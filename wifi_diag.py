@@ -23,13 +23,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import platform
+import random
 import re
 import shutil
 import socket
 import ssl
 import statistics
+import struct
 import subprocess
 import sys
 import threading
@@ -45,6 +48,24 @@ CF_HOST = "speed.cloudflare.com"
 CF_META = "/meta"
 CF_DOWN = "/__down?bytes={n}"
 CF_UP = "/__up"
+
+# 下り負荷用エンドポイント。Cloudflare が最良（サイズ指定可）だが、
+# 遮断されている環境向けに大きな公開ファイルへのフォールバックを持つ。
+# フォールバックはストリームが尽きたら同じ URL を開き直して負荷を維持する。
+DOWNLOAD_ENDPOINTS = [
+    {"name": "cloudflare", "host": CF_HOST, "path": CF_DOWN.format(n=300 * 1024 * 1024)},
+    {"name": "github-codeload", "host": "codeload.github.com",
+     "path": "/torvalds/linux/tar.gz/refs/tags/v6.9"},
+    {"name": "github-codeload-2", "host": "codeload.github.com",
+     "path": "/torvalds/linux/tar.gz/refs/tags/v6.1"},
+]
+
+# 負荷時の応答性（RPM 近似）を測るための小さな HTTP エンドポイント
+RPM_ENDPOINTS = [
+    {"host": CF_HOST, "path": CF_DOWN.format(n=1)},
+    {"host": "registry.npmjs.org", "path": "/-/ping"},
+    {"host": "github.com", "path": "/manifest.json"},
+]
 PING_TARGETS_V4 = ["1.1.1.1", "8.8.8.8"]
 PING_TARGET_V6 = "2606:4700:4700::1111"
 TRACE_TARGET_V4 = "8.8.8.8"
@@ -78,6 +99,12 @@ def run(cmd, timeout=20):
             errors="replace",
         )
         return p.stdout
+    except subprocess.TimeoutExpired as e:
+        # kill 直前までの部分出力にも使える情報がある（traceroute の途中経路など）
+        out = e.stdout
+        if isinstance(out, bytes):
+            out = out.decode("utf-8", "replace")
+        return out or None
     except (OSError, subprocess.SubprocessError):
         return None
 
@@ -269,6 +296,21 @@ def _parse_signal_noise(s):
     return None, None
 
 
+def _freq_to_channel(freq):
+    """中心周波数 (MHz) を Wi-Fi チャンネル番号に変換する。"""
+    if not freq:
+        return None
+    if 2412 <= freq <= 2472:
+        return (freq - 2407) // 5
+    if freq == 2484:
+        return 14
+    if 5160 <= freq <= 5885:
+        return (freq - 5000) // 5
+    if 5955 <= freq <= 7115:          # 6GHz (Wi-Fi 6E/7)
+        return (freq - 5950) // 5
+    return None
+
+
 def _wifi_linux():
     dev = None
     out = run(["iw", "dev"], timeout=10) if have("iw") else None
@@ -283,6 +325,7 @@ def _wifi_linux():
             sig = _int(_search(r"signal:\s*(-?\d+)", link))
             rate = _search(r"tx bitrate:\s*([\d.]+)", link)
             freq = _int(_search(r"freq:\s*(\d+)", link))
+            channel = _freq_to_channel(freq)
             noise = None
             surv = run(["iw", "dev", dev, "survey", "dump"], timeout=10) or ""
             for block in surv.split("Survey data from"):
@@ -296,7 +339,8 @@ def _wifi_linux():
                 "rssi_dbm": sig,
                 "noise_dbm": noise,
                 "snr_db": (sig - noise) if (sig is not None and noise is not None) else None,
-                "channel": freq,
+                "channel": f"{channel} ({freq} MHz)" if channel else freq,
+                "freq_mhz": freq,
                 "tx_rate_mbps": float(rate) if rate else None,
                 "phy_mode": None,
             }
@@ -329,6 +373,7 @@ def _wifi_windows():
         "signal_percent": pct,
         # Windows は % しか出さないので、業界慣用の換算式で dBm を近似
         "rssi_dbm": (pct / 2.0 - 100) if pct is not None else None,
+        "rssi_estimated": True,
         "noise_dbm": None,
         "snr_db": None,
         "channel": _search(r"Channel\s*:\s*(\d+)", out),
@@ -481,6 +526,64 @@ def _parse_traceroute(text):
     return hops
 
 
+def _traceroute_recverr(target=TRACE_TARGET_V4, port=53, max_hops=12, timeout=1.2):
+    """traceroute コマンドがない Linux 向けの純 Python 実装（root 不要）。
+    UDP ソケットに IP_RECVERR を立て、TTL を 1 から伸ばしながら DNS クエリを送る。
+    途中のルーターが返す ICMP time-exceeded がエラーキューに載るので、
+    そこから送信元（= そのホップのルーター）と RTT を読み取る。"""
+    IP_RECVERR = 11
+    SO_EE_ORIGIN_ICMP = 2
+    ee_size = struct.calcsize("=IBBBBII")
+    hops = []
+    for ttl in range(1, max_hops + 1):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        hop_ip = None
+        rtt = None
+        reached = False
+        try:
+            s.setsockopt(socket.IPPROTO_IP, IP_RECVERR, 1)
+            s.setsockopt(socket.IPPROTO_IP, socket.IP_TTL, ttl)
+            s.settimeout(timeout)
+            pkt = _dns_query_packet(f"ttl{ttl}-{random.randrange(16 ** 6):06x}.wifi-diag.invalid")
+            t0 = time.perf_counter()
+            s.sendto(pkt, (target, port))
+            try:
+                s.recvfrom(512)                     # 普通に応答が返った = 目的地に到達
+                rtt = (time.perf_counter() - t0) * 1000
+                hop_ip = target
+                reached = True
+            except socket.timeout:
+                pass
+            except OSError:
+                rtt = (time.perf_counter() - t0) * 1000   # ICMP エラーが届いた時刻
+            if hop_ip is None:
+                try:
+                    _data, anc, _flags, _addr = s.recvmsg(512, 1024, socket.MSG_ERRQUEUE)
+                    if rtt is None:
+                        rtt = (time.perf_counter() - t0) * 1000
+                    for lvl, typ, cd in anc:
+                        if lvl == socket.IPPROTO_IP and typ == IP_RECVERR and len(cd) >= ee_size + 8:
+                            origin = cd[4]
+                            fam = struct.unpack_from("=H", cd, ee_size)[0]
+                            if origin == SO_EE_ORIGIN_ICMP and fam == socket.AF_INET:
+                                hop_ip = socket.inet_ntoa(cd[ee_size + 4:ee_size + 8])
+                except OSError:
+                    pass
+        except OSError:
+            s.close()
+            break
+        finally:
+            try:
+                s.close()
+            except OSError:
+                pass
+        hops.append({"hop": ttl, "host": None, "ip": hop_ip,
+                     "rtt_ms": round(rtt, 1) if rtt is not None else None})
+        if reached:
+            break
+    return hops
+
+
 def collect_traceroute(prog, max_hops=12):
     res = {}
     if IS_WIN:
@@ -498,10 +601,17 @@ def collect_traceroute(prog, max_hops=12):
                        timeout=90)
     res["v4"] = _parse_traceroute(out4)
     res["v6"] = _parse_traceroute(out6)
+    if not res["v4"] and IS_LINUX:
+        prog.step("traceroute コマンドが使えないため、純 Python 実装で経路を追跡中")
+        res["v4"] = _traceroute_recverr(max_hops=max_hops)
+        res["v4_source"] = "recverr-fallback"
     return res
 
 
 def _is_private_v4(ip):
+    """RFC1918 のプライベートアドレスか。CGNAT (100.64/10) は含めない —
+    日本の IPoE (MAP-E / DS-Lite) では途中経路に CGNAT 帯が普通に現れるため、
+    これを混ぜると IPoE ユーザーを「二重ルーター」と誤検出してしまう。"""
     if not ip:
         return False
     try:
@@ -514,9 +624,17 @@ def _is_private_v4(ip):
         return True
     if a == 192 and b == 168:
         return True
-    if a == 100 and 64 <= b <= 127:   # CGNAT
-        return True
     return False
+
+
+def _is_cgnat_v4(ip):
+    if not ip:
+        return False
+    try:
+        a, b = (int(x) for x in ip.split(".")[:2])
+    except (ValueError, IndexError):
+        return False
+    return a == 100 and 64 <= b <= 127
 
 
 # --------------------------------------------------------------------------
@@ -524,31 +642,254 @@ def _is_private_v4(ip):
 # --------------------------------------------------------------------------
 
 def collect_dns(prog):
+    """アプリと同じ経路（システムのスタブリゾルバ経由）で名前解決の時間を測る。
+    同じ名前を 2 回引き、1 回目（キャッシュに乗る前）と 2 回目（キャッシュ後）を
+    分けて記録する。1 回だけだと、直前の測定で温まったキャッシュに当たって
+    実際より速く見えることがある。"""
     prog.step("DNS の応答を測定中")
     samples = []
     for name in DNS_NAMES:
-        t0 = time.perf_counter()
-        try:
-            socket.getaddrinfo(name, 443, socket.AF_UNSPEC, socket.SOCK_STREAM)
-            ok = True
-        except OSError:
-            ok = False
-        dt = (time.perf_counter() - t0) * 1000
-        samples.append({"name": name, "ok": ok, "ms": round(dt, 1)})
-    good = [s["ms"] for s in samples if s["ok"]]
+        row = {"name": name}
+        for key in ("cold_ms", "warm_ms"):
+            t0 = time.perf_counter()
+            try:
+                socket.getaddrinfo(name, 443, socket.AF_UNSPEC, socket.SOCK_STREAM)
+                row[key] = round((time.perf_counter() - t0) * 1000, 1)
+            except OSError:
+                row[key] = None
+        row["ok"] = row["cold_ms"] is not None
+        samples.append(row)
+    cold = [s["cold_ms"] for s in samples if s["cold_ms"] is not None]
+    warm = [s["warm_ms"] for s in samples if s["warm_ms"] is not None]
     return {
         "samples": samples,
-        "mean_ms": round(statistics.mean(good), 1) if good else None,
-        "max_ms": round(max(good), 1) if good else None,
+        "mean_ms": round(statistics.mean(cold), 1) if cold else None,
+        "max_ms": round(max(cold), 1) if cold else None,
+        "warm_mean_ms": round(statistics.mean(warm), 1) if warm else None,
         "failures": [s["name"] for s in samples if not s["ok"]],
     }
 
 
 # --------------------------------------------------------------------------
-# 7. 遅延（ping）
+# 7. 遅延計測エンジン
+#    ICMP ping が使えない環境（コンテナ、企業ネットワーク等）は珍しくないので、
+#    ICMP → UDP DNS クエリ → TCP 接続時間 の三段構えで必ず何かしら測れるようにする。
 # --------------------------------------------------------------------------
 
-def _ping(host, count=10, interval=0.25, v6=False, timeout=30):
+DNS_PROBE_SERVERS = ["8.8.8.8", "1.1.1.1", "8.8.4.4", "1.0.0.1"]
+
+
+def _dns_query_packet(name, qtype=1):
+    """最小限の DNS クエリパケットを手組みする（依存ライブラリなし）。"""
+    tid = random.randint(0, 0xFFFF)
+    header = struct.pack(">HHHHHH", tid, 0x0100, 1, 0, 0, 0)
+    qname = b"".join(bytes([len(p)]) + p.encode("ascii") for p in name.split(".")) + b"\x00"
+    return header + qname + struct.pack(">HH", qtype, 1)
+
+
+def _series_stats(times, sent, target, method):
+    if not times:
+        return None
+    return {
+        "target": target,
+        "method": method,
+        "samples": len(times),
+        "loss_percent": round(100.0 * (sent - len(times)) / sent, 1) if sent else 0.0,
+        "min_ms": round(min(times), 1),
+        "avg_ms": round(statistics.mean(times), 1),
+        "p95_ms": round(sorted(times)[min(len(times) - 1, math.ceil(0.95 * len(times)) - 1)], 1),
+        "max_ms": round(max(times), 1),
+        # ジッタは RFC 3550 系に合わせ「隣接サンプル差の平均」。ばらつき全体は stdev_ms に
+        "jitter_ms": round(statistics.mean(abs(a - b) for a, b in zip(times, times[1:])), 1)
+                     if len(times) > 1 else 0.0,
+        "stdev_ms": round(statistics.pstdev(times), 1) if len(times) > 1 else 0.0,
+    }
+
+
+def _dns_rtt_series(server, count=10, interval=0.2, timeout=2.0):
+    """UDP の DNS クエリで往復時間を測る。ICMP が使えない環境の代替。
+    .invalid TLD はリゾルバがローカルで即答するため（RFC 6761）、
+    再帰解決の揺らぎが乗らないほぼ純粋なネットワーク RTT になる。
+    毎回ユニークな名前を使い、経路上のキャッシュ応答も避ける。"""
+    times = []
+    sent = 0
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.settimeout(timeout)
+    try:
+        for i in range(count):
+            pkt = _dns_query_packet(f"p{i}-{random.randrange(16 ** 8):08x}.wifi-diag.invalid")
+            sent += 1
+            t0 = time.perf_counter()
+            try:
+                s.sendto(pkt, (server, 53))
+                s.recvfrom(512)
+                times.append((time.perf_counter() - t0) * 1000)
+            except OSError:
+                pass
+            if i < count - 1:
+                time.sleep(interval)
+    finally:
+        s.close()
+    return _series_stats(times, sent, server, "dns")
+
+
+def _tcp_rtt_series(host, port=443, count=8, interval=0.25, timeout=3.0):
+    """TCP 接続確立（SYN→SYN/ACK）の所要時間 ≒ 1 往復。最後の砦。
+    接続拒否（RST）も 1 往復してから返るので RTT として数えられる。"""
+    times = []
+    sent = 0
+    for i in range(count):
+        sent += 1
+        t0 = time.perf_counter()
+        s = None
+        try:
+            s = socket.create_connection((host, port), timeout=timeout)
+            times.append((time.perf_counter() - t0) * 1000)
+        except ConnectionRefusedError:
+            times.append((time.perf_counter() - t0) * 1000)
+        except OSError:
+            pass
+        finally:
+            if s is not None:
+                s.close()
+        if i < count - 1:
+            time.sleep(interval)
+    return _series_stats(times, sent, f"{host}:{port}", "tcp")
+
+
+_LATENCY_METHOD = None
+
+
+def detect_latency_method():
+    """この環境で使える遅延計測手段を一度だけ判定して覚える。"""
+    global _LATENCY_METHOD
+    if _LATENCY_METHOD:
+        return _LATENCY_METHOD
+    r = _ping("8.8.8.8", count=2, interval=0.2, timeout=10)
+    if r and r["samples"] > 0:
+        _LATENCY_METHOD = "icmp"
+    elif _dns_rtt_series("8.8.8.8", count=2, interval=0.1):
+        _LATENCY_METHOD = "dns"
+    else:
+        _LATENCY_METHOD = "tcp"
+    return _LATENCY_METHOD
+
+
+def measure_rtt(target, count=10, interval=0.25, timeout=30, method=None):
+    """検出済みの手段で target への RTT 統計を取る。"""
+    method = method or detect_latency_method()
+    if method == "icmp":
+        r = _ping(target, count=count, interval=interval, timeout=timeout)
+        if r:
+            r["method"] = "icmp"
+            return r
+        return None
+    if method == "dns":
+        return _dns_rtt_series(target, count=count, interval=interval)
+    return _tcp_rtt_series(target, count=min(count, 10), interval=interval)
+
+
+METHOD_LABEL = {"icmp": "ICMP ping", "dns": "DNS クエリ (UDP/53)", "tcp": "TCP 接続時間"}
+
+
+# --------------------------------------------------------------------------
+# 7b. 公開リゾルバのベンチマーク
+#     「DNS が遅い」は体感を大きく左右するのに、どのリゾルバが自分の環境から
+#     速いかは場所によって全く違う。実測して一番速いものを提示する。
+# --------------------------------------------------------------------------
+
+PUBLIC_RESOLVERS = [
+    ("Google", "8.8.8.8"),
+    ("Google", "8.8.4.4"),
+    ("Cloudflare", "1.1.1.1"),
+    ("Cloudflare", "1.0.0.1"),
+    ("Quad9", "9.9.9.9"),
+]
+
+
+def _system_nameservers():
+    ns = []
+    try:
+        with open("/etc/resolv.conf", encoding="utf-8", errors="replace") as fh:
+            for line in fh:
+                m = re.match(r"\s*nameserver\s+(\S+)", line)
+                if m and ":" not in m.group(1):
+                    ns.append(m.group(1))
+    except OSError:
+        pass
+    return ns
+
+
+RESOLVE_TEST_NAMES = ["www.google.com", "en.wikipedia.org", "www.amazon.co.jp", "github.com"]
+
+
+def _dns_resolve_ms(server, name, timeout=2.0):
+    """server に A と AAAA を問い合わせ、遅い方の所要時間を返す（体感を決めるのは遅い方）。"""
+    worst = None
+    for qtype in (1, 28):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.settimeout(timeout)
+        t0 = time.perf_counter()
+        try:
+            s.sendto(_dns_query_packet(name, qtype), (server, 53))
+            s.recvfrom(4096)
+            dt = (time.perf_counter() - t0) * 1000
+            worst = dt if worst is None else max(worst, dt)
+        except OSError:
+            return None
+        finally:
+            s.close()
+    return worst
+
+
+def collect_resolver_bench(prog):
+    prog.step("公開 DNS リゾルバの速さを比較中（RTT と実在ドメインの解決時間）")
+    system_ns = _system_nameservers()
+    rows = []
+    seen = set()
+
+    def bench(label, ip, is_system):
+        r = _dns_rtt_series(ip, count=6, interval=0.08)
+        row = {"label": label, "ip": ip, "system": is_system,
+               "min_ms": r["min_ms"] if r else None,
+               "avg_ms": r["avg_ms"] if r else None,
+               "resolve_ms": None}
+        if r:
+            # 素の RTT が横並びでも、キャッシュの充実度や再帰の速さで
+            # 実際の解決時間には差が出る。推奨はこちらを基準にする。
+            resolved = [x for x in (_dns_resolve_ms(ip, n)
+                                    for n in RESOLVE_TEST_NAMES * 2)
+                        if x is not None]
+            if resolved:
+                row["resolve_ms"] = round(statistics.mean(resolved), 1)
+        rows.append(row)
+
+    for label, ip in PUBLIC_RESOLVERS:
+        bench(label, ip, ip in system_ns)
+        seen.add(ip)
+    for ip in system_ns[:2]:
+        if ip not in seen:
+            bench("ルーター" if _is_private_v4(ip) else "システム設定", ip, True)
+
+    def score(x):
+        return x["resolve_ms"] if x["resolve_ms"] is not None else x["avg_ms"]
+
+    ok = [x for x in rows if score(x) is not None]
+    best = min(ok, key=score) if ok else None
+    return {"resolvers": rows, "system_nameservers": system_ns,
+            "best": {"ip": best["ip"], "label": best["label"], "avg_ms": best["avg_ms"],
+                     "resolve_ms": best["resolve_ms"]} if best else None}
+
+
+# --------------------------------------------------------------------------
+# 7c. ping（ICMP、使える環境でのみ）
+# --------------------------------------------------------------------------
+
+def _ping(host, count=10, interval=0.25, v6=False, timeout=None):
+    # Windows の ping に送信間隔オプションはなく固定 1 秒。タイムアウトは実効所要時間から求める
+    eff_interval = 1.0 if IS_WIN else interval
+    if timeout is None:
+        timeout = count * eff_interval + 15
     if IS_WIN:
         cmd = ["ping", "-n", str(count), "-w", "2000"]
         if v6:
@@ -563,46 +904,49 @@ def _ping(host, count=10, interval=0.25, v6=False, timeout=30):
     out = run(cmd, timeout=timeout)
     if not out:
         return None
-    times = [float(x) for x in re.findall(r"time[=<]\s*([\d.]+)\s*ms", out)]
+    # ロケール非依存: 「time=12.3 ms」「時間 =4ms」「Zeit=3ms」いずれも拾う
+    times = [float(x) for x in re.findall(r"[=<]\s*([\d.]+)\s*ms", out)]
     if not times:
         return None
-    sent = count
-    return {
-        "target": host,
-        "samples": len(times),
-        "loss_percent": round(100.0 * (sent - len(times)) / sent, 1),
-        "min_ms": round(min(times), 1),
-        "avg_ms": round(statistics.mean(times), 1),
-        "p95_ms": round(sorted(times)[max(0, int(len(times) * 0.95) - 1)], 1),
-        "max_ms": round(max(times), 1),
-        "jitter_ms": round(statistics.pstdev(times), 1) if len(times) > 1 else 0.0,
-    }
+    return _series_stats(times, count, host, "icmp")
 
 
 def collect_idle_latency(prog, gateway=None):
-    prog.step("アイドル時の遅延を測定中")
-    res = {"targets": []}
+    method = detect_latency_method()
+    prog.step(f"アイドル時の遅延を測定中（計測手段: {METHOD_LABEL[method]}）")
+    res = {"targets": [], "method": method}
     if gateway:
-        r = _ping(gateway, count=10)
+        # ルーターまでの RTT。ICMP がなければ TCP（管理画面ポート）で。
+        # 接続拒否でも 1 往復は測れる。
+        r = _ping(gateway, count=10) if method == "icmp" else \
+            _tcp_rtt_series(gateway, port=80, count=6, interval=0.15, timeout=2.0)
         if r:
             r["role"] = "gateway"
             res["targets"].append(r)
     for t in PING_TARGETS_V4:
-        r = _ping(t, count=15)
+        r = measure_rtt(t, count=15, method=method)
         if r:
             r["role"] = "internet_v4"
             res["targets"].append(r)
-    r6 = _ping(PING_TARGET_V6, count=10, v6=True)
-    if r6:
-        r6["role"] = "internet_v6"
-        res["targets"].append(r6)
+    if method == "icmp":
+        r6 = _ping(PING_TARGET_V6, count=10, v6=True)
+        if r6:
+            r6["role"] = "internet_v6"
+            r6["method"] = "icmp"
+            res["targets"].append(r6)
     internet = [t for t in res["targets"] if t["role"] == "internet_v4"]
     if internet:
         res["idle_avg_ms"] = round(statistics.mean(t["avg_ms"] for t in internet), 1)
         res["idle_min_ms"] = round(min(t["min_ms"] for t in internet), 1)
+        # 負荷時との差分は「同じターゲット」同士で取らないと意味がないので、
+        # 負荷試験が使うターゲット（先頭）の値を基準として別に持つ
+        ref = next((t for t in internet if t["target"] == PING_TARGETS_V4[0]), internet[0])
+        res["idle_ref_target"] = ref["target"]
+        res["idle_ref_avg_ms"] = ref["avg_ms"]
     else:
         res["idle_avg_ms"] = None
         res["idle_min_ms"] = None
+        res["idle_ref_avg_ms"] = None
     return res
 
 
@@ -610,48 +954,84 @@ def collect_idle_latency(prog, gateway=None):
 # 8. スループット
 # --------------------------------------------------------------------------
 
-def _download_stream(stop_event, byte_target, counter, lock, timeout=30, errors=None):
-    """Cloudflare からダウンロードし、受信バイト数を counter に加算する。"""
-    conn = None
-    try:
-        conn = FamilyHTTPSConnection(CF_HOST, timeout=timeout)
-        conn.request("GET", CF_DOWN.format(n=byte_target),
-                     headers={"User-Agent": "wifi_diag/1.0"})
-        resp = conn.getresponse()
-        if resp.status != 200:
-            # エラー応答を「高速なダウンロード」と誤認しないよう、ここで打ち切る
-            resp.read()
+_DL_ENDPOINT_CACHE = [None]
+
+
+def pick_download_endpoint():
+    """使える下りエンドポイントを一度だけ選んで覚える。"""
+    if _DL_ENDPOINT_CACHE[0] is not None:
+        return _DL_ENDPOINT_CACHE[0]
+    for ep in DOWNLOAD_ENDPOINTS:
+        conn = None
+        try:
+            conn = FamilyHTTPSConnection(ep["host"], timeout=8)
+            conn.request("GET", ep["path"], headers={"User-Agent": "wifi_diag/1.0"})
+            resp = conn.getresponse()
+            if resp.status == 200 and resp.read(4096):
+                _DL_ENDPOINT_CACHE[0] = ep
+                return ep
+        except (OSError, http.client.HTTPException):
+            pass
+        finally:
+            if conn is not None:
+                try:
+                    conn.close()
+                except (OSError, http.client.HTTPException):
+                    pass
+    _DL_ENDPOINT_CACHE[0] = {}          # 「探したが無い」の印
+    return {}
+
+
+def _download_stream(stop_event, endpoint, counter, lock, timeout=30, errors=None):
+    """endpoint からダウンロードし続け、受信バイト数を counter に加算する。
+    ストリームが尽きたら開き直して、stop_event まで負荷を維持する。"""
+    while not stop_event.is_set():
+        conn = None
+        got_any = False
+        try:
+            conn = FamilyHTTPSConnection(endpoint["host"], timeout=timeout)
+            conn.request("GET", endpoint["path"], headers={"User-Agent": "wifi_diag/1.0"})
+            resp = conn.getresponse()
+            if resp.status != 200:
+                # エラー応答を「高速なダウンロード」と誤認しないよう、ここで打ち切る
+                resp.read()
+                if errors is not None:
+                    with lock:
+                        errors.append(f"HTTP {resp.status} {resp.reason}")
+                return
+            while not stop_event.is_set():
+                chunk = resp.read(65536)
+                if not chunk:
+                    break
+                got_any = True
+                with lock:
+                    counter[0] += len(chunk)
+        except (OSError, http.client.HTTPException) as e:
             if errors is not None:
                 with lock:
-                    errors.append(f"HTTP {resp.status} {resp.reason}")
-            return
-        while not stop_event.is_set():
-            chunk = resp.read(65536)
-            if not chunk:
-                break
-            with lock:
-                counter[0] += len(chunk)
-    except (OSError, http.client.HTTPException) as e:
-        if errors is not None:
-            with lock:
-                errors.append(str(e) or e.__class__.__name__)
-    finally:
-        if conn is not None:
-            try:
-                conn.close()
-            except (OSError, http.client.HTTPException):
-                pass
+                    errors.append(str(e) or e.__class__.__name__)
+            if not got_any:
+                return                  # 1 バイトも取れずに失敗したら再試行しない
+        finally:
+            if conn is not None:
+                try:
+                    conn.close()
+                except (OSError, http.client.HTTPException):
+                    pass
 
 
 def measure_download(prog, duration=8.0, streams=4):
-    prog.step(f"下り速度を測定中（{streams} 並列 / {duration:.0f} 秒）")
+    ep = pick_download_endpoint()
+    if not ep:
+        return {"mbps": None, "error": "利用可能なダウンロード先がありません（すべて遮断されています）"}
+    prog.step(f"下り速度を測定中（{streams} 並列 / {duration:.0f} 秒 / 接続先: {ep['name']}）")
     counter = [0]
     lock = threading.Lock()
     stop = threading.Event()
     errors = []
     threads = [
         threading.Thread(target=_download_stream,
-                         args=(stop, 300 * 1024 * 1024, counter, lock, 30, errors),
+                         args=(stop, ep, counter, lock, 30, errors),
                          daemon=True)
         for _ in range(streams)
     ]
@@ -659,19 +1039,20 @@ def measure_download(prog, duration=8.0, streams=4):
         t.start()
     time.sleep(1.0)                    # 立ち上がり（TCP スロースタート）を除外
     with lock:
-        base = counter[0]
-    t0 = time.perf_counter()
+        base, t0 = counter[0], time.perf_counter()
     time.sleep(duration)
-    elapsed = time.perf_counter() - t0
     with lock:
-        got = counter[0] - base
+        end, t1 = counter[0], time.perf_counter()
+    elapsed = t1 - t0
+    got = end - base
     stop.set()
     for t in threads:
         t.join(timeout=2)
     if got <= 0:
         reason = errors[0] if errors else "通信をブロックされている可能性があります"
         return {"mbps": None, "error": f"ダウンロードできませんでした: {reason}"}
-    return {"mbps": round(got * 8 / elapsed / 1e6, 1), "bytes": got, "seconds": round(elapsed, 1)}
+    return {"mbps": round(got * 8 / elapsed / 1e6, 1), "bytes": got,
+            "seconds": round(elapsed, 1), "endpoint": ep["name"]}
 
 
 def measure_upload(prog, payload_mb=8):
@@ -679,6 +1060,7 @@ def measure_upload(prog, payload_mb=8):
     payload = b"\x00" * (payload_mb * 1024 * 1024)
     try:
         conn = FamilyHTTPSConnection(CF_HOST, timeout=45)
+        conn.connect()                      # TCP+TLS ハンドシェイクを計測から外す
         t0 = time.perf_counter()
         conn.request("POST", CF_UP, body=payload,
                      headers={"User-Agent": "wifi_diag/1.0",
@@ -703,23 +1085,68 @@ def measure_upload(prog, payload_mb=8):
 # 9. バッファブロート / 負荷時の応答性（RPM）
 # --------------------------------------------------------------------------
 
+_RPM_ENDPOINT_CACHE = [None]
+
+
+def pick_rpm_endpoint():
+    if _RPM_ENDPOINT_CACHE[0] is not None:
+        return _RPM_ENDPOINT_CACHE[0]
+    for ep in RPM_ENDPOINTS:
+        conn = None
+        try:
+            conn = FamilyHTTPSConnection(ep["host"], timeout=6)
+            conn.request("GET", ep["path"], headers={"User-Agent": "wifi_diag/1.0"})
+            resp = conn.getresponse()
+            resp.read()
+            if resp.status == 200:
+                _RPM_ENDPOINT_CACHE[0] = ep
+                return ep
+        except (OSError, http.client.HTTPException):
+            pass
+        finally:
+            if conn is not None:
+                try:
+                    conn.close()
+                except (OSError, http.client.HTTPException):
+                    pass
+    _RPM_ENDPOINT_CACHE[0] = {}
+    return {}
+
+
 def _http_round_trips(stop_event, results, lock):
     """小さな HTTPS リクエストを繰り返し、1 往復に要する秒数を記録する。
-    Apple の RPM と同じ考え方（= 実際のアプリが感じる往復）。"""
+    Apple の RPM と同じ考え方（= 実際のアプリが感じる往復）。
+    接続は keep-alive で使い回す。毎回張り直すと TLS ハンドシェイク
+    （3 往復ぶん）が混ざり、RPM を実際より悪く見積もってしまうため。"""
+    ep = pick_rpm_endpoint()
+    if not ep:
+        return
+    conn = None
     while not stop_event.is_set():
         t0 = time.perf_counter()
         try:
-            conn = FamilyHTTPSConnection(CF_HOST, timeout=15)
-            conn.request("GET", CF_DOWN.format(n=1), headers={"User-Agent": "wifi_diag/1.0"})
+            if conn is None:
+                conn = FamilyHTTPSConnection(ep["host"], timeout=15)
+            conn.request("GET", ep["path"], headers={"User-Agent": "wifi_diag/1.0"})
             resp = conn.getresponse()
             resp.read()
-            conn.close()
             dt = time.perf_counter() - t0
             with lock:
                 results.append(dt)
         except (OSError, http.client.HTTPException):
-            pass
+            # サーバー側で切られたら次の周回で張り直す
+            if conn is not None:
+                try:
+                    conn.close()
+                except (OSError, http.client.HTTPException):
+                    pass
+            conn = None
         time.sleep(0.05)
+    if conn is not None:
+        try:
+            conn.close()
+        except (OSError, http.client.HTTPException):
+            pass
 
 
 def measure_networkquality(prog):
@@ -763,10 +1190,13 @@ def measure_bufferbloat(prog, idle_avg_ms, duration=10.0, streams=4):
     rt_results = []
     rt_lock = threading.Lock()
 
+    ep = pick_download_endpoint()
+    if not ep:
+        return {"error": "利用可能なダウンロード先がなく、負荷をかけられませんでした。"}
     load_errors = []
     loaders = [
         threading.Thread(target=_download_stream,
-                         args=(stop, 300 * 1024 * 1024, counter, dl_lock, 30, load_errors),
+                         args=(stop, ep, counter, dl_lock, 30, load_errors),
                          daemon=True)
         for _ in range(streams)
     ]
@@ -777,17 +1207,22 @@ def measure_bufferbloat(prog, idle_avg_ms, duration=10.0, streams=4):
 
     time.sleep(1.5)                     # 回線が埋まるまで待つ
     with dl_lock:
-        base_bytes = counter[0]
+        base_bytes, t_load0 = counter[0], time.perf_counter()
     with rt_lock:
         rt_results.clear()
 
+    method = detect_latency_method()
+    n_probes = int(duration / 0.25)
+    if method == "icmp" and IS_WIN:
+        n_probes = max(4, int(duration))          # Windows ping は 1 秒間隔固定
     t0 = time.perf_counter()
-    loaded_ping = _ping(PING_TARGETS_V4[0], count=int(duration / 0.25), interval=0.25,
-                        timeout=duration + 20)
+    loaded_ping = measure_rtt(PING_TARGETS_V4[0], count=n_probes, interval=0.25,
+                              timeout=duration + 25)
     elapsed = time.perf_counter() - t0
 
     with dl_lock:
-        got = counter[0] - base_bytes
+        got, t_load1 = counter[0] - base_bytes, time.perf_counter()
+    load_elapsed = t_load1 - t_load0
     with rt_lock:
         trips = list(rt_results)
     stop.set()
@@ -796,8 +1231,11 @@ def measure_bufferbloat(prog, idle_avg_ms, duration=10.0, streams=4):
     rt_thread.join(timeout=3)
 
     res = {
-        "loaded_download_mbps": round(got * 8 / elapsed / 1e6, 1) if got > 0 and elapsed > 0 else None,
-        "seconds": round(elapsed, 1),
+        "loaded_download_mbps": round(got * 8 / load_elapsed / 1e6, 1)
+                                if got > 0 and load_elapsed > 0 else None,
+        "seconds": round(load_elapsed, 1),
+        "endpoint": ep["name"],
+        "latency_method": detect_latency_method(),
     }
     if got <= 0:
         res["error"] = ("回線に負荷をかけられませんでした: "
@@ -840,7 +1278,7 @@ def grade_rpm(rpm):
 def grade_bloat(increase_ms):
     if increase_ms is None:
         return None, "—"
-    if increase_ms < 30:
+    if increase_ms < 30:                # 負値（測定誤差の範囲）もここに含む
         return "A", "バッファブロートなし"
     if increase_ms < 100:
         return "B", "わずかなバッファブロート"
@@ -863,7 +1301,15 @@ def analyze(r):
     local = r.get("local") or {}
     v4 = wan.get("v4") or {}
     v6 = wan.get("v6")
-    if not local.get("has_global_ipv6") and not v6:
+    if local.get("has_global_ipv6") and not v6:
+        add("warn", "IPv6 アドレスはあるのに外部に到達できません",
+            "端末にグローバル IPv6 が付いていますが、IPv6 での外部通信が失敗します。"
+            "ISP 側の IPv6 障害、ルーターのファイアウォール、または設定の中途半端な"
+            "IPv6 有効化が疑われます。この状態は「IPv6 対応サイトへの接続が"
+            "タイムアウトまで待たされてから IPv4 に落ちる」遅さの原因になります。",
+            "ルーターの IPv6 設定を確認し、直らなければ一時的に端末の IPv6 を無効化すると"
+            "体感が改善することがあります。")
+    elif not local.get("has_global_ipv6") and not v6:
         add("critical", "IPv6 が使えていません",
             "グローバル IPv6 アドレスが端末に付いておらず、IPv6 での外部到達もできません。"
             "国内主要 ISP の速度・遅延の改善はほぼ IPv6 IPoE 経由なので、"
@@ -895,12 +1341,18 @@ def analyze(r):
     # --- 二重ルーター ---
     hops = (r.get("traceroute") or {}).get("v4") or []
     private_hops = [h for h in hops[:3] if _is_private_v4(h.get("ip"))]
-    if len(private_hops) >= 2:
+    distinct = {h["ip"] for h in private_hops}
+    if len(private_hops) >= 2 and len(distinct) >= 2:
         add("warn", "二重ルーターの疑いがあります",
-            "経路の最初の 2 ホップがどちらもプライベート IP でした。"
-            f"（{', '.join(h['ip'] for h in private_hops)}）"
+            "経路の最初の 3 ホップ以内に、異なるプライベート IP が 2 つ以上ありました"
+            f"（{', '.join(sorted(distinct))}）。"
             "ルーターが 2 段になっていると NAT が二重にかかり、遅延と不安定さの原因になります。",
             "ISP 提供機器をルーターとして使い、市販ルーターは「アクセスポイント（ブリッジ）モード」に切り替えてください。")
+    cgnat_hops = [h for h in hops[:4] if _is_cgnat_v4(h.get("ip"))]
+    if cgnat_hops:
+        add("info", "経路上に CGNAT 帯 (100.64.0.0/10) を検出",
+            "ISP 側でアドレス共有（CGNAT）または IPv4 over IPv6 (MAP-E / DS-Lite) が"
+            "使われている痕跡です。IPoE 環境では正常な構成であり、異常ではありません。")
 
     gw = local.get("gateway_v4")
     if gw and gw.startswith("192.168.3."):
@@ -912,6 +1364,9 @@ def analyze(r):
     wifi = r.get("wifi") or {}
     rssi = wifi.get("rssi_dbm")
     snr = wifi.get("snr_db")
+    if rssi is not None and wifi.get("rssi_estimated"):
+        add("info", "Wi-Fi 信号強度は % からの換算値です",
+            "Windows は信号を % でしか公開しないため、dBm は近似値です。傾向の把握には使えます。")
     if rssi is not None:
         if rssi <= -75:
             add("warn", "Wi-Fi の電波が弱いです",
@@ -941,6 +1396,35 @@ def analyze(r):
     if dns.get("failures"):
         add("warn", "名前解決に失敗したドメインがあります", ", ".join(dns["failures"]))
 
+    # --- リゾルバの改善余地 ---
+    rb = r.get("resolver_bench") or {}
+    best = rb.get("best")
+
+    def _score(x):
+        return x["resolve_ms"] if x.get("resolve_ms") is not None else x.get("avg_ms")
+
+    sys_rows = [x for x in (rb.get("resolvers") or [])
+                if x.get("system") and _score(x) is not None]
+    if best and sys_rows:
+        cur = min(sys_rows, key=_score)
+        best_score = best.get("resolve_ms") or best.get("avg_ms")
+        cur_score = _score(cur)
+        if cur["ip"] != best["ip"] and cur_score > best_score * 1.4 \
+                and cur_score - best_score > 5:
+            add("warn", "いまの DNS より速いリゾルバがあります",
+                f"現在の設定 {cur['ip']}（実解決 {cur_score} ms）に対し、"
+                f"{best['label']} {best['ip']} は {best_score} ms でした"
+                f"（約 {cur_score / best_score:.1f} 倍差）。名前解決はページを開くたびに"
+                "発生するので、体感の初速に直結します。",
+                f"OS またはルーターの DNS 設定を {best['ip']} に変更してください。")
+        elif cur["ip"] == best["ip"]:
+            add("ok", "DNS リゾルバの選択は最適です",
+                f"現在の {cur['ip']} が計測した中で最速でした（実解決 {cur_score} ms）。")
+    elif best and not sys_rows and rb.get("system_nameservers"):
+        add("info", "現在の DNS の速度を直接測定できませんでした",
+            f"参考: 計測した公開リゾルバの最速は {best['label']} {best['ip']}"
+            f"（{best['avg_ms']} ms）でした。")
+
     # --- アイドル遅延 ---
     lat = r.get("latency") or {}
     if lat.get("idle_avg_ms") is not None:
@@ -960,7 +1444,7 @@ def analyze(r):
     nq = r.get("networkquality") or {}
     bb = r.get("bufferbloat") or {}
     rpm = nq.get("responsiveness_rpm") or bb.get("approx_rpm")
-    if rpm is not None:
+    if rpm:
         g, label = grade_rpm(rpm)
         src = "networkQuality" if nq.get("responsiveness_rpm") else "自前計測（近似）"
         lvl = "ok" if g in ("A", "B") else ("warn" if g == "C" else "critical")
@@ -973,15 +1457,18 @@ def analyze(r):
     if inc is not None:
         g, label = grade_bloat(inc)
         lvl = "ok" if g in ("A", "B") else ("warn" if g == "C" else "critical")
-        add(lvl, f"負荷時の遅延増加: +{inc} ms（評価 {g}）",
+        add(lvl, f"負荷時の遅延増加: {inc:+.1f} ms（評価 {g}）",
             f"{label}。アイドル {lat.get('idle_avg_ms')} ms → 負荷時 {bb.get('loaded_avg_ms')} ms。")
 
     # --- 計測そのものが成立したか ---
     if not (r.get("latency") or {}).get("targets"):
         add("warn", "遅延を測定できませんでした",
-            "ping がまったく応答を得られませんでした。ICMP を遮断するネットワーク、"
-            "または VPN 配下で実行している可能性があります。",
+            "ICMP・DNS・TCP のどの手段でも往復時間を測定できませんでした。"
+            "外向き通信を強く制限されたネットワークか、VPN 配下の可能性があります。",
             "VPN を切って、自宅の Wi-Fi に直接つないだ状態で再実行してください。")
+    elif (r.get("latency") or {}).get("method") == "tcp":
+        add("info", "遅延は TCP 接続時間で近似しています",
+            "ICMP と DNS が使えないため精度は落ちます。傾向の把握には十分です。")
     if bb.get("error"):
         add("warn", "負荷試験が成立しませんでした", bb["error"],
             "この結果のバッファブロート値は無視してください。ネットワークを変えて再実行が必要です。")
@@ -1046,21 +1533,34 @@ def print_report(r):
 
     hops = (r.get("traceroute") or {}).get("v4") or []
     if hops:
-        print("\n   経路 (IPv4, 先頭 5 ホップ):")
+        via = "（純 Python 実装）" if (r.get("traceroute") or {}).get("v4_source") else ""
+        print(f"\n   経路 (IPv4, 先頭 5 ホップ){via}:")
         for h in hops[:5]:
             name = h.get("host") or h.get("ip") or "*"
             print(f"     {h['hop']:>2}. {name:<44} {fmt(h.get('rtt_ms'),' ms')}")
 
     print("\n■ 遅延")
+    if lat.get("method") and lat["method"] != "icmp":
+        print(f"   （ICMP ping が使えない環境のため {METHOD_LABEL[lat['method']]} で計測）")
     if not lat.get("targets"):
-        print("   ping で応答が得られませんでした（ICMP がブロックされている環境の可能性）")
+        print("   どの手段でも遅延を測定できませんでした")
     for t in lat.get("targets", []):
         print(f"   {t['role']:<12} {t['target']:<24} "
               f"avg {fmt(t['avg_ms'],' ms')}  p95 {fmt(t['p95_ms'],' ms')}  "
               f"jitter {fmt(t['jitter_ms'],' ms')}  loss {fmt(t['loss_percent'],'%')}")
 
     dns = r.get("dns") or {}
-    print(f"\n■ DNS         : 平均 {fmt(dns.get('mean_ms'),' ms')}   最大 {fmt(dns.get('max_ms'),' ms')}")
+    print(f"\n■ DNS（システム経由の名前解決）: 初回平均 {fmt(dns.get('mean_ms'),' ms')}"
+          f"   最大 {fmt(dns.get('max_ms'),' ms')}"
+          f"   キャッシュ後 {fmt(dns.get('warm_mean_ms'),' ms')}")
+    rb = r.get("resolver_bench") or {}
+    if rb.get("resolvers"):
+        print("\n■ リゾルバ比較（RTT と、実在ドメインの解決時間）")
+        for row in rb["resolvers"]:
+            mark = "  ← 現在の設定" if row.get("system") else ""
+            print("   " + pad(row["label"], 12) + pad(row["ip"], 12)
+                  + f" RTT {pad(fmt(row['avg_ms'],' ms'), 9, '>')}"
+                  + f"  解決 {pad(fmt(row.get('resolve_ms'),' ms'), 9, '>')}" + mark)
 
     print("\n■ スループット")
     dl = tp.get("download") or {}
@@ -1069,7 +1569,8 @@ def print_report(r):
           f"{'   ← ' + dl['error'] if dl.get('error') else ''}")
     print(f"   上り（単独） : {fmt(ul.get('mbps'),' Mbps')}"
           f"{'   ← ' + ul['error'] if ul.get('error') else ''}")
-    print(f"   下り（負荷時）: {fmt(bb.get('loaded_download_mbps'),' Mbps')}")
+    ep_note = f"   （接続先: {dl.get('endpoint')}）" if dl.get("endpoint") else ""
+    print(f"   下り（負荷時）: {fmt(bb.get('loaded_download_mbps'),' Mbps')}{ep_note}")
 
     print("\n■ バッファブロート（ここが体感を決めます）")
     print(f"   アイドル遅延  : {fmt(lat.get('idle_avg_ms'),' ms')}")
@@ -1077,7 +1578,7 @@ def print_report(r):
           f"p95 {fmt(bb.get('loaded_p95_ms'),' ms')}  max {fmt(bb.get('loaded_max_ms'),' ms')}")
     if bb.get("latency_increase_ms") is not None:
         g, lab = grade_bloat(bb["latency_increase_ms"])
-        print(f"   遅延の増加    : +{fmt(bb['latency_increase_ms'],' ms')}   評価 {g}（{lab}）")
+        print(f"   遅延の増加    : {bb['latency_increase_ms']:+.1f} ms   評価 {g}（{lab}）")
     rpm = nq.get("responsiveness_rpm") or bb.get("approx_rpm")
     if rpm:
         g, lab = grade_rpm(rpm)
@@ -1129,25 +1630,24 @@ def _rpm_of(d):
 
 
 def _delta_text(va, vb, direction):
-    """「高いほど良い」「低いほど良い」を取り違えないよう、向きに応じて表記を変える。"""
+    """「高いほど良い」「低いほど良い」を取り違えないよう、向きに応じて表記を変える。
+    比率は両方が正のときだけ意味を持つ。dBm のような負値は差分で表す。"""
     if not (isinstance(va, (int, float)) and isinstance(vb, (int, float))):
         return ""
     if va == vb:
         return "変化なし"
-    if direction == "higher":
-        if va == 0:
-            return f"✅ {vb:+.1f}"
-        ratio = vb / va
-        mark = "✅" if ratio > 1 else "⚠️"
-        return f"{mark} {ratio:.1f}倍"
-    # 低いほど良い指標: 減った量と「何分の一になったか」で示す
     diff = vb - va
-    mark = "✅" if diff < 0 else "⚠️"
-    if vb > 0 and va > 0:
-        if diff < 0:
+    improved = (diff > 0) if direction == "higher" else (diff < 0)
+    mark = "✅" if improved else "⚠️"
+    if va <= 0 or vb <= 0:
+        return f"{mark} {diff:+.1f}"
+    if direction == "higher":
+        return f"{mark} {vb / va:.1f}倍"
+    if diff < 0:
+        if va / vb >= 1.95:
             return f"{mark} {diff:+.1f}  (1/{va / vb:.0f})"
-        return f"{mark} {diff:+.1f}  ({vb / va:.1f}倍に悪化)"
-    return f"{mark} {diff:+.1f}"
+        return f"{mark} {diff:+.1f}  ({(1 - vb / va) * 100:.0f}% 減)"
+    return f"{mark} {diff:+.1f}  ({vb / va:.1f}倍に悪化)"
 
 
 def compare(path_a, path_b):
@@ -1246,15 +1746,19 @@ def main():
     r["wan"] = collect_wan(prog)
     r["traceroute"] = collect_traceroute(prog)
     r["dns"] = collect_dns(prog)
+    r["resolver_bench"] = collect_resolver_bench(prog)
     r["latency"] = collect_idle_latency(prog, gateway=r["local"].get("gateway_v4"))
 
     r["throughput"] = {}
     if not args.no_load:
         r["throughput"]["download"] = measure_download(prog, duration=dur_dl, streams=args.streams)
+        time.sleep(1.5)                     # 下りの残留トラフィックが上り測定を汚さないように
         r["throughput"]["upload"] = measure_upload(prog, payload_mb=4 if args.quick else 8)
         time.sleep(1.0)
         r["bufferbloat"] = measure_bufferbloat(
-            prog, r["latency"].get("idle_avg_ms"), duration=dur_bb, streams=args.streams)
+            prog,
+            r["latency"].get("idle_ref_avg_ms") or r["latency"].get("idle_avg_ms"),
+            duration=dur_bb, streams=args.streams)
         if not args.no_networkquality:
             nq = measure_networkquality(prog)
             if nq:
