@@ -365,7 +365,9 @@ def _wifi_windows():
     out = run(["netsh", "wlan", "show", "interfaces"], timeout=15)
     if not out or "SSID" not in out:
         return {"source": None, "error": "Wi-Fi 情報を取得できませんでした（有線接続の可能性）"}
-    pct = _int(_search(r"Signal\s*:\s*(\d+)%", out))
+    # netsh の項目名は OS の表示言語で変わる（SSID / BSSID だけは共通）。
+    # 日本語 Windows では「シグナル」「チャネル」「受信速度 (Mbps)」「無線の種類」。
+    pct = _int(_search(r"(?:Signal|シグナル)\s*:\s*(\d+)\s*%", out))
     return {
         "source": "netsh",
         "ssid": _search(r"^\s*SSID\s*:\s*(.+)$", out, flags=re.M),
@@ -376,9 +378,10 @@ def _wifi_windows():
         "rssi_estimated": True,
         "noise_dbm": None,
         "snr_db": None,
-        "channel": _search(r"Channel\s*:\s*(\d+)", out),
-        "tx_rate_mbps": _float(_search(r"Receive rate \(Mbps\)\s*:\s*([\d.]+)", out)),
-        "phy_mode": _search(r"Radio type\s*:\s*(\S+)", out),
+        "channel": _search(r"(?:Channel|チャネル|チャンネル)\s*:\s*(\d+)", out),
+        "tx_rate_mbps": _float(_search(
+            r"(?:Receive rate \(Mbps\)|受信速度\s*\(Mbps\))\s*:\s*([\d.]+)", out)),
+        "phy_mode": _search(r"(?:Radio type|無線の種類)\s*:\s*(\S+)", out),
     }
 
 
@@ -474,6 +477,90 @@ def collect_local():
 
 
 # --------------------------------------------------------------------------
+# 3b. IPv6 到達性の直接検査
+#     外部 API に頼ると、その API 自体に到達できないだけで「IPv6 が壊れている」と
+#     誤診断してしまう。既知の IPv6 アドレスへ直接 UDP / TCP して確かめる。
+# --------------------------------------------------------------------------
+
+V6_DNS_PROBES = [
+    ("Google DNS", "2001:4860:4860::8888"),
+    ("Cloudflare DNS", "2606:4700:4700::1111"),
+]
+DUAL_STACK_TCP_HOST = "www.google.com"
+
+
+def _dns_rtt_v6(server, count=3, timeout=2.0):
+    """IPv6 で DNS クエリを投げて往復時間を測る。"""
+    times = []
+    try:
+        s = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+    except OSError:
+        return None                     # カーネルが IPv6 を持っていない
+    s.settimeout(timeout)
+    try:
+        for i in range(count):
+            pkt = _dns_query_packet(f"v6probe{i}-{random.randrange(16 ** 6):06x}.wifi-diag.invalid")
+            t0 = time.perf_counter()
+            try:
+                s.sendto(pkt, (server, 53))
+                s.recvfrom(512)
+                times.append((time.perf_counter() - t0) * 1000)
+            except OSError:
+                pass
+    finally:
+        s.close()
+    return round(statistics.mean(times), 1) if times else None
+
+
+def _tcp_connect_ms(host, family, port=443, timeout=5.0):
+    """指定した family で TCP 接続にかかる時間を測る。届かなければ None。"""
+    try:
+        infos = socket.getaddrinfo(host, port, family, socket.SOCK_STREAM)
+    except OSError:
+        return None
+    for af, socktype, proto, _c, sa in infos:
+        s = None
+        try:
+            s = socket.socket(af, socktype, proto)
+            s.settimeout(timeout)
+            t0 = time.perf_counter()
+            s.connect(sa)
+            return round((time.perf_counter() - t0) * 1000, 1)
+        except OSError:
+            continue
+        finally:
+            if s is not None:
+                s.close()
+    return None
+
+
+def collect_ipv6_health(prog, has_global_v6):
+    """IPv6 が「アドレスだけ付いて実際は通らない」状態を検出する。
+    この状態は、デュアルスタックのサイトに繋ぐたび IPv6 を先に試して
+    タイムアウトを待つため、全体の体感を確実に悪くする。"""
+    prog.step("IPv6 の到達性を直接検査中")
+    res = {"has_global_address": bool(has_global_v6), "dns_probes": []}
+    reachable = False
+    for label, addr in V6_DNS_PROBES:
+        ms = _dns_rtt_v6(addr)
+        res["dns_probes"].append({"label": label, "address": addr, "rtt_ms": ms})
+        if ms is not None:
+            reachable = True
+    res["dns_reachable"] = reachable
+
+    # デュアルスタックのホストに v4 / v6 それぞれで繋いで所要時間を比べる。
+    # v6 だけ極端に遅い／繋がらないなら、日常の通信が毎回待たされている。
+    v6_ms = _tcp_connect_ms(DUAL_STACK_TCP_HOST, socket.AF_INET6)
+    v4_ms = _tcp_connect_ms(DUAL_STACK_TCP_HOST, socket.AF_INET)
+    res["dual_stack_host"] = DUAL_STACK_TCP_HOST
+    res["tcp_v6_ms"] = v6_ms
+    res["tcp_v4_ms"] = v4_ms
+    res["tcp_v6_reachable"] = v6_ms is not None
+    res["usable"] = bool(reachable or v6_ms is not None)
+    return res
+
+
+# --------------------------------------------------------------------------
 # 4. WAN 側（外から見た自分の IP / ASN / 接続先データセンター）
 # --------------------------------------------------------------------------
 
@@ -483,9 +570,11 @@ def collect_wan(prog):
         prog.step(f"外部から見た自分の姿を確認中 (IPv{key[1]})")
         try:
             meta = http_json(CF_HOST, CF_META, family=family, timeout=10)
+            if meta is None:
+                out[key + "_error"] = "確認サーバから応答が得られませんでした"
         except OSError as e:
             meta = None
-            out[key + "_error"] = str(e)
+            out[key + "_error"] = str(e) or e.__class__.__name__
         if meta:
             out[key] = {
                 "ip": meta.get("clientIp"),
@@ -694,7 +783,8 @@ def _series_stats(times, sent, target, method):
         "target": target,
         "method": method,
         "samples": len(times),
-        "loss_percent": round(100.0 * (sent - len(times)) / sent, 1) if sent else 0.0,
+        "loss_percent": round(min(100.0, max(0.0, 100.0 * (sent - len(times)) / sent)), 1)
+                        if sent else 0.0,
         "min_ms": round(min(times), 1),
         "avg_ms": round(statistics.mean(times), 1),
         "p95_ms": round(sorted(times)[min(len(times) - 1, math.ceil(0.95 * len(times)) - 1)], 1),
@@ -885,6 +975,28 @@ def collect_resolver_bench(prog):
 # 7c. ping（ICMP、使える環境でのみ）
 # --------------------------------------------------------------------------
 
+def _parse_ping_times(out):
+    """ping の出力から応答時間だけを取り出す。
+
+    ロケール非依存にするため「time=」ではなく「= 数字 ms」で拾うが、それだけだと
+    Windows の統計行（Minimum = 11ms, Maximum = 12ms, Average = 11ms /
+    最小 = 1ms、最大 = 4ms、平均 = 2ms）まで応答として数えてしまい、
+    受信数が送信数を超えて損失率がマイナスになる。応答行だけを対象にする。"""
+    if not out:
+        return []
+    lines = out.splitlines()
+    # 応答行には TTL がある（英語 "TTL=57" / 日本語 "TTL=64" / Linux "ttl=57"）
+    reply_lines = [ln for ln in lines if re.search(r"(?i)\bttl\s*[=:]", ln)]
+    if not reply_lines:
+        # TTL を出さない ping 実装向けの保険。統計行だけを除外する
+        summary = re.compile(
+            r"(?i)min|max|avg|average|rtt|round.?trip|statistics|"
+            r"最小|最大|平均|統計|概算|packets|パケット")
+        reply_lines = [ln for ln in lines if ln.strip() and not summary.search(ln)]
+    pat = re.compile(r"[=<]\s*([\d.]+)\s*(?:ms|ミリ秒)")
+    return [float(x) for ln in reply_lines for x in pat.findall(ln)]
+
+
 def _ping(host, count=10, interval=0.25, v6=False, timeout=None):
     # Windows の ping に送信間隔オプションはなく固定 1 秒。タイムアウトは実効所要時間から求める
     eff_interval = 1.0 if IS_WIN else interval
@@ -904,8 +1016,7 @@ def _ping(host, count=10, interval=0.25, v6=False, timeout=None):
     out = run(cmd, timeout=timeout)
     if not out:
         return None
-    # ロケール非依存: 「time=12.3 ms」「時間 =4ms」「Zeit=3ms」いずれも拾う
-    times = [float(x) for x in re.findall(r"[=<]\s*([\d.]+)\s*ms", out)]
+    times = _parse_ping_times(out)
     if not times:
         return None
     return _series_stats(times, count, host, "icmp")
@@ -1055,6 +1166,40 @@ def measure_download(prog, duration=8.0, streams=4):
             "seconds": round(elapsed, 1), "endpoint": ep["name"]}
 
 
+def _upload_stream(stop_event, counter, lock, chunk_mb=8, timeout=30, errors=None):
+    """回線の上り方向を埋め続ける。下りと同じく stop_event まで繰り返す。"""
+    payload = b"\x00" * (chunk_mb * 1024 * 1024)
+    while not stop_event.is_set():
+        conn = None
+        try:
+            conn = FamilyHTTPSConnection(CF_HOST, timeout=timeout)
+            conn.connect()
+            conn.request("POST", CF_UP, body=payload,
+                         headers={"User-Agent": "wifi_diag/1.0",
+                                  "Content-Type": "application/octet-stream",
+                                  "Content-Length": str(len(payload))})
+            resp = conn.getresponse()
+            resp.read()
+            if resp.status // 100 != 2:
+                if errors is not None:
+                    with lock:
+                        errors.append(f"HTTP {resp.status} {resp.reason}")
+                return
+            with lock:
+                counter[0] += len(payload)
+        except (OSError, http.client.HTTPException) as e:
+            if errors is not None:
+                with lock:
+                    errors.append(str(e) or e.__class__.__name__)
+            return
+        finally:
+            if conn is not None:
+                try:
+                    conn.close()
+                except (OSError, http.client.HTTPException):
+                    pass
+
+
 def measure_upload(prog, payload_mb=8):
     prog.step(f"上り速度を測定中（{payload_mb} MB）")
     payload = b"\x00" * (payload_mb * 1024 * 1024)
@@ -1181,25 +1326,41 @@ def _round(v, div, nd=1):
         return None
 
 
-def measure_bufferbloat(prog, idle_avg_ms, duration=10.0, streams=4):
-    """自前のバッファブロート計測。回線を飽和させながら遅延と往復回数を測る。"""
-    prog.step(f"負荷をかけながらの遅延を測定中（{duration:.0f} 秒）— ここが本命です")
+def measure_bufferbloat(prog, idle_avg_ms, duration=10.0, streams=4, direction="down"):
+    """自前のバッファブロート計測。回線を飽和させながら遅延と往復回数を測る。
+
+    direction="up" では上り方向を埋める。詰まりは上下で別々に起きるので、
+    下りだけ測って「問題なし」と判定すると、アップロード中に会議の音声が
+    途切れるタイプのバッファブロートを丸ごと見落とす。"""
+    label = "下り" if direction == "down" else "上り"
+    prog.step(f"{label}に負荷をかけながらの遅延を測定中（{duration:.0f} 秒）")
     counter = [0]
     dl_lock = threading.Lock()
     stop = threading.Event()
     rt_results = []
     rt_lock = threading.Lock()
 
-    ep = pick_download_endpoint()
-    if not ep:
-        return {"error": "利用可能なダウンロード先がなく、負荷をかけられませんでした。"}
     load_errors = []
-    loaders = [
-        threading.Thread(target=_download_stream,
-                         args=(stop, ep, counter, dl_lock, 30, load_errors),
-                         daemon=True)
-        for _ in range(streams)
-    ]
+    if direction == "down":
+        ep = pick_download_endpoint()
+        if not ep:
+            return {"direction": direction,
+                    "error": "利用可能なダウンロード先がなく、負荷をかけられませんでした。"}
+        ep_name = ep["name"]
+        loaders = [
+            threading.Thread(target=_download_stream,
+                             args=(stop, ep, counter, dl_lock, 30, load_errors),
+                             daemon=True)
+            for _ in range(streams)
+        ]
+    else:
+        ep_name = "cloudflare-up"
+        loaders = [
+            threading.Thread(target=_upload_stream,
+                             args=(stop, counter, dl_lock, 8, 30, load_errors),
+                             daemon=True)
+            for _ in range(streams)
+        ]
     for t in loaders:
         t.start()
     rt_thread = threading.Thread(target=_http_round_trips, args=(stop, rt_results, rt_lock), daemon=True)
@@ -1230,16 +1391,21 @@ def measure_bufferbloat(prog, idle_avg_ms, duration=10.0, streams=4):
         t.join(timeout=2)
     rt_thread.join(timeout=3)
 
+    throughput = round(got * 8 / load_elapsed / 1e6, 1) if got > 0 and load_elapsed > 0 else None
     res = {
-        "loaded_download_mbps": round(got * 8 / load_elapsed / 1e6, 1)
-                                if got > 0 and load_elapsed > 0 else None,
+        "direction": direction,
+        "loaded_throughput_mbps": throughput,
         "seconds": round(load_elapsed, 1),
-        "endpoint": ep["name"],
+        "endpoint": ep_name,
         "latency_method": detect_latency_method(),
     }
+    if direction == "down":
+        res["loaded_download_mbps"] = throughput      # 既存の JSON と互換を保つ
+    else:
+        res["loaded_upload_mbps"] = throughput
     if got <= 0:
         res["error"] = ("回線に負荷をかけられませんでした: "
-                        + (load_errors[0] if load_errors else "ダウンロードが確立できません")
+                        + (load_errors[0] if load_errors else "転送が確立できません")
                         + "。この状態の負荷時遅延は参考値になりません。")
     if loaded_ping:
         res["loaded_ping"] = loaded_ping
@@ -1260,6 +1426,14 @@ def measure_bufferbloat(prog, idle_avg_ms, duration=10.0, streams=4):
 # --------------------------------------------------------------------------
 # 判定ロジック
 # --------------------------------------------------------------------------
+
+def _worst_bloat(r):
+    """上り・下りの遅延増加のうち悪い方を返す。体感は悪い方に引きずられる。"""
+    vals = [(r.get(k) or {}).get("latency_increase_ms")
+            for k in ("bufferbloat", "bufferbloat_up")]
+    vals = [v for v in vals if v is not None]
+    return max(vals) if vals else None
+
 
 def grade_rpm(rpm):
     if rpm is None:
@@ -1301,15 +1475,42 @@ def analyze(r):
     local = r.get("local") or {}
     v4 = wan.get("v4") or {}
     v6 = wan.get("v6")
-    if local.get("has_global_ipv6") and not v6:
-        add("warn", "IPv6 アドレスはあるのに外部に到達できません",
-            "端末にグローバル IPv6 が付いていますが、IPv6 での外部通信が失敗します。"
-            "ISP 側の IPv6 障害、ルーターのファイアウォール、または設定の中途半端な"
-            "IPv6 有効化が疑われます。この状態は「IPv6 対応サイトへの接続が"
-            "タイムアウトまで待たされてから IPv4 に落ちる」遅さの原因になります。",
-            "ルーターの IPv6 設定を確認し、直らなければ一時的に端末の IPv6 を無効化すると"
-            "体感が改善することがあります。")
-    elif not local.get("has_global_ipv6") and not v6:
+    v6h = r.get("ipv6_health") or {}
+    has_v6_addr = local.get("has_global_ipv6")
+    # 到達性は「外部 API に映ったか」ではなく直接検査を優先する。
+    # API 自体に届かないだけで IPv6 障害と誤診断しないため。
+    if v6h:
+        v6_works = v6h.get("usable")
+    else:
+        v6_works = bool(v6)
+
+    if has_v6_addr and v6_works is False:
+        detail = ("端末にグローバル IPv6 が付いていますが、既知の IPv6 アドレスへの"
+                  "直接通信（DNS・TCP とも）が失敗しました。ISP 側の IPv6 障害、"
+                  "ルーターのファイアウォール、または中途半端な IPv6 有効化が疑われます。")
+        if v6h.get("tcp_v4_ms") is not None:
+            detail += (f"\n   参考: {v6h.get('dual_stack_host')} への接続は "
+                       f"IPv4 だと {v6h['tcp_v4_ms']} ms で成功、IPv6 では失敗しました。")
+        detail += ("\n   この状態はデュアルスタック（IPv4/IPv6 両対応）のサイトに繋ぐたび、"
+                   "先に IPv6 を試して失敗するのを待ってから IPv4 に落ちるため、"
+                   "ページを開くたびの初動が確実に遅くなります。")
+        add("critical", "IPv6 アドレスはあるのに通信できていません（体感を悪くします）",
+            detail,
+            "ルーターの IPv6 設定を確認してください。すぐ直せない場合、"
+            "端末側で IPv6 を一時的に無効化すると初動が改善します"
+            "（Windows: アダプターのプロパティ →「インターネット プロトコル バージョン 6」のチェックを外す）。")
+    elif has_v6_addr and v6_works:
+        note = ""
+        if v6h.get("tcp_v6_ms") is not None and v6h.get("tcp_v4_ms") is not None:
+            note = (f" {v6h['dual_stack_host']} への接続は IPv6 {v6h['tcp_v6_ms']} ms / "
+                    f"IPv4 {v6h['tcp_v4_ms']} ms。")
+        add("ok", "IPv6 は正常に動作しています",
+            f"グローバル IPv6 アドレスがあり、実際に IPv6 で通信できています。{note}"
+            "IPoE 経路に乗っている可能性が高い構成です。")
+    elif has_v6_addr and v6_works is None:
+        add("info", "IPv6 の到達性を判定できませんでした",
+            "グローバル IPv6 アドレスは付いています。")
+    elif not has_v6_addr and not v6:
         add("critical", "IPv6 が使えていません",
             "グローバル IPv6 アドレスが端末に付いておらず、IPv6 での外部到達もできません。"
             "国内主要 ISP の速度・遅延の改善はほぼ IPv6 IPoE 経由なので、"
@@ -1321,9 +1522,16 @@ def analyze(r):
             "外部への IPv6 到達はあるのに端末にグローバル IPv6 が付いていません。"
             "ルーターの RA/DHCPv6 配布設定か、二重ルーターが疑わしいです。",
             "ルーターの IPv6 パススルー / RA 設定を確認してください。")
-    else:
+    elif v6:
         add("ok", "IPv6 が有効です",
-            f"IPv6 で外部に到達できています（{(v6 or {}).get('ip', '—')}）。IPoE 経路に乗っている可能性が高いです。")
+            f"IPv6 で外部に到達できています（{(v6 or {}).get('ip', '—')}）。"
+            "IPoE 経路に乗っている可能性が高いです。")
+
+    if wan.get("v4") is None and wan.get("v6") is None:
+        add("info", "外部の確認サーバに到達できませんでした",
+            "接続元 IP や経由 ASN を取得できなかったため、回線種別の推定は行えていません"
+            f"（理由: {wan.get('v4_error', '不明')}）。"
+            "他の測定結果には影響しません。")
 
     # --- 経路と ASN ---
     if v4.get("as_org"):
@@ -1453,12 +1661,31 @@ def analyze(r):
             None if lvl == "ok" else
             "これは「速度の天井」ではなく「詰まり」の問題です。まず IPv6 IPoE 化、"
             "次にルーターの SQM / スマートキュー（fq_codel, cake）有効化が効きます。")
-    inc = bb.get("latency_increase_ms")
-    if inc is not None:
+    bbu = r.get("bufferbloat_up") or {}
+    for node, name, hint in (
+            (bb, "下り", "大きなファイルのダウンロードや動画視聴の最中に、"
+                         "他の操作がもたつく形で出ます。"),
+            (bbu, "上り", "クラウド同期・写真のバックアップ・動画のアップロード中に、"
+                          "ビデオ会議の音声が途切れる形で出ます。"
+                          "上り帯域は下りより細いことが多く、こちらの方が詰まりやすいです。")):
+        inc = node.get("latency_increase_ms")
+        if inc is None:
+            continue
         g, label = grade_bloat(inc)
         lvl = "ok" if g in ("A", "B") else ("warn" if g == "C" else "critical")
-        add(lvl, f"負荷時の遅延増加: {inc:+.1f} ms（評価 {g}）",
-            f"{label}。アイドル {lat.get('idle_avg_ms')} ms → 負荷時 {bb.get('loaded_avg_ms')} ms。")
+        add(lvl, f"{name}負荷時の遅延増加: {inc:+.1f} ms（評価 {g}）",
+            f"{label}。アイドル {lat.get('idle_avg_ms')} ms → "
+            f"{name}負荷時 {node.get('loaded_avg_ms')} ms。"
+            + (f"\n   {hint}" if lvl != "ok" else ""))
+
+    worst = _worst_bloat(r)
+    if worst is not None and worst >= 100:
+        add("warn", "ルーターのキュー管理（SQM）で改善できる可能性があります",
+            "遅延の増加は回線速度の上限ではなく、機器のバッファにパケットが"
+            "溜まることで起きています。速度を少し犠牲にして遅延を抑える設定が有効です。",
+            "ルーターの管理画面で「QoS」「スマートキュー」「帯域制御」を探し、"
+            "上り・下りの上限を実測値の 85〜90% に設定してください。"
+            "OpenWrt が使える機種なら SQM (cake / fq_codel) が最も効果的です。")
 
     # --- 計測そのものが成立したか ---
     if not (r.get("latency") or {}).get("targets"):
@@ -1528,8 +1755,20 @@ def print_report(r):
     v4 = wan.get("v4") or {}
     v6 = wan.get("v6") or {}
     print(f"   WAN v4        : {fmt(v4.get('ip'))}  {fmt(v4.get('as_org'))}")
-    print((f"   WAN v6        : {fmt(v6.get('ip')) if v6 else 'IPv6 で外部到達できません'}"
+    print((f"   WAN v6        : {fmt(v6.get('ip')) if v6 else '確認サーバに到達できず'}"
            f"  {fmt(v6.get('as_org')) if v6 else ''}").rstrip())
+    v6h = r.get("ipv6_health") or {}
+    if v6h:
+        if v6h.get("usable"):
+            state = "正常に通信できています"
+        elif v6h.get("has_global_address"):
+            state = "アドレスはあるが通信できません ← 要対処"
+        else:
+            state = "未使用"
+        print(f"   IPv6 到達性   : {state}")
+        if v6h.get("tcp_v6_ms") is not None or v6h.get("tcp_v4_ms") is not None:
+            print(f"     {v6h.get('dual_stack_host')} への接続: "
+                  f"IPv6 {fmt(v6h.get('tcp_v6_ms'),' ms')} / IPv4 {fmt(v6h.get('tcp_v4_ms'),' ms')}")
 
     hops = (r.get("traceroute") or {}).get("v4") or []
     if hops:
@@ -1572,18 +1811,30 @@ def print_report(r):
     ep_note = f"   （接続先: {dl.get('endpoint')}）" if dl.get("endpoint") else ""
     print(f"   下り（負荷時）: {fmt(bb.get('loaded_download_mbps'),' Mbps')}{ep_note}")
 
+    bbu = r.get("bufferbloat_up") or {}
     print("\n■ バッファブロート（ここが体感を決めます）")
     print(f"   アイドル遅延  : {fmt(lat.get('idle_avg_ms'),' ms')}")
-    print(f"   負荷時 遅延   : avg {fmt(bb.get('loaded_avg_ms'),' ms')}  "
-          f"p95 {fmt(bb.get('loaded_p95_ms'),' ms')}  max {fmt(bb.get('loaded_max_ms'),' ms')}")
-    if bb.get("latency_increase_ms") is not None:
-        g, lab = grade_bloat(bb["latency_increase_ms"])
-        print(f"   遅延の増加    : {bb['latency_increase_ms']:+.1f} ms   評価 {g}（{lab}）")
+    for node, name in ((bb, "下り負荷時"), (bbu, "上り負荷時")):
+        if not node or node.get("loaded_avg_ms") is None:
+            if node.get("error"):
+                print(f"   {name}    : 測定できず（{node['error']}）")
+            continue
+        line = (f"   {name}    : avg {fmt(node.get('loaded_avg_ms'),' ms')}  "
+                f"p95 {fmt(node.get('loaded_p95_ms'),' ms')}  "
+                f"max {fmt(node.get('loaded_max_ms'),' ms')}")
+        if node.get("latency_increase_ms") is not None:
+            g, lab = grade_bloat(node["latency_increase_ms"])
+            line += f"   増加 {node['latency_increase_ms']:+.1f} ms → {g}"
+        print(line)
+    worst = _worst_bloat(r)
+    if worst is not None:
+        g, lab = grade_bloat(worst)
+        print(f"   総合評価      : {g}（{lab}）  ※上り・下りの悪い方で判定")
     rpm = nq.get("responsiveness_rpm") or bb.get("approx_rpm")
     if rpm:
         g, lab = grade_rpm(rpm)
-        src = "networkQuality" if nq.get("responsiveness_rpm") else "近似"
-        print(f"   応答性 RPM    : {rpm}（{src}）   評価 {g}（{lab}）")
+        srcname = "networkQuality" if nq.get("responsiveness_rpm") else "近似"
+        print(f"   応答性 RPM    : {rpm}（{srcname}, 下り負荷時）   評価 {g}（{lab}）")
 
     print("\n" + "=" * 68)
     print(" 所見")
@@ -1615,7 +1866,9 @@ def _get(d, path, default=None):
 COMPARE_ROWS = [
     ("負荷時の応答 (RPM)",        "rpm",                            "higher"),
     ("負荷時の遅延 (ms)",         "bufferbloat.loaded_avg_ms",      "lower"),
-    ("遅延の増加 (ms)",           "bufferbloat.latency_increase_ms", "lower"),
+    ("遅延の増加 下り (ms)",      "bufferbloat.latency_increase_ms", "lower"),
+    ("遅延の増加 上り (ms)",      "bufferbloat_up.latency_increase_ms", "lower"),
+    ("上り 負荷時 (Mbps)",        "bufferbloat_up.loaded_upload_mbps", "higher"),
     ("アイドル遅延 (ms)",         "latency.idle_avg_ms",            "lower"),
     ("下り 単独 (Mbps)",          "throughput.download.mbps",       "higher"),
     ("下り 負荷時 (Mbps)",        "bufferbloat.loaded_download_mbps", "higher"),
@@ -1743,6 +1996,7 @@ def main():
     prog.step("ローカルのアドレスとゲートウェイを確認中")
     r["local"] = collect_local()
 
+    r["ipv6_health"] = collect_ipv6_health(prog, r["local"].get("has_global_ipv6"))
     r["wan"] = collect_wan(prog)
     r["traceroute"] = collect_traceroute(prog)
     r["dns"] = collect_dns(prog)
@@ -1755,10 +2009,13 @@ def main():
         time.sleep(1.5)                     # 下りの残留トラフィックが上り測定を汚さないように
         r["throughput"]["upload"] = measure_upload(prog, payload_mb=4 if args.quick else 8)
         time.sleep(1.0)
+        idle_ref = r["latency"].get("idle_ref_avg_ms") or r["latency"].get("idle_avg_ms")
         r["bufferbloat"] = measure_bufferbloat(
-            prog,
-            r["latency"].get("idle_ref_avg_ms") or r["latency"].get("idle_avg_ms"),
-            duration=dur_bb, streams=args.streams)
+            prog, idle_ref, duration=dur_bb, streams=args.streams, direction="down")
+        time.sleep(1.5)
+        r["bufferbloat_up"] = measure_bufferbloat(
+            prog, idle_ref, duration=dur_bb, streams=max(2, args.streams // 2),
+            direction="up")
         if not args.no_networkquality:
             nq = measure_networkquality(prog)
             if nq:
