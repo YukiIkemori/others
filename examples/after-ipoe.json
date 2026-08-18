@@ -1,0 +1,169 @@
+{
+  "schema_version": 2,
+  "label": "after-ipoe",
+  "system": {
+    "timestamp": "2026-08-08T21:10:00+09:00",
+    "os": "macOS-15.3-arm64",
+    "python": "3.11.9",
+    "hostname": "example"
+  },
+  "wifi": {
+    "source": "system_profiler",
+    "ssid": "MyHome-5G",
+    "rssi_dbm": -58,
+    "noise_dbm": -92,
+    "snr_db": 34,
+    "channel": "149 (5GHz, 80MHz)",
+    "tx_rate_mbps": 866,
+    "phy_mode": "802.11ax"
+  },
+  "local": {
+    "local_ipv4": "192.168.1.23",
+    "local_ipv6": "2400:4050:1234:5600:18b2:9f3a:2c51:77de",
+    "has_global_ipv6": true,
+    "gateway_v4": "192.168.3.1",
+    "gateway_v6": null
+  },
+  "wan": {
+    "v4": {
+      "ip": "203.0.113.45",
+      "asn": 17676,
+      "as_org": "SoftBank BB Corp.",
+      "colo": "NRT",
+      "city": "Tokyo"
+    },
+    "v6": {
+      "ip": "2400:4050::1",
+      "asn": 17676,
+      "as_org": "SoftBank BB Corp.",
+      "colo": "NRT"
+    },
+    "ipv6_reachable": true
+  },
+  "traceroute": {
+    "v4": [
+      {
+        "hop": 1,
+        "host": null,
+        "ip": "192.168.3.1",
+        "rtt_ms": 1.9
+      },
+      {
+        "hop": 2,
+        "host": "softbank.jp",
+        "ip": "203.0.113.1",
+        "rtt_ms": 6.06
+      }
+    ],
+    "v6": []
+  },
+  "dns": {
+    "samples": [],
+    "mean_ms": 18.0,
+    "max_ms": 32.4,
+    "failures": []
+  },
+  "latency": {
+    "targets": [
+      {
+        "target": "1.1.1.1",
+        "role": "internet_v4",
+        "samples": 15,
+        "loss_percent": 0.0,
+        "min_ms": 8.1,
+        "avg_ms": 10.1,
+        "p95_ms": 13.13,
+        "max_ms": 16.16,
+        "jitter_ms": 2.1
+      }
+    ],
+    "idle_avg_ms": 10.1,
+    "idle_min_ms": 8.1
+  },
+  "throughput": {
+    "download": {
+      "mbps": 612.0,
+      "bytes": 1,
+      "seconds": 8.0
+    },
+    "upload": {
+      "mbps": 430.0,
+      "seconds": 5.0
+    }
+  },
+  "bufferbloat": {
+    "loaded_download_mbps": 335.9,
+    "seconds": 10.0,
+    "loaded_avg_ms": 49.0,
+    "loaded_p95_ms": 68.6,
+    "loaded_max_ms": 93.1,
+    "latency_increase_ms": 38.9,
+    "http_round_trips": 12,
+    "mean_round_trip_ms": 48.7,
+    "approx_rpm": 1231
+  },
+  "networkquality": {
+    "source": "networkQuality",
+    "dl_throughput_mbps": 612.0,
+    "ul_throughput_mbps": 430.0,
+    "dl_responsiveness_rpm": 1231,
+    "responsiveness_rpm": 1231,
+    "base_rtt_ms": 10.1
+  },
+  "findings": [
+    {
+      "level": "ok",
+      "title": "IPv6 が有効です",
+      "detail": "IPv6 で外部に到達できています（2400:4050::1）。IPoE 経路に乗っている可能性が高いです。",
+      "action": null
+    },
+    {
+      "level": "info",
+      "title": "接続先の情報",
+      "detail": "IPv4: 203.0.113.45 / SoftBank BB Corp. (AS17676) / 接続 POP: NRT",
+      "action": null
+    },
+    {
+      "level": "info",
+      "title": "ゲートウェイが 192.168.3.x です",
+      "detail": "SoftBank の光BBユニットは既定で 192.168.3.0/24 を使います。光BBユニットが直接のゲートウェイになっている可能性があります（あくまで傍証です）。",
+      "action": null
+    },
+    {
+      "level": "ok",
+      "title": "Wi-Fi の電波は良好です",
+      "detail": "RSSI -58 dBm。",
+      "action": null
+    },
+    {
+      "level": "ok",
+      "title": "Wi-Fi の S/N 比は良好です",
+      "detail": "SNR 34 dB。",
+      "action": null
+    },
+    {
+      "level": "ok",
+      "title": "DNS の応答は良好です",
+      "detail": "平均 18.0 ms。",
+      "action": null
+    },
+    {
+      "level": "ok",
+      "title": "アイドル時の遅延は良好です",
+      "detail": "平均 10.1 ms。",
+      "action": null
+    },
+    {
+      "level": "ok",
+      "title": "負荷時の応答性: 1231 RPM（評価 A）",
+      "detail": "非常に良い（負荷時もほぼ無遅延）。1 往復あたり約 49 ms 相当です。計測元: networkQuality。",
+      "action": null
+    },
+    {
+      "level": "ok",
+      "title": "負荷時の遅延増加: +38.9 ms（評価 B）",
+      "detail": "わずかなバッファブロート。アイドル 10.1 ms → 負荷時 49.0 ms。",
+      "action": null
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "schema_version": 2,
+  "label": "before-pppoe",
+  "system": {
+    "timestamp": "2026-08-01T21:10:00+09:00",
+    "os": "macOS-15.3-arm64",
+    "python": "3.11.9",
+    "hostname": "example"
+  },
+  "wifi": {
+    "source": "system_profiler",
+    "ssid": "MyHome-5G",
+    "rssi_dbm": -58,
+    "noise_dbm": -92,
+    "snr_db": 34,
+    "channel": "149 (5GHz, 80MHz)",
+    "tx_rate_mbps": 866,
+    "phy_mode": "802.11ax"
+  },
+  "local": {
+    "local_ipv4": "192.168.1.23",
+    "local_ipv6": null,
+    "has_global_ipv6": false,
+    "gateway_v4": "192.168.1.1",
+    "gateway_v6": null
+  },
+  "wan": {
+    "v4": {
+      "ip": "203.0.113.45",
+      "asn": 17676,
+      "as_org": "SoftBank BB Corp.",
+      "colo": "NRT",
+      "city": "Tokyo"
+    },
+    "v6": null,
+    "ipv6_reachable": false
+  },
+  "traceroute": {
+    "v4": [
+      {
+        "hop": 1,
+        "host": null,
+        "ip": "192.168.1.1",
+        "rtt_ms": 1.9
+      },
+      {
+        "hop": 2,
+        "host": "softbank.jp",
+        "ip": "203.0.113.1",
+        "rtt_ms": 21.9
+      }
+    ],
+    "v6": []
+  },
+  "dns": {
+    "samples": [],
+    "mean_ms": 143.0,
+    "max_ms": 257.40000000000003,
+    "failures": []
+  },
+  "latency": {
+    "targets": [
+      {
+        "target": "1.1.1.1",
+        "role": "internet_v4",
+        "samples": 15,
+        "loss_percent": 0.0,
+        "min_ms": 34.5,
+        "avg_ms": 36.5,
+        "p95_ms": 47.45,
+        "max_ms": 58.400000000000006,
+        "jitter_ms": 2.1
+      }
+    ],
+    "idle_avg_ms": 36.5,
+    "idle_min_ms": 34.5
+  },
+  "throughput": {
+    "download": {
+      "mbps": 184.0,
+      "bytes": 1,
+      "seconds": 8.0
+    },
+    "upload": {
+      "mbps": 92.0,
+      "seconds": 5.0
+    }
+  },
+  "bufferbloat": {
+    "loaded_download_mbps": 6.5,
+    "seconds": 10.0,
+    "loaded_avg_ms": 5400.0,
+    "loaded_p95_ms": 7559.999999999999,
+    "loaded_max_ms": 10260.0,
+    "latency_increase_ms": 5363.5,
+    "http_round_trips": 12,
+    "mean_round_trip_ms": 5454.5,
+    "approx_rpm": 11
+  },
+  "networkquality": {
+    "source": "networkQuality",
+    "dl_throughput_mbps": 184.0,
+    "ul_throughput_mbps": 92.0,
+    "dl_responsiveness_rpm": 11,
+    "responsiveness_rpm": 11,
+    "base_rtt_ms": 36.5
+  },
+  "findings": [
+    {
+      "level": "critical",
+      "title": "IPv6 が使えていません",
+      "detail": "グローバル IPv6 アドレスが端末に付いておらず、IPv6 での外部到達もできません。国内主要 ISP の速度・遅延の改善はほぼ IPv6 IPoE 経由なので、この状態だと古い PPPoE 方式のまま（＝プロバイダの網終端装置がボトルネック）である可能性が高いです。",
+      "action": "契約中の ISP の IPoE（IPv4 over IPv6）に対応した機器・オプションを確認してください。SoftBank 光の場合は光BBユニットが認証を担うため、市販ルーター単体では IPoE 化できません。"
+    },
+    {
+      "level": "info",
+      "title": "接続先の情報",
+      "detail": "IPv4: 203.0.113.45 / SoftBank BB Corp. (AS17676) / 接続 POP: NRT",
+      "action": null
+    },
+    {
+      "level": "ok",
+      "title": "Wi-Fi の電波は良好です",
+      "detail": "RSSI -58 dBm。",
+      "action": null
+    },
+    {
+      "level": "ok",
+      "title": "Wi-Fi の S/N 比は良好です",
+      "detail": "SNR 34 dB。",
+      "action": null
+    },
+    {
+      "level": "warn",
+      "title": "DNS の応答が遅いです",
+      "detail": "平均 143.0 ms。ページを開いた瞬間の反応が鈍く感じる原因になります。",
+      "action": "ルーターの DNS を 1.1.1.1 / 8.8.8.8 などに変更して再測定してみてください。"
+    },
+    {
+      "level": "warn",
+      "title": "アイドル時の遅延が大きいです",
+      "detail": "平均 36.5 ms。国内の光回線としては明確に高い値です（良好な IPoE 接続なら 5〜15 ms）。",
+      "action": "PPPoE の網終端装置での混雑、または経路の問題が疑われます。時間帯を変えて再測定し、夜だけ悪化するなら混雑が原因です。"
+    },
+    {
+      "level": "critical",
+      "title": "負荷時の応答性: 11 RPM（評価 F）",
+      "detail": "非常に悪い（典型的なバッファブロート）。1 往復あたり約 5455 ms 相当です。計測元: networkQuality。",
+      "action": "これは「速度の天井」ではなく「詰まり」の問題です。まず IPv6 IPoE 化、次にルーターの SQM / スマートキュー（fq_codel, cake）有効化が効きます。"
+    },
+    {
+      "level": "critical",
+      "title": "負荷時の遅延増加: +5363.5 ms（評価 F）",
+      "detail": "極めて重度（通信中はほぼ操作不能）。アイドル 36.5 ms → 負荷時 5400.0 ms。",
+      "action": null
+    },
+    {
+      "level": "info",
+      "title": "負荷時にスループットが落ち込みます",
+      "detail": "単独測定 184.0 Mbps に対し、遅延測定と同時では 6.5 Mbps。キューが詰まって実効帯域が出ていない状態です。",
+      "action": null
+    }
+  ]
+}
