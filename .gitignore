@@ -1,3 +1,6 @@
 results/
 __pycache__/
 *.pyc
+
+# フォームの連投よけの記録（テスト時に出る。サーバーでは一時領域に作られる）
+shiomi/shiomi-form-log/
