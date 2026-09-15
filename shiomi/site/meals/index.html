@@ -8,47 +8,14 @@
 <link rel="canonical" href="https://shiomihouse.com/meals/">
 <meta name="theme-color" content="#fbfaf7">
 <link rel="stylesheet" href="../style.css">
-<script type="application/ld+json">
-{
- "@context": "https://schema.org",
- "@type": "BreadcrumbList",
- "itemListElement": [
-  {
-   "@type": "ListItem",
-   "position": 1,
-   "name": "ホーム",
-   "item": "https://shiomihouse.com/"
-  },
-  {
-   "@type": "ListItem",
-   "position": 2,
-   "name": "食事",
-   "item": "https://shiomihouse.com/meals/"
-  }
- ]
-}
-</script>
-<link rel="icon" href="/favicon.ico" sizes="48x48">
-<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-<link rel="manifest" href="/site.webmanifest">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="古民家ゲストハウス 汐見の家">
-<meta property="og:locale" content="ja_JP">
-<meta property="og:title" content="食事｜汐見の家">
-<meta property="og:description" content="ゲストとスタッフで作って食べて片すシェアごはん（夕飯1,600円・朝飯700円）。自炊、隣島のお店、摘み菜弁当のお取り寄せ、島の日本酒もあります。">
-<meta property="og:url" content="https://shiomihouse.com/meals/">
-<meta property="og:image" content="https://shiomihouse.com/img/ogp.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="畳の間で食卓を囲む人たちのイラスト">
-<meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 
+<a class="reserve-float" href="/reserve/">ご予約</a>
+
 <header class="site-header">
-  <div class="wrap">
-    <a class="brand" href="/"><img src="../img/logo.svg" alt="" width="111" height="132"><span class="brand-name"><span class="brand-sub">古民家ゲストハウス</span>汐見の家</span></a>
+  <div class="container site-header__inner">
+    <a class="brand" href="/"><img src="../img/logo.svg" alt="" width="111" height="132"><span class="brand__name"><span class="brand__sub">古民家ゲストハウス</span>汐見の家</span></a>
     <nav class="site-nav" aria-label="メインメニュー">
       <ul>
         <li><a href="/about/">汐見の家について</a></li>
@@ -64,126 +31,156 @@
 
 <main>
 
-  <div class="wrap">
+  <div class="container">
+    <ol class="breadcrumb">
+    <li><a href="/">ホーム</a></li>
+    <li>食事</li>
+    </ol>
+  </div>
+
+  <div class="container">
     <div class="page-head">
       <h1>食事</h1>
       <p>一緒に作って食べるか、自分で作るか、隣の島まで食べに行くか。</p>
     </div>
   </div>
 
-  <section class="section">
-    <div class="wrap">
-      <figure class="photo"><img src="../img/meal-sharing-1200.jpg"
+  <section class="band band--flush">
+    <figure class="photo photo--wide"><img src="../img/meal-sharing-1200.jpg"
              srcset="../img/meal-sharing-480.jpg 480w, ../img/meal-sharing-800.jpg 800w, ../img/meal-sharing-1200.jpg 1200w"
              sizes="100vw"
              alt="大勢で囲むシェアごはんの食卓。土鍋を挟んで手が伸びる" width="1200" height="900" loading="lazy"></figure>
-    </div>
   </section>
 
-  <section class="section">
-    <div class="wrap">
-      <h2>シェアごはん</h2>
-      <div class="prose">
-        <p>ほかのゲストやスタッフと一緒に、作る・食べる・片すをシェアします。島の方が飛び入りで加わることもあります。</p>
-        <p>料理が苦手でも大丈夫です。できることを手伝ってもらいます。得意な方は「今日は板長やるよ」と言ってください。</p>
-        <p>島の人が差し入れを持って来て宴会になることもあれば、結局ひとりのこともあります。</p>
+  <section class="band">
+    <div class="container">
+      <div class="side-layout">
+        <h2 class="side-layout__title">シェアごはん</h2>
+        <div class="side-layout__body">
+          <div class="prose">
+            <p>ほかのゲストやスタッフと一緒に、作る・食べる・片すをシェアします。島の方が飛び入りで加わることもあります。</p>
+            <p>料理が苦手でも大丈夫です。できることを手伝ってもらいます。得意な方は「今日は板長やるよ」と言ってください。</p>
+            <p>島の人が差し入れを持って来て宴会になることもあれば、結局ひとりのこともあります。</p>
+          </div>
+        </div>
       </div>
-      <dl class="facts">
-        <div><dt>夕飯</dt><dd><strong>1,600円</strong></dd></div>
-        <div><dt>朝飯</dt><dd><strong>700円</strong></dd></div>
-        <div><dt>お休み</dt><dd>火曜の夜、日曜の夜<br>貸切のときもお休みです</dd></div>
+      <dl class="facts-strip">
+        <div><dt>夕飯</dt><dd><span class="nowrap"><span class="figure">1,600</span><span class="price__unit">円</span></span></dd></div>
+        <div><dt>朝飯</dt><dd><span class="nowrap"><span class="figure figure--small">700</span>円</span></dd></div>
+        <div><dt>お休み</dt><dd>火曜の夜、日曜の夜<small>貸切のときもお休みです</small></dd></div>
+        <div><dt>ご予約</dt><dd>お申し込みのときにお尋ねください</dd></div>
       </dl>
-      <div class="notice-important">
+      <div class="note note--important">
         <p><strong>夕飯をご希望の場合は、17時までにチェックインをお願いします。</strong>スタッフの都合でできない日もありますので、ご予約のときにお尋ねください。</p>
       </div>
     </div>
   </section>
 
-  <section class="section">
-    <div class="wrap media media-reverse">
-      <div class="media-photo"><img src="../img/meal-share-1200.jpg"
+  <section class="band band--flush">
+
+    <div class="overlap overlap--flip">
+      <figure class="overlap__media photo photo--3x2"><img src="../img/meal-share-1200.jpg"
              srcset="../img/meal-share-480.jpg 480w, ../img/meal-share-800.jpg 800w, ../img/meal-share-1200.jpg 1200w"
-             sizes="(min-width: 66em) 560px, (min-width: 48em) 55vw, 100vw"
-             alt="おひつと味噌汁が並んだシェアごはんの食卓" width="1200" height="900" loading="lazy"></div>
-      <div class="media-body">
-        <h2>自炊</h2>
+             sizes="(min-width: 62em) 62vw, 100vw"
+             alt="おひつと味噌汁が並んだシェアごはんの食卓" width="1200" height="900" loading="lazy"></figure>
+      <div class="overlap__panel">
+        <h2 id="self-h">自炊</h2>
         <p>基本の食材セット（お米または弓削島 Kitchen 313 Kamiyuge の食パン、各種調味料）をご用意します。<strong>お1人400円。</strong>前日に自炊またはシェアごはんに参加された場合は無料です。</p>
         <p>台所にある食材はご自由にお使いください。あまり無いときもあれば、島の方の差し入れで野菜や柑橘が山盛りになっていることもあります。</p>
       </div>
     </div>
+
   </section>
 
-  <section class="section">
-    <div class="wrap">
-      <h2>お弁当を取り寄せる</h2>
-      <div class="prose">
-        <p>隣の弓削島、しまでカフェの<strong>摘み菜弁当</strong>。島のお母さんたちの心尽くしのお弁当です。野山や海で育った四季折々の摘み菜が入ります。</p>
-        <p>手前味噌のお味噌汁を付けて<strong>1人前 1,000円</strong>。お味噌は、管理人のけいこさんとみえさんが島のお母さんたちと仕込んだ麦味噌です。甘さと柔らかさが特徴で、サラダのディップにも好評です。</p>
-        <p><strong>ご注文はご宿泊の前々日までに</strong>お願いします。</p>
-      </div>
-      <div class="notice">
-        <p><strong>摘み菜とは</strong> — 野山や浜辺、里海で育つ野草や海藻のことです。キクイモ、ツワブキ、ハマボウフウ、ツユクサ、ホトケノザ、ツルナ、カラスノエンドウ、山茶花の花、ハマエンドウ、ギシギシ、クレソン、ヒジキ、生ノリなどから、季節のものが2〜3種類入ります。</p>
-      </div>
-    </div>
-  </section>
+  <section class="band">
+    <div class="container">
+      <div class="side-layout">
+        <h2 class="side-layout__title">お弁当を取り寄せる</h2>
+        <div class="side-layout__body">
+          <div class="prose">
+            <p>隣の弓削島、しまでカフェの<strong>摘み菜弁当</strong>。島のお母さんたちの心尽くしのお弁当です。野山や海で育った四季折々の摘み菜が入ります。</p>
+            <p>手前味噌のお味噌汁を付けて<strong>1人前 1,000円</strong>。お味噌は、管理人のけいこさんとみえさんが島のお母さんたちと仕込んだ麦味噌です。甘さと柔らかさが特徴で、サラダのディップにも好評です。</p>
+            <p><strong>ご注文はご宿泊の前々日までに</strong>お願いします。</p>
+          </div>
 
-  <section class="section">
-    <div class="wrap">
-      <h2>外で食べる</h2>
-      <div class="prose">
-        <p>佐島には夕食を食べられる飲食店がありません。橋で繋がっている弓削島や生名島に、おいしいお店があります。口コミはスタッフにお尋ねください。</p>
-        <p>2018年9月、佐島に book cafe okappa が開業しました。朝食にご案内することが増えています。佐島の新鮮な野菜をたっぷり使ったランチやスイーツもおすすめです。</p>
+          <div class="note">
+            <p><strong>摘み菜とは</strong> — 野山や浜辺、里海で育つ野草や海藻のことです。キクイモ、ツワブキ、ハマボウフウ、ツユクサ、ホトケノザ、ツルナ、カラスノエンドウ、山茶花の花、ハマエンドウ、ギシギシ、クレソン、ヒジキ、生ノリなどから、季節のものが2〜3種類入ります。</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="section">
-    <div class="wrap">
-      <h2>お酒</h2>
-      <div class="prose">
+  <section class="band">
+    <div class="container">
+      <div class="side-layout">
+        <h2 class="side-layout__title">外で食べる</h2>
+        <div class="side-layout__body">
+          <div class="prose">
+            <p>佐島には夕食を食べられる飲食店がありません。橋で繋がっている弓削島や生名島に、おいしいお店があります。口コミはスタッフにお尋ねください。</p>
+            <p>2018年9月、佐島に book cafe okappa が開業しました。朝食にご案内することが増えています。佐島の新鮮な野菜をたっぷり使ったランチやスイーツもおすすめです。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container">
+      <div class="band__head">
+        <h2 id="drink-h">お酒</h2>
         <p>ビールと日本酒をご用意しています。日本酒は呉市倉橋島、榎酒造のもの。お食事とご一緒に。</p>
       </div>
-      <dl class="facts">
-        <div><dt>ビール</dt><dd>350ml缶 300円</dd></div>
-        <div><dt>日本酒</dt><dd>榎酒造（呉市倉橋島）より数銘柄<br>銘柄と価格はスタッフにお尋ねください</dd></div>
+      <dl class="facts-strip">
+        <div><dt>ビール</dt><dd><span class="nowrap">350ml缶 <span class="figure figure--small">300</span>円</span></dd></div>
+        <div><dt>日本酒</dt><dd>榎酒造（呉市倉橋島）より数銘柄<small>銘柄と価格はスタッフにお尋ねください</small></dd></div>
+        <div><dt>持ち込み</dt><dd>歓迎です</dd></div>
+        <div><dt>ご注意</dt><dd>在庫が無いこともあります</dd></div>
       </dl>
-      <div class="notice">
-        <p>在庫が無いこともありますので、スタッフにお聞きください。持ち込みも歓迎です。</p>
-      </div>
     </div>
   </section>
 
-  <section class="section">
-    <div class="wrap">
-      <h2>お土産</h2>
-      <div class="prose">
-        <p>少しばかりお取り扱いがあります。価格はスタッフにお尋ねください。</p>
-      </div>
-      <dl class="facts-list">
+  <section class="band">
+    <div class="container">
+      <div class="side-layout">
+        <h2 class="side-layout__title">お土産</h2>
+        <div class="side-layout__body">
+          <div class="prose">
+            <p>少しばかりお取り扱いがあります。価格はスタッフにお尋ねください。</p>
+          </div>
+      <dl class="def-list">
         <div><dt>汐見の家オリジナル手ぬぐい</dt><dd>浅緑または柑子色</dd></div>
         <div><dt>弓削塩</dt><dd>島の塩です</dd></div>
         <div><dt>弓削海苔</dt><dd>島の海苔です</dd></div>
         <div><dt>しまなみ島走マップ</dt><dd>サイクリング用の地図</dd></div>
         <div><dt>しまなみ島走ブック</dt><dd>サイクリングのガイドブック</dd></div>
       </dl>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="section cta">
-    <div class="wrap">
-      <h2>泊まりに来ませんか</h2>
+  <section class="cta-scene" aria-labelledby="cta-h">
+    <figure class="cta-scene__media">
+      <img src="../img/sea-dawn-1800.jpg"
+           srcset="../img/sea-dawn-480.jpg 480w, ../img/sea-dawn-800.jpg 800w, ../img/sea-dawn-1200.jpg 1200w, ../img/sea-dawn-1800.jpg 1800w"
+           sizes="100vw" alt="夜明けの瀬戸内海" width="1800" height="1350" loading="lazy">
+    </figure>
+    <div class="container cta-scene__body">
+      <h2 id="cta-h">泊まりに来ませんか</h2>
       <p>空室のご確認とご予約はこちらから。お電話でも承ります。</p>
-      <p class="button-row"><a class="button button-primary" href="/reserve/">予約・お問い合わせ</a></p>
+      <p class="button-row"><a class="button button--ink button--large" href="/reserve/">予約・お問い合わせ</a></p>
     </div>
   </section>
 
 </main>
 
 <footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-info">
-      <p><strong>古民家ゲストハウス 汐見の家</strong><br>〒794-2520 愛媛県越智郡上島町弓削佐島299<br>TEL <a href="tel:0897729800">0897-72-9800</a><br><a href="mailto:shiomihouse@gmail.com">shiomihouse@gmail.com</a></p>
-      <p>長く空き家だったため、地図に番地が出ないことがあります。その場合は「古民家ゲストハウス汐見の家」で検索してください。</p>
+  <div class="container site-footer__inner">
+    <div>
+      <a class="brand" href="/"><img src="../img/logo-white.svg" alt="" width="111" height="132"><span class="brand__name"><span class="brand__sub">古民家ゲストハウス</span>汐見の家</span></a>
+      <p><strong>古民家ゲストハウス 汐見の家</strong><br>〒794-2520 愛媛県越智郡上島町弓削佐島299<br>TEL <a class="nowrap" href="tel:0897729800">0897-72-9800</a><br><a class="nowrap" href="mailto:shiomihouse@gmail.com">shiomihouse@gmail.com</a></p>
+      <p class="site-footer__note">長く空き家だったため、地図に番地が出ないことがあります。その場合は「古民家ゲストハウス汐見の家」で検索してください。</p>
     </div>
     <nav aria-label="フッターメニュー">
       <ul>
@@ -197,7 +194,7 @@
         <li><a href="/reserve/">ご予約</a></li>
       </ul>
     </nav>
-    <p class="copyright">© 汐見の家合同会社</p>
+    <p class="site-footer__copy">© 汐見の家合同会社</p>
   </div>
 </footer>
 

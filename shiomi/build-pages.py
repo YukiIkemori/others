@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""下層ページの雛形を一度だけ書き出す。
+"""下層ページの雛形を書き出す（第2版の意匠に対応）。
 
-ヘッダーとフッターを手で繰り返すと綴じ間違いが出るので、
-最初の1回だけこのスクリプトで揃えて書き出す。
-書き出したあとは **HTMLファイルの方が正** になる。
-文言を直したいときはHTMLを直接編集すること（このスクリプトは再実行しない）。
+ヘッダーとフッターを手で繰り返すと綴じ間違いが出るので、ここで揃えて書き出す。
+書き出したあとは **HTMLファイルの方が正**。
+文言を直したいときは HTML を直接編集すること。
 """
-import os, sys
+import os
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "site")
 
@@ -31,6 +30,12 @@ def head(title, desc, canon, up="../"):
 '''
 
 
+def brand(up, white=False):
+    logo = "logo-white.svg" if white else "logo.svg"
+    return (f'<a class="brand" href="/"><img src="{up}img/{logo}" alt="" width="111" height="132">'
+            f'<span class="brand__name"><span class="brand__sub">古民家ゲストハウス</span>汐見の家</span></a>')
+
+
 def header(current, up="../"):
     items = []
     for href, label in NAV:
@@ -40,9 +45,11 @@ def header(current, up="../"):
     items.append(f'        <li class="nav-reserve"><a href="/reserve/"{cur}>ご予約</a></li>')
     nav = "\n".join(items)
     return f'''
+<a class="reserve-float" href="/reserve/">ご予約</a>
+
 <header class="site-header">
-  <div class="wrap">
-    <a class="brand" href="/"><img src="{up}img/logo.svg" alt="" width="111" height="132"><span class="brand-name"><span class="brand-sub">古民家ゲストハウス</span>汐見の家</span></a>
+  <div class="container site-header__inner">
+    {brand(up)}
     <nav class="site-nav" aria-label="メインメニュー">
       <ul>
 {nav}
@@ -55,46 +62,61 @@ def header(current, up="../"):
 '''
 
 
-def page_head(h1, lead=""):
-    p = f"\n      <p>{lead}</p>" if lead else ""
+def page_head(h1, lead="", eyebrow=""):
+    eb = f'\n      <span class="eyebrow">{eyebrow}</span>' if eyebrow else ""
+    p = f'\n      <p>{lead}</p>' if lead else ""
     return f'''
-  <div class="wrap">
-    <div class="page-head">
+  <div class="container">
+    <div class="page-head">{eb}
       <h1>{h1}</h1>{p}
     </div>
   </div>
 '''
 
 
-def cta(text="空室のご確認とご予約はこちらから。お電話でも承ります。"):
+def breadcrumb(items):
+    """items: [(表示名, URL or None)] — 最後の要素は URL なしにする"""
+    lis = ['    <li><a href="/">ホーム</a></li>']
+    for name, url in items:
+        lis.append(f'    <li><a href="{url}">{name}</a></li>' if url else f'    <li>{name}</li>')
+    return '\n  <div class="container">\n    <ol class="breadcrumb">\n' + "\n".join(lis) + '\n    </ol>\n  </div>\n'
+
+
+def cta(text="空室のご確認とご予約はこちらから。お電話でも承ります。", up="../"):
     return f'''
-  <section class="section cta">
-    <div class="wrap">
-      <h2>泊まりに来ませんか</h2>
+  <section class="cta-scene" aria-labelledby="cta-h">
+    <figure class="cta-scene__media">
+      <img src="{up}img/sea-dawn-1800.jpg"
+           srcset="{up}img/sea-dawn-480.jpg 480w, {up}img/sea-dawn-800.jpg 800w, {up}img/sea-dawn-1200.jpg 1200w, {up}img/sea-dawn-1800.jpg 1800w"
+           sizes="100vw" alt="夜明けの瀬戸内海" width="1800" height="1350" loading="lazy">
+    </figure>
+    <div class="container cta-scene__body">
+      <h2 id="cta-h">泊まりに来ませんか</h2>
       <p>{text}</p>
-      <p class="button-row"><a class="button button-primary" href="/reserve/">予約・お問い合わせ</a></p>
+      <p class="button-row"><a class="button button--ink button--large" href="/reserve/">予約・お問い合わせ</a></p>
     </div>
   </section>
 '''
 
 
-def footer():
+def footer(up="../"):
     items = "\n".join(f'        <li><a href="{h}">{l}</a></li>' for h, l in FOOT_NAV)
     return f'''
 </main>
 
 <footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-info">
-      <p><strong>古民家ゲストハウス 汐見の家</strong><br>〒794-2520 愛媛県越智郡上島町弓削佐島299<br>TEL <a href="tel:0897729800">0897-72-9800</a><br><a href="mailto:shiomihouse@gmail.com">shiomihouse@gmail.com</a></p>
-      <p>長く空き家だったため、地図に番地が出ないことがあります。その場合は「古民家ゲストハウス汐見の家」で検索してください。</p>
+  <div class="container site-footer__inner">
+    <div>
+      {brand(up, white=True)}
+      <p><strong>古民家ゲストハウス 汐見の家</strong><br>〒794-2520 愛媛県越智郡上島町弓削佐島299<br>TEL <a class="nowrap" href="tel:0897729800">0897-72-9800</a><br><a class="nowrap" href="mailto:shiomihouse@gmail.com">shiomihouse@gmail.com</a></p>
+      <p class="site-footer__note">長く空き家だったため、地図に番地が出ないことがあります。その場合は「古民家ゲストハウス汐見の家」で検索してください。</p>
     </div>
     <nav aria-label="フッターメニュー">
       <ul>
 {items}
       </ul>
     </nav>
-    <p class="copyright">© 汐見の家合同会社</p>
+    <p class="site-footer__copy">© 汐見の家合同会社</p>
   </div>
 </footer>
 
@@ -103,19 +125,30 @@ def footer():
 '''
 
 
-def img(name, alt, w, h, sizes, widths=(480, 800, 1200, 1800), up="../", lazy=True):
+def img(name, alt, w, h, sizes, widths=(480, 800, 1200, 1800), up="../", lazy=True, cls=""):
     srcset = ", ".join(f"{up}img/{name}-{x}.jpg {x}w" for x in widths)
     lz = ' loading="lazy"' if lazy else ""
-    return (f'<img src="{up}img/{name}-{widths[-1]}.jpg"\n'
+    c = f' class="{cls}"' if cls else ""
+    return (f'<img{c} src="{up}img/{name}-{widths[-1]}.jpg"\n'
             f'             srcset="{srcset}"\n'
             f'             sizes="{sizes}"\n'
             f'             alt="{alt}" width="{w}" height="{h}"{lz}>')
 
 
-def write(path, parts):
+def side(title, body):
+    """PC で左に縦書きの見出し、右に中身。見出しは12字まで"""
+    return f'''      <div class="side-layout">
+        <h2 class="side-layout__title">{title}</h2>
+        <div class="side-layout__body">
+{body}
+        </div>
+      </div>'''
+
+
+def write(path, parts, force=True):
     full = os.path.join(ROOT, path)
     os.makedirs(os.path.dirname(full), exist_ok=True)
-    if os.path.exists(full):
+    if os.path.exists(full) and not force:
         print(f"  すでにある（上書きしない）: {path}")
         return
     with open(full, "w", encoding="utf-8") as f:
@@ -124,4 +157,4 @@ def write(path, parts):
 
 
 if __name__ == "__main__":
-    print("このスクリプトは雛形の書き出し専用。既存ファイルは上書きしない。")
+    print("このスクリプトは雛形の書き出し用。単体では何もしない。")
