@@ -37,19 +37,24 @@ def cycling():
     <figure class="photo photo--wide">{bp.img("sea-islands", "瀬戸内海に浮かぶ島々。手前の入江と、遠くに連なる島影", 1800, 1350, "100vw", up=UP, lazy=False)}</figure>
   </section>
 
-  <section class="band" aria-labelledby="what-h">
+  <section class="band">
     <div class="container">
-{bp.side('<span id="what-h">ゆめしま海道のこと</span>', """        <div class="prose">
+{bp.reading(
+  bp.reading_nav("このページの中身", None, [
+      ("#yumeshima", "ゆめしま海道のこと"),
+      ("#route", "しまなみ海道から渡る"),
+      ("#ship", "自転車ごと船に乗る"),
+      ("#stay", "宿でできること"),
+  ]) + """
+          <p class="reading-side__note">道順が分かりにくいときは、お気軽にお問い合わせください。その日の便に合わせてご提案します。</p>
+          <p><a class="button" href="/reserve/">予約・お問い合わせ</a></p>""",
+  f"""        <div class="prose prose--wide">
+          <h2 id="yumeshima">ゆめしま海道のこと</h2>
           <p>弓削島、佐島、生名島、岩城島。愛媛県上島町のこの四つの島は、橋で繋がっています。全長はおよそ17キロ。しまなみ海道の一日分には、とても届きません。</p>
           <p>届かないのが、いいところだと思っています。走り終えたあとの時間が、そのぶん長い。夕方に自転車を降りて、まだ日が暮れていない。そういう場所です。</p>
           <p>信号がほとんどありません。対向車も、あまり来ません。橋の上から見えるのは海と、島と、貨物船です。</p>
-        </div>""")}
-    </div>
-  </section>
 
-  <section class="band" aria-labelledby="route-h">
-    <div class="container">
-{bp.side('<span id="route-h">しまなみ海道から渡る</span>', """        <div class="prose">
+          <h2 id="route">しまなみ海道から渡る</h2>
           <p>汐見の家がある佐島は離島ですので、どこかで必ず船に乗ります。しまなみ海道を走っている途中で立ち寄るなら、いちばん早いのはこの道順です。</p>
           <div class="note">
             <p><strong>生口島・洲江（すのえ）港 → 岩城島・小漕（こぎ）港</strong><br>
@@ -57,29 +62,15 @@ def cycling():
           </div>
           <p>尾道側から来るなら、因島の土生（はぶ）港から芸予汽船で佐島港へ直接という手もあります。宿は佐島港から徒歩2分です。</p>
           <p>その他の道順（今治から、広島空港から、三原から）は<a href="/access/">アクセスのページ</a>にまとめています。</p>
-        </div>""")}
-    </div>
-  </section>
 
-  <section class="band band--flush">
-    <div class="container">
-      <figure class="photo photo--wide">{bp.img("lane", "汐見の家の板壁沿いに続く、佐島の集落の細い路地", 1800, 1349, "(min-width: 80em) 80rem, 100vw", up=UP)}</figure>
-    </div>
-  </section>
+          <figure class="photo photo--3x2">{bp.img("lane", "汐見の家の板壁沿いに続く、佐島の集落の細い路地", 1800, 1349, "(min-width: 62em) 46rem, 100vw", up=UP)}</figure>
 
-  <section class="band" aria-labelledby="ship-h">
-    <div class="container">
-{bp.side('<span id="ship-h">自転車ごと船に乗る</span>', """        <div class="prose">
+          <h2 id="ship">自転車ごと船に乗る</h2>
           <p>自転車は、たいていの船に載せられます。ただし小型の便は自転車と大きな荷物を載せられません。荷物の量によって断られることもあります。</p>
           <p>時刻表と運賃はよく変わるので、このサイトには載せていません。各社のサイトでご確認ください。分からないときは、お気軽にお問い合わせください。その日の便に合わせて道順をご提案します。</p>
           <p>手ぶらで来て島で借りる、という手もあります。レンタサイクルは、佐島の手前の弓削島（弓削港から徒歩1分のせとうち交流館）が便利です。宿にも貸自転車があります。</p>
-        </div>""")}
-    </div>
-  </section>
 
-  <section class="band" aria-labelledby="stay-h">
-    <div class="container">
-{bp.side('<span id="stay-h">宿でできること</span>', """        <div class="prose">
+          <h2 id="stay">宿でできること</h2>
           <ul>
             <li>洗濯乾燥機があります。汗をかいた日は、そのまま洗って寝てください（22時までにお願いします）</li>
             <li>夕飯と朝飯は、ゲストとスタッフで作って食べる<a href="/meals/">シェアごはん</a>。夕飯をご希望なら17時までにチェックインを</li>
@@ -116,36 +107,31 @@ def school():
     </div>
   </section>
 
-  <section class="band" aria-labelledby="near-h">
+  <section class="band">
     <div class="container">
-{bp.side('<span id="near-h">隣の島です</span>', """        <div class="prose">
+{bp.reading(
+  bp.reading_nav("このページの中身", None, [
+      ("#near", "隣の島です"),
+      ("#family", "ご家族でお越しのとき"),
+      ("#shimaoya", "島留学と、島親のこと"),
+      ("#way", "行き方"),
+  ]) + """
+          <p class="reading-side__note">日にちが決まりましたら、お早めにご相談ください。島の宿は数が限られています。</p>
+          <p><a class="button" href="/reserve/">予約・お問い合わせ</a></p>""",
+  """        <div class="prose prose--wide">
+          <h2 id="near">隣の島です</h2>
           <p>愛媛県立弓削高等学校と、弓削商船高等専門学校は、隣の弓削島にあります。佐島と弓削島は橋で繋がっていて、町営バスが走っています。</p>
           <p>島には宿が多くありません。学校説明会、面接、実習、卒業式。年に何度か、この島に泊まる必要が出てくる方がいらっしゃいます。そういうときに、どうぞ。</p>
-        </div>""")}
-    </div>
-  </section>
 
-  <section class="band" aria-labelledby="family-h">
-    <div class="container">
-{bp.side('<span id="family-h">ご家族でお越しのとき</span>', """        <div class="prose">
+          <h2 id="family">ご家族でお越しのとき</h2>
           <p>襖で仕切られた和室に布団を敷きます。グループごとの個室です。定員は7名。ご家族だけで静かに過ごしたい場合は、一棟貸し（1泊30,000円）もあります。</p>
           <p>素泊りは1泊5,500円、小学生は半額、乳幼児は1人まで無料です。朝が早い日は、前の晩に<a href="/meals/">シェアごはん</a>をご一緒することもできます。</p>
-        </div>""")}
-    </div>
-  </section>
 
-  <section class="band" aria-labelledby="oya-h">
-    <div class="container">
-{bp.side('<span id="oya-h">島留学と、島親のこと</span>', """        <div class="prose">
+          <h2 id="shimaoya">島留学と、島親のこと</h2>
           <p>弓削高校は2020年度から、全国の中学生を留学生として受け入れています。島親は、島の大人が一人暮らしの留学生を支える仕組みです。食事に呼んだり、釣りやSUPに誘ったり。お互いに無理のない、心地よい距離を目指しています。</p>
           <p>汐見の家も、島親をしています。詳しくは<a href="/stories/island/#shimaoya">島の暮らし</a>に書きました。窓口は弓削高校ですが、汐見の家についてのご質問は直接お寄せください。</p>
-        </div>""")}
-    </div>
-  </section>
 
-  <section class="band" aria-labelledby="way-h">
-    <div class="container">
-{bp.side('<span id="way-h">行き方</span>', """        <div class="prose">
+          <h2 id="way">行き方</h2>
           <p>佐島港から徒歩2分です。尾道・因島から、今治から、広島空港・三原から。どの道順も<a href="/access/">アクセスのページ</a>にまとめています。乗り継ぎが分かりにくいときは、お気軽にお問い合わせください。</p>
           <p>駐車場があります。車でお越しの場合も、どこかで必ずフェリーに乗ることになります。</p>
         </div>""")}

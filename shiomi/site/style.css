@@ -96,11 +96,12 @@ body {
   line-height: 1.9;
   letter-spacing: .02em;
   font-feature-settings: "palt" 0;
-  /* 折り返し。break-word は、収まらない長い語だけを割る指定。
-     anywhere と違い、メールアドレスや電話番号を途中で割らない。
-     文節単位で折る auto-phrase は、見出しや短い一文にだけ効かせる
-     （下の .phrase-break）。長い本文にかけると、文節が次の行へ
-     まとめて送られて右端がぼろぼろになる */
+  /* 折り返し。日本語は文節の切れ目で折る（auto-phrase）。
+     これが無いと「飛び入／り」「手／伝って」のように語の途中で割れる。
+     非対応のブラウザでは従来どおり字単位で折れるだけで、崩れはしない。
+     break-word は、収まらない長い語だけを割る指定。anywhere と違い
+     メールアドレスや電話番号を途中で割らない */
+  word-break: auto-phrase;
   overflow-wrap: break-word;
   line-break: strict;
   overflow-x: clip;
@@ -138,14 +139,6 @@ h1, h2, h3, h4 {
   word-break: auto-phrase;
   font-feature-settings: "palt" 1;   /* 見出しは詰め組み。大きい文字は詰めた方が締まる */
 }
-/* 短い一文は文節で折る。語の途中で割れるのを防ぐ。
-   長い本文にはかけない（右端がぼろぼろになるため） */
-.phrase-break, .eyebrow, .hero__lead, .page-head p, .brand__name,
-.index-list__title, .facts-strip dt, .facts-strip dd, .button, .site-nav a,
-.breadcrumb, .reading-nav a, .form-note, figcaption, .faq__item h3 {
-  word-break: auto-phrase;
-}
-
 h1 { font-size: var(--fs-display); line-height: 1.15; }
 h2 { font-size: var(--fs-h2); }
 h3 { font-size: var(--fs-h3); }
@@ -226,7 +219,9 @@ figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-h
     text-orientation: mixed;
     position: sticky;
     top: calc(var(--header-h) + var(--s4));
-    font-size: clamp(1.75rem, 1rem + 1.6vw, 2.75rem);   /* 横書きの h2 より一段小さい。12字でも画面に収まる */
+    /* 横書きの h2 よりだいぶ小さく。大きくすると、中身の少ない区画で
+       見出しの方が長くなり、下に飛び出して座りが悪くなる */
+    font-size: clamp(1.4rem, .9rem + 1.05vw, 2.1rem);
     letter-spacing: .22em;
     line-height: 1;
     /* 途中で列を折らない。折れると2列になり、line-height:1 のせいで
@@ -469,24 +464,6 @@ figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-h
 @media (max-width: 47.99em) { .hero__lead br { display: none; } }
 .hero__actions { display: flex; flex-wrap: wrap; gap: var(--s2); margin: 0; }
 
-/* 右下に置く、下へ促す細い線。文字は無し。動きは 10 章 */
-.hero__hint {
-  position: absolute;
-  right: var(--gutter);
-  bottom: 0;
-  width: 1px;
-  height: clamp(4rem, 10vh, 7rem);
-  overflow: hidden;
-  opacity: .7;
-}
-.hero__hint::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent, #fff);
-}
-@media (max-width: 47.99em) { .hero__hint { display: none; } }
-
 /* 短い画面（横向きのスマホなど）で写真がつぶれないように */
 @media (max-height: 30em) { .hero { min-height: 36rem; } }
 
@@ -632,8 +609,12 @@ a:hover .photo img, .photo:hover img { transform: scale(1.03); }
   }
   .facts-strip > div + div { padding-left: var(--s3); border-left: 1px solid var(--rule); }
 
-  /* 料金の帯（トップと「汐見の家について」）は6項目。
-     素泊りの金額を大きく見せる組み方にする。
+  /* 6項目のときは3列×2段。4列だと2段目が半端に空く */
+  .facts-strip--3col { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .facts-strip--3col > div:nth-child(n+4) { border-top: 1px solid var(--rule); }
+  .facts-strip--3col > div:nth-child(3n+1) { border-left: 0; padding-left: 0; }
+
+  /* トップの料金だけは、素泊りの金額を大きく見せる組み方。
      3列目を広めに取るのは、定員の補足が文節で折れる幅を確保するため */
   .facts-strip--price {
     grid-template-columns: minmax(0, 1.4fr) minmax(0, .95fr) minmax(0, 1.35fr) minmax(0, 1.2fr);
@@ -731,7 +712,7 @@ a:hover .photo img, .photo:hover img { transform: scale(1.03); }
 }
 .index-list .numbered__n { grid-area: n; font-size: 1.5rem; line-height: 1; align-self: start; padding-top: .35em; }
 .index-list__title { grid-area: title; font-family: var(--font-serif); font-size: var(--fs-h3); letter-spacing: .06em; line-height: 1.4; font-feature-settings: "palt" 1; transition: color .25s; }
-.index-list__desc { grid-area: desc; font-size: 1rem; color: var(--ink-soft); margin-top: .5em; line-height: 1.8; }
+.index-list__desc { grid-area: desc; font-size: 1rem; color: var(--ink-soft); margin-top: .5em; line-height: 1.8; max-width: 46rem; }
 .index-list a::after {
   content: "";
   display: none;
@@ -838,6 +819,10 @@ a:hover .photo img, .photo:hover img { transform: scale(1.03); }
 .reading-nav a:hover { color: var(--shio); }
 .reading-nav a[aria-current="page"], .reading-nav a[aria-current="true"] { color: var(--shio); font-weight: 600; }
 .reading-nav__back { display: inline-block; margin-bottom: var(--s3); font-size: .95rem; text-decoration: none; }
+.reading-side__note { font-size: .95rem; color: var(--ink-soft); }
+/* 案内が左にあるぶん、本文は少し広く取れる */
+.prose--wide { max-width: 46rem; }
+.prose--wide > h2:first-child { margin-top: 0; }
 .reading-nav__back:hover { text-decoration: underline; }
 
 /* 本文の中の写真。.photo は margin:0 なので、文章の中では上下に間を空ける */
@@ -853,7 +838,9 @@ a:hover .photo img, .photo:hover img { transform: scale(1.03); }
 .article-nav a { text-decoration: none; }
 .article-nav a:hover { text-decoration: underline; }
 
-/* 説明つきの用語一覧（縦に並ぶ）。ハウスルール、設備一覧 */
+/* 説明つきの用語一覧（縦に並ぶ）。ハウスルール、設備一覧。
+   1行が長くなりすぎると目が迷うので、文章と同じくらいの幅で止める */
+.def-list { max-width: 46rem; }
 .def-list dt { font-weight: 600; margin-top: 1.2em; }
 .def-list dd { margin: 0 0 .5em; }
 
@@ -891,6 +878,8 @@ a:hover .photo img, .photo:hover img { transform: scale(1.03); }
 .note { padding: var(--s3) var(--s4); background: var(--paper-deep); margin: 0 0 1.4em; border-left: 1px solid var(--ink); }
 .note--important { background: var(--shio-pale); border-left: 2px solid var(--shio); }
 .note > :last-child { margin-bottom: 0; }
+/* 囲みは幅いっぱいでも、中の文章は読める長さで折る */
+.note > p { max-width: 46rem; }
 
 /* 表。狭い幅は .table-scroll で包む（表だけが横に動き、ページは動かない） */
 table { width: 100%; border-collapse: collapse; font-size: 1rem; line-height: 1.7; }
@@ -972,13 +961,11 @@ input[type="checkbox"], input[type="radio"] { width: 1.15em; height: 1.15em; acc
 /* 読み込み時：ヒーローの文字が下から浮かび、写真がゆっくり引く */
 @keyframes rise { from { opacity: 0; transform: translateY(1.25rem); } to { opacity: 1; transform: none; } }
 @keyframes settle { from { transform: scale(1.06); } to { transform: none; } }
-@keyframes drop { 0% { transform: translateY(-100%); } 60%, 100% { transform: translateY(100%); } }
 
 .hero__media img { animation: settle 2.4s var(--ease) both; }
 .hero__title, .hero__lead, .hero__actions { animation: rise 1s var(--ease) both; }
 .hero__lead { animation-delay: .15s; }
 .hero__actions { animation-delay: .3s; }
-.hero__hint::before { animation: drop 2.2s var(--ease) infinite; }
 
 /* スクロール連動：区画の中身が、画面に入りながら少し持ち上がる。
    対応ブラウザだけで動く。非対応では静止（JS 無し） */
@@ -1034,13 +1021,12 @@ input[type="checkbox"], input[type="radio"] { width: 1.15em; height: 1.15em; acc
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .reveal { opacity: 1; transform: none; }
   .reserve-float { visibility: hidden; }
-  .hero__hint { display: none; }
 }
 
 
 /* 11. 印刷 ============================================================== */
 @media print {
-  .site-nav, .button-row, .hero__actions, .hero__hint, .reserve-float, .article-nav { display: none; }
+  .site-nav, .button-row, .hero__actions, .reserve-float, .article-nav { display: none; }
   body, .band--night, .site-footer { background: #fff; color: #000; }
   .site-header--overlay { position: static; color: #000; }
   .hero { min-height: 0; color: #000; }
