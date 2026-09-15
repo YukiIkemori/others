@@ -522,6 +522,36 @@ input[type="checkbox"], input[type="radio"] { width: 1.15em; height: 1.15em; acc
   .form-row-short input, .form-row-short select { max-width: 20rem; }
 }
 
+/* 「必須」の小さな印。label の中に置く */
+.required {
+  display: inline-block;
+  margin-left: .5em;
+  padding: .15em .5em;
+  font-size: .8125rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: #fff;
+  background: var(--shio);
+  border-radius: var(--radius);
+  vertical-align: .1em;
+}
+
+/* 人数のように「名前＋数字」を横に並べる入力。狭いと折り返す */
+.choice-count { gap: 1rem 1.5rem; }
+.choice-count > span { display: block; }
+.choice-count label { font-weight: 600; display: block; margin-bottom: .35em; }
+.choice-count input { width: 6.5rem; min-width: 0; }
+
+/* 電話番号を大きく見せる。スマホではそのまま押せる */
+.tel-large {
+  display: inline-block;
+  margin-top: .2em;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+
 /* 地図や空室カレンダーの埋め込み。iframe に幅が書いてあっても枠に収める */
 .embed {
   position: relative;
