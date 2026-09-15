@@ -1284,5 +1284,27 @@
     "h": 640
    }
   ]
+ },
+ {
+  "name": "meal-sharing",
+  "alt": "大勢で囲むシェアごはんの食卓。土鍋を挟んで手が伸びる",
+  "source": "cd8a7725-10f6-4e80-9efd-7b6d05e020cb.jfif",
+  "sizes": [
+   {
+    "file": "meal-sharing-1200.jpg",
+    "w": 1200,
+    "h": 900
+   },
+   {
+    "file": "meal-sharing-800.jpg",
+    "w": 800,
+    "h": 600
+   },
+   {
+    "file": "meal-sharing-480.jpg",
+    "w": 480,
+    "h": 360
+   }
+  ]
  }
 ]
