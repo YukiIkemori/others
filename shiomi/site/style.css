@@ -1016,6 +1016,9 @@ input[type="checkbox"], input[type="radio"] { width: 1.15em; height: 1.15em; acc
 }
 .reserve-float::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #8fc5d8; }
 .reserve-float:hover { background: var(--shio); color: #fff; }
+/* 62em以上ではヘッダーが上に貼り付いていて、そこに「ご予約」がある。
+   浮いているボタンと二重になるので、こちらは出さない */
+@media (min-width: 62em) { .reserve-float { display: none; } }
 @keyframes appear { from { visibility: hidden; opacity: 0; transform: translateY(1rem); } to { visibility: visible; opacity: 1; transform: none; } }
 @supports (animation-timeline: scroll()) {
   .reserve-float {
