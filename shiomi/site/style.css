@@ -307,7 +307,7 @@ h2 + h3, h3 + h4 { margin-top: 0; }
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
   gap: .3em 1.5em;
 }
 .site-footer nav li { margin: 0; }
@@ -528,7 +528,7 @@ input[type="checkbox"], input[type="radio"] { width: 1.15em; height: 1.15em; acc
 .hero-text h1 { margin-bottom: var(--space-3); }
 .lead {
   font-size: 1.05rem;
-  max-width: var(--width-text);
+  max-width: 40rem;                        /* 3行目が半端に折れないよう本文幅より少し広く */
   margin-bottom: 0;
 }
 @media (max-width: 47.99em) {
@@ -555,8 +555,9 @@ input[type="checkbox"], input[type="radio"] { width: 1.15em; height: 1.15em; acc
   .feature:nth-child(even) .feature-photo { order: 2; }
 }
 
-/* 部屋。写真3枚を並べる。.photo-grid をそのまま使う */
+/* 部屋。写真3枚を並べる。.photo-grid をそのまま使い、中くらいの幅でも3列を保つ */
 .room-list img { aspect-ratio: 4 / 3; }
+@media (min-width: 40em) { .room-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
 /* 泊まりに来ませんか。淡い青の地に */
 .cta { background: var(--shio-pale); padding-block: var(--space-5); }
