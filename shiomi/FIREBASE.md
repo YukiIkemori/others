@@ -56,7 +56,7 @@ https://firebase.google.com/docs/cli の「スタンドアロン バイナリ」
 
 ### 4. プロジェクトを指定する
 
-`.firebaserc` には `shiomi-test` と書いてある。
+`.firebaserc` には `shiomi-test-2d186` と書いてある。
 以前に作ったプロジェクトがそのまま使えるならそのままでよい。
 
 違うプロジェクトを使う、または新しく作る場合：
@@ -72,7 +72,7 @@ https://firebase.google.com/docs/cli の「スタンドアロン バイナリ」
 
 終わると URL が出る。それを先方に送る。
 
-    Hosting URL: https://shiomi-test.web.app
+    Hosting URL: https://shiomi-test-2d186.web.app
 
 ### 6. 直したら上げ直す
 
