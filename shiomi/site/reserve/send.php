@@ -73,9 +73,9 @@ function shell_page(string $title, string $lead, string $body): string
 </head>
 <body>
 
-<a class="reserve-float" href="/reserve/">ご予約</a>
-
 <input class="nav-toggle" type="checkbox" id="nav-open">
+
+<a class="reserve-float" href="/reserve/">ご予約</a>
 
 <header class="site-header">
   <div class="container site-header__inner">

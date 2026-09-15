@@ -252,7 +252,10 @@ figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-h
    .site-header--overlay を付けると、ヒーロー写真の上に白い文字で重なる */
 .site-header {
   position: relative;
-  z-index: 10;
+  /* 右下に浮く「ご予約」（z-index 20）より上。
+     メニューの板はこのヘッダーの中にあるので、ここが低いと
+     板の上に浮きボタンが乗ってしまう */
+  z-index: 40;
   background: var(--paper);
   border-bottom: 1px solid var(--rule);
 }
@@ -335,17 +338,35 @@ figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-h
 /* メニューの開け閉め。JavaScript は使わず、チェックボックスの状態で切り替える。
    input は見えないが focus は当たるので、キーボードでも開ける */
 .nav-toggle { position: absolute; width: 1px; height: 1px; opacity: 0; margin: 0; }
+/* メニューを開いているあいだは、浮いている「ご予約」を引っ込める */
+.nav-toggle:checked ~ .reserve-float { display: none; }
 .nav-button, .nav-close { display: none; }
 
 /* --- 狭い画面：メニューを畳む ------------------------------------------
    ヘッダーは1行（ロゴ／ご予約／メニューボタン）。
    ボタンを押すと、画面いっぱいの板が出てメニューが並ぶ。 */
 @media (max-width: 61.99em) {
-  .site-header__inner { flex-wrap: nowrap; gap: var(--s2); padding-block: .55rem; }
+  .site-header__inner { flex-wrap: nowrap; gap: .6rem; padding-block: .55rem; }
+  /* 縮んでよいのはロゴの側だけ。ボタン類に重ならないよう、はみ出しは切る */
+  .brand { min-width: 0; overflow: hidden; }
+  .brand__name { min-width: 0; font-size: 1.05rem; letter-spacing: .12em; }
   .brand img { height: 2.8rem; }
-  .brand__name { font-size: 1.05rem; letter-spacing: .12em; }
-  .brand__sub { font-size: .72rem; letter-spacing: .1em; margin-bottom: .15em; }
+  .brand__sub { font-size: .72rem; letter-spacing: .1em; margin-bottom: .15em; white-space: nowrap; }
   .nav-reserve { font-size: .85rem; padding: .45em .95em; margin-left: auto; }
+}
+
+/* 376px より狭い画面（iPhone SE など、文字を大きくしている場合も）。
+   「古民家ゲストハウス」まで入れると「ご予約」に重なるので、宿の名前だけにする */
+@media (max-width: 23.5em) {
+  .site-header__inner { gap: .4rem; }
+  .brand img { height: 2.3rem; }
+  .brand__sub { display: none; }
+  .brand__name { font-size: 1rem; letter-spacing: .08em; }
+  .nav-reserve { font-size: .8rem; padding: .4em .75em; }
+  .nav-button { width: 2.4rem; }
+}
+
+@media (max-width: 61.99em) {
 
   /* メニューボタン（三本線） */
   .nav-button {

@@ -50,9 +50,9 @@ def header(current, up="../", brand_html=None):
     nav = "\n".join(items)
     cur = ' aria-current="page"' if current == "/reserve/" else ""
     return f'''
-<a class="reserve-float" href="/reserve/">ご予約</a>
-
 <input class="nav-toggle" type="checkbox" id="nav-open">
+
+<a class="reserve-float" href="/reserve/">ご予約</a>
 
 <header class="site-header">
   <div class="container site-header__inner">
