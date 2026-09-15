@@ -1,0 +1,38 @@
+name: 確認用サイトを Firebase に上げる
+
+# shiomi/ 以下が変わったら、確認用サイト（shiomi-test.web.app）へ自動で反映する。
+# 本番（さくら／shiomihouse.com）には一切触らない。
+
+on:
+  push:
+    branches:
+      - claude/keen-brown-tylcp5
+    paths:
+      - 'shiomi/site/**'
+      - 'shiomi/firebase.json'
+      - 'shiomi/.firebaserc'
+      - '.github/workflows/firebase-preview.yml'
+  workflow_dispatch:        # 手動でも流せるようにしておく
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: リポジトリを取ってくる
+        uses: actions/checkout@v4
+
+      - name: 上げるものを数えておく
+        working-directory: shiomi
+        run: |
+          echo "HTML: $(find site -name '*.html' | wc -l) ページ"
+          echo "画像: $(find site/img -type f | wc -l) 点"
+          echo "合計: $(du -sh site | cut -f1)"
+
+      - name: Firebase Hosting へデプロイ
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SHIOMI_TEST }}
+          projectId: shiomi-test
+          channelId: live
+          entryPoint: shiomi
