@@ -6,8 +6,9 @@
       "**/.*",
       "**/node_modules/**",
       "htaccess.txt",
-      "DESIGN.md",
-      "README-納品.txt"
+      "**/*.md",
+      "README-納品.txt",
+      "img/manifest.json"
     ],
     "cleanUrls": false,
     "trailingSlash": true,
