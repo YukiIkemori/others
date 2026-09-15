@@ -70,6 +70,9 @@ BREADCRUMB = {
     "rooms/index.html":   [("部屋と設備", "/rooms/")],
     "meals/index.html":   [("食事", "/meals/")],
     "access/index.html":  [("アクセス", "/access/")],
+    "cycling/index.html": [("ゆめしま海道と自転車", "/cycling/")],
+    "school/index.html":  [("学校にご用の方へ", "/school/")],
+    "faq/index.html":     [("よくあるご質問", "/faq/")],
     "reserve/index.html": [("ご予約・お問い合わせ", "/reserve/")],
     "media/index.html":   [("メディア掲載", "/media/")],
     "thanks/index.html":  [("Special Thanks", "/thanks/")],
@@ -173,6 +176,20 @@ def main():
             elif f in BREADCRUMB:
                 blocks.append(jsonld(breadcrumb(BREADCRUMB[f])))
 
+            # よくあるご質問は FAQPage にする。検索結果やAIの回答に引かれやすくなる
+            if f == "faq/index.html":
+                qa = re.findall(r'<div class="faq__item">\s*<h3>(.*?)</h3>\s*<p>(.*?)</p>', s, re.S)
+                blocks.append(jsonld({
+                    "@context": "https://schema.org", "@type": "FAQPage",
+                    "mainEntity": [
+                        {"@type": "Question",
+                         "name": re.sub(r"<[^>]+>", "", q).strip(),
+                         "acceptedAnswer": {"@type": "Answer",
+                                            "text": re.sub(r"<[^>]+>", "", a).strip()}}
+                        for q, a in qa
+                    ],
+                }))
+
         if blocks and inject(f, blocks):
             done += 1
 
@@ -181,7 +198,8 @@ def main():
     # sitemap.xml
     today = datetime.date.today().isoformat()
     prio = {"index.html": "1.0", "reserve/index.html": "0.9", "rooms/index.html": "0.8",
-            "about/index.html": "0.8", "access/index.html": "0.8", "meals/index.html": "0.7"}
+            "about/index.html": "0.8", "access/index.html": "0.8", "cycling/index.html": "0.8",
+            "faq/index.html": "0.8", "meals/index.html": "0.7", "school/index.html": "0.7"}
     rows = []
     for f in pages:
         if f == "404.html":

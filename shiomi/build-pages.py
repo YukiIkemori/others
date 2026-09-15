@@ -10,8 +10,9 @@ import os
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "site")
 
 NAV = [("/about/", "汐見の家について"), ("/rooms/", "部屋と設備"), ("/meals/", "食事"),
-       ("/access/", "アクセス"), ("/stories/", "読み物")]
-FOOT_NAV = NAV + [("/media/", "メディア掲載"), ("/thanks/", "Special Thanks"), ("/reserve/", "ご予約")]
+       ("/access/", "アクセス"), ("/cycling/", "サイクリング"), ("/stories/", "読み物")]
+FOOT_NAV = NAV + [("/faq/", "よくあるご質問"), ("/school/", "学校にご用の方へ"),
+                  ("/media/", "メディア掲載"), ("/thanks/", "Special Thanks"), ("/reserve/", "ご予約")]
 
 
 def head(title, desc, canon, up="../"):

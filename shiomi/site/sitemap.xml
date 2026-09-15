@@ -11,6 +11,16 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://shiomihouse.com/cycling/</loc>
+    <lastmod>2026-09-15</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://shiomihouse.com/faq/</loc>
+    <lastmod>2026-09-15</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://shiomihouse.com/</loc>
     <lastmod>2026-09-15</lastmod>
     <priority>1.0</priority>
@@ -34,6 +44,11 @@
     <loc>https://shiomihouse.com/rooms/</loc>
     <lastmod>2026-09-15</lastmod>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://shiomihouse.com/school/</loc>
+    <lastmod>2026-09-15</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://shiomihouse.com/stories/</loc>

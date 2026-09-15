@@ -748,6 +748,13 @@ a:hover .photo img, .photo:hover img { transform: scale(1.03); }
   .log-list time, .log-list .eyebrow { grid-row: 1 / span 2; }
 }
 
+/* よくあるご質問。問いと答えを1組ずつ、細い線で仕切る */
+.faq__item { padding: var(--s4) 0; border-bottom: 1px solid var(--rule); }
+.faq__item:first-child { border-top: 1px solid var(--ink); }
+.faq__item h3 { font-size: 1.2rem; margin: 0 0 .6em; }
+.faq__item h3::before { content: "Q."; font-family: var(--font-serif); color: var(--shio); margin-right: .5em; }
+.faq__item p { margin: 0; color: var(--ink-soft); }
+
 /* 時系列の記録。年や日付を左に */
 .timeline { list-style: none; padding: 0; margin: 0; }
 .timeline > li { margin: 0 0 var(--s5); padding-left: var(--s4); border-left: 1px solid var(--ink); position: relative; }

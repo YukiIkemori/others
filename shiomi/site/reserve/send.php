@@ -84,6 +84,7 @@ function shell_page(string $title, string $lead, string $body): string
         <li><a href="/rooms/">部屋と設備</a></li>
         <li><a href="/meals/">食事</a></li>
         <li><a href="/access/">アクセス</a></li>
+        <li><a href="/cycling/">サイクリング</a></li>
         <li><a href="/stories/">読み物</a></li>
         <li class="nav-reserve"><a href="/reserve/" aria-current="page">ご予約</a></li>
       </ul>
@@ -121,7 +122,10 @@ __BODY__
         <li><a href="/rooms/">部屋と設備</a></li>
         <li><a href="/meals/">食事</a></li>
         <li><a href="/access/">アクセス</a></li>
+        <li><a href="/cycling/">サイクリング</a></li>
         <li><a href="/stories/">読み物</a></li>
+        <li><a href="/faq/">よくあるご質問</a></li>
+        <li><a href="/school/">学校にご用の方へ</a></li>
         <li><a href="/media/">メディア掲載</a></li>
         <li><a href="/thanks/">Special Thanks</a></li>
         <li><a href="/reserve/">ご予約</a></li>

@@ -134,8 +134,6 @@ BEFORE = '''
         <dd>薪で焚き、井戸の水を沸かします。準備に時間がかかるため、前日までのご相談をお願いしています。日によってはお受けできないこともあります。</dd>
         <dt>宿帳</dt>
         <dd>ご住所などは当日ご記帳いただきますので、このフォームでは伺いません。</dd>
-        <dt>お支払い</dt>
-        <dd>現地で現金にてお願いします。</dd>
       </dl>
 '''
 
@@ -182,7 +180,7 @@ def page():
     <div class="container--text">
       <div class="band__head"><h2 id="before-h">ご予約の前に</h2></div>
 {BEFORE}
-      <p class="button-row"><a class="button" href="/rooms/">部屋と設備をもっと見る</a><a class="button" href="/access/">行き方を調べる</a></p>
+      <p class="button-row"><a class="button" href="/faq/">よくあるご質問</a><a class="button" href="/rooms/">部屋と設備をもっと見る</a><a class="button" href="/access/">行き方を調べる</a></p>
     </div>
   </section>
 ''',
