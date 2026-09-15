@@ -45,7 +45,20 @@ def build(html, path):
 '''
 
 
+def css_version():
+    """style.css の中身から短い印を作る。
+
+    ブラウザは style.css を一定時間ためこむので、中身を変えても
+    古いままのことがある（HTMLだけ新しくなって表示が崩れる）。
+    読み込み先に ?v=… を付けて、変わったら別物として取り直させる。
+    """
+    import hashlib
+    css = os.path.join(ROOT, "style.css")
+    return hashlib.sha1(open(css, "rb").read()).hexdigest()[:8]
+
+
 def main():
+    ver = css_version()
     n = 0
     for path in sorted(glob.glob(os.path.join(ROOT, "**/*.html"), recursive=True)):
         html = open(path, encoding="utf-8").read()
@@ -57,9 +70,10 @@ def main():
                       r'<meta name="twitter:[^>]*>\n?', "", html)
         block = build(html, path)
         html = html.replace("</head>", block + "</head>", 1)
+        html = re.sub(r'(href="[^"]*style\.css)(\?v=[0-9a-f]+)?"', rf'\1?v={ver}"', html)
         open(path, "w", encoding="utf-8").write(html)
         n += 1
-    print(f"head のメタ情報を入れたページ: {n}")
+    print(f"head のメタ情報を入れたページ: {n}（style.css の印 v={ver}）")
 
 
 if __name__ == "__main__":
