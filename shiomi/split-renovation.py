@@ -82,7 +82,7 @@ def index_page():
     intro = ms.render_blocks(ms.ART["renovation"]["blocks"], up)
     return [
         bp.head(f"{SERIES}｜汐見の家",
-                "空き家だった築百年の古民家を2012年から作り直した記録。井戸、五右衛門風呂、壁塗りワークショップ、長屋門の屋根、コンポストバイオトイレまで全15回。",
+                "空き家だった古民家を2012年から作り直した記録。井戸、五右衛門風呂、壁塗りワークショップ、長屋門の屋根、コンポストバイオトイレまで全15回。",
                 "/stories/renovation/", up),
         bp.header("/stories/", up),
         f'''
