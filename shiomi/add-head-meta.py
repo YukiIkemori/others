@@ -9,6 +9,7 @@ import os, re, glob
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "site")
 SITE = "https://shiomihouse.com"
 MARK = "<!-- head-meta -->"
+MARK_END = "<!-- /head-meta -->"
 
 ICONS = '''<link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
@@ -42,6 +43,7 @@ def build(html, path):
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="畳の間で食卓を囲む人たちのイラスト">
 <meta name="twitter:card" content="summary_large_image">
+{MARK_END}
 '''
 
 
@@ -63,6 +65,9 @@ def main():
     for path in sorted(glob.glob(os.path.join(ROOT, "**/*.html"), recursive=True)):
         html = open(path, encoding="utf-8").read()
         # 既存の差し込み分をいったん外してから入れ直す
+        # 前に入れた分だけを外す。ここで </head> までまとめて消すと、
+        # あとから入れた構造化データも道連れになる
+        html = re.sub(re.escape(MARK) + r".*?" + re.escape(MARK_END) + r"\n?", "", html, flags=re.S)
         html = re.sub(re.escape(MARK) + r".*?(?=</head>)", "", html, flags=re.S)
         # 初回（印のない手書きページ）に残っている分も外す
         html = re.sub(r'<link rel="icon"[^>]*>\n?|<link rel="apple-touch-icon"[^>]*>\n?|'

@@ -96,12 +96,11 @@ body {
   line-height: 1.9;
   letter-spacing: .02em;
   font-feature-settings: "palt" 0;
-  /* 折り返し。日本語は文節の切れ目で折る（auto-phrase）。
-     これが無いと「飛び入／り」「手／伝って」のように語の途中で割れる。
-     非対応のブラウザでは従来どおり字単位で折れるだけで、崩れはしない。
-     break-word は、収まらない長い語だけを割る指定。anywhere と違い
-     メールアドレスや電話番号を途中で割らない */
-  word-break: auto-phrase;
+  /* 折り返し。break-word は、収まらない長い語だけを割る指定。
+     anywhere と違い、メールアドレスや電話番号を途中で割らない。
+     文節の切れ目で折る auto-phrase は、1行が長い画面でだけ効かせる
+     （下の 48em 以上）。狭い画面でかけると、文節が丸ごと次の行へ
+     送られて、行末が大きく空いてしまう */
   overflow-wrap: break-word;
   line-break: strict;
   overflow-x: clip;
@@ -110,6 +109,19 @@ body {
   flex-direction: column;
 }
 main { flex: 1 0 auto; }
+
+/* 1行に十分な字数が入る画面では、文節の切れ目で折る。
+   「飛び入／り」「手／伝って」のように語の途中で割れるのを防ぐ。
+   非対応のブラウザでは、従来どおり字単位で折れるだけ */
+@media (min-width: 48em) {
+  body { word-break: auto-phrase; }
+}
+/* 見出しと短い一文は、狭い画面でも文節で折る。行数が少なく、
+   行末が空いても目立たないため */
+h1, h2, h3, h4, .eyebrow, .hero__lead, .page-head p, .brand__name,
+.index-list__title, .facts-strip dt, .button, .nav-reserve, .breadcrumb {
+  word-break: auto-phrase;
+}
 
 img, svg, video, iframe { max-width: 100%; }
 img, video { height: auto; display: block; }
@@ -468,8 +480,12 @@ figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-h
    トップの白い文字がそのまま出ないよう、色も戻す */
 .nav-toggle:checked ~ .site-header .site-nav ul a { color: var(--ink); }
 
+/* 広い画面では、板の中だけの部分は出さない。
+   .site-nav ul（display:flex）より強い指定にしないと打ち消されてしまう */
 @media (min-width: 62em) {
-  .nav-sub, .nav-extra, .nav-close { display: none; }
+  .site-nav ul.nav-sub,
+  .site-nav .nav-extra,
+  .site-nav .nav-close { display: none; }
 }
 
 /* 写真の上に重なる版。ヒーローのあるページで使う */
@@ -492,8 +508,8 @@ figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-h
   .brand img { height: 3rem; }
   .brand__name { font-size: 1.15rem; }
   .brand__sub { font-size: .8rem; }
-  .site-nav ul { gap: .25rem 1.1rem; }
-  .site-nav a { font-size: .875rem; letter-spacing: .04em; }
+  .site-nav ul { gap: .25rem .95rem; }
+  .site-nav ul a { font-size: .875rem; letter-spacing: .04em; }
   .nav-reserve { padding: .45em .9em; }
 
   /* 読みながらでも他のページに移れるように、上に貼り付ける。

@@ -36,8 +36,6 @@ LODGING = {
     "checkoutTime": "10:00",
     "numberOfRooms": {"@type": "QuantitativeValue", "value": 3},
     "maximumAttendeeCapacity": 7,
-    "petsAllowed": False,
-    "smokingAllowed": False,
     "amenityFeature": [
         {"@type": "LocationFeatureSpecification", "name": "五右衛門風呂（前日までの要相談）", "value": True},
         {"@type": "LocationFeatureSpecification", "name": "井戸（手押しポンプ）", "value": True},
@@ -46,9 +44,9 @@ LODGING = {
         {"@type": "LocationFeatureSpecification", "name": "掘りごたつ", "value": True},
         {"@type": "LocationFeatureSpecification", "name": "無料Wi-Fi", "value": True},
         {"@type": "LocationFeatureSpecification", "name": "共用キッチン", "value": True},
-        {"@type": "LocationFeatureSpecification", "name": "洗濯乾燥機", "value": True},
-        {"@type": "LocationFeatureSpecification", "name": "貸自転車", "value": True},
-        {"@type": "LocationFeatureSpecification", "name": "駐車場", "value": True},
+        {"@type": "LocationFeatureSpecification", "name": "洗濯乾燥機（洗濯・乾燥 各100円）", "value": True},
+        {"@type": "LocationFeatureSpecification", "name": "貸自転車（ママチャリ1台）", "value": True},
+        {"@type": "LocationFeatureSpecification", "name": "駐車場（佐島港のそば）", "value": True},
     ],
     "makesOffer": [
         {"@type": "Offer", "name": "素泊り", "price": "5500", "priceCurrency": "JPY",
@@ -108,9 +106,13 @@ def page_meta(path):
 
 
 def inject(path, blocks):
+    """構造化データを入れ直す。
+
+    前に入れた分はいったん外してから入れる。そうしないと、
+    このファイルの中身を直しても、書き出し済みのページに反映されない。
+    """
     s = open(path, encoding="utf-8").read()
-    if "application/ld+json" in s:
-        return False
+    s = re.sub(r'<script type="application/ld\+json">.*?</script>\n?', "", s, flags=re.S)
     s = s.replace("</head>", "".join(blocks) + "</head>", 1)
     open(path, "w", encoding="utf-8").write(s)
     return True
