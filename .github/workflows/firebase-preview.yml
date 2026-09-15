@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: リポジトリを取ってくる
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 上げるものを数えておく
         working-directory: shiomi
