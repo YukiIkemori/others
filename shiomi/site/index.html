@@ -6,151 +6,211 @@
 <title>汐見の家｜瀬戸内・佐島の古民家ゲストハウス</title>
 <meta name="description" content="しまなみ海道の東、愛媛県上島町佐島。大正期に渡米した日系一世ロバート汐見ゆかりの古民家を改装したゲストハウスです。素泊り1泊5,500円、定員7名。五右衛門風呂と井戸のある宿。">
 <link rel="canonical" href="https://shiomihouse.com/">
+<meta name="theme-color" content="#fbfaf7">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-  <a href="/"><img src="img/logo.svg" alt="汐見の家" width="180" height="60"></a>
-  <nav aria-label="メインメニュー">
-    <ul>
-      <li><a href="/about/">汐見の家について</a></li>
-      <li><a href="/rooms/">部屋と設備</a></li>
-      <li><a href="/meals/">食事</a></li>
-      <li><a href="/access/">アクセス</a></li>
-      <li><a href="/stories/">読み物</a></li>
-      <li><a href="/reserve/">ご予約</a></li>
-    </ul>
-  </nav>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/"><img src="img/logo.png" alt="汐見の家" width="600" height="198"></a>
+    <nav class="site-nav" aria-label="メインメニュー">
+      <ul>
+        <li><a href="/about/">汐見の家について</a></li>
+        <li><a href="/rooms/">部屋と設備</a></li>
+        <li><a href="/meals/">食事</a></li>
+        <li><a href="/access/">アクセス</a></li>
+        <li><a href="/stories/">読み物</a></li>
+        <li class="nav-reserve"><a href="/reserve/">ご予約</a></li>
+      </ul>
+    </nav>
+  </div>
 </header>
 
 <main>
 
-  <section data-block="hero">
-    <img src="img/exterior-night-1800.jpg" alt="夜、灯りのともった汐見の家を庭から見る" width="1800" height="1350">
-    <h1>小さな島、大きな旅。</h1>
-    <p>瀬戸内海に浮かぶ佐島の、築百年を越えた古民家です。<br>
-       襖を開けると庭があり、土間には井戸があり、風呂は薪で焚く五右衛門風呂。<br>
-       何もしないための場所が、ここにあります。</p>
-    <p data-block="hero-actions">
-      <a href="/reserve/">空室を確認して予約する</a>
-      <a href="/about/">汐見の家について</a>
-    </p>
+  <section class="section hero">
+    <figure class="hero-photo">
+      <img src="img/exterior-night-1200.jpg"
+           srcset="img/exterior-night-480.jpg 480w, img/exterior-night-800.jpg 800w, img/exterior-night-1200.jpg 1200w, img/exterior-night-1800.jpg 1800w"
+           sizes="(min-width: 75em) 1200px, 100vw"
+           alt="夜、灯りのともった汐見の家を庭から見る" width="1800" height="1350" fetchpriority="high">
+    </figure>
+    <div class="wrap hero-text">
+      <h1>小さな島、大きな旅。</h1>
+      <p class="lead">瀬戸内海に浮かぶ佐島の、築百年を越えた古民家です。<br>襖を開けると庭があり、土間には井戸があり、風呂は薪で焚く五右衛門風呂。<br>何もしないための場所が、ここにあります。</p>
+      <p class="button-row"><a class="button button-primary" href="/reserve/">空室を確認して予約する</a><a class="button" href="/about/">汐見の家について</a></p>
+    </div>
   </section>
 
-  <section data-block="essentials" aria-labelledby="essentials-h">
-    <h2 id="essentials-h">宿のあらまし</h2>
-    <dl>
-      <div><dt>宿泊料</dt><dd><strong>素泊り 1泊 5,500円</strong><br>小学生は半額、乳幼児1人まで無料</dd></div>
-      <div><dt>一棟貸し</dt><dd>1泊 30,000円</dd></div>
-      <div><dt>定員</dt><dd>7名<br>これを超える場合や長期滞在はご相談ください</dd></div>
-      <div><dt>チェックイン</dt><dd>15:00 / チェックアウト 10:00</dd></div>
-      <div><dt>所在地</dt><dd>愛媛県越智郡上島町弓削佐島299</dd></div>
-      <div><dt>お問い合わせ</dt><dd><a href="tel:0897729800">0897-72-9800</a><br><a href="mailto:shiomihouse@gmail.com">shiomihouse@gmail.com</a></dd></div>
-    </dl>
+  <section class="section" aria-labelledby="essentials-h">
+    <div class="wrap">
+      <h2 class="section-title" id="essentials-h">宿のあらまし</h2>
+      <dl class="facts">
+        <div><dt>宿泊料</dt><dd><strong>素泊り 1泊 5,500円</strong><br>小学生は半額、乳幼児1人まで無料</dd></div>
+        <div><dt>一棟貸し</dt><dd>1泊 30,000円</dd></div>
+        <div><dt>定員</dt><dd>7名<br>これを超える場合や長期滞在はご相談ください</dd></div>
+        <div><dt>チェックイン</dt><dd>15:00 / チェックアウト 10:00</dd></div>
+        <div><dt>所在地</dt><dd>愛媛県越智郡上島町弓削佐島299</dd></div>
+        <div><dt>お問い合わせ</dt><dd><a href="tel:0897729800">0897-72-9800</a><br><a href="mailto:shiomihouse@gmail.com">shiomihouse@gmail.com</a></dd></div>
+      </dl>
+    </div>
   </section>
 
-  <section data-block="features" aria-labelledby="features-h">
-    <h2 id="features-h">よその宿には、たぶん無いもの</h2>
+  <section class="section" aria-labelledby="features-h">
+    <div class="wrap">
+      <h2 class="section-title" id="features-h">よその宿には、たぶん無いもの</h2>
 
-    <article>
-      <img src="img/goemon-bath-1200.jpg" alt="五右衛門風呂" width="1200" height="800">
-      <h3>五右衛門風呂</h3>
-      <p>薪で焚きます。井戸から汲んだ水を沸かすので、湯が軟らかい。
-         焚きつけから湯加減まで、やりたい方にはお任せします。</p>
-    </article>
+      <div class="feature-list">
 
-    <article>
-      <img src="img/well-pump-1200.jpg" alt="土間の井戸と手押しポンプ" width="1200" height="800">
-      <h3>井戸</h3>
-      <p>手押しポンプ、またはバケツで汲みます。五右衛門風呂に使う水はここから。
-         飲用には適しません。</p>
-    </article>
+        <article class="feature">
+          <div class="feature-photo">
+            <img src="img/goemon-bath-1200.jpg"
+                 srcset="img/goemon-bath-480.jpg 480w, img/goemon-bath-800.jpg 800w, img/goemon-bath-1200.jpg 1200w, img/goemon-bath-1800.jpg 1800w"
+                 sizes="(min-width: 66em) 620px, (min-width: 48em) 58vw, 100vw"
+                 alt="五右衛門風呂" width="1200" height="800" loading="lazy">
+          </div>
+          <div class="feature-body">
+            <h3>五右衛門風呂</h3>
+            <p>薪で焚きます。井戸から汲んだ水を沸かすので、湯が軟らかい。焚きつけから湯加減まで、やりたい方にはお任せします。</p>
+          </div>
+        </article>
 
-    <article>
-      <img src="img/prayer-room-1200.jpg" alt="簡易イスラム礼拝室のクルアーンと礼拝マット" width="1200" height="800">
-      <h3>簡易イスラム礼拝室</h3>
-      <p>クルアーンと礼拝マット、方角の印を用意しています。
-         ムスリムの方が安心して泊まれる島の宿は、まだ多くありません。</p>
-    </article>
+        <article class="feature">
+          <div class="feature-photo">
+            <img src="img/well-pump-1200.jpg"
+                 srcset="img/well-pump-480.jpg 480w, img/well-pump-800.jpg 800w, img/well-pump-1200.jpg 1200w, img/well-pump-1800.jpg 1800w"
+                 sizes="(min-width: 66em) 620px, (min-width: 48em) 58vw, 100vw"
+                 alt="土間の井戸と手押しポンプ" width="1200" height="800" loading="lazy">
+          </div>
+          <div class="feature-body">
+            <h3>井戸</h3>
+            <p>手押しポンプ、またはバケツで汲みます。五右衛門風呂に使う水はここから。飲用には適しません。</p>
+          </div>
+        </article>
 
-    <article>
-      <img src="img/horigotatsu-1200.jpg" alt="掘りごたつの間" width="1200" height="800">
-      <h3>掘りごたつとピアノ</h3>
-      <p>足を下ろして座れる掘りごたつの間。ピアノもあります。弾いてください。</p>
-    </article>
+        <article class="feature">
+          <div class="feature-photo">
+            <img src="img/prayer-room-1200.jpg"
+                 srcset="img/prayer-room-480.jpg 480w, img/prayer-room-800.jpg 800w, img/prayer-room-1200.jpg 1200w, img/prayer-room-1800.jpg 1800w"
+                 sizes="(min-width: 66em) 620px, (min-width: 48em) 58vw, 100vw"
+                 alt="簡易イスラム礼拝室のクルアーンと礼拝マット" width="1200" height="900" loading="lazy">
+          </div>
+          <div class="feature-body">
+            <h3>簡易イスラム礼拝室</h3>
+            <p>クルアーンと礼拝マット、方角の印を用意しています。ムスリムの方が安心して泊まれる島の宿は、まだ多くありません。</p>
+          </div>
+        </article>
+
+        <article class="feature">
+          <div class="feature-photo">
+            <img src="img/horigotatsu-1200.jpg"
+                 srcset="img/horigotatsu-480.jpg 480w, img/horigotatsu-800.jpg 800w, img/horigotatsu-1200.jpg 1200w, img/horigotatsu-1800.jpg 1800w"
+                 sizes="(min-width: 66em) 620px, (min-width: 48em) 58vw, 100vw"
+                 alt="掘りごたつの間" width="1200" height="800" loading="lazy">
+          </div>
+          <div class="feature-body">
+            <h3>掘りごたつとピアノ</h3>
+            <p>足を下ろして座れる掘りごたつの間。ピアノもあります。弾いてください。</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
   </section>
 
-  <section data-block="rooms-teaser" aria-labelledby="rooms-h">
-    <h2 id="rooms-h">部屋</h2>
-    <p>襖で仕切られた和室に布団を敷きます。
-       相部屋で始めた宿ですが、いまは原則としてグループごとの個室です。</p>
-    <ul>
-      <li><img src="img/room-oku-800.jpg" alt="奥の間" width="800" height="533"><span>奥の間（6畳）</span></li>
-      <li><img src="img/room-omote-800.jpg" alt="表の間" width="800" height="533"><span>表の間（6畳）</span></li>
-      <li><img src="img/room-tokonoma-800.jpg" alt="床の間のある和室" width="800" height="533"><span>天窓の間（3畳）</span></li>
-    </ul>
-    <p><a href="/rooms/">部屋と設備を詳しく見る</a></p>
+  <section class="section" aria-labelledby="rooms-h">
+    <div class="wrap">
+      <h2 class="section-title" id="rooms-h">部屋</h2>
+      <p class="section-intro">襖で仕切られた和室に布団を敷きます。相部屋で始めた宿ですが、いまは原則としてグループごとの個室です。</p>
+      <ul class="photo-grid room-list">
+        <li><img src="img/room-oku-800.jpg"
+                 srcset="img/room-oku-480.jpg 480w, img/room-oku-800.jpg 800w, img/room-oku-1200.jpg 1200w"
+                 sizes="(min-width: 66em) 360px, (min-width: 40em) 33vw, 100vw"
+                 alt="奥の間" width="800" height="533" loading="lazy"><span>奥の間（6畳）</span></li>
+        <li><img src="img/room-omote-800.jpg"
+                 srcset="img/room-omote-480.jpg 480w, img/room-omote-800.jpg 800w"
+                 sizes="(min-width: 66em) 360px, (min-width: 40em) 33vw, 100vw"
+                 alt="表の間" width="800" height="600" loading="lazy"><span>表の間（6畳）</span></li>
+        <li><img src="img/room-tokonoma-800.jpg"
+                 srcset="img/room-tokonoma-480.jpg 480w, img/room-tokonoma-800.jpg 800w, img/room-tokonoma-1200.jpg 1200w"
+                 sizes="(min-width: 66em) 360px, (min-width: 40em) 33vw, 100vw"
+                 alt="床の間のある和室" width="800" height="533" loading="lazy"><span>天窓の間（3畳）</span></li>
+      </ul>
+      <p class="more"><a href="/rooms/">部屋と設備を詳しく見る</a></p>
+    </div>
   </section>
 
-  <section data-block="meals-teaser" aria-labelledby="meals-h">
-    <img src="img/meal-1200.jpg" alt="開業を祝う膳" width="1200" height="900">
-    <h2 id="meals-h">シェアごはん</h2>
-    <p>ほかのゲストやスタッフと一緒に、作る・食べる・片すをシェアします。
-       料理が苦手でも大丈夫です。できることを手伝ってもらいます。
-       島の人が差し入れを持って来て宴会になることもあれば、結局ひとりのこともあります。</p>
-    <p><a href="/meals/">食事について</a></p>
+  <section class="section" aria-labelledby="meals-h">
+    <div class="wrap media">
+      <div class="media-photo">
+        <img src="img/meal-480.jpg" alt="開業を祝う膳" width="480" height="640" loading="lazy">
+      </div>
+      <div class="media-body">
+        <h2 class="section-title" id="meals-h">シェアごはん</h2>
+        <p>ほかのゲストやスタッフと一緒に、作る・食べる・片すをシェアします。料理が苦手でも大丈夫です。できることを手伝ってもらいます。島の人が差し入れを持って来て宴会になることもあれば、結局ひとりのこともあります。</p>
+        <p class="more"><a href="/meals/">食事について</a></p>
+      </div>
+    </div>
   </section>
 
-  <section data-block="access-teaser" aria-labelledby="access-h">
-    <img src="img/sea-islands-1200.jpg" alt="瀬戸内の島々と海" width="1200" height="800">
-    <h2 id="access-h">佐島まで</h2>
-    <p>しまなみ海道の少し東にある離島です。どこかで必ず船に乗ります。
-       一番短い航路はたった3分。対岸には、ゆったりした島時間が待っています。</p>
-    <p><a href="/access/">アクセスを見る</a></p>
+  <section class="section" aria-labelledby="access-h">
+    <div class="wrap media media-reverse">
+      <div class="media-photo">
+        <img src="img/sea-islands-1200.jpg"
+             srcset="img/sea-islands-480.jpg 480w, img/sea-islands-800.jpg 800w, img/sea-islands-1200.jpg 1200w, img/sea-islands-1800.jpg 1800w"
+             sizes="(min-width: 66em) 560px, (min-width: 48em) 55vw, 100vw"
+             alt="瀬戸内の島々と海" width="1200" height="900" loading="lazy">
+      </div>
+      <div class="media-body">
+        <h2 class="section-title" id="access-h">佐島まで</h2>
+        <p>しまなみ海道の少し東にある離島です。どこかで必ず船に乗ります。一番短い航路はたった3分。対岸には、ゆったりした島時間が待っています。</p>
+        <p class="more"><a href="/access/">アクセスを見る</a></p>
+      </div>
+    </div>
   </section>
 
-  <section data-block="stories-teaser" aria-labelledby="stories-h">
-    <h2 id="stories-h">読み物</h2>
-    <ul>
-      <li><a href="/stories/shiomi/"><span>アメリカ日系一世 ロバート汐見の足跡</span>
-          <span>この家の縁となった、大正期に渡米した医師の生涯。全7回。</span></a></li>
-      <li><a href="/stories/renovation/"><span>古民家再生の記録</span>
-          <span>2012年の「はじまり」から開業、第二期改修まで。</span></a></li>
-      <li><a href="/stories/island/"><span>島の暮らし</span>
-          <span>島四国、島親、こまなん自動車。佐島で起きていること。</span></a></li>
-    </ul>
+  <section class="section" aria-labelledby="stories-h">
+    <div class="wrap">
+      <h2 class="section-title" id="stories-h">読み物</h2>
+      <ul class="link-list">
+        <li><a href="/stories/shiomi/"><span class="link-title">アメリカ日系一世 ロバート汐見の足跡</span><span class="link-desc">この家の縁となった、大正期に渡米した医師の生涯。全7回。</span></a></li>
+        <li><a href="/stories/renovation/"><span class="link-title">古民家再生の記録</span><span class="link-desc">2012年の「はじまり」から開業、第二期改修まで。</span></a></li>
+        <li><a href="/stories/island/"><span class="link-title">島の暮らし</span><span class="link-desc">島四国、島親、こまなん自動車。佐島で起きていること。</span></a></li>
+      </ul>
+    </div>
   </section>
 
-  <section data-block="cta">
-    <h2>泊まりに来ませんか</h2>
-    <p>空室の確認とご予約はこちらから。お電話でも承ります。</p>
-    <p><a href="/reserve/">予約・お問い合わせ</a></p>
+  <section class="section cta">
+    <div class="wrap">
+      <h2>泊まりに来ませんか</h2>
+      <p>空室の確認とご予約はこちらから。お電話でも承ります。</p>
+      <p class="button-row"><a class="button button-primary" href="/reserve/">予約・お問い合わせ</a></p>
+    </div>
   </section>
 
 </main>
 
-<footer>
-  <div data-block="footer-info">
-    <p><strong>古民家ゲストハウス 汐見の家</strong><br>
-       〒794-2520 愛媛県越智郡上島町弓削佐島299<br>
-       TEL <a href="tel:0897729800">0897-72-9800</a><br>
-       <a href="mailto:shiomihouse@gmail.com">shiomihouse@gmail.com</a></p>
-    <p>長く空き家だったため、地図に番地が出ないことがあります。
-       その場合は「古民家ゲストハウス汐見の家」で検索してください。</p>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-info">
+      <p><strong>古民家ゲストハウス 汐見の家</strong><br>〒794-2520 愛媛県越智郡上島町弓削佐島299<br>TEL <a href="tel:0897729800">0897-72-9800</a><br><a href="mailto:shiomihouse@gmail.com">shiomihouse@gmail.com</a></p>
+      <p>長く空き家だったため、地図に番地が出ないことがあります。その場合は「古民家ゲストハウス汐見の家」で検索してください。</p>
+    </div>
+    <nav aria-label="フッターメニュー">
+      <ul>
+        <li><a href="/about/">汐見の家について</a></li>
+        <li><a href="/rooms/">部屋と設備</a></li>
+        <li><a href="/meals/">食事</a></li>
+        <li><a href="/access/">アクセス</a></li>
+        <li><a href="/stories/">読み物</a></li>
+        <li><a href="/media/">メディア掲載</a></li>
+        <li><a href="/thanks/">Special Thanks</a></li>
+        <li><a href="/reserve/">ご予約</a></li>
+      </ul>
+    </nav>
+    <p class="copyright">© 汐見の家合同会社</p>
   </div>
-  <nav aria-label="フッターメニュー">
-    <ul>
-      <li><a href="/about/">汐見の家について</a></li>
-      <li><a href="/rooms/">部屋と設備</a></li>
-      <li><a href="/meals/">食事</a></li>
-      <li><a href="/access/">アクセス</a></li>
-      <li><a href="/stories/">読み物</a></li>
-      <li><a href="/media/">メディア掲載</a></li>
-      <li><a href="/thanks/">Special Thanks</a></li>
-      <li><a href="/reserve/">ご予約</a></li>
-    </ul>
-  </nav>
-  <p data-block="copyright">© 汐見の家合同会社</p>
 </footer>
 
 </body>

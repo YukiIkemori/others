@@ -1137,5 +1137,108 @@
     "bytes": 23203
    }
   ]
+ },
+ {
+  "name": "meal-table",
+  "alt": "シェアごはんの食卓に並んだ料理",
+  "source": "4545.jpg（明るさ・トリミングのみ）",
+  "sizes": [
+   {
+    "file": "meal-table-1200.jpg",
+    "w": 1200,
+    "h": 900
+   },
+   {
+    "file": "meal-table-800.jpg",
+    "w": 800,
+    "h": 600
+   },
+   {
+    "file": "meal-table-480.jpg",
+    "w": 480,
+    "h": 360
+   }
+  ]
+ },
+ {
+  "name": "guests-engawa",
+  "alt": "縁側に座る浴衣姿の宿泊客",
+  "source": "IMG_3519.jpg",
+  "sizes": [
+   {
+    "file": "guests-engawa-1800.jpg",
+    "w": 1800,
+    "h": 1200
+   },
+   {
+    "file": "guests-engawa-1200.jpg",
+    "w": 1200,
+    "h": 800
+   },
+   {
+    "file": "guests-engawa-800.jpg",
+    "w": 800,
+    "h": 533
+   },
+   {
+    "file": "guests-engawa-480.jpg",
+    "w": 480,
+    "h": 320
+   }
+  ]
+ },
+ {
+  "name": "guests-garden",
+  "alt": "浴衣姿で庭を眺める宿泊客",
+  "source": "IMG_3633.jpg",
+  "sizes": [
+   {
+    "file": "guests-garden-1800.jpg",
+    "w": 1800,
+    "h": 1200
+   },
+   {
+    "file": "guests-garden-1200.jpg",
+    "w": 1200,
+    "h": 800
+   },
+   {
+    "file": "guests-garden-800.jpg",
+    "w": 800,
+    "h": 533
+   },
+   {
+    "file": "guests-garden-480.jpg",
+    "w": 480,
+    "h": 320
+   }
+  ]
+ },
+ {
+  "name": "guests-photo",
+  "alt": "縁側で写真を撮る浴衣姿の宿泊客",
+  "source": "IMG_3680.jpg",
+  "sizes": [
+   {
+    "file": "guests-photo-1800.jpg",
+    "w": 1800,
+    "h": 1200
+   },
+   {
+    "file": "guests-photo-1200.jpg",
+    "w": 1200,
+    "h": 800
+   },
+   {
+    "file": "guests-photo-800.jpg",
+    "w": 800,
+    "h": 533
+   },
+   {
+    "file": "guests-photo-480.jpg",
+    "w": 480,
+    "h": 320
+   }
+  ]
  }
 ]

@@ -1,0 +1,638 @@
+@charset "UTF-8";
+/* =====================================================================
+   汐見の家 — サイト共通の意匠
+   ---------------------------------------------------------------------
+   このファイル1枚で全ページの見た目を決めています。
+   考え方は DESIGN.md にまとめてあります。文言の差し替えに CSS を
+   触る必要はありません。
+   目次
+     1. 設定値（色・文字・余白）
+     2. 下地（リセットと基本の文字組み）
+     3. 骨組み（幅・区切り・ページ見出し）
+     4. ヘッダーとナビ
+     5. フッター
+     6. 部品（ボタン・写真・表・リスト・囲み・フォーム・埋め込み）
+     7. トップページの区画
+     8. 下層ページの区画（記事・一覧）
+     9. 印刷
+   ===================================================================== */
+
+
+/* 1. 設定値 ============================================================ */
+
+:root {
+  color-scheme: light;
+
+  /* 色。地は障子紙の白、文字は墨、差し色は瀬戸内の海の青 */
+  --paper:      #fbfaf7;   /* ページの地 */
+  --paper-deep: #f3efe7;   /* 一段濃い地（フッターなど） */
+  --ink:        #2a2924;   /* 本文 */
+  --ink-soft:   #6a665e;   /* 補足・キャプション・小さな見出し */
+  --rule:       #e2ddd3;   /* 罫線 */
+  --shio:       #2f6b87;   /* 差し色：汐の青。リンク・見出しの印・ボタン */
+  --shio-deep:  #1f4f66;   /* 差し色の濃いほう。マウスを乗せたとき */
+  --shio-pale:  #e9f0f3;   /* 差し色の淡い地。予約の囲みなど */
+
+  /* 文字。本文はゴシック、見出しは明朝。OS に入っている書体だけで組む */
+  --font-sans:  "Hiragino Sans", "Hiragino Kaku Gothic ProN", "BIZ UDPGothic",
+                "Yu Gothic Medium", "Yu Gothic", YuGothic, Meiryo,
+                "Noto Sans CJK JP", "Noto Sans JP", sans-serif;
+  --font-serif: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "BIZ UDPMincho",
+                "Yu Mincho", YuMincho, "Noto Serif CJK JP", "Noto Serif JP",
+                "MS PMincho", serif;
+
+  /* 幅。文章は1行 36〜38 字で止める。写真や一覧はもっと広く使う */
+  --width-text: 37rem;
+  --width-page: 66rem;
+  --gutter: clamp(1.25rem, 4vw, 3rem);    /* 左右の余白。どの幅でも 20px 以上 */
+
+  /* 余白の段階 */
+  --space-1: .5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+  --space-section: clamp(3.5rem, 9vw, 6.5rem);   /* 区画と区画の間 */
+
+  --radius: 3px;
+}
+
+
+/* 2. 下地 ============================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  font-size: 106.25%;               /* 17px。宿の客層に合わせて標準より一段大きく */
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;               /* 横スクロールは何があっても起こさない */
+  scroll-behavior: smooth;
+}
+@media (min-width: 56em) {
+  html { font-size: 112.5%; }       /* 18px。広い画面では行長が伸びるので少し上げる */
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: 1.9;
+  letter-spacing: .02em;
+  font-feature-settings: "palt" 0;  /* 日本語の詰め組みはしない。素直に並べる */
+  overflow-wrap: anywhere;          /* 長い URL でも横にはみ出さない */
+  line-break: strict;
+  overflow-x: hidden;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+main { flex: 1 0 auto; }
+
+img, svg, video, iframe { max-width: 100%; }
+img, video { height: auto; display: block; }
+iframe { border: 0; }
+
+a {
+  color: var(--shio);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .22em;
+  text-decoration-color: color-mix(in srgb, var(--shio) 45%, transparent);
+  transition: color .15s, text-decoration-color .15s;
+}
+a:hover { color: var(--shio-deep); text-decoration-color: currentColor; }
+a:focus-visible { outline: 2px solid var(--shio); outline-offset: 3px; border-radius: 2px; }
+
+/* 見出し。明朝で、ゆったり字間 */
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: .06em;
+  margin: 0;
+  color: var(--ink);
+  text-wrap: balance;
+  word-break: auto-phrase;          /* 対応ブラウザでは文節で折り返す */
+}
+h1 { font-size: clamp(1.75rem, 1.25rem + 2.2vw, 2.5rem); }
+h2 { font-size: clamp(1.4rem, 1.15rem + 1.1vw, 1.8rem); }
+h3 { font-size: 1.2rem; font-family: var(--font-sans); font-weight: 600; letter-spacing: .04em; }
+h4 { font-size: 1.05rem; font-family: var(--font-sans); font-weight: 600; letter-spacing: .03em; }
+
+p, ul, ol, dl, table, blockquote, figure, pre { margin: 0 0 1.4em; }
+ul, ol { padding-left: 1.4em; }
+li { margin-bottom: .35em; }
+li > ul, li > ol { margin: .35em 0 0; }
+strong, b { font-weight: 700; }
+small { font-size: .875em; color: var(--ink-soft); }
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: var(--space-4) 0;
+}
+blockquote {
+  padding: .25em 0 .25em 1.25em;
+  border-left: 2px solid var(--shio);
+  color: var(--ink-soft);
+}
+blockquote p:last-child { margin-bottom: 0; }
+figcaption { font-size: .875rem; color: var(--ink-soft); margin-top: .6em; line-height: 1.7; }
+abbr[title] { text-decoration: none; }
+::selection { background: var(--shio-pale); }
+
+
+/* 3. 骨組み ============================================================ */
+
+/* .wrap = ページの幅。.wrap-text = 文章の幅（狭い）。.wrap-wide = 写真向け（少し広い） */
+.wrap, .wrap-text, .wrap-wide {
+  width: 100%;
+  max-width: var(--width-page);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.wrap-text { max-width: calc(var(--width-text) + var(--gutter) * 2); }
+.wrap-wide { max-width: calc(var(--width-page) + 6rem); }
+
+/* .section = トップページの1区画。上下に大きく余白を取る */
+.section { padding-block: var(--space-section); }
+.section + .section { padding-top: 0; }
+
+/* 区画の見出し。上に短い青い線を1本。中央揃えにはしない */
+.section-title,
+main h2 {
+  position: relative;
+  padding-top: 1rem;
+  margin-bottom: var(--space-3);
+}
+.section-title::before,
+main h2::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2.25rem;
+  height: 2px;
+  background: var(--shio);
+}
+main h2 { margin-top: var(--space-5); }
+.section-title, .section > h2:first-child, .section > .wrap > h2:first-child { margin-top: 0; }
+main h3 { margin-top: var(--space-4); margin-bottom: .6em; }
+main h4 { margin-top: var(--space-3); margin-bottom: .5em; }
+h2 + h3, h3 + h4 { margin-top: 0; }
+
+/* 区画の書き出し。見出しの下に置く短い導入文 */
+.section-intro { max-width: var(--width-text); margin-bottom: var(--space-4); }
+
+/* 下層ページの先頭。h1 と、あれば一言 */
+.page-head {
+  padding-block: var(--space-4) var(--space-4);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: var(--space-5);
+}
+.page-head h1 { margin-bottom: .4em; }
+.page-head p { margin: 0; color: var(--ink-soft); max-width: var(--width-text); }
+.page-head + .section { padding-top: 0; }
+
+/* パンくず。あってもなくてもよい */
+.breadcrumb {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-3) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25em .5em;
+  font-size: .875rem;
+  color: var(--ink-soft);
+}
+.breadcrumb li { margin: 0; }
+.breadcrumb li + li::before { content: "／"; margin-right: .5em; color: var(--rule); }
+.breadcrumb a { color: inherit; }
+
+/* 読み物・下層の本文。1行の長さを文章向けに絞る */
+.prose { max-width: var(--width-text); }
+.prose > p:first-of-type { margin-top: 0; }
+.prose img, .prose figure img { width: 100%; }
+.prose figure { margin: var(--space-4) 0; }
+
+/* 目に見えないが読み上げには残す */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+
+/* 4. ヘッダーとナビ ===================================================== */
+
+.site-header {
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+}
+.site-header .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  padding-block: var(--space-2);
+}
+.brand { display: inline-block; line-height: 0; text-decoration: none; }
+.brand img { height: 3.25rem; width: auto; }
+
+/* メニューは隠さず、狭い幅では2段に折り返す。年配の方にも迷いがない */
+.site-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem 1.4rem;
+}
+.site-nav li { margin: 0; }
+.site-nav a {
+  display: inline-block;
+  padding: .3em 0;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: .95rem;
+  letter-spacing: .04em;
+  border-bottom: 1px solid transparent;
+  transition: color .15s, border-color .15s;
+}
+.site-nav a:hover, .site-nav a[aria-current="page"] {
+  color: var(--shio);
+  border-bottom-color: var(--shio);
+}
+/* 「ご予約」だけ枠で囲って目立たせる */
+.site-nav .nav-reserve a {
+  border: 1px solid var(--shio);
+  color: var(--shio);
+  border-radius: var(--radius);
+  padding: .3em .9em;
+}
+.site-nav .nav-reserve a:hover { background: var(--shio); color: #fff; }
+
+@media (min-width: 62em) {
+  .site-header .wrap { flex-wrap: nowrap; padding-block: var(--space-3); }
+  .brand img { height: 3.6rem; }
+  .site-nav ul { gap: .25rem 1.75rem; }
+}
+
+
+/* 5. フッター =========================================================== */
+
+.site-footer {
+  background: var(--paper-deep);
+  border-top: 1px solid var(--rule);
+  padding-block: var(--space-5) var(--space-3);
+  font-size: .95rem;
+  line-height: 1.8;
+}
+.site-footer .wrap {
+  display: grid;
+  gap: var(--space-4) var(--space-5);
+}
+.site-footer p { margin: 0 0 1em; }
+.footer-info p:last-child { color: var(--ink-soft); font-size: .9rem; margin: 0; }
+.footer-info a { color: inherit; }
+.site-footer nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .3em 1.5em;
+}
+.site-footer nav li { margin: 0; }
+.site-footer nav a { color: var(--ink); text-decoration: none; }
+.site-footer nav a:hover { color: var(--shio); text-decoration: underline; }
+.copyright {
+  grid-column: 1 / -1;
+  margin: 0 !important;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--rule);
+  color: var(--ink-soft);
+  font-size: .85rem;
+}
+@media (min-width: 48em) {
+  .site-footer .wrap { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+}
+
+
+/* 6. 部品 =============================================================== */
+
+/* ボタン。.button が枠、.button-primary が塗り。<a> にも <button> にも使える */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5em;
+  min-height: 3rem;
+  padding: .6em 1.5em;
+  border: 1px solid var(--shio);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--shio);
+  font: inherit;
+  font-size: 1rem;
+  letter-spacing: .04em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color .15s, color .15s, border-color .15s;
+}
+.button:hover { background: var(--shio-pale); color: var(--shio-deep); border-color: var(--shio-deep); }
+.button-primary { background: var(--shio); color: #fff; }
+.button-primary:hover { background: var(--shio-deep); color: #fff; }
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+}
+@media (max-width: 30em) {
+  .button-row .button { flex: 1 1 100%; }   /* 狭い画面ではボタンを横いっぱいに */
+}
+
+/* 「もっと見る」の行。本文末尾の1行リンク */
+.more { margin: var(--space-3) 0 0; }
+.more a { text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: .1em; }
+.more a::after { content: "→"; margin-left: .4em; }
+
+/* 写真。単独でも並べても使える */
+.photo img { width: 100%; }
+.photo-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: var(--space-3) var(--space-3);
+}
+.photo-grid li { margin: 0; }
+.photo-grid img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.photo-grid figcaption, .photo-grid span { display: block; font-size: .9rem; color: var(--ink-soft); margin-top: .5em; }
+
+/* 写真と文章を横に並べる。狭い幅では縦に積む。.media-reverse で写真を右に */
+.media {
+  display: grid;
+  gap: var(--space-3) var(--space-5);
+  align-items: start;
+}
+.media-photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.media-body > :first-child { margin-top: 0; }
+.media-body > :last-child { margin-bottom: 0; }
+@media (min-width: 48em) {
+  .media { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); align-items: center; }
+  .media-reverse .media-photo { order: 2; }
+}
+
+/* 用語と説明。料金表・宿の概要・アクセスの要点に */
+.facts {
+  display: grid;
+  gap: var(--space-3) var(--space-4);
+  margin: 0;
+  padding-block: var(--space-3);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.facts > div { margin: 0; }
+.facts dt {
+  font-size: .85rem;
+  letter-spacing: .12em;
+  color: var(--shio);
+  margin-bottom: .2em;
+}
+.facts dd { margin: 0; }
+.facts strong { font-family: var(--font-serif); font-weight: 500; font-size: 1.3rem; letter-spacing: .04em; }
+@media (min-width: 40em) { .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 62em) { .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+/* 説明つきの用語リスト（縦に並ぶ）。下層ページのハウスルールや設備一覧に */
+.facts-list dt { font-weight: 600; margin-top: 1em; }
+.facts-list dd { margin: 0 0 .5em; color: var(--ink); }
+
+/* 表。狭い幅では .table-scroll で包むと横スクロールできる（ページ全体は動かない） */
+table { width: 100%; border-collapse: collapse; font-size: .95rem; line-height: 1.7; }
+th, td { padding: .7em .8em; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+thead th { border-bottom: 2px solid var(--ink); font-weight: 600; }
+tbody th { font-weight: 600; white-space: nowrap; }
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 1.4em; }
+.table-scroll table { min-width: 32rem; margin: 0; }
+
+/* 罫線で区切るリンク一覧。読み物の目次、メディア掲載など */
+.link-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--rule);
+}
+.link-list li { margin: 0; border-bottom: 1px solid var(--rule); }
+.link-list a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .25em var(--space-2);
+  padding: 1.1em 0;
+  color: var(--ink);
+  text-decoration: none;
+}
+.link-list a::after {
+  content: "→";
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  color: var(--shio);
+  transition: transform .15s;
+}
+.link-list a:hover .link-title { color: var(--shio); }
+.link-list a:hover::after { transform: translateX(3px); }
+.link-title { font-family: var(--font-serif); font-size: 1.15rem; letter-spacing: .04em; line-height: 1.5; }
+.link-desc { font-size: .9rem; color: var(--ink-soft); line-height: 1.7; }
+
+/* 囲み。.notice は補足、.notice-important は必ず読んでほしいこと */
+.notice {
+  padding: var(--space-3);
+  background: var(--paper-deep);
+  border-radius: var(--radius);
+  margin: 0 0 1.4em;
+}
+.notice-important { background: var(--shio-pale); border-left: 3px solid var(--shio); }
+.notice > :last-child { margin-bottom: 0; }
+
+/* 日付や区分などの小さな見出し。記事の日付、メディア掲載の媒体名など */
+.eyebrow, .article-meta {
+  font-size: .85rem;
+  letter-spacing: .1em;
+  color: var(--ink-soft);
+}
+
+/* 予約・問い合わせのフォーム。JS なしで動く HTML の部品だけ */
+fieldset { border: 0; padding: 0; margin: 0 0 var(--space-4); min-width: 0; }
+legend { font-weight: 600; padding: 0; margin-bottom: var(--space-2); }
+label { display: block; font-weight: 600; margin-bottom: .35em; }
+.form-row { margin-bottom: var(--space-3); }
+.form-note { font-size: .875rem; color: var(--ink-soft); margin-top: .3em; }
+input:not([type="checkbox"]):not([type="radio"]), select, textarea {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-height: 3rem;
+  padding: .6em .8em;
+  font: inherit;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid #c9c3b8;
+  border-radius: var(--radius);
+}
+textarea { min-height: 8rem; resize: vertical; }
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--shio); outline-offset: 1px; border-color: var(--shio); }
+.choice { display: flex; flex-wrap: wrap; gap: .5em 1.5em; }
+.choice label { font-weight: 400; display: inline-flex; align-items: center; gap: .5em; margin: 0; }
+input[type="checkbox"], input[type="radio"] { width: 1.15em; height: 1.15em; accent-color: var(--shio); }
+@media (min-width: 40em) {
+  .form-row-short input, .form-row-short select { max-width: 20rem; }
+}
+
+/* 地図や空室カレンダーの埋め込み。iframe に幅が書いてあっても枠に収める */
+.embed {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: var(--paper-deep);
+  margin: 0 0 1.4em;
+}
+.embed iframe { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
+@media (min-width: 48em) { .embed { aspect-ratio: 16 / 9; } }
+.embed-tall { aspect-ratio: 3 / 4; }
+@media (min-width: 48em) { .embed-tall { aspect-ratio: 4 / 3; } }
+
+
+/* 7. トップページの区画 ================================================= */
+
+/* 顔になる写真。文字は写真の上に置かず、下に置く */
+.hero { padding-top: 0; }
+.hero-photo { margin: 0; }
+.hero-photo img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center 55%;
+}
+.hero-text { padding-top: var(--space-4); }
+.hero-text h1 { margin-bottom: var(--space-3); }
+.lead {
+  font-size: 1.05rem;
+  max-width: var(--width-text);
+  margin-bottom: 0;
+}
+@media (max-width: 47.99em) {
+  .lead br { display: none; }             /* 狭い幅では文の途中で改行させない */
+}
+@media (min-width: 48em) {
+  .hero-photo { padding-inline: var(--gutter); max-width: calc(var(--width-page) + 6rem); margin-inline: auto; }
+  .hero-photo img { aspect-ratio: 16 / 8; max-height: 36rem; }
+  .hero-text { padding-top: var(--space-5); }
+  .lead { font-size: 1.1rem; }
+}
+
+/* 宿のあらまし。.facts をそのまま使う */
+
+/* よその宿には無いもの。写真と説明を交互に */
+.feature-list { display: grid; gap: var(--space-5); }
+.feature { display: grid; gap: var(--space-3) var(--space-5); align-items: center; }
+.feature img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.feature h3 { margin: 0 0 .5em; font-family: var(--font-serif); font-weight: 500; font-size: 1.35rem; letter-spacing: .06em; }
+.feature p { margin: 0; max-width: 30rem; }
+@media (min-width: 48em) {
+  .feature-list { gap: var(--space-section); }
+  .feature { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+  .feature:nth-child(even) .feature-photo { order: 2; }
+}
+
+/* 部屋。写真3枚を並べる。.photo-grid をそのまま使う */
+.room-list img { aspect-ratio: 4 / 3; }
+
+/* 泊まりに来ませんか。淡い青の地に */
+.cta { background: var(--shio-pale); padding-block: var(--space-5); }
+.cta h2 { margin-top: 0; }
+.cta h2::before { display: none; }
+.cta p { max-width: var(--width-text); }
+.cta .button-row { margin-top: var(--space-3); }
+.section + .cta { padding-top: var(--space-5); }
+
+
+/* 8. 下層ページの区画 =================================================== */
+
+/* 読み物1本。見出し・日付・本文 */
+.article { max-width: var(--width-text); }
+.article header { margin-bottom: var(--space-4); padding-bottom: var(--space-3); border-bottom: 1px solid var(--rule); }
+.article header h1 { margin-bottom: .5em; }
+.article .article-meta { display: block; }
+.article h2 { font-size: 1.4rem; }
+.article h2::before { width: 1.75rem; }
+.article figure img { width: 100%; }
+
+/* 連載の前後へ */
+.article-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--rule);
+}
+.article-nav a { text-decoration: none; }
+.article-nav a:hover { text-decoration: underline; }
+
+/* 連載や記録の一覧（読み物の目次）。番号つきなら <ol class="link-list"> でよい */
+ol.link-list { counter-reset: item; }
+ol.link-list a::before {
+  counter-increment: item;
+  content: counter(item, cjk-ideographic);
+  grid-column: 1;
+  font-family: var(--font-serif);
+  color: var(--shio);
+  font-size: .9rem;
+  letter-spacing: .1em;
+}
+
+/* メディア掲載など、日付＋媒体＋一言の行 */
+.media-list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--rule); }
+.media-list li {
+  margin: 0;
+  padding: 1em 0;
+  border-bottom: 1px solid var(--rule);
+  display: grid;
+  gap: .2em var(--space-3);
+}
+.media-list time, .media-list .eyebrow { color: var(--ink-soft); font-size: .875rem; letter-spacing: .06em; }
+@media (min-width: 40em) {
+  .media-list li { grid-template-columns: 7.5rem minmax(0, 1fr); }
+  .media-list time, .media-list .eyebrow { grid-row: 1 / span 2; }
+}
+
+/* 時系列の記録（古民家再生など）。年や日付を左に */
+.timeline { list-style: none; padding: 0; margin: 0; }
+.timeline > li {
+  margin: 0 0 var(--space-4);
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--rule);
+}
+.timeline time { display: block; font-size: .875rem; letter-spacing: .08em; color: var(--shio); margin-bottom: .3em; }
+.timeline h3 { margin-top: 0; }
+
+
+/* 9. 印刷 =============================================================== */
+@media print {
+  .site-nav, .cta, .button-row, .article-nav { display: none; }
+  body { background: #fff; color: #000; font-size: 11pt; }
+  a { color: inherit; text-decoration: underline; }
+  .hero-photo img, .feature img { max-height: 60mm; }
+}
