@@ -48,6 +48,7 @@
                 "MS PMincho", serif;
 
   /* 幅 */
+  --header-h: 0rem;                        /* 貼り付いたヘッダーの高さ。62em以上で値が入る */
   --w-text:  38rem;                        /* 文章の1行。36〜38字 */
   --w-page:  80rem;                        /* 区画の内側の最大幅。1440px */
   --gutter:  clamp(1.25rem, 5vw, 6rem);    /* 左右の余白。狭い画面で 20px、広い画面で 96px */
@@ -77,6 +78,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
+  scroll-padding-top: calc(var(--header-h) + 1rem);
   font-size: 106.25%;               /* 17px。本文は 17px を下回らない */
   -webkit-text-size-adjust: 100%;
   overflow-x: clip;                 /* 横スクロールは何があっても起こさない */
@@ -94,12 +96,11 @@ body {
   line-height: 1.9;
   letter-spacing: .02em;
   font-feature-settings: "palt" 0;
-  /* 折り返し。日本語は文節の切れ目で折る（auto-phrase）。
-     これが無いと「手／伝って」「原則とし／て」のように語の途中で割れる。
-     非対応のブラウザでは従来どおり字単位で折れるだけで、崩れはしない。
-     break-word は、収まらない長い語だけを割る指定。anywhere と違い
-     メールアドレスや電話番号を途中で割らない */
-  word-break: auto-phrase;
+  /* 折り返し。break-word は、収まらない長い語だけを割る指定。
+     anywhere と違い、メールアドレスや電話番号を途中で割らない。
+     文節単位で折る auto-phrase は、見出しや短い一文にだけ効かせる
+     （下の .phrase-break）。長い本文にかけると、文節が次の行へ
+     まとめて送られて右端がぼろぼろになる */
   overflow-wrap: break-word;
   line-break: strict;
   overflow-x: clip;
@@ -137,6 +138,14 @@ h1, h2, h3, h4 {
   word-break: auto-phrase;
   font-feature-settings: "palt" 1;   /* 見出しは詰め組み。大きい文字は詰めた方が締まる */
 }
+/* 短い一文は文節で折る。語の途中で割れるのを防ぐ。
+   長い本文にはかけない（右端がぼろぼろになるため） */
+.phrase-break, .eyebrow, .hero__lead, .page-head p, .brand__name,
+.index-list__title, .facts-strip dt, .facts-strip dd, .button, .site-nav a,
+.breadcrumb, .reading-nav a, .form-note, figcaption, .faq__item h3 {
+  word-break: auto-phrase;
+}
+
 h1 { font-size: var(--fs-display); line-height: 1.15; }
 h2 { font-size: var(--fs-h2); }
 h3 { font-size: var(--fs-h3); }
@@ -216,12 +225,16 @@ figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-h
     writing-mode: vertical-rl;
     text-orientation: mixed;
     position: sticky;
-    top: var(--s4);
+    top: calc(var(--header-h) + var(--s4));
     font-size: clamp(1.75rem, 1rem + 1.6vw, 2.75rem);   /* 横書きの h2 より一段小さい。12字でも画面に収まる */
     letter-spacing: .22em;
     line-height: 1;
-    white-space: nowrap;      /* 途中で列を折らない（折れると2列に見える） */
-    text-wrap: initial;
+    /* 途中で列を折らない。折れると2列になり、line-height:1 のせいで
+       隣の列と重なって読めなくなる。
+       text-wrap: initial を足してはいけない。white-space の nowrap は
+       text-wrap-mode の nowrap でもあるので、あとから initial に戻すと
+       この nowrap ごと打ち消されてしまう（実際それで重なっていた） */
+    white-space: nowrap;
     padding-right: .1em;
   }
   .side-layout__title::before {
@@ -264,6 +277,10 @@ figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-h
   color: inherit;
 }
 .brand img { height: 3.4rem; width: auto; flex: none; background: none; }
+/* トップのヘッダーは写真の上では白いロゴ、下げて紙の色になったら色付きのロゴ。
+   2枚重ねて入れ替える（画像の差し替えはCSSではできないため） */
+.brand__marks { position: relative; display: block; flex: none; line-height: 0; }
+.brand__mark--dark { position: absolute; inset: 0; opacity: 0; }
 .brand__name {
   display: flex;
   flex-direction: column;
@@ -323,11 +340,72 @@ figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-h
 .site-header--overlay .site-nav .nav-reserve a:hover { background: #fff; border-color: #fff; color: var(--ink); }
 
 @media (min-width: 62em) {
-  .site-header__inner { flex-wrap: nowrap; padding-block: var(--s3); }
-  .brand img { height: 4rem; }
-  .brand__name { font-size: 1.4rem; }
-  .site-nav ul { gap: .25rem 2rem; }
+  :root { --header-h: 5.7rem; }   /* 実測 約91px。アンカーで飛んだときに隠れないよう少し多めに */
+  .site-header__inner { flex-wrap: nowrap; padding-block: var(--s2); gap: var(--s2) var(--s3); }
+  /* 62em〜80em はメニューが1行に収まるぎりぎり。ここで大きくすると
+     2段に折り返し、貼り付いたヘッダーが画面の2割近くを占めてしまう */
+  .brand img { height: 3rem; }
+  .brand__name { font-size: 1.15rem; }
+  .brand__sub { font-size: .8rem; }
+  .site-nav ul { gap: .25rem 1.1rem; }
+  .site-nav a { font-size: .875rem; letter-spacing: .04em; }
+  .site-nav .nav-reserve a { padding: .45em .9em; }
+
+  /* 読みながらでも他のページに移れるように、上に貼り付ける。
+     スマホは折り返して2段になり画面を食うので、貼り付けない */
+  .site-header { position: sticky; top: 0; }
 }
+
+/* トップは写真の上に重なっている。スクロール連動に対応している
+   ブラウザでだけ、貼り付けたうえで、下げると紙の色に変わる。
+   対応していなければ、いままでどおり写真と一緒に流れて消える */
+/* 画面が広ければ、字間と間隔を元に戻す */
+@media (min-width: 80em) {
+  :root { --header-h: 6.4rem; }   /* 実測 約102px */
+  .brand img { height: 3.6rem; }
+  .brand__name { font-size: 1.35rem; }
+  .brand__sub { font-size: .9rem; }
+  .site-nav ul { gap: .25rem 2rem; }
+  .site-nav a { font-size: .95rem; letter-spacing: .08em; }
+  .site-nav .nav-reserve a { padding: .45em 1.1em; }
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (min-width: 62em) {
+    .site-header--overlay {
+      position: fixed;
+      border-bottom: 1px solid transparent;
+      animation: header-settle linear both;
+      animation-timeline: scroll();
+      animation-range: 45vh 75vh;
+    }
+    .site-header--overlay .site-nav .nav-reserve a {
+      animation: header-settle-button linear both;
+      animation-timeline: scroll();
+      animation-range: 45vh 75vh;
+    }
+    .site-header--overlay .brand__mark--light {
+      animation: mark-fade-out linear both;
+      animation-timeline: scroll();
+      animation-range: 45vh 75vh;
+    }
+    .site-header--overlay .brand__mark--dark {
+      animation: mark-fade-in linear both;
+      animation-timeline: scroll();
+      animation-range: 45vh 75vh;
+    }
+  }
+}
+@keyframes header-settle {
+  from { background-color: rgba(251, 250, 247, 0); color: #fff; border-bottom-color: rgba(221, 215, 203, 0); }
+  to   { background-color: rgba(251, 250, 247, .96); color: var(--ink); border-bottom-color: var(--rule); }
+}
+@keyframes header-settle-button {
+  from { background-color: rgba(255, 255, 255, .12); }
+  to   { background-color: transparent; }
+}
+@keyframes mark-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes mark-fade-in  { from { opacity: 0; } to { opacity: 1; } }
 
 
 /* 5. ヒーロー =========================================================== */
@@ -540,13 +618,11 @@ a:hover .photo img, .photo:hover img { transform: scale(1.03); }
 
 @media (min-width: 40em) {
   .facts-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s4); }
-  .facts-strip > div:first-child { grid-column: 1 / -1; }
 }
 @media (min-width: 62em) {
+  /* 既定は4列。上端を揃えて、同じ幅で並べる */
   .facts-strip {
-    /* 定員の補足（「これを超える場合や長期滞在はご相談ください」）が
-       文節で折れる幅を確保するため、3列目を広めに取る */
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, .95fr) minmax(0, 1.35fr) minmax(0, 1.2fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     column-gap: 0;
     border-bottom: 1px solid var(--ink);
   }
@@ -555,10 +631,17 @@ a:hover .photo img, .photo:hover img { transform: scale(1.03); }
     border-bottom: 0;
   }
   .facts-strip > div + div { padding-left: var(--s3); border-left: 1px solid var(--rule); }
-  .facts-strip > div:first-child { grid-column: 1; grid-row: 1 / span 2; padding-right: var(--s5); display: flex; flex-direction: column; justify-content: center; }
-  .facts-strip > div:nth-child(n+5) { border-top: 1px solid var(--rule); }
-  .facts-strip > div:nth-child(5) { grid-column: 2 / 4; }
-  .facts-strip > div:nth-child(6) { grid-column: 4; }
+
+  /* 料金の帯（トップと「汐見の家について」）は6項目。
+     素泊りの金額を大きく見せる組み方にする。
+     3列目を広めに取るのは、定員の補足が文節で折れる幅を確保するため */
+  .facts-strip--price {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, .95fr) minmax(0, 1.35fr) minmax(0, 1.2fr);
+  }
+  .facts-strip--price > div:first-child { grid-column: 1; grid-row: 1 / span 2; padding-right: var(--s5); display: flex; flex-direction: column; justify-content: center; }
+  .facts-strip--price > div:nth-child(n+5) { border-top: 1px solid var(--rule); }
+  .facts-strip--price > div:nth-child(5) { grid-column: 2 / 4; }
+  .facts-strip--price > div:nth-child(6) { grid-column: 4; }
 }
 
 /* --- よその宿には、たぶん無いもの .collage ------------------------------
@@ -703,7 +786,9 @@ a:hover .photo img, .photo:hover img { transform: scale(1.03); }
 /* 8. 下層ページ向けの部品 =============================================== */
 
 /* ページの頭。h1 と一言。ヒーローの無いページで使う */
-.page-head { padding-block: var(--s5) var(--s5); border-bottom: 1px solid var(--ink); margin-bottom: var(--s6); }
+/* 区画（.band）が自前で上下の余白を持っているので、ここでは足さない。
+   足すと、見出しと最初の中身のあいだに画面半分ぶんの空白ができる */
+.page-head { padding-block: var(--s5) var(--s5); border-bottom: 1px solid var(--ink); margin-bottom: 0; }
 .page-head .eyebrow { margin-bottom: var(--s2); }
 .page-head h1 { font-size: clamp(2.25rem, 1.5rem + 3vw, 4.5rem); margin-bottom: .5em; }
 .page-head p { margin: 0; max-width: var(--w-text); color: var(--ink-soft); font-size: 1.05rem; }
@@ -725,6 +810,39 @@ a:hover .photo img, .photo:hover img { transform: scale(1.03); }
 .prose img { width: 100%; }
 .prose figure { margin: var(--s4) 0; }
 .prose figure.photo--bleed { max-width: none; }
+
+/* 読み物のページ。PCでは左に案内（連載の目次）、右に本文。
+   1カラムのまま中央に細く置くと、両脇が空きすぎて落ち着かない。
+   <div class="reading"><nav class="reading__side">…</nav><div class="reading__body">…</div></div> */
+.reading { display: grid; gap: var(--s5); }
+.reading__body { min-width: 0; }
+.reading__body > :first-child { margin-top: 0; }
+/* 狭い画面では本文が先。目次を頭に置くと、読み始めるまでに
+   十数行ぶんスクロールさせることになる */
+.reading__side { min-width: 0; order: 2; }
+@media (min-width: 62em) {
+  .reading {
+    grid-template-columns: minmax(0, 16rem) minmax(0, 44rem);
+    gap: clamp(2.5rem, 5vw, 6rem);
+    justify-content: center;
+    align-items: start;
+  }
+  .reading__side { position: sticky; top: calc(var(--header-h) + var(--s4)); order: 0; }
+}
+
+/* 左の案内の中身 */
+.reading-nav__label { display: block; font-size: .8rem; letter-spacing: .18em; color: var(--ink-soft); margin-bottom: .8em; }
+.reading-nav { list-style: none; margin: 0 0 var(--s4); padding: 0; border-top: 1px solid var(--ink); font-size: .95rem; }
+.reading-nav li { margin: 0; border-bottom: 1px solid var(--rule); }
+.reading-nav a { display: block; padding: .7em 0; color: var(--ink); text-decoration: none; line-height: 1.5; }
+.reading-nav a:hover { color: var(--shio); }
+.reading-nav a[aria-current="page"], .reading-nav a[aria-current="true"] { color: var(--shio); font-weight: 600; }
+.reading-nav__back { display: inline-block; margin-bottom: var(--s3); font-size: .95rem; text-decoration: none; }
+.reading-nav__back:hover { text-decoration: underline; }
+
+/* 本文の中の写真。.photo は margin:0 なので、文章の中では上下に間を空ける */
+.article .photo, .prose .photo { margin-block: var(--s4); }
+.article figure, .prose figure { margin-block: var(--s4); }
 
 /* 読み物1本。見出し・日付・本文 */
 .article { max-width: var(--w-text); }
@@ -749,8 +867,12 @@ a:hover .photo img, .photo:hover img { transform: scale(1.03); }
 }
 
 /* よくあるご質問。問いと答えを1組ずつ、細い線で仕切る */
+.faq { display: grid; border-top: 1px solid var(--ink); }
 .faq__item { padding: var(--s4) 0; border-bottom: 1px solid var(--rule); }
-.faq__item:first-child { border-top: 1px solid var(--ink); }
+@media (min-width: 62em) {
+  /* PCでは2列。16問を1列で縦に並べると、両脇が空きすぎる */
+  .faq { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(2.5rem, 5vw, 5rem); }
+}
 .faq__item h3 { font-size: 1.2rem; margin: 0 0 .6em; }
 .faq__item h3::before { content: "Q."; font-family: var(--font-serif); color: var(--shio); margin-right: .5em; }
 .faq__item p { margin: 0; color: var(--ink-soft); }
@@ -785,6 +907,10 @@ tbody th { font-weight: 600; white-space: nowrap; }
 .embed--tall { aspect-ratio: 3 / 4; }
 @media (min-width: 48em) { .embed--tall { aspect-ratio: 4 / 3; } }
 
+/* フォーム。素の HTML の部品だけで動く。
+   横に広がりすぎると書きにくいので、1行の長さは本文と同じに抑える */
+.form, .lead { max-width: var(--w-text); }
+.lead { color: var(--ink-soft); margin-bottom: var(--s5); }
 /* フォーム。素の HTML の部品だけで動く */
 fieldset { border: 0; padding: 0; margin: 0 0 var(--s5); min-width: 0; }
 legend { font-family: var(--font-serif); font-size: 1.35rem; letter-spacing: .08em; padding: 0; margin-bottom: var(--s3); }

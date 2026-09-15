@@ -136,6 +136,30 @@ def img(name, alt, w, h, sizes, widths=(480, 800, 1200, 1800), up="../", lazy=Tr
             f'             alt="{alt}" width="{w}" height="{h}"{lz}>')
 
 
+def reading(side_html, body_html):
+    """PCで左に案内、右に本文の2段組。1段のまま中央に細く置くと両脇が空きすぎる"""
+    return f'''      <div class="reading">
+        <aside class="reading__side">
+{side_html}
+        </aside>
+        <div class="reading__body">
+{body_html}
+        </div>
+      </div>'''
+
+
+def reading_nav(label, back, items, current=None):
+    """左の案内。items は [(リンク先, 見出し)]。current と一致する項目に印を付ける"""
+    lis = []
+    for href, text in items:
+        cur = ' aria-current="page"' if current and href == current else ""
+        lis.append(f'            <li><a href="{href}"{cur}>{text}</a></li>')
+    back_html = f'          <a class="reading-nav__back" href="{back[0]}">← {back[1]}</a>\n' if back else ""
+    return (f'{back_html}'
+            f'          <span class="reading-nav__label">{label}</span>\n'
+            f'          <ul class="reading-nav">\n' + "\n".join(lis) + '\n          </ul>')
+
+
 def side(title, body):
     """PC で左に縦書きの見出し、右に中身。見出しは12字まで"""
     return f'''      <div class="side-layout">

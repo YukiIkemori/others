@@ -63,7 +63,7 @@ def esc(t):
     return html.escape(t, quote=False)
 
 
-def render_img(src, alt, up, sizes="(min-width: 48em) 620px, 100vw", cap=""):
+def render_img(src, alt, up, sizes="(min-width: 62em) 44rem, (min-width: 48em) 90vw, 100vw", cap=""):
     m = IMG.get(src)
     if not m or not m["sizes"]:
         return ""
@@ -143,6 +143,10 @@ def article_page(slug, path_slug, title, eyebrow, prev_, next_, up="../../../"):
                + "".join(nav) + "</nav></div>\n") if nav else ""
     body = render_blocks(a["blocks"], up)
     date = f'<p class="article__meta"><time>{a["date"]}</time>　西村 暢子</p>' if a["date"] else '<p class="article__meta">西村 暢子</p>'
+    nav_items = [("/stories/shiomi/", "はじめに")] + [
+        (f"/stories/shiomi/{p2}/", esc(t2)) for _, p2, t2, _ in SHIOMI if p2]
+    here = f"/stories/shiomi/{path_slug}/" if path_slug else "/stories/shiomi/"
+    side = bp.reading_nav("目次", ("/stories/shiomi/", esc(SERIES_NAME)), nav_items, here)
     return [
         bp.head(f"{title}｜{SERIES_NAME}｜汐見の家", desc, canon, up),
         bp.header("/stories/", up),
@@ -157,13 +161,15 @@ def article_page(slug, path_slug, title, eyebrow, prev_, next_, up="../../../"):
   </div>
 
   <article class="band">
-    <div class="container--text article">
-      <header>
-        <p class="eyebrow">{esc(eyebrow)}</p>
-        <h1>{esc(title)}</h1>
-        {date}
-      </header>
+    <div class="container">
+{bp.reading(side, f"""      <div class="article">
+        <header>
+          <p class="eyebrow">{esc(eyebrow)}</p>
+          <h1>{esc(title)}</h1>
+          {date}
+        </header>
 {body}
+      </div>""")}
     </div>
   </article>
 {navhtml}''',
@@ -206,9 +212,11 @@ def build_shiomi():
   </div>
 
   <article class="band">
-    <div class="container--text article">
-      <header><h2>はじめに</h2><p class="article__meta"><time>{a["date"]}</time>　西村 暢子</p></header>
+    <div class="container">
+{bp.side("はじめに", f"""        <div class="article">
+          <p class="article__meta"><time>{a["date"]}</time>　西村 暢子</p>
 {body}
+        </div>""")}
     </div>
   </article>
 
@@ -227,39 +235,27 @@ def build_shiomi():
 
 
 def merged_page(path, canon, title, lead, desc, entries, intro_slug=None, up="../../"):
-    parts = []
+    body = []
     if intro_slug:
-        parts.append(f'''
-  <section class="band">
-    <div class="container--text prose">
-{render_blocks(ART[intro_slug]["blocks"], up)}
-    </div>
-  </section>
-''')
-    toc = "\n".join(f'        <li><a href="#{anc}">{esc(t)}</a></li>' for _, anc, t in entries)
-    parts.append(f'''
-  <section class="band">
-    <div class="container">
-      <h2>目次</h2>
-      <ul class="index-list">
-{toc}
-      </ul>
-    </div>
-  </section>
-''')
+        body.append(f'        <div class="prose">\n{render_blocks(ART[intro_slug]["blocks"], up)}\n        </div>')
     for slug, anc, t in entries:
         a = ART.get(slug)
         if not a:
             continue
         d = f'<p class="article__meta"><time>{a["date"]}</time></p>' if a["date"] else ""
-        parts.append(f'''
-  <section class="band" id="{anc}">
-    <div class="container--text article">
-      <header><h2>{esc(t)}</h2>{d}</header>
+        body.append(f'''        <section class="article" id="{anc}">
+          <header><h2>{esc(t)}</h2>{d}</header>
 {render_blocks(a["blocks"], up)}
+        </section>''')
+    side = bp.reading_nav("目次", ("/stories/", "読み物"),
+                          [(f"#{anc}", esc(t)) for _, anc, t in entries])
+    parts = [f'''
+  <section class="band">
+    <div class="container">
+{bp.reading(side, chr(10).join(body))}
     </div>
   </section>
-''')
+''']
     return [
         bp.head(title, desc, canon, up),
         bp.header("/stories/", up),
@@ -315,16 +311,18 @@ def build_media():
 
 def build_thanks():
     parts = []
-    for slug, t in [("special_thanks", "Special Thanks"), ("harukoseki", "関 晴子さんのこと")]:
+    for slug, t in [("special_thanks", "お世話になった皆さま"), ("harukoseki", "関 晴子さんのこと")]:
         a = ART.get(slug)
         if not a:
             continue
         anc = "seki-haruko" if slug == "harukoseki" else "list"
+        body = render_blocks(a["blocks"], "../")
         parts.append(f'''
   <section class="band" id="{anc}">
-    <div class="container--text article">
-      <header><h2>{esc(t)}</h2></header>
-{render_blocks(a["blocks"], "../")}
+    <div class="container">
+{bp.side(esc(t), f"""        <div class="prose">
+{body}
+        </div>""")}
     </div>
   </section>
 ''')

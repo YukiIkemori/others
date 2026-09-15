@@ -35,6 +35,9 @@ def page(i, slug, ps, title):
     navhtml = ('\n  <div class="container"><nav class="article-nav" aria-label="記録の移動">'
                + "".join(nav) + "</nav></div>\n")
     d = f'<p class="article__meta"><time>{a["date"]}</time>　西村 暢子</p>' if a["date"] else '<p class="article__meta">西村 暢子</p>'
+    side = bp.reading_nav("目次", ("/stories/renovation/", SERIES),
+                          [(f"/stories/renovation/{p2}/", ms.esc(t2)) for _, p2, t2 in ITEMS],
+                          f"/stories/renovation/{ps}/")
     return [
         bp.head(f"{title}｜{SERIES}｜汐見の家", desc, canon, up),
         bp.header("/stories/", up),
@@ -49,13 +52,15 @@ def page(i, slug, ps, title):
   </div>
 
   <article class="band">
-    <div class="container--text article">
-      <header>
-        <p class="eyebrow">{ms.esc(SERIES)}</p>
-        <h1>{ms.esc(title)}</h1>
-        {d}
-      </header>
+    <div class="container">
+{bp.reading(side, f"""      <div class="article">
+        <header>
+          <p class="eyebrow">{ms.esc(SERIES)}</p>
+          <h1>{ms.esc(title)}</h1>
+          {d}
+        </header>
 {ms.render_blocks(a["blocks"], up)}
+      </div>""")}
     </div>
   </article>
 {navhtml}''',
@@ -90,8 +95,10 @@ def index_page():
   </div>
 
   <section class="band">
-    <div class="container--text prose">
+    <div class="container">
+{bp.side("この記録について", f"""        <div class="prose">
 {intro}
+        </div>""")}
     </div>
   </section>
 

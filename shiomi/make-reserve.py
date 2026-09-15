@@ -158,29 +158,28 @@ def page():
   </section>
 
   <section class="band" aria-labelledby="form-h">
-    <div class="container--text">
-      <div class="band__head">
-        <h2 id="form-h">フォームから</h2>
-        <p>ご宿泊のお申し込みは、いただいた内容を確認して<strong>こちらから返信したときに成立</strong>します。この時点ではまだ確定ではありませんので、ご了承ください。</p>
-      </div>
-{FORM}
+    <div class="container">
+{bp.side('<span id="form-h">フォームから</span>', f"""        <p class="lead">ご宿泊のお申し込みは、いただいた内容を確認して<strong>こちらから返信したときに成立</strong>します。この時点ではまだ確定ではありませんので、ご了承ください。</p>
+{FORM}""")}
     </div>
   </section>
 
   <section class="band band--deep" aria-labelledby="tel-h">
-    <div class="container--text">
-      <div class="band__head"><h2 id="tel-h">お電話でも</h2></div>
-      <p>フォームが使いにくいときは、お電話ください。</p>
-      <p><a class="tel-large" href="tel:0897729800">0897-72-9800</a></p>
-      <p>島の宿ですので、出られないことがあります。その場合は改めておかけ直しいただくか、フォームをお使いください。</p>
+    <div class="container">
+{bp.side('<span id="tel-h">お電話でも</span>', """        <div class="prose">
+          <p>フォームが使いにくいときは、お電話ください。</p>
+          <p><a class="tel-large" href="tel:0897729800">0897-72-9800</a></p>
+          <p>島の宿ですので、出られないことがあります。その場合は改めておかけ直しいただくか、フォームをお使いください。</p>
+        </div>""")}
     </div>
   </section>
 
   <section class="band" aria-labelledby="before-h">
-    <div class="container--text">
-      <div class="band__head"><h2 id="before-h">ご予約の前に</h2></div>
+    <div class="container">
+{bp.side('<span id="before-h">ご予約の前に</span>', f"""        <div class="prose">
 {BEFORE}
-      <p class="button-row"><a class="button" href="/faq/">よくあるご質問</a><a class="button" href="/rooms/">部屋と設備をもっと見る</a><a class="button" href="/access/">行き方を調べる</a></p>
+          <p class="button-row"><a class="button" href="/faq/">よくあるご質問</a><a class="button" href="/rooms/">部屋と設備をもっと見る</a><a class="button" href="/access/">行き方を調べる</a></p>
+        </div>""")}
     </div>
   </section>
 ''',
