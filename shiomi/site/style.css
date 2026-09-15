@@ -94,7 +94,13 @@ body {
   line-height: 1.9;
   letter-spacing: .02em;
   font-feature-settings: "palt" 0;
-  overflow-wrap: anywhere;
+  /* 折り返し。日本語は文節の切れ目で折る（auto-phrase）。
+     これが無いと「手／伝って」「原則とし／て」のように語の途中で割れる。
+     非対応のブラウザでは従来どおり字単位で折れるだけで、崩れはしない。
+     break-word は、収まらない長い語だけを割る指定。anywhere と違い
+     メールアドレスや電話番号を途中で割らない */
+  word-break: auto-phrase;
+  overflow-wrap: break-word;
   line-break: strict;
   overflow-x: clip;
   min-height: 100dvh;
@@ -534,15 +540,17 @@ a:hover .photo img, .photo:hover img { transform: scale(1.03); }
 }
 @media (min-width: 62em) {
   .facts-strip {
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.25fr);
+    /* 定員の補足（「これを超える場合や長期滞在はご相談ください」）が
+       文節で折れる幅を確保するため、3列目を広めに取る */
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, .95fr) minmax(0, 1.35fr) minmax(0, 1.2fr);
     column-gap: 0;
     border-bottom: 1px solid var(--ink);
   }
   .facts-strip > div {
-    padding: var(--s4) var(--s4) var(--s4) 0;
+    padding: var(--s4) var(--s3) var(--s4) 0;
     border-bottom: 0;
   }
-  .facts-strip > div + div { padding-left: var(--s4); border-left: 1px solid var(--rule); }
+  .facts-strip > div + div { padding-left: var(--s3); border-left: 1px solid var(--rule); }
   .facts-strip > div:first-child { grid-column: 1; grid-row: 1 / span 2; padding-right: var(--s5); display: flex; flex-direction: column; justify-content: center; }
   .facts-strip > div:nth-child(n+5) { border-top: 1px solid var(--rule); }
   .facts-strip > div:nth-child(5) { grid-column: 2 / 4; }
@@ -898,3 +906,8 @@ input[type="checkbox"], input[type="radio"] { width: 1.15em; height: 1.15em; acc
 
 /* 途中で折らない語句（時刻と語の組など） */
 .nowrap { white-space: nowrap; }
+/* 電話・メールのように「割ってはいけないが、枠を超えても困る」もの。
+   狭い画面で本当に収まらないときだけ、折り返しを許す */
+@media (max-width: 26em) {
+  a.nowrap { white-space: normal; overflow-wrap: anywhere; }
+}
