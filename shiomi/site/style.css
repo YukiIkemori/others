@@ -297,7 +297,7 @@ figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-h
 /* ナビ。隠さない。狭い幅では折り返す */
 .site-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: .1rem 1.25rem; }
 .site-nav li { margin: 0; }
-.site-nav a {
+.site-nav ul a {
   display: inline-block;
   padding: .35em 0;
   color: inherit;
@@ -306,7 +306,7 @@ figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-h
   letter-spacing: .08em;
   position: relative;
 }
-.site-nav a::after {
+.site-nav ul a::after {
   content: "";
   position: absolute;
   left: 0; right: 0; bottom: .1em;
@@ -316,11 +316,140 @@ figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-h
   transform-origin: left;
   transition: transform .35s var(--ease);
 }
-.site-nav a:hover::after, .site-nav a[aria-current="page"]::after { transform: scaleX(1); }
-/* 「ご予約」だけボタンにする */
-.site-nav .nav-reserve a { padding: .45em 1.1em; border: 1px solid currentColor; border-radius: 999px; }
-.site-nav .nav-reserve a::after { display: none; }
-.site-nav .nav-reserve a:hover { background: var(--shio); border-color: var(--shio); color: #fff; }
+.site-nav ul a:hover::after, .site-nav ul a[aria-current="page"]::after { transform: scaleX(1); }
+/* 「ご予約」はボタンの形。狭い画面でもヘッダーに出したままにする */
+.nav-reserve {
+  flex: none;
+  padding: .45em 1.1em;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: inherit;
+  text-decoration: none;
+  font-size: .95rem;
+  letter-spacing: .08em;
+  white-space: nowrap;
+  transition: background-color .25s, color .25s, border-color .25s;
+}
+.nav-reserve:hover { background: var(--shio); border-color: var(--shio); color: #fff; }
+
+/* メニューの開け閉め。JavaScript は使わず、チェックボックスの状態で切り替える。
+   input は見えないが focus は当たるので、キーボードでも開ける */
+.nav-toggle { position: absolute; width: 1px; height: 1px; opacity: 0; margin: 0; }
+.nav-button, .nav-close { display: none; }
+
+/* --- 狭い画面：メニューを畳む ------------------------------------------
+   ヘッダーは1行（ロゴ／ご予約／メニューボタン）。
+   ボタンを押すと、画面いっぱいの板が出てメニューが並ぶ。 */
+@media (max-width: 61.99em) {
+  .site-header__inner { flex-wrap: nowrap; gap: var(--s2); padding-block: .55rem; }
+  .brand img { height: 2.8rem; }
+  .brand__name { font-size: 1.05rem; letter-spacing: .12em; }
+  .brand__sub { font-size: .72rem; letter-spacing: .1em; margin-bottom: .15em; }
+  .nav-reserve { font-size: .85rem; padding: .45em .95em; margin-left: auto; }
+
+  /* メニューボタン（三本線） */
+  .nav-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-right: -.6rem;
+    cursor: pointer;
+    color: inherit;
+  }
+  .nav-button__bars, .nav-button__bars::before, .nav-button__bars::after {
+    content: "";
+    display: block;
+    width: 1.35rem;
+    height: 1px;
+    background: currentColor;
+    transition: transform .25s var(--ease);
+  }
+  .nav-button__bars { position: relative; }
+  .nav-button__bars::before { position: absolute; top: -.42rem; }
+  .nav-button__bars::after  { position: absolute; top: .42rem; }
+
+  /* 畳んだ中身。開くまでは画面の外に置く */
+  .site-nav {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: var(--paper);
+    color: var(--ink);
+    padding: 1.25rem var(--gutter) 3rem;
+    padding-top: max(1.25rem, env(safe-area-inset-top));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-.75rem);
+    transition: opacity .25s, transform .3s var(--ease), visibility .25s;
+  }
+  .nav-toggle:checked ~ .site-header .site-nav {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+  }
+
+  /* 板の中の閉じるボタン（×） */
+  .nav-close {
+    display: block;
+    position: relative;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin: 0 -.6rem 1.5rem auto;
+    cursor: pointer;
+  }
+  .nav-close::before, .nav-close::after {
+    content: "";
+    position: absolute;
+    left: .6rem; right: .6rem; top: 50%;
+    height: 1px;
+    background: var(--ink);
+  }
+  .nav-close::before { transform: rotate(45deg); }
+  .nav-close::after  { transform: rotate(-45deg); }
+
+  .site-nav ul { display: block; border-top: 1px solid var(--ink); }
+  .site-nav li { display: block; }
+  /* 一覧の中のリンクだけ。下の予約ボタンや電話番号には効かせない */
+  .site-nav ul a {
+    display: block;
+    padding: 1.05em 0;
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    letter-spacing: .1em;
+    border-bottom: 1px solid var(--rule);
+  }
+  .site-nav ul a::after { display: none; }
+  .site-nav ul a[aria-current="page"] { color: var(--shio); }
+
+  /* キーボードで開けるように、focus の見た目をボタン側に出す */
+  /* 板の下の方。細かいページと、予約・電話 */
+  .nav-sub { border-top: 0; margin-top: var(--s4); }
+  .site-nav .nav-sub a { font-family: var(--font-sans); font-size: .95rem; padding: .8em 0; color: var(--ink-soft); letter-spacing: .06em; }
+  .nav-extra { margin-top: var(--s5); }
+  .nav-extra p { margin-bottom: .6em; font-size: .95rem; color: var(--ink-soft); }
+  .nav-extra .button { width: 100%; }
+  .nav-extra .tel-large { font-size: 1.75rem; }
+
+  .nav-toggle:focus-visible ~ .site-header .nav-button,
+  .nav-toggle:focus-visible ~ .site-header .nav-close {
+    outline: 2px solid var(--shio);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+/* 開いているあいだは、後ろの写真や文字が透けないように板を不透明に保つ。
+   トップの白い文字がそのまま出ないよう、色も戻す */
+.nav-toggle:checked ~ .site-header .site-nav ul a { color: var(--ink); }
+
+@media (min-width: 62em) {
+  .nav-sub, .nav-extra, .nav-close { display: none; }
+}
 
 /* 写真の上に重なる版。ヒーローのあるページで使う */
 .site-header--overlay {
@@ -331,8 +460,8 @@ figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-h
   color: #fff;
 }
 .site-header--overlay .brand:hover .brand__name { color: #fff; opacity: .85; }
-.site-header--overlay .site-nav .nav-reserve a { background: rgba(255,255,255,.12); backdrop-filter: blur(6px); }
-.site-header--overlay .site-nav .nav-reserve a:hover { background: #fff; border-color: #fff; color: var(--ink); }
+.site-header--overlay .nav-reserve { background: rgba(255,255,255,.12); backdrop-filter: blur(6px); }
+.site-header--overlay .nav-reserve:hover { background: #fff; border-color: #fff; color: var(--ink); }
 
 @media (min-width: 62em) {
   :root { --header-h: 5.7rem; }   /* 実測 約91px。アンカーで飛んだときに隠れないよう少し多めに */
@@ -344,7 +473,7 @@ figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-h
   .brand__sub { font-size: .8rem; }
   .site-nav ul { gap: .25rem 1.1rem; }
   .site-nav a { font-size: .875rem; letter-spacing: .04em; }
-  .site-nav .nav-reserve a { padding: .45em .9em; }
+  .nav-reserve { padding: .45em .9em; }
 
   /* 読みながらでも他のページに移れるように、上に貼り付ける。
      スマホは折り返して2段になり画面を食うので、貼り付けない */
@@ -361,8 +490,8 @@ figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-h
   .brand__name { font-size: 1.35rem; }
   .brand__sub { font-size: .9rem; }
   .site-nav ul { gap: .25rem 2rem; }
-  .site-nav a { font-size: .95rem; letter-spacing: .08em; }
-  .site-nav .nav-reserve a { padding: .45em 1.1em; }
+  .site-nav ul a { font-size: .95rem; letter-spacing: .08em; }
+  .nav-reserve { padding: .45em 1.1em; }
 }
 
 @supports (animation-timeline: scroll()) {
@@ -374,7 +503,7 @@ figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-h
       animation-timeline: scroll();
       animation-range: 45vh 75vh;
     }
-    .site-header--overlay .site-nav .nav-reserve a {
+    .site-header--overlay .nav-reserve {
       animation: header-settle-button linear both;
       animation-timeline: scroll();
       animation-range: 45vh 75vh;

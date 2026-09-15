@@ -37,25 +37,44 @@ def brand(up, white=False):
             f'<span class="brand__name"><span class="brand__sub">古民家ゲストハウス</span>汐見の家</span></a>')
 
 
-def header(current, up="../"):
+def header(current, up="../", brand_html=None):
+    """ヘッダー。狭い画面ではメニューを畳んで、ボタンで開く。
+
+    開け閉めは JavaScript ではなく、チェックボックスの状態で行う。
+    input は header より前に置くこと（CSS の ~ で参照するため）。
+    """
     items = []
     for href, label in NAV:
         cur = ' aria-current="page"' if href == current else ""
-        items.append(f'        <li><a href="{href}"{cur}>{label}</a></li>')
-    cur = ' aria-current="page"' if current == "/reserve/" else ""
-    items.append(f'        <li class="nav-reserve"><a href="/reserve/"{cur}>ご予約</a></li>')
+        items.append(f'          <li><a href="{href}"{cur}>{label}</a></li>')
     nav = "\n".join(items)
+    cur = ' aria-current="page"' if current == "/reserve/" else ""
     return f'''
 <a class="reserve-float" href="/reserve/">ご予約</a>
 
+<input class="nav-toggle" type="checkbox" id="nav-open">
+
 <header class="site-header">
   <div class="container site-header__inner">
-    {brand(up)}
+    {brand_html or brand(up)}
     <nav class="site-nav" aria-label="メインメニュー">
+      <label class="nav-close" for="nav-open"><span class="visually-hidden">メニューを閉じる</span></label>
       <ul>
 {nav}
       </ul>
+      <ul class="nav-sub">
+        <li><a href="/faq/">よくあるご質問</a></li>
+        <li><a href="/school/">学校にご用の方へ</a></li>
+        <li><a href="/media/">メディア掲載</a></li>
+        <li><a href="/thanks/">Special Thanks</a></li>
+      </ul>
+      <div class="nav-extra">
+        <p class="button-row"><a class="button button--primary button--large" href="/reserve/">予約・お問い合わせ</a></p>
+        <p>お電話でも承ります<br><a class="tel-large" href="tel:0897729800">0897-72-9800</a></p>
+      </div>
     </nav>
+    <a class="nav-reserve" href="/reserve/"{cur}>ご予約</a>
+    <label class="nav-button" for="nav-open"><span class="nav-button__bars" aria-hidden="true"></span><span class="visually-hidden">メニューを開く</span></label>
   </div>
 </header>
 
