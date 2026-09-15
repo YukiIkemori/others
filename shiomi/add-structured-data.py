@@ -39,7 +39,7 @@ LODGING = {
     "petsAllowed": False,
     "smokingAllowed": False,
     "amenityFeature": [
-        {"@type": "LocationFeatureSpecification", "name": "五右衛門風呂", "value": True},
+        {"@type": "LocationFeatureSpecification", "name": "五右衛門風呂（前日までの要相談）", "value": True},
         {"@type": "LocationFeatureSpecification", "name": "井戸（手押しポンプ）", "value": True},
         {"@type": "LocationFeatureSpecification", "name": "簡易イスラム礼拝室", "value": True},
         {"@type": "LocationFeatureSpecification", "name": "ピアノ", "value": True},
@@ -122,6 +122,9 @@ def main():
         s, title, canon = page_meta(f)
         blocks = []
 
+        if 'name="robots" content="noindex"' in s:
+            continue
+
         if f == "index.html":
             blocks.append(jsonld(LODGING))
             blocks.append(jsonld({
@@ -183,8 +186,8 @@ def main():
     for f in pages:
         if f == "404.html":
             continue
-        _, _, canon = page_meta(f)
-        if not canon:
+        body, _, canon = page_meta(f)
+        if not canon or 'name="robots" content="noindex"' in body:
             continue
         rows.append(f"  <url>\n    <loc>{canon}</loc>\n    <lastmod>{today}</lastmod>\n"
                     f"    <priority>{prio.get(f, '0.6')}</priority>\n  </url>")

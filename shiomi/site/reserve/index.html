@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ご予約・お問い合わせ｜汐見の家</title>
-<meta name="description" content="汐見の家のご予約とお問い合わせ。素泊り1泊5,500円、一棟貸し1泊30,000円。フォームまたはお電話（0897-72-9800）で承ります。24時間以内にご返信します。">
+<title>ご予約・お問い合わせ｜汐見の家 - 瀬戸内・佐島の古民家ゲストハウス</title>
+<meta name="description" content="汐見の家のご予約とお問い合わせ。素泊り1泊5,500円、一棟貸し1泊30,000円、定員7名。フォームまたはお電話（0897-72-9800）で承ります。24時間以内にご返信します。">
 <link rel="canonical" href="https://shiomihouse.com/reserve/">
 <meta name="theme-color" content="#fbfaf7">
 <link rel="stylesheet" href="../style.css">
@@ -36,8 +36,8 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="古民家ゲストハウス 汐見の家">
 <meta property="og:locale" content="ja_JP">
-<meta property="og:title" content="ご予約・お問い合わせ｜汐見の家">
-<meta property="og:description" content="汐見の家のご予約とお問い合わせ。素泊り1泊5,500円、一棟貸し1泊30,000円。フォームまたはお電話（0897-72-9800）で承ります。24時間以内にご返信します。">
+<meta property="og:title" content="ご予約・お問い合わせ｜汐見の家 - 瀬戸内・佐島の古民家ゲストハウス">
+<meta property="og:description" content="汐見の家のご予約とお問い合わせ。素泊り1泊5,500円、一棟貸し1泊30,000円、定員7名。フォームまたはお電話（0897-72-9800）で承ります。24時間以内にご返信します。">
 <meta property="og:url" content="https://shiomihouse.com/reserve/">
 <meta property="og:image" content="https://shiomihouse.com/img/ogp.jpg">
 <meta property="og:image:width" content="1200">
@@ -47,9 +47,11 @@
 </head>
 <body>
 
+<a class="reserve-float" href="/reserve/">ご予約</a>
+
 <header class="site-header">
-  <div class="wrap">
-    <a class="brand" href="/"><img src="../img/logo.svg" alt="" width="111" height="132"><span class="brand-name"><span class="brand-sub">古民家ゲストハウス</span>汐見の家</span></a>
+  <div class="container site-header__inner">
+    <a class="brand" href="/"><img src="../img/logo.svg" alt="" width="111" height="132"><span class="brand__name"><span class="brand__sub">古民家ゲストハウス</span>汐見の家</span></a>
     <nav class="site-nav" aria-label="メインメニュー">
       <ul>
         <li><a href="/about/">汐見の家について</a></li>
@@ -65,63 +67,42 @@
 
 <main>
 
-  <div class="wrap">
+  <div class="container">
+    <ol class="breadcrumb">
+    <li><a href="/">ホーム</a></li>
+    <li>ご予約・お問い合わせ</li>
+    </ol>
+  </div>
+
+  <div class="container">
     <div class="page-head">
       <h1>ご予約・お問い合わせ</h1>
-      <p>下のフォームか、お電話（<a href="tel:0897729800">0897-72-9800</a>）で承ります。24時間以内にご返信します。</p>
+      <p>フォームか、お電話（<a href="tel:0897729800">0897-72-9800</a>）で承ります。24時間以内にご返信します。</p>
     </div>
   </div>
 
-  <!-- 先方確認用の仮表示。本番公開時にこの notice ごと削除すること -->
-  <section class="section">
-    <div class="wrap">
-      <div class="notice-important">
-        <p><strong>※ これは確認用の見本です。</strong>まだ送信はできません。本番公開のときに動くようになります。</p>
-      </div>
-    </div>
-  </section>
+  <section class="band" aria-labelledby="price-h">
+    <div class="container">
+      <div class="band__head"><h2 id="price-h">料金</h2></div>
 
-  <section class="section">
-    <div class="wrap">
-      <h2>料金</h2>
-      <dl class="facts">
-        <div>
-          <dt>素泊り</dt>
-          <dd><strong>1泊 5,500円</strong><br>小学生は半額、乳幼児1人まで無料</dd>
-        </div>
-        <div>
-          <dt>一棟貸し</dt>
-          <dd>1泊 30,000円</dd>
-        </div>
-        <div>
-          <dt>シェアごはん</dt>
-          <dd>夕飯 1,600円 ／ 朝飯 700円</dd>
-        </div>
-        <div>
-          <dt>定員</dt>
-          <dd>7名<br>超える場合や長期滞在はご相談ください</dd>
-        </div>
-        <div>
-          <dt>チェックイン</dt>
-          <dd>15:00 ／ チェックアウト 10:00</dd>
-        </div>
-        <div>
-          <dt>お電話</dt>
-          <dd><a href="tel:0897729800">0897-72-9800</a></dd>
-        </div>
+      <dl class="facts-strip">
+        <div><dt>素泊り</dt><dd><strong class="price"><span class="price__label">1泊1名</span> <span class="nowrap"><span class="figure">5,500</span><span class="price__unit">円</span></span></strong><small>小学生は半額、乳幼児1人まで無料</small></dd></div>
+        <div><dt>一棟貸し</dt><dd>1泊 <span class="nowrap"><span class="figure figure--small">30,000</span>円</span></dd></div>
+        <div><dt>シェアごはん</dt><dd><span class="nowrap">夕飯 1,600円</span> ／ <span class="nowrap">朝飯 700円</span></dd></div>
+        <div><dt>定員</dt><dd><span class="nowrap"><span class="figure figure--small">7</span>名</span><small>超える場合や長期滞在はご相談ください</small></dd></div>
       </dl>
+
     </div>
   </section>
 
-  <section class="section">
-    <div class="wrap">
-      <h2>フォームから</h2>
-
-      <div class="prose">
+  <section class="band" aria-labelledby="form-h">
+    <div class="container--text">
+      <div class="band__head">
+        <h2 id="form-h">フォームから</h2>
         <p>ご宿泊のお申し込みは、いただいた内容を確認して<strong>こちらから返信したときに成立</strong>します。この時点ではまだ確定ではありませんので、ご了承ください。</p>
       </div>
 
-      <form method="post" action="">
+      <form method="post" action="send.php" class="form">
 
         <div class="form-row">
           <label for="name">お名前 <span class="required">必須</span></label>
@@ -140,12 +121,12 @@
           <p class="form-note">携帯電話会社のメールアドレス（docomo・au・SoftBankなど）をお使いの場合、こちらからの返信が迷惑メールとして弾かれることがあります。そのときはお電話します。</p>
         </div>
 
-        <div class="form-row form-row-short">
+        <div class="form-row form-row--short">
           <label for="checkin">チェックイン日 <span class="required">必須</span></label>
           <input type="date" id="checkin" name="checkin" required>
         </div>
 
-        <div class="form-row form-row-short">
+        <div class="form-row form-row--short">
           <label for="checkout">チェックアウト日 <span class="required">必須</span></label>
           <input type="date" id="checkout" name="checkout" required>
         </div>
@@ -153,9 +134,9 @@
         <fieldset class="form-row">
           <legend>人数 <span class="required">必須</span></legend>
           <div class="choice choice-count">
-            <span><label for="adults">大人</label><input type="number" id="adults" name="adults" min="0" max="7" value="1" inputmode="numeric"></span>
-            <span><label for="kids">小学生</label><input type="number" id="kids" name="kids" min="0" max="7" value="0" inputmode="numeric"></span>
-            <span><label for="infants">未就学児</label><input type="number" id="infants" name="infants" min="0" max="7" value="0" inputmode="numeric"></span>
+            <span><label for="adults">大人</label><input type="number" id="adults" name="adults" min="0" max="20" value="1" inputmode="numeric"></span>
+            <span><label for="kids">小学生</label><input type="number" id="kids" name="kids" min="0" max="20" value="0" inputmode="numeric"></span>
+            <span><label for="infants">未就学児</label><input type="number" id="infants" name="infants" min="0" max="20" value="0" inputmode="numeric"></span>
           </div>
           <p class="form-note">定員は7名です。超える場合もご相談ください。</p>
         </fieldset>
@@ -163,18 +144,26 @@
         <fieldset class="form-row">
           <legend>お部屋の使い方</legend>
           <div class="choice">
-            <label><input type="radio" name="roomtype" value="normal" checked> おまかせ（グループごとの個室）</label>
-            <label><input type="radio" name="roomtype" value="whole"> 一棟貸し（1泊 30,000円）</label>
+            <label><input type="radio" name="roomtype" value="おまかせ（グループごとの個室）" checked> おまかせ（グループごとの個室）</label>
+            <label><input type="radio" name="roomtype" value="一棟貸し"> 一棟貸し（1泊 30,000円）</label>
           </div>
         </fieldset>
 
         <fieldset class="form-row">
           <legend>シェアごはん</legend>
           <div class="choice">
-            <label><input type="checkbox" name="dinner" value="1"> 夕飯（1,600円）</label>
-            <label><input type="checkbox" name="breakfast" value="1"> 朝飯（700円）</label>
+            <label><input type="checkbox" name="dinner" value="希望する"> 夕飯（1,600円）</label>
+            <label><input type="checkbox" name="breakfast" value="希望する"> 朝飯（700円）</label>
           </div>
           <p class="form-note">夕飯をご希望の場合は<strong>17時までにチェックイン</strong>をお願いします。火曜と日曜の夜、貸切のときはお休みです。</p>
+        </fieldset>
+
+        <fieldset class="form-row">
+          <legend>五右衛門風呂</legend>
+          <div class="choice">
+            <label><input type="checkbox" name="goemon" value="希望する"> 焚いてみたい</label>
+          </div>
+          <p class="form-note">準備に時間がかかるため、前日までのご相談をお願いしています。日によってはお受けできないこともあります。</p>
         </fieldset>
 
         <div class="form-row">
@@ -183,57 +172,59 @@
           <p class="form-note">到着のおおよその時刻、交通手段、アレルギー、その他ご心配なことがあればお書きください。</p>
         </div>
 
-        <p class="button-row"><button type="submit" class="button button-primary">この内容で問い合わせる</button></p>
+        <div class="hp" aria-hidden="true">
+          <label for="website">この欄は空のままにしてください</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+
+        <p class="button-row"><button type="submit" class="button button--primary button--large">この内容で問い合わせる</button></p>
       </form>
+
     </div>
   </section>
 
-  <section class="section">
-    <div class="wrap">
-      <h2>お電話でも</h2>
-      <div class="prose">
-        <p>フォームが使いにくいときは、お電話ください。<br>
-           <a class="tel-large" href="tel:0897729800">0897-72-9800</a></p>
-        <p>島の宿ですので、出られないことがあります。その場合は改めておかけ直しいただくか、フォームをお使いください。</p>
-      </div>
+  <section class="band band--deep" aria-labelledby="tel-h">
+    <div class="container--text">
+      <div class="band__head"><h2 id="tel-h">お電話でも</h2></div>
+      <p>フォームが使いにくいときは、お電話ください。</p>
+      <p><a class="tel-large" href="tel:0897729800">0897-72-9800</a></p>
+      <p>島の宿ですので、出られないことがあります。その場合は改めておかけ直しいただくか、フォームをお使いください。</p>
     </div>
   </section>
 
-  <section class="section">
-    <div class="wrap">
-      <h2>ご予約の前に</h2>
-      <dl class="facts-list">
-        <div>
-          <dt>お部屋</dt>
-          <dd>襖で仕切られた和室に布団を敷きます。相部屋で始めた宿ですが、いまは原則としてグループごとの個室です。</dd>
-        </div>
-        <div>
-          <dt>門限</dt>
-          <dd>ありません。ただし静かな集落で、20時を過ぎると静まり返ります。夜の出入りは静かにお願いします。</dd>
-        </div>
-        <div>
-          <dt>使える時間</dt>
-          <dd>シャワー・ドライヤー・洗面台・キッチン・掘りごたつの間・玄関土間は 6時〜24時。洗濯機は22時までにお願いします。</dd>
-        </div>
-        <div>
-          <dt>五右衛門風呂</dt>
-          <dd>薪で焚きます。井戸の水を沸かすので、沸くまでに時間がかかります。ご希望があればお申し付けください。</dd>
-        </div>
-        <div>
-          <dt>宿帳</dt>
-          <dd>ご住所などは当日ご記帳いただきますので、このフォームでは伺いません。</dd>
-        </div>
+  <section class="band" aria-labelledby="before-h">
+    <div class="container--text">
+      <div class="band__head"><h2 id="before-h">ご予約の前に</h2></div>
+
+      <dl class="def-list">
+        <dt>お部屋</dt>
+        <dd>襖で仕切られた和室に布団を敷きます。相部屋で始めた宿ですが、いまは原則としてグループごとの個室です。</dd>
+        <dt>チェックイン・チェックアウト</dt>
+        <dd>15:00 〜 ／ 10:00 まで。夕飯をご希望の場合は17時までにお越しください。</dd>
+        <dt>門限</dt>
+        <dd>ありません。ただし静かな集落で、20時を過ぎると静まり返ります。夜の出入りは静かにお願いします。</dd>
+        <dt>使える時間</dt>
+        <dd>シャワー・ドライヤー・洗面台・キッチン・掘りごたつの間・玄関土間は 6時〜24時。洗濯機は22時までにお願いします。</dd>
+        <dt>五右衛門風呂</dt>
+        <dd>薪で焚き、井戸の水を沸かします。準備に時間がかかるため、前日までのご相談をお願いしています。日によってはお受けできないこともあります。</dd>
+        <dt>宿帳</dt>
+        <dd>ご住所などは当日ご記帳いただきますので、このフォームでは伺いません。</dd>
+        <dt>お支払い</dt>
+        <dd>現地で現金にてお願いします。</dd>
       </dl>
+
+      <p class="button-row"><a class="button" href="/rooms/">部屋と設備をもっと見る</a><a class="button" href="/access/">行き方を調べる</a></p>
     </div>
   </section>
 
 </main>
 
 <footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-info">
-      <p><strong>古民家ゲストハウス 汐見の家</strong><br>〒794-2520 愛媛県越智郡上島町弓削佐島299<br>TEL <a href="tel:0897729800">0897-72-9800</a><br><a href="mailto:shiomihouse@gmail.com">shiomihouse@gmail.com</a></p>
-      <p>長く空き家だったため、地図に番地が出ないことがあります。その場合は「古民家ゲストハウス汐見の家」で検索してください。</p>
+  <div class="container site-footer__inner">
+    <div>
+      <a class="brand" href="/"><img src="../img/logo-white.svg" alt="" width="111" height="132"><span class="brand__name"><span class="brand__sub">古民家ゲストハウス</span>汐見の家</span></a>
+      <p><strong>古民家ゲストハウス 汐見の家</strong><br>〒794-2520 愛媛県越智郡上島町弓削佐島299<br>TEL <a class="nowrap" href="tel:0897729800">0897-72-9800</a><br><a class="nowrap" href="mailto:shiomihouse@gmail.com">shiomihouse@gmail.com</a></p>
+      <p class="site-footer__note">長く空き家だったため、地図に番地が出ないことがあります。その場合は「古民家ゲストハウス汐見の家」で検索してください。</p>
     </div>
     <nav aria-label="フッターメニュー">
       <ul>
@@ -247,7 +238,7 @@
         <li><a href="/reserve/">ご予約</a></li>
       </ul>
     </nav>
-    <p class="copyright">© 汐見の家合同会社</p>
+    <p class="site-footer__copy">© 汐見の家合同会社</p>
   </div>
 </footer>
 

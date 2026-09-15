@@ -8,10 +8,17 @@
       "htaccess.txt",
       "**/*.md",
       "README-納品.txt",
-      "img/manifest.json"
+      "img/manifest.json",
+      "**/*.php"
     ],
     "cleanUrls": false,
     "trailingSlash": true,
+    "rewrites": [
+      {
+        "source": "/reserve/send.php",
+        "destination": "/reserve/preview/index.html"
+      }
+    ],
     "headers": [
       {
         "source": "**",

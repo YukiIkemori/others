@@ -755,6 +755,9 @@ a:hover .photo img, .photo:hover img { transform: scale(1.03); }
 .timeline time { display: block; font-family: var(--font-serif); font-size: 1.1rem; letter-spacing: .12em; color: var(--shio); margin-bottom: .3em; }
 .timeline h3 { margin: 0 0 .5em; font-size: 1.35rem; }
 
+/* 本文のすぐ下につく但し書き。囲まずに、色と細い線で弱める */
+.note-inline { font-size: .95rem; color: var(--ink-soft); border-left: 1px solid var(--rule); padding-left: 1em; }
+
 /* 囲み。.note は補足、.note--important は必ず読んでほしいこと */
 .note { padding: var(--s3) var(--s4); background: var(--paper-deep); margin: 0 0 1.4em; border-left: 1px solid var(--ink); }
 .note--important { background: var(--shio-pale); border-left: 2px solid var(--shio); }
@@ -797,6 +800,9 @@ input[type="checkbox"], input[type="radio"] { width: 1.15em; height: 1.15em; acc
 .choice-count > span { display: block; }
 .choice-count label { font-weight: 600; display: block; margin-bottom: .35em; }
 .choice-count input { width: 6.5rem; min-width: 0; }
+/* 機械よけの罠。人には見せず、読み上げからも外す（HTML側で aria-hidden） */
+.hp { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
 .tel-large { display: inline-block; margin-top: .2em; font-family: var(--font-serif); font-size: 2rem; letter-spacing: .06em; white-space: nowrap; font-feature-settings: "palt" 1; }
 
 
