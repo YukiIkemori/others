@@ -1,0 +1,194 @@
+# 手引き類は配信しない（サーバーに置いてあっても、外からは見えないように）
+<FilesMatch "\.(md|txt)$">
+  Require all denied
+</FilesMatch>
+<Files "robots.txt">
+  Require all granted
+</Files>
+
+# ── テスト用：検索エンジンに載せない ─────────────────────────
+# このサイトは作業用なので、検索結果に出ないようにする。
+# 本番へ移すときは、この .htaccess ごと本番用に差し替えること。
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow"
+</IfModule>
+
+# 汐見の家 — 作業用（テスト）サイト向け
+# 生成: 2026-09-15 / 対象152URL（301: 108件、URL変更なし: 2件、404: 41件）
+#
+# さくらのレンタルサーバ（Apache）のドキュメントルートに置く。
+# テスト用サブドメイン（例: test.shiomihouse.com）のフォルダに置く。
+# 本番のドメインへ移すときは htaccess-honban.txt の方を使うこと。
+#
+# /about/ と /media/ は旧サイトと新サイトでURLが同じなので、
+# リダイレクトを書かない（書くと自分自身へのループになる）。
+
+# ── ためこみ（キャッシュ）の設定 ───────────────────────────────
+# HTMLとCSSは毎回サーバーに確かめに行かせる。
+# これが無いと、文言を直してもブラウザが古いものを出し続けて
+# 「直っていない」ように見える（実際それで一度ハマった）。
+# 写真は変わらないので、長めにためこませる。
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|php)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.css$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(jpg|jpeg|png|svg|webp|ico|woff2)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
+
+Options -Indexes
+DirectoryIndex index.html
+AddDefaultCharset UTF-8
+
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# ---- 読み物：ロバート汐見の足跡（24件） ---------------------------------------------
+RewriteRule ^166/?$ /stories/shiomi/ [R=301,L,NE]
+RewriteRule ^178/?$ /stories/shiomi/1-tobei/ [R=301,L,NE]
+RewriteRule ^179/?$ /stories/shiomi/2-tanshin/ [R=301,L,NE]
+RewriteRule ^193/?$ /stories/shiomi/column-inochi/ [R=301,L,NE]
+RewriteRule ^203/?$ /stories/shiomi/3-seishun/ [R=301,L,NE]
+RewriteRule ^242/?$ /stories/shiomi/tasaka-sumigama/ [R=301,L,NE]
+RewriteRule ^259/?$ /stories/shiomi/4-shuyojo/ [R=301,L,NE]
+RewriteRule ^277/?$ /stories/shiomi/5-american-dream/ [R=301,L,NE]
+RewriteRule ^318/?$ /stories/shiomi/column-tanaka/ [R=301,L,NE]
+RewriteRule ^627/?$ /stories/shiomi/6-bunkazai/ [R=301,L,NE]
+RewriteRule ^1028/?$ /stories/shiomi/7-ryugakusei/ [R=301,L,NE]
+RewriteRule ^1427/?$ /stories/shiomi/nikkei-canadian/ [R=301,L,NE]
+RewriteRule ^1532/?$ /stories/shiomi/owarini/ [R=301,L,NE]
+RewriteRule ^en/511/?$ /stories/shiomi/ [R=301,L,NE]
+RewriteRule ^en/514/?$ /stories/shiomi/1-tobei/ [R=301,L,NE]
+RewriteRule ^en/530/?$ /stories/shiomi/2-tanshin/ [R=301,L,NE]
+RewriteRule ^en/536/?$ /stories/shiomi/3-seishun/ [R=301,L,NE]
+RewriteRule ^en/543/?$ /stories/shiomi/4-shuyojo/ [R=301,L,NE]
+RewriteRule ^en/912/?$ /stories/shiomi/5-american-dream/ [R=301,L,NE]
+RewriteRule ^en/1578/?$ /stories/shiomi/6-bunkazai/ [R=301,L,NE]
+RewriteRule ^en/1582/?$ /stories/shiomi/7-ryugakusei/ [R=301,L,NE]
+RewriteRule ^en/1608/?$ /stories/shiomi/owarini/ [R=301,L,NE]
+RewriteRule ^en/nikkeitoc/?$ /stories/shiomi/ [R=301,L,NE]
+RewriteRule ^nikkeiarticlelist/?$ /stories/shiomi/ [R=301,L,NE]
+
+# ---- 読み物：古民家再生の記録（17件） ----------------------------------------------
+RewriteRule ^649/?$ /stories/renovation/goemon-naiso/ [R=301,L,NE]
+RewriteRule ^656/?$ /stories/renovation/goemon-hontai/ [R=301,L,NE]
+RewriteRule ^667/?$ /stories/renovation/itadakimono-2/ [R=301,L,NE]
+RewriteRule ^1326/?$ /stories/renovation/niwa/ [R=301,L,NE]
+RewriteRule ^1331/?$ /stories/renovation/ido/ [R=301,L,NE]
+RewriteRule ^1359/?$ /stories/renovation/nagayamon/ [R=301,L,NE]
+RewriteRule ^1361/?$ /stories/renovation/baiotoire/ [R=301,L,NE]
+RewriteRule ^1413/?$ /stories/renovation/kabenuri/ [R=301,L,NE]
+RewriteRule ^1749/?$ /stories/renovation/itadakimono-1/ [R=301,L,NE]
+RewriteRule ^1752/?$ /stories/renovation/furudategu/ [R=301,L,NE]
+RewriteRule ^1757/?$ /stories/renovation/hajimari/ [R=301,L,NE]
+RewriteRule ^2302/?$ /stories/renovation/naiso/ [R=301,L,NE]
+RewriteRule ^2348/?$ /stories/renovation/dai2ki/ [R=301,L,NE]
+RewriteRule ^2425/?$ /stories/renovation/tanden/ [R=301,L,NE]
+RewriteRule ^renovation/?$ /stories/renovation/ [R=301,L,NE]
+RewriteRule ^studentpj_1d/?$ /stories/renovation/gakusei/ [R=301,L,NE]
+RewriteRule ^en/renovation/?$ /stories/renovation/ [R=301,L,NE]
+
+# ---- 読み物：島の暮らし（6件） -------------------------------------------------
+RewriteRule ^175/?$ /stories/island/#kotsu [R=301,L,NE]
+RewriteRule ^176/?$ /stories/island/#kaimono [R=301,L,NE]
+RewriteRule ^715/?$ /stories/island/#shimashikoku [R=301,L,NE]
+RewriteRule ^1897/?$ /stories/island/#komanan [R=301,L,NE]
+RewriteRule ^3108/?$ /stories/island/#shimaoya [R=301,L,NE]
+RewriteRule ^life_shopping/?$ /stories/island/#kaimono [R=301,L,NE]
+
+# ---- メディア掲載（19件） ----------------------------------------------------
+RewriteRule ^918/?$ /media/ [R=301,L,NE]
+RewriteRule ^920/?$ /media/ [R=301,L,NE]
+RewriteRule ^1130/?$ /media/ [R=301,L,NE]
+RewriteRule ^1165/?$ /media/ [R=301,L,NE]
+RewriteRule ^1172/?$ /media/ [R=301,L,NE]
+RewriteRule ^1174/?$ /media/ [R=301,L,NE]
+RewriteRule ^1180/?$ /media/ [R=301,L,NE]
+RewriteRule ^1185/?$ /media/ [R=301,L,NE]
+RewriteRule ^1187/?$ /media/ [R=301,L,NE]
+RewriteRule ^1190/?$ /media/ [R=301,L,NE]
+RewriteRule ^1194/?$ /media/ [R=301,L,NE]
+RewriteRule ^1196/?$ /media/ [R=301,L,NE]
+RewriteRule ^1200/?$ /media/ [R=301,L,NE]
+RewriteRule ^1204/?$ /media/ [R=301,L,NE]
+RewriteRule ^1206/?$ /media/ [R=301,L,NE]
+RewriteRule ^1212/?$ /media/ [R=301,L,NE]
+RewriteRule ^2432/?$ /media/ [R=301,L,NE]
+RewriteRule ^8060/?$ /media/ [R=301,L,NE]
+RewriteRule ^en/1613/?$ /media/ [R=301,L,NE]
+
+# ---- 宿の紹介・部屋・食事（18件） ------------------------------------------------
+RewriteRule ^285/?$ /about/ [R=301,L,NE]
+RewriteRule ^room/?$ /rooms/ [R=301,L,NE]
+RewriteRule ^1000-2/?$ /rooms/#prayer [R=301,L,NE]
+RewriteRule ^obento/?$ /meals/ [R=301,L,NE]
+RewriteRule ^alcohol/?$ /meals/ [R=301,L,NE]
+RewriteRule ^souvenir/?$ /meals/ [R=301,L,NE]
+RewriteRule ^en/1000-2/?$ /rooms/#prayer [R=301,L,NE]
+RewriteRule ^shiomicar/?$ /rooms/#shiomicar [R=301,L,NE]
+RewriteRule ^en/alcohol/?$ /meals/ [R=301,L,NE]
+RewriteRule ^harukoseki/?$ /thanks/#seki-haruko [R=301,L,NE]
+RewriteRule ^othermeals/?$ /meals/ [R=301,L,NE]
+RewriteRule ^mealsharing/?$ /meals/ [R=301,L,NE]
+RewriteRule ^self-cooking/?$ /meals/ [R=301,L,NE]
+RewriteRule ^en/seki-haruko/?$ /thanks/#seki-haruko [R=301,L,NE]
+RewriteRule ^special-thanks/?$ /thanks/ [R=301,L,NE]
+RewriteRule ^en/special-thanks/?$ /thanks/ [R=301,L,NE]
+RewriteRule ^en/room-and-facility/?$ /rooms/ [R=301,L,NE]
+RewriteRule ^en/about-shiomi-house/?$ /about/ [R=301,L,NE]
+
+# ---- アクセス（17件） ------------------------------------------------------
+RewriteRule ^164/?$ /access/ [R=301,L,NE]
+RewriteRule ^168/?$ /access/ [R=301,L,NE]
+RewriteRule ^169/?$ /access/ [R=301,L,NE]
+RewriteRule ^171/?$ /access/ [R=301,L,NE]
+RewriteRule ^172/?$ /access/ [R=301,L,NE]
+RewriteRule ^173/?$ /access/ [R=301,L,NE]
+RewriteRule ^177/?$ /access/ [R=301,L,NE]
+RewriteRule ^access-2/?$ /access/ [R=301,L,NE]
+RewriteRule ^habuport/?$ /access/ [R=301,L,NE]
+RewriteRule ^en/access/?$ /access/ [R=301,L,NE]
+RewriteRule ^lcc-fromtokyo/?$ /access/ [R=301,L,NE]
+RewriteRule ^jal-ana-fromtokyo/?$ /access/ [R=301,L,NE]
+RewriteRule ^en/category/access/?$ /access/ [R=301,L,NE]
+RewriteRule ^en/onomichi-st-map/?$ /access/ [R=301,L,NE]
+RewriteRule ^highwaybus-fromtokyo/?$ /access/ [R=301,L,NE]
+RewriteRule ^shinkansen-fromtokyo/?$ /access/ [R=301,L,NE]
+RewriteRule ^en/nagasaki-sanbashi-pier/?$ /access/ [R=301,L,NE]
+
+# ---- ご予約（2件） -------------------------------------------------------
+RewriteRule ^reservations/?$ /reserve/ [R=301,L,NE]
+RewriteRule ^en/reservations-2/?$ /reserve/ [R=301,L,NE]
+
+# ---- その他（5件） -------------------------------------------------------
+RewriteRule ^en/?$ / [R=301,L,NE]
+RewriteRule ^category/blog/?$ /stories/ [R=301,L,NE]
+RewriteRule ^en/category/blog/?$ /stories/ [R=301,L,NE]
+RewriteRule ^category/eventnews/?$ / [R=301,L,NE]
+RewriteRule ^en/category/eventnews/?$ / [R=301,L,NE]
+
+# ---- 以下は意図的に削除したページ。受け皿が無いので 404 を返す ----------------
+# /1013/ /10450/ /11781/ /1458/ /1544/ /163/ /165/ /170/ /174/ /1870/ /1947/ /2036/ /2061/ /2076/ /2089/ /2096/ /2104/ /2378/ /2573/ /2721/ /2734/ /2839/ /2865/ /2871/ /300/ /3010/ /42/ /684/ /724/ /760/ /7730/ /7750/ /7909/ /8078/ /9179/ /932/ /9607/ /995/ /en/11314/ /en/69/ /en/934/
+
+</IfModule>
+
+# ---- 転送量と表示速度 --------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg    "access plus 1 year"
+  ExpiresByType image/png     "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType text/css      "access plus 1 week"
+  ExpiresByType text/html     "access plus 1 hour"
+</IfModule>

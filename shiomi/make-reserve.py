@@ -260,7 +260,7 @@ const TO_ADDR    = 'shiomihouse@gmail.com';
 const FROM_ADDR  = 'no-reply@shiomihouse.com';   // ← 公開前に実在するアドレスへ
 const FROM_NAME  = '古民家ゲストハウス 汐見の家';
 const SITE_HOST  = 'shiomihouse.com';
-const LOG_DIR    = __DIR__ . '/../../shiomi-form-log';  // 公開ディレクトリの外
+
 
 mb_internal_encoding('UTF-8');
 
@@ -333,10 +333,13 @@ function send_utf8_mail(string $to, string $subject, string $body, string $reply
 /** 同じ相手からの連投を止める。1時間に5件まで */
 function rate_limited(string $ip): bool
 {{
-    if (!is_dir(LOG_DIR) && !@mkdir(LOG_DIR, 0700, true)) {{
+    // 記録の置き場所はサーバーの一時領域。公開ディレクトリの中に置くと、
+    // 置き場所によっては外から見えてしまう
+    $dir = sys_get_temp_dir() . '/shiomi-form-log';
+    if (!is_dir($dir) && !@mkdir($dir, 0700, true)) {{
         return false;   // 置き場所が作れないときは素通しする（送れない方が困る）
     }}
-    $file = LOG_DIR . '/rate-' . hash('sha256', $ip) . '.txt';
+    $file = $dir . '/rate-' . hash('sha256', $ip) . '.txt';
     $now  = time();
     $hits = [];
     if (is_readable($file)) {{
