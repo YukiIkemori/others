@@ -58,7 +58,6 @@
 /8060/,/media/,301
 /918/,/media/,301
 /920/,/media/,301
-/about/,/about/,301
 /access-2/,/access/,301
 /alcohol/,/meals/,301
 /category/blog/,/stories/,301
@@ -96,7 +95,6 @@
 /lcc-fromtokyo/,/access/,301
 /life_shopping/,/stories/island/#kaimono,301
 /mealsharing/,/meals/,301
-/media/,/media/,301
 /nikkeiarticlelist/,/stories/shiomi/,301
 /obento/,/meals/,301
 /othermeals/,/meals/,301
@@ -147,6 +145,10 @@
 /932/,,404（受け皿なし／意図的に削除）
 /9607/,,404（受け皿なし／意図的に削除）
 /995/,,404（受け皿なし／意図的に削除）
+/about/,,404（受け皿なし／意図的に削除）
 /en/11314/,,404（受け皿なし／意図的に削除）
 /en/69/,,404（受け皿なし／意図的に削除）
 /en/934/,,404（受け皿なし／意図的に削除）
+/media/,,404（受け皿なし／意図的に削除）
+/about/,/about/,変更なし（同じURLのまま）
+/media/,/media/,変更なし（同じURLのまま）

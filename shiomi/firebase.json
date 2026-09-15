@@ -633,16 +633,6 @@
         "type": 301
       },
       {
-        "source": "/about",
-        "destination": "/about/",
-        "type": 301
-      },
-      {
-        "source": "/about/",
-        "destination": "/about/",
-        "type": 301
-      },
-      {
         "source": "/access-2",
         "destination": "/access/",
         "type": 301
@@ -1010,16 +1000,6 @@
       {
         "source": "/mealsharing/",
         "destination": "/meals/",
-        "type": 301
-      },
-      {
-        "source": "/media",
-        "destination": "/media/",
-        "type": 301
-      },
-      {
-        "source": "/media/",
-        "destination": "/media/",
         "type": 301
       },
       {
