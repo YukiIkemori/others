@@ -44,6 +44,7 @@
   thanks/            Special Thanks
   404.html           見つからないときのページ
   style.css          見た目（全ページこれ1枚）
+  DESIGN.md          見た目の決めごと（第2版。部品の名前と書き方）
   img/               写真
   sitemap.xml        検索エンジン向けの地図
   robots.txt         同上

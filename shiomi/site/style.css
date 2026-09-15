@@ -1,20 +1,22 @@
 @charset "UTF-8";
 /* =====================================================================
-   汐見の家 — サイト共通の意匠
+   汐見の家 — サイト共通の意匠（第2版：全面刷新）
    ---------------------------------------------------------------------
-   このファイル1枚で全ページの見た目を決めています。
-   考え方は DESIGN.md にまとめてあります。文言の差し替えに CSS を
-   触る必要はありません。
+   このファイル1枚で全ページの見た目を決めます。部品の名前・役割・
+   HTML の書き方は DESIGN.md にまとめてあります。
+
    目次
      1. 設定値（色・文字・余白）
      2. 下地（リセットと基本の文字組み）
-     3. 骨組み（幅・区切り・ページ見出し）
-     4. ヘッダーとナビ
-     5. フッター
-     6. 部品（ボタン・写真・表・リスト・囲み・フォーム・埋め込み）
-     7. トップページの区画
-     8. 下層ページの区画（記事・一覧）
-     9. 印刷
+     3. 骨組み（.container / .band / 縦見出し）
+     4. ヘッダー
+     5. ヒーロー（.hero）
+     6. 部品（ボタン・数字・リンク・写真）
+     7. トップページの区画（.facts-strip .collage .strip .overlap .index-list .cta-scene）
+     8. 下層ページ向けの部品（.page-head .prose .article .note .table-scroll .embed フォーム）
+     9. フッター
+    10. 動き（読み込み時・スクロール連動・浮遊予約ボタン）
+    11. 印刷
    ===================================================================== */
 
 
@@ -23,38 +25,50 @@
 :root {
   color-scheme: light;
 
-  /* 色。地は障子紙の白、文字は墨、差し色は瀬戸内の海の青 */
-  --paper:      #fbfaf7;   /* ページの地 */
-  --paper-deep: #f3efe7;   /* 一段濃い地（フッターなど） */
-  --ink:        #2a2924;   /* 本文 */
-  --ink-soft:   #6a665e;   /* 補足・キャプション・小さな見出し */
-  --rule:       #e2ddd3;   /* 罫線 */
-  --shio:       #2f6b87;   /* 差し色：汐の青。ロゴの青 #73C9E5 を文字が読める濃さまで落としたもの */
-  --shio-deep:  #1f4f66;   /* 差し色の濃いほう。マウスを乗せたとき */
-  --shio-pale:  #e9f0f3;   /* 差し色の淡い地。予約の囲みなど */
+  /* 色。地は障子紙の白、文字は墨、差し色は汐の青、夜はヒーローとフッターの地 */
+  --paper:       #fbfaf7;   /* ページの地 */
+  --paper-deep:  #f1ede4;   /* 一段濃い地。囲み、写真の読み込み前 */
+  --ink:         #2a2924;   /* 本文 */
+  --ink-soft:    #6a665e;   /* 補足・キャプション */
+  --rule:        #ddd7cb;   /* 罫線 */
+  --shio:        #2f6b87;   /* 差し色：汐の青。ロゴの青 #73C9E5 を白地で読める濃さに落としたもの */
+  --shio-deep:   #1f4f66;   /* 差し色の濃いほう。マウスを乗せたとき */
+  --shio-pale:   #e6eef2;   /* 差し色の淡い地 */
+  --night:       #14181c;   /* 夜。ヒーローの下地・フッター・浮遊ボタン。写真の夜空から */
+  --night-soft:  #1d2329;   /* 夜の一段明るい面 */
+  --on-night:    #efece6;   /* 夜の上の文字 */
+  --on-night-soft: #b3aea4; /* 夜の上の補足文字 */
 
   /* 文字。本文はゴシック、見出しは明朝。OS に入っている書体だけで組む */
   --font-sans:  "Hiragino Sans", "Hiragino Kaku Gothic ProN", "BIZ UDPGothic",
                 "Yu Gothic Medium", "Yu Gothic", YuGothic, Meiryo,
                 "Noto Sans CJK JP", "Noto Sans JP", sans-serif;
-  --font-serif: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "BIZ UDPMincho",
-                "Yu Mincho", YuMincho, "Noto Serif CJK JP", "Noto Serif JP",
+  --font-serif: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", YuMincho,
+                "BIZ UDPMincho", "Noto Serif CJK JP", "Noto Serif JP",
                 "MS PMincho", serif;
 
-  /* 幅。文章は1行 36〜38 字で止める。写真や一覧はもっと広く使う */
-  --width-text: 37rem;
-  --width-page: 66rem;
-  --gutter: clamp(1.25rem, 4vw, 3rem);    /* 左右の余白。どの幅でも 20px 以上 */
+  /* 幅 */
+  --w-text:  38rem;                        /* 文章の1行。36〜38字 */
+  --w-page:  80rem;                        /* 区画の内側の最大幅。1440px */
+  --gutter:  clamp(1.25rem, 5vw, 6rem);    /* 左右の余白。狭い画面で 20px、広い画面で 96px */
 
-  /* 余白の段階 */
-  --space-1: .5rem;
-  --space-2: 1rem;
-  --space-3: 1.5rem;
-  --space-4: 2.5rem;
-  --space-5: 4rem;
-  --space-section: clamp(3.5rem, 9vw, 6.5rem);   /* 区画と区画の間 */
+  /* 余白 */
+  --s1: .5rem;
+  --s2: 1rem;
+  --s3: 1.5rem;
+  --s4: 2.5rem;
+  --s5: 4rem;
+  --s6: 6rem;
+  --band: clamp(4.5rem, 11vw, 9rem);       /* 区画（.band）の上下 */
 
-  --radius: 3px;
+  /* 見出しの大きさ。画面幅に連動 */
+  --fs-display: clamp(2.75rem, 1.5rem + 5.5vw, 7.5rem);   /* h1。390px で 47px、1600px で 112px */
+  --fs-h2:      clamp(2rem, 1.2rem + 2vw, 3.5rem);        /* 区画見出し。34〜56px */
+  --fs-h3:      clamp(1.4rem, 1.15rem + .7vw, 1.9rem);    /* 項目見出し。24〜30px */
+  --fs-figure:  clamp(2.6rem, 1.6rem + 2.6vw, 4.5rem);    /* 数字。料金など */
+
+  --radius: 2px;
+  --ease: cubic-bezier(.2, .7, .2, 1);
 }
 
 
@@ -63,18 +77,13 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
-  font-size: 106.25%;               /* 17px。宿の客層に合わせて標準より一段大きく */
+  font-size: 106.25%;               /* 17px。本文は 17px を下回らない */
   -webkit-text-size-adjust: 100%;
-  overflow-x: hidden;               /* 横スクロールは何があっても起こさない */
+  overflow-x: clip;                 /* 横スクロールは何があっても起こさない */
   scroll-behavior: smooth;
+  background: var(--paper);
 }
-@media (min-width: 56em) {
-  html { font-size: 112.5%; }       /* 18px。広い画面では行長が伸びるので少し上げる */
-}
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { transition: none !important; animation: none !important; }
-}
+@media (min-width: 56em) { html { font-size: 112.5%; } }   /* 18px */
 
 body {
   margin: 0;
@@ -84,10 +93,10 @@ body {
   font-weight: 400;
   line-height: 1.9;
   letter-spacing: .02em;
-  font-feature-settings: "palt" 0;  /* 日本語の詰め組みはしない。素直に並べる */
-  overflow-wrap: anywhere;          /* 長い URL でも横にはみ出さない */
+  font-feature-settings: "palt" 0;
+  overflow-wrap: anywhere;
   line-break: strict;
-  overflow-x: hidden;
+  overflow-x: clip;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
@@ -96,6 +105,7 @@ main { flex: 1 0 auto; }
 
 img, svg, video, iframe { max-width: 100%; }
 img, video { height: auto; display: block; }
+img { background: var(--paper-deep); }
 iframe { border: 0; }
 
 a {
@@ -103,124 +113,40 @@ a {
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: .22em;
-  text-decoration-color: color-mix(in srgb, var(--shio) 45%, transparent);
-  transition: color .15s, text-decoration-color .15s;
+  text-decoration-color: color-mix(in srgb, var(--shio) 40%, transparent);
+  transition: color .2s, text-decoration-color .2s;
 }
 a:hover { color: var(--shio-deep); text-decoration-color: currentColor; }
 a:focus-visible { outline: 2px solid var(--shio); outline-offset: 3px; border-radius: 2px; }
 
-/* 見出し。明朝で、ゆったり字間 */
+/* 見出し。明朝、細く、字間ゆったり */
 h1, h2, h3, h4 {
   font-family: var(--font-serif);
   font-weight: 500;
-  line-height: 1.45;
-  letter-spacing: .06em;
+  line-height: 1.35;
+  letter-spacing: .08em;
   margin: 0;
-  color: var(--ink);
+  color: inherit;
   text-wrap: balance;
-  word-break: auto-phrase;          /* 対応ブラウザでは文節で折り返す */
+  word-break: auto-phrase;
+  font-feature-settings: "palt" 1;   /* 見出しは詰め組み。大きい文字は詰めた方が締まる */
 }
-h1 { font-size: clamp(1.75rem, 1.25rem + 2.2vw, 2.5rem); }
-h2 { font-size: clamp(1.4rem, 1.15rem + 1.1vw, 1.8rem); }
-h3 { font-size: 1.2rem; font-family: var(--font-sans); font-weight: 600; letter-spacing: .04em; }
-h4 { font-size: 1.05rem; font-family: var(--font-sans); font-weight: 600; letter-spacing: .03em; }
+h1 { font-size: var(--fs-display); line-height: 1.15; }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); }
+h4 { font-size: 1.15rem; font-family: var(--font-sans); font-weight: 600; letter-spacing: .04em; font-feature-settings: normal; }
 
 p, ul, ol, dl, table, blockquote, figure, pre { margin: 0 0 1.4em; }
 ul, ol { padding-left: 1.4em; }
 li { margin-bottom: .35em; }
-li > ul, li > ol { margin: .35em 0 0; }
 strong, b { font-weight: 700; }
-small { font-size: .875em; color: var(--ink-soft); }
-hr {
-  border: 0;
-  border-top: 1px solid var(--rule);
-  margin: var(--space-4) 0;
-}
-blockquote {
-  padding: .25em 0 .25em 1.25em;
-  border-left: 2px solid var(--shio);
-  color: var(--ink-soft);
-}
+small { font-size: .9em; color: var(--ink-soft); }
+hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s5) 0; }
+blockquote { padding: .25em 0 .25em 1.25em; border-left: 2px solid var(--shio); color: var(--ink-soft); }
 blockquote p:last-child { margin-bottom: 0; }
-figcaption { font-size: .875rem; color: var(--ink-soft); margin-top: .6em; line-height: 1.7; }
-abbr[title] { text-decoration: none; }
+figcaption { font-size: .95rem; color: var(--ink-soft); margin-top: .7em; line-height: 1.7; letter-spacing: .04em; }
 ::selection { background: var(--shio-pale); }
 
-
-/* 3. 骨組み ============================================================ */
-
-/* .wrap = ページの幅。.wrap-text = 文章の幅（狭い）。.wrap-wide = 写真向け（少し広い） */
-.wrap, .wrap-text, .wrap-wide {
-  width: 100%;
-  max-width: var(--width-page);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
-}
-.wrap-text { max-width: calc(var(--width-text) + var(--gutter) * 2); }
-.wrap-wide { max-width: calc(var(--width-page) + 6rem); }
-
-/* .section = トップページの1区画。上下に大きく余白を取る */
-.section { padding-block: var(--space-section); }
-.section + .section { padding-top: 0; }
-
-/* 区画の見出し。上に短い青い線を1本。中央揃えにはしない */
-.section-title,
-main h2 {
-  position: relative;
-  padding-top: 1rem;
-  margin-bottom: var(--space-3);
-}
-.section-title::before,
-main h2::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 2.25rem;
-  height: 2px;
-  background: var(--shio);
-}
-main h2 { margin-top: var(--space-5); }
-.section-title, .section > h2:first-child, .section > .wrap > h2:first-child { margin-top: 0; }
-main h3 { margin-top: var(--space-4); margin-bottom: .6em; }
-main h4 { margin-top: var(--space-3); margin-bottom: .5em; }
-h2 + h3, h3 + h4 { margin-top: 0; }
-
-/* 区画の書き出し。見出しの下に置く短い導入文 */
-.section-intro { max-width: var(--width-text); margin-bottom: var(--space-4); }
-
-/* 下層ページの先頭。h1 と、あれば一言 */
-.page-head {
-  padding-block: var(--space-4) var(--space-4);
-  border-bottom: 1px solid var(--rule);
-  margin-bottom: var(--space-5);
-}
-.page-head h1 { margin-bottom: .4em; }
-.page-head p { margin: 0; color: var(--ink-soft); max-width: var(--width-text); }
-.page-head + .section { padding-top: 0; }
-
-/* パンくず。あってもなくてもよい */
-.breadcrumb {
-  list-style: none;
-  padding: 0;
-  margin: var(--space-3) 0 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: .25em .5em;
-  font-size: .875rem;
-  color: var(--ink-soft);
-}
-.breadcrumb li { margin: 0; }
-.breadcrumb li + li::before { content: "／"; margin-right: .5em; color: var(--rule); }
-.breadcrumb a { color: inherit; }
-
-/* 読み物・下層の本文。1行の長さを文章向けに絞る */
-.prose { max-width: var(--width-text); }
-.prose > p:first-of-type { margin-top: 0; }
-.prose img, .prose figure img { width: 100%; }
-.prose figure { margin: var(--space-4) 0; }
-
-/* 目に見えないが読み上げには残す */
 .visually-hidden {
   position: absolute !important;
   width: 1px; height: 1px;
@@ -229,464 +155,746 @@ h2 + h3, h3 + h4 { margin-top: 0; }
 }
 
 
-/* 4. ヘッダーとナビ ===================================================== */
+/* 3. 骨組み ============================================================ */
 
-.site-header {
-  border-bottom: 1px solid var(--rule);
-  background: var(--paper);
+/* .container = 区画の内側。左右に --gutter、最大 --w-page。
+   .container--text = 文章幅。.container--wide = 余白を最小にして写真を広く */
+.container, .container--text, .container--wide {
+  width: 100%;
+  max-width: calc(var(--w-page) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
 }
-.site-header .wrap {
+.container--text { max-width: calc(var(--w-text) + var(--gutter) * 2); }
+.container--wide { max-width: none; padding-inline: clamp(1.25rem, 2.5vw, 3rem); }
+
+/* .band = 1区画。上下に大きな余白。地は素のまま、.band--night で夜、.band--deep で一段濃い紙 */
+.band { padding-block: var(--band); position: relative; }
+.band + .band { padding-top: 0; }        /* 区画が続くときは、間が1つ分になるように */
+.band--flush { padding-block: 0; }
+.band--flush + .band { padding-top: var(--band); }
+.band--night { background: var(--night); color: var(--on-night); }
+.band--night a { color: inherit; }
+.band--deep { background: var(--paper-deep); }
+.band--rule-top { border-top: 1px solid var(--rule); }
+
+/* 区画の小さな前置き。見出しの上に置く。青、字間広め */
+.eyebrow {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: .95rem;
+  letter-spacing: .18em;
+  color: var(--shio);
+  margin-bottom: var(--s2);
+}
+.band--night .eyebrow { color: #8fc5d8; }
+
+/* 見出しと導入文。見出しの下に文章幅の一言 */
+.band__head { margin-bottom: var(--s5); }
+.band__head p { max-width: var(--w-text); margin: var(--s3) 0 0; }
+
+/* .sidebar-layout = PC で左に縦書きの見出し、右に中身。
+   縦見出しは sticky で、中身を読み進めても左に留まる。
+   スマホでは縦書きをやめ、普通の見出しとして上に積む */
+.side-layout { display: grid; gap: var(--s4); }
+.side-layout__title { margin: 0; }
+.side-layout__body { min-width: 0; }
+.side-layout__body > :first-child { margin-top: 0; }
+@media (min-width: 62em) {
+  .side-layout {
+    grid-template-columns: minmax(0, 6rem) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 6rem);
+    align-items: start;
+  }
+  .side-layout__title {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    position: sticky;
+    top: var(--s4);
+    font-size: clamp(1.75rem, 1rem + 1.6vw, 2.75rem);   /* 横書きの h2 より一段小さい。12字でも画面に収まる */
+    letter-spacing: .22em;
+    line-height: 1;
+    white-space: nowrap;      /* 途中で列を折らない（折れると2列に見える） */
+    text-wrap: initial;
+    padding-right: .1em;
+  }
+  .side-layout__title::before {
+    /* 見出しの上に短い墨の線。横書きの「上の線」の縦書き版 */
+    content: "";
+    display: inline-block;
+    width: 1px;
+    height: 2.25rem;
+    background: currentColor;
+    margin-bottom: 1rem;
+    vertical-align: top;
+    opacity: .6;
+  }
+}
+
+
+/* 4. ヘッダー =========================================================== */
+
+/* 素の状態は紙の地に墨の文字（下層ページ向け）。
+   .site-header--overlay を付けると、ヒーロー写真の上に白い文字で重なる */
+.site-header {
+  position: relative;
+  z-index: 10;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+.site-header__inner {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-2) var(--space-4);
-  padding-block: var(--space-2);
+  gap: var(--s2) var(--s4);
+  padding-block: var(--s2);
 }
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: .8rem;
+  gap: .85rem;
   text-decoration: none;
-  color: var(--ink);
+  color: inherit;
 }
-.brand img { height: 3.6rem; width: auto; flex: none; }
-.brand-name {
+.brand img { height: 3.4rem; width: auto; flex: none; background: none; }
+.brand__name {
   display: flex;
   flex-direction: column;
   font-family: var(--font-serif);
-  font-size: 1.3rem;
-  letter-spacing: .12em;
+  font-size: 1.25rem;
+  letter-spacing: .16em;
   line-height: 1.2;
+  font-feature-settings: "palt" 1;
 }
-.brand-sub {
+.brand__sub {
   font-family: var(--font-sans);
-  font-size: .85rem;
-  letter-spacing: .1em;
-  color: var(--ink-soft);
-  margin-bottom: .2em;
+  font-size: .9rem;                 /* 15px を下回らない */
+  letter-spacing: .14em;
+  opacity: .8;
+  margin-bottom: .25em;
 }
-.brand:hover .brand-name { color: var(--shio); }
+.brand:hover .brand__name { color: var(--shio); }
 
-/* メニューは隠さず、狭い幅では2段に折り返す。年配の方にも迷いがない */
-.site-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: .25rem 1.4rem;
-}
+/* ナビ。隠さない。狭い幅では折り返す */
+.site-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: .1rem 1.25rem; }
 .site-nav li { margin: 0; }
 .site-nav a {
   display: inline-block;
-  padding: .3em 0;
-  color: var(--ink);
+  padding: .35em 0;
+  color: inherit;
   text-decoration: none;
   font-size: .95rem;
-  letter-spacing: .04em;
-  border-bottom: 1px solid transparent;
-  transition: color .15s, border-color .15s;
+  letter-spacing: .08em;
+  position: relative;
 }
-.site-nav a:hover, .site-nav a[aria-current="page"] {
-  color: var(--shio);
-  border-bottom-color: var(--shio);
+.site-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: .1em;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .35s var(--ease);
 }
-/* 「ご予約」だけ枠で囲って目立たせる */
-.site-nav .nav-reserve a {
-  border: 1px solid var(--shio);
-  color: var(--shio);
-  border-radius: var(--radius);
-  padding: .3em .9em;
+.site-nav a:hover::after, .site-nav a[aria-current="page"]::after { transform: scaleX(1); }
+/* 「ご予約」だけボタンにする */
+.site-nav .nav-reserve a { padding: .45em 1.1em; border: 1px solid currentColor; border-radius: 999px; }
+.site-nav .nav-reserve a::after { display: none; }
+.site-nav .nav-reserve a:hover { background: var(--shio); border-color: var(--shio); color: #fff; }
+
+/* 写真の上に重なる版。ヒーローのあるページで使う */
+.site-header--overlay {
+  position: absolute;
+  inset: 0 0 auto 0;
+  background: transparent;
+  border-bottom: 0;
+  color: #fff;
 }
-.site-nav .nav-reserve a:hover { background: var(--shio); color: #fff; }
+.site-header--overlay .brand:hover .brand__name { color: #fff; opacity: .85; }
+.site-header--overlay .site-nav .nav-reserve a { background: rgba(255,255,255,.12); backdrop-filter: blur(6px); }
+.site-header--overlay .site-nav .nav-reserve a:hover { background: #fff; border-color: #fff; color: var(--ink); }
 
 @media (min-width: 62em) {
-  .site-header .wrap { flex-wrap: nowrap; padding-block: var(--space-3); }
-  .brand img { height: 4.25rem; }
-  .brand-name { font-size: 1.45rem; }
-  .site-nav ul { gap: .25rem 1.75rem; }
+  .site-header__inner { flex-wrap: nowrap; padding-block: var(--s3); }
+  .brand img { height: 4rem; }
+  .brand__name { font-size: 1.4rem; }
+  .site-nav ul { gap: .25rem 2rem; }
 }
 
 
-/* 5. フッター =========================================================== */
+/* 5. ヒーロー =========================================================== */
 
-.site-footer {
-  background: var(--paper-deep);
-  border-top: 1px solid var(--rule);
-  padding-block: var(--space-5) var(--space-3);
-  font-size: .95rem;
-  line-height: 1.8;
+/* 画面いっぱいの夜の写真。文字は写真の上、左下に寄せる */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: #fff;
+  background: var(--night);
+  isolation: isolate;
 }
-.site-footer .wrap {
-  display: grid;
-  gap: var(--space-4) var(--space-5);
-}
-.site-footer p { margin: 0 0 1em; }
-.footer-info p:last-child { color: var(--ink-soft); font-size: .9rem; margin: 0; }
-.footer-info a { color: inherit; }
-.site-footer nav ul {
-  list-style: none;
+.hero__media {
+  position: absolute;
+  inset: 0;
   margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
-  gap: .3em 1.5em;
+  overflow: hidden;
+  z-index: -1;
 }
-.site-footer nav li { margin: 0; }
-.site-footer nav a { color: var(--ink); text-decoration: none; }
-.site-footer nav a:hover { color: var(--shio); text-decoration: underline; }
-.copyright {
-  grid-column: 1 / -1;
-  margin: 0 !important;
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--rule);
-  color: var(--ink-soft);
-  font-size: .85rem;
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 42% 62%;      /* 左の庭の灯りと、右の障子の灯りの両方が入る位置 */
+  background: var(--night);
 }
-@media (min-width: 48em) {
-  .site-footer .wrap { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+/* 文字が乗る側を暗くする。左下から右上へ */
+.hero__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(10,12,16,.82) 0%, rgba(10,12,16,.45) 38%, rgba(10,12,16,0) 70%),
+    linear-gradient(to right, rgba(10,12,16,.55) 0%, rgba(10,12,16,0) 55%);
 }
+.hero__body {
+  position: relative;
+  padding-top: clamp(11rem, 26vh, 16rem);   /* ヘッダーが上に重なる分 */
+  padding-bottom: clamp(2.5rem, 7vh, 5.5rem);
+}
+.hero__title {
+  font-weight: 500;
+  letter-spacing: .06em;
+  line-height: 1.12;
+  margin-bottom: clamp(1.25rem, 3vh, 2.25rem);
+  text-shadow: 0 2px 40px rgba(0,0,0,.35);
+}
+.hero__title span { display: block; }
+.hero__lead {
+  font-size: clamp(1rem, .95rem + .3vw, 1.2rem);
+  line-height: 2;
+  letter-spacing: .04em;
+  max-width: 40em;
+  margin: 0 0 clamp(1.5rem, 4vh, 2.75rem);
+  color: rgba(255,255,255,.92);
+}
+@media (max-width: 47.99em) { .hero__lead br { display: none; } }
+.hero__actions { display: flex; flex-wrap: wrap; gap: var(--s2); margin: 0; }
+
+/* 右下に置く、下へ促す細い線。文字は無し。動きは 10 章 */
+.hero__hint {
+  position: absolute;
+  right: var(--gutter);
+  bottom: 0;
+  width: 1px;
+  height: clamp(4rem, 10vh, 7rem);
+  overflow: hidden;
+  opacity: .7;
+}
+.hero__hint::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, #fff);
+}
+@media (max-width: 47.99em) { .hero__hint { display: none; } }
+
+/* 短い画面（横向きのスマホなど）で写真がつぶれないように */
+@media (max-height: 30em) { .hero { min-height: 36rem; } }
 
 
 /* 6. 部品 =============================================================== */
 
-/* ボタン。.button が枠、.button-primary が塗り。<a> にも <button> にも使える */
+/* ボタン。.button が枠、--primary が塗り、--light は写真や夜の上で白く */
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: .5em;
-  min-height: 3rem;
-  padding: .6em 1.5em;
+  gap: .6em;
+  min-height: 3.25rem;
+  padding: .7em 1.75em;
   border: 1px solid var(--shio);
-  border-radius: var(--radius);
+  border-radius: 999px;
   background: transparent;
   color: var(--shio);
   font: inherit;
   font-size: 1rem;
-  letter-spacing: .04em;
+  letter-spacing: .08em;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color .15s, color .15s, border-color .15s;
+  transition: background-color .25s, color .25s, border-color .25s, transform .25s var(--ease);
 }
 .button:hover { background: var(--shio-pale); color: var(--shio-deep); border-color: var(--shio-deep); }
-.button-primary { background: var(--shio); color: #fff; }
-.button-primary:hover { background: var(--shio-deep); color: #fff; }
-.button-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin: var(--space-3) 0 0;
-}
-@media (max-width: 30em) {
-  .button-row .button { flex: 1 1 100%; }   /* 狭い画面ではボタンを横いっぱいに */
-}
+.button:active { transform: translateY(1px); }
+.button--primary { background: var(--shio); color: #fff; }
+.button--primary:hover { background: var(--shio-deep); border-color: var(--shio-deep); color: #fff; }
+.button--light { border-color: rgba(255,255,255,.7); color: #fff; }
+.button--light:hover { background: rgba(255,255,255,.12); border-color: #fff; color: #fff; }
+.button--light.button--primary { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+.button--light.button--primary:hover { background: #fff; color: var(--ink); border-color: #fff; }
+.button--ink { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.button--ink:hover { background: #000; border-color: #000; color: #fff; }
+.button--large { min-height: 3.75rem; padding: .8em 2.25em; font-size: 1.05rem; }
+.button-row { display: flex; flex-wrap: wrap; gap: var(--s2); margin: var(--s4) 0 0; }
+@media (max-width: 30em) { .button-row .button, .hero__actions .button { flex: 1 1 100%; } }
 
-/* 「もっと見る」の行。本文末尾の1行リンク */
-.more { margin: var(--space-3) 0 0; }
-.more a { text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: .1em; }
-.more a::after { content: "→"; margin-left: .4em; }
-
-/* 写真。単独でも並べても使える */
-.photo img { width: 100%; }
-.photo-grid {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
-  gap: var(--space-3) var(--space-3);
-}
-.photo-grid li { margin: 0; }
-.photo-grid img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
-.photo-grid figcaption, .photo-grid span { display: block; font-size: .9rem; color: var(--ink-soft); margin-top: .5em; }
-
-/* 写真と文章を横に並べる。狭い幅では縦に積む。.media-reverse で写真を右に */
-.media {
-  display: grid;
-  gap: var(--space-3) var(--space-5);
-  align-items: start;
-}
-.media-photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
-.media-body > :first-child { margin-top: 0; }
-.media-body > :last-child { margin-bottom: 0; }
-@media (min-width: 48em) {
-  .media { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); align-items: center; }
-  .media-reverse .media-photo { order: 2; }
-}
-
-/* 用語と説明。料金表・宿の概要・アクセスの要点に */
-.facts {
-  display: grid;
-  gap: var(--space-3) var(--space-4);
-  margin: 0;
-  padding-block: var(--space-3);
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-}
-.facts > div { margin: 0; }
-.facts dt {
-  font-size: .85rem;
-  letter-spacing: .12em;
-  color: var(--shio);
-  margin-bottom: .2em;
-}
-.facts dd { margin: 0; }
-.facts strong { font-family: var(--font-serif); font-weight: 500; font-size: 1.3rem; letter-spacing: .04em; }
-@media (min-width: 40em) { .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (min-width: 62em) { .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-
-/* 説明つきの用語リスト（縦に並ぶ）。下層ページのハウスルールや設備一覧に */
-.facts-list dt { font-weight: 600; margin-top: 1em; }
-.facts-list dd { margin: 0 0 .5em; color: var(--ink); }
-
-/* 表。狭い幅では .table-scroll で包むと横スクロールできる（ページ全体は動かない） */
-table { width: 100%; border-collapse: collapse; font-size: .95rem; line-height: 1.7; }
-th, td { padding: .7em .8em; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
-thead th { border-bottom: 2px solid var(--ink); font-weight: 600; }
-tbody th { font-weight: 600; white-space: nowrap; }
-.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 1.4em; }
-.table-scroll table { min-width: 32rem; margin: 0; }
-
-/* 罫線で区切るリンク一覧。読み物の目次、メディア掲載など */
-.link-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  border-top: 1px solid var(--rule);
-}
-.link-list li { margin: 0; border-bottom: 1px solid var(--rule); }
-.link-list a {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+/* 「〜を見る →」の1行リンク。矢印は線で描く */
+.more-link {
+  display: inline-flex;
   align-items: center;
-  gap: .25em var(--space-2);
-  padding: 1.1em 0;
+  gap: .75em;
   color: var(--ink);
   text-decoration: none;
+  font-size: 1rem;
+  letter-spacing: .08em;
+  margin-top: var(--s3);
 }
-.link-list a::after {
-  content: "→";
-  grid-column: 2;
-  grid-row: 1 / span 2;
+.more-link::after {
+  content: "";
+  width: 2.5rem;
+  height: 1px;
+  background: currentColor;
+  transition: width .35s var(--ease);
+}
+.more-link:hover { color: var(--shio); }
+.more-link:hover::after { width: 3.75rem; }
+p.more-link, .more-link-row { margin-bottom: 0; }
+
+/* 数字を明朝で大きく。料金、定員、時刻 */
+.figure {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: var(--fs-figure);
+  line-height: 1;
+  letter-spacing: .02em;
+  font-feature-settings: "palt" 1, "pnum" 1;
+}
+.figure--small { font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.5rem); }
+
+/* 写真の枡。はみ出しを切り、マウスを乗せるとわずかに寄る */
+.photo { margin: 0; overflow: hidden; background: var(--paper-deep); }
+.photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
+a:hover .photo img, .photo:hover img { transform: scale(1.03); }
+.photo--3x2 { aspect-ratio: 3 / 2; }
+.photo--4x3 { aspect-ratio: 4 / 3; }
+.photo--2x3 { aspect-ratio: 2 / 3; }
+.photo--wide { aspect-ratio: 21 / 9; }
+
+/* 漢数字の番号。CSS カウンタで付く（文言ではなく飾り） */
+.numbered { counter-reset: item; }
+.numbered__n::before {
+  counter-increment: item;
+  content: counter(item, cjk-ideographic);
+}
+.numbered__n {
+  font-family: var(--font-serif);
   color: var(--shio);
-  transition: transform .15s;
-}
-.link-list a:hover .link-title { color: var(--shio); }
-.link-list a:hover::after { transform: translateX(3px); }
-.link-title { font-family: var(--font-serif); font-size: 1.15rem; letter-spacing: .04em; line-height: 1.5; }
-.link-desc { font-size: .9rem; color: var(--ink-soft); line-height: 1.7; }
-
-/* 囲み。.notice は補足、.notice-important は必ず読んでほしいこと */
-.notice {
-  padding: var(--space-3);
-  background: var(--paper-deep);
-  border-radius: var(--radius);
-  margin: 0 0 1.4em;
-}
-.notice-important { background: var(--shio-pale); border-left: 3px solid var(--shio); }
-.notice > :last-child { margin-bottom: 0; }
-
-/* 日付や区分などの小さな見出し。記事の日付、メディア掲載の媒体名など */
-.eyebrow, .article-meta {
-  font-size: .85rem;
   letter-spacing: .1em;
-  color: var(--ink-soft);
+  font-feature-settings: "palt" 1;
 }
-
-/* 予約・問い合わせのフォーム。JS なしで動く HTML の部品だけ */
-fieldset { border: 0; padding: 0; margin: 0 0 var(--space-4); min-width: 0; }
-legend { font-weight: 600; padding: 0; margin-bottom: var(--space-2); }
-label { display: block; font-weight: 600; margin-bottom: .35em; }
-.form-row { margin-bottom: var(--space-3); }
-.form-note { font-size: .875rem; color: var(--ink-soft); margin-top: .3em; }
-input:not([type="checkbox"]):not([type="radio"]), select, textarea {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  min-height: 3rem;
-  padding: .6em .8em;
-  font: inherit;
-  color: var(--ink);
-  background: #fff;
-  border: 1px solid #c9c3b8;
-  border-radius: var(--radius);
-}
-textarea { min-height: 8rem; resize: vertical; }
-input:focus, select:focus, textarea:focus { outline: 2px solid var(--shio); outline-offset: 1px; border-color: var(--shio); }
-.choice { display: flex; flex-wrap: wrap; gap: .5em 1.5em; }
-.choice label { font-weight: 400; display: inline-flex; align-items: center; gap: .5em; margin: 0; }
-input[type="checkbox"], input[type="radio"] { width: 1.15em; height: 1.15em; accent-color: var(--shio); }
-@media (min-width: 40em) {
-  .form-row-short input, .form-row-short select { max-width: 20rem; }
-}
-
-/* 「必須」の小さな印。label の中に置く */
-.required {
-  display: inline-block;
-  margin-left: .5em;
-  padding: .15em .5em;
-  font-size: .8125rem;
-  font-weight: 600;
-  letter-spacing: .04em;
-  color: #fff;
-  background: var(--shio);
-  border-radius: var(--radius);
-  vertical-align: .1em;
-}
-
-/* 人数のように「名前＋数字」を横に並べる入力。狭いと折り返す */
-.choice-count { gap: 1rem 1.5rem; }
-.choice-count > span { display: block; }
-.choice-count label { font-weight: 600; display: block; margin-bottom: .35em; }
-.choice-count input { width: 6.5rem; min-width: 0; }
-
-/* 電話番号を大きく見せる。スマホではそのまま押せる */
-.tel-large {
-  display: inline-block;
-  margin-top: .2em;
-  font-size: 1.6rem;
-  font-weight: 600;
-  letter-spacing: .04em;
-  white-space: nowrap;
-}
-
-/* 地図や空室カレンダーの埋め込み。iframe に幅が書いてあっても枠に収める */
-.embed {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  background: var(--paper-deep);
-  margin: 0 0 1.4em;
-}
-.embed iframe { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
-@media (min-width: 48em) { .embed { aspect-ratio: 16 / 9; } }
-.embed-tall { aspect-ratio: 3 / 4; }
-@media (min-width: 48em) { .embed-tall { aspect-ratio: 4 / 3; } }
 
 
 /* 7. トップページの区画 ================================================= */
 
-/* 顔になる写真。文字は写真の上に置かず、下に置く */
-.hero { padding-top: 0; }
-.hero-photo { margin: 0; }
-.hero-photo img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  object-position: center 55%;
+/* --- 宿のあらまし .facts-strip ---------------------------------------
+   罫で区切った項目の帯。左端の項目（料金）だけ数字を大きく。
+   <dl class="facts-strip"><div><dt>項目</dt><dd>値</dd></div>…</dl> */
+.facts-strip {
+  display: grid;
+  margin: 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
 }
-.hero-text { padding-top: var(--space-4); }
-.hero-text h1 { margin-bottom: var(--space-3); }
-.lead {
-  font-size: 1.05rem;
-  max-width: 40rem;                        /* 3行目が半端に折れないよう本文幅より少し広く */
-  margin-bottom: 0;
+.facts-strip > div {
+  margin: 0;
+  padding: var(--s3) 0;
+  border-bottom: 1px solid var(--rule);
 }
-@media (max-width: 47.99em) {
-  .lead br { display: none; }             /* 狭い幅では文の途中で改行させない */
+.facts-strip dt {
+  font-size: .9rem;
+  letter-spacing: .18em;
+  color: var(--shio);
+  margin-bottom: .5em;
 }
+.facts-strip dd { margin: 0; line-height: 1.8; }
+.facts-strip dd small { display: block; font-size: .95rem; color: var(--ink-soft); margin-top: .35em; }
+.facts-strip .price { display: block; font-weight: 400; }
+.facts-strip .price__label { display: block; font-size: 1rem; letter-spacing: .1em; margin-bottom: .25em; }
+.facts-strip .price__unit { font-family: var(--font-serif); font-size: clamp(1.25rem, 1rem + .8vw, 1.75rem); margin-left: .15em; }
+.facts-strip a { color: var(--ink); text-decoration-color: var(--rule); }
+.facts-strip a:hover { color: var(--shio); }
+
+@media (min-width: 40em) {
+  .facts-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s4); }
+  .facts-strip > div:first-child { grid-column: 1 / -1; }
+}
+@media (min-width: 62em) {
+  .facts-strip {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.25fr);
+    column-gap: 0;
+    border-bottom: 1px solid var(--ink);
+  }
+  .facts-strip > div {
+    padding: var(--s4) var(--s4) var(--s4) 0;
+    border-bottom: 0;
+  }
+  .facts-strip > div + div { padding-left: var(--s4); border-left: 1px solid var(--rule); }
+  .facts-strip > div:first-child { grid-column: 1; grid-row: 1 / span 2; padding-right: var(--s5); display: flex; flex-direction: column; justify-content: center; }
+  .facts-strip > div:nth-child(n+5) { border-top: 1px solid var(--rule); }
+  .facts-strip > div:nth-child(5) { grid-column: 2 / 4; }
+  .facts-strip > div:nth-child(6) { grid-column: 4; }
+}
+
+/* --- よその宿には、たぶん無いもの .collage ------------------------------
+   2列で、右の列を半段ずらして並べる。番号は漢数字。
+   <ol class="collage numbered"><li class="collage__item"><figure class="photo …"><img></figure>
+     <div class="collage__body"><span class="numbered__n"></span><h3>…</h3><p>…</p></div></li>…</ol> */
+.collage { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--s6) var(--s5); }
+.collage__item { margin: 0; display: grid; gap: var(--s3); align-content: start; }
+.collage__body { max-width: 30rem; }
+.collage__body .numbered__n { display: block; font-size: 1.1rem; margin-bottom: .6em; }
+.collage__body h3 { margin-bottom: .6em; }
+.collage__body p { margin: 0; }
 @media (min-width: 48em) {
-  .hero-photo { padding-inline: var(--gutter); max-width: calc(var(--width-page) + 6rem); margin-inline: auto; }
-  .hero-photo img { aspect-ratio: 16 / 8; max-height: 36rem; }
-  .hero-text { padding-top: var(--space-5); }
-  .lead { font-size: 1.1rem; }
+  .collage { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(3rem, 6vw, 6rem) clamp(2rem, 5vw, 5rem); }
+  .collage__item:nth-child(even) { transform: translateY(clamp(4rem, 12vw, 10rem)); }
+  .collage__item:nth-child(even) .collage__body { margin-left: auto; text-align: left; }
+  .collage { padding-bottom: clamp(4rem, 12vw, 10rem); }   /* ずらした分の逃げ */
+}
+@media (min-width: 62em) {
+  .collage__item { grid-template-columns: minmax(0, 1fr); }
+  .collage__item:nth-child(odd) .collage__body { padding-right: clamp(0rem, 6vw, 5rem); }
+  .collage__item:nth-child(even) .collage__body { padding-left: clamp(0rem, 6vw, 5rem); }
 }
 
-/* 宿のあらまし。.facts をそのまま使う */
-
-/* よその宿には無いもの。写真と説明を交互に */
-.feature-list { display: grid; gap: var(--space-5); }
-.feature { display: grid; gap: var(--space-3) var(--space-5); align-items: center; }
-.feature img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
-.feature h3 { margin: 0 0 .5em; font-family: var(--font-serif); font-weight: 500; font-size: 1.35rem; letter-spacing: .06em; }
-.feature p { margin: 0; max-width: 30rem; }
+/* --- 部屋 .strip ----------------------------------------------------------
+   画面の端から端まで、写真を横に並べる。幅は不揃い（5:4:3）。
+   <ul class="strip"><li><figure class="photo"><img></figure><span class="strip__caption">…</span></li>…</ul> */
+.strip { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--s3); }
+.strip li { margin: 0; }
+.strip .photo { aspect-ratio: 4 / 3; }
+.strip__caption { display: block; font-size: .95rem; color: var(--ink-soft); letter-spacing: .06em; margin-top: .7em; padding-inline: var(--gutter); }
 @media (min-width: 48em) {
-  .feature-list { gap: var(--space-section); }
-  .feature { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
-  .feature:nth-child(even) .feature-photo { order: 2; }
+  .strip { grid-template-columns: 5fr 4fr 3fr; gap: clamp(.5rem, 1.2vw, 1.25rem); }
+  .strip .photo { aspect-ratio: auto; height: clamp(20rem, 42vw, 40rem); }
+  .strip__caption { padding-inline: 0; }
+  .strip li:first-child .strip__caption { padding-left: var(--gutter); }
+  .strip li:last-child .strip__caption { padding-right: var(--gutter); }
 }
 
-/* 部屋。写真3枚を並べる。.photo-grid をそのまま使い、中くらいの幅でも3列を保つ */
-.room-list img { aspect-ratio: 4 / 3; }
-@media (min-width: 40em) { .room-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+/* --- シェアごはん・佐島まで .overlap ---------------------------------------
+   画面の端から伸びる大きな写真に、文章の板が重なる。--flip で左右反転。
+   <div class="overlap"><figure class="overlap__media photo"><img></figure>
+     <div class="overlap__panel"><h2>…</h2><p>…</p></div></div> */
+.overlap { display: grid; }
+.overlap__media { margin: 0; aspect-ratio: 4 / 3; }
+.overlap__panel { padding: var(--s4) var(--gutter) 0; }
+.overlap__panel h2 { margin-bottom: var(--s3); }
+.overlap__panel p { max-width: 32em; }
+.overlap__panel > :last-child { margin-bottom: 0; }
+@media (min-width: 62em) {
+  .overlap {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: end;
+  }
+  .overlap__media { grid-column: 1 / 9; grid-row: 1; aspect-ratio: 3 / 2; max-height: 48rem; }
+  .overlap__panel {
+    grid-column: 7 / 13;
+    grid-row: 1;
+    align-self: end;
+    position: relative;
+    z-index: 1;
+    background: var(--paper);
+    padding: var(--s5) var(--gutter) 0 var(--s5);
+    margin-bottom: 0;
+    margin-top: var(--s6);
+  }
+  .overlap--flip .overlap__media { grid-column: 5 / 13; }
+  .overlap--flip .overlap__panel { grid-column: 1 / 7; padding: var(--s5) var(--s5) 0 var(--gutter); }
+}
 
-/* 泊まりに来ませんか。淡い青の地に */
-.cta { background: var(--shio-pale); padding-block: var(--space-5); }
-.cta h2 { margin-top: 0; }
-.cta h2::before { display: none; }
-.cta p { max-width: var(--width-text); }
-.cta .button-row { margin-top: var(--space-3); }
-.section + .cta { padding-top: var(--space-5); }
+/* --- 読み物 .index-list -----------------------------------------------
+   漢数字つきの大きな目次。1行がまるごとリンク。
+   <ol class="index-list numbered"><li><a href><span class="numbered__n"></span>
+     <span class="index-list__title">…</span><span class="index-list__desc">…</span></a></li></ol> */
+.index-list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--ink); }
+.index-list li { margin: 0; border-bottom: 1px solid var(--rule); }
+.index-list a {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  grid-template-areas: "n title" "n desc";
+  column-gap: var(--s2);
+  align-items: baseline;
+  padding: var(--s3) 0;
+  color: var(--ink);
+  text-decoration: none;
+  transition: padding-left .4s var(--ease);
+}
+.index-list .numbered__n { grid-area: n; font-size: 1.5rem; line-height: 1; align-self: start; padding-top: .35em; }
+.index-list__title { grid-area: title; font-family: var(--font-serif); font-size: var(--fs-h3); letter-spacing: .06em; line-height: 1.4; font-feature-settings: "palt" 1; transition: color .25s; }
+.index-list__desc { grid-area: desc; font-size: 1rem; color: var(--ink-soft); margin-top: .5em; line-height: 1.8; }
+.index-list a::after {
+  content: "";
+  display: none;
+  grid-area: arrow;
+  align-self: center;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--ink);
+  transition: width .4s var(--ease), background-color .25s;
+}
+.index-list a:hover { padding-left: .5rem; }
+.index-list a:hover .index-list__title { color: var(--shio); }
+.index-list a:hover::after { width: 4rem; background: var(--shio); }
+@media (min-width: 48em) {
+  .index-list a { grid-template-columns: 4rem minmax(0, 1fr) 6rem; grid-template-areas: "n title arrow" "n desc arrow"; }
+  .index-list a::after { display: block; justify-self: end; }
+}
+@media (min-width: 62em) {
+  .index-list a { grid-template-columns: 5rem minmax(0, 1fr) 6rem; padding: var(--s4) 0; }
+  .index-list .numbered__n { font-size: 2rem; }
+}
+
+/* --- 泊まりに来ませんか .cta-scene --------------------------------------
+   全面の写真（朝の海）の上に、墨の文字と予約ボタン。
+   <section class="cta-scene"><figure class="cta-scene__media"><img></figure>
+     <div class="container cta-scene__body"><h2>…</h2><p>…</p><p class="button-row">…</p></div></section> */
+.cta-scene {
+  position: relative;
+  display: grid;
+  align-items: center;
+  min-height: clamp(30rem, 70vh, 46rem);
+  color: var(--ink);
+  isolation: isolate;
+}
+.cta-scene__media { position: absolute; inset: 0; margin: 0; overflow: hidden; z-index: -1; }
+.cta-scene__media img { width: 100%; height: 100%; object-fit: cover; object-position: center 60%; }
+.cta-scene__media::after {
+  /* 文字側を紙の色で軽く霞ませて、墨の文字が読めるようにする */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, rgba(251,250,247,.86) 0%, rgba(251,250,247,.6) 45%, rgba(251,250,247,.05) 80%),
+    linear-gradient(to top, rgba(251,250,247,.5), transparent 40%);
+}
+.cta-scene__body { position: relative; padding-block: var(--band); }
+.cta-scene__body h2 { margin-bottom: var(--s3); }
+.cta-scene__body p { max-width: 30em; }
+.cta-scene__body .button-row { margin-top: var(--s4); }
 
 
-/* 8. 下層ページの区画 =================================================== */
+/* 8. 下層ページ向けの部品 =============================================== */
+
+/* ページの頭。h1 と一言。ヒーローの無いページで使う */
+.page-head { padding-block: var(--s5) var(--s5); border-bottom: 1px solid var(--ink); margin-bottom: var(--s6); }
+.page-head .eyebrow { margin-bottom: var(--s2); }
+.page-head h1 { font-size: clamp(2.25rem, 1.5rem + 3vw, 4.5rem); margin-bottom: .5em; }
+.page-head p { margin: 0; max-width: var(--w-text); color: var(--ink-soft); font-size: 1.05rem; }
+
+/* パンくず */
+.breadcrumb { list-style: none; padding: 0; margin: var(--s3) 0 0; display: flex; flex-wrap: wrap; gap: .25em .6em; font-size: .95rem; color: var(--ink-soft); letter-spacing: .04em; }
+.breadcrumb li { margin: 0; }
+.breadcrumb li + li::before { content: "／"; margin-right: .6em; color: var(--rule); }
+.breadcrumb a { color: inherit; }
+
+/* 本文。1行の長さを文章向けに絞る。h2 は上に短い線 */
+.prose { max-width: var(--w-text); }
+.prose > :first-child { margin-top: 0; }
+.prose h2 { font-size: clamp(1.6rem, 1.2rem + 1vw, 2.25rem); margin: var(--s6) 0 var(--s3); padding-top: var(--s2); position: relative; }
+.prose h2::before { content: ""; position: absolute; top: 0; left: 0; width: 2.25rem; height: 1px; background: var(--ink); }
+.prose h3 { font-size: 1.35rem; margin: var(--s5) 0 .6em; }
+.prose h4 { margin: var(--s4) 0 .5em; }
+.prose h2 + h3, .prose h3 + h4 { margin-top: 0; }
+.prose img { width: 100%; }
+.prose figure { margin: var(--s4) 0; }
+.prose figure.photo--bleed { max-width: none; }
 
 /* 読み物1本。見出し・日付・本文 */
-.article { max-width: var(--width-text); }
-.article header { margin-bottom: var(--space-4); padding-bottom: var(--space-3); border-bottom: 1px solid var(--rule); }
-.article header h1 { margin-bottom: .5em; }
-.article .article-meta { display: block; }
-.article h2 { font-size: 1.4rem; }
-.article h2::before { width: 1.75rem; }
-.article figure img { width: 100%; }
-
-/* 連載の前後へ */
-.article-nav {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--space-2);
-  margin-top: var(--space-5);
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--rule);
-}
+.article { max-width: var(--w-text); }
+.article > header { margin-bottom: var(--s5); padding-bottom: var(--s3); border-bottom: 1px solid var(--rule); }
+.article > header h1 { font-size: clamp(1.9rem, 1.3rem + 2vw, 3.25rem); margin-bottom: .6em; }
+.article__meta { display: block; font-size: .95rem; letter-spacing: .1em; color: var(--ink-soft); }
+.article-nav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s2); margin-top: var(--s6); padding-top: var(--s3); border-top: 1px solid var(--rule); }
 .article-nav a { text-decoration: none; }
 .article-nav a:hover { text-decoration: underline; }
 
-/* 連載や記録の一覧（読み物の目次）。番号つきなら <ol class="link-list"> でよい */
-ol.link-list { counter-reset: item; }
-ol.link-list a::before {
-  counter-increment: item;
-  content: counter(item, cjk-ideographic);
-  grid-column: 1;
-  font-family: var(--font-serif);
-  color: var(--shio);
-  font-size: .9rem;
-  letter-spacing: .1em;
-}
+/* 説明つきの用語一覧（縦に並ぶ）。ハウスルール、設備一覧 */
+.def-list dt { font-weight: 600; margin-top: 1.2em; }
+.def-list dd { margin: 0 0 .5em; }
 
-/* メディア掲載など、日付＋媒体＋一言の行 */
-.media-list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--rule); }
-.media-list li {
-  margin: 0;
-  padding: 1em 0;
-  border-bottom: 1px solid var(--rule);
-  display: grid;
-  gap: .2em var(--space-3);
-}
-.media-list time, .media-list .eyebrow { color: var(--ink-soft); font-size: .875rem; letter-spacing: .06em; }
+/* 日付＋媒体＋一言の行。メディア掲載 */
+.log-list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--ink); }
+.log-list li { margin: 0; padding: 1.1em 0; border-bottom: 1px solid var(--rule); display: grid; gap: .2em var(--s3); }
+.log-list time, .log-list .eyebrow { color: var(--ink-soft); font-size: .95rem; letter-spacing: .08em; margin: 0; }
 @media (min-width: 40em) {
-  .media-list li { grid-template-columns: 7.5rem minmax(0, 1fr); }
-  .media-list time, .media-list .eyebrow { grid-row: 1 / span 2; }
+  .log-list li { grid-template-columns: 8rem minmax(0, 1fr); }
+  .log-list time, .log-list .eyebrow { grid-row: 1 / span 2; }
 }
 
-/* 時系列の記録（古民家再生など）。年や日付を左に */
+/* 時系列の記録。年や日付を左に */
 .timeline { list-style: none; padding: 0; margin: 0; }
-.timeline > li {
-  margin: 0 0 var(--space-4);
-  padding-left: var(--space-3);
-  border-left: 2px solid var(--rule);
+.timeline > li { margin: 0 0 var(--s5); padding-left: var(--s4); border-left: 1px solid var(--ink); position: relative; }
+.timeline > li::before { content: ""; position: absolute; left: -4px; top: .6em; width: 7px; height: 7px; border-radius: 50%; background: var(--shio); }
+.timeline time { display: block; font-family: var(--font-serif); font-size: 1.1rem; letter-spacing: .12em; color: var(--shio); margin-bottom: .3em; }
+.timeline h3 { margin: 0 0 .5em; font-size: 1.35rem; }
+
+/* 囲み。.note は補足、.note--important は必ず読んでほしいこと */
+.note { padding: var(--s3) var(--s4); background: var(--paper-deep); margin: 0 0 1.4em; border-left: 1px solid var(--ink); }
+.note--important { background: var(--shio-pale); border-left: 2px solid var(--shio); }
+.note > :last-child { margin-bottom: 0; }
+
+/* 表。狭い幅は .table-scroll で包む（表だけが横に動き、ページは動かない） */
+table { width: 100%; border-collapse: collapse; font-size: 1rem; line-height: 1.7; }
+th, td { padding: .75em .9em; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+thead th { border-bottom: 1px solid var(--ink); font-weight: 600; }
+tbody th { font-weight: 600; white-space: nowrap; }
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 1.4em; }
+.table-scroll table { min-width: 32rem; margin: 0; }
+
+/* 地図や空室カレンダーの埋め込み */
+.embed { position: relative; width: 100%; aspect-ratio: 4 / 3; background: var(--paper-deep); margin: 0 0 1.4em; }
+.embed iframe { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
+@media (min-width: 48em) { .embed { aspect-ratio: 16 / 9; } }
+.embed--tall { aspect-ratio: 3 / 4; }
+@media (min-width: 48em) { .embed--tall { aspect-ratio: 4 / 3; } }
+
+/* フォーム。素の HTML の部品だけで動く */
+fieldset { border: 0; padding: 0; margin: 0 0 var(--s5); min-width: 0; }
+legend { font-family: var(--font-serif); font-size: 1.35rem; letter-spacing: .08em; padding: 0; margin-bottom: var(--s3); }
+label { display: block; font-weight: 600; margin-bottom: .4em; }
+.form-row { margin-bottom: var(--s4); }
+.form-note { font-size: .95rem; color: var(--ink-soft); margin-top: .4em; }
+input:not([type="checkbox"]):not([type="radio"]), select, textarea {
+  display: block; width: 100%; max-width: 100%; min-height: 3.25rem;
+  padding: .65em .9em; font: inherit; color: var(--ink); background: #fff;
+  border: 1px solid #c4bdb0; border-radius: var(--radius);
 }
-.timeline time { display: block; font-size: .875rem; letter-spacing: .08em; color: var(--shio); margin-bottom: .3em; }
-.timeline h3 { margin-top: 0; }
+textarea { min-height: 9rem; resize: vertical; }
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--shio); outline-offset: 1px; border-color: var(--shio); }
+.choice { display: flex; flex-wrap: wrap; gap: .5em 1.5em; }
+.choice label { font-weight: 400; display: inline-flex; align-items: center; gap: .5em; margin: 0; }
+input[type="checkbox"], input[type="radio"] { width: 1.15em; height: 1.15em; accent-color: var(--shio); }
+@media (min-width: 40em) { .form-row--short input, .form-row--short select { max-width: 20rem; } }
+.required { display: inline-block; margin-left: .5em; padding: .1em .55em; font-size: .85rem; font-weight: 600; letter-spacing: .06em; color: #fff; background: var(--shio); border-radius: var(--radius); vertical-align: .12em; }
+.choice-count { gap: 1rem 1.5rem; }
+.choice-count > span { display: block; }
+.choice-count label { font-weight: 600; display: block; margin-bottom: .35em; }
+.choice-count input { width: 6.5rem; min-width: 0; }
+.tel-large { display: inline-block; margin-top: .2em; font-family: var(--font-serif); font-size: 2rem; letter-spacing: .06em; white-space: nowrap; font-feature-settings: "palt" 1; }
 
 
-/* 9. 印刷 =============================================================== */
+/* 9. フッター =========================================================== */
+
+/* 夜の地。ページの最初（夜の外観）と呼応する */
+.site-footer {
+  background: var(--night);
+  color: var(--on-night);
+  padding-block: var(--s6) var(--s4);
+  font-size: .95rem;
+  line-height: 1.9;
+}
+.site-footer__inner { display: grid; gap: var(--s5) var(--s6); }
+.site-footer .brand { color: inherit; margin-bottom: var(--s3); }
+.site-footer .brand img { height: 4.5rem; }
+.site-footer p { margin: 0 0 1em; }
+.site-footer a { color: inherit; text-decoration-color: rgba(255,255,255,.3); }
+.site-footer a:hover { color: #fff; text-decoration-color: #fff; }
+.site-footer__note { color: var(--on-night-soft); font-size: .95rem; max-width: 34em; }
+.site-footer nav ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); gap: .5em 1.5em; }
+.site-footer nav li { margin: 0; }
+.site-footer nav a { text-decoration: none; letter-spacing: .06em; }
+.site-footer nav a:hover { text-decoration: underline; }
+.site-footer__copy { grid-column: 1 / -1; margin: 0 !important; padding-top: var(--s3); border-top: 1px solid rgba(255,255,255,.14); color: var(--on-night-soft); font-size: .9rem; letter-spacing: .08em; }
+@media (min-width: 48em) {
+  .site-footer__inner { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: start; }
+  .site-footer nav { padding-top: var(--s2); }
+}
+
+
+/* 10. 動き ============================================================= */
+
+/* 読み込み時：ヒーローの文字が下から浮かび、写真がゆっくり引く */
+@keyframes rise { from { opacity: 0; transform: translateY(1.25rem); } to { opacity: 1; transform: none; } }
+@keyframes settle { from { transform: scale(1.06); } to { transform: none; } }
+@keyframes drop { 0% { transform: translateY(-100%); } 60%, 100% { transform: translateY(100%); } }
+
+.hero__media img { animation: settle 2.4s var(--ease) both; }
+.hero__title, .hero__lead, .hero__actions { animation: rise 1s var(--ease) both; }
+.hero__lead { animation-delay: .15s; }
+.hero__actions { animation-delay: .3s; }
+.hero__hint::before { animation: drop 2.2s var(--ease) infinite; }
+
+/* スクロール連動：区画の中身が、画面に入りながら少し持ち上がる。
+   対応ブラウザだけで動く。非対応では静止（JS 無し） */
+@keyframes drift { from { transform: translateY(2.5rem); } to { transform: none; } }
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: drift linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 50%;
+  }
+}
+/* 透明度は動かさない。どんな状態でも文字は見えている（予約導線を消さない） */
+
+/* 浮遊する「ご予約」。ヒーローを過ぎたら右下に現れる。
+   スクロール連動に対応したブラウザだけで出る（非対応では出ない。他に予約導線が3つある） */
+.reserve-float {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 20;
+  visibility: hidden;
+  opacity: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: .6em;
+  min-height: 3.25rem;
+  padding: .7em 1.5em;
+  border-radius: 999px;
+  background: var(--night);
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: .1em;
+  font-size: .95rem;
+  box-shadow: 0 8px 30px rgba(0,0,0,.25);
+}
+.reserve-float::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #8fc5d8; }
+.reserve-float:hover { background: var(--shio); color: #fff; }
+@keyframes appear { from { visibility: hidden; opacity: 0; transform: translateY(1rem); } to { visibility: visible; opacity: 1; transform: none; } }
+@supports (animation-timeline: scroll()) {
+  .reserve-float {
+    animation: appear linear both;
+    animation-timeline: scroll(root);
+    animation-range: 70vh 100vh;
+  }
+}
+
+/* 動きを減らす設定では、全部止める。中身は最初から見えている */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .reveal { opacity: 1; transform: none; }
+  .reserve-float { visibility: hidden; }
+  .hero__hint { display: none; }
+}
+
+
+/* 11. 印刷 ============================================================== */
 @media print {
-  .site-nav, .cta, .button-row, .article-nav { display: none; }
-  body { background: #fff; color: #000; font-size: 11pt; }
-  a { color: inherit; text-decoration: underline; }
-  .hero-photo img, .feature img { max-height: 60mm; }
+  .site-nav, .button-row, .hero__actions, .hero__hint, .reserve-float, .article-nav { display: none; }
+  body, .band--night, .site-footer { background: #fff; color: #000; }
+  .site-header--overlay { position: static; color: #000; }
+  .hero { min-height: 0; color: #000; }
+  .hero__media { position: static; height: 60mm; }
+  .hero__media::after, .cta-scene__media::after { display: none; }
+  a { color: inherit; }
+  .collage__item:nth-child(even) { transform: none; }
 }
+
+/* 途中で折らない語句（時刻と語の組など） */
+.nowrap { white-space: nowrap; }
