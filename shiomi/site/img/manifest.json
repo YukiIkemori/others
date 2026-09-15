@@ -1240,5 +1240,49 @@
     "h": 320
    }
   ]
+ },
+ {
+  "name": "meal-share",
+  "alt": "おひつと味噌汁が並んだシェアごはんの食卓",
+  "source": "9d7467d4-854f-4788-96c4-6a308b5a7954.jfif",
+  "sizes": [
+   {
+    "file": "meal-share-1200.jpg",
+    "w": 1200,
+    "h": 900
+   },
+   {
+    "file": "meal-share-800.jpg",
+    "w": 800,
+    "h": 600
+   },
+   {
+    "file": "meal-share-480.jpg",
+    "w": 480,
+    "h": 360
+   }
+  ]
+ },
+ {
+  "name": "meal-donabe",
+  "alt": "土鍋を囲むシェアごはん",
+  "source": "f7896f0d-3377-47f8-b1e4-21c48c439bc1.jfif",
+  "sizes": [
+   {
+    "file": "meal-donabe-1200.jpg",
+    "w": 1200,
+    "h": 1600
+   },
+   {
+    "file": "meal-donabe-800.jpg",
+    "w": 800,
+    "h": 1067
+   },
+   {
+    "file": "meal-donabe-480.jpg",
+    "w": 480,
+    "h": 640
+   }
+  ]
  }
 ]
