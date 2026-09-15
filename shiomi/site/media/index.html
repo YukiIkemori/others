@@ -28,6 +28,7 @@
  ]
 }
 </script>
+<!-- head-meta -->
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
@@ -46,9 +47,11 @@
 </head>
 <body>
 
+<a class="reserve-float" href="/reserve/">ご予約</a>
+
 <header class="site-header">
-  <div class="wrap">
-    <a class="brand" href="/"><img src="../img/logo.svg" alt="" width="111" height="132"><span class="brand-name"><span class="brand-sub">古民家ゲストハウス</span>汐見の家</span></a>
+  <div class="container site-header__inner">
+    <a class="brand" href="/"><img src="../img/logo.svg" alt="" width="111" height="132"><span class="brand__name"><span class="brand__sub">古民家ゲストハウス</span>汐見の家</span></a>
     <nav class="site-nav" aria-label="メインメニュー">
       <ul>
         <li><a href="/about/">汐見の家について</a></li>
@@ -64,16 +67,16 @@
 
 <main>
 
-  <div class="wrap">
+  <div class="container">
     <div class="page-head">
       <h1>メディア掲載</h1>
       <p>新聞・雑誌・ガイドブックなどでご紹介いただきました。</p>
     </div>
   </div>
 
-  <section class="section">
-    <div class="wrap">
-      <ul class="media-list">
+  <section class="band">
+    <div class="container">
+      <ul class="log-list">
         <li><time>2015年1月</time><span>愛媛新聞朝刊「古民家活用 若者目線で～松山の専門学校生 交流施設など提案」</span></li>
         <li><time>2015年4月</time><span>愛媛新聞「よみがえる家 歴史伝承～現地でイベント 住民らに魅力紹介」</span></li>
         <li><time>2015年5月</time><span>東京新聞夕刊｢国際交流の宿 平和の扉開け～瀬戸内・佐島　親族ら古民家改装へ｣</span></li>
@@ -96,21 +99,27 @@
     </div>
   </section>
 
-  <section class="section cta">
-    <div class="wrap">
-      <h2>泊まりに来ませんか</h2>
+  <section class="cta-scene" aria-labelledby="cta-h">
+    <figure class="cta-scene__media">
+      <img src="../img/sea-dawn-1800.jpg"
+           srcset="../img/sea-dawn-480.jpg 480w, ../img/sea-dawn-800.jpg 800w, ../img/sea-dawn-1200.jpg 1200w, ../img/sea-dawn-1800.jpg 1800w"
+           sizes="100vw" alt="夜明けの瀬戸内海" width="1800" height="1350" loading="lazy">
+    </figure>
+    <div class="container cta-scene__body">
+      <h2 id="cta-h">泊まりに来ませんか</h2>
       <p>空室のご確認とご予約はこちらから。お電話でも承ります。</p>
-      <p class="button-row"><a class="button button-primary" href="/reserve/">予約・お問い合わせ</a></p>
+      <p class="button-row"><a class="button button--ink button--large" href="/reserve/">予約・お問い合わせ</a></p>
     </div>
   </section>
 
 </main>
 
 <footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-info">
-      <p><strong>古民家ゲストハウス 汐見の家</strong><br>〒794-2520 愛媛県越智郡上島町弓削佐島299<br>TEL <a href="tel:0897729800">0897-72-9800</a><br><a href="mailto:shiomihouse@gmail.com">shiomihouse@gmail.com</a></p>
-      <p>長く空き家だったため、地図に番地が出ないことがあります。その場合は「古民家ゲストハウス汐見の家」で検索してください。</p>
+  <div class="container site-footer__inner">
+    <div>
+      <a class="brand" href="/"><img src="../img/logo-white.svg" alt="" width="111" height="132"><span class="brand__name"><span class="brand__sub">古民家ゲストハウス</span>汐見の家</span></a>
+      <p><strong>古民家ゲストハウス 汐見の家</strong><br>〒794-2520 愛媛県越智郡上島町弓削佐島299<br>TEL <a class="nowrap" href="tel:0897729800">0897-72-9800</a><br><a class="nowrap" href="mailto:shiomihouse@gmail.com">shiomihouse@gmail.com</a></p>
+      <p class="site-footer__note">長く空き家だったため、地図に番地が出ないことがあります。その場合は「古民家ゲストハウス汐見の家」で検索してください。</p>
     </div>
     <nav aria-label="フッターメニュー">
       <ul>
@@ -124,7 +133,7 @@
         <li><a href="/reserve/">ご予約</a></li>
       </ul>
     </nav>
-    <p class="copyright">© 汐見の家合同会社</p>
+    <p class="site-footer__copy">© 汐見の家合同会社</p>
   </div>
 </footer>
 

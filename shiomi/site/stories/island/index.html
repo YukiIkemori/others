@@ -34,11 +34,12 @@
  ]
 }
 </script>
+<!-- head-meta -->
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta property="og:type" content="website">
+<meta property="og:type" content="article">
 <meta property="og:site_name" content="古民家ゲストハウス 汐見の家">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:title" content="島の暮らし｜汐見の家">
@@ -52,9 +53,11 @@
 </head>
 <body>
 
+<a class="reserve-float" href="/reserve/">ご予約</a>
+
 <header class="site-header">
-  <div class="wrap">
-    <a class="brand" href="/"><img src="../../img/logo.svg" alt="" width="111" height="132"><span class="brand-name"><span class="brand-sub">古民家ゲストハウス</span>汐見の家</span></a>
+  <div class="container site-header__inner">
+    <a class="brand" href="/"><img src="../../img/logo.svg" alt="" width="111" height="132"><span class="brand__name"><span class="brand__sub">古民家ゲストハウス</span>汐見の家</span></a>
     <nav class="site-nav" aria-label="メインメニュー">
       <ul>
         <li><a href="/about/">汐見の家について</a></li>
@@ -70,18 +73,18 @@
 
 <main>
 
-  <div class="wrap">
-    <nav class="breadcrumb" aria-label="現在の位置"><a href="/stories/">読み物</a></nav>
+  <div class="container">
+    <ol class="breadcrumb"><li><a href="/">ホーム</a></li><li><a href="/stories/">読み物</a></li></ol>
     <div class="page-head">
       <h1>島の暮らし</h1>
       <p>島四国、島親、こまなん自動車。佐島で起きていること。</p>
     </div>
   </div>
 
-  <section class="section">
-    <div class="wrap">
+  <section class="band">
+    <div class="container">
       <h2>目次</h2>
-      <ul class="link-list">
+      <ul class="index-list">
         <li><a href="#shimashikoku">佐島の島四国</a></li>
         <li><a href="#shimaoya">汐見の家、島親やります</a></li>
         <li><a href="#komanan">小出さんと実録こまなん自動車</a></li>
@@ -91,8 +94,8 @@
     </div>
   </section>
 
-  <section class="section" id="shimashikoku">
-    <div class="wrap-text article">
+  <section class="band" id="shimashikoku">
+    <div class="container--text article">
       <header><h2>佐島の島四国</h2></header>
       <p>ここ上島町でも弘法大師信仰は篤く、四国八十八ヶ所巡礼は人々の憧れでしたが、伝馬船で移動する時代には大変な事でした。そこで、自分の島に八十八ヶ所を勧請し、島を一回りすれば八十八ヶ所巡礼コンプ！と言うのが島四国です。凄い発想ですね。瀬戸内のあちこちの島に残っています。</p>
       <p>弘法大師入定の日である旧暦3月21日が島四国の日です。参加しやすい様に4月の第何日曜と決めている島もありますが、佐島は巡礼道の一部、蛸崎に渡る浜が干潮でないと歩けないので旧暦を守っています。</p>
@@ -103,14 +106,14 @@
       <p>島のおかあさん、富美ちゃんに案内して貰ってみんなでてくてく。ナカサカ電機さんの札所でもお接待です。のぼりがあるとワクワクしますね。島のおかあさん、直ちゃんも家の前でお接待。管理人のけいこさんの子供のゴウくんココちゃんはお菓子を貰って大喜びです。</p>
       <p>蛸崎まで回って2時間くらい？お天気にも恵まれ、春ののどかな海辺をめぐる佐島の島四国。命延ぶる心地がしそうです。</p>
       <p>2017年の島四国は4月17日(月)。メモしておいて下さいね。ちなみに2018年は5月6日(日)、2019年は4月25日(木)、2020年は4月13日(月)です。</p>
-      <figure class="photo">
+      <figure class="photo photo--natural">
         <img src="../../img/stories/2016-04-28-22-40-57-800.jpg"
              srcset="../../img/stories/2016-04-28-22-40-57-480.jpg 480w, ../../img/stories/2016-04-28-22-40-57-800.jpg 800w"
              sizes="(min-width: 48em) 620px, 100vw"
              alt="2016-04-28 22.40.57" width="800" height="1067" loading="lazy">
         <figcaption>〇札所にのぼりが。</figcaption>
       </figure>
-      <figure class="photo">
+      <figure class="photo photo--natural">
         <img src="../../img/stories/2016-04-28-22-41-18-1200.jpg"
              srcset="../../img/stories/2016-04-28-22-41-18-480.jpg 480w, ../../img/stories/2016-04-28-22-41-18-800.jpg 800w, ../../img/stories/2016-04-28-22-41-18-1200.jpg 1200w"
              sizes="(min-width: 48em) 620px, 100vw"
@@ -118,14 +121,14 @@
         <figcaption>〇浜辺をてくてく。歩きにくいです(笑</figcaption>
       </figure>
       <p>〇蛸崎。上島町HPより転載させて頂きました。佐島でも蛸がよく捕れます。</p>
-      <figure class="photo">
+      <figure class="photo photo--natural">
         <img src="../../img/stories/f75b4debd220de057bc44140b136a8e4-300.jpg"
              srcset="../../img/stories/f75b4debd220de057bc44140b136a8e4-300.jpg 300w"
              sizes="(min-width: 48em) 620px, 100vw"
              alt="蛸崎" width="300" height="168" loading="lazy">
         <figcaption>｢蛸は買ったことがないわねぇ。｣という島のおかあさんも。</figcaption>
       </figure>
-      <figure class="photo">
+      <figure class="photo photo--natural">
         <img src="../../img/stories/95ba096548ef88349f83a7db827e129c-1200.jpg"
              srcset="../../img/stories/95ba096548ef88349f83a7db827e129c-480.jpg 480w, ../../img/stories/95ba096548ef88349f83a7db827e129c-800.jpg 800w, ../../img/stories/95ba096548ef88349f83a7db827e129c-1200.jpg 1200w"
              sizes="(min-width: 48em) 620px, 100vw"
@@ -136,8 +139,8 @@
     </div>
   </section>
 
-  <section class="section" id="shimaoya">
-    <div class="wrap-text article">
+  <section class="band" id="shimaoya">
+    <div class="container--text article">
       <header><h2>汐見の家、島親やります</h2></header>
       <p>弓削高校は2020年度より全国からの留学生を受け入れています。</p>
       <p>島親とは、島の大人が一人暮らしの島留学生をサポートする仕組みで、食事や釣り、SUP（！）などに声を掛けたり、お互い無理のない心地よい関係を目指しています。</p>
@@ -153,8 +156,8 @@
     </div>
   </section>
 
-  <section class="section" id="komanan">
-    <div class="wrap-text article">
+  <section class="band" id="komanan">
+    <div class="container--text article">
       <header><h2>小出さんと実録こまなん自動車</h2></header>
       <p>「こまなん自動車」は、移動サービスの新しい取り組みです。</p>
       <p>2017年4月26日に行われた出発式には宮脇町長も来賓として出席され、翌日の愛媛新聞朝刊１面、南海テレビ、あいテレビで取り上げられました。</p>
@@ -200,7 +203,7 @@
       <p>9年間で9万キロ乗られ、ホイールまで替えられる徹底した整備で乗り心地も最高です。菓子折りがMPVに。わらしべ長者と言ってもスキップし過ぎでしょう。</p>
       <p>2017年3月22日、小出さんはお友達と交替で800キロを運転して佐島に来て下さいました。</p>
       <p>汐見では小学校の同級生や幼なじみにお声掛けしてご飯会を開催。たけちゃんよう来たねと旧交を温められたと、こちらがお礼を言われて胸熱です。</p>
-      <figure class="photo">
+      <figure class="photo photo--natural">
         <img src="../../img/stories/d91a16c89da260b09f486aa651aaf6a4-800.jpg"
              srcset="../../img/stories/d91a16c89da260b09f486aa651aaf6a4-480.jpg 480w, ../../img/stories/d91a16c89da260b09f486aa651aaf6a4-800.jpg 800w"
              sizes="(min-width: 48em) 620px, 100vw"
@@ -208,7 +211,7 @@
       </figure>
       <p>【サービスイン】</p>
       <p>島の会社と東京の会社、佐島をふるさとに持つ方が手を携えて出来た「こまなん自動車」の出発式には町長さんも来賓として来られ、町としての期待の高さを感じました。</p>
-      <figure class="photo">
+      <figure class="photo photo--natural">
         <img src="../../img/stories/064489be18b97eb974b3e09f24b6a665-480.jpg"
              srcset="../../img/stories/064489be18b97eb974b3e09f24b6a665-480.jpg 480w"
              sizes="(min-width: 48em) 620px, 100vw"
@@ -242,8 +245,8 @@
     </div>
   </section>
 
-  <section class="section" id="kotsu">
-    <div class="wrap-text article">
+  <section class="band" id="kotsu">
+    <div class="container--text article">
       <header><h2>三島のなかの交通手段</h2></header>
       <p>佐島、弓削島、生名島の３島は橋で繋がっており、町営バスが走っています。</p>
       <p>また、芸予汽船で弓削島、生名島をはじめ岩城島など他の島々に移動出来ます。</p>
@@ -304,8 +307,8 @@
     </div>
   </section>
 
-  <section class="section" id="kaimono">
-    <div class="wrap-text article">
+  <section class="band" id="kaimono">
+    <div class="container--text article">
       <header><h2>お買いもの</h2></header>
       <p>佐島には食料品店、飲食店がありません。</p>
       <p>隣の弓削島の下弓削港付近にスーパーが2軒、コンビニが1軒、魚屋さんが1軒あります。</p>
@@ -340,7 +343,7 @@
       <p>塩と味噌は汐見の家の基本調味料セットに含まれます。</p>
       <p>住所：上島町弓削下弓削830番地1</p>
       <p>tel: 0897-77-2232</p>
-      <figure class="photo">
+      <figure class="photo photo--natural">
         <img src="../../img/stories/afed77db2f2f79150c6fdbb849417425-480.jpg"
              srcset="../../img/stories/afed77db2f2f79150c6fdbb849417425-480.jpg 480w"
              sizes="(min-width: 48em) 620px, 100vw"
@@ -359,21 +362,27 @@
     </div>
   </section>
 
-  <section class="section cta">
-    <div class="wrap">
-      <h2>泊まりに来ませんか</h2>
+  <section class="cta-scene" aria-labelledby="cta-h">
+    <figure class="cta-scene__media">
+      <img src="../../img/sea-dawn-1800.jpg"
+           srcset="../../img/sea-dawn-480.jpg 480w, ../../img/sea-dawn-800.jpg 800w, ../../img/sea-dawn-1200.jpg 1200w, ../../img/sea-dawn-1800.jpg 1800w"
+           sizes="100vw" alt="夜明けの瀬戸内海" width="1800" height="1350" loading="lazy">
+    </figure>
+    <div class="container cta-scene__body">
+      <h2 id="cta-h">泊まりに来ませんか</h2>
       <p>この家に泊まってみませんか。</p>
-      <p class="button-row"><a class="button button-primary" href="/reserve/">予約・お問い合わせ</a></p>
+      <p class="button-row"><a class="button button--ink button--large" href="/reserve/">予約・お問い合わせ</a></p>
     </div>
   </section>
 
 </main>
 
 <footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-info">
-      <p><strong>古民家ゲストハウス 汐見の家</strong><br>〒794-2520 愛媛県越智郡上島町弓削佐島299<br>TEL <a href="tel:0897729800">0897-72-9800</a><br><a href="mailto:shiomihouse@gmail.com">shiomihouse@gmail.com</a></p>
-      <p>長く空き家だったため、地図に番地が出ないことがあります。その場合は「古民家ゲストハウス汐見の家」で検索してください。</p>
+  <div class="container site-footer__inner">
+    <div>
+      <a class="brand" href="/"><img src="../../img/logo-white.svg" alt="" width="111" height="132"><span class="brand__name"><span class="brand__sub">古民家ゲストハウス</span>汐見の家</span></a>
+      <p><strong>古民家ゲストハウス 汐見の家</strong><br>〒794-2520 愛媛県越智郡上島町弓削佐島299<br>TEL <a class="nowrap" href="tel:0897729800">0897-72-9800</a><br><a class="nowrap" href="mailto:shiomihouse@gmail.com">shiomihouse@gmail.com</a></p>
+      <p class="site-footer__note">長く空き家だったため、地図に番地が出ないことがあります。その場合は「古民家ゲストハウス汐見の家」で検索してください。</p>
     </div>
     <nav aria-label="フッターメニュー">
       <ul>
@@ -387,7 +396,7 @@
         <li><a href="/reserve/">ご予約</a></li>
       </ul>
     </nav>
-    <p class="copyright">© 汐見の家合同会社</p>
+    <p class="site-footer__copy">© 汐見の家合同会社</p>
   </div>
 </footer>
 

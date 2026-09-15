@@ -489,6 +489,10 @@ a:hover .photo img, .photo:hover img { transform: scale(1.03); }
 .photo--4x3 { aspect-ratio: 4 / 3; }
 .photo--2x3 { aspect-ratio: 2 / 3; }
 .photo--wide { aspect-ratio: 21 / 9; }
+/* 読み物の中の写真。新聞の切り抜き・名簿・古写真など比率がばらばらなので、
+   切り抜かずに元の形のまま出す */
+.photo--natural { aspect-ratio: auto; }
+.photo--natural img { height: auto; object-fit: initial; }
 
 /* 漢数字の番号。CSS カウンタで付く（文言ではなく飾り） */
 .numbered { counter-reset: item; }

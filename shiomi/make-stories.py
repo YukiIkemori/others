@@ -71,7 +71,7 @@ def render_img(src, alt, up, sizes="(min-width: 48em) 620px, 100vw", cap=""):
     srcset = ", ".join(f"{up}img/stories/{s['file']} {s['w']}w" for s in sorted(m["sizes"], key=lambda x: x["w"]))
     a = esc(alt) if alt else ""
     capline = f'        <figcaption>{esc(cap)}</figcaption>\n' if cap else ""
-    return (f'      <figure class="photo">\n'
+    return (f'      <figure class="photo photo--natural">\n'
             f'        <img src="{up}img/stories/{big["file"]}"\n'
             f'             srcset="{srcset}"\n'
             f'             sizes="{sizes}"\n'
@@ -139,22 +139,25 @@ def article_page(slug, path_slug, title, eyebrow, prev_, next_, up="../../../"):
         nav.append(f'<a href="{prev_[0]}">← {esc(prev_[1])}</a>')
     if next_:
         nav.append(f'<a href="{next_[0]}">{esc(next_[1])} →</a>')
-    navhtml = ('\n  <div class="wrap"><nav class="article-nav" aria-label="連載の移動">'
+    navhtml = ('\n  <div class="container"><nav class="article-nav" aria-label="連載の移動">'
                + "".join(nav) + "</nav></div>\n") if nav else ""
     body = render_blocks(a["blocks"], up)
-    date = f'<p class="article-meta"><time>{a["date"]}</time>　西村 暢子</p>' if a["date"] else '<p class="article-meta">西村 暢子</p>'
+    date = f'<p class="article__meta"><time>{a["date"]}</time>　西村 暢子</p>' if a["date"] else '<p class="article__meta">西村 暢子</p>'
     return [
         bp.head(f"{title}｜{SERIES_NAME}｜汐見の家", desc, canon, up),
         bp.header("/stories/", up),
         f'''
-  <div class="wrap">
-    <nav class="breadcrumb" aria-label="現在の位置">
-      <a href="/stories/">読み物</a> ／ <a href="/stories/shiomi/">{esc(SERIES_NAME)}</a>
-    </nav>
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="/">ホーム</a></li>
+      <li><a href="/stories/">読み物</a></li>
+      <li><a href="/stories/shiomi/">{esc(SERIES_NAME)}</a></li>
+      <li>{esc(title)}</li>
+    </ol>
   </div>
 
-  <article class="section">
-    <div class="wrap-text article">
+  <article class="band">
+    <div class="container--text article">
       <header>
         <p class="eyebrow">{esc(eyebrow)}</p>
         <h1>{esc(title)}</h1>
@@ -164,8 +167,8 @@ def article_page(slug, path_slug, title, eyebrow, prev_, next_, up="../../../"):
     </div>
   </article>
 {navhtml}''',
-        bp.cta("この家に泊まってみませんか。"),
-        bp.footer(),
+        bp.cta("この家に泊まってみませんか。", up),
+        bp.footer(up),
     ]
 
 
@@ -176,7 +179,7 @@ def build_shiomi():
             continue
         a = ART[slug]
         lead = next((b["text"] for b in a["blocks"] if b["type"] == "p"), "")[:80]
-        links.append(f'''        <li><a href="/stories/shiomi/{ps}/"><span class="link-title">{esc(title)}</span><span class="link-desc">{esc(eyebrow)}　{esc(lead)}…</span></a></li>''')
+        links.append(f'''        <li><a href="/stories/shiomi/{ps}/"><span class="index-list__title">{esc(title)}</span><span class="index-list__desc">{esc(eyebrow)}　{esc(lead)}…</span></a></li>''')
 
     # 各記事
     items = [(s, p, t, e) for s, p, t, e in SHIOMI if p]
@@ -194,32 +197,32 @@ def build_shiomi():
                 "/stories/shiomi/", "../../"),
         bp.header("/stories/", "../../"),
         f'''
-  <div class="wrap">
-    <nav class="breadcrumb" aria-label="現在の位置"><a href="/stories/">読み物</a></nav>
+  <div class="container">
+    <ol class="breadcrumb"><li><a href="/">ホーム</a></li><li><a href="/stories/">読み物</a></li></ol>
     <div class="page-head">
       <h1>{esc(SERIES_NAME)}</h1>
       <p>この家に生まれ、13歳で海を渡った人の話。</p>
     </div>
   </div>
 
-  <article class="section">
-    <div class="wrap-text article">
-      <header><h2>はじめに</h2><p class="article-meta"><time>{a["date"]}</time>　西村 暢子</p></header>
+  <article class="band">
+    <div class="container--text article">
+      <header><h2>はじめに</h2><p class="article__meta"><time>{a["date"]}</time>　西村 暢子</p></header>
 {body}
     </div>
   </article>
 
-  <section class="section">
-    <div class="wrap">
+  <section class="band">
+    <div class="container">
       <h2>目次</h2>
-      <ol class="link-list">
+      <ol class="index-list numbered">
 {chr(10).join(links)}
       </ol>
     </div>
   </section>
 ''',
-        bp.cta("この家に泊まってみませんか。"),
-        bp.footer(),
+        bp.cta("この家に泊まってみませんか。", "../../"),
+        bp.footer("../../"),
     ])
 
 
@@ -227,18 +230,18 @@ def merged_page(path, canon, title, lead, desc, entries, intro_slug=None, up="..
     parts = []
     if intro_slug:
         parts.append(f'''
-  <section class="section">
-    <div class="wrap-text prose">
+  <section class="band">
+    <div class="container--text prose">
 {render_blocks(ART[intro_slug]["blocks"], up)}
     </div>
   </section>
 ''')
     toc = "\n".join(f'        <li><a href="#{anc}">{esc(t)}</a></li>' for _, anc, t in entries)
     parts.append(f'''
-  <section class="section">
-    <div class="wrap">
+  <section class="band">
+    <div class="container">
       <h2>目次</h2>
-      <ul class="link-list">
+      <ul class="index-list">
 {toc}
       </ul>
     </div>
@@ -248,10 +251,10 @@ def merged_page(path, canon, title, lead, desc, entries, intro_slug=None, up="..
         a = ART.get(slug)
         if not a:
             continue
-        d = f'<p class="article-meta"><time>{a["date"]}</time></p>' if a["date"] else ""
+        d = f'<p class="article__meta"><time>{a["date"]}</time></p>' if a["date"] else ""
         parts.append(f'''
-  <section class="section" id="{anc}">
-    <div class="wrap-text article">
+  <section class="band" id="{anc}">
+    <div class="container--text article">
       <header><h2>{esc(t)}</h2>{d}</header>
 {render_blocks(a["blocks"], up)}
     </div>
@@ -261,8 +264,8 @@ def merged_page(path, canon, title, lead, desc, entries, intro_slug=None, up="..
         bp.head(title, desc, canon, up),
         bp.header("/stories/", up),
         f'''
-  <div class="wrap">
-    <nav class="breadcrumb" aria-label="現在の位置"><a href="/stories/">読み物</a></nav>
+  <div class="container">
+    <ol class="breadcrumb"><li><a href="/">ホーム</a></li><li><a href="/stories/">読み物</a></li></ol>
     <div class="page-head">
       <h1>{esc(lead[0])}</h1>
       <p>{esc(lead[1])}</p>
@@ -270,8 +273,8 @@ def merged_page(path, canon, title, lead, desc, entries, intro_slug=None, up="..
   </div>
 ''',
         "".join(parts),
-        bp.cta("この家に泊まってみませんか。"),
-        bp.footer(),
+        bp.cta("この家に泊まってみませんか。", up),
+        bp.footer(up),
     ]
 
 
@@ -297,9 +300,9 @@ def build_media():
         bp.header(""),
         bp.page_head("メディア掲載", "新聞・雑誌・ガイドブックなどでご紹介いただきました。"),
         f'''
-  <section class="section">
-    <div class="wrap">
-      <ul class="media-list">
+  <section class="band">
+    <div class="container">
+      <ul class="log-list">
 {chr(10).join(rows)}
       </ul>
     </div>
@@ -318,8 +321,8 @@ def build_thanks():
             continue
         anc = "seki-haruko" if slug == "harukoseki" else "list"
         parts.append(f'''
-  <section class="section" id="{anc}">
-    <div class="wrap-text article">
+  <section class="band" id="{anc}">
+    <div class="container--text article">
       <header><h2>{esc(t)}</h2></header>
 {render_blocks(a["blocks"], "../")}
     </div>
@@ -361,12 +364,12 @@ if __name__ == "__main__":
         bp.header("/stories/"),
         bp.page_head("読み物", "この家と、この島にまつわる話。"),
         '''
-  <section class="section">
-    <div class="wrap">
-      <ul class="link-list">
-        <li><a href="/stories/shiomi/"><span class="link-title">アメリカ日系一世 ロバート汐見の足跡</span><span class="link-desc">1904年にこの家で生まれ、13歳で単身渡米して医師になった人の生涯。日系人排斥と強制収容を経て、留学生を支え続けました。全7回とコラム2本。</span></a></li>
-        <li><a href="/stories/renovation/"><span class="link-title">古民家再生の記録</span><span class="link-desc">2012年の「はじまり」から、井戸、五右衛門風呂、壁塗りワークショップ、長屋門の屋根、第二期改修まで。</span></a></li>
-        <li><a href="/stories/island/"><span class="link-title">島の暮らし</span><span class="link-desc">島四国、島親、こまなん自動車。佐島・弓削島・生名島の交通と買い物のことも。</span></a></li>
+  <section class="band">
+    <div class="container">
+      <ul class="index-list">
+        <li><a href="/stories/shiomi/"><span class="index-list__title">アメリカ日系一世 ロバート汐見の足跡</span><span class="index-list__desc">1904年にこの家で生まれ、13歳で単身渡米して医師になった人の生涯。日系人排斥と強制収容を経て、留学生を支え続けました。全7回とコラム2本。</span></a></li>
+        <li><a href="/stories/renovation/"><span class="index-list__title">古民家再生の記録</span><span class="index-list__desc">2012年の「はじまり」から、井戸、五右衛門風呂、壁塗りワークショップ、長屋門の屋根、第二期改修まで。</span></a></li>
+        <li><a href="/stories/island/"><span class="index-list__title">島の暮らし</span><span class="index-list__desc">島四国、島親、こまなん自動車。佐島・弓削島・生名島の交通と買い物のことも。</span></a></li>
       </ul>
     </div>
   </section>
@@ -384,16 +387,16 @@ if __name__ == "__main__":
         bp.page_head("ページが見つかりません",
                      "お探しのページは、移動したか、公開を終えた可能性があります。"),
         '''
-  <section class="section">
-    <div class="wrap">
-      <ul class="link-list">
-        <li><a href="/"><span class="link-title">トップページ</span><span class="link-desc">汐見の家について、はじめから</span></a></li>
-        <li><a href="/reserve/"><span class="link-title">ご予約・お問い合わせ</span><span class="link-desc">空室の確認とお申し込み</span></a></li>
-        <li><a href="/stories/"><span class="link-title">読み物</span><span class="link-desc">ロバート汐見の足跡、古民家再生の記録、島の暮らし</span></a></li>
+  <section class="band">
+    <div class="container">
+      <ul class="index-list">
+        <li><a href="/"><span class="index-list__title">トップページ</span><span class="index-list__desc">汐見の家について、はじめから</span></a></li>
+        <li><a href="/reserve/"><span class="index-list__title">ご予約・お問い合わせ</span><span class="index-list__desc">空室の確認とお申し込み</span></a></li>
+        <li><a href="/stories/"><span class="index-list__title">読み物</span><span class="index-list__desc">ロバート汐見の足跡、古民家再生の記録、島の暮らし</span></a></li>
       </ul>
       <p>お探しのものが見つからないときは、<a href="tel:0897729800">0897-72-9800</a> までお気軽にどうぞ。</p>
     </div>
   </section>
 ''',
-        bp.footer(),
+        bp.footer(""),
     ])

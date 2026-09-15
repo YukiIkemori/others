@@ -8,6 +8,7 @@
 <link rel="canonical" href="https://shiomihouse.com/404.html">
 <meta name="theme-color" content="#fbfaf7">
 <link rel="stylesheet" href="style.css">
+<!-- head-meta -->
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
@@ -26,9 +27,11 @@
 </head>
 <body>
 
+<a class="reserve-float" href="/reserve/">ご予約</a>
+
 <header class="site-header">
-  <div class="wrap">
-    <a class="brand" href="/"><img src="img/logo.svg" alt="" width="111" height="132"><span class="brand-name"><span class="brand-sub">古民家ゲストハウス</span>汐見の家</span></a>
+  <div class="container site-header__inner">
+    <a class="brand" href="/"><img src="img/logo.svg" alt="" width="111" height="132"><span class="brand__name"><span class="brand__sub">古民家ゲストハウス</span>汐見の家</span></a>
     <nav class="site-nav" aria-label="メインメニュー">
       <ul>
         <li><a href="/about/">汐見の家について</a></li>
@@ -44,19 +47,19 @@
 
 <main>
 
-  <div class="wrap">
+  <div class="container">
     <div class="page-head">
       <h1>ページが見つかりません</h1>
       <p>お探しのページは、移動したか、公開を終えた可能性があります。</p>
     </div>
   </div>
 
-  <section class="section">
-    <div class="wrap">
-      <ul class="link-list">
-        <li><a href="/"><span class="link-title">トップページ</span><span class="link-desc">汐見の家について、はじめから</span></a></li>
-        <li><a href="/reserve/"><span class="link-title">ご予約・お問い合わせ</span><span class="link-desc">空室の確認とお申し込み</span></a></li>
-        <li><a href="/stories/"><span class="link-title">読み物</span><span class="link-desc">ロバート汐見の足跡、古民家再生の記録、島の暮らし</span></a></li>
+  <section class="band">
+    <div class="container">
+      <ul class="index-list">
+        <li><a href="/"><span class="index-list__title">トップページ</span><span class="index-list__desc">汐見の家について、はじめから</span></a></li>
+        <li><a href="/reserve/"><span class="index-list__title">ご予約・お問い合わせ</span><span class="index-list__desc">空室の確認とお申し込み</span></a></li>
+        <li><a href="/stories/"><span class="index-list__title">読み物</span><span class="index-list__desc">ロバート汐見の足跡、古民家再生の記録、島の暮らし</span></a></li>
       </ul>
       <p>お探しのものが見つからないときは、<a href="tel:0897729800">0897-72-9800</a> までお気軽にどうぞ。</p>
     </div>
@@ -65,10 +68,11 @@
 </main>
 
 <footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-info">
-      <p><strong>古民家ゲストハウス 汐見の家</strong><br>〒794-2520 愛媛県越智郡上島町弓削佐島299<br>TEL <a href="tel:0897729800">0897-72-9800</a><br><a href="mailto:shiomihouse@gmail.com">shiomihouse@gmail.com</a></p>
-      <p>長く空き家だったため、地図に番地が出ないことがあります。その場合は「古民家ゲストハウス汐見の家」で検索してください。</p>
+  <div class="container site-footer__inner">
+    <div>
+      <a class="brand" href="/"><img src="img/logo-white.svg" alt="" width="111" height="132"><span class="brand__name"><span class="brand__sub">古民家ゲストハウス</span>汐見の家</span></a>
+      <p><strong>古民家ゲストハウス 汐見の家</strong><br>〒794-2520 愛媛県越智郡上島町弓削佐島299<br>TEL <a class="nowrap" href="tel:0897729800">0897-72-9800</a><br><a class="nowrap" href="mailto:shiomihouse@gmail.com">shiomihouse@gmail.com</a></p>
+      <p class="site-footer__note">長く空き家だったため、地図に番地が出ないことがあります。その場合は「古民家ゲストハウス汐見の家」で検索してください。</p>
     </div>
     <nav aria-label="フッターメニュー">
       <ul>
@@ -82,7 +86,7 @@
         <li><a href="/reserve/">ご予約</a></li>
       </ul>
     </nav>
-    <p class="copyright">© 汐見の家合同会社</p>
+    <p class="site-footer__copy">© 汐見の家合同会社</p>
   </div>
 </footer>
 
