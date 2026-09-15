@@ -1,0 +1,1146 @@
+{
+  "hosting": {
+    "public": "site",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "htaccess.txt",
+      "DESIGN.md",
+      "README-納品.txt"
+    ],
+    "cleanUrls": false,
+    "trailingSlash": true,
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "X-Robots-Tag",
+            "value": "noindex, nofollow"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(jpg|jpeg|png|svg|webp)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=604800"
+          }
+        ]
+      },
+      {
+        "source": "**/*.css",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=3600"
+          }
+        ]
+      }
+    ],
+    "redirects": [
+      {
+        "source": "/1000-2",
+        "destination": "/rooms/#prayer",
+        "type": 301
+      },
+      {
+        "source": "/1000-2/",
+        "destination": "/rooms/#prayer",
+        "type": 301
+      },
+      {
+        "source": "/1028",
+        "destination": "/stories/shiomi/7-ryugakusei/",
+        "type": 301
+      },
+      {
+        "source": "/1028/",
+        "destination": "/stories/shiomi/7-ryugakusei/",
+        "type": 301
+      },
+      {
+        "source": "/1130",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1130/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1165",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1165/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1172",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1172/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1174",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1174/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1180",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1180/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1185",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1185/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1187",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1187/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1190",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1190/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1194",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1194/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1196",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1196/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1200",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1200/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1204",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1204/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1206",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1206/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1212",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1212/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/1326",
+        "destination": "/stories/renovation/niwa/",
+        "type": 301
+      },
+      {
+        "source": "/1326/",
+        "destination": "/stories/renovation/niwa/",
+        "type": 301
+      },
+      {
+        "source": "/1331",
+        "destination": "/stories/renovation/ido/",
+        "type": 301
+      },
+      {
+        "source": "/1331/",
+        "destination": "/stories/renovation/ido/",
+        "type": 301
+      },
+      {
+        "source": "/1359",
+        "destination": "/stories/renovation/nagayamon/",
+        "type": 301
+      },
+      {
+        "source": "/1359/",
+        "destination": "/stories/renovation/nagayamon/",
+        "type": 301
+      },
+      {
+        "source": "/1361",
+        "destination": "/stories/renovation/baiotoire/",
+        "type": 301
+      },
+      {
+        "source": "/1361/",
+        "destination": "/stories/renovation/baiotoire/",
+        "type": 301
+      },
+      {
+        "source": "/1413",
+        "destination": "/stories/renovation/kabenuri/",
+        "type": 301
+      },
+      {
+        "source": "/1413/",
+        "destination": "/stories/renovation/kabenuri/",
+        "type": 301
+      },
+      {
+        "source": "/1427",
+        "destination": "/stories/shiomi/nikkei-canadian/",
+        "type": 301
+      },
+      {
+        "source": "/1427/",
+        "destination": "/stories/shiomi/nikkei-canadian/",
+        "type": 301
+      },
+      {
+        "source": "/1532",
+        "destination": "/stories/shiomi/owarini/",
+        "type": 301
+      },
+      {
+        "source": "/1532/",
+        "destination": "/stories/shiomi/owarini/",
+        "type": 301
+      },
+      {
+        "source": "/164",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/164/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/166",
+        "destination": "/stories/shiomi/",
+        "type": 301
+      },
+      {
+        "source": "/166/",
+        "destination": "/stories/shiomi/",
+        "type": 301
+      },
+      {
+        "source": "/168",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/168/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/169",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/169/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/171",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/171/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/172",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/172/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/173",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/173/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/1749",
+        "destination": "/stories/renovation/itadakimono-1/",
+        "type": 301
+      },
+      {
+        "source": "/1749/",
+        "destination": "/stories/renovation/itadakimono-1/",
+        "type": 301
+      },
+      {
+        "source": "/175",
+        "destination": "/stories/island/#kotsu",
+        "type": 301
+      },
+      {
+        "source": "/175/",
+        "destination": "/stories/island/#kotsu",
+        "type": 301
+      },
+      {
+        "source": "/1752",
+        "destination": "/stories/renovation/furudategu/",
+        "type": 301
+      },
+      {
+        "source": "/1752/",
+        "destination": "/stories/renovation/furudategu/",
+        "type": 301
+      },
+      {
+        "source": "/1757",
+        "destination": "/stories/renovation/hajimari/",
+        "type": 301
+      },
+      {
+        "source": "/1757/",
+        "destination": "/stories/renovation/hajimari/",
+        "type": 301
+      },
+      {
+        "source": "/176",
+        "destination": "/stories/island/#kaimono",
+        "type": 301
+      },
+      {
+        "source": "/176/",
+        "destination": "/stories/island/#kaimono",
+        "type": 301
+      },
+      {
+        "source": "/177",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/177/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/178",
+        "destination": "/stories/shiomi/1-tobei/",
+        "type": 301
+      },
+      {
+        "source": "/178/",
+        "destination": "/stories/shiomi/1-tobei/",
+        "type": 301
+      },
+      {
+        "source": "/179",
+        "destination": "/stories/shiomi/2-tanshin/",
+        "type": 301
+      },
+      {
+        "source": "/179/",
+        "destination": "/stories/shiomi/2-tanshin/",
+        "type": 301
+      },
+      {
+        "source": "/1897",
+        "destination": "/stories/island/#komanan",
+        "type": 301
+      },
+      {
+        "source": "/1897/",
+        "destination": "/stories/island/#komanan",
+        "type": 301
+      },
+      {
+        "source": "/193",
+        "destination": "/stories/shiomi/column-inochi/",
+        "type": 301
+      },
+      {
+        "source": "/193/",
+        "destination": "/stories/shiomi/column-inochi/",
+        "type": 301
+      },
+      {
+        "source": "/203",
+        "destination": "/stories/shiomi/3-seishun/",
+        "type": 301
+      },
+      {
+        "source": "/203/",
+        "destination": "/stories/shiomi/3-seishun/",
+        "type": 301
+      },
+      {
+        "source": "/2302",
+        "destination": "/stories/renovation/naiso/",
+        "type": 301
+      },
+      {
+        "source": "/2302/",
+        "destination": "/stories/renovation/naiso/",
+        "type": 301
+      },
+      {
+        "source": "/2348",
+        "destination": "/stories/renovation/dai2ki/",
+        "type": 301
+      },
+      {
+        "source": "/2348/",
+        "destination": "/stories/renovation/dai2ki/",
+        "type": 301
+      },
+      {
+        "source": "/242",
+        "destination": "/stories/shiomi/tasaka-sumigama/",
+        "type": 301
+      },
+      {
+        "source": "/242/",
+        "destination": "/stories/shiomi/tasaka-sumigama/",
+        "type": 301
+      },
+      {
+        "source": "/2425",
+        "destination": "/stories/renovation/tanden/",
+        "type": 301
+      },
+      {
+        "source": "/2425/",
+        "destination": "/stories/renovation/tanden/",
+        "type": 301
+      },
+      {
+        "source": "/2432",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/2432/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/259",
+        "destination": "/stories/shiomi/4-shuyojo/",
+        "type": 301
+      },
+      {
+        "source": "/259/",
+        "destination": "/stories/shiomi/4-shuyojo/",
+        "type": 301
+      },
+      {
+        "source": "/277",
+        "destination": "/stories/shiomi/5-american-dream/",
+        "type": 301
+      },
+      {
+        "source": "/277/",
+        "destination": "/stories/shiomi/5-american-dream/",
+        "type": 301
+      },
+      {
+        "source": "/285",
+        "destination": "/about/",
+        "type": 301
+      },
+      {
+        "source": "/285/",
+        "destination": "/about/",
+        "type": 301
+      },
+      {
+        "source": "/3108",
+        "destination": "/stories/island/#shimaoya",
+        "type": 301
+      },
+      {
+        "source": "/3108/",
+        "destination": "/stories/island/#shimaoya",
+        "type": 301
+      },
+      {
+        "source": "/318",
+        "destination": "/stories/shiomi/column-tanaka/",
+        "type": 301
+      },
+      {
+        "source": "/318/",
+        "destination": "/stories/shiomi/column-tanaka/",
+        "type": 301
+      },
+      {
+        "source": "/627",
+        "destination": "/stories/shiomi/6-bunkazai/",
+        "type": 301
+      },
+      {
+        "source": "/627/",
+        "destination": "/stories/shiomi/6-bunkazai/",
+        "type": 301
+      },
+      {
+        "source": "/649",
+        "destination": "/stories/renovation/goemon-naiso/",
+        "type": 301
+      },
+      {
+        "source": "/649/",
+        "destination": "/stories/renovation/goemon-naiso/",
+        "type": 301
+      },
+      {
+        "source": "/656",
+        "destination": "/stories/renovation/goemon-hontai/",
+        "type": 301
+      },
+      {
+        "source": "/656/",
+        "destination": "/stories/renovation/goemon-hontai/",
+        "type": 301
+      },
+      {
+        "source": "/667",
+        "destination": "/stories/renovation/itadakimono-2/",
+        "type": 301
+      },
+      {
+        "source": "/667/",
+        "destination": "/stories/renovation/itadakimono-2/",
+        "type": 301
+      },
+      {
+        "source": "/715",
+        "destination": "/stories/island/#shimashikoku",
+        "type": 301
+      },
+      {
+        "source": "/715/",
+        "destination": "/stories/island/#shimashikoku",
+        "type": 301
+      },
+      {
+        "source": "/8060",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/8060/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/918",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/918/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/920",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/920/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/about",
+        "destination": "/about/",
+        "type": 301
+      },
+      {
+        "source": "/about/",
+        "destination": "/about/",
+        "type": 301
+      },
+      {
+        "source": "/access-2",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/access-2/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/alcohol",
+        "destination": "/meals/",
+        "type": 301
+      },
+      {
+        "source": "/alcohol/",
+        "destination": "/meals/",
+        "type": 301
+      },
+      {
+        "source": "/category/blog",
+        "destination": "/stories/",
+        "type": 301
+      },
+      {
+        "source": "/category/blog/",
+        "destination": "/stories/",
+        "type": 301
+      },
+      {
+        "source": "/category/eventnews",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/category/eventnews/",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/en",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/en/",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/en/1000-2",
+        "destination": "/rooms/#prayer",
+        "type": 301
+      },
+      {
+        "source": "/en/1000-2/",
+        "destination": "/rooms/#prayer",
+        "type": 301
+      },
+      {
+        "source": "/en/1578",
+        "destination": "/stories/shiomi/6-bunkazai/",
+        "type": 301
+      },
+      {
+        "source": "/en/1578/",
+        "destination": "/stories/shiomi/6-bunkazai/",
+        "type": 301
+      },
+      {
+        "source": "/en/1582",
+        "destination": "/stories/shiomi/7-ryugakusei/",
+        "type": 301
+      },
+      {
+        "source": "/en/1582/",
+        "destination": "/stories/shiomi/7-ryugakusei/",
+        "type": 301
+      },
+      {
+        "source": "/en/1608",
+        "destination": "/stories/shiomi/owarini/",
+        "type": 301
+      },
+      {
+        "source": "/en/1608/",
+        "destination": "/stories/shiomi/owarini/",
+        "type": 301
+      },
+      {
+        "source": "/en/1613",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/en/1613/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/en/511",
+        "destination": "/stories/shiomi/",
+        "type": 301
+      },
+      {
+        "source": "/en/511/",
+        "destination": "/stories/shiomi/",
+        "type": 301
+      },
+      {
+        "source": "/en/514",
+        "destination": "/stories/shiomi/1-tobei/",
+        "type": 301
+      },
+      {
+        "source": "/en/514/",
+        "destination": "/stories/shiomi/1-tobei/",
+        "type": 301
+      },
+      {
+        "source": "/en/530",
+        "destination": "/stories/shiomi/2-tanshin/",
+        "type": 301
+      },
+      {
+        "source": "/en/530/",
+        "destination": "/stories/shiomi/2-tanshin/",
+        "type": 301
+      },
+      {
+        "source": "/en/536",
+        "destination": "/stories/shiomi/3-seishun/",
+        "type": 301
+      },
+      {
+        "source": "/en/536/",
+        "destination": "/stories/shiomi/3-seishun/",
+        "type": 301
+      },
+      {
+        "source": "/en/543",
+        "destination": "/stories/shiomi/4-shuyojo/",
+        "type": 301
+      },
+      {
+        "source": "/en/543/",
+        "destination": "/stories/shiomi/4-shuyojo/",
+        "type": 301
+      },
+      {
+        "source": "/en/912",
+        "destination": "/stories/shiomi/5-american-dream/",
+        "type": 301
+      },
+      {
+        "source": "/en/912/",
+        "destination": "/stories/shiomi/5-american-dream/",
+        "type": 301
+      },
+      {
+        "source": "/en/about-shiomi-house",
+        "destination": "/about/",
+        "type": 301
+      },
+      {
+        "source": "/en/about-shiomi-house/",
+        "destination": "/about/",
+        "type": 301
+      },
+      {
+        "source": "/en/access",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/en/access/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/en/alcohol",
+        "destination": "/meals/",
+        "type": 301
+      },
+      {
+        "source": "/en/alcohol/",
+        "destination": "/meals/",
+        "type": 301
+      },
+      {
+        "source": "/en/category/access",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/en/category/access/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/en/category/blog",
+        "destination": "/stories/",
+        "type": 301
+      },
+      {
+        "source": "/en/category/blog/",
+        "destination": "/stories/",
+        "type": 301
+      },
+      {
+        "source": "/en/category/eventnews",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/en/category/eventnews/",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/en/nagasaki-sanbashi-pier",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/en/nagasaki-sanbashi-pier/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/en/nikkeitoc",
+        "destination": "/stories/shiomi/",
+        "type": 301
+      },
+      {
+        "source": "/en/nikkeitoc/",
+        "destination": "/stories/shiomi/",
+        "type": 301
+      },
+      {
+        "source": "/en/onomichi-st-map",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/en/onomichi-st-map/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/en/renovation",
+        "destination": "/stories/renovation/",
+        "type": 301
+      },
+      {
+        "source": "/en/renovation/",
+        "destination": "/stories/renovation/",
+        "type": 301
+      },
+      {
+        "source": "/en/reservations-2",
+        "destination": "/reserve/",
+        "type": 301
+      },
+      {
+        "source": "/en/reservations-2/",
+        "destination": "/reserve/",
+        "type": 301
+      },
+      {
+        "source": "/en/room-and-facility",
+        "destination": "/rooms/",
+        "type": 301
+      },
+      {
+        "source": "/en/room-and-facility/",
+        "destination": "/rooms/",
+        "type": 301
+      },
+      {
+        "source": "/en/seki-haruko",
+        "destination": "/thanks/#seki-haruko",
+        "type": 301
+      },
+      {
+        "source": "/en/seki-haruko/",
+        "destination": "/thanks/#seki-haruko",
+        "type": 301
+      },
+      {
+        "source": "/en/special-thanks",
+        "destination": "/thanks/",
+        "type": 301
+      },
+      {
+        "source": "/en/special-thanks/",
+        "destination": "/thanks/",
+        "type": 301
+      },
+      {
+        "source": "/habuport",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/habuport/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/harukoseki",
+        "destination": "/thanks/#seki-haruko",
+        "type": 301
+      },
+      {
+        "source": "/harukoseki/",
+        "destination": "/thanks/#seki-haruko",
+        "type": 301
+      },
+      {
+        "source": "/highwaybus-fromtokyo",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/highwaybus-fromtokyo/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/jal-ana-fromtokyo",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/jal-ana-fromtokyo/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/lcc-fromtokyo",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/lcc-fromtokyo/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/life_shopping",
+        "destination": "/stories/island/#kaimono",
+        "type": 301
+      },
+      {
+        "source": "/life_shopping/",
+        "destination": "/stories/island/#kaimono",
+        "type": 301
+      },
+      {
+        "source": "/mealsharing",
+        "destination": "/meals/",
+        "type": 301
+      },
+      {
+        "source": "/mealsharing/",
+        "destination": "/meals/",
+        "type": 301
+      },
+      {
+        "source": "/media",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/media/",
+        "destination": "/media/",
+        "type": 301
+      },
+      {
+        "source": "/nikkeiarticlelist",
+        "destination": "/stories/shiomi/",
+        "type": 301
+      },
+      {
+        "source": "/nikkeiarticlelist/",
+        "destination": "/stories/shiomi/",
+        "type": 301
+      },
+      {
+        "source": "/obento",
+        "destination": "/meals/",
+        "type": 301
+      },
+      {
+        "source": "/obento/",
+        "destination": "/meals/",
+        "type": 301
+      },
+      {
+        "source": "/othermeals",
+        "destination": "/meals/",
+        "type": 301
+      },
+      {
+        "source": "/othermeals/",
+        "destination": "/meals/",
+        "type": 301
+      },
+      {
+        "source": "/renovation",
+        "destination": "/stories/renovation/",
+        "type": 301
+      },
+      {
+        "source": "/renovation/",
+        "destination": "/stories/renovation/",
+        "type": 301
+      },
+      {
+        "source": "/reservations",
+        "destination": "/reserve/",
+        "type": 301
+      },
+      {
+        "source": "/reservations/",
+        "destination": "/reserve/",
+        "type": 301
+      },
+      {
+        "source": "/room",
+        "destination": "/rooms/",
+        "type": 301
+      },
+      {
+        "source": "/room/",
+        "destination": "/rooms/",
+        "type": 301
+      },
+      {
+        "source": "/self-cooking",
+        "destination": "/meals/",
+        "type": 301
+      },
+      {
+        "source": "/self-cooking/",
+        "destination": "/meals/",
+        "type": 301
+      },
+      {
+        "source": "/shinkansen-fromtokyo",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/shinkansen-fromtokyo/",
+        "destination": "/access/",
+        "type": 301
+      },
+      {
+        "source": "/shiomicar",
+        "destination": "/rooms/#shiomicar",
+        "type": 301
+      },
+      {
+        "source": "/shiomicar/",
+        "destination": "/rooms/#shiomicar",
+        "type": 301
+      },
+      {
+        "source": "/souvenir",
+        "destination": "/meals/",
+        "type": 301
+      },
+      {
+        "source": "/souvenir/",
+        "destination": "/meals/",
+        "type": 301
+      },
+      {
+        "source": "/special-thanks",
+        "destination": "/thanks/",
+        "type": 301
+      },
+      {
+        "source": "/special-thanks/",
+        "destination": "/thanks/",
+        "type": 301
+      },
+      {
+        "source": "/studentpj_1d",
+        "destination": "/stories/renovation/gakusei/",
+        "type": 301
+      },
+      {
+        "source": "/studentpj_1d/",
+        "destination": "/stories/renovation/gakusei/",
+        "type": 301
+      }
+    ]
+  }
+}
