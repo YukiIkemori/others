@@ -1,3 +1,11 @@
+# 手引き類は配信しない（サーバーに置いてあっても、外からは見えないように）
+<FilesMatch "\.(md|txt)$">
+  Require all denied
+</FilesMatch>
+<Files "robots.txt">
+  Require all granted
+</Files>
+
 # 汐見の家 — 旧サイト（WordPress）から静的サイトへの移行用
 # 生成: 2026-09-15 / 対象152URL（301: 108件、URL変更なし: 2件、404: 41件）
 #
