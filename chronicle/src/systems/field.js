@@ -1,5 +1,5 @@
 // Field: the map screen (DESIGN §7.2). One opaque layer that draws tiles,
-// objects and y-sorted sprites, moves the party in 8 directions on a half-tile
+// objects and y-sorted sprites, moves the party in 8 directions one whole tile at a time (no half steps; owner request)
 // grid (caterpillar trail),
 // runs NPC AI, doors/locks, damage floors, warps, step events, encounters and
 // the ship, plus the public R.Field API used by title/menu/events/debug.
@@ -425,9 +425,16 @@
   // are taken when `cell` changes — once per tile entered. A warp or step
   // event first glides the box onto its tile. Encounters, poison, walk-heal
   // and 魔除け count the distance walked, so half steps count half.
-  const HALF = 0.5;
+  // Step size in tiles. Crest moved on a half-tile grid; Chronicle's owner found that stressful,
+  // so every step is one whole tile (8 directions and wall sliding stay). The grid code below is
+  // step-size generic: with STEP = 1 positions are always whole tiles and corner assist never fires.
+  const STEP = 1;
+  const HALF = STEP;
   const EPS = 1e-6;
-  const GAP = 1; // follower spacing along the leader's path (tiles)
+  const GAP = 1; // follower spacing along the leader's path (steps)
+  // path length in steps: a diagonal step counts as 1 like a straight one, so with whole-tile
+  // steps follower i stands exactly on the leader's i-th previous tile once the party stops
+  const segLen = (dx, dy) => Math.max(Math.abs(dx), Math.abs(dy));
   const isInt = (v) => Math.abs(v - Math.round(v)) < EPS;
   const HORIZ = { left: 1, right: 1 };
   const dirOf = (dx, dy) => (dx > 0 ? 'right' : dx < 0 ? 'left' : dy > 0 ? 'down' : dy < 0 ? 'up' : null);
@@ -526,7 +533,7 @@
       let need = GAP * i, a = lead;
       for (let j = lead.back ? 1 : 0; j < this.trail.length; j++) {
         const b = this.trail[j];
-        const dx = a.x - b.x, dy = a.y - b.y, len = Math.hypot(dx, dy);
+        const dx = a.x - b.x, dy = a.y - b.y, len = segLen(dx, dy);
         if (len < EPS) continue;
         if (len >= need - EPS) {
           const ax = Math.abs(dx), ay = Math.abs(dy);
@@ -725,7 +732,7 @@
         this.trail.unshift({ x: p.x, y: p.y });
         let len = 0;
         for (let i = 1; i < this.trail.length; i++) {
-          len += Math.hypot(this.trail[i].x - this.trail[i - 1].x, this.trail[i].y - this.trail[i - 1].y);
+          len += segLen(this.trail[i].x - this.trail[i - 1].x, this.trail[i].y - this.trail[i - 1].y);
           if (len > GAP * (this.P.length - 1) + 1) { this.trail.length = i + 1; break; }
         }
       }
