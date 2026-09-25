@@ -39325,15 +39325,17 @@ try{
         G().text('経験値', 14, 139, { color: G().C.gray }); G().text(q(m.exp), 80, 139, { align: 'right' });
         G().text('ゴールド', 92, 139, { color: G().C.gray }); G().text(q(m.gold), 170, 139, { align: 'right' });
         G().text('JP', 182, 139, { color: G().C.gray }); G().text(q(m.jp), 242, 139, { align: 'right' });
+        // 「ドロップ 薬草／★四つ葉のお守り」 and 「盗める 薬草／★…」: everything this monster can give,
+        // each item by name once obtained (by drop or by stealing), 「？？？」 until then
         const rareOk = gotSlot(m, r, 'rare'), dropOk = gotSlot(m, r, 'drop');
-        const drop = (slot, got) => {
-          if (!m[slot] || !m[slot].item) return b ? 'なし' : '？？？';
-          return got ? K.itemLabel(m[slot].item) : '？？？';
-        };
+        const dparts = [];
+        if (m.drop && m.drop.item) dparts.push(dropOk ? K.itemLabel(m.drop.item) : '？？？');
+        if (m.rare && m.rare.item) dparts.push(rareOk ? '★' + K.itemLabel(m.rare.item).replace(/★$/, '') : '★？？？');
         G().text('ドロップ', 14, 152, { color: G().C.gray });
-        K.fitText(drop('drop', dropOk), 82, 152, 160, { color: dropOk ? G().C.white : G().C.dark });
-        G().text('レア', 14, 165, { color: G().C.gray });
-        K.fitText(drop('rare', rareOk), 82, 165, 160, { color: rareOk ? G().C.yellow : G().C.dark });
+        K.fitText(dparts.join('／') || (b ? 'なし' : '？？？'), 82, 152, 160, { color: dropOk || rareOk ? G().C.white : G().C.dark });
+        const [sk, sv, scol] = m.steal && (m.steal.item || m.steal.rare) ? stealLine(m, r) : ['盗める', b ? 'なし' : '？？？', G().C.dark];
+        G().text(sk, 14, 165, { color: G().C.gray });
+        K.fitText(sv, 82, 165, 160, { color: scol });
         // up to 3 lines of description (boss texts are long)
         let dl = G().wrap(m.desc || '', 226);
         if (dl.length > 3) dl = G().wrap(String(m.desc).replace(/\n/g, ''), 226); // author line breaks may not fit: reflow
