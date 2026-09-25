@@ -60,6 +60,25 @@
     }
     return tileGfx(m, m.tiles[i]);
   }
+  /** decor canvas | frames | null at a cell (cached per cell) */
+  function decorGfx(m, x, y) {
+    const id = m.decorAt(x, y);
+    if (!id) return null;
+    const i = m.idx(x, y);
+    m.dcache = m.dcache || [];
+    let g = m.dcache[i];
+    if (g === undefined) {
+      g = null;
+      if (R.Art && typeof R.Art.decorTile === 'function') {
+        try { g = R.Art.decorTile(m, x, y) || null; } catch (e) {
+          if (!artWarned.decor) { artWarned.decor = 1; console.error('R.Art.decorTile failed', e); }
+        }
+      }
+      if (!g) g = R.Gfx.get('decor:' + id);
+      m.dcache[i] = g;
+    }
+    return g;
+  }
   function drawTiles(camX, camY) {
     const ox = Math.floor(camX / TS), oy = Math.floor(camY / TS);
     const base = M.uid + ',' + M.version + ',' + ox + ',' + oy;
@@ -81,6 +100,23 @@
             if (!g) continue;
           }
           bctx.drawImage(g, i * TS, j * TS);
+        }
+      }
+      // decor layer: second pass so tall props (drawn bottom-aligned, up to 32px)
+      // overlap the row above; one extra row below the view for their tops
+      if (M.decor) {
+        for (let j = 0; j <= BH; j++) {
+          for (let i = 0; i < BW; i++) {
+            let g = decorGfx(M, ox + i, oy + j);
+            if (!g) continue;
+            if (Array.isArray(g)) {
+              anim = true;
+              const dd = R.DB.decor[M.decorAt(ox + i, oy + j)];
+              g = g[Math.floor(f / ((dd && dd.animRate) || 12)) % g.length];
+              if (!g) continue;
+            }
+            bctx.drawImage(g, i * TS + ((TS - g.width) >> 1), j * TS + TS - g.height);
+          }
         }
       }
       bufBase = base; bufPhase = phase; bufAnim = anim;
@@ -334,7 +370,7 @@
       const p = this.P[0], d = p.dir;
       const fx = p.x + U.DX[d], fy = p.y + U.DY[d];
       let npc = M.npcAt(fx, fy);
-      if (!npc && M.tile(fx, fy).counter) npc = M.npcAt(fx + U.DX[d], fy + U.DY[d]);
+      if (!npc && M.counterAt(fx, fy)) npc = M.npcAt(fx + U.DX[d], fy + U.DY[d]);
       if (npc) return this.runLocked(() => this.talk(npc));
       const chest = M.chestAt(fx, fy);
       if (chest && !R.Game.chests[chest.id]) return this.runLocked(() => openChest(chest));

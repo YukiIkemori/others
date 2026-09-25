@@ -29,6 +29,7 @@
       });
       // starting items
       State.addItem('herb', 4);
+      if (R.Battle) R.Battle.autoCarry = false; // auto battle never carries over a new game / load
       return g;
     },
 
@@ -148,6 +149,7 @@
         for (const s of R.Rules.SET_SLOTS) if (c.set[s] && !(DB.abilities[c.set[s]] || DB.jobs[c.set[s]])) c.set[s] = null;
       }
       R.Game = g;
+      if (R.Battle) R.Battle.autoCarry = false;
       return true;
     },
   });

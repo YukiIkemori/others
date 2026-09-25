@@ -155,3 +155,95 @@
 
   R.TILE_THEMED = Object.keys(T).filter((k) => T[k].themed);
 })(window.RPG);
+
+// ------------------------------------------------------------ decor layer
+// Maps may add `decor: [rows]` (same size as `rows`) drawn ON TOP of the base
+// tile: wall hangings, rugs, furniture, town props. ' ' and '.' = nothing.
+// Props: pass (default false), counter (talk across), wall (meant for wall
+// tiles), anim (frames), tall (art may be up to 32px high, bottom-aligned),
+// auto (art joins with same-id neighbours: rugs, long tables, stalls, fountains).
+// Art: 'decor:<id>' (canvas or frames) or R.Art.decorTile(map,x,y) when defined.
+(function (R) {
+  'use strict';
+  const D = (R.DB.decor = R.DB.decor || {});
+  Object.assign(D, {
+    // --- wall-mounted (place on wall / housewall tiles)
+    banner_red:   { name: '赤い旗', wall: true },
+    banner_blue:  { name: '青い旗', wall: true },
+    tapestry:     { name: 'タペストリー', wall: true },
+    window:       { name: '窓', wall: true },
+    window_arch:  { name: 'アーチ窓', wall: true },
+    sconce:       { name: 'たいまつ', wall: true, anim: 2 },
+    painting:     { name: '絵画', wall: true },
+    portrait:     { name: '肖像画', wall: true },
+    emblem:       { name: '紋章', wall: true },
+    swords:       { name: '交差した剣', wall: true },
+    wall_shelf:   { name: '壁の棚', wall: true },
+    mirror:       { name: '鏡', wall: true },
+    // --- floor overlays (walkable)
+    rug:          { name: 'じゅうたん', pass: true, auto: true },
+    rug_blue:     { name: '青いじゅうたん', pass: true, auto: true },
+    dais:         { name: '段差', pass: true, auto: true },
+    crack:        { name: 'ひび', pass: true },
+    tile_alt:     { name: '色違いの床', pass: true },
+    mosaic:       { name: 'モザイク', pass: true },
+    grate:        { name: '格子', pass: true },
+    straw:        { name: 'わら', pass: true },
+    leaves:       { name: '落ち葉', pass: true },
+    flowers_low:  { name: '草花', pass: true },
+    stool:        { name: 'スツール', pass: true },
+    // --- furniture (block movement)
+    fireplace:    { name: '暖炉', anim: 3, tall: true },
+    stove:        { name: 'かまど', anim: 2 },
+    sink:         { name: '流し台', counter: true },
+    cupboard:     { name: '食器棚', tall: true },
+    wardrobe:     { name: 'タンス', tall: true },
+    dresser:      { name: '引き出し' },
+    desk:         { name: '机', counter: true },
+    table_round:  { name: '丸テーブル', counter: true },
+    table_long:   { name: '長テーブル', counter: true, auto: true },
+    bench:        { name: 'ベンチ' },
+    plant:        { name: '鉢植え', tall: true },
+    vase:         { name: '花びん' },
+    sacks:        { name: '麦袋' },
+    crates:       { name: '積み荷', tall: true },
+    armor_stand:  { name: '鎧飾り', tall: true },
+    weapon_rack:  { name: '武器立て', tall: true },
+    treasure:     { name: '財宝の山' },
+    candelabra:   { name: '燭台', anim: 2, tall: true },
+    globe:        { name: '地球儀' },
+    anvil:        { name: '金床' },
+    clock:        { name: '柱時計', tall: true },
+    // --- town exterior
+    flowerbed:    { name: '花壇' },
+    hedge:        { name: '生け垣', auto: true },
+    lamp:         { name: '街灯', anim: 2, tall: true },
+    sign_item:    { name: '道具屋の看板', tall: true },
+    sign_weapon:  { name: '武器屋の看板', tall: true },
+    sign_armor:   { name: '防具屋の看板', tall: true },
+    sign_inn:     { name: '宿屋の看板', tall: true },
+    sign_church:  { name: '教会の看板', tall: true },
+    stall:        { name: '露店', counter: true, auto: true, tall: true },
+    fountain:     { name: '噴水', anim: 4, auto: true },
+    cart:         { name: '荷車' },
+    haystack:     { name: '干し草' },
+    bush:         { name: '茂み' },
+    well_small:   { name: '井戸' },
+  });
+
+  R.DB.legends.decor = {
+    // wall
+    b: 'banner_red', B: 'banner_blue', t: 'tapestry', w: 'window', W: 'window_arch', i: 'sconce',
+    p: 'painting', P: 'portrait', c: 'emblem', x: 'swords', k: 'wall_shelf', m: 'mirror',
+    // floor
+    r: 'rug', R: 'rug_blue', d: 'dais', z: 'crack', a: 'tile_alt', o: 'mosaic', g: 'grate',
+    s: 'straw', l: 'leaves', f: 'flowers_low', n: 'stool',
+    // furniture
+    F: 'fireplace', K: 'stove', S: 'sink', C: 'cupboard', A: 'wardrobe', y: 'dresser', D: 'desk',
+    T: 'table_round', L: 'table_long', e: 'bench', Z: 'plant', v: 'vase', q: 'sacks', U: 'crates',
+    Y: 'armor_stand', X: 'weapon_rack', G: 'treasure', Q: 'candelabra', I: 'globe', O: 'anvil', V: 'clock',
+    // town
+    '1': 'flowerbed', '2': 'hedge', '3': 'lamp', '4': 'sign_item', '5': 'sign_weapon', '6': 'sign_armor',
+    '7': 'sign_inn', '8': 'sign_church', '9': 'stall', J: 'fountain', E: 'cart', M: 'haystack', h: 'bush', u: 'well_small',
+  };
+})(window.RPG);

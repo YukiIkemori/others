@@ -66,6 +66,8 @@ function walkable(P, x, y, fromSea) {
   const t = id && DB.tiles[id];
   if (!t) return null;
   if (blockedByNpc(P, x, y)) return null;
+  const dec = P.decorAt(x, y);
+  if (dec && DB.decor[dec] && !DB.decor[dec].pass) return null;
   if (t.flagPass && !S.flags.has(t.flagPass)) return null;
   const barrierOpen = t.flagPass && S.flags.has(t.flagPass) && t.shipWhenFlag;
   if (t.pass) {
@@ -124,7 +126,9 @@ function near(seen, map, x, y, P) {
     if (seen.has(`${map}:${x + dx},${y + dy}`)) return true;
     // across a counter
     const mid = P && DB.tiles[tileId(P, x + dx, y + dy)];
-    if (mid && mid.counter && seen.has(`${map}:${x + 2 * dx},${y + 2 * dy}`)) return true;
+    const md = P && P.decorAt(x + dx, y + dy);
+    const counter = (mid && mid.counter) || (md && DB.decor[md] && DB.decor[md].counter);
+    if (counter && seen.has(`${map}:${x + 2 * dx},${y + 2 * dy}`)) return true;
   }
   return false;
 }

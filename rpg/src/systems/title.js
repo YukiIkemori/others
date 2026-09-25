@@ -244,7 +244,7 @@
         ];
         const i = await R.UI.choose(items, { x: 76, y: 132, w: 104, initial: any ? 1 : 0, cancel: true });
         if (i < 0) { this.stage = 'press'; return; }
-        if (i === 0) { await this.newGame(); return; }
+        if (i === 0 && (await this.newGame())) return;
         if (i === 1 && (await this.continueGame())) return;
         if (i === 2 && (await this.codeGame())) return;
         if (i === 3) { await Menu().settings(); }
@@ -252,13 +252,18 @@
     }
     async newGame() {
       R.sfx('confirm');
+      // the player names the three heroes first (B on the first screen returns here)
+      const names = R.NameEntry ? await R.NameEntry.run() : {};
+      if (!names) return false;
       this.stage = 'leave';
       R.Audio && R.Audio.stopBGM && R.Audio.stopBGM(40);
       await R.Engine.fadeOut(40);
       this.close();
       R.State.newGame();
+      if (R.NameEntry) R.NameEntry.apply(names);
       const st = R.State.START;
       if (R.Field && R.Field.start) await R.Field.start(st.map, st.spawn);
+      return true;
     }
     async continueGame() {
       const ok = await R.Engine.run(new SlotPicker(this.slots));

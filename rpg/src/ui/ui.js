@@ -9,6 +9,30 @@
 
   const MSG = { x: 8, y: 148, w: 240, h: 72, lines: 4, pad: 10 };
 
+  // ------------------------------------------------------ text placeholders
+  // Party names are chosen by the player, so text never hard-codes them:
+  //   {yuki} {non} {metem}  → that member's current name
+  //   {leader}              → the first living member's name
+  // R.Gfx.text / textWidth / wrap and every message window apply this.
+  R.Text = {
+    name(key) {
+      const g = R.Game;
+      if (key === 'leader') {
+        const l = g && R.State && R.State.leader && R.State.leader();
+        return l ? l.name : (R.DB.chars.yuki ? R.DB.chars.yuki.name : '');
+      }
+      const c = g && g.party && g.party.find((p) => p.id === key);
+      if (c) return c.name;
+      return R.DB.chars[key] ? R.DB.chars[key].name : '{' + key + '}';
+    },
+    fmt(s) {
+      if (s == null) return '';
+      s = String(s);
+      if (s.indexOf('{') < 0) return s;
+      return s.replace(/\{(yuki|non|metem|leader)\}/g, (m, k) => R.Text.name(k));
+    },
+  };
+
   // ----------------------------------------------------------- message
   class MessageLayer extends R.Layer {
     constructor(opts) {

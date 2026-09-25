@@ -68,9 +68,18 @@
     /** tile definition (never null) */
     tile(x, y) { return DB.tiles[this.tileAt(x, y)] || EMPTY; }
 
+    /** decor id at (x,y) or null (DESIGN §7.1 decor layer) */
+    decorAt(x, y) { return this.decor && this.inBounds(x, y) ? this.decor[y * this.w + x] : null; }
+    /** decor definition at (x,y) or null */
+    decorDef(x, y) { const d = this.decorAt(x, y); return d ? DB.decor[d] || null : null; }
+    /** can the player talk across (x,y)? (counter tiles and counter-like furniture) */
+    counterAt(x, y) { const d = this.decorDef(x, y); return !!(this.tile(x, y).counter || (d && d.counter)); }
+
     /** walkable on foot (ignores objects) */
     walkable(x, y) {
       if (!this.inBounds(x, y)) return false;
+      const dd = this.decorDef(x, y);
+      if (dd && !dd.pass) return false;
       const t = this.tile(x, y);
       if (t.pass) return true;
       return !!(t.flagPass && !t.shipWhenFlag && R.State.flag(t.flagPass));
@@ -147,7 +156,7 @@
       let changed = !this.tiles;
       if (this.tiles) for (let i = 0; i < next.length; i++) if (next[i] !== this.tiles[i]) { changed = true; break; }
       this.tiles = next;
-      if (changed) { this.version++; this.wcache = []; }
+      if (changed) { this.version++; this.wcache = []; this.dcache = []; }
       for (const n of this.npcs) n.present = !n.hidden && (n.forced || R.State.check(n.cond));
       for (const c of this.chests) c.present = R.State.check(c.cond);
     }
@@ -271,6 +280,28 @@
       }
     }
     if (ragged) warn(id, 'rows have unequal lengths (padded with the outside tile)');
+
+    // decor layer (optional): same size as rows; ' ' and '.' mean nothing
+    if (Array.isArray(def.decor) && def.decor.length) {
+      const dl = DB.legends.decor || {};
+      const dec = new Array(m.w * m.h).fill(null);
+      const dbad = {};
+      if (def.decor.length !== m.h) warn(id, 'decor has ' + def.decor.length + ' rows, map has ' + m.h);
+      for (let y = 0; y < Math.min(m.h, def.decor.length); y++) {
+        const row = String(def.decor[y]);
+        if (row.length !== m.w) warn(id, 'decor row ' + y + ' length ' + row.length + ' != ' + m.w);
+        for (let x = 0; x < Math.min(m.w, row.length); x++) {
+          const ch = row[x];
+          if (ch === ' ' || ch === '.') continue;
+          const did = dl[ch];
+          if (!did || !DB.decor[did]) { dbad[ch] = 1; continue; }
+          dec[y * m.w + x] = did;
+        }
+      }
+      const dk = Object.keys(dbad);
+      if (dk.length) warn(id, 'unknown decor chars: ' + dk.map((k) => JSON.stringify(k)).join(' '));
+      m.decor = dec;
+    } else m.decor = null;
     const badKeys = Object.keys(bad);
     if (badKeys.length) warn(id, 'unknown row chars/tiles: ' + badKeys.map((k) => JSON.stringify(k)).join(' '));
     if (!m.h || !m.w) warn(id, 'map has no rows');

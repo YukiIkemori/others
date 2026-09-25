@@ -148,6 +148,8 @@
     { key: 'alwaysDash', label: 'いつでも ダッシュ', values: [true, false], names: ['オン', 'オフ'], desc: 'オンにすると いつも はしって いどうします。（シフトキーで ぎゃくに なります）' },
     { key: 'windowColor', label: 'ウインドウの いろ', values: ['black', 'blue', 'green', 'red'], names: ['くろ', 'あお', 'みどり', 'あか'], desc: 'ウインドウの いろを かえます。' },
     { key: 'touchPad', label: 'タッチパッド', values: ['auto', 'on', 'off'], names: ['じどう', 'ひょうじ', 'かくす'], desc: 'がめんの ボタンを ひょうじするか えらびます。' },
+    { key: 'padConfirm', label: '決定ボタン', values: ['right', 'bottom'], names: ['みぎ', 'した'], desc: 'コントローラーの決定ボタンの位置。みぎ＝○／任天堂のA、した＝×／XboxのA（反対側がキャンセル）。' },
+    { key: 'autoKeep', label: 'オート継続', values: [true, false], names: ['する', 'しない'], desc: 'オート戦闘を次の戦闘にも引き継ぎます（ボス戦・イベント戦闘は手動で始まります）。Bボタンで解除すると手動に戻ります。' },
     { key: 'cursorMemory', label: 'カーソル きおく', values: [true, false], names: ['オン', 'オフ'], desc: 'せんとうで まえに えらんだ コマンドを おぼえます。' },
   ];
 

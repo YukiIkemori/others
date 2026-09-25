@@ -20,6 +20,8 @@
     windowColor: 'black', // black | blue | green | red
     touchPad: 'auto', // auto | on | off
     cursorMemory: true, // battle command cursor remembers last choice
+    padConfirm: 'right', // gamepad confirm button: 'right' (○/Nintendo A) or 'bottom' (×/Xbox A)
+    autoKeep: true, // auto battle carries over to the next random encounter
   };
   R.Settings = Object.assign({}, DEFAULT_SETTINGS);
   R.DEFAULT_SETTINGS = DEFAULT_SETTINGS;

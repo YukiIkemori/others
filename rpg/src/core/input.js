@@ -1,5 +1,6 @@
 // Input: keyboard + on-screen touch pad + gamepad, folded into virtual buttons.
 // Buttons: up down left right a b dash
+// Gamepad: confirm on the RIGHT face button by default (R.Settings.padConfirm = 'right'|'bottom')
 //   a    = Z / Enter / Space      (confirm, talk, examine)
 //   b    = X / Esc / Backspace    (cancel; on the field opens the menu)
 //   dash = Shift (held)           (inverts the "always dash" setting)
@@ -66,7 +67,10 @@
     /** For tests/bots: force a button state. */
     _set(b, v) { src.key[b] = !!v; },
     init(container) {
+      // keys typed into DOM text fields (name entry, ふっかつのじゅもん) never reach the game
+      const isField = (t) => t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
       window.addEventListener('keydown', (e) => {
+        if (isField(e.target)) return;
         fireAny();
         const b = KEYMAP[e.code] || KEYMAP[e.key];
         if (!b) return;
@@ -74,6 +78,7 @@
         e.preventDefault();
       });
       window.addEventListener('keyup', (e) => {
+        if (isField(e.target)) return;
         const b = KEYMAP[e.code] || KEYMAP[e.key];
         if (!b) return;
         src.key[b] = false;
@@ -99,8 +104,11 @@
       if (bt(13) || ax[1] > 0.5) src.pad.down = true;
       if (bt(14) || ax[0] < -0.5) src.pad.left = true;
       if (bt(15) || ax[0] > 0.5) src.pad.right = true;
-      if (bt(0)) src.pad.a = true;
-      if (bt(1) || bt(9)) src.pad.b = true;
+      // Standard mapping: 0 = bottom face, 1 = right face. Default: RIGHT confirms
+      // (○ / Nintendo A, Japanese style); the setting can swap to bottom (× / Xbox A).
+      const confirmBtn = R.Settings && R.Settings.padConfirm === 'bottom' ? 0 : 1;
+      if (bt(confirmBtn)) src.pad.a = true;
+      if (bt(1 - confirmBtn) || bt(9)) src.pad.b = true;
       if (bt(2) || bt(5)) src.pad.dash = true;
       if (Object.keys(src.pad).length) fireAny();
     }

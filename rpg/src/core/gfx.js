@@ -100,7 +100,7 @@
       c.textBaseline = 'top';
       const a = c.globalAlpha;
       if (o.alpha != null) c.globalAlpha = a * o.alpha;
-      str = String(str);
+      str = R.Text ? R.Text.fmt(str) : String(str);
       if (o.shadow) {
         c.fillStyle = o.shadow === true ? '#000' : o.shadow;
         c.fillText(str, x + 2 / 3, y + 2 / 3);
@@ -112,12 +112,13 @@
     textWidth(str, size) {
       const c = Gfx.ctx;
       c.font = Gfx.font(size);
-      return c.measureText(String(str)).width;
+      return c.measureText(R.Text ? R.Text.fmt(str) : String(str)).width;
     },
     /** wrap text into lines that fit width (char-level wrap, honours \n) */
     wrap(str, width, size) {
       const out = [];
-      for (const para of String(str).split('\n')) {
+      str = R.Text ? R.Text.fmt(str) : String(str);
+      for (const para of str.split('\n')) {
         let line = '';
         for (const ch of para) {
           const t = line + ch;

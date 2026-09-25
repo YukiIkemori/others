@@ -39,6 +39,26 @@ function parseMap(R, id) {
     }
     grid.push(row);
   }
+  // decor layer
+  out.decor = null;
+  if (Array.isArray(m.decor) && m.decor.length) {
+    const dl = R.DB.legends.decor || {};
+    out.decor = [];
+    if (m.decor.length !== h) issues.push(`decor has ${m.decor.length} rows, map has ${h}`);
+    for (let y = 0; y < h; y++) {
+      const row = String(m.decor[y] || '');
+      if (m.decor[y] != null && row.length !== w) issues.push(`decor row ${y} length ${row.length} != ${w}`);
+      const r = [];
+      for (let x = 0; x < w; x++) {
+        const ch = row[x];
+        if (ch === undefined || ch === ' ' || ch === '.') { r.push(null); continue; }
+        if (!dl[ch]) { issues.push(`unknown decor char '${ch}' at ${x},${y}`); r.push(null); continue; }
+        r.push(dl[ch]);
+      }
+      out.decor.push(r);
+    }
+  }
+  out.decorAt = (x, y) => (out.decor && x >= 0 && y >= 0 && x < w && y < h ? out.decor[y][x] : null);
   for (const k in (m.spawns || {})) out.spawns[k] = m.spawns[k];
   for (const k of ['npcs', 'chests', 'warps', 'events', 'hidden', 'signs']) for (const o of (m[k] || [])) out[k].push(Object.assign({}, o));
   out.tileAt = (x, y) => (x >= 0 && y >= 0 && x < w && y < h ? grid[y][x] : null);

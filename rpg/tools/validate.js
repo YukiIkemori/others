@@ -192,7 +192,15 @@ for (const id in parsed) {
   for (const wp of P.warps) tgt(wp, `warp@${wp.x},${wp.y}`);
   if (m.exit) tgt(m.exit, 'exit');
   if (m.escape) tgt(m.escape, 'escape');
+  if (P.decor) for (let y = 0; y < P.h; y++) for (let x = 0; x < P.w; x++) {
+    const d = P.decorAt(x, y);
+    if (!d) continue;
+    const dd = DB.decor[d];
+    if (dd.wall && DB.tiles[P.tileAt(x, y)] && DB.tiles[P.tileAt(x, y)].pass) W(`${w}: wall decor ${d} on walkable tile at ${x},${y}`);
+    if (!dd.wall && !dd.pass && !(DB.tiles[P.tileAt(x, y)] || {}).pass) W(`${w}: furniture ${d} on non-walkable tile at ${x},${y}`);
+  }
   for (const n of P.npcs) {
+    if (P.decorAt(n.x, n.y) && !(DB.decor[P.decorAt(n.x, n.y)] || {}).pass) W(`${w}: npc ${n.id} stands on furniture ${P.decorAt(n.x, n.y)}`);
     if (n.sprite && !gfx(n.sprite)) E(`${w}: npc ${n.id} sprite ${n.sprite} not registered`);
     if (n.event && !DB.events[n.event]) E(`${w}: npc ${n.id} event ${n.event} missing`);
     const t = DB.tiles[P.tileAt(n.x, n.y)];
@@ -248,6 +256,7 @@ for (const t in DB.tiles) {
   if (tile.themed) for (const th in DB.themes) if (!gfx(`tile:${th}:${t}`)) W(`gfx tile:${th}:${t} missing (fallback used)`);
 }
 for (const b of BBG) if (!gfx('bbg:' + b)) E(`gfx bbg:${b} missing`);
+for (const d in DB.decor || {}) if (!gfx('decor:' + d) && !(R.Art && R.Art.decorTile)) E(`gfx decor:${d} missing`);
 for (const c in DB.chars) for (const j of JOBS) if (!gfx(`party:${c}:${j}`) && !(R.Art && R.Art.partySheet)) E(`gfx party:${c}:${j} missing`);
 for (const n of NPCS) if (!gfx('npc:' + n)) E(`gfx npc:${n} missing`);
 for (const o of ['chest', 'ship', 'sparkle', 'crest_glow', 'shadow']) if (!gfx('obj:' + o)) E(`gfx obj:${o} missing`);

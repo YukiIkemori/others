@@ -21,8 +21,11 @@ A complete, polished, browser-playable **Japanese command RPG**:
 * **Modern QoL**: always-dash (toggle), save anywhere outside battle, auto-battle, fast messages, battle
   speed, optimize equipment, visible next objective, teleport to visited towns, dungeon escape, world map,
   no lost EXP on a wipe (only half the gold), generous escape rates, encounter-control abilities.
-* **Language**: all in-game text is Japanese, **DQ style**: mostly hiragana/katakana, phrases separated
-  by spaces (「よくぞ まいった！」), only very simple kanji in proper nouns (王, 城, 町, 村 …).
+* **Language**: all in-game text is Japanese for adult players: **natural modern kanji-kana mixed text**, no
+  DQ-style inter-phrase spaces. Follow **STYLE_JA.md** (rules + glossary of canonical terms) exactly.
+* **Player-named heroes**: the player names the three heroes at the start (hiragana/katakana/ASCII only).
+  Never hard-code ユウキ/ノン/メテム in text: use `{yuki}` `{non}` `{metem}` `{leader}` (resolved by `R.Text.fmt`,
+  applied automatically by `R.Gfx.text`, `textWidth`, `wrap` and every message window). Code uses `c.name`.
 * **Originality**: nothing copied from Dragon Quest / Final Fantasy: no DQ/FF-specific names
   (メラ/ホイミ/ルーラ/スライム/ケアル/ファイガ/エスナ/レイズ…), no copied melodies, no copied sprites.
   Generic fantasy vocabulary is fine (ファイアボール, ヒール, ゴブリン, スケルトン, ドラゴン…).
@@ -413,6 +416,7 @@ centred on the ground line, bottom window for commands and messages (DQ wording:
   spawns:{name:{x,y,dir}}, npcs:[{id,x,y,sprite,dir,move:'still'|'wander'|'spin',text|event,cond}],
   chests:[{id,x,y,item,n}|{id,x,y,gold}], warps:[{x,y,to,spawn,dir}], events:[{x,y,id,trigger:'step'|'examine',cond,once}],
   hidden:[{id,x,y,item}], signs:[{x,y,text}],
+  decor?:['..b..', ...]                  // optional overlay layer, same size as rows (see below)
   exit?:{to:'world', spawn}               // walking off the map edge
   outside?:'<legend char>'               // tile drawn beyond the map edge (default: void for local maps, sea for world)
   encounter?:'zoneId', encRate?:24       // avg steps between fights (dungeon default 22, world 26)
@@ -423,6 +427,14 @@ centred on the ground line, bottom window for commands and messages (DQ wording:
   zones?:[{x,y,w,h,zone}], defaultZone?  // world: encounter zone rectangles, first match wins
 }
 ```
+**Decor layer.** `decor` rows use `R.DB.legends.decor` (src/data/tiles.js) to place props ON TOP of the base tile:
+wall hangings (banners, tapestries, windows, sconces, paintings, emblems — on wall tiles), floor overlays (rugs,
+dais steps, cracks, alternate tiles, straw…), furniture (fireplace, stove, cupboard, wardrobe, desks, tables,
+plants, sacks, crates, armor stands, treasure…) and town props (flowerbeds, hedges, lamps, shop signs, stalls,
+fountains, carts…). `' '`/`'.'` = nothing. Non-`pass` decor blocks movement; `counter` decor lets you talk across.
+Art: `decor:<id>` (16×16, or up to 16×32 for `tall`, bottom-aligned) or `R.Art.decorAuto[id](map,x,y)` for pieces
+that join with neighbours. Use decor to make towns/castles/houses dense and lived-in (target: SFC DQ5 density).
+
 Mark chars must not be legend chars (`R.MARK_CHARS_LOCAL` / `R.MARK_CHARS_WORLD` list the free ones).
 A mark char may appear several times (warps/events/hidden); npc/chest ids get `_2`, `_3`… suffixes.
 NPC `cond` uses `R.State.check` syntax (`'flag'`, `'!flag'`, `{item:'x'}`, …); NPCs whose cond fails are absent.
@@ -557,6 +569,10 @@ with a gold + playtime + next-objective window. Details:
   always dash, window color, touch pad).
 Shops (buy/sell with equip-ability markers per character and stat preview), inn, church (save / revive / cure poison),
 title screen (はじめから / つづきから / ふっかつのじゅもん / せってい), game over.
+New game → **name entry** (`R.NameEntry.run()`, src/systems/nameentry.js): grid of ひらがな/カタカナ/英数字 plus a
+DOM keyboard/IME input; no kanji; confirmation screen. Settings also include `padConfirm` ('right' default = ○ /
+Nintendo A confirms; 'bottom') and `autoKeep` (auto battle carries over to the next random encounter; boss/event
+battles always start manual; B cancels and returns to manual; never saved).
 Global `R.Menu.open()`, `R.Shop.open(shopId)`, `R.Shop.inn(price)`, `R.Shop.church()`, `R.Title.start()`, `R.GameOver.run()`.
 
 ## 9. QA tools (QA phase)

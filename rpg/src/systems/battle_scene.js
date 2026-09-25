@@ -61,7 +61,7 @@
       this.msg = { lines: [], start: 0, ch: 0, need: 0, hold: 0, wait: 0, key: false, resolve: null };
       this.input = null;
       this.panel = null;
-      this.auto = false;
+      this.auto = !!this.o.autoStart;
       this.autoCancel = false;
       this.acting = null;
       this.picking = null; // {units:[...], ally:bool}
@@ -174,6 +174,7 @@
           this.acting = null;
         }
         result = this.eng.result;
+        if (this.autoCancel) R.Battle.autoCarry = false; // B pressed during the last round
         this.auto = false;
         this.acting = null;
         if (result === 'win') await this.victory();
@@ -348,14 +349,14 @@
     // ------------------------------------------------------------ commands
     async commandPhase() {
       const eng = this.eng;
-      if (this.auto && this.autoCancel) { this.auto = false; this.autoCancel = false; }
+      if (this.auto && this.autoCancel) { this.auto = false; this.autoCancel = false; R.Battle.autoCarry = false; }
       if (this.auto) return R.BattleAI.partyCommands(eng);
       if (!eng.party.some((p) => p.commandable())) { await this.frames(24); return []; }
       this.clearMsg();
       for (;;) {
         const r = await this.partyMenu();
         if (r === 1) {
-          this.auto = true; this.autoCancel = false;
+          this.auto = true; this.autoCancel = false; R.Battle.autoCarry = true;
           return R.BattleAI.partyCommands(eng);
         }
         if (r === 2) return { flee: true };
@@ -814,7 +815,11 @@
     const prev = A && A.current;
     if (A && A.pushBGM) A.pushBGM(bgm); else R.bgm(bgm);
     R.Game.battles = (R.Game.battles || 0) + 1;
-    const scene = new BattleScene(eng, { bg, bgm, canLose: !!o.canLose });
+    // オート継続: a plain random encounter starts in auto mode when the last
+    // battle ended in auto (boss/event battles always start manual)
+    const randomFight = !!(o.zone && !o.troop && !o.mons && !o.canLose && !eng.noEscape && !eng.boss);
+    const autoStart = randomFight && R.Settings.autoKeep !== false && !!B.autoCarry;
+    const scene = new BattleScene(eng, { bg, bgm, canLose: !!o.canLose, autoStart });
     B.current = scene;
     let res;
     try {
