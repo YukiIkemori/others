@@ -1,0 +1,453 @@
+<title>ルミナス・クレスト公式ページ</title>
+<meta name="description" content="ブラウザですぐ遊べる本格コマンドRPG。19のジョブ、127種の魔物、レアアイテム集めに裏ダンジョン。三人の勇者と、光の紋章を取り戻す旅へ。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ルミナス・クレスト 〜光の紋章と三人の勇者〜">
+<meta property="og:description" content="ブラウザですぐ遊べる本格コマンドRPG。19のジョブ、127種の魔物、レアアイテム集めに裏ダンジョン。">
+<meta property="og:image" content="img/ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&family=M+PLUS+1p:wght@400;700&display=swap">
+<style>
+  :root {
+    color-scheme: dark;
+    --night: #0b0e24;
+    --night2: #141a44;
+    --window: #121852;
+    --line: #ffffff;
+    --gold: #f5c542;
+    --text: #eef0ff;
+    --muted: #aab1e2;
+    --dim: #6f78b4;
+    --pixel: "DotGothic16", "Hiragino Kaku Gothic ProN", "Yu Gothic", monospace;
+    --body: "M PLUS 1p", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--night);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.8;
+    padding-inline: 16px;
+    overflow-x: hidden;
+  }
+  body {
+    background:
+      radial-gradient(1px 1px at 12% 18%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 28% 62%, #cfd6ff 50%, transparent 51%),
+      radial-gradient(2px 2px at 44% 12%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 63% 40%, #fff 50%, transparent 51%),
+      radial-gradient(2px 2px at 78% 22%, #f5c542 50%, transparent 51%),
+      radial-gradient(1px 1px at 88% 70%, #cfd6ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 6% 84%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 52% 88%, #fff 50%, transparent 51%),
+      radial-gradient(2px 2px at 94% 48%, #fff 50%, transparent 51%),
+      linear-gradient(180deg, #0b0e24 0%, #121840 60%, #1a1650 100%);
+    background-size: 340px 340px, 420px 420px, 520px 520px, 300px 300px, 610px 610px, 380px 380px, 460px 460px, 560px 560px, 700px 700px, 100% 100%;
+    background-color: var(--night);
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  img.px { image-rendering: pixelated; image-rendering: crisp-edges; }
+
+  /* the SFC-style window: white double border, deep blue fill */
+  .win {
+    background: var(--window);
+    border: 3px solid var(--line);
+    border-radius: 10px;
+    box-shadow: 0 0 0 3px #05071a, inset 0 0 0 2px #05071a;
+    padding: 18px 22px;
+  }
+  .win-title {
+    display: inline-block;
+    font-family: var(--pixel);
+    background: var(--window);
+    padding: 0 10px;
+    margin: -32px 0 6px -4px;
+    position: relative;
+    letter-spacing: 0.08em;
+  }
+
+  h1, h2, h3 { font-family: var(--pixel); font-weight: 400; text-wrap: balance; margin: 0; }
+  h2 { font-size: clamp(26px, 4vw, 36px); line-height: 1.3; }
+  h3 { font-size: 21px; line-height: 1.4; color: var(--gold); }
+  p { margin: 0; }
+  .eyebrow { font-family: var(--pixel); color: var(--gold); letter-spacing: 0.12em; font-size: 14px; }
+
+  /* ---------------------------------------------------------------- nav */
+  nav.top {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding-block: 14px;
+    font-family: var(--pixel);
+  }
+  nav.top .brand { font-size: 18px; color: var(--gold); letter-spacing: 0.06em; }
+  nav.top .links { display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; }
+  nav.top a { color: var(--muted); text-decoration: none; }
+  nav.top a:hover, nav.top a:focus-visible { color: var(--text); }
+
+  /* ---------------------------------------------------------------- CTA */
+  .play {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: var(--pixel); font-size: 22px; letter-spacing: 0.06em;
+    color: #1a1204; background: var(--gold);
+    padding: 14px 28px 14px 22px;
+    border: 3px solid #fff; border-radius: 10px;
+    box-shadow: 0 0 0 3px #05071a, 0 6px 0 3px #05071a;
+    text-decoration: none;
+    transition: transform .08s ease, box-shadow .08s ease;
+  }
+  .play::before { content: "▶"; font-size: 16px; }
+  .play:hover { transform: translateY(-2px); box-shadow: 0 0 0 3px #05071a, 0 8px 0 3px #05071a; }
+  .play:active { transform: translateY(4px); box-shadow: 0 0 0 3px #05071a, 0 2px 0 3px #05071a; }
+  .play:focus-visible { outline: 3px dashed var(--gold); outline-offset: 6px; }
+  .play-note { font-size: 13px; color: var(--muted); margin-top: 12px; }
+
+  /* ---------------------------------------------------------------- hero */
+  .hero {
+    display: grid; grid-template-columns: 1fr 1.05fr; gap: 40px; align-items: center;
+    padding-block: 28px 64px;
+  }
+  .hero h1 { font-size: clamp(40px, 7vw, 68px); line-height: 1.1; color: var(--gold); letter-spacing: 0.04em;
+    text-shadow: 0 4px 0 #6b3d05, 0 0 24px rgba(245,197,66,.35); }
+  .hero .sub { font-family: var(--pixel); font-size: 18px; color: var(--muted); margin-top: 10px; }
+  .hero .lead { font-size: 18px; margin-top: 24px; max-width: 30em; }
+  .hero .cta { margin-top: 30px; }
+  .screen {
+    border: 3px solid #fff; border-radius: 10px; overflow: hidden;
+    box-shadow: 0 0 0 3px #05071a, 0 20px 50px rgba(0,0,0,.5);
+    background: #000; aspect-ratio: 8 / 7; max-width: 100%;
+  }
+  .screen img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .tag { font-family: var(--pixel); font-size: 13px; color: var(--text); border: 2px solid var(--dim); border-radius: 6px; padding: 2px 10px; }
+
+  section { padding-block: 56px; }
+  .sec-head { display: grid; gap: 8px; margin-bottom: 28px; }
+
+  /* ---------------------------------------------------------------- story */
+  .story { max-width: 720px; }
+  .msg { min-height: 170px; position: relative; cursor: pointer; user-select: none; }
+  .msg:focus-visible { outline: 3px dashed var(--gold); outline-offset: 4px; }
+  .msg-text { font-family: var(--pixel); font-size: 20px; line-height: 1.75; white-space: pre-line; min-height: 5.25em; }
+  .msg-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 12px; color: var(--dim); font-family: var(--pixel); }
+  .msg .arrow { color: var(--text); font-size: 14px; animation: bob 0.9s steps(2) infinite; }
+  @keyframes bob { 50% { transform: translateY(3px); } }
+
+  /* ---------------------------------------------------------------- party */
+  .party { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .hero-card { display: grid; grid-template-rows: auto auto 1fr auto; gap: 10px; text-align: center; }
+  .hero-card button.spr {
+    all: unset; cursor: pointer; justify-self: center;
+    width: 128px; height: 192px; display: grid; place-items: end center;
+  }
+  .hero-card button.spr:focus-visible { outline: 3px dashed var(--gold); outline-offset: 4px; border-radius: 6px; }
+  .hero-card .spr img { width: 128px; height: 192px; }
+  .hero-card .name { font-family: var(--pixel); font-size: 24px; }
+  .hero-card .job { font-family: var(--pixel); color: var(--gold); font-size: 14px; }
+  .hero-card .profile { color: var(--muted); font-size: 14px; }
+  .hero-card .quote { font-family: var(--pixel); font-size: 15px; text-align: left; border-top: 2px dashed #2c3580; padding-top: 10px; }
+  .party-note { font-size: 13px; color: var(--muted); margin-top: 16px; text-align: center; }
+
+  /* ---------------------------------------------------------------- features */
+  .feat { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center; padding-block: 26px; }
+  .feat:nth-of-type(even) .feat-img { order: 2; }
+  .feat-body { display: grid; gap: 14px; }
+  .feat-body p { color: var(--text); }
+  .feat-body ul { margin: 0; padding-left: 1.2em; color: var(--muted); font-size: 15px; display: grid; gap: 4px; }
+  .feat-body ul li::marker { content: "▸ "; color: var(--gold); }
+
+  /* ---------------------------------------------------------------- status window */
+  .status { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 28px; font-family: var(--pixel); font-size: 18px; }
+  .status div { display: flex; justify-content: space-between; border-bottom: 1px dashed #2c3580; padding-block: 6px; }
+  .status b { font-weight: 400; color: var(--gold); font-variant-numeric: tabular-nums; }
+
+  /* ---------------------------------------------------------------- controls */
+  .ctl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .ctl h3 { margin-bottom: 10px; }
+  .ctl dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 15px; }
+  .ctl dt { font-family: var(--pixel); color: var(--text); white-space: nowrap; }
+  .ctl dd { margin: 0; color: var(--muted); }
+  kbd { font-family: var(--pixel); background: #0b0e24; border: 2px solid var(--dim); border-radius: 4px; padding: 0 6px; font-size: 13px; }
+
+  /* ---------------------------------------------------------------- finale */
+  .finale { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; padding-block: 40px 80px; }
+  .finale img { width: 100%; max-width: 512px; justify-self: center; filter: drop-shadow(0 0 24px rgba(160,60,200,.45)); }
+  .finale h2 { color: var(--gold); }
+  .finale p { margin-top: 14px; color: var(--muted); }
+  .finale .cta { margin-top: 26px; }
+  footer { border-top: 2px dashed #2c3580; padding-block: 24px 40px; color: var(--dim); font-size: 13px; text-align: center; font-family: var(--pixel); }
+
+  @media (max-width: 820px) {
+    .hero, .feat, .finale { grid-template-columns: 1fr; }
+    .feat:nth-of-type(even) .feat-img { order: 0; }
+    .party, .ctl-grid { grid-template-columns: 1fr; }
+    .status { grid-template-columns: 1fr 1fr; }
+    nav.top .links { display: none; }
+    .finale img { max-width: 320px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .msg .arrow { animation: none; }
+    .play { transition: none; }
+  }
+</style>
+
+<div class="wrap">
+  <nav class="top" aria-label="ページ内リンク">
+    <span class="brand">LUMINAS CREST</span>
+    <span class="links">
+      <a href="#story">物語</a><a href="#party">勇者たち</a><a href="#features">特徴</a><a href="#controls">操作</a>
+    </span>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <p class="eyebrow">ブラウザで遊べるコマンドRPG</p>
+      <h1>ルミナス・<br>クレスト</h1>
+      <p class="sub">〜 光の紋章と三人の勇者 〜</p>
+      <p class="lead">100年前に魔王を封じた光の紋章が、五つに分かれて眠っている。剣士の少年、神殿の少女、天才魔法使い。三人の旅が、いま始まる。</p>
+      <div class="cta">
+        <a class="play" href="https://claude.ai/artifact/XX3xiBEvwhc6raTyawWfb6" target="_blank" rel="noopener">冒険をはじめる</a>
+        <p class="play-note">インストール不要・無料。セーブはブラウザに保存されます。</p>
+      </div>
+      <div class="tags">
+        <span class="tag">19のジョブ</span><span class="tag">127種の魔物</span><span class="tag">裏ダンジョン</span><span class="tag">スマホ・パッド対応</span>
+      </div>
+    </div>
+    <div class="screen"><img class="px" src="img/title.png" alt="タイトル画面。紋章のエンブレムと「ルミナス・クレスト」のロゴ、夜空と城のシルエット"></div>
+  </header>
+
+  <section id="story">
+    <div class="sec-head">
+      <p class="eyebrow">STORY</p>
+      <h2>王様の話を聞いてみよう</h2>
+      <p style="color:var(--muted)">レグナス城・玉座の間。ウィンドウをクリックすると話が進みます。</p>
+    </div>
+    <div class="story">
+      <div class="win msg" id="msg" tabindex="0" role="button" aria-label="メッセージを進める">
+        <div class="msg-text" id="msgText" aria-live="polite"></div>
+        <div class="msg-foot"><span id="msgPage">1 / 8</span><span class="arrow" id="msgArrow">▼</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="party">
+    <div class="sec-head">
+      <p class="eyebrow">PARTY</p>
+      <h2>三人の勇者</h2>
+      <p style="color:var(--muted)">絵をクリックすると、転職した姿に着替えます。</p>
+    </div>
+    <div class="party">
+      <article class="win hero-card" data-hero="yuki">
+        <button class="spr" type="button" aria-label="ユウキの別のジョブを見る"><img class="px" src="img/yuki_warrior.png" alt="ユウキ（戦士）"></button>
+        <div><div class="name">ユウキ</div><div class="job" aria-live="polite">戦士</div></div>
+        <p class="profile">剣士の家系に生まれた少年。まっすぐで、仲間思い。</p>
+        <p class="quote">「任せてください！<br>必ずやり遂げてみせます！」</p>
+      </article>
+      <article class="win hero-card" data-hero="non">
+        <button class="spr" type="button" aria-label="ハニバニの別のジョブを見る"><img class="px" src="img/non_priest.png" alt="ハニバニ（僧侶）"></button>
+        <div><div class="name">ハニバニ</div><div class="job" aria-live="polite">僧侶</div></div>
+        <p class="profile">神殿で育った心優しい少女。回復の祈りでみんなを支える。</p>
+        <p class="quote">「わたし、がんばります。<br>神様、どうかわたしたちを<br>お守りください。」</p>
+      </article>
+      <article class="win hero-card" data-hero="metem">
+        <button class="spr" type="button" aria-label="メテムの別のジョブを見る"><img class="px" src="img/metem_mage.png" alt="メテム（魔法使い）"></button>
+        <div><div class="name">メテム</div><div class="job" aria-live="polite">魔法使い</div></div>
+        <p class="profile">魔法学院始まって以来の天才少女。自信家で、ちょっと強気。</p>
+        <p class="quote">「ふふん、任せなさい。<br>わたしの魔法があれば、<br>魔王なんてひとひねりよ！」</p>
+      </article>
+    </div>
+    <p class="party-note">名前はゲーム開始時に自由に変えられます。</p>
+  </section>
+
+  <section id="features">
+    <div class="sec-head">
+      <p class="eyebrow">FEATURES</p>
+      <h2>じっくり育てて、どこまでも集める</h2>
+    </div>
+
+    <div class="feat">
+      <div class="screen feat-img"><img class="px" src="img/jobs.png" alt="ジョブ画面。19のジョブが並び、マスターしたジョブに星が付いている"></div>
+      <div class="feat-body">
+        <h3>19のジョブで、自分だけのパーティを</h3>
+        <p>戦士・僧侶・魔法使い・盗賊から始まり、パラディン、忍者、賢者、そして勇者まで。覚えたアビリティは別のジョブでも使えるので、組み合わせは自由自在です。</p>
+        <ul>
+          <li>アビリティは214種。サブコマンド・リアクション・サポートを付け替え</li>
+          <li>ジョブをマスターすると能力アップと「代表アビリティの常時発動」</li>
+          <li>上位ジョブの転職条件は、なれるまでヒミツ</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="feat">
+      <div class="screen feat-img"><img class="px" src="img/boss.png" alt="星見の塔のボス「星の守護神」との戦闘画面"></div>
+      <div class="feat-body">
+        <h3>王道コマンドバトル</h3>
+        <p>「戦う」「防御」「呪文」の、あの手ざわり。敵の弱点属性を突き、バフとデバフで流れを変える。ボス戦は準備と作戦がものを言います。</p>
+        <ul>
+          <li>炎・氷・雷・風・大地・水・光・闇の8属性</li>
+          <li>二刀流、隊列（前衛ほど狙われやすい）</li>
+          <li>オート（弱った敵に集中攻撃）とリピートで雑魚戦はサクサク</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="feat">
+      <div class="screen feat-img"><img class="px" src="img/world.png" alt="船で海を進むワールドマップ"></div>
+      <div class="feat-body">
+        <h3>船で世界を渡る</h3>
+        <p>東の大陸、砂漠のピラミッド、雪の村、炎の火山、魔法都市。五つの紋章を求めて、端から端までつながった世界を旅します。</p>
+        <ul>
+          <li>一度行った町とダンジョンへは「ワープ」ですぐ移動</li>
+          <li>メニューで「次の目的」をいつでも確認</li>
+          <li>斜め移動とダッシュで、移動もストレスなし</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="feat">
+      <div class="screen feat-img"><img class="px" src="img/book.png" alt="モンスター図鑑の詳細ページ。ドロップと盗めるアイテムが表示されている"></div>
+      <div class="feat-body">
+        <h3>レアを狙って、図鑑を埋める</h3>
+        <p>魔物はそれぞれドロップと「盗む」の両方にレア枠を持っています。★の付いたレアアイテムは87種。各地には、めったに出会えないレアモンスターも潜んでいます。</p>
+        <ul>
+          <li>モンスター図鑑127種。手に入れたアイテムも記録</li>
+          <li>レアモンスターは出会えた瞬間、金色に光る</li>
+          <li>「大物狙い」や「金の招き猫」でレア率アップ</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="feat">
+      <div class="screen feat-img"><img class="px" src="img/town.png" alt="港町ポルタの町並み"></div>
+      <div class="feat-body">
+        <h3>クリア後も、まだ終わらない</h3>
+        <p>魔王を倒したあとには、海に浮かぶ島に「深淵の迷宮」が口を開けます。全4層の奥で待つ裏ボスは、レベルを上げるだけでは倒せません。</p>
+        <ul>
+          <li>最強の剣と、状態異常をすべて防ぐ紋章が眠る</li>
+          <li>ジョブ・装備・作戦を詰める、やり込みの本番</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="specTitle">
+    <div class="win">
+      <span class="win-title" id="specTitle">つよさ</span>
+      <div class="status">
+        <div><span>ジョブ</span><b>19</b></div>
+        <div><span>アビリティ</span><b>214</b></div>
+        <div><span>モンスター</span><b>127</b></div>
+        <div><span>アイテム</span><b>266</b></div>
+        <div><span>レアアイテム</span><b>87</b></div>
+        <div><span>マップ</span><b>50</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="controls">
+    <div class="sec-head">
+      <p class="eyebrow">CONTROLS</p>
+      <h2>操作方法</h2>
+    </div>
+    <div class="ctl-grid">
+      <div class="win ctl">
+        <h3>キーボード</h3>
+        <dl>
+          <dt><kbd>↑↓←→</kbd></dt><dd>移動・カーソル</dd>
+          <dt><kbd>Z</kbd> <kbd>Enter</kbd></dt><dd>決定・話す・調べる</dd>
+          <dt><kbd>X</kbd> <kbd>Esc</kbd></dt><dd>キャンセル（押しながら移動でダッシュ）</dd>
+          <dt><kbd>C</kbd> <kbd>Tab</kbd></dt><dd>メニュー・アイテムの詳細</dd>
+          <dt><kbd>Q</kbd> <kbd>E</kbd></dt><dd>メニューで仲間を切り替え</dd>
+        </dl>
+      </div>
+      <div class="win ctl">
+        <h3>ゲームパッド</h3>
+        <dl>
+          <dt>十字キー</dt><dd>移動・カーソル</dd>
+          <dt>A / B</dt><dd>決定・キャンセル（決定ボタンの位置は設定で変更可）</dd>
+          <dt>Y</dt><dd>メニュー・詳細</dd>
+          <dt>L / R</dt><dd>仲間を切り替え</dd>
+        </dl>
+      </div>
+      <div class="win ctl">
+        <h3>スマホ</h3>
+        <dl>
+          <dt>画面のパッド</dt><dd>十字キーと A・B・Y・L・R ボタンを表示</dd>
+          <dt>セーブ</dt><dd>端末のブラウザに保存。王様か宿屋で記録</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="finale" aria-labelledby="finTitle">
+    <img class="px" src="img/mon_demon_king2.png" alt="魔神ヴァルザード">
+    <div>
+      <p class="eyebrow">FINAL</p>
+      <h2 id="finTitle">魔王ヴァルザードが、目覚めを待っている。</h2>
+      <p>五つの紋章を集め、光の神殿で光の紋章をよみがえらせる。三人の力で、100年の因縁に決着を。</p>
+      <div class="cta">
+        <a class="play" href="https://claude.ai/artifact/XX3xiBEvwhc6raTyawWfb6" target="_blank" rel="noopener">冒険をはじめる</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>ルミナス・クレスト 〜光の紋章と三人の勇者〜 ／ ブラウザ版</footer>
+</div>
+
+<script>
+(() => {
+  // ---- story: the king's speech in an SFC-style message window (click / Enter / ↓ to advance)
+  const pages = [
+    'おお、よくぞ参った！\nユウキ、ハニバニ、メテムよ。',
+    '今より100年の昔……\n魔王ヴァルザードは、\n光の紋章の力によって封じられた。',
+    'その紋章は五つに分かたれ、\n風・水・大地・炎・星の紋章として\n世界の各地に祀られたのじゃ。',
+    'だが近ごろ封印が弱まり、\n世界中に魔物があふれ出しておる。\n魔王の目覚めも、近いのかもしれぬ……。',
+    'そなたたち3人は、\n紋章の光を宿して生まれた者たち。',
+    'どうか五つの紋章を集め、\n光の神殿で\n光の紋章をよみがえらせてほしい。',
+    'そして魔の渦の向こう、\n魔王の島へと渡り、\nヴァルザードを討ち倒すのじゃ！',
+    'では行け！\nそなたたちに光の加護が\nあらんことを！',
+  ];
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const box = document.getElementById('msg'), txt = document.getElementById('msgText');
+  const pg = document.getElementById('msgPage'), arrow = document.getElementById('msgArrow');
+  let i = 0, shown = 0, timer = null;
+  function render() { txt.textContent = pages[i].slice(0, shown); pg.textContent = (i + 1) + ' / ' + pages.length; arrow.style.visibility = shown >= pages[i].length ? 'visible' : 'hidden'; }
+  function type() {
+    clearInterval(timer);
+    if (reduce) { shown = pages[i].length; render(); return; }
+    shown = 0; render();
+    timer = setInterval(() => { shown++; render(); if (shown >= pages[i].length) clearInterval(timer); }, 38);
+  }
+  function next() {
+    if (shown < pages[i].length) { clearInterval(timer); shown = pages[i].length; render(); return; }
+    i = (i + 1) % pages.length; type();
+  }
+  box.addEventListener('click', next);
+  box.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown' || e.key === 'z' || e.key === 'Z') { e.preventDefault(); next(); } });
+  // start with the first page fully visible so the section reads at rest
+  shown = pages[0].length; render();
+
+  // ---- party: click a hero to cycle through job outfits
+  const JOBS = {
+    yuki: [['warrior', '戦士'], ['paladin', 'パラディン'], ['ninja', '忍者'], ['hero', '勇者']],
+    non: [['priest', '僧侶'], ['whitemage', '白魔術師'], ['bard', '吟遊詩人'], ['sage', '賢者']],
+    metem: [['mage', '魔法使い'], ['blackmage', '黒魔術師'], ['timemage', '時空術師'], ['spellblade', '魔法剣士']],
+  };
+  const NAMES = { yuki: 'ユウキ', non: 'ハニバニ', metem: 'メテム' };
+  document.querySelectorAll('.hero-card').forEach((card) => {
+    const id = card.dataset.hero, list = JOBS[id];
+    const img = card.querySelector('.spr img'), job = card.querySelector('.job');
+    list.forEach(([j]) => { const p = new Image(); p.src = 'img/' + id + '_' + j + '.png'; });
+    let k = 0;
+    card.querySelector('.spr').addEventListener('click', () => {
+      k = (k + 1) % list.length;
+      img.src = 'img/' + id + '_' + list[k][0] + '.png';
+      img.alt = NAMES[id] + '（' + list[k][1] + '）';
+      job.textContent = list[k][1];
+    });
+  });
+})();
+</script>
