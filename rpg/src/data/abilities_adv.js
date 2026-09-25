@@ -76,7 +76,7 @@
     monk_counter: reaction('返し技', 500, '攻撃を受けると、よく反撃する。', 'hitPhys', 0.5, { type: 'counter' }),
     monk_ibuki: reaction('息吹', 400, 'HPが減ると、息を整えて回復する。', 'lowHp', 0.6, { type: 'heal', pct: 0.4 }),
     monk_brawler: support('素手の心得', 400, '素手のときの攻撃力と会心率が上がる。', { unarmed: 30, crit: 5 }),
-    monk_training: support('修行', 600, '戦闘で得る経験値が50%増える。', { expPct: 50 }),
+    monk_training: support('修行', 600, '戦闘で得る経験値が20%増える。', { expPct: 20 }),
   });
 
   // ============================================================ 白魔術師
