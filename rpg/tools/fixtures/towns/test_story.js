@@ -38,3 +38,25 @@ assert(R.Game.respawn.x === 8, 'an inn spot in the same town is kept');
 for (const id of ['regnas_castle_enter', 'king_talk', 'gate_soldier', 'porta_captain', 'temple_altar', 'shop', 'inn', 'church', 'chat', 'fortune', 'yuki_mother', 'metem_mother', 'elfin_spring'])
   assert(R.DB.events[id] && R.DB.events[id].meta && typeof R.DB.events[id].run === 'function', `event ${id}`);
 assert(R.Ending && typeof R.Ending.start === 'function', 'R.Ending.start');
+
+// text: the heroes' names are player-chosen (placeholders only), no DQ-style
+// word spacing between Japanese phrases, and the placeholders resolve.
+{
+  const fs = require('fs'), path = require('path');
+  const ROOT = path.resolve(__dirname, '../../..');
+  const JA = /[ぁ-んァ-ヶー一-龯]/;
+  const strs = [];
+  for (const f of ['src/events/story.js', 'src/events/story_town.js', 'src/data/objectives.js', 'src/systems/ending.js']) {
+    const src = fs.readFileSync(path.join(ROOT, f), 'utf8').split('\n').filter((l) => !/^\s*(\/\/|\*|\/\*)/.test(l)).join('\n');
+    const re = /'((?:[^'\\]|\\.)*)'/g;
+    let m;
+    while ((m = re.exec(src))) if (JA.test(m[1])) strs.push([f, m[1]]);
+  }
+  const named = strs.filter(([, s]) => /ユウキ|ノン|メテム/.test(s));
+  assert(!named.length, `no hard-coded hero names in story text${named.length ? ': ' + named.map((x) => x[1]).join(' / ') : ''}`);
+  const spaced = strs.filter(([, s]) => /[ぁ-んァ-ヶー一-龯。、] [ぁ-んァ-ヶー一-龯]/.test(s));
+  assert(!spaced.length, `no DQ-style spaces in story text${spaced.length ? ': ' + spaced.map((x) => x[1]).join(' / ') : ''}`);
+  R.Game.party.find((c) => c.id === 'yuki').name = 'Alex';
+  assert(R.Text.fmt(R.Ending.EPILOGUES[0].text[0]).startsWith('Alex'), 'epilogue uses the chosen name');
+  assert(R.Ending.CREDITS.some(([k, v]) => k === 'name' && R.Text.fmt(v).includes('Alex')), 'credits use the chosen names');
+}

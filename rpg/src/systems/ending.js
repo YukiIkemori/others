@@ -1,8 +1,8 @@
 // Ending (DESIGN §7.4): called by the last boss event via ev.ending() →
 // R.Ending.start(). Sequence: black narration → the throne room of Regnas
 // (field renderer, celebrating NPCs with cond 'game_clear') and the king's
-// thanks → epilogues for ユウキ / ノン / メテム over battle backdrops → scrolling
-// credits over a starry sky with the party walking → 「おわり」 → offer to save
+// thanks → epilogues for Yuki / Non / Metem over battle backdrops → scrolling
+// credits over a starry sky with the party walking → "おわり" → offer to save
 // the cleared game (restarts in the throne room) → title screen.
 //   await R.Ending.start()
 (function (R) {
@@ -18,26 +18,26 @@
     ['head', 'Art'], ['name', 'Claude'], ['gap', 2],
     ['head', 'Music'], ['name', 'Claude'], ['gap', 2],
     ['head', 'Font'], ['name', 'DotGothic16 (SIL OFL)'], ['gap', 2],
-    ['head', 'Special thanks'], ['name', 'ユウキ・ノン・メテム'], ['gap', 3],
-    ['name', 'そして あそんで くれた'], ['name', 'あなたに'], ['gap', 1],
+    ['head', 'Special thanks'], ['name', '{yuki}・{non}・{metem}'], ['gap', 3],
+    ['name', 'そして、遊んでくれた'], ['name', 'あなたに'], ['gap', 1],
     ['head', 'ありがとう！'],
   ];
 
   const EPILOGUES = [
     { who: ['yuki'], bg: 'bbg:grass', text: [
-      'ユウキは レグナスの きしだんに\nむかえられた。',
-      'ちちの けんを うけついだ かれは\nいまも くにを まもる\nりっぱな きしと して\nたたかい つづけて いる。',
+      '{yuki}はレグナスの騎士団に\n迎えられた。',
+      '父の剣を受け継いだ彼は、\n今も国を守る立派な騎士として\n戦い続けている。',
     ] },
     { who: ['non'], bg: 'bbg:shrine', text: [
-      'ノンは そだての しんでんに\nもどった。',
-      'きずついた ひとびとを いやす\nかのじょの えがおは\nいつしか まちの ひかりと\nよばれるように なった。',
+      '{non}は、自分を育ててくれた\n神殿へと帰っていった。',
+      '傷ついた人々を癒やす彼女の笑顔は、\nいつしか「町の光」と\n呼ばれるようになった。',
     ] },
     { who: ['metem'], bg: 'bbg:tower', text: [
-      'メテムは アルカナの\nまほうがくいんで\nさいねんしょうの せんせいに なった。',
-      'ほしを みあげる かのじょの てには\nあたらしい まほうの しょ。\f「つぎは わたしが\nでんせつを つくる ばんよ！」',
+      '{metem}は、アルカナの魔法学院で\n史上最年少の教師になった。',
+      '星を見上げる彼女の手には、\n新しい魔法の書。\f「次は、わたしが\n伝説をつくる番よ！」',
     ] },
     { who: ['yuki', 'non', 'metem'], bg: 'bbg:hills', text: [
-      'そして 3にんは ときおり あつまっては\nたびの おもいでを\nかたりあうのだった。',
+      'そして3人は、ときおり集まっては、\n旅の思い出を語り合うのだった。',
     ] },
   ];
 
@@ -193,7 +193,7 @@
     };
   }
 
-  /** 「おわり」: the three stand under the stars, looking up */
+  /** "おわり": the three stand under the stars, looking up */
   function fin() {
     const stars = makeStars(70);
     return {
@@ -211,7 +211,7 @@
         G().text('おわり', R.W / 2, R.H / 2 - 20, { align: 'center', size: 21, color: '#ffffff', shadow: '#1a1040' });
         G().ctx.globalAlpha = 1;
         if (L.t - this.t0 > 150 && Math.floor(L.t / 30) % 2 === 0) {
-          G().text('Aボタンを おしてください', R.W / 2, R.H - 84, { align: 'center', size: 8, color: '#b8c0e8' });
+          G().text('Aボタンを押してください', R.W / 2, R.H - 84, { align: 'center', size: 8, color: '#b8c0e8' });
         }
       },
     };
@@ -227,14 +227,14 @@
     await ev.wait(20);
     await ev.player.walk('UUUUUU');
     await ev.wait(20);
-    await ev.say('おお ユウキ ノン メテム！\nよくぞ ぶじに もどった！');
-    await ev.say('まおう ヴァルザードは ほろび\nせかいに ひかりが もどった。\nそなたたちこそ\nまことの ゆうしゃじゃ！');
-    await ev.say('じょおう「おかえりなさい。\nあなたたちの ぶじを\nしんじて いましたよ。」');
-    await ev.say('だいじん「レグナス ばんざい！\nゆうしゃ ばんざい！」');
+    await ev.say('{yuki}、{non}、{metem}！\nよくぞ無事に戻った！');
+    await ev.say('魔王ヴァルザードは滅び、\n世界に光が戻った。\nそなたたちこそ、\nまことの勇者じゃ！');
+    await ev.say('王妃「おかえりなさい。\nあなたたちの無事を、\nずっと信じていましたよ。」');
+    await ev.say('大臣「レグナス万歳！\n勇者万歳！」');
     R.sfx('confirm');
-    await ev.say('へいしたち「ばんざーい！\nばんざーい！」');
-    await ev.say('ユウキ「みんなが いたから\nここまで これたんだ。」\fノン「はい！ かみさまも\nきっと みまもって\nくださいました。」\fメテム「ま とうぜんの けっかね。\n……でも ありがと ふたりとも。」');
-    await ev.say('この ひかりが とわに\nつづかんことを……。');
+    await ev.say('兵士たち「ばんざーい！\nばんざーい！」');
+    await ev.say('{yuki}「みんながいたから、\nここまで来られたんだ。」\f{non}「はい！　神様も、\nきっと見守って\nくださいました。」\f{metem}「ま、当然の結果ね。\n……でも、ありがと。ふたりとも。」');
+    await ev.say('この光が、永遠に\n続かんことを……。');
     await ev.fadeOut(90);
     R.UI.closeMessage();
   }
@@ -246,7 +246,7 @@
     ev.heal(); // everyone walks into the throne room on their own feet
     const L = new EndingLayer();
     R.Engine.push(L);
-    L.scene = narration(['まおう ヴァルザードは ほろびた。', '', 'まのうずは きえさり', 'せかいに ふたたび', 'ひかりが もどった……。']);
+    L.scene = narration(['魔王ヴァルザードは滅びた。', '', '魔の渦は消え去り、', '世界にふたたび', '光が戻った……。']);
     await ev.fadeIn(60);
     await ev.wait(260);
     await ev.fadeOut(60);
@@ -281,7 +281,7 @@
     g.pos = { map: 'regnas_castle', x: 19, y: 3, dir: 'up', spawn: 'start' };
     g.respawn = { map: 'regnas_castle', spawn: 'start' };
     g.objective = 'obj_clear';
-    if (await R.UI.yesno('クリアデータを きろく しますか？')) {
+    if (await R.UI.yesno('クリアデータを記録しますか？')) {
       R.UI.closeMessage();
       if (R.Menu && R.Menu.saveScreen) await R.Menu.saveScreen({ ending: true });
       else if (R.Save && R.Save.save) await R.Save.save(R.Save.lastSlot || 0, R.State.serialize());

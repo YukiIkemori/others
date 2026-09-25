@@ -23,6 +23,9 @@
   const BUFF_STATS = ['atk', 'def', 'mag', 'mdef', 'agi'];
   const TIMED = { sleep: [1, 4], paralyze: [1, 3], confuse: [2, 4], silence: [3, 5], blind: [3, 5], regen: [5, 5] };
   const BAD = ['poison', 'sleep', 'paralyze', 'confuse', 'silence', 'blind'];
+  // 二刀流 (twoSwords): たたかう swings a second time with the off-hand weapon (only when one is in the
+  // shield slot); that swing deals ×OFFHAND_MULT so the good physical skills still beat it (tools/sim_dualwield.js)
+  const OFFHAND_MULT = 0.6;
   const NAMES = {
     elem: { fire: '炎', ice: '氷', thunder: '雷', wind: '風', earth: '大地', water: '水', holy: '聖', dark: '闇' },
     buff: { atk: '攻撃力', def: '守備力', mag: '魔力', mdef: '魔法防御', agi: '素早さ' },
@@ -463,16 +466,20 @@
       return U.pick(foes);
     }
 
+    /** dual wielding right now: twoSwords AND a weapon in the shield slot (a shield / empty hand → one swing) */
+    dualWield(u) { return !!(u.isParty && u.mods.twoSwords && u.st.atk2 > 0); }
+
     *attack(u, target, counter) {
       yield this.m(counter ? `${u.name}の反撃！` : `${u.name}の攻撃！`);
-      const swings = u.isParty && u.mods.twoSwords ? 2 : 1;
+      const swings = this.dualWield(u) ? 2 : 1;
       for (let i = 0; i < swings; i++) {
         let t = this.pickFoe(u, target);
         if (!t || !u.alive) break;
         if (!counter) t = yield* this.cover(u, t);
-        const atk = i === 1 && u.isParty && u.st.atk2 ? u.st.atk2 : u.stat('atk');
+        const atk = i === 1 ? u.st.atk2 : u.stat('atk');
         yield { t: 'fx', fx: this.weaponFx(u), user: u, targets: [t], kind: 'attack' };
         const r = this.roll(u, t, { formula: 'phys', power: 1 }, { atk });
+        if (i === 1 && r.dmg) r.dmg *= OFFHAND_MULT; // the off-hand swing is the weaker one
         const landed = yield* this.hit(u, t, r, { kind: 'phys' });
         const onHit = u.isParty ? u.st.onHit : u.d.onHit;
         if (landed && onHit && t.alive) yield* this.inflict(u, t, onHit.status, onHit.chance, true);
@@ -1028,7 +1035,7 @@
     }
     expectAttack(u, t) {
       let d = this.roll(u, t, { formula: 'phys', power: 1 }, { expect: true }).dmg;
-      if (u.isParty && u.mods.twoSwords) d *= u.st.atk2 ? 1 + u.st.atk2 / Math.max(1, u.stat('atk')) : 2;
+      if (this.dualWield(u)) d += OFFHAND_MULT * this.roll(u, t, { formula: 'phys', power: 1 }, { expect: true, atk: u.st.atk2 }).dmg;
       return t.defending ? d / 2 : d;
     }
     /** expected HP healed on t by an action (0 if it does not heal) */
@@ -1215,7 +1222,7 @@
 
   Object.assign(B, {
     Engine, Unit, PartyUnit, MonUnit, NAMES, BUFF_STATS, TIMED, BAD, STAGES, stageMult,
-    MON_ATTACK_FX, WEAPON_FX, BATTLE_EFFECT,
+    MON_ATTACK_FX, WEAPON_FX, BATTLE_EFFECT, OFFHAND_MULT,
     buildMons, simulate, drain,
     /** registry for effect type 'special': B.specials[id] = function* (engine, user, target, eff, ctx) */
     specials: B.specials || {},

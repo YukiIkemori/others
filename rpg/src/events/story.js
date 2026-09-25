@@ -9,7 +9,7 @@
   'use strict';
   const DB = R.DB;
   const CRESTS = ['crest_wind', 'crest_water', 'crest_earth', 'crest_fire', 'crest_star'];
-  const CREST_NAME = { crest_wind: 'かぜ', crest_water: 'みず', crest_earth: 'だいち', crest_fire: 'ほのお', crest_star: 'ほし' };
+  const CREST_NAME = { crest_wind: '風', crest_water: '水', crest_earth: '大地', crest_fire: '炎', crest_star: '星' };
   const has = (id) => R.State.hasItem(id);
   const flag = (f) => R.State.flag(f);
 
@@ -84,26 +84,26 @@
     faceNpc(ev, 'minister', 'right');
     faceNpc(ev, 'queen', 'down');
     await ev.wait(40);
-    await ev.say('おお ユウキ ノン メテム！\nよくぞ まいった！');
-    await ev.say('わしは この くにの おう レグナス。\nそなたたちを よんだのは\nほかでもない。');
-    await ev.say('いまより 100ねん むかし……\nまおう ヴァルザードは\nひかりの もんしょうの ちからで\nふうじられた。');
-    await ev.say('その もんしょうは いつつに わかたれ\nかぜ みず だいち ほのお ほしの\nもんしょうとして\nせかいの ちに まつられたのじゃ。');
-    await ev.say('だが ちかごろ ふういんが よわまり\nせかいじゅうに まものが\nあふれだして おる。\fまおうの めざめも\nちかいのかも しれぬ……。');
-    await ev.say('そなたたち 3にんは\nもんしょうの ひかりを やどして\nうまれた ものたち。');
-    await ev.say('けんしの いえに うまれた ユウキ。\nしんでんで そだった ノン。\nまほうがくいん はじまって いらいの\nてんさい メテム。');
-    await ev.say('どうか いつつの もんしょうを あつめ\nひかりの しんでんで\nひかりの もんしょうを\nよみがえらせて ほしい。');
-    await ev.say('そして まのうずの むこう\nまおうの しまへ わたり\nヴァルザードを うちたおすのじゃ！');
-    await ev.say('ユウキ「まかせて ください！\nかならず やりとげて みせます！」');
-    await ev.say('ノン「わたし がんばります。\nかみさま どうか\nわたしたちを おまもりください。」');
-    await ev.say('メテム「ふふん まかせなさい。\nわたしの まほうが あれば\nまおうなんて ひとひねりよ！」');
-    await ev.say('うむ たのもしい かぎりじゃ。\fまずは この しろの はるか きた\nやまの ふもとの かぜの どうくつへ\nむかうが よい。\nかぜの もんしょうが まつられて おる。');
-    await ev.say('わずかだが たびの しきんを\nさずけよう。');
+    await ev.say('おお、よくぞ参った！\n{yuki}、{non}、{metem}よ。');
+    await ev.say('わしがこのレグナスの王じゃ。\nそなたたちを呼んだのは、\nほかでもない。');
+    await ev.say('今より100年の昔……\n魔王ヴァルザードは、\n光の紋章の力によって\n封じられた。');
+    await ev.say('その紋章は五つに分かたれ、\n風・水・大地・炎・星の紋章として\n世界の各地に祀られたのじゃ。');
+    await ev.say('だが近ごろ封印が弱まり、\n世界中に魔物があふれ出しておる。\f魔王の目覚めも、\n近いのかもしれぬ……。');
+    await ev.say('そなたたち3人は、\n紋章の光を宿して\n生まれた者たち。');
+    await ev.say('剣士の家に生まれた{yuki}。\n神殿で育った{non}。\n魔法学院始まって以来の天才、\n{metem}。');
+    await ev.say('どうか五つの紋章を集め、\n光の神殿で\n光の紋章をよみがえらせてほしい。');
+    await ev.say('そして魔の渦の向こう、\n魔王の島へと渡り、\nヴァルザードを討ち倒すのじゃ！');
+    await ev.say('{yuki}「任せてください！\n必ずやり遂げてみせます！」');
+    await ev.say('{non}「わたし、がんばります。\n神様、どうかわたしたちを\nお守りください。」');
+    await ev.say('{metem}「ふふん、任せなさい。\nわたしの魔法があれば、\n魔王なんてひとひねりよ！」');
+    await ev.say('うむ、頼もしい限りじゃ。\fまずは、この城のはるか北、\n山のふもとにある風の洞窟へ\n向かうがよい。\nそこに風の紋章が祀られておる。');
+    await ev.say('わずかだが、旅の資金を授けよう。');
     await ev.giveGold(150);
     faceNpc(ev, 'minister', 'down');
-    await ev.say('だいじん「ぼうけんに まよったら\nBボタンで メニューを ひらき\n『つぎの もくてき』を\nたしかめると よいですぞ。」');
-    await ev.say('だいじん「また おうさまに\nはなしかければ ぼうけんの きろくを\nつけることが できますぞ。」');
+    await ev.say('大臣「冒険に迷ったら、\nBボタンでメニューを開き、\n『次の目的』を確かめると\nよいですぞ。」');
+    await ev.say('大臣「また、王様に話しかければ、\n冒険の記録をつけることが\nできますぞ。」');
     faceNpc(ev, 'minister', 'right');
-    await ev.say('では ゆけ！ ユウキ ノン メテムよ！\nそなたたちに ひかりの\nかごが あらんことを！');
+    await ev.say('では行け！\n{yuki}、{non}、{metem}！\nそなたたちに光の加護が\nあらんことを！');
     ev.setFlag('intro_done');
     ev.setObjective('obj_wind');
   }
@@ -121,9 +121,9 @@
     for (const c of R.Game.party) {
       let n = 0;
       try { n = R.Rules.expToNext(c); } catch (e) { n = 0; }
-      lines.push(c.name + (n > 0 ? ' あと ' + n + 'ポイント' : ' これいじょうは のびぬ'));
+      lines.push(c.name + (n > 0 ? 'はあと' + n + 'ポイント' : 'はこれ以上伸びぬよう'));
     }
-    return 'つぎの レベルまでに ひつような\nけいけんちは……\f' + lines.join('\n') + '\nじゃ。 はげむが よいぞ。';
+    return '次のレベルまでに必要な経験値は……\f' + lines.join('、\n') + 'じゃ。\n精進するがよいぞ。';
   }
 
   E.king_talk = {
@@ -133,18 +133,18 @@
       refreshObjective();
       const o = DB.objectives[R.Game.objective] || {};
       if (ev.flag('game_clear')) {
-        await ev.say('おお ゆうしゃたちよ！\nそなたたちの おかげで\nせかいに へいわが もどった。\nほんとうに ありがとう。');
-        await ev.say('いつでも この しろに\nかえって くるが よいぞ。');
+        await ev.say('おお、勇者たちよ！\nそなたたちのおかげで、\n世界に平和が戻った。\n本当にありがとう。');
+        await ev.say('いつでもこの城に\n帰ってくるがよいぞ。');
       } else {
-        await ev.say('おお ' + lead() + 'たちよ！\nよくぞ もどった。');
+        await ev.say('おお、' + lead() + 'たちよ！\nよくぞ戻った。');
         if (o.king) await ev.say(o.king);
         await ev.say(expReport());
       }
-      if (await ev.yesno('そなたたちの ぼうけんを\nきろく してゆくか？')) {
+      if (await ev.yesno('そなたたちの冒険を\n記録していくか？')) {
         await ev.saveMenu();
-        await ev.say('では また あおう。\nそなたたちに ひかりの かごを！');
+        await ev.say('では、また会おう。\nそなたたちに光の加護を！');
       } else {
-        await ev.say('では ゆけ！\nそなたたちに ひかりの かごを！');
+        await ev.say('では行け！\nそなたたちに光の加護を！');
       }
     },
   };
@@ -154,25 +154,25 @@
     meta: { needs: ['item:crest_wind'], gives: ['flag:gate_open'] },
     run: async (ev) => {
       if (ev.flag('gate_open')) {
-        await ev.say('きを つけて いくのだぞ。\nみなとまち ポルタは\nせきしょを でて きたへ すすんだ\nさきに ある。');
+        await ev.say('気をつけて行くのだぞ。\n港町ポルタは、関所を出て\n北東へ進んだ先にある。');
         return;
       }
       if (!ev.has('crest_wind')) {
-        await ev.say('ここは レグナスの ひがしの せきしょ。');
-        await ev.say('まものが ふえて きけんな ため\nおうの しるしを もたぬ ものは\nとおす わけには いかぬ。');
+        await ev.say('ここはレグナスの東の関所。');
+        await ev.say('魔物が増えて危険なため、\n王の印を持たぬ者は\n通すわけにはいかぬ。');
         return false;
       }
-      await ev.say('む？ そなたたちが もっている\nその ひかりは……！');
+      await ev.say('む？　そなたたちが持っている\nその光は……！');
       R.sfx('holy');
       await ev.flash('#c8f0ff', 10);
-      await ev.say('かぜの もんしょう… おうの しるしだ。\nとおりなさい。');
+      await ev.say('風の紋章……王の印だ。\n通るがよい。');
       const self = ev.self;
       if (self && R.Field.npc(self)) {
         await ev.npc(self).walk('U');
         ev.npc(self).face('down');
       }
       ev.setFlag('gate_open');
-      await ev.say('ぶうんを いのって おるぞ。');
+      await ev.say('武運を祈っておるぞ。');
     },
   };
 
@@ -181,27 +181,27 @@
     meta: { needs: ['flag:bandits_defeated'], gives: ['flag:has_ship'] },
     run: async (ev) => {
       if (ev.flag('has_ship') || R.Game.ship) {
-        await ev.say('よう ' + lead() + '！\nふねの ちょうしは どうだい？');
-        await ev.say('ふねは まちを でて すぐの\nみなとに とめてあるぜ。\nあんたたちの ふねだ。\nすきに つかって くれ！');
+        await ev.say('よう、' + lead() + '！\n船の調子はどうだい？');
+        await ev.say('船は町を出てすぐの\n港に停めてあるぜ。\nあんたたちの船だ。\n好きに使ってくれ！');
         return;
       }
       if (!ev.flag('bandits_defeated')) {
         ev.setFlag('heard_bandits');
-        await ev.say('おれは この みなとの せんちょうだ。\nだが みてのとおり\nふねは だせねえ。');
-        await ev.say('ちかごろ みなとの そとに\nとうぞくどもが いすわってな。\nふねを だせば たちまち おそわれて\nにもつを うばわれちまう。');
-        await ev.say('やつらの とりでは この まちの\nはるか みなみ みさきの さきに\nあるらしい。');
-        await ev.say('だれか やつらの おかしらを\nこらしめて くれりゃあなあ……。');
+        await ev.say('おれはこの港の船長だ。\nだが見てのとおり、\n船は出せねえ。');
+        await ev.say('近ごろ港の外に、\n盗賊どもが居座ってな。\n船を出せば、たちまち襲われて\n積み荷を奪われちまう。');
+        await ev.say('やつらのねぐら、盗賊の砦は\nこの町のはるか南、\n岬の先にあるらしい。');
+        await ev.say('誰か、やつらのお頭を\n懲らしめてくれりゃあなあ……。');
         return false;
       }
-      await ev.say('おお！ あんたたちが\nとうぞくどもを こらしめて\nくれたのか！');
-      await ev.say('これで みなとも もとどおりだ。\nほんとうに ありがとうよ！');
-      await ev.say('……なに？ ふねで せかいを\nまわりたい だって？');
-      await ev.say('よし！ おれの じまんの ふねを\nあんたたちに たくすぜ！\nもってけ どろぼう……\nいや ゆうしゃさま！');
+      await ev.say('おお！　あんたたちが\n盗賊どもを懲らしめて\nくれたのか！');
+      await ev.say('これで港も元どおりだ。\n本当にありがとうよ！');
+      await ev.say('……なに？　船で世界を\n回りたいだって？');
+      await ev.say('よし！　おれの自慢の船を\nあんたたちに託すぜ！\n持ってけ泥棒……\nいや、勇者さま！');
       ev.giveShip('porta_dock');
       ev.setFlag('has_ship');
-      await ev.gotItem(lead() + 'たちは ふねを てにいれた！', 'keyitem');
-      await ev.say('ふねは まちを でて すぐの\nみなとに とめて ある。\nりくに むかって すすめば\nそのまま おりられるぜ。');
-      await ev.say('みなみの うみの もりの しまには\nエルフの むらが あるそうだ。\nいい かぜが ふいてるぜ！');
+      await ev.gotItem(lead() + 'たちは船を手に入れた！', 'keyitem');
+      await ev.say('船は町を出てすぐの\n港に停めてある。\n陸に向かって進めば、\nそのまま降りられるぜ。');
+      await ev.say('南の海に浮かぶ森の島には、\nエルフの住む村、エルフィンが\nあるそうだ。\nいい風が吹いてるぜ！');
       refreshObjective();
     },
   };
@@ -212,29 +212,29 @@
     meta: { needs: CRESTS.map((c) => 'item:' + c), gives: ['item:light_crest', 'flag:barrier_broken'] },
     run: async (ev) => {
       if (ev.flag('barrier_broken')) {
-        await ev.say('ひかりの もんしょうは\nそなたたちと ともに あります。');
-        await ev.say('まのうずは きえました。\nみなみの うみの さいはてに\nちいさな ほこらが あります。\nそこで たびの したくを。');
+        await ev.say('光の紋章は、\nあなたたちとともにあります。');
+        await ev.say('魔の渦は消えました。\n南東の海に浮かぶ最果ての祠で、\n旅の支度を整えるのです。');
         return;
       }
       const missing = CRESTS.filter((c) => !ev.has(c));
       if (missing.length) {
-        await ev.say('ここは ひかりの しんでん。\nいつつの もんしょうを だいざに\nささげる とき ひかりの もんしょうは\nよみがえるのです。');
+        await ev.say('ここは光の神殿。\n五つの紋章を台座に捧げるとき、\n光の紋章はよみがえるのです。');
         const got = CRESTS.length - missing.length;
         if (got > 0) {
-          await ev.say('あなたたちは ' + got + 'つの もんしょうを\nもって いますね。\nのこる もんしょうは\n' + missing.map((c) => CREST_NAME[c]).join(' ') + '……。');
+          await ev.say('あなたたちは' + got + 'つの紋章を\n持っていますね。\n残るは' + missing.map((c) => CREST_NAME[c]).join('・') + 'の紋章……。');
         } else {
-          await ev.say('もんしょうの ひかりを やどす\nものたちよ。 いつつの もんしょうを\nあつめて ここへ もどるのです。');
+          await ev.say('紋章の光を宿す者たちよ。\n五つの紋章を集めて、\nここへ戻るのです。');
         }
         return false;
       }
-      await ev.say('おお…… いつつの もんしょうが\nついに そろったのですね。');
-      await ev.say('さあ もんしょうを だいざへ。');
+      await ev.say('おお……五つの紋章が、\nついにそろったのですね。');
+      await ev.say('さあ、紋章を台座へ。');
       R.Audio && R.Audio.stopBGM && R.Audio.stopBGM(60);
       for (let i = 0; i < CRESTS.length; i++) {
         if (R.Field.npc(GLOWS[i])) ev.npc(GLOWS[i]).show();
         R.sfx('holy');
         await ev.flash('#ffffff', 8);
-        await ev.say(lead() + 'は ' + DB.items[CRESTS[i]].name + 'を\nだいざに ささげた。', { speed: 3 });
+        await ev.say(lead() + 'は' + DB.items[CRESTS[i]].name + 'を\n台座に捧げた。', { speed: 3 });
         await ev.wait(12);
       }
       R.UI.closeMessage();
@@ -242,19 +242,19 @@
       R.sfx('magic');
       await ev.shake(40, 2);
       for (let i = 0; i < 3; i++) { R.sfx('holy'); await ev.flash('#fff8d0', 10); await ev.wait(6); }
-      await ev.say('いつつの ひかりが\nさいだんの うえに あつまってゆく……！');
+      await ev.say('五つの光が、\n祭壇の上に集まってゆく……！');
       if (R.Field.npc('glow_light')) ev.npc('glow_light').show();
       R.sfx('revive');
       await ev.flash('#ffffff', 30);
       ev.bgm();
       await ev.give('light_crest');
       ev.setFlag('barrier_broken');
-      await ev.say('ひかりの もんしょうが\nよみがえりました……！');
-      await ev.say('その ひかりは まのうずを はらい\nまおうの しまへの みちを\nひらくでしょう。');
-      await ev.say('みなみの うみの さいはてに\nちいさな ほこらが あります。\nそこで したくを ととのえ\nまおうじょうへ むかうのです。');
-      await ev.say('ユウキ「いよいよ だな……。」');
-      await ev.say('ノン「みんなで かならず\nかえって きましょうね。」');
-      await ev.say('メテム「とうぜんよ。\nさっさと まおうを たおして\nおいしい ものでも たべましょ。」');
+      await ev.say('光の紋章が、\nよみがえりました……！');
+      await ev.say('その光は魔の渦を払い、\n魔王の島への道を\n開くでしょう。');
+      await ev.say('南東の海に、\n最果ての祠があります。\nそこで支度を整え、\n魔王城へ向かうのです。');
+      await ev.say('{yuki}「いよいよだな……。」');
+      await ev.say('{non}「みんなで必ず、\n帰ってきましょうね。」');
+      await ev.say('{metem}「当然よ。\nさっさと魔王を倒して、\nおいしいものでも食べましょ。」');
       refreshObjective();
     },
   };

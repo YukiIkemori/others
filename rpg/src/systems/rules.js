@@ -13,7 +13,7 @@
 
   const STATS = ['hp', 'mp', 'str', 'vit', 'agi', 'int', 'mnd', 'luk'];
   const SLOTS = ['weapon', 'shield', 'head', 'body', 'acc'];
-  const SLOT_NAMES = { weapon: 'ぶき', shield: 'たて', head: 'あたま', body: 'からだ', acc: 'アクセサリ' };
+  const SLOT_NAMES = { weapon: '武器', shield: '盾', head: '頭', body: '体', acc: 'アクセサリ' };
   const SET_SLOTS = ['sub', 'reaction', 'support', 'field'];
   const SET_NAMES = { sub: 'サブアクション', reaction: 'リアクション', support: 'サポート', field: 'フィールド' };
   // cumulative JP earned in a job needed for job level 1..8
@@ -108,10 +108,10 @@
     canLearn(c, abilityId) {
       const a = DB.abilities[abilityId];
       if (!a) return { ok: false, reason: '不明なアビリティ' };
-      if (Rules.learned(c, abilityId)) return { ok: false, reason: 'しゅうとくずみ' };
+      if (Rules.learned(c, abilityId)) return { ok: false, reason: '習得済み' };
       if (!Rules.isJobUnlocked(c, a.job)) return { ok: false, reason: 'ジョブ未開放' };
       const rec = Rules.jobRec(c, a.job);
-      if (rec.jp < (a.jp || 0)) return { ok: false, reason: 'JPがたりない' };
+      if (rec.jp < (a.jp || 0)) return { ok: false, reason: 'JPが足りない' };
       return { ok: true };
     },
     learn(c, abilityId) {
@@ -202,12 +202,12 @@
      *  [{type:'attack'}, {type:'job',job}, {type:'job',job:sub}?, {type:'defend'}, {type:'item'}]
      */
     commands(c) {
-      const out = [{ type: 'attack', name: 'たたかう' }];
+      const out = [{ type: 'attack', name: '戦う' }];
       const j = DB.jobs[c.job];
-      out.push({ type: 'job', job: c.job, name: (j && j.command) || 'とくぎ' });
-      if (c.set.sub && DB.jobs[c.set.sub]) out.push({ type: 'job', job: c.set.sub, name: DB.jobs[c.set.sub].command || 'とくぎ' });
-      out.push({ type: 'defend', name: 'ぼうぎょ' });
-      out.push({ type: 'item', name: 'どうぐ' });
+      out.push({ type: 'job', job: c.job, name: (j && j.command) || '特技' });
+      if (c.set.sub && DB.jobs[c.set.sub]) out.push({ type: 'job', job: c.set.sub, name: DB.jobs[c.set.sub].command || '特技' });
+      out.push({ type: 'defend', name: '防御' });
+      out.push({ type: 'item', name: '道具' });
       return out;
     },
     /** action abilities usable from the field menu (current + sub job) */

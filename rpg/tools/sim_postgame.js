@@ -8,10 +8,12 @@
 //   node tools/sim_postgame.js --n 300 --seed 7 --verbose
 //
 // Party models (built directly: jobs mastered = JP 2000 and every ability learned):
-//   prepared   Lv55 — ユウキ 勇者 (sub パラディン, 二刀流, ふくつのちかい), ノン 賢者 (sub 白魔術師,
-//              MP半減, ふくつのちかい), メテム 時空術師 (sub 賢者, MP半減, ふくつのちかい); 13/9/9 jobs
-//              mastered; abyss chest gear + a few abyss rare drops + 暁の剣; 明鏡の護符 ×3 (sleep,
-//              paralysis and confusion immunity), the hero's innate death immunity.
+//   prepared   Lv55 — ユウキ 勇者 (sub 竜騎士: the boss is a dragon; 二刀流; ふくつのちかい),
+//              ノン 賢者 (sub 白魔術師, MP半減, ふくつのちかい), メテム 時空術師 (sub 賢者 — かいじゅ,
+//              りゅうせいう; MP半減, ふくつのちかい); 14/9/10 jobs mastered; abyss chest gear, a few
+//              abyss rare drops and 暁の剣; status cover: ユウキ 混沌の兜 + 明鏡の護符 + the hero's
+//              death immunity, ノン 天輪の冠 + 魂鎮めの鈴 (death), メテム 明鏡の護符.
+//   arrival    Lv42 — the same jobs with 最果ての祠 shop gear (info rows for the dungeon entrance).
 //   levels     Lv65 — basic jobs only (ナイト / 白魔術師 / 黒魔術師 + their tier-1 jobs mastered),
 //              the best shop gear of 最果ての祠, no status protection, no dispel, no revive-on-KO.
 //   Both carry the same bag (shop consumables, which the AI uses).
@@ -150,7 +152,7 @@ function playerCommands(eng, opts) {
   if (!opts.dispel) return cmds;
   const boss = eng.living('mon').find((m) => m.boss);
   if (!boss) return cmds;
-  // its scales (def/mdef) are always worth erasing; gathered power (atk/mag +1) only before 終焉の咆哮
+  // 始原の鱗 (def/mdef) is always worth erasing; a raised atk/mag once it has stacked
   const guard = boss.buffs.def > 0 || boss.buffs.mdef > 0;
   const power = boss.buffs.atk + boss.buffs.mag >= 2;
   if (!guard && !power) return cmds;
@@ -294,11 +296,11 @@ if (ONLY.includes('zones')) {
       const avg = { winPct: 0, rounds: 0, hpLost: 0, deaths: 0, exp: 0, gold: 0, jp: 0 };
       const rows = [];
       e.groups.forEach((grp, gi) => {
-        const r = runMany(p, { mons: grp.mons, inv: {}, dispel: true, salt: gi * 17 + L }, Math.max(60, N / 2));
+        const r = runMany(p, { mons: grp.mons, inv: {}, dispel: true, salt: gi * 17 + L }, L === 50 ? N : Math.max(60, N / 2));
         for (const k in avg) avg[k] += (r[k] * grp.w) / tw;
         rows.push(`    #${gi} w${padL(grp.w, 2)} ${pad(groupLabel(grp), 40)} ${padL(groupWidth(grp), 3)}px  win${padL(f0(r.winPct), 4)}%  rnd ${f1(r.rounds)}  hp-${padL(f0(r.hpLost), 3)}%  dead ${f1(r.deaths)}  exp ${padL(f0(r.exp), 5)} jp ${padL(f0(r.jp), 4)} g ${padL(f0(r.gold), 5)}`);
         if (groupWidth(grp) > 256) W(`${z} #${gi}: group ${groupLabel(grp)} is ${groupWidth(grp)} px wide`);
-        if (L === 50 && r.winPct < 99) W(`${z}@Lv50 #${gi} ${groupLabel(grp)}: win ${f0(r.winPct)}%`);
+        if (L === 50 && r.winPct < 98) W(`${z}@Lv50 #${gi} ${groupLabel(grp)}: win ${f1(r.winPct)}%`);
       });
       console.log(`${pad(z, 9)} Lv${L}  win ${padL(f0(avg.winPct), 3)}%  rounds ${f1(avg.rounds)}  hp-${padL(f0(avg.hpLost), 3)}%  deaths ${f1(avg.deaths)}  exp ${padL(f0(avg.exp), 6)}  jp ${padL(f0(avg.jp), 4)}  gold ${padL(f0(avg.gold), 5)}`);
       if (L === 50 && (avg.hpLost < 25 || avg.hpLost > 45)) W(`${z}@Lv50: party loses ${f0(avg.hpLost)}% HP per fight (target 25–45)`);
@@ -350,7 +352,7 @@ if (ONLY.includes('ablation')) {
   const n = Math.max(100, N / 2);
   const cases = [
     ['full preparation', null, {}],
-    ['no 明鏡の護符 (no sleep/paralysis/confusion immunity)', { yuki: { equip: { acc: 'iron_ring', head: 'holy_helm' } }, non: { equip: { acc: 'rosary', head: 'light_crown' } }, metem: { equip: { acc: 'star_earring' } } }, {}],
+    ['no sleep/paralysis/confusion immunity', { yuki: { equip: { acc: 'iron_ring', head: 'holy_helm' } }, non: { equip: { head: 'light_crown' } }, metem: { equip: { acc: 'star_earring' } } }, {}],
     ['no ふくつのちかい (revive-on-KO)', { yuki: { reaction: 'warrior_counter' }, non: { reaction: 'whitemage_mending_hand' }, metem: { reaction: 'sage_mana_return' } }, {}],
     ['player never dispels the boss', null, { dispel: false }],
     ['no elemental resistance gear', { yuki: { equip: { body: 'holy_vest' } }, non: { equip: { body: 'holy_robe' } } }, {}],
@@ -382,9 +384,18 @@ if (ONLY.includes('king')) {
 
 // ====================================================================== rare
 if (ONLY.includes('rare')) {
-  console.log('\n=== プリズマ (rare_prism) ===  (prepared Lv50, no items)');
-  const r = runMany(party(PREPARED, 50), { mons: [['rare_prism', 1]], inv: {}, dispel: false }, Math.max(200, N));
-  console.log(`win ${f0(r.winPct)}%  fled ${f0(r.escapePct + r.timeoutPct)}% (escape/timeout)  lose ${f0(r.losePct)}%  rounds ${f1(r.rounds)}  hp-${f0(r.hpLost)}%  exp ${f0(r.exp)} jp ${f0(r.jp)} gold ${f0(r.gold)}`);
+  console.log('\n=== プリズマ (rare_prism) ===  (prepared party, no items)');
+  // a monster that runs away also ends the battle as 'win' (nothing left on the field): count kills
+  for (const L of [46, 50, 55]) {
+    const p = party(PREPARED, L), n = Math.max(200, N);
+    let killed = 0, lost = 0, rounds = 0;
+    for (let i = 0; i < n; i++) {
+      const r = fight(p, { mons: [['rare_prism', 1]], inv: {}, seed: SEED * 31 + i * 7 + L });
+      if (r.killed) killed++; if (r.result === 'lose') lost++; rounds += r.rounds;
+    }
+    console.log(`prepared Lv${L}: beaten ${padL(f0((100 * killed) / n), 3)}%  fled ${padL(f0((100 * (n - killed - lost)) / n), 3)}%  party lost ${f0((100 * lost) / n)}%  rounds ${f1(rounds / n)}`);
+    if (L === 50 && (killed / n < 0.3 || killed / n > 0.6)) W(`rare_prism beaten ${f0((100 * killed) / n)}% at Lv50 (target 30–60, like the main-game rare monsters)`);
+  }
   const rp = DB.monsters.rare_prism;
   const zoneRates = ZONES.map((z) => (DB.rareEncounters[z] ? DB.rareEncounters[z].rate : 0));
   console.log(`encounter share ${zoneRates.map((x) => (x * 100).toFixed(1) + '%').join(' / ')}  drop ${DB.items[rp.drop.item].name} 1/${rp.drop.rate}  rare ${DB.items[rp.rare.item].name} 1/${rp.rare.rate} (exclusive)  steal ${rp.steal.item}/${rp.steal.rare}`);

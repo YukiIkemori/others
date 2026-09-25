@@ -154,7 +154,7 @@
     en_pg_death_touch: act('死者の手招き', 'enemy', [status('death', 0.2)], 'death', '{user}は冷たい手で手招きした！'),
     en_pg_abyss_slash: act('深淵斬り', 'enemy', [phys(1.9, { element: 'dark' })], 'dark2', '{user}は闇をまとった剣で斬りつけた！'),
     en_pg_guard:       act('鉄壁の構え', 'self', [buff('def', 2)], 'buff', '{user}は盾を構えて身を固めた！'),
-    en_pg_rampage:     act('混沌の暴走', 'random', [phys(0.75, { hits: [3, 5] })], 'strike3', '{user}は手当たり次第に暴れ回った！'),
+    en_pg_rampage:     act('混沌の暴走', 'random', [phys(0.75, { hits: [3, 4] })], 'strike3', '{user}は手当たり次第に暴れ回った！'),
     en_pg_chaos_roar:  act('混沌の雄叫び', 'enemies', [buff('atk', -1, 0.5), buff('mag', -1, 0.5)], 'debuff', '{user}は耳をつんざく雄叫びを上げた！'),
     en_pg_star_crush:  act('星砕き', 'enemy', [phys(2.2, { acc: 0.85 })], 'strike3', '{user}は巨大な拳を振り下ろした！'),
     en_pg_meteor_quake: act('隕鉄の地鳴り', 'enemies', [magic(60, 0.5, 'earth')], 'earth3', '{user}は大地を激しく踏み鳴らした！'),
@@ -172,7 +172,7 @@
     en_pg_dark_nova:   act('暗黒新星', 'enemies', [magic(70, 0.6, 'dark')], 'dark3', '{user}は暗黒の星を炸裂させた！', { mp: 18, magic: true }),
     en_pg_demon_claw:  act('魔将の爪', 'enemy', [phys(1.1, { hits: 2, element: 'dark' })], 'claw', '{user}は鋭い爪で二度切り裂いた！'),
     en_pg_stone_gaze:  act('石の眼差し', 'enemies', [status('paralyze', 0.3)], 'paralyze', '{user}は石のように冷たい目でにらんだ！'),
-    en_pg_dive:        act('急降下', 'enemy', [phys(1.7, { acc: 0.9 })], 'claw', '{user}は急降下して襲いかかった！'),
+    en_pg_dive:        act('急降下', 'enemy', [phys(1.6, { acc: 0.9 })], 'claw', '{user}は急降下して襲いかかった！'),
 
     // ---- rare_prism
     en_pg_prism_flash: act('プリズムフラッシュ', 'enemies', [magic(40, 0.4), status('blind', 0.3)], 'holy2', '{user}の体がまばゆい虹色に輝いた！'),
@@ -181,8 +181,8 @@
     // ---- abyss_lord
     en_pg_lord_claw:   act('始原の爪', 'enemy', [phys(1.9, { critBonus: 5 })], 'claw3', '{user}は始原の爪を振り下ろした！'),
     en_pg_lord_tail:   act('天地崩し', 'enemies', [phys(0.85)], 'strike3', '{user}は巨大な尾で天地を薙ぎ払った！'),
-    en_pg_lord_flame:  act('創世の業火', 'enemies', [breath(200, 'fire')], 'breath_fire', '{user}は創世の業火を吐き出した！'),
-    en_pg_lord_frost:  act('終末の凍気', 'enemies', [breath(200, 'ice')], 'breath_ice', '{user}は終末の凍気を吐き出した！'),
+    en_pg_lord_flame:  act('創世の業火', 'enemies', [breath(215, 'fire')], 'breath_fire', '{user}は創世の業火を吐き出した！'),
+    en_pg_lord_frost:  act('終末の凍気', 'enemies', [breath(215, 'ice')], 'breath_ice', '{user}は終末の凍気を吐き出した！'),
     en_pg_lord_void:   act('虚無の吐息', 'enemies', [breath(220, 'dark')], 'breath_dark', '{user}はすべてを呑み込む虚無の吐息を吐いた！'),
     en_pg_lord_madness: act('混沌の瞳', 'enemies', [status('confuse', 0.75)], 'confuse', '{user}の無数の瞳が七色に揺らめいた！'),
     en_pg_lord_lullaby: act('深淵の子守歌', 'enemies', [status('sleep', 0.7)], 'sleep', '{user}は深淵の底から響く子守歌を歌った！'),
@@ -205,7 +205,7 @@
   Object.assign(R.DB.monsters, {
     // ================================================= 地下1階 (Lv45–48)
     pg_hell_hound: pgMon('冥府の番犬', 'wolf', 46, {
-      s: { hp: 1.75, atk: 1.7, def: 1.1, agi: 1.5 }, x: X_REG, hue: 120, sat: 2.5, bri: 0.85, eva: 8,
+      s: { hp: 1.75, atk: 1.85, def: 1.1, agi: 1.5 }, x: X_REG, hue: 120, sat: 2.5, bri: 0.85, eva: 8,
       elem: { fire: 0.5, ice: 1.5, holy: 1.5 }, statusRes: HARD_RES,
       a: [['attack', 4], ['en_pg_hellfire_fang', 3], ['en_pg_howl', 2]],
       drop: ['nectar', 8], rare: ['pg_nova_claw', 96], steal: ['nectar', 'seed_agi'],
@@ -214,19 +214,19 @@
     pg_prism_eye: pgMon('虹の魔眼', 'eyeball', 46, {
       s: { hp: 2.0, atk: 1.5, mag: 1.8, mdef: 1.6, agi: 1.2 }, x: X_REG, hue: 150, sat: 1.8, bri: 1.1, mp: 40,
       flags: ['flying'], elem: { wind: 1.5, earth: 0.5 }, statusRes: { confuse: 1, blind: 1, sleep: 0.5 },
-      a: [['attack', 3], ['en_pg_madness_gaze', 2], ['en_pg_prism_beam', 3]],
+      a: [['attack', 3], ['en_pg_madness_gaze', 1], ['en_pg_prism_beam', 4]],
       drop: ['pg_clarity_amulet', 32], rare: ['pg_halo', 128], steal: ['all_cure', 'pg_clarity_amulet'],
       desc: '七色に光る瞳で人の心を惑わす魔眼。\n見つめられると正気を失う。',
     }),
     pg_void_wraith: pgMon('虚無の亡霊', 'void_wraith', 47, {
       s: { hp: 2.1, atk: 1.6, mag: 1.8, mdef: 1.5, agi: 1.1 }, x: X_REG, mp: 60,
       flags: ['undead', 'flying'], elem: { holy: 2, dark: -1, ice: 0.5 }, statusRes: UNDEAD_RES, eva: 10,
-      a: [['attack', 3], ['en_pg_soul_drain', 3], ['en_pg_lament', 2], ['en_pg_death_touch', 1]],
+      a: [['attack', 3], ['en_pg_soul_drain', 4], ['en_pg_lament', 1], ['en_pg_death_touch', 1]],
       drop: ['mana_crystal', 10], rare: ['pg_soul_bell', 128], steal: ['mana_crystal', 'pg_soul_bell'],
       desc: '深淵に呑まれた者たちの成れの果て。\n声なき嘆きで生者の言葉を奪う。',
     }),
     pg_abyss_knight: pgMon('深淵の騎士', 'armor', 48, {
-      s: { hp: 1.95, atk: 1.75, def: 1.7, mdef: 1.1, agi: 0.9 }, x: X_REG, hue: -60, sat: 2.5, bri: 0.6,
+      s: { hp: 1.95, atk: 1.9, def: 1.7, mdef: 1.1, agi: 0.9 }, x: X_REG, hue: -60, sat: 2.5, bri: 0.6,
       elem: { holy: 1.5, thunder: 1.5, dark: 0 }, statusRes: { poison: 1, death: 1, sleep: 0.5, confuse: 0.5 },
       a: [['attack', 4], ['en_pg_abyss_slash', 3], ['en_pg_guard', 1]],
       drop: ['nectar', 8], rare: ['pg_chaos_helm', 128], steal: ['nectar', 'seed_vit'],
@@ -316,7 +316,7 @@
     // ================================================= 裏ボス
     abyss_lord: {
       name: 'アビスロード', sprite: 'boss_abyss', lv: 70, actsPerTurn: 3,
-      hp: 8400, mp: 0, atk: 360, def: 180, agi: 110, mag: 260, mdef: 110, eva: 2,
+      hp: 7800, mp: 0, atk: 390, def: 180, agi: 110, mag: 260, mdef: 110, eva: 2,
       exp: 60000, gold: 30000, jp: 3000,
       flags: ['boss', 'dragon'], statusRes: BOSS_RES,
       elem: { dark: -1, fire: 0.5, ice: 0.5, thunder: 0.5 },

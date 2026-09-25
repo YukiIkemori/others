@@ -220,7 +220,7 @@ Base sprites must look good in their **default** palette and still read well hue
   use?:{ target, effects:[...], fx, battle:true, field:true },
 }
 ```
-Required ids: `herb` (やくそう, start ×4), start gear `copper_sword oak_staff wooden_rod traveler_clothes`,
+Required ids: `herb` (薬草, start ×4), start gear `copper_sword oak_staff wooden_rod traveler_clothes`,
 key items `crest_wind crest_water crest_earth crest_fire crest_star light_crest silver_key gold_key`.
 Utility consumables (exact ids): `wing` (teleport to a visited town), `escape_rope` (leave dungeon),
 `holy_water` (repel 150 steps), `phoenix_down`-equivalent must be named originally (id `revive_feather`).
@@ -242,25 +242,25 @@ Mastered (★) = all abilities of the job learned.
 **Job tree (ids fixed):**
 | Tier | id | name | requirements |
 |---|---|---|---|
-|1| warrior | せんし | — |
-|1| priest | そうりょ | — |
-|1| mage | まほうつかい | — |
-|1| thief | とうぞく | — |
+|1| warrior | 戦士 | — |
+|1| priest | 僧侶 | — |
+|1| mage | 魔法使い | — |
+|1| thief | 盗賊 | — |
 |2| knight | ナイト | warrior 3 |
-|2| monk | ぶとうか | warrior 2, priest 2 |
-|2| whitemage | しろまどうし | priest 3 |
-|2| blackmage | くろまどうし | mage 3 |
-|2| hunter | かりゅうど | thief 3 |
-|2| bard | ぎんゆうしじん | priest 2, thief 2 |
-|2| alchemist | くすりし | mage 2, thief 2 |
-|3| spellblade | まほうけんし | knight 3, blackmage 3 |
+|2| monk | 武闘家 | warrior 2, priest 2 |
+|2| whitemage | 白魔術師 | priest 3 |
+|2| blackmage | 黒魔術師 | mage 3 |
+|2| hunter | 狩人 | thief 3 |
+|2| bard | 吟遊詩人 | priest 2, thief 2 |
+|2| alchemist | 薬師 | mage 2, thief 2 |
+|3| spellblade | 魔法剣士 | knight 3, blackmage 3 |
 |3| paladin | パラディン | knight 5, whitemage 4 |
-|3| ninja | にんじゃ | hunter 4, monk 3 |
-|3| sage | けんじゃ | whitemage 5, blackmage 5 |
-|3| dragoon | りゅうきし | knight 4, hunter 4 |
-|3| timemage | じくうまどうし | blackmage 4, bard 3 |
-|3| darkknight | あんこくきし | warrior 6, blackmage 4 |
-|4| hero | ゆうしゃ | paladin 5, spellblade 5 |
+|3| ninja | 忍者 | hunter 4, monk 3 |
+|3| sage | 賢者 | whitemage 5, blackmage 5 |
+|3| dragoon | 竜騎士 | knight 4, hunter 4 |
+|3| timemage | 時空術師 | blackmage 4, bard 3 |
+|3| darkknight | 暗黒騎士 | warrior 6, blackmage 4 |
+|4| hero | 勇者 | paladin 5, spellblade 5 |
 
 Start: ユウキ warrior (knows `warrior_power_slash`), ノン priest (`priest_heal`), メテム mage (`mage_fire`).
 
