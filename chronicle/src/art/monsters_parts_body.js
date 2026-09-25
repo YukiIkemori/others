@@ -228,7 +228,7 @@
     const hcx = hx, hcy = (hy + my) / 2 + 0.5, hrx = hw / 2 + 0.8, hry = (my - hy) / 2 + 1.5;
     const col = o.extra('front');
     const ny = an.neck ? an.neck[1] : my + 2;
-    for (const s2 of [-1, 1]) {
+    for (const s2 of an.collar === false ? [] : [-1, 1]) {
       const cm = T.mask(p.w, p.h);
       const topY = Math.max(1, hy + Math.round(hw * 0.3));
       cm.poly([

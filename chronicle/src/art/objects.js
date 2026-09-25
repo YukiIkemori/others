@@ -697,7 +697,9 @@
   };
   // ---- Chronicle additions (DESIGN §11.3.6): the new weapon families, the armour
   // slots and the six elements (magic stones, spell book). dagger/head/body reuse
-  // knife/helm/light as the spec says.
+  // knife/helm/light as the spec says. Every grid is the spec's; fist, hands and feet
+  // keep the spec's silhouette with one more shade (knuckles, cuff, sole) —
+  // tools/test_art-chars.js checks both.
   Object.assign(ICONS, {
     // the broad two-edged blade of §11.3.6 (3px wide, so it never reads as icon:sword)
     greatsword: [
@@ -727,7 +729,7 @@
       'LwLwLLM.',
       'LLLLLLM.',
       '.LLLLM..',
-      '.HHHH...',
+      '..HHH...',
       '........',
     ],
     whip: [
@@ -825,5 +827,6 @@
   ICONS.head = ICONS.helm;
   ICONS.body = ICONS.light;
   A.ICON_IDS = Object.keys(ICONS);
+  A.ICON_GRIDS = ICONS; // read-only, for tools/test_art-chars.js (grids vs §11.3.6)
   for (const k in ICONS) R.Gfx.def('icon:' + k, () => R.Gfx.fromGrid(ICONS[k], IP));
 })(window.RPG);

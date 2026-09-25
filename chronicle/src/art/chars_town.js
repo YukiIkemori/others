@@ -102,11 +102,13 @@
     right: L(11, ['.Q..Q...........', '.QwwQ...........', '.PwwP...........', '..PP............']),
     attach: 'body',
   };
-  // farmer — a hoe over the shoulder (leather shaft, steel blade)
+  // farmer — a hoe stood upright at his side, the steel blade up beside the hat crown
+  // (clear of the face, so it never reads as an ear), leather shaft down to the ground
+  const shaft = (x, n) => Array.from({ length: n }, (_, i) => '.'.repeat(x) + (i === 0 ? 'N' : i === n - 1 ? 'L' : 'M') + '.'.repeat(15 - x));
   P.over.hoe = {
-    down: L(6, ['..........XYY...', '...........YM...', '............M...', '............M...', '............M...', '............M...', '............M...', '............M...', '............M...', '............M...', '............M...', '............M...', '............L...']),
-    up: L(6, ['...YYX..........', '...MY...........', '...M............', '...M............', '...M............', '...M............', '...M............', '...M............', '...M............', '...M............', '...M............', '...M............', '...L............']),
-    right: L(6, ['..XYY...........', '...YM...........', '....M...........', '....M...........', '.....M..........', '.....M..........', '......M.........', '......M.........', '.......M........', '.......M........', '........M.......', '........L.......']),
+    down: L(1, ['............YZZ.', '............XXY.'].concat(shaft(14, 19))),
+    up: L(1, ['.ZZY............', '.YXX............'].concat(shaft(1, 19))),
+    right: L(1, ['............YZZ.', '............XXY.'].concat(shaft(14, 19))),
     attach: 'body',
   };
   // miner — soot smudges on the cheeks and nose
@@ -384,6 +386,8 @@
     out.left = out.right.map((c) => R.Gfx.flipH(c));
     return out;
   }
-  N.sheep = { build: () => animal(SHEEP, { W: '#f4f0e4', w: '#d0c8b8', v: '#9a9088', a: '#3c3438', e: '#f8f0d8', n: '#1c1418' }) };
+  // face and legs a warm dark grey (not ink-black), so the 1px gaps between the legs and the
+  // face's edge still read against the outline
+  N.sheep = { build: () => animal(SHEEP, { W: '#f4f0e4', w: '#d0c8b8', v: '#9a9088', a: '#54484c', e: '#f8f0d8', n: '#241a20' }) };
   N.chicken = { build: () => animal(CHICKEN, { W: '#f8f4ec', w: '#d8d0c4', v: '#a8988c', r: '#d83c30', n: '#f0b830', e: '#1c1418', y: '#e8a830' }, 3) };
 })(window.RPG);

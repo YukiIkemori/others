@@ -1195,18 +1195,13 @@
     K.fitText(c.name, x + 26, y + 6, 54, { color: col });
     G().text('Lv' + c.level, x + 110, y + 6, { align: 'right', color: col });
     G().text('H', x + 26, y + 18, { color: col === '#ffffff' ? COL.sub : col });
-    G().text(c.hp + '/' + (st.hp || 0), x + 110, y + 18, { align: 'right', color: col });
+    // a fallen member reads 「戦闘不能」 in place of 0/最大 (a plate on the lower border would cover the W value)
+    G().text(c.hp <= 0 ? '戦闘不能' : c.hp + '/' + (st.hp || 0), x + 110, y + 18, { align: 'right', color: col });
     G().text('M', x + 26, y + 29, { color: COL.sub });
     G().text(String(c.mp), x + 58, y + 29, { align: 'right' });
     G().text('W', x + 66, y + 29, { color: COL.sub });
     G().text(String(c.wp || 0), x + 110, y + 29, { align: 'right' });
     K.rowTag(x + 4, y + 36, effectiveRow(c));
-    if (c.hp <= 0) {
-      const th = K.theme();
-      const tw = Math.ceil(G().textWidth('戦闘不能', 8)) + 6;
-      G().rect(x + 114 - tw, y + 36, tw, 8, th.fill2 || th.fill);
-      G().text('戦闘不能', x + 111, y + 36, { align: 'right', color: G().C.dead, size: 8 });
-    }
   }
   Menu.drawMemberWindow = drawMemberWindow;
   function drawParty(x, y) {

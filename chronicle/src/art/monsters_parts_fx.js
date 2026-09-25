@@ -144,23 +144,27 @@
 
   // ---------------------------------------------------------------- smoke 煙 (around, back)
   PARTS.smoke = (p, a, o) => {
-    const T = TK(), k = o.baseK, b = around(o);
+    const T = TK(), k = o.baseK, b = around(o), info = o.info;
     const rmp = T.ramp(o.c || '#a0a0a0', 4, { dark: 0.5, light: 0.45 });
-    const n = k < 1.3 ? 4 : 6;
+    // puffs billowing out from behind the silhouette: centred just outside its sides and top
+    const n = k < 1.3 ? 5 : 7;
     for (let i = 0; i < n; i++) {
       const side = i % 2 ? 1 : -1;
-      const cx = Math.round(a[0] + side * (b.x1 - b.x0) * (0.3 + o.rng() * 0.25)), cy = Math.round(b.y0 + (b.y1 - b.y0) * (0.1 + o.rng() * 0.55));
-      // a puff = three overlapping circles, lit from the top-left, dithered edge
-      const puffs = [[0, 0, 1], [-1.2, 0.6, 0.8], [1.1, 0.5, 0.75]];
+      const top = i === n - 1;
+      const y = top ? Math.max(1, b.y0 + Math.round(1 * k)) : Math.round(b.y0 + (b.y1 - b.y0) * (0.15 + (i / n) * 0.6 + o.rng() * 0.08));
+      const edge = top ? a[0] + Math.round((o.rng() - 0.5) * (b.x1 - b.x0) * 0.4) : side < 0 ? info.left[y] : info.right[y];
+      if (edge < 0) continue;
+      const cx = top ? edge : edge + side * Math.round(1 + 1.2 * k), cy = y;
+      const puffs = [[0, 0, 1], [-1.1, 0.7, 0.8], [1.1, 0.6, 0.75], [0.2, -0.9, 0.7]];
       for (const [ox, oy, rs] of puffs) {
-        const r = (1.2 + o.rng() * 0.8) * k * rs + 0.6;
+        const r = (1.1 + o.rng() * 0.7) * k * rs + 0.6;
         const px = cx + ox * r, py = cy + oy * r;
-        for (let y = Math.floor(py - r); y <= Math.ceil(py + r); y++) for (let x = Math.floor(px - r); x <= Math.ceil(px + r); x++) {
-          const d = Math.hypot(x - px, y - py);
+        for (let yy = Math.floor(py - r); yy <= Math.ceil(py + r); yy++) for (let xx = Math.floor(px - r); xx <= Math.ceil(px + r); xx++) {
+          const d = Math.hypot(xx - px, yy - py);
           if (d > r) continue;
-          if (d > r - 0.9 && (x + y) % 2) continue;
-          const lit = (x - px) * -0.6 + (y - py) * -0.8;
-          o.fx.set(x, y, lit > r * 0.35 ? rmp[3] : lit > -r * 0.2 ? rmp[2] : rmp[1]);
+          if (d > r - 0.9 && (xx + yy) % 2) continue;
+          const lit = (xx - px) * -0.6 + (yy - py) * -0.8;
+          o.fx.set(xx, yy, lit > r * 0.35 ? rmp[3] : lit > -r * 0.2 ? rmp[2] : rmp[1]);
         }
       }
     }

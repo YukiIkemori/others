@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Contact sheets for the decor layer (DESIGN §7.1) — art review tool.
 //
-//   node tools/sheet_decor.js [--out DIR] [--only decor,themes,rooms] [--scale N] [--frame F]
+//   node tools/sheet_decor.js [--out DIR] [--only decor,themes,rooms,study] [--scale N] [--frame F]
 //        [--themes castle,house,town] [--ids a,b,…] [--room throne,house,…]
 //   node tools/sheet_decor.js --emit <room|theme>  print a --eval expression for tools/shot.js
 //                                                  that injects demo room <room> (or the small
@@ -14,7 +14,11 @@
 //            animated ids show every frame; joining ids are shown as small groups
 //   themes   one small composed room per theme (all 12 themes), same layout
 //   rooms    hand-composed demo rooms (throne room, great hall, house, dining hall, library,
-//            chapel, treasury, inn)
+//            chapel, treasury, inn; Chronicle: tavern, archive reading room, manor parlour)
+//   study    art-local review maps (--study dungeon|town, --themes a,b): every themed, closed
+//            and secret tile of a dungeon theme in context (one secret drawn "found"), or a town
+//            block per town theme (streets, regional houses and roofs, lawn, canal, an interior)
+// Pass --maps to also load src/maps (off by default: other owners' map files cannot break it).
 // Maps are real R.FieldMap compiles with a decor layer, rendered like the field:
 // R.Art.localTile for the base, then decor (R.Art.decorTile or 'decor:<id>') bottom-aligned.
 // Loads core + data + art + maps + systems/field_map.js only (no game boot).
@@ -235,6 +239,74 @@ const ROOMS = {
     ],
     npcs: [['innkeeper', 8, 1], ['man', 5, 4], ['dancer', 9, 5]],
   },
+  // --- Chronicle rooms (art-local): new decor at DQ5 density
+  tavern: {
+    name: 'tavern with a stage (語らいの灯亭)', theme: 'house', type: 'town',
+    rows: [
+      '################',
+      '#..............#',
+      '#cccc..........#',
+      '#..............#',
+      '#..............#',
+      '#..............#',
+      '#######@D#######',
+    ],
+    decor: [
+      '.H.$.w.[.p.w.H..',
+      '.N........0000..',
+      '..........0000..',
+      '..n.T.n.......Z.',
+      '.&&....n.T.n....',
+      '.Q.n.T.n......%.',
+      '................',
+    ],
+    npcs: [['bartender', 2, 1], ['dancer', 12, 1], ['sailor', 4, 4], ['man', 9, 3]],
+  },
+  archive: {
+    name: 'reading room of the white archive', theme: 'library', type: 'dungeon',
+    rows: [
+      '################',
+      '#..............#',
+      '#.l..........l.#',
+      '#..............#',
+      '#.l..........l.#',
+      '#..............#',
+      '#######@D#######',
+    ],
+    decor: [
+      '.}..}.i....i.}..',
+      '..{..>..=....{..',
+      '....=...........',
+      '..RRRRRRRRRRRR..',
+      '.......I...{....',
+      '.{..=.......>...',
+      '................',
+    ],
+    npcs: [['scholar', 6, 3]],
+  },
+  manor: {
+    name: 'parlour of the misty manor', theme: 'manor', type: 'dungeon',
+    rows: [
+      '################',
+      '#..............#',
+      '#..............#',
+      '#..............#',
+      '#..............#',
+      '#..............#',
+      '#######@D#######',
+    ],
+    decor: [
+      '.P.|..W..V.w.m..',
+      '.:........F.....',
+      '...rrrrr......@.',
+      '...rrrrr..;.....',
+      '.@.........Q....',
+      '..,.......v.....',
+      '................',
+    ],
+    decorLegend: { '|': 'doll_shelf', ':': 'piano', ',': 'broken_chair', ';': 'rug_round' },
+    npcs: [['ghost', 7, 4]],
+  },
 };
 // one small room shown in every theme
 const THEME_ROOM = {
@@ -333,7 +405,7 @@ function roomDef(key) {
   if (!r) return null;
   const def = {
     name: r.name || key, type: r.type || 'town', legend: 'local', theme: r.theme || 'castle', bgm: 'town',
-    rows: r.rows.map((s) => s.replace('@', '.')), decor: r.decor,
+    rows: r.rows.map((s) => s.replace('@', '.')), decor: r.decor, decorLegend: r.decorLegend, outside: '#',
     spawns: {}, npcs: [],
   };
   let sx = 1, sy = 1;

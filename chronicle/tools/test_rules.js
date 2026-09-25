@@ -71,7 +71,7 @@ test('K: constants of §4.18.1', () => {
   eq(K.MOB, { atk: 0.6, mag: 0.6 }, 'MOB');
   eq(K.PRICE_SLOT, { weapon: 1.6, body: 1.4, shield: 1.0, head: 0.8, hands: 0.6, feet: 0.6, acc: 1.2 }, 'PRICE_SLOT');
   eq(K.RESERVE_RATE, 0.6, 'RESERVE_RATE');
-  eq(K.MODCAP, { party: 150, preempt: 30, exp: 30, expMin: -100, glim: 40, glimMin: -100, prof: 50, profMin: -100, cost: -50, encounter: 50, autoSteal: 100 }, 'MODCAP');
+  eq(K.MODCAP, { party: 150, partyMin: -100, preempt: 30, exp: 30, expMin: -100, glim: 40, glimMin: -100, prof: 50, profMin: -100, cost: -50, encounter: 50, autoSteal: 100 }, 'MODCAP');
   eq(Ru.SLOTS, ['weapon1', 'weapon2', 'shield', 'head', 'body', 'hands', 'feet', 'acc1', 'acc2'], 'SLOTS');
   eq(Ru.STATS, ['str', 'vit', 'dex', 'agi', 'int', 'mnd'], 'STATS');
   const w = K.WTYPE;
@@ -959,7 +959,7 @@ test('tier: clear, effective, pick, inn (§3.3.5)', () => {
   eq([Ti.isCleared('r_mine'), Ti.isCleared('r_x')], [true, false], 'isCleared');
   eq(Ti.clearedList().slice(0, 2), ['r_forest', 'r_desert'], 'clear order');
   eq([Ti.pick([1, 2, 3], 0), Ti.pick([1, 2, 3], 1), Ti.pick([1, 2, 3], 9)], [1, 2, 3], 'array pick clamps');
-  eq([Ti.pick({ 0: 'a', 3: 'b', 6: 'c' }, 2), Ti.pick({ 0: 'a', 3: 'b', 6: 'c' }, 3), Ti.pick({ 0: 'a', 3: 'b' }, 9), Ti.pick({ 2: 'x' }, 0)], ['a', 'b', 'b', 'x'], 'object pick');
+  eq([Ti.pick({ 0: 'a', 3: 'b', 6: 'c' }, 2), Ti.pick({ 0: 'a', 3: 'b', 6: 'c' }, 3), Ti.pick({ 0: 'a', 3: 'b' }, 9), Ti.pick({ 2: 'x' }, 0)], ['a', 'b', 'b', undefined], 'object pick');
   eq(Ti.pick([5, 6]), 6, 'default tier = current');
   eq(Ti.innPrice(), 112, 'inn T9');
   g.gameClear = false; delete g.flags.game_clear; g.regionsCleared = []; g.tier = 0;

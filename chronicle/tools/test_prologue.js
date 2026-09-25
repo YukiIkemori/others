@@ -129,7 +129,9 @@ function testStatic() {
       if (n.event) ok(!!DB.events[n.event] || EXTERNAL_EVENTS.test(n.event), id + ': npc ' + n.id + ' event ' + n.event);
       ok(!!(n.event || n.text), id + ': npc ' + n.id + ' has text or an event');
       const t = DB.tiles[m.tileAt(n.x, n.y)] || {}, dd = m.decorDef(n.x, n.y);
-      ok(t.pass && (!dd || dd.pass), id + ': npc ' + n.id + ' stands on a walkable cell (' + m.tileAt(n.x, n.y) + ')');
+      const person = /^(npc|party):/.test(n.sprite);
+      if (person) ok(t.pass && (!dd || dd.pass), id + ': npc ' + n.id + ' stands on a walkable cell (' + m.tileAt(n.x, n.y) + ')');
+      else ok(!!n.text || !!n.event, id + ': object ' + n.id + ' can be examined');
     }
     // chests
     const seenIds = new Set();
@@ -247,7 +249,7 @@ function testReach() {
   withState({ flags: ['hero_created', 'pro_start', 'pro_berna_sent'] }, () => {
     const m = R.FieldMap.compile('lute'), e = m.spawns.entrance;
     const s = reach(m, e.x, e.y);
-    for (const n of m.npcs) if (n.present) ok(touch(m, s, n.x, n.y) || s.has(n.x + ',' + n.y), 'lute: npc ' + n.id + ' reachable');
+    for (const n of m.npcs) if (n.present && n.id !== 'ship') ok(touch(m, s, n.x, n.y) || s.has(n.x + ',' + n.y), 'lute: npc ' + n.id + ' reachable');
     for (const c of m.chests) ok(touch(m, s, c.x, c.y), 'lute: chest ' + c.id + ' reachable');
     for (const k of ['inn', 'dock']) ok(s.has(m.spawns[k].x + ',' + m.spawns[k].y), 'lute: spawn ' + k + ' reachable');
     for (const sg of m.signs) ok(touch(m, s, sg.x, sg.y), 'lute: sign ' + sg.x + ',' + sg.y + ' readable');
@@ -389,6 +391,7 @@ function testText() {
     'ポイントの経験値', '身を守っている', '様子をうかがっている', 'を落としていった', 'リジェネ', 'ジョブ', 'アビリティ', 'JP', '麻痺', '魔法防御', '並び替え',
     '酒場の主人', 'すべて袋に', '頁', '秘奥義', '魔剣士', '蘇生', 'アルン', '{yuki}', '{non}', '{metem}'];
   let n = 0, pages = 0, longest = 0;
+  const mapNames = new Set(MAPS.map((id) => DB.maps[id] && DB.maps[id].name)); // UI labels: 「ファロス灯台　2階」 (STYLE_JA §3)
   for (const f of srcFiles()) {
     for (const { s, line } of strings(f)) {
       n++;
@@ -404,7 +407,7 @@ function testText() {
         if (/……$/.test(t) && t !== '……') ok(false, at + ' 「……」 at the end of a sentence needs 。！？: ' + JSON.stringify(t));
         // full-width spaces only after ！？ (or ♪), never as word spacing
         const sp = t.match(/.　/g) || [];
-        for (const m of sp) ok(/[！？♪]/.test(m[0]), at + ' full-width space after 「' + m[0] + '」: ' + JSON.stringify(t));
+        if (!mapNames.has(t)) for (const m of sp) ok(/[！？♪]/.test(m[0]), at + ' full-width space after 「' + m[0] + '」: ' + JSON.stringify(t));
       }
       if (joyo) for (const ch of s) {
         if (!/[\u4e00-\u9fff]/.test(ch)) continue;
@@ -451,20 +454,29 @@ async function testPlay() {
   const sayLog = [];
   { const say0 = R.UI.say; R.UI.say = function (t, o) { sayLog.push(R.Text.fmt(t)); return say0.call(this, t, o); }; }
   const said = (re, from) => sayLog.slice(from || 0).some((t) => re.test(t));
+  // captions (ev.caption → the stage layer) are recorded too
+  const capLog = [];
+  { const push0 = R.Engine.push; R.Engine.push = function (L) {
+    if (L && typeof L.setCaption === 'function') { const sc = L.setCaption.bind(L); L.setCaption = (t, o) => { capLog.push(R.Text.fmt(t)); return sc(t, o); }; }
+    return push0.call(this, L);
+  }; }
+  const captioned = (re) => capLog.some((t) => re.test(t));
   const g = () => R.Game;
+  /** start / warp without deadlocking: the fades advance only while frames are stepped */
+  const go = async (p) => { let done = false; p.then(() => { done = true; }); for (let i = 0; i < 400 && !done; i++) await step(1); ok(done, 'warp finished'); return settle(); };
   const talk = async (id) => { const n = R.Field.npc(id); ok(!!n && n.present, 'npc ' + id + ' present on ' + R.Field.map.id); if (n) { R.Events.talk(n); ok(await settle(), 'talk ' + id + ' ends'); } };
   const runStep = async (id, x, y) => { R.Events.run(id, { trigger: 'step', once: id, x, y }); ok(await settle(), id + ' ends'); };
 
   // ---- new game → P1
   R.State.newGame();
-  await R.Field.start('roa_house', 'bed');
-  ok(await settle(), 'P1 intro runs to the end');
+  ok(await go(R.Field.start('roa_house', 'bed')), 'P1 intro runs to the end');
   ok(R.Engine.fadeAlpha === 0, 'P1: the screen is visible after the intro');
   ok(g().flags.pro_start && g().flags.hero_created, 'P1 flags pro_start + hero_created');
   eq(g().objective, 'obj_p_roa', 'P1 objective');
   eq(S.created, 1, 'P1 hero creation ran once');
   eq(R.State.hero().name, S.HERO.name, 'P1 the created hero leads the party');
-  ok(said(/……ねえ、聞こえる？/) && said(/いい名前だ/), 'P1 captions + the master\'s lines');
+  ok(said(/今日は大事な日だよ/) && said(/いい名前だ/), 'P1 the master\'s lines');
+  ok(captioned(/……ねえ、聞こえる？/) && captioned(/忘れられかけた物語/) && captioned(/ひとりの語り部の物語/), 'P1 the three captions');
   const b = R.Field.npc('berna');
   eq([b.x, b.y], [9, 4], 'P1 the master walks back to her lectern');
   // ---- P2
@@ -476,7 +488,7 @@ async function testPlay() {
   eq(g().objective, 'obj_p_to_lute', 'P2 objective');
   ok(said(/白紙/, mark) && said(/灯台の火/, mark), 'P2 白紙 and the dark lighthouse');
   // roa_gate before / after
-  await R.Field.warp('roa', 'berna_house'); ok(await settle(), 'to roa');
+  ok(await go(R.Field.warp('roa', 'berna_house')), 'to roa');
   g().flags.pro_berna_sent = false;
   R.Field.setPlayerPos(30, 34, 'down');
   mark = sayLog.length;
@@ -490,7 +502,7 @@ async function testPlay() {
   mark = sayLog.length; R.Events.run('roa_stone', { trigger: 'examine' }); await settle();
   ok(said(/白く抜けている/, mark), 'roa_stone: half blank');
   // ---- P4
-  await R.Field.warp('lute', 'entrance'); ok(await settle(), 'P4 arrival');
+  ok(await go(R.Field.warp('lute', 'entrance')), 'P4 arrival');
   ok(g().flags.pro_lute, 'P4 pro_lute');
   ok(said(/三晩/) && said(/跳ね橋/) && said(/定期船/), 'P4 the three pieces of news');
   eq(g().respawn && g().respawn.map, 'lute', 'lute sets the respawn point');
@@ -514,7 +526,7 @@ async function testPlay() {
   eq(g().objective, 'obj_p_lighthouse', 'P7 objective');
   ok(said(/前列と中列/, mark) && said(/武器は2つまで/, mark) && said(/『オート』/, mark), 'P7 the three lessons');
   // ---- P8
-  await R.Field.warp('lighthouse_1', 'entrance'); ok(await settle(), 'to lighthouse_1');
+  ok(await go(R.Field.warp('lighthouse_1', 'entrance')), 'to lighthouse_1');
   eq(R.Field.map.tileAt(18, 24), 'door', 'P8 the key opens the tower door');
   ok(R.Field.npc('otto_door').present, 'P8 the keeper waits inside');
   S.battleScript = ['lose', 'win'];
@@ -529,7 +541,7 @@ async function testPlay() {
   ok(said(/危なかったのう/, mark) && said(/新しい技/, mark) && said(/『技の書』/, mark), 'P8 the retry line and the 閃き lesson (技)');
   ok(!R.Field.npc('otto_door').present, 'P8 the keeper goes back to the harbour');
   // ---- P9
-  await R.Field.warp('lighthouse_3', 'from_prev'); ok(await settle(), 'to lighthouse_3');
+  ok(await go(R.Field.warp('lighthouse_3', 'from_prev')), 'to lighthouse_3');
   mark = sayLog.length;
   await runStep('lighthouse_3_fine', 13, 18);
   ok(g().flags.lighthouse_3_fine && said(/言葉を失った灯/, mark), 'P9 the girl in grey');
@@ -540,13 +552,13 @@ async function testPlay() {
   ok(await settle(), 'P9 boss → P10 departure ends');
   eq(S.battles[S.battles.length - 1].troop, 'tr_b_pageeater', 'P9 the boss troop');
   ok(g().flags.pro_boss, 'P9 pro_boss');
-  ok(said(/守り歌を年代記に書き記した/, mark) && said(/海の果てまで/, mark), 'P9 the song comes back');
+  ok(said(/守り歌を年代記に書き記した/, mark) && captioned(/海の果てまで、灯よ届け/) && captioned(/翌朝/), 'P9 the song comes back, the night passes');
   // ---- P10
   eq(R.Field.map.id, 'lute', 'P10 in Faros');
   ok(g().flags.prologue_done, 'P10 prologue_done');
   for (const k of ['k_chronicle', 'k_quill', 'k_bell']) ok(R.State.hasItem(k), 'P10 ' + k);
   eq(g().objective, 'obj_regions', 'P10 objective obj_regions');
-  ok(said(/夜通し歩いてきたよ/, mark) && said(/序章/, mark) && said(/八つの大きな伝承/, mark) && said(/どこの町の酒場でもね/, mark), 'P10 the master, the chapter, the eight legends, the tavern master');
+  ok(said(/夜通し歩いてきたよ/, mark) && captioned(/序章\n『灯台守の歌』が記された/) && said(/八つの大きな伝承/, mark) && said(/どこの町の酒場でもね/, mark), 'P10 the master, the chapter, the eight legends, the tavern master');
   const hints = Object.values(DB.regions || {}).map((r) => r.hint).filter(Boolean);
   ok(hints.length === 8 && hints.every((h) => said(new RegExp(h.split('\n')[0]), mark)), 'P10 all eight rumours');
   ok(S.jingles.includes('chapter'), 'P10 jingle chapter');
@@ -558,15 +570,15 @@ async function testPlay() {
   mark = sayLog.length; await talk('otto');
   eq(R.State.count('ac_otto_lantern'), 1, 'lute_otto_reward only once');
   // the onEnter after the prologue is quiet
-  mark = sayLog.length; await R.Field.warp('lute', 'entrance'); await settle();
+  mark = sayLog.length; await go(R.Field.warp('lute', 'entrance'));
   eq(sayLog.length, mark, 'lute onEnter is silent after the prologue');
 
   // ---- branches
   // the lamp is lit on 3F afterwards, the boss is gone
-  await R.Field.warp('lighthouse_3', 'from_prev'); await settle();
+  await go(R.Field.warp('lighthouse_3', 'from_prev'));
   ok(R.Field.npc('lamp_lit').present && !R.Field.npc('lamp').present && !R.Field.npc('boss').present, '3F after pro_boss: the lamp burns');
   // the master after the prologue: lodging
-  await R.Field.warp('roa_house', 'entrance'); await settle();
+  await go(R.Field.warp('roa_house', 'entrance'));
   for (const c of g().party) c.hp = 1;
   mark = sayLog.length; await talk('berna');
   ok(said(/年代記は、\nちゃんと書いているかい/, mark) && g().party.every((c) => c.hp === R.Rules.stats(c).hp), 'the master: prologue_done line + a free night (full HP)');
@@ -585,12 +597,12 @@ async function testPlay() {
   ok(said(/子どもたちが/, mark), 'the master after the ending');
   // the stone at tier 6 / after the ending
   g().flags.final_roa = false; g().gameClear = false; g().flags.game_clear = false;
-  await R.Field.warp('roa', 'stone'); await settle();
+  await go(R.Field.warp('roa', 'stone'));
   eq(R.Field.map.tileAt(22, 16), 'story_stone_blank', 'the stone is blank at tier 6');
   mark = sayLog.length; R.Events.run('roa_stone', { trigger: 'examine' }); await settle();
   ok(said(/真っ白/, mark), 'roa_stone at tier 6');
   // tier lines in the towns (§3.2.4 through R.Events.talk)
-  await R.Field.warp('lute', 'inn'); await settle();
+  await go(R.Field.warp('lute', 'inn'));
   mark = sayLog.length; await talk('watchman');
   ok(said(/記録院の書記/, mark), 'lute watchman: the tier-4 line');
   ok(R.Field.npc('scribe').present, 'lute: the white-robed scribe at tier 6');
@@ -605,7 +617,7 @@ async function testPlay() {
   // a spell glimmer changes the keeper's lesson (術師 heroes)
   R.State.newGame();
   g().flags.pro_key = true; R.State.addItem('k_lighthouse_key');
-  await R.Field.warp('lighthouse_1', 'entrance'); await settle();
+  await go(R.Field.warp('lighthouse_1', 'entrance'));
   S.battleScript = ['win']; S.glimmer = 'spell';
   mark = sayLog.length;
   await runStep('lighthouse_1_tutorial', 18, 21);

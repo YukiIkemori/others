@@ -125,7 +125,7 @@
     },
     STEAL: { base: 0.35, agiDiv: 200, min: 0.1, max: 0.8, boss: 0.5, rareMul: 4, rareCap: 0.5, autoRare: 0.5 },
     // §3.3.16 — caps of summed mods
-    MODCAP: { party: 150, preempt: 30, exp: 30, expMin: -100, glim: 40, glimMin: -100, prof: 50, profMin: -100, cost: -50, encounter: 50, autoSteal: 100 },
+    MODCAP: { party: 150, partyMin: -100, preempt: 30, exp: 30, expMin: -100, glim: 40, glimMin: -100, prof: 50, profMin: -100, cost: -50, encounter: 50, autoSteal: 100 },
     PARTY_KEYS: ['goldPct', 'dropPct', 'rarePct', 'superPct', 'rareEncPct', 'goldenPct', 'preemptPct', 'escapePct'],
     // §4.11 — encounters, pre-emptive strike, escape
     ENC: { world: 26, dungeon: 22, randLo: 0.6, randHi: 1.4, safeSteps: 6 },
@@ -432,7 +432,9 @@
     },
     /**
      * the 8 party-wide keys (§3.3.16 *): sums over the living active party, capped
-     * (drop/encounter keys +150, preemptPct +30, escapePct uncapped — the chance stops at 1)
+     * (drop/encounter keys +150, preemptPct +30, escapePct uncapped — the chance stops at 1).
+     * Every sum stops at −100 so quirks (goldPct −50 on several members) never turn a
+     * reward or a chance negative.
      */
     partyMods(party) {
       party = party || (R.Game && R.Game.party) || [];
@@ -445,6 +447,7 @@
       }
       for (const k of ['goldPct', 'dropPct', 'rarePct', 'superPct', 'rareEncPct', 'goldenPct']) out[k] = Math.min(K.MODCAP.party, out[k]);
       out.preemptPct = Math.min(K.MODCAP.preempt, out.preemptPct);
+      for (const k of K.PARTY_KEYS) out[k] = Math.max(K.MODCAP.partyMin, out[k]);
       return out;
     },
 
@@ -850,13 +853,16 @@
             if (s === 'weapon2' && forceNoW2) continue;
             if (s === 'shield' && Rules.hasTwoHanded(v)) { if (v.equip.shield) { invPut(vinv, v.equip.shield, true); v.equip.shield = null; } continue; }
             const cur = v.equip[s];
-            let wtype = null;
+            let wtype = null, other = null;
             if (s === 'weapon1' || s === 'weapon2') {
               const it = itemOf(cur);
               if (!it) continue;            // an empty weapon slot stays empty
               wtype = it.wtype;
+              other = s === 'weapon1' ? 'weapon2' : 'weapon1';
             }
-            const cands = [cur];
+            // candidates: the current item, the inventory, and the piece c wears in the other
+            // weapon slot when it is of this slot's type (the two swap places; §4.4.1 「その人が今付けている品」)
+            const cands = [{ id: cur }];
             for (const id in vinv) {
               if (!(vinv[id] > 0) || id === cur) continue;
               const it = DB.items[id];
@@ -864,24 +870,32 @@
               if (wtype && it.wtype !== wtype) continue;
               if (it.only && !it.only.includes(c.id)) continue;
               if (it.gender && it.gender !== c.gender) continue;
-              cands.push(id);
+              cands.push({ id });
             }
-            let best = cur, bestScore = -Infinity, bestIt = itemOf(cur);
-            for (const id of cands) {
+            if (other && !locked[other] && !(forceNoW2 && other === 'weapon2')) {
+              const oid = v.equip[other], oit = itemOf(oid);
+              if (oit && oid !== cur && oit.wtype === wtype && !oit.quirk && !cands.some((x) => x.id === oid)) cands.push({ id: oid, swap: true });
+            }
+            let best = cands[0], bestScore = -Infinity, bestIt = itemOf(cur);
+            for (const cand of cands) {
               const t = virtualChar(v);
-              t.equip[s] = id;
-              if (id && (s === 'weapon1' || s === 'weapon2') && Rules.isTwoHanded(id)) t.equip.shield = null;
+              t.equip[s] = cand.id;
+              if (cand.swap) t.equip[other] = cur;
+              if (cand.id && (s === 'weapon1' || s === 'weapon2') && Rules.isTwoHanded(cand.id)) t.equip.shield = null;
               const sc = Rules.loadoutScore(Rules.stats(t), mode);
-              const it = itemOf(id);
-              if (sc > bestScore + 1e-9 || (Math.abs(sc - bestScore) <= 1e-9 && better(it, bestIt, id === cur, best === cur))) {
-                best = id; bestScore = sc; bestIt = it;
+              const it = itemOf(cand.id);
+              if (sc > bestScore + 1e-9 || (Math.abs(sc - bestScore) <= 1e-9 && better(it, bestIt, cand.id === cur, best.id === cur))) {
+                best = cand; bestScore = sc; bestIt = it;
               }
             }
-            if (best !== cur) {
+            if (best.swap) {
+              v.equip[other] = cur;
+              v.equip[s] = best.id;
+            } else if (best.id !== cur) {
               if (cur) invPut(vinv, cur, true);
-              if (best) vinv[best] = (vinv[best] || 0) - 1;
-              v.equip[s] = best;
-              if (best && (s === 'weapon1' || s === 'weapon2') && Rules.isTwoHanded(best) && v.equip.shield) { invPut(vinv, v.equip.shield, true); v.equip.shield = null; }
+              if (best.id) vinv[best.id] = (vinv[best.id] || 0) - 1;
+              v.equip[s] = best.id;
+              if (best.id && (s === 'weapon1' || s === 'weapon2') && Rules.isTwoHanded(best.id) && v.equip.shield) { invPut(vinv, v.equip.shield, true); v.equip.shield = null; }
             }
           }
         }
@@ -1129,6 +1143,7 @@
     return Math.max(1, pct < 0 ? Math.floor(v + 1e-9) : Math.ceil(v - 1e-9));
   }
   let actIdx = null, actIdxN = -1;
+  /** spells by their `order` (§7.2.2), techs in tech data order (§3.3.3, §6.1.2) */
   function sortActions(ids) {
     const keys = Object.keys(DB.actions);
     if (!actIdx || actIdxN !== keys.length) { actIdx = {}; keys.forEach((k, i) => { actIdx[k] = i; }); actIdxN = keys.length; }
@@ -1136,7 +1151,7 @@
     const ord = (id) => {
       const a = DB.actions[id];
       if (a.order != null) return a.order;
-      return 1e6 + ((a.glim && a.glim.lv) || 0) * 1e4 + (idx[id] || 0);
+      return 1e6 + (idx[id] || 0);
     };
     return uniq(ids).sort((x, y) => ord(x) - ord(y) || (idx[x] || 0) - (idx[y] || 0));
   }
@@ -1241,8 +1256,9 @@
     }
     if (m.profPct) { const ks = Object.keys(m.profPct).filter((k) => m.profPct[k] > 0); if (ks.length) G(joinDot(ks.map(keyName)) + 'の熟練度が伸びやすい。', '熟練度が伸びやすい。'); }
     if (m.dropPct > 0) G('魔物がアイテムを落としやすい。', 'アイテムをよく落とす。');
-    if (m.rarePct > 0) G('レアアイテムを落としやすい。', 'レアをよく落とす。');
-    if (m.superPct > 0) G('超レアアイテムを落としやすい。', '超レアをよく落とす。');
+    if (m.rarePct > 0 && m.superPct > 0) G('レアと超レアのアイテムを落としやすい。', 'レア・超レアをよく落とす。');
+    else if (m.rarePct > 0) G('レアアイテムを落としやすい。', 'レアをよく落とす。');
+    else if (m.superPct > 0) G('超レアアイテムを落としやすい。', '超レアをよく落とす。');
     if (m.goldPct > 0) G('手に入るお金が増える。', 'お金が増える。');
     if (m.goldPct < 0) B('ただしお金が減る。');
     if (m.expPct > 0) G('経験値が増える。');
@@ -1276,7 +1292,8 @@
   /**
    * pack sentences into ≤ 2 lines of ≤ 20: good effects first, quirks last. Long forms
    * first; the longest sentences are shortened until it fits; then trailing good ones
-   * are dropped (quirks always stay). A normal-grade item keeps its stat line if it fits.
+   * are dropped (quirks always stay). When the effects take one line and there is no
+   * quirk, the stat line (「〇が上がる。」) goes first so the second line is not wasted.
    */
   function packDesc(good, bad, statLine) {
     const MAXW = 20;

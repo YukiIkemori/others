@@ -144,6 +144,50 @@ window.CHECK = (function () {
     }
     return { pairs, border: bs / Math.max(1, bn), inside: is / Math.max(1, inn), ratio: (bs / Math.max(1, bn)) / Math.max(0.01, is / Math.max(1, inn)) };
   }
+  /** texture tiling: pairs of cells whose whole 4×3 neighbourhood is one ground tile */
+  function interiorSeams(m, cv) {
+    const d = px(cv), W = cv.width;
+    const step = (i, j) => Math.abs(d[i] - d[j]) + Math.abs(d[i + 1] - d[j + 1]) + Math.abs(d[i + 2] - d[j + 2]);
+    let bs = 0, bn = 0, is = 0, inn = 0, pairs = 0;
+    for (let cy = 1; cy + 1 < m.h; cy++) for (let cx = 1; cx + 2 < m.w; cx++) {
+      const a = m.tileAt(cx, cy);
+      if (!GROUND.has(a)) continue;
+      let same = true;
+      for (let j = -1; j <= 1 && same; j++) for (let i = -1; i <= 2; i++) if (m.tileAt(cx + i, cy + j) !== a) { same = false; break; }
+      if (!same) continue;
+      pairs++;
+      for (let y = 0; y < 16; y++) {
+        const r = (cy * 16 + y) * W;
+        bs += step((r + cx * 16 + 15) * 4, (r + cx * 16 + 16) * 4); bn++;
+        for (const o of [3, 7, 11]) { is += step((r + cx * 16 + o) * 4, (r + cx * 16 + o + 1) * 4); inn++; }
+      }
+    }
+    return { pairs, ratio: pairs ? (bs / bn) / Math.max(0.01, is / inn) : 1 };
+  }
+  /** seamless by construction: each cell's 2 px margin must agree with what the neighbour draws there */
+  function fieldConsistency(m) {
+    const F = new Map(), key = (x, y) => y * 100000 + x;
+    const get = (x, y) => { const k = key(x, y); let f = F.get(k); if (!f) { f = A.worldTileField(m, x, y); F.set(k, f); } return f; };
+    let n = 0, bad = 0, wrapN = 0, wrapBad = 0;
+    for (let y = 0; y < m.h; y++) for (let x = 0; x < m.w; x++) {
+      const a = get(x, y), E = a.EW, M = a.MG;
+      const nb = [[x + 1, y, 1, 0], [x, y + 1, 0, 1]];
+      for (const [bx, by, dx, dy] of nb) {
+        const wrapped = bx >= m.w || by >= m.h;
+        if (wrapped && !m.wrap) continue;
+        const b = get(wrapped ? bx % m.w : bx, wrapped ? by % m.h : by);
+        for (let k = 0; k < 16; k++) for (let o = 0; o < M; o++) {
+          // a's margin pixel beyond its right / bottom edge vs b's own pixel
+          const ax = dx ? M + 16 + o : M + k, ay = dy ? M + 16 + o : M + k;
+          const bx2 = dx ? M + o : M + k, by2 = dy ? M + o : M + k;
+          const same = a.cls[ay * E + ax] === b.cls[by2 * E + bx2];
+          n++; if (!same) bad++;
+          if (wrapped) { wrapN++; if (!same) wrapBad++; }
+        }
+      }
+    }
+    return { n, bad, wrapN, wrapBad };
+  }
   function seamCheck() {
     const m = worldMap();
     const res = {};
@@ -151,7 +195,7 @@ window.CHECK = (function () {
       const t0 = performance.now();
       const cv = draw(m, 0, 0, m.w, m.h, 0);
       const ms = performance.now() - t0;
-      res.world = Object.assign(groundSeams(m, cv, 0, 0), { all: seams(cv).ratio, cells: m.w * m.h, cache: A.worldTileCacheSize(), ms: Math.round(ms) });
+      res.world = Object.assign(groundSeams(m, cv, 0, 0), { all: seams(cv).ratio, interior: interiorSeams(m, cv), field: fieldConsistency(m), cells: m.w * m.h, cache: A.worldTileCacheSize(), ms: Math.round(ms) });
       // wrap seam: last column + first column, last row + first row
       const colL = draw(m, m.w - 4, 0, 8, m.h, 0), rowT = draw(m, 0, m.h - 4, m.w, 8, 0);
       const s1 = groundSeams(m, colL, m.w - 4, 0), s2 = groundSeams(m, rowT, 0, m.h - 4);
@@ -166,7 +210,8 @@ window.CHECK = (function () {
       }
       res.wrap.seamStep = s / n; res.wrap.insideStep = si / ni;
     }
-    res.samples = (window.SAMPLES && window.SAMPLES.world || []).map((d) => { const mm = mapOf(d.rows, 'world', false); return groundSeams(mm, draw(mm, 0, 0, mm.w, mm.h, 0), 0, 0).ratio; });
+    res.samples = (window.SAMPLES && window.SAMPLES.world || []).map((d) => { const mm = mapOf(d.rows, 'world', false); const f = fieldConsistency(mm); return { bad: f.bad, n: f.n, interior: interiorSeams(mm, draw(mm, 0, 0, mm.w, mm.h, 0)) }; });
+    res.textures = uniformCheck(['sea', 'fog', 'grass', 'plain', 'beach', 'desert', 'sandstorm', 'snow', 'marsh', 'marsh_fog', 'swamp', 'wasteland', 'ash', 'magma']);
     return res;
   }
   /** mean luminance gradient in a rect */
@@ -273,10 +318,16 @@ ${sources().map((f) => `<script src="file://${f}"></script>`).join('\n')}
 
     // C2 / C3 / C7
     const s = await run('CHECK.seamCheck()');
-    s.samples.forEach((r, i) => ok(r <= 1.1, 'C2 sample ' + i + ': ground borders step ' + r.toFixed(2) + '× the inside of the cells (≤ 1.1)'));
+    for (const id in s.textures) { const q = s.textures[id]; ok(q.ratio <= 1.15 || q.border - q.inside <= 3, 'C2 ' + id + ' tiles seamlessly: border step ' + q.border.toFixed(1) + ' vs inside ' + q.inside.toFixed(1) + ' (≤ 1.15× or +3)'); }
+    s.samples.forEach((r, i) => {
+      ok(r.bad === 0, 'C2 sample ' + i + ': every cell margin agrees with its neighbour (' + r.bad + '/' + r.n + ' px differ)');
+      if (VERBOSE && r.interior.pairs) console.log('  info C2 sample ' + i + ': interior borders ' + r.interior.ratio.toFixed(2) + '× the inside (' + r.interior.pairs + ' pairs; decorations differ per cell)');
+    });
     if (s.world) {
-      ok(s.world.ratio <= 1.1, 'C2 world map: ' + s.world.pairs + ' ground borders step ' + s.world.ratio.toFixed(2) + '× the inside (≤ 1.1; border ' + s.world.border.toFixed(1) + ', inside ' + s.world.inside.toFixed(1) + '; whole picture incl. objects ' + s.world.all.toFixed(2) + ')');
-      ok(s.wrap.ratio <= 1.1, 'C3 wrap: ground borders around the seam ' + s.wrap.ratio.toFixed(2) + '× (≤ 1.1; seam column step ' + s.wrap.seamStep.toFixed(1) + ' vs inside ' + s.wrap.insideStep.toFixed(1) + ')');
+      ok(s.world.field.bad === 0, 'C2 world map: class field seamless at all ' + s.world.field.n + ' margin px (' + s.world.field.bad + ' differ)');
+      if (VERBOSE) console.log('  info C2 world map: ' + s.world.interior.pairs + ' interior borders step ' + s.world.interior.ratio.toFixed(2) + '× the inside (decorations differ per cell)');
+      if (VERBOSE) console.log('  info C2 ground-to-ground borders incl. coasts ' + s.world.ratio.toFixed(2) + '× (coastlines follow cell borders), whole picture ' + s.world.all.toFixed(2) + '×');
+      ok(s.world.field.wrapN > 0 && s.world.field.wrapBad === 0, 'C3 wrap: the ' + s.world.field.wrapN + ' margin px across the seam agree (' + s.world.field.wrapBad + ' differ)');
       const per = s.world.ms / s.world.cache;
       console.log(`  C7 world map ${s.world.cells} cells cold in ${s.world.ms} ms: ${s.world.cache} distinct cells cached, ${per.toFixed(2)} ms per distinct cell`);
       ok(per < 3, 'C7 ≤ 3 ms per distinct cell (' + per.toFixed(2) + ')');

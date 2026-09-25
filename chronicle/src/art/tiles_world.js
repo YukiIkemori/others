@@ -196,7 +196,7 @@
     const plain = t.tile(PL[3]);
     for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
       const v = nz(x, y, 8, 13);
-      if (v < 0.34 && (x + y * 2) % 5 === 0) plain.p[y * 16 + x] = PL[2];
+      if (v < 0.34 && (x + y * 2) % 4 === 0) plain.p[y * 16 + x] = PL[2];
       else if (v > 0.7 && dith(x, y, (v - 0.7) * 2)) plain.p[y * 16 + x] = PL[4];
     }
     TEX[PLAIN] = [plain.p];
@@ -219,7 +219,7 @@
       const v = nz(x, y, 8, 19);
       if (v < 0.3 && (x * 3 + y) % 4 === 0) return S[2];
       if (v < 0.22 && dith(x, y, 0.4)) return S[2];
-      return v > 0.72 && (x + y) % 7 === 0 ? S[4] : S[3];
+      return v > 0.72 && (x + y) % 8 === 0 ? S[4] : S[3];
     })];
     // swamp (poison mire): muted violet with dark pools, sheen and bubbles
     const SW = WP.swamp;
@@ -245,7 +245,7 @@
       const v = nz(x, y, 8, 41), h = t.hash(x, y, 43);
       if (h < 0.05) return WA[1];
       if (h > 0.96) return WA[3];
-      return v < 0.3 && (x + y) % 3 === 0 ? WA[1] : WA[2];
+      return v < 0.3 && (x + y) % 4 === 0 ? WA[1] : WA[2];
     })];
     // magma: 2 frames, crust plates over glowing channels (colours unchanged, §11.2.2)
     const MGM = P.magma, CR = P.crust;
@@ -599,13 +599,13 @@
         // hidden passage: a faint crack and a slightly different tone on the lit face
         const found = sec === 2;
         const path = [[px - 3, top + 9], [px - 2, top + 10], [px - 3, top + 11], [px - 2, top + 12], [px - 2, top + 13], [px - 3, top + 14], [px - 2, base - 1]];
-        for (const [x, y] of path) if (b.get(x, y) !== t.NONE) { b.set(x, y, found ? Rk[0] : Rk[1]); if (found) b.set(x + 1, y, Rk[1]); }
+        for (const [x, y] of path) if (b.get(x, y) !== t.NONE) { b.set(x, y, found ? Rk[0] : Rk[1]); if (found) { b.set(x + 1, y, Rk[0]); b.set(x - 1, y, Rk[1]); } }
         for (let y = top + 9; y < base; y++) for (let x = px - 6; x < px - 3; x++) if (b.get(x, y) !== t.NONE && t.hash(x, y, 71) < 0.3) b.set(x, y, t.mix(b.get(x, y), 0x6a6a4a, 0.2));
       }
       b.outline(k === SNOW ? 0x121622 : 0x1c140c);
       for (let x = 0; x < W; x++) if (b.get(x, base + 1) !== t.NONE) b.set(x, base + 1, null);
       if (foot) for (const [x, y] of [[3 + v, base + 1], [W - 5, base + 1], [px + 1, base + 2]]) { b.set(x, y, Rk[2]); b.set(x + 1, y, Rk[1]); }
-      if (sec === 2) for (const y of [base + 1, base + 2]) if ((y & 1)) b.set(px - 2, y, WP.road[3]);
+      if (sec === 2) { for (const y of [base - 1, base + 1]) b.set(px - 2, y, WP.road[3]); b.set(px - 3, base + 2, WP.road[2]); }
       return { buf: b, ox: -2, oy: 15 - base };
     });
   }
@@ -1009,14 +1009,15 @@
 
   // ------------------------------------------------------------ render
   const CACHE = new Map();
+  function classes9(m, x, y) {
+    const c9 = new Int8Array(9);
+    for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) c9[(j + 1) * 3 + (i + 1)] = resolveClass(m, x + i, y + j);
+    return c9;
+  }
   function render(m, x, y) {
     tk(); textures(); periodic();
-    const c9 = new Int8Array(9), d9 = new Array(9);
-    for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) {
-      const q = (j + 1) * 3 + (i + 1);
-      c9[q] = resolveClass(m, x + i, y + j);
-      d9[q] = descriptor(m, x + i, y + j, c9[q]);
-    }
+    const c9 = classes9(m, x, y), d9 = new Array(9);
+    for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) { const q = (j + 1) * 3 + (i + 1); d9[q] = descriptor(m, x + i, y + j, c9[q]); }
     const own = m.tileAt(x, y), v = vOf(x, y);
     const key = own + v + '|' + c9.join(',') + '|' + d9.join(';');
     let hit = CACHE.get(key);
@@ -1302,6 +1303,8 @@
   A.worldTileStats = () => { const o = {}; for (const k of CACHE.keys()) { const id = k.split('|')[0]; o[id] = (o[id] || 0) + 1; } return o; };
   /** drop cached cells (e.g. after R.Game.secrets changed); the field keeps its own per-cell cache */
   A.worldTileReset = () => CACHE.clear();
+  /** (tests) the ground-class field of a cell over its 20×20 extended area (2 px margin) */
+  A.worldTileField = (m, x, y) => { tk(); return { cls: field(classes9(m, x, y)).cls, EW, MG }; };
   A.WORLD_CLASS = { TCLS, clsOf, isWater, NAMES: ['sea', 'barrier', 'grass', 'plain', 'desert', 'snow', 'swamp', 'beach', 'waste', 'magma', 'marsh', 'ash', 'fog'] };
 
   // Standalone 'tile:<id>' for world tiles: the tile in a neutral neighbourhood.

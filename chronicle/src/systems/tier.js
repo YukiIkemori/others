@@ -33,7 +33,8 @@
     },
     /**
      * a value by tier: an array → table[min(tier, length−1)]; an object {0:a, 3:b} →
-     * the value of the largest key ≤ tier. tier defaults to current().
+     * the value of the largest key ≤ tier (undefined below every key: {3:b} means
+     * "from tier 3 on"). tier defaults to current().
      */
     pick(table, tier) {
       if (table == null) return undefined;
@@ -45,13 +46,7 @@
         const n = +k;
         if (!isNaN(n) && n <= t && (best === null || n > best)) best = n;
       }
-      if (best === null) {
-        // below every key: the smallest one
-        const keys = Object.keys(table).map(Number).filter((n) => !isNaN(n));
-        if (!keys.length) return undefined;
-        best = Math.min(...keys);
-      }
-      return table[best];
+      return best === null ? undefined : table[best];
     },
     /** one draw from a pool at tier T → {item, n} | {gold} | null (§8.12) */
     rollPool(poolId, T) {

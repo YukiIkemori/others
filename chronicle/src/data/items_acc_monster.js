@@ -5,6 +5,8 @@
   'use strict';
   // Monster-chapter accessories (DESIGN §9.12): rares of the monster rare slot (§9.12.5, incl. the two post-game
   // bosses), supers of exactly one monster's super slot (§9.12.4), and the fixed-tier super of 本の虫 (§8.7.2).
+  // units: the race's main stat of the (first) monster (§8.6.2); when a `stat:<s>-1u` quirk lowers that very stat,
+  // the sub stat takes the unit instead, so the quirk really shows as a minus (鈴尾の根付け, 子守歌の羽根).
   const ITEMS = {
     // ---------------------------------------------------------------- monster rares (40)
     // jelly_1 · hpPct+5

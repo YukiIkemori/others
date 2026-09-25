@@ -157,11 +157,9 @@
       if (v === 1) { // footprints
         let x = 2 + Math.floor(rng() * 4), y = 1;
         while (y < 15) { b.set(x, y, P[1]); b.set(x + 1, y, P[2]); b.set(x, y + 1, P[2]); x += (y & 2) ? 2 : -1; y += 3; }
-      } else if (v === 2) { // stone peeking through
+      } else if (v === 2) { // a dimple of blue shadow where snow slumped
         const x = 4 + Math.floor(rng() * 7), y = 6 + Math.floor(rng() * 5);
-        const S = [0x3c3e48, 0x5c5e68, 0x80828c];
-        b.hline(x, x + 3, y + 1, S[1]); b.hline(x - 1, x + 4, y + 2, S[1]); b.set(x - 1, y + 2, S[2]); b.set(x + 4, y + 2, S[0]);
-        b.hline(x, x + 3, y, P[4]); b.set(x + 1, y - 1, P[4]); b.hline(x, x + 4, y + 3, P[1]);
+        b.hline(x, x + 3, y + 1, P[2]); b.hline(x - 1, x + 4, y + 2, P[2]); b.hline(x, x + 3, y, P[4]); b.set(x + 1, y + 1, P[1]);
       } else if (v === 3) { // drift hollow
         const cx = 4 + rng() * 8, cy = 5 + rng() * 6;
         b.each((x, y, c) => { const e = ((x - cx) / 4.5) ** 2 + ((y - cy) / 2.2) ** 2; return e < 1 ? (y < cy ? P[2] : P[4]) : undefined; });

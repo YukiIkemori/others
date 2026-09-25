@@ -203,7 +203,47 @@
     return img;
   }
 
+  /** a stone archway over a street or gate, drawn over the figures walking beneath (over:true) */
+  function archOver() {
+    const { STONE } = K().P;
+    return mk(16, 32, (L, t) => {
+      // lintel with a keystone, voussoirs curving down into the two piers
+      for (let y = 0; y <= 12; y++) for (let x = 0; x < 16; x++) {
+        const inside = y > 3 && x > 1 && x < 14 && Math.hypot(x - 7.5, (y - 12) * 1.1) < 6.5;
+        if (inside) continue;
+        const k = (x + (y >> 2) * 3) % 5;
+        let c = y === 0 ? STONE[5] : k === 0 || y % 4 === 3 ? STONE[1] : x < 8 ? STONE[4] : STONE[3];
+        L.set(x, y, c);
+      }
+      L.rect(6, 0, 4, 4, STONE[5]); L.hline(6, 9, 3, STONE[2]); L.set(9, 1, STONE[3]);
+      // piers down both sides (thin, so a figure between them stays visible)
+      for (let y = 12; y < 32; y++) {
+        L.set(0, y, STONE[4]); L.set(1, y, y % 4 === 3 ? STONE[1] : STONE[3]);
+        L.set(14, y, y % 4 === 3 ? STONE[1] : STONE[2]); L.set(15, y, STONE[1]);
+      }
+      L.set(1, 20, 0x4a6a2c); L.set(0, 21, 0x5a7c34); L.set(15, 26, 0x4a6a2c); // moss
+    }, { contact: [8, 31, 8, 0.8, 0.2] });
+  }
+  /** a bough hanging over a path, drawn over the figures beneath (over:true) */
+  function leavesOver() {
+    const F = [0x0c2410, 0x163a1a, 0x225426, 0x326e30, 0x4a8a3c, 0x6aa64e];
+    return mk(16, 32, (L, t) => {
+      L.line(0, 3, 16, 6, 0x3a2614); L.line(0, 4, 16, 7, 0x281a0e);
+      for (const [cx, cy, r] of [[3, 5, 4.2], [9, 4, 4.6], [14, 7, 3.8], [6, 10, 3.4], [12, 12, 2.8]]) {
+        for (let y = Math.floor(cy - r); y <= Math.ceil(cy + r); y++) for (let x = Math.floor(cx - r); x <= Math.ceil(cx + r); x++) {
+          const d = Math.hypot(x + 0.5 - cx, y + 0.5 - cy);
+          if (d > r || (d > r - 1 && t.hash(x, y, 991) < 0.4)) continue;
+          const l = (-(x - cx) - (y - cy)) / r;
+          L.set(x, y, F[Math.max(1, Math.min(5, Math.round(2.6 + l * 1.6 + (t.hash(x, y, 993) - 0.5))))]);
+        }
+      }
+      // a few leaves dangling low, where they brush the head of whoever walks under
+      for (const [x, y] of [[4, 16], [11, 17], [7, 19], [13, 20]]) { L.set(x, y, F[3]); L.set(x, y - 1, F[4]); L.set(x + 1, y, F[2]); L.vline(x, y - 4, y - 2, 0x2a1c10); }
+    }, { outline: 0x081a0a });
+  }
+
   const D = {
+    arch_over: archOver, leaves_over: leavesOver,
     signpost, laundry, palm, snowpile, firewood,
     net_rack: netRack, tent, boat,
     hot_spring: () => [0, 1].map((f) => hotSpring(f).canvas()),

@@ -662,7 +662,13 @@
     }
 
     // ------------------------------------------------------------ commands
+    /** the commands of one round (menus, オート or リピート); the panel is closed when it returns */
     async commandPhase() {
+      const cmds = await this.commandInput();
+      this.panel = null;
+      return cmds;
+    }
+    async commandInput() {
       const eng = this.eng;
       if (this.auto && this.autoCancel) { this.auto = false; this.autoCancel = false; B.autoCarry = false; }
       if (this.auto) return R.BattleAI && R.BattleAI.partyCommands ? R.BattleAI.partyCommands(eng, AUTO_OPTS) : [];

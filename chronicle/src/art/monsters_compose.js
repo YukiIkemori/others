@@ -7,6 +7,10 @@
 // The table is §9.4.6 verbatim, except seven stage-2+ entries that were a pure colour shift of an earlier
 // stage (beetle_2, crystal_2..4, frog_3, darkmage_2, darkmage_3). Each got the part its bestiary text
 // describes (marked "+ (A14a)"), so every stage of a lineage reads as a different monster, not a recolour.
+// Fourteen hue values were corrected (marked "colour (A14a)") where §9.4.6's numbers, applied to the real
+// base colours, gave a colour the monster's own name or bestiary text contradicts (紅水晶 came out green,
+// ゼリー将軍 "赤いゼリー" green, 砂ヘビ green, 毒ガエル "青と黄色" purple, …). Measured with the dominant hue
+// of the recoloured base (tools/check_mons-parts.js, check "colour words").
 (function (R) {
   'use strict';
   const A = (R.Art = R.Art || {});
@@ -15,7 +19,7 @@
     jelly_1: ['jelly', {}, []],
     jelly_2: ['jelly', { hue: 170 }, [['bubbles', { c: '#c8f0ff' }]]],
     jelly_3: ['jelly', { hue: 110, sat: 1.1, bri: 0.85 }, [['drips', { c: '#a060e0' }], ['skull_mark', { c: '#f0e0ff' }]]],
-    jelly_4: ['jelly', { hue: -40, sat: 1.1 }, [['helm', { c: '#9aa0b0', style: 'horned' }], ['sword', { c: '#d8dce8' }]]],
+    jelly_4: ['jelly', { hue: -150, sat: 1.1 }, [['helm', { c: '#9aa0b0', style: 'horned' }], ['sword', { c: '#d8dce8' }]]], // colour (A14a): 赤いゼリー
     jelly_5: ['jelly', {}, [['tiara', { c: '#ffe070', gem: '#ff60c0' }]], 'prism'],
     // rat ネズミ
     rat_1: ['rat', {}, []],
@@ -24,7 +28,7 @@
     rat_4: ['rat', { hue: -20, bri: 0.8 }, [['eyepatch'], ['bandana', { c: '#c03030' }], ['sword', { c: '#c0c4d0', size: 's' }]]],
     // bat コウモリ
     bat_1: ['bat', {}, []],
-    bat_2: ['bat', { hue: 330, sat: 1.2 }, [['eyes_glow', { c: '#ff4040' }]]],
+    bat_2: ['bat', { hue: 55, sat: 1.2 }, [['eyes_glow', { c: '#ff4040' }]]], // colour (A14a): 体が赤く染まる
     bat_3: ['bat', { hue: 260 }, [['aura', { c: '#c090ff' }]]],
     bat_4: ['bat', { sat: 0.5, bri: 0.55 }, [['eyes_glow', { c: '#ff3050' }], ['aura', { c: '#502070' }]]],
     bat_5: ['bat', { hue: 330, sat: 1.1, bri: 0.7 }, [['crown', { c: '#e0c050', gem: '#c02040' }], ['cape', { c: '#301020', c2: '#c02030' }]]],
@@ -36,7 +40,7 @@
     // crab カニ
     crab_1: ['crab', {}, []],
     crab_2: ['crab', { hue: 200, sat: 0.35 }, [['armor_plates', { c: '#7c8898' }]]],
-    crab_3: ['crab', { hue: 160 }, [['bubbles', { c: '#e0ffff' }]]],
+    crab_3: ['crab', { hue: 190 }, [['bubbles', { c: '#e0ffff' }]]], // colour (A14a): 青いカニ
     crab_4: ['crab', { hue: 30, sat: 0.6, bri: 1.1 }, [['shell_tower', { c: '#d8c8a0' }]]],
     // seabird カモメ
     seabird_1: ['seabird', {}, []],
@@ -57,7 +61,7 @@
     // plant 人食い花
     plant_1: ['plant', {}, []],
     plant_2: ['plant', { hue: -20, sat: 0.9, bri: 0.85 }, [['thorns', { c: '#2a5020' }]]],
-    plant_3: ['plant', { hue: 200, sat: 1.1 }, [['smoke', { c: '#b080e0' }]]],
+    plant_3: ['plant', { hue: -60, sat: 1.1 }, [['smoke', { c: '#b080e0' }]]], // colour (A14a): 紫の花びら
     plant_4: ['plant', { hue: 230, sat: 0.9, bri: 0.65 }, [['aura', { c: '#8090ff' }]]],
     plant_5: ['plant', { hue: 40, sat: 0.6, bri: 1.2 }, [['halo', { c: '#fff4b0' }], ['flower', { c: '#ffffff' }]]],
     // fairy 妖精
@@ -77,10 +81,10 @@
     scorpion_4: ['scorpion', { hue: 260, sat: 0.6, bri: 0.6 }, [['skull_mark', { c: '#e0e0e0' }], ['eyes_glow', { c: '#ff2040' }]]],
     scorpion_5: ['scorpion', { hue: 30, sat: 0.8, bri: 0.8 }, [['crown', { c: '#f0c030', gem: '#40c0ff' }], ['armor_plates', { c: '#c09030' }]]],
     // snake ヘビ
-    snake_1: ['snake', { hue: 35, sat: 0.7, bri: 1.1 }, []],
+    snake_1: ['snake', { hue: -70, sat: 0.7, bri: 1.1 }, []], // colour (A14a): 砂と同じ色
     snake_2: ['snake', { hue: 20, sat: 0.8, bri: 0.85 }, [['rattle', { c: '#e0c080' }]]],
     snake_3: ['snake', { hue: 60, sat: 1.1 }, [['eyes_glow', { c: '#ff3030' }], ['hood', { c: '#5a8030', style: 'cobra' }]]],
-    snake_4: ['snake', { hue: 30, sat: 0.9, bri: 0.9 }, [['horns', { c: '#d8c090', len: 's' }], ['armor_plates', { c: '#a88040' }]]],
+    snake_4: ['snake', { hue: -85, sat: 1, bri: 0.8 }, [['horns', { c: '#d8c090', len: 's' }], ['armor_plates', { c: '#a88040' }]]], // colour (A14a): 砂の大蛇
     // mummy ミイラ
     mummy_1: ['mummy', {}, []],
     mummy_2: ['mummy', { hue: 250, sat: 0.4, bri: 0.9 }, [['eyes_glow', { c: '#b040ff' }]]],
@@ -124,17 +128,17 @@
     // ghost 霊
     ghost_1: ['ghost', {}, []],
     ghost_2: ['ghost', { hue: 20, sat: 1.2 }, [['drips', { c: '#a0d0ff', style: 'tears' }]]],
-    ghost_3: ['ghost', { hue: 120, sat: 0.8, bri: 0.8 }, [['eyes_glow', { c: '#ff3050' }], ['chain', { c: '#6a6480' }]]],
+    ghost_3: ['ghost', { hue: 50, sat: 0.8, bri: 0.8 }, [['eyes_glow', { c: '#ff3050' }], ['chain', { c: '#6a6480' }]]], // colour (A14a): 紫の霊
     ghost_4: ['ghost', { hue: 330, sat: 1.2, bri: 0.7 }, [['chain', { c: '#503040' }], ['aura', { c: '#801030' }]]],
     ghost_5: ['ghost', { hue: 250, sat: 1.2, bri: 0.6 }, [['crown', { c: '#b0a0e0', gem: '#ff4080' }], ['cape', { c: '#201030', c2: '#8040c0' }], ['aura', { c: '#6030a0' }]]],
     // wisp 鬼火
     wisp_1: ['wisp', { hue: -170, sat: 1.2 }, []],
     wisp_2: ['wisp', { hue: -100, sat: 1.2 }, [['eyes_glow', { c: '#ffffff', style: 'face' }]]],
     wisp_3: ['wisp', { sat: 0.4, bri: 1.2 }, [['aura', { c: '#c0e0ff' }]]],
-    wisp_4: ['wisp', { hue: 80, sat: 1.2, bri: 0.7 }, [['aura', { c: '#502080' }], ['skull_mark', { c: '#d0c0ff' }]]],
+    wisp_4: ['wisp', { hue: 15, sat: 1.2, bri: 0.55 }, [['aura', { c: '#502080' }], ['skull_mark', { c: '#d0c0ff' }]]], // colour (A14a): 青黒い炎
     // frog カエル
     frog_1: ['frog', {}, []],
-    frog_2: ['frog', { hue: 180, sat: 1.3 }, [['spots', { c: '#ffd020' }]]],
+    frog_2: ['frog', { hue: 125, sat: 1.3 }, [['spots', { c: '#ffd020' }]]], // colour (A14a): 青と黄色のカエル
     frog_3: ['frog', { hue: 40, sat: 0.8, bri: 0.9 }, [['horns', { c: '#a88848', len: 's' }], ['spots', { c: '#503818' }]]], // + (A14a): 角ガエルの大口
     frog_4: ['frog', { hue: 20, sat: 0.7, bri: 0.95 }, [['bell', { c: '#c89040' }]]],
     // doll 人形
@@ -183,9 +187,9 @@
     beetle_4: ['beetle', { sat: 0.3, bri: 1.3 }, [['crystals', { c: '#e0f8ff' }]]],
     // crystal 水晶
     crystal_1: ['crystal', {}, []],
-    crystal_2: ['crystal', { hue: -60, sat: 1.4 }, [['embers', { c: '#ffb040' }]]], // + (A14a): 中で火がゆれる
-    crystal_3: ['crystal', { hue: 180, sat: 1.3 }, [['frost', { c: '#e8fcff' }]]], // + (A14a): 指が凍える
-    crystal_4: ['crystal', { hue: 250, sat: 1.3, bri: 0.85 }, [['aura', { c: '#7040c0' }], ['runes', { c: '#e0a0ff' }]]], // + (A14a): 闇を吸いこむ
+    crystal_2: ['crystal', { hue: 150, sat: 1.4 }, [['embers', { c: '#ffb040' }]]], // + (A14a): 中で火がゆれる; colour: 紅水晶: 赤
+    crystal_3: ['crystal', { hue: 20, sat: 1.3 }, [['frost', { c: '#e8fcff' }]]], // + (A14a): 指が凍える; colour: 青水晶: 青
+    crystal_4: ['crystal', { hue: 80, sat: 1.3, bri: 0.85 }, [['aura', { c: '#7040c0' }], ['runes', { c: '#e0a0ff' }]]], // + (A14a): 闇を吸いこむ; colour: 紫水晶: 紫
     // goblin 小鬼
     goblin_1: ['goblin', {}, []],
     goblin_2: ['goblin', { hue: 20 }, [['axe', { c: '#b8c0c8' }], ['helm', { c: '#807060', style: 'cap' }]]],
@@ -207,7 +211,7 @@
     // gargoyle 石像鬼
     gargoyle_1: ['gargoyle', {}, []],
     gargoyle_2: ['gargoyle', { sat: 0.3, bri: 0.45 }, [['eyes_glow', { c: '#ff3020' }]]],
-    gargoyle_3: ['gargoyle', { hue: -150, sat: 1.3 }, [['embers', { c: '#ff6020' }]]],
+    gargoyle_3: ['gargoyle', { hue: 115, sat: 1.3 }, [['embers', { c: '#ff6020' }]]], // colour (A14a): 溶岩で焼き固められた
     gargoyle_4: ['gargoyle', { sat: 0.5, bri: 0.85 }, [['horns', { c: '#606070', len: 'l' }], ['crown', { c: '#a0a0b0' }]]],
     // orc 大鬼
     orc_1: ['orc', { hue: 20, sat: 0.8 }, []],
@@ -225,7 +229,7 @@
     eyeball_5: ['eyeball', { hue: 180, sat: 0.6, bri: 1.25 }, [['crown', { c: '#ffe070', gem: '#80c0ff' }], ['wings_feather', { c: '#ffffff', size: 'm' }], ['aura', { c: '#fff0b0' }]]],
     // darkmage 魔術師
     darkmage_1: ['darkmage', { hue: 20, sat: 0.8 }, []],
-    darkmage_2: ['darkmage', { hue: 140, sat: 1.2 }, [['embers', { c: '#ffa040' }]]], // + (A14a): 火の雨
+    darkmage_2: ['darkmage', { hue: 60, sat: 1.2 }, [['embers', { c: '#ffa040' }]]], // + (A14a): 火の雨; colour: 赤い法衣
     darkmage_3: ['darkmage', { hue: -150, sat: 1.1 }, [['storm', { c: '#c8f0d8' }]]], // + (A14a): 風の刃
     darkmage_4: ['darkmage', { hue: 30, sat: 1.1, bri: 0.6 }, [['aura', { c: '#502080' }], ['staff', { c: '#302030', gem: '#c040ff' }]]],
     // automaton からくり

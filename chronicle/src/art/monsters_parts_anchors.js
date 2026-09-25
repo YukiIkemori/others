@@ -49,7 +49,7 @@
       hand: [15, 40], hand2: [33, 40], tail: [41, 8], feet: [24, 46] },
     plant: { head: [24, 4], headW: 16, brow: [24, 8], eyes: [[20, 8], [27, 8]], mouth: [24, 17], neck: [24, 27], back: [24, 12], body: [24, 34],
       hand: [6, 37], hand2: [42, 36], tail: [24, 34], feet: [24, 46] },
-    skeleton: { head: [24, 5], headW: 16, brow: [24, 6], eyes: [[21, 9], [28, 9]], mouth: [24, 15], neck: [24, 19], back: [24, 20], body: [24, 27],
+    skeleton: { collar: false, head: [24, 5], headW: 16, brow: [24, 6], eyes: [[21, 9], [28, 9]], mouth: [24, 15], neck: [24, 19], back: [24, 20], body: [24, 27],
       hand: [10, 24], hand2: [34, 30], tail: [24, 27], feet: [24, 46], handDir: -95,
       erase: { hand: [[3, 0, 13, 21, 'all'], [3, 21, 8, 24, 'all']] } },
     ghost: { head: [24, 7], headW: 12, brow: [24, 11], eyes: [[21, 16], [27, 16]], mouth: [24, 20], neck: [24, 26], back: [24, 14], body: [24, 28],
@@ -69,7 +69,7 @@
     darkmage: { head: [25, 5], headW: 14, brow: [25, 9], eyes: [[20, 13], [27, 13]], mouth: [24, 17], neck: [25, 22], back: [25, 20], body: [25, 32],
       hand: [9, 31], hand2: [39, 28], tail: [25, 32], feet: [25, 46], handDir: -90,
       erase: { hand: [[2, 0, 14, 9, 'all'], [5, 10, 11, 47, 'wood']] } },
-    armor: { head: [24, 4], headW: 14, brow: [24, 6], eyes: [[22, 11], [26, 11]], mouth: [24, 15], neck: [24, 20], back: [24, 18], body: [24, 28],
+    armor: { collar: false, head: [24, 4], headW: 14, brow: [24, 6], eyes: [[22, 11], [26, 11]], mouth: [24, 15], neck: [24, 20], back: [24, 18], body: [24, 28],
       hand: [11, 22], hand2: [36, 24], tail: [24, 28], feet: [24, 46], handDir: -90,
       erase: { hand: [[7, 0, 13, 19, 'metal']], head: [[23, 0, 40, 8, 'red']] } },
     gargoyle: { head: [24, 8], headW: 12, brow: [24, 10], eyes: [[21, 12], [26, 12]], mouth: [24, 17], neck: [24, 20], back: [24, 14], body: [24, 28],
@@ -108,6 +108,7 @@
     beetle: { at: { horns: [15, 5] } },
     frog: { at: { spots: [23, 24, 0.36, 0.18] } },
     mole: { clawAt: [[8, 22], [39, 22]], clawDir: -90 },
+    automaton: { collar: false },
     scribe: { erase: { hand: [[3, 7, 10, 26, 'all']], hand2: [[30, 27, 42, 41, 'wood']] } },
   });
   const AN = (A.MON_ANCHORS = A.MON_ANCHORS || {});

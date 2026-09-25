@@ -242,7 +242,8 @@
 // walkable (brief A2); real furniture, stalls, carts, lamps and signs block.
 // Props: pass (default false), counter (talk across), wall (meant for wall
 // tiles), anim (frames), tall (art may be up to 32px high, bottom-aligned),
-// auto (art joins with same-id neighbours: rugs, long tables, stalls, fountains).
+// auto (art joins with same-id neighbours: rugs, long tables, stalls, fountains),
+// animRate (field frames per animation frame), over (drawn above the figures).
 // Art: 'decor:<id>' (canvas or frames) or R.Art.decorTile(map,x,y) when defined.
 // Per-map legend: a map may add `decorLegend: {'|': 'tent', …}` (DESIGN §11.2.10,
 // read by the field on top of R.DB.legends.decor). The ids marked "map legend"
@@ -365,6 +366,9 @@
     // regional set pieces (§11.2.11, the "見せ場の絵" column)
     sunken_bell:  { name: '沈んだ鐘' },                    // on bog / water tiles (鐘沈みの沼)
     mural_firebird: { name: '火の鳥の壁画', wall: true },  // 灰の火山
+    // drawn above the figures (field: over:true layer, §3.3.10-8, P2 of §11.2.10); walkable
+    arch_over:    { name: '石のアーチ', over: true, pass: true, tall: true },
+    leaves_over:  { name: '張り出した枝', over: true, pass: true, tall: true },
   });
 
   R.DB.legends.decor = Object.assign(R.DB.legends.decor || {}, {

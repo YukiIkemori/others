@@ -89,7 +89,7 @@
      * — every key in one object must hold
      */
     check(cond) {
-      if (cond == null || cond === true) return true;
+      if (cond == null || cond === true || cond === '') return true;
       if (cond === false) return false;
       if (typeof cond === 'string') return cond[0] === '!' ? !State.flag(cond.slice(1)) : State.flag(cond);
       if (Array.isArray(cond)) return cond.every(State.check);
@@ -115,12 +115,12 @@
         if (cond.heroType && h.heroType !== cond.heroType) return false;
       }
       if (cond.var) {
-        const v = State.getVar(cond.var);
+        const v = +State.getVar(cond.var) || 0;
         const cmp = cond.gte != null || cond.lt != null || cond.eq != null;
         if (cond.gte != null && !(v >= cond.gte)) return false;
         if (cond.lt != null && !(v < cond.lt)) return false;
         if (cond.eq != null && v !== cond.eq) return false;
-        if (!cmp && !v) return false;
+        if (!cmp && !(v > 0)) return false;       // a bare {var} means "is set" (same as tools/lib/cond.js)
       }
       if (cond.postgame != null && !!g.gameClear !== !!cond.postgame) return false;
       return true;
@@ -207,7 +207,18 @@
         c.counts = Object.assign({ battles: 0, kills: 0, glimmers: 0 }, old.counts);
         c.joined = old.joined || c.joined;
         c.mem = old.mem || c.mem;
-        if (State.flag('hero_created')) {
+        if (!State.flag('hero_created')) {
+          // the placeholder hero's kit is replaced: its techs/spells leave the books too
+          const keep = new Set(c.techs.concat(c.spells));
+          for (const k of ['tech', 'spell']) {
+            const book = g.book[k];
+            for (const id of (k === 'tech' ? old.techs : old.spells) || []) {
+              if (keep.has(id) || !book[id]) continue;
+              book[id] = book[id].filter((who) => who !== 'hero');
+              if (!book[id].length) delete book[id];
+            }
+          }
+        } else {
           c.equip = Object.assign(R.Rules.emptyEquip(), old.equip);
           for (const w of R.Rules.WTYPES) c.wprof[w] = Math.max(c.wprof[w] || 0, (old.wprof && old.wprof[w]) || 0);
           for (const e of R.Rules.ELEMENTS) c.eprof[e] = Math.max(c.eprof[e] || 0, (old.eprof && old.eprof[e]) || 0);
@@ -241,9 +252,10 @@
       const b = R.Game.book.mon;
       return (b[monId] = b[monId] || { seen: 0, kills: 0, gold: 0, drop: false, rare: false, sr: false, scan: false });
     },
+    /** a monster met (the battle calls this once per kind per battle); rare monsters count in records.rareMons */
     seen(monId) {
       const e = State.mon(monId);
-      if (!e.seen && DB.monsters[monId] && (DB.monsters[monId].flags || []).includes('rare')) R.Game.records.rareMons++;
+      if (DB.monsters[monId] && (DB.monsters[monId].flags || []).includes('rare')) R.Game.records.rareMons++;
       e.seen++;
       return e;
     },
@@ -472,6 +484,15 @@
       g.gold = U.clamp(Math.floor(g.gold || 0), 0, MAX_GOLD);
       if (!g.pos || !g.pos.map) g.pos = fresh.pos;
       if (!g.respawn || !g.respawn.map) g.respawn = fresh.respawn;
+      // a map that no longer exists (renamed in an update): back to the respawn town, else the start
+      if (nonEmpty(DB.maps)) {
+        if (!DB.maps[g.respawn.map]) g.respawn = fresh.respawn;
+        if (!DB.maps[g.pos.map]) {
+          const r = g.respawn;
+          g.pos = DB.maps[r.map] ? { map: r.map, x: r.x || 0, y: r.y || 0, dir: r.dir || 'down', spawn: r.spawn || (r.x == null ? 'entrance' : undefined) } : fresh.pos;
+          g.onShip = false;
+        }
+      }
       g.version = R.VERSION;
       const prev = R.Game;
       R.Game = g;

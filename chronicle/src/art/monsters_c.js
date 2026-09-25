@@ -233,7 +233,7 @@
   // jaws, white page-teeth line the gap, the two round clasps on the cover
   // glow like eyes and the bookmark ribbon lolls out like a tongue.
   SIZES.book = 32;
-  ANCHORS.book = { head: [15, 3], brow: [15, 6], eyes: [[10, 7], [21, 7]], mouth: [15, 16], neck: [15, 12], back: [15, 5], body: [15, 15], hand: [2, 15], hand2: [29, 15], tail: [15, 23], feet: [15, 28], headW: 22, float: true };
+  ANCHORS.book = { head: [15, 3], brow: [15, 6], eyes: [[10, 7], [21, 7]], mouth: [15, 17], neck: [15, 13], back: [15, 5], body: [15, 16], hand: [2, 16], hand2: [29, 16], tail: [15, 24], feet: [15, 28], headW: 22, float: true };
   S.book = () => {
     const T = TS(), W = 32, H = 32;
     const leather = M(null, { ramp: ['#3a1a18', '#5c2c22', '#804830', '#9c6040', '#b87850', '#dca878'], rim: 1 });
@@ -242,10 +242,10 @@
     const ribbon = M(null, { ramp: ['#601420', '#90202a', '#c03030', '#e86050'] });
     const sc = new T.Scene(W, H);
     // lower cover (its front edge shows under the lower page block)
-    sc.poly([[3, 20], [28, 20], [28.5, 23], [27, 24.5], [4, 24.5], [2.5, 23]], { m: leather, g: 'lower', z: 2, bevel: 1.5 });
-    // page blocks, upper and lower, and the dark gullet between them
+    sc.poly([[3, 21], [28, 21], [28.5, 24], [27, 25.5], [4, 25.5], [2.5, 24]], { m: leather, g: 'lower', z: 2, bevel: 1.5 });
+    // page blocks, upper and lower; the mouth opens between them
     sc.poly([[4.5, 11], [26.5, 11], [26.5, 15], [4.5, 15]], { m: page, g: 'pageU', z: 4, n: [0, 0.3, 1] });
-    sc.poly([[4.5, 17.5], [26.5, 17.5], [26.5, 21.5], [4.5, 21.5]], { m: page, g: 'pageL', z: 5, n: [0, -0.2, 1] });
+    sc.poly([[4.5, 18.5], [26.5, 18.5], [26.5, 22.5], [4.5, 22.5]], { m: page, g: 'pageL', z: 5, n: [0, -0.2, 1] });
     // upper cover lifted like a jaw: outer face toward the viewer
     sc.poly([[5, 2.5], [26, 2.5], [29, 10], [29.5, 12], [1.5, 12], [2, 10]], { m: leather, g: 'upper', z: 9, bevel: 2.2, bz: 2.5 });
     // round clasps (the eyes) and the corner fittings
@@ -258,24 +258,30 @@
     // embossed frame on the cover
     sc.carve([[6, 4], [25, 4]], 1).carve([[3.5, 10.5], [27.5, 10.5]], -1);
     T.sym(W, (X) => sc.carve([[X(6), 4], [X(3.8), 10]], 1));
-    // the ribbon tongue, lolling out of the right of the gap
-    sc.tube([[18, 16.5, 1.3, 14], [19.5, 20, 1.3, 14], [18.6, 24.5, 1.2, 14], [19.6, 27.6, 1.2, 14]], { m: ribbon, g: 'ribbon' });
     const p = sc.render();
-    // the gullet and the page-teeth
-    for (let x = 5; x <= 26; x++) { p.set(x, 15, '#2a0810'); p.set(x, 16, '#4a0e1a'); p.set(x, 17, '#2a0810'); }
+    // the fore-edges: a stack of page lines, darker toward the covers
+    const PG = ['#b0a080', '#d4c8a8', '#f0e8d0', '#fcf8ec'];
+    const pageRow = (y, k) => { for (let x = 5; x <= 26; x++) if (p.get(x, y) != null) p.set(x, y, PG[(T.hash(x >> 2, y, 5) < 0.18) ? Math.max(0, k - 1) : k]); };
+    [[11, 0], [12, 2], [13, 1], [14, 3]].forEach(([y, k]) => pageRow(y, k));
+    [[19, 3], [20, 1], [21, 2], [22, 0]].forEach(([y, k]) => pageRow(y, k));
+    // the mouth: a dark gullet with interlocking page-teeth, upper row pointing
+    // down and lower row pointing up
+    for (let x = 5; x <= 26; x++) { p.set(x, 15, '#2a0810'); p.set(x, 16, '#4a0e1a'); p.set(x, 17, '#4a0e1a'); p.set(x, 18, '#2a0810'); }
     for (let x = 5; x <= 25; x += 3) { p.set(x, 15, WHITE); p.set(x + 1, 15, '#d8d0bc'); p.set(x, 16, '#e8e2d2'); }
-    for (let x = 6; x <= 26; x += 3) { p.set(x, 17, WHITE); p.set(x - 1, 17, '#d8d0bc'); }
-    // page lines on the fore-edges
-    for (const y of [12, 13.9, 19, 20.6]) for (let x = 5; x <= 26; x++) if ((x + Math.round(y)) % 4) over(p, x, Math.round(y), '#c8b898');
-    // the ribbon over the teeth, forked end
-    p.set(19, 28, null); p.set(20, 29, ribbon.r[1]); p.set(18, 29, ribbon.r[1]);
+    for (let x = 6; x <= 25; x += 3) { p.set(x, 18, '#d8d0bc'); p.set(x + 1, 18, WHITE); p.set(x + 1, 17, '#e8e2d2'); }
+    // the ribbon tongue lolling out of the mouth, its end forked
+    const RB = ribbon.r;
+    const rib = [[18, 17, 1], [19, 17, 2], [18, 18, 1], [19, 18, 2], [18, 19, 1], [19, 19, 2], [19, 20, 1], [20, 20, 2], [19, 21, 1], [20, 21, 2], [19, 22, 1], [20, 22, 3],
+      [19, 23, 1], [20, 23, 2], [18, 24, 1], [19, 24, 2], [18, 25, 1], [19, 25, 2], [18, 26, 0], [19, 26, 2], [19, 27, 1], [20, 27, 1], [18, 28, 0], [20, 28, 0]];
+    for (const [x, y, k] of rib) p.set(x, y, RB[k]);
+    p.set(17, 17, '#1c0408'); p.set(17, 18, '#1c0408');
     // glowing clasp-eyes: bright core and a dark slit
     T.stampM(p, 9, 6, ['ww.', 'wyk', '.yk'], { w: '#fffbe0', y: '#f8e070', k: '#5a2a10' });
     // scuffs on the old leather
-    for (const [x, y] of [[7, 5], [24, 9], [13, 10], [26, 22], [6, 23]]) over(p, x, y, leather.r[1]);
+    for (const [x, y] of [[7, 5], [24, 9], [13, 10], [26, 23], [6, 24]]) over(p, x, y, leather.r[1]);
     // motes of magic drifting around the tome (un-outlined)
     return finish(p, { post: (q) => {
-      for (const [x, y] of [[1, 5], [30, 14], [3, 27]]) q.set(x, y, '#fff4c0');
+      for (const [x, y] of [[1, 5], [30, 15], [3, 28]]) q.set(x, y, '#fff4c0');
     } });
   };
 
@@ -679,7 +685,7 @@
     // the quill: a long white feather held up in the fist, leaning outward so
     // its broad vane stands clear of the coat; the dark nib shows under the fist
     const q = R.Gfx.pix(W, H);
-    const shaftAt = (t) => [11 - 7.4 * t - 1.3 * Math.sin(t * Math.PI), 30.4 - 24.6 * t];
+    const shaftAt = (t) => [11 - 6.6 * t - 1.1 * Math.sin(t * Math.PI), 30.4 - 24.6 * t];
     const Lp = [], Rp = [];
     for (let i = 0; i <= 20; i++) {
       const t = i / 20, [x, y] = shaftAt(t);

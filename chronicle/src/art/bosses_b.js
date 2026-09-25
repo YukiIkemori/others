@@ -718,17 +718,20 @@
       both(W, (X) => {
         T.shard(p, W, H, X(cx - 6), hy - 4, X(cx - 14), hy - 19, 2.8);
         T.shard(p, W, H, X(cx - 8), hy - 1, X(cx - 20), hy - 9, 2.1);
-        T.shard(p, W, H, X(cx - 9), hy + 5, X(cx - 17), hy + 8, 1.6);
+        T.shard(p, W, H, X(cx - 9), hy + 5, X(cx - 15), hy + 8, 1.3);
       });
       const hm = mask(W, H);
       hm.ellipse(cx, hy, 10, 7.5, 1);
       hm.poly([[cx - 8.5, hy + 1], [cx + 8.5, hy + 1], [cx + 6.5, hy + 10], [cx + 4, hy + 14], [cx - 4, hy + 14], [cx - 6.5, hy + 10]], 1);
-      const head = shade(hm, scale, { depth: 4, light: L, normal: sphereN(cx - 2, hy + 1, 11, 12), blend: 0.35, rim: 1, bias: -0.04 });
+      const head = shade(hm, scale, { depth: 4, light: L, normal: sphereN(cx - 2, hy + 3, 11, 14), blend: 0.3, rim: 1, bias: 0.16 });
       T.scales(head, scale, 3, 3, { lit: 1, mask: (() => { const q = mask(W, H); q.ellipse(cx, hy - 3, 7, 3, 1); return q; })() });
       put(p, head, 'dark');
       // snout ridge and muzzle plates
       for (let y = hy - 6; y <= hy + 11; y++) { on(p, cx, y, y % 3 ? scale[5] : scale[3]); on(p, cx + 1, y, scale[3]); }
-      for (const y of [hy + 7, hy + 10]) curve(p, [[cx - 5, y], [cx, y + 1], [cx + 5, y]], scale[2]);
+      for (const y of [hy + 7, hy + 10]) curve(p, [[cx - 5, y], [cx, y + 1], [cx + 5, y]], scale[3]);
+      // cheek shadow either side of the muzzle, a lit nose ridge
+      both(W, (X) => { for (let y = hy + 5; y <= hy + 12; y++) on(p, X(cx - 6), y, scale[2]); });
+      for (let y = hy + 4; y <= hy + 11; y++) on(p, cx - 1, y, scale[6]);
       both(W, (X, sd) => {
         // heavy brow over each eye
         put(p, part(W, H, (g) => cap(g, X(cx - 9), hy - 1, X(cx - 3), hy + 1.5, 2.2, 1.5), scale, { depth: 1.5, light: [-0.4, -0.9, 0.3], bias: 0.18 }), 'dark');
@@ -737,7 +740,7 @@
         stamp(p, ex, hy + 2, X(0) === 0 ? ['kkkkk', 'kwebk', '.kkk.'] : ['kkkkk', 'kbewk', '.kkk.'], { k: '#28345a', w: '#ffffff', e: '#d8f0ff', b: '#8cb8dc' });
       });
       // nostrils and a slightly open mouth with ice fangs
-      p.set(cx - 3, hy + 12, INK); p.set(cx + 3, hy + 12, INK);
+      stamp(p, cx - 4, hy + 11, ['kk.....kk', '.k.....k.'], { k: INK });
       p.hline(cx - 4, cx + 4, hy + 14, INK);
       for (const x of [cx - 3, cx + 3]) { p.set(x, hy + 15, ICE[6]); p.set(x, hy + 16, ICE[4]); }
       for (const x of [cx - 1, cx + 1]) p.set(x, hy + 15, ICE[5]);

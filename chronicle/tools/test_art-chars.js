@@ -65,15 +65,22 @@ const WT = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'club', 'sta
 if (R.DB.weaponTypes && Object.keys(R.DB.weaponTypes).length) ok(JSON.stringify(Object.keys(R.DB.weaponTypes).sort()) === JSON.stringify(WT.slice().sort()), 'DB.weaponTypes = the 11 families');
 const ICON_KEYS = WT.concat('shield head body hands feet acc herb potion key'.split(' '), ['fire', 'water', 'wind', 'earth', 'light', 'dark'].map((e) => 'el_' + e));
 for (const i of ICON_KEYS) ok(G.has('icon:' + i), 'icon:' + i + ' registered (§3.1.2)');
+// §11.3.6 gives the P2 grid of every new icon (or names the icon it copies). Ours must be
+// that grid; fist / hands / feet add one shade (knuckles, cuff, sole) but keep the spec's
+// silhouette exactly.
+const GRIDS = R.Art.ICON_GRIDS || {};
+const SHADED = new Set(['fist', 'hands', 'feet']);
+const mask = (g) => g.map((row) => row.replace(/[^.]/g, '#')).join('/');
 for (const r of T536) {
   const id = r[0].replace(/`/g, '').slice(5);
-  const want = (r[3] || '').match(/`[.A-Za-z]{8}`/g);
-  const grid = R.Art.ICON_IDS && R.Art.ICON_IDS.includes(id);
-  ok(grid, 'icon:' + id + ' drawn as its own grid');
-  if (want && want.length === 8 && !['greatsword', 'fist'].includes(id)) {
-    // the spec gives the P2 grid; ours must match it (greatsword/fist were redrawn with more shading)
-    ok(true, 'icon:' + id + ' has a spec grid');
-  }
+  const want = ((r[3] || '').match(/`[.A-Za-z]{8}`/g) || []).map((s) => s.slice(1, -1));
+  ok(R.Art.ICON_IDS && R.Art.ICON_IDS.includes(id), 'icon:' + id + ' drawn as its own grid');
+  const same = /（`(\w+)` と同じ）/.exec(r[3] || '');
+  if (same) { ok(GRIDS[id] && GRIDS[id] === GRIDS[same[1]], `icon:${id} is icon:${same[1]} (§11.3.6)`); continue; }
+  ok(want.length === 8, `§11.3.6 gives an 8-row grid for icon:${id}`);
+  const have = GRIDS[id] || [];
+  if (SHADED.has(id)) ok(mask(have) === mask(want), `icon:${id} has the §11.3.6 silhouette`);
+  else ok(have.join('/') === want.join('/'), `icon:${id} = the §11.3.6 grid`);
 }
 for (const id of CA.PARTY_IDS) ok(G.has('face:' + id), 'face:' + id + ' registered');
 const pend = (R.Art.PENDING || []).filter((k) => /^(party|npc|obj|icon|face):/.test(k));
@@ -136,6 +143,91 @@ for (const r of T528) {
 ok(JSON.stringify(CA.HAIR.chestnut) === JSON.stringify(['#3c2414', '#6c4424', '#9c6c3c', '#c89860']), 'hero chestnut hair = §5.2.8');
 ok(JSON.stringify(CA.SKIN.A) === JSON.stringify(['#d8966a', '#f4c49c', '#fde2c8']) && JSON.stringify(CA.SKIN.pale) === JSON.stringify(['#b8a8a8', '#e0d0cc', '#f4ece8']), 'skin tables = §5.3.7');
 
+// ------------------------------------------------------------------ §11.3.3 / §11.3.4 NPC tables
+// part objects → their names (a CA.use() copy has the part as its prototype)
+const partName = (grp, p) => {
+  if (!p) return null;
+  for (const k of Object.keys(grp || {})) if (grp[k] === p || Object.getPrototypeOf(p) === grp[k]) return k;
+  return '?';
+};
+const hairName = (p) => partName(Object.fromEntries(Object.keys(P).filter((k) => /^hair|^tuft$/.test(k)).map((k) => [k, P[k]])), p);
+const npcSpec = (t) => { const n = CA.npcs[t]; return n && n.spec ? n.spec() : null; };
+const overNames = (sp) => [].concat(sp.over || []).map((o) => partName(P.over, o));
+
+section('§11.3.3 story characters = the spec table');
+// Named deviations (reported in the A13 report):
+//   fine   hair: a hood fringe (hairHooded) instead of hairLong — the long hair would be cut off under the
+//          deep hood anyway; the fringe keeps "銀白が少し見える" and fine unlike morga (hairLong + hood + robe).
+//   berna  cane: over.caneOut, the same walking stick one pixel out from the wide robe (over.cane vanishes on it);
+//          colours: the table lists マント / 服 / 縁, so the mantle colour is `sub` (the mantle part draws in sub).
+const DEV533 = { fine: { hair: ['hairLong', 'hairHooded'] }, berna: { over: ['cane', 'caneOut'] } };
+for (const r of T533) {
+  const t = r[0].replace(/`/g, '').slice(4), parts = r[2] || '', cols = r[3] || '';
+  const sp = npcSpec(t), dev = DEV533[t] || {};
+  if (t === 'fine_fade') { ok(CA.npcs.fine_fade && CA.npcs.fine_fade.build, 'npc:fine_fade builds from npc:fine (dither on the lowest 6 rows)'); continue; }
+  if (!sp) { ok(false, `npc:${t} has a figure spec`); continue; }
+  const body = /体 `(\w+)`/.exec(parts);
+  if (body) ok(partName(P.body, sp.body) === body[1], `npc:${t} body ${body[1]} (have ${partName(P.body, sp.body)})`);
+  const face = /face\.(\w+)/.exec(parts);
+  if (face) ok([].concat(sp.head)[1] === P.face[face[1]], `npc:${t} face.${face[1]}`);
+  const hair = /髪 `(\w+)`/.exec(parts);
+  if (hair) {
+    const want = dev.hair && dev.hair[0] === hair[1] ? dev.hair[1] : hair[1];
+    ok([].concat(sp.hair).map(hairName).includes(want), `npc:${t} hair ${want}${want !== hair[1] ? ' (for ' + hair[1] + ')' : ''}`);
+  }
+  const cape = /cape:(\w+)/.exec(parts);
+  ok(cape ? partName(P.cape, sp.cape) === cape[1] : !sp.cape, `npc:${t} cape ${cape ? cape[1] : '-'}`);
+  const hat = /hat:(\w+)/.exec(parts);
+  ok(hat ? partName(P.hat, sp.hat) === hat[1] : !sp.hat, `npc:${t} hat ${hat ? hat[1] : '-'}`);
+  for (const m of parts.matchAll(/over\.(\w+)/g)) {
+    const want = dev.over && dev.over[0] === m[1] ? dev.over[1] : m[1];
+    ok(overNames(sp).includes(want), `npc:${t} over.${want}`);
+  }
+  const beard = /(?:ひげ|口ひげ) `(\w+)`/.exec(parts);
+  if (beard) ok(partName(P, sp.beard) === beard[1], `npc:${t} beard ${beard[1]}`);
+  const pal = CA.npcs[t].pal, three = hexes(cols).slice(0, 3);
+  const mine = [pal.main, pal.sub, pal.trim].map((h) => h.toLowerCase());
+  if (t === 'berna') ok(mine[0] === three[1] && mine[1] === three[0] && mine[2] === three[2], 'npc:berna robe 服 = main, mantle マント = sub, trim 縁');
+  else ok(JSON.stringify(mine) === JSON.stringify(three), `npc:${t} main/sub/trim ${three.join(' ')}`);
+  const hn = /髪 (black|white|grey|brown|blond|red|auburn|green)/.exec(cols), hx = /髪 ((?:`#[0-9a-f]{6}` ?){4})/i.exec(cols);
+  if (hn) ok(JSON.stringify(pal.hair) === JSON.stringify(CA.HAIR[hn[1]]), `npc:${t} hair colour ${hn[1]}`);
+  if (hx) ok(JSON.stringify(pal.hair) === JSON.stringify(hexes(hx[1])), `npc:${t} hair colour ${hexes(hx[1]).join(' ')}`);
+  const sk = /肌 (A|B|C|青白|森)/.exec(cols);
+  if (sk) ok(JSON.stringify(pal.skin) === JSON.stringify(CA.SKIN[SKIN[sk[1]]]), `npc:${t} skin ${sk[1]}`);
+}
+
+section('§11.3.4 town folk = the spec table');
+// Named deviations (the table's part name is a different shape in chars_parts.js):
+//   farmer  麦わら帽 `wide` → hat.straw   (`wide` is the pointed witch hat with a broad brim)
+//   miner   ランプの帽子 `cap` → hat.lampcap (`cap` has no lamp)
+//   noble   `tophat` → hat.tophatPlain  (the Crest top hat carries the time-mage crescent)
+const DEV534 = { farmer: { wide: 'straw' }, miner: { cap: 'lampcap', goggles: 'lampcap' }, noble: { tophat: 'tophatPlain' } };
+const PROPS = { 竪琴: 'lyre', くわ: 'hoe', すすけた: 'soot', 網: 'net', 本: 'book', 口もとの布: 'veilMouth' };
+for (const r of T534) {
+  const form = r[2] || '';
+  for (const key of r[0].match(/npc:[a-z_]+/g)) {
+    const t = key.slice(4), n = CA.npcs[t];
+    if (/animal/.test(form)) { ok(n && typeof n.build === 'function', `npc:${t} is an animal grid (like cat / dog)`); continue; }
+    const sp = npcSpec(t);
+    if (!sp) { ok(false, `npc:${t} has a figure spec`); continue; }
+    const words = [...form.matchAll(/`(\w+)`/g)].map((m) => m[1]);
+    const bodyN = partName(P.body, sp.body), hatN = partName(P.hat, sp.hat);
+    const named = (w) => (DEV534[t] && DEV534[t][w]) || w;
+    const bodies = words.filter((w) => P.body[w] && !(t === 'miner' && w === 'dwarf'));
+    if (bodies.length) ok(bodies.includes(bodyN), `npc:${t} body ${bodies.join('/')} (have ${bodyN})`);
+    const hats = words.filter((w) => (P.hat[w] || (DEV534[t] && DEV534[t][w])) && !form.includes('`' + w + '` の体')).map(named);
+    if (hats.length) ok(hats.includes(hatN), `npc:${t} hat ${hats.join('/')} (have ${hatN})`);
+    for (const k in PROPS) if (form.includes(k)) ok(overNames(sp).includes(PROPS[k]), `npc:${t} carries ${PROPS[k]} (${k})`);
+    if (/長いマント/.test(form)) ok(partName(P.cape, sp.cape) === 'long', `npc:${t} long cape`);
+    if (/緋の袴/.test(form)) {
+      const noela = P.party.noela, pal = n.pal;
+      ok(bodyN === 'hakama' && pal.main === noela.outfit.main && pal.sub === noela.outfit.sub, `npc:${t} white top + scarlet hakama in noela's colours`);
+      ok(hairName(sp.hair) !== [].concat(noela.hairPart)[0], `npc:${t} hair differs from noela's`);
+    }
+  }
+}
+ok(CA.NPC_TYPES.length === 47 && new Set(CA.NPC_TYPES).size === 47, `CA.NPC_TYPES has the 47 types (30 reused + 17 new), no duplicates (${CA.NPC_TYPES.length})`);
+
 // ------------------------------------------------------------------ parts exist, no stand-ins
 section('new parts (§5.3.8) exist');
 for (const n of ['hairPony', 'hairTail', 'hairBraid', 'hairCurly', 'hairCrop', 'hairWave', 'hairHime', 'hairSide', 'hairHeroM', 'hairHeroF', 'face.old', 'face.narrow', 'over.eyepatch', 'over.freckles', 'over.earrings', 'over.quill'])
@@ -144,14 +236,15 @@ for (const id of CA.PARTY_IDS) ok(CA.pendingParts(P.party[id]).length === 0, `${
 
 // ------------------------------------------------------------------ distinguishability
 section('distinguishability (§5.3.7 rule)');
+// §5.3.7: "20 人と主人公 10 枚を 1 枚に並べ、同じ髪の部品＋同じ体の組み合わせが 2 人いない"
 const seen = {};
 let dup = 0;
-for (const id of CA.COMPANION_IDS) {
+for (const id of CA.PARTY_IDS) {
   const w = P.party[id], st = w.style;
   const k = [].concat(w.hairPart).join('+') + '|' + (st.variant || (w.gender === 'f' && st.bodyF) || st.body);
   if (seen[k]) { dup++; ok(false, `${seen[k]} and ${id} share hair part + body ${k}`); } else seen[k] = id;
 }
-ok(dup === 0, 'no two companions share hair part + body');
+ok(dup === 0, 'no two of the 30 party looks share hair part + body');
 // companions vs townsfolk: never the same hair + body + hat triple as an NPC type
 const npcTriples = {};
 for (const t of CA.NPC_TYPES) {

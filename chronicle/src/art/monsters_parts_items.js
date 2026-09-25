@@ -295,13 +295,13 @@
     const T = TK(), k = o.baseK;
     grip(o, 'hand');
     const deg = handDir(o, a, 'hand') + (a[0] < o.anchors.body[0] ? 12 : -12);
-    const L = Math.round(L0(k) * 0.95);
-    const vane = T.ramp(o.c || '#ffffff', 4, { dark: 0.35, light: 0.4 });
+    const L = Math.round(L0(k) * 1.15);
+    const vane = T.ramp(o.c || '#ffffff', 4, { dark: 0.42, light: 0.4 });
     frame(p, a[0], a[1], deg, -Math.round(1.5 * k), L, 2 * k, (t, s) => {
       if (t < 0) return Math.abs(s) <= 0.5 ? '#302030' : null;               // nib
       const u = t / L;
       if (Math.abs(s) <= 0.35 && u < 0.97) return vane[1];                  // shaft
-      const hw = u < 0.2 ? 0 : Math.sin(((u - 0.2) / 0.8) * Math.PI) * (1.1 + 0.55 * k);
+      const hw = u < 0.15 ? 0 : Math.sin(((u - 0.15) / 0.85) * Math.PI) * (1.3 + 0.75 * k);
       const hw2 = hw * (s > 0 ? 1 : 0.55);
       if (Math.abs(s) > hw2) return null;
       return (Math.round(t * 1.5) & 1) ? vane[2] : vane[s > 0 ? 3 : 2];     // barbs

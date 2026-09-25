@@ -153,7 +153,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   ok(sfx[sfx.length - 1] === 'buzzer' && S.panel.left.title === DB.weaponTypes.sword.name, 'C15 a gray tech buzzes and stays in the list', sfx);
   hero.c.wp = 40;
   await press('b'); await step(1); await press('b'); await step(2);
-  ok(S.panel.left.items[0].label === '戦う', 'C16 B from the first member → the party menu');
+  ok(S.panel.left.items[0] === '戦う', 'C16 B from the first member → the party menu');
   await press('a'); await step(2);
   ok(S.panel.left.index === 0 && hero.c.mem.cmd === 0, 'C17 command cursor remembered in c.mem.cmd');
   // members one after another: B goes back to the previous member
@@ -299,7 +299,8 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   S.handle({ t: 'glimmer', u: S.eng.party[0], id: pickC.tech, kind: 'tech' })
     .then(() => S.handle({ t: 'glimmer', u: S.eng.party[1], id: pickC.tech, kind: 'tech' })).then(() => { second = R.Engine.frame; });
   await until(() => second >= 0, 200);
-  ok(second - F1 >= 50 + 6 + 12, 'G11 the second banner waits for the first to close', second - F1);
+  const H1 = Math.max(36, Math.round(50 / S.spd));
+  ok(second - F1 >= H1 + 6 + 12, 'G11 the second banner waits for the first to close', { waited: second - F1, H: H1 });
   // a whole round through the scripted engine: glimmer → message → fx (waits) → damage
   S = BUI.open({ mons: std(), script: { glimmer: [{ round: 1, idx: 0, id: pickC.tech }], monsIdle: true } });
   const log = [];
@@ -433,7 +434,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   await press('a'); await step(2);
   ok(S.repeating && S.eng.rounds.length === before + 1, 'P3 リピート starts at once, no menu');
   const r1 = S.eng.rounds[S.eng.rounds.length - 1];
-  ok(r1.filter(Boolean).length === 3 && r1.every((c, i) => !c || c.type === S.lastCmds[i].type), 'P4 the repeated commands copy the last round', r1.map((c) => c && c.type));
+  ok(r1.filter(Boolean).length === 4 && r1.every((c, i) => !c || c.type === S.lastCmds[i].type), 'P4 the repeated commands copy the last round', r1.map((c) => c && c.type));
   await until(() => S.eng.rounds.length >= before + 3, 1500);
   ok(S.repeating && S.eng.rounds.length >= before + 3 && !S.panel, 'P5 リピート keeps going round after round (no menu)', S.eng.rounds.length - before);
   // B during a round: the round finishes, then the party menu opens on 戦う
@@ -526,7 +527,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   try {
     R.State.newGame({ name: 'アルン', gender: 'm', type: 'warrior', favor: { kind: 'weapon', id: 'sword' } });
     for (const id of ['brigitta', 'sylvain', 'marta']) R.Party.recruit(id);
-    for (const c of R.Game.party) { c.level = 20; const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; }
+    for (const c of R.Game.party) { c.level = 20; const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; c.row = 'front'; }
     R.Engine.clear();
     B.autoCarry = false;
     let res = null;
@@ -545,13 +546,17 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
       if (items[0].label !== '攻撃') { await press('a'); await step(2); }
       await press('a'); await step(2); await press('a'); await step(3);
     }
-    // then リピート (S-R1): on until B, or the battle ends
-    for (let i = 0; i < 3000 && !res; i++) {
+    // then リピート (S-R1): chosen once, it stays on round after round until the battle ends
+    let menus = 0, repeatRounds = 0, lastRound = scene.eng.round;
+    for (let i = 0; i < 6000 && !res; i++) {
       await step(1);
-      if (scene.panel && scene.panel.left && scene.panel.left.items[0] === '戦う' && !scene.panel.left.isDisabled(1) && scene.partyIdx !== 1) { await press('right'); await press('a'); }
-      if (scene.msg.key) await press('a');
+      if (scene.eng.round !== lastRound) { lastRound = scene.eng.round; if (scene.repeating) repeatRounds++; }
+      const pl = scene.panel && scene.panel.left;
+      if (pl && pl.items[0] === '戦う') { menus++; ok(!pl.isDisabled(1), 'R2b リピート enabled after the first round'); await press('right'); await press('a'); }
+      else if (scene.msg.key) await press('a');
     }
     ok(res === 'win' || res === 'lose' || res === 'escape', 'R3 the battle runs to its end (' + res + ')', res);
+    ok(menus === 1 && repeatRounds >= 1, 'R3b リピート chosen once kept the battle going without the menu', { menus, repeatRounds, rounds: scene.eng.round });
     ok(B.last && B.last.result === res && Array.isArray(B.last.drops) && Array.isArray(B.last.glimmers), 'R4 R.Battle.last is filled', B.last && Object.keys(B.last));
     ok(!B.current, 'R5 the scene closed');
     real = res;

@@ -459,7 +459,7 @@
       if (c == null || ring[i]) continue;
       const l = lum(c);
       if (l < 0.1) { p.d[i] = '#1c2230'; continue; }
-      p.d[i] = lumTo(STEEL, nl(l), 1.05);
+      p.d[i] = lumTo(STEEL, nl(l), 1.45);
     }
     // one diagonal white band (2 px), top-right to lower-left across the upper body
     const bb = bboxOf(p);
@@ -561,7 +561,7 @@
   /** depth group of front parts: 0 body surface and growths, 1 head / face / neck wear, 2 held items */
   A.PART_Z = Object.assign(A.PART_Z || {}, {
     armor_plates: 0, spots: 0, runes: 0, chain: 0, skull_mark: 0, embers: 0, frost: 0, moss: 0, coral: 0, crystals: 0,
-    spikes: 0, thorns: 0, drips: 0, pins: 0, cape: 0, shell_tower: 0, mist: 3,
+    spikes: 0, thorns: 0, drips: 0, pins: 0, cape: 0, shell_tower: 0, mist: 3, flame: 0.5,
     sword: 2, spear: 2, axe: 2, staff: 2, bow: 2, club_iron: 2, pick: 2, bomb: 2, cannon: 2, baton: 2, quill: 2, parasol: 2,
     shield: 2, book: 2, violin: 2, drum: 2, flute: 2, claws: 2,
   });

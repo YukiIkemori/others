@@ -939,15 +939,17 @@ function run(opts) {
         const blockedBy = (x, y) => { const dd = P2.decorDef(x, y); const t = DB.tiles[P2.tileAt(x, y)]; return dd && !dd.pass && !dd.over && t && t.pass ? `${P2.decorAt(x, y)}@${x},${y}` : null; };
         const cells = new Map();
         for (let y = 0; y < P2.h; y++) for (let x = 0; x < P2.w; x++) { const tid = P2.tileAt(x, y); if (/^door/.test(tid) || (DB.tiles[tid] || {}).door) cells.set(y * P2.w + x, [x, y, 2, tid]); }
-        for (const wp of P2.warps) if (P2.inMap(wp.x, wp.y)) { const k = wp.y * P2.w + wp.x; if (!cells.has(k)) cells.set(k, [wp.x, wp.y, 1, 'warp→' + wp.to]); }
+        for (const wp of P2.warps) if (P2.inMap(wp.x, wp.y)) { const k = wp.y * P2.w + wp.x; cells.set(k, [wp.x, wp.y, 1, (cells.has(k) ? 'door ' : '') + 'warp→' + wp.to]); }
         for (const [x, y, need, what] of cells.values()) {
-          const nb = [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([dx, dy]) => [x + dx, y + dy]);
-          const nFree = nb.filter(([xx, yy]) => free(xx, yy)).length;
+          // a door is a corridor between two sides: an error when nothing around it is walkable, or when one
+          // side is floor walled off by furniture while the other side is open (a facade door with a roof
+          // behind it is fine; a warp cell needs one open side)
           const onEdge = x === 0 || y === 0 || x === P2.w - 1 || y === P2.h - 1;
-          if (nFree < (onEdge ? 1 : need)) {
-            const by = nb.map(([xx, yy]) => blockedBy(xx, yy)).filter(Boolean);
-            E(V, o, `${w}: ${what} at ${x},${y} cannot be passed through` + (by.length ? ` (blocked by decor ${by.join(', ')})` : ` (only ${nFree} walkable neighbour)`));
-          }
+          const nb = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+          const nFree = nb.filter(([dx, dy]) => free(x + dx, y + dy)).length;
+          const walled = nb.filter(([dx, dy]) => blockedBy(x + dx, y + dy) && (free(x - dx, y - dy) || need === 1)).map(([dx, dy]) => blockedBy(x + dx, y + dy));
+          if (walled.length && nFree < 2) E(V, o, `${w}: ${what} at ${x},${y} is walled off by decor ${walled.join(', ')} (furniture must not stand in front of a door)`);
+          else if (!nFree && !onEdge) E(V, o, `${w}: ${what} at ${x},${y} has no walkable neighbour`);
         }
       }
       if (d.type === 'town' || d.type === 'village' || d.type === 'castle') {

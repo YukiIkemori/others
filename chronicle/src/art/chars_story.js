@@ -22,6 +22,14 @@
     down: L(8, ['.............23.', '.............32.', '.............23.', '.............32.', '.............H..']),
     up: L(8, ['.23.............', '.32.............', '.23.............', '.32.............', '..H.............']),
   };
+  // berna — her walking stick (over.cane, §11.3.3) held one pixel out from the robe: the
+  // Crest cane sits on the robe's edge column and vanishes against a wide robe. Crook on top.
+  P.over.caneOut = {
+    down: L(14, ['.............NM.', '..............M.', '..............M.', '..............M.', '..............M.', '..............M.', '..............M.', '..............M.', '..............L.']),
+    up: L(14, ['.MN.............', '.M..............', '.M..............', '.M..............', '.M..............', '.M..............', '.M..............', '.M..............', '.L..............']),
+    right: L(14, ['............NM..', '............M...', '............M...', '...........sM...', '............M...', '............M...', '............M...', '............M...', '............L...']),
+    attach: 'body',
+  };
   // rowell — the black hair tied into a short tail at the nape
   P.over.napeTail = {
     up: L(9, ['......2332......', '.......33.......', '.......32.......', '.......21.......']),
@@ -78,8 +86,8 @@
   // berna: white bun with a thin side braid, an old mantle, a walking stick
   lazy('berna', () => ({
     capeBack: use(P.cape.mantle.back, {}), cape: P.cape.mantle, body: P.body.robe,
-    head: head('old'), hair: P.hairBun, over: [P.over.braidSide, P.over.cane],
-  }), () => ({ main: '#c8b890', sub: '#6a5a44', trim: '#8a3c2c', hair: HAIR().white, skin: SKIN().A, leather: '#6a4a30' }));
+    head: head('old'), hair: P.hairBun, over: [P.over.braidSide, P.over.caneOut],
+  }), () => ({ main: '#c8b890', sub: '#6a5a44', trim: '#8a3c2c', hair: HAIR().white, skin: SKIN().A, leather: '#7a5230' }));
 
   // rowell: the Record Hall's white coat with the collar up, black hair tied back, black notebook
   lazy('rowell', () => ({

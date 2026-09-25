@@ -3111,38 +3111,38 @@ try{
   const S = {
     b_pageeater: { hp: 1.35 },
     b_moth: { hp: 1.65 },
-    b_rooteater: { hp: 1.2, atk: 0.6, mag: 0.6 },
-    b_root: { hp: 1.2, atk: 0.6, mag: 0.6 },
-    b_sandworm: { hp: 1.5 },
+    b_rooteater: { hp: 1.1, atk: 0.6, mag: 0.6 },
+    b_root: { hp: 1.1, atk: 0.6, mag: 0.6 },
+    b_sandworm: { hp: 1.35 },
     b_sandking: { hp: 0.9, atk: 0.7, mag: 0.7 },
-    b_icegiant: { hp: 1.5 },
+    b_icegiant: { hp: 1.35 },
     b_whitedragon: { hp: 1.35, atk: 0.6, mag: 0.6 },
-    b_doll_conductor: { hp: 1.1 },
-    b_doll_violin: { hp: 1.1 },
-    b_doll_drum: { hp: 1.1 },
-    b_doll_flute: { hp: 1.1 },
+    b_doll_conductor: { hp: 0.9 },
+    b_doll_violin: { hp: 0.9 },
+    b_doll_drum: { hp: 0.9 },
+    b_doll_flute: { hp: 0.9 },
     b_mistbeast: { hp: 0.9, atk: 0.6, mag: 0.6 },
     b_mist_double: { hp: 0.9, atk: 0.6, mag: 0.6 },
-    b_octopus: { hp: 1.5 },
-    b_tentacle: { hp: 1.5 },
-    b_captain: { hp: 1.2, atk: 0.7, mag: 0.7 },
-    b_rockeater: { hp: 1.5 },
+    b_octopus: { hp: 1.35 },
+    b_tentacle: { hp: 1.35 },
+    b_captain: { hp: 1.1, atk: 0.7, mag: 0.7 },
+    b_rockeater: { hp: 1.35 },
     b_ironwarden: { hp: 0.9, atk: 0.7, mag: 0.7 },
-    b_hellhound: { hp: 1.5, atk: 0.8, mag: 0.8 },
-    b_lavabeast: { hp: 0.9, atk: 0.8, mag: 0.8 },
+    b_hellhound: { hp: 1.35, atk: 0.85, mag: 0.85 },
+    b_lavabeast: { hp: 0.9, atk: 0.85, mag: 0.85 },
     b_orrery: { hp: 1.35 },
-    b_stareater: { hp: 1.2, atk: 0.5, mag: 0.5 },
-    b_rowell1: { hp: 1.2 },
-    b_rowell2: { hp: 1.35 },
-    b_bookgolem: { hp: 0.9 },
-    b_shade_sword: { hp: 1.1, atk: 0.8, mag: 0.8 },
-    b_shade_prayer: { hp: 1.1, atk: 0.8, mag: 0.8 },
-    b_shade_star: { hp: 1.1, atk: 0.8, mag: 0.8 },
-    b_lazaro: { hp: 1.2 },
-    b_nemrea1: { hp: 0.7, atk: 0.8, mag: 0.8 },
+    b_stareater: { hp: 1.1, atk: 0.7, mag: 0.7 },
+    b_rowell1: { hp: 1.1 },
+    b_rowell2: { hp: 1.65, atk: 0.85, mag: 0.85 },
+    b_bookgolem: { hp: 1.1, atk: 0.85, mag: 0.85 },
+    b_shade_sword: { hp: 1.1, atk: 0.7, mag: 0.7 },
+    b_shade_prayer: { hp: 1.1, atk: 0.7, mag: 0.7 },
+    b_shade_star: { hp: 1.1, atk: 0.7, mag: 0.7 },
+    b_lazaro: { hp: 1.35 },
+    b_nemrea1: { hp: 0.7 },
     b_nemrea2: { hp: 0.5, atk: 0.5, mag: 0.5 },
-    b_valzard_echo: { hp: 1.35, atk: 0.7, mag: 0.7 },
-    b_ouroboros: { hp: 0.5, atk: 0.55, mag: 0.55 },
+    b_valzard_echo: { hp: 1.65 },
+    b_ouroboros: { hp: 0.7, atk: 0.5, mag: 0.5 },
   };
   // @@S-END
 
@@ -4400,6 +4400,8 @@ try{
   'use strict';
   // Monster-chapter accessories (DESIGN §9.12): rares of the monster rare slot (§9.12.5, incl. the two post-game
   // bosses), supers of exactly one monster's super slot (§9.12.4), and the fixed-tier super of 本の虫 (§8.7.2).
+  // units: the race's main stat of the (first) monster (§8.6.2); when a `stat:<s>-1u` quirk lowers that very stat,
+  // the sub stat takes the unit instead, so the quirk really shows as a minus (鈴尾の根付け, 子守歌の羽根).
   const ITEMS = {
     // ---------------------------------------------------------------- monster rares (40)
     // jelly_1 · hpPct+5
@@ -11406,7 +11408,8 @@ try{
 // walkable (brief A2); real furniture, stalls, carts, lamps and signs block.
 // Props: pass (default false), counter (talk across), wall (meant for wall
 // tiles), anim (frames), tall (art may be up to 32px high, bottom-aligned),
-// auto (art joins with same-id neighbours: rugs, long tables, stalls, fountains).
+// auto (art joins with same-id neighbours: rugs, long tables, stalls, fountains),
+// animRate (field frames per animation frame), over (drawn above the figures).
 // Art: 'decor:<id>' (canvas or frames) or R.Art.decorTile(map,x,y) when defined.
 // Per-map legend: a map may add `decorLegend: {'|': 'tent', …}` (DESIGN §11.2.10,
 // read by the field on top of R.DB.legends.decor). The ids marked "map legend"
@@ -11529,6 +11532,9 @@ try{
     // regional set pieces (§11.2.11, the "見せ場の絵" column)
     sunken_bell:  { name: '沈んだ鐘' },                    // on bog / water tiles (鐘沈みの沼)
     mural_firebird: { name: '火の鳥の壁画', wall: true },  // 灰の火山
+    // drawn above the figures (field: over:true layer, §3.3.10-8, P2 of §11.2.10); walkable
+    arch_over:    { name: '石のアーチ', over: true, pass: true, tall: true },
+    leaves_over:  { name: '張り出した枝', over: true, pass: true, tall: true },
   });
 
   R.DB.legends.decor = Object.assign(R.DB.legends.decor || {}, {
@@ -21779,6 +21785,14 @@ try{
     down: L(8, ['.............23.', '.............32.', '.............23.', '.............32.', '.............H..']),
     up: L(8, ['.23.............', '.32.............', '.23.............', '.32.............', '..H.............']),
   };
+  // berna — her walking stick (over.cane, §11.3.3) held one pixel out from the robe: the
+  // Crest cane sits on the robe's edge column and vanishes against a wide robe. Crook on top.
+  P.over.caneOut = {
+    down: L(14, ['.............NM.', '..............M.', '..............M.', '..............M.', '..............M.', '..............M.', '..............M.', '..............M.', '..............L.']),
+    up: L(14, ['.MN.............', '.M..............', '.M..............', '.M..............', '.M..............', '.M..............', '.M..............', '.M..............', '.L..............']),
+    right: L(14, ['............NM..', '............M...', '............M...', '...........sM...', '............M...', '............M...', '............M...', '............M...', '............L...']),
+    attach: 'body',
+  };
   // rowell — the black hair tied into a short tail at the nape
   P.over.napeTail = {
     up: L(9, ['......2332......', '.......33.......', '.......32.......', '.......21.......']),
@@ -21835,8 +21849,8 @@ try{
   // berna: white bun with a thin side braid, an old mantle, a walking stick
   lazy('berna', () => ({
     capeBack: use(P.cape.mantle.back, {}), cape: P.cape.mantle, body: P.body.robe,
-    head: head('old'), hair: P.hairBun, over: [P.over.braidSide, P.over.cane],
-  }), () => ({ main: '#c8b890', sub: '#6a5a44', trim: '#8a3c2c', hair: HAIR().white, skin: SKIN().A, leather: '#6a4a30' }));
+    head: head('old'), hair: P.hairBun, over: [P.over.braidSide, P.over.caneOut],
+  }), () => ({ main: '#c8b890', sub: '#6a5a44', trim: '#8a3c2c', hair: HAIR().white, skin: SKIN().A, leather: '#7a5230' }));
 
   // rowell: the Record Hall's white coat with the collar up, black hair tied back, black notebook
   lazy('rowell', () => ({
@@ -21997,11 +22011,13 @@ try{
     right: L(11, ['.Q..Q...........', '.QwwQ...........', '.PwwP...........', '..PP............']),
     attach: 'body',
   };
-  // farmer — a hoe over the shoulder (leather shaft, steel blade)
+  // farmer — a hoe stood upright at his side, the steel blade up beside the hat crown
+  // (clear of the face, so it never reads as an ear), leather shaft down to the ground
+  const shaft = (x, n) => Array.from({ length: n }, (_, i) => '.'.repeat(x) + (i === 0 ? 'N' : i === n - 1 ? 'L' : 'M') + '.'.repeat(15 - x));
   P.over.hoe = {
-    down: L(6, ['..........XYY...', '...........YM...', '............M...', '............M...', '............M...', '............M...', '............M...', '............M...', '............M...', '............M...', '............M...', '............M...', '............L...']),
-    up: L(6, ['...YYX..........', '...MY...........', '...M............', '...M............', '...M............', '...M............', '...M............', '...M............', '...M............', '...M............', '...M............', '...M............', '...L............']),
-    right: L(6, ['..XYY...........', '...YM...........', '....M...........', '....M...........', '.....M..........', '.....M..........', '......M.........', '......M.........', '.......M........', '.......M........', '........M.......', '........L.......']),
+    down: L(1, ['............YZZ.', '............XXY.'].concat(shaft(14, 19))),
+    up: L(1, ['.ZZY............', '.YXX............'].concat(shaft(1, 19))),
+    right: L(1, ['............YZZ.', '............XXY.'].concat(shaft(14, 19))),
     attach: 'body',
   };
   // miner — soot smudges on the cheeks and nose
@@ -22279,7 +22295,9 @@ try{
     out.left = out.right.map((c) => R.Gfx.flipH(c));
     return out;
   }
-  N.sheep = { build: () => animal(SHEEP, { W: '#f4f0e4', w: '#d0c8b8', v: '#9a9088', a: '#3c3438', e: '#f8f0d8', n: '#1c1418' }) };
+  // face and legs a warm dark grey (not ink-black), so the 1px gaps between the legs and the
+  // face's edge still read against the outline
+  N.sheep = { build: () => animal(SHEEP, { W: '#f4f0e4', w: '#d0c8b8', v: '#9a9088', a: '#54484c', e: '#f8f0d8', n: '#241a20' }) };
   N.chicken = { build: () => animal(CHICKEN, { W: '#f8f4ec', w: '#d8d0c4', v: '#a8988c', r: '#d83c30', n: '#f0b830', e: '#1c1418', y: '#e8a830' }, 3) };
 })(window.RPG);
 
@@ -26238,7 +26256,47 @@ try{
     return img;
   }
 
+  /** a stone archway over a street or gate, drawn over the figures walking beneath (over:true) */
+  function archOver() {
+    const { STONE } = K().P;
+    return mk(16, 32, (L, t) => {
+      // lintel with a keystone, voussoirs curving down into the two piers
+      for (let y = 0; y <= 12; y++) for (let x = 0; x < 16; x++) {
+        const inside = y > 3 && x > 1 && x < 14 && Math.hypot(x - 7.5, (y - 12) * 1.1) < 6.5;
+        if (inside) continue;
+        const k = (x + (y >> 2) * 3) % 5;
+        let c = y === 0 ? STONE[5] : k === 0 || y % 4 === 3 ? STONE[1] : x < 8 ? STONE[4] : STONE[3];
+        L.set(x, y, c);
+      }
+      L.rect(6, 0, 4, 4, STONE[5]); L.hline(6, 9, 3, STONE[2]); L.set(9, 1, STONE[3]);
+      // piers down both sides (thin, so a figure between them stays visible)
+      for (let y = 12; y < 32; y++) {
+        L.set(0, y, STONE[4]); L.set(1, y, y % 4 === 3 ? STONE[1] : STONE[3]);
+        L.set(14, y, y % 4 === 3 ? STONE[1] : STONE[2]); L.set(15, y, STONE[1]);
+      }
+      L.set(1, 20, 0x4a6a2c); L.set(0, 21, 0x5a7c34); L.set(15, 26, 0x4a6a2c); // moss
+    }, { contact: [8, 31, 8, 0.8, 0.2] });
+  }
+  /** a bough hanging over a path, drawn over the figures beneath (over:true) */
+  function leavesOver() {
+    const F = [0x0c2410, 0x163a1a, 0x225426, 0x326e30, 0x4a8a3c, 0x6aa64e];
+    return mk(16, 32, (L, t) => {
+      L.line(0, 3, 16, 6, 0x3a2614); L.line(0, 4, 16, 7, 0x281a0e);
+      for (const [cx, cy, r] of [[3, 5, 4.2], [9, 4, 4.6], [14, 7, 3.8], [6, 10, 3.4], [12, 12, 2.8]]) {
+        for (let y = Math.floor(cy - r); y <= Math.ceil(cy + r); y++) for (let x = Math.floor(cx - r); x <= Math.ceil(cx + r); x++) {
+          const d = Math.hypot(x + 0.5 - cx, y + 0.5 - cy);
+          if (d > r || (d > r - 1 && t.hash(x, y, 991) < 0.4)) continue;
+          const l = (-(x - cx) - (y - cy)) / r;
+          L.set(x, y, F[Math.max(1, Math.min(5, Math.round(2.6 + l * 1.6 + (t.hash(x, y, 993) - 0.5))))]);
+        }
+      }
+      // a few leaves dangling low, where they brush the head of whoever walks under
+      for (const [x, y] of [[4, 16], [11, 17], [7, 19], [13, 20]]) { L.set(x, y, F[3]); L.set(x, y - 1, F[4]); L.set(x + 1, y, F[2]); L.vline(x, y - 4, y - 2, 0x2a1c10); }
+    }, { outline: 0x081a0a });
+  }
+
   const D = {
+    arch_over: archOver, leaves_over: leavesOver,
     signpost, laundry, palm, snowpile, firewood,
     net_rack: netRack, tent, boat,
     hot_spring: () => [0, 1].map((f) => hotSpring(f).canvas()),
@@ -29484,7 +29542,7 @@ try{
   // jaws, white page-teeth line the gap, the two round clasps on the cover
   // glow like eyes and the bookmark ribbon lolls out like a tongue.
   SIZES.book = 32;
-  ANCHORS.book = { head: [15, 3], brow: [15, 6], eyes: [[10, 7], [21, 7]], mouth: [15, 16], neck: [15, 12], back: [15, 5], body: [15, 15], hand: [2, 15], hand2: [29, 15], tail: [15, 23], feet: [15, 28], headW: 22, float: true };
+  ANCHORS.book = { head: [15, 3], brow: [15, 6], eyes: [[10, 7], [21, 7]], mouth: [15, 17], neck: [15, 13], back: [15, 5], body: [15, 16], hand: [2, 16], hand2: [29, 16], tail: [15, 24], feet: [15, 28], headW: 22, float: true };
   S.book = () => {
     const T = TS(), W = 32, H = 32;
     const leather = M(null, { ramp: ['#3a1a18', '#5c2c22', '#804830', '#9c6040', '#b87850', '#dca878'], rim: 1 });
@@ -29493,10 +29551,10 @@ try{
     const ribbon = M(null, { ramp: ['#601420', '#90202a', '#c03030', '#e86050'] });
     const sc = new T.Scene(W, H);
     // lower cover (its front edge shows under the lower page block)
-    sc.poly([[3, 20], [28, 20], [28.5, 23], [27, 24.5], [4, 24.5], [2.5, 23]], { m: leather, g: 'lower', z: 2, bevel: 1.5 });
-    // page blocks, upper and lower, and the dark gullet between them
+    sc.poly([[3, 21], [28, 21], [28.5, 24], [27, 25.5], [4, 25.5], [2.5, 24]], { m: leather, g: 'lower', z: 2, bevel: 1.5 });
+    // page blocks, upper and lower; the mouth opens between them
     sc.poly([[4.5, 11], [26.5, 11], [26.5, 15], [4.5, 15]], { m: page, g: 'pageU', z: 4, n: [0, 0.3, 1] });
-    sc.poly([[4.5, 17.5], [26.5, 17.5], [26.5, 21.5], [4.5, 21.5]], { m: page, g: 'pageL', z: 5, n: [0, -0.2, 1] });
+    sc.poly([[4.5, 18.5], [26.5, 18.5], [26.5, 22.5], [4.5, 22.5]], { m: page, g: 'pageL', z: 5, n: [0, -0.2, 1] });
     // upper cover lifted like a jaw: outer face toward the viewer
     sc.poly([[5, 2.5], [26, 2.5], [29, 10], [29.5, 12], [1.5, 12], [2, 10]], { m: leather, g: 'upper', z: 9, bevel: 2.2, bz: 2.5 });
     // round clasps (the eyes) and the corner fittings
@@ -29509,24 +29567,30 @@ try{
     // embossed frame on the cover
     sc.carve([[6, 4], [25, 4]], 1).carve([[3.5, 10.5], [27.5, 10.5]], -1);
     T.sym(W, (X) => sc.carve([[X(6), 4], [X(3.8), 10]], 1));
-    // the ribbon tongue, lolling out of the right of the gap
-    sc.tube([[18, 16.5, 1.3, 14], [19.5, 20, 1.3, 14], [18.6, 24.5, 1.2, 14], [19.6, 27.6, 1.2, 14]], { m: ribbon, g: 'ribbon' });
     const p = sc.render();
-    // the gullet and the page-teeth
-    for (let x = 5; x <= 26; x++) { p.set(x, 15, '#2a0810'); p.set(x, 16, '#4a0e1a'); p.set(x, 17, '#2a0810'); }
+    // the fore-edges: a stack of page lines, darker toward the covers
+    const PG = ['#b0a080', '#d4c8a8', '#f0e8d0', '#fcf8ec'];
+    const pageRow = (y, k) => { for (let x = 5; x <= 26; x++) if (p.get(x, y) != null) p.set(x, y, PG[(T.hash(x >> 2, y, 5) < 0.18) ? Math.max(0, k - 1) : k]); };
+    [[11, 0], [12, 2], [13, 1], [14, 3]].forEach(([y, k]) => pageRow(y, k));
+    [[19, 3], [20, 1], [21, 2], [22, 0]].forEach(([y, k]) => pageRow(y, k));
+    // the mouth: a dark gullet with interlocking page-teeth, upper row pointing
+    // down and lower row pointing up
+    for (let x = 5; x <= 26; x++) { p.set(x, 15, '#2a0810'); p.set(x, 16, '#4a0e1a'); p.set(x, 17, '#4a0e1a'); p.set(x, 18, '#2a0810'); }
     for (let x = 5; x <= 25; x += 3) { p.set(x, 15, WHITE); p.set(x + 1, 15, '#d8d0bc'); p.set(x, 16, '#e8e2d2'); }
-    for (let x = 6; x <= 26; x += 3) { p.set(x, 17, WHITE); p.set(x - 1, 17, '#d8d0bc'); }
-    // page lines on the fore-edges
-    for (const y of [12, 13.9, 19, 20.6]) for (let x = 5; x <= 26; x++) if ((x + Math.round(y)) % 4) over(p, x, Math.round(y), '#c8b898');
-    // the ribbon over the teeth, forked end
-    p.set(19, 28, null); p.set(20, 29, ribbon.r[1]); p.set(18, 29, ribbon.r[1]);
+    for (let x = 6; x <= 25; x += 3) { p.set(x, 18, '#d8d0bc'); p.set(x + 1, 18, WHITE); p.set(x + 1, 17, '#e8e2d2'); }
+    // the ribbon tongue lolling out of the mouth, its end forked
+    const RB = ribbon.r;
+    const rib = [[18, 17, 1], [19, 17, 2], [18, 18, 1], [19, 18, 2], [18, 19, 1], [19, 19, 2], [19, 20, 1], [20, 20, 2], [19, 21, 1], [20, 21, 2], [19, 22, 1], [20, 22, 3],
+      [19, 23, 1], [20, 23, 2], [18, 24, 1], [19, 24, 2], [18, 25, 1], [19, 25, 2], [18, 26, 0], [19, 26, 2], [19, 27, 1], [20, 27, 1], [18, 28, 0], [20, 28, 0]];
+    for (const [x, y, k] of rib) p.set(x, y, RB[k]);
+    p.set(17, 17, '#1c0408'); p.set(17, 18, '#1c0408');
     // glowing clasp-eyes: bright core and a dark slit
     T.stampM(p, 9, 6, ['ww.', 'wyk', '.yk'], { w: '#fffbe0', y: '#f8e070', k: '#5a2a10' });
     // scuffs on the old leather
-    for (const [x, y] of [[7, 5], [24, 9], [13, 10], [26, 22], [6, 23]]) over(p, x, y, leather.r[1]);
+    for (const [x, y] of [[7, 5], [24, 9], [13, 10], [26, 23], [6, 24]]) over(p, x, y, leather.r[1]);
     // motes of magic drifting around the tome (un-outlined)
     return finish(p, { post: (q) => {
-      for (const [x, y] of [[1, 5], [30, 14], [3, 27]]) q.set(x, y, '#fff4c0');
+      for (const [x, y] of [[1, 5], [30, 15], [3, 28]]) q.set(x, y, '#fff4c0');
     } });
   };
 
@@ -29930,7 +29994,7 @@ try{
     // the quill: a long white feather held up in the fist, leaning outward so
     // its broad vane stands clear of the coat; the dark nib shows under the fist
     const q = R.Gfx.pix(W, H);
-    const shaftAt = (t) => [11 - 7.4 * t - 1.3 * Math.sin(t * Math.PI), 30.4 - 24.6 * t];
+    const shaftAt = (t) => [11 - 6.6 * t - 1.1 * Math.sin(t * Math.PI), 30.4 - 24.6 * t];
     const Lp = [], Rp = [];
     for (let i = 0; i <= 20; i++) {
       const t = i / 20, [x, y] = shaftAt(t);
@@ -30218,6 +30282,10 @@ try{
 // The table is §9.4.6 verbatim, except seven stage-2+ entries that were a pure colour shift of an earlier
 // stage (beetle_2, crystal_2..4, frog_3, darkmage_2, darkmage_3). Each got the part its bestiary text
 // describes (marked "+ (A14a)"), so every stage of a lineage reads as a different monster, not a recolour.
+// Fourteen hue values were corrected (marked "colour (A14a)") where §9.4.6's numbers, applied to the real
+// base colours, gave a colour the monster's own name or bestiary text contradicts (紅水晶 came out green,
+// ゼリー将軍 "赤いゼリー" green, 砂ヘビ green, 毒ガエル "青と黄色" purple, …). Measured with the dominant hue
+// of the recoloured base (tools/check_mons-parts.js, check "colour words").
 (function (R) {
   'use strict';
   const A = (R.Art = R.Art || {});
@@ -30226,7 +30294,7 @@ try{
     jelly_1: ['jelly', {}, []],
     jelly_2: ['jelly', { hue: 170 }, [['bubbles', { c: '#c8f0ff' }]]],
     jelly_3: ['jelly', { hue: 110, sat: 1.1, bri: 0.85 }, [['drips', { c: '#a060e0' }], ['skull_mark', { c: '#f0e0ff' }]]],
-    jelly_4: ['jelly', { hue: -40, sat: 1.1 }, [['helm', { c: '#9aa0b0', style: 'horned' }], ['sword', { c: '#d8dce8' }]]],
+    jelly_4: ['jelly', { hue: -150, sat: 1.1 }, [['helm', { c: '#9aa0b0', style: 'horned' }], ['sword', { c: '#d8dce8' }]]], // colour (A14a): 赤いゼリー
     jelly_5: ['jelly', {}, [['tiara', { c: '#ffe070', gem: '#ff60c0' }]], 'prism'],
     // rat ネズミ
     rat_1: ['rat', {}, []],
@@ -30235,7 +30303,7 @@ try{
     rat_4: ['rat', { hue: -20, bri: 0.8 }, [['eyepatch'], ['bandana', { c: '#c03030' }], ['sword', { c: '#c0c4d0', size: 's' }]]],
     // bat コウモリ
     bat_1: ['bat', {}, []],
-    bat_2: ['bat', { hue: 330, sat: 1.2 }, [['eyes_glow', { c: '#ff4040' }]]],
+    bat_2: ['bat', { hue: 55, sat: 1.2 }, [['eyes_glow', { c: '#ff4040' }]]], // colour (A14a): 体が赤く染まる
     bat_3: ['bat', { hue: 260 }, [['aura', { c: '#c090ff' }]]],
     bat_4: ['bat', { sat: 0.5, bri: 0.55 }, [['eyes_glow', { c: '#ff3050' }], ['aura', { c: '#502070' }]]],
     bat_5: ['bat', { hue: 330, sat: 1.1, bri: 0.7 }, [['crown', { c: '#e0c050', gem: '#c02040' }], ['cape', { c: '#301020', c2: '#c02030' }]]],
@@ -30247,7 +30315,7 @@ try{
     // crab カニ
     crab_1: ['crab', {}, []],
     crab_2: ['crab', { hue: 200, sat: 0.35 }, [['armor_plates', { c: '#7c8898' }]]],
-    crab_3: ['crab', { hue: 160 }, [['bubbles', { c: '#e0ffff' }]]],
+    crab_3: ['crab', { hue: 190 }, [['bubbles', { c: '#e0ffff' }]]], // colour (A14a): 青いカニ
     crab_4: ['crab', { hue: 30, sat: 0.6, bri: 1.1 }, [['shell_tower', { c: '#d8c8a0' }]]],
     // seabird カモメ
     seabird_1: ['seabird', {}, []],
@@ -30268,7 +30336,7 @@ try{
     // plant 人食い花
     plant_1: ['plant', {}, []],
     plant_2: ['plant', { hue: -20, sat: 0.9, bri: 0.85 }, [['thorns', { c: '#2a5020' }]]],
-    plant_3: ['plant', { hue: 200, sat: 1.1 }, [['smoke', { c: '#b080e0' }]]],
+    plant_3: ['plant', { hue: -60, sat: 1.1 }, [['smoke', { c: '#b080e0' }]]], // colour (A14a): 紫の花びら
     plant_4: ['plant', { hue: 230, sat: 0.9, bri: 0.65 }, [['aura', { c: '#8090ff' }]]],
     plant_5: ['plant', { hue: 40, sat: 0.6, bri: 1.2 }, [['halo', { c: '#fff4b0' }], ['flower', { c: '#ffffff' }]]],
     // fairy 妖精
@@ -30288,10 +30356,10 @@ try{
     scorpion_4: ['scorpion', { hue: 260, sat: 0.6, bri: 0.6 }, [['skull_mark', { c: '#e0e0e0' }], ['eyes_glow', { c: '#ff2040' }]]],
     scorpion_5: ['scorpion', { hue: 30, sat: 0.8, bri: 0.8 }, [['crown', { c: '#f0c030', gem: '#40c0ff' }], ['armor_plates', { c: '#c09030' }]]],
     // snake ヘビ
-    snake_1: ['snake', { hue: 35, sat: 0.7, bri: 1.1 }, []],
+    snake_1: ['snake', { hue: -70, sat: 0.7, bri: 1.1 }, []], // colour (A14a): 砂と同じ色
     snake_2: ['snake', { hue: 20, sat: 0.8, bri: 0.85 }, [['rattle', { c: '#e0c080' }]]],
     snake_3: ['snake', { hue: 60, sat: 1.1 }, [['eyes_glow', { c: '#ff3030' }], ['hood', { c: '#5a8030', style: 'cobra' }]]],
-    snake_4: ['snake', { hue: 30, sat: 0.9, bri: 0.9 }, [['horns', { c: '#d8c090', len: 's' }], ['armor_plates', { c: '#a88040' }]]],
+    snake_4: ['snake', { hue: -85, sat: 1, bri: 0.8 }, [['horns', { c: '#d8c090', len: 's' }], ['armor_plates', { c: '#a88040' }]]], // colour (A14a): 砂の大蛇
     // mummy ミイラ
     mummy_1: ['mummy', {}, []],
     mummy_2: ['mummy', { hue: 250, sat: 0.4, bri: 0.9 }, [['eyes_glow', { c: '#b040ff' }]]],
@@ -30335,17 +30403,17 @@ try{
     // ghost 霊
     ghost_1: ['ghost', {}, []],
     ghost_2: ['ghost', { hue: 20, sat: 1.2 }, [['drips', { c: '#a0d0ff', style: 'tears' }]]],
-    ghost_3: ['ghost', { hue: 120, sat: 0.8, bri: 0.8 }, [['eyes_glow', { c: '#ff3050' }], ['chain', { c: '#6a6480' }]]],
+    ghost_3: ['ghost', { hue: 50, sat: 0.8, bri: 0.8 }, [['eyes_glow', { c: '#ff3050' }], ['chain', { c: '#6a6480' }]]], // colour (A14a): 紫の霊
     ghost_4: ['ghost', { hue: 330, sat: 1.2, bri: 0.7 }, [['chain', { c: '#503040' }], ['aura', { c: '#801030' }]]],
     ghost_5: ['ghost', { hue: 250, sat: 1.2, bri: 0.6 }, [['crown', { c: '#b0a0e0', gem: '#ff4080' }], ['cape', { c: '#201030', c2: '#8040c0' }], ['aura', { c: '#6030a0' }]]],
     // wisp 鬼火
     wisp_1: ['wisp', { hue: -170, sat: 1.2 }, []],
     wisp_2: ['wisp', { hue: -100, sat: 1.2 }, [['eyes_glow', { c: '#ffffff', style: 'face' }]]],
     wisp_3: ['wisp', { sat: 0.4, bri: 1.2 }, [['aura', { c: '#c0e0ff' }]]],
-    wisp_4: ['wisp', { hue: 80, sat: 1.2, bri: 0.7 }, [['aura', { c: '#502080' }], ['skull_mark', { c: '#d0c0ff' }]]],
+    wisp_4: ['wisp', { hue: 15, sat: 1.2, bri: 0.55 }, [['aura', { c: '#502080' }], ['skull_mark', { c: '#d0c0ff' }]]], // colour (A14a): 青黒い炎
     // frog カエル
     frog_1: ['frog', {}, []],
-    frog_2: ['frog', { hue: 180, sat: 1.3 }, [['spots', { c: '#ffd020' }]]],
+    frog_2: ['frog', { hue: 125, sat: 1.3 }, [['spots', { c: '#ffd020' }]]], // colour (A14a): 青と黄色のカエル
     frog_3: ['frog', { hue: 40, sat: 0.8, bri: 0.9 }, [['horns', { c: '#a88848', len: 's' }], ['spots', { c: '#503818' }]]], // + (A14a): 角ガエルの大口
     frog_4: ['frog', { hue: 20, sat: 0.7, bri: 0.95 }, [['bell', { c: '#c89040' }]]],
     // doll 人形
@@ -30394,9 +30462,9 @@ try{
     beetle_4: ['beetle', { sat: 0.3, bri: 1.3 }, [['crystals', { c: '#e0f8ff' }]]],
     // crystal 水晶
     crystal_1: ['crystal', {}, []],
-    crystal_2: ['crystal', { hue: -60, sat: 1.4 }, [['embers', { c: '#ffb040' }]]], // + (A14a): 中で火がゆれる
-    crystal_3: ['crystal', { hue: 180, sat: 1.3 }, [['frost', { c: '#e8fcff' }]]], // + (A14a): 指が凍える
-    crystal_4: ['crystal', { hue: 250, sat: 1.3, bri: 0.85 }, [['aura', { c: '#7040c0' }], ['runes', { c: '#e0a0ff' }]]], // + (A14a): 闇を吸いこむ
+    crystal_2: ['crystal', { hue: 150, sat: 1.4 }, [['embers', { c: '#ffb040' }]]], // + (A14a): 中で火がゆれる; colour: 紅水晶: 赤
+    crystal_3: ['crystal', { hue: 20, sat: 1.3 }, [['frost', { c: '#e8fcff' }]]], // + (A14a): 指が凍える; colour: 青水晶: 青
+    crystal_4: ['crystal', { hue: 80, sat: 1.3, bri: 0.85 }, [['aura', { c: '#7040c0' }], ['runes', { c: '#e0a0ff' }]]], // + (A14a): 闇を吸いこむ; colour: 紫水晶: 紫
     // goblin 小鬼
     goblin_1: ['goblin', {}, []],
     goblin_2: ['goblin', { hue: 20 }, [['axe', { c: '#b8c0c8' }], ['helm', { c: '#807060', style: 'cap' }]]],
@@ -30418,7 +30486,7 @@ try{
     // gargoyle 石像鬼
     gargoyle_1: ['gargoyle', {}, []],
     gargoyle_2: ['gargoyle', { sat: 0.3, bri: 0.45 }, [['eyes_glow', { c: '#ff3020' }]]],
-    gargoyle_3: ['gargoyle', { hue: -150, sat: 1.3 }, [['embers', { c: '#ff6020' }]]],
+    gargoyle_3: ['gargoyle', { hue: 115, sat: 1.3 }, [['embers', { c: '#ff6020' }]]], // colour (A14a): 溶岩で焼き固められた
     gargoyle_4: ['gargoyle', { sat: 0.5, bri: 0.85 }, [['horns', { c: '#606070', len: 'l' }], ['crown', { c: '#a0a0b0' }]]],
     // orc 大鬼
     orc_1: ['orc', { hue: 20, sat: 0.8 }, []],
@@ -30436,7 +30504,7 @@ try{
     eyeball_5: ['eyeball', { hue: 180, sat: 0.6, bri: 1.25 }, [['crown', { c: '#ffe070', gem: '#80c0ff' }], ['wings_feather', { c: '#ffffff', size: 'm' }], ['aura', { c: '#fff0b0' }]]],
     // darkmage 魔術師
     darkmage_1: ['darkmage', { hue: 20, sat: 0.8 }, []],
-    darkmage_2: ['darkmage', { hue: 140, sat: 1.2 }, [['embers', { c: '#ffa040' }]]], // + (A14a): 火の雨
+    darkmage_2: ['darkmage', { hue: 60, sat: 1.2 }, [['embers', { c: '#ffa040' }]]], // + (A14a): 火の雨; colour: 赤い法衣
     darkmage_3: ['darkmage', { hue: -150, sat: 1.1 }, [['storm', { c: '#c8f0d8' }]]], // + (A14a): 風の刃
     darkmage_4: ['darkmage', { hue: 30, sat: 1.1, bri: 0.6 }, [['aura', { c: '#502080' }], ['staff', { c: '#302030', gem: '#c040ff' }]]],
     // automaton からくり
@@ -30554,7 +30622,7 @@ try{
       hand: [15, 40], hand2: [33, 40], tail: [41, 8], feet: [24, 46] },
     plant: { head: [24, 4], headW: 16, brow: [24, 8], eyes: [[20, 8], [27, 8]], mouth: [24, 17], neck: [24, 27], back: [24, 12], body: [24, 34],
       hand: [6, 37], hand2: [42, 36], tail: [24, 34], feet: [24, 46] },
-    skeleton: { head: [24, 5], headW: 16, brow: [24, 6], eyes: [[21, 9], [28, 9]], mouth: [24, 15], neck: [24, 19], back: [24, 20], body: [24, 27],
+    skeleton: { collar: false, head: [24, 5], headW: 16, brow: [24, 6], eyes: [[21, 9], [28, 9]], mouth: [24, 15], neck: [24, 19], back: [24, 20], body: [24, 27],
       hand: [10, 24], hand2: [34, 30], tail: [24, 27], feet: [24, 46], handDir: -95,
       erase: { hand: [[3, 0, 13, 21, 'all'], [3, 21, 8, 24, 'all']] } },
     ghost: { head: [24, 7], headW: 12, brow: [24, 11], eyes: [[21, 16], [27, 16]], mouth: [24, 20], neck: [24, 26], back: [24, 14], body: [24, 28],
@@ -30574,7 +30642,7 @@ try{
     darkmage: { head: [25, 5], headW: 14, brow: [25, 9], eyes: [[20, 13], [27, 13]], mouth: [24, 17], neck: [25, 22], back: [25, 20], body: [25, 32],
       hand: [9, 31], hand2: [39, 28], tail: [25, 32], feet: [25, 46], handDir: -90,
       erase: { hand: [[2, 0, 14, 9, 'all'], [5, 10, 11, 47, 'wood']] } },
-    armor: { head: [24, 4], headW: 14, brow: [24, 6], eyes: [[22, 11], [26, 11]], mouth: [24, 15], neck: [24, 20], back: [24, 18], body: [24, 28],
+    armor: { collar: false, head: [24, 4], headW: 14, brow: [24, 6], eyes: [[22, 11], [26, 11]], mouth: [24, 15], neck: [24, 20], back: [24, 18], body: [24, 28],
       hand: [11, 22], hand2: [36, 24], tail: [24, 28], feet: [24, 46], handDir: -90,
       erase: { hand: [[7, 0, 13, 19, 'metal']], head: [[23, 0, 40, 8, 'red']] } },
     gargoyle: { head: [24, 8], headW: 12, brow: [24, 10], eyes: [[21, 12], [26, 12]], mouth: [24, 17], neck: [24, 20], back: [24, 14], body: [24, 28],
@@ -30613,6 +30681,7 @@ try{
     beetle: { at: { horns: [15, 5] } },
     frog: { at: { spots: [23, 24, 0.36, 0.18] } },
     mole: { clawAt: [[8, 22], [39, 22]], clawDir: -90 },
+    automaton: { collar: false },
     scribe: { erase: { hand: [[3, 7, 10, 26, 'all']], hand2: [[30, 27, 42, 41, 'wood']] } },
   });
   const AN = (A.MON_ANCHORS = A.MON_ANCHORS || {});
@@ -30852,7 +30921,7 @@ try{
     const hcx = hx, hcy = (hy + my) / 2 + 0.5, hrx = hw / 2 + 0.8, hry = (my - hy) / 2 + 1.5;
     const col = o.extra('front');
     const ny = an.neck ? an.neck[1] : my + 2;
-    for (const s2 of [-1, 1]) {
+    for (const s2 of an.collar === false ? [] : [-1, 1]) {
       const cm = T.mask(p.w, p.h);
       const topY = Math.max(1, hy + Math.round(hw * 0.3));
       cm.poly([
@@ -31604,23 +31673,27 @@ try{
 
   // ---------------------------------------------------------------- smoke 煙 (around, back)
   PARTS.smoke = (p, a, o) => {
-    const T = TK(), k = o.baseK, b = around(o);
+    const T = TK(), k = o.baseK, b = around(o), info = o.info;
     const rmp = T.ramp(o.c || '#a0a0a0', 4, { dark: 0.5, light: 0.45 });
-    const n = k < 1.3 ? 4 : 6;
+    // puffs billowing out from behind the silhouette: centred just outside its sides and top
+    const n = k < 1.3 ? 5 : 7;
     for (let i = 0; i < n; i++) {
       const side = i % 2 ? 1 : -1;
-      const cx = Math.round(a[0] + side * (b.x1 - b.x0) * (0.3 + o.rng() * 0.25)), cy = Math.round(b.y0 + (b.y1 - b.y0) * (0.1 + o.rng() * 0.55));
-      // a puff = three overlapping circles, lit from the top-left, dithered edge
-      const puffs = [[0, 0, 1], [-1.2, 0.6, 0.8], [1.1, 0.5, 0.75]];
+      const top = i === n - 1;
+      const y = top ? Math.max(1, b.y0 + Math.round(1 * k)) : Math.round(b.y0 + (b.y1 - b.y0) * (0.15 + (i / n) * 0.6 + o.rng() * 0.08));
+      const edge = top ? a[0] + Math.round((o.rng() - 0.5) * (b.x1 - b.x0) * 0.4) : side < 0 ? info.left[y] : info.right[y];
+      if (edge < 0) continue;
+      const cx = top ? edge : edge + side * Math.round(1 + 1.2 * k), cy = y;
+      const puffs = [[0, 0, 1], [-1.1, 0.7, 0.8], [1.1, 0.6, 0.75], [0.2, -0.9, 0.7]];
       for (const [ox, oy, rs] of puffs) {
-        const r = (1.2 + o.rng() * 0.8) * k * rs + 0.6;
+        const r = (1.1 + o.rng() * 0.7) * k * rs + 0.6;
         const px = cx + ox * r, py = cy + oy * r;
-        for (let y = Math.floor(py - r); y <= Math.ceil(py + r); y++) for (let x = Math.floor(px - r); x <= Math.ceil(px + r); x++) {
-          const d = Math.hypot(x - px, y - py);
+        for (let yy = Math.floor(py - r); yy <= Math.ceil(py + r); yy++) for (let xx = Math.floor(px - r); xx <= Math.ceil(px + r); xx++) {
+          const d = Math.hypot(xx - px, yy - py);
           if (d > r) continue;
-          if (d > r - 0.9 && (x + y) % 2) continue;
-          const lit = (x - px) * -0.6 + (y - py) * -0.8;
-          o.fx.set(x, y, lit > r * 0.35 ? rmp[3] : lit > -r * 0.2 ? rmp[2] : rmp[1]);
+          if (d > r - 0.9 && (xx + yy) % 2) continue;
+          const lit = (xx - px) * -0.6 + (yy - py) * -0.8;
+          o.fx.set(xx, yy, lit > r * 0.35 ? rmp[3] : lit > -r * 0.2 ? rmp[2] : rmp[1]);
         }
       }
     }
@@ -33015,13 +33088,13 @@ try{
     const T = TK(), k = o.baseK;
     grip(o, 'hand');
     const deg = handDir(o, a, 'hand') + (a[0] < o.anchors.body[0] ? 12 : -12);
-    const L = Math.round(L0(k) * 0.95);
-    const vane = T.ramp(o.c || '#ffffff', 4, { dark: 0.35, light: 0.4 });
+    const L = Math.round(L0(k) * 1.15);
+    const vane = T.ramp(o.c || '#ffffff', 4, { dark: 0.42, light: 0.4 });
     frame(p, a[0], a[1], deg, -Math.round(1.5 * k), L, 2 * k, (t, s) => {
       if (t < 0) return Math.abs(s) <= 0.5 ? '#302030' : null;               // nib
       const u = t / L;
       if (Math.abs(s) <= 0.35 && u < 0.97) return vane[1];                  // shaft
-      const hw = u < 0.2 ? 0 : Math.sin(((u - 0.2) / 0.8) * Math.PI) * (1.1 + 0.55 * k);
+      const hw = u < 0.15 ? 0 : Math.sin(((u - 0.15) / 0.85) * Math.PI) * (1.3 + 0.75 * k);
       const hw2 = hw * (s > 0 ? 1 : 0.55);
       if (Math.abs(s) > hw2) return null;
       return (Math.round(t * 1.5) & 1) ? vane[2] : vane[s > 0 ? 3 : 2];     // barbs
@@ -33644,7 +33717,7 @@ try{
       if (c == null || ring[i]) continue;
       const l = lum(c);
       if (l < 0.1) { p.d[i] = '#1c2230'; continue; }
-      p.d[i] = lumTo(STEEL, nl(l), 1.05);
+      p.d[i] = lumTo(STEEL, nl(l), 1.45);
     }
     // one diagonal white band (2 px), top-right to lower-left across the upper body
     const bb = bboxOf(p);
@@ -33746,7 +33819,7 @@ try{
   /** depth group of front parts: 0 body surface and growths, 1 head / face / neck wear, 2 held items */
   A.PART_Z = Object.assign(A.PART_Z || {}, {
     armor_plates: 0, spots: 0, runes: 0, chain: 0, skull_mark: 0, embers: 0, frost: 0, moss: 0, coral: 0, crystals: 0,
-    spikes: 0, thorns: 0, drips: 0, pins: 0, cape: 0, shell_tower: 0, mist: 3,
+    spikes: 0, thorns: 0, drips: 0, pins: 0, cape: 0, shell_tower: 0, mist: 3, flame: 0.5,
     sword: 2, spear: 2, axe: 2, staff: 2, bow: 2, club_iron: 2, pick: 2, bomb: 2, cannon: 2, baton: 2, quill: 2, parasol: 2,
     shield: 2, book: 2, violin: 2, drum: 2, flute: 2, claws: 2,
   });
@@ -34613,7 +34686,9 @@ try{
   };
   // ---- Chronicle additions (DESIGN §11.3.6): the new weapon families, the armour
   // slots and the six elements (magic stones, spell book). dagger/head/body reuse
-  // knife/helm/light as the spec says.
+  // knife/helm/light as the spec says. Every grid is the spec's; fist, hands and feet
+  // keep the spec's silhouette with one more shade (knuckles, cuff, sole) —
+  // tools/test_art-chars.js checks both.
   Object.assign(ICONS, {
     // the broad two-edged blade of §11.3.6 (3px wide, so it never reads as icon:sword)
     greatsword: [
@@ -34643,7 +34718,7 @@ try{
       'LwLwLLM.',
       'LLLLLLM.',
       '.LLLLM..',
-      '.HHHH...',
+      '..HHH...',
       '........',
     ],
     whip: [
@@ -34741,6 +34816,7 @@ try{
   ICONS.head = ICONS.helm;
   ICONS.body = ICONS.light;
   A.ICON_IDS = Object.keys(ICONS);
+  A.ICON_GRIDS = ICONS; // read-only, for tools/test_art-chars.js (grids vs §11.3.6)
   for (const k in ICONS) R.Gfx.def('icon:' + k, () => R.Gfx.fromGrid(ICONS[k], IP));
 })(window.RPG);
 
@@ -40302,11 +40378,9 @@ try{
       if (v === 1) { // footprints
         let x = 2 + Math.floor(rng() * 4), y = 1;
         while (y < 15) { b.set(x, y, P[1]); b.set(x + 1, y, P[2]); b.set(x, y + 1, P[2]); x += (y & 2) ? 2 : -1; y += 3; }
-      } else if (v === 2) { // stone peeking through
+      } else if (v === 2) { // a dimple of blue shadow where snow slumped
         const x = 4 + Math.floor(rng() * 7), y = 6 + Math.floor(rng() * 5);
-        const S = [0x3c3e48, 0x5c5e68, 0x80828c];
-        b.hline(x, x + 3, y + 1, S[1]); b.hline(x - 1, x + 4, y + 2, S[1]); b.set(x - 1, y + 2, S[2]); b.set(x + 4, y + 2, S[0]);
-        b.hline(x, x + 3, y, P[4]); b.set(x + 1, y - 1, P[4]); b.hline(x, x + 4, y + 3, P[1]);
+        b.hline(x, x + 3, y + 1, P[2]); b.hline(x - 1, x + 4, y + 2, P[2]); b.hline(x, x + 3, y, P[4]); b.set(x + 1, y + 1, P[1]);
       } else if (v === 3) { // drift hollow
         const cx = 4 + rng() * 8, cy = 5 + rng() * 6;
         b.each((x, y, c) => { const e = ((x - cx) / 4.5) ** 2 + ((y - cy) / 2.2) ** 2; return e < 1 ? (y < cy ? P[2] : P[4]) : undefined; });
@@ -42458,7 +42532,7 @@ try{
     const plain = t.tile(PL[3]);
     for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
       const v = nz(x, y, 8, 13);
-      if (v < 0.34 && (x + y * 2) % 5 === 0) plain.p[y * 16 + x] = PL[2];
+      if (v < 0.34 && (x + y * 2) % 4 === 0) plain.p[y * 16 + x] = PL[2];
       else if (v > 0.7 && dith(x, y, (v - 0.7) * 2)) plain.p[y * 16 + x] = PL[4];
     }
     TEX[PLAIN] = [plain.p];
@@ -42481,7 +42555,7 @@ try{
       const v = nz(x, y, 8, 19);
       if (v < 0.3 && (x * 3 + y) % 4 === 0) return S[2];
       if (v < 0.22 && dith(x, y, 0.4)) return S[2];
-      return v > 0.72 && (x + y) % 7 === 0 ? S[4] : S[3];
+      return v > 0.72 && (x + y) % 8 === 0 ? S[4] : S[3];
     })];
     // swamp (poison mire): muted violet with dark pools, sheen and bubbles
     const SW = WP.swamp;
@@ -42507,7 +42581,7 @@ try{
       const v = nz(x, y, 8, 41), h = t.hash(x, y, 43);
       if (h < 0.05) return WA[1];
       if (h > 0.96) return WA[3];
-      return v < 0.3 && (x + y) % 3 === 0 ? WA[1] : WA[2];
+      return v < 0.3 && (x + y) % 4 === 0 ? WA[1] : WA[2];
     })];
     // magma: 2 frames, crust plates over glowing channels (colours unchanged, §11.2.2)
     const MGM = P.magma, CR = P.crust;
@@ -43271,14 +43345,15 @@ try{
 
   // ------------------------------------------------------------ render
   const CACHE = new Map();
+  function classes9(m, x, y) {
+    const c9 = new Int8Array(9);
+    for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) c9[(j + 1) * 3 + (i + 1)] = resolveClass(m, x + i, y + j);
+    return c9;
+  }
   function render(m, x, y) {
     tk(); textures(); periodic();
-    const c9 = new Int8Array(9), d9 = new Array(9);
-    for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) {
-      const q = (j + 1) * 3 + (i + 1);
-      c9[q] = resolveClass(m, x + i, y + j);
-      d9[q] = descriptor(m, x + i, y + j, c9[q]);
-    }
+    const c9 = classes9(m, x, y), d9 = new Array(9);
+    for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) { const q = (j + 1) * 3 + (i + 1); d9[q] = descriptor(m, x + i, y + j, c9[q]); }
     const own = m.tileAt(x, y), v = vOf(x, y);
     const key = own + v + '|' + c9.join(',') + '|' + d9.join(';');
     let hit = CACHE.get(key);
@@ -43564,6 +43639,8 @@ try{
   A.worldTileStats = () => { const o = {}; for (const k of CACHE.keys()) { const id = k.split('|')[0]; o[id] = (o[id] || 0) + 1; } return o; };
   /** drop cached cells (e.g. after R.Game.secrets changed); the field keeps its own per-cell cache */
   A.worldTileReset = () => CACHE.clear();
+  /** (tests) the ground-class field of a cell over its 20×20 extended area (2 px margin) */
+  A.worldTileField = (m, x, y) => { tk(); return { cls: field(classes9(m, x, y)).cls, EW, MG }; };
   A.WORLD_CLASS = { TCLS, clsOf, isWater, NAMES: ['sea', 'barrier', 'grass', 'plain', 'desert', 'snow', 'swamp', 'beach', 'waste', 'magma', 'marsh', 'ash', 'fog'] };
 
   // Standalone 'tile:<id>' for world tiles: the tile in a neutral neighbourhood.
@@ -45930,28 +46007,28 @@ try{
       '~~~~~~~~~~~~~~,,r,:,,r,~~~~~~~~~~~~~',
     ],
     decor: [
+      '................i...i...............',
       '....................................',
-      '.............i.........i............',
-      '....................................',
+      '............i...........i...........',
       '...............U....................',
-      '.........q..........................',
-      '......................q.............',
-      '......i.......................i.....',
+      '..........q.........................',
+      '......................q....@........',
+      '....................................',
       '....................................',
       '....................................',
       '.............................U......',
-      '......@.q...........................',
-      '....................................',
-      '....i...........................i...',
-      '....................................',
-      '....................................',
-      '..............................N.....',
-      '.............N...........@..........',
-      '..........q.........................',
+      '........q...........................',
+      '.......@............................',
+      '.......i......i.......i.....i.......',
       '....................................',
       '....................................',
       '....................................',
-      '................,...................',
+      '............................N.......',
+      '...........q..N.........@...........',
+      '....................................',
+      '................i...i...............',
+      '....................................',
+      '...........@....,...................',
       '....................q...............',
       '....................................',
       '....................................',
@@ -46032,27 +46109,27 @@ try{
       '..................................',
       '.........W........................',
       '..................................',
+      '..............i....i..............',
       '..................................',
-      '............i.........i...........',
       '..................................',
-      '..................................',
+      '..........................q.......',
       '..............q...................',
-      '....W@............................',
-      '..................................',
-      '..................................',
+      '....W..........i...i..............',
+      '.....@............................',
       '..................................',
       '..................................',
       '..................................',
       '..................................',
       '......N...........................',
       '..................................',
-      '........................U....@....',
+      '.............................@....',
+      '..................................',
+      '.......................U..........',
       '..................................',
       '..................................',
       '..................................',
       '..................................',
-      '..................................',
-      '..................................',
+      '..........@.......................',
       '..................................',
       '..................................',
       '..................................',
@@ -46286,13 +46363,13 @@ try{
       '.........rrr.......................DD...>...............',
       '.........rrr.........................rr...........|.....',
       '.....................................rr.....U...........',
-      '.............Z.................Z........................',
+      '.............Z................Z.........................',
       '............................................U...........',
-      '....1...7...3....1.j....3....1.....3....................',
+      '.....1..7...3...1......j...3...1..3.....................',
       '.........................................99.............',
       '........................................................',
       '.................................................,......',
-      '.....3..e..3..e..3..e....e......3...e....3..............',
+      '........3.e.....3.....e...3..e......e...3...............',
       '.....................................2h22h2.............',
       '......$.k.$......x.x...B.B...3.....3.........,..........',
       '...h..v.........X........YY...1...1...................|.',
@@ -46302,18 +46379,18 @@ try{
       '.......rr...........rrr.......1...1.....................',
       '...........Z.................3.....3.........U..........',
       '...h....................................................',
-      '.......4....3.....5.6....3.........3......3.............',
-      '...E.......................o.....N.............|........',
+      '.......4....3.......5.6...3.......3.......3.............',
+      '...E.............................N.............|........',
       '........................................................',
       '.......p.$......k...$.......1.1........k.[......,.......',
       '...h.....KC.........F...................................',
-      '......................?.................................',
+      '.....................?..................................',
       '..........v....:..........e.....e.....s.....:....|......',
       '......&&...............................s................',
       '......y............&&....(......(............N..........',
       '...h....................................................',
       '........................................................',
-      '......3........3.........3........3........3............',
+      '..........3....3............3......3.......3............',
       '......:............................:....................',
       '........................,...............................',
       '.............|..........................................',
@@ -46540,12 +46617,12 @@ try{
       'TT,,,,,::,,,T,,TT:::::::::::T,::,,::,,T,,,TT',
       'TT,,,T,::,,,,,,T,:::::Q:::::,,::,,::,,,,,,TT',
       'TT,,,,,::,,,,,,,,:::::::::::,,::,BBBBBBBB,TT',
-      'TT,,,,,::,,,,,,:,::::::::::W,,::,BBBBBBBB,TT',
+      'TT,,,,,::,,,,,,,,::::::::::W,,::,BBBBBBBB,TT',
       'TT,,,,,::,,,,~~~~~,,::::::::,,::,Bk___bbB,TT',
       'TT,BBBBBBBBB~~~~~~~,,,,,,,,,,,::,B_____bB,TT',
       'TT,BBBBBBBBB~~~|~~~~,FFFFFFF,,::,B______B,TT',
       'TT,Bb_____pB~~~|~~~,,F,,,,,F,,::,B_th___B,TT',
-      'TT,Bb______B,~~~~~,,,F,,,,,F,,::,B______B,TT',
+      'TT,Bb______B,~~|~~,,,F,,,,,F,,::,B______B,TT',
       'TT,B_______B,,,:,,,,,F,,,,,F,,::,B______B,TT',
       'TT,B__th___B,,,,,,,,,F,,,,,F,,::,BBBDBBBB,TT',
       'TT,B_______B,,,,,,,,,F,,,,,F,,::,,::,,,,,,TT',
@@ -46588,7 +46665,7 @@ try{
       '..2......................................2..',
       '..2..&&...............ss.................2..',
       '..2......Z...............................2..',
-      '..2...................................h..2..',
+      '..2......................................2..',
       '..2......................................2..',
       '..2........(.(............M..............2..',
       '..2..............................M......%2..',
@@ -46644,10 +46721,10 @@ try{
       K.npc('folk_b', 'woman', 26, 13, { event: 'story_rumor', rumor: 'roa_b', move: 'wander', push: true }),
       K.talk('dog', 'dog', 29, 20, 'ワン！', { move: 'wander', push: true }),
       // --- the pond
-      K.talk('angler', 'old_man', 15, 22, [
+      K.talk('angler', 'old_man', 15, 21, [
         { cond: C.done, text: '海の魚も、そろそろ\n釣れるようになったかのう。\nこの池の主は、まだまだじゃ。' },
         { text: 'この池の主は、わしの\n釣り針をずっと避けておる。\nかしこい魚じゃ。' },
-      ], { dir: 'down', fixed: true }),
+      ], { dir: 'up', fixed: true }),
       // --- the weaver's house
       K.talk('weaver', 'woman', 8, 23, [
         { cond: C.post, text: '子守歌の続き、\nちゃんと思い出したのよ。\n今夜、あの子に歌ってあげるの。' },
@@ -46723,7 +46800,7 @@ try{
       '..!.Z.....D.........',
       '....................',
       '........n.......U...',
-      '.C........?..q......',
+      '.C........?...q.....',
       '....rrr.n...........',
       '..Z.rrr........%....',
       '........V..q........',
@@ -50378,7 +50455,13 @@ try{
     }
 
     // ------------------------------------------------------------ commands
+    /** the commands of one round (menus, オート or リピート); the panel is closed when it returns */
     async commandPhase() {
+      const cmds = await this.commandInput();
+      this.panel = null;
+      return cmds;
+    }
+    async commandInput() {
       const eng = this.eng;
       if (this.auto && this.autoCancel) { this.auto = false; this.autoCancel = false; B.autoCarry = false; }
       if (this.auto) return R.BattleAI && R.BattleAI.partyCommands ? R.BattleAI.partyCommands(eng, AUTO_OPTS) : [];
@@ -62010,18 +62093,13 @@ try{
     K.fitText(c.name, x + 26, y + 6, 54, { color: col });
     G().text('Lv' + c.level, x + 110, y + 6, { align: 'right', color: col });
     G().text('H', x + 26, y + 18, { color: col === '#ffffff' ? COL.sub : col });
-    G().text(c.hp + '/' + (st.hp || 0), x + 110, y + 18, { align: 'right', color: col });
+    // a fallen member reads 「戦闘不能」 in place of 0/最大 (a plate on the lower border would cover the W value)
+    G().text(c.hp <= 0 ? '戦闘不能' : c.hp + '/' + (st.hp || 0), x + 110, y + 18, { align: 'right', color: col });
     G().text('M', x + 26, y + 29, { color: COL.sub });
     G().text(String(c.mp), x + 58, y + 29, { align: 'right' });
     G().text('W', x + 66, y + 29, { color: COL.sub });
     G().text(String(c.wp || 0), x + 110, y + 29, { align: 'right' });
     K.rowTag(x + 4, y + 36, effectiveRow(c));
-    if (c.hp <= 0) {
-      const th = K.theme();
-      const tw = Math.ceil(G().textWidth('戦闘不能', 8)) + 6;
-      G().rect(x + 114 - tw, y + 36, tw, 8, th.fill2 || th.fill);
-      G().text('戦闘不能', x + 111, y + 36, { align: 'right', color: G().C.dead, size: 8 });
-    }
   }
   Menu.drawMemberWindow = drawMemberWindow;
   function drawParty(x, y) {
@@ -64059,7 +64137,7 @@ try{
     },
     STEAL: { base: 0.35, agiDiv: 200, min: 0.1, max: 0.8, boss: 0.5, rareMul: 4, rareCap: 0.5, autoRare: 0.5 },
     // §3.3.16 — caps of summed mods
-    MODCAP: { party: 150, preempt: 30, exp: 30, expMin: -100, glim: 40, glimMin: -100, prof: 50, profMin: -100, cost: -50, encounter: 50, autoSteal: 100 },
+    MODCAP: { party: 150, partyMin: -100, preempt: 30, exp: 30, expMin: -100, glim: 40, glimMin: -100, prof: 50, profMin: -100, cost: -50, encounter: 50, autoSteal: 100 },
     PARTY_KEYS: ['goldPct', 'dropPct', 'rarePct', 'superPct', 'rareEncPct', 'goldenPct', 'preemptPct', 'escapePct'],
     // §4.11 — encounters, pre-emptive strike, escape
     ENC: { world: 26, dungeon: 22, randLo: 0.6, randHi: 1.4, safeSteps: 6 },
@@ -64366,7 +64444,9 @@ try{
     },
     /**
      * the 8 party-wide keys (§3.3.16 *): sums over the living active party, capped
-     * (drop/encounter keys +150, preemptPct +30, escapePct uncapped — the chance stops at 1)
+     * (drop/encounter keys +150, preemptPct +30, escapePct uncapped — the chance stops at 1).
+     * Every sum stops at −100 so quirks (goldPct −50 on several members) never turn a
+     * reward or a chance negative.
      */
     partyMods(party) {
       party = party || (R.Game && R.Game.party) || [];
@@ -64379,6 +64459,7 @@ try{
       }
       for (const k of ['goldPct', 'dropPct', 'rarePct', 'superPct', 'rareEncPct', 'goldenPct']) out[k] = Math.min(K.MODCAP.party, out[k]);
       out.preemptPct = Math.min(K.MODCAP.preempt, out.preemptPct);
+      for (const k of K.PARTY_KEYS) out[k] = Math.max(K.MODCAP.partyMin, out[k]);
       return out;
     },
 
@@ -64784,13 +64865,16 @@ try{
             if (s === 'weapon2' && forceNoW2) continue;
             if (s === 'shield' && Rules.hasTwoHanded(v)) { if (v.equip.shield) { invPut(vinv, v.equip.shield, true); v.equip.shield = null; } continue; }
             const cur = v.equip[s];
-            let wtype = null;
+            let wtype = null, other = null;
             if (s === 'weapon1' || s === 'weapon2') {
               const it = itemOf(cur);
               if (!it) continue;            // an empty weapon slot stays empty
               wtype = it.wtype;
+              other = s === 'weapon1' ? 'weapon2' : 'weapon1';
             }
-            const cands = [cur];
+            // candidates: the current item, the inventory, and the piece c wears in the other
+            // weapon slot when it is of this slot's type (the two swap places; §4.4.1 「その人が今付けている品」)
+            const cands = [{ id: cur }];
             for (const id in vinv) {
               if (!(vinv[id] > 0) || id === cur) continue;
               const it = DB.items[id];
@@ -64798,24 +64882,32 @@ try{
               if (wtype && it.wtype !== wtype) continue;
               if (it.only && !it.only.includes(c.id)) continue;
               if (it.gender && it.gender !== c.gender) continue;
-              cands.push(id);
+              cands.push({ id });
             }
-            let best = cur, bestScore = -Infinity, bestIt = itemOf(cur);
-            for (const id of cands) {
+            if (other && !locked[other] && !(forceNoW2 && other === 'weapon2')) {
+              const oid = v.equip[other], oit = itemOf(oid);
+              if (oit && oid !== cur && oit.wtype === wtype && !oit.quirk && !cands.some((x) => x.id === oid)) cands.push({ id: oid, swap: true });
+            }
+            let best = cands[0], bestScore = -Infinity, bestIt = itemOf(cur);
+            for (const cand of cands) {
               const t = virtualChar(v);
-              t.equip[s] = id;
-              if (id && (s === 'weapon1' || s === 'weapon2') && Rules.isTwoHanded(id)) t.equip.shield = null;
+              t.equip[s] = cand.id;
+              if (cand.swap) t.equip[other] = cur;
+              if (cand.id && (s === 'weapon1' || s === 'weapon2') && Rules.isTwoHanded(cand.id)) t.equip.shield = null;
               const sc = Rules.loadoutScore(Rules.stats(t), mode);
-              const it = itemOf(id);
-              if (sc > bestScore + 1e-9 || (Math.abs(sc - bestScore) <= 1e-9 && better(it, bestIt, id === cur, best === cur))) {
-                best = id; bestScore = sc; bestIt = it;
+              const it = itemOf(cand.id);
+              if (sc > bestScore + 1e-9 || (Math.abs(sc - bestScore) <= 1e-9 && better(it, bestIt, cand.id === cur, best.id === cur))) {
+                best = cand; bestScore = sc; bestIt = it;
               }
             }
-            if (best !== cur) {
+            if (best.swap) {
+              v.equip[other] = cur;
+              v.equip[s] = best.id;
+            } else if (best.id !== cur) {
               if (cur) invPut(vinv, cur, true);
-              if (best) vinv[best] = (vinv[best] || 0) - 1;
-              v.equip[s] = best;
-              if (best && (s === 'weapon1' || s === 'weapon2') && Rules.isTwoHanded(best) && v.equip.shield) { invPut(vinv, v.equip.shield, true); v.equip.shield = null; }
+              if (best.id) vinv[best.id] = (vinv[best.id] || 0) - 1;
+              v.equip[s] = best.id;
+              if (best.id && (s === 'weapon1' || s === 'weapon2') && Rules.isTwoHanded(best.id) && v.equip.shield) { invPut(vinv, v.equip.shield, true); v.equip.shield = null; }
             }
           }
         }
@@ -65063,6 +65155,7 @@ try{
     return Math.max(1, pct < 0 ? Math.floor(v + 1e-9) : Math.ceil(v - 1e-9));
   }
   let actIdx = null, actIdxN = -1;
+  /** spells by their `order` (§7.2.2), techs in tech data order (§3.3.3, §6.1.2) */
   function sortActions(ids) {
     const keys = Object.keys(DB.actions);
     if (!actIdx || actIdxN !== keys.length) { actIdx = {}; keys.forEach((k, i) => { actIdx[k] = i; }); actIdxN = keys.length; }
@@ -65070,7 +65163,7 @@ try{
     const ord = (id) => {
       const a = DB.actions[id];
       if (a.order != null) return a.order;
-      return 1e6 + ((a.glim && a.glim.lv) || 0) * 1e4 + (idx[id] || 0);
+      return 1e6 + (idx[id] || 0);
     };
     return uniq(ids).sort((x, y) => ord(x) - ord(y) || (idx[x] || 0) - (idx[y] || 0));
   }
@@ -65175,8 +65268,9 @@ try{
     }
     if (m.profPct) { const ks = Object.keys(m.profPct).filter((k) => m.profPct[k] > 0); if (ks.length) G(joinDot(ks.map(keyName)) + 'の熟練度が伸びやすい。', '熟練度が伸びやすい。'); }
     if (m.dropPct > 0) G('魔物がアイテムを落としやすい。', 'アイテムをよく落とす。');
-    if (m.rarePct > 0) G('レアアイテムを落としやすい。', 'レアをよく落とす。');
-    if (m.superPct > 0) G('超レアアイテムを落としやすい。', '超レアをよく落とす。');
+    if (m.rarePct > 0 && m.superPct > 0) G('レアと超レアのアイテムを落としやすい。', 'レア・超レアをよく落とす。');
+    else if (m.rarePct > 0) G('レアアイテムを落としやすい。', 'レアをよく落とす。');
+    else if (m.superPct > 0) G('超レアアイテムを落としやすい。', '超レアをよく落とす。');
     if (m.goldPct > 0) G('手に入るお金が増える。', 'お金が増える。');
     if (m.goldPct < 0) B('ただしお金が減る。');
     if (m.expPct > 0) G('経験値が増える。');
@@ -65210,7 +65304,8 @@ try{
   /**
    * pack sentences into ≤ 2 lines of ≤ 20: good effects first, quirks last. Long forms
    * first; the longest sentences are shortened until it fits; then trailing good ones
-   * are dropped (quirks always stay). A normal-grade item keeps its stat line if it fits.
+   * are dropped (quirks always stay). When the effects take one line and there is no
+   * quirk, the stat line (「〇が上がる。」) goes first so the second line is not wasted.
    */
   function packDesc(good, bad, statLine) {
     const MAXW = 20;
@@ -65710,7 +65805,7 @@ try{
      * — every key in one object must hold
      */
     check(cond) {
-      if (cond == null || cond === true) return true;
+      if (cond == null || cond === true || cond === '') return true;
       if (cond === false) return false;
       if (typeof cond === 'string') return cond[0] === '!' ? !State.flag(cond.slice(1)) : State.flag(cond);
       if (Array.isArray(cond)) return cond.every(State.check);
@@ -65736,12 +65831,12 @@ try{
         if (cond.heroType && h.heroType !== cond.heroType) return false;
       }
       if (cond.var) {
-        const v = State.getVar(cond.var);
+        const v = +State.getVar(cond.var) || 0;
         const cmp = cond.gte != null || cond.lt != null || cond.eq != null;
         if (cond.gte != null && !(v >= cond.gte)) return false;
         if (cond.lt != null && !(v < cond.lt)) return false;
         if (cond.eq != null && v !== cond.eq) return false;
-        if (!cmp && !v) return false;
+        if (!cmp && !(v > 0)) return false;       // a bare {var} means "is set" (same as tools/lib/cond.js)
       }
       if (cond.postgame != null && !!g.gameClear !== !!cond.postgame) return false;
       return true;
@@ -65828,7 +65923,18 @@ try{
         c.counts = Object.assign({ battles: 0, kills: 0, glimmers: 0 }, old.counts);
         c.joined = old.joined || c.joined;
         c.mem = old.mem || c.mem;
-        if (State.flag('hero_created')) {
+        if (!State.flag('hero_created')) {
+          // the placeholder hero's kit is replaced: its techs/spells leave the books too
+          const keep = new Set(c.techs.concat(c.spells));
+          for (const k of ['tech', 'spell']) {
+            const book = g.book[k];
+            for (const id of (k === 'tech' ? old.techs : old.spells) || []) {
+              if (keep.has(id) || !book[id]) continue;
+              book[id] = book[id].filter((who) => who !== 'hero');
+              if (!book[id].length) delete book[id];
+            }
+          }
+        } else {
           c.equip = Object.assign(R.Rules.emptyEquip(), old.equip);
           for (const w of R.Rules.WTYPES) c.wprof[w] = Math.max(c.wprof[w] || 0, (old.wprof && old.wprof[w]) || 0);
           for (const e of R.Rules.ELEMENTS) c.eprof[e] = Math.max(c.eprof[e] || 0, (old.eprof && old.eprof[e]) || 0);
@@ -65862,9 +65968,10 @@ try{
       const b = R.Game.book.mon;
       return (b[monId] = b[monId] || { seen: 0, kills: 0, gold: 0, drop: false, rare: false, sr: false, scan: false });
     },
+    /** a monster met (the battle calls this once per kind per battle); rare monsters count in records.rareMons */
     seen(monId) {
       const e = State.mon(monId);
-      if (!e.seen && DB.monsters[monId] && (DB.monsters[monId].flags || []).includes('rare')) R.Game.records.rareMons++;
+      if (DB.monsters[monId] && (DB.monsters[monId].flags || []).includes('rare')) R.Game.records.rareMons++;
       e.seen++;
       return e;
     },
@@ -66093,6 +66200,15 @@ try{
       g.gold = U.clamp(Math.floor(g.gold || 0), 0, MAX_GOLD);
       if (!g.pos || !g.pos.map) g.pos = fresh.pos;
       if (!g.respawn || !g.respawn.map) g.respawn = fresh.respawn;
+      // a map that no longer exists (renamed in an update): back to the respawn town, else the start
+      if (nonEmpty(DB.maps)) {
+        if (!DB.maps[g.respawn.map]) g.respawn = fresh.respawn;
+        if (!DB.maps[g.pos.map]) {
+          const r = g.respawn;
+          g.pos = DB.maps[r.map] ? { map: r.map, x: r.x || 0, y: r.y || 0, dir: r.dir || 'down', spawn: r.spawn || (r.x == null ? 'entrance' : undefined) } : fresh.pos;
+          g.onShip = false;
+        }
+      }
       g.version = R.VERSION;
       const prev = R.Game;
       R.Game = g;

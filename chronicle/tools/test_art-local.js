@@ -203,6 +203,7 @@ section('decor (§11.2.10)');
   }
   // regional set pieces (§11.2.11 見せ場) added by art-local
   for (const id of ['sunken_bell', 'mural_firebird']) ok(!!D[id] && R.DECOR_MAP_ONLY.includes(id), id + ' registered (map legend)');
+  for (const id of ['arch_over', 'leaves_over']) ok(D[id] && D[id].over === true && D[id].pass === true && R.DECOR_MAP_ONLY.includes(id), id + ' over-layer decor (walkable, map legend)');
   // brief A2: seats, trees and soft small things are walkable
   for (const id of ['stool', 'bench', 'rug', 'rug_blue', 'rug_round', 'straw', 'leaves', 'flowers_low', 'plant', 'flowerbed', 'haystack', 'bush', 'palm', 'snowpile', 'laundry', 'paper_drift', 'mushrooms', 'cobweb', 'rope_coil', 'broken_chair', 'ash_pile', 'stage', 'rails', 'ember', 'hot_spring', 'ivy'])
     ok(D[id] && D[id].pass === true, id + ' walkable (brief A2)');
