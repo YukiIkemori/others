@@ -782,9 +782,25 @@
         L.set(x, y, P[1]); if (v === 1) L.set(x, y - 1, P[2]); else { L.set(x + 1, y, P[0]); L.set(x, y - 1, P[2]); }
       }
     }
+    if (v === 4) {
+      // snow-covered: darker evergreen body, a snow cap on the top rows of every column
+      L.each((x, y, c) => (c === NONE ? undefined : t.mix(c, 0x0e3a2a, 0.45)));
+      for (let x = 0; x < 16; x++) {
+        let top = -1;
+        for (let y = 0; y < 16; y++) if (L.get(x, y) !== NONE) { top = y; break; }
+        if (top < 0) continue;
+        L.set(x, top, 0xffffff);
+        if (L.get(x, top + 1) !== NONE) L.set(x, top + 1, (x + top) % 3 ? 0xdce8f6 : 0xa8bcd4);
+      }
+      for (const [x, y] of [[5, 8], [10, 8], [7, 10]]) if (L.get(x, y) !== NONE) L.set(x, y, 0xdce8f6);
+    }
     return finish(L, { outline: INK_LEAF, ell: [9, 14.4, 6.5, 1.3], sa: 0.36 });
   }
-  AUTO.bush = (m, x, y) => { const h = tk().hash(x, y, 383); const v = h < 0.6 ? 0 : h < 0.75 ? 1 : h < 0.9 ? 2 : 3; return cached('bush|' + v, () => bush(v)); };
+  AUTO.bush = (m, x, y) => {
+    const snowy = m && m.tileAt && [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => m.tileAt(x + dx, y + dy) === 'snowfloor');
+    if (snowy) return cached('bush|4', () => bush(4));
+    const h = tk().hash(x, y, 383); const v = h < 0.6 ? 0 : h < 0.75 ? 1 : h < 0.9 ? 2 : 3; return cached('bush|' + v, () => bush(v));
+  };
 
   // ============================================================ small well
   // Round stone well with a little shingled roof on two posts, winch and bucket.

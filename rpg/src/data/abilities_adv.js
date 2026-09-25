@@ -68,7 +68,7 @@
       mp: 5, target: 'enemies', effects: [phys(0.75, { element: 'earth' })], fx: 'earth2',
     }),
     monk_revive: act('活を入れる', 400, '活を入れて、倒れた仲間を生き返らせる。', {
-      mp: 6, target: 'ally_dead', effects: [{ type: 'revive', pct: 0.2 }], fx: 'revive', fieldUse: true,
+      mp: 6, target: 'ally_dead', effects: [{ type: 'revive', pct: 0.2 }], fx: 'revive', fieldUse: true, msg: '{user}は活を入れた！',
     }),
     monk_tiger: act('猛虎拳', 450, '猛烈な一撃を放つ。会心が出やすい。', {
       mp: 6, target: 'enemy', effects: [phys(1.8, { critBonus: 15 })], fx: 'strike3',
@@ -196,8 +196,8 @@
     bard_bewilder: act('惑わしの歌', 350, '敵全体を混乱させる。', {
       mp: 6, target: 'enemies', effects: [status('confuse', 0.35)], fx: 'song', msg: SONG,
     }),
-    bard_mana: act('魔力の歌', 400, '味方全員のMPを少し回復する。', {
-      mp: 0, target: 'allies', effects: [{ type: 'healMp', power: 10 }], fx: 'song', msg: SONG,
+    bard_mana: act('魔力の歌', 400, '身を削って歌い、味方全員のMPを回復する。', {
+      mp: 0, target: 'allies', oncePerBattle: true, effects: [{ type: 'healMp', power: 8, hpCost: 0.2 }], fx: 'song', msg: SONG,
     }),
     bard_life: act('命の歌', 500, '味方全員の毒を消し、HPを少しずつ癒やす。', {
       mp: 12, target: 'allies', effects: [cure(['poison']), { type: 'regen' }], fx: 'song', msg: SONG,
@@ -227,8 +227,8 @@
     alchemist_tonic: act('強化薬', 300, '仲間ひとりの攻撃力と守備力を上げる。', {
       mp: 6, target: 'ally', effects: [buff('atk', 1), buff('def', 1)], fx: 'buff', msg: BREW,
     }),
-    alchemist_ether: act('魔力薬', 400, '仲間ひとりのMPを20回復する。', {
-      mp: 0, target: 'ally', effects: [{ type: 'healMp', power: 20 }], fx: 'mp', msg: BREW,
+    alchemist_ether: act('魔力薬', 400, '生気を込め、仲間ひとりのMPを15回復する。', {
+      mp: 0, target: 'ally', oncePerBattle: true, effects: [{ type: 'healMp', power: 15, hpCost: 0.2 }], fx: 'mp', msg: BREW,
     }),
     alchemist_revive: act('復活薬', 450, '倒れた仲間をHP半分で生き返らせる。', {
       mp: 12, target: 'ally_dead', effects: [{ type: 'revive', pct: 0.5 }], fx: 'revive', msg: BREW, fieldUse: true,

@@ -15,6 +15,7 @@
 
   // ------------------------------------------------------------ objectives
   /** current story stage (R.DB.objectives id), derived from flags and key items */
+  const visited = (loc) => !!(R.Game.visited && R.Game.visited[loc]);
   function objective() {
     if (!R.Game) return 'obj_start';
     if (flag('abyss_clear')) return 'obj_abyss_clear';
@@ -24,13 +25,14 @@
     if (!has('crest_wind')) return 'obj_wind';
     if (!flag('has_ship') && !R.Game.ship) {
       if (flag('bandits_defeated')) return 'obj_ship';
-      if ((R.Game.visited && R.Game.visited.porta) || flag('heard_bandits')) return 'obj_bandits';
+      if (flag('heard_bandits')) return 'obj_bandits';
+      if (visited('porta')) return 'obj_porta';
       return 'obj_gate';
     }
     if (CRESTS.every(has)) return 'obj_temple';
-    if (!has('crest_water')) return 'obj_water';
+    if (!has('crest_water')) return visited('elfin') ? 'obj_water2' : 'obj_water';
     if (!has('crest_earth')) return 'obj_earth';
-    if (!has('gold_key')) return 'obj_frost';
+    if (!has('gold_key')) return visited('frost') ? 'obj_frost2' : 'obj_frost';
     if (!has('crest_fire')) return 'obj_fire';
     return 'obj_star';
   }
@@ -61,8 +63,8 @@
   R.Story = {
     CRESTS,
     CREST_NAME,
-    OBJECTIVES: ['obj_start', 'obj_wind', 'obj_gate', 'obj_bandits', 'obj_ship', 'obj_water', 'obj_earth', 'obj_frost',
-      'obj_fire', 'obj_star', 'obj_temple', 'obj_demon', 'obj_clear', 'obj_postgame', 'obj_abyss_clear'],
+    OBJECTIVES: ['obj_start', 'obj_wind', 'obj_gate', 'obj_porta', 'obj_bandits', 'obj_ship', 'obj_water', 'obj_water2', 'obj_earth',
+      'obj_frost', 'obj_frost2', 'obj_fire', 'obj_star', 'obj_temple', 'obj_demon', 'obj_clear', 'obj_postgame', 'obj_abyss_clear'],
     objective,
     refreshObjective,
     autoRespawn,
@@ -137,7 +139,8 @@
         await ev.say('おお、勇者たちよ！\nそなたたちのおかげで、\n世界に平和が戻った。\n本当にありがとう。');
         await ev.say('いつでもこの城に\n帰ってくるがよいぞ。');
       } else {
-        await ev.say('おお、' + lead() + 'たちよ！\nよくぞ戻った。');
+        const away = visited('milt') || ev.has('crest_wind');
+        await ev.say(away ? 'おお、' + lead() + 'たちよ！\nよくぞ戻った。' : 'どうした、' + lead() + 'たちよ。\nまだ城におったのか。');
         if (o.king) await ev.say(o.king);
         await ev.say(expReport());
       }

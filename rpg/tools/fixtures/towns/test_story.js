@@ -10,16 +10,19 @@ step('new game', () => {}, 'obj_start');
 step('intro', () => st.setFlag('intro_done'), 'obj_wind');
 step('crest_wind', () => st.addItem('crest_wind'), 'obj_gate');
 step('gate open', () => st.setFlag('gate_open'), 'obj_gate');
-step('visited porta', () => { R.Game.visited.porta = true; }, 'obj_bandits');
+step('visited porta', () => { R.Game.visited.porta = true; }, 'obj_porta');
+step('captain', () => st.setFlag('heard_bandits'), 'obj_bandits');
 step('fort cleared', () => { st.setFlag('bandits_defeated'); st.addItem('silver_key'); }, 'obj_ship');
 step('ship', () => { st.setFlag('has_ship'); R.Game.ship = { map: 'world', x: 56, y: 44 }; }, 'obj_water');
 step('pyramid first', () => st.addItem('crest_earth'), 'obj_water');
+step('visited elfin', () => { R.Game.visited.elfin = true; }, 'obj_water2');
 step('water', () => st.addItem('crest_water'), 'obj_frost');
+step('visited frost', () => { R.Game.visited.frost = true; }, 'obj_frost2');
 step('gold key', () => st.addItem('gold_key'), 'obj_fire');
 step('star first', () => st.addItem('crest_star'), 'obj_fire');
 step('fire', () => st.addItem('crest_fire'), 'obj_temple');
 step('ceremony', () => { st.addItem('light_crest'); st.setFlag('barrier_broken'); }, 'obj_demon');
-step('clear', () => st.setFlag('game_clear'), 'obj_clear');
+step('clear', () => st.setFlag('game_clear'), 'obj_postgame');
 for (const id of S.OBJECTIVES) assert(R.DB.objectives[id] && R.DB.objectives[id].text && R.DB.objectives[id].king, `objective ${id} has text + king advice`);
 
 // respawn default

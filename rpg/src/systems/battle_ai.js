@@ -101,12 +101,31 @@
     }
     return out;
   }
-  function itemOptions(eng, plan) {
+  /**
+   * consumables the AI may use. mode true: any (simulator); 'auto' (in-game オート): only
+   * revive items when no living member can cast a revive, and healing items when nobody
+   * has the MP for a healing spell — the player's stock is not burnt on routine fights.
+   */
+  function itemOptions(eng, plan, mode) {
     const out = [];
+    let canRevive = false, canHeal = false;
+    if (mode === 'auto') {
+      for (const p of eng.party) {
+        if (!p.commandable()) continue;
+        for (const o of abilityOptions(eng, p)) {
+          if (has(o.ab, 'revive')) canRevive = true;
+          if (has(o.ab, 'heal') && ALLY_TARGETS[o.ab.target]) canHeal = true;
+        }
+      }
+    }
     for (const id in eng.inv) {
       const it = DB.items[id];
       if (!it || it.type !== 'consumable' || !it.use || !it.use.battle || it.rare) continue;
       if (eng.count(id) - (plan.items[id] || 0) <= 0) continue;
+      if (mode === 'auto') {
+        const rev = has(it.use, 'revive'), heal = has(it.use, 'heal');
+        if (!(rev && !canRevive) && !(heal && !rev && !canHeal)) continue;
+      }
       out.push({ id, ab: it.use, cost: 0, item: it });
     }
     return out;
@@ -155,6 +174,11 @@
       if (plan.cured.has(p)) continue;
       const bad = DISABLING.filter((s) => p.status[s]);
       if (p.status.silence && abilityOptions(eng, p).length === 0 && p.mmp > 0) bad.push('silence');
+      // poison / blind only matter in a real fight (not while mopping up a trivial group)
+      if (!plan.trivial) {
+        if (p.status.poison && (eng.boss || p.hpRate() < 0.7)) bad.push('poison');
+        if (p.status.blind && (eng.boss || p.stat('atk') >= p.stat('mag'))) bad.push('blind');
+      }
       if (!bad.length) continue;
       const o = acts.find((x) => {
         const cu = has(x.ab, 'cure') && effOf(x.ab, 'cure');
@@ -163,6 +187,17 @@
       if (o) { plan.cured.add(p); reserve(plan, o); return cmdOf(o, p); }
     }
     return null;
+  }
+
+  /** strip a boss's defensive buffs (守備力 / 魔法防御 up) with an enemy-targeted dispel */
+  function tryDispel(eng, u, acts, plan) {
+    if (!eng.boss) return null;
+    const t = eng.living('mon').find((m) => m.boss && (m.buffs.def > 0 || m.buffs.mdef > 0 || m.buffs.atk > 1 || m.buffs.mag > 1) && !plan.dispelled.has(m));
+    if (!t) return null;
+    const o = acts.filter((x) => !x.item && has(x.ab, 'dispel') && FOE_TARGETS[x.ab.target]).sort((a, b) => a.cost - b.cost)[0];
+    if (!o) return null;
+    plan.dispelled.add(t);
+    return cmdOf(o, t);
   }
 
   function tryBuff(eng, u, acts, plan) {
@@ -200,11 +235,16 @@
     const total = pool.reduce((s, m) => s + left(m), 0);
     const mpRate = u.mmp ? u.mp / u.mmp : 0;
     // weak foes: keep MP; bosses: spend freely; low MP: be frugal
-    const easy = !eng.boss && total <= Math.max(1, attackScore) * 2.5;
-    const mpWeight = eng.boss ? 0.3 : easy ? Infinity : mpRate < 0.3 ? 4 : 1.2;
+    const easy = !eng.boss && (total <= Math.max(1, attackScore) * 2.5 || (plan.thrift && plan.trivial));
+    let mpWeight = eng.boss ? 0.3 : easy ? Infinity : mpRate < 0.3 ? 4 : 1.2;
+    // オート (thrift): ordinary fights are one of many before the next inn — MP is worth a lot,
+    // big spells only when the party is in trouble, and a healer keeps its MP for healing
+    const healer = plan.thrift && acts.some((o) => !o.item && has(o.ab, 'heal') && ALLY_TARGETS[o.ab.target]);
+    if (plan.thrift && !eng.boss && isFinite(mpWeight)) mpWeight = plan.danger ? 1.5 : mpRate < 0.4 ? 8 : 4;
     for (const o of acts) {
       if (!has(o.ab, 'damage') || !FOE_TARGETS[o.ab.target] || o.item) continue;
       if (!isFinite(mpWeight) && o.cost > 0) continue;
+      if (plan.thrift && !eng.boss && !plan.danger && o.cost > 0 && (healer || o.cost > Math.max(4, u.mmp * 0.12))) continue;
       const t0 = o.ab.target;
       const cands = t0 === 'enemy' || t0 === 'group' ? pool : [pool[0]];
       for (const m of cands) {
@@ -233,18 +273,43 @@
   /** one party member's action for this round (plan is shared by the whole party) */
   function partyAction(eng, u, plan, opts) {
     const acts = abilityOptions(eng, u);
-    if (opts && opts.items) acts.push(...itemOptions(eng, plan));
+    if (opts && opts.items) acts.push(...itemOptions(eng, plan, opts.items));
     return tryRevive(eng, u, acts, plan) || tryHeal(eng, u, acts, plan) || tryCure(eng, u, acts, plan) ||
-      tryBuff(eng, u, acts, plan) || offense(eng, u, acts, plan);
+      tryDispel(eng, u, acts, plan) || tryBuff(eng, u, acts, plan) || offense(eng, u, acts, plan);
   }
-  function newPlan() { return { heal: new Map(), revive: new Set(), dmg: new Map(), cured: new Set(), buffed: new Set(), items: {} }; }
-  /** commands for every commandable party member (array by party index) */
+  function newPlan() { return { heal: new Map(), revive: new Set(), dmg: new Map(), cured: new Set(), buffed: new Set(), dispelled: new Set(), items: {} }; }
+  /**
+   * How the fight looks for the party: trivial = plain attacks finish it in about two rounds
+   * and nobody is hurt; danger = party HP below half (or someone down) in a real fight.
+   */
+  function assess(eng, plan) {
+    const party = eng.living('party'), foes = eng.living('mon');
+    const hp = party.reduce((s, p) => s + p.hp, 0), mhp = eng.party.reduce((s, p) => s + p.mhp, 0);
+    let perRound = 0;
+    for (const p of party) {
+      if (!p.commandable()) continue;
+      let best = 0;
+      for (const m of foes) best = Math.max(best, eng.expectAttack(p, m));
+      perRound += best;
+    }
+    const foeHp = foes.reduce((s, m) => s + m.hp, 0);
+    const down = eng.party.some((p) => !p.alive);
+    plan.danger = !eng.boss && (down || (mhp ? hp / mhp : 1) < 0.5);
+    plan.trivial = !eng.boss && !plan.danger && foeHp <= perRound * 2 && party.every((p) => p.hpRate() >= 0.5);
+  }
+  /**
+   * commands for every commandable party member (array by party index).
+   * opts: {items: true|'auto' (consumables allowed; 'auto' = only when no spell can do it),
+   *        thrift: bool (in-game オート: conserve MP in ordinary fights)}
+   */
   function partyCommands(eng, opts) {
     const plan = newPlan();
+    plan.thrift = !!(opts && opts.thrift);
+    assess(eng, plan);
     const cmds = [];
     for (const u of eng.party) if (u.commandable()) cmds[u.idx] = partyAction(eng, u, plan, opts || {});
     return cmds;
   }
 
-  R.BattleAI = { monster, monCommand, condOk, partyCommands, partyAction, abilityOptions, newPlan, pickPartyTarget };
+  R.BattleAI = { monster, monCommand, condOk, partyCommands, partyAction, abilityOptions, itemOptions, newPlan, pickPartyTarget, assess };
 })(window.RPG);

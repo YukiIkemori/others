@@ -114,23 +114,48 @@
       c.font = Gfx.font(size);
       return c.measureText(R.Text ? R.Text.fmt(str) : String(str)).width;
     },
-    /** wrap text into lines that fit width (char-level wrap, honours \n) */
+    /**
+     * Wrap text into lines that fit width (honours \n). Unspaced Japanese: a line
+     * that fits stays whole; otherwise it breaks at the last natural phrase boundary
+     * in the second half of the line (after punctuation / a space, or between a
+     * particle and the next word), falling back to a plain char break. Kinsoku:
+     * a line never starts with closing punctuation or a small kana — the previous
+     * character moves down with it instead of spilling past the window border.
+     */
     wrap(str, width, size) {
-      const out = [];
       str = R.Text ? R.Text.fmt(str) : String(str);
-      for (const para of str.split('\n')) {
-        let line = '';
-        for (const ch of para) {
-          const t = line + ch;
-          if (line && Gfx.textWidth(t, size) > width) {
-            // kinsoku: don't start a line with closing punctuation
-            if ('、。」』）！？…ー'.includes(ch)) { line = t; continue; }
-            out.push(line); line = ch === ' ' || ch === '　' ? '' : ch;
-          } else line = t;
+      const key = str + '\u0000' + width + '\u0000' + (size || '');
+      const hit = WRAP_CACHE.get(key);
+      if (hit) return hit.slice();
+      const out = [];
+      const fits = (s) => Gfx.textWidth(s, size) <= width;
+      for (let para of str.split('\n')) {
+        let guard = 0;
+        while (para && !fits(para) && guard++ < 200) {
+          let n = 1;
+          while (n < para.length && fits(para.slice(0, n + 1))) n++;
+          let cut = 0;
+          for (let k = n; k > 0 && k >= n / 2; k--) if (niceBreak(para, k)) { cut = k; break; }
+          if (!cut) { cut = n; while (cut > 1 && NO_START.includes(para[cut])) cut--; }
+          out.push(para.slice(0, cut).replace(/[ 　]+$/, ''));
+          para = para.slice(cut).replace(/^[ 　]+/, '');
         }
-        out.push(line);
+        out.push(para);
       }
-      return out;
+      if (WRAP_CACHE.size > 400) WRAP_CACHE.clear();
+      WRAP_CACHE.set(key, out);
+      return out.slice();
+    },
+    /** draw text squeezed horizontally to fit maxW (names in narrow columns) */
+    fitText(str, x, y, maxW, opts) {
+      const w = Gfx.textWidth(str, opts && opts.size);
+      if (w <= maxW || maxW <= 0) { Gfx.text(str, x, y, opts); return; }
+      const c = Gfx.ctx;
+      const al = (opts && opts.align) || 'left';
+      const ox = al === 'right' ? x - maxW : al === 'center' ? x - maxW / 2 : x;
+      c.save(); c.translate(ox, y); c.scale(maxW / w, 1);
+      Gfx.text(str, 0, 0, Object.assign({}, opts, { align: 'left' }));
+      c.restore();
     },
 
     // --------------------------------------------------------- windows
@@ -167,7 +192,8 @@
       if (o.title) {
         const tw = Math.ceil(Gfx.textWidth(o.title)) + 8;
         const tx = x + Math.floor((w - tw) / 2);
-        Gfx.rect(tx, y, tw, 5, theme.fill);
+        // solid plate behind the title: it sits on the top border and never shows the field through it
+        Gfx.rect(tx, Math.max(0, y - 3), tw, 8 + Math.min(0, y - 3), theme.fill);
         Gfx.text(o.title, tx + 4, y - 3, { color: Gfx.C.white });
       }
     },
@@ -318,6 +344,27 @@
     },
     hexToRgb, rgbToHex,
   });
+
+  // ---- line-break rules (unspaced Japanese; shared by message windows and battle)
+  const WRAP_CACHE = new Map();
+  const NO_START = '、。，．！？!?）」』】…ー・：ぁぃぅぇぉっゃゅょァィゥェォッャュョ';
+  const BREAK_AFTER = '、。！？!?）」』　 ：';
+  const KANA = /[\u3041-\u309f]/; // hiragana
+  const KANJI = /[\u4e00-\u9fff々]/;
+  // one-kana particles; after a kanji only は/を are safe (と/に/で/の/が can be okurigana: 落とす, 上がる)
+  const PARTICLE = 'はをにでともへの';
+  /** true when a line may break between s[k-1] and s[k] at a natural phrase boundary */
+  function niceBreak(s, k) {
+    const a = s[k - 1], b = s[k];
+    if (!a || !b || NO_START.includes(b)) return false;
+    if (BREAK_AFTER.includes(a)) return true;
+    if (!KANA.test(a)) return false;
+    if (!KANA.test(b)) return true; // particle / okurigana → next word (kanji, katakana, digits, 「『★)
+    const w = s[k - 2]; // word + one-kana particle → hiragana word
+    if (!w || KANA.test(w) || !PARTICLE.includes(a)) return false;
+    return !KANJI.test(w) || a === 'は' || a === 'を';
+  }
+  Gfx.NO_START = NO_START;
 
   function hexToRgb(h) {
     h = h.replace('#', '');

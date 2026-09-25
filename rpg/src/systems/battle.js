@@ -62,6 +62,7 @@
   };
   const WEAPON_FX = { sword: 'slash', katana: 'slash', axe: 'slash', knife: 'slash', spear: 'pierce', bow: 'pierce', claw: 'claw', staff: 'strike', rod: 'strike', harp: 'strike' };
   const EMPTY = Object.freeze({});
+  const MISSED = 'missed'; // damageEffect result: a physical hit that was dodged
 
   // ---------------------------------------------------------------- units
   class Unit {
@@ -217,11 +218,13 @@
       if (ab.magic && u.status.silence) return 'silence';
       if (u.mp < this.mpCost(u, id, ab)) return 'mp';
       if (!ab.effects || !ab.effects.some((e) => BATTLE_EFFECT[e.type])) return 'field';
+      if (u.isParty && this.noEscape && B.isEscape(ab)) return 'noescape';
       return null;
     }
-    weaponFx(u) {
+    weaponFx(u, offHand) {
       if (u.isParty) {
-        const w = u.c.equip && u.c.equip.weapon && DB.items[u.c.equip.weapon];
+        const slot = offHand ? 'shield' : 'weapon';
+        const w = u.c.equip && u.c.equip[slot] && DB.items[u.c.equip[slot]];
         return w ? (w.fx || WEAPON_FX[w.wtype] || 'slash') : 'strike';
       }
       return u.d.attackFx || MON_ATTACK_FX[u.d.sprite] || 'claw';
@@ -235,8 +238,10 @@
       if (--this.inv[id] <= 0) delete this.inv[id];
       return true;
     }
+    /** room for one more (the bag holds 99 of each item) */
+    canCarry(id) { return !!DB.items[id] && (this.inv[id] || 0) < 99; }
     giveItem(id) {
-      if (!DB.items[id]) return false;
+      if (!this.canCarry(id)) return false;
       if (this.live && R.State && R.Game && this.inv === R.Game.inv) return R.State.addItem(id, 1);
       this.inv[id] = Math.min(99, (this.inv[id] || 0) + 1);
       return true;
@@ -402,8 +407,13 @@
 
     *endTurn(u) {
       if (!u.alive) return;
+      // upkeep (poison, regen, status countdowns) once per round, even for monsters acting 2–3 times
+      if (this.round > 0 && u.upkeep === this.round) return;
+      u.upkeep = this.round;
       if (u.status.poison) {
-        const n = Math.max(1, Math.floor(u.mhp / 12));
+        // 1/12 of max HP; monsters (bosses above all) are capped so poison can't carry a boss fight
+        let n = Math.max(1, Math.floor(u.mhp / 12));
+        if (!u.isParty) n = Math.min(n, 20 + (u.level || 1) * 3);
         u.hp = Math.max(0, u.hp - n);
         if (u.isParty) this.stats.taken += n; else this.stats.dealt += n;
         yield { t: 'dmg', u, n, kind: 'poison' };
@@ -469,19 +479,21 @@
     /** dual wielding right now: twoSwords AND a weapon in the shield slot (a shield / empty hand → one swing) */
     dualWield(u) { return !!(u.isParty && u.mods.twoSwords && u.st.atk2 > 0); }
 
+    /** counter: true (反撃) or the reaction's name (援護射撃 …) */
     *attack(u, target, counter) {
-      yield this.m(counter ? `${u.name}の反撃！` : `${u.name}の攻撃！`);
+      yield this.m(counter ? `${u.name}の${typeof counter === 'string' ? counter : '反撃'}！` : `${u.name}の攻撃！`);
       const swings = this.dualWield(u) ? 2 : 1;
       for (let i = 0; i < swings; i++) {
         let t = this.pickFoe(u, target);
         if (!t || !u.alive) break;
         if (!counter) t = yield* this.cover(u, t);
-        const atk = i === 1 ? u.st.atk2 : u.stat('atk');
-        yield { t: 'fx', fx: this.weaponFx(u), user: u, targets: [t], kind: 'attack' };
-        const r = this.roll(u, t, { formula: 'phys', power: 1 }, { atk });
-        if (i === 1 && r.dmg) r.dmg *= OFFHAND_MULT; // the off-hand swing is the weaker one
+        const off = i === 1; // the off-hand swing: its own ATK, element and on-hit status
+        const atk = off ? u.st.atk2 : u.stat('atk');
+        yield { t: 'fx', fx: this.weaponFx(u, off), user: u, targets: [t], kind: 'attack' };
+        const r = this.roll(u, t, { formula: 'phys', power: 1 }, off ? { atk, el: u.st.element2 || null } : { atk });
+        if (off && r.dmg) r.dmg *= OFFHAND_MULT; // the off-hand swing is the weaker one
         const landed = yield* this.hit(u, t, r, { kind: 'phys' });
-        const onHit = u.isParty ? u.st.onHit : u.d.onHit;
+        const onHit = u.isParty ? (off ? u.st.onHit2 : u.st.onHit) : u.d.onHit;
         if (landed && onHit && t.alive) yield* this.inflict(u, t, onHit.status, onHit.chance, true);
         target = t;
       }
@@ -528,7 +540,7 @@
       const rf = (a, b) => (x ? (a + b) / 2 : U.rf(a, b));
       const f = eff.formula || 'phys';
       const power = eff.power != null ? eff.power : 1;
-      const el = eff.element || (f === 'phys' ? (att.isParty ? att.st.element : att.d.element) : null) || null;
+      const el = eff.element || (ctx.el !== undefined ? ctx.el : f === 'phys' ? (att.isParty ? att.st.element : att.d.element) : null) || null;
       const vs = this.vsMult(eff, tgt);
       const itemMul = ctx.item ? 1 + this.pct(att, 'itemPct') / 100 : 1;
       if (f === 'phys') {
@@ -653,6 +665,7 @@
       const room = kind === 'mp' ? t.mmp - t.mp : t.mhp - t.hp;
       const got = Math.min(room, n);
       if (kind === 'mp') t.mp += got; else t.hp += got;
+      if (why === 'drain' && got <= 0) return 0; // already full: nothing to say
       yield { t: 'heal', u: t, n: got, mp: kind === 'mp' };
       const K = kind === 'mp' ? 'MP' : 'HP';
       if (why === 'drain') yield this.m(`${t.name}は${K}を${got}吸い取った！`);
@@ -761,7 +774,8 @@
           yield { t: 'fx', fx: ctx.fx, user: u, targets: [t], ab, kind: 'ability' };
           for (const eff of effects) {
             if (!t.alive && eff.type !== 'revive') break;
-            yield* this.effect(u, t, eff, Object.assign({ once: true }, ctx));
+            const res = yield* this.effect(u, t, eff, Object.assign({ once: true }, ctx));
+            if (res === MISSED) break; // a dodged physical hit carries no status / debuff / steal
           }
         }
       } else {
@@ -772,7 +786,8 @@
           for (const eff of effects) {
             if (this.result === 'escape') return;
             if (!t.alive && eff.type !== 'revive') break;
-            yield* this.effect(u, t, eff, Object.assign({ multi: targets.length > 1 }, ctx));
+            const res = yield* this.effect(u, t, eff, Object.assign({ multi: targets.length > 1 }, ctx));
+            if (res === MISSED) break; // a dodged physical hit carries no status / debuff / steal
           }
         }
       }
@@ -844,13 +859,14 @@
         case 'grow': {
           if (!t.isParty || !t.alive) return;
           const n = eff.n || 1;
-          const mhp = t.mhp, mmp = t.mmp;
+          const mhp = t.mhp, mmp = t.mmp, before = t.st[eff.stat] || 0;
           R.Rules.grow(t.c, eff.stat, n);
           t.refresh();
           if (t.mhp > mhp) t.hp += t.mhp - mhp;
           if (t.mmp > mmp) t.mp += t.mmp - mmp;
+          const gain = (t.st[eff.stat] || 0) - before; // the real change (caps, % mods)
           yield { t: 'buff', u: t, stat: eff.stat, d: 1, grow: true };
-          yield this.m(`${t.name}の${NAMES.stat[eff.stat] || eff.stat}が${n}上がった！`);
+          yield this.m(gain > 0 ? `${t.name}の${NAMES.stat[eff.stat] || eff.stat}が${gain}上がった！` : `${t.name}の${NAMES.stat[eff.stat] || eff.stat}はもう上がらない。`);
           return;
         }
         case 'teleport': case 'exit': case 'repel':
@@ -867,14 +883,18 @@
     *damageEffect(u, t, eff, ctx) {
       const n = ctx.once ? 1 : this.hitCount(eff);
       const kind = (eff.formula || 'phys') === 'phys' ? 'phys' : 'magic';
+      let landed = false, tried = false;
       for (let i = 0; i < n; i++) {
         if (!t.alive || !u.alive) break;
         if (i > 0) yield { t: 'fx', fx: ctx.fx, user: u, targets: [t], ab: ctx.ab, kind: 'ability' };
         if (kind === 'phys' && !ctx.multi && ctx.ab.target === 'enemy') t = yield* this.cover(u, t);
         const r = this.roll(u, t, eff, ctx);
+        tried = true;
         if (r.immune || r.resisted) { yield { t: 'miss', u: t, att: u }; yield this.m(`しかし${t.name}には効かなかった！`); break; }
-        yield* this.hit(u, t, r, { kind, mp: !!eff.mp, drain: eff.drain || 0 });
+        if (yield* this.hit(u, t, r, { kind, mp: !!eff.mp, drain: eff.drain || 0 })) landed = true;
       }
+      // physical skills: when every hit was dodged, the rest of the ability (status, debuff, steal) fails too
+      return kind === 'phys' && tried && !landed ? MISSED : landed;
     }
 
     *buff(t, eff) {
@@ -904,6 +924,7 @@
       if (!U.chance(this.stealChance(u, t))) { yield this.m('しかし盗めなかった！'); return; }
       let item = s.item, rare = false;
       if (s.rare && (!s.item || U.chance(this.rareStealChance(u, eff, t)))) { item = s.rare; rare = true; }
+      if (!this.canCarry(item)) { yield this.m(`しかし${(DB.items[item] || {}).name || item}はもう持ちきれない！`); return; }
       t.stolen = true;
       this.giveItem(item);
       this.stolen.push({ mon: t.id, item, rare });
@@ -985,7 +1006,7 @@
         case 'counter':
           if (!r.src || !r.src.alive || r.src.side === u.side) return;
           yield { t: 'react', u, a: r.a };
-          yield* this.attack(u, r.src, true);
+          yield* this.attack(u, r.src, r.a.name || true);
           return;
         case 'heal':
           yield { t: 'react', u, a: r.a };
@@ -1035,7 +1056,7 @@
     }
     expectAttack(u, t) {
       let d = this.roll(u, t, { formula: 'phys', power: 1 }, { expect: true }).dmg;
-      if (this.dualWield(u)) d += OFFHAND_MULT * this.roll(u, t, { formula: 'phys', power: 1 }, { expect: true, atk: u.st.atk2 }).dmg;
+      if (this.dualWield(u)) d += OFFHAND_MULT * this.roll(u, t, { formula: 'phys', power: 1 }, { expect: true, atk: u.st.atk2, el: u.st.element2 || null }).dmg;
       return t.defending ? d / 2 : d;
     }
     /** expected HP healed on t by an action (0 if it does not heal) */
@@ -1073,8 +1094,9 @@
     /** victory: messages + apply EXP/JP/gold/items (to R.Game when live) */
     *rewards() {
       const rw = (this.rewardInfo = this.computeRewards());
-      yield { t: 'victory' };
+      // every monster ran away: no fanfare, no rewards (DQ style)
       if (!this.killed.length) { yield this.m('魔物たちはいなくなった。'); yield { t: 'pause' }; return; }
+      yield { t: 'victory' };
       const species = new Set(this.killed.map((m) => m.id));
       yield this.m(species.size === 1 && this.killed.length === 1 ? `${this.killed[0].base}をやっつけた！` : '魔物たちをやっつけた！');
       const same = (k) => rw.each.every((e) => e[k] === rw.each[0][k]);
@@ -1091,6 +1113,7 @@
         else for (const e of rw.each) yield this.m(`${e.u.name}は${e.jp}JPを獲得！`);
       }
       yield { t: 'pause' };
+      let lvJingle = false, jobJingle = false; // each fanfare once per battle, not once per member
       for (const e of rw.each) {
         const c = e.u.c;
         const before = R.Rules.stats(c);
@@ -1099,7 +1122,7 @@
           const after = R.Rules.stats(c);
           e.u.refresh();
           yield { t: 'clear' };
-          yield { t: 'jingle', id: 'levelup' };
+          if (!lvJingle) { lvJingle = true; yield { t: 'jingle', id: 'levelup' }; }
           yield this.m(`${c.name}はレベル${c.level}に上がった！`);
           // stat gains, three per line: 「力+2　素早さ+1　体力+2」
           const gains = LEVEL_STATS.filter((k) => after[k] > before[k]).map((k) => `${NAMES.stat[k]}+${after[k] - before[k]}`);
@@ -1109,7 +1132,7 @@
         const jr = R.Rules.gainJp(c, e.jp);
         if (jr.levelUps.length || jr.unlocked.length) {
           yield { t: 'clear' };
-          yield { t: 'jingle', id: 'jobup' };
+          if (!jobJingle) { jobJingle = true; yield { t: 'jingle', id: 'jobup' }; }
           for (const lu of jr.levelUps) yield this.m(`${c.name}の${(DB.jobs[lu.job] || {}).name || lu.job}のジョブレベルが${lu.level}に上がった！`);
           for (const j of jr.unlocked) yield this.m(`新しいジョブ『${(DB.jobs[j] || {}).name || j}』になれるようになった！`);
           yield { t: 'pause' };
@@ -1118,9 +1141,14 @@
       for (const d of rw.drops) {
         const it = DB.items[d.item];
         if (!it) continue;
-        this.giveItem(d.item);
-        if (this.live && R.State && R.Game) R.State.noteDrop(d.mon, d.rare ? 'rare' : 'drop');
         yield { t: 'clear' };
+        if (!this.giveItem(d.item)) {
+          yield this.m(`${DB.monsters[d.mon].name}は${it.name}を落としていった！`);
+          yield this.m(`しかし${it.name}はもう持ちきれない！`);
+          yield { t: 'pause' };
+          continue;
+        }
+        if (this.live && R.State && R.Game) R.State.noteDrop(d.mon, d.rare ? 'rare' : 'drop');
         if (d.rare) { yield { t: 'rare' }; yield this.m('★レアアイテム！'); }
         yield { t: 'gain', item: d.item, rare: d.rare };
         yield this.m(`${DB.monsters[d.mon].name}は${it.name}を落としていった！`);
@@ -1139,6 +1167,8 @@
     }
   }
 
+  /** an action whose only battle effect is running away (煙玉, 離脱 …) */
+  B.isEscape = (act) => !!(act && act.effects && act.effects.length && act.effects.every((e) => e.type === 'escape' || !BATTLE_EFFECT[e.type]) && act.effects.some((e) => e.type === 'escape'));
   const BATTLE_EFFECT = { damage: 1, heal: 1, healMp: 1, revive: 1, cure: 1, status: 1, buff: 1, dispel: 1, steal: 1, scan: 1, escape: 1, regen: 1, grow: 1, special: 1 };
 
   // ------------------------------------------------------------ monsters
@@ -1174,7 +1204,7 @@
    * Headless battle (balance tools). Uses clones of the party and inventory, the party AI
    * for the player side and the normal monster AI. Same resolution code as real battles.
    * o: {party:[chars] (default R.Game.party), inv, mons|troop|zone, maxRounds=50, seed,
-   *     items:bool (let the AI use consumables), rewards:bool (apply EXP/JP to the clones),
+   *     items:bool (let the AI use consumables), ai:{thrift, items:'auto'} (the in-game オート), rewards:bool (apply EXP/JP to the clones),
    *     surprise:'pre'|'ambush'|null (default: rolled like a real battle), log:bool}
    * → {result:'win'|'lose'|'escape'|'timeout', rounds, partyHpPct, partyMpPct, deaths,
    *    damageDealt, damageTaken, killed, exp, gold, jp, party (clones after the fight), inv, log?}
@@ -1196,7 +1226,7 @@
       drain(eng.begin(), sink);
       const maxR = o.maxRounds || 50;
       while (!eng.result && eng.round < maxR) {
-        const cmds = R.BattleAI && R.BattleAI.partyCommands ? R.BattleAI.partyCommands(eng, { items: !!o.items }) : [];
+        const cmds = R.BattleAI && R.BattleAI.partyCommands ? R.BattleAI.partyCommands(eng, Object.assign({ items: !!o.items }, o.ai)) : [];
         drain(eng.playRound(cmds), sink);
       }
       if (eng.result === 'win' && o.rewards) drain(eng.rewards(), sink);

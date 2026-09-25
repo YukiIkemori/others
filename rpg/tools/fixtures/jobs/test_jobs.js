@@ -143,7 +143,8 @@ for (const id of allAbilities) {
     continue;
   }
   const selfMp = has(ab, 'healMp') || ab.effects.some((f) => f.mp);
-  ok(tryUse(id, {}, (x) => said(x.ev, n) && (selfMp || x.u.mp === 999 - x.cost), 1), `${n}: announced and costs ${ab.mp} MP`);
+  const announced = (x) => said(x.ev, n) || (!!ab.msg && said(x.ev, ab.msg.replace(/\{user\}/g, x.u.name).replace(/\{name\}/g, n)));
+  ok(tryUse(id, {}, (x) => announced(x) && (selfMp || x.u.mp === 999 - x.cost), 1), `${n}: announced and costs ${ab.mp} MP`);
   const dm = eff(ab, 'damage');
   if (dm && dm.formula === 'percent') {
     ok(tryUse(id, {}, (x) => x.foe.hp < x.before.fhp, 40), `${n}: percent damage lands on a normal foe`);

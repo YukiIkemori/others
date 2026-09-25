@@ -14,7 +14,7 @@
 //            アビスロード at the end of the carpet; after the fight an exit circle opens behind it
 //
 // Conventions as the other dungeons: floor spawns 'up' (arrived from the floor above) / 'down'
-// (from below), floor 1 'entrance', escape to the world spawn 'abyss_1', bgm 'lastdungeon'.
+// (from below), floor 1 'entrance', escape to the world spawn 'abyss_1', bgm 'abyss' (its own post-game theme).
 // All treasure is in visible chests (the abyss-exclusive gear of src/data/postgame.js: every
 // `exclusive: 'abyss_chest'` item, the amulet twice); two chests are 滅びの箱 mimics.
 // Checked by tools/check_abyss.js (layout, BFS reachability per story state, events, texts).
@@ -23,7 +23,7 @@
   const M = R.DB.maps;
   const NAME = '深淵の迷宮';
   const ESC = { to: 'world', spawn: 'abyss_1' };
-  const base = (theme, zone) => ({ name: NAME, type: 'dungeon', legend: 'local', theme, bgm: 'lastdungeon', encounter: zone, escape: ESC });
+  const base = (theme, zone) => ({ name: NAME, type: 'dungeon', legend: 'local', theme, bgm: 'abyss', encounter: zone, escape: ESC });
   const spawn = (name, dir, under) => ({ spawn: name, dir, under: under || '.' });
   const warp = (to, name, under, dir) => ({ warp: { to, spawn: name, dir }, under });
   const chest = (id, item, n, under) => ({ chest: n > 1 ? { id, item, n } : { id, item }, under: under || '.' });

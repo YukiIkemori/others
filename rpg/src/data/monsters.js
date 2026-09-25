@@ -414,8 +414,8 @@
       desc: '包帯に巻かれた、いにしえの死者。\n包帯を伸ばして絡みつく。',
     }),
     hagane_jelly: M('鋼ゼリー', 'jelly', 15, {
-      hp: 7, hue: 70, sat: 0.25, bri: 0.8, def: 255, s: { agi: 2.6, atk: 0.85, mag: 1.0 }, mdef: 255, eva: 10, mp: 8,
-      exp: 1200, jp: 90, gold: 24, flags: ['metal', 'flee'], fleeRate: 0.35,
+      hp: 5, hue: 70, sat: 0.25, bri: 0.8, def: 255, s: { agi: 2.6, atk: 0.85, mag: 1.0 }, mdef: 255, eva: 10, mp: 8,
+      exp: 1200, jp: 90, gold: 24, flags: ['metal', 'flee'], fleeRate: 0.25,
       statusRes: METAL_RES, a: [['attack', 3], ['en_fire', 2]],
       drop: ['seed_luk', 12], rare: ['speed_boots', 48], steal: ['mana_drop', 'loot_bag'],
       desc: '鋼のように硬いゼリー。すぐ逃げる。\n倒せば多くの経験値とJPが得られる。',

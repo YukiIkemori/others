@@ -24,7 +24,7 @@
       hp: 420, mp: 0, atk: 54, def: 15, agi: 14, mag: 8, mdef: 6, exp: 160, gold: 180, jp: 60,
       fam: ['beast'], statusRes: Object.assign({}, BOSS_RES, { poison: 0.3, blind: 0.3 }),
       actions: [['attack', 6], ['en_club_storm', 2], ['en_shout', 2, { round: 2 }], ['en_herb', 3, { hpBelow: 0.4, once: true }]],
-      drop: { item: 'seed_str', rate: 1 }, rare: { item: 'swallow_sword', rate: 4 },
+      drop: { item: 'seed_str', rate: 1 }, rare: { item: 'swallow_sword', rate: 4 }, steal: { item: 'healing_grass', rare: 'power_bracer' },
       desc: '風の紋章の洞窟に居座るゴブリンの親分。\nこん棒を振り回して暴れる。',
     }),
     bandit_chief: boss({
@@ -34,7 +34,7 @@
       statusRes: Object.assign({}, BOSS_RES, { poison: 0.4, blind: 0.4, silence: 0.3 }),
       actions: [['attack', 6], ['en_double', 3], ['en_poison_blade', 2], ['en_smoke', 1, { every: [4, 1] }], ['en_steal', 1],
         ['en_focus', 2, { hpBelow: 0.5 }]],
-      drop: { item: 'seed_agi', rate: 1 }, rare: { item: 'gold_charm', rate: 4 },
+      drop: { item: 'seed_agi', rate: 1 }, rare: { item: 'gold_charm', rate: 4 }, steal: { item: 'smoke_bomb', rare: 'thief_glove' },
       desc: '港を封鎖した盗賊団の頭。\n素早いナイフさばきで相手を翻弄する。',
     }),
     sea_serpent: boss({
@@ -42,7 +42,7 @@
       hp: 1400, mp: 0, atk: 88, def: 34, agi: 30, mag: 44, mdef: 18, exp: 1100, gold: 1100, jp: 180,
       fam: ['sea'],
       actions: [['attack', 5], ['en_bite_crush', 2], ['en_bind', 2], ['en_tsunami', 2, { every: [3, 2] }], ['en_breath_ice1', 2]],
-      drop: { item: 'seed_hp', rate: 1 }, rare: { item: 'float_shoes', rate: 4 },
+      drop: { item: 'seed_hp', rate: 1 }, rare: { item: 'float_shoes', rate: 4 }, steal: { item: 'nectar', rare: 'iron_ring' },
       desc: '水の洞窟の奥にすむ海ヘビの主。\n大波を呼び起こす。',
     }),
     sphinx: boss({
@@ -51,7 +51,7 @@
       fam: ['rock'],
       actions: [['attack', 5], ['en_claws', 2], ['en_riddle', 1, { every: [4, 1] }], ['en_sandstorm', 2], ['en_thunder2', 2],
         ['en_ancient_heal', 3, { hpBelow: 0.35, once: true }]],
-      drop: { item: 'seed_int', rate: 1 }, rare: { item: 'maneki', rate: 4 },
+      drop: { item: 'seed_int', rate: 1 }, rare: { item: 'maneki', rate: 4 }, steal: { item: 'mana_drop', rare: 'free_bracelet' },
       desc: 'ピラミッドを守る最後の番人。\n謎に答えられぬ者を食らう。',
     }),
     frost_giant: boss({
@@ -59,7 +59,7 @@
       hp: 2500, mp: 0, atk: 160, def: 52, agi: 30, mag: 60, mdef: 26, exp: 2800, gold: 2400, jp: 300,
       fam: ['frost', 'beast'],
       actions: [['attack', 5], ['en_frost_fist', 2], ['en_stomp', 2], ['en_breath_ice2', 2], ['en_breath_ice3', 1, { hpBelow: 0.5 }], ['en_focus', 1, { hpBelow: 0.5 }]],
-      drop: { item: 'seed_vit', rate: 1 }, rare: { item: 'glacier_sword', rate: 4 },
+      drop: { item: 'seed_vit', rate: 1 }, rare: { item: 'glacier_sword', rate: 4 }, steal: { item: 'healing_aroma', rare: 'frost_ring' },
       desc: '氷結の洞窟の奥で眠っていた巨人。\n吹雪を吐き、大地を踏み鳴らす。',
     }),
     flame_lord: boss({
@@ -68,7 +68,7 @@
       fam: ['flame'],
       actions: [['attack', 5], ['en_lava_blade', 2], ['en_breath_fire4', 2], ['en_inferno', 2, { every: [4, 3] }],
         ['en_flame_armor', 2, { hpBelow: 0.5, once: true }]],
-      drop: { item: 'seed_str', rate: 1 }, rare: { item: 'flame_shield', rate: 4 },
+      drop: { item: 'seed_str', rate: 1 }, rare: { item: 'flame_shield', rate: 4 }, steal: { item: 'mana_drop', rare: 'fire_ring' },
       desc: '火山の炎が魔王の力で形を得た魔神。\nすべてを焼き尽くす。',
     }),
     star_guardian: boss({
@@ -77,15 +77,15 @@
       fam: ['light'], elem: { holy: 0 },
       actions: [['attack', 4], ['en_light_blade', 2], ['en_stardust', 2], ['en_thunder3', 2], ['en_star_rain', 2, { hpBelow: 0.5 }], ['en_null_wave', 1, { every: [5, 2] }],
         ['en_star_heal', 3, { hpBelow: 0.4, once: true }]],
-      drop: { item: 'seed_mnd', rate: 1 }, rare: { item: 'wisdom_ring', rate: 4 },
+      drop: { item: 'seed_mnd', rate: 1 }, rare: { item: 'wisdom_ring', rate: 4 }, steal: { item: 'mana_crystal', rare: 'star_earring' },
       desc: '星の紋章を守るいにしえの守護神。\n真の勇者かどうかを試す。',
     }),
     dark_general: boss({
       name: '暗黒将軍', sprite: 'boss_general_a', lv: 36, actsPerTurn: 2,
-      hp: 4500, mp: 0, atk: 190, def: 80, agi: 62, mag: 110, mdef: 48, exp: 6000, gold: 5000, jp: 480,
+      hp: 4800, mp: 0, atk: 200, def: 80, agi: 62, mag: 110, mdef: 48, exp: 6000, gold: 5000, jp: 480,
       fam: ['demon'], elem: { dark: -1 },
       actions: [['attack', 5], ['en_dark_blade', 3], ['en_dark_wave', 2], ['en_focus', 1, { hpBelow: 0.6 }], ['en_gloom', 1, { every: [5, 3] }]],
-      drop: { item: 'seed_str', rate: 1 }, rare: { item: 'dawn_sword', rate: 8 },
+      drop: { item: 'seed_str', rate: 1 }, rare: { item: 'dawn_sword', rate: 8 }, steal: { item: 'healing_aroma', rare: 'giant_bracer' },
       desc: '魔王軍最強の剣士。\n闇の剣で多くの勇者を葬ってきた。',
     }),
     lich_general: boss({
@@ -94,14 +94,14 @@
       flags: ['boss', 'undead'], fam: ['undead'], elem: { holy: 2 },
       actions: [['attack', 2], ['en_inferno', 2], ['en_ice3', 2], ['en_dark2', 2], ['en_doom', 1, { every: [5, 2] }], ['en_mp_drain', 1],
         ['en_dark_heal', 3, { hpBelow: 0.3, once: true }]],
-      drop: { item: 'seed_int', rate: 1 }, rare: { item: 'goddess_lyre', rate: 8 },
+      drop: { item: 'seed_int', rate: 1 }, rare: { item: 'goddess_lyre', rate: 8 }, steal: { item: 'mana_crystal', rare: 'magic_orb' },
       desc: '死を超越した魔王の軍師。\nあらゆる呪文を極めた闇の魔導士。',
     }),
     demon_king: boss({
       name: '魔王ヴァルザード', sprite: 'boss_demon_king', lv: 40, actsPerTurn: 2,
       hp: 7200, mp: 0, atk: 255, def: 88, agi: 72, mag: 215, mdef: 64, exp: 0, gold: 0, jp: 0,
       fam: ['demon'], elem: { dark: -1 },
-      drop: { item: 'light_drop', rate: 1 }, rare: { item: 'goddess_tear', rate: 2 },
+      drop: { item: 'light_drop', rate: 1 }, rare: { item: 'goddess_tear', rate: 2 }, steal: { item: 'revive_feather', rare: 'regen_ring' },
       actions: [['attack', 4], ['en_demon_claw', 2], ['en_dark_thunder', 2], ['en_breath_fire4', 2], ['en_gloom', 1, { every: [4, 2] }],
         ['en_null_wave', 1, { hpBelow: 0.5 }]],
       desc: '光の紋章に封じられていた魔王。\n100年の時を経てよみがえった。',
@@ -112,7 +112,7 @@
       fam: ['demon'], elem: { dark: -1 },
       actions: [['attack', 4], ['en_ruin_blow', 2], ['en_breath_dark', 2], ['en_despair', 2], ['en_warp', 1, { every: [5, 3] }],
         ['en_null_wave', 1, { every: [6, 1] }], ['en_ruin_light', 1, { hpBelow: 0.5 }], ['en_dark_heal', 3, { hpBelow: 0.25, once: true }]],
-      drop: { item: 'seed_luk', rate: 1 }, rare: { item: 'golden_maneki', rate: 1 },
+      drop: { item: 'seed_luk', rate: 1 }, rare: { item: 'golden_maneki', rate: 1 }, steal: { item: 'mana_crystal', rare: 'eagle_eye' },
       desc: '魔王が真の姿を現した破壊の魔神。\n世界を闇に沈めようとしている。',
     }),
   });

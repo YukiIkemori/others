@@ -341,6 +341,7 @@ sec('buff/dispel/steal/scan/escape/grow/special');
   let items = 0, rares = 0, nothing = 0, fail = 0;
   for (let i = 0; i < 600; i++) {
     const s = new B.MonUnit('tb_slime', 9);
+    for (const k in e.inv) if (e.inv[k] >= 98) e.inv[k] = 1; // the bag holds 99 of each item
     const ev2 = run(e.steal(yuki, s, {}));
     if (said(ev2, 'テスト薬草を盗んだ')) items++;
     else if (said(ev2, 'きらめく石を盗んだ')) { rares++; ok(ev2.some((x) => x.t === 'rare'), 'rare steal event'); }
@@ -452,7 +453,7 @@ sec('reactions');
   gob.d = Object.assign({}, gob.d, { hit: 999, crit: 0 });
   let ev = run(e.attack(gob, yuki, false));
   ev = ev.concat(run(e.flushReactions()));
-  ok(said(ev, 'ユウキの反撃！') && gob.hp < 999, 'counter on physical hit');
+  ok(said(ev, 'ユウキのカウンター！') && gob.hp < 999, 'counter on physical hit (announced with the reaction name)');
   ev = run(e.hit(gob, yuki, { dmg: 5 }, { kind: 'magic' }));
   ev = ev.concat(run(e.flushReactions()));
   ok(!said(ev, '反撃'), 'hitPhys ignores magic');
@@ -899,6 +900,73 @@ sec('real content');
     try { B.simulate({ party: R.fxBattleParty(20), zone: z, seed: 4, maxRounds: 40 }); } catch (err) { ok(false, `zone ${z} simulate threw: ${err.message}`); }
   }
   console.log(`  real content exercised: ${n} items, ${a} ability uses, ${mcount} monsters, ${real(DB.troops).length} troops, ${real(DB.encounters).length} zones`);
+}
+
+// ================================================================ QA round-1 regressions
+sec('qa fixes');
+{
+  // a dodged physical skill carries no status / debuff
+  DB.abilities.tb_sleeparrow = { name: '眠り矢', job: 'tb_fighter', kind: 'action', jp: 1, desc: 't', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1, acc: 0 }, { type: 'status', status: 'sleep', chance: 1 }, { type: 'buff', stat: 'def', stages: -1 }], fx: 'pierce' };
+  {
+    const e = mk({ mons: ['tb_goblin'] });
+    let slept = 0;
+    for (let i = 0; i < 60; i++) {
+      const g = Mo(e, 0); g.hp = g.mhp; delete g.status.sleep; g.buffs.def = 0;
+      const ev = run(e.useAbility(P(e, 0), 'tb_sleeparrow', DB.abilities.tb_sleeparrow, g, null));
+      if (ev.some((x) => x.t === 'miss') && (g.status.sleep || g.buffs.def < 0)) slept++;
+    }
+    ok(slept === 0, `missed physical skill applies nothing (${slept}/60)`);
+  }
+  // poison: once per round, capped for monsters
+  {
+    const e = mk({ mons: ['tb_boss'] });
+    const b = Mo(e, 0);
+    b.status.poison = true;
+    e.round = 1;
+    const h0 = b.hp;
+    run(e.endTurn(b)); run(e.endTurn(b));
+    const tick = h0 - b.hp;
+    ok(tick === Math.min(Math.floor(b.mhp / 12), 20 + b.level * 3), `boss poison tick capped, once per round (${tick})`);
+  }
+  // drain at full HP: no 「HPを0吸い取った」
+  {
+    const e = mk({ mons: ['tb_goblin'] });
+    const ev = use(e, P(e, 0), 'tb_drain', Mo(e, 0));
+    ok(!said(ev, '0吸い取った'), 'drain at full HP is silent');
+  }
+  // every monster ran away: no victory fanfare
+  {
+    const e = mk({ mons: ['tb_goblin'] });
+    Mo(e, 0).gone = true;
+    e.checkEnd();
+    const ev = run(e.rewards());
+    ok(!ev.some((x) => x.t === 'victory') && said(ev, 'いなくなった'), 'all fled: no victory event');
+  }
+  // a full bag: the drop is announced as not carried
+  {
+    const e = mk({ mons: ['tb_goblin'], inv: { tb_herb: 99 } });
+    const g = Mo(e, 0);
+    g.d = Object.assign({}, g.d, { drop: { item: 'tb_herb', rate: 1 } });
+    e.killed.push(g); g.hp = 0; e.checkEnd();
+    const ev = run(e.rewards());
+    ok(said(ev, '持ちきれない') && e.inv.tb_herb === 99 && !ev.some((x) => x.t === 'gain'), 'drop at 99: not obtained');
+  }
+  // AI: dispel a buffed boss; オート thrift keeps MP in a trivial fight
+  {
+    const e = mk({ mons: ['tb_boss'] });
+    const metem = P(e, 2);
+    metem.c.jobs.tb_caster.learned.push('tb_dispel');
+    Mo(e, 0).buffs.def = 2;
+    const cmds = R.BattleAI.partyCommands(e);
+    ok(cmds.some((c) => c && c.id === 'tb_dispel'), 'AI dispels a boss with 守備力 up');
+    const e2 = mk({ mons: ['tb_goblin', 'tb_goblin'], party: R.fxBattleParty(30) });
+    let spent = 0;
+    for (let i = 0; i < 20; i++) {
+      const c2 = R.BattleAI.partyCommands(e2, { thrift: true, items: 'auto' });
+      spent += c2.filter((c) => c && c.type === 'ability' && DB.abilities[c.id].mp).length;
+    }
+    ok(spent === 0, `thrift: no MP spells on a trivial group (${spent})`);
+  }
 }
 
 console.log(`battle tests: ${passes} passed, ${fails} failed`);

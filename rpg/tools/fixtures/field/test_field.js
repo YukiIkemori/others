@@ -108,7 +108,8 @@ async function newGame(map, spawn) {
   await newGame('fx_town', 'entrance');
   eq(pos(), { x: 10, y: 14, dir: 'up' }, 'start pos');
   ok(R.Game.visited.fx_town, 'visited via location');
-  ok(R.Field.layer.banner && R.Field.layer.banner.text === 'テストの町', 'location banner');
+  // the town's onEnter speech is up: the map-name banner gives way so it never covers the speaker
+  ok(!R.Field.layer.banner, 'location banner yields to the onEnter message');
   ok(/テストの町に着いた/.test(msgText()), 'onEnter event message');
   ok(R.Field.isBusy(), 'field frozen during event');
   await clearMsgs();
@@ -314,6 +315,7 @@ async function newGame(map, spawn) {
   await walk('D'); // (12,9) = cave icon warp
   eq(R.Field.map.id, 'fx_dungeon_1', 'entered cave via icon warp');
   eq([pos().x, pos().y], [1, 1], 'dungeon entrance spawn');
+  ok(R.Field.layer.banner && R.Field.layer.banner.text === 'テストの洞窟', 'location banner');
   await settle();
   // silver door at (6,3) locked
   R.Field.setPlayerPos(5, 3, 'right');
@@ -437,11 +439,12 @@ async function newGame(map, spawn) {
   R.Game.ship = { map: 'fx_world', x: 28, y: 18, dir: 'down' };
   const tp = R.Field.teleport('fx_town');
   await settle(300); await tp;
-  eq([pos().x, pos().y], [5, 7], 'teleport to location spawn');
+  // landing on the location's entrance tile enters it at once (no step off and back on)
+  eq([R.Field.map.id, pos().x, pos().y], ['fx_town', 10, 14], 'teleport enters the location');
   eq([R.Game.ship.x, R.Game.ship.y], [11, 15], 'ship moved to dock');
   eq(R.Field.teleportList(), [{ id: 'fx_town', name: 'テストの町' }], 'teleportList');
   R.Field.setRespawnHere();
-  eq(R.Game.respawn, { map: 'fx_world', x: 5, y: 7, dir: 'down' }, 'setRespawnHere');
+  eq(R.Game.respawn, { map: 'fx_town', x: 10, y: 14, dir: 'up' }, 'setRespawnHere');
   // save → load → resume
   await R.Field.warp('fx_town', { x: 12, y: 9, dir: 'left' }, { fade: false });
   await settle();

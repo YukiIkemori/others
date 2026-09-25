@@ -64,7 +64,7 @@ const MODS = new Set(('hpPct mpPct strPct vitPct agiPct intPct mndPct lukPct atk
   'twoSwords unarmed equip expPct jpPct goldPct dropPct rarePct stealPct encounterPct walkHeal noFloorDamage treasureSense').split(' '));
 const EFFECT_FIELDS = {
   damage: ['formula', 'power', 'scale', 'element', 'hits', 'ignoreDef', 'drain', 'mp', 'critBonus', 'acc', 'vs', 'hpCost'],
-  heal: ['power', 'scale', 'pct', 'hpCost'], healMp: ['power'], revive: ['pct'], cure: ['statuses'], status: ['status', 'chance'],
+  heal: ['power', 'scale', 'pct', 'hpCost'], healMp: ['power', 'hpCost'], revive: ['pct'], cure: ['statuses'], status: ['status', 'chance'],
   buff: ['stat', 'stages', 'chance', 'hpCost'], dispel: [], steal: ['rareBonus'], scan: [], escape: [], regen: [], grow: ['stat', 'n'],
   teleport: [], exit: [], repel: ['steps'],
 };

@@ -43,7 +43,7 @@ const OTHER = ['world', 'wind_cave_1', 'bandit_fort_1', 'water_cave_1', 'pyramid
 const mine = Object.keys(DB.maps).filter((id) => PREFIX.some((p) => id.startsWith(p)));
 for (const id of REQUIRED) if (!DB.maps[id]) E(`map ${id} missing`);
 
-const BGM = 'title overworld sea town village castle shrine dungeon cave tower pyramid ice volcano lastdungeon battle boss lastboss ending'.split(' ');
+const BGM = 'title overworld sea town village castle shrine dungeon cave tower pyramid ice volcano lastdungeon abyss battle boss lastboss ending'.split(' ');
 const FORBIDDEN = ['メラ', 'ホイミ', 'ルーラ', 'スライム', 'ケアル', 'ファイガ', 'エスナ', 'レイズ', 'ギラ', 'ベホマ', 'リレミト', 'キメラのつばさ', 'ドラクエ', 'ファイナル', 'チョコボ', 'モーグリ'];
 const gfx = (k) => R.Gfx && R.Gfx._defs && Object.prototype.hasOwnProperty.call(R.Gfx._defs, k);
 const texts = []; // [where, text]
@@ -101,6 +101,8 @@ for (const id of mine) {
       if (seen.has(k) || nx < 0 || ny < 0 || nx >= P.w || ny >= P.h) continue;
       const t = tileDef(P, nx, ny);
       if (!t || !t.pass || block.has(k) || chestAt.has(k)) continue;
+      const dd = P.decorAt && P.decorAt(nx, ny) && DB.decor[P.decorAt(nx, ny)];
+      if (dd && !dd.pass) continue; // furniture blocks
       seen.add(k); q.push([nx, ny]);
     }
   }
@@ -108,7 +110,8 @@ for (const id of mine) {
     for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
       if (seen.has((x + dx) + ',' + (y + dy))) return true;
       const mid = tileDef(P, x + dx, y + dy);
-      if (mid && mid.counter && seen.has((x + 2 * dx) + ',' + (y + 2 * dy))) return true;
+      const md = P.decorAt && P.decorAt(x + dx, y + dy) && DB.decor[P.decorAt(x + dx, y + dy)];
+      if (((mid && mid.counter) || (md && md.counter)) && seen.has((x + 2 * dx) + ',' + (y + 2 * dy))) return true;
     }
     return seen.has(x + ',' + y);
   };
@@ -142,6 +145,12 @@ for (const id of mine) {
       if (!room) W(`${nw}: wanders but cannot move`);
     }
     if (!decor && !reach(n.x, n.y)) E(`${nw}: cannot be talked to (unreachable)`);
+    // shop clerks, innkeepers and priests are served across a counter/altar: the
+    // party must not be able to walk up beside or behind them
+    if (['shop', 'inn', 'church'].includes(n.event) && !n.open) {
+      const side = [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([dx, dy]) => seen.has((n.x + dx) + ',' + (n.y + dy)));
+      if (side.length) W(`${nw}: ${n.event} NPC can be walked up to at ${side.map(([dx, dy]) => (n.x + dx) + ',' + (n.y + dy)).join(' ')}`);
+    }
   }
   for (const c of P.chests) {
     if (c.item && !DB.items[c.item]) E(`${w}: chest ${c.id} item ${c.item} unknown`);

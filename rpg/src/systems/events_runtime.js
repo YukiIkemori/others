@@ -268,7 +268,7 @@
     await ev.say('では、ごゆっくりお休みください。');
     closeWin();
     await R.Engine.fadeOut(30);
-    R.State.healAll();
+    R.State.healAll({ living: true });
     await R.jingle('inn');
     await R.Engine.wait(20);
     await R.Engine.fadeIn(30);

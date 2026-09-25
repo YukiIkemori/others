@@ -234,6 +234,7 @@
     async menu() {
       this.slots = await R.Save.list();
       const any = this.slots.some(Boolean);
+      let last = any ? 1 : 0; // the cursor stays on the last choice (a failed 復活の呪文 must not jump to はじめから)
       for (;;) {
         this.stage = 'menu';
         const items = [
@@ -242,8 +243,9 @@
           { label: '復活の呪文' },
           { label: '設定' },
         ];
-        const i = await R.UI.choose(items, { x: 76, y: 132, w: 104, initial: any ? 1 : 0, cancel: true });
+        const i = await R.UI.choose(items, { x: 76, y: 132, w: 104, initial: last, cancel: true });
         if (i < 0) { this.stage = 'press'; return; }
+        last = i;
         if (i === 0 && (await this.newGame())) return;
         if (i === 1 && (await this.continueGame())) return;
         if (i === 2 && (await this.codeGame())) return;
@@ -328,6 +330,8 @@
       if (this.stage === 'press' && this.t > 70 && Math.floor(f / 30) % 2 === 0) {
         G().text('Aボタンを押してください', 128, 164, { align: 'center', color: '#ffffff', shadow: '#000' });
       }
+      // keyboard legend for PC players (A / B / dash keys)
+      if (this.t > 70 && !touchUI()) G().text('キーボード　A：Z・Enter　B：X・Esc　ダッシュ：Shift', 128, 200, { align: 'center', size: 8, color: '#a0a8d0', shadow: '#000' });
       G().text('ver ' + R.VERSION, 252, 214, { align: 'right', size: 16 / 3 * 1.5, color: '#8088b0' });
     }
     onPush() { R.bgm('title'); }
@@ -365,6 +369,10 @@
   }
 
   function Menu() { return R.Menu; }
+  /** the on-screen pad is shown (no keyboard legend then) */
+  function touchUI() {
+    try { const g = document.getElementById('game'); return !!(g && g.classList.contains('touch')); } catch (e) { return false; }
+  }
 
   /** show the title screen (clears everything else) */
   Title.start = function () {

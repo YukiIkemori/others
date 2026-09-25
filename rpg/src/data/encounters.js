@@ -26,7 +26,7 @@
     d_wind1: Z([3, 5], 'cave', [
       g(8, ['hora_bat', 2, 3]),
       g(8, ['iwa_jelly', 1, 2], ['hora_bat', 1, 2]),
-      g(7, ['kaze_kodama', 2, 3]),
+      g(7, ['kaze_kodama', 1, 2], ['hora_bat', 1, 1]),
       g(6, ['goblin', 2, 3]),
       g(6, ['doku_take', 1, 2], ['goblin', 1, 1]),
       g(5, ['kaze_kodama', 1, 2], ['iwa_jelly', 1, 1]),

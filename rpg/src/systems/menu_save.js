@@ -50,7 +50,7 @@
       title.textContent = '復活の呪文';
       title.style.color = '#ffe45a';
       const hint = document.createElement('div');
-      hint.textContent = imp ? '呪文を貼り付けて「決定」を押してください。' : 'この呪文を控えておけば、別の端末でも続きから遊べます。';
+      hint.textContent = imp ? '呪文を貼り付けて「決定」を押してください。' : '「コピー」で呪文を保存しておけば、別の端末でも続きから遊べます。';
       hint.style.fontSize = '0.8em';
       hint.style.lineHeight = '1.4';
       const ta = document.createElement('textarea');
@@ -193,8 +193,8 @@
         if (!ok) { R.sfx('buzzer'); await K.msg('記録に失敗しました。'); return; }
         this.saved = true;
         await this.load();
-        const j = R.jingle('save');
-        await Promise.all([K.say('冒険の書' + n + 'に記録しました。'), j]);
+        R.jingle('save'); // plays on after the screen closes — input is not held hostage by the jingle
+        await K.say('冒険の書' + n + 'に記録しました。');
         this.close(true);
       }
       render() {
@@ -227,14 +227,14 @@
         const s = SETTINGS[this.index];
         let step = 0;
         if (d === 'left') step = -1;
-        if (d === 'right' || In().pressed('a')) step = 1;
+        if (d === 'right' || (In().pressed('a') && !s.vol)) step = 1; // A never touches a volume bar (no wrap to mute)
         if (!step) return;
         const S = R.Settings;
         if (s.vol) {
           const v = Math.round((S[s.key] || 0) * 10);
           const nv = Math.max(0, Math.min(10, v + step));
-          if (nv === v && d) return;
-          S[s.key] = (In().pressed('a') && v === 10 ? 0 : nv) / 10;
+          if (nv === v) return;
+          S[s.key] = nv / 10;
         } else {
           let k = s.values.indexOf(S[s.key]);
           if (k < 0) k = 0;

@@ -38,10 +38,17 @@
 
   async function doChangeJob(c, job) {
     const K = Menu.kit;
+    const prevJob = c.job, prevSub = c.set.sub;
     const removed = R.Rules.changeJob(c, job);
     if (removed == null) { R.sfx('buzzer'); return false; }
     R.sfx('buff');
     const lines = [c.name + 'は' + K.jobName(job) + 'になった！'].concat(removedLines(c, removed));
+    if (prevSub && !c.set.sub) lines.push('サブアクションが外れた。');
+    // an empty サブアクション takes the previous job, so its learned skills stay usable in battle
+    if (!c.set.sub && prevJob !== job && R.Rules.slotOptions(c, 'sub').includes(prevJob)) {
+      R.Rules.setSlot(c, 'sub', prevJob);
+      lines.push('サブアクションに' + ((DB.jobs[prevJob] && DB.jobs[prevJob].command) || K.jobName(prevJob)) + 'をセットした。');
+    }
     await K.msg(lines.join('\n'));
     if (removed.length && R.Rules.optimize) {
       if (await K.yesno('最強の装備にしますか？')) {
@@ -77,10 +84,18 @@
         this.rows.forEach((row, r) => { const k = row.indexOf(job); if (k >= 0) { this.r = r; this.i = k; } });
       }
       cellX(r, i) { const n = this.rows[r].length; return 9 + (7 - n) * (CELL / 2) + i * CELL; }
-      cellY(r) { return 12 + r * CELL; }
+      cellY(r) { return 15 + r * CELL; }
       input() {
         if (!this.rows.length) { if (In().pressed('b') || In().pressed('a')) { R.sfx('cancel'); this.close(); } return; }
         const d = In().dirRepeat();
+        // Shift (dash) switches member from anywhere on the board
+        if (In().pressed('dash')) {
+          const n = R.Game.party.length;
+          this.m = (this.m + 1) % n;
+          lastMember = this.m;
+          R.sfx('cursor');
+          return;
+        }
         if (d && this.r < 0) {
           // member row (the board's title): left/right switch member
           if (d === 'left' || d === 'right') {
@@ -124,14 +139,15 @@
         const cur = c.job === job;
         const opts = [{ label: 'ジョブを変える', disabled: cur }, { label: 'アビリティを覚える' }];
         const cx = this.cellX(this.r, this.i);
-        const i = await R.UI.choose(opts, { x: cx > 120 ? 8 : 116, y: 58, w: 132, initial: cur ? 1 : 0 });
+        const w = Math.ceil(Math.max(...opts.map((o) => G().textWidth(o.label)))) + 32; // sized to the longest label
+        const i = await R.UI.choose(opts, { x: cx > 120 ? 8 : 248 - w, y: 58, w, initial: cur ? 1 : 0 });
         if (i === 0) await doChangeJob(c, job);
         else if (i === 1) { this.hidden = true; try { await Menu.learnScreen(c, job); } finally { this.hidden = false; } }
       }
       render() {
         const c = this.c;
         const f = Math.floor(R.Engine.frame / 16);
-        G().window(4, 4, 248, 150);
+        G().window(4, 8, 248, 146);
         this.renderTitle();
         // faint tier separators
         for (let r = 1; r < this.rows.length; r++) {
@@ -166,9 +182,10 @@
         const tw = Math.ceil(G().textWidth(t)) + 8;
         const tx = 128 - (tw >> 1);
         const focus = this.r < 0;
-        G().rect(tx - (focus ? 12 : 0), 4, tw + (focus ? 24 : 0), 5, '#000000');
-        G().text(t, tx + 4, 1, { color: focus ? G().C.yellow : G().C.white });
-        if (focus) K.lrArrows(tx - 10, tx + tw + 9, 2);
+        // a solid plate behind the title (it sits on the window's top border, never over the field)
+        G().rect(tx - (focus ? 12 : 0), 2, tw + (focus ? 24 : 0), 12, '#000000');
+        G().text(t, tx + 4, 3, { color: focus ? G().C.yellow : G().C.white });
+        if (focus) K.lrArrows(tx - 10, tx + tw + 9, 4);
       }
       renderInfo() {
         const c = this.c, job = this.job, j = DB.jobs[job];
@@ -221,7 +238,7 @@
         G().text('サブ', x, y + 28, { color: G().C.gray });
         G().text(c.set.sub ? K.jobName(c.set.sub) : '―――', x + 44, y + 28, { color: c.set.sub ? G().C.white : G().C.dark });
         G().text('ジョブ ' + open + '/' + all.length, 242, y + 28, { align: 'right' });
-        G().text('◀▶で仲間を切り替え', x, y + 42, { color: G().C.gray });
+        G().text('◀▶・Shiftで仲間を切り替え', x, y + 42, { color: G().C.gray });
         G().text('★ ' + mast, 242, y + 42, { align: 'right', color: mast ? G().C.gold : G().C.gray });
       }
     }
@@ -357,7 +374,7 @@
           const items = [{ label: '外す', value: null }].concat(opts.map((v) => ({ label: slot === 'sub' ? subLabel(v) : K.abName(v), value: v })));
           const cur = this.c.set[slot];
           const k = items.findIndex((it) => it.value === cur);
-          this.opt = { slot, list: new R.UI.List({ x: 110, y: 36, w: 142, rows: 8, items, index: k >= 0 ? k : Math.min(1, items.length - 1), title: SET_ROWS[this.row].label, drawItem: (row, x, y, w) => this.drawOpt(row, x, y, w) }) };
+          this.opt = { slot, list: new R.UI.List({ x: 110, y: 40, w: 142, rows: 8, items, index: k >= 0 ? k : Math.min(1, items.length - 1), title: SET_ROWS[this.row].label, drawItem: (row, x, y, w) => this.drawOpt(row, x, y, w) }) };
         }
       }
       inputOpt() {
@@ -401,24 +418,24 @@
         G().text(c.name, 38, 11, { color: K.condColor(c) });
         G().text(K.jobName(c.job), 104, 11, { color: G().C.cyan });
         K.lrArrows(10, 246, 13);
-        G().window(4, 36, 248, 16 + SET_ROWS.length * 28 - 6);
+        G().window(4, 36, 248, 16 + SET_ROWS.length * 24 - 6);
         SET_ROWS.forEach((r, i) => {
-          const y = 44 + i * 28;
+          const y = 44 + i * 24;
           G().text(r.label, 20, y, { color: r.slot === 'cmd' ? G().C.gray : KIND_COL[r.slot] });
           let val, col = G().C.white;
           if (r.slot === 'cmd') { val = subLabel(c.job); col = G().C.gray; }
           else if (r.slot === 'sub') val = c.set.sub ? subLabel(c.set.sub) + '（' + K.jobName(c.set.sub) + '）' : null;
           else val = c.set[r.slot] ? K.abName(c.set[r.slot]) : null;
-          G().text(val || '―――', 36, y + 13, { color: val ? col : G().C.dark });
+          G().text(val || '―――', 36, y + 12, { color: val ? col : G().C.dark });
           if (i === this.row && !this.opt) G().cursor(10, y + 1, !this.busy);
         });
         if (this.opt) this.opt.list.draw();
         const d = this.descText();
-        G().window(4, 176, 248, 44);
+        G().window(4, 168, 248, 52);
         if (d.head) {
-          G().text(d.head, 14, 183, { color: G().C.yellow });
-          G().wrap(d.text, 226).slice(0, 1).forEach((l) => G().text(l, 14, 197));
-        } else G().wrap(d.text, 226).slice(0, 2).forEach((l, k) => G().text(l, 14, 183 + k * 14, { color: G().C.gray }));
+          G().text(d.head, 14, 175, { color: G().C.yellow });
+          G().wrap(d.text, 226).slice(0, 2).forEach((l, k) => G().text(l, 14, 188 + k * 13));
+        } else G().wrap(d.text, 226).slice(0, 3).forEach((l, k) => G().text(l, 14, 175 + k * 13, { color: G().C.gray }));
       }
     }
     const KIND_COL = { sub: K.KIND_COLORS.action, reaction: K.KIND_COLORS.reaction, support: K.KIND_COLORS.support, field: K.KIND_COLORS.field };

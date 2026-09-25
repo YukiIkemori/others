@@ -50,6 +50,9 @@
     ev.refresh();
     await ev.give(o.item);
     await ev.say(o.after);
+    ev.heal();
+    ev.sfx('heal');
+    await ev.say('紋章の力で、3人の傷が\nすっかり癒えた。');
     const n = CRESTS.filter((id) => ev.has(id)).length;
     await ev.say(n >= CRESTS.length
       ? 'ついに五つの紋章が\nすべてそろった！\f海の真ん中にある光の神殿へ\n持っていこう。'

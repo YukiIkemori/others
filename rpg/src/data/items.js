@@ -86,6 +86,15 @@
     seed_mp:  seed('mp', 5, '魔力の実', '最大MP'),
   };
 
+  // menu icon (icon:<key>, src/art/objects.js) for consumables that are not herbs or flasks
+  const ICON = {
+    feather: ['wing', 'revive_feather'], rope: ['escape_rope'],
+    bomb: ['fire_bomb', 'ice_bomb', 'thunder_bomb', 'mega_bomb', 'smoke_bomb'], powder: ['sleep_powder', 'all_cure'],
+    seed: ['antidote', 'seed_str', 'seed_vit', 'seed_agi', 'seed_int', 'seed_mnd', 'seed_luk', 'seed_hp', 'seed_mp'],
+    drop: ['mana_drop', 'mana_crystal', 'light_drop', 'goddess_tear'], bell: ['guard_bell'], flute: ['courage_flute'],
+  };
+  for (const k in ICON) for (const id of ICON[k]) consumables[id].icon = k;
+
   // -------------------------------------------------------------- weapons
   const weapons = {
     // swords — warrior knight spellblade paladin darkknight hero

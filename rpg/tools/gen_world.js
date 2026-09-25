@@ -804,6 +804,7 @@ function landZoneMap() {
   const west = bfsWalk(iconOf('regnas_castle').x, iconOf('regnas_castle').y);
   const east = bfsWalk(iconOf('porta_town').x, iconOf('porta_town').y);
   const { comps } = components((ch) => walkable(ch));
+  const unowned = [];
   for (const cells of comps) {
     const [x0, y0] = cells[0];
     let zone;
@@ -814,8 +815,22 @@ function landZoneMap() {
       for (const [x, y] of cells) { const o = OWN[y][x]; if (o) cnt[o] = (cnt[o] || 0) + 1; }
       const own = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a])[0];
       zone = own === 'start' ? (x0 < GATE.w + 1 ? 'w_start' : 'w_east') : ZONE_OF_LAND[own];
-      if (!zone) zone = seaZoneAt(x0, y0).replace('w_sea1', 'w_east').replace('w_sea2', 'w_forest').replace('w_sea3', 'w_arcana');
+      if (!zone) { unowned.push(cells); continue; } // islets: nearest continent's zone (below)
     }
+    for (const [x, y] of cells) Z[y][x] = zone;
+  }
+  // an islet nobody owns takes the zone of the nearest zoned land (by the islet's closest
+  // cell), so a rock off the desert coast has desert monsters, not the early east table
+  for (const cells of unowned) {
+    let best = null, bd = Infinity;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      if (!Z[y][x] || Z[y][x] === 'w_demon' || Z[y][x] === 'w_start') continue; // islets are reached by ship
+      for (const [cx, cy] of cells) {
+        const d = Math.abs(cx - x) + Math.abs(cy - y);
+        if (d < bd) { bd = d; best = Z[y][x]; }
+      }
+    }
+    const zone = best || seaZoneAt(cells[0][0], cells[0][1]);
     for (const [x, y] of cells) Z[y][x] = zone;
   }
   return Z;

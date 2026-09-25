@@ -1,4 +1,4 @@
-// Music (dungeons): dungeon, cave, tower, pyramid, ice, volcano, lastdungeon.
+// Music (dungeons): dungeon, cave, tower, pyramid, ice, volcano, lastdungeon, abyss (post-game).
 // Original compositions; format documented at the top of src/core/audio.js.
 (function (R) {
   'use strict';
@@ -201,6 +201,34 @@
       { inst: 'drums', vol: 0.5, echo: 0.4, mml: `
         L g1 | r1 | r1 | r1 | b1 | r1 | r1 | r1 | g1 | r1 | r1 | r1 | b1 | r1 | r1 | r1 |
         {gc}1 | r1 | r1 | r1 | b1 | r1 | r1 | b4 r4 b4 b4 |` },
+    ],
+  };
+
+  // ================================================================ abyss (post-game)
+  // F minor, 66 bpm, vast and cold: a slow heartbeat, a choir drone, a celesta
+  // line that keeps sinking by half steps, a low horn answer. A (16) B (8).
+  M.abyss = {
+    tempo: 66, key: 'Fm', gain: 0.86,
+    echo: { time: 0.455, fb: 0.5, wet: 0.42, lp: 2000 },
+    chords: `
+      L @A Fm | Dbmaj7 | Eb | Fm | Bbm | Gbmaj7 | C7 | C7 |
+      Fm | Dbmaj7 | Ab | Dbmaj7 | Bbm7 | Bbm | Fm C7 | Fm |
+      @B Db | Cm | Bbm | Ab | Bbm | Fm | G7b9 | C7 |`,
+    ch: [
+      { inst: 'celesta', vol: 0.9, pan: 0.15, echo: 0.5, mml: `
+        L o5 q6 c4. <b8 >c2 | e-4 d-4 c2 | <b-4. a-8 g2 | f2 a-4 >c4 |
+        d-4. c8 <b-2 | a-4 g-4 f2 | g2 e4 g4 | e1 |
+        >c4. <b8 >c2 | f4 e-4 d-2 | c4. <b-8 a-2 | f2 >c4 f4 |
+        f4. e-8 d-2 | d-2 <b-2 | a-4 f4 e4 g4 | f1 |
+        @violin o5 a-4. g8 f4 a-4 | g2 e-4 g4 | f4. e-8 d-4 f4 | e-2 c4 e-4 |
+        d-4. c8 <b-4 >d-4 | c2 <a-4 f4 | a-4 b4 >d4 f4 | e2 <b-4 g4 |` },
+      { inst: 'horn', harm: 0, vol: 0.35, pan: -0.3, echo: 0.35 },
+      { inst: 'choir', vol: 0.45, pan: -0.1, echo: 0.5, pat: 'C1', range: [53, 70], voices: 3 },
+      { inst: 'strings', vol: 0.32, pan: 0.3, echo: 0.4, range: [60, 76], voices: 3, pats: { A: 'l2 a c', B: 'l4 a b c b' } },
+      { inst: 'contra', vol: 0.75, range: [28, 45], pats: { A: 'R1', B: 'l2 R F' } },
+      { inst: 'drums', vol: 0.55, echo: 0.35, mml: `
+        L [b8 r8 b4 r2]7 g1 | [b8 r8 b4 r2]7 g1 |
+        [b8 r8 b4 r4 i4]6 b8 b8 b4 r2 | g1 |` },
     ],
   };
 

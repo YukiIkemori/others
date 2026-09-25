@@ -58,7 +58,7 @@ const GATE = 'abyss_gate_pad';
 const WORLD_EVENT = 'abyss_entrance';
 const TITLE = '深淵を越えし者';
 const REWARDS = ['pg_genesis_sword', 'pg_abyss_crest'];
-const BGM = 'title overworld sea town village castle shrine dungeon cave tower pyramid ice volcano lastdungeon battle boss lastboss ending'.split(' ');
+const BGM = 'title overworld sea town village castle shrine dungeon cave tower pyramid ice volcano lastdungeon abyss battle boss lastboss ending'.split(' ');
 const SFX = ('cursor confirm confirm_soft cancel buzzer menu_open attack hit crit miss enemy_attack hurt magic fire ice thunder wind holy dark ' +
   'earth water heal revive buff debuff status poison sleep death enemy_die boss_die escape stairs door locked chest item gold step_damage ' +
   'ship bump warp teleport steal jump breath roar shake').split(' ');
@@ -125,7 +125,7 @@ FLOORS.forEach((id, fi) => {
   if (def.type !== 'dungeon') E(`${id}: type ${def.type} (expected dungeon)`);
   if (def.name !== NAME) E(`${id}: name ${def.name} (expected ${NAME})`);
   if (def.theme !== THEMES[fi]) E(`${id}: theme ${def.theme} (expected ${THEMES[fi]})`);
-  if (def.bgm !== 'lastdungeon') E(`${id}: bgm ${def.bgm} (expected lastdungeon)`);
+  if (def.bgm !== 'abyss') E(`${id}: bgm ${def.bgm} (expected abyss)`);
   if (def.encounter !== ZONES[fi]) E(`${id}: encounter ${def.encounter} (expected ${ZONES[fi]})`);
   if (!DB.encounters[def.encounter]) E(`${id}: encounter zone ${def.encounter} not defined`);
   const esc = def.escape;

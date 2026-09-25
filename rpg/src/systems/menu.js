@@ -324,8 +324,9 @@
             const s1 = R.Rules.stats(c);
             if (e.stat === 'hp') c.hp = Math.min(s1.hp, c.hp + (s1.hp - s0.hp));
             if (e.stat === 'mp') c.mp = Math.min(s1.mp, c.mp + (s1.mp - s0.mp));
-            const gain = e.stat === 'hp' || e.stat === 'mp' ? s1[e.stat] - s0[e.stat] || n : n;
-            out.lines.push(c.name + 'の' + (STAT_NAMES[e.stat] || e.stat) + 'が' + gain + '上がった！');
+            const gain = s1[e.stat] - s0[e.stat]; // the real change (caps, % mods) — never just n
+            out.lines.push(gain > 0 ? c.name + 'の' + (STAT_NAMES[e.stat] || e.stat) + 'が' + gain + '上がった！'
+              : c.name + 'の' + (STAT_NAMES[e.stat] || e.stat) + 'はもう上がらない。');
             out.changed = true;
             break;
           }
@@ -422,11 +423,14 @@
       return true;
     }
     // pick a target, repeatedly while the item lasts (FF-style quick healing)
-    let used = false, last = 0;
+    let used = false;
     const valid = validFor(u.target, eff);
-    if (!R.Game.party.some((c) => valid(c) && affects(eff, c))) { await K.msg('今は使う必要がないようだ。'); return false; }
+    const needy = () => R.Game.party.findIndex((c) => valid(c) && affects(eff, c));
+    let last = needy();
+    if (last < 0) { await K.msg('今は使う必要がないようだ。'); return false; }
     for (;;) {
       if (!R.State.count(id)) break;
+      if (used) { const k = needy(); if (k < 0) break; if (!affects(eff, R.Game.party[last])) last = k; } // nobody left who needs it
       const i = await Menu.pickMember({ title: it.name + ' ×' + R.State.count(id), valid, initial: last });
       if (i < 0) break;
       last = i;
@@ -487,11 +491,17 @@
       await K.msg(c.name + 'は' + ab.name + verb + '\n' + r.lines.join('\n'));
       return true;
     }
-    let used = false, last = R.Game.party.indexOf(c);
+    let used = false;
     const valid = validFor(ab.target, eff);
-    if (!R.Game.party.some((t) => valid(t) && affects(eff, t))) { await K.msg('今は使う必要がないようだ。'); return false; }
+    const needy = () => R.Game.party.findIndex((t) => valid(t) && affects(eff, t));
+    // the cursor starts on someone who needs it (the most hurt for heals), not on the caster
+    const hurt = R.Game.party.map((t, i) => [t, i]).filter(([t]) => valid(t) && affects(eff, t))
+      .sort((a, b) => a[0].hp / R.Rules.stats(a[0]).hp - b[0].hp / R.Rules.stats(b[0]).hp);
+    let last = hurt.length ? hurt[0][1] : -1;
+    if (last < 0) { await K.msg('今は使う必要がないようだ。'); return false; }
     for (;;) {
       if (c.mp < cost || c.hp <= 0) break;
+      if (used) { const k = needy(); if (k < 0) break; if (!affects(eff, R.Game.party[last])) last = k; } // nobody left who needs it
       const i = await Menu.pickMember({ title: ab.name + (cost ? ' MP' + cost : ''), valid, initial: last });
       if (i < 0) break;
       last = i;

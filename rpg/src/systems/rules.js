@@ -277,22 +277,42 @@
       Rules.clampHpMp(c);
       return true;
     },
-    /** simple score used by 'さいきょうそうび' */
+    /**
+     * score used by '最強装備', weighted by what the member is good at: fighters value
+     * 攻撃力/力, mages 魔力/知力, healers 精神 (a rod is never swapped for a knife on a mage)
+     */
     itemScore(c, itemId) {
       const it = DB.items[itemId];
       if (!it) return -1;
       const st = it.stats || {};
-      const statSum = (st.str || 0) + (st.vit || 0) + (st.agi || 0) + (st.int || 0) + (st.mnd || 0) + (st.luk || 0);
-      const magFocus = (Rules.stats(c).int > Rules.stats(c).str) ? 1 : 0.3;
-      return (it.atk || 0) * (1.3 - magFocus * 0.6) + (it.def || 0) * 1.2 + (it.mag || 0) * magFocus * 1.2 + (it.mdef || 0) * 0.8 + statSum * 0.8 + (it.rare ? 0.5 : 0);
+      const b = { str: Rules.baseStat(c, 'str'), int: Rules.baseStat(c, 'int'), mnd: Rules.baseStat(c, 'mnd') };
+      const mult = (DB.jobs[c.job] && DB.jobs[c.job].mult) || {};
+      for (const k in b) b[k] *= mult[k] || 1;
+      const phys = b.str >= Math.max(b.int, b.mnd) * 0.9;
+      const caster = !phys && b.int >= b.mnd;
+      const healer = !phys && !caster;
+      const w = {
+        atk: phys ? 1.3 : 0.3, mag: caster ? 3 : healer ? 0.8 : 0.2,
+        str: phys ? 1 : 0.3, int: caster ? 1.5 : 0.3, mnd: healer ? 1.2 : 0.5, vit: 0.8, agi: phys ? 0.8 : 0.5, luk: phys ? 0.4 : 0.2,
+      };
+      let v = (it.atk || 0) * w.atk + (it.def || 0) * 1.2 + (it.mag || 0) * w.mag + (it.mdef || 0) * (phys ? 0.8 : 1);
+      for (const k of ['str', 'vit', 'agi', 'int', 'mnd', 'luk']) v += (st[k] || 0) * w[k];
+      v += ((st.hp || 0) + (st.mp || 0)) * 0.1;
+      return v + (it.rare ? 0.5 : 0);
     },
-    /** equip the best available items for every slot. Returns true if anything changed */
+    /**
+     * equip the best available items for every slot. Returns true if anything changed.
+     * Party-aware: the last copy of an item is left for a member who would gain clearly more from it.
+     */
     optimize(c) {
       let changed = false;
+      const others = ((R.Game && R.Game.party) || []).filter((o) => o !== c);
+      const gainFor = (o, id, slot) => (Rules.canEquip(o, id, slot) ? Rules.itemScore(o, id) - (o.equip[slot] ? Rules.itemScore(o, o.equip[slot]) : 0) : -Infinity);
       for (const slot of SLOTS) {
         if (slot === 'shield' && c.equip.weapon && DB.items[c.equip.weapon] && DB.items[c.equip.weapon].twoHanded) continue;
         const cur = c.equip[slot];
-        let best = cur, bestScore = cur ? Rules.itemScore(c, cur) : 0;
+        const curScore = cur ? Rules.itemScore(c, cur) : 0;
+        let best = cur, bestScore = curScore;
         for (const id in (R.Game && R.Game.inv) || {}) {
           if (!R.Game.inv[id]) continue;
           const it = DB.items[id];
@@ -301,7 +321,12 @@
           if (it.type !== slot && !(slot === 'shield' && it.type === 'weapon')) continue;
           if (!Rules.canEquip(c, id, slot)) continue;
           const s = Rules.itemScore(c, id);
-          if (s > bestScore) { best = id; bestScore = s; }
+          if (s <= bestScore) continue;
+          if (R.Game.inv[id] === 1 && it.type === slot) {
+            const mine = s - curScore;
+            if (others.some((o) => gainFor(o, id, slot) > mine * 1.25 + 0.5)) continue;
+          }
+          best = id; bestScore = s;
         }
         if (best !== cur) { Rules.equip(c, slot, best); changed = true; }
       }
@@ -311,8 +336,8 @@
     // ---------------------------------------------------------- stats
     baseStat(c, stat, level) {
       const g = DB.chars[c.id].growth[stat];
-      // c.bonus: permanent gains from seeds ('grow' effect)
-      return g[0] + g[1] * ((level || c.level) - 1) + ((c.bonus && c.bonus[stat]) || 0);
+      // growth curve only; c.bonus (seeds) is added after the job multiplier in stats()
+      return g[0] + g[1] * ((level || c.level) - 1);
     },
     /** permanent stat gain (seeds). Returns new bonus. */
     grow(c, stat, n) {
@@ -352,7 +377,7 @@
     /**
      * Full derived stats.
      * { hp,mp (max), str,vit,agi,int,mnd,luk, atk, atk2 (off-hand, dual wield) , def, mag, mdef,
-     *   hit, eva, crit, element (weapon element), onHit (weapon status), mods }
+     *   hit, eva, crit, element (weapon element), onHit (weapon status), element2/onHit2 (off-hand), mods }
      */
     stats(c) {
       const j = DB.jobs[c.job] || { mult: {} };
@@ -360,13 +385,14 @@
       const m = Rules.mods(c);
       const s = {};
       for (const k of STATS) {
-        let v = Rules.baseStat(c, k) * (mult[k] || 1);
+        // seeds ('grow', c.bonus) are a flat, job-independent gain: 力の種 +2 is +2 in every job
+        let v = Rules.baseStat(c, k) * (mult[k] || 1) + ((c.bonus && c.bonus[k]) || 0);
         v = v * (100 + (m[k + 'Pct'] || 0)) / 100;
         s[k] = v;
       }
       // equipment flat stats
       let atkW = 0, atkW2 = 0, def = 0, mag = 0, mdef = 0, eva = 0, hit = 0;
-      let element = null, onHit = null;
+      let element = null, onHit = null, element2 = null, onHit2 = null;
       for (const slot of SLOTS) {
         const it = c.equip[slot] && DB.items[c.equip[slot]];
         if (!it) continue;
@@ -374,7 +400,7 @@
         for (const k of STATS) if (st[k]) s[k] += st[k];
         if (it.type === 'weapon') {
           if (slot === 'weapon') { atkW += it.atk || 0; element = it.element || element; onHit = it.onHit || onHit; }
-          else atkW2 += it.atk || 0;
+          else { atkW2 += it.atk || 0; element2 = it.element || null; onHit2 = it.onHit || null; }
           hit += it.hit || 0;
         } else def += it.def || 0;
         mag += it.mag || 0;
@@ -394,6 +420,7 @@
       s.eva = Math.floor(s.agi / 16) + eva + (m.eva || 0);
       s.crit = 3 + Math.floor(s.luk / 32) + (m.crit || 0) + (m.critPct || 0);
       s.element = element; s.onHit = onHit;
+      s.element2 = s.atk2 ? element2 : null; s.onHit2 = s.atk2 ? onHit2 : null; // off-hand weapon (dual wield)
       s.mods = m;
       return s;
     },

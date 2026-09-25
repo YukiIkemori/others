@@ -135,13 +135,13 @@
   // ============================================================ 盗賊
   add('thief', {
     thief_steal: act('盗む', 50, '敵の持ち物を盗む。', {
-      mp: 0, target: 'enemy', effects: [{ type: 'steal' }], fx: 'steal',
+      mp: 0, target: 'enemy', effects: [{ type: 'steal' }], fx: 'steal', msg: '{user}は隙を見て飛びかかった！',
     }),
     thief_sand: act('砂かけ', 120, '砂をかけて敵の目をくらませる。', {
       mp: 0, target: 'enemy', effects: [status('blind', 0.7)], fx: 'blind',
     }),
     thief_flee: act('ずらかる', 150, '戦闘から必ず逃げ出す。', {
-      mp: 2, target: 'self', effects: [{ type: 'escape' }], fx: 'smoke',
+      mp: 2, target: 'self', effects: [{ type: 'escape' }], fx: 'smoke', msg: '{user}は一目散に逃げ出した！',
     }),
     thief_repel: act('気配消し', 180, 'しばらく魔物が寄ってこなくなる。', {
       mp: 3, target: 'self', effects: [{ type: 'repel', steps: 200 }], fx: 'magic', fieldUse: true,

@@ -26,7 +26,7 @@
       'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT',
       'TT###########T,,,,,,,!,,T,,,,,,,,,,TTT',
       'TT###########T,RRRRRRRR,,,,,,~~~~~,,TT',
-      'TT#____O__J_#,,RRRRRRRR,,,,,~~~~~~~,TT',
+      'TT#___YOY_J_#,,RRRRRRRR,,,,,~~~~~~~,TT',
       'TT#____a____#,,RRRRRRRRT,,,~~~~~~~~,TT',
       'TT#____+____#,,BBB<BBBB,,,,~~~~~~~~,TT',
       'TT#____+____#,,,,,4:,,,,T,~~~~~~~~,fTT',

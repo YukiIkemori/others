@@ -133,6 +133,7 @@
       idx = i;
       const id = ids[i], it = DB.items[id];
       if (R.Game.gold < it.price) { R.sfx('buzzer'); await say('お金が足りないようですね。'); continue; }
+      if (isGear(it) && !(await R.UI.yesno(it.name + 'ですね。\n' + it.price + 'ゴールドになりますが、\nよろしいですか？'))) continue;
       if (isGear(it)) await buyGear(id, it);
       else await buyItems(id, it);
     }
@@ -143,13 +144,14 @@
     if (room <= 0) { await say('それ以上は持てないようですね。'); return; }
     const max = Math.max(1, Math.min(room, Math.floor(R.Game.gold / Math.max(1, it.price))));
     await say(it.name + 'をいくつお求めですか？', { noWait: true });
-    const n = max > 1 ? await R.UI.number({ min: 1, max, initial: 1, price: it.price, label: it.name.length > 6 ? '個数' : it.name, w: 132 }) : 1;
+    // always the number window (even when only 1 is affordable), so B can still cancel
+    const n = await R.UI.number({ min: 1, max, initial: 1, price: it.price, label: it.name.length > 6 ? '個数' : it.name, w: 132 });
     if (n < 1) return;
     const total = it.price * n;
     if (!R.State.takeGold(total)) { R.sfx('buzzer'); await say('お金が足りないようですね。'); return; }
     R.State.addItem(id, n);
     R.sfx('gold');
-    await say(it.name + (n > 1 ? 'を' + n + '個' : '') + 'ですね。\n毎度ありがとうございます！');
+    await say(it.name + 'を' + n + '個お買い上げですね。\n毎度ありがとうございます！');
   }
 
   async function buyGear(id, it) {
@@ -225,11 +227,12 @@
     if (active && R.Engine.layers.includes(active)) return;
     const gold = (active = R.Engine.push(new GoldLayer()));
     try {
-      let first = true;
+      let first = true, last = 0;
       for (;;) {
         const greet = first ? 'いらっしゃいませ！' + (shop.name ? '　ここは' + shop.name + 'です。' : '') + '\n何をお求めですか？' : 'ほかにも何かご用はありますか？';
         first = false;
-        const i = await ask(greet, ['買う', '売る', 'やめる']);
+        const i = await ask(greet, ['買う', '売る', 'やめる'], { initial: last });
+        if (i >= 0) last = i;
         if (i === 0) await buy(shop);
         else if (i === 1) await sell();
         else break;
@@ -257,12 +260,14 @@
       R.UI.closeMessage();
       R.Engine.remove(gold);
       await R.Engine.fadeOut(40);
-      R.State.healAll();
+      R.State.healAll({ living: true }); // an inn does not raise the dead — that is the church's work
       await R.jingle('inn');
       await R.Engine.wait(30);
       if (R.Field && R.Field.setRespawnHere) R.Field.setRespawnHere();
       await R.Engine.fadeIn(40);
-      await say('おはようございます。\n昨夜はよくお休みになれましたか？\fでは、いってらっしゃいませ。');
+      const down = R.Game.party.some((c) => c.hp <= 0);
+      await say('おはようございます。\n昨夜はよくお休みになれましたか？\f' +
+        (down ? '倒れているお仲間は、教会で\n生き返らせてもらってくださいね。\f' : '') + 'では、いってらっしゃいませ。');
       return true;
     } finally {
       R.UI.closeMessage();
@@ -276,9 +281,11 @@
     if (R.Field && R.Field.setRespawnHere) R.Field.setRespawnHere();
     const gold = R.Engine.push(new GoldLayer());
     try {
-      let text = 'ここは神の家。\n今日はどんなご用かな？';
+      let text = 'ここは神の家。\n今日はどんなご用かな？', last = 0;
       for (;;) {
-        const i = await ask(text, ['お祈りをする', '生き返らせる', '毒の治療', 'やめる']);
+        // the cursor stays where it was (mashing A after a revive must not open the save screen)
+        const i = await ask(text, ['お祈りをする', '生き返らせる', '毒の治療', 'やめる'], { initial: last });
+        if (i >= 0) last = i;
         text = 'ほかにもご用はあるかな？';
         if (i === 0) {
           await say('では、神にこれまでの\n冒険を報告するがよい。');

@@ -219,6 +219,10 @@
       if (kind === 'sail') {
         for (const p of this.P) { p.x = nx; p.y = ny; p.dir = d; }
         R.Game.ship = { map: M.id, x: nx, y: ny, dir: d };
+      } else if (kind === 'land') {
+        // everyone steps ashore together (followers are never left standing on the hull)
+        for (const p of this.P) { p.x = nx; p.y = ny; p.dir = d; }
+        R.Game.onShip = false; R.bgm(M.bgm);
       } else {
         for (let i = this.P.length - 1; i > 0; i--) {
           const a = this.P[i], b = this.P[i - 1];
@@ -226,7 +230,6 @@
           a.x = b.x; a.y = b.y;
         }
         this.P[0].x = nx; this.P[0].y = ny; this.P[0].dir = d;
-        if (kind === 'land') { R.Game.onShip = false; R.bgm(M.bgm); }
       }
       this.mv = { t: 0, dur, from, kind, scripted: !!o.scripted, resolve: o.resolve || null };
     }
@@ -452,6 +455,9 @@
         if (la.t >= la.dur) { this.lift = la.to; this.liftAnim = null; la.resolve(); }
       }
       if (this.banner && ++this.banner.t >= BANNER_FRAMES) this.banner = null;
+      // a message (e.g. the opening speech) takes over: the map-name banner must not cover the speaker
+      const msg = R.UI && R.UI._msg;
+      if (this.banner && msg && !msg.closed && msg.resolveText && R.Engine.layers.includes(msg)) this.banner = null;
     }
     tickNpcs(ai) {
       for (const n of M.npcs) {
@@ -568,7 +574,14 @@
           const spr = G.get(n.sprite);
           const moving = !!n.mv;
           const img = n.sprite.startsWith('mon:') ? (Array.isArray(spr) ? spr[af % spr.length] : spr) : sheetFrame(spr, n.dir, moving ? Math.floor(n.mv.t / 8) + n.seq : af + n.seq);
-          if (img) G.draw(img, sx + 8 - (img.width >> 1), sy + TS - img.height);
+          if (img) {
+            // battle-size monster art standing on the map is drawn at half size (bottom-aligned on its tile)
+            const mon = n.sprite.startsWith('mon:') || n.sprite.startsWith('fieldmon:');
+            const k = mon && img.height > 40 ? 0.5 : 1;
+            const w = Math.round(img.width * k), h = Math.round(img.height * k);
+            if (k === 1) G.draw(img, sx + 8 - (img.width >> 1), sy + TS - img.height);
+            else G.draw(img, sx + 8 - (w >> 1), sy + TS - h + 1, { w, h });
+          }
         } else if (s.ship) {
           const img = sheetFrame(G.get('obj:ship'), s.ship.dir || 'down', af);
           if (img) {
@@ -821,6 +834,10 @@
         await R.Engine.fadeIn(10);
         await lay.liftTo(0, 22);
       } finally { lay.lift = 0; unlock(lay); }
+      // landing on a town / castle entrance tile enters it at once (no step off and back on)
+      const p = lay.P[0];
+      const w = M && !R.Game.onShip && M.warpAt(p.x, p.y);
+      if (w && !M.eventsAt(p.x, p.y, 'step').length) { await lay.useWarp(w); return true; }
       afterEnter(prev);
       return true;
     },

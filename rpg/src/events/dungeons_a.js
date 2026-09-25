@@ -47,6 +47,9 @@
     ev.refresh();
     await ev.give(o.item);
     await ev.say(o.after);
+    ev.heal();
+    ev.sfx('heal');
+    await ev.say('紋章の力で、3人の傷が\nすっかり癒えた。');
     const n = CRESTS.filter((id) => ev.has(id)).length;
     await ev.say(n >= CRESTS.length ? 'ついに五つの紋章が\nすべてそろった！' : 'これで紋章は' + KAZU[n] + '。\n残る紋章はあと' + KAZU[CRESTS.length - n] + 'だ。');
     nextObjective(ev, o.fallback);
@@ -69,6 +72,32 @@
     },
   };
 
+  // ------------------------------------------------------------ pyramid shortcut
+  // B1's stair vault holds a circle linked to the 1F entrance hall; once used, the 1F circle
+  // lights up too, so a retreat does not mean walking the labyrinth again.
+  E.pyr_circle_b1 = {
+    meta: { needs: [], gives: ['flag:pyr_shortcut'] },
+    async run(ev) {
+      ev.sfx('warp');
+      if (!ev.flag('pyr_shortcut')) await ev.say('床の魔法陣が淡く光っている。\n入口の広間と\nつながっているようだ。');
+      if (!(await ev.yesno('ピラミッドの入口へ\n戻りますか？'))) return false;
+      ev.setFlag('pyr_shortcut');
+      ev.sfx('teleport');
+      await ev.warp('pyramid_1', 'shortcut', { dir: 'down' });
+      return true;
+    },
+  };
+  E.pyr_circle_1f = {
+    meta: { needs: ['flag:pyr_shortcut'], gives: [] },
+    async run(ev) {
+      ev.sfx('warp');
+      if (!(await ev.yesno('魔法陣が静かに光っている。\n地下の銀の扉の奥へ\n向かいますか？'))) return false;
+      ev.sfx('teleport');
+      await ev.warp('pyramid_2', 'shortcut', { dir: 'left' });
+      return true;
+    },
+  };
+
   // ============================================================ Wind Cave
   E.wind_boss = {
     meta: { needs: [], gives: ['flag:boss_wind_done'] },
@@ -81,7 +110,7 @@
       if ((await ev.battle('boss_wind')) !== 'win') return false;
       await ev.say('ゴブリン親分「ひ、ひいいっ！\n覚えてろよー！」');
       await vanish(ev, 'boss_wind_done', 'fade');
-      await ev.say('ゴブリンたちは洞窟の奥へ\n逃げていった……。');
+      await ev.say('ゴブリンたちは一目散に\n洞窟の外へ逃げていった……。');
       await ev.say('奥の部屋から、\n不思議な風が吹いてくる……。');
     },
   };

@@ -97,9 +97,10 @@
     alive() { return R.Game.party.filter((c) => c.hp > 0); },
     leader() { return R.Game.party.find((c) => c.hp > 0) || R.Game.party[0]; },
     char(id) { return R.Game.party.find((c) => c.id === id); },
-    /** full heal: HP/MP, revive, cure statuses */
-    healAll() {
+    /** full heal: HP/MP, revive, cure statuses. living:true → the fallen stay down (inns, DQ style) */
+    healAll(opts) {
       for (const c of R.Game.party) {
+        if (opts && opts.living && c.hp <= 0) continue;
         const s = R.Rules.stats(c);
         c.hp = s.hp; c.mp = s.mp; c.status = {};
       }
@@ -108,6 +109,7 @@
     wipeRecover() {
       R.Game.gold = Math.floor(R.Game.gold / 2);
       State.healAll();
+      if (R.Battle) R.Battle.autoCarry = false; // waking up after a wipe: the next fight starts manual
     },
 
     // ---------------------------------------------------------- bestiary
@@ -120,16 +122,34 @@
     noteDrop(monId, kind) { const b = (R.Game.bestiary[monId] = R.Game.bestiary[monId] || { seen: 1, kills: 0 }); b[kind] = true; },
 
     // --------------------------------------------------- serialisation
+    /** where the party is, for save slots: the map name, or 「〇〇付近」 on the world map / ship */
+    placeName() {
+      const g = R.Game;
+      const def = DB.maps[g.pos.map];
+      if (!def) return '';
+      if (def.type !== 'world') return def.name || '';
+      let best = null, bd = Infinity;
+      for (const id in DB.locations) {
+        const l = DB.locations[id];
+        if (l.map !== g.pos.map || (g.visited && !g.visited[id])) continue;
+        let p = null;
+        try { p = R.FieldMap && R.FieldMap.spawnPos(l.spawn, l.map); } catch (e) { p = null; }
+        if (!p) continue;
+        const d = Math.abs(p.x - g.pos.x) + Math.abs(p.y - g.pos.y);
+        if (d < bd) { bd = d; best = l; }
+      }
+      if (!best) return 'フィールド';
+      return bd <= 1 ? best.name : best.name + '付近';
+    },
     serialize() {
       const g = R.Game;
       const lead = g.party[0];
-      const loc = DB.maps[g.pos.map];
       return {
         v: 1,
         summary: {
           level: lead.level,
           names: g.party.map((c) => c.name + ' Lv' + c.level),
-          place: (loc && loc.name) || '',
+          place: State.placeName(),
           time: U.playTime(g.playFrames),
           gold: g.gold,
           title: g.title || '',
