@@ -433,7 +433,7 @@
     leadAt(a) {
       const p = this.P[0], mv = this.mv;
       if (!mv) return { x: p.x, y: p.y };
-      const k = Math.min(1, (mv.t + (a || 0)) / mv.dur);
+      const k = U.clamp((mv.t + (a || 0)) / mv.dur, 0, 1);
       return { x: mv.from.x + (p.x - mv.from.x) * k, y: mv.from.y + (p.y - mv.from.y) * k };
     }
     /** follower i: the point GAP·i back along the leader's path from `lead`, facing its motion */
@@ -878,12 +878,15 @@
       if (mv) {
         mv.t++;
         this.clock += (8 * mv.len) / mv.dur; // one walk frame per tile
-        if (mv.t >= mv.dur - EPS) {
+        // a move ends on the tick after which it would overshoot (t > dur − 1): the next step then
+        // starts at t − dur ∈ (−1, 0], so the drawn position (t + alpha) never stalls or jumps at a
+        // step boundary even when a step lasts a fractional number of frames (diagonals, sail dash)
+        if (mv.t > mv.dur - 1 + EPS) {
           this.mv = null;
           const changed = this.commit(mv);
           if (mv.scripted) { this.savePos(); if (mv.resolve) mv.resolve(); }
           else {
-            this.carry = Math.max(0, mv.t - mv.dur); this.carryF = R.Engine.frame;
+            this.carry = Math.min(0, mv.t - mv.dur); this.carryF = R.Engine.frame;
             this.arrived = { kind: mv.kind, dist: mv.kind === 'board' || mv.kind === 'align' ? 0 : mv.len, changed };
           }
         }

@@ -785,10 +785,10 @@ async function newGame(map, spawn) {
     await holdDirs(['right'], 12);
     await holdDirs(['right', 'up'], 6);
     const P = L.P;
-    // leader went right 4 tiles (1→5) then 2 diagonal half steps up-right → (6, 4): the path back is
-    // two diagonals (√½ each) then straight left, so follower 1 is at (5 − (1 − √2·½·2)... ) on the straight part
-    eq(xp(), [6, 4], 'leader after straight + diagonal');
-    const back = (d) => { const diag = Math.SQRT1_2 * 2; return d <= diag ? [6 - d / Math.SQRT2, 4 + d / Math.SQRT2] : [5 - (d - diag), 5]; };
+    // leader went right 2 tiles (1→3) then 2 diagonal half steps up-right → (4, 4): the path back is
+    // two diagonals (√½ tile each) then straight left
+    eq(xp(), [4, 4], 'leader after straight + diagonal');
+    const back = (d) => { const diag = Math.SQRT1_2 * 2; return d <= diag ? [4 - d / Math.SQRT2, 4 + d / Math.SQRT2] : [3 - (d - diag), 5]; };
     const near = (a, b) => Math.abs(a[0] - b[0]) < 1e-9 && Math.abs(a[1] - b[1]) < 1e-9;
     ok(near([P[1].x, P[1].y], back(1)), 'follower 1 one tile back along the path: ' + [P[1].x, P[1].y] + ' vs ' + back(1));
     ok(near([P[2].x, P[2].y], back(2)), 'follower 2 two tiles back along the path: ' + [P[2].x, P[2].y] + ' vs ' + back(2));
