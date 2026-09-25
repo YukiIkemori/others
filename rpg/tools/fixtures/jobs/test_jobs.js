@@ -426,7 +426,7 @@ for (const id of allAbilities) {
     e3.killed = [e3.mons[0]];
     return e3.computeRewards().each[0];
   };
-  ok(rw({ support: 'monk_training' }).exp === Math.round(10 * 1.5), '修行: +50% EXP');
+  ok(rw({ support: 'monk_training' }).exp === Math.round(10 * 1.2), '修行: +20% EXP');
   ok(rw({ support: 'bard_learning' }).jp === Math.round(5 * 1.2), '学びの心: +20% JP');
   const ex = engine([member('yuki', 'thief', 20, null, { support: 'thief_rare_hunter' })], ['jb_thief']);
   ok(ex.rareStealChance(ex.party[0], {}) > 0.2, 'レアハンター: better rare steals');

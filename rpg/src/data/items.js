@@ -72,7 +72,7 @@
     smoke_bomb:     C('煙玉',            25, 1, '煙に紛れて、必ず逃げ出せる。', battle('self', [{ type: 'escape' }], 'smoke')),
     courage_flute:  C('勇みの笛',       120, 3, '味方全員の攻撃力を上げる。', battle('allies', [{ type: 'buff', stat: 'atk', stages: 1 }], 'buff')),
     guard_bell:     C('守りの鐘',       120, 3, '味方全員の守備力を上げる。', battle('allies', [{ type: 'buff', stat: 'def', stages: 1 }], 'buff')),
-    holy_water:     C('魔除けの香',      40, 1, 'しばらく魔物を寄せつけない不思議な香。', field([{ type: 'repel', steps: 150 }], 'buff')),
+    holy_water:     C('魔除けの香',      40, 1, 'しばらく弱い魔物を寄せつけない不思議な香。', field([{ type: 'repel', steps: 150 }], 'buff')),
     wing:           C('旅鳥の羽',        25, 1, '投げると、訪れた町や村へひとっ飛び。', field([{ type: 'teleport' }], 'warp')),
     escape_rope:    C('導きの糸',        30, 1, '洞窟や塔などから外へ導いてくれる。', field([{ type: 'exit' }], 'warp')),
     // stat nuts: rare drops / hidden spots only

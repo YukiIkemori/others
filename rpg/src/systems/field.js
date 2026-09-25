@@ -811,10 +811,12 @@
     /** advance the encounter counter by `dist` tiles walked; returns a zone id when a battle starts */
     encounterStep(t, dist) {
       const g = R.Game;
-      if (Field.noEncounter || g.repelSteps > 0) return null;
+      if (Field.noEncounter) return null;
       const c = this.cell;
       const zone = M.zoneAt(c.x, c.y);
       if (!zone) return null;
+      // 気配消し / 魔除けの香 only keep away monsters the party has outgrown (DQ せいすい rule)
+      if (g.repelSteps > 0 && this.repelBlocks(zone)) return null;
       const rate = t.enc == null ? 1 : t.enc;
       if (!(rate > 0)) return null;
       const mult = Math.max(0, 1 + (this.fieldMods().encounterPct || 0) / 100);
@@ -824,6 +826,16 @@
       if (!DB.encounters[zone]) { R.FieldMap.warn(M.id, 'unknown encounter zone ' + zone); return null; }
       if (!R.Battle || !R.Battle.start) return null;
       return zone;
+    }
+    /** repel works only once the party's average level has reached the top of the zone's level band */
+    repelBlocks(zone) {
+      const z = DB.encounters[zone];
+      if (!z || z.lv == null) return true;
+      const top = Array.isArray(z.lv) ? z.lv[z.lv.length - 1] : z.lv; // the top of the zone's band
+      const alive = (R.Game.party || []).filter((c) => c.hp > 0);
+      if (!alive.length) return true;
+      const avg = alive.reduce((n, c) => n + c.level, 0) / alive.length;
+      return avg >= top;
     }
     async useWarp(w) {
       const id = M.tileAt(this.cell.x, this.cell.y);

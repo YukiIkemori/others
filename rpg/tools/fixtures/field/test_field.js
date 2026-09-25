@@ -316,12 +316,20 @@ async function newGame(map, spawn) {
     ok(['grass', 'forest', 'hills'].includes(R.fxBattleLog[0].bg), 'bg from tile: ' + R.fxBattleLog[0].bg);
   }
   await settle(200);
-  // repel
+  // repel (the party has outgrown fx_w1's band)
+  const lvSave = R.Game.party.map((c) => c.level);
+  R.Game.party.forEach((c) => { c.level = 10; });
   R.Field.repel(3);
   R.fxBattleLog.length = 0;
   R.Field.layer.encCount = 0.1;
   await walk('R'); await walk('L');
   eq(R.fxBattleLog.length, 0, 'no encounter while repelled');
+  // repel only keeps away monsters the party has outgrown
+  R.Game.party.forEach((c) => { c._lv = c.level; c.level = 1; });
+  ok(!R.Field.layer.repelBlocks('fx_w1'), 'repel does not work below the zone band');
+  R.Game.party.forEach((c) => { c.level = 3; });
+  ok(R.Field.layer.repelBlocks('fx_w1'), 'repel works at the top of the zone band');
+  R.Game.party.forEach((c, i) => { c.level = lvSave[i]; delete c._lv; });
   await walk('R');
   ok(/魔除けの効果が切れた/.test(msgText()), 'repel expiry notice');
   await clearMsgs();

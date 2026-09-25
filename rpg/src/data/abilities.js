@@ -143,8 +143,8 @@
     thief_flee: act('ずらかる', 150, '戦闘から必ず逃げ出す。', {
       mp: 2, target: 'self', effects: [{ type: 'escape' }], fx: 'smoke', msg: '{user}は一目散に逃げ出した！',
     }),
-    thief_repel: act('気配消し', 180, 'しばらく魔物が寄ってこなくなる。', {
-      mp: 3, target: 'self', effects: [{ type: 'repel', steps: 200 }], fx: 'magic', fieldUse: true,
+    thief_repel: act('気配消し', 180, 'しばらく弱い魔物が寄ってこなくなる。', {
+      mp: 3, target: 'self', effects: [{ type: 'repel', steps: 100 }], fx: 'magic', fieldUse: true,
     }),
     thief_quick: act('はやて斬り', 200, '目にも止まらぬ速さで2回斬る。', {
       mp: 2, target: 'enemy', effects: [phys(0.7, { hits: 2, acc: 1.1 })], fx: 'slash',
