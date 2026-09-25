@@ -97,7 +97,7 @@ Everything on screen is an `R.Layer` on `R.Engine.layers`:
 Virtual buttons `up down left right a b dash`. Keyboard: arrows/WASD, **A = Z/Enter/Space**, **B = X/Esc/Backspace**,
 dash = Shift. Touch pad (D-pad + A/B) and gamepads map to the same buttons.
 `R.Input.down(b) pressed(b) repeat(b) released(b) dir() dirRepeat() consume()`.
-**Field: A = talk/examine/open, B = open menu.** Menus: A = confirm, B = back.
+**Field: A = talk/examine/open, Y = open menu, hold B (or Shift) while moving = dash.** Menus: A = confirm, B = back, L/R = switch party member. Keyboard: Y = C/Tab, L = Q, R = E; gamepad Y = button 3, L/R = 4/5; touch pad has A/B/Y/L/R.
 
 ### Graphics (`src/core/gfx.js`)
 All coordinates are logical pixels. `R.Gfx.clear rect strokeRect draw(img,x,y,{flip,alpha,sx,sy,sw,sh,w,h}) drawTinted
@@ -505,7 +505,7 @@ NPC `sprite` is any Gfx key (`npc:*` sheets animate; `mon:*` draws the monster s
 visible bosses). NPCs block movement. Talking to an NPC across a `counter` tile works.
 
 ### 7.2 Field behaviour (owner: field)
-* Tile movement, 8 frames per tile walking, 4 dashing (always-dash on by default; Shift inverts).
+* Tile movement, 6 frames per tile walking, 4 dashing (dash while holding B/Shift; optional always-dash), starts on the first frame a direction is held, chains tiles without idle frames; rendering interpolates between fixed steps.
 * Party caterpillar: the other two members follow the leader's trail (dead members still follow, like DQ ghosts are not needed).
 * Camera centred on the leader, clamped to map edges (small maps centred). Overworld does **not** wrap.
 * Doors open when stepped on (sfx `door`); locked doors (`lock`) open automatically if the key item is held,

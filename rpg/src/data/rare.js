@@ -16,7 +16,7 @@
   const late = (L) => { const t = Math.min(1, Math.max(0, (L - 16) / 14)); return t * t * (3 - 2 * t); };
   // outgoing damage softened (playtest: 「全体的に敵の攻撃が痛い」): atk & mag ×0.87 up to Lv18,
   // eased to ×0.93 by Lv34 (late fights keep some bite)
-  const soft = (L) => { const t = Math.min(1, Math.max(0, (L - 18) / 16)); return 0.87 + 0.06 * t * t * (3 - 2 * t); };
+  const soft = (L) => { const t = Math.min(1, Math.max(0, (L - 18) / 16)); return 0.87 + 0.03 * t * t * (3 - 2 * t); };
   const curve = (L) => ({
     hp: (7 + 5 * L + 0.28 * L * L) * (1 + 0.15 * late(L)),
     atk: (10 + 3.8 * L) * (1 + 0.12 * late(L)) * soft(L),
