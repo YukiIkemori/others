@@ -274,7 +274,7 @@ most one fires per member per hit). Menus: 「マスター特典 HP+10 力+3／�
 | 戦士 | 反撃 (reaction 30 %) | 魔法剣士 | 文武の道 (力・知力+10 %) |
 | 僧侶 | 精神アップ (+20 %) | パラディン | 不屈の誓い (KO → 50 % HP once) |
 | 魔法使い | 知力アップ (+15 %) | 忍者 | 二刀流 |
-| 盗賊 | ついでに盗む (new: a landed 戦う steals at 70 % of the 盗む chance, rare ×0.5, silent on failure) | 賢者 | MP半減 |
+| 盗賊 | ついでに盗む (new: a landed 戦う steals at the full 盗む chance, rare ×0.5, silent on failure) | 賢者 | MP半減 |
 | ナイト | 守りの構え (start def +1) | 竜騎士 | 竜の力 (weapon dmg +20 %) |
 | 武闘家 | 修行 (EXP +20 %) | 時空術師 | 俊足 (start agi +1) |
 | 白魔術師 | 回復アップ (+30 %) | 暗黒騎士 | 力アップ (+20 %) |

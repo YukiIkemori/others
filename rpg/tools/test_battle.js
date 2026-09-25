@@ -1086,9 +1086,9 @@ sec('mastery signatures');
   }
   // supports: merged without a slot, never doubled
   const th = master('yuki', 'warrior', ['thief']);
-  ok(!th.set.support && Rl.signatures(th).includes('thief_auto_steal') && Rl.mods(th).autoSteal === 70, 'mastered 盗賊: ついでに盗む on in 戦士 without a slot');
+  ok(!th.set.support && Rl.signatures(th).includes('thief_auto_steal') && Rl.mods(th).autoSteal === 100, 'mastered 盗賊: ついでに盗む on in 戦士 without a slot');
   th.set.support = 'thief_auto_steal';
-  ok(Rl.mods(th).autoSteal === 70, 'signature also in the slot: not doubled');
+  ok(Rl.mods(th).autoSteal === 100, 'signature also in the slot: not doubled');
   const unm = master('yuki', 'warrior', []);
   Rl.jobRec(unm, 'thief').learned = Rl.jobAbilities('thief').slice(1);
   for (const j in unm.jobs) { unm.jobs[j].total = 0; delete unm.jobs[j].mastered; } // job Lv MAX would master too
@@ -1132,7 +1132,7 @@ sec('auto-steal');
     const e = mk({ party: [U.clone(c)], mons: ['tb_slime'], inv: {} });
     const u = P(e, 0), t = Mo(e, 0);
     t.hp = t.mhp = 99999;
-    chance = e.stealChance(u, t) * 0.7;
+    chance = e.stealChance(u, t) * 1.0;
     const r = e.roll(u, t, { formula: 'phys', power: 1 }, {});
     if (r.miss) continue;
     tries++;
@@ -1143,7 +1143,7 @@ sec('auto-steal');
       if (!said(ev, `${u.name}は${t.name}から`) || !t.stolen) msgOk = false;
     } else if (texts(ev).length) silentFail = false;
   }
-  near(got / tries, chance, 0.05, 'ついでに盗む: 70 % of the 盗む success chance');
+  near(got / tries, chance, 0.05, 'ついでに盗む: same chance as 盗む');
   ok(msgOk, 'auto-steal message 「〇〇は××から△△を盗んだ！」, monster marked as stolen from');
   ok(silentFail, 'a failed auto-steal says nothing');
   const e0 = mk({ party: [U.clone(c)], mons: ['tb_slime'] });

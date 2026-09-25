@@ -1050,7 +1050,7 @@
       yield this.m(`${u.name}は${t.name}から${(DB.items[item] || {}).name || item}を盗んだ！`);
     }
     /**
-     * ついでに盗む (mod autoSteal = % of the 盗む success chance; 盗賊's signature): a landed 戦う may also pick the
+     * ついでに盗む (mod autoSteal = % of the 盗む success chance, 100 = same as 盗む; 盗賊's signature): a landed 戦う may also pick the
      * target's pocket — the item even from a monster it just felled. Silent when nothing is taken;
      * the rare item comes at half the usual rate.
      */
