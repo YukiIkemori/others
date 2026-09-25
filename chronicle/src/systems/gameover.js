@@ -51,6 +51,7 @@
   GameOver.run = async function () {
     if (running && R.Engine.layers.includes(running)) return;
     const L = (running = new GameOverLayer());
+    if (R.Battle) R.Battle.autoCarry = false; // オート never carries over a game over
     try {
       if (R.UI && R.UI.closeMessage) R.UI.closeMessage();
       R.Engine.fade(0, 0);

@@ -1,5 +1,6 @@
 // Field: the map screen (DESIGN §7.2). One opaque layer that draws tiles,
-// objects and y-sorted sprites, moves the party tile by tile (caterpillar),
+// objects and y-sorted sprites, moves the party in 8 directions on a half-tile
+// grid (caterpillar trail),
 // runs NPC AI, doors/locks, damage floors, warps, step events, encounters and
 // the ship, plus the public R.Field API used by title/menu/events/debug.
 //
@@ -12,12 +13,14 @@
   const DB = R.DB;
   const TS = 16;
 
-  const WALK = 8, DASH = 4, SAIL = 6, SAIL_DASH = 3, NPC_STEP = 16;
-  const TURN_DELAY = 5; // frames a new direction is held before walking (a tap only turns)
+  // frames per tile (a half step takes half, a diagonal half step √2× that: same px/frame in every direction).
+  // 16px / 6 = 2⅔ px per frame = exactly 8 device px on the 3× canvas.
+  const WALK = 6, DASH = 4, SAIL = 6, SAIL_DASH = 3, NPC_STEP = 16;
+  const SCRIPT_WALK = 8; // cutscene party walks keep their original pacing
   const BUMP_EVERY = 20;
   const BANNER_FRAMES = 130;
   const ANIM_RATE = { sea: 16, water: 16, lava: 24, magma: 24, poison: 24, wall_torch: 8, warp_pad: 8, barrier: 8, seal: 16 };
-  const BW = 17, BH = 15; // tile buffer size in cells (covers 256x224 + one partial cell)
+  const BW = 17, BH = 15; // cells touched by the view (256x224 + one partial cell)
   const SPIN = { down: 'left', left: 'up', up: 'right', right: 'down' };
 
   let L = null; // the FieldLayer
@@ -28,7 +31,21 @@
   const leaderName = () => R.State.leader().name;
 
   // ------------------------------------------------------------ tile art
-  let buf = null, bctx = null, bufBase = '', bufPhase = -1, bufAnim = false;
+  // The map (tiles + decor) is pre-rendered into a cache canvas that is only
+  // ever patched, never rebuilt while walking:
+  //   * small maps (every town / dungeon): the whole map plus a screen-sized
+  //     border is drawn once when the map loads (behind the fade);
+  //   * big maps (the overworld): a window a few cells larger than the view
+  //     slides along; crossing its edge shifts the pixels and draws only the
+  //     newly exposed strip.
+  // Animated tiles / decor redraw just their own cells when their frame changes.
+  // (Previously the whole 17×15 buffer was redrawn at every tile crossing and
+  // every 8 frames on maps with water, which showed up as frame-time spikes.)
+  const WHOLE_MAX = 9000; // cells: cache the whole map when (w+2·PADX)·(h+2·PADY) fits
+  const PADX = 9, PADY = 8; // cells of "outside" around a whole-map cache (a centred small map shows them)
+  const MARG = 3; // sliding window margin (cells) on each side of the view
+  const CH = 8; // whole-map cache chunk (cells)
+  const TC = { cv: null, ctx: null, spare: null, uid: -1, ver: -1, x0: 0, y0: 0, w: 0, h: 0, whole: false, anim: [], danim: [], drawn: new Map() };
   const artWarned = {};
 
   function tileGfx(m, id) {
@@ -79,49 +96,238 @@
     }
     return g;
   }
-  function drawTiles(camX, camY) {
-    const ox = Math.floor(camX / TS), oy = Math.floor(camY / TS);
-    const base = M.uid + ',' + M.version + ',' + ox + ',' + oy;
-    const phase = Math.floor(R.Engine.frame / 8);
-    if (base !== bufBase || (bufAnim && phase !== bufPhase)) {
-      if (!buf) { buf = R.Gfx.makeCanvas(BW * TS, BH * TS); bctx = buf.getContext('2d'); bctx.imageSmoothingEnabled = false; }
-      bctx.fillStyle = '#000';
-      bctx.fillRect(0, 0, buf.width, buf.height);
-      let anim = false;
-      const f = R.Engine.frame;
-      for (let j = 0; j < BH; j++) {
-        for (let i = 0; i < BW; i++) {
-          const x = ox + i, y = oy + j;
-          let g = cellGfx(M, x, y);
+  const tileRate = (m, x, y) => ANIM_RATE[m.tileAt(x, y)] || 16;
+  const decorRate = (m, x, y) => { const dd = R.DB.decor[m.decorAt(x, y)]; return (dd && dd.animRate) || 12; };
+  const cellKey = (x, y) => (y + 1024) * 4096 + (x + 1024);
+  function frameOf(g, rate) { return Math.floor(R.Engine.frame / rate) % g.length; }
+
+  /** redraw a rectangle of the cache (cache-local px): tiles, then every decor that can reach it, clipped */
+  function redrawRect(px, py, pw, ph) {
+    const c = TC.ctx, m = M;
+    c.save();
+    c.beginPath(); c.rect(px, py, pw, ph); c.clip();
+    c.fillStyle = '#000';
+    c.fillRect(px, py, pw, ph);
+    const c0 = Math.floor(px / TS), c1 = Math.floor((px + pw - 1) / TS);
+    const r0 = Math.floor(py / TS), r1 = Math.floor((py + ph - 1) / TS);
+    for (let j = r0; j <= r1; j++) {
+      for (let i = c0; i <= c1; i++) {
+        const x = TC.x0 + i, y = TC.y0 + j;
+        let g = cellGfx(m, x, y);
+        if (!g) continue;
+        if (Array.isArray(g)) {
+          const f = frameOf(g, tileRate(m, x, y));
+          TC.drawn.set(cellKey(x, y), f);
+          g = g[f];
+          if (!g) continue;
+        }
+        c.drawImage(g, i * TS, j * TS);
+      }
+    }
+    // decor: tall props are drawn bottom-aligned (up to 48px) and centred (up to 48px wide),
+    // so cells up to 2 rows below and 1 column either side can reach into the rect
+    if (m.decor) {
+      for (let j = r0; j <= r1 + 2; j++) {
+        for (let i = c0 - 1; i <= c1 + 1; i++) {
+          const x = TC.x0 + i, y = TC.y0 + j;
+          let g = decorGfx(m, x, y);
           if (!g) continue;
           if (Array.isArray(g)) {
-            anim = true;
-            g = g[Math.floor(f / (ANIM_RATE[M.tileAt(x, y)] || 16)) % g.length];
+            const f = frameOf(g, decorRate(m, x, y));
+            TC.drawn.set(-cellKey(x, y), f);
+            g = g[f];
             if (!g) continue;
           }
-          bctx.drawImage(g, i * TS, j * TS);
+          c.drawImage(g, i * TS + ((TS - g.width) >> 1), j * TS + TS - g.height);
         }
       }
-      // decor layer: second pass so tall props (drawn bottom-aligned, up to 32px)
-      // overlap the row above; one extra row below the view for their tops
-      if (M.decor) {
-        for (let j = 0; j <= BH; j++) {
-          for (let i = 0; i < BW; i++) {
-            let g = decorGfx(M, ox + i, oy + j);
-            if (!g) continue;
-            if (Array.isArray(g)) {
-              anim = true;
-              const dd = R.DB.decor[M.decorAt(ox + i, oy + j)];
-              g = g[Math.floor(f / ((dd && dd.animRate) || 12)) % g.length];
-              if (!g) continue;
-            }
-            bctx.drawImage(g, i * TS + ((TS - g.width) >> 1), j * TS + TS - g.height);
-          }
-        }
-      }
-      bufBase = base; bufPhase = phase; bufAnim = anim;
     }
-    R.Gfx.draw(buf, ox * TS - camX, oy * TS - camY);
+    c.restore();
+  }
+  /** (re)collect the animated cells of the cached area */
+  function scanAnim(i0, j0, i1, j1) {
+    const m = M;
+    if (i0 === undefined) { TC.anim = []; TC.danim = []; i0 = 0; j0 = 0; i1 = TC.w - 1; j1 = TC.h - 1; }
+    for (let j = j0; j <= j1; j++) {
+      for (let i = i0; i <= i1; i++) {
+        const x = TC.x0 + i, y = TC.y0 + j;
+        const g = cellGfx(m, x, y);
+        if (Array.isArray(g)) {
+          let plain = true; // no decor can overlap this cell: a plain blit is enough
+          if (m.decor) for (let jj = y; jj <= y + 2 && plain; jj++) for (let ii = x - 1; ii <= x + 1; ii++) if (m.decorAt(ii, jj)) { plain = false; break; }
+          TC.anim.push({ x, y, plain });
+        }
+        const dg = m.decor && decorGfx(m, x, y);
+        if (Array.isArray(dg)) TC.danim.push({ x, y });
+      }
+    }
+  }
+  function tcCanvas(w, h) {
+    const pw = w * TS, ph = h * TS;
+    if (!TC.cv || TC.cv.width !== pw || TC.cv.height !== ph) {
+      TC.cv = R.Gfx.makeCanvas(pw, ph);
+      TC.ctx = TC.cv.getContext('2d');
+      TC.ctx.imageSmoothingEnabled = false;
+      TC.spare = null;
+    }
+  }
+  function tcRebuild(ox, oy) {
+    TC.uid = M.uid; TC.ver = M.version;
+    const W = M.w + 2 * PADX, H = M.h + 2 * PADY;
+    TC.whole = W * H <= WHOLE_MAX;
+    if (TC.whole) { TC.x0 = -PADX; TC.y0 = -PADY; TC.w = W; TC.h = H; }
+    else { TC.w = BW + 2 * MARG; TC.h = BH + 2 * MARG; TC.x0 = ox - MARG; TC.y0 = oy - MARG; }
+    tcCanvas(TC.w, TC.h);
+    TC.drawn.clear();
+    if (TC.whole) {
+      // drawn lazily in CH×CH chunks: the view's chunks at once, the rest a little per frame
+      TC.cw = Math.ceil(TC.w / CH); TC.chh = Math.ceil(TC.h / CH);
+      TC.chunks = new Uint8Array(TC.cw * TC.chh);
+      TC.left = TC.chunks.length;
+      TC.anim = []; TC.danim = [];
+    } else {
+      redrawRect(0, 0, TC.w * TS, TC.h * TS);
+      scanAnim();
+    }
+  }
+  function tcChunk(ci, cj) {
+    const k = cj * TC.cw + ci;
+    if (TC.chunks[k]) return;
+    TC.chunks[k] = 1; TC.left--;
+    const i0 = ci * CH, j0 = cj * CH, i1 = Math.min(TC.w, i0 + CH) - 1, j1 = Math.min(TC.h, j0 + CH) - 1;
+    redrawRect(i0 * TS, j0 * TS, (i1 - i0 + 1) * TS, (j1 - j0 + 1) * TS);
+    scanAnim(i0, j0, i1, j1);
+  }
+  /** whole-map cache: make sure the view's chunks exist, then fill others nearest-first within a time budget */
+  function tcFill(ox, oy, budgetMs) {
+    const ci0 = Math.max(0, Math.floor((ox - 1 - TC.x0) / CH)), cj0 = Math.max(0, Math.floor((oy - 1 - TC.y0) / CH));
+    const ci1 = Math.min(TC.cw - 1, Math.floor((ox + BW - TC.x0) / CH)), cj1 = Math.min(TC.chh - 1, Math.floor((oy + BH + 2 - TC.y0) / CH));
+    for (let cj = cj0; cj <= cj1; cj++) for (let ci = ci0; ci <= ci1; ci++) tcChunk(ci, cj);
+    if (!TC.left) return;
+    const t0 = performance.now();
+    const cx = (ci0 + ci1) / 2, cy = (cj0 + cj1) / 2;
+    for (let r = 1; TC.left && r < TC.cw + TC.chh; r++) {
+      for (let cj = Math.floor(cy - r); cj <= cy + r; cj++) {
+        for (let ci = Math.floor(cx - r); ci <= cx + r; ci++) {
+          if (ci < 0 || cj < 0 || ci >= TC.cw || cj >= TC.chh || TC.chunks[cj * TC.cw + ci]) continue;
+          tcChunk(ci, cj);
+          if (performance.now() - t0 > budgetMs) return;
+        }
+      }
+    }
+  }
+  /** slide the window so the view (ox,oy)+(BW,BH) sits in its middle, redrawing only exposed strips */
+  function tcSlide(ox, oy) {
+    const nx0 = ox - MARG, ny0 = oy - MARG;
+    const dx = TC.x0 - nx0, dy = TC.y0 - ny0; // old origin in new cache cells
+    if (Math.abs(dx) >= TC.w || Math.abs(dy) >= TC.h) { tcRebuild(ox, oy); return; }
+    if (!TC.spare) {
+      TC.spare = R.Gfx.makeCanvas(TC.cv.width, TC.cv.height);
+      TC.spareCtx = TC.spare.getContext('2d');
+      TC.spareCtx.imageSmoothingEnabled = false;
+    }
+    const s = TC.spareCtx;
+    s.fillStyle = '#000'; s.fillRect(0, 0, TC.spare.width, TC.spare.height);
+    s.drawImage(TC.cv, dx * TS, dy * TS);
+    [TC.cv, TC.spare] = [TC.spare, TC.cv];
+    [TC.ctx, TC.spareCtx] = [TC.spareCtx, TC.ctx];
+    TC.x0 = nx0; TC.y0 = ny0;
+    const W = TC.w * TS, H = TC.h * TS;
+    if (dx > 0) redrawRect(0, 0, dx * TS, H);
+    if (dx < 0) redrawRect(W + dx * TS, 0, -dx * TS, H);
+    if (dy > 0) redrawRect(0, 0, W, dy * TS);
+    if (dy < 0) redrawRect(0, H + dy * TS, W, -dy * TS);
+    // forget frames drawn for cells that left the window
+    for (const k of TC.drawn.keys()) {
+      const a = Math.abs(k), x = (a % 4096) - 1024, y = Math.floor(a / 4096) - 1024;
+      if (x < TC.x0 - 1 || y < TC.y0 || x > TC.x0 + TC.w || y > TC.y0 + TC.h + 1) TC.drawn.delete(k);
+    }
+    scanAnim();
+  }
+  /** Generate (and cache) the art of cells around the sliding window a little
+   *  every frame, so a slide only copies ready-made canvases. Context tiles
+   *  (autotiling) cost far more to build than to draw. */
+  const WARM = 10; // cells beyond the window
+  function warmArt(budgetMs) {
+    const m = M, t0 = performance.now();
+    const x0 = Math.max(0, TC.x0 - WARM), y0 = Math.max(0, TC.y0 - WARM);
+    const x1 = Math.min(m.w - 1, TC.x0 + TC.w + WARM), y1 = Math.min(m.h - 1, TC.y0 + TC.h + WARM);
+    for (let y = y0; y <= y1; y++) {
+      for (let x = x0; x <= x1; x++) {
+        const i = m.idx(x, y);
+        const need = m.wcache[i] === undefined || (m.decor && m.decor[i] && (!m.dcache || m.dcache[i] === undefined));
+        if (!need) continue;
+        cellGfx(m, x, y); decorGfx(m, x, y);
+        if (performance.now() - t0 > budgetMs) return;
+      }
+    }
+  }
+  /** redraw the animated cells near the view whose frame changed */
+  function tcAnimate(ox, oy) {
+    const m = M, c = TC.ctx;
+    const vx0 = ox - 1, vy0 = oy - 1, vx1 = ox + BW, vy1 = oy + BH + 2;
+    for (const a of TC.anim) {
+      if (a.x < vx0 || a.y < vy0 || a.x > vx1 || a.y > vy1) continue;
+      const g = cellGfx(m, a.x, a.y);
+      if (!Array.isArray(g)) continue;
+      const f = frameOf(g, tileRate(m, a.x, a.y)), k = cellKey(a.x, a.y);
+      if (TC.drawn.get(k) === f) continue;
+      const lx = (a.x - TC.x0) * TS, ly = (a.y - TC.y0) * TS;
+      if (a.plain) {
+        c.fillStyle = '#000'; c.fillRect(lx, ly, TS, TS);
+        if (g[f]) c.drawImage(g[f], lx, ly);
+        TC.drawn.set(k, f);
+      } else redrawRect(lx, ly, TS, TS);
+    }
+    for (const a of TC.danim) {
+      if (a.x < vx0 - 1 || a.y < vy0 || a.x > vx1 + 1 || a.y > vy1 + 2) continue;
+      const g = decorGfx(m, a.x, a.y);
+      if (!Array.isArray(g)) continue;
+      const f = frameOf(g, decorRate(m, a.x, a.y));
+      if (TC.drawn.get(-cellKey(a.x, a.y)) === f) continue;
+      const im = g[f] || g[0];
+      const w = (im && im.width) || TS, h = (im && im.height) || TS;
+      redrawRect((a.x - TC.x0) * TS + ((TS - w) >> 1), (a.y - TC.y0) * TS + TS - h, w, h);
+    }
+  }
+  function drawTiles(camX, camY) {
+    const ox = Math.floor(camX / TS), oy = Math.floor(camY / TS);
+    if (TC.uid !== M.uid || !TC.cv) tcRebuild(ox, oy);
+    else if (TC.ver !== M.version) {
+      // doors opened on this visit patch single cells; anything else redraws everything
+      const dirty = (M.dirtyCells || []).filter((d) => d.v > TC.ver && d.v <= M.version);
+      if (dirty.length === M.version - TC.ver) {
+        TC.ver = M.version;
+        for (const d of dirty) {
+          const lx = (d.x - TC.x0) * TS, ly = (d.y - TC.y0) * TS;
+          if (lx >= 0 && ly >= 0 && lx < TC.w * TS && ly < TC.h * TS) redrawRect(lx, ly, TS, TS);
+        }
+      } else tcRebuild(ox, oy);
+    }
+    if (TC.whole) { if (TC.left) tcFill(ox, oy, 0); }
+    else if (ox < TC.x0 || oy < TC.y0 || ox + BW > TC.x0 + TC.w || oy + BH > TC.y0 + TC.h) tcSlide(ox, oy);
+    tcAnimate(ox, oy);
+    // copy just the visible part of the cache (whole-pixel source rect, sub-pixel destination)
+    const ix = Math.floor(camX), iy = Math.floor(camY);
+    const sx = ix - TC.x0 * TS, sy = iy - TC.y0 * TS;
+    const w = Math.min(R.W + 1, TC.cv.width - sx), h = Math.min(R.H + 1, TC.cv.height - sy);
+    if (sx < 0 || sy < 0 || w <= 0 || h <= 0) { blit(TC.cv, TC.x0 * TS - camX, TC.y0 * TS - camY); return; }
+    R.Gfx.ctx.drawImage(TC.cv, sx, sy, w, h, q(ix - camX), q(iy - camY), w, h);
+    // spare time: build the rest of the map cache / the art around the window
+    if (TC.whole) { if (TC.left) tcFill(ox, oy, 1); }
+    else warmArt(1);
+  }
+  /** draw at a sub-pixel position: logical px quantised to device px (the canvas is R.SCALE×) */
+  const q = (v) => Math.round(v * R.SCALE) / R.SCALE;
+  function blit(img, x, y, o) {
+    if (!img) return;
+    const c = R.Gfx.ctx;
+    x = q(x); y = q(y);
+    if (!o) { c.drawImage(img, x, y); return; }
+    const a = c.globalAlpha;
+    if (o.alpha != null) c.globalAlpha = a * o.alpha;
+    if (o.w) c.drawImage(img, x, y, o.w, o.h); else c.drawImage(img, x, y);
+    c.globalAlpha = a;
   }
   /** pick a frame from a sprite sheet {down:[..],..} / array / canvas */
   function sheetFrame(g, dir, f) {
@@ -134,16 +340,50 @@
   }
 
   // ------------------------------------------------------------ the layer
+  // Movement (DESIGN §7.2): the leader's collision box is one tile (16×16)
+  // anchored at P[0].x/y, in tile units on a half-tile (8px) grid. A position is
+  // valid when every tile the box overlaps is passable. Each move is one half
+  // step in up to 8 directions (diagonals check the whole swept rectangle, so
+  // no corner is ever cut); blocked diagonals slide along the free axis and a
+  // push into a wall that is only half in the way nudges half a tile sideways.
+  //
+  // Tile-based rules use `cell`, the leader's logical tile: on each axis it is
+  // the tile the box last fully occupied (it only changes when the box is
+  // aligned on that axis), so it is always one of the tiles under the box.
+  // Step events, warps, stairs, damage floors and the saved position fire /
+  // are taken when `cell` changes — once per tile entered. A warp or step
+  // event first glides the box onto its tile. Encounters, poison, walk-heal
+  // and 魔除け count the distance walked, so half steps count half.
+  const HALF = 0.5;
+  const EPS = 1e-6;
+  const GAP = 1; // follower spacing along the leader's path (tiles)
+  const isInt = (v) => Math.abs(v - Math.round(v)) < EPS;
+  const HORIZ = { left: 1, right: 1 };
+  const dirOf = (dx, dy) => (dx > 0 ? 'right' : dx < 0 ? 'left' : dy > 0 ? 'down' : dy < 0 ? 'up' : null);
+  /** cells [x,y] touched by the 1×1 boxes at (x0,y0) and (x1,y1) and everything between */
+  function rectCells(x0, y0, x1, y1) {
+    const ax = Math.min(x0, x1), bx = Math.max(x0, x1) + 1, ay = Math.min(y0, y1), by = Math.max(y0, y1) + 1;
+    const out = [];
+    for (let cy = Math.floor(ay + EPS); cy < by - EPS; cy++) for (let cx = Math.floor(ax + EPS); cx < bx - EPS; cx++) out.push([cx, cy]);
+    return out;
+  }
+  /** does the 1×1 box at (bx,by) overlap cell (cx,cy)? */
+  const boxHits = (bx, by, cx, cy) => bx < cx + 1 - EPS && bx + 1 > cx + EPS && by < cy + 1 - EPS && by + 1 > cy + EPS;
+
   class FieldLayer extends R.Layer {
     constructor() {
       super();
       this.opaque = true;
-      this.P = [0, 1, 2].map(() => ({ x: 0, y: 0, dir: 'down' })); // P[0] = leader (tile coords)
-      this.mv = null; // party move {t,dur,from,kind,scripted,resolve}
-      this.arrived = null; // kind of the move that just completed (processed in update)
+      this.P = [0, 1, 2].map(() => ({ x: 0, y: 0, dir: 'down' })); // P[0] = leader box (tile units, half-tile grid)
+      this.cell = { x: 0, y: 0 }; // the leader's logical tile (see above)
+      this.trail = [{ x: 0, y: 0 }]; // leader positions, newest first (caterpillar path)
+      this.mv = null; // party move {t,dur,from,kind,len,scripted,resolve}
+      this.arrived = null; // the move that just completed {kind,dist,changed} (processed in update)
+      this.carry = 0; // frames left over from the move that just ended (keeps chained steps exact)
+      this.walked = 0; // tiles walked since the last whole step (poison / 魔除け / walk-heal)
+      this.shipPos = null; // exact ship position this visit {x,y,ref} (saves keep the whole tile)
       this.locks = 0; // >0 while warping / processing a step / in battle
-      this.walking = false; // walked last frame (no turn delay)
-      this.turnT = 0;
+      this.walking = false; // a step is chained (no idle frame between steps)
       this.bumpT = 0;
       this.clock = 0; // walk animation clock
       this.lift = 0; // teleport lift (px, negative = up)
@@ -157,13 +397,15 @@
 
     // ------------------------------------------------------------ helpers
     get lead() { return this.P[0]; }
-    place(x, y, dir) {
+    place(x, y, dir, cell) {
       for (const p of this.P) { p.x = x; p.y = y; if (dir) p.dir = dir; }
-      this.mv = null; this.arrived = null; this.walking = false; this.turnT = 0;
+      this.cell = cell ? { x: cell.x, y: cell.y } : { x: Math.round(x), y: Math.round(y) };
+      this.trail = [{ x, y }];
+      this.mv = null; this.arrived = null; this.walking = false; this.carry = 0; this.last = null;
     }
     savePos() {
-      const p = this.P[0];
-      R.Game.pos = { map: M.id, x: p.x, y: p.y, dir: p.dir, spawn: this.spawnName };
+      const c = this.cell;
+      R.Game.pos = { map: M.id, x: c.x, y: c.y, dir: this.P[0].dir, spawn: this.spawnName };
     }
     resetEnc() { this.encCount = M.encRate * U.rf(0.6, 1.4); }
     /** party-wide field mods: strongest encounterPct, max walkHeal, any noFloorDamage/treasureSense */
@@ -187,11 +429,51 @@
       const party = R.Game.party, lead = R.State.leader();
       return [lead].concat(party.filter((c) => c !== lead)).slice(0, 3);
     }
+    /** leader position (tiles) at fraction `a` of the current fixed step */
+    leadAt(a) {
+      const p = this.P[0], mv = this.mv;
+      const at = (m, t) => { const k = U.clamp(t / m.dur, 0, 1); return { x: m.from.x + (m.to.x - m.from.x) * k, y: m.from.y + (m.to.y - m.from.y) * k }; };
+      a = a || 0;
+      // a step ends up to one frame early (see tick): until its real end time the previous step is still drawn
+      // (`back`: the point lies on the segment before trail[0])
+      if (mv) return mv.t + a < 0 && mv.prev ? Object.assign(at(mv.prev, mv.prev.dur + mv.t + a), { back: 1 }) : at(mv, mv.t + a);
+      const l = this.last;
+      if (l && l.t + a < 0) return Object.assign(at(l.mv, l.mv.dur + l.t + a), { back: 1 });
+      return { x: p.x, y: p.y };
+    }
+    /** follower i: the point GAP·i back along the leader's path from `lead`, facing its motion */
+    followerAt(i, lead) {
+      const keep = this.P[i].dir;
+      if (this.mv && this.mv.kind === 'land') return { x: lead.x, y: lead.y, dir: this.P[0].dir };
+      let need = GAP * i, a = lead;
+      for (let j = lead.back ? 1 : 0; j < this.trail.length; j++) {
+        const b = this.trail[j];
+        const dx = a.x - b.x, dy = a.y - b.y, len = Math.hypot(dx, dy);
+        if (len < EPS) continue;
+        if (len >= need - EPS) {
+          const ax = Math.abs(dx), ay = Math.abs(dy);
+          let dir = ax > ay + EPS ? dirOf(dx, 0) : ay > ax + EPS ? dirOf(0, dy) : null;
+          if (!dir) dir = keep === dirOf(dx, 0) || keep === dirOf(0, dy) ? keep : dirOf(dx, 0); // diagonal: keep a matching facing
+          const k = need / len;
+          return { x: a.x - dx * k, y: a.y - dy * k, dir };
+        }
+        need -= len;
+        a = b;
+      }
+      return { x: a.x, y: a.y, dir: keep }; // the path is shorter (just placed): wait at its start
+    }
+    /** drawn position (px) of party member i. Between fixed steps the move is
+     *  advanced by Engine.alpha so motion follows real time on any refresh rate;
+     *  values are quantised to device pixels (1/3 px), never to whole pixels. */
     renderPos(i) {
-      const p = this.P[i], mv = this.mv;
-      if (!mv) return { x: p.x * TS, y: p.y * TS };
-      const f = mv.from[i], k = mv.t / mv.dur;
-      return { x: Math.round((f.x + (p.x - f.x) * k) * TS), y: Math.round((f.y + (p.y - f.y) * k) * TS) };
+      const lead = this.leadAt(R.Engine.alpha || 0);
+      const p = i ? this.followerAt(i, lead) : lead;
+      return { x: q(p.x * TS), y: q(p.y * TS), dir: i ? p.dir : this.P[0].dir };
+    }
+    /** move the followers to their trail points (fixed step) */
+    syncFollowers() {
+      const lead = this.mv ? this.leadAt(0) : { x: this.P[0].x, y: this.P[0].y };
+      for (let i = 1; i < this.P.length; i++) { const f = this.followerAt(i, lead); Object.assign(this.P[i], f); }
     }
     camera() {
       const lp = this.renderPos(0);
@@ -199,7 +481,13 @@
       const mw = M.w * TS, mh = M.h * TS;
       cx = mw <= R.W ? Math.floor((mw - R.W) / 2) : U.clamp(cx, 0, mw - R.W);
       cy = mh <= R.H ? Math.floor((mh - R.H) / 2) : U.clamp(cy, 0, mh - R.H);
-      return { x: cx, y: cy };
+      return { x: q(cx), y: q(cy) };
+    }
+    /** the engine renders every display refresh while something glides */
+    wantsFrame() {
+      if (this.mv || this.liftAnim) return true;
+      if (M) for (const n of M.npcs) if (n.mv && n.present) return true;
+      return false;
     }
     runLocked(fn) {
       this.locks++;
@@ -209,148 +497,281 @@
     liftTo(to, frames) {
       return new Promise((res) => { this.liftAnim = { from: this.lift, to, t: 0, dur: Math.max(1, frames), resolve: res }; });
     }
+    aligned() { return isInt(this.P[0].x) && isInt(this.P[0].y); }
+    /** the ship's exact position on this map {x,y} or null */
+    shipXY() {
+      const sh = R.Game.ship;
+      if (!sh || !M || sh.map !== M.id) return null;
+      const s = this.shipPos;
+      return s && s.ref === sh ? s : { x: sh.x, y: sh.y };
+    }
+    /** does any party box (or the leader's move origin) overlap cell (x,y)? */
+    partyOn(x, y) {
+      for (const p of this.P) if (boxHits(p.x, p.y, x, y)) return true;
+      return !!(this.mv && boxHits(this.mv.from.x, this.mv.from.y, x, y));
+    }
 
     // ------------------------------------------------------------ movement
-    startMove(d, nx, ny, kind, opts) {
-      const o = opts || {};
-      const dash = !!R.Settings.alwaysDash !== !!R.Input.down('dash');
-      const dur = o.dur || (kind === 'sail' ? (dash ? SAIL_DASH : SAIL) : (dash ? DASH : WALK));
-      const from = this.P.map((p) => ({ x: p.x, y: p.y }));
-      if (kind === 'sail') {
-        for (const p of this.P) { p.x = nx; p.y = ny; p.dir = d; }
-        R.Game.ship = { map: M.id, x: nx, y: ny, dir: d };
-      } else {
-        for (let i = this.P.length - 1; i > 0; i--) {
-          const a = this.P[i], b = this.P[i - 1];
-          a.dir = dirTo(a, b) || a.dir;
-          a.x = b.x; a.y = b.y;
-        }
-        this.P[0].x = nx; this.P[0].y = ny; this.P[0].dir = d;
-        if (kind === 'land') { R.Game.onShip = false; R.bgm(M.bgm); }
+    /** on foot: null if the leader's box may cover (x,y); else 'out' | 'lock' | 'wall' */
+    footBlock(x, y) {
+      if (!M.inBounds(x, y)) return 'out';
+      if (!M.walkable(x, y) || M.npcAt(x, y) || M.chestAt(x, y)) return 'wall';
+      const t = M.tile(x, y);
+      if (t.lock && !M.opened.has(M.idx(x, y)) && !R.State.hasItem(t.lock)) return 'lock';
+      return null;
+    }
+    sailOk(x, y) { return M.sailable(x, y) && !M.npcAt(x, y); }
+    /** what a half step by (dx,dy) from (fx,fy) would do:
+     *  {kind:'walk'|'sail'|'land'|'board', x, y} | {kind:'exit', ex} | {kind:'lock'} | null (blocked) */
+    plan(dx, dy, fx, fy) {
+      const p = this.P[0], g = R.Game;
+      if (fx == null) { fx = p.x; fy = p.y; }
+      const tx = fx + dx * HALF, ty = fy + dy * HALF;
+      // only the cells the box moves into (never stuck on a tile it already covers, e.g. after setPos)
+      const cells = rectCells(fx, fy, tx, ty).filter(([x, y]) => !boxHits(fx, fy, x, y));
+      if (g.onShip) {
+        if (cells.every(([x, y]) => this.sailOk(x, y))) return { kind: 'sail', x: tx, y: ty };
+        if (dx && dy) return null;
+        // step ashore: the box leaves the hull for the land beyond (a whole tile from an aligned ship)
+        const lx = dx ? (isInt(fx) ? fx + dx : tx) : fx, ly = dy ? (isInt(fy) ? fy + dy : ty) : fy;
+        const land = rectCells(lx, ly, lx, ly);
+        if (land.every(([x, y]) => !this.footBlock(x, y) && !M.tile(x, y).lock)) return { kind: 'land', x: lx, y: ly };
+        return null;
       }
-      this.mv = { t: 0, dur, from, kind, scripted: !!o.scripted, resolve: o.resolve || null };
+      if (cells.some(([x, y]) => !M.inBounds(x, y))) {
+        if (dx && dy) return null;
+        const ex = M.exitFor(dirOf(dx, dy));
+        return ex ? { kind: 'exit', ex } : null;
+      }
+      const sh = this.shipXY();
+      if (sh && Math.abs(tx - sh.x) < 1 - EPS && Math.abs(ty - sh.y) < 1 - EPS) return { kind: 'board', x: sh.x, y: sh.y };
+      let lock = false;
+      for (const [x, y] of cells) {
+        const b = this.footBlock(x, y);
+        if (b === 'lock') lock = true;
+        else if (b) return null;
+      }
+      if (lock) return { kind: 'lock' };
+      const doors = cells.filter(([x, y]) => isDoor(M.tileAt(x, y)) && !M.opened.has(M.idx(x, y)));
+      return { kind: 'walk', x: tx, y: ty, doors };
+    }
+    /** corner assist: pushing d into an edge that is only half in the way → a half step sideways that lets the next step pass */
+    nudge(d) {
+      const p = this.P[0], hz = !!HORIZ[d];
+      if (isInt(hz ? p.y : p.x)) return null;
+      const dx = U.DX[d], dy = U.DY[d];
+      // try the side of the logical tile first
+      const toward = hz ? Math.sign(this.cell.y - p.y) : Math.sign(this.cell.x - p.x);
+      for (const s of [toward || 1, -(toward || 1)]) {
+        const side = hz ? this.plan(0, s) : this.plan(s, 0);
+        if (!side || (side.kind !== 'walk' && side.kind !== 'sail')) continue;
+        const fwd = this.plan(dx, dy, side.x, side.y);
+        if (fwd && fwd.kind !== 'lock' && fwd.kind !== 'exit') return side;
+      }
+      return null;
+    }
+    /** carry out a plan; true if the party moves / warps */
+    exec(pl, face) {
+      if (pl.kind === 'exit') {
+        const ex = pl.ex;
+        this.P[0].dir = face;
+        this.runLocked(() => Field.warp(ex.to, ex.spawn, { dir: ex.dir || face }));
+        return true;
+      }
+      if (pl.doors && pl.doors.length) {
+        R.sfx('door');
+        for (const [x, y] of pl.doors) openDoor(M.idx(x, y), x, y, face);
+      }
+      this.startMove(pl.kind, pl.x, pl.y, face);
+      return true;
+    }
+    startMove(kind, nx, ny, d, opts) {
+      const o = opts || {};
+      const p = this.P[0], g = R.Game;
+      const from = { x: p.x, y: p.y };
+      const len = Math.hypot(nx - p.x, ny - p.y);
+      // hold B (or Shift) while moving to dash; "いつでもダッシュ" inverts it
+      const dash = !!R.Settings.alwaysDash !== !!(R.Input.down('b') || R.Input.down('dash'));
+      const perTile = o.dur || (kind === 'sail' ? (dash ? SAIL_DASH : SAIL) : (dash ? DASH : WALK));
+      const dur = Math.max(1, perTile * Math.max(len, EPS));
+      if (kind === 'land') {
+        // everyone steps ashore together (followers are never left standing on the hull)
+        this.shipPos = { x: from.x, y: from.y, ref: g.ship };
+        g.onShip = false; R.bgm(M.bgm);
+      }
+      p.x = nx; p.y = ny;
+      if (d) p.dir = d;
+      if (g.onShip && g.ship) g.ship.dir = p.dir;
+      const chained = !o.scripted && this.carryF === R.Engine.frame && this.last;
+      const t = chained ? this.carry : 0;
+      this.carry = 0;
+      this.mv = { t, dur, from, to: { x: nx, y: ny }, kind, len, prev: chained ? this.last.mv : null, scripted: !!o.scripted, resolve: o.resolve || null };
+      this.last = null;
+    }
+    /** the fixed step reached its end: commit the logical tile, the trail and the ship */
+    commit(mv) {
+      const p = this.P[0], g = R.Game, c = this.cell;
+      const was = c.x + ',' + c.y;
+      if (mv.kind === 'board') { c.x = g.ship.x; c.y = g.ship.y; }
+      else { if (isInt(p.x)) c.x = Math.round(p.x); if (isInt(p.y)) c.y = Math.round(p.y); }
+      if (mv.kind === 'land') this.trail = [{ x: p.x, y: p.y }];
+      else {
+        this.trail.unshift({ x: p.x, y: p.y });
+        let len = 0;
+        for (let i = 1; i < this.trail.length; i++) {
+          len += Math.hypot(this.trail[i].x - this.trail[i - 1].x, this.trail[i].y - this.trail[i - 1].y);
+          if (len > GAP * (this.P.length - 1) + 1) { this.trail.length = i + 1; break; }
+        }
+      }
+      if (g.onShip && mv.kind !== 'board') {
+        g.ship = { map: M.id, x: c.x, y: c.y, dir: p.dir };
+        this.shipPos = { x: p.x, y: p.y, ref: g.ship };
+      }
+      return was !== c.x + ',' + c.y;
     }
     bump() {
       if (this.bumpT <= 0) { R.sfx('bump'); this.bumpT = BUMP_EVERY; }
       return false;
     }
-    /** try to step the leader in direction d; true if a move/warp started */
-    tryMove(d) {
+    lockedMsg(d) {
+      this.heldBlock = d; // don't repeat the message while the direction stays held
+      this.runLocked(() => R.Events.run(async (ev) => { R.sfx('locked'); await ev.say('鍵がかかっている。'); }, { self: 'lock' }));
+      return false;
+    }
+    /** held directions → one half step (8 directions, wall sliding, corner assist); true if moving */
+    tryMove(hx, vy, last) {
       const p = this.P[0];
-      const nx = p.x + U.DX[d], ny = p.y + U.DY[d];
-      p.dir = d;
-      const g = R.Game;
-      if (g.onShip) {
-        if (g.ship) g.ship.dir = d;
-        if (!M.inBounds(nx, ny) || M.npcAt(nx, ny)) return this.bump();
-        if (M.sailable(nx, ny)) { this.startMove(d, nx, ny, 'sail'); return true; }
-        if (M.walkable(nx, ny) && !M.chestAt(nx, ny) && !M.tile(nx, ny).lock) { this.startMove(d, nx, ny, 'land'); return true; }
+      const hd = dirOf(hx, 0), vd = dirOf(0, vy);
+      const movable = (pl) => pl && pl.kind !== 'lock';
+      if (hx && vy) {
+        const pd = this.plan(hx, vy);
+        if (movable(pd)) return this.exec(pd, p.dir === hd || p.dir === vd ? p.dir : last);
+        // slide along whichever axis is free (the most recently pressed one first)
+        const order = HORIZ[last] ? [[hx, 0, hd], [0, vy, vd]] : [[0, vy, vd], [hx, 0, hd]];
+        for (const [dx, dy, d] of order) {
+          const pl = this.plan(dx, dy);
+          if (movable(pl)) return this.exec(pl, d);
+        }
+        for (const [, , d] of order) {
+          const nd = this.nudge(d);
+          if (nd) return this.exec(nd, d);
+        }
+        p.dir = last;
         return this.bump();
       }
-      if (!M.inBounds(nx, ny)) {
-        const ex = M.exitFor(d);
-        if (!ex) return this.bump();
-        this.runLocked(() => Field.warp(ex.to, ex.spawn, { dir: ex.dir || d }));
-        return true;
-      }
-      const sh = g.ship;
-      if (sh && sh.map === M.id && sh.x === nx && sh.y === ny) { this.startMove(d, nx, ny, 'board'); return true; }
-      if (!M.walkable(nx, ny) || M.npcAt(nx, ny) || M.chestAt(nx, ny)) return this.bump();
-      const id = M.tileAt(nx, ny), t = M.tile(nx, ny);
-      const i = M.idx(nx, ny);
-      if (t.lock && !M.opened.has(i)) {
-        if (!R.State.hasItem(t.lock)) {
-          this.heldBlock = d; // don't repeat the message while the direction stays held
-          this.runLocked(() => R.Events.run(async (ev) => { R.sfx('locked'); await ev.say('鍵がかかっている。'); }, { self: 'lock' }));
-          return false;
-        }
-      }
-      if (isDoor(id) && !M.opened.has(i)) { R.sfx('door'); openDoor(i, nx, ny, d); }
-      this.startMove(d, nx, ny, 'walk');
-      return true;
+      const d = hd || vd;
+      p.dir = d;
+      if (R.Game.onShip && R.Game.ship) R.Game.ship.dir = d;
+      const pl = this.plan(hx, vy);
+      if (movable(pl)) return this.exec(pl, d);
+      if (pl && pl.kind === 'lock') return this.lockedMsg(d);
+      const nd = this.nudge(d);
+      if (nd) return this.exec(nd, d);
+      return this.bump();
     }
-    /** scripted single step (events): no triggers, ignores collisions */
+    /** scripted single tile step (events): no triggers, ignores collisions */
     stepScripted(d, dur) {
       return new Promise((res) => {
         const p = this.P[0];
-        this.startMove(d, p.x + U.DX[d], p.y + U.DY[d], R.Game.onShip ? 'sail' : 'walk', { scripted: true, resolve: res, dur: dur || WALK });
+        this.startMove(R.Game.onShip ? 'sail' : 'walk', p.x + U.DX[d], p.y + U.DY[d], d, { scripted: true, resolve: res, dur: dur || SCRIPT_WALK });
+      });
+    }
+    /** scripted: glide onto the logical tile first (events move the party on whole tiles) */
+    alignScripted(dur) {
+      if (this.aligned()) return Promise.resolve();
+      return new Promise((res) => {
+        const p = this.P[0], c = this.cell;
+        this.startMove(R.Game.onShip ? 'sail' : 'walk', c.x, c.y, p.dir, { scripted: true, resolve: res, dur: dur || SCRIPT_WALK });
       });
     }
 
     // ------------------------------------------------------------ arrival
-    /** sync part of arriving on a tile; returns an async task when something must happen */
-    onArrive(kind) {
+    /** sync part of a completed half step; returns an async task when something must happen */
+    onArrive(a) {
       const g = R.Game;
-      const p = this.P[0];
-      g.steps = (g.steps || 0) + 1;
+      const p = this.P[0], c = this.cell;
       this._fm = null;
-      if (kind === 'board') {
+      if (a.kind === 'board') {
         g.onShip = true;
-        g.ship = { map: M.id, x: p.x, y: p.y, dir: p.dir };
-        this.place(p.x, p.y, p.dir);
+        this.shipPos = { x: p.x, y: p.y, ref: g.ship };
+        g.ship.dir = p.dir;
+        this.place(p.x, p.y, p.dir, c);
         R.sfx('ship');
         R.bgm('sea');
       }
       this.savePos();
-      R.emit('step', M.id, p.x, p.y);
+      if (a.changed) R.emit('step', M.id, c.x, c.y);
+      // distance-based effects: one "step" per whole tile walked
+      this.walked += a.dist;
+      let whole = 0;
+      while (this.walked >= 1 - EPS) { this.walked -= 1; whole++; }
+      g.steps = (g.steps || 0) + whole;
       const tasks = [];
-      const t = M.tile(p.x, p.y);
-      if (!g.onShip) {
+      const t = M.tile(c.x, c.y);
+      if (!g.onShip && (whole || a.changed)) {
         const fm = this.fieldMods();
         const fallen = [];
-        if (t.damage > 0 && !fm.noFloorDamage) {
-          for (const c of R.State.alive()) { c.hp = Math.max(0, c.hp - t.damage); if (c.hp <= 0) { c.status = {}; fallen.push(c); } }
+        const hurt = a.changed && t.damage > 0 && !fm.noFloorDamage;
+        if (hurt) {
+          for (const m of R.State.alive()) { m.hp = Math.max(0, m.hp - t.damage); if (m.hp <= 0) { m.status = {}; fallen.push(m); } }
           R.Engine.flashScreen('#ff2010', 8);
           R.sfx('step_damage');
         }
         let poisoned = false;
-        for (const c of R.State.alive()) {
-          if (c.status && c.status.poison) { poisoned = true; if (c.hp > 1) c.hp--; }
+        for (let k = 0; k < whole; k++) {
+          for (const m of R.State.alive()) {
+            if (m.status && m.status.poison) { poisoned = true; if (m.hp > 1) m.hp--; }
+          }
+          if (fm.walkHeal > 0) for (const m of R.State.alive()) m.hp = Math.min(R.Rules.stats(m).hp, m.hp + fm.walkHeal);
         }
-        if (poisoned && !(t.damage > 0 && !fm.noFloorDamage)) R.Engine.flashScreen('#9020c0', 5);
-        if (fm.walkHeal > 0) {
-          for (const c of R.State.alive()) c.hp = Math.min(R.Rules.stats(c).hp, c.hp + fm.walkHeal);
-        }
+        if (poisoned && !hurt) R.Engine.flashScreen('#9020c0', 5);
         if (!R.State.alive().length) return () => Field.gameOver();
         if (fallen.length) {
           tasks.push(() => R.Events.run(async (ev) => {
             R.sfx('death');
-            for (const c of fallen) await ev.say(c.name + 'は力尽きた……');
+            for (const m of fallen) await ev.say(m.name + 'は力尽きた……');
           }, { self: 'floor' }));
         }
       }
-      if (g.repelSteps > 0) {
+      for (let k = 0; k < whole && g.repelSteps > 0; k++) {
         g.repelSteps--;
         if (g.repelSteps === 0) {
           tasks.push(() => R.Events.run(async (ev) => { await ev.say('魔除けの効果が切れた。'); }, { self: 'repel' }));
         }
       }
-      // step events, then warps, then encounters
-      const evs = M.eventsAt(p.x, p.y, 'step');
-      if (evs.length) {
-        const e = evs[0];
-        tasks.push(() => R.Events.run(e.id, { self: e.id, trigger: 'step', once: e.once, x: p.x, y: p.y }));
-        return seq(tasks);
+      // step events, then warps (once per tile entered; the box glides onto the tile first), then encounters
+      if (a.changed || a.kind === 'align') {
+        const evs = M.eventsAt(c.x, c.y, 'step');
+        const w = !evs.length && M.warpAt(c.x, c.y);
+        if ((evs.length || w) && !this.aligned()) {
+          // pending: the triggers run when the glide ends ('align' arrival); damage/poison already applied
+          this.startMove('align', c.x, c.y, p.dir);
+          return tasks.length ? seq(tasks) : null;
+        }
+        if (evs.length) {
+          const e = evs[0];
+          tasks.push(() => R.Events.run(e.id, { self: e.id, trigger: 'step', once: e.once, x: c.x, y: c.y }));
+          return seq(tasks);
+        }
+        if (w) { tasks.push(() => this.useWarp(w)); return seq(tasks); }
       }
-      const w = M.warpAt(p.x, p.y);
-      if (w) { tasks.push(() => this.useWarp(w)); return seq(tasks); }
-      if (!tasks.length) {
-        const zone = this.encounterStep(t);
+      if (!tasks.length && a.dist > 0) {
+        const zone = this.encounterStep(t, a.dist);
         if (zone) return () => Field.encounter(zone);
       }
       return tasks.length ? seq(tasks) : null;
     }
-    /** advance the encounter counter; returns a zone id when a battle starts */
-    encounterStep(t) {
+    /** advance the encounter counter by `dist` tiles walked; returns a zone id when a battle starts */
+    encounterStep(t, dist) {
       const g = R.Game;
       if (Field.noEncounter || g.repelSteps > 0) return null;
-      const p = this.P[0];
-      const zone = M.zoneAt(p.x, p.y);
+      const c = this.cell;
+      const zone = M.zoneAt(c.x, c.y);
       if (!zone) return null;
       const rate = t.enc == null ? 1 : t.enc;
       if (!(rate > 0)) return null;
       const mult = Math.max(0, 1 + (this.fieldMods().encounterPct || 0) / 100);
-      this.encCount -= rate * mult;
+      this.encCount -= rate * mult * (dist == null ? 1 : dist);
       if (this.encCount > 0) return null;
       this.resetEnc();
       if (!DB.encounters[zone]) { R.FieldMap.warn(M.id, 'unknown encounter zone ' + zone); return null; }
@@ -358,7 +779,7 @@
       return zone;
     }
     async useWarp(w) {
-      const id = M.tileAt(this.P[0].x, this.P[0].y);
+      const id = M.tileAt(this.cell.x, this.cell.y);
       if (w.sfx) R.sfx(w.sfx);
       else if (id === 'stairs_up' || id === 'stairs_down') R.sfx('stairs');
       else if (id === 'warp_pad') R.sfx('warp');
@@ -366,24 +787,47 @@
     }
 
     // ------------------------------------------------------------ A button
+    /** cells right in front of the box (the first whole tiles past its leading edge; two when it straddles) */
+    frontCells() {
+      const p = this.P[0], d = p.dir, c = this.cell;
+      const out = [];
+      if (HORIZ[d]) {
+        const fx = d === 'right' ? Math.ceil(p.x + 1 - EPS) : Math.floor(p.x + EPS) - 1;
+        out.push([fx, c.y]);
+        if (!isInt(p.y)) out.push([fx, c.y === Math.floor(p.y) ? c.y + 1 : c.y - 1]);
+      } else {
+        const fy = d === 'down' ? Math.ceil(p.y + 1 - EPS) : Math.floor(p.y + EPS) - 1;
+        out.push([c.x, fy]);
+        if (!isInt(p.x)) out.push([c.x === Math.floor(p.x) ? c.x + 1 : c.x - 1, fy]);
+      }
+      return out;
+    }
     examine() {
       const p = this.P[0], d = p.dir;
-      const fx = p.x + U.DX[d], fy = p.y + U.DY[d];
-      let npc = M.npcAt(fx, fy);
-      if (!npc && M.counterAt(fx, fy)) npc = M.npcAt(fx + U.DX[d], fy + U.DY[d]);
-      if (npc) return this.runLocked(() => this.talk(npc));
-      const chest = M.chestAt(fx, fy);
-      if (chest && !R.Game.chests[chest.id]) return this.runLocked(() => openChest(chest));
-      const sign = M.signAt(fx, fy);
-      if (sign) return this.runLocked(() => R.Events.run(async (ev) => { await ev.say(sign.text); }, { self: 'sign' }));
-      for (const [x, y] of [[fx, fy], [p.x, p.y]]) {
+      const front = this.frontCells();
+      for (const [fx, fy] of front) {
+        let npc = M.npcAt(fx, fy);
+        if (!npc && M.counterAt(fx, fy)) npc = M.npcAt(fx + U.DX[d], fy + U.DY[d]);
+        if (npc) return this.runLocked(() => this.talk(npc));
+      }
+      for (const [fx, fy] of front) {
+        const chest = M.chestAt(fx, fy);
+        if (chest && !R.Game.chests[chest.id]) return this.runLocked(() => openChest(chest));
+      }
+      for (const [fx, fy] of front) {
+        const sign = M.signAt(fx, fy);
+        if (sign) return this.runLocked(() => R.Events.run(async (ev) => { await ev.say(sign.text); }, { self: 'sign' }));
+      }
+      const own = rectCells(p.x, p.y, p.x, p.y).sort((a, b) => (a[0] === this.cell.x && a[1] === this.cell.y ? -1 : b[0] === this.cell.x && b[1] === this.cell.y ? 1 : 0));
+      const under = new Set(own.map(([x, y]) => x + ',' + y));
+      for (const [x, y] of front.concat(own)) {
         const evs = M.eventsAt(x, y, 'examine');
         if (evs.length) {
           const e = evs[0];
           return this.runLocked(() => R.Events.run(e.id, { self: e.id, trigger: 'examine', once: e.once, x, y }));
         }
         const h = M.hiddenAt(x, y);
-        if (h) return this.runLocked(() => findHidden(h, x === p.x && y === p.y));
+        if (h) return this.runLocked(() => findHidden(h, under.has(x + ',' + y)));
       }
       return null;
     }
@@ -403,31 +847,36 @@
     update() {
       if (!M || !R.Game) return;
       if (this.bumpT > 0) this.bumpT--;
-      if (this.locks > 0 || R.Events.busy()) { this.walking = false; return; }
+      if (this.locks > 0 || R.Events.busy()) { this.walking = false; this.carry = 0; return; }
       if (this.mv) return;
       if (this.arrived) {
-        const k = this.arrived;
+        const a = this.arrived;
         this.arrived = null;
-        const task = this.onArrive(k);
-        if (task) { this.runLocked(task); return; }
+        const task = this.onArrive(a);
+        if (task) { this.carry = 0; this.runLocked(task); return; }
+        if (this.mv) return; // gliding onto a warp / event tile
       }
       const In = R.Input;
-      if (In.pressed('b')) { this.walking = false; this.openMenu(); return; }
-      if (In.pressed('a')) { this.walking = false; this.examine(); return; }
-      const d = In.dir();
-      if (!d) { this.walking = false; this.turnT = 0; this.bumpT = 0; this.heldBlock = null; return; }
-      if (d === this.heldBlock) return;
+      // Y opens the menu (B is held for dashing, so it no longer does)
+      if (In.pressed('y')) { this.walking = false; this.carry = 0; this.openMenu(); return; }
+      if (In.pressed('a')) { this.walking = false; this.carry = 0; this.examine(); return; }
+      const last = In.dir();
+      if (!last) { this.walking = false; this.carry = 0; this.bumpT = 0; this.heldBlock = null; return; }
+      // held axes (opposite keys: the most recently pressed wins)
+      const axis = (neg, pos) => {
+        const a = In.down(neg), b = In.down(pos);
+        if (a && b) return last === neg ? -1 : last === pos ? 1 : 0;
+        return a ? -1 : b ? 1 : 0;
+      };
+      const hx = axis('left', 'right'), vy = axis('up', 'down');
+      if (last === this.heldBlock && !(hx && vy)) { this.carry = 0; return; }
       this.heldBlock = null;
-      const p = this.P[0];
-      if (!this.walking && d !== p.dir) {
-        p.dir = d;
-        if (R.Game.onShip && R.Game.ship) R.Game.ship.dir = d;
-        this.turnT = TURN_DELAY;
-        this.savePos();
-        return;
-      }
-      if (this.turnT > 0) { this.turnT--; return; }
-      this.walking = this.tryMove(d);
+      // walk on the very first frame a direction is held (no turn-in-place delay);
+      // blocked directions just turn (so facing an NPC / shelf is still a tap)
+      const d0 = this.P[0].dir;
+      this.walking = this.tryMove(hx, vy, last);
+      if (!this.walking) this.carry = 0;
+      if (!this.walking && d0 !== this.P[0].dir && !this.locks) this.savePos();
     }
     tick() {
       const g = R.Game;
@@ -436,13 +885,26 @@
       const mv = this.mv;
       if (mv) {
         mv.t++;
-        this.clock += 8 / mv.dur;
-        if (mv.t >= mv.dur) {
+        this.clock += (8 * mv.len) / mv.dur; // one walk frame per tile
+        // a move ends on the tick after which it would overshoot (t > dur − 1): the next step then
+        // starts at t − dur ∈ (−1, 0], so the drawn position (t + alpha) never stalls or jumps at a
+        // step boundary even when a step lasts a fractional number of frames (diagonals, sail dash)
+        if (mv.t > mv.dur - 1 + EPS) {
           this.mv = null;
+          mv.prev = null;
+          this.last = { mv, t: mv.t - mv.dur };
+          const changed = this.commit(mv);
           if (mv.scripted) { this.savePos(); if (mv.resolve) mv.resolve(); }
-          else this.arrived = mv.kind;
+          else {
+            this.carry = Math.min(0, mv.t - mv.dur); this.carryF = R.Engine.frame;
+            this.arrived = { kind: mv.kind, dist: mv.kind === 'board' || mv.kind === 'align' ? 0 : mv.len, changed };
+          }
         }
-      } else this.clock += 0.5;
+        this.syncFollowers();
+      } else {
+        this.clock += 0.5;
+        if (this.last && ++this.last.t > -EPS) this.last = null;
+      }
       this.tickNpcs(R.Engine.top() === this && this.locks === 0 && !R.Events.busy());
       const la = this.liftAnim;
       if (la) {
@@ -452,6 +914,9 @@
         if (la.t >= la.dur) { this.lift = la.to; this.liftAnim = null; la.resolve(); }
       }
       if (this.banner && ++this.banner.t >= BANNER_FRAMES) this.banner = null;
+      // a message (e.g. the opening speech) takes over: the map-name banner must not cover the speaker
+      const msg = R.UI && R.UI._msg;
+      if (this.banner && msg && !msg.closed && msg.resolveText && R.Engine.layers.includes(msg)) this.banner = null;
     }
     tickNpcs(ai) {
       for (const n of M.npcs) {
@@ -485,12 +950,13 @@
       if (!M.walkable(x, y)) return false;
       const id = M.tileAt(x, y), t = M.tile(x, y);
       if (t.counter || t.damage || t.warpIcon || isDoor(id) || id.startsWith('stairs') || id === 'warp_pad') return false;
+      // the party may cut across trees / benches / flowerbeds, townsfolk keep to open ground
+      if (id === 'tree' || M.decorAt(x, y)) return false;
       if (M.warpAt(x, y) || M.chestAt(x, y) || M.eventIdx.has(M.idx(x, y)) || M.signAt(x, y)) return false;
       if (M.npcAt(x, y, n)) return false;
-      for (const p of this.P) if (p.x === x && p.y === y) return false;
-      if (this.mv) for (const f of this.mv.from) if (f.x === x && f.y === y) return false;
-      const sh = R.Game.ship;
-      if (sh && sh.map === M.id && sh.x === x && sh.y === y) return false;
+      if (this.partyOn(x, y)) return false;
+      const sh = this.shipXY();
+      if (sh && boxHits(sh.x, sh.y, x, y)) return false;
       return true;
     }
 
@@ -504,8 +970,8 @@
       this.drawSprites(cam);
       if (this.banner) this.drawBanner();
       if (Field.showCoords) {
-        const p = this.P[0];
-        G.text(M.id + ' ' + p.x + ',' + p.y + (R.Game.onShip ? ' ship' : ''), 3, R.H - 11, { size: 8, color: G.C.yellow, shadow: true });
+        const p = this.P[0], c = this.cell;
+        G.text(M.id + ' ' + c.x + ',' + c.y + (this.aligned() ? '' : ' (' + p.x + ',' + p.y + ')') + (R.Game.onShip ? ' ship' : ''), 3, R.H - 11, { size: 8, color: G.C.yellow, shadow: true });
       }
     }
     inView(cam, px, py, pad) {
@@ -518,7 +984,7 @@
         for (const c of M.chests) {
           if (!c.present || !this.inView(cam, c.x * TS, c.y * TS, 16)) continue;
           const img = Array.isArray(g) ? g[R.Game.chests[c.id] ? 1 : 0] || g[0] : g;
-          G.draw(img, c.x * TS - cam.x, c.y * TS - cam.y);
+          blit(img, c.x * TS - cam.x, c.y * TS - cam.y);
         }
       }
       if (M.hidden.length && this.fieldMods().treasureSense) {
@@ -527,7 +993,7 @@
         for (const h of M.hidden) {
           if (R.Game.chests[h.id] || !R.State.check(h.cond) || !this.inView(cam, h.x * TS, h.y * TS, 16)) continue;
           const img = Array.isArray(g) ? g[f % g.length] : g;
-          G.draw(img, h.x * TS - cam.x, h.y * TS - cam.y);
+          blit(img, h.x * TS - cam.x, h.y * TS - cam.y);
         }
       }
     }
@@ -539,9 +1005,9 @@
         if (!n.present) continue;
         let x = n.x * TS, y = n.y * TS;
         if (n.mv) {
-          const k = n.mv.t / n.mv.dur;
-          x = Math.round((n.mv.fx + (n.x - n.mv.fx) * k) * TS);
-          y = Math.round((n.mv.fy + (n.y - n.mv.fy) * k) * TS);
+          const k = Math.min(1, (n.mv.t + (R.Engine.alpha || 0)) / n.mv.dur);
+          x = q((n.mv.fx + (n.x - n.mv.fx) * k) * TS);
+          y = q((n.mv.fy + (n.y - n.mv.fy) * k) * TS);
         }
         if (!this.inView(cam, x, y, 48)) continue;
         list.push({ y, pri: 1, x, npc: n });
@@ -549,14 +1015,15 @@
       const g = R.Game;
       const ship = g.ship && g.ship.map === M.id ? g.ship : null;
       if (ship) {
-        const pos = g.onShip ? this.renderPos(0) : { x: ship.x * TS, y: ship.y * TS };
+        const sp = this.shipXY();
+        const pos = g.onShip ? this.renderPos(0) : { x: q(sp.x * TS), y: q(sp.y * TS) };
         list.push({ y: pos.y, pri: 0, x: pos.x, ship });
       }
       if (!g.onShip) {
         const mem = this.members();
         for (let i = mem.length - 1; i >= 0; i--) {
           const pos = this.renderPos(i);
-          list.push({ y: pos.y, pri: 5 - i, x: pos.x, member: mem[i], i });
+          list.push({ y: pos.y, pri: 5 - i, x: pos.x, member: mem[i], i, dir: pos.dir });
         }
       }
       list.sort((a, b) => a.y - b.y || a.pri - b.pri);
@@ -568,17 +1035,24 @@
           const spr = G.get(n.sprite);
           const moving = !!n.mv;
           const img = n.sprite.startsWith('mon:') ? (Array.isArray(spr) ? spr[af % spr.length] : spr) : sheetFrame(spr, n.dir, moving ? Math.floor(n.mv.t / 8) + n.seq : af + n.seq);
-          if (img) G.draw(img, sx + 8 - (img.width >> 1), sy + TS - img.height);
+          if (img) {
+            // battle-size monster art standing on the map is drawn at half size (bottom-aligned on its tile)
+            const mon = n.sprite.startsWith('mon:') || n.sprite.startsWith('fieldmon:');
+            const k = mon && img.height > 40 ? 0.5 : 1;
+            const w = Math.round(img.width * k), h = Math.round(img.height * k);
+            if (k === 1) blit(img, sx + 8 - (img.width >> 1), sy + TS - img.height);
+            else blit(img, sx + 8 - (w >> 1), sy + TS - h + 1, { w, h });
+          }
         } else if (s.ship) {
           const img = sheetFrame(G.get('obj:ship'), s.ship.dir || 'down', af);
           if (img) {
             const bob = g.onShip && Math.floor(R.Engine.frame / 24) % 2 ? 1 : 0;
-            G.draw(img, sx + 8 - (img.width >> 1), sy + TS - img.height + Math.min(4, (img.height - TS) >> 2) + bob);
+            blit(img, sx + 8 - (img.width >> 1), sy + TS - img.height + Math.min(4, (img.height - TS) >> 2) + bob);
           }
         } else {
           const c = s.member;
-          const img = sheetFrame(G.get('party:' + c.id + ':' + c.job), this.P[s.i].dir, pf);
-          if (img) G.draw(img, sx + 8 - (img.width >> 1), sy + TS - img.height + Math.round(this.lift), c.hp > 0 ? null : { alpha: 0.5 });
+          const img = sheetFrame(G.get('party:' + c.id + ':' + c.job), s.dir, pf);
+          if (img) blit(img, sx + 8 - (img.width >> 1), sy + TS - img.height + Math.round(this.lift), c.hp > 0 ? null : { alpha: 0.5 });
         }
       }
     }
@@ -692,6 +1166,7 @@
     const ok = (tx, ty) => M.inBounds(tx, ty) && M.walkable(tx, ty) && !isDoor(M.tileAt(tx, ty)) && !M.tile(tx, ty).warpIcon;
     M.opened.set(i, ok(bx, by) ? M.tileAt(bx, by) : ok(fx, fy) ? M.tileAt(fx, fy) : 'floor');
     M.version++;
+    (M.dirtyCells = M.dirtyCells || []).push({ v: M.version, x, y }); // the renderer patches just this cell
   }
   function seq(tasks) {
     return async () => { for (const t of tasks) await t(); };
@@ -722,6 +1197,7 @@
     let s = m.spawn(spawn == null ? 'entrance' : spawn);
     if (!m.inBounds(s.x, s.y)) { R.FieldMap.warn(m.id, 'position ' + s.x + ',' + s.y + ' is outside the map'); s = m.spawn('entrance'); }
     L.place(s.x, s.y, dir || s.dir || L.P[0].dir);
+    L.shipPos = null; L.walked = 0;
     L.spawnName = typeof spawn === 'string' ? spawn : null;
     const g = R.Game;
     const sh = g.ship;
@@ -808,7 +1284,7 @@
       lay.locks++;
       try {
         const g = R.Game;
-        if (g.onShip && M) { g.onShip = false; lay.place(lay.P[0].x, lay.P[0].y, 'down'); }
+        if (g.onShip && M) { g.onShip = false; lay.place(lay.cell.x, lay.cell.y, 'down'); }
         R.sfx('teleport');
         await lay.liftTo(-(R.H + 40), 26);
         await R.Engine.fadeOut(10);
@@ -821,6 +1297,10 @@
         await R.Engine.fadeIn(10);
         await lay.liftTo(0, 22);
       } finally { lay.lift = 0; unlock(lay); }
+      // landing on a town / castle entrance tile enters it at once (no step off and back on)
+      const p = lay.cell;
+      const w = M && !R.Game.onShip && M.warpAt(p.x, p.y);
+      if (w && !M.eventsAt(p.x, p.y, 'step').length) { await lay.useWarp(w); return true; }
       afterEnter(prev);
       return true;
     },
@@ -852,8 +1332,8 @@
     repel(steps) { R.Game.repelSteps = Math.max(R.Game.repelSteps || 0, steps | 0); },
     setRespawnHere() {
       if (!M || !L) return;
-      const p = L.P[0];
-      R.Game.respawn = { map: M.id, x: p.x, y: p.y, dir: p.dir };
+      const p = L.cell;
+      R.Game.respawn = { map: M.id, x: p.x, y: p.y, dir: L.P[0].dir };
     },
     /** warp to R.Game.respawn (after a wipe) */
     respawn() {
@@ -871,7 +1351,7 @@
       if (!M) return 'grass';
       const enc = zone && DB.encounters[zone];
       if (M.isWorld) {
-        const p = L.P[0];
+        const p = L.cell;
         return M.tile(p.x, p.y).bbg || (enc && enc.bg) || 'grass';
       }
       if (M.bbg) return M.bbg;
@@ -880,7 +1360,7 @@
     },
     /** random encounter in zone (default: the current position's zone) */
     async encounter(zone) {
-      zone = zone || (M && L && M.zoneAt(L.P[0].x, L.P[0].y));
+      zone = zone || (M && L && M.zoneAt(L.cell.x, L.cell.y));
       if (!zone || !R.Battle || !R.Battle.start) return null;
       const lay = ensureLayer();
       lay.locks++;
@@ -910,6 +1390,7 @@
     },
     async walkParty(path, dur) {
       if (!L || !M) return;
+      await L.alignScripted(dur); // events move the party on whole tiles
       for (const d of parsePath(path)) await L.stepScripted(d, dur);
     },
     facePlayer(dir) {
@@ -920,16 +1401,18 @@
     },
     setPlayerPos(x, y, dir) {
       if (!L || !M) return;
-      L.place(x, y, dir || L.P[0].dir);
+      L.place(Math.round(x), Math.round(y), dir || L.P[0].dir);
       L.savePos();
     },
-    /** leader tile position {x,y,dir} */
-    pos() { return L ? Object.assign({}, L.P[0]) : null; },
-    /** the tile in front of the leader */
+    /** leader tile position {x,y,dir}: the logical tile (whole tiles; see the layer's `cell`) */
+    pos() { return L ? { x: L.cell.x, y: L.cell.y, dir: L.P[0].dir } : null; },
+    /** exact leader box position {x,y,dir} in tiles (multiples of ½) */
+    exactPos() { return L ? { x: L.P[0].x, y: L.P[0].y, dir: L.P[0].dir } : null; },
+    /** the tile in front of the leader (the first of frontCells) */
     front() {
       if (!L) return null;
-      const p = L.P[0];
-      return { x: p.x + U.DX[p.dir], y: p.y + U.DY[p.dir] };
+      const [x, y] = L.frontCells()[0];
+      return { x, y };
     },
     parsePath,
   });

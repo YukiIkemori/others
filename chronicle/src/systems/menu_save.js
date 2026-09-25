@@ -1,5 +1,5 @@
-// Field menu: セーブ (3 slots + 復活の呪文 export), 設定 (all settings,
-// applied immediately) and the DOM overlay used to show / enter a 呪文 code
+// Field menu: セーブ (3 slots + 冒険の合言葉 export), 設定 (all settings,
+// applied immediately) and the DOM overlay used to show / enter a 合言葉 code
 // (also used by the title screen).
 (function (R) {
   'use strict';
@@ -27,7 +27,7 @@
 
   // ------------------------------------------------------------ DOM code overlay
   /**
-   * Show the 復活の呪文 overlay over the canvas.
+   * Show the 冒険の合言葉 overlay over the canvas.
    * o: {mode:'export'|'import', code}  → Promise(code string | null)
    */
   Menu.codeOverlay = function (o) {
@@ -47,10 +47,10 @@
         border: '3px solid #fff', borderRadius: '8px',
       });
       const title = document.createElement('div');
-      title.textContent = '復活の呪文';
+      title.textContent = '冒険の合言葉';
       title.style.color = '#ffe45a';
       const hint = document.createElement('div');
-      hint.textContent = imp ? '呪文を貼り付けて「決定」を押してください。' : 'この呪文を控えておけば、別の端末でも続きから遊べます。';
+      hint.textContent = imp ? '合言葉を貼り付けて「決定」を押してください。' : '「コピー」で合言葉を保存しておけば、別の端末でも続きから遊べます。';
       hint.style.fontSize = '0.8em';
       hint.style.lineHeight = '1.4';
       const ta = document.createElement('textarea');
@@ -112,7 +112,7 @@
           if (!ok) {
             try { ta.focus(); ta.select(); ok = document.execCommand && document.execCommand('copy'); } catch (e) { ok = false; }
           }
-          msg.textContent = ok ? 'コピーしました。' : '呪文を選択してコピーしてください。';
+          msg.textContent = ok ? 'コピーしました。' : '合言葉を選択してコピーしてください。';
           msg.style.color = ok ? '#6ee07a' : '#ffb03c';
           if (!ok) { ta.focus(); ta.select(); }
           b.blur();
@@ -129,7 +129,7 @@
   Menu.showCode = async function () {
     let code = null;
     try { code = await R.Save.exportCode(R.State.serialize()); } catch (e) { console.error(e); }
-    if (!code) { await Menu.kit.msg('呪文を作れなかった……。'); return; }
+    if (!code) { await Menu.kit.msg('合言葉を作れなかった……。'); return; }
     await Menu.codeOverlay({ mode: 'export', code });
   };
 
@@ -147,7 +147,7 @@
     { key: 'battleSpeed', label: '戦闘速度', values: [0, 1, 2], names: ['普通', '速い', '最速'], desc: '戦闘演出の速さを選びます。' },
     { key: 'bgmVolume', label: 'BGMの音量', vol: true, desc: '音楽の音量を調節します。' },
     { key: 'sfxVolume', label: '効果音の音量', vol: true, desc: '効果音の音量を調節します。' },
-    { key: 'alwaysDash', label: '常にダッシュ', values: [true, false], names: ['オン', 'オフ'], desc: 'オンにすると常に走って移動します。\n（Shiftキーを押している間は逆になります）' },
+    { key: 'alwaysDash', label: 'いつでもダッシュ', values: [false, true], names: ['オフ', 'オン'], desc: 'ふだんはBボタン（Shift）を押しながら移動でダッシュ。\nオンにすると常に走り、押している間は歩きます。' },
     { key: 'windowColor', label: 'ウインドウの色', values: ['black', 'blue', 'green', 'red'], names: ['黒', '青', '緑', '赤'], desc: 'ウインドウの色を変えます。' },
     { key: 'touchPad', label: 'タッチパッド', values: ['auto', 'on', 'off'], names: ['自動', '表示', '隠す'], desc: '画面上のボタンを表示するか選びます。' },
     { key: 'padConfirm', label: '決定ボタン', values: ['right', 'bottom'], names: ['右', '下'], desc: 'パッドの決定ボタン。右＝○／任天堂のA、\n下＝×／XboxのA。反対側がキャンセルです。' },
@@ -193,8 +193,8 @@
         if (!ok) { R.sfx('buzzer'); await K.msg('記録に失敗しました。'); return; }
         this.saved = true;
         await this.load();
-        const j = R.jingle('save');
-        await Promise.all([K.say('冒険の書' + n + 'に記録しました。'), j]);
+        R.jingle('save'); // plays on after the screen closes — input is not held hostage by the jingle
+        await K.say('冒険の書' + n + 'に記録しました。');
         this.close(true);
       }
       render() {
@@ -206,7 +206,7 @@
         if (!this.slots) G().text('読み込み中…', 128, 30, { align: 'center', color: G().C.gray });
         if (!this.o.noCode) {
           G().window(4, 178, 248, 26);
-          G().text('復活の呪文を見る', 20, 185, { color: G().C.cyan });
+          G().text('冒険の合言葉を見る', 20, 185, { color: G().C.cyan });
           if (this.index === 3) G().cursor(10, 186, !this.busy);
         }
       }
@@ -227,14 +227,14 @@
         const s = SETTINGS[this.index];
         let step = 0;
         if (d === 'left') step = -1;
-        if (d === 'right' || In().pressed('a')) step = 1;
+        if (d === 'right' || (In().pressed('a') && !s.vol)) step = 1; // A never touches a volume bar (no wrap to mute)
         if (!step) return;
         const S = R.Settings;
         if (s.vol) {
           const v = Math.round((S[s.key] || 0) * 10);
           const nv = Math.max(0, Math.min(10, v + step));
-          if (nv === v && d) return;
-          S[s.key] = (In().pressed('a') && v === 10 ? 0 : nv) / 10;
+          if (nv === v) return;
+          S[s.key] = nv / 10;
         } else {
           let k = s.values.indexOf(S[s.key]);
           if (k < 0) k = 0;

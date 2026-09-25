@@ -1,6 +1,7 @@
 // Field menu: ジョブ (FFT-style job board: every job by tier, member sprite in
-// that job's outfit, job level pips, ★ mastered, locked jobs dark with their
-// requirements), アビリティを覚える (spend JP) and セット (ability slots).
+// that job's outfit, job level pips, ★ mastered; a job nobody has unlocked yet is a
+// blank ？ slot, one unlocked by another member is greyed out — requirements are never
+// shown), アビリティを覚える (spend JP) and セット (ability slots).
 (function (R) {
   'use strict';
   const DB = R.DB;
@@ -27,7 +28,8 @@
     return fixed;
   }
 
-  const reqText = (req) => Menu.kit.jobName(req[0]) + ' Lv' + req[1];
+  /** a job appears on the board once any party member has unlocked it */
+  const known = (job) => R.Game.party.some((c) => R.Rules.isJobUnlocked(c, job));
 
   /** things a job change took off, as message lines */
   function removedLines(c, removed) {
@@ -38,10 +40,17 @@
 
   async function doChangeJob(c, job) {
     const K = Menu.kit;
+    const prevJob = c.job, prevSub = c.set.sub;
     const removed = R.Rules.changeJob(c, job);
     if (removed == null) { R.sfx('buzzer'); return false; }
     R.sfx('buff');
     const lines = [c.name + 'は' + K.jobName(job) + 'になった！'].concat(removedLines(c, removed));
+    if (prevSub && !c.set.sub) lines.push('サブアクションが外れた。');
+    // an empty サブアクション takes the previous job, so its learned skills stay usable in battle
+    if (!c.set.sub && prevJob !== job && R.Rules.slotOptions(c, 'sub').includes(prevJob)) {
+      R.Rules.setSlot(c, 'sub', prevJob);
+      lines.push('サブアクションに' + ((DB.jobs[prevJob] && DB.jobs[prevJob].command) || K.jobName(prevJob)) + 'をセットした。');
+    }
     await K.msg(lines.join('\n'));
     if (removed.length && R.Rules.optimize) {
       if (await K.yesno('最強の装備にしますか？')) {
@@ -77,10 +86,19 @@
         this.rows.forEach((row, r) => { const k = row.indexOf(job); if (k >= 0) { this.r = r; this.i = k; } });
       }
       cellX(r, i) { const n = this.rows[r].length; return 9 + (7 - n) * (CELL / 2) + i * CELL; }
-      cellY(r) { return 12 + r * CELL; }
+      cellY(r) { return 15 + r * CELL; }
       input() {
         if (!this.rows.length) { if (In().pressed('b') || In().pressed('a')) { R.sfx('cancel'); this.close(); } return; }
         const d = In().dirRepeat();
+        // L/R (or Shift) switches member from anywhere on the board
+        const lr = K.memberStep() || (In().pressed('dash') ? 1 : 0);
+        if (lr) {
+          const n = R.Game.party.length;
+          this.m = (this.m + (lr < 0 ? n - 1 : 1)) % n;
+          lastMember = this.m;
+          R.sfx('cursor');
+          return;
+        }
         if (d && this.r < 0) {
           // member row (the board's title): left/right switch member
           if (d === 'left' || d === 'right') {
@@ -117,21 +135,29 @@
         const c = this.c, job = this.job;
         if (!R.Rules.isJobUnlocked(c, job)) {
           R.sfx('buzzer');
-          await K.msg(K.jobName(job) + 'になるには\n' + (DB.jobs[job].req || []).map(reqText).join('と') + 'が必要だ。');
+          await K.msg(known(job) ? c.name + 'はまだ' + K.jobName(job) + 'になれない。' : 'まだ誰も知らないジョブだ。');
           return;
         }
         R.sfx('confirm');
         const cur = c.job === job;
         const opts = [{ label: 'ジョブを変える', disabled: cur }, { label: 'アビリティを覚える' }];
         const cx = this.cellX(this.r, this.i);
-        const i = await R.UI.choose(opts, { x: cx > 120 ? 8 : 116, y: 58, w: 132, initial: cur ? 1 : 0 });
+        const w = Math.ceil(Math.max(...opts.map((o) => G().textWidth(o.label)))) + 32; // sized to the longest label
+        const i = await R.UI.choose(opts, { x: cx > 120 ? 8 : 248 - w, y: 58, w, initial: cur ? 1 : 0 });
         if (i === 0) await doChangeJob(c, job);
-        else if (i === 1) { this.hidden = true; try { await Menu.learnScreen(c, job); } finally { this.hidden = false; } }
+        else if (i === 1) {
+          this.hidden = true;
+          let who = null;
+          try { who = await Menu.learnScreen(c, job); } finally { this.hidden = false; }
+          // L/R inside おぼえる may have switched member: the board follows
+          const k = who && typeof who === 'object' ? R.Game.party.indexOf(who) : -1;
+          if (k >= 0 && k !== this.m) { this.m = k; lastMember = k; }
+        }
       }
       render() {
         const c = this.c;
         const f = Math.floor(R.Engine.frame / 16);
-        G().window(4, 4, 248, 150);
+        G().window(4, 8, 248, 146);
         this.renderTitle();
         // faint tier separators
         for (let r = 1; r < this.rows.length; r++) {
@@ -144,7 +170,8 @@
           const sel = r === this.r && i === this.i;
           if (job === c.job) { G().rect(x + 2, y + 1, CELL - 4, CELL - 3, '#23336e'); G().strokeRect(x + 2, y + 1, CELL - 4, CELL - 3, '#4a64c0'); }
           else if (job === c.set.sub) G().strokeRect(x + 2, y + 1, CELL - 4, CELL - 3, '#3a6a5a');
-          K.drawSprite(c, x + CELL / 2, y + 26, { job, frame: sel ? f : 0, dark: !open, darkAmt: 0.8 });
+          const seen = open || known(job);
+          if (seen) K.drawSprite(c, x + CELL / 2, y + 26, { job, frame: sel ? f : 0, dark: !open, darkAmt: 0.6 });
           if (open) {
             const lv = R.Rules.jobLevel(c, job);
             const mast = R.Rules.isMastered(c, job);
@@ -153,8 +180,10 @@
               G().rect(x + 5 + k * 3, y + 28, 2, 2, on ? (mast ? '#ffd24a' : '#6fd8ff') : '#383850');
             }
             if (mast) star(x + CELL - 9, y + 2);
-          } else {
-            G().text('?', x + CELL / 2, y + 9, { align: 'center', color: sel ? '#9090b0' : '#50506a' });
+          } else if (!seen) {
+            // nobody has this job yet: a blank slot (no outfit, no name)
+            G().strokeRect(x + 4, y + 3, CELL - 8, CELL - 7, '#2c2c44');
+            G().text('?', x + CELL / 2, y + 10, { align: 'center', color: sel ? '#9090b0' : '#50506a' });
           }
           if (sel) cursorFrame(x + 1, y, CELL - 2, CELL - 1);
         }));
@@ -166,9 +195,10 @@
         const tw = Math.ceil(G().textWidth(t)) + 8;
         const tx = 128 - (tw >> 1);
         const focus = this.r < 0;
-        G().rect(tx - (focus ? 12 : 0), 4, tw + (focus ? 24 : 0), 5, '#000000');
-        G().text(t, tx + 4, 1, { color: focus ? G().C.yellow : G().C.white });
-        if (focus) K.lrArrows(tx - 10, tx + tw + 9, 2);
+        // a solid plate behind the title (it sits on the window's top border, never over the field)
+        G().rect(tx - (focus ? 12 : 0), 2, tw + (focus ? 24 : 0), 12, '#000000');
+        G().text(t, tx + 4, 3, { color: focus ? G().C.yellow : G().C.white });
+        if (focus) K.lrArrows(tx - 10, tx + tw + 9, 4);
       }
       renderInfo() {
         const c = this.c, job = this.job, j = DB.jobs[job];
@@ -178,17 +208,16 @@
         const open = R.Rules.isJobUnlocked(c, job);
         const x = 14, y = 163;
         if (!open) {
+          // never the requirements: an unknown job has no name, a known one is just greyed out
+          if (!known(job)) {
+            G().text('？？？', x, y, { color: G().C.gray });
+            G().text('まだ誰も知らないジョブ。', x, y + 14, { color: G().C.dark });
+            return;
+          }
           G().text(j.name, x, y, { color: G().C.gray });
-          G().text('未解放', 242, y, { align: 'right', color: G().C.red });
-          G().text('条件', x, y + 14, { color: G().C.gray });
-          (j.req || []).forEach((rq, k) => {
-            const ok = R.Rules.jobLevel(c, rq[0]) >= rq[1];
-            const now = R.Rules.jobLevel(c, rq[0]);
-            const col = ok ? G().C.green : G().C.white;
-            const yy = y + 14 + k * 14;
-            G().text(reqText(rq), x + 58, yy, { color: col });
-            G().text(ok ? 'OK' : '現在 Lv' + now, 242, yy, { align: 'right', color: ok ? G().C.green : G().C.gray });
-          });
+          G().text('未修得', 242, y, { align: 'right', color: G().C.gray });
+          G().text(c.name + 'はまだこのジョブになれない。', x, y + 14, { color: G().C.gray });
+          G().wrap(j.desc || '', 226).slice(0, 2).forEach((l, k) => G().text(l, x, y + 28 + k * 14, { color: G().C.gray }));
           return;
         }
         const lv = R.Rules.jobLevel(c, job);
@@ -196,18 +225,26 @@
         const all = R.Rules.jobAbilities(job);
         const got = all.filter((a) => rec.learned.includes(a)).length;
         const mast = R.Rules.isMastered(c, job);
-        G().text(j.name, x, y, { color: mast ? G().C.gold : G().C.white });
+        const label = K.jobLabel(c, job);
+        G().text(label, x, y, { color: mast ? G().C.gold : G().C.white });
         const tags = [];
         if (job === c.job) tags.push(['現在のジョブ', G().C.cyan]);
         else if (job === c.set.sub) tags.push(['サブ', '#6ad0a0']);
-        let tx = x + G().textWidth(j.name) + 8;
+        let tx = x + G().textWidth(label) + 8;
         for (const [t, col] of tags) { G().text(t, tx, y, { color: col }); tx += G().textWidth(t) + 6; }
-        G().text('Lv ' + lv + (mast ? ' ★' : ''), 242, y, { align: 'right', color: mast ? G().C.gold : G().C.white });
+        G().text(mast ? 'マスター' : 'Lv ' + lv, 242, y, { align: 'right', color: mast ? G().C.gold : G().C.white });
         G().text('JP ' + rec.jp, x, y + 14, { color: G().C.yellow });
         const nx = R.Rules.jpToNextLevel(c, job);
         G().text(nx > 0 ? '次のLvまで ' + nx : 'Lv MAX', x + 70, y + 14, { color: G().C.gray });
         G().text('習得 ' + got + '/' + all.length, 242, y + 14, { align: 'right', color: mast ? G().C.gold : G().C.white });
-        G().wrap(j.desc || '', 226).slice(0, 2).forEach((l, k) => G().text(l, x, y + 28 + k * 14));
+        // mastery perk (permanent stats + trait in every job) replaces the description's 2nd line;
+        // its content stays 「？？？」 until someone in the party has mastered the job
+        const mb = R.Rules.masterPerkText(job);
+        G().wrap(j.desc || '', 226).slice(0, mb ? 1 : 2).forEach((l, k) => G().text(l, x, y + 28 + k * 14));
+        if (mb) {
+          const known = R.Rules.perkKnown(job);
+          K.fitText((mast ? '★マスター特典 ' : 'マスター特典 ') + (known ? mb : '？？？'), x, y + 42, 228, { color: mast ? G().C.gold : G().C.gray });
+        }
       }
       renderMember() {
         const c = this.c, x = 14, y = 163;
@@ -217,11 +254,11 @@
         G().text(c.name, x, y, { color: K.condColor(c) });
         G().text('Lv ' + c.level, 242, y, { align: 'right' });
         G().text('ジョブ', x, y + 14, { color: G().C.gray });
-        G().text(K.jobName(c.job) + ' Lv' + R.Rules.jobLevel(c, c.job), x + 44, y + 14, { color: G().C.cyan });
+        G().text(K.jobLabel(c, c.job) + ' Lv' + R.Rules.jobLevel(c, c.job), x + 44, y + 14, { color: K.jobColor(c, c.job, G().C.cyan) });
         G().text('サブ', x, y + 28, { color: G().C.gray });
-        G().text(c.set.sub ? K.jobName(c.set.sub) : '―――', x + 44, y + 28, { color: c.set.sub ? G().C.white : G().C.dark });
+        G().text(c.set.sub ? K.jobLabel(c, c.set.sub) : '―――', x + 44, y + 28, { color: c.set.sub ? K.jobColor(c, c.set.sub) : G().C.dark });
         G().text('ジョブ ' + open + '/' + all.length, 242, y + 28, { align: 'right' });
-        G().text('◀▶で仲間を切り替え', x, y + 42, { color: G().C.gray });
+        G().text('L/R・◀▶で仲間を切り替え', x, y + 42, { color: G().C.gray });
         G().text('★ ' + mast, 242, y + 42, { align: 'right', color: mast ? G().C.gold : G().C.gray });
       }
     }
@@ -241,6 +278,19 @@
       }
       input() {
         const d = In().dirRepeat();
+        const lr = K.memberStep();
+        if (lr) {
+          // L/R: next member, on the same job when they have it (else their current job)
+          const party = R.Game.party, n = party.length;
+          const k = (party.indexOf(this.c) + (lr < 0 ? n - 1 : 1)) % n;
+          this.c = party[k];
+          lastMember = k;
+          this.jobs = R.Rules.unlockedJobs(this.c);
+          if (!this.jobs.includes(this.job)) this.job = this.c.job;
+          R.sfx('cursor');
+          this.refresh(false);
+          return;
+        }
         if ((d === 'left' || d === 'right') && this.jobs.length > 1) {
           let k = this.jobs.indexOf(this.job);
           k = (k + (d === 'left' ? this.jobs.length - 1 : 1)) % this.jobs.length;
@@ -250,7 +300,7 @@
           return;
         }
         const r = this.list.update();
-        if (r === 'cancel') this.close();
+        if (r === 'cancel') this.close(this.c);
         else if (r === 'select') this.flow(() => this.learn(this.list.item.id));
       }
       async learn(id) {
@@ -264,7 +314,10 @@
         await K.msg(c.name + 'は' + ab.name + 'を覚えた！');
         if (R.Rules.isMastered(c, this.job)) {
           await R.jingle('jobup');
-          await K.msg(c.name + 'は' + K.jobName(this.job) + 'をマスターした！');
+          const mb = R.Rules.masterBonusText(this.job);
+          const tr = R.Rules.jobMasterTrait(this.job);
+          await K.msg(c.name + 'は' + K.jobName(this.job) + 'をマスターした！' + (mb ? '\nマスター特典：' + mb : ''));
+          if (tr) await K.msg('特性「' + tr.text + '」を身につけた！\n' + (tr.desc || '') + '\n（どのジョブでも有効）');
         }
         if (ab.kind !== 'action' && !c.set[ab.kind]) {
           if (await K.yesno(ab.name + 'を\n' + K.KIND_NAMES[ab.kind] + 'にセットしますか？')) {
@@ -291,10 +344,12 @@
         const rec = c.jobs[this.job] || { jp: 0 };
         G().window(4, 4, 248, 30);
         K.drawSprite(c, 24, 30, { job: this.job, frame: Math.floor(R.Engine.frame / 20) });
-        G().text(j ? j.name : '', 38, 11, { color: R.Rules.isMastered(c, this.job) ? G().C.gold : G().C.white });
-        G().text('JP', 162, 11, { color: G().C.gray });
-        G().text(String(rec.jp), 240, 11, { align: 'right', color: G().C.yellow });
-        if (this.jobs.length > 1) K.lrArrows(10, 246, 13);
+        K.fitText(c.name, 38, 11, 56, { color: K.condColor(c) });
+        K.fitText(j ? K.jobLabel(c, this.job) : '', 98, 11, 56, { color: K.jobColor(c, this.job, G().C.cyan) });
+        G().text('JP', 166, 11, { color: G().C.gray });
+        G().text(String(rec.jp), 234, 11, { align: 'right', color: G().C.yellow });
+        if (this.jobs.length > 1) K.lrArrows(90, 160, 13); // ◀▶ = job
+        K.lrArrows(10, 246, 12, true); // L/R = member
         this.list.draw();
         if (!this.list.items.length) G().text('覚えられるアビリティがない。', 20, 44, { color: G().C.gray });
         G().window(4, 164, 248, 54);
@@ -335,9 +390,10 @@
       input() {
         if (this.opt) return this.inputOpt();
         const d = In().dirRepeat();
-        if (d === 'left' || d === 'right') {
+        const lr = K.memberStep();
+        if (d === 'left' || d === 'right' || lr) {
           const n = R.Game.party.length;
-          this.m = (this.m + (d === 'left' ? n - 1 : 1)) % n;
+          this.m = (this.m + ((lr || (d === 'left' ? -1 : 1)) < 0 ? n - 1 : 1)) % n;
           lastMember = this.m;
           R.sfx('cursor');
           return;
@@ -357,7 +413,7 @@
           const items = [{ label: '外す', value: null }].concat(opts.map((v) => ({ label: slot === 'sub' ? subLabel(v) : K.abName(v), value: v })));
           const cur = this.c.set[slot];
           const k = items.findIndex((it) => it.value === cur);
-          this.opt = { slot, list: new R.UI.List({ x: 110, y: 36, w: 142, rows: 8, items, index: k >= 0 ? k : Math.min(1, items.length - 1), title: SET_ROWS[this.row].label, drawItem: (row, x, y, w) => this.drawOpt(row, x, y, w) }) };
+          this.opt = { slot, list: new R.UI.List({ x: 110, y: 40, w: 142, rows: 8, items, index: k >= 0 ? k : Math.min(1, items.length - 1), title: SET_ROWS[this.row].label, drawItem: (row, x, y, w) => this.drawOpt(row, x, y, w) }) };
         }
       }
       inputOpt() {
@@ -377,7 +433,10 @@
         if (row.value == null) { G().text('外す', x, y, { color: G().C.cyan }); return; }
         const on = this.c.set[this.opt.slot] === row.value;
         if (this.opt.slot === 'sub') {
+          // command name + the job (★ gold once mastered)
           G().text(row.label, x, y, { color: on ? G().C.yellow : G().C.white });
+          const jl = K.jobLabel(this.c, row.value);
+          K.fitText(jl, x + 52, y, w - 62, { color: K.jobColor(this.c, row.value, G().C.gray) });
         } else {
           G().text(row.label, x, y, { color: on ? G().C.yellow : G().C.white });
         }
@@ -390,7 +449,7 @@
         if (this.opt) { slot = this.opt.slot; const it = this.opt.list.item; v = it ? it.value : null; if (v == null) return { head: '外す', text: 'この枠を空にする。' }; }
         else { slot = SET_ROWS[this.row].slot; v = c.set[slot]; }
         if (!v) return { head: '', text: 'Aボタンでセットするアビリティを選ぶ。' };
-        if (slot === 'sub') return { head: subLabel(v) + '（' + K.jobName(v) + '）', text: subDesc(c, v) };
+        if (slot === 'sub') return { head: subLabel(v) + '（' + K.jobLabel(c, v) + '）', text: subDesc(c, v) };
         const ab = DB.abilities[v];
         return { head: ab ? ab.name + '（' + K.jobName(ab.job) + '）' : '', text: (ab && ab.desc) || '' };
       }
@@ -399,26 +458,26 @@
         G().window(4, 4, 248, 30);
         K.drawSprite(c, 24, 30, { frame: Math.floor(R.Engine.frame / 20) });
         G().text(c.name, 38, 11, { color: K.condColor(c) });
-        G().text(K.jobName(c.job), 104, 11, { color: G().C.cyan });
-        K.lrArrows(10, 246, 13);
-        G().window(4, 36, 248, 16 + SET_ROWS.length * 28 - 6);
+        G().text(K.jobLabel(c, c.job), 104, 11, { color: K.jobColor(c, c.job, G().C.cyan) });
+        K.lrArrows(10, 246, 13, true);
+        G().window(4, 36, 248, 16 + SET_ROWS.length * 24 - 6);
         SET_ROWS.forEach((r, i) => {
-          const y = 44 + i * 28;
+          const y = 44 + i * 24;
           G().text(r.label, 20, y, { color: r.slot === 'cmd' ? G().C.gray : KIND_COL[r.slot] });
           let val, col = G().C.white;
           if (r.slot === 'cmd') { val = subLabel(c.job); col = G().C.gray; }
-          else if (r.slot === 'sub') val = c.set.sub ? subLabel(c.set.sub) + '（' + K.jobName(c.set.sub) + '）' : null;
+          else if (r.slot === 'sub') val = c.set.sub ? subLabel(c.set.sub) + '（' + K.jobLabel(c, c.set.sub) + '）' : null;
           else val = c.set[r.slot] ? K.abName(c.set[r.slot]) : null;
-          G().text(val || '―――', 36, y + 13, { color: val ? col : G().C.dark });
+          G().text(val || '―――', 36, y + 12, { color: val ? col : G().C.dark });
           if (i === this.row && !this.opt) G().cursor(10, y + 1, !this.busy);
         });
         if (this.opt) this.opt.list.draw();
         const d = this.descText();
-        G().window(4, 176, 248, 44);
+        G().window(4, 168, 248, 52);
         if (d.head) {
-          G().text(d.head, 14, 183, { color: G().C.yellow });
-          G().wrap(d.text, 226).slice(0, 1).forEach((l) => G().text(l, 14, 197));
-        } else G().wrap(d.text, 226).slice(0, 2).forEach((l, k) => G().text(l, 14, 183 + k * 14, { color: G().C.gray }));
+          G().text(d.head, 14, 175, { color: G().C.yellow });
+          G().wrap(d.text, 226).slice(0, 2).forEach((l, k) => G().text(l, 14, 188 + k * 13));
+        } else G().wrap(d.text, 226).slice(0, 3).forEach((l, k) => G().text(l, 14, 175 + k * 13, { color: G().C.gray }));
       }
     }
     const KIND_COL = { sub: K.KIND_COLORS.action, reaction: K.KIND_COLORS.reaction, support: K.KIND_COLORS.support, field: K.KIND_COLORS.field };

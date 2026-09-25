@@ -15,18 +15,23 @@
   const SLOTS = ['weapon', 'shield', 'head', 'body', 'acc'];
   const SLOT_NAMES = { weapon: '武器', shield: '盾', head: '頭', body: '体', acc: 'アクセサリ' };
   const SET_SLOTS = ['sub', 'reaction', 'support', 'field'];
+  const STAT_NAMES = { hp: 'HP', mp: 'MP', str: '力', vit: '体力', agi: '素早さ', int: '知力', mnd: '精神', luk: '運' };
   const SET_NAMES = { sub: 'サブアクション', reaction: 'リアクション', support: 'サポート', field: 'フィールド' };
-  // cumulative JP earned in a job needed for job level 1..8
+  // cumulative JP earned in a job needed for job level 1..8 — the base (tier 1) table.
+  // Higher tiers scale it (playtest: intermediate/advanced jobs levelled up too fast, since
+  // monsters pay more JP later): tier 2 ×1.6, tier 3 ×2.25, tier 4 ×2.75 → Rules.jpTable(jobId).
   const JP_TABLE = [0, 100, 250, 450, 700, 1000, 1400, 2000];
+  const JP_TIER_MULT = { 1: 1, 2: 1.6, 3: 2.25, 4: 2.75 };
+  const jpTables = {};
   const MAX_LEVEL = 99;
   const CAPS = { hp: 999, mp: 999, str: 255, vit: 255, agi: 255, int: 255, mnd: 255, luk: 255 };
 
   // mods whose values are lists or maps rather than numbers
   const LIST_MODS = { equip: 1, statusImmune: 1 };
-  const MAP_MODS = { elemBoost: 1, elemResist: 1, startBuffs: 1 };
+  const MAP_MODS = { elemBoost: 1, elemResist: 1, startBuffs: 1, slayer: 1 };
 
   const Rules = (R.Rules = {
-    STATS, SLOTS, SLOT_NAMES, SET_SLOTS, SET_NAMES, JP_TABLE, MAX_LEVEL, CAPS,
+    STATS, STAT_NAMES, SLOTS, SLOT_NAMES, SET_SLOTS, SET_NAMES, JP_TABLE, JP_TIER_MULT, MAX_LEVEL, CAPS,
 
     // ------------------------------------------------------------ creation
     newChar(id) {
@@ -41,7 +46,31 @@
       for (const s of SLOTS) if (d.startEquip && d.startEquip[s] && DB.items[d.startEquip[s]]) c.equip[s] = d.startEquip[s];
       const st = Rules.stats(c);
       c.hp = st.hp; c.mp = st.mp;
+      Rules.syncUnlocks(c);
       return c;
+    },
+    /**
+     * Save migration: saves from before the tier-scaled JP tables (R.Game.jpTables missing)
+     * keep their job levels — a tier-2+ job's JP total is moved to the same place on its new
+     * table (same level, same fraction of the way to the next; JP beyond Lv8 added as is).
+     * Spendable JP is untouched. Unlocks are recorded before and after.
+     */
+    migrateJpTables(c) {
+      Rules.syncUnlocks(c);
+      const n = JP_TABLE.length;
+      for (const jid in c.jobs) {
+        const rec = c.jobs[jid], tab = Rules.jpTable(jid), t = rec.total || 0;
+        if (tab === JP_TABLE || !t) continue;
+        let v;
+        if (t >= JP_TABLE[n - 1]) v = tab[n - 1] + (t - JP_TABLE[n - 1]);
+        else {
+          let i = 0;
+          while (t >= JP_TABLE[i + 1]) i++;
+          v = tab[i] + ((t - JP_TABLE[i]) / (JP_TABLE[i + 1] - JP_TABLE[i])) * (tab[i + 1] - tab[i]);
+        }
+        rec.total = Math.min(99999, Math.round(v));
+      }
+      Rules.syncUnlocks(c);
     },
     jobRec(c, jobId) {
       if (!c.jobs[jobId]) c.jobs[jobId] = { jp: 0, total: 0, learned: [] };
@@ -72,23 +101,60 @@
     },
 
     // --------------------------------------------------------------- jobs
+    /** cumulative JP table of a job (levels 1..8), scaled by its tier */
+    jpTable(jobId) {
+      const j = DB.jobs[jobId];
+      const tier = (j && j.tier) || 1;
+      if (!jpTables[tier]) {
+        const m = JP_TIER_MULT[tier] || 1;
+        jpTables[tier] = JP_TABLE.map((v) => Math.round((v * m) / 10) * 10);
+      }
+      return jpTables[tier];
+    },
+    /** cumulative JP needed for job level lv (1..8) of a job */
+    jpForJobLevel(jobId, lv) {
+      const t = Rules.jpTable(jobId);
+      return t[U.clamp(lv | 0, 1, t.length) - 1];
+    },
     jobLevel(c, jobId) {
       const rec = c.jobs[jobId];
       const t = rec ? rec.total : 0;
+      const tab = Rules.jpTable(jobId);
       let lv = 1;
-      for (let i = 0; i < JP_TABLE.length; i++) if (t >= JP_TABLE[i]) lv = i + 1;
+      for (let i = 0; i < tab.length; i++) if (t >= tab[i]) lv = i + 1;
       return lv;
     },
     /** JP still needed for the next job level (0 at max) */
     jpToNextLevel(c, jobId) {
       const lv = Rules.jobLevel(c, jobId);
-      if (lv >= JP_TABLE.length) return 0;
-      return JP_TABLE[lv] - ((c.jobs[jobId] && c.jobs[jobId].total) || 0);
+      const tab = Rules.jpTable(jobId);
+      if (lv >= tab.length) return 0;
+      return tab[lv] - ((c.jobs[jobId] && c.jobs[jobId].total) || 0);
     },
-    isJobUnlocked(c, jobId) {
+    /** does the character meet the job's requirements right now (job levels)? */
+    meetsJobReq(c, jobId) {
       const j = DB.jobs[jobId];
       if (!j) return false;
       return (j.req || []).every(([rj, lv]) => Rules.jobLevel(c, rj) >= lv);
+    },
+    /**
+     * Unlocks are permanent: once a job has been open it stays open (c.unlocked), even if the
+     * JP table changes later. A job the character is in, has as its sub-command, or has JP /
+     * learned abilities in also counts as unlocked (old saves).
+     */
+    isJobUnlocked(c, jobId) {
+      if (!DB.jobs[jobId]) return false;
+      if (c.unlocked && c.unlocked[jobId]) return true;
+      if (c.job === jobId || (c.set && c.set.sub === jobId)) return true;
+      const rec = c.jobs && c.jobs[jobId];
+      if (rec && (rec.total > 0 || (rec.learned && rec.learned.length))) return true;
+      return Rules.meetsJobReq(c, jobId);
+    },
+    /** remember every currently open job in c.unlocked (called on JP gain, job change, load) */
+    syncUnlocks(c) {
+      c.unlocked = c.unlocked || {};
+      for (const jid in DB.jobs) if (!c.unlocked[jid] && Rules.isJobUnlocked(c, jid)) c.unlocked[jid] = true;
+      return c.unlocked;
     },
     unlockedJobs(c) { return Object.keys(DB.jobs).filter((j) => Rules.isJobUnlocked(c, j)); },
     jobAbilities(jobId) { const j = DB.jobs[jobId]; return j ? (j.abilities || []).filter((a) => DB.abilities[a]) : []; },
@@ -118,9 +184,51 @@
       if (!Rules.canLearn(c, abilityId).ok) return false;
       const a = DB.abilities[abilityId];
       const rec = Rules.jobRec(c, a.job);
+      const before = Rules.stats(c);
       rec.jp -= a.jp || 0;
       rec.learned.push(abilityId);
+      if (Rules.isMastered(c, a.job)) {
+        // mastery bonus: max HP/MP rise, and the current values with them (like a level-up)
+        const after = Rules.stats(c);
+        if (c.hp > 0) c.hp = Math.min(after.hp, c.hp + Math.max(0, after.hp - before.hp));
+        c.mp = Math.min(after.mp, c.mp + Math.max(0, after.mp - before.mp));
+      }
       return true;
+    },
+    /** flat stats a job grants for good once mastered (DB.jobs[job].masterBonus) */
+    jobMasterBonus(jobId) { const j = DB.jobs[jobId]; return (j && j.masterBonus) || {}; },
+    /** summed mastery bonuses of every job the character has mastered: {hp, str, ...} */
+    masterBonus(c) {
+      const b = {};
+      for (const jid in c.jobs || {}) {
+        if (!Rules.isMastered(c, jid)) continue;
+        const mb = Rules.jobMasterBonus(jid);
+        for (const k in mb) b[k] = (b[k] || 0) + mb[k];
+      }
+      return b;
+    },
+    /** 'HP+10 力+3' — a job's mastery bonus for menus */
+    masterBonusText(jobId) {
+      const mb = Rules.jobMasterBonus(jobId);
+      return STATS.filter((k) => mb[k]).map((k) => STAT_NAMES[k] + '+' + mb[k]).join(' ');
+    },
+    /** a job's mastery trait {mods, text, desc} (DB.jobs[job].masterTrait) or null */
+    jobMasterTrait(jobId) { const j = DB.jobs[jobId]; return (j && j.masterTrait) || null; },
+    /** '反撃' — the trait's short label */
+    masterTraitText(jobId) { const t = Rules.jobMasterTrait(jobId); return (t && t.text) || ''; },
+    /** 'HP+10 力+3／反撃' — the whole mastery perk (stats + trait) for menus */
+    masterPerkText(jobId) {
+      return [Rules.masterBonusText(jobId), Rules.masterTraitText(jobId)].filter(Boolean).join('／');
+    },
+    /** mastered jobs of c, in DB order */
+    masteredJobs(c) { return Object.keys(DB.jobs).filter((j) => c.jobs && c.jobs[j] && Rules.isMastered(c, j)); },
+    /**
+     * is a job's mastery perk known to the player? Only once someone in the party has mastered
+     * the job (menus show 「マスター特典 ？？？」 until then).
+     */
+    perkKnown(jobId, party) {
+      party = party || (R.Game && R.Game.party) || [];
+      return party.some((c) => c && c.jobs && c.jobs[jobId] && Rules.isMastered(c, jobId));
     },
     /** add JP to current job. Returns {levelUps:[{job,level}], unlocked:[jobId]} */
     gainJp(c, n) {
@@ -136,6 +244,7 @@
       const lv1 = Rules.jobLevel(c, jid);
       if (lv1 > lv0) res.levelUps.push({ job: jid, level: lv1 });
       for (const j of Rules.unlockedJobs(c)) if (!beforeUnlocked.has(j)) res.unlocked.push(j);
+      Rules.syncUnlocks(c);
       return res;
     },
     /**
@@ -147,6 +256,7 @@
       if (!Rules.isJobUnlocked(c, jobId)) return null;
       c.job = jobId;
       Rules.jobRec(c, jobId);
+      Rules.syncUnlocks(c);
       if (c.set.sub === jobId) c.set.sub = null;
       const removed = Rules.validateEquip(c);
       Rules.clampHpMp(c);
@@ -223,7 +333,10 @@
       const a = DB.abilities[abilityId];
       if (!a || !a.mp) return 0;
       const m = Rules.mods(c);
-      return Math.max(0, Math.round(a.mp * (100 + (m.mpCostPct || 0)) / 100));
+      const pct = m.mpCostPct || 0;
+      // reductions round down (but an MP ability never becomes free); increases round up
+      const v = a.mp * (100 + pct) / 100;
+      return Math.max(1, pct < 0 ? Math.floor(v + 1e-9) : Math.ceil(v - 1e-9));
     },
 
     // -------------------------------------------------------- equipment
@@ -277,22 +390,42 @@
       Rules.clampHpMp(c);
       return true;
     },
-    /** simple score used by 'さいきょうそうび' */
+    /**
+     * score used by '最強装備', weighted by what the member is good at: fighters value
+     * 攻撃力/力, mages 魔力/知力, healers 精神 (a rod is never swapped for a knife on a mage)
+     */
     itemScore(c, itemId) {
       const it = DB.items[itemId];
       if (!it) return -1;
       const st = it.stats || {};
-      const statSum = (st.str || 0) + (st.vit || 0) + (st.agi || 0) + (st.int || 0) + (st.mnd || 0) + (st.luk || 0);
-      const magFocus = (Rules.stats(c).int > Rules.stats(c).str) ? 1 : 0.3;
-      return (it.atk || 0) * (1.3 - magFocus * 0.6) + (it.def || 0) * 1.2 + (it.mag || 0) * magFocus * 1.2 + (it.mdef || 0) * 0.8 + statSum * 0.8 + (it.rare ? 0.5 : 0);
+      const b = { str: Rules.baseStat(c, 'str'), int: Rules.baseStat(c, 'int'), mnd: Rules.baseStat(c, 'mnd') };
+      const mult = (DB.jobs[c.job] && DB.jobs[c.job].mult) || {};
+      for (const k in b) b[k] *= mult[k] || 1;
+      const phys = b.str >= Math.max(b.int, b.mnd) * 0.9;
+      const caster = !phys && b.int >= b.mnd;
+      const healer = !phys && !caster;
+      const w = {
+        atk: phys ? 1.3 : 0.3, mag: caster ? 3 : healer ? 0.8 : 0.2,
+        str: phys ? 1 : 0.3, int: caster ? 1.5 : 0.3, mnd: healer ? 1.2 : 0.5, vit: 0.8, agi: phys ? 0.8 : 0.5, luk: phys ? 0.4 : 0.2,
+      };
+      let v = (it.atk || 0) * w.atk + (it.def || 0) * 1.2 + (it.mag || 0) * w.mag + (it.mdef || 0) * (phys ? 0.8 : 1);
+      for (const k of ['str', 'vit', 'agi', 'int', 'mnd', 'luk']) v += (st[k] || 0) * w[k];
+      v += ((st.hp || 0) + (st.mp || 0)) * 0.1;
+      return v + (it.rare ? 0.5 : 0);
     },
-    /** equip the best available items for every slot. Returns true if anything changed */
+    /**
+     * equip the best available items for every slot. Returns true if anything changed.
+     * Party-aware: the last copy of an item is left for a member who would gain clearly more from it.
+     */
     optimize(c) {
       let changed = false;
+      const others = ((R.Game && R.Game.party) || []).filter((o) => o !== c);
+      const gainFor = (o, id, slot) => (Rules.canEquip(o, id, slot) ? Rules.itemScore(o, id) - (o.equip[slot] ? Rules.itemScore(o, o.equip[slot]) : 0) : -Infinity);
       for (const slot of SLOTS) {
         if (slot === 'shield' && c.equip.weapon && DB.items[c.equip.weapon] && DB.items[c.equip.weapon].twoHanded) continue;
         const cur = c.equip[slot];
-        let best = cur, bestScore = cur ? Rules.itemScore(c, cur) : 0;
+        const curScore = cur ? Rules.itemScore(c, cur) : 0;
+        let best = cur, bestScore = curScore;
         for (const id in (R.Game && R.Game.inv) || {}) {
           if (!R.Game.inv[id]) continue;
           const it = DB.items[id];
@@ -301,7 +434,12 @@
           if (it.type !== slot && !(slot === 'shield' && it.type === 'weapon')) continue;
           if (!Rules.canEquip(c, id, slot)) continue;
           const s = Rules.itemScore(c, id);
-          if (s > bestScore) { best = id; bestScore = s; }
+          if (s <= bestScore) continue;
+          if (R.Game.inv[id] === 1 && it.type === slot) {
+            const mine = s - curScore;
+            if (others.some((o) => gainFor(o, id, slot) > mine * 1.25 + 0.5)) continue;
+          }
+          best = id; bestScore = s;
         }
         if (best !== cur) { Rules.equip(c, slot, best); changed = true; }
       }
@@ -311,8 +449,8 @@
     // ---------------------------------------------------------- stats
     baseStat(c, stat, level) {
       const g = DB.chars[c.id].growth[stat];
-      // c.bonus: permanent gains from seeds ('grow' effect)
-      return g[0] + g[1] * ((level || c.level) - 1) + ((c.bonus && c.bonus[stat]) || 0);
+      // growth curve only; c.bonus (seeds) is added after the job multiplier in stats()
+      return g[0] + g[1] * ((level || c.level) - 1);
     },
     /** permanent stat gain (seeds). Returns new bonus. */
     grow(c, stat, n) {
@@ -340,6 +478,11 @@
       };
       const j = DB.jobs[c.job];
       if (j) add(j.innate);
+      // mastery traits: every mastered job's signature passive, in any job
+      for (const jid in c.jobs || {}) {
+        const t = DB.jobs[jid] && DB.jobs[jid].masterTrait;
+        if (t && Rules.isMastered(c, jid)) add(t.mods);
+      }
       for (const s of ['support', 'field', 'reaction']) {
         const a = c.set[s] && DB.abilities[c.set[s]];
         if (a && a.kind === s && Rules.learned(c, c.set[s])) add(a.mods);
@@ -352,21 +495,24 @@
     /**
      * Full derived stats.
      * { hp,mp (max), str,vit,agi,int,mnd,luk, atk, atk2 (off-hand, dual wield) , def, mag, mdef,
-     *   hit, eva, crit, element (weapon element), onHit (weapon status), mods }
+     *   hit, eva, crit, element (weapon element), onHit (weapon status), element2/onHit2 (off-hand), mods }
      */
     stats(c) {
       const j = DB.jobs[c.job] || { mult: {} };
       const mult = j.mult || {};
       const m = Rules.mods(c);
+      const mb = Rules.masterBonus(c);
       const s = {};
       for (const k of STATS) {
-        let v = Rules.baseStat(c, k) * (mult[k] || 1);
+        // seeds ('grow', c.bonus) and mastered jobs' bonuses are flat, job-independent gains:
+        // 力の種 +2 is +2 in every job
+        let v = Rules.baseStat(c, k) * (mult[k] || 1) + ((c.bonus && c.bonus[k]) || 0) + (mb[k] || 0);
         v = v * (100 + (m[k + 'Pct'] || 0)) / 100;
         s[k] = v;
       }
       // equipment flat stats
       let atkW = 0, atkW2 = 0, def = 0, mag = 0, mdef = 0, eva = 0, hit = 0;
-      let element = null, onHit = null;
+      let element = null, onHit = null, element2 = null, onHit2 = null;
       for (const slot of SLOTS) {
         const it = c.equip[slot] && DB.items[c.equip[slot]];
         if (!it) continue;
@@ -374,7 +520,7 @@
         for (const k of STATS) if (st[k]) s[k] += st[k];
         if (it.type === 'weapon') {
           if (slot === 'weapon') { atkW += it.atk || 0; element = it.element || element; onHit = it.onHit || onHit; }
-          else atkW2 += it.atk || 0;
+          else { atkW2 += it.atk || 0; element2 = it.element || null; onHit2 = it.onHit || null; }
           hit += it.hit || 0;
         } else def += it.def || 0;
         mag += it.mag || 0;
@@ -394,6 +540,7 @@
       s.eva = Math.floor(s.agi / 16) + eva + (m.eva || 0);
       s.crit = 3 + Math.floor(s.luk / 32) + (m.crit || 0) + (m.critPct || 0);
       s.element = element; s.onHit = onHit;
+      s.element2 = s.atk2 ? element2 : null; s.onHit2 = s.atk2 ? onHit2 : null; // off-hand weapon (dual wield)
       s.mods = m;
       return s;
     },

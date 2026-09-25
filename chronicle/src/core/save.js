@@ -16,13 +16,22 @@
     battleSpeed: 1, // 0 normal, 1 fast, 2 fastest
     bgmVolume: 0.6,
     sfxVolume: 0.7,
-    alwaysDash: true,
+    alwaysDash: false, // dash = hold B (or Shift) while moving; this makes running the default
     windowColor: 'black', // black | blue | green | red
     touchPad: 'auto', // auto | on | off
     cursorMemory: true, // battle command cursor remembers last choice
     padConfirm: 'right', // gamepad confirm button: 'right' (○/Nintendo A) or 'bottom' (×/Xbox A)
     autoKeep: true, // auto battle carries over to the next random encounter
+    settingsVer: 2, // bumped when a default changes for existing players (see migrateSettings)
   };
+  /** bring settings stored by an older version up to date (in place) */
+  function migrateSettings(s) {
+    const v = +s.settingsVer || 1;
+    // v2: dash moved to "hold B"; always-dash is now off by default
+    if (v < 2) s.alwaysDash = false;
+    s.settingsVer = DEFAULT_SETTINGS.settingsVer;
+    return v < DEFAULT_SETTINGS.settingsVer;
+  }
   R.Settings = Object.assign({}, DEFAULT_SETTINGS);
   R.DEFAULT_SETTINGS = DEFAULT_SETTINGS;
 
@@ -48,9 +57,17 @@
     LocalBackend,
     loadSettings() {
       const v = lsGet('settings');
-      if (v) { try { Object.assign(R.Settings, JSON.parse(v)); } catch (e) { /* ignore */ } }
+      if (v) {
+        try {
+          const stored = JSON.parse(v) || {};
+          const changed = migrateSettings(stored);
+          Object.assign(R.Settings, stored);
+          if (changed) Save.saveSettings();
+        } catch (e) { /* ignore */ }
+      }
       return R.Settings;
     },
+    migrateSettings,
     saveSettings() { lsSet('settings', JSON.stringify(R.Settings)); },
 
     /** [{slot, summary}|null, ...] summary = data.summary (set by State.serialize) */

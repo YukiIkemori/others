@@ -300,6 +300,7 @@
     const key = 'o|' + id + '|' + gname + '|' + ctx;
     return cached(key, () => {
       const c = ctx ? { l: ctx[0] === '1', r: ctx[1] === '1', u: ctx[2] === '1', d: ctx[3] === '1' } : {};
+      if (gname === 'snowfloor' || gname === 'snow') c.snow = true;
       const nf = ANIM_OBJ[id] || 1;
       const fl = A.floorBuf(gname);
       if (nf > 1) return tk().frames(nf, (f) => A.objectArt(id, fl, Object.assign({ f }, c)));

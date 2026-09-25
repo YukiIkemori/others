@@ -439,9 +439,36 @@
     for (let x = 3; x < 13; x++) { const y = Math.round(8.5 - 6.2 * Math.sqrt(Math.max(0, 1 - ((x - 7.5) / 6.8) ** 2))); b.set(x, y + 1, 0x000000); }
     return b;
   };
+  // snow-laden fir for snowy ground (the broadleaf tree looked like summer in Frost)
+  function snowFir(fl) {
+    const t = tk(), tr = t.PAL.trunk;
+    const G = [0x0e2a1c, 0x1a4430, 0x285c40, 0x3a7452];
+    const SN = [0xa8bcd4, 0xd8e6f4, 0xffffff];
+    return t.stamp(fl, (L) => {
+      L.rect(7, 13, 2, 3, tr[1]); L.vline(7, 13, 15, tr[2]);
+      const tiers = [[1, 5, 1, 3], [4, 9, 2, 5], [8, 13, 3, 7]];
+      for (const [y0, y1, w0, w1] of tiers) {
+        for (let y = y0; y <= y1; y++) {
+          const w = Math.round(w0 + (w1 - w0) * (y - y0) / Math.max(1, y1 - y0));
+          for (let x = 8 - w; x <= 7 + w; x++) {
+            const edge = x === 8 - w || x === 7 + w;
+            let c = x < 8 ? G[2] : G[1];
+            if (edge) c = G[0];
+            if (x === 8 - w + 1 && !edge) c = G[3];
+            // snow on the upper rows of each tier, thinning toward the rim
+            if (y - y0 < 2 && Math.abs(x - 7.5) < w - (y - y0)) c = y === y0 ? SN[2] : SN[1];
+            else if (y === y1 && (x + y) % 3 === 0) c = SN[0];
+            L.set(x, y, c);
+          }
+        }
+      }
+      L.set(7, 0, SN[2]); L.set(8, 0, SN[1]);
+    }, { outline: 0x0a1c14, sx: 2, sy: 1 });
+  }
   OBJ.tree = (fl, ctx) => {
     const t = tk(), F = t.PAL.leaf, tr = t.PAL.trunk;
     ctx = ctx || {};
+    if (ctx.snow) return snowFir(fl);
     return t.stamp(fl, (L) => {
       L.rect(7, 11, 3, 5, tr[1]); L.vline(7, 11, 15, tr[2]); L.set(9, 15, tr[0]);
       const ramp = [F[0], F[1], F[2], F[3], F[4]];

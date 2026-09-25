@@ -42,7 +42,7 @@
       const c = R.State.char(charId);
       if (!c) return 'unknown char ' + charId;
       const rec = R.Rules.jobRec(c, job);
-      const total = R.Rules.JP_TABLE[R.U.clamp(lv | 0, 1, R.Rules.JP_TABLE.length) - 1];
+      const total = R.Rules.jpForJobLevel(job, lv);
       if (total > rec.total) rec.jp += total - rec.total;
       rec.total = total;
       return c.name + ' ' + job + ' Lv' + R.Rules.jobLevel(c, job);

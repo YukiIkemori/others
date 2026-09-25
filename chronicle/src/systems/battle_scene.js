@@ -16,6 +16,8 @@
   const WIN = { xs: [6, 88, 170], y: 6, w: 80, h: 44 }; // party status windows
   const BOX = { x: 8, y: 150, w: 240, h: 68, lines: 4 }; // bottom window
   const GROUND = 130; // monsters' feet (backdrop ground ≈ 124–132)
+  const HELP_Y = 133;
+  const AUTO_OPTS = { thrift: true, items: 'auto' }; // オート: conserve MP, items only as a last resort // help / target-name strip, directly above the bottom window
   const BACK = { back: true };
   const MEM = {}; // cursor memory per character id (kept for the session)
   const ICON_ORDER = ['poison', 'sleep', 'paralyze', 'confuse', 'silence', 'blind', 'regen'];
@@ -24,48 +26,8 @@
     if (!R.Settings.cursorMemory) return { cmd: 0, ab: {}, item: 0, target: null };
     return (MEM[id] = MEM[id] || { cmd: 0, ab: {}, item: 0, target: null });
   }
-  // line-break rules for battle messages (unspaced Japanese)
-  const NO_START = '、。，．！？!?）」』】…ー・：ぁぃぅぇぉっゃゅょァィゥェォッャュョ';
-  const BREAK_AFTER = '、。！？!?）」』　 ：';
-  const KANA = /[\u3041-\u309f]/; // hiragana
-  const KANJI = /[\u4e00-\u9fff々]/;
-  // one-kana particles; after a kanji only は/を are safe (と/に/で/の/が can be okurigana: 落とす, 上がる)
-  const PARTICLE = 'はをにでともへの';
-  /** true when a line may break between s[k-1] and s[k] at a natural phrase boundary */
-  function niceBreak(s, k) {
-    const a = s[k - 1], b = s[k];
-    if (!a || !b || NO_START.includes(b)) return false;
-    if (BREAK_AFTER.includes(a)) return true;
-    if (!KANA.test(a)) return false;
-    // particle / okurigana → next word (kanji, katakana, digits, latin, 「『★)
-    if (!KANA.test(b)) return true;
-    // word + one-kana particle → hiragana word (「ヴァルザードを|かばった」「『ナイト』に|なれる」)
-    const w = s[k - 2];
-    if (!w || KANA.test(w) || !PARTICLE.includes(a)) return false;
-    return !KANJI.test(w) || a === 'は' || a === 'を';
-  }
-  /**
-   * Wrap a battle message: a line that fits stays whole; otherwise break at the
-   * last natural phrase boundary near the edge (after punctuation, or between a
-   * particle and the next word), falling back to a plain char break (kinsoku safe).
-   */
-  function wrapPhrases(text, width) {
-    const out = [];
-    const fits = (s) => G().textWidth(s) <= width;
-    for (let para of (R.Text ? R.Text.fmt(text) : String(text)).split('\n')) {
-      while (!fits(para)) {
-        let n = 1;
-        while (n < para.length && fits(para.slice(0, n + 1))) n++;
-        let cut = 0;
-        for (let k = n; k > 0 && k >= n / 2; k--) if (niceBreak(para, k)) { cut = k; break; }
-        if (!cut) { cut = n; while (cut > 1 && NO_START.includes(para[cut])) cut--; }
-        out.push(para.slice(0, cut).replace(/[ 　]+$/, ''));
-        para = para.slice(cut).replace(/^[ 　]+/, '');
-      }
-      out.push(para);
-    }
-    return out;
-  }
+  /** battle messages use the shared phrase-aware wrap (R.Gfx.wrap) */
+  function wrapPhrases(text, width) { return G().wrap(text, width); }
   function fitText(s, x, y, maxW, opts) {
     const w = G().textWidth(s);
     if (w <= maxW) { G().text(s, x, y, opts); return; }
@@ -114,8 +76,11 @@
       list.forEach((m, i) => {
         const img = imgs[i];
         const feet = GROUND + (img.height > 64 ? Math.min(14, Math.round((img.height - 64) / 3)) : 0);
+        // very tall sprites (final bosses): keep the head/horns below the party windows; their feet
+        // may go behind the bottom window instead
+        const y = img.height > 96 ? Math.max(feet - img.height, WIN.y + WIN.h - 2) : feet - img.height;
         this.vis.set(m, {
-          m, img, x: Math.round(x), y: feet - img.height, w: img.width, h: img.height, i,
+          m, img, x: Math.round(x), y, w: img.width, h: img.height, i,
           flash: 0, shake: 0, blink: 0, lunge: 0, dodge: 0, appear: 0, die: null, flee: null, gone: false,
           fly: m.flag('flying'),
         });
@@ -194,13 +159,14 @@
         await this.play(this.eng.begin());
         while (!this.eng.result) {
           const cmds = this.eng.round === 0 && this.eng.surprise === 'ambush' ? null : await this.commandPhase();
+          if (cmds && !cmds.flee && cmds.some(Boolean)) this.lastCmds = cmds.slice(); // for リピート
           this.panel = null;
           this.acting = null;
           await this.play(this.eng.playRound(cmds));
           this.acting = null;
         }
         result = this.eng.result;
-        if (this.autoCancel) R.Battle.autoCarry = false; // B pressed during the last round
+        if (this.autoCancel || result === 'lose') R.Battle.autoCarry = false; // B pressed during the last round / wiped
         this.auto = false;
         this.acting = null;
         if (result === 'win') await this.victory();
@@ -281,7 +247,7 @@
           return s.frames(8);
         case 'die': return s.onDie(ev);
         case 'revive':
-          if (!ev.u.isParty) { const v = s.vis.get(ev.u); v.die = null; v.appear = 20; }
+          if (!ev.u.isParty) { const v = s.vis.get(ev.u); v.die = null; v.flee = null; v.gone = false; v.appear = 20; }
           if (s.lastFx !== 'revive') { s.lastFx = 'revive'; R.BattleFX.play(s, 'revive', { targets: [s.rectOf(ev.u)] }); }
           else R.sfx('revive');
           return s.frames(12);
@@ -385,29 +351,38 @@
     async commandPhase() {
       const eng = this.eng;
       if (this.auto && this.autoCancel) { this.auto = false; this.autoCancel = false; R.Battle.autoCarry = false; }
-      if (this.auto) return R.BattleAI.partyCommands(eng);
+      if (this.auto) return R.BattleAI.partyCommands(eng, AUTO_OPTS);
       if (!eng.party.some((p) => p.commandable())) { await this.frames(24); return []; }
       this.clearMsg();
       for (;;) {
         const r = await this.partyMenu();
-        if (r === 1) {
+        if (r === 'auto') {
           this.auto = true; this.autoCancel = false; R.Battle.autoCarry = true;
-          return R.BattleAI.partyCommands(eng);
+          return R.BattleAI.partyCommands(eng, AUTO_OPTS);
         }
-        if (r === 2) return { flee: true };
+        if (r === 'repeat') return eng.repeatCommands(this.lastCmds); // one round; the menu comes back next round
+        if (r === 'flee') return { flee: true };
         const cmds = await this.memberCommands();
         if (cmds) return cmds;
       }
     }
     async partyMenu() {
+      // 戦う リピート / オート 逃げる
+      const ids = ['fight', 'repeat', 'auto', 'flee'];
+      const canRepeat = !!(this.lastCmds && this.lastCmds.some(Boolean));
       const list = new R.UI.List({
-        x: BOX.x, y: BOX.y, w: 84, h: BOX.h, rows: 3, lineH: 16, padY: 10, cancel: false,
-        items: ['戦う', 'オート', { label: '逃げる', disabled: this.eng.noEscape }], index: this.partyIdx,
+        x: BOX.x, y: BOX.y, w: 128, h: BOX.h, cols: 2, rows: 2, lineH: 16, padY: 10, cancel: false,
+        items: ['戦う', { label: 'リピート', disabled: !canRepeat }, 'オート', { label: '逃げる', disabled: this.eng.noEscape }],
+        index: this.partyIdx,
       });
-      this.panel = { left: list, enemies: true };
+      if (list.isDisabled(list.index)) list.index = 0;
+      this.panel = {
+        left: list, enemies: true,
+        help: () => (ids[list.index] === 'repeat' ? (canRepeat ? '前のターンと同じ行動をくり返す。' : 'くり返す行動がまだない。') : ''),
+      };
       const r = await this.ask(() => (list.update() === 'select' ? list.index : undefined));
-      this.partyIdx = r === 1 ? 1 : 0;
-      return r;
+      this.partyIdx = r === 1 || r === 2 ? r : 0;
+      return ids[r];
     }
     async memberCommands() {
       const order = this.eng.party.filter((p) => p.commandable());
@@ -437,7 +412,7 @@
       return Object.keys(inv)
         .filter((id) => { const it = DB.items[id]; return it && it.type === 'consumable' && it.use && it.use.battle && inv[id] > 0; })
         .sort((a, b) => (!!DB.items[a].rare - !!DB.items[b].rare) || ((DB.items[a].sort || 0) - (DB.items[b].sort || 0)) || ((DB.items[a].price || 0) - (DB.items[b].price || 0)))
-        .map((id) => ({ id, it: DB.items[id], n: inv[id] - ((reserved && reserved[id]) || 0) }));
+        .map((id) => ({ id, it: DB.items[id], n: inv[id] - ((reserved && reserved[id]) || 0), noEsc: this.eng.noEscape && B.isEscape(DB.items[id].use) }));
     }
     async memberMenu(u, reserved) {
       const c = u.c, m = mem(c.id);
@@ -446,7 +421,7 @@
         label: k.name,
         disabled: (k.type === 'job' && !R.Rules.actionList(c, k.job).length) || (k.type === 'item' && !this.battleItems(reserved).some((x) => x.n > 0)),
       }));
-      const list = new R.UI.List({ x: BOX.x, y: BOX.y, w: 154, h: BOX.h, items, cols: 2, rows: 3, lineH: 16, padY: 10, title: c.name, index: Math.min(m.cmd || 0, items.length - 1) });
+      const list = new R.UI.List({ x: BOX.x, y: BOX.y, w: 128, h: BOX.h, items, cols: 2, rows: 3, lineH: 16, padY: 10, title: c.name, index: Math.min(m.cmd || 0, items.length - 1) });
       if (list.isDisabled(list.index)) list.index = 0;
       this.acting = u;
       for (;;) {
@@ -495,17 +470,19 @@
       const why = this.eng.unusable(u, id);
       if (why === 'silence') return '魔法を封じられている！';
       if (why === 'mp') return 'MPが足りない！';
+      if (why === 'once') return 'この戦いではもう使えない。';
       if (why === 'field') return '戦闘中は使えない。';
+      if (why === 'noescape') return 'この戦いからは逃げられない！';
       return ab.desc || '';
     }
     async itemMenu(u, reserved) {
       const m = mem(u.c.id);
       const list0 = this.battleItems(reserved);
       if (!list0.length) { R.sfx('buzzer'); return BACK; }
-      const items = list0.map((x) => ({ label: (x.it.rare ? '★' : '') + x.it.name, right: String(Math.max(0, x.n)), disabled: x.n <= 0 }));
+      const items = list0.map((x) => ({ label: (x.it.rare ? '★' : '') + x.it.name, right: String(Math.max(0, x.n)), disabled: x.n <= 0 || x.noEsc }));
       const list = new R.UI.List({ x: BOX.x, y: BOX.y, w: BOX.w, h: BOX.h, items, cols: 2, rows: 3, lineH: 16, padY: 10, title: '道具', index: Math.min(m.item || 0, items.length - 1) });
       for (;;) {
-        this.panel = { left: list, help: () => (list0[list.index] ? list0[list.index].it.desc || '' : '') };
+        this.panel = { left: list, help: () => { const x = list0[list.index]; return x ? (x.noEsc ? 'この戦いからは逃げられない！' : x.it.desc || '') : ''; } };
         list.active = true;
         const i = await this.ask(() => { const r = list.update(); return r === 'select' ? list.index : r === 'cancel' ? -1 : undefined; });
         if (i < 0) return BACK;
@@ -520,7 +497,7 @@
     // ------------------------------------------------------------ targeting
     async pickTarget(u, type) {
       if (type === 'enemy' || type === 'group') return this.pickEnemy(u, type === 'group');
-      if (type === 'ally' || type === 'ally_any' || type === 'ally_dead') return this.pickAlly(u, type);
+      if (type === 'ally' || type === 'ally_any' || type === 'ally_dead' || type === 'ally_other') return this.pickAlly(u, type);
       if (type === 'enemies' || type === 'random' || type === 'allies') return this.confirmAll(type);
       return null; // self needs no choice
     }
@@ -569,11 +546,12 @@
     }
     async pickAlly(u, type) {
       const party = this.eng.party;
-      const ok = (p) => (type === 'ally' ? p.alive : type === 'ally_dead' ? !p.alive : true);
+      const ok = (p) => (type === 'ally' ? p.alive : type === 'ally_other' ? p.alive && p !== u : type === 'ally_dead' ? !p.alive : true);
       const cands = party.filter(ok);
       if (!cands.length) { R.sfx('buzzer'); return BACK; }
-      let t = type === 'ally_dead' ? cands[0] : type === 'ally' ? cands.slice().sort((a, b) => a.hpRate() - b.hpRate())[0] : u;
-      if (type === 'ally' && t.hpRate() >= 1) t = ok(u) ? u : cands[0];
+      const most = type === 'ally' || type === 'ally_other';
+      let t = type === 'ally_dead' ? cands[0] : most ? cands.slice().sort((a, b) => a.hpRate() - b.hpRate())[0] : u;
+      if (most && t.hpRate() >= 1) t = ok(u) ? u : cands[0];
       let i = party.indexOf(t);
       const prevPanel = this.panel;
       this.panel = Object.assign({}, prevPanel, { help: () => { const p = party[i]; return `${p.name}  HP ${p.hp}/${p.mhp}  MP ${p.mp}/${p.mmp}`; }, helpCenter: true });
@@ -732,8 +710,8 @@
       if (!this.picking || !this.picking.units || Math.floor(R.Engine.frame / 10) % 3 === 2) return;
       for (const m of this.picking.units) {
         const v = this.vis.get(m);
-        const cx = Math.round(v.x + v.w / 2), top = Math.max(52, v.y - 9);
-        downArrow(cx, top);
+        if (v.y - 9 < 52) { rightArrow(Math.max(2, v.x - 8), Math.round(v.y + Math.min(v.h / 2, 40))); continue; }
+        downArrow(Math.round(v.x + v.w / 2), v.y - 9);
       }
     }
     drawPops(party) {
@@ -801,17 +779,18 @@
         const x = p.left.x + p.left.w + 2;
         this.drawEnemyList(x, BOX.y, BOX.x + BOX.w - x, BOX.h);
       }
-      if (p.left) p.left.draw({ showInactiveCursor: true });
+      // help / target strip first: the command window's title tab may overlap its bottom border
       if (p.help) {
         const s = p.help();
         if (s) {
-          G().window(BOX.x, 128, BOX.w, 21);
+          G().window(BOX.x, HELP_Y, BOX.w, BOX.y - HELP_Y + 2);
           if (p.helpCenter) {
             const w = Math.min(BOX.w - 20, G().textWidth(s));
-            fitText(s, BOX.x + (BOX.w - w) / 2, 133, BOX.w - 20);
-          } else fitText(s, BOX.x + 10, 133, BOX.w - 20);
+            fitText(s, BOX.x + (BOX.w - w) / 2, HELP_Y + 4, BOX.w - 20);
+          } else fitText(s, BOX.x + 10, HELP_Y + 4, BOX.w - 20);
         }
       }
+      if (p.left) p.left.draw({ showInactiveCursor: true });
     }
     drawEnemyList(x, y, w, h) {
       G().window(x, y, w, h);
@@ -828,13 +807,17 @@
       const s = this.autoCancel ? 'オート解除' : 'オート　Bで解除';
       const w = Math.ceil(G().textWidth(s)) + 16;
       G().window(BOX.x + BOX.w - w, BOX.y - 20, w, 20);
-      if (this.autoCancel || Math.floor(R.Engine.frame / 20) % 4 !== 3) G().text(s, BOX.x + BOX.w - w + 8, BOX.y - 16, { color: this.autoCancel ? G().C.yellow : G().C.white });
+      G().text(s, BOX.x + BOX.w - w + 8, BOX.y - 16, { color: this.autoCancel ? G().C.yellow : G().C.white });
     }
   }
 
   function downArrow(cx, y) {
     for (let i = 0; i < 5; i++) G().rect(cx - 5 + i, y + i, 11 - i * 2, 1, '#000000');
     for (let i = 0; i < 4; i++) G().rect(cx - 4 + i, y + i, 9 - i * 2, 1, '#ffffff');
+  }
+  function rightArrow(x, cy) {
+    for (let i = 0; i < 5; i++) G().rect(x + i, cy - 5 + i, 1, 11 - i * 2, '#000000');
+    for (let i = 0; i < 4; i++) G().rect(x + i, cy - 4 + i, 1, 9 - i * 2, '#ffffff');
   }
   function upArrow(cx, y) {
     for (let i = 0; i < 5; i++) G().rect(cx - 5 + i, y + 4 - i, 11 - i * 2, 1, '#000000');
@@ -883,7 +866,7 @@
       B.current = null;
       if (A && A.popBGM) A.popBGM(); else if (prev) R.bgm(prev);
     }
-    if (res === 'win') R.Game.wins = (R.Game.wins || 0) + 1;
+    if (res === 'win' && eng.killed.length) R.Game.wins = (R.Game.wins || 0) + 1;
     if (res === 'escape') R.Game.escapes = (R.Game.escapes || 0) + 1;
     R.emit('battleEnd', res, o);
     return res;

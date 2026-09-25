@@ -16,6 +16,9 @@
     draw() {}
     onPush() {}
     onRemove() {}
+    /** true while something on this layer moves smoothly between fixed steps
+     *  (the engine then renders every display refresh, using Engine.alpha) */
+    wantsFrame() { return false; }
     /** remove this layer and resolve Engine.run() with value */
     close(value) {
       if (this.closed) return;
@@ -41,6 +44,10 @@
     paused: false,
     error: null,
     speed: 1, // debug/test: frames simulated per real frame
+    // Render interpolation: fraction (0..1) of a fixed step elapsed since the
+    // last simulated frame. Layers that move things (the field) draw positions
+    // at t + alpha so motion follows real time on 60/120/144 Hz displays.
+    alpha: 0,
 
     push(layer) { Engine.layers.push(layer); layer.closed = false; layer.onPush(); return layer; },
     remove(layer) {
@@ -140,19 +147,40 @@
     },
   });
 
+  // Fixed 60 Hz simulation, rendered on every display refresh that shows
+  // something new. rAF timestamps jitter by a millisecond or so (coarse timers
+  // in Firefox/Safari); on a 60 Hz display that used to make the accumulator
+  // alternate 0 and 2 steps, i.e. a visible stall + jump. Deltas close to a
+  // whole number of steps are snapped to it, so a 60 Hz display gets exactly
+  // one step per refresh; faster displays (120/144 Hz) get interpolated
+  // frames between steps (Engine.alpha) instead of repeated images.
+  const MAX_STEPS = 5;
+  const SNAP = 1.6; // ms
   function loop(now) {
     requestAnimationFrame(loop);
     if (Engine.paused) { last = now; return; }
-    acc += Math.min(250, now - last);
-    last = now;
     const dt = 1000 / R.FPS;
+    let delta = Math.min(250, Math.max(0, now - last));
+    last = now;
+    const k = Math.round(delta / dt);
+    if (k >= 1 && k <= 4 && Math.abs(delta - k * dt) < SNAP) delta = k * dt;
+    acc += delta;
     let steps = 0;
-    while (acc >= dt && steps < 4) {
-      for (let k = 0; k < Engine.speed; k++) Engine.step();
+    while (acc >= dt && steps < MAX_STEPS) {
+      for (let j = 0; j < Engine.speed; j++) Engine.step();
       acc -= dt; steps++;
     }
-    if (steps >= 4) acc = 0;
-    if (steps > 0) Engine.render();
+    if (acc >= dt) acc = 0; // fell far behind (tab switch, long GC): don't spiral
+    Engine.alpha = Math.min(0.999, acc / dt);
+    if (steps > 0 || wantsFrame()) Engine.render();
+  }
+  function wantsFrame() {
+    const L = Engine.layers;
+    for (let i = L.length - 1; i >= 0; i--) {
+      try { if (L[i].wantsFrame()) return true; } catch (e) { /* ignore */ }
+      if (L[i].opaque) break;
+    }
+    return false;
   }
 
   function reportError(e) {

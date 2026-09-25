@@ -23,6 +23,12 @@
     const touch = game.classList.contains('touch');
     const landscape = w > h;
     if (touch && !landscape && pad) h -= Math.max(170, pad.offsetHeight || 0);
+    // landscape: the D-pad and A/B sit left and right of the screen — keep the canvas between them
+    if (touch && landscape && pad) {
+      const side = (sel) => { const el = pad.querySelector(sel); return (el && el.offsetWidth) || 150; };
+      const room = w - 2 * (Math.max(side('.tp-dpad'), side('.tp-ab')) + 16);
+      if (room >= R.W) w = room;
+    }
     let s = Math.min(w / R.W, h / R.H);
     if (s >= 2) s = Math.max(2, Math.floor(s * 2) / 2); // prefer clean half-steps when large
     cv.style.width = Math.floor(R.W * s) + 'px';

@@ -97,7 +97,7 @@ Everything on screen is an `R.Layer` on `R.Engine.layers`:
 Virtual buttons `up down left right a b dash`. Keyboard: arrows/WASD, **A = Z/Enter/Space**, **B = X/Esc/Backspace**,
 dash = Shift. Touch pad (D-pad + A/B) and gamepads map to the same buttons.
 `R.Input.down(b) pressed(b) repeat(b) released(b) dir() dirRepeat() consume()`.
-**Field: A = talk/examine/open, B = open menu.** Menus: A = confirm, B = back.
+**Field: A = talk/examine/open, Y = open menu, hold B (or Shift) while moving = dash.** Menus: A = confirm, B = back, L/R = switch party member. Keyboard: Y = C/Tab, L = Q, R = E; gamepad Y = button 3, L/R = 4/5; touch pad has A/B/Y/L/R.
 
 ### Graphics (`src/core/gfx.js`)
 All coordinates are logical pixels. `R.Gfx.clear rect strokeRect draw(img,x,y,{flip,alpha,sx,sy,sw,sh,w,h}) drawTinted
@@ -125,7 +125,7 @@ mirrorX outline(c,{diag}) replace each blit toCanvas`), `recolor(canvas,map)`, `
 ### Save & settings (`src/core/save.js`)
 `R.Settings` = `{msgSpeed 0-3, battleSpeed 0-2, bgmVolume, sfxVolume, alwaysDash, windowColor, touchPad, cursorMemory}`;
 `R.Save.saveSettings()`. Slots (async): `R.Save.list() load(slot) save(slot,data) remove(slot)`,
-`exportCode(data)`/`importCode(str)` (ふっかつのじゅもん). 3 slots.
+`exportCode(data)`/`importCode(str)` (冒険の合言葉 — a portable text save code). 3 slots.
 
 ### Rules (`src/systems/rules.js`) and State (`src/systems/state.js`)
 See the source; key functions:
@@ -238,8 +238,43 @@ Utility consumables (exact ids): `wing` (teleport to a visited town), `escape_ro
   outfit:{main:'#hex', sub:'#hex', trim:'#hex'}, // party sprite clothing colours
 }
 ```
-JP table (cumulative JP earned in the job): Lv1 0, Lv2 100, Lv3 250, Lv4 450, Lv5 700, Lv6 1000, Lv7 1400, Lv8 2000.
-Mastered (★) = all abilities of the job learned.
+JP table (cumulative JP earned in the job) — base (tier 1): Lv1 0, Lv2 100, Lv3 250, Lv4 450, Lv5 700, Lv6 1000,
+Lv7 1400, Lv8 2000. Higher tiers scale it (`R.Rules.JP_TIER_MULT`, rounded to 10; playtest: intermediate/advanced
+jobs levelled too fast because monsters pay more JP later) — read it through `R.Rules.jpTable(job)` /
+`jpForJobLevel(job, lv)` / `jobLevel` / `jpToNextLevel`, never `JP_TABLE` directly:
+
+| tier | × | Lv2 | Lv3 | Lv4 | Lv5 | Lv6 | Lv7 | Lv8 |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 1 | 100 | 250 | 450 | 700 | 1000 | 1400 | 2000 |
+| 2 | 1.6 | 160 | 400 | 720 | 1120 | 1600 | 2240 | 3200 |
+| 3 | 2.25 | 230 | 560 | 1010 | 1580 | 2250 | 3150 | 4500 |
+| 4 | 2.75 | 280 | 690 | 1240 | 1930 | 2750 | 3850 | 5500 |
+
+Pacing (`node tools/sim_balance.js`, campaign): every tier takes ≈50–70 fights from job Lv1 to Lv8; tier-2 jobs
+open ≈Lv8–11, tier 3 ≈Lv15–25 (パラディン ≈20, 賢者 ≈24), 勇者 ≈Lv30. Mastering a job costs ≈1.2–1.5× its Lv8 JP on tier 1–2
+and ≈0.9–1.1× on tier 3–4 (`tools/check_jobs.js`).
+**Unlocks are permanent** (`c.unlocked[jobId] = true`, recorded by `Rules.syncUnlocks` on JP gain / job change /
+load): a job stays open even if its requirements are no longer met. A job that is the current job, the sub-command
+or has JP / learned abilities also counts as open. Saves from before the tier tables (`R.Game.jpTables` missing) are
+migrated on load (`Rules.migrateJpTables`): each job's JP total moves to the same place on its new table, so job
+levels and unlocks are unchanged.
+Mastered (★) = all abilities of the job learned. **Mastery bonus** (`masterBonus` in jobs.js, summed by
+`R.Rules.masterBonus(c)`, text `Rules.masterBonusText(job)`): flat stats added for good, in every job (like seeds),
+once the job is mastered; learning the last ability also raises current HP/MP by the bonus.
+
+| job | bonus | job | bonus |
+|---|---|---|---|
+| 戦士 | HP+10 力+3 | 魔法剣士 | MP+5 力+3 知力+3 |
+| 僧侶 | MP+5 精神+3 | パラディン | HP+20 体力+3 精神+3 |
+| 魔法使い | MP+5 知力+3 | 忍者 | 力+2 素早さ+5 |
+| 盗賊 | 素早さ+3 運+2 | 賢者 | MP+12 知力+3 精神+3 |
+| ナイト | HP+15 体力+4 | 竜騎士 | HP+15 力+5 |
+| 武闘家 | HP+15 力+4 | 時空術師 | MP+10 素早さ+4 知力+2 |
+| 白魔術師 | MP+8 精神+4 | 暗黒騎士 | HP+20 力+5 |
+| 黒魔術師 | MP+8 知力+4 | 勇者 | HP+20 MP+10 力・体力・素早さ・知力・精神+3 |
+| 狩人 | 力+2 素早さ+4 | | |
+| 吟遊詩人 | MP+5 精神+2 運+3 | | |
+| 薬師 | HP+10 MP+5 精神+2 | | |
 
 **Job tree (ids fixed):**
 | Tier | id | name | requirements |
@@ -270,7 +305,7 @@ Start: ユウキ warrior (knows `warrior_power_slash`), ノン priest (`priest_h
 ```
 { name, job, kind:'action'|'reaction'|'support'|'field', jp, desc,
   // action
-  mp?, magic?:bool (silence blocks it; MP cost mods apply), target, effects:[...], fx, fieldUse?:bool,
+  mp?, magic?:bool (silence blocks it; MP cost mods apply), target, effects:[...], fx, fieldUse?:bool, oncePerBattle?:bool,
   // reaction
   trigger:'hitPhys'|'hitMagic'|'hitAny'|'lowHp'|'allyLowHp'|'ko', chance:0..1, react:{...},
   // support / field
@@ -278,7 +313,10 @@ Start: ユウキ warrior (knows `warrior_power_slash`), ノン priest (`priest_h
 }
 ```
 **target**: `enemy` (one) · `enemies` (all) · `group` (every enemy of the chosen target's species) ·
-`random` (effects repeat on random enemies; use `hits`) · `ally` · `allies` · `self` · `ally_dead` · `ally_any`.
+`random` (effects repeat on random enemies; use `hits`) · `ally` · `ally_other` (a living ally other than the user, e.g. 命分け) ·
+`allies` · `self` · `ally_dead` · `ally_any`.
+`oncePerBattle: true` — each unit may use it only once per battle (greyed out afterwards; AI respects it).
+MP cost with `mpCostPct` mods: reductions round down, increases round up, never below 1 for an ability that costs MP.
 
 **effects** (applied in order to each target):
 | type | fields | meaning |
@@ -331,12 +369,59 @@ hit; 2–4 turns), `silence` (no `magic` abilities, 3–5 turns), `blind` (physi
 `death` (instant KO effect), `regen` (+1/10 max HP per turn, 5 turns). Only `poison` persists after battle.
 Elements: `fire ice thunder wind earth water holy dark`.
 
+#### Element policy (weaknesses by family — `node tools/check_elements.js`)
+A monster's weaknesses follow **what it looks like**, so a player who has seen one bat knows every bat.
+Each monster lists its families in `fam` (data-only field; the game reads `elem`); `elem` = the families'
+profiles merged left to right (a later family overrides an element) + a few listed exceptions. The table
+lives in `monsters.js` as `R.ELEM_FAMILIES` (merge helper `R.famElem`). Values: weak ×2, resist ×0.5,
+immune 0, absorb −1. **Bosses** use the same families with weaknesses at ×1.5 (`troops.js` `bossElem`);
+rare monsters also use ×1.5.
+
+| family | who | weak | resist / immune / absorb |
+|---|---|---|---|
+| `wing` 翼で飛ぶ敵 | bats, bees, harpies, dragons, chimeras, gargoyles, imps | 風 | 大地 immune |
+| `float` 宙に浮かぶ敵 | ghosts, will-o'-wisps, eyes, spirits | — | 大地 ×0.5 |
+| `beast` 地を駆ける獣・亜人 | rats, wolves, goblins, orcs, minotaurs, yeti, frost giant | 大地 | — |
+| `rock` 岩・石・ゴーレム | rock jelly, golems, gargoyles, rock crab, stone sphinx | 水・大地 | 炎 ×0.5 |
+| `sand` 砂漠の生き物 | scorpions, sandworms | 水 (氷 ×1.5) | — |
+| `plant` 植物・キノコ | mushrooms, man-eating flowers, cactus | 炎 | 水 ×0.5 |
+| `bug` 虫 | bees | 炎 | — |
+| `reptile` ヘビ・トカゲ・竜 | snakes, lizardmen, dragons, chimeras (snake tail) | 氷 | — |
+| `sea` 海の生き物 | water jellies, octopuses | 雷 | 水 absorb |
+| `shore` 水辺の生き物 | mermen, crabs, sea snakes | 雷 | 水 ×0.5 |
+| `metal` 鎧・金属 | living armor, golden idol | 雷 | — |
+| `flame` 炎の体 | salamander, magma jelly/golem, fire wisps, fire imp | 氷・水 | 炎 absorb |
+| `frost` 氷の体 | snow/ice spirits, ice jelly, ice armor/golem | 炎 | 氷 absorb |
+| `snow` 雪国の獣 | furred snow beasts, icicle bat, ice dragon | — | 氷 ×0.5 |
+| `gale` 風の体 | wind spirit | — | 風 absorb |
+| `undead` アンデッド | skeletons, mummies, ghosts, lich (flag `undead`) | 聖 (炎 ×1.5) | 闇 absorb |
+| `demon` 悪魔・闇の者 | demons, imps, dark priests, the demon eye, cursed armor, demon king | 聖 | 闇 immune |
+| `shade` 闇に染まった魔物 | 「闇」「黒」 variants (keep their base family) | — | 闇 ×0.5 |
+| `light` 光・星・精霊 | star-tower monsters, spirits, fox fire, star guardian | 闇 | 聖 ×0.5 |
+| `eye` 目玉 | eyes (darkness blinds them) | 闇 | — |
+| `human` 人間 | hired mage, star mage, bandit chief | 闇 | — |
+| `plain` 弱点なし | plain jelly, mimics | — | — |
+
+Rules: **absorb only where the body *is* the element** (water jelly/octopus, lava/fire wisp, ice/snow spirit,
+ghost/undead, wind spirit) — 21 regular absorbers. `flying` flag ⇔ `wing`/`float` family. Exceptions are
+few and visible in the data (mummy burns ×2; ice armor/golem are immune to ice instead of absorbing; the
+fire imp and flame breathers resist fire). Target: **12–20 regular monsters weak to each element**
+(now 炎20 氷18 雷16 風16 大地18 水14 聖13 闇12). Bosses rotate the element that matters: 大地 goblin chief,
+闇 bandit chief, 雷 sea serpent, 水/大地 stone sphinx, 炎/大地 frost giant, 氷/水 flame lord, 闇 star
+guardian, 聖 generals and demon king.
+Player side: every element has weapons across the bands (大地: 岩砕きの爪★ b3, 巨人の斧 b4, 地竜の斧★ b6;
+風: 風切りの槍★ … 天つ風★; 闇: 影縫いの短剣★ b4, 朧月の太刀 b5 …; 水: 時雨の太刀, 水竜の槍★, 水神の爪★)
+and skills of the same power as fire/ice/thunder at the same tier (大地: 地ならし, 岩石落とし (黒魔術師 T2
+single, = old 爆炎); 風: かまいたち, 旋風脚, 風切り; 闇: 暗黒騎士). Shop elemental stock should match
+the next dungeon's weaknesses.
+
 ### 5.6 Monsters (`R.DB.monsters[id]`)
 ```
 { name, sprite:'jelly', hue?, sat?, bri?,               // palette variant of a base sprite
   lv, hp, mp, atk, def, agi, mag, mdef, eva?,           // eva % (default 3)
   exp, gold, jp,
   elem?:{fire:2, ice:0.5, holy:0, dark:-1},             // damage multipliers (2 weak, 0.5 resist, 0 immune, <0 absorb)
+  fam?:['wing','reptile'],                              // element families (§5.5 Element policy), data-only
   statusRes?:{sleep:0.5, death:1},                      // chance to resist (1 = immune); bosses resist most
   actions:[{id:'attack', w:6}, {id:'en_fireball', w:2, cond?:{hpBelow:0.5, every:[3,0], once:true}}],
   actsPerTurn?:1|2|3,
@@ -383,7 +468,15 @@ R.DB.objectives[id] = { text:'つぎの もくてき …' }
   **Percent**: `targetHP × power` (fails on bosses).
 * **Heal**: `(power + mnd × scale) × rand(0.95..1.05) × (1 + healPct/100)`; `pct` heals a fraction of max HP.
 * **Element multipliers**: product of monster `elem[e]` (or party `elemResist`) and 1 + `elemBoost`/100.
-* Buff stage multipliers: −2 ×0.5, −1 ×0.75, 0 ×1, +1 ×1.5, +2 ×2.
+* Buff stage multipliers: −2 ×0.6, −1 ×0.8, 0 ×1, +1 ×1.3, +2 ×1.6 (`STAGES` in battle.js; moderate on purpose: buffs help,
+  they never wall off damage — 硬くなる is +1 def).
+* **Enemy damage** (playtest 「全体的に敵の攻撃が痛い」): regular monsters' atk and mag are ×0.87 up to Lv18, easing to
+  ×0.90 by Lv34 (`soft` in monsters.js / rare.js), and the regular breath tiers were cut ≈15 %. Target per random fight
+  at the arrival level (`sim_balance` zones, `dmg`): ≈5–15 % of the party's HP early, ≈5–16 % late. Bosses keep their
+  own stats (troops.js): 60–90 % wins at the stage's upper level in 6–15 rounds.
+* **MP economy** (playtest 「MP枯渇早い」): character MP growth ≈+30 % (chars.js) and the big tier-3/4 spells ≈20 %
+  cheaper (e.g. プロミネンス/絶対零度 24, 星くずの雨/流星雨 28, 聖母の祈り/希望の光 32). A careful player leaves each
+  dungeon floor with ≥30 % MP (`sim_balance` crawl warns below that); the free-spending AI uses ≈1–19 % MP per fight.
 * Status success: `chance × (1 − resist)`; immunities from `statusImmune`/accessories.
 * **Metal** monsters: physical damage 0–1 (critical still hits for 1–3), immune to all magic except `percent`.
 * **Escape**: chance `0.5 + 0.1 × attempts + (partyAvgAgi − enemyAvgAgi)/200`, clamp 0.3–1; bosses/`noEscape` impossible.
@@ -455,7 +548,7 @@ NPC `sprite` is any Gfx key (`npc:*` sheets animate; `mon:*` draws the monster s
 visible bosses). NPCs block movement. Talking to an NPC across a `counter` tile works.
 
 ### 7.2 Field behaviour (owner: field)
-* Tile movement, 8 frames per tile walking, 4 dashing (always-dash on by default; Shift inverts).
+* Tile movement, 6 frames per tile walking, 4 dashing (dash while holding B/Shift; optional always-dash), starts on the first frame a direction is held, chains tiles without idle frames; rendering interpolates between fixed steps.
 * Party caterpillar: the other two members follow the leader's trail (dead members still follow, like DQ ghosts are not needed).
 * Camera centred on the leader, clamped to map edges (small maps centred). Overworld does **not** wrap.
 * Doors open when stepped on (sfx `door`); locked doors (`lock`) open automatically if the key item is held,
@@ -568,10 +661,19 @@ ship, flags, chests and event `meta` (`needs`/`gives`). Keep `meta` accurate for
 
 ## 8. Menus (owner: menu)
 
-Field menu (B): **どうぐ / アビリティ / そうび / ジョブ / セット / つよさ / ならびかえ / ずかん / ちず(overworld only) / セーブ / せってい**,
+Field menu (B): **どうぐ / アビリティ / 満タン / そうび / ジョブ / セット / つよさ / ならびかえ / ずかん / ちず(overworld only) / セーブ / せってい**,
 with a gold + playtime + next-objective window. Details:
 * **どうぐ**: consumables usable in the field, equipment list, だいじなもの tab; use / すてる.
 * **アビリティ**: field-usable action abilities (heal, cure, revive, teleport, exit, repel).
+* **Repeat use**: after using a targeted item / field ability the target picker stays open on the same member
+  (result shown in a small window; A = use again, B = back); it closes when the item runs out or MP is short.
+  The list keeps its cursor on the item used.
+* **満タン**: heals the whole party with learned field abilities, cheapest MP per HP first (near-ties → the caster
+  with the most MP); cures poison; revives a fallen healer only when no living member can heal. If HP is still
+  missing it asks before using healing items (cheapest one that covers the gap; never rare / % / party-wide items).
+  Ends with a summary window (casts × count and MP, items used, who is still hurt / poisoned / down).
+* **Member switch**: every per-member screen (アビリティ, 装備, ジョブ, おぼえる, セット, 強さ) switches member with
+  L / R (keyboard Q / E, pad shoulders); ←→ also works where it does not move a cursor. Headers show small L / R marks.
 * **そうび**: per character, per slot; shows stat changes (↑ green / ↓ red) for candidates; **さいきょう** (optimize) and **はずす**.
 * **ジョブ**: FFT-style job board: every job in a grid with state (locked shows requirements), job level and ★ mastered;
   change job; **アビリティをおぼえる** (spend that job's JP on its abilities; shows cost, JP available, kind, desc).
@@ -579,10 +681,10 @@ with a gold + playtime + next-objective window. Details:
 * **つよさ**: stats, EXP to next level, job level/JP of current job, equipment, set abilities, resistances.
 * **ずかん**: monsters seen/defeated, sprite, stats once defeated, drop & rare drop names once obtained (else ？？？).
 * **ちず**: overworld map with party and ship markers.
-* **セーブ**: 3 slots + ふっかつのじゅもん export; **せってい**: settings (message speed, battle speed, volumes,
+* **セーブ**: 3 slots + 冒険の合言葉 (text save code) export; **せってい**: settings (message speed, battle speed, volumes,
   always dash, window color, touch pad).
 Shops (buy/sell with equip-ability markers per character and stat preview), inn, church (save / revive / cure poison),
-title screen (はじめから / つづきから / ふっかつのじゅもん / せってい), game over.
+title screen (はじめから / つづきから / 冒険の合言葉 / 設定), game over.
 New game → **name entry** (`R.NameEntry.run()`, src/systems/nameentry.js): grid of ひらがな/カタカナ/英数字 plus a
 DOM keyboard/IME input; no kanji; confirmation screen. Settings also include `padConfirm` ('right' default = ○ /
 Nintendo A confirms; 'bottom') and `autoKeep` (auto battle carries over to the next random encounter; boss/event

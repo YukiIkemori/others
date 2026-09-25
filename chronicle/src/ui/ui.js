@@ -195,7 +195,10 @@
           i += (d === 'left' ? -1 : 1) * this.rows;
           i = R.U.clamp(i, 0, n - 1);
         }
-        if (i < 0) i = this.wrap ? (d === 'up' ? i + Math.ceil(n / c) * c : n - 1) : old;
+        if (i < 0) {
+          i = this.wrap ? (d === 'up' ? i + Math.ceil(n / c) * c : n - 1) : old;
+          if (d === 'up' && i >= n) i -= c; // short last row: wrap to the last item of the same column
+        }
         if (i >= n) i = this.wrap ? (d === 'down' ? i % c : 0) : old;
         if (i >= n) i = n - 1;
         if (i !== old) {
@@ -228,10 +231,12 @@
           const label = typeof it === 'object' ? it.label : it;
           const dis = typeof it === 'object' && it.disabled;
           const color = (typeof it === 'object' && it.color) || (dis ? G().C.gray : G().C.white);
-          G().text(label, x, y, { color });
-          if (typeof it === 'object' && it.right != null) {
-            G().text(it.right, x + this.colW - 10, y, { color, align: 'right' });
-          }
+          const right = typeof it === 'object' && it.right != null && it.right !== '' ? String(it.right) : null;
+          // a long label never runs into its count / cost or the next column (squeezed instead)
+          const room = right ? this.colW - 16 - G().textWidth(right) : this.cols > 1 ? this.colW - 6 : 0;
+          if (room > 0) G().fitText(label, x, y, room, { color });
+          else G().text(label, x, y, { color });
+          if (right) G().text(right, x + this.colW - 10, y, { color, align: 'right' });
         }
         if (sel && (this.active || o.showInactiveCursor)) G().cursor(x - 10, y + 1, this.active);
       }

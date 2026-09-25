@@ -1,17 +1,21 @@
 // Input: keyboard + on-screen touch pad + gamepad, folded into virtual buttons.
-// Buttons: up down left right a b dash
+// Buttons: up down left right a b y l r dash
 // Gamepad: confirm on the RIGHT face button by default (R.Settings.padConfirm = 'right'|'bottom')
-//   a    = Z / Enter / Space      (confirm, talk, examine)
-//   b    = X / Esc / Backspace    (cancel; on the field opens the menu)
-//   dash = Shift (held)           (inverts the "always dash" setting)
+//   a    = Z / Enter / Space      (confirm, talk, examine)            pad: right/bottom face
+//   b    = X / Esc / Backspace    (cancel; held while moving = dash)  pad: the other of right/bottom
+//   y    = C / Tab                (field: open the menu)              pad: top face (3)
+//   l, r = Q, E                   (menus: previous / next member)     pad: shoulders (4, 5)
+//   dash = Shift (held)           (dash while moving, like holding B)  pad: left face (2)
 (function (R) {
   'use strict';
-  const BTNS = ['up', 'down', 'left', 'right', 'a', 'b', 'dash'];
+  const BTNS = ['up', 'down', 'left', 'right', 'a', 'b', 'y', 'l', 'r', 'dash'];
   const KEYMAP = {
     ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
     KeyW: 'up', KeyS: 'down', KeyA: 'left', KeyD: 'right',
     KeyZ: 'a', Enter: 'a', Space: 'a', NumpadEnter: 'a',
     KeyX: 'b', Escape: 'b', Backspace: 'b',
+    KeyC: 'y', Tab: 'y',
+    KeyQ: 'l', KeyE: 'r',
     ShiftLeft: 'dash', ShiftRight: 'dash',
   };
   const REPEAT_DELAY = 16; // frames before auto-repeat
@@ -109,7 +113,10 @@
       const confirmBtn = R.Settings && R.Settings.padConfirm === 'bottom' ? 0 : 1;
       if (bt(confirmBtn)) src.pad.a = true;
       if (bt(1 - confirmBtn) || bt(9)) src.pad.b = true;
-      if (bt(2) || bt(5)) src.pad.dash = true;
+      if (bt(3)) src.pad.y = true;
+      if (bt(4)) src.pad.l = true;
+      if (bt(5)) src.pad.r = true;
+      if (bt(2)) src.pad.dash = true;
       if (Object.keys(src.pad).length) fireAny();
     }
   }
@@ -127,14 +134,21 @@
         <div class="tp-btn tp-down" data-b="down"></div>
       </div>
       <div class="tp-ab">
+        <div class="tp-btn tp-y" data-b="y">Y</div>
         <div class="tp-btn tp-b" data-b="b">B</div>
         <div class="tp-btn tp-a" data-b="a">A</div>
-      </div>`;
+      </div>
+      <div class="tp-btn tp-l" data-b="l">L</div>
+      <div class="tp-btn tp-r" data-b="r">R</div>`;
     container.appendChild(pad);
     const dpad = pad.querySelector('.tp-dpad');
     const active = new Map(); // pointerId -> button
+    const FACE = { a: 1, b: 1, y: 1, l: 1, r: 1 };
 
     function btnAt(x, y) {
+      // face / shoulder buttons win over the D-pad's generous slop area
+      const el = document.elementFromPoint(x, y);
+      if (el && el.dataset && FACE[el.dataset.b]) return el.dataset.b;
       // D-pad: pick by angle from its center so sliding the thumb works.
       const r = dpad.getBoundingClientRect();
       if (x >= r.left - 20 && x <= r.right + 20 && y >= r.top - 20 && y <= r.bottom + 20) {
@@ -143,8 +157,7 @@
         if (Math.hypot(dx, dy) < r.width * 0.12) return null;
         return Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up';
       }
-      const el = document.elementFromPoint(x, y);
-      return el && el.dataset && el.dataset.b && (el.dataset.b === 'a' || el.dataset.b === 'b') ? el.dataset.b : null;
+      return null;
     }
     function refresh() {
       src.touch = {};
@@ -161,8 +174,8 @@
     pad.addEventListener('pointermove', (e) => {
       if (!active.has(e.pointerId)) return;
       const cur = active.get(e.pointerId);
-      // only directions slide; A/B stay latched until release
-      if (cur === 'a' || cur === 'b') return;
+      // only directions slide; face/shoulder buttons stay latched until release
+      if (FACE[cur]) return;
       active.set(e.pointerId, btnAt(e.clientX, e.clientY));
       refresh();
     });

@@ -69,7 +69,7 @@
     water:       { name: '水', pass: false, anim: 4 },
     lava:        { name: '溶岩', pass: true, damage: 10, anim: 2 },
     poison:      { name: '毒の床', pass: true, damage: 3, anim: 2 },
-    tree:        { name: '木', pass: false },
+    tree:        { name: '木', pass: true }, // request K: the party walks through trees (drawn under the sprites)
     flowers:     { name: '花', pass: true },
     fence:       { name: '柵', pass: false },
     door:        { name: '扉', pass: true, themed: true },
@@ -159,6 +159,9 @@
 // ------------------------------------------------------------ decor layer
 // Maps may add `decor: [rows]` (same size as `rows`) drawn ON TOP of the base
 // tile: wall hangings, rugs, furniture, town props. ' ' and '.' = nothing.
+// Seats and small/soft props (stools, benches, rugs, straw, leaves, flowerbeds,
+// bushes, haystacks, potted plants) are walkable (request K); real furniture,
+// stalls, carts, lamps and signs block.
 // Props: pass (default false), counter (talk across), wall (meant for wall
 // tiles), anim (frames), tall (art may be up to 32px high, bottom-aligned),
 // auto (art joins with same-id neighbours: rugs, long tables, stalls, fountains).
@@ -192,7 +195,7 @@
     leaves:       { name: '落ち葉', pass: true },
     flowers_low:  { name: '草花', pass: true },
     stool:        { name: 'スツール', pass: true },
-    // --- furniture (block movement)
+    // --- furniture (block movement, except the seats and plants marked pass)
     fireplace:    { name: '暖炉', anim: 3, tall: true },
     stove:        { name: 'かまど', anim: 2 },
     sink:         { name: '流し台', counter: true },
@@ -202,8 +205,8 @@
     desk:         { name: '机', counter: true },
     table_round:  { name: '丸テーブル', counter: true },
     table_long:   { name: '長テーブル', counter: true, auto: true },
-    bench:        { name: 'ベンチ' },
-    plant:        { name: '鉢植え', tall: true },
+    bench:        { name: 'ベンチ', pass: true },
+    plant:        { name: '鉢植え', tall: true, pass: true },
     vase:         { name: '花瓶' },
     sacks:        { name: '麦の袋' },
     crates:       { name: '積み荷', tall: true },
@@ -215,7 +218,7 @@
     anvil:        { name: '金床' },
     clock:        { name: '柱時計', tall: true },
     // --- town exterior
-    flowerbed:    { name: '花壇' },
+    flowerbed:    { name: '花壇', pass: true },
     hedge:        { name: '生け垣', auto: true },
     lamp:         { name: '街灯', anim: 2, tall: true },
     sign_item:    { name: '道具屋の看板', tall: true },
@@ -226,8 +229,8 @@
     stall:        { name: '露店', counter: true, auto: true, tall: true },
     fountain:     { name: '噴水', anim: 4, auto: true },
     cart:         { name: '荷車' },
-    haystack:     { name: '干し草' },
-    bush:         { name: '茂み' },
+    haystack:     { name: '干し草', pass: true },
+    bush:         { name: '茂み', pass: true },
     well_small:   { name: '井戸' },
   });
 

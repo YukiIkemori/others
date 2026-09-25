@@ -1,5 +1,5 @@
 // Title screen: starry night sky over a castle silhouette, the crest emblem and
-// the 「ルミナス・クレスト」 logo, then はじめから / つづきから / 復活の呪文 / 設定.
+// the 「ルミナス・クレスト」 logo, then はじめから / つづきから / 冒険の合言葉 / 設定.
 //   R.Title.start()
 (function (R) {
   'use strict';
@@ -234,16 +234,18 @@
     async menu() {
       this.slots = await R.Save.list();
       const any = this.slots.some(Boolean);
+      let last = any ? 1 : 0; // the cursor stays on the last choice (a failed 冒険の合言葉 must not jump to はじめから)
       for (;;) {
         this.stage = 'menu';
         const items = [
           { label: 'はじめから' },
           { label: 'つづきから', disabled: !any },
-          { label: '復活の呪文' },
+          { label: '冒険の合言葉' },
           { label: '設定' },
         ];
-        const i = await R.UI.choose(items, { x: 76, y: 132, w: 104, initial: any ? 1 : 0, cancel: true });
+        const i = await R.UI.choose(items, { x: 76, y: 132, w: 104, initial: last, cancel: true });
         if (i < 0) { this.stage = 'press'; return; }
+        last = i;
         if (i === 0 && (await this.newGame())) return;
         if (i === 1 && (await this.continueGame())) return;
         if (i === 2 && (await this.codeGame())) return;
@@ -275,7 +277,7 @@
       const code = await Menu().codeOverlay({ mode: 'import' });
       if (!code) return false;
       const data = await R.Save.importCode(code);
-      if (!data || !data.game) { R.sfx('buzzer'); await Menu().kit.msg('呪文が間違っています。'); return false; }
+      if (!data || !data.game) { R.sfx('buzzer'); await Menu().kit.msg('合言葉が間違っています。'); return false; }
       return this.boot(data);
     }
     async boot(data) {
@@ -328,6 +330,8 @@
       if (this.stage === 'press' && this.t > 70 && Math.floor(f / 30) % 2 === 0) {
         G().text('Aボタンを押してください', 128, 164, { align: 'center', color: '#ffffff', shadow: '#000' });
       }
+      // keyboard legend for PC players (A / B / dash keys)
+      if (this.t > 70 && !touchUI()) G().text('A：Z・Enter　B：X・Esc　Y：C　L/R：Q/E　ダッシュ：B押しながら', 128, 200, { align: 'center', size: 8, color: '#a0a8d0', shadow: '#000' });
       G().text('ver ' + R.VERSION, 252, 214, { align: 'right', size: 16 / 3 * 1.5, color: '#8088b0' });
     }
     onPush() { R.bgm('title'); }
@@ -365,6 +369,10 @@
   }
 
   function Menu() { return R.Menu; }
+  /** the on-screen pad is shown (no keyboard legend then) */
+  function touchUI() {
+    try { const g = document.getElementById('game'); return !!(g && g.classList.contains('touch')); } catch (e) { return false; }
+  }
 
   /** show the title screen (clears everything else) */
   Title.start = function () {

@@ -18,7 +18,9 @@
     house: { fl: null, floor: 'planks', wl: [0x5c4a30, 0xa89470, 0xcebe9a, 0xe6dabc, 0xf6eed6], wall: 'plaster', door: 'wood', col: 'wood' },
     cave: { fl: [0x34261a, 0x544030, 0x6c563e, 0x846c50, 0x9e8666], floor: 'dirt', wl: [0x241810, 0x44301e, 0x62482c, 0x80623e, 0xa08054, 0xc0a070], wall: 'rock', door: 'wood', col: 'stalag' },
     fort: { fl: [0x383026, 0x5a4e3e, 0x746652, 0x8c7e68, 0xa69880], floor: 'slabs', wl: [0x2e2a26, 0x524c44, 0x726a5e, 0x928a7c, 0xb2aa9a], wall: 'rubble', door: 'wood', col: 'wood' },
-    pyramid: { fl: [0x5a3e1a, 0x8a6630, 0xae8646, 0xc8a05e, 0xe0c080], floor: 'blocks', wl: [0x4c3214, 0x7c5628, 0xa47a3e, 0xc49a56, 0xdcba78], wall: 'sandstone', door: 'stone', col: 'lotus' },
+    pyramid: { fl: [0x5a3e1a, 0x8a6630, 0xae8646, 0xc8a05e, 0xe0c080], floor: 'blocks', wl: [0x4c3214, 0x7c5628, 0xa47a3e, 0xc49a56, 0xdcba78], wall: 'sandstone', door: 'stone', col: 'lotus',
+      // wall tops two steps darker than the floor blocks, so the B1 labyrinth reads clearly
+      tp: [0x24160a, 0x3c2812, 0x54391c, 0x6a4a26, 0x806034] },
     water: { fl: [0x1a2838, 0x304a62, 0x46647e, 0x5e7e98, 0x7c9cb4], floor: 'wet', wl: [0x0e1c2c, 0x1c3850, 0x2a5070, 0x3a6a8e, 0x5488ac, 0x7cacca], wall: 'rock', door: 'wood', col: 'stalag' },
     ice: { fl: [0x5070a0, 0x7898c4, 0x9cbcdc, 0xbcd8ee, 0xe0f2fc], floor: 'ice', wl: [0x203c6c, 0x34609a, 0x5088c0, 0x78b0dc, 0xa8d4f0, 0xe4f6ff], wall: 'iceblock', door: 'ice', col: 'ice' },
     volcano: { fl: [0x160c0c, 0x2a1a18, 0x3e2a24, 0x543a30, 0x6c4c3c], floor: 'basalt', wl: [0x180a06, 0x341a10, 0x522818, 0x703a24, 0x8e5030, 0xae6a40], wall: 'rock', door: 'iron', col: 'basalt' },
@@ -348,7 +350,7 @@
       }
     }
     const topKind = TOP_OF[th.wall] || 'stone';
-    a.top = TOP[topKind](t, th.wl);
+    a.top = TOP[topKind](t, th.tp || th.wl);
     a.topKind = topKind;
     // cap = 4 px strip at the top of a face whose upper neighbour is floor
     a.capColors = topKind === 'rock' ? [th.wl[0], th.wl[2], th.wl[3], th.wl[4]] : topKind === 'beam' ? [WOOD[0], WOOD[3], WOOD[4], WOOD[5]] : [th.wl[0], th.wl[3], th.wl[4], th.wl[th.wl.length - 1]];

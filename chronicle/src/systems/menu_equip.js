@@ -37,6 +37,19 @@
 
   /** main number for comparing gear in a slot */
   const keyStat = (slot, it) => (slot === 'weapon' || (it && it.type === 'weapon') ? (it && it.mag > (it.atk || 0) ? 'mag' : 'atk') : 'def');
+  /**
+   * ▲/▼ score of putting `it` in `slot`: weapons by their key stat (the off-hand by atk2),
+   * armour by 守備力+魔法防御, accessories by R.Rules.itemScore (what this member is good at)
+   */
+  function gearScore(c, slot, id, cur) {
+    const it = DB.items[id];
+    const nxt = previewStats(c, slot, id);
+    if (slot === 'shield' && it.type === 'weapon') return nxt.atk2 - cur.atk2;
+    if (slot === 'weapon') { const k = keyStat(slot, it); return nxt[k] - cur[k]; }
+    // accessories: the same member-aware score as 最強装備 (a mage values 魔力 over 攻撃力)
+    if (slot === 'acc') return Math.round((R.Rules.itemScore(c, id) - (c.equip.acc ? R.Rules.itemScore(c, c.equip.acc) : 0)) * 10) / 10;
+    return (nxt.def - cur.def) + (nxt.mdef - cur.mdef);
+  }
 
   let C = null;
   const cls = () => C || (C = build());
@@ -57,9 +70,10 @@
       input() {
         if (this.mode === 'cand') return this.inputCand();
         const d = In().dirRepeat();
-        if (d === 'left' || d === 'right') {
+        const lr = Menu.kit.memberStep();
+        if (d === 'left' || d === 'right' || lr) {
           const n = R.Game.party.length;
-          this.m = (this.m + (d === 'left' ? n - 1 : 1)) % n;
+          this.m = (this.m + ((lr || (d === 'left' ? -1 : 1)) < 0 ? n - 1 : 1)) % n;
           lastMember = this.m;
           R.sfx('cursor');
           return;
@@ -77,15 +91,14 @@
       openCand(slot, ids) {
         const c = this.c;
         const cur = R.Rules.stats(c);
-        const items = [{ label: '外す', id: null }].concat(ids.map((id) => {
-          const it = DB.items[id];
-          const k = slot === 'shield' && it.type === 'weapon' ? 'atk2' : keyStat(slot, it);
-          const d = previewStats(c, slot, id)[k] - cur[k];
-          return { label: Menu.kit.itemLabel(id), id, d };
-        }));
-        const start = Math.max(0, ids.indexOf(c.equip[slot]) + 1);
+        const now = c.equip[slot] || null;
+        // the item worn right now is listed (marked E) so you can see what you would replace
+        const items = [{ label: '外す', id: null }]
+          .concat(now ? [{ label: Menu.kit.itemLabel(now), id: now, d: 0, worn: true }] : [])
+          .concat(ids.map((id) => ({ label: Menu.kit.itemLabel(id), id, d: gearScore(c, slot, id, cur) })));
+        const start = now ? 1 : 0;
         const list = new R.UI.List({
-          x: 4, y: 46, w: 248, rows: ROWS, items, index: ids.length ? (start || 1) : 0,
+          x: 4, y: 46, w: 248, rows: ROWS, items, index: now ? 1 : ids.length ? 1 : start,
           title: slot === 'shield' && dual(c) ? '左手' : LABEL[slot],
           onChange: () => this.updatePreview(),
           drawItem: (row, x, y, w) => this.drawCand(row, x, y, w),
@@ -125,6 +138,7 @@
         const it = DB.items[row.id];
         Menu.kit.drawIcon(it, x, y + 2);
         G().text(row.label, x + 11, y, { color: it.rare ? G().C.yellow : G().C.white });
+        if (row.worn) { G().text('E', x + w - 22, y, { align: 'right', color: G().C.cyan }); return; }
         G().text(String(R.State.count(row.id)), x + w - 22, y, { align: 'right' });
         if (row.d) arrow(x + w - 14, y + 3, row.d > 0);
       }
@@ -142,8 +156,8 @@
           K.drawSprite(c, 26, 38, { frame: Math.floor(R.Engine.frame / 20) });
           G().text(c.name, 42, 11, { color: K.condColor(c) });
           G().text('Lv' + c.level, 42, 25);
-          G().text(K.jobName(c.job), 150, 11, { color: G().C.cyan });
-          K.lrArrows(10, 246, 20);
+          G().text(K.jobLabel(c, c.job), 150, 11, { color: K.jobColor(c, c.job, G().C.cyan) });
+          K.lrArrows(10, 246, 20, true);
         }
         // slots
         if (cd) {

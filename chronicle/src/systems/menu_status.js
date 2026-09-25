@@ -54,6 +54,11 @@
   const rec = (id) => (R.Game.bestiary && R.Game.bestiary[id]) || null;
   const seen = (id) => { const b = rec(id); return !!(b && (b.seen || b.kills)); };
   const beaten = (id) => { const b = rec(id); return !!(b && b.kills); };
+  const isRareMon = (id) => !!(DB.monsters[id] && (DB.monsters[id].flags || []).includes('rare'));
+  /** stats / weaknesses are shown once beaten or scanned (スキャン) */
+  const known = (r) => !!(r && (r.kills || r.scan));
+  /** rare item obtained from this monster (dropped, or stolen when it is the same item) */
+  const gotRare = (m, r) => !!(r && (r.rare || (r.stealRare && m.steal && m.rare && m.steal.rare === m.rare.item)));
   function monSprite(m) {
     const key = 'mon:' + m.sprite;
     if (!G().has(key)) return null;
@@ -76,7 +81,7 @@
     const K = Menu.kit;
 
     // ============================================================ 強さ
-    const PAGES = ['能力', '装備・アビリティ', '耐性・特性'];
+    const PAGES = ['能力', '装備・アビリティ', '耐性・特性', 'ジョブ'];
     class StatusScreen extends K.Screen {
       constructor(o) {
         super();
@@ -86,9 +91,10 @@
       get c() { return R.Game.party[this.m]; }
       input() {
         const d = In().dirRepeat();
-        if (d === 'left' || d === 'right') {
+        const lr = K.memberStep();
+        if (d === 'left' || d === 'right' || lr) {
           const n = R.Game.party.length;
-          this.m = (this.m + (d === 'left' ? n - 1 : 1)) % n;
+          this.m = (this.m + ((lr || (d === 'left' ? -1 : 1)) < 0 ? n - 1 : 1)) % n;
           lastMember = this.m;
           R.sfx('cursor');
         } else if (d === 'up' || d === 'down') {
@@ -109,13 +115,32 @@
         const stt = K.statusText(c);
         if (stt) G().text(stt.text, 42 + G().textWidth(c.name) + 8, 10, { color: stt.color });
         G().text('Lv ' + c.level, 150, 10);
-        G().text(K.jobName(c.job) + ' Lv' + R.Rules.jobLevel(c, c.job), 42, 24, { color: G().C.cyan });
+        G().text(K.jobLabel(c, c.job) + ' Lv' + R.Rules.jobLevel(c, c.job), 42, 24, { color: K.jobColor(c, c.job, G().C.cyan) });
         G().text('JP ' + ((c.jobs[c.job] && c.jobs[c.job].jp) || 0), 240, 24, { align: 'right', color: G().C.yellow });
         G().text((this.page + 1) + '/' + PAGES.length, 240, 10, { align: 'right', color: G().C.gray });
-        K.lrArrows(8, 248, 18);
+        K.lrArrows(8, 248, 18, true);
         if (this.page === 0) this.page1(c, st);
         else if (this.page === 1) this.page2(c, st);
-        else this.page3(c, st);
+        else if (this.page === 2) this.page3(c, st);
+        else this.page4(c);
+      }
+      /** job levels of every job this member can take (★ gold = mastered) */
+      page4(c) {
+        const jobs = R.Rules.unlockedJobs(c);
+        const mast = jobs.filter((j) => R.Rules.isMastered(c, j)).length;
+        G().window(4, 46, 248, 174, { title: 'ジョブ' });
+        const half = Math.max(8, Math.ceil(jobs.length / 2));
+        jobs.slice(0, 22).forEach((j, i) => {
+          const col = Math.floor(i / half), row = i % half;
+          const x = 14 + col * 120, y = 55 + row * 14;
+          const on = j === c.job;
+          K.fitText(K.jobLabel(c, j), x, y, 72, { color: K.jobColor(c, j, on ? G().C.cyan : G().C.white) });
+          G().text('Lv' + R.Rules.jobLevel(c, j), x + 108, y, { align: 'right', color: K.jobColor(c, j, G().C.white) });
+        });
+        G().text('マスター ★' + mast, 242, 205, { align: 'right', color: mast ? G().C.gold : G().C.gray });
+        // mastery traits this member carries into every job
+        const tr = R.Rules.masteredJobs(c).map((j) => R.Rules.masterTraitText(j)).filter(Boolean);
+        if (tr.length) K.fitText('特典 ' + tr.join('・'), 14, 205, 150, { color: G().C.gold });
       }
       page1(c, st) {
         G().window(4, 46, 122, 128, { title: '基本' });
@@ -145,7 +170,7 @@
         const cmd = (j) => (DB.jobs[j] && DB.jobs[j].command) || '';
         const AL = [
           ['コマンド', cmd(c.job), K.KIND_COLORS.action],
-          ['サブ', c.set.sub ? cmd(c.set.sub) + '（' + K.jobName(c.set.sub) + '）' : '', K.KIND_COLORS.action],
+          ['サブ', c.set.sub ? cmd(c.set.sub) + '（' + K.jobLabel(c, c.set.sub) + '）' : '', K.KIND_COLORS.action],
           ['リアクション', c.set.reaction ? K.abName(c.set.reaction) : '', K.KIND_COLORS.reaction],
           ['サポート', c.set.support ? K.abName(c.set.support) : '', K.KIND_COLORS.support],
           ['フィールド', c.set.field ? K.abName(c.set.field) : '', K.KIND_COLORS.field],
@@ -170,7 +195,8 @@
           else if (r != null && r < 1) { t = '半減'; col = G().C.green; }
           else if (r != null && r > 1) { t = '弱点'; col = G().C.red; }
           if (boost[e]) { t = (t === '―' ? '' : t + ' ') + '威力+' + boost[e]; col = t.startsWith('威力') ? G().C.orange : col; }
-          G().text(t, x + 110, y, { align: 'right', color: col });
+          // never over the element label (耐性 + 威力 together are long)
+          K.fitText(t, x + 110, y, 110 - G().textWidth(K.elemName(e)) - 6, { align: 'right', color: col });
         });
         G().window(4, 120, 248, 72, { title: '状態異常' });
         const imm = m.statusImmune || [];
@@ -190,6 +216,12 @@
     function traits(m) {
       const t = [];
       if (m.twoSwords) t.push('二刀流');
+      if (m.counterPct) t.push('反撃' + m.counterPct + '%');
+      if (m.autoSteal) t.push('攻撃で盗む');
+      if (m.attackDrain) t.push('攻撃で吸収');
+      if (m.autoRevive) t.push('一度だけ復活');
+      if (m.startRegen) t.push('開幕リジェネ');
+      if (m.slayer) t.push('飛行・竜特効');
       if (m.regen) t.push('再生');
       if (m.walkHeal) t.push('歩行回復');
       if (m.encounterPct < 0) t.push('魔物よけ');
@@ -260,9 +292,13 @@
         const s = seen(row.id), b = beaten(row.id);
         G().text(pad3(i + 1), x, y, { color: G().C.gray });
         const m = DB.monsters[row.id];
-        G().text(s ? m.name : '？？？？？', x + 20, y, { color: s ? (b ? G().C.white : '#b0b0c0') : G().C.dark });
         const r = rec(row.id);
-        if (r && r.rare) Menu.kitStar(x + w - 9, y + 3);
+        const rareMon = s && isRareMon(row.id);
+        // right side: 「レア」 tag for rare monsters, ★ once its rare item was obtained; the name never runs under them
+        let right = x + w - (r && gotRare(m, r) ? 12 : 0);
+        if (r && gotRare(m, r)) Menu.kitStar(x + w - 9, y + 3);
+        if (rareMon) { G().text('レア', right, y, { align: 'right', color: G().C.gold }); right -= G().textWidth('レア') + 2; }
+        K.fitText(s ? m.name : '？？？？？', x + 20, y, right - x - 22, { color: s ? (b ? G().C.white : '#b0b0c0') : G().C.dark });
       }
       render() {
         if (this.detail) { this.renderDetail(); return; }
@@ -290,54 +326,63 @@
       }
       renderDetail() {
         const id = this.id, m = DB.monsters[id], r = rec(id) || {};
-        const b = !!r.kills;
+        const b = known(r);
         // title
         G().window(4, 4, 248, 26);
         G().text('No.' + pad3(this.list.index + 1), 14, 11, { color: G().C.gray });
         G().text(m.name, 64, 11, { color: G().C.yellow });
+        if (isRareMon(id)) {
+          const tx = 64 + G().textWidth(m.name) + 6;
+          G().rect(tx, 10, G().textWidth('レア') + 6, 13, '#6a4a00');
+          G().text('レア', tx + 3, 11, { color: G().C.gold });
+        }
         G().text((this.page + 1) + '/2', 240, 11, { align: 'right', color: G().C.gray });
         // sprite panel with a little ground
-        G().window(4, 32, 108, 104);
-        G().rect(10, 118, 96, 12, '#1a1a28');
-        G().rect(10, 118, 96, 1, '#34344c');
-        drawMon(m, 58, 124, 96, 90, false);
-        K.lrArrows(8, 108, 80);
+        G().window(4, 32, 108, 98);
+        G().rect(10, 112, 96, 12, '#1a1a28');
+        G().rect(10, 112, 96, 1, '#34344c');
+        drawMon(m, 58, 118, 96, 84, false);
+        K.lrArrows(8, 108, 76);
         if (this.page === 0) this.detail1(m, r, b);
         else this.detail2(m, r, b);
       }
       detail1(m, r, b) {
         const q = (v) => (b ? String(v) : '？？？');
-        G().window(114, 32, 138, 104);
+        G().window(114, 32, 138, 98);
         const rows = [['レベル', m.lv], ['HP', m.hp], ['攻撃力', m.atk], ['守備力', m.def], ['素早さ', m.agi], ['倒した数', r.kills || 0]];
         rows.forEach(([k, v], i) => {
           G().text(k, 124, 40 + i * 14, { color: G().C.gray });
           G().text(i === 5 ? String(v) : q(v), 242, 40 + i * 14, { align: 'right', color: i === 5 ? G().C.cyan : G().C.white });
         });
-        G().window(4, 138, 248, 82);
-        G().text('経験値', 14, 145, { color: G().C.gray }); G().text(q(m.exp), 80, 145, { align: 'right' });
-        G().text('ゴールド', 92, 145, { color: G().C.gray }); G().text(q(m.gold), 170, 145, { align: 'right' });
-        G().text('JP', 182, 145, { color: G().C.gray }); G().text(q(m.jp), 242, 145, { align: 'right' });
-        const drop = (slot, flag) => {
+        G().window(4, 132, 248, 88);
+        G().text('経験値', 14, 139, { color: G().C.gray }); G().text(q(m.exp), 80, 139, { align: 'right' });
+        G().text('ゴールド', 92, 139, { color: G().C.gray }); G().text(q(m.gold), 170, 139, { align: 'right' });
+        G().text('JP', 182, 139, { color: G().C.gray }); G().text(q(m.jp), 242, 139, { align: 'right' });
+        const rareOk = gotRare(m, r);
+        const drop = (slot, got) => {
           if (!m[slot] || !m[slot].item) return b ? 'なし' : '？？？';
-          return r[flag] ? K.itemLabel(m[slot].item) : '？？？';
+          return got ? K.itemLabel(m[slot].item) : '？？？';
         };
-        G().text('ドロップ', 14, 159, { color: G().C.gray });
-        G().text(drop('drop', 'drop'), 82, 159, { color: r.drop ? G().C.white : G().C.dark });
-        G().text('レア', 14, 173, { color: G().C.gray });
-        G().text(drop('rare', 'rare'), 82, 173, { color: r.rare ? G().C.yellow : G().C.dark });
-        G().wrap(m.desc || '', 226).slice(0, 2).forEach((l, i) => G().text(l, 14, 190 + i * 13, { color: '#d0d0e0' }));
+        G().text('ドロップ', 14, 152, { color: G().C.gray });
+        K.fitText(drop('drop', r.drop), 82, 152, 160, { color: r.drop ? G().C.white : G().C.dark });
+        G().text('レア', 14, 165, { color: G().C.gray });
+        K.fitText(drop('rare', rareOk), 82, 165, 160, { color: rareOk ? G().C.yellow : G().C.dark });
+        // up to 3 lines of description (boss texts are long)
+        let dl = G().wrap(m.desc || '', 226);
+        if (dl.length > 3) dl = G().wrap(String(m.desc).replace(/\n/g, ''), 226); // author line breaks may not fit: reflow
+        dl.slice(0, 3).forEach((l, i) => G().text(l, 14, 179 + i * 12, { color: '#d0d0e0' }));
       }
       detail2(m, r, b) {
         const q = (v) => (b ? String(v) : '？？？');
-        G().window(114, 32, 138, 104);
+        G().window(114, 32, 138, 98);
         const acts = m.actsPerTurn || 1;
         const rows = [['MP', q(m.mp || 0)], ['魔力', q(m.mag || 0)], ['魔法防御', q(m.mdef || 0)], ['回避', b ? (m.eva != null ? m.eva : 3) + '%' : '？？？'], ['行動回数', b ? acts + '回' : '？？？']];
         rows.forEach(([k, v], i) => {
           G().text(k, 124, 40 + i * 14, { color: G().C.gray });
           G().text(v, 242, 40 + i * 14, { align: 'right' });
         });
-        G().window(4, 138, 248, 82, { title: '特徴' });
-        if (!b) { G().text('倒すと分かる。', 14, 150, { color: G().C.dark }); return; }
+        G().window(4, 132, 248, 88, { title: '特徴' });
+        if (!b) { G().text('倒すか、スキャンすると分かる。', 14, 144, { color: G().C.dark }); return; }
         const el = m.elem || {};
         const weak = [], strong = [];
         for (const e of K.ELEMS) {
@@ -349,18 +394,23 @@
         }
         const sr = m.statusRes || {};
         const immune = Object.keys(sr).filter((s) => sr[s] >= 1).map(K.statusName);
-        const FL = { boss: 'ボス', metal: 'メタル', undead: 'アンデッド', flying: '飛行', dragon: 'ドラゴン', flee: '逃げやすい' };
+        const FL = { rare: 'レア', boss: 'ボス', metal: 'メタル', undead: 'アンデッド', flying: '飛行', dragon: 'ドラゴン', flee: '逃げやすい' };
         const tags = (m.flags || []).map((f) => FL[f]).filter(Boolean);
         const lines = [
           ['弱点', weak.join('・') || 'なし', weak.length ? G().C.green : G().C.gray],
           ['耐性', strong.join('・') || 'なし', strong.length ? G().C.orange : G().C.gray],
           ['効かない', immune.join('・') || 'なし', immune.length ? G().C.white : G().C.gray],
         ];
-        if (m.steal && m.steal.item) lines.push(['盗める', r.steal ? K.itemLabel(m.steal.item) : '？？？', r.steal ? G().C.white : G().C.dark]);
+        if (m.steal && (m.steal.item || m.steal.rare)) {
+          const parts = [];
+          if (m.steal.item) parts.push(r.steal ? K.itemLabel(m.steal.item) : '？？？');
+          if (m.steal.rare) parts.push(r.stealRare ? '★' + K.itemLabel(m.steal.rare).replace(/★$/, '') : '★？？？');
+          lines.push(['盗める', parts.join('／'), r.steal || r.stealRare ? G().C.white : G().C.dark]);
+        }
         if (tags.length) lines.push(['種族', tags.join('・'), G().C.yellow]);
         lines.slice(0, 5).forEach(([k, v, col], i) => {
-          G().text(k, 14, 147 + i * 14, { color: G().C.gray });
-          K.fitText(v, 76, 147 + i * 14, 166, { color: col });
+          G().text(k, 14, 141 + i * 14, { color: G().C.gray });
+          K.fitText(v, 76, 141 + i * 14, 166, { color: col });
         });
       }
     }
