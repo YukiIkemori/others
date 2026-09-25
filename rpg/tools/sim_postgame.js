@@ -7,7 +7,8 @@
 //   node tools/sim_postgame.js --only text,party,zones,boss,ablation,king,rare,rewards
 //   node tools/sim_postgame.js --n 300 --seed 7 --verbose
 //
-// Party models (built directly: jobs mastered = JP 2000 and every ability learned):
+// Party models (built directly: jobs mastered = job Lv8 JP and every ability learned, so their
+// mastery bonuses — DB.jobs[*].masterBonus — count):
 //   prepared   Lv55 — ユウキ 勇者 (sub 竜騎士: the boss is a dragon; 二刀流; ふくつのちかい),
 //              ノン 賢者 (sub 白魔術師, はじゃのこころ, ふくつのちかい), メテム 時空術師 (sub 賢者 —
 //              かいじゅ, りゅうせいう; MP半減, ふくつのちかい); 14/9/10 jobs mastered. Gear only from

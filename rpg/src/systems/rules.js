@@ -15,6 +15,7 @@
   const SLOTS = ['weapon', 'shield', 'head', 'body', 'acc'];
   const SLOT_NAMES = { weapon: '武器', shield: '盾', head: '頭', body: '体', acc: 'アクセサリ' };
   const SET_SLOTS = ['sub', 'reaction', 'support', 'field'];
+  const STAT_NAMES = { hp: 'HP', mp: 'MP', str: '力', vit: '体力', agi: '素早さ', int: '知力', mnd: '精神', luk: '運' };
   const SET_NAMES = { sub: 'サブアクション', reaction: 'リアクション', support: 'サポート', field: 'フィールド' };
   // cumulative JP earned in a job needed for job level 1..8 — the base (tier 1) table.
   // Higher tiers scale it (playtest: intermediate/advanced jobs levelled up too fast, since
@@ -30,7 +31,7 @@
   const MAP_MODS = { elemBoost: 1, elemResist: 1, startBuffs: 1 };
 
   const Rules = (R.Rules = {
-    STATS, SLOTS, SLOT_NAMES, SET_SLOTS, SET_NAMES, JP_TABLE, JP_TIER_MULT, MAX_LEVEL, CAPS,
+    STATS, STAT_NAMES, SLOTS, SLOT_NAMES, SET_SLOTS, SET_NAMES, JP_TABLE, JP_TIER_MULT, MAX_LEVEL, CAPS,
 
     // ------------------------------------------------------------ creation
     newChar(id) {
@@ -139,9 +140,33 @@
       if (!Rules.canLearn(c, abilityId).ok) return false;
       const a = DB.abilities[abilityId];
       const rec = Rules.jobRec(c, a.job);
+      const before = Rules.stats(c);
       rec.jp -= a.jp || 0;
       rec.learned.push(abilityId);
+      if (Rules.isMastered(c, a.job)) {
+        // mastery bonus: max HP/MP rise, and the current values with them (like a level-up)
+        const after = Rules.stats(c);
+        if (c.hp > 0) c.hp = Math.min(after.hp, c.hp + Math.max(0, after.hp - before.hp));
+        c.mp = Math.min(after.mp, c.mp + Math.max(0, after.mp - before.mp));
+      }
       return true;
+    },
+    /** flat stats a job grants for good once mastered (DB.jobs[job].masterBonus) */
+    jobMasterBonus(jobId) { const j = DB.jobs[jobId]; return (j && j.masterBonus) || {}; },
+    /** summed mastery bonuses of every job the character has mastered: {hp, str, ...} */
+    masterBonus(c) {
+      const b = {};
+      for (const jid in c.jobs || {}) {
+        if (!Rules.isMastered(c, jid)) continue;
+        const mb = Rules.jobMasterBonus(jid);
+        for (const k in mb) b[k] = (b[k] || 0) + mb[k];
+      }
+      return b;
+    },
+    /** 'HP+10 力+3' — a job's mastery bonus for menus */
+    masterBonusText(jobId) {
+      const mb = Rules.jobMasterBonus(jobId);
+      return STATS.filter((k) => mb[k]).map((k) => STAT_NAMES[k] + '+' + mb[k]).join(' ');
     },
     /** add JP to current job. Returns {levelUps:[{job,level}], unlocked:[jobId]} */
     gainJp(c, n) {
@@ -407,10 +432,12 @@
       const j = DB.jobs[c.job] || { mult: {} };
       const mult = j.mult || {};
       const m = Rules.mods(c);
+      const mb = Rules.masterBonus(c);
       const s = {};
       for (const k of STATS) {
-        // seeds ('grow', c.bonus) are a flat, job-independent gain: 力の種 +2 is +2 in every job
-        let v = Rules.baseStat(c, k) * (mult[k] || 1) + ((c.bonus && c.bonus[k]) || 0);
+        // seeds ('grow', c.bonus) and mastered jobs' bonuses are flat, job-independent gains:
+        // 力の種 +2 is +2 in every job
+        let v = Rules.baseStat(c, k) * (mult[k] || 1) + ((c.bonus && c.bonus[k]) || 0) + (mb[k] || 0);
         v = v * (100 + (m[k + 'Pct'] || 0)) / 100;
         s[k] = v;
       }
