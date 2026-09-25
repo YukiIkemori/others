@@ -335,10 +335,11 @@
         G().window(4, 4, 248, 30);
         K.drawSprite(c, 24, 30, { job: this.job, frame: Math.floor(R.Engine.frame / 20) });
         K.fitText(c.name, 38, 11, 56, { color: K.condColor(c) });
-        K.fitText(j ? K.jobLabel(c, this.job) : '', 98, 11, 62, { color: K.jobColor(c, this.job, G().C.cyan) });
+        K.fitText(j ? K.jobLabel(c, this.job) : '', 98, 11, 56, { color: K.jobColor(c, this.job, G().C.cyan) });
         G().text('JP', 166, 11, { color: G().C.gray });
-        G().text(String(rec.jp), 240, 11, { align: 'right', color: G().C.yellow });
-        if (this.jobs.length > 1) K.lrArrows(10, 246, 13);
+        G().text(String(rec.jp), 234, 11, { align: 'right', color: G().C.yellow });
+        if (this.jobs.length > 1) K.lrArrows(90, 160, 13); // ◀▶ = job
+        K.lrArrows(10, 246, 12, true); // L/R = member
         this.list.draw();
         if (!this.list.items.length) G().text('覚えられるアビリティがない。', 20, 44, { color: G().C.gray });
         G().window(4, 164, 248, 54);

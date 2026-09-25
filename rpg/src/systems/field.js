@@ -302,24 +302,18 @@
         }
       } else tcRebuild(ox, oy);
     }
-    const P = R._prof, t0 = performance.now();
     if (TC.whole) { if (TC.left) tcFill(ox, oy, 0); }
-    else if (ox < TC.x0 || oy < TC.y0 || ox + BW > TC.x0 + TC.w || oy + BH > TC.y0 + TC.h) { tcSlide(ox, oy); if (P) P.push(['slide', performance.now() - t0]); }
-    const t1 = performance.now();
+    else if (ox < TC.x0 || oy < TC.y0 || ox + BW > TC.x0 + TC.w || oy + BH > TC.y0 + TC.h) tcSlide(ox, oy);
     tcAnimate(ox, oy);
-    if (P) P.push(['anim', performance.now() - t1]);
-    const t2 = performance.now();
     // copy just the visible part of the cache (whole-pixel source rect, sub-pixel destination)
     const ix = Math.floor(camX), iy = Math.floor(camY);
     const sx = ix - TC.x0 * TS, sy = iy - TC.y0 * TS;
     const w = Math.min(R.W + 1, TC.cv.width - sx), h = Math.min(R.H + 1, TC.cv.height - sy);
     if (sx < 0 || sy < 0 || w <= 0 || h <= 0) { blit(TC.cv, TC.x0 * TS - camX, TC.y0 * TS - camY); return; }
     R.Gfx.ctx.drawImage(TC.cv, sx, sy, w, h, q(ix - camX), q(iy - camY), w, h);
-    if (P) P.push(['blit', performance.now() - t2]);
-    const t3 = performance.now();
+    // spare time: build the rest of the map cache / the art around the window
     if (TC.whole) { if (TC.left) tcFill(ox, oy, 1); }
     else warmArt(1);
-    if (P) P.push(['warm', performance.now() - t3]);
   }
   /** draw at a sub-pixel position: logical px quantised to device px (the canvas is R.SCALE×) */
   const q = (v) => Math.round(v * R.SCALE) / R.SCALE;

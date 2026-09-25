@@ -58,7 +58,7 @@
       mp: 10, magic: true, target: 'allies', effects: [cure('all')], fx: 'cure', fieldUse: true,
     }),
     paladin_sacrifice: act('命分け', 400, '自分のHPを分け与え、仲間を大きく癒やす。', {
-      mp: 0, target: 'ally', effects: [{ type: 'heal', pct: 0.6, hpCost: 0.25 }], fx: 'heal',
+      mp: 0, target: 'ally_other', effects: [{ type: 'heal', pct: 0.6, hpCost: 0.25 }], fx: 'heal',
     }),
     paladin_wave: act('光の波', 500, '光の波で敵全体を撃つ。', {
       mp: 10, target: 'enemies', effects: [phys(0.8, { element: 'holy', vs: { undead: 1.5 } })], fx: 'holy2',

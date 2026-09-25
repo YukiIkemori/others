@@ -97,14 +97,14 @@ sec('phys');
   const b0 = mean(() => e.roll(yuki, dummy, { formula: 'phys', critBonus: -100, acc: 10 }, {}).dmg, 2000);
   yuki.buffs.atk = 2;
   const b2 = mean(() => e.roll(yuki, dummy, { formula: 'phys', critBonus: -100, acc: 10 }, {}).dmg, 2000);
-  near(b2 / b0, 2, 0.05, 'atk +2 → ×2');
+  near(b2 / b0, B.stageMult(2), 0.05, 'atk +2 → ×' + B.stageMult(2));
   yuki.buffs.atk = 0; dummy.buffs.def = 1;
   const d1 = mean(() => e.roll(yuki, dummy, { formula: 'phys', critBonus: -100, acc: 10 }, {}).dmg, 2000);
-  near(d1 / b0, 1 / 1.5, 0.03, 'target def +1 → ÷1.5');
+  near(d1 / b0, 1 / B.stageMult(1), 0.03, 'target def +1 → ÷' + B.stageMult(1));
   dummy.buffs.def = -2;
-  near(mean(() => e.roll(yuki, dummy, { formula: 'phys', critBonus: -100, acc: 10 }, {}).dmg, 2000) / b0, 2, 0.06, 'target def −2 → ×2');
+  near(mean(() => e.roll(yuki, dummy, { formula: 'phys', critBonus: -100, acc: 10 }, {}).dmg, 2000) / b0, 1 / B.stageMult(-2), 0.06, 'target def −2 → ÷' + B.stageMult(-2));
   dummy.buffs.def = 0;
-  ok(B.stageMult(-1) === 0.75 && B.stageMult(1) === 1.5 && B.stageMult(5) === 2, 'stage table');
+  ok(B.stageMult(-2) === 0.6 && B.stageMult(-1) === 0.8 && B.stageMult(0) === 1 && B.stageMult(1) === 1.3 && B.stageMult(2) === 1.6 && B.stageMult(5) === 1.6, 'stage table (moderate: 0.6 / 0.8 / 1 / 1.3 / 1.6, clamped)');
 
   // physPct mod, ignoreDef, vs
   yuki.c.jobs.tb_fighter.learned.push('tb_brawn'); yuki.c.set.support = 'tb_brawn'; yuki.refresh();
@@ -161,7 +161,7 @@ sec('magic');
   near(mean(() => e.roll(metem, gob, DB.abilities.tb_fire.effects[0], {}).dmg, 4000) / got, 1.5, 0.02, 'elemBoost fire +50');
   metem.c.equip.acc = null; metem.refresh();
   metem.buffs.mag = 1; gob.buffs.mdef = -1;
-  near(mean(() => e.roll(metem, gob, DB.abilities.tb_fire.effects[0], {}).dmg, 4000) / got, 1.5 / 0.75, 0.04, 'mag / mdef buffs');
+  near(mean(() => e.roll(metem, gob, DB.abilities.tb_fire.effects[0], {}).dmg, 4000) / got, B.stageMult(1) / B.stageMult(-1), 0.04, 'mag / mdef buffs');
   metem.buffs.mag = 0; gob.buffs.mdef = 0;
   // fixed & breath & percent
   near(mean(() => e.roll(metem, gob, { formula: 'fixed', power: 50 }, {}).dmg, 3000), 50, 0.6, 'fixed = power × 0.9..1.1');
