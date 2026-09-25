@@ -1,5 +1,6 @@
 // Field: the map screen (DESIGN §7.2). One opaque layer that draws tiles,
-// objects and y-sorted sprites, moves the party tile by tile (caterpillar),
+// objects and y-sorted sprites, moves the party in 8 directions on a half-tile
+// grid (caterpillar trail),
 // runs NPC AI, doors/locks, damage floors, warps, step events, encounters and
 // the ship, plus the public R.Field API used by title/menu/events/debug.
 //
@@ -12,7 +13,8 @@
   const DB = R.DB;
   const TS = 16;
 
-  // frames per tile. 16px / 6 = 2⅔ px per frame = exactly 8 device px on the 3× canvas.
+  // frames per tile (a half step takes half, a diagonal half step √2× that: same px/frame in every direction).
+  // 16px / 6 = 2⅔ px per frame = exactly 8 device px on the 3× canvas.
   const WALK = 6, DASH = 4, SAIL = 6, SAIL_DASH = 3, NPC_STEP = 16;
   const SCRIPT_WALK = 8; // cutscene party walks keep their original pacing
   const BUMP_EVERY = 20;
@@ -338,15 +340,50 @@
   }
 
   // ------------------------------------------------------------ the layer
+  // Movement (DESIGN §7.2): the leader's collision box is one tile (16×16)
+  // anchored at P[0].x/y, in tile units on a half-tile (8px) grid. A position is
+  // valid when every tile the box overlaps is passable. Each move is one half
+  // step in up to 8 directions (diagonals check the whole swept rectangle, so
+  // no corner is ever cut); blocked diagonals slide along the free axis and a
+  // push into a wall that is only half in the way nudges half a tile sideways.
+  //
+  // Tile-based rules use `cell`, the leader's logical tile: on each axis it is
+  // the tile the box last fully occupied (it only changes when the box is
+  // aligned on that axis), so it is always one of the tiles under the box.
+  // Step events, warps, stairs, damage floors and the saved position fire /
+  // are taken when `cell` changes — once per tile entered. A warp or step
+  // event first glides the box onto its tile. Encounters, poison, walk-heal
+  // and 魔除け count the distance walked, so half steps count half.
+  const HALF = 0.5;
+  const EPS = 1e-6;
+  const GAP = 1; // follower spacing along the leader's path (tiles)
+  const isInt = (v) => Math.abs(v - Math.round(v)) < EPS;
+  const HORIZ = { left: 1, right: 1 };
+  const dirOf = (dx, dy) => (dx > 0 ? 'right' : dx < 0 ? 'left' : dy > 0 ? 'down' : dy < 0 ? 'up' : null);
+  /** cells [x,y] touched by the 1×1 boxes at (x0,y0) and (x1,y1) and everything between */
+  function rectCells(x0, y0, x1, y1) {
+    const ax = Math.min(x0, x1), bx = Math.max(x0, x1) + 1, ay = Math.min(y0, y1), by = Math.max(y0, y1) + 1;
+    const out = [];
+    for (let cy = Math.floor(ay + EPS); cy < by - EPS; cy++) for (let cx = Math.floor(ax + EPS); cx < bx - EPS; cx++) out.push([cx, cy]);
+    return out;
+  }
+  /** does the 1×1 box at (bx,by) overlap cell (cx,cy)? */
+  const boxHits = (bx, by, cx, cy) => bx < cx + 1 - EPS && bx + 1 > cx + EPS && by < cy + 1 - EPS && by + 1 > cy + EPS;
+
   class FieldLayer extends R.Layer {
     constructor() {
       super();
       this.opaque = true;
-      this.P = [0, 1, 2].map(() => ({ x: 0, y: 0, dir: 'down' })); // P[0] = leader (tile coords)
-      this.mv = null; // party move {t,dur,from,kind,scripted,resolve}
-      this.arrived = null; // kind of the move that just completed (processed in update)
+      this.P = [0, 1, 2].map(() => ({ x: 0, y: 0, dir: 'down' })); // P[0] = leader box (tile units, half-tile grid)
+      this.cell = { x: 0, y: 0 }; // the leader's logical tile (see above)
+      this.trail = [{ x: 0, y: 0 }]; // leader positions, newest first (caterpillar path)
+      this.mv = null; // party move {t,dur,from,kind,len,scripted,resolve}
+      this.arrived = null; // the move that just completed {kind,dist,changed} (processed in update)
+      this.carry = 0; // frames left over from the move that just ended (keeps chained steps exact)
+      this.walked = 0; // tiles walked since the last whole step (poison / 魔除け / walk-heal)
+      this.shipPos = null; // exact ship position this visit {x,y,ref} (saves keep the whole tile)
       this.locks = 0; // >0 while warping / processing a step / in battle
-      this.walking = false; // a step is chained (no idle frame between tiles)
+      this.walking = false; // a step is chained (no idle frame between steps)
       this.bumpT = 0;
       this.clock = 0; // walk animation clock
       this.lift = 0; // teleport lift (px, negative = up)
@@ -360,13 +397,15 @@
 
     // ------------------------------------------------------------ helpers
     get lead() { return this.P[0]; }
-    place(x, y, dir) {
+    place(x, y, dir, cell) {
       for (const p of this.P) { p.x = x; p.y = y; if (dir) p.dir = dir; }
-      this.mv = null; this.arrived = null; this.walking = false;
+      this.cell = cell ? { x: cell.x, y: cell.y } : { x: Math.round(x), y: Math.round(y) };
+      this.trail = [{ x, y }];
+      this.mv = null; this.arrived = null; this.walking = false; this.carry = 0;
     }
     savePos() {
-      const p = this.P[0];
-      R.Game.pos = { map: M.id, x: p.x, y: p.y, dir: p.dir, spawn: this.spawnName };
+      const c = this.cell;
+      R.Game.pos = { map: M.id, x: c.x, y: c.y, dir: this.P[0].dir, spawn: this.spawnName };
     }
     resetEnc() { this.encCount = M.encRate * U.rf(0.6, 1.4); }
     /** party-wide field mods: strongest encounterPct, max walkHeal, any noFloorDamage/treasureSense */
@@ -390,14 +429,45 @@
       const party = R.Game.party, lead = R.State.leader();
       return [lead].concat(party.filter((c) => c !== lead)).slice(0, 3);
     }
+    /** leader position (tiles) at fraction `a` of the current fixed step */
+    leadAt(a) {
+      const p = this.P[0], mv = this.mv;
+      if (!mv) return { x: p.x, y: p.y };
+      const k = Math.min(1, (mv.t + (a || 0)) / mv.dur);
+      return { x: mv.from.x + (p.x - mv.from.x) * k, y: mv.from.y + (p.y - mv.from.y) * k };
+    }
+    /** follower i: the point GAP·i back along the leader's path from `lead`, facing its motion */
+    followerAt(i, lead) {
+      const keep = this.P[i].dir;
+      if (this.mv && this.mv.kind === 'land') return { x: lead.x, y: lead.y, dir: this.P[0].dir };
+      let need = GAP * i, a = lead;
+      for (const b of this.trail) {
+        const dx = a.x - b.x, dy = a.y - b.y, len = Math.hypot(dx, dy);
+        if (len < EPS) continue;
+        if (len >= need - EPS) {
+          const ax = Math.abs(dx), ay = Math.abs(dy);
+          let dir = ax > ay + EPS ? dirOf(dx, 0) : ay > ax + EPS ? dirOf(0, dy) : null;
+          if (!dir) dir = keep === dirOf(dx, 0) || keep === dirOf(0, dy) ? keep : dirOf(dx, 0); // diagonal: keep a matching facing
+          const k = need / len;
+          return { x: a.x - dx * k, y: a.y - dy * k, dir };
+        }
+        need -= len;
+        a = b;
+      }
+      return { x: a.x, y: a.y, dir: keep }; // the path is shorter (just placed): wait at its start
+    }
     /** drawn position (px) of party member i. Between fixed steps the move is
      *  advanced by Engine.alpha so motion follows real time on any refresh rate;
      *  values are quantised to device pixels (1/3 px), never to whole pixels. */
     renderPos(i) {
-      const p = this.P[i], mv = this.mv;
-      if (!mv) return { x: p.x * TS, y: p.y * TS };
-      const f = mv.from[i], k = Math.min(1, (mv.t + (R.Engine.alpha || 0)) / mv.dur);
-      return { x: q((f.x + (p.x - f.x) * k) * TS), y: q((f.y + (p.y - f.y) * k) * TS) };
+      const lead = this.leadAt(R.Engine.alpha || 0);
+      const p = i ? this.followerAt(i, lead) : lead;
+      return { x: q(p.x * TS), y: q(p.y * TS), dir: i ? p.dir : this.P[0].dir };
+    }
+    /** move the followers to their trail points (fixed step) */
+    syncFollowers() {
+      const lead = this.leadAt(0);
+      for (let i = 1; i < this.P.length; i++) { const f = this.followerAt(i, lead); Object.assign(this.P[i], f); }
     }
     camera() {
       const lp = this.renderPos(0);
@@ -421,152 +491,278 @@
     liftTo(to, frames) {
       return new Promise((res) => { this.liftAnim = { from: this.lift, to, t: 0, dur: Math.max(1, frames), resolve: res }; });
     }
+    aligned() { return isInt(this.P[0].x) && isInt(this.P[0].y); }
+    /** the ship's exact position on this map {x,y} or null */
+    shipXY() {
+      const sh = R.Game.ship;
+      if (!sh || !M || sh.map !== M.id) return null;
+      const s = this.shipPos;
+      return s && s.ref === sh ? s : { x: sh.x, y: sh.y };
+    }
+    /** does any party box (or the leader's move origin) overlap cell (x,y)? */
+    partyOn(x, y) {
+      for (const p of this.P) if (boxHits(p.x, p.y, x, y)) return true;
+      return !!(this.mv && boxHits(this.mv.from.x, this.mv.from.y, x, y));
+    }
 
     // ------------------------------------------------------------ movement
-    startMove(d, nx, ny, kind, opts) {
+    /** on foot: null if the leader's box may cover (x,y); else 'out' | 'lock' | 'wall' */
+    footBlock(x, y) {
+      if (!M.inBounds(x, y)) return 'out';
+      if (!M.walkable(x, y) || M.npcAt(x, y) || M.chestAt(x, y)) return 'wall';
+      const t = M.tile(x, y);
+      if (t.lock && !M.opened.has(M.idx(x, y)) && !R.State.hasItem(t.lock)) return 'lock';
+      return null;
+    }
+    sailOk(x, y) { return M.sailable(x, y) && !M.npcAt(x, y); }
+    /** what a half step by (dx,dy) from (fx,fy) would do:
+     *  {kind:'walk'|'sail'|'land'|'board', x, y} | {kind:'exit', ex} | {kind:'lock'} | null (blocked) */
+    plan(dx, dy, fx, fy) {
+      const p = this.P[0], g = R.Game;
+      if (fx == null) { fx = p.x; fy = p.y; }
+      const tx = fx + dx * HALF, ty = fy + dy * HALF;
+      const cells = rectCells(fx, fy, tx, ty);
+      if (g.onShip) {
+        if (cells.every(([x, y]) => this.sailOk(x, y))) return { kind: 'sail', x: tx, y: ty };
+        if (dx && dy) return null;
+        // step ashore: the box leaves the hull for the land beyond (a whole tile from an aligned ship)
+        const lx = dx ? (isInt(fx) ? fx + dx : tx) : fx, ly = dy ? (isInt(fy) ? fy + dy : ty) : fy;
+        const land = rectCells(lx, ly, lx, ly);
+        if (land.every(([x, y]) => !this.footBlock(x, y) && !M.tile(x, y).lock)) return { kind: 'land', x: lx, y: ly };
+        return null;
+      }
+      if (cells.some(([x, y]) => !M.inBounds(x, y))) {
+        if (dx && dy) return null;
+        const ex = M.exitFor(dirOf(dx, dy));
+        return ex ? { kind: 'exit', ex } : null;
+      }
+      const sh = this.shipXY();
+      if (sh && Math.abs(tx - sh.x) < 1 - EPS && Math.abs(ty - sh.y) < 1 - EPS) return { kind: 'board', x: sh.x, y: sh.y };
+      let lock = false;
+      for (const [x, y] of cells) {
+        const b = this.footBlock(x, y);
+        if (b === 'lock') lock = true;
+        else if (b) return null;
+      }
+      if (lock) return { kind: 'lock' };
+      const doors = cells.filter(([x, y]) => isDoor(M.tileAt(x, y)) && !M.opened.has(M.idx(x, y)));
+      return { kind: 'walk', x: tx, y: ty, doors };
+    }
+    /** corner assist: pushing d into an edge that is only half in the way → a half step sideways that lets the next step pass */
+    nudge(d) {
+      const p = this.P[0], hz = !!HORIZ[d];
+      if (isInt(hz ? p.y : p.x)) return null;
+      const dx = U.DX[d], dy = U.DY[d];
+      // try the side of the logical tile first
+      const toward = hz ? Math.sign(this.cell.y - p.y) : Math.sign(this.cell.x - p.x);
+      for (const s of [toward || 1, -(toward || 1)]) {
+        const side = hz ? this.plan(0, s) : this.plan(s, 0);
+        if (!side || (side.kind !== 'walk' && side.kind !== 'sail')) continue;
+        const fwd = this.plan(dx, dy, side.x, side.y);
+        if (fwd && fwd.kind !== 'lock' && fwd.kind !== 'exit') return side;
+      }
+      return null;
+    }
+    /** carry out a plan; true if the party moves / warps */
+    exec(pl, face) {
+      if (pl.kind === 'exit') {
+        const ex = pl.ex;
+        this.P[0].dir = face;
+        this.runLocked(() => Field.warp(ex.to, ex.spawn, { dir: ex.dir || face }));
+        return true;
+      }
+      if (pl.doors && pl.doors.length) {
+        R.sfx('door');
+        for (const [x, y] of pl.doors) openDoor(M.idx(x, y), x, y, face);
+      }
+      this.startMove(pl.kind, pl.x, pl.y, face);
+      return true;
+    }
+    startMove(kind, nx, ny, d, opts) {
       const o = opts || {};
+      const p = this.P[0], g = R.Game;
+      const from = { x: p.x, y: p.y };
+      const len = Math.hypot(nx - p.x, ny - p.y);
       // hold B (or Shift) while moving to dash; "いつでもダッシュ" inverts it
       const dash = !!R.Settings.alwaysDash !== !!(R.Input.down('b') || R.Input.down('dash'));
-      const dur = o.dur || (kind === 'sail' ? (dash ? SAIL_DASH : SAIL) : (dash ? DASH : WALK));
-      const from = this.P.map((p) => ({ x: p.x, y: p.y }));
-      if (kind === 'sail') {
-        for (const p of this.P) { p.x = nx; p.y = ny; p.dir = d; }
-        R.Game.ship = { map: M.id, x: nx, y: ny, dir: d };
-      } else if (kind === 'land') {
+      const perTile = o.dur || (kind === 'sail' ? (dash ? SAIL_DASH : SAIL) : (dash ? DASH : WALK));
+      const dur = Math.max(1, perTile * Math.max(len, EPS));
+      if (kind === 'land') {
         // everyone steps ashore together (followers are never left standing on the hull)
-        for (const p of this.P) { p.x = nx; p.y = ny; p.dir = d; }
-        R.Game.onShip = false; R.bgm(M.bgm);
-      } else {
-        for (let i = this.P.length - 1; i > 0; i--) {
-          const a = this.P[i], b = this.P[i - 1];
-          a.dir = dirTo(a, b) || a.dir;
-          a.x = b.x; a.y = b.y;
-        }
-        this.P[0].x = nx; this.P[0].y = ny; this.P[0].dir = d;
+        this.shipPos = { x: from.x, y: from.y, ref: g.ship };
+        g.onShip = false; R.bgm(M.bgm);
       }
-      this.mv = { t: 0, dur, from, kind, scripted: !!o.scripted, resolve: o.resolve || null };
+      p.x = nx; p.y = ny;
+      if (d) p.dir = d;
+      if (g.onShip && g.ship) g.ship.dir = p.dir;
+      const t = o.scripted || this.carryF !== R.Engine.frame ? 0 : this.carry;
+      this.carry = 0;
+      this.mv = { t, dur, from, kind, len, scripted: !!o.scripted, resolve: o.resolve || null };
+    }
+    /** the fixed step reached its end: commit the logical tile, the trail and the ship */
+    commit(mv) {
+      const p = this.P[0], g = R.Game, c = this.cell;
+      const was = c.x + ',' + c.y;
+      if (mv.kind === 'board') { c.x = g.ship.x; c.y = g.ship.y; }
+      else { if (isInt(p.x)) c.x = Math.round(p.x); if (isInt(p.y)) c.y = Math.round(p.y); }
+      if (mv.kind === 'land') this.trail = [{ x: p.x, y: p.y }];
+      else {
+        this.trail.unshift({ x: p.x, y: p.y });
+        let len = 0;
+        for (let i = 1; i < this.trail.length; i++) {
+          len += Math.hypot(this.trail[i].x - this.trail[i - 1].x, this.trail[i].y - this.trail[i - 1].y);
+          if (len > GAP * (this.P.length - 1) + 1) { this.trail.length = i + 1; break; }
+        }
+      }
+      if (g.onShip && mv.kind !== 'board') {
+        g.ship = { map: M.id, x: c.x, y: c.y, dir: p.dir };
+        this.shipPos = { x: p.x, y: p.y, ref: g.ship };
+      }
+      return was !== c.x + ',' + c.y;
     }
     bump() {
       if (this.bumpT <= 0) { R.sfx('bump'); this.bumpT = BUMP_EVERY; }
       return false;
     }
-    /** try to step the leader in direction d; true if a move/warp started */
-    tryMove(d) {
+    lockedMsg(d) {
+      this.heldBlock = d; // don't repeat the message while the direction stays held
+      this.runLocked(() => R.Events.run(async (ev) => { R.sfx('locked'); await ev.say('鍵がかかっている。'); }, { self: 'lock' }));
+      return false;
+    }
+    /** held directions → one half step (8 directions, wall sliding, corner assist); true if moving */
+    tryMove(hx, vy, last) {
       const p = this.P[0];
-      const nx = p.x + U.DX[d], ny = p.y + U.DY[d];
-      p.dir = d;
-      const g = R.Game;
-      if (g.onShip) {
-        if (g.ship) g.ship.dir = d;
-        if (!M.inBounds(nx, ny) || M.npcAt(nx, ny)) return this.bump();
-        if (M.sailable(nx, ny)) { this.startMove(d, nx, ny, 'sail'); return true; }
-        if (M.walkable(nx, ny) && !M.chestAt(nx, ny) && !M.tile(nx, ny).lock) { this.startMove(d, nx, ny, 'land'); return true; }
+      const hd = dirOf(hx, 0), vd = dirOf(0, vy);
+      const movable = (pl) => pl && pl.kind !== 'lock';
+      if (hx && vy) {
+        const pd = this.plan(hx, vy);
+        if (movable(pd)) return this.exec(pd, p.dir === hd || p.dir === vd ? p.dir : last);
+        // slide along whichever axis is free (the most recently pressed one first)
+        const order = HORIZ[last] ? [[hx, 0, hd], [0, vy, vd]] : [[0, vy, vd], [hx, 0, hd]];
+        for (const [dx, dy, d] of order) {
+          const pl = this.plan(dx, dy);
+          if (movable(pl)) return this.exec(pl, d);
+        }
+        for (const [, , d] of order) {
+          const nd = this.nudge(d);
+          if (nd) return this.exec(nd, d);
+        }
+        p.dir = last;
         return this.bump();
       }
-      if (!M.inBounds(nx, ny)) {
-        const ex = M.exitFor(d);
-        if (!ex) return this.bump();
-        this.runLocked(() => Field.warp(ex.to, ex.spawn, { dir: ex.dir || d }));
-        return true;
-      }
-      const sh = g.ship;
-      if (sh && sh.map === M.id && sh.x === nx && sh.y === ny) { this.startMove(d, nx, ny, 'board'); return true; }
-      if (!M.walkable(nx, ny) || M.npcAt(nx, ny) || M.chestAt(nx, ny)) return this.bump();
-      const id = M.tileAt(nx, ny), t = M.tile(nx, ny);
-      const i = M.idx(nx, ny);
-      if (t.lock && !M.opened.has(i)) {
-        if (!R.State.hasItem(t.lock)) {
-          this.heldBlock = d; // don't repeat the message while the direction stays held
-          this.runLocked(() => R.Events.run(async (ev) => { R.sfx('locked'); await ev.say('鍵がかかっている。'); }, { self: 'lock' }));
-          return false;
-        }
-      }
-      if (isDoor(id) && !M.opened.has(i)) { R.sfx('door'); openDoor(i, nx, ny, d); }
-      this.startMove(d, nx, ny, 'walk');
-      return true;
+      const d = hd || vd;
+      p.dir = d;
+      if (R.Game.onShip && R.Game.ship) R.Game.ship.dir = d;
+      const pl = this.plan(hx, vy);
+      if (movable(pl)) return this.exec(pl, d);
+      if (pl && pl.kind === 'lock') return this.lockedMsg(d);
+      const nd = this.nudge(d);
+      if (nd) return this.exec(nd, d);
+      return this.bump();
     }
-    /** scripted single step (events): no triggers, ignores collisions */
+    /** scripted single tile step (events): no triggers, ignores collisions */
     stepScripted(d, dur) {
       return new Promise((res) => {
         const p = this.P[0];
-        this.startMove(d, p.x + U.DX[d], p.y + U.DY[d], R.Game.onShip ? 'sail' : 'walk', { scripted: true, resolve: res, dur: dur || SCRIPT_WALK });
+        this.startMove(R.Game.onShip ? 'sail' : 'walk', p.x + U.DX[d], p.y + U.DY[d], d, { scripted: true, resolve: res, dur: dur || SCRIPT_WALK });
+      });
+    }
+    /** scripted: glide onto the logical tile first (events move the party on whole tiles) */
+    alignScripted(dur) {
+      if (this.aligned()) return Promise.resolve();
+      return new Promise((res) => {
+        const p = this.P[0], c = this.cell;
+        this.startMove(R.Game.onShip ? 'sail' : 'walk', c.x, c.y, p.dir, { scripted: true, resolve: res, dur: dur || SCRIPT_WALK });
       });
     }
 
     // ------------------------------------------------------------ arrival
-    /** sync part of arriving on a tile; returns an async task when something must happen */
-    onArrive(kind) {
+    /** sync part of a completed half step; returns an async task when something must happen */
+    onArrive(a) {
       const g = R.Game;
-      const p = this.P[0];
-      g.steps = (g.steps || 0) + 1;
+      const p = this.P[0], c = this.cell;
       this._fm = null;
-      if (kind === 'board') {
+      if (a.kind === 'board') {
         g.onShip = true;
-        g.ship = { map: M.id, x: p.x, y: p.y, dir: p.dir };
-        this.place(p.x, p.y, p.dir);
+        this.shipPos = { x: p.x, y: p.y, ref: g.ship };
+        g.ship.dir = p.dir;
+        this.place(p.x, p.y, p.dir, c);
         R.sfx('ship');
         R.bgm('sea');
       }
       this.savePos();
-      R.emit('step', M.id, p.x, p.y);
+      if (a.changed) R.emit('step', M.id, c.x, c.y);
+      // distance-based effects: one "step" per whole tile walked
+      this.walked += a.dist;
+      let whole = 0;
+      while (this.walked >= 1 - EPS) { this.walked -= 1; whole++; }
+      g.steps = (g.steps || 0) + whole;
       const tasks = [];
-      const t = M.tile(p.x, p.y);
-      if (!g.onShip) {
+      const t = M.tile(c.x, c.y);
+      if (!g.onShip && (whole || a.changed)) {
         const fm = this.fieldMods();
         const fallen = [];
-        if (t.damage > 0 && !fm.noFloorDamage) {
-          for (const c of R.State.alive()) { c.hp = Math.max(0, c.hp - t.damage); if (c.hp <= 0) { c.status = {}; fallen.push(c); } }
+        const hurt = a.changed && t.damage > 0 && !fm.noFloorDamage;
+        if (hurt) {
+          for (const m of R.State.alive()) { m.hp = Math.max(0, m.hp - t.damage); if (m.hp <= 0) { m.status = {}; fallen.push(m); } }
           R.Engine.flashScreen('#ff2010', 8);
           R.sfx('step_damage');
         }
         let poisoned = false;
-        for (const c of R.State.alive()) {
-          if (c.status && c.status.poison) { poisoned = true; if (c.hp > 1) c.hp--; }
+        for (let k = 0; k < whole; k++) {
+          for (const m of R.State.alive()) {
+            if (m.status && m.status.poison) { poisoned = true; if (m.hp > 1) m.hp--; }
+          }
+          if (fm.walkHeal > 0) for (const m of R.State.alive()) m.hp = Math.min(R.Rules.stats(m).hp, m.hp + fm.walkHeal);
         }
-        if (poisoned && !(t.damage > 0 && !fm.noFloorDamage)) R.Engine.flashScreen('#9020c0', 5);
-        if (fm.walkHeal > 0) {
-          for (const c of R.State.alive()) c.hp = Math.min(R.Rules.stats(c).hp, c.hp + fm.walkHeal);
-        }
+        if (poisoned && !hurt) R.Engine.flashScreen('#9020c0', 5);
         if (!R.State.alive().length) return () => Field.gameOver();
         if (fallen.length) {
           tasks.push(() => R.Events.run(async (ev) => {
             R.sfx('death');
-            for (const c of fallen) await ev.say(c.name + 'は力尽きた……');
+            for (const m of fallen) await ev.say(m.name + 'は力尽きた……');
           }, { self: 'floor' }));
         }
       }
-      if (g.repelSteps > 0) {
+      for (let k = 0; k < whole && g.repelSteps > 0; k++) {
         g.repelSteps--;
         if (g.repelSteps === 0) {
           tasks.push(() => R.Events.run(async (ev) => { await ev.say('魔除けの効果が切れた。'); }, { self: 'repel' }));
         }
       }
-      // step events, then warps, then encounters
-      const evs = M.eventsAt(p.x, p.y, 'step');
-      if (evs.length) {
-        const e = evs[0];
-        tasks.push(() => R.Events.run(e.id, { self: e.id, trigger: 'step', once: e.once, x: p.x, y: p.y }));
-        return seq(tasks);
+      // step events, then warps (once per tile entered; the box glides onto the tile first), then encounters
+      if (a.changed || a.kind === 'align') {
+        const evs = M.eventsAt(c.x, c.y, 'step');
+        const w = !evs.length && M.warpAt(c.x, c.y);
+        if ((evs.length || w) && !this.aligned()) {
+          // pending: the triggers run when the glide ends ('align' arrival); damage/poison already applied
+          this.startMove('align', c.x, c.y, p.dir);
+          return tasks.length ? seq(tasks) : null;
+        }
+        if (evs.length) {
+          const e = evs[0];
+          tasks.push(() => R.Events.run(e.id, { self: e.id, trigger: 'step', once: e.once, x: c.x, y: c.y }));
+          return seq(tasks);
+        }
+        if (w) { tasks.push(() => this.useWarp(w)); return seq(tasks); }
       }
-      const w = M.warpAt(p.x, p.y);
-      if (w) { tasks.push(() => this.useWarp(w)); return seq(tasks); }
-      if (!tasks.length) {
-        const zone = this.encounterStep(t);
+      if (!tasks.length && a.dist > 0) {
+        const zone = this.encounterStep(t, a.dist);
         if (zone) return () => Field.encounter(zone);
       }
       return tasks.length ? seq(tasks) : null;
     }
-    /** advance the encounter counter; returns a zone id when a battle starts */
-    encounterStep(t) {
+    /** advance the encounter counter by `dist` tiles walked; returns a zone id when a battle starts */
+    encounterStep(t, dist) {
       const g = R.Game;
       if (Field.noEncounter || g.repelSteps > 0) return null;
-      const p = this.P[0];
-      const zone = M.zoneAt(p.x, p.y);
+      const c = this.cell;
+      const zone = M.zoneAt(c.x, c.y);
       if (!zone) return null;
       const rate = t.enc == null ? 1 : t.enc;
       if (!(rate > 0)) return null;
       const mult = Math.max(0, 1 + (this.fieldMods().encounterPct || 0) / 100);
-      this.encCount -= rate * mult;
+      this.encCount -= rate * mult * (dist == null ? 1 : dist);
       if (this.encCount > 0) return null;
       this.resetEnc();
       if (!DB.encounters[zone]) { R.FieldMap.warn(M.id, 'unknown encounter zone ' + zone); return null; }
@@ -574,7 +770,7 @@
       return zone;
     }
     async useWarp(w) {
-      const id = M.tileAt(this.P[0].x, this.P[0].y);
+      const id = M.tileAt(this.cell.x, this.cell.y);
       if (w.sfx) R.sfx(w.sfx);
       else if (id === 'stairs_up' || id === 'stairs_down') R.sfx('stairs');
       else if (id === 'warp_pad') R.sfx('warp');
@@ -582,24 +778,47 @@
     }
 
     // ------------------------------------------------------------ A button
+    /** cells right in front of the box (the first whole tiles past its leading edge; two when it straddles) */
+    frontCells() {
+      const p = this.P[0], d = p.dir, c = this.cell;
+      const out = [];
+      if (HORIZ[d]) {
+        const fx = d === 'right' ? Math.ceil(p.x + 1 - EPS) : Math.floor(p.x + EPS) - 1;
+        out.push([fx, c.y]);
+        if (!isInt(p.y)) out.push([fx, c.y === Math.floor(p.y) ? c.y + 1 : c.y - 1]);
+      } else {
+        const fy = d === 'down' ? Math.ceil(p.y + 1 - EPS) : Math.floor(p.y + EPS) - 1;
+        out.push([c.x, fy]);
+        if (!isInt(p.x)) out.push([c.x === Math.floor(p.x) ? c.x + 1 : c.x - 1, fy]);
+      }
+      return out;
+    }
     examine() {
       const p = this.P[0], d = p.dir;
-      const fx = p.x + U.DX[d], fy = p.y + U.DY[d];
-      let npc = M.npcAt(fx, fy);
-      if (!npc && M.counterAt(fx, fy)) npc = M.npcAt(fx + U.DX[d], fy + U.DY[d]);
-      if (npc) return this.runLocked(() => this.talk(npc));
-      const chest = M.chestAt(fx, fy);
-      if (chest && !R.Game.chests[chest.id]) return this.runLocked(() => openChest(chest));
-      const sign = M.signAt(fx, fy);
-      if (sign) return this.runLocked(() => R.Events.run(async (ev) => { await ev.say(sign.text); }, { self: 'sign' }));
-      for (const [x, y] of [[fx, fy], [p.x, p.y]]) {
+      const front = this.frontCells();
+      for (const [fx, fy] of front) {
+        let npc = M.npcAt(fx, fy);
+        if (!npc && M.counterAt(fx, fy)) npc = M.npcAt(fx + U.DX[d], fy + U.DY[d]);
+        if (npc) return this.runLocked(() => this.talk(npc));
+      }
+      for (const [fx, fy] of front) {
+        const chest = M.chestAt(fx, fy);
+        if (chest && !R.Game.chests[chest.id]) return this.runLocked(() => openChest(chest));
+      }
+      for (const [fx, fy] of front) {
+        const sign = M.signAt(fx, fy);
+        if (sign) return this.runLocked(() => R.Events.run(async (ev) => { await ev.say(sign.text); }, { self: 'sign' }));
+      }
+      const own = rectCells(p.x, p.y, p.x, p.y).sort((a, b) => (a[0] === this.cell.x && a[1] === this.cell.y ? -1 : b[0] === this.cell.x && b[1] === this.cell.y ? 1 : 0));
+      const under = new Set(own.map(([x, y]) => x + ',' + y));
+      for (const [x, y] of front.concat(own)) {
         const evs = M.eventsAt(x, y, 'examine');
         if (evs.length) {
           const e = evs[0];
           return this.runLocked(() => R.Events.run(e.id, { self: e.id, trigger: 'examine', once: e.once, x, y }));
         }
         const h = M.hiddenAt(x, y);
-        if (h) return this.runLocked(() => findHidden(h, x === p.x && y === p.y));
+        if (h) return this.runLocked(() => findHidden(h, under.has(x + ',' + y)));
       }
       return null;
     }
@@ -619,27 +838,36 @@
     update() {
       if (!M || !R.Game) return;
       if (this.bumpT > 0) this.bumpT--;
-      if (this.locks > 0 || R.Events.busy()) { this.walking = false; return; }
+      if (this.locks > 0 || R.Events.busy()) { this.walking = false; this.carry = 0; return; }
       if (this.mv) return;
       if (this.arrived) {
-        const k = this.arrived;
+        const a = this.arrived;
         this.arrived = null;
-        const task = this.onArrive(k);
-        if (task) { this.runLocked(task); return; }
+        const task = this.onArrive(a);
+        if (task) { this.carry = 0; this.runLocked(task); return; }
+        if (this.mv) return; // gliding onto a warp / event tile
       }
       const In = R.Input;
       // Y opens the menu (B is held for dashing, so it no longer does)
-      if (In.pressed('y')) { this.walking = false; this.openMenu(); return; }
-      if (In.pressed('a')) { this.walking = false; this.examine(); return; }
-      const d = In.dir();
-      if (!d) { this.walking = false; this.bumpT = 0; this.heldBlock = null; return; }
-      if (d === this.heldBlock) return;
+      if (In.pressed('y')) { this.walking = false; this.carry = 0; this.openMenu(); return; }
+      if (In.pressed('a')) { this.walking = false; this.carry = 0; this.examine(); return; }
+      const last = In.dir();
+      if (!last) { this.walking = false; this.carry = 0; this.bumpT = 0; this.heldBlock = null; return; }
+      // held axes (opposite keys: the most recently pressed wins)
+      const axis = (neg, pos) => {
+        const a = In.down(neg), b = In.down(pos);
+        if (a && b) return last === neg ? -1 : last === pos ? 1 : 0;
+        return a ? -1 : b ? 1 : 0;
+      };
+      const hx = axis('left', 'right'), vy = axis('up', 'down');
+      if (last === this.heldBlock && !(hx && vy)) { this.carry = 0; return; }
       this.heldBlock = null;
       // walk on the very first frame a direction is held (no turn-in-place delay);
       // blocked directions just turn (so facing an NPC / shelf is still a tap)
-      const turned = this.P[0].dir !== d;
-      this.walking = this.tryMove(d);
-      if (!this.walking && turned && !this.locks) this.savePos();
+      const d0 = this.P[0].dir;
+      this.walking = this.tryMove(hx, vy, last);
+      if (!this.walking) this.carry = 0;
+      if (!this.walking && d0 !== this.P[0].dir && !this.locks) this.savePos();
     }
     tick() {
       const g = R.Game;
@@ -648,12 +876,17 @@
       const mv = this.mv;
       if (mv) {
         mv.t++;
-        this.clock += 8 / mv.dur;
-        if (mv.t >= mv.dur) {
+        this.clock += (8 * mv.len) / mv.dur; // one walk frame per tile
+        if (mv.t >= mv.dur - EPS) {
           this.mv = null;
+          const changed = this.commit(mv);
           if (mv.scripted) { this.savePos(); if (mv.resolve) mv.resolve(); }
-          else this.arrived = mv.kind;
+          else {
+            this.carry = Math.max(0, mv.t - mv.dur); this.carryF = R.Engine.frame;
+            this.arrived = { kind: mv.kind, dist: mv.kind === 'board' || mv.kind === 'align' ? 0 : mv.len, changed };
+          }
         }
+        this.syncFollowers();
       } else this.clock += 0.5;
       this.tickNpcs(R.Engine.top() === this && this.locks === 0 && !R.Events.busy());
       const la = this.liftAnim;
@@ -704,10 +937,9 @@
       if (id === 'tree' || M.decorAt(x, y)) return false;
       if (M.warpAt(x, y) || M.chestAt(x, y) || M.eventIdx.has(M.idx(x, y)) || M.signAt(x, y)) return false;
       if (M.npcAt(x, y, n)) return false;
-      for (const p of this.P) if (p.x === x && p.y === y) return false;
-      if (this.mv) for (const f of this.mv.from) if (f.x === x && f.y === y) return false;
-      const sh = R.Game.ship;
-      if (sh && sh.map === M.id && sh.x === x && sh.y === y) return false;
+      if (this.partyOn(x, y)) return false;
+      const sh = this.shipXY();
+      if (sh && boxHits(sh.x, sh.y, x, y)) return false;
       return true;
     }
 
@@ -721,8 +953,8 @@
       this.drawSprites(cam);
       if (this.banner) this.drawBanner();
       if (Field.showCoords) {
-        const p = this.P[0];
-        G.text(M.id + ' ' + p.x + ',' + p.y + (R.Game.onShip ? ' ship' : ''), 3, R.H - 11, { size: 8, color: G.C.yellow, shadow: true });
+        const p = this.P[0], c = this.cell;
+        G.text(M.id + ' ' + c.x + ',' + c.y + (this.aligned() ? '' : ' (' + p.x + ',' + p.y + ')') + (R.Game.onShip ? ' ship' : ''), 3, R.H - 11, { size: 8, color: G.C.yellow, shadow: true });
       }
     }
     inView(cam, px, py, pad) {
@@ -766,14 +998,15 @@
       const g = R.Game;
       const ship = g.ship && g.ship.map === M.id ? g.ship : null;
       if (ship) {
-        const pos = g.onShip ? this.renderPos(0) : { x: ship.x * TS, y: ship.y * TS };
+        const sp = this.shipXY();
+        const pos = g.onShip ? this.renderPos(0) : { x: q(sp.x * TS), y: q(sp.y * TS) };
         list.push({ y: pos.y, pri: 0, x: pos.x, ship });
       }
       if (!g.onShip) {
         const mem = this.members();
         for (let i = mem.length - 1; i >= 0; i--) {
           const pos = this.renderPos(i);
-          list.push({ y: pos.y, pri: 5 - i, x: pos.x, member: mem[i], i });
+          list.push({ y: pos.y, pri: 5 - i, x: pos.x, member: mem[i], i, dir: pos.dir });
         }
       }
       list.sort((a, b) => a.y - b.y || a.pri - b.pri);
@@ -801,7 +1034,7 @@
           }
         } else {
           const c = s.member;
-          const img = sheetFrame(G.get('party:' + c.id + ':' + c.job), this.P[s.i].dir, pf);
+          const img = sheetFrame(G.get('party:' + c.id + ':' + c.job), s.dir, pf);
           if (img) blit(img, sx + 8 - (img.width >> 1), sy + TS - img.height + Math.round(this.lift), c.hp > 0 ? null : { alpha: 0.5 });
         }
       }
@@ -947,6 +1180,7 @@
     let s = m.spawn(spawn == null ? 'entrance' : spawn);
     if (!m.inBounds(s.x, s.y)) { R.FieldMap.warn(m.id, 'position ' + s.x + ',' + s.y + ' is outside the map'); s = m.spawn('entrance'); }
     L.place(s.x, s.y, dir || s.dir || L.P[0].dir);
+    L.shipPos = null; L.walked = 0;
     L.spawnName = typeof spawn === 'string' ? spawn : null;
     const g = R.Game;
     const sh = g.ship;
@@ -1033,7 +1267,7 @@
       lay.locks++;
       try {
         const g = R.Game;
-        if (g.onShip && M) { g.onShip = false; lay.place(lay.P[0].x, lay.P[0].y, 'down'); }
+        if (g.onShip && M) { g.onShip = false; lay.place(lay.cell.x, lay.cell.y, 'down'); }
         R.sfx('teleport');
         await lay.liftTo(-(R.H + 40), 26);
         await R.Engine.fadeOut(10);
@@ -1047,7 +1281,7 @@
         await lay.liftTo(0, 22);
       } finally { lay.lift = 0; unlock(lay); }
       // landing on a town / castle entrance tile enters it at once (no step off and back on)
-      const p = lay.P[0];
+      const p = lay.cell;
       const w = M && !R.Game.onShip && M.warpAt(p.x, p.y);
       if (w && !M.eventsAt(p.x, p.y, 'step').length) { await lay.useWarp(w); return true; }
       afterEnter(prev);
@@ -1081,8 +1315,8 @@
     repel(steps) { R.Game.repelSteps = Math.max(R.Game.repelSteps || 0, steps | 0); },
     setRespawnHere() {
       if (!M || !L) return;
-      const p = L.P[0];
-      R.Game.respawn = { map: M.id, x: p.x, y: p.y, dir: p.dir };
+      const p = L.cell;
+      R.Game.respawn = { map: M.id, x: p.x, y: p.y, dir: L.P[0].dir };
     },
     /** warp to R.Game.respawn (after a wipe) */
     respawn() {
@@ -1100,7 +1334,7 @@
       if (!M) return 'grass';
       const enc = zone && DB.encounters[zone];
       if (M.isWorld) {
-        const p = L.P[0];
+        const p = L.cell;
         return M.tile(p.x, p.y).bbg || (enc && enc.bg) || 'grass';
       }
       if (M.bbg) return M.bbg;
@@ -1109,7 +1343,7 @@
     },
     /** random encounter in zone (default: the current position's zone) */
     async encounter(zone) {
-      zone = zone || (M && L && M.zoneAt(L.P[0].x, L.P[0].y));
+      zone = zone || (M && L && M.zoneAt(L.cell.x, L.cell.y));
       if (!zone || !R.Battle || !R.Battle.start) return null;
       const lay = ensureLayer();
       lay.locks++;
@@ -1139,6 +1373,7 @@
     },
     async walkParty(path, dur) {
       if (!L || !M) return;
+      await L.alignScripted(dur); // events move the party on whole tiles
       for (const d of parsePath(path)) await L.stepScripted(d, dur);
     },
     facePlayer(dir) {
@@ -1149,16 +1384,18 @@
     },
     setPlayerPos(x, y, dir) {
       if (!L || !M) return;
-      L.place(x, y, dir || L.P[0].dir);
+      L.place(Math.round(x), Math.round(y), dir || L.P[0].dir);
       L.savePos();
     },
-    /** leader tile position {x,y,dir} */
-    pos() { return L ? Object.assign({}, L.P[0]) : null; },
-    /** the tile in front of the leader */
+    /** leader tile position {x,y,dir}: the logical tile (whole tiles; see the layer's `cell`) */
+    pos() { return L ? { x: L.cell.x, y: L.cell.y, dir: L.P[0].dir } : null; },
+    /** exact leader box position {x,y,dir} in tiles (multiples of ½) */
+    exactPos() { return L ? { x: L.P[0].x, y: L.P[0].y, dir: L.P[0].dir } : null; },
+    /** the tile in front of the leader (the first of frontCells) */
     front() {
       if (!L) return null;
-      const p = L.P[0];
-      return { x: p.x + U.DX[p.dir], y: p.y + U.DY[p.dir] };
+      const [x, y] = L.frontCells()[0];
+      return { x, y };
     },
     parsePath,
   });

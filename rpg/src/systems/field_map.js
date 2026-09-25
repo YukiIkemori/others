@@ -117,7 +117,7 @@
     }
     /** resolve a spawn name or {x,y,dir} → {x,y,dir} (never null) */
     spawn(s) {
-      if (s && typeof s === 'object' && s.x != null) return { x: s.x | 0, y: s.y | 0, dir: DIRS[s.dir] ? s.dir : null };
+      if (s && typeof s === 'object' && s.x != null) return { x: Math.round(+s.x) || 0, y: Math.round(+s.y) || 0, dir: DIRS[s.dir] ? s.dir : null };
       if (typeof s === 'string' && this.spawns[s]) return Object.assign({}, this.spawns[s]);
       if (s != null) warn(this.id, 'unknown spawn "' + (typeof s === 'string' ? s : JSON.stringify(s)) + '"');
       const fb = this.spawns.entrance || this.spawns[Object.keys(this.spawns)[0]];

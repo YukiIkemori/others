@@ -237,7 +237,10 @@
         const nx = R.Rules.jpToNextLevel(c, job);
         G().text(nx > 0 ? '次のLvまで ' + nx : 'Lv MAX', x + 70, y + 14, { color: G().C.gray });
         G().text('習得 ' + got + '/' + all.length, 242, y + 14, { align: 'right', color: mast ? G().C.gold : G().C.white });
-        G().wrap(j.desc || '', 226).slice(0, 2).forEach((l, k) => G().text(l, x, y + 28 + k * 14));
+        // mastery bonus (permanent stats in every job) replaces the description's 2nd line
+        const mb = R.Rules.masterBonusText ? R.Rules.masterBonusText(job) : '';
+        G().wrap(j.desc || '', 226).slice(0, mb ? 1 : 2).forEach((l, k) => G().text(l, x, y + 28 + k * 14));
+        if (mb) G().text((mast ? '★マスター特典 ' : 'マスター特典 ') + mb, x, y + 42, { color: mast ? G().C.gold : G().C.gray });
       }
       renderMember() {
         const c = this.c, x = 14, y = 163;
@@ -307,7 +310,8 @@
         await K.msg(c.name + 'は' + ab.name + 'を覚えた！');
         if (R.Rules.isMastered(c, this.job)) {
           await R.jingle('jobup');
-          await K.msg(c.name + 'は' + K.jobName(this.job) + 'をマスターした！');
+          const mb = R.Rules.masterBonusText ? R.Rules.masterBonusText(this.job) : '';
+          await K.msg(c.name + 'は' + K.jobName(this.job) + 'をマスターした！' + (mb ? '\nマスター特典：' + mb : ''));
         }
         if (ab.kind !== 'action' && !c.set[ab.kind]) {
           if (await K.yesno(ab.name + 'を\n' + K.KIND_NAMES[ab.kind] + 'にセットしますか？')) {
