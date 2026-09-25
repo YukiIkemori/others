@@ -7,21 +7,28 @@
 //   objectives obj_postgame, obj_abyss_clear
 // Everything is a normal R.DB entry, so the bestiary (ずかん) lists and counts it.
 //
-// Balance — tools/sim_postgame.js (real battle engine, see its header for the party models):
-//   abyss regulars: the prepared party at Lv50 wins every fight, losing ≈25–45 % HP per fight.
-//   abyss_lord: prepared Lv55 party (mastered jobs, best/rare gear, status immunity, dispel,
-//   revive-on-KO) wins ≈50–75 % in 12–25 rounds; a Lv65 "levels only" party wins < 10 %.
+// Balance — tools/sim_postgame.js (real battle engine; see its header for the party models):
+//   abyss regulars: a prepared Lv50 party wins every fight and loses ≈25 % HP per fight
+//     (23–28 % by floor; the healer tops up at 40 %); a party fresh from the demon king
+//     (Lv42, shop gear) wins ≈90 % of the fights on floors 1–2.
+//   abyss_lord: prepared Lv55 (mastered jobs, abyss/rare gear, 明鏡の護符, かいじゅ,
+//     ふくつのちかい) wins ≈65–70 % in ≈23 rounds (Lv52 ≈40 %, Lv58 ≈87 %); a Lv65
+//     "levels only" party wins 0 % (still 0 % at Lv99, and at Lv80 with the amulets).
+//     Taking away one piece of the preparation: no status immunity 0 %, only two members
+//     immune ≈37 %, no revive-on-KO ≈49 %, never dispelling ≈52 % (32 rounds), no elemental
+//     resistance ≈46 %, shop weapons ≈48 %. 魔王 (boss_king2) is beaten 100 % by the same parties.
 //
 // abyss_lord's pattern (actsPerTurn 3; `every` counts its own actions, 3 per round):
-//   round 1, 4, 7 …  混沌の瞳      mass confusion          → confusion immunity
-//   round 2, 5, 8 …  滅びの宣告    certain death on one    → death immunity / revive-on-KO
-//                    始原の鱗      def & mdef +2 (3rd act) → dispel (かいじゅ) or break skills
+//   round 1, 4, 7 …  混沌の瞳      mass confusion 75 %      → confusion immunity
+//   round 2, 5, 8 …  滅びの宣告    certain death on one     → death immunity / revive-on-KO
+//                    始原の鱗      def & mdef +2 (3rd act)  → dispel (かいじゅ) or break skills
 //   round 3, 6, 9 …  虚無の波動 → 終焉の咆哮   party buffs erased, then a heavy blast
-//   phase 1 (HP > 50 %): its 3rd action gathers power (atk/mag +1) → 2 real attacks a round
+//   phase 1 (HP > 50 %): its 3rd action is 様子をうかがう → 2 real actions a round
 //   phase 2 (HP ≤ 50 %): 3 real actions a round, 虚無の吐息 joins the elemental breaths
 //   phase 3 (HP < 25 %): 混沌の再生 once (heals 12 %)
-//   breaths (fire / ice / dark) are fixed damage that only elemResist reduces; sleep and
-//   paralysis spells fill the pool. It absorbs dark and shrugs off fire, ice and thunder.
+//   free actions: claw, tail sweep, fire / ice breaths (fixed damage only elemResist reduces),
+//   mass sleep, mass paralysis. It absorbs dark, halves fire / ice / thunder and is a dragon
+//   (竜騎士 skills ×1.5).
 (function (R) {
   'use strict';
 
@@ -184,7 +191,6 @@
     en_pg_lord_null:   act('虚無の波動', 'enemies', [{ type: 'dispel' }], 'dispel', '{user}はすべてを無に帰す波動を放った！'),
     en_pg_lord_roar:   act('終焉の咆哮', 'enemies', [magic(130, 0.7)], 'explosion3', '{user}は世界の終わりを告げる咆哮を上げた！'),
     en_pg_lord_scales: act('始原の鱗', 'self', [buff('def', 2), buff('mdef', 2)], 'buff', '{user}の鱗が黄金色に輝き、固く閉じた！'),
-    en_pg_lord_gather: act('深淵の胎動', 'self', [buff('atk', 1), buff('mag', 1)], 'dark', '{user}は深淵の力を体に取り込んでいる……！'),
     en_pg_lord_rebirth: act('混沌の再生', 'self', [{ type: 'heal', pct: 0.12 }], 'regen', '{user}の傷口から混沌があふれ、体を再生させた！'),
   });
 

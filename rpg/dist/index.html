@@ -5351,7 +5351,7 @@ try{
 
     // rewards for defeating abyss_lord (given by the boss event)
     pg_genesis_sword: W('開闢の剣',   'sword',  160, '天地が分かれた時に生まれたという剣。\n深淵の主を討った者だけが手にできる。', { element: 'holy', stats: { str: 15, vit: 10, agi: 10 }, mods: { crit: 8 } , exclusive: 'abyss_lord' }),
-    pg_abyss_crest:   X('深淵の紋章', '深淵を越えた証の紋章。\nすべての能力が上がり、あらゆる状態異常を防ぐ。', {
+    pg_abyss_crest:   X('深淵の紋章', '深淵を越えた証。すべての能力が上がり、\nあらゆる状態異常を防ぎ、属性も和らげる。', {
       stats: { str: 12, vit: 12, agi: 12, int: 12, mnd: 12, luk: 12 }, mods: { hpPct: 15, mpPct: 15, statusImmune: ALL_STATUS, elemResist: ALL_ELEM(0.75) },
       exclusive: 'abyss_lord',
     }),
@@ -5541,7 +5541,7 @@ try{
 
     // ================================================= 裏ボス
     abyss_lord: {
-      name: '深淵の主アビスロード', sprite: 'boss_abyss', lv: 70, actsPerTurn: 3,
+      name: 'アビスロード', sprite: 'boss_abyss', lv: 70, actsPerTurn: 3,
       hp: 8400, mp: 0, atk: 360, def: 180, agi: 110, mag: 260, mdef: 110, eva: 2,
       exp: 60000, gold: 30000, jp: 3000,
       flags: ['boss', 'dragon'], statusRes: BOSS_RES,
@@ -5567,7 +5567,7 @@ try{
         { id: 'en_pg_lord_void', w: 2, cond: { hpBelow: 0.5 } },
       ],
       drop: { item: 'goddess_tear', rate: 1 }, rare: { item: 'light_drop', rate: 1 },
-      desc: '世界が生まれる前から深淵に在った\n混沌の竜神。魔王ヴァルザードの力も\nこの者のかけらに過ぎなかったという。',
+      desc: '天地が生まれる前から深淵に在る混沌の竜神。\n魔王の力さえ、そのかけらに過ぎないという。',
     },
   });
 
