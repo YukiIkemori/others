@@ -1063,5 +1063,165 @@ sec('repeat');
   ok(r[0] === undefined, 'repeat: fallen member gets no command');
 }
 
+// ================================================================ mastery signatures / auto-steal / focus fire
+sec('mastery signatures');
+{
+  const Rl = R.Rules;
+  /** a real character who has learned every ability of the given jobs (= mastered them) */
+  const master = (cid, job, jobs, L) => {
+    const c = Rl.newChar(cid);
+    c.level = L || 30; c.exp = Rl.expForLevel(c.level);
+    for (const j of jobs) { const rec = Rl.jobRec(c, j); rec.total = 9999; rec.learned = Rl.jobAbilities(j).slice(); }
+    Rl.jobRec(c, job).total = 9999;
+    c.job = job;
+    const st = Rl.stats(c); c.hp = st.hp; c.mp = st.mp;
+    return c;
+  };
+  for (const j in DB.jobs) {
+    if (j.startsWith('tb_')) continue; // test fixtures
+    const id = Rl.jobMasterTrait(j);
+    const a = id && DB.abilities[id];
+    ok(a && a.job === j && (a.kind === 'support' || a.kind === 'reaction') && DB.jobs[j].abilities.includes(id), `${j}: signature ${id} is its own support/reaction`);
+    ok(Rl.masterPerkText(j).includes('／常時：' + (a ? a.name : '?')), `${j}: perk text shows 常時：${a && a.name}`);
+  }
+  // supports: merged without a slot, never doubled
+  const th = master('yuki', 'warrior', ['thief']);
+  ok(!th.set.support && Rl.signatures(th).includes('thief_auto_steal') && Rl.mods(th).autoSteal === 70, 'mastered 盗賊: ついでに盗む on in 戦士 without a slot');
+  th.set.support = 'thief_auto_steal';
+  ok(Rl.mods(th).autoSteal === 70, 'signature also in the slot: not doubled');
+  const unm = master('yuki', 'warrior', []);
+  Rl.jobRec(unm, 'thief').learned = Rl.jobAbilities('thief').slice(1);
+  ok(!Rl.signatures(unm).length && !Rl.mods(unm).autoSteal, 'not mastered: no signature');
+  const nj = master('yuki', 'warrior', ['ninja']);
+  ok(Rl.canEquip(nj, 'iron_sword', 'shield') || Rl.canEquip(nj, Object.keys(DB.items).find((i) => DB.items[i].wtype === 'sword' && !DB.items[i].twoHanded), 'shield'), 'mastered 忍者: 二刀流 in 戦士');
+  // reactions: signature reactions join the slotted one
+  const wa = master('metem', 'mage', ['warrior']);
+  wa.set.reaction = 'mage_ward';
+  Rl.jobRec(wa, 'mage').learned.push('mage_ward');
+  ok(Rl.reactions(wa).join() === 'mage_ward,warrior_counter', 'reactions: slot first, then signature 反撃');
+  wa.set.reaction = 'warrior_counter';
+  ok(Rl.reactions(wa).join() === 'warrior_counter', 'signature reaction in the slot: listed once');
+  wa.set.reaction = null;
+  let fired = 0;
+  for (let i = 0; i < 300; i++) {
+    const e = mk({ party: [U.clone(wa)], mons: ['tb_goblin'] });
+    e.triggerReactions(Mo(e, 0), P(e, 0), 'phys');
+    const ev = run(e.flushReactions());
+    if (ev.some((x) => x.t === 'react' && x.a === DB.abilities.warrior_counter)) fired++;
+  }
+  near(fired / 300, DB.abilities.warrior_counter.chance, 0.08, 'mastered 戦士: 反撃 fires with no reaction set');
+  const pa = master('non', 'priest', ['paladin']);
+  const ep = mk({ party: [U.clone(pa)], mons: ['tb_dummy'] });
+  const pu = P(ep, 0);
+  run(ep.die(pu, null));
+  ok(pu.alive && pu.revived, 'mastered パラディン: 不屈の誓い revives without the slot');
+  run(ep.die(pu, null));
+  ok(!pu.alive, '…only once per battle');
+}
+
+sec('auto-steal');
+{
+  const Rl = R.Rules;
+  const c = Rl.newChar('yuki');
+  c.level = 20; c.exp = Rl.expForLevel(20);
+  const rec = Rl.jobRec(c, 'thief'); rec.total = 9999; rec.learned = Rl.jobAbilities('thief').slice();
+  const st = Rl.stats(c); c.hp = st.hp; c.mp = st.mp;
+  let got = 0, rare = 0, tries = 0, msgOk = true, silentFail = true, chance = 0;
+  for (let i = 0; i < 1500; i++) {
+    const e = mk({ party: [U.clone(c)], mons: ['tb_slime'], inv: {} });
+    const u = P(e, 0), t = Mo(e, 0);
+    t.hp = t.mhp = 99999;
+    chance = e.stealChance(u, t) * 0.7;
+    const r = e.roll(u, t, { formula: 'phys', power: 1 }, {});
+    if (r.miss) continue;
+    tries++;
+    const ev = run(e.autoSteal(u, t));
+    if (e.stolen.length) {
+      got++;
+      if (e.stolen[0].rare) rare++;
+      if (!said(ev, `${u.name}は${t.name}から`) || !t.stolen) msgOk = false;
+    } else if (texts(ev).length) silentFail = false;
+  }
+  near(got / tries, chance, 0.05, 'ついでに盗む: 70 % of the 盗む success chance');
+  ok(msgOk, 'auto-steal message 「〇〇は××から△△を盗んだ！」, monster marked as stolen from');
+  ok(silentFail, 'a failed auto-steal says nothing');
+  const e0 = mk({ party: [U.clone(c)], mons: ['tb_slime'] });
+  near(rare / Math.max(1, got), e0.rareStealChance(P(e0, 0), null, Mo(e0, 0)) * 0.5, 0.06, 'rare item at half the 盗む rate');
+  // wired into 戦う; a second steal from the same monster never happens
+  let viaAttack = 0, once = true;
+  for (let i = 0; i < 300; i++) {
+    const e = mk({ party: [U.clone(c)], mons: ['tb_slime'] });
+    Mo(e, 0).hp = Mo(e, 0).mhp = 99999;
+    run(e.attack(P(e, 0), Mo(e, 0)));
+    run(e.attack(P(e, 0), Mo(e, 0)));
+    if (e.stolen.length) viaAttack++;
+    if (e.stolen.length > 1) once = false;
+  }
+  ok(once, 'one steal per monster');
+  ok(viaAttack > 30, `戦う triggers the auto-steal (${viaAttack}/300)`);
+  // not mastered, no support → never
+  const plain = Rl.newChar('yuki');
+  let none = 0;
+  for (let i = 0; i < 100; i++) { const e = mk({ party: [plain], mons: ['tb_slime'] }); Mo(e, 0).hp = Mo(e, 0).mhp = 99999; run(e.attack(P(e, 0), Mo(e, 0))); none += e.stolen.length; }
+  ok(none === 0, 'no auto-steal without the ability');
+  // the 盗む chance itself is unchanged by the signature
+  const e1 = mk({ party: [U.clone(c)], mons: ['tb_slime'] }), e2 = mk({ party: [plain], mons: ['tb_slime'] });
+  ok(!P(e1, 0).mods.stealPct && P(e2, 0) && e1.stealChance(P(e1, 0), Mo(e1, 0)) <= 0.9, '盗む success unchanged (no stealPct from the signature)');
+}
+
+sec('focus fire');
+{
+  // three identical foes, nobody can one-shot: every attacker goes for the same one
+  const e = mk({ mons: ['tb_goblin', 'tb_goblin', 'tb_goblin'] });
+  for (const m of e.mons) m.hp = m.mhp = 500;
+  for (const p of e.party) p.mp = 0; // plain 戦う only
+  let cmds = R.BattleAI.partyCommands(e, { thrift: true });
+  const tg = cmds.filter((c) => c && (c.type === 'attack' || (c.type === 'ability' && DB.abilities[c.id].target === 'enemy'))).map((c) => c.target);
+  ok(tg.length >= 2 && tg.every((t) => t === tg[0]), 'all single-target attacks on one target');
+  // a wounded foe is finished first
+  const e2 = mk({ mons: ['tb_goblin', 'tb_goblin', 'tb_goblin'] });
+  for (const m of e2.mons) m.hp = m.mhp = 500;
+  Mo(e2, 2).hp = 200;
+  ok(R.BattleAI.focusOrder(e2)[0] === Mo(e2, 2), 'focus: the lowest effective HP first');
+  // the harder hitter first at equal HP
+  const e3 = mk({ mons: ['tb_goblin', 'tb_wolf'] });
+  for (const m of e3.mons) m.hp = m.mhp = 300;
+  ok(R.BattleAI.focusOrder(e3)[0] === Mo(e3, 1) && R.BattleAI.threat(e3, Mo(e3, 1)) > R.BattleAI.threat(e3, Mo(e3, 0)), 'focus: the more dangerous foe first at equal HP');
+  // overkill: a foe the first attacker finishes is not attacked again; a sliver goes to the weakest hitter
+  const e4 = mk({ mons: ['tb_goblin', 'tb_goblin'] });
+  const y = P(e4, 0);
+  const dY = e4.expectAttack(y, Mo(e4, 0));
+  Mo(e4, 0).hp = Math.max(1, Math.floor(dY * 0.9)); Mo(e4, 1).hp = Mo(e4, 1).mhp = 900;
+  const plan = R.BattleAI.newPlan();
+  const t0 = R.BattleAI.assignTarget(e4, y, plan);
+  plan.dmg.set(t0, e4.expectAttack(y, t0));
+  const t1 = R.BattleAI.assignTarget(e4, P(e4, 1), plan);
+  ok(t0 === Mo(e4, 0) || t1 === Mo(e4, 0), 'the killable foe is taken');
+  ok(!(t0 === Mo(e4, 0) && t1 === Mo(e4, 0)), 'dead-in-expectation: the next member moves on');
+  // mid-round retarget: members whose target fell follow the focus order, not a random pick
+  const e5 = mk({ mons: ['tb_goblin', 'tb_goblin', 'tb_goblin'] });
+  for (const m of e5.mons) m.hp = m.mhp = 500;
+  Mo(e5, 1).hp = 120; Mo(e5, 0).hp = 0;
+  const picks = new Set();
+  for (let i = 0; i < 20; i++) picks.add(e5.pickFoe(P(e5, 0), Mo(e5, 0)));
+  ok(picks.size === 1 && picks.has(Mo(e5, 1)), 'retarget: always the focus target');
+  // リピート: fallen targets → the focus plan (no two members piling on a dead-in-expectation foe)
+  const e6 = mk({ mons: ['tb_goblin', 'tb_goblin', 'tb_goblin'] });
+  for (const m of e6.mons) m.hp = m.mhp = 500;
+  Mo(e6, 0).hp = 0;
+  const rp = e6.repeatCommands([{ type: 'attack', target: Mo(e6, 0) }, { type: 'attack', target: Mo(e6, 0) }, { type: 'attack', target: Mo(e6, 0) }]);
+  ok(rp.every((c) => c.target && c.target.alive) && new Set(rp.map((c) => c.target)).size === 1, 'repeat: fallen target → everyone on the same focus target');
+  // group spells still used on a pack
+  let grp = 0;
+  for (let i = 0; i < 20; i++) {
+    const e7 = mk({ mons: ['tb_goblin', 'tb_goblin', 'tb_goblin', 'tb_goblin'] });
+    for (const m of e7.mons) m.hp = m.mhp = 400;
+    P(e7, 2).mp = 99;
+    const c7 = R.BattleAI.partyCommands(e7);
+    if (c7[2] && c7[2].type === 'ability' && ['group', 'enemies', 'random'].includes(DB.abilities[c7[2].id].target)) grp++;
+  }
+  ok(grp >= 10, `group/all spells on a pack of 4 (${grp}/20)`);
+}
+
 console.log(`battle tests: ${passes} passed, ${fails} failed`);
 process.exit(fails ? 1 : 0);

@@ -334,11 +334,12 @@
     const ix = Math.floor(camX), iy = Math.floor(camY);
     const sx = ix - TC.x0 * TS, sy = iy - TC.y0 * TS;
     const w = Math.min(Math.ceil(V.w) + 1, TC.cv.width - sx), h = Math.min(Math.ceil(V.h) + 1, TC.cv.height - sy);
-    if (sx < 0 || sy < 0 || w <= 0 || h <= 0) { blit(TC.cv, TC.x0 * TS - camX, TC.y0 * TS - camY); return; }
+    if (sx < 0 || sy < 0 || w <= 0 || h <= 0) { blit(TC.cv, TC.x0 * TS - camX, TC.y0 * TS - camY); return false; }
     R.Gfx.ctx.drawImage(TC.cv, sx, sy, w, h, q(ix - camX), q(iy - camY), w, h);
     // spare time: build the rest of the map cache / the art around the window
     if (TC.whole) { if (TC.left) tcFill(ox, oy, 1); }
     else warmArt(1);
+    return w >= V.w + 1 && h >= V.h + 1; // the view is fully painted (the destination starts within 1px left/above)
   }
   /** draw at a sub-pixel position: map px quantised to device px (the field draws at V.z device px per map px) */
   const q = (v) => Math.round(v * V.z) / V.z;
@@ -995,7 +996,7 @@
       c.save();
       c.scale(k, k);
       const cam = this.camera();
-      drawTiles(cam.x, cam.y);
+      this.coversScreen = drawTiles(cam.x, cam.y); // next frame the engine may skip its clear
       this.drawObjects(cam);
       this.drawSprites(cam);
       c.restore();

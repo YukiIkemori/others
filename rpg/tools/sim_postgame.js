@@ -85,17 +85,19 @@ const T1 = ['warrior', 'priest', 'mage', 'thief'];
 const PREPARED = {
   yuki: {
     master: [...T1, 'knight', 'monk', 'whitemage', 'blackmage', 'hunter', 'spellblade', 'paladin', 'ninja', 'dragoon', 'hero'],
-    job: 'hero', sub: 'dragoon', reaction: 'paladin_last_stand', support: 'ninja_two_swords',
+    // 二刀流 / ふくつのちかい / 竜の力 / 勇者の心 … come for free as mastered jobs' signatures (always on),
+    // so the slots hold something else
+    job: 'hero', sub: 'dragoon', reaction: 'knight_cover', support: 'warrior_hp_up',
     equip: { weapon: 'pg_chaos_sword', shield: 'pg_dragon_lance', head: 'holy_helm', body: 'pg_abyss_mail', acc: 'pg_clarity_amulet' },
   },
   non: {
     master: ['priest', 'mage', 'warrior', 'whitemage', 'blackmage', 'knight', 'sage', 'paladin', 'bard'],
-    job: 'sage', sub: 'whitemage', reaction: 'paladin_last_stand', support: 'paladin_ward',
+    job: 'sage', sub: 'whitemage', reaction: 'whitemage_mending_hand', support: 'paladin_ward',
     equip: { weapon: 'pg_aurora_staff', head: 'light_crown', body: 'pg_aurora_robe', acc: 'life_charm' },
   },
   metem: {
     master: [...T1, 'blackmage', 'whitemage', 'bard', 'knight', 'timemage', 'sage', 'paladin'],
-    job: 'timemage', sub: 'sage', reaction: 'paladin_last_stand', support: 'sage_half_mp',
+    job: 'timemage', sub: 'sage', reaction: 'sage_mana_return', support: 'blackmage_magic_up',
     equip: { weapon: 'pg_origin_rod', head: 'light_crown', body: 'holy_robe', acc: 'pg_clarity_amulet' },
   },
 };

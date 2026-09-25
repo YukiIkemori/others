@@ -904,6 +904,7 @@ try{
     /** true while something on this layer moves smoothly between fixed steps
      *  (the engine then renders every display refresh, using Engine.alpha) */
     wantsFrame() { return false; }
+    // coversScreen: set true while draw() paints every pixel (the engine then skips its clear)
     /** remove this layer and resolve Engine.run() with value */
     close(value) {
       if (this.closed) return;
@@ -1002,17 +1003,19 @@ try{
     render() {
       const G = R.Gfx;
       G.reset();
-      G.clear('#000');
       const c = G.ctx;
+      const L = Engine.layers;
+      let start = 0;
+      for (let i = L.length - 1; i >= 0; i--) if (L[i].opaque) { start = i; break; }
+      const shaking = Engine._shake.frames > 0;
+      // a bottom layer that paints every pixel (the field's tile cache) makes the clear redundant
+      if (shaking || !L[start] || !L[start].coversScreen) G.clear('#000');
       let sx = 0, sy = 0;
-      if (Engine._shake.frames > 0) {
+      if (shaking) {
         const m = Engine._shake.mag;
         sx = Math.round(R.U.rf(-m, m)); sy = Math.round(R.U.rf(-m, m));
         c.translate(sx, sy);
       }
-      const L = Engine.layers;
-      let start = 0;
-      for (let i = L.length - 1; i >= 0; i--) if (L[i].opaque) { start = i; break; }
       for (let i = start; i < L.length; i++) {
         try { c.save(); L[i].draw(); c.restore(); } catch (e) { c.restore(); reportError(e); }
         G.reset(); if (sx || sy) c.translate(sx, sy);
@@ -2473,14 +2476,15 @@ try{
       if (!this.resolveText) return; // idle, kept open between says
       const len = this.pageLen();
       if (this.shown < len) {
-        if (In().pressed('a')) {
+        if (In().pressed('a') || In().pressed('down')) {
           this.shown = len;
           if (this.opts.noWait && this.page === this.pages.length - 1) this.finish();
         }
         return;
       }
       if (this.opts.auto) return;
-      if (In().pressed('a') || In().pressed('b')) { sfx('confirm_soft'); this.advance(); }
+      // A, B or Down advances (Down lets players page through long result text one-handed)
+      if (In().pressed('a') || In().pressed('b') || In().pressed('down')) { sfx('confirm_soft'); this.advance(); }
     }
     advance() {
       if (this.page < this.pages.length - 1) { this.page++; this.shown = 0; this.autoT = 0; return; }
@@ -3365,9 +3369,10 @@ try{
     }),
     thief_nimble: reaction('早足', 250, '攻撃を受けると素早さが上がる。', 'hitAny', 0.5, { type: 'buff', stat: 'agi', stages: 1 }),
     thief_rare_hunter: support('レアハンター', 300, 'レアアイテムを手に入れやすくなる。', { rarePct: 100 }),
+    thief_steal_up: support('盗みのコツ', 250, '盗みが成功しやすくなる。', { stealPct: 50 }),
     // 盗賊's signature (always on once mastered). autoSteal: % of the 盗む success chance a landed 戦う
-    // also tries (rare item at half the rate; battle.js *autoSteal)
-    thief_steal_up: support('ついでに盗む', 250, '通常攻撃でも盗む。盗みも成功しやすい。', { stealPct: 50, autoSteal: 70 }),
+    // also tries — silent when nothing is taken, rare item at half the rate (battle.js *autoSteal)
+    thief_auto_steal: support('ついでに盗む', 250, '通常攻撃が当たると、ときどき盗む。', { autoSteal: 70 }),
     thief_ambush: support('先駆け', 300, '先制攻撃しやすく、逃げやすくもなる。', { preemptPct: 20, escapePct: 25 }),
     // (hidden items were removed from the game; this field ability now improves loot)
     thief_treasure: field('目利き', 300, '魔物の落とし物とゴールドが増える。', { dropPct: 100, goldPct: 25 }),
@@ -4364,13 +4369,13 @@ try{
       desc: '素早い身のこなしで道具を盗む。\n珍しいお宝にも目ざとい。',
       mult: { hp: 0.95, mp: 0.75, str: 0.95, vit: 0.9, agi: 1.3, int: 0.85, mnd: 0.85, luk: 1.3 },
       masterBonus: { agi: 3, luk: 2 },
-      masterTrait: 'thief_steal_up',
+      masterTrait: 'thief_auto_steal',
       weapons: ['knife'], heads: ['hat'], bodies: ['light'],
       abilities: [
         'thief_steal', 'thief_sand', 'thief_flee', 'thief_repel', 'thief_quick', 'thief_poison',
         'thief_mug', 'thief_steal_rare',
         'thief_nimble',
-        'thief_rare_hunter', 'thief_steal_up', 'thief_ambush',
+        'thief_rare_hunter', 'thief_steal_up', 'thief_ambush', 'thief_auto_steal',
         'thief_treasure',
       ],
       outfit: { main: '#3e7a44', sub: '#5a4030', trim: '#c8c8c0' },
@@ -5885,7 +5890,7 @@ try{
     // ================================================= 裏ボス
     abyss_lord: {
       name: 'アビスロード', sprite: 'boss_abyss', lv: 70, actsPerTurn: 3,
-      hp: 11000, mp: 0, atk: 485, def: 180, agi: 110, mag: 280, mdef: 110, eva: 2,
+      hp: 14000, mp: 0, atk: 510, def: 180, agi: 110, mag: 280, mdef: 110, eva: 2,
       exp: 60000, gold: 30000, jp: 3000,
       flags: ['boss', 'dragon'], statusRes: BOSS_RES,
       fam: ['shade'],
@@ -36206,11 +36211,12 @@ try{
     const ix = Math.floor(camX), iy = Math.floor(camY);
     const sx = ix - TC.x0 * TS, sy = iy - TC.y0 * TS;
     const w = Math.min(Math.ceil(V.w) + 1, TC.cv.width - sx), h = Math.min(Math.ceil(V.h) + 1, TC.cv.height - sy);
-    if (sx < 0 || sy < 0 || w <= 0 || h <= 0) { blit(TC.cv, TC.x0 * TS - camX, TC.y0 * TS - camY); return; }
+    if (sx < 0 || sy < 0 || w <= 0 || h <= 0) { blit(TC.cv, TC.x0 * TS - camX, TC.y0 * TS - camY); return false; }
     R.Gfx.ctx.drawImage(TC.cv, sx, sy, w, h, q(ix - camX), q(iy - camY), w, h);
     // spare time: build the rest of the map cache / the art around the window
     if (TC.whole) { if (TC.left) tcFill(ox, oy, 1); }
     else warmArt(1);
+    return w >= V.w + 1 && h >= V.h + 1; // the view is fully painted (the destination starts within 1px left/above)
   }
   /** draw at a sub-pixel position: map px quantised to device px (the field draws at V.z device px per map px) */
   const q = (v) => Math.round(v * V.z) / V.z;
@@ -36867,7 +36873,7 @@ try{
       c.save();
       c.scale(k, k);
       const cam = this.camera();
-      drawTiles(cam.x, cam.y);
+      this.coversScreen = drawTiles(cam.x, cam.y); // next frame the engine may skip its clear
       this.drawObjects(cam);
       this.drawSprites(cam);
       c.restore();
