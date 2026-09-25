@@ -832,6 +832,7 @@
     if (q === 'grass' || id === 'tree') return 'e';
     if (q === 'sand') return 's';
     if (q === 'snow') return 'n';
+    if (q === 'dirt') return 'd';
     return 'k';
   }
   /** does water at (x,y) sit in outdoor ground (town canals, garden ponds)? */
@@ -848,8 +849,8 @@
       const P = COB, D = DIRT;
       const bankCol = 0x0a1840;
       // lip ramps [shade, top, lit] and bank-face colours for earthen banks
-      const LIP = { e: [t.PAL.tgrass[1], t.PAL.tgrass[3], t.PAL.tgrass[4]], s: [t.PAL.sand[1], t.PAL.sand[3], t.PAL.sand[4]], n: [t.PAL.snow[1], t.PAL.snow[3], t.PAL.snow[4]] };
-      const FACE = { e: [D[1], D[0]], s: [t.PAL.sand[1], t.PAL.sand[0]], n: [t.PAL.snow[1], t.PAL.snow[0]] };
+      const LIP = { e: [t.PAL.tgrass[1], t.PAL.tgrass[3], t.PAL.tgrass[4]], s: [t.PAL.sand[1], t.PAL.sand[3], t.PAL.sand[4]], n: [t.PAL.snow[1], t.PAL.snow[3], t.PAL.snow[4]], d: [D[1], D[2], D[3]] };
+      const FACE = { e: [D[1], D[0]], s: [t.PAL.sand[1], t.PAL.sand[0]], n: [t.PAL.snow[1], t.PAL.snow[0]], d: [t.mul(D[1], 0.85), D[0]] };
       const make = (f) => {
         const b = water(t, f);
         // the water under a north bank lies in its shadow

@@ -5550,7 +5550,7 @@ try{
         { id: 'en_pg_lord_null', w: 10000, cond: { every: [9, 6] } },
         { id: 'en_pg_lord_roar', w: 10000, cond: { every: [9, 7] } },
         { id: 'en_pg_lord_scales', w: 10000, cond: { every: [9, 5] } },
-        { id: 'en_pg_lord_gather', w: 10000, cond: { every: [9, 2], hpAbove: 0.5 } },
+        { id: 'wait', w: 10000, cond: { every: [9, 2], hpAbove: 0.5 } },
         { id: 'wait', w: 10000, cond: { every: [9, 8], hpAbove: 0.5 } },
         { id: 'en_pg_lord_rebirth', w: 10000, cond: { hpBelow: 0.25, once: true } },
         // free actions
@@ -13861,28 +13861,27 @@ try{
     return cv(piece(16, 16, (L) => {
       L.hline(1, 14, 1, WOOD[2]); L.hline(2, 13, 0, WOOD[4]);
       L.set(0, 1, GOLD[4]); L.set(15, 1, GOLD[3]);
-      // cloth: red border band, teal field
+      // woven hanging: red border with a gold thread, cream field
       for (let y = 2; y <= 13; y++) for (let x = 2; x <= 13; x++) {
         const edge = x === 2 || x === 13 || y === 2 || y === 13;
         const band = x === 3 || x === 12 || y === 3 || y === 12;
-        let c = edge ? RED[2] : band ? GOLD[2] : TEAL[2];
-        if (!edge && !band && ((x + y) % 2 === 0) && (x === 4 || x === 11 || y === 4 || y === 11)) c = TEAL[1];
-        if (x >= 12) c = tk().mul(c, 0.85);
+        let c = edge ? RED[2] : band ? ((x + y) % 2 ? GOLD[3] : RED[3]) : CREAM[3];
+        if (!edge && !band && (x * 3 + y * 5) % 11 === 0) c = CREAM[2];
+        if (x === 13 || (x === 12 && !edge)) c = tk().mul(c, 0.86);
         L.set(x, y, c);
       }
-      for (let x = 3; x <= 12; x += 3) L.set(x, 2, GOLD[3]);
-      // tree of life
+      // tree of life on a green mound
       grid(L, 4, 4, [
-        '...ab...',
-        '.abbbba.',
-        'abbrbbba',
-        'bbbbbrbb',
-        '.abbbba.',
-        '...tt...',
-        '..tttt..',
-        '.t.tt.t.',
-      ], { a: GOLD[3], b: GOLD[4], r: RED[4], t: GOLD[2] });
-      L.set(6, 5, GOLD[5]); L.set(7, 4, GOLD[5]);
+        '..abbc..',
+        '.abbbcc.',
+        'abbrbccd',
+        'bbcccrcd',
+        '.cccddd.',
+        '...tu...',
+        '...tu...',
+        'gggggggg',
+      ], { a: GREEN[5], b: GREEN[4], c: GREEN[3], d: GREEN[2], r: RED[4], t: WOOD[3], u: WOOD[1], g: GREEN[3] });
+      L.set(5, 11, GREEN[4]); L.set(10, 11, GREEN[2]);
       // fringe
       for (let x = 2; x <= 13; x++) if (x % 2 === 0) { L.set(x, 14, CREAM[3]); L.set(x, 15, CREAM[1]); } else L.set(x, 14, CREAM[2]);
     }, { drop: [1, 1, 0.3] }));
@@ -13908,21 +13907,16 @@ try{
       // sill
       L.hline(2, 14, 13, F[5]); L.hline(2, 14, 14, F[2]);
       if (curtains) {
-        const C = RED;
-        L.hline(1, 14, 1, WOOD[1]); L.set(1, 1, GOLD[4]); L.set(14, 1, GOLD[3]);
+        // red valance across the top, cream curtains tied back at the sides
+        L.hline(2, 14, 1, WOOD[1]);
+        for (let x = 3; x <= 13; x++) { L.set(x, 2, RED[3]); if (x % 3 !== 2) L.set(x, 3, RED[2]); }
+        L.hline(3, 13, 2, RED[4]);
         const side = (x0, dir) => {
-          // gathered curtain: wide at the top, tied at y8, flaring below
-          const widths = [3, 3, 3, 3, 2, 2, 1, 1, 2, 3, 3];
-          widths.forEach((w, i) => {
-            const y = 2 + i;
-            for (let k = 0; k < w; k++) {
-              const x = dir > 0 ? x0 + k : x0 - k;
-              L.set(x, y, k === w - 1 ? C[2] : (k + i) % 3 === 0 ? C[4] : C[3]);
-            }
-          });
-          L.set(dir > 0 ? x0 : x0, 8, GOLD[4]); L.set(dir > 0 ? x0 + 1 : x0 - 1, 8, GOLD[3]);
+          const w = [2, 2, 2, 1, 1, 1, 2, 2, 2];
+          w.forEach((n, i) => { for (let k = 0; k < n; k++) L.set(x0 + dir * k, 4 + i, k === 0 ? CREAM[4] : CREAM[2]); });
+          L.set(x0, 7, GOLD[4]); L.set(x0 + dir, 7, GOLD[2]);
         };
-        side(2, 1); side(13, -1);
+        side(4, 1); side(12, -1);
       }
     }, { drop: [1, 1, 0.3] }));
   }
@@ -13937,22 +13931,21 @@ try{
         const inner = inShape(x, y, 3.9) && y <= 12;
         if (!inner) { L.set(x, y, x < 7 ? STONE[4] : x > 8 ? STONE[2] : STONE[3]); continue; }
         // glass with lead lattice (symmetric about the centre line)
-        const a = (x + y) & 3, b = (15 - x + y) & 3;
+        const a = (x + y) % 6, b = (15 - x + y) % 6;
         let c;
         if (kind === 'stained') {
-          const cell = ((x + y) >> 2) + ((15 - x + y) >> 2);
+          const cell = Math.floor((x + y) / 6) + Math.floor((15 - x + y) / 6);
           const P = [BLUE[3], RED[3], BLUE[4], GOLD[4], GREEN[4], BLUE[3]];
           c = P[cell % P.length];
           if (y <= 5 && Math.abs(x - 7.5) < 1.5) c = GOLD[5];
           if (a === 0 || b === 0) c = IRON[1];
         } else if (kind === 'dark') {
-          const cell = ((x + y) >> 2) + ((15 - x + y) >> 2);
+          const cell = Math.floor((x + y) / 6) + Math.floor((15 - x + y) / 6);
           c = cell % 3 === 0 ? RED[2] : cell % 3 === 1 ? PURPLE[3] : PURPLE[2];
           if (a === 0 || b === 0) c = 0x100810;
         } else {
-          c = y < 7 ? GLASS[3] : GLASS[2];
-          if ((a === 2 && b === 2)) c = GLASS[4];
-          if (a === 0 || b === 0) c = IRON[2];
+          c = y < 5 ? GLASS[4] : y < 9 ? GLASS[3] : GLASS[2];
+          if (a === 0 || b === 0) c = y < 7 ? GLASS[1] : 0x1c2c50;
         }
         L.set(x, y, c);
       }
@@ -14055,21 +14048,21 @@ try{
     return cv(piece(16, 16, (L) => {
       const sword = (flip) => {
         const X = (x) => (flip ? 15 - x : x);
-        for (let i = 0; i < 8; i++) { L.set(X(2 + i), 1 + i, STEEL[5]); L.set(X(3 + i), 1 + i, STEEL[3]); }
-        L.set(X(2), 1, STEEL[4]);
-        for (const [x, y] of [[13, 7], [12, 8], [11, 9], [10, 10], [9, 11]]) L.set(X(x), y, GOLD[3]);
-        L.set(X(13), 7, GOLD[4]);
-        L.set(X(12), 11, WOOD[2]); L.set(X(13), 12, WOOD[1]); L.set(X(11), 10, WOOD[2]);
-        L.set(X(14), 13, GOLD[4]); L.set(X(13), 13, GOLD[2]);
+        for (let i = 0; i < 9; i++) { L.set(X(1 + i), 1 + i, STEEL[5]); L.set(X(2 + i), 1 + i, STEEL[3]); }
+        L.set(X(1), 1, STEEL[4]); L.set(X(2), 1, null);
+        for (const [x, y] of [[12, 8], [11, 9], [10, 10], [9, 11], [8, 12]]) L.set(X(x), y, GOLD[3]);
+        L.set(X(12), 8, GOLD[4]); L.set(X(8), 12, GOLD[2]);
+        L.set(X(11), 11, WOOD[2]); L.set(X(12), 12, WOOD[1]);
+        L.set(X(13), 13, GOLD[4]); L.set(X(14), 14, GOLD[2]);
       };
       sword(false); sword(true);
-      // round shield covering the crossing
-      for (let y = 4; y <= 12; y++) for (let x = 3; x <= 12; x++) {
-        const d = Math.hypot(x - 7.5, y - 8);
-        if (d > 4.3) continue;
-        L.set(x, y, d > 3.3 ? (x + y < 16 ? GOLD[4] : GOLD[2]) : x + y < 15 ? RED[4] : RED[3]);
+      // small round shield over the crossing
+      for (let y = 3; y <= 11; y++) for (let x = 3; x <= 12; x++) {
+        const d = Math.hypot(x - 7.5, y - 7.2);
+        if (d > 3.5) continue;
+        L.set(x, y, d > 2.6 ? (x + y < 15 ? GOLD[4] : GOLD[2]) : x + y < 14 ? RED[4] : RED[3]);
       }
-      L.rect(7, 7, 2, 2, GOLD[4]); L.set(7, 7, GOLD[5]); L.set(8, 8, GOLD[2]);
+      L.set(7, 7, GOLD[5]); L.set(8, 7, GOLD[3]); L.set(7, 8, GOLD[3]); L.set(8, 8, GOLD[2]);
     }, { drop: [1, 1, 0.32] }));
   }
 
@@ -14157,10 +14150,14 @@ try{
     return out;
   }
   function straw() {
-    return cv(piece(16, 16, (L) => {
+    return cv(piece(16, 16, (L, t) => {
       const S = [0x8c6c28, 0xb89438, 0xd8b850, 0xf0d878];
-      const pile = (x, y) => ((x - 8) / 7.5) ** 2 + ((y - 9) / 6) ** 2 < 1;
-      for (const p of scatter(401, 44, S, pile, (r) => 2 + Math.floor(r() * 3))) {
+      const pile = (x, y) => ((x - 8) / 7.5) ** 2 + ((y - 8.5) / 6.5) ** 2 < 1;
+      for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+        const r = ((x + 0.5 - 8) / (6.4 + t.hash(x, y, 5) * 1.4)) ** 2 + ((y + 0.5 - 8.5) / (5.4 + t.hash(y, x, 6))) ** 2;
+        if (r < 1) L.set(x, y, t.hash(x, y, 7) < 0.5 ? S[1] : S[0]);
+      }
+      for (const p of scatter(401, 90, S, pile, (r) => 2 + Math.floor(r() * 3))) {
         const dir = p.r < 0.4 ? [1, 0] : p.r < 0.7 ? [1, 1] : p.r < 0.9 ? [1, -1] : [0, 1];
         for (let k = 0; k < p.s; k++) L.set(p.x + dir[0] * k, p.y + dir[1] * k, k === 0 ? p.c : S[Math.min(3, S.indexOf(p.c) + (k === 1 ? 1 : 0))]);
       }
@@ -14170,7 +14167,7 @@ try{
     return cv(piece(16, 16, (L) => {
       const LV = [[0xd87028, 0xf0a040], [0xb03020, 0xe05838], [0xd8a820, 0xf8d860], [0x8c5a28, 0xb07c3c]];
       const shapes = [[[0, 0, 1], [1, 0, 0], [1, 1, 0], [2, 1, 0]], [[0, 1, 0], [1, 0, 1], [1, 1, 0], [2, 0, 0]], [[0, 0, 1], [0, 1, 0], [1, 1, 0], [1, 2, 0]]];
-      const pts = [[2, 3], [9, 2], [13, 6], [5, 8], [10, 10], [2, 12], [7, 13], [13, 13]];
+      const pts = [[2, 3], [9, 2], [13, 5], [5, 7], [10, 9], [1, 11], [7, 12], [13, 13], [5, 1], [12, 11], [3, 14], [9, 5]];
       pts.forEach(([x, y], i) => {
         const [c0, c1] = LV[(i * 7 + 3) % 4];
         for (const [dx, dy, hi] of shapes[i % 3]) L.set(x + dx, y + dy, hi ? c1 : c0);
@@ -14370,12 +14367,14 @@ try{
       const fl = f ? [[6, 13], [7, 12], [7, 13], [8, 11], [8, 12], [8, 13], [9, 13]] : [[6, 12], [6, 13], [7, 13], [8, 12], [8, 13], [9, 11], [9, 12], [9, 13]];
       for (const [x, y] of fl) L.set(x, y, y === 13 ? FIRE[4] : FIRE[3]);
       L.hline(5, 10, 14, FIRE[2]); L.set(7, 14, FIRE[5]);
-      // pot on top
-      for (let y = 1; y <= 5; y++) for (let x = 4; x <= 11; x++) {
-        const dx = (x - 7.5) / 3.6, dy = (y - 3.4) / 2.4;
-        if (dx * dx + dy * dy <= 1) L.set(x, y, x < 7 ? IRON[3] : x < 10 ? IRON[2] : IRON[1]);
-      }
-      L.hline(5, 10, 1, IRON[4]); L.set(3, 3, IRON[2]); L.set(12, 3, IRON[1]); L.set(6, 2, IRON[5]);
+      // cauldron of stew on top
+      grid(L, 3, 1, [
+        '.aaaaaaaa.',
+        'hbssrsssbh',
+        '.cbbbbbbd.',
+        '.ceccccdd.',
+        '..cccddd..',
+      ], { a: IRON[4], b: IRON[2], s: 0x9c6030, r: 0xc88848, c: IRON[3], d: IRON[1], e: IRON[5], h: IRON[2] });
       // steam
       const st = f ? [[6, 0], [9, 0]] : [[7, 0], [8, 0]];
       for (const [x, y] of st) O.put(x, y, 0xffffff, 0.55);
@@ -14386,7 +14385,7 @@ try{
   function sink() {
     return cv(piece(16, 16, (L) => {
       // plates drying and a clay jug on the back of the counter
-      L.vline(1, 1, 4, CLOTH[3]); L.vline(2, 0, 4, CLOTH[4]); L.set(2, 2, BLUE[4]);
+      L.hline(1, 4, 3, CLOTH[4]); L.hline(1, 4, 2, CLOTH[3]); L.set(2, 2, BLUE[4]); L.set(3, 2, BLUE[4]); L.hline(2, 3, 1, CLOTH[4]);
       grid(L, 12, 0, ['.aa.', 'bccd', 'bccd', 'bccd', '.cd.'], { a: CLAY[2], b: CLAY[4], c: CLAY[3], d: CLAY[2] });
       L.set(15, 2, CLAY[2]);
       // stone worktop with a basin
@@ -14410,8 +14409,9 @@ try{
       L.rect(3, 9, 10, 3, WOOD[3]); L.hline(3, 12, 9, WOOD[4]); L.hline(3, 12, 11, WOOD[1]);
       L.set(7, 10, GOLD[4]); L.set(8, 10, GOLD[2]);
       // open book
-      L.rect(3, 4, 5, 3, CREAM[4]); L.vline(5, 4, 6, CREAM[1]); L.set(3, 6, CREAM[2]); L.set(7, 6, CREAM[2]);
-      L.set(4, 5, CREAM[1]); L.set(6, 5, CREAM[1]);
+      L.rect(2, 4, 6, 3, CREAM[4]); L.vline(4, 4, 6, CREAM[2]); L.vline(5, 4, 6, CREAM[3]);
+      L.hline(2, 7, 6, CREAM[2]); L.set(2, 5, CREAM[1]); L.set(3, 5, CREAM[1]); L.set(6, 5, CREAM[1]); L.set(7, 5, CREAM[1]);
+      L.set(3, 4, RED[3]);
       // ink pot and quill
       L.rect(9, 4, 2, 2, IRON[1]); L.set(9, 4, IRON[3]);
       L.set(11, 1, CLOTH[4]); L.set(11, 2, CLOTH[3]); L.set(10, 3, CLOTH[3]); L.set(12, 0, CLOTH[4]);
@@ -14482,22 +14482,39 @@ try{
     }, { contact: [8.5, 14.6, 4.6, 1.5, 0.36] }));
   }
 
+  /** one burlap sack (tied neck) into its own layer, outlined */
+  function sack(t, cx, top, w, h) {
+    const B = t.buf(16, 16), P = BURLAP;
+    B.set(cx, top, P[4]); B.set(cx - 1, top + 1, P[4]); B.set(cx, top + 1, P[3]); B.set(cx + 1, top + 1, P[2]);
+    B.set(cx - 1, top + 2, WOOD[2]); B.set(cx, top + 2, WOOD[1]);
+    for (let y = top + 3; y < top + h; y++) {
+      const i = y - top - 3, half = Math.min(w / 2, 1.5 + i * 1.2) - (y === top + h - 1 ? 1 : 0);
+      const x0 = Math.round(cx - half), x1 = Math.round(cx + half) - 1;
+      for (let x = x0; x <= x1; x++) {
+        const u = (x - x0) / Math.max(1, x1 - x0);
+        B.set(x, y, u < 0.15 ? P[5] : u < 0.4 ? P[4] : u < 0.75 ? P[3] : P[2]);
+      }
+      if (y === top + h - 1) for (let x = x0; x <= x1; x++) B.set(x, y, P[2]);
+    }
+    B.outline(INK);
+    return B;
+  }
   function sacks() {
-    return cv(piece(16, 16, (L) => {
-      const R_ = [BURLAP[1], BURLAP[2], BURLAP[3], BURLAP[4], BURLAP[5]];
-      L.shadeEllipse(10.5, 7.5, 4, 4.3, R_, { dither: 0.5 });
-      L.rect(10, 2, 2, 2, BURLAP[2]); L.set(9, 1, BURLAP[4]); L.set(12, 1, BURLAP[3]); L.set(10, 1, BURLAP[5]);
-      L.hline(9, 12, 3, WOOD[2]);
-      L.shadeEllipse(6, 10.5, 4.6, 4, R_, { dither: 0.5 });
-      L.rect(5, 5, 2, 2, BURLAP[2]); L.set(4, 4, BURLAP[4]); L.set(7, 4, BURLAP[3]); L.set(5, 4, BURLAP[5]);
-      L.hline(4, 7, 6, WOOD[2]);
-      L.shadeEllipse(12.5, 12.5, 2.8, 2.2, R_, { dither: 0.5 });
-      // stencil mark, seam
-      L.set(5, 10, BURLAP[1]); L.set(7, 10, BURLAP[1]); L.set(6, 11, BURLAP[1]); L.set(5, 12, BURLAP[1]); L.set(7, 12, BURLAP[1]);
-      L.vline(12, 6, 10, BURLAP[2]);
+    return cv(piece(16, 16, (L, t) => {
+      L.blit(sack(t, 11, 0, 7, 12), 0, 0);
+      const f = sack(t, 6, 3, 8, 12);
+      // stencilled mark
+      f.set(5, 10, BURLAP[1]); f.set(7, 10, BURLAP[1]); f.set(6, 11, BURLAP[1]); f.set(5, 12, BURLAP[1]); f.set(7, 12, BURLAP[1]);
+      L.blit(f, 0, 0);
+      // small sack lying in front
+      for (let y = 12; y <= 14; y++) for (let x = 10; x <= 15; x++) {
+        if ((y === 12 || y === 14) && (x === 10 || x === 15)) continue;
+        L.set(x, y, y === 12 ? BURLAP[4] : y === 13 ? BURLAP[3] : BURLAP[2]);
+      }
+      L.set(15, 13, WOOD[2]);
       // spilled grain
-      for (const [x, y] of [[1, 14], [2, 13], [3, 14], [2, 15], [4, 15]]) L.set(x, y, (x + y) % 2 ? GOLD[4] : GOLD[3]);
-    }, { contact: [8.5, 14.2, 7.6, 1.8, 0.36] }));
+      for (const [x, y] of [[1, 15], [2, 14], [3, 15], [0, 14]]) L.set(x, y, (x + y) % 2 ? GOLD[4] : GOLD[3]);
+    }, { outline: false, contact: [8.5, 14.6, 7.8, 1.5, 0.36] }));
   }
 
   function crates() {
@@ -14556,7 +14573,7 @@ try{
         '...abb.bccd.',
         '..wwwwwwwwww',
         '..vvvvvvvvvv',
-      ], { r: RED[4], q: RED[2], a: S[5], b: S[4], c: S[3], d: S[2], e: S[5], k: IRON[0], g: GOLD[3], w: WOOD[4], v: WOOD[2] });
+      ], { r: RED[4], q: RED[2], a: S[4], b: S[3], c: S[2], d: S[1], e: S[5], k: IRON[0], g: GOLD[3], w: WOOD[4], v: WOOD[2] });
       L.set(8, 18, GOLD[5]); L.set(9, 18, GOLD[4]);
       L.set(8, 21, STEEL[2]); L.vline(8, 21, 27, WOOD[2]);
     }, { contact: [8.5, 30.2, 6.6, 1.6, 0.42], drop: [1, 0, 0.24] }));
@@ -14564,24 +14581,23 @@ try{
 
   function weaponRack() {
     return cv(piece(16, 32, (L) => {
-      // spear
-      L.vline(4, 4, 28, WOOD[4]); L.set(4, 1, STEEL[5]); L.vline(4, 2, 3, STEEL[4]); L.set(3, 3, STEEL[3]); L.set(5, 3, STEEL[2]);
-      L.set(4, 4, RED[3]); L.set(4, 5, RED[2]);
+      // spear with a red tassel
+      L.vline(4, 4, 27, WOOD[4]); L.set(4, 0, STEEL[5]); L.hline(3, 5, 1, STEEL[4]); L.hline(3, 5, 2, STEEL[3]); L.set(5, 2, STEEL[2]);
+      L.set(4, 3, STEEL[2]); L.set(3, 4, RED[4]); L.set(5, 4, RED[3]); L.set(4, 5, RED[2]);
       // sword
-      L.set(7, 6, STEEL[5]); L.vline(7, 7, 20, STEEL[5]); L.vline(8, 7, 20, STEEL[3]); L.set(8, 6, STEEL[4]);
-      L.hline(5, 10, 21, GOLD[3]); L.set(5, 21, GOLD[4]);
+      L.set(7, 5, STEEL[5]); L.vline(7, 6, 20, STEEL[5]); L.vline(8, 6, 20, STEEL[3]); L.set(8, 5, null);
+      L.hline(5, 10, 21, GOLD[3]); L.set(5, 21, GOLD[4]); L.set(10, 21, GOLD[2]);
       L.vline(7, 22, 25, WOOD[1]); L.vline(8, 22, 25, WOOD[0]); L.set(7, 26, GOLD[4]); L.set(8, 26, GOLD[2]);
       // axe
-      L.vline(11, 8, 28, WOOD[3]);
-      grid(L, 11, 7, ['.ab', 'abb', 'abc', 'abc', '.bc', '..c'], { a: STEEL[5], b: STEEL[4], c: STEEL[2] });
-      L.set(10, 9, STEEL[3]);
-      // rack frame
-      L.vline(1, 12, 29, WOOD[4]); L.vline(2, 12, 29, WOOD[2]);
-      L.vline(13, 12, 29, WOOD[3]); L.vline(14, 12, 29, WOOD[1]);
-      L.hline(1, 14, 12, WOOD[5]); L.hline(1, 14, 13, WOOD[2]);
-      for (const x of [4, 7, 8, 11]) L.set(x, 13, WOOD[0]);
-      L.hline(1, 14, 26, WOOD[4]); L.hline(1, 14, 27, WOOD[1]);
-      L.hline(0, 15, 29, WOOD[3]); L.hline(0, 15, 30, WOOD[1]);
+      L.vline(11, 7, 27, WOOD[3]);
+      grid(L, 12, 6, ['ab.', 'abb', 'abc', 'abc', 'bbc', 'b..'], { a: STEEL[5], b: STEEL[4], c: STEEL[2] });
+      L.set(10, 8, STEEL[3]); L.set(11, 6, WOOD[4]);
+      // rack: two posts, a slotted rail and a base plank
+      L.rect(1, 15, 2, 13, WOOD[3]); L.vline(1, 15, 27, WOOD[4]);
+      L.rect(13, 15, 2, 13, WOOD[2]); L.vline(14, 15, 27, WOOD[1]);
+      L.hline(0, 15, 15, WOOD[5]); L.hline(0, 15, 16, WOOD[3]); L.hline(0, 15, 17, WOOD[1]);
+      for (const x of [4, 7, 8, 11]) L.set(x, 16, WOOD[0]);
+      L.hline(0, 15, 28, WOOD[4]); L.hline(0, 15, 29, WOOD[2]); L.hline(0, 15, 30, WOOD[1]);
     }, { contact: [8.5, 30.4, 8, 1.5, 0.4], drop: [1, 0, 0.24] }));
   }
 
@@ -14612,22 +14628,23 @@ try{
 
   function candelabra(f) {
     return piece(16, 32, (L, t, U) => {
-      const fx = [3.5, 7.5, 11.5], fy = [4, 3, 4];
-      for (let i = 0; i < 3; i++) glow(U, fx[i], fy[i], f ? 3.6 : 4.2, 0.18);
-      // candles
-      for (const [x, y0] of [[3, 6], [7, 5], [11, 6]]) {
-        L.rect(x, y0, 2, 5 - (y0 === 5 ? 0 : 1) + 1, CREAM[4]); L.vline(x + 1, y0, y0 + 4, CREAM[2]);
-        L.set(x, y0, CREAM[3]);
-        const h = f ? 3 : 4;
-        for (let k = 1; k <= h; k++) L.set(x + (k === h && f ? 1 : 0), y0 - k, k === 1 ? FIRE[4] : k === h ? FIRE[2] : FIRE[3]);
-        L.set(x, y0 - 1, FIRE[5]);
+      const CX = [2, 7, 12], TOP = [6, 5, 6];
+      for (let i = 0; i < 3; i++) glow(U, CX[i] + 1, TOP[i] - 2, f ? 3.6 : 4.2, 0.2);
+      for (let i = 0; i < 3; i++) {
+        const x = CX[i], y0 = TOP[i];
+        L.rect(x, y0, 2, 11 - y0, CREAM[4]); L.vline(x + 1, y0, 10, CREAM[2]); L.set(x, y0 + 1, CREAM[3]);
+        const h = f ? 3 : 4, lean = f && i !== 1 ? (i === 0 ? 1 : 0) : 0;
+        for (let k = 1; k <= h; k++) L.set(x + (k === h ? lean : 0), y0 - k, k === 1 ? FIRE[4] : k === h ? FIRE[2] : FIRE[3]);
+        L.set(x + 1, y0 - 1, FIRE[3]); L.set(x, y0 - 1, FIRE[5]);
+        // drip cup
+        L.hline(x - 1, x + 2, 11, GOLD[4]); L.hline(x, x + 1, 12, GOLD[2]);
       }
-      // cups and arms
-      for (const x of [2, 6, 10]) { L.hline(x, x + 3, 11, GOLD[4]); L.hline(x + 1, x + 2, 12, GOLD[2]); }
-      L.hline(3, 12, 14, GOLD[3]); L.set(3, 13, GOLD[3]); L.set(12, 13, GOLD[2]); L.hline(4, 11, 15, GOLD[2]);
+      // arms
+      L.hline(2, 13, 14, GOLD[3]); L.set(2, 13, GOLD[4]); L.set(13, 13, GOLD[2]); L.hline(3, 12, 15, GOLD[2]);
+      L.vline(7, 12, 13, GOLD[4]); L.vline(8, 12, 13, GOLD[2]);
       // stem with knops
-      L.vline(7, 13, 27, GOLD[4]); L.vline(8, 13, 27, GOLD[2]);
-      for (const y of [17, 23]) { L.hline(6, 9, y, GOLD[3]); L.set(6, y, GOLD[5]); L.set(9, y, GOLD[1]); }
+      L.vline(7, 16, 27, GOLD[4]); L.vline(8, 16, 27, GOLD[2]);
+      for (const y of [18, 23]) { L.hline(6, 9, y, GOLD[3]); L.set(6, y, GOLD[5]); L.set(9, y, GOLD[1]); }
       // tripod foot
       L.hline(5, 10, 28, GOLD[3]); L.hline(4, 11, 29, GOLD[2]); L.set(4, 30, GOLD[2]); L.set(11, 30, GOLD[1]); L.set(7, 30, GOLD[2]);
       L.set(5, 28, GOLD[5]);
@@ -14833,20 +14850,20 @@ try{
     const riser = !e.S;
     const top = riser ? 10 : 16;
     for (let j = 0; j < top; j++) for (let i = 0; i < 16; i++) {
-      img.put(i, j, 0xffffff, 0.06);
-      if (!e.N && j === 0) img.put(i, j, 0xffffff, 0.34);
-      if (!e.N && j === 1) img.put(i, j, 0x000000, 0.12);
-      if (!e.W && i === 0) img.put(i, j, 0xffffff, 0.26);
-      if (!e.E && i === 15) img.put(i, j, 0x000000, 0.34);
+      img.put(i, j, 0xfff8e8, 0.1);
+      if (!e.N && j === 0) img.put(i, j, 0xffffff, 0.45);
+      if (!e.W && i === 0) img.put(i, j, 0xffffff, 0.35);
+      if (!e.E && i === 15) img.put(i, j, 0x000000, 0.4);
     }
     if (riser) {
-      const rows = [P[4], P[2], P[1], P[3], P[2], P[1]];
+      const t = tk();
+      const rows = [t.shade(P[4], 0.25), t.mul(P[2], 0.78), t.mul(P[1], 0.72), P[4], t.mul(P[2], 0.72), t.mul(P[1], 0.6)];
       for (let j = 0; j < 6; j++) for (let i = 0; i < 16; i++) {
         let c = rows[j];
         const u = u0 + i;
-        if ((j === 1 || j === 2 || j === 4 || j === 5) && (u & 7) === 7 && P !== null) c = P[0];
-        if (!e.W && i === 0) c = j === 0 || j === 3 ? P[4] : P[3];
-        if (!e.E && i === 15) c = P[0];
+        if ((j === 1 || j === 2 || j === 4 || j === 5) && (u & 7) === 7) c = t.mul(P[0], 0.8);
+        if (!e.W && i === 0) c = j === 0 || j === 3 ? t.shade(P[4], 0.3) : P[3];
+        if (!e.E && i === 15) c = t.mul(P[0], 0.7);
         img.put(i, 10 + j, c, 1);
       }
     }
@@ -14941,7 +14958,7 @@ try{
   function benchCell(l, r) {
     return piece(16, 16, (L, t, U) => {
       const x0 = l ? 0 : 1, x1 = r ? 15 : 14;
-      for (let q = x0; q <= x1; q++) { U.put(q, 12, SH, 0.3); U.put(q, 13, SH, 0.26); }
+      for (let q = x0; q <= x1; q++) U.put(q, 12, SH, 0.22);
       if (!l) { L.rect(2, 10, 2, 4, WOOD[2]); L.set(2, 10, WOOD[3]); }
       if (!r) L.rect(12, 10, 2, 4, WOOD[1]);
       if (!l || !r) L.hline(l ? 0 : 3, r ? 15 : 12, 12, WOOD[1]);
@@ -21165,6 +21182,7 @@ try{
     if (q === 'grass' || id === 'tree') return 'e';
     if (q === 'sand') return 's';
     if (q === 'snow') return 'n';
+    if (q === 'dirt') return 'd';
     return 'k';
   }
   /** does water at (x,y) sit in outdoor ground (town canals, garden ponds)? */
@@ -21181,8 +21199,8 @@ try{
       const P = COB, D = DIRT;
       const bankCol = 0x0a1840;
       // lip ramps [shade, top, lit] and bank-face colours for earthen banks
-      const LIP = { e: [t.PAL.tgrass[1], t.PAL.tgrass[3], t.PAL.tgrass[4]], s: [t.PAL.sand[1], t.PAL.sand[3], t.PAL.sand[4]], n: [t.PAL.snow[1], t.PAL.snow[3], t.PAL.snow[4]] };
-      const FACE = { e: [D[1], D[0]], s: [t.PAL.sand[1], t.PAL.sand[0]], n: [t.PAL.snow[1], t.PAL.snow[0]] };
+      const LIP = { e: [t.PAL.tgrass[1], t.PAL.tgrass[3], t.PAL.tgrass[4]], s: [t.PAL.sand[1], t.PAL.sand[3], t.PAL.sand[4]], n: [t.PAL.snow[1], t.PAL.snow[3], t.PAL.snow[4]], d: [D[1], D[2], D[3]] };
+      const FACE = { e: [D[1], D[0]], s: [t.PAL.sand[1], t.PAL.sand[0]], n: [t.PAL.snow[1], t.PAL.snow[0]], d: [t.mul(D[1], 0.85), D[0]] };
       const make = (f) => {
         const b = water(t, f);
         // the water under a north bank lies in its shadow

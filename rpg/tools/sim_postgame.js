@@ -79,8 +79,8 @@ function makeChar(id, L, spec) {
 const T1 = ['warrior', 'priest', 'mage', 'thief'];
 const PREPARED = {
   yuki: {
-    master: [...T1, 'knight', 'monk', 'whitemage', 'blackmage', 'hunter', 'spellblade', 'paladin', 'ninja', 'hero'],
-    job: 'hero', sub: 'paladin', reaction: 'paladin_last_stand', support: 'ninja_two_swords',
+    master: [...T1, 'knight', 'monk', 'whitemage', 'blackmage', 'hunter', 'spellblade', 'paladin', 'ninja', 'dragoon', 'hero'],
+    job: 'hero', sub: 'dragoon', reaction: 'paladin_last_stand', support: 'ninja_two_swords',
     equip: { weapon: 'pg_chaos_sword', shield: 'dawn_sword', head: 'pg_chaos_helm', body: 'pg_abyss_mail', acc: 'pg_clarity_amulet' },
   },
   non: {
