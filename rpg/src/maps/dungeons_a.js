@@ -80,9 +80,7 @@
       { id: 'wind_cave_1_c4', x: 43, y: 3, item: 'herb', n: 2 },
       { id: 'wind_cave_1_c5', x: 43, y: 30, item: 'escape_rope' },
       { id: 'wind_cave_1_c6', x: 4, y: 30, item: 'antidote', n: 2 },
-    ],
-    hidden: [
-      { id: 'wind_cave_1_h1', x: 9, y: 12, item: 'seed_luk' },
+      { id: 'wind_cave_1_h1', x: 10, y: 12, item: 'seed_luk' }, // niche off the west cavern
     ],
   };
 
@@ -151,10 +149,8 @@
       { id: 'wind_cave_2_c4', x: 11, y: 37, item: 'bronze_shield' },
       { id: 'wind_cave_2_c5', x: 40, y: 30, gold: 120 },
       { id: 'wind_cave_2_c6', x: 25, y: 3, item: 'copper_staff' },
-    ],
-    hidden: [
-      { id: 'wind_cave_2_h1', x: 2, y: 23, item: 'seed_hp' },
-      { id: 'wind_cave_2_h2', x: 34, y: 22, item: 'herb' },
+      { id: 'wind_cave_2_h1', x: 2, y: 23, item: 'seed_hp' }, // dead-end pocket, south-west
+      { id: 'wind_cave_2_h2', x: 33, y: 22, item: 'herb' }, // goblin den corner, by the barrels
     ],
     events: [
       { x: 30, y: 6, id: 'da_exit_circle', cond: 'boss_wind_done' },

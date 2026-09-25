@@ -5320,8 +5320,9 @@ try{
 
   // ------------------------------------------------------------------ items
   // rare:true → never sold, shown with ★; price 0 = cannot be sold. band 6 (the top band of the item tools)
-  // + postgame:true. `exclusive` names the single source of each item (a monster's rare drop, the abyss
-  // chests, or the reward for beating abyss_lord), which keeps them out of the shared R.ITEM_RARE pools.
+  // + postgame:true. `exclusive` names where each item comes from (a monster's rare drop, the abyss
+  // chests — 'abyss' = chests and 虹の魔眼 — or the reward for beating abyss_lord); it also keeps them out
+  // of the shared R.ITEM_RARE pools (tools/check_items.js).
   const ALL_ELEM = (v) => ({ fire: v, ice: v, thunder: v, wind: v, earth: v, water: v, holy: v, dark: v });
   const ALL_STATUS = ['poison', 'sleep', 'paralyze', 'confuse', 'silence', 'blind', 'death'];
   const PG = { rare: true, price: 0, band: 6, postgame: true };
@@ -5332,32 +5333,32 @@ try{
 
   const items = {
     // weapons — the chests of the abyss and its monsters' rare drops
-    pg_chaos_sword:   W('混沌の剣',   'sword',  124, '深淵の底で眠っていた漆黒の剣。\n刃の奥で七色の光が渦を巻く。', { stats: { str: 8, agi: 4 } , exclusive: 'abyss_chest' }),
-    pg_dragon_lance:  W('竜神の槍',   'spear',  126, '古の竜神のひげを穂先に鍛えた槍。', { stats: { str: 6, agi: 6 } , exclusive: 'abyss_chest' }),
-    pg_void_katana:   W('虚空の太刀', 'katana', 128, '空間ごと断ち切るという妖刀。\n会心の一撃が出やすい。', { stats: { agi: 8 }, mods: { crit: 10 } , exclusive: 'pg_chaos_chimera' }),
-    pg_ruin_axe:      W('崩界の斧',   'axe',    140, '世界の果てを砕いたと伝わる大斧。', { hit: -5, stats: { str: 10 } , exclusive: 'pg_chaos_beast' }),
-    pg_star_dagger:   W('星霜の短剣', 'knife',   90, '幾千の星霜を経て輝く短剣。\n素早さと運が大きく上がる。', { hit: 10, stats: { agi: 16, luk: 10 }, mods: { crit: 6 } , exclusive: 'pg_doom_box' }),
-    pg_nova_claw:     W('新星の爪',   'claw',   108, '生まれたての星のように燃える爪。', { element: 'fire', stats: { str: 8, agi: 10 } , exclusive: 'pg_hell_hound' }),
-    pg_heaven_bow:    W('天穹の弓',   'bow',    120, '天の弧をかたどった大弓。\n放った矢は決して外れない。', { twoHanded: true, hit: 15, mods: { crit: 6 } , exclusive: 'pg_void_dragon' }),
-    pg_origin_rod:    W('始原のロッド', 'rod',   28, '世界の始まりの光を封じたロッド。\n魔法の威力が大きく上がる。', { mag: 64, stats: { int: 10 }, mods: { magicPct: 15 } , exclusive: 'abyss_chest' }),
-    pg_aurora_staff:  W('極光の杖',   'staff',   44, 'オーロラの光を宿す杖。\n回復の力が大きく増す。', { mag: 32, stats: { mnd: 30 }, mods: { healPct: 20 } , exclusive: 'abyss_chest' }),
-    pg_genesis_harp:  W('創世の竪琴', 'harp',    72, '世界が生まれた日の調べを奏でる。\n聴いた者を惑わせる。', { stats: { mnd: 16, int: 12 }, onHit: { status: 'confuse', chance: 0.2 } , exclusive: 'pg_arch_demon' }),
+    pg_chaos_sword:   W('混沌の剣',   'sword',  124, '深淵の底で眠っていた漆黒の剣。\n刃の奥で七色の光が渦を巻く。', { stats: { str: 8, agi: 4 }, exclusive: 'abyss_chest' }),
+    pg_dragon_lance:  W('竜神の槍',   'spear',  126, '古の竜神のひげを穂先に鍛えた槍。', { stats: { str: 6, agi: 6 }, exclusive: 'abyss_chest' }),
+    pg_void_katana:   W('虚空の太刀', 'katana', 128, '空間ごと断ち切るという妖刀。\n会心の一撃が出やすい。', { stats: { agi: 8 }, mods: { crit: 10 }, exclusive: 'pg_chaos_chimera' }),
+    pg_ruin_axe:      W('崩界の斧',   'axe',    140, '世界の果てを砕いたと伝わる大斧。', { hit: -5, stats: { str: 10 }, exclusive: 'pg_chaos_beast' }),
+    pg_star_dagger:   W('星霜の短剣', 'knife',   90, '幾千の星霜を経て輝く短剣。\n素早さと運が大きく上がる。', { hit: 10, stats: { agi: 16, luk: 10 }, mods: { crit: 6 }, exclusive: 'pg_doom_box' }),
+    pg_nova_claw:     W('新星の爪',   'claw',   108, '生まれたての星のように燃える爪。', { element: 'fire', stats: { str: 8, agi: 10 }, exclusive: 'pg_hell_hound' }),
+    pg_heaven_bow:    W('天穹の弓',   'bow',    120, '天の弧をかたどった大弓。\n放った矢は決して外れない。', { twoHanded: true, hit: 15, mods: { crit: 6 }, exclusive: 'pg_void_dragon' }),
+    pg_origin_rod:    W('始原のロッド', 'rod',   28, '世界の始まりの光を封じたロッド。\n魔法の威力が大きく上がる。', { mag: 64, stats: { int: 10 }, mods: { magicPct: 15 }, exclusive: 'abyss_chest' }),
+    pg_aurora_staff:  W('極光の杖',   'staff',   44, 'オーロラの光を宿す杖。\n回復の力が大きく増す。', { mag: 32, stats: { mnd: 30 }, mods: { healPct: 20 }, exclusive: 'abyss_chest' }),
+    pg_genesis_harp:  W('創世の竪琴', 'harp',    72, '世界が生まれた日の調べを奏でる。\n聴いた者を惑わせる。', { stats: { mnd: 16, int: 12 }, onHit: { status: 'confuse', chance: 0.2 }, exclusive: 'pg_arch_demon' }),
 
     // armor
-    pg_abyss_mail:    A('深淵の鎧',   'heavy',  90, '深淵の闇を鍛えて固めた鎧。\n闇・炎・氷に強い。', { mdef: 20, stats: { vit: 8 }, mods: { elemResist: { dark: 0.5, fire: 0.75, ice: 0.75 } } , exclusive: 'abyss_chest' }),
-    pg_starlight_garb: A('星光の衣',  'light',  68, '星の光を織り込んだ軽い衣。\n氷と雷に強い。', { mdef: 18, eva: 8, stats: { agi: 14 }, mods: { elemResist: { ice: 0.5, thunder: 0.5 } } , exclusive: 'pg_aurora_harpy' }),
-    pg_aurora_robe:   A('極光のローブ', 'robe', 56, 'オーロラの糸で縫ったローブ。\n沈黙を防ぎ、炎・氷・雷を和らげる。', { mdef: 46, stats: { int: 12, mnd: 12 }, mods: { statusImmune: ['silence'], elemResist: { fire: 0.75, ice: 0.75, thunder: 0.75 } } , exclusive: 'abyss_chest' }),
-    pg_chaos_helm:    A('混沌の兜',   'helm',   44, '混沌の力を封じた兜。\n眠りと麻痺を防ぐ。', { mdef: 14, mods: { statusImmune: ['sleep', 'paralyze'] } , exclusive: 'pg_abyss_knight' }),
-    pg_halo:          A('天輪の冠',   'hat',    32, '天使の輪をかたどった冠。\n眠りと混乱を防ぐ。', { mdef: 26, stats: { int: 10, mnd: 10 }, mods: { statusImmune: ['sleep', 'confuse'] } , exclusive: 'pg_prism_eye' }),
-    pg_void_shield:   A('虚空の盾',   'shield', 48, '虚空を映す盾。\n炎・氷・雷・闇の力を和らげる。', { eva: 12, mdef: 16, mods: { elemResist: { fire: 0.6, ice: 0.6, thunder: 0.6, dark: 0.6 } } , exclusive: 'abyss_chest' }),
+    pg_abyss_mail:    A('深淵の鎧',   'heavy',  90, '深淵の闇を鍛えて固めた鎧。\n闇・炎・氷に強い。', { mdef: 20, stats: { vit: 8 }, mods: { elemResist: { dark: 0.5, fire: 0.75, ice: 0.75 } }, exclusive: 'abyss_chest' }),
+    pg_starlight_garb: A('星光の衣',  'light',  68, '星の光を織り込んだ軽い衣。\n氷と雷に強い。', { mdef: 18, eva: 8, stats: { agi: 14 }, mods: { elemResist: { ice: 0.5, thunder: 0.5 } }, exclusive: 'pg_aurora_harpy' }),
+    pg_aurora_robe:   A('極光のローブ', 'robe', 56, 'オーロラの糸で縫ったローブ。\n沈黙を防ぎ、炎・氷・雷を和らげる。', { mdef: 46, stats: { int: 12, mnd: 12 }, mods: { statusImmune: ['silence'], elemResist: { fire: 0.75, ice: 0.75, thunder: 0.75 } }, exclusive: 'abyss_chest' }),
+    pg_chaos_helm:    A('混沌の兜',   'helm',   44, '混沌の力を封じた兜。\n眠りと麻痺を防ぐ。', { mdef: 14, mods: { statusImmune: ['sleep', 'paralyze'] }, exclusive: 'pg_abyss_knight' }),
+    pg_halo:          A('天輪の冠',   'hat',    32, '天使の輪をかたどった冠。\n眠りと混乱を防ぐ。', { mdef: 26, stats: { int: 10, mnd: 10 }, mods: { statusImmune: ['sleep', 'confuse'] }, exclusive: 'pg_prism_eye' }),
+    pg_void_shield:   A('虚空の盾',   'shield', 48, '虚空を映す盾。\n炎・氷・雷・闇の力を和らげる。', { eva: 12, mdef: 16, mods: { elemResist: { fire: 0.6, ice: 0.6, thunder: 0.6, dark: 0.6 } }, exclusive: 'abyss_chest' }),
 
     // accessories — the preparation the superboss asks for
-    pg_clarity_amulet: X('明鏡の護符', '心を曇りなき鏡のように保つ護符。\n眠り・麻痺・混乱を受けつけない。', { mods: { statusImmune: ['sleep', 'paralyze', 'confuse'] } , exclusive: 'abyss_chest' }),
-    pg_soul_bell:     X('魂鎮めの鈴', '魂を体につなぎとめる澄んだ鈴。\n即死・毒・暗闇を防ぎ、最大HPが増える。', { mods: { statusImmune: ['death', 'poison', 'blind'], hpPct: 10 } , exclusive: 'pg_void_wraith' }),
+    pg_clarity_amulet: X('明鏡の護符', '心を曇りなき鏡のように保つ護符。\n眠り・麻痺・混乱を受けつけない。', { mods: { statusImmune: ['sleep', 'paralyze', 'confuse'] }, exclusive: 'abyss' }),
+    pg_soul_bell:     X('魂鎮めの鈴', '魂を体につなぎとめる澄んだ鈴。\n即死・毒・暗闇を防ぎ、最大HPが増える。', { mods: { statusImmune: ['death', 'poison', 'blind'], hpPct: 10 }, exclusive: 'pg_void_wraith' }),
     pg_prism_ring:    X('虹晶の指輪', 'プリズマの結晶から削り出した指輪。\nあらゆる属性の攻撃を半分にする。', { stats: { luk: 10 }, mods: { elemResist: ALL_ELEM(0.5) }, exclusive: 'rare_prism' }),
 
     // rewards for defeating abyss_lord (given by the boss event)
-    pg_genesis_sword: W('開闢の剣',   'sword',  160, '天地が分かれた時に生まれたという剣。\n深淵の主を討った者だけが手にできる。', { element: 'holy', stats: { str: 15, vit: 10, agi: 10 }, mods: { crit: 8 } , exclusive: 'abyss_lord' }),
+    pg_genesis_sword: W('開闢の剣',   'sword',  160, '天地が分かれた時に生まれたという剣。\n深淵の主を討った者だけが手にできる。', { element: 'holy', stats: { str: 15, vit: 10, agi: 10 }, mods: { crit: 8 }, exclusive: 'abyss_lord' }),
     pg_abyss_crest:   X('深淵の紋章', '深淵を越えた証。すべての能力が上がり、\nあらゆる状態異常を防ぎ、属性も和らげる。', {
       stats: { str: 12, vit: 12, agi: 12, int: 12, mnd: 12, luk: 12 }, mods: { hpPct: 15, mpPct: 15, statusImmune: ALL_STATUS, elemResist: ALL_ELEM(0.75) },
       exclusive: 'abyss_lord',
