@@ -1,4 +1,4 @@
-// Game over (DESIGN §6 Wipe): black screen 「ぜんめつ してしまった……」 + jingle,
+// Game over (DESIGN §6 Wipe): black screen 「全滅してしまった……」 + jingle,
 // then R.State.wipeRecover() (half gold, full revive) and a warp to R.Game.respawn.
 //   await R.GameOver.run()
 (function (R) {
@@ -41,7 +41,7 @@
       G().ctx.globalAlpha = k * 0.8;
       G().draw(glow, 0, 60);
       G().ctx.globalAlpha = k;
-      G().text('ぜんめつ してしまった……', R.W / 2, 103, { align: 'center', color: '#ffffff', shadow: '#400010' });
+      G().text('全滅してしまった……', R.W / 2, 103, { align: 'center', color: '#ffffff', shadow: '#400010' });
       G().ctx.globalAlpha = 1;
     }
   }
@@ -81,8 +81,8 @@
       } else await R.Engine.fadeIn(20);
       if (R.Engine.fadeAlpha > 0) await R.Engine.fadeIn(20);
       const name = R.State.leader().name;
-      let text = '……' + name + 'たちは めを さました。';
-      if (lost > 0) text += '\nおかねが はんぶんに なってしまった……。';
+      let text = '……' + name + 'たちは目を覚ました。';
+      if (lost > 0) text += '\nお金が半分になってしまった……。';
       await R.UI.say(text, { noWait: false, keep: false, auto: 0 });
     } finally {
       R.Engine.remove(L);

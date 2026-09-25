@@ -159,7 +159,7 @@ window.SHEET = (function () {
   }
   function zoom(ids, s) {
     const imgs = ids.map(img);
-    const per = 3, mw = 64, mh = 64;
+    const per = Math.min(3, ids.length), mw = 64, mh = 64;
     const [cv, c] = canvas(per * (mw * s + 8) + 8, Math.ceil(ids.length / per) * (mh * s + 24) + 4, '#000');
     imgs.forEach((im, k) => {
       const x = 8 + (k % per) * (mw * s + 8), y = 4 + Math.floor(k / per) * (mh * s + 24);

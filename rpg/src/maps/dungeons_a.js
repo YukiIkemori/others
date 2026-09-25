@@ -1,4 +1,4 @@
-// ダンジョン 前半 (DESIGN §7.1, §7.4): かぜのどうくつ, とうぞくのとりで, みずのどうくつ, ピラミッド.
+// First-half dungeons (DESIGN §7.1, §7.4): Wind Cave, Bandit Fort, Water Cave, Pyramid.
 // Map ids: wind_cave_1..2 (d_wind1/2), bandit_fort_1..2 (d_fort1/2), water_cave_1..2 (d_water1/2),
 // pyramid_1..3 (d_pyr1..3). Floor 1 of each has spawn 'entrance' and leads back to the world spawn
 // named after it; stairs arrive at spawns 'up' (came from the floor above) / 'down' (from below).
@@ -27,7 +27,7 @@
   // the winding way north-east, and the junction leading to the big cavern with its pool;
   // the stairs down wait in the far north-west.
   M.wind_cave_1 = {
-    name: 'かぜのどうくつ', type: 'dungeon', legend: 'local', theme: 'cave', bgm: 'cave',
+    name: '風の洞窟', type: 'dungeon', legend: 'local', theme: 'cave', bgm: 'cave',
     encounter: 'd_wind1', escape: { to: 'world', spawn: 'wind_cave_1' },
     rows: [
       '################################################',
@@ -91,7 +91,7 @@
   // (torches, barrels) → the chief's hall. The goblin chief blocks the passage to the crest
   // chamber; an exit circle opens there after the fight.
   M.wind_cave_2 = {
-    name: 'かぜのどうくつ', type: 'dungeon', legend: 'local', theme: 'cave', bgm: 'cave',
+    name: '風の洞窟', type: 'dungeon', legend: 'local', theme: 'cave', bgm: 'cave',
     encounter: 'd_wind2', escape: { to: 'world', spawn: 'wind_cave_1' },
     rows: [
       '############################################',
@@ -175,7 +175,7 @@
   // barracks, storeroom (pots and barrels hide things), mess hall, armory and cells along the
   // torch-lit hallway; the stair tower in the north-west. Bandits leave once the chief falls.
   M.bandit_fort_1 = {
-    name: 'とうぞくのとりで', type: 'dungeon', legend: 'local', theme: 'fort', bgm: 'dungeon',
+    name: '盗賊の砦', type: 'dungeon', legend: 'local', theme: 'fort', bgm: 'dungeon',
     encounter: 'd_fort1', escape: { to: 'world', spawn: 'bandit_fort_1' },
     exit: { to: 'world', spawn: 'bandit_fort_1' }, outside: 'T',
     rows: [
@@ -240,10 +240,10 @@
       { id: 'bandit_fort_1_h3', x: 45, y: 26, item: 'numb_cure' },
     ],
     npcs: [
-      { id: 'fort_gate_bandit', x: 28, y: 33, sprite: 'npc:bandit', dir: 'left', text: 'ここは おれたち とうぞくだんの\nとりでだ！ よそものは\nとっとと かえりな！\f……なに？ おかしらに\nあいに きただと？\fへっ かってに しな。\nどうせ いたい めを みるだけさ。', cond: '!bandits_defeated' },
-      { id: 'fort_hall_bandit', x: 25, y: 16, sprite: 'npc:bandit', dir: 'down', text: 'おかしらなら 2かいの\nおくの ひろまだぜ。\fみなとの ふねを とめてるのも\nおかしらの めいれいさ。\fポルタの れんちゅうから\nたんまり かねを\nしぼりとるんだとよ。', cond: '!bandits_defeated' },
-      { id: 'fort_mess_bandit', x: 20, y: 7, sprite: 'npc:bandit', dir: 'up', text: 'はらが へったなあ……。\nちかごろ まものが ふえて\nかりにも でられねえ。\fおかしらの ぶんの にくまで\nくっちまったら どやされるし……。', cond: '!bandits_defeated' },
-      { id: 'fort_bunk_bandit', x: 9, y: 16, sprite: 'npc:bandit', dir: 'down', text: 'グー グー……。\nむにゃ…… おかしら……\nもう のめません……。', cond: '!bandits_defeated' },
+      { id: 'fort_gate_bandit', x: 28, y: 33, sprite: 'npc:bandit', dir: 'left', text: 'ここは俺たち盗賊団の砦だ！\nよそ者はとっとと帰りな！\f……なに？　お頭に\n会いに来ただと？\fへっ、勝手にしな。\nどうせ痛い目を見るだけさ。', cond: '!bandits_defeated' },
+      { id: 'fort_hall_bandit', x: 25, y: 16, sprite: 'npc:bandit', dir: 'down', text: 'お頭なら2階の奥の広間だぜ。\f港の船を止めてるのも\nお頭の命令さ。\fポルタの連中から\nたんまり金を\n搾り取るんだとよ。', cond: '!bandits_defeated' },
+      { id: 'fort_mess_bandit', x: 20, y: 7, sprite: 'npc:bandit', dir: 'up', text: '腹が減ったなあ……。\n近ごろ魔物が増えて、\n狩りにも出られねえ。\fお頭の分の肉まで食っちまったら、\nどやされるし……。', cond: '!bandits_defeated' },
+      { id: 'fort_bunk_bandit', x: 9, y: 16, sprite: 'npc:bandit', dir: 'down', text: 'グーグー……。\nむにゃ……お頭……\nもう飲めません……。', cond: '!bandits_defeated' },
     ],
   };
 
@@ -252,7 +252,7 @@
   // his hired mage and guard dog stand before the throne; his silver key opens the vault east
   // of the hall. A mimic waits in the loot store.
   M.bandit_fort_2 = {
-    name: 'とうぞくのとりで', type: 'dungeon', legend: 'local', theme: 'fort', bgm: 'dungeon',
+    name: '盗賊の砦', type: 'dungeon', legend: 'local', theme: 'fort', bgm: 'dungeon',
     encounter: 'd_fort2', escape: { to: 'world', spawn: 'bandit_fort_1' },
     rows: [
       '                                                ',
@@ -315,9 +315,9 @@
       { id: 'bandit_fort_2_h2', x: 14, y: 21, item: 'healing_grass' },
     ],
     npcs: [
-      { id: 'fort_map_bandit', x: 34, y: 26, sprite: 'npc:bandit', dir: 'up', text: 'この ちずかい？\nポルタの みなとの ずめんさ。\fおかしらは みなとの ふねを\nぜんぶ いただいて\nうみに のりだす つもりなんだとよ。', cond: '!bandits_defeated' },
-      { id: 'fort_kennel_bandit', x: 17, y: 24, sprite: 'npc:bandit', dir: 'left', text: 'ばんけんたちに えさを やるのが\nおいらの しごとさ。\fおかしらの ばんけんは\nとくべつ きが あらいから\nきを つけな。', cond: '!bandits_defeated' },
-      { id: 'fort_look_bandit', x: 39, y: 6, sprite: 'npc:bandit', dir: 'up', text: 'ここから みえる うみも\nいまは おれたちの もんだ。\fおかしらが もってる\nしろがねの かぎ？\fあれは むかし どこかの いせきで\nひろった たからものさ。', cond: '!bandits_defeated' },
+      { id: 'fort_map_bandit', x: 34, y: 26, sprite: 'npc:bandit', dir: 'up', text: 'この地図かい？\nポルタの港の図面さ。\fお頭は港の船を全部いただいて、\n海へ乗り出すつもりなんだとよ。', cond: '!bandits_defeated' },
+      { id: 'fort_kennel_bandit', x: 17, y: 24, sprite: 'npc:bandit', dir: 'left', text: '番犬どもに餌をやるのが\nおいらの仕事さ。\fお頭の番犬は特別に気が荒いから、\n気をつけな。', cond: '!bandits_defeated' },
+      { id: 'fort_look_bandit', x: 39, y: 6, sprite: 'npc:bandit', dir: 'up', text: 'ここから見える海も、\n今じゃ俺たちのもんだ。\fお頭が持ってる銀の鍵？\nあれは昔、どこかの遺跡で\n拾ったお宝さ。', cond: '!bandits_defeated' },
     ],
     events: [
       { x: 22, y: 4, id: 'fort_boss', cond: '!boss_fort_done' },
@@ -340,7 +340,7 @@
   // three bridges cross it and a fourth reaches the islet in the lake cavern (south-east).
   // The stairs down are beyond the upper river (north-east).
   M.water_cave_1 = {
-    name: 'みずのどうくつ', type: 'dungeon', legend: 'local', theme: 'water', bgm: 'cave',
+    name: '水の洞窟', type: 'dungeon', legend: 'local', theme: 'water', bgm: 'cave',
     encounter: 'd_water1', escape: { to: 'world', spawn: 'water_cave_1' },
     rows: [
       '########################################################',
@@ -413,7 +413,7 @@
   // cavern → the shore of the great lake. A pier runs to the islet shrine; the sea serpent
   // rises across it.
   M.water_cave_2 = {
-    name: 'みずのどうくつ', type: 'dungeon', legend: 'local', theme: 'water', bgm: 'cave',
+    name: '水の洞窟', type: 'dungeon', legend: 'local', theme: 'water', bgm: 'cave',
     encounter: 'd_water2', escape: { to: 'world', spawn: 'water_cave_1' },
     rows: [
       '####################################################',
@@ -565,8 +565,8 @@
       { id: 'pyramid_1_h2', x: 3, y: 12, item: 'healing_grass' },
     ],
     signs: [
-      { x: 27, y: 13, text: 'いにしえの もじが\nきざまれている……。\f「おうの ねむりを さまたげる\nものに わざわい あれ。\fしろがねの とびらの おくにて\nだいちの しるしは ねむる」' },
-      { x: 28, y: 13, text: 'いにしえの もじが\nきざまれている……。\f「おうの ねむりを さまたげる\nものに わざわい あれ。\fしろがねの とびらの おくにて\nだいちの しるしは ねむる」' },
+      { x: 27, y: 13, text: '古代の文字が刻まれている……。\f「王の眠りを妨げる者に\n災いあれ。\n銀の扉の奥にて\n大地の紋章は眠る」' },
+      { x: 28, y: 13, text: '古代の文字が刻まれている……。\f「王の眠りを妨げる者に\n災いあれ。\n銀の扉の奥にて\n大地の紋章は眠る」' },
     ],
   };
 

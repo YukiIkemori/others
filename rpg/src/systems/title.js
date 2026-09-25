@@ -1,5 +1,5 @@
 // Title screen: starry night sky over a castle silhouette, the crest emblem and
-// the 「ルミナス・クレスト」 logo, then はじめから / つづきから / ふっかつのじゅもん / せってい.
+// the 「ルミナス・クレスト」 logo, then はじめから / つづきから / 復活の呪文 / 設定.
 //   R.Title.start()
 (function (R) {
   'use strict';
@@ -8,7 +8,7 @@
   const In = () => R.Input;
   const Title = (R.Title = R.Title || {});
 
-  const SUB = '〜 ひかりの もんしょうと さんにんの ゆうしゃ 〜';
+  const SUB = '〜 光の紋章と三人の勇者 〜';
   let bgCache = null, crestCache = null, logoCache = null, glowCache = null;
 
   /** soft radial glow behind the crest */
@@ -239,8 +239,8 @@
         const items = [
           { label: 'はじめから' },
           { label: 'つづきから', disabled: !any },
-          { label: 'ふっかつのじゅもん' },
-          { label: 'せってい' },
+          { label: '復活の呪文' },
+          { label: '設定' },
         ];
         const i = await R.UI.choose(items, { x: 76, y: 132, w: 104, initial: any ? 1 : 0, cancel: true });
         if (i < 0) { this.stage = 'press'; return; }
@@ -275,11 +275,11 @@
       const code = await Menu().codeOverlay({ mode: 'import' });
       if (!code) return false;
       const data = await R.Save.importCode(code);
-      if (!data || !data.game) { R.sfx('buzzer'); await Menu().kit.msg('じゅもんが ちがいます。'); return false; }
+      if (!data || !data.game) { R.sfx('buzzer'); await Menu().kit.msg('呪文が間違っています。'); return false; }
       return this.boot(data);
     }
     async boot(data) {
-      if (!data || !R.State.deserialize(data)) { R.sfx('buzzer'); await Menu().kit.msg('きろくを よみこめなかった……。'); return false; }
+      if (!data || !R.State.deserialize(data)) { R.sfx('buzzer'); await Menu().kit.msg('記録を読み込めなかった……。'); return false; }
       R.sfx('confirm');
       this.stage = 'leave';
       R.Audio && R.Audio.stopBGM && R.Audio.stopBGM(40);
@@ -326,7 +326,7 @@
       G().text(SUB, 128, 102, { align: 'center', size: 8, color: '#d8dcff', shadow: '#10082a' });
       G().ctx.globalAlpha = 1;
       if (this.stage === 'press' && this.t > 70 && Math.floor(f / 30) % 2 === 0) {
-        G().text('Aボタンを おしてください', 128, 164, { align: 'center', color: '#ffffff', shadow: '#000' });
+        G().text('Aボタンを押してください', 128, 164, { align: 'center', color: '#ffffff', shadow: '#000' });
       }
       G().text('ver ' + R.VERSION, 252, 214, { align: 'right', size: 16 / 3 * 1.5, color: '#8088b0' });
     }
@@ -355,7 +355,7 @@
       G().rect(0, 0, R.W, R.H, '#000010');
       G().ctx.globalAlpha = 1;
       G().window(62, 8, 132, 24);
-      G().text('どの きろくから？', 128, 14, { align: 'center' });
+      G().text('どの冒険の書から？', 128, 14, { align: 'center' });
       for (let i = 0; i < 3; i++) {
         const y = 36 + i * 60;
         Menu().drawSlot(i, this.slots[i], 4, y, 248, 56, { dim: !this.slots[i] });

@@ -87,7 +87,7 @@
     }
     add(ch) {
       const next = this.str + ch;
-      if (this.name.length >= MAX_LEN || G().textWidth(next) > MAX_W) { R.sfx('buzzer'); this.flash('これ以上 入力できません。'); return; }
+      if (this.name.length >= MAX_LEN || G().textWidth(next) > MAX_W) { R.sfx('buzzer'); this.flash('これ以上入力できません。'); return; }
       this.name.push(ch);
       R.sfx('cursor');
       if (this.name.length >= MAX_LEN || G().textWidth(this.str + 'ア') > MAX_W) { this.cy = ROWS; this.cmd = 5; }
@@ -156,7 +156,7 @@
       const f = sheet && sheet.down ? sheet.down[Math.floor(R.Engine.frame / 24) % 2] : null;
       if (f) g.draw(f, 14, 5, { w: 32, h: 48 });
       g.text(R.DB.chars[this.id].profile, 54, 9, { color: C.cyan });
-      g.text('名前:', 54, 28);
+      g.text('名前', 54, 28);
       const x0 = 84;
       let x = x0;
       for (let i = 0; i < 6; i++) g.rect(x0 + i * 13, 41, 11, 1, C.gray);
@@ -269,7 +269,7 @@
     draw() {
       const g = G();
       g.clear('#000010');
-      g.window(28, 20, 200, 108, { title: 'この名前で よろしいですか？' });
+      g.window(28, 20, 200, 108, { title: 'この名前でよろしいですか？' });
       ORDER.forEach((id, i) => {
         const sheet = R.Gfx.get('party:' + id + ':' + R.DB.chars[id].startJob);
         const f = sheet && sheet.down ? sheet.down[Math.floor(R.Engine.frame / 24) % 2] : null;
@@ -297,7 +297,7 @@
         }
         const conf = new ConfirmLayer(names);
         R.Engine.push(conf);
-        const ok = await R.UI.yesno('この名前で 冒険を はじめますか？');
+        const ok = await R.UI.yesno('この名前で冒険を始めますか？');
         R.UI.closeMessage();
         conf.close();
         if (ok) return names;

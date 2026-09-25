@@ -1,5 +1,5 @@
-// Field menu: セーブ (3 slots + ふっかつのじゅもん export), せってい (all settings,
-// applied immediately) and the DOM overlay used to show / enter a じゅもん code
+// Field menu: セーブ (3 slots + 復活の呪文 export), 設定 (all settings,
+// applied immediately) and the DOM overlay used to show / enter a 呪文 code
 // (also used by the title screen).
 (function (R) {
   'use strict';
@@ -13,8 +13,8 @@
     const o = opts || {};
     G().window(x, y, w, h);
     const dim = o.dim;
-    G().text('ぼうけんのしょ ' + (i + 1), x + 16, y + 7, { color: dim ? G().C.gray : G().C.yellow });
-    if (!s) { G().text('―― からっぽ ――', x + w / 2, y + 25, { align: 'center', color: G().C.dark }); return; }
+    G().text('冒険の書' + (i + 1), x + 16, y + 7, { color: dim ? G().C.gray : G().C.yellow });
+    if (!s) { G().text('―― データなし ――', x + w / 2, y + 25, { align: 'center', color: G().C.dark }); return; }
     const m = s.summary || {};
     G().text(m.time || '', x + w - 10, y + 7, { align: 'right', color: dim ? G().C.gray : G().C.white });
     Menu.kit.fitText((m.names || []).join('  '), x + 16, y + 21, w - 26, { color: dim ? G().C.gray : G().C.white });
@@ -25,7 +25,7 @@
 
   // ------------------------------------------------------------ DOM code overlay
   /**
-   * Show the ふっかつのじゅもん overlay over the canvas.
+   * Show the 復活の呪文 overlay over the canvas.
    * o: {mode:'export'|'import', code}  → Promise(code string | null)
    */
   Menu.codeOverlay = function (o) {
@@ -45,10 +45,10 @@
         border: '3px solid #fff', borderRadius: '8px',
       });
       const title = document.createElement('div');
-      title.textContent = 'ふっかつのじゅもん';
+      title.textContent = '復活の呪文';
       title.style.color = '#ffe45a';
       const hint = document.createElement('div');
-      hint.textContent = imp ? 'じゅもんを はりつけて 「けってい」を おしてください。' : 'この じゅもんを ひかえておけば べつの ばしょでも つづきから あそべます。';
+      hint.textContent = imp ? '呪文を貼り付けて「決定」を押してください。' : 'この呪文を控えておけば、別の端末やブラウザでも続きから遊べます。';
       hint.style.fontSize = '0.8em';
       hint.style.lineHeight = '1.4';
       const ta = document.createElement('textarea');
@@ -102,7 +102,7 @@
 
       if (imp) {
         btn('やめる', () => finish(null));
-        btn('けってい', () => finish(ta.value.trim() || null), true);
+        btn('決定', () => finish(ta.value.trim() || null), true);
       } else {
         btn('コピー', async (b) => {
           let ok = false;
@@ -110,12 +110,12 @@
           if (!ok) {
             try { ta.focus(); ta.select(); ok = document.execCommand && document.execCommand('copy'); } catch (e) { ok = false; }
           }
-          msg.textContent = ok ? 'コピーしました。' : 'じゅもんを えらんで コピーしてください。';
+          msg.textContent = ok ? 'コピーしました。' : '呪文を選択してコピーしてください。';
           msg.style.color = ok ? '#6ee07a' : '#ffb03c';
           if (!ok) { ta.focus(); ta.select(); }
           b.blur();
         }, true);
-        btn('とじる', () => finish(null));
+        btn('閉じる', () => finish(null));
       }
       box.appendChild(title); box.appendChild(hint); box.appendChild(ta); box.appendChild(msg); box.appendChild(row);
       host.appendChild(box);
@@ -127,13 +127,13 @@
   Menu.showCode = async function () {
     let code = null;
     try { code = await R.Save.exportCode(R.State.serialize()); } catch (e) { console.error(e); }
-    if (!code) { await Menu.kit.msg('じゅもんを つくれなかった……。'); return; }
+    if (!code) { await Menu.kit.msg('呪文を作れなかった……。'); return; }
     await Menu.codeOverlay({ mode: 'export', code });
   };
 
   let C = null;
   const cls = () => C || (C = build());
-  /** save screen (menu セーブ, church おいのり, events). → true if saved */
+  /** save screen (menu セーブ, church お祈り, events). → true if saved */
   Menu.saveScreen = (o) => R.Engine.run(new (cls().SaveScreen)(o || {}));
   Menu.saveMenu = Menu.saveScreen; // name used by events_runtime (ev.saveMenu)
   /** settings screen (field menu & title) */
@@ -141,16 +141,16 @@
 
   // ------------------------------------------------------------ settings rows
   const SETTINGS = [
-    { key: 'msgSpeed', label: 'メッセージの はやさ', values: [0, 1, 2, 3], names: ['おそい', 'ふつう', 'はやい', 'しゅんかん'], desc: 'メッセージが ひょうじされる はやさを えらびます。' },
-    { key: 'battleSpeed', label: 'せんとうの はやさ', values: [0, 1, 2], names: ['ふつう', 'はやい', 'さいそく'], desc: 'せんとうの えんしゅつの はやさを えらびます。' },
-    { key: 'bgmVolume', label: 'BGMの おおきさ', vol: true, desc: 'おんがくの おおきさを ちょうせつします。' },
-    { key: 'sfxVolume', label: 'こうかおんの おおきさ', vol: true, desc: 'こうかおんの おおきさを ちょうせつします。' },
-    { key: 'alwaysDash', label: 'いつでも ダッシュ', values: [true, false], names: ['オン', 'オフ'], desc: 'オンにすると いつも はしって いどうします。（シフトキーで ぎゃくに なります）' },
-    { key: 'windowColor', label: 'ウインドウの いろ', values: ['black', 'blue', 'green', 'red'], names: ['くろ', 'あお', 'みどり', 'あか'], desc: 'ウインドウの いろを かえます。' },
-    { key: 'touchPad', label: 'タッチパッド', values: ['auto', 'on', 'off'], names: ['じどう', 'ひょうじ', 'かくす'], desc: 'がめんの ボタンを ひょうじするか えらびます。' },
-    { key: 'padConfirm', label: '決定ボタン', values: ['right', 'bottom'], names: ['みぎ', 'した'], desc: '決定ボタンの位置。みぎ＝○／任天堂のA、\nした＝×／XboxのA（反対側がキャンセル）。' },
+    { key: 'msgSpeed', label: 'メッセージ速度', values: [0, 1, 2, 3], names: ['遅い', '普通', '速い', '瞬間'], desc: 'メッセージが表示される速さを選びます。' },
+    { key: 'battleSpeed', label: '戦闘速度', values: [0, 1, 2], names: ['普通', '速い', '最速'], desc: '戦闘演出の速さを選びます。' },
+    { key: 'bgmVolume', label: 'BGMの音量', vol: true, desc: '音楽の音量を調節します。' },
+    { key: 'sfxVolume', label: '効果音の音量', vol: true, desc: '効果音の音量を調節します。' },
+    { key: 'alwaysDash', label: '常にダッシュ', values: [true, false], names: ['オン', 'オフ'], desc: 'オンにすると常に走って移動します。\n（Shiftキーを押している間は逆になります）' },
+    { key: 'windowColor', label: 'ウインドウの色', values: ['black', 'blue', 'green', 'red'], names: ['黒', '青', '緑', '赤'], desc: 'ウインドウの色を変えます。' },
+    { key: 'touchPad', label: 'タッチパッド', values: ['auto', 'on', 'off'], names: ['自動', '表示', '隠す'], desc: '画面上のボタンを表示するか選びます。' },
+    { key: 'padConfirm', label: '決定ボタン', values: ['right', 'bottom'], names: ['右', '下'], desc: 'パッドの決定ボタン。右＝○／任天堂のA、\n下＝×／XboxのA。反対側がキャンセルです。' },
     { key: 'autoKeep', label: 'オート継続', values: [true, false], names: ['する', 'しない'], desc: 'オート戦闘を次の戦闘にも引き継ぎます。\nボス戦・イベント戦闘は手動で始まります。' },
-    { key: 'cursorMemory', label: 'カーソル きおく', values: [true, false], names: ['オン', 'オフ'], desc: 'せんとうで まえに えらんだ コマンドを おぼえます。' },
+    { key: 'cursorMemory', label: 'カーソル記憶', values: [true, false], names: ['オン', 'オフ'], desc: '戦闘で前回選んだコマンドを記憶します。' },
   ];
 
   function applySetting(key) {
@@ -185,14 +185,14 @@
       }
       async save(i) {
         const n = i + 1;
-        if (this.slots[i] && !(await K.yesno('ぼうけんのしょ ' + n + 'に うわがき しますか？'))) return;
+        if (this.slots[i] && !(await K.yesno('冒険の書' + n + 'に上書きしますか？'))) return;
         let ok = false;
         try { ok = await R.Save.save(i, R.State.serialize()); } catch (e) { console.error(e); }
-        if (!ok) { R.sfx('buzzer'); await K.msg('きろくに しっぱいしました。'); return; }
+        if (!ok) { R.sfx('buzzer'); await K.msg('記録に失敗しました。'); return; }
         this.saved = true;
         await this.load();
         const j = R.jingle('save');
-        await Promise.all([K.say('ぼうけんのしょ ' + n + 'に きろくしました。'), j]);
+        await Promise.all([K.say('冒険の書' + n + 'に記録しました。'), j]);
         this.close(true);
       }
       render() {
@@ -201,21 +201,21 @@
           drawSlot(i, this.slots ? this.slots[i] : null, 4, ys[i], 248, 56);
           if (this.index === i) G().cursor(10, ys[i] + 8, !this.busy);
         }
-        if (!this.slots) G().text('よみこみちゅう…', 128, 30, { align: 'center', color: G().C.gray });
+        if (!this.slots) G().text('読み込み中…', 128, 30, { align: 'center', color: G().C.gray });
         if (!this.o.noCode) {
           G().window(4, 178, 248, 26);
-          G().text('ふっかつのじゅもんを みる', 20, 185, { color: G().C.cyan });
+          G().text('復活の呪文を見る', 20, 185, { color: G().C.cyan });
           if (this.index === 3) G().cursor(10, 186, !this.busy);
         }
       }
     }
 
-    // ============================================================ せってい
+    // ============================================================ 設定
     class SettingsScreen extends K.Screen {
       constructor() {
         super();
         this.index = 0;
-        this.n = SETTINGS.length + 1; // + もどる
+        this.n = SETTINGS.length + 1; // + 戻る
       }
       input() {
         const d = In().dirRepeat();
@@ -248,7 +248,7 @@
         // description window below would drop under two lines
         const LH = Math.max(14, Math.min(16, Math.floor(154 / (SETTINGS.length + 1))));
         const h = 16 + (SETTINGS.length + 1) * LH - 4;
-        G().window(4, 4, 248, h, { title: 'せってい' });
+        G().window(4, 4, 248, h, { title: '設定' });
         SETTINGS.forEach((s, i) => {
           const y = 14 + i * LH;
           const sel = i === this.index;
@@ -265,13 +265,13 @@
           if (sel) G().cursor(8, y + 1, !this.busy);
         });
         const by = 14 + SETTINGS.length * LH;
-        G().text('もどる', 20, by, { color: G().C.cyan });
+        G().text('戻る', 20, by, { color: G().C.cyan });
         if (this.index === SETTINGS.length) G().cursor(8, by + 1, !this.busy);
         // description + window colour preview (only as many lines as the window holds)
         const s = SETTINGS[this.index];
         const dh = 224 - h - 12;
         G().window(4, h + 8, 248, dh);
-        const text = s ? s.desc : 'せっていを おえて もどります。';
+        const text = s ? s.desc : '設定を終えて戻ります。';
         G().wrap(text, 226).slice(0, Math.max(1, Math.floor((dh - 12) / 14))).forEach((l, i) => G().text(l, 14, h + 16 + i * 14));
       }
     }

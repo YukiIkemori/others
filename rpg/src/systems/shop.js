@@ -1,4 +1,4 @@
-// Town services (DESIGN §8): shops (かう / うる with equip markers per member and
+// Town services (DESIGN §8): shops (買う / 売る with equip markers per member and
 // stat preview, quantity input, "equip now?"), the inn and the church.
 //   await R.Shop.open(shopId)   await R.Shop.inn(price) → bool   await R.Shop.church()
 (function (R) {
@@ -30,7 +30,7 @@
     }
     return 'def';
   }
-  const STAT_SHORT = { atk: 'こうげき', def: 'しゅび', mag: 'まりょく', mdef: 'まぼうぎょ', agi: 'すばやさ', luk: 'うん' };
+  const STAT_SHORT = { atk: '攻撃力', def: '守備力', mag: '魔力', mdef: '魔法防御', agi: '素早さ', luk: '運' };
 
   /** delta of the key stat if member c equipped item id (null if cannot) */
   function gearDelta(c, id) {
@@ -103,16 +103,16 @@
           } else G().text('○', 244, y + 14, { align: 'right', color: G().C.white });
         });
       } else if (it) {
-        G().text('もっている', 180, 38, { color: G().C.gray });
-        G().text(R.State.count(id) + ' こ', 244, 52, { align: 'right' });
+        G().text('所持数', 180, 38, { color: G().C.gray });
+        G().text(R.State.count(id) + '個', 244, 52, { align: 'right' });
         if (this.mode === 'sell' && sellPrice(it)) {
-          G().text('うりね', 180, 72, { color: G().C.gray });
+          G().text('売値', 180, 72, { color: G().C.gray });
           G().text(sellPrice(it) + ' G', 244, 86, { align: 'right', color: G().C.yellow });
         }
       }
       // description (in place of the shopkeeper's message)
       G().window(8, 150, 240, 68);
-      if (!it) { G().text(this.mode === 'sell' ? 'うれる ものを もっていない。' : '', 18, 157, { color: G().C.gray }); return; }
+      if (!it) { G().text(this.mode === 'sell' ? '売れる物を持っていない。' : '', 18, 157, { color: G().C.gray }); return; }
       const lines = G().wrap(it.desc || '', 220).slice(0, 3);
       lines.forEach((l, i) => G().text(l, 18, 157 + i * 14));
       if (isGear(it) && lines.length < 3 && R.Menu.gearSummary) {
@@ -132,7 +132,7 @@
       if (i < 0) return;
       idx = i;
       const id = ids[i], it = DB.items[id];
-      if (R.Game.gold < it.price) { R.sfx('buzzer'); await say('おかねが たりない ようですね。'); continue; }
+      if (R.Game.gold < it.price) { R.sfx('buzzer'); await say('お金が足りないようですね。'); continue; }
       if (isGear(it)) await buyGear(id, it);
       else await buyItems(id, it);
     }
@@ -140,33 +140,33 @@
 
   async function buyItems(id, it) {
     const room = 99 - R.State.count(id);
-    if (room <= 0) { await say('それいじょう もてない ようですね。'); return; }
+    if (room <= 0) { await say('それ以上は持てないようですね。'); return; }
     const max = Math.max(1, Math.min(room, Math.floor(R.Game.gold / Math.max(1, it.price))));
-    await say(it.name + 'を いくつ おもとめですか？', { noWait: true });
-    const n = max > 1 ? await R.UI.number({ min: 1, max, initial: 1, price: it.price, label: it.name.length > 6 ? 'かず' : it.name, w: 132 }) : 1;
+    await say(it.name + 'をいくつお求めですか？', { noWait: true });
+    const n = max > 1 ? await R.UI.number({ min: 1, max, initial: 1, price: it.price, label: it.name.length > 6 ? '個数' : it.name, w: 132 }) : 1;
     if (n < 1) return;
     const total = it.price * n;
-    if (!R.State.takeGold(total)) { R.sfx('buzzer'); await say('おかねが たりない ようですね。'); return; }
+    if (!R.State.takeGold(total)) { R.sfx('buzzer'); await say('お金が足りないようですね。'); return; }
     R.State.addItem(id, n);
     R.sfx('gold');
-    await say(it.name + (n > 1 ? 'を ' + n + 'こ' : '') + ' まいど ありがとうございます！');
+    await say(it.name + (n > 1 ? 'を' + n + '個' : '') + 'ですね。\n毎度ありがとうございます！');
   }
 
   async function buyGear(id, it) {
     const slot = R.Rules.itemSlot(id);
     const who = R.Game.party.filter((c) => R.Rules.canEquip(c, id));
-    if (!who.length && !(await R.UI.yesno('それを そうびできる ひとは いない ようですが……\nそれでも かいますか？'))) return;
-    if (!R.State.takeGold(it.price)) { R.sfx('buzzer'); await say('おかねが たりない ようですね。'); return; }
+    if (!who.length && !(await R.UI.yesno('それを装備できる方は\nいらっしゃらないようですが……\nそれでもお買いになりますか？'))) return;
+    if (!R.State.takeGold(it.price)) { R.sfx('buzzer'); await say('お金が足りないようですね。'); return; }
     R.State.addItem(id, 1);
     R.sfx('gold');
     const cand = who.filter((c) => c.equip[slot] !== id);
-    if (!cand.length) { await say('まいど ありがとうございます！'); return; }
-    if (!(await R.UI.yesno('まいど ありがとうございます！\nいま そうび していきますか？'))) return;
+    if (!cand.length) { await say('毎度ありがとうございます！'); return; }
+    if (!(await R.UI.yesno('毎度ありがとうございます！\nこのまま装備していかれますか？'))) return;
     let c = cand[0];
     if (cand.length > 1) {
       R.UI.closeMessage();
       const k = await R.Menu.pickMember({
-        title: 'だれが そうびする？', initial: R.Game.party.indexOf(cand[0]), x: 100, y: 34,
+        title: '誰が装備する？', initial: R.Game.party.indexOf(cand[0]), x: 100, y: 34,
         valid: (m) => cand.includes(m),
       });
       if (k < 0) return;
@@ -177,12 +177,12 @@
     const also = slot === 'weapon' && it.twoHanded && c.equip.shield ? c.equip.shield : slot === 'shield' && w && w.twoHanded ? c.equip.weapon : null;
     R.Rules.equip(c, slot, id);
     R.sfx('item');
-    await say(c.name + 'は ' + it.name + 'を そうびした！', { keep: true });
+    await say(c.name + 'は' + it.name + 'を装備した！', { keep: true });
     for (const oldId of [old, also].filter(Boolean)) {
       const o = DB.items[oldId];
       const p = sellPrice(o);
       if (!p) continue;
-      if (await R.UI.yesno('いままでの ' + o.name + 'を\n' + p + 'ゴールドで かいとりましょうか？')) {
+      if (await R.UI.yesno('今までの' + o.name + 'を\n' + p + 'ゴールドで買い取りましょうか？')) {
         R.State.removeItem(oldId, 1);
         R.State.addGold(p);
         R.sfx('gold');
@@ -195,25 +195,25 @@
     for (;;) {
       R.UI.closeMessage();
       const ids = R.State.items((it) => it.type !== 'key').map((e) => e.id);
-      if (!ids.length) { await say('うれる ものを なにも もっていない ようですね。'); return; }
+      if (!ids.length) { await say('お売りいただける物を\nお持ちでないようですね。'); return; }
       const i = await R.Engine.run(new ShopList('sell', ids, Math.min(idx, ids.length - 1)));
       if (i < 0) return;
       idx = i;
       const id = ids[i], it = DB.items[id];
       const p = sellPrice(it);
-      if (!p) { R.sfx('buzzer'); await say('それを かいとる わけには いきません。'); continue; }
+      if (!p) { R.sfx('buzzer'); await say('それはお買い取りできません。'); continue; }
       const have = R.State.count(id);
       let n = 1;
       if (have > 1) {
-        await say(it.name + 'を いくつ うりますか？', { noWait: true });
-        n = await R.UI.number({ min: 1, max: have, initial: 1, price: p, label: it.name.length > 6 ? 'かず' : it.name, w: 132 });
+        await say(it.name + 'をいくつお売りになりますか？', { noWait: true });
+        n = await R.UI.number({ min: 1, max: have, initial: 1, price: p, label: it.name.length > 6 ? '個数' : it.name, w: 132 });
         if (n < 1) continue;
       }
-      if (!(await R.UI.yesno(it.name + (n > 1 ? 'を ' + n + 'こ' : 'を') + '\n' + p * n + 'ゴールドで かいとりましょう。\nよろしいですか？'))) continue;
+      if (!(await R.UI.yesno(it.name + (n > 1 ? n + '個' : '') + 'なら\n' + p * n + 'ゴールドで買い取りましょう。\nよろしいですか？'))) continue;
       R.State.removeItem(id, n);
       R.State.addGold(p * n);
       R.sfx('gold');
-      await say('まいど ありがとうございます！');
+      await say('毎度ありがとうございます！');
     }
   }
 
@@ -227,14 +227,14 @@
     try {
       let first = true;
       for (;;) {
-        const greet = first ? 'いらっしゃい！' + (shop.name ? ' ここは ' + shop.name + 'です。' : '') + '\nなにを おもとめですか？' : 'ほかにも なにか ごようは ありますか？';
+        const greet = first ? 'いらっしゃいませ！' + (shop.name ? '　ここは' + shop.name + 'です。' : '') + '\n何をお求めですか？' : 'ほかにも何かご用はありますか？';
         first = false;
-        const i = await ask(greet, ['かう', 'うる', 'やめる']);
+        const i = await ask(greet, ['買う', '売る', 'やめる']);
         if (i === 0) await buy(shop);
         else if (i === 1) await sell();
         else break;
       }
-      await say('また どうぞ！');
+      await say('またのお越しをお待ちしております。');
     } finally {
       R.UI.closeMessage();
       R.Engine.remove(gold);
@@ -248,12 +248,12 @@
     price = Math.max(0, price | 0);
     const gold = R.Engine.push(new GoldLayer());
     try {
-      if (!(await R.UI.yesno('たびびとの やどやへ ようこそ。\nひとばん ' + price + 'ゴールドですが\nおとまりに なりますか？'))) {
-        await say('またの おこしを おまちしております。');
+      if (!(await R.UI.yesno('旅人の宿屋へようこそ。\nひと晩' + price + 'ゴールドです。\nお泊まりになりますか？'))) {
+        await say('またのお越しをお待ちしております。');
         return false;
       }
-      if (!R.State.takeGold(price)) { R.sfx('buzzer'); await say('おや おかねが たりない ようですね。'); return false; }
-      await say('では ごゆっくり おやすみください。');
+      if (!R.State.takeGold(price)) { R.sfx('buzzer'); await say('おや、お金が足りないようですね。'); return false; }
+      await say('では、ごゆっくりお休みください。');
       R.UI.closeMessage();
       R.Engine.remove(gold);
       await R.Engine.fadeOut(40);
@@ -262,7 +262,7 @@
       await R.Engine.wait(30);
       if (R.Field && R.Field.setRespawnHere) R.Field.setRespawnHere();
       await R.Engine.fadeIn(40);
-      await say('おはようございます。\nゆうべは よく おやすみに なれましたか？\fでは いってらっしゃいませ。');
+      await say('おはようございます。\n昨夜はよくお休みになれましたか？\fでは、いってらっしゃいませ。');
       return true;
     } finally {
       R.UI.closeMessage();
@@ -271,27 +271,27 @@
   };
 
   // ------------------------------------------------------------ church
-  /** church: save (おいのり) / revive / cure poison; sets the respawn point */
+  /** church: save (お祈り) / revive / cure poison; sets the respawn point */
   Shop.church = async function () {
     if (R.Field && R.Field.setRespawnHere) R.Field.setRespawnHere();
     const gold = R.Engine.push(new GoldLayer());
     try {
-      let text = 'ここは かみの いえ。\nきょうは どんな ごようかな？';
+      let text = 'ここは神の家。\n今日はどんなご用かな？';
       for (;;) {
-        const i = await ask(text, ['おいのりをする', 'いきかえらせる', 'どくの ちりょう', 'やめる']);
-        text = 'ほかにも ごようは あるかな？';
+        const i = await ask(text, ['お祈りをする', '生き返らせる', '毒の治療', 'やめる']);
+        text = 'ほかにもご用はあるかな？';
         if (i === 0) {
-          await say('では かみに これまでの ぼうけんを ほうこく するが よい。');
+          await say('では、神にこれまでの\n冒険を報告するがよい。');
           R.UI.closeMessage();
           R.Engine.remove(gold);
           const saved = R.Menu && R.Menu.saveScreen ? await R.Menu.saveScreen({ church: true }) : false;
           R.Engine.push(gold);
-          if (saved) await say('かみの ごかごが あらんことを。', { keep: true });
+          if (saved) await say('神のご加護があらんことを。', { keep: true });
         } else if (i === 1 || i === 2) {
           await treat(i === 1);
         } else break;
       }
-      await say('あなたに かみの ごかごが ありますように。');
+      await say('そなたたちに、神のご加護が\nありますように。');
     } finally {
       R.UI.closeMessage();
       R.Engine.remove(gold);
@@ -300,28 +300,28 @@
 
   async function treat(revive) {
     const need = R.Game.party.filter((c) => (revive ? c.hp <= 0 : c.hp > 0 && c.status && c.status.poison));
-    if (!need.length) { await say(revive ? 'いきかえらせる ひとは いない ようじゃ。' : 'どくに おかされた ひとは いない ようじゃ。', { keep: true }); return; }
+    if (!need.length) { await say(revive ? '倒れている者はおらんようじゃ。' : '毒に冒された者はおらんようじゃ。', { keep: true }); return; }
     const priceOf = (c) => (revive ? 10 * c.level : 10);
     let c = need[0];
     if (need.length > 1) {
-      await say(revive ? 'だれを いきかえらせるのじゃ？' : 'だれの どくを なおすのじゃ？', { noWait: true });
+      await say(revive ? '誰を生き返らせるのじゃ？' : '誰の毒を治すのじゃ？', { noWait: true });
       const k = await R.UI.choose(need.map((m) => ({ label: m.name, right: priceOf(m) + 'G' })), { w: 118 });
       if (k < 0) return;
       c = need[k];
     }
     const price = priceOf(c);
-    if (!(await R.UI.yesno(c.name + 'を ' + (revive ? 'いきかえらせるには' : 'なおすには') + '\n' + price + 'ゴールド いただくが よいかな？'))) return;
-    if (!R.State.takeGold(price)) { R.sfx('buzzer'); await say('おかねが たりない ようじゃな。', { keep: true }); return; }
+    if (!(await R.UI.yesno(c.name + (revive ? 'を生き返らせるには' : 'の毒を治すには') + '\n' + price + 'ゴールドいただくが、よいかな？'))) return;
+    if (!R.State.takeGold(price)) { R.sfx('buzzer'); await say('お金が足りないようじゃな。', { keep: true }); return; }
     if (revive) {
       c.hp = R.Rules.stats(c).hp;
       c.status = {};
       R.sfx('revive');
       R.Engine.flashScreen('#ffffff', 10);
-      await say('おお かみよ！\n' + c.name + 'に ふたたび いのちの ひかりを！\fなんと ' + c.name + 'が いきかえった！', { keep: true });
+      await say('おお、神よ！\n' + c.name + 'にふたたび命の光を！\fなんと、' + c.name + 'が生き返った！', { keep: true });
     } else {
       delete c.status.poison;
       R.sfx('heal');
-      await say(c.name + 'の からだから どくが きえさった。', { keep: true });
+      await say(c.name + 'の体から毒が消え去った。', { keep: true });
     }
   }
 })(window.RPG);
