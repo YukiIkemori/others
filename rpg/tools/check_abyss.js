@@ -584,7 +584,7 @@ async function events() {
 
 // ------------------------------------------------------------------ text style (STYLE_JA.md)
 const LONG_NAME = 'アアアアアア';
-const HERO_NAMES = ['ユウキ', 'ノン', 'メテム'];
+const HERO_NAMES = ['ユウキ', 'ノン', 'ハニバニ', 'メテム'];
 const JA = 'ぁ-ヿ一-鿿々、。「-』！？…';
 const DQ_SPACE = new RegExp(`[${JA}][ 　]+[${JA}]`, 'g');
 function textCheck(where, t) {

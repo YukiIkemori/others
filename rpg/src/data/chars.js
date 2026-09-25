@@ -15,7 +15,7 @@
       startEquip: { weapon: 'copper_sword', body: 'traveler_clothes' },
     },
     non: {
-      name: 'ノン', gender: 'f', startJob: 'priest', profile: '神殿で育った心優しい少女',
+      name: 'ハニバニ', gender: 'f', startJob: 'priest', profile: '神殿で育った心優しい少女',
       desc: '神殿で育った心優しい少女。癒やしの力と素早さを持つ。',
       growth: {
         hp: [26, 7.7], mp: [13, 4.6], str: [9, 1.85], vit: [9, 1.8],

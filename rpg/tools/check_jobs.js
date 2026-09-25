@@ -101,7 +101,7 @@ function banned(s) {
 function checkText(where, s) {
   s = String(s || '');
   if (/[^\x00-\x7f] +[^\x00-\x7f]/.test(s)) E(`${where}: DQ-style space in Japanese text: ${s}`);
-  for (const n of ['ユウキ', 'ノン', 'メテム']) if (s.includes(n)) E(`${where}: hard-coded hero name ${n}`);
+  for (const n of ['ユウキ', 'ノン', 'ハニバニ', 'メテム']) if (s.includes(n)) E(`${where}: hard-coded hero name ${n}`);
 }
 
 function checkMods(where, m, kind) {

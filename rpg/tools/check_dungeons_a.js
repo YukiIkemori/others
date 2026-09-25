@@ -334,7 +334,7 @@ for (const d of DUNGEONS) {
 // Hero names are chosen by the player (up to 6 full-width characters): lines are measured with
 // the longest possible name so that they still fit the window.
 const LONG_NAME = 'アアアアアア';
-const HERO_NAMES = ['ユウキ', 'ノン', 'メテム'];
+const HERO_NAMES = ['ユウキ', 'ノン', 'ハニバニ', 'メテム'];
 const JA = '\u3041-\u30ff\u4e00-\u9fff\u3005\u3001\u3002\u300c-\u300f\uff01\uff1f\u2026';
 const DQ_SPACE = new RegExp(`[${JA}][ \u3000]+[${JA}]`);
 function textCheck(where, t) {

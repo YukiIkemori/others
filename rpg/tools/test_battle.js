@@ -193,7 +193,7 @@ sec('heal');
   const ev = use(e, non, 'tb_heal', yuki);
   const healed = yuki.hp - 1;
   ok(healed >= Math.round((30 + mnd * 0.5) * 0.95) && healed <= Math.round((30 + mnd * 0.5) * 1.05), `heal = (power + mnd×scale) × 0.95..1.05 (${healed})`);
-  ok(said(ev, 'ノンはヒールを唱えた！') && said(ev, `ユウキのHPが${healed}回復した！`), 'heal messages');
+  ok(said(ev, 'ハニバニはヒールを唱えた！') && said(ev, `ユウキのHPが${healed}回復した！`), 'heal messages');
   ok(non.mp === non.mmp - 3, 'mp paid');
   non.c.jobs.tb_caster.learned.push('tb_booster'); non.c.set.support = 'tb_booster'; non.refresh();
   const h2 = mean(() => { yuki.hp = 1; run(e.effect(non, yuki, DB.abilities.tb_heal.effects[0], { ab: DB.abilities.tb_heal })); return yuki.hp - 1; }, 400);
@@ -463,7 +463,7 @@ sec('reactions');
   non.hp = Math.floor(non.mhp * 0.3);
   run(e.hit(gob, non, { dmg: 10 }, { kind: 'phys' }));
   ev = run(e.flushReactions());
-  ok(said(ev, 'ノンのオートヒール！') && ev.some((x) => x.t === 'heal' && x.u === non), 'lowHp → heal');
+  ok(said(ev, 'ハニバニのオートヒール！') && ev.some((x) => x.t === 'heal' && x.u === non), 'lowHp → heal');
   // autoItem (never rare items)
   learn(metem, 'tb_autoitem', 'reaction');
   e.inv.tb_herb = 1; e.inv.tb_gem = 3;
@@ -494,7 +494,7 @@ sec('reactions');
   learn(yuki, 'tb_cover', 'reaction');
   non.hp = 2; yuki.hp = yuki.mhp;
   ev = run(e.attack(gob, non, false));
-  ok(said(ev, 'ユウキはノンをかばった！') && non.hp === 2 && yuki.hp < yuki.mhp, 'cover takes the hit for a weak ally');
+  ok(said(ev, 'ユウキはハニバニをかばった！') && non.hp === 2 && yuki.hp < yuki.mhp, 'cover takes the hit for a weak ally');
   // allyLowHp heal
   learn(yuki, 'tb_guardian', 'reaction');
   non.hp = non.mhp;
@@ -505,7 +505,7 @@ sec('reactions');
   learn(non, 'tb_phoenix', 'reaction');
   non.hp = 5;
   ev = run(e.hit(gob, non, { dmg: 50 }, { kind: 'phys' }));
-  ok(said(ev, 'ノンは倒れた！') && said(ev, '再び立ち上がった') && non.hp === Math.floor(non.mhp * 0.5), 'ko → revive');
+  ok(said(ev, 'ハニバニは倒れた！') && said(ev, '再び立ち上がった') && non.hp === Math.floor(non.mhp * 0.5), 'ko → revive');
   non.hp = 5;
   ev = run(e.hit(gob, non, { dmg: 50 }, { kind: 'phys' }));
   ok(!non.alive && !said(ev, '再び'), 'ko revive only once');
@@ -732,7 +732,7 @@ sec('rewards');
   ok(rw.each[0].exp === 6 && rw.each[1].exp === 3 && rw.each[0].jp === 5 && rw.each[1].jp === 3, 'expPct / jpPct per character');
   ok(rw.gold === 8, 'goldPct');
   const ev2 = run(e2.rewards());
-  ok(said(ev2, 'ユウキは6ポイントの経験値を獲得！') && said(ev2, 'ノンは3ポイントの'), 'per-character EXP lines when they differ');
+  ok(said(ev2, 'ユウキは6ポイントの経験値を獲得！') && said(ev2, 'ハニバニは3ポイントの'), 'per-character EXP lines when they differ');
   // drop rate statistics
   let d = 0, rr = 0;
   for (let i = 0; i < 4000; i++) {

@@ -55,7 +55,7 @@ assert(R.Ending && typeof R.Ending.start === 'function', 'R.Ending.start');
     let m;
     while ((m = re.exec(src))) if (JA.test(m[1])) strs.push([f, m[1]]);
   }
-  const named = strs.filter(([, s]) => /ユウキ|ノン|メテム/.test(s));
+  const named = strs.filter(([, s]) => /ユウキ|ノン|ハニバニ|メテム/.test(s));
   assert(!named.length, `no hard-coded hero names in story text${named.length ? ': ' + named.map((x) => x[1]).join(' / ') : ''}`);
   const spaced = strs.filter(([, s]) => /[ぁ-んァ-ヶー一-龯。、] [ぁ-んァ-ヶー一-龯]/.test(s));
   assert(!spaced.length, `no DQ-style spaces in story text${spaced.length ? ': ' + spaced.map((x) => x[1]).join(' / ') : ''}`);
