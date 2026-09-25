@@ -708,7 +708,7 @@ async function newGame(map, spawn) {
       events: [{ x: 6, y: 4, id: 'fx_cnt', trigger: 'step' }],
       warps: [{ x: 9, y: 5, to: 'fx_town', spawn: 'entrance' }],
     };
-    const L = R.Field.layer;
+    let L = R.Field.layer;
     const go = async (x, y, dir, cell) => {
       await R.Field.warp('fx_open', 'entrance', { fade: false }); await settle();
       L.place(x, y, dir, cell); L.savePos();
@@ -754,11 +754,11 @@ async function newGame(map, spawn) {
     // entering with a half offset on the other axis: the box glides onto the tile, then the event runs (once)
     await go(5, 4.5, 'right', { x: 5, y: 4 });
     stepHits = 0;
-    await holdDirs(['right'], 2); await clearMsgs(); await settle();
+    await holdDirs(['right'], 4); await clearMsgs(); await settle();
     eq([stepHits, xp()[0], xp()[1]], [1, 6, 4], 'half-offset entry: glide onto the tile, fire once');
     // warps too
     await go(8, 5.5, 'right', { x: 8, y: 5 });
-    await holdDirs(['right'], 2); await settle(200); await clearMsgs();
+    await holdDirs(['right'], 4); await settle(200); await clearMsgs();
     eq(R.Field.map.id, 'fx_town', 'warp from a half-offset approach');
     // talk / chest from half positions: the tile in front of the box (either tile when it straddles two)
     await go(3.5, 5, 'down', { x: 3, y: 5 });
@@ -773,29 +773,38 @@ async function newGame(map, spawn) {
     await clearMsgs();
     // blocked by NPC / chest boxes
     await go(4.5, 4, 'down', { x: 4, y: 4 });
-    await holdDirs(['down'], 10);
-    eq(xp()[1] <= 5 && xp()[0] !== 4.5 ? 'nudged' : xp()[1] <= 5 ? 'blocked' : 'through', xp()[0] === 4.5 ? 'blocked' : 'nudged', 'npc half in the way');
-    ok(!(Math.abs(xp()[0] - 4) < 1 && xp()[1] > 5), 'never overlaps the npc (' + xp() + ')');
+    let overlap = false;
+    R.Input._set('down', true);
+    for (let i = 0; i < 20; i++) { await step(1); const p = L.leadAt(0); if (Math.abs(p.x - 4) < 1 - 1e-9 && Math.abs(p.y - 6) < 1 - 1e-9) overlap = true; }
+    R.Input._set('down', false); await settle();
+    ok(!overlap, 'never overlaps the npc');
+    eq(xp()[0], 5, 'nudged around the npc that was half in the way');
+    ok(xp()[1] > 5, 'and walked on past it (' + xp() + ')');
     // caterpillar: followers one tile back along the leader's path, facing their motion
     await go(1, 5, 'right');
     await holdDirs(['right'], 12);
     await holdDirs(['right', 'up'], 6);
     const P = L.P;
-    let pathD = 0; // followers sit exactly GAP along the (diagonal/straight) path
-    ok(P[1].x < P[0].x && P[2].x < P[1].x, 'followers behind: ' + P.map((p) => p.x + ',' + p.y).join(' '));
-    ok(Math.abs(Math.hypot(P[0].x - P[1].x, P[0].y - P[1].y) - 1) < 1e-6 || Math.hypot(P[0].x - P[1].x, P[0].y - P[1].y) < 1, 'follower 1 within one tile of path');
-    ok(['right', 'up'].includes(P[1].dir), 'follower faces its motion (' + P[1].dir + ')');
-    void pathD;
+    // leader went right 4 tiles (1→5) then 2 diagonal half steps up-right → (6, 4): the path back is
+    // two diagonals (√½ each) then straight left, so follower 1 is at (5 − (1 − √2·½·2)... ) on the straight part
+    eq(xp(), [6, 4], 'leader after straight + diagonal');
+    const back = (d) => { const diag = Math.SQRT1_2 * 2; return d <= diag ? [6 - d / Math.SQRT2, 4 + d / Math.SQRT2] : [5 - (d - diag), 5]; };
+    const near = (a, b) => Math.abs(a[0] - b[0]) < 1e-9 && Math.abs(a[1] - b[1]) < 1e-9;
+    ok(near([P[1].x, P[1].y], back(1)), 'follower 1 one tile back along the path: ' + [P[1].x, P[1].y] + ' vs ' + back(1));
+    ok(near([P[2].x, P[2].y], back(2)), 'follower 2 two tiles back along the path: ' + [P[2].x, P[2].y] + ' vs ' + back(2));
+    eq([P[1].dir, P[2].dir], ['right', 'right'], 'followers face their own motion');
     // saves keep whole tiles only
     await go(3.5, 4.5, 'left', { x: 3, y: 4 });
     const sv = JSON.parse(JSON.stringify(R.State.serialize()));
     eq([sv.game.pos.x, sv.game.pos.y], [3, 4], 'save stores the logical whole tile');
     R.State.deserialize(sv);
     const rr = R.Field.resume(); await step(40); await rr;
+    L = R.Field.layer;
     eq(xp(), [3, 4], 'resume on the whole tile');
     sv.game.pos.x = 3.5; sv.game.pos.y = 4.4; // a fractional position (never written) still loads
     R.State.deserialize(sv);
     const rr2 = R.Field.resume(); await step(40); await rr2;
+    L = R.Field.layer; // resume builds a fresh layer
     eq(xp(), [4, 4], 'fractional saved position rounds to a whole tile');
     // scripted party walks align onto the whole tile first
     await go(5.5, 3, 'down', { x: 5, y: 3 });
@@ -805,7 +814,7 @@ async function newGame(map, spawn) {
     // encounters count distance: a half step counts half
     await R.Field.warp('fx_world', { x: 6, y: 9 }, { fade: false }); await settle();
     R.Field.noEncounter = false; R.Game.repelSteps = 0;
-    L.encCount = 50; lay._fm = null;
+    L.encCount = 50; L._fm = null;
     const rate = R.Field.map.tile(6, 9).enc == null ? 1 : R.Field.map.tile(6, 9).enc;
     await holdDirs(['right'], 1);
     ok(Math.abs(50 - L.encCount - rate * 0.5) < 1e-9, 'half step = half an encounter step (' + (50 - L.encCount) + ')');
