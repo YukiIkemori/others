@@ -1050,7 +1050,7 @@
       yield this.m(`${u.name}は${t.name}から${(DB.items[item] || {}).name || item}を盗んだ！`);
     }
     /**
-     * ついでに盗む (mod autoSteal = % of the 盗む success chance; 盗賊's signature): a landed 戦う may also pick the
+     * ついでに盗む (mod autoSteal = % of the 盗む success chance, 100 = same as 盗む; 盗賊's signature): a landed 戦う may also pick the
      * target's pocket — the item even from a monster it just felled. Silent when nothing is taken;
      * the rare item comes at half the usual rate.
      */
@@ -1273,10 +1273,17 @@
           yield { t: 'pause', levels: c.level - lv0 };
         }
         const jr = R.Rules.gainJp(c, e.jp);
-        if (jr.levelUps.length || jr.unlocked.length) {
+        if (jr.levelUps.length || jr.unlocked.length || (jr.mastered || []).length) {
           yield { t: 'clear' };
           if (!jobJingle) { jobJingle = true; yield { t: 'jingle', id: 'jobup' }; }
           for (const lu of jr.levelUps) yield this.m(`${c.name}の${(DB.jobs[lu.job] || {}).name || lu.job}のジョブレベルが${lu.level}に上がった！`);
+          for (const j of jr.mastered || []) {
+            yield this.m(`${c.name}は${(DB.jobs[j] || {}).name || j}をマスターした！`);
+            const mb = R.Rules.masterBonusText(j);
+            if (mb) yield this.m('マスター特典：' + mb);
+            const sig = R.Rules.jobMasterTrait(j);
+            if (sig) yield this.m(`${DB.abilities[sig].name}が常に効くようになった！`);
+          }
           for (const j of jr.unlocked) yield this.m(`新しいジョブ『${(DB.jobs[j] || {}).name || j}』になれるようになった！`);
           yield { t: 'pause' };
         }

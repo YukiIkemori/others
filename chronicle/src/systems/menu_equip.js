@@ -51,6 +51,15 @@
     return (nxt.def - cur.def) + (nxt.mdef - cur.mdef);
   }
 
+  /** 「攻128」「魔64」「守30」: an item's own key stat for the candidate list ('' for accessories) */
+  function gearTag(it) {
+    if (!it) return '';
+    if (it.type === 'weapon') return it.mag > (it.atk || 0) ? '魔' + it.mag : '攻' + (it.atk || 0);
+    if (it.type === 'shield' || it.type === 'head' || it.type === 'body') return '守' + (it.def || 0);
+    return '';
+  }
+  Menu.gearTag = gearTag;
+
   let C = null;
   const cls = () => C || (C = build());
   /** open the equipment screen (o.member: party index to start with) */
@@ -138,6 +147,9 @@
         const it = DB.items[row.id];
         Menu.kit.drawIcon(it, x, y + 2);
         G().text(row.label, x + 11, y, { color: it.rare ? G().C.yellow : G().C.white });
+        // the item's own main number (攻/魔 for weapons, 守 for armour) so gear can be compared at a glance
+        const tag = gearTag(it);
+        if (tag) G().text(tag, x + w - 40, y, { align: 'right', color: G().C.gray });
         if (row.worn) { G().text('E', x + w - 22, y, { align: 'right', color: G().C.cyan }); return; }
         G().text(String(R.State.count(row.id)), x + w - 22, y, { align: 'right' });
         if (row.d) arrow(x + w - 14, y + 3, row.d > 0);
@@ -180,7 +192,7 @@
         G().window(4, 144, 248, 74);
         const cur = R.Rules.stats(c), nxt = this.preview;
         // dual wield: show the off-hand attack in place of evasion
-        const show = cur.atk2 || (nxt && nxt.atk2) ? SHOW.map((e) => (e[0] === 'eva' ? ['atk2', '左手'] : e)) : SHOW;
+        const show = cur.atk2 || (nxt && nxt.atk2) ? SHOW.map((e) => (e[0] === 'eva' ? ['atk2', '左手攻撃'] : e)) : SHOW;
         show.forEach(([k, label], i) => {
           const x = 14 + (i % 2) * 118, y = 152 + Math.floor(i / 2) * 14;
           G().text(label, x, y, { color: G().C.gray });

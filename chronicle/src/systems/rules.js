@@ -13,6 +13,8 @@
 
   const STATS = ['hp', 'mp', 'str', 'vit', 'agi', 'int', 'mnd', 'luk'];
   const SLOTS = ['weapon', 'shield', 'head', 'body', 'acc'];
+  // abilities added to existing jobs after saves existed (see Rules.syncMastery)
+  const LATE_ABILITIES = ['thief_auto_steal'];
   const SLOT_NAMES = { weapon: '武器', shield: '盾', head: '頭', body: '体', acc: 'アクセサリ' };
   const SET_SLOTS = ['sub', 'reaction', 'support', 'field'];
   const STAT_NAMES = { hp: 'HP', mp: 'MP', str: '力', vit: '体力', agi: '素早さ', int: '知力', mnd: '精神', luk: '運' };
@@ -158,10 +160,35 @@
     },
     unlockedJobs(c) { return Object.keys(DB.jobs).filter((j) => Rules.isJobUnlocked(c, j)); },
     jobAbilities(jobId) { const j = DB.jobs[jobId]; return j ? (j.abilities || []).filter((a) => DB.abilities[a]) : []; },
+    /** mastery (job level MAX or every ability learned) is permanent: rec.mastered stays set even if the job gains abilities later */
     isMastered(c, jobId) {
-      const list = Rules.jobAbilities(jobId);
       const rec = c.jobs[jobId];
-      return list.length > 0 && !!rec && list.every((a) => rec.learned.includes(a));
+      if (!rec) return false;
+      if (rec.mastered) return true;
+      const list = Rules.jobAbilities(jobId);
+      // マスター = job level MAX, or every ability learned (whichever comes first)
+      const maxed = (rec.total || 0) >= Rules.jpTable(jobId)[Rules.jpTable(jobId).length - 1];
+      if (!maxed && !(list.length > 0 && list.every((a) => rec.learned.includes(a)))) return false;
+      rec.mastered = true;
+      return true;
+    },
+    /**
+     * Save migration for abilities added to a job after release: a character missing only such
+     * abilities had mastered the job, so they get them for free (and stay mastered). A mastered
+     * job also receives any ability added to it later.
+     */
+    syncMastery(c) {
+      for (const jid in c.jobs) {
+        const rec = c.jobs[jid], list = Rules.jobAbilities(jid);
+        if (!rec || !list.length) continue;
+        rec.learned = rec.learned || [];
+        const missing = list.filter((a) => !rec.learned.includes(a));
+        if (!missing.length) { rec.mastered = true; continue; }
+        if (rec.mastered || missing.every((a) => LATE_ABILITIES.includes(a))) {
+          for (const a of missing) rec.learned.push(a);
+          rec.mastered = true;
+        }
+      }
     },
     /** has the character learned this ability (in its own job)? */
     learned(c, abilityId) {
@@ -253,19 +280,28 @@
       party = party || (R.Game && R.Game.party) || [];
       return party.some((c) => c && c.jobs && c.jobs[jobId] && Rules.isMastered(c, jobId));
     },
-    /** add JP to current job. Returns {levelUps:[{job,level}], unlocked:[jobId]} */
+    /** add JP to current job. Returns {levelUps:[{job,level}], unlocked:[jobId], mastered:[jobId]} */
     gainJp(c, n) {
-      const res = { levelUps: [], unlocked: [] };
+      const res = { levelUps: [], unlocked: [], mastered: [] };
       n = Math.max(0, Math.floor(n));
       if (!n) return res;
       const beforeUnlocked = new Set(Rules.unlockedJobs(c));
       const jid = c.job;
+      const m0 = Rules.isMastered(c, jid);
+      const st0 = m0 ? null : Rules.stats(c);
       const lv0 = Rules.jobLevel(c, jid);
       const rec = Rules.jobRec(c, jid);
       rec.jp = Math.min(9999, rec.jp + n);
       rec.total = Math.min(99999, rec.total + n);
       const lv1 = Rules.jobLevel(c, jid);
       if (lv1 > lv0) res.levelUps.push({ job: jid, level: lv1 });
+      if (!m0 && Rules.isMastered(c, jid)) {
+        res.mastered.push(jid);
+        // mastery bonus: current HP/MP rise with the maxima (like a level-up)
+        const st1 = Rules.stats(c);
+        if (c.hp > 0) c.hp = Math.min(st1.hp, c.hp + Math.max(0, st1.hp - st0.hp));
+        c.mp = Math.min(st1.mp, c.mp + Math.max(0, st1.mp - st0.mp));
+      }
       for (const j of Rules.unlockedJobs(c)) if (!beforeUnlocked.has(j)) res.unlocked.push(j);
       Rules.syncUnlocks(c);
       return res;

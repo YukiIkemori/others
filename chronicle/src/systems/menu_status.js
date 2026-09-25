@@ -58,7 +58,21 @@
   /** stats / weaknesses are shown once beaten or scanned (スキャン) */
   const known = (r) => !!(r && (r.kills || r.scan));
   /** rare item obtained from this monster (dropped, or stolen when it is the same item) */
-  const gotRare = (m, r) => !!(r && (r.rare || (r.stealRare && m.steal && m.rare && m.steal.rare === m.rare.item)));
+  const gotRare = (m, r) => !!(r && (r.rare || r.stealRare));
+  /** has the item in drop slot `slot` ('drop' | 'rare') been obtained from this monster, by drop or by stealing? */
+  const gotSlot = (m, r, slot) => {
+    const it = m[slot] && m[slot].item;
+    if (!r || !it) return false;
+    if (r[slot]) return true;
+    return !!((r.steal && m.steal && m.steal.item === it) || (r.stealRare && m.steal && m.steal.rare === it));
+  };
+  /** the 盗める line: stolen items by name, the others 「？？？」 (shown even before the monster is beaten) */
+  const stealLine = (m, r) => {
+    const K = Menu.kit, parts = [];
+    if (m.steal.item) parts.push(r && r.steal ? K.itemLabel(m.steal.item) : '？？？');
+    if (m.steal.rare) parts.push(r && r.stealRare ? '★' + K.itemLabel(m.steal.rare).replace(/★$/, '') : '★？？？');
+    return ['盗める', parts.join('／'), r && (r.steal || r.stealRare) ? G().C.white : G().C.dark];
+  };
   function monSprite(m) {
     const key = 'mon:' + m.sprite;
     if (!G().has(key)) return null;
@@ -353,13 +367,13 @@
         G().text('経験値', 14, 139, { color: G().C.gray }); G().text(q(m.exp), 80, 139, { align: 'right' });
         G().text('ゴールド', 92, 139, { color: G().C.gray }); G().text(q(m.gold), 170, 139, { align: 'right' });
         G().text('JP', 182, 139, { color: G().C.gray }); G().text(q(m.jp), 242, 139, { align: 'right' });
-        const rareOk = gotRare(m, r);
+        const rareOk = gotSlot(m, r, 'rare'), dropOk = gotSlot(m, r, 'drop');
         const drop = (slot, got) => {
           if (!m[slot] || !m[slot].item) return b ? 'なし' : '？？？';
           return got ? K.itemLabel(m[slot].item) : '？？？';
         };
         G().text('ドロップ', 14, 152, { color: G().C.gray });
-        K.fitText(drop('drop', r.drop), 82, 152, 160, { color: r.drop ? G().C.white : G().C.dark });
+        K.fitText(drop('drop', dropOk), 82, 152, 160, { color: dropOk ? G().C.white : G().C.dark });
         G().text('レア', 14, 165, { color: G().C.gray });
         K.fitText(drop('rare', rareOk), 82, 165, 160, { color: rareOk ? G().C.yellow : G().C.dark });
         // up to 3 lines of description (boss texts are long)
@@ -377,7 +391,15 @@
           G().text(v, 242, 40 + i * 14, { align: 'right' });
         });
         G().window(4, 132, 248, 88, { title: '特徴' });
-        if (!b) { G().text('倒すか、スキャンすると分かる。', 14, 144, { color: G().C.dark }); return; }
+        if (!b) {
+          G().text('倒すか、スキャンすると分かる。', 14, 144, { color: G().C.dark });
+          if (m.steal && (m.steal.item || m.steal.rare) && (r.steal || r.stealRare)) {
+            const [k, v, col] = stealLine(m, r);
+            G().text(k, 14, 158, { color: G().C.gray });
+            K.fitText(v, 76, 158, 166, { color: col });
+          }
+          return;
+        }
         const el = m.elem || {};
         const weak = [], strong = [];
         for (const e of K.ELEMS) {
@@ -396,12 +418,7 @@
           ['耐性', strong.join('・') || 'なし', strong.length ? G().C.orange : G().C.gray],
           ['効かない', immune.join('・') || 'なし', immune.length ? G().C.white : G().C.gray],
         ];
-        if (m.steal && (m.steal.item || m.steal.rare)) {
-          const parts = [];
-          if (m.steal.item) parts.push(r.steal ? K.itemLabel(m.steal.item) : '？？？');
-          if (m.steal.rare) parts.push(r.stealRare ? '★' + K.itemLabel(m.steal.rare).replace(/★$/, '') : '★？？？');
-          lines.push(['盗める', parts.join('／'), r.steal || r.stealRare ? G().C.white : G().C.dark]);
-        }
+        if (m.steal && (m.steal.item || m.steal.rare)) lines.push(stealLine(m, r));
         if (tags.length) lines.push(['種族', tags.join('・'), G().C.yellow]);
         lines.slice(0, 5).forEach(([k, v, col], i) => {
           G().text(k, 14, 141 + i * 14, { color: G().C.gray });

@@ -25131,7 +25131,7 @@ try{
       yield this.m(`${u.name}は${t.name}から${(DB.items[item] || {}).name || item}を盗んだ！`);
     }
     /**
-     * ついでに盗む (mod autoSteal = % of the 盗む success chance; 盗賊's signature): a landed 戦う may also pick the
+     * ついでに盗む (mod autoSteal = % of the 盗む success chance, 100 = same as 盗む; 盗賊's signature): a landed 戦う may also pick the
      * target's pocket — the item even from a monster it just felled. Silent when nothing is taken;
      * the rare item comes at half the usual rate.
      */
@@ -25354,10 +25354,17 @@ try{
           yield { t: 'pause', levels: c.level - lv0 };
         }
         const jr = R.Rules.gainJp(c, e.jp);
-        if (jr.levelUps.length || jr.unlocked.length) {
+        if (jr.levelUps.length || jr.unlocked.length || (jr.mastered || []).length) {
           yield { t: 'clear' };
           if (!jobJingle) { jobJingle = true; yield { t: 'jingle', id: 'jobup' }; }
           for (const lu of jr.levelUps) yield this.m(`${c.name}の${(DB.jobs[lu.job] || {}).name || lu.job}のジョブレベルが${lu.level}に上がった！`);
+          for (const j of jr.mastered || []) {
+            yield this.m(`${c.name}は${(DB.jobs[j] || {}).name || j}をマスターした！`);
+            const mb = R.Rules.masterBonusText(j);
+            if (mb) yield this.m('マスター特典：' + mb);
+            const sig = R.Rules.jobMasterTrait(j);
+            if (sig) yield this.m(`${DB.abilities[sig].name}が常に効くようになった！`);
+          }
           for (const j of jr.unlocked) yield this.m(`新しいジョブ『${(DB.jobs[j] || {}).name || j}』になれるようになった！`);
           yield { t: 'pause' };
         }
@@ -28492,6 +28499,15 @@ try{
     return (nxt.def - cur.def) + (nxt.mdef - cur.mdef);
   }
 
+  /** 「攻128」「魔64」「守30」: an item's own key stat for the candidate list ('' for accessories) */
+  function gearTag(it) {
+    if (!it) return '';
+    if (it.type === 'weapon') return it.mag > (it.atk || 0) ? '魔' + it.mag : '攻' + (it.atk || 0);
+    if (it.type === 'shield' || it.type === 'head' || it.type === 'body') return '守' + (it.def || 0);
+    return '';
+  }
+  Menu.gearTag = gearTag;
+
   let C = null;
   const cls = () => C || (C = build());
   /** open the equipment screen (o.member: party index to start with) */
@@ -28579,6 +28595,9 @@ try{
         const it = DB.items[row.id];
         Menu.kit.drawIcon(it, x, y + 2);
         G().text(row.label, x + 11, y, { color: it.rare ? G().C.yellow : G().C.white });
+        // the item's own main number (攻/魔 for weapons, 守 for armour) so gear can be compared at a glance
+        const tag = gearTag(it);
+        if (tag) G().text(tag, x + w - 40, y, { align: 'right', color: G().C.gray });
         if (row.worn) { G().text('E', x + w - 22, y, { align: 'right', color: G().C.cyan }); return; }
         G().text(String(R.State.count(row.id)), x + w - 22, y, { align: 'right' });
         if (row.d) arrow(x + w - 14, y + 3, row.d > 0);
@@ -28621,7 +28640,7 @@ try{
         G().window(4, 144, 248, 74);
         const cur = R.Rules.stats(c), nxt = this.preview;
         // dual wield: show the off-hand attack in place of evasion
-        const show = cur.atk2 || (nxt && nxt.atk2) ? SHOW.map((e) => (e[0] === 'eva' ? ['atk2', '左手'] : e)) : SHOW;
+        const show = cur.atk2 || (nxt && nxt.atk2) ? SHOW.map((e) => (e[0] === 'eva' ? ['atk2', '左手攻撃'] : e)) : SHOW;
         show.forEach(([k, label], i) => {
           const x = 14 + (i % 2) * 118, y = 152 + Math.floor(i / 2) * 14;
           G().text(label, x, y, { color: G().C.gray });
@@ -29196,10 +29215,11 @@ try{
         const chk = R.Rules.canLearn(c, id);
         if (!chk.ok) { R.sfx('buzzer'); await K.msg('JPが足りない！\n（' + ab.name + 'には' + (ab.jp || 0) + 'JP必要だ）'); return; }
         if (!(await K.yesno((ab.jp || 0) + 'JPで' + ab.name + 'を覚えますか？'))) return;
+        const wasMastered = R.Rules.isMastered(c, this.job);
         R.Rules.learn(c, id);
         R.sfx('buff');
         await K.msg(c.name + 'は' + ab.name + 'を覚えた！');
-        if (R.Rules.isMastered(c, this.job)) {
+        if (!wasMastered && R.Rules.isMastered(c, this.job)) {
           await R.jingle('jobup');
           const mb = R.Rules.masterBonusText(this.job);
           const sig = R.Rules.jobMasterTrait(this.job);
@@ -29757,7 +29777,21 @@ try{
   /** stats / weaknesses are shown once beaten or scanned (スキャン) */
   const known = (r) => !!(r && (r.kills || r.scan));
   /** rare item obtained from this monster (dropped, or stolen when it is the same item) */
-  const gotRare = (m, r) => !!(r && (r.rare || (r.stealRare && m.steal && m.rare && m.steal.rare === m.rare.item)));
+  const gotRare = (m, r) => !!(r && (r.rare || r.stealRare));
+  /** has the item in drop slot `slot` ('drop' | 'rare') been obtained from this monster, by drop or by stealing? */
+  const gotSlot = (m, r, slot) => {
+    const it = m[slot] && m[slot].item;
+    if (!r || !it) return false;
+    if (r[slot]) return true;
+    return !!((r.steal && m.steal && m.steal.item === it) || (r.stealRare && m.steal && m.steal.rare === it));
+  };
+  /** the 盗める line: stolen items by name, the others 「？？？」 (shown even before the monster is beaten) */
+  const stealLine = (m, r) => {
+    const K = Menu.kit, parts = [];
+    if (m.steal.item) parts.push(r && r.steal ? K.itemLabel(m.steal.item) : '？？？');
+    if (m.steal.rare) parts.push(r && r.stealRare ? '★' + K.itemLabel(m.steal.rare).replace(/★$/, '') : '★？？？');
+    return ['盗める', parts.join('／'), r && (r.steal || r.stealRare) ? G().C.white : G().C.dark];
+  };
   function monSprite(m) {
     const key = 'mon:' + m.sprite;
     if (!G().has(key)) return null;
@@ -30052,13 +30086,13 @@ try{
         G().text('経験値', 14, 139, { color: G().C.gray }); G().text(q(m.exp), 80, 139, { align: 'right' });
         G().text('ゴールド', 92, 139, { color: G().C.gray }); G().text(q(m.gold), 170, 139, { align: 'right' });
         G().text('JP', 182, 139, { color: G().C.gray }); G().text(q(m.jp), 242, 139, { align: 'right' });
-        const rareOk = gotRare(m, r);
+        const rareOk = gotSlot(m, r, 'rare'), dropOk = gotSlot(m, r, 'drop');
         const drop = (slot, got) => {
           if (!m[slot] || !m[slot].item) return b ? 'なし' : '？？？';
           return got ? K.itemLabel(m[slot].item) : '？？？';
         };
         G().text('ドロップ', 14, 152, { color: G().C.gray });
-        K.fitText(drop('drop', r.drop), 82, 152, 160, { color: r.drop ? G().C.white : G().C.dark });
+        K.fitText(drop('drop', dropOk), 82, 152, 160, { color: dropOk ? G().C.white : G().C.dark });
         G().text('レア', 14, 165, { color: G().C.gray });
         K.fitText(drop('rare', rareOk), 82, 165, 160, { color: rareOk ? G().C.yellow : G().C.dark });
         // up to 3 lines of description (boss texts are long)
@@ -30076,7 +30110,15 @@ try{
           G().text(v, 242, 40 + i * 14, { align: 'right' });
         });
         G().window(4, 132, 248, 88, { title: '特徴' });
-        if (!b) { G().text('倒すか、スキャンすると分かる。', 14, 144, { color: G().C.dark }); return; }
+        if (!b) {
+          G().text('倒すか、スキャンすると分かる。', 14, 144, { color: G().C.dark });
+          if (m.steal && (m.steal.item || m.steal.rare) && (r.steal || r.stealRare)) {
+            const [k, v, col] = stealLine(m, r);
+            G().text(k, 14, 158, { color: G().C.gray });
+            K.fitText(v, 76, 158, 166, { color: col });
+          }
+          return;
+        }
         const el = m.elem || {};
         const weak = [], strong = [];
         for (const e of K.ELEMS) {
@@ -30095,12 +30137,7 @@ try{
           ['耐性', strong.join('・') || 'なし', strong.length ? G().C.orange : G().C.gray],
           ['効かない', immune.join('・') || 'なし', immune.length ? G().C.white : G().C.gray],
         ];
-        if (m.steal && (m.steal.item || m.steal.rare)) {
-          const parts = [];
-          if (m.steal.item) parts.push(r.steal ? K.itemLabel(m.steal.item) : '？？？');
-          if (m.steal.rare) parts.push(r.stealRare ? '★' + K.itemLabel(m.steal.rare).replace(/★$/, '') : '★？？？');
-          lines.push(['盗める', parts.join('／'), r.steal || r.stealRare ? G().C.white : G().C.dark]);
-        }
+        if (m.steal && (m.steal.item || m.steal.rare)) lines.push(stealLine(m, r));
         if (tags.length) lines.push(['種族', tags.join('・'), G().C.yellow]);
         lines.slice(0, 5).forEach(([k, v, col], i) => {
           G().text(k, 14, 141 + i * 14, { color: G().C.gray });
@@ -32093,6 +32130,8 @@ try{
 
   const STATS = ['hp', 'mp', 'str', 'vit', 'agi', 'int', 'mnd', 'luk'];
   const SLOTS = ['weapon', 'shield', 'head', 'body', 'acc'];
+  // abilities added to existing jobs after saves existed (see Rules.syncMastery)
+  const LATE_ABILITIES = ['thief_auto_steal'];
   const SLOT_NAMES = { weapon: '武器', shield: '盾', head: '頭', body: '体', acc: 'アクセサリ' };
   const SET_SLOTS = ['sub', 'reaction', 'support', 'field'];
   const STAT_NAMES = { hp: 'HP', mp: 'MP', str: '力', vit: '体力', agi: '素早さ', int: '知力', mnd: '精神', luk: '運' };
@@ -32238,10 +32277,35 @@ try{
     },
     unlockedJobs(c) { return Object.keys(DB.jobs).filter((j) => Rules.isJobUnlocked(c, j)); },
     jobAbilities(jobId) { const j = DB.jobs[jobId]; return j ? (j.abilities || []).filter((a) => DB.abilities[a]) : []; },
+    /** mastery (job level MAX or every ability learned) is permanent: rec.mastered stays set even if the job gains abilities later */
     isMastered(c, jobId) {
-      const list = Rules.jobAbilities(jobId);
       const rec = c.jobs[jobId];
-      return list.length > 0 && !!rec && list.every((a) => rec.learned.includes(a));
+      if (!rec) return false;
+      if (rec.mastered) return true;
+      const list = Rules.jobAbilities(jobId);
+      // マスター = job level MAX, or every ability learned (whichever comes first)
+      const maxed = (rec.total || 0) >= Rules.jpTable(jobId)[Rules.jpTable(jobId).length - 1];
+      if (!maxed && !(list.length > 0 && list.every((a) => rec.learned.includes(a)))) return false;
+      rec.mastered = true;
+      return true;
+    },
+    /**
+     * Save migration for abilities added to a job after release: a character missing only such
+     * abilities had mastered the job, so they get them for free (and stay mastered). A mastered
+     * job also receives any ability added to it later.
+     */
+    syncMastery(c) {
+      for (const jid in c.jobs) {
+        const rec = c.jobs[jid], list = Rules.jobAbilities(jid);
+        if (!rec || !list.length) continue;
+        rec.learned = rec.learned || [];
+        const missing = list.filter((a) => !rec.learned.includes(a));
+        if (!missing.length) { rec.mastered = true; continue; }
+        if (rec.mastered || missing.every((a) => LATE_ABILITIES.includes(a))) {
+          for (const a of missing) rec.learned.push(a);
+          rec.mastered = true;
+        }
+      }
     },
     /** has the character learned this ability (in its own job)? */
     learned(c, abilityId) {
@@ -32333,19 +32397,28 @@ try{
       party = party || (R.Game && R.Game.party) || [];
       return party.some((c) => c && c.jobs && c.jobs[jobId] && Rules.isMastered(c, jobId));
     },
-    /** add JP to current job. Returns {levelUps:[{job,level}], unlocked:[jobId]} */
+    /** add JP to current job. Returns {levelUps:[{job,level}], unlocked:[jobId], mastered:[jobId]} */
     gainJp(c, n) {
-      const res = { levelUps: [], unlocked: [] };
+      const res = { levelUps: [], unlocked: [], mastered: [] };
       n = Math.max(0, Math.floor(n));
       if (!n) return res;
       const beforeUnlocked = new Set(Rules.unlockedJobs(c));
       const jid = c.job;
+      const m0 = Rules.isMastered(c, jid);
+      const st0 = m0 ? null : Rules.stats(c);
       const lv0 = Rules.jobLevel(c, jid);
       const rec = Rules.jobRec(c, jid);
       rec.jp = Math.min(9999, rec.jp + n);
       rec.total = Math.min(99999, rec.total + n);
       const lv1 = Rules.jobLevel(c, jid);
       if (lv1 > lv0) res.levelUps.push({ job: jid, level: lv1 });
+      if (!m0 && Rules.isMastered(c, jid)) {
+        res.mastered.push(jid);
+        // mastery bonus: current HP/MP rise with the maxima (like a level-up)
+        const st1 = Rules.stats(c);
+        if (c.hp > 0) c.hp = Math.min(st1.hp, c.hp + Math.max(0, st1.hp - st0.hp));
+        c.mp = Math.min(st1.mp, c.mp + Math.max(0, st1.mp - st0.mp));
+      }
       for (const j of Rules.unlockedJobs(c)) if (!beforeUnlocked.has(j)) res.unlocked.push(j);
       Rules.syncUnlocks(c);
       return res;
@@ -33171,6 +33244,7 @@ try{
         for (const s of R.Rules.SET_SLOTS) if (c.set[s] && !(DB.abilities[c.set[s]] || DB.jobs[c.set[s]])) c.set[s] = null;
         // job levels / unlocks: old saves keep their job levels; unlocks are permanent
         if (oldJp) R.Rules.migrateJpTables(c); else R.Rules.syncUnlocks(c);
+        R.Rules.syncMastery(c);
       }
       R.Game = g;
       if (R.Battle) R.Battle.autoCarry = false;
