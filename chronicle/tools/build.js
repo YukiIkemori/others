@@ -133,7 +133,7 @@ ${FONT_HEAD}
 <style>${CSS}</style>
 </head>
 <body>
-<div id="game"><canvas id="screen" width="768" height="672"></canvas></div>
+<div id="game"><canvas id="screen" width="1024" height="896"></canvas></div>
 ${body}
 </body>
 </html>

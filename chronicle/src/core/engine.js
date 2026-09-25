@@ -19,6 +19,7 @@
     /** true while something on this layer moves smoothly between fixed steps
      *  (the engine then renders every display refresh, using Engine.alpha) */
     wantsFrame() { return false; }
+    // coversScreen: set true while draw() paints every pixel (the engine then skips its clear)
     /** remove this layer and resolve Engine.run() with value */
     close(value) {
       if (this.closed) return;
@@ -117,17 +118,19 @@
     render() {
       const G = R.Gfx;
       G.reset();
-      G.clear('#000');
       const c = G.ctx;
+      const L = Engine.layers;
+      let start = 0;
+      for (let i = L.length - 1; i >= 0; i--) if (L[i].opaque) { start = i; break; }
+      const shaking = Engine._shake.frames > 0;
+      // a bottom layer that paints every pixel (the field's tile cache) makes the clear redundant
+      if (shaking || !L[start] || !L[start].coversScreen) G.clear('#000');
       let sx = 0, sy = 0;
-      if (Engine._shake.frames > 0) {
+      if (shaking) {
         const m = Engine._shake.mag;
         sx = Math.round(R.U.rf(-m, m)); sy = Math.round(R.U.rf(-m, m));
         c.translate(sx, sy);
       }
-      const L = Engine.layers;
-      let start = 0;
-      for (let i = L.length - 1; i >= 0; i--) if (L[i].opaque) { start = i; break; }
       for (let i = start; i < L.length; i++) {
         try { c.save(); L[i].draw(); c.restore(); } catch (e) { c.restore(); reportError(e); }
         G.reset(); if (sx || sy) c.translate(sx, sy);

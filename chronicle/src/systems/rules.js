@@ -28,7 +28,7 @@
 
   // mods whose values are lists or maps rather than numbers
   const LIST_MODS = { equip: 1, statusImmune: 1 };
-  const MAP_MODS = { elemBoost: 1, elemResist: 1, startBuffs: 1, slayer: 1 };
+  const MAP_MODS = { elemBoost: 1, elemResist: 1, startBuffs: 1 };
 
   const Rules = (R.Rules = {
     STATS, STAT_NAMES, SLOTS, SLOT_NAMES, SET_SLOTS, SET_NAMES, JP_TABLE, JP_TIER_MULT, MAX_LEVEL, CAPS,
@@ -212,13 +212,36 @@
       const mb = Rules.jobMasterBonus(jobId);
       return STATS.filter((k) => mb[k]).map((k) => STAT_NAMES[k] + '+' + mb[k]).join(' ');
     },
-    /** a job's mastery trait {mods, text, desc} (DB.jobs[job].masterTrait) or null */
-    jobMasterTrait(jobId) { const j = DB.jobs[jobId]; return (j && j.masterTrait) || null; },
-    /** '反撃' — the trait's short label */
-    masterTraitText(jobId) { const t = Rules.jobMasterTrait(jobId); return (t && t.text) || ''; },
-    /** 'HP+10 力+3／反撃' — the whole mastery perk (stats + trait) for menus */
+    /** a job's signature ability id (DB.jobs[job].masterTrait), always active once the job is mastered */
+    jobMasterTrait(jobId) {
+      const j = DB.jobs[jobId], id = j && j.masterTrait;
+      return id && DB.abilities[id] ? id : null;
+    },
+    /** '常時：反撃' — the signature ability for menus ('' if none) */
+    masterTraitText(jobId) { const id = Rules.jobMasterTrait(jobId); return id ? '常時：' + DB.abilities[id].name : ''; },
+    /** 'HP+10 力+3／常時：反撃' — the whole mastery perk (stats + signature) for menus */
     masterPerkText(jobId) {
       return [Rules.masterBonusText(jobId), Rules.masterTraitText(jobId)].filter(Boolean).join('／');
+    },
+    /** signature abilities c carries into every job (one per mastered job), in DB order */
+    signatures(c) {
+      const out = [];
+      for (const jid in DB.jobs) {
+        const id = c.jobs && c.jobs[jid] && Rules.jobMasterTrait(jid);
+        if (id && Rules.isMastered(c, jid)) out.push(id);
+      }
+      return out;
+    },
+    /**
+     * the reaction abilities active for c: the one set in the リアクション slot, then the
+     * signature reactions of mastered jobs (each once)
+     */
+    reactions(c) {
+      const out = [];
+      const id = c.set && c.set.reaction;
+      if (id && DB.abilities[id] && DB.abilities[id].kind === 'reaction' && Rules.learned(c, id)) out.push(id);
+      for (const s of Rules.signatures(c)) if (DB.abilities[s].kind === 'reaction' && !out.includes(s)) out.push(s);
+      return out;
     },
     /** mastered jobs of c, in DB order */
     masteredJobs(c) { return Object.keys(DB.jobs).filter((j) => c.jobs && c.jobs[j] && Rules.isMastered(c, j)); },
@@ -416,12 +439,14 @@
     /**
      * equip the best available items for every slot. Returns true if anything changed.
      * Party-aware: the last copy of an item is left for a member who would gain clearly more from it.
+     * The accessory is the player's own choice and is left alone unless opts.acc (sims).
      */
-    optimize(c) {
+    optimize(c, opts) {
       let changed = false;
       const others = ((R.Game && R.Game.party) || []).filter((o) => o !== c);
       const gainFor = (o, id, slot) => (Rules.canEquip(o, id, slot) ? Rules.itemScore(o, id) - (o.equip[slot] ? Rules.itemScore(o, o.equip[slot]) : 0) : -Infinity);
       for (const slot of SLOTS) {
+        if (slot === 'acc' && !(opts && opts.acc)) continue;
         if (slot === 'shield' && c.equip.weapon && DB.items[c.equip.weapon] && DB.items[c.equip.weapon].twoHanded) continue;
         const cur = c.equip[slot];
         const curScore = cur ? Rules.itemScore(c, cur) : 0;
@@ -478,14 +503,15 @@
       };
       const j = DB.jobs[c.job];
       if (j) add(j.innate);
-      // mastery traits: every mastered job's signature passive, in any job
-      for (const jid in c.jobs || {}) {
-        const t = DB.jobs[jid] && DB.jobs[jid].masterTrait;
-        if (t && Rules.isMastered(c, jid)) add(t.mods);
-      }
+      const slotted = [];
       for (const s of ['support', 'field', 'reaction']) {
         const a = c.set[s] && DB.abilities[c.set[s]];
-        if (a && a.kind === s && Rules.learned(c, c.set[s])) add(a.mods);
+        if (a && a.kind === s && Rules.learned(c, c.set[s])) { add(a.mods); slotted.push(c.set[s]); }
+      }
+      // mastered jobs' signature supports: always on, without a slot (never doubled with the slotted one)
+      for (const id of Rules.signatures(c)) {
+        const a = DB.abilities[id];
+        if (a.kind !== 'reaction' && !slotted.includes(id)) add(a.mods);
       }
       if (!(opts && opts.ignoreEquip)) {
         for (const s of SLOTS) { const it = c.equip[s] && DB.items[c.equip[s]]; if (it) add(it.mods); }

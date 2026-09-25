@@ -107,14 +107,15 @@
       if (!this.resolveText) return; // idle, kept open between says
       const len = this.pageLen();
       if (this.shown < len) {
-        if (In().pressed('a')) {
+        if (In().pressed('a') || In().pressed('down')) {
           this.shown = len;
           if (this.opts.noWait && this.page === this.pages.length - 1) this.finish();
         }
         return;
       }
       if (this.opts.auto) return;
-      if (In().pressed('a') || In().pressed('b')) { sfx('confirm_soft'); this.advance(); }
+      // A, B or Down advances (Down lets players page through long result text one-handed)
+      if (In().pressed('a') || In().pressed('b') || In().pressed('down')) { sfx('confirm_soft'); this.advance(); }
     }
     advance() {
       if (this.page < this.pages.length - 1) { this.page++; this.shown = 0; this.autoT = 0; return; }

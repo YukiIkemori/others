@@ -32,6 +32,9 @@
       this.name = def.name || '';
       this.type = def.type || 'town';
       this.isWorld = this.type === 'world';
+      // world maps wrap around (a torus, like the classic overworlds): walking / sailing off an
+      // edge comes back in at the opposite one. `wrap:false` on a world map turns it off.
+      this.wrap = def.wrap != null ? !!def.wrap : this.isWorld;
       this.legendName = def.legend || (this.isWorld ? 'world' : 'local');
       this.legend = DB.legends[this.legendName] || {};
       this.theme = def.theme || null;
@@ -61,15 +64,21 @@
       this.wcache = []; // render cache: world cell -> R.Art.worldTile result
     }
 
-    inBounds(x, y) { return x >= 0 && y >= 0 && x < this.w && y < this.h; }
-    idx(x, y) { return y * this.w + x; }
-    /** tile id at (x,y); the map's outside tile beyond the edges */
-    tileAt(x, y) { return this.inBounds(x, y) ? this.tiles[y * this.w + x] : this.outside; }
+    /** inside the map rows (raw coordinates, ignores wrapping) */
+    inMap(x, y) { return x >= 0 && y >= 0 && x < this.w && y < this.h; }
+    /** a valid cell? (always, on a wrapping map: coordinates are taken modulo the size) */
+    inBounds(x, y) { return this.wrap ? this.w > 0 && this.h > 0 : x >= 0 && y >= 0 && x < this.w && y < this.h; }
+    /** wrapped coordinates (identity on non-wrapping maps) */
+    wx(x) { return this.wrap ? ((x % this.w) + this.w) % this.w : x; }
+    wy(y) { return this.wrap ? ((y % this.h) + this.h) % this.h : y; }
+    idx(x, y) { return this.wrap ? this.wy(y) * this.w + this.wx(x) : y * this.w + x; }
+    /** tile id at (x,y); the map's outside tile beyond the edges (wrapping maps have no edges) */
+    tileAt(x, y) { return this.inBounds(x, y) ? this.tiles[this.idx(x, y)] : this.outside; }
     /** tile definition (never null) */
     tile(x, y) { return DB.tiles[this.tileAt(x, y)] || EMPTY; }
 
     /** decor id at (x,y) or null (DESIGN §7.1 decor layer) */
-    decorAt(x, y) { return this.decor && this.inBounds(x, y) ? this.decor[y * this.w + x] : null; }
+    decorAt(x, y) { return this.decor && this.inBounds(x, y) ? this.decor[this.idx(x, y)] : null; }
     /** decor definition at (x,y) or null */
     decorDef(x, y) { const d = this.decorAt(x, y); return d ? DB.decor[d] || null : null; }
     /** can the player talk across (x,y)? (counter tiles and counter-like furniture) */
@@ -94,6 +103,7 @@
 
     // ------------------------------------------------------------ objects
     npcAt(x, y, except) {
+      if (this.wrap) { x = this.wx(x); y = this.wy(y); }
       for (const n of this.npcs) {
         if (!n.present || n === except) continue;
         if ((n.x === x && n.y === y) || (n.mv && n.mv.fx === x && n.mv.fy === y)) return n;
@@ -101,7 +111,7 @@
       return null;
     }
     npc(id) { return this.npcs.find((n) => n.id === id) || null; }
-    chestAt(x, y) { const c = this.chestIdx.get(this.idx(x, y)); return c && c.present ? c : null; }
+    chestAt(x, y) { if (!this.inBounds(x, y)) return null; const c = this.chestIdx.get(this.idx(x, y)); return c && c.present ? c : null; }
     warpAt(x, y) { return this.inBounds(x, y) ? this.warpIdx.get(this.idx(x, y)) || null : null; }
     signAt(x, y) { const s = this.inBounds(x, y) && this.signIdx.get(this.idx(x, y)); return s && R.State.check(s.cond) ? s : null; }
     hiddenAt(x, y) {
@@ -132,6 +142,7 @@
     }
     /** encounter zone id at (x,y) (world zones first match → defaultZone → encounter) */
     zoneAt(x, y) {
+      if (this.wrap) { x = this.wx(x); y = this.wy(y); }
       for (const z of this.zones) if (x >= z.x && y >= z.y && x < z.x + z.w && y < z.y + z.h) return z.zone;
       return this.defaultZone || this.encounter || null;
     }
@@ -317,7 +328,7 @@
     for (const o of def.signs || []) add.sign(o);
 
     // bounds check
-    const oob = (kind, o) => { if (!m.inBounds(o.x, o.y)) warn(id, kind + ' out of bounds at ' + o.x + ',' + o.y); };
+    const oob = (kind, o) => { if (!m.inMap(o.x, o.y)) warn(id, kind + ' out of bounds at ' + o.x + ',' + o.y); };
     for (const k of ['npcs', 'chests', 'warps', 'events', 'hidden', 'signs']) for (const o of m[k]) oob(k, o);
     for (const k in m.spawns) oob('spawn ' + k, m.spawns[k]);
     for (const n of m.npcs) {
@@ -328,14 +339,14 @@
     if (m.onEnter && !DB.events[m.onEnter]) warn(id, 'unknown onEnter event ' + m.onEnter);
 
     m.base = base;
-    const index = (list) => { const mp = new Map(); for (const o of list) if (m.inBounds(o.x, o.y)) mp.set(m.idx(o.x, o.y), o); return mp; };
+    const index = (list) => { const mp = new Map(); for (const o of list) if (m.inMap(o.x, o.y)) mp.set(m.idx(o.x, o.y), o); return mp; };
     m.chestIdx = index(m.chests);
     m.warpIdx = index(m.warps);
     m.signIdx = index(m.signs);
     m.hiddenIdx = index(m.hidden);
     m.eventIdx = new Map();
     for (const e of m.events) {
-      if (!m.inBounds(e.x, e.y)) continue;
+      if (!m.inMap(e.x, e.y)) continue;
       const k = m.idx(e.x, e.y);
       if (!m.eventIdx.has(k)) m.eventIdx.set(k, []);
       m.eventIdx.get(k).push(e);
@@ -369,5 +380,18 @@
     return m.spawns[name] ? Object.assign({}, m.spawns[name]) : null;
   }
 
-  R.FieldMap = { FieldMap, compile, peek, spawnPos, findWorld, warn, DEFAULT_BGM };
+  /** may the party push this NPC aside (DESIGN §7.2)? Works on compiled NPCs and raw map data.
+   *  Stays put: `fixed:true`, monsters / objects (non-`npc:` sprites), conditional NPCs (story
+   *  blockers such as the east gate soldier) and standing NPCs with an event (shops, inns, priests,
+   *  kings: they keep their post). `push:true` forces pushable. Wanderers are always pushable. */
+  function pushable(n) {
+    if (!n || n.fixed) return false;
+    if (n.push) return true;
+    const s = n.sprite == null ? '' : String(n.sprite);
+    if (s.includes(':') && !s.startsWith('npc:')) return false;
+    if (n.cond != null) return false;
+    return (n.move || 'still') === 'wander' || !n.event;
+  }
+
+  R.FieldMap = { FieldMap, compile, peek, spawnPos, findWorld, warn, pushable, DEFAULT_BGM };
 })(window.RPG);

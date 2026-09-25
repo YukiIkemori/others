@@ -55,7 +55,7 @@
     },
 
     // ---- extras
-    pos() { const p = R.Field.pos(); return p && Object.assign({ map: R.Field.map && R.Field.map.id }, p); },
+    pos() { const p = R.Field.pos(); return p && Object.assign({ map: R.Field.map && R.Field.map.id }, p, { exact: R.Field.exactPos() }); },
     /** battle(zoneId | troopId) */
     battle(id) {
       if (!R.Battle || !R.Battle.start) return 'no battle system';

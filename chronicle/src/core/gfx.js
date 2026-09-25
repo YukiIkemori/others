@@ -1,7 +1,8 @@
 // Graphics: canvas setup, sprite registry, pixel-art builders, text & windows.
-// All drawing uses LOGICAL coordinates (256x224). The backing canvas is 3x and
-// the context carries a 3x transform, so sprites stay pixel-crisp (smoothing
-// off) while text is rasterised at full resolution.
+// All drawing uses LOGICAL coordinates (256x224). The backing canvas is
+// R.SCALE× (4× = 1024x896) and the context carries that transform, so sprites
+// stay pixel-crisp (smoothing off) while text is rasterised at full resolution.
+// The field layer temporarily switches to its own scale (see field.js).
 (function (R) {
   'use strict';
   const U = R.U;
@@ -9,7 +10,8 @@
   const Gfx = (R.Gfx = {
     canvas: null,
     ctx: null,
-    // DotGothic16 at 32 device px = exactly 2 device px per font pixel.
+    // Text size in logical px (unchanged since the 3× canvas: 32 device px there,
+    // 42⅔ on the 4× canvas — same layout, same on-screen size).
     FONT: '"DotGothic16", "Hiragino Kaku Gothic ProN", "Meiryo", "Noto Sans JP", monospace',
     FS: 32 / 3, // default text size (logical px)
     LH: 14, // default line height (logical px)
@@ -34,7 +36,7 @@
       Gfx.ctx = canvas.getContext('2d', { alpha: false });
       Gfx.reset();
     },
-    /** restore the default 3x transform & state (call after any save/restore mishap) */
+    /** restore the default R.SCALE× transform & state (call after any save/restore mishap) */
     reset() {
       const c = Gfx.ctx;
       c.setTransform(R.SCALE, 0, 0, R.SCALE, 0, 0);

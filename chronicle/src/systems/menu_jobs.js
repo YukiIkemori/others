@@ -315,9 +315,9 @@
         if (R.Rules.isMastered(c, this.job)) {
           await R.jingle('jobup');
           const mb = R.Rules.masterBonusText(this.job);
-          const tr = R.Rules.jobMasterTrait(this.job);
+          const sig = R.Rules.jobMasterTrait(this.job);
           await K.msg(c.name + 'は' + K.jobName(this.job) + 'をマスターした！' + (mb ? '\nマスター特典：' + mb : ''));
-          if (tr) await K.msg('特性「' + tr.text + '」を身につけた！\n' + (tr.desc || '') + '\n（どのジョブでも有効）');
+          if (sig) await K.msg(DB.abilities[sig].name + 'が常に効くようになった！\n（どのジョブでも、セットしなくても有効）');
         }
         if (ab.kind !== 'action' && !c.set[ab.kind]) {
           if (await K.yesno(ab.name + 'を\n' + K.KIND_NAMES[ab.kind] + 'にセットしますか？')) {
