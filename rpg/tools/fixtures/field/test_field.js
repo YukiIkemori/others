@@ -599,6 +599,20 @@ async function newGame(map, spawn) {
   ok(!R.Field.isBusy(), 'field not busy while menu open');
   menuOpen(); await step(2);
   delete R.Menu;
+  {
+    // wandering townsfolk keep off trees and decor cells (the party may walk over them)
+    const M = R.Field.map, L = R.Field.layer, P = L.P[0];
+    let cell = null;
+    for (let y = 1; y < M.h - 1 && !cell; y++) for (let x = 1; x < M.w - 1 && !cell; x++) if (Math.abs(x - P.x) + Math.abs(y - P.y) > 3 && L.npcCanEnter(x, y, {})) cell = { x, y };
+    ok(!!cell, 'found an open cell');
+    const i = M.idx(cell.x, cell.y), keepDecor = M.decor, keepTile = M.tiles[i];
+    M.decor = new Array(M.w * M.h).fill(null); M.decor[i] = 'bench';
+    ok(!L.npcCanEnter(cell.x, cell.y, {}), 'npc avoids decor cells');
+    M.decor = keepDecor;
+    M.tiles[i] = 'tree';
+    ok(!L.npcCanEnter(cell.x, cell.y, {}), 'npc avoids trees');
+    M.tiles[i] = keepTile;
+  }
   // mimic chest: escape keeps it closed, win opens it
   R.DB.maps.fx_mimic = { name: 'ミミック', type: 'dungeon', theme: 'cave', rows: ['#####', '#.$.#', '#.@.#', '#####'],
     marks: { '$': { chest: { id: 'fx_mimic_c', item: 'herb', troop: 'fx_golem' } }, '@': { spawn: 'entrance', dir: 'up' } },

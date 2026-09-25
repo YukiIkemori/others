@@ -86,7 +86,7 @@ async function main() {
     check('満タン used no items after いいえ', st.inv === inv0, st);
     await keys('a,w300');
     await shot('fullheal_after');
-    await keys('b,w300');
+    await keys('up,w100,b,w300'); // leave the remembered cursor on 道具 for the next tests
     check('menu closed', await onlyField());
   };
   T.wing = async () => {

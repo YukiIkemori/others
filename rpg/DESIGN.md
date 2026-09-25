@@ -433,7 +433,7 @@ R.DB.objectives[id] = { text:'つぎの もくてき …' }
   **Percent**: `targetHP × power` (fails on bosses).
 * **Heal**: `(power + mnd × scale) × rand(0.95..1.05) × (1 + healPct/100)`; `pct` heals a fraction of max HP.
 * **Element multipliers**: product of monster `elem[e]` (or party `elemResist`) and 1 + `elemBoost`/100.
-* Buff stage multipliers: −2 ×0.5, −1 ×0.75, 0 ×1, +1 ×1.5, +2 ×2.
+* Buff stage multipliers: −2 ×0.67, −1 ×0.8, 0 ×1, +1 ×1.25, +2 ×1.5 (moderate on purpose: buffs help, they never wall off damage).
 * Status success: `chance × (1 − resist)`; immunities from `statusImmune`/accessories.
 * **Metal** monsters: physical damage 0–1 (critical still hits for 1–3), immune to all magic except `percent`.
 * **Escape**: chance `0.5 + 0.1 × attempts + (partyAvgAgi − enemyAvgAgi)/200`, clamp 0.3–1; bosses/`noEscape` impossible.

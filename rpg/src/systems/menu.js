@@ -116,10 +116,11 @@
     },
     /** blinking left/right arrows around a header (member switch hint) */
     lrArrows(x1, x2, y, keys) {
-      // member switch: small L / R key labels just inside the arrows (they do not blink)
+      // member switch: small L / R shoulder-button badges in place of the arrows
       if (keys) {
-        G().text('L', x1 + 6, y + 1, { size: 7, color: '#8890b0' });
-        G().text('R', x2 - 6, y + 1, { size: 7, color: '#8890b0', align: 'right' });
+        K.keyBadge('L', x1 - 3, y);
+        K.keyBadge('R', x2 - 5, y);
+        return;
       }
       if (Math.floor(R.Engine.frame / 20) % 2) return;
       for (let i = 0; i < 4; i++) {
@@ -134,6 +135,12 @@
       if (I.pressed('l')) return -1;
       if (I.pressed('r')) return 1;
       return 0;
+    },
+    /** a tiny 9x9 button badge with a letter (L / R) */
+    keyBadge(ch, x, y) {
+      G().rect(x + 1, y, 7, 9, '#5a6498'); G().rect(x, y + 1, 9, 7, '#5a6498');
+      G().rect(x + 1, y + 1, 7, 7, '#2a3060');
+      G().text(ch, x + 5, y + 1, { size: 7, color: '#e8ecff', align: 'center' });
     },
     /** small 「L/R」 hint (member switch); align 'left' | 'right' | 'center' */
     lrHint(x, y, align) {

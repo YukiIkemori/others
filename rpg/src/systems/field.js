@@ -42,6 +42,7 @@
   const WHOLE_MAX = 9000; // cells: cache the whole map when (w+2·PADX)·(h+2·PADY) fits
   const PADX = 9, PADY = 8; // cells of "outside" around a whole-map cache (a centred small map shows them)
   const MARG = 3; // sliding window margin (cells) on each side of the view
+  const CH = 8; // whole-map cache chunk (cells)
   const TC = { cv: null, ctx: null, spare: null, uid: -1, ver: -1, x0: 0, y0: 0, w: 0, h: 0, whole: false, anim: [], danim: [], drawn: new Map() };
   const artWarned = {};
 
@@ -142,11 +143,11 @@
     c.restore();
   }
   /** (re)collect the animated cells of the cached area */
-  function scanAnim() {
+  function scanAnim(i0, j0, i1, j1) {
     const m = M;
-    TC.anim = []; TC.danim = [];
-    for (let j = 0; j < TC.h; j++) {
-      for (let i = 0; i < TC.w; i++) {
+    if (i0 === undefined) { TC.anim = []; TC.danim = []; i0 = 0; j0 = 0; i1 = TC.w - 1; j1 = TC.h - 1; }
+    for (let j = j0; j <= j1; j++) {
+      for (let i = i0; i <= i1; i++) {
         const x = TC.x0 + i, y = TC.y0 + j;
         const g = cellGfx(m, x, y);
         if (Array.isArray(g)) {
@@ -176,8 +177,42 @@
     else { TC.w = BW + 2 * MARG; TC.h = BH + 2 * MARG; TC.x0 = ox - MARG; TC.y0 = oy - MARG; }
     tcCanvas(TC.w, TC.h);
     TC.drawn.clear();
-    redrawRect(0, 0, TC.w * TS, TC.h * TS);
-    scanAnim();
+    if (TC.whole) {
+      // drawn lazily in CH×CH chunks: the view's chunks at once, the rest a little per frame
+      TC.cw = Math.ceil(TC.w / CH); TC.chh = Math.ceil(TC.h / CH);
+      TC.chunks = new Uint8Array(TC.cw * TC.chh);
+      TC.left = TC.chunks.length;
+      TC.anim = []; TC.danim = [];
+    } else {
+      redrawRect(0, 0, TC.w * TS, TC.h * TS);
+      scanAnim();
+    }
+  }
+  function tcChunk(ci, cj) {
+    const k = cj * TC.cw + ci;
+    if (TC.chunks[k]) return;
+    TC.chunks[k] = 1; TC.left--;
+    const i0 = ci * CH, j0 = cj * CH, i1 = Math.min(TC.w, i0 + CH) - 1, j1 = Math.min(TC.h, j0 + CH) - 1;
+    redrawRect(i0 * TS, j0 * TS, (i1 - i0 + 1) * TS, (j1 - j0 + 1) * TS);
+    scanAnim(i0, j0, i1, j1);
+  }
+  /** whole-map cache: make sure the view's chunks exist, then fill others nearest-first within a time budget */
+  function tcFill(ox, oy, budgetMs) {
+    const ci0 = Math.max(0, Math.floor((ox - 1 - TC.x0) / CH)), cj0 = Math.max(0, Math.floor((oy - 1 - TC.y0) / CH));
+    const ci1 = Math.min(TC.cw - 1, Math.floor((ox + BW - TC.x0) / CH)), cj1 = Math.min(TC.chh - 1, Math.floor((oy + BH + 2 - TC.y0) / CH));
+    for (let cj = cj0; cj <= cj1; cj++) for (let ci = ci0; ci <= ci1; ci++) tcChunk(ci, cj);
+    if (!TC.left) return;
+    const t0 = performance.now();
+    const cx = (ci0 + ci1) / 2, cy = (cj0 + cj1) / 2;
+    for (let r = 1; TC.left && r < TC.cw + TC.chh; r++) {
+      for (let cj = Math.floor(cy - r); cj <= cy + r; cj++) {
+        for (let ci = Math.floor(cx - r); ci <= cx + r; ci++) {
+          if (ci < 0 || cj < 0 || ci >= TC.cw || cj >= TC.chh || TC.chunks[cj * TC.cw + ci]) continue;
+          tcChunk(ci, cj);
+          if (performance.now() - t0 > budgetMs) return;
+        }
+      }
+    }
   }
   /** slide the window so the view (ox,oy)+(BW,BH) sits in its middle, redrawing only exposed strips */
   function tcSlide(ox, oy) {
@@ -206,6 +241,24 @@
       if (x < TC.x0 - 1 || y < TC.y0 || x > TC.x0 + TC.w || y > TC.y0 + TC.h + 1) TC.drawn.delete(k);
     }
     scanAnim();
+  }
+  /** Generate (and cache) the art of cells around the sliding window a little
+   *  every frame, so a slide only copies ready-made canvases. Context tiles
+   *  (autotiling) cost far more to build than to draw. */
+  const WARM = 10; // cells beyond the window
+  function warmArt(budgetMs) {
+    const m = M, t0 = performance.now();
+    const x0 = Math.max(0, TC.x0 - WARM), y0 = Math.max(0, TC.y0 - WARM);
+    const x1 = Math.min(m.w - 1, TC.x0 + TC.w + WARM), y1 = Math.min(m.h - 1, TC.y0 + TC.h + WARM);
+    for (let y = y0; y <= y1; y++) {
+      for (let x = x0; x <= x1; x++) {
+        const i = m.idx(x, y);
+        const need = m.wcache[i] === undefined || (m.decor && m.decor[i] && (!m.dcache || m.dcache[i] === undefined));
+        if (!need) continue;
+        cellGfx(m, x, y); decorGfx(m, x, y);
+        if (performance.now() - t0 > budgetMs) return;
+      }
+    }
   }
   /** redraw the animated cells near the view whose frame changed */
   function tcAnimate(ox, oy) {
@@ -249,14 +302,24 @@
         }
       } else tcRebuild(ox, oy);
     }
-    if (!TC.whole && (ox < TC.x0 || oy < TC.y0 || ox + BW > TC.x0 + TC.w || oy + BH > TC.y0 + TC.h)) tcSlide(ox, oy);
+    const P = R._prof, t0 = performance.now();
+    if (TC.whole) { if (TC.left) tcFill(ox, oy, 0); }
+    else if (ox < TC.x0 || oy < TC.y0 || ox + BW > TC.x0 + TC.w || oy + BH > TC.y0 + TC.h) { tcSlide(ox, oy); if (P) P.push(['slide', performance.now() - t0]); }
+    const t1 = performance.now();
     tcAnimate(ox, oy);
+    if (P) P.push(['anim', performance.now() - t1]);
+    const t2 = performance.now();
     // copy just the visible part of the cache (whole-pixel source rect, sub-pixel destination)
     const ix = Math.floor(camX), iy = Math.floor(camY);
     const sx = ix - TC.x0 * TS, sy = iy - TC.y0 * TS;
     const w = Math.min(R.W + 1, TC.cv.width - sx), h = Math.min(R.H + 1, TC.cv.height - sy);
     if (sx < 0 || sy < 0 || w <= 0 || h <= 0) { blit(TC.cv, TC.x0 * TS - camX, TC.y0 * TS - camY); return; }
     R.Gfx.ctx.drawImage(TC.cv, sx, sy, w, h, q(ix - camX), q(iy - camY), w, h);
+    if (P) P.push(['blit', performance.now() - t2]);
+    const t3 = performance.now();
+    if (TC.whole) { if (TC.left) tcFill(ox, oy, 1); }
+    else warmArt(1);
+    if (P) P.push(['warm', performance.now() - t3]);
   }
   /** draw at a sub-pixel position: logical px quantised to device px (the canvas is R.SCALE×) */
   const q = (v) => Math.round(v * R.SCALE) / R.SCALE;
@@ -643,6 +706,8 @@
       if (!M.walkable(x, y)) return false;
       const id = M.tileAt(x, y), t = M.tile(x, y);
       if (t.counter || t.damage || t.warpIcon || isDoor(id) || id.startsWith('stairs') || id === 'warp_pad') return false;
+      // the party may cut across trees / benches / flowerbeds, townsfolk keep to open ground
+      if (id === 'tree' || M.decorAt(x, y)) return false;
       if (M.warpAt(x, y) || M.chestAt(x, y) || M.eventIdx.has(M.idx(x, y)) || M.signAt(x, y)) return false;
       if (M.npcAt(x, y, n)) return false;
       for (const p of this.P) if (p.x === x && p.y === y) return false;

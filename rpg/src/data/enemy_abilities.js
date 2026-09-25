@@ -75,7 +75,7 @@
     en_howl: act('群れの叫び', 'allies', [buff('atk', 1)], 'buff', { msg: '{user}は仲間を奮い立たせる叫びを上げた！' }),
     en_shout: act('掛け声', 'allies', [buff('atk', 1)], 'buff', { msg: '{user}は掛け声で手下を奮い立たせた！' }),
     en_focus: act('力ため', 'self', [buff('atk', 2)], 'buff', { msg: '{user}は力をためている！' }),
-    en_harden: act('硬くなる', 'self', [buff('def', 2)], 'buff', { msg: '{user}の体が硬くなった！' }),
+    en_harden: act('硬くなる', 'self', [buff('def', 1)], 'buff', { msg: '{user}の体が硬くなった！' }),
     en_flame_armor: act('炎の鎧', 'self', [buff('def', 1), buff('mdef', 1)], 'fire', { msg: '{user}は炎をまとった！' }),
     en_herb: act('薬草をかじる', 'self', [{ type: 'heal', pct: 0.2 }], 'heal', { msg: '{user}は薬草をかじった！' }),
     en_regrow: act('再生', 'self', [{ type: 'heal', pct: 0.25 }], 'regen', { msg: '{user}の傷がみるみるふさがっていく！' }),

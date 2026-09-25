@@ -18,7 +18,7 @@
   const B = (R.Battle = R.Battle || {});
 
   // ------------------------------------------------------------ constants
-  const STAGES = [0.5, 0.75, 1, 1.5, 2]; // buff stage −2..+2
+  const STAGES = [0.6, 0.8, 1, 1.3, 1.6]; // buff stage −2..+2 (kept moderate: a buff shouldn't wall off damage)
   const stageMult = (s) => STAGES[U.clamp(s | 0, -2, 2) + 2];
   const BUFF_STATS = ['atk', 'def', 'mag', 'mdef', 'agi'];
   const TIMED = { sleep: [1, 4], paralyze: [1, 3], confuse: [2, 4], silence: [3, 5], blind: [3, 5], regen: [5, 5] };
