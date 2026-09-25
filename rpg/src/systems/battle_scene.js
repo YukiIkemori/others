@@ -178,6 +178,10 @@
       }
       this.eng.finish();
       await R.Engine.fadeOut(16);
+      // ↓ used to page the rewards: wait for its release so it does not walk the party on the field
+      for (let i = 0; i < 600 && this.downLatch && In().down('down'); i++) await R.Engine.wait(1);
+      this.downLatch = false;
+      In().consume();
       this.close(result);
       R.Engine.fadeIn(12);
     }
@@ -577,11 +581,19 @@
     update() {
       if (this.auto && !this.autoCancel && In().pressed('b')) { this.autoCancel = true; R.sfx('cancel'); }
       const m = this.msg;
-      if (m.resolve && m.key && m.ch >= m.need && (In().pressed('a') || In().pressed('b'))) {
+      // a page waiting for a key (rewards, level-ups, drops, pause): A, B or ↓ (request: 十字キーの下でも進む)
+      const down = In().pressed('down');
+      if (m.resolve && m.key && m.ch >= m.need && (In().pressed('a') || In().pressed('b') || down)) {
         R.sfx('confirm_soft');
+        if (down) this.downLatch = true; // the held ↓ must not move a menu cursor / the party afterwards
+        In().consume();
         const r = m.resolve; m.resolve = null; m.key = false;
         r();
         return;
+      }
+      if (this.downLatch) {
+        if (In().down('down')) return;
+        this.downLatch = false;
       }
       if (this.input) {
         const v = this.input();

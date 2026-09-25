@@ -77,7 +77,7 @@ build breaks because of someone else's file, ignore it and test your part in iso
 ## 2. Core runtime API (implemented)
 
 ### R namespace (`src/core/ns.js`)
-`R.W=256, R.H=224, R.TILE=16, R.SCALE=3`. `R.DB.*` data registries. `R.U` utils:
+`R.W=256, R.H=224, R.TILE=16, R.SCALE=4` (backing canvas 1024×896; UI layers draw with a 4× transform, the field with its own scale — §7.2 *Field view*). `R.DB.*` data registries. `R.U` utils:
 `r() rf(a,b) ri(a,b) chance(p) oneIn(n) pick shuffle weighted(arr,'w') clamp lerp clone DX DY opposite padL playTime seed(n)`.
 Event bus `R.on/off/emit`. Audio-safe wrappers `R.sfx(id)`, `R.bgm(id,opts)`, `await R.jingle(id)`.
 `R.onBoot(fn)` — run after engine/fonts are ready, before the title screen.
@@ -123,7 +123,7 @@ mirrorX outline(c,{diag}) replace each blit toCanvas`), `recolor(canvas,map)`, `
   `'select'|'cancel'|'move'|null`; `draw()`. Items: string or `{label,disabled,right,color}`; `drawItem` hook.
 
 ### Save & settings (`src/core/save.js`)
-`R.Settings` = `{msgSpeed 0-3, battleSpeed 0-2, bgmVolume, sfxVolume, alwaysDash, windowColor, touchPad, cursorMemory}`;
+`R.Settings` = `{msgSpeed 0-3, battleSpeed 0-2, bgmVolume, sfxVolume, alwaysDash, fieldZoom, windowColor, touchPad, cursorMemory}`;
 `R.Save.saveSettings()`. Slots (async): `R.Save.list() load(slot) save(slot,data) remove(slot)`,
 `exportCode(data)`/`importCode(str)` (冒険の合言葉 — a portable text save code). 3 slots.
 
@@ -573,6 +573,13 @@ visible bosses). NPCs block movement. Talking to an NPC across a `counter` tile 
 * Party caterpillar: the other two members follow the leader's actual path (position history) one tile apart
   (path distance), facing their own motion (dead members still follow, like DQ ghosts are not needed).
 * Camera centred on the leader, clamped to map edges (small maps centred). Overworld does **not** wrap.
+* Field view (`Settings.fieldZoom`, 設定「フィールドの広さ」, applied at once): the field layer draws with its own
+  integer scale on the 4× canvas — `normal` 4 device px per map px (256×224 map px = 16×14 tiles, the original
+  framing), `wide` 3 (341⅓×298⅔ ≈ 21×19 tiles, **default**), `wider` 2 (512×448 = 32×28 tiles). Menus, messages,
+  battle and the field's own overlays (location banner, debug coords) keep the 4× UI transform, so their layout
+  is unchanged. `R.Field.view()` → `{zoom, z, w, h}`, `R.Field.camera()`; drawn positions are quantised to 1/z
+  map px (at `wide`, walking = exactly 8 device px per frame). The tile cache, animated-tile redraws (at most
+  280 cells per frame, swept top to bottom), sprite culling and the teleport lift all use the view size.
 * Doors open when stepped on (sfx `door`); locked doors (`lock`) open automatically if the key item is held,
   otherwise "かぎが かかっている。" and block.
 * Damage floors (`damage`) hurt every living member per step (flash red, sfx `step_damage`), negated by `noFloorDamage`.

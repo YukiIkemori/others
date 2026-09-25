@@ -867,6 +867,36 @@ async function newGame(map, spawn) {
     ok(Number.isInteger(R.Game.ship.x) && Number.isInteger(R.Game.ship.y), 'ship on a whole tile');
   }
 
+  // view: Settings.fieldZoom picks the field's own device scale (UI layers keep R.SCALE)
+  console.log('view');
+  {
+    eq(R.DEFAULT_SETTINGS.fieldZoom, 'wide', 'field zoom: 広め by default');
+    const want = { normal: [4, 256, 224], wide: [3, 1024 / 3, 896 / 3], wider: [2, 512, 448] };
+    for (const z of R.Field.ZOOMS) {
+      R.Settings.fieldZoom = z;
+      const v = R.Field.view();
+      eq([v.zoom, v.z, +v.w.toFixed(3), +v.h.toFixed(3)], [z, ...want[z].map((n) => +n.toFixed(3))], 'view ' + z);
+    }
+    R.Settings.fieldZoom = 'bogus';
+    eq(R.Field.view().zoom, 'wide', 'unknown zoom falls back to wide');
+    await R.Field.warp('fx_town', 'entrance', { fade: false }); await settle();
+    const L = R.Field.layer, m = R.Field.map, mw = m.w * 16, mh = m.h * 16;
+    for (const z of R.Field.ZOOMS) {
+      R.Settings.fieldZoom = z;
+      const v = R.Field.view();
+      for (const [x, y] of [[1, 1], [m.w - 2, m.h - 2], [10, 8]]) {
+        L.place(x, y, 'down');
+        const c = R.Field.camera();
+        const okX = mw <= v.w ? c.x === Math.floor((mw - v.w) / 2) : c.x >= 0 && c.x <= mw - v.w + 1e-9;
+        const okY = mh <= v.h ? c.y === Math.floor((mh - v.h) / 2) : c.y >= 0 && c.y <= mh - v.h + 1e-9;
+        ok(okX && okY, `camera ${z} at ${x},${y}: clamped / centred (${c.x},${c.y})`);
+        ok(Math.abs(c.x * v.z - Math.round(c.x * v.z)) < 1e-6 && Math.abs(c.y * v.z - Math.round(c.y * v.z)) < 1e-6, `camera ${z} on device px`);
+      }
+    }
+    R.Settings.fieldZoom = 'wide';
+    L.place(10, 14, 'up'); L.savePos();
+  }
+
   // debug
   console.log('debug');
   R.debug.level(10);

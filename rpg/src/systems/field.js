@@ -35,9 +35,10 @@
   const ZOOM_DIV = { normal: 1, wide: 4 / 3, wider: 2 }; // view size ÷ the original 256x224
   const V = { key: '', z: 3, w: 0, h: 0, bw: 0, bh: 0, padx: 0, pady: 0 };
   function updateView() {
-    const key = (R.Settings && R.Settings.fieldZoom) || 'wide';
+    let key = R.Settings && R.Settings.fieldZoom;
+    if (!ZOOM_DIV[key]) key = 'wide';
     if (key === V.key && V.scale === R.SCALE) return V;
-    const div = ZOOM_DIV[key] || ZOOM_DIV.wide;
+    const div = ZOOM_DIV[key];
     V.key = key; V.scale = R.SCALE;
     V.z = Math.max(1, Math.round(R.SCALE / div));
     V.w = R.W * R.SCALE / V.z; V.h = R.H * R.SCALE / V.z;
@@ -285,20 +286,40 @@
       }
     }
   }
+  /** true when every pixel of a tile frame is opaque (then a redraw needs no black underlay) */
+  function isOpaque(img) {
+    if (!img) return false;
+    if (img._opaque !== undefined) return img._opaque;
+    let op = false;
+    try {
+      const d = img.getContext('2d').getImageData(0, 0, img.width, img.height).data;
+      op = img.width >= TS && img.height >= TS;
+      for (let i = 3; op && i < d.length; i += 4) if (d[i] !== 255) op = false;
+    } catch (e) { op = false; }
+    return (img._opaque = op);
+  }
+  // Animated cells whose frame changed are redrawn top to bottom, at most
+  // ANIM_MAX per frame: on the wide views a whole sea changes frame at once
+  // (~1000 cells at 'wider'); spread over a few frames that is a quick sweep
+  // instead of a frame-time spike.
+  const ANIM_MAX = 280;
   /** redraw the animated cells near the view whose frame changed */
   function tcAnimate(ox, oy) {
     const m = M, c = TC.ctx;
     const vx0 = ox - 1, vy0 = oy - 1, vx1 = ox + V.bw, vy1 = oy + V.bh + 2;
+    let budget = ANIM_MAX;
     for (const a of TC.anim) {
       if (a.x < vx0 || a.y < vy0 || a.x > vx1 || a.y > vy1) continue;
       const g = cellGfx(m, a.x, a.y);
       if (!Array.isArray(g)) continue;
       const f = frameOf(g, tileRate(m, a.x, a.y)), k = cellKey(a.x, a.y);
       if (TC.drawn.get(k) === f) continue;
+      if (budget-- <= 0) break;
       const lx = (a.x - TC.x0) * TS, ly = (a.y - TC.y0) * TS;
       if (a.plain) {
-        c.fillStyle = '#000'; c.fillRect(lx, ly, TS, TS);
-        if (g[f]) c.drawImage(g[f], lx, ly);
+        const im = g[f];
+        if (!isOpaque(im)) { c.fillStyle = '#000'; c.fillRect(lx, ly, TS, TS); }
+        if (im) c.drawImage(im, lx, ly);
         TC.drawn.set(k, f);
       } else redrawRect(lx, ly, TS, TS);
     }
