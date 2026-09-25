@@ -10,26 +10,51 @@
   const MSG = { x: 8, y: 148, w: 240, h: 72, lines: 4, pad: 10 };
 
   // ------------------------------------------------------ text placeholders
-  // Party names are chosen by the player, so text never hard-codes them:
-  //   {yuki} {non} {metem}  → that member's current name
-  //   {leader}              → the first living member's name
+  // The hero is named by the player, so text never hard-codes the name:
+  //   {hero}          → the hero's current name
+  //   {leader}        → the first living active member's name (hero while wiped)
+  //   {g:男形|女形}    → chosen by the hero's gender (e.g. {g:坊や|お嬢さん})
   // R.Gfx.text / textWidth / wrap and every message window apply this.
   R.Text = {
+    hero() {
+      const h = R.Game && R.State && R.State.hero && R.State.hero();
+      if (h) return h;
+      return null;
+    },
     name(key) {
       const g = R.Game;
+      if (key === 'hero') {
+        const h = R.Text.hero();
+        if (h) return h.name;
+        const d = R.DB.config && R.DB.config.defaultHero;
+        return d ? d.name : '';
+      }
       if (key === 'leader') {
         const l = g && R.State && R.State.leader && R.State.leader();
-        return l ? l.name : (R.DB.chars.yuki ? R.DB.chars.yuki.name : '');
+        return l ? l.name : R.Text.name('hero');
       }
-      const c = g && g.party && g.party.find((p) => p.id === key);
-      if (c) return c.name;
-      return R.DB.chars[key] ? R.DB.chars[key].name : '{' + key + '}';
+      return '{' + key + '}';
+    },
+    gender() {
+      const h = R.Text.hero();
+      if (h && h.gender) return h.gender;
+      const d = R.DB.config && R.DB.config.defaultHero;
+      return (d && d.gender) || 'm';
     },
     fmt(s) {
       if (s == null) return '';
       s = String(s);
       if (s.indexOf('{') < 0) return s;
-      return s.replace(/\{(yuki|non|metem|leader)\}/g, (m, k) => R.Text.name(k));
+      return s
+        .replace(/\{g:([^|}]*)\|([^}]*)\}/g, (m, a, b) => (R.Text.gender() === 'f' ? b : a))
+        .replace(/\{(hero|leader)\}/g, (m, k) => R.Text.name(k));
+    },
+    /** canvas-free width estimate (node tools): full-width 32/3 px, half-width 16/3 px */
+    approxWidth(s) {
+      s = R.Text.fmt(s);
+      let w = 0;
+      for (const ch of s) w += ch.charCodeAt(0) < 0x2000 || (ch >= '｡' && ch <= 'ﾟ') ? 16 / 3 : 32 / 3;
+      return w;
     },
   };
 

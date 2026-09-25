@@ -52,6 +52,7 @@
     // Audio can only start after a user gesture.
     R.Input.onAnyPress(() => { try { R.Audio && R.Audio.init && R.Audio.init(); } catch (e) { console.error(e); } });
 
+    R.runDataHooks();
     for (const fn of R._bootHooks) {
       try { await fn(); } catch (e) { console.error('boot hook failed', e); }
     }

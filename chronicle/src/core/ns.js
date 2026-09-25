@@ -1,4 +1,4 @@
-// ルミナス・クレスト — core namespace & utilities.
+// ルミナス・クロニクル — core namespace & utilities.
 // Every source file is wrapped in an IIFE and only *registers* things on RPG at
 // load time. Nothing may touch the DOM or another module's runtime state at
 // load time; cross-module wiring happens in RPG.boot() (src/main.js).
@@ -6,8 +6,11 @@
   'use strict';
   const R = (window.RPG = window.RPG || {});
 
-  R.VERSION = '1.0.0';
-  R.TITLE = 'ルミナス・クレスト';
+  R.VERSION = '0.1.0';
+  R.TITLE = 'ルミナス・クロニクル';
+  R.SUBTITLE = '〜八つの伝承〜'; // final wording: DESIGN.md §10
+  R.COPYRIGHT = '© Studio Metem';
+  R.PARTY_MAX = 4;
   R.W = 256; // logical screen width (SFC)
   R.H = 224; // logical screen height (SFC)
   R.TILE = 16;
@@ -18,9 +21,10 @@
   // Object.assign(R.DB.xxx, {...}). See DESIGN.md for every schema.
   R.DB = R.DB || {};
   for (const k of [
-    'tiles', 'legends', 'themes', 'chars', 'jobs', 'abilities', 'items',
-    'shops', 'monsters', 'encounters', 'troops', 'maps', 'events',
-    'battlebg', 'music', 'sfx', 'statuses', 'elements', 'locations', 'objectives', 'rareEncounters',
+    'tiles', 'legends', 'themes', 'decor', 'config', 'heroTypes', 'companions', 'weaponTypes',
+    'elements', 'statuses', 'actions', 'items', 'pools', 'shops', 'monsters', 'lineages',
+    'encounters', 'troops', 'rareEncounters', 'regions', 'locations', 'objectives', 'maps',
+    'events', 'music', 'sfx', 'battlebg',
   ]) R.DB[k] = R.DB[k] || {};
 
   // Load-time error collection (build.js wraps every file in try/catch).
@@ -114,4 +118,18 @@
   // Boot hooks (see main.js)
   R._bootHooks = R._bootHooks || [];
   R.onBoot = function (fn) { R._bootHooks.push(fn); };
+
+  // Data post-processing hooks: derive tables from registered data (e.g. expand
+  // lineages into monsters). Run exactly once, after every file has loaded, both
+  // in the browser (main.js, before onBoot) and in node tools (tools/lib/load.js),
+  // so tools and the game always see the same data. Must not touch the DOM.
+  R._dataHooks = R._dataHooks || [];
+  R.onData = function (fn) { R._dataHooks.push(fn); };
+  R.runDataHooks = function () {
+    if (R._dataHooksRan) return;
+    R._dataHooksRan = true;
+    for (const fn of R._dataHooks) {
+      try { fn(R); } catch (e) { R.loadErrors.push('onData hook: ' + (e && e.stack || e)); console.error('data hook failed', e); }
+    }
+  };
 })();

@@ -2,6 +2,8 @@
 // simulation and logic tests.
 //   const R = require('./lib/load')();          // everything except DOM-bound boot
 //   const R = require('./lib/load')({quiet:true});
+//   const R = require('./lib/load')({extra:['tools/fixtures/x/a.js']});  // fixtures loaded last
+// R.runDataHooks() is called after loading (pass {dataHooks:false} to skip).
 // Art/audio files only register factories at load time, so loading them is
 // safe; calling a factory (which needs document) is not.
 'use strict';
@@ -47,7 +49,13 @@ module.exports = function load(opts) {
     try { vm.runInContext(fs.readFileSync(f, 'utf8'), sandbox, { filename: f }); }
     catch (e) { errors.push(path.relative(ROOT, f) + ': ' + (e.stack || e)); }
   }
+  for (const f of opts.extra || []) {
+    const fp = path.resolve(f);
+    try { vm.runInContext(fs.readFileSync(fp, 'utf8'), sandbox, { filename: fp }); }
+    catch (e) { errors.push(path.relative(ROOT, fp) + ': ' + (e.stack || e)); }
+  }
   const R = sandbox.RPG;
+  if (R && R.runDataHooks && opts.dataHooks !== false) R.runDataHooks();
   R._nodeLoadErrors = errors;
   if (errors.length && !opts.quiet) console.error('LOAD ERRORS:\n' + errors.join('\n'));
   return R;

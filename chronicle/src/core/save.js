@@ -84,19 +84,19 @@
       if (typeof CompressionStream !== 'undefined') {
         const cs = new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw'));
         const buf = new Uint8Array(await new Response(cs).arrayBuffer());
-        return 'LC1:' + b64(buf);
+        return 'CH1:' + b64(buf);
       }
-      return 'LC0:' + b64(bytes);
+      return 'CH0:' + b64(bytes);
     },
     async importCode(code) {
       code = String(code || '').trim().replace(/\s+/g, '');
       try {
-        if (code.startsWith('LC1:')) {
+        if (code.startsWith('CH1:')) {
           const buf = unb64(code.slice(4));
           const ds = new Blob([buf]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
           return JSON.parse(await new Response(ds).text());
         }
-        if (code.startsWith('LC0:')) return JSON.parse(new TextDecoder().decode(unb64(code.slice(4))));
+        if (code.startsWith('CH0:')) return JSON.parse(new TextDecoder().decode(unb64(code.slice(4))));
       } catch (e) { console.error(e); }
       return null;
     },

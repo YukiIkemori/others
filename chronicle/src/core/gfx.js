@@ -17,7 +17,7 @@
       white: '#ffffff', gray: '#8c8c8c', dark: '#404040', black: '#000000',
       red: '#ff5a4a', orange: '#ffa53c', yellow: '#ffe45a', green: '#6ee07a',
       cyan: '#6fd8ff', blue: '#4a78ff', purple: '#c38cff', pink: '#ff8cc6',
-      gold: '#ffd24a', hpLow: '#ffb03c', dead: '#ff4a4a',
+      gold: '#ffd24a', rare: '#ffd24a', super: '#ff9cf0', hpLow: '#ffb03c', dead: '#ff4a4a',
     },
     // window color themes (Settings.windowColor)
     WINDOW_THEMES: {
@@ -210,18 +210,33 @@
     },
     /**
      * Cached color variant of a registered graphic (for monster palette swaps).
-     * opts: {hue:deg, sat:mult, bri:mult, pal:{'#from':'#to'}}. Returns a canvas.
+     * opts: {hue:deg, sat:mult, bri:mult, pal:{'#from':'#to'}, tint:'#rrggbb', tintAmt:0..1}.
+     * tint pulls every non-outline pixel towards that colour while keeping its
+     * brightness (golden individuals use tint:'#ffd24a'). Returns a canvas.
      */
     variant(key, opts) {
-      if (!opts || (!opts.hue && !opts.pal && opts.sat == null && opts.bri == null)) return Gfx.get(key);
+      if (!opts || (!opts.hue && !opts.pal && opts.sat == null && opts.bri == null && !opts.tint)) return Gfx.get(key);
       const vk = key + '|' + JSON.stringify(opts);
       if (vk in Gfx._cache) return Gfx._cache[vk];
       let base = Gfx.get(key);
       if (Array.isArray(base)) base = base[0];
       let out = opts.pal ? Gfx.recolor(base, opts.pal) : base;
       if (opts.hue || opts.sat != null || opts.bri != null) out = Gfx.hsvShift(out, opts.hue || 0, opts.sat == null ? 1 : opts.sat, opts.bri == null ? 1 : opts.bri);
+      if (opts.tint) out = Gfx.tintKeepLuma(out, opts.tint, opts.tintAmt == null ? 0.75 : opts.tintAmt);
       Gfx._cache[vk] = out;
       return out;
+    },
+    /** blend each coloured pixel towards `hex`, preserving its luminance (near-black outlines kept) */
+    tintKeepLuma(canvas, hex, amt) {
+      const [tr, tg, tb] = Gfx.hexToRgb(hex);
+      const tl = 0.299 * tr + 0.587 * tg + 0.114 * tb || 1;
+      return Gfx.mapColors(canvas, (r, g, b) => {
+        const l = 0.299 * r + 0.587 * g + 0.114 * b;
+        if (l < 28) return [r, g, b];
+        const k = l / tl;
+        const cr = U.clamp(tr * k, 0, 255), cg = U.clamp(tg * k, 0, 255), cb = U.clamp(tb * k, 0, 255);
+        return [Math.round(r + (cr - r) * amt), Math.round(g + (cg - g) * amt), Math.round(b + (cb - b) * amt)];
+      });
     },
     /** rotate hue by deg, multiply saturation/brightness (keeps near-black/near-gray outlines) */
     hsvShift(canvas, deg, satMul, briMul) {

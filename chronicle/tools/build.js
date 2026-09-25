@@ -17,6 +17,7 @@ const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const SRC = path.join(ROOT, 'src');
+const TITLE = 'ルミナス・クロニクル';
 const DIRS = ['core', 'ui', 'data', 'art', 'audio', 'maps', 'events', 'systems'];
 const CORE_FIRST = ['ns.js', 'input.js', 'gfx.js', 'engine.js', 'save.js'];
 
@@ -110,6 +111,7 @@ function fontCss(files) {
     const b64 = fs.readFileSync(out).toString('base64');
     return `<style>@font-face{font-family:"DotGothic16";src:url(data:font/woff2;base64,${b64}) format("woff2");font-display:block}</style>`;
   } catch (e) {
+    console.warn('\n[build] !!!!! FONT SUBSET FAILED — dist would need the network for its font. Run: pip install fonttools brotli');
     console.warn('[build] font subset failed, using Google Fonts link:', String(e.message || e).split('\n')[0]);
     return gf;
   }
@@ -152,9 +154,23 @@ function main() {
   });
   const bundle = parts.join('\n');
   fs.mkdirSync(path.join(ROOT, 'dist'), { recursive: true });
-  fs.writeFileSync(path.join(ROOT, 'dist', 'index.html'), html(`<script>\n${bundle}\n</script>`, 'ルミナス・クレスト'));
-  const tags = ok.map((f) => `<script src="${path.relative(ROOT, f).replace(/\\/g, '/')}"></script>`).join('\n');
-  fs.writeFileSync(path.join(ROOT, 'debug.html'), html(tags, 'ルミナス・クレスト (debug)'));
+  fs.writeFileSync(path.join(ROOT, 'dist', 'index.html'), html(`<script>\n${bundle}\n</script>`, TITLE));
+  const tag = (f) => `<script src="${path.relative(ROOT, f).replace(/\\/g, '/')}"></script>`;
+  const tags = ok.map(tag).join('\n');
+  fs.writeFileSync(path.join(ROOT, 'debug.html'), html(tags, TITLE + ' (debug)'));
+  // --with <dir>: debug_<name>.html = sources + <dir>/*.js (fixtures) inserted before main.js
+  const wi = process.argv.indexOf('--with');
+  if (wi > 0 && process.argv[wi + 1]) {
+    const dir = path.resolve(process.argv[wi + 1]);
+    const extra = fs.readdirSync(dir).filter((f) => f.endsWith('.js')).sort().map((f) => path.join(dir, f));
+    const { ok: xok, bad: xbad } = check(extra);
+    for (const b of xbad) console.warn(`[build] fixture SYNTAX ERROR — excluded: ${path.relative(ROOT, b.f)}`);
+    const main = ok.filter((f) => path.basename(f) === 'main.js' && path.dirname(f) === SRC);
+    const rest = ok.filter((f) => !main.includes(f));
+    const name = 'debug_' + path.basename(dir) + '.html';
+    fs.writeFileSync(path.join(ROOT, name), html([...rest, ...xok, ...main].map(tag).join('\n'), TITLE + ' (' + path.basename(dir) + ')'));
+    console.log(`[build] ${name} with ${xok.length} fixture file(s) from ${path.relative(ROOT, dir)}`);
+  }
   const kb = (fs.statSync(path.join(ROOT, 'dist', 'index.html')).size / 1024).toFixed(0);
   console.log(`[build] ${ok.length} files → dist/index.html (${kb} KB), debug.html` + (bad.length ? `  (${bad.length} excluded!)` : ''));
   if (bad.length) process.exitCode = 1;
