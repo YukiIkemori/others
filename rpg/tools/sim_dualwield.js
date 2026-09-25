@@ -1,30 +1,32 @@
 #!/usr/bin/env node
-// 二刀流 check (owner: battle). Does a dual-wielding normal attack (MP 0) make the
-// physical skills pointless? Measured with the real battle engine: each command is
-// executed (Engine.execute → attack / useAbility: hit roll, crits, def, elements, the
-// dual swings) against every monster of the stage with its HP raised out of reach,
-// averaging ≥ --n trials per action and monster.
+// 二刀流 check (owner: battle). Does a dual-wielding normal attack (MP 0) make the physical
+// skills pointless? Measured with the real battle engine: each command runs through the engine's
+// own attack / useAbility (hit roll, crits, def, elements, buffs, the dual swings with
+// OFFHAND_MULT) against every monster of the stage with its HP raised out of reach, averaging
+// --n (default 2000) trials per action and monster.
 //
-//   node tools/sim_dualwield.js                         all checkpoints (Lv15 20 25 30 35 40 55)
-//   node tools/sim_dualwield.js --levels 20,30 --n 3000 --seed 7 --all (every phys skill, not the top ones)
+//   node tools/sim_dualwield.js                        all checkpoints (Lv15 20 25 30 35 40 55), ≈1 min
+//   node tools/sim_dualwield.js --levels 20,30 --n 3000 --seed 7 --all   (--all: every phys skill, not the top 3)
 //
 // Builds (all ユウキ, the party's fighter, so the base stats are identical):
 //   忍者          beeline warrior2 priest2 thief3 monk3 hunter4 → ninja (innate 二刀流); JP = sim_balance's
-//                 model (8·Lv² into the plan); sub = the prerequisite job with the strongest physical skill.
-//   計画職        the job tools/sim_balance.js PLANS gives ユウキ at that level (ナイト/パラディン/勇者),
-//                 its sub job, weapon + shield.
+//                 model (8·Lv² along the plan); sub = the prerequisite job with the strongest phys skill.
+//   計画職 (盾)   the job tools/sim_balance.js PLANS gives ユウキ at that level (ナイト/パラディン/勇者),
+//                 weapon + shield.
 //   計画職+二刀流 the same with 二刀流 (ninja_two_swords) in its support slot (instead of its usual
-//                 support) and two one-handed weapons. Skills always swing once (main hand).
-//   The ninja detour costs ≈2000 JP on top of the plan (printed per level), so 計画職+二刀流 is a
-//   "what if" row until the JP budget allows it (≈Lv25+).
+//                 support) and two one-handed weapons. Its ninja detour costs ≈1850 JP on top of the plan
+//                 (printed per level), so this row is a "what if" until ≈Lv30.
+//   Skills: the learned physical-damage actions of the job and of every job it could set as its sub
+//   (tagged 〈job〉 — the player picks the sub the stage calls for). Skills always swing once (main hand).
 // Gear: the best by the game's own score (Rules.itemScore = さいきょうそうび) among the shops of the
 // towns visited so far (sim_balance STAGES) + the chest pools R.ITEM_TIERS of the level bands reached
-// (chest-only items: one copy). Lv55 = the post-game model of tools/sim_postgame.js (mastered jobs,
-// abyss/legendary gear; 計画職+二刀流 is exactly its prepared ユウキ).
+// (chest-only items: one copy); the main hand avoids an element the stage resists (it applies to both
+// swings). Lv55 = the post-game model of tools/sim_postgame.js (mastered jobs, abyss/legendary gear;
+// 勇者+二刀流 is exactly its prepared ユウキ).
 // Columns: MP · mean damage per use vs the stage's regular monsters (species averaged; metal/rare
-// excluded) · vs its boss(es) · ×atk = vs the build's own normal attack. Group/all skills: damage
-// per target with 3 foes present; random-target skills (手裏剣 …) count as single-target (all hits
-// land on a lone foe).
+// excluded) · vs its boss(es) · ×atk = vs the build's own 戦う. Group/all skills: damage per target
+// with 3 foes present; random-target skills (手裏剣 …) count as single-target (all hits on a lone foe).
+// SUMMARY: best single-target skill ÷ the 二刀流 戦う of the same build, and how many skills reach it.
 // Target: 二刀流 is a solid MP-free option, but the good physical skills of the same period beat it
 // per turn (「わざを使うほうが強い」), and multi-target skills keep their niche.
 'use strict';
@@ -262,7 +264,7 @@ function stageBuilds(si, L, tg) {
 const HUGE = 1e7;
 const ZERO_BUFFS = () => ({ atk: 0, def: 0, mag: 0, mdef: 0, agi: 0 });
 /**
- * mean damage dealt per use of cmd (null = たたかう, else an ability id) by c on nFoes copies of monId.
+ * mean damage dealt per use of abId (null = 戦う, else an ability id) by c on nFoes copies of monId.
  * Every trial starts fresh (full HP/MP, no buffs/statuses); damage = the engine's own dealt counter.
  */
 function measure(c, abId, monId, nFoes) {

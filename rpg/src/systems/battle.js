@@ -23,7 +23,7 @@
   const BUFF_STATS = ['atk', 'def', 'mag', 'mdef', 'agi'];
   const TIMED = { sleep: [1, 4], paralyze: [1, 3], confuse: [2, 4], silence: [3, 5], blind: [3, 5], regen: [5, 5] };
   const BAD = ['poison', 'sleep', 'paralyze', 'confuse', 'silence', 'blind'];
-  // 二刀流 (twoSwords): たたかう swings a second time with the off-hand weapon (only when one is in the
+  // 二刀流 (twoSwords): 戦う (and counters) swing a second time with the off-hand weapon (only when one is in the
   // shield slot); that swing deals ×OFFHAND_MULT so the good physical skills still beat it (tools/sim_dualwield.js)
   const OFFHAND_MULT = 0.6;
   const NAMES = {

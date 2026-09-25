@@ -517,10 +517,34 @@ sec('supports');
   const e = mk({ party, mons: ['tb_dummy'] });
   const yuki = P(e, 0);
   learn(yuki, 'tb_twoswords', 'support');
-  let ev = run(e.attack(yuki, Mo(e, 0), false));
-  ok(ev.filter((x) => x.t === 'fx').length === 2, 'twoSwords: 2 attacks');
+  // 二刀流: a second swing only with a weapon in the shield slot; that swing deals ×OFFHAND_MULT
+  const dummy = Mo(e, 0);
+  const swings = () => run(e.attack(yuki, dummy, false)).filter((x) => x.t === 'fx').length;
+  const expOne = (atk) => e.roll(yuki, dummy, { formula: 'phys', power: 1 }, { expect: true, atk }).dmg;
+  ok(B.OFFHAND_MULT === 0.6, 'OFFHAND_MULT = 0.6');
+  ok(swings() === 1, 'twoSwords with an empty off hand: 1 swing');
+  near(e.expectAttack(yuki, dummy), expOne(), 1e-9, 'AI estimate: 1 swing with an empty off hand');
+  yuki.c.equip.shield = 'tb_shield'; yuki.refresh();
+  ok(yuki.st.atk2 === 0 && swings() === 1, 'twoSwords with a shield: 1 swing');
+  near(e.expectAttack(yuki, dummy), expOne(), 1e-9, 'AI estimate: 1 swing with a shield');
   yuki.c.equip.shield = 'tb_sword2'; yuki.refresh();
   ok(yuki.st.atk2 > 0 && yuki.st.atk2 < yuki.stat('atk'), 'off-hand atk2 from the second weapon');
+  ok(swings() === 2, 'twoSwords with an off-hand weapon: 2 swings');
+  near(e.expectAttack(yuki, dummy), expOne() + B.OFFHAND_MULT * expOne(yuki.st.atk2), 1e-9, 'AI estimate: main hand + off hand × OFFHAND_MULT');
+  yuki.c.equip.shield = 'tb_sword'; yuki.refresh();
+  ok(yuki.st.atk2 === yuki.stat('atk'), 'the same weapon in both hands: atk2 = atk');
+  let sw1 = 0, sw2 = 0;
+  for (let i = 0; i < 4000; i++) {
+    dummy.hp = dummy.mhp;
+    let k = -1;
+    for (const x of e.attack(yuki, dummy, false)) {
+      if (x.t === 'fx') k++;
+      else if (x.t === 'dmg' && x.u === dummy) { if (k === 0) sw1 += x.n; else sw2 += x.n; }
+    }
+  }
+  near(sw2 / sw1, B.OFFHAND_MULT, 0.03, 'the off-hand swing deals ×OFFHAND_MULT of the main-hand one');
+  dummy.hp = dummy.mhp;
+  yuki.c.equip.shield = null; yuki.refresh();
   // regen support
   learn(P(e, 1), 'tb_regen', 'support');
   const e2 = mk({ party: e.party.map((u) => u.c), mons: ['tb_dummy'] });

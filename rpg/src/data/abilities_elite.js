@@ -99,7 +99,7 @@
       mp: 5, target: 'enemy', effects: [phys(1.6, { critBonus: 30 })], fx: 'slash3',
     }),
     ninja_retaliate: reaction('返り討ち', 700, 'どんな攻撃を受けても、よく反撃する。', 'hitAny', 0.45, { type: 'counter' }),
-    ninja_two_swords: support('二刀流', 900, '武器を二つ持ち、2回攻撃する。', { twoSwords: true }),
+    ninja_two_swords: support('二刀流', 900, '左手にも武器を持ち、弱めの2撃目を放つ。', { twoSwords: true }),
     ninja_equip_katana: support('刀装備', 500, 'どのジョブでも刀を装備できる。', { equip: ['katana'] }),
   });
 

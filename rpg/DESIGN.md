@@ -369,6 +369,13 @@ R.DB.objectives[id] = { text:'つぎの もくてき …' }
   `dmg = base × rand(0.875..1.125)` × element × buffs × mods. Hit chance = `hit − target.eva` %, blind ×0.5.
   **Critical** (会心/痛恨): chance `crit %`: dmg = `atk × rand(0.95..1.05)` ignoring def.
   Monsters use the same formula with their `atk`/`def`.
+* **二刀流** (mod `twoSwords`: 忍者 innate, support `ninja_two_swords`): with a one-handed weapon in the shield
+  slot (左手), 戦う — and a counter — swings twice: main hand (`atk`), then off hand (`atk2` = str + off-hand
+  weapon atk). Each swing rolls hit/crit on its own; the off-hand swing's damage is ×0.6 (`OFFHAND_MULT` in
+  battle.js); element and onHit come from the main-hand weapon. Shield or empty off hand → one swing.
+  Abilities always strike once with the main hand. Balance (`node tools/sim_dualwield.js`): dual wield ≈ 1.6×
+  a one-handed 戦う for 0 MP; the strong single-target skills of the same period (power ≥ 1.6–1.8, e.g.
+  全力斬り・忍び討ち・十字斬り) still beat it by ≈1.2–1.4×, and group/all skills keep their niche.
 * **Magic**: `dmg = (power + mag × scale) × rand(0.9..1.1) × 100/(100 + mdef) × element × mods`. Default scale 0.6.
 * **Fixed**: `power × rand(0.9..1.1)` (items like bombs). **Breath**: fixed, reduced only by elemResist.
   **Percent**: `targetHP × power` (fails on bosses).
