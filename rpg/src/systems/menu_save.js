@@ -1,0 +1,274 @@
+// Field menu: セーブ (3 slots + ふっかつのじゅもん export), せってい (all settings,
+// applied immediately) and the DOM overlay used to show / enter a じゅもん code
+// (also used by the title screen).
+(function (R) {
+  'use strict';
+  const G = () => R.Gfx;
+  const In = () => R.Input;
+  const Menu = (R.Menu = R.Menu || {});
+
+  // ------------------------------------------------------------ slot summaries
+  /** draw one save slot window. s: {summary}|null */
+  function drawSlot(i, s, x, y, w, h, opts) {
+    const o = opts || {};
+    G().window(x, y, w, h);
+    const dim = o.dim;
+    G().text('ぼうけんのしょ ' + (i + 1), x + 16, y + 7, { color: dim ? G().C.gray : G().C.yellow });
+    if (!s) { G().text('―― からっぽ ――', x + w / 2, y + 25, { align: 'center', color: G().C.dark }); return; }
+    const m = s.summary || {};
+    G().text(m.time || '', x + w - 10, y + 7, { align: 'right', color: dim ? G().C.gray : G().C.white });
+    Menu.kit.fitText((m.names || []).join('  '), x + 16, y + 21, w - 26, { color: dim ? G().C.gray : G().C.white });
+    G().text(m.place || '', x + 16, y + 35, { color: dim ? G().C.gray : G().C.cyan });
+    if (m.gold != null) G().text(m.gold + ' G', x + w - 10, y + 35, { align: 'right', color: dim ? G().C.gray : G().C.white });
+  }
+  Menu.drawSlot = drawSlot;
+
+  // ------------------------------------------------------------ DOM code overlay
+  /**
+   * Show the ふっかつのじゅもん overlay over the canvas.
+   * o: {mode:'export'|'import', code}  → Promise(code string | null)
+   */
+  Menu.codeOverlay = function (o) {
+    return new Promise((resolve) => {
+      if (typeof document === 'undefined') { resolve(null); return; }
+      const imp = o.mode === 'import';
+      const host = document.getElementById('game') || document.body;
+      const cv = document.getElementById('screen');
+      const r = cv ? cv.getBoundingClientRect() : { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
+      const box = document.createElement('div');
+      box.id = 'code-overlay';
+      Object.assign(box.style, {
+        position: 'fixed', left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px',
+        boxSizing: 'border-box', padding: Math.max(8, r.width * 0.035) + 'px', background: 'rgba(0,0,12,0.93)',
+        display: 'flex', flexDirection: 'column', gap: '8px', zIndex: 50, color: '#fff',
+        fontFamily: '"DotGothic16", monospace', fontSize: Math.max(13, Math.round(r.width / 26)) + 'px',
+        border: '3px solid #fff', borderRadius: '8px',
+      });
+      const title = document.createElement('div');
+      title.textContent = 'ふっかつのじゅもん';
+      title.style.color = '#ffe45a';
+      const hint = document.createElement('div');
+      hint.textContent = imp ? 'じゅもんを はりつけて 「けってい」を おしてください。' : 'この じゅもんを ひかえておけば べつの ばしょでも つづきから あそべます。';
+      hint.style.fontSize = '0.8em';
+      hint.style.lineHeight = '1.4';
+      const ta = document.createElement('textarea');
+      ta.value = o.code || '';
+      ta.readOnly = !imp;
+      ta.spellcheck = false;
+      ta.setAttribute('autocapitalize', 'off');
+      ta.setAttribute('autocomplete', 'off');
+      Object.assign(ta.style, {
+        flex: '1 1 auto', minHeight: '40px', width: '100%', boxSizing: 'border-box', resize: 'none',
+        background: '#10142c', color: '#e8ecff', border: '2px solid #6a78c0', borderRadius: '4px',
+        fontFamily: 'monospace', fontSize: '12px', wordBreak: 'break-all', padding: '6px',
+      });
+      const row = document.createElement('div');
+      Object.assign(row.style, { display: 'flex', gap: '10px', justifyContent: 'flex-end', flexWrap: 'wrap' });
+      const btn = (label, fn, primary) => {
+        const b = document.createElement('button');
+        b.textContent = label;
+        Object.assign(b.style, {
+          font: 'inherit', fontSize: '0.9em', color: '#fff', background: primary ? '#2a3c9a' : '#2a2a3a',
+          border: '2px solid #fff', borderRadius: '6px', padding: '6px 14px', cursor: 'pointer', minWidth: '5em',
+        });
+        b.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); fn(b); });
+        row.appendChild(b);
+        return b;
+      };
+      const msg = document.createElement('div');
+      Object.assign(msg.style, { fontSize: '0.8em', color: '#6ee07a', minHeight: '1.2em' });
+
+      const wasEnabled = R.Input.enabled;
+      R.Input.enabled = false;
+      let done = false;
+      const finish = (v) => {
+        if (done) return;
+        done = true;
+        document.removeEventListener('keydown', onKey, true);
+        box.remove();
+        R.Input.enabled = wasEnabled;
+        R.Input.consume();
+        try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) { /* ignore */ }
+        resolve(v);
+      };
+      // keys typed into the textarea must not reach the game's key handler
+      ta.addEventListener('keydown', (e) => { e.stopPropagation(); if (e.key === 'Escape') { e.preventDefault(); finish(null); } });
+      const onKey = (e) => {
+        if (e.target === ta) return;
+        if (e.key === 'Escape' || e.code === 'KeyX' || e.key === 'Backspace') { e.preventDefault(); e.stopPropagation(); finish(null); }
+        else if (!imp && (e.code === 'KeyZ' || e.key === 'Enter')) { e.preventDefault(); e.stopPropagation(); finish(null); }
+      };
+      document.addEventListener('keydown', onKey, true);
+
+      if (imp) {
+        btn('やめる', () => finish(null));
+        btn('けってい', () => finish(ta.value.trim() || null), true);
+      } else {
+        btn('コピー', async (b) => {
+          let ok = false;
+          try { if (navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(ta.value); ok = true; } } catch (e) { ok = false; }
+          if (!ok) {
+            try { ta.focus(); ta.select(); ok = document.execCommand && document.execCommand('copy'); } catch (e) { ok = false; }
+          }
+          msg.textContent = ok ? 'コピーしました。' : 'じゅもんを えらんで コピーしてください。';
+          msg.style.color = ok ? '#6ee07a' : '#ffb03c';
+          if (!ok) { ta.focus(); ta.select(); }
+          b.blur();
+        }, true);
+        btn('とじる', () => finish(null));
+      }
+      box.appendChild(title); box.appendChild(hint); box.appendChild(ta); box.appendChild(msg); box.appendChild(row);
+      host.appendChild(box);
+      if (imp) setTimeout(() => { try { ta.focus(); } catch (e) { /* ignore */ } }, 50);
+    });
+  };
+
+  /** export the current game as a code and show it */
+  Menu.showCode = async function () {
+    let code = null;
+    try { code = await R.Save.exportCode(R.State.serialize()); } catch (e) { console.error(e); }
+    if (!code) { await Menu.kit.msg('じゅもんを つくれなかった……。'); return; }
+    await Menu.codeOverlay({ mode: 'export', code });
+  };
+
+  let C = null;
+  const cls = () => C || (C = build());
+  /** save screen (menu セーブ, church おいのり, events). → true if saved */
+  Menu.saveScreen = (o) => R.Engine.run(new (cls().SaveScreen)(o || {}));
+  Menu.saveMenu = Menu.saveScreen; // name used by events_runtime (ev.saveMenu)
+  /** settings screen (field menu & title) */
+  Menu.settings = () => R.Engine.run(new (cls().SettingsScreen)());
+
+  // ------------------------------------------------------------ settings rows
+  const SETTINGS = [
+    { key: 'msgSpeed', label: 'メッセージの はやさ', values: [0, 1, 2, 3], names: ['おそい', 'ふつう', 'はやい', 'しゅんかん'], desc: 'メッセージが ひょうじされる はやさを えらびます。' },
+    { key: 'battleSpeed', label: 'せんとうの はやさ', values: [0, 1, 2], names: ['ふつう', 'はやい', 'さいそく'], desc: 'せんとうの えんしゅつの はやさを えらびます。' },
+    { key: 'bgmVolume', label: 'BGMの おおきさ', vol: true, desc: 'おんがくの おおきさを ちょうせつします。' },
+    { key: 'sfxVolume', label: 'こうかおんの おおきさ', vol: true, desc: 'こうかおんの おおきさを ちょうせつします。' },
+    { key: 'alwaysDash', label: 'いつでも ダッシュ', values: [true, false], names: ['オン', 'オフ'], desc: 'オンにすると いつも はしって いどうします。（シフトキーで ぎゃくに なります）' },
+    { key: 'windowColor', label: 'ウインドウの いろ', values: ['black', 'blue', 'green', 'red'], names: ['くろ', 'あお', 'みどり', 'あか'], desc: 'ウインドウの いろを かえます。' },
+    { key: 'touchPad', label: 'タッチパッド', values: ['auto', 'on', 'off'], names: ['じどう', 'ひょうじ', 'かくす'], desc: 'がめんの ボタンを ひょうじするか えらびます。' },
+    { key: 'cursorMemory', label: 'カーソル きおく', values: [true, false], names: ['オン', 'オフ'], desc: 'せんとうで まえに えらんだ コマンドを おぼえます。' },
+  ];
+
+  function applySetting(key) {
+    const S = R.Settings;
+    if ((key === 'bgmVolume' || key === 'sfxVolume') && R.Audio && R.Audio.setVolumes) {
+      try { R.Audio.setVolumes(S.bgmVolume, S.sfxVolume); } catch (e) { console.error(e); }
+    }
+    if (key === 'touchPad' && R.applyTouchSetting) { try { R.applyTouchSetting(); } catch (e) { console.error(e); } }
+    if (R.Save && R.Save.saveSettings) R.Save.saveSettings();
+  }
+
+  function build() {
+    const K = Menu.kit;
+
+    // ============================================================ セーブ
+    class SaveScreen extends K.Screen {
+      constructor(o) {
+        super();
+        this.o = o;
+        this.slots = null;
+        this.index = R.Save.lastSlot || 0;
+        this.flow(() => this.load());
+      }
+      async load() { this.slots = await R.Save.list(); }
+      get count() { return this.o.noCode ? 3 : 4; }
+      input() {
+        if (!this.slots) return;
+        const d = In().dirRepeat();
+        if (d === 'up' || d === 'down') { this.index = (this.index + (d === 'up' ? this.count - 1 : 1)) % this.count; R.sfx('cursor'); }
+        if (In().pressed('b')) { R.sfx('cancel'); this.close(this.saved || false); return; }
+        if (In().pressed('a')) { R.sfx('confirm'); this.flow(() => (this.index === 3 ? Menu.showCode() : this.save(this.index))); }
+      }
+      async save(i) {
+        const n = i + 1;
+        if (this.slots[i] && !(await K.yesno('ぼうけんのしょ ' + n + 'に うわがき しますか？'))) return;
+        let ok = false;
+        try { ok = await R.Save.save(i, R.State.serialize()); } catch (e) { console.error(e); }
+        if (!ok) { R.sfx('buzzer'); await K.msg('きろくに しっぱいしました。'); return; }
+        this.saved = true;
+        await this.load();
+        const j = R.jingle('save');
+        await Promise.all([K.say('ぼうけんのしょ ' + n + 'に きろくしました。'), j]);
+        this.close(true);
+      }
+      render() {
+        const ys = [4, 62, 120];
+        for (let i = 0; i < 3; i++) {
+          drawSlot(i, this.slots ? this.slots[i] : null, 4, ys[i], 248, 56);
+          if (this.index === i) G().cursor(10, ys[i] + 8, !this.busy);
+        }
+        if (!this.slots) G().text('よみこみちゅう…', 128, 30, { align: 'center', color: G().C.gray });
+        if (!this.o.noCode) {
+          G().window(4, 178, 248, 26);
+          G().text('ふっかつのじゅもんを みる', 20, 185, { color: G().C.cyan });
+          if (this.index === 3) G().cursor(10, 186, !this.busy);
+        }
+      }
+    }
+
+    // ============================================================ せってい
+    class SettingsScreen extends K.Screen {
+      constructor() {
+        super();
+        this.index = 0;
+        this.n = SETTINGS.length + 1; // + もどる
+      }
+      input() {
+        const d = In().dirRepeat();
+        if (d === 'up' || d === 'down') { this.index = (this.index + (d === 'up' ? this.n - 1 : 1)) % this.n; R.sfx('cursor'); }
+        if (In().pressed('b')) { R.sfx('cancel'); this.close(); return; }
+        if (this.index === SETTINGS.length) { if (In().pressed('a')) { R.sfx('confirm'); this.close(); } return; }
+        const s = SETTINGS[this.index];
+        let step = 0;
+        if (d === 'left') step = -1;
+        if (d === 'right' || In().pressed('a')) step = 1;
+        if (!step) return;
+        const S = R.Settings;
+        if (s.vol) {
+          const v = Math.round((S[s.key] || 0) * 10);
+          const nv = Math.max(0, Math.min(10, v + step));
+          if (nv === v && d) return;
+          S[s.key] = (In().pressed('a') && v === 10 ? 0 : nv) / 10;
+        } else {
+          let k = s.values.indexOf(S[s.key]);
+          if (k < 0) k = 0;
+          k = (k + step + s.values.length) % s.values.length;
+          S[s.key] = s.values[k];
+        }
+        applySetting(s.key);
+        R.sfx('cursor');
+      }
+      render() {
+        const S = R.Settings;
+        const h = 16 + (SETTINGS.length + 1) * 16 - 4;
+        G().window(4, 4, 248, h, { title: 'せってい' });
+        SETTINGS.forEach((s, i) => {
+          const y = 14 + i * 16;
+          const sel = i === this.index;
+          G().text(s.label, 20, y, { color: sel ? G().C.white : '#c8c8d8' });
+          const vx = 196;
+          if (s.vol) {
+            const v = Math.round((S[s.key] || 0) * 10);
+            for (let k = 0; k < 10; k++) G().rect(158 + k * 7, y + 3, 5, 7, k < v ? (sel ? '#ffe45a' : '#c0c0d0') : '#303044');
+          } else {
+            const k = Math.max(0, s.values.indexOf(S[s.key]));
+            G().text(s.names[k], vx, y, { align: 'center', color: sel ? G().C.yellow : G().C.white });
+          }
+          if (sel && !s.vol) K.lrArrows(vx - 34, vx + 33, y + 2);
+          if (sel) G().cursor(8, y + 1, !this.busy);
+        });
+        const by = 14 + SETTINGS.length * 16;
+        G().text('もどる', 20, by, { color: G().C.cyan });
+        if (this.index === SETTINGS.length) G().cursor(8, by + 1, !this.busy);
+        // description + window colour preview
+        const s = SETTINGS[this.index];
+        G().window(4, h + 8, 248, 224 - h - 12);
+        const text = s ? s.desc : 'せっていを おえて もどります。';
+        G().wrap(text, 226).slice(0, 3).forEach((l, i) => G().text(l, 14, h + 16 + i * 14));
+      }
+    }
+    return { SaveScreen, SettingsScreen };
+  }
+})(window.RPG);
