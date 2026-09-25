@@ -168,6 +168,7 @@
         result = this.eng.result;
         if (this.autoCancel || result === 'lose') R.Battle.autoCarry = false; // B pressed during the last round / wiped
         this.auto = false;
+        this.repeating = false;
         this.acting = null;
         if (result === 'win') await this.victory();
         else if (result === 'lose') await this.defeat();
@@ -356,6 +357,9 @@
       const eng = this.eng;
       if (this.auto && this.autoCancel) { this.auto = false; this.autoCancel = false; R.Battle.autoCarry = false; }
       if (this.auto) return R.BattleAI.partyCommands(eng, AUTO_OPTS);
+      // リピート stays on (like オート) until B is pressed; this battle only
+      if (this.repeating && this.repeatCancel) { this.repeating = false; this.repeatCancel = false; }
+      if (this.repeating && this.lastCmds) return eng.repeatCommands(this.lastCmds);
       if (!eng.party.some((p) => p.commandable())) { await this.frames(24); return []; }
       this.clearMsg();
       for (;;) {
@@ -364,7 +368,7 @@
           this.auto = true; this.autoCancel = false; R.Battle.autoCarry = true;
           return R.BattleAI.partyCommands(eng, AUTO_OPTS);
         }
-        if (r === 'repeat') return eng.repeatCommands(this.lastCmds); // one round; the menu comes back next round
+        if (r === 'repeat') { this.repeating = true; this.repeatCancel = false; return eng.repeatCommands(this.lastCmds); }
         if (r === 'flee') return { flee: true };
         const cmds = await this.memberCommands();
         if (cmds) return cmds;
@@ -382,7 +386,7 @@
       if (list.isDisabled(list.index)) list.index = 0;
       this.panel = {
         left: list, enemies: true,
-        help: () => (ids[list.index] === 'repeat' ? (canRepeat ? '前のターンと同じ行動をくり返す。' : 'くり返す行動がまだない。') : ''),
+        help: () => (ids[list.index] === 'repeat' ? (canRepeat ? '前のターンと同じ行動をくり返す。（Bで解除）' : 'くり返す行動がまだない。') : ''),
       };
       const r = await this.ask(() => (list.update() === 'select' ? list.index : undefined));
       this.partyIdx = r === 1 || r === 2 ? r : 0;
@@ -580,6 +584,7 @@
     // ------------------------------------------------------------ layer hooks
     update() {
       if (this.auto && !this.autoCancel && In().pressed('b')) { this.autoCancel = true; R.sfx('cancel'); }
+      if (this.repeating && !this.repeatCancel && In().pressed('b')) { this.repeatCancel = true; R.sfx('cancel'); }
       const m = this.msg;
       // a page waiting for a key (rewards, level-ups, drops, pause): A, B or ↓ (request: 十字キーの下でも進む)
       const down = In().pressed('down');
@@ -815,11 +820,13 @@
       });
     }
     drawAuto() {
-      if (!this.auto) return;
-      const s = this.autoCancel ? 'オート解除' : 'オート　Bで解除';
+      if (!this.auto && !this.repeating) return;
+      const cancel = this.auto ? this.autoCancel : this.repeatCancel;
+      const name = this.auto ? 'オート' : 'リピート';
+      const s = cancel ? name + '解除' : name + '　Bで解除';
       const w = Math.ceil(G().textWidth(s)) + 16;
       G().window(BOX.x + BOX.w - w, BOX.y - 20, w, 20);
-      G().text(s, BOX.x + BOX.w - w + 8, BOX.y - 16, { color: this.autoCancel ? G().C.yellow : G().C.white });
+      G().text(s, BOX.x + BOX.w - w + 8, BOX.y - 16, { color: cancel ? G().C.yellow : G().C.white });
     }
   }
 

@@ -30,11 +30,48 @@
   }
   Menu.gearSummary = gearSummary;
 
+  const TYPE_NAMES = { weapon: '武器', shield: '盾', head: '頭', body: '体', acc: 'アクセサリ', consumable: '道具', key: '大切なもの' };
+  const pctText = (v) => (v > 0 ? '+' : '') + v + '%';
+  /** special effects of an item (its mods and on-hit extras) as short Japanese phrases */
+  function effectLines(it) {
+    const K = Menu.kit, m = it.mods || {}, out = [];
+    const el = (o, f) => Object.keys(o).map((e) => K.elemName(e) + f(o[e]));
+    if (it.onHit && it.onHit.status) out.push('攻撃時 ' + Math.round((it.onHit.chance || 0) * 100) + '%で' + K.statusName(it.onHit.status));
+    if (it.twoHanded) out.push('両手持ち');
+    if (it.hit) out.push('命中' + (it.hit > 0 ? '+' : '') + it.hit);
+    if (it.eva) out.push('回避+' + it.eva + '%');
+    if (m.statusImmune) out.push(m.statusImmune.map(K.statusName).join('・') + 'を防ぐ');
+    if (m.elemResist) out.push(el(m.elemResist, (v) => (v <= 0 ? '無効' : 'ダメージ' + Math.round((1 - v) * 100) + '%減')).join('・'));
+    if (m.elemBoost) out.push(el(m.elemBoost, (v) => '威力' + pctText(v)).join('・'));
+    if (m.hpPct) out.push('最大HP' + pctText(m.hpPct));
+    if (m.mpPct) out.push('最大MP' + pctText(m.mpPct));
+    if (m.crit) out.push('会心率' + pctText(m.crit));
+    if (m.hit) out.push('命中' + pctText(m.hit));
+    if (m.magicPct) out.push('魔法の威力' + pctText(m.magicPct));
+    if (m.healPct) out.push('回復量' + pctText(m.healPct));
+    if (m.mpCostPct) out.push('消費MP' + pctText(m.mpCostPct));
+    if (m.startBuffs) out.push('戦闘開始時 ' + Object.keys(m.startBuffs).map((k) => ({ atk: '攻撃力', def: '守備力', mag: '魔力', mdef: '魔法防御', agi: '素早さ' }[k] || k)).join('・') + 'アップ');
+    if (m.regen) out.push('戦闘中HPが少しずつ回復');
+    if (m.walkHeal) out.push('歩くとHPが回復');
+    if (m.noFloorDamage) out.push('ダメージ床を無効');
+    if (m.preemptPct) out.push('先制率' + pctText(m.preemptPct));
+    if (m.escapePct) out.push('逃げやすさ' + pctText(m.escapePct));
+    if (m.expPct) out.push('経験値' + pctText(m.expPct));
+    if (m.goldPct) out.push('ゴールド' + pctText(m.goldPct));
+    if (m.dropPct) out.push('ドロップ率' + pctText(m.dropPct));
+    if (m.rarePct) out.push('レア率' + pctText(m.rarePct));
+    if (m.stealPct) out.push('盗み成功率' + pctText(m.stealPct));
+    return out;
+  }
+  Menu.itemEffects = effectLines;
+
   let lastMember = 0;
   // classes are built on first use (Menu.kit comes from menu.js, whose load order is not guaranteed)
   let C = null;
   const cls = () => C || (C = build());
   Menu.itemScreen = () => R.Engine.run(new (cls().ItemScreen)());
+  /** Y (詳細) in item lists: a popup with everything about the item; any button closes it */
+  Menu.itemDetail = (id) => (DB.items[id] ? R.Engine.run(new (cls().ItemDetail)(id)) : Promise.resolve());
   Menu.abilityScreen = () => R.Engine.run(new (cls().AbilityScreen)());
 
   function build() {
@@ -60,6 +97,7 @@
           this.refresh(false);
           return;
         }
+        if (In().pressed('y') && this.cur) { R.sfx('confirm'); this.flow(() => Menu.itemDetail(this.cur.id)); return; }
         const r = this.list.update();
         if (r === 'cancel') this.close();
         else if (r === 'select' && this.cur) this.flow(() => this.act(this.cur));
@@ -127,8 +165,8 @@
         K.lrArrows(12, 243, 12);
         this.list.draw();
         if (!this.entries.length) G().text('何も持っていない。', 20, 38, { color: G().C.gray });
-        // description
-        G().window(4, 158, 248, 60);
+        // description (Y opens the full 詳細 popup)
+        G().window(4, 158, 248, 60, this.cur ? { title: 'Y：詳細' } : undefined);
         const e = this.cur;
         if (!e) return;
         const it = e.item;
@@ -148,6 +186,51 @@
           if (where) G().text(where, 15, 194, { color: G().C.gray });
           if (it.price) G().text('売値 ' + Math.floor(it.price / 2) + 'G', 242, 194, { align: 'right', color: G().C.gray });
         }
+      }
+    }
+
+    // ------------------------------------------------------------ 詳細 popup
+    class ItemDetail extends Menu.kit.Screen {
+      constructor(id) {
+        super();
+        const K = Menu.kit, it = DB.items[id];
+        this.id = id; this.it = it;
+        const L = [];
+        const W = 212;
+        for (const l of G().wrap(it.desc || '', W)) L.push([l, G().C.white]);
+        const gear = ['weapon', 'shield', 'head', 'body', 'acc'].includes(it.type);
+        if (gear) {
+          const sum = gearSummary(it);
+          if (sum) for (const l of G().wrap(sum, W)) L.push([l, G().C.cyan]);
+        }
+        const fx = effectLines(it);
+        if (fx.length) for (const l of G().wrap('効果：' + fx.join('、'), W)) L.push([l, G().C.green]);
+        if (it.type === 'consumable') {
+          const u = it.use || {};
+          const where = u.field && u.battle ? 'いつでも使える' : u.field ? 'フィールドで使える' : u.battle ? '戦闘中に使える' : '';
+          if (where) L.push([where, G().C.gray]);
+        }
+        if (gear) {
+          const who = R.Game.party.filter((c) => R.Rules.canEquip(c, id)).map((c) => c.name);
+          L.push(['今のジョブで装備できる：' + (who.length === R.Game.party.length ? '全員' : who.length ? who.join('・') : 'なし'), G().C.gray]);
+        }
+        const own = R.State.count(id);
+        L.push(['持っている数 ' + own + (it.price ? '　　売値 ' + Math.floor(it.price / 2) + 'G' : ''), G().C.gray]);
+        this.lines = L;
+        this.h = Math.min(200, 34 + L.length * 14);
+      }
+      input() {
+        if (In().pressed('a') || In().pressed('b') || In().pressed('y')) { R.sfx('cancel'); this.close(); }
+      }
+      render() {
+        const K = Menu.kit, it = this.it;
+        const y0 = Math.max(8, Math.floor((R.H - this.h) / 2));
+        G().window(12, y0, 232, this.h, { title: '詳細' });
+        K.drawIcon(it, 22, y0 + 12);
+        G().text(K.itemLabel(this.id), 34, y0 + 10, { color: it.rare ? G().C.yellow : G().C.white });
+        G().text(TYPE_NAMES[it.type] || '', 234, y0 + 10, { align: 'right', color: G().C.gray });
+        const max = Math.floor((this.h - 30) / 14);
+        this.lines.slice(0, max).forEach(([l, col], i) => K.fitText(l, 22, y0 + 28 + i * 14, 214, { color: col }));
       }
     }
 
@@ -225,6 +308,6 @@
         }
       }
     }
-    return { ItemScreen, AbilityScreen };
+    return { ItemScreen, AbilityScreen, ItemDetail };
   }
 })(window.RPG);

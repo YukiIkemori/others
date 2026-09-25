@@ -69,6 +69,8 @@
       if (!this.list.rows) this.list.rows = 1;
     }
     update() {
+      const cur = this.list.item && this.list.item.id;
+      if (R.Input.pressed('y') && cur && R.Menu.itemDetail) { R.sfx('confirm'); R.Menu.itemDetail(cur); return; }
       const r = this.list.update();
       if (r === 'select') this.close(this.list.index);
       else if (r === 'cancel') this.close(-1);
@@ -111,7 +113,7 @@
         }
       }
       // description (in place of the shopkeeper's message)
-      G().window(8, 150, 240, 68);
+      G().window(8, 150, 240, 68, it ? { title: 'Y：詳細' } : undefined);
       if (!it) { G().text(this.mode === 'sell' ? '売れる物を持っていない。' : '', 18, 157, { color: G().C.gray }); return; }
       const lines = G().wrap(it.desc || '', 220).slice(0, 3);
       lines.forEach((l, i) => G().text(l, 18, 157 + i * 14));

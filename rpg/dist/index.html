@@ -32596,6 +32596,7 @@ try{
         result = this.eng.result;
         if (this.autoCancel || result === 'lose') R.Battle.autoCarry = false; // B pressed during the last round / wiped
         this.auto = false;
+        this.repeating = false;
         this.acting = null;
         if (result === 'win') await this.victory();
         else if (result === 'lose') await this.defeat();
@@ -32784,6 +32785,9 @@ try{
       const eng = this.eng;
       if (this.auto && this.autoCancel) { this.auto = false; this.autoCancel = false; R.Battle.autoCarry = false; }
       if (this.auto) return R.BattleAI.partyCommands(eng, AUTO_OPTS);
+      // リピート stays on (like オート) until B is pressed; this battle only
+      if (this.repeating && this.repeatCancel) { this.repeating = false; this.repeatCancel = false; }
+      if (this.repeating && this.lastCmds) return eng.repeatCommands(this.lastCmds);
       if (!eng.party.some((p) => p.commandable())) { await this.frames(24); return []; }
       this.clearMsg();
       for (;;) {
@@ -32792,7 +32796,7 @@ try{
           this.auto = true; this.autoCancel = false; R.Battle.autoCarry = true;
           return R.BattleAI.partyCommands(eng, AUTO_OPTS);
         }
-        if (r === 'repeat') return eng.repeatCommands(this.lastCmds); // one round; the menu comes back next round
+        if (r === 'repeat') { this.repeating = true; this.repeatCancel = false; return eng.repeatCommands(this.lastCmds); }
         if (r === 'flee') return { flee: true };
         const cmds = await this.memberCommands();
         if (cmds) return cmds;
@@ -32810,7 +32814,7 @@ try{
       if (list.isDisabled(list.index)) list.index = 0;
       this.panel = {
         left: list, enemies: true,
-        help: () => (ids[list.index] === 'repeat' ? (canRepeat ? '前のターンと同じ行動をくり返す。' : 'くり返す行動がまだない。') : ''),
+        help: () => (ids[list.index] === 'repeat' ? (canRepeat ? '前のターンと同じ行動をくり返す。（Bで解除）' : 'くり返す行動がまだない。') : ''),
       };
       const r = await this.ask(() => (list.update() === 'select' ? list.index : undefined));
       this.partyIdx = r === 1 || r === 2 ? r : 0;
@@ -33008,6 +33012,7 @@ try{
     // ------------------------------------------------------------ layer hooks
     update() {
       if (this.auto && !this.autoCancel && In().pressed('b')) { this.autoCancel = true; R.sfx('cancel'); }
+      if (this.repeating && !this.repeatCancel && In().pressed('b')) { this.repeatCancel = true; R.sfx('cancel'); }
       const m = this.msg;
       // a page waiting for a key (rewards, level-ups, drops, pause): A, B or ↓ (request: 十字キーの下でも進む)
       const down = In().pressed('down');
@@ -33243,11 +33248,13 @@ try{
       });
     }
     drawAuto() {
-      if (!this.auto) return;
-      const s = this.autoCancel ? 'オート解除' : 'オート　Bで解除';
+      if (!this.auto && !this.repeating) return;
+      const cancel = this.auto ? this.autoCancel : this.repeatCancel;
+      const name = this.auto ? 'オート' : 'リピート';
+      const s = cancel ? name + '解除' : name + '　Bで解除';
       const w = Math.ceil(G().textWidth(s)) + 16;
       G().window(BOX.x + BOX.w - w, BOX.y - 20, w, 20);
-      G().text(s, BOX.x + BOX.w - w + 8, BOX.y - 16, { color: this.autoCancel ? G().C.yellow : G().C.white });
+      G().text(s, BOX.x + BOX.w - w + 8, BOX.y - 16, { color: cancel ? G().C.yellow : G().C.white });
     }
   }
 
@@ -37746,6 +37753,15 @@ try{
     return '';
   }
   Menu.gearTag = gearTag;
+  /** sort key for the candidate list: a weapon's 攻撃力 (or 魔力 when that is its point), armour 守備力+魔法防御,
+   *  accessories by the member-aware 最強装備 score */
+  function gearRank(c, id) {
+    const it = DB.items[id];
+    if (!it) return -1;
+    if (it.type === 'weapon') return Math.max(it.atk || 0, it.mag || 0);
+    if (it.type === 'acc') return R.Rules.itemScore(c, id);
+    return (it.def || 0) + (it.mdef || 0) * 0.5;
+  }
 
   let C = null;
   const cls = () => C || (C = build());
@@ -37788,13 +37804,15 @@ try{
         const c = this.c;
         const cur = R.Rules.stats(c);
         const now = c.equip[slot] || null;
-        // the item worn right now is listed (marked E) so you can see what you would replace
-        const items = [{ label: '外す', id: null }]
-          .concat(now ? [{ label: Menu.kit.itemLabel(now), id: now, d: 0, worn: true }] : [])
-          .concat(ids.map((id) => ({ label: Menu.kit.itemLabel(id), id, d: gearScore(c, slot, id, cur) })));
-        const start = now ? 1 : 0;
+        // strongest first (攻撃力/魔力 for weapons, 守備力 for armour); the item worn right now sits
+        // in its place in that order (marked E) so you can see what you would replace
+        const rows = ids.filter((id) => id !== now).map((id) => ({ label: Menu.kit.itemLabel(id), id, d: gearScore(c, slot, id, cur) }));
+        if (now) rows.push({ label: Menu.kit.itemLabel(now), id: now, d: 0, worn: true });
+        rows.sort((a, b) => gearRank(c, b.id) - gearRank(c, a.id) || (b.worn ? 1 : 0) - (a.worn ? 1 : 0));
+        const items = [{ label: '外す', id: null }].concat(rows);
+        const wornAt = items.findIndex((r) => r.worn);
         const list = new R.UI.List({
-          x: 4, y: 46, w: 248, rows: ROWS, items, index: now ? 1 : ids.length ? 1 : start,
+          x: 4, y: 46, w: 248, rows: ROWS, items, index: wornAt > 0 ? wornAt : rows.length ? 1 : 0,
           title: slot === 'shield' && dual(c) ? '左手' : LABEL[slot],
           onChange: () => this.updatePreview(),
           drawItem: (row, x, y, w) => this.drawCand(row, x, y, w),
@@ -37811,6 +37829,7 @@ try{
       }
       inputCand() {
         const cd = this.cand;
+        if (In().pressed('y') && cd.list.item && cd.list.item.id) { R.sfx('confirm'); this.flow(() => Menu.itemDetail(cd.list.item.id)); return; }
         const r = cd.list.update();
         if (r === 'cancel') { this.mode = 'slot'; this.cand = null; this.preview = null; return; }
         if (r !== 'select') return;
@@ -37845,8 +37864,8 @@ try{
         const K = Menu.kit;
         const c = this.c;
         // header: member (or the highlighted item's description while choosing)
-        G().window(4, 4, 248, 40);
         const cd = this.mode === 'cand' ? this.cand : null;
+        G().window(4, 4, 248, 40, cd && cd.list.item && cd.list.item.id ? { title: 'Y：詳細' } : undefined);
         if (cd) {
           const row = cd.list.item;
           const text = row && row.id ? (DB.items[row.id].desc || '') : '今の装備を外す。';
@@ -37941,11 +37960,48 @@ try{
   }
   Menu.gearSummary = gearSummary;
 
+  const TYPE_NAMES = { weapon: '武器', shield: '盾', head: '頭', body: '体', acc: 'アクセサリ', consumable: '道具', key: '大切なもの' };
+  const pctText = (v) => (v > 0 ? '+' : '') + v + '%';
+  /** special effects of an item (its mods and on-hit extras) as short Japanese phrases */
+  function effectLines(it) {
+    const K = Menu.kit, m = it.mods || {}, out = [];
+    const el = (o, f) => Object.keys(o).map((e) => K.elemName(e) + f(o[e]));
+    if (it.onHit && it.onHit.status) out.push('攻撃時 ' + Math.round((it.onHit.chance || 0) * 100) + '%で' + K.statusName(it.onHit.status));
+    if (it.twoHanded) out.push('両手持ち');
+    if (it.hit) out.push('命中' + (it.hit > 0 ? '+' : '') + it.hit);
+    if (it.eva) out.push('回避+' + it.eva + '%');
+    if (m.statusImmune) out.push(m.statusImmune.map(K.statusName).join('・') + 'を防ぐ');
+    if (m.elemResist) out.push(el(m.elemResist, (v) => (v <= 0 ? '無効' : 'ダメージ' + Math.round((1 - v) * 100) + '%減')).join('・'));
+    if (m.elemBoost) out.push(el(m.elemBoost, (v) => '威力' + pctText(v)).join('・'));
+    if (m.hpPct) out.push('最大HP' + pctText(m.hpPct));
+    if (m.mpPct) out.push('最大MP' + pctText(m.mpPct));
+    if (m.crit) out.push('会心率' + pctText(m.crit));
+    if (m.hit) out.push('命中' + pctText(m.hit));
+    if (m.magicPct) out.push('魔法の威力' + pctText(m.magicPct));
+    if (m.healPct) out.push('回復量' + pctText(m.healPct));
+    if (m.mpCostPct) out.push('消費MP' + pctText(m.mpCostPct));
+    if (m.startBuffs) out.push('戦闘開始時 ' + Object.keys(m.startBuffs).map((k) => ({ atk: '攻撃力', def: '守備力', mag: '魔力', mdef: '魔法防御', agi: '素早さ' }[k] || k)).join('・') + 'アップ');
+    if (m.regen) out.push('戦闘中HPが少しずつ回復');
+    if (m.walkHeal) out.push('歩くとHPが回復');
+    if (m.noFloorDamage) out.push('ダメージ床を無効');
+    if (m.preemptPct) out.push('先制率' + pctText(m.preemptPct));
+    if (m.escapePct) out.push('逃げやすさ' + pctText(m.escapePct));
+    if (m.expPct) out.push('経験値' + pctText(m.expPct));
+    if (m.goldPct) out.push('ゴールド' + pctText(m.goldPct));
+    if (m.dropPct) out.push('ドロップ率' + pctText(m.dropPct));
+    if (m.rarePct) out.push('レア率' + pctText(m.rarePct));
+    if (m.stealPct) out.push('盗み成功率' + pctText(m.stealPct));
+    return out;
+  }
+  Menu.itemEffects = effectLines;
+
   let lastMember = 0;
   // classes are built on first use (Menu.kit comes from menu.js, whose load order is not guaranteed)
   let C = null;
   const cls = () => C || (C = build());
   Menu.itemScreen = () => R.Engine.run(new (cls().ItemScreen)());
+  /** Y (詳細) in item lists: a popup with everything about the item; any button closes it */
+  Menu.itemDetail = (id) => (DB.items[id] ? R.Engine.run(new (cls().ItemDetail)(id)) : Promise.resolve());
   Menu.abilityScreen = () => R.Engine.run(new (cls().AbilityScreen)());
 
   function build() {
@@ -37971,6 +38027,7 @@ try{
           this.refresh(false);
           return;
         }
+        if (In().pressed('y') && this.cur) { R.sfx('confirm'); this.flow(() => Menu.itemDetail(this.cur.id)); return; }
         const r = this.list.update();
         if (r === 'cancel') this.close();
         else if (r === 'select' && this.cur) this.flow(() => this.act(this.cur));
@@ -38038,8 +38095,8 @@ try{
         K.lrArrows(12, 243, 12);
         this.list.draw();
         if (!this.entries.length) G().text('何も持っていない。', 20, 38, { color: G().C.gray });
-        // description
-        G().window(4, 158, 248, 60);
+        // description (Y opens the full 詳細 popup)
+        G().window(4, 158, 248, 60, this.cur ? { title: 'Y：詳細' } : undefined);
         const e = this.cur;
         if (!e) return;
         const it = e.item;
@@ -38059,6 +38116,51 @@ try{
           if (where) G().text(where, 15, 194, { color: G().C.gray });
           if (it.price) G().text('売値 ' + Math.floor(it.price / 2) + 'G', 242, 194, { align: 'right', color: G().C.gray });
         }
+      }
+    }
+
+    // ------------------------------------------------------------ 詳細 popup
+    class ItemDetail extends Menu.kit.Screen {
+      constructor(id) {
+        super();
+        const K = Menu.kit, it = DB.items[id];
+        this.id = id; this.it = it;
+        const L = [];
+        const W = 212;
+        for (const l of G().wrap(it.desc || '', W)) L.push([l, G().C.white]);
+        const gear = ['weapon', 'shield', 'head', 'body', 'acc'].includes(it.type);
+        if (gear) {
+          const sum = gearSummary(it);
+          if (sum) for (const l of G().wrap(sum, W)) L.push([l, G().C.cyan]);
+        }
+        const fx = effectLines(it);
+        if (fx.length) for (const l of G().wrap('効果：' + fx.join('、'), W)) L.push([l, G().C.green]);
+        if (it.type === 'consumable') {
+          const u = it.use || {};
+          const where = u.field && u.battle ? 'いつでも使える' : u.field ? 'フィールドで使える' : u.battle ? '戦闘中に使える' : '';
+          if (where) L.push([where, G().C.gray]);
+        }
+        if (gear) {
+          const who = R.Game.party.filter((c) => R.Rules.canEquip(c, id)).map((c) => c.name);
+          L.push(['今のジョブで装備できる：' + (who.length === R.Game.party.length ? '全員' : who.length ? who.join('・') : 'なし'), G().C.gray]);
+        }
+        const own = R.State.count(id);
+        L.push(['持っている数 ' + own + (it.price ? '　　売値 ' + Math.floor(it.price / 2) + 'G' : ''), G().C.gray]);
+        this.lines = L;
+        this.h = Math.min(200, 34 + L.length * 14);
+      }
+      input() {
+        if (In().pressed('a') || In().pressed('b') || In().pressed('y')) { R.sfx('cancel'); this.close(); }
+      }
+      render() {
+        const K = Menu.kit, it = this.it;
+        const y0 = Math.max(8, Math.floor((R.H - this.h) / 2));
+        G().window(12, y0, 232, this.h, { title: '詳細' });
+        K.drawIcon(it, 22, y0 + 12);
+        G().text(K.itemLabel(this.id), 34, y0 + 10, { color: it.rare ? G().C.yellow : G().C.white });
+        G().text(TYPE_NAMES[it.type] || '', 234, y0 + 10, { align: 'right', color: G().C.gray });
+        const max = Math.floor((this.h - 30) / 14);
+        this.lines.slice(0, max).forEach(([l, col], i) => K.fitText(l, 22, y0 + 28 + i * 14, 214, { color: col }));
       }
     }
 
@@ -38136,7 +38238,7 @@ try{
         }
       }
     }
-    return { ItemScreen, AbilityScreen };
+    return { ItemScreen, AbilityScreen, ItemDetail };
   }
 })(window.RPG);
 
@@ -42042,6 +42144,8 @@ try{
       if (!this.list.rows) this.list.rows = 1;
     }
     update() {
+      const cur = this.list.item && this.list.item.id;
+      if (R.Input.pressed('y') && cur && R.Menu.itemDetail) { R.sfx('confirm'); R.Menu.itemDetail(cur); return; }
       const r = this.list.update();
       if (r === 'select') this.close(this.list.index);
       else if (r === 'cancel') this.close(-1);
@@ -42084,7 +42188,7 @@ try{
         }
       }
       // description (in place of the shopkeeper's message)
-      G().window(8, 150, 240, 68);
+      G().window(8, 150, 240, 68, it ? { title: 'Y：詳細' } : undefined);
       if (!it) { G().text(this.mode === 'sell' ? '売れる物を持っていない。' : '', 18, 157, { color: G().C.gray }); return; }
       const lines = G().wrap(it.desc || '', 220).slice(0, 3);
       lines.forEach((l, i) => G().text(l, 18, 157 + i * 14));
