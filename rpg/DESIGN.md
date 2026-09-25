@@ -705,7 +705,7 @@ with a gold + playtime + next-objective window. Details:
   Ends with a summary window (casts × count and MP, items used, who is still hurt / poisoned / down).
 * **Member switch**: every per-member screen (アビリティ, 装備, ジョブ, おぼえる, セット, 強さ) switches member with
   L / R (keyboard Q / E, pad shoulders); ←→ also works where it does not move a cursor. Headers show small L / R marks.
-* **そうび**: per character, per slot; shows stat changes (↑ green / ↓ red) for candidates; **さいきょう** (optimize) and **はずす**.
+* **そうび**: per character, per slot; shows stat changes (↑ green / ↓ red) for candidates; **さいきょう** (optimize; アクセサリーは変えない) and **はずす**.
 * **ジョブ**: FFT-style job board: every job in a grid with state (locked shows requirements), job level and ★ mastered;
   change job; **アビリティをおぼえる** (spend that job's JP on its abilities; shows cost, JP available, kind, desc).
 * **セット**: サブアクション (another unlocked job's command), リアクション, サポート, フィールド (learned from any job).

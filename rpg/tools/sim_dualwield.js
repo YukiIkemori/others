@@ -213,7 +213,7 @@ function equipBuild(c, pool, dual, tg) {
     const t = DB.items[id].type;
     if (t !== 'weapon' && !(dual && t === 'shield')) R.Game.inv[id] = pool[id];
   }
-  Rules.optimize(c);
+  Rules.optimize(c, { acc: true });
   R.Game.inv = {};
   return ready(c);
 }

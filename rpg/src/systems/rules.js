@@ -439,12 +439,14 @@
     /**
      * equip the best available items for every slot. Returns true if anything changed.
      * Party-aware: the last copy of an item is left for a member who would gain clearly more from it.
+     * The accessory is the player's own choice and is left alone unless opts.acc (sims).
      */
-    optimize(c) {
+    optimize(c, opts) {
       let changed = false;
       const others = ((R.Game && R.Game.party) || []).filter((o) => o !== c);
       const gainFor = (o, id, slot) => (Rules.canEquip(o, id, slot) ? Rules.itemScore(o, id) - (o.equip[slot] ? Rules.itemScore(o, o.equip[slot]) : 0) : -Infinity);
       for (const slot of SLOTS) {
+        if (slot === 'acc' && !(opts && opts.acc)) continue;
         if (slot === 'shield' && c.equip.weapon && DB.items[c.equip.weapon] && DB.items[c.equip.weapon].twoHanded) continue;
         const cur = c.equip[slot];
         const curScore = cur ? Rules.itemScore(c, cur) : 0;

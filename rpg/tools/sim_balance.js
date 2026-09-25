@@ -168,7 +168,7 @@ function equipParty(party, towns) {
   for (const c of party) {
     if (!towns.length) { const st = Rules.stats(c); c.hp = st.hp; c.mp = st.mp; continue; }
     for (const s of Rules.SLOTS) c.equip[s] = null;
-    Rules.optimize(c);
+    Rules.optimize(c, { acc: true });
     const st = Rules.stats(c);
     c.hp = st.hp; c.mp = st.mp; c.status = {};
   }
