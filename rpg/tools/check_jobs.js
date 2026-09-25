@@ -56,7 +56,9 @@ const FORMULAS = ['phys', 'magic', 'fixed', 'percent', 'breath'];
 const BUFFS = ['atk', 'def', 'mag', 'mdef', 'agi'];
 const TRIGGERS = ['hitPhys', 'hitMagic', 'hitAny', 'lowHp', 'allyLowHp', 'ko'];
 const FLAGS = ['boss', 'metal', 'undead', 'flying', 'dragon', 'flee'];
-const FIELD_MODS = new Set(['encounterPct', 'walkHeal', 'noFloorDamage', 'treasureSense']);
+const FIELD_MODS = new Set(['encounterPct', 'walkHeal', 'noFloorDamage']);
+// loot bonuses are allowed in both the support and the field slot
+const LOOT_MODS = new Set(['dropPct', 'goldPct', 'rarePct']);
 const MODS = new Set(('hpPct mpPct strPct vitPct agiPct intPct mndPct lukPct atk def mag mdef hit eva crit atkPct defPct magPct mdefPct ' +
   'physPct magicPct healPct itemPct mpCostPct critPct escapePct preemptPct elemBoost elemResist statusImmune startBuffs regen ' +
   'twoSwords unarmed equip expPct jpPct goldPct dropPct rarePct stealPct encounterPct walkHeal noFloorDamage treasureSense').split(' '));
@@ -98,7 +100,7 @@ function checkMods(where, m, kind) {
   if (!Object.keys(m).length) E(`${where}: empty mods`);
   for (const k in m) {
     if (!MODS.has(k)) E(`${where}: unknown mod '${k}'`);
-    if (kind === 'field' && !FIELD_MODS.has(k)) E(`${where}: field ability with battle mod '${k}' (it would apply everywhere)`);
+    if (kind === 'field' && !FIELD_MODS.has(k) && !LOOT_MODS.has(k)) E(`${where}: field ability with battle mod '${k}' (it would apply everywhere)`);
     if (kind === 'support' && FIELD_MODS.has(k)) W(`${where}: support with field-only mod '${k}'`);
     const v = m[k];
     if ((k === 'elemBoost' || k === 'elemResist')) for (const e in v) if (!ELEMENTS.includes(e)) E(`${where}: bad element ${e}`);
