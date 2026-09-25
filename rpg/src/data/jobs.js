@@ -12,6 +12,9 @@
 //   魔法アップ (blackmage) · 竜の力 (dragoon) · 俊足 (timemage)
 //   不屈の誓い auto-revive (paladin) · とっさの薬 auto-item (alchemist)
 //
+// masterBonus: flat stats gained for good once the job is mastered (every ability learned,
+// R.Rules.isMastered); like seeds they count in every job (R.Rules.masterBonus). Tier 1 ≈ one
+// theme stat +3 (+HP/MP), higher tiers a little more, 勇者 a bit of everything.
 // mult: multipliers on the character's base stats (chars.js growth). Menu order
 // on the job board = definition order within a tier.
 (function (R) {
@@ -25,6 +28,7 @@
       name: '戦士', tier: 1, command: '戦技',
       desc: '武器を振るい、前に出て戦う。\n力と体力に優れる。',
       mult: { hp: 1.2, mp: 0.6, str: 1.2, vit: 1.15, agi: 0.95, int: 0.7, mnd: 0.8, luk: 1.0 },
+      masterBonus: { hp: 10, str: 3 },
       weapons: ['sword', 'axe', 'spear'], shield: true, heads: ['helm', 'hat'], bodies: ['heavy', 'light'],
       abilities: [
         'warrior_power_slash', 'warrior_first_aid', 'warrior_armor_break', 'warrior_weapon_break', 'warrior_double',
@@ -38,6 +42,7 @@
       name: '僧侶', tier: 1, command: '祈り',
       desc: '祈りで仲間の傷を癒やす。\n守りの祈りも使える。',
       mult: { hp: 1.0, mp: 1.15, str: 0.85, vit: 0.95, agi: 1.0, int: 0.9, mnd: 1.25, luk: 1.0 },
+      masterBonus: { mp: 5, mnd: 3 },
       weapons: ['staff'], shield: true, heads: ['hat'], bodies: ['light', 'robe'],
       abilities: [
         'priest_heal', 'priest_cure', 'priest_holy', 'priest_protect', 'priest_awaken', 'priest_silence',
@@ -52,6 +57,7 @@
       name: '魔法使い', tier: 1, command: '魔法',
       desc: '炎や氷の魔法を操る。\n一度訪れた町へワープもできる。',
       mult: { hp: 0.85, mp: 1.3, str: 0.7, vit: 0.8, agi: 1.0, int: 1.3, mnd: 1.0, luk: 1.0 },
+      masterBonus: { mp: 5, int: 3 },
       weapons: ['rod', 'knife'], heads: ['hat'], bodies: ['light', 'robe'],
       abilities: [
         'mage_fire', 'mage_scan', 'mage_ice', 'mage_exit', 'mage_thunder', 'mage_sleep', 'mage_blind',
@@ -65,6 +71,7 @@
       name: '盗賊', tier: 1, command: '小技',
       desc: '素早い身のこなしで道具を盗む。\n珍しいお宝にも目ざとい。',
       mult: { hp: 0.95, mp: 0.75, str: 0.95, vit: 0.9, agi: 1.3, int: 0.85, mnd: 0.85, luk: 1.3 },
+      masterBonus: { agi: 3, luk: 2 },
       weapons: ['knife'], heads: ['hat'], bodies: ['light'],
       abilities: [
         'thief_steal', 'thief_sand', 'thief_flee', 'thief_repel', 'thief_quick', 'thief_poison',
@@ -81,6 +88,7 @@
       name: 'ナイト', tier: 2, command: '騎士道', req: [['warrior', 3]],
       desc: '重い鎧と盾で仲間を守る。\n敵の力をくじく技も持つ。',
       mult: { hp: 1.25, mp: 0.7, str: 1.2, vit: 1.3, agi: 0.85, int: 0.7, mnd: 1.0, luk: 0.9 },
+      masterBonus: { hp: 15, vit: 4 },
       weapons: ['sword', 'spear'], shield: true, heads: ['helm'], bodies: ['heavy', 'light'],
       abilities: [
         'knight_bash', 'knight_mind_break', 'knight_speed_break', 'knight_fortress', 'knight_oath',
@@ -94,6 +102,7 @@
       name: '武闘家', tier: 2, command: '拳法', req: [['warrior', 2], ['priest', 2]],
       desc: '鍛えた拳で戦う武術家。\n武器がなくても強い。',
       mult: { hp: 1.3, mp: 0.7, str: 1.25, vit: 1.1, agi: 1.15, int: 0.65, mnd: 1.0, luk: 1.0 },
+      masterBonus: { hp: 15, str: 4 },
       weapons: ['claw'], heads: ['hat'], bodies: ['light'],
       innate: { unarmed: 12 },
       abilities: [
@@ -108,6 +117,7 @@
       name: '白魔術師', tier: 2, command: '白魔法', req: [['priest', 3]],
       desc: '回復と蘇生の魔法の使い手。\n光の魔法で魔を払う。',
       mult: { hp: 0.95, mp: 1.3, str: 0.7, vit: 0.9, agi: 0.95, int: 1.0, mnd: 1.35, luk: 1.0 },
+      masterBonus: { mp: 8, mnd: 4 },
       weapons: ['staff'], heads: ['hat'], bodies: ['light', 'robe'],
       abilities: [
         'whitemage_healing', 'whitemage_esuna', 'whitemage_regen', 'whitemage_arrow', 'whitemage_purge',
@@ -121,6 +131,7 @@
       name: '黒魔術師', tier: 2, command: '黒魔法', req: [['mage', 3]],
       desc: '破壊の魔法を極めた魔術師。\n敵の群れをまとめてなぎ払う。',
       mult: { hp: 0.85, mp: 1.3, str: 0.65, vit: 0.8, agi: 1.0, int: 1.4, mnd: 0.95, luk: 1.0 },
+      masterBonus: { mp: 8, int: 4 },
       weapons: ['rod'], heads: ['hat'], bodies: ['light', 'robe'],
       abilities: [
         'blackmage_fire2', 'blackmage_ice2', 'blackmage_poison', 'blackmage_thunder2', 'blackmage_confuse',
@@ -134,6 +145,7 @@
       name: '狩人', tier: 2, command: '弓術', req: [['thief', 3]],
       desc: '弓の名手。毒矢やしびれ矢で\n獲物の急所を狙う。',
       mult: { hp: 1.05, mp: 0.8, str: 1.1, vit: 1.0, agi: 1.2, int: 0.8, mnd: 0.9, luk: 1.15 },
+      masterBonus: { str: 2, agi: 4 },
       weapons: ['bow', 'knife'], heads: ['hat'], bodies: ['light'],
       abilities: [
         'hunter_aim', 'hunter_venom', 'hunter_double', 'hunter_sleep', 'hunter_numb', 'hunter_skyshot',
@@ -148,6 +160,7 @@
       name: '吟遊詩人', tier: 2, command: '歌', req: [['priest', 2], ['thief', 2]],
       desc: '歌で仲間を奮い立たせ、\n敵を眠らせる旅の歌い手。',
       mult: { hp: 0.95, mp: 1.1, str: 0.85, vit: 0.9, agi: 1.15, int: 1.05, mnd: 1.2, luk: 1.2 },
+      masterBonus: { mp: 5, mnd: 2, luk: 3 },
       weapons: ['harp', 'knife'], heads: ['hat'], bodies: ['light', 'robe'],
       abilities: [
         'bard_lullaby', 'bard_swift', 'bard_hymn', 'bard_battle', 'bard_requiem', 'bard_bewilder',
@@ -162,6 +175,7 @@
       name: '薬師', tier: 2, command: '調合', req: [['mage', 2], ['thief', 2]],
       desc: '薬と爆薬を扱う。\n道具の効果も高める。',
       mult: { hp: 1.0, mp: 1.05, str: 0.9, vit: 1.0, agi: 1.05, int: 1.15, mnd: 1.1, luk: 1.15 },
+      masterBonus: { hp: 10, mp: 5, mnd: 2 },
       weapons: ['knife', 'staff'], heads: ['hat'], bodies: ['light', 'robe'],
       innate: { itemPct: 25 },
       abilities: [
@@ -178,6 +192,7 @@
       name: '魔法剣士', tier: 3, command: '魔剣', req: [['knight', 3], ['blackmage', 3]],
       desc: '剣に魔法を宿して戦う。\n敵の弱点を斬り裂く。',
       mult: { hp: 1.1, mp: 1.05, str: 1.15, vit: 1.05, agi: 1.05, int: 1.2, mnd: 0.95, luk: 1.0 },
+      masterBonus: { str: 3, int: 3, mp: 5 },
       weapons: ['sword', 'knife'], shield: true, heads: ['helm', 'hat'], bodies: ['heavy', 'light'],
       abilities: [
         'spellblade_flame', 'spellblade_frost', 'spellblade_thunder', 'spellblade_seal', 'spellblade_gale',
@@ -191,6 +206,7 @@
       name: 'パラディン', tier: 3, command: '聖剣', req: [['knight', 5], ['whitemage', 4]],
       desc: '聖なる力を宿す騎士。\n魔を払い、仲間を守り抜く。',
       mult: { hp: 1.3, mp: 0.95, str: 1.2, vit: 1.3, agi: 0.9, int: 0.85, mnd: 1.2, luk: 1.0 },
+      masterBonus: { hp: 20, vit: 3, mnd: 3 },
       weapons: ['sword', 'spear'], shield: true, heads: ['helm'], bodies: ['heavy', 'light'],
       abilities: [
         'paladin_holy_blade', 'paladin_heal', 'paladin_purify', 'paladin_sacrifice', 'paladin_wave',
@@ -204,6 +220,7 @@
       name: '忍者', tier: 3, command: '忍法', req: [['hunter', 4], ['monk', 3]],
       desc: '影に生きる忍び。武器を二つ持ち、\n誰よりも速く動く。',
       mult: { hp: 1.05, mp: 0.8, str: 1.15, vit: 0.95, agi: 1.4, int: 0.95, mnd: 0.85, luk: 1.15 },
+      masterBonus: { str: 2, agi: 5 },
       weapons: ['katana', 'knife'], heads: ['hat'], bodies: ['light'],
       innate: { twoSwords: true },
       abilities: [
@@ -218,6 +235,7 @@
       name: '賢者', tier: 3, command: '秘術', req: [['whitemage', 5], ['blackmage', 5]],
       desc: '白と黒の魔法を極めた者。\n最高位の呪文を操る。',
       mult: { hp: 0.95, mp: 1.4, str: 0.7, vit: 0.9, agi: 1.0, int: 1.3, mnd: 1.3, luk: 1.05 },
+      masterBonus: { mp: 12, int: 3, mnd: 3 },
       weapons: ['staff', 'rod'], heads: ['hat'], bodies: ['light', 'robe'],
       abilities: [
         'sage_full_heal', 'sage_blessed_rain', 'sage_prominence', 'sage_zero', 'sage_mother', 'sage_stardust',
@@ -230,6 +248,7 @@
       name: '竜騎士', tier: 3, command: '槍術', req: [['knight', 4], ['hunter', 4]],
       desc: '竜の力を槍に宿す騎士。\n空から舞い降りて敵を貫く。',
       mult: { hp: 1.2, mp: 0.8, str: 1.3, vit: 1.15, agi: 1.0, int: 0.7, mnd: 0.85, luk: 0.95 },
+      masterBonus: { hp: 15, str: 5 },
       weapons: ['spear'], shield: true, heads: ['helm'], bodies: ['heavy', 'light'],
       abilities: [
         'dragoon_wyvern', 'dragoon_leech', 'dragoon_pierce', 'dragoon_roar', 'dragoon_breath',
@@ -243,6 +262,7 @@
       name: '時空術師', tier: 3, command: '時空魔法', req: [['blackmage', 4], ['bard', 3]],
       desc: '時と重力を操る術師。\n隕石を呼ぶこともできる。',
       mult: { hp: 0.9, mp: 1.35, str: 0.65, vit: 0.85, agi: 1.1, int: 1.25, mnd: 1.15, luk: 1.05 },
+      masterBonus: { mp: 10, int: 2, agi: 4 },
       weapons: ['rod', 'staff'], heads: ['hat'], bodies: ['light', 'robe'],
       abilities: [
         'timemage_haste', 'timemage_slow', 'timemage_dispel', 'timemage_gravity', 'timemage_haste_all',
@@ -257,6 +277,7 @@
       name: '暗黒騎士', tier: 3, command: '暗黒剣', req: [['warrior', 6], ['blackmage', 4]],
       desc: '自らの命を削り、\n闇の力を振るう騎士。',
       mult: { hp: 1.3, mp: 0.9, str: 1.35, vit: 1.15, agi: 0.9, int: 1.0, mnd: 0.7, luk: 0.85 },
+      masterBonus: { hp: 20, str: 5 },
       weapons: ['sword', 'axe'], shield: true, heads: ['helm'], bodies: ['heavy'],
       innate: { elemResist: { dark: 0.5 } },
       abilities: [
@@ -273,6 +294,7 @@
       name: '勇者', tier: 4, command: '奇跡', req: [['paladin', 5], ['spellblade', 5]],
       desc: '光に選ばれし勇者。\n光の奇跡で闇を打ち払う。',
       mult: { hp: 1.3, mp: 1.1, str: 1.3, vit: 1.25, agi: 1.15, int: 1.1, mnd: 1.15, luk: 1.2 },
+      masterBonus: { hp: 20, mp: 10, str: 3, vit: 3, agi: 3, int: 3, mnd: 3 },
       weapons: ['sword', 'spear', 'katana'], shield: true, heads: ['helm', 'hat'], bodies: ['heavy', 'light'],
       innate: { statusImmune: ['death'] },
       abilities: [

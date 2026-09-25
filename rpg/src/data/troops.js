@@ -47,7 +47,7 @@
     }),
     sphinx: boss({
       name: 'スフィンクス', sprite: 'boss_sphinx', lv: 19, actsPerTurn: 2,
-      hp: 1450, mp: 60, atk: 138, def: 42, agi: 36, mag: 80, mdef: 26, exp: 1900, gold: 1600, jp: 240,
+      hp: 1450, mp: 60, atk: 138, def: 42, agi: 36, mag: 80, mdef: 26, exp: 1700, gold: 1600, jp: 240,
       fam: ['rock'],
       actions: [['attack', 5], ['en_claws', 2], ['en_riddle', 1, { every: [4, 1] }], ['en_sandstorm', 2], ['en_thunder2', 2],
         ['en_ancient_heal', 3, { hpBelow: 0.35, once: true }]],
