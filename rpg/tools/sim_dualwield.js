@@ -295,19 +295,25 @@ function stageTargets(st) {
   return { regs: [...regs], bosses };
 }
 
-/** every row of one build: たたかう + its learned physical skills (current job + sub) */
+/**
+ * every row of one build: 戦う + the learned physical skills of its job and of every job it could set
+ * as its sub (tagged 〈job〉: the player picks the sub that holds the skill the stage calls for)
+ */
 function buildRows(b, tg) {
   const c = b.c;
-  const ids = [null];
-  for (const job of [c.job, c.set.sub]) if (job) for (const a of Rules.actionList(c, job)) if (isPhysDamage(DB.abilities[a])) ids.push(a);
+  const ids = [[null, null]];
+  const jobs = [c.job, ...Object.keys(c.jobs).filter((j) => j !== c.job && Rules.isJobUnlocked(c, j))];
+  for (const job of jobs) for (const a of Rules.actionList(c, job)) if (isPhysDamage(DB.abilities[a])) ids.push([a, job === c.job ? null : job]);
+  const dual = c.set.support === 'ninja_two_swords' || (DB.jobs[c.job].innate || {}).twoSwords;
   const rows = [];
-  for (const id of ids) {
+  for (const [id, sub] of ids) {
     const ab = id && DB.abilities[id];
     const multi = !!(ab && MULTI[ab.target]);
     const n = multi ? 3 : 1;
     const reg = tg.regs.reduce((s, m) => s + measure(c, id, m, n) / n, 0) / Math.max(1, tg.regs.length);
     const boss = tg.bosses.length ? tg.bosses.reduce((s, m) => s + measure(c, id, m, 1), 0) / tg.bosses.length : null;
-    rows.push({ id, name: ab ? ab.name : c.set.support === 'ninja_two_swords' || (DB.jobs[c.job].innate || {}).twoSwords ? 'たたかう(二刀流)' : 'たたかう', mp: id ? Rules.mpCost(c, id) : 0, multi, target: ab ? ab.target : 'enemy', reg, boss });
+    const name = ab ? ab.name + (sub ? `〈${DB.jobs[sub].name}〉` : '') : dual ? '戦う(二刀流)' : '戦う';
+    rows.push({ id, name, sub, mp: id ? Rules.mpCost(c, id) : 0, multi, target: ab ? ab.target : 'enemy', reg, boss });
   }
   return rows;
 }
@@ -329,7 +335,7 @@ for (const L of LEVELS) {
   const builds = si < 0 ? postBuilds(L) : stageBuilds(si, L, tg);
   const defs = tg.regs.map((m) => DB.monsters[m].def);
   console.log(`\n--- Lv${L}  ${st.id}  (${st.zones.join(',')}; boss ${tg.bosses.join('+') || '-'})  regular def ${Math.min(...defs)}–${Math.max(...defs)} (avg ${f0(defs.reduce((a, b) => a + b, 0) / defs.length)}), ${tg.regs.length} species`);
-  console.log(`    ${pad('build', 22)} ${pad('weapons', 30)} ${pad('atk/atk2', 9)} ${pad('action', 18)} ${padL('MP', 3)} ${padL('vs regs', 8)} ${padL('vs boss', 8)} ${padL('×atk', 5)}`);
+  console.log(`    ${pad('build', 22)} ${pad('weapons', 30)} ${pad('atk/atk2', 9)} ${pad('action', 28)} ${padL('MP', 3)} ${padL('vs regs', 8)} ${padL('vs boss', 8)} ${padL('×atk', 5)}`);
   const res = {};
   for (const b of builds) {
     const st2 = Rules.stats(b.c);
@@ -343,7 +349,7 @@ for (const L of LEVELS) {
         ? `    ${pad(b.label, 22)} ${pad(wname(b.c.equip.weapon) + (st2.atk2 ? '+' + wname(b.c.equip.shield) : b.c.equip.shield ? '/' + wname(b.c.equip.shield) : ''), 30)} ${pad(st2.atk + (st2.atk2 ? '/' + st2.atk2 : ''), 9)}`
         : `    ${pad('', 22)} ${pad('', 30)} ${pad('', 9)}`;
       const nm = r.name + (r.multi ? (r.target === 'group' ? ' [群/体]' : ' [全/体]') : r.target === 'random' ? ' [乱]' : '');
-      console.log(`${head} ${pad(nm, 18)} ${padL(r.mp, 3)} ${padL(f0(r.reg), 8)} ${padL(f0(r.boss), 8)} ${padL(f2(r.reg / Math.max(1e-9, atk.reg)), 5)}`);
+      console.log(`${head} ${pad(nm, 28)} ${padL(r.mp, 3)} ${padL(f0(r.reg), 8)} ${padL(f0(r.boss), 8)} ${padL(f2(r.reg / Math.max(1e-9, atk.reg)), 5)}`);
     });
     if (b.detour != null) console.log(`    ${pad('', 22)} (二刀流 detour ≈${b.detour} JP more than the plan; budget 8·Lv² = ${jpBudget(L)})`);
     res[b.key] = { atk, singles, best: singles[0] || null, multi: multis[0] || null, label: b.label };
@@ -352,13 +358,13 @@ for (const L of LEVELS) {
 }
 
 console.log('\n=== SUMMARY ===  (mean damage per turn vs the stage\'s regular monsters / vs its boss; skills: single-target physical ones)');
-console.log(`${pad('Lv', 3)} ${pad('stage', 8)}| ${pad('忍者 二刀流', 10)} ${pad('忍者の最強わざ (MP) ×二刀流', 34)}| ${pad('計画職 たたかう', 10)} ${pad('+二刀流', 9)} ${pad('計画職の最強わざ (MP) ×二刀流', 34)} ${pad('わざ≥二刀流', 11)}`);
+console.log(`${pad('Lv', 3)} ${pad('stage', 8)}| ${pad('忍者 二刀流', 10)} ${pad('忍者の最強わざ (MP) ×二刀流', 44)}| ${pad('計画職 戦う', 10)} ${pad('+二刀流', 9)} ${pad('計画職の最強わざ (MP) ×二刀流', 40)} ${pad('わざ≥二刀流', 11)}`);
 for (const s of summary) {
   const n = s.res.ninja, p = s.res.plan, d = s.res.dual;
   const vs = (x) => (x ? `${padL(f0(x.reg), 4)}/${padL(f0(x.boss), 4)}` : '    -    ');
-  const skill = (b, ref) => (b ? `${pad(b.name, 10)} ${vs(b)} (${padL(b.mp, 2)}) ${f2(b.reg / ref.reg)}×` : '-');
+  const skill = (b, ref) => (b ? `${pad(b.name, 20)} ${vs(b)} (${padL(b.mp, 2)}) ${f2(b.reg / ref.reg)}×` : '-');
   const beat = (list, ref) => `${list.filter((r) => r.reg >= ref.reg).length}/${list.length}`;
-  console.log(`${pad(s.L, 3)} ${pad(s.st, 8)}| ${pad(vs(n && n.atk), 10)} ${pad(n ? skill(n.best, n.atk) + '  ' + beat(n.singles, n.atk) : '-', 34)}| ${pad(vs(p.atk), 10)} ${pad(vs(d.atk), 9)} ${pad(skill(p.best, d.atk), 34)} ${pad(beat(p.singles, d.atk), 11)}`);
+  console.log(`${pad(s.L, 3)} ${pad(s.st, 8)}| ${pad(vs(n && n.atk), 10)} ${pad(n ? skill(n.best, n.atk) + '  ' + beat(n.singles, n.atk) : '-', 44)}| ${pad(vs(p.atk), 10)} ${pad(vs(d.atk), 9)} ${pad(skill(p.best, d.atk), 40)} ${pad(beat(p.singles, d.atk), 11)}`);
 }
 
 // the rule itself: no off-hand weapon → one swing
@@ -368,5 +374,5 @@ for (const s of summary) {
   const eng = new B.Engine({ party: [c], mons: ['yami_kishi'], inv: {}, live: false, noSurprise: true });
   eng.mons[0].hp = eng.mons[0].mhp = HUGE;
   const swings = [...eng.attack(eng.party[0], eng.mons[0], false)].filter((e) => e.t === 'fx').length;
-  console.log(`\ncheck: 二刀流 support with a shield (${wname(c.equip.shield)}) → ${swings} swing(s) per たたかう (want 1)`);
+  console.log(`\ncheck: 二刀流 support with a shield (${wname(c.equip.shield)}) → ${swings} swing(s) per 戦う (want 1)`);
 }

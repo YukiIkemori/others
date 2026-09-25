@@ -295,7 +295,7 @@
 
     // ================================================= 地下4階 (Lv56–60)
     pg_abyss_gargoyle: pgMon('深淵のガーゴイル', 'gargoyle', 57, {
-      s: { hp: 1.3, atk: 1.3, def: 1.6, mdef: 1.3, agi: 1.2 }, x: X_REG, hue: -40, sat: 3, bri: 0.8,
+      s: { hp: 1.4, atk: 1.45, def: 1.6, mdef: 1.3, agi: 1.2 }, x: X_REG, hue: -40, sat: 3, bri: 0.8,
       flags: ['flying'], elem: { thunder: 1.5, earth: 0.5, dark: 0.5 }, statusRes: GOLEM_RES,
       a: [['attack', 4], ['en_pg_dive', 3], ['en_pg_stone_gaze', 2]],
       drop: ['seed_hp', 12], rare: ['goddess_charm', 128], steal: ['nectar', 'seed_hp'],
