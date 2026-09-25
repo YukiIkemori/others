@@ -174,6 +174,7 @@
         for (const s of R.Rules.SET_SLOTS) if (c.set[s] && !(DB.abilities[c.set[s]] || DB.jobs[c.set[s]])) c.set[s] = null;
         // job levels / unlocks: old saves keep their job levels; unlocks are permanent
         if (oldJp) R.Rules.migrateJpTables(c); else R.Rules.syncUnlocks(c);
+        R.Rules.syncMastery(c);
       }
       R.Game = g;
       if (R.Battle) R.Battle.autoCarry = false;

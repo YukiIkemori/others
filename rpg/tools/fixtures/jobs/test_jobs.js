@@ -67,6 +67,7 @@ function unmaster(c, keep) {
   const rec = c.jobs[c.job];
   const drop = rec.learned.find((a) => a !== keep && DB.abilities[a].job === c.job && DB.abilities[a].kind === 'action');
   if (drop) rec.learned.splice(rec.learned.indexOf(drop), 1);
+  delete rec.mastered;
   return c;
 }
 function engine(party, mons, o) {
@@ -204,7 +205,7 @@ sec('mastery');
   ok(R.Rules.signatures(c).includes('mage_int_up') && (R.Rules.mods(c).intPct || 0) === 15, 'mastered mage: 知力アップ always on without a slot');
   ok(c.mp === Math.min(st(c).mp, mp0 + (mb.mp || 0)), 'current MP rises with the bonus');
   R.Rules.changeJob(c, 'thief');
-  const t = st(c); c.jobs.mage.learned = [];
+  const t = st(c); c.jobs.mage.learned = []; delete c.jobs.mage.mastered;
   ok(t.int - st(c).int >= (mb.int || 0) && !R.Rules.signatures(c).length, 'the bonus applies in every job');
 }
 
@@ -471,6 +472,21 @@ for (const b of builds) {
   console.log(`  Lv${b.L} ${b.jobs.map((j) => j[1]).join('/')}: ${wins}/${N} wins, ${(rounds / N).toFixed(1)} rounds avg, ${kinds} different job abilities used by the AI`);
   ok(wins >= N * 0.8, `Lv${b.L} party beats ${b.n} same-level foes (${wins}/${N})`);
   ok(kinds >= 3, `Lv${b.L}: the auto-battle AI uses several job abilities (${kinds})`);
+}
+
+// mastery is permanent; a save that mastered the thief before ついでに盗む existed is migrated
+{
+  const c = R.Rules.newChar('metem');
+  const rec = R.Rules.jobRec(c, 'thief');
+  rec.learned = R.Rules.jobAbilities('thief').filter((a) => a !== 'thief_auto_steal');
+  delete rec.mastered;
+  ok(!R.Rules.isMastered(c, 'thief'), 'old save: thief not mastered before migration');
+  R.Rules.syncMastery(c);
+  ok(R.Rules.isMastered(c, 'thief') && rec.learned.includes('thief_auto_steal'), 'old save: thief mastery restored, ついでに盗む granted');
+  const w = R.Rules.jobRec(c, 'warrior');
+  w.learned = R.Rules.jobAbilities('warrior').slice(0, -1);
+  R.Rules.syncMastery(c);
+  ok(!R.Rules.isMastered(c, 'warrior'), 'syncMastery does not master a job missing a regular ability');
 }
 
 console.log(`\njob tests: ${passes} passed, ${fails} failed  (${used} action abilities exercised)`);

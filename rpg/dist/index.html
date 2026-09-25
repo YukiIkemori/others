@@ -41332,6 +41332,8 @@ try{
 
   const STATS = ['hp', 'mp', 'str', 'vit', 'agi', 'int', 'mnd', 'luk'];
   const SLOTS = ['weapon', 'shield', 'head', 'body', 'acc'];
+  // abilities added to existing jobs after saves existed (see Rules.syncMastery)
+  const LATE_ABILITIES = ['thief_auto_steal'];
   const SLOT_NAMES = { weapon: '武器', shield: '盾', head: '頭', body: '体', acc: 'アクセサリ' };
   const SET_SLOTS = ['sub', 'reaction', 'support', 'field'];
   const STAT_NAMES = { hp: 'HP', mp: 'MP', str: '力', vit: '体力', agi: '素早さ', int: '知力', mnd: '精神', luk: '運' };
@@ -41477,10 +41479,33 @@ try{
     },
     unlockedJobs(c) { return Object.keys(DB.jobs).filter((j) => Rules.isJobUnlocked(c, j)); },
     jobAbilities(jobId) { const j = DB.jobs[jobId]; return j ? (j.abilities || []).filter((a) => DB.abilities[a]) : []; },
+    /** mastery is permanent: once every ability was learned, rec.mastered stays set even if the job gains abilities later */
     isMastered(c, jobId) {
-      const list = Rules.jobAbilities(jobId);
       const rec = c.jobs[jobId];
-      return list.length > 0 && !!rec && list.every((a) => rec.learned.includes(a));
+      if (!rec) return false;
+      if (rec.mastered) return true;
+      const list = Rules.jobAbilities(jobId);
+      if (!(list.length > 0 && list.every((a) => rec.learned.includes(a)))) return false;
+      rec.mastered = true;
+      return true;
+    },
+    /**
+     * Save migration for abilities added to a job after release: a character missing only such
+     * abilities had mastered the job, so they get them for free (and stay mastered). A mastered
+     * job also receives any ability added to it later.
+     */
+    syncMastery(c) {
+      for (const jid in c.jobs) {
+        const rec = c.jobs[jid], list = Rules.jobAbilities(jid);
+        if (!rec || !list.length) continue;
+        rec.learned = rec.learned || [];
+        const missing = list.filter((a) => !rec.learned.includes(a));
+        if (!missing.length) { rec.mastered = true; continue; }
+        if (rec.mastered || missing.every((a) => LATE_ABILITIES.includes(a))) {
+          for (const a of missing) rec.learned.push(a);
+          rec.mastered = true;
+        }
+      }
     },
     /** has the character learned this ability (in its own job)? */
     learned(c, abilityId) {
@@ -42410,6 +42435,7 @@ try{
         for (const s of R.Rules.SET_SLOTS) if (c.set[s] && !(DB.abilities[c.set[s]] || DB.jobs[c.set[s]])) c.set[s] = null;
         // job levels / unlocks: old saves keep their job levels; unlocks are permanent
         if (oldJp) R.Rules.migrateJpTables(c); else R.Rules.syncUnlocks(c);
+        R.Rules.syncMastery(c);
       }
       R.Game = g;
       if (R.Battle) R.Battle.autoCarry = false;
