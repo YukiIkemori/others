@@ -525,6 +525,7 @@ centred on the ground line, bottom window for commands and messages (DQ wording:
   decor?:['..b..', ...]                  // optional overlay layer, same size as rows (see below)
   exit?:{to:'world', spawn}               // walking off the map edge
   outside?:'<legend char>'               // tile drawn beyond the map edge (default: void for local maps, sea for world)
+  wrap?:bool                             // torus map (default: true for type 'world', false otherwise)
   encounter?:'zoneId', encRate?:24       // avg steps between fights (dungeon default 22, world 26)
   onEnter?:'eventId'                     // every time the map loads (event checks its own flags)
   tilePatches?:[{cond:'flag', x, y, ch}] // applied whenever cond holds (e.g. a seal disappears)
@@ -546,6 +547,7 @@ A mark char may appear several times (warps/events); npc/chest ids get `_2`, `_3
 NPC `cond` uses `R.State.check` syntax (`'flag'`, `'!flag'`, `{item:'x'}`, …); NPCs whose cond fails are absent.
 NPC `sprite` is any Gfx key (`npc:*` sheets animate; `mon:*` draws the monster sprite standing on the tile, for
 visible bosses). NPCs block movement. Talking to an NPC across a `counter` tile works.
+NPC flags: `fixed:true` never pushed aside, `push:true` always pushable (see §7.2 *Pushing NPCs*).
 
 ### 7.2 Field behaviour (owner: field)
 * Free movement on a half-tile grid: the leader's collision box is one tile (16×16) anchored at its position
@@ -572,7 +574,25 @@ visible bosses). NPCs block movement. Talking to an NPC across a `counter` tile 
 * Saves: `R.Game.pos` / `R.Game.ship` hold whole tiles only (the logical tile); positions are rounded on load.
 * Party caterpillar: the other two members follow the leader's actual path (position history) one tile apart
   (path distance), facing their own motion (dead members still follow, like DQ ghosts are not needed).
-* Camera centred on the leader, clamped to map edges (small maps centred). Overworld does **not** wrap.
+* Camera centred on the leader, clamped to map edges (small maps centred) — except on wrapping maps.
+* **World wraparound** (playtest 「端っこで見えない壁」): `type:'world'` maps wrap like a torus (`map.wrap`; `wrap:false`
+  turns it off). `FieldMap` normalises coordinates modulo w/h in `idx/tileAt/decorAt/walkable/npcAt/zoneAt/...`
+  (`inBounds` is always true, `inMap` is the raw check), so walking, sailing, diagonals and half steps simply continue
+  past an edge. The logical tile stays inside the map: when a step ends with it past an edge, `rewrap()` moves every
+  position (party, trail, the step still being drawn, ship pos, tile-cache window) by a whole map size, so the drawn
+  screen never changes. The camera is not clamped; the tile cache always slides on wrapping maps (cells take the art of
+  their wrapped cell); NPCs, chests and the ship are drawn at the copy nearest the view. NPCs never walk across the
+  seam. The overworld's outer 3 rows/columns are all sea, so the seam adds no new connectivity (progress.js BFS wraps too
+  and its acquisition order is unchanged). Saves, `Field.pos()`, the ship and the minimap keep whole in-map tiles.
+* **Pushing NPCs** (playtest 「NPCに囲まれて詰む」): walking into a pushable NPC for 14 frames — or at once when it is
+  pushed again within 45 frames — makes it side-step one tile (10 frames): sideways first (the side the party's box does
+  not overlap), else straight ahead; `npcCanEnter` rules apply (no doors, warps, stairs, events, decor…). If it cannot move
+  at all, it trades places with the leader (only from a whole tile). A displaced standing NPC walks back to its post
+  after 6 s when the party is not next to it. Pushing never opens a conversation (A still talks).
+  `R.FieldMap.pushable(n)`: wanderers and plain townsfolk yes; **stay put**: `fixed:true`, non-`npc:` sprites (monsters,
+  objects), NPCs with a `cond` (story blockers such as the east gate soldier) and standing NPCs with an `event` (shops,
+  inns, priests, kings); `push:true` overrides. progress.js treats pushable NPCs as non-blocking. Wanderers also never
+  step where they would leave the leader fewer than two free neighbouring tiles (`wouldTrap`).
 * Field view (`Settings.fieldZoom`, 設定「フィールドの広さ」, applied at once): the field layer draws with its own
   integer scale on the 4× canvas — `normal` 4 device px per map px (256×224 map px = 16×14 tiles, the original
   framing), `wide` 3 (341⅓×298⅔ ≈ 21×19 tiles, **default**), `wider` 2 (512×448 = 32×28 tiles). Menus, messages,

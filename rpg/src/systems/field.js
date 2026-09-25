@@ -18,6 +18,10 @@
   const WALK = 6, DASH = 4, SAIL = 6, SAIL_DASH = 3, NPC_STEP = 16;
   const SCRIPT_WALK = 8; // cutscene party walks keep their original pacing
   const BUMP_EVERY = 20;
+  // pushing an NPC (DESIGN §7.2): after PUSH_FRAMES of walking into it — or at once when pushed
+  // again within PUSH_AGAIN frames — it side-steps (PUSH_STEP frames); a displaced standing NPC
+  // heads back to its post PUSH_BACK frames later, when the party is not next to it
+  const PUSH_FRAMES = 14, PUSH_AGAIN = 45, PUSH_STEP = 10, PUSH_BACK = 360;
   const BANNER_FRAMES = 130;
   const ANIM_RATE = { sea: 16, water: 16, lava: 24, magma: 24, poison: 24, wall_torch: 8, warp_pad: 8, barrier: 8, seal: 16 };
   const SPIN = { down: 'left', left: 'up', up: 'right', right: 'down' };
@@ -85,6 +89,7 @@
   function cellGfx(m, x, y) {
     if (!m.inBounds(x, y)) return tileGfx(m, m.outside);
     const i = m.idx(x, y);
+    if (m.wrap) { x = m.wx(x); y = m.wy(y); } // the art of a wrapped cell is the art of its original
     if (m.opened.size && m.opened.has(i)) return tileGfx(m, m.opened.get(i));
     // context-aware art (autotiling): worldTile for the overworld, localTile elsewhere
     const ctxFn = R.Art && (m.isWorld ? R.Art.worldTile : R.Art.localTile);
@@ -106,6 +111,7 @@
     const id = m.decorAt(x, y);
     if (!id) return null;
     const i = m.idx(x, y);
+    if (m.wrap) { x = m.wx(x); y = m.wy(y); }
     m.dcache = m.dcache || [];
     let g = m.dcache[i];
     if (g === undefined) {
@@ -123,6 +129,26 @@
   const tileRate = (m, x, y) => ANIM_RATE[m.tileAt(x, y)] || 16;
   const decorRate = (m, x, y) => { const dd = R.DB.decor[m.decorAt(x, y)]; return (dd && dd.animRate) || 12; };
   const cellKey = (x, y) => (y + 1024) * 4096 + (x + 1024);
+  /** on a wrapping map: the copy of coordinate v (tiles) nearest to ref along axis 'w' | 'h' */
+  function unwrap(m, v, ref, axis) {
+    if (!m || !m.wrap) return v;
+    const n = m[axis];
+    return v + Math.round((ref - v) / n) * n;
+  }
+  /** the party position jumped by (sx,sy) whole map sizes (wrapping): move the cache window along,
+   *  its pixels stay valid because the map repeats */
+  function tcShift(sx, sy) {
+    if (!TC.cv || TC.uid !== M.uid) return;
+    TC.x0 += sx; TC.y0 += sy;
+    for (const a of TC.anim) { a.x += sx; a.y += sy; }
+    for (const a of TC.danim) { a.x += sx; a.y += sy; }
+    const old = [...TC.drawn];
+    TC.drawn.clear();
+    for (const [k, f] of old) {
+      const a = Math.abs(k), x = (a % 4096) - 1024 + sx, y = Math.floor(a / 4096) - 1024 + sy;
+      TC.drawn.set(Math.sign(k) * cellKey(x, y), f);
+    }
+  }
   function frameOf(g, rate) { return Math.floor(R.Engine.frame / rate) % g.length; }
 
   /** redraw a rectangle of the cache (cache-local px): tiles, then every decor that can reach it, clipped */
@@ -198,7 +224,7 @@
   function tcRebuild(ox, oy) {
     TC.uid = M.uid; TC.ver = M.version; TC.z = V.z;
     const W = M.w + 2 * V.padx, H = M.h + 2 * V.pady;
-    TC.whole = W * H <= WHOLE_MAX;
+    TC.whole = !M.wrap && W * H <= WHOLE_MAX; // a wrapping map always slides (the camera never stops at an edge)
     if (TC.whole) { TC.x0 = -V.padx; TC.y0 = -V.pady; TC.w = W; TC.h = H; }
     else { TC.w = V.bw + 2 * MARG; TC.h = V.bh + 2 * MARG; TC.x0 = ox - MARG; TC.y0 = oy - MARG; }
     tcCanvas(TC.w, TC.h);
@@ -274,8 +300,8 @@
   const WARM = 10; // cells beyond the window
   function warmArt(budgetMs) {
     const m = M, t0 = performance.now();
-    const x0 = Math.max(0, TC.x0 - WARM), y0 = Math.max(0, TC.y0 - WARM);
-    const x1 = Math.min(m.w - 1, TC.x0 + TC.w + WARM), y1 = Math.min(m.h - 1, TC.y0 + TC.h + WARM);
+    const x0 = m.wrap ? TC.x0 - WARM : Math.max(0, TC.x0 - WARM), y0 = m.wrap ? TC.y0 - WARM : Math.max(0, TC.y0 - WARM);
+    const x1 = m.wrap ? TC.x0 + TC.w + WARM : Math.min(m.w - 1, TC.x0 + TC.w + WARM), y1 = m.wrap ? TC.y0 + TC.h + WARM : Math.min(m.h - 1, TC.y0 + TC.h + WARM);
     for (let y = y0; y <= y1; y++) {
       for (let x = x0; x <= x1; x++) {
         const i = m.idx(x, y);
@@ -343,7 +369,7 @@
       if (dirty.length === M.version - TC.ver) {
         TC.ver = M.version;
         for (const d of dirty) {
-          const lx = (d.x - TC.x0) * TS, ly = (d.y - TC.y0) * TS;
+          const lx = (unwrap(M, d.x, TC.x0 + TC.w / 2, 'w') - TC.x0) * TS, ly = (unwrap(M, d.y, TC.y0 + TC.h / 2, 'h') - TC.y0) * TS;
           if (lx >= 0 && ly >= 0 && lx < TC.w * TS && ly < TC.h * TS) redrawRect(lx, ly, TS, TS);
         }
       } else tcRebuild(ox, oy);
@@ -443,6 +469,13 @@
     // ------------------------------------------------------------ helpers
     get lead() { return this.P[0]; }
     place(x, y, dir, cell) {
+      if (M && M.wrap) {
+        // keep the logical tile inside the map (the box may hang half a tile over the seam)
+        const c0 = cell || { x: Math.round(x), y: Math.round(y) };
+        const sx = c0.x - M.wx(c0.x), sy = c0.y - M.wy(c0.y);
+        x -= sx; y -= sy;
+        cell = { x: c0.x - sx, y: c0.y - sy };
+      }
       for (const p of this.P) { p.x = x; p.y = y; if (dir) p.dir = dir; }
       this.cell = cell ? { x: cell.x, y: cell.y } : { x: Math.round(x), y: Math.round(y) };
       this.trail = [{ x, y }];
@@ -526,6 +559,7 @@
       const lp = this.renderPos(0);
       let cx = lp.x + 8 - V.w / 2, cy = lp.y + 8 - V.h / 2;
       const mw = M.w * TS, mh = M.h * TS;
+      if (M.wrap) return { x: q(cx), y: q(cy) }; // follows the party everywhere (the map repeats)
       cx = mw <= V.w ? Math.floor((mw - V.w) / 2) : U.clamp(cx, 0, mw - V.w);
       cy = mh <= V.h ? Math.floor((mh - V.h) / 2) : U.clamp(cy, 0, mh - V.h);
       return { x: q(cx), y: q(cy) };
@@ -550,12 +584,36 @@
       const sh = R.Game.ship;
       if (!sh || !M || sh.map !== M.id) return null;
       const s = this.shipPos;
-      return s && s.ref === sh ? s : { x: sh.x, y: sh.y };
+      const at = s && s.ref === sh ? s : { x: sh.x, y: sh.y };
+      if (!M.wrap) return at;
+      // the copy nearest to the party (the ship may sit just across the seam)
+      const p = this.P[0];
+      return { x: unwrap(M, at.x, p.x, 'w'), y: unwrap(M, at.y, p.y, 'h'), ref: at.ref };
     }
     /** does any party box (or the leader's move origin) overlap cell (x,y)? */
     partyOn(x, y) {
-      for (const p of this.P) if (boxHits(p.x, p.y, x, y)) return true;
-      return !!(this.mv && boxHits(this.mv.from.x, this.mv.from.y, x, y));
+      const hit = (bx, by) => boxHits(bx, by, unwrap(M, x, bx, 'w'), unwrap(M, y, by, 'h'));
+      for (const p of this.P) if (hit(p.x, p.y)) return true;
+      return !!(this.mv && hit(this.mv.from.x, this.mv.from.y));
+    }
+    /** wrapping maps: keep the logical tile inside [0,w)×[0,h) — when a step ends past an edge,
+     *  every position (party, trail, the step being drawn, logical tile, cache window) moves by a
+     *  whole map size, so nothing visible changes (the camera follows the same relative path) */
+    rewrap(mv) {
+      if (!M || !M.wrap) return;
+      const c = this.cell;
+      const sx = c.x < 0 ? M.w : c.x >= M.w ? -M.w : 0, sy = c.y < 0 ? M.h : c.y >= M.h ? -M.h : 0;
+      if (!sx && !sy) return;
+      const mvp = (o) => { if (o) { o.x += sx; o.y += sy; } };
+      for (const q of this.P) mvp(q);
+      for (const t of this.trail) mvp(t);
+      mvp(this.cell);
+      const moves = new Set();
+      for (const m of [mv, this.mv, this.last && this.last.mv]) if (m) { moves.add(m); if (m.prev) moves.add(m.prev); }
+      for (const m of moves) { mvp(m.from); mvp(m.to); }
+      const g = R.Game;
+      if (this.shipPos && g.onShip) mvp(this.shipPos);
+      tcShift(sx, sy);
     }
 
     // ------------------------------------------------------------ movement
@@ -659,8 +717,9 @@
     commit(mv) {
       const p = this.P[0], g = R.Game, c = this.cell;
       const was = c.x + ',' + c.y;
-      if (mv.kind === 'board') { c.x = g.ship.x; c.y = g.ship.y; }
+      if (mv.kind === 'board') { c.x = unwrap(M, g.ship.x, p.x, 'w'); c.y = unwrap(M, g.ship.y, p.y, 'h'); }
       else { if (isInt(p.x)) c.x = Math.round(p.x); if (isInt(p.y)) c.y = Math.round(p.y); }
+      this.rewrap(mv);
       if (mv.kind === 'land') this.trail = [{ x: p.x, y: p.y }];
       else {
         this.trail.unshift({ x: p.x, y: p.y });
@@ -714,7 +773,88 @@
       if (pl && pl.kind === 'lock') return this.lockedMsg(d);
       const nd = this.nudge(d);
       if (nd) return this.exec(nd, d);
+      const pushed = this.pushNpc(d);
+      if (pushed) return pushed === true; // 'aside': the NPC is stepping out of the way (no bump)
       return this.bump();
+    }
+
+    // ------------------------------------------------------------ pushing NPCs aside
+    /** the pushable NPC that alone blocks a half step toward d (null if a wall is in the way too) */
+    npcAhead(d) {
+      if (R.Game.onShip) return null;
+      const p = this.P[0], tx = p.x + U.DX[d] * HALF, ty = p.y + U.DY[d] * HALF;
+      let npc = null;
+      for (const [x, y] of rectCells(p.x, p.y, tx, ty)) {
+        if (boxHits(p.x, p.y, x, y)) continue;
+        const n = M.npcAt(x, y);
+        if (n) { if (npc && npc !== n) return null; npc = n; continue; }
+        if (this.footBlock(x, y)) return null;
+      }
+      return npc && !npc.mv && !npc.path && R.FieldMap.pushable(npc) ? npc : null;
+    }
+    /** held direction d is blocked: count the push → true (swapped: the party moves) | 'aside' | false */
+    pushNpc(d) {
+      const npc = this.npcAhead(d), f = R.Engine.frame;
+      if (!npc) { this.push = null; return false; }
+      let pu = this.push;
+      if (!pu || pu.npc !== npc || pu.d !== d || f - pu.last > 1) {
+        // a fresh push; a quick second push (released and pressed again) moves it at once
+        const again = !!(pu && pu.npc === npc && pu.d === d && f - pu.last <= PUSH_AGAIN);
+        pu = this.push = { npc, d, n: 0, last: f, again };
+      }
+      pu.n++; pu.last = f;
+      if (pu.n < PUSH_FRAMES && !(pu.again && pu.n >= 2)) return false;
+      this.push = null;
+      return this.shove(npc, d);
+    }
+    /** move npc one tile out of the way: sideways first (the side the party's box leaves free), then
+     *  straight ahead; if it cannot move anywhere, it swaps places with the leader */
+    shove(npc, d) {
+      const p = this.P[0], hz = !!HORIZ[d];
+      const off = hz ? p.y - npc.y : p.x - npc.x; // the box hangs toward this side of the NPC
+      let side = hz ? ['up', 'down'] : ['left', 'right'];
+      if (off > EPS) side = side.reverse(); // the box is lower / further right: dodge up / left
+      else if (!(off < -EPS) && U.rng() < 0.5) side = side.reverse();
+      for (const nd of side.concat([d])) {
+        const nx = npc.x + U.DX[nd], ny = npc.y + U.DY[nd];
+        if (!this.npcCanEnter(nx, ny, npc)) continue;
+        this.npcStep(npc, nx, ny, nd, PUSH_STEP);
+        if (!npc.move || npc.move === 'still' || npc.move === 'spin') npc.backT = PUSH_BACK;
+        npc.ai = U.ri(90, 150);
+        return 'aside'; // the leader stays put this frame; the way opens as the NPC steps aside
+      }
+      // boxed in: trade places (only from a whole tile, straight at the NPC)
+      const c = this.cell, dx = U.DX[d], dy = U.DY[d];
+      if (!this.aligned() || M.wx(c.x + dx) !== npc.x || M.wy(c.y + dy) !== npc.y) return false;
+      if (M.warpAt(c.x, c.y) || M.eventsAt(c.x, c.y, 'step').length || isDoor(M.tileAt(c.x, c.y))) return false;
+      this.npcStep(npc, M.wx(c.x), M.wy(c.y), U.opposite(d), WALK);
+      if (!npc.move || npc.move === 'still' || npc.move === 'spin') npc.backT = PUSH_BACK;
+      npc.ai = U.ri(90, 150);
+      this.startMove('walk', p.x + dx, p.y + dy, d);
+      return true;
+    }
+    npcStep(n, nx, ny, dir, dur) {
+      n.mv = { fx: n.x, fy: n.y, t: 0, dur };
+      n.x = nx; n.y = ny;
+      if (!n.fixedDir) n.dir = dir;
+    }
+    /** a displaced standing NPC walks back to its post (never next to the party) */
+    npcReturn(n) {
+      if (n.backT == null || --n.backT > 0) return;
+      if (n.x === n.homeX && n.y === n.homeY) { n.backT = null; if (!n.fixedDir) n.dir = n.dir0; return; }
+      n.backT = 60;
+      const c = this.cell;
+      const opts = [];
+      if (n.x !== n.homeX) opts.push(n.homeX > n.x ? 'right' : 'left');
+      if (n.y !== n.homeY) opts.push(n.homeY > n.y ? 'down' : 'up');
+      for (const d of opts) {
+        const nx = n.x + U.DX[d], ny = n.y + U.DY[d];
+        if (Math.abs(M.wx(nx) - c.x) + Math.abs(M.wy(ny) - c.y) <= 1) continue;
+        if (!this.npcCanEnter(nx, ny, n, true)) continue;
+        this.npcStep(n, nx, ny, d, NPC_STEP);
+        n.backT = 1; // keep going next frame (after the step)
+        return;
+      }
     }
     /** scripted single tile step (events): no triggers, ignores collisions */
     stepScripted(d, dur) {
@@ -986,6 +1126,7 @@
         }
         if (n.path) { nextPathStep(n); continue; }
         if (!ai) continue;
+        if (n.backT != null && n.move !== 'wander') { this.npcReturn(n); if (n.mv) continue; }
         if (n.move === 'wander') this.wander(n);
         else if (n.move === 'spin') {
           if (n.ai == null) n.ai = U.ri(20, 60);
@@ -1001,12 +1142,14 @@
       n.dir = d;
       const nx = n.x + U.DX[d], ny = n.y + U.DY[d];
       if (Math.abs(nx - n.homeX) > 2 || Math.abs(ny - n.homeY) > 2) return;
-      if (!this.npcCanEnter(nx, ny, n)) return;
+      if (!this.npcCanEnter(nx, ny, n, true)) return;
       n.mv = { fx: n.x, fy: n.y, t: 0, dur: NPC_STEP };
       n.x = nx; n.y = ny;
     }
-    npcCanEnter(x, y, n) {
-      if (!M.walkable(x, y)) return false;
+    /** may npc n step onto (x,y)? `own`: a move of its own (wandering / walking home) — then it
+     *  also never takes the leader's last free ways out (so townsfolk cannot box the party in) */
+    npcCanEnter(x, y, n, own) {
+      if (!M.inMap(x, y) || !M.walkable(x, y)) return false; // NPCs never cross a wrapping map's seam
       const id = M.tileAt(x, y), t = M.tile(x, y);
       if (t.counter || t.damage || t.warpIcon || isDoor(id) || id.startsWith('stairs') || id === 'warp_pad') return false;
       // the party may cut across trees / benches / flowerbeds, townsfolk keep to open ground
@@ -1015,8 +1158,28 @@
       if (M.npcAt(x, y, n)) return false;
       if (this.partyOn(x, y)) return false;
       const sh = this.shipXY();
-      if (sh && boxHits(sh.x, sh.y, x, y)) return false;
+      if (sh && boxHits(sh.x, sh.y, unwrap(M, x, sh.x, 'w'), unwrap(M, y, sh.y, 'h'))) return false;
+      if (own && this.wouldTrap(x, y, n)) return false;
       return true;
+    }
+    /** would npc n standing on (x,y) leave the leader fewer than two free neighbouring tiles
+     *  (or none, where there was only one to begin with)? */
+    wouldTrap(x, y, n) {
+      const c = this.cell;
+      if (Math.abs(M.wx(x) - c.x) + Math.abs(M.wy(y) - c.y) !== 1 && !this.partyOn(x, y)) return false;
+      const free = (tx, ty, blockTarget) => {
+        if (blockTarget && M.wx(tx) === M.wx(x) && M.wy(ty) === M.wy(y)) return false;
+        if (!M.walkable(tx, ty) || M.chestAt(tx, ty)) return false;
+        const o = M.npcAt(tx, ty, n);
+        return !o;
+      };
+      let before = 0, after = 0;
+      for (const d of U.DIRS) {
+        const tx = c.x + U.DX[d], ty = c.y + U.DY[d];
+        if (free(tx, ty, false)) before++;
+        if (free(tx, ty, true)) after++;
+      }
+      return after < Math.min(2, before);
     }
 
     // ------------------------------------------------------------ drawing
@@ -1043,23 +1206,32 @@
     inView(cam, px, py, pad) {
       return px > cam.x - pad && px < cam.x + V.w + pad && py > cam.y - pad && py < cam.y + V.h + pad;
     }
+    /** px position of an object at tile (x,y): on a wrapping map the copy nearest the view's centre */
+    objPx(cam, x, y) {
+      if (!M.wrap) return { x: x * TS, y: y * TS };
+      return { x: unwrap(M, x, (cam.x + V.w / 2) / TS, 'w') * TS, y: unwrap(M, y, (cam.y + V.h / 2) / TS, 'h') * TS };
+    }
     drawObjects(cam) {
       const G = R.Gfx;
       if (M.chests.length) {
         const g = G.get('obj:chest');
         for (const c of M.chests) {
-          if (!c.present || !this.inView(cam, c.x * TS, c.y * TS, 16)) continue;
+          if (!c.present) continue;
+          const o = this.objPx(cam, c.x, c.y);
+          if (!this.inView(cam, o.x, o.y, 16)) continue;
           const img = Array.isArray(g) ? g[R.Game.chests[c.id] ? 1 : 0] || g[0] : g;
-          blit(img, c.x * TS - cam.x, c.y * TS - cam.y);
+          blit(img, o.x - cam.x, o.y - cam.y);
         }
       }
       if (M.hidden.length && this.fieldMods().treasureSense) {
         const g = G.get('obj:sparkle');
         const f = Math.floor(R.Engine.frame / 8);
         for (const h of M.hidden) {
-          if (R.Game.chests[h.id] || !R.State.check(h.cond) || !this.inView(cam, h.x * TS, h.y * TS, 16)) continue;
+          if (R.Game.chests[h.id] || !R.State.check(h.cond)) continue;
+          const o = this.objPx(cam, h.x, h.y);
+          if (!this.inView(cam, o.x, o.y, 16)) continue;
           const img = Array.isArray(g) ? g[f % g.length] : g;
-          blit(img, h.x * TS - cam.x, h.y * TS - cam.y);
+          blit(img, o.x - cam.x, o.y - cam.y);
         }
       }
     }
@@ -1069,11 +1241,12 @@
       const af = Math.floor(R.Engine.frame / 16);
       for (const n of M.npcs) {
         if (!n.present) continue;
-        let x = n.x * TS, y = n.y * TS;
+        const o = this.objPx(cam, n.x, n.y);
+        let x = o.x, y = o.y;
         if (n.mv) {
           const k = Math.min(1, (n.mv.t + (R.Engine.alpha || 0)) / n.mv.dur);
-          x = q((n.mv.fx + (n.x - n.mv.fx) * k) * TS);
-          y = q((n.mv.fy + (n.y - n.mv.fy) * k) * TS);
+          x = q(x + (n.mv.fx - n.x) * (1 - k) * TS);
+          y = q(y + (n.mv.fy - n.y) * (1 - k) * TS);
         }
         if (!this.inView(cam, x, y, 48)) continue;
         list.push({ y, pri: 1, x, npc: n });

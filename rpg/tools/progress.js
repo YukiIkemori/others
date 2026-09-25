@@ -59,7 +59,8 @@ function tileId(P, x, y) {
   return t;
 }
 function blockedByNpc(P, x, y) {
-  return P.npcs.some((n) => n.x === x && n.y === y && (n.move || 'still') !== 'wander' && check(n.cond));
+  // NPCs the party can push aside (R.FieldMap.pushable: wanderers, plain townsfolk) never block
+  return P.npcs.some((n) => n.x === x && n.y === y && !R.FieldMap.pushable(n) && check(n.cond));
 }
 function walkable(P, x, y, fromSea) {
   const id = tileId(P, x, y);
@@ -110,8 +111,11 @@ function bfs() {
       if (meta && meta.warp && needsOk(meta.needs)) goSpawn(meta.warp.to, meta.warp.spawn);
     }
     const here = walkable(P, x, y) || 'land';
+    // world maps wrap around (DESIGN §7.2): leaving an edge comes back in at the opposite one
+    const wraps = P.def.wrap != null ? !!P.def.wrap : P.def.type === 'world';
     for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
-      const nx = x + dx, ny = y + dy;
+      let nx = x + dx, ny = y + dy;
+      if (wraps) { nx = (nx + P.w) % P.w; ny = (ny + P.h) % P.h; }
       if (nx < 0 || ny < 0 || nx >= P.w || ny >= P.h) {
         if (P.def.exit) goSpawn(P.def.exit.to, P.def.exit.spawn);
         continue;

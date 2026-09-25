@@ -320,6 +320,7 @@ async function newGame(map, spawn) {
   const lvSave = R.Game.party.map((c) => c.level);
   R.Game.party.forEach((c) => { c.level = 10; });
   R.Field.repel(3);
+  R.Field.layer.walked = 0; // whole tiles from here (a half step left over would shift the count)
   R.fxBattleLog.length = 0;
   R.Field.layer.encCount = 0.1;
   await walk('R'); await walk('L');
@@ -330,6 +331,7 @@ async function newGame(map, spawn) {
   R.Game.party.forEach((c) => { c.level = 3; });
   ok(R.Field.layer.repelBlocks('fx_w1'), 'repel works at the top of the zone band');
   R.Game.party.forEach((c, i) => { c.level = lvSave[i]; delete c._lv; });
+  R.Field.layer.encCount = 99; // (below the band again: no fight may pre-empt the notice)
   await walk('R');
   ok(/魔除けの効果が切れた/.test(msgText()), 'repel expiry notice');
   await clearMsgs();
@@ -912,6 +914,180 @@ async function newGame(map, spawn) {
   eq(R.debug.setJobLevel('yuki', 'warrior', 3), 'ユウキ warrior Lv3', 'debug.setJobLevel');
   R.debug.noEncounter(true);
   ok(R.Field.noEncounter, 'debug.noEncounter');
+
+  // --------------------------------------------------------------- world wraparound
+  console.log('wrap');
+  {
+    const L = R.Field.layer;
+    const fw = R.FieldMap.compile('fx_world');
+    ok(fw.wrap, 'world maps wrap by default');
+    ok(!R.FieldMap.compile('fx_town').wrap, 'towns do not wrap');
+    eq([fw.tileAt(-1, 0), fw.tileAt(fw.w, 5), fw.tileAt(3, -1)], [fw.tileAt(fw.w - 1, 0), fw.tileAt(0, 5), fw.tileAt(3, fw.h - 1)], 'tileAt wraps');
+    eq(fw.zoneAt(-1, 3), fw.zoneAt(fw.w - 1, 3), 'zoneAt wraps');
+    // a small all-land world: on foot across every edge, plus a mountain wall at the seam
+    R.DB.maps.fx_torus = {
+      name: 'わのせかい', type: 'world', legend: 'world', bgm: 'overworld',
+      rows: [
+        '..........M',
+        '..........M',
+        '...........',
+        '...........',
+        '...........',
+        '...........',
+        '...........',
+        '...........',
+        '...........',
+        '...........',
+      ],
+      spawns: { entrance: { x: 0, y: 5, dir: 'left' } },
+      defaultZone: 'fx_w2',
+    };
+    await R.Field.warp('fx_torus', 'entrance', { fade: false }); await settle();
+    const m = R.Field.map, W = m.w, H = m.h;
+    const camMod = () => { const c = R.Field.camera(); return [((c.x % (W * 16)) + W * 16) % (W * 16), ((c.y % (H * 16)) + H * 16) % (H * 16)]; };
+    // walk left off x=0: comes in at the right edge; the drawn screen position never jumps
+    L.place(0, 5, 'left'); L.savePos();
+    const scr0 = L.renderPos(0).x - R.Field.camera().x;
+    let prev = camMod()[0], maxJump = 0, scrOk = true;
+    R.Input._set('left', true);
+    for (let i = 0; i < 14; i++) {
+      await step(1);
+      const cx = camMod()[0];
+      let dj = Math.abs(cx - prev); dj = Math.min(dj, W * 16 - dj);
+      maxJump = Math.max(maxJump, dj); prev = cx;
+      if (Math.abs(L.renderPos(0).x - R.Field.camera().x - scr0) > 1e-6) scrOk = false;
+    }
+    R.Input._set('left', false); await settle();
+    ok(maxJump <= 4, 'camera glides across the seam (max ' + maxJump + ' px/frame)');
+    ok(scrOk, 'leader stays centred while crossing');
+    ok(pos().x > W - 4 && pos().x <= W - 1 && pos().y === 5, 'walked off the left edge → right side (' + pos().x + ')');
+    ok(R.Field.exactPos().x >= -0.5 && R.Field.exactPos().x < W, 'box kept near the map');
+    ok(R.Game.pos.x >= 0 && R.Game.pos.x < W, 'saved position inside the map');
+    L.place(W - 1, 5, 'right'); await walk('R');
+    eq([pos().x, pos().y], [0, 5], 'right edge → x 0');
+    L.place(4, 0, 'up'); await walk('U');
+    eq([pos().x, pos().y], [4, H - 1], 'top edge → bottom');
+    await walk('D');
+    eq([pos().x, pos().y], [4, 0], 'bottom edge → top');
+    // the mountain at the far right blocks walking left from x=0 (walkability across the seam)
+    L.place(0, 0, 'left'); await walk('L');
+    eq([pos().x, pos().y], [0, 0], 'blocked by the mountain across the seam');
+    ok(!m.walkable(-1, 1) && m.walkable(-1, 2), 'walkable() wraps');
+    // diagonal across the corner
+    L.place(0, 9, 'down'); L.savePos();
+    await holdDirs(['right', 'down'], 5);
+    const d = R.Field.exactPos();
+    ok(d.y < 2 && d.x > 0 && d.x < 3, 'diagonal across the bottom edge (' + d.x + ',' + d.y + ')');
+    ok(pos().y >= 0 && pos().y < H, 'logical tile inside the map after a diagonal');
+    // wide view: camera is never clamped on a wrapping map
+    L.place(0, 0, 'down');
+    const c0 = R.Field.camera();
+    ok(c0.x < 0 && c0.y < 0, 'camera not clamped at the corner (' + c0.x + ',' + c0.y + ')');
+
+    // ship across every edge of fx_world
+    await R.Field.warp('fx_world', 'start', { fade: false }); await settle();
+    const mw = R.Field.map;
+    const sail = async (x, y, d) => {
+      L.place(x, y, d);
+      R.Game.ship = { map: 'fx_world', x, y, dir: d }; R.Game.onShip = true; L.shipPos = null; L.savePos();
+      await walk(d[0].toUpperCase());
+      return [pos().x, pos().y];
+    };
+    eq(await sail(0, 25, 'left'), [mw.w - 1, 25], 'sail off the left edge');
+    eq([R.Game.ship.x, R.Game.ship.y], [mw.w - 1, 25], 'ship saved on the far side');
+    ok(R.Game.onShip, 'still aboard after the seam');
+    eq(await sail(mw.w - 1, 25, 'right'), [0, 25], 'sail off the right edge');
+    eq(await sail(20, 0, 'up'), [20, mw.h - 1], 'sail off the top edge');
+    eq(await sail(20, mw.h - 1, 'down'), [20, 0], 'sail off the bottom edge');
+    // several whole tiles past the seam and back (trail / followers stay consistent)
+    L.place(1, 26, 'left'); R.Game.ship = { map: 'fx_world', x: 1, y: 26, dir: 'left' }; R.Game.onShip = true; L.shipPos = null;
+    await walk('LLLL');
+    eq([pos().x, pos().y], [mw.w - 3, 26], 'four tiles west across the seam');
+    ok(L.P.every((p) => Math.abs(p.x - L.P[0].x) <= 2.01), 'followers followed across the seam');
+    await walk('RRRR');
+    eq([pos().x, pos().y], [1, 26], 'and back');
+    // boarding a ship that sits across the seam
+    R.Game.onShip = false;
+    R.Game.ship = { map: 'fx_world', x: mw.w - 1, y: 26, dir: 'left' }; L.shipPos = null;
+    L.place(0, 26, 'left');
+    ok(L.shipXY().x === -1, 'ship seen across the seam (nearest copy)');
+    R.Game.ship = null; R.Game.onShip = false;
+  }
+
+  // --------------------------------------------------------------- pushing NPCs aside
+  console.log('push');
+  {
+    const L = R.Field.layer, PF = R.FieldMap.pushable;
+    const t = R.FieldMap.compile('fx_town');
+    const kind = (id) => PF(t.npc(id));
+    eq(['guard', 'kid', 'elder', 'shopkeeper', 'priest', 'ghost_girl'].map(kind), [true, true, false, false, false, false], 'pushable: townsfolk yes, service / conditional NPCs no');
+    ok(!PF({ sprite: 'mon:golem' }) && !PF({ sprite: 'soldier', fixed: true }) && PF({ sprite: 'soldier', event: 'x', push: true }), 'pushable flags');
+    R.DB.events.fx_hi = { run: async (ev) => { await ev.say('やあ。'); } };
+    R.DB.maps.fx_yard = {
+      name: 'なかにわ', type: 'dungeon', legend: 'local', theme: 'cave',
+      rows: [
+        '##########',
+        '#........#',
+        '#........#',
+        '#........#',
+        '##########',
+        '#....#####',
+        '##########',
+      ],
+      spawns: { entrance: { x: 2, y: 2, dir: 'right' } },
+      npcs: [
+        { id: 'loafer', x: 5, y: 2, sprite: 'npc:man', text: 'ひまだなあ。' },
+        { id: 'boss', x: 7, y: 2, sprite: 'npc:soldier', event: 'fx_hi' },
+        { id: 'mover', x: 2, y: 5, sprite: 'npc:man', text: 'せまいね。' },
+        { id: 'post', x: 3, y: 5, sprite: 'npc:soldier', text: 'ここは通さん。', fixed: true },
+      ],
+    };
+    await R.Field.warp('fx_yard', 'entrance', { fade: false }); await settle();
+    const npc = (id) => R.Field.npc(id);
+    // talking still works and never moves anyone
+    L.place(4, 2, 'right'); L.savePos();
+    await press('a');
+    ok(/ひまだなあ/.test(msgText()), 'A talks to the NPC in front');
+    await clearMsgs();
+    eq([npc('loafer').x, npc('loafer').y], [5, 2], 'talking does not push');
+    // a short tap only turns / bumps
+    await hold('right', 5); await settle();
+    eq([npc('loafer').x, npc('loafer').y], [5, 2], 'a brief push does nothing');
+    eq(pos().x, 4, 'party blocked for now');
+    // keep pushing: the NPC steps aside (sideways) and the party walks on
+    R.Input._set('right', true); await step(40); R.Input._set('right', false); await settle();
+    const lo = npc('loafer');
+    ok(lo.x === 5 && (lo.y === 1 || lo.y === 3), 'pushed NPC stepped aside (' + lo.x + ',' + lo.y + ')');
+    ok(pos().x >= 5, 'party walked through (' + pos().x + ')');
+    ok(!R.Engine.top() || R.Engine.top() === L, 'pushing opened no message');
+    // it goes back to its post later, once the party is not next to it
+    L.place(1, 2, 'left'); L.savePos();
+    await step(520);
+    eq([lo.x, lo.y], [5, 2], 'standing NPC returned to its post');
+    // a quick second push moves it at once
+    L.place(4, 2, 'right'); L.savePos();
+    await hold('right', 3); await settle(); await step(3);
+    eq([lo.x, lo.y], [5, 2], 'first tap: stays');
+    R.Input._set('right', true); await step(4); R.Input._set('right', false);
+    ok(lo.y !== 2 || lo.x !== 5, 'second push within a moment: steps aside at once');
+    await settle(); await step(20);
+    // service NPCs (event) stay put
+    L.place(6, 2, 'right'); L.savePos();
+    R.Input._set('right', true); await step(60); R.Input._set('right', false); await settle();
+    eq([npc('boss').x, npc('boss').y, pos().x], [7, 2, 6], 'NPC with an event is never pushed');
+    // boxed in (walls on both sides, a fixed NPC behind): trade places instead
+    L.place(1, 5, 'right'); L.savePos();
+    R.Input._set('right', true); await step(24); R.Input._set('right', false); await settle();
+    eq([pos().x, npc('mover').x, npc('mover').y], [2, 1, 5], 'no room to step aside: swapped places');
+    eq([npc('post').x, npc('post').y], [3, 5], 'fixed NPC stays');
+    // wanderers never take the leader's last way out
+    L.place(1, 5, 'right');
+    const mv = npc('mover');
+    mv.x = 3; mv.y = 5; // pretend (for the check only)
+    ok(!L.npcCanEnter(2, 5, mv, true), 'a wanderer will not seal a dead end');
+    ok(L.npcCanEnter(2, 5, mv, false), 'a push may still move it there');
+    mv.x = 1; mv.y = 5;
+  }
 
   const bad2 = warnings.filter((x) => !/fx_bad|shop system|nowhere|objective|missing graphic/.test(x));
   if (bad2.length) console.log('warnings:\n  ' + [...new Set(bad2)].join('\n  '));
