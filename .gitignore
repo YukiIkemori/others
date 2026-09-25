@@ -4,3 +4,4 @@ __pycache__/
 rpg/dist/.fontcache/
 rpg/node_modules/
 rpg/.*.js
+rpg/.towns_resume.js
