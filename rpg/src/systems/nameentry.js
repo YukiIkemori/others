@@ -269,11 +269,11 @@
     draw() {
       const g = G();
       g.clear('#000010');
-      g.window(28, 20, 200, 108, { title: 'この名前でよろしいですか？' });
+      g.window(28, 6, 200, 96, { title: 'この名前でよろしいですか？' });
       ORDER.forEach((id, i) => {
         const sheet = R.Gfx.get('party:' + id + ':' + R.DB.chars[id].startJob);
         const f = sheet && sheet.down ? sheet.down[Math.floor(R.Engine.frame / 24) % 2] : null;
-        const y = 32 + i * 30;
+        const y = 18 + i * 28; // kept above the はい/いいえ window
         if (f) g.draw(f, 46, y);
         g.text(this.names[id], 72, y + 6, { size: 16 });
         g.text(R.DB.chars[id].gender === 'm' ? '♂' : '♀', 200, y + 8, { color: R.DB.chars[id].gender === 'm' ? g.C.cyan : g.C.pink });

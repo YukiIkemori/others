@@ -206,7 +206,10 @@ ${src.map((f) => `<script src="file://${f}"></script>`).join('\n')}
   const page = await (await browser.newContext({ viewport: { width: 800, height: 600 } })).newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(String(e.stack || e)));
-  page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') errors.push(m.text()); });
+  page.on('console', (m) => {
+    // the check's own getImageData readbacks trigger a harmless performance hint
+    if ((m.type() === 'error' || m.type() === 'warning') && !/willReadFrequently/.test(m.text())) errors.push(m.text());
+  });
   await page.goto('file://' + pageFile);
   await page.waitForTimeout(200);
   const save = (name, url) => {

@@ -205,7 +205,7 @@
       const have = R.State.count(id);
       let n = 1;
       if (have > 1) {
-        await say(it.name + 'をいくつお売りになりますか？', { noWait: true });
+        await say(it.name + 'ですね。\nいくつお売りになりますか？', { noWait: true });
         n = await R.UI.number({ min: 1, max: have, initial: 1, price: p, label: it.name.length > 6 ? '個数' : it.name, w: 132 });
         if (n < 1) continue;
       }

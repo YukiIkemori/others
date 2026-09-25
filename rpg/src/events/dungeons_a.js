@@ -150,7 +150,7 @@
       if (ev.flag('boss_pyramid_done')) return;
       faceNpc(ev, 'pyramid_sphinx');
       await ev.say('スフィンクス「止まれ、人の子よ。\n我が名はスフィンクス。\nいにしえの王の眠りを\n守る者なり。」');
-      await ev.say('「大地の紋章を求める者よ。\n汝らに、その資格ありや？\f力なき者に\n紋章を持つ資格なし。\f汝らの力、\n我に示してみせよ！」');
+      await ev.say('「大地の紋章を求める者よ。\n汝らは、それにふさわしき者か？\f力なき者に\n紋章を持つ資格なし。\f汝らの力、\n我に示してみせよ！」');
       if ((await ev.battle('boss_pyramid')) !== 'win') return false;
       await ev.say('スフィンクス「……見事だ。\n汝らこそ、紋章に\n選ばれし者たち……。\f王の眠る部屋へ\n進むがよい……。」');
       ev.sfx('earth');

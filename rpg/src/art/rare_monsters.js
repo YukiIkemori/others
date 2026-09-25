@@ -457,6 +457,7 @@
       p.d = q.d;
     }
     p.outline(OUT); shave(p);
+    if (o.after) o.after(p, dx, dy);
     if (post) {
       const q = G().pix(p.w, p.h);
       post(q);
@@ -507,7 +508,7 @@
     sc.carve([[12, 30], [11, 33]], -1).carve([[35, 30], [36, 33]], -1).carve([[14, 37], [13, 39]], -1).carve([[33, 37], [34, 39]], -1);
     sc.carve([[21, 12], [22, 13]], -1).carve([[26, 12], [25, 13]], -1);
     for (const x of [10, 12, 14, 33, 35, 37]) sc.carve([[x, 43], [x, 45]], -1);
-    const p = sc.render();
+    const p = sc.render({ ground: 0.02 });
     for (const x of [18, 20, 27, 29]) on(p, x, 40, FUR[1]); // paw toes
     // eyes: big glossy ruby eyes with two highlights
     const eye = { k: INK, d: '#4a0e3c', r: '#a8205c', m: '#e0407a', l: '#ff9ac0', w: WHITE };
@@ -582,22 +583,9 @@
     const BELLY = ['#5e4c78', '#9a88ac', '#cec2d8', '#eee8f0', '#ffffff'];
     const belly = mat('', { ramp: BELLY, tex: (x, y) => ((x + y * 2) % 5 === 0 ? -1 : 0) });
     const jaw = mat('', { ramp: BELLY, bias: 0.28, contrast: 0.6 });
+    // prism tints for the diamond plates, sweeping like a rainbow along the back
     const TINTS = ['#9cf0ff', '#a8ffcc', '#fff09c', '#ffc4a0', '#ffa8d8', '#c8b4ff'];
-    // diamond scales: a rotated 5-px grid with dark grout; each scale has a lit
-    // upper-left edge and a tint from a rainbow sweeping across the back
-    const SIL = ['#1a1644', '#34347c', '#6470bc', '#a0b0e4', '#d4e0f8', '#ffffff'];
-    const scaleTex = (x, y) => {
-      const u = (x + y) % 6, v = (x - y + 120) % 6;
-      if (u === 0 || v === 0) return -2;
-      return u <= 2 && v <= 3 ? 1 : u >= 4 ? -1 : 0;
-    };
-    const scaleCol = (k, x, y) => {
-      if (k <= 1) return SIL[k];
-      const cu = Math.floor((x + y) / 6), cv = Math.floor((x - y + 120) / 6);
-      const t = TINTS[Math.floor((cu * 38 + cv * 17 + 1000) / 64) % TINTS.length];
-      return k >= 5 ? mix(WHITE, t, 0.25) : mix(SIL[k], t, k === 4 ? 0.7 : k === 3 ? 0.55 : 0.3);
-    };
-    const back = mat('', { ramp: SIL, tex: scaleTex, col: scaleCol, bias: 0.1, line: '#141034' });
+    const back = mat('', { ramp: HIDE, rim: 3, bias: 0.04 });
     const CRYS = ['#2a3470', '#4a6cb4', '#7cb4e8', '#b4e6fa', '#e4fbff', '#ffffff'];
     const crys = mat('', { ramp: CRYS, contrast: 1.3, bias: 0.08, line: '#1a2250' });
     const claw = mat('#eceaf8', { n: 4, dark: 0.5 });
@@ -636,7 +624,6 @@
       crystal(sc, 32, 21, 33.5, 12.5, 2.2, { m: crys, g: 's4', z: 3 }),
       crystal(sc, 27, 21, 27.5, 9, 2.7, { m: crys, g: 's3', z: 4 }),
       crystal(sc, 21.5, 22, 20.5, 11.5, 2.4, { m: crys, g: 's2', z: 5 }),
-      crystal(sc, 16.5, 25, 15, 18.5, 1.7, { m: crys, g: 's1', z: 6 }),
       crystal(sc, 42, 13.2, 40, 6.5, 1.8, { m: crys, g: 'tip', z: 1 }),
     ];
     const p = sc.render();
@@ -650,8 +637,34 @@
     p.set(2, 31, INK); p.set(3, 31, INK);
     p.line(2, 34, 11, 34, INK); p.line(12, 33, 14, 32, INK); p.set(15, 31, INK);
     p.set(5, 35, WHITE); p.set(8, 35, WHITE); p.set(11, 34, WHITE);
-    // prism glints scattered over the diamond scales
-    for (const [x, y, c] of [[24, 25, WHITE], [29, 24, '#fff4a0'], [19, 28, '#b8f8ff'], [33, 26, '#ffc8ec'], [26, 29, WHITE]]) on(p, x, y, c);
+    // diamond plates paving the back and tail: a rhombic lattice of r=3 plates
+    // with dark seams; each plate has a lit upper-left facet and a darker
+    // lower-right one in a prism tint that sweeps like a rainbow along the
+    // back, toned by the lighting the scene gave that pixel
+    const spineY = (x) => (x < 22 ? 30.5 - (x - 15) * 0.29 : x < 30 ? 28.5 - (x - 22) * 0.125 : 27.5 + (x - 30) * 0.08);
+    const onBack = (x, y) => (sc.isG(x, y, 'body') && y < spineY(x) + 2.5) || (sc.isG(x, y, 'tail') && x > 38);
+    const LT = ['#6a7ac0', '#96a8e4', '#c4d4f8', '#f0f6ff'], MD = ['#4c5aa4', '#7282cc', '#a2b2ec', '#d2deff'], DK = ['#2e3882', '#4a58a8', '#6e7ecc', '#9eaeea'];
+    const orig = p.d.slice();
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      if (!onBack(x, y) || p.get(x, y) !== orig[y * W + x]) continue;
+      // nearest lattice centre (i+j even) → offsets
+      let best = null;
+      for (let j = Math.floor(y / 3) - 1; j <= Math.floor(y / 3) + 1; j++) for (let i = Math.floor(x / 3) - 1; i <= Math.floor(x / 3) + 1; i++) {
+        if ((i + j) & 1) continue;
+        const d = Math.abs(x - i * 3) + Math.abs(y - j * 3);
+        if (!best || d < best[0]) best = [d, i, j];
+      }
+      const [d, i, j] = best, dx = x - best[1] * 3, dy = y - best[2] * 3;
+      const lvl = clamp(HIDE.indexOf(orig[y * W + x]) - 1, 0, 3);
+      const t = TINTS[((Math.floor(i / 2) + Math.floor(j / 2)) % 6 + 6) % 6];
+      let c;
+      if (d >= 3) c = '#1c1a4e';
+      else if (dx + dy < 0) c = mix(LT[lvl], t, 0.5);
+      else if (dx + dy === 0) c = mix(MD[lvl], t, 0.6);
+      else c = mix(DK[lvl], t, 0.55);
+      if (dy === -2 && dx === 0 && lvl >= 2) c = WHITE;
+      p.set(x, y, c);
+    }
     return finish(p, (q) => {
       sparkle(q, 23, 5, 'star', 'c');
       sparkle(q, 35, 7, 'small', 'y');
@@ -740,6 +753,163 @@
       sparkle(q, 45, 2, 'dot');
       sparkle(q, 33, 45, 'dot');
     });
+  };
+
+  // 星くじら: a small sky whale in three-quarter view drifting on a wisp of
+  // cloud. Its deep-navy back is dotted with twinkling stars, the pleated belly
+  // glows with nebula colours (aqua → violet → rose), the fins are tiny and a
+  // fountain of stardust rises from its blowhole.
+  S.rare_whale = () => {
+    const W = 64, H = 64;
+    const NAVY = ['#050820', '#0c1644', '#182872', '#2842a2', '#4468cc', '#86a6f0'];
+    const NEB = [
+      ['#0a2a50', '#145c90', '#28a0d0', '#78e0f4', '#e0fcff'],
+      ['#1e104a', '#48288e', '#7a50ce', '#b890f8', '#ece2ff'],
+      ['#380c46', '#781c76', '#be40a6', '#f080d0', '#ffd4f2'],
+    ];
+    const navy = mat('', { ramp: NAVY, rim: 4 });
+    const belly = gradMat(NEB, (x, y) => (x - 10) / 36 + (y - 44) / 50, { dither: 0.14, bias: 0.3, contrast: 0.7, tex: (x, y) => ((y + Math.floor(x / 9)) % 3 === 0 ? -1 : 0) });
+    const fin = mat('', { ramp: NAVY, rim: 4, bias: 0.06 });
+    const CLOUD = ['#6a5c9c', '#9c90cc', '#cec6ec', '#f0ecff', '#ffffff'];
+    const cloud = mat('', { ramp: CLOUD, bias: 0.12, contrast: 0.8 });
+    const sc = new Scene(W, H);
+    // cloud wisp beneath it
+    for (const [x, y, rx, ry] of [[22, 58.5, 7, 3.6], [31, 57.5, 7.5, 4.4], [40.5, 59, 6.5, 3.2], [15, 60, 4.2, 2.2], [47.5, 60.4, 4, 1.8]]) sc.ell(x, y, rx, ry, { m: cloud, g: 'cloud', z: 0, rz: Math.min(rx, ry) });
+    // tail stock rising behind, flukes spread at the top right
+    sc.tube([[42, 36, 8, -4], [51, 30, 5, -5], [56, 22, 3, -6], [57.5, 16.5, 2.2, -6]], { m: navy, g: 'tail', steps: 8 });
+    sc.poly([[57.5, 18.5], [52, 13.5], [48, 7.5], [53.5, 9.5], [57.5, 13.5], [60.5, 8.5], [63.4, 5.2], [62.6, 11.5], [59.5, 17.5]], { m: fin, g: 'fluke', z: -7, bevel: 2 });
+    // body: a big blunt head tapering toward the tail
+    sc.ell(29, 36, 21, 14.5, { m: navy, g: 'body', z: 4, rz: 14 });
+    sc.ell(19, 36.5, 13, 12.5, { m: navy, g: 'body', z: 7, rz: 12 });
+    // nebula belly with throat pleats, below a wavy line
+    const edge = (x) => 39.5 + Math.sin(x / 7) * 1.2 - (x > 40 ? (x - 40) * 0.5 : 0) + (x < 12 ? (12 - x) * 0.5 : 0);
+    sc.region((x, y) => sc.isG(x, y, 'body') && y > edge(x), belly);
+    // tiny pectoral fins
+    sc.poly([[20, 46], [26, 45.5], [22.5, 52.5], [17.5, 54]], { m: fin, g: 'finN', z: 20, bevel: 1.5 });
+    sc.poly([[37, 48], [41, 47.5], [42.5, 52], [39.5, 51.8]], { m: fin, g: 'finF', z: -2, bevel: 1.2 });
+    // blowhole and brow ridge
+    sc.carve([[21, 23.5], [24, 23.5]], -2);
+    const p = sc.render();
+    // stars twinkling on the back (deterministic scatter over the navy)
+    const navySet = new Set(NAVY);
+    for (let i = 0; i < 70; i++) {
+      const x = Math.floor(hash(i, 1, 9) * W), y = Math.floor(hash(i, 2, 9) * 50);
+      const c = p.get(x, y);
+      if (!navySet.has(c) || c === NAVY[5]) continue;
+      p.set(x, y, [WHITE, '#fff0a0', '#b8f4ff', '#ffc8f0'][i & 3]);
+    }
+    for (const [x, y, t] of [[30, 27, 'y'], [44, 29, 'c'], [36, 33, 'w'], [13, 30, 'p'], [51, 24, 'y']]) {
+      if (p.get(x, y) == null) continue;
+      stamp(p, x - 1, y - 1, ['.t.', 'twt', '.t.'], { t: SPARK[t], w: WHITE });
+    }
+    // bright motes glowing inside the nebula belly
+    for (const [x, y] of [[14, 45], [22, 47], [29, 44], [35, 49], [42, 45], [26, 51], [47, 41]]) if (p.get(x, y) && !navySet.has(p.get(x, y))) p.set(x, y, WHITE);
+    // eye: small, kind, with a star-shaped highlight; a long smiling mouth
+    stamp(p, 12, 34, ['.kk.', 'kwbk', 'kbbk', '.kk.'], { k: INK, w: WHITE, b: '#2a3a8a' });
+    p.line(4, 41, 10, 42, INK); p.line(11, 42, 18, 41.5, INK); p.set(19, 40, INK); p.set(20, 39, INK);
+    for (const [x, y] of [[8, 39], [9, 39], [16, 38]]) on(p, x, y, '#ff90c0'); // blush
+    // a crescent-moon jewel on the brow (gold set, pale moonstone)
+    jewel(p, 17, 27, 2.2, 2, ['#3a3c7a', '#6a70b8', '#a8b0e8', '#dce4ff', '#f4f8ff', '#ffffff'], { bezel: GOLD });
+    return finish(p, (q) => {
+      // stardust fountain from the blowhole
+      sparkle(q, 22, 18, 'star', 'y');
+      sparkle(q, 18, 12, 'small', 'c');
+      sparkle(q, 27, 11, 'small', 'p');
+      sparkle(q, 22, 6, 'star', 'w');
+      sparkle(q, 15, 4, 'dot'); sparkle(q, 29, 4, 'dot'); sparkle(q, 24, 14, 'dot');
+      sparkle(q, 5, 22, 'small', 'y');
+      sparkle(q, 60, 40, 'small', 'c');
+    });
+  };
+
+  // 黄金の守護像: a living golden guardian idol seated cross-legged in the air
+  // above a glowing jade sigil, hands resting on its knees. A wide fan of
+  // golden rays tipped with jade crowns its head, ruby eyes burn in a stern
+  // mask and jade inlays set off the diadem, ear pendants, pauldrons and the
+  // great stone on its breastplate.
+  S.rare_idol = () => {
+    const W = 48, H = 48;
+    const cx = 23.5;
+    const gold = mat('', { ramp: GOLD, spec: 0.92, rim: 5, contrast: 1.2, bias: 0.08 });
+    const dgold = mat('', { ramp: GOLD, spec: 0.95, rim: 4, contrast: 1.1, bias: -0.02 });
+    const jade = mat('', { ramp: JADE, spec: 0.9, contrast: 1.2, bias: 0.06 });
+    const sigil = mat('', { ramp: JADE.slice(1), glow: 0.7, flat: true });
+    const sc = new Scene(W, H);
+    // jade sigil beneath (it hovers above it)
+    sc.ell(cx, 45.2, 13, 1.7, { m: sigil, g: 'sigil', z: -12, rz: 1 });
+    // a wide fan of rays behind the head, long ones tipped with jade beads
+    const HY = 13;
+    const beads = [];
+    for (let i = 0; i < 11; i++) {
+      const a = Math.PI * (1.02 + (i / 10) * 0.96);
+      const ax = Math.cos(a), ay = Math.sin(a);
+      const long = i % 2 === 0;
+      const L = Math.hypot(ax * 16.5, ay * 12.4) * (long ? 1 : 0.8);
+      sc.tube([[cx + ax * 6, HY + ay * 6, long ? 2 : 1.5, -10], [cx + ax * (L - 2), HY + ay * (L - 2), long ? 1.4 : 1, -10], [cx + ax * L, HY + ay * L, 0.6, -10]], { m: dgold, g: 'ray' + i, k: 0 });
+      if (long) beads.push([cx + ax * (L - 1.4), HY + ay * (L - 1.4)]);
+    }
+    // crossed legs: a wide base, knees out to the sides, soles turned up
+    sc.ell(cx, 36.4, 13, 3.3, { m: gold, g: 'legs', z: 0, rz: 5 });
+    sym(W, (X) => {
+      sc.ell(X(12.5), 35.6, 3.4, 3, { m: gold, g: 'legs', z: 1, rz: 3 });
+      sc.ell(X(19), 35.2, 3.4, 1.8, { m: gold, g: 'feet', z: 5, rz: 2.2 });
+    });
+    // torso with a breastplate, broad pauldrons, arms down to hands on the knees
+    sc.ell(cx, 26.5, 7.8, 7.4, { m: gold, g: 'torso', z: 2, rz: 7 });
+    sc.ell(cx, 23.8, 6, 3.6, { m: gold, g: 'plate', z: 7, rz: 3 });
+    sym(W, (X, s) => {
+      sc.tube([[X(15), 22, 2.6, 3], [X(11.5), 27, 2.4, 4], [X(11.8), 31.5, 2.2, 5]], { m: gold, g: 'arm' + s });
+      sc.ell(X(12.2), 33.2, 2.6, 2.2, { m: gold, g: 'hand' + s, z: 8, rz: 2.2 });
+      sc.ell(X(14.4), 20.4, 3.9, 3.2, { m: gold, g: 'pauldron' + s, z: 7, rz: 3.2 });
+    });
+    // jade armbands just above the elbows
+    sc.region((x, y) => (sc.isG(x, y, 'arm1') || sc.isG(x, y, 'arm-1')) && y >= 27 && y <= 28, jade);
+    // head: a squared mask, a jewelled diadem, pendant earrings
+    const head = G().pix(W, H);
+    head.poly([[18, 7.5], [29, 7.5], [29.9, 11], [29, 16.3], [26.5, 19.3], [20.5, 19.3], [18, 16.3], [17.1, 11]], 1);
+    sc.shape(head, { m: gold, g: 'head', z: 9, bevel: 2.4 });
+    sc.poly([[16.6, 6.5], [30.4, 6.5], [30.2, 9.5], [16.8, 9.5]], { m: gold, g: 'diadem', z: 12, bevel: 1 });
+    sc.poly([[20.5, 7], [cx, 1.5], [26.5, 7]], { m: gold, g: 'diadem', z: 12, bevel: 1.2 });
+    sym(W, (X, s) => {
+      sc.ell(X(16.8), 13, 1.4, 2.4, { m: gold, g: 'ear' + s, z: 8, rz: 1.4 });
+      sc.ell(X(16.6), 17.2, 1.2, 1.8, { m: jade, g: 'pend' + s, z: 10, rz: 1.2 });
+    });
+    // carved brow and cheek lines, belly bands
+    sc.carve([[18.8, 11], [22, 11.8]], -2).carve([[28.2, 11], [25, 11.8]], -2);
+    sc.carve([[19, 16], [20.5, 18]], -1).carve([[28, 16], [26.5, 18]], -1);
+    sc.carve([[17.5, 29], [cx, 30.6], [29.5, 29]], -1).carve([[18.5, 31.5], [cx, 33], [28.5, 31.5]], -1);
+    const p = sc.render();
+    // ruby eyes, glowing
+    stampM(p, 19, 11, ['kkk', 'WRr', 'kkk'], { k: '#3a1408', W: WHITE, R: RUBY[3], r: RUBY[2] });
+    // nose and a stern mouth with gritted teeth
+    p.set(23, 13, GOLD[3]); p.set(24, 13, GOLD[2]); p.set(23, 14, GOLD[6]); p.set(24, 14, GOLD[1]); p.set(22, 15, GOLD[2]); p.set(25, 15, GOLD[1]);
+    stamp(p, 20, 16, ['kkkkkkkk', 'kwkwwkwk', '.kkkkkk.'], { k: '#3a1a10', w: GOLD[5] });
+    // jewels: diadem stones, the great jade on the breastplate, pauldron studs, ray beads
+    jewel(p, cx, 4.8, 1.3, 1.6, RUBY, { shape: 'kite' });
+    for (const x of [18.8, 28.2]) jewel(p, x, 8, 0.9, 0.9, JADE);
+    jewel(p, cx, 24, 2.4, 2, JADE, { bezel: GOLD });
+    for (const x of [13.8, 33.2]) jewel(p, x, 19.8, 1, 1, JADE);
+    for (const [x, y] of beads) jewel(p, x, y, 0.9, 0.9, JADE);
+    // the sigil: a glowing ring seen at an angle, darker inside, gold rune marks
+    p.each((x, y) => {
+      if (y < 43) return undefined;
+      const d = Math.hypot((x - cx) / 13.5, (y - 45.2) / 2.2);
+      return d > 0.8 ? (y < 45 ? JADE[4] : JADE[3]) : d > 0.55 ? JADE[2] : JADE[1];
+    });
+    for (const x of [14, 19.5, 27.5, 33]) on(p, x, 45, GOLD[5]);
+    for (const x of [cx - 0.5, cx + 0.5]) on(p, x, 45, JADE[5]);
+    return finish(p, (q) => {
+      // motes of jade light rising between the idol and its sigil
+      for (const [x, y, c] of [[14, 41, JADE[4]], [19, 42, JADE[5]], [28, 41, JADE[4]], [33, 42, JADE[5]], [24, 41, WHITE]]) q.set(x, y, c);
+      sparkle(q, 4, 25, 'star', 'y');
+      sparkle(q, 43, 29, 'small', 'y');
+      sparkle(q, 5, 36, 'small', 'c');
+      sparkle(q, 43, 2, 'dot');
+      sparkle(q, 41, 38, 'dot');
+    }, { after: (p2, dx, dy) => {
+      // the sigil's rim glows dark jade instead of the black outline
+      p2.each((x, y, c) => (c === OUT && y >= 43 + dy ? JADE[0] : undefined));
+    } });
   };
 
   // ------------------------------------------------------------ registry

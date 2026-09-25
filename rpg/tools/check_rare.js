@@ -151,7 +151,17 @@ for (const s of SPEC) {
   if (!m.steal || !SEEDS.includes(m.steal.item)) E(`${w}: steal item must be a seed`);
   if (!m.steal || !m.rare || m.steal.rare !== m.rare.item) E(`${w}: rare steal must be the exclusive item`);
   checkText(`${w} desc`, m.desc, 2, 226 / 11);
-  if (m.appear) checkText(`${w} appear`, m.appear, 1, 21);
+  // battle messages: one line of the 220 px battle window
+  if (m.appear) checkText(`${w} appear`, m.appear, 1, 20);
+  for (const a of acts) {
+    const ab = DB.abilities[a.id];
+    if (a.id.startsWith('en_rx_') && ab) {
+      if (!ab.msg) E(`ability ${a.id}: no msg`);
+      else checkText(`ability ${a.id} msg`, ab.msg.replace(/\{user\}/g, m.name), 1, 20);
+      checkEffects(`ability ${a.id}`, ab.effects);
+      if (!TARGETS.includes(ab.target)) E(`ability ${a.id}: bad target ${ab.target}`);
+    }
+  }
   // zones
   for (const z of s.zones) {
     const r = rareEnc[z];
@@ -164,6 +174,9 @@ for (const s of SPEC) {
   }
 }
 for (const z in rareEnc) if (!SPEC.some((s) => s.zones.includes(z))) E(`rareEncounters: zone ${z} is not in the spec`);
+for (const id in DB.abilities) {
+  if (id.startsWith('en_rx_') && !RARE_IDS.some((mid) => mons[mid] && (mons[mid].actions || []).some((a) => a.id === id))) W(`ability ${id}: used by no rare monster`);
+}
 for (const id in mons) if (!RARE_IDS.includes(id) && (mons[id].flags || []).includes('rare')) W(`monster ${id}: flag 'rare' but not in the spec`);
 
 // exclusive items
@@ -333,15 +346,20 @@ if (simRows.length) {
       `  ${padL(f0(real.killPct), 5)}%  ${padL(f0(real.fledPct), 3)}%  ${padL(f1(real.fleeRound), 7)}  ${padL(f1(real.losePct), 5)}% | 1/${f0(1 / Math.max(1e-9, perEnc))}`);
   }
   console.log('(* = the monster\'s own level; ★ per encounter = beaten% × rare-drop rate, before rarePct and steals)');
-  // rough odds for a thief: one steal attempt at the monster's own level, base 12.5 % rare steal
-  console.log('\nsteal (thief-like attacker with the own-level party\'s best agi/luk, one attempt, no stealPct/rarePct):');
+  // rough odds for a thief (battle.js stealChance/rareStealChance): one steal attempt at the monster's
+  // own level with the party's best agi/luk; plain steal (12.5 % rare) and the best rareBonus ability
+  let bonus = 0;
+  for (const id in DB.abilities) for (const f of DB.abilities[id].effects || []) if (f.type === 'steal' && f.rareBonus > bonus) bonus = f.rareBonus;
+  console.log(`\nsteal: one attempt at the own level (best agi/luk of the party, no stealPct/rarePct) → ★ exclusive item` +
+    ` (plain steal 12.5 % of successes, best ability +${Math.round(bonus * 100)} %)`);
   for (const s of SPEC) {
     const m = mons[s.id], row = simRows.find((r) => r.s === s && r.p.own);
     if (!m || !row) continue;
     const party = model.buildParty(row.p.si, row.p.L).map((c) => Rules.stats(c));
     const agi = Math.max(...party.map((x) => x.agi)), luk = Math.max(...party.map((x) => x.luk));
     const p = U.clamp(0.4 + (agi - m.agi) / 200 + luk / 400, 0.1, 0.9);
-    console.log(`  ${pad(m.name, 14)} steal ${f0(p * 100)}% → ★${items[m.rare.item].name} ${f1(p * 12.5)}% per attempt`);
+    console.log(`  ${pad(m.name, 14)} success ${padL(f0(p * 100), 2)}% → ★ ${f1(p * 12.5)}% per attempt, ${f1(p * (12.5 + bonus * 100))}% with the ability` +
+      `  (drop route: 1/${m.rare.rate} per kill)`);
   }
 }
 console.log('');

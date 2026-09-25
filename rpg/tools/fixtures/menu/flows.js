@@ -43,6 +43,13 @@ async function main() {
     if (cond) { pass++; console.log('  ok  ', name); } else { fail++; console.log('  FAIL', name, info !== undefined ? JSON.stringify(info) : ''); }
   };
   const shot = (name) => page.locator('#screen').screenshot({ path: path.join(OUT, name + '.png') });
+  // poll until a page condition holds (jingles run much longer headless than their nominal length)
+  const until = async (js, ms) => {
+    const t0 = Date.now();
+    while (Date.now() - t0 < (ms || 15000)) { if (await ev(js)) return true; await page.waitForTimeout(100); }
+    return false;
+  };
+  const msgShown = `!!(R.UI._msg && !R.UI._msg.closed && R.UI._msg.resolveText) && R.Engine.fadeAlpha === 0`;
   const onlyField = async () => JSON.stringify(await ev(`R.Engine.layers.map(l=>l.constructor.name)`)) === '["FieldLayer"]';
 
   const T = {};
@@ -58,17 +65,21 @@ async function main() {
   T.wing = async () => {
     await setup('fx_world', 'start');
     const idx = await ev(`R.State.items(it=>it.type==='consumable').map(e=>e.id).indexOf('wing')`);
+    const dest = await ev(`(()=>{ const l = R.Field.teleportList()[1]; const loc = R.DB.locations[l.id]; return loc && loc.map; })()`);
+    const p0 = await ev(`R.debug.pos()`);
     await ev(`(R.Menu.open(), 1)`); await keys(`w300,a,w200,down*${idx},a,w200,a,w300,down,a,w400,a,w2000`);
     const st = await ev(`({wing:R.Game.inv.wing, pos:R.debug.pos()})`);
     check('wing consumed', st.wing === 2, st);
-    check('teleported to milt spawn', st.pos && st.pos.map === 'fx_world' && st.pos.x === 33 && st.pos.y === 6, st);
+    check('teleported to the 2nd destination', st.pos && st.pos.map === dest && JSON.stringify(st.pos) !== JSON.stringify(p0), [dest, p0, st]);
     check('no menu left open', await onlyField());
   };
   T.exit = async () => {
     await setup('fx_dungeon_1', 'entrance');
-    await ev(`(R.Menu.open(), 1)`); await keys('w300,right,a,w300,right,right,down,a,w400,a,w2200');
+    const k = await ev(`R.Rules.fieldActions(R.Game.party[2]).indexOf('mage_exit')`);
+    const mp0 = await ev(`R.Game.party[2].mp - R.Rules.mpCost(R.Game.party[2], 'mage_exit')`);
+    await ev(`(R.Menu.open(), 1)`); await keys(`w300,right,a,w300,right,right,down*${k},a,w400,a,w2200`);
     const st = await ev(`({mp:R.Game.party[2].mp, pos:R.debug.pos()})`);
-    check('exit spell cost MP', st.mp === 27, st);
+    check('exit spell cost MP', st.mp === mp0, [mp0, st]);
     check('left the dungeon', st.pos.map === 'fx_world', st);
   };
   T.equip = async () => {
@@ -159,9 +170,13 @@ async function main() {
   T.inn = async () => {
     await setup('fx_town', 'entrance', { dead: true });
     await ev(`(R.Events.run(async ev => { window.__inn = await ev.inn(20); }), 1)`);
-    await keys('w500,a,w300,a,w300,w2600,a,w300,a,w400');
-    const st = await ev(`({inn:window.__inn, hp:R.Game.party.map(c=>c.hp), r:R.Game.respawn, g:R.Game.gold})`);
-    check('inn healed everyone', st.inn === true && st.hp.every((h) => h > 100), st);
+    await keys('w500,a,w300,a,w300');
+    await until(`R.Engine.fadeAlpha > 0`, 5000); // the night fade has begun
+    await until(msgShown);
+    await keys('a,w300,a,w400');
+    await until(`window.__inn !== undefined`, 3000);
+    const st = await ev(`({inn:window.__inn, full:R.Game.party.map(c=>c.hp===R.Rules.stats(c).hp), r:R.Game.respawn, g:R.Game.gold})`);
+    check('inn healed everyone', st.inn === true && st.full.every(Boolean), st);
     check('inn respawn set', st.r && st.r.map === 'fx_town', st);
   };
   T.church = async () => {
@@ -181,7 +196,10 @@ async function main() {
     await ev(`(localStorage.clear(), 1)`);
     await setup('fx_town', 'entrance');
     await ev(`(R.Game.gold = 777, R.Menu.saveScreen().then(v=>window.__sv=v), 1)`);
-    await keys('w400,a,w400,a,w400');
+    await keys('w400,a,w400');
+    await until(msgShown);
+    await keys('a,w300');
+    await until(`window.__sv !== undefined`);
     check('saved to slot 1', (await ev(`window.__sv`)) === true);
     const list = await ev(`R.Save.list()`);
     check('slot 1 has a summary', list[0] && list[0].summary.gold === 777, list);

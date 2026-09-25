@@ -101,7 +101,7 @@
     en_rx_gem_flash: act('宝石の輝き', 'enemies', [{ type: 'status', status: 'blind', chance: 0.3 }], 'holy',
       '{user}の額の宝石がまばゆく光った！'),
     en_rx_hop: act('跳ね回る', 'self', [{ type: 'buff', stat: 'agi', stages: 1 }, { type: 'buff', stat: 'def', stages: 1 }], 'buff',
-      '{user}はぴょんぴょんと跳ね回っている！'),
+      '{user}はぴょんぴょん跳ね回っている！'),
     en_rx_prism: act('虹色の光', 'enemies', [magic(14, 0.45)], 'holy',
       '{user}のうろこが虹色の光を放った！'),
     en_rx_aurora: act('オーロラの光', 'enemies', [magic(20, 0.5)], 'holy2',
@@ -109,7 +109,7 @@
     en_rx_star_song: act('星の歌', 'enemies', [{ type: 'status', status: 'sleep', chance: 0.3 }], 'song',
       '{user}は星空に響く歌を歌った！'),
     en_rx_gold_ray: act('黄金の光線', 'enemy', [magic(40, 0.8, 'holy')], 'holy2',
-      '{user}の目から黄金の光線が放たれた！'),
+      '{user}の目から光線が放たれた！'),
     en_rx_guard: act('守護の構え', 'self', [{ type: 'buff', stat: 'def', stages: 1 }, { type: 'buff', stat: 'mdef', stages: 1 }], 'buff',
       '{user}は守りの構えをとった！'),
   });

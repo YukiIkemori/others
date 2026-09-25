@@ -48,7 +48,7 @@
       title.textContent = '復活の呪文';
       title.style.color = '#ffe45a';
       const hint = document.createElement('div');
-      hint.textContent = imp ? '呪文を貼り付けて「決定」を押してください。' : 'この呪文を控えておけば、別の端末やブラウザでも続きから遊べます。';
+      hint.textContent = imp ? '呪文を貼り付けて「決定」を押してください。' : 'この呪文を控えておけば、別の端末でも続きから遊べます。';
       hint.style.fontSize = '0.8em';
       hint.style.lineHeight = '1.4';
       const ta = document.createElement('textarea');
