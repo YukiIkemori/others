@@ -5240,15 +5240,15 @@ try{
 // Everything is a normal R.DB entry, so the bestiary (ずかん) lists and counts it.
 //
 // Balance — tools/sim_postgame.js (real battle engine; see its header for the party models):
-//   abyss regulars: a prepared Lv50 party wins every fight and loses ≈25–28 % HP per fight
+//   abyss regulars: a prepared Lv50 party wins every fight and loses ≈26–28 % HP per fight
 //     (the healer tops up at 40 %); a party fresh from the demon king (Lv42, shop gear)
-//     wins ≈93 % of the fights on floors 1–2 and ≈85 % on floors 3–4.
-//   abyss_lord: prepared Lv55 (mastered jobs, abyss/rare gear, 明鏡の護符, かいじゅ,
-//     ふくつのちかい) wins ≈60–65 % in ≈20 rounds (Lv52 ≈48 %, Lv58 ≈86 %); a Lv65
-//     "levels only" party wins 0 % (still 0 % at Lv99, ≈1 % at Lv80 with the amulets).
-//     Taking one piece of the preparation away: no status immunity ≈3 %, only two members
-//     immune ≈35 %, no revive-on-KO ≈43 %, never dispelling ≈45 % (27 rounds), no elemental
-//     resistance ≈44 %, shop weapons ≈44 %. 魔王 (boss_king2) falls 100 % to the same parties.
+//     wins ≈92–95 % of the fights on floors 1–2 and ≈80–85 % on floors 3–4.
+//   abyss_lord: prepared Lv55 (mastered jobs, abyss chest gear, 明鏡の護符, かいじゅ,
+//     ふくつのちかい) wins ≈64–69 % in ≈18 rounds (Lv52 ≈39 %, Lv58 ≈87 %); a Lv65
+//     "levels only" party wins 0 % (still 0 % at Lv99, and at Lv80 with the amulets).
+//     Taking one piece of the preparation away: no status immunity ≈1 %, only two members
+//     immune ≈36 %, no revive-on-KO ≈39 %, never dispelling ≈55 % (22 rounds), no elemental
+//     resistance ≈47 %, shop weapons ≈43 %. 魔王 (boss_king2) falls 100 % to the same parties.
 //
 // abyss_lord's pattern (actsPerTurn 3; `every` counts its own actions, 3 per round):
 //   round 1, 4, 7 …  混沌の瞳      mass confusion 75 %      → confusion immunity
