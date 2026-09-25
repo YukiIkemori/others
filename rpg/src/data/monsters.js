@@ -415,7 +415,7 @@
     }),
     hagane_jelly: M('鋼ゼリー', 'jelly', 15, {
       hp: 5, hue: 70, sat: 0.25, bri: 0.8, def: 255, s: { agi: 2.6, atk: 0.85, mag: 1.0 }, mdef: 255, eva: 10, mp: 8,
-      exp: 1200, jp: 90, gold: 24, flags: ['metal', 'flee'], fleeRate: 0.25,
+      exp: 900, jp: 80, gold: 24, flags: ['metal', 'flee'], fleeRate: 0.25,
       statusRes: METAL_RES, a: [['attack', 3], ['en_fire', 2]],
       drop: ['seed_luk', 12], rare: ['speed_boots', 48], steal: ['mana_drop', 'loot_bag'],
       desc: '鋼のように硬いゼリー。すぐ逃げる。\n倒せば多くの経験値とJPが得られる。',
@@ -430,6 +430,7 @@
 
     // ======================================================= ピラミッド (Lv14–18)
     skeleton: M('スケルトン', 'skeleton', 14, {
+      exp: 70, // pyramid-only: a touch below the curve (the pyramid runs long)
       fam: ['undead'],
       s: { hp: 1.16, atk: 1.1 }, flags: ['undead'], statusRes: UNDEAD_RES,
       a: [['attack', 5], ['en_double', 2]],
@@ -437,6 +438,7 @@
       desc: '剣と盾を持つ骸骨の兵士。\n骨がカタカタと鳴る。',
     }),
     akuryou: M('悪霊', 'ghost', 15, {
+      exp: 76, // pyramid-only: a touch below the curve (the pyramid runs long)
       fam: ['undead', 'float'],
       s: { hp: 1.04, atk: 1.05, def: 0.6, mdef: 1.3 }, eva: 14, flags: ['undead', 'flying'],
       statusRes: UNDEAD_RES, a: [['attack', 3], ['en_life_suck', 2], ['en_curse', 1], ['en_evil_eye', 1]],
@@ -451,6 +453,7 @@
       desc: '棺に彫られた呪いの目。\nにらまれると体が動かなくなる。',
     }),
     kuro_sasori: M('黒サソリ', 'scorpion', 16, {
+      exp: 82, // pyramid-only: a touch below the curve (the pyramid runs long)
       fam: ['sand'],
       s: { def: 1.5, atk: 1.05 }, hue: -150, sat: 0.6, bri: 0.6,
       a: [['attack', 4], ['en_poison_sting', 2], ['en_numb_sting', 2]],
@@ -458,6 +461,7 @@
       desc: '真っ黒な殻のサソリ。\n2種類の毒を使い分ける。',
     }),
     hakamori: M('墓守', 'darkmage', 17, {
+      exp: 89, // pyramid-only: a touch below the curve (the pyramid runs long)
       fam: ['demon'],
       s: { hp: 0.95, mag: 1.4, mdef: 1.6 }, mp: 21, hue: 150, sat: 0.8,
       a: [['attack', 2], ['en_fire2', 2], ['en_sleep', 1], ['en_poison_mist', 1], ['en_heal', 2]],

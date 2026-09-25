@@ -265,7 +265,7 @@
       flags: ['flying'], fam: ['wing'], elem: { ice: 0.5, thunder: 0.5 }, statusRes: HARD_RES,
       a: [['attack', 3], ['en_pg_dive', 3], ['en_pg_aurora_song', 2], ['en_pg_gale', 2]],
       drop: ['goddess_tear', 24], rare: ['pg_starlight_garb', 128], steal: ['nectar', 'seed_agi'],
-      desc: 'オーロラ色の翼を持つ魔鳥。\nその歌を聴いた者は二度と目覚めないという。',
+      desc: 'オーロラ色の翼を持つ魔鳥。\nその歌に眠れば、二度と覚めない。',
     }),
 
     // ================================================= 地下3階 (Lv52–56)
@@ -288,7 +288,7 @@
       fam: ['plain'], statusRes: { death: 1, sleep: 0.5, confuse: 0.5, paralyze: 0.5 },
       a: [['attack', 3], ['en_pg_doom_bite', 3], ['en_pg_greed', 2]],
       drop: ['seed_luk', 8], rare: ['pg_star_dagger', 64], steal: ['goddess_tear', 'pg_star_dagger'],
-      desc: '深淵に置き去りにされた宝箱に\n死神が棲みついたもの。噛まれれば命はない。',
+      desc: '深淵に置き去られた宝箱の死神。\n噛まれれば、命はない。',
     }),
     pg_arch_demon: pgMon('深淵の魔将', 'demon', 56, {
       s: { hp: 1.26, atk: 1.35, mag: 1.3, mdef: 1.2, agi: 1.1 }, x: X_REG, hue: 50, sat: 1.6, bri: 0.8, mp: 80,
@@ -347,7 +347,7 @@
         { id: 'en_pg_lord_void', w: 2, cond: { hpBelow: 0.5 } },
       ],
       drop: { item: 'goddess_tear', rate: 1 }, rare: { item: 'light_drop', rate: 1 },
-      desc: '天地が生まれる前から深淵に在る混沌の竜神。\n魔王の力さえ、そのかけらに過ぎないという。',
+      desc: '天地の始まりより在る混沌の竜神。\n魔王の力さえ、そのかけらにすぎぬ。',
     },
   });
 
@@ -399,8 +399,8 @@
   R.DB.objectives = R.DB.objectives || {};
   Object.assign(R.DB.objectives, {
     obj_postgame: {
-      text: '海に浮かぶ小島に現れた\n「深淵の迷宮」の\n最深部を目指そう。',
-      king: '魔王を倒したそなたたちに\n伝えねばならぬことがある。\f海に浮かぶ小さな島に、見知らぬ\n迷宮が口を開けたというのじゃ。\f底知れぬ闇の気配……。\nくれぐれも、備えを怠るでないぞ。',
+      text: '光の神殿のはるか北の小島に\n現れた「深淵の迷宮」の\n最深部を目指そう。',
+      king: '魔王を倒したそなたたちに\n伝えねばならぬことがある。\f光の神殿のはるか北、\n海に浮かぶ小さな島に、\n見知らぬ迷宮が\n口を開けたというのじゃ。\f底知れぬ闇の気配……。\nくれぐれも、備えを\n怠るでないぞ。',
     },
     obj_abyss_clear: {
       text: '深淵の主を打ち倒した！\n真の平和が訪れた。\nおつかれさま！',

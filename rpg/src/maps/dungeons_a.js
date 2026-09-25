@@ -569,6 +569,7 @@
   M.pyramid_2 = {
     name: 'ピラミッド', type: 'dungeon', legend: 'local', theme: 'pyramid', bgm: 'pyramid',
     encounter: 'd_pyr2', escape: { to: 'world', spawn: 'pyramid_1' },
+    encRate: 30, // the labyrinth is long: fewer, not more, fights for a full clear
     rows: [
       '####################################################',
       '#######################i##i#########################',

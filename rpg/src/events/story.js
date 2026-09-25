@@ -138,6 +138,7 @@
       if (ev.flag('game_clear')) {
         await ev.say('おお、勇者たちよ！\nそなたたちのおかげで、\n世界に平和が戻った。\n本当にありがとう。');
         await ev.say('いつでもこの城に\n帰ってくるがよいぞ。');
+        if (o.king && (R.Game.objective === 'obj_postgame' || R.Game.objective === 'obj_abyss_clear')) await ev.say(o.king);
       } else {
         const away = visited('milt') || ev.has('crest_wind');
         await ev.say(away ? 'おお、' + lead() + 'たちよ！\nよくぞ戻った。' : 'どうした、' + lead() + 'たちよ。\nまだ城におったのか。');

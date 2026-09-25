@@ -134,7 +134,7 @@
       a: [['attack', 3], ['en_rx_prism', 2], ['en_tail', 2], ['wait', 1]],
       drop: ['seed_vit', 6], rare: ['rx_prism_shield', 96], steal: ['seed_str', 'rx_prism_shield'],
       appear: '虹色の光があふれ、金剛トカゲが現れた！',
-      desc: '背中が金剛石のうろこで覆われたトカゲ。\n光を受けると虹色に輝く。出会えたら幸運だ。',
+      desc: '金剛石のうろこに覆われたトカゲ。\n光を受けて虹色に輝く。会えたら幸運。',
     }),
     // フロスト〜炎の火山 (Lv17–27): quick flyer with aurora magic
     rare_bird: rareMon('rare_bird', 'オーロラ鳥', 23, {
