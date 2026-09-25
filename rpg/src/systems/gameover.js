@@ -84,7 +84,10 @@
       const name = R.State.leader().name;
       let text = '……' + name + 'たちは目を覚ました。';
       if (lost > 0) text += '\nお金が半分になってしまった……。';
-      await R.UI.say(text, { noWait: false, keep: false, auto: 0 });
+      // queued as an event (after the respawn map's onEnter, or after the event whose battle was lost) and
+      // not awaited: awaiting it here, while the field is still locked by the lost battle, froze the game
+      if (R.Events && R.Events.run) R.Events.run(async (ev) => { await ev.say(text); }, { defer: true, self: 'gameover' });
+      else await R.UI.say(text, { noWait: false, keep: false, auto: 0 });
     } finally {
       R.Engine.remove(L);
       if (R.UI && R.UI.closeMessage) R.UI.closeMessage();

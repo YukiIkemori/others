@@ -96,6 +96,12 @@
       if (this.page < this.pages.length - 1) { this.page++; this.shown = 0; this.autoT = 0; return; }
       this.finish();
     }
+    /** closed from outside (an event ending, a warp) while text was still up: release whoever awaits it */
+    onRemove() {
+      const r = this.resolveText; this.resolveText = null;
+      if (UI._msg === this) UI._msg = null;
+      if (r) r();
+    }
     finish() {
       const r = this.resolveText; this.resolveText = null;
       if (!this.opts.keep) { if (UI._msg === this) UI._msg = null; this.close(); }
