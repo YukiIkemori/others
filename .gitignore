@@ -1,3 +1,5 @@
 results/
 __pycache__/
 *.pyc
+rpg/dist/.fontcache/
+rpg/node_modules/
