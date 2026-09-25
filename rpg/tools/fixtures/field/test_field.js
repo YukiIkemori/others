@@ -58,15 +58,34 @@ const msgText = () => { const m = R.UI._msg; return m && !m.closed ? m.pages.map
 /** window lines as shown: lines joined by '/', pages by '|' */
 const msgLines = () => { const m = R.UI._msg; return m && !m.closed ? m.pages.map((p) => p.join('/')).join('|') : ''; };
 const pos = () => R.Field.pos();
+/** walk whole tiles: hold each direction until the leader's box is headed for the next tile
+ *  (two half steps), then release (the running half step completes) */
 async function walk(path) {
   for (const d of R.Field.parsePath(path)) {
     const L = R.Field.layer;
+    const m0 = R.Field.map, p0 = R.Field.exactPos();
+    const gx = p0.x + R.U.DX[d], gy = p0.y + R.U.DY[d];
     R.Input._set(d, true);
-    for (let i = 0; i < 9; i++) { await step(1); if (L.mv || L.locks || R.Events.busy()) break; }
+    let idle = 0;
+    for (let i = 0; i < 40; i++) {
+      await step(1);
+      if (L.locks || R.Events.busy() || R.Field.map !== m0) break;
+      const p = L.P[0];
+      if (L.mv && Math.abs(p.x - gx) < 1e-6 && Math.abs(p.y - gy) < 1e-6) break;
+      if (!L.mv && !L.arrived) { if (++idle > 2) break; } else idle = 0;
+    }
     R.Input._set(d, false);
     await settle();
   }
 }
+/** hold several directions for n frames */
+async function holdDirs(dirs, n) {
+  for (const d of dirs) R.Input._set(d, true);
+  await step(n);
+  for (const d of dirs) R.Input._set(d, false);
+  await settle();
+}
+const xp = () => { const p = R.Field.exactPos(); return [p.x, p.y]; };
 async function newGame(map, spawn) {
   R.Engine.clear();
   R.State.newGame();
