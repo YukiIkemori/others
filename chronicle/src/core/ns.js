@@ -27,7 +27,7 @@
     'tiles', 'legends', 'themes', 'decor', 'config', 'heroTypes', 'companions', 'weaponTypes',
     'elements', 'statuses', 'actions', 'items', 'pools', 'shops', 'monsters', 'lineages',
     'encounters', 'troops', 'rareEncounters', 'regions', 'locations', 'objectives', 'maps',
-    'events', 'music', 'sfx', 'battlebg',
+    'events', 'music', 'sfx', 'battlebg', 'rumors', 'starterKit',
   ]) R.DB[k] = R.DB[k] || {};
 
   // Load-time error collection (build.js wraps every file in try/catch).

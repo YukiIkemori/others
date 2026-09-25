@@ -18,18 +18,19 @@
     sfxVolume: 0.7,
     alwaysDash: false, // dash = hold B (or Shift) while moving; this makes running the default
     fieldZoom: 'wide', // field view: 'normal' (16×14 tiles) | 'wide' (≈21×19) | 'wider' (32×28); see field.js VIEW
-    windowColor: 'black', // black | blue | green | red
+    windowColor: 'ink', // ink | black | blue | green | red
     touchPad: 'auto', // auto | on | off
     cursorMemory: true, // battle command cursor remembers last choice
     padConfirm: 'right', // gamepad confirm button: 'right' (○/Nintendo A) or 'bottom' (×/Xbox A)
     autoKeep: true, // auto battle carries over to the next random encounter
-    settingsVer: 2, // bumped when a default changes for existing players (see migrateSettings)
+    settingsVer: 3, // bumped when a default changes for existing players (see migrateSettings)
   };
   /** bring settings stored by an older version up to date (in place) */
   function migrateSettings(s) {
     const v = +s.settingsVer || 1;
     // v2: dash moved to "hold B"; always-dash is now off by default
     if (v < 2) s.alwaysDash = false;
+    if (v < 3 && (!s.windowColor || s.windowColor === 'black')) s.windowColor = 'ink';
     s.settingsVer = DEFAULT_SETTINGS.settingsVer;
     return v < DEFAULT_SETTINGS.settingsVer;
   }

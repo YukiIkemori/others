@@ -66,7 +66,7 @@ try{
     'tiles', 'legends', 'themes', 'decor', 'config', 'heroTypes', 'companions', 'weaponTypes',
     'elements', 'statuses', 'actions', 'items', 'pools', 'shops', 'monsters', 'lineages',
     'encounters', 'troops', 'rareEncounters', 'regions', 'locations', 'objectives', 'maps',
-    'events', 'music', 'sfx', 'battlebg',
+    'events', 'music', 'sfx', 'battlebg', 'rumors', 'starterKit',
   ]) R.DB[k] = R.DB[k] || {};
 
   // Load-time error collection (build.js wraps every file in try/catch).
@@ -393,10 +393,11 @@ try{
       white: '#ffffff', gray: '#8c8c8c', dark: '#404040', black: '#000000',
       red: '#ff5a4a', orange: '#ffa53c', yellow: '#ffe45a', green: '#6ee07a',
       cyan: '#6fd8ff', blue: '#4a78ff', purple: '#c38cff', pink: '#ff8cc6',
-      gold: '#ffd24a', rare: '#ffd24a', super: '#ff9cf0', hpLow: '#ffb03c', dead: '#ff4a4a',
+      gold: '#ffd24a', rare: '#f8d838', super: '#ff88d0', hpLow: '#ffb03c', dead: '#ff4a4a',
     },
     // window color themes (Settings.windowColor)
     WINDOW_THEMES: {
+      ink: { fill: '#16203e', fill2: '#0b1024', border: '#f0e8d0', alpha: 0.97 }, // default (DESIGN §11.1.2)
       black: { fill: '#000000', fill2: null, border: '#ffffff', alpha: 1 },
       blue: { fill: '#1c2c8c', fill2: '#0a1450', border: '#ffffff', alpha: 0.96 },
       green: { fill: '#0e4a2a', fill2: '#062414', border: '#ffffff', alpha: 0.96 },
@@ -541,7 +542,7 @@ try{
      */
     window(x, y, w, h, opts) {
       const o = opts || {};
-      const theme = Gfx.WINDOW_THEMES[o.theme || (R.Settings && R.Settings.windowColor) || 'black'] || Gfx.WINDOW_THEMES.black;
+      const theme = Gfx.WINDOW_THEMES[o.theme || (R.Settings && R.Settings.windowColor) || 'ink'] || Gfx.WINDOW_THEMES.ink;
       const c = Gfx.ctx;
       const a = c.globalAlpha;
       c.globalAlpha = a * (o.alpha != null ? o.alpha : theme.alpha);
@@ -1149,18 +1150,19 @@ try{
     sfxVolume: 0.7,
     alwaysDash: false, // dash = hold B (or Shift) while moving; this makes running the default
     fieldZoom: 'wide', // field view: 'normal' (16×14 tiles) | 'wide' (≈21×19) | 'wider' (32×28); see field.js VIEW
-    windowColor: 'black', // black | blue | green | red
+    windowColor: 'ink', // ink | black | blue | green | red
     touchPad: 'auto', // auto | on | off
     cursorMemory: true, // battle command cursor remembers last choice
     padConfirm: 'right', // gamepad confirm button: 'right' (○/Nintendo A) or 'bottom' (×/Xbox A)
     autoKeep: true, // auto battle carries over to the next random encounter
-    settingsVer: 2, // bumped when a default changes for existing players (see migrateSettings)
+    settingsVer: 3, // bumped when a default changes for existing players (see migrateSettings)
   };
   /** bring settings stored by an older version up to date (in place) */
   function migrateSettings(s) {
     const v = +s.settingsVer || 1;
     // v2: dash moved to "hold B"; always-dash is now off by default
     if (v < 2) s.alwaysDash = false;
+    if (v < 3 && (!s.windowColor || s.windowColor === 'black')) s.windowColor = 'ink';
     s.settingsVer = DEFAULT_SETTINGS.settingsVer;
     return v < DEFAULT_SETTINGS.settingsVer;
   }
@@ -26689,7 +26691,7 @@ try{
 // ==== src/systems/field.js
 try{
 // Field: the map screen (DESIGN §7.2). One opaque layer that draws tiles,
-// objects and y-sorted sprites, moves the party in 8 directions on a half-tile
+// objects and y-sorted sprites, moves the party in 8 directions one whole tile at a time (no half steps; owner request)
 // grid (caterpillar trail),
 // runs NPC AI, doors/locks, damage floors, warps, step events, encounters and
 // the ship, plus the public R.Field API used by title/menu/events/debug.
@@ -27115,9 +27117,16 @@ try{
   // are taken when `cell` changes — once per tile entered. A warp or step
   // event first glides the box onto its tile. Encounters, poison, walk-heal
   // and 魔除け count the distance walked, so half steps count half.
-  const HALF = 0.5;
+  // Step size in tiles. Crest moved on a half-tile grid; Chronicle's owner found that stressful,
+  // so every step is one whole tile (8 directions and wall sliding stay). The grid code below is
+  // step-size generic: with STEP = 1 positions are always whole tiles and corner assist never fires.
+  const STEP = 1;
+  const HALF = STEP;
   const EPS = 1e-6;
-  const GAP = 1; // follower spacing along the leader's path (tiles)
+  const GAP = 1; // follower spacing along the leader's path (steps)
+  // path length in steps: a diagonal step counts as 1 like a straight one, so with whole-tile
+  // steps follower i stands exactly on the leader's i-th previous tile once the party stops
+  const segLen = (dx, dy) => Math.max(Math.abs(dx), Math.abs(dy));
   const isInt = (v) => Math.abs(v - Math.round(v)) < EPS;
   const HORIZ = { left: 1, right: 1 };
   const dirOf = (dx, dy) => (dx > 0 ? 'right' : dx < 0 ? 'left' : dy > 0 ? 'down' : dy < 0 ? 'up' : null);
@@ -27216,7 +27225,7 @@ try{
       let need = GAP * i, a = lead;
       for (let j = lead.back ? 1 : 0; j < this.trail.length; j++) {
         const b = this.trail[j];
-        const dx = a.x - b.x, dy = a.y - b.y, len = Math.hypot(dx, dy);
+        const dx = a.x - b.x, dy = a.y - b.y, len = segLen(dx, dy);
         if (len < EPS) continue;
         if (len >= need - EPS) {
           const ax = Math.abs(dx), ay = Math.abs(dy);
@@ -27415,7 +27424,7 @@ try{
         this.trail.unshift({ x: p.x, y: p.y });
         let len = 0;
         for (let i = 1; i < this.trail.length; i++) {
-          len += Math.hypot(this.trail[i].x - this.trail[i - 1].x, this.trail[i].y - this.trail[i - 1].y);
+          len += segLen(this.trail[i].x - this.trail[i - 1].x, this.trail[i].y - this.trail[i - 1].y);
           if (len > GAP * (this.P.length - 1) + 1) { this.trail.length = i + 1; break; }
         }
       }

@@ -1,6 +1,6 @@
 # ルミナス・クロニクル 〜八つの伝承〜 設計書（DESIGN.md）
 
-スタジオメテム作品・ルミナス・シリーズ 2 作目。**この文書が正**（編集版。9 つの章の案 `design/drafts/01〜09` と批評 89 件、ブリーフ Part A〜A5 を 1 つにまとめた）。画面の文の書き方と用語は `STYLE_JA.md` が正。
+スタジオメテム作品・ルミナス・シリーズ 2 作目。**この文書が正**（編集版。9 つの章の案 `design/drafts/01〜09` と批評 89 件、ブリーフ Part A〜A6 を 1 つにまとめた。第 2 版の編集で批評 27 件を直した）。画面の文の書き方と用語は `STYLE_JA.md` が正。
 
 **目次**: §0 製品の要約と柱 ／ §1 技術と約束 ／ §2 コアランタイム API ／ §3 状態の形・共有 ID・モジュールの API ／ §4 規則・式・バランスの目標 ／ §5 主人公の作成と仲間 ／ §6 技 ／ §7 術 ／ §8 アイテム ／ §9 魔物 ／ §10 世界と物語 ／ §11 表現（絵・画面・音） ／ §12 QA ツールと完了の条件 ／ §13 ビルド期間のファイル担当表
 
@@ -28,7 +28,7 @@
 ### 0.3 ボリューム（Part A・B6 の目安と、この仕様の数）
 | 項目 | 目安 | この仕様 | 正の節 |
 |---|---|---|---|
-| 魔物 | 200 前後（色違い含む） | 雑魚 **211**（54 系統 × 3〜5 段。鋼 3 系統は 2 段）＋ めずらしい魔物 **23** ＋ ボス **34 体**（26 編成）＝ **268** | §9.5・§9.10・§9.11 |
+| 魔物 | 200 前後（色違い含む） | 雑魚 **211**（54 系統 × 3〜5 段。鋼 3 系統は元の系統（ゼリー・カブト・鬼火）の分岐で 2 段。§9.9）＋ めずらしい魔物 **23** ＋ ボス **34 体**（26 編成）＝ **268** | §9.5・§9.10・§9.11 |
 | めずらしい魔物（レア魔物） | 20 以上 | 23（専用の絵） | §9.10 |
 | ボス | 20〜30（裏ボス含む） | 26 編成・34 体 | §9.11・§10.13.5 |
 | 武器 | 10 系統以上・150 種以上 | 11 系統・**301** | §8.1.3 |
@@ -42,7 +42,7 @@
 | 曲・効果音 | — | BGM 32、ジングル 11、効果音 62 | §11.11.4 |
 
 ### 0.4 この文書の読み方
-- **この文書が正**（ブリーフの Part B より優先。Part A は変えない）。9 つの章の案（`design/drafts/01〜09`）を編集で 1 つにし、批評の 89 件とブリーフ Part A5 をすべて取り込んだ（§0.6）。案のファイルはそのまま残すが、**食い違ったらこの文書が正**。
+- **この文書が正**（ブリーフの Part B より優先。Part A は変えない）。9 つの章の案（`design/drafts/01〜09`）を編集で 1 つにし、批評の 89 件とブリーフ Part A5・A6 をすべて取り込んだ（§0.6・§0.7）。案のファイルはそのまま残すが、**食い違ったらこの文書が正**。
 - 章と案の対応: §1〜§3・§13 ← 01 エンジン（§1.0 = 01 §0、§1.1〜1.7 = 01 §1、§1.8 = 01 §9、§2 = 01 §2、§3.1〜3.4 = 01 §3〜§6、§12.1 = 01 §8、§13 = 01 §7）、§4 ← 02 成長・戦闘、§5 ← 04 仲間、§6 ← 05 技、§7 ← 06 術、§8 ← 07 アイテム、§9 ← 08 魔物、§10 ← 03 世界と物語、§11 ← 09 表現、§12 ← 新しく書いた QA の章。
 - 各章の「**決定の一覧**」（§C.0）は、その章の中では「0.N」、ほかの章からは「§C.0 の 0.N」で指す。
 - 本文に残した章の呼び名: **エンジン章** = §1〜§3・§13、**成長章**（閃き章・戦闘章・戦利品の章）= §4、**キャラ章** = §5、**技章** = §6、**術章** = §7、**装備章**（装備の章・武器章）= §8、**魔物章**（モンスター章・ボス章）= §9、**ワールド章**（物語章）= §10、**表現章**（UI 章）= §11。「01〜09」「02 成長章」のような番号は案のファイルの番号（01 = エンジン、02 = 成長、03 = ワールド、04 = キャラ、05 = 技、06 = 術、07 = 装備、08 = 魔物、09 = 表現）。「この章」はその節のある章。
@@ -62,9 +62,11 @@
 | 属性の相性を偏らせない・理屈のある弱点 | §4.7、§9.3 |
 | 序章一本道 → 8 地方を好きな順 → 終盤 → クリア後の裏ダンジョン | §10.7〜§10.12 |
 | Part A2: Y メニュー・B ダッシュ・L/R・下で送る・満タン・連続使用・ワープと脱出はコマンド・冒険の合言葉・被ダメ 5〜15%・MP 多め・段階 ×1.3/×1.6・賢いオート | §2.3、§11.7.1・§11.7.4、§2.6、§4.2.2、§4.8.2、§4.13.2、§4.17.3 A2・A3b |
-| Part A3: 半歩 8 方向・フィールドの広さ・ワールドのループ・押せる町の人・下で送る・最強装備はアクセサリを変えない・弱い敵だけ避ける 100 歩・倍率は控えめ | §2.3、§2.6、§3.3.10、§10.5.1、§10.13.10、§4.4.1、§4.11.1、§8.3.5 |
+| Part A3（A7 で半歩は取り消し）: 1 マス単位の 8 方向・フィールドの広さ・ワールドのループ・押せる町の人・下で送る・最強装備はアクセサリを変えない・弱い敵だけ避ける 100 歩・倍率は控えめ | §2.3、§2.6、§3.3.10、§10.5.1、§10.13.10、§4.4.1、§4.11.1、§8.3.5 |
+| Part A7: **半歩はなし**（1 歩 = 1 マス）、斜め移動はあり。隊列はマスをなぞって止まると整列 | §2.3、§3.3.10（field.js `STEP = 1` 実装済み） |
 | Part A4: 隠し通路（3〜4 割のフロア、先は見える宝箱、発見の表示、進行に必須の物は置かない） | §3.3.10-11、§10.6.4、§12.2 |
 | Part A5: 集中攻撃のオート、装備の候補に攻・術・守、図鑑はドロップでも盗みでも、ついでに盗む | §4.13.2、§3.3.9、§11.7.5、§11.7.9、§8.3.7（`autoSteal`）、§5.3.4（ティッタ） |
+| Part A6: Y で詳細、装備の候補は強い順、リピートは B まで続く、図鑑の 1 ページ目に落とす物と盗める物、ワープ先にダンジョンの入口、全滅→復活のあとで操作できる | **§0.7**（まとめ・担当・受け入れテスト）、§11.7.18、§11.7.5、§11.5.3a、§11.7.9、§10.6.3・§11.7.12、§4.12.2・§12.2 |
 | 標準仕様: 漢字かなまじり・右の決定ボタン・隠しアイテムなし・強化合成なし・どこでもセーブ・次の目的・ワールドマップ | STYLE_JA、§2.3、§1.0 の 0.20、§11.7.1、§11.7.14 |
 
 ### 0.6 編集で決めたこと（批評 89 件。食い違いは Part A に一番かなう方を選び、理由を書いた）
@@ -74,10 +76,10 @@
 | 2・67 | 通常の雑魚に `K.MOB = {atk:0.6, mag:0.6}`。雑魚戦の HP の減りは平均 8〜12%（どこでも 5〜15%）、p95 ≤ 20%、倒れる ≤ 3%、全滅 ≤ 0.1%。ボスは曲線のまま | §4.14.2、§4.17.3 A2、§9.13.1 M1 |
 | 3 | `MPlv = 8 + 2.6(L−1)^0.85`、上限 150。上位の術を約 15% 安く（4段 7〜9、5段 11〜12、合成A 7〜9、合成B 10〜13、三属性 15〜20、大技 20）。1 フロアで MP 3 割残る検査（A3b・P11）。3 階以上のダンジョンは中ほどに休息の灯を必ず | §4.2.2、§7.1.3、§7.5.3、§10.6.2-5 |
 | 4・78 | `STAGE = [0.63, 0.77, 1, 1.3, 1.6]` | §4.8.2、§4.18.1 |
-| 5・70・76 | `R.Game.encItem = {id, pct, steps, weakOnly}` の 1 つにした。魔除けの香・影隠れは −100%・100 歩・弱いゾーンだけ（平均 Lv ≥ Lb + 3）、誘い寄せの香・誘い火は +100%・100 歩。1 歩 = 歩いた距離 1 マス（半歩 0.5）。装備の `encounterPct` は −50〜+50 | §4.11.1、§3.2.1、§8.9、§7.3.3 |
+| 5・70・76 | `R.Game.encItem = {id, pct, steps, weakOnly}` の 1 つにした。魔除けの香・影隠れは −100%・100 歩・弱いゾーンだけ（平均 Lv ≥ Lb + 3）、誘い寄せの香・誘い火は +100%・100 歩。1 歩 = 1 マス（斜めの 1 歩も 1 歩）。装備の `encounterPct` は −50〜+50 | §4.11.1、§3.2.1、§8.9、§7.3.3 |
 | 6・69 | 2 つの案が食い違うので **69 の値**にした（L6 の一式集めと両立するため）: 1 品あたり ドロップ系 10/20/30/遺物 20・30、`expPct` 10/15/20/15（1 人 +30 まで）、`glimPct` 10/15/20（クリア後 25、1 人・キーごと +40）、`profPct` 20/35/50（+50 まで）、パーティ +150、個性 +10 | §8.3.5、§4.16、§3.3.16、§5.3.4 |
 | 7・89 | **ワープ・脱出はメニューのコマンド**（`prologue_done` から）。`k_quill`・`k_bell` は同じ処理を呼ぶ飾りの品 | §11.7.1、§3.3.12、§8.0 の 0.10、§10.5.4 |
-| 8・68 | 入力・操作を今のエンジン（クレスト 3119fb2）から書き直した（10 ボタン、Y メニュー、B ダッシュ、L/R、下で送る、半歩 8 方向、マスに入ったときだけ） | §2.3 |
+| 8・68 | 入力・操作を今のエンジン（クレスト 3119fb2）から書き直した（10 ボタン、Y メニュー、B ダッシュ、L/R、下で送る、1 マス単位の 8 方向（A7）、マスに入ったときだけ） | §2.3 |
 | 9・73 | 設定「フィールドの広さ」`fieldZoom`（ふつう／ひろい（既定）／もっとひろい）。設定は 12 行 | §2.6、§11.7.15 |
 | 10・72 | `R.Rules.optimize(c, 'phys'|'magic'|'balance')`: アクセサリ 2 枠・クセの品・ほかの仲間の品は使わない、系統はそのまま、両手と片手＋盾を比べる。点は**批評 10 の式** | §4.4.1 |
 | 11・48・89 | 禁止の一覧を 1 つにし、**部分一致（固有名）と完全一致（一般語の他社の品名）**に分けた。範囲は技・術・敵の行動・品・魔物の名前。改名: 暁の剣 → **日の出の剣**（「明けの剣」より読みやすい）、光の羽衣 → 光の薄衣、潮風の羽衣 → 潮風の薄衣、毒針の槍 → 蜂針の槍、なぎ払い → 横払い、毒針 → 毒の尾針、力をためる → 気合いをこめる、目薬 → 澄み目のしずく、沼の鎖かたびら → 沼の鎖編み鎧、月影オオカミ → 月夜オオカミ、急所突き → 急所ねらい。水晶・髪飾り・風切りは完全一致の側に移して名前は残した | STYLE_JA §7 |
@@ -99,7 +101,7 @@
 | 27 | 音の id の正は §11.11.4（エンジン章には一覧を置かない） | §3.1.3 |
 | 28 | ダメージ床を置いた（灰の火山 2・3 階の溶岩、鐘沈みの沼の毒の床）。最大 HP の割合で減り、床では倒れない | §10.6.2-11、§3.3.10-10 |
 | 29・71 | オートに集中攻撃・倒しきり・弱点・閃きねらいを足した。術師はオートで 1 戦 0.75 回以上唱える | §4.13.2 |
-| 30 | 忘却の底の 2 系統に 3 段目（`void_3` `chaos_3`）。鋼の 3 系統は 2 段のまま（例外。理由を書いた） | §9.0、§9.5、§9.9 |
+| 30 | 忘却の底の 2 系統に 3 段目（`void_3` `chaos_3`）。鋼の 3 系統は 2 段のまま、**元の系統（ゼリー・カブト・鬼火）の分岐**として組み込む（第 2 版。Part A の「3〜5 段」は元の系統で満たす） | §9.0、§9.5、§9.9 |
 | 31 | 調べて手に入る大事なもの 2 つに見える印（光る貝がら・書見台） | §10.8.6、§10.8.9 |
 | 32 | 固定の中身の宝箱は作らない。`chest_rare` は `p_rare` の宝箱だけ | §8.12.1、§11.0 の 0.19 |
 | 33・74 | プール 10 段、`R.Tier.chest(def, map)`、店の段の `cond`、`R.Tier.effective()`、`R.Battle.start({lvOff})`、`R.Rules.zoneLevel(zone, map)` | §3.3.5、§3.3.8、§4.18.2 |
@@ -124,6 +126,35 @@
 | 87 | Glimmer の ctx に `row`・`silenced` | §3.3.7、§7.10 |
 | 88 | T8 の一式 27 品は超レアの分母 128。`superPct` は品を重ねて +100 が最大なので、+100 で 9 品が 900 戦以内になるよう、その種に 1 戦 0.65 体以上出会う組の重みにする | §8.6.5、§9.12.1、§9.13.3 L6 |
 | Part A5 | 集中攻撃（脅威度 ÷ 残り HP、85% に届く最小の人数）、装備の候補に攻・術・守、図鑑はドロップでも盗みでも、**ついでに盗む**（`autoSteal`。ティッタの個性 100、早業の指輪 50） | §4.13.2、§11.7.5、§11.7.9、§8.3.7、§8.4.4、§5.3.4 |
+| Part A6（第 2 版） | エンジンはクレスト **8259156**。Y の詳細ポップアップ（道具・装備・店・技と術）、候補は強い順、リピートは B まで、図鑑の 1 ページ目、ワープ先にダンジョンの入口（地方ごと）、全滅→復活の不変条件と E2E。**エンジンにある `itemDetail`・`previewStats`・リピートは残して広げる** | §0.7 |
+| 第 2 版の批評 2〜27 | API の名前を §3.3.3 に 1 つに（`previewStats` `equip` `optimize` と `applyLoadout` `partyMods` `autoDesc` `fillItem` `K.PRICE_SLOT`）、戦闘のイベント表を §3.3.8 に 1 つに（`phase` `summon` `gain.grade` `noescape` `ally_any`、効果音は bui だけ）、`MON_COMPOSE` を雑魚とボスで分けて足し込む、チュートリアルで必ず閃く、装備の候補は 攻・術・守 の 3 列、名前の重なり、`location` と `dungeonLocation`、うわさ話と目的の担当、数の直し、文言は STYLE_JA が正、文字数、フラグと例の id、戦闘後の回復・窓の位置・データの項目、上限と範囲、`ctx.tier`、出現率の打ち消し、分母の書き方、scan、道具の等級、`codeOverlay` と教会、常用漢字表、小さな誤り、quickStart、鋼の系統 | 各節（本文の「第 2 版」） |
+
+### 0.7 Part A6 の取り込み（クレスト同期その4。エンジンは 8259156。**normative**。第 2 版で足した）
+ブリーフ Part A6（`design/ADDENDUM4_playtest_sync.md`）の 6 点を、この節にまとめる。画面の座標・文は、各行の仕様の最後に書いた節（→ §…）にも同じ内容で書いた（食い違ったらこの節が正）。
+**エンジン（`chronicle/src`）にはクレスト 8259156 の実装がすでに入っている**。作り替える担当は、次のものを**消さずに残して広げる**（§3.4・§13）:
+- `R.Menu.itemDetail(id)`（menu_items.js:74。Y の詳細ポップアップ）と、道具の画面・装備の候補・店の Y の処理（menu_items.js:100、menu_equip.js:138、shop.js:73）。
+- `R.Menu.previewStats(c, slot, id)`（menu_equip.js:22。付けた後の能力。shop.js:43 も使う）、`R.Menu.equipCandidates`、候補の強い順の並べ替え（menu_equip.js:113〜）。
+- 戦闘のリピート: `battle_scene.js` の `repeating` `repeatCancel` `lastCmds`（:162・:171・:361〜:371・:587）と `drawAuto` の「リピート　Bで解除」（:823）、`battle.js` の `repeatCommands` `repeatOne` `repeatTarget`（:509〜）。
+- ワープ先のダンジョン: `R.State.dungeonLocation(def)`・`R.State.syncVisited(g)`（state.js:124・:134）、field.js:1445〜1446 の `visited` の書き込み。
+
+| # | Part A6 | 仕様（要点。詳しくは → の節） | 担当・ファイル | 受け入れテスト |
+|---|---|---|---|---|
+| A6-1 | **Y で詳細ポップアップ** | 道具（3 つのタブ）・装備（枠の一覧と候補の一覧）・店（買う・売る）・技と術（§11.7.3）の一覧で、カーソルの行に品・技・術があるとき **Y** で開く。どのボタンでも閉じ、元の一覧のカーソルはそのまま。品は 名前とレア度・種別と持ち方・数値・**6 能力値の増減（上がる 緑・下がる 赤）**・**特殊効果をすべて**（mods と武器の項目。クセは赤）・装備できる人・入手元（超レアは「〈魔物〉だけが落とす」）・説明 2 行。技・術は 消費・種類・対象と届く範囲・威力と属性・追加の効果・覚えている人・説明。戦闘・酒場・技の書と術の書では Y を使わない → §11.7.18・§11.7.2・§11.7.3・§11.7.5・§11.7.16 | menu A5（`menu_items.js` に `itemDetail` `actionDetail` `detailLines`、`menu_equip.js` `shop.js` `menu.js` の Y） | `tools/test_menu.js`（A5・新）T1〜T3。スクショ §11.12.2 の 21 |
+| A6-2 | **装備の候補は強い順** | 先頭は `外す`。そのあとは点 `max(Δ攻, Δ術) + Δ守 + floor(Δ術防 / 2)`（Δ は `R.Rules.previewStats`）の大きい順、同じなら id の順。付けている品も同じ規則の位置に `E`。1 行は `名前　攻±n　術±n　守±n` → §11.7.5 | menu A5（`menu_equip.js`） | `test_menu.js` T4〜T6 |
+| A6-3 | **リピートは B で止めるまで続く** | 全体のコマンド `リピート` を選ぶと、その戦闘のあいだ毎ラウンド、前のラウンドの全員の行動を自動で入力する。**B を押すまで続く**（その戦闘だけ。次の戦闘には持ち越さない）。B のラウンドは最後まで行い、次の入力の前に全体のコマンドへ戻る。表示「リピート　Bで解除」→ 黄「リピート解除」 → §11.5.3a・§11.5.11 | bui A3（`battle_scene.js`）、battle A2（`battle.js` の `repeatCommands` を `DB.actions` に） | `tools/test_battle.js`（A2）R1〜R6、`tools/smoke.js`（A22）S-R1 |
+| A6-4 | **図鑑の 1 ページ目に落とす物と盗める物** | 詳しい画面の 1 ページ目の下の窓に 通常・レア・超レアの 3 行を並べ、行ごとに「落とす」「盗む」の列（○ = その手段で手に入る、― = 手に入らない。超レアは盗めない）。手に入れた品は★と名前、まだは `？？？` → §11.7.9 | menu A5（`menu_status.js`） | `test_menu.js` T7・T8。スクショ §11.12.2 の 14 |
+| A6-5 | **ワープ先にダンジョンの入口** | `DB.locations` を 23 件（町 12 ＋ ダンジョンの入口 11）にし、各件に `kind`（`'town'` か `'dungeon'`）と `region`。ワープの一覧は**地方ごとにまとめて**（地方の名前は各まとまりの最初の行の左）、町のあとにダンジョンの入口（「〈名前〉の入口」）。入ったことのあるダンジョンだけ（マップの `location` で記録） → §10.6.3・§11.7.12・§3.3.2・§3.3.10 | world A18（`src/data/locations.js`・`config.js`）、町とダンジョンのマップの担当（`location`）、rules A1（`dungeonLocation`）、field A4（`teleportList`）、menu A5（一覧） | validate V1・V14、`tools/test_field.js`（A4）W1〜W3 |
+| A6-6 | **全滅→復活のあとで操作できる** | `R.GameOver.run()` が終わったとき、§4.12.2 の不変条件（フィールドのレイヤーが一番上・`locks` 0・`R.Events.busy()` false・暗転なし・入力が有効・全員全快・`autoCarry` false・戻り先の `onEnter` は 1 回だけ）が必ず成り立つ。クレストの「城で復活したあと固まる」不具合の修正が入ったら、lead が取り込んで同じ原因がないか確かめ、この表と §4.12.2 に足す → §4.12.2・§11.7.17・§3.3.11 | menu A5（`gameover.js`）、field A4（`field.js` の `encounter` `respawn`、`events_runtime.js` の `ev.battle`） | `tools/smoke.js` S-W1〜S-W3（E2E）、`tools/test_field.js` W4 |
+
+**受け入れテストの中身**（どれも node かブラウザで、失敗なら exit 1）:
+- **T1** 全品（`DB.items` のすべて）で `R.Menu.detailLines(id, {member})` が例外なく 12 行以内を返し、各行の幅（`R.Text.approxWidth`）が 341px 以内（描くときは `fitText` で 224px に縮めるので、1 字 7px の下限を割らない幅）。**T2** §3.3.16 の mods のキーと武器の項目のすべてに §11.7.18 の言い方がある（無いキーはテストが失敗）。**T3** 超レアの入手元が「〈`exclusive` の魔物の名前〉だけが落とす」（図鑑でまだ見ていない魔物は「？？？だけが落とす」）。
+- **T4** 術師（知力が主）の頭の枠で、知力の帽子（Δ術 > 0）が守備だけの兜より上に来る。**T5** 点が同じ 2 品は id の順。**T6** 付けている品に `E` が付き、位置は点の順（先頭の `外す` の次とは限らない）。
+- **T7** `book.mon[id]` の `drop/rare/sr` が真の枠は★と名前、偽の枠は `？？？`。盗んで手に入れた（`noteDrop(id, grade, {stolen:true})`）枠は、倒す前（`kills` 0）でも名前が出る。**T8** 超レアの行の「盗む」は `―`、ボス（通常枠だけ）の「レア」「超レア」の行は品が `―`。
+- **R1** 前のラウンドと同じ行動・同じ相手を入力する。**R2** 相手が倒れていたら、相手向きの 1 体の行動は集中の相手（`R.BattleAI.focusOrder` の先頭）へ。**R3** WP・MP が足りない・沈黙・中列から届かない技と術は、その人だけ「攻撃」（届かなければ防御）。**R4** 道具が無くなったら「攻撃」。**R5** 逃げるは繰り返さない（`cmds.flee` は `lastCmds` に入れない）。**R6** 前のラウンドに行動しなかった人（眠っていた・生き返った）は「攻撃」。
+- **S-R1**（ブラウザ）リピートを選ぶ → 3 ラウンド続けて全体のコマンドが出ない → B → そのラウンドが終わった次の入力で全体のコマンドが出て、表示が「リピート解除」から消える。次の戦闘はリピートなしで始まる。
+- **W1** マップの `location` が無い町・ダンジョンの階があれば validate のエラー（V14）。**W2** ダンジョンの 2 階に入っただけで、そのダンジョンの入口が `R.Field.teleportList()` に出る。**W3** 一覧の順は地方の順（`prologue` → `r_forest` … `r_star` → `finale`）で、同じ地方の中は町 → ダンジョン。
+- **W4**（node）`R.Battle.start` を差し替えて `'lose'` を返させ、ランダムの戦闘・イベントの戦闘・ボスの戦闘の 3 つで全滅させる → `R.GameOver.run()` のあと §4.12.2 の不変条件 ①〜⑦ がすべて真。
+- **S-W1〜S-W3**（ブラウザ・E2E。**「全滅 → 復活 → 歩ける」**）: debug で (1) ワールドのランダムの戦闘、(2) 町のイベントの戦闘（`canLose` なし）、(3) ダンジョンのボスの戦闘、のそれぞれで全員の HP を 0 にして負ける → ゲームオーバーを A で飛ばす → 町に着いた文を A で送る → **60 フレーム以内に** 不変条件 ①〜⑥ が真 → 右に 3 マス歩いて位置が変わる → Y でメニューが開き B で閉じる → もう一度ランダムの戦闘に入って勝てる。
 
 ---
 
@@ -133,7 +164,7 @@
 中身の数値（成長曲線、ダメージ式、閃き確率、ドロップ率、ティア倍率など）と、コンテンツ（キャラ・技・術・装備・魔物・地方・物語）は各章が決める。
 この章が決めるのは、**それらを載せる器**（ファイル・ロード順・API・状態の形・ID・担当）である。
 
-- 「実装済み」と書いた項目は、`chronicle/src` の実コードを読んで確認した事実。**エンジンはクレスト 3119fb2 に同期済み**（最初のフォークは 4bd1640。その後 9e76696 → edfd367 → 3119fb2。Part B1）。行番号は同期後のコードのもの（編集で読み直した）。
+- 「実装済み」と書いた項目は、`chronicle/src` の実コードを読んで確認した事実。**エンジンはクレスト 8259156 に同期済み**（最初のフォークは 4bd1640。その後 9e76696 → edfd367 → 3119fb2 → 8259156。Part B1・Part A6）。行番号は 8259156 に同期した後のコードのもの（第 2 版の編集で読み直した）。
 - 「既定値」と書いた数値は仮置き。担当章が別の値を決めたらそちらを正とする（APIの形は変えない）。
 - 「Phase 0」と書いた項目は、並列作業の開始前に lead（コア担当）が入れる小さな変更。
 
@@ -152,7 +183,7 @@
 | 0.9 | 冒険の合言葉の接頭辞を `LC1:` から `CH1:` に変える（Phase 0）。 | 現状はクレストと同じ接頭辞なので、クレストの合言葉が読めてしまい、壊れたデータになる。 |
 | 0.10 | 酒場（入れ替え画面）で出撃メンバーに入った仲間は全回復する（既定値）。 | 「管理はシンプルに」。控えの HP 管理をなくす。 |
 | 0.11 | **画面は `R.SCALE = 4`（1024×896）**。UI は 4 倍、フィールドは設定「フィールドの広さ」で 4 / 3 / 2 倍（16×14 / 約 21×19 / 32×28 マス。既定 3 倍 = ひろい）。 | 同期後のエンジン（ns.js・field.js の VIEW）。批評 15・68。 |
-| 0.12 | **操作は同期後のエンジンのとおり**: 仮想ボタン `up down left right a b y l r dash`。フィールドは A 話す・調べる・開ける、**Y メニュー**、**B を押しながら移動でダッシュ**。メニューは A 決定・B 戻る・**L/R で人を切り替え**。メッセージは A・B・**下**で送る。移動は半歩（8px）の 8 方向。 | Part A2・A3。批評 8・68。 |
+| 0.12 | **操作は同期後のエンジンのとおり**: 仮想ボタン `up down left right a b y l r dash`。フィールドは A 話す・調べる・開ける、**Y メニュー**、**B を押しながら移動でダッシュ**。メニューは A 決定・B 戻る・**L/R で人を切り替え**。メッセージは A・B・**下**で送る。移動は **1 マス（16px）単位の 8 方向**（半歩は Part A7 で取り消し）。 | Part A2・A3。批評 8・68。 |
 | 0.13 | 設定の既定値: `alwaysDash:false`、`fieldZoom:'wide'`、**`windowColor:'ink'`**（§11.0 の 0.6 の「墨の窓」を採用。`settingsVer` を 3 に上げて、古い既定の `'black'` を `'ink'` に移す）。 | 批評 9・35・73。窓の色は表現章の案を lead が採った。 |
 | 0.14 | 状態異常は**戦闘の外では必ず `{}`**（毒も持ち越さない）。 | §4.0 の 0.6。批評 21・86。 |
 | 0.15 | 敵の単体攻撃の狙い: **前列 2 : 中列 1**（`aim:'middle'` は中列 3 : 前列 1）。 | §4.0 の 0.13。批評 23。 |
@@ -162,6 +193,7 @@
 | 0.19 | プールは **10 段**（ティア 0〜9）。宝箱のティアは `def.tier ?? map.chestTier ?? R.Game.tier`。`R.Tier.effective()`（クリア後は 9）を足す。店の段に `cond`。`R.Battle.start` に `lvOff`、`R.Rules.zoneLevel(zone, map)`。 | 批評 33・74。 |
 | 0.20 | **隠しアイテム（`hidden`。調べると見つかる）は使わない**。マップに書いたら validate が失敗にする（標準仕様「隠しアイテムなし」）。 | ブリーフの標準仕様。隠し通路の先も見える宝箱だけ。 |
 | 0.21 | Part A5 の取り込み: オートの**集中攻撃**（`R.BattleAI.focusOrder`/`assignTarget`。§4.13.2）、装備の候補の一覧に**攻・術力・守と主な能力値の増減**（§11.7.5）、図鑑の 3 枠は**ドロップでも盗みでも**埋まる（§3.2.1）、**ついでに盗む**（mods `autoSteal`。§3.3.16）。 | ブリーフ Part A5（エンジンはクレスト 3119fb2 で実装済みのものを使う）。 |
+| 0.22 | **Part A6 の取り込み**（§0.7）: Y の詳細ポップアップ（`R.Menu.itemDetail`・`actionDetail`）、装備の候補は強い順、リピートは B まで続く、図鑑の 1 ページ目に落とす物と盗める物、ワープ先に入ったことのあるダンジョンの入口（`DB.locations` の `kind`・`region`、マップの `location`）、全滅→復活の不変条件。**エンジンにある実装は残して広げる**。 | ブリーフ Part A6（エンジンはクレスト 8259156 で実装済み）。 |
 
 ### 1.1 実行環境
 - 素の JavaScript。依存なし、実行時の通信なし。ES2020 まで使ってよい（`?.` `??` 可）。ES modules・`import`/`export`・トップレベル await は使わない。
@@ -181,7 +213,8 @@
    実行時の結線（イベントバスの購読など）は `R.onBoot(fn)` に書く（ブラウザのみ、フォント読み込み後、タイトル表示の前に実行）。
 4. `R.DB.<registry>` は ns.js が作る（§2.1）。自分の担当の id だけを Object.assign で登録し、他人の id を上書きしない。
 5. **他モジュールが未完成でも落ちない**ように書く。`R.Glimmer && R.Glimmer.roll(...)` のように存在を確かめてから呼ぶ。未知の id は `R.warn` して読み飛ばす。並列開発中は他人のデータが空のことがある。
-6. DOM に触れてよいのは次のファイルだけ: `core/input.js`（タッチパッド）、`core/audio.js`、`core/gfx.js`（canvas）、`main.js`、`systems/menu_save.js`（合言葉の入力のオーバーレイ）、`systems/nameentry.js`（キーボード入力のオーバーレイ）。それ以外は node ツールから読まれるので DOM 禁止。
+6. DOM に触れてよいのは次のファイルだけ: `core/input.js`（タッチパッド）、`core/audio.js`、`core/gfx.js`（canvas）、`main.js`、`systems/menu_save.js`（合言葉の入力のオーバーレイ `R.Menu.codeOverlay`。§3.3.12）、`systems/nameentry.js`（キーボード入力のオーバーレイ）。それ以外は node ツールから読まれるので DOM 禁止。
+   - **例外（読むだけ）**: `systems/title.js` は `document.fonts.check(...)`（フォントが読めたか）と `document.getElementById('game').classList.contains('touch')`（タッチパッドが出ているか）の 2 つだけを、`typeof document !== 'undefined'` を確かめ、`try` の中で読んでよい（今のコード title.js:188・:376 のまま）。書き込み・要素の作成はしない。合言葉の入力は `R.Menu.codeOverlay` を呼ぶ（自分で DOM を作らない）。
 7. 乱数は `R.U` の関数だけを使う（`Math.random` の直接呼び出しは禁止）。`R.U.seed(n)` で再現できるようにするため。
 8. 待ち時間はフレーム単位（`await R.Engine.wait(n)`）で書く。`setTimeout` はコア以外で使わない。
 9. スタイル: インデント2スペース、セミコロンあり、シングルクォート、小さな関数。コメントは必要な所だけ書く（日本語でも英語でもよい）。
@@ -301,7 +334,7 @@ const R = require('./tools/lib/load')({ quiet: true });            // extra:[pat
 - テストと手動制御: `step()` と `render()`（テストから呼べる）、`reportError(e)`（画面の隅に 10 秒表示して続行する）
 - 描画順: 背景 → 各レイヤー → フラッシュ → フェード → エラー表示。
 
-### 2.3 入力（src/core/input.js。実装済み、クレスト 3119fb2。編集で今のコードから書き直した）
+### 2.3 入力（src/core/input.js。実装済み。クレスト 3119fb2 で入り、8259156 まで変わらない。編集で今のコードから書き直した）
 仮想ボタンは **`up down left right a b y l r dash` の 10 個**（`BTNS`）。
 | ボタン | キーボード | ゲームパッド（標準マッピング） | タッチパッド |
 |---|---|---|---|
@@ -315,13 +348,14 @@ const R = require('./tools/lib/load')({ quiet: true });            // extra:[pat
 - API: `down(b)`、`pressed(b)`（押した瞬間）、`repeat(b)`（押した瞬間と、16 フレーム後から 4 フレームごと）、`released(b)`、`dir()`（最後に押した方向）、`dirRepeat()`、`consume()`、`enabled`、`onAnyPress(cb)`、`_set(b, v)`（テスト用）。
 - DOM の入力欄（名前入力・合言葉の入力）でのキー入力はゲームに届かない。
 - **操作の約束**（Part A2・A3。normative）:
-  - **フィールド**: A = 話す・調べる・開ける。**Y = メニュー**（field.js:1060）。**B か dash を押しながら移動 = ダッシュ**（設定「常にダッシュ」が真なら反対に、押している間だけ歩く。field.js:699）。B だけではメニューは開かない。
-  - **移動**: 押した最初のフレームから動く（向き変えの待ちなし）。**半歩（8px）単位の 8 方向**で、マスの間で止まらずに続けて歩く。描画は補間する。壁に半分だけかかったときは横に半マスずらす。
-  - **マスの出来事**: 足元のイベント（`trigger:'step'`）・ワープ・ダメージ床・隠し通路は、**新しいマスに入ったときに 1 回**だけ起きる（半歩ごとには起きない。ずれていれば一度マスの上に滑らせてから起こす）。
-  - **歩数**: 出現・毒・`walkHeal`・`encItem.steps` は**歩いた距離**で数える（1 マス = 1 歩、半歩 0.5。§4.11.1）。
+  - **フィールド**: A = 話す・調べる・開ける。**Y = メニュー**（field.js:1067）。**B か dash を押しながら移動 = ダッシュ**（設定「常にダッシュ」が真なら反対に、押している間だけ歩く。field.js:706）。B だけではメニューは開かない。
+  - **移動**: 押した最初のフレームから動く（向き変えの待ちなし）。**1 マス（16px）単位の 8 方向**（Part A7。半歩は採用しない）で、マスの間で止まらずに続けて歩く。描画は補間する。斜めは両隣が通れるときだけ進み（角は切らない）、進めないときは空いている軸へ壁沿いに滑る。仲間は先頭が歩いたマスを 1 つずつなぞり、止まると全員マスの上に並ぶ（field.js `STEP = 1`、隊列の道のりは歩数＝チェビシェフ距離）。
+  - **マスの出来事**: 足元のイベント（`trigger:'step'`）・ワープ・ダメージ床・隠し通路は、**新しいマスに入ったときに 1 回**だけ起きる。
+  - **歩数**: 出現・毒・`walkHeal`・`encItem.steps` は**歩いた距離**で数える（1 マス = 1 歩、斜めも 1 歩。§4.11.1）。
   - **メニュー**: A = 決定、B = 戻る、**L/R = 人の切り替え**（装備・強さ・技・術・技の書と術の書など、人ごとの画面すべて）。
   - **メッセージ**: A・B・**下**で送る（ui.js:110・:118。B を押している間は文字が 3 倍速く出る）。
-  - **戦闘**: オート中に B でオート解除。
+  - **戦闘**: オート中に B でオート解除。**リピート中も B でリピート解除**（§11.5.3a。そのラウンドは最後まで行い、次の入力の前に止まる）。
+  - **Y の詳細**（Part A6）: 道具・装備・店・技と術の一覧で、カーソルの品・技・術の詳しいポップアップを開く（§0.7 A6-1・§11.7.18）。どのボタンでも閉じる。戦闘の中では Y を使わない。
   - **NPC を押す**: 押せる NPC（`R.FieldMap.pushable`）に向かって歩き続けると、横にどく（すぐにもう一度押すと、その場でどく）。しばらくすると元の場所に戻る。店員・宿屋・王・道をふさぐ人は動かない（§3.3.10）。
 
 ### 2.4 グラフィックス（src/core/gfx.js）
@@ -424,6 +458,7 @@ const R = require('./tools/lib/load')({ quiet: true });            // extra:[pat
 | C8 | 環境 | `pip install fonttools brotli`（フォントの埋め込みを有効にする） |
 | C9 | DESIGN.md | ID 一覧は DESIGN.md に確定済み（編集で各章を 1 つにした） |
 | C10 | shot.js | `--keys` に `y l r`（C・Q・E）を足す（§1.5） |
+| C11 | tools/lib/joyo.txt | 常用漢字表（2139 字、1 行）をリポジトリに入れる（§12.4。第 2 版。ネットは使わない） |
 
 ---
 
@@ -451,7 +486,7 @@ const R = require('./tools/lib/load')({ quiet: true });            // extra:[pat
 | 良い状態 | `regen veil counter nimble cover` | 再生 加護 反撃の構え 身軽 かばう |
 | 即死（状態ではなく効果） | `death` | 即死（倒れた人は「戦闘不能」） |
 | 強化・弱体の対象 | `atk def mag mdef agi`（段階は −2〜+2。倍率は§4.8.2） | 攻撃力 守備力 術力 術防 素早さ |
-| 対象 `target` | `enemy enemies group random ally allies self ally_dead ally_any party`（`party` = 倒れた人も含む味方全員。§7.3.2） | 敵1体・敵全体・ひと群れ・敵ランダム・味方1人・味方全員・自分・倒れた1人 |
+| 対象 `target` | `enemy enemies group random ally allies self ally_dead ally_any party`（`party` = 倒れた人も含む味方全員。**`ally_any` = 味方 1 人を、生きている人と倒れた人のどちらからでも選ぶ**（効果ごとに効く人にだけ効く: `revive` は倒れた人、ほかは生きている人）。§7.3.2） | 敵1体・敵全体・ひと群れ・敵ランダム・味方1人・味方全員・自分・倒れた1人・味方1人（倒れた人も）・味方全員（倒れた人も） |
 | 効果 `effects[].type` | `damage heal healMp healWp revive cure status buff dispel steal scan escape grow teleport exit encounter cover summon special`（`damage` の `formula` は `phys magic breath tier fixed percent`） | |
 | 効果の項目（追加分） | `dispel.side:'good'|'bad'`（§7.3.3）、`on:'allies'|'self'`（§7.3.4-3・§9.1.6）、`status:'counter'` の `power parry critBonus`（§6.2.4-A）、`healMp.pct`、`summon {mon, n, max}`（§9.1.6）、`damage.mp`・`drain`・`vs`（キーに状態 id も可。§6.0 の 0.10） | |
 | 行動の条件 `cond`（魔物） | `hpBelow hpAbove every once round alone countBelow allyDown`（§9.1.7） | |
@@ -493,23 +528,23 @@ const R = require('./tools/lib/load')({ quiet: true });            // extra:[pat
 #### 3.1.4 命名規約（id）
 | 対象 | 規則 | 例 |
 |---|---|---|
-| 技 | `t_<wtype>_<名前>` | `t_sword_rising` |
-| 術 | `s_<名前>`。合成術も同じ | `s_fire_1`、`s_blizzard` |
-| 敵の行動 | 雑魚用は `e_<名前>`（担当 mons）、ボス・レア魔物専用は `eb_<名前>`（担当 boss） | `e_bite`、`eb_quake` |
+| 技 | `t_<wtype>_<名前>` | `t_sword_stepcut` |
+| 術 | `s_<名前>`。合成術も同じ（形は §7.2.1） | `s_fire_1`、`s_fire_wind_a` |
+| 敵の行動 | 雑魚用は `e_<名前>`（担当 mons）、ボス・レア魔物専用は `eb_<名前>`（担当 boss） | `e_bite`、`eb_diamond_scales` |
 | アイテム | 武器 `w_<wtype>_<名前>`、盾 `sh_`、頭 `hd_`、体 `bd_`、手 `hn_`、足 `ft_`、アクセサリ `ac_`、道具 `i_`、大事なもの `k_`（細かい形は§8.1.1） | `w_katana_sr_matsuyoi`、`i_salve` |
-| 魔物 | 雑魚は `<lineage>_<段階番号 1..5>`、レア魔物は `rm_<名前>`、ボスは `b_<名前>` | `wolf_3`、`rm_prism`、`b_rival1` |
+| 魔物 | 雑魚は `<lineage>_<段階番号 1..5>`、レア魔物は `rm_<名前>`、ボスは `b_<名前>` | `wolf_3`、`rm_prisma`、`b_rooteater` |
 | 系統 | `<名前>`（snake_case） | `wolf` |
-| 敵の編成 | `tr_<名前>` | `tr_b_rival1` |
-| 出現ゾーン | `z_<regionId>_<名前>`、ワールドは `zw_<名前>` | `z_r3_cave1` |
-| 宝箱のプール | `p_<名前>` | `p_weapon`、`p_supply` |
-| 店 | `<locationId>_<item|weapon|armor|magic>` | `r3town_weapon` |
+| 敵の編成 | `tr_<名前>` | `tr_b_rowell1` |
+| 出現ゾーン | `z_<regionId>_<名前>`、ワールドは `zw_<名前>` | `z_r_desert_tomb`、`zw_desert` |
+| 宝箱のプール | `p_<名前>` | `p_rare`、`p_supply` |
+| 店 | `<町の locationId>_<item|weapon|armor|magic>` | `kasim_weapon`、`orbis_magic` |
 | 地方 | `<名前>`（ワールド章が決める） | |
 | マップ | 町は場所の名前、ダンジョンの階は `<ダンジョン>_<n>`、ワールドは `world` | |
 | イベント | `<マップid>_<名前>`、物語の共通イベントは `story_<名前>` | |
-| 宝箱 | **必ず明示的に一意な id を付ける**（`<マップid>_c<n>`）。マーク文字の自動採番はセーブを壊すので使わない | `r3cave_1_c2` |
+| 宝箱 | **必ず明示的に一意な id を付ける**（`<マップid>_c<n>`）。マーク文字の自動採番はセーブを壊すので使わない | `sand_tomb_2_c1` |
 | フラグ | snake_case。自動で立つもの: `cleared_<regionId>`（R.Tier.clear）、`joined_<companionId>`（R.Party.recruit）、`game_clear`（エンディング）、`hero_created`（ev.createHero） | |
 | 変数（vars） | `<地方か担当>_<名前>` | |
-| 目的 | `obj_<名前>` | |
+| 目的 | 担当ごとに接頭辞を分ける: world `obj_w_<名前>` と `obj_regions`、story `obj_s_<名前>`、地方の担当 `obj_<rs>_<n>`（§10.13.8） | `obj_w_roa`、`obj_s_final_roa`、`obj_forest_1` |
 
 ### 3.2 状態スキーマ `R.Game`
 
@@ -531,7 +566,7 @@ const R = require('./tools/lib/load')({ quiet: true });            // extra:[pat
 | `gold` | `DB.config.startGold` | 所持金 |
 | `inv` | `{}` | itemId → 個数（1〜99）。**装備中の品は含まない** |
 | `chests` | `{}` | chestId → `{item, n}` または `{gold}`（開けた時点の中身） |
-| `visited` | `{}` | locationId → true（ワープ先の一覧） |
+| `visited` | `{}` | locationId → true（ワープ先の一覧。町もダンジョンの入口も。マップの `location` に入ると field が立てる。消さない。§3.3.2） |
 | `book` | `{mon:{}, tech:{}, spell:{}}` | 図鑑・技の書・術の書（下の表） |
 | `pos` | `{map, x, y, dir, spawn}` | 現在地 |
 | `respawn` | `{map, spawn}` または `{map, x, y, dir}` | 全滅したときの戻り先 |
@@ -544,8 +579,9 @@ const R = require('./tools/lib/load')({ quiet: true });            // extra:[pat
 
 **`book`（図鑑・技の書・術の書）**
 ```
-book.mon[monId]   = { seen:n, kills:n, gold:n (倒した金色の個体の数), drop:bool, rare:bool, sr:bool (超レア) }
+book.mon[monId]   = { seen:n, kills:n, gold:n (倒した金色の個体の数), drop:bool, rare:bool, sr:bool (超レア), scan:bool (見破った) }
                     // drop・rare は**ドロップでも盗みでも**手に入れたら true（Part A5）。盗んで手に入れた枠は、倒す前（kills 0）でも図鑑に出す
+                    // scan は見破りの鏡など `scan` の効果を当てたら true。図鑑の能力・弱点を倒す前でも出す（落とす物の名前は出さない。§4.10.4）
 book.tech[techId]  = [charId, …]   // 閃いた人（パーティを離れても残る）
 book.spell[spellId]= [charId, …]
 ```
@@ -602,7 +638,7 @@ book.spell[spellId]= [charId, …]
 - **`{cond, text}` の配列**: 上から見て、最初に cond を満たしたものの text を表示する。cond を書かないものは常に真なので、最後に置くと既定の台詞になる
 ```js
 text: [
-  { cond: { tier: 6 }, text: '伝承が戻ってきている。{hero}のおかげだね。' },
+  { cond: { tier: 6 }, text: '伝承が戻ってきた。{hero}のおかげだ。' },
   { cond: { cleared: 'r_desert' }, text: '砂漠の道がまた通れるようになったそうだ。' },
   { text: '近ごろ、昔話を思い出せないんだ。' },
 ]
@@ -624,6 +660,7 @@ serialize() → { v: 1, kind: 'chronicle',
 6. hp/mp/wp を最大値の範囲に収める。すべての人の `status = {}`。
 7. `secrets` が無ければ `{}`。古い `repelSteps` があれば捨てる（`encItem` は null）。
 8. `R.Battle.autoCarry = false`。
+9. `R.State.syncVisited(g)`（入ったことのあるダンジョンを `visited` に足す。古いセーブの移し替え。§3.3.2）。
 
 #### 3.2.6 いつも成り立つこと（不変条件）
 - `party` は1〜4人で、`id:'hero'` を必ず1人含む。同じ id が `party` と `reserve` の両方に入ることはない。
@@ -654,11 +691,20 @@ addGold(n)   takeGold(n) → bool   // 所持金の上限は 9999999
 hero() → CharState   party() → R.Game.party   alive() → 出撃中で生きている人   leader() → 生きている先頭（全滅なら主人公）
 char(id) → 出撃中か控えの CharState | null   all() → party.concat(reserve)
 healAll({reserve = true}) → HP/MP/WP を全快、状態異常を治す、戦闘不能から戻す
-wipeRecover()             → 所持金を半分にして healAll()   // 経験値は失わない
-seen(monId) killed(monId, {golden}) noteDrop(monId, grade, {stolen}?)   // grade: 'normal'|'rare'|'super' → book.mon の drop/rare/sr（盗んだときも。Part A5）
+wipeRecover()             → 所持金を半分（切り捨て）にして healAll()、encItem = null、R.Battle.autoCarry = false   // 経験値は失わない（§4.12.2）
+seen(monId) killed(monId, {golden}) noteDrop(monId, kind, {stolen}?)
+   // kind（第 2 引数に使える値はこの 4 つだけ）: 'normal' | 'rare' | 'super' → book.mon の drop / rare / sr を true（盗んだときも。Part A5）、
+   //   'scan' → book.mon の scan を true（`scan` の効果。§4.10.4。エンジンの battle.js:1095 の呼び方のまま）。ほかの値は R.warn して何もしない
+dungeonLocation(def) → locationId | null   // そのマップが属するワープ先（field.js:1446 が使う）。def.location が DB.locations にあればそれ。
+                           // 無ければ DB.locations のうち kind === 'dungeon'（古いデータの dungeon:true も）で spawn === def.escape.spawn のもの。
+                           // **状態を持たない読むだけの関数**（set は無い。キャッシュもしない）
+syncVisited(g)            // 読み込み時（§3.2.5 の 9）に、入ったことのあるダンジョン（宝箱を開けた・出現ゾーンの魔物を見た・今いる）の
+                           // ワープ先を g.visited に足す（エンジンの state.js:134 のまま）
+
 noteLearned(charId, actionId)                                 // book.tech / book.spell に記録
 serialize() deserialize(data) → bool
 ```
+- **`R.Game.visited` の書き込み**（field A4。field.js:1445〜1446 のまま）: マップに入るたびに、`def.location` があれば `visited[def.location] = true`、無ければダンジョンの階なら `visited[dungeonLocation(def)] = true`。**立てるだけで消さない**（新しいゲームで空になるだけ）。`R.debug.visitAll()` は全部を立てる。町・ダンジョンのマップは `location` を必ず書く（§10.6.1・§10.6.2-12。validate V14）。
 
 #### 3.3.3 `R.Rules`（src/systems/rules.js、担当 rules。数値は成長章が決める）
 **定数**: `STATS`、`MAXES`（`['hp','mp','wp']`）、`SLOTS`、`SLOT_NAMES`、`WTYPES`、`ELEMENTS`、`MAX_LEVEL`（既定 99）、`CAPS`
@@ -699,11 +745,29 @@ train(c, info) → [{kind, id, rank}]    // 戦闘が、味方の行動のたび
 slotGroup(itemId) → 'weapon'|'shield'|'head'|'body'|'hands'|'feet'|'acc'|null     slotsFor(itemId) → ['weapon1','weapon2'] など
 isTwoHanded(itemId)   reach(itemId|null) → 'front'|'any'
 canEquip(c, itemId, slot) → bool     equipIssue(c, itemId, slot) → null | '理由の文'（メニューに出す）
-equip(c, slot, itemId|null) → { ok, removed:[itemId] }   // inv との間で出し入れする
+equip(c, slot, itemId|null) → { ok, removed:[itemId], reason? }   // inv との間で出し入れする（この名前だけ。R.Party.equip は作らない）
+                                        // 失敗は {ok:false, reason:'理由の文'}（equipIssue と同じ文）。**戻り値はオブジェクトなので、呼ぶ側は .ok を見る**
+                                        // （今の menu_items.js の `if (!R.Rules.equip(...))` は `.ok` に直す）
 unequipAll(c)
-preview(c, slot, itemId) → 装備した場合の stats（メニューの ↑↓ 表示用。c は変えない）
-optimize(c, mode) → {changes}           // mode: 'phys'|'magic'|'balance'（物理重視・術重視・バランス）。式は§4.4.1
+previewStats(c, slot, itemId|null) → Diff   // 付けた場合の差分（付けた後 − 今）。c と持ち物は変えない。両手持ちで外れる盾も数える
+   // Diff = { atk1, atk2, mag, def, mdef, hit, eva, crit, str, vit, dex, agi, int, mnd, hp, mp, wp }（17 のキー。変わらないキーは 0）
+   //   atk1 = stats(c).w.weapon1 の atk（武器1が空なら素手 w.fist）、atk2 = w.weapon2 の atk（空なら 0）、hit・crit は武器1の値
+   // 付けた後の値 = R.Rules.stats(c)[k] + Diff[k]（atk1/atk2 は w.weapon1.atk / w.weapon2.atk）。
+   // メニューの R.Menu.previewStats(c, slot, id)（menu_equip.js:22。付けた後の stats を返す）は残し、中身をこの関数で作る（§0.7）
+optimize(c, mode) → Plan               // **計算だけの純粋な関数**（c・持ち物・ほかの人を変えない）。mode: 'phys'|'magic'|'balance'。決め方は§4.4.1
+   // Plan = { mode, equip:{ weapon1, weapon2, shield, head, body, hands, feet },   // 7 枠の付ける品（itemId|null。acc1/acc2 は入れない）
+   //          changes:[{slot, from, to}],   // 今と違う枠だけ（枠の順）
+   //          diff: Diff,                   // Plan をすべて付けた場合の差分（最強装備の確認の窓に出す）
+   //          score }                       // §4.4.1 の点
+applyLoadout(c, plan) → { ok, removed:[itemId] }   // Plan を反映する。changes を枠の順に R.Rules.equip で付け替える。
+   // 途中で失敗したら（持ち物が 99 個を超えて外せない など）それまでの付け替えを元に戻して {ok:false}
+partyMods() → { goldPct, dropPct, rarePct, superPct, rareEncPct, goldenPct, preemptPct, escapePct }
+   // パーティ全体に効く 8 つのキー（§3.3.16 の *）の、出撃中で生きている人の mods(c) の合計。上限（K.MODCAP）で止めた値。
+   // R.Party.mod(key) はこの戻り値の [key] を返す（party.js が呼ぶ。ほかのキーは R.Party.mod が今までどおり合計する）
+fillItem(it) → it                       // 装備の数値を埋める（§8.2.9。items_*.js が onData で呼ぶ）
+autoDesc(it) → string                   // 通常品の説明 2 行（§8.2.7 の通常品の文。'\n' で 2 行）
 ```
+- 定数 `R.Rules.K`（§4.18.1 が正）には `PRICE_SLOT = { weapon:1.6, body:1.4, shield:1.0, head:0.8, hands:0.6, feet:0.6, acc:1.2 }`（値段の枠の係数。§4.3.6・§8.2.9）を含める。
 装備の規則（normative）:
 1. 枠の種類が合わない品は付けられない（`weapon` → weapon1/weapon2、`acc` → acc1/acc2、ほかは同じ名前の枠）。
 2. **weapon1 か weapon2 に両手持ちの武器があるときは、盾の枠は空でなければならない**。
@@ -741,9 +805,12 @@ swap(activeId, reserveId) → bool   setOrder(ids)（出撃中の並び）   set
 canSwapHere() → bool                         // 入れ替えできる場所: 町・城・村のマップ（map.def.partySwap で上書きできる）
 award({killed:[{def, golden}]}) → [{c, exp, levels, gains, reserve:bool}]
                                              // 出撃中は R.Rules.battleExp。戦闘不能の人と控えは、その 60%（CONST RESERVE_RATE = 0.6）
-afterBattle(result) → void                   // 戦闘後の回復の方針。既定値: 勝ったら生存者の HP を全快。MP/WP と戦闘不能はそのまま（成長章・戦闘章で確定）
-mod(key) → 出撃中で生きている人の mods[key] の合計（金・ドロップ・レア・出現率など、パーティ全体に効く補正。個性を含む。上限 +150 などは §3.3.16）
-fieldMods() → {encounterPct（絶対値が最大のもの。−50〜+50 に止める）, walkHeal（最大）, noFloorDamage}
+afterBattle(result) → void                   // 戦闘後の回復（§4.12.1 が正）: 勝ったら生存者の HP を全快、MP・WP を最大値の 10%（切り上げ。K.AFTER）回復。
+                                             // 戦闘不能の人はそのまま。逃げたときは HP 全快だけ。状態と強化はいつも消える
+mod(key) → 出撃中で生きている人の mods[key] の合計（金・ドロップ・レア・出現率など、パーティ全体に効く補正。個性を含む）。§3.3.16 の * の 8 つは R.Rules.partyMods()[key]（上限で止めた値）
+fieldMods() → {encounterPct, walkHeal（最大）, noFloorDamage}
+                                             // encounterPct: 出撃中で生きている人それぞれの mods(c).encounterPct のうち**絶対値が最大のもの**を −50〜+50 に止める。
+                                             // **同じ絶対値で符号の違う値があれば 0**（例: ロウガ +25 とシルヴァン −25 だけなら 0。+50 があれば +50）
 spriteKey(c) → 'party:<spriteId>'    faceKey(c) → 'face:<spriteId>'
 ```
 
@@ -779,14 +846,20 @@ goldenName(def) → 名前                             // def.goldName、無け�
 ```
 roll(c, ctx) → {id, kind:'tech'|'spell'} | null     // c を変えない（純粋な関数）
    ctx = { kind:'tech'|'spell', wtype?, elements?:[…], used: actionId | 'attack', stone?: bool,
-           rankB, ef, tier, row: 'front'|'middle', silenced: bool, rng? }       // §7.10 の形 ＋ row・silenced（批評 26・87）
+           rankB, ef, tier, row: 'front'|'middle', silenced: bool, force?: bool, rng? }       // §7.10 の形 ＋ row・silenced（批評 26・87）
+   // **ctx.tier = R.Tier.effective()**（クリア後は 9。EXPECT(T) と PEXP(T) の T。戦闘のティア Tb ではない。Tb は rankB に入っている）。
+   //   simulate とテストで R.Battle.start({tier}) を渡したときは、その tier（gameClear のゲームなら 9）
+   // force: true なら p = 1（glimmerForce。下の規則）
    // tech: 武器の攻撃か技を使ったとき（wtype = その枠の系統）。spell: 術か魔石を使ったとき（elements = その属性）
    // rankB・ef は戦闘の開始時に Engine が決める。row は行動の時の effectiveRow、silenced は沈黙か
 learn(c, id) → bool   // c.techs / c.spells に加え、R.State.noteLearned、c.counts.glimmers++、R.Game.records.glimmers++、R.emit('glimmer', c, id, kind)
 chance(c, id, ctx) → p        candidates(c, ctx) → [{id, w, p}]   // row === 'middle' なら reach:false の技を、silenced なら magic:true の技と術を外す（§6.0 の 0.16）
 ```
 - 戦闘での順番（normative）: 行動の直前に `roll` → 当たれば `{t:'glimmer'}` のイベントを出す → `learn` → その技・術で**行動を置き換えて**実行する（消費なし）。対象の決め方はその技・術の `target` に従う（§4.9.2-5）。
-- `R.Battle.start({glimmerForce:'hero'})` の戦闘では、主人公の最初の武器の行動で p = 1（チュートリアル。§3.3.8）。
+- **`glimmerForce:'hero'`**（チュートリアル。§4.9.6・§9.11.7。第 2 版で決め直した）: その戦闘で**主人公が最初に行う行動**の直前に、**行動の種類を問わず**必ず閃く（1 戦で 1 回だけ）。
+  - 攻撃・技: その枠の系統の候補（§4.9.3）から重みで選ぶ。術・魔石: その属性の候補から。候補が無いとき・防御・道具のときは、**武器1の系統（武器1が空なら体術）の、覚えていない技のうち `glim.lv` が一番小さいもの**（同じなら技データの並び順で先）を、rankB と熟練度の条件を無視して選ぶ。
+  - p = 1 で `learn` し、行動をその技・術で置き換える（§4.9.2-5 の対象の決め方。防御・道具を置き換えたときの相手は、生きている相手からランダム）。
+  - 主人公が行動できないまま戦闘が終わったとき（先に負けた・逃げた）は何もしない（`canLose` でやり直す。§10.7 P8）。
 - シミュレーション（`R.Battle.simulate`）は複製した CharState に learn するので、ゲームの状態を汚さない。
 
 #### 3.3.8 `R.Battle`（battle.js・mon.js は担当 battle、battle_scene.js・battle_fx.js は担当 bui）
@@ -800,21 +873,24 @@ const res = await R.Battle.start({
   noRare, noGolden,           // レア魔物への差し替え・金色の抽選をしない
   tier,                       // テスト用（省略時は R.Tier.current()）
   lvOff,                      // 戦闘レベルの足し算（省略時はマップの lvOff、次にゾーンの lvOff。R.Rules.zoneLevel(zone, map)）
-  glimmerForce,               // 'hero': 主人公の最初の武器の行動で必ず閃く（チュートリアル。§4.9.6）
+  glimmerForce,               // 'hero': 主人公の最初の行動（種類を問わない）で必ず閃く（チュートリアル。§3.3.7・§4.9.6）
+  members,                    // [charId…]: 戦闘に出る味方をこの人だけにする（出撃中の人の中から。ほかの人はその戦闘に出ず、経験値は控えと同じ 60%）。
+                              // 省略時は出撃中の全員。チュートリアルは ['hero']（§9.11.7）
 });                           // → 'win' | 'lose' | 'escape'
 R.Battle.last = { result, rounds, zone, troop, killed:[{id, golden}], exp, gold,
                   drops:[{item, grade, mon}], glimmers:[{char, id, kind}], levelUps:[{char, level}] };
 ```
 - **ゾーンでのランダム戦闘の順番**:
-  1. レア魔物への差し替え（`DB.rareEncounters[zone] = {mon, rate}`。確率に `R.Party.mod('rareEncPct')` をかける）
+  1. レア魔物への差し替え（`DB.rareEncounters[zone] = {mon, rate}`。**rate は分母 N**（80 なら 1/80）。確率の式は
+     `p = (1 / rate) × (1 + min(150, R.Party.mod('rareEncPct')) / 100) × L`、`L = (R.Game.encItem && R.Game.encItem.pct > 0) ? 2 : 1`（誘い寄せの香・誘い火のあいだ 2 倍）。§4.10.3）
   2. `R.Mon.buildList`
   3. 金色の抽選
 - **オートで始まる条件**: `zone` の戦闘で、`troop` も `mons` も指定がなく、`canLose` でも `noEscape` でもなく、ボス・レア魔物・金色の個体・**鋼の魔物**がいなくて、`Settings.autoKeep` が真で、`R.Battle.autoCarry` が真のとき。
   - これ以外（ボス戦・イベント戦・レア魔物戦・金色の個体・鋼の魔物の戦闘）は**手動で始まる**。
   - オート中に B を押すと、次のコマンド入力のときに解除され、`autoCarry = false` になる。`autoCarry` はセーブしない。
 - **負けたとき**: `'lose'` を返し、パーティはそのままにする。呼んだ側（field / ev.battle）が `R.GameOver.run()` を行う（`canLose` のときは戦闘不能の人を HP1 にして続ける）。
-- レイアウト（担当 bui。案）: 4人分のステータス窓 `WIN = {xs:[3,66,129,192], y:4, w:61, h:48}`。名前は枠の上に載せ、その下に H / M / W の3行、隊列の印（前・中）を付ける。
-  ほかのレイアウト定数（`52` = 窓の下端、など）は `WIN` から計算する。`R.Battle.WIN` と `R.Battle.BOX` を公開する。
+- レイアウト（担当 bui。**§11.5.1 が正**）: 4人分のステータス窓 `WIN = {xs:[3,66,129,192], y:5, w:61, h:46}`。名前は枠の上に載せ、その下に H / M / W の3行、隊列の印（前・中）を付ける。
+  窓の帯の下の端は `WIN_BOTTOM = 56`（クレストのコードの `52` はすべてこれに置き換える）。`R.Battle.WIN` `R.Battle.BOX` `R.Battle.HELP` を公開する。
 
 **戦闘エンジン**（`new R.Battle.Engine(o)`。ジェネレーターがイベントを出し、画面はそれを描くだけ。simulate も同じコードで動く）
 - o の形: `{party:[CharState], reserve:[CharState], mons:[{id, golden}] | [monId], inv, live, noEscape, surprise, noSurprise, tier}`
@@ -823,7 +899,7 @@ R.Battle.last = { result, rounds, zone, troop, killed:[{id, golden}], exp, gold,
   {type:'attack', slot:'weapon1'|'weapon2'|null, target}   {type:'tech', id, slot, target}   {type:'spell', id, target}
   {type:'item', id, target}   {type:'defend'}   // 全員で逃げるときは cmds.flee = true
   ```
-- 行動できない理由 `unusable(u, id, slot)`: `'mp' | 'wp' | 'silence' | 'reach'（中列から届かない）| 'field'（戦闘では使えない）| null`
+- 行動できない理由 `unusable(u, id, slot)`: `'mp' | 'wp' | 'silence' | 'reach'（中列から届かない）| 'field'（戦闘では使えない）| 'noescape'（逃げられない戦闘で逃げる道具・`escape` の効果）| null`。ヘルプの文は §11.5.3 の表（STYLE_JA §9）
 - **出すイベント**（クレストの一覧に追加・変更するもの）:
   | イベント | 中身 | 意味 |
   |---|---|---|
@@ -832,7 +908,11 @@ R.Battle.last = { result, rounds, zone, troop, killed:[{id, golden}], exp, gold,
   | `golden` | `{u}` | 金色の個体が現れた（戦闘の始め）。キラキラと `sfx('golden')` |
   | `levelup` | `{c, level, gains}` | メッセージは別に出る |
   | `prof` | `{u, kind, id, rank}` | 熟練度の段階が上がった（表示するかどうかは bui が決める） |
-  | `gain` | `{item, stolen:true}` | 盗んだ品だけに使う（ついでに盗む `autoSteal` の成功も。失敗は何も出さない） |
+  | `gain` | `{item, grade, stolen:true}` | 盗んだ品だけに使う（ついでに盗む `autoSteal` の成功も。失敗は何も出さない）。`grade` は盗んだ枠（`'normal'`\|`'rare'`）。bui は `rare` ならドロップのレアと同じ札（§11.5.8） |
+  | `phase` | `{u, text, sprite?}` | ボスの段階の変化（§9.11.1）。`text` はデータの `phases[].msg`、`sprite` は `phases[].set.sprite`。演出は §11.4.2 |
+  | `summon` | `{units:[unitId…]}` | 魔物が仲間を呼んだ（§9.1.6 の `summon`）。`units` は新しく並んだ魔物の番号（`Engine.mons` の添え字）。演出は §11.4.2 |
+  - **この表が戦闘のイベントの正**（§9.11.1・§11.4.2・§11.5 はこの形で読む）。表に無いイベントはクレストの形のまま。
+  - **効果音・ジングル・画面の揺れを鳴らすのは bui（battle_scene.js・battle_fx.js）だけ**。battle.js（エンジン）はイベントを出すだけで、`R.sfx`・`R.jingle`・`R.Engine.shake` を呼ばない（simulate が音を鳴らさないように。二重に鳴らないように）。
   - 削除するもの: `jobup` 系、JP のメッセージ、二刀流、リアクションの枠。
 - **ごほうび**（`rewards()`）の順番:
   1. `victory`
@@ -861,18 +941,19 @@ R.Battle.last = { result, rounds, zone, troop, killed:[{id, golden}], exp, gold,
 - 戦闘: `battleBg(zone)`、`encounter(zone)`、`gameOver()`
 - イベント用: `npc(id)`、`walkNpc`、`walkParty`、`facePlayer`、`setPlayerPos`、`parsePath`
 
-**同期後のエンジンにすでにあるもの**（クレスト 3119fb2。そのまま使う）:
-- 半歩（8px）・8 方向の移動、補間の描画、マスに入ったときだけの出来事（§2.3）、距離で数える歩数（`this.walked`、field.js:891）。
+**同期後のエンジンにすでにあるもの**（クレスト 8259156。そのまま使う）:
+- 1 マス単位・8 方向の移動（Part A7、`STEP = 1`）、補間の描画、マスに入ったときだけの出来事（§2.3）、距離で数える歩数（`this.walked`、field.js:891）。
 - フィールドの広さ `fieldZoom`（`updateView`、field.js:29〜）と、小さいマップのまわりに `outside` のタイルを並べる描き方。
 - ワールドのループ `map.wrap`（ワールドの既定は true。`unwrap`・`rewrap`。NPC はつなぎ目をまたがない）。
 - 押せる NPC `R.FieldMap.pushable(n)`（field_map.js:387）: `fixed:true` は動かない、`push:true` は必ず押せる、それ以外は「魔物・物の絵、`cond` のある NPC、イベントを持って立っている NPC」が動かず、歩き回る NPC とイベントの無い NPC は押せる（クレスト DESIGN §7.2）。
 - セーブの位置はマスに丸める（`savePos`）。
+- **ワープ先のダンジョン**（Part A6）: マップに入ると `visited` を立てる（field.js:1445〜1446。§3.3.2）。`teleportList()` は `[{id, name}]` を返す → **`[{id, name, kind, region}]` に広げ、`DB.locations` の順（§10.6.3。地方の順 → 町 → ダンジョン）で返す**（menu が地方ごとにまとめて描く。§11.7.12）。ダンジョンの入口へのワープは、ワールドの出現位置（入口のマス）に降りて、そのまま 1 階の `entrance` に入る（`teleport` の今の動き。町と同じ）。
 
 **変える点**（担当 field A4。行番号は今の field.js）:
 1. 隊列の後ろに付いてくる人数を `R.Game.party.length`（最大4）にする（今は 3 に固定: field.js:508 の `slice(0, 3)`）。
 2. 人物の絵のキーは `R.Party.spriteKey(c)` を使う（field.js:1293 と menu.js:45 の `party:<id>:<job>` を置き換える）。
 3. 宝箱: `pool` のある宝箱は `R.Tier.chest(def, map)` で中身を決め、`R.Game.chests[id]` に記録する。99個の上限と、大事なもののジングルは、決まった中身で判断する。**隠しアイテム（`hidden`、field.js:1028・:1226・:1341〜）は使わない**（コードは消してよい。validate は `hidden` を書いたマップを失敗にする）。
-4. **出現**: `R.Game.encItem`（`pct`・`steps`・`weakOnly`）と `R.Party.fieldMods().encounterPct` をかける。今の `R.Game.repelSteps` と `repelBlocks(zone)`（field.js:923・:959・:971。`zone.lv` が無いゾーンで常に止めてしまう）を**置き換える**: `weakOnly` のときは、生きている味方の平均レベル ≥ `R.Rules.zoneLevel(zone, map).Lb + 3` のときだけ、その戦闘を起こさない（§4.11.1）。`steps` は歩いた距離（1 マス 1）で減らし、0 になったら「〇〇の効果が切れた。」（〇〇 = 香か術の名前）。
+4. **出現**: `R.Game.encItem`（`pct`・`steps`・`weakOnly`）と `R.Party.fieldMods().encounterPct` をかける。今の `R.Game.repelSteps` と `repelBlocks(zone)`（field.js:923・:959・:971。`zone.lv` が無いゾーンで常に止めてしまう）を**置き換える**: `weakOnly` のときは、生きている味方の平均レベル ≥ `R.Rules.zoneLevel(zone, map).Lb + 3` のときだけ、その戦闘を起こさない（§4.11.1）。`steps` は歩いた距離（1 マス 1）で減らし、0 になったら文を出して `encItem = null`。**文は STYLE_JA §9 の「香・術が切れた」が正**（道具なら「〈品名〉の効果が切れた。」、術なら「〈術名〉の効き目が切れた。」。名前は `DB.items[id]` か `DB.actions[id]` の `name`）と `R.sfx('cancel')`。
 5. **町・城・村のマップに入ったら `R.Game.respawn = {map, spawn: def.respawnSpawn || 'entrance'}` にする**（`def.noRespawn` で止められる）。
 6. **ワープにも実行時の `cond` を効かせる**（tools/progress.js はすでに cond を見ているのに、ゲームは見ていない）。
 7. NPC の台詞の形（§3.2.4）。立ち止まっているときに足踏みさせない（RS1 風）。
@@ -881,7 +962,7 @@ R.Battle.last = { result, rounds, zone, troop, killed:[{id, golden}], exp, gold,
 10. **ダメージ床**（§10.6.2 の溶岩・毒の沼）: タイルの `damage`（固定値）を **`damagePct`**（最大HP の割合）に替える: 溶岩 `lava` 4、毒の床 `poison` 2、毒の沼 `swamp` 2（art-tiles が tiles.js を直す）。新しいマスに入ったとき、生きている人それぞれ `max(1, round(最大HP × damagePct / 100))` を失うが、**HP は 1 より下がらない**（床で倒れない）。`noFloorDamage`（個性・装備）の人は受けない。赤いフラッシュと `step_damage` は今のまま。
 11. **隠し通路**（Part A4。批評 66）:
     - タイル（art-tiles A16 が tiles.js と絵を作る）: ローカル `secret_wall`（凡例の文字 `%`）、ワールド `secret_forest`（`%`）・`secret_rock`（`&`）。`pass:true`。絵はそのテーマの壁（森・岩）と同じ絵に 1〜2px のひび・苔・色むらを足したもの。**見つけた後の絵** `found` は、ひびを少しはっきりさせ、床に 1px の点線を足したもの（`R.Game.secrets` に記録があるマスだけ）。`R.MARK_CHARS_LOCAL` から `%` を、`R.MARK_CHARS_WORLD` から `%` `&` を外す。
-    - 動き（field A4）: そのマスに**初めて入ったとき**（マスに入ったときの出来事。半歩ごとではない）、`R.sfx('secret')`（無ければ `door`）、`R.UI.notice('隠し通路を見つけた！', 60)`、`R.Game.secrets[`${map}:${x},${y}`] = true`。2 回目からは何も出さない。出現・毒の数え方はふつうの床と同じ。
+    - 動き（field A4）: そのマスに**初めて入ったとき**（マスに入ったときの出来事）、`R.sfx('secret')`（無ければ `door`）、`R.UI.notice('隠し通路を見つけた！', 60)`、`R.Game.secrets[`${map}:${x},${y}`] = true`。2 回目からは何も出さない。出現・毒の数え方はふつうの床と同じ。
     - 置き方の決まりと数は§10.6.2・§10.6.4（隠し通路の先は見える宝箱・休息の灯・語り部の書き付け・レア魔物の小部屋だけ。物語に要る物は置かない）。progress.js の検査は QA の章（§12.2）。
     - 年代記の画面（menu）に「隠し通路　n/総数」（総数は全マップの `secret_*` のマスの数。担当 menu）。
 12. ダッシュ・メニュー・メッセージ送りは §2.3 のとおり（実装済み）。
@@ -897,6 +978,7 @@ R.Battle.last = { result, rounds, zone, troop, killed:[{id, golden}], exp, gold,
 | `respawnSpawn` `noRespawn` `partySwap` | 町・城・村 | 全滅の戻り先・戻り先にしない・酒場の入れ替えを許す／禁じる |
 | `escape` | ダンジョンの階 | 脱出の行き先 `{map, spawn}`（メニューの「脱出」はこれがある階だけ） |
 | `region` | マップ | そのマップが属する地方の id（年代記・目的・検証ツール用） |
+| **`location`** | **町・村・家の中・ダンジョンの全部の階（必須）** | そのマップが属するワープ先の id（`DB.locations`。§10.6.1・§10.6.2-12）。入ると `R.Game.visited[location] = true`（§3.3.2）。ワールドには書かない。validate は町・ダンジョンの階に無いと失敗にする（V14） |
 | 宝箱の `pool` `tier` | 宝箱 | 宝箱のプールとティア（`item` を直に書かない） |
 | ワープの `cond` | ワープ | 通れる条件 |
 | NPC の `fixed` / `push` | NPC | 押しても動かない／必ず押せる（§10.13.10 の表） |
@@ -914,11 +996,11 @@ R.Battle.last = { result, rounds, zone, troop, killed:[{id, golden}], exp, gold,
 - 文章: `say(text|pages[], opts)`（続けて say すると同じ窓を使う）、`ask(text, choices)` → 番号 / −1、`yesno(text)` → bool、`gotItem`、`closeMessage`
 - 状態（同期）: `flag`、`setFlag`、`check`、`var`、`setVar`、`has`、`take`、`gold`、`takeGold`
 - 物とお金: `give(item, n=1, {silent})`（大事なものはジングル `keyitem`）、`giveGold(n)`
-- 戦闘: `battle(troopId|opts, {canLose, noEscape, bgm, bg, glimmerForce, lvOff})` → `'win'|'lose'|'escape'`。負けたら（canLose でなければ）ゲームオーバーにして、イベントを終わらせる。チュートリアルは `ev.battle({troop:'tr_tutorial', glimmerForce:'hero', noEscape:true})`（§10.7・§9.11.7）
+- 戦闘: `battle(troopId|opts, {canLose, noEscape, noRare, noGolden, bgm, bg, glimmerForce, members, lvOff})` → `'win'|'lose'|'escape'`（項目の意味は §3.3.8 の `R.Battle.start`）。負けたら（canLose でなければ）`await R.GameOver.run()` のあと、**そのイベントを中止する**（`once` を立てない。あとの `ev.*` は何もしない。中止しても `R.Events` の数えは必ず 0 に戻す。§4.12.2 の不変条件）。チュートリアルは `ev.battle({troop:'tr_tutorial', members:['hero'], glimmerForce:'hero', canLose:true, noEscape:true, noRare:true, noGolden:true})`（§10.7 P8・§9.11.7 と一字一句同じ）
 - 移動と画面: `warp(map, spawn|{x,y}, {dir, fade})`、`wait`、`fadeOut`、`fadeIn`、`shake`、`flash`
 - 音: `sfx`、`bgm(id?)`、`jingle`
 - 人物: `npc(id)` → `{x, y, dir, visible, face(dir|'player'), walk('U3L2'), hide(), show(), setPos()}`、`player` → `{x, y, dir, face, walk, setPos}`
-- 施設: `heal()`、`inn(price?)`（省略時の値段は `R.Tier.innPrice()`）、`shop(shopId)`、`church()`、`saveMenu()`
+- 施設: `heal()`、`inn(price?)`（省略時の値段は `R.Tier.innPrice()`）、`shop(shopId)`、`saveMenu()`。**教会は無い**: 今のコードの `ev.church()`（events_runtime.js:211）と `R.Shop.church()`（shop.js:282）は**消す**（STYLE_JA §7.4。宿屋が蘇生もする。shop.js:265 の `living:true` は外す）
 - 目的: `setObjective(id, {region}?)`（region を付けると `R.Game.regionObj[region]` に入れる）
 - その他: `giveShip(spawn)`（使う場合）、`refresh()`、`ending()`、`call(id)`、`map`、`self`、`ctx`、`leader`
 
@@ -943,22 +1025,27 @@ R.Battle.last = { result, rounds, zone, troop, killed:[{id, golden}], exp, gold,
 #### 3.3.12 画面を持つシステム
 | API | 担当 | 仕様 |
 |---|---|---|
-| `R.Title.start()` | newgame | タイトル画面（ロゴ・副題・`R.COPYRIGHT`）。コマンドは **はじめから / つづきから / 冒険の合言葉 / 設定**（§11.8.1 が正）。はじめから は確認してから `R.State.newGame()` → `R.Field.start(DB.config.start.map, …)`。つづきから は「どの記録から始めますか？」で記録1〜3。冒険の合言葉 は DOM の入力欄（注記「合言葉の入力」） |
+| `R.Title.start()` | newgame | タイトル画面（ロゴ・副題・`R.COPYRIGHT`）。コマンドは **はじめから / つづきから / 冒険の合言葉 / 設定**（§11.8.1 が正）。はじめから は確認してから `R.State.newGame()` → `R.Field.start(DB.config.start.map, …)`。つづきから は「どの記録から始めますか？」で記録1〜3。冒険の合言葉 は `R.Menu.codeOverlay({mode:'import'})`（注記「合言葉の入力」。title.js は自分で DOM を作らない。§1.2-6） |
 | `R.CharCreate.run({cancel = true})` | newgame | 性別 → タイプ（`DB.heroTypes`）→ 得意分野（タイプの `favorKind` に合わせて、武器系統か属性を選ぶ）→ 名前（`R.NameEntry.run`）→ 確認。heroSpec を返す（キャンセルなら null） |
 | `R.NameEntry.run({initial, max = 5, spriteKey, title})` | newgame | 五十音表（ひらがな・カタカナ・英数字）と DOM キーボード。1〜5文字。漢字は使えない。名前の文字列を返す（キャンセルなら null）。`check(name)`、`normalize(s)`、`VALID` |
 | `R.Tavern.chooseStart({count = 3})` | newgame | 20人の候補から選ぶ画面（絵・プロフィール・得手不得手・加入の台詞）。id の配列を返す |
 | `R.Tavern.open({recruit = true})` | newgame | 出撃と控えの入れ替え、未加入の候補の加入、並び・隊列。`R.Party` の API だけで状態を変える |
 | `R.Menu.open()` | menu | フィールドのメニュー（**Y**）。コマンドは§11.7.1 が正: **道具 / 技・術 / 満タン / 装備 / 強さ / 並びと隊列 / 技の書 / 術の書 / 図鑑 / 年代記 / 地図 / ワープ / 脱出 / 仲間 / セーブ / 設定**。**ワープ**（`prologue_done` から、ダンジョンの外で。`R.Field.teleport`）と**脱出**（`prologue_done` から、`map.escape` のある階で。`R.Field.exitDungeon`）は術・道具に依らないコマンド（Part A2）。仲間は `R.Party.canSwapHere()` のときだけ → `R.Tavern.open({recruit:false})` |
-| `R.Menu.*Screen` | menu | `itemScreen`、`spellScreen`、`equipScreen(o)`（候補の一覧に攻・術力・守と主な能力値の増減。Part A5。§11.7.5）、`statusScreen(o)`、`orderScreen`（並びと隊列）、`skillBookScreen`（技の書と術の書）、`bookScreen`（図鑑。通常・レア・超レアの3枠。ドロップでも盗みでも★）、`chronicleScreen`（年代記。章・断片・地方ごとの目的）、`saveScreen`/`saveMenu`、`settings`、`pickMember(o)`、`applyFieldEffect(def, user, targets)`、`useItem(id)`、`kit` |
-| `R.Shop.open(shopId)` / `R.Shop.inn(price)` / `R.Shop.church()` | menu | 品ぞろえは `R.Tier.shopItems`。出撃中の4人それぞれについて、装備できるかと能力の増減を見せる。宿屋は出撃と控えの全員を全快・復活させる |
-| `R.GameOver.run()` | menu | 全滅の画面（「{hero}たちは全滅した……。」）→ `R.State.wipeRecover()` → `R.Field.respawn()` →「{hero}たちは目を覚ました。」とお金が減った表示 |
+| `R.Menu.*Screen` | menu | `itemScreen`、`spellScreen`、`equipScreen(o)`（候補の一覧に 攻・術・守 の増減の 3 列と、下の窓にほかの能力値の増減。強い順。Part A5・A6。§11.7.5）、`statusScreen(o)`、`orderScreen`（並びと隊列）、`skillBookScreen`（技の書と術の書）、`bookScreen`（図鑑。通常・レア・超レアの3枠。ドロップでも盗みでも★。詳しい画面の 1 ページ目に落とす物と盗める物。§11.7.9）、`itemDetail(id, {member})`・`actionDetail(id, {member})`・`detailLines(id, {member})`（Y の詳細。§11.7.18）、`chronicleScreen`（年代記。章・断片・地方ごとの目的）、`saveScreen`/`saveMenu`、`settings`、`pickMember(o)`、`applyFieldEffect(def, user, targets)`、`useItem(id)`、`kit` |
+| `R.Menu.codeOverlay(o)` | menu（menu_save.js:33。newgame の title.js も呼ぶ） | **冒険の合言葉の DOM の窓**。`o = {mode:'export'|'import', code?}` → `Promise<string|null>`（import は入力された文字列、export と取り消しは null）。キャンバスの上に重ね、閉じるまでゲームの入力を止める。node では null を返す。接頭辞の検査は呼ぶ側（`R.Save.importCode`） |
+| `R.Shop.open(shopId)` / `R.Shop.inn(price)` | menu | 品ぞろえは `R.Tier.shopItems`。出撃中の4人それぞれについて、装備できるかと能力の増減を見せる。宿屋は出撃と控えの全員を全快・復活させる |
+| `R.GameOver.run()` | menu | 全滅の画面（「{hero}たちは全滅した……。」）→ `R.State.wipeRecover()` → `R.Field.respawn()` →「{hero}たちは目を覚ました。」「所持金が半分になった。」（文は STYLE_JA §9 が正。お金が 0 なら 2 行目は出さない）。終わったときの不変条件は §4.12.2 |
 | `R.Ending.start()` | story | エンディング → 出撃中の仲間それぞれの後日談（`DB.companions[id].epilogue`）→ クレジット（`R.COPYRIGHT` を入れる）→ `gameClear`・`clearCount`・クリア後の位置と目的（`DB.config.postgameStart`）→ セーブを勧める → タイトル |
 | `R.Minimap.open()` | field | ワールドマップの画面。キャッシュのキーはクレストの `barrier_broken` ではなく `map.version` を使う |
 
 #### 3.3.13 `R.debug`（src/systems/debug.js、担当 field。全員がスクショとテストで使う）
 ```
 quickStart({hero:{name,gender,type,favor}, companions:[ids], tier, level, map, spawn, gear:'start'|'tier'}) → Promise
-   // タイトルを飛ばして、すぐに遊べる状態にする。省略時: 主人公 DB.config.defaultHero（アルン・男・warrior・剣）、仲間 ['brigitta', 'marta', 'sylvain']（§4.17.1 の標準のパーティ。§5.0 の 0.13）、tier 0、level 1、DB.config.start
+   // タイトルを飛ばして、すぐに遊べる状態にする。省略時: 主人公 DB.config.defaultHero（アルン・男・warrior・剣）、仲間 ['brigitta', 'marta', 'sylvain']（§4.17.1 の標準のパーティ。§5.0 の 0.13）、tier 0、level 1、
+   // **map 'lute'・spawn 'inn'（港町ファロスの宿の前）**。序章を終えた状態にする: フラグ `hero_created pro_start pro_berna_sent pro_lute pro_met_rowell
+   //   pro_party_chosen pro_key pro_tutorial pro_boss prologue_done` を立て、`k_chronicle k_quill k_bell` を渡し、visited に roa lute lighthouse、目的 obj_regions。
+   // o.prologue:true なら序章の前から（フラグなし・仲間なし・DB.config.start = roa_house の bed。roa_house_intro が流れる）。
+   // tier > 0 のときは regionsCleared に §10.8.1 の順で tier 個の地方を入れ、そのフラグ（cleared_<id> と <rs>_boss）も立てる
 newGameAt(map, spawn)   warp(map, spawn|{x,y})   give(item, n)   giveAll(kind)   gold(n)   flag(name, v)
 level(n, charId?)   tier(n)   clearRegion(id)   recruit(id)   party([ids])   prof(charId, 'w'|'e', id, pts)
 learn(charId, actionId)   learnAll(charId?)   heal()   noEncounter(v)   battle(zone|troop|{mons})   event(id)
@@ -973,13 +1060,13 @@ visitAll()   teleport(loc)   pos()   maps()
 #### 3.3.15 データレジストリ（エンジンが読む最小限の項目。詳しい形は各章）
 | レジストリ | 担当 | エンジンが読む項目 |
 |---|---|---|
-| `config` | world | `start:{map, spawn, dir}`、`startGold`、`startItems:{id:n}`、`startObjective`、`defaultHero:{name:'アルン', gender:'m', type:'warrior', favor:{kind:'weapon', id:'sword'}}`、`innPrice:[10, 16, 24, 32, 42, 54, 66, 80, 96, 112]`（ティア 0〜9。`R.Tier.effective()` で引く）、`postgameStart:{map, spawn}` |
-| `heroTypes[id]` | newgame | `name, desc, stats{6}, growth{hp,mp,wp}, favorKind:'weapon'|'element'|'any', favorOptions?, apt{w,e}, startEquip{slot:item}, startTechs[], startSpells[], row` |
-| `companions[id]` | newgame | §5.3 が正: `name, gender, title（肩書）, profile, joinLine, epilogue, stats{6}, growth{hp,mp,wp}, apt{w:{wtype:'S'…'D'}, e:{el:'S'…'D'}}（文字。倍率は R.Rules.aptitude）, innate:{name, desc, mods}, startEquip, startTechs, startSpells, row, sprite?`（`startProf` はデータに書かない。§5.0 の 0.6） |
+| `config` | world | `start:{map, spawn, dir}`、`startGold`、`startItems:{id:n}`、`startObjective`、`defaultHero:{name:'アルン', gender:'m', type:'warrior', favor:{kind:'weapon', id:'sword'}}`、`innPrice:[10, 16, 24, 32, 42, 54, 66, 80, 96, 112]`（ティア 0〜9。`R.Tier.effective()` で引く）、`postgameStart:{map, spawn}`、`warpGroups:{prologue, finale}`（ワープの一覧の地方の名前。§10.6.3） |
+| `heroTypes[id]` | newgame | §5.2.10 が正: `name, desc, stats{6}, growth{hp,mp,wp}（文字 S〜D）, apt{w:{wtype:'S'…'D'}, e:{el:'S'…'D'}}, favorKind:'weapon'|'element'|'any', favorOptions:{weapon?:[wtype], element?:[el]}, pairElement:bool, defaultWeapon:itemId, startEquip{slot:item}, onFavor:{weapon:{techs,spells}, element:{techs,spells}}, row:'front'|'middle'|'auto', mods?`（初めの技・術は `DB.starterKit` と `onFavor` から作る。`startTechs`・`startSpells` はデータに書かない） |
+| `companions[id]` | newgame | §5.3.9 が正: `name, gender, age, kin（種族）, title（肩書）, from（出身）, role, row, stats{6}, growth{hp,mp,wp}, apt{w:{wtype:'S'…'D'}, e:{el:'S'…'D'}}（文字。倍率は R.Rules.aptitude）, innate:{name, desc, mods}, startEquip, startTechs, startSpells, profile, joinLine, leaveLine, rejoinLine, epilogue, sprite?`（`startProf` はデータに書かない。§5.0 の 0.6） |
 | `weaponTypes[wtype]` | techs | `name, twoHanded, reach, icon, fx` |
 | `elements[el]` | spells | `name, color, fx, sfx` |
-| `statuses[s]` | spells | `name, bad, persists:false（すべて）, turns:[min,max]|'next', icon, on, off`（どう働くかは§4.8.1 の表。`cover` を含む。§7.9.2） |
-| `rumors[id]` | world | うわさ話（§10.9.3。NPC の `rumor` から引く） |
+| `statuses[s]` | spells | §7.9.2 が正: `name, bad, persists:false（すべて）, turns:null|[min,max]|'next', bossTurns?:[min,max], disable?:true, instant?:true, icon, on, off`（どう働くかは§4.8.1 の表。`cover` を含む） |
+| `rumors[id]` | **story**（`src/events/story_rumors.js`。§10.9.3。第 2 版で 1 人に決めた） | うわさ話（NPC の `rumor` から引く。id は `<町id>_a` `<町id>_b`） |
 | `starterKit[id]` | newgame | 最初の持ち物の組（§5.2.10） |
 | `actions[id]` | techs（`t_`）、spells（`s_`）、mons（`e_`）、boss（`eb_`） | `kind, name, desc, wtype?, elements?:[…], rank, wp?, mp?, magic?, reach?, target, effects[], fx, field?, msg?`。閃きの項目（`glim`）は閃き章 |
 | `items[id]` | weapons（武器）、gear-a（防具・アクセサリ）、gear-b（道具・大事なもの） | §8.2 が正: `name, type, grade, tier, desc, price (0 なら売れない), units, line, src, exclusive?, unique?, quirk?, sort?, icon?, mods?, statsAdd?`、武器は `wtype, element?, onHit?, vs?, drain?, sealTech?, metalHit?, twoHanded?, hit?, crit?`、防具は `weight`、道具は `use:{target, effects, fx, battle, field}`（数値 `atk mag def mdef eva stats price` は `R.Rules.fillItem` が埋める） |
@@ -987,12 +1074,12 @@ visitAll()   teleport(loc)   pos()   maps()
 | `shops[id]` | gear-b（id は店を置く担当が§10.6.1 の店の表から使う） | §3.3.5 |
 | `monsters[id]` | mons（雑魚）、boss（ボス・レア魔物） | §9.1.1 が正: `name, goldName?, sprite, lineage?, stage?, lv, s:{hp,atk,mag,def,mdef,agi}, size, race, rank?, elem{}, phys{}, statusRes{}, actions[{id, w, cond}], actsPerTurn?, drops:{normal:{item|pool, rate}, rare:{item, rate}, super:{item, rate}, bonus?:{item, rate:1}}, flags[], fleeRate?, scale?:'tier', phases?, desc`（**`hue/sat/bri/pal` は書かない**。能力値は `R.Mon.fillStats` が作る） |
 | `lineages[id]` | mons | `name, stages:[{mon, tier}]`（tier は、その段が出始めるティア） |
-| `encounters[zone]` | mons | `region, bg, groups:[{w, mons:[[ref, min, max]], tierMin?, tierMax?}]` |
-| `troops[id]` | boss | `mons, bg, bgm, noEscape, scale?` |
+| `encounters[zone]` | mons | §9.1.4 が正: `region, tier:'dyn'|0..9, lv?:[min,max]（序章だけ）, lvOff?, bg, groups:[{w, mons:[[ref, min, max]], tierMin?, tierMax?, solo?}]` |
+| `troops[id]` | boss | §9.1.5 が正: `mons, scale?:'tier', tier?, lv?, lvOff?, bg, bgm, noEscape` |
 | `rareEncounters[zone]` | boss | `{mon, rate}` |
 | `regions[id]` | world | `name, chapter:{no, title, summary}, fragment（大事なものの id）, locations[], bossTroop, hint` |
-| `locations[id]` | world | `name, map, spawn, region?, dock?` |
-| `objectives[id]` | world（物語の目的は story が書いてもよい。id の接頭辞で分ける: `obj_s_…`） | `text`（`{cleared}` と `{left}` をクリア数・残り数に置き換える） |
+| `locations[id]` | world | §10.6.3 が正: `name, map:'world', spawn, region, kind:'town'|'dungeon'`（23 件。並び順がワープの一覧の順。`dock` は書かない） |
+| `objectives[id]` | 接頭辞で担当を分ける（§10.13.8）: world `obj_w_*` と `obj_regions`（`src/data/objectives.js`）、story `obj_s_*`（`src/events/story_objectives.js`）、reg-a・reg-b は自分の地方の `obj_<rs>_<n>`（`src/events/region<N>_*.js` の中で登録） | `text`（`{cleared}` と `{left}` をクリア数・残り数に置き換える） |
 | `maps`、`events` | world、story、reg-a、reg-b | クレスト §7.1・§7.3 と、§3.3.10・§3.3.11 の追加分 |
 | `tiles`、`legends`、`themes`、`decor` | art-tiles | クレストと同じ |
 | `music`、`sfx` | audio | |
@@ -1038,29 +1125,29 @@ visitAll()   teleport(loc)   pos()   maps()
 
 | ファイル（行数） | 扱い | 担当 | 主な変更点 |
 |---|---|---|---|
-| state.js（184） | **作り直す** | rules | §3.2 のスキーマ。party と reserve。条件式の拡張。book |
+| state.js（212） | **作り直す** | rules | §3.2 のスキーマ。party と reserve。条件式の拡張。book。**`dungeonLocation`・`syncVisited`・`noteDrop(id, kind)` の形は残す**（§3.3.2） |
 | rules.js（611） | **作り直す** | rules | ジョブ・アビリティ・JP・二刀流・運を削除。6つの能力値、9つの枠、熟練度、成長、コマンド |
 | （新）party.js、tier.js | 新しく作る | rules | §3.3.4、§3.3.5 |
 | battle.js（1410） | **作り替える** | battle | ジェネレーター式のエンジンは残す。WP、隊列（受けるダメージ・届く範囲）、閃きのフック（execute の中）、熟練度（train）、行動の出どころを `DB.actions` に、3段階のドロップ、金色の個体、`R.Mon.def`、経験値は `R.Party.award`。削除するもの: JP・ジョブ・リアクションの枠・二刀流（`OFFHAND_MULT`、`atk2`）・運。追加の属性（配列の属性）と新しい状態異常 |
 | （新）mon.js | 新しく作る | battle | §3.3.6（クレストの buildMons と computeRewards のドロップ部分をここに移す） |
 | battle_ai.js（404） | 作り替える | battle | 狙う相手の重みを隊列で決める（今は並び順で 5/3/2）。オートで技と術を使う。WP も考える。**集中攻撃（`focusOrder`・`assignTarget`）は残す**（Part A5） |
-| battle_scene.js（888） | 作り替える | bui | 4人分の窓（今は3人に固定: `pickAlly` の `% 3`: :568 など）、コマンド（武器1 / 武器2 / 術 / 防御 / 道具）、閃きの演出、ドロップ・超レア・金色の演出、オートの条件 |
+| battle_scene.js（895） | 作り替える | bui | 4人分の窓（今は3人に固定: `pickAlly` の `% 3`: :568 など）、コマンド（武器1 / 武器2 / 術 / 防御 / 道具）、閃きの演出、ドロップ・超レア・金色の演出、オートの条件。**リピート（`repeating` `repeatCancel` `lastCmds`・「リピート　Bで解除」）は残して広げる**（§11.5.3a。Part A6） |
 | battle_fx.js（947） | ほぼ残す | bui | 光（`light` → holy の見た目）、合成術（2つの fx を続けて出す）、凍結・やけど。fx はキーワードの部分一致で誤爆するので（`jump` → `mp` など）、**データは fx の id を正確に書く** |
-| field.js（1663） | 作り替える | field | §3.3.10 の 1〜12（半歩の移動・広さ・ループ・押せる NPC はそのまま） |
+| field.js（1664） | 作り替える | field | §3.3.10 の 1〜12（1 マス単位 8 方向の移動＝`STEP = 1` 済み・広さ・ループ・押せる NPC・`visited` の書き込み・ダンジョンへのワープはそのまま） |
 | field_map.js（397） | ほぼ残す | field | ワープの cond、宝箱の pool、隠しアイテム（`hidden`）を削除、`outside` が無いマップの警告 |
 | events_runtime.js（378） | 作り替える | field | §3.3.11 の新しい API、`fmt` を `R.Text.fmt` に任せる、お金の単位の語を定数に |
 | minimap.js（174） | 作り替える | field | キャッシュのキー、新しいワールドのタイルと町の印 |
 | debug.js（96） | **作り直す** | field | §3.3.13 |
-| menu.js（913） | 作り替える | menu | コマンドの一覧、4人分の窓（H/M/W）、`applyFieldEffect` の回復量を `R.Mon.healAmount` で計算する |
-| menu_equip.js（220） | **作り直す** | menu | 9つの枠、候補の一覧に攻・術力・守と主な能力値の増減（Part A5。今のコードの「攻/魔/守」の列を広げる）、トレードオフが分かる比べ方（↑緑 ↓赤、すべての能力値）、最強装備の 3 つのモード（§4.4.1）、両手武器と盾の説明 |
-| menu_items.js（230） | 作り替える | menu | 道具・大事なもの（使える大事なもの＝ワープ・脱出）、アビリティを術に置き換える |
+| menu.js（913） | 作り替える | menu | コマンドの一覧、4人分の窓（H/M/W）、`applyFieldEffect` の回復量を `R.Mon.healAmount` で計算する、ワープの一覧を地方ごとに（`chooseTown` を §11.7.12 の形に） |
+| menu_equip.js（232） | **作り替える**（第 2 版で「作り直す」から変えた。**`Menu.previewStats`・`Menu.equipCandidates`・候補の並べ替え・Y の詳細は残して広げる**） | menu | 9つの枠、候補の一覧は 攻・術・守 の増減の 3 列と下の窓のほかの増減（Part A5）、**強い順**（Part A6。§11.7.5）、トレードオフが分かる比べ方（↑緑 ↓赤、すべての能力値）、最強装備の 3 つのモード（§4.4.1。`optimize` → 確認 → `applyLoadout`）、両手武器と盾の説明 |
+| menu_items.js（313） | 作り替える（**`Menu.itemDetail`・`ItemDetail` と Y の処理は残して広げる**） | menu | 道具・大事なもの（使える大事なもの＝ワープ・脱出）、アビリティを術に置き換える、Y の詳細を §11.7.18 の形に（`actionDetail`・`detailLines` を足す）、`R.Rules.equip` の戻り値は `.ok` を見る |
 | menu_jobs.js（522） | **削除** | menu | 技の書と術の書は新しい `menu_book.js` で作る |
-| menu_status.js（432） | 作り替える | menu | 強さ（能力値・熟練度 11＋6・技と術）、並びと隊列（隊列も）、図鑑（3段階のドロップ。盗んだ品も★。今のコードの盗みの記録を 3 枠に広げる） |
+| menu_status.js（434） | 作り替える | menu | 強さ（能力値・熟練度 11＋6・技と術）、並びと隊列（隊列も）、図鑑（3段階のドロップ。盗んだ品も★。今のコードの盗みの記録を 3 枠に広げる。1 ページ目に落とす物と盗める物。§11.7.9） |
 | （新）menu_book.js、menu_chronicle.js | 新しく作る | menu | 技の書と術の書、年代記 |
 | menu_save.js（283） | ほぼ残す | menu | セーブ欄の要約（主人公・4人・ティア） |
-| shop.js（334） | 作り替える | menu | 9つの枠、ティアの品ぞろえ、宿屋が控えも回復する |
-| gameover.js（94） | ほぼ残す | menu | 文言だけ |
-| title.js（390） | 作り替える | newgame | ロゴ・副題・© Studio Metem。はじめからの流れ（§3.3.12） |
+| shop.js（336） | 作り替える | menu | 9つの枠、ティアの品ぞろえ、宿屋が控えも回復・蘇生する、**Y の詳細は残す**、教会（`Shop.church`）は消す |
+| gameover.js（94） | ほぼ残す | menu | 文言を STYLE_JA §9 に。終わったときの不変条件（§4.12.2）をテストで確かめる |
+| title.js（390） | 作り替える | newgame | ロゴ・副題・© Studio Metem。はじめからの流れ（§3.3.12）。合言葉は `R.Menu.codeOverlay`、DOM は §1.2-6 の例外の 2 つだけ |
 | nameentry.js（312） | 作り替える | newgame | 主人公1人・5文字まで、ジョブの絵を使わない |
 | （新）charcreate.js、tavern.js | 新しく作る | newgame | §3.3.12 |
 | ending.js（301） | **作り直す** | story | 中身がクレスト専用（玉座の間・3人の後日談）。舞台を回す部分（EndingLayer）は流用してよい |
@@ -1107,7 +1194,7 @@ visitAll()   teleport(loc)   pos()   maps()
 | 0.15 | 強化・弱体の倍率 `STAGE = [0.63, 0.77, 1, 1.3, 1.6]`。 | Part A2 の読み（+1 = ×1.3、+2 = ×1.6、−1 ≒ ×0.77、−2 ≒ ×0.63）のとおり（批評 4・78）。 |
 | 0.16 | **通常の雑魚の攻撃力・術力に `K.MOB = {atk:0.6, mag:0.6}`** をかける（ボス・レア魔物・鋼は 1）。雑魚戦で受けるダメージの目標は、パーティの最大HP の合計に対して **平均 8〜12%**（§4.17.3 A2）。 | Part A2「通常戦闘 1 回で受けるダメージはパーティ HP の 5〜15%」。曲線のままでは 18〜19%（批評 2・67 の検算）。 |
 | 0.17 | 増やす系の補正は控えめにし、**合計に上限**を付ける（パーティの `dropPct` など +150、1 人の `expPct` +30、`glimPct` キーごと +40、`profPct` キーごと +50、装備の `encounterPct` −50〜+50）。1 品の値は§8.3.5。 | Part A3「最初は +20% 程度、上限あり、いくつも重ねて効いてくる」（批評 6・69 が食い違うので 69 の値にした）。 |
-| 0.18 | **出現を減らす道具・術は「弱い魔物」だけを避け、約 100 歩**（`encItem.weakOnly`。§4.11.1）。歩数は**歩いた距離**（1 マス = 1 歩、半歩 0.5）。 | Part A3（批評 5・70・76）。半歩の移動で歩数を数えると出現が 2 倍になるため。 |
+| 0.18 | **出現を減らす道具・術は「弱い魔物」だけを避け、約 100 歩**（`encItem.weakOnly`。§4.11.1）。歩数は**歩いた距離**（1 マス = 1 歩）。 | Part A3（批評 5・70・76）。 |
 | 0.19 | 宿代 `innPrice = [10, 16, 24, 32, 42, 54, 66, 80, 96, 112]`（ティア 0〜9。ワールド章の案）。 | 2 つの案が食い違う（批評 19・82）。Part A2「序盤はケチくさくしない」に合う安い方にした。 |
 | 0.20 | **最強装備 `R.Rules.optimize(c, mode)`** を §4.4.1 で決める（物理重視・術重視・バランス。アクセサリ 2 枠は変えない）。 | Part A3。エンジン章と表現章でモードが食い違っていた（批評 10・72。点の式は批評 10 のものにした）。 |
 | 0.21 | 技の `glim.lv` は **1〜10**（lv 10 = 極意。§6.0 の 0.3）、術は 1〜8 のまま。lv 10 の BASE は `K.GLIM.base.secret = 0.006`。§4.9.5 の目標を直した。 | 技章が lv 10 を足した（批評 20・79）。 |
@@ -1332,7 +1419,7 @@ S: 知力 52+180    → 術力 435      S/Z = 2.55   S/N = 1.68
 - 体力の使い道: 最大HP（§4.2.2 の VIT）。器用さ: 命中・会心・器用さの武器の攻撃力・技の閃き・技の状態異常。
   素早さ: 行動順・回避・逃走。知力: 術力・術の閃き・術の状態異常。腕力: 腕力の武器の攻撃力。
 
-#### 4.4.1 最強装備 `R.Rules.optimize(c, mode)`（規則。編集で足した。menu が「最強装備」で呼ぶ）
+#### 4.4.1 最強装備 `R.Rules.optimize(c, mode)` と `R.Rules.applyLoadout(c, plan)`（規則。編集で足した。menu が「最強装備」で呼ぶ）
 - `mode`: `'phys'`（物理重視）／`'magic'`（術重視）／`'balance'`（バランス）。ほかのモードは作らない。
 - **変える枠**: `weapon1 weapon2 shield head body hands feet`。**`acc1` `acc2` は変えない**（Part A3）。
 - **候補**: 持ち物の品と、その人が今付けている品。**ほかの仲間（出撃中・控え）が付けている品は使わない**。`quirk:true` の品は候補にしない（今付けているクセの品は、その枠ごと変えない）。`only`・`gender` に合わない品は使わない。
@@ -1345,7 +1432,9 @@ S: 知力 52+180    → 術力 435      S/Z = 2.55   S/N = 1.68
   balance = (phys + magic) / 2                                          // 同じ単位なので、ティアの W で割っても順位は同じ
   ```
 - **選び方**: 枠の順（武器1 → 武器2 → 体 → 盾 → 頭 → 手 → 足）に、ほかの枠を今の品のままにして点が一番高い品を選ぶ。これを 2 回くり返す。点が同じなら tier の高い方、次に値段の高い方、次に今の品。
-- 戻り値: `{changes:[{slot, from, to}]}`（画面は変わった枠だけを ↑↓ で見せる）。持ち物の出し入れは `R.Party.equip` と同じ処理。
+- **`optimize` は計算だけの純粋な関数**（第 2 版で決めた）: `c`・持ち物・ほかの人の装備を**変えない**。試しの計算は `c` の複製（`equip` と持ち物の数を写した仮の人）で行う。戻り値は §3.3.3 の `Plan`（`{mode, equip:{7 枠}, changes:[{slot, from, to}], diff, score}`）。
+- **反映は `R.Rules.applyLoadout(c, plan)`**: `plan.changes` を枠の順（武器1 → 武器2 → 体 → 盾 → 頭 → 手 → 足）に `R.Rules.equip(c, slot, to)` で付け替える（持ち物との出し入れは `equip` の規則のまま。両手持ちで外れる盾も同じ）。途中で失敗したら、それまでに変えた枠を元に戻して `{ok:false}`。
+- 画面の流れ（§11.7.5）: `optimize` → 変わった枠と `plan.diff` を見せて「この装備にしますか？」→ はい なら `applyLoadout`、いいえ なら何もしない（状態は変わっていない）。`changes` が空なら「今の装備がいちばんだ。」とだけ出す。
 
 ### 4.5 戦闘の流れ
 
@@ -1625,7 +1714,7 @@ rank = Tb + 1  （Tb = 戦闘のティア。§4.14.1）
 
 | 技（各系統 10 個が目安） | glim.lv の並び（目安） | BASE | WP の目安 |
 |---|---|---|---|
-| 1系統の11個（§6.0 の 0.2） | 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 | 0.012（lv 10 は `secret` 0.006） | lv1: 1〜2、2: 2、3: 3、4: 3〜4、5: 4〜5、6: 5〜6、7: 6〜7、8: 7〜8、9: 9〜11、10: 12〜14 |
+| 1系統の11個（§6.0 の 0.2） | 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 | 0.012（lv 10 は `secret` 0.006） | **§6.4.1 の範囲が正**: lv1: 1〜2、2: 2〜3、3: 2〜4、4: 3〜4、5: 3〜5、6: 4〜6、7: 5〜7、8: 6〜8、9: 10〜11、10: 12〜14 |
 - 各ティアで、どの系統にも新しい候補が1つ以上開く（ティア T の普通の戦闘は rank T+1）。
 - lv 9 の技（その系統の奥義）は、ティア 8（最終地方: rank 9）か、ティア 6 以上のボス（rank 9 以上）でしか閃かない（終盤のご褒美）。lv 10 の技（極意）は rank 10 以上（ティア 7 以上のボス・最終地方のボス・クリア後）で、熟練度の段階 9 以上。
 - 術の MP の目安は§7.1.3 が正（0.14 で下げた値）。
@@ -1637,7 +1726,7 @@ p = BASE × APT × GF × FK × EF × MARGIN × (1 + glimPct/100)、上限 0.35
 APT  … 得手不得手の倍率 S 2.0 / A 1.5 / B 1.0 / C 0.6 / D 0.3（合成術は、その属性の倍率の平均）
 GF   = clamp((100 + 能力値)/150, 0.7, 2.0)     // 技は器用さ、術は知力。能力値 200 で上限
 FK   = clamp(1 + 0.4 × (EXPECT(T) − 覚えている数 − 2), 1, 4)   // 覚えている数 = 技と術の合計。2つ以内の遅れには効かない
-EXPECT(T) = [2, 4, 6, 8, 10, 12, 14, 16, 17, 19]              // T = R.Tier.effective()（クリア後は 9）。ふつうに出撃している人の数
+EXPECT(T) = [2, 4, 6, 8, 10, 12, 14, 16, 17, 19]              // T = ctx.tier = R.Tier.effective()（クリア後は 9。戦闘のティア Tb ではない。§3.3.7）。ふつうに出撃している人の数
 EF   … §4.9.2
 MARGIN = 1 + 0.1 × min(5, rankB − 候補の glim.lv)              // 格上ほど閃きやすい
 glimPct … mods の glimPct の、その系統・属性の値＋ 'tech' か 'spell' の値
@@ -1666,7 +1755,7 @@ glimPct … mods の glimPct の、その系統・属性の値＋ 'tech' か 'sp
 - 術師型の主人公と仲間は、得意な属性（S か A）の1段の術を1〜2個持って始まる（`startSpells`）。ほかの人は 0（戦士型も魔石で術を始められる）。
 - **魔石**（道具。属性ごとに1つ。店で安く買える。例 id `i_stone_fire`）: 使うと、その属性の1段相当の攻撃（`formula:'tier'`, SP 1.2）を相手1体に行い、
   その属性の熟練度 +1 と、術の閃きの判定（`kind:'spell'`, elements = [その属性]）をする。覚えていない属性を始める入口。オートでは使わない。
-- 物語の最初のイベント戦（チュートリアル。ファロス灯台1階のイベント `lighthouse_1_tutorial`、編成 `tr_tutorial` = 野ネズミ 2 匹・ティア 0。§9.11.7・§10.7）では、主人公が必ず閃く（`ev.battle({troop:'tr_tutorial', glimmerForce:'hero', noEscape:true})` → `R.Battle.start({... glimmerForce:'hero'})`: その戦闘の主人公の最初の武器の行動で p = 1）。
+- 物語の最初のイベント戦（チュートリアル。ファロス灯台1階のイベント `lighthouse_1_tutorial`、編成 `tr_tutorial` = 野ネズミ 2 匹・ティア 0。§9.11.7・§10.7）では、主人公が必ず閃く（`ev.battle({troop:'tr_tutorial', members:['hero'], glimmerForce:'hero', canLose:true, noEscape:true, noRare:true, noGolden:true})`。§9.11.7・§10.7 P8 と一字一句同じ）。仲間はこの戦闘に出ない（`members`。仲間が先にネズミを倒してしまわないように）。`glimmerForce` は**主人公の最初の行動なら種類を問わず**効く（術師の主人公が術を唱えても、防御しても閃く。規則は §3.3.7）。
 
 ### 4.10 ドロップ・レア魔物・金色の個体・鋼の魔物（戦利品の規則）
 
@@ -1694,7 +1783,7 @@ glimPct … mods の glimPct の、その系統・属性の値＋ 'tech' か 'sp
 - 1地方（約 313 体を倒す）の期待値（補正なし）: 通常 39 個、レア 9.8 個、超レア 1.2 個。レア狙いの装備を 5〜8 品重ねると（§8.13.2: `rarePct` +150、`superPct` +100）レアは 2.5 倍、超レアは 2 倍。
 - ボスの `drops`: `normal:{pool, rate:1}`（プールの中身は戦闘のティアで決まる。§8.12.3）、`bonus:{item:'i_seed_*', rate:1}`（最大値を伸ばす実。確定の 2 つ目の枠）。割り当ては§9.12.8。
 - 盗む（`steal` 効果。技章が使う場合）: 1体1回。成功率 = clamp(0.35 + (素早さ − 魔物の素早さ)/200, 0.1, 0.8) × (1 + stealPct/100)（ボス ×0.5）。
-  成功したら、レア枠の品を min(0.5, レアの確率 × 4) で、外れたら通常枠の品を取る。**超レアは盗めない**。
+  成功したら、レア枠の品を min(0.5, レアの確率 × 4) で、外れたら通常枠の品を取る。**超レアは盗めない**。イベント `{t:'gain', item, grade, stolen:true}`（grade は取った枠）と `R.State.noteDrop(monId, grade, {stolen:true})`。
 - **ついでに盗む**（mods `autoSteal`。Part A5）: 「攻撃」が当たるたびに、上の成功率 × `autoSteal/100` で盗む（レア枠の率は半分、1 体に 1 回、失敗は何も表示しない）。
 - 図鑑: 盗んで手に入れた品も、その枠（通常・レア）を「入手済み」（★）にする。盗んで分かった持ち物は、倒す前でも図鑑に出す（Part A5。§3.2.1 `book.mon`）。
 
@@ -1706,8 +1795,8 @@ glimPct … mods の glimPct の、その系統・属性の値＋ 'tech' か 'sp
 - 出現: 「金色の○○が現れた！」、キラキラ・`sfx('golden')`。**手動で始まる**（オートを続けていても止まる）。
 
 #### 4.10.3 レア魔物（専用の絵、22 種以上）
-- `DB.rareEncounters[zone] = {mon, rate}`。rate の既定 **1/80**（そのゾーンのランダム戦闘がレア魔物に差し替わる確率）。
-  × (1 + min(150, rareEncPct合計)/100) × 誘い寄せの香（2倍）。
+- `DB.rareEncounters[zone] = {mon, rate}`。**rate は分母 N**（既定 `80` = 1/80。ドロップの `rate` と同じ書き方。§9.0 の 0.18）。そのゾーンのランダム戦闘がレア魔物に差し替わる確率は
+  `p = (1 / rate) × (1 + min(150, rareEncPct合計)/100) × L`、`L` = 誘い寄せの香・誘い火のあいだ（`R.Game.encItem.pct > 0`）2、ほか 1（§3.3.8）。
 - 能力: レア魔物との戦闘の Lb は、そのゾーンの Lb + 2。曲線 × 種の倍率（HP は ×3 前後）。旗 `rare`。閃き: rank +2、EF 2.0。経験値・お金 ×5。
 - 逃げる: 2ラウンド目から、自分の手番ごとに 25% で逃げる（`fleeRate:0.25`）。状態異常の耐性はボスの既定の表（§4.8.3）と同じ、即死は効かない、弱体の成功率 ×0.5。
 - 3つの枠すべてが、その魔物だけの品: 通常 = その種だけの道具（§8.9.2）1/2、レア = 遺物 `ac_rl_<鍵>` 1/6、超レア = 遺物 `ac_rs_<鍵>` 1/24（ティアが固定のゾーンの 4 種は固定ティアの超レア品）。§8.7・§9.12.7。
@@ -1715,6 +1804,8 @@ glimPct … mods の glimPct の、その系統・属性の値＋ 'tech' か 'sp
 #### 4.10.4 図鑑・演出
 - レアを手に入れたらジングル `rare`、超レアは `superrare` と専用の演出（§3.3.8）。
 - 図鑑は元の魔物の id で、通常・レア・超レアの3枠を記録する。金色を倒した数も数える。
+- **見破る（`scan` の効果。道具 `i_lens` 見破りの鏡。第 2 版で決めた）**: 戦闘で相手 1 体に使うと、文を 2〜3 行出す: 「〈魔物〉　Lv12　HP120/300」、「弱点：火・風」（倍率 1.5 以上の属性。無ければ「弱点は見つからない。」）、吸う属性があれば「吸収：水」（倍率が負）。文は STYLE_JA §6。ボス・レア魔物にも効く（仲間には HP の行だけ）。
+  - 図鑑への記録: `R.State.noteDrop(monId, 'scan')`（§3.3.2。第 2 引数に使える値は `'normal' 'rare' 'super' 'scan'` の 4 つ）→ `book.mon[id].scan = true`。図鑑の詳しい画面は、倒す前でも `scan` なら能力と弱点を出す。**落とす物・盗める物の名前は見破っても出さない**（手に入れるまで `？？？`）。
 
 #### 4.10.5 鋼の魔物（逃げやすく硬いが、経験値とお金が多い枠。2〜3 系統）
 - 旗 `metal`。HP は曲線を使わず固定（6〜12）。素早さ ×2.5、回避 30。
@@ -1731,16 +1822,17 @@ glimPct … mods の glimPct の、その系統・属性の値＋ 'tech' か 'sp
 ```
 次の戦闘までの歩数 = encRate × rand(0.6, 1.4)
 1歩ごとに 地形の enc × (1 + encounterPct/100) × 香の倍率 を引き、0 以下で戦闘
-1歩 = 歩いた距離 1 マス（16px）。半歩（8px）は 0.5 歩、斜めの半歩も 0.5 歩（距離は縦横の大きい方）
+香の倍率 = encItem が無い → 1、encItem.weakOnly → 1（弱い敵だけを避ける香・術は倍率を変えない。下の規則で戦闘を取り消す）、ほか → 1 + encItem.pct/100（誘い寄せ 2）
+1 歩 = 1 マス（16px）の移動。斜めの 1 歩も 1 歩（距離は縦横の大きい方）
 encRate の既定: ワールド 26、ダンジョン 22（マップの encRate で上書き）
 戦闘の後・マップに入った直後の 6 歩は出ない
 ```
-- `encounterPct`: 出撃中の人の中で絶対値が最大のもの（§3.3.4）を −50〜+50 に止める。アクセサリ・キャラ固有の能力で −50（半分）、−25、+50。
+- `encounterPct`: 出撃中の人の中で絶対値が最大のもの（§3.3.4）を −50〜+50 に止める。**同じ絶対値で符号の違う値があれば 0**（ロウガ +25 とシルヴァン −25 だけなら打ち消して 0。§5.3.4）。アクセサリ・キャラ固有の能力で −50（半分）、−25、+50。
 - 道具・術（`encounter` 効果）: `R.Game.encItem = {id, pct, steps, weakOnly}`（§3.2.1。使うと前の香・術の効果は置き換わる。`steps` は上の歩数で減らし、0 で消える）。
-  - **魔除けの香**・術「影隠れ」: `{pct:-100, steps:100, weakOnly:true}`。**弱い魔物だけを避ける**: 戦闘が起きるとき、**生きている味方の平均レベル ≥ Lb(ゾーン, マップ) + 3** ならその戦闘を起こさない（歩数はふつうに数え直す）。そうでなければ香は効かず、ふつうに戦う。Lb = LZ(Tb) ＋ (`map.lvOff ?? zone.lvOff`)（§4.14.1。`R.Rules.zoneLevel(zone, map)`）。地方の後半のワールドと 1 階では効き、着いたばかりの地方では効かない。
+  - **魔除けの香**・術「影隠れ」: `{pct:-100, steps:100, weakOnly:true}`。**弱い魔物だけを避ける**: 歩数の数え方は香が無いときと同じ（倍率 ×1。`pct:-100` は出現率には使わない）で、戦闘が始まるとき、**生きている味方の平均レベル ≥ Lb(ゾーン, マップ) + 3** ならその戦闘を起こさない（歩数はふつうに数え直す）。そうでなければ香は効かず、ふつうに戦う。Lb = LZ(Tb) ＋ (`map.lvOff ?? zone.lvOff`)（§4.14.1。`R.Rules.zoneLevel(zone, map)`）。地方の後半のワールドと 1 階では効き、着いたばかりの地方では効かない。
   - **誘い寄せの香**・術「誘い火」: `{pct:+100, steps:100}`（出現 2 倍、レア魔物 2 倍）。
   - エンジンの今の `R.Game.repelSteps` と `repelBlocks` は `encItem` に置き換える（field A4）。
-- 地形のイベント・ダメージ床は、**新しいマスに入ったときに 1 回**だけ起きる（半歩ごとには起きない）。毒の歩数・`walkHeal` も上の歩数で数える。セーブの位置はマスに丸める。
+- 地形のイベント・ダメージ床は、**新しいマスに入ったときに 1 回**だけ起きる。毒の歩数・`walkHeal` も上の歩数で数える。セーブの位置はマスに丸める。
 
 #### 4.11.2 先制（こちらが先に動く）
 ```
@@ -1774,6 +1866,17 @@ Ap・Am = 生きている味方・魔物の素早さの平均（段階の倍率�
 - `R.GameOver.run()` → `R.State.wipeRecover()`: 所持金を半分（切り捨て）、出撃中と控えの全員を全快・蘇生 → 最後に入った町（`R.Game.respawn`）へ。
 - 失わないもの: 経験値・レベル・熟練度・技・術（その戦闘で閃いたものも残る）・道具・装備。
 - `canLose` のイベント戦: 負けても続く。戦闘不能の人を HP 1 にする（§3.3.8）。
+- 文は STYLE_JA §9（「{hero}たちは全滅した……。」→ 町で「{hero}たちは目を覚ました。」「所持金が半分になった。」）。
+- **終わったときの不変条件**（Part A6。第 2 版で足した。`R.GameOver.run()` が解決した時点で、どこから全滅しても必ず真。§0.7 A6-6 のテストが確かめる）:
+  ① `R.Engine.top()` がフィールドのレイヤー（ゲームオーバー・戦闘・メッセージ・メニュー・字幕のレイヤーが残っていない。`R.UI.closeMessage()` 済み）。
+  ② フィールドの `locks === 0`（`Field.isBusy()` が偽）、`R.Events.busy() === false`（イベントの戦闘で全滅したときは、そのイベントを中止し、数えを finally で必ず戻す）。
+  ③ `R.Engine.fadeAlpha === 0`（暗転が残っていない）、`R.Engine.paused === false`。
+  ④ `R.Input.enabled === true`（DOM の窓・合言葉の窓が開いていない）。
+  ⑤ 出撃中と控えの全員が HP・MP・WP 最大、`status` が `{}`、戦闘不能がいない。所持金は半分（切り捨て）。
+  ⑥ `R.Battle.autoCarry === false`、`R.Game.encItem === null`（香も消える）、戦闘のレイヤーの `repeating` は残らない（その戦闘だけのもの）。
+  ⑦ 戻り先（`R.Game.respawn` の町）の `onEnter` は、そのマップの cond に従って 1 回だけ走る（全滅で二重に走らない。`defer` で並べたものも 1 つ）。
+- 全滅の入口は 3 つ: ランダムの戦闘（`Field.encounter` → `Field.gameOver`）、イベントの戦闘（`ev.battle`、`canLose` なし）、ボスの戦闘（イベント）。フィールドでは全滅しない（状態は戦闘の外に残らず、ダメージ床では倒れない。§3.3.10-10）。
+- クレストで調べている「城で復活したあと固まる」不具合（Part A6）: 修正が入ったら lead が取り込み、同じ原因が新作に無いかを確かめて、原因をこの不変条件に足す（最後の報告に書く）。
 
 #### 4.12.3 宿屋
 - 出撃中と控えの全員を全快・蘇生。値段は `DB.config.innPrice[R.Tier.effective()]` = `[10, 16, 24, 32, 42, 54, 66, 80, 96, 112]`（ティア 0〜9。0.19。§10.13.11 と同じ値。`K.INN` にも同じ配列を置く）。
@@ -1980,7 +2083,8 @@ DROP:{ cap:{normal:0.75, rare:0.5, super:0.125}, modCap:150, golden:{normal:2, r
 MODCAP:{ party:150, preempt:30, exp:30, expMin:-100, glim:40, prof:50, cost:-50, encounter:50 },
 ENC_ITEM:{ repel:{pct:-100, steps:100, weakOnly:true}, lure:{pct:100, steps:100}, weakMargin:3 },
 INN:[10, 16, 24, 32, 42, 54, 66, 80, 96, 112],
-GOLDEN:{ rate:1/40, hp:2, stat:1.2, exp:3, gold:5, lvShow:2 }, RARE_ENC:1/80, METAL:{ exp:30, gold:10, flee:0.5 },
+GOLDEN:{ rate:1/40, hp:2, stat:1.2, exp:3, gold:5, lvShow:2 }, RARE_ENC:80 /* 分母。1/80 */, METAL:{ exp:30, gold:10, flee:0.5 },
+PRICE_SLOT:{ weapon:1.6, body:1.4, shield:1.0, head:0.8, hands:0.6, feet:0.6, acc:1.2 },   // §4.3.6・§8.2.9
 AFTER:{ mpPct:0.10, wpPct:0.10 }, ESCAPE:{ base:0.55, step:0.12, agi:0.5, min:0.25, max:0.95 }, PREEMPT:1/16,
 BOSS:{ mid:{lvOff:2, hpMul:10, atk:1.3, mag:1.3, def:1.1, agi:1.1}, region:{lvOff:3, hpMul:18, atk:1.5, mag:1.4, def:1.2, agi:1.2}, … §4.14.3 },
 hpBoss:(L) => hp(L) × (0.65 + 0.05 × clamp((L−6)/6, 0, 10))
@@ -1988,13 +2092,13 @@ hpBoss:(L) => hp(L) × (0.65 + 0.05 × clamp((L−6)/6, 0, 10))
 
 #### 4.18.2 関数（§3.3.3〜3.3.7 の形に入れる中身）
 - `R.Rules.stats(c)` の戻り値に **`mag`（術力）を足す**。`w.weapon1.atk` などは §4.4 の最終値。`w.*.crit` も持たせる。
-- `R.Rules.gearStat(T, units, grade)`、`R.Rules.dk(L)`、`R.Rules.zoneLevel(zoneId, map)` → `{Tb, Lb}`（`map.lvOff` があればゾーンの `lvOff` より先に使う）、`R.Rules.profRank(pts)`、`R.Rules.aptitude(c)`（文字 → 倍率）、`R.Rules.optimize(c, mode)`（§4.4.1）。
+- `R.Rules.gearStat(T, units, grade)`、`R.Rules.dk(L)`、`R.Rules.zoneLevel(zoneId, map)` → `{Tb, Lb}`（`map.lvOff` があればゾーンの `lvOff` より先に使う）、`R.Rules.profRank(pts)`、`R.Rules.aptitude(c)`（文字 → 倍率）、`R.Rules.optimize(c, mode)`・`R.Rules.applyLoadout(c, plan)`（§4.4.1）、`R.Rules.previewStats(c, slot, id)`・`R.Rules.equip(c, slot, id)`・`R.Rules.partyMods()`・`R.Rules.fillItem(it)`・`R.Rules.autoDesc(it)`（形は §3.3.3 が正）。
 - `R.Tier.effective()` = クリア後なら 9、そうでなければ `R.Game.tier`（EXPECT・PEXP・宿代・FK が使う。§3.3.5）。
 - `R.Rules.battleExp(c, killed)` は §4.2.3 の f(d) を魔物1体ずつに。`R.Party.award` が share（1 / 0.6）をかける。
 - `R.Mon.curve(L)` → `{hp, atk, mag, def, mdef, agi, exp, gold}`。`R.Mon.def(id, {tier, golden})` は §4.14.2 の伸縮と §4.10.2 の金色。キャッシュのキーは (id, Lb, golden)。
 - `R.Glimmer.roll(c, ctx)`: ctx の形は§7.10（`used`・`stone`・`rankB`・`ef`・`tier`・`kind`・`wtype`・`elements`）＋ `row`（その時の `effectiveRow`）・`silenced`（沈黙か）。`R.Glimmer.candidates(c, ctx)` は `row === 'middle'` なら `reach:false` の技を、`silenced` なら `magic:true` の技と術を外す（§6.0 の 0.16）。
 - `R.Battle.Engine`: `this.lv`（Lb）、`this.tier`（Tb）、`this.rankB`、`this.ef` を開始時に決める。DK はこの `this.lv` から。
-- `R.Battle.start` に `glimmerForce:'hero'`（§4.9.6）と `lvOff`（マップの `lvOff`。§3.3.8）を足す。
+- `R.Battle.start` に `glimmerForce:'hero'`（§3.3.7・§4.9.6）・`members`（§3.3.8）と `lvOff`（マップの `lvOff`。§3.3.8）を足す。
 
 #### 4.18.3 validate に足す検査（担当 qa）
 - 能力値の範囲（§4.2.1）、得手不得手の合計（§4.2.1）、装備の単位数（§4.3.3、レア ×2・超レア ×3 と一致）、W/D の表どおりか（±10%）。
@@ -2093,7 +2197,7 @@ hpBoss:(L) => hp(L) × (0.65 + 0.05 × clamp((L−6)/6, 0, 10))
 - 手・足・アクセサリは、誰も持たずに始まる（最初の町で買う）。
 
 #### 5.1.5 個性（innate）で使う mods のキー
-`statusResist statusImmune goldPct noFloorDamage preemptPct encounterPct stealPct autoSteal escapePct goldenPct superPct dropPct expPct rareEncPct itemPct rarePct`（増やす系の個性はどれも +10。§8.0 の 0.17・§4.0 の 0.17 で編集が下げた）
+`statusResist statusImmune goldPct noFloorDamage preemptPct encounterPct stealPct autoSteal escapePct goldenPct superPct dropPct expPct rareEncPct itemPct rarePct`。値は §5.3.4 の表が正（第 2 版で文を表に合わせた）: お金・ドロップ・出会い・経験値の系（`goldPct dropPct rarePct superPct goldenPct rareEncPct expPct`）は **+10**（§8.0 の 0.17・§4.0 の 0.17 で編集が下げた）、`preemptPct` +5、`escapePct` +25、`encounterPct` ±25、`itemPct` +25、`stealPct` +50 と `autoSteal` 100（ティッタ）。
 （すべて§3.3.16 にあるキー。新しいキーは作らない）
 
 ### 5.2 主人公の作成
@@ -3234,7 +3338,7 @@ newChar({id:companionId, level?}):
 | `healMp` | `pct` | 相手の最大 MP × pct（切り上げ、最低 1）。MNDF はかけない |
 | `cure` | `statuses:[…]` | その状態を治す |
 | `steal` | — | 盗む（§4.10.1 の式。1 体 1 回。超レアは盗めない） |
-| `dispel` | `side:'good'` | §7.3.3 の定義: 相手の正の段階をすべて 0 にし、良い状態（再生・加護・反撃の構え・身軽）を消す。負の段階（味方がかけた弱体）は残す |
+| `dispel` | `side:'good'` | §7.3.3 の定義: 相手の正の段階をすべて 0 にし、良い状態（再生・加護・反撃の構え・身軽・かばう）を消す。負の段階（味方がかけた弱体）は残す |
 
 #### 6.2.4 技のための規則（battle が実装する）
 **A. 反撃の構え（`status:'counter'`）**
@@ -4621,7 +4725,7 @@ newChar({id:companionId, level?}):
 | 0.1 | 術は **77 個**: 単属性 27（火・光・闇は 1〜5段の 5 個、水・風・土は 1・2・3・5段の 4 個＝**4段が無い**）、2属性の合成 30（15組 × 合成A・合成B）、3属性の合成 20（20組 × 1）。 | Part A・B の目安どおり。光（回復・蘇生・加護）と闇（吸収・弱体・眠り・即死）は役目が多く、火は「一番高いダメージ」の段を細かく刻みたい。水・風・土の抜けた4段の時期（ティア4〜5）は合成Aが埋める。 |
 | 0.2 | **id の規則**: 単属性 `s_<属性>_<段>`（例 `s_fire_1` `s_water_5`）、2属性 `s_<属性1>_<属性2>_<a\|b>`（例 `s_water_wind_a`）、3属性 `s_<属性1>_<属性2>_<属性3>`（例 `s_fire_light_dark`）。属性は正式な並び順（fire water wind earth light dark）。 | キャラ章が固定した `s_fire_1` などと同じ形。§3.1.1 の組の id（`fire_wind`）と同じ並びなので、**属性の組から id を機械的に作れる**（検証・閃き・術の書が名前の表を引かずに済む）。依頼文の `s_<e1><e2>_<name>` の形からは変えた。 |
 | 0.3 | 威力の式は§4.6.2（**術力 × SP**）をそのまま使う。依頼文の「power + 術力 × scale」は、**足し算の部分 = 0、scale = SP** と読み替える。データでは `power` に SP を書き、`scale` は使わない（書いたら validate のエラー）。 | 知力は術力（×(64+知力)/64）を通して一度だけ効かせる。こうすると§4.3.7 の「知力を超レアで固めると 2.55 倍」が、どの術・どのティアでも同じに成り立つ。 |
-| 0.4 | SP は§4.6.6 の目安に合わせる。**火の「ダメージだけの術」は目安の 1.1 倍**（火の性格＝一番高いダメージ）。ほかの属性は追加効果で個性を出し、追加効果の分だけ SP を 0.85〜0.95 倍にする（単属性だけ。合成術は割り引かない＝ご褒美）。3属性のうち**大技 4 つ**（百雷・星降らし・皆既日食・冥府返し）は目安より強く、MP は上限の 24。 | 「全身を知力で固めた術師」の手応え（§7.4.2・§7.11.2）。大技は高いので、MP の管理とボス戦での使いどころが生まれる。 |
+| 0.4 | SP は§4.6.6 の目安に合わせる。**火の「ダメージだけの術」は目安の 1.1 倍**（火の性格＝一番高いダメージ）。ほかの属性は追加効果で個性を出し、追加効果の分だけ SP を 0.85〜0.95 倍にする（単属性だけ。合成術は割り引かない＝ご褒美）。3属性のうち**大技 4 つ**（百雷・星降らし・皆既日食・冥府返し）は目安より強く、MP は 3 属性の上限の 20（§7.1.3・§7.5。第 2 版で 24 を直した）。 | 「全身を知力で固めた術師」の手応え（§7.4.2・§7.11.2）。大技は高いので、MP の管理とボス戦での使いどころが生まれる。 |
 | 0.5 | MP は§4.9.3 の目安の範囲に入れる（例外なし。§7.5）。編集で上位の術の MP を約 15% 下げた（§7.1.3）。 | 雑魚戦の MP 使用（§4.17 A3）と釣り合う。Part A2「上位の術は少し安く」（批評 3）。 |
 | 0.6 | 良い状態 **`nimble` 身軽**（物理の回避 +25、3手番）を足す（`statuses.js` はこの章の担当）。 | 風の「回避」は強化の段階（atk def mag mdef agi）では表せない。回避を上げる手段が他に無いと、風の補助が素早さだけになる。 |
 | 0.7 | 効果の形に足すもの: `dispel` の `side`、効果の `on:'allies'`（相手を撃ちつつ味方を強化）、対象 `party`（倒れた人も含む全員）、行動の `quick`（術にも使う）・`noAuto`・`fieldEffects`、`fx` の配列。定義は §7.3.4。 | 合成術に「両方の属性の性質」を持たせるのに必要な最小限。 |
@@ -4745,6 +4849,7 @@ newChar({id:companionId, level?}):
 | `self` | 自分 | 1 |
 | `ally_dead` | 倒れた味方1人（選ぶ） | 2 |
 | `party` **（追加）** | 味方全員（**倒れた人も**）。効果ごとに、効く人にだけ効く（`revive` は倒れた人だけ、ほかは生きている人だけ） | 1 |
+| `ally_any` | 味方 1 人を、**生きている人と倒れた人のどちらからでも**選ぶ。効果ごとに効く人にだけ効く（`revive` は倒れた人、ほかは生きている人）。リピート・オートで前の相手がいなければ自分（エンジンの `repeatTarget` のまま） | 0（術では使わない。エンジンと道具のため） |
 - 相手1体・グループ・全員の区別はクレストと同じ。`group` は術では使わない。
 
 #### 7.3.3 効果 `effects[]`（術が使う型。§4.6・§4.8 の式で動く）
@@ -4778,7 +4883,7 @@ newChar({id:companionId, level?}):
 - 実行する効果: `fieldEffects` があればそれ、無ければ `effects` のうち **`heal revive healWp cure`** だけ（ほかは読み飛ばす）。1つも効かなければ「使っても効果がない。」と出して MP を使わない。
 - 対象の選び方: `ally` → 生きている人から選ぶ、`ally_dead` → 倒れた人から選ぶ（いなければ使えない）、`allies`・`party`・`self` → 選ばない。`fieldEffects` が `encounter` だけなら選ばない。
 - 回復量はメニューも `R.Mon.healAmount` で計算する（§3.3.6）。
-- `encounter` のメッセージ: pct < 0「魔物の気配が遠のいた。」、pct > 0「魔物の気配が近づいてきた……。」。効果が切れたとき（field が出す）「術の効き目が切れた。」。
+- `encounter` のメッセージ（**文は STYLE_JA §9 が正**）: pct < 0「魔物の気配が遠のいた。」、pct > 0「魔物の気配が近づいてきた……。」。効果が切れたとき（field が出す）「〈術名〉の効き目が切れた。」（道具なら「〈品名〉の効果が切れた。」）。
 
 #### 7.3.6 戦闘のメッセージ（battle。クレストの形を使う）
 - 唱えたとき「{name}は{術名}を唱えた！」。沈黙中は選べない（`unusable → 'silence'`）。
@@ -4957,7 +5062,7 @@ newChar({id:companionId, level?}):
 | `s_wind_earth_b` | 峰の守り | 風＋土 | 合成B | 6 / 7 | 10 | 味方全員 | 守備力+1、素早さ+1 | — | 全員の守備力と素早さを上げる。 |
 | `s_wind_light_a` | 澄みきった心 | 風＋光 | 合成A | 4 / 5 | 8 | 自分 | 術力+2、加護 | — | 心を澄ませ、術力を上げて加護を得る。 |
 | `s_wind_light_b` | 光の薄衣 | 風＋光 | 合成B | 6 / 7 | 12 | 味方全員 | 回復35%、身軽 | ○ | 全員を回復し、身軽にする。 |
-| `s_wind_dark_a` | 影隠れ | 風＋闇 | 合成A | 4 / 5 | 8 | 味方全員 | 身軽 | 魔除け（弱い魔物だけ −100%・100歩） | 全員を身軽にする。外では弱い魔物を避ける。 |
+| `s_wind_dark_a` | 影隠れ | 風＋闇 | 合成A | 4 / 5 | 8 | 味方全員 | 身軽 | 魔除け（弱い魔物だけ −100%・100歩） | 全員を身軽に。外では弱い魔物を避ける。 |
 | `s_wind_dark_b` | 惑いの夜嵐 | 風＋闇 | 合成B | 6 / 7 | 13 | 敵全体 | ダメージ SP1.8、混乱40% | — | 夜の嵐で、敵全体を惑わせる。 |
 | `s_earth_light_a` | 不屈の光 | 土＋光 | 合成A | 4 / 5 | 9 | 倒れた1人 | 蘇生50%、守備力+1 | ○ | 1人を生き返らせ、守備力を上げる。 |
 | `s_earth_light_b` | 大地の加護 | 土＋光 | 合成B | 6 / 7 | 12 | 味方全員 | 加護、守備力+1 | — | 全員に加護を与え、守備力を上げる。 |
@@ -5190,7 +5295,7 @@ newChar({id:companionId, level?}):
       '全員を回復し、身軽にする。', { field: true }),
     s_wind_dark_a: sp('影隠れ', ['wind', 'dark'], 'A', 8, 'allies',
       [st('nimble')], ['dark1', 'wind1'],
-      '全員を身軽にする。外では弱い魔物を避ける。', { field: true, fieldEffects: [enc(-100, 100, true)] }),
+      '全員を身軽に。外では弱い魔物を避ける。', { field: true, fieldEffects: [enc(-100, 100, true)] }),
     s_wind_dark_b: sp('惑いの夜嵐', ['wind', 'dark'], 'B', 13, 'enemies',
       [dmg(1.8), st('confuse', 0.4)], ['dark2', 'wind2'],
       '夜の嵐で、敵全体を惑わせる。'),
@@ -5467,7 +5572,8 @@ R.Glimmer = {
   learn(c, id) → bool                                              // §3.3.7 のとおり
 }
 ctx = { kind: 'tech' | 'spell', wtype?, elements?: [...], used: actionId | 'attack', stone?: bool,
-        rankB, ef, tier, row: 'front' | 'middle', silenced: bool, rng? }   // row・silenced は候補の除外に使う（§6.0 の 0.16。§3.3.7）                                      // rankB・ef は戦闘の開始時に Engine が決める（§4.9.2）
+        rankB, ef, tier, row: 'front' | 'middle', silenced: bool, force?: bool, rng? }   // row・silenced は候補の除外に使う（§6.0 の 0.16。§3.3.7）
+        // tier = R.Tier.effective()（クリア後は 9。EXPECT[tier] の添え字。戦闘のティア Tb ではない。§3.3.7）。force = glimmerForce で p = 1（§3.3.7）                                      // rankB・ef は戦闘の開始時に Engine が決める（§4.9.2）
 ```
 **術の部分の手順（規則）**
 1. 候補: `DB.actions` のうち `kind === 'spell'` で、§7.1.4 の 1〜5 を満たすもの。5 の「組の合成術を覚えている」は `c.spells` の中に `elements.join('_')` がその組と同じ術があるか、で数える。
@@ -5572,7 +5678,7 @@ glimPct = mods.glimPct の、候補の属性の値の最大 ＋ mods.glimPct.spe
 | 戦闘（battle、A2） | §7.3.3〜7.3.4 の追加: `dispel.side`、効果の `on:'allies'`、対象 `party`、術の `quick`、`percent`（ボス・鋼・レア魔物に無効）、`healWp`、良い状態の `status`（必ずかかる・持続を付け直す）、敵への弱体の成功率（§7.3.3 の `buff`）、`status:'death'`、属性の配列（最大の倍率）。閃いた術に対象が無いときの扱い（§7.0 の 0.12）。状態のメッセージは `DB.statuses[s].on/off`。`BATTLE_EFFECT` の許可の表に `healWp` を足す。 |
 | 戦闘画面（bui、A3） | `fx` の配列を順に出す（§7.3.4-7）。`thunder3`（百雷）・`explosion2`（星降らし）・`gravity`（底なし沼）を使う。状態の印 `軽`（身軽）。閃いたときの術名の大きな表示は 8 字まで。属性の色は `DB.elements[el].color`。 |
 | メニュー（menu、A5） | 術の書は 77 個を `order` の順に、未発見は「？？？」。行に属性の印（1〜3 個）と段（1〜5段・合・三）。フィールドの術の使い方は §7.3.5（`party`・`allies` は選ばない、`encounter` のメッセージ）。 |
-| フィールド（field、A4） | `encounter` 効果: `R.Game.encItem = {id, pct, steps, weakOnly}` を置き換える（§4.11.1）。切れたときの文「術の効き目が切れた。」（香と同じ処理でよい。文は香のときは香の文）。 |
+| フィールド（field、A4） | `encounter` 効果: `R.Game.encItem = {id, pct, steps, weakOnly}` を置き換える（§4.11.1）。切れたときの文は STYLE_JA §9（術「〈術名〉の効き目が切れた。」、香「〈品名〉の効果が切れた。」。同じ処理で名前だけ変える）。 |
 | 装備・道具（gear-a A10a・gear-b A10b） | 魔石 `i_stone_<属性>` 6つ（§4.9.6）。術ビルドの味付けのアクセサリ: `glimPct:{<属性>|spell}`、`profPct:{<属性>}`、`elemBoost`、`mpCostPct`、`mag`、`magicPct`、`healPct`。見破る道具（`scan`）。術を覚える道具は作らない（術は閃きだけ）。MP を回復する道具（§4.15 の MP 30%）。 |
 | 技（techs、A7） | 技の名前に §7.6 の術の名前を使わない。杖の技（`formula:'magic'`）の SP は §7.4.3 の同じ格の値 × 0.9（§4.6.6）。`scan`（見破る）を入れるならこの章の代わりに技で。 |
 | 魔物・ボス（mons・boss、A11・A12） | `s_` を参照しない（§7.0 の 0.13）。耐性の付け方は §7.8.2 の目安。強化を使う魔物を各地方に 1〜2 体。親和の属性の弱点は `DB.elements[el].weakTo`。 |
@@ -6360,7 +6466,7 @@ R.Rules.fillItem = function (it) {
 | 知力 | `sh_sr_blank` → `book_1` かみつき本（1/128）、`w_staff_sr_moon` → `book_2` 呪いの書（1/128）、`w_staff_sr_cosmos` → `book_3` 白紙の書（1/128）、`ac_sr_ink` → `scribe_1` 白衣の書記（1/128）、`hn_sr_words` → `scribe_2` 白衣の写本師（1/128）、`hd_sr_dusk` → `imp_5` 悪魔の軍師（1/128）、`bd_sr_starry` → `ghost_5` 冥界の霊王（1/128）、`ft_sr_cloud` → `frostling_5` 冬将軍（1/128）、`ac_sr_owl` → `owl_4` 賢者フクロウ（1/128） |
 | 器用さ | `w_dagger_sr_moonfang` → `bat_5` コウモリ公（1/128）、`w_whip_sr_silk` → `spider_4` 女郎グモ（1/128）、`hd_sr_heaveneye` → `eyeball_5` 天の大目玉（1/128）、`ft_sr_whirl` → `bee_5` 女王バチ（1/128）、`sh_sr_phantom` → `jelly_5` 虹ゼリー（1/128）、`bd_sr_shadow` → `mummy_5` 王家のミイラ（1/128）、`hn_sr_hundred` → `scorpion_5` 皇帝サソリ（1/128）、`ac_sr_eagle` → `wyvern_3` 嵐飛竜（1/128）、`ac_sr_needle` → `scribe_3` 白衣の司書長（1/128） |
 | 腕力 | `w_sword_sr_hegemon` → `goblin_5` 小鬼の王（1/128）、`w_axe_sr_titan` → `golem_3` 宝玉兵（1/128）、`sh_sr_steadfast` → `armor_4` 黒金の鎧（1/128）、`hd_sr_oni` → `orc_3` 大鬼の頭目（1/128）、`bd_sr_dragonhide` → `salamander_5` 炎帝トカゲ（1/128）、`hn_sr_mighty` → `yeti_3` 大雪男（1/128）、`ft_sr_quake` → `mammoth_3` 大王マンモス（1/128）、`ac_sr_beastheart` → `wolf_5` 氷牙のオオカミ王（1/128）、`ac_sr_bloodoath` → `demon_1` 忘れられた魔兵（1/128） |
-| クセ・クリア後 | `ac_sr_greedy` → `mimic_1` 牙の宝箱（1/128）、`w_greatsword_sr_frenzy` → `orc_1` 荒野の大鬼（1/256）、`ac_sr_scholar` → `darkmage_1` 見習い魔術師（1/256）、`w_dagger_sr_mirror` → `quicksilver_1` 白銀のしずく（1/128）、`ac_sr_glass` → `frostling_2` つらら小僧（1/256）、`ac_sr_firebird` → `skeleton_3` 骸骨の砲手（1/256）、`bd_sr_salamander` → `salamander_3` 溶岩トカゲ（1/256）、`hd_sr_berserk` → `orc_2` 鉄棒の大鬼（1/256）、`w_katana_sr_matsuyoi` → `wolf_4` 月夜オオカミ（1/256）、`ft_sr_ghost` → `ghost_4` 恨み霊（1/256）、`ac_sr_coin` → `mimic_4` 奈落の宝箱（1/128）、`bd_sr_oblivion` → `void_2` 虚無の騎士団長（1/256） |
+| クセ・クリア後 | `ac_sr_greedy` → `mimic_1` 牙の宝箱（1/128）、`w_greatsword_sr_frenzy` → `orc_1` 荒野の大鬼（1/256）、`ac_sr_scholar` → `darkmage_1` 見習い魔術師（1/256）、`w_dagger_sr_mirror` → `quicksilver_1` 白銀ゼリー（1/128）、`ac_sr_glass` → `frostling_2` つらら小僧（1/256）、`ac_sr_firebird` → `skeleton_3` 骸骨の砲手（1/256）、`bd_sr_salamander` → `salamander_3` 溶岩トカゲ（1/256）、`hd_sr_berserk` → `orc_2` 鉄棒の大鬼（1/256）、`w_katana_sr_matsuyoi` → `wolf_4` 月夜オオカミ（1/256）、`ft_sr_ghost` → `ghost_4` 恨み霊（1/256）、`ac_sr_coin` → `mimic_4` 奈落の宝箱（1/128）、`bd_sr_oblivion` → `void_2` 虚無の騎士団長（1/256） |
 | クリア後のボス | `w_sword_sr_echo` → `b_valzard_echo`（1/4）、`ac_sr_ouroboros` → `b_ouroboros`（1/4） |
 
 **知力の一式（T8）**（9品）
@@ -6455,7 +6561,7 @@ R.Rules.fillItem = function (it) {
 | `rm_gold_idol` 黄金の守護像 | gold | `ac_rl_gold` 守護像のひすい | `goldPct:20` `goldenPct:20` | `ac_rs_gold` 黄金の光輪 | `strPct:15` `goldPct:30` `goldenPct:30` | `expPct:-50` | 手に入るお金が増える。／金色の魔物に出会いやすい。 ‖ 腕力が割合で上がる。お金が増える。／金色に出会いやすい。ただし経験値が減る。 |
 | `rm_treasure_crab` 財宝ヤドカリ | clover | `ac_rl_clover` 海賊の杯 | `dexPct:10` `rarePct:20` | `ac_rs_clover` 財宝の地図 | `rarePct:30` `superPct:30` | `hpPct:-20` | 器用さが割合で上がる。／レアの品を落としやすい。 ‖ レアをよく落とす。超レアをよく落とす。／ただし最大HPが下がる。 |
 | `rm_bookworm` 本の虫 | sage | `ac_rl_sage` 本の虫の眼鏡 | `intPct:10` `expPct:15` | —（§8.7.2 の `ac_sr_scholar_monocle`） | — | — | 知力が割合で上がる。経験値が増える。 |
-| `rm_diamond_lizard` 金剛トカゲ | iron | `ac_rl_iron` 金剛のうろこ | `vitPct:10` `statusImmune:['stun']` | `ac_rs_iron` 金剛トカゲの心臓石 | `vitPct:15` `strPct:15` `defPct:25` | `spd:-30` | 体力が割合で上がる。気絶が効かない。 ‖ 体力と腕力が割合で上がる。／守備力が上がる。ただし動きが遅くなる。 |
+| `rm_diamond_lizard` 金剛トカゲ | iron | `ac_rl_iron` 金剛トカゲのうろこ | `vitPct:10` `statusImmune:['stun']` | `ac_rs_iron` 金剛トカゲの心臓石 | `vitPct:15` `strPct:15` `defPct:25` | `spd:-30` | 体力が割合で上がる。気絶が効かない。 ‖ 体力と腕力が割合で上がる。／守備力が上がる。ただし動きが遅くなる。 |
 | `rm_memory_fish` 記憶の金魚 | spirit | `ac_rl_spirit` 金魚のうろこ | `mndPct:10` `statusImmune:['death']` | —（§8.7.2 の `sh_sr_memory_bowl`） | — | — | 精神が割合で上がる。即死が効かない。 |
 | `rm_spa_monkey` 湯けむり猿 | beast | `ac_rl_beast` 湯けむりの手ぬぐい | `strPct:10` `physPct:15` | `ac_rs_beast` 猿の湯おけ | `strPct:15` `agiPct:15` `physPct:25` | `mdefPct:-50` | 腕力が割合で上がる。／物理攻撃の威力が上がる。 ‖ 腕力と素早さが上がる。物理が強くなる。／ただし術防が下がる。 |
 | `rm_jewel_hare` 宝石ウサギ | bird | `ac_rl_bird` 宝石ウサギのお守り | `agiPct:10` `escapePct:50` | `ac_rs_bird` うさぎの月長石 | `agiPct:15` `dexPct:15` `spd:30` | `elemResist:{wind:1.5}` | 素早さが割合で上がる。逃げやすくなる。 ‖ 素早さと器用さが割合で上がる。／すばやく動ける。ただし風に弱くなる。 |
@@ -6500,6 +6606,7 @@ R.Rules.fillItem = function (it) {
 - 値段はティアで変わらない（§4.15）。「入手」の「店 Tn」は、道具屋の品ぞろえに加わるティア（§8.11.2）。
 - `formula:'tier'` のダメージは§4.6.3。魔石は `stone:'<属性>'` を持ち、使うとその属性の熟練度 +1 と術の閃きの判定をする（§4.9.6。**使っても減る**。閃いたときだけ減らない）。オートでは使わない。
 - 治療の道具はフィールドでは使えない（状態は戦闘の終わりに消える。§7.0 の 0.9）。
+- **`grade` と `src`**（第 2 版で決めた）: 下の表で入手が「店」の 29 品は `grade:'normal', src:'shop'`。**`i_lifedew` `i_grace` `i_phoenix` `i_seed_hp` `i_seed_mp` `i_seed_wp` の 6 品は `grade:'rare', src:'drop'`**（店に置かない。宝箱のプール・ボスの `bonus`・魔物の通常枠で手に入る。名前に★）。§8.9.2 の 23 品は `grade:'rare', src:'relic'`。道具の `src:'drop'` は魔物の枠に置いてよい（「帯のレア品を魔物の枠に置かない」検査 §8.14.2-3・V9 は装備だけに当てる）。
 | id | 名前 | 値段 | 入手 | target | effects | fx | 戦闘 | フィールド | 説明 |
 |---|---|---|---|---|---|---|---|---|---|
 | `i_salve` | 傷薬 | 20 | 店 T0 | ally | `{type:'heal',pct:0.35}` | heal | ○ | ○ | 味方1人のHPを／最大値の35%回復する。 |
@@ -6531,13 +6638,13 @@ R.Rules.fillItem = function (it) {
 | `i_stone_earth` | 土の魔石 | 30 | 店 T0 | enemy | `{type:'damage',formula:'tier',power:1.2,element:'earth'}` | earth | ○ | × | 敵1体に土のダメージ。／土の術を覚える入口になる。 |
 | `i_stone_light` | 光の魔石 | 30 | 店 T0 | enemy | `{type:'damage',formula:'tier',power:1.2,element:'light'}` | holy | ○ | × | 敵1体に光のダメージ。／光の術を覚える入口になる。 |
 | `i_stone_dark` | 闇の魔石 | 30 | 店 T0 | enemy | `{type:'damage',formula:'tier',power:1.2,element:'dark'}` | dark | ○ | × | 敵1体に闇のダメージ。／闇の術を覚える入口になる。 |
-| `i_lifedew` | 命のしずく | 600 | レア枠・宝箱 | ally | `{type:'heal',pct:1}` `{type:'healMp',pct:1}` `{type:'healWp',pct:1}` | heal | ○ | ○ | 味方1人のHP・MP・WPを／すべて回復する。 |
-| `i_grace` | 天の恵み | 900 | レア枠・宝箱 | allies | `{type:'heal',pct:1}` `{type:'cure',statuses:'all'}` | heal3 | ○ | ○ | 味方全員のHPをすべて回復し、／悪い状態を治す。 |
-| `i_phoenix` | よみがえりの花 | 600 | レア枠・宝箱 | ally_dead | `{type:'revive',pct:1}` | revive | ○ | ○ | 倒れた味方1人を／HPすべてで生き返らせる。 |
+| `i_lifedew` | 命のしずく | 600 | 宝箱 `p_rare`（T4〜）・`p_supply`（T6〜） | ally | `{type:'heal',pct:1}` `{type:'healMp',pct:1}` `{type:'healWp',pct:1}` | heal | ○ | ○ | 味方1人のHP・MP・WPを／すべて回復する。 |
+| `i_grace` | 天の恵み | 900 | 宝箱 `p_rare`（T4〜） | allies | `{type:'heal',pct:1}` `{type:'cure',statuses:'all'}` | heal3 | ○ | ○ | 味方全員のHPをすべて回復し、／悪い状態を治す。 |
+| `i_phoenix` | よみがえりの花 | 600 | 魔物の通常枠（7 種。§9.12.3）・宝箱 `p_rare`（T4〜） | ally_dead | `{type:'revive',pct:1}` | revive | ○ | ○ | 倒れた味方1人を／HPすべてで生き返らせる。 |
 | `i_seed_hp` | 活力の実 | 0 | ボスの `bonus`・宝箱 `p_rare` | ally | `{type:'grow',stat:'hp',n:10}` | heal | × | ○ | 食べると最大HPが／10増える。 |
 | `i_seed_mp` | 魔力の実 | 0 | ボスの `bonus`・宝箱 `p_rare` | ally | `{type:'grow',stat:'mp',n:2}` | mp | × | ○ | 食べると最大MPが／2増える。 |
 | `i_seed_wp` | 気力の実 | 0 | ボスの `bonus`・宝箱 `p_rare` | ally | `{type:'grow',stat:'wp',n:2}` | mp | × | ○ | 食べると最大WPが／2増える。 |
-- `encounter` の効果は `R.Game.encItem = {id, pct, steps, weakOnly}` に入る（前の香・術は置き換わる。§4.11.1）。`weakOnly` のときは、**生きている味方の平均レベル ≥ Lb(ゾーン, マップ) + 3 のゾーンの戦闘だけ**を起こさない（Lb = LZ(Tb) ＋ `map.lvOff ?? zone.lvOff`）。歩数は歩いた距離（1 マス = 1 歩、半歩 0.5）。
+- `encounter` の効果は `R.Game.encItem = {id, pct, steps, weakOnly}` に入る（前の香・術は置き換わる。§4.11.1）。`weakOnly` のときは、**生きている味方の平均レベル ≥ Lb(ゾーン, マップ) + 3 のゾーンの戦闘だけ**を起こさない（Lb = LZ(Tb) ＋ `map.lvOff ?? zone.lvOff`）。歩数は歩いた距離（1 マス = 1 歩）。
 - 最初の持ち物: `DB.config.startItems` は空（§10.13.11）。ベルナが序章 P2 で `i_salve` ×3 と 50 ゴールドを渡す（ワールド担当）。
 
 #### 8.9.2 レア魔物の道具（23。`type:'consumable'`、`grade:'rare'`、`src:'relic'`。そのレア魔物の通常枠 1/2 だけで手に入る。§9.12.7）
@@ -6606,7 +6713,7 @@ R.Rules.fillItem = function (it) {
 #### 8.11.2 店の一覧
 | 店 id | 名前 | 売る物 |
 |---|---|---|
-| `roa_item` | ロアの道具屋 | 固定: 傷薬・解毒薬・澄み目のしずく・目覚まし草・気つけの羽根・魔除けの香 |
+| `roa_item` | ロアの道具屋 | 固定: 傷薬・解毒薬・澄み目のしずく・目覚まし草・気つけの羽根・魔除けの香（`stock:[]`、`keepOld:true`。段は無く、いつもこの 6 品だけ） |
 | `<町>_item`（`lute fern kasim yule loch coral nerei dovan caldera orbis biblia`） | 〇〇の道具屋（ネレイは雑貨屋） | 共通の 4 段。T0: 傷薬・気つけの羽根・解毒薬・澄み目のしずく・目覚まし草・魔除けの香・煙玉・火炎つぼ・魔石 6・毒/暗闇/眠りよけ。T1: 癒やしの水・魔力の水・気力の茶・しびれ消し・澄み声のあめ・誘い寄せの香・見破りの鏡・まひ/沈黙/混乱/気絶よけ・静寂の鈴・呼び声の笛・逃げ足の羽根・見張りの角笛・すりの小袋。T2: 癒やしの香炉・癒やしのぬり薬・はじけ玉・勇みの角笛・守りの香・凍結/やけどよけ・命の守り・浮遊の羽根・早業の指輪。T3: 癒やしの霊水・魔力の霊水・清めの霊薬 |
 | `lute_item` | ファロスの道具屋 | 共通 ＋ T2: 守り石 6・目利きの片眼鏡・四つ葉の押し花・商人の銭入れ・薬師の小瓶・癒やし手の香袋、T3: 学びの帯 |
 | `biblia_item` | ビブリアの道具屋 | 共通 ＋ 守り石 6・精霊石 6・閃き 2・砂時計 2・片眼鏡・押し花・銭入れ・学びの帯・小瓶・香袋 |
@@ -6667,7 +6774,7 @@ R.Rules.fillItem = function (it) {
   };
   const I = (name, extra = []) => ({ name, kind: 'item', keepOld: true, stock: [...ITEM_STEPS, ...extra] });
   const SHOPS = {
-    roa_item: { name: 'ロアの道具屋', kind: 'item', items: ['i_salve', 'i_antidote', 'i_clear', 'i_waker', 'i_revive', 'i_repel'] },
+    roa_item: { name: 'ロアの道具屋', kind: 'item', keepOld: true, stock: [], items: ['i_salve', 'i_antidote', 'i_clear', 'i_waker', 'i_revive', 'i_repel'] },
     lute_item: I('ファロスの道具屋', [{ tier: 2, items: [...GUARDS, 'ac_loupe', 'ac_clover', 'ac_purse', 'ac_vial', 'ac_sachet'] }, { tier: 3, items: ['ac_sash'] }]),
     lute_weapon: W('ファロスの武器屋', ALLW, { extra: BADGES, post9: true }),
     lute_armor: A('ファロスの防具屋', ['heavy', 'light', 'cloth'], ['str', 'vit', 'dex', 'agi', 'int', 'mnd'], { post9: true }),
@@ -6857,14 +6964,14 @@ R.Rules.fillItem = function (it) {
 #### 8.14.2 validate（qa）に足す検査
 1. 超レア（`src:'super'`）: **ちょうど 1 種類の魔物**の `drops.super` にあり、`exclusive` がその魔物。品の tier = `srTier(魔物)`（§8.6.1）。店・プール・盗み・報酬・宝箱に無い。
 2. 出現表に出る魔物（鋼を含む）211 種が、どれも超レアを 1 つ持つ。レア魔物 23 種が遺物を持つ（レア枠。超レア枠は遺物か §8.7.2 の品。通常枠は §8.9.2 のその種の道具）。遺物の鍵が重ならない。割り当てていない遺物が無い。
-3. 魔物のレア品（`src:'mdrop'`）は魔物のレア枠だけに、3 種類まで。品の tier が `band(srTier(魔物))`（§8.6.1-3）。帯のレア品（`src:'drop'`）は魔物の枠に無い。
+3. 魔物のレア品（`src:'mdrop'`）は魔物のレア枠だけに、3 種類まで。品の tier が `band(srTier(魔物))`（§8.6.1-3）。帯のレア品（`src:'drop'` の**装備**）は魔物の枠に無い（`src:'drop'` の道具 6 品は §8.9 のとおり魔物の通常枠に置いてよい）。
 4. 店: 34 店の id がそろう。品がすべて存在し、`src:'shop'` の装備か道具だけ。
 5. プール: 10 個、各 10 段、空の段なし、品が存在する、超レア・遺物・報酬・魔物のレア品を含まない。宝箱の `pool` が存在する。
 6. ボスの `drops` は §8.12.3 の形（`bonus` を含む）。`{pool}` の枠のプールが存在する。
-9. 店・プール・道具・大事なもの（gear-b の分）の検査もここで行う（`test_gear.js` は防具・アクセサリだけ）。
-10. 表示名の重なり: 品・魔物・技・術・敵の行動の名前が、たがいに同じでない（批評 49）。
 7. 報酬: §8.8 のイベントが `ev.give` で渡す（イベントの `meta.gives` に `item:<id>`）。
 8. すべての品がどこかで手に入る（店・プール・魔物・イベントのどれか）。
+9. 店・プール・道具・大事なもの（gear-b の分）の検査もここで行う（`test_gear.js` は防具・アクセサリだけ）。
+10. 表示名の重なり: 品・魔物・技・術・敵の行動の名前が、たがいに同じでない（批評 49）。
 
 #### 8.14.3 使ってはいけない名前（**STYLE_JA §7 に移した**）
 - §6.9.3 とこの節の旧案の一覧は、編集で 1 つにまとめて STYLE_JA §7 に置いた（部分一致の固有名と、完全一致の品名の 2 つ。当てる範囲は技・術・敵の行動・品・魔物の名前。批評 11・48）。`check_text.js` はその一覧を読む。
@@ -6909,7 +7016,7 @@ R.Rules.fillItem = function (it) {
 
 | # | 決定 | 理由 |
 |---|---|---|
-| 0.1 | **54 系統・雑魚 211 種**（鋼の魔物 6 種を含む。編集で虚無の騎士・混沌獣に 3 段目を足した）、**レア魔物 23 種**、**ボス 26 編成・34 体**（お供を含む）。魔物の定義は計 268。 | Part A「200種前後、レア20以上、ボス20〜30」。系統の段は 3〜5。**例外は鋼の 3 系統（2 段ずつ）**: 鋼はめったに出ない稼ぎ枠で、段を増やすと出会う回数が割れて、どの段にも出会えなくなるため（Part A の「3〜5段」の例外として明記する）。 |
+| 0.1 | **54 系統・雑魚 211 種**（鋼の魔物 6 種を含む。編集で虚無の騎士・混沌獣に 3 段目を足した）、**レア魔物 23 種**、**ボス 26 編成・34 体**（お供を含む）。魔物の定義は計 268。 | Part A「200種前後、レア20以上、ボス20〜30」。系統の段は 3〜5。**鋼の 3 系統（2 段ずつ）は独立の系統にせず、元の絵の系統の分岐**（`family`）にした（第 2 版。§9.9）: 白銀ゼリーはゼリー、鏡カブトはカブト、白金の鬼火は鬼火の系統に入り、その系統は 4〜5 段 ＋ 鋼の分岐 2 段になる（DQ の「スライム → スライムベス → メタルスライム」と同じく、元の絵の系統の中に鋼がいる）。鋼の枝を 2 段のままにするのは、めったに出ない枠で段を増やすと、どの段にも出会えなくなるため。 |
 | 0.2 | 段の出始めのティア（`DB.lineages[*].stages[].tier`）は **5段 [0,2,4,6,8] / 4段 [0,2,4,6] / 3段 [0,3,6]**（§4.14.1 の目安どおり）。虚ろの使いは [2,4,6,8]、鋼は [2,6] [5,7] [8,9]、終盤の系統は [8,…]、裏の系統は [9,…]。 | **第5段はティア8（8地方をすべてクリアしたあと）でしか出ない**。終盤とクリア後に中盤の地方へ戻ると、見たことのない上位種が現れる（図鑑を埋める理由になる）。 |
 | 0.3 | 雑魚の出現表は `'@<系統>'` で書く（§1.0 の 0.4）。**固定ティアのゾーン（序章・終盤・裏）だけは段の id を直接書く**。 | 固定ティアでは `@` が常に同じ段になり、下の段を混ぜられないため。 |
 | 0.4 | 魔物データは **名目のレベル `lv`・大きさ `size`・能力の倍率 `s`・報酬の倍率 `rw`** を持ち、`hp atk …` の絶対値は **`R.Mon.fillStats` が `R.onData` で埋める**（§9.1.2）。絶対値を直接書いた項目はそのまま使う。§4.14.2 の「データが絶対値を持つ」を変更。 | 曲線の式は `R.Rules.K`（rules.js）の1か所にしかない。データのファイルは読み込み時に他のファイルを読めない（§1.2-2）ので、式を各ファイルに写すと食い違う。onData なら式が1つで済む。 |
@@ -7032,11 +7139,13 @@ Object.assign(R.DB.lineages, {
   void: { name: '虚無の騎士', stages: [{ mon: 'void_1', tier: 9 }, { mon: 'void_2', tier: 9 }, { mon: 'void_3', tier: 9 }] },
   chaos: { name: '混沌獣', stages: [{ mon: 'chaos_1', tier: 9 }, { mon: 'chaos_2', tier: 9 }, { mon: 'chaos_3', tier: 9 }] },
   demon: { name: '魔神', stages: [{ mon: 'demon_1', tier: 8 }, { mon: 'demon_2', tier: 9 }, { mon: 'demon_3', tier: 9 }] },
-  quicksilver: { name: '白銀のしずく', stages: [{ mon: 'quicksilver_1', tier: 2 }, { mon: 'quicksilver_2', tier: 6 }] },
-  mirror: { name: '鏡の甲虫', stages: [{ mon: 'mirror_1', tier: 5 }, { mon: 'mirror_2', tier: 7 }] },
-  platinum: { name: '白金の灯', stages: [{ mon: 'platinum_1', tier: 8 }, { mon: 'platinum_2', tier: 9 }] },
+  // 鋼の分岐（family = 元の系統。図鑑では元の系統の直後に並ぶ。出現表は '@quicksilver' などで引く）
+  quicksilver: { name: '白銀ゼリー', family: 'jelly', stages: [{ mon: 'quicksilver_1', tier: 2 }, { mon: 'quicksilver_2', tier: 6 }] },
+  mirror: { name: '鏡カブト', family: 'beetle', stages: [{ mon: 'mirror_1', tier: 5 }, { mon: 'mirror_2', tier: 7 }] },
+  platinum: { name: '白金の鬼火', family: 'wisp', stages: [{ mon: 'platinum_1', tier: 8 }, { mon: 'platinum_2', tier: 9 }] },
 });
 ```
+- `family`（第 2 版で足した項目）: その系統が、どの系統の分岐か。`family` のある系統は 2 段でよい（元の系統が 3〜5 段を持つ）。`family` の無い系統は 3〜5 段（validate V8）。図鑑の並び・`R.Menu` の系統の表示は `family` の系統の直後に置く。
 - `R.Mon.resolve('@<系統>', T)` は、`tier ≤ T` の段のうち最後のもの。どの段も当てはまらなければ `null`（その組は出さない）。
 
 #### 9.1.4 `R.DB.encounters[zone]` と `R.DB.rareEncounters[zone]`（担当 A11・A12）
@@ -7126,7 +7235,7 @@ troops[id] = { mons: [[monId | '@系統', n], …],   // 左から並べる順
 - **ボスの状態の耐性**は、表の値と§4.8.3 の「ボスの既定の耐性」の大きい方を使う（battle が実行時にかける。表にはボス固有の分だけ書いた）。
 
 #### 9.3.2 片寄りの検査（§4.7.3・§4.17.3-I。検算の結果）
-弱点（1.5 以上）をもつものの割合。雑魚 203 種（鋼を除く）と、段の半分以上がその弱点をもつ系統（51 系統）で数えた。
+弱点（1.5 以上）をもつものの割合。雑魚 205 種（鋼の 6 種を除く）と、段の半分以上がその弱点をもつ系統（51 系統）で数えた。
 | 属性 | 火 | 水 | 風 | 土 | 光 | 闇 |
 |---|---|---|---|---|---|---|
 | 種の割合 | 23.2% | 14.8% | 24.1% | 16.3% | 23.6% | 15.3% |
@@ -7144,7 +7253,7 @@ troops[id] = { mons: [[monId | '@系統', n], …],   // 左から並べる順
 #### 9.4.1 既存の元絵（36。クレストの `src/art/monsters_a.js` `monsters_b.js`、そのまま使う）
 | 大きさ | 元絵 → 使う系統 |
 |---|---|
-| 小 32 | `jelly`→ゼリー・白銀のしずく　`bat`→コウモリ　`rat`→ネズミ　`mushroom`→キノコ　`bee`→ハチ　`wisp`→鬼火・白金の灯　`imp`→悪魔・白紙の小鬼　`mimic`→宝箱　`eyeball`→目玉 |
+| 小 32 | `jelly`→ゼリー・白銀ゼリー　`bat`→コウモリ　`rat`→ネズミ　`mushroom`→キノコ　`bee`→ハチ　`wisp`→鬼火・白金の鬼火　`imp`→悪魔・白紙の小鬼　`mimic`→宝箱　`eyeball`→目玉 |
 | 中 48 | `goblin`→小鬼　`snake`→ヘビ　`wolf`→オオカミ・白紙の獣　`plant`→人食い花　`skeleton`→骸骨　`ghost`→霊・霧の分身　`lizardman`→トカゲ兵　`scorpion`→サソリ　`mummy`→ミイラ　`crab`→カニ　`merman`→魚人　`darkmage`→魔術師　`armor`→鎧・白紙の騎士　`gargoyle`→石像鬼　`salamander`→火トカゲ　`cactus`→サボテン　`frostling`→氷の小鬼　`harpy`→（予備） |
 | 大 64 | `orc`→大鬼　`golem`→石くれ兵　`wyvern`→飛竜・白紙の竜　`chimera`→三頭獣　`yeti`→雪男　`kraken`→タコ・深みの大ダコ　`demon`→魔神　`sandworm`→ミミズ・岩食らい　`minotaur`→（予備） |
 | 裏 | `void_wraith`（48）→虚無の騎士　`chaos_beast`（64）→混沌獣（クレストの `postgame.js`） |
@@ -7175,8 +7284,8 @@ troops[id] = { mons: [[monId | '@系統', n], …],   // 左から並べる順
 ```js
 R.Art.compose(base, hsb, parts, filter) → canvas        // 例: R.Art.compose('wolf', {hue:20, sat:0.6, bri:1.15}, [['frost', {c:'#e8fcff'}]], null)
 R.Art.MON_ANCHORS[base] = { head, brow, eyes:[[x,y],…], mouth, neck, back, body, hand, hand2, tail, feet }   // 元絵の座標（ピクセル）
-R.Art.MON_COMPOSE[spriteId] = [base, hsb, parts, filter?]   // §9.4.6。onData ではなく読み込み時に登録してよい（データではなく絵の表）
-// 登録: for (const id in MON_COMPOSE) R.Gfx.def('mon:' + id, () => R.Art.compose(...MON_COMPOSE[id]))
+R.Art.MON_COMPOSE[spriteId] = [base, hsb, parts, filter?]   // §9.4.6（雑魚。A14）と §9.11.6（ボス。A15）を足し込んだもの。読み込み時に登録してよい（絵の表）
+// 登録: 各ファイルが自分の表の id だけ R.Gfx.def('mon:' + id, () => R.Art.compose(...表[id]))（§9.4.6 の形）
 ```
 手順（規則）:
 1. `R.Gfx.variant('mon:' + base, {hue, sat, bri})` で元絵を色替えする（`hsb` のキーは `hue`（度）`sat`（倍）`bri`（倍））。
@@ -7251,14 +7360,17 @@ R.Art.MON_COMPOSE[spriteId] = [base, hsb, parts, filter?]   // §9.4.6。onData 
 |---|---|---|
 | `paper` | 虚ろの使い | 明るさを紙の色の段（#f8f6ee → #c8c4b8 → #8a8a98）に置き換え、輪郭を墨の青灰 #5a5a68 にする。輪郭の右と上に、欠けた三角（2〜4px）を 3〜6 か所あける（seed で決める）。体の上に薄い文字の線（1px の点線 #a0a0b0）を 2〜3 本。 |
 | `shade` | 霧の分身・魔王の残影 | 明るさを白と青の段に置き換え、内側を市松の点で半分透かす。輪郭を明るい #a0b0e0 に。 |
-| `chrome` | 白銀のしずく | 明るさを鋼の段（#303848 #6a7890 #b0c0d8 #f0f8ff）に置き換え、斜めの白い光の帯（2px）を1本。 |
-| `mirror` | 鏡の甲虫 | chrome と同じにしたうえで、虹色の帯（色相を 3px で一回り）と、十字の光を 2 つ。 |
-| `platinum` | 白金の灯 | 明るさを白金の段（#6a6048 #c0b890 #f0ecd8 #ffffff）に置き換え、光の点を 3〜4。 |
+| `chrome` | 白銀ゼリー | 明るさを鋼の段（#303848 #6a7890 #b0c0d8 #f0f8ff）に置き換え、斜めの白い光の帯（2px）を1本。 |
+| `mirror` | 鏡カブト | chrome と同じにしたうえで、虹色の帯（色相を 3px で一回り）と、十字の光を 2 つ。 |
+| `platinum` | 白金の鬼火 | 明るさを白金の段（#6a6048 #c0b890 #f0ecd8 #ffffff）に置き換え、光の点を 3〜4。 |
 | `prism` | 虹ゼリー | 明るさを保ったまま、上から下へ色相を 300° 回す（彩度 0.8）。 |
 
-#### 9.4.6 組み立て表 `R.Art.MON_COMPOSE`（normative。雑魚 209 ＋ ボスの組み立て 14）
+#### 9.4.6 組み立て表 `R.Art.MON_COMPOSE`（normative。**雑魚 211**。ボスの組み立て 14 は §9.11.6 の表。第 2 版で分けた）
+- **登録の形（A14・A15 とも同じ。第 2 版で決めた）**: 自分の表を `R.Art.MON_COMPOSE_MOBS`（A14）/ `R.Art.MON_COMPOSE_BOSSES`（A15）に置き、下のコードの形（`R.Art.MON_COMPOSE = R.Art.MON_COMPOSE || {}` に 1 件ずつ入れる。`Object.assign(R.Art.MON_COMPOSE = R.Art.MON_COMPOSE || {}, 自分の表)` と同じ意味で、重なりだけ warn する）で**足し込む**（`R.Art.MON_COMPOSE = {…}` と代入しない。代入すると読み込み順で相手の分が消える。ES2020 までなので `||=` は使わない）。`R.Gfx.def('mon:' + id, …)` も自分の表の id だけを登録する（factory の中で `R.Art.compose` を呼ぶので、読み込み順に頼らない）。
+- **id の重なりはエラー**: `MON_COMPOSE_MOBS` と `MON_COMPOSE_BOSSES` の両方にある id を validate が失敗にする（V8）。足し込むとき、すでにある id を見つけたら `R.warn('MON_COMPOSE: duplicate', id)` を出して上書きしない。
 ```js
-R.Art.MON_COMPOSE = {
+// src/art/monsters_parts.js（担当 A14）— 雑魚 211 の組み立て表（§9.4.3 の形）
+const MOBS = (R.Art.MON_COMPOSE_MOBS = {
   // jelly ゼリー
   jelly_1: ['jelly', {}, []],
   jelly_2: ['jelly', { hue: 170 }, [['bubbles', { c: '#c8f0ff' }]]],
@@ -7515,31 +7627,21 @@ R.Art.MON_COMPOSE = {
   demon_1: ['demon', { sat: 0.6, bri: 0.8 }, []],
   demon_2: ['demon', { hue: 200, sat: 0.8, bri: 0.7 }, [['armor_plates', { c: '#403050' }], ['helm', { c: '#302030', style: 'horned' }], ['sword', { c: '#503060', style: 'great' }]]],
   demon_3: ['demon', { hue: 240, sat: 0.9, bri: 0.65 }, [['crown', { c: '#e0c050', gem: '#ff2040' }], ['eye3', { c: '#ff4040' }], ['aura', { c: '#502070' }]]],
-  // quicksilver 白銀のしずく
+  // quicksilver 白銀ゼリー
   quicksilver_1: ['jelly', {}, [], 'chrome'],
   quicksilver_2: ['jelly', {}, [['tiara', { c: '#e8f0ff' }]], 'chrome'],
-  // mirror 鏡の甲虫
+  // mirror 鏡カブト
   mirror_1: ['beetle', {}, [], 'mirror'],
   mirror_2: ['beetle', {}, [['horns', { c: '#f0f8ff', len: 'l' }]], 'mirror'],
-  // platinum 白金の灯
+  // platinum 白金の鬼火
   platinum_1: ['wisp', {}, [], 'platinum'],
   platinum_2: ['wisp', {}, [['crown', { c: '#fff8e0' }]], 'platinum'],
-  // bosses (owner art-boss A15 registers these with the same R.Art.compose)
-  b_sandworm: ['boss_serpent', { hue: 25, sat: 0.7, bri: 1.05 }, []],
-  b_sandking: ['boss_general_b', { hue: 60, sat: 0.6, bri: 1.1 }, []],
-  b_doll_conductor: ['doll', { sat: 0.4, bri: 0.9 }, [['hat', { c: '#202020', style: 'tophat' }], ['cape', { c: '#202020', c2: '#c02030', style: 'tailcoat' }], ['baton', { c: '#f0f0f0' }]]],
-  b_doll_violin: ['doll', { hue: 330, sat: 0.8 }, [['violin', { c: '#a05020' }], ['ribbon', { c: '#c02040' }]]],
-  b_doll_drum: ['doll', { hue: 200, sat: 0.8 }, [['drum', { c: '#c03030' }], ['hat', { c: '#2040a0', style: 'shako' }]]],
-  b_doll_flute: ['doll', { hue: 90, sat: 0.7 }, [['flute', { c: '#d0c080' }], ['flower', { c: '#ffe080' }]]],
-  b_mist_double: ['ghost', { sat: 0.1, bri: 0.9 }, [['hood', { c: '#8890a0', style: 'witch' }]], 'shade'],
-  b_octopus: ['kraken', { hue: 250, sat: 0.9, bri: 0.8 }, [['coral', { c: '#e08070' }], ['crown', { c: '#c0c0a0', style: 'barnacle' }]]],
-  b_captain: ['boss_bandit', { hue: 170, sat: 0.45, bri: 1.1 }, []],
-  b_rockeater: ['sandworm', { sat: 0.25, bri: 0.8 }, [['armor_plates', { c: '#707078', style: 'rock' }], ['crystals', { c: '#80e0ff' }]]],
-  b_ironwarden: ['boss_general_a', { hue: 15, sat: 0.5, bri: 1.15 }, []],
-  b_lavabeast_cold: ['boss_flame_lord', { sat: 0.35, bri: 0.55 }, []],
-  b_rowell2: ['boss_rowell', { bri: 0.95 }, [['aura', { c: '#ffffff' }]]],
-  b_valzard_echo: ['boss_demon_king', { sat: 0.2, bri: 0.85 }, [], 'shade'],
-};
+});
+for (const id in MOBS) {
+  if (R.Art.MON_COMPOSE && R.Art.MON_COMPOSE[id]) { R.warn('MON_COMPOSE: duplicate', id); continue; }
+  (R.Art.MON_COMPOSE = R.Art.MON_COMPOSE || {})[id] = MOBS[id];
+  R.Gfx.def('mon:' + id, () => R.Art.compose(...MOBS[id]));
+}
 ```
 
 ### 9.5 系統と段（normative。担当 A11 `monsters_<地方>.js`）
@@ -7601,9 +7703,9 @@ R.Art.MON_COMPOSE = {
 | `void` | 虚無の騎士 | void_wraith（m） | 霊体 | 3段 [9,9,9] | z_postgame_oblivion_lo z_postgame_oblivion_hi |
 | `chaos` | 混沌獣 | chaos_beast（l） | 獣 | 3段 [9,9,9] | z_postgame_oblivion_lo z_postgame_oblivion_hi |
 | `demon` | 魔神 | demon（l） | 魔族 | 3段 [8,9,9] | z_finale_archive_hi(1) z_postgame_oblivion_lo(2) z_postgame_oblivion_hi(3) |
-| `quicksilver` | 白銀のしずく | jelly（s） | 軟体・鋼 | 2段 [2,6] | 中盤8地方のワールド（ティア2から、組の重み 2〜3%） |
-| `mirror` | 鏡の甲虫 | beetle（s） | 虫・鋼 | 2段 [5,7] | 中盤8地方のダンジョン（ティア5から） |
-| `platinum` | 白金の灯 | wisp（s） | 霊体・鋼 | 2段 [8,9] | zw_center z_finale_archive_hi z_postgame_oblivion_lo/hi |
+| `quicksilver` | 白銀ゼリー | jelly（s） | 軟体・鋼 | 2段 [2,6]（ゼリーの分岐） | 中盤8地方のワールド（ティア2から、組の重み 2〜3%） |
+| `mirror` | 鏡カブト | beetle（s） | 虫・鋼 | 2段 [5,7]（カブトの分岐） | 中盤8地方のダンジョン（ティア5から） |
+| `platinum` | 白金の鬼火 | wisp（s） | 霊体・鋼 | 2段 [8,9]（鬼火の分岐） | zw_center z_finale_archive_hi z_postgame_oblivion_lo/hi |
 
 - ファイルの分け方（A11）: `monsters_common.js`（jelly rat bat paper crab seabird mimic と鋼の3系統）、`monsters_forest.js` `monsters_desert.js` `monsters_snow.js` `monsters_marsh.js` `monsters_isles.js` `monsters_mine.js` `monsters_ash.js` `monsters_star.js`（その地方の系統。spider は marsh、gargoyle は ash、crystal は mine）、`monsters_finale.js`（scribe book demon）、`monsters_postgame.js`（void chaos）。
 
@@ -8128,29 +8230,29 @@ R.Art.MON_COMPOSE = {
 | `demon_2` | 忘れられた魔将 | T9 / 61 | demon 色相+200 彩.8 明.7 ＋装甲板・かぶと(horned)・剣(great) | 光1.5 闇.25（親和闇） | — | 死.8 | hp1.3 atk1.25 def1.15 | 攻撃3 · e_dark_slash2 · e_sweep2 · e_gloom1 | i_phoenix 1/8<br>ac_void_shard 1/32<br>hd_sr_demon_general 1/256 | 魔王軍の将だった影。<br>三百年たっても剣を振るう。 |
 | `demon_3` | 忘れられた魔神 | T9 / 61 | demon 色相+240 彩.9 明.65 ＋冠・第三の目・オーラ | 光1.5 闇.25（親和闇） | — | 死.8 | hp1.4 atk1.25 mag1.25 | 攻撃2 · e_dark_mist2 · e_inferno_breath1 · e_death_word1 · e_gloom1 · e_dispel1[4手ごと@3] | i_phoenix 1/8<br>w_greatsword_chaoshorn 1/32<br>ac_sr_demon_eye 1/256 | 第三の眼をもつ魔神の影。<br>恐れの記憶だけで動いている。 |
 
-##### `quicksilver` 白銀のしずく（軟体・s・鋼）
+##### `quicksilver` 白銀ゼリー（軟体・s・鋼）
 水銀のようなゼリー。硬く、すぐ逃げるが、経験値とお金が多い。
 
 | id | 名前 | 段T / lv | 絵 | 属性の倍率 | 打撃 | 状態の耐性 | 能力 s | 行動（重み・条件） | 通常 / レア / 超レア | 図鑑の説明 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `quicksilver_1` | 白銀のしずく | T2 / 19 | jelly 〔白銀〕 | 火1.25 | 斬1.25 打.5 | — | agi2.5・鋼 HP固定8 | 攻撃3 · e_water_bolt1 | i_ether 1/4<br>ac_silver_drop 1/16<br>w_dagger_sr_mirror 1/128 | 水銀のように光るゼリー。<br>打っても打ってもびくともしない。 |
-| `quicksilver_2` | 白銀の大しずく | T6 / 43 | jelly ＋小冠 〔白銀〕 | 火1.25 | 斬1.25 打.5 | — | agi2.5・鋼 HP固定10 | 攻撃2 · e_tide1 · e_water_bolt1 | i_ether2 1/4<br>ac_silver_orb 1/16<br>w_whip_sr_quicksilver 1/128 | 白銀のしずくが集まった大玉。<br>出会えたら運がいい。 |
+| `quicksilver_1` | 白銀ゼリー | T2 / 19 | jelly 〔白銀〕 | 火1.25 | 斬1.25 打.5 | — | agi2.5・鋼 HP固定8 | 攻撃3 · e_water_bolt1 | i_ether 1/4<br>ac_silver_drop 1/16<br>w_dagger_sr_mirror 1/128 | 水銀のように光るゼリー。<br>打っても打ってもびくともしない。 |
+| `quicksilver_2` | 白銀の大ゼリー | T6 / 43 | jelly ＋小冠 〔白銀〕 | 火1.25 | 斬1.25 打.5 | — | agi2.5・鋼 HP固定10 | 攻撃2 · e_tide1 · e_water_bolt1 | i_ether2 1/4<br>ac_silver_orb 1/16<br>w_whip_sr_quicksilver 1/128 | 白銀ゼリーが集まった大玉。<br>出会えたら運がいい。 |
 
-##### `mirror` 鏡の甲虫（虫・s・鋼）
-全身が鏡の甲虫。光をはね返して逃げる。
+##### `mirror` 鏡カブト（虫・s・鋼）
+全身が鏡のようなカブト。光をはね返して逃げる。
 
 | id | 名前 | 段T / lv | 絵 | 属性の倍率 | 打撃 | 状態の耐性 | 能力 s | 行動（重み・条件） | 通常 / レア / 超レア | 図鑑の説明 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `mirror_1` | 鏡の甲虫 | T5 / 37 | beetle 〔鏡〕 | 火1.5 | — | 毒.5 | agi2.5・鋼 HP固定8 | 攻撃3 · e_flash1 | i_ether2 1/4<br>ac_mirror_scale 1/16<br>sh_sr_mirror_shell 1/128 | 鏡のような殻をもつ甲虫。<br>まぶしく光ってすぐ逃げる。 |
-| `mirror_2` | 鏡の大甲虫 | T7 / 49 | beetle ＋角 〔鏡〕 | 火1.5 | — | 毒.5 | agi2.5・鋼 HP固定10 | 攻撃2 · e_flash1 · e_light_ray1 | i_elixir 1/4<br>ac_mirror_crest 1/16<br>w_spear_sr_mirrorhorn 1/128 | 鏡の角をもつ大きな甲虫。<br>見た者は自分の顔に驚く。 |
+| `mirror_1` | 鏡カブト | T5 / 37 | beetle 〔鏡〕 | 火1.5 | — | 毒.5 | agi2.5・鋼 HP固定8 | 攻撃3 · e_flash1 | i_ether2 1/4<br>ac_mirror_scale 1/16<br>sh_sr_mirror_shell 1/128 | 鏡のような殻をもつ甲虫。<br>まぶしく光ってすぐ逃げる。 |
+| `mirror_2` | 鏡の大カブト | T7 / 49 | beetle ＋角 〔鏡〕 | 火1.5 | — | 毒.5 | agi2.5・鋼 HP固定10 | 攻撃2 · e_flash1 · e_light_ray1 | i_elixir 1/4<br>ac_mirror_crest 1/16<br>w_spear_sr_mirrorhorn 1/128 | 鏡の角をもつ大きな甲虫。<br>見た者は自分の顔に驚く。 |
 
-##### `platinum` 白金の灯（霊体・s・鋼）
+##### `platinum` 白金の鬼火（霊体・s・鋼）
 白金色に燃える灯。最終地方と裏ダンジョンにだけ現れる。
 
 | id | 名前 | 段T / lv | 絵 | 属性の倍率 | 打撃 | 状態の耐性 | 能力 s | 行動（重み・条件） | 通常 / レア / 超レア | 図鑑の説明 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `platinum_1` | 白金の灯 | T8 / 55 | wisp 〔白金〕 | 光1.5 | 斬.5 打.5 突.5 | 毒1 死1 気1 | agi2.5・鋼 HP固定10 | 攻撃2 · e_light_ray2 · e_fire_bolt1 | i_elixir 1/4<br>ac_platinum_flame 1/16<br>ac_sr_platinum_heart 1/128 | 白金色に燃える小さな灯。<br>見つけたら逃がしたくない。 |
-| `platinum_2` | 白金の大灯 | T9 / 61 | wisp ＋冠 〔白金〕 | 光1.5 | 斬.5 打.5 突.5 | 毒1 死1 気1 | agi2.5・鋼 HP固定12 | 攻撃1 · e_light_ray2 · e_holy_beam1 · e_flash1 | i_phoenix 1/4<br>ac_platinum_crown 1/16<br>w_katana_sr_platinum 1/128 | 冠をいただく白金の大きな灯。<br>忘却の底の宝といわれる。 |
+| `platinum_1` | 白金の鬼火 | T8 / 55 | wisp 〔白金〕 | 光1.5 | 斬.5 打.5 突.5 | 毒1 死1 気1 | agi2.5・鋼 HP固定10 | 攻撃2 · e_light_ray2 · e_fire_bolt1 | i_elixir 1/4<br>ac_platinum_flame 1/16<br>ac_sr_platinum_heart 1/128 | 白金色に燃える小さな灯。<br>見つけたら逃がしたくない。 |
+| `platinum_2` | 白金の大鬼火 | T9 / 61 | wisp ＋冠 〔白金〕 | 光1.5 | 斬.5 打.5 突.5 | 毒1 死1 気1 | agi2.5・鋼 HP固定12 | 攻撃1 · e_light_ray2 · e_holy_beam1 · e_flash1 | i_phoenix 1/4<br>ac_platinum_crown 1/16<br>w_katana_sr_platinum 1/128 | 冠をいただく白金の大きな灯。<br>忘却の底の宝といわれる。 |
 
 ### 9.6 敵の行動（雑魚用 `e_` 124。担当 A11 `enemy_actions.js`）
 
@@ -8323,7 +8425,7 @@ Object.assign(R.DB.actions, {
 | `postgame` | `z_postgame_oblivion_hi` | void_3 void_2 void_1 chaos_3 chaos_2 demon_3 demon_2 ghost_5 goblin_5 salamander_5 imp_5 eyeball_5 skeleton_5 jelly_5 bat_5 platinum_2 | `rm_dream_tapir` |  |
 
 - **虚ろの使い `paper`**（§10.9.1: ティア2から）は、中盤の全ゾーンに `tierMin: 2` で入れた。ティア2〜3は小（白紙の小鬼）、4〜7は中（白紙の獣・騎士）、8は大（白紙の竜）なので、**大きさごとに組を3つに分けた**（数が変わるため）。
-- **鋼**: 白銀のしずく（`@quicksilver`）は中盤のワールドの全ゾーンにティア2から、鏡の甲虫（`@mirror`）は中盤のダンジョンの全ゾーンにティア5から、白金の灯は終盤・裏にだけ。組の重み 1.5（全体の 2.5〜3%。§4.10.5）。
+- **鋼**: 白銀ゼリー（`@quicksilver`）は中盤のワールドの全ゾーンにティア2から、鏡カブト（`@mirror`）は中盤のダンジョンの全ゾーンにティア5から、白金の鬼火は終盤・裏にだけ。組の重み 1.5（全体の 2.5〜3%。§4.10.5）。
 - **宝箱もどき `@mimic`** は、王墓・霧の館・幽霊船・星読みの塔と大書庫に重み 2 で1体だけ（`solo`）。お金が多く、レア・超レアが出やすい（§9.12）。
 - 同じ地方でも、ワールドとダンジョンで系統の顔ぶれを変えた（例: 森のワールドはハチ・キノコ・花・妖精・ゼリー、迷いの森はクモと魔木が加わる）。
 - 町・村にはゾーンを置かない（§10.13.4）。
@@ -8759,19 +8861,19 @@ Object.assign(R.DB.rareEncounters, {
 
 | 系統 | 段（出始め） | 元絵とフィルター | 出る所 | 特徴 |
 |---|---|---|---|---|
-| `quicksilver` 白銀のしずく | `quicksilver_1` 白銀のしずく（T2）→ `quicksilver_2` 白銀の大しずく（T6） | `jelly` 〔chrome〕 | 中盤のワールド全部（ティア2〜） | 水の術を少し使う。いちばん出会いやすい |
-| `mirror` 鏡の甲虫 | `mirror_1` 鏡の甲虫（T5）→ `mirror_2` 鏡の大甲虫（T7） | `beetle` 〔mirror〕 | 中盤のダンジョン全部（ティア5〜） | まばゆい光（暗闇）で逃げるすきを作る |
-| `platinum` 白金の灯 | `platinum_1` 白金の灯（T8）→ `platinum_2` 白金の大灯（T9） | `wisp` 〔platinum〕 | ビブリア島・大書庫・忘却の底 | 光線を撃つ。裏の稼ぎ役 |
+| `quicksilver` 白銀ゼリー | `quicksilver_1` 白銀ゼリー（T2）→ `quicksilver_2` 白銀の大ゼリー（T6） | `jelly` 〔chrome〕 | 中盤のワールド全部（ティア2〜） | 水の術を少し使う。いちばん出会いやすい |
+| `mirror` 鏡カブト | `mirror_1` 鏡カブト（T5）→ `mirror_2` 鏡の大カブト（T7） | `beetle` 〔mirror〕 | 中盤のダンジョン全部（ティア5〜） | まばゆい光（暗闇）で逃げるすきを作る |
+| `platinum` 白金の鬼火 | `platinum_1` 白金の鬼火（T8）→ `platinum_2` 白金の大鬼火（T9） | `wisp` 〔platinum〕 | ビブリア島・大書庫・忘却の底 | 光線を撃つ。裏の稼ぎ役 |
 - 規則: HP は `hpFixed`（8〜12、伸縮しない）、素早さ ×2.5、回避 30。**受けるダメージは1回の命中につき 1**（会心 2）、`metalHit:true` の技と**武器**だけ `ceil(3 × P)`。状態異常・即死・`percent`・弱体はすべて効かない。自分の手番ごとに 50% で逃げる（1ラウンド目から）。経験値 = 曲線 × 30、お金 × 10。閃き rank +1。**手動で始まる**（§4.13.1）。
 - 鋼の組は同じ種の 1〜2 体だけ（ほかの魔物と混ざらない）。
 - **鋼に通る武器**（`metalHit:true` の超レア武器。§6.2.2 の `metalHit` を武器の項目にも広げる。§9.14 の依頼）: 白銀の流れ鞭（`quicksilver_2`）・鏡角の槍（`mirror_2`）・白金の太刀（`platinum_2`）の 3 本。鋼を倒すと鋼に強い武器が手に入る、という回り道。
 - ドロップの枠: 通常 1/4、レア 1/16、超レア 1/128（§4.10.1）。品は §9.5 の表と §9.12.4。
-- **段の数の例外**: 鋼の 3 系統は 2 段ずつ（§9.0 の 0.1）。Part A の「3〜5段」の例外として扱う（出会いがめったにない枠なので、段を増やすとどの段にも出会えなくなる）。
+- **鋼は元の系統の分岐**（第 2 版。§9.0 の 0.1）: `quicksilver` はゼリー（5 段）の、`mirror` はカブト（4 段）の、`platinum` は鬼火（4 段）の分岐（`DB.lineages[id].family`）。Part A の「元の絵ごとに系統を作り 3〜5 段」は元の系統で満たし、鋼はその系統の特別な枝として 2 段（出会いがめったにない枠なので、段を増やすとどの段にも出会えなくなる）。名前も元の系統が分かるものにした（白銀ゼリー・鏡カブト・白金の鬼火）。図鑑では元の系統の最後の段の直後に並ぶ。
 
 ### 9.10 レア魔物（23。担当 A12 `rare.js`、絵は A15 `rare_monsters*.js`）
 
 #### 9.10.1 規則（§4.10.3 の具体化）
-- `DB.rareEncounters[zone] = {mon, rate}`（rate は分母）。そのゾーンのランダム戦闘が、確率 `1/rate × (1 + rareEncPct合計/100) × 誘い寄せの香(2)` でレア魔物1体に差し替わる。
+- `DB.rareEncounters[zone] = {mon, rate}`（rate は分母）。そのゾーンのランダム戦闘が、確率 `(1/rate) × (1 + min(150, rareEncPct合計)/100) × L`（`L` は誘い寄せの香・誘い火のあいだ 2、ほか 1。§3.3.8・§4.10.3 と同じ式）でレア魔物1体に差し替わる。
 - 戦闘レベルはそのゾーンの Lb + 2。能力値は §9.1.2（KIND = 経験値・お金 ×5）で、`s.hp` は 2.8〜3.6（「HP ×3 前後」）。旗 `rare`、`fleeRate: 0.25`（2ラウンド目から、自分の手番ごと）、状態の耐性はボスの既定（§4.8.3）、即死は効かない、弱体の成功率 ×0.5。閃き rank +2、EF 2.0。
 - **3つの枠すべてが専用の品**（§9.12.7）: 通常 1/2（その種だけの道具。§8.9.2）、レア 1/6（遺物 `ac_rl_<鍵>`）、超レア 1/24（遺物 `ac_rs_<鍵>`。固定ティアのゾーンの 4 種はそのティアの固定の超レア品）。夢食いバクは 1/2・1/4・1/12。
 - 遺物はティアに依らない品（能力値の割合と mods だけ。§8.7）なので、中盤のどのティアで手に入れても価値がそろう。
@@ -8858,7 +8960,7 @@ HP の目安（§4.14.2 の曲線 × 大きさ × `s.hp`。戦闘レベル = ゾ
 ```js
 phases: [{ hpBelow: 0.5, msg: '…', set: { actsPerTurn?, elem?, phys?, buffs?: {stat: 段階}, sprite? } }]
 ```
-- ダメージを受けて HP の割合が初めて `hpBelow` を下回ったとき、その行動の終わりに1回だけ: `msg` を出し（イベント `{t:'phase', u, msg}`、効果音 `shake`）、`set` を当てはめる。
+- ダメージを受けて HP の割合が初めて `hpBelow` を下回ったとき、その行動の終わりに1回だけ: イベント `{t:'phase', u, text, sprite?}`（§3.3.8 の表の形。`text` = `msg`、`sprite` = `set.sprite`）を出し、`set` を当てはめる。効果音 `shake`・画面の揺れ・文は **bui が**イベントを受けて出す（battle.js は音を鳴らさない。§3.3.8）。
   - `actsPerTurn`: 置き換える。`elem` `phys`: キーごとに上書き。`buffs`: 段階を足す（−2〜+2 に収める。強化を消す `dispel` で消えるのは足した分も同じ）。`sprite`: 絵を差し替える（bui は `mon:<sprite>` を読み直し、白く光らせて入れ替える）。
 - 1体に複数の段階があれば、上から順に判定する。
 
@@ -9238,13 +9340,42 @@ Object.assign(R.DB.actions, {
 - `boss_nemrea2`（ネムレア）: 128×112（新）。名を与えられた真の姿。白い大理石のような、眠たげで静かな顔の巨大な人影。背にページでできた翼が8枚（1枚ずつ色合いが違う: 緑・砂・氷・霧・潮・鉄・灰・星）。体の半分に光る文字が広がりつつある。頭に折れた羽ペンの冠。まわりに星とインクの渦。色: 体 #f0eee8、文字 #fff0a0、翼 #b0d0a0/#e0c890/#c0e8ff/#c0c8d0/#90d0e0/#a0a0a8/#b0a0a0/#c0c0ff。
 - `boss_ouroboros`（円環竜オウロボラ）: 128×112（新）。自分の尾をくわえて完全な輪になった巨大な竜。うろこは輪を一周するあいだに金から黒へ移り変わる（昼から夜）。輪の内側にページと星が渦巻く銀河。背にそって小さな翼が何対も並ぶ。目は時計の文字盤のような金色の輪。色: 金 #f0c040→黒 #181020、銀河 #6040a0/#c0c8ff、ページ #f0e8d0、目 #ffe070。
 
+**ボスの組み立て表（normative。14。担当 A15 `src/art/bosses_compose.js`。§9.4.6 から第 2 版で移した）**。形と登録の決まりは §9.4.6 と同じ（足し込む。重なりはエラー）:
+```js
+// src/art/bosses_compose.js（担当 A15）
+const BOSSES = (R.Art.MON_COMPOSE_BOSSES = {
+  b_sandworm: ['boss_serpent', { hue: 25, sat: 0.7, bri: 1.05 }, []],
+  b_sandking: ['boss_general_b', { hue: 60, sat: 0.6, bri: 1.1 }, []],
+  b_doll_conductor: ['doll', { sat: 0.4, bri: 0.9 }, [['hat', { c: '#202020', style: 'tophat' }], ['cape', { c: '#202020', c2: '#c02030', style: 'tailcoat' }], ['baton', { c: '#f0f0f0' }]]],
+  b_doll_violin: ['doll', { hue: 330, sat: 0.8 }, [['violin', { c: '#a05020' }], ['ribbon', { c: '#c02040' }]]],
+  b_doll_drum: ['doll', { hue: 200, sat: 0.8 }, [['drum', { c: '#c03030' }], ['hat', { c: '#2040a0', style: 'shako' }]]],
+  b_doll_flute: ['doll', { hue: 90, sat: 0.7 }, [['flute', { c: '#d0c080' }], ['flower', { c: '#ffe080' }]]],
+  b_mist_double: ['ghost', { sat: 0.1, bri: 0.9 }, [['hood', { c: '#8890a0', style: 'witch' }]], 'shade'],
+  b_octopus: ['kraken', { hue: 250, sat: 0.9, bri: 0.8 }, [['coral', { c: '#e08070' }], ['crown', { c: '#c0c0a0', style: 'barnacle' }]]],
+  b_captain: ['boss_bandit', { hue: 170, sat: 0.45, bri: 1.1 }, []],
+  b_rockeater: ['sandworm', { sat: 0.25, bri: 0.8 }, [['armor_plates', { c: '#707078', style: 'rock' }], ['crystals', { c: '#80e0ff' }]]],
+  b_ironwarden: ['boss_general_a', { hue: 15, sat: 0.5, bri: 1.15 }, []],
+  b_lavabeast_cold: ['boss_flame_lord', { sat: 0.35, bri: 0.55 }, []],
+  b_rowell2: ['boss_rowell', { bri: 0.95 }, [['aura', { c: '#ffffff' }]]],
+  b_valzard_echo: ['boss_demon_king', { sat: 0.2, bri: 0.85 }, [], 'shade'],
+});
+for (const id in BOSSES) {
+  if (R.Art.MON_COMPOSE && R.Art.MON_COMPOSE[id]) { R.warn('MON_COMPOSE: duplicate', id); continue; }
+  (R.Art.MON_COMPOSE = R.Art.MON_COMPOSE || {})[id] = BOSSES[id];
+  R.Gfx.def('mon:' + id, () => (R.Art.compose ? R.Art.compose(...BOSSES[id]) : R.Gfx.get('mon:' + BOSSES[id][0])));
+}
+```
+
 #### 9.11.7 イベント戦の編成（担当 A12 `troops.js`）
 | 編成 id | 並び | ティア | lv | 背景 | BGM | 使う所 |
 |---|---|---|---|---|---|---|
 | `tr_tutorial` | `rat_1` ×2 | 0 固定 | lv 2（Lb 2） | `tower` | `battle` | 灯台1階のチュートリアル（§10.7 の P8、イベント `lighthouse_1_tutorial`） |
 - データ: `tr_tutorial: { mons: [['rat_1', 2]], tier: 0, lv: 2, bg: 'tower', bgm: 'battle', noEscape: true }`。
-- 呼び方: `ev.battle({troop:'tr_tutorial', glimmerForce:'hero', noEscape:true})`（§3.3.8・§4.9.6）。主人公の最初の武器の行動で必ず閃く（p = 1）。ドロップの抽選はふつうに行う（`noRare` `noGolden` を必ず付ける）。
-- 負けても続く（`canLose:true`）。負けたら全員 HP 1 で、イベントが「もう一度」を促す（§10.7）。
+- 呼び方（§10.7 P8・§4.9.6 と一字一句同じ）: `ev.battle({troop:'tr_tutorial', members:['hero'], glimmerForce:'hero', canLose:true, noEscape:true, noRare:true, noGolden:true})`。
+  - **仲間は出ない**（`members:['hero']`）。主人公ひとりで野ネズミ 2 匹と戦うので、主人公の最初の行動の前に戦闘が終わるのは、主人公が先に倒れたときだけ（`canLose` でやり直す）。仲間は経験値を控えと同じ 60% もらう（§3.3.8 `members`）。
+  - **`glimmerForce` は主人公の最初の行動なら種類を問わず効く**（§3.3.7。攻撃・技はその系統、術はその属性、防御・道具は武器1の系統の一番低い覚えていない技）。術師の主人公が術を唱えても閃く。
+  - ドロップの抽選はふつうに行う。`noRare` `noGolden` は編成の戦闘では元から起きないが、書いておく（検査を単純にするため）。
+- 負けても続く（`canLose:true`）。負けたら全員 HP 1 で、イベントが「もう一度」を促し、全快してからやり直す（§10.7 P8）。
 
 ### 9.12 戦利品（担当: 魔物の側は A11・A12。品の定義は weapons A9・gear-a A10a。**品の id と定義の正は 07 装備章、この章は「魔物 → 品」の割り当ての正**）
 
@@ -9683,7 +9814,7 @@ Object.assign(R.DB.actions, {
 | `rm_bloom_fawn` | 花角の小鹿 | `bloom` | `i_bloom_nectar` 1/2 | `ac_rl_bloom` 花角の髪飾り 1/6 | `ac_rs_bloom` 森の小さな冠 1/24 |
 | `rm_glass_moth` | ガラスアゲハ | `wind` | `i_glass_dust` 1/2 | `ac_rl_wind` ガラスの羽 1/6 | `ac_rs_wind` ステンドの羽 1/24 |
 | `rm_acorn_prince` | どんぐり王子 | `peak` | `i_golden_acorn` 1/2 | `ac_rl_peak` どんぐりの帽子飾り 1/6 | `ac_rs_peak` どんぐり王子の紋章 1/24 |
-| `rm_diamond_lizard` | 金剛トカゲ | `iron` | `i_diamond_dust` 1/2 | `ac_rl_iron` 金剛のうろこ 1/6 | `ac_rs_iron` 金剛トカゲの心臓石 1/24 |
+| `rm_diamond_lizard` | 金剛トカゲ | `iron` | `i_diamond_dust` 1/2 | `ac_rl_iron` 金剛トカゲのうろこ 1/6 | `ac_rs_iron` 金剛トカゲの心臓石 1/24 |
 | `rm_gold_idol` | 黄金の守護像 | `gold` | `i_gold_bar` 1/2 | `ac_rl_gold` 守護像のひすい 1/6 | `ac_rs_gold` 黄金の光輪 1/24 |
 | `rm_aurora_bird` | オーロラ鳥 | `moon` | `i_aurora_feather` 1/2 | `ac_rl_moon` オーロラの羽飾り 1/6 | `ac_rs_moon` 極光の宝珠 1/24 |
 | `rm_icetail_fox` | 氷尾ギツネ | `frost` | `i_fox_icicle` 1/2 | `ac_rl_frost` 氷尾の毛飾り 1/6 | `ac_rs_frost` 氷ギツネの面 1/24 |
@@ -9706,7 +9837,7 @@ Object.assign(R.DB.actions, {
 #### 9.12.8 ボスの品
 | ボス | 通常（確定） | `bonus`（確定の2つ目） | レア | 超レア |
 |---|---|---|---|---|
-| 序章のボス・地方の中ボス 8（`b_pageeater` `b_moth` `b_sandworm` `b_icegiant` `b_doll_conductor` `b_octopus` `b_rockeater` `b_hellhound` `b_orrery`） | `{pool:'p_boss_mid'}` | §9.11.4 の表のとおり（`i_seed_wp` か `i_seed_mp`） | — | — |
+| 序章のボス 1・地方の中ボス 8（9 体。`b_pageeater` `b_moth` `b_sandworm` `b_icegiant` `b_doll_conductor` `b_octopus` `b_rockeater` `b_hellhound` `b_orrery`） | `{pool:'p_boss_mid'}` | §9.11.4 の表のとおり（`i_seed_wp` か `i_seed_mp`） | — | — |
 | 地方ボス 8（`b_rooteater` `b_sandking` `b_whitedragon` `b_mistbeast` `b_captain` `b_ironwarden` `b_lavabeast` `b_stareater`） | `{pool:'p_boss'}` | `i_seed_hp` | — | — |
 | 終盤の中ボス（`b_bookgolem`・`b_shade_sword`・`b_lazaro`） | `{pool:'p_boss'}` | `b_bookgolem` `i_seed_mp`、`b_lazaro` `i_seed_hp` | — | — |
 | `b_shade_prayer`（三つの影の2体目） | — | `i_seed_mp` | — | — |
@@ -9770,8 +9901,8 @@ Object.assign(R.DB.actions, {
 |---|---|
 | mons A11 | `src/data/lineages.js`、`src/data/monsters_{common,forest,desert,snow,marsh,isles,mine,ash,star,finale,postgame}.js`、`src/data/enemy_actions.js`、`src/data/encounters.js`、`tools/sim_zones.js` |
 | boss A12 | `src/data/bosses.js`（ボス 34 体）、`src/data/bosses_actions.js`（`eb_` 191）、`src/data/troops.js`（26）、`src/data/rare.js`（レア魔物 23）、`src/data/rare_encounters.js`、`tools/sim_bosses.js`、`tools/sim_loot.js` |
-| art-mons A14 | `src/art/monsters_c.js`（新しい元絵 14）、`src/art/monsters_parts.js`（`R.Art.compose` `MON_ANCHORS` `PARTS` `FILTERS` と雑魚の `MON_COMPOSE` 209）、`tools/sheet_monsters_parts.js` |
-| art-boss A15 | `src/art/bosses_b.js`（新しいボス 16 ＋ お供 2）、`src/art/bosses_compose.js`（ボスの組み立て 14 を `R.Art.compose` で登録）、`src/art/rare_monsters_b.js`（新しいレア魔物 17）、`tools/sheet_bosses.js` `tools/sheet_rare.js` の更新 |
+| art-mons A14 | `src/art/monsters_c.js`（新しい元絵 14）、`src/art/monsters_parts.js`（`R.Art.compose` `MON_ANCHORS` `PARTS` `FILTERS` と雑魚の組み立て表 `MON_COMPOSE_MOBS` 211。§9.4.6 の形で `MON_COMPOSE` に足し込む）、`tools/sheet_monsters_parts.js` |
+| art-boss A15 | `src/art/bosses_b.js`（新しいボス 16 ＋ お供 2）、`src/art/bosses_compose.js`（ボスの組み立て表 `MON_COMPOSE_BOSSES` 14。§9.11.6 の表。`MON_COMPOSE` に足し込み、`R.Art.compose` で登録）、`src/art/rare_monsters_b.js`（新しいレア魔物 17）、`tools/sheet_bosses.js` `tools/sheet_rare.js` の更新 |
 - A15 の組み立ては A14 の `R.Art.compose` を**実行時に**呼ぶ（factory の中で呼ぶので、読み込み順には頼らない。§1.2）。A14 が未完成のあいだは、元絵をそのまま返す仮の関数で自分の絵を確かめる。
 
 #### 9.14.2 依頼
@@ -9782,7 +9913,7 @@ Object.assign(R.DB.actions, {
 | battle（A2） | ① `R.Mon.fillStats`（onData、§9.1.2）と `R.Mon.resolve` の `'lower'`。② 効果 `summon`（§9.1.6）、`mp:true` の `drain` は HP の回復、`on:'self'`、行動の `elements`（多属性は相手に一番効くもの）。③ 条件 `countBelow` `allyDown`（§9.1.7）。④ `phases`（§9.11.1。イベント `{t:'phase'}`）。⑤ 呼ばれた魔物の旗 `summoned`（ドロップ・金色なし）。⑥ 武器の `metalHit:true`（その武器での攻撃・技を metalHit 扱い）。⑦ ボスの状態の耐性 = データとボスの既定の大きい方。⑧ `rareEncounters.rate` は分母。⑨ 金色の対象外（§9.8）。⑩ 魔物の `ally` は HP の割合が一番低い仲間、`ally_dead` は倒れた仲間。 |
 | bui（A3） | ① 段階の変化の演出（`{t:'phase'}`: 文・画面の揺れ・`sprite` の差し替え）。② 呼ばれた魔物の登場（並び直して、左右から出てくる）。③ 金色のキラキラ（0.5 秒ごと）とレア魔物のキラキラ。④ 使う fx: `arrow bite bite2 breath(_fire _ice _poison _dark) buff claw confuse dark dark2 dark3 death debuff dispel drain earth earth2 explosion explosion2 fire fire2 fire3 heal holy holy2 ice ice2 ice3 magic magic2 magic3 mp paralyze pierce pierce2 poison regen revive silence slash slash2 sleep smoke song strike strike2 strike3 thunder warp water water2 wind wind2`（無いものはクレストの `resolve` の代わりでよい）。⑤ 8体・横幅 256px の並び（クレストの `layout` のまま）。 |
 | field（A4） | マップの `lvOff` を `R.Battle.start` に渡す（§9.0 の 0.17）。 |
-| menu（A5） | 図鑑: 雑魚 209・レア魔物 23・ボス 34 の順（雑魚は §9.5 の系統の順 → 段の順、次にレア魔物、ボスは戦う順）。3枠（通常・レア・超レア。未入手は「？？？」、ボスのレア・超レア枠は「―」、ただし裏の2体は枠あり）、金色を倒した数、レア魔物の印、親和の属性のヒント（倒したあと）。 |
+| menu（A5） | 図鑑: 雑魚 211・レア魔物 23・ボス 34 の順（雑魚は §9.5 の系統の順 → 段の順。`family` のある鋼の系統は元の系統の直後。次にレア魔物、ボスは戦う順）。3枠（通常・レア・超レア。未入手は「？？？」、ボスのレア・超レア枠は「―」、ただし裏の2体は枠あり）、金色を倒した数、レア魔物の印、親和の属性のヒント（倒したあと）。 |
 | weapons（A9）・gear-a（A10a）・gear-b（A10b） | §9.12.4 の超レア 172（この章の品）・§9.12.5 のレア 113・§9.12.7 の固定ティアの超レア 4 を**この id で**定義する（名前・ティア・種別・効果の略記が正）。§8.6.5 の手作りの 39 品は 07 の表から。値段は §8.3.8（レア ×3・超レア ×6）。道具は §8.9（レア魔物の道具 23 は §8.9.2）。武器の項目 `metalHit` を使う。ファイルは §9.14 のとおり（`items_weapons_monster.js` は A9、`items_armor_monster.js` `items_acc_monster.js` は A10a）。 |
 | art-tiles（A16） | 出現表と編成が使う戦闘背景: `tower forest tree pyramid ice snow manor swamp watercave ship mine volcano library oblivion`（§10.6.2・§10.15 と同じ。無いときの代わりもワールド章のとおり）。 |
 | audio（A17） | BGM `rarebattle`（金色・レア魔物・鋼）、`boss` `boss2` `rival` `tension` `lastboss` `superboss`（編成の表）。効果音 `golden`（金色）、`shake`（段階の変化）、`roar`。 |
@@ -10081,7 +10212,7 @@ world 担当は下の座標に置く（地形の都合で±3マスまでずら�
 |---|---|
 | 徒歩 | ワールドマップを歩く。常にダッシュ（設定）。 |
 | **定期船** | 港のある町の桟橋の船乗り（NPC id `ferry`、イベント `common_ferry`、§10.5.5）に話しかけ、行き先を選ぶ。**運賃は無料**。行き先の町の出現位置 `dock` に `ev.warp` する（フェードと効果音 `ship`）。 |
-| ワープ | **メニューの「ワープ」**（`prologue_done` から）。行ったことのある町へ（`DB.locations`）。ダンジョンの中では使えない。大事なもの `k_quill` を使っても同じ。 |
+| ワープ | **メニューの「ワープ」**（`prologue_done` から）。行ったことのある**町と、入ったことのあるダンジョンの入口**へ（`DB.locations` の 23 件。**地方ごとにまとめて**出す。Part A6。§10.6.3・§11.7.12）。ダンジョンの中では使えない。大事なもの `k_quill` を使っても同じ。 |
 | 脱出 | **メニューの「脱出」**（`prologue_done` から）。ダンジョンの `escape` へ。大事なもの `k_bell` を使っても同じ。 |
 
 #### 10.5.5 定期船の航路（`common_ferry` は world 担当。各町の船乗り NPC は町の担当が置く）
@@ -10152,6 +10283,7 @@ world 担当は下の座標に置く（地形の都合で±3マスまでずら�
 - 宿屋の主人 NPC id `inn`（イベント `common_inn` → `ev.inn()`）、店の NPC id は `shop_item` `shop_weapon` `shop_armor` `shop_magic`（`common_shop` → `ev.shop(ev.ctx.npc.shop)`）。共通イベント `common_*`（宿・酒場・店・定期船・休息の灯）は world 担当が `src/events/world_common.js` に書く。
 - 町のマップに必ず置く出現位置：`entrance`（ワールドから入ったとき。町の入口）、`inn`（宿屋の入口の前、下向き）、港町は `dock`（桟橋）。ネレイは `pier`（岬の桟橋）。
 - 町の外へは `exit:{to:'world', spawn:'<町id>'}`。
+- **町のマップには `location:'<町id>'` を必ず書く**（家の中の別マップも同じ町の id。§10.6.3。無いとワープの一覧に出ない。validate V14）。
 
 #### 10.6.2 ダンジョン（14。全 41 フロア、うち本編 36）
 | ダンジョン | 名前 | 地方 | 階（マップ id） | theme | 戦闘背景 bbg | BGM | ゾーン | 入口 |
@@ -10184,7 +10316,43 @@ world 担当は下の座標に置く（地形の都合で±3マスまでずら�
 10. **`outside` を必ず書く**（§3.3.10。validate が失敗にする）: 屋内のダンジョンはテーマの壁 `'#'`、外のダンジョンは森 `'T'`（迷いの森・千年樹）・岩 `'r'`（白竜の峰の頂上）・水 `'~'`（鐘沈みの沼・潮鳴りの洞窟）。
 11. **ダメージ床**（§3.3.10-10。最大HP の割合で減り、床では倒れない）: `ash_volcano_2` に溶岩 `'L'` を約 12 マス、`ash_volcano_3` に約 16 マス、`bell_marsh_1` の沼のふちに毒の床 `'x'` を約 14 マス。どれも道の脇に置き、**踏まずに進める道を必ず残す**（ドッカの個性「山歩き」と `ac_float` が生きるように。批評 28）。
 
+12. **`location` を必ず書く**（全部の階。§10.6.3 の対応表のとおり。例 `sand_tomb_2: { …, location:'sand_tomb' }`）。入った階の `location` がワープの一覧のダンジョンの入口になる（Part A6）。
+
 **大きさ（規則。批評 14・75）**：町 **40×32 以上**（目安 40×32〜56×44）。ダンジョンの階 **34×30 以上**（目安 34×30〜56×48）。ボスの階・家の中はこれより小さくてよいが、そのときは `outside` を壁（`'#'` か `'B'`）にする（「もっとひろい」32×28 で見たとき、まわりが黒い空白でなく壁に見えるように）。1階の歩き回りは 5〜8 分。
+
+#### 10.6.3 `DB.locations`（ワープ先。world 担当 `src/data/locations.js`。第 2 版で Part A6 に合わせて作り直した）
+**23 件 = 町 12 ＋ ダンジョンの入口 11**。形は `{name, map:'world', spawn, region, kind:'town'|'dungeon'}`（`dock` はクレストの船のためのもので、この作品では書かない）。**並び順 = ワープの一覧の順**（地方の順 `prologue` → `r_forest` … `r_star` → `finale`、同じ地方の中は 町 → ダンジョン）。`spawn` はワールドの出現位置（§10.5.3・§10.13.3。町は町の id、ダンジョンは 1 階の id）。
+```js
+Object.assign(R.DB.locations, {
+  roa:         { name: 'ロアの里',         map: 'world', spawn: 'roa',           region: 'prologue', kind: 'town' },
+  lute:        { name: '港町ファロス',     map: 'world', spawn: 'lute',          region: 'prologue', kind: 'town' },
+  lighthouse:  { name: 'ファロス灯台',     map: 'world', spawn: 'lighthouse_1',  region: 'prologue', kind: 'dungeon' },
+  fern:        { name: '森の村フェルン',   map: 'world', spawn: 'fern',          region: 'r_forest', kind: 'town' },
+  verda_maze:  { name: '迷いの森',         map: 'world', spawn: 'verda_maze_1',  region: 'r_forest', kind: 'dungeon' },
+  kasim:       { name: 'オアシスの町カシム', map: 'world', spawn: 'kasim',       region: 'r_desert', kind: 'town' },
+  sand_tomb:   { name: '砂の王墓',         map: 'world', spawn: 'sand_tomb_1',   region: 'r_desert', kind: 'dungeon' },
+  yule:        { name: '雪の村ユール',     map: 'world', spawn: 'yule',          region: 'r_snow',   kind: 'town' },
+  frost_peak:  { name: '白竜の峰',         map: 'world', spawn: 'frost_peak_1',  region: 'r_snow',   kind: 'dungeon' },
+  loch:        { name: '水辺の町ロッホ',   map: 'world', spawn: 'loch',          region: 'r_marsh',  kind: 'town' },
+  mist_manor:  { name: '霧の館',           map: 'world', spawn: 'mist_manor_1',  region: 'r_marsh',  kind: 'dungeon' },
+  bell_marsh:  { name: '鐘沈みの沼',       map: 'world', spawn: 'bell_marsh_1',  region: 'r_marsh',  kind: 'dungeon' },
+  coral:       { name: '港町コーラル',     map: 'world', spawn: 'coral',         region: 'r_isles',  kind: 'town' },
+  nerei:       { name: '岬の村ネレイ',     map: 'world', spawn: 'nerei',         region: 'r_isles',  kind: 'town' },
+  tide_cave:   { name: '潮鳴りの洞窟',     map: 'world', spawn: 'tide_cave_1',   region: 'r_isles',  kind: 'dungeon' },
+  dovan:       { name: '鉱山都市ドヴァン', map: 'world', spawn: 'dovan',         region: 'r_mine',   kind: 'town' },
+  deep_mine:   { name: '深き坑道',         map: 'world', spawn: 'deep_mine_1',   region: 'r_mine',   kind: 'dungeon' },
+  caldera:     { name: '炎の町カルデラ',   map: 'world', spawn: 'caldera',       region: 'r_ash',    kind: 'town' },
+  ash_volcano: { name: '灰の火山',         map: 'world', spawn: 'ash_volcano_1', region: 'r_ash',    kind: 'dungeon' },
+  orbis:       { name: '学術都市オルビス', map: 'world', spawn: 'orbis',         region: 'r_star',   kind: 'town' },
+  stargaze:    { name: '星読みの塔',       map: 'world', spawn: 'stargaze_1',    region: 'r_star',   kind: 'dungeon' },
+  biblia:      { name: '書の都ビブリア',   map: 'world', spawn: 'biblia',        region: 'finale',   kind: 'town' },
+  archive:     { name: '白の大書庫',       map: 'world', spawn: 'archive_1',     region: 'finale',   kind: 'dungeon' },
+});
+```
+- **マップの `location`（必須。§3.3.10 の表・V14）**: 町のマップと家の中は町の id（`roa_house` は `roa`、`<町id>_house<n>` はその町）。ダンジョンの階はそのダンジョンの入口の id: `lighthouse_1..3` → `lighthouse`、`verda_maze_1..2` と **`elder_tree_1..2` → `verda_maze`**（千年樹は迷いの森の奥から入る）、`sand_tomb_*` → `sand_tomb`、`frost_peak_*` → `frost_peak`、`mist_manor_*` → `mist_manor`、`bell_marsh_1` → `bell_marsh`、`tide_cave_1` → `tide_cave`、**`ghost_ship_1..3` → `nerei`**（ネレイの桟橋から入る。ワープ先はネレイ）、`deep_mine_*` → `deep_mine`、`ash_volcano_*` → `ash_volcano`、`stargaze_*` → `stargaze`、`archive_1..6` と **`oblivion_1..5` → `archive`**。ワールドには書かない。
+- 入ったことの記録は §3.3.2（マップに入ると `visited[location] = true`。消さない）。ワープの一覧は `visited` の件だけ（§11.7.12）。**ダンジョンの入口は、そのダンジョンのどれかの階に一度入れば出る**（1 階に入らずに 2 階へは行けないので、実際には 1 階に入ったとき）。
+- ワープの一覧で地方の名前に使う字（`DB.config.warpGroups`。world 担当）: `prologue: 'ファロス半島'`、`finale: 'ビブリア島'`、`r_*` は `DB.regions[id].name`。
+- ダンジョンの入口へのワープは、ワールドの出現位置（入口のマス）に降りて、そのまま 1 階の `entrance` に入る（`R.Field.teleport` の今の動き。§3.3.10）。ダンジョンの中からはワープできない（メニューの灰色の規則。§11.7.1）。
 
 #### 10.6.4 隠し通路（Part A4。規則。批評 66）
 - タイルと動きは§3.3.10-11（ローカル `%` = `secret_wall`、ワールド `%` = `secret_forest`・`&` = `secret_rock`。押して入るだけで通れる。初めて入ったとき「隠し通路を見つけた！」）。
@@ -10202,10 +10370,6 @@ world 担当は下の座標に置く（地形の都合で±3マスまでずら�
 | reg-a（A20） | `oblivion_2`、`oblivion_4` | `p_rare`、レア魔物の小部屋 |
 - validate はダンジョンごとの数を出し、上の表と違えば警告する。年代記の画面に「隠し通路　n/総数」（§3.3.10-11）。
 
-#### 10.6.3 `DB.locations`（ワープ先。world 担当）
-`roa lute fern kasim yule loch coral nerei dovan caldera orbis biblia` の12件。各 `{name, map:'world', spawn:'<町id>', region}`。
-名前は §10.6.1 の表のとおり（例 `lute: {name:'港町ファロス', map:'world', spawn:'lute', region:'prologue'}`）。並び順もこの順（ワープの一覧に出る順）。
-
 ### 10.7 序章（一本道・約1時間45分。担当 world）
 
 マップ：`roa_house`（師匠の家。`roa` の中の別マップ。出現位置 `bed` `entrance`）、`roa`、ワールド（ファロス半島）、`lute`、`lighthouse_1..3`。
@@ -10213,14 +10377,14 @@ world 担当は下の座標に置く（地形の都合で±3マスまでずら�
 
 | # | 場面（マップ） | イベント id | 流れ | 立つフラグ | 目的 |
 |---|---|---|---|---|---|
-| P1 | オープニング（`roa_house`、onEnter） | `roa_house_intro` | 暗転のまま `ev.caption` を3枚：「……ねえ、聞こえる？」「これは、忘れられかけた物語。」「そして、それを語り直した、\nひとりの語り部の物語。」→ 明転。ベルナが枕元に立つ。「おはよう。今日は大事な日だよ。」「語り部の名簿に、\nあなたのことを書いておかないとね。」→ `ev.createHero()` →「{hero}。……うん、いい名前だ。」 | `hero_created`（自動）、`pro_start` | `obj_s_roa` |
-| P2 | ロアの里 | `roa_stone`（語り石を調べる）、`roa_berna`（ベルナ） | 語り石：「石に刻まれた物語の半分が、\n白く抜けている……。」ベルナ：白紙の話、ファロスの灯台の火が三晩消えていること、仲間を探すこと。回復の道具を3つと 50 ゴールドを渡す。里の出口の手前の step イベント `roa_gate`（cond `'!pro_berna_sent'`）：「師匠に、あいさつしていかないのかい？」で押し戻す。 | `pro_berna_sent` | `obj_s_to_lute` |
+| P1 | オープニング（`roa_house`、onEnter。cond `'!pro_start'`、once） | `roa_house_intro` | 暗転のまま `ev.caption` を3枚：「……ねえ、聞こえる？」「これは、忘れられかけた物語。」「そして、それを語り直した、\nひとりの語り部の物語。」→ 明転。ベルナが枕元に立つ。「おはよう。今日は大事な日だよ。」「語り部の名簿に、\nあなたのことを書いておかないとね。」→ `ev.createHero()` →「{hero}。……うん、いい名前だ。」 | `hero_created`（自動）、`pro_start` | `obj_w_roa` |
+| P2 | ロアの里 | `roa_stone`（語り石を調べる）、`roa_berna`（ベルナ） | 語り石：「石に刻まれた物語の半分が、\n白く抜けている……。」ベルナ：白紙の話、ファロスの灯台の火が三晩消えていること、仲間を探すこと。回復の道具を3つと 50 ゴールドを渡す。里の出口の手前の step イベント `roa_gate`（cond `'!pro_berna_sent'`）：「師匠に、あいさつしていかないのかい？」で押し戻す。 | `pro_berna_sent` | `obj_w_to_lute` |
 | P3 | ワールド（ロア → ファロス、約10マス） | — | `zw_prologue` の弱い魔物だけ（主人公1人で勝てる強さ。モンスター章）。 | | |
 | P4 | ファロス（onEnter、1回） | `lute_arrival` | 町の人：「灯台の火が消えて三晩になる」「夜になると、\n暗い海から魔物が上がってくる。\n領主さまが跳ね橋を上げさせた」「定期船も止まったまま」。 | `pro_lute` | （同じ） |
 | P5 | ファロスの記録院出張所（任意） | `lute_rowell` | ロウェル：「……語り部の見習いか。灯台の伝承なら、\nきのう記録院が写し取った。」「伝承は記録院が責任をもって保管する。\n語り部の出る幕じゃない。」 | `pro_met_rowell` | |
-| P6 | 酒場「語らいの灯亭」 | `lute_tavern_start`（酒場のマスター。`!pro_party_chosen` の間は `common_tavern` の代わりにこれを出す） | 「語り部さんかい。灯台へ行くなら、\n守り手がいるね。」「今夜ここにいるのは、\n腕の立つ連中ばかりだよ。」→ `ev.chooseCompanions({count:3})` →「灯台守のオットーじいさんが、\n港で途方に暮れてたよ。」 | `pro_party_chosen` | `obj_s_keeper` |
-| P7 | ファロスの港 | `lute_otto`（灯台守オットー） | 仲間を選ぶ前：「ひとりで灯台へ？　とんでもない。\n酒場で仲間を見つけておいで。」選んだあと：「灯台の守り歌が、\nどうしても思い出せんのじゃ。」「あの歌がなけりゃ、火はつかん。……頼む。」→ `k_lighthouse_key` を渡す。→ **戦いの心得（チュートリアルの 3 行）**：「仲間は前列と中列に並ぶんじゃ。\n中列は狙われにくいが、槍・弓・鞭の\nほかは、前まで届かんぞ。」「武器は2つまで持てる。戦うときは、\nどちらの武器で行くかを選ぶんじゃ。」「戦いに慣れたら『オート』に任せてもよい。\nBを押せば、いつでも自分で指示できる。」 | `pro_key` | `obj_s_lighthouse` |
-| P8 | 灯台1〜2階 | `lighthouse_1_tutorial`（1階の入口から 3 マス奥の step イベント、once） | 1階：倉庫。入ってすぐ、オットーが入口まで付いてきて（NPC `otto_door`、cond `'!pro_tutorial'`）「中から、ネズミの鳴き声が……\n気をつけるんじゃ！」→ **チュートリアルの戦闘** `ev.battle({troop:'tr_tutorial', glimmerForce:'hero', noEscape:true})`（野ネズミ 2 匹・ティア 0。§9.11.7。主人公が必ず閃く）→「今のは……『閃き』じゃな。戦いの中で、\nふいに新しい技を思いつくことがある。」「閃いた技は、年代記の技の書に\n書き残される。メニューの『技の書』で\n見られるぞ。」→ オットーは港へ戻る（`otto_door` を消す）。そのあと宝箱（回復の道具）。入口の扉は `k_lighthouse_key` を持っていれば開く（§10.8.0-6 の閉じた道）。2階：らせん階段。休息の灯。隠し通路（§10.6.4）。 | `pro_tutorial` | |
+| P6 | 酒場「語らいの灯亭」 | `lute_tavern_start`（酒場のマスター。`!pro_party_chosen` の間は `common_tavern` の代わりにこれを出す） | 「語り部さんかい。灯台へ行くなら、\n守り手がいるね。」「今夜ここにいるのは、\n腕の立つ連中ばかりだよ。」→ `ev.chooseCompanions({count:3})` →「灯台守のオットーじいさんが、\n港で途方に暮れてたよ。」 | `pro_party_chosen` | `obj_w_keeper` |
+| P7 | ファロスの港 | `lute_otto`（灯台守オットー） | 仲間を選ぶ前：「ひとりで灯台へ？　とんでもない。\n酒場で仲間を見つけておいで。」選んだあと：「灯台の守り歌が、\nどうしても思い出せんのじゃ。」「あの歌がなけりゃ、火はつかん。……頼む。」→ `k_lighthouse_key` を渡す。→ **戦いの心得（チュートリアルの 3 行）**：「仲間は前列と中列に並ぶんじゃ。\n中列は狙われにくいが、槍・弓・鞭の\nほかは、前まで届かんぞ。」「武器は2つまで持てる。戦うときは、\nどちらの武器で行くかを選ぶんじゃ。」「戦いに慣れたら『オート』に任せてもよい。\nBを押せば、いつでも自分で指示できる。」 | `pro_key` | `obj_w_lighthouse` |
+| P8 | 灯台1〜2階 | `lighthouse_1_tutorial`（1階の入口から 3 マス奥の step イベント、once） | 1階：倉庫。入ってすぐ、オットーが入口まで付いてきて（NPC `otto_door`、cond `'!pro_tutorial'`）「中から、ネズミの鳴き声が……\n気をつけるんじゃ！」→「ネズミ2匹なら、{hero}ひとりで\n十分じゃろう。仲間は後ろで見ておれ。」→ **チュートリアルの戦闘** `ev.battle({troop:'tr_tutorial', members:['hero'], glimmerForce:'hero', canLose:true, noEscape:true, noRare:true, noGolden:true})`（§9.11.7・§4.9.6 と一字一句同じ。野ネズミ 2 匹・ティア 0。仲間は出ない。主人公の最初の行動で必ず閃く）。負けたら「……危なかったのう。\nひと息ついて、もう一度じゃ。」→ `ev.heal()` → 同じ戦闘をやり直す（勝つまでくり返す。`once` は勝ってから立つ）→「今のは……『閃き』じゃな。戦いの中で、\nふいに新しい技を思いつくことがある。」「閃いた技は、年代記の技の書に\n書き残される。メニューの『技の書』で\n見られるぞ。」→ オットーは港へ戻る（`otto_door` を消す）。そのあと宝箱（回復の道具）。入口の扉は `k_lighthouse_key` を持っていれば開く（§10.8.0-6 の閉じた道）。2階：らせん階段。休息の灯。隠し通路（§10.6.4）。 | `pro_tutorial` | |
 | P9 | 灯台3階（灯室） | `lighthouse_3_fine`、`lighthouse_3_boss` | フィーネ（初登場・名乗らない）：「言葉を失った灯は、言葉で取り戻すの。」「……あなたなら、できるわ。」→ 消える。ボス `tr_b_pageeater`（ページ食らい）。勝つと、ページ食らいの体から白い紙片が舞い、歌の言葉に戻る。`ev.caption`：「♪ 海の果てまで、灯よ届け\n帰る舟に、道を照らせ」→「{hero}は、\n守り歌を年代記に書き記した。」→ 灯がともる（白く光る演出）→ 暗転して `ev.warp('lute','inn')`。 | `pro_boss` | |
 | P10 | ファロス（朝。onEnter） | `lute_departure` | 町の人が喜ぶ。跳ね橋が下りた知らせ。宿の前にベルナ：「夜通し歩いてきたよ。……よくやったね、\n{hero}。」`k_chronicle`・`k_quill`・`k_bell` を渡す。`ev.caption`「年代記に序章『灯台守の歌』が記された。」＋ジングル `chapter`。「この大陸には八つの大きな伝承がある。\nその全部が、いま白紙になりかけている。」「全部を語り直して、\n年代記を書き上げなさい。それが、\nあなたの修業の仕上げだよ。」→ 8地方のうわさを1行ずつ（`DB.regions[*].hint`）。酒場のマスター：「ここに残った連中も、\nいつでも仲間にできるよ。\nどこの町の酒場でもね。」 | `prologue_done` | `obj_regions` |
 
@@ -10482,7 +10646,7 @@ world 担当は下の座標に置く（地形の都合で±3マスまでずら�
 
 | # | 場所 | イベント id | 流れ | フラグ・変数 | 目的 |
 |---|---|---|---|---|---|
-| 1 | `caldera`（onEnter、1回） | `caldera_intro` | 族長ドルガ：「火山が灰を吐き続けて、畑が全滅だ。」「今年は、\n火の鳥がよみがえる百年目のはずなのに……。」 | `ash_start` | `obj_ash_1` |
+| 1 | `caldera`（onEnter、1回） | `caldera_intro` | 族長ドルガ：「火山が灰を吐き続けて、畑が全滅だ。」「今年は、火の鳥が\nよみがえる百年目のはずなのに……。」 | `ash_start` | `obj_ash_1` |
 | 2 | `caldera` | `caldera_kaya` | 火の巫女カヤ：「百年目の祭りでは、\n巫女が卵の前で火の鳥の物語を語るの。\nでも、物語が出てこない……。」「火山の壁には、\n昔の巫女たちが描いた絵が残っているはず。」 | | `obj_ash_2` |
 | 3 | `ash_volcano_1` | `ash_volcano_1_mural` | 壁画1：「壁画には、灰の中から\n小さな炎が生まれる姿が\n描かれている。」 | `ash_murals` +1 | |
 | 4 | `ash_volcano_2` | `ash_volcano_2_boss` | 中ボス `tr_b_hellhound`（炎の番犬）。奥の壁画の前にいる | `ash_mid` | |
@@ -10716,7 +10880,7 @@ world 担当は下の座標に置く（地形の都合で±3マスまでずら�
 - 地方 `DB.regions`（並び順 = N）：`r_forest r_desert r_snow r_marsh r_isles r_mine r_ash r_star`
 - マップの `region` に使う値：上の8つ ＋ `prologue` `finale` `postgame`
 - 地方の短い名前 `<rs>`（フラグ・目的・イベントに使う）：`forest desert snow marsh isles mine ash star`
-- 場所 `DB.locations`（ワープ先、この順）：`roa lute fern kasim yule loch coral nerei dovan caldera orbis biblia`
+- 場所 `DB.locations`（ワープ先、この順。§10.6.3）：`roa lute lighthouse fern verda_maze kasim sand_tomb yule frost_peak loch mist_manor bell_marsh coral nerei tide_cave dovan deep_mine caldera ash_volcano orbis stargaze biblia archive`（23 件。町 12・ダンジョンの入口 11）
 
 #### 10.13.2 マップ（55枚。＋任意の家 `<町id>_house<n>`）
 | 担当 | マップ id |
@@ -10791,7 +10955,7 @@ world 担当は下の座標に置く（地形の都合で±3マスまでずら�
 | 区分 | フラグ |
 |---|---|
 | 自動 | `hero_created` `cleared_<地方id>` `joined_<仲間id>` `game_clear` |
-| 序章 | `pro_start` `pro_berna_sent` `pro_lute` `pro_met_rowell` `pro_party_chosen` `pro_key` `pro_boss` `prologue_done` |
+| 序章 | `pro_start` `pro_berna_sent` `pro_lute` `pro_met_rowell` `pro_party_chosen` `pro_key` `pro_tutorial` `pro_boss` `prologue_done` |
 | 地方（全地方） | `<rs>_start` `<rs>_mid` `<rs>_fine` `<rs>_boss` |
 | 地方（個別） | `forest_dan` `snow_flame` `marsh_key` `isles_marina` `isles_ship` `star_chart` |
 | 報酬など1回だけのイベント | once のフラグ名 = イベント id（例 `fern_hanna_reward`） |
@@ -10803,20 +10967,21 @@ world 担当は下の座標に置く（地形の都合で±3マスまでずら�
 **変数（vars）**：`forest_verses`（0〜3）、`desert_letters`（0〜3）、`marsh_bells`（0〜3）、`mine_rescued`（0〜3）、`ash_murals`（0〜3）。
 
 #### 10.13.8 目的（`DB.objectives`。`{left}` は残りの地方の数）
-| id | 文 |
-|---|---|
-| `obj_s_roa` | 師匠ベルナの話を聞こう。 |
-| `obj_s_to_lute` | 港町ファロスの酒場で、\n旅の仲間を探そう。 |
-| `obj_s_keeper` | 港にいる灯台守の\nオットーを訪ねよう。 |
-| `obj_s_lighthouse` | 半島の南の岬にある、\nファロス灯台に火を取り戻そう。 |
-| `obj_regions` | 各地の伝承を語り直そう。\n（残り{left}地方） |
-| `obj_s_t6_home` | 師匠の様子を見に、\nロアの里へ帰ろう。 |
-| `obj_s_final_roa` | 八枚のページがそろった。\nロアの里へ帰ろう。 |
-| `obj_s_final_ferry` | ファロスの港から、\nビブリア島へ渡ろう。 |
-| `obj_s_final_archive` | 白の大書庫の頂を目指そう。 |
-| `obj_s_postgame` | 大書庫の地下に、\n忘却の底が口を開けた。 |
-| `obj_s_pg_clear` | すべての物語を書き終えた。 |
-| 地方の目的 | `obj_forest_1..3` `obj_desert_1..3` `obj_snow_1..2` `obj_marsh_1..3` `obj_isles_1..4` `obj_mine_1..2` `obj_ash_1..3` `obj_star_1..2`（文は §10.8 の各地方） |
+**担当は id の接頭辞で分ける**（第 2 版で決めた。§3.3.15・§13）: world（A18、`src/data/objectives.js`）= **`obj_w_*` と `obj_regions`**、story（A19、`src/events/story_objectives.js`）= **`obj_s_*`**、reg-a・reg-b（A20・A21）= 自分の地方の **`obj_<rs>_<n>`**（その地方の `src/events/region<N>_*.js` の中で `Object.assign(R.DB.objectives, {…})`）。ほかの担当の接頭辞の id は登録しない。
+| id | 文 | 担当 |
+|---|---|---|
+| `obj_w_roa` | 師匠ベルナの話を聞こう。 | world |
+| `obj_w_to_lute` | 港町ファロスの酒場で、\n旅の仲間を探そう。 | world |
+| `obj_w_keeper` | 港にいる灯台守の\nオットーを訪ねよう。 | world |
+| `obj_w_lighthouse` | 半島の南の岬にある、\nファロス灯台に火を取り戻そう。 | world |
+| `obj_regions` | 各地の伝承を語り直そう。\n（残り{left}地方） | world |
+| `obj_s_t6_home` | 師匠の様子を見に、\nロアの里へ帰ろう。 | story |
+| `obj_s_final_roa` | 八枚のページがそろった。\nロアの里へ帰ろう。 | story |
+| `obj_s_final_ferry` | ファロスの港から、\nビブリア島へ渡ろう。 | story |
+| `obj_s_final_archive` | 白の大書庫の頂を目指そう。 | story |
+| `obj_s_postgame` | 大書庫の地下に、\n忘却の底が口を開けた。 | story |
+| `obj_s_pg_clear` | すべての物語を書き終えた。 | story |
+| 地方の目的 | `obj_forest_1..3` `obj_desert_1..3` `obj_snow_1..2` `obj_marsh_1..3` `obj_isles_1..4` `obj_mine_1..2` `obj_ash_1..3` `obj_star_1..2`（文は §10.8 の各地方） | reg-a（forest desert snow marsh）・reg-b（isles mine ash star） |
 - 地方の目的は `ev.setObjective(id, {region:'<地方id>'})` で入れる（全体の目的は変えない）。
 - **menu への依頼**：「次の目的」の窓は、いるマップの `region` がクリア前の地方で、`R.Game.regionObj[region]` があればそれを、なければ `R.Game.objective` を出す。
 
@@ -10844,10 +11009,11 @@ R.DB.config = Object.assign(R.DB.config || {}, {
   start: { map: 'roa_house', spawn: 'bed', dir: 'down' },
   startGold: 0,                 // 50 ゴールドと回復の道具はベルナが P2 で渡す
   startItems: {},
-  startObjective: 'obj_s_roa',
+  startObjective: 'obj_w_roa',
   defaultHero: { name: 'アルン', gender: 'm', type: 'warrior', favor: { kind: 'weapon', id: 'sword' } },   // §5.0 の 0.13（批評 18・54・82）
   innPrice: [10, 16, 24, 32, 42, 54, 66, 80, 96, 112],   // ティア0〜9（R.Tier.effective() で引く。§4.12.3・0.19）
   postgameStart: { map: 'roa', spawn: 'entrance' },
+  warpGroups: { prologue: 'ファロス半島', finale: 'ビブリア島' },   // ワープの一覧の地方の名前（r_* は DB.regions[id].name。§10.6.3・§11.7.12）
   chronicle: { /* §10.4.1 */ },
 });
 ```
@@ -10861,7 +11027,7 @@ R.DB.config = Object.assign(R.DB.config || {}, {
 | ダンジョン | 14（本編13・裏1） | 12〜16 ✓ |
 | フロア | 41（本編36・裏5） | 30〜40（本編） ✓ |
 | マップの総数 | 55（＋任意の家） | |
-| ボスの編成 | 26（裏ボス含む。魔物としては28体） | 24〜28 ✓ |
+| ボスの編成 | 26（裏ボス含む。魔物としては 34 体。お供を含む） | 24〜28 ✓ |
 | 地方 | 8（どの順番でも） | 6〜8 ✓ |
 
 | 部分 | 目安 |
@@ -10954,7 +11120,8 @@ R.DB.config = Object.assign(R.DB.config || {}, {
 | 0.18 | 図鑑は 3 枠（通常・レア・超レア）を名前か「？？？」で出し、一覧の行の右に**枠の数だけの小さな点 3 つ**（取った枠が色つき）を出す。 | 一覧で「何が足りないか」がすぐ分かる（集める楽しさ）。 |
 | 0.19 | 宝箱の絵は 2 種: ふつうの `obj:chest`（木と鉄の帯）と、`obj:chest_rare`（紺と金、宝石つき）。**`pool:'p_rare'` の宝箱だけ** `chest_rare`（固定の中身の宝箱は作らない。§8.12.1。編集で決めた。批評 32）。 | §8.12.4 の「ダンジョンごとに 1 つの p_rare」を見つける楽しみ。 |
 | 0.20 | 立ち止まっている人物・NPC は**足踏みしない**（歩いているときだけ 2 コマ）。 | RS1 の見た目（フィールドの覚え書き §4.10）。 |
-| 0.21 | **Part A5**: 装備の候補の一覧に、品ごとの主な数値（武器 `攻88` か `術94`、防具 `守12`、アクセサリは一番大きい能力値 `知+15`）を右に出し、比べる窓に全部の増減を出す（§11.7.5）。図鑑の 3 枠は**ドロップでも盗みでも**★になり、盗んで分かった品は倒す前でも出す（§11.7.9）。 | ブリーフ Part A5（エンジンのクレスト 3119fb2 の「攻/魔/守」を、この作品の言葉「攻・術・守」に直して使う）。 |
+| 0.21 | **Part A5**（第 2 版で直した）: 装備の候補の一覧の 1 行を **`名前　攻±n　術±n　守±n` の 3 列**（付けたときの攻撃力・術力・守備力の増減。上がる 緑・下がる 赤・0 は灰）にし、ほかの能力値（6 能力値・術防・命中・回避・会心・最大 HP/MP/WP）の増減は候補の窓の下の窓に出す（§11.7.5）。図鑑の 3 枠は**ドロップでも盗みでも**★になり、盗んで分かった品は倒す前でも出す（§11.7.9）。 | ブリーフ Part A5（エンジンのクレスト 3119fb2 の「攻/魔/守」を、この作品の言葉「攻・術・守」に直して使う）。 |
+| 0.23 | **Part A6**（第 2 版）: Y の詳細ポップアップ（§11.7.18）、候補は強い順（§11.7.5）、リピートは B まで（§11.5.3a）、図鑑の 1 ページ目に落とす物と盗める物（§11.7.9）、ワープの一覧を地方ごとに（§11.7.12）。まとめは §0.7。 | ブリーフ Part A6（エンジンはクレスト 8259156）。 |
 | 0.22 | 設定に **「フィールドの広さ」**（`fieldZoom`: ふつう・ひろい（既定）・もっとひろい）を足して **12 行**にする（§11.7.15）。 | Part A3（批評 9・73）。12 × 14 + 16 = 184 で画面に入る。 |
 
 ### 11.1 共通の約束（全部の絵・画面・音）
@@ -11351,7 +11518,7 @@ P1 では**既存の種類（kind）に新しい色の段**だけで行を作る
 ### 11.4 魔物・ボス・レア魔物の絵（受け渡しの形。**§9.4・§9.10.3・§9.11.6 が正**）
 
 #### 11.4.1 魔物章で決まっていること（まとめ。変えない）
-- **全種 `mon:<魔物id>`**（雑魚 209・レア魔物 23・ボス 34）。雑魚は art-mons（A14）が `src/art/monsters_parts.js` の組み立て表 `R.Art.MON_COMPOSE[spriteId] = [base, hsb, parts, filter?]` から登録、新しい元絵 14 は `src/art/monsters_c.js`。ボス・レア魔物は art-boss（A15）が `bosses_b.js` `bosses_compose.js` `rare_monsters_b.js`。
+- **全種 `mon:<魔物id>`**（雑魚 211・レア魔物 23・ボス 34）。雑魚は art-mons（A14）が `src/art/monsters_parts.js` の組み立て表（`MON_COMPOSE_MOBS` を `R.Art.MON_COMPOSE[spriteId] = [base, hsb, parts, filter?]` に足し込む。§9.4.6）から登録、新しい元絵 14 は `src/art/monsters_c.js`。ボス・レア魔物は art-boss（A15）が `bosses_b.js` `bosses_compose.js` `rare_monsters_b.js`。
 - 魔物データは `hue/sat/bri` を持たない（色は組み立て表の中）。bui は `R.Gfx.get('mon:' + d.sprite)` をそのまま描く（`d.sprite` が無ければ `mon:<id>`）。
 - 組み立て: `R.Art.compose(base, hsb, parts, filter)`、アンカー `R.Art.MON_ANCHORS`、パーツ 66（`R.Art.PARTS`）、フィルター 6（`paper shade chrome mirror platinum prism`）。キャンバスの大きさは元絵と同じ。
 - **金色の個体** = 組み立て後の絵に `R.Gfx.variant(key, {tint:'#ffd24a'})`（エンジン章 C4）。
@@ -11428,7 +11595,7 @@ CARD       = { y: 64 }                                      // ドロップの�
 #### 11.5.3 コマンド・リスト・ヘルプ
 | 場面 | 窓・リスト（`R.UI.List`） | 中身 |
 |---|---|---|
-| 全体のコマンド | `{x:8, y:150, w:128, h:68, cols:2, rows:2, lineH:16, padY:10, cancel:false}` ＋ 右に敵の名前の窓 | `戦う` `リピート` / `オート` `逃げる`（今のまま。逃げられない戦闘は `逃げる` を灰色） |
+| 全体のコマンド | `{x:8, y:150, w:128, h:68, cols:2, rows:2, lineH:16, padY:10, cancel:false}` ＋ 右に敵の名前の窓 | `戦う` `リピート` / `オート` `逃げる`（今のまま。逃げられない戦闘は `逃げる` を灰色。この戦闘でまだ一度もコマンドを入力していなければ `リピート` を灰色）。ヘルプ: `リピート` にカーソルがあるとき、使えるなら「前と同じ行動を、Bを押すまで続ける。」、灰色なら「くり返す行動がまだない。」 |
 | 1 人のコマンド | `{x:8, y:150, w:128, h:68, cols:2, rows:3, lineH:16, padY:10, title:c.name}` ＋ 右に敵の名前の窓 | `R.Rules.commands(c)` の順: 武器の枠ごとのコマンド（名前は `DB.weaponTypes[w].name`: 剣・槍…、両方空なら `体術`）、`術`（覚えているときだけ）、`防御`、`道具`（戦闘で使える品が無ければ灰色）。B で前の人へ戻る |
 | 武器の技 | `{x:8, y:150, w:240, h:68, cols:2, rows:3, lineH:16, padY:10, title:<系統の名前>}` | 先頭に `攻撃`（右の欄は空）、続けて `R.Rules.techList(c, wtype)`。右の欄は `W` と消費（例 `W5`）。使えない物は灰色 |
 | 術 | 同じ形、`title:'術'` | `R.Rules.spellList(c)`。右の欄は `M` と消費（例 `M12`） |
@@ -11448,6 +11615,23 @@ CARD       = { y: 64 }                                      // ドロップの�
 - 狙う相手を選ぶ（今のまま）: 敵 1 体 → 魔物の上に下向きの三角（上端が `WIN_BOTTOM` より上なら左横に右向きの三角）、ヘルプの帯の中央に名前（`Ａ`〜`Ｈ` の記号つき）。同じ種の全部（`group`）→ `小鬼　3匹`。味方 → 窓の下の三角、ヘルプに `アルン　HP 212/240　MP 18/30　WP 24/31`（`fitText`）。全体 → `敵全体` / `敵全体にランダム` / `味方全員` を中央に。**味方のカーソルは 4 人の中を回る**（`% party.length`。今のコードは `% 3`）。
 - カーソルの記憶は人ごと・リストごと（`c.mem`。§3.2.2: `cmd` と `list['weapon1'|'weapon2'|'spell']` と `item` と `target`）。
 
+#### 11.5.3a リピート（Part A6。normative。エンジンの battle_scene.js・battle.js の実装を残して広げる）
+- **意味**: 全体のコマンド `リピート` を選ぶと、**前のラウンドに全員が行った行動**（コマンド入力でもリピートでも、実際に入力された `cmds`。同じ行動・同じ相手）を、そのラウンドから**毎ラウンド自動で入力する**。コマンドの窓は出さない。
+- **続く長さ**: **B を押すまで続く**（Part A6「一度オンにしたら、B で止めるまでオンのまま」）。その戦闘だけで、戦闘が終われば切れる（次の戦闘はリピートなしで始まる。オートの `autoCarry` とは別。`c.mem` にも残さない）。
+- **止め方**: 行動の再生中（文が流れている間も）いつ B を押してもよい。押したら `R.sfx('cancel')`、そのラウンドは最後まで行い、**次のコマンド入力の前に止めて全体のコマンドを出す**（カーソルは `戦う`）。
+- **表示**: リピート中は下の窓の右上 `(248 − w, 130, w, 20)`（`w = textWidth(文) + 16`）に「リピート　Bで解除」（白）。B を押したら同じ所に黄色 `C.yellow` で「リピート解除」を、止まるまで出す（オートの表示と同じ場所・同じ形。§11.5.11。今の `drawAuto`）。文は STYLE_JA §9。
+- **1 人ずつの置き換え**（battle.js の `repeatOne`・`repeatTarget` のまま。`DB.abilities` → `DB.actions`、`type:'ability'` → `'tech'`/`'spell'` に読み替える）:
+  | 前の行動 | 今のラウンドの行動 |
+  |---|---|
+  | 攻撃（武器の枠） | 同じ枠で攻撃。相手が倒れていれば集中の相手（`R.BattleAI.focusTarget`。無ければふつうの選び方）。中列からその枠が届かなければ防御 |
+  | 技・術 | 同じ技・術。`unusable` が `wp` `mp` `silence` `reach` なら、その人だけ攻撃（上の行）。1 体の相手が倒れていれば集中の相手（`focusOrder` の先頭）、味方への回復は HP の割合が一番低い人、蘇生は倒れた人（いなければ攻撃）、`ally_any` は前の相手（いなければ自分） |
+  | 道具 | 同じ道具。残りが無い（予約した分を引いて 0）・逃げられない戦闘の逃げる道具なら攻撃 |
+  | 防御 | 防御 |
+  | 前のラウンドに行動していない（眠っていた・生き返った・加わった） | 攻撃 |
+  | 逃げる | 繰り返さない（`cmds.flee` は `lastCmds` に入れない。今のまま） |
+- 閃きはリピートでも起きる（行動の直前の判定は同じ。§4.9.2）。閃いて置き換わった行動は、そのラウンドだけ（`lastCmds` は入力した元の行動のまま）。
+- オート中は `リピート` を選べない（オートが先）。リピート中に誰も行動できない（全員が眠り・まひ）ラウンドは、入力なしで進める。
+
 #### 11.5.4 敵の名前の窓
 - 位置 `(138, 150, 110, 68)`（全体のコマンド・1 人のコマンドの右）。種の組ごとに 1 行、最大 4 行: 名前を `(x+9, y+8+i×14)` に `fitText`（幅 `110 − 22 − 数の幅`）、数を右寄せ `(x+101, 同じ y)`。
 - 名前の色: 金色の個体 `C.gold`、鋼 `#c8d0e0`、ほか白。レア魔物は白（キラキラで分かる）。
@@ -11461,7 +11645,7 @@ CARD       = { y: 64 }                                      // ドロップの�
 - 熟練度の段が上がった（`{t:'prof'}`）ことは、戦闘では**何も出さない**（強さの画面で見る）。
 
 #### 11.5.7 閃きの演出（normative。Part A の「ピコーン・窓が光る・技名を大きく」）
-エンジンの順番（§3.3.7）: `{t:'glimmer', u, id, kind}` → 文「{name}は{名前}を閃いた！」 → 置き換えた行動の `fx` …。bui は次のとおりに描く（フレームは戦闘の速さ 1 のとき。`H = max(36, round(50 / spd))`）:
+エンジンの順番（§3.3.7）: `{t:'glimmer', u, id, kind}` → 文「{name}は〈技名〉を閃いた！」（STYLE_JA §6。術も同じ形） → 置き換えた行動の `fx` …。bui は次のとおりに描く（フレームは戦闘の速さ 1 のとき。`H = max(36, round(50 / spd))`）:
 | フレーム | すること |
 |---|---|
 | 0 | `R.sfx('glimmer')`。その人の窓の `glow = 40`。`R.Engine.flashScreen('#fff8d0', 4)`。電球 `obj:glimmer` を窓の下 `(x+30−8, WIN_BOTTOM+1)` に出す（コマ 0/1 を 4 フレームで交互、最初の 8 フレームは 8px 下から上がってくる） |
@@ -11477,10 +11661,10 @@ CARD       = { y: 64 }                                      // ドロップの�
 エンジンは勝利のごほうびの最後に、落とした品を**通常 → レア → 超レアの順**に 1 つずつ出す（battle への依頼。同じ grade は倒した順）。それぞれのあとに `pause`（キー待ち）。
 | grade | 演出 |
 |---|---|
-| `normal` | `R.sfx('item')`。文「{mon}は{item}を落としていった！」。札は出さない |
-| `rare` | `R.Engine.flashScreen('#fff4b0', 16)`、`R.jingle('rare')`（待たない）。**札**: 窓 `(44, 64, 168, 30)`、`title:'レア'`、アイコン `(x+12, y+11)`、名前 `★{item}` を `(x+24, y+9)` に `C.rare`。札の左右に白い十字のキラキラ 2 つ。文「{mon}は{item}を落としていった！」「レアアイテムだ！」 |
-| `super` | 戦闘背景と魔物の上を黒 45% で暗くする。`await R.jingle('superrare')` を始め、**ジングルが終わるまでキーを受け付けない**。札: 窓 `(44, 62, 168, 46)`、`title:'超レア'`（札の文字 `C.super`）、アイコン `(x+14, y+10)`、名前 `★{item}` を `(x+26, y+8)` に `C.super`、2 行目 `(x+14, y+24)` に `ほかでは手に入らない一品` を `#c8c8d8`。札のまわりに桃と白の十字のキラキラ 7 つ（半径 1〜3、20 フレーム周期で瞬く）。文「{mon}は{item}を落としていった！」「超レアアイテムだ！」 |
-- 盗んだ品（`{t:'gain'}`）は `R.sfx('steal')` と文だけ。盗んだ品がレア以上なら上の `rare` / `super` と同じ札（battle が `grade` を付ける）。
+| `normal` | `R.sfx('item')`。文「{mon}は{item}を残していった！」（STYLE_JA §6）。札は出さない |
+| `rare` | `R.Engine.flashScreen('#fff4b0', 16)`、`R.jingle('rare')`（待たない）。**札**: 窓 `(44, 64, 168, 30)`、`title:'レア'`、アイコン `(x+12, y+11)`、名前 `★{item}` を `(x+24, y+9)` に `C.rare`。札の左右に白い十字のキラキラ 2 つ。文「{mon}は{item}を残していった！」「レアアイテムだ！」（STYLE_JA §6） |
+| `super` | 戦闘背景と魔物の上を黒 45% で暗くする。`await R.jingle('superrare')` を始め、**ジングルが終わるまでキーを受け付けない**。札: 窓 `(44, 62, 168, 46)`、`title:'超レア'`（札の文字 `C.super`）、アイコン `(x+14, y+10)`、名前 `★{item}` を `(x+26, y+8)` に `C.super`、2 行目 `(x+14, y+24)` に `ほかでは手に入らない一品` を `#c8c8d8`。札のまわりに桃と白の十字のキラキラ 7 つ（半径 1〜3、20 フレーム周期で瞬く）。文「{mon}は{item}を残していった！」「超レアアイテムだ！」（STYLE_JA §6） |
+- 盗んだ品（`{t:'gain', item, grade, stolen:true}`。§3.3.8）は `R.sfx('steal')` と文「{name}は〈品〉を盗んだ！」（STYLE_JA §6）だけ。`grade` が `rare` なら上の `rare` と同じ札（超レアは盗めない）。
 - 宝箱からレア・超レアの品が出たときは、フィールドで同じジングル（§11.6.3）。札は出さない。
 
 #### 11.5.9 登場の演出
@@ -11488,7 +11672,7 @@ CARD       = { y: 64 }                                      // ドロップの�
 |---|---|---|
 | ふつう | 今のまま | `battle` |
 | ボス | `R.sfx('roar')`、`R.Engine.shake(24, 2)`、20 フレーム（今のまま） | 編成の `bgm` |
-| レア魔物 | 金の光 `#ffe890` を 2 回（14 フレーム）、`R.jingle('rare')` を待ちながら「めったに出会えない魔物が現れた！」、そのあとレア魔物の `appear` の文。キラキラは戦闘中ずっと | `rarebattle` |
+| レア魔物 | 金の光 `#ffe890` を 2 回（14 フレーム）、`R.jingle('rare')` を待ちながら「めったに出会えない魔物が現れた！」（STYLE_JA §6 の「めずらしい魔物」の行）、そのあと「〈魔物〉が現れた！」とレア魔物の `appear` の文。キラキラは戦闘中ずっと | `rarebattle` |
 | 金色の個体 | その魔物を `#fff4b0` で 4 フレームおきに 24 フレーム光らせる、`R.sfx('golden')`、文は§9.8「金色の〇〇が現れた！」。キラキラは戦闘中ずっと | `rarebattle` |
 | 鋼の魔物 | 今のまま（特別な光は無し） | `rarebattle` |
 | 先制 | 文「魔物たちは、まだこちらに気づいていない。先手を取った！」（クレストの文は DQ の定型に近いので替えた。STYLE_JA §6） | |
@@ -11505,7 +11689,7 @@ CARD       = { y: 64 }                                      // ドロップの�
 - かばう（`cover`）: かばった人の窓を 3px 上げ、`R.sfx('jump')`（今のまま）。
 
 #### 11.5.11 オートの表示
-- オート中は下の窓の右上 `(248 − w, 130, w, 20)` に「オート　Bで解除」、B を押したら黄色の「オート解除」（今のまま）。オートの文は 1.4 倍速く流れる（今のまま）。
+- オート中は下の窓の右上 `(248 − w, 130, w, 20)` に「オート　Bで解除」、B を押したら黄色の「オート解除」（今のまま）。オートの文は 1.4 倍速く流れる（今のまま）。リピート中も同じ場所に「リピート　Bで解除」／「リピート解除」（§11.5.3a）。
 
 #### 11.5.12 演出（`fx`）の一覧（`battle_fx.js`）
 - 既存の fx はすべて残す。**データは fx の id を正確に書く**（部分一致に頼らない。戦闘の覚え書き §22）。bui は `KEYWORDS` の部分一致を、既存のセーブ・データの互換のためにだけ残し、単語の境目で判定するように直す（`jump` が `mp` にならない）。
@@ -11534,7 +11718,7 @@ CARD       = { y: 64 }                                      // ドロップの�
 - 開けたときのジングル: 大事なもの `keyitem`、超レア `superrare`、レア `rare`、ほか `item`（決まった中身の grade で。§3.3.10-3）。文「{leader}は宝箱を開けた！」（STYLE_JA §9）「★{item}を手に入れた！」。
 
 #### 11.6.4 休息の灯（NPC `rest`、絵 `obj:lantern`）
-- 調べると `R.sfx('heal')`、画面を白く 8 フレーム光らせ、文「やさしい灯に包まれて、\n疲れが消えていく……。」（HP・MP・WP 全快・蘇生。§10.6.2-5）。
+- 調べると `R.sfx('heal')`、画面を白く 8 フレーム光らせ、文は STYLE_JA §9 の「休息の灯」（「灯の光に包まれて、\n疲れが消えていく……。」）。HP・MP・WP 全快・蘇生（§10.6.2-5）。
 
 #### 11.6.5 字幕 `ev.caption(text, {frames = 150, pos:'middle', size})`
 - 画面全体を黒 60% で暗くし、y 76〜148 の帯（高さ 72）の中央に文を中央ぞろえで（1 行 14、最大 4 行）。`size:16` のときは 1 行 20 で最大 3 行。A で先に進める。ワールド章の場面の字幕（「……ねえ、聞こえる？」など）に使う。
@@ -11549,7 +11733,7 @@ CARD       = { y: 64 }                                      // ドロップの�
 - 閉じたタイルが開くとき（地方担当の tilePatch の直後）: `ev.sfx('unlock')`、そのマスを白く 6 フレーム光らせる（`ev.flash` でよい）。
 - ワープ（メニューの ワープ・羽ペン）: `R.sfx('quill')` → `R.sfx('teleport')` → 暗転して移動。脱出（メニューの 脱出・鈴）: `R.sfx('bell')` → `R.sfx('warp')` → 暗転。
 - 定期船: `R.sfx('ship')` → 暗転 → 着いた町の `dock`（§10.5.4）。
-- 誘い寄せ・魔除けの効き目が切れた: 文（術章・装備章のとおり）と `R.sfx('cancel')`。
+- 誘い寄せ・魔除けの効き目が切れた: 文は STYLE_JA §9 の「香・術が切れた」（§3.3.10-4）と `R.sfx('cancel')`。
 
 ### 11.7 メニュー（担当 menu A5。`src/systems/menu*.js` `shop.js` `gameover.js`）
 
@@ -11586,7 +11770,7 @@ CARD       = { y: 64 }                                      // ドロップの�
 - 灰色にする条件（§11.0 の 0.12）:
   | コマンド | 使えるとき |
   |---|---|
-  | 技・術 | 出撃中の誰かがフィールドで使える術・技を覚えている |
+  | 技・術 | 出撃中の誰かが技か術を 1 つ以上覚えている（**移動中に使えるのは `field:true` の術だけ**。技は見るだけ。§11.7.3） |
   | 年代記 | `k_chronicle` を持っている |
   | 地図 | ワールドに一度でも出た（町・ダンジョンの中でも開ける） |
   | ワープ | フラグ `prologue_done`、かつダンジョン（`type:'dungeon'`）の中でない |
@@ -11602,9 +11786,11 @@ CARD       = { y: 64 }                                      // ドロップの�
 - 装備品のタブ: **L/R で種類をしぼる**（全部 → 武器 → 盾 → 頭 → 体 → 手 → 足 → アクセサリ）。タブの右に今の種類の名前。説明の窓の右下に 4 人の小さな絵を右から左へ `x = 234 − 18k`（装備できない人は暗く）、要約の文字は幅 150 まで。
 - 大事なもの: `k_quill`（ワープ）・`k_bell`（脱出）は「使う」でメニューのワープ・脱出と同じ（§11.7.12）。ほかは説明だけ。
 - 品の名前は `itemLabel`・`itemColor`（§11.1.2）。
+- **Y で詳細**（Part A6。3 つのタブのどれでも）: カーソルの品の `R.Menu.itemDetail(id)`（§11.7.18）。閉じたらカーソルはそのまま（今の menu_items.js:100）。
 
 #### 11.7.3 技・術（フィールドで使う）
-- 人ごと（L/R）。見出し `(4,4,248,40)`: 絵、名前、`M 現在/最大　W 現在/最大`。リスト `(4,46,248, rows 8, cols 1)`: フィールドで使える術（`R.Rules.fieldSpells(c)`）と技。右の欄に `M12` / `W5`。説明 `(4,176,248,44)`。
+- 人ごと（L/R）。見出し `(4,4,248,40)`: 絵、名前、`M 現在/最大　W 現在/最大`。リスト `(4,46,248, rows 8, cols 1)`: その人の**術**（`R.Rules.spellList(c)`。`field:true` の術は白、ほかは灰）、続けて**技**（`R.Rules.techList` を系統の順に。**すべて灰**。**技は移動中には使えない**。第 2 版で直した）。右の欄に `M12` / `W5`。説明 `(4,176,248,44)`。
+- A: 白い術だけ使える（下の対象の選び方）。灰の術・技は `R.sfx('buzzer')` と説明の窓に「今は使えない。」（STYLE_JA §9）。**Y で詳細**: カーソルの技・術の `R.Menu.actionDetail(id, {member:c})`（§11.7.18）。
 - 対象を選ぶ窓は `pickMember`（`party` `allies` の術は選ばない。§7.3.5）。足りなければ `MPが足りない！`。誘い寄せ・魔除けの術は文（術章）。
 
 #### 11.7.4 満タン
@@ -11635,10 +11821,33 @@ CARD       = { y: 64 }                                      // ドロップの�
 ```
 - 見出し `(4,4,248,40)`: 絵 `(12,12)`、名前 `(34,10)`、`Lv` を右寄せ `(118,10)`、2 行目 `(34,24)` に主人公は「タイプ　〇〇が得意」、仲間は肩書。右上 `(244,10)` に隊列（`前列`/`中列`、右寄せ）、右下 `(244,24)` に `L◀ ▶R`。**品を選んでいるあいだは、2 行目と右側の代わりに、その品の `desc` 2 行**（`(34,10)` `(34,24)`、幅 210）。
 - 枠 `(4,46,146,154)`: 10 行（`y+8+k×14`）。ラベル `(20, y)`: `武器1 武器2 盾 頭 体 手 足 アクセ1 アクセ2`、10 行目は `最強装備`（`C.cyan`）。品の名前 `fitText(64, y, 80)`（`itemLabel`・`itemColor`）、空は `―`（灰）。両手持ちで盾が使えないときは盾の行を `（両手持ち）`（灰）。
-- 品を選ぶ: 枠の窓と同じ四角にリスト（10 行）: 先頭 `外す`、続けて付けられる品。1 行 = 名前 `fitText(20, y, 78)` ＋ **右に品の主な数値**（Part A5）: 武器は `攻88`（杖などで `mag > atk` なら `術94`）、盾・頭・体・手・足は `守12`、アクセサリは一番大きい能力値の増え方（`知+15`。能力値の略は 腕・体・器・速・知・精。能力値の無い品は空）を右寄せ `(142, y)`、`#c8c8d8`。持っている数は名前の後ろに `×2`（2 つ以上のとき）。**比べる窓はそのまま見えていて**、カーソルの品を付けたときの 14 項目の増減（↑緑 ↓赤）を出す（A5「主要ステータスの増減が一覧で分かる」）。
-- 比べる `(152,46,100,174)`: 14 行（`y+7+k×11`）: `攻撃1 攻撃2 術力 守備 術防 命中 回避 会心 腕力 体力 器用さ 素早さ 知力 精神`。ラベル `(158, y)` を `#c8c8d8`、今の値を右寄せ `(208, y)`、`▶`（灰）を `(210, y)`、付けたあとの値を右寄せ `(246, y)`（上がる 緑・下がる 赤・同じ 白）。品を選んでいないときは付けたあとの列を空ける。**変わるものは全部色が付く**（トレードオフが見える）。
-- 下の 1 行 `(4,202,146,18)`: 両手持ちの注意「両手持ち：盾は外れる」（黄）、最大 HP/MP/WP が変わる品なら「最大HP +20　最大MP −5」、ほかは空。
-- 最強装備: 選ぶと小さな窓 `物理重視` `術重視` `バランス` → `R.Rules.optimize(c, 'phys'|'magic'|'balance')`（§4.4.1。アクセ1・アクセ2 は変えない。クセの品とほかの仲間の品は使わない）。結果の比べる窓を見せて「この装備にしますか？」はい／いいえ。
+- **品を選ぶ（候補の一覧。第 2 版で作り直した。Part A5・A6）**: 枠の行で A を押すと、画面の下半分が次の配置に変わる（見出しは残り、品を選んでいるあいだは見出しの 2 行目と右側がカーソルの品の `desc` 2 行になる）:
+```
+  4 ┌(4,4,248,40) 見出し ─────────────────────────────────────────────────┐
+    │[絵] 鋼の剣の説明 1 行目（desc。幅 210）                              │
+    │     鋼の剣の説明 2 行目                                              │
+ 44 └──────────────────────────────────────────────────────────────────────┘
+ 46 ┌武器1 (4,46,248,120) ── 7 行（y+8+14k）────────────────────────────────┐
+    │  外す                                  攻-88   術 -8   守  0 │
+    │E 鋼の剣                                攻  0   術  0   守  0 │
+    │▶★炎の剣 ×2                             攻+12   術 +5   守  0 │
+    │  鉄の斧                                攻-20   術  0   守  0 │
+    │  …（▲▼ で送る）                                              │
+    │  x: E 20／名前 28〜128／攻 132・値の右端 168／術 172・208／守 212・248 │
+166 └──────────────────────────────────────────────────────────────────────┘
+168 ┌付けると (4,168,248,52) ──────────────────────────────────────────────┐
+    │ 腕力+4　器用さ+2　知力-6　命中+3                      （y+6）      │
+    │ 最大HP+20　回避-2　術防+4                             （y+20）     │
+    │ 両手持ち：盾は外れる                                  （y+34。黄） │
+220 └──────────────────────────────────────────────────────────────────────┘
+```
+  - **1 行 = `名前　攻±n　術±n　守±n`**（Part A5 の「攻・術・守」と、その増減）。`E`（付けている品。`C.cyan`、半角）を `x 20`、名前（`itemLabel`・`itemColor`。2 つ以上持っていれば後ろに `×2`）を `fitText(28, y, 100)`、`攻` を `x 132`（`#c8c8d8`）と値を右寄せ `x 168`、`術` を `x 172` と値を右寄せ `x 208`、`守` を `x 212` と値を右寄せ `x 248`。値は **付けたときの増減**（`R.Rules.previewStats(c, slot, id)` の `atk1`（武器2の枠は `atk2`）・`mag`・`def`）で、半角の `+` `-` と数字（`+128` で 21.3px。字の左端から値の右端まで 36px に入る）。色は 上がる `C.green`、下がる `C.red`、0 は灰 `#808090`（`0` と書く）。`外す` の行も外したときの増減を出す。窓の中の幅は 4〜252 で、右端 248 までに収まる（全角 1 字 10.67px・半角 5.33px で計算した）。
+  - **並びは強い順**（Part A6。§0.7 A6-2）: 先頭は `外す`、そのあとは点 `max(Δatk, Δmag) + Δdef + floor(Δmdef / 2)`（Δ は同じ `previewStats`。`atk` は上と同じ枠の値）の大きい順、同じ点なら id の文字列の順。付けている品も同じ規則でその位置に並ぶ（`E`）。カーソルの初めの位置は付けている品（無ければ 2 行目）。アクセ1・アクセ2 も同じ式（能力値の無い補助のアクセサリは点 0 で id の順）。
+  - **付けると**（下の窓）: カーソルの品を付けたときに変わる、ほかの項目（`previewStats` の 17 のキーのうち、その行に出した 3 つ以外で 0 でないもの。名前は `攻撃1 攻撃2 術力 守備 術防 命中 回避 会心 腕力 体力 器用さ 素早さ 知力 精神 最大HP 最大MP 最大WP`）を `名前±n` で全角スペースでつなぎ、上がる 緑・下がる 赤で 2 行（`(x+10, y+6)` `(x+10, y+20)`、幅 228。入らなければ `fitText` で縮める）。何も変わらなければ 1 行目に「ほかに変わる能力はない。」（灰）。3 行目 `(x+10, y+34)` は注意（黄）: 両手持ちで盾が外れるときは「両手持ち：盾は外れる」、クセの品は「クセのある品（Yで詳細）」、ほかは空。
+  - A で付ける（`R.Rules.equip(c, slot, id)` の `.ok` を見る。外れた盾は「盾を外した。」）、B で枠の一覧に戻る、**Y で詳細**（`R.Menu.itemDetail(id, {member:c})`。§11.7.18。`外す` の行では何もしない）。枠の一覧でも、品の付いている枠で Y を押すと、その品の詳細が開く。
+- 比べる `(152,46,100,174)`: 14 行（`y+7+k×11`）: `攻撃1 攻撃2 術力 守備 術防 命中 回避 会心 腕力 体力 器用さ 素早さ 知力 精神`。ラベル `(158, y)` を `#c8c8d8`、今の値を右寄せ `(208, y)`、`▶`（灰）を `(210, y)`、付けたあとの値を右寄せ `(246, y)`（上がる 緑・下がる 赤・同じ 白）。**枠の一覧のあいだは今の値だけ**（付けたあとの列は空ける）。付けたあとの列を使うのは**最強装備の確認のとき**（`plan.diff`。下の最強装備）。候補の一覧のあいだはこの窓は隠れ、増減は候補の行（攻・術・守）と「付けると」の窓で見せる（第 2 版）。**変わるものは全部色が付く**（トレードオフが見える）。
+- 下の 1 行 `(4,202,146,18)`（枠の一覧のあいだ）: 武器1か武器2が両手持ちなら「両手持ち：盾は使えない」（黄）、ほかは空。最強装備の確認のときは、最大 HP/MP/WP が変わるなら「最大HP+20　最大MP-5」（`plan.diff` の `hp mp wp`）。
+- 最強装備: 選ぶと小さな窓 `物理重視` `術重視` `バランス` → `const plan = R.Rules.optimize(c, 'phys'|'magic'|'balance')`（§4.4.1。**計算だけで、まだ何も変えない**。アクセ1・アクセ2 は変えない。クセの品とほかの仲間の品は使わない）。`plan.changes` が空なら「今の装備がいちばんだ。」。空でなければ、枠の窓の変わる行を緑で光らせ、比べる窓の「付けた後」の列に `plan.diff` を足した値を出して「この装備にしますか？」→ はい: `R.Rules.applyLoadout(c, plan)`（`.ok` が偽なら `R.sfx('buzzer')` と「これ以上は持てない。」）、いいえ: 何もしない。
 
 #### 11.7.6 強さ（人ごと。↑↓ か A でページ、L/R で人）
 - 見出し `(4,4,248,40)`: 絵、名前、`Lv`、隊列の札、2 行目に主人公「タイプ・得意分野」／仲間「肩書・役割」、右に `ページ n/N`。
@@ -11678,10 +11887,25 @@ CARD       = { y: 64 }                                      // ドロップの�
 - ページをめくる（タブを変える）と `R.sfx('page')`。
 
 #### 11.7.9 図鑑
-- 見出し `(4,4,248,24)`: `図鑑　見つけた 120/266　倒した 98`。一覧 `(4,30,150,190)`: 13 行、1 行 = `No.001`（3 桁）＋名前（`fitText` 100。見ていない種は `？？？？？`、見たが倒していない種は灰）＋**右端に点 3 つ**（`x+134, x+139, x+144` に 3×3px。通常・レア・超レアの枠、取った枠は `#ffffff` `C.rare` `C.super`、まだは `#404050`。ボスの枠の無い欄は点を描かない）。レア魔物は名前の前に `★`（`C.gold`）。
+- 見出し `(4,4,248,24)`: `図鑑　見つけた 120/268　倒した 98`（分母は雑魚 211・レア魔物 23・ボス 34 の 268）。一覧 `(4,30,150,190)`: 13 行、1 行 = `No.001`（3 桁）＋名前（`fitText` 100。見ていない種は `？？？？？`、見たが倒していない種は灰）＋**右端に点 3 つ**（`x+134, x+139, x+144` に 3×3px。通常・レア・超レアの枠、取った枠は `#ffffff` `C.rare` `C.super`、まだは `#404050`。ボスの枠の無い欄は点を描かない）。レア魔物は名前の前に `★`（`C.gold`）。
 - 小さな絵 `(156,30,96,120)`: `mon:<id>` を枠に入るまで半分ずつ縮めて中央、下に `倒した数 12` と `金色 2`（金色を倒した数が 1 以上のとき）。
-- A で詳しい画面（見た種だけ）: 題 `(4,4,248,26)`（`No.`、名前、`1/2`）、絵 `(4,32,108,104)`、能力 `(114,32,138,104)`: `Lv`（その種の名目のレベル `lv`）・`HP` `攻撃` `守備` `術力` `素早さ`（`R.Mon.fillStats` が埋めた名目の値。倒すまでは `？？？`）。下 `(4,138,248,82)`: `経験値` `ゴールド`（`y+6`）、`通常` `(y+20)`・`レア` `(y+34)`・`超レア` `(y+48)` に品の名前か `？？？`（ボスで枠が無いものは `―`）、`y+62` に `desc` の 1 行目。2 ページ目: 弱点・耐性（倒したあと。「火に弱い」「土が効きにくい」など）、種族、飛ぶ、`desc` 2 行。←→ で前後の見た種。
-- 並びは§9.14.2（雑魚は系統の順 → 段の順、次にレア魔物、ボスは戦う順）。
+- A で詳しい画面（見た種だけ）: 題 `(4,4,248,26)`（`No.`、名前、`1/2`）、絵 `(4,32,108,104)`、能力 `(114,32,138,104)`: `Lv`（その種の名目のレベル `lv`）・`HP` `攻撃` `守備` `術力` `素早さ`（`R.Mon.fillStats` が埋めた名目の値。倒すか見破る（`scan`）までは `？？？`）。
+- **1 ページ目の下の窓 = 落とす物と盗める物の表**（Part A6「1 ページ目にドロップと盗めるアイテムをまとめて」。第 2 版で決めた）:
+```
+138 ┌(4,138,248,82)──────────────────────────────────────────────────────┐
+    │ 経験値 120　ゴールド 45                          落とす　盗む  │ y+6（見出しの行。「落とす」x 190・「盗む」x 226 を中央ぞろえ、#c8c8d8）
+    │ 通常   ★傷薬                                       ○       ○   │ y+20
+    │ レア   ★オオカミの牙                               ○       ○   │ y+34
+    │ 超レア ？？？                                      ○       ―   │ y+48
+    │ 群れで狩りをする灰色のオオカミ。                              │ y+62（desc の 1 行目）
+220 └──────────────────────────────────────────────────────────────────────┘
+```
+  - 行の名前 `通常` `レア` `超レア` を `x+8`（`#c8c8d8`）、品を `fitText(x+44, y, 120)`（「落とす」の列の左 x 174 より手前で終わる）: 手に入れた枠（`book.mon[id].drop` / `rare` / `sr`。ドロップでも盗みでも）は `★` ＋名前（`itemColor`）、まだの枠は `？？？`（灰）、その枠が無い（ボスの レア・超レア、`drops` に無い枠）は `―`。
+  - 「落とす」の列（中心 `x 190`）: その枠があれば `○`、無ければ `―`。「盗む」の列（中心 `x 226`）: 通常・レアの枠があり、その魔物から盗めるなら `○`（ボスは盗みの率 ×0.5 でも盗めるので `○`）、超レアの行と枠が無い行は `―`（**超レアは盗めない**。§4.10.1）。
+  - 盗む技・ついでに盗むで手に入れた枠は、その種を倒す前（`kills` 0）でも名前が出る（Part A5）。見破って（`scan`）も品の名前は出さない（§4.10.4）。
+  - レア魔物の枠（通常 = その種の道具・レア = 遺物・超レア = 遺物か固定ティアの品）も同じ表。金色の個体は元の種の表に数える。
+- 2 ページ目: 弱点・耐性（倒したあと。「火に弱い」「土が効きにくい」など）、種族、飛ぶ、`desc` 2 行。←→ で前後の見た種。
+- 並びは§9.14.2（雑魚は系統の順 → 段の順。鋼の系統（`family` あり）は元の系統の直後。次にレア魔物、ボスは戦う順）。
 - **3 枠（通常・レア・超レア）は、ドロップでも盗みでも、手に入れたら品の名前と★**（Part A5。§3.2.1 の `book.mon[id].drop/rare/sr`）。**盗んで手に入れた枠は、その種を倒す前でも出す**（倒していない種の行は灰色のまま、詳しい画面は「見た」種なら開ける）。
 
 #### 11.7.10 年代記（`R.Menu.chronicleScreen`、§10.4）
@@ -11694,7 +11918,20 @@ CARD       = { y: 64 }                                      // ドロップの�
 - ワールド全体を 1 マス 2px（128×112 → 256×224）。いる所に点滅する白い印（町・ダンジョンの中からは、そのマップの `location` / `escape` の出口の位置）。行ったことのある場所の印は明るく、まだの所は暗く。どのボタンでも閉じる。
 
 #### 11.7.12 ワープ・脱出
-- ワープ: 窓 `(4,4,150, 14 + 行数×14)` に行ったことのある場所（`DB.locations` の順、`R.Game.visited` のもの）。右の窓 `(156,4,96,40)` に選んでいる場所の地方の名前。A → §11.6.7 の演出 → `R.Field.teleport(id)`。
+- ワープ（Part A6。第 2 版で作り直した）: 窓 `(4,4,248,198)`、`title:'どこへ行く？'`、リスト `rows:13`（`lineH` 14。13 行を超えたら ▲▼ で送る）。行 = `R.Field.teleportList()` の 1 件（`visited` の町とダンジョンの入口。§10.6.3 の順 = 地方の順 → 町 → ダンジョン）。**地方ごとにまとめる**: 各まとまりの最初の行（と、送ったときに一番上に来た行）の左 `(x+12, y)` に地方の名前（`DB.config.warpGroups[region] ?? DB.regions[region].name`。`C.cyan`、`fitText` 76）、場所の名前を `(x+96, y)`（`fitText` 144）。町は名前のまま白、ダンジョンは「〈名前〉の入口」を `#c8c8d8`（例「迷いの森の入口」）。
+```
+  4 ┌どこへ行く？ (4,4,248,198)──────────────────────────────────────┐
+    │ ファロス半島  ▶ロアの里                                        │
+    │                 港町ファロス                                   │
+    │                 ファロス灯台の入口                             │
+    │ ヴェルダの森    森の村フェルン                                 │
+    │                 迷いの森の入口                                 │
+    │ グレイモア湿原  水辺の町ロッホ                                 │
+    │                 霧の館の入口                                   │
+    │   …（13 行。行ったことのある所だけ）                            │
+202 └────────────────────────────────────────────────────────────────┘
+```
+  A → §11.6.7 の演出 → `R.Field.teleport(id)`（ダンジョンの入口なら、そのまま 1 階に入る。§10.6.3）。B で戻る。行き先が 1 つも無ければ「飛んでいける場所がない！」。
 - 脱出: 「ダンジョンから脱出しますか？」はい／いいえ → §11.6.7 の演出 → `R.Field.exitDungeon()`。
 - どちらもメニューを閉じてから行う（`Menu._after`。クレストのしくみ）。
 
@@ -11718,20 +11955,90 @@ CARD       = { y: 64 }                                      // ドロップの�
 | ウインドウの色 | `windowColor` | **紺（`ink`、既定）** / 黒 / 青 / 緑 / 赤 |
 | タッチパッド | `touchPad` | 自動 / 出す / 出さない |
 | 決定ボタン | `padConfirm` | 右 / 下 |
-| オート継続 | `autoKeep` | する / しない（説明「ボス戦・イベント戦・レア魔物・金色・鋼の戦闘は、手動で始まります。」） |
+| オート継続 | `autoKeep` | する / しない（説明「次の戦闘もオートで始める（ボス戦は手動）」。20 字。「レア魔物」「金色」は画面に出さない語なので使わない。STYLE_JA §8） |
 | カーソル記憶 | `cursorMemory` | する / しない |
 | 戻る | | |
 - `windowColor` の既定を `'ink'` に（lead: `save.js` の `DEFAULT_SETTINGS` と `settingsVer` 3、`gfx.js` の `WINDOW_THEMES`。§2.6）。
 - 行のピッチ 14、窓の高さ = 12 × 14 + 16 = **184**（画面の 224 に入る）。
 
 #### 11.7.16 店・宿屋
-- 店: 買う品のリスト `(4,4,166, rows 9)`（アイコン・名前・値段。買えない値段は赤）。所持金 `(172,4,80,24)`。横の窓 `(172,30,80,118)`: 4 人の行を `y = 36 + 28i`（絵 `(x+4, y)`、名前 `fitText(x+22, y+1, 54)`、印 `(x+22, y+13)`: `×` 付けられない・`E` 付けている・`▲5`（緑）/`▼3`（赤）主な数値の差・`○` 数値の無い品）。**←→ で横の窓の人を選ぶ**と、説明の窓にその人の全部の差（装備の比べる窓と同じ 14 項目のうち、変わるものだけ `術力+32 守備−6`）。説明 `(8,150,240,68)`: `desc` 2 行＋差の 1 行。
+- 店: 買う品のリスト `(4,4,166, rows 9)`（アイコン・名前・値段。買えない値段は赤）。所持金 `(172,4,80,24)`。横の窓 `(172,30,80,118)`: 4 人の行を `y = 36 + 28i`（絵 `(x+4, y)`、名前 `fitText(x+22, y+1, 54)`、印 `(x+22, y+13)`: `×` 付けられない・`E` 付けている・`▲5`（緑）/`▼3`（赤）主な数値の差・`○` 数値の無い品）。**←→ で横の窓の人を選ぶ**と、説明の窓にその人の全部の差（装備の比べる窓と同じ 14 項目のうち、変わるものだけ `術力+32 守備−6`）。説明 `(8,150,240,68)`: `desc` 2 行＋差の 1 行。**Y で詳細**（Part A6）: カーソルの品の `R.Menu.itemDetail(id, {member: 横の窓で選んでいる人})`（§11.7.18。買う前に全部の効果が分かる。今の shop.js:73）。売る一覧でも同じ。
 - 売る: 大事なもの以外。`price:0` と報酬（`unique`）は灰色（「これは売れない。」）。
 - 宿屋: クレストのまま（出撃中と控えの全員を全快・蘇生、`R.jingle('inn')`、暗転、朝の文）。
 
 #### 11.7.17 ゲームオーバー（`gameover.js`）
-- 黒の画面。白い紙のかけら 12 枚（2×2px、白 60%）がゆっくり左右に揺れながら落ちる（「白紙」の雰囲気）。中央 `(128, 100)` に「全滅してしまった……。」、`R.jingle('gameover')`（80 フレーム後から A/B で飛ばせる。最長 420 フレーム）。
-- そのあと `R.State.wipeRecover()` → 最後の町へ → 「{hero}たちは目を覚ました。」「所持金が半分になった……。」（クレストのまま、名前だけ）。
+- 黒の画面。白い紙のかけら 12 枚（2×2px、白 60%）がゆっくり左右に揺れながら落ちる（「白紙」の雰囲気）。中央 `(128, 100)` に「{hero}たちは全滅した……。」（STYLE_JA §9。今のコードの「全滅してしまった……」は直す）、`R.jingle('gameover')`（80 フレーム後から A/B で飛ばせる。最長 420 フレーム）。
+- そのあと `R.State.wipeRecover()` → 最後の町へ → 「{hero}たちは目を覚ました。」「所持金が半分になった。」（**STYLE_JA §9 が正**。お金が 0 なら 2 行目は出さない。今のコードの「……〇〇たちは目を覚ました。」「お金が半分になってしまった……。」は直す）。終わったときは §4.12.2 の不変条件がすべて真（Part A6。§0.7 A6-6 のテスト）。
+
+#### 11.7.18 詳細ポップアップ（Y。Part A6。normative。担当 menu A5 `menu_items.js`）
+**API**: `R.Menu.itemDetail(id, {member?}) → Promise`（今の menu_items.js:74 を残して `member` を足す）、`R.Menu.actionDetail(id, {member?}) → Promise`（新。技・術）、`R.Menu.detailLines(id, {member?}) → [{text, color?}]`（描く行を返す純粋な関数。品・技・術のどちらも。描画はこの戻り値だけを使う。node のテスト T1〜T3 が呼ぶ）。どのボタン（A・B・Y）でも閉じる（`R.sfx('cancel')`）。開くとき `R.sfx('confirm')`。開ける画面は §0.7 A6-1（道具・装備の枠と候補・店の買う売る・技と術）。
+
+**品の窓** `(8,20,240,184)`、`title` = 種別の名前（武器・盾・頭・体・手・足・アクセサリ・道具・大事なもの）。12 行、行 k は `(x+8, y+8+14k)`、幅 224（はみ出す行は `fitText`）:
+```
+ 20 ┌武器 (8,20,240,184)──────────────────────────────────────────┐
+    │[i]★炎の剣                                         レア★ │ 0 アイコン (x+8,y+10)・名前 fitText(x+20,y+8,150)・レア度（右寄せ x+232）
+    │ 剣　片手持ち                                              │ 1 種別の詳しい行
+    │ 攻撃力 64　術力 12　命中+5                                 │ 2 数値
+    │ 腕力+8　知力-4                                            │ 3 6 能力値の増減（上がる 緑・下がる 赤）
+    │ 火の属性　攻撃で眠り15%                                    │ 4〜7 特殊効果（下の表の言い方。全角スペースでつなぎ、
+    │ レア率+10%　火の熟練度の伸び+20%                           │      4 行まで。入らなければ最後を「…ほか」）
+    │ 術防-10%                                                  │      悪い向きの効果（クセ）は赤
+    │                                                           │
+    │ 装備：アルン　ブリギッタ　マルタ　シルヴァン                │ 8 出撃中の 4 人（装備できない人は #606070）
+    │ 入手：金剛トカゲだけが落とす                               │ 9 入手元
+    │ 火の力を宿した剣。                                         │ 10 desc 1 行目
+    │ ただし術防が下がる。                                       │ 11 desc 2 行目
+204 └──────────────────────────────────────────────────────────────┘
+```
+| 行 | 装備（武器・防具・アクセサリ） | 道具 | 大事なもの |
+|---|---|---|---|
+| 0 | アイコン・名前（`itemLabel`・`itemColor`）・右にレア度: `通常`（白）/ `レア★`（`C.rare`）/ `超レア★`（`C.super`）/ `一品物◆`（水色。`unique`）。遺物はその `grade` | 同じ（道具の `grade`） | 名前・右に `大事なもの` |
+| 1 | 武器「〈系統〉　片手持ち」か「〈系統〉　両手持ち」、防具「重装」「軽装」「布」（盾は「盾　重装」など）、アクセサリ「アクセサリ」 | 使える所「戦闘中・移動中に使える」「戦闘中だけ使える」「移動中だけ使える」 | ― |
+| 2 | 武器「攻撃力 n　術力 n」（＋ `hit` `crit` があれば「命中+n」「会心+n」）、防具「守備力 n　術防 n」（盾は「回避+n」も）、アクセサリ「―」 | 「対象：〈対象の名前〉」（§3.1.1 の表示名） | ― |
+| 3 | `stats`（`statsAdd` を含む）を 腕力 体力 器用さ 素早さ 知力 精神 の順に「腕力+8」「知力-4」、全角スペースでつなぐ。0 は書かない。無ければ「能力値の増減なし」（灰） | 「持っている数：n」 | ― |
+| 4〜7 | 特殊効果: `mods` のキー（§3.3.16 の順）と武器の項目（`element onHit vs drain sealTech metalHit`）を下の表の言い方で | `use.effects` を下の表の言い方で（「HPを35%回復」など） | ― |
+| 8 | 「装備：」＋出撃中の人の名前（`R.Rules.canEquip` が偽の人は `#606070`）。`member` があればその人を先頭に | ― | ― |
+| 9 | 入手元（下の表） | 入手元 | ― |
+| 10〜11 | `desc`（2 行） | `desc` | `desc` |
+
+**入手元の行**（`src` で決める）: `shop` →「入手：店で買える」、`drop` →「入手：宝箱・ボス」（道具は「入手：宝箱・魔物」）、`mdrop` →「入手：〈魔物〉が落とす（レア）」（その品をレア枠に持つ魔物のうち図鑑で見た最初の 1 種。まだ見ていなければ `？？？`、2 種以上なら後ろに「ほか」）、`super` →「入手：〈魔物〉だけが落とす」（`exclusive` の魔物。見ていなければ「？？？だけが落とす」）、`relic` →「入手：めずらしい魔物〈名〉が落とす」（同じ）、`reward` →「入手：物語のお礼の一品物」。
+
+**特殊効果の言い方**（n は値。符号は半角の `+` `-`。% のキーは `%` を付ける）:
+| キー | 言い方 | キー | 言い方 |
+|---|---|---|---|
+| `atk def mdef hit eva crit mag` | 攻撃力+n・守備力+n・術防+n・命中+n・回避+n・会心+n・術力+n | `spd` | 行動の速さ+n |
+| `strPct … mndPct` | 腕力+n%・体力+n%・器用さ+n%・素早さ+n%・知力+n%・精神+n% | `hpPct mpPct wpPct` | 最大HP+n%・最大MP+n%・最大WP+n% |
+| `defPct mdefPct` | 守備力+n%・術防+n% | `physPct magicPct healPct itemPct` | 物理の威力+n%・術の威力+n%・回復の術+n%・回復の道具+n% |
+| `takenPct` | 受けるダメージ+n%（正は赤） | `mpCostPct wpCostPct` | 消費MP+n%・消費WP+n%（正は赤） |
+| `elemBoost:{el:n}` | 〈属性〉の威力+n% | `elemResist:{el:v}` | v 0.5「〈属性〉に強い」、0「〈属性〉が効かない」、−1「〈属性〉を吸う」、1.5 以上「〈属性〉に弱い」（赤）、ほか「〈属性〉のダメージ×v」 |
+| `statusImmune:[s…]` | 「毒・眠りが効かない」（STYLE_JA §4 の名前を「・」で） | `statusResist:{s:v}` | 「まひにかかりにくい」 |
+| `profPct:{k:n}` | 〈系統か属性〉の熟練度の伸び+n% | `glimPct:{k:n}` | 〈系統か属性〉の閃き+n%（`tech` は「技の閃き」、`spell` は「術の閃き」） |
+| `expPct goldPct` | 経験値+n%・ゴールド+n% | `dropPct rarePct superPct` | ドロップ率+n%・レア率+n%・超レア率+n% |
+| `rareEncPct goldenPct` | めずらしい魔物+n%・金色の魔物+n% | `preemptPct escapePct` | 先制+n%・逃げやすさ+n% |
+| `stealPct autoSteal` | 盗み+n%・攻撃でついでに盗むn% | `encounterPct` | 魔物の出現+n%（`quirk` の品なら赤） |
+| `regen mpRegen wpRegen` | 手番ごとにHP回復・手番ごとにMP+n・手番ごとにWP+n | `startBuffs:{stat:n}` | 戦闘の始めに〈攻撃力など〉+n段 |
+| `noSpell` | 術が使えない（赤） | `hpLoss` | 手番ごとに最大HP-n%（赤） |
+| `autoRevive autoCounter` | 倒れても起き上がるn%・反撃n%（x × 100） | `walkHeal noFloorDamage` | 歩くとHP回復・ダメージ床を受けない |
+| 武器 `element` | 〈属性〉の属性 | 武器 `onHit:{status, chance}` | 攻撃で〈状態〉n% |
+| 武器 `vs:{k:x}` | 〈種族・旗〉に強い（×x）（`flying` は「飛ぶ敵」） | 武器 `drain` | 与えた傷のn%を吸う |
+| 武器 `sealTech` | 技が使えない（赤） | 武器 `metalHit` | 鋼の魔物にも効く |
+| 道具 `heal{pct}` `healMp` `healWp` | HPをn%回復・MPをn%回復・WPをn%回復 | 道具 `revive{pct}` | 生き返らせる（HPn%） |
+| 道具 `cure` | 〈状態〉を治す（`'all'` は「悪い状態をすべて治す」） | 道具 `buff` | 〈攻撃力など〉+n段 |
+| 道具 `damage{element}` | 〈属性〉のダメージ（属性が無ければ「ダメージ」） | 道具 `escape` `scan` | 必ず逃げ出せる・HPと弱点を見破る |
+| 道具 `encounter` | n歩のあいだ魔物の出現±n%（`weakOnly` は「弱い魔物だけ」を足す） | 道具 `grow` | 最大HP+n など |
+- **赤にするもの**（クセ・悪い向き）: 能力・威力・率・熟練度・閃きの負の値、`takenPct` `mpCostPct` `wpCostPct` の正の値、`elemResist` の 1 を超える値、`noSpell` `hpLoss` `sealTech`、`quirk:true` の品の `encounterPct`。ほかは白。能力値の行（行 3）は上がる 緑・下がる 赤。
+- ここに無いキーが品にあれば、`detailLines` はキーの名前をそのまま灰で出し（落ちない）、テスト T2 が失敗にする。
+
+**技・術の窓** `(8,56,240,114)`、`title` = `技` か `術`。7 行（`(x+8, y+8+14k)`、幅 224）:
+| 行 | 中身 |
+|---|---|
+| 0 | 名前（大きさは本文。`fitText` 150）、右寄せ `(x+232)` に消費 `W 9` / `M 24`（`member` があればその人の `wpCost`/`mpCost`、無ければデータの値） |
+| 1 | 技「〈系統〉の技　格n」（格 9 は「格9（奥義）」、格 10 は「格10（極意）」）、術「〈属性〉の術　n段」／「合成術　火＋風」／「三属性の術　火＋水＋風」（属性の字は属性の色） |
+| 2 | 「対象：〈対象の名前〉　中列から：届く」か「届かない」（術と `reach:true` の技は「届く」） |
+| 3 | 最初の `damage` の効果: 「威力 n」（n = `round(power × 10)`。多段は「威力 n×h回」、ランダムは「威力 n×h回（ランダム）」）＋属性（「火の属性」）＋物理の打撃の種類（「斬」「打」「突」）＋「必ず当たる」（`sure`）。回復は「回復 n%」（`pct × 100`）、蘇生は「生き返らせる（HPn%）」。どれも無ければ「―」 |
+| 4 | 追加の効果: 状態は「〈状態〉n%」（`chance × 100`。良い状態は名前だけ）、強化・弱体は「〈攻撃力など〉+n段」「-n段」、`dispel` は「強化を消す」／「弱体を消す」、`cover` は「かばう」、`steal` は「盗む」。全角スペースでつなぐ。無ければ空 |
+| 5 | 「覚えている：」＋名前（`book.tech`/`book.spell`。加入した人だけ。`fitText` 212）。誰もいなければ「まだ誰も覚えていない。」 |
+| 6 | `desc`（1 行） |
 
 ### 11.8 新しい冒険の画面（担当 newgame A6。`src/systems/{title,charcreate,nameentry,tavern}.js`）
 
@@ -11788,11 +12095,11 @@ CARD       = { y: 64 }                                      // ドロップの�
  64 ┌(4,64,248,156) ページ 1/2 ─────────────────────────────────────────┐
     │[絵×2] バジル                                                       │
     │       男　44歳　修道士                                             │
-    │       術・癒やし　中列                                             │
-    │ 丘の修道院で薬草と祈りを学んだ。（プロフィール 3 行）              │
-    │ 武器 剣C 大剣D 短剣B 斧C 槍D 弓A                                   │
-    │      棍棒S 杖D 刀B 体術C 鞭D                                       │
-    │ 術   火D  水A  風C  土B  光S  闇D                                ▶ │
+    │       前衛・重　前列                                               │
+    │ 丘の上の修道院から来た大男。（プロフィール 3 行）                  │
+    │ 武器 剣B 大剣B 短剣D 斧B 槍B 弓D                                   │
+    │      棍棒S 杖B 刀D 体術A 鞭D                                       │
+    │ 術   火C  水B  風C  土B  光A  闇C                                ▶ │
 220 └──────────────────────────────────────────────────────────────────┘
 ```
 - 上の窓 `(4,2,248,60)`、`title` は chooseStart では `仲間を3人選ぼう　n/3`、「仲間を探す」では `仲間を探す`。絵は `party:<id>` のコマ 0（カーソルの人だけ 16 フレームで歩く）。カーソルは白い 1px の枠 `(x−2, y−1, 20, 26)`。選んだ人は絵の右下 `(x+11, y+14)` に `1`〜`3`（`C.yellow`、地の札つき）。「仲間を探す」では加入済みの人は出さない（詰めて並べる）。
@@ -12003,13 +12310,15 @@ CARD       = { y: 64 }                                      // ドロップの�
 | 11 | 超レアのドロップ | 札とキラキラ |
 | 12 | 金色の個体・レア魔物の登場 | |
 | 13 | ボス（高さ 112 のもの） | 頭がどこまで隠れるか |
-| 14 | メニュー・装備・強さ（熟練度）・技の書・術の書・図鑑（詳しい画面）・年代記 | T5 の状態 |
+| 14 | メニュー・装備・強さ（熟練度）・技の書・術の書・図鑑（詳しい画面の 1 ページ目: 落とす物と盗める物の表）・年代記 | T5 の状態 |
 | 15 | 酒場の入れ替え | 控え 10 人 |
 | 16 | 地方クリアの演出 | 羽ペンと章の題 |
 | 17 | ゲームオーバー・エンディングの後日談・クレジット | |
 | 18 | フィールドの広さ 3 つ（ふつう・ひろい・もっとひろい） | 同じ町の同じ場所。まわりが黒い余白だらけにならないこと（`outside`） |
 | 19 | 隠し通路を見つけた瞬間 | 「隠し通路を見つけた！」の表示 |
-| 20 | 装備の候補の一覧 | 攻・術・守の数値と、比べる窓の増減（Part A5） |
+| 20 | 装備の候補の一覧 | `名前　攻±n　術±n　守±n` の 3 列と下の窓の増減、強い順（Part A5・A6）。術師の頭の枠で、知力の帽子が上に来ていること |
+| 21 | Y の詳細ポップアップ | 道具（超レアの武器）・装備の候補（クセのあるレアの防具）・店（アクセサリ）・技と術（合成術）の 4 枚。文字の切れ・重なりが無いこと（Part A6） |
+| 22 | ワープの一覧・リピート中の戦闘 | 地方ごとのまとまりとダンジョンの入口が 13 行を超えて送れること／「リピート　Bで解除」と「リピート解除」（Part A6） |
 - 画面の担当（bui・menu・newgame・field）は、自分の画面をこの表の条件で撮って Read で見てから完了とする。
 
 ### 11.13 他の章・担当への依頼
@@ -12019,7 +12328,7 @@ CARD       = { y: 64 }                                      // ドロップの�
 | lead（A0） | `src/core/gfx.js` | `WINDOW_THEMES.ink = {fill:'#16203e', fill2:'#0b1024', border:'#f0e8d0', alpha:0.97}`。`C.rare = '#f8d838'`、`C.super = '#ff88d0'`（C4 の仮の値を§8.2.8 の色に）。`window()` の title の札の地を `theme.fill` に（今は黒以外でも `fill` なので確認だけ） | §11.0 の 0.6・§11.1.2 |
 | lead | `src/core/save.js` | `DEFAULT_SETTINGS.windowColor = 'ink'`、`settingsVer: 3` と移し替え | §11.0 の 0.6（§2.6。済みにする） |
 | lead | `DESIGN.md` | （編集で済み）戦闘の窓の配置は §11.11.3、音の一覧は §11.11.4 を正にし、エンジン章の一覧はここを指すようにした。物・アイコン（`obj:lantern obj:page` など）は §11.11.1 | 一覧を 1 か所に |
-| rules（A1） | `src/systems/rules.js` `party.js` | UI が読む: `R.Party.spriteKey(c)`、`R.Rules.effectiveRow(c, party)`、`R.Rules.commands(c)` の名前は `DB.weaponTypes[w].name`、`R.Rules.optimize(c, 'phys'|'magic'|'balance')`、`R.Rules.previewStats(c, slot, id)` が 14 項目（§11.7.5）を返す | 画面が数値を自分で計算しないように |
+| rules（A1） | `src/systems/rules.js` `party.js` | UI が読む: `R.Party.spriteKey(c)`、`R.Rules.effectiveRow(c, party)`、`R.Rules.commands(c)` の名前は `DB.weaponTypes[w].name`、`R.Rules.optimize(c, 'phys'|'magic'|'balance')`、`R.Rules.previewStats(c, slot, id)` が 17 のキーの差分（§3.3.3。§11.7.5 の 3 列と下の窓）を返す、`R.Rules.optimize` は計算だけで反映は `R.Rules.applyLoadout`（§4.4.1） | 画面が数値を自分で計算しないように |
 | battle（A2） | `src/systems/battle.js` | ① ドロップを通常 → レア → 超レアの順に出す（§11.5.8）。② 盗んだ品の `gain` に `grade`。③ `levelup` のジングルは 1 回の勝利で 1 回。④ `R.Battle.start` の BGM の選び方に鋼を入れる（§11.5.9）。⑤ `canLose` の負けの文。⑥ 閃きの文「{name}は{名前}を閃いた！」を `glimmer` のイベントの直後に | 演出の順番がエンジンの出す順で決まるため |
 | field（A4） | `field.js` `field_map.js` `minimap.js` | ① 付いてくる人数を 4 に、立ち止まりはコマ 0。② マップの `decorLegend`（§11.2.10）。③ 宝箱の絵とジングル（§11.6.3）。④ minimap の色（§11.2.5）とキャッシュのキー。⑤ ワープ・脱出の音（§11.6.7）。⑥ P2: 人物の上に描く飾りの層（`over:true`） | §11.6 |
 | menu（A5） | `menu*.js` `shop.js` `gameover.js` | §11.7 のすべて。`R.Menu.kit.itemLabel/itemColor/iconKey/APT_COLOR`、`menu_jobs.js` を消す前に `kitStar` を menu.js へ（メニューの覚え書き §18） | |
@@ -12059,14 +12368,14 @@ CARD       = { y: 64 }                                      // ドロップの�
 | `check_world.js` | world | ワールドのつながり（**ループを考えた BFS**。端の 3 マス以上の海）、場所の印・ゾーンの矩形（§10.5） |
 | `check_density.js` | qa | 町・家の中の飾りの密度（§11.2.7） |
 | `sim_balance.js` | qa | §4.17 の A〜K と、1 フロアの MP（A3b） |
-| `smoke.js` | qa | ブラウザで §13 の縦の一本道を操作し、主要な画面を撮る。console.error がないこと |
+| `smoke.js` | qa | ブラウザで §13 の縦の一本道を操作し、主要な画面を撮る。console.error がないこと。**E2E: 全滅 → 復活 → 歩ける（S-W1〜S-W3）、リピートが B まで続く（S-R1）**（§0.7 の受け入れテスト。Part A6） |
 | `playthrough.js` | qa | node で、主要なイベントを仮の `ev` で順に実行する（戦闘は simulate で勝たせる）。途中で例外が出ないこと、meta と実際に渡した物が一致すること |
 | `shots.js` | qa | 主要な画面のスクショ一式（タイトル・作成・酒場・フィールド・戦闘・閃き・超レア・メニュー各画面・年代記・図鑑・エンディング）を `design/shots/` に出す（最後に施主へ見せる用） |
 | `sim_glimmer.js`・`sim_spells.js` | spells | 閃きの頻度（何戦に1回か、強い敵での頻度、覚えた数が少ない人の追いつき、得手不得手の差）、合成術の強さ、知力をレア・超レア装備で固めたときの伸び |
 | `sim_loot.js`・`sim_bosses.js` | boss | 実際の抽選でのレア率・超レア率、金色の出る率と効果、ドロップ率アップの装備の効き。各ボスの勝率をティアごとに |
 | `sim_zones.js` | mons | 各地方の雑魚を、ティア 0〜8 × その地方のクリア順で。勝率・ターン数・受けたダメージ |
 | `sim_growth.js` | rules | レベルと HP/MP/WP、稼いでも伸びにくいこと、控えが6割でどれだけ追いつけるか |
-| `test_*.js` | 各担当 | 単体テスト（node、exit 1）。`test_weapons.js`（A9）・`test_gear.js`（A10a）は§8.14.1 |
+| `test_*.js` | 各担当 | 単体テスト（node、exit 1）。`test_weapons.js`（A9）・`test_gear.js`（A10a）は§8.14.1。**`test_menu.js`（A5。新）は §0.7 の T1〜T8**（詳細ポップアップの行・mods の言い方・入手元・候補の強い順・図鑑の 1 ページ目）。`test_battle.js`（A2）に R1〜R6（リピート）、`test_field.js`（A4）に W1〜W4（ワープ先・全滅の不変条件） |
 
 **各担当の完了の条件**
 1. `node tools/build.js --check` が通る。
@@ -12089,12 +12398,13 @@ CARD       = { y: 64 }                                      // ドロップの�
 | V5 | マップ | ローカルのマップに `outside` が無い。町 < 40×32、ダンジョンの階 < 34×30 で `outside` が壁でない。`hidden` がある。固定の中身の宝箱（`item` を直に書いた宝箱）。NPC に `fixed` も `push` も無い（警告） |
 | V6 | ワールド | `wrap` が真でない。外周 3 マスに陸がある |
 | V7 | 隠し通路 | ダンジョンごとの数が §10.6.4 の表と違う（警告）。合計が 13 フロア未満（エラー） |
-| V8 | 魔物 | `hue/sat/bri` を書いた（§3.1.2）。色の語で始まる種に `goldName` が無い（§9.8）。雑魚に `K.MOB` がかかっていない（§9.13.4） |
-| V9 | ドロップ | 超レアがちょうど 1 種の魔物の super 枠に無い、tier が `srTier` と違う。魔物のレア品（`mdrop`）の tier が `band(srTier)` と違う、4 種以上に付く。帯のレア品（`drop`）が魔物の枠にある。ボスの `drops` が §8.12.3 の形でない（§8.14.2） |
+| V8 | 魔物 | `hue/sat/bri` を書いた（§3.1.2）。色の語で始まる種に `goldName` が無い（§9.8）。雑魚に `K.MOB` がかかっていない（§9.13.4）。**`R.Art.MON_COMPOSE_MOBS` と `MON_COMPOSE_BOSSES` の両方にある id**（§9.4.6。第 2 版）。`family` の無い系統の段が 3〜5 でない、`family` のある系統の段が 2 でない・`family` の系統が無い（§9.1.3・§9.9） |
+| V9 | ドロップ | 超レアがちょうど 1 種の魔物の super 枠に無い、tier が `srTier` と違う。魔物のレア品（`mdrop`）の tier が `band(srTier)` と違う、4 種以上に付く。帯のレア品（`drop` の**装備**。道具の `drop` 6 品は除く。§8.9）が魔物の枠にある。ボスの `drops` が §8.12.3 の形でない（§8.14.2） |
 | V10 | 技・術 | `glim.lv` が技 1〜10・術 1〜8 の外。術の MP が §7.1.3 の範囲の外 |
 | V11 | 状態・操作 | 戦闘の外で `status` が空でない状態を作るコード（`status.poison` などの持ち越し）。`R.Game.repelSteps` の読み書きが残っている |
 | V12 | 絵・音 | §11.12.1 の 1〜4。`R.Art.PENDING`・`R.Audio.PENDING` の数（警告） |
 | V13 | 文 | STYLE_JA §10 の check_text のエラーが 0 |
+| V14 | ワープ先（Part A6。第 2 版） | 町・村・家の中・ダンジョンの階のマップに `location` が無い、`location` が `DB.locations` に無い。`DB.locations` が 23 件でない・`kind` か `region` が無い・`spawn` がワールドの出現位置に無い。§10.6.3 の対応表（千年樹 → `verda_maze`、幽霊船 → `nerei`、忘却の底 → `archive`）と違う |
 
 **progress.js（担当 A22）**
 1. 新規ゲームから `game_clear` まで行ける（BFS。ティアと地方のクリアを含む。定期船の `meta.warp` を使う）。
@@ -12127,6 +12437,7 @@ CARD       = { y: 64 }                                      // ドロップの�
 - 使ってはいけない名前（STYLE_JA §7。部分一致と完全一致）を、技・術・敵の行動・品・魔物の名前に当てる。
 - **src/ 全体（台詞・コードの中の文字列を含む）**に当てる禁止語: `冒険の書` `復活の呪文` `ふっかつのじゅもん` `痛恨` `スライム` `メタル` など（STYLE_JA §7.3）。
 - 使ってよい常用外の字（STYLE_JA §2）以外の常用外の字、DQ 式の分かち書き、「！」「？」の後の全角スペース、三点リーダー、1 行の幅（全角 20 字）、名前の直書き（`{hero}`）。
+- **常用漢字表 `tools/lib/joyo.txt`**（第 2 版で決めた。作業環境はネットにつながらないので、ツールが取りに行かない）: **lead（A0）が Phase 0（§2.9 の C11）でリポジトリに入れる**。中身は 2010 年の常用漢字表の 2136 字（改定の告示のとおり）に、許容字体の 3 字（填 剥 頬。表の 塡 剝 頰 と並べる）を足し、「𠮟」を「叱」に置き換えた **2139 字**を、UTF-8・区切りなし・改行なしの 1 行で書いたもの（lead の手元の一覧から作った。先頭は「一丁七万丈三上下不与」）。`check_text.js` は「この字の集合 ＋ STYLE_JA §2 の使ってよい常用外の字 ＋ ひらがな・カタカナ・記号」の外の字をエラーにする。**ファイルが無いときは**、検査 3 だけを飛ばして警告を 1 行出す（ほかの検査は行う。exit 1 にはしない）。
 
 ### 12.5 スクショの確かめ（`shots.js` と各担当。**撮った PNG は必ず Read で見る**）
 - 一覧は §11.12.2 の 20 枚。`design/shots/` に出す（最後にオーナーに見せる）。
@@ -12139,7 +12450,7 @@ CARD       = { y: 64 }                                      // ドロップの�
 **ゲーム全体**（リードが最後に確かめる）:
 1. `node tools/build.js` で `dist/index.html` 1 つができ、オフラインで起動する（フォントを埋め込み済み。外への通信なし）。
 2. validate・progress・check_text がエラー 0。
-3. `smoke.js`: ブラウザでタイトル → はじめから → 主人公の作成 → 酒場で 3 人 → 灯台のチュートリアル（閃き）→ ボス → 地方 1 つ → セーブ・ロード・冒険の合言葉、まで console.error なし。
+3. `smoke.js`: ブラウザでタイトル → はじめから → 主人公の作成 → 酒場で 3 人 → 灯台のチュートリアル（閃き）→ ボス → 地方 1 つ → セーブ・ロード・冒険の合言葉、まで console.error なし。**全滅 → 復活 → 歩ける（S-W1〜S-W3）とリピート（S-R1）の E2E も通る**（§0.7。Part A6）。
 4. `playthrough.js`: node で全部のイベントを順に実行し（戦闘は simulate）、`game_clear` と `pg_clear` まで例外なし。meta と実際に渡した物が一致する。
 5. §12.3 の全項目が合格。
 6. §11.12.2 のスクショ一式をそろえて目で確かめた。
@@ -12158,12 +12469,12 @@ CARD       = { y: 64 }                                      // ドロップの�
 
 | # | 略称 | 範囲 | 担当するファイル |
 |---|---|---|---|
-| A0 | core（lead） | コア・ビルド・設計書・Phase 0 | `src/core/{ns,input,gfx,engine,save}.js`、`src/ui/ui.js`、`src/main.js`、`tools/build.js`、`tools/shot.js`、`tools/lib/load.js`、`assets/**`、`DESIGN.md`、`STYLE_JA.md`、`design/**` |
+| A0 | core（lead） | コア・ビルド・設計書・Phase 0 | `src/core/{ns,input,gfx,engine,save}.js`、`src/ui/ui.js`、`src/main.js`、`tools/build.js`、`tools/shot.js`、`tools/lib/load.js`、`tools/lib/joyo.txt`（§12.4）、`assets/**`、`DESIGN.md`、`STYLE_JA.md`、`design/**` |
 | A1 | rules | 状態・能力・成長・装備の規則・仲間・ティア | `src/systems/{state,rules,party,tier}.js`、`tools/test_rules.js`、`tools/sim_growth.js`（HP/MP/WP の曲線・経験値の減り方・控えの追いつき） |
 | A2 | battle | 戦闘の計算・AI・魔物の解決・ドロップ | `src/systems/{battle,battle_ai,mon}.js`、`tools/test_battle.js`、`tools/fixtures/battle/**`（クレストの test_battle 1173件を移植して、新しい仕様に合わせる） |
-| A3 | bui | 戦闘画面・エフェクト | `src/systems/{battle_scene,battle_fx}.js`、`tools/battle_gallery.js`、`tools/fixtures/bui/**` |
+| A3 | bui | 戦闘画面・エフェクト（**リピートの実装は残して広げる**。§11.5.3a） | `src/systems/{battle_scene,battle_fx}.js`、`tools/battle_gallery.js`、`tools/fixtures/bui/**` |
 | A4 | field | フィールド・マップの読み込み・イベントの実行・地図・デバッグ | `src/systems/{field,field_map,events_runtime,minimap,debug}.js`、`tools/test_field.js`、`tools/fixtures/field/**` |
-| A5 | menu | メニュー・店・宿屋・ゲームオーバー | `src/systems/menu*.js`（menu_jobs.js の削除を含む）、`src/systems/{shop,gameover}.js` |
+| A5 | menu | メニュー・店・宿屋・ゲームオーバー（**`itemDetail`・`previewStats`・候補の並べ替え・Y の処理は残して広げる**。§0.7） | `src/systems/menu*.js`（menu_jobs.js の削除を含む）、`src/systems/{shop,gameover}.js`、`tools/test_menu.js` |
 | A6 | newgame | タイトル・主人公作成・名前入力・酒場・キャラのデータ | `src/systems/{title,charcreate,nameentry,tavern}.js`、`src/data/herotypes.js`、`src/data/companions*.js` |
 | A7 | techs | 武器系統・技 121 | `src/data/weapontypes.js`、`src/data/techs_*.js` |
 | A8 | spells | 属性・状態異常・術 77・閃きのエンジン | `src/data/{elements,statuses}.js`、`src/data/spells_*.js`、`src/systems/glimmer.js`、`tools/sim_glimmer.js`（閃きの頻度）、`tools/sim_spells.js`（合成術の強さ・知力の効き方） |
@@ -12174,13 +12485,13 @@ CARD       = { y: 64 }                                      // ドロップの�
 | A12 | boss | ボス 34 体（26 編成）・レア魔物 23・金色・鋼の魔物・編成 | `src/data/bosses*.js`、`src/data/troops*.js`、`src/data/rare*.js`、`tools/sim_bosses.js`、`tools/sim_loot.js`（レア率・超レア率・金色） |
 | A13 | art-chars | 主人公・仲間・NPC の絵、顔、物、アイコン | `src/art/chars*.js`、`src/art/faces*.js`、`src/art/objects.js`、`tools/sheet_chars.js` |
 | A14 | art-mons | 雑魚の絵（新しい元絵・パーツ替え） | `src/art/monsters_*.js`、`tools/sheet_monsters*.js` |
-| A15 | art-boss | ボス・レア魔物の絵 | `src/art/bosses*.js`、`src/art/rare_monsters*.js`、`src/art/postgame.js`、`tools/{sheet_bosses,sheet_rare,sheet_postgame}.js` |
+| A15 | art-boss | ボス・レア魔物の絵（ボスの組み立て表 `MON_COMPOSE_BOSSES` は `bosses_compose.js`。§9.11.6） | `src/art/bosses*.js`、`src/art/rare_monsters*.js`、`src/art/postgame.js`、`tools/{sheet_bosses,sheet_rare,sheet_postgame}.js` |
 | A16 | art-tiles | タイルの定義と絵、ワールド、町の飾り、戦闘背景 | `src/data/tiles.js`、`src/art/tiles*.js`、`src/art/decor*.js`、`src/art/battlebg*.js`、`tools/sheet_tiles.js`、`tools/sheet_decor*.js` |
 | A17 | audio | 音の仕組み・曲・効果音 | `src/core/audio.js`、`src/audio/*.js`、`tools/render_audio.js` |
-| A18 | world | ワールドマップ・プロローグ・地方と目的のデータ | `src/maps/world*.js`、`src/maps/prologue*.js`、`src/events/prologue*.js`、`src/events/world*.js`、`src/data/{regions,locations,objectives,config}.js`、`tools/gen_world.js`、`tools/check_world.js` |
-| A19 | story | 地方をまたぐ物語（ライバル・謎の人物・師匠）・終盤（ビブリア・白の大書庫）・エンディング | `src/events/story*.js`、`src/maps/final*.js`、`src/events/final*.js`、`src/systems/{ending,postgame_scene}.js` |
-| A20 | reg-a | 地方 1〜4（§10.8.1 の地方表の 1〜4 行目）の町・ダンジョン・イベント、**クリア後の裏ダンジョン 忘却の底**（`oblivion_1..5`・魔王の残影・円環竜の場面。§10.12） | `src/maps/region{1,2,3,4}*.js`、`src/events/region{1,2,3,4}*.js`、`src/maps/oblivion*.js`、`src/events/oblivion*.js` |
-| A21 | reg-b | 地方 5〜8 | `src/maps/region{5,6,7,8}*.js`、`src/events/region{5,6,7,8}*.js` |
+| A18 | world | ワールドマップ・プロローグ・地方と目的のデータ（目的は `obj_w_*` と `obj_regions` だけ。ワープ先 23 件） | `src/maps/world*.js`、`src/maps/prologue*.js`、`src/events/prologue*.js`、`src/events/world*.js`、`src/data/{regions,locations,objectives,config}.js`、`tools/gen_world.js`、`tools/check_world.js` |
+| A19 | story | 地方をまたぐ物語（ライバル・謎の人物・師匠）・終盤（ビブリア・白の大書庫）・エンディング・**うわさ話 `DB.rumors`**（`src/events/story_rumors.js`）・**目的 `obj_s_*`**（`src/events/story_objectives.js`） | `src/events/story*.js`、`src/maps/final*.js`、`src/events/final*.js`、`src/systems/{ending,postgame_scene}.js` |
+| A20 | reg-a | 地方 1〜4（§10.8.1 の地方表の 1〜4 行目）の町・ダンジョン・イベント（目的 `obj_forest_* obj_desert_* obj_snow_* obj_marsh_*` を自分のイベントのファイルで登録）、**クリア後の裏ダンジョン 忘却の底**（`oblivion_1..5`・魔王の残影・円環竜の場面。§10.12） | `src/maps/region{1,2,3,4}*.js`、`src/events/region{1,2,3,4}*.js`、`src/maps/oblivion*.js`、`src/events/oblivion*.js` |
+| A21 | reg-b | 地方 5〜8（目的 `obj_isles_* obj_mine_* obj_ash_* obj_star_*` を自分のイベントのファイルで登録） | `src/maps/region{5,6,7,8}*.js`、`src/events/region{5,6,7,8}*.js` |
 | A22 | qa | 検証・到達性・通しテスト・スクショ一式・シミュレーションの共有部分・全体のバランス | `tools/lib/maps.js`、`tools/lib/cond.js`（§3.2.3 の条件式の共有実装）、`tools/lib/party_model.js`、`tools/{validate,progress,check_text,smoke,playthrough,shots}.js`、**`tools/sim_balance.js`**（§4.17）、**`tools/check_density.js`**（§11.2.7） |
 
 補足:
@@ -12199,6 +12510,28 @@ CARD       = { y: 64 }                                      // ドロップの�
   PM.levelAt(tier) → 想定レベル   PM.profAt(tier, apt) → 想定の熟練度   PM.withGame(R, {tier}, fn)   // 仮の R.Game で fn を実行
   ```
 - 生成物（`dist/`、`debug*.html`）と `design/drafts/**` は、上の表の外にある。
+
+
+### 13.1 リードによる担当の分割（normative。§13 の表より優先。ビルド開始時に確定）
+§13 の表のうち、1 人の担当には大きすぎるものを、**ファイルで重ならないように**分ける。ほかの行（A1〜A9・A10a・A10b・A11・A12・A13・A17・A22）は §13 のまま。
+
+| # | 略称 | 範囲 | 担当するファイル |
+|---|---|---|---|
+| A14a | mons-parts | 魔物の組み立て `R.Art.compose`・パーツ 66・フィルター 6・組み立て表 `R.Art.MON_COMPOSE`（雑魚 211。§9.4.3〜§9.4.6） | `src/art/monsters_parts*.js`、`src/art/monsters_compose*.js`、`tools/sheet_monsters_compose.js` |
+| A14b | mons-base | 新しい元絵 14（§9.4.2）と既存の元絵 36 の手直し | `src/art/monsters_a.js`、`src/art/monsters_b.js`、`src/art/monsters_c.js`、`tools/sheet_monsters_a.js`、`tools/sheet_monsters_b.js`、`tools/sheet_monsters_c.js` |
+| A15a | art-boss | ボスの絵（既存 11＋後日談の再利用・新しい 16＋お供 2、組み立て表 `MON_COMPOSE_BOSSES`。§9.11.6） | `src/art/bosses*.js`（`bosses_compose.js` を含む）、`tools/sheet_bosses.js` |
+| A15b | art-rare | レア魔物の絵（既存 6・新しい 17。§9.10.3）とクレストの後日談の絵 `postgame.js` | `src/art/rare_monsters*.js`、`src/art/postgame.js`、`tools/sheet_rare.js`、`tools/sheet_postgame.js` |
+| A16a | art-world | ワールドのタイル（RS1 風）・ワールドの場所の印・戦闘背景。**ワールドのタイルの定義（通行・`bbg`・`enc` など）とワールドの凡例は `src/data/tiles_world.js` に書く**（tiles.js より後に読まれるので上書き・追加できる） | `src/data/tiles_world.js`、`src/art/tiles_world*.js`、`src/art/battlebg*.js`、`tools/sheet_tiles.js` |
+| A16b | art-local | 町・ダンジョンのタイルとテーマ（`town_*` など）・閉じたタイル・隠し通路 `secret_*`・飾り（decor）。**ローカルのタイルの定義と凡例・飾りの凡例は `src/data/tiles.js`**（ワールドの項目は A16a が tiles_world.js で上書きする。tiles.js のワールドの項目は消さずに残す） | `src/data/tiles.js`、`src/art/tiles.js`、`src/art/tiles_auto.js`、`src/art/tiles_local*.js`、`src/art/tiles_theme*.js`、`src/art/decor*.js`、`tools/sheet_decor*.js` |
+| A18a | world | ワールドマップ（ループ）・地方・場所・目的（`obj_w_*` `obj_regions`）・`DB.config`・ワールドのイベント | `src/maps/world*.js`、`src/events/world*.js`、`src/data/{regions,locations,objectives,config}.js`、`tools/gen_world.js`、`tools/check_world.js` |
+| A18b | prologue | 序章（主人公の作成を呼ぶ語りの場面・港町ファロス・酒場で 3 人・灯台のチュートリアル・旅立ち）のマップとイベント。序章の目的は自分のイベントのファイルで登録（`obj_p_*`） | `src/maps/prologue*.js`、`src/events/prologue*.js` |
+| R1〜R8 | reg-1〜reg-8 | 地方 N（§10.8.1 の表の N 行目）の町・ダンジョン・イベント・目的（§10.8.0 の約束）。**§13 の A20・A21 を地方ごとに分けたもの** | `src/maps/regionN_*.js`、`src/events/regionN_*.js`（N は 1〜8） |
+| OB | oblivion | クリア後の裏ダンジョン 忘却の底（`oblivion_1..5`・魔王の残影・円環竜の場面。§10.12）。**§13 の A20 から分けたもの** | `src/maps/oblivion*.js`、`src/events/oblivion*.js` |
+
+**作業の波**
+- 第 1 波（同時に）: A1 A2 A3 A4 A5 A6 A7 A8 A9 A10a A10b A11 A12 A13 A14a A14b A15a A15b A16a A16b A17 A18a A18b A22。
+- 第 2 波（第 1 波のフィールド・タイル・ワールドが入ってから）: R1〜R8、OB、A19 story。
+- どの担当も **git の commit・checkout・stash・reset・rebase をしない**（同じ作業ツリーでほかの担当が同時に書いている。コミットはリードがまとめて行う）。
 
 **作業の順番（依存関係の目安）**
 1. Phase 0（lead）: §2.9 の変更と、全章の ID 一覧の確定。

@@ -19,10 +19,11 @@
       white: '#ffffff', gray: '#8c8c8c', dark: '#404040', black: '#000000',
       red: '#ff5a4a', orange: '#ffa53c', yellow: '#ffe45a', green: '#6ee07a',
       cyan: '#6fd8ff', blue: '#4a78ff', purple: '#c38cff', pink: '#ff8cc6',
-      gold: '#ffd24a', rare: '#ffd24a', super: '#ff9cf0', hpLow: '#ffb03c', dead: '#ff4a4a',
+      gold: '#ffd24a', rare: '#f8d838', super: '#ff88d0', hpLow: '#ffb03c', dead: '#ff4a4a',
     },
     // window color themes (Settings.windowColor)
     WINDOW_THEMES: {
+      ink: { fill: '#16203e', fill2: '#0b1024', border: '#f0e8d0', alpha: 0.97 }, // default (DESIGN §11.1.2)
       black: { fill: '#000000', fill2: null, border: '#ffffff', alpha: 1 },
       blue: { fill: '#1c2c8c', fill2: '#0a1450', border: '#ffffff', alpha: 0.96 },
       green: { fill: '#0e4a2a', fill2: '#062414', border: '#ffffff', alpha: 0.96 },
@@ -167,7 +168,7 @@
      */
     window(x, y, w, h, opts) {
       const o = opts || {};
-      const theme = Gfx.WINDOW_THEMES[o.theme || (R.Settings && R.Settings.windowColor) || 'black'] || Gfx.WINDOW_THEMES.black;
+      const theme = Gfx.WINDOW_THEMES[o.theme || (R.Settings && R.Settings.windowColor) || 'ink'] || Gfx.WINDOW_THEMES.ink;
       const c = Gfx.ctx;
       const a = c.globalAlpha;
       c.globalAlpha = a * (o.alpha != null ? o.alpha : theme.alpha);
