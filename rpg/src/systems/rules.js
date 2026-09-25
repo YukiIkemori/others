@@ -28,7 +28,7 @@
 
   // mods whose values are lists or maps rather than numbers
   const LIST_MODS = { equip: 1, statusImmune: 1 };
-  const MAP_MODS = { elemBoost: 1, elemResist: 1, startBuffs: 1 };
+  const MAP_MODS = { elemBoost: 1, elemResist: 1, startBuffs: 1, slayer: 1 };
 
   const Rules = (R.Rules = {
     STATS, STAT_NAMES, SLOTS, SLOT_NAMES, SET_SLOTS, SET_NAMES, JP_TABLE, JP_TIER_MULT, MAX_LEVEL, CAPS,
@@ -211,6 +211,24 @@
     masterBonusText(jobId) {
       const mb = Rules.jobMasterBonus(jobId);
       return STATS.filter((k) => mb[k]).map((k) => STAT_NAMES[k] + '+' + mb[k]).join(' ');
+    },
+    /** a job's mastery trait {mods, text, desc} (DB.jobs[job].masterTrait) or null */
+    jobMasterTrait(jobId) { const j = DB.jobs[jobId]; return (j && j.masterTrait) || null; },
+    /** '反撃' — the trait's short label */
+    masterTraitText(jobId) { const t = Rules.jobMasterTrait(jobId); return (t && t.text) || ''; },
+    /** 'HP+10 力+3／反撃' — the whole mastery perk (stats + trait) for menus */
+    masterPerkText(jobId) {
+      return [Rules.masterBonusText(jobId), Rules.masterTraitText(jobId)].filter(Boolean).join('／');
+    },
+    /** mastered jobs of c, in DB order */
+    masteredJobs(c) { return Object.keys(DB.jobs).filter((j) => c.jobs && c.jobs[j] && Rules.isMastered(c, j)); },
+    /**
+     * is a job's mastery perk known to the player? Only once someone in the party has mastered
+     * the job (menus show 「マスター特典 ？？？」 until then).
+     */
+    perkKnown(jobId, party) {
+      party = party || (R.Game && R.Game.party) || [];
+      return party.some((c) => c && c.jobs && c.jobs[jobId] && Rules.isMastered(c, jobId));
     },
     /** add JP to current job. Returns {levelUps:[{job,level}], unlocked:[jobId]} */
     gainJp(c, n) {
@@ -460,6 +478,11 @@
       };
       const j = DB.jobs[c.job];
       if (j) add(j.innate);
+      // mastery traits: every mastered job's signature passive, in any job
+      for (const jid in c.jobs || {}) {
+        const t = DB.jobs[jid] && DB.jobs[jid].masterTrait;
+        if (t && Rules.isMastered(c, jid)) add(t.mods);
+      }
       for (const s of ['support', 'field', 'reaction']) {
         const a = c.set[s] && DB.abilities[c.set[s]];
         if (a && a.kind === s && Rules.learned(c, c.set[s])) add(a.mods);

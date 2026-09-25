@@ -338,7 +338,8 @@ for (const id of allAbilities) {
   const ra = DB.abilities[id];
   if (ra.kind !== 'reaction') continue;
   const n = ra.name, t = ra.react.type;
-  const reacted = (x) => x.ev.some((v) => v.t === 'react' && v.u === x.u) || x.ev.some((v) => v.t === 'cover' && v.u === x.u);
+  // this reaction itself (a mastered job's trait, e.g. 戦士's 反撃, may react on its own)
+  const reacted = (x) => x.ev.some((v) => v.t === 'react' && v.u === x.u && v.a === ra) || x.ev.some((v) => v.t === 'cover' && v.u === x.u);
   switch (ra.trigger) {
     case 'hitPhys': case 'hitAny': case 'hitMagic': {
       const kind = ra.trigger === 'hitMagic' ? 'magic' : 'phys';
@@ -426,7 +427,7 @@ for (const id of allAbilities) {
   const bm0 = engine([member('metem', 'blackmage', 20)], ['jb_dummy']);
   ok(bm.expectDamage(bm.party[0], DB.abilities.blackmage_blast, bm.mons[0]) > bm0.expectDamage(bm0.party[0], DB.abilities.blackmage_blast, bm0.mons[0]) * 1.2, '魔法アップ: +25% spell damage');
   const alc = member('yuki', 'alchemist', 20);
-  ok((R.Rules.mods(alc).itemPct || 0) === 25, '薬師: innate item mastery');
+  ok((R.Rules.mods(alc).itemPct || 0) === 25 + ((DB.jobs.alchemist.masterTrait.mods.itemPct) || 0), '薬師: innate item mastery (+ its mastery trait)');
   const hero = engine([member('yuki', 'hero', 30)], ['jb_dummy']);
   ok(hero.party[0].resist('death') === 1, '勇者: immune to death');
 }

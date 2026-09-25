@@ -237,10 +237,14 @@
         const nx = R.Rules.jpToNextLevel(c, job);
         G().text(nx > 0 ? '次のLvまで ' + nx : 'Lv MAX', x + 70, y + 14, { color: G().C.gray });
         G().text('習得 ' + got + '/' + all.length, 242, y + 14, { align: 'right', color: mast ? G().C.gold : G().C.white });
-        // mastery bonus (permanent stats in every job) replaces the description's 2nd line
-        const mb = R.Rules.masterBonusText ? R.Rules.masterBonusText(job) : '';
+        // mastery perk (permanent stats + trait in every job) replaces the description's 2nd line;
+        // its content stays 「？？？」 until someone in the party has mastered the job
+        const mb = R.Rules.masterPerkText(job);
         G().wrap(j.desc || '', 226).slice(0, mb ? 1 : 2).forEach((l, k) => G().text(l, x, y + 28 + k * 14));
-        if (mb) G().text((mast ? '★マスター特典 ' : 'マスター特典 ') + mb, x, y + 42, { color: mast ? G().C.gold : G().C.gray });
+        if (mb) {
+          const known = R.Rules.perkKnown(job);
+          K.fitText((mast ? '★マスター特典 ' : 'マスター特典 ') + (known ? mb : '？？？'), x, y + 42, 228, { color: mast ? G().C.gold : G().C.gray });
+        }
       }
       renderMember() {
         const c = this.c, x = 14, y = 163;
@@ -310,8 +314,10 @@
         await K.msg(c.name + 'は' + ab.name + 'を覚えた！');
         if (R.Rules.isMastered(c, this.job)) {
           await R.jingle('jobup');
-          const mb = R.Rules.masterBonusText ? R.Rules.masterBonusText(this.job) : '';
+          const mb = R.Rules.masterBonusText(this.job);
+          const tr = R.Rules.jobMasterTrait(this.job);
           await K.msg(c.name + 'は' + K.jobName(this.job) + 'をマスターした！' + (mb ? '\nマスター特典：' + mb : ''));
+          if (tr) await K.msg('特性「' + tr.text + '」を身につけた！\n' + (tr.desc || '') + '\n（どのジョブでも有効）');
         }
         if (ab.kind !== 'action' && !c.set[ab.kind]) {
           if (await K.yesno(ab.name + 'を\n' + K.KIND_NAMES[ab.kind] + 'にセットしますか？')) {

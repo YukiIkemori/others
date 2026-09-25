@@ -724,6 +724,32 @@ async function newGame(map, spawn) {
     eq(xp()[1], 1, 'diagonal walk stops at the top wall');
     ok(xp()[0] > 5, 'then slides along the wall (' + xp() + ')');
     eq(L.P[0].dir, 'right', 'facing the slide');
+    // no jitter: sampled between fixed steps (Engine.alpha), the drawn position advances at a constant
+    // rate across step boundaries, straight and diagonal, walking and dashing (fractional step lengths)
+    for (const [keys, dash, x0, y0] of [[['right'], false, 1, 5], [['right', 'down'], false, 4, 1], [['right', 'down'], true, 4, 1], [['left', 'up'], true, 10, 4]]) {
+      await go(x0, y0, keys[0]);
+      if (dash) R.Input._set('b', true);
+      for (const k of keys) R.Input._set(k, true);
+      const samples = [];
+      for (let f = 0; f < (dash ? 14 : 18); f++) {
+        await step(1);
+        for (const a of [0, 0.25, 0.5, 0.75]) { const ld = L.leadAt(a); ld.f = L.followerAt(1, ld); samples.push(ld); }
+      }
+      for (const k of keys) R.Input._set(k, false);
+      R.Input._set('b', false);
+      await settle();
+      const per = (dash ? 1 / R.Field.DASH : 1 / R.Field.WALK) / (keys.length === 2 ? Math.SQRT2 : 1) / 4;
+      let worst = 0;
+      for (let i = 5; i < samples.length; i++) {
+        const dx = Math.abs(samples[i].x - samples[i - 1].x), dy = Math.abs(samples[i].y - samples[i - 1].y);
+        worst = Math.max(worst, Math.abs(dx - per), keys.length === 2 ? Math.abs(dy - per) : dy);
+      }
+      let fworst = 0;
+      for (let i = 33; i < samples.length; i++) fworst = Math.max(fworst, Math.abs(Math.hypot(samples[i].f.x - samples[i - 1].f.x, samples[i].f.y - samples[i - 1].f.y) - per * (keys.length === 2 ? Math.SQRT2 : 1)));
+      ok(fworst < 1e-9, 'follower glides at the same constant speed (worst ' + fworst.toExponential(2) + ')');
+      if (worst > 1e-9) console.log(samples.map((p) => p.x.toFixed(3) + "," + p.y.toFixed(3)).join(" "));
+      ok(worst < 1e-9, 'constant drawn speed ' + keys.join('+') + (dash ? ' dash' : '') + ' (worst deviation ' + worst.toExponential(2) + ' tiles per ¼ frame)');
+    }
     // diagonal into the corner of a wall block: the swept cells include the corner → slide, no corner cutting
     await go(2, 1, 'right');
     R.Input._set('down', true); R.Input._set('right', true);

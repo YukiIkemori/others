@@ -780,13 +780,17 @@
 
   // ------------------------------------------------------------ main menu
   const COMMANDS = [
-    { id: 'items', label: '道具' }, { id: 'abilities', label: 'アビリティ' },
-    { id: 'fullheal', label: '満タン' }, { id: 'equip', label: '装備' },
-    { id: 'jobs', label: 'ジョブ' }, { id: 'set', label: 'セット' },
+    { id: 'items', label: '道具' }, { id: 'fullheal', label: '満タン' },
+    { id: 'abilities', label: 'アビリティ' }, { id: 'jobs', label: 'ジョブ' },
+    { id: 'set', label: 'セット' }, { id: 'equip', label: '装備' },
     { id: 'status', label: '強さ' }, { id: 'order', label: '並び替え' },
-    { id: 'book', label: '図鑑' }, { id: 'map', label: '地図' },
+    { id: 'warp', label: 'ワープ' }, { id: 'escape', label: '脱出' },
+    { id: 'map', label: '地図' }, { id: 'book', label: '図鑑' },
     { id: 'save', label: 'セーブ' }, { id: 'settings', label: '設定' },
   ];
+  // ワープ / 脱出 are basic commands every party can use for free (no job or MP needed)
+  const canWarp = () => !!(R.Field && R.Field.canTeleport && R.Field.canTeleport());
+  const canEscape = () => !!(R.Field && R.Field.canExit && R.Field.canExit());
   const onWorld = () => !!(R.Field && R.Field.map && R.Field.map.isWorld);
   let lastCmd = 0;
 
@@ -794,8 +798,12 @@
     constructor() {
       super();
       this.list = new R.UI.List({
-        x: 4, y: 4, w: 150, cols: 2, rows: 6, padX: 15, index: lastCmd,
-        items: COMMANDS.map((c) => ({ label: c.label, disabled: c.id === 'map' && !(onWorld() && R.Minimap && R.Minimap.open) })),
+        x: 4, y: 4, w: 150, cols: 2, rows: 7, padX: 15, index: lastCmd,
+        items: COMMANDS.map((c) => ({
+          label: c.label,
+          disabled: (c.id === 'map' && !(onWorld() && R.Minimap && R.Minimap.open)) ||
+            (c.id === 'warp' && !canWarp()) || (c.id === 'escape' && !canEscape()),
+        })),
         onChange: (i) => { lastCmd = i; },
       });
     }
@@ -815,6 +823,18 @@
         save: Menu.saveScreen, settings: Menu.settings,
       };
       if (cmd === 'fullheal') { await Menu.fullHeal(); return; }
+      if (cmd === 'warp') {
+        const id = await chooseTown();
+        if (!id) return;
+        afterMenu(['{leader}たちは光に包まれた！'], { teleport: id });
+        this.close('exit');
+        return;
+      }
+      if (cmd === 'escape') {
+        afterMenu(['{leader}たちはダンジョンを脱出した！'], { exit: true });
+        this.close('exit');
+        return;
+      }
       if (cmd === 'map') {
         this.hidden = true;
         try { await R.Minimap.open(); } finally { this.hidden = false; }
@@ -830,9 +850,9 @@
     render() {
       this.list.draw();
       const titled = !!R.Game.title;
-      drawGold(4, 104, 150);
+      drawGold(4, 118, 150);
       drawParty(156, 4);
-      drawObjective(4, titled ? 164 : 150, 248);
+      drawObjective(4, titled ? 178 : 164, 248, titled ? 2 : 3);
     }
   }
 
@@ -866,10 +886,10 @@
     const o = DB.objectives && R.Game.objective && DB.objectives[R.Game.objective];
     return o && o.text ? String(o.text) : '';
   }
-  function drawObjective(x, y, w) {
+  function drawObjective(x, y, w, maxLines) {
     const t = objectiveText();
     if (!t) return;
-    const lines = G().wrap(t, w - 22).slice(0, 4);
+    const lines = G().wrap(t, w - 22).slice(0, maxLines || 4);
     G().window(x, y, w, 16 + lines.length * 14 - 2 + 2, { title: '次の目的' });
     lines.forEach((l, i) => G().text(l, x + 11, y + 9 + i * 14));
   }

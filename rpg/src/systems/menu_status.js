@@ -138,6 +138,9 @@
           G().text('Lv' + R.Rules.jobLevel(c, j), x + 108, y, { align: 'right', color: K.jobColor(c, j, G().C.white) });
         });
         G().text('マスター ★' + mast, 242, 205, { align: 'right', color: mast ? G().C.gold : G().C.gray });
+        // mastery traits this member carries into every job
+        const tr = R.Rules.masteredJobs(c).map((j) => R.Rules.masterTraitText(j)).filter(Boolean);
+        if (tr.length) K.fitText('特典 ' + tr.join('・'), 14, 205, 150, { color: G().C.gold });
       }
       page1(c, st) {
         G().window(4, 46, 122, 128, { title: '基本' });
@@ -213,6 +216,12 @@
     function traits(m) {
       const t = [];
       if (m.twoSwords) t.push('二刀流');
+      if (m.counterPct) t.push('反撃' + m.counterPct + '%');
+      if (m.autoSteal) t.push('攻撃で盗む');
+      if (m.attackDrain) t.push('攻撃で吸収');
+      if (m.autoRevive) t.push('一度だけ復活');
+      if (m.startRegen) t.push('開幕リジェネ');
+      if (m.slayer) t.push('飛行・竜特効');
       if (m.regen) t.push('再生');
       if (m.walkHeal) t.push('歩行回復');
       if (m.encounterPct < 0) t.push('魔物よけ');

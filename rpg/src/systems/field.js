@@ -401,7 +401,7 @@
       for (const p of this.P) { p.x = x; p.y = y; if (dir) p.dir = dir; }
       this.cell = cell ? { x: cell.x, y: cell.y } : { x: Math.round(x), y: Math.round(y) };
       this.trail = [{ x, y }];
-      this.mv = null; this.arrived = null; this.walking = false; this.carry = 0;
+      this.mv = null; this.arrived = null; this.walking = false; this.carry = 0; this.last = null;
     }
     savePos() {
       const c = this.cell;
@@ -432,16 +432,22 @@
     /** leader position (tiles) at fraction `a` of the current fixed step */
     leadAt(a) {
       const p = this.P[0], mv = this.mv;
-      if (!mv) return { x: p.x, y: p.y };
-      const k = U.clamp((mv.t + (a || 0)) / mv.dur, 0, 1);
-      return { x: mv.from.x + (p.x - mv.from.x) * k, y: mv.from.y + (p.y - mv.from.y) * k };
+      const at = (m, t) => { const k = U.clamp(t / m.dur, 0, 1); return { x: m.from.x + (m.to.x - m.from.x) * k, y: m.from.y + (m.to.y - m.from.y) * k }; };
+      a = a || 0;
+      // a step ends up to one frame early (see tick): until its real end time the previous step is still drawn
+      // (`back`: the point lies on the segment before trail[0])
+      if (mv) return mv.t + a < 0 && mv.prev ? Object.assign(at(mv.prev, mv.prev.dur + mv.t + a), { back: 1 }) : at(mv, mv.t + a);
+      const l = this.last;
+      if (l && l.t + a < 0) return Object.assign(at(l.mv, l.mv.dur + l.t + a), { back: 1 });
+      return { x: p.x, y: p.y };
     }
     /** follower i: the point GAP·i back along the leader's path from `lead`, facing its motion */
     followerAt(i, lead) {
       const keep = this.P[i].dir;
       if (this.mv && this.mv.kind === 'land') return { x: lead.x, y: lead.y, dir: this.P[0].dir };
       let need = GAP * i, a = lead;
-      for (const b of this.trail) {
+      for (let j = lead.back ? 1 : 0; j < this.trail.length; j++) {
+        const b = this.trail[j];
         const dx = a.x - b.x, dy = a.y - b.y, len = Math.hypot(dx, dy);
         if (len < EPS) continue;
         if (len >= need - EPS) {
@@ -466,7 +472,7 @@
     }
     /** move the followers to their trail points (fixed step) */
     syncFollowers() {
-      const lead = this.leadAt(0);
+      const lead = this.mv ? this.leadAt(0) : { x: this.P[0].x, y: this.P[0].y };
       for (let i = 1; i < this.P.length; i++) { const f = this.followerAt(i, lead); Object.assign(this.P[i], f); }
     }
     camera() {
@@ -596,9 +602,11 @@
       p.x = nx; p.y = ny;
       if (d) p.dir = d;
       if (g.onShip && g.ship) g.ship.dir = p.dir;
-      const t = o.scripted || this.carryF !== R.Engine.frame ? 0 : this.carry;
+      const chained = !o.scripted && this.carryF === R.Engine.frame && this.last;
+      const t = chained ? this.carry : 0;
       this.carry = 0;
-      this.mv = { t, dur, from, kind, len, scripted: !!o.scripted, resolve: o.resolve || null };
+      this.mv = { t, dur, from, to: { x: nx, y: ny }, kind, len, prev: chained ? this.last.mv : null, scripted: !!o.scripted, resolve: o.resolve || null };
+      this.last = null;
     }
     /** the fixed step reached its end: commit the logical tile, the trail and the ship */
     commit(mv) {
@@ -883,6 +891,8 @@
         // step boundary even when a step lasts a fractional number of frames (diagonals, sail dash)
         if (mv.t > mv.dur - 1 + EPS) {
           this.mv = null;
+          mv.prev = null;
+          this.last = { mv, t: mv.t - mv.dur };
           const changed = this.commit(mv);
           if (mv.scripted) { this.savePos(); if (mv.resolve) mv.resolve(); }
           else {
@@ -891,7 +901,10 @@
           }
         }
         this.syncFollowers();
-      } else this.clock += 0.5;
+      } else {
+        this.clock += 0.5;
+        if (this.last && ++this.last.t > -EPS) this.last = null;
+      }
       this.tickNpcs(R.Engine.top() === this && this.locks === 0 && !R.Events.busy());
       const la = this.liftAnim;
       if (la) {
