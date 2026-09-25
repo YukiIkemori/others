@@ -61,11 +61,11 @@
     monk_flurry: act('乱撃', 300, '敵に4回続けて殴りかかる。', {
       mp: 5, target: 'random', effects: [phys(0.55, { hits: 4 })], fx: 'strike',
     }),
-    monk_whirl_kick: act('旋風脚', 300, '回し蹴りで敵の群れを蹴散らす。', {
-      mp: 4, target: 'group', effects: [phys(0.9)], fx: 'strike2',
+    monk_whirl_kick: act('旋風脚', 300, '風をまとう回し蹴りで敵の群れを蹴散らす。', {
+      mp: 4, target: 'group', effects: [phys(0.9, { element: 'wind' })], fx: 'wind2',
     }),
     monk_quake: act('地ならし', 350, '大地を揺らし、敵全体を攻撃する。', {
-      mp: 5, target: 'enemies', effects: [phys(0.75, { element: 'earth', vs: { flying: 0.5 } })], fx: 'earth2',
+      mp: 5, target: 'enemies', effects: [phys(0.75, { element: 'earth' })], fx: 'earth2',
     }),
     monk_revive: act('活を入れる', 400, '活を入れて、倒れた仲間を生き返らせる。', {
       mp: 6, target: 'ally_dead', effects: [{ type: 'revive', pct: 0.2 }], fx: 'revive', fieldUse: true,
@@ -130,8 +130,8 @@
     blackmage_osmose: act('魔力吸い', 300, '敵ひとりのMPを吸い取る。', {
       mp: 0, magic: true, target: 'enemy', effects: [magic(6, 0.2, null, { mp: true, drain: 1 })], fx: 'drain',
     }),
-    blackmage_blast: act('爆炎', 300, '激しい爆炎で敵ひとりを焼く。', {
-      mp: 8, magic: true, target: 'enemy', effects: [magic(16, 0.8, 'fire')], fx: 'explosion2',
+    blackmage_blast: act('岩石落とし', 300, '大岩を落とし、敵ひとりを押しつぶす。', {
+      mp: 8, magic: true, target: 'enemy', effects: [magic(16, 0.8, 'earth')], fx: 'earth2',
     }),
     blackmage_death: act('魂抜き', 450, '敵ひとりの魂を抜き取る。', {
       mp: 10, magic: true, target: 'enemy', effects: [status('death', 0.35)], fx: 'death',
@@ -141,7 +141,7 @@
     }),
     blackmage_awaken: reaction('魔力覚醒', 400, '魔法を受けると魔力が上がる。', 'hitMagic', 0.6, { type: 'buff', stat: 'mag', stages: 1 }),
     blackmage_magic_up: support('魔法アップ', 600, '魔法のダメージが25%上がる。', { magicPct: 25 }),
-    blackmage_elem_up: support('属性アップ', 450, '炎・氷・雷・風の威力が25%上がる。', { elemBoost: { fire: 25, ice: 25, thunder: 25, wind: 25 } }),
+    blackmage_elem_up: support('属性アップ', 450, '炎・氷・雷・風・大地の威力が25%上がる。', { elemBoost: { fire: 25, ice: 25, thunder: 25, wind: 25, earth: 25 } }),
   });
 
   // ============================================================ 狩人

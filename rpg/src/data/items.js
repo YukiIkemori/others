@@ -18,9 +18,9 @@
 //   any band : seed_str seed_vit seed_agi seed_int seed_mnd seed_luk seed_hp seed_mp  (rare drops / hidden spots)
 //   band1    : swallow_sword fairy_knife clover
 //   band2    : gale_spear cat_hood gold_charm
-//   band3    : lightning_sword prayer_staff dream_robe maneki study_charm float_shoes
-//   band4    : glacier_sword glacier_bow sapphire_rod kagerou flame_shield ninja_garb speed_boots loot_bag light_drop
-//   band5    : dusk_sword night_dagger dragon_mail dragon_shield regen_ring magic_orb giant_bracer wisdom_ring goddess_tear
+//   band3    : lightning_sword rock_claw prayer_staff dream_robe maneki study_charm float_shoes
+//   band4    : glacier_sword glacier_bow sapphire_rod kagerou water_spear shadow_dagger flame_shield ninja_garb speed_boots loot_bag light_drop
+//   band5    : dusk_sword night_dagger gust_bow tide_claw dragon_mail dragon_shield regen_ring magic_orb giant_bracer wisdom_ring goddess_tear
 //   band6    : LEGENDARY (rare-drop only, keep out of chests except one or two story chests):
 //              dawn_sword dawn_armor dawn_shield dawn_helm            (dawn set 暁 — knight/paladin/hero)
 //              goddess_lyre goddess_robe goddess_crown goddess_charm (goddess set 女神 — casters/bard)
@@ -108,10 +108,10 @@
     battle_axe:      W('バトルアックス',     'axe',  28,   900, 2, '戦いのために鍛えられた斧。', { hit: -5 }),
     great_axe:       W('グレートアックス',   'axe',  39,  1600, 3, 'ずっしりと重い大きな斧。', { hit: -5 }),
     whirl_axe:       W('旋風の斧',           'axe',  50,  2800, 3, '振るうたびにつむじ風が起こる。', { element: 'wind', hit: -5 }),
-    giant_axe:       W('巨人の斧',           'axe',  62,  4900, 4, '巨人が使ったという途方もない斧。', { hit: -5 }),
+    giant_axe:       W('巨人の斧',           'axe',  62,  4900, 4, '振り下ろすと大地が割れる巨人の斧。', { element: 'earth', hit: -5 }),
     thunder_axe:     W('轟雷の斧',           'axe',  78,  6700, 5, '雷の轟音とともに打ち下ろす。', { element: 'thunder', hit: -5 }),
     crimson_axe:     W('紅蓮の斧',           'axe',  96, 11300, 6, '紅蓮の炎をまとう大斧。', { element: 'fire', hit: -5 }),
-    earth_axe:       W('地竜の斧',           'axe', 126,     0, 6, '大地の竜の牙から作られた斧。', { hit: -5, stats: { str: 10, vit: 6 }, rare: true }),
+    earth_axe:       W('地竜の斧',           'axe', 126,     0, 6, '大地の竜の牙から作られた斧。', { element: 'earth', hit: -5, stats: { str: 10, vit: 6 }, rare: true }),
 
     // spears — knight dragoon
     copper_spear:    W('銅の槍',             'spear',  11,   120, 1, '銅の穂先をつけた槍。'),
@@ -121,9 +121,10 @@
     thunder_spear:   W('雷の槍',             'spear',  36,  1700, 3, '雷の力を秘めた槍。', { element: 'thunder' }),
     halberd:         W('ハルバード',         'spear',  45,  2700, 3, '斧と槍を合わせた長柄の武器。'),
     platinum_spear:  W('白銀の槍',           'spear',  56,  4750, 4, '白銀の穂先が光る槍。'),
+    water_spear:     W('水竜の槍',           'spear',  58,  5000, 4, '水竜のうろこで鍛えた、水の力を秘めた槍。', { element: 'water', rare: true }),
     stardust_spear:  W('星くずの槍',         'spear',  71,  6600, 5, '星くずの光をまとう槍。'),
     holy_spear:      W('聖銀の槍',           'spear',  88, 11000, 6, '聖なる銀の槍。魔物を貫く。', { element: 'holy' }),
-    sky_spear:       W('天竜の槍',           'spear', 116,     0, 6, '空を駆ける竜の力が宿る槍。', { stats: { agi: 8, str: 4 }, rare: true }),
+    sky_spear:       W('天竜の槍',           'spear', 116,     0, 6, '空を駆ける竜の風が宿る槍。', { element: 'wind', stats: { agi: 8, str: 4 }, rare: true }),
 
     // knives — thief ninja bard alchemist: light, accurate, raise agility
     copper_knife:    W('銅のナイフ',         'knife',   6,    45, 1, '銅でできた小さなナイフ。', { hit: 5, stats: { agi: 1 } }),
@@ -133,6 +134,7 @@
     silver_dagger:   W('銀のダガー',         'knife',  24,  1200, 3, '磨き上げられた銀の短剣。', { hit: 5, stats: { agi: 4 } }),
     slumber_dagger:  W('まどろみの短剣',     'knife', 30, 2100, 3, '傷つけた相手を眠りに誘う。', { hit: 5, stats: { agi: 4 }, onHit: { status: 'sleep', chance: 0.2 } }),
     platinum_dagger: W('白銀のダガー',       'knife',  38,  3600, 4, '白銀の刃が光る短剣。', { hit: 5, stats: { agi: 5 } }),
+    shadow_dagger:   W('影縫いの短剣',       'knife',  41,  4200, 4, '影に溶ける黒い刃。闇の力を宿す。', { hit: 5, element: 'dark', stats: { agi: 5 }, rare: true }),
     stardust_dagger: W('星くずのダガー',     'knife',  48,  5300, 5, '星くずをちりばめた軽い短剣。', { hit: 5, stats: { agi: 6 } }),
     night_dagger:    W('闇夜の短剣',         'knife',  52,  5500, 5, '闇に溶ける刃。相手を麻痺させる。', { hit: 5, element: 'dark', stats: { agi: 6 }, onHit: { status: 'paralyze', chance: 0.2 }, rare: true }),
     holy_dagger:     W('聖銀のダガー',       'knife',  60,  8900, 6, '聖なる銀の短剣。', { hit: 5, element: 'holy', stats: { agi: 8 } }),
@@ -143,9 +145,9 @@
     shigure:         W('時雨の太刀',         'katana',  45,  2800, 3, '水のように滑らかな刀。', { element: 'water', mods: { crit: 3 } }),
     kogarashi:       W('木枯らしの太刀',     'katana',  58,  4900, 4, '冷たい風を呼ぶ刀。', { element: 'wind', mods: { crit: 4 } }),
     kagerou:         W('陽炎の太刀',         'katana',  61,  5300, 4, '陽炎のように揺らめく炎の刀。', { element: 'fire', mods: { crit: 4 }, rare: true }),
-    oborozuki:       W('朧月の太刀',         'katana',  74,  7100, 5, '朧月のように妖しく光る刀。', { mods: { crit: 5 } }),
+    oborozuki:       W('朧月の太刀',         'katana',  74,  7100, 5, '闇夜の朧月のように妖しく光る刀。', { element: 'dark', mods: { crit: 5 } }),
     izayoi:          W('十六夜の太刀',       'katana',  92, 11600, 6, '名工が命をかけて打った刀。', { mods: { crit: 6 } }),
-    amatsukaze:      W('天つ風',             'katana', 118,     0, 6, '天の風を切り裂く伝説の刀。', { stats: { agi: 6 }, mods: { crit: 10 }, rare: true }),
+    amatsukaze:      W('天つ風',             'katana', 118,     0, 6, '天の風をまとう伝説の刀。', { element: 'wind', stats: { agi: 6 }, mods: { crit: 10 }, rare: true }),
 
     // claws — monk
     beast_claw:      W('獣の爪',             'claw',  13,   240, 1, '獣の爪を取りつけた拳の武器。'),
@@ -154,7 +156,9 @@
     tiger_claw:      W('猛虎の爪',           'claw',  37,  2400, 3, '猛虎の力が宿る爪。', { stats: { str: 3 } }),
     flame_claw:      W('炎の爪',             'claw',  47,  4250, 4, '炎をまとった赤い爪。', { element: 'fire' }),
     raijin_claw:     W('雷神の爪',           'claw',  60,  6100, 5, '雷がほとばしる爪。', { element: 'thunder' }),
+    tide_claw:       W('水神の爪',           'claw',  61,  6300, 5, '水神の加護を受けた青い爪。水の力を宿す。', { element: 'water', rare: true }),
     holy_claw:       W('聖銀の爪',           'claw',  74, 10100, 6, '聖なる銀の爪。', { element: 'holy' }),
+    rock_claw:       W('岩砕きの爪',         'claw',  33,  1900, 3, '岩をも砕く大地の力を宿した爪。', { element: 'earth', rare: true }),
     kirin_claw:      W('麒麟の爪',           'claw',  98,     0, 6, '聖獣・麒麟の爪。素早さも上がる。', { stats: { agi: 10, str: 6 }, rare: true }),
 
     // bows — hunter (two-handed)
@@ -165,6 +169,7 @@
     platinum_bow:    W('白銀の弓',           'bow',  54,  4600, 4, '白銀の弦を張った強い弓。', { twoHanded: true, hit: 5 }),
     glacier_bow:     W('氷河の弓',           'bow',  57,  4900, 4, '放った矢が氷の矢に変わる。', { twoHanded: true, hit: 5, element: 'ice', rare: true }),
     stardust_bow:    W('星くずの弓',         'bow',  68,  6500, 5, '流れ星のように矢が飛ぶ弓。', { twoHanded: true, hit: 5 }),
+    gust_bow:        W('突風の弓',           'bow',  70,  6600, 5, '放った矢が突風となって敵を襲う。', { twoHanded: true, hit: 5, element: 'wind', rare: true }),
     holy_bow:        W('聖銀の弓',           'bow',  84, 10700, 6, '聖なる銀の弓。魔物を射抜く。', { twoHanded: true, hit: 5, element: 'holy' }),
     moon_bow:        W('月光の弓',           'bow', 108,     0, 6, '月の光で狙いを外さない弓。', { twoHanded: true, hit: 15, mods: { crit: 5 }, rare: true }),
 
@@ -360,20 +365,20 @@
       'silver_armor', 'knight_armor', 'forest_garb', 'sand_mantle', 'fairy_robe', 'moon_robe', 'silver_helm', 'great_helm',
       'circlet', 'turban', 'silver_shield', 'kite_shield',
       'iron_ring', 'wake_brooch', 'thief_glove', 'vigor_shoes', 'rosary', 'tiger_fang', 'free_bracelet', 'mana_pierce',
-      'lightning_sword', 'prayer_staff', 'dream_robe', 'maneki', 'study_charm', 'float_shoes', 'seed_str', 'seed_vit'],
+      'lightning_sword', 'rock_claw', 'prayer_staff', 'dream_robe', 'maneki', 'study_charm', 'float_shoes', 'seed_str', 'seed_vit'],
     band4: ['nectar', 'healing_aroma', 'all_cure', 'revive_feather', 'thunder_bomb', 'light_drop',
       'platinum_sword', 'giant_axe', 'platinum_spear', 'platinum_dagger', 'kogarashi', 'flame_claw', 'platinum_bow',
       'platinum_staff', 'diamond_rod', 'platinum_harp',
       'platinum_armor', 'silk_coat', 'glacier_robe', 'platinum_helm', 'fur_hat', 'platinum_shield', 'glacier_shield',
       'frost_ring', 'fire_ring', 'life_belt', 'wind_bracelet',
-      'glacier_sword', 'glacier_bow', 'sapphire_rod', 'kagerou', 'flame_shield', 'ninja_garb', 'speed_boots', 'loot_bag',
+      'glacier_sword', 'glacier_bow', 'sapphire_rod', 'kagerou', 'water_spear', 'shadow_dagger', 'flame_shield', 'ninja_garb', 'speed_boots', 'loot_bag',
       'seed_int', 'seed_mnd'],
     band5: ['nectar', 'mana_crystal', 'healing_aroma', 'revive_feather', 'mega_bomb', 'goddess_tear', 'light_drop',
       'stardust_sword', 'thunder_axe', 'stardust_spear', 'stardust_dagger', 'oborozuki', 'raijin_claw', 'stardust_bow',
       'starseer_staff', 'stardust_rod', 'star_harp',
       'stardust_armor', 'gale_garb', 'starseer_robe', 'stardust_helm', 'star_crown', 'stardust_shield',
       'star_earring', 'barrier_charm', 'thunder_ring', 'calm_ring', 'voice_bell', 'eagle_eye',
-      'dusk_sword', 'night_dagger', 'dragon_mail', 'dragon_shield', 'regen_ring', 'magic_orb', 'giant_bracer', 'wisdom_ring',
+      'dusk_sword', 'night_dagger', 'gust_bow', 'tide_claw', 'dragon_mail', 'dragon_shield', 'regen_ring', 'magic_orb', 'giant_bracer', 'wisdom_ring',
       'seed_hp', 'seed_str', 'seed_agi'],
     band6: ['nectar', 'mana_crystal', 'revive_feather', 'mega_bomb', 'goddess_tear', 'light_drop',
       'holy_sword', 'crimson_axe', 'holy_spear', 'holy_dagger', 'izayoi', 'holy_claw', 'holy_bow', 'saint_staff', 'mystic_rod', 'holy_harp',
@@ -387,9 +392,9 @@
     seeds: SEEDS,
     band1: ['swallow_sword', 'fairy_knife', 'clover'],
     band2: ['gale_spear', 'cat_hood', 'gold_charm'],
-    band3: ['lightning_sword', 'prayer_staff', 'dream_robe', 'maneki', 'study_charm', 'float_shoes'],
-    band4: ['glacier_sword', 'glacier_bow', 'sapphire_rod', 'kagerou', 'flame_shield', 'ninja_garb', 'speed_boots', 'loot_bag', 'light_drop'],
-    band5: ['dusk_sword', 'night_dagger', 'dragon_mail', 'dragon_shield', 'regen_ring', 'magic_orb', 'giant_bracer', 'wisdom_ring', 'goddess_tear'],
+    band3: ['lightning_sword', 'rock_claw', 'prayer_staff', 'dream_robe', 'maneki', 'study_charm', 'float_shoes'],
+    band4: ['glacier_sword', 'glacier_bow', 'sapphire_rod', 'kagerou', 'water_spear', 'shadow_dagger', 'flame_shield', 'ninja_garb', 'speed_boots', 'loot_bag', 'light_drop'],
+    band5: ['dusk_sword', 'night_dagger', 'gust_bow', 'tide_claw', 'dragon_mail', 'dragon_shield', 'regen_ring', 'magic_orb', 'giant_bracer', 'wisdom_ring', 'goddess_tear'],
     band6: ['dawn_sword', 'dawn_armor', 'dawn_shield', 'dawn_helm', 'goddess_lyre', 'goddess_robe', 'goddess_crown', 'goddess_charm',
       'earth_axe', 'sky_spear', 'galaxy_dagger', 'amatsukaze', 'kirin_claw', 'moon_bow', 'angel_staff', 'orb_rod', 'phoenix_garb', 'golden_maneki'],
   };

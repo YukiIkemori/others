@@ -79,9 +79,11 @@
       jp: Math.round(c.jp * sz.jp * (x.jp || 1)),
       actions: o.a.map(([id, w, cond]) => (cond ? { id, w, cond } : { id, w })),
     };
-    for (const key of ['hue', 'sat', 'bri', 'eva', 'elem', 'statusRes', 'flags', 'fleeRate', 'attackFx', 'actsPerTurn', 'appear', 'desc']) {
+    for (const key of ['hue', 'sat', 'bri', 'eva', 'fam', 'elem', 'statusRes', 'flags', 'fleeRate', 'attackFx', 'actsPerTurn', 'appear', 'desc']) {
       if (o[key] != null) d[key] = o[key];
     }
+    // element families as for the main game (monsters.js FAMILIES, DESIGN §5.5); `elem` = exceptions
+    if (o.fam) d.elem = R.famElem(o.fam, o.elem);
     d.drop = { item: o.drop[0], rate: o.drop[1] };
     d.rare = { item: o.rare[0], rate: o.rare[1] };
     if (o.steal) d.steal = o.steal[1] ? { item: o.steal[0], rare: o.steal[1] } : { item: o.steal[0] };
@@ -209,28 +211,28 @@
     // ================================================= 地下1階 (Lv45–48)
     pg_hell_hound: pgMon('冥府の番犬', 'wolf', 46, {
       s: { hp: 1.75, atk: 1.85, def: 1.1, agi: 1.5 }, x: X_REG, hue: 120, sat: 2.5, bri: 0.85, eva: 8,
-      elem: { fire: 0.5, ice: 1.5, holy: 1.5 }, statusRes: HARD_RES,
+      fam: ['beast'], elem: { fire: 0.5 }, statusRes: HARD_RES,
       a: [['attack', 4], ['en_pg_hellfire_fang', 3], ['en_pg_howl', 2]],
       drop: ['nectar', 8], rare: ['pg_nova_claw', 96], steal: ['nectar', 'seed_agi'],
       desc: '深淵の入り口を守る冥府の番犬。\n燃え盛る牙で侵入者に食らいつく。',
     }),
     pg_prism_eye: pgMon('虹の魔眼', 'eyeball', 46, {
       s: { hp: 2.0, atk: 1.5, mag: 1.8, mdef: 1.6, agi: 1.2 }, x: X_REG, hue: 150, sat: 1.8, bri: 1.1, mp: 40,
-      flags: ['flying'], elem: { wind: 1.5, earth: 0.5 }, statusRes: { confuse: 1, blind: 1, sleep: 0.5 },
+      flags: ['flying'], fam: ['eye', 'float'], statusRes: { confuse: 1, blind: 1, sleep: 0.5 },
       a: [['attack', 3], ['en_pg_madness_gaze', 1], ['en_pg_prism_beam', 4]],
       drop: ['pg_clarity_amulet', 32], rare: ['pg_halo', 128], steal: ['all_cure', 'pg_clarity_amulet'],
       desc: '七色に光る瞳で人の心を惑わす魔眼。\n見つめられると正気を失う。',
     }),
     pg_void_wraith: pgMon('虚無の亡霊', 'void_wraith', 47, {
       s: { hp: 2.1, atk: 1.6, mag: 1.8, mdef: 1.5, agi: 1.1 }, x: X_REG, mp: 60,
-      flags: ['undead', 'flying'], elem: { holy: 2, dark: -1, ice: 0.5 }, statusRes: UNDEAD_RES, eva: 10,
+      flags: ['undead', 'flying'], fam: ['undead', 'float'], elem: { ice: 0.5 }, statusRes: UNDEAD_RES, eva: 10,
       a: [['attack', 3], ['en_pg_soul_drain', 4], ['en_pg_lament', 1], ['en_pg_death_touch', 1]],
       drop: ['mana_crystal', 10], rare: ['pg_soul_bell', 128], steal: ['mana_crystal', 'pg_soul_bell'],
       desc: '深淵に呑まれた者たちの成れの果て。\n声なき嘆きで生者の言葉を奪う。',
     }),
     pg_abyss_knight: pgMon('深淵の騎士', 'armor', 48, {
       s: { hp: 1.95, atk: 1.9, def: 1.7, mdef: 1.1, agi: 0.9 }, x: X_REG, hue: -60, sat: 2.5, bri: 0.6,
-      elem: { holy: 1.5, thunder: 1.5, dark: 0 }, statusRes: { poison: 1, death: 1, sleep: 0.5, confuse: 0.5 },
+      fam: ['metal', 'shade'], elem: { dark: 0 }, statusRes: { poison: 1, death: 1, sleep: 0.5, confuse: 0.5 },
       a: [['attack', 4], ['en_pg_abyss_slash', 3], ['en_pg_guard', 1]],
       drop: ['nectar', 8], rare: ['pg_chaos_helm', 128], steal: ['nectar', 'seed_vit'],
       desc: '主を失ってなお深淵をさまよう騎士。\n闇をまとった剣は鎧ごと断ち切る。',
@@ -239,28 +241,28 @@
     // ================================================= 地下2階 (Lv48–52)
     pg_chaos_beast: pgMon('カオスビースト', 'chaos_beast', 50, {
       s: { hp: 1.4, atk: 1.35, def: 1.1, agi: 1.0 }, x: X_REG,
-      elem: { holy: 1.5 }, statusRes: HARD_RES,
+      fam: ['beast'], statusRes: HARD_RES,
       a: [['attack', 4], ['en_pg_rampage', 3], ['en_pg_chaos_roar', 1]],
       drop: ['seed_str', 16], rare: ['pg_ruin_axe', 128], steal: ['nectar', 'seed_str'],
       desc: 'いくつもの獣が混沌の中で溶け合った怪物。\n理性はなく、ただ暴れ回る。',
     }),
     pg_star_golem: pgMon('星鋼の巨兵', 'golem', 50, {
       s: { hp: 1.54, atk: 1.45, def: 1.9, mdef: 1.2, agi: 0.6 }, x: X_REG, sat: 0.2, bri: 1.3,
-      elem: { thunder: 1.5, earth: 0.5, dark: 0.5 }, statusRes: GOLEM_RES,
+      fam: ['metal'], elem: { earth: 0.5, dark: 0.5 }, statusRes: GOLEM_RES,
       a: [['attack', 4], ['en_pg_star_crush', 3], ['en_pg_meteor_quake', 2]],
       drop: ['mega_bomb', 12], rare: ['dawn_armor', 96], steal: ['mega_bomb', 'seed_hp'],
       desc: '星から落ちた鋼で造られた巨兵。\n数千年の間、深淵の門を守り続けている。',
     }),
     pg_abyss_sorcerer: pgMon('深淵の魔導師', 'darkmage', 50, {
       s: { hp: 1.33, atk: 1.1, mag: 1.5, mdef: 1.6, agi: 1.2 }, x: X_REG, hue: -100, sat: 1.4, bri: 0.7, mp: 90,
-      elem: { holy: 1.5, dark: 0.5 }, statusRes: { sleep: 0.5, silence: 0.5, confuse: 0.5, death: 0.8 },
+      fam: ['human', 'demon'], statusRes: { sleep: 0.5, silence: 0.5, confuse: 0.5, death: 0.8 },
       a: [['attack', 2], ['en_pg_chaos_flare', 3], ['en_pg_abyss_ice', 2], ['en_pg_sleep_mist', 2], ['en_pg_dispel', 1]],
       drop: ['mana_crystal', 8], rare: ['goddess_robe', 96], steal: ['mana_crystal', 'seed_int'],
       desc: '禁じられた混沌の魔法を求めて\n深淵に降りた魔導師。もはや人ではない。',
     }),
     pg_aurora_harpy: pgMon('極光のハーピー', 'harpy', 49, {
       s: { hp: 1.4, atk: 1.15, mag: 1.2, agi: 1.5 }, x: X_REG, hue: 160, sat: 1.6, bri: 1.1, eva: 10,
-      flags: ['flying'], elem: { thunder: 1.5, wind: 0.5, earth: 0.5 }, statusRes: HARD_RES,
+      flags: ['flying'], fam: ['wing'], elem: { ice: 0.5, thunder: 0.5 }, statusRes: HARD_RES,
       a: [['attack', 3], ['en_pg_dive', 3], ['en_pg_aurora_song', 2], ['en_pg_gale', 2]],
       drop: ['goddess_tear', 24], rare: ['pg_starlight_garb', 128], steal: ['nectar', 'seed_agi'],
       desc: 'オーロラ色の翼を持つ魔鳥。\nその歌を聴いた者は二度と目覚めないという。',
@@ -269,28 +271,28 @@
     // ================================================= 地下3階 (Lv52–56)
     pg_void_dragon: pgMon('虚竜', 'wyvern', 54, {
       s: { hp: 1.33, atk: 1.25, def: 1.2, agi: 1.1 }, x: X_REG, sat: 0.25, bri: 1.35,
-      flags: ['flying', 'dragon'], elem: { holy: 1.5, dark: -1, earth: 0.5 }, statusRes: HARD_RES,
+      flags: ['flying', 'dragon'], fam: ['reptile', 'wing', 'shade'], elem: { dark: -1 }, statusRes: HARD_RES,
       a: [['attack', 4], ['en_pg_void_breath', 2], ['en_pg_frost_breath', 2], ['en_pg_greed', 2]],
       drop: ['light_drop', 16], rare: ['pg_heaven_bow', 128], steal: ['nectar', 'light_drop'],
       desc: '虚無を喰らって生きる竜。\n吐く息はあらゆるものを無に帰す。',
     }),
     pg_chaos_chimera: pgMon('混沌キマイラ', 'chimera', 54, {
       s: { hp: 1.4, atk: 1.4, def: 1.1, agi: 1.2 }, x: X_REG, hue: -60, sat: 1.8, bri: 0.9,
-      flags: ['flying'], elem: { ice: 1.5, fire: 0.5 }, statusRes: HARD_RES,
+      flags: ['flying'], fam: ['beast', 'reptile', 'wing'], elem: { fire: 0.5 }, statusRes: HARD_RES,
       a: [['attack', 5], ['en_pg_flame_breath', 2], ['en_pg_greed', 2], ['en_pg_howl', 1]],
       drop: ['nectar', 8], rare: ['pg_void_katana', 128], steal: ['nectar', 'seed_str'],
       desc: '獅子と山羊と蛇が混沌の中で結びついた獣。\n三つの口から獄炎を吐く。',
     }),
     pg_doom_box: pgMon('滅びの箱', 'mimic', 55, {
       s: { hp: 2.8, atk: 1.6, def: 1.3, mdef: 1.3, agi: 1.1 }, x: { exp: 1.1, gold: 3, jp: 1.5 }, sat: 0.15, bri: 0.4,
-      statusRes: { death: 1, sleep: 0.5, confuse: 0.5, paralyze: 0.5 },
+      fam: ['plain'], statusRes: { death: 1, sleep: 0.5, confuse: 0.5, paralyze: 0.5 },
       a: [['attack', 3], ['en_pg_doom_bite', 3], ['en_pg_greed', 2]],
       drop: ['seed_luk', 8], rare: ['pg_star_dagger', 64], steal: ['goddess_tear', 'pg_star_dagger'],
       desc: '深淵に置き去りにされた宝箱に\n死神が棲みついたもの。噛まれれば命はない。',
     }),
     pg_arch_demon: pgMon('深淵の魔将', 'demon', 56, {
       s: { hp: 1.26, atk: 1.35, mag: 1.3, mdef: 1.2, agi: 1.1 }, x: X_REG, hue: 50, sat: 1.6, bri: 0.8, mp: 80,
-      elem: { holy: 2, dark: -1, ice: 0.5 }, statusRes: HARD_RES,
+      fam: ['demon'], elem: { dark: -1, ice: 0.5 }, statusRes: HARD_RES,
       a: [['attack', 3], ['en_pg_demon_claw', 3], ['en_pg_dark_nova', 2], ['en_pg_chaos_flare', 1]],
       drop: ['mana_crystal', 8], rare: ['pg_genesis_harp', 128], steal: ['mana_crystal', 'seed_mnd'],
       desc: '深淵の主に仕える魔族の将。\n魔王ヴァルザードさえ恐れたという。',
@@ -299,7 +301,7 @@
     // ================================================= 地下4階 (Lv56–60)
     pg_abyss_gargoyle: pgMon('深淵のガーゴイル', 'gargoyle', 57, {
       s: { hp: 1.4, atk: 1.45, def: 1.6, mdef: 1.3, agi: 1.2 }, x: X_REG, hue: -40, sat: 3, bri: 0.8,
-      flags: ['flying'], elem: { thunder: 1.5, earth: 0.5, dark: 0.5 }, statusRes: GOLEM_RES,
+      flags: ['flying'], fam: ['rock', 'wing', 'shade'], statusRes: GOLEM_RES,
       a: [['attack', 4], ['en_pg_dive', 3], ['en_pg_stone_gaze', 2]],
       drop: ['seed_hp', 12], rare: ['goddess_charm', 128], steal: ['nectar', 'seed_hp'],
       desc: '最深部へ続く回廊を見張る石の魔物。\nその眼差しは体を石のようにこわばらせる。',
@@ -309,7 +311,7 @@
     rare_prism: pgMon('プリズマ', 'rare_prism', 55, {
       s: { hp: 1.2, atk: 1.0, def: 1.8, mdef: 1.8, agi: 1.5, mag: 1.2 }, x: { exp: 6, gold: 8, jp: 5 }, mp: 40,
       eva: 10, flags: ['rare', 'flee'], fleeRate: 0.35, attackFx: 'strike',
-      elem: { fire: 0.5, ice: 0.5, thunder: 0.5, wind: 0.5, earth: 0.5, water: 0.5, holy: 0.5, dark: 0.5 }, statusRes: RARE_RES,
+      fam: ['plain'], elem: { fire: 0.5, ice: 0.5, thunder: 0.5, wind: 0.5, earth: 0.5, water: 0.5, holy: 0.5, dark: 0.5 }, statusRes: RARE_RES,
       a: [['attack', 3], ['en_pg_prism_flash', 3], ['en_pg_refract', 1, { once: true }], ['wait', 2]],
       drop: ['goddess_tear', 6], rare: ['pg_prism_ring', 32], steal: ['seed_luk', 'pg_prism_ring'],
       appear: '虹色の光が弾け、プリズマが現れた！',
@@ -322,6 +324,7 @@
       hp: 7300, mp: 0, atk: 390, def: 180, agi: 110, mag: 260, mdef: 110, eva: 2,
       exp: 60000, gold: 30000, jp: 3000,
       flags: ['boss', 'dragon'], statusRes: BOSS_RES,
+      fam: ['shade'],
       elem: { dark: -1, fire: 0.5, ice: 0.5, thunder: 0.5 },
       actions: [
         // fixed schedule (3 actions a round; see the header)

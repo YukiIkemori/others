@@ -51,7 +51,7 @@
       jp: nice(c.jp * sz.jp * o.x.jp),
       actions: o.a.map(([aid, w, cond]) => (cond ? { id: aid, w, cond } : { id: aid, w })),
     };
-    for (const key of ['eva', 'elem', 'statusRes', 'flags', 'fleeRate', 'attackFx', 'appear', 'desc']) if (o[key] != null) d[key] = o[key];
+    for (const key of ['eva', 'fam', 'elem', 'statusRes', 'flags', 'fleeRate', 'attackFx', 'appear', 'desc']) if (o[key] != null) d[key] = o[key];
     d.drop = { item: o.drop[0], rate: o.drop[1] };
     d.rare = { item: o.rare[0], rate: o.rare[1] };
     d.steal = { item: o.steal[0], rare: o.steal[1] };
@@ -120,6 +120,7 @@
     rare_hare: rareMon('rare_hare', '宝石ウサギ', 8, {
       s: { hp: 1.6, atk: 0.55, def: 0.7, mdef: 1.2, agi: 1.7, mag: 0.8 }, x: { exp: 6, gold: 8, jp: 5 },
       eva: 12, flags: ['rare', 'flee'], fleeRate: 0.45, attackFx: 'strike', statusRes: RARE_RES,
+      fam: ['beast'], elem: { earth: 1.5 },
       a: [['attack', 3], ['en_rx_gem_flash', 2], ['en_rx_hop', 1, { once: true }], ['wait', 2]],
       drop: ['seed_luk', 6], rare: ['rx_rabbit_charm', 64], steal: ['seed_agi', 'rx_rabbit_charm'],
       appear: 'まばゆい光とともに、宝石ウサギが現れた！',
@@ -129,7 +130,7 @@
     rare_lizard: rareMon('rare_lizard', '金剛トカゲ', 16, {
       s: { hp: 1.3, atk: 0.95, def: 1.8, mdef: 0.8, agi: 1.25 }, x: { exp: 6, gold: 8, jp: 5 },
       eva: 6, flags: ['rare', 'flee'], fleeRate: 0.4, attackFx: 'bite',
-      elem: { ice: 1.5, earth: 0.5, holy: 0.5 }, statusRes: RARE_RES,
+      fam: ['reptile'], elem: { ice: 1.5, earth: 0.5, holy: 0.5 }, statusRes: RARE_RES,
       a: [['attack', 3], ['en_rx_prism', 2], ['en_tail', 2], ['wait', 1]],
       drop: ['seed_vit', 6], rare: ['rx_prism_shield', 96], steal: ['seed_str', 'rx_prism_shield'],
       appear: '虹色の光があふれ、金剛トカゲが現れた！',
@@ -139,7 +140,7 @@
     rare_bird: rareMon('rare_bird', 'オーロラ鳥', 23, {
       s: { hp: 1.5, atk: 0.9, def: 0.9, mdef: 2.2, agi: 1.5, mag: 1.3 }, x: { exp: 6, gold: 8, jp: 5 },
       eva: 10, flags: ['rare', 'flee', 'flying'], fleeRate: 0.45, attackFx: 'pierce',
-      elem: { ice: 0.5, wind: 0.5, earth: 0.5, thunder: 1.5 }, statusRes: RARE_RES,
+      fam: ['wing'], elem: { wind: 1.5, earth: 0, ice: 0.5 }, statusRes: RARE_RES,
       a: [['attack', 3], ['en_rx_aurora', 2], ['en_sleep_song', 1], ['wait', 1]],
       drop: ['light_drop', 6], rare: ['rx_aurora_robe', 128], steal: ['seed_mnd', 'rx_aurora_robe'],
       appear: '空が色づき、オーロラ鳥が舞い降りた！',
@@ -150,7 +151,7 @@
       large: true, mp: 60,
       s: { hp: 1.3, atk: 0.9, mdef: 1.5, agi: 1.4, mag: 1.3 }, x: { exp: 4.2, gold: 4.5, jp: 3 },
       eva: 4, flags: ['rare', 'flee', 'flying'], fleeRate: 0.35, attackFx: 'strike',
-      elem: { thunder: 1.5, earth: 0.5, water: 0.5, holy: 0.5 }, statusRes: RARE_RES,
+      fam: ['shore', 'float'], elem: { thunder: 1.5, earth: 0.5, water: 0.5, holy: 0.5 }, statusRes: RARE_RES,
       a: [['attack', 3], ['en_stardust', 2], ['en_rx_star_song', 1], ['en_star_heal', 2, { hpBelow: 0.5, once: true }]],
       drop: ['goddess_tear', 8], rare: ['rx_starsea_rod', 128], steal: ['seed_int', 'rx_starsea_rod'],
       appear: '星がきらめき、星くじらが現れた！',
@@ -161,7 +162,7 @@
       mp: 0,
       s: { hp: 2, atk: 1.05, def: 1.7, mdef: 1.4, agi: 1.5, mag: 1.2 }, x: { exp: 6, gold: 8.5, jp: 4 },
       eva: 4, flags: ['rare', 'flee'], fleeRate: 0.4, attackFx: 'strike',
-      elem: { thunder: 1.5, earth: 0.5, holy: 0.5, dark: 0.5 },
+      fam: ['metal'], elem: { thunder: 1.5, earth: 0.5, holy: 0.5, dark: 0.5 },
       statusRes: Object.assign({}, RARE_RES, { poison: 1, blind: 0.5, confuse: 0.8 }),
       a: [['attack', 3], ['en_rx_gold_ray', 2], ['en_rx_guard', 1, { once: true }], ['en_quake', 1]],
       drop: ['seed_str', 6], rare: ['rx_golden_amulet', 128], steal: ['seed_hp', 'rx_golden_amulet'],
