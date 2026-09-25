@@ -55,7 +55,7 @@ function makeChar(id, L, spec) {
   c.level = L; c.exp = Rules.expForLevel(L);
   for (const job of spec.master) {
     const rec = Rules.jobRec(c, job);
-    rec.total = Rules.JP_TABLE[7]; rec.jp = 0;
+    rec.total = Rules.jpForJobLevel(job, 8); rec.jp = 0;
     rec.learned = Rules.jobAbilities(job).slice();
   }
   if (!Rules.isJobUnlocked(c, spec.job)) W(`${id}: job ${spec.job} is locked by the plan`);
@@ -420,7 +420,7 @@ if (ONLY.includes('rewards')) {
     }
     const L = e.lv[0];
     const need = Rules.expForLevel(L + 1) - Rules.expForLevel(L);
-    console.log(`${pad(z, 9)} Lv${e.lv[0]}-${e.lv[1]}  exp ${padL(f0(exp), 6)}  jp ${padL(f0(jp), 4)}  gold ${padL(f0(gold), 5)}   → ${f1(need / exp)} fights per level at Lv${L}, ${f1(Rules.JP_TABLE[7] / jp)} fights per mastered-job's 2000 JP`);
+    console.log(`${pad(z, 9)} Lv${e.lv[0]}-${e.lv[1]}  exp ${padL(f0(exp), 6)}  jp ${padL(f0(jp), 4)}  gold ${padL(f0(gold), 5)}   → ${f1(need / exp)} fights per level at Lv${L}, ${f1(Rules.jpForJobLevel('paladin', 8) / jp)} fights per tier-3 job's Lv8 (${Rules.jpForJobLevel('paladin', 8)} JP)`);
   }
   // a party arriving from the final boss: fights needed to reach Lv55 on the floor matching its level
   {

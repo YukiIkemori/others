@@ -2,7 +2,9 @@
 // monster AI (battle_ai.js) picks them by weight/cond from R.DB.monsters[*].actions.
 // Balance (tools/sim_balance.js): physical skills scale with the user's atk, spells
 // with its mag (monster mag ≈ 0.6·atk), breaths are fixed tiers and ignore mdef:
-//   fire  8 → 20 → 42 → 75      ice 10 → 28 → 55      dark 95
+//   fire  7 → 17 → 36 → 75      ice 9 → 24 → 47      dark 95
+//   (the regular tiers were cut ≈15 % with the monsters' atk/mag, see monsters.js `soft`;
+//   煉獄の炎 and 闇の息吹 are boss-only and balanced with the bosses)
 // Spells cost MP, so a monster's mp decides how often it can cast.
 (function (R) {
   'use strict';
@@ -117,14 +119,14 @@
     en_mp_drain: spell('MP吸い取り', 0, 'enemy', [magic(8, 0.15, null, { mp: true, drain: 1 })], 'mp'),
 
     // --------------------------------------------------------------- breaths
-    en_breath_fire1: act('火の粉の息', 'enemies', [breath(8, 'fire')], 'breath_fire', { msg: '{user}は火の粉を吹きかけた！' }),
-    en_breath_fire2: act('炎の息', 'enemies', [breath(20, 'fire')], 'breath_fire', { msg: '{user}は炎を吐いた！' }),
-    en_breath_fire3: act('猛火の息', 'enemies', [breath(42, 'fire')], 'breath_fire', { msg: '{user}は猛烈な炎を吐いた！' }),
+    en_breath_fire1: act('火の粉の息', 'enemies', [breath(7, 'fire')], 'breath_fire', { msg: '{user}は火の粉を吹きかけた！' }),
+    en_breath_fire2: act('炎の息', 'enemies', [breath(17, 'fire')], 'breath_fire', { msg: '{user}は炎を吐いた！' }),
+    en_breath_fire3: act('猛火の息', 'enemies', [breath(36, 'fire')], 'breath_fire', { msg: '{user}は猛烈な炎を吐いた！' }),
     en_breath_fire4: act('煉獄の炎', 'enemies', [breath(75, 'fire')], 'breath_fire', { msg: '{user}は煉獄の炎を吐き出した！' }),
-    en_breath_ice1: act('霜の息', 'enemies', [breath(10, 'ice')], 'breath_ice', { msg: '{user}は霜の息を吹きかけた！' }),
-    en_breath_ice2: act('氷結の息', 'enemies', [breath(28, 'ice')], 'breath_ice', { msg: '{user}は凍りつく息を吐いた！' }),
-    en_breath_ice3: act('吹雪の息', 'enemies', [breath(55, 'ice')], 'breath_ice', { msg: '{user}はすさまじい吹雪を吐いた！' }),
-    en_breath_poison: act('毒ガス', 'enemies', [breath(6), status('poison', 0.4)], 'breath_poison', { msg: '{user}は毒ガスを吐き出した！' }),
+    en_breath_ice1: act('霜の息', 'enemies', [breath(9, 'ice')], 'breath_ice', { msg: '{user}は霜の息を吹きかけた！' }),
+    en_breath_ice2: act('氷結の息', 'enemies', [breath(24, 'ice')], 'breath_ice', { msg: '{user}は凍りつく息を吐いた！' }),
+    en_breath_ice3: act('吹雪の息', 'enemies', [breath(47, 'ice')], 'breath_ice', { msg: '{user}はすさまじい吹雪を吐いた！' }),
+    en_breath_poison: act('毒ガス', 'enemies', [breath(5), status('poison', 0.4)], 'breath_poison', { msg: '{user}は毒ガスを吐き出した！' }),
     en_breath_dark: act('闇の息吹', 'enemies', [breath(95, 'dark')], 'breath_dark', { msg: '{user}は闇の息吹を吐き出した！' }),
 
     // ------------------------------------------------------ boss signatures

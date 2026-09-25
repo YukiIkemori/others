@@ -50,7 +50,7 @@ const STATS = ['hp', 'mp', 'str', 'vit', 'agi', 'int', 'mnd', 'luk'];
 const WTYPES = ['sword', 'knife', 'axe', 'spear', 'staff', 'rod', 'bow', 'claw', 'katana', 'harp'];
 const ELEMENTS = ['fire', 'ice', 'thunder', 'wind', 'earth', 'water', 'holy', 'dark'];
 const STATUSES = ['poison', 'sleep', 'paralyze', 'confuse', 'silence', 'blind', 'death', 'regen'];
-const TARGETS = ['enemy', 'enemies', 'group', 'random', 'ally', 'allies', 'self', 'ally_dead', 'ally_any'];
+const TARGETS = ['enemy', 'enemies', 'group', 'random', 'ally', 'ally_other', 'allies', 'self', 'ally_dead', 'ally_any'];
 const FOE = { enemy: 1, enemies: 1, group: 1, random: 1 };
 const FORMULAS = ['phys', 'magic', 'fixed', 'percent', 'breath'];
 const BUFFS = ['atk', 'def', 'mag', 'mdef', 'agi'];
@@ -277,7 +277,7 @@ if (!fieldEff('repel').length) E('no repel-like field ability');
 for (const k of ['heal', 'cure', 'revive']) if (!fieldEff(k).length) E(`no field-usable ${k} ability`);
 
 // ------------------------------------------------------------------ job tree
-const { JP_TABLE } = R.Rules;
+const jpFor = (job, lv) => R.Rules.jpForJobLevel(job, lv);
 const reqClosure = (id, acc = {}, stack = []) => {
   if (stack.includes(id)) { E(`job tree cycle: ${[...stack, id].join(' → ')}`); return acc; }
   for (const [rj, lv] of (jobs[id] && jobs[id].req) || []) {
@@ -291,7 +291,7 @@ const reqClosure = (id, acc = {}, stack = []) => {
 const unlockJP = {};
 for (const id in jobs) {
   const cl = reqClosure(id);
-  unlockJP[id] = Object.keys(cl).reduce((s, j) => s + JP_TABLE[cl[j] - 1], 0);
+  unlockJP[id] = Object.keys(cl).reduce((s, j) => s + jpFor(j, cl[j]), 0);
   // reachability: a fresh character (only tier-1 jobs open) can meet every requirement
   const roots = Object.keys(cl).filter((j) => !(jobs[j].req || []).length);
   if ((jobs[id].req || []).length && !roots.length) E(`job ${id}: not reachable from a tier-1 job`);
@@ -301,7 +301,7 @@ for (const id in jobs) {
   for (const id in jobs) {
     const cl = reqClosure(id);
     const t = { jobs: {}, job: 'warrior', set: {}, equip: {} };
-    for (const j in cl) t.jobs[j] = { jp: 0, total: JP_TABLE[cl[j] - 1], learned: [] };
+    for (const j in cl) t.jobs[j] = { jp: 0, total: jpFor(j, cl[j]), learned: [] };
     if (!R.Rules.isJobUnlocked(t, id)) E(`job ${id}: Rules.isJobUnlocked disagrees with its requirement closure`);
   }
   if (!c) E('Rules.newChar failed');
@@ -310,17 +310,18 @@ for (const id in jobs) {
 // ------------------------------------------------------------------ JP table
 const kindsOf = (id) => (jobs[id].abilities || []).map((a) => abil[a]).filter(Boolean);
 const jpTotal = (id) => kindsOf(id).reduce((s, a) => s + (a.jp || 0), 0);
-console.log('\n=== JOBS ===  (JP to master vs the Lv8 threshold 2000; unlock = minimum JP spent elsewhere first)');
-console.log(pad('job', 12) + pad('名前', 16) + 'T  cmd' + ' '.repeat(10) + 'act rea sup fld   JP   ×Lv8  unlock');
+console.log('\n=== JOBS ===  (JP to master vs the job\'s own Lv8 threshold — the JP table scales by tier ×' + [1, 2, 3, 4].map((t) => R.Rules.JP_TIER_MULT[t]).join('/') + '; unlock = minimum JP spent elsewhere first)');
+console.log(pad('job', 12) + pad('名前', 16) + 'T  cmd' + ' '.repeat(10) + 'act rea sup fld   JP   Lv8  ×Lv8  unlock');
 for (const id in jobs) {
   const j = jobs[id], ks = kindsOf(id);
   const n = (k) => ks.filter((a) => a.kind === k).length;
   const tot = jpTotal(id);
-  const ratio = tot / 2000;
-  if (ratio < 1.4 || ratio > 2.6) W(`job ${id}: mastery JP ${tot} is ${ratio.toFixed(2)}× Lv8 (want ≈1.5–2.5×)`);
+  const lv8 = jpFor(id, 8), ratio = tot / lv8;
+  // mastering a job should take about as long as its job levels, or a little longer (higher tiers: ≈1×, the last job level may come just after mastery)
+  if (ratio < 0.85 || ratio > 2.0) W(`job ${id}: mastery JP ${tot} is ${ratio.toFixed(2)}× its Lv8 ${lv8} (want ≈1–2×)`);
   console.log(pad(id, 12) + pad(j.name, 16) + j.tier + '  ' + pad(j.command, 14) +
     padL(n('action'), 3) + padL(n('reaction'), 4) + padL(n('support'), 4) + padL(n('field'), 4) +
-    padL(tot, 6) + padL(ratio.toFixed(2), 6) + padL(unlockJP[id], 7));
+    padL(tot, 6) + padL(lv8, 6) + padL(ratio.toFixed(2), 6) + padL(unlockJP[id], 7));
 }
 console.log(`abilities: ${Object.keys(abil).filter((k) => !k.startsWith('en_')).length}   start: ${Object.keys(START).join(' ')}`);
 

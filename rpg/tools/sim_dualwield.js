@@ -115,7 +115,7 @@ function buildChar(id, L, plan) {
     if (budget <= 0) break;
     if (!Rules.isJobUnlocked(c, job)) break;
     const rec = Rules.jobRec(c, job);
-    const need = Math.max(0, Rules.JP_TABLE[lv - 1] - rec.total);
+    const need = Math.max(0, Rules.jpForJobLevel(job, lv) - rec.total);
     const put = Math.min(need, budget);
     rec.total += put; rec.jp += put; budget -= put;
     if (isMain && !mains.includes(job)) mains.push(job);
@@ -159,7 +159,7 @@ function bestPhysJob(c, jobs) {
 function detourJp(c) {
   let n = 0;
   for (const [job, lv] of [['warrior', 2], ['priest', 2], ['thief', 3], ['monk', 3], ['hunter', 4]]) {
-    n += Math.max(0, Rules.JP_TABLE[lv - 1] - ((c.jobs[job] && c.jobs[job].total) || 0));
+    n += Math.max(0, Rules.jpForJobLevel(job, lv) - ((c.jobs[job] && c.jobs[job].total) || 0));
   }
   return n + (DB.abilities.ninja_two_swords.jp || 0);
 }
@@ -227,7 +227,7 @@ function makeMastered(L, spec) {
   c.level = L; c.exp = Rules.expForLevel(L);
   for (const job of PG_MASTER) {
     const rec = Rules.jobRec(c, job);
-    rec.total = Rules.JP_TABLE[7]; rec.jp = 0;
+    rec.total = Rules.jpForJobLevel(job, 8); rec.jp = 0;
     rec.learned = Rules.jobAbilities(job).slice();
   }
   c.job = spec.job;

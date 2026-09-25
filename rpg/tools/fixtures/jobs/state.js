@@ -14,7 +14,7 @@
       const [y, n, m] = g.party;
       const jl = (c, job, lv, spare) => {
         const rec = R.Rules.jobRec(c, job);
-        rec.total = R.Rules.JP_TABLE[lv - 1];
+        rec.total = R.Rules.jpForJobLevel(job, lv);
         rec.jp = spare != null ? spare : 120;
       };
       const learn = (c, ids) => { for (const a of ids) { const rec = R.Rules.jobRec(c, R.DB.abilities[a].job); if (!rec.learned.includes(a)) rec.learned.push(a); } };

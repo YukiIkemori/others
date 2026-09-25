@@ -17,7 +17,8 @@
 // campaign (a natural playthrough: levels, JP, gold vs shop prices) · loot (rare drops).
 // Targets: zones win ≈100 %, 2–5 rounds, 5–25 % party HP lost (a bit more late);
 // bosses 60–90 % at the stage's upper level with healing, 6–15 rounds;
-// campaign: 20–40 fights per band, ≈1 job level per 6–10 fights early.
+// campaign: 20–40 fights per band, ≈1 job level per 6–10 fights early; the JP table scales by
+// tier (Rules.jpTable) so a tier-2/3/4 job still takes ≈50–90 fights to Lv8 when monsters pay more JP.
 // The simulated party uses the game's own battle AI (R.BattleAI), which spends MP
 // freely; the crawl section replays it with a thriftier player instead.
 'use strict';
@@ -123,7 +124,7 @@ function buildChar(id, L) {
     if (budget <= 0) break;
     if (!Rules.isJobUnlocked(c, job)) break;
     const rec = Rules.jobRec(c, job);
-    const need = Math.max(0, Rules.JP_TABLE[lv - 1] - rec.total);
+    const need = Math.max(0, Rules.jpForJobLevel(job, lv) - rec.total);
     const put = Math.min(need, budget);
     rec.total += put; rec.jp += put; budget -= put;
     if (isMain && !mains.includes(job)) mains.push(job);
@@ -214,8 +215,9 @@ if (ONLY.includes('party')) {
 
 // ================================================================ zones
 function runGroup(party, inv, mons, n, o) {
-  const acc = { n: 0, win: 0, rounds: 0, hpLost: 0, mpUsed: 0, deaths: 0, exp: 0, gold: 0, jp: 0, lose: 0 };
+  const acc = { n: 0, win: 0, rounds: 0, hpLost: 0, dmg: 0, mpUsed: 0, deaths: 0, exp: 0, gold: 0, jp: 0, lose: 0 };
   const mp0 = party.reduce((s, c) => s + c.mp, 0);
+  const hpMax = party.reduce((s, c) => s + Rules.stats(c).hp, 0);
   const mpMax = party.reduce((s, c) => s + Rules.stats(c).mp, 0);
   for (let i = 0; i < n; i++) {
     const r = R.Battle.simulate(Object.assign({ party, inv, mons, items: false, seed: SEED * 7919 + i * 31 + 17 }, o || {}));
@@ -224,11 +226,12 @@ function runGroup(party, inv, mons, n, o) {
     if (r.result === 'lose') acc.lose++;
     acc.rounds += r.rounds;
     acc.hpLost += 100 - r.partyHpPct;
+    acc.dmg += (100 * (r.damageTaken || 0)) / Math.max(1, hpMax);
     acc.mpUsed += mpMax ? (100 * (mp0 - r.party.reduce((s, c) => s + c.mp, 0))) / mpMax : 0;
     acc.deaths += r.deaths;
     acc.exp += r.exp; acc.gold += r.gold; acc.jp += r.jp;
   }
-  for (const k of ['rounds', 'hpLost', 'mpUsed', 'deaths', 'exp', 'gold', 'jp']) acc[k] /= acc.n;
+  for (const k of ['rounds', 'hpLost', 'dmg', 'mpUsed', 'deaths', 'exp', 'gold', 'jp']) acc[k] /= acc.n;
   acc.winPct = (100 * acc.win) / acc.n;
   return acc;
 }
@@ -245,7 +248,7 @@ function zoneReport(z, si, L, verbose) {
   const party = buildParty(si, L);
   const inv = bagFor(si);
   const totalW = e.groups.reduce((s, g) => s + g.w, 0);
-  const avg = { winPct: 0, rounds: 0, hpLost: 0, mpUsed: 0, deaths: 0, exp: 0, gold: 0, jp: 0 };
+  const avg = { winPct: 0, rounds: 0, hpLost: 0, dmg: 0, mpUsed: 0, deaths: 0, exp: 0, gold: 0, jp: 0 };
   const rows = [];
   e.groups.forEach((grp, gi) => {
     const metal = grp.mons.every(([id]) => (DB.monsters[id].flags || []).includes('metal'));
@@ -260,7 +263,7 @@ function zoneReport(z, si, L, verbose) {
     }
   });
   if (verbose) for (const { gi, grp, r, metal } of rows) {
-    verbose.push(`    #${gi} w${padL(grp.w, 2)} ${pad(groupLabel(grp), 44)} win${padL(f0(r.winPct), 4)}%  rnd ${f1(r.rounds)}  hp-${padL(f0(r.hpLost), 3)}%  mp-${padL(f0(r.mpUsed), 3)}%  dead ${f1(r.deaths)}  exp ${padL(f0(r.exp), 5)} jp ${padL(f0(r.jp), 3)} g ${padL(f0(r.gold), 4)}${metal ? '  (metal)' : ''}`);
+    verbose.push(`    #${gi} w${padL(grp.w, 2)} ${pad(groupLabel(grp), 44)} win${padL(f0(r.winPct), 4)}%  rnd ${f1(r.rounds)}  hp-${padL(f0(r.hpLost), 3)}% (dmg ${padL(f0(r.dmg), 3)}%)  mp-${padL(f0(r.mpUsed), 3)}%  dead ${f1(r.deaths)}  exp ${padL(f0(r.exp), 5)} jp ${padL(f0(r.jp), 3)} g ${padL(f0(r.gold), 4)}${metal ? '  (metal)' : ''}`);
   }
   return avg;
 }
@@ -278,7 +281,7 @@ if (ONLY.includes('zones')) {
         const rows = [];
         const a = zoneReport(z, si, L, rows);
         if (!a) continue;
-        console.log(`${pad(z, 10)} ${pad(s.id, 10)} Lv${padL(L, 2)}  win ${padL(f0(a.winPct), 3)}%  rounds ${f1(a.rounds)}  hp-${padL(f0(a.hpLost), 3)}%  mp-${padL(f0(a.mpUsed), 3)}%  deaths ${f1(a.deaths)}  exp ${padL(f0(a.exp), 5)}  jp ${padL(f0(a.jp), 3)}  gold ${padL(f0(a.gold), 4)}`);
+        console.log(`${pad(z, 10)} ${pad(s.id, 10)} Lv${padL(L, 2)}  win ${padL(f0(a.winPct), 3)}%  rounds ${f1(a.rounds)}  hp-${padL(f0(a.hpLost), 3)}% (dmg ${padL(f0(a.dmg), 3)}%)  mp-${padL(f0(a.mpUsed), 3)}%  deaths ${f1(a.deaths)}  exp ${padL(f0(a.exp), 5)}  jp ${padL(f0(a.jp), 3)}  gold ${padL(f0(a.gold), 4)}`);
         if (VERBOSE || ZONE_FILTER) for (const l of rows) console.log(l);
       }
     }
@@ -509,6 +512,7 @@ function campaign(seed) {
   U.seed(seed);
   let L = 1, exp = 0, jpTotal = 0, fightsTotal = 0, goldBank = 0;
   const firstJob = [];
+  const jpSeq = []; // [stage index, JP] per won fight (and boss) — for the job level pacing report
   const out = [];
   STAGES.forEach((s, si) => {
     if (s.towns.length) goldBank = 0;
@@ -519,17 +523,19 @@ function campaign(seed) {
       const r = R.Battle.simulate({ party: buildParty(si, L), inv: bagFor(si), mons: grp.mons, seed: seed * 7 + fightsTotal * 13 + 3 });
       fights++; fightsTotal++; rounds += r.rounds;
       if (r.result !== 'win') continue;
-      exp += r.exp; jpTotal += r.jp; goldBank += r.gold;
+      exp += r.exp; jpTotal += r.jp; goldBank += r.gold; jpSeq.push([si, r.jp]);
       while (exp >= Rules.expForLevel(L + 1)) L++;
       for (let k = firstJob.length; k < 3 && jpTotal >= Rules.JP_TABLE[k + 1]; k++) firstJob.push(fightsTotal);
     }
     for (const tid of s.boss || []) {
-      for (const [id, a] of DB.troops[tid].mons) { const m = DB.monsters[id]; exp += m.exp * a; jpTotal += m.jp * a; goldBank += m.gold * a; }
+      let bj = 0;
+      for (const [id, a] of DB.troops[tid].mons) { const m = DB.monsters[id]; exp += m.exp * a; jpTotal += m.jp * a; bj += m.jp * a; goldBank += m.gold * a; }
+      jpSeq.push([si, bj]);
       while (exp >= Rules.expForLevel(L + 1)) L++;
     }
     out.push({ L0, L, fights, fightsTotal, rounds: rounds / Math.max(1, fights), jp: jpTotal, gold: goldBank });
   });
-  return { stages: out, firstJob };
+  return { stages: out, firstJob, jpSeq };
 }
 if (ONLY.includes('campaign')) {
   const RUNS = 12;
@@ -554,6 +560,25 @@ if (ONLY.includes('campaign')) {
   });
   const fj = [0, 1, 2].map((k) => f1(runs.reduce((a, r) => a + (r.firstJob[k] || 0), 0) / RUNS));
   console.log(`first job levels (Lv2, Lv3, Lv4 of the first job) after fights: ${fj.join(', ')}`);
+  // job level pacing: a job of each tier taken up at the stage where a player typically gets it
+  // (JP table scaled by tier, Rules.jpTable); fights (incl. bosses) until each job level
+  console.log('job level pacing (fights from taking the job up to job Lv2 … Lv8, natural play):');
+  const PACE = [['warrior', 'regnas'], ['knight', 'east'], ['whitemage', 'fort'], ['paladin', 'pyramid'], ['sage', 'snow'], ['hero', 'star'], ['hero', 'sea3']];
+  for (const [job, sid] of PACE) {
+    const s0 = STAGES.findIndex((s) => s.id === sid), tab = Rules.jpTable(job);
+    const lv = tab.slice(1).map(() => 0);
+    for (const r of runs) {
+      let jp = 0, n = 0, k = 0;
+      for (const [si, j] of r.jpSeq) {
+        if (si < s0) continue;
+        jp += j; n++;
+        while (k < lv.length && jp >= tab[k + 1]) lv[k++] += n;
+      }
+      while (k < lv.length) lv[k++] += NaN;
+    }
+    const cells = lv.map((x) => (isNaN(x) ? '  -' : padL(f0(x / RUNS), 3)));
+    console.log(`  ${pad(DB.jobs[job].name, 12)} T${DB.jobs[job].tier} from ${pad(sid, 8)} (Lv${STAGES[s0].lv[0]})  Lv8 = ${padL(tab[7], 4)} JP:  ${cells.join(' ')}`);
+  }
 }
 
 // ================================================================== loot

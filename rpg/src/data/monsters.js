@@ -27,17 +27,20 @@
   const expFor = (L) => (L <= 1 ? 0 : 8 * Math.pow(L - 1, 2.6) + 10 * (L - 1));
   // late-game boost: the party's jobs, abilities and gear snowball after the ship
   const late = (L) => { const t = Math.min(1, Math.max(0, (L - 16) / 14)); return t * t * (3 - 2 * t); };
+  // outgoing damage softened (playtest: 「全体的に敵の攻撃が痛い」): atk & mag ×0.87 up to Lv18,
+  // eased to ×0.93 by Lv34 (late fights keep some bite)
+  const soft = (L) => { const t = Math.min(1, Math.max(0, (L - 18) / 16)); return 0.87 + 0.06 * t * t * (3 - 2 * t); };
   // early game (request K): the first regions paid out too generously — EXP and gold are
   // scaled down at Lv1 (×lo) and eased back to the plain curve by Lv`end`
   const early = (L, lo, end) => { const t = Math.min(1, Math.max(0, (L - 1) / (end - 1))); return lo + (1 - lo) * t * t * (3 - 2 * t); };
   const EXP_EARLY = [0.72, 8], GOLD_EARLY = [0.6, 9];
   const curve = (L) => ({
     hp: (7 + 5 * L + 0.28 * L * L) * (1 + 0.15 * late(L)),
-    atk: (10 + 3.8 * L) * (1 + 0.12 * late(L)),
+    atk: (10 + 3.8 * L) * (1 + 0.12 * late(L)) * soft(L),
     def: 1 + 2.1 * L,
     mdef: L,
     agi: 4 + 1.8 * L,
-    mag: 5 + 2.4 * L,
+    mag: (5 + 2.4 * L) * soft(L),
     exp: ((expFor(L + 2.5) - expFor(L + 1.5)) / 14.4) * Math.exp(0.1 - 2 * (L / 40) + 1.8 * (L / 40) * (L / 40)) * early(L, ...EXP_EARLY),
     jp: 5 + 1.15 * L,
     gold: (6 + 8 * L + 0.3 * L * L) * early(L, ...GOLD_EARLY),

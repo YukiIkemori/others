@@ -16,8 +16,12 @@
   const SLOT_NAMES = { weapon: '武器', shield: '盾', head: '頭', body: '体', acc: 'アクセサリ' };
   const SET_SLOTS = ['sub', 'reaction', 'support', 'field'];
   const SET_NAMES = { sub: 'サブアクション', reaction: 'リアクション', support: 'サポート', field: 'フィールド' };
-  // cumulative JP earned in a job needed for job level 1..8
+  // cumulative JP earned in a job needed for job level 1..8 — the base (tier 1) table.
+  // Higher tiers scale it (playtest: intermediate/advanced jobs levelled up too fast, since
+  // monsters pay more JP later): tier 2 ×1.6, tier 3 ×2.25, tier 4 ×2.75 → Rules.jpTable(jobId).
   const JP_TABLE = [0, 100, 250, 450, 700, 1000, 1400, 2000];
+  const JP_TIER_MULT = { 1: 1, 2: 1.6, 3: 2.25, 4: 2.75 };
+  const jpTables = {};
   const MAX_LEVEL = 99;
   const CAPS = { hp: 999, mp: 999, str: 255, vit: 255, agi: 255, int: 255, mnd: 255, luk: 255 };
 
@@ -26,7 +30,7 @@
   const MAP_MODS = { elemBoost: 1, elemResist: 1, startBuffs: 1 };
 
   const Rules = (R.Rules = {
-    STATS, SLOTS, SLOT_NAMES, SET_SLOTS, SET_NAMES, JP_TABLE, MAX_LEVEL, CAPS,
+    STATS, SLOTS, SLOT_NAMES, SET_SLOTS, SET_NAMES, JP_TABLE, JP_TIER_MULT, MAX_LEVEL, CAPS,
 
     // ------------------------------------------------------------ creation
     newChar(id) {
@@ -72,18 +76,35 @@
     },
 
     // --------------------------------------------------------------- jobs
+    /** cumulative JP table of a job (levels 1..8), scaled by its tier */
+    jpTable(jobId) {
+      const j = DB.jobs[jobId];
+      const tier = (j && j.tier) || 1;
+      if (!jpTables[tier]) {
+        const m = JP_TIER_MULT[tier] || 1;
+        jpTables[tier] = JP_TABLE.map((v) => Math.round((v * m) / 10) * 10);
+      }
+      return jpTables[tier];
+    },
+    /** cumulative JP needed for job level lv (1..8) of a job */
+    jpForJobLevel(jobId, lv) {
+      const t = Rules.jpTable(jobId);
+      return t[U.clamp(lv | 0, 1, t.length) - 1];
+    },
     jobLevel(c, jobId) {
       const rec = c.jobs[jobId];
       const t = rec ? rec.total : 0;
+      const tab = Rules.jpTable(jobId);
       let lv = 1;
-      for (let i = 0; i < JP_TABLE.length; i++) if (t >= JP_TABLE[i]) lv = i + 1;
+      for (let i = 0; i < tab.length; i++) if (t >= tab[i]) lv = i + 1;
       return lv;
     },
     /** JP still needed for the next job level (0 at max) */
     jpToNextLevel(c, jobId) {
       const lv = Rules.jobLevel(c, jobId);
-      if (lv >= JP_TABLE.length) return 0;
-      return JP_TABLE[lv] - ((c.jobs[jobId] && c.jobs[jobId].total) || 0);
+      const tab = Rules.jpTable(jobId);
+      if (lv >= tab.length) return 0;
+      return tab[lv] - ((c.jobs[jobId] && c.jobs[jobId].total) || 0);
     },
     isJobUnlocked(c, jobId) {
       const j = DB.jobs[jobId];

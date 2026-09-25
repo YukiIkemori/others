@@ -3016,7 +3016,7 @@ try{
       mp: 10, magic: true, target: 'allies', effects: [cure('all')], fx: 'cure', fieldUse: true,
     }),
     paladin_sacrifice: act('命分け', 400, '自分のHPを分け与え、仲間を大きく癒やす。', {
-      mp: 0, target: 'ally', effects: [{ type: 'heal', pct: 0.6, hpCost: 0.25 }], fx: 'heal',
+      mp: 0, target: 'ally_other', effects: [{ type: 'heal', pct: 0.6, hpCost: 0.25 }], fx: 'heal',
     }),
     paladin_wave: act('光の波', 500, '光の波で敵全体を撃つ。', {
       mp: 10, target: 'enemies', effects: [phys(0.8, { element: 'holy', vs: { undead: 1.5 } })], fx: 'holy2',
@@ -3719,7 +3719,9 @@ try{
 // monster AI (battle_ai.js) picks them by weight/cond from R.DB.monsters[*].actions.
 // Balance (tools/sim_balance.js): physical skills scale with the user's atk, spells
 // with its mag (monster mag ≈ 0.6·atk), breaths are fixed tiers and ignore mdef:
-//   fire  8 → 20 → 42 → 75      ice 10 → 28 → 55      dark 95
+//   fire  7 → 17 → 36 → 75      ice 9 → 24 → 47      dark 95
+//   (the regular tiers were cut ≈15 % with the monsters' atk/mag, see monsters.js `soft`;
+//   煉獄の炎 and 闇の息吹 are boss-only and balanced with the bosses)
 // Spells cost MP, so a monster's mp decides how often it can cast.
 (function (R) {
   'use strict';
@@ -3834,14 +3836,14 @@ try{
     en_mp_drain: spell('MP吸い取り', 0, 'enemy', [magic(8, 0.15, null, { mp: true, drain: 1 })], 'mp'),
 
     // --------------------------------------------------------------- breaths
-    en_breath_fire1: act('火の粉の息', 'enemies', [breath(8, 'fire')], 'breath_fire', { msg: '{user}は火の粉を吹きかけた！' }),
-    en_breath_fire2: act('炎の息', 'enemies', [breath(20, 'fire')], 'breath_fire', { msg: '{user}は炎を吐いた！' }),
-    en_breath_fire3: act('猛火の息', 'enemies', [breath(42, 'fire')], 'breath_fire', { msg: '{user}は猛烈な炎を吐いた！' }),
+    en_breath_fire1: act('火の粉の息', 'enemies', [breath(7, 'fire')], 'breath_fire', { msg: '{user}は火の粉を吹きかけた！' }),
+    en_breath_fire2: act('炎の息', 'enemies', [breath(17, 'fire')], 'breath_fire', { msg: '{user}は炎を吐いた！' }),
+    en_breath_fire3: act('猛火の息', 'enemies', [breath(36, 'fire')], 'breath_fire', { msg: '{user}は猛烈な炎を吐いた！' }),
     en_breath_fire4: act('煉獄の炎', 'enemies', [breath(75, 'fire')], 'breath_fire', { msg: '{user}は煉獄の炎を吐き出した！' }),
-    en_breath_ice1: act('霜の息', 'enemies', [breath(10, 'ice')], 'breath_ice', { msg: '{user}は霜の息を吹きかけた！' }),
-    en_breath_ice2: act('氷結の息', 'enemies', [breath(28, 'ice')], 'breath_ice', { msg: '{user}は凍りつく息を吐いた！' }),
-    en_breath_ice3: act('吹雪の息', 'enemies', [breath(55, 'ice')], 'breath_ice', { msg: '{user}はすさまじい吹雪を吐いた！' }),
-    en_breath_poison: act('毒ガス', 'enemies', [breath(6), status('poison', 0.4)], 'breath_poison', { msg: '{user}は毒ガスを吐き出した！' }),
+    en_breath_ice1: act('霜の息', 'enemies', [breath(9, 'ice')], 'breath_ice', { msg: '{user}は霜の息を吹きかけた！' }),
+    en_breath_ice2: act('氷結の息', 'enemies', [breath(24, 'ice')], 'breath_ice', { msg: '{user}は凍りつく息を吐いた！' }),
+    en_breath_ice3: act('吹雪の息', 'enemies', [breath(47, 'ice')], 'breath_ice', { msg: '{user}はすさまじい吹雪を吐いた！' }),
+    en_breath_poison: act('毒ガス', 'enemies', [breath(5), status('poison', 0.4)], 'breath_poison', { msg: '{user}は毒ガスを吐き出した！' }),
     en_breath_dark: act('闇の息吹', 'enemies', [breath(95, 'dark')], 'breath_dark', { msg: '{user}は闇の息吹を吐き出した！' }),
 
     // ------------------------------------------------------ boss signatures
@@ -4613,17 +4615,20 @@ try{
   const expFor = (L) => (L <= 1 ? 0 : 8 * Math.pow(L - 1, 2.6) + 10 * (L - 1));
   // late-game boost: the party's jobs, abilities and gear snowball after the ship
   const late = (L) => { const t = Math.min(1, Math.max(0, (L - 16) / 14)); return t * t * (3 - 2 * t); };
+  // outgoing damage softened (playtest: 「全体的に敵の攻撃が痛い」): atk & mag ×0.87 up to Lv18,
+  // eased to ×0.93 by Lv34 (late fights keep some bite)
+  const soft = (L) => { const t = Math.min(1, Math.max(0, (L - 18) / 16)); return 0.87 + 0.06 * t * t * (3 - 2 * t); };
   // early game (request K): the first regions paid out too generously — EXP and gold are
   // scaled down at Lv1 (×lo) and eased back to the plain curve by Lv`end`
   const early = (L, lo, end) => { const t = Math.min(1, Math.max(0, (L - 1) / (end - 1))); return lo + (1 - lo) * t * t * (3 - 2 * t); };
   const EXP_EARLY = [0.72, 8], GOLD_EARLY = [0.6, 9];
   const curve = (L) => ({
     hp: (7 + 5 * L + 0.28 * L * L) * (1 + 0.15 * late(L)),
-    atk: (10 + 3.8 * L) * (1 + 0.12 * late(L)),
+    atk: (10 + 3.8 * L) * (1 + 0.12 * late(L)) * soft(L),
     def: 1 + 2.1 * L,
     mdef: L,
     agi: 4 + 1.8 * L,
-    mag: 5 + 2.4 * L,
+    mag: (5 + 2.4 * L) * soft(L),
     exp: ((expFor(L + 2.5) - expFor(L + 1.5)) / 14.4) * Math.exp(0.1 - 2 * (L / 40) + 1.8 * (L / 40) * (L / 40)) * early(L, ...EXP_EARLY),
     jp: 5 + 1.15 * L,
     gold: (6 + 8 * L + 0.3 * L * L) * early(L, ...GOLD_EARLY),
@@ -5931,13 +5936,16 @@ try{
   // ------------------------------------------------------------ curve (= monsters.js)
   const expFor = (L) => (L <= 1 ? 0 : 8 * Math.pow(L - 1, 2.6) + 10 * (L - 1));
   const late = (L) => { const t = Math.min(1, Math.max(0, (L - 16) / 14)); return t * t * (3 - 2 * t); };
+  // outgoing damage softened (playtest: 「全体的に敵の攻撃が痛い」): atk & mag ×0.87 up to Lv18,
+  // eased to ×0.93 by Lv34 (late fights keep some bite)
+  const soft = (L) => { const t = Math.min(1, Math.max(0, (L - 18) / 16)); return 0.87 + 0.06 * t * t * (3 - 2 * t); };
   const curve = (L) => ({
     hp: (7 + 5 * L + 0.28 * L * L) * (1 + 0.15 * late(L)),
-    atk: (10 + 3.8 * L) * (1 + 0.12 * late(L)),
+    atk: (10 + 3.8 * L) * (1 + 0.12 * late(L)) * soft(L),
     def: 1 + 2.1 * L,
     mdef: L,
     agi: 4 + 1.8 * L,
-    mag: 5 + 2.4 * L,
+    mag: (5 + 2.4 * L) * soft(L),
     exp: ((expFor(L + 2.5) - expFor(L + 1.5)) / 14.4) * Math.exp(0.1 - 2 * (L / 40) + 1.8 * (L / 40) * (L / 40)),
     jp: 5 + 1.15 * L,
     gold: 6 + 8 * L + 0.3 * L * L,
@@ -34534,7 +34542,7 @@ try{
       const c = R.State.char(charId);
       if (!c) return 'unknown char ' + charId;
       const rec = R.Rules.jobRec(c, job);
-      const total = R.Rules.JP_TABLE[R.U.clamp(lv | 0, 1, R.Rules.JP_TABLE.length) - 1];
+      const total = R.Rules.jpForJobLevel(job, lv);
       if (total > rec.total) rec.jp += total - rec.total;
       rec.total = total;
       return c.name + ' ' + job + ' Lv' + R.Rules.jobLevel(c, job);
@@ -40543,8 +40551,12 @@ try{
   const SLOT_NAMES = { weapon: '武器', shield: '盾', head: '頭', body: '体', acc: 'アクセサリ' };
   const SET_SLOTS = ['sub', 'reaction', 'support', 'field'];
   const SET_NAMES = { sub: 'サブアクション', reaction: 'リアクション', support: 'サポート', field: 'フィールド' };
-  // cumulative JP earned in a job needed for job level 1..8
+  // cumulative JP earned in a job needed for job level 1..8 — the base (tier 1) table.
+  // Higher tiers scale it (playtest: intermediate/advanced jobs levelled up too fast, since
+  // monsters pay more JP later): tier 2 ×1.6, tier 3 ×2.25, tier 4 ×2.75 → Rules.jpTable(jobId).
   const JP_TABLE = [0, 100, 250, 450, 700, 1000, 1400, 2000];
+  const JP_TIER_MULT = { 1: 1, 2: 1.6, 3: 2.25, 4: 2.75 };
+  const jpTables = {};
   const MAX_LEVEL = 99;
   const CAPS = { hp: 999, mp: 999, str: 255, vit: 255, agi: 255, int: 255, mnd: 255, luk: 255 };
 
@@ -40553,7 +40565,7 @@ try{
   const MAP_MODS = { elemBoost: 1, elemResist: 1, startBuffs: 1 };
 
   const Rules = (R.Rules = {
-    STATS, SLOTS, SLOT_NAMES, SET_SLOTS, SET_NAMES, JP_TABLE, MAX_LEVEL, CAPS,
+    STATS, SLOTS, SLOT_NAMES, SET_SLOTS, SET_NAMES, JP_TABLE, JP_TIER_MULT, MAX_LEVEL, CAPS,
 
     // ------------------------------------------------------------ creation
     newChar(id) {
@@ -40599,18 +40611,35 @@ try{
     },
 
     // --------------------------------------------------------------- jobs
+    /** cumulative JP table of a job (levels 1..8), scaled by its tier */
+    jpTable(jobId) {
+      const j = DB.jobs[jobId];
+      const tier = (j && j.tier) || 1;
+      if (!jpTables[tier]) {
+        const m = JP_TIER_MULT[tier] || 1;
+        jpTables[tier] = JP_TABLE.map((v) => Math.round((v * m) / 10) * 10);
+      }
+      return jpTables[tier];
+    },
+    /** cumulative JP needed for job level lv (1..8) of a job */
+    jpForJobLevel(jobId, lv) {
+      const t = Rules.jpTable(jobId);
+      return t[U.clamp(lv | 0, 1, t.length) - 1];
+    },
     jobLevel(c, jobId) {
       const rec = c.jobs[jobId];
       const t = rec ? rec.total : 0;
+      const tab = Rules.jpTable(jobId);
       let lv = 1;
-      for (let i = 0; i < JP_TABLE.length; i++) if (t >= JP_TABLE[i]) lv = i + 1;
+      for (let i = 0; i < tab.length; i++) if (t >= tab[i]) lv = i + 1;
       return lv;
     },
     /** JP still needed for the next job level (0 at max) */
     jpToNextLevel(c, jobId) {
       const lv = Rules.jobLevel(c, jobId);
-      if (lv >= JP_TABLE.length) return 0;
-      return JP_TABLE[lv] - ((c.jobs[jobId] && c.jobs[jobId].total) || 0);
+      const tab = Rules.jpTable(jobId);
+      if (lv >= tab.length) return 0;
+      return tab[lv] - ((c.jobs[jobId] && c.jobs[jobId].total) || 0);
     },
     isJobUnlocked(c, jobId) {
       const j = DB.jobs[jobId];

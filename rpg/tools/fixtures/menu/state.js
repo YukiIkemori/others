@@ -17,7 +17,7 @@
       const [y, n, m] = g.party;
       const jl = (c, job, l) => {
         const rec = R.Rules.jobRec(c, job);
-        const total = R.Rules.JP_TABLE[l - 1];
+        const total = R.Rules.jpForJobLevel(job, l);
         rec.jp += total - rec.total + 60; rec.total = total;
       };
       jl(y, 'warrior', 6); jl(y, 'knight', 3); jl(y, 'priest', 2); jl(y, 'thief', 1);
