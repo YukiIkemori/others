@@ -90,12 +90,13 @@ sec('tree');
 {
   const c = R.Rules.newChar('yuki');
   ok(R.Rules.unlockedJobs(c).sort().join() === 'mage,priest,thief,warrior', 'fresh character: only tier 1 open');
-  const path = [['warrior', 250], ['priest', 250], ['mage', 250], ['knight', 700], ['whitemage', 450], ['blackmage', 250], ['paladin', 700], ['spellblade', 700]];
+  const path = [['warrior', 3], ['priest', 3], ['mage', 3], ['knight', 5], ['whitemage', 4], ['blackmage', 3], ['paladin', 5], ['spellblade', 5]];
   const unlocked = [];
-  for (const [job, jp] of path) {
+  for (const [job, lv] of path) {
     ok(R.Rules.changeJob(c, job) != null, `can change to ${job} when its turn comes`);
-    const r = R.Rules.gainJp(c, jp);
+    const r = R.Rules.gainJp(c, R.Rules.jpForJobLevel(job, lv));
     unlocked.push(...r.unlocked);
+    ok(R.Rules.jobLevel(c, job) === lv, `${job} reaches job Lv${lv} with its tier's table`);
   }
   ok(R.Rules.isJobUnlocked(c, 'hero'), 'hero unlocked by the minimum path (paladin 5 + spellblade 5)');
   ok(unlocked.includes('hero') && unlocked.includes('paladin') && unlocked.includes('spellblade'), 'gainJp reports newly unlocked jobs');
@@ -106,6 +107,96 @@ sec('tree');
     ok(removed != null && d.job === j, `changeJob → ${j}`);
     ok(R.Rules.commands(d).some((k) => k.type === 'job' && k.job === j && k.name === DB.jobs[j].command), `${j}: battle command ${DB.jobs[j].command}`);
   }
+}
+
+// ================================================================ JP tables by tier
+sec('jp tables');
+{
+  const T = (j) => R.Rules.jpTable(j);
+  ok(T('warrior').join() === R.Rules.JP_TABLE.join(), 'tier 1 uses the base table');
+  for (const [j, t] of [['knight', 2], ['paladin', 3], ['hero', 4]]) {
+    const m = R.Rules.JP_TIER_MULT[t];
+    ok(T(j).length === 8 && T(j).every((v, i) => Math.abs(v - R.Rules.JP_TABLE[i] * m) <= 5), `${j}: tier ${t} table = base ×${m}`);
+    ok(T(j)[7] > T('warrior')[7], `${j}: Lv8 costs more JP than a tier-1 job`);
+  }
+  const c = R.Rules.newChar('yuki');
+  R.Rules.jobRec(c, 'knight').total = R.Rules.JP_TABLE[4]; // 700: old knight Lv5, new knight Lv3
+  ok(R.Rules.jobLevel(c, 'knight') === 3 && R.Rules.jpToNextLevel(c, 'knight') === T('knight')[3] - 700, 'jobLevel / jpToNextLevel read the tier table');
+  ok(R.Rules.jpForJobLevel('hero', 8) === T('hero')[7] && R.Rules.jpForJobLevel('hero', 99) === T('hero')[7], 'jpForJobLevel clamps');
+}
+
+// ================================================================ permanent unlocks & old saves
+sec('unlocks');
+{
+  // an unlock stays even if the requirement is no longer met (e.g. after a JP table change)
+  const c = R.Rules.newChar('yuki');
+  R.Rules.changeJob(c, 'thief'); R.Rules.gainJp(c, R.Rules.jpForJobLevel('thief', 3));
+  R.Rules.changeJob(c, 'warrior'); R.Rules.gainJp(c, R.Rules.jpForJobLevel('warrior', 2));
+  R.Rules.changeJob(c, 'priest'); R.Rules.gainJp(c, R.Rules.jpForJobLevel('priest', 2));
+  ok(R.Rules.isJobUnlocked(c, 'hunter') && R.Rules.isJobUnlocked(c, 'monk') && c.unlocked.hunter && c.unlocked.monk, 'gainJp records unlocks in c.unlocked');
+  R.Rules.changeJob(c, 'hunter'); R.Rules.gainJp(c, R.Rules.jpForJobLevel('hunter', 4));
+  R.Rules.changeJob(c, 'monk'); R.Rules.gainJp(c, R.Rules.jpForJobLevel('monk', 3));
+  ok(R.Rules.isJobUnlocked(c, 'ninja') && c.unlocked.ninja, 'ninja unlocked (hunter 4 + monk 3)');
+  R.Rules.changeJob(c, 'ninja');
+  c.jobs.hunter.total = 10; c.jobs.monk.total = 10; // requirements no longer met
+  ok(!R.Rules.meetsJobReq(c, 'ninja') && R.Rules.isJobUnlocked(c, 'ninja'), 'unlocked job stays open when its requirements drop');
+  R.Rules.jobRec(c, 'ninja').jp = 9999;
+  ok(R.Rules.canLearn(c, 'ninja_two_swords').ok, 'abilities of a permanently unlocked job can be learned');
+  ok(R.Rules.slotOptions(c, 'sub').length >= 0 && R.Rules.changeJob(c, 'warrior') && R.Rules.changeJob(c, 'ninja') != null, 'can leave and come back to it');
+  // a job the character already has JP in (old save without c.unlocked) counts as open
+  const d = R.Rules.newChar('non');
+  delete d.unlocked;
+  d.jobs.sage = { jp: 50, total: 300, learned: [] };
+  ok(R.Rules.isJobUnlocked(d, 'sage') && !R.Rules.meetsJobReq(d, 'sage'), 'old save: a job with JP in it is open');
+  d.job = 'darkknight';
+  ok(R.Rules.isJobUnlocked(d, 'darkknight'), 'old save: the current job is open');
+  // save from before the tier tables: job levels are kept, unlocks survive a save/load
+  R.State.newGame();
+  const y = R.Game.party[0];
+  const old = { warrior: 1000, knight: 700, whitemage: 450, paladin: 700, hunter: 2400 }; // old table: Lv6, 5, 4, 5 and Lv8+400
+  for (const j in old) y.jobs[j] = { jp: 30, total: old[j], learned: [] };
+  y.job = 'paladin'; delete y.unlocked;
+  const save = R.State.serialize();
+  delete save.game.jpTables;
+  ok(R.State.deserialize(JSON.parse(JSON.stringify(save))), 'old save loads');
+  const y2 = R.Game.party[0];
+  ok(R.Rules.jobLevel(y2, 'warrior') === 6 && R.Rules.jobLevel(y2, 'knight') === 5 && R.Rules.jobLevel(y2, 'whitemage') === 4 && R.Rules.jobLevel(y2, 'paladin') === 5,
+    'old save: job levels are the same after migration');
+  ok(R.Rules.jobLevel(y2, 'hunter') === 8 && y2.jobs.hunter.total === R.Rules.jpForJobLevel('hunter', 8) + 400, 'old save: JP beyond Lv8 is kept');
+  ok(y2.jobs.knight.jp === 30, 'old save: spendable JP untouched');
+  ok(y2.unlocked && y2.unlocked.paladin && y2.unlocked.knight && R.Rules.isJobUnlocked(y2, 'paladin'), 'old save: unlocks recorded on load');
+  ok(R.Game.jpTables === 2, 'migrated game is marked');
+  const again = R.State.serialize();
+  ok(R.State.deserialize(JSON.parse(JSON.stringify(again))) && R.Game.party[0].jobs.knight.total === y2.jobs.knight.total, 'a migrated save is not migrated twice');
+  R.State.newGame();
+}
+
+// ================================================================ mastery bonus
+sec('mastery');
+{
+  for (const j of jobIds) {
+    const mb = DB.jobs[j].masterBonus;
+    ok(mb && Object.keys(mb).length && Object.keys(mb).every((k) => R.Rules.STATS.includes(k) && mb[k] > 0), `${j}: masterBonus is a stat map`);
+    ok(R.Rules.masterBonusText(j).length > 0, `${j}: masterBonusText`);
+  }
+  const c = R.Rules.newChar('yuki');
+  c.level = 20; c.exp = R.Rules.expForLevel(20);
+  const st = (x) => R.Rules.stats(x);
+  const rec = R.Rules.jobRec(c, 'mage');
+  rec.jp = 99999; rec.total = 99999;
+  const s0 = st(c);
+  const list = R.Rules.jobAbilities('mage');
+  for (const a of list.slice(0, -1)) R.Rules.learn(c, a);
+  ok(st(c).int === s0.int && st(c).mp === s0.mp, 'no bonus before the job is mastered');
+  const mp0 = c.mp;
+  R.Rules.learn(c, list[list.length - 1]);
+  ok(R.Rules.isMastered(c, 'mage'), 'mage mastered');
+  const mb = DB.jobs.mage.masterBonus;
+  ok(st(c).int === s0.int + (mb.int || 0) && st(c).mp === s0.mp + (mb.mp || 0), 'mastery bonus added (warrior job, mage mastered)');
+  ok(c.mp === Math.min(st(c).mp, mp0 + (mb.mp || 0)), 'current MP rises with the bonus');
+  R.Rules.changeJob(c, 'thief');
+  const t = st(c); c.jobs.mage.learned = [];
+  ok(t.int - st(c).int === (mb.int || 0), 'the bonus applies in every job');
 }
 
 // ================================================================ every action ability

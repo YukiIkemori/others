@@ -321,7 +321,7 @@
     // ================================================= 裏ボス
     abyss_lord: {
       name: 'アビスロード', sprite: 'boss_abyss', lv: 70, actsPerTurn: 3,
-      hp: 9600, mp: 0, atk: 460, def: 180, agi: 110, mag: 270, mdef: 110, eva: 2,
+      hp: 10200, mp: 0, atk: 470, def: 180, agi: 110, mag: 275, mdef: 110, eva: 2,
       exp: 60000, gold: 30000, jp: 3000,
       flags: ['boss', 'dragon'], statusRes: BOSS_RES,
       fam: ['shade'],

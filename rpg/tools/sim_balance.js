@@ -491,6 +491,9 @@ if (ONLY.includes('crawl')) {
     console.log(`${pad(s.id, 10)} Lv${padL(s.lv[0], 2)}  one floor (${Math.round(s.fights / s.zones.length)} fights): survived ${floors.map((f) => padL(f0(f.ok), 3) + '%').join(' ')}  MP left ${floors.map((f) => padL(f0(f.mp), 2) + '%').join(' ')}` +
       `  |  whole dungeon (${s.fights}): ${padL(f0(whole.ok), 3)}%  HP ${padL(f0(whole.hp), 3)}%  MP ${padL(f0(whole.mp), 3)}%  herbs ${f1(whole.herbs)}`);
     if (worst.ok < 75) W(`crawl ${s.id}: a single floor is survived only ${f0(worst.ok)}% of the time`);
+    // MP economy (playtest 「MP枯渇早い」): a careful player casts on every floor and still leaves with MP
+    const dry = floors.reduce((a, b) => (b.mp < a.mp ? b : a));
+    if (dry.mp < 30) W(`crawl ${s.id}: a floor leaves only ${f0(dry.mp)}% MP (want ≥30 %)`);
   });
 }
 

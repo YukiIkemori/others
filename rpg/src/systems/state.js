@@ -27,6 +27,7 @@
         steps: 0, playFrames: 0, battles: 0, wins: 0, escapes: 0,
         objective: 'obj_start', // key into R.DB.objectives (menu shows current goal)
         title: '', // 称号 earned in the post-game (shown in the menu and save slots)
+        jpTables: 2, // job JP tables scaled by tier (older saves are migrated on load)
       });
       // starting items
       State.addItem('herb', 4);
@@ -161,6 +162,7 @@
     deserialize(data) {
       if (!data || !data.game) return false;
       const g = U.clone(data.game);
+      const oldJp = !g.jpTables; // saved before the tier-scaled job JP tables
       // forward-compat: fill missing fields from a fresh game
       const fresh = State.newGame();
       for (const k in fresh) if (!(k in g)) g[k] = fresh[k];
@@ -170,6 +172,8 @@
         for (const s of R.Rules.SLOTS) if (c.equip[s] && !DB.items[c.equip[s]]) c.equip[s] = null;
         if (!DB.jobs[c.job]) c.job = DB.chars[c.id].startJob;
         for (const s of R.Rules.SET_SLOTS) if (c.set[s] && !(DB.abilities[c.set[s]] || DB.jobs[c.set[s]])) c.set[s] = null;
+        // job levels / unlocks: old saves keep their job levels; unlocks are permanent
+        if (oldJp) R.Rules.migrateJpTables(c); else R.Rules.syncUnlocks(c);
       }
       R.Game = g;
       if (R.Battle) R.Battle.autoCarry = false;

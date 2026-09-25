@@ -1,5 +1,6 @@
 // The three fixed party members.
 // Base stat at level L = base + growth * (L - 1)   (then × job multiplier)
+// MP growth raised ≈30 % (playtest: 「MP枯渇早い」) — see tools/sim_balance.js crawl / zones mp-.
 (function (R) {
   'use strict';
   Object.assign(R.DB.chars, {
@@ -7,7 +8,7 @@
       name: 'ユウキ', gender: 'm', startJob: 'warrior', profile: '剣士の家系に生まれた少年',
       desc: '剣士の家系に生まれた、まっすぐな少年。力と体力に優れる。',
       growth: {
-        hp: [32, 9.2], mp: [4, 2.4], str: [13, 2.55], vit: [11, 2.2],
+        hp: [32, 9.2], mp: [5, 3.1], str: [13, 2.55], vit: [11, 2.2],
         agi: [9, 1.95], int: [5, 1.55], mnd: [7, 1.7], luk: [8, 1.5],
       },
       startLearned: ['warrior_power_slash'],
@@ -17,7 +18,7 @@
       name: 'ノン', gender: 'f', startJob: 'priest', profile: '神殿で育った心優しい少女',
       desc: '神殿で育った心優しい少女。癒やしの力と素早さを持つ。',
       growth: {
-        hp: [26, 7.7], mp: [11, 3.5], str: [9, 1.85], vit: [9, 1.8],
+        hp: [26, 7.7], mp: [13, 4.6], str: [9, 1.85], vit: [9, 1.8],
         agi: [11, 2.3], int: [8, 2.0], mnd: [13, 2.8], luk: [10, 1.9],
       },
       startLearned: ['priest_heal'],
@@ -27,7 +28,7 @@
       name: 'メテム', gender: 'f', startJob: 'mage', profile: '魔法学院始まって以来の天才少女',
       desc: '魔法学院始まって以来の天才少女。魔力は高いが、体は弱い。',
       growth: {
-        hp: [22, 6.7], mp: [13, 4.1], str: [7, 1.5], vit: [7, 1.5],
+        hp: [22, 6.7], mp: [15, 5.4], str: [7, 1.5], vit: [7, 1.5],
         agi: [10, 2.4], int: [14, 3.0], mnd: [10, 2.2], luk: [9, 1.7],
       },
       startLearned: ['mage_fire'],

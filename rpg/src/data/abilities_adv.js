@@ -137,7 +137,7 @@
       mp: 10, magic: true, target: 'enemy', effects: [status('death', 0.35)], fx: 'death',
     }),
     blackmage_inferno: act('インフェルノ', 600, '業火で敵全体を焼き払う。', {
-      mp: 18, magic: true, target: 'enemies', effects: [magic(6, 0.6, 'fire')], fx: 'fire3',
+      mp: 15, magic: true, target: 'enemies', effects: [magic(6, 0.6, 'fire')], fx: 'fire3',
     }),
     blackmage_awaken: reaction('魔力覚醒', 400, '魔法を受けると魔力が上がる。', 'hitMagic', 0.6, { type: 'buff', stat: 'mag', stages: 1 }),
     blackmage_magic_up: support('魔法アップ', 600, '魔法のダメージが25%上がる。', { magicPct: 25 }),

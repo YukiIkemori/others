@@ -46,7 +46,31 @@
       for (const s of SLOTS) if (d.startEquip && d.startEquip[s] && DB.items[d.startEquip[s]]) c.equip[s] = d.startEquip[s];
       const st = Rules.stats(c);
       c.hp = st.hp; c.mp = st.mp;
+      Rules.syncUnlocks(c);
       return c;
+    },
+    /**
+     * Save migration: saves from before the tier-scaled JP tables (R.Game.jpTables missing)
+     * keep their job levels — a tier-2+ job's JP total is moved to the same place on its new
+     * table (same level, same fraction of the way to the next; JP beyond Lv8 added as is).
+     * Spendable JP is untouched. Unlocks are recorded before and after.
+     */
+    migrateJpTables(c) {
+      Rules.syncUnlocks(c);
+      const n = JP_TABLE.length;
+      for (const jid in c.jobs) {
+        const rec = c.jobs[jid], tab = Rules.jpTable(jid), t = rec.total || 0;
+        if (tab === JP_TABLE || !t) continue;
+        let v;
+        if (t >= JP_TABLE[n - 1]) v = tab[n - 1] + (t - JP_TABLE[n - 1]);
+        else {
+          let i = 0;
+          while (t >= JP_TABLE[i + 1]) i++;
+          v = tab[i] + ((t - JP_TABLE[i]) / (JP_TABLE[i + 1] - JP_TABLE[i])) * (tab[i + 1] - tab[i]);
+        }
+        rec.total = Math.min(99999, Math.round(v));
+      }
+      Rules.syncUnlocks(c);
     },
     jobRec(c, jobId) {
       if (!c.jobs[jobId]) c.jobs[jobId] = { jp: 0, total: 0, learned: [] };
@@ -107,10 +131,30 @@
       if (lv >= tab.length) return 0;
       return tab[lv] - ((c.jobs[jobId] && c.jobs[jobId].total) || 0);
     },
-    isJobUnlocked(c, jobId) {
+    /** does the character meet the job's requirements right now (job levels)? */
+    meetsJobReq(c, jobId) {
       const j = DB.jobs[jobId];
       if (!j) return false;
       return (j.req || []).every(([rj, lv]) => Rules.jobLevel(c, rj) >= lv);
+    },
+    /**
+     * Unlocks are permanent: once a job has been open it stays open (c.unlocked), even if the
+     * JP table changes later. A job the character is in, has as its sub-command, or has JP /
+     * learned abilities in also counts as unlocked (old saves).
+     */
+    isJobUnlocked(c, jobId) {
+      if (!DB.jobs[jobId]) return false;
+      if (c.unlocked && c.unlocked[jobId]) return true;
+      if (c.job === jobId || (c.set && c.set.sub === jobId)) return true;
+      const rec = c.jobs && c.jobs[jobId];
+      if (rec && (rec.total > 0 || (rec.learned && rec.learned.length))) return true;
+      return Rules.meetsJobReq(c, jobId);
+    },
+    /** remember every currently open job in c.unlocked (called on JP gain, job change, load) */
+    syncUnlocks(c) {
+      c.unlocked = c.unlocked || {};
+      for (const jid in DB.jobs) if (!c.unlocked[jid] && Rules.isJobUnlocked(c, jid)) c.unlocked[jid] = true;
+      return c.unlocked;
     },
     unlockedJobs(c) { return Object.keys(DB.jobs).filter((j) => Rules.isJobUnlocked(c, j)); },
     jobAbilities(jobId) { const j = DB.jobs[jobId]; return j ? (j.abilities || []).filter((a) => DB.abilities[a]) : []; },
@@ -182,6 +226,7 @@
       const lv1 = Rules.jobLevel(c, jid);
       if (lv1 > lv0) res.levelUps.push({ job: jid, level: lv1 });
       for (const j of Rules.unlockedJobs(c)) if (!beforeUnlocked.has(j)) res.unlocked.push(j);
+      Rules.syncUnlocks(c);
       return res;
     },
     /**
@@ -193,6 +238,7 @@
       if (!Rules.isJobUnlocked(c, jobId)) return null;
       c.job = jobId;
       Rules.jobRec(c, jobId);
+      Rules.syncUnlocks(c);
       if (c.set.sub === jobId) c.set.sub = null;
       const removed = Rules.validateEquip(c);
       Rules.clampHpMp(c);

@@ -106,22 +106,22 @@
   // ============================================================ 賢者
   add('sage', {
     sage_full_heal: act('フルヒール', 350, '仲間ひとりのHPを全回復する。', {
-      mp: 18, magic: true, target: 'ally', effects: [{ type: 'heal', pct: 1 }], fx: 'heal3', fieldUse: true,
+      mp: 15, magic: true, target: 'ally', effects: [{ type: 'heal', pct: 1 }], fx: 'heal3', fieldUse: true,
     }),
     sage_blessed_rain: act('恵みの雨', 500, '味方全員のHPを大きく回復する。', {
-      mp: 24, magic: true, target: 'allies', effects: [heal(70, 1.0)], fx: 'heal3', fieldUse: true,
+      mp: 20, magic: true, target: 'allies', effects: [heal(70, 1.0)], fx: 'heal3', fieldUse: true,
     }),
     sage_prominence: act('プロミネンス', 600, '太陽の炎で敵を焼き尽くす。', {
-      mp: 30, magic: true, target: 'enemy', effects: [magic(40, 1.2, 'fire')], fx: 'fire3',
+      mp: 24, magic: true, target: 'enemy', effects: [magic(40, 1.2, 'fire')], fx: 'fire3',
     }),
     sage_zero: act('絶対零度', 600, 'すべてを凍らせる冷気で敵を撃つ。', {
-      mp: 30, magic: true, target: 'enemy', effects: [magic(40, 1.2, 'ice')], fx: 'ice3',
+      mp: 24, magic: true, target: 'enemy', effects: [magic(40, 1.2, 'ice')], fx: 'ice3',
     }),
     sage_mother: act('聖母の祈り', 700, '倒れた仲間全員を生き返らせる。', {
-      mp: 40, magic: true, target: 'allies', effects: [{ type: 'revive', pct: 0.5 }], fx: 'revive', fieldUse: true,
+      mp: 32, magic: true, target: 'allies', effects: [{ type: 'revive', pct: 0.5 }], fx: 'revive', fieldUse: true,
     }),
     sage_stardust: act('星くずの雨', 800, '星くずを降らせ、敵全体を撃つ。', {
-      mp: 36, magic: true, target: 'enemies', effects: [magic(10, 0.75)], fx: 'meteor3',
+      mp: 28, magic: true, target: 'enemies', effects: [magic(10, 0.75)], fx: 'meteor3',
     }),
     sage_mana_return: reaction('魔力還元', 450, 'ダメージを受けるとMPが戻る。', 'hitAny', 0.5, { type: 'mp', power: 12 }),
     sage_half_mp: support('MP半減', 900, '消費MPが半分になる。', { mpCostPct: -50 }),
@@ -148,7 +148,7 @@
       mp: 6, target: 'enemy', effects: [phys(2.2, { acc: 0.9 })], fx: 'jump',
     }),
     dragoon_great_breath: act('ドラゴンブレス', 800, '大いなる竜の吐息で敵全体を撃つ。', {
-      mp: 24, target: 'enemies', effects: [{ type: 'damage', formula: 'breath', power: 110 }], fx: 'breath',
+      mp: 20, target: 'enemies', effects: [{ type: 'damage', formula: 'breath', power: 110 }], fx: 'breath',
     }),
     dragoon_wrath: reaction('竜の怒り', 450, '攻撃されると攻撃力が上がる。', 'hitAny', 0.4, { type: 'buff', stat: 'atk', stages: 1 }),
     dragoon_equip_spear: support('槍装備', 450, 'どのジョブでも槍を装備できる。', { equip: ['spear'] }),
@@ -176,7 +176,7 @@
       mp: 10, magic: true, target: 'group', effects: [status('paralyze', 0.4)], fx: 'paralyze',
     }),
     timemage_meteor: act('流星雨', 800, '隕石を呼び寄せ、敵に5回降らせる。', {
-      mp: 36, magic: true, target: 'random', effects: [magic(12, 0.6, null, { hits: 5 })], fx: 'meteor3',
+      mp: 28, magic: true, target: 'random', effects: [magic(12, 0.6, null, { hits: 5 })], fx: 'meteor3',
     }),
     timemage_close_call: reaction('危機一髪', 400, 'HPが減ると、素早さが大きく上がる。', 'lowHp', 1, { type: 'buff', stat: 'agi', stages: 2 }),
     timemage_swift: support('俊足', 700, '戦闘開始時から素早さが上がる。', { startBuffs: { agi: 1 } }),
@@ -216,19 +216,19 @@
       mp: 8, target: 'enemy', effects: [phys(1.8, { element: 'holy' })], fx: 'holy2',
     }),
     hero_courage: act('勇気の灯火', 400, '味方全員の攻撃力と守備力を上げる。', {
-      mp: 18, magic: true, target: 'allies', effects: [buff('atk', 1), buff('def', 1)], fx: 'buff',
+      mp: 15, magic: true, target: 'allies', effects: [buff('atk', 1), buff('def', 1)], fx: 'buff',
     }),
     hero_verdict: act('光の裁き', 550, '光のつるぎで敵全体を斬る。', {
       mp: 16, target: 'enemies', effects: [phys(0.9, { element: 'holy' })], fx: 'holy2',
     }),
     hero_judgment: act('ジャッジメント', 650, '天の光で敵全体を裁く。', {
-      mp: 30, magic: true, target: 'enemies', effects: [magic(90, 0.5, 'holy')], fx: 'holy3',
+      mp: 24, magic: true, target: 'enemies', effects: [magic(90, 0.5, 'holy')], fx: 'holy3',
     }),
     hero_hope: act('希望の光', 650, '味方全員を全回復し、状態異常も治す。', {
-      mp: 40, magic: true, target: 'allies', effects: [{ type: 'heal', pct: 1 }, cure('all')], fx: 'heal3', fieldUse: true,
+      mp: 32, magic: true, target: 'allies', effects: [{ type: 'heal', pct: 1 }, cure('all')], fx: 'heal3', fieldUse: true,
     }),
     hero_luminous: act('ルミナス', 900, '紋章の光を込めた一撃。', {
-      mp: 30, target: 'enemy', effects: [phys(3.0, { element: 'holy', ignoreDef: true })], fx: 'holy3',
+      mp: 24, target: 'enemy', effects: [phys(3.0, { element: 'holy', ignoreDef: true })], fx: 'holy3',
     }),
     hero_guiding_light: reaction('導きの光', 400, '仲間がピンチのとき、光で癒やす。', 'allyLowHp', 0.6, { type: 'heal', pct: 0.5 }),
     hero_heart: support('勇者の心', 600, 'HPとすべての能力値が10%上がる。', { hpPct: 10, strPct: 10, vitPct: 10, agiPct: 10, intPct: 10, mndPct: 10 }),
