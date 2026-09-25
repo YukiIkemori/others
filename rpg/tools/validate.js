@@ -220,7 +220,7 @@ for (const id in parsed) {
     allChestIds[c.id] = id;
   }
   // hidden (examine-to-find) items were abolished: every treasure is a visible chest
-  for (const c of P.hidden) W(`${w}: hidden item ${c.id} (${c.item}) — convert to a visible chest`);
+  for (const c of P.hidden) E(`${w}: hidden item ${c.id} (${c.item}) — hidden items are abolished, use a visible chest`);
   for (const e of P.events) if (!DB.events[e.id]) E(`${w}: event ${e.id} missing`);
   if (m.onEnter && !DB.events[m.onEnter]) E(`${w}: onEnter ${m.onEnter} missing`);
   if (m.location && !DB.locations[m.location]) E(`${w}: location ${m.location} missing`);
