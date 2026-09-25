@@ -12,7 +12,7 @@
 //   魔法アップ (blackmage) · 竜の力 (dragoon) · 俊足 (timemage)
 //   不屈の誓い auto-revive (paladin) · とっさの薬 auto-item (alchemist)
 //
-// masterBonus: flat stats gained for good once the job is mastered (every ability learned,
+// masterBonus: flat stats gained for good once the job is mastered (job Lv MAX or every ability learned; permanent,
 // R.Rules.isMastered); like seeds they count in every job (R.Rules.masterBonus). Tier 1 ≈ one
 // theme stat +3 (+HP/MP), higher tiers a little more, 勇者 a bit of everything.
 // masterTrait: the job's signature ability (one of its own support/reaction abilities). Once the job is

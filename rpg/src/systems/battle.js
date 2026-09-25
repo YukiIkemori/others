@@ -1273,10 +1273,17 @@
           yield { t: 'pause', levels: c.level - lv0 };
         }
         const jr = R.Rules.gainJp(c, e.jp);
-        if (jr.levelUps.length || jr.unlocked.length) {
+        if (jr.levelUps.length || jr.unlocked.length || (jr.mastered || []).length) {
           yield { t: 'clear' };
           if (!jobJingle) { jobJingle = true; yield { t: 'jingle', id: 'jobup' }; }
           for (const lu of jr.levelUps) yield this.m(`${c.name}の${(DB.jobs[lu.job] || {}).name || lu.job}のジョブレベルが${lu.level}に上がった！`);
+          for (const j of jr.mastered || []) {
+            yield this.m(`${c.name}は${(DB.jobs[j] || {}).name || j}をマスターした！`);
+            const mb = R.Rules.masterBonusText(j);
+            if (mb) yield this.m('マスター特典：' + mb);
+            const sig = R.Rules.jobMasterTrait(j);
+            if (sig) yield this.m(`${DB.abilities[sig].name}が常に効くようになった！`);
+          }
           for (const j of jr.unlocked) yield this.m(`新しいジョブ『${(DB.jobs[j] || {}).name || j}』になれるようになった！`);
           yield { t: 'pause' };
         }

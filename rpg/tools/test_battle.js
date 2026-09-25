@@ -1091,6 +1091,7 @@ sec('mastery signatures');
   ok(Rl.mods(th).autoSteal === 70, 'signature also in the slot: not doubled');
   const unm = master('yuki', 'warrior', []);
   Rl.jobRec(unm, 'thief').learned = Rl.jobAbilities('thief').slice(1);
+  for (const j in unm.jobs) { unm.jobs[j].total = 0; delete unm.jobs[j].mastered; } // job Lv MAX would master too
   ok(!Rl.signatures(unm).length && !Rl.mods(unm).autoSteal, 'not mastered: no signature');
   const nj = master('yuki', 'warrior', ['ninja']);
   ok(Rl.canEquip(nj, 'iron_sword', 'shield') || Rl.canEquip(nj, Object.keys(DB.items).find((i) => DB.items[i].wtype === 'sword' && !DB.items[i].twoHanded), 'shield'), 'mastered 忍者: 二刀流 in 戦士');

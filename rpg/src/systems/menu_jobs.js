@@ -309,10 +309,11 @@
         const chk = R.Rules.canLearn(c, id);
         if (!chk.ok) { R.sfx('buzzer'); await K.msg('JPが足りない！\n（' + ab.name + 'には' + (ab.jp || 0) + 'JP必要だ）'); return; }
         if (!(await K.yesno((ab.jp || 0) + 'JPで' + ab.name + 'を覚えますか？'))) return;
+        const wasMastered = R.Rules.isMastered(c, this.job);
         R.Rules.learn(c, id);
         R.sfx('buff');
         await K.msg(c.name + 'は' + ab.name + 'を覚えた！');
-        if (R.Rules.isMastered(c, this.job)) {
+        if (!wasMastered && R.Rules.isMastered(c, this.job)) {
           await R.jingle('jobup');
           const mb = R.Rules.masterBonusText(this.job);
           const sig = R.Rules.jobMasterTrait(this.job);

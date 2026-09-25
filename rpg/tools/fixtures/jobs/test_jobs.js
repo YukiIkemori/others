@@ -48,7 +48,7 @@ function bestWeapon(job, L) {
 function member(cid, job, L, learned, set) {
   const c = R.Rules.newChar(cid);
   c.level = L; c.exp = R.Rules.expForLevel(L);
-  for (const j in DB.jobs) R.Rules.jobRec(c, j).total = 2000;
+  for (const j in DB.jobs) R.Rules.jobRec(c, j).total = 1999; // just under Lv MAX (which would master the job)
   c.job = job;
   const setIds = Object.values(set || {}).filter((a) => DB.abilities[a]);
   for (const a of learned || R.Rules.jobAbilities(job).concat(setIds)) {
@@ -68,6 +68,8 @@ function unmaster(c, keep) {
   const drop = rec.learned.find((a) => a !== keep && DB.abilities[a].job === c.job && DB.abilities[a].kind === 'action');
   if (drop) rec.learned.splice(rec.learned.indexOf(drop), 1);
   delete rec.mastered;
+  const tab = R.Rules.jpTable(c.job);
+  rec.total = Math.min(rec.total || 0, tab[tab.length - 1] - 1); // job Lv MAX would master too
   return c;
 }
 function engine(party, mons, o) {
@@ -191,7 +193,7 @@ sec('mastery');
   c.level = 20; c.exp = R.Rules.expForLevel(20);
   const st = (x) => R.Rules.stats(x);
   const rec = R.Rules.jobRec(c, 'mage');
-  rec.jp = 99999; rec.total = 99999;
+  rec.jp = 99999; rec.total = 1999; // below Lv MAX: mastery comes from learning everything here
   const s0 = st(c);
   const list = R.Rules.jobAbilities('mage');
   for (const a of list.slice(0, -1)) R.Rules.learn(c, a);
@@ -205,8 +207,16 @@ sec('mastery');
   ok(R.Rules.signatures(c).includes('mage_int_up') && (R.Rules.mods(c).intPct || 0) === 15, 'mastered mage: 知力アップ always on without a slot');
   ok(c.mp === Math.min(st(c).mp, mp0 + (mb.mp || 0)), 'current MP rises with the bonus');
   R.Rules.changeJob(c, 'thief');
-  const t = st(c); c.jobs.mage.learned = []; delete c.jobs.mage.mastered;
+  const t = st(c); c.jobs.mage.learned = []; c.jobs.mage.total = 0; delete c.jobs.mage.mastered;
   ok(t.int - st(c).int >= (mb.int || 0) && !R.Rules.signatures(c).length, 'the bonus applies in every job');
+  // job level MAX also counts as マスター (the battle reward reports it once)
+  const d = R.Rules.newChar('non');
+  const tab = R.Rules.jpTable(d.job);
+  R.Rules.jobRec(d, d.job).total = tab[tab.length - 1] - 5;
+  ok(!R.Rules.isMastered(d, d.job), 'one step below Lv MAX: not mastered');
+  const g = R.Rules.gainJp(d, 10);
+  ok(R.Rules.isMastered(d, d.job) && g.mastered.includes(d.job), 'reaching job Lv MAX masters the job');
+  ok(!R.Rules.gainJp(d, 10).mastered.length, 'mastery is reported only once');
 }
 
 // ================================================================ every action ability

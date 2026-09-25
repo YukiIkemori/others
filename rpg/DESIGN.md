@@ -258,9 +258,9 @@ load): a job stays open even if its requirements are no longer met. A job that i
 or has JP / learned abilities also counts as open. Saves from before the tier tables (`R.Game.jpTables` missing) are
 migrated on load (`Rules.migrateJpTables`): each job's JP total moves to the same place on its new table, so job
 levels and unlocks are unchanged.
-Mastered (★) = all abilities of the job learned. **Mastery bonus** (`masterBonus` in jobs.js, summed by
+Mastered (★) = job level MAX (Lv8) **or** all abilities of the job learned, whichever comes first; permanent (`rec.mastered`), announced once (battle rewards / learning screen). Old saves: `Rules.syncMastery` on load. **Mastery bonus** (`masterBonus` in jobs.js, summed by
 `R.Rules.masterBonus(c)`, text `Rules.masterBonusText(job)`): flat stats added for good, in every job (like seeds),
-once the job is mastered; learning the last ability also raises current HP/MP by the bonus.
+once the job is mastered; mastering also raises current HP/MP by the bonus.
 **Signature ability** (`masterTrait: '<abilityId>'` in jobs.js — one of the job's own support/reaction abilities;
 `Rules.jobMasterTrait(job)`, `Rules.signatures(c)`, `Rules.reactions(c)`): once the job is mastered it is ALWAYS active for
 that character in every job without taking a slot — a support's mods are merged by `Rules.mods` (not doubled when the

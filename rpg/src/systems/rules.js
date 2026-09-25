@@ -160,13 +160,15 @@
     },
     unlockedJobs(c) { return Object.keys(DB.jobs).filter((j) => Rules.isJobUnlocked(c, j)); },
     jobAbilities(jobId) { const j = DB.jobs[jobId]; return j ? (j.abilities || []).filter((a) => DB.abilities[a]) : []; },
-    /** mastery is permanent: once every ability was learned, rec.mastered stays set even if the job gains abilities later */
+    /** mastery (job level MAX or every ability learned) is permanent: rec.mastered stays set even if the job gains abilities later */
     isMastered(c, jobId) {
       const rec = c.jobs[jobId];
       if (!rec) return false;
       if (rec.mastered) return true;
       const list = Rules.jobAbilities(jobId);
-      if (!(list.length > 0 && list.every((a) => rec.learned.includes(a)))) return false;
+      // マスター = job level MAX, or every ability learned (whichever comes first)
+      const maxed = (rec.total || 0) >= Rules.jpTable(jobId)[Rules.jpTable(jobId).length - 1];
+      if (!maxed && !(list.length > 0 && list.every((a) => rec.learned.includes(a)))) return false;
       rec.mastered = true;
       return true;
     },
@@ -278,19 +280,28 @@
       party = party || (R.Game && R.Game.party) || [];
       return party.some((c) => c && c.jobs && c.jobs[jobId] && Rules.isMastered(c, jobId));
     },
-    /** add JP to current job. Returns {levelUps:[{job,level}], unlocked:[jobId]} */
+    /** add JP to current job. Returns {levelUps:[{job,level}], unlocked:[jobId], mastered:[jobId]} */
     gainJp(c, n) {
-      const res = { levelUps: [], unlocked: [] };
+      const res = { levelUps: [], unlocked: [], mastered: [] };
       n = Math.max(0, Math.floor(n));
       if (!n) return res;
       const beforeUnlocked = new Set(Rules.unlockedJobs(c));
       const jid = c.job;
+      const m0 = Rules.isMastered(c, jid);
+      const st0 = m0 ? null : Rules.stats(c);
       const lv0 = Rules.jobLevel(c, jid);
       const rec = Rules.jobRec(c, jid);
       rec.jp = Math.min(9999, rec.jp + n);
       rec.total = Math.min(99999, rec.total + n);
       const lv1 = Rules.jobLevel(c, jid);
       if (lv1 > lv0) res.levelUps.push({ job: jid, level: lv1 });
+      if (!m0 && Rules.isMastered(c, jid)) {
+        res.mastered.push(jid);
+        // mastery bonus: current HP/MP rise with the maxima (like a level-up)
+        const st1 = Rules.stats(c);
+        if (c.hp > 0) c.hp = Math.min(st1.hp, c.hp + Math.max(0, st1.hp - st0.hp));
+        c.mp = Math.min(st1.mp, c.mp + Math.max(0, st1.mp - st0.mp));
+      }
       for (const j of Rules.unlockedJobs(c)) if (!beforeUnlocked.has(j)) res.unlocked.push(j);
       Rules.syncUnlocks(c);
       return res;
