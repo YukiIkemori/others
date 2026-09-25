@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Checker for the second-half dungeons: src/maps/dungeons_b.js + src/events/dungeons_b.js
-// (ひょうけつのどうくつ, ほのおのかざん, ほしみのとう, まおうじょう).
+// (氷結の洞窟, 炎の火山, 星見の塔, 魔王城).
 //
 //   node tools/check_dungeons_b.js               static checks + reachability + event dry runs
 //   node tools/check_dungeons_b.js --verbose     also list every chest / hidden item and path lengths
@@ -11,8 +11,9 @@
 // (type/theme/bgm/encounter zone/escape), floor 1 entrance + world exit, world spawns, stairs and
 // two-way pads that lead back next to where they came from, chests & hidden items on walkable
 // tiles with existing items and globally unique ids, NPC sprites/events/troops, torches facing a
-// floor, boss trigger floors close enough for the camera to frame the boss, texts (window width,
-// forbidden names).
+// floor, boss trigger floors close enough for the camera to frame the boss, texts (STYLE_JA.md:
+// glossary map names, window width with 6-character hero names, forbidden names, no hard-coded hero
+// names, no DQ-style spaces, a full-width space after a mid-line ！/？).
 // Reachability: BFS over all floors of a dungeon for a sequence of story states (keys held, bosses
 // beaten). Warps fire when stepped on (not on arrival), NPCs & chests block, locked doors need
 // their key, damage floors (lava/poison) are walkable, tilePatches follow the flags, boss trigger
@@ -42,17 +43,17 @@ R.warn = (...a) => mapWarns.push(a.join(' '));
 // ------------------------------------------------------------------ the plan
 const boss = (event, troop, sprite, npc, flag) => ({ event, troop, sprite, npc, flag });
 const DUNGEONS = [
-  { key: 'ice', floors: ['ice_cave_1', 'ice_cave_2'], zones: ['d_ice1', 'd_ice2'], theme: 'ice', bgm: 'ice', keys: [],
+  { key: 'ice', name: '氷結の洞窟', floors: ['ice_cave_1', 'ice_cave_2'], zones: ['d_ice1', 'd_ice2'], theme: 'ice', bgm: 'ice', keys: [],
     bosses: [boss('ice_boss', 'boss_ice', 'boss_frost_giant', 'ice_giant', 'boss_ice_done')],
     gives: ['item:gold_key'] },
-  { key: 'volcano', gated: true, floors: ['volcano_1', 'volcano_2'], zones: ['d_vol1', 'd_vol2'], theme: 'volcano', bgm: 'volcano', keys: ['gold_key'],
+  { key: 'volcano', name: '炎の火山', gated: true, floors: ['volcano_1', 'volcano_2'], zones: ['d_vol1', 'd_vol2'], theme: 'volcano', bgm: 'volcano', keys: ['gold_key'],
     bosses: [boss('volcano_boss', 'boss_volcano', 'boss_flame_lord', 'volcano_lord', 'boss_volcano_done')],
     crest: { event: 'volcano_crest', item: 'crest_fire', got: 'got_crest_fire' } },
-  { key: 'star', gated: true, floors: ['star_tower_1', 'star_tower_2', 'star_tower_3', 'star_tower_4'], zones: ['d_star1', 'd_star2', 'd_star3', 'd_star4'],
+  { key: 'star', name: '星見の塔', gated: true, floors: ['star_tower_1', 'star_tower_2', 'star_tower_3', 'star_tower_4'], zones: ['d_star1', 'd_star2', 'd_star3', 'd_star4'],
     theme: 'tower', bgm: 'tower', keys: ['gold_key'],
     bosses: [boss('star_boss', 'boss_star', 'boss_star_guardian', 'star_guardian', 'boss_star_done')],
     crest: { event: 'star_crest', item: 'crest_star', got: 'got_crest_star' } },
-  { key: 'demon', floors: ['demon_castle_1', 'demon_castle_2', 'demon_castle_3', 'demon_castle_4', 'demon_castle_5'],
+  { key: 'demon', name: '魔王城', floors: ['demon_castle_1', 'demon_castle_2', 'demon_castle_3', 'demon_castle_4', 'demon_castle_5'],
     zones: ['d_demon1', 'd_demon2', 'd_demon3', 'd_demon4', 'd_demon5'], theme: 'demon', bgm: 'lastdungeon', keys: ['silver_key', 'gold_key'],
     bosses: [
       boss('demon_general1', 'boss_general1', 'boss_general_a', 'dark_general', 'boss_general1_done'),
@@ -130,6 +131,7 @@ for (const d of DUNGEONS) {
     }
     for (const r of def.rows) for (const ch of r) if (!legend[ch] && !(def.marks && def.marks[ch])) E(`${id}: unknown char '${ch}'`);
     if (def.type !== 'dungeon') E(`${id}: type ${def.type} (expected dungeon)`);
+    if (def.name !== d.name) E(`${id}: name ${def.name} (expected ${d.name})`);
     if (def.theme !== d.theme) E(`${id}: theme ${def.theme} (expected ${d.theme})`);
     if (def.bgm !== d.bgm || !BGM.includes(def.bgm)) E(`${id}: bgm ${def.bgm} (expected ${d.bgm})`);
     if (def.encounter !== d.zones[fi]) E(`${id}: encounter ${def.encounter} (expected ${d.zones[fi]})`);
@@ -383,7 +385,7 @@ for (const d of DUNGEONS) {
 // ------------------------------------------------------------------ events (dry run)
 function stubEv(state, log, map) {
   const ev = {
-    map, self: null, leader: 'ユウキ',
+    map, self: null, leader: '{leader}',
     say: async (t) => { texts.push([log.where, Array.isArray(t) ? t.join('\f') : t]); },
     ask: async (t) => { if (t) texts.push([log.where, t]); return 0; },
     yesno: async (t) => { if (t) texts.push([log.where, t]); return true; },
@@ -473,16 +475,32 @@ async function events() {
   // every event of this area has meta
   const src = fs.readFileSync(path.join(__dirname, '..', 'src', 'events', 'dungeons_b.js'), 'utf8');
   for (const m of src.matchAll(/E\.([a-z0-9_]+) = \{/g)) if (!DB.events[m[1]] || !DB.events[m[1]].meta) E(`event ${m[1]} without meta`);
-  // texts: DQ window (≈ 20 full-width chars a line, 4 lines a page), no borrowed names
-  const cw = (ch) => (ch.charCodeAt(0) < 0x80 ? 0.5 : 1);
-  for (const [where, t] of texts) {
-    if (typeof t !== 'string') continue;
-    for (const w of FORBIDDEN) if (t.includes(w)) E(`${where}: forbidden word ${w}`);
-    for (const page of t.split('\f')) {
-      const lines = page.split('\n');
-      if (lines.length > 4) E(`${where}: page with ${lines.length} lines: ${page.replace(/\n/g, '/')}`);
-      for (const l of lines) { const n = [...l].reduce((a, c) => a + cw(c), 0); if (n > 20) E(`${where}: line too wide (${n}): ${l}`); }
-    }
+  // texts: message window (20 full-width chars a line, 4 lines a page), style, no borrowed names
+  for (const [where, t] of texts) if (typeof t === 'string') textCheck(where, t);
+}
+
+// ------------------------------------------------------------------ text style (STYLE_JA.md)
+// Hero names are chosen by the player (up to 6 full-width characters): lines are measured with
+// the longest possible name so that they still fit the window.
+const LONG_NAME = 'アアアアアア';
+const HERO_NAMES = ['ユウキ', 'ノン', 'メテム'];
+const JA = '\u3041-\u30ff\u4e00-\u9fff\u3005\u3001\u3002\u300c-\u300f\uff01\uff1f\u2026';
+const DQ_SPACE = new RegExp(`[${JA}][ \u3000]+[${JA}]`, 'g');
+function textCheck(where, t) {
+  for (const w of FORBIDDEN) if (t.includes(w)) E(`${where}: forbidden word ${w}`);
+  for (const n of HERO_NAMES) if (t.includes(n)) E(`${where}: hard-coded hero name ${n} (use a placeholder)`);
+  for (const m of t.matchAll(/\{([a-z]+)\}/g)) if (!['yuki', 'non', 'metem', 'leader'].includes(m[1])) E(`${where}: unknown placeholder {${m[1]}}`);
+  // DQ-style spacing: the only space allowed in Japanese text is a full-width one after ！/？
+  for (const m of t.matchAll(DQ_SPACE)) {
+    if (!(m[0][1] === '\u3000' && m[0].length === 3 && '！？'.includes(m[0][0]))) E(`${where}: DQ-style space in "${m[0]}"`);
+  }
+  const bang = t.match(/.?[！？][^\s\u3000」』！？…\n\f]./);
+  if (bang) E(`${where}: mid-line ！/？ needs a full-width space after it: ${bang[0]}`);
+  const cw = (ch) => (ch.charCodeAt(0) < 0x2000 ? 0.5 : 1);
+  for (const page of t.replace(/\{(yuki|non|metem|leader)\}/g, LONG_NAME).split('\f')) {
+    const lines = page.split('\n');
+    if (lines.length > 4) E(`${where}: page with ${lines.length} lines: ${page.replace(/\n/g, '/')}`);
+    for (const l of lines) { const n = [...l].reduce((a, c) => a + cw(c), 0); if (n > 20) E(`${where}: line too wide (${n} with 6-char names): ${l}`); }
   }
 }
 

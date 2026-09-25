@@ -79,7 +79,7 @@ function wrapLines(str, units) {
   return out;
 }
 const JA = '[\\u3000-\\u30ff\\u4e00-\\u9fff\\uff01-\\uff5e]';
-const DQ_SPACE = new RegExp(`${JA} | ${JA}|(^|[^！？])　`);
+const DQ_SPACE = new RegExp(`${JA} | ${JA}|(^|[^！？])\u3000`);
 const HERO_NAMES = /ユウキ|メテム|(^|[^ァ-ヶー])ノン/;
 function checkText(where, text, maxLines, units) {
   if (!text || typeof text !== 'string') { E(`${where}: missing text`); return; }
@@ -253,7 +253,7 @@ function loadPartyModel() {
   return new Function('R', 'DB', 'U', 'Rules', 'State', src.slice(a, b) + '\nreturn { STAGES, buildParty, bagFor };')(R, DB, U, Rules, State);
 }
 
-const pad = (s, n) => { s = String(s); let w = 0; for (const ch of s) w += /[　-￿]/.test(ch) ? 2 : 1; return s + ' '.repeat(Math.max(0, n - w)); };
+const pad = (s, n) => { s = String(s); let w = 0; for (const ch of s) w += /[\u3000-\uffff]/.test(ch) ? 2 : 1; return s + ' '.repeat(Math.max(0, n - w)); };
 const padL = (s, n) => { s = String(s); return ' '.repeat(Math.max(0, n - s.length)) + s; };
 const f0 = (x) => String(Math.round(x));
 const f1 = (x) => (Math.round(x * 10) / 10).toFixed(1);

@@ -69,7 +69,7 @@
   Object.assign(R.DB.items, {
     rx_rabbit_charm: Object.assign({
       name: '宝石ウサギのお守り', type: 'acc', band: 2, sort: 1001, exclusive: 'rare_hare',
-      desc: '宝石ウサギの額の石を収めたお守り。\n運が上がり、レアアイテムを得やすくなる。',
+      desc: '宝石ウサギの額の石を収めたお守り。\n運が上がり、珍しい物を得やすくなる。',
       stats: { luk: 15, agi: 4 }, mods: { rarePct: 50 },
     }, EX),
     rx_prism_shield: Object.assign({
@@ -89,7 +89,7 @@
     }, EX),
     rx_golden_amulet: Object.assign({
       name: '黄金の護符', type: 'acc', band: 6, sort: 1005, exclusive: 'rare_idol',
-      desc: '黄金の守護像の力が宿る護符。\n戦闘開始時から守りが固く、即死も防ぐ。',
+      desc: '黄金の守護像の力が宿る護符。\n戦闘開始時に守りを固め、即死も防ぐ。',
       stats: { vit: 6, mnd: 6 }, mods: { startBuffs: { def: 1, mdef: 1 }, statusImmune: ['death'] },
     }, EX),
   });

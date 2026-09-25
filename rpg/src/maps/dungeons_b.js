@@ -1,4 +1,4 @@
-// ダンジョン 後半 (DESIGN §7.1, §7.4): ひょうけつのどうくつ, ほのおのかざん, ほしみのとう, まおうじょう.
+// Second-half dungeons (DESIGN §7.1, §7.4): Ice Cave, Fire Volcano, Star Tower, Demon Castle.
 // Map ids: ice_cave_1..2 (d_ice1/2), volcano_1..2 (d_vol1/2), star_tower_1..4 (d_star1..4),
 // demon_castle_1..5 (d_demon1..5). Floor 1 of each has spawn 'entrance' and leads back to the
 // world spawn named after it; stairs arrive at spawns 'up' (came from the floor above) / 'down'
@@ -44,14 +44,14 @@
   }
 
   // ====================================================================
-  // ひょうけつのどうくつ (Lv18-22) — こがねのかぎ
+  // Ice Cave (Lv18-22) — gold key
   // ====================================================================
 
   // ice_cave_1: an underground frozen lake. The ice path leads only to the snowy island;
   // the way on goes round the east side and back along the north shore to the stairs.
   // A crack in the north-east alcove drops to a ledge of ice_cave_2.
   M.ice_cave_1 = {
-    name: 'ひょうけつのどうくつ', type: 'dungeon', legend: 'local', theme: 'ice', bgm: 'ice',
+    name: '氷結の洞窟', type: 'dungeon', legend: 'local', theme: 'ice', bgm: 'ice',
     encounter: 'd_ice1', escape: { to: 'world', spawn: 'ice_cave_1' },
     rows: [
       '##################################################',
@@ -113,7 +113,7 @@
 
   // ice_cave_2: down the west side, over the frozen river, up the east side to the giant's hall.
   M.ice_cave_2 = {
-    name: 'ひょうけつのどうくつ', type: 'dungeon', legend: 'local', theme: 'ice', bgm: 'ice',
+    name: '氷結の洞窟', type: 'dungeon', legend: 'local', theme: 'ice', bgm: 'ice',
     encounter: 'd_ice2', escape: { to: 'world', spawn: 'ice_cave_1' },
     rows: [
       '####################################################',
@@ -182,14 +182,14 @@
   };
 
   // ====================================================================
-  // ほのおのかざん (Lv22-26) — ほのおのもんしょう
+  // Fire Volcano (Lv22-26) — fire crest
   // ====================================================================
 
   // volcano_1: a gold door right inside the entrance. A rock shelf runs round the lava lake;
   // the safe way loops through the east tunnel and round the north rim to the island.
   // The south jetty (three cells of lava) and the west tongue (two cells) are the risky short cuts.
   M.volcano_1 = {
-    name: 'ほのおのかざん', type: 'dungeon', legend: 'local', theme: 'volcano', bgm: 'volcano',
+    name: '炎の火山', type: 'dungeon', legend: 'local', theme: 'volcano', bgm: 'volcano',
     encounter: 'd_vol1', escape: { to: 'world', spawn: 'volcano_1' },
     rows: [
       '##################################################',
@@ -249,7 +249,7 @@
   // volcano_2: along the magma river, up the east climb and round the crater rim to the causeway
   // where the flame lord waits on his dais; the crest lies on the altar behind him.
   M.volcano_2 = {
-    name: 'ほのおのかざん', type: 'dungeon', legend: 'local', theme: 'volcano', bgm: 'volcano',
+    name: '炎の火山', type: 'dungeon', legend: 'local', theme: 'volcano', bgm: 'volcano',
     encounter: 'd_vol2', escape: { to: 'world', spawn: 'volcano_1' },
     rows: [
       '######################################################',
@@ -321,13 +321,13 @@
   };
 
   // ====================================================================
-  // ほしみのとう (Lv25-30) — ほしのもんしょう
+  // Star Tower (Lv25-30) — star crest
   // ====================================================================
 
   // star_tower_1: the entrance hall ends at a gold door. Beyond, the star hall opens west into
   // the long gallery that climbs to the reading rooms and the stairs; the east wing is treasure.
   M.star_tower_1 = {
-    name: 'ほしみのとう', type: 'dungeon', legend: 'local', theme: 'tower', bgm: 'tower',
+    name: '星見の塔', type: 'dungeon', legend: 'local', theme: 'tower', bgm: 'tower',
     encounter: 'd_star1', escape: { to: 'world', spawn: 'star_tower_1' },
     rows: [
       '      ################################      ',
@@ -384,7 +384,7 @@
       '8': mimic('star_tower_1_c6', 'wisdom_ring', 'hoshi_modoki'),
       '?': hidden('star_tower_1_h1', 'seed_int'),
       '!': hidden('star_tower_1_h2', 'mana_crystal'),
-      'A': sign('「ここは ほしみの とう。\nほしを よむ ものの せいいき。\fこがねの かぎを もたぬ ものは\nここより さきへ すすむ べからず」', 'Y'),
+      'A': sign('「ここは星見の塔。\n星を読む者の聖域なり。\f金の鍵を持たぬ者、\nこれより先へ進むべからず」', 'Y'),
     },
   };
 
@@ -392,7 +392,7 @@
   // east → the vault, south → back by the stairs, west → floor 3's west terrace (a dead end).
   // The star map on the floor hints at the pole star.
   M.star_tower_2 = {
-    name: 'ほしみのとう', type: 'dungeon', legend: 'local', theme: 'tower', bgm: 'tower',
+    name: '星見の塔', type: 'dungeon', legend: 'local', theme: 'tower', bgm: 'tower',
     encounter: 'd_star2', escape: { to: 'world', spawn: 'star_tower_1' },
     rows: [
       '      ################################      ',
@@ -462,7 +462,7 @@
   // star_tower_3: a walkway round a well of open sky; a pad pair bridges the broken east side
   // to the stairs. The west terrace is reached only from floor 2.
   M.star_tower_3 = {
-    name: 'ほしみのとう', type: 'dungeon', legend: 'local', theme: 'tower', bgm: 'tower',
+    name: '星見の塔', type: 'dungeon', legend: 'local', theme: 'tower', bgm: 'tower',
     encounter: 'd_star3', escape: { to: 'world', spawn: 'star_tower_1' },
     rows: [
       '       ################################       ',
@@ -528,7 +528,7 @@
 
   // star_tower_4: the observatory under the open sky; the star guardian stands before the altar.
   M.star_tower_4 = {
-    name: 'ほしみのとう', type: 'dungeon', legend: 'local', theme: 'tower', bgm: 'tower',
+    name: '星見の塔', type: 'dungeon', legend: 'local', theme: 'tower', bgm: 'tower',
     encounter: 'd_star4', escape: { to: 'world', spawn: 'star_tower_1' },
     rows: [
       '                                        ',
@@ -586,14 +586,14 @@
   };
 
   // ====================================================================
-  // まおうじょう (Lv32-40) — まおう ヴァルザード
+  // Demon Castle (Lv32-40) — the demon king Valzard
   // ====================================================================
 
   // demon_castle_1: a causeway through poison marshes to the great hall. Its alcoves hold two sealed
   // circles that open as short cuts once the generals fall. The west corridor leads round to the
   // chapel, whose altar hides the stairs down to the crypts; the east wing holds treasure.
   M.demon_castle_1 = {
-    name: 'まおうじょう', type: 'dungeon', legend: 'local', theme: 'demon', bgm: 'lastdungeon',
+    name: '魔王城', type: 'dungeon', legend: 'local', theme: 'demon', bgm: 'lastdungeon',
     encounter: 'd_demon1', escape: { to: 'world', spawn: 'demon_castle_1' }, onEnter: 'demon_castle_voice',
     rows: [
       '############################################################',
@@ -675,7 +675,7 @@
   // demon_castle_2: the crypts under the castle. Poison canals, the silver door → gold door vault,
   // and the west stair tower up into the keep.
   M.demon_castle_2 = {
-    name: 'まおうじょう', type: 'dungeon', legend: 'local', theme: 'demon', bgm: 'lastdungeon',
+    name: '魔王城', type: 'dungeon', legend: 'local', theme: 'demon', bgm: 'lastdungeon',
     encounter: 'd_demon2', escape: { to: 'world', spawn: 'demon_castle_1' },
     rows: [
       '############################################################',
@@ -751,7 +751,7 @@
   // demon_castle_3: six sealed halls joined only by warp pads (A1→A2→B3→B1→hall; B2 and A3 are
   // treasure dead ends). The dark general guards the stairs; his sealed circle leads back to floor 1.
   M.demon_castle_3 = {
-    name: 'まおうじょう', type: 'dungeon', legend: 'local', theme: 'demon', bgm: 'lastdungeon',
+    name: '魔王城', type: 'dungeon', legend: 'local', theme: 'demon', bgm: 'lastdungeon',
     encounter: 'd_demon3', escape: { to: 'world', spawn: 'demon_castle_1' },
     rows: [
       '##############################################################',
@@ -845,7 +845,7 @@
   // demon_castle_4: the lich's floor: the west corridor, the poisoned library, the gallery to the
   // ritual hall where the lich guards the stairs to the throne; a gold-locked reliquary in the east.
   M.demon_castle_4 = {
-    name: 'まおうじょう', type: 'dungeon', legend: 'local', theme: 'demon', bgm: 'lastdungeon',
+    name: '魔王城', type: 'dungeon', legend: 'local', theme: 'demon', bgm: 'lastdungeon',
     encounter: 'd_demon4', escape: { to: 'world', spawn: 'demon_castle_1' },
     rows: [
       '############################################################',
@@ -930,7 +930,7 @@
   // demon_castle_5: the throne room. Valzard waits before his throne; his true form appears in
   // the same place (npc demon_king2) after the first battle.
   M.demon_castle_5 = {
-    name: 'まおうじょう', type: 'dungeon', legend: 'local', theme: 'demon', bgm: 'lastdungeon',
+    name: '魔王城', type: 'dungeon', legend: 'local', theme: 'demon', bgm: 'lastdungeon',
     encounter: 'd_demon5', escape: { to: 'world', spawn: 'demon_castle_1' }, encRate: 40,
     rows: [
       '################################################',

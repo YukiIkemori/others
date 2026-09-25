@@ -667,20 +667,21 @@
    * dither where two ramps meet.
    */
   function gradMat(ramps, t, o) {
-    const n = ramps.length;
+    const n = ramps.length, dz = o && o.dither != null ? o.dither : 0.14;
     const col = (k, x, y) => {
       const f = clamp(t(x, y), 0, 0.999) * (n - 1);
       let i = Math.floor(f);
       const fr = f - i;
-      if (fr + ((x + y) & 1 ? 0.14 : -0.14) > 0.5) i++;
+      if (fr + ((x + y) & 1 ? dz : -dz) > 0.5) i++;
       return ramps[clamp(i, 0, n - 1)][k];
     };
     return mat('', Object.assign({ ramp: ramps[0], col }, o || {}));
   }
 
-  // オーロラ鳥: an elegant bird hovering with its wings raised; the plumage runs
-  // through the colours of an aurora (emerald → teal → blue → violet) and two
-  // long ribbon tail feathers ripple down to the ground. Gold beak, jewelled crest.
+  // オーロラ鳥: an elegant long-necked bird in three-quarter view, wings raised
+  // high above its back. The plumage runs through the colours of an aurora
+  // (emerald → teal → blue → violet → rose at the tips) and two long ribbon
+  // tail feathers ripple down to the ground and curl. Gold beak, jewelled crest.
   S.rare_bird = () => {
     const W = 48, H = 48;
     const AUR = [
@@ -690,57 +691,54 @@
       ['#2a0c52', '#5a22a2', '#8e4ad8', '#c690f8', '#f4e2ff'],
       ['#440c44', '#8a1c7c', '#cc4ab4', '#f69ad8', '#fff0fa'],
     ];
-    const cx = 23.5;
-    const wing = gradMat(AUR, (x, y) => (Math.hypot(x - cx, (y - 20) * 1.1) - 6) / 19, { rim: 3 });
-    const ribbon = gradMat(AUR, (x, y) => (y - 28) / 19, { rim: 3 });
-    const body = gradMat(AUR.slice(0, 3), (x, y) => (y - 8) / 26, { rim: 3 });
-    const chest = mat('', { ramp: ['#3a8a7a', '#78c8b0', '#bcf0dc', '#eafff6', '#ffffff'], bias: 0.05 });
+    const wing = gradMat(AUR, (x, y) => (Math.hypot(x - 27, (y - 21) * 1.1) - 5) / 17, { rim: 3, dither: 0.1 });
+    const far = gradMat(AUR, (x, y) => (Math.hypot(x - 24, y - 18) - 6) / 14, { bias: -0.1, dither: 0.1 });
+    const ribbon = gradMat(AUR, (x, y) => (Math.hypot(x - 27, y - 29) - 3) / 15, { rim: 3, dither: 0.1 });
+    const body = gradMat(AUR.slice(0, 3), (x, y) => (x + y - 18) / 36, { rim: 3, dither: 0.1 });
+    const CH = ['#2c7a6c', '#62b8a0', '#a8e8d0', '#e2fff0', '#ffffff'];
+    const chest = mat('', { ramp: CH, bias: 0.04, tex: (x, y) => ((x * 3 + y * 2) % 7 === 0 ? -1 : 0) });
     const gold = mat('', { ramp: GOLD.slice(1), spec: 0.95 });
     const sc = new Scene(W, H);
-    // ribbon tail: two long streamers rippling down to the ground, a short fan between
-    sc.tube([[22, 29.5, 1.8, -2], [16.5, 33.5, 2.1, -2], [14.5, 38.5, 0.9, -2], [18.5, 42, 2, -2], [13.5, 46.4, 1.1, -2]], { m: ribbon, g: 'ribL', steps: 7 });
-    sc.tube([[25, 29.5, 1.8, -2], [30.5, 33, 2.1, -2], [33.5, 37.5, 0.9, -2], [29.5, 41.5, 2, -2], [34, 46.4, 1.1, -2]], { m: ribbon, g: 'ribR', steps: 7 });
-    for (const [tx, ty, g] of [[20.5, 37, 'fan1'], [26.5, 37, 'fan2'], [23.5, 38.5, 'fan3']]) sc.tube([[cx, 30, 1.8, 0], [tx, ty, 0.8, 0]], { m: ribbon, g });
-    // wings raised in a wide V: a fan of primaries under the arm, coverts on top
-    sym(W, (X, s) => {
-      const F = [[[2.5, 7], [0.5, 16]], [[5, 9], [1.2, 21.5]], [[7.5, 11], [3.8, 26]], [[10, 13], [7.6, 28.8]], [[12.8, 15], [11.8, 29.8]], [[15.5, 17.5], [16, 28.6]]];
-      F.forEach(([r, t], k) => {
-        const mx = (r[0] + t[0]) / 2 - 0.7, my = (r[1] + t[1]) / 2;
-        sc.tube([[X(r[0]), r[1], 2.2, -8 + k], [X(mx), my, 2, -8 + k], [X(t[0]), t[1], 0.5, -8 + k]], { m: wing, g: 'f' + k + s });
-      });
-      sc.tube([[X(19.5), 21, 2.8, 0], [X(13), 14, 2.6, 1], [X(6.5), 8.5, 2.1, 1], [X(1.5), 5.2, 0.9, 1]], { m: wing, g: 'arm' + s });
-      for (const [x, y] of [[15, 17.5], [11.5, 14], [8, 11]]) sc.tube([[X(x + 1), y - 1, 1.7, 2], [X(x - 0.6), y + 3.2, 0.5, 2]], { m: wing, g: 'arm' + s });
-    });
-    // body, chest, tucked golden talons
-    sc.ell(cx, 23.5, 5.4, 7.6, { m: body, g: 'body', z: 3, rz: 5 });
-    sc.ell(cx, 24, 3.4, 5.2, { m: chest, g: 'chest', z: 7, rz: 3, soft: true });
-    for (let i = -1; i <= 1; i++) sc.tube([[cx + i * 2, 27.5, 1.2, 8], [cx + i * 2.1, 29.8 - Math.abs(i) * 0.4, 0.4, 8]], { m: chest, g: 'chest' });
-    sym(W, (X, s) => sc.tube([[X(21.5), 30.5, 1, 5], [X(21), 32.5, 0.5, 5]], { m: gold, g: 'talon' + s }));
+    // ribbon tail: two long streamers from the rump, twisting as they fall, each ending in a curl
+    sc.tube([[28, 29, 1.7, -3], [34, 30.2, 1.9, -3], [39.5, 32.5, 0.7, -3], [44, 36.5, 1.8, -3], [44.6, 41.5, 1.5, -3], [41, 45.3, 1.1, -3], [37, 44.6, 0.8, -3], [37, 41.8, 0.5, -3]], { m: ribbon, g: 'ribA', steps: 5 });
+    sc.tube([[28, 30.5, 1.6, -1], [32, 34, 1.8, -1], [33.5, 38.5, 0.7, -1], [31.5, 43, 1.6, -1], [27.5, 46.3, 1.1, -1], [24.2, 45.2, 0.8, -1], [24.6, 42.6, 0.5, -1]], { m: ribbon, g: 'ribB', steps: 5 });
+    for (const [tx, ty, g] of [[34.5, 30, 'fan1'], [33, 33.5, 'fan2']]) sc.tube([[27, 28, 2, 0], [tx, ty, 0.6, 0]], { m: ribbon, g });
+    // far wing: two feather tips peeking up behind the near one
+    sc.poly([[22, 19], [19.5, 10], [17, 4.5], [20.5, 7.5], [21, 1.5], [24, 8], [25, 16]], { m: far, g: 'far', z: -8, bevel: 2 });
+    // near wing: one raised fan with six pointed primaries; feather splits carved in
+    const WING = [[27, 23], [23.5, 18.5], [22.5, 12], [24, 5.5], [25.5, 0.6], [28, 5.5], [31, 0.5], [32.8, 6.2], [37, 1.8], [37.4, 8.2], [42.2, 5.4], [40.8, 11.4], [46, 11.4], [42.6, 15.4], [46.6, 18.6], [39, 20.2], [32, 22.6]];
+    sc.poly(WING, { m: wing, g: 'wing', z: 0, bevel: 3, bz: 3 });
+    for (const [nx, ny, rx, ry] of [[28, 5.5, 27, 15], [32.8, 6.2, 29.5, 15], [37.4, 8.2, 32, 16], [40.8, 11.4, 34, 17.5], [42.6, 15.4, 35, 19]]) sc.carve([[nx, ny + 0.5], [rx, ry]], -2);
+    // coverts: a scalloped band over the feather roots
+    for (const [x, y] of [[25.5, 17.5], [28.5, 16.5], [31.5, 16.8], [34.5, 18]]) sc.carve([[x - 1.5, y - 1], [x - 0.5, y], [x + 0.5, y], [x + 1.5, y - 1]], -1);
+    sc.carve([[24, 14], [27, 12.5], [31, 12.5], [35, 14.5], [38, 17]], 1);
+    // body with a pale chest, tucked golden talons
+    sc.ell(22, 25, 7.2, 6, { m: body, g: 'body', z: 4, rz: 6 });
+    sc.region((x, y) => sc.isG(x, y, 'body') && Math.hypot((x - 18) / 4.6, (y - 25.5) / 5.2) < 1, chest);
+    sc.tube([[19, 30.5, 1, 7], [18.2, 32.8, 0.6, 7]], { m: gold, g: 'talon1' });
+    sc.tube([[22.5, 30.8, 1, 6], [22, 33, 0.6, 6]], { m: gold, g: 'talon2' });
+    // slender S-curved neck, head turned to the viewer, gold beak
+    sc.tube([[19, 22, 3.4, 6], [15, 18, 2.3, 7], [13, 14, 2.2, 8], [12.5, 11, 2.4, 8]], { m: body, g: 'body', steps: 5 });
+    sc.region((x, y) => sc.isG(x, y, 'body') && y > 13 && y < 23 && x < 12.5 + (y - 13) * 0.62 && x > 8, chest);
+    sc.ell(12.2, 10.2, 4, 3.7, { m: body, g: 'head', z: 9, rz: 4 });
+    sc.tube([[9, 11, 1.2, 13], [5.6, 11.8, 0.9, 13], [2.8, 13.2, 0.4, 13]], { m: gold, g: 'beak' });
     // crest plumes sweeping back from the crown
-    sc.tube([[22.5, 9.5, 1.1, 2], [20, 5, 0.9, 2], [16.5, 2.6, 0.5, 2]], { m: body, g: 'crest' });
-    sc.tube([[24.5, 9.5, 1.1, 2], [27, 5, 0.9, 2], [30.5, 2.6, 0.5, 2]], { m: body, g: 'crest' });
-    sc.tube([[cx, 9.5, 1.1, 3], [cx - 0.3, 5, 0.9, 3], [cx + 0.5, 1.5, 0.5, 3]], { m: body, g: 'crest' });
-    // head and golden beak
-    sc.cap(cx, 16, cx, 19, 2.6, 3, { m: body, g: 'body', z: 4 });
-    sc.ell(cx, 12.8, 4.2, 4.1, { m: body, g: 'head', z: 6, rz: 4 });
-    sc.poly([[22, 14], [25, 14], [23.5, 18]], { m: gold, g: 'beak', z: 12, bevel: 1 });
+    sc.tube([[14, 7.4, 0.9, 5], [17, 4.5, 0.7, 5], [20.5, 3.8, 0.5, 5]], { m: body, g: 'crest' });
+    sc.tube([[12.5, 7, 0.9, 6], [13.6, 3.6, 0.7, 6], [15.6, 1.2, 0.5, 6]], { m: body, g: 'crest' });
     const p = sc.render();
-    // eyes: dark with a ruby glint, a pale ring around them
-    stampM(p, 20, 11, ['wk', 'kr'], { k: INK, r: '#e02858', w: '#ecfff4' });
-    p.set(23, 14, GOLD[6]); p.set(23, 15, GOLD[5]);
-    // jewels: tipping the crest plumes and set on the brow
-    jewel(p, 16.5, 2.6, 1.2, 1.2, PINK);
-    jewel(p, 30.5, 2.6, 1.2, 1.2, PINK);
-    jewel(p, cx + 0.5, 1.6, 1.3, 1.3, PINK);
-    jewel(p, cx, 10.2, 1.4, 1.2, RUBY, { bezel: GOLD, shape: 'kite' });
-    // light catching the ribbon edges
-    for (const [x, y] of [[17, 33], [30, 32], [19, 41], [29, 41]]) on(p, x, y, '#f4e8ff');
+    // eye with a dark mask stripe, ruby glint
+    stamp(p, 9, 9, ['kkk', 'kwr', '.kk'], { k: INK, r: '#e02858', w: WHITE });
+    p.set(12, 9, INK); p.set(13, 8, INK);
+    p.set(5, 11, GOLD[6]); p.set(6, 11, GOLD[5]);
+    // jewels tipping the crest
+    jewel(p, 20.8, 3.8, 1, 1, PINK);
+    jewel(p, 15.8, 1.2, 1, 1, PINK);
     return finish(p, (q) => {
-      sparkle(q, 9, 3, 'star', 'c');
-      sparkle(q, 40, 30, 'small', 'p');
-      sparkle(q, 6, 33, 'small', 'y');
-      sparkle(q, 39, 3, 'dot');
-      sparkle(q, 36, 40, 'dot');
+      sparkle(q, 5, 4, 'star', 'c');
+      sparkle(q, 40, 28, 'small', 'p');
+      sparkle(q, 6, 30, 'small', 'y');
+      sparkle(q, 45, 2, 'dot');
+      sparkle(q, 33, 45, 'dot');
     });
   };
 

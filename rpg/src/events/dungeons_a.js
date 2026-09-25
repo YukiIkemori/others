@@ -101,7 +101,7 @@
       if (ev.flag('boss_fort_done')) return;
       faceNpc(ev, 'fort_chief');
       await ev.say('盗賊頭「なんだなんだ、お前ら！\nここをどこだと思ってやがる！」');
-      await ev.say('「……ほう、ポルタの連中に\n頼まれて来たってわけか。\fふん！　港も船も、\nみーんなおれ様のもんだ！\f生きて帰れると思うなよ。\nまとめて片づけてやる！」');
+      await ev.say('「……ほう、ポルタの連中に\n頼まれて来たってわけか。\fふん！　港も船も、\nみーんなおれ様のもんだ！\f生きて帰れると思うなよ！\nまとめて片づけてやる！」');
       if ((await ev.battle('boss_fort')) !== 'win') return false;
       faceNpc(ev, 'fort_chief');
       await ev.say('盗賊頭「ま、参った！\nおれたちの負けだ！\f港からは手を引く！\nこいつをやるから勘弁してくれ！」');

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Checker for the first-half dungeons: src/maps/dungeons_a.js + src/events/dungeons_a.js
-// (かぜのどうくつ, とうぞくのとりで, みずのどうくつ, ピラミッド).
+// (風の洞窟, 盗賊の砦, 水の洞窟, ピラミッド).
 //
 //   node tools/check_dungeons_a.js               static checks + reachability + event dry runs
 //   node tools/check_dungeons_a.js --verbose     also print every chest / hidden item
@@ -15,6 +15,9 @@
 // key, boss NPCs block until their flag is set): before the boss the boss can be reached and
 // nothing behind it can; after it every chest, hidden item, stair, crest and exit circle can.
 // The pyramid sanctum must be sealed without the silver key.
+// Texts (STYLE_JA.md): map names from the glossary, no hard-coded hero names (placeholders
+// {yuki} {non} {metem} {leader}), no DQ-style spaces, a full-width space after a mid-line ！/？,
+// every line fits the message window even with 6-character hero names, at most 4 lines a page.
 // Events: every script is run with a stub `ev` (battles won, yes to every question); the flags
 // and items it hands out must equal its meta.gives, and the exit circle must lead to escape.
 'use strict';
@@ -37,16 +40,16 @@ R.warn = (...a) => mapWarns.push(a.join(' '));
 
 // ------------------------------------------------------------------ the plan
 const DUNGEONS = [
-  { key: 'wind', floors: ['wind_cave_1', 'wind_cave_2'], zones: ['d_wind1', 'd_wind2'], theme: 'cave', bgm: 'cave',
+  { key: 'wind', name: '風の洞窟', floors: ['wind_cave_1', 'wind_cave_2'], zones: ['d_wind1', 'd_wind2'], theme: 'cave', bgm: 'cave',
     boss: { event: 'wind_boss', troop: 'boss_wind', sprite: 'boss_goblin_chief', flag: 'boss_wind_done' },
     crest: { event: 'wind_crest', item: 'crest_wind', got: 'got_crest_wind' } },
-  { key: 'fort', floors: ['bandit_fort_1', 'bandit_fort_2'], zones: ['d_fort1', 'd_fort2'], theme: 'fort', bgm: 'dungeon',
+  { key: 'fort', name: '盗賊の砦', floors: ['bandit_fort_1', 'bandit_fort_2'], zones: ['d_fort1', 'd_fort2'], theme: 'fort', bgm: 'dungeon',
     boss: { event: 'fort_boss', troop: 'boss_fort', sprite: 'boss_bandit', flag: 'boss_fort_done' },
     gives: ['item:silver_key', 'flag:bandits_defeated'] },
-  { key: 'water', floors: ['water_cave_1', 'water_cave_2'], zones: ['d_water1', 'd_water2'], theme: 'water', bgm: 'cave',
+  { key: 'water', name: '水の洞窟', floors: ['water_cave_1', 'water_cave_2'], zones: ['d_water1', 'd_water2'], theme: 'water', bgm: 'cave',
     boss: { event: 'water_boss', troop: 'boss_water', sprite: 'boss_serpent', flag: 'boss_water_done' },
     crest: { event: 'water_crest', item: 'crest_water', got: 'got_crest_water' }, keyBefore: true },
-  { key: 'pyramid', floors: ['pyramid_1', 'pyramid_2', 'pyramid_3'], zones: ['d_pyr1', 'd_pyr2', 'd_pyr3'], theme: 'pyramid', bgm: 'pyramid',
+  { key: 'pyramid', name: 'ピラミッド', floors: ['pyramid_1', 'pyramid_2', 'pyramid_3'], zones: ['d_pyr1', 'd_pyr2', 'd_pyr3'], theme: 'pyramid', bgm: 'pyramid',
     boss: { event: 'pyramid_boss', troop: 'boss_pyramid', sprite: 'boss_sphinx', flag: 'boss_pyramid_done' },
     crest: { event: 'pyramid_crest', item: 'crest_earth', got: 'got_crest_earth' }, sealed: true, keyBefore: true },
 ];
@@ -103,6 +106,7 @@ for (const d of DUNGEONS) {
     }
     for (const r of def.rows) for (const ch of r) if (!legend[ch] && !(def.marks && def.marks[ch])) E(`${id}: unknown char '${ch}'`);
     if (def.type !== 'dungeon') E(`${id}: type ${def.type} (expected dungeon)`);
+    if (def.name !== d.name) E(`${id}: name ${def.name} (expected ${d.name})`);
     if (def.theme !== d.theme) E(`${id}: theme ${def.theme} (expected ${d.theme})`);
     if (!BGM.includes(def.bgm)) E(`${id}: bad bgm ${def.bgm}`);
     if (def.encounter !== d.zones[fi]) E(`${id}: encounter ${def.encounter} (expected ${d.zones[fi]})`);
@@ -303,6 +307,34 @@ for (const d of DUNGEONS) {
     `  no-key: ${noKey.floors.size}/${d.floors.length} floors${d.sealed ? ', sanctum sealed' : ''}`);
 }
 
+// ------------------------------------------------------------------ text style
+// Hero names are chosen by the player (up to 6 full-width characters): lines are measured with
+// the longest possible name so that they still fit the window.
+const LONG_NAME = 'アアアアアア';
+const HERO_NAMES = ['ユウキ', 'ノン', 'メテム'];
+const JA = '\u3041-\u30ff\u4e00-\u9fff\u3005\u3001\u3002\u300c-\u300f\uff01\uff1f\u2026';
+const DQ_SPACE = new RegExp(`[${JA}][ \u3000]+[${JA}]`);
+function textCheck(where, t) {
+  for (const bad of FORBIDDEN) if (t.includes(bad)) E(`${where}: forbidden word ${bad}`);
+  for (const n of HERO_NAMES) if (t.includes(n)) E(`${where}: hard-coded hero name ${n} (use a placeholder)`);
+  for (const m of t.matchAll(/\{([a-z]+)\}/g)) if (!['yuki', 'non', 'metem', 'leader'].includes(m[1])) E(`${where}: unknown placeholder {${m[1]}}`);
+  // DQ-style spacing: the only space allowed in Japanese text is a full-width one after ！/？
+  for (const m of t.matchAll(new RegExp(DQ_SPACE, 'g'))) {
+    if (!(m[0][1] === '\u3000' && m[0].length === 3 && '！？'.includes(m[0][0]))) E(`${where}: DQ-style space in "${m[0]}"`);
+  }
+  if (/[！？][^\s\u3000」』！？…\n\f]/.test(t)) E(`${where}: mid-line ！/？ needs a full-width space after it: ${t.match(/.?[！？][^\s\u3000」』！？…\n\f]./)[0]}`);
+  const long = t.replace(/\{(yuki|non|metem|leader)\}/g, LONG_NAME);
+  for (const page of long.split('\f')) {
+    const lines = page.split('\n');
+    if (lines.length > 4) E(`${where}: page with ${lines.length} lines: ${page.slice(0, 20)}…`);
+    // the message window holds 220 px per line (DotGothic16 at 10.67 px: full-width 11, half-width 5.34)
+    for (const l of lines) {
+      const px = [...l].reduce((w, ch) => w + (ch.charCodeAt(0) < 0x2000 ? 5.34 : 11), 0);
+      if (px > 220) E(`${where}: line too wide for the window (${Math.round(px)} px with 6-char names): ${l}`);
+    }
+  }
+}
+
 // ------------------------------------------------------------------ event dry runs
 async function dry(id, mapId, pre) {
   const ev = DB.events[id];
@@ -383,19 +415,8 @@ async function events() {
       if (x.warps.join() !== esc.to + ':' + esc.spawn) E(`da_exit_circle on ${f}: warps to ${x.warps.join()} (expected ${esc.to}:${esc.spawn})`);
     }
   }
-  // DQ-style text sanity
-  for (const [where, t] of texts) {
-    for (const bad of FORBIDDEN) if (t.includes(bad)) E(`${where}: forbidden word ${bad}`);
-    for (const page of String(t).split('\f')) {
-      const lines = page.split('\n');
-      if (lines.length > 4) E(`${where}: page with ${lines.length} lines: ${page.slice(0, 20)}…`);
-      // the message window holds 220 px per line (DotGothic16 at 10.67 px: full-width 11, … 9, half-width 5.33)
-      for (const l of lines) {
-        const px = [...l].reduce((w, ch) => w + (ch === '…' ? 9 : ch.charCodeAt(0) < 0x2000 ? 5.34 : 11), 0);
-        if (px > 220) E(`${where}: line too wide for the window (${Math.round(px)} px): ${l}`);
-      }
-    }
-  }
+  // text style (STYLE_JA.md) and window fit
+  for (const [where, t] of texts) textCheck(where, String(t));
 }
 
 // ------------------------------------------------------------------ PNG render

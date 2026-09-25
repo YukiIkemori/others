@@ -1,7 +1,7 @@
-// ダンジョン 後半のイベント (DESIGN §7.3, §7.4): ひょうけつのどうくつ・ほのおのかざん・
-// ほしみのとう・まおうじょう の ボスせん、もんしょうの だいざ、ボスのあとに ひらく
-// でぐちの まほうじん、まおうじょうの ふういんされた ちかみち、そして さいごの たたかい。
-// マップは src/maps/dungeons_b.js。
+// Events of the second-half dungeons (DESIGN §7.3, §7.4): the boss fights of the Ice Cave,
+// Fire Volcano, Star Tower and Demon Castle, the crest altars, the exit circles that open after
+// each boss, the demon castle's sealed shortcuts, and the final battle.
+// Maps: src/maps/dungeons_b.js.
 //
 // Flags set here:  boss_ice_done  boss_volcano_done got_crest_fire  boss_star_done got_crest_star
 //                  demon_voice_heard  boss_general1_done  boss_general2_done
@@ -11,7 +11,7 @@
   'use strict';
   const E = R.DB.events;
   const CRESTS = ['crest_wind', 'crest_water', 'crest_earth', 'crest_fire', 'crest_star'];
-  const KAZU = ['ゼロ', 'ひとつ', 'ふたつ', 'みっつ', 'よっつ', 'いつつ'];
+  const KAZU = ['ゼロ', '一つ', '二つ', '三つ', '四つ', '五つ'];
 
   // ------------------------------------------------------------ helpers
   /** turn the leader toward an NPC (bosses are drawn big; they may be talked to from the side) */
@@ -52,10 +52,10 @@
     await ev.say(o.after);
     const n = CRESTS.filter((id) => ev.has(id)).length;
     await ev.say(n >= CRESTS.length
-      ? 'ついに いつつの もんしょうが\nすべて そろった！\fうみの まんなかの ひかりの しんでんへ\nもっていこう。'
-      : 'これで もんしょうは ' + KAZU[n] + '。\nのこる もんしょうは あと ' + KAZU[CRESTS.length - n] + 'だ。');
+      ? 'ついに五つの紋章が\nすべてそろった！\f海の真ん中にある光の神殿へ\n持っていこう。'
+      : 'これで紋章は' + KAZU[n] + '。\n残る紋章はあと' + KAZU[CRESTS.length - n] + 'だ。');
     nextObjective(ev, o.fallback);
-    await ev.say('……ふと みると ゆかの まほうじんが\nあわく ひかっている。\nあれに のれば そとへ でられそうだ。');
+    await ev.say('……ふと見ると、床の魔法陣が\n淡く光っている。\nあれに乗れば外へ出られそうだ。');
     return true;
   }
 
@@ -67,40 +67,40 @@
       const esc = def && def.escape;
       if (!esc) return false;
       ev.sfx('warp');
-      if (!(await ev.yesno('まほうじんが しずかに ひかっている。\nそとへ でますか？'))) return false;
+      if (!(await ev.yesno('魔法陣が静かに光っている。\n外へ出ますか？'))) return false;
       ev.sfx('teleport');
       await ev.warp(esc.to, esc.spawn, { dir: 'down' });
       return true;
     },
   };
 
-  // ============================================================ ひょうけつのどうくつ
+  // ============================================================ Ice Cave
   E.ice_boss = {
     meta: { needs: [], gives: ['flag:boss_ice_done', 'item:gold_key'] },
     async run(ev) {
       if (ev.flag('boss_ice_done')) return;
       faceNpc(ev, 'ice_giant');
       await ev.shake(30, 2);
-      await ev.say('ゴゴゴゴ……\nこおりの かべが ふるえている……！');
+      await ev.say('ゴゴゴゴ……\n氷の壁が震えている……！');
       ev.sfx('roar');
-      await ev.say('ひょうがのきょじん「……だれだ。\nながき ねむりを さますのは。」');
-      await ev.say('「……ひかりの においが する。\nおまえたちが まおうさまの いう\nもんしょうの こらか。\fこがねの かぎは わたさぬ。\nこおりの ひつぎで ねむるが よい！」');
+      await ev.say('氷河の巨人「……誰だ。\n長き眠りを覚ますのは。」');
+      await ev.say('「……光の匂いがする。\n貴様らが、魔王様の言う\n紋章の子らか。\f金の鍵は渡さぬ。\n氷の棺で、永遠に眠るがよい！」');
       if ((await ev.battle('boss_ice')) !== 'win') return false;
       faceNpc(ev, 'ice_giant');
-      await ev.say('ひょうがのきょじん「グ……ヌウ……。\nからだが…… とけて ゆく……。」');
+      await ev.say('氷河の巨人「グ……ヌウ……。\n体が……溶けてゆく……。」');
       ev.sfx('ice');
       await ev.shake(24, 3);
       await vanish(ev, 'boss_ice_done', 'flash');
-      await ev.say('きょじんの からだは くだけちり\nこおりの つぶと なって きえた……。');
-      await ev.say('あとには きんいろに かがやく\nかぎが おちている。');
+      await ev.say('巨人の体は砕け散り、\n氷の粒となって消えた……。');
+      await ev.say('あとには、金色に輝く\n鍵が落ちている。');
       await ev.give('gold_key');
-      await ev.say('これで せかいの どこかに ある\nこがねの とびらを ひらけるはずだ。');
+      await ev.say('これで、世界のどこかにある\n金の扉を開けられるはずだ。');
       nextObjective(ev, 'obj_fire');
-      await ev.say('おくの まほうじんが\nあわく ひかりはじめた……。');
+      await ev.say('奥の魔法陣が\n淡く光り始めた……。');
     },
   };
 
-  // ============================================================ ほのおのかざん
+  // ============================================================ Fire Volcano
   E.volcano_boss = {
     meta: { needs: [], gives: ['flag:boss_volcano_done'] },
     async run(ev) {
@@ -108,29 +108,29 @@
       faceNpc(ev, 'volcano_lord');
       ev.sfx('fire');
       await ev.flash('#ff6010', 10);
-      await ev.say('ようがんが ごうっと ふきあがった！');
-      await ev.say('えんまじん「フハハハハ！\nよくぞ ここまで きたな\nひかりの こらよ！」');
-      await ev.say('「ここは まおうさまに ささげられた\nほのおの せいいき。\fほのおの もんしょうが ほしいか？\nならば この ほのおで\nほねまで やきつくして くれるわ！」');
+      await ev.say('溶岩がごうっと噴き上がった！');
+      await ev.say('炎魔神「フハハハハ！\nよくぞここまで来たな、\n光の子らよ！」');
+      await ev.say('「ここは魔王様に捧げられた\n炎の聖域。\f炎の紋章が欲しいか？\nならば、この炎で\n骨まで焼き尽くしてくれるわ！」');
       if ((await ev.battle('boss_volcano')) !== 'win') return false;
       faceNpc(ev, 'volcano_lord');
-      await ev.say('えんまじん「ば ばかな……！\nこの わしの ほのおが……\nきえる だと……！」');
+      await ev.say('炎魔神「ば、馬鹿な……！\nこのわしの炎が……\n消えるだと……！」');
       ev.sfx('fire');
       await ev.shake(30, 3);
       await vanish(ev, 'boss_volcano_done', 'flash');
-      await ev.say('えんまじんは ほのおと ともに\nようがんの なかへ きえていった……。');
-      await ev.say('おくの だいざで なにかが\nあかく かがやいている……。');
+      await ev.say('炎魔神は炎とともに\n溶岩の中へ消えていった……。');
+      await ev.say('奥の台座で、何かが\n赤く輝いている……。');
     },
   };
   E.volcano_crest = {
     meta: { needs: ['flag:boss_volcano_done'], gives: ['item:crest_fire', 'flag:got_crest_fire'] },
     run: (ev) => takeCrest(ev, {
       boss: 'boss_volcano_done', got: 'got_crest_fire', item: 'crest_fire', fallback: 'obj_star',
-      look: 'だいざの うえで\nあかい もんしょうが\nほのおの ように ゆらめいている……。',
-      after: 'ほのおの もんしょうを てにすると\nからだの おくから あつい ちからが\nわきあがってきた……。',
+      look: '台座の上で、赤い紋章が\n炎のように揺らめいている……。',
+      after: '炎の紋章を手にすると、\n体の奥から熱い力が\n湧き上がってきた……。',
     }),
   };
 
-  // ============================================================ ほしみのとう
+  // ============================================================ Star Tower
   E.star_boss = {
     meta: { needs: [], gives: ['flag:boss_star_done'] },
     async run(ev) {
@@ -138,37 +138,37 @@
       faceNpc(ev, 'star_guardian');
       ev.sfx('holy');
       await ev.flash('#e8f0ff', 10);
-      await ev.say('よぞらの ほしが いっせいに\nまたたいた……！');
-      await ev.say('ほしのしゅごしん「……まっていた。\nひかりの もんしょうに\nえらばれし ものたちよ。」');
-      await ev.say('メテム「ほしみの とうの しゅごしん……！\nがくいんの ほんで よんだ とおりだわ。」');
-      await ev.say('ほしのしゅごしん「ほしの もんしょうは\nまことの ゆうしゃにのみ たくされる。\fそなたらの ちからと こころ\nこの われが ためさせて もらう！」');
+      await ev.say('夜空の星が一斉に\nまたたいた……！');
+      await ev.say('星の守護神「……待っていた。\n光の紋章に\n選ばれし者たちよ。」');
+      await ev.say('{metem}「星見の塔の守護神……！\n学院の本で読んだとおりだわ。」');
+      await ev.say('星の守護神「星の紋章は、\n真の勇者にのみ託される。\fそなたらの力と心、\nこの我が試させてもらう！」');
       if ((await ev.battle('boss_star')) !== 'win') return false;
       faceNpc(ev, 'star_guardian');
-      await ev.say('ほしのしゅごしん「……みごとだ。\nそなたらこそ ひかりを つぐ もの。」');
-      await ev.say('「ほしの もんしょうを もってゆけ。\nそして まおうの やみから\nこの せかいを すくうのだ……。」');
+      await ev.say('星の守護神「……見事だ。\nそなたらこそ、光を継ぐ者。」');
+      await ev.say('「星の紋章を持ってゆけ。\nそして魔王の闇から、\nこの世界を救うのだ……。」');
       ev.sfx('holy');
       await vanish(ev, 'boss_star_done', 'flash');
-      await ev.say('しゅごしんの すがたは\nほしくずと なって\nよぞらへ のぼっていった……。');
+      await ev.say('守護神の姿は星くずとなり、\n夜空へ昇っていった……。');
     },
   };
   E.star_crest = {
     meta: { needs: ['flag:boss_star_done'], gives: ['item:crest_star', 'flag:got_crest_star'] },
     run: (ev) => takeCrest(ev, {
       boss: 'boss_star_done', got: 'got_crest_star', item: 'crest_star', fallback: 'obj_temple',
-      look: 'だいざの うえで\nぎんいろの もんしょうが\nほしぞらの ように きらめいている……。',
-      after: 'ほしの もんしょうから あふれた ひかりが\n3にんの みちを\nてらしだす ように かがやいた……。',
+      look: '台座の上で、銀色の紋章が\n星空のようにきらめいている……。',
+      after: '星の紋章からあふれた光が、\n3人の行く道を\n照らし出すように輝いた……。',
     }),
   };
   /** the star-reading circle: a talking inscription that hints at the right pad */
   E.star_hint = {
     meta: { needs: [], gives: [] },
     async run(ev) {
-      await ev.say('ゆかに ほしぞらの ずが\nきざまれている……。');
-      await ev.say('「まよえる たびびとよ\nうごかぬ ほしを めざせ。\fきたの そらに ひとつ\nけっして うごかぬ ほし あり」');
+      await ev.say('床に星空の図が\n刻まれている……。');
+      await ev.say('「迷える旅人よ、\n動かぬ星を目指せ。\f北の空にひとつ、\n決して動かぬ星あり」');
     },
   };
 
-  // ============================================================ まおうじょう
+  // ============================================================ Demon Castle
   E.demon_castle_voice = {
     meta: { needs: [], gives: ['flag:demon_voice_heard'] },
     async run(ev) {
@@ -177,17 +177,17 @@
       await ev.wait(30);
       ev.sfx('dark');
       await ev.flash('#300018', 16);
-      await ev.say('どこからともなく\nひくい こえが ひびいてきた……。');
-      await ev.say('「……きたか ひかりの こらよ。\fひゃくねんの ねむりの あいだ\nこの ときを まっていたぞ。\fわが しろにて ほろびるが よい……。」');
-      await ev.say('ノン「いまの こえ……！」\nユウキ「まおうだ。 いこう みんな！」');
+      await ev.say('どこからともなく、\n低い声が響いてきた……。');
+      await ev.say('「……来たか、光の子らよ。\f百年の眠りのあいだ、\nこの時を待ちわびていたぞ。\f我が城にて、滅びるがよい……。」');
+      await ev.say('{non}「今の声……！」\n{yuki}「魔王だ。行こう、みんな！」');
     },
   };
   /** the sealed circles near the entrance: examined while still sealed */
   E.demon_seal = {
     meta: { needs: [], gives: [] },
     async run(ev) {
-      await ev.say('まほうじんが まがまがしい\nふういんで とざされている……。');
-      await ev.say('この しろの どこかに\nふういんの ぬしが いるのだろう。');
+      await ev.say('魔法陣が禍々しい封印で\n閉ざされている……。');
+      await ev.say('この城のどこかに、\n封印の主がいるのだろう。');
     },
   };
   /** open shortcut circles (sealed until the general that holds them falls) */
@@ -215,17 +215,17 @@
       if (ev.flag('boss_general1_done')) return;
       faceNpc(ev, 'dark_general');
       ev.sfx('dark');
-      await ev.say('くろい よろいの きしが\nゆっくりと つるぎを ぬいた……。');
-      await ev.say('あんこくしょうぐん「まっていたぞ\nひかりの もんしょうの こらよ。\fわれこそは まおうぐん さいきょうの けん\nあんこくしょうぐん！\fまおうさまの もとへは\nいっぽたりとも ゆかせぬ！」');
-      await ev.say('ユウキ「そこを どいてもらう！」');
+      await ev.say('黒い鎧の騎士が、\nゆっくりと剣を抜いた……。');
+      await ev.say('暗黒将軍「待っていたぞ、\n光の紋章の子らよ。\f我こそは魔王軍最強の剣、\n暗黒将軍！\f魔王様のもとへは、\n一歩たりとも行かせぬ！」');
+      await ev.say('{yuki}「そこをどいてもらう！」');
       if ((await ev.battle('boss_general1')) !== 'win') return false;
       faceNpc(ev, 'dark_general');
-      await ev.say('あんこくしょうぐん「み みごと……。\nだが まおうさまの ちからは\nこんな ものでは ない……。」');
+      await ev.say('暗黒将軍「み、見事……。\nだが、魔王様の力は\nこんなものではない……。」');
       ev.sfx('dark');
       await vanish(ev, 'boss_general1_done', 'fade');
-      await ev.say('あんこくしょうぐんは\nくろい けむりと なって きえた……。');
+      await ev.say('暗黒将軍は黒い煙となって\n消えた……。');
       ev.sfx('warp');
-      await ev.say('どこかで ふういんの とける\nおとが した……。');
+      await ev.say('どこかで、封印の解ける\n音がした……。');
     },
   };
 
@@ -236,17 +236,17 @@
       faceNpc(ev, 'lich_general');
       ev.sfx('dark');
       await ev.flash('#40c060', 8);
-      await ev.say('やみのだいまどうし「クックック……\nあんこくしょうぐんを やぶるとはな。」');
-      await ev.say('「だが わしの やみの まほうの まえでは\nひかりなど むりょく！\fおまえたちの たましい\nまおうさまへの ささげものと\nしてくれようぞ！」');
-      await ev.say('メテム「まほうで わたしに\nかてると おもわないでよね！」');
+      await ev.say('闇の大魔導士「クックック……\n暗黒将軍を破るとはな。」');
+      await ev.say('「だが、わしの闇の魔法の前では\n光など無力！\f貴様らの魂、\n魔王様への捧げ物と\nしてくれようぞ！」');
+      await ev.say('{metem}「魔法でわたしに\n勝てると思わないでよね！」');
       if ((await ev.battle('boss_general2')) !== 'win') return false;
       faceNpc(ev, 'lich_general');
-      await ev.say('やみのだいまどうし「ば ばかな……\nしを こえた この わしが……！\fまおうさま…… おゆるしを……。」');
+      await ev.say('闇の大魔導士「ば、馬鹿な……\n死を超えたこのわしが……！\f魔王様……お許しを……。」');
       ev.sfx('dark');
       await vanish(ev, 'boss_general2_done', 'flash');
-      await ev.say('だいまどうしの すがたは\nちりと なって くずれおちた……。');
+      await ev.say('大魔導士の姿は\n塵となって崩れ落ちた……。');
       ev.sfx('warp');
-      await ev.say('どこかで また ふういんの とける\nおとが した……。\fそして うえの かいから\nおそろしい けはいが ただよってくる……。');
+      await ev.say('どこかで、また封印の解ける\n音がした……。\fそして上の階から、\n恐ろしい気配が漂ってくる……。');
     },
   };
 
@@ -254,33 +254,33 @@
   async function kingTrueForm(ev) {
     ev.sfx('roar');
     await ev.shake(50, 4);
-    await ev.say('まじん ヴァルザード「ほう……\nまだ ひかりに すがるか。\fよかろう！ なんど こようと\nやみに かえして くれるわ！」');
+    await ev.say('魔神ヴァルザード「ほう……\nまだ光にすがるか。\fよかろう！　何度来ようと、\n闇に還してくれるわ！」');
     const res = await ev.battle('boss_king2');
     return res === 'win';
   }
   async function finale(ev) {
     faceNpc(ev, 'demon_king2');
-    await ev.say('まじん ヴァルザード「グオオオ……！\nば ばかな……！\fこの わしが……\nひかりに…… やぶれる など……！」');
-    await ev.say('「……だが おぼえておけ……\nひとの こころに やみの ある かぎり\nわしは いつか また……\nよみがえる…… ぞ……。」');
+    await ev.say('魔神ヴァルザード「グオオオ……！\nば、馬鹿な……！\fこのわしが……\n光に……敗れるなど……！」');
+    await ev.say('「……だが、覚えておけ……\n人の心に闇がある限り、\nわしはいつか、また……\nよみがえる……ぞ……。」');
     ev.closeMessage();
     ev.sfx('boss_die');
     await ev.flash('#ffffff', 20);
     ev.setFlag('boss_king2_done');
     ev.refresh();
     await ev.wait(40);
-    await ev.say('まおう ヴァルザードは\nひかりの なかへ きえていった……。');
+    await ev.say('魔王ヴァルザードは\n光の中へ消えていった……。');
     await ev.wait(20);
     ev.closeMessage();
     ev.sfx('shake');
     await ev.shake(90, 3);
-    await ev.say('ゴゴゴゴゴ……！\nまおうじょうが おおきく ゆれはじめた！');
+    await ev.say('ゴゴゴゴゴ……！\n魔王城が大きく揺れ始めた！');
     ev.sfx('earth');
     await ev.shake(70, 5);
-    await ev.say('ノン「しろが くずれます！」\nメテム「はやく にげないと……！」');
+    await ev.say('{non}「城が崩れます！」\n{metem}「早く逃げないと……！」');
     ev.closeMessage();
     ev.sfx('holy');
     await ev.flash('#fff8d0', 30);
-    await ev.say('そのとき ひかりの もんしょうが\nまばゆく かがやき\n3にんを やさしく つつみこんだ……。');
+    await ev.say('そのとき、光の紋章が\nまばゆく輝き、\n3人を優しく包み込んだ……。');
     ev.setFlag('game_clear');
     nextObjective(ev, 'obj_clear');
     await ev.flash('#ffffff', 40);
@@ -290,7 +290,7 @@
     }
     // no ending system: bring the party out safely
     await ev.warp('world', 'demon_castle_1');
-    await ev.say('せかいに へいわが もどった。\nおめでとう！');
+    await ev.say('世界に平和が戻った。\nおめでとう！');
   }
 
   E.demon_king = {
@@ -307,15 +307,15 @@
       faceNpc(ev, 'demon_king');
       if (R.Audio && R.Audio.stopBGM) { try { R.Audio.stopBGM(60); } catch (e) { /* ignore */ } }
       await ev.wait(40);
-      await ev.say('ぎょくざの まおうが\nゆっくりと たちあがった……。');
-      await ev.say('まおう「……よくぞ まいった\nひかりの もんしょうに\nえらばれし ものたちよ。」');
-      await ev.say('「ひゃくねん まえ わしを ふうじた\nあの にくき ひかり……\nおまえたちの なかにも みえるぞ。\fだが ひかりは いつか かならず\nやみに のまれる。\nそれが この せかいの さだめ。」');
-      await ev.say('「さあ こい！\nひゃくねんの うらみ\nその みで おもいしるが よい！」');
-      await ev.say('ユウキ「……いくぞ みんな！」\nノン「はい！」\nメテム「とうぜん！」');
+      await ev.say('玉座の魔王が、\nゆっくりと立ち上がった……。');
+      await ev.say('魔王「……よくぞ参った、\n光の紋章に\n選ばれし者たちよ。」');
+      await ev.say('「百年前、わしを封じた\nあの憎き光……\n貴様らの中にも見えるぞ。\fだが、光はいつか必ず\n闇にのまれる。\nそれがこの世界の定め。」');
+      await ev.say('「さあ、来るがよい！\n百年の恨み、\nその身で思い知れ！」');
+      await ev.say('{yuki}「……行くぞ、みんな！」\n{non}「はい！」\n{metem}「当然！」');
       if ((await ev.battle('boss_king1')) !== 'win') return false;
       faceNpc(ev, 'demon_king');
-      await ev.say('まおう「ぐ…… ぐおお……。\nまさか これほどとは……。」');
-      await ev.say('「……だが これで おわりと おもうな！\nみるが よい……\nこれが わが まことの すがた！」');
+      await ev.say('魔王「ぐ……ぐおお……。\nまさか、これほどとは……。」');
+      await ev.say('「……だが、これで終わりと思うな！\n見るがよい……\nこれが我が真の姿！」');
       ev.closeMessage();
       ev.sfx('roar');
       await ev.flash('#600020', 16);
@@ -325,12 +325,12 @@
       await ev.flash('#600020', 16);
       await ev.wait(30);
       faceNpc(ev, 'demon_king2');
-      await ev.say('まじん ヴァルザード「グオオオオ！\nこの すがたを みて\nいきて かえった ものは おらぬ！」');
+      await ev.say('魔神ヴァルザード「グオオオオ！\nこの姿を見て、\n生きて帰った者はおらぬ！」');
       ev.sfx('holy');
       await ev.flash('#fff8d0', 16);
       ev.heal();
-      await ev.say('そのとき ひかりの もんしょうが\nまばゆく かがやいた！\f3にんの きずが\nみるみる いえていく……！');
-      await ev.say('まじん「おのれ いまいましい ひかりめ！\nまとめて やみに かえしてくれる！」');
+      await ev.say('そのとき、光の紋章が\nまばゆく輝いた！\f3人の傷が\nみるみる癒えていく……！');
+      await ev.say('魔神「おのれ、忌々しい光め！\nまとめて闇に還してくれる！」');
       if ((await ev.battle('boss_king2')) !== 'win') return false;
       await finale(ev);
     },
