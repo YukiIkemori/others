@@ -308,7 +308,14 @@
     // ---------------------------------------------------------- stats
     baseStat(c, stat, level) {
       const g = DB.chars[c.id].growth[stat];
-      return g[0] + g[1] * ((level || c.level) - 1);
+      // c.bonus: permanent gains from seeds ('grow' effect)
+      return g[0] + g[1] * ((level || c.level) - 1) + ((c.bonus && c.bonus[stat]) || 0);
+    },
+    /** permanent stat gain (seeds). Returns new bonus. */
+    grow(c, stat, n) {
+      c.bonus = c.bonus || {};
+      c.bonus[stat] = (c.bonus[stat] || 0) + n;
+      return c.bonus[stat];
     },
     /**
      * Aggregated modifier object from: current job innate, set reaction/support/field

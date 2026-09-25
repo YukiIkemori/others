@@ -290,6 +290,7 @@ Start: ユウキ warrior (knows `warrior_power_slash`), ノン priest (`priest_h
 | `scan` | — | show HP/weakness, register bestiary |
 | `escape` | — | guaranteed flee (not bosses) |
 | `regen` | — | give regen status |
+| `grow` | `stat`, `n` | permanent stat gain (seeds) via `R.Rules.grow(c, stat, n)`; usable in field and battle |
 | `teleport` | — | field only: choose visited town |
 | `exit` | — | field only: leave dungeon (map.escape) |
 | `repel` | `steps` | field only |
@@ -413,6 +414,7 @@ centred on the ground line, bottom window for commands and messages (DQ wording:
   chests:[{id,x,y,item,n}|{id,x,y,gold}], warps:[{x,y,to,spawn,dir}], events:[{x,y,id,trigger:'step'|'examine',cond,once}],
   hidden:[{id,x,y,item}], signs:[{x,y,text}],
   exit?:{to:'world', spawn}               // walking off the map edge
+  outside?:'<legend char>'               // tile drawn beyond the map edge (default: void for local maps, sea for world)
   encounter?:'zoneId', encRate?:24       // avg steps between fights (dungeon default 22, world 26)
   onEnter?:'eventId'                     // every time the map loads (event checks its own flags)
   tilePatches?:[{cond:'flag', x, y, ch}] // applied whenever cond holds (e.g. a seal disappears)
@@ -521,6 +523,8 @@ Conventions:
   Dungeons owner writes dungeon maps and their events (boss battles, crest/key chests, demon castle, final boss →
   `ev.setFlag('game_clear')` → `ev.ending()`). The flag `bandits_defeated` is set by the fort boss event;
   the captain event (story) checks it.
+
+World map: exactly **128 columns × 112 rows** (the ちず screen draws it at 2 px/tile), ringed by ≥ 3 tiles of sea.
 
 Encounter zone ids (world rectangles): `w_start w_east w_sea1 w_forest w_desert w_sea2 w_snow w_volcano w_arcana w_sea3 w_demon`.
 Dungeon zone ids: `d_wind1 d_wind2 d_fort1 d_fort2 d_water1 d_water2 d_pyr1 d_pyr2 d_pyr3 d_ice1 d_ice2
