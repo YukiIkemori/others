@@ -108,7 +108,7 @@
     snow:    { name: '雪国の獣（毛皮で寒さに強い）', elem: { ice: 0.5 } },
     gale:    { name: '風の体', elem: { wind: -1 } },
     undead:  { name: 'アンデッド', elem: { holy: 2, fire: 1.5, dark: -1 } },
-    demon:   { name: '悪魔・闇の使い手', elem: { holy: 2, dark: 0 } },
+    demon:   { name: '悪魔・闇の者（悪魔・闇の神官・呪われた魂）', elem: { holy: 2, dark: 0 } },
     shade:   { name: '闇に染まった魔物（「闇」「黒」の名を持つ）', elem: { dark: 0.5 } },
     light:   { name: '光・星・精霊', elem: { dark: 2, holy: 0.5 } },
     eye:     { name: '目玉（闇に目がくらむ）', elem: { dark: 2 } },
@@ -267,7 +267,7 @@
       desc: '砦のゴミをあさるネズミ。\n隙を見てゴールドをくすねていく。',
     }),
     sabi_yoroi: M('さびた鎧', 'armor', 8, {
-      fam: ['metal', 'undead'], elem: { dark: 0 },
+      fam: ['metal', 'demon'],
       s: { hp: 1.26, def: 1.8, mdef: 0.6, agi: 0.6 }, hue: 160, sat: 3, bri: 0.75,
       statusRes: { poison: 1, death: 0.5 },
       a: [['attack', 4], ['en_heavy', 2], ['en_harden', 1]],
@@ -407,7 +407,7 @@
       desc: '砂漠をぴょこぴょこ歩くサボテン。\n体のトゲを飛ばしてくる。',
     }),
     mummy: M('ミイラ', 'mummy', 15, {
-      fam: ['undead'], elem: { fire: 2 }, // dry bandages burn
+      fam: ['undead'], elem: { fire: 2 }, // dry bandages burn well
       s: { hp: 1.31, atk: 1.1, agi: 0.6 }, flags: ['undead'], statusRes: UNDEAD_RES,
       a: [['attack', 4], ['en_bandage', 2]],
       drop: ['all_cure', 16], rare: ['dream_robe', 128], steal: ['all_cure'],
