@@ -404,7 +404,7 @@ sec('targets');
   // retarget when the chosen monster died
   Mo(e, 0).hp = 0;
   ev = use(e, metem, 'tb_fire', Mo(e, 0));
-  ok(ev.find((x) => x.t === 'dmg').u === Mo(e, 1), 'enemy target retargets to same species');
+  ok(ev.find((x) => x.t === 'dmg').u === R.BattleAI.focusOrder(e)[0] && ev.find((x) => x.t === 'dmg').u.alive, 'enemy target retargets to the focus-fire target');
   const t = e.targets(P(e, 1), DB.abilities.tb_healall, null);
   ok(t.length === 3, 'allies');
   ok(e.targets(P(e, 1), { target: 'self' }, null)[0] === P(e, 1), 'self');

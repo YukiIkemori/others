@@ -324,11 +324,14 @@
         }
       }
       order.sort((a, b) => b.v - a.v);
+      this.pending = order.filter((s) => s.u.isParty && s.cmd); // party commands still to come (focus-fire retargeting)
       for (const s of order) {
         if (this.checkEnd()) break;
+        if (s.u.isParty) this.pending = this.pending.filter((x) => x !== s);
         if (!s.u.alive) continue;
         yield* this.turn(s.u, s.cmd);
       }
+      this.pending = null;
       for (const u of this.units()) u.defending = false;
       this.checkEnd();
     }
@@ -469,15 +472,34 @@
     }
 
     // ------------------------------------------------------- attacks
-    /** a living target for u: the chosen one if still valid, else a random foe (same species first) */
+    /**
+     * a living target for u: the chosen one if still valid; else, for the party, the focus-fire
+     * target (R.BattleAI.focusOrder — everyone whose foe fell moves on to the SAME next enemy),
+     * for monsters a random foe (same species first)
+     */
     pickFoe(u, t) {
       if (t && t.alive) return t;
       const foes = this.foes(u);
       if (!foes.length) return null;
+      if (u.isParty && !foes[0].isParty && R.BattleAI && R.BattleAI.focusOrder) return R.BattleAI.focusOrder(this, this.pendingPlan())[0] || U.pick(foes);
       if (t && !t.isParty) { const same = foes.filter((m) => m.id === t.id); if (same.length) return U.pick(same); }
       // a monster whose target fell picks a new one with the same formation weights (front 50/30/20)
       if (!u.isParty && foes[0].isParty && R.BattleAI && R.BattleAI.pickPartyTarget) return R.BattleAI.pickPartyTarget(this) || U.pick(foes);
       return U.pick(foes);
+    }
+
+    /** expected damage the party members still to act this round have aimed at each monster */
+    pendingPlan() {
+      const dmg = new Map();
+      for (const s of this.pending || []) {
+        const c = s.cmd, t = c && c.target;
+        if (!t || !t.alive || t.isParty || !s.u.commandable()) continue;
+        let d = 0;
+        if (c.type === 'attack') d = this.expectAttack(s.u, t);
+        else if (c.type === 'ability' && DB.abilities[c.id] && DB.abilities[c.id].target === 'enemy') d = this.expectDamage(s.u, DB.abilities[c.id], t);
+        if (d > 0) dmg.set(t, (dmg.get(t) || 0) + d);
+      }
+      return { dmg };
     }
 
     // ------------------------------------------------------- リピート
@@ -489,12 +511,23 @@
     repeatCommands(prev) {
       const out = [];
       const reserved = {};
-      for (const u of this.party) if (u.commandable()) out[u.idx] = this.repeatOne(u, prev && prev[u.idx], reserved);
+      // focus fire for members whose old target fell: the plan holds the expected damage of the
+      // attacks already assigned, so a target that is dead-in-expectation passes to the next enemy
+      const plan = R.BattleAI && R.BattleAI.newPlan ? R.BattleAI.newPlan() : null;
+      for (const u of this.party) if (u.commandable()) out[u.idx] = this.repeatOne(u, prev && prev[u.idx], reserved, plan);
       return out;
     }
-    repeatOne(u, p, reserved) {
+    repeatOne(u, p, reserved, plan) {
       const foeOf = (t) => (t && t.side !== u.side && !t.gone ? t : null);
-      const attack = () => ({ type: 'attack', target: this.pickFoe(u, foeOf(p && p.target)) });
+      const attack = () => {
+        const old = foeOf(p && p.target);
+        if (old && old.alive) {
+          if (plan) plan.dmg.set(old, (plan.dmg.get(old) || 0) + this.expectAttack(u, old));
+          return { type: 'attack', target: old };
+        }
+        const t = plan && R.BattleAI.focusTarget ? R.BattleAI.focusTarget(this, u, plan) : this.pickFoe(u, null);
+        return { type: 'attack', target: t || this.pickFoe(u, null) };
+      };
       if (!p || p.type === 'attack') return attack();
       if (p.type === 'defend') return { type: 'defend' };
       let act = null;
@@ -508,8 +541,13 @@
         if (this.noEscape && B.isEscape(it.use)) return attack();
         act = it.use;
       } else return attack();
-      const t = this.repeatTarget(u, act, p.target);
+      let t = this.repeatTarget(u, act, p.target);
       if (t === false) return attack();
+      // a single-target ability whose target fell follows the focus plan too
+      if (plan && act.target === 'enemy' && t && t !== p.target && R.BattleAI.focusOrder) {
+        t = R.BattleAI.focusOrder(this, plan)[0] || t;
+        plan.dmg.set(t, (plan.dmg.get(t) || 0) + this.expectDamage(u, act, t, p.type === 'item'));
+      } else if (plan && act.target === 'enemy' && t && t.alive) plan.dmg.set(t, (plan.dmg.get(t) || 0) + this.expectDamage(u, act, t, p.type === 'item'));
       if (p.type === 'item') reserved[p.id] = (reserved[p.id] || 0) + 1;
       return { type: p.type, id: p.id, target: t };
     }

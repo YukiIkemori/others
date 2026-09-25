@@ -222,6 +222,93 @@
     return null;
   }
 
+  // ------------------------------------------------------------ focus fire
+  // Playtest 「オートが頭悪い。殴る対象を分散化しすぎてる」: the party concentrates on ONE enemy at
+  // a time — the one whose removal helps most per round spent on it: threat (expected damage it
+  // deals per round) ÷ rounds the party needs to finish it (so an enemy that dies this round comes
+  // first, a hard hitter before a harmless one). Damage the members planned earlier this round is
+  // subtracted; once a target is dead-in-expectation the next members move on to the next one.
+  /** rough damage per round monster m deals to the party */
+  function threat(eng, m) {
+    const party = eng.living('party');
+    if (!party.length) return 1;
+    let phys = 0, mdef = 0;
+    for (const p of party) { phys += eng.expectAttack(m, p); mdef += p.stat('mdef'); }
+    phys /= party.length; mdef /= party.length;
+    const magic = (m.stat('mag') * 0.6 + (m.level || 1)) * (100 / (100 + mdef));
+    let t = Math.max(phys, magic, 1) * U.clamp((m.d && m.d.actsPerTurn) || 1, 1, 3);
+    if (!m.canAct()) t *= 0.3;
+    else if (m.status.confuse) t *= 0.5;
+    return t;
+  }
+  /** the party's expected damage on m in one round of plain attacks (commandable members) */
+  function partyDpr(eng, m) {
+    let d = 0;
+    for (const p of eng.living('party')) if (p.commandable()) d += eng.expectAttack(p, m);
+    return Math.max(1, d);
+  }
+  /**
+   * living foes, best focus target first. plan (optional): damage already planned this round —
+   * foes that are dead-in-expectation go last.
+   */
+  function focusOrder(eng, plan) {
+    const foes = eng.living('mon');
+    const COVER = R.FOCUS_COVER || 1;
+    const left = (m) => Math.max(0, m.hp * COVER - ((plan && plan.dmg.get(m)) || 0));
+    const rows = foes.map((m) => {
+      const l = left(m);
+      const MODE = R.FOCUS_MODE || 'a';
+      let score;
+      if (MODE === 'a') score = threat(eng, m) / Math.max(1, Math.ceil(l / partyDpr(eng, m) - 1e-9));
+      else if (MODE === 'b') score = threat(eng, m) / Math.max(1, l);
+      else score = threat(eng, m) / Math.max(1, l) * (l <= partyDpr(eng, m) ? 2 : 1);
+      // dead-in-expectation: last, the least over-covered one first (the likeliest survivor)
+      return { m, l, score: l > 0 ? score : -((plan && plan.dmg.get(m)) || 0) / Math.max(1, m.hp) };
+    });
+    rows.sort((a, b) => b.score - a.score || a.l - b.l || a.m.idx - b.m.idx);
+    return rows.map((r) => r.m);
+  }
+  /**
+   * u's share of the party's focus fire this round: the members still to plan (u and everyone after
+   * it) are split over the foes in focus order — each target gets the cheapest set of attackers
+   * whose expected damage finishes it (a strong hitter is not spent on a 2-HP remnant a weak one
+   * can finish), leftovers join the next target; a target nobody can finish this round takes
+   * everyone left. → the foe u should attack
+   */
+  function assignTarget(eng, u, plan) {
+    const order = focusOrder(eng, plan);
+    if (!order.length) return null;
+    let free = eng.party.filter((p) => p.idx >= u.idx && p.commandable() && (p === u || !p.status.confuse));
+    if (!free.includes(u)) free.push(u);
+    const planned = (m) => (plan && plan.dmg.get(m)) || 0;
+    for (const m of order) {
+      const need = m.hp * (R.FOCUS_COVER || 1) - planned(m);
+      if (need <= 0) continue;
+      const ds = free.map((p) => eng.expectAttack(p, m));
+      const total = ds.reduce((a, b) => a + b, 0);
+      if (total < need) return m; // cannot fall this round: all hands on it
+      // cheapest covering subset (n ≤ 4 → brute force); ties → fewer attackers
+      let bestMask = 0, bestSum = Infinity, bestN = 9;
+      for (let mask = 1; mask < 1 << free.length; mask++) {
+        let sum = 0, n = 0;
+        for (let i = 0; i < free.length; i++) if (mask & (1 << i)) { sum += ds[i]; n++; }
+        if (sum >= need && (sum < bestSum - 1e-6 || (Math.abs(sum - bestSum) < 1e-6 && n < bestN))) { bestMask = mask; bestSum = sum; bestN = n; }
+      }
+      const ui = free.indexOf(u);
+      if (bestMask & (1 << ui)) return m;
+      free = free.filter((_, i) => !(bestMask & (1 << i)));
+      if (!free.length) break;
+    }
+    // everything is covered: back up the target most likely to survive
+    return order.slice().sort((a, b) => planned(a) / Math.max(1, a.hp) - planned(b) / Math.max(1, b.hp))[0];
+  }
+  /** the focus target for u's plain attack (records the expected damage in plan) */
+  function focusTarget(eng, u, plan) {
+    const t = focusOrder(eng, plan)[0] || null;
+    if (t && plan) plan.dmg.set(t, (plan.dmg.get(t) || 0) + eng.expectAttack(u, t));
+    return t;
+  }
+
   function offense(eng, u, acts, plan) {
     const foes = eng.living('mon');
     if (!foes.length) return { type: 'defend' };
@@ -229,13 +316,13 @@
     const open = foes.filter((m) => left(m) > 0);
     const pool = open.length ? open : foes;
     const value = (d, m) => { const l = left(m) || m.hp; return Math.min(d, l) * (d >= l ? 1.35 : 1); };
-    // plain attack on the best single target
-    let best = null;
-    for (const m of pool) {
-      const d = eng.expectAttack(u, m);
-      const s = value(d, m);
-      if (!best || s > best.score) best = { score: s, cmd: { type: 'attack', target: m }, hits: [[m, d]] };
-    }
+    // focus fire: single-target actions go for the focus target; another foe only when the
+    // action finishes it outright (a kill is never a wasted spread)
+    const focus = assignTarget(eng, u, plan);
+    const single = (d, m) => (m === focus ? value(d, m) : d >= left(m) && left(m) > 0 ? value(d, m) * 0.9 : -1);
+    // plain attack on the focus target
+    const d0 = eng.expectAttack(u, focus);
+    let best = { score: value(d0, focus), cmd: { type: 'attack', target: focus }, hits: [[focus, d0]] };
     const attackScore = best.score;
     const total = pool.reduce((s, m) => s + left(m), 0);
     const mpRate = u.mmp ? u.mp / u.mmp : 0;
@@ -263,9 +350,10 @@
             const n = Array.isArray(de.hits) ? (de.hits[0] + de.hits[1]) / 2 : Math.max(1, de.hits | 0 || 1);
             d = (d * n) / targets.length;
           }
-          v += value(d, t);
+          v += t0 === 'enemy' ? single(d, t) : value(d, t);
           hits.push([t, d]);
         }
+        if (v < 0) continue;
         const hpCost = o.ab.effects.reduce((mx, e) => Math.max(mx, e.hpCost || 0), 0) * u.mhp;
         const score = v - o.cost * mpWeight - hpCost * (u.hpRate() < 0.5 ? 2 : 0.5);
         if (score > best.score * 1.1) best = { score, cmd: cmdOf(o, m), hits };
@@ -316,5 +404,5 @@
     return cmds;
   }
 
-  R.BattleAI = { monster, monCommand, condOk, partyCommands, partyAction, abilityOptions, itemOptions, newPlan, pickPartyTarget, assess };
+  R.BattleAI = { monster, monCommand, condOk, partyCommands, partyAction, abilityOptions, itemOptions, newPlan, pickPartyTarget, assess, threat, focusOrder, focusTarget, assignTarget };
 })(window.RPG);

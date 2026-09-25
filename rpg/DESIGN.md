@@ -548,8 +548,30 @@ NPC `sprite` is any Gfx key (`npc:*` sheets animate; `mon:*` draws the monster s
 visible bosses). NPCs block movement. Talking to an NPC across a `counter` tile works.
 
 ### 7.2 Field behaviour (owner: field)
-* Tile movement, 6 frames per tile walking, 4 dashing (dash while holding B/Shift; optional always-dash), starts on the first frame a direction is held, chains tiles without idle frames; rendering interpolates between fixed steps.
-* Party caterpillar: the other two members follow the leader's trail (dead members still follow, like DQ ghosts are not needed).
+* Free movement on a half-tile grid: the leader's collision box is one tile (16×16) anchored at its position
+  (tile units, multiples of ½); a position is valid when every tile the box overlaps is passable (tiles, decor,
+  NPCs, chests, locked doors without the key; sailable tiles + no NPC when aboard). Each move is one **half step
+  (8px) in 8 directions**: diagonals need the whole swept rectangle free (no corner cutting), otherwise the party
+  slides along the free axis (most recently pressed first); pushing into an edge that is only half in the way
+  nudges half a tile sideways (corner assist). Speeds are per tile — 6 frames walking, 4 dashing (dash while
+  holding B/Shift; optional always-dash), sailing 6 / 3 — and a half step takes half of that, a diagonal half
+  step √2× (same px/frame in every direction). Moves start on the first frame a direction is held and chain
+  without idle frames; fractional frame lengths carry over and rendering interpolates across step boundaries
+  (Engine.alpha), so the drawn speed is constant. Facing: the held direction (diagonal: keeps the current facing
+  if it is one of the two held keys, else the most recently pressed; sliding faces the slide).
+* Logical tile (`layer.cell`, `R.Field.pos()`): per axis the tile the box last fully occupied (it changes only
+  when the box is aligned on that axis), so it is always a tile under the box. Step events, warps/stairs,
+  damage floors and `R.emit('step')` fire when it changes — exactly once per tile entered (jiggling inside a tile
+  never re-fires); a step event / warp first glides the box onto its tile. Map-edge exits fire when the box
+  would leave the map. Encounters, poison, walk-heal and 魔除け count the distance walked (half steps count
+  half; `R.Game.steps` counts whole tiles). A/talk/chests/signs use the first whole tile beyond the box's
+  leading edge (both tiles when the box straddles two), examine also the tiles under the box.
+  `R.Field.exactPos()` gives the box position.
+* Scripted party movement (`walkParty`, `ev.player.walk`, `setPlayerPos`, warps) stays on whole tiles; a
+  scripted walk from a half position first glides onto the logical tile.
+* Saves: `R.Game.pos` / `R.Game.ship` hold whole tiles only (the logical tile); positions are rounded on load.
+* Party caterpillar: the other two members follow the leader's actual path (position history) one tile apart
+  (path distance), facing their own motion (dead members still follow, like DQ ghosts are not needed).
 * Camera centred on the leader, clamped to map edges (small maps centred). Overworld does **not** wrap.
 * Doors open when stepped on (sfx `door`); locked doors (`lock`) open automatically if the key item is held,
   otherwise "かぎが かかっている。" and block.
@@ -559,9 +581,11 @@ visible bosses). NPCs block movement. Talking to an NPC across a `counter` tile 
   Battle background = tile `bbg` on the world, theme `bbg` in dungeons, or encounter table `bg`.
 * Chests (`obj:chest`), signs, NPC talk (NPC turns to face). **No hidden items**: every treasure in the game is a
   visible chest (the old examine-to-find `hidden` objects were abolished — tools/validate.js flags any left).
-* Ship: owned when `R.Game.ship` is set. Walk onto it to board; sail on `ship` tiles; stepping onto land leaves the ship there.
+* Ship: owned when `R.Game.ship` is set. Walk into it to board (the party glides onto the hull); sail with the same
+  half-step / diagonal rules on `ship` tiles; pushing toward land steps ashore (everyone together, a whole tile
+  from an aligned hull) and leaves the ship there (saved on its logical tile).
   `barrier` tiles become sailable when flag `barrier_broken` is set.
-* Menu: B opens the field menu (owner: menu → `R.Menu.open()`).
+* Menu: Y opens the field menu (owner: menu → `R.Menu.open()`); B is held to dash.
 * Teleport (ability/`wing`): list of `R.Game.visited` locations → warp to `locations[id].spawn` on the world;
   if the party owns the ship and the location has a `dock`, the ship moves to that dock.
 * Exit (ability/`escape_rope`): only in maps with `escape`.

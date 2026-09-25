@@ -7,6 +7,7 @@
 //   node tools/sim_balance.js --only party,zones,echo,bosses,crawl,campaign,loot
 //   node tools/sim_balance.js --zones w_start,d_wind1 --n 300 --boss boss_wind --seed 7
 //   options: --both (zones also at the leave level) --verbose (every group) --grind (campaign fights until the plan level)
+//            --auto (zones with the in-game オート: thrift MP; compare rounds when changing the party AI)
 //
 // Party model (per stage of DESIGN §7.4): level = the stage's level, JP earned ≈
 // 12·Lv² (the jobs checker's pacing model) spread along a sensible job plan per
@@ -36,6 +37,8 @@ const ZONE_FILTER = arg('zones', null) ? arg('zones').split(',') : null;
 const BOSS_FILTER = arg('boss', null) ? arg('boss').split(',') : null;
 const VERBOSE = argv.includes('--verbose');
 const GRIND = argv.includes('--grind'); // campaign: keep fighting until the stage's leave level
+// zones: play them with the in-game オート settings (thrift MP, items only as a last resort) instead of the free-spending AI
+const AUTO = argv.includes('--auto') ? { ai: { thrift: true, items: 'auto' } } : null;
 
 // --------------------------------------------------------------- stages
 // towns: shops available (cumulative). lv: [arrive, leave]. boss fought at bossLv.
@@ -253,7 +256,7 @@ function zoneReport(z, si, L, verbose) {
   const rows = [];
   e.groups.forEach((grp, gi) => {
     const metal = grp.mons.every(([id]) => (DB.monsters[id].flags || []).includes('metal'));
-    const r = runGroup(party, inv, grp.mons, metal ? Math.max(40, N / 2) : N);
+    const r = runGroup(party, inv, grp.mons, metal ? Math.max(40, N / 2) : N, AUTO);
     for (const k in avg) avg[k] += (r[k] * grp.w) / totalW;
     rows.push({ gi, grp, r, metal });
     if (groupWidth(grp) > 260) W(`${z} #${gi}: group ${groupLabel(grp)} is ${groupWidth(grp)} px wide`);
