@@ -116,14 +116,25 @@ async function newGame(map, spawn) {
   ok(R.State.flag('fx_town_seen'), 'onEnter flag');
   ok(!R.UI._msg || R.UI._msg.closed, 'window closed at event end');
 
-  // tap turns without moving
+  // no turn-in-place delay: a tap walks one tile at once
   await press('left', 1);
-  eq(pos(), { x: 10, y: 14, dir: 'left' }, 'tap turns only');
-  // walking timing: 8 frames per tile
-  const f0 = R.Engine.frame;
+  eq(pos(), { x: 9, y: 14, dir: 'left' }, 'tap walks one tile immediately');
+  await settle();
+  await walk('R');
+  eq(pos(), { x: 10, y: 14, dir: 'right' }, 'walked back');
+  // walking timing: the move starts on the first frame the direction is held,
+  // and consecutive tiles chain with no idle frame (WALK frames per tile)
   R.Input._set('up', true);
+  await step(1);
+  ok(!!R.Field.layer.mv && R.Field.layer.mv.dur === R.Field.WALK, 'walk starts on the first held frame (WALK=' + R.Field.WALK + ')');
   let moved = -1;
-  for (let i = 0; i < 40; i++) { await step(1); if (pos().y === 13 && moved < 0) moved = i; }
+  const arrivals = [];
+  for (let i = 0; i < 40; i++) {
+    await step(1);
+    if (pos().y === 13 && moved < 0) moved = i;
+    if (R.Field.layer.mv && R.Field.layer.mv.t === 0) arrivals.push(i);
+  }
+  ok(arrivals.length >= 1 && arrivals[0] === R.Field.WALK - 1, 'second tile starts right as the first ends (' + arrivals + ')');
   R.Input._set('up', false);
   await settle();
   ok(moved >= 0, 'walked up after holding');

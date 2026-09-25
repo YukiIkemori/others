@@ -477,6 +477,63 @@
       return U.pick(foes);
     }
 
+    // ------------------------------------------------------- リピート
+    /**
+     * リピート: every commandable member repeats their command of the previous round (prev,
+     * by party index): same ability / item / target. A target that is gone gets a sensible
+     * new one of the same side; no command, no MP, no item left or nothing to do → 戦う.
+     */
+    repeatCommands(prev) {
+      const out = [];
+      const reserved = {};
+      for (const u of this.party) if (u.commandable()) out[u.idx] = this.repeatOne(u, prev && prev[u.idx], reserved);
+      return out;
+    }
+    repeatOne(u, p, reserved) {
+      const foeOf = (t) => (t && t.side !== u.side && !t.gone ? t : null);
+      const attack = () => ({ type: 'attack', target: this.pickFoe(u, foeOf(p && p.target)) });
+      if (!p || p.type === 'attack') return attack();
+      if (p.type === 'defend') return { type: 'defend' };
+      let act = null;
+      if (p.type === 'ability') {
+        const ab = DB.abilities[p.id];
+        if (!ab || ab.kind !== 'action' || this.unusable(u, p.id)) return attack();
+        act = ab;
+      } else if (p.type === 'item') {
+        const it = DB.items[p.id];
+        if (!it || !it.use || !it.use.battle || this.count(p.id) - (reserved[p.id] || 0) <= 0) return attack();
+        if (this.noEscape && B.isEscape(it.use)) return attack();
+        act = it.use;
+      } else return attack();
+      const t = this.repeatTarget(u, act, p.target);
+      if (t === false) return attack();
+      if (p.type === 'item') reserved[p.id] = (reserved[p.id] || 0) + 1;
+      return { type: p.type, id: p.id, target: t };
+    }
+    /** target for a repeated action: the old one if still valid, else a sensible one (false = pointless) */
+    repeatTarget(u, act, t) {
+      const friends = this.friends(u);
+      const side = (u.isParty ? this.party : this.mons).filter((x) => !x.gone);
+      switch (act.target) {
+        case 'enemy': case 'group': {
+          const f = this.pickFoe(u, t && t.side !== u.side && !t.gone ? t : null);
+          return f || false;
+        }
+        case 'ally': case 'ally_other': {
+          const ok = (x) => x && x.alive && !x.gone && x.side === u.side && (act.target !== 'ally_other' || x !== u);
+          if (ok(t)) return t;
+          const n = friends.filter(ok).sort((a, b) => a.hpRate() - b.hpRate())[0];
+          return n || false;
+        }
+        case 'ally_dead': {
+          if (t && !t.alive && !t.gone && t.side === u.side) return t;
+          return side.find((x) => !x.alive) || false;
+        }
+        case 'ally_any': return t && !t.gone && t.side === u.side ? t : u;
+        default: return t || null; // all / self / random: no choice
+      }
+    }
+
     /** dual wielding right now: twoSwords AND a weapon in the shield slot (a shield / empty hand → one swing) */
     dualWield(u) { return !!(u.isParty && u.mods.twoSwords && u.st.atk2 > 0); }
 

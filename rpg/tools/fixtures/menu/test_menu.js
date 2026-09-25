@@ -167,7 +167,7 @@ eq(y.job, 'knight', 'job changed');
   const l6 = R.Menu.autoHeal();
   ok(!Object.keys(l6.abs).length && R.Game.inv.herb === herb0, 'no MP: abilities phase does nothing');
   R.Menu.autoHeal({ items: true, log: l6 });
-  ok(R.Game.inv.herb < herb0 || R.Game.inv.healing_grass < grass0, 'items phase uses heal items');
+  ok((R.Game.inv.herb || 0) < herb0 || (R.Game.inv.healing_grass || 0) < grass0, 'items phase uses heal items');
   ok(!R.Game.inv.light_drop || R.Game.inv.light_drop === 1, 'never uses the rare light drop');
   ok(R.Game.party.every((c) => c.hp === R.Rules.stats(c).hp) || (!R.Game.inv.herb && !R.Game.inv.healing_grass), 'items fill HP while they last');
 }

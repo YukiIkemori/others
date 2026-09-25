@@ -12,12 +12,12 @@
   const DB = R.DB;
   const TS = 16;
 
-  const WALK = 8, DASH = 4, SAIL = 6, SAIL_DASH = 3, NPC_STEP = 16;
-  const TURN_DELAY = 5; // frames a new direction is held before walking (a tap only turns)
+  // frames per tile. 16px / 6 = 2⅔ px per frame = exactly 8 device px on the 3× canvas.
+  const WALK = 6, DASH = 4, SAIL = 6, SAIL_DASH = 3, NPC_STEP = 16;
   const BUMP_EVERY = 20;
   const BANNER_FRAMES = 130;
   const ANIM_RATE = { sea: 16, water: 16, lava: 24, magma: 24, poison: 24, wall_torch: 8, warp_pad: 8, barrier: 8, seal: 16 };
-  const BW = 17, BH = 15; // tile buffer size in cells (covers 256x224 + one partial cell)
+  const BW = 17, BH = 15; // cells touched by the view (256x224 + one partial cell)
   const SPIN = { down: 'left', left: 'up', up: 'right', right: 'down' };
 
   let L = null; // the FieldLayer
@@ -28,7 +28,20 @@
   const leaderName = () => R.State.leader().name;
 
   // ------------------------------------------------------------ tile art
-  let buf = null, bctx = null, bufBase = '', bufPhase = -1, bufAnim = false;
+  // The map (tiles + decor) is pre-rendered into a cache canvas that is only
+  // ever patched, never rebuilt while walking:
+  //   * small maps (every town / dungeon): the whole map plus a screen-sized
+  //     border is drawn once when the map loads (behind the fade);
+  //   * big maps (the overworld): a window a few cells larger than the view
+  //     slides along; crossing its edge shifts the pixels and draws only the
+  //     newly exposed strip.
+  // Animated tiles / decor redraw just their own cells when their frame changes.
+  // (Previously the whole 17×15 buffer was redrawn at every tile crossing and
+  // every 8 frames on maps with water, which showed up as frame-time spikes.)
+  const WHOLE_MAX = 9000; // cells: cache the whole map when (w+2·PADX)·(h+2·PADY) fits
+  const PADX = 9, PADY = 8; // cells of "outside" around a whole-map cache (a centred small map shows them)
+  const MARG = 3; // sliding window margin (cells) on each side of the view
+  const TC = { cv: null, ctx: null, spare: null, uid: -1, ver: -1, x0: 0, y0: 0, w: 0, h: 0, whole: false, anim: [], danim: [], drawn: new Map() };
   const artWarned = {};
 
   function tileGfx(m, id) {
@@ -79,49 +92,177 @@
     }
     return g;
   }
-  function drawTiles(camX, camY) {
-    const ox = Math.floor(camX / TS), oy = Math.floor(camY / TS);
-    const base = M.uid + ',' + M.version + ',' + ox + ',' + oy;
-    const phase = Math.floor(R.Engine.frame / 8);
-    if (base !== bufBase || (bufAnim && phase !== bufPhase)) {
-      if (!buf) { buf = R.Gfx.makeCanvas(BW * TS, BH * TS); bctx = buf.getContext('2d'); bctx.imageSmoothingEnabled = false; }
-      bctx.fillStyle = '#000';
-      bctx.fillRect(0, 0, buf.width, buf.height);
-      let anim = false;
-      const f = R.Engine.frame;
-      for (let j = 0; j < BH; j++) {
-        for (let i = 0; i < BW; i++) {
-          const x = ox + i, y = oy + j;
-          let g = cellGfx(M, x, y);
+  const tileRate = (m, x, y) => ANIM_RATE[m.tileAt(x, y)] || 16;
+  const decorRate = (m, x, y) => { const dd = R.DB.decor[m.decorAt(x, y)]; return (dd && dd.animRate) || 12; };
+  const cellKey = (x, y) => (y + 1024) * 4096 + (x + 1024);
+  function frameOf(g, rate) { return Math.floor(R.Engine.frame / rate) % g.length; }
+
+  /** redraw a rectangle of the cache (cache-local px): tiles, then every decor that can reach it, clipped */
+  function redrawRect(px, py, pw, ph) {
+    const c = TC.ctx, m = M;
+    c.save();
+    c.beginPath(); c.rect(px, py, pw, ph); c.clip();
+    c.fillStyle = '#000';
+    c.fillRect(px, py, pw, ph);
+    const c0 = Math.floor(px / TS), c1 = Math.floor((px + pw - 1) / TS);
+    const r0 = Math.floor(py / TS), r1 = Math.floor((py + ph - 1) / TS);
+    for (let j = r0; j <= r1; j++) {
+      for (let i = c0; i <= c1; i++) {
+        const x = TC.x0 + i, y = TC.y0 + j;
+        let g = cellGfx(m, x, y);
+        if (!g) continue;
+        if (Array.isArray(g)) {
+          const f = frameOf(g, tileRate(m, x, y));
+          TC.drawn.set(cellKey(x, y), f);
+          g = g[f];
+          if (!g) continue;
+        }
+        c.drawImage(g, i * TS, j * TS);
+      }
+    }
+    // decor: tall props are drawn bottom-aligned (up to 48px) and centred (up to 48px wide),
+    // so cells up to 2 rows below and 1 column either side can reach into the rect
+    if (m.decor) {
+      for (let j = r0; j <= r1 + 2; j++) {
+        for (let i = c0 - 1; i <= c1 + 1; i++) {
+          const x = TC.x0 + i, y = TC.y0 + j;
+          let g = decorGfx(m, x, y);
           if (!g) continue;
           if (Array.isArray(g)) {
-            anim = true;
-            g = g[Math.floor(f / (ANIM_RATE[M.tileAt(x, y)] || 16)) % g.length];
+            const f = frameOf(g, decorRate(m, x, y));
+            TC.drawn.set(-cellKey(x, y), f);
+            g = g[f];
             if (!g) continue;
           }
-          bctx.drawImage(g, i * TS, j * TS);
+          c.drawImage(g, i * TS + ((TS - g.width) >> 1), j * TS + TS - g.height);
         }
       }
-      // decor layer: second pass so tall props (drawn bottom-aligned, up to 32px)
-      // overlap the row above; one extra row below the view for their tops
-      if (M.decor) {
-        for (let j = 0; j <= BH; j++) {
-          for (let i = 0; i < BW; i++) {
-            let g = decorGfx(M, ox + i, oy + j);
-            if (!g) continue;
-            if (Array.isArray(g)) {
-              anim = true;
-              const dd = R.DB.decor[M.decorAt(ox + i, oy + j)];
-              g = g[Math.floor(f / ((dd && dd.animRate) || 12)) % g.length];
-              if (!g) continue;
-            }
-            bctx.drawImage(g, i * TS + ((TS - g.width) >> 1), j * TS + TS - g.height);
-          }
-        }
-      }
-      bufBase = base; bufPhase = phase; bufAnim = anim;
     }
-    R.Gfx.draw(buf, ox * TS - camX, oy * TS - camY);
+    c.restore();
+  }
+  /** (re)collect the animated cells of the cached area */
+  function scanAnim() {
+    const m = M;
+    TC.anim = []; TC.danim = [];
+    for (let j = 0; j < TC.h; j++) {
+      for (let i = 0; i < TC.w; i++) {
+        const x = TC.x0 + i, y = TC.y0 + j;
+        const g = cellGfx(m, x, y);
+        if (Array.isArray(g)) {
+          let plain = true; // no decor can overlap this cell: a plain blit is enough
+          if (m.decor) for (let jj = y; jj <= y + 2 && plain; jj++) for (let ii = x - 1; ii <= x + 1; ii++) if (m.decorAt(ii, jj)) { plain = false; break; }
+          TC.anim.push({ x, y, plain });
+        }
+        const dg = m.decor && decorGfx(m, x, y);
+        if (Array.isArray(dg)) TC.danim.push({ x, y });
+      }
+    }
+  }
+  function tcCanvas(w, h) {
+    const pw = w * TS, ph = h * TS;
+    if (!TC.cv || TC.cv.width !== pw || TC.cv.height !== ph) {
+      TC.cv = R.Gfx.makeCanvas(pw, ph);
+      TC.ctx = TC.cv.getContext('2d');
+      TC.ctx.imageSmoothingEnabled = false;
+      TC.spare = null;
+    }
+  }
+  function tcRebuild(ox, oy) {
+    TC.uid = M.uid; TC.ver = M.version;
+    const W = M.w + 2 * PADX, H = M.h + 2 * PADY;
+    TC.whole = W * H <= WHOLE_MAX;
+    if (TC.whole) { TC.x0 = -PADX; TC.y0 = -PADY; TC.w = W; TC.h = H; }
+    else { TC.w = BW + 2 * MARG; TC.h = BH + 2 * MARG; TC.x0 = ox - MARG; TC.y0 = oy - MARG; }
+    tcCanvas(TC.w, TC.h);
+    TC.drawn.clear();
+    redrawRect(0, 0, TC.w * TS, TC.h * TS);
+    scanAnim();
+  }
+  /** slide the window so the view (ox,oy)+(BW,BH) sits in its middle, redrawing only exposed strips */
+  function tcSlide(ox, oy) {
+    const nx0 = ox - MARG, ny0 = oy - MARG;
+    const dx = TC.x0 - nx0, dy = TC.y0 - ny0; // old origin in new cache cells
+    if (Math.abs(dx) >= TC.w || Math.abs(dy) >= TC.h) { tcRebuild(ox, oy); return; }
+    if (!TC.spare) {
+      TC.spare = R.Gfx.makeCanvas(TC.cv.width, TC.cv.height);
+      TC.spareCtx = TC.spare.getContext('2d');
+      TC.spareCtx.imageSmoothingEnabled = false;
+    }
+    const s = TC.spareCtx;
+    s.fillStyle = '#000'; s.fillRect(0, 0, TC.spare.width, TC.spare.height);
+    s.drawImage(TC.cv, dx * TS, dy * TS);
+    [TC.cv, TC.spare] = [TC.spare, TC.cv];
+    [TC.ctx, TC.spareCtx] = [TC.spareCtx, TC.ctx];
+    TC.x0 = nx0; TC.y0 = ny0;
+    const W = TC.w * TS, H = TC.h * TS;
+    if (dx > 0) redrawRect(0, 0, dx * TS, H);
+    if (dx < 0) redrawRect(W + dx * TS, 0, -dx * TS, H);
+    if (dy > 0) redrawRect(0, 0, W, dy * TS);
+    if (dy < 0) redrawRect(0, H + dy * TS, W, -dy * TS);
+    // forget frames drawn for cells that left the window
+    for (const k of TC.drawn.keys()) {
+      const a = Math.abs(k), x = (a % 4096) - 1024, y = Math.floor(a / 4096) - 1024;
+      if (x < TC.x0 - 1 || y < TC.y0 || x > TC.x0 + TC.w || y > TC.y0 + TC.h + 1) TC.drawn.delete(k);
+    }
+    scanAnim();
+  }
+  /** redraw the animated cells near the view whose frame changed */
+  function tcAnimate(ox, oy) {
+    const m = M, c = TC.ctx;
+    const vx0 = ox - 1, vy0 = oy - 1, vx1 = ox + BW, vy1 = oy + BH + 2;
+    for (const a of TC.anim) {
+      if (a.x < vx0 || a.y < vy0 || a.x > vx1 || a.y > vy1) continue;
+      const g = cellGfx(m, a.x, a.y);
+      if (!Array.isArray(g)) continue;
+      const f = frameOf(g, tileRate(m, a.x, a.y)), k = cellKey(a.x, a.y);
+      if (TC.drawn.get(k) === f) continue;
+      const lx = (a.x - TC.x0) * TS, ly = (a.y - TC.y0) * TS;
+      if (a.plain) {
+        c.fillStyle = '#000'; c.fillRect(lx, ly, TS, TS);
+        if (g[f]) c.drawImage(g[f], lx, ly);
+        TC.drawn.set(k, f);
+      } else redrawRect(lx, ly, TS, TS);
+    }
+    for (const a of TC.danim) {
+      if (a.x < vx0 - 1 || a.y < vy0 || a.x > vx1 + 1 || a.y > vy1 + 2) continue;
+      const g = decorGfx(m, a.x, a.y);
+      if (!Array.isArray(g)) continue;
+      const f = frameOf(g, decorRate(m, a.x, a.y));
+      if (TC.drawn.get(-cellKey(a.x, a.y)) === f) continue;
+      const im = g[f] || g[0];
+      const w = (im && im.width) || TS, h = (im && im.height) || TS;
+      redrawRect((a.x - TC.x0) * TS + ((TS - w) >> 1), (a.y - TC.y0) * TS + TS - h, w, h);
+    }
+  }
+  function drawTiles(camX, camY) {
+    const ox = Math.floor(camX / TS), oy = Math.floor(camY / TS);
+    if (TC.uid !== M.uid || !TC.cv) tcRebuild(ox, oy);
+    else if (TC.ver !== M.version) {
+      // doors opened on this visit patch single cells; anything else redraws everything
+      const dirty = (M.dirtyCells || []).filter((d) => d.v > TC.ver && d.v <= M.version);
+      if (dirty.length === M.version - TC.ver) {
+        TC.ver = M.version;
+        for (const d of dirty) {
+          const lx = (d.x - TC.x0) * TS, ly = (d.y - TC.y0) * TS;
+          if (lx >= 0 && ly >= 0 && lx < TC.w * TS && ly < TC.h * TS) redrawRect(lx, ly, TS, TS);
+        }
+      } else tcRebuild(ox, oy);
+    }
+    if (!TC.whole && (ox < TC.x0 || oy < TC.y0 || ox + BW > TC.x0 + TC.w || oy + BH > TC.y0 + TC.h)) tcSlide(ox, oy);
+    tcAnimate(ox, oy);
+    blit(TC.cv, TC.x0 * TS - camX, TC.y0 * TS - camY);
+  }
+  /** draw at a sub-pixel position: logical px quantised to device px (the canvas is R.SCALE×) */
+  const q = (v) => Math.round(v * R.SCALE) / R.SCALE;
+  function blit(img, x, y, o) {
+    if (!img) return;
+    const c = R.Gfx.ctx;
+    x = q(x); y = q(y);
+    if (!o) { c.drawImage(img, x, y); return; }
+    const a = c.globalAlpha;
+    if (o.alpha != null) c.globalAlpha = a * o.alpha;
+    if (o.w) c.drawImage(img, x, y, o.w, o.h); else c.drawImage(img, x, y);
+    c.globalAlpha = a;
   }
   /** pick a frame from a sprite sheet {down:[..],..} / array / canvas */
   function sheetFrame(g, dir, f) {
@@ -142,8 +283,7 @@
       this.mv = null; // party move {t,dur,from,kind,scripted,resolve}
       this.arrived = null; // kind of the move that just completed (processed in update)
       this.locks = 0; // >0 while warping / processing a step / in battle
-      this.walking = false; // walked last frame (no turn delay)
-      this.turnT = 0;
+      this.walking = false; // a step is chained (no idle frame between tiles)
       this.bumpT = 0;
       this.clock = 0; // walk animation clock
       this.lift = 0; // teleport lift (px, negative = up)
@@ -159,7 +299,7 @@
     get lead() { return this.P[0]; }
     place(x, y, dir) {
       for (const p of this.P) { p.x = x; p.y = y; if (dir) p.dir = dir; }
-      this.mv = null; this.arrived = null; this.walking = false; this.turnT = 0;
+      this.mv = null; this.arrived = null; this.walking = false;
     }
     savePos() {
       const p = this.P[0];
@@ -187,11 +327,14 @@
       const party = R.Game.party, lead = R.State.leader();
       return [lead].concat(party.filter((c) => c !== lead)).slice(0, 3);
     }
+    /** drawn position (px) of party member i. Between fixed steps the move is
+     *  advanced by Engine.alpha so motion follows real time on any refresh rate;
+     *  values are quantised to device pixels (1/3 px), never to whole pixels. */
     renderPos(i) {
       const p = this.P[i], mv = this.mv;
       if (!mv) return { x: p.x * TS, y: p.y * TS };
-      const f = mv.from[i], k = mv.t / mv.dur;
-      return { x: Math.round((f.x + (p.x - f.x) * k) * TS), y: Math.round((f.y + (p.y - f.y) * k) * TS) };
+      const f = mv.from[i], k = Math.min(1, (mv.t + (R.Engine.alpha || 0)) / mv.dur);
+      return { x: q((f.x + (p.x - f.x) * k) * TS), y: q((f.y + (p.y - f.y) * k) * TS) };
     }
     camera() {
       const lp = this.renderPos(0);
@@ -199,7 +342,13 @@
       const mw = M.w * TS, mh = M.h * TS;
       cx = mw <= R.W ? Math.floor((mw - R.W) / 2) : U.clamp(cx, 0, mw - R.W);
       cy = mh <= R.H ? Math.floor((mh - R.H) / 2) : U.clamp(cy, 0, mh - R.H);
-      return { x: cx, y: cy };
+      return { x: q(cx), y: q(cy) };
+    }
+    /** the engine renders every display refresh while something glides */
+    wantsFrame() {
+      if (this.mv || this.liftAnim) return true;
+      if (M) for (const n of M.npcs) if (n.mv && n.present) return true;
+      return false;
     }
     runLocked(fn) {
       this.locks++;
@@ -213,7 +362,8 @@
     // ------------------------------------------------------------ movement
     startMove(d, nx, ny, kind, opts) {
       const o = opts || {};
-      const dash = !!R.Settings.alwaysDash !== !!R.Input.down('dash');
+      // hold B (or Shift) while moving to dash; "いつでもダッシュ" inverts it
+      const dash = !!R.Settings.alwaysDash !== !!(R.Input.down('b') || R.Input.down('dash'));
       const dur = o.dur || (kind === 'sail' ? (dash ? SAIL_DASH : SAIL) : (dash ? DASH : WALK));
       const from = this.P.map((p) => ({ x: p.x, y: p.y }));
       if (kind === 'sail') {
@@ -415,22 +565,18 @@
         if (task) { this.runLocked(task); return; }
       }
       const In = R.Input;
-      if (In.pressed('b')) { this.walking = false; this.openMenu(); return; }
+      // Y opens the menu (B is held for dashing, so it no longer does)
+      if (In.pressed('y')) { this.walking = false; this.openMenu(); return; }
       if (In.pressed('a')) { this.walking = false; this.examine(); return; }
       const d = In.dir();
-      if (!d) { this.walking = false; this.turnT = 0; this.bumpT = 0; this.heldBlock = null; return; }
+      if (!d) { this.walking = false; this.bumpT = 0; this.heldBlock = null; return; }
       if (d === this.heldBlock) return;
       this.heldBlock = null;
-      const p = this.P[0];
-      if (!this.walking && d !== p.dir) {
-        p.dir = d;
-        if (R.Game.onShip && R.Game.ship) R.Game.ship.dir = d;
-        this.turnT = TURN_DELAY;
-        this.savePos();
-        return;
-      }
-      if (this.turnT > 0) { this.turnT--; return; }
+      // walk on the very first frame a direction is held (no turn-in-place delay);
+      // blocked directions just turn (so facing an NPC / shelf is still a tap)
+      const turned = this.P[0].dir !== d;
       this.walking = this.tryMove(d);
+      if (!this.walking && turned && !this.locks) this.savePos();
     }
     tick() {
       const g = R.Game;
@@ -524,7 +670,7 @@
         for (const c of M.chests) {
           if (!c.present || !this.inView(cam, c.x * TS, c.y * TS, 16)) continue;
           const img = Array.isArray(g) ? g[R.Game.chests[c.id] ? 1 : 0] || g[0] : g;
-          G.draw(img, c.x * TS - cam.x, c.y * TS - cam.y);
+          blit(img, c.x * TS - cam.x, c.y * TS - cam.y);
         }
       }
       if (M.hidden.length && this.fieldMods().treasureSense) {
@@ -533,7 +679,7 @@
         for (const h of M.hidden) {
           if (R.Game.chests[h.id] || !R.State.check(h.cond) || !this.inView(cam, h.x * TS, h.y * TS, 16)) continue;
           const img = Array.isArray(g) ? g[f % g.length] : g;
-          G.draw(img, h.x * TS - cam.x, h.y * TS - cam.y);
+          blit(img, h.x * TS - cam.x, h.y * TS - cam.y);
         }
       }
     }
@@ -545,9 +691,9 @@
         if (!n.present) continue;
         let x = n.x * TS, y = n.y * TS;
         if (n.mv) {
-          const k = n.mv.t / n.mv.dur;
-          x = Math.round((n.mv.fx + (n.x - n.mv.fx) * k) * TS);
-          y = Math.round((n.mv.fy + (n.y - n.mv.fy) * k) * TS);
+          const k = Math.min(1, (n.mv.t + (R.Engine.alpha || 0)) / n.mv.dur);
+          x = q((n.mv.fx + (n.x - n.mv.fx) * k) * TS);
+          y = q((n.mv.fy + (n.y - n.mv.fy) * k) * TS);
         }
         if (!this.inView(cam, x, y, 48)) continue;
         list.push({ y, pri: 1, x, npc: n });
@@ -579,19 +725,19 @@
             const mon = n.sprite.startsWith('mon:') || n.sprite.startsWith('fieldmon:');
             const k = mon && img.height > 40 ? 0.5 : 1;
             const w = Math.round(img.width * k), h = Math.round(img.height * k);
-            if (k === 1) G.draw(img, sx + 8 - (img.width >> 1), sy + TS - img.height);
-            else G.draw(img, sx + 8 - (w >> 1), sy + TS - h + 1, { w, h });
+            if (k === 1) blit(img, sx + 8 - (img.width >> 1), sy + TS - img.height);
+            else blit(img, sx + 8 - (w >> 1), sy + TS - h + 1, { w, h });
           }
         } else if (s.ship) {
           const img = sheetFrame(G.get('obj:ship'), s.ship.dir || 'down', af);
           if (img) {
             const bob = g.onShip && Math.floor(R.Engine.frame / 24) % 2 ? 1 : 0;
-            G.draw(img, sx + 8 - (img.width >> 1), sy + TS - img.height + Math.min(4, (img.height - TS) >> 2) + bob);
+            blit(img, sx + 8 - (img.width >> 1), sy + TS - img.height + Math.min(4, (img.height - TS) >> 2) + bob);
           }
         } else {
           const c = s.member;
           const img = sheetFrame(G.get('party:' + c.id + ':' + c.job), this.P[s.i].dir, pf);
-          if (img) G.draw(img, sx + 8 - (img.width >> 1), sy + TS - img.height + Math.round(this.lift), c.hp > 0 ? null : { alpha: 0.5 });
+          if (img) blit(img, sx + 8 - (img.width >> 1), sy + TS - img.height + Math.round(this.lift), c.hp > 0 ? null : { alpha: 0.5 });
         }
       }
     }
@@ -705,6 +851,7 @@
     const ok = (tx, ty) => M.inBounds(tx, ty) && M.walkable(tx, ty) && !isDoor(M.tileAt(tx, ty)) && !M.tile(tx, ty).warpIcon;
     M.opened.set(i, ok(bx, by) ? M.tileAt(bx, by) : ok(fx, fy) ? M.tileAt(fx, fy) : 'floor');
     M.version++;
+    (M.dirtyCells = M.dirtyCells || []).push({ v: M.version, x, y }); // the renderer patches just this cell
   }
   function seq(tasks) {
     return async () => { for (const t of tasks) await t(); };

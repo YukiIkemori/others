@@ -159,6 +159,7 @@
         await this.play(this.eng.begin());
         while (!this.eng.result) {
           const cmds = this.eng.round === 0 && this.eng.surprise === 'ambush' ? null : await this.commandPhase();
+          if (cmds && !cmds.flee && cmds.some(Boolean)) this.lastCmds = cmds.slice(); // for リピート
           this.panel = null;
           this.acting = null;
           await this.play(this.eng.playRound(cmds));
@@ -355,24 +356,33 @@
       this.clearMsg();
       for (;;) {
         const r = await this.partyMenu();
-        if (r === 1) {
+        if (r === 'auto') {
           this.auto = true; this.autoCancel = false; R.Battle.autoCarry = true;
           return R.BattleAI.partyCommands(eng, AUTO_OPTS);
         }
-        if (r === 2) return { flee: true };
+        if (r === 'repeat') return eng.repeatCommands(this.lastCmds); // one round; the menu comes back next round
+        if (r === 'flee') return { flee: true };
         const cmds = await this.memberCommands();
         if (cmds) return cmds;
       }
     }
     async partyMenu() {
+      // 戦う リピート / オート 逃げる
+      const ids = ['fight', 'repeat', 'auto', 'flee'];
+      const canRepeat = !!(this.lastCmds && this.lastCmds.some(Boolean));
       const list = new R.UI.List({
-        x: BOX.x, y: BOX.y, w: 84, h: BOX.h, rows: 3, lineH: 16, padY: 10, cancel: false,
-        items: ['戦う', 'オート', { label: '逃げる', disabled: this.eng.noEscape }], index: this.partyIdx,
+        x: BOX.x, y: BOX.y, w: 128, h: BOX.h, cols: 2, rows: 2, lineH: 16, padY: 10, cancel: false,
+        items: ['戦う', { label: 'リピート', disabled: !canRepeat }, 'オート', { label: '逃げる', disabled: this.eng.noEscape }],
+        index: this.partyIdx,
       });
-      this.panel = { left: list, enemies: true };
+      if (list.isDisabled(list.index)) list.index = 0;
+      this.panel = {
+        left: list, enemies: true,
+        help: () => (ids[list.index] === 'repeat' ? (canRepeat ? '前のターンと同じ行動をくり返す。' : 'くり返す行動がまだない。') : ''),
+      };
       const r = await this.ask(() => (list.update() === 'select' ? list.index : undefined));
-      this.partyIdx = r === 1 ? 1 : 0;
-      return r;
+      this.partyIdx = r === 1 || r === 2 ? r : 0;
+      return ids[r];
     }
     async memberCommands() {
       const order = this.eng.party.filter((p) => p.commandable());
