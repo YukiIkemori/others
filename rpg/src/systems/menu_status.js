@@ -81,7 +81,7 @@
     const K = Menu.kit;
 
     // ============================================================ 強さ
-    const PAGES = ['能力', '装備・アビリティ', '耐性・特性'];
+    const PAGES = ['能力', '装備・アビリティ', '耐性・特性', 'ジョブ'];
     class StatusScreen extends K.Screen {
       constructor(o) {
         super();
@@ -115,13 +115,29 @@
         const stt = K.statusText(c);
         if (stt) G().text(stt.text, 42 + G().textWidth(c.name) + 8, 10, { color: stt.color });
         G().text('Lv ' + c.level, 150, 10);
-        G().text(K.jobName(c.job) + ' Lv' + R.Rules.jobLevel(c, c.job), 42, 24, { color: G().C.cyan });
+        G().text(K.jobLabel(c, c.job) + ' Lv' + R.Rules.jobLevel(c, c.job), 42, 24, { color: K.jobColor(c, c.job, G().C.cyan) });
         G().text('JP ' + ((c.jobs[c.job] && c.jobs[c.job].jp) || 0), 240, 24, { align: 'right', color: G().C.yellow });
         G().text((this.page + 1) + '/' + PAGES.length, 240, 10, { align: 'right', color: G().C.gray });
         K.lrArrows(8, 248, 18, true);
         if (this.page === 0) this.page1(c, st);
         else if (this.page === 1) this.page2(c, st);
-        else this.page3(c, st);
+        else if (this.page === 2) this.page3(c, st);
+        else this.page4(c);
+      }
+      /** job levels of every job this member can take (★ gold = mastered) */
+      page4(c) {
+        const jobs = R.Rules.unlockedJobs(c);
+        const mast = jobs.filter((j) => R.Rules.isMastered(c, j)).length;
+        G().window(4, 46, 248, 174, { title: 'ジョブ' });
+        const half = Math.max(8, Math.ceil(jobs.length / 2));
+        jobs.slice(0, 22).forEach((j, i) => {
+          const col = Math.floor(i / half), row = i % half;
+          const x = 14 + col * 120, y = 55 + row * 14;
+          const on = j === c.job;
+          K.fitText(K.jobLabel(c, j), x, y, 72, { color: K.jobColor(c, j, on ? G().C.cyan : G().C.white) });
+          G().text('Lv' + R.Rules.jobLevel(c, j), x + 108, y, { align: 'right', color: K.jobColor(c, j, G().C.white) });
+        });
+        G().text('マスター ★' + mast, 242, 205, { align: 'right', color: mast ? G().C.gold : G().C.gray });
       }
       page1(c, st) {
         G().window(4, 46, 122, 128, { title: '基本' });
@@ -151,7 +167,7 @@
         const cmd = (j) => (DB.jobs[j] && DB.jobs[j].command) || '';
         const AL = [
           ['コマンド', cmd(c.job), K.KIND_COLORS.action],
-          ['サブ', c.set.sub ? cmd(c.set.sub) + '（' + K.jobName(c.set.sub) + '）' : '', K.KIND_COLORS.action],
+          ['サブ', c.set.sub ? cmd(c.set.sub) + '（' + K.jobLabel(c, c.set.sub) + '）' : '', K.KIND_COLORS.action],
           ['リアクション', c.set.reaction ? K.abName(c.set.reaction) : '', K.KIND_COLORS.reaction],
           ['サポート', c.set.support ? K.abName(c.set.support) : '', K.KIND_COLORS.support],
           ['フィールド', c.set.field ? K.abName(c.set.field) : '', K.KIND_COLORS.field],

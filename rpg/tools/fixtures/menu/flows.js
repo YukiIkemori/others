@@ -56,10 +56,37 @@ async function main() {
   T.herb = async () => {
     await setup('fx_world', 'start');
     const before = await ev(`({n:R.Game.inv.herb, hp:R.Game.party[0].hp})`);
-    await ev(`(R.Menu.open(), 1)`); await keys('w300,a,w200,a,w200,a,w200,a,w300,a,w300,b,w200,b,w200,b,w300');
+    // 道具 → 薬草 → 使う → ユウキ: the picker stays open on him (repeat use)
+    await ev(`(R.Game.party[0].hp = 1, R.Menu.open(), 1)`); await keys('w300,a,w200,a,w200,a,w200,a,w300');
+    const mid = await ev(`({n:R.Game.inv.herb, hp:R.Game.party[0].hp, top:R.Engine.top().constructor.name})`);
+    check('herb consumed', mid.n === before.n - 1, [before, mid]);
+    check('herb healed', mid.hp > 1, [before, mid]);
+    check('picker stays open after use', mid.top === 'PickerLayer', mid);
+    await shot('herb_repeat');
+    await keys('a,w300');
     const after = await ev(`({n:R.Game.inv.herb, hp:R.Game.party[0].hp})`);
-    check('herb consumed', after.n === before.n - 1, [before, after]);
-    check('herb healed', after.hp > before.hp, [before, after]);
+    check('A again uses a second herb on the same member', after.n === before.n - 2 && after.hp > mid.hp, [mid, after]);
+    await keys('b,w200');
+    check('B returns to the item list on the herb', await ev(`R.Engine.top().constructor.name === 'ItemScreen' && R.Engine.top().cur && R.Engine.top().cur.id === 'herb'`));
+    await keys('b,w200,b,w300');
+    check('menu closed', await onlyField());
+  };
+  T.fullheal = async () => {
+    await setup('fx_world', 'start');
+    const inv0 = await ev(`JSON.stringify(R.Game.inv)`);
+    // main menu: 道具 アビリティ / 満タン … → down,a
+    await ev(`(R.Menu.open(), 1)`); await keys('w300,down,a,w400');
+    await until(`R.Engine.top().constructor.name === 'SummaryLayer' || (R.UI._msg && !R.UI._msg.closed)`, 5000);
+    const asked = await ev(`R.Engine.top().constructor.name === 'ChoiceLayer'`);
+    if (asked) { await shot('fullheal_ask'); await keys('down,a,w400'); } // いいえ: abilities only
+    await until(`R.Engine.top().constructor.name === 'SummaryLayer'`, 5000);
+    await shot('fullheal_summary');
+    const st = await ev(`({poison: !!R.Game.party[1].status.poison, inv: JSON.stringify(R.Game.inv), hp: R.Game.party.map(c=>c.hp+'/'+R.Rules.stats(c).hp)})`);
+    check('満タン cured poison', !st.poison, st);
+    check('満タン used no items after いいえ', st.inv === inv0, st);
+    await keys('a,w300');
+    await shot('fullheal_after');
+    await keys('b,w300');
     check('menu closed', await onlyField());
   };
   T.wing = async () => {

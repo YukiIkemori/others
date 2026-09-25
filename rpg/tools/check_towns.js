@@ -3,7 +3,7 @@
 // (src/maps/town*.js, src/events/story*.js, src/data/objectives.js).
 //
 //   node tools/check_towns.js                 static checks (exit 1 on errors)
-//   node tools/check_towns.js --png DIR       also render every town map with the
+//   node tools/check_towns.js --png DIR       also render every town map (tiles + decor layer) with the
 //                                             real tile art + NPC/chest sprites
 //   node tools/check_towns.js --png DIR --flags a,b --items x,y --only regnas_town
 //                                             render with story flags / key items set

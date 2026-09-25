@@ -7,6 +7,7 @@
 //   exp: (EXP a party ≈1.5 levels above needs for its next level) / 14.4, × a smooth factor fitted
 //        so that natural play (≈9 fights per region, 5–9 per dungeon floor, bosses) meets §7.4's levels
 //   jp  5+1.15L (≈ 12·Lv² JP earned at Lv)      gold 6+8L+0.3L² (≈ 50–100 % of each town's gear)
+//   early game: exp ×0.72 and gold ×0.6 at Lv1, eased back to ×1 by Lv8 (exp) / Lv9 (gold)
 //   size: small hp×0.72 atk×0.9 rewards×0.75 (jp×0.9) · large hp×2 atk×1.15 def×1.1 rewards×1.8 (jp×1.6)
 // Rare drops use the band pools of items.js (R.ITEM_RARE); the metal and gold
 // jellies and the mimic line are the main rare targets.

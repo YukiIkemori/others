@@ -156,7 +156,7 @@
           K.drawSprite(c, 26, 38, { frame: Math.floor(R.Engine.frame / 20) });
           G().text(c.name, 42, 11, { color: K.condColor(c) });
           G().text('Lv' + c.level, 42, 25);
-          G().text(K.jobName(c.job), 150, 11, { color: G().C.cyan });
+          G().text(K.jobLabel(c, c.job), 150, 11, { color: K.jobColor(c, c.job, G().C.cyan) });
           K.lrArrows(10, 246, 20, true);
         }
         // slots

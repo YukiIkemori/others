@@ -83,6 +83,10 @@
       const k = K.iconKey(it);
       if (k && G().has('icon:' + k)) G().draw(G().get('icon:' + k), x, y);
     },
+    /** job name with a leading ★ once c has mastered it (every job list uses this) */
+    jobLabel(c, job) { return (c && R.Rules.isMastered(c, job) ? '★' : '') + jobName(job); },
+    /** gold for a mastered job, else `base` */
+    jobColor(c, job, base) { return c && R.Rules.isMastered(c, job) ? G().C.gold : base || G().C.white; },
     /** item name with ★ for rare ones */
     itemLabel(id) { const it = DB.items[id]; return it ? it.name + (it.rare ? '★' : '') : '？？？'; },
     /** name colour by condition (DQ: orange when low, red when down) */
@@ -842,7 +846,7 @@
       const col = K.condColor(c);
       G().text(c.name, x + 10, yy + 6, { color: col });
       G().text('Lv' + c.level, x + w - 9, yy + 6, { align: 'right', color: col });
-      K.fitText(jobName(c.job), x + 10, yy + 19, w - 20, { color: G().C.cyan });
+      K.fitText(K.jobLabel(c, c.job), x + 10, yy + 19, w - 20, { color: K.jobColor(c, c.job, G().C.cyan) });
       G().text('H', x + 10, yy + 32, { color: col });
       G().text(String(c.hp), x + 45, yy + 32, { align: 'right', color: col });
       G().text('M', x + 51, yy + 32, { color: col });

@@ -77,6 +77,15 @@ async function newGame(map, spawn) {
 
 (async function main() {
   // --------------------------------------------------------------- compile
+  console.log('settings');
+  {
+    const old = { alwaysDash: true, msgSpeed: 1 };
+    ok(R.Save.migrateSettings(old), 'old settings migrate');
+    eq([old.alwaysDash, old.msgSpeed, old.settingsVer], [false, 1, R.DEFAULT_SETTINGS.settingsVer], 'v1 settings: always-dash reset to the new default (off)');
+    const cur = { alwaysDash: true, settingsVer: R.DEFAULT_SETTINGS.settingsVer };
+    ok(!R.Save.migrateSettings(cur) && cur.alwaysDash === true, 'current settings keep the player\'s choice');
+    eq(R.DEFAULT_SETTINGS.alwaysDash, false, 'always-dash off by default');
+  }
   console.log('compile');
   const town = R.FieldMap.compile('fx_town');
   eq([town.w, town.h], [22, 16], 'town size');
@@ -155,9 +164,25 @@ async function newGame(map, spawn) {
   await hold('up', 1);
   let fr = 0;
   while (lay.mv && fr < 20) { await step(1); fr++; }
-  ok(fr <= 4, 'dash = 4 frames/tile (' + fr + ')');
+  ok(fr <= R.Field.DASH, 'dash = ' + R.Field.DASH + ' frames/tile (' + fr + ')');
+  await settle();
+  // いつでもダッシュ + holding B = walk
+  R.Input._set('b', true);
+  await hold('down', 1);
+  ok(lay.mv && lay.mv.dur === R.Field.WALK, 'always-dash: holding B walks');
+  R.Input._set('b', false);
   R.Settings.alwaysDash = false;
   await settle();
+  await walk('U');
+  // default: hold B (or Shift) while moving = dash
+  for (const btn of ['b', 'dash']) {
+    R.Input._set(btn, true);
+    await hold('up', 1);
+    ok(lay.mv && lay.mv.dur === R.Field.DASH, 'hold ' + btn + ' + move = dash');
+    R.Input._set(btn, false);
+    await settle();
+    await walk('D');
+  }
   // go to shop door (5,8): from (10,11) → up to 9, left to 5, up to 8
   await walk('UU'); // (10,9)
   eq(pos(), { x: 10, y: 9, dir: 'up' }, 'on road');
@@ -564,11 +589,13 @@ async function newGame(map, spawn) {
   await settle();
   R.UI.say = origSay;
   eq(lockMsgs, 1, 'locked message once while held');
-  // menu: B calls R.Menu.open, no field lock held while open
+  // menu: Y calls R.Menu.open, no field lock held while open
   let menuOpen = null;
   R.Menu = { open() { return new Promise((res) => { menuOpen = res; }); } };
   await press('b');
-  ok(!!menuOpen, 'B opens R.Menu');
+  ok(!menuOpen, 'B no longer opens the menu on the field');
+  await press('y');
+  ok(!!menuOpen, 'Y opens R.Menu');
   ok(!R.Field.isBusy(), 'field not busy while menu open');
   menuOpen(); await step(2);
   delete R.Menu;

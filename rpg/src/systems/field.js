@@ -14,6 +14,7 @@
 
   // frames per tile. 16px / 6 = 2⅔ px per frame = exactly 8 device px on the 3× canvas.
   const WALK = 6, DASH = 4, SAIL = 6, SAIL_DASH = 3, NPC_STEP = 16;
+  const SCRIPT_WALK = 8; // cutscene party walks keep their original pacing
   const BUMP_EVERY = 20;
   const BANNER_FRAMES = 130;
   const ANIM_RATE = { sea: 16, water: 16, lava: 24, magma: 24, poison: 24, wall_torch: 8, warp_pad: 8, barrier: 8, seal: 16 };
@@ -250,7 +251,12 @@
     }
     if (!TC.whole && (ox < TC.x0 || oy < TC.y0 || ox + BW > TC.x0 + TC.w || oy + BH > TC.y0 + TC.h)) tcSlide(ox, oy);
     tcAnimate(ox, oy);
-    blit(TC.cv, TC.x0 * TS - camX, TC.y0 * TS - camY);
+    // copy just the visible part of the cache (whole-pixel source rect, sub-pixel destination)
+    const ix = Math.floor(camX), iy = Math.floor(camY);
+    const sx = ix - TC.x0 * TS, sy = iy - TC.y0 * TS;
+    const w = Math.min(R.W + 1, TC.cv.width - sx), h = Math.min(R.H + 1, TC.cv.height - sy);
+    if (sx < 0 || sy < 0 || w <= 0 || h <= 0) { blit(TC.cv, TC.x0 * TS - camX, TC.y0 * TS - camY); return; }
+    R.Gfx.ctx.drawImage(TC.cv, sx, sy, w, h, q(ix - camX), q(iy - camY), w, h);
   }
   /** draw at a sub-pixel position: logical px quantised to device px (the canvas is R.SCALE×) */
   const q = (v) => Math.round(v * R.SCALE) / R.SCALE;
@@ -426,7 +432,7 @@
     stepScripted(d, dur) {
       return new Promise((res) => {
         const p = this.P[0];
-        this.startMove(d, p.x + U.DX[d], p.y + U.DY[d], R.Game.onShip ? 'sail' : 'walk', { scripted: true, resolve: res, dur: dur || WALK });
+        this.startMove(d, p.x + U.DX[d], p.y + U.DY[d], R.Game.onShip ? 'sail' : 'walk', { scripted: true, resolve: res, dur: dur || SCRIPT_WALK });
       });
     }
 

@@ -1025,5 +1025,43 @@ sec('oncePerBattle / ally_other / mpCost');
   DB.jobs.tb_caster.abilities.splice(DB.jobs.tb_caster.abilities.indexOf('tb_once'), 2);
 }
 
+sec('repeat');
+{
+  const e = mk({ mons: ['tb_goblin', 'tb_goblin', 'tb_slime'], inv: { tb_potion: 1 } });
+  run(e.begin());
+  const [y, n, m] = e.party;
+  for (const u of e.party) u.mp = 99;
+  y.hp = 5;
+  const prev = [];
+  prev[0] = { type: 'attack', target: Mo(e, 0) };
+  prev[1] = { type: 'ability', id: 'tb_heal', target: y };
+  prev[2] = { type: 'ability', id: 'tb_fire', target: Mo(e, 2) };
+  let r = e.repeatCommands(prev);
+  ok(r[0].type === 'attack' && r[0].target === Mo(e, 0), 'repeat: same attack target');
+  ok(r[1].id === 'tb_heal' && r[1].target === y, 'repeat: same heal target');
+  ok(r[2].id === 'tb_fire' && r[2].target === Mo(e, 2), 'repeat: same spell target');
+  // target gone → same side / species
+  Mo(e, 0).hp = 0; Mo(e, 2).hp = 0;
+  r = e.repeatCommands(prev);
+  ok(r[0].type === 'attack' && r[0].target === Mo(e, 1), 'repeat: dead target → the same species');
+  ok(r[2].id === 'tb_fire' && r[2].target && r[2].target.alive && !r[2].target.isParty, 'repeat: spell retargets a living foe');
+  // no MP → 戦う ; no previous command → 戦う
+  m.mp = 0;
+  r = e.repeatCommands([prev[0], undefined, prev[2]]);
+  ok(r[2].type === 'attack', 'repeat: no MP → attack');
+  ok(r[1].type === 'attack' && r[1].target && !r[1].target.isParty, 'repeat: nothing to repeat → attack');
+  // items: count respected across members
+  const pi = { type: 'item', id: 'tb_potion', target: y };
+  r = e.repeatCommands([pi, pi, pi]);
+  ok(r.filter((c) => c.type === 'item').length === 1 && r.filter((c) => c.type === 'attack').length === 2, 'repeat: one potion → one item use, others attack');
+  // revive with nobody down → attack; ally target died → another ally
+  r = e.repeatCommands([undefined, { type: 'ability', id: 'tb_revive', target: y }, undefined]);
+  ok(r[1].type === 'attack', 'repeat: nothing to revive → attack');
+  n.mp = 99; m.mp = 99; y.hp = 0;
+  r = e.repeatCommands([undefined, { type: 'ability', id: 'tb_heal', target: y }, undefined]);
+  ok(r[1].id === 'tb_heal' && r[1].target !== y && r[1].target.alive, 'repeat: heal target down → another living ally');
+  ok(r[0] === undefined, 'repeat: fallen member gets no command');
+}
+
 console.log(`battle tests: ${passes} passed, ${fails} failed`);
 process.exit(fails ? 1 : 0);

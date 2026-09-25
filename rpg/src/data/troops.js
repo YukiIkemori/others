@@ -29,7 +29,7 @@
     }),
     bandit_chief: boss({
       name: '盗賊頭', sprite: 'boss_bandit', lv: 12, actsPerTurn: 2,
-      hp: 820, mp: 0, atk: 60, def: 26, agi: 30, mag: 12, mdef: 12, exp: 520, gold: 600, jp: 110,
+      hp: 820, mp: 0, atk: 60, def: 26, agi: 30, mag: 12, mdef: 12, exp: 720, gold: 600, jp: 110,
       fam: ['human'],
       statusRes: Object.assign({}, BOSS_RES, { poison: 0.4, blind: 0.4, silence: 0.3 }),
       actions: [['attack', 6], ['en_double', 3], ['en_poison_blade', 2], ['en_smoke', 1, { every: [4, 1] }], ['en_steal', 1],
