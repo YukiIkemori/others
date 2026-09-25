@@ -8,7 +8,7 @@
 //   tier 4  hero                                           (400–1200, ~5000)
 // The prized passives sit deep in the tree so that mixing pays off:
 //   二刀流 (ninja) · 重装備 (knight) · MP半減 (sage) · レアハンター (thief)
-//   修行 EXP+50% (monk) · 学びの心 JP+50% (bard) · 回復アップ (whitemage)
+//   修行 EXP+20% (monk) · 学びの心 JP+20% (bard) · 回復アップ (whitemage)
 //   魔法アップ (blackmage) · 竜の力 (dragoon) · 俊足 (timemage)
 //   不屈の誓い auto-revive (paladin) · とっさの薬 auto-item (alchemist)
 //

@@ -203,7 +203,7 @@
       mp: 12, target: 'allies', effects: [cure(['poison']), { type: 'regen' }], fx: 'song', msg: SONG,
     }),
     bard_rally: reaction('立ち直り', 350, 'HPが減ると、歌って自分を癒やす。', 'lowHp', 0.7, { type: 'heal', pct: 0.3 }),
-    bard_learning: support('学びの心', 600, '戦闘で得るJPが50%増える。', { jpPct: 50 }),
+    bard_learning: support('学びの心', 600, '戦闘で得るJPが20%増える。', { jpPct: 20 }),
     bard_calm: field('安らぎの調べ', 450, '魔物に出会いにくくなる。', { encounterPct: -50 }),
   });
 
