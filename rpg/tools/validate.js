@@ -153,6 +153,12 @@ for (const z in DB.encounters) {
     if (total > 8) E(`encounter ${z}: >8 monsters`);
   }
 }
+for (const z in DB.rareEncounters || {}) {
+  const r = DB.rareEncounters[z];
+  if (!DB.encounters[z]) E(`rareEncounters: unknown zone ${z}`);
+  if (!mons[r.mon]) E(`rareEncounters ${z}: monster ${r.mon} missing`);
+  if (!(r.rate > 0 && r.rate <= 0.05)) E(`rareEncounters ${z}: rate ${r.rate} out of range`);
+}
 for (const t of TROOPS) if (!DB.troops[t]) E(`troop ${t} missing`);
 for (const t in DB.troops) {
   const tr = DB.troops[t];
@@ -256,7 +262,7 @@ for (const t in DB.tiles) {
   if (tile.themed) for (const th in DB.themes) if (!gfx(`tile:${th}:${t}`)) W(`gfx tile:${th}:${t} missing (fallback used)`);
 }
 for (const b of BBG) if (!gfx('bbg:' + b)) E(`gfx bbg:${b} missing`);
-for (const d in DB.decor || {}) if (!gfx('decor:' + d) && !(R.Art && R.Art.decorTile)) E(`gfx decor:${d} missing`);
+for (const d in DB.decor || {}) if (!gfx('decor:' + d) && !(R.Art && R.Art.decorAuto && R.Art.decorAuto[d])) E(`gfx decor:${d} missing`);
 for (const c in DB.chars) for (const j of JOBS) if (!gfx(`party:${c}:${j}`) && !(R.Art && R.Art.partySheet)) E(`gfx party:${c}:${j} missing`);
 for (const n of NPCS) if (!gfx('npc:' + n)) E(`gfx npc:${n} missing`);
 for (const o of ['chest', 'ship', 'sparkle', 'crest_glow', 'shadow']) if (!gfx('obj:' + o)) E(`gfx obj:${o} missing`);

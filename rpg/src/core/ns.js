@@ -20,7 +20,7 @@
   for (const k of [
     'tiles', 'legends', 'themes', 'chars', 'jobs', 'abilities', 'items',
     'shops', 'monsters', 'encounters', 'troops', 'maps', 'events',
-    'battlebg', 'music', 'sfx', 'statuses', 'elements', 'locations', 'objectives',
+    'battlebg', 'music', 'sfx', 'statuses', 'elements', 'locations', 'objectives', 'rareEncounters',
   ]) R.DB[k] = R.DB[k] || {};
 
   // Load-time error collection (build.js wraps every file in try/catch).
