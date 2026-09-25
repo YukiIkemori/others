@@ -521,7 +521,8 @@
       const p = this.P[0], g = R.Game;
       if (fx == null) { fx = p.x; fy = p.y; }
       const tx = fx + dx * HALF, ty = fy + dy * HALF;
-      const cells = rectCells(fx, fy, tx, ty);
+      // only the cells the box moves into (never stuck on a tile it already covers, e.g. after setPos)
+      const cells = rectCells(fx, fy, tx, ty).filter(([x, y]) => !boxHits(fx, fy, x, y));
       if (g.onShip) {
         if (cells.every(([x, y]) => this.sailOk(x, y))) return { kind: 'sail', x: tx, y: ty };
         if (dx && dy) return null;
