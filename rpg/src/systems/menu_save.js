@@ -148,8 +148,8 @@
     { key: 'alwaysDash', label: 'いつでも ダッシュ', values: [true, false], names: ['オン', 'オフ'], desc: 'オンにすると いつも はしって いどうします。（シフトキーで ぎゃくに なります）' },
     { key: 'windowColor', label: 'ウインドウの いろ', values: ['black', 'blue', 'green', 'red'], names: ['くろ', 'あお', 'みどり', 'あか'], desc: 'ウインドウの いろを かえます。' },
     { key: 'touchPad', label: 'タッチパッド', values: ['auto', 'on', 'off'], names: ['じどう', 'ひょうじ', 'かくす'], desc: 'がめんの ボタンを ひょうじするか えらびます。' },
-    { key: 'padConfirm', label: '決定ボタン', values: ['right', 'bottom'], names: ['みぎ', 'した'], desc: 'コントローラーの決定ボタンの位置。みぎ＝○／任天堂のA、した＝×／XboxのA（反対側がキャンセル）。' },
-    { key: 'autoKeep', label: 'オート継続', values: [true, false], names: ['する', 'しない'], desc: 'オート戦闘を次の戦闘にも引き継ぎます（ボス戦・イベント戦闘は手動で始まります）。Bボタンで解除すると手動に戻ります。' },
+    { key: 'padConfirm', label: '決定ボタン', values: ['right', 'bottom'], names: ['みぎ', 'した'], desc: '決定ボタンの位置。みぎ＝○／任天堂のA、\nした＝×／XboxのA（反対側がキャンセル）。' },
+    { key: 'autoKeep', label: 'オート継続', values: [true, false], names: ['する', 'しない'], desc: 'オート戦闘を次の戦闘にも引き継ぎます。\nボス戦・イベント戦闘は手動で始まります。' },
     { key: 'cursorMemory', label: 'カーソル きおく', values: [true, false], names: ['オン', 'オフ'], desc: 'せんとうで まえに えらんだ コマンドを おぼえます。' },
   ];
 
@@ -244,10 +244,13 @@
       }
       render() {
         const S = R.Settings;
-        const h = 16 + (SETTINGS.length + 1) * 16 - 4;
+        // row pitch shrinks (16 → 14) once the list is long enough that the
+        // description window below would drop under two lines
+        const LH = Math.max(14, Math.min(16, Math.floor(154 / (SETTINGS.length + 1))));
+        const h = 16 + (SETTINGS.length + 1) * LH - 4;
         G().window(4, 4, 248, h, { title: 'せってい' });
         SETTINGS.forEach((s, i) => {
-          const y = 14 + i * 16;
+          const y = 14 + i * LH;
           const sel = i === this.index;
           G().text(s.label, 20, y, { color: sel ? G().C.white : '#c8c8d8' });
           const vx = 196;
@@ -261,14 +264,15 @@
           if (sel && !s.vol) K.lrArrows(vx - 34, vx + 33, y + 2);
           if (sel) G().cursor(8, y + 1, !this.busy);
         });
-        const by = 14 + SETTINGS.length * 16;
+        const by = 14 + SETTINGS.length * LH;
         G().text('もどる', 20, by, { color: G().C.cyan });
         if (this.index === SETTINGS.length) G().cursor(8, by + 1, !this.busy);
-        // description + window colour preview
+        // description + window colour preview (only as many lines as the window holds)
         const s = SETTINGS[this.index];
-        G().window(4, h + 8, 248, 224 - h - 12);
+        const dh = 224 - h - 12;
+        G().window(4, h + 8, 248, dh);
         const text = s ? s.desc : 'せっていを おえて もどります。';
-        G().wrap(text, 226).slice(0, 3).forEach((l, i) => G().text(l, 14, h + 16 + i * 14));
+        G().wrap(text, 226).slice(0, Math.max(1, Math.floor((dh - 12) / 14))).forEach((l, i) => G().text(l, 14, h + 16 + i * 14));
       }
     }
     return { SaveScreen, SettingsScreen };

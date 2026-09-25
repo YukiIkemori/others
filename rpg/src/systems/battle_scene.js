@@ -24,19 +24,45 @@
     if (!R.Settings.cursorMemory) return { cmd: 0, ab: {}, item: 0, target: null };
     return (MEM[id] = MEM[id] || { cmd: 0, ab: {}, item: 0, target: null });
   }
-  /** DQ-style wrap: break between space-separated phrases, char-wrap only overlong phrases */
+  // line-break rules for battle messages (unspaced Japanese)
+  const NO_START = '、。，．！？!?）」』】…ー・：ぁぃぅぇぉっゃゅょァィゥェォッャュョ';
+  const BREAK_AFTER = '、。！？!?）」』　 ：';
+  const KANA = /[\u3041-\u309f]/; // hiragana
+  const KANJI = /[\u4e00-\u9fff々]/;
+  // one-kana particles; after a kanji only は/を are safe (と/に/で/の/が can be okurigana: 落とす, 上がる)
+  const PARTICLE = 'はをにでともへの';
+  /** true when a line may break between s[k-1] and s[k] at a natural phrase boundary */
+  function niceBreak(s, k) {
+    const a = s[k - 1], b = s[k];
+    if (!a || !b || NO_START.includes(b)) return false;
+    if (BREAK_AFTER.includes(a)) return true;
+    if (!KANA.test(a)) return false;
+    // particle / okurigana → next word (kanji, katakana, digits, latin, 「『★)
+    if (!KANA.test(b)) return true;
+    // word + one-kana particle → hiragana word (「ヴァルザードを|かばった」「『ナイト』に|なれる」)
+    const w = s[k - 2];
+    if (!w || KANA.test(w) || !PARTICLE.includes(a)) return false;
+    return !KANJI.test(w) || a === 'は' || a === 'を';
+  }
+  /**
+   * Wrap a battle message: a line that fits stays whole; otherwise break at the
+   * last natural phrase boundary near the edge (after punctuation, or between a
+   * particle and the next word), falling back to a plain char break (kinsoku safe).
+   */
   function wrapPhrases(text, width) {
     const out = [];
-    for (const para of String(text).split('\n')) {
-      let line = '';
-      for (const ph of para.split(' ')) {
-        const t = line ? line + ' ' + ph : ph;
-        if (G().textWidth(t) <= width) { line = t; continue; }
-        if (line) out.push(line);
-        if (G().textWidth(ph) <= width) line = ph;
-        else { const parts = G().wrap(ph, width); line = parts.pop(); out.push(...parts); }
+    const fits = (s) => G().textWidth(s) <= width;
+    for (let para of (R.Text ? R.Text.fmt(text) : String(text)).split('\n')) {
+      while (!fits(para)) {
+        let n = 1;
+        while (n < para.length && fits(para.slice(0, n + 1))) n++;
+        let cut = 0;
+        for (let k = n; k > 0 && k >= n / 2; k--) if (niceBreak(para, k)) { cut = k; break; }
+        if (!cut) { cut = n; while (cut > 1 && NO_START.includes(para[cut])) cut--; }
+        out.push(para.slice(0, cut).replace(/[ 　]+$/, ''));
+        para = para.slice(cut).replace(/^[ 　]+/, '');
       }
-      out.push(line);
+      out.push(para);
     }
     return out;
   }
@@ -213,7 +239,7 @@
     async defeat() {
       if (R.Audio && R.Audio.stopBGM) R.Audio.stopBGM(20);
       this.clearMsg();
-      await this.say(`${this.eng.party[0].name}たちは ぜんめつした……`);
+      await this.say(`${this.eng.party[0].name}たちは全滅した……`);
       await this.waitKey();
     }
 
@@ -367,7 +393,7 @@
     async partyMenu() {
       const list = new R.UI.List({
         x: BOX.x, y: BOX.y, w: 84, h: BOX.h, rows: 3, lineH: 16, padY: 10, cancel: false,
-        items: ['たたかう', 'オート', { label: 'にげる', disabled: this.eng.noEscape }], index: this.partyIdx,
+        items: ['戦う', 'オート', { label: '逃げる', disabled: this.eng.noEscape }], index: this.partyIdx,
       });
       this.panel = { left: list, enemies: true };
       const r = await this.ask(() => (list.update() === 'select' ? list.index : undefined));
@@ -458,9 +484,9 @@
     }
     abilityHelp(u, id, ab) {
       const why = this.eng.unusable(u, id);
-      if (why === 'silence') return 'じゅもんを ふうじられている！';
-      if (why === 'mp') return 'MPが たりない！';
-      if (why === 'field') return 'たたかいの なかでは つかえない。';
+      if (why === 'silence') return '魔法を封じられている！';
+      if (why === 'mp') return 'MPが足りない！';
+      if (why === 'field') return '戦闘中は使えない。';
       return ab.desc || '';
     }
     async itemMenu(u, reserved) {
@@ -468,7 +494,7 @@
       const list0 = this.battleItems(reserved);
       if (!list0.length) { R.sfx('buzzer'); return BACK; }
       const items = list0.map((x) => ({ label: (x.it.rare ? '★' : '') + x.it.name, right: String(Math.max(0, x.n)), disabled: x.n <= 0 }));
-      const list = new R.UI.List({ x: BOX.x, y: BOX.y, w: BOX.w, h: BOX.h, items, cols: 2, rows: 3, lineH: 16, padY: 10, title: 'どうぐ', index: Math.min(m.item || 0, items.length - 1) });
+      const list = new R.UI.List({ x: BOX.x, y: BOX.y, w: BOX.w, h: BOX.h, items, cols: 2, rows: 3, lineH: 16, padY: 10, title: '道具', index: Math.min(m.item || 0, items.length - 1) });
       for (;;) {
         this.panel = { left: list, help: () => (list0[list.index] ? list0[list.index].it.desc || '' : '') };
         list.active = true;
@@ -493,7 +519,7 @@
     async confirmAll(type) {
       const foes = type !== 'allies';
       const prevPanel = this.panel;
-      const label = foes ? (type === 'random' ? 'てき ぜんたいに ランダム' : 'てき ぜんたい') : 'みかた ぜんいん';
+      const label = foes ? (type === 'random' ? '敵全体にランダム' : '敵全体') : '味方全員';
       this.panel = Object.assign({}, prevPanel, { help: () => label, helpCenter: true });
       this.picking = foes ? { units: this.eng.mons.filter((m) => m.alive) } : { allies: true };
       const r = await this.ask(() => {
@@ -513,7 +539,7 @@
         .sort((a, b) => this.vis.get(a[0]).x - this.vis.get(b[0]).x) : alive.map((x) => [x]);
       let i = Math.max(0, choices.findIndex((l) => l.some((x) => x.key === m.target)));
       const prevPanel = this.panel;
-      const name = () => { const l = choices[i]; return group && l.length > 1 ? `${l[0].base}  ${l.length}ひき` : l[0].name; };
+      const name = () => { const l = choices[i]; return group && l.length > 1 ? `${l[0].base}　${l.length}匹` : l[0].name; };
       this.panel = Object.assign({}, prevPanel, { help: name, helpCenter: true });
       this.picking = { units: choices[i] };
       const r = await this.ask(() => {
@@ -775,7 +801,7 @@
     }
     drawAuto() {
       if (!this.auto) return;
-      const s = this.autoCancel ? 'オート かいじょ' : 'オート  B:とめる';
+      const s = this.autoCancel ? 'オート解除' : 'オート　Bで解除';
       const w = Math.ceil(G().textWidth(s)) + 16;
       G().window(BOX.x + BOX.w - w, BOX.y - 20, w, 20);
       if (this.autoCancel || Math.floor(R.Engine.frame / 20) % 4 !== 3) G().text(s, BOX.x + BOX.w - w + 8, BOX.y - 16, { color: this.autoCancel ? G().C.yellow : G().C.white });

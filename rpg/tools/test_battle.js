@@ -88,10 +88,10 @@ sec('phys');
   near(fire, (yuki.stat('atk') / 2 - 9 / 4) * 2, 0.6, 'weapon element × monster elem (fire 2)');
   yuki.c.equip.weapon = 'tb_sword'; yuki.refresh();
   const thunderHit = run(e.hit(yuki, gob, e.roll(yuki, gob, { formula: 'phys', element: 'thunder', critBonus: -100, acc: 10 }, {}), { kind: 'phys' }));
-  ok(said(thunderHit, 'ダメージを あたえられない'), 'element 0 → no damage message');
+  ok(said(thunderHit, 'ダメージを与えられない'), 'element 0 → no damage message');
   gob.hp = 10;
   const windHit = run(e.hit(yuki, gob, e.roll(yuki, gob, { formula: 'phys', element: 'wind', critBonus: -100, acc: 10 }, {}), { kind: 'phys' }));
-  ok(said(windHit, 'きゅうしゅう') && gob.hp > 10, 'negative element multiplier absorbs (heals)');
+  ok(said(windHit, '吸収') && gob.hp > 10, 'negative element multiplier absorbs (heals)');
 
   // buffs × stage multipliers
   const b0 = mean(() => e.roll(yuki, dummy, { formula: 'phys', critBonus: -100, acc: 10 }, {}).dmg, 2000);
@@ -119,7 +119,7 @@ sec('phys');
   // defend halves
   const def = run(e.hit(Mo(e, 0), yuki, { dmg: 40 }, { kind: 'phys' }));
   const hp0 = yuki.mhp;
-  ok(yuki.hp === hp0 - 40 && said(def, '40の ダメージを うけた'), 'party damage message');
+  ok(yuki.hp === hp0 - 40 && said(def, '40のダメージを受けた'), 'party damage message');
   yuki.hp = yuki.mhp; yuki.defending = true;
   run(e.hit(Mo(e, 0), yuki, { dmg: 40 }, { kind: 'phys' }));
   ok(yuki.hp === hp0 - 20, 'defend halves damage');
@@ -193,14 +193,14 @@ sec('heal');
   const ev = use(e, non, 'tb_heal', yuki);
   const healed = yuki.hp - 1;
   ok(healed >= Math.round((30 + mnd * 0.5) * 0.95) && healed <= Math.round((30 + mnd * 0.5) * 1.05), `heal = (power + mnd×scale) × 0.95..1.05 (${healed})`);
-  ok(said(ev, 'ノンは ヒールを となえた！') && said(ev, `ユウキの HPが ${healed} かいふくした！`), 'heal messages');
+  ok(said(ev, 'ノンはヒールを唱えた！') && said(ev, `ユウキのHPが${healed}回復した！`), 'heal messages');
   ok(non.mp === non.mmp - 3, 'mp paid');
   non.c.jobs.tb_caster.learned.push('tb_booster'); non.c.set.support = 'tb_booster'; non.refresh();
   const h2 = mean(() => { yuki.hp = 1; run(e.effect(non, yuki, DB.abilities.tb_heal.effects[0], { ab: DB.abilities.tb_heal })); return yuki.hp - 1; }, 400);
   near(h2, (30 + mnd * 0.5) * 1.5, 1.2, 'healPct +50');
   yuki.hp = yuki.mhp;
   const full = run(e.effect(non, yuki, { type: 'heal', power: 30 }, { ab: {} }));
-  ok(said(full, 'まんたん'), 'heal at full HP');
+  ok(said(full, '満タン'), 'heal at full HP');
   // item heal ignores mnd, itemPct doubles
   yuki.hp = 1;
   e.inv.tb_herb = 2;
@@ -211,7 +211,7 @@ sec('heal');
   yuki.hp = 1; use(e, non, 'tb_herb', yuki, true);
   ok(yuki.hp >= 1 + Math.round(60 * 0.95) && yuki.hp <= 1 + Math.round(60 * 1.05), `itemPct +100 (${yuki.hp - 1})`);
   const none = use(e, non, 'tb_herb', yuki, true);
-  ok(said(none, 'もう なかった'), 'no item left');
+  ok(said(none, 'もうなかった'), 'no item left');
   // pct heal & healMp
   yuki.hp = 1;
   run(e.effect(non, yuki, { type: 'heal', pct: 1 }, { ab: {} }));
@@ -228,25 +228,25 @@ sec('revive/cure/status');
   run(e.die(yuki, null));
   ok(!yuki.alive && yuki.hp === 0, 'died');
   const hev = use(e, non, 'tb_heal', yuki);
-  ok(!yuki.alive && !said(hev, 'ユウキの HPが'), 'heal does not revive (retargets living ally)');
+  ok(!yuki.alive && !said(hev, 'ユウキのHPが'), 'heal does not revive (retargets living ally)');
   const rev = use(e, non, 'tb_revive', yuki);
-  ok(yuki.alive && yuki.hp === Math.floor(yuki.mhp * 0.5) && said(rev, 'ユウキは いきかえった！'), 'revive pct');
+  ok(yuki.alive && yuki.hp === Math.floor(yuki.mhp * 0.5) && said(rev, 'ユウキは生き返った！'), 'revive pct');
   const again = use(e, non, 'tb_revive', yuki);
-  ok(said(again, 'なにも おこらなかった'), 'revive on nobody');
+  ok(said(again, '何も起こらなかった'), 'revive on nobody');
   // status + resist + immune + cure
   const gob = Mo(e, 0), boss = Mo(e, 1);
   metem.c.jobs.tb_caster.learned.push('tb_poison', 'tb_confuse', 'tb_stun', 'tb_blind', 'tb_sleep', 'tb_doom');
   let ev = use(e, metem, 'tb_poison', gob);
-  ok(gob.status.poison && said(ev, 'どくに おかされた'), 'poison inflicted');
+  ok(gob.status.poison && said(ev, '毒に冒された'), 'poison inflicted');
   ev = use(e, metem, 'tb_poison', gob);
-  ok(said(ev, 'きかなかった'), 'already poisoned');
+  ok(said(ev, '効かなかった'), 'already poisoned');
   ev = use(e, metem, 'tb_mute', boss);
-  ok(!boss.status.silence && said(ev, 'きかなかった'), 'statusRes 1 = immune');
+  ok(!boss.status.silence && said(ev, '効かなかった'), 'statusRes 1 = immune');
   const sleepRes = mean(() => { delete boss.status.blind; run(e.inflict(metem, boss, 'blind', 1, true)); return boss.status.blind ? 1 : 0; }, 2000);
   near(sleepRes, 0.5, 0.04, 'success = chance × (1 − resist)');
   yuki.c.equip.acc = 'tb_ring'; yuki.refresh();
   ev = run(e.inflict(Mo(e, 0), yuki, 'sleep', 1, false));
-  ok(!yuki.status.sleep && said(ev, 'きかなかった'), 'statusImmune from equipment');
+  ok(!yuki.status.sleep && said(ev, '効かなかった'), 'statusImmune from equipment');
   yuki.c.equip.acc = null; yuki.refresh();
   run(e.inflict(gob, yuki, 'sleep', 1, false));
   run(e.inflict(gob, yuki, 'blind', 1, false));
@@ -254,12 +254,12 @@ sec('revive/cure/status');
   ok(yuki.status.sleep && yuki.turns.sleep >= 1 && yuki.turns.sleep <= 4, 'sleep turns 1–4');
   ok(yuki.turns.blind >= 3 && yuki.turns.blind <= 5, 'blind turns 3–5');
   ev = use(e, non, 'tb_cure', yuki);
-  ok(!yuki.status.sleep && !yuki.status.blind && !yuki.status.poison && said(ev, 'めを さました') && said(ev, 'どくが きえた'), 'cure all');
+  ok(!yuki.status.sleep && !yuki.status.blind && !yuki.status.poison && said(ev, '目を覚ました') && said(ev, '毒が消えた'), 'cure all');
   // death status: boss immune
   ev = use(e, metem, 'tb_doom', boss);
-  ok(boss.alive && said(ev, 'きかなかった'), 'death fails on boss');
+  ok(boss.alive && said(ev, '効かなかった'), 'death fails on boss');
   ev = use(e, metem, 'tb_doom', gob);
-  ok(!gob.alive && said(ev, 'テストゴブリンを たおした！') && e.killed.includes(gob), 'death kills');
+  ok(!gob.alive && said(ev, 'テストゴブリンを倒した！') && e.killed.includes(gob), 'death kills');
 }
 
 sec('turn statuses');
@@ -268,16 +268,16 @@ sec('turn statuses');
   const yuki = P(e, 0);
   yuki.status.sleep = true; yuki.turns.sleep = 2;
   let ev = run(e.turn(yuki, { type: 'attack', target: Mo(e, 0) }));
-  ok(said(ev, 'ねむっている') && !said(ev, 'こうげき'), 'asleep: no action');
+  ok(said(ev, '眠っている') && !said(ev, '攻撃'), 'asleep: no action');
   ev = run(e.turn(yuki, { type: 'attack', target: Mo(e, 0) }));
-  ok(said(ev, 'めを さました') && !yuki.status.sleep && !said(ev, 'こうげき！'), 'wakes up (turn lost)');
+  ok(said(ev, '目を覚ました') && !yuki.status.sleep && !said(ev, '攻撃！'), 'wakes up (turn lost)');
   yuki.status.paralyze = true; yuki.turns.paralyze = 1;
   ev = run(e.turn(yuki, { type: 'attack', target: Mo(e, 0) }));
-  ok(said(ev, 'しびれが とれた'), 'paralysis wears off');
+  ok(said(ev, 'しびれが取れた'), 'paralysis wears off');
   // poison tick 1/12, regen 1/10
   yuki.hp = yuki.mhp; yuki.status.poison = true;
   ev = run(e.endTurn(yuki));
-  ok(yuki.hp === yuki.mhp - Math.floor(yuki.mhp / 12) && said(ev, 'どくで'), 'poison 1/12 max HP');
+  ok(yuki.hp === yuki.mhp - Math.floor(yuki.mhp / 12) && said(ev, '毒で'), 'poison 1/12 max HP');
   delete yuki.status.poison;
   run(e.inflict(yuki, yuki, 'regen', 1));
   ok(yuki.turns.regen === 5, 'regen 5 turns');
@@ -290,12 +290,12 @@ sec('turn statuses');
   const metem = P(e, 2);
   metem.status.silence = true; metem.turns.silence = 3;
   ev = use(e, metem, 'tb_fire', Mo(e, 0));
-  ok(said(ev, 'ふうじこめられている') && Mo(e, 0).hp === Mo(e, 0).mhp, 'silence blocks magic');
+  ok(said(ev, '魔法は封じられている') && Mo(e, 0).hp === Mo(e, 0).mhp, 'silence blocks magic');
   ok(e.unusable(metem, 'tb_fire') === 'silence' && !e.unusable(P(e, 0), 'tb_power'), 'unusable() reports silence');
   delete metem.status.silence;
   metem.mp = 1;
   ev = use(e, metem, 'tb_fire', Mo(e, 0));
-  ok(said(ev, 'MPが たりない'), 'not enough MP');
+  ok(said(ev, 'MPが足りない'), 'not enough MP');
   ok(e.unusable(metem, 'tb_fire') === 'mp', 'unusable() reports mp');
   ok(e.unusable(P(e, 0), 'tb_warpout') === 'field', 'field-only ability unusable in battle');
   // confusion: random targets including friends
@@ -306,7 +306,7 @@ sec('turn statuses');
   ok(friend > 120 && foe > 120, `confuse picks friends and foes (${friend}/${foe})`);
   y2.status.confuse = true; y2.turns.confuse = 5;
   const cev = run(e2.turn(y2, null));
-  ok(said(cev, 'こんらんしている') && said(cev, 'ユウキの こうげき！'), 'confused unit attacks anyway');
+  ok(said(cev, '混乱している') && said(cev, 'ユウキの攻撃！'), 'confused unit attacks anyway');
   let woke = 0, snapped = 0;
   for (let i = 0; i < 400; i++) {
     const g = mk({ mons: ['tb_dummy'] });
@@ -325,27 +325,27 @@ sec('buff/dispel/steal/scan/escape/grow/special');
   const e = mk({ mons: ['tb_slime', 'tb_goblin', 'tb_boss'] });
   const yuki = P(e, 0), non = P(e, 1), metem = P(e, 2);
   let ev = use(e, non, 'tb_protect', null);
-  ok(e.party.every((p) => p.buffs.def === 1) && texts(ev).filter((t) => t.includes('しゅびりょくが あがった')).length === 3, 'allies buff');
+  ok(e.party.every((p) => p.buffs.def === 1) && texts(ev).filter((t) => t.includes('守備力が上がった')).length === 3, 'allies buff');
   use(e, non, 'tb_protect', null);
   ev = use(e, non, 'tb_protect', null);
-  ok(yuki.buffs.def === 2 && said(ev, 'もう あがらない'), 'buff clamps at +2');
+  ok(yuki.buffs.def === 2 && said(ev, 'もう上がらない'), 'buff clamps at +2');
   metem.c.jobs.tb_caster.learned.push('tb_dispel');
   use(e, metem, 'tb_weaken', Mo(e, 1));
   use(e, metem, 'tb_weaken', Mo(e, 1));
   ev = use(e, metem, 'tb_weaken', Mo(e, 1));
-  ok(Mo(e, 1).buffs.atk === -2 && said(ev, 'もう さがらない'), 'debuff clamps at −2');
+  ok(Mo(e, 1).buffs.atk === -2 && said(ev, 'もう下がらない'), 'debuff clamps at −2');
   ev = use(e, metem, 'tb_dispel', Mo(e, 1));
-  ok(Mo(e, 1).buffs.atk === 0 && said(ev, 'こうかが きえた'), 'dispel');
+  ok(Mo(e, 1).buffs.atk === 0 && said(ev, '効果が消えた'), 'dispel');
   // steal: normal / rare / nothing / fail
   yuki.c.jobs.tb_fighter.learned.push('tb_mug', 'tb_seed', 'tb_smoke', 'tb_special', 'tb_sacrifice', 'tb_drain', 'tb_osmose', 'tb_holyblade');
   let items = 0, rares = 0, nothing = 0, fail = 0;
   for (let i = 0; i < 600; i++) {
     const s = new B.MonUnit('tb_slime', 9);
     const ev2 = run(e.steal(yuki, s, {}));
-    if (said(ev2, 'テストやくそうを ぬすんだ')) items++;
-    else if (said(ev2, 'きらめくいしを ぬすんだ')) { rares++; ok(ev2.some((x) => x.t === 'rare'), 'rare steal event'); }
+    if (said(ev2, 'テスト薬草を盗んだ')) items++;
+    else if (said(ev2, 'きらめく石を盗んだ')) { rares++; ok(ev2.some((x) => x.t === 'rare'), 'rare steal event'); }
     else fail++;
-    if (said(run(e.steal(yuki, s, {})), 'なにも もっていない')) nothing++;
+    if (said(run(e.steal(yuki, s, {})), '何も持っていない')) nothing++;
   }
   ok(nothing === items + rares, 'second steal: nothing left');
   near(rares / (items + rares), 0.125, 0.04, 'rare steal ≈ 1/8');
@@ -359,27 +359,27 @@ sec('buff/dispel/steal/scan/escape/grow/special');
   ev = use(e, yuki, 'tb_steal', Mo(e, 2));
   // scan
   ev = use(e, yuki, 'tb_scan', Mo(e, 1));
-  ok(said(ev, /テストゴブリン\s+レベル 3\s+HP \d+\/34/) && said(ev, 'じゃくてん： ほのお') && said(ev, 'きゅうしゅう： かぜ'), 'scan shows HP / weakness / absorb');
+  ok(said(ev, /^テストゴブリン　レベル3　HP\d+\/34$/) && said(ev, '弱点：炎') && said(ev, '吸収：風'), 'scan shows HP / weakness / absorb');
   // grow
   const str0 = yuki.stat('str');
   ev = use(e, yuki, 'tb_seed', yuki);
-  ok(yuki.stat('str') === str0 + 2 && yuki.c.bonus.str === 2 && said(ev, 'ちからが 2 あがった'), 'grow (seed)');
+  ok(yuki.stat('str') === str0 + 2 && yuki.c.bonus.str === 2 && said(ev, '力が2上がった'), 'grow (seed)');
   const hp0 = yuki.hp, mhp0 = yuki.mhp;
   e.inv.tb_nut = 1;
   run(e.effect(yuki, yuki, { type: 'grow', stat: 'hp', n: 8 }, { ab: {} }));
   ok(yuki.mhp === mhp0 + 8 && yuki.hp === hp0 + 8, 'grow hp raises current HP too');
   // special registry
-  B.specials.tb_special = function* (eng, u, t) { t.hp = 1; yield eng.m('とくべつな こうか！'); };
+  B.specials.tb_special = function* (eng, u, t) { t.hp = 1; yield eng.m('特別な効果！'); };
   ev = use(e, yuki, 'tb_special', Mo(e, 1));
-  ok(Mo(e, 1).hp === 1 && said(ev, 'とくべつな こうか'), 'special effect hook');
+  ok(Mo(e, 1).hp === 1 && said(ev, '特別な効果'), 'special effect hook');
   delete B.specials.tb_special;
   ev = use(e, yuki, 'tb_special', Mo(e, 1));
-  ok(said(ev, 'なにも おこらなかった'), 'unknown special does nothing');
+  ok(said(ev, '何も起こらなかった'), 'unknown special does nothing');
   ev = use(e, yuki, 'tb_warpout', null);
-  ok(said(ev, 'ここでは つかえない'), 'field-only effect in battle');
+  ok(said(ev, 'ここでは使えない'), 'field-only effect in battle');
   // escape effect
   ev = use(e, yuki, 'tb_smoke', null);
-  ok(e.result === null && said(ev, 'にげられない'), 'escape effect blocked by a boss');
+  ok(e.result === null && said(ev, '逃げられない'), 'escape effect blocked by a boss');
   const e3 = mk({ mons: ['tb_slime'] });
   ev = use(e3, P(e3, 0), 'tb_smoke', null);
   ok(e3.result === 'escape' && ev.some((x) => x.t === 'escape' && x.ok), 'escape effect guaranteed');
@@ -452,24 +452,24 @@ sec('reactions');
   gob.d = Object.assign({}, gob.d, { hit: 999, crit: 0 });
   let ev = run(e.attack(gob, yuki, false));
   ev = ev.concat(run(e.flushReactions()));
-  ok(said(ev, 'ユウキの はんげき！') && gob.hp < 999, 'counter on physical hit');
+  ok(said(ev, 'ユウキの反撃！') && gob.hp < 999, 'counter on physical hit');
   ev = run(e.hit(gob, yuki, { dmg: 5 }, { kind: 'magic' }));
   ev = ev.concat(run(e.flushReactions()));
-  ok(!said(ev, 'はんげき'), 'hitPhys ignores magic');
+  ok(!said(ev, '反撃'), 'hitPhys ignores magic');
   // lowHp heal
   const learn = (u, id, slot) => { const ab = DB.abilities[id]; (u.c.jobs[ab.job] = u.c.jobs[ab.job] || { jp: 0, total: 0, learned: [] }).learned.push(id); u.c.set[slot] = id; u.refresh(); };
   learn(non, 'tb_autoheal', 'reaction');
   non.hp = Math.floor(non.mhp * 0.3);
   run(e.hit(gob, non, { dmg: 10 }, { kind: 'phys' }));
   ev = run(e.flushReactions());
-  ok(said(ev, 'ノンの オートヒール！') && ev.some((x) => x.t === 'heal' && x.u === non), 'lowHp → heal');
+  ok(said(ev, 'ノンのオートヒール！') && ev.some((x) => x.t === 'heal' && x.u === non), 'lowHp → heal');
   // autoItem (never rare items)
   learn(metem, 'tb_autoitem', 'reaction');
   e.inv.tb_herb = 1; e.inv.tb_gem = 3;
   metem.hp = metem.mhp;
   run(e.hit(gob, metem, { dmg: 20 }, { kind: 'phys' }));
   ev = run(e.flushReactions());
-  ok(said(ev, 'メテムは とっさに テストやくそうを つかった！') && !e.inv.tb_herb && e.inv.tb_gem === 3, 'autoItem uses a heal item');
+  ok(said(ev, 'メテムはとっさにテスト薬草を使った！') && !e.inv.tb_herb && e.inv.tb_gem === 3, 'autoItem uses a heal item');
   run(e.hit(gob, metem, { dmg: 5 }, { kind: 'phys' }));
   ev = run(e.flushReactions());
   ok(!ev.length, 'autoItem with no item does nothing');
@@ -493,21 +493,21 @@ sec('reactions');
   learn(yuki, 'tb_cover', 'reaction');
   non.hp = 2; yuki.hp = yuki.mhp;
   ev = run(e.attack(gob, non, false));
-  ok(said(ev, 'ユウキは ノンを かばった！') && non.hp === 2 && yuki.hp < yuki.mhp, 'cover takes the hit for a weak ally');
+  ok(said(ev, 'ユウキはノンをかばった！') && non.hp === 2 && yuki.hp < yuki.mhp, 'cover takes the hit for a weak ally');
   // allyLowHp heal
   learn(yuki, 'tb_guardian', 'reaction');
   non.hp = non.mhp;
   run(e.hit(gob, non, { dmg: non.mhp - 3 }, { kind: 'phys' }));
   ev = run(e.flushReactions());
-  ok(said(ev, 'ユウキの ガーディアン！') && non.hp > 3, 'allyLowHp heals the ally');
+  ok(said(ev, 'ユウキのガーディアン！') && non.hp > 3, 'allyLowHp heals the ally');
   // ko revive (once per battle)
   learn(non, 'tb_phoenix', 'reaction');
   non.hp = 5;
   ev = run(e.hit(gob, non, { dmg: 50 }, { kind: 'phys' }));
-  ok(said(ev, 'ノンは たおれた！') && said(ev, 'ふたたび たちあがった') && non.hp === Math.floor(non.mhp * 0.5), 'ko → revive');
+  ok(said(ev, 'ノンは倒れた！') && said(ev, '再び立ち上がった') && non.hp === Math.floor(non.mhp * 0.5), 'ko → revive');
   non.hp = 5;
   ev = run(e.hit(gob, non, { dmg: 50 }, { kind: 'phys' }));
-  ok(!non.alive && !said(ev, 'ふたたび'), 'ko revive only once');
+  ok(!non.alive && !said(ev, '再び'), 'ko revive only once');
 }
 
 sec('supports');
@@ -592,16 +592,16 @@ sec('monster AI');
   const e4 = mk({ mons: ['tb_metal'] });
   run(e4.begin());
   let fled = false;
-  for (let r = 0; r < 20 && !e4.result; r++) { const ev = run(e4.playRound([{ type: 'defend' }, { type: 'defend' }, { type: 'defend' }])); if (said(ev, 'にげだした')) fled = true; }
+  for (let r = 0; r < 20 && !e4.result; r++) { const ev = run(e4.playRound([{ type: 'defend' }, { type: 'defend' }, { type: 'defend' }])); if (said(ev, '逃げ出した')) fled = true; }
   ok(fled && e4.result === 'win' && e4.killed.length === 0, 'flee monsters run away; battle ends');
   // breath monster uses msg template
   const e5 = mk({ mons: ['tb_drake'] });
   const drake = Mo(e5, 0);
   const ev5 = run(e5.useAbility(drake, 'en_tb_breath', DB.abilities.en_tb_breath, null, null));
-  ok(said(ev5, 'テストドラゴンは ほのおを はいた！') && ev5.filter((x) => x.t === 'dmg').length === 3, 'breath hits the whole party, custom msg');
+  ok(said(ev5, 'テストドラゴンは炎を吐いた！') && ev5.filter((x) => x.t === 'dmg').length === 3, 'breath hits the whole party, custom msg');
   // monster thief steals gold only in live battles
   const ev6 = run(e5.steal(Mo(e5, 0), P(e5, 0), {}));
-  ok(said(ev6, 'ぬすめなかった'), 'sim: monster steal takes nothing');
+  ok(said(ev6, '盗めなかった'), 'sim: monster steal takes nothing');
 }
 
 sec('rounds/order/defend');
@@ -641,25 +641,25 @@ sec('escape/surprise');
   near(esc / 400, p0, 0.07, 'escape rate');
   const b = mk({ troop: 'tb_boss', mons: ['tb_boss'], noEscape: true });
   const ev = run(b.playRound({ flee: true }));
-  ok(!b.result && said(ev, 'にげられない'), 'bosses: no escape');
+  ok(!b.result && said(ev, '逃げられない'), 'bosses: no escape');
   let failedOk = false;
   for (let i = 0; i < 30 && !failedOk; i++) {
     const failed = mk({ mons: ['tb_goblin'] });
     failed.mons[0].flags = [];
     const evs = run(failed.playRound({ flee: true }));
     if (failed.result) continue;
-    failedOk = said(evs, 'まわりこまれて') && evs.some((x) => x.t === 'actor' && x.u && x.u.key === 'm0') && !evs.some((x) => x.t === 'actor' && x.u && x.u.isParty);
+    failedOk = said(evs, '回り込まれて') && evs.some((x) => x.t === 'actor' && x.u && x.u.key === 'm0') && !evs.some((x) => x.t === 'actor' && x.u && x.u.isParty);
   }
   ok(failedOk, 'failed escape: monsters act, party does not');
   // surprise rounds
   const pre = mk({ mons: ['tb_goblin'], surprise: 'pre', noSurprise: false });
   let ev2 = run(pre.begin());
-  ok(said(ev2, 'きづいていない'), 'preemptive message');
+  ok(said(ev2, '気づいていない'), 'preemptive message');
   ev2 = run(pre.playRound([{ type: 'defend' }, { type: 'defend' }, { type: 'defend' }]));
   ok(!ev2.some((x) => x.t === 'actor' && x.u && !x.u.isParty), 'preemptive: monsters skip round 1');
   const amb = mk({ mons: ['tb_goblin'], surprise: 'ambush', noSurprise: false });
   ev2 = run(amb.begin());
-  ok(said(ev2, 'いきなり おそいかかってきた'), 'ambush message');
+  ok(said(ev2, 'いきなり襲いかかってきた'), 'ambush message');
   ev2 = run(amb.playRound([{ type: 'attack', target: amb.mons[0] }]));
   ok(!ev2.some((x) => x.t === 'actor' && x.u && x.u.isParty), 'ambush: party skips round 1');
   let pr = 0, am = 0;
@@ -686,17 +686,17 @@ sec('rewards');
   U.seed(7);
   const ev = run(e.rewards());
   const tx = texts(ev);
-  ok(said(ev, 'まものたちを やっつけた！'), 'victory message');
-  ok(said(ev, 'それぞれ 303ポイントの けいけんちを かくとく！'), 'EXP summed, each living member full');
-  ok(said(ev, '204ゴールドを てにいれた！'), 'gold');
-  ok(said(ev, 'それぞれ 43 JPを かくとく！'), 'JP');
-  ok(P(e, 0).c.level > lv0 && said(ev, `ユウキは レベル ${P(e, 0).c.level}に あがった！`), 'level up message');
-  ok(tx.some((t) => /^(ちから|すばやさ|たいりょく|さいだいHP)\+\d+( \S+\+\d+)*$/.test(t)), 'stat gain lines');
+  ok(said(ev, '魔物たちをやっつけた！'), 'victory message');
+  ok(said(ev, 'それぞれ303ポイントの経験値を獲得！'), 'EXP summed, each living member full');
+  ok(said(ev, '204ゴールドを手に入れた！'), 'gold');
+  ok(said(ev, 'それぞれ43JPを獲得！'), 'JP');
+  ok(P(e, 0).c.level > lv0 && said(ev, `ユウキはレベル${P(e, 0).c.level}に上がった！`), 'level up message');
+  ok(tx.some((t) => /^(力|素早さ|体力|最大HP)\+\d+(　\S+\+\d+)*$/.test(t)), 'stat gain lines');
   ok(ev.some((x) => x.t === 'jingle' && x.id === 'levelup') && ev.some((x) => x.t === 'jingle' && x.id === 'jobup'), 'levelup / jobup jingles');
-  ok(said(ev, 'ユウキの テストせんしの ジョブレベルが 2に あがった！'), 'job level up message');
-  ok(said(ev, 'あたらしい ジョブ テストたつじんに なれるように なった！'), 'job unlock message');
+  ok(said(ev, 'ユウキのテスト戦士のジョブレベルが2に上がった！'), 'job level up message');
+  ok(said(ev, '新しいジョブ『テスト達人』になれるようになった！'), 'job unlock message');
   ok(P(e, 2).c.exp === R.Rules.expForLevel(1), 'KO member gets nothing');
-  ok(said(ev, 'テストキングは テストポーションを おとしていった！') && said(ev, '★レアアイテム！') && ev.some((x) => x.t === 'rare'), 'guaranteed drop + rare drop');
+  ok(said(ev, 'テストキングはテストポーションを落としていった！') && said(ev, '★レアアイテム！') && ev.some((x) => x.t === 'rare'), 'guaranteed drop + rare drop');
   ok(e.inv.tb_potion === 1 && e.inv.tb_gem === 1, 'drops added to inventory');
   // per-character mods
   const p2 = R.fxBattleParty(1);
@@ -707,7 +707,7 @@ sec('rewards');
   ok(rw.each[0].exp === 6 && rw.each[1].exp === 3 && rw.each[0].jp === 5 && rw.each[1].jp === 3, 'expPct / jpPct per character');
   ok(rw.gold === 8, 'goldPct');
   const ev2 = run(e2.rewards());
-  ok(said(ev2, 'ユウキは 6ポイントの けいけんちを かくとく！') && said(ev2, 'ノンは 3ポイントの'), 'per-character EXP lines when they differ');
+  ok(said(ev2, 'ユウキは6ポイントの経験値を獲得！') && said(ev2, 'ノンは3ポイントの'), 'per-character EXP lines when they differ');
   // drop rate statistics
   let d = 0, rr = 0;
   for (let i = 0; i < 4000; i++) {
@@ -760,7 +760,7 @@ sec('live bestiary/state');
   R.Game.gold = 100;
   const e2 = new B.Engine({ party: R.Game.party, mons: ['tb_thief'], inv: R.Game.inv, live: true, noSurprise: true });
   const ev = run(e2.steal(e2.mons[0], P(e2, 0), {}));
-  ok(R.Game.gold === 80 && said(ev, '20ゴールドを ぬすまれた'), 'monster steals gold');
+  ok(R.Game.gold === 80 && said(ev, '20ゴールドを盗まれた'), 'monster steals gold');
 }
 
 // ================================================================ AI & simulate
@@ -842,7 +842,7 @@ sec('real content');
     const tgt = ['enemy', 'group'].includes(it.use.target) ? Mo(e, 0) : P(e, 0);
     let ev = [];
     try { ev = use(e, u, id, tgt, true); } catch (err) { ok(false, `item ${id} threw: ${err.message}`); continue; }
-    ok(said(ev, `${it.name}を つかった`) && texts(ev).length >= 2 && !e.inv[id], `item ${id} works in battle`);
+    ok(said(ev, `${it.name}を使った`) && texts(ev).length >= 2 && !e.inv[id], `item ${id} works in battle`);
     n++;
   }
   // every action ability (job + enemy) used by a party member and by a monster

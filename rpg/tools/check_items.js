@@ -40,7 +40,9 @@ const START_GEAR = ['copper_sword', 'oak_staff', 'wooden_rod', 'traveler_clothes
 const LOCS = ['regnas', 'milt', 'porta', 'elfin', 'salva', 'frost', 'arcana', 'edge_shrine'];
 const LOC_BAND = { regnas: 1, milt: 1, porta: 2, elfin: 3, salva: 3, frost: 4, arcana: 5, edge_shrine: 6 };
 const BAND_LV = { 1: [1, 5], 2: [6, 11], 3: [12, 18], 4: [19, 26], 5: [27, 32], 6: [33, 40] };
-// names that belong to Dragon Quest / Final Fantasy (must never appear)
+// names that belong to Dragon Quest / Final Fantasy (must never appear). Kana spellings from the old
+// all-kana era plus the kanji forms of the coined/iconic ones. Plain generic words (鉄の鎧, 薬草, 銀の盾 …)
+// are fine — see STYLE_JA.md (固有名詞の権利).
 const FORBIDDEN = ['ひのきのぼう', 'こんぼう', 'どうのつるぎ', 'はがねのつるぎ', 'てつのつるぎ', 'はじゃのつるぎ', 'ロトの', 'てんくうの',
   'キメラのつばさ', 'せいすい', 'せかいじゅ', 'ちからのたね', 'すばやさのたね', 'まもりのたね', 'かしこさのたね', 'いのちのきのみ',
   'ふしぎなきのみ', 'ラックのたね', 'どくけしそう', 'まんげつそう', 'かわのよろい', 'くさりかたびら', 'てつのよろい', 'ぬののふく',
@@ -49,9 +51,39 @@ const FORBIDDEN = ['ひのきのぼう', 'こんぼう', 'どうのつるぎ', '
   'エリクサー', 'エーテル', 'フェニックスの尾', 'ポーション', 'ハイポーション', 'ばんのうやく', 'まんのうやく', 'リボン', 'エクスカリバー',
   'ラグナロク', 'マサムネ', 'ムラマサ', 'アルテマ', 'ライトブリンガー', 'ミスリル', 'ディフェンダー', 'アイスブランド', 'フレイムタン',
   'ルーンブレイド', 'ホイミ', 'メラ', 'ギラ', 'ヒャド', 'ルーラ', 'リレミト', 'スライム', 'ケアル', 'ファイガ', 'エスナ', 'レイズ', 'ゴールドカード',
-  'イージス', 'きせきのつるぎ', 'ぎんのたてごと', 'どくがのナイフ', 'ぶとうぎ', 'まどうしのつえ', 'かしのつえ', 'ドラゴンメイル', 'みずのはごろも'];
+  'イージス', 'きせきのつるぎ', 'ぎんのたてごと', 'どくがのナイフ', 'ぶとうぎ', 'まどうしのつえ', 'かしのつえ', 'ドラゴンメイル', 'みずのはごろも',
+  // kanji forms
+  'ひのきの棒', '檜の棒', '破邪の剣', '天空の', 'キメラの翼', '世界樹', '力の種', '素早さの種', '守りの種', '賢さの種', '命の木の実',
+  '不思議な木の実', 'ラックの種', '毒消し草', '満月草', '水鏡の盾', '不思議な帽子', '星降る腕輪', '祈りの指輪', '幸せの靴', '隼の剣',
+  '奇跡の剣', '銀の竪琴', '毒蛾のナイフ', '武闘着', '魔道士の杖', '樫の杖', '水の羽衣', '万能薬', '光の玉', 'ラーの鏡', '源氏の',
+  'エルメスの靴', '金の針', '乙女のキッス', 'やまびこ草', '打ち出の小槌', 'うちでの小槌', '魔道士'];
+// hero names are chosen by the player: text must use {yuki} {non} {metem} {leader}
+const HERO_NAMES = /ユウキ|メテム|(^|[^ァ-ヶー])ノン/;
 
 const width = (s) => [...s].reduce((w, ch) => w + (ch.charCodeAt(0) < 0x80 ? 0.5 : 1), 0);
+// description boxes: shop 220px, item/equip menus 226px, battle help one line of 220px. DotGothic16 at
+// 32/3 px measures 11px per full-width character in the browser, so a line holds 20 units.
+const LINE_UNITS = 220 / 11;
+/** lines R.Gfx.wrap would produce (char wrap + kinsoku), using the unit widths above */
+function wrapLines(str, units) {
+  const out = [];
+  for (const para of String(str).split('\n')) {
+    let line = '';
+    for (const ch of para) {
+      if (line && width(line + ch) > units) {
+        if ('、。」』）！？…ー'.includes(ch)) { line += ch; continue; }
+        out.push(line); line = ch === ' ' || ch === '　' ? '' : ch;
+      } else line += ch;
+    }
+    out.push(line);
+  }
+  return out;
+}
+// DQ-style inter-phrase space: a half-width space next to Japanese text, or a full-width space that
+// does not follow ！/？ (STYLE_JA.md allows exactly that one)
+const JA = '[\\u3000-\\u30ff\\u4e00-\\u9fff\\uff01-\\uff5e]';
+const DQ_SPACE = new RegExp(`${JA} | ${JA}|(^|[^！？])\u3000`);
+const KANJI = /[\u4e00-\u9fff]/;
 const isInt = (v) => Number.isInteger(v);
 
 // ------------------------------------------------------------- per item
@@ -112,10 +144,25 @@ for (const id in I) {
     if (names[it.name]) err(`${id}: duplicate name ${it.name} (also ${names[it.name]})`);
     names[it.name] = id;
     if (width(it.name) > 9) err(`${id}: name too wide (${it.name}, ${width(it.name)} > 9)`);
+    if (/[ \u3000]/.test(it.name)) err(`${id}: name '${it.name}' contains a space`);
+    if (HERO_NAMES.test(it.name)) err(`${id}: name '${it.name}' hard-codes a hero name`);
     for (const f of FORBIDDEN) if (it.name.includes(f)) err(`${id}: name '${it.name}' contains forbidden '${f}'`);
   }
   if (!it.desc || typeof it.desc !== 'string') err(`${id}: missing desc`);
-  else if (width(it.desc) > (it.type === 'key' ? 44 : 32)) warn(`${id}: long desc (${width(it.desc)})`);
+  else {
+    // menus show two lines of description (the shop's third line is the gear summary)
+    const lines = wrapLines(it.desc, LINE_UNITS);
+    if (lines.length > 2) err(`${id}: desc needs ${lines.length} lines (max 2 at 220px): ${it.desc}`);
+    for (const l of lines) if (width(l) > LINE_UNITS) err(`${id}: desc line '${l}' is wider than the box (kinsoku overflow)`);
+    // a desc that wraps on its own breaks mid-word: put an explicit \n at a phrase boundary
+    if (lines.length > 1 && !it.desc.includes('\n')) warn(`${id}: desc wraps mid-phrase, add a \\n: ${it.desc}`);
+    // battle item help is one line; longer text gets squeezed
+    if (it.type === 'consumable' && it.use && it.use.battle && width(it.desc) > LINE_UNITS)
+      warn(`${id}: battle help squeezed (${width(it.desc)} > ${LINE_UNITS.toFixed(1)} units): ${it.desc}`);
+    if (DQ_SPACE.test(it.desc)) err(`${id}: DQ-style space in desc: '${it.desc}'`);
+    if (HERO_NAMES.test(it.desc)) err(`${id}: desc hard-codes a hero name (use {yuki} {non} {metem} {leader})`);
+    if (!KANJI.test(it.desc)) warn(`${id}: desc has no kanji (old all-kana style?): ${it.desc}`);
+  }
   if (!isInt(it.price) || it.price < 0) err(`${id}: bad price`);
   if (!(it.band >= 0 && it.band <= 6)) err(`${id}: band must be 0..6`);
   if (!isInt(it.sort)) err(`${id}: missing sort`);
@@ -146,7 +193,7 @@ for (const id in I) {
   if (it.type === 'consumable' && !it.rare && !(it.price > 0)) err(`${id}: shop consumable needs a price`);
 }
 for (const id of REQUIRED) if (!I[id]) err(`required item missing: ${id}`);
-if (I.herb && I.herb.name !== 'やくそう') err('herb must be named やくそう');
+if (I.herb && I.herb.name !== '薬草') err('herb must be named 薬草');
 for (const c of Object.values(R.DB.chars)) for (const s in c.startEquip || {}) if (!I[c.startEquip[s]]) err(`start gear ${c.startEquip[s]} missing`);
 
 // ------------------------------------------------------------------- shops

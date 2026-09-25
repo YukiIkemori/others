@@ -1,4 +1,4 @@
-// Visual fixture: draws a DQ-style shop list for one shop (or an id list) so item
+// Visual fixture: draws a shop-style list for one shop (or an id list) so item
 // name widths / prices / descriptions can be eyeballed with tools/shot.js:
 //   node tools/shot.js --out /tmp/x.png --eval "$(cat tools/fixtures/items/shop_mock.js)" --eval "RPG._mockShop('frost_weapon')"
 (() => {
@@ -27,7 +27,7 @@
       G.window(4, 176 - 18, 248, 60);
       const lines = G.wrap(it.desc, 228);
       lines.forEach((l, i) => G.text(l, 14, 168 - 2 + i * 14));
-      const st = it.atk ? `こうげき +${it.atk}` : it.def ? `しゅび +${it.def}` : '';
+      const st = it.atk ? `攻撃力+${it.atk}` : it.def ? `守備力+${it.def}` : '';
       if (st) G.text(st, 242, 166 + 2 * 14, { align: 'right', color: G.C.yellow });
     };
     R.Engine.push(L);

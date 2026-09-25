@@ -24,28 +24,28 @@
   const TIMED = { sleep: [1, 4], paralyze: [1, 3], confuse: [2, 4], silence: [3, 5], blind: [3, 5], regen: [5, 5] };
   const BAD = ['poison', 'sleep', 'paralyze', 'confuse', 'silence', 'blind'];
   const NAMES = {
-    elem: { fire: 'ほのお', ice: 'こおり', thunder: 'いかずち', wind: 'かぜ', earth: 'だいち', water: 'みず', holy: 'ひかり', dark: 'やみ' },
-    buff: { atk: 'こうげきりょく', def: 'しゅびりょく', mag: 'まりょく', mdef: 'まほうぼうぎょ', agi: 'すばやさ' },
-    stat: { hp: 'さいだいHP', mp: 'さいだいMP', str: 'ちから', vit: 'たいりょく', agi: 'すばやさ', int: 'かしこさ', mnd: 'せいしん', luk: 'うんのよさ' },
-    status: { poison: 'どく', sleep: 'ねむり', paralyze: 'まひ', confuse: 'こんらん', silence: 'ふうじ', blind: 'くらやみ', regen: 'リジェネ', death: 'し' },
+    elem: { fire: '炎', ice: '氷', thunder: '雷', wind: '風', earth: '大地', water: '水', holy: '聖', dark: '闇' },
+    buff: { atk: '攻撃力', def: '守備力', mag: '魔力', mdef: '魔法防御', agi: '素早さ' },
+    stat: { hp: '最大HP', mp: '最大MP', str: '力', vit: '体力', agi: '素早さ', int: '知力', mnd: '精神', luk: '運' },
+    status: { poison: '毒', sleep: '眠り', paralyze: '麻痺', confuse: '混乱', silence: '沈黙', blind: '暗闇', regen: '再生', death: '即死' },
   };
   const ST_ON = {
-    poison: (n) => `${n}は どくに おかされた！`,
-    sleep: (n) => `${n}は ねむってしまった！`,
-    paralyze: (n) => `${n}は からだが しびれて うごけなくなった！`,
-    confuse: (n) => `${n}は こんらんした！`,
-    silence: (n) => `${n}は じゅもんを ふうじこめられた！`,
-    blind: (n) => `${n}は めが みえなくなった！`,
-    regen: (n) => `${n}の からだを いのちの ひかりが つつんだ！`,
+    poison: (n) => `${n}は毒に冒された！`,
+    sleep: (n) => `${n}は眠ってしまった！`,
+    paralyze: (n) => `${n}は体がしびれて動けなくなった！`,
+    confuse: (n) => `${n}は混乱した！`,
+    silence: (n) => `${n}は魔法を封じられた！`,
+    blind: (n) => `${n}は目が見えなくなった！`,
+    regen: (n) => `${n}の体を命の光が包んだ！`,
   };
   const ST_OFF = {
-    poison: (n) => `${n}の どくが きえた！`,
-    sleep: (n) => `${n}は めを さました！`,
-    paralyze: (n) => `${n}の からだの しびれが とれた！`,
-    confuse: (n) => `${n}は われに かえった！`,
-    silence: (n) => `${n}の じゅもんの ふうじが とけた！`,
-    blind: (n) => `${n}の めが みえるように なった！`,
-    regen: (n) => `${n}を つつむ ひかりが きえた。`,
+    poison: (n) => `${n}の毒が消えた！`,
+    sleep: (n) => `${n}は目を覚ました！`,
+    paralyze: (n) => `${n}の体のしびれが取れた！`,
+    confuse: (n) => `${n}は我に返った！`,
+    silence: (n) => `${n}の魔法の封印が解けた！`,
+    blind: (n) => `${n}の目が見えるようになった！`,
+    regen: (n) => `${n}を包む光が消えた。`,
   };
   const LEVEL_STATS = ['str', 'agi', 'vit', 'int', 'mnd', 'luk', 'hp', 'mp'];
   const LETTERS = 'ＡＢＣＤＥＦＧＨ';
@@ -257,7 +257,7 @@
 
     // ------------------------------------------------------- start
     *begin() {
-      for (const g of this.groups()) yield this.m(g.n > 1 ? `${g.name}が ${g.n}ひき あらわれた！` : `${g.name}が あらわれた！`);
+      for (const g of this.groups()) yield this.m(g.n > 1 ? `${g.name}が${g.n}匹現れた！` : `${g.name}が現れた！`);
       if (this.live && R.State && R.Game) for (const g of this.groups()) R.State.seen(g.id);
       if (this.o.surprise !== undefined) this.surprise = this.o.surprise || null; // forced ('pre'|'ambush'|null)
       else if (!this.o.noSurprise && !this.boss) {
@@ -266,8 +266,8 @@
         if (r < pre) this.surprise = 'pre';
         else if (r < pre + 1 / 32) this.surprise = 'ambush';
       }
-      if (this.surprise === 'pre') yield this.m('しかし まものたちは まだ こちらに きづいていない！');
-      if (this.surprise === 'ambush') yield this.m('まものたちは いきなり おそいかかってきた！');
+      if (this.surprise === 'pre') yield this.m('しかし魔物たちは、まだこちらに気づいていない！');
+      if (this.surprise === 'ambush') yield this.m('魔物たちがいきなり襲いかかってきた！');
       for (const p of this.party) {
         const sb = p.mods.startBuffs;
         if (p.alive && sb) for (const k in sb) if (BUFF_STATS.includes(k)) p.buffs[k] = U.clamp(p.buffs[k] + sb[k], -2, 2);
@@ -332,19 +332,19 @@
         if (left <= 0) yield* this.clearStatus(u, s);
         else {
           u.turns[s] = left;
-          yield this.m(s === 'sleep' ? `${u.name}は ねむっている。` : `${u.name}は からだが しびれて うごけない！`);
+          yield this.m(s === 'sleep' ? `${u.name}は眠っている。` : `${u.name}は体がしびれて動けない！`);
         }
         yield* this.endTurn(u);
         u.acts++;
         return;
       }
       if (u.status.confuse) {
-        yield this.m(`${u.name}は こんらんしている！`);
+        yield this.m(`${u.name}は混乱している！`);
         cmd = this.confusedCommand(u);
       } else if (!u.isParty) {
         if (u.flag('flee') && !u.boss && U.chance(u.d.fleeRate != null ? u.d.fleeRate : 0.3)) {
           u.gone = true;
-          yield this.m(`${u.name}は にげだした！`);
+          yield this.m(`${u.name}は逃げ出した！`);
           yield { t: 'flee', u };
           return;
         }
@@ -368,15 +368,15 @@
         case 'attack': return yield* this.attack(u, cmd.target, false);
         case 'defend':
           u.defending = true;
-          yield this.m(`${u.name}は みを まもっている。`);
+          yield this.m(`${u.name}は身を守っている。`);
           return;
         case 'wait':
-          yield this.m(`${u.name}は ようすを うかがっている。`);
+          yield this.m(`${u.name}は様子をうかがっている。`);
           return;
         case 'flee':
           if (!u.isParty && !u.boss) {
             u.gone = true;
-            yield this.m(`${u.name}は にげだした！`);
+            yield this.m(`${u.name}は逃げ出した！`);
             yield { t: 'flee', u };
           }
           return;
@@ -400,7 +400,7 @@
         u.hp = Math.max(0, u.hp - n);
         if (u.isParty) this.stats.taken += n; else this.stats.dealt += n;
         yield { t: 'dmg', u, n, kind: 'poison' };
-        yield this.m(`${u.name}は どくで ${n}の ダメージを うけた！`);
+        yield this.m(`${u.name}は毒で${n}のダメージを受けた！`);
         if (u.hp <= 0) { yield* this.die(u, null); return; }
       }
       if ((u.status.regen || u.permRegen) && u.hp < u.mhp) {
@@ -423,10 +423,10 @@
     // ------------------------------------------------------- escape
     *tryEscape(sure) {
       yield { t: 'actor', u: null };
-      yield this.m(`${this.leaderName()}たちは にげだした！`);
+      yield this.m(`${this.leaderName()}たちは逃げ出した！`);
       if (this.noEscape) {
         yield { t: 'escape', ok: false };
-        yield this.m('しかし にげられない！');
+        yield this.m('しかし逃げられない！');
         return false;
       }
       if (sure || U.chance(this.escapeChance())) {
@@ -437,7 +437,7 @@
       }
       this.escapes++;
       yield { t: 'escape', ok: false };
-      yield this.m('しかし まわりこまれて しまった！');
+      yield this.m('しかし回り込まれてしまった！');
       return false;
     }
     escapeChance() {
@@ -458,7 +458,7 @@
     }
 
     *attack(u, target, counter) {
-      yield this.m(counter ? `${u.name}の はんげき！` : `${u.name}の こうげき！`);
+      yield this.m(counter ? `${u.name}の反撃！` : `${u.name}の攻撃！`);
       const swings = u.isParty && u.mods.twoSwords ? 2 : 1;
       for (let i = 0; i < swings; i++) {
         let t = this.pickFoe(u, target);
@@ -482,7 +482,7 @@
         const ra = this.reactionOf(p);
         if (ra && ra.react.type === 'cover' && U.chance(ra.chance != null ? ra.chance : 1)) {
           yield { t: 'cover', u: p, ally: t };
-          yield this.m(`${p.name}は ${t.name}を かばった！`);
+          yield this.m(`${p.name}は${t.name}をかばった！`);
           return p;
         }
       }
@@ -567,18 +567,18 @@
       const kind = info.kind || 'phys';
       if (r.miss) {
         yield { t: 'miss', u: tgt, att };
-        yield this.m(tgt.isParty ? `しかし ${tgt.name}は すばやく みを かわした！` : `ミス！ ${tgt.name}は ひらりと みを かわした！`);
+        yield this.m(tgt.isParty ? `しかし${tgt.name}は素早く身をかわした！` : `ミス！　${tgt.name}はひらりと身をかわした！`);
         return false;
       }
       if (r.crit) {
         yield { t: 'crit', u: att };
-        yield this.m(att.isParty ? 'かいしんの いちげき！' : 'つうこんの いちげき！');
+        yield this.m(att.isParty ? '会心の一撃！' : '痛恨の一撃！');
       }
       let dmg = r.dmg;
       if (tgt.defending && dmg > 0) dmg /= 2;
       dmg = dmg < 0 ? -Math.round(-dmg) : Math.round(dmg);
       if (dmg < 0) {
-        yield this.m(`しかし ${tgt.name}は ダメージを きゅうしゅうした！`);
+        yield this.m(`しかし${tgt.name}はダメージを吸収した！`);
         yield* this.restore(tgt, -dmg, 'hp');
         return true;
       }
@@ -586,20 +586,20 @@
         const n = Math.min(tgt.mp, dmg);
         tgt.mp -= n;
         yield { t: 'dmg', u: tgt, n, mp: true, kind };
-        yield this.m(`${tgt.name}の MPが ${n} へった！`);
+        yield this.m(`${tgt.name}のMPが${n}減った！`);
         if (info.drain && n > 0 && att.alive) yield* this.restore(att, Math.round(n * info.drain), 'mp', 'drain');
         return true;
       }
       if (dmg <= 0) {
         yield { t: 'dmg', u: tgt, n: 0, kind };
-        yield this.m(tgt.isParty ? `ミス！ ${tgt.name}は ダメージを うけない！` : `ミス！ ${tgt.name}に ダメージを あたえられない！`);
+        yield this.m(tgt.isParty ? `ミス！　${tgt.name}はダメージを受けない！` : `ミス！　${tgt.name}にダメージを与えられない！`);
         return true;
       }
       const dealt = Math.min(tgt.hp, dmg);
       tgt.hp = Math.max(0, tgt.hp - dmg);
       if (tgt.isParty) this.stats.taken += dealt; else this.stats.dealt += dealt;
       yield { t: 'dmg', u: tgt, n: dmg, crit: !!r.crit, kind, src: att };
-      yield this.m(tgt.isParty ? `${tgt.name}は ${dmg}の ダメージを うけた！` : `${tgt.name}に ${dmg}の ダメージ！`);
+      yield this.m(tgt.isParty ? `${tgt.name}は${dmg}のダメージを受けた！` : `${tgt.name}に${dmg}のダメージ！`);
       if (tgt.hp <= 0) yield* this.die(tgt, att);
       else {
         if (tgt.status.sleep && U.chance(0.5)) yield* this.clearStatus(tgt, 'sleep');
@@ -619,18 +619,18 @@
       yield { t: 'die', u, killer };
       if (u.isParty) {
         this.stats.deaths++;
-        yield this.m(`${u.name}は たおれた！`);
+        yield this.m(`${u.name}は倒れた！`);
         const ra = this.reactionOf(u);
         if (ra && ra.trigger === 'ko' && ra.react.type === 'revive' && !u.revived && U.chance(ra.chance != null ? ra.chance : 1)) {
           u.revived = true;
           u.hp = Math.max(1, Math.floor(u.mhp * (ra.react.pct || 0.25)));
           yield { t: 'react', u, a: ra };
           yield { t: 'revive', u };
-          yield this.m(`しかし ${u.name}は ふたたび たちあがった！`);
+          yield this.m(`しかし${u.name}は再び立ち上がった！`);
         }
       } else {
         if (!this.killed.includes(u)) this.killed.push(u);
-        yield this.m(`${u.name}を たおした！`);
+        yield this.m(`${u.name}を倒した！`);
       }
     }
 
@@ -642,9 +642,9 @@
       if (kind === 'mp') t.mp += got; else t.hp += got;
       yield { t: 'heal', u: t, n: got, mp: kind === 'mp' };
       const K = kind === 'mp' ? 'MP' : 'HP';
-      if (why === 'drain') yield this.m(`${t.name}は ${K}を ${got} すいとった！`);
-      else if (got > 0) yield this.m(`${t.name}の ${K}が ${got} かいふくした！`);
-      else yield this.m(`${t.name}の ${K}は もう まんたんだ。`);
+      if (why === 'drain') yield this.m(`${t.name}は${K}を${got}吸い取った！`);
+      else if (got > 0) yield this.m(`${t.name}の${K}が${got}回復した！`);
+      else yield this.m(`${t.name}の${K}はもう満タンだ。`);
       return got;
     }
 
@@ -653,16 +653,16 @@
       const res = t.resist(s);
       if (s === 'death') {
         if (res >= 1 || !U.chance((chance != null ? chance : 1) * (1 - res))) {
-          if (!quiet) yield this.m(`しかし ${t.name}には きかなかった！`);
+          if (!quiet) yield this.m(`しかし${t.name}には効かなかった！`);
           return false;
         }
         yield { t: 'status', u: t, s: 'death', on: true };
-        yield this.m(t.isParty ? `${t.name}の いきが とまった！` : `${t.name}の いきのねを とめた！`);
+        yield this.m(t.isParty ? `${t.name}の息が止まった！` : `${t.name}の息の根を止めた！`);
         yield* this.die(t, u);
         return true;
       }
       if (t.status[s] || (s !== 'regen' && !U.chance((chance != null ? chance : 1) * (1 - res)))) {
-        if (!quiet) yield this.m(`しかし ${t.name}には きかなかった！`);
+        if (!quiet) yield this.m(`しかし${t.name}には効かなかった！`);
         return false;
       }
       t.status[s] = true;
@@ -705,28 +705,28 @@
     }
 
     announce(u, ab, item) {
-      if (item) return `${u.name}は ${item.name}を つかった！`;
+      if (item) return `${u.name}は${item.name}を使った！`;
       if (ab.msg) return ab.msg.replace(/\{user\}/g, u.name).replace(/\{name\}/g, ab.name);
-      return ab.magic ? `${u.name}は ${ab.name}を となえた！` : `${u.name}の ${ab.name}！`;
+      return ab.magic ? `${u.name}は${ab.name}を唱えた！` : `${u.name}の${ab.name}！`;
     }
 
     *useAbility(u, id, ab, chosen, item) {
       if (!item) {
         if (ab.magic && u.status.silence) {
           yield this.m(this.announce(u, ab));
-          yield this.m('しかし じゅもんは ふうじこめられている！');
+          yield this.m('しかし魔法は封じられている！');
           return;
         }
         const cost = this.mpCost(u, id, ab);
         if (u.mp < cost) {
           yield this.m(this.announce(u, ab));
-          yield this.m('しかし MPが たりない！');
+          yield this.m('しかしMPが足りない！');
           return;
         }
         u.mp -= cost;
       } else if (!this.takeItem(id)) {
-        yield this.m(`${u.name}は ${item.name}を つかおうとした！`);
-        yield this.m(`しかし ${item.name}は もう なかった！`);
+        yield this.m(`${u.name}は${item.name}を使おうとした！`);
+        yield this.m(`しかし${item.name}はもうなかった！`);
         return;
       }
       u.used[id] = true;
@@ -753,7 +753,7 @@
         }
       } else {
         const targets = this.targets(u, ab, chosen);
-        if (!targets.length) { yield this.m('しかし なにも おこらなかった！'); return; }
+        if (!targets.length) { yield this.m('しかし何も起こらなかった！'); return; }
         yield { t: 'fx', fx: ctx.fx, user: u, targets, ab, kind: 'ability' };
         for (const t of targets) {
           for (const eff of effects) {
@@ -763,7 +763,7 @@
           }
         }
       }
-      if (this.said === said) yield this.m('しかし なにも おこらなかった！');
+      if (this.said === said) yield this.m('しかし何も起こらなかった！');
     }
 
     *effect(u, t, eff, ctx) {
@@ -793,7 +793,7 @@
           const i = this.killed.indexOf(t);
           if (i >= 0) this.killed.splice(i, 1);
           yield { t: 'revive', u: t };
-          yield this.m(`${t.name}は いきかえった！`);
+          yield this.m(`${t.name}は生き返った！`);
           return;
         }
         case 'cure': {
@@ -808,7 +808,7 @@
           if (!BUFF_STATS.some((k) => t.buffs[k])) return;
           t.buffs = { atk: 0, def: 0, mag: 0, mdef: 0, agi: 0 };
           yield { t: 'buff', u: t, stat: null, d: 0 };
-          yield this.m(`${t.name}に かかっていた こうかが きえた！`);
+          yield this.m(`${t.name}にかかっていた効果が消えた！`);
           return;
         }
         case 'steal': return yield* this.steal(u, t, eff);
@@ -817,15 +817,15 @@
           if (!u.isParty) {
             if (u.boss) return;
             u.gone = true;
-            yield this.m(`${u.name}は にげだした！`);
+            yield this.m(`${u.name}は逃げ出した！`);
             yield { t: 'flee', u };
             return;
           }
           if (this.result) return;
-          if (this.noEscape) { yield this.m('しかし にげられない！'); return; }
+          if (this.noEscape) { yield this.m('しかし逃げられない！'); return; }
           this.result = 'escape';
           yield { t: 'escape', ok: true };
-          yield this.m(`${this.leaderName()}たちは うまく にげきった！`);
+          yield this.m(`${this.leaderName()}たちはうまく逃げ切った！`);
           return;
         }
         case 'grow': {
@@ -837,11 +837,11 @@
           if (t.mhp > mhp) t.hp += t.mhp - mhp;
           if (t.mmp > mmp) t.mp += t.mmp - mmp;
           yield { t: 'buff', u: t, stat: eff.stat, d: 1, grow: true };
-          yield this.m(`${t.name}の ${NAMES.stat[eff.stat] || eff.stat}が ${n} あがった！`);
+          yield this.m(`${t.name}の${NAMES.stat[eff.stat] || eff.stat}が${n}上がった！`);
           return;
         }
         case 'teleport': case 'exit': case 'repel':
-          yield this.m('しかし ここでは つかえない！');
+          yield this.m('しかしここでは使えない！');
           return;
         case 'special': {
           const fn = B.specials && B.specials[eff.id];
@@ -859,7 +859,7 @@
         if (i > 0) yield { t: 'fx', fx: ctx.fx, user: u, targets: [t], ab: ctx.ab, kind: 'ability' };
         if (kind === 'phys' && !ctx.multi && ctx.ab.target === 'enemy') t = yield* this.cover(u, t);
         const r = this.roll(u, t, eff, ctx);
-        if (r.immune || r.resisted) { yield { t: 'miss', u: t, att: u }; yield this.m(`しかし ${t.name}には きかなかった！`); break; }
+        if (r.immune || r.resisted) { yield { t: 'miss', u: t, att: u }; yield this.m(`しかし${t.name}には効かなかった！`); break; }
         yield* this.hit(u, t, r, { kind, mp: !!eff.mp, drain: eff.drain || 0 });
       }
     }
@@ -868,27 +868,27 @@
       if (!t.alive || !BUFF_STATS.includes(eff.stat)) return;
       const st = eff.stages || 1;
       const name = NAMES.buff[eff.stat];
-      if (eff.chance != null && !U.chance(eff.chance)) { yield this.m(`しかし ${t.name}には きかなかった！`); return; }
+      if (eff.chance != null && !U.chance(eff.chance)) { yield this.m(`しかし${t.name}には効かなかった！`); return; }
       const cur = t.buffs[eff.stat], nv = U.clamp(cur + st, -2, 2), d = nv - cur;
-      if (!d) { yield this.m(`しかし ${t.name}の ${name}は もう ${st > 0 ? 'あがらない' : 'さがらない'}！`); return; }
+      if (!d) { yield this.m(`しかし${t.name}の${name}はもう${st > 0 ? '上がらない' : '下がらない'}！`); return; }
       t.buffs[eff.stat] = nv;
       yield { t: 'buff', u: t, stat: eff.stat, d };
-      yield this.m(`${t.name}の ${name}が ${d > 0 ? 'あがった' : 'さがった'}！`);
+      yield this.m(`${t.name}の${name}が${d > 0 ? '上がった' : '下がった'}！`);
     }
 
     *steal(u, t, eff) {
       if (!u.isParty) {
         // monster thieves take a little gold (real battles only)
         const g = this.live && R.Game ? Math.min(R.Game.gold, (u.level || 1) * 5) : 0;
-        if (!g) { yield this.m(`しかし ${u.name}は なにも ぬすめなかった！`); return; }
+        if (!g) { yield this.m(`しかし${u.name}は何も盗めなかった！`); return; }
         R.Game.gold -= g;
-        yield this.m(`${this.leaderName()}たちは ${g}ゴールドを ぬすまれた！`);
+        yield this.m(`${this.leaderName()}たちは${g}ゴールドを盗まれた！`);
         return;
       }
       if (t.isParty) return;
       const s = t.d.steal;
-      if (!s || t.stolen || (!s.item && !s.rare)) { yield this.m(`${t.name}は なにも もっていない！`); return; }
-      if (!U.chance(this.stealChance(u, t))) { yield this.m('しかし ぬすめなかった！'); return; }
+      if (!s || t.stolen || (!s.item && !s.rare)) { yield this.m(`${t.name}は何も持っていない！`); return; }
+      if (!U.chance(this.stealChance(u, t))) { yield this.m('しかし盗めなかった！'); return; }
       let item = s.item, rare = false;
       if (s.rare && (!s.item || U.chance(this.rareStealChance(u, eff)))) { item = s.rare; rare = true; }
       t.stolen = true;
@@ -897,7 +897,7 @@
       if (this.live && R.State && R.Game) R.State.noteDrop(t.id, rare ? 'stealRare' : 'steal');
       if (rare) { yield { t: 'rare' }; yield this.m('★レアアイテム！'); }
       yield { t: 'gain', item, rare };
-      yield this.m(`${u.name}は ${t.name}から ${(DB.items[item] || {}).name || item}を ぬすんだ！`);
+      yield this.m(`${u.name}は${t.name}から${(DB.items[item] || {}).name || item}を盗んだ！`);
     }
     stealChance(u, t) {
       let p = U.clamp(0.4 + (u.stat('agi') - t.stat('agi')) / 200 + u.stat('luk') / 400, 0.1, 0.9);
@@ -910,13 +910,13 @@
     }
 
     *scan(t) {
-      yield this.m(`${t.name}  レベル ${t.level}  HP ${t.hp}/${t.mhp}`);
+      yield this.m(`${t.name}　レベル${t.level}　HP${t.hp}/${t.mhp}`);
       if (t.isParty) return;
       const el = t.d.elem || {};
       const weak = Object.keys(el).filter((e) => el[e] >= 1.5).map((e) => NAMES.elem[e]);
       const absorb = Object.keys(el).filter((e) => el[e] < 0).map((e) => NAMES.elem[e]);
-      yield this.m(weak.length ? `じゃくてん： ${weak.join(' ')}` : 'じゃくてんは みつからない。');
-      if (absorb.length) yield this.m(`きゅうしゅう： ${absorb.join(' ')}`);
+      yield this.m(weak.length ? `弱点：${weak.join('・')}` : '弱点は見つからない。');
+      if (absorb.length) yield this.m(`吸収：${absorb.join('・')}`);
       if (this.live && R.State && R.Game) R.State.noteDrop(t.id, 'scan');
     }
 
@@ -971,7 +971,7 @@
           return;
         case 'heal':
           yield { t: 'react', u, a: r.a };
-          yield this.m(`${u.name}の ${r.a.name}！`);
+          yield this.m(`${u.name}の${r.a.name}！`);
           yield { t: 'fx', fx: 'heal', user: u, targets: [t], kind: 'react' };
           yield* this.restore(t, t.mhp * (re.pct || 0.25), 'hp');
           return;
@@ -980,20 +980,20 @@
           if (!id || !this.takeItem(id)) return;
           const it = DB.items[id];
           yield { t: 'react', u, a: r.a };
-          yield this.m(`${u.name}は とっさに ${it.name}を つかった！`);
+          yield this.m(`${u.name}はとっさに${it.name}を使った！`);
           yield { t: 'fx', fx: it.use.fx || 'heal', user: u, targets: [t], kind: 'react' };
           for (const eff of it.use.effects) yield* this.effect(u, t, eff, { item: it, ab: it.use });
           return;
         }
         case 'buff':
           yield { t: 'react', u, a: r.a };
-          yield this.m(`${u.name}の ${r.a.name}！`);
+          yield this.m(`${u.name}の${r.a.name}！`);
           yield { t: 'fx', fx: (re.stages || 1) > 0 ? 'buff' : 'debuff', user: u, targets: [u], kind: 'react' };
           yield* this.buff(u, { stat: re.stat, stages: re.stages || 1 });
           return;
         case 'mp':
           yield { t: 'react', u, a: r.a };
-          yield this.m(`${u.name}の ${r.a.name}！`);
+          yield this.m(`${u.name}の${r.a.name}！`);
           yield { t: 'fx', fx: 'mp', user: u, targets: [u], kind: 'react' };
           yield* this.restore(u, re.power || 10, 'mp');
           return;
@@ -1056,21 +1056,21 @@
     *rewards() {
       const rw = (this.rewardInfo = this.computeRewards());
       yield { t: 'victory' };
-      if (!this.killed.length) { yield this.m('まものたちは いなくなった。'); yield { t: 'pause' }; return; }
+      if (!this.killed.length) { yield this.m('魔物たちはいなくなった。'); yield { t: 'pause' }; return; }
       const species = new Set(this.killed.map((m) => m.id));
-      yield this.m(species.size === 1 && this.killed.length === 1 ? `${this.killed[0].base}を やっつけた！` : 'まものたちを やっつけた！');
+      yield this.m(species.size === 1 && this.killed.length === 1 ? `${this.killed[0].base}をやっつけた！` : '魔物たちをやっつけた！');
       const same = (k) => rw.each.every((e) => e[k] === rw.each[0][k]);
       if (rw.each.length) {
-        if (same('exp')) yield this.m(`${rw.each.length > 1 ? 'それぞれ ' : ''}${rw.each[0].exp}ポイントの けいけんちを かくとく！`);
-        else for (const e of rw.each) yield this.m(`${e.u.name}は ${e.exp}ポイントの けいけんちを かくとく！`);
+        if (same('exp')) yield this.m(`${rw.each.length > 1 ? 'それぞれ' : ''}${rw.each[0].exp}ポイントの経験値を獲得！`);
+        else for (const e of rw.each) yield this.m(`${e.u.name}は${e.exp}ポイントの経験値を獲得！`);
       }
       if (rw.gold > 0) {
         if (this.live && R.State && R.Game) R.State.addGold(rw.gold);
-        yield this.m(`${rw.gold}ゴールドを てにいれた！`);
+        yield this.m(`${rw.gold}ゴールドを手に入れた！`);
       }
       if (rw.each.length && rw.jp > 0) {
-        if (same('jp')) yield this.m(`${rw.each.length > 1 ? 'それぞれ ' : ''}${rw.each[0].jp} JPを かくとく！`);
-        else for (const e of rw.each) yield this.m(`${e.u.name}は ${e.jp} JPを かくとく！`);
+        if (same('jp')) yield this.m(`${rw.each.length > 1 ? 'それぞれ' : ''}${rw.each[0].jp}JPを獲得！`);
+        else for (const e of rw.each) yield this.m(`${e.u.name}は${e.jp}JPを獲得！`);
       }
       yield { t: 'pause' };
       for (const e of rw.each) {
@@ -1082,18 +1082,18 @@
           e.u.refresh();
           yield { t: 'clear' };
           yield { t: 'jingle', id: 'levelup' };
-          yield this.m(`${c.name}は レベル ${c.level}に あがった！`);
-          // stat gains, three per line: 「ちから+2 すばやさ+1 たいりょく+2」
+          yield this.m(`${c.name}はレベル${c.level}に上がった！`);
+          // stat gains, three per line: 「力+2　素早さ+1　体力+2」
           const gains = LEVEL_STATS.filter((k) => after[k] > before[k]).map((k) => `${NAMES.stat[k]}+${after[k] - before[k]}`);
-          for (let i = 0; i < gains.length; i += 3) yield this.m(gains.slice(i, i + 3).join(' '));
+          for (let i = 0; i < gains.length; i += 3) yield this.m(gains.slice(i, i + 3).join('　'));
           yield { t: 'pause', levels: c.level - lv0 };
         }
         const jr = R.Rules.gainJp(c, e.jp);
         if (jr.levelUps.length || jr.unlocked.length) {
           yield { t: 'clear' };
           yield { t: 'jingle', id: 'jobup' };
-          for (const lu of jr.levelUps) yield this.m(`${c.name}の ${(DB.jobs[lu.job] || {}).name || lu.job}の ジョブレベルが ${lu.level}に あがった！`);
-          for (const j of jr.unlocked) yield this.m(`あたらしい ジョブ ${(DB.jobs[j] || {}).name || j}に なれるように なった！`);
+          for (const lu of jr.levelUps) yield this.m(`${c.name}の${(DB.jobs[lu.job] || {}).name || lu.job}のジョブレベルが${lu.level}に上がった！`);
+          for (const j of jr.unlocked) yield this.m(`新しいジョブ『${(DB.jobs[j] || {}).name || j}』になれるようになった！`);
           yield { t: 'pause' };
         }
       }
@@ -1105,7 +1105,7 @@
         yield { t: 'clear' };
         if (d.rare) { yield { t: 'rare' }; yield this.m('★レアアイテム！'); }
         yield { t: 'gain', item: d.item, rare: d.rare };
-        yield this.m(`${DB.monsters[d.mon].name}は ${it.name}を おとしていった！`);
+        yield this.m(`${DB.monsters[d.mon].name}は${it.name}を落としていった！`);
         yield { t: 'pause' };
       }
     }

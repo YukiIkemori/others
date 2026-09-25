@@ -12,6 +12,12 @@ console.warn = (...a) => { warnings.push(a.join(' ')); };
 const R = require(path.join(ROOT, 'tools/lib/load'))({ quiet: true });
 console.warn = origWarn;
 const win = { RPG: R };
+// The field is tested in isolation: drop the real battle/shop/menu/game-over
+// systems so the fixture battle stub and the event fallbacks are exercised.
+R.Battle = null;
+R.Shop = null;
+R.Menu = null;
+R.GameOver = null;
 for (const f of ['maps.js', 'battle_stub.js']) new Function('window', fs.readFileSync(path.join(__dirname, f), 'utf8'))(win);
 
 // headless stubs: text metrics only (nothing is drawn)
