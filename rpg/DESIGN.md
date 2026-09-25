@@ -331,12 +331,59 @@ hit; 2–4 turns), `silence` (no `magic` abilities, 3–5 turns), `blind` (physi
 `death` (instant KO effect), `regen` (+1/10 max HP per turn, 5 turns). Only `poison` persists after battle.
 Elements: `fire ice thunder wind earth water holy dark`.
 
+#### Element policy (weaknesses by family — `node tools/check_elements.js`)
+A monster's weaknesses follow **what it looks like**, so a player who has seen one bat knows every bat.
+Each monster lists its families in `fam` (data-only field; the game reads `elem`); `elem` = the families'
+profiles merged left to right (a later family overrides an element) + a few listed exceptions. The table
+lives in `monsters.js` as `R.ELEM_FAMILIES` (merge helper `R.famElem`). Values: weak ×2, resist ×0.5,
+immune 0, absorb −1. **Bosses** use the same families with weaknesses at ×1.5 (`troops.js` `bossElem`);
+rare monsters also use ×1.5.
+
+| family | who | weak | resist / immune / absorb |
+|---|---|---|---|
+| `wing` 翼で飛ぶ敵 | bats, bees, harpies, dragons, chimeras, gargoyles, imps | 風 | 大地 immune |
+| `float` 宙に浮かぶ敵 | ghosts, will-o'-wisps, eyes, spirits | — | 大地 ×0.5 |
+| `beast` 地を駆ける獣・亜人 | rats, wolves, goblins, orcs, minotaurs, yeti, frost giant | 大地 | — |
+| `rock` 岩・石・ゴーレム | rock jelly, golems, gargoyles, rock crab, stone sphinx | 水・大地 | 炎 ×0.5 |
+| `sand` 砂漠の生き物 | scorpions, sandworms | 水 (氷 ×1.5) | — |
+| `plant` 植物・キノコ | mushrooms, man-eating flowers, cactus | 炎 | 水 ×0.5 |
+| `bug` 虫 | bees | 炎 | — |
+| `reptile` ヘビ・トカゲ・竜 | snakes, lizardmen, dragons, chimeras (snake tail) | 氷 | — |
+| `sea` 海の生き物 | water jellies, octopuses | 雷 | 水 absorb |
+| `shore` 水辺の生き物 | mermen, crabs, sea snakes | 雷 | 水 ×0.5 |
+| `metal` 鎧・金属 | living armor, golden idol | 雷 | — |
+| `flame` 炎の体 | salamander, magma jelly/golem, fire wisps, fire imp | 氷・水 | 炎 absorb |
+| `frost` 氷の体 | snow/ice spirits, ice jelly, ice armor/golem | 炎 | 氷 absorb |
+| `snow` 雪国の獣 | furred snow beasts, icicle bat, ice dragon | — | 氷 ×0.5 |
+| `gale` 風の体 | wind spirit | — | 風 absorb |
+| `undead` アンデッド | skeletons, mummies, ghosts, lich (flag `undead`) | 聖 (炎 ×1.5) | 闇 absorb |
+| `demon` 悪魔・闇の者 | demons, imps, dark priests, the demon eye, cursed armor, demon king | 聖 | 闇 immune |
+| `shade` 闇に染まった魔物 | 「闇」「黒」 variants (keep their base family) | — | 闇 ×0.5 |
+| `light` 光・星・精霊 | star-tower monsters, spirits, fox fire, star guardian | 闇 | 聖 ×0.5 |
+| `eye` 目玉 | eyes (darkness blinds them) | 闇 | — |
+| `human` 人間 | hired mage, star mage, bandit chief | 闇 | — |
+| `plain` 弱点なし | plain jelly, mimics | — | — |
+
+Rules: **absorb only where the body *is* the element** (water jelly/octopus, lava/fire wisp, ice/snow spirit,
+ghost/undead, wind spirit) — 21 regular absorbers. `flying` flag ⇔ `wing`/`float` family. Exceptions are
+few and visible in the data (mummy burns ×2; ice armor/golem are immune to ice instead of absorbing; the
+fire imp and flame breathers resist fire). Target: **12–20 regular monsters weak to each element**
+(now 炎20 氷18 雷16 風16 大地18 水14 聖13 闇12). Bosses rotate the element that matters: 大地 goblin chief,
+闇 bandit chief, 雷 sea serpent, 水/大地 stone sphinx, 炎/大地 frost giant, 氷/水 flame lord, 闇 star
+guardian, 聖 generals and demon king.
+Player side: every element has weapons across the bands (大地: 岩砕きの爪★ b3, 巨人の斧 b4, 地竜の斧★ b6;
+風: 風切りの槍★ … 天つ風★; 闇: 影縫いの短剣★ b4, 朧月の太刀 b5 …; 水: 時雨の太刀, 水竜の槍★, 水神の爪★)
+and skills of the same power as fire/ice/thunder at the same tier (大地: 地ならし, 岩石落とし (黒魔術師 T2
+single, = old 爆炎); 風: かまいたち, 旋風脚, 風切り; 闇: 暗黒騎士). Shop elemental stock should match
+the next dungeon's weaknesses.
+
 ### 5.6 Monsters (`R.DB.monsters[id]`)
 ```
 { name, sprite:'jelly', hue?, sat?, bri?,               // palette variant of a base sprite
   lv, hp, mp, atk, def, agi, mag, mdef, eva?,           // eva % (default 3)
   exp, gold, jp,
   elem?:{fire:2, ice:0.5, holy:0, dark:-1},             // damage multipliers (2 weak, 0.5 resist, 0 immune, <0 absorb)
+  fam?:['wing','reptile'],                              // element families (§5.5 Element policy), data-only
   statusRes?:{sleep:0.5, death:1},                      // chance to resist (1 = immune); bosses resist most
   actions:[{id:'attack', w:6}, {id:'en_fireball', w:2, cond?:{hpBelow:0.5, every:[3,0], once:true}}],
   actsPerTurn?:1|2|3,
