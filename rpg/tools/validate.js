@@ -134,7 +134,7 @@ for (const id in mons) {
   const m = mons[id], w = `monster ${id}`;
   if (!gfx('mon:' + m.sprite)) E(`${w}: sprite mon:${m.sprite} not registered`);
   for (const k of ['lv', 'hp', 'atk', 'def', 'agi', 'exp', 'gold', 'jp']) if (typeof m[k] !== 'number') E(`${w}: ${k} missing`);
-  for (const a of m.actions || []) if (a.id !== 'attack' && !abil[a.id]) E(`${w}: action ${a.id} missing`);
+  for (const a of m.actions || []) if (!['attack', 'defend', 'wait', 'flee'].includes(a.id) && !abil[a.id]) E(`${w}: action ${a.id} missing`);
   if (!(m.actions || []).length) E(`${w}: no actions`);
   for (const k of ['drop', 'rare']) if (m[k] && !items[m[k].item]) E(`${w}: ${k} item ${m[k].item} missing`);
   if (m.steal) { if (m.steal.item && !items[m.steal.item]) E(`${w}: steal item missing`); if (m.steal.rare && !items[m.steal.rare]) E(`${w}: steal rare missing`); }
@@ -178,7 +178,9 @@ for (const id in parsed) {
   if (m.type !== 'world' && m.theme && !DB.themes[m.theme]) E(`${w}: bad theme ${m.theme}`);
   if (m.encounter && !DB.encounters[m.encounter]) E(`${w}: encounter zone ${m.encounter} missing`);
   if (m.encounter) zonesUsed.add(m.encounter);
-  for (const z of m.zones || []) { zonesUsed.add(z.zone); if (!DB.encounters[z.zone]) E(`${w}: zone ${z.zone} missing`); }
+  const missingZones = new Set();
+  for (const z of m.zones || []) { zonesUsed.add(z.zone); if (!DB.encounters[z.zone]) missingZones.add(z.zone); }
+  for (const z of missingZones) E(`${w}: zone ${z} missing`);
   if (m.defaultZone) zonesUsed.add(m.defaultZone);
   const chars = m.type === 'world' ? R.MARK_CHARS_WORLD : R.MARK_CHARS_LOCAL;
   for (const ch in m.marks || {}) if (!chars.includes(ch)) W(`${w}: mark char '${ch}' is not in the free list`);
@@ -194,7 +196,8 @@ for (const id in parsed) {
     if (n.sprite && !gfx(n.sprite)) E(`${w}: npc ${n.id} sprite ${n.sprite} not registered`);
     if (n.event && !DB.events[n.event]) E(`${w}: npc ${n.id} event ${n.event} missing`);
     const t = DB.tiles[P.tileAt(n.x, n.y)];
-    if (t && !t.pass && !(n.sprite || '').startsWith('mon:')) W(`${w}: npc ${n.id} on impassable tile ${P.tileAt(n.x, n.y)}`);
+    const decor = /^(mon|obj|fieldmon):/.test(n.sprite || '') || ['throne', 'pedestal', 'altar'].includes(P.tileAt(n.x, n.y));
+    if (t && !t.pass && !decor) W(`${w}: npc ${n.id} on impassable tile ${P.tileAt(n.x, n.y)}`);
   }
   for (const c of P.chests) {
     if (c.item && !items[c.item]) E(`${w}: chest ${c.id} item ${c.item} missing`);

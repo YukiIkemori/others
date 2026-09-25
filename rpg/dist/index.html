@@ -56,7 +56,7 @@ try{
   for (const k of [
     'tiles', 'legends', 'themes', 'chars', 'jobs', 'abilities', 'items',
     'shops', 'monsters', 'encounters', 'troops', 'maps', 'events',
-    'battlebg', 'music', 'sfx', 'statuses', 'elements', 'locations',
+    'battlebg', 'music', 'sfx', 'statuses', 'elements', 'locations', 'objectives',
   ]) R.DB[k] = R.DB[k] || {};
 
   // Load-time error collection (build.js wraps every file in try/catch).
@@ -453,7 +453,7 @@ try{
           if (line && Gfx.textWidth(t, size) > width) {
             // kinsoku: don't start a line with closing punctuation
             if ('、。」』）！？…ー'.includes(ch)) { line = t; continue; }
-            out.push(line); line = ch;
+            out.push(line); line = ch === ' ' || ch === '　' ? '' : ch;
           } else line = t;
         }
         out.push(line);
@@ -2273,7 +2273,7 @@ try{
   const In = () => R.Input;
   const sfx = (id) => R.sfx(id);
 
-  const MSG = { x: 8, y: 150, w: 240, h: 68, lines: 4, pad: 10 };
+  const MSG = { x: 8, y: 148, w: 240, h: 72, lines: 4, pad: 10 };
 
   // ----------------------------------------------------------- message
   class MessageLayer extends R.Layer {
@@ -2290,7 +2290,8 @@ try{
       if (this.opts.pos === 'middle') this.box.y = 78;
     }
     setText(text, opts, resolve) {
-      this.opts = Object.assign({}, this.opts, opts || {});
+      // options never carry over from the previous say (only the position does)
+      this.opts = Object.assign({ pos: this.opts.pos }, opts || {});
       this.box.y = this.opts.pos === 'top' ? 6 : this.opts.pos === 'middle' ? 78 : MSG.y;
       const w = this.box.w - this.box.pad * 2;
       const pages = [];
@@ -2351,10 +2352,10 @@ try{
       for (let i = 0; i < lines.length; i++) {
         const s = lines[i].slice(0, Math.max(0, left));
         left -= lines[i].length;
-        G().text(s, b.x + b.pad, b.y + 7 + i * 14);
+        G().text(s, b.x + b.pad, b.y + 6 + i * 14);
       }
       if (this.resolveText && this.shown >= this.pageLen() && !this.opts.noWait && !this.opts.auto) {
-        G().moreArrow(b.x + b.w / 2 - 3, b.y + b.h - 8);
+        G().moreArrow(b.x + b.w / 2 - 3, b.y + b.h - 9);
       }
     }
   }
@@ -27649,12 +27650,14 @@ try{
     if (!m.inBounds(x, y)) return tileGfx(m, m.outside);
     const i = m.idx(x, y);
     if (m.opened.size && m.opened.has(i)) return tileGfx(m, m.opened.get(i));
-    if (m.isWorld && R.Art && typeof R.Art.worldTile === 'function') {
+    // context-aware art (autotiling): worldTile for the overworld, localTile elsewhere
+    const ctxFn = R.Art && (m.isWorld ? R.Art.worldTile : R.Art.localTile);
+    if (typeof ctxFn === 'function') {
       let w = m.wcache[i];
       if (w === undefined) {
-        try { w = R.Art.worldTile(m, x, y) || null; } catch (e) {
+        try { w = ctxFn(m, x, y) || null; } catch (e) {
           w = null;
-          if (!artWarned.world) { artWarned.world = 1; console.error('R.Art.worldTile failed', e); }
+          if (!artWarned.ctx) { artWarned.ctx = 1; console.error('R.Art context tile failed', e); }
         }
         m.wcache[i] = w;
       }
@@ -31230,7 +31233,10 @@ try{
         let best = cur, bestScore = cur ? Rules.itemScore(c, cur) : 0;
         for (const id in (R.Game && R.Game.inv) || {}) {
           if (!R.Game.inv[id]) continue;
-          if (DB.items[id] && DB.items[id].type !== slot) continue;
+          const it = DB.items[id];
+          if (!it) continue;
+          // the shield slot may hold an off-hand weapon when dual wielding
+          if (it.type !== slot && !(slot === 'shield' && it.type === 'weapon')) continue;
           if (!Rules.canEquip(c, id, slot)) continue;
           const s = Rules.itemScore(c, id);
           if (s > bestScore) { best = id; bestScore = s; }

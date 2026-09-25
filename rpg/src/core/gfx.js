@@ -124,7 +124,7 @@
           if (line && Gfx.textWidth(t, size) > width) {
             // kinsoku: don't start a line with closing punctuation
             if ('、。」』）！？…ー'.includes(ch)) { line = t; continue; }
-            out.push(line); line = ch;
+            out.push(line); line = ch === ' ' || ch === '　' ? '' : ch;
           } else line = t;
         }
         out.push(line);

@@ -295,7 +295,10 @@
         let best = cur, bestScore = cur ? Rules.itemScore(c, cur) : 0;
         for (const id in (R.Game && R.Game.inv) || {}) {
           if (!R.Game.inv[id]) continue;
-          if (DB.items[id] && DB.items[id].type !== slot) continue;
+          const it = DB.items[id];
+          if (!it) continue;
+          // the shield slot may hold an off-hand weapon when dual wielding
+          if (it.type !== slot && !(slot === 'shield' && it.type === 'weapon')) continue;
           if (!Rules.canEquip(c, id, slot)) continue;
           const s = Rules.itemScore(c, id);
           if (s > bestScore) { best = id; bestScore = s; }

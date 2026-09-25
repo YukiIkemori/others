@@ -7,7 +7,7 @@
   const In = () => R.Input;
   const sfx = (id) => R.sfx(id);
 
-  const MSG = { x: 8, y: 150, w: 240, h: 68, lines: 4, pad: 10 };
+  const MSG = { x: 8, y: 148, w: 240, h: 72, lines: 4, pad: 10 };
 
   // ----------------------------------------------------------- message
   class MessageLayer extends R.Layer {
@@ -24,7 +24,8 @@
       if (this.opts.pos === 'middle') this.box.y = 78;
     }
     setText(text, opts, resolve) {
-      this.opts = Object.assign({}, this.opts, opts || {});
+      // options never carry over from the previous say (only the position does)
+      this.opts = Object.assign({ pos: this.opts.pos }, opts || {});
       this.box.y = this.opts.pos === 'top' ? 6 : this.opts.pos === 'middle' ? 78 : MSG.y;
       const w = this.box.w - this.box.pad * 2;
       const pages = [];
@@ -85,10 +86,10 @@
       for (let i = 0; i < lines.length; i++) {
         const s = lines[i].slice(0, Math.max(0, left));
         left -= lines[i].length;
-        G().text(s, b.x + b.pad, b.y + 7 + i * 14);
+        G().text(s, b.x + b.pad, b.y + 6 + i * 14);
       }
       if (this.resolveText && this.shown >= this.pageLen() && !this.opts.noWait && !this.opts.auto) {
-        G().moreArrow(b.x + b.w / 2 - 3, b.y + b.h - 8);
+        G().moreArrow(b.x + b.w / 2 - 3, b.y + b.h - 9);
       }
     }
   }

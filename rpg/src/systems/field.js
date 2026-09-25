@@ -45,12 +45,14 @@
     if (!m.inBounds(x, y)) return tileGfx(m, m.outside);
     const i = m.idx(x, y);
     if (m.opened.size && m.opened.has(i)) return tileGfx(m, m.opened.get(i));
-    if (m.isWorld && R.Art && typeof R.Art.worldTile === 'function') {
+    // context-aware art (autotiling): worldTile for the overworld, localTile elsewhere
+    const ctxFn = R.Art && (m.isWorld ? R.Art.worldTile : R.Art.localTile);
+    if (typeof ctxFn === 'function') {
       let w = m.wcache[i];
       if (w === undefined) {
-        try { w = R.Art.worldTile(m, x, y) || null; } catch (e) {
+        try { w = ctxFn(m, x, y) || null; } catch (e) {
           w = null;
-          if (!artWarned.world) { artWarned.world = 1; console.error('R.Art.worldTile failed', e); }
+          if (!artWarned.ctx) { artWarned.ctx = 1; console.error('R.Art context tile failed', e); }
         }
         m.wcache[i] = w;
       }
