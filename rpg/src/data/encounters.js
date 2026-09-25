@@ -2,7 +2,7 @@
 // band the zone is meant for; bg = backdrop when the map gives none (world maps use
 // the tile's backdrop). Each group: ≤ 3 species, ≤ 8 monsters, ≤ 4 large; groups
 // are also kept narrow enough to stand side by side on the 256 px battle line.
-// The metal jelly (はがねゼリー) shows up from the desert on, the gold one on the
+// The metal jelly (鋼ゼリー) shows up from the desert on, the gold one on the
 // demon island; mimics lurk in the fort, the pyramid, the tower and the castle.
 (function (R) {
   'use strict';

@@ -2,14 +2,19 @@
 // Contact sheets for the decor layer (DESIGN §7.1) — art review tool.
 //
 //   node tools/sheet_decor.js [--out DIR] [--only decor,themes,rooms] [--scale N] [--frame F]
-//   node tools/sheet_decor.js --emit <room>     print a --eval expression for tools/shot.js
-//                                                that injects demo room <room> and starts there
-//   node tools/sheet_decor.js --list            list the demo rooms
+//        [--themes castle,house,town] [--ids a,b,…] [--room throne,house,…]
+//   node tools/sheet_decor.js --emit <room|theme>  print a --eval expression for tools/shot.js
+//                                                  that injects demo room <room> (or the small
+//                                                  theme room in <theme>) and starts there
+//   node tools/sheet_decor.js --list               list the demo rooms
+//   node tools/sheet_decor.js --zoom <png> --rect x,y,w,h [--z N] --to <png>   crop & upscale
 //
-// Sheets (PNG, nearest-neighbour upscaled):
-//   decor    every decor id on castle / house / town walls & floors (animated ids: every frame)
+// Sheets (PNG, nearest-neighbour upscaled, paginated):
+//   decor    every decor id (or --ids) on castle / house / town walls & floors (--themes);
+//            animated ids show every frame; joining ids are shown as small groups
 //   themes   one small composed room per theme (all 12 themes), same layout
-//   rooms    hand-composed demo rooms (throne room, house, dining hall, library, chapel, …)
+//   rooms    hand-composed demo rooms (throne room, great hall, house, dining hall, library,
+//            chapel, treasury, inn)
 // Maps are real R.FieldMap compiles with a decor layer, rendered like the field:
 // R.Art.localTile for the base, then decor (R.Art.decorTile or 'decor:<id>') bottom-aligned.
 // Loads core + data + art + maps + systems/field_map.js only (no game boot).
@@ -59,6 +64,30 @@ const ROOMS = {
     ],
     npcs: [['king', 7, 2], ['queen', 8, 2], ['minister', 5, 4], ['soldier', 3, 6], ['soldier', 12, 6]],
   },
+  hall: {
+    name: 'great hall (two-tile walls)', theme: 'castle', type: 'castle',
+    rows: [
+      '################',
+      '################',
+      '#..............#',
+      '#..............#',
+      '#..............#',
+      '#l............l#',
+      '#..............#',
+      '#######@D#######',
+    ],
+    decor: [
+      '................',
+      '.b..B.W.cW.B..b.',
+      '.Q.Y..........Q.',
+      '....oooooooo....',
+      '..a.oooooooo.a..',
+      '.Z............Z.',
+      '..e..........e..',
+      '................',
+    ],
+    npcs: [['knight', 3, 4], ['soldier', 12, 4]],
+  },
   house: {
     name: 'house (living room + kitchen)', theme: 'house', type: 'town',
     rows: [
@@ -76,7 +105,7 @@ const ROOMS = {
     decor: [
       '..w.p.m..w.k..',
       '.F..TA.V..CKS.',
-      '..rrrr.....q.o',
+      '..rrrr.....q..',
       '..rrrr.Z......',
       '.y.......L..e.',
       '..............',
@@ -93,8 +122,8 @@ const ROOMS = {
     rows: [
       '################',
       '#..........#...#',
-      '#..........#...#',
-      '#..........#...#',
+      '#..........#b.b#',
+      '#..........#b.b#',
       '#..........#...#',
       '#..........D...#',
       '#..........#...#',
@@ -102,15 +131,15 @@ const ROOMS = {
     ],
     decor: [
       '.b.t.i.p.b..x.w.',
-      '.C..Q....Q.X.Y..',
-      '..eeeeeee...b.bs',
-      '..LLLLLLL...b.b.',
-      '..eeeeeee....ss.',
-      '.Z......vn...U..',
-      '..q.K....S..Uqs.',
+      '.C..Q....Q..X.Y.',
+      '..eeeeeee.......',
+      '..LLLLLLL.......',
+      '..eeeeeee....s..',
+      '.Z......vn....U.',
+      '..q.K....S..sUq.',
       '................',
     ],
-    npcs: [['soldier', 4, 1], ['woman', 8, 5], ['knight', 14, 5]],
+    npcs: [['soldier', 6, 1], ['woman', 8, 5], ['knight', 13, 5]],
   },
   library: {
     name: 'library / study', theme: 'tower', type: 'castle',
@@ -140,6 +169,7 @@ const ROOMS = {
     name: 'chapel', theme: 'shrine', type: 'shrine',
     rows: [
       '##############',
+      '##############',
       '#.....a......#',
       '#............#',
       '#............#',
@@ -149,8 +179,9 @@ const ROOMS = {
       '######@D######',
     ],
     decor: [
+      '..............',
       '..W.B.W.B.W...',
-      '.Q.Z.......Z.Q',
+      '.Q.Z..dd...Z.Q',
       '.....ooo......',
       '.....ooo......',
       '..eee...eee...',
@@ -158,7 +189,7 @@ const ROOMS = {
       '.v..........v.',
       '..............',
     ],
-    npcs: [['priest', 6, 2], ['nun', 3, 6]],
+    npcs: [['priest', 6, 3], ['nun', 3, 7]],
   },
   treasury: {
     name: 'treasury + smithy', theme: 'fort', type: 'dungeon',
@@ -176,7 +207,7 @@ const ROOMS = {
       '.GYG.U.X.O.K..',
       '.q..G.....s...',
       '.a.a.U...g..z.',
-      '..a.q........s',
+      '..a.q.......s.',
       '.U.z.q.Y.q..U.',
       '..............',
     ],
@@ -186,8 +217,8 @@ const ROOMS = {
     name: 'inn / tavern', theme: 'house', type: 'town',
     rows: [
       '##############',
-      '#.......cc...#',
       '#............#',
+      '#......ccc...#',
       '#............#',
       '#............#',
       '#............#',
@@ -195,14 +226,14 @@ const ROOMS = {
     ],
     decor: [
       '.w.i.p.i.w.k..',
-      '.o.U....V..CZ.',
-      '..n.n..T..n...',
-      '..LLL..n......',
-      '..n.n.....LLL.',
+      '.U..V.K..qS.C.',
+      '..n.n.........',
+      '..LLL..T......',
+      '..n.n..n..LLL.',
       '.Z........n.n.',
       '..............',
     ],
-    npcs: [['innkeeper', 9, 2], ['man', 5, 4], ['dancer', 11, 5]],
+    npcs: [['innkeeper', 8, 1], ['man', 5, 4], ['dancer', 9, 5]],
   },
 };
 // one small room shown in every theme

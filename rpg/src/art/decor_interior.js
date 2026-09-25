@@ -26,7 +26,6 @@
   const RED = [0x4c0c10, 0x7c1418, 0xa8201e, 0xd0382c, 0xec6048, 0xf89478];
   const BLUE = [0x101c48, 0x1c3070, 0x2c4c9c, 0x4270c4, 0x6c98e0, 0xa0c4f4];
   const GREEN = [0x0c2a14, 0x17441f, 0x23602b, 0x33803a, 0x4ea04c, 0x7cc46c];
-  const TEAL = [0x0a2226, 0x12363c, 0x1b4c52, 0x28666a, 0x3e8484, 0x62a8a0];
   const PURPLE = [0x20102c, 0x3c1c50, 0x5c2c78, 0x8040a0, 0xa868c8, 0xd0a0e8];
   const CLOTH = [0x767c94, 0xa4aabe, 0xc8cedc, 0xe6e9f2, 0xfafbff];
   const CREAM = [0x8c7850, 0xb8a47c, 0xd8c8a0, 0xeee2c0, 0xfcf6e0];
@@ -132,22 +131,11 @@
     return img;
   }
   const cv = (img) => img.canvas();
-  const anim = (n, fn) => { const out = []; for (let f = 0; f < n; f++) out.push(fn(f).canvas()); return out; };
 
   // small drawing helpers on TK Bufs
   /** rows of a string grid → pixels (pal: char → colour) at (ox, oy) */
   function grid(L, ox, oy, rows, pal) {
     rows.forEach((row, y) => { for (let x = 0; x < row.length; x++) { const c = pal[row[x]]; if (c != null) L.set(ox + x, oy + y, c); } });
-  }
-  /** horizontal cylinder shading of a rect: left lit → right dark */
-  function cyl(L, x0, y0, w, h, P, lit) {
-    const n = P.length;
-    for (let x = 0; x < w; x++) {
-      const u = (x + 0.5) / w;
-      let k = u < 0.18 ? n - 1 : u < 0.45 ? n - 2 : u < 0.8 ? n - 3 : n - 4;
-      if (lit === false) k = Math.max(0, k - 1);
-      for (let y = 0; y < h; y++) L.set(x0 + x, y0 + y, P[Math.max(0, k)]);
-    }
   }
   /** panel: raised frame lit top-left, recessed centre */
   function panel(L, x0, y0, w, h, P) {
@@ -155,18 +143,15 @@
     L.hline(x0, x0 + w - 1, y0, P[1]); L.vline(x0, y0, y0 + h - 1, P[1]);
     L.hline(x0, x0 + w - 1, y0 + h - 1, P[4]); L.vline(x0 + w - 1, y0, y0 + h - 1, P[4]);
   }
-  function flame(L, cx, by, h, f, core) {
-    // small candle flame, bottom at by, height h (2..4), f = frame
-    const lean = f % 2 ? 0 : 0;
-    for (let i = 0; i < h; i++) L.set(cx + (i === h - 1 && f % 2 ? -1 : lean), by - i, i === 0 ? FIRE[3] : i === h - 1 ? FIRE[2] : FIRE[4]);
-    if (core) L.set(cx, by - 1, FIRE[5]);
-  }
 
   // =============================================================== WALL PIECES
   // drawn over a wall face of any theme: the object only, upper-middle of the face
 
-  function banner(C, kind) {
-    return cv(piece(16, 16, (L) => {
+  function banner(C, kind, crest, long) {
+    const H = long ? 32 : 16, oy = long ? 16 : 0;
+    return cv(piece(16, H, (L0) => {
+      // long banners hang from the top of a two-tile wall: draw the short one 16px lower, then extend the cloth up
+      const L = long ? { set: (x, y, c) => L0.set(x, y + oy, c), hline: (a, b, y, c) => L0.hline(a, b, y + oy, c), get: (x, y) => L0.get(x, y + oy) } : L0;
       // brass rod with finials
       L.hline(3, 12, 1, GOLD[2]); L.set(2, 1, GOLD[4]); L.set(13, 1, GOLD[3]);
       L.set(2, 0, GOLD[5]); L.set(13, 0, GOLD[4]); L.set(2, 2, GOLD[2]); L.set(13, 2, GOLD[1]);
@@ -193,7 +178,11 @@
         while (y > 2 && !inCloth(x, y)) y--;
         L.set(x, y, x < 8 ? GOLD[3] : GOLD[2]);
       }
-      if (kind === 'tail') {
+      if (crest === 'eye') {
+        // the demon lord's eye
+        grid(L, 5, 6, ['.gggg.', 'gwrkwg', '.gggg.', '..gg..'], { g: GOLD[3], w: CLOTH[3], r: RED[4], k: 0x100808 });
+        L.set(7, 5, GOLD[2]); L.set(8, 5, GOLD[2]); L.set(5, 5, GOLD[2]); L.set(10, 5, GOLD[2]);
+      } else if (kind === 'tail') {
         // crown
         grid(L, 5, 5, ['a.b.a.', 'aaaaaa', 'aracra', 'dddddd'].map((r) => r.slice(0, 6)), { a: GOLD[4], b: GOLD[5], r: RED[4], c: BLUE[5], d: GOLD[2] });
         L.set(10, 5, null);
@@ -202,6 +191,19 @@
         // sun crest
         grid(L, 5, 5, ['..ab..', '.abba.', 'abccba', '.abba.', '..ab..'], { a: GOLD[3], b: GOLD[4], c: GOLD[5] });
         L.set(4 + 3, 10, GOLD[2]); L.set(4 + 4, 10, GOLD[2]);
+      }
+      if (long) {
+        // move the rod to the top and let the cloth run the whole height
+        for (let x = 0; x < 16; x++) for (let y = 16; y <= 18; y++) if (x < 4 || x > 11 || y < 18) L0.set(x, y, null);
+        const tone = [1, 0, 1, -1, 0, 1, -1, -2];
+        for (let y = 2; y < 19; y++) for (let x = 4; x <= 11; x++) L0.set(x, y, C[3 + tone[x - 4]]);
+        L0.hline(3, 12, 1, GOLD[2]); L0.set(2, 1, GOLD[4]); L0.set(13, 1, GOLD[3]);
+        L0.set(2, 0, GOLD[5]); L0.set(13, 0, GOLD[4]); L0.set(2, 2, GOLD[2]); L0.set(13, 2, GOLD[1]);
+        L0.hline(4, 11, 2, C[1]); L0.hline(4, 11, 3, GOLD[3]); L0.hline(4, 11, 5, GOLD[2]);
+        for (let y = 8; y < 18; y += 3) { L0.set(5, y, C[4]); L0.set(10, y + 1, C[2]); }
+        // a second, smaller crest high on the cloth
+        L0.set(7, 10, GOLD[4]); L0.set(8, 10, GOLD[3]); L0.set(7, 11, GOLD[3]); L0.set(8, 11, GOLD[2]);
+        L0.set(6, 10, GOLD[2]); L0.set(9, 11, GOLD[1]); L0.set(7, 9, GOLD[5]); L0.set(8, 12, GOLD[2]);
       }
     }, { drop: [1, 1, 0.32] }));
   }
@@ -238,7 +240,7 @@
 
   /** frame: 'wood' | 'stone'; curtains for homes */
   function windowRect(frame, curtains) {
-    const F = frame === 'stone' ? STONE : WOOD;
+    const F = Array.isArray(frame) ? frame : frame === 'stone' ? STONE : WOOD;
     return cv(piece(16, 16, (L) => {
       // frame 11x11 at x3..13, y2..12
       L.rect(3, 2, 11, 11, F[3]);
@@ -271,14 +273,16 @@
   }
 
   /** arched window: 'leaded' (clear diamond panes) | 'stained' | 'dark' (demon: red/purple) */
-  function windowArch(kind) {
-    return cv(piece(16, 16, (L, t) => {
+  function windowArch(kind, S, long) {
+    S = S || STONE;
+    const H = long ? 32 : 16, bot = H - 3;
+    return cv(piece(16, H, (L, t) => {
       const cx = 7.5, cy = 6;
       const inShape = (x, y, r) => (y >= cy ? x >= 7.5 - r && x <= 7.5 + r : Math.hypot(x - cx, (y - cy) * 1.05) <= r + 0.3);
-      for (let y = 0; y <= 13; y++) for (let x = 2; x <= 13; x++) {
-        if (!inShape(x, y, 5) || y > 13) continue;
-        const inner = inShape(x, y, 3.9) && y <= 12;
-        if (!inner) { L.set(x, y, x < 7 ? STONE[4] : x > 8 ? STONE[2] : STONE[3]); continue; }
+      for (let y = 0; y <= bot; y++) for (let x = 2; x <= 13; x++) {
+        if (!inShape(x, y, 5)) continue;
+        const inner = inShape(x, y, 3.9) && y <= bot - 1;
+        if (!inner) { L.set(x, y, x < 7 ? S[4] : x > 8 ? S[2] : S[3]); continue; }
         // glass with lead lattice (symmetric about the centre line)
         const a = (x + y) % 6, b = (15 - x + y) % 6;
         let c;
@@ -287,21 +291,24 @@
           const P = [BLUE[3], RED[3], BLUE[4], GOLD[4], GREEN[4], BLUE[3]];
           c = P[cell % P.length];
           if (y <= 5 && Math.abs(x - 7.5) < 1.5) c = GOLD[5];
+          if (long && y >= 16 && y <= 19 && Math.abs(x - 7.5) < 1.5) c = y === 16 || y === 19 ? GOLD[3] : RED[4];
           if (a === 0 || b === 0) c = IRON[1];
         } else if (kind === 'dark') {
           const cell = Math.floor((x + y) / 6) + Math.floor((15 - x + y) / 6);
           c = cell % 3 === 0 ? RED[2] : cell % 3 === 1 ? PURPLE[3] : PURPLE[2];
           if (a === 0 || b === 0) c = 0x100810;
         } else {
-          c = y < 5 ? GLASS[4] : y < 9 ? GLASS[3] : GLASS[2];
-          if (a === 0 || b === 0) c = y < 7 ? GLASS[1] : 0x1c2c50;
+          const q = y / (bot + 1);
+          c = q < 0.3 ? GLASS[4] : q < 0.6 ? GLASS[3] : GLASS[2];
+          if (a === 0 || b === 0) c = q < 0.45 ? GLASS[1] : 0x1c2c50;
         }
         L.set(x, y, c);
       }
       // keystone and sill
-      L.set(7, 0, STONE[5]); L.set(8, 0, STONE[4]);
-      L.hline(2, 13, 13, STONE[5]); L.hline(2, 13, 14, STONE[2]);
-      if (kind !== 'stained' && kind !== 'dark') { L.set(5, 10, GLASS[5]); L.set(6, 9, GLASS[5]); L.set(6, 10, GLASS[4]); }
+      L.set(7, 0, S[5]); L.set(8, 0, S[4]);
+      L.hline(2, 13, bot, S[5]); L.hline(2, 13, bot + 1, S[2]);
+      if (long) { L.hline(4, 11, 15, S[3]); L.hline(4, 11, 16, S[1]); }
+      if (kind !== 'stained' && kind !== 'dark') { L.set(5, bot - 3, GLASS[5]); L.set(6, bot - 4, GLASS[5]); L.set(6, bot - 3, GLASS[4]); if (long) { L.set(5, 10, GLASS[5]); L.set(6, 9, GLASS[4]); } }
     }, { drop: [1, 1, 0.3] }));
   }
 
@@ -473,8 +480,7 @@
   }
   function tileAltOverlay() {
     const img = new Img(16, 16);
-    for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) img.put(x, y, 0xf0d8a0, 0.2);
-    for (let i = 0; i < 16; i++) { img.put(i, 0, 0xffffff, 0.15); img.put(0, i, 0xffffff, 0.15); img.put(i, 15, SH, 0.18); img.put(15, i, SH, 0.18); }
+    for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) img.put(x, y, 0xe8c890, 0.24);
     return img;
   }
   function grate() {
@@ -837,7 +843,7 @@
     B.set(cx, top, P[4]); B.set(cx - 1, top + 1, P[4]); B.set(cx, top + 1, P[3]); B.set(cx + 1, top + 1, P[2]);
     B.set(cx - 1, top + 2, WOOD[2]); B.set(cx, top + 2, WOOD[1]);
     for (let y = top + 3; y < top + h; y++) {
-      const i = y - top - 3, half = Math.min(w / 2, 1.5 + i * 1.2) - (y === top + h - 1 ? 1 : 0);
+      const i = y - top - 3, half = (i === 0 ? 1.5 : Math.min(w / 2, 2.5 + i * 1.6)) - (y === top + h - 1 ? 1 : 0);
       const x0 = Math.round(cx - half), x1 = Math.round(cx + half) - 1;
       for (let x = x0; x <= x1; x++) {
         const u = (x - x0) / Math.max(1, x1 - x0);
@@ -931,21 +937,25 @@
   function weaponRack() {
     return cv(piece(16, 32, (L) => {
       // spear with a red tassel
-      L.vline(4, 4, 27, WOOD[4]); L.set(4, 0, STEEL[5]); L.hline(3, 5, 1, STEEL[4]); L.hline(3, 5, 2, STEEL[3]); L.set(5, 2, STEEL[2]);
-      L.set(4, 3, STEEL[2]); L.set(3, 4, RED[4]); L.set(5, 4, RED[3]); L.set(4, 5, RED[2]);
+      L.vline(3, 4, 27, WOOD[4]); L.set(3, 0, STEEL[5]); L.hline(2, 4, 1, STEEL[4]); L.hline(2, 4, 2, STEEL[3]); L.set(4, 2, STEEL[2]);
+      L.set(3, 3, STEEL[2]); L.set(2, 4, RED[4]); L.set(4, 4, RED[3]); L.set(3, 5, RED[2]);
       // sword
-      L.set(7, 5, STEEL[5]); L.vline(7, 6, 20, STEEL[5]); L.vline(8, 6, 20, STEEL[3]); L.set(8, 5, null);
+      L.set(7, 5, STEEL[5]); L.vline(7, 6, 20, STEEL[5]); L.vline(8, 6, 20, STEEL[3]);
+      // axe
+      L.vline(12, 7, 27, WOOD[3]); L.set(12, 6, WOOD[4]);
+      grid(L, 13, 6, ['ab.', 'abb', 'abc', 'abc', 'bbc', 'b..'], { a: STEEL[5], b: STEEL[4], c: STEEL[2] });
+      // rack: back board between two posts, a slotted rail and a base plank
+      L.rect(2, 18, 12, 10, WALNUT[2]);
+      for (const x of [5, 10]) L.vline(x, 18, 27, WALNUT[1]);
+      L.hline(2, 13, 18, WALNUT[0]);
+      L.vline(3, 18, 27, WOOD[4]); L.vline(12, 18, 27, WOOD[3]);
+      L.vline(7, 18, 20, STEEL[5]); L.vline(8, 18, 20, STEEL[3]);
       L.hline(5, 10, 21, GOLD[3]); L.set(5, 21, GOLD[4]); L.set(10, 21, GOLD[2]);
       L.vline(7, 22, 25, WOOD[1]); L.vline(8, 22, 25, WOOD[0]); L.set(7, 26, GOLD[4]); L.set(8, 26, GOLD[2]);
-      // axe
-      L.vline(11, 7, 27, WOOD[3]);
-      grid(L, 12, 6, ['ab.', 'abb', 'abc', 'abc', 'bbc', 'b..'], { a: STEEL[5], b: STEEL[4], c: STEEL[2] });
-      L.set(10, 8, STEEL[3]); L.set(11, 6, WOOD[4]);
-      // rack: two posts, a slotted rail and a base plank
-      L.rect(1, 15, 2, 13, WOOD[3]); L.vline(1, 15, 27, WOOD[4]);
-      L.rect(13, 15, 2, 13, WOOD[2]); L.vline(14, 15, 27, WOOD[1]);
+      L.rect(0, 15, 2, 13, WOOD[3]); L.vline(0, 15, 27, WOOD[4]);
+      L.rect(14, 15, 2, 13, WOOD[2]); L.vline(15, 15, 27, WOOD[1]);
       L.hline(0, 15, 15, WOOD[5]); L.hline(0, 15, 16, WOOD[3]); L.hline(0, 15, 17, WOOD[1]);
-      for (const x of [4, 7, 8, 11]) L.set(x, 16, WOOD[0]);
+      for (const x of [3, 7, 8, 12]) L.set(x, 16, WOOD[0]);
       L.hline(0, 15, 28, WOOD[4]); L.hline(0, 15, 29, WOOD[2]); L.hline(0, 15, 30, WOOD[1]);
     }, { contact: [8.5, 30.4, 8, 1.5, 0.4], drop: [1, 0, 0.24] }));
   }
@@ -1090,7 +1100,6 @@
     if (v === undefined) { v = make(); CACHE.set(key, v); }
     return v;
   }
-  const ALL = { N: true, S: true, W: true, E: true, NW: true, NE: true, SW: true, SE: true };
   const NONE_E = { N: false, S: false, W: false, E: false, NW: false, NE: false, SW: false, SE: false };
 
   /** floor-shadow (walls & furniture to the north/west) as translucent black, matching tiles_auto */
@@ -1194,106 +1203,123 @@
     if (!th.fl) return [WOOD[0], WOOD[1], WOOD[2], WOOD[3], WOOD[4]];
     return th.fl.slice(0, 5);
   }
-  function daisCell(e, P, u0) {
-    const img = new Img(16, 16);
+  /** e: neighbour flags; P: riser ramp; top: floor Buf of the platform surface (null = see-through) */
+  function daisCell(e, P, u0, top) {
+    const t = tk(), img = new Img(16, 16);
     const riser = !e.S;
-    const top = riser ? 10 : 16;
-    for (let j = 0; j < top; j++) for (let i = 0; i < 16; i++) {
-      img.put(i, j, 0xfff8e8, 0.1);
-      if (!e.N && j === 0) img.put(i, j, 0xffffff, 0.45);
-      if (!e.W && i === 0) img.put(i, j, 0xffffff, 0.35);
-      if (!e.E && i === 15) img.put(i, j, 0x000000, 0.4);
+    const h = riser ? 9 : 16;
+    for (let j = 0; j < h; j++) for (let i = 0; i < 16; i++) {
+      // solid platform: the floor a touch brighter, lit lips on the far and left edges
+      const f = top ? t.shade(top.get(i, j), 0.1) : null;
+      const lipN = !e.N && j <= 1, lipW = !e.W && i === 0, dark = !e.E && i === 15;
+      if (top) {
+        let c = f;
+        if (lipN) c = j === 0 ? t.shade(f, 0.4) : t.shade(f, 0.18);
+        if (lipW) c = t.shade(f, 0.32);
+        if (dark) c = t.mul(f, 0.55);
+        img.put(i, j, c, 1);
+      } else {
+        img.put(i, j, 0xfff8e8, 0.08);
+        if (lipN) img.put(i, j, 0xffffff, j === 0 ? 0.5 : 0.18);
+        if (lipW) img.put(i, j, 0xffffff, 0.4);
+        if (dark) img.put(i, j, 0x000000, 0.45);
+      }
     }
     if (riser) {
-      const t = tk();
-      const rows = [t.shade(P[4], 0.25), t.mul(P[2], 0.78), t.mul(P[1], 0.72), P[4], t.mul(P[2], 0.72), t.mul(P[1], 0.6)];
-      for (let j = 0; j < 6; j++) for (let i = 0; i < 16; i++) {
+      // one step: bright nosing, a face in shadow, a dark foot line
+      const rows = [t.shade(P[4], 0.45), t.shade(P[3], 0.15), t.mul(P[2], 0.72), t.mul(P[2], 0.64), t.mul(P[1], 0.8), t.mul(P[1], 0.66), t.mul(P[0], 0.7)];
+      for (let j = 0; j < 7; j++) for (let i = 0; i < 16; i++) {
         let c = rows[j];
         const u = u0 + i;
-        if ((j === 1 || j === 2 || j === 4 || j === 5) && (u & 7) === 7) c = t.mul(P[0], 0.8);
-        if (!e.W && i === 0) c = j === 0 || j === 3 ? t.shade(P[4], 0.3) : P[3];
-        if (!e.E && i === 15) c = t.mul(P[0], 0.7);
-        img.put(i, 10 + j, c, 1);
+        if (j >= 2 && j < 6 && (u & 7) === 7) c = t.mul(P[0], 0.6);
+        if (j >= 2 && j < 6 && (u & 7) === 0) c = t.mul(P[2], 0.8);
+        if (!e.W && i === 0) c = j < 2 ? t.shade(P[4], 0.5) : P[2];
+        if (!e.E && i === 15) c = t.mul(P[0], 0.55);
+        img.put(i, 9 + j, c, 1);
       }
     }
     return img;
   }
+  /** floor Buf name under a dais cell (null on carpet: the carpet shows through) */
+  function daisTop(m, x, y) {
+    const id = m.tileAt(x, y);
+    if (id === 'carpet' || !A.floorBuf) return null;
+    if (id === 'floor') return 'theme:' + (m.theme && A.THEME_DEFS && A.THEME_DEFS[m.theme] ? m.theme : 'generic');
+    return R.DB.tiles[id] && R.DB.tiles[id].pass ? id : null;
+  }
   function daisAuto(m, x, y) {
     const e = edges(m, 'dais', x, y), P = daisPal(m, x, y), box = component(m, 'dais', x, y);
-    const u0 = (x - box.x0) * 16;
-    return cached('dais|' + ekey(e) + '|' + P.join(',') + '|' + (u0 & 15), () => daisCell(e, P, u0).canvas());
+    const u0 = (x - box.x0) * 16, top = daisTop(m, x, y);
+    const key = 'dais|' + ekey(e) + '|' + P.join(',') + '|' + (u0 & 15) + '|' + top + '|' + shadeKey(m, x, y);
+    return cached(key, () => floorShade(daisCell(e, P, u0, top ? A.floorBuf(top) : null), m, x, y).canvas());
   }
 
   // ------------------------------------------------------------ long table
-  /** e: neighbour flags; box: component; items keyed by position in the run */
+  /** e: neighbour flags; box: component; tableware keyed by position in the run */
   function tableCell(e, box, x, y) {
     const i = x - box.x0, j = y - box.y0, nx = box.x1 - box.x0 + 1, ny = box.y1 - box.y0 + 1;
     const vertical = ny > 1 && nx === 1;
-    return piece(16, 16, (L, t, U, O) => {
+    return piece(16, 16, (L, t, U) => {
       const x0 = e.W ? 0 : 1, x1 = e.E ? 15 : 14;
       const y0 = e.N ? 0 : 3, y1 = e.S ? 15 : 10;
-      // legs & shadow under the table (only below the front edge)
+      // shadow and legs below the front edge
       if (!e.S) {
-        for (let q = x0; q <= x1; q++) U.put(q, 13, SH, 0.34), U.put(q, 14, SH, 0.3);
+        for (let q = x0; q <= x1; q++) U.put(q, 13, SH, 0.3);
         if (!e.W) { L.rect(1, 12, 2, 3, WOOD[2]); L.set(1, 12, WOOD[3]); }
-        if (!e.E) { L.rect(13, 12, 2, 3, WOOD[1]); }
+        if (!e.E) L.rect(13, 12, 2, 3, WOOD[1]);
       }
-      // cloth over the top, hanging over the front edge
+      // white cloth over the top, hanging over the front edge in folds
       L.rect(x0, y0, x1 - x0 + 1, y1 - y0 + 1, CLOTH[3]);
       if (!e.N) L.hline(x0, x1, y0, CLOTH[4]);
-      if (!e.W) L.vline(x0, y0, y1, CLOTH[4]);
-      if (!e.E) L.vline(x1, y0, y1, CLOTH[1]);
+      if (!e.W) L.vline(x0, y0, y1 + (e.S ? 0 : 2), CLOTH[4]);
+      if (!e.E) L.vline(x1, y0, y1 + (e.S ? 0 : 2), CLOTH[1]);
       if (!e.S) {
-        L.rect(x0, 11, x1 - x0 + 1, 2, CLOTH[2]);
-        for (let q = x0; q <= x1; q++) { if (q % 4 === 1) L.set(q, 11, CLOTH[1]); if (q % 2 === 0) L.set(q, 13, CLOTH[2]); }
         L.hline(x0, x1, 10, CLOTH[4]);
+        L.rect(x0, 11, x1 - x0 + 1, 2, CLOTH[2]);
+        for (let q = x0; q <= x1; q++) if (q % 4 === 2) { L.set(q, 11, CLOTH[1]); L.set(q, 12, CLOTH[1]); } else if (q % 4 === 3) L.set(q, 12, CLOTH[3]);
+        if (!e.W) L.vline(x0, 11, 12, CLOTH[3]);
       }
-      // red runner along the length
-      if (vertical) {
-        for (let q = y0; q <= y1; q++) { L.set(6, q, GOLD[3]); L.set(7, q, RED[3]); L.set(8, q, RED[2]); L.set(9, q, GOLD[2]); }
-      } else {
-        for (let q = x0; q <= x1; q++) { L.set(q, 5, GOLD[3]); L.set(q, 6, RED[3]); L.set(q, 7, RED[2]); L.set(q, 8, GOLD[2]); }
-      }
+      // runner
+      if (vertical) for (let q = y0 + (e.N ? 0 : 1); q <= y1; q++) { L.set(7, q, RED[3]); L.set(8, q, RED[2]); }
+      else for (let q = x0 + (e.W ? 0 : 1); q <= x1 - (e.E ? 0 : 1); q++) { L.set(q, 6, RED[3]); L.set(q, 7, RED[2]); }
       // tableware
-      const plate = (cx, cy) => {
-        L.hline(cx - 1, cx + 1, cy - 1, CLOTH[4]); L.hline(cx - 2, cx + 2, cy, CLOTH[4]); L.hline(cx - 1, cx + 1, cy + 1, CLOTH[1]);
-        L.set(cx - 2, cy, CLOTH[2]); L.set(cx + 2, cy, CLOTH[1]); L.set(cx, cy, BLUE[4]);
+      const plate = (cx, cy, food) => {
+        L.hline(cx - 1, cx + 1, cy - 1, CLOTH[1]); L.hline(cx - 2, cx + 2, cy, CLOTH[4]); L.hline(cx - 1, cx + 1, cy + 1, CLOTH[1]);
+        L.set(cx - 2, cy, CLOTH[1]); L.set(cx + 2, cy, CLOTH[1]);
+        L.hline(cx - 1, cx + 1, cy, CLOTH[4]); L.set(cx, cy, food); L.set(cx - 1, cy - 1, CLOTH[4]);
       };
-      const goblet = (cx, cy) => { L.set(cx, cy - 1, GOLD[5]); L.set(cx, cy, GOLD[3]); L.set(cx, cy + 1, GOLD[2]); };
+      const cup = (cx, cy) => { L.set(cx, cy - 1, GOLD[5]); L.set(cx, cy, GOLD[3]); };
       const n = vertical ? ny : nx, k = vertical ? j : i;
-      const mid = n >= 3 && (k === (n >> 1) || (n % 2 === 0 && k === (n >> 1) - 1 && n > 5));
-      const kind = n === 1 ? 'fruit' : mid ? 'candles' : ['plates', 'fruit', 'plates', 'bread', 'plates', 'roast'][(k + (n > 4 ? 1 : 0)) % 6];
+      const mid = n >= 3 && k === (n >> 1);
+      const kind = n === 1 ? 'fruit' : mid ? 'candles' : ['bread', 'fruit', 'roast', 'wine'][(k + (n >> 1)) % 4];
+      const FOOD = [CLAY[4], GREEN[4], RED[4], CLAY[3]];
       if (vertical) {
-        plate(3, 4 + (k % 2) * 5); plate(12, 9 - (k % 2) * 5);
-        goblet(4, 12); goblet(11, 2);
-      } else if (kind !== 'candles') {
-        plate(4, 3 + (e.N ? 0 : 1)); plate(11, 9);
-        goblet(1 + (e.W ? 0 : 1) + 12, 4); goblet(2 + (e.W ? 0 : 1), 9);
-      }
-      const cxm = vertical ? 7 : 7, cym = vertical ? 7 : 6;
-      if (kind === 'candles') {
-        L.hline(cxm - 3, cxm + 4, cym + 1, GOLD[3]); L.hline(cxm - 2, cxm + 3, cym + 2, GOLD[2]);
-        for (const dx of [-3, 0, 3]) {
-          const hx = cxm + (dx === 0 ? 0 : dx) + (dx > 0 ? 1 : 0);
-          L.vline(hx, cym - 3 + (dx === 0 ? -1 : 0), cym, CREAM[4]);
-          L.set(hx, cym - 4 + (dx === 0 ? -1 : 0), FIRE[4]); L.set(hx, cym - 5 + (dx === 0 ? -1 : 0), FIRE[3]);
-          glow(U, hx + 0.5, cym - 4, 2.5, 0.16);
-        }
-        plate(3, 10); plate(12, 10);
-      } else if (kind === 'fruit') {
-        L.hline(cxm - 2, cxm + 3, cym + 1, CLOTH[4]); L.hline(cxm - 1, cxm + 2, cym + 2, CLOTH[2]);
-        L.set(cxm - 1, cym, RED[4]); L.set(cxm, cym, RED[3]); L.set(cxm + 1, cym - 1, GOLD[4]); L.set(cxm + 2, cym, GREEN[4]);
-        L.set(cxm, cym - 1, 0x9c40a0); L.set(cxm + 1, cym, GOLD[3]);
-      } else if (kind === 'bread') {
-        L.hline(cxm - 2, cxm + 3, cym + 1, WOOD[4]); L.hline(cxm - 1, cxm + 2, cym + 2, WOOD[2]);
-        L.hline(cxm - 1, cxm + 2, cym, CLAY[4]); L.set(cxm, cym - 1, CLAY[5]); L.set(cxm + 1, cym - 1, CLAY[4]);
-      } else if (kind === 'roast') {
-        L.hline(cxm - 3, cxm + 4, cym + 2, CLOTH[4]);
-        L.hline(cxm - 1, cxm + 2, cym + 1, CLAY[3]); L.hline(cxm - 1, cxm + 2, cym, CLAY[4]); L.set(cxm, cym - 1, CLAY[5]);
-        L.set(cxm - 2, cym, CREAM[4]); L.set(cxm + 3, cym, CREAM[4]);
+        plate(3, 7, FOOD[k % 4]); plate(12, 7, FOOD[(k + 2) % 4]);
+        cup(4, 11); cup(11, 3);
       } else {
-        // wine bottle
-        L.vline(cxm + 1, cym - 2, cym + 1, GREEN[2]); L.set(cxm + 1, cym - 3, WOOD[4]); L.set(cxm + 1, cym - 1, GREEN[4]);
+        plate(4, 4 + (e.N ? -1 : 0), FOOD[k % 4]); plate(11, 9, FOOD[(k + 1) % 4]);
+        cup(12, 4 + (e.N ? -1 : 0)); cup(3, 9);
+      }
+      const cx = 7, cy = vertical ? 4 + (k % 2) * 7 : 6;
+      if (kind === 'candles') {
+        L.hline(cx - 2, cx + 3, cy + 1, GOLD[3]); L.set(cx - 2, cy + 1, GOLD[4]);
+        for (const hx of [cx - 2, cx + 3]) { L.vline(hx, cy - 2, cy, CREAM[4]); L.set(hx, cy - 3, FIRE[4]); L.set(hx, cy - 4, FIRE[3]); glow(U, hx + 0.5, cy - 3, 2.5, 0.16); }
+        L.vline(cx, cy - 3, cy, GOLD[4]); L.vline(cx + 1, cy - 3, cy, GOLD[2]);
+        L.vline(cx, cy - 5, cy - 4, CREAM[4]); L.set(cx, cy - 6, FIRE[4]); L.set(cx, cy - 7, FIRE[3]);
+      } else if (kind === 'fruit') {
+        L.hline(cx - 2, cx + 3, cy + 1, CLOTH[4]); L.hline(cx - 1, cx + 2, cy + 2, CLOTH[1]);
+        L.set(cx - 1, cy, RED[4]); L.set(cx, cy, RED[3]); L.set(cx + 1, cy - 1, GOLD[4]); L.set(cx + 2, cy, GREEN[4]);
+        L.set(cx, cy - 1, 0x9c40a0); L.set(cx + 1, cy, GOLD[3]); L.set(cx - 1, cy - 1, RED[5]);
+      } else if (kind === 'bread') {
+        L.hline(cx - 2, cx + 3, cy + 1, WOOD[4]); L.hline(cx - 1, cx + 2, cy + 2, WOOD[2]);
+        L.hline(cx - 2, cx + 2, cy, CLAY[3]); L.hline(cx - 1, cx + 1, cy - 1, CLAY[5]); L.set(cx + 3, cy, CLAY[4]); L.set(cx + 2, cy - 1, CLAY[4]);
+      } else if (kind === 'roast') {
+        L.hline(cx - 3, cx + 4, cy + 1, CLOTH[4]); L.hline(cx - 2, cx + 3, cy + 2, CLOTH[1]);
+        L.hline(cx - 1, cx + 2, cy, CLAY[3]); L.hline(cx - 1, cx + 1, cy - 1, CLAY[4]); L.set(cx, cy - 2, CLAY[5]);
+        L.set(cx - 2, cy - 1, CREAM[4]); L.set(cx + 3, cy - 1, CREAM[4]); L.set(cx + 2, cy + 1, GREEN[4]);
+      } else {
+        L.vline(cx + 1, cy - 3, cy + 1, GREEN[2]); L.set(cx + 1, cy - 4, WOOD[4]); L.set(cx + 1, cy - 1, GREEN[4]);
+        L.set(cx - 1, cy + 1, GOLD[3]); L.set(cx - 1, cy, GOLD[5]);
       }
     }, { outline: INK });
   }
@@ -1366,16 +1392,36 @@
 
   // ------------------------------------------------------------ theme-aware wall pieces
   const STONE_THEMES = { castle: 1, fort: 1, tower: 1, shrine: 1, demon: 1, pyramid: 1, ice: 1, cave: 1, water: 1, volcano: 1 };
+  /** window frame ramp (6) from a theme's wall colours, so frames match the masonry */
+  function framePal(theme) {
+    const th = A.THEME_DEFS && A.THEME_DEFS[theme];
+    if (!th || theme === 'castle' || theme === 'shrine' || theme === 'tower') return STONE;
+    const w = th.wl.length > 5 ? th.wl.slice(1) : th.wl;
+    return [w[0], w[1], w[2], w[3], w[4], tk().shade(w[4], 0.3)];
+  }
   function windowAuto(m) {
     const th = m.theme;
     if (th === 'house') return cached('win|house', () => windowRect('wood', true));
-    if (STONE_THEMES[th]) return cached('win|stone', () => windowRect('stone', false));
+    if (STONE_THEMES[th]) return cached('win|' + th, () => windowRect(framePal(th), false));
     return null;
   }
-  function windowArchAuto(m) {
-    if (m.theme === 'shrine') return cached('warch|stained', () => windowArch('stained'));
-    if (m.theme === 'demon') return cached('warch|dark', () => windowArch('dark'));
-    return null;
+  function windowArchAuto(m, x, y) {
+    const th = m.theme, long = y > 0 && !!WALLISH[m.tileAt(x, y - 1)];
+    const kind = th === 'shrine' ? 'stained' : th === 'demon' ? 'dark' : 'leaded';
+    const S = th === 'demon' || (STONE_THEMES[th] && framePal(th) !== STONE) ? framePal(th) : STONE;
+    if (kind === 'leaded' && S === STONE && !long) return null;
+    return cached('warch|' + kind + '|' + th + '|' + long, () => windowArch(kind, S, long));
+  }
+  const DEMON_RED = [0x1c0408, 0x3c0810, 0x5c0c18, 0x801424, 0xa02030, 0xc44050];
+  const WALLISH = { wall: 1, wall_torch: 1 };
+  /** banners: long (two tiles) on a wall that continues above; demon colours in the demon castle */
+  function bannerAuto(C, kind) {
+    return (m, x, y) => {
+      const demon = m.theme === 'demon', long = !!WALLISH[m.tileAt(x, y - 1)] && y > 0;
+      if (!demon && !long) return null;
+      const col = demon ? (kind === 'tail' ? DEMON_RED : PURPLE) : C;
+      return cached('bn|' + kind + '|' + demon + '|' + long, () => banner(col, kind, demon ? 'eye' : null, long));
+    };
   }
   const FIRE_PAL = { castle: STONE, fort: WARM, house: BRICK, tower: STONE, shrine: STONE, demon: [0x140a18, 0x281c34, 0x3c2c4c, 0x524066, 0x6c5884, 0x8c78a4] };
   function fireplaceAuto(m) {
@@ -1388,6 +1434,18 @@
   const empty = () => EMPTY || (EMPTY = new Img(1, 1).canvas());
   function inFloor(kind) {
     return (m, x, y) => (typeof A.floorHandlesDecor === 'function' && A.floorHandlesDecor(m, x, y, kind) ? empty() : null);
+  }
+
+  /** tile_alt: painted by the floor tile when it can; otherwise the theme's alt floor as an opaque piece */
+  function tileAltAuto(m, x, y) {
+    const e = inFloor('tile_alt')(m, x, y);
+    if (e) return e;
+    if (m.tileAt(x, y) !== 'floor' || !A.floorVariant) return null;
+    const th = m.theme && A.THEME_DEFS && A.THEME_DEFS[m.theme] ? m.theme : 'generic';
+    return cached('alt|' + th + '|' + shadeKey(m, x, y), () => {
+      const b = A.floorVariant('theme:' + th, 'alt'), img = new Img(16, 16).buf(b);
+      return floorShade(img, m, x, y).canvas();
+    });
   }
 
   // =============================================================== REGISTER
@@ -1436,10 +1494,11 @@
     bench: benchAuto,
     mosaic: mosaicAuto,
     window: windowAuto,
+    banner_red: bannerAuto(RED, 'point'),
+    banner_blue: bannerAuto(BLUE, 'tail'),
     window_arch: windowArchAuto,
     fireplace: fireplaceAuto,
-    tile_alt: inFloor('tile_alt'),
+    tile_alt: tileAltAuto,
     crack: inFloor('crack'),
   });
-  void ALL;
 })(window.RPG);

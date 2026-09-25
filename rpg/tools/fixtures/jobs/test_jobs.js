@@ -148,7 +148,7 @@ for (const id of allAbilities) {
   if (dm && dm.formula === 'percent') {
     ok(tryUse(id, {}, (x) => x.foe.hp < x.before.fhp, 40), `${n}: percent damage lands on a normal foe`);
     ok(tryUse(id, { mons: ['jb_metal'] }, (x) => x.foe.hp < x.before.fhp, 40), `${n}: works on metal foes`);
-    ok(tryUse(id, { mons: ['jb_boss'] }, (x) => x.foe.hp === x.before.fhp && said(x.ev, 'きかなかった'), 3), `${n}: no effect on bosses`);
+    ok(tryUse(id, { mons: ['jb_boss'] }, (x) => x.foe.hp === x.before.fhp && said(x.ev, '効かなかった'), 3), `${n}: no effect on bosses`);
   } else if (dm && dm.mp) {
     ok(tryUse(id, { pre: (x) => { x.u.mp = 0; } }, (x) => x.foe.mp < 50 && x.u.mp > 0), `${n}: drains the foe's MP`);
   } else if (dm) {
@@ -169,7 +169,7 @@ for (const id of allAbilities) {
   if (has(ab, 'heal')) ok(tryUse(id, { pre: (x) => { x.ally.hp = 1; x.u.hp = Math.max(1, x.u.hp - 5); }, target: (x) => (ab.target === 'self' ? x.u : x.ally) }, (x) => (ab.target === 'self' ? x.u.hp > x.before.uhp : x.ally.hp > 1)), `${n}: heals`);
   if (has(ab, 'healMp')) ok(tryUse(id, { pre: (x) => { x.ally.mp = 0; } }, (x) => x.ally.mp > 0), `${n}: restores MP`);
   if (has(ab, 'revive')) {
-    ok(tryUse(id, { pre: (x) => run(x.e.die(x.ally, null)) }, (x) => x.ally.hp > 0 && said(x.ev, 'いきかえった')), `${n}: revives`);
+    ok(tryUse(id, { pre: (x) => run(x.e.die(x.ally, null)) }, (x) => x.ally.hp > 0 && said(x.ev, '生き返った')), `${n}: revives`);
   }
   if (has(ab, 'cure')) {
     const cu = eff(ab, 'cure');
@@ -203,7 +203,7 @@ for (const id of allAbilities) {
     tryUse('thief_steal_rare', { mons: ['jb_thief'] }, (x) => { if (x.e.stolen[0] && x.e.stolen[0].rare) rare++; return true; }, 1);
     tryUse('thief_steal', { mons: ['jb_thief'] }, (x) => { if (x.e.stolen[0] && x.e.stolen[0].rare) plain++; return true; }, 1);
   }
-  ok(rare > plain * 1.8, `おおものねらい steals rares more often (${rare} vs ${plain})`);
+  ok(rare > plain * 1.8, `大物狙い steals rares more often (${rare} vs ${plain})`);
 }
 
 // ================================================================ field use (menu)
@@ -263,7 +263,7 @@ for (const id of allAbilities) {
       else ok(reactTest(id, (x) => { x.ally.hp = Math.floor(x.ally.mhp * 0.2); x.e.triggerReactions(x.foe, x.ally, 'phys'); return []; }, reacted), `${n}: helps an ally in danger`);
       break;
     case 'ko':
-      ok(reactTest(id, (x) => run(x.e.die(x.u, x.foe)), (x) => x.u.hp > 0 && said(x.ev, 'たちあがった'), 3), `${n}: gets back up once`);
+      ok(reactTest(id, (x) => run(x.e.die(x.u, x.foe)), (x) => x.u.hp > 0 && said(x.ev, '立ち上がった'), 3), `${n}: gets back up once`);
       ok(reactTest(id, (x) => { run(x.e.die(x.u, x.foe)); return run(x.e.die(x.u, x.foe)); }, (x) => x.u.hp === 0, 3), `${n}: only once per battle`);
       break;
   }
@@ -293,13 +293,13 @@ for (const id of allAbilities) {
   }
   if (a.mods.mpCostPct) ok(R.Rules.mpCost(c, 'mage_missile') < R.Rules.mpCost(without, 'mage_missile'), `${a.name}: cheaper spells`);
 }
-{ // にとうりゅう: a knight wields two swords and swings twice
+{ // 二刀流: a knight wields two swords and swings twice
   const k = member('yuki', 'knight', 25, null, { support: 'ninja_two_swords' });
-  ok(R.Rules.canEquip(k, 'iron_sword', 'shield'), 'にとうりゅう: sword in the shield hand');
+  ok(R.Rules.canEquip(k, 'iron_sword', 'shield'), '二刀流: sword in the shield hand');
   k.equip.shield = 'iron_sword';
   const e = engine([k], ['jb_dummy']);
   const ev = run(e.attack(e.party[0], e.mons[0], false));
-  ok(ev.filter((v) => v.t === 'fx').length === 2, 'にとうりゅう: two swings');
+  ok(ev.filter((v) => v.t === 'fx').length === 2, '二刀流: two swings');
   const nj = member('yuki', 'ninja', 25);
   ok(R.Rules.canEquip(nj, 'wakizashi', 'shield'), 'ninja: dual wields by nature');
 }
@@ -307,36 +307,36 @@ for (const id of allAbilities) {
   const t = member('metem', 'mage', 20, null, { support: 'timemage_swift' });
   const e = engine([t], ['jb_dummy']);
   run(e.begin());
-  ok(e.party[0].buffs.agi === 1, 'しゅんそく: haste at battle start');
+  ok(e.party[0].buffs.agi === 1, '俊足: haste at battle start');
   const g = member('yuki', 'warrior', 20, null, { support: 'knight_guard_stance' });
   const e2 = engine([g], ['jb_dummy']); run(e2.begin());
-  ok(e2.party[0].buffs.def === 1, 'まもりのかまえ: defense up at battle start');
+  ok(e2.party[0].buffs.def === 1, '守りの構え: defense up at battle start');
   const p = engine([member('yuki', 'warrior', 20, null, { support: 'paladin_life' })], ['jb_dummy']);
-  ok(p.party[0].permRegen, 'せいなるいのち: permanent regen');
+  ok(p.party[0].permRegen, '聖なる命: permanent regen');
   const monk = member('yuki', 'monk', 20); monk.equip.weapon = null;
   const war = member('yuki', 'warrior', 20); war.equip.weapon = null;
   const brawl = member('yuki', 'warrior', 20, null, { support: 'monk_brawler' }); brawl.equip.weapon = null;
-  ok(R.Rules.stats(monk).atk > R.Rules.stats(war).atk + 10, 'ぶとうか: strong bare hands');
-  ok(R.Rules.stats(brawl).atk >= R.Rules.stats(war).atk + 30, 'すでのこころえ: bare hands for any job');
+  ok(R.Rules.stats(monk).atk > R.Rules.stats(war).atk + 10, '武闘家: strong bare hands');
+  ok(R.Rules.stats(brawl).atk >= R.Rules.stats(war).atk + 30, '素手の心得: bare hands for any job');
   const rw = (sup) => {
     const e3 = engine([member('yuki', 'warrior', 20, null, sup)], ['jb_dummy']);
     e3.killed = [e3.mons[0]];
     return e3.computeRewards().each[0];
   };
-  ok(rw({ support: 'monk_training' }).exp === Math.round(10 * 1.5), 'しゅぎょう: +50% EXP');
-  ok(rw({ support: 'bard_learning' }).jp === Math.round(5 * 1.5), 'まなびのこころ: +50% JP');
+  ok(rw({ support: 'monk_training' }).exp === Math.round(10 * 1.5), '修行: +50% EXP');
+  ok(rw({ support: 'bard_learning' }).jp === Math.round(5 * 1.5), '学びの心: +50% JP');
   const ex = engine([member('yuki', 'thief', 20, null, { support: 'thief_rare_hunter' })], ['jb_thief']);
   ok(ex.rareStealChance(ex.party[0], {}) > 0.2, 'レアハンター: better rare steals');
   const whm = engine([member('non', 'whitemage', 20, null, { support: 'whitemage_heal_up' })], ['jb_dummy']);
   const wh0 = engine([member('non', 'whitemage', 20)], ['jb_dummy']);
-  ok(whm.expectHeal(whm.party[0], DB.abilities.whitemage_healing, whm.party[0]) > wh0.expectHeal(wh0.party[0], DB.abilities.whitemage_healing, wh0.party[0]) * 1.25, 'かいふくアップ: +30% healing');
+  ok(whm.expectHeal(whm.party[0], DB.abilities.whitemage_healing, whm.party[0]) > wh0.expectHeal(wh0.party[0], DB.abilities.whitemage_healing, wh0.party[0]) * 1.25, '回復アップ: +30% healing');
   const bm = engine([member('metem', 'blackmage', 20, null, { support: 'blackmage_magic_up' })], ['jb_dummy']);
   const bm0 = engine([member('metem', 'blackmage', 20)], ['jb_dummy']);
-  ok(bm.expectDamage(bm.party[0], DB.abilities.blackmage_blast, bm.mons[0]) > bm0.expectDamage(bm0.party[0], DB.abilities.blackmage_blast, bm0.mons[0]) * 1.2, 'まほうアップ: +25% spell damage');
+  ok(bm.expectDamage(bm.party[0], DB.abilities.blackmage_blast, bm.mons[0]) > bm0.expectDamage(bm0.party[0], DB.abilities.blackmage_blast, bm0.mons[0]) * 1.2, '魔法アップ: +25% spell damage');
   const alc = member('yuki', 'alchemist', 20);
-  ok((R.Rules.mods(alc).itemPct || 0) === 25, 'くすりし: innate item mastery');
+  ok((R.Rules.mods(alc).itemPct || 0) === 25, '薬師: innate item mastery');
   const hero = engine([member('yuki', 'hero', 30)], ['jb_dummy']);
-  ok(hero.party[0].resist('death') === 1, 'ゆうしゃ: immune to death');
+  ok(hero.party[0].resist('death') === 1, '勇者: immune to death');
 }
 
 // ================================================================ simulated battles (party AI with real kits)

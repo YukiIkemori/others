@@ -30,11 +30,16 @@
     if (ab.magic && u.status.silence) return false;
     return (ab.mp || 0) <= u.mp;
   }
-  /** party member a monster attacks: the front of the line is hit a little more often */
+  /**
+   * Party member a single-target monster attack goes for. Formation matters:
+   * the 1st/2nd/3rd LIVING members in line are picked 50% / 30% / 20% of the time
+   * (with two left: 5:3, i.e. the same ratio). Group/random attacks are unaffected.
+   */
+  const LINE_WEIGHTS = [5, 3, 2];
   function pickPartyTarget(eng) {
-    const l = eng.living('party');
+    const l = eng.living('party').slice().sort((a, b) => a.idx - b.idx);
     if (!l.length) return null;
-    return U.weighted(l.map((p) => ({ p, w: p.idx === 0 ? 4 : 3 }))).p;
+    return U.weighted(l.map((p, i) => ({ p, w: LINE_WEIGHTS[i] || 1 }))).p;
   }
   function monCommand(eng, u, id) {
     if (id === 'attack') return { type: 'attack', target: pickPartyTarget(eng) };

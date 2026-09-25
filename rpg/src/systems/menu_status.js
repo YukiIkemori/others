@@ -22,7 +22,15 @@
     const party = R.Game.party;
     let a = 0;
     for (;;) {
-      a = await Menu.pickMember({ title: '誰を入れ替える？', initial: a, x: 53, y: 40 });
+      a = await Menu.pickMember({
+        title: '誰を入れ替える？', initial: a, x: 53, y: 40,
+        // formation matters: single-target enemy attacks favour the front (battle_ai pickPartyTarget)
+        info: (x, y) => {
+          G().window(x, y, 200, 38);
+          G().text('先頭ほど敵に狙われやすくなります。', x + 10, y + 6);
+          G().text('（先頭50%・2番目30%・3番目20%）', x + 10, y + 20, { color: G().C.gray });
+        },
+      });
       if (a < 0) return;
       const b = await Menu.pickMember({
         title: '誰と入れ替える？', initial: a, x: 53, y: 40, mark: a,

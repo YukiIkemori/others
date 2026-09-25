@@ -140,7 +140,7 @@
       if (!c.u && y === fy0 && t.hash(gx, 0, 301) < 0.55) continue;
       if (!c.l && x === fx0 && (y === fy0 || t.hash(gx, gy, 303) < 0.3)) continue;
       if (!c.r && x === fx1 && (y === fy0 || t.hash(gx, gy, 305) < 0.3)) continue;
-      const v = t.fnoise(gx, gy, 4, 256, 307);
+      const v = t.fnoise(gx, gy, 4, 64, 307);
       let col = v < 0.36 ? LEAF[2] : v < 0.62 ? LEAF[3] : LEAF[4];
       const u = (gx + ((gy >> 1) & 1) * 2) & 3, w = gy & 1;
       if (u === 0 && w === 0) col = LEAF[Math.min(6, LEAF.indexOf(col) + 1)];
@@ -214,7 +214,7 @@
       const gx = cx * 16 + x, gy = cy * 16 + y;
       let col;
       if (y < faceY) {
-        const v = t.fnoise(gx, gy, 4, 256, 335);
+        const v = t.fnoise(gx, gy, 4, 128, 335);
         col = leafScale(t, gx, gy, v < 0.4 ? 4 : 5, LEAF);
         if (!c.u && y === top0) col = (gx & 3) === 0 ? null : LEAF[6];
         else if (!c.u && y === top0 + 1 && (gx & 3) === 0) col = LEAF[5];
@@ -248,7 +248,7 @@
   // flame and the warm halo (drawn translucent over whatever is around it).
   function lamp(f) {
     const t = tk(), L = buf(16, 32);
-    const lvl = [1, 0.8, 1, 0.9][f];
+    const lvl = [1, 0.6, 0.9, 0.75][f], fy = [7.6, 8.2, 7.2, 7.9][f];
     const GL = [0xa04c10, 0xe88a28, 0xffc048, 0xffe890, 0xfffce8];
     // stone foot
     L.rect(5, 27, 6, 4, STONE[3]); L.hline(5, 10, 27, STONE[5]); L.vline(5, 27, 30, STONE[4]); L.vline(10, 28, 30, STONE[2]); L.hline(5, 10, 30, STONE[1]);
@@ -267,8 +267,8 @@
     for (let y = 5; y <= 10; y++) {
       L.set(5, y, IRON[3]); L.set(10, y, IRON[1]);
       for (let x = 6; x <= 9; x++) {
-        const d = Math.hypot(x - 7.5, (y - 7.6) * 0.9);
-        const k = Math.max(0, Math.min(4, Math.round(4.3 - d * 1.35 - (1 - lvl) * 2)));
+        const d = Math.hypot(x - 7.5, (y - fy) * 0.9);
+        const k = Math.max(0, Math.min(4, Math.round(4.4 - d * 1.3 - (1 - lvl) * 2.5)));
         L.set(x, y, GL[k]);
       }
     }
@@ -287,7 +287,7 @@
       if ((x + y) % 2 && d > rad - 1.6) continue;
       glow.set(x, y, a);
     }
-    return finish(L, { outline: INK, ell: [9.5, 30.5, 3.2, 1.2], sa: 0.36, glow: { m: glow, col: 0xffd878, a: 0.45, alpha: true } });
+    return finish(L, { outline: INK, ell: [9.5, 30.5, 3.2, 1.2], sa: 0.36, glow: { m: glow, col: 0xffd878, a: 0.62, alpha: true } });
   }
 
   // ============================================================ shop signs
@@ -437,9 +437,13 @@
         L.ellipse(x + 1.5, y + 1, 2.2, 1.4, 0xc07c34); L.hline(x, x + 3, y, 0xe0a458); L.set(x + 1, y + 1, 0xf0c888); L.set(x + 3, y + 2, 0x8c5020);
       }
       L.hline(3, 5, 17, 0xe0a458);
-    } else if (kind === 4) { // clay pots
-      for (const x of [2, 7, 11]) {
-        L.rect(x, 16, 3, 5, CLAY[3]); L.vline(x, 16, 20, CLAY[4]); L.vline(x + 2, 17, 20, CLAY[2]); L.hline(x, x + 2, 15, CLAY[4]); L.set(x + 1, 15, CLAY[1]);
+    } else if (kind === 4) { // clay pots and a jug
+      for (const [x, big] of [[3.5, 1], [8, 0], [12, 1]]) {
+        const r = big ? 2.3 : 1.8, cy = 19.2;
+        L.shadeEllipse(x, cy, r, r * 0.9, [CLAY[1], CLAY[2], CLAY[3], CLAY[4]], { dither: 0.3 });
+        const x0 = Math.round(x - 1), x1 = Math.round(x + 0.4);
+        L.hline(x0, x1 + (big ? 1 : 0), Math.round(cy - r) - 1, CLAY[5]); L.set(x1 + (big ? 1 : 0), Math.round(cy - r) - 1, CLAY[3]);
+        L.hline(x0 + 1, x1, Math.round(cy - r), CLAY[0]);
       }
     } else if (kind === 5) { // fish on a tray
       L.hline(2, 13, 20, 0x8890a4); L.hline(2, 13, 21, 0x5c6478);
@@ -596,25 +600,31 @@
       else if (e2 <= 1 && y > bcy) L.set(x, y, x < cx - brx * 0.4 ? STONE[3] : x > cx + brx * 0.4 ? STONE[1] : STONE[2]);
     }
     L.outline(INK);
-    // jet: rising column, crown and falling arcs (phase moves each frame)
-    const jetH = big ? 9 : small ? 6 : 8;
-    const jx = Math.round(cx);
-    for (let y = bcy - jetH; y < bcy; y++) { L.set(jx, y, WATER[6]); if ((y + f) % 2 === 0) L.set(jx - 1, y, WATER[5]); }
-    L.set(jx - 1, bcy - jetH, WATER[5]); L.set(jx + 1, bcy - jetH, WATER[5]); L.set(jx, bcy - jetH - 1, WATER[5]);
-    const drop = (x, y, col) => { const X = Math.round(x), Y = Math.round(y); if (L.get(X, Y) !== NONE || Y < 0) L.set(X, Y, col); else L.set(X, Y, col); };
+    // jet: a 2 px column with a crown, droplets arcing down to the bowl rim
+    // (they advance a quarter step per frame), streams from the bowl lip
+    const jetH = big ? 10 : small ? 6 : 8;
+    const jx0 = Math.floor(cx), jx1 = jx0 + 1, jtop = Math.round(bcy - jetH);
+    for (let y = jtop; y < bcy; y++) {
+      L.set(jx0, y, (y + f) % 3 === 0 ? WATER[5] : WATER[6]);
+      L.set(jx1, y, (y + f) % 3 === 1 ? WATER[6] : WATER[5]);
+    }
+    L.set(jx0, jtop - 1, WATER[6]); L.set(jx1, jtop - 1, WATER[6]);
+    L.set(jx0 - 1, jtop, WATER[5]); L.set(jx1 + 1, jtop, WATER[5]);
+    if (f & 1) { L.set(jx0, jtop - 2, WATER[5]); } else { L.set(jx1, jtop - 2, WATER[5]); }
     for (const side of [-1, 1]) {
-      // arcs from the crown to the bowl rim
-      const span = brx + 1, top = bcy - jetH;
-      for (let s = 0; s < 10; s++) {
-        const q = ((s + f * 0.5) % 10) / 10;
-        const x = jx + side * (0.5 + q * span), y = top + (bcy - top) * q * q + 0.5;
-        if (s % 2 === 0) drop(x, y, q < 0.5 ? WATER[6] : WATER[5]);
+      const span = brx + 0.5, ox = side < 0 ? jx0 : jx1;
+      const n = big ? 6 : small ? 3 : 5;
+      for (let s = 0; s < n; s++) {
+        const q = (s + f / 4) / n;
+        const at = (qq) => [Math.round(ox + side * (0.6 + qq * span)), Math.round(jtop + (bcy - jtop) * qq * qq)];
+        const [x, y] = at(q), [tx, ty] = at(Math.max(0, q - 0.6 / n));
+        if (tx !== x || ty !== y) L.set(tx, ty, WATER[4]);
+        L.set(x, y, WATER[6]);
       }
       // streams from the bowl lip down to the basin
       const sx = cx + side * (brx + 0.6);
       for (let y = Math.ceil(bcy + bry); y <= baseY; y++) {
-        const on = (y + f) % 3 !== 0;
-        if (on) drop(sx + side * (y - bcy) * 0.12, y, (y + f) % 3 === 1 ? WATER[6] : WATER[4]);
+        L.set(Math.round(sx + side * (y - bcy) * 0.12), y, (y + f) % 3 === 0 ? WATER[4] : WATER[6]);
       }
       // splash where the streams land
       const lx = Math.round(sx + side * (baseY - bcy) * 0.12);
@@ -724,24 +734,28 @@
   // ============================================================ haystack
   function haystack() {
     const t = tk(), L = buf(16, 18);
-    const cx = 7.5, cy = 11, rx = 7, ry = 7.5;
-    for (let y = 2; y <= 16; y++) for (let x = 0; x < 16; x++) {
-      const dx = (x - cx) / (rx + 0.5), dy = (y - cy) / (ry + 0.5);
-      if (y > 14) { if (Math.abs(x - cx) > rx + 0.2) continue; }
-      else if (dx * dx + dy * dy > 1) continue;
-      // fibres: vertical strokes, lit from the upper left
-      const lit = -(dx * 0.7 + dy * 0.7) + 0.2;
-      const fibre = t.hash(x, Math.floor(y / 3 + (x % 2) * 0.5), 371);
-      let i = lit > 0.55 ? 5 : lit > 0.15 ? 4 : lit > -0.3 ? 3 : 2;
-      if (fibre < 0.25) i -= 1; else if (fibre > 0.85) i += 1;
-      if (y >= 15) i = Math.min(i, 2);
-      L.set(x, y, STRAW[Math.max(0, Math.min(5, i))]);
+    // a dome of straw laid in bundles that converge toward the top
+    const top = 4, base = 16;
+    for (let y = top; y <= base; y++) {
+      const q = (base - y + 0.5) / (base - top + 1); // ~1 at the top, 0 at the foot
+      const w = 7.6 * Math.sqrt(Math.max(0, 1 - q * q));
+      for (let x = 0; x < 16; x++) {
+        const dx = (x + 0.5 - 8) / Math.max(0.5, w);
+        if (Math.abs(dx) > 1) continue;
+        const lit = -dx * 0.75 + q * 0.55 + 0.1;
+        let i = lit > 0.7 ? 5 : lit > 0.3 ? 4 : lit > -0.15 ? 3 : 2;
+        const u = Math.round(dx * 5.5);
+        if (((u % 2) + 2) % 2 === 0) i -= t.hash(x, y, 371) < 0.7 ? 1 : 0;
+        if (((u % 3) + 3) % 3 === 1 && (y + x) % 3 === 0) i -= 1;
+        if (t.hash(x, y, 373) < 0.06) i += 1;
+        if (y >= base - 1) i = Math.min(i, 2) - (y === base ? 1 : 0);
+        L.set(x, y, STRAW[Math.max(0, Math.min(5, i))]);
+      }
     }
-    // stray straws poking out
-    for (const [x, y, c] of [[3, 4, 4], [11, 3, 3], [1, 9, 3], [14, 8, 2], [7, 1, 4], [8, 2, 5], [0, 14, 2], [15, 13, 1]]) L.set(x, y, STRAW[c]);
-    // rope band
-    for (let x = 1; x <= 14; x++) { const y = 10 + Math.round(Math.sin((x / 15) * Math.PI) * 1.2); if (L.get(x, y) !== NONE) L.set(x, y, x < 8 ? 0x8c6c3c : 0x6c5028); }
-    return finish(L, { outline: INK, ell: [9, 16.6, 7, 1.2], sa: 0.34 });
+    // tuft on top, loose straws at the silhouette and on the ground
+    L.set(7, 3, STRAW[5]); L.set(8, 2, STRAW[4]); L.set(9, 3, STRAW[3]); L.set(6, 3, STRAW[4]);
+    for (const [x, y, c] of [[2, 7, 4], [13, 7, 2], [1, 10, 3], [15, 12, 1], [0, 15, 2], [15, 16, 1], [4, 5, 5]]) L.set(x, y, STRAW[c]);
+    return finish(L, { outline: INK, ell: [9.5, 16.6, 7, 1.3], sa: 0.34 });
   }
 
   // ============================================================ bush

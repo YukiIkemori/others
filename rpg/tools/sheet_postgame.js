@@ -16,6 +16,9 @@
 //   variants    the two regular base sprites in their default palette and hue-shifted
 //               (the pg_* monsters reuse them with palette variants)
 //   check       size / bbox / bottom row / colour count; exit 1 on a size or feet problem
+//   roster      every R.DB.monsters entry whose id starts with pg_ (plus rare_prism and
+//               abyss_lord) with its real sprite + palette variant, three to a battle screen
+//               on bbg:demon (reads the monster data, so it shows what the game will show)
 //   scene       boots the built game (debug.html), sets up a cleared party and plays
 //               R.Postgame.bonusScene(), taking screenshots while it fades in, while the
 //               text is shown and at 「おしまい」 (run `node tools/build.js` first)
@@ -98,7 +101,7 @@ window.SHEET = (function () {
     const [cv, c] = canvas(w, mh * s + 28);
     imgs.forEach((im, k) => {
       label(c, ids[k] + ' ' + im.width + 'x' + im.height + ' ' + colours(im) + 'c ' + times[ids[k]] + 'ms', pos[k], 4);
-      cell(c, pos[k], 20, im.width * s, im.height * s, s);
+      cell(c, pos[k], 20 + (mh - im.height) * s, im.width * s, im.height * s, s);
       c.drawImage(im, pos[k], 20 + (mh - im.height) * s, im.width * s, im.height * s);
     });
     return cv.toDataURL();
@@ -185,7 +188,22 @@ window.SHEET = (function () {
       return { id, size: im.width + 'x' + im.height, bbox: [x0, y0, x1, y1], colours: colours(im), ms: times[id], probs };
     });
   }
-  return { zoom, context, variants, check, times };
+  /** battle screens for the post-game monster data (sprite + hue/sat/bri) */
+  function roster(s) {
+    const M = R.DB.monsters || {};
+    const ids = Object.keys(M).filter((id) => id.startsWith('pg_')).concat(['rare_prism', 'abyss_lord'].filter((id) => M[id]));
+    const scenes = [];
+    for (let i = 0; i < ids.length; i += 3) {
+      const part = ids.slice(i, i + 3);
+      scenes.push({ bg: 'demon', title: part.join(' '), list: part.map((id) => {
+        const m = M[id], v = {};
+        if (m.hue) v.hue = m.hue; if (m.sat != null) v.sat = m.sat; if (m.bri != null) v.bri = m.bri;
+        return { id: m.sprite, v: Object.keys(v).length ? v : null };
+      }) });
+    }
+    return { ids, url: scenes.length ? context(scenes, s) : null };
+  }
+  return { zoom, context, variants, check, roster, times };
 })();
 `;
 
@@ -200,7 +218,8 @@ ${src.map((f) => `<script src="file://${f}"></script>`).join('\n')}
   const page = await (await browser.newContext({ viewport: { width: 800, height: 600 } })).newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(String(e.stack || e)));
-  page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') errors.push(m.text()); });
+  // (Chrome's willReadFrequently notice comes from this tool's own pixel readback)
+  page.on('console', (m) => { if ((m.type() === 'error' || m.type() === 'warning') && !/willReadFrequently/.test(m.text())) errors.push(m.text()); });
   await page.goto('file://' + pageFile);
   await page.waitForTimeout(200);
   const run = (js) => page.evaluate(js);
@@ -231,6 +250,11 @@ ${src.map((f) => `<script src="file://${f}"></script>`).join('\n')}
       if (r.probs.length) bad = true;
     }
   }
+  if (ONLY.includes('roster')) {
+    const r = await run('SHEET.roster(2)');
+    console.log('roster:', r.ids.length, 'monsters:', r.ids.join(' '));
+    if (r.url) save('roster', r.url);
+  }
   const info = await run(`(() => ({ warned: Object.keys(RPG.Gfx._warned) }))()`);
   console.log('missing:', info.warned.join(' ') || '-');
   for (const e of errors) console.log('[page]', e);
@@ -255,7 +279,7 @@ async function scene(browser) {
     R.Game.party[0].name = 'アレン';
     R.Game.title = '深淵を越えし者';
     R.Game.flags.game_clear = true; R.Game.flags.abyss_clear = true;
-    if (R.Field && R.Field.start) { try { await R.Field.start('regnas_castle', 'start'); } catch (e) { return 'field: ' + e.message; } }
+    R.bgm('castle'); // the scene must hand this back when it closes
     window.__done = false;
     R.Postgame.bonusScene().then(() => { window.__done = true; });
     return 'ok';
@@ -264,17 +288,22 @@ async function scene(browser) {
   const shot = async (name) => { const f = path.join(OUT, name + '.png'); await page.locator('#screen').screenshot({ path: f }); console.log('shot →', f); };
   const press = async (k) => { await page.keyboard.down(k); await page.waitForTimeout(60); await page.keyboard.up(k); };
   await page.waitForTimeout(700); await shot('scene_1_fadein');
-  await page.waitForTimeout(2500); await shot('scene_2_panel');
-  await page.waitForTimeout(6000); await shot('scene_3_text');
-  for (let i = 0; i < 30; i++) {
+  await page.waitForTimeout(1600); await shot('scene_2_panel');
+  const bgmIn = await page.evaluate('window.RPG.Audio && window.RPG.Audio.current');
+  console.log('bgm during scene:', bgmIn);
+  await page.waitForTimeout(2500); await shot('scene_3_text');
+  let n = 0, titled = false;
+  for (let i = 0; i < 40; i++) {
     const st = await page.evaluate('window.RPG.Postgame._state && window.RPG.Postgame._state()');
     if (st === 'end') break;
-    await press('KeyZ'); await page.waitForTimeout(700);
+    if (st === 'title' && !titled) { titled = true; await page.waitForTimeout(1200); await shot('scene_4_title'); }
+    await press('KeyZ'); await page.waitForTimeout(500);
+    if (st === 'text') { await press('KeyZ'); await page.waitForTimeout(400); if (++n === 3) await shot('scene_3b_text'); }
   }
-  await page.waitForTimeout(2500); await shot('scene_4_end');
+  await page.waitForTimeout(2500); await shot('scene_5_end');
   await press('KeyZ'); await page.waitForTimeout(2500);
   const done = await page.evaluate('window.__done');
-  await shot('scene_5_after');
+  await shot('scene_6_after');
   const bgm = await page.evaluate('window.RPG.Audio && window.RPG.Audio.current');
   console.log('closed:', done, 'bgm after:', bgm);
   for (const e of errors) console.log('[page]', e);
@@ -291,7 +320,7 @@ async function main() {
   fs.mkdirSync(OUT, { recursive: true });
   const browser = await playwright.chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] });
   let ok = true;
-  if (ONLY.some((k) => ['zoom', 'context', 'variants', 'check'].includes(k))) ok = (await sprites(browser)) && ok;
+  if (ONLY.some((k) => ['zoom', 'context', 'variants', 'check', 'roster'].includes(k))) ok = (await sprites(browser)) && ok;
   if (ONLY.includes('scene')) ok = (await scene(browser)) && ok;
   await browser.close();
   if (!ok) process.exitCode = 1;

@@ -118,8 +118,8 @@
       }
       return b;
     },
-    planks(t) {
-      const P = WOOD, b = t.tile();
+    planks(t, pal) {
+      const P = pal && pal.length > 5 ? pal : WOOD, b = t.tile();
       for (let y = 0; y < 16; y++) {
         const row = y >> 2, ry = y & 3, off = [0, 9, 4, 12][row];
         for (let x = 0; x < 16; x++) {
@@ -135,14 +135,17 @@
       }
       return b;
     },
-    dirt(t, P) {
+    dirt(t, P, seed) {
+      const sd = seed || 0;
       const b = t.tex(16, 16, (x, y) => {
-        const v = t.fnoise(x, y, 8, 16, 21), h = t.hash(x, y, 23);
+        const v = t.fnoise(x, y, 8, 16, 21), h = t.hash(x, y, 23 + sd);
         if (h < 0.05) return P[1];
         if (h > 0.97) return P[4];
         return v < 0.35 ? t.mix(P[2], P[1], 0.45) : v > 0.68 ? t.mix(P[2], P[3], 0.5) : P[2];
       });
-      for (const [x, y] of [[3, 3], [11, 6], [6, 12], [14, 13]]) { b.wset(x, y, P[3]); b.wset(x + 1, y, P[4]); b.wset(x, y + 1, P[1]); b.wset(x + 1, y + 1, P[0]); }
+      let pts = [[3, 3], [11, 6], [6, 12], [14, 13]];
+      if (sd) { const r = t.rng(sd); pts = pts.map(() => [Math.floor(r() * 16), Math.floor(r() * 16)]).slice(0, 2 + Math.floor(r() * 3)); }
+      for (const [x, y] of pts) { b.wset(x, y, P[3]); b.wset(x + 1, y, P[4]); b.wset(x, y + 1, P[1]); b.wset(x + 1, y + 1, P[0]); }
       return b;
     },
     slabs(t, P) { return stones(t.tile(), P, [[4, 3], [12, 5], [3, 11], [10, 13]], { grout: 1.2, seed: 6 }); },
@@ -355,6 +358,226 @@
   }
   A.themeArt = art;
   A.THEME_DEFS = TH;
+
+  // ------------------------------------------------------------ floor variants
+  // Large runs of one floor get deterministic variety (tiles_auto picks a variant
+  // per cell from a position hash): 1 'tone' (a stone / tile recoloured), 2 'worn'
+  // (chips, scuffs, a stain), 3 'detail' (hairline crack, moss in the grout, a
+  // knot…). 'alt' is the floor in the theme's second colour (tile_alt decor) and
+  // 'crack' a long crack across the cell (crack decor). Variants never move grout
+  // lines and only recolour stones that do not continue into the next cell, so
+  // they tile seamlessly with the plain floor.
+  // Second colour per theme (tile_alt): same texture, contrasting material.
+  const ALT = {
+    generic: [0x4a3e30, 0x7a6a54, 0x9c8a6e, 0xb8a688, 0xd4c4a6],
+    town: [0x4a2a22, 0x7c4436, 0x9c5a46, 0xb87458, 0xd49474],
+    castle: [0x5c5448, 0x8c8270, 0xb0a68e, 0xccc2a8, 0xe6dcc4],
+    house: [0x21100a, 0x3a1e12, 0x55301c, 0x6e4228, 0x8a5836, 0xa87248],
+    cave: [0x2a2420, 0x463c34, 0x5c5046, 0x746658, 0x8c7e6e],
+    fort: [0x2e2a30, 0x4c4852, 0x66626c, 0x807c86, 0x9a96a0],
+    pyramid: [0x3c2c1c, 0x6a4c2c, 0x8c6a40, 0xa88452, 0xc4a06c],
+    water: [0x14303a, 0x245064, 0x326a80, 0x44849a, 0x5ea0b4],
+    ice: [0x384e8c, 0x5070b0, 0x7094cc, 0x98b8e4, 0xc8e0f8],
+    volcano: [0x281008, 0x46201a, 0x62302a, 0x7c4234, 0x985844],
+    tower: [0x2c2c3c, 0x484c64, 0x646a86, 0x8088a4, 0xa4acc4],
+    shrine: [0x3c5078, 0x5c74a0, 0x8098c0, 0xa8bcdc, 0xd0e0f4],
+    demon: [0x1a0608, 0x34101a, 0x4c1a28, 0x662438, 0x843250],
+  };
+  const MOSSY = { town: 1, cave: 1, fort: 1, water: 1, generic: 1, pyramid: 0 };
+  const FORMAL = { castle: 1, shrine: 1, tower: 1 };
+  const D4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+  /** flood-fill the non-separator pixels of a 16x16 texture on the torus */
+  function regions(b, isSep) {
+    const lab = new Int16Array(256).fill(-1), list = [];
+    for (let s = 0; s < 256; s++) {
+      if (lab[s] !== -1 || isSep(b.p[s])) continue;
+      const k = list.length, px = [], st = [s];
+      let cross = false;
+      lab[s] = k;
+      while (st.length) {
+        const i = st.pop();
+        px.push(i);
+        const x = i & 15, y = i >> 4;
+        for (const [dx, dy] of D4) {
+          let nx = x + dx, ny = y + dy;
+          const wrap = nx < 0 || nx > 15 || ny < 0 || ny > 15;
+          nx &= 15; ny &= 15;
+          const j = ny * 16 + nx;
+          if (isSep(b.p[j])) continue;
+          if (wrap) cross = true;
+          if (lab[j] === -1) { lab[j] = k; st.push(j); }
+        }
+      }
+      list.push({ px, cross, k });
+    }
+    return { lab, list };
+  }
+  /** separator (grout / seam) test for a floor kind */
+  function sepFor(kind, P) {
+    const c = tk().c;
+    if (kind === 'planks') return (v) => v === c(P[1]);
+    if (kind === 'marble' || kind === 'ice') return (v) => v === c(P[1]);
+    if (kind === 'demon') return (v) => v === 0x3c0a10;
+    if (kind === 'basalt') return (v) => v === c(P[0]) || v === 0x6a1c0c;
+    if (kind === 'dirt') return () => false;
+    return (v) => v === c(P[0]);
+  }
+  /** pixels of region r that touch a separator */
+  function rim(r, b, isSep) {
+    return r.px.filter((i) => {
+      const x = i & 15, y = i >> 4;
+      return D4.some(([dx, dy]) => isSep(b.p[((y + dy) & 15) * 16 + ((x + dx) & 15)]));
+    });
+  }
+  function hairline(b, t, rng, x, y, len, col, hi, within) {
+    let dx = rng() < 0.5 ? 1 : -1, dy = rng() < 0.5 ? 1 : 0;
+    for (let k = 0; k < len; k++) {
+      if (within && !within(x, y)) break;
+      b.set(x, y, col);
+      if (hi && b.get(x, y + 1) !== -1 && (!within || within(x, y + 1))) b.set(x, y + 1, t.mix(b.get(x, y + 1), hi, 0.5));
+      if (rng() < 0.35) dy = dy ? 0 : (rng() < 0.5 ? 1 : -1);
+      x += dx; y += dy;
+      if (x < 0 || x > 15 || y < 0 || y > 15) break;
+    }
+  }
+  /** variant v of a floor texture: kind = FLOOR kind, P = ramp, theme for moss */
+  function floorVar(base, kind, P, v, seed, theme) {
+    const t = tk(), b = base.clone(), rng = t.rng(seed);
+    if (v === 'crack') {
+      // a long crack across the cell with a branch
+      const col = t.mul(P[0], 0.8), hi = P[Math.min(P.length - 1, 4)];
+      let x = 0, y = 4 + Math.floor(rng() * 6);
+      const pts = [];
+      while (x < 16) { pts.push([x, y]); x += 1; if (rng() < 0.45) y += rng() < 0.5 ? 1 : -1; y = Math.max(1, Math.min(14, y)); }
+      for (const [px, py] of pts) { b.set(px, py, col); if (py < 15) b.set(px, py + 1, t.mix(b.get(px, py + 1), hi, 0.45)); }
+      const [bx, by] = pts[5 + Math.floor(rng() * 5)];
+      hairline(b, t, rng, bx, by + 1, 5, col, hi);
+      b.set(bx + 2, by - 2, col); b.set(bx + 3, by - 3, col);
+      return b;
+    }
+    if (kind === 'planks') {
+      const W = P.length > 5 ? P : WOOD;
+      if (v === 1) {
+        // knots
+        for (const [x, y] of [[3 + Math.floor(rng() * 8), 1 + 4 * Math.floor(rng() * 4)]]) {
+          b.set(x, y, W[1]); b.set(x + 1, y, W[1]); b.set(x - 1, y, W[2]); b.set(x + 2, y, W[2]); b.set(x, y + 1, W[2]);
+        }
+      } else if (v === 2) {
+        // nail heads beside the seams and a worn, lighter stretch
+        for (let y = 1; y < 16; y += 4) for (let x = 0; x < 16; x++) if (b.get(x, y) === W[1] && b.get(x, y + 1) === W[1] && x + 1 < 16) { b.set(x + 1, y + 1, W[0]); }
+        const y = 1 + 4 * Math.floor(rng() * 4), x0 = 2 + Math.floor(rng() * 6);
+        for (let x = x0; x < x0 + 6; x++) if (b.get(x, y) === W[3]) b.set(x, y, W[4]);
+      } else if (v === 3) {
+        const y = 2 + 4 * Math.floor(rng() * 4), x0 = 1 + Math.floor(rng() * 7);
+        for (let x = x0; x < x0 + 5; x++) if (b.get(x, y) !== W[1]) b.set(x, y, W[2]);
+        b.set(x0 + 5, y - 1, W[2]);
+      }
+      return b;
+    }
+    if (kind === 'dirt') {
+      // a fresh speckle / pebble layout (the noise is shared, so it still tiles)
+      if (theme !== 'town') { const nb = FLOOR.dirt(t, P, 1 + (seed & 0xffff)); b.p.set(nb.p); }
+      if (v === 1) for (let k = 0; k < 3; k++) { const x = Math.floor(rng() * 14) + 1, y = Math.floor(rng() * 14) + 1; b.set(x, y, P[3]); b.set(x + 1, y, P[4] || P[3]); b.set(x, y + 1, P[1]); b.set(x + 1, y + 1, P[0]); }
+      else if (v === 2) { const cx = 4 + rng() * 8, cy = 4 + rng() * 8; b.each((x, y, c) => (((x - cx) / 4.5) ** 2 + ((y - cy) / 3) ** 2 < 1 && (x + y) % 2 === 0 ? t.mul(c, 0.86) : undefined)); }
+      else if (v === 3) { const x = 3 + Math.floor(rng() * 9), y = 3 + Math.floor(rng() * 9); b.set(x, y, P[4] || P[3]); b.set(x + 1, y - 1, P[4] || P[3]); b.set(x + 2, y, P[3]); b.set(x + 1, y, P[1]); b.set(x + 3, y + 1, P[3]); }
+      return b;
+    }
+    const isSep = sepFor(kind, P);
+    const R_ = regions(b, isSep);
+    const inner = R_.list.filter((r) => !r.cross && r.px.length >= 5);
+    const pickR = () => inner[Math.floor(rng() * inner.length)];
+    if (v === 1 && inner.length) {
+      // one or two stones a shade darker / lighter
+      const n = inner.length > 3 ? 2 : 1;
+      for (let q = 0; q < n; q++) {
+        const r = pickR(), dark = rng() < 0.6;
+        for (const i of r.px) b.p[i] = dark ? t.mix(b.p[i], P[1], 0.32) : t.mix(b.p[i], P[3], 0.35);
+      }
+    } else if (v === 2 && R_.list.length) {
+      // chipped edges and a scuff
+      const r = inner.length ? pickR() : R_.list[Math.floor(rng() * R_.list.length)];
+      const edge = rim(r, b, isSep);
+      for (let q = 0; q < 3 && edge.length; q++) { const i = edge[Math.floor(rng() * edge.length)]; b.p[i] = t.c(P[0]); }
+      const r2 = inner.length ? pickR() : r;
+      const i0 = r2.px[Math.floor(rng() * r2.px.length)], x0 = i0 & 15, y0 = i0 >> 4;
+      for (let k = 0; k < 3; k++) { const x = x0 + k, y = y0 - k; if (R_.lab[(y & 15) * 16 + (x & 15)] === r2.k) b.set(x, y, P[Math.min(P.length - 1, 4)]); }
+    } else if (v === 3 && FORMAL[theme] && inner.length) {
+      // well-kept floors: a polished (lighter) stone with a glint instead of damage
+      const r = pickR();
+      for (const i of r.px) b.p[i] = t.mix(b.p[i], P[Math.min(P.length - 1, 4)], 0.3);
+      const i0 = r.px[Math.floor(r.px.length / 3)];
+      b.p[i0] = t.c(P[Math.min(P.length - 1, 4)]);
+    } else if (v === 3) {
+      if (MOSSY[theme] && rng() < 0.75) {
+        // moss creeping along the grout
+        const grout = [];
+        for (let i = 0; i < 256; i++) if (isSep(b.p[i])) grout.push(i);
+        if (grout.length) {
+          const i0 = grout[Math.floor(rng() * grout.length)];
+          const MOSS = [0x2c5a24, 0x3c7a2c, 0x5a9a3c];
+          for (let k = 0; k < 7; k++) {
+            const x = (i0 & 15) + Math.floor(rng() * 5) - 2, y = (i0 >> 4) + Math.floor(rng() * 3) - 1;
+            const j = (y & 15) * 16 + (x & 15);
+            if (isSep(b.p[j]) || k < 2) b.p[j] = t.c(MOSS[k % 3]);
+          }
+        }
+      } else if (inner.length) {
+        // hairline crack inside one stone
+        const r = pickR(), i0 = r.px[Math.floor(r.px.length / 2)];
+        hairline(b, t, rng, i0 & 15, i0 >> 4, 4 + Math.floor(rng() * 3), t.mul(P[0], 0.85), P[Math.min(P.length - 1, 4)], (x, y) => R_.lab[(y & 15) * 16 + (x & 15)] === r.k);
+      }
+    }
+    return b;
+  }
+  // non-theme grounds (tiles_local): lgrass dirt sand snowfloor wood
+  function groundVar(name, v, seed) {
+    const t = tk(), b = A.floorBuf(name).clone(), rng = t.rng(seed);
+    if (name === 'wood') return floorVar(b, 'planks', WOOD, v, seed, 'house');
+    if (name === 'dirt') return floorVar(b, 'dirt', [0x5c4028, 0x806040, 0xa07c54, 0xb89468, 0xd0ae80], v, seed, 'town');
+    if (name === 'lgrass') {
+      const G = t.PAL.tgrass;
+      if (v === 1) for (let k = 0; k < 3; k++) { const x = Math.floor(rng() * 14) + 1, y = Math.floor(rng() * 13) + 2; b.set(x, y, G[1]); b.set(x - 1, y - 1, G[2]); b.set(x + 1, y - 1, G[2]); b.set(x, y - 1, G[4]); }
+      else if (v === 2) {
+        const F = [[0xffffff, 0xf8e040], [0xf8e040, 0xc08010], [0xf8a0d0, 0xffffff]];
+        for (let k = 0; k < 2; k++) { const x = Math.floor(rng() * 12) + 2, y = Math.floor(rng() * 12) + 2, [p, c] = F[Math.floor(rng() * 3)]; b.set(x - 1, y, p); b.set(x + 1, y, p); b.set(x, y - 1, p); b.set(x, y, c); b.set(x, y + 1, G[1]); }
+      } else if (v === 3) { const x = Math.floor(rng() * 12) + 2, y = Math.floor(rng() * 12) + 2; b.set(x, y, 0xb8b4a8); b.set(x + 1, y, 0x8c887c); b.set(x, y - 1, 0xdcd8cc); b.set(x + 1, y + 1, G[1]); b.set(x, y + 1, G[1]); }
+      return b;
+    }
+    if (name === 'sand' || name === 'snowfloor') {
+      const S = name === 'sand' ? t.PAL.sand : t.PAL.snow;
+      if (v === 1 || v === 3) for (let k = 0; k < (v === 1 ? 2 : 1); k++) { const x = Math.floor(rng() * 13) + 1, y = Math.floor(rng() * 13) + 1; b.set(x, y, S[1]); b.set(x + 1, y, S[2]); b.set(x, y - 1, S[4]); }
+      else if (v === 2) { const y = 3 + Math.floor(rng() * 10), x0 = Math.floor(rng() * 8); for (let x = x0; x < x0 + 6; x++) b.set(x, y + ((x >> 1) & 1), S[2]); }
+      return b;
+    }
+    return b;
+  }
+  const FVAR = new Map();
+  /** floor Buf for a ground name ('theme:<t>' or a ground tile id) and variant (0-3 | 'alt' | 'crack'); read-only */
+  A.floorVariant = function (gname, v) {
+    if (!v) return A.floorBuf(gname);
+    const key = gname + '|' + v;
+    let b = FVAR.get(key);
+    if (b) return b;
+    const t = tk();
+    let seed = 0;
+    for (let i = 0; i < key.length; i++) seed = (Math.imul(seed, 31) + key.charCodeAt(i)) | 0;
+    if (gname.startsWith('theme:')) {
+      const theme = TH[gname.slice(6)] ? gname.slice(6) : 'generic';
+      const a = art(theme), th = a.th, P = th.fl || WOOD;
+      if (v === 'alt') {
+        const AP = ALT[theme] || ALT.generic;
+        b = FLOOR[th.floor](t, AP);
+        if (theme === 'volcano') for (let i = 0; i < 256; i++) if (b.p[i] === AP[0] && t.hash(i, 1, 33) < 0.35) b.p[i] = 0x6a1c0c;
+      } else b = floorVar(a.floor, th.floor, P, v, seed, theme);
+    } else if (v === 'alt' && gname === 'wood') b = FLOOR.planks(t, ALT.house);
+    else b = groundVar(gname, v, seed);
+    FVAR.set(key, b);
+    return b;
+  };
+  /** grounds that have variants / can show tile_alt and crack in the floor itself */
+  A.floorVaries = (gname) => gname.startsWith('theme:') || gname === 'wood' || gname === 'dirt' || gname === 'lgrass' || gname === 'sand' || gname === 'snowfloor';
+  A.floorHasAlt = (gname) => gname.startsWith('theme:') || gname === 'wood';
+  A.floorHasCrack = (gname) => gname.startsWith('theme:') || gname === 'wood' || gname === 'dirt';
 
   /** wall face (+cap when capTop) as a Buf */
   function wallFace(a, capTop) {

@@ -4,7 +4,7 @@
 // (R.Battle.Engine + R.BattleAI — the same code as the game).
 //
 //   node tools/sim_postgame.js                       everything
-//   node tools/sim_postgame.js --only party,zones,boss,ablation,king,rare,rewards
+//   node tools/sim_postgame.js --only text,party,zones,boss,ablation,king,rare,rewards
 //   node tools/sim_postgame.js --n 300 --seed 7 --verbose
 //
 // Party models (built directly: jobs mastered = JP 2000 and every ability learned):
@@ -15,9 +15,9 @@
 //   levels     Lv65 — basic jobs only (ナイト / 白魔術師 / 黒魔術師 + their tier-1 jobs mastered),
 //              the best shop gear of 最果ての祠, no status protection, no dispel, no revive-on-KO.
 //   Both carry the same bag (shop consumables, which the AI uses).
-// The player side is the game's auto-battle AI (R.BattleAI.partyCommands) plus one thing a
-// player facing this boss does: when the boss has raised its stats and someone knows
-// かいじゅ (dispel), that member dispels it (the auto AI never dispels on its own).
+// The player side is the game's auto-battle AI (R.BattleAI.partyAction) plus two things a
+// player does: the healers decide first (so the attacker keeps attacking), and when the boss
+// has raised its stats someone who knows かいじゅ (dispel) dispels it (the auto AI never does).
 // Targets: regulars — prepared Lv50 wins 100 %, loses 25–45 % HP per fight;
 //          abyss_lord — prepared Lv55 wins 50–75 % in 12–25 rounds, levels-only Lv65 < 10 %;
 //          boss_king2 (魔王) clearly easier than abyss_lord for the same parties.
@@ -29,7 +29,7 @@ const B = R.Battle;
 
 const argv = process.argv.slice(2);
 const arg = (k, d) => { const i = argv.indexOf('--' + k); return i >= 0 ? argv[i + 1] : d; };
-const ONLY = arg('only', 'party,zones,boss,ablation,king,rare,rewards').split(',');
+const ONLY = arg('only', 'text,party,zones,boss,ablation,king,rare,rewards').split(',');
 const N = +arg('n', 200);
 const SEED = +arg('seed', 4242);
 const VERBOSE = argv.includes('--verbose');
@@ -108,6 +108,12 @@ const LEVELS_ONLY = {
     equip: { weapon: 'mystic_rod', head: 'light_crown', body: 'holy_robe', acc: 'star_earring' },
   },
 };
+/** a party fresh from the final boss: the prepared jobs, but 最果ての祠 shop gear and no abyss items */
+const ARRIVAL = {
+  yuki: { support: 'hero_heart', equip: { weapon: 'holy_sword', shield: 'holy_shield', head: 'holy_helm', body: 'holy_armor', acc: 'life_charm' } },
+  non: { equip: { weapon: 'saint_staff', head: 'light_crown', body: 'holy_robe', acc: 'rosary' } },
+  metem: { equip: { weapon: 'mystic_rod', head: 'light_crown', body: 'holy_robe', acc: 'star_earring' } },
+};
 /** shop consumables both parties carry (the AI heals, revives and cures with them) */
 const BAG = { nectar: 10, healing_aroma: 4, revive_feather: 6, all_cure: 6, mana_crystal: 4 };
 
@@ -126,9 +132,21 @@ function party(model, L, patch) {
 }
 
 // --------------------------------------------------------------- the player
-/** what a player adds to the auto-battle AI here: dispel the boss when it has raised its stats */
+/** heal/revive actions a member can use right now (the party's healers plan their turn first) */
+function healerScore(eng, u) {
+  return R.BattleAI.abilityOptions(eng, u).filter((o) => o.ab.effects.some((e) => e.type === 'heal' || e.type === 'revive') && o.ab.target !== 'self').length;
+}
+/**
+ * The auto-battle AI's decisions (R.BattleAI.partyAction) with two things a player does here:
+ * the healers take their turn's decision first (the auto AI plans in party order, so the
+ * front-line attacker ends up spending its turns on herbs while the healer attacks), and when
+ * the boss has raised its stats someone who knows かいじゅ dispels it.
+ */
 function playerCommands(eng, opts) {
-  const cmds = R.BattleAI.partyCommands(eng, opts);
+  const plan = R.BattleAI.newPlan();
+  const cmds = [];
+  const order = eng.party.filter((u) => u.commandable()).sort((a, b) => healerScore(eng, b) - healerScore(eng, a) || a.idx - b.idx);
+  for (const u of order) cmds[u.idx] = R.BattleAI.partyAction(eng, u, plan, opts);
   if (!opts.dispel) return cmds;
   const boss = eng.living('mon').find((m) => m.boss);
   if (!boss) return cmds;
@@ -204,6 +222,51 @@ function describe(c) {
     `| immune ${imm} | resist ${res} | ${Rules.SLOTS.map((s) => (c.equip[s] ? DB.items[c.equip[s]].name : '-')).join(' ')}`;
 }
 
+// ====================================================================== text
+// the post-game strings, measured like tools/check_items.js: DotGothic16 ≈ 11 px per full-width
+// character, item and bestiary description boxes hold 2 lines of ≈ 220–226 px (20 units)
+const width = (str) => [...str].reduce((w, ch) => w + (ch.charCodeAt(0) < 0x80 ? 0.5 : 1), 0);
+function wrapLines(str, units) {
+  const out = [];
+  for (const para of String(str).split('\n')) {
+    let line = '';
+    for (const ch of para) {
+      if (line && width(line + ch) > units) {
+        if ('、。」』）！？…ー'.includes(ch)) { line += ch; continue; }
+        out.push(line); line = ch;
+      } else line += ch;
+    }
+    out.push(line);
+  }
+  return out;
+}
+const JA = '[\\u3000-\\u30ff\\u4e00-\\u9fff\\uff01-\\uff5e]';
+const DQ_SPACE = new RegExp(`${JA} | ${JA}|(^|[^！？])\u3000`);
+const HERO = /ユウキ|メテム|(^|[^ァ-ヶー])ノン/;
+if (ONLY.includes('text')) {
+  const PG = (id) => id.startsWith('pg_') || id.startsWith('en_pg_') || id === 'rare_prism' || id === 'abyss_lord';
+  const texts = [];
+  for (const id in DB.items) if (PG(id)) texts.push([`item ${id} desc`, DB.items[id].desc, 2], [`item ${id} name`, DB.items[id].name, 1]);
+  for (const id in DB.monsters) if (PG(id)) texts.push([`monster ${id} desc`, DB.monsters[id].desc, 2], [`monster ${id} name`, DB.monsters[id].name, 1]);
+  for (const id in DB.abilities) if (PG(id)) texts.push([`ability ${id} msg`, (DB.abilities[id].msg || '').replace(/\{user\}/g, 'アビスロード'), 2], [`ability ${id} name`, DB.abilities[id].name, 1]);
+  for (const id of ['obj_postgame', 'obj_abyss_clear']) {
+    const o = DB.objectives[id];
+    if (!o) { W(`objective ${id} missing`); continue; }
+    texts.push([`objective ${id} text`, o.text, 3]);
+    for (const [k, page] of (o.king || '').split('\f').entries()) texts.push([`objective ${id} king p${k + 1}`, page, 4]);
+  }
+  let n = 0;
+  for (const [where, str, maxLines] of texts) {
+    if (!str) { W(`${where}: empty`); continue; }
+    n++;
+    const lines = wrapLines(str, where.includes('king') || where.includes('msg') ? 21 : 20);
+    if (lines.length > maxLines) W(`${where}: ${lines.length} lines (max ${maxLines}): ${str.replace(/\n/g, '⏎')}`);
+    if (DQ_SPACE.test(str)) W(`${where}: DQ-style space: ${str}`);
+    if (HERO.test(str)) W(`${where}: hard-coded hero name: ${str}`);
+  }
+  console.log(`=== TEXT ===  ${n} post-game strings checked (line fit, spacing, hero names)`);
+}
+
 // ===================================================================== party
 if (ONLY.includes('party')) {
   console.log('=== PARTY MODELS ===');
@@ -241,6 +304,16 @@ if (ONLY.includes('zones')) {
       if (L === 50 && (avg.hpLost < 25 || avg.hpLost > 45)) W(`${z}@Lv50: party loses ${f0(avg.hpLost)}% HP per fight (target 25–45)`);
       if (VERBOSE || L === 50) for (const l of rows) console.log(l);
     }
+  }
+}
+
+if (ONLY.includes('zones')) {
+  console.log('-- a party fresh from the demon king (Lv42, advanced jobs, shop gear, no abyss items; info only)');
+  for (const z of ZONES) {
+    const e = DB.encounters[z], tw = e.groups.reduce((s, g) => s + g.w, 0), p = party(PREPARED, 42, ARRIVAL);
+    let win = 0, hp = 0;
+    e.groups.forEach((grp, gi) => { const r = runMany(p, { mons: grp.mons, inv: {}, dispel: true, salt: gi * 5 }, Math.max(60, N / 2)); win += (r.winPct * grp.w) / tw; hp += (r.hpLost * grp.w) / tw; });
+    console.log(`${pad(z, 9)} Lv42  win ${padL(f0(win), 3)}%  hp-${padL(f0(hp), 3)}%`);
   }
 }
 
@@ -285,7 +358,11 @@ if (ONLY.includes('ablation')) {
     ['no 二刀流 (shield instead)', { yuki: { support: 'hero_heart', equip: { shield: 'holy_shield' } } }, {}],
     ['shop weapons instead of abyss/legendary ones', { yuki: { equip: { weapon: 'holy_sword', shield: 'holy_sword' } }, non: { equip: { weapon: 'saint_staff' } }, metem: { equip: { weapon: 'mystic_rod' } } }, {}],
   ];
+  cases.splice(2, 0, ['メテム without 明鏡の護符 (2 of 3 protected)', { metem: { equip: { acc: 'star_earring' } } }, {}]);
   for (const [label, patch, o] of cases) bossLine(label, party(PREPARED, 55, patch), 'boss_abyss', o, n);
+  const amulets = { yuki: { equip: { acc: 'pg_clarity_amulet' } }, non: { equip: { acc: 'pg_clarity_amulet' } }, metem: { equip: { acc: 'pg_clarity_amulet' } } };
+  bossLine('levels only Lv65 + 明鏡の護符 ×3', party(LEVELS_ONLY, 65, amulets), 'boss_abyss', {}, n);
+  bossLine('levels only Lv80 + 明鏡の護符 ×3', party(LEVELS_ONLY, 80, amulets), 'boss_abyss', {}, n);
 }
 
 // ====================================================================== king
@@ -329,6 +406,22 @@ if (ONLY.includes('rewards')) {
     const L = e.lv[0];
     const need = Rules.expForLevel(L + 1) - Rules.expForLevel(L);
     console.log(`${pad(z, 9)} Lv${e.lv[0]}-${e.lv[1]}  exp ${padL(f0(exp), 6)}  jp ${padL(f0(jp), 4)}  gold ${padL(f0(gold), 5)}   → ${f1(need / exp)} fights per level at Lv${L}, ${f1(Rules.JP_TABLE[7] / jp)} fights per mastered-job's 2000 JP`);
+  }
+  // a party arriving from the final boss: fights needed to reach Lv55 on the floor matching its level
+  {
+    let L = 42, exp = Rules.expForLevel(42), fights = 0;
+    const per = {};
+    for (const z of ZONES) {
+      const e = DB.encounters[z], tw = e.groups.reduce((s, g) => s + g.w, 0);
+      per[z] = e.groups.reduce((s, grp) => s + (grp.w / tw) * grp.mons.reduce((t, [id, a, b]) => t + DB.monsters[id].exp * (a + b) / 2, 0), 0);
+    }
+    const trail = [];
+    while (L < 55 && fights < 999) {
+      const z = L < 48 ? 'd_abyss1' : L < 52 ? 'd_abyss2' : 'd_abyss3';
+      exp += per[z]; fights++;
+      while (exp >= Rules.expForLevel(L + 1)) { L++; if (L % 3 === 0 || L === 55) trail.push(`Lv${L}@${fights}`); }
+    }
+    console.log(`from Lv42 (after the demon king) to Lv55: ${fights} random fights (${trail.join(' ')})`);
   }
   const al = DB.monsters.abyss_lord;
   console.log(`abyss_lord: exp ${al.exp} gold ${al.gold} jp ${al.jp}; rewards pg_genesis_sword + pg_abyss_crest via the boss event`);

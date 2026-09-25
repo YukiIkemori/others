@@ -458,6 +458,8 @@
       const foes = this.foes(u);
       if (!foes.length) return null;
       if (t && !t.isParty) { const same = foes.filter((m) => m.id === t.id); if (same.length) return U.pick(same); }
+      // a monster whose target fell picks a new one with the same formation weights (front 50/30/20)
+      if (!u.isParty && foes[0].isParty && R.BattleAI && R.BattleAI.pickPartyTarget) return R.BattleAI.pickPartyTarget(this) || U.pick(foes);
       return U.pick(foes);
     }
 

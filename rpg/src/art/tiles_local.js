@@ -456,6 +456,8 @@
   OBJ.fence = (fl, ctx) => {
     const t = tk(), W = A.themeArt('house').WOOD;
     ctx = ctx || {};
+    // no join info at all (the plain 'tile:fence'): a straight east-west run
+    if (ctx.l == null && ctx.r == null && ctx.u == null && ctx.d == null) ctx = { l: true, r: true };
     return t.stamp(fl, (L) => {
       const railH = (x0, x1) => {
         for (const y of [6, 10]) { L.hline(x0, x1, y, W[4]); L.hline(x0, x1, y + 1, W[2]); }
@@ -588,7 +590,7 @@
   };
   const COB = [0x4a463e, 0x7c7666, 0x9e9784, 0xb8b19c, 0xd4cdb8]; // town floor ramp (tiles_theme 'town')
   const DIRT = [0x5c4028, 0x806040, 0xa07c54, 0xb89468, 0xd0ae80];
-  const MOSS = [0x3c5a24, 0x557a2e, 0x6e963a];
+  const MOSS = [0x3e4c2a, 0x4a5e30, 0x587236];
   const PUDDLE = [0x2c3850, 0x4a5c7c, 0x6c84a8, 0xa4bcd8, 0xdce8f4];
   /** ground kind of a tile id: grass | dirt | cobble | sand | snow | water | floor | other */
   function kindOf(id, theme) {
@@ -627,18 +629,20 @@
     if (big) { b.set(x, y, S[3]); b.set(x + 1, y, S[2]); b.set(x, y + 1, S[2]); b.set(x + 1, y + 1, S[1]); b.set(x + 2, y + 1, S[0]); b.set(x + 1, y + 2, S[0]); }
     else { b.set(x, y, S[3]); b.set(x + 1, y, S[1]); b.set(x, y + 1, S[0]); }
   }
-  function puddle(b, cx, cy, rx, ry, rim) {
+  /** shallow puddle: irregular outline, dark wet rim, bank reflected at the far edge, a glint of sky */
+  function puddle(b, cx, cy, rx, ry) {
     const t = tk();
-    for (let y = Math.floor(cy - ry - 1); y <= Math.ceil(cy + ry + 1); y++) for (let x = Math.floor(cx - rx - 1); x <= Math.ceil(cx + rx + 1); x++) {
-      const e = ((x - cx) / (rx + 0.5)) ** 2 + ((y - cy) / (ry + 0.5)) ** 2;
-      if (e > 1.35) continue;
-      if (e > 1) { if (rim != null) b.set(x, y, t.mix(b.get(x, y), rim, 0.45)); continue; }
-      const top = y < cy - ry * 0.35;
-      b.set(x, y, top ? PUDDLE[1] : e > 0.6 ? PUDDLE[2] : PUDDLE[2]);
+    const inside = (x, y) => ((x - cx) / (rx + 0.5)) ** 2 + ((y - cy) / (ry + 0.5)) ** 2 <= 1 ||
+      ((x - cx - rx * 0.55) / (rx * 0.6 + 0.5)) ** 2 + ((y - cy - ry * 0.55) / (ry * 0.75 + 0.5)) ** 2 <= 1;
+    const src = b.clone();
+    let top = 99;
+    for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) if (inside(x, y)) top = Math.min(top, y);
+    for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+      if (inside(x, y)) b.set(x, y, y <= top ? PUDDLE[1] : !inside(x, y + 1) ? PUDDLE[3] : PUDDLE[2]);
+      else if (inside(x - 1, y) || inside(x + 1, y) || inside(x, y - 1) || inside(x, y + 1)) b.set(x, y, t.mul(src.get(x, y), 0.76));
     }
-    b.set(Math.round(cx - rx * 0.4), Math.round(cy - ry * 0.1), PUDDLE[4]);
-    b.set(Math.round(cx - rx * 0.4) + 1, Math.round(cy - ry * 0.1), PUDDLE[3]);
-    b.set(Math.round(cx + rx * 0.3), Math.round(cy + ry * 0.4), PUDDLE[3]);
+    const gy = Math.round(cy), gx = Math.round(cx - rx * 0.5);
+    b.set(gx, gy, PUDDLE[4]); b.set(gx + 1, gy, PUDDLE[3]); b.set(gx + 2, gy, PUDDLE[3]);
   }
   /** apply fn to pixels inside an ellipse (blob) */
   function blob(b, cx, cy, rx, ry, fn) {
@@ -669,7 +673,7 @@
     const t = tk(), G = t.PAL.tgrass;
     if (v === 1) { pebble(b, 4, 5, true); pebble(b, 11, 9, false); pebble(b, 7, 12, false); }
     else if (v === 2) { blob(b, 8, 8, 5.5, 4, (x, y, c, e) => (e > 0.75 && (x + y) % 2 ? undefined : t.mul(c, 0.88))); }
-    else if (v === 3) { puddle(b, 8, 9, 3.6, 1.7, DIRT[0]); }
+    else if (v === 3) { puddle(b, 7, 8.5, 3, 1.4); }
     else if (v === 4) { tuft(b, 7, 7, G); }
     else if (v === 5) { // footprints
       for (const [x, y] of [[4, 3], [6, 6], [8, 9], [10, 12]]) { b.set(x, y, DIRT[1]); b.set(x, y + 1, DIRT[1]); b.set(x + 1, y + 1, DIRT[0]); }
@@ -683,15 +687,15 @@
     if (v === 1) { // crack across a stone
       for (const [x, y] of [[5, 5], [6, 6], [6, 7], [7, 8], [8, 8], [9, 9], [9, 10]]) { b.set(x, y, COB[0]); b.set(x + 1, y, t.mul(b.get(x + 1, y), 1.12)); }
     } else if (v === 2) { // moss in the joints
-      blob(b, 8, 8, 6, 5, (x, y, c) => (c === COB[0] ? MOSS[(x + y) % 3 === 0 ? 2 : 1] : undefined));
+      blob(b, 8, 8, 6, 5, (x, y, c) => (c === COB[0] && (x * 3 + y) % 4 ? MOSS[(x + y) % 3 === 0 ? 2 : 1] : undefined));
     } else if (v === 3) { // worn / polished stones
       blob(b, 8, 8, 6, 4.5, (x, y, c, e) => (c === COB[0] || (e > 0.7 && (x + y) % 2) ? undefined : t.mul(c, 1.07)));
     } else if (v === 4) { // dark stain
       blob(b, 7, 9, 4.5, 3, (x, y, c, e) => (e > 0.7 && (x + y) % 2 ? undefined : t.mul(c, 0.86)));
-    } else if (v === 5) { puddle(b, 8, 8.5, 3.4, 1.6, COB[0]); }
-    else if (v === 6) { // a missing stone
-      blob(b, 8, 8, 3, 2.2, (x, y, c, e) => (e > 0.6 ? DIRT[1] : DIRT[2]));
-      b.set(7, 7, DIRT[0]); pebble(b, 8, 8, false);
+    } else if (v === 5) { puddle(b, 7, 8, 2.8, 1.3); }
+    else if (v === 6) { // a missing stone: an earthen hole, shaded under its upper rim
+      blob(b, 8, 8.5, 3.2, 2.3, (x, y) => (y < 7.5 ? DIRT[0] : y < 8.5 ? DIRT[1] : DIRT[2]));
+      b.set(9, 10, DIRT[3]);
     } else if (v === 7) { // iron drain grate
       const I = [0x1c1c24, 0x3a3a48, 0x6a6a7c];
       b.rect(5, 6, 6, 4, I[0]);
@@ -712,7 +716,11 @@
     if (v === 1) { for (const [x, y] of [[4, 3], [7, 6], [5, 9], [8, 12]]) { b.set(x, y, S[1]); b.set(x, y + 1, S[2]); b.set(x + 1, y, S[2]); } }
     else if (v === 2) { blob(b, 8, 9, 5, 2.8, (x, y, c, e) => (y < 9 ? S[4] : e > 0.6 ? S[2] : S[4])); b.hline(5, 11, 12, S[2]); }
     else if (v === 3) { for (const [x, y] of [[3, 4], [11, 6], [6, 11], [13, 13]]) { b.set(x, y, 0xffffff); b.set(x + 1, y + 1, S[2]); } }
-    else if (v === 4) { const R_ = [0x3c3e48, 0x64666e, 0x8c8e98]; b.rect(6, 9, 5, 2, R_[1]); b.hline(6, 10, 9, R_[2]); b.set(10, 10, R_[0]); b.hline(6, 10, 8, S[4]); b.set(7, 7, S[4]); b.set(8, 8, S[3]); }
+    else if (v === 4) { // a stone peeking out of the snow, capped white
+      const R_ = [0x3c3e48, 0x64666e, 0x8c8e98];
+      b.hline(7, 10, 10, R_[1]); b.hline(6, 11, 11, R_[1]); b.set(6, 11, R_[2]); b.set(11, 11, R_[0]); b.hline(7, 11, 12, S[1]);
+      b.hline(7, 10, 9, S[4]); b.set(8, 8, S[4]); b.set(9, 8, S[3]); b.set(10, 10, R_[0]);
+    }
   }
   const DETAIL = { grass: grassDetail, dirt: dirtDetail, cobble: cobbleDetail, sand: sandDetail, snow: snowDetail };
 
@@ -768,6 +776,33 @@
     if (sh[1] === '1') for (let y = sh[0] === '1' ? 3 : 0; y < 16; y++) { b.set(0, y, t.mul(b.get(0, y), 0.7)); if (y % 2) b.set(1, y, t.mul(b.get(1, y), 0.85)); }
     if (sh[2] === '1' && sh[0] !== '1' && sh[1] !== '1') { b.set(0, 0, t.mul(b.get(0, 0), 0.6)); b.set(1, 0, t.mul(b.get(1, 0), 0.75)); b.set(0, 1, t.mul(b.get(0, 1), 0.75)); }
   }
+  // Floor shading is shared with the context tiler (A.floorShadeKey / floorShadeK:
+  // walls, tall tiles and decor furniture cast soft shadows, light from the top-left),
+  // so indoor and outdoor floors match. Thin street props (lamps, sign posts) carry
+  // their own small shadow and cast no band on the cell below.
+  const THIN_DECOR = { lamp: 1, sign_item: 1, sign_weapon: 1, sign_armor: 1, sign_inn: 1, sign_church: 1 };
+  const PROXY = new WeakMap();
+  function shadeMap(m) {
+    if (typeof m !== 'object' || !m) return m;
+    let p = PROXY.get(m);
+    if (!p) {
+      p = Object.create(m);
+      p.decorAt = function (x, y) { const d = typeof m.decorAt === 'function' ? m.decorAt(x, y) : null; return d && THIN_DECOR[d] ? null : d; };
+      PROXY.set(m, p);
+    }
+    return p;
+  }
+  /** shade signature of a cell ('' unshaded) */
+  function shadeSig(m, x, y) {
+    if (typeof A.floorShadeKey === 'function') return 's' + A.floorShadeKey(shadeMap(m), x, y);
+    return (XT.TALL[m.tileAt(x, y - 1)] ? '1' : '0') + (XT.TALL[m.tileAt(x - 1, y)] ? '1' : '0') + (XT.TALL[m.tileAt(x - 1, y - 1)] ? '1' : '0');
+  }
+  function applyShade(b, m, x, y, sig) {
+    if (sig[0] === 's') {
+      const k = A.floorShadeK(shadeMap(m), x, y);
+      if (k) for (let i = 0; i < 256; i++) if (k[i] < 1 && b.p[i] !== -1) b.p[i] = tk().mul(b.p[i], k[i]);
+    } else shadows(b, sig);
+  }
   const XCACHE = new Map();
   function xcached(key, make) { let v = XCACHE.get(key); if (v === undefined) { v = make(); XCACHE.set(key, v); } return v; }
   /** signature + builder of the ground Buf of kind `kind` (tile id `id`) at (x,y) */
@@ -775,7 +810,7 @@
     const kind = kindOf(id, theme);
     const at = (dx, dy) => m.tileAt(x + dx, y + dy);
     const k = (dx, dy) => kindOf(at(dx, dy), theme);
-    const sh = (XT.TALL[at(0, -1)] ? '1' : '0') + (XT.TALL[at(-1, 0)] ? '1' : '0') + (XT.TALL[at(-1, -1)] ? '1' : '0');
+    const sh = shadeSig(m, x, y);
     const v = VAR[kind] ? pickVar(x, y, kind === 'grass' ? 231 : 233, VAR[kind]) : 0;
     const fv = id === 'flowers' ? Math.floor(tk().hash(x, y, 235) * 4) : 0;
     const N = k(0, -1), S = k(0, 1), W = k(-1, 0), E = k(1, 0);
@@ -812,7 +847,7 @@
       } else if (edge && edge !== '00000000') {
         fringe(b, { n: edge[0] === '1', s: edge[1] === '1', w: edge[2] === '1', e: edge[3] === '1', nw: edge[4] === '1', ne: edge[5] === '1', sw: edge[6] === '1', se: edge[7] === '1' }, x * 16, y * 16);
       }
-      shadows(b, sh);
+      applyShade(b, m, x, y, sh);
       return b;
     };
     return { key, build, kind };
@@ -970,7 +1005,7 @@
     const spec = groundSpec(m, x, y, g, theme);
     return xcached('fn|' + spec.key + '|' + j, () => {
       const fl = EXT_KIND[spec.kind] ? spec.build() : A.floorBuf(g === 'floor' ? 'theme:' + (theme || 'generic') : g).clone();
-      if (!EXT_KIND[spec.kind]) shadows(fl, (XT.TALL[m.tileAt(x, y - 1)] ? '1' : '0') + (XT.TALL[m.tileAt(x - 1, y)] ? '1' : '0') + '0');
+      if (!EXT_KIND[spec.kind]) applyShade(fl, m, x, y, shadeSig(m, x, y));
       return OBJ.fence(fl, { l: j[0] === '1', r: j[1] === '1', u: j[2] === '1', d: j[3] === '1' }).toCanvas();
     });
   }
@@ -1037,7 +1072,12 @@
       if (id === 'fence') return fenceTile(map, x, y, theme);
       if (id === 'water') return (outdoorWater(map, x, y, theme) && canalTile(map, x, y, theme)) || base(map, x, y);
       if (id === 'lbridge_h' || id === 'lbridge_v') return outdoorWater(map, x, y, theme) ? bridgeTile(map, x, y, id, theme) : base(map, x, y);
-      if (XT.GROUND[id]) return extGroundTile(map, x, y, id, theme) || base(map, x, y);
+      if (XT.GROUND[id]) {
+        // cracks / alternate tiles from the decor layer are painted into the floor by the base tiler
+        const d = typeof map.decorAt === 'function' ? map.decorAt(x, y) : null;
+        if ((d === 'crack' || d === 'tile_alt') && typeof A.floorHandlesDecor === 'function' && A.floorHandlesDecor(map, x, y, d)) return base(map, x, y);
+        return extGroundTile(map, x, y, id, theme) || base(map, x, y);
+      }
       return base(map, x, y);
     };
     wrapped._exterior = true;

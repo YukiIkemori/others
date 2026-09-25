@@ -58,9 +58,10 @@ const DEMO = {
     'T,,,,.......................,T',
     'T,,,,,.........:............,T',
     'T~~~~~~~~~~~~~~|~~~~~~~~~~~~~T',
-    'T,,,,,,,,,,,,,,:,,,,,,,,,,,,,T',
-    'T,FFFFFFFF,,,,,:,,,,,,,,,f,,,T',
-    'T,F,,,,,,F,,,,,:,,,,,,,,,,,,,T',
+    'T~~~~~~~~~~~~~~|~~~~~~~~~~~~~T',
+    'T,,,,,,,,,,,,,,:,,,,,RRRRRRR,T',
+    'T,FFFFFFFF,,,,,:,,,,,RRRRRRR,T',
+    'T,F,,,,,,F,,,,,:,,,,,BBBDBBB,T',
     'T,F,,,,,,F,,,,,::::::::::::::T',
     'T,FFFF,FFF,,,,,:,,,,,ff,,,,,,T',
     'T,,,,,,,,,,,,,,:,,,,,,,,,,,,,T',
@@ -71,22 +72,23 @@ const DEMO = {
     '                              ',
     '                              ',
     '                              ',
-    '      3 5    h  h    3  7     ',
-    '     11            h 11  11   ',
+    '      5 6    h  h      7 4    ',
+    '     3  111      h  3     11  ',
     '                              ',
     '  2        1  JJJ  1       h  ',
-    '       3      JJJ      3      ',
+    '              JJJ             ',
     '           1  JJJ  1          ',
     '                              ',
     '      999          9999       ',
     '     3                   3    ',
     '                              ',
-    '  2222222     3  2222222      ',
-    '                         u    ',
-    '   M  E                       ',
-    '   h     h               h    ',
     '                              ',
-    '   h                     E    ',
+    '  2222222     3  22           ',
+    '                              ',
+    '   M  E                       ',
+    '   h     h               8    ',
+    '   h               u       E  ',
+    '                              ',
     '                              ',
   ],
   marks: {},
@@ -95,9 +97,9 @@ const DEMO = {
     { id: 'v2', x: 21, y: 10, sprite: 'npc:woman', dir: 'down', text: '新鮮な果物はいかが？' },
     { id: 'w1', x: 11, y: 6, sprite: 'npc:man', move: 'wander', text: 'いい天気だ。' },
     { id: 'w2', x: 18, y: 10, sprite: 'npc:girl', move: 'wander', text: '噴水がきれいでしょ？' },
-    { id: 'w3', x: 5, y: 16, sprite: 'npc:old_man', move: 'wander', text: '畑仕事はいいぞ。' },
+    { id: 'w3', x: 5, y: 17, sprite: 'npc:old_man', move: 'wander', text: '畑仕事はいいぞ。' },
   ],
-  spawns: { entrance: { x: 15, y: 19, dir: 'up' }, plaza: { x: 15, y: 11, dir: 'up' } },
+  spawns: { entrance: { x: 15, y: 20, dir: 'up' }, plaza: { x: 15, y: 11, dir: 'up' } },
 };
 
 // ---------------------------------------------------------------- page code
@@ -308,7 +310,7 @@ async function main() {
     // the real field renderer: inject the map, start a game on it, walk a little
     await page.evaluate(`(() => { RPG.DB.maps.__decor_demo = ${JSON.stringify(DEMO)}; RPG.debug.newGameAt('__decor_demo', 'plaza'); RPG.debug.noEncounter(true); })()`);
     await page.waitForTimeout(2600); // map-name banner
-    const shots = [['plaza', 0], ['plaza', 330], [{ x: 8, y: 16, dir: 'up' }, 0], [{ x: 22, y: 9, dir: 'left' }, 0]];
+    const shots = [['plaza', 0], ['plaza', 330], [{ x: 8, y: 17, dir: 'up' }, 0], [{ x: 22, y: 9, dir: 'left' }, 0], [{ x: 20, y: 18, dir: 'right' }, 0]];
     let k = 0;
     for (const [sp, wait] of shots) {
       if (typeof sp === 'object') { await page.evaluate(`RPG.debug.warp('__decor_demo', ${JSON.stringify(sp)})`); await page.waitForTimeout(400); }

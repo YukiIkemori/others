@@ -562,8 +562,6 @@
     const torso = shadeVoid(tm, { depth: 9, light: L, normal: sphereN(cx - 3, 72, 26, 26), blend: 0.35, seed: 31 });
     scales(torso, DARKS, 6, 4, { lit: 0 });
     put(p, torso, 'dark');
-    // pearl scutes down the belly, half hidden by the coil in front
-    for (const y of [87, 91]) { curve(p, [[57, y - 1], [cx, y + 1], [71, y - 1]], PEARL[1]); curve(p, [[57, y], [cx, y + 2], [71, y]], PEARL[3]); }
 
     // --- breastplate: gold pectoral armour framing the eye of chaos
     both(W, (X) => {
@@ -611,10 +609,22 @@
       if (q[0] < 18) continue;
       on(cf, q[0], q[1] + 4, PEARL[3]); on(cf, q[0] + 1, q[1] + 4, PEARL[2]); on(cf, q[0], q[1] + 5, PEARL[1]);
     }
-    for (const [seg, t] of [[fa, 0.72], [fb, 0.5]]) {
-      const q = bez(seg, t);
-      put(cf, goldPart((g) => cap(g, q[0] - 0.8, q[1] - 6, q[0] + 0.8, q[1] + 6, 1.4, 1.4), { depth: 1.1 }), 'dark');
-    }
+    // gold rings clasped round the coil: a band bowed along the body, lit on top
+    const ring = (seg, t, r) => {
+      const q = bez(seg, t), q2 = bez(seg, Math.min(1, t + 0.02));
+      let tx = q2[0] - q[0], ty = q2[1] - q[1];
+      const l = Math.hypot(tx, ty) || 1; tx /= l; ty /= l;
+      const nx = -ty, ny = tx;
+      for (let s = -r; s <= r; s += 0.35) {
+        const u = s / r, bow = 1.6 * (1 - u * u);
+        const k = u < -0.55 ? 5 : u < -0.1 ? 4 : u < 0.45 ? 3 : 2;
+        for (let w = -1; w <= 1; w++) {
+          const x = q[0] + nx * s + tx * (bow + w), y = q[1] + ny * s + ty * (bow + w);
+          on(cf, x, y, w === 1 ? GOLD[1] : w === -1 ? GOLD[Math.min(6, k + 1)] : GOLD[k]);
+        }
+      }
+    };
+    ring(fa, 0.74, 6.5); ring(fb, 0.46, 6.5); ring(fb, 0.82, 5.8);
     put(p, cf, 'dark');
     put(p, goldPart((g) => { g.poly([[119, 72], [112, 65], [115, 54], [121, 62], [124, 72]], 1); }, { depth: 1.8 }), 'dark');
     for (const t of [0.3, 0.62, 0.88]) {
@@ -683,6 +693,294 @@
     return finish(p, { free: true, post: (q) => {
       for (const [x, y, r, c] of [[3, 82, 2, '#b4fff0'], [124, 40, 1, '#ffd0f0'], [8, 96, 1, '#cce0ff'], [3, 8, 1, '#fff8d0'], [124, 12, 2, '#fff8d0'], [100, 110, 1, '#e8d4ff']]) sparkle(q, x, y, r, c, WHITE);
     } });
+  };
+
+  // ================================================================ rare_prism
+  // A living prism: a hexagonal crystal with pointed ends floating upright,
+  // every facet splitting the light into a rainbow, a shy little face on the
+  // front facet, two crystal shards orbiting it like hands and a crown of
+  // small points. Sparkles all round: it should read as "rare" at a glance. 48x48.
+  S.rare_prism = () => {
+    const W = 48, H = 48;
+    const p = G().pix(W, H);
+    const Lx = -0.55, Ly = -0.7;
+    /**
+     * Paint a convex facet polygon: hue sweeps diagonally across the whole
+     * crystal (a rainbow), brightness from the facet's fake normal and a soft
+     * gradient along the facet; dithered between steps.
+     */
+    const facet = (pts, n, o) => {
+      o = o || {};
+      const m = mask(W, H); m.poly(pts, 1);
+      const lit = Math.max(0, n[0] * Lx + n[1] * Ly + (n[2] || 0.6) * 0.62);
+      // posterised: 12 hue steps and 5 value steps (SFC-style palette), dithered at the seams
+      m.each((x, y) => {
+        let hq = ((o.hue0 || 0) + x * 5.5 + y * 4.2) / 30;
+        if ((x + y) % 2 && hq % 1 > 0.6) hq += 0.5;
+        const v = 0.6 + lit * 0.4 + (o.grad ? ((y - o.grad[0]) / o.grad[1]) * 0.12 : 0);
+        const vq = Math.min(5, Math.floor(v * 5)) / 5;
+        const s = 0.78 - vq * 0.42;
+        p.set(x, y, fromHsv(Math.floor(hq) * 30, Math.max(0.12, s), Math.min(1, vq + 0.02)));
+      });
+      return m;
+    };
+    const edge = (x0, y0, x1, y1, c) => p.line(x0, y0, x1, y1, c);
+    const cx = 24;
+    // body: a hexagonal prism, three faces visible, pointed top and bottom
+    const T = [cx, 4], B = [cx, 44];
+    const yl = 14, yb = 33; // shoulder and hip lines
+    const xL = 12, xl = 18.5, xr = 29.5, xR = 36;
+    facet([T, [xL, yl], [xl, yl + 2]], [-0.8, -0.6, 0.5], { grad: [4, 12] });
+    facet([T, [xl, yl + 2], [xr, yl + 2]], [0, -0.8, 0.7], { grad: [4, 12] });
+    facet([T, [xr, yl + 2], [xR, yl]], [0.8, -0.5, 0.3], { grad: [4, 12] });
+    facet([[xL, yl], [xl, yl + 2], [xl, yb + 2], [xL, yb]], [-0.9, 0, 0.4], { grad: [yl, 20] });
+    facet([[xl, yl + 2], [xr, yl + 2], [xr, yb + 2], [xl, yb + 2]], [-0.1, 0, 1], { grad: [yl, 20] });
+    facet([[xr, yl + 2], [xR, yl], [xR, yb], [xr, yb + 2]], [0.9, 0.1, 0.3], { grad: [yl, 20] });
+    facet([[xL, yb], [xl, yb + 2], B], [-0.6, 0.7, 0.3], { grad: [yb, 10] });
+    facet([[xl, yb + 2], [xr, yb + 2], B], [0, 0.8, 0.5], { grad: [yb, 10] });
+    facet([[xr, yb + 2], [xR, yb], B], [0.6, 0.8, 0.1], { grad: [yb, 10] });
+    // facet edges: bright on the lit side, darker on the shaded side
+    const HI = '#ffffff', MID = '#e8f4ff', LO = '#8a7ab8';
+    edge(xl, yl + 2, xl, yb + 2, MID); edge(xr, yl + 2, xr, yb + 2, LO);
+    edge(xL, yl, T[0], T[1], HI); edge(xl, yl + 2, T[0], T[1], MID); edge(xr, yl + 2, T[0], T[1], LO);
+    edge(xL, yl, xl, yl + 2, HI); edge(xl, yl + 2, xr, yl + 2, MID); edge(xr, yl + 2, xR, yl, LO);
+    edge(xL, yb, xl, yb + 2, MID); edge(xl, yb + 2, xr, yb + 2, LO); edge(xr, yb + 2, xR, yb, LO);
+    edge(xl, yb + 2, B[0], B[1], LO);
+    // inner fire: refracted streaks crossing the front face
+    for (const [x0, y0, x1, y1, c] of [[20, 30, 27, 22, '#ffffff'], [21, 32, 28, 25, '#fff0c0'], [13, 28, 17, 20, '#ffffff'], [31, 30, 34, 24, '#e0d0ff']]) edge(x0, y0, x1, y1, c);
+    // face: big shy eyes with two highlights, a blush and a small smile
+    for (const ex of [20, 26]) {
+      stamp(p, ex, 20, ['.kk.', 'kwkk', 'kkwk', 'kkkk', '.kk.'], { k: '#2a1a4a', w: WHITE });
+      p.set(ex - 1, 25, '#ff9ac8'); p.set(ex, 25, '#ffb8d8'); p.set(ex + 3, 25, '#ffb8d8'); p.set(ex + 4, 25, '#ff9ac8');
+    }
+    stamp(p, 22, 26, ['k..k', '.kk.'], { k: '#2a1a4a' });
+    // crown: three small points on the top
+    // a small pointed crystal (hexagonal prism seen from the front, tilted by 'lean')
+    const small = (bx, by, h, w, hue, lean) => {
+      const tip = [bx + lean, by - h], bot = [bx - lean * 0.4, by + w * 1.2];
+      const sh = by - h + w * 1.6;
+      const faces = [
+        [[tip, [bx - w + lean * 0.7, sh], [bx - w, by], bot], 0.95],
+        [[tip, bot, [bx + w, by], [bx + w + lean * 0.7, sh]], 0.62],
+      ];
+      for (const [pts, l] of faces) {
+        const m = mask(W, H); m.poly(pts, 1);
+        m.each((x, y) => p.set(x, y, fromHsv(hue + Math.floor((y - by) / 3) * 30, 0.34, l)));
+      }
+      p.line(Math.round(tip[0]), Math.round(tip[1]), Math.round(bot[0]), Math.round(bot[1]) - 1, '#ffffff');
+    };
+    // orbiting shards (hands) and loose chips
+    small(6, 30, 12, 3, 300, -1.5); small(42, 26, 12, 3, 180, 1.5);
+    small(9, 11, 6, 1.8, 30, -1); small(39, 8, 5, 1.6, 120, 1);
+    p.outline(OUT);
+    const out = finish(p, { float: false, free: true, post: (q) => {
+      for (const [x, y, r, c] of [[3, 4, 2, '#ffe6a8'], [44, 16, 2, '#b4fff0'], [4, 42, 1, '#ffd0f0'], [44, 40, 2, '#e8d4ff'], [30, 2, 1, '#ffffff'], [16, 44, 1, '#cce0ff']]) sparkle(q, x, y, r, c, WHITE);
+      for (const [x, y, c] of [[2, 20, '#ffb0ec'], [46, 32, '#a8f0ff'], [14, 3, '#fff8d0'], [36, 45, '#d2b0ff']]) q.set(x, y, c);
+    } });
+    return out;
+  };
+
+  // ================================================================ void_wraith
+  // A spectral knight made of the void: a horned great helm whose visor burns
+  // with two cold eyes, heavy spiked pauldrons over an empty cuirass split open
+  // onto a starfield, a long sword of darkness raised with edges of ghost
+  // light, a clawed gauntlet cupping a wisp, and no legs: a torn cloak that
+  // dissolves into ghost-flame at the hem. 48x48.
+  S.void_wraith = () => {
+    const W = 48, H = 48;
+    const L = [-0.5, -0.75, 0.6];
+    const p = G().pix(W, H);
+    const steel = ramp('#5a6690', 7, { dark: 0.8, light: 0.72, shift: 18 });
+    const cloak = ramp('#3e3268', 6, { dark: 0.82, light: 0.45 });
+    const trim = ramp('#b09058', 5, { dark: 0.6, light: 0.6 });
+    const hornR = ramp('#d8d0bc', 5, { dark: 0.6, shift: 30 });
+    const ghost = ['#18406a', '#2878a8', '#40b8e8', '#90ecff', '#e8ffff'];
+
+    // cloak: flaring from the waist, torn into points that burn away as ghost-flame
+    const cm = mask(W, H);
+    cm.poly([[15, 27], [33, 27], [40, 38], [42, 46], [37, 41], [34, 46], [30, 40], [26, 46], [22, 40], [18, 46], [14, 40], [10, 46], [7, 38]], 1);
+    const cl = shade(cm, cloak, { depth: 3, light: L, normal: cylN(23, 18), blend: 0.5 });
+    // folds
+    for (const [x0, x1] of [[16, 12], [21, 20], [27, 28], [32, 36]]) curve(cl, [[x0, 30], [(x0 + x1) / 2 + 0.5, 37], [x1, 43]], cloak[0]);
+    for (const [x0, x1] of [[18, 15], [30, 33]]) curve(cl, [[x0, 30], [(x0 + x1) / 2, 36], [x1, 41]], cloak[3]);
+    put(p, cl, 'dark');
+    // the hollow inside the cloak: void showing through the front opening
+    const inner = mask(W, H); inner.poly([[20, 29], [28, 29], [30, 40], [26, 45], [24, 39], [22, 45], [18, 40]], 1);
+    put(p, voidMembrane(inner, { seed: 31, depthFn: (x, y) => Math.max(0, 1 - (y - 29) / 16) }), 'dark');
+    // ghost flame licking up from the torn hem
+    for (const [x, y, h] of [[10, 46, 4], [18, 46, 4], [26, 46, 5], [34, 46, 4], [42, 46, 4], [14, 40, 2], [22, 40, 2], [30, 40, 2], [37, 41, 2]]) {
+      for (let k = 0; k < h; k++) on(p, x + (k % 2 ? (x < 24 ? 1 : -1) : 0), y - k, ghost[Math.min(4, 1 + k)]);
+    }
+
+    // cuirass: an empty shell split open down the middle onto the void
+    const cu = mask(W, H);
+    cu.poly([[15, 18], [33, 18], [32, 26], [28, 31], [20, 31], [16, 26]], 1);
+    put(p, shade(cu, steel, { depth: 3.5, light: L, normal: sphereN(23, 22, 11, 11), blend: 0.35, spec: 0.93, bias: 0.06 }), 'dark');
+    const gap = mask(W, H); gap.poly([[22, 18], [26, 18], [25.5, 25], [24, 30], [22.5, 25]], 1);
+    put(p, voidMembrane(gap, { seed: 41, depthFn: () => 0.9 }), 'dark');
+    both(W, (X) => { curve(p, [[X(17), 23], [X(19.5), 25.5], [X(21), 26]], steel[1]); on(p, X(17), 20, steel[6]); on(p, X(18), 20, steel[5]); });
+    // belt with a ghost-lit clasp
+    put(p, part(W, H, (g) => g.poly([[16, 27], [32, 27], [31, 30], [17, 30]], 1), trim, { depth: 1, light: L }), 'dark');
+    stamp(p, 22, 27, ['kggk', 'kgGk', '.kk.'], { k: INK, g: ghost[2], G: ghost[4] });
+
+    // gauntlet reaching out (screen right), a wisp of ghost-flame cupped in the claws
+    put(p, part(W, H, (g) => { cap(g, 33, 22, 38, 29, 3.2, 2.8); }, steel, { depth: 2.2, light: L }), 'dark');
+    put(p, part(W, H, (g) => g.ellipse(39.5, 31, 3.2, 2.7, 1), steel, { depth: 2, light: L, bias: 0.05 }), 'dark');
+    for (const [x1, y1] of [[36, 36], [39.5, 36.5], [43, 34]]) put(p, part(W, H, (g) => cap(g, 39.5, 32, x1, y1, 1.1, 0.4), steel, { depth: 1, light: L, bias: 0.1 }), 'dark');
+    const wisp = mask(W, H); tube(wisp, [[41, 29], [45, 25], [42, 19]], 2.8, 0.6, 1, 12);
+    const wf = G().pix(W, H);
+    wisp.each((x, y) => { const d = Math.hypot(x - 41.5, y - 27.5); wf.set(x, y, ghost[Math.max(1, Math.min(4, Math.floor(4.6 - d * 0.45 - (x > 43 ? 1 : 0))))]); });
+    put(p, wf, ghost[0]);
+
+    // pauldrons: two layered plates each, spiked
+    both(W, (X) => {
+      put(p, part(W, H, (g) => cap(g, X(12), 17, X(6), 8, 2, 0.3), steel, { depth: 1.2, light: L, bias: 0.12 }), 'dark');
+      for (const [y, rx, ry, b] of [[18, 7, 4.5, 0], [21.5, 5.5, 3, -0.08]]) {
+        put(p, part(W, H, (g) => g.ellipse(X(13), y, rx, ry, 1), steel, { depth: 2.5, light: L, bias: b, normal: sphereN(X(12), y - 1.5, rx + 1, ry + 1.5), blend: 0.3, spec: 0.95 }), 'dark');
+      }
+      p.line(X(7), 20, X(13), 21, trim[3]); p.line(X(8), 21, X(12), 22, trim[1]);
+    });
+
+    // sword: raised diagonally, a blade of darkness with ghost-lit edges
+    const bl = mask(W, H);
+    bl.poly([[12, 29], [15, 27], [5, 3], [3, 1], [3, 5]], 1);
+    const blade = G().pix(W, H);
+    bl.each((x, y) => blade.set(x, y, hash(x, y, 4) < 0.1 ? '#4a3a7a' : '#140c24'));
+    for (let y = 3; y <= 27; y++) {
+      const t = (y - 3) / 24, xl = Math.round(3.5 + t * 8.5), xr = Math.round(4.5 + t * 10.5);
+      on(blade, xl, y, y % 6 === 0 ? ghost[4] : ghost[3]); on(blade, xr, y, ghost[1]);
+    }
+    put(p, blade, 'dark');
+    put(p, part(W, H, (g) => cap(g, 9.5, 28.5, 17, 25.5, 1.3, 1.3), trim, { depth: 1, light: L, spec: 0.9 }), 'dark');
+    put(p, part(W, H, (g) => g.ellipse(14, 29.5, 3, 2.6, 1), steel, { depth: 2, light: L }), 'dark');
+    stamp(p, 11, 26, ['g'], { g: ghost[3] });
+
+    // helm: horned great helm with cheek guards, a T visor burning with ghost-light
+    both(W, (X) => {
+      const hn = mask(W, H); tube(hn, [[X(19), 8], [X(13), 6], [X(10), 0.5]], 2, 0.4, 1, 12);
+      put(p, shade(hn, hornR, { depth: 1.2, light: L }), 'dark');
+    });
+    const hm = mask(W, H);
+    hm.ellipse(24, 10, 6.5, 6.5, 1);
+    hm.poly([[17.5, 10], [30.5, 10], [30, 17], [26.5, 20], [21.5, 20], [18, 17]], 1);
+    hm.poly([[23, 1], [25, 1], [26, 6], [22, 6]], 1);
+    const helm = shade(hm, steel, { depth: 3.5, light: L, normal: sphereN(23, 10, 8, 10), blend: 0.35, spec: 0.94 });
+    for (let y = 2; y <= 10; y++) on(helm, 23, y, steel[6]);
+    for (const [x, y] of [[19, 16], [28, 16], [21, 19], [26, 19]]) on(helm, x, y, steel[5]);
+    put(p, helm, 'dark');
+    for (let x = 18; x <= 30; x++) p.set(x, 11, '#07050e');
+    for (let y = 11; y <= 18; y++) { p.set(23, y, '#07050e'); p.set(24, y, '#07050e'); }
+    for (let x = 18; x <= 30; x++) p.set(x, 12, '#07050e');
+    stamp(p, 19, 11, ['eEEe'], { e: ghost[3], E: ghost[4] });
+    stamp(p, 25, 11, ['eEEe'], { e: ghost[3], E: ghost[4] });
+    for (const x of [20, 27]) { p.set(x, 12, ghost[2]); p.set(x + 1, 12, ghost[2]); }
+
+    return finish(p, { free: true, post: (q) => {
+      // ghost-light trailing up from the eyes and a few loose motes
+      for (const [x, y, c] of [[20, 9, ghost[3]], [19, 8, ghost[2]], [28, 9, ghost[3]], [29, 8, ghost[2]], [45, 17, ghost[3]], [2, 38, ghost[2]], [46, 42, ghost[2]]]) q.set(x, y, c);
+    } });
+  };
+
+  // ================================================================ chaos_beast
+  // A multi-eyed chaos behemoth: a hunched mountain of muscle, its broad face
+  // split by a fanged maw and studded with seven eyes of every size, great
+  // horns sweeping up from the crown, chitin plates and crystal growths on the
+  // shoulders, forelegs like pillars ending in hooked claws. 64x64.
+  S.chaos_beast = () => {
+    const W = 64, H = 64, cx = 32;
+    const L = [-0.5, -0.75, 0.6];
+    const p = G().pix(W, H);
+    const hide = ramp('#7a3e84', 7, { dark: 0.8, light: 0.62 });
+    const plate = ramp('#3c2e58', 6, { dark: 0.75, light: 0.6 });
+    const bone = ramp('#d6c8a8', 6, { dark: 0.66, shift: 30 });
+    const belly = ramp('#c07a98', 5, { dark: 0.6, light: 0.6 });
+    const EYE = ['#7a4a08', '#d0a018', '#ffe040', '#fff8c0'];
+    const MAW = ['#2a0610', '#5a1020', '#9a2030', '#e04850', '#ff9080'];
+    const crystal = ['#2e2470', '#4a50c0', '#7aa0f0', '#c8e8ff'];
+
+    // hind bulk behind the shoulders
+    put(p, part(W, H, (g) => { g.ellipse(cx, 36, 28, 14, 1); }, hide, { depth: 7, light: L, bias: -0.14 }), 'dark');
+    // crystal growths along the back
+    for (const [bx, by, tx, ty, r] of [[11, 30, 3, 19, 2.6], [16, 26, 11, 13, 2.4], [48, 26, 53, 13, 2.4], [53, 30, 61, 19, 2.6]]) {
+      const cm = mask(W, H); cap(cm, bx, by, tx, ty, r, 0.3);
+      const c = shade(cm, crystal, { depth: 1.2, light: L, flat: 0.5 });
+      put(p, c, 'dark');
+      p.line(Math.round(bx + (tx - bx) * 0.2 - 0.5), Math.round(by + (ty - by) * 0.2), Math.round(tx), Math.round(ty) + 1, crystal[3]);
+    }
+    // shoulders: two great humps armoured with chitin
+    both(W, (X) => {
+      put(p, part(W, H, (g) => g.ellipse(X(15), 35, 13, 12, 1), hide, { depth: 7, light: L, normal: sphereN(X(13), 32, 14, 14), blend: 0.35 }), 'dark');
+      const pm = mask(W, H); pm.ellipse(X(13), 30, 9, 6.5, 1);
+      const pl = shade(pm, plate, { depth: 3, light: L, spec: 0.95 });
+      curve(pl, [[X(6), 32], [X(13), 28], [X(20), 31]], plate[5]);
+      curve(pl, [[X(6), 34], [X(13), 31], [X(20), 34]], plate[1]);
+      put(p, pl, 'dark');
+      // a lone eye on the shoulder
+      put(p, part(W, H, (g) => g.ellipse(X(9), 38, 2.2, 1.8, 1), EYE, { depth: 1.2, light: L }), INK);
+      p.vline(X(9), 37, 39, '#3a0a0a');
+    });
+    // forelegs: pillars with hooked claws
+    both(W, (X) => {
+      const lm = mask(W, H);
+      cap(lm, X(14), 40, X(12), 54, 7, 6);
+      const leg = shade(lm, hide, { depth: 5, light: L, normal: cylN(X(12), 8), blend: 0.4 });
+      curve(leg, [[X(8), 46], [X(12), 47], [X(17), 45]], hide[1]);
+      curve(leg, [[X(8), 51], [X(12), 52], [X(16), 50]], hide[1]);
+      put(p, leg, 'dark');
+      put(p, part(W, H, (g) => g.ellipse(X(12), 58, 8, 4, 1), hide, { depth: 2.5, light: L }), 'dark');
+      for (const [x0, x1, xc] of [[5, 3, 3.5], [10, 9, 9], [15, 16, 15.5], [19, 21, 20.5]]) {
+        put(p, part(W, H, (g) => tube(g, [[X(x0 + 1), 58], [X(xc), 60], [X(x1), 62]], 1.6, 0.3, 1, 8), bone, { depth: 1.2, light: L }), 'dark');
+      }
+    });
+    // chest between the legs
+    const bm = mask(W, H);
+    bm.poly([[22, 42], [42, 42], [40, 52], [cx, 55], [24, 52]], 1);
+    const bl = shade(bm, belly, { depth: 4, light: L, normal: cylN(cx - 1, 10), blend: 0.5, bias: -0.05 });
+    for (const y of [46, 50]) curve(bl, [[23, y - 1], [cx, y + 1], [41, y - 1]], belly[1]);
+    put(p, bl, 'dark');
+
+    // great horns sweeping up and out from the crown, a short spike between them
+    both(W, (X) => {
+      const pts = [[X(25), 19], [X(17), 14], [X(12), 5], [X(16), 1]];
+      const hn = mask(W, H); tube(hn, pts, 3.4, 0.6, 1, 22);
+      const h = shade(hn, bone, { depth: 2, light: L });
+      for (let i = 1; i < 9; i++) { const q = bez(pts, i / 9); on(h, q[0] + 1, q[1] + 1, bone[1]); }
+      put(p, h, 'dark');
+    });
+    // head: broad and heavy, pushed forward between the shoulders
+    const hm = mask(W, H);
+    hm.ellipse(cx, 27, 14, 10, 1);
+    hm.poly([[18, 27], [46, 27], [43, 40], [38, 46], [26, 46], [21, 40]], 1);
+    const head = shade(hm, hide, { depth: 5, light: L, normal: sphereN(cx - 2, 27, 15, 15), blend: 0.35, rim: 1, bias: 0.04 });
+    // brow ridges over the big eyes
+    both(W, (X) => curve(head, [[X(20), 25], [X(25), 23], [X(30), 25]], hide[1]));
+    put(p, head, 'dark');
+    put(p, part(W, H, (g) => cap(g, cx, 18, cx, 11, 2, 0.3), bone, { depth: 1, light: L }), 'dark');
+    // the maw: wide, fanged top and bottom, a hot throat
+    const mw = mask(W, H);
+    mw.poly([[22, 35], [42, 35], [40, 41], [cx, 45], [24, 41]], 1);
+    const mouth = G().pix(W, H);
+    mw.each((x, y) => { const d = Math.hypot((x - cx) / 8.5, (y - 40) / 4.2); mouth.set(x, y, MAW[Math.max(0, Math.min(4, Math.floor(4.2 - d * 3.6)))]); });
+    put(p, mouth, INK);
+    for (const [x, l] of [[23, 3], [25, 2], [27, 3], [29, 2], [31, 2], [33, 2], [35, 2], [37, 3], [39, 2], [41, 3]]) for (let k = 0; k < l; k++) p.set(x, 35 + k, k === l - 1 ? bone[3] : WHITE);
+    for (const [x, l] of [[25, 2], [28, 3], [cx, 2], [36, 3], [39, 2]]) for (let k = 0; k < l; k++) p.set(x, 43 - k - (Math.abs(x - cx) > 5 ? 1 : 0), k === l - 1 ? bone[3] : bone[5]);
+    // seven eyes, each in its own dark socket: a big pair, a small pair, one on the brow, two on the cheeks
+    const eye = (x, y, r) => {
+      const sock = mask(W, H); sock.ellipse(x, y, r + 1, r * 0.8 + 1, 1);
+      put(p, part(W, H, (g) => g.ellipse(x, y, r + 1, r * 0.8 + 1, 1), hide, { depth: 1, light: [0.4, 0.7, 0.5], bias: -0.25 }));
+      const m = mask(W, H); m.ellipse(x, y, r, r * 0.8, 1);
+      const e = G().pix(W, H);
+      m.each((X, Y) => { const d = Math.hypot(X - x + r * 0.35, Y - y + r * 0.35) / (r + 0.6); e.set(X, Y, EYE[Math.max(0, Math.min(3, Math.floor(3.7 - d * 3.2)))]); });
+      put(p, e, INK);
+      p.vline(Math.round(x), Math.round(y - r * 0.55), Math.round(y + r * 0.55), '#3a0a0a');
+      if (r > 2) p.set(Math.round(x - r * 0.5), Math.round(y - r * 0.4), WHITE);
+    };
+    eye(25, 28, 3.2); eye(39, 28, 3.2);
+    eye(27, 21.5, 1.6); eye(37, 21.5, 1.6);
+    eye(cx, 19.5, 1.5);
+    eye(19.5, 33, 1.5); eye(44.5, 33, 1.5);
+
+    return finish(p);
   };
 
   // ------------------------------------------------------------ registry

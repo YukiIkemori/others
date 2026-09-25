@@ -6,7 +6,9 @@
 //  * carpets with gold borders, water/lava/poison with banks
 //  * furniture on the floor it actually stands on; counters, tables, beds and
 //    fences that join with their neighbours
-//  * soft wall shadows on the floor and grass fringes along paths
+//  * soft shadows on the floor from walls and furniture (decor layer), light
+//    from the top-left; deterministic floor variety; tile_alt / crack decor
+//    painted into the floor itself; grass fringes along paths
 // Returns a canvas / frame array (cached per context signature) or null to let
 // the caller use the plain 'tile:<theme>:<id>' / 'tile:<id>'.
 // Map contract: map.tileAt(x, y) → tile id (outside → map.outside), map.theme.
@@ -55,12 +57,104 @@
     return best || (m.theme ? 'floor' : 'wood');
   }
 
-  // ------------------------------------------------------------ ground
-  /** shadows from tall neighbours (north / west / north-west) + grass fringe */
-  function groundTile(m, x, y, id, theme) {
+  // ------------------------------------------------------------ shading
+  // Light comes from the top-left: walls, house walls and tall objects cast a
+  // soft band on the floor south of them and a thin shadow on the floor east of
+  // them; furniture from the decor layer (DESIGN §7.1) does the same, more
+  // subtly. The same multipliers are exposed for opaque floor decor (rugs,
+  // mosaics, dais tops) so shadows fall across them identically.
+  const hasDecor = (m) => typeof m.decorAt === 'function' && !!m.decor;
+  /** 'T' tall furniture, 'f' furniture, 'd' dais, '' nothing (walkable/wall pieces cast nothing) */
+  function decorCaster(m, x, y) {
+    const id = m.decorAt(x, y);
+    if (!id) return '';
+    if (id === 'dais') return 'd';
+    const d = R.DB.decor && R.DB.decor[id];
+    if (!d || d.pass || d.wall) return '';
+    return d.tall ? 'T' : 'f';
+  }
+  /** shading signature of a floor cell: '' when unshaded */
+  function shadeKey(m, x, y) {
     const n = TALL[m.tileAt(x, y - 1)] ? 1 : 0;
     const w = TALL[m.tileAt(x - 1, y)] ? 1 : 0;
-    const nw = TALL[m.tileAt(x - 1, y - 1)] ? 1 : 0;
+    const nw = !n && !w && TALL[m.tileAt(x - 1, y - 1)] ? 1 : 0;
+    let dn = '', dw = '';
+    if (hasDecor(m)) {
+      const self = m.decorAt(x, y);
+      dn = n ? '' : decorCaster(m, x, y - 1);
+      dw = w ? '' : decorCaster(m, x - 1, y);
+      if (self === 'dais') { if (dn === 'd') dn = ''; if (dw === 'd') dw = ''; }
+      if (dw === 'f') dw = '';
+    }
+    if (!n && !w && !nw && !dn && !dw) return '';
+    return '' + n + w + nw + dn + '.' + dw;
+  }
+  const KCACHE = new Map();
+  /** per-pixel brightness multipliers (Float32Array 256) for a shade key, or null */
+  function shadeK(key) {
+    if (!key) return null;
+    let k = KCACHE.get(key);
+    if (k) return k;
+    k = new Float32Array(256).fill(1);
+    const n = key[0] === '1', w = key[1] === '1', nw = key[2] === '1';
+    const [dn, dw] = key.slice(3).split('.');
+    const dim = (x, y, v) => { if (x >= 0 && y >= 0 && x < 16 && y < 16) { const i = y * 16 + x; if (v < k[i]) k[i] = v; } };
+    for (let i = 0; i < 16; i++) {
+      if (n) { dim(i, 0, 0.56); dim(i, 1, 0.68); dim(i, 2, 0.8); if ((i + 3) % 2) dim(i, 3, 0.9); }
+      if (w) { dim(0, i, 0.72); if (i % 2) dim(1, i, 0.86); }
+      if (dn === 'T') { if (i >= 2) dim(i, 0, 0.72); if (i >= 3) dim(i, 1, 0.84); if (i >= 4 && i % 2) dim(i, 2, 0.92); }
+      if (dn === 'f') { if (i >= 2) dim(i, 0, 0.82); if (i >= 3 && i % 2) dim(i, 1, 0.9); }
+      if (dn === 'd') { dim(i, 0, 0.66); dim(i, 1, 0.82); if (i % 2) dim(i, 2, 0.92); }
+      if (dw === 'T') { if (i >= 2) dim(0, i, 0.8); if (i >= 3 && i % 2) dim(1, i, 0.9); }
+      if (dw === 'd') { if (i < 10) { dim(0, i, 0.74); if (i % 2) dim(1, i, 0.88); } else { dim(0, i, 0.66); dim(1, i, 0.8); } }
+    }
+    if (nw) { dim(0, 0, 0.62); dim(1, 0, 0.78); dim(0, 1, 0.78); dim(1, 1, 0.9); dim(2, 0, 0.9); dim(0, 2, 0.9); }
+    KCACHE.set(key, k);
+    return k;
+  }
+  A.floorShadeKey = shadeKey;
+  A.floorShadeK = (m, x, y) => shadeK(shadeKey(m, x, y));
+
+  // ------------------------------------------------------------ floor variety
+  // Deterministic per cell (map id + position), so a room never looks like wallpaper.
+  function salt(m) {
+    if (m._artSalt != null) return m._artSalt;
+    let h = 0;
+    const s = String(m.id || '');
+    for (let i = 0; i < s.length; i++) h = (Math.imul(h, 31) + s.charCodeAt(i)) | 0;
+    return (m._artSalt = h & 0xffff);
+  }
+  function variantAt(m, x, y, gname) {
+    if (!A.floorVariant || !A.floorVaries || !A.floorVaries(gname)) return 0;
+    const h = tk().hash(x, y, 7001 + salt(m));
+    const plain = gname === 'lgrass' ? 0.64 : gname === 'theme:cave' ? 0.3 : 0.58;
+    return h < plain ? 0 : h < plain + 0.2 ? 1 : h < plain + 0.32 ? 2 : 3;
+  }
+  /** floor decor this cell's floor paints itself: 'alt' | 'crack' | '' */
+  function floorFx(m, x, y, gname) {
+    if (!hasDecor(m) || !A.floorVariant) return '';
+    const d = m.decorAt(x, y);
+    if (d === 'tile_alt' && A.floorHasAlt && A.floorHasAlt(gname)) return 'alt';
+    if (d === 'crack' && A.floorHasCrack && A.floorHasCrack(gname)) return 'crack';
+    return '';
+  }
+  /** used by the decor art: does the floor at (x,y) already show this decor? */
+  // grounds the outdoor tiler (tiles_local.js wraps localTile) paints itself: not ours
+  const EXT_IDS = { lgrass: 1, flowers: 1, dirt: 1, sand: 1, snowfloor: 1 };
+  const extTakes = (id, theme) => !!(A.localTile && A.localTile._exterior) && (EXT_IDS[id] || (id === 'floor' && theme === 'town'));
+  A.floorHandlesDecor = function (m, x, y, kind) {
+    const id = m.tileAt(x, y);
+    if (!GROUND[id] || id === 'carpet') return false;
+    const theme = m.theme && A.THEME_DEFS[m.theme] ? m.theme : 'generic';
+    if (extTakes(id, theme)) return false;
+    return floorFx(m, x, y, groundName(id, theme)) === (kind === 'tile_alt' ? 'alt' : kind);
+  };
+
+  // ------------------------------------------------------------ ground
+  /** shadows (walls, tall objects, furniture), floor variety, carpet borders, grass fringe */
+  function groundTile(m, x, y, id, theme) {
+    const gname = groundName(id, theme);
+    const sk = shadeKey(m, x, y);
     let fringe = '';
     if (!GRASSY[id] && id !== 'carpet' && id !== 'wood') {
       for (const [dx, dy] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) fringe += GRASSY[m.tileAt(x + dx, y + dy)] ? '1' : '0';
@@ -70,17 +164,17 @@
       const c = (dx, dy) => (m.tileAt(x + dx, y + dy) === 'carpet' || m.tileAt(x + dx, y + dy) === 'throne' ? '1' : '0');
       carpet = c(0, -1) + c(0, 1) + c(-1, 0) + c(1, 0) + c(-1, -1) + c(1, -1) + c(-1, 1) + c(1, 1);
     }
-    if (!n && !w && !nw && fringe === '0000' && (!carpet || carpet === '11111111')) return null;
-    const key = 'g|' + id + '|' + theme + '|' + n + w + nw + '|' + fringe + '|' + carpet;
+    const fx = id === 'carpet' ? '' : floorFx(m, x, y, gname);
+    const v = id === 'carpet' || fx === 'alt' ? 0 : variantAt(m, x, y, gname);
+    if (!sk && fringe === '0000' && (!carpet || carpet === '11111111') && !v && !fx) return null;
+    const key = 'g|' + id + '|' + theme + '|' + sk + '|' + fringe + '|' + carpet + '|' + v + '|' + fx;
     return cached(key, () => {
       const t = tk();
-      const b = A.floorBuf(groundName(id, theme)).clone();
+      const b = (fx ? A.floorVariant(gname, fx) : v ? A.floorVariant(gname, v) : A.floorBuf(gname)).clone();
       if (carpet) carpetBorder(b, carpet);
       if (fringe !== '0000') grassFringe(b, fringe);
-      // soft shadow: 3 rows under a wall to the north, 2 columns east of a west wall
-      if (n) for (let x0 = 0; x0 < 16; x0++) { b.set(x0, 0, t.mul(b.get(x0, 0), 0.58)); b.set(x0, 1, t.mul(b.get(x0, 1), 0.7)); if ((x0 + y) % 2) b.set(x0, 2, t.mul(b.get(x0, 2), 0.85)); }
-      if (w) for (let y0 = n ? 3 : 0; y0 < 16; y0++) { b.set(0, y0, t.mul(b.get(0, y0), 0.7)); if (y0 % 2) b.set(1, y0, t.mul(b.get(1, y0), 0.85)); }
-      if (nw && !n && !w) { b.set(0, 0, t.mul(b.get(0, 0), 0.6)); b.set(1, 0, t.mul(b.get(1, 0), 0.75)); b.set(0, 1, t.mul(b.get(0, 1), 0.75)); }
+      const k = shadeK(sk);
+      if (k) for (let i = 0; i < 256; i++) if (k[i] < 1 && b.p[i] !== -1) b.p[i] = t.mul(b.p[i], k[i]);
       return canvas(b);
     });
   }

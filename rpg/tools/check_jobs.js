@@ -15,7 +15,7 @@
 //     ≈ 1.6× the strict minimum (detours, other jobs) before an ability is bought. The
 //     "Lv" column is the level at which the ability typically becomes available.
 //   * ratio = expected damage (all targets for group ×2.5 / enemies ×3.5 / random: all hits)
-//     divided by ユウキ's normal attack as a せんし at that level (crits included).
+//     divided by ユウキ's normal attack as a 戦士 at that level (crits included).
 // Exit code 1 on errors.
 'use strict';
 const load = require('./lib/load');
@@ -32,16 +32,16 @@ for (const e of R._nodeLoadErrors || []) if (/data\/(jobs|abilities)/.test(e)) E
 
 // ------------------------------------------------------------------ contract
 const JOB_TREE = {
-  warrior: [1, 'せんし', []], priest: [1, 'そうりょ', []], mage: [1, 'まほうつかい', []], thief: [1, 'とうぞく', []],
-  knight: [2, 'ナイト', [['warrior', 3]]], monk: [2, 'ぶとうか', [['warrior', 2], ['priest', 2]]],
-  whitemage: [2, 'しろまどうし', [['priest', 3]]], blackmage: [2, 'くろまどうし', [['mage', 3]]],
-  hunter: [2, 'かりゅうど', [['thief', 3]]], bard: [2, 'ぎんゆうしじん', [['priest', 2], ['thief', 2]]],
-  alchemist: [2, 'くすりし', [['mage', 2], ['thief', 2]]],
-  spellblade: [3, 'まほうけんし', [['knight', 3], ['blackmage', 3]]], paladin: [3, 'パラディン', [['knight', 5], ['whitemage', 4]]],
-  ninja: [3, 'にんじゃ', [['hunter', 4], ['monk', 3]]], sage: [3, 'けんじゃ', [['whitemage', 5], ['blackmage', 5]]],
-  dragoon: [3, 'りゅうきし', [['knight', 4], ['hunter', 4]]], timemage: [3, 'じくうまどうし', [['blackmage', 4], ['bard', 3]]],
-  darkknight: [3, 'あんこくきし', [['warrior', 6], ['blackmage', 4]]],
-  hero: [4, 'ゆうしゃ', [['paladin', 5], ['spellblade', 5]]],
+  warrior: [1, '戦士', []], priest: [1, '僧侶', []], mage: [1, '魔法使い', []], thief: [1, '盗賊', []],
+  knight: [2, 'ナイト', [['warrior', 3]]], monk: [2, '武闘家', [['warrior', 2], ['priest', 2]]],
+  whitemage: [2, '白魔術師', [['priest', 3]]], blackmage: [2, '黒魔術師', [['mage', 3]]],
+  hunter: [2, '狩人', [['thief', 3]]], bard: [2, '吟遊詩人', [['priest', 2], ['thief', 2]]],
+  alchemist: [2, '薬師', [['mage', 2], ['thief', 2]]],
+  spellblade: [3, '魔法剣士', [['knight', 3], ['blackmage', 3]]], paladin: [3, 'パラディン', [['knight', 5], ['whitemage', 4]]],
+  ninja: [3, '忍者', [['hunter', 4], ['monk', 3]]], sage: [3, '賢者', [['whitemage', 5], ['blackmage', 5]]],
+  dragoon: [3, '竜騎士', [['knight', 4], ['hunter', 4]]], timemage: [3, '時空術師', [['blackmage', 4], ['bard', 3]]],
+  darkknight: [3, '暗黒騎士', [['warrior', 6], ['blackmage', 4]]],
+  hero: [4, '勇者', [['paladin', 5], ['spellblade', 5]]],
 };
 const START = { warrior_power_slash: 'warrior', priest_heal: 'priest', mage_fire: 'mage' };
 const JP_RANGE = { 1: [30, 300], 2: [100, 600], 3: [200, 900], 4: [400, 1200] };
@@ -93,6 +93,14 @@ function banned(s) {
   let t = String(s);
   for (const ok of BANNED_OK) t = t.split(ok).join('');
   return BANNED.filter((b) => b && t.includes(b));
+}
+
+// STYLE_JA.md: kanji-kana prose without DQ-style word spacing, and never a hard-coded hero name
+// (the player names them; text uses {yuki} {non} {metem} {leader} or the character's name)
+function checkText(where, s) {
+  s = String(s || '');
+  if (/[^\x00-\x7f] +[^\x00-\x7f]/.test(s)) E(`${where}: DQ-style space in Japanese text: ${s}`);
+  for (const n of ['ユウキ', 'ノン', 'メテム']) if (s.includes(n)) E(`${where}: hard-coded hero name ${n}`);
 }
 
 function checkMods(where, m, kind) {
@@ -175,10 +183,11 @@ for (const id in jobs) {
   for (const t of j.heads || []) if (!['helm', 'hat'].includes(t)) E(`${w}: bad head ${t}`);
   for (const t of j.bodies || []) if (!['heavy', 'light', 'robe'].includes(t)) E(`${w}: bad body ${t}`);
   if (!(j.heads || []).length || !(j.bodies || []).length) E(`${w}: must allow some head and body armour`);
-  if (j.tier === 1 && !(j.bodies || []).includes('light')) E(`${w}: tier-1 job cannot wear 'light' clothes (start gear たびじのふく)`);
+  if (j.tier === 1 && !(j.bodies || []).includes('light')) E(`${w}: tier-1 job cannot wear 'light' clothes (start gear 旅路の服)`);
   if (j.innate) checkMods(`${w} innate`, j.innate, 'innate');
   if (!j.outfit || !hex(j.outfit.main) || !hex(j.outfit.sub) || !hex(j.outfit.trim)) E(`${w}: outfit needs main/sub/trim #rrggbb`);
   for (const b of banned(j.command || '')) E(`${w}: command contains banned name '${b}'`);
+  for (const k of ['name', 'command', 'desc']) checkText(`${w} ${k}`, j[k]);
   const n = { action: 0, reaction: 0, support: 0, field: 0 };
   const seen = new Set();
   for (const a of j.abilities || []) {
@@ -211,6 +220,7 @@ for (const id in abil) {
   if (names[a.name]) E(`${w}: name '${a.name}' also used by ${names[a.name]}`);
   names[a.name] = id;
   for (const b of banned(a.name)) E(`${w}: name contains banned '${b}'`);
+  for (const k of ['name', 'desc', 'msg']) checkText(`${w} ${k}`, a[k]);
   if (!a.desc) E(`${w}: no desc`);
   else if (width(a.desc) > 226 * 2) E(`${w}: desc does not fit the menu (${fmt(width(a.desc))}px)`);
   else if (a.kind === 'action' && width(a.desc) > 236) W(`${w}: desc squeezed in the one-line battle help (${fmt(width(a.desc))}px > 236)`);
@@ -401,7 +411,7 @@ function engineCheck(c, a, L, mine) {
 }
 
 if (!QUIET) {
-  console.log('\n=== DAMAGE ===  (Lv = typical level when bought; vs monster def 2.2·Lv, mdef Lv; ratio vs せんし ユウキ normal attack)');
+  console.log('\n=== DAMAGE ===  (Lv = typical level when bought; vs monster def 2.2·Lv, mdef Lv; ratio vs 戦士 ユウキ normal attack)');
   console.log(pad('ability', 24) + pad('target', 8) + ' Lv   per-hit  hits  total   atk   ratio   MP  dmg/MP  note');
   for (const jid in jobs) {
     if (ONLY && jid !== ONLY) continue;
@@ -440,7 +450,7 @@ if (!QUIET) {
   if (R.Battle && R.Battle.Engine) console.log(`engine cross-check: ${engineOk} agree, ${engineBad} differ`);
   else console.log('engine cross-check skipped (R.Battle.Engine not loaded)');
 
-  console.log('\n=== HEALING ===  (healer ノン in the job; % of せんし ユウキ max HP at that level)');
+  console.log('\n=== HEALING ===  (healer ノン in the job; % of 戦士 ユウキ max HP at that level)');
   console.log(pad('ability', 26) + pad('target', 10) + ' Lv   amount  %maxHP   MP');
   for (const jid in jobs) {
     if (ONLY && jid !== ONLY) continue;
@@ -462,7 +472,7 @@ if (!QUIET) {
     }
   }
 
-  console.log('\n=== REFERENCE ===  (Lv: せんし ユウキ atk / normal hit · くろまどうし メテム mag · そうりょ ノン mnd · monster def/mdef)');
+  console.log('\n=== REFERENCE ===  (Lv: 戦士 ユウキ atk / normal hit · 黒魔術師 メテム mag · 僧侶 ノン mnd · monster def/mdef)');
   for (const L of [1, 5, 10, 15, 20, 25, 30, 35, 40]) {
     const y = refChar('yuki', 'warrior', L, 'atk'), m = refChar('metem', 'blackmage', L, 'mag'), n = refChar('non', 'priest', L, 'mnd');
     console.log(`Lv${padL(L, 2)}  atk ${padL(y.st.atk, 3)} hit ${padL(fmt(attackRef(L), 1), 5)} HP ${padL(y.st.hp, 3)}  |  mag ${padL(m.st.mag, 3)} MP ${padL(m.st.mp, 3)}  |  mnd ${padL(n.st.mnd, 3)} MP ${padL(n.st.mp, 3)}  |  def ${fmt(MON(L).def)} mdef ${L}`);
