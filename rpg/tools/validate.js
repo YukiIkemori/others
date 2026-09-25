@@ -30,7 +30,7 @@ const TRIGGERS = ['hitPhys', 'hitMagic', 'hitAny', 'lowHp', 'allyLowHp', 'ko'];
 const REACTS = ['counter', 'heal', 'autoItem', 'buff', 'cover', 'revive', 'mp'];
 const MODS = new Set(('hpPct mpPct strPct vitPct agiPct intPct mndPct lukPct atk def mag mdef hit eva crit atkPct defPct magPct mdefPct ' +
   'physPct magicPct healPct itemPct mpCostPct critPct escapePct preemptPct elemBoost elemResist statusImmune startBuffs regen ' +
-  'twoSwords unarmed equip expPct jpPct goldPct dropPct rarePct stealPct encounterPct walkHeal noFloorDamage treasureSense').split(' '));
+  'twoSwords unarmed equip expPct jpPct goldPct dropPct rarePct stealPct encounterPct walkHeal noFloorDamage').split(' '));
 const BGM = 'title overworld sea town village castle shrine dungeon cave tower pyramid ice volcano lastdungeon battle boss lastboss ending'.split(' ');
 const JINGLES = 'victory levelup jobup item keyitem inn save gameover rare'.split(' ');
 const SFX = ('cursor confirm confirm_soft cancel buzzer menu_open attack hit crit miss enemy_attack hurt magic fire ice thunder wind holy dark ' +
@@ -219,7 +219,8 @@ for (const id in parsed) {
     if (allChestIds[c.id]) E(`${w}: duplicate chest id ${c.id} (also in ${allChestIds[c.id]})`);
     allChestIds[c.id] = id;
   }
-  for (const c of P.hidden) if (!items[c.item]) E(`${w}: hidden ${c.id} item ${c.item} missing`);
+  // hidden (examine-to-find) items were abolished: every treasure is a visible chest
+  for (const c of P.hidden) W(`${w}: hidden item ${c.id} (${c.item}) — convert to a visible chest`);
   for (const e of P.events) if (!DB.events[e.id]) E(`${w}: event ${e.id} missing`);
   if (m.onEnter && !DB.events[m.onEnter]) E(`${w}: onEnter ${m.onEnter} missing`);
   if (m.location && !DB.locations[m.location]) E(`${w}: location ${m.location} missing`);

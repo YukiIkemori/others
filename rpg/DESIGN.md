@@ -319,7 +319,7 @@ startBuffs:{agi:1, def:1}   regen:true   twoSwords:true   unarmed:N (flat atk bo
 equip:['sword','heavy','shield','helm',...]            // extra equip permissions
 expPct jpPct goldPct dropPct rarePct stealPct          // rewards
 // field-only (effective from the フィールド slot or equipment)
-encounterPct (−50 halves, +100 doubles)  walkHeal:N (HP per step)  noFloorDamage:true  treasureSense:true
+encounterPct (−50 halves, +100 doubles)  walkHeal:N (HP per step)  noFloorDamage:true
 ```
 
 ### 5.5 Statuses & elements
@@ -410,12 +410,11 @@ centred on the ground line, bottom window for commands and messages (DQ wording:
           '$':{chest:{id:'regnas_c1', item:'herb', n:2}},
           '>':{warp:{to:'world', spawn:'regnas_castle'}, under:'s'},
           '!':{event:{id:'evt_x', trigger:'step', once:'flag_name'}},
-          '?':{hidden:{id:'regnas_h1', item:'seed_str'}},
           '%':{sign:{text:'...'}, under:'m'} },   // `under` = tile char placed at the mark (default '.' local / '.' world)
   // objects may also be listed explicitly with coordinates:
   spawns:{name:{x,y,dir}}, npcs:[{id,x,y,sprite,dir,move:'still'|'wander'|'spin',text|event,cond}],
   chests:[{id,x,y,item,n}|{id,x,y,gold}], warps:[{x,y,to,spawn,dir}], events:[{x,y,id,trigger:'step'|'examine',cond,once}],
-  hidden:[{id,x,y,item}], signs:[{x,y,text}],
+  signs:[{x,y,text}],
   decor?:['..b..', ...]                  // optional overlay layer, same size as rows (see below)
   exit?:{to:'world', spawn}               // walking off the map edge
   outside?:'<legend char>'               // tile drawn beyond the map edge (default: void for local maps, sea for world)
@@ -436,7 +435,7 @@ Art: `decor:<id>` (16×16, or up to 16×32 for `tall`, bottom-aligned) or `R.Art
 that join with neighbours. Use decor to make towns/castles/houses dense and lived-in (target: SFC DQ5 density).
 
 Mark chars must not be legend chars (`R.MARK_CHARS_LOCAL` / `R.MARK_CHARS_WORLD` list the free ones).
-A mark char may appear several times (warps/events/hidden); npc/chest ids get `_2`, `_3`… suffixes.
+A mark char may appear several times (warps/events); npc/chest ids get `_2`, `_3`… suffixes.
 NPC `cond` uses `R.State.check` syntax (`'flag'`, `'!flag'`, `{item:'x'}`, …); NPCs whose cond fails are absent.
 NPC `sprite` is any Gfx key (`npc:*` sheets animate; `mon:*` draws the monster sprite standing on the tile, for
 visible bosses). NPCs block movement. Talking to an NPC across a `counter` tile works.
@@ -451,7 +450,8 @@ visible bosses). NPCs block movement. Talking to an NPC across a `counter` tile 
   Poisoned members lose 1 HP/step (min 1 HP).
 * Encounters: step counter `encRate × rand(0.6..1.4) × terrain.enc`, modified by `encounterPct`, `holy_water`.
   Battle background = tile `bbg` on the world, theme `bbg` in dungeons, or encounter table `bg`.
-* Chests (`obj:chest`), hidden items (examine; `treasureSense` shows a sparkle), signs, NPC talk (NPC turns to face).
+* Chests (`obj:chest`), signs, NPC talk (NPC turns to face). **No hidden items**: every treasure in the game is a
+  visible chest (the old examine-to-find `hidden` objects were abolished — tools/validate.js flags any left).
 * Ship: owned when `R.Game.ship` is set. Walk onto it to board; sail on `ship` tiles; stepping onto land leaves the ship there.
   `barrier` tiles become sailable when flag `barrier_broken` is set.
 * Menu: B opens the field menu (owner: menu → `R.Menu.open()`).

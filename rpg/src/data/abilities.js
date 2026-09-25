@@ -162,6 +162,7 @@
     thief_rare_hunter: support('レアハンター', 300, 'レアアイテムを てにいれやすくなる。', { rarePct: 100 }),
     thief_steal_up: support('ぬすみのコツ', 250, 'ぬすみが せいこうしやすくなる。', { stealPct: 50 }),
     thief_ambush: support('さきがけ', 300, 'せんせいこうげきを しかけやすくなる。', { preemptPct: 20, escapePct: 25 }),
-    thief_treasure: field('たからさがし', 300, 'かくされた どうぐが ひかって みえる。', { treasureSense: true }),
+    // (hidden items were removed from the game; this field ability now improves loot)
+    thief_treasure: field('目利き', 300, '魔物が道具を落としやすくなり、\n手に入るゴールドも増える。', { dropPct: 100, goldPct: 25 }),
   });
 })(window.RPG);
