@@ -161,6 +161,9 @@
     thief_nimble: reaction('早足', 250, '攻撃を受けると素早さが上がる。', 'hitAny', 0.5, { type: 'buff', stat: 'agi', stages: 1 }),
     thief_rare_hunter: support('レアハンター', 300, 'レアアイテムを手に入れやすくなる。', { rarePct: 100 }),
     thief_steal_up: support('盗みのコツ', 250, '盗みが成功しやすくなる。', { stealPct: 50 }),
+    // 盗賊's signature (always on once mastered). autoSteal: % of the 盗む success chance a landed 戦う
+    // also tries — silent when nothing is taken, rare item at half the rate (battle.js *autoSteal)
+    thief_auto_steal: support('ついでに盗む', 300, '通常攻撃が当たると、ときどき盗む。', { autoSteal: 70 }),
     thief_ambush: support('先駆け', 300, '先制攻撃しやすく、逃げやすくもなる。', { preemptPct: 20, escapePct: 25 }),
     // (hidden items were removed from the game; this field ability now improves loot)
     thief_treasure: field('目利き', 300, '魔物の落とし物とゴールドが増える。', { dropPct: 100, goldPct: 25 }),

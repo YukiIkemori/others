@@ -45,7 +45,8 @@ const JOB_TREE = {
 };
 const START = { warrior_power_slash: 'warrior', priest_heal: 'priest', mage_fire: 'mage' };
 const JP_RANGE = { 1: [30, 300], 2: [100, 600], 3: [200, 900], 4: [400, 1200] };
-const COUNTS = { action: [6, 10], reaction: [1, 2], support: [1, 3], field: [0, 1] };
+// support up to 4: 盗賊 got ついでに盗む (its mastery signature, request: 盗むが死にスキル)
+const COUNTS = { action: [6, 10], reaction: [1, 2], support: [1, 4], field: [0, 1] };
 const STATS = ['hp', 'mp', 'str', 'vit', 'agi', 'int', 'mnd', 'luk'];
 const WTYPES = ['sword', 'knife', 'axe', 'spear', 'staff', 'rod', 'bow', 'claw', 'katana', 'harp'];
 const ELEMENTS = ['fire', 'ice', 'thunder', 'wind', 'earth', 'water', 'holy', 'dark'];
@@ -61,7 +62,7 @@ const FIELD_MODS = new Set(['encounterPct', 'walkHeal', 'noFloorDamage']);
 const LOOT_MODS = new Set(['dropPct', 'goldPct', 'rarePct']);
 const MODS = new Set(('hpPct mpPct strPct vitPct agiPct intPct mndPct lukPct atk def mag mdef hit eva crit atkPct defPct magPct mdefPct ' +
   'physPct magicPct healPct itemPct mpCostPct critPct escapePct preemptPct elemBoost elemResist statusImmune startBuffs regen ' +
-  'twoSwords unarmed equip expPct jpPct goldPct dropPct rarePct stealPct encounterPct walkHeal noFloorDamage treasureSense').split(' '));
+  'twoSwords unarmed equip expPct jpPct goldPct dropPct rarePct stealPct autoSteal encounterPct walkHeal noFloorDamage treasureSense').split(' '));
 const EFFECT_FIELDS = {
   damage: ['formula', 'power', 'scale', 'element', 'hits', 'ignoreDef', 'drain', 'mp', 'critBonus', 'acc', 'vs', 'hpCost'],
   heal: ['power', 'scale', 'pct', 'hpCost'], healMp: ['power', 'hpCost'], revive: ['pct'], cure: ['statuses'], status: ['status', 'chance'],

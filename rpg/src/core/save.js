@@ -17,6 +17,7 @@
     bgmVolume: 0.6,
     sfxVolume: 0.7,
     alwaysDash: false, // dash = hold B (or Shift) while moving; this makes running the default
+    fieldZoom: 'wide', // field view: 'normal' (16×14 tiles) | 'wide' (≈21×19) | 'wider' (32×28); see field.js VIEW
     windowColor: 'black', // black | blue | green | red
     touchPad: 'auto', // auto | on | off
     cursorMemory: true, // battle command cursor remembers last choice

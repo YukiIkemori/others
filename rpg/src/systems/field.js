@@ -14,14 +14,38 @@
   const TS = 16;
 
   // frames per tile (a half step takes half, a diagonal half step √2× that: same px/frame in every direction).
-  // 16px / 6 = 2⅔ px per frame = exactly 8 device px on the 3× canvas.
+  // 16px / 6 = 2⅔ map px per frame = exactly 8 device px at the default field scale (3, see VIEW).
   const WALK = 6, DASH = 4, SAIL = 6, SAIL_DASH = 3, NPC_STEP = 16;
   const SCRIPT_WALK = 8; // cutscene party walks keep their original pacing
   const BUMP_EVERY = 20;
   const BANNER_FRAMES = 130;
   const ANIM_RATE = { sea: 16, water: 16, lava: 24, magma: 24, poison: 24, wall_torch: 8, warp_pad: 8, barrier: 8, seal: 16 };
-  const BW = 17, BH = 15; // cells touched by the view (256x224 + one partial cell)
   const SPIN = { down: 'left', left: 'up', up: 'right', right: 'down' };
+
+  // ------------------------------------------------------------ view (field zoom)
+  // The field draws with its own scale on the R.SCALE× canvas: V.z device px
+  // per map px (always an integer, so pixel art stays crisp), picked by
+  // Settings.fieldZoom. UI layers (menus, messages, battle) keep R.SCALE.
+  //   normal: 4 → 256x224 map px (16×14 tiles, the original framing)
+  //   wide:   3 → 341⅓x298⅔ (≈21×19 tiles, default)
+  //   wider:  2 → 512x448 (32×28 tiles)
+  // Everything inside the field layer (camera, tile cache, sprites) works in
+  // map px over the view V.w×V.h; overlays (banner, debug coords) switch back
+  // to the UI transform.
+  const ZOOM_DIV = { normal: 1, wide: 4 / 3, wider: 2 }; // view size ÷ the original 256x224
+  const V = { key: '', z: 3, w: 0, h: 0, bw: 0, bh: 0, padx: 0, pady: 0 };
+  function updateView() {
+    const key = (R.Settings && R.Settings.fieldZoom) || 'wide';
+    if (key === V.key && V.scale === R.SCALE) return V;
+    const div = ZOOM_DIV[key] || ZOOM_DIV.wide;
+    V.key = key; V.scale = R.SCALE;
+    V.z = Math.max(1, Math.round(R.SCALE / div));
+    V.w = R.W * R.SCALE / V.z; V.h = R.H * R.SCALE / V.z;
+    V.bw = Math.ceil(V.w / TS) + 1; V.bh = Math.ceil(V.h / TS) + 1; // cells touched by the view (+ one partial cell)
+    V.padx = Math.ceil(V.w / TS / 2) + 1; V.pady = Math.ceil(V.h / TS / 2) + 1; // "outside" cells a centred small map shows
+    return V;
+  }
+  updateView();
 
   let L = null; // the FieldLayer
   let M = null; // current map runtime (R.FieldMap)
@@ -41,11 +65,10 @@
   // Animated tiles / decor redraw just their own cells when their frame changes.
   // (Previously the whole 17×15 buffer was redrawn at every tile crossing and
   // every 8 frames on maps with water, which showed up as frame-time spikes.)
-  const WHOLE_MAX = 9000; // cells: cache the whole map when (w+2·PADX)·(h+2·PADY) fits
-  const PADX = 9, PADY = 8; // cells of "outside" around a whole-map cache (a centred small map shows them)
+  const WHOLE_MAX = 12000; // cells: cache the whole map when (w+2·V.padx)·(h+2·V.pady) fits
   const MARG = 3; // sliding window margin (cells) on each side of the view
   const CH = 8; // whole-map cache chunk (cells)
-  const TC = { cv: null, ctx: null, spare: null, uid: -1, ver: -1, x0: 0, y0: 0, w: 0, h: 0, whole: false, anim: [], danim: [], drawn: new Map() };
+  const TC = { cv: null, ctx: null, spare: null, uid: -1, ver: -1, z: 0, x0: 0, y0: 0, w: 0, h: 0, whole: false, anim: [], danim: [], drawn: new Map() };
   const artWarned = {};
 
   function tileGfx(m, id) {
@@ -172,11 +195,11 @@
     }
   }
   function tcRebuild(ox, oy) {
-    TC.uid = M.uid; TC.ver = M.version;
-    const W = M.w + 2 * PADX, H = M.h + 2 * PADY;
+    TC.uid = M.uid; TC.ver = M.version; TC.z = V.z;
+    const W = M.w + 2 * V.padx, H = M.h + 2 * V.pady;
     TC.whole = W * H <= WHOLE_MAX;
-    if (TC.whole) { TC.x0 = -PADX; TC.y0 = -PADY; TC.w = W; TC.h = H; }
-    else { TC.w = BW + 2 * MARG; TC.h = BH + 2 * MARG; TC.x0 = ox - MARG; TC.y0 = oy - MARG; }
+    if (TC.whole) { TC.x0 = -V.padx; TC.y0 = -V.pady; TC.w = W; TC.h = H; }
+    else { TC.w = V.bw + 2 * MARG; TC.h = V.bh + 2 * MARG; TC.x0 = ox - MARG; TC.y0 = oy - MARG; }
     tcCanvas(TC.w, TC.h);
     TC.drawn.clear();
     if (TC.whole) {
@@ -201,7 +224,7 @@
   /** whole-map cache: make sure the view's chunks exist, then fill others nearest-first within a time budget */
   function tcFill(ox, oy, budgetMs) {
     const ci0 = Math.max(0, Math.floor((ox - 1 - TC.x0) / CH)), cj0 = Math.max(0, Math.floor((oy - 1 - TC.y0) / CH));
-    const ci1 = Math.min(TC.cw - 1, Math.floor((ox + BW - TC.x0) / CH)), cj1 = Math.min(TC.chh - 1, Math.floor((oy + BH + 2 - TC.y0) / CH));
+    const ci1 = Math.min(TC.cw - 1, Math.floor((ox + V.bw - TC.x0) / CH)), cj1 = Math.min(TC.chh - 1, Math.floor((oy + V.bh + 2 - TC.y0) / CH));
     for (let cj = cj0; cj <= cj1; cj++) for (let ci = ci0; ci <= ci1; ci++) tcChunk(ci, cj);
     if (!TC.left) return;
     const t0 = performance.now();
@@ -216,7 +239,7 @@
       }
     }
   }
-  /** slide the window so the view (ox,oy)+(BW,BH) sits in its middle, redrawing only exposed strips */
+  /** slide the window so the view (ox,oy)+(V.bw,V.bh) sits in its middle, redrawing only exposed strips */
   function tcSlide(ox, oy) {
     const nx0 = ox - MARG, ny0 = oy - MARG;
     const dx = TC.x0 - nx0, dy = TC.y0 - ny0; // old origin in new cache cells
@@ -265,7 +288,7 @@
   /** redraw the animated cells near the view whose frame changed */
   function tcAnimate(ox, oy) {
     const m = M, c = TC.ctx;
-    const vx0 = ox - 1, vy0 = oy - 1, vx1 = ox + BW, vy1 = oy + BH + 2;
+    const vx0 = ox - 1, vy0 = oy - 1, vx1 = ox + V.bw, vy1 = oy + V.bh + 2;
     for (const a of TC.anim) {
       if (a.x < vx0 || a.y < vy0 || a.x > vx1 || a.y > vy1) continue;
       const g = cellGfx(m, a.x, a.y);
@@ -292,7 +315,7 @@
   }
   function drawTiles(camX, camY) {
     const ox = Math.floor(camX / TS), oy = Math.floor(camY / TS);
-    if (TC.uid !== M.uid || !TC.cv) tcRebuild(ox, oy);
+    if (TC.uid !== M.uid || !TC.cv || TC.z !== V.z) tcRebuild(ox, oy);
     else if (TC.ver !== M.version) {
       // doors opened on this visit patch single cells; anything else redraws everything
       const dirty = (M.dirtyCells || []).filter((d) => d.v > TC.ver && d.v <= M.version);
@@ -305,20 +328,20 @@
       } else tcRebuild(ox, oy);
     }
     if (TC.whole) { if (TC.left) tcFill(ox, oy, 0); }
-    else if (ox < TC.x0 || oy < TC.y0 || ox + BW > TC.x0 + TC.w || oy + BH > TC.y0 + TC.h) tcSlide(ox, oy);
+    else if (ox < TC.x0 || oy < TC.y0 || ox + V.bw > TC.x0 + TC.w || oy + V.bh > TC.y0 + TC.h) tcSlide(ox, oy);
     tcAnimate(ox, oy);
     // copy just the visible part of the cache (whole-pixel source rect, sub-pixel destination)
     const ix = Math.floor(camX), iy = Math.floor(camY);
     const sx = ix - TC.x0 * TS, sy = iy - TC.y0 * TS;
-    const w = Math.min(R.W + 1, TC.cv.width - sx), h = Math.min(R.H + 1, TC.cv.height - sy);
+    const w = Math.min(Math.ceil(V.w) + 1, TC.cv.width - sx), h = Math.min(Math.ceil(V.h) + 1, TC.cv.height - sy);
     if (sx < 0 || sy < 0 || w <= 0 || h <= 0) { blit(TC.cv, TC.x0 * TS - camX, TC.y0 * TS - camY); return; }
     R.Gfx.ctx.drawImage(TC.cv, sx, sy, w, h, q(ix - camX), q(iy - camY), w, h);
     // spare time: build the rest of the map cache / the art around the window
     if (TC.whole) { if (TC.left) tcFill(ox, oy, 1); }
     else warmArt(1);
   }
-  /** draw at a sub-pixel position: logical px quantised to device px (the canvas is R.SCALE×) */
-  const q = (v) => Math.round(v * R.SCALE) / R.SCALE;
+  /** draw at a sub-pixel position: map px quantised to device px (the field draws at V.z device px per map px) */
+  const q = (v) => Math.round(v * V.z) / V.z;
   function blit(img, x, y, o) {
     if (!img) return;
     const c = R.Gfx.ctx;
@@ -464,7 +487,7 @@
     }
     /** drawn position (px) of party member i. Between fixed steps the move is
      *  advanced by Engine.alpha so motion follows real time on any refresh rate;
-     *  values are quantised to device pixels (1/3 px), never to whole pixels. */
+     *  values are quantised to device pixels (1/V.z px), never to whole pixels. */
     renderPos(i) {
       const lead = this.leadAt(R.Engine.alpha || 0);
       const p = i ? this.followerAt(i, lead) : lead;
@@ -475,12 +498,14 @@
       const lead = this.mv ? this.leadAt(0) : { x: this.P[0].x, y: this.P[0].y };
       for (let i = 1; i < this.P.length; i++) { const f = this.followerAt(i, lead); Object.assign(this.P[i], f); }
     }
+    /** top-left of the view in map px (quantised to device px); the view is V.w×V.h */
     camera() {
+      updateView();
       const lp = this.renderPos(0);
-      let cx = lp.x + 8 - R.W / 2, cy = lp.y + 8 - R.H / 2;
+      let cx = lp.x + 8 - V.w / 2, cy = lp.y + 8 - V.h / 2;
       const mw = M.w * TS, mh = M.h * TS;
-      cx = mw <= R.W ? Math.floor((mw - R.W) / 2) : U.clamp(cx, 0, mw - R.W);
-      cy = mh <= R.H ? Math.floor((mh - R.H) / 2) : U.clamp(cy, 0, mh - R.H);
+      cx = mw <= V.w ? Math.floor((mw - V.w) / 2) : U.clamp(cx, 0, mw - V.w);
+      cy = mh <= V.h ? Math.floor((mh - V.h) / 2) : U.clamp(cy, 0, mh - V.h);
       return { x: q(cx), y: q(cy) };
     }
     /** the engine renders every display refresh while something glides */
@@ -964,10 +989,17 @@
     draw() {
       const G = R.Gfx;
       if (!M || !R.Game) { G.clear('#000'); return; }
+      updateView();
+      // map px → V.z device px (keeps the engine's shake offset, which is in UI px)
+      const c = G.ctx, k = V.z / R.SCALE;
+      c.save();
+      c.scale(k, k);
       const cam = this.camera();
       drawTiles(cam.x, cam.y);
       this.drawObjects(cam);
       this.drawSprites(cam);
+      c.restore();
+      // overlays in UI px
       if (this.banner) this.drawBanner();
       if (Field.showCoords) {
         const p = this.P[0], c = this.cell;
@@ -975,7 +1007,7 @@
       }
     }
     inView(cam, px, py, pad) {
-      return px > cam.x - pad && px < cam.x + R.W + pad && py > cam.y - pad && py < cam.y + R.H + pad;
+      return px > cam.x - pad && px < cam.x + V.w + pad && py > cam.y - pad && py < cam.y + V.h + pad;
     }
     drawObjects(cam) {
       const G = R.Gfx;
@@ -1226,6 +1258,11 @@
     WALK, DASH,
     get map() { return M; },
     get layer() { return L; },
+    ZOOMS: Object.keys(ZOOM_DIV),
+    /** current field view {zoom, z (device px per map px), w, h (map px)} — follows Settings.fieldZoom */
+    view() { updateView(); return { zoom: V.key, z: V.z, w: V.w, h: V.h }; },
+    /** top-left of the view in map px (null off the field) */
+    camera() { return L && M && R.Game ? L.camera() : null; },
 
     /** entry point after title / new game */
     async start(mapId, spawn) {
@@ -1286,14 +1323,14 @@
         const g = R.Game;
         if (g.onShip && M) { g.onShip = false; lay.place(lay.cell.x, lay.cell.y, 'down'); }
         R.sfx('teleport');
-        await lay.liftTo(-(R.H + 40), 26);
+        await lay.liftTo(-(V.h + 40), 26);
         await R.Engine.fadeOut(10);
         if (g.ship && loc.dock) {
           const d = R.FieldMap.spawnPos(loc.dock, mapId);
           if (d) g.ship = { map: mapId, x: d.x, y: d.y, dir: g.ship.dir || 'down' };
         }
         load(mapId, loc.spawn, 'down');
-        lay.lift = -(R.H + 40);
+        lay.lift = -(V.h + 40);
         await R.Engine.fadeIn(10);
         await lay.liftTo(0, 22);
       } finally { lay.lift = 0; unlock(lay); }

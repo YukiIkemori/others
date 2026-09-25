@@ -21,7 +21,7 @@
   const STAGES = [0.6, 0.8, 1, 1.3, 1.6]; // buff stage −2..+2 (kept moderate: a buff shouldn't wall off damage)
   const stageMult = (s) => STAGES[U.clamp(s | 0, -2, 2) + 2];
   const BUFF_STATS = ['atk', 'def', 'mag', 'mdef', 'agi'];
-  const AUTO_STEAL_RARE = 0.5; // 盗賊 mastery auto-steal: rare item at half the 盗む rate
+  const AUTO_STEAL_RARE = 0.5; // ついでに盗む (autoSteal): rare item at half the 盗む rate
   const TIMED = { sleep: [1, 4], paralyze: [1, 3], confuse: [2, 4], silence: [3, 5], blind: [3, 5], regen: [5, 5] };
   const BAD = ['poison', 'sleep', 'paralyze', 'confuse', 'silence', 'blind'];
   // 二刀流 (twoSwords): 戦う (and counters) swing a second time with the off-hand weapon (only when one is in the
@@ -286,8 +286,6 @@
         const sb = p.mods.startBuffs;
         if (p.alive && sb) for (const k in sb) if (BUFF_STATS.includes(k)) p.buffs[k] = U.clamp(p.buffs[k] + sb[k], -2, 2);
       }
-      // 白魔術師 mastery (mod startRegen): the fight starts under 再生
-      for (const p of this.party) if (p.alive && p.mods.startRegen && !p.permRegen) yield* this.inflict(p, p, 'regen', 1, true);
     }
 
     // ------------------------------------------------------- rounds
@@ -591,8 +589,7 @@
         yield { t: 'fx', fx: this.weaponFx(u, off), user: u, targets: [t], kind: 'attack' };
         const r = this.roll(u, t, { formula: 'phys', power: 1 }, off ? { atk, el: u.st.element2 || null } : { atk });
         if (off && r.dmg) r.dmg *= OFFHAND_MULT; // the off-hand swing is the weaker one
-        const drain = u.isParty && u.mods.attackDrain ? u.mods.attackDrain / 100 : 0; // 暗黒騎士 mastery
-        const landed = yield* this.hit(u, t, r, { kind: 'phys', drain });
+        const landed = yield* this.hit(u, t, r, { kind: 'phys' });
         const onHit = u.isParty ? (off ? u.st.onHit2 : u.st.onHit) : u.d.onHit;
         if (landed && onHit && t.alive) yield* this.inflict(u, t, onHit.status, onHit.chance, true);
         if (landed && u.isParty && u.mods.autoSteal && !t.isParty && u.alive) yield* this.autoSteal(u, t);
@@ -605,8 +602,8 @@
       if (!t.isParty || att.side === t.side || t.hpRate() >= 0.25) return t;
       for (const p of this.party) {
         if (p === t || !p.commandable() || p.hpRate() < 0.25) continue;
-        const ra = this.reactionOf(p);
-        if (ra && ra.react.type === 'cover' && U.chance(ra.chance != null ? ra.chance : 1)) {
+        const ra = this.reactionOf(p, (a) => a.react.type === 'cover');
+        if (ra && U.chance(ra.chance != null ? ra.chance : 1)) {
           yield { t: 'cover', u: p, ally: t };
           yield this.m(`${p.name}は${t.name}をかばった！`);
           return p;
@@ -625,14 +622,7 @@
       for (const f in eff.vs) if (tgt.flag(f)) v *= eff.vs[f];
       return v;
     }
-    /** 竜騎士 mastery (mod slayer:{flying:30}): weapon damage bonus on flagged foes (the best one applies) */
-    slayerMult(att, tgt) {
-      const sl = att.isParty && att.mods.slayer;
-      if (!sl || tgt.isParty) return 1;
-      let b = 0;
-      for (const f in sl) if (tgt.flag(f)) b = Math.max(b, sl[f]);
-      return 1 + b / 100;
-    }
+
     hitCount(eff) {
       const h = eff && eff.hits;
       if (Array.isArray(h)) return U.ri(h[0], h[1]);
@@ -660,7 +650,7 @@
         if (!x && !U.chance(hit)) return { miss: true, dmg: 0 };
         const atk = ctx.atk != null ? ctx.atk : att.stat('atk');
         const crit = !x && U.chance((att.stat('crit') + (eff.critBonus || 0)) / 100);
-        const mods = (1 + this.pct(att, 'physPct') / 100) * itemMul * vs * (ctx.item ? 1 : this.slayerMult(att, tgt));
+        const mods = (1 + this.pct(att, 'physPct') / 100) * itemMul * vs;
         let dmg;
         if (tgt.flag('metal')) dmg = x ? 0.5 : crit ? U.ri(1, 3) : U.ri(0, 1);
         else if (crit) dmg = atk * power * rf(0.95, 1.05) * stageMult(att.buffs.atk) * this.elemFactor(att, tgt, el) * mods;
@@ -754,18 +744,11 @@
       if (u.isParty) {
         this.stats.deaths++;
         yield this.m(`${u.name}は倒れた！`);
-        const ra = this.reactionOf(u);
-        if (ra && ra.trigger === 'ko' && ra.react.type === 'revive' && !u.revived && U.chance(ra.chance != null ? ra.chance : 1)) {
+        const ra = this.reactionOf(u, (a) => a.trigger === 'ko' && a.react.type === 'revive');
+        if (ra && !u.revived && U.chance(ra.chance != null ? ra.chance : 1)) {
           u.revived = true;
           u.hp = Math.max(1, Math.floor(u.mhp * (ra.react.pct || 0.25)));
           yield { t: 'react', u, a: ra };
-          yield { t: 'revive', u };
-          yield this.m(`しかし${u.name}は再び立ち上がった！`);
-        } else if (u.mods.autoRevive && !u.revived) {
-          // パラディン mastery: once per battle, back on its feet with autoRevive % of max HP
-          u.revived = true;
-          u.hp = Math.max(1, Math.floor((u.mhp * Math.min(100, u.mods.autoRevive)) / 100));
-          yield { t: 'react', u, a: { name: '不屈' } };
           yield { t: 'revive', u };
           yield this.m(`しかし${u.name}は再び立ち上がった！`);
         }
@@ -1067,7 +1050,7 @@
       yield this.m(`${u.name}は${t.name}から${(DB.items[item] || {}).name || item}を盗んだ！`);
     }
     /**
-     * 盗賊 mastery (mod autoSteal = % of the normal steal chance): a landed 戦う may also pick the
+     * ついでに盗む (mod autoSteal = % of the 盗む success chance; 盗賊's signature): a landed 戦う may also pick the
      * target's pocket — the item even from a monster it just felled. Silent when nothing is taken;
      * the rare item comes at half the usual rate.
      */
@@ -1113,43 +1096,48 @@
     }
 
     // ------------------------------------------------------- reactions
-    reactionOf(u) {
-      if (!u.isParty) return null;
-      const id = u.c.set && u.c.set.reaction;
-      const a = id && DB.abilities[id];
-      return a && a.kind === 'reaction' && a.react && R.Rules.learned(u.c, id) ? a : null;
+    /** the reaction abilities active for u: its リアクション slot + mastered jobs' signature reactions */
+    reactionsOf(u) {
+      if (!u.isParty) return [];
+      return R.Rules.reactions(u.c).map((id) => DB.abilities[id]).filter((a) => a && a.react);
+    }
+    /** u's first active reaction matching test(a) (null if none) */
+    reactionOf(u, test) {
+      return this.reactionsOf(u).find((a) => !test || test(a)) || null;
     }
     triggerReactions(att, tgt, kind) {
       if (!tgt.isParty || !att || att.side === tgt.side) return;
-      const ra = this.reactionOf(tgt);
-      if (ra) {
+      for (const ra of this.reactionsOf(tgt)) {
         const tr = ra.trigger;
         if (tr === 'hitAny' || (tr === 'hitPhys' && kind === 'phys') || (tr === 'hitMagic' && kind !== 'phys') ||
           (tr === 'lowHp' && tgt.hpRate() < 0.25)) this.queueReaction(tgt, ra, att, null);
       }
-      // 戦士 mastery (mod counterPct): a physical hit may be answered even without a counter reaction
-      if (kind === 'phys' && tgt.mods.counterPct && tgt.alive) this.queueReaction(tgt, { name: '反撃', chance: Math.min(100, tgt.mods.counterPct) / 100, react: { type: 'counter' } }, att, null);
       if (tgt.hpRate() < 0.25) {
         for (const p of this.party) {
           if (p === tgt || !p.alive) continue;
-          const r2 = this.reactionOf(p);
-          if (r2 && r2.trigger === 'allyLowHp') this.queueReaction(p, r2, att, tgt);
+          for (const r2 of this.reactionsOf(p)) if (r2.trigger === 'allyLowHp') this.queueReaction(p, r2, att, tgt);
         }
       }
     }
     queueReaction(u, a, src, ally) {
       if (a.react.type === 'cover' || a.react.type === 'revive') return;
-      if (this.reactQ.some((q) => q.u === u)) return;
+      if (this.reactQ.some((q) => q.u === u && q.a === a)) return;
       this.reactQ.push({ u, a, src, ally });
     }
+    /**
+     * run the queued reactions. A member may have several active (its slot + mastered jobs'
+     * signature reactions): they roll in order (slot first) and at most ONE fires per member.
+     */
     *flushReactions() {
       const q = this.reactQ;
       this.reactQ = [];
+      const done = new Set();
       for (const r of q) {
         if (this.checkEnd()) break;
         const u = r.u;
-        if (!u.commandable()) continue;
+        if (done.has(u) || !u.commandable()) continue;
         if (!U.chance(r.a.chance != null ? r.a.chance : 1)) continue;
+        done.add(u);
         yield* this.react(u, r);
       }
       this.reactQ = [];

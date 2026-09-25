@@ -148,6 +148,7 @@
     { key: 'bgmVolume', label: 'BGMの音量', vol: true, desc: '音楽の音量を調節します。' },
     { key: 'sfxVolume', label: '効果音の音量', vol: true, desc: '効果音の音量を調節します。' },
     { key: 'alwaysDash', label: 'いつでもダッシュ', values: [false, true], names: ['オフ', 'オン'], desc: 'ふだんはBボタン（Shift）を押しながら移動でダッシュ。\nオンにすると常に走り、押している間は歩きます。' },
+    { key: 'fieldZoom', label: 'フィールドの広さ', values: ['normal', 'wide', 'wider'], names: ['標準', '広め', '広い'], desc: 'マップ画面にどこまで映すかを選びます。\n広くするほど、まわりが広く見渡せます。' },
     { key: 'windowColor', label: 'ウインドウの色', values: ['black', 'blue', 'green', 'red'], names: ['黒', '青', '緑', '赤'], desc: 'ウインドウの色を変えます。' },
     { key: 'touchPad', label: 'タッチパッド', values: ['auto', 'on', 'off'], names: ['自動', '表示', '隠す'], desc: '画面上のボタンを表示するか選びます。' },
     { key: 'padConfirm', label: '決定ボタン', values: ['right', 'bottom'], names: ['右', '下'], desc: 'パッドの決定ボタン。右＝○／任天堂のA、\n下＝×／XboxのA。反対側がキャンセルです。' },
@@ -246,9 +247,9 @@
       }
       render() {
         const S = R.Settings;
-        // row pitch shrinks (16 → 14) once the list is long enough that the
+        // row pitch shrinks (16 → 13) once the list is long enough that the
         // description window below would drop under two lines
-        const LH = Math.max(14, Math.min(16, Math.floor(154 / (SETTINGS.length + 1))));
+        const LH = Math.max(13, Math.min(16, Math.floor(154 / (SETTINGS.length + 1))));
         const h = 16 + (SETTINGS.length + 1) * LH - 4;
         G().window(4, 4, 248, h, { title: '設定' });
         SETTINGS.forEach((s, i) => {

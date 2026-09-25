@@ -32,7 +32,7 @@ const FIELD_ONLY = ['teleport', 'exit', 'repel'];
 const BUFF_STATS = ['atk', 'def', 'mag', 'mdef', 'agi'];
 const NUM_MODS = ['hpPct', 'mpPct', 'strPct', 'vitPct', 'agiPct', 'intPct', 'mndPct', 'lukPct', 'atk', 'def', 'mag', 'mdef', 'hit', 'eva', 'crit',
   'atkPct', 'defPct', 'magPct', 'mdefPct', 'physPct', 'magicPct', 'healPct', 'itemPct', 'mpCostPct', 'critPct', 'escapePct', 'preemptPct',
-  'unarmed', 'expPct', 'jpPct', 'goldPct', 'dropPct', 'rarePct', 'stealPct', 'encounterPct', 'walkHeal'];
+  'unarmed', 'expPct', 'jpPct', 'goldPct', 'dropPct', 'rarePct', 'stealPct', 'autoSteal', 'encounterPct', 'walkHeal'];
 const BOOL_MODS = ['regen', 'twoSwords', 'noFloorDamage', 'treasureSense'];
 const REQUIRED = ['herb', 'copper_sword', 'oak_staff', 'wooden_rod', 'traveler_clothes', 'crest_wind', 'crest_water', 'crest_earth',
   'crest_fire', 'crest_star', 'light_crest', 'silver_key', 'gold_key', 'wing', 'escape_rope', 'holy_water', 'revive_feather'];

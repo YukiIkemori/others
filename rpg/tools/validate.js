@@ -30,7 +30,7 @@ const TRIGGERS = ['hitPhys', 'hitMagic', 'hitAny', 'lowHp', 'allyLowHp', 'ko'];
 const REACTS = ['counter', 'heal', 'autoItem', 'buff', 'cover', 'revive', 'mp'];
 const MODS = new Set(('hpPct mpPct strPct vitPct agiPct intPct mndPct lukPct atk def mag mdef hit eva crit atkPct defPct magPct mdefPct ' +
   'physPct magicPct healPct itemPct mpCostPct critPct escapePct preemptPct elemBoost elemResist statusImmune startBuffs regen ' +
-  'twoSwords unarmed equip expPct jpPct goldPct dropPct rarePct stealPct encounterPct walkHeal noFloorDamage').split(' '));
+  'twoSwords unarmed equip expPct jpPct goldPct dropPct rarePct stealPct autoSteal encounterPct walkHeal noFloorDamage').split(' '));
 const BGM = 'title overworld sea town village castle shrine dungeon cave tower pyramid ice volcano lastdungeon abyss battle boss lastboss ending'.split(' ');
 const JINGLES = 'victory levelup jobup item keyitem inn save gameover rare'.split(' ');
 const SFX = ('cursor confirm confirm_soft cancel buzzer menu_open attack hit crit miss enemy_attack hurt magic fire ice thunder wind holy dark ' +

@@ -62,6 +62,13 @@ function member(cid, job, L, learned, set) {
   c.hp = st.hp; c.mp = st.mp; c.status = {};
   return c;
 }
+/** forget one ability of c's job (not keep) so the job is not mastered — no signature ability */
+function unmaster(c, keep) {
+  const rec = c.jobs[c.job];
+  const drop = rec.learned.find((a) => a !== keep && DB.abilities[a].job === c.job && DB.abilities[a].kind === 'action');
+  if (drop) rec.learned.splice(rec.learned.indexOf(drop), 1);
+  return c;
+}
 function engine(party, mons, o) {
   return new B.Engine(Object.assign({ party, mons, inv: {}, live: false, noSurprise: true }, o || {}));
 }
@@ -192,11 +199,13 @@ sec('mastery');
   R.Rules.learn(c, list[list.length - 1]);
   ok(R.Rules.isMastered(c, 'mage'), 'mage mastered');
   const mb = DB.jobs.mage.masterBonus;
-  ok(st(c).int === s0.int + (mb.int || 0) && st(c).mp === s0.mp + (mb.mp || 0), 'mastery bonus added (warrior job, mage mastered)');
+  // (知力 also gets the mage's signature 知力アップ +15 %, always on once mastered)
+  ok(st(c).int >= s0.int + (mb.int || 0) && st(c).mp === s0.mp + (mb.mp || 0), 'mastery bonus added (warrior job, mage mastered)');
+  ok(R.Rules.signatures(c).includes('mage_int_up') && (R.Rules.mods(c).intPct || 0) === 15, 'mastered mage: 知力アップ always on without a slot');
   ok(c.mp === Math.min(st(c).mp, mp0 + (mb.mp || 0)), 'current MP rises with the bonus');
   R.Rules.changeJob(c, 'thief');
   const t = st(c); c.jobs.mage.learned = [];
-  ok(t.int - st(c).int === (mb.int || 0), 'the bonus applies in every job');
+  ok(t.int - st(c).int >= (mb.int || 0) && !R.Rules.signatures(c).length, 'the bonus applies in every job');
 }
 
 // ================================================================ every action ability
@@ -369,8 +378,9 @@ sec('supports');
 for (const id of allAbilities) {
   const a = DB.abilities[id];
   if (a.kind !== 'support' && a.kind !== 'field') continue;
-  const c = member('metem', 'mage', 20, null, { [a.kind]: id });
-  const without = member('metem', 'mage', 20);
+  // a mage that has NOT mastered mage (its signature 知力アップ would be on in both)
+  const c = unmaster(member('metem', 'mage', 20, null, { [a.kind]: id }), id);
+  const without = unmaster(member('metem', 'mage', 20), id);
   const m = R.Rules.mods(c);
   ok(Object.keys(a.mods).every((k) => m[k] != null), `${a.name}: mods active when set`);
   const learnedNot = member('metem', 'mage', 20, [], { [a.kind]: id });
@@ -420,14 +430,15 @@ for (const id of allAbilities) {
   ok(rw({ support: 'bard_learning' }).jp === Math.round(5 * 1.5), '学びの心: +50% JP');
   const ex = engine([member('yuki', 'thief', 20, null, { support: 'thief_rare_hunter' })], ['jb_thief']);
   ok(ex.rareStealChance(ex.party[0], {}) > 0.2, 'レアハンター: better rare steals');
-  const whm = engine([member('non', 'whitemage', 20, null, { support: 'whitemage_heal_up' })], ['jb_dummy']);
-  const wh0 = engine([member('non', 'whitemage', 20)], ['jb_dummy']);
+  const whm = engine([unmaster(member('non', 'whitemage', 20, null, { support: 'whitemage_heal_up' }), 'whitemage_heal_up')], ['jb_dummy']);
+  const wh0 = engine([unmaster(member('non', 'whitemage', 20), 'whitemage_heal_up')], ['jb_dummy']);
   ok(whm.expectHeal(whm.party[0], DB.abilities.whitemage_healing, whm.party[0]) > wh0.expectHeal(wh0.party[0], DB.abilities.whitemage_healing, wh0.party[0]) * 1.25, '回復アップ: +30% healing');
   const bm = engine([member('metem', 'blackmage', 20, null, { support: 'blackmage_magic_up' })], ['jb_dummy']);
   const bm0 = engine([member('metem', 'blackmage', 20)], ['jb_dummy']);
   ok(bm.expectDamage(bm.party[0], DB.abilities.blackmage_blast, bm.mons[0]) > bm0.expectDamage(bm0.party[0], DB.abilities.blackmage_blast, bm0.mons[0]) * 1.2, '魔法アップ: +25% spell damage');
   const alc = member('yuki', 'alchemist', 20);
-  ok((R.Rules.mods(alc).itemPct || 0) === 25 + ((DB.jobs.alchemist.masterTrait.mods.itemPct) || 0), '薬師: innate item mastery (+ its mastery trait)');
+  ok((R.Rules.mods(unmaster(alc)).itemPct || 0) === 25, '薬師: innate item mastery');
+  ok((R.Rules.mods(member('yuki', 'alchemist', 20)).itemPct || 0) === 25 + DB.abilities.alchemist_item_lore.mods.itemPct, '薬師 mastered: + its signature 道具の知識');
   const hero = engine([member('yuki', 'hero', 30)], ['jb_dummy']);
   ok(hero.party[0].resist('death') === 1, '勇者: immune to death');
 }

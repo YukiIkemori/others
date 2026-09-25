@@ -56,7 +56,7 @@ const EFFECTS = ['damage', 'heal', 'healMp', 'revive', 'cure', 'status', 'buff',
 const BUFFS = ['atk', 'def', 'mag', 'mdef', 'agi'];
 const MODS = new Set(('hpPct mpPct strPct vitPct agiPct intPct mndPct lukPct atk def mag mdef hit eva crit atkPct defPct magPct mdefPct ' +
   'physPct magicPct healPct itemPct mpCostPct critPct escapePct preemptPct elemBoost elemResist statusImmune startBuffs regen ' +
-  'twoSwords unarmed equip expPct jpPct goldPct dropPct rarePct stealPct encounterPct walkHeal noFloorDamage treasureSense').split(' '));
+  'twoSwords unarmed equip expPct jpPct goldPct dropPct rarePct stealPct autoSteal encounterPct walkHeal noFloorDamage treasureSense').split(' '));
 const SLOT_OF = { helm: 'head', hat: 'head', heavy: 'body', light: 'body', robe: 'body', shield: 'shield' };
 const WTYPES = ['sword', 'knife', 'axe', 'spear', 'staff', 'rod', 'bow', 'claw', 'katana', 'harp'];
 const BUILTIN_ACTS = ['attack', 'defend', 'wait', 'flee'];

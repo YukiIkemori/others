@@ -15,8 +15,10 @@
 // masterBonus: flat stats gained for good once the job is mastered (every ability learned,
 // R.Rules.isMastered); like seeds they count in every job (R.Rules.masterBonus). Tier 1 ≈ one
 // theme stat +3 (+HP/MP), higher tiers a little more, 勇者 a bit of everything.
-// masterTrait: {mods, text, desc} — the job's signature passive, active in EVERY job once mastered (merged by
-// R.Rules.mods). text is the short label (job board, つよさ), desc the sentence in the mastery message.
+// masterTrait: the job's signature ability (one of its own support/reaction abilities). Once the job is
+// mastered it is ALWAYS active for that character, in every job, without taking a slot (R.Rules.signatures:
+// support mods merged by R.Rules.mods, reactions added to the battle's reaction list; never doubled when
+// the same ability is also set in its slot). Shown as 「マスター特典 … ／常時：〇〇」 once someone mastered it.
 // mult: multipliers on the character's base stats (chars.js growth). Menu order
 // on the job board = definition order within a tier.
 (function (R) {
@@ -31,7 +33,7 @@
       desc: '武器を振るい、前に出て戦う。\n力と体力に優れる。',
       mult: { hp: 1.2, mp: 0.6, str: 1.2, vit: 1.15, agi: 0.95, int: 0.7, mnd: 0.8, luk: 1.0 },
       masterBonus: { hp: 10, str: 3 },
-      masterTrait: { mods: { counterPct: 20 }, text: '反撃', desc: '物理攻撃を受けると、ときどき反撃する。' },
+      masterTrait: 'warrior_counter',
       weapons: ['sword', 'axe', 'spear'], shield: true, heads: ['helm', 'hat'], bodies: ['heavy', 'light'],
       abilities: [
         'warrior_power_slash', 'warrior_first_aid', 'warrior_armor_break', 'warrior_weapon_break', 'warrior_double',
@@ -46,7 +48,7 @@
       desc: '祈りで仲間の傷を癒やす。\n守りの祈りも使える。',
       mult: { hp: 1.0, mp: 1.15, str: 0.85, vit: 0.95, agi: 1.0, int: 0.9, mnd: 1.25, luk: 1.0 },
       masterBonus: { mp: 5, mnd: 3 },
-      masterTrait: { mods: { healPct: 10 }, text: '回復+10%', desc: '回復の効果が10%上がる。' },
+      masterTrait: 'priest_mnd_up',
       weapons: ['staff'], shield: true, heads: ['hat'], bodies: ['light', 'robe'],
       abilities: [
         'priest_heal', 'priest_cure', 'priest_holy', 'priest_protect', 'priest_awaken', 'priest_silence',
@@ -62,7 +64,7 @@
       desc: '炎や氷の魔法を操る。\n一度訪れた町へワープもできる。',
       mult: { hp: 0.85, mp: 1.3, str: 0.7, vit: 0.8, agi: 1.0, int: 1.3, mnd: 1.0, luk: 1.0 },
       masterBonus: { mp: 5, int: 3 },
-      masterTrait: { mods: { magicPct: 10 }, text: '魔法+10%', desc: '魔法のダメージが10%上がる。' },
+      masterTrait: 'mage_int_up',
       weapons: ['rod', 'knife'], heads: ['hat'], bodies: ['light', 'robe'],
       abilities: [
         'mage_fire', 'mage_scan', 'mage_ice', 'mage_exit', 'mage_thunder', 'mage_sleep', 'mage_blind',
@@ -77,13 +79,13 @@
       desc: '素早い身のこなしで道具を盗む。\n珍しいお宝にも目ざとい。',
       mult: { hp: 0.95, mp: 0.75, str: 0.95, vit: 0.9, agi: 1.3, int: 0.85, mnd: 0.85, luk: 1.3 },
       masterBonus: { agi: 3, luk: 2 },
-      masterTrait: { mods: { autoSteal: 70 }, text: '攻撃で盗む', desc: '通常攻撃が当たると、ときどき持ち物を盗む。' },
+      masterTrait: 'thief_auto_steal',
       weapons: ['knife'], heads: ['hat'], bodies: ['light'],
       abilities: [
         'thief_steal', 'thief_sand', 'thief_flee', 'thief_repel', 'thief_quick', 'thief_poison',
         'thief_mug', 'thief_steal_rare',
         'thief_nimble',
-        'thief_rare_hunter', 'thief_steal_up', 'thief_ambush',
+        'thief_rare_hunter', 'thief_steal_up', 'thief_ambush', 'thief_auto_steal',
         'thief_treasure',
       ],
       outfit: { main: '#3e7a44', sub: '#5a4030', trim: '#c8c8c0' },
@@ -95,7 +97,7 @@
       desc: '重い鎧と盾で仲間を守る。\n敵の力をくじく技も持つ。',
       mult: { hp: 1.25, mp: 0.7, str: 1.2, vit: 1.3, agi: 0.85, int: 0.7, mnd: 1.0, luk: 0.9 },
       masterBonus: { hp: 15, vit: 4 },
-      masterTrait: { mods: { defPct: 10 }, text: '守備+10%', desc: '守備力が10%上がる。' },
+      masterTrait: 'knight_guard_stance',
       weapons: ['sword', 'spear'], shield: true, heads: ['helm'], bodies: ['heavy', 'light'],
       abilities: [
         'knight_bash', 'knight_mind_break', 'knight_speed_break', 'knight_fortress', 'knight_oath',
@@ -110,7 +112,7 @@
       desc: '鍛えた拳で戦う武術家。\n武器がなくても強い。',
       mult: { hp: 1.3, mp: 0.7, str: 1.25, vit: 1.1, agi: 1.15, int: 0.65, mnd: 1.0, luk: 1.0 },
       masterBonus: { hp: 15, str: 4 },
-      masterTrait: { mods: { crit: 5 }, text: '会心+5%', desc: '会心の一撃が出やすくなる。' },
+      masterTrait: 'monk_ibuki',
       weapons: ['claw'], heads: ['hat'], bodies: ['light'],
       innate: { unarmed: 12 },
       abilities: [
@@ -126,7 +128,7 @@
       desc: '回復と蘇生の魔法の使い手。\n光の魔法で魔を払う。',
       mult: { hp: 0.95, mp: 1.3, str: 0.7, vit: 0.9, agi: 0.95, int: 1.0, mnd: 1.35, luk: 1.0 },
       masterBonus: { mp: 8, mnd: 4 },
-      masterTrait: { mods: { startRegen: true }, text: '開幕リジェネ', desc: '戦闘開始時に再生（リジェネ）がかかる。' },
+      masterTrait: 'whitemage_heal_up',
       weapons: ['staff'], heads: ['hat'], bodies: ['light', 'robe'],
       abilities: [
         'whitemage_healing', 'whitemage_esuna', 'whitemage_regen', 'whitemage_arrow', 'whitemage_purge',
@@ -141,7 +143,7 @@
       desc: '破壊の魔法を極めた魔術師。\n敵の群れをまとめてなぎ払う。',
       mult: { hp: 0.85, mp: 1.3, str: 0.65, vit: 0.8, agi: 1.0, int: 1.4, mnd: 0.95, luk: 1.0 },
       masterBonus: { mp: 8, int: 4 },
-      masterTrait: { mods: { elemBoost: { fire: 10, ice: 10, thunder: 10, wind: 10, earth: 10, water: 10, holy: 10, dark: 10 } }, text: '属性+10%', desc: 'すべての属性の威力が10%上がる。' },
+      masterTrait: 'blackmage_elem_up',
       weapons: ['rod'], heads: ['hat'], bodies: ['light', 'robe'],
       abilities: [
         'blackmage_fire2', 'blackmage_ice2', 'blackmage_poison', 'blackmage_thunder2', 'blackmage_confuse',
@@ -156,7 +158,7 @@
       desc: '弓の名手。毒矢やしびれ矢で\n獲物の急所を狙う。',
       mult: { hp: 1.05, mp: 0.8, str: 1.1, vit: 1.0, agi: 1.2, int: 0.8, mnd: 0.9, luk: 1.15 },
       masterBonus: { str: 2, agi: 4 },
-      masterTrait: { mods: { hit: 10, preemptPct: 10 }, text: '命中・先制', desc: '命中が上がり、先制攻撃しやすくなる。' },
+      masterTrait: 'hunter_spoils',
       weapons: ['bow', 'knife'], heads: ['hat'], bodies: ['light'],
       abilities: [
         'hunter_aim', 'hunter_venom', 'hunter_double', 'hunter_sleep', 'hunter_numb', 'hunter_skyshot',
@@ -172,7 +174,7 @@
       desc: '歌で仲間を奮い立たせ、\n敵を眠らせる旅の歌い手。',
       mult: { hp: 0.95, mp: 1.1, str: 0.85, vit: 0.9, agi: 1.15, int: 1.05, mnd: 1.2, luk: 1.2 },
       masterBonus: { mp: 5, mnd: 2, luk: 3 },
-      masterTrait: { mods: { startBuffs: { mdef: 1 } }, text: '開幕魔防', desc: '戦闘開始時から魔法防御が上がる。' },
+      masterTrait: 'bard_learning',
       weapons: ['harp', 'knife'], heads: ['hat'], bodies: ['light', 'robe'],
       abilities: [
         'bard_lullaby', 'bard_swift', 'bard_hymn', 'bard_battle', 'bard_requiem', 'bard_bewilder',
@@ -188,7 +190,7 @@
       desc: '薬と爆薬を扱う。\n道具の効果も高める。',
       mult: { hp: 1.0, mp: 1.05, str: 0.9, vit: 1.0, agi: 1.05, int: 1.15, mnd: 1.1, luk: 1.15 },
       masterBonus: { hp: 10, mp: 5, mnd: 2 },
-      masterTrait: { mods: { itemPct: 25 }, text: '道具+25%', desc: '道具の効果が25%上がる。' },
+      masterTrait: 'alchemist_item_lore',
       weapons: ['knife', 'staff'], heads: ['hat'], bodies: ['light', 'robe'],
       innate: { itemPct: 25 },
       abilities: [
@@ -206,7 +208,7 @@
       desc: '剣に魔法を宿して戦う。\n敵の弱点を斬り裂く。',
       mult: { hp: 1.1, mp: 1.05, str: 1.15, vit: 1.05, agi: 1.05, int: 1.2, mnd: 0.95, luk: 1.0 },
       masterBonus: { str: 3, int: 3, mp: 5 },
-      masterTrait: { mods: { physPct: 8, magicPct: 8 }, text: '物理・魔法+8%', desc: '武器と魔法のダメージが8%上がる。' },
+      masterTrait: 'spellblade_dual_path',
       weapons: ['sword', 'knife'], shield: true, heads: ['helm', 'hat'], bodies: ['heavy', 'light'],
       abilities: [
         'spellblade_flame', 'spellblade_frost', 'spellblade_thunder', 'spellblade_seal', 'spellblade_gale',
@@ -221,7 +223,7 @@
       desc: '聖なる力を宿す騎士。\n魔を払い、仲間を守り抜く。',
       mult: { hp: 1.3, mp: 0.95, str: 1.2, vit: 1.3, agi: 0.9, int: 0.85, mnd: 1.2, luk: 1.0 },
       masterBonus: { hp: 20, vit: 3, mnd: 3 },
-      masterTrait: { mods: { autoRevive: 25 }, text: '一度だけ復活', desc: '倒れても一度だけ、HP25%で立ち上がる。' },
+      masterTrait: 'paladin_last_stand',
       weapons: ['sword', 'spear'], shield: true, heads: ['helm'], bodies: ['heavy', 'light'],
       abilities: [
         'paladin_holy_blade', 'paladin_heal', 'paladin_purify', 'paladin_sacrifice', 'paladin_wave',
@@ -236,7 +238,7 @@
       desc: '影に生きる忍び。武器を二つ持ち、\n誰よりも速く動く。',
       mult: { hp: 1.05, mp: 0.8, str: 1.15, vit: 0.95, agi: 1.4, int: 0.95, mnd: 0.85, luk: 1.15 },
       masterBonus: { str: 2, agi: 5 },
-      masterTrait: { mods: { twoSwords: true }, text: '二刀流', desc: 'どのジョブでも左手に武器を持てる。' },
+      masterTrait: 'ninja_two_swords',
       weapons: ['katana', 'knife'], heads: ['hat'], bodies: ['light'],
       innate: { twoSwords: true },
       abilities: [
@@ -252,7 +254,7 @@
       desc: '白と黒の魔法を極めた者。\n最高位の呪文を操る。',
       mult: { hp: 0.95, mp: 1.4, str: 0.7, vit: 0.9, agi: 1.0, int: 1.3, mnd: 1.3, luk: 1.05 },
       masterBonus: { mp: 12, int: 3, mnd: 3 },
-      masterTrait: { mods: { mpCostPct: -15 }, text: '消費MP-15%', desc: '消費MPが15%減る。' },
+      masterTrait: 'sage_half_mp',
       weapons: ['staff', 'rod'], heads: ['hat'], bodies: ['light', 'robe'],
       abilities: [
         'sage_full_heal', 'sage_blessed_rain', 'sage_prominence', 'sage_zero', 'sage_mother', 'sage_stardust',
@@ -266,7 +268,7 @@
       desc: '竜の力を槍に宿す騎士。\n空から舞い降りて敵を貫く。',
       mult: { hp: 1.2, mp: 0.8, str: 1.3, vit: 1.15, agi: 1.0, int: 0.7, mnd: 0.85, luk: 0.95 },
       masterBonus: { hp: 15, str: 5 },
-      masterTrait: { mods: { slayer: { flying: 30, dragon: 30 } }, text: '飛行・竜特効', desc: '飛ぶ敵と竜に、武器のダメージが30%上がる。' },
+      masterTrait: 'dragoon_might',
       weapons: ['spear'], shield: true, heads: ['helm'], bodies: ['heavy', 'light'],
       abilities: [
         'dragoon_wyvern', 'dragoon_leech', 'dragoon_pierce', 'dragoon_roar', 'dragoon_breath',
@@ -281,7 +283,7 @@
       desc: '時と重力を操る術師。\n隕石を呼ぶこともできる。',
       mult: { hp: 0.9, mp: 1.35, str: 0.65, vit: 0.85, agi: 1.1, int: 1.25, mnd: 1.15, luk: 1.05 },
       masterBonus: { mp: 10, int: 2, agi: 4 },
-      masterTrait: { mods: { startBuffs: { agi: 1 } }, text: '開幕素早さ', desc: '戦闘開始時から素早さが上がる。' },
+      masterTrait: 'timemage_swift',
       weapons: ['rod', 'staff'], heads: ['hat'], bodies: ['light', 'robe'],
       abilities: [
         'timemage_haste', 'timemage_slow', 'timemage_dispel', 'timemage_gravity', 'timemage_haste_all',
@@ -297,7 +299,7 @@
       desc: '自らの命を削り、\n闇の力を振るう騎士。',
       mult: { hp: 1.3, mp: 0.9, str: 1.35, vit: 1.15, agi: 0.9, int: 1.0, mnd: 0.7, luk: 0.85 },
       masterBonus: { hp: 20, str: 5 },
-      masterTrait: { mods: { attackDrain: 15 }, text: '攻撃で吸収', desc: '通常攻撃で与えたダメージの15%を吸い取る。' },
+      masterTrait: 'darkknight_power',
       weapons: ['sword', 'axe'], shield: true, heads: ['helm'], bodies: ['heavy'],
       innate: { elemResist: { dark: 0.5 } },
       abilities: [
@@ -315,7 +317,7 @@
       desc: '光に選ばれし勇者。\n光の奇跡で闇を打ち払う。',
       mult: { hp: 1.3, mp: 1.1, str: 1.3, vit: 1.25, agi: 1.15, int: 1.1, mnd: 1.15, luk: 1.2 },
       masterBonus: { hp: 20, mp: 10, str: 3, vit: 3, agi: 3, int: 3, mnd: 3 },
-      masterTrait: { mods: { statusImmune: ['death'], physPct: 5, magicPct: 5, healPct: 5 }, text: '即死無効・全力+5%', desc: '即死を防ぎ、与ダメージと回復が5%上がる。' },
+      masterTrait: 'hero_heart',
       weapons: ['sword', 'spear', 'katana'], shield: true, heads: ['helm', 'hat'], bodies: ['heavy', 'light'],
       innate: { statusImmune: ['death'] },
       abilities: [

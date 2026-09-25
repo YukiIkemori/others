@@ -147,14 +147,16 @@
   /** logo text at full device resolution: outlined, gradient-filled */
   function buildLogo() {
     const S = R.SCALE;
-    const size = 64; // device px → 4 device px per font pixel
+    const k = S / 3; // designed on the 3× canvas: 64 device px there (4 per font pixel), same logical size at any R.SCALE
+    const size = 64;
     const text = R.TITLE || 'ルミナス・クレスト';
     const tmp = G().makeCanvas(8, 8).getContext('2d');
     tmp.font = size + 'px ' + G().FONT;
     const tw = Math.ceil(tmp.measureText(text).width);
     const pad = 12;
-    const cv = G().makeCanvas(tw + pad * 2, size + pad * 2);
+    const cv = G().makeCanvas(Math.ceil((tw + pad * 2) * k), Math.ceil((size + pad * 2) * k));
     const c = cv.getContext('2d');
+    c.scale(k, k);
     c.font = size + 'px ' + G().FONT;
     c.textBaseline = 'top';
     c.lineJoin = 'round';

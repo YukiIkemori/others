@@ -11,7 +11,10 @@
   R.W = 256; // logical screen width (SFC)
   R.H = 224; // logical screen height (SFC)
   R.TILE = 16;
-  R.SCALE = 3; // backing canvas = 768x672
+  // Backing canvas = 1024x896 (4 device px per logical px). UI layers draw
+  // with a 4x transform; the field picks its own integer scale (4/3/2 device
+  // px per map px, Settings.fieldZoom) so it can show more of the world.
+  R.SCALE = 4;
   R.FPS = 60;
 
   // Central data registry. Data/art/audio/map/event files fill these with
