@@ -9,11 +9,12 @@
 //
 // Party models (built directly: jobs mastered = JP 2000 and every ability learned):
 //   prepared   Lv55 — ユウキ 勇者 (sub 竜騎士: the boss is a dragon; 二刀流; ふくつのちかい),
-//              ノン 賢者 (sub 白魔術師, MP半減, ふくつのちかい), メテム 時空術師 (sub 賢者 — かいじゅ,
-//              りゅうせいう; MP半減, ふくつのちかい); 14/9/10 jobs mastered; gear from the abyss
-//              chests (混沌の剣 + 竜神の槍 in the off hand, 深淵の鎧, 極光の杖/ローブ, 始原のロッド) and
-//              shops; status cover: ユウキ 混沌の兜 + 明鏡の護符 + the hero's death immunity,
-//              ノン 天輪の冠 + 命のお守り (death), メテム 明鏡の護符 (so no rare drop is required).
+//              ノン 賢者 (sub 白魔術師, はじゃのこころ, ふくつのちかい), メテム 時空術師 (sub 賢者 —
+//              かいじゅ, りゅうせいう; MP半減, ふくつのちかい); 14/9/10 jobs mastered. Gear only from
+//              the abyss chests (混沌の剣 + 竜神の槍 in the off hand, 深淵の鎧, 極光の杖/ローブ,
+//              始原のロッド, 明鏡の護符 ×2) and shops — no rare drop needed. Status cover:
+//              ユウキ 明鏡の護符 + the hero's death immunity, ノン はじゃのこころ (poison/sleep/
+//              paralysis/confusion) + 命のお守り (death), メテム 明鏡の護符.
 //   arrival    Lv42 — the same jobs with 最果ての祠 shop gear (info rows for the dungeon entrance).
 //   levels     Lv65 — basic jobs only (ナイト / 白魔術師 / 黒魔術師 + their tier-1 jobs mastered),
 //              the best shop gear of 最果ての祠, no status protection, no dispel, no revive-on-KO.
@@ -84,12 +85,12 @@ const PREPARED = {
   yuki: {
     master: [...T1, 'knight', 'monk', 'whitemage', 'blackmage', 'hunter', 'spellblade', 'paladin', 'ninja', 'dragoon', 'hero'],
     job: 'hero', sub: 'dragoon', reaction: 'paladin_last_stand', support: 'ninja_two_swords',
-    equip: { weapon: 'pg_chaos_sword', shield: 'pg_dragon_lance', head: 'pg_chaos_helm', body: 'pg_abyss_mail', acc: 'pg_clarity_amulet' },
+    equip: { weapon: 'pg_chaos_sword', shield: 'pg_dragon_lance', head: 'holy_helm', body: 'pg_abyss_mail', acc: 'pg_clarity_amulet' },
   },
   non: {
     master: ['priest', 'mage', 'warrior', 'whitemage', 'blackmage', 'knight', 'sage', 'paladin', 'bard'],
-    job: 'sage', sub: 'whitemage', reaction: 'paladin_last_stand', support: 'sage_half_mp',
-    equip: { weapon: 'pg_aurora_staff', head: 'pg_halo', body: 'pg_aurora_robe', acc: 'life_charm' },
+    job: 'sage', sub: 'whitemage', reaction: 'paladin_last_stand', support: 'paladin_ward',
+    equip: { weapon: 'pg_aurora_staff', head: 'light_crown', body: 'pg_aurora_robe', acc: 'life_charm' },
   },
   metem: {
     master: [...T1, 'blackmage', 'whitemage', 'bard', 'knight', 'timemage', 'sage', 'paladin'],
@@ -353,15 +354,17 @@ if (ONLY.includes('ablation')) {
   const n = Math.max(100, N / 2);
   const cases = [
     ['full preparation', null, {}],
-    ['no sleep/paralysis/confusion immunity', { yuki: { equip: { acc: 'iron_ring', head: 'holy_helm' } }, non: { equip: { head: 'light_crown' } }, metem: { equip: { acc: 'star_earring' } } }, {}],
+    ['no sleep/paralysis/confusion immunity', { yuki: { equip: { acc: 'iron_ring' } }, non: { support: 'sage_half_mp' }, metem: { equip: { acc: 'star_earring' } } }, {}],
+    ['メテム without 明鏡の護符 (2 of 3 protected)', { metem: { equip: { acc: 'star_earring' } } }, {}],
+    ['ノン without 命のお守り (no death immunity)', { non: { equip: { acc: 'rosary' } } }, {}],
     ['no ふくつのちかい (revive-on-KO)', { yuki: { reaction: 'warrior_counter' }, non: { reaction: 'whitemage_mending_hand' }, metem: { reaction: 'sage_mana_return' } }, {}],
     ['player never dispels the boss', null, { dispel: false }],
     ['no elemental resistance gear', { yuki: { equip: { body: 'holy_vest' } }, non: { equip: { body: 'holy_robe' } } }, {}],
-    ['no MP半減 (other supports)', { non: { support: 'whitemage_heal_up' }, metem: { support: 'blackmage_magic_up' } }, {}],
-    ['no 二刀流 (shield instead)', { yuki: { support: 'hero_heart', equip: { shield: 'holy_shield' } } }, {}],
-    ['shop weapons instead of abyss/legendary ones', { yuki: { equip: { weapon: 'holy_sword', shield: 'holy_sword' } }, non: { equip: { weapon: 'saint_staff' } }, metem: { equip: { weapon: 'mystic_rod' } } }, {}],
+    ['no MP半減 on メテム (魔法アップ)', { metem: { support: 'blackmage_magic_up' } }, {}],
+    ['no 二刀流 (虚空の盾 + 竜の力)', { yuki: { support: 'dragoon_might', equip: { shield: 'pg_void_shield' } } }, {}],
+    ['shop weapons instead of the abyss ones', { yuki: { equip: { weapon: 'holy_sword', shield: 'holy_sword' } }, non: { equip: { weapon: 'saint_staff' } }, metem: { equip: { weapon: 'mystic_rod' } } }, {}],
+    ['+ rare drops (天輪の冠 + 魂鎮めの鈴, MP半減 on ノン)', { non: { support: 'sage_half_mp', equip: { head: 'pg_halo', acc: 'pg_soul_bell' } } }, {}],
   ];
-  cases.splice(2, 0, ['メテム without 明鏡の護符 (2 of 3 protected)', { metem: { equip: { acc: 'star_earring' } } }, {}]);
   for (const [label, patch, o] of cases) bossLine(label, party(PREPARED, 55, patch), 'boss_abyss', o, n);
   const amulets = { yuki: { equip: { acc: 'pg_clarity_amulet' } }, non: { equip: { acc: 'pg_clarity_amulet' } }, metem: { equip: { acc: 'pg_clarity_amulet' } } };
   bossLine('levels only Lv65 + 明鏡の護符 ×3', party(LEVELS_ONLY, 65, amulets), 'boss_abyss', {}, n);

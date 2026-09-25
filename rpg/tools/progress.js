@@ -104,6 +104,11 @@ function bfs() {
     // warp on this tile (not for the arrival tile of the start… warps fire on step, approximated as always)
     const wp = P.warps.find((w) => w.x === x && w.y === y && check(w.cond));
     if (wp) goSpawn(wp.to, wp.spawn);
+    // step events that warp (declared via meta.warp {to, spawn}), e.g. the post-game entrance
+    for (const e of P.events) {
+      const meta = e.x === x && e.y === y && (e.trigger || 'step') === 'step' && check(e.cond) && DB.events[e.id] && DB.events[e.id].meta;
+      if (meta && meta.warp && needsOk(meta.needs)) goSpawn(meta.warp.to, meta.warp.spawn);
+    }
     const here = walkable(P, x, y) || 'land';
     for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
       const nx = x + dx, ny = y + dy;

@@ -42,8 +42,10 @@ const SPEC = [
   { id: 'rare_bird', name: 'オーロラ鳥', size: 48, lv: 23, zones: 'w_sea2 w_snow w_volcano d_ice1 d_ice2 d_vol1 d_vol2' },
   { id: 'rare_whale', name: '星くじら', size: 64, lv: 28, zones: 'w_sea3 w_arcana d_star1 d_star2 d_star3 d_star4' },
   { id: 'rare_idol', name: '黄金の守護像', size: 48, lv: 36, zones: 'w_demon d_demon1 d_demon2 d_demon3 d_demon4 d_demon5' },
+  { id: 'rare_prism', name: 'プリズマ', size: 48, lv: 55, zones: 'd_abyss1 d_abyss2 d_abyss3 d_abyss4', postgame: true },
 ].map((s) => Object.assign(s, { zones: s.zones.split(' ') }));
 const RARE_IDS = SPEC.map((s) => s.id);
+const MAIN = SPEC.filter((s) => !s.postgame); // post-game rare: balanced by tools/sim_postgame.js
 
 const has = (o, k) => o && Object.prototype.hasOwnProperty.call(o, k);
 const ELEMENTS = ['fire', 'ice', 'thunder', 'wind', 'earth', 'water', 'holy', 'dark'];
@@ -112,7 +114,7 @@ function checkEffects(where, effects) {
 // ------------------------------------------------------------ references
 const items = DB.items, mons = DB.monsters, rareEnc = DB.rareEncounters || {};
 const exclusive = {}; // item id → monster id
-for (const s of SPEC) {
+for (const s of MAIN) {
   const m = mons[s.id], w = `monster ${s.id}`;
   if (!m) { E(`${w}: missing`); continue; }
   if (m.name !== s.name) E(`${w}: name ${m.name} (spec ${s.name})`);
@@ -144,7 +146,7 @@ for (const s of SPEC) {
   if (!m.rare || !items[m.rare.item]) E(`${w}: rare item missing`);
   else {
     if (!(m.rare.rate >= 64 && m.rare.rate <= 128)) E(`${w}: rare rate 1/${m.rare.rate} outside 1/64–1/128`);
-    if (!m.rare.item.startsWith('rx_')) E(`${w}: rare item ${m.rare.item} is not an exclusive rx_ item`);
+    if (!/^(rx|pg)_/.test(m.rare.item)) E(`${w}: rare item ${m.rare.item} is not an exclusive rx_/pg_ item`);
     if (exclusive[m.rare.item]) E(`${w}: rare item ${m.rare.item} also used by ${exclusive[m.rare.item]}`);
     exclusive[m.rare.item] = s.id;
   }
@@ -243,7 +245,7 @@ function peers(lv) {
   return [];
 }
 const rewardRows = [];
-for (const s of SPEC) {
+for (const s of MAIN) {
   const m = mons[s.id];
   if (!m) continue;
   const p = peers(s.lv);
@@ -294,7 +296,7 @@ let model = null;
 if (SIM) {
   try { model = loadPartyModel(); } catch (e) { E('party model: ' + e.message); }
   if (model) {
-    for (const s of SPEC) {
+    for (const s of MAIN) {
       const m = mons[s.id];
       if (!m) continue;
       // a copy that never runs away (same stats, same AI)
@@ -351,14 +353,14 @@ if (simRows.length) {
   let bonus = 0;
   for (const id in DB.abilities) for (const f of DB.abilities[id].effects || []) if (f.type === 'steal' && f.rareBonus > bonus) bonus = f.rareBonus;
   console.log(`\nsteal: one attempt at the own level (best agi/luk of the party, no stealPct/rarePct) → ★ exclusive item` +
-    ` (plain steal 12.5 % of successes, best ability +${Math.round(bonus * 100)} %)`);
-  for (const s of SPEC) {
+    ` (rare monsters: 1/64 of successes, best ability +${f1(bonus * 4)} % — battle.js rareStealChance)`);
+  for (const s of MAIN) {
     const m = mons[s.id], row = simRows.find((r) => r.s === s && r.p.own);
     if (!m || !row) continue;
     const party = model.buildParty(row.p.si, row.p.L).map((c) => Rules.stats(c));
     const agi = Math.max(...party.map((x) => x.agi)), luk = Math.max(...party.map((x) => x.luk));
     const p = U.clamp(0.4 + (agi - m.agi) / 200 + luk / 400, 0.1, 0.9);
-    console.log(`  ${pad(m.name, 14)} success ${padL(f0(p * 100), 2)}% → ★ ${f1(p * 12.5)}% per attempt, ${f1(p * (12.5 + bonus * 100))}% with the ability` +
+    console.log(`  ${pad(m.name, 14)} success ${padL(f0(p * 100), 2)}% → ★ ${f1(p * 100 / 64)}% per attempt, ${f1(p * (100 / 64 + bonus * 4))}% with the ability` +
       `  (drop route: 1/${m.rare.rate} per kill)`);
   }
 }

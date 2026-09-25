@@ -26,6 +26,7 @@
         repelSteps: 0, // せいすい
         steps: 0, playFrames: 0, battles: 0, wins: 0, escapes: 0,
         objective: 'obj_start', // key into R.DB.objectives (menu shows current goal)
+        title: '', // 称号 earned in the post-game (shown in the menu and save slots)
       });
       // starting items
       State.addItem('herb', 4);
@@ -131,6 +132,8 @@
           place: (loc && loc.name) || '',
           time: U.playTime(g.playFrames),
           gold: g.gold,
+          title: g.title || '',
+          clear: !!g.flags.game_clear,
         },
         game: U.clone(g),
       };

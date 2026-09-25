@@ -190,8 +190,8 @@
       }
       if (!(await ev.yesno('アビスロードに挑みますか？'))) {
         await ev.say('{yuki}「……まだだ。\nもっと備えを整えてこよう。」');
-        ev.closeMessage();
-        await ev.player.walk('D');
+        ev.bgm('lastdungeon'); // the first meeting silenced the dungeon
+        ev.player.face('down');
         return false;
       }
       ev.sfx('roar');

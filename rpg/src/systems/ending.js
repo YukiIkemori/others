@@ -280,7 +280,7 @@
     g.onShip = false;
     g.pos = { map: 'regnas_castle', x: 19, y: 3, dir: 'up', spawn: 'start' };
     g.respawn = { map: 'regnas_castle', spawn: 'start' };
-    g.objective = 'obj_clear';
+    g.objective = 'obj_postgame'; // the clear save continues into the post-game (深淵の迷宮)
     if (await R.UI.yesno('クリアデータを記録しますか？')) {
       R.UI.closeMessage();
       if (R.Menu && R.Menu.saveScreen) await R.Menu.saveScreen({ ending: true });

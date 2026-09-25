@@ -17,7 +17,8 @@
   /** current story stage (R.DB.objectives id), derived from flags and key items */
   function objective() {
     if (!R.Game) return 'obj_start';
-    if (flag('game_clear')) return 'obj_clear';
+    if (flag('abyss_clear')) return 'obj_abyss_clear';
+    if (flag('game_clear')) return 'obj_postgame';
     if (flag('barrier_broken') || has('light_crest')) return 'obj_demon';
     if (!flag('intro_done')) return 'obj_start';
     if (!has('crest_wind')) return 'obj_wind';
@@ -61,7 +62,7 @@
     CRESTS,
     CREST_NAME,
     OBJECTIVES: ['obj_start', 'obj_wind', 'obj_gate', 'obj_bandits', 'obj_ship', 'obj_water', 'obj_earth', 'obj_frost',
-      'obj_fire', 'obj_star', 'obj_temple', 'obj_demon', 'obj_clear'],
+      'obj_fire', 'obj_star', 'obj_temple', 'obj_demon', 'obj_clear', 'obj_postgame', 'obj_abyss_clear'],
     objective,
     refreshObjective,
     autoRespawn,

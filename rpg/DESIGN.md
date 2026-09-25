@@ -199,6 +199,8 @@ Large 64×64: `orc golem wyvern chimera yeti kraken demon sandworm minotaur`
 Bosses: `boss_goblin_chief 64×64`, `boss_bandit 64×64`, `boss_serpent 96×80`, `boss_sphinx 96×80`,
 `boss_frost_giant 96×96`, `boss_flame_lord 96×96`, `boss_star_guardian 96×96`, `boss_general_a 96×96`
 (dark knight), `boss_general_b 96×96` (lich sorcerer), `boss_demon_king 112×96`, `boss_demon_king2 128×112`.
+Rare monsters (one per region, unique designs): `rare_hare 48`, `rare_lizard 48`, `rare_bird 48`, `rare_whale 64`,
+`rare_idol 48`. Post-game: `boss_abyss 128×112` (superboss アビスロード), `rare_prism 48`, `void_wraith 48`, `chaos_beast 64`.
 Regular monsters reuse a base sprite with palette variants (`hue`, `sat`, `bri`) — like classic DQ.
 Base sprites must look good in their **default** palette and still read well hue-shifted.
 

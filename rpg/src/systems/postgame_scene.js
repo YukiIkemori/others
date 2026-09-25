@@ -1,4 +1,4 @@
-// Post-game bonus scene (深淵の王 defeated): one illustrated panel painted
+// Post-game bonus scene (深淵の主 defeated): one illustrated panel painted
 // procedurally — the three heroes seen from behind on a clifftop under an
 // aurora and a sky full of stars, the rebuilt castle of Regnas glowing far
 // across the sea — with a short epilogue, the earned 称号 (R.Game.title) and
@@ -21,7 +21,7 @@
 
   // epilogue pages (STYLE_JA: kanji-kana, hero names only via placeholders)
   const PAGES = [
-    '深淵の王は倒れ、\n世界の底に眠っていた混沌は\n静かに消えていった。',
+    '深淵の主は倒れ、\n世界の底に眠っていた混沌は\n静かに消えていった。',
     'その夜、北の空には\n誰も見たことがないほど\n美しい光のカーテンが\n揺れていたという。',
     '{metem}「ふふん。世界の果ての\nそのまた底まで、\n制覇しちゃったわね。」',
     '{non}「はい。でも……\n三人一緒だったから、ですね。」',

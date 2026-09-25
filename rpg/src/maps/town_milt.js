@@ -100,9 +100,9 @@
       O: npc('priest', 'priest', '_', { event: 'church', dir: 'down' }),
       J: say('nun', 'nun', '_', '小さな教会ですが、\n神のご加護は\nどこでも同じですよ。', { dir: 'down' }),
       // inn
-      I: npc('innkeeper', 'innkeeper', '_', { event: 'inn', price: 8, dir: 'left' }),
+      I: npc('innkeeper', 'innkeeper', '_', { event: 'inn', price: 8, dir: 'down' }),
       V: say('inn_guest', 'man', '_', 'この村の宿は安いし、\n飯もうまい。\f旅の疲れを取るなら、\nやっぱりミルトだな。', { dir: 'right' }),
-      U: say('inn_cat', 'cat', '_', 'ニャーン。\n暖炉の前で丸くなっている。', { move: 'wander' }),
+      U: say('inn_cat', 'cat', '_', 'ニャーン。\f宿の看板猫らしい。\nのんびりとあくびをしている。', { move: 'wander' }),
       // general store
       E: shop('weapon', '_', 'milt_weapon', { dir: 'down' }),
       G: shop('armor', '_', 'milt_armor', { dir: 'down' }),

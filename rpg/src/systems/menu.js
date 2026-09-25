@@ -556,16 +556,19 @@
     }
     render() {
       this.list.draw();
+      const titled = !!R.Game.title;
       drawGold(4, 104, 150);
       drawParty(156, 4);
-      drawObjective(4, 150, 248);
+      drawObjective(4, titled ? 164 : 150, 248);
     }
   }
 
   function drawGold(x, y, w) {
-    G().window(x, y, w, 44);
+    const title = R.Game.title; // 称号 earned in the post-game
+    G().window(x, y, w, title ? 58 : 44);
     K.labelNum('ゴールド', R.Game.gold + ' G', x + 12, y + 8, w - 24);
     K.labelNum('プレイ時間', U.playTime(R.Game.playFrames || 0), x + 12, y + 22, w - 24);
+    if (title) G().text('★' + title, x + 12, y + 36, { color: G().C.gold });
   }
   Menu.drawGold = drawGold;
 

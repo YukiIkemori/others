@@ -17,6 +17,8 @@
     if (!s) { G().text('―― データなし ――', x + w / 2, y + 25, { align: 'center', color: G().C.dark }); return; }
     const m = s.summary || {};
     G().text(m.time || '', x + w - 10, y + 7, { align: 'right', color: dim ? G().C.gray : G().C.white });
+    // cleared games show a star, and the post-game 称号 when earned
+    if (m.title || m.clear) G().text('★' + (m.title || 'クリア'), x + 80, y + 7, { color: dim ? G().C.gray : G().C.gold });
     Menu.kit.fitText((m.names || []).join('  '), x + 16, y + 21, w - 26, { color: dim ? G().C.gray : G().C.white });
     G().text(m.place || '', x + 16, y + 35, { color: dim ? G().C.gray : G().C.cyan });
     if (m.gold != null) G().text(m.gold + ' G', x + w - 10, y + 35, { align: 'right', color: dim ? G().C.gray : G().C.white });

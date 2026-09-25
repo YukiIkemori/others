@@ -10,13 +10,15 @@
 // Balance — tools/sim_postgame.js (real battle engine; see its header for the party models):
 //   abyss regulars: a prepared Lv50 party wins every fight and loses ≈26–28 % HP per fight
 //     (the healer tops up at 40 %); a party fresh from the demon king (Lv42, shop gear)
-//     wins ≈92–95 % of the fights on floors 1–2 and ≈80–85 % on floors 3–4.
-//   abyss_lord: prepared Lv55 (mastered jobs, abyss chest gear, 明鏡の護符, かいじゅ,
-//     ふくつのちかい) wins ≈64–69 % in ≈18 rounds (Lv52 ≈39 %, Lv58 ≈87 %); a Lv65
-//     "levels only" party wins 0 % (still 0 % at Lv99, and at Lv80 with the amulets).
-//     Taking one piece of the preparation away: no status immunity ≈1 %, only two members
-//     immune ≈36 %, no revive-on-KO ≈39 %, never dispelling ≈55 % (22 rounds), no elemental
-//     resistance ≈47 %, shop weapons ≈43 %. 魔王 (boss_king2) falls 100 % to the same parties.
+//     wins ≈93–96 % of the fights on floors 1–2 and ≈81–86 % on floors 3–4.
+//   abyss_lord: prepared Lv55 (mastered jobs, abyss chest gear, 明鏡の護符 ×2 + はじゃのこころ
+//     & 命のお守り, かいじゅ, ふくつのちかい — no rare drop needed) wins ≈55–63 % in ≈19 rounds
+//     (Lv52 ≈37 %, Lv58 ≈81 %; better supports or rare drops ≈66–73 %); a Lv65 "levels only"
+//     party wins 0 % (still 0 % at Lv99, ≈1 % at Lv80 with the amulets).
+//     Taking one piece of the preparation away: no status immunity ≈1 %, one member without it
+//     ≈23 %, no death immunity on the healer ≈27 %, no revive-on-KO ≈38 %, never dispelling
+//     ≈33 %, no elemental resistance ≈41 %, shop weapons ≈22 %.
+//     魔王 (boss_king2) falls 100 % to the same parties in 6–11 rounds.
 //
 // abyss_lord's pattern (actsPerTurn 3; `every` counts its own actions, 3 per round):
 //   round 1, 4, 7 …  混沌の瞳      mass confusion 75 %      → confusion immunity
@@ -210,7 +212,7 @@
       elem: { fire: 0.5, ice: 1.5, holy: 1.5 }, statusRes: HARD_RES,
       a: [['attack', 4], ['en_pg_hellfire_fang', 3], ['en_pg_howl', 2]],
       drop: ['nectar', 8], rare: ['pg_nova_claw', 96], steal: ['nectar', 'seed_agi'],
-      desc: '深淵の入り口を守る冥府の番犬。\n燃える牙で侵入者を焼き噛みにする。',
+      desc: '深淵の入り口を守る冥府の番犬。\n燃え盛る牙で侵入者に食らいつく。',
     }),
     pg_prism_eye: pgMon('虹の魔眼', 'eyeball', 46, {
       s: { hp: 2.0, atk: 1.5, mag: 1.8, mdef: 1.6, agi: 1.2 }, x: X_REG, hue: 150, sat: 1.8, bri: 1.1, mp: 40,
@@ -277,7 +279,7 @@
       flags: ['flying'], elem: { ice: 1.5, fire: 0.5 }, statusRes: HARD_RES,
       a: [['attack', 5], ['en_pg_flame_breath', 2], ['en_pg_greed', 2], ['en_pg_howl', 1]],
       drop: ['nectar', 8], rare: ['pg_void_katana', 128], steal: ['nectar', 'seed_str'],
-      desc: '獅子と竜と蛇が混沌のうちに結びついた獣。\n三つの口から獄炎を吐く。',
+      desc: '獅子と山羊と蛇が混沌の中で結びついた獣。\n三つの口から獄炎を吐く。',
     }),
     pg_doom_box: pgMon('滅びの箱', 'mimic', 55, {
       s: { hp: 2.8, atk: 1.6, def: 1.3, mdef: 1.3, agi: 1.1 }, x: { exp: 1.1, gold: 3, jp: 1.5 }, sat: 0.15, bri: 0.4,
@@ -317,7 +319,7 @@
     // ================================================= 裏ボス
     abyss_lord: {
       name: 'アビスロード', sprite: 'boss_abyss', lv: 70, actsPerTurn: 3,
-      hp: 6700, mp: 0, atk: 390, def: 180, agi: 110, mag: 260, mdef: 110, eva: 2,
+      hp: 7300, mp: 0, atk: 390, def: 180, agi: 110, mag: 260, mdef: 110, eva: 2,
       exp: 60000, gold: 30000, jp: 3000,
       flags: ['boss', 'dragon'], statusRes: BOSS_RES,
       elem: { dark: -1, fire: 0.5, ice: 0.5, thunder: 0.5 },
