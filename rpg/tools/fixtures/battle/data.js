@@ -109,6 +109,7 @@
   Object.assign(DB.items, {
     tb_sword:  { name: 'テストソード', type: 'weapon', wtype: 'sword', atk: 20, price: 100, desc: 'テスト' },
     tb_sword2: { name: 'テストソード2', type: 'weapon', wtype: 'sword', atk: 10, price: 100, desc: 'テスト' },
+    tb_shield: { name: 'テストの盾', type: 'shield', atype: 'shield', def: 4, price: 100, desc: 'テスト' },
     tb_flame:  { name: '炎の剣', type: 'weapon', wtype: 'sword', atk: 20, element: 'fire', price: 100, desc: 'テスト' },
     tb_venom:  { name: '毒のナイフ', type: 'weapon', wtype: 'knife', atk: 12, onHit: { status: 'poison', chance: 1 }, price: 100, desc: 'テスト' },
     tb_staff:  { name: 'テストの杖', type: 'weapon', wtype: 'staff', atk: 5, mag: 5, price: 100, desc: 'テスト' },
