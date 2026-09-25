@@ -3,17 +3,21 @@
 // (風の洞窟, 盗賊の砦, 水の洞窟, ピラミッド).
 //
 //   node tools/check_dungeons_a.js               static checks + reachability + event dry runs
-//   node tools/check_dungeons_a.js --verbose     also print every chest / hidden item
+//   node tools/check_dungeons_a.js --verbose     also print every chest
 //   node tools/check_dungeons_a.js --png DIR     also render every floor (real tile art, objects,
 //                                                spawns/warps/events marked) to DIR/<map>.png
 //
 // Static: size 40x32..64x48, equal rows, legend/mark chars, `under` tiles, required fields
 // (type/theme/bgm/encounter zone/escape), world spawns, stairs pairs that lead back next to
-// the stairs they came from, chests & hidden items on sensible tiles with existing items and
-// globally unique ids, NPC sprites/events, torches that face a floor, poison used sparingly.
+// the stairs they came from, chests on plain floor (not on or right next to a door, stairs,
+// warp, event or spawn) with existing items and globally unique ids, NO hidden (examine-to-find)
+// items at all (abolished: every treasure is a visible chest), NPC sprites/events, torches that
+// face a floor, poison used sparingly.
 // Reachability (BFS over all floors of a dungeon; NPCs & chests block, silver doors need the
 // key, boss NPCs block until their flag is set): before the boss the boss can be reached and
-// nothing behind it can; after it every chest, hidden item, stair, crest and exit circle can.
+// nothing behind it can; after it every chest, stair, crest and exit circle can, and no chest
+// blocks a way through (ignoring the chests reaches the same cells, save a tiny empty pocket of
+// at most 4 cells a floor behind a chest; never a warp, event, spawn or sign).
 // The pyramid sanctum must be sealed without the silver key.
 // Texts (STYLE_JA.md): map names from the glossary, no hard-coded hero names (placeholders
 // {yuki} {non} {metem} {leader}), no DQ-style spaces, a full-width space after a mid-line ！/？,
@@ -82,7 +86,7 @@ for (const id in DB.maps) {
   }
   for (const c of ids) {
     if (!c) continue;
-    if (allIds[c] && (MINE.includes(id) || MINE.includes(allIds[c]))) E(`duplicate chest/hidden id ${c} (${allIds[c]} and ${id})`);
+    if (allIds[c] && (MINE.includes(id) || MINE.includes(allIds[c]))) E(`duplicate chest id ${c} (${allIds[c]} and ${id})`);
     allIds[c] = id;
   }
 }
@@ -143,7 +147,13 @@ for (const d of DUNGEONS) {
       }
       if (!/^stairs_/.test(tid)) W(`${id}: warp at ${w.x},${w.y} on ${tid}`);
     }
-    // chests / hidden
+    // hidden (examine-to-find) items are abolished: every treasure must be a visible chest
+    for (const h of def.hidden || []) E(`${id}: hidden item ${h.id} (${h.item || h.gold + 'G'}) at ${h.x},${h.y} — make it a visible chest`);
+    for (const ch in def.marks || {}) {
+      const h = def.marks[ch].hidden;
+      if (h) E(`${id}: mark '${ch}' is a hidden item ${h.id} (${h.item || h.gold + 'G'}) — make it a visible chest`);
+    }
+    // chests
     const occupied = {};
     const occ = (x, y, what) => { const k = x + ',' + y; if (occupied[k]) E(`${id}: ${what} and ${occupied[k]} share ${k}`); occupied[k] = what; };
     for (const n of m.npcs) occ(n.x, n.y, 'npc ' + n.id);
@@ -153,13 +163,15 @@ for (const d of DUNGEONS) {
       const t = tileAt(m, c.x, c.y);
       if (!t.pass || t.lock || t.damage || /^stairs|^door|warp_pad/.test(m.tileAt(c.x, c.y))) E(`${id}: chest ${c.id} on ${m.tileAt(c.x, c.y)}`);
       if (m.warpAt(c.x, c.y) || m.eventIdx.has(m.idx(c.x, c.y))) E(`${id}: chest ${c.id} on a warp/event`);
+      // never right in front of a way through (door, stairs, pad, warp, event, spawn)
+      for (const [dx, dy] of DIRS) {
+        const x = c.x + dx, y = c.y + dy;
+        const tid = m.tileAt(x, y);
+        const why = /^door|^stairs|warp_pad|seal/.test(tid) ? tid : m.warpAt(x, y) ? 'a warp' : m.eventIdx.has(m.idx(x, y)) ? 'an event' :
+          Object.keys(m.spawns).find((k) => m.spawns[k].x === x && m.spawns[k].y === y) ? 'a spawn' : null;
+        if (why) E(`${id}: chest ${c.id} at ${c.x},${c.y} stands right next to ${why} (${x},${y})`);
+      }
       if (c.troop && !(c.troop.mons || []).every(([mid]) => DB.monsters[mid])) E(`${id}: chest ${c.id} mimic monster missing`);
-    }
-    for (const h of m.hidden) {
-      occ(h.x, h.y, 'hidden ' + h.id);
-      if (!h.gold && !DB.items[h.item]) E(`${id}: hidden ${h.id} unknown item ${h.item}`);
-      const tid = m.tileAt(h.x, h.y);
-      if (!tileAt(m, h.x, h.y).pass && !['pot', 'barrel', 'crate', 'grave', 'shelf', 'bookshelf'].includes(tid)) E(`${id}: hidden ${h.id} inside ${tid}`);
     }
     for (const n of m.npcs) {
       if (!gfx(n.sprite)) E(`${id}: npc ${n.id} sprite ${n.sprite} not registered`);
@@ -188,7 +200,7 @@ for (const d of DUNGEONS) {
 
 // ------------------------------------------------------------------ reachability
 /** BFS from floor 1 'entrance' over the dungeon's floors in a given state */
-function reach(d, flags, items) {
+function reach(d, flags, items, ignoreChests) {
   const S = { flag: (f) => flags.includes(f), item: (i) => items.includes(i) };
   const check = (c) => {
     if (c == null || c === true) return true;
@@ -205,7 +217,7 @@ function reach(d, flags, items) {
     for (const p of m.patches) if (p.x === x && p.y === y && check(p.cond)) t = m.legend[p.ch] || p.tile || t;
     return t;
   };
-  const blocked = (m, x, y) => m.npcs.some((n) => n.x === x && n.y === y && check(n.cond)) || m.chests.some((c) => c.x === x && c.y === y && check(c.cond));
+  const blocked = (m, x, y) => m.npcs.some((n) => n.x === x && n.y === y && check(n.cond)) || (!ignoreChests && m.chests.some((c) => c.x === x && c.y === y && check(c.cond)));
   const pass = (m, x, y) => {
     if (!m.inBounds(x, y)) return false;
     const t = DB.tiles[tileId(m, x, y)];
@@ -256,6 +268,7 @@ for (const d of DUNGEONS) {
   const key = ['silver_key'];
   const before = reach(d, [], d.keyBefore ? key : []);
   const after = reach(d, [d.boss.flag], key);
+  const open = reach(d, [d.boss.flag], key, true);
   const noKey = reach(d, [], []);
   const bossFloor = d.floors.find((f) => maps[f].npcs.some((n) => n.event === d.boss.event));
   const bm = maps[bossFloor];
@@ -273,7 +286,21 @@ for (const d of DUNGEONS) {
       if (bm.tileAt(crestNpc.x, crestNpc.y) !== 'pedestal') E(`${d.key}: crest not on a pedestal`);
     }
   }
-  // after the boss: every chest, hidden item, stair and the exit circle
+  // no chest blocks a way through: ignoring the chests reaches the same floor (plus the chest cells),
+  // except a tiny empty pocket behind a chest (at most 4 cells a floor, e.g. a chest capping an islet)
+  const chestCell = new Set(d.floors.flatMap((f) => maps[f].chests.map((c) => f + ':' + c.x + ',' + c.y)));
+  const cut = {};
+  for (const k of open.seen) {
+    if (after.seen.has(k) || chestCell.has(k)) continue;
+    const [f, xy] = k.split(':'); const [x, y] = xy.split(',').map(Number);
+    const m = maps[f];
+    const thing = m.warpAt(x, y) ? 'a warp' : m.eventIdx.has(m.idx(x, y)) ? 'an event' : m.signs.some((s) => s.x === x && s.y === y) ? 'a sign' :
+      Object.keys(m.spawns).find((n) => m.spawns[n].x === x && m.spawns[n].y === y) ? 'a spawn' : null;
+    if (thing) E(`${d.key}: ${thing} at ${k} is cut off by a chest`);
+    (cut[f] = cut[f] || []).push(xy);
+  }
+  for (const f in cut) if (cut[f].length > 4) E(`${d.key}: chests cut off ${cut[f].length} cells of ${f}: ${cut[f].slice(0, 6).join(' ')}…`);
+  // after the boss: every chest, stair and the exit circle
   let behind = 0;
   for (const f of d.floors) {
     const m = maps[f];
@@ -281,10 +308,6 @@ for (const d of DUNGEONS) {
       if (!after.near(f, c.x, c.y)) E(`${f}: chest ${c.id} (${itemName(c)}) unreachable`);
       else if (!before.near(f, c.x, c.y)) behind++;
       report.push(`  ${f.padEnd(14)} ${c.id.padEnd(18)} ${String(c.x).padStart(2)},${String(c.y).padStart(2)}  ${itemName(c)}${c.troop ? ' (mimic)' : ''}${before.near(f, c.x, c.y) ? '' : noKey.near(f, c.x, c.y) ? '' : ' [behind boss/door]'}`);
-    }
-    for (const h of m.hidden) {
-      if (!after.near(f, h.x, h.y)) E(`${f}: hidden ${h.id} unreachable`);
-      report.push(`  ${f.padEnd(14)} ${h.id.padEnd(18)} ${String(h.x).padStart(2)},${String(h.y).padStart(2)}  ${itemName(h)} (hidden in ${m.tileAt(h.x, h.y)})`);
     }
     for (const w of m.warps) if (!after.seen.has(f + ':' + w.x + ',' + w.y)) E(`${f}: stairs at ${w.x},${w.y} unreachable`);
     for (const e of m.events) {
@@ -303,7 +326,7 @@ for (const d of DUNGEONS) {
     if (!noKey.triggered.has(d.boss.event) && !noKey.near(bossFloor, boss.x, boss.y)) E(`${d.key}: boss needs the silver key (it should not)`);
   }
   console.log(`${d.key.padEnd(8)} floors ${d.floors.length}  chests ${d.floors.reduce((s, f) => s + maps[f].chests.length, 0)} (${behind} behind the boss/doors)` +
-    `  hidden ${d.floors.reduce((s, f) => s + maps[f].hidden.length, 0)}  tiles reached ${after.seen.size}` +
+    `  tiles reached ${after.seen.size}` +
     `  no-key: ${noKey.floors.size}/${d.floors.length} floors${d.sealed ? ', sanctum sealed' : ''}`);
 }
 
@@ -455,7 +478,6 @@ async function renderPng() {
         c.drawImage(Array.isArray(chest) ? chest[0] : chest, o.x * TS, o.y * TS);
         if (o.troop) { c.strokeStyle = '#f0f'; c.strokeRect(o.x * TS + 0.5, o.y * TS + 0.5, 15, 15); }
       }
-      for (const h of m.hidden) { c.fillStyle = 'rgba(255,240,0,0.9)'; c.fillRect(h.x * TS + 5, h.y * TS + 5, 6, 6); }
       for (const p of m.patches) { c.strokeStyle = '#8f8'; c.strokeRect(p.x * TS + 2.5, p.y * TS + 2.5, 11, 11); }
       const list = m.npcs.map((n) => {
         const s = G.get(n.sprite);

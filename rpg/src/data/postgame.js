@@ -8,15 +8,15 @@
 // Everything is a normal R.DB entry, so the bestiary (ずかん) lists and counts it.
 //
 // Balance — tools/sim_postgame.js (real battle engine; see its header for the party models):
-//   abyss regulars: a prepared Lv50 party wins every fight and loses ≈25–28 % HP per fight
+//   abyss regulars: a prepared Lv50 party wins every fight and loses ≈26–28 % HP per fight
 //     (the healer tops up at 40 %); a party fresh from the demon king (Lv42, shop gear)
-//     wins ≈93 % of the fights on floors 1–2 and ≈85 % on floors 3–4.
-//   abyss_lord: prepared Lv55 (mastered jobs, abyss/rare gear, 明鏡の護符, かいじゅ,
-//     ふくつのちかい) wins ≈60–65 % in ≈20 rounds (Lv52 ≈48 %, Lv58 ≈86 %); a Lv65
-//     "levels only" party wins 0 % (still 0 % at Lv99, ≈1 % at Lv80 with the amulets).
-//     Taking one piece of the preparation away: no status immunity ≈3 %, only two members
-//     immune ≈35 %, no revive-on-KO ≈43 %, never dispelling ≈45 % (27 rounds), no elemental
-//     resistance ≈44 %, shop weapons ≈44 %. 魔王 (boss_king2) falls 100 % to the same parties.
+//     wins ≈92–95 % of the fights on floors 1–2 and ≈80–85 % on floors 3–4.
+//   abyss_lord: prepared Lv55 (mastered jobs, abyss chest gear, 明鏡の護符, かいじゅ,
+//     ふくつのちかい) wins ≈64–69 % in ≈18 rounds (Lv52 ≈39 %, Lv58 ≈87 %); a Lv65
+//     "levels only" party wins 0 % (still 0 % at Lv99, and at Lv80 with the amulets).
+//     Taking one piece of the preparation away: no status immunity ≈1 %, only two members
+//     immune ≈36 %, no revive-on-KO ≈39 %, never dispelling ≈55 % (22 rounds), no elemental
+//     resistance ≈47 %, shop weapons ≈43 %. 魔王 (boss_king2) falls 100 % to the same parties.
 //
 // abyss_lord's pattern (actsPerTurn 3; `every` counts its own actions, 3 per round):
 //   round 1, 4, 7 …  混沌の瞳      mass confusion 75 %      → confusion immunity
@@ -89,7 +89,7 @@
   // ------------------------------------------------------------------ items
   // rare:true → never sold, shown with ★; price 0 = cannot be sold. band 6 (the top band of the item tools)
   // + postgame:true. `exclusive` names where each item comes from (a monster's rare drop, the abyss
-  // chests — 'abyss' = chests and 虹の魔眼 — or the reward for beating abyss_lord); it also keeps them out
+  // chests, 'abyss' = a chest and also a monster's drop, or the reward for beating abyss_lord); it also keeps them out
   // of the shared R.ITEM_RARE pools (tools/check_items.js).
   const ALL_ELEM = (v) => ({ fire: v, ice: v, thunder: v, wind: v, earth: v, water: v, holy: v, dark: v });
   const ALL_STATUS = ['poison', 'sleep', 'paralyze', 'confuse', 'silence', 'blind', 'death'];
@@ -116,8 +116,8 @@
     pg_abyss_mail:    A('深淵の鎧',   'heavy',  90, '深淵の闇を鍛えて固めた鎧。\n闇・炎・氷に強い。', { mdef: 20, stats: { vit: 8 }, mods: { elemResist: { dark: 0.5, fire: 0.75, ice: 0.75 } }, exclusive: 'abyss_chest' }),
     pg_starlight_garb: A('星光の衣',  'light',  68, '星の光を織り込んだ軽い衣。\n氷と雷に強い。', { mdef: 18, eva: 8, stats: { agi: 14 }, mods: { elemResist: { ice: 0.5, thunder: 0.5 } }, exclusive: 'pg_aurora_harpy' }),
     pg_aurora_robe:   A('極光のローブ', 'robe', 56, 'オーロラの糸で縫ったローブ。\n沈黙を防ぎ、炎・氷・雷を和らげる。', { mdef: 46, stats: { int: 12, mnd: 12 }, mods: { statusImmune: ['silence'], elemResist: { fire: 0.75, ice: 0.75, thunder: 0.75 } }, exclusive: 'abyss_chest' }),
-    pg_chaos_helm:    A('混沌の兜',   'helm',   44, '混沌の力を封じた兜。\n眠りと麻痺を防ぐ。', { mdef: 14, mods: { statusImmune: ['sleep', 'paralyze'] }, exclusive: 'pg_abyss_knight' }),
-    pg_halo:          A('天輪の冠',   'hat',    32, '天使の輪をかたどった冠。\n眠りと混乱を防ぐ。', { mdef: 26, stats: { int: 10, mnd: 10 }, mods: { statusImmune: ['sleep', 'confuse'] }, exclusive: 'pg_prism_eye' }),
+    pg_chaos_helm:    A('混沌の兜',   'helm',   44, '混沌の力を封じた兜。\n眠りと麻痺を防ぐ。', { mdef: 14, mods: { statusImmune: ['sleep', 'paralyze'] }, exclusive: 'abyss' }),
+    pg_halo:          A('天輪の冠',   'hat',    32, '天使の輪をかたどった冠。\n眠りと混乱を防ぐ。', { mdef: 26, stats: { int: 10, mnd: 10 }, mods: { statusImmune: ['sleep', 'confuse'] }, exclusive: 'abyss' }),
     pg_void_shield:   A('虚空の盾',   'shield', 48, '虚空を映す盾。\n炎・氷・雷・闇の力を和らげる。', { eva: 12, mdef: 16, mods: { elemResist: { fire: 0.6, ice: 0.6, thunder: 0.6, dark: 0.6 } }, exclusive: 'abyss_chest' }),
 
     // accessories — the preparation the superboss asks for
@@ -317,7 +317,7 @@
     // ================================================= 裏ボス
     abyss_lord: {
       name: 'アビスロード', sprite: 'boss_abyss', lv: 70, actsPerTurn: 3,
-      hp: 7300, mp: 0, atk: 390, def: 180, agi: 110, mag: 260, mdef: 110, eva: 2,
+      hp: 6700, mp: 0, atk: 390, def: 180, agi: 110, mag: 260, mdef: 110, eva: 2,
       exp: 60000, gold: 30000, jp: 3000,
       flags: ['boss', 'dragon'], statusRes: BOSS_RES,
       elem: { dark: -1, fire: 0.5, ice: 0.5, thunder: 0.5 },

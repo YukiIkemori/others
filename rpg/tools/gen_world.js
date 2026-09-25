@@ -23,6 +23,11 @@
 //
 // Extra spawns beyond DESIGN §7.4: regnas_dock and milt_dock (teleporting to
 // Regnas/Milt brings the ship along, like every other dock).
+//
+// Post-game (深淵の迷宮): a small rocky islet in the northern sea (ABYSS). Its
+// centre stays plain ground until the flag game_clear; then the map's
+// tilePatch shows a cave icon there and a step event (cond game_clear) warps
+// into abyss_1. Spawns 'abyss_1' (that cell) and 'abyss_dock' (sea beside it).
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -122,6 +127,12 @@ const MEADOW = (seed) => [
 ];
 const DIVIDER = [[35, 24], [33, 32], [32, 40], [34, 47], [36, 53], [35, 60], [33, 67], [34, 74], [36, 82], [37, 90]];
 const GATE_Y = 58;
+// Post-game (深淵の迷宮, src/maps/abyss.js + src/events/postgame.js): a lone rocky islet in the
+// northern sea. Its centre cell is plain ground until the demon king falls; then the world map's
+// tilePatch (cond game_clear) raises a cave icon there and a step event (cond game_clear, warps
+// have no cond) takes the party inside. World spawns: 'abyss_1' on that cell (escape / leaving
+// the dungeon) and 'abyss_dock' on the sea beside the islet (reachable by ship from the start).
+const ABYSS = { x: 72, y: 30, icon: 'O', event: 'abyss_entrance', cond: 'game_clear' };
 
 const LANDS = [
   {
@@ -247,6 +258,15 @@ const LANDS = [
     layers: [],
   },
   {
+    // post-game islet (深淵の迷宮, see ABYSS below): bare rock and scree under a lone crag
+    id: 'abyss', seed: 111, amp: 0.5, warp: [0.8, 4], ground: 'k',
+    body: union(ell(ABYSS.x, ABYSS.y, 2.9, 2.2), ell(ABYSS.x + 1.5, ABYSS.y - 1.6, 1.8, 1.3)),
+    layers: [
+      ['n', ALL, { amp: 0, seed: 113, dens: [1.6, 0.62] }],
+      ['M', ell(ABYSS.x + 1.6, ABYSS.y - 2, 1.3, 0.8), { amp: 0.3, seed: 115 }],
+    ],
+  },
+  {
     // small uninhabited islands
     id: 'isle', seed: 101, amp: 1, warp: [1, 5], ground: '.',
     body: union(ell(6, 21, 2, 2.5), ell(61, 37, 2.2, 1.6), ell(87, 62, 2.2, 1.8), ell(90, 29, 1.8, 1.5), ell(51, 91, 2, 1.5), ell(61, 71, 1.6, 1.3), ell(81, 39, 2, 1.4), ell(79, 64, 1.5, 1.2)),
@@ -256,7 +276,7 @@ const LANDS = [
 
 const ZONE_OF_LAND = {
   start: 'w_start', forest: 'w_forest', desert: 'w_desert', temple: 'w_forest', snow: 'w_snow',
-  volcano: 'w_volcano', arcana: 'w_arcana', demon: 'w_demon', edge: 'w_demon', isle: null,
+  volcano: 'w_volcano', arcana: 'w_arcana', demon: 'w_demon', edge: 'w_demon', isle: null, abyss: 'w_demon',
 };
 
 // ------------------------------------------------------------- locations
@@ -735,6 +755,30 @@ function placeDocks() {
     SPAWNS[d.name] = best;
   }
 }
+// ------------------------------------------------------------- post-game islet
+/** the abyss entrance cell (plain ground; a cave icon after game_clear) and the dock beside the islet */
+function placeAbyss() {
+  const { x, y } = ABYSS;
+  if (OWN[y][x] !== 'abyss' || !isLand(G[y][x])) throw new Error(`abyss entrance ${x},${y} is not on the islet`);
+  set(x, y, LANDS.find((l) => l.id === 'abyss').ground);
+  PROTECT[y][x] = true;
+  const seen = bfsWalk(x, y);
+  const ocean = oceanMask(false);
+  let best = null, bd = Infinity;
+  for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
+    if (!ocean[j][i]) continue;
+    let open = 0;
+    for (const [dx, dy] of N8) if (get(i + dx, j + dy) === '~') open++;
+    if (open < 4) continue;
+    const shore = N4.find(([dx, dy]) => inb(i + dx, j + dy) && seen[j + dy][i + dx] && !(i + dx === x && j + dy === y));
+    if (!shore) continue;
+    const dd = Math.hypot(i - x, j - (y + 3)); // the south shore: the side ships come from
+    if (dd < bd) { bd = dd; best = { x: i, y: j, dir: dirAway(shore) }; }
+  }
+  if (!best) throw new Error('no dock for the abyss islet');
+  SPAWNS.abyss_dock = best;
+}
+
 /** facing on arrival at an icon: toward open ground (down preferred) */
 function exitDir(x, y) {
   for (const [d, dx, dy] of [['down', 0, 1], ['left', -1, 0], ['right', 1, 0], ['up', 0, -1]]) {
@@ -833,9 +877,11 @@ function generate() {
   paintBeaches();
   enforceBorder();
   placeDocks();
+  placeAbyss();
   fixDerived();
   sealPockets();
   for (const ic of ICONS) SPAWNS[ic.map] = { x: ic.x, y: ic.y, dir: exitDir(ic.x, ic.y) };
+  SPAWNS.abyss_1 = { x: ABYSS.x, y: ABYSS.y, dir: exitDir(ABYSS.x, ABYSS.y) };
   SPAWNS.east_gate_w = { x: GATE.w, y: GATE.y, dir: 'left' };
   SPAWNS.east_gate_e = { x: GATE.e, y: GATE.y, dir: 'right' };
   const warps = ICONS.map((ic) => ({ x: ic.x, y: ic.y, to: ic.map, spawn: 'entrance' }));
@@ -869,6 +915,9 @@ function emit(res) {
   }
   L.push('    ],');
   L.push(`    defaultZone: '${DEFAULT_ZONE}',`);
+  L.push('    // post-game: the entrance of 深淵の迷宮 appears on the northern islet once the demon king falls');
+  L.push(`    tilePatches: [{ cond: '${ABYSS.cond}', x: ${ABYSS.x}, y: ${ABYSS.y}, ch: '${ABYSS.icon}' }],`);
+  L.push(`    events: [{ x: ${ABYSS.x}, y: ${ABYSS.y}, id: '${ABYSS.event}', trigger: 'step', cond: '${ABYSS.cond}' }],`);
   L.push('  };');
   L.push('})(window.RPG);');
   return L.join('\n') + '\n';

@@ -4,7 +4,9 @@
 // named after it; stairs arrive at spawns 'up' (came from the floor above) / 'down' (from below).
 // Bosses stand on the map as 'mon:' NPCs; their scripts, the crest altars and the exit circles
 // that appear after each boss live in src/events/dungeons_a.js. Chests are listed explicitly
-// (x, y) so the rows stay plain tiles. Checked by tools/check_dungeons_a.js.
+// (x, y) so the rows stay plain tiles. Every treasure is a visible chest (no hidden items; the
+// `_h<n>` ids are the former examine-to-find spots, kept so old saves stay consistent).
+// Checked by tools/check_dungeons_a.js.
 (function (R) {
   'use strict';
   const M = R.DB.maps;
@@ -168,7 +170,7 @@
 
   // ============================================================ bandit_fort_1
   // Ground floor: road through the woods to the gate, courtyard with a well, great hall,
-  // barracks, storeroom (pots and barrels hide things), mess hall, armory and cells along the
+  // barracks, storeroom (chests tucked between the crates), mess hall, armory and cells along the
   // torch-lit hallway; the stair tower in the north-west. Bandits leave once the chief falls.
   M.bandit_fort_1 = {
     name: '盗賊の砦', type: 'dungeon', legend: 'local', theme: 'fort', bgm: 'dungeon',
@@ -229,11 +231,9 @@
       { id: 'bandit_fort_1_c5', x: 5, y: 26, item: 'pointy_hat' },
       { id: 'bandit_fort_1_c6', x: 47, y: 25, item: 'sleep_powder', n: 2 },
       { id: 'bandit_fort_1_c7', x: 47, y: 17, item: 'throat_drop', n: 2 },
-    ],
-    hidden: [
-      { id: 'bandit_fort_1_h1', x: 14, y: 7, item: 'healing_grass' },
-      { id: 'bandit_fort_1_h2', x: 45, y: 18, item: 'seed_mp' },
-      { id: 'bandit_fort_1_h3', x: 45, y: 26, item: 'numb_cure' },
+      { id: 'bandit_fort_1_h1', x: 25, y: 8, item: 'healing_grass' }, // mess hall corner, under the barrels
+      { id: 'bandit_fort_1_h2', x: 46, y: 14, item: 'seed_mp' }, // storeroom nook between the crates
+      { id: 'bandit_fort_1_h3', x: 46, y: 28, item: 'numb_cure' }, // storeroom nook between the crates
     ],
     npcs: [
       { id: 'fort_gate_bandit', x: 28, y: 33, sprite: 'npc:bandit', dir: 'left', text: 'ここは俺たち盗賊団の砦だ！\nよそ者はとっとと帰りな！\f……なに？　お頭に\n会いに来ただと？\fへっ、勝手にしな。\nどうせ痛い目を見るだけさ。', cond: '!bandits_defeated' },
@@ -305,10 +305,8 @@
       { id: 'bandit_fort_2_c6', x: 44, y: 3, item: 'revive_feather' },
       { id: 'bandit_fort_2_c7', x: 39, y: 27, item: 'magic_ring' },
       { id: 'bandit_fort_2_c8', x: 8, y: 21, item: 'healing_grass', n: 2 },
-    ],
-    hidden: [
-      { id: 'bandit_fort_2_h1', x: 12, y: 18, item: 'seed_agi' },
-      { id: 'bandit_fort_2_h2', x: 14, y: 21, item: 'healing_grass' },
+      { id: 'bandit_fort_2_h1', x: 11, y: 18, item: 'seed_agi' }, // barracks corner, beside the barrel
+      { id: 'bandit_fort_2_h2', x: 14, y: 27, item: 'healing_grass' }, // kennel, far corner
     ],
     npcs: [
       { id: 'fort_map_bandit', x: 34, y: 26, sprite: 'npc:bandit', dir: 'up', text: 'この地図かい？\nポルタの港の図面さ。\fお頭は港の船を全部いただいて、\n海へ乗り出すつもりなんだとよ。', cond: '!bandits_defeated' },
@@ -398,9 +396,7 @@
       { id: 'water_cave_1_c5', x: 12, y: 16, item: 'fairy_robe' },
       { id: 'water_cave_1_c6', x: 3, y: 3, item: 'thunder_spear' },
       { id: 'water_cave_1_c7', x: 53, y: 22, item: 'mana_drop' },
-    ],
-    hidden: [
-      { id: 'water_cave_1_h1', x: 53, y: 29, item: 'seed_vit' },
+      { id: 'water_cave_1_h1', x: 53, y: 28, item: 'seed_vit' }, // east cavern, north-east corner
     ],
   };
 
@@ -471,10 +467,8 @@
       { id: 'water_cave_2_c4', x: 34, y: 9, item: 'revive_feather' },
       { id: 'water_cave_2_c5', x: 23, y: 31, item: 'silver_shield' },
       { id: 'water_cave_2_c6', x: 19, y: 4, gold: 900 },
-    ],
-    hidden: [
-      { id: 'water_cave_2_h1', x: 49, y: 15, item: 'seed_mp' },
-      { id: 'water_cave_2_h2', x: 4, y: 35, item: 'mana_drop' },
+      { id: 'water_cave_2_h1', x: 49, y: 15, item: 'seed_mp' }, // pool cavern, north-east corner
+      { id: 'water_cave_2_h2', x: 3, y: 35, item: 'mana_drop' }, // south-west pocket, top corner
     ],
     events: [
       { x: 20, y: 8, id: 'da_exit_circle', cond: 'boss_water_done' },
@@ -555,10 +549,8 @@
       { id: 'pyramid_1_c7', x: 53, y: 16, item: 'ice_bomb', n: 2 },
       { id: 'pyramid_1_c8', x: 3, y: 27, item: 'ruby_rod' },
       { id: 'pyramid_1_c9', x: 53, y: 30, item: 'all_cure', n: 2 },
-    ],
-    hidden: [
-      { id: 'pyramid_1_h1', x: 20, y: 18, item: 'seed_str' },
-      { id: 'pyramid_1_h2', x: 3, y: 12, item: 'healing_grass' },
+      { id: 'pyramid_1_h1', x: 17, y: 24, item: 'seed_str' }, // great hall, south-west corner
+      { id: 'pyramid_1_h2', x: 2, y: 12, item: 'healing_grass' }, // west chamber corner, beside the pot
     ],
     signs: [
       { x: 27, y: 13, text: '古代の文字が刻まれている……。\f「王の眠りを妨げる者に\n災いあれ。\n銀の扉の奥にて\n大地の紋章は眠る」' },
@@ -634,10 +626,8 @@
       { id: 'pyramid_2_c5', x: 39, y: 34, item: 'mana_drop', n: 2 },
       { id: 'pyramid_2_c6', x: 7, y: 2, gold: 1000 },
       { id: 'pyramid_2_c7', x: 47, y: 39, item: 'moon_robe' },
-    ],
-    hidden: [
-      { id: 'pyramid_2_h1', x: 3, y: 3, item: 'seed_int' },
-      { id: 'pyramid_2_h2', x: 35, y: 27, item: 'healing_aroma' },
+      { id: 'pyramid_2_h1', x: 2, y: 2, item: 'seed_int' }, // north-west tomb, corner
+      { id: 'pyramid_2_h2', x: 35, y: 26, item: 'healing_aroma' }, // end of a blind passage
     ],
   };
 
@@ -707,10 +697,8 @@
       { id: 'pyramid_3_c5', x: 39, y: 27, gold: 1500 },
       { id: 'pyramid_3_c6', x: 4, y: 21, item: 'nectar' },
       { id: 'pyramid_3_c7', x: 43, y: 21, item: 'revive_feather' },
-    ],
-    hidden: [
-      { id: 'pyramid_3_h1', x: 5, y: 28, item: 'seed_vit' },
-      { id: 'pyramid_3_h2', x: 42, y: 28, item: 'seed_mnd' },
+      { id: 'pyramid_3_h1', x: 2, y: 27, item: 'seed_vit' }, // west tomb, north-west corner
+      { id: 'pyramid_3_h2', x: 45, y: 27, item: 'seed_mnd' }, // east tomb, north-east corner
     ],
     events: [
       { x: 27, y: 7, id: 'da_exit_circle', cond: 'boss_pyramid_done' },

@@ -10,9 +10,10 @@
 // Party models (built directly: jobs mastered = JP 2000 and every ability learned):
 //   prepared   Lv55 — ユウキ 勇者 (sub 竜騎士: the boss is a dragon; 二刀流; ふくつのちかい),
 //              ノン 賢者 (sub 白魔術師, MP半減, ふくつのちかい), メテム 時空術師 (sub 賢者 — かいじゅ,
-//              りゅうせいう; MP半減, ふくつのちかい); 14/9/10 jobs mastered; abyss chest gear, a few
-//              abyss rare drops and 暁の剣; status cover: ユウキ 混沌の兜 + 明鏡の護符 + the hero's
-//              death immunity, ノン 天輪の冠 + 魂鎮めの鈴 (death), メテム 明鏡の護符.
+//              りゅうせいう; MP半減, ふくつのちかい); 14/9/10 jobs mastered; gear from the abyss
+//              chests (混沌の剣 + 竜神の槍 in the off hand, 深淵の鎧, 極光の杖/ローブ, 始原のロッド) and
+//              shops; status cover: ユウキ 混沌の兜 + 明鏡の護符 + the hero's death immunity,
+//              ノン 天輪の冠 + 命のお守り (death), メテム 明鏡の護符 (so no rare drop is required).
 //   arrival    Lv42 — the same jobs with 最果ての祠 shop gear (info rows for the dungeon entrance).
 //   levels     Lv65 — basic jobs only (ナイト / 白魔術師 / 黒魔術師 + their tier-1 jobs mastered),
 //              the best shop gear of 最果ての祠, no status protection, no dispel, no revive-on-KO.
@@ -83,12 +84,12 @@ const PREPARED = {
   yuki: {
     master: [...T1, 'knight', 'monk', 'whitemage', 'blackmage', 'hunter', 'spellblade', 'paladin', 'ninja', 'dragoon', 'hero'],
     job: 'hero', sub: 'dragoon', reaction: 'paladin_last_stand', support: 'ninja_two_swords',
-    equip: { weapon: 'pg_chaos_sword', shield: 'dawn_sword', head: 'pg_chaos_helm', body: 'pg_abyss_mail', acc: 'pg_clarity_amulet' },
+    equip: { weapon: 'pg_chaos_sword', shield: 'pg_dragon_lance', head: 'pg_chaos_helm', body: 'pg_abyss_mail', acc: 'pg_clarity_amulet' },
   },
   non: {
     master: ['priest', 'mage', 'warrior', 'whitemage', 'blackmage', 'knight', 'sage', 'paladin', 'bard'],
     job: 'sage', sub: 'whitemage', reaction: 'paladin_last_stand', support: 'sage_half_mp',
-    equip: { weapon: 'pg_aurora_staff', head: 'pg_halo', body: 'pg_aurora_robe', acc: 'pg_soul_bell' },
+    equip: { weapon: 'pg_aurora_staff', head: 'pg_halo', body: 'pg_aurora_robe', acc: 'life_charm' },
   },
   metem: {
     master: [...T1, 'blackmage', 'whitemage', 'bard', 'knight', 'timemage', 'sage', 'paladin'],
