@@ -5,6 +5,7 @@
 //   node tools/sheet_decor_ext.js [--out DIR] [--scale N] [--html FILE] [--only sheet,grounds,demo,game]
 //                                 [--ids lamp,stall,...]   (sheet: only these pieces / combos)
 //                                 [--grounds ',.:*']       (sheet: grounds under each piece)
+//                                 [--maps regnas_town,...]  (also render real maps whole)
 //
 // Loads the built game (default dist/index.html — run `node tools/build.js` first),
 // injects small maps at runtime and renders them with the same art entry points
@@ -15,6 +16,7 @@
 //                          stalls, fountains 1x1..3x3, cart / bush variants)
 //   decor_ext_grounds.png  town ground variety, kerbs, worn edges, fences, canals
 //   decor_ext_demo_fN.png  a composed demo town square, whole map, frames 0..3
+//   decor_ext_map_<id>.png a real map (--maps), whole, frame 0
 //   decor_ext_game_N.png   the demo square in the running game (real field
 //                          renderer, NPCs walking), a few views and frames
 'use strict';
@@ -31,7 +33,8 @@ const SCALE = +opt('scale', 3);
 const HTML = path.resolve(opt('html', path.join(ROOT, 'dist/index.html')));
 const ONLY = opt('only', 'sheet,grounds,demo,game').split(',');
 const IDS = opt('ids', '');
-const GROUNDS = opt('grounds', ',.:*'); // sheet: ground chars under each piece (grass cobble dirt snow) // sheet filter: comma list of decor ids / combo names (substring)
+const GROUNDS = opt('grounds', ',.:*');
+const MAPS = opt('maps', ''); // also render these real maps whole: decor_ext_map_<id>.png // sheet: ground chars under each piece (grass cobble dirt snow) // sheet filter: comma list of decor ids / combo names (substring)
 
 // ---------------------------------------------------------------- demo town square
 // local legend: . cobbles (town floor)  , grass  : dirt  f flowers  ~ water  | = bridges
@@ -215,7 +218,7 @@ window.DSHEET = (function () {
     }
     return cv.toDataURL();
   }
-  function grounds(scale) {
+  function grounds(scale, filter) {
     const sets = [
       ['town grounds: cobble plaza, dirt path, grass (variety by position), kerbs & worn edges', {
         rows: [
@@ -239,7 +242,7 @@ window.DSHEET = (function () {
           '.......:......~~~,,,',
           '.......:......~~~,,,',
           ',,,,,,,:,,,,,,~~~,,,',
-          ',,,,~~~=~~~~~~~~~,,,',
+          ',,,,~~~|~~~~~~~~~,,,',
           ',,,,,,,:,,,,,,,,,,,,',
         ] }],
       ['fences over the ground they stand on (grass, dirt, cobble, snow), joins and corners', {
@@ -256,7 +259,8 @@ window.DSHEET = (function () {
         ] }],
       ['snow / sand grounds', { rows: ['********dddddddd', '********dddddddd', '****::::dddd::::', '********dddddddd'] }],
     ];
-    const parts = sets.map(([name, def]) => ({ name, img: render(compile(def), 0, scale) }));
+    const parts = sets.filter(([name]) => !filter || filter.split(',').includes(name.split(/[ :]/)[0]))
+      .map(([name, def]) => ({ name, img: render(compile(def), 0, scale) }));
     const W = Math.max(...parts.map((p) => p.img.width)) + 8;
     const H = parts.reduce((s, p) => s + p.img.height + 22, 8);
     const [cv, c] = canvas(W, H);
@@ -268,7 +272,12 @@ window.DSHEET = (function () {
     const m = compile(def);
     return render(m, frame, scale).toDataURL();
   }
-  return { sheet, grounds, demo };
+  /** a real map from src/maps, whole, through the same art entry points */
+  function realMap(id, frame, scale) {
+    const m = R.FieldMap.compile(id);
+    return m ? render(m, frame, scale).toDataURL() : null;
+  }
+  return { sheet, grounds, demo, realMap };
 })();
 `;
 
@@ -289,8 +298,12 @@ async function main() {
   };
   const t0 = Date.now();
   if (ONLY.includes('sheet')) save('decor_ext_sheet', await page.evaluate(`DSHEET.sheet(${SCALE}, ${JSON.stringify(IDS)}, ${JSON.stringify(GROUNDS)})`));
-  if (ONLY.includes('grounds')) save('decor_ext_grounds', await page.evaluate(`DSHEET.grounds(${SCALE})`));
+  if (ONLY.includes('grounds')) save('decor_ext_grounds', await page.evaluate(`DSHEET.grounds(${SCALE}, ${JSON.stringify(IDS)})`));
   if (ONLY.includes('demo')) for (let f = 0; f < 4; f++) save('decor_ext_demo_f' + f, await page.evaluate(`DSHEET.demo(${JSON.stringify(DEMO)}, ${f}, ${Math.max(1, SCALE - 1)})`));
+  for (const id of MAPS.split(',').filter(Boolean)) {
+    const url = await page.evaluate(`DSHEET.realMap(${JSON.stringify(id)}, 0, ${Math.max(1, SCALE - 1)})`);
+    if (url) save('decor_ext_map_' + id, url); else console.log('(no map ' + id + ')');
+  }
   if (ONLY.includes('game')) {
     // the real field renderer: inject the map, start a game on it, walk a little
     await page.evaluate(`(() => { RPG.DB.maps.__decor_demo = ${JSON.stringify(DEMO)}; RPG.debug.newGameAt('__decor_demo', 'plaza'); RPG.debug.noEncounter(true); })()`);

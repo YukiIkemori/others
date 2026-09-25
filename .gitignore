@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 rpg/dist/.fontcache/
 rpg/node_modules/
+rpg/.*.js

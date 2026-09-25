@@ -59,12 +59,15 @@
     },
     snowfloor(t) {
       const S = t.PAL.snow;
-      return t.tex(16, 16, (x, y) => {
+      const b = t.tex(16, 16, (x, y) => {
         const v = t.fnoise(x, y, 8, 16, 85);
-        if ((x * 5 + y * 7) % 19 === 0) return S[4];
-        if (v < 0.3 && (x + y) % 2 === 0) return S[2];
+        if (v < 0.28 && (x + y) % 2 === 0) return S[2];
+        if (v > 0.72 && (x + y) % 2 === 1) return S[4];
         return S[3];
       });
+      // glints with a hint of blue shadow below
+      for (const [x, y] of [[2, 3], [11, 1], [7, 8], [14, 10], [4, 13], [9, 14]]) { b.wset(x, y, S[4]); b.wset(x + 1, y + 1, S[2]); }
+      return b;
     },
     ice(t) {
       const I = [0x6890c0, 0x8cb4dc, 0xacd0ec, 0xc8e4f6, 0xecfaff];
@@ -608,7 +611,7 @@
   const VAR = {
     grass: [[0.62, 0], [0.08, 1], [0.07, 2], [0.07, 3], [0.06, 4], [0.06, 5], [0.02, 6], [0.02, 7]],
     dirt: [[0.6, 0], [0.1, 1], [0.08, 2], [0.04, 3], [0.07, 4], [0.06, 5], [0.05, 6]],
-    cobble: [[0.64, 0], [0.07, 1], [0.07, 2], [0.07, 3], [0.06, 4], [0.03, 5], [0.03, 6], [0.03, 7]],
+    cobble: [[0.7, 0], [0.07, 1], [0.05, 2], [0.07, 3], [0.06, 4], [0.02, 5], [0.02, 6], [0.01, 7]],
     sand: [[0.66, 0], [0.12, 1], [0.08, 2], [0.07, 3], [0.07, 4]],
     snow: [[0.66, 0], [0.1, 1], [0.1, 2], [0.07, 3], [0.07, 4]],
   };
@@ -670,8 +673,9 @@
     else if (v === 4) { tuft(b, 7, 7, G); }
     else if (v === 5) { // footprints
       for (const [x, y] of [[4, 3], [6, 6], [8, 9], [10, 12]]) { b.set(x, y, DIRT[1]); b.set(x, y + 1, DIRT[1]); b.set(x + 1, y + 1, DIRT[0]); }
-    } else if (v === 6) { // wheel ruts
-      for (let y = 0; y < 16; y++) { if (y % 5 !== 2) { b.set(4, y, t.mul(b.get(4, y), 0.84)); b.set(11, y, t.mul(b.get(11, y), 0.84)); } b.set(5, y, t.mix(b.get(5, y), DIRT[3], 0.4)); }
+    } else if (v === 6) { // scattered gravel
+      for (const [x, y] of [[3, 9], [9, 4], [12, 12], [6, 13]]) pebble(b, x, y, false);
+      b.set(10, 9, DIRT[4]); b.set(5, 6, DIRT[4]);
     }
   }
   function cobbleDetail(b, v) {

@@ -86,7 +86,7 @@ const PREPARED = {
   non: {
     master: ['priest', 'mage', 'warrior', 'whitemage', 'blackmage', 'knight', 'sage', 'paladin', 'bard'],
     job: 'sage', sub: 'whitemage', reaction: 'paladin_last_stand', support: 'sage_half_mp',
-    equip: { weapon: 'pg_aurora_staff', head: 'pg_halo', body: 'pg_aurora_robe', acc: 'pg_clarity_amulet' },
+    equip: { weapon: 'pg_aurora_staff', head: 'pg_halo', body: 'pg_aurora_robe', acc: 'pg_soul_bell' },
   },
   metem: {
     master: [...T1, 'blackmage', 'whitemage', 'bard', 'knight', 'timemage', 'sage', 'paladin'],
@@ -132,8 +132,10 @@ function playerCommands(eng, opts) {
   if (!opts.dispel) return cmds;
   const boss = eng.living('mon').find((m) => m.boss);
   if (!boss) return cmds;
-  const up = ['def', 'mdef', 'atk', 'mag'].reduce((s, k) => s + Math.max(0, boss.buffs[k]), 0);
-  if (up < 2) return cmds;
+  // its scales (def/mdef) are always worth erasing; gathered power (atk/mag +1) only before 終焉の咆哮
+  const guard = boss.buffs.def > 0 || boss.buffs.mdef > 0;
+  const power = boss.buffs.atk + boss.buffs.mag >= 2;
+  if (!guard && !power) return cmds;
   for (const u of eng.party) {
     if (!u.commandable()) continue;
     const cmd = cmds[u.idx];
@@ -186,6 +188,12 @@ function runMany(p, o, n) {
     dealt: acc.dealt / n, taken: acc.taken / n,
   };
   return out;
+}
+
+// used as a module (diagnostics): export the models and stop here
+if (require.main !== module) {
+  module.exports = { party, fight, runMany, playerCommands, PREPARED, LEVELS_ONLY, BAG, R };
+  return;
 }
 
 function describe(c) {
