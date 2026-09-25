@@ -1443,6 +1443,7 @@
     g.onShip = !!(sh && sh.map === m.id && sh.x === s.x && sh.y === s.y && !m.walkable(s.x, s.y));
     if (g.onShip) sh.dir = L.P[0].dir;
     if (m.location) g.visited[m.location] = true;
+    else if (m.type === 'dungeon') { const loc = R.State.dungeonLocation(m.def); if (loc) g.visited[loc] = true; }
     L.resetEnc();
     L._fm = null;
     L.banner = null;

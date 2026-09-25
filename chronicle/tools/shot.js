@@ -26,7 +26,7 @@ let playwright;
 try { playwright = require('playwright'); } catch (e) { playwright = require('/opt/node22/lib/node_modules/playwright'); }
 
 const ROOT = path.resolve(__dirname, '..');
-const KEY = { up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight', a: 'KeyZ', b: 'KeyX', dash: 'ShiftLeft' };
+const KEY = { up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight', a: 'KeyZ', b: 'KeyX', y: 'KeyC', l: 'KeyQ', r: 'KeyE', dash: 'ShiftLeft' };
 
 async function main() {
   const argv = process.argv.slice(2);

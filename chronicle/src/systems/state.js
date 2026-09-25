@@ -120,6 +120,33 @@
       return b;
     },
     killed(monId) { const b = (R.Game.bestiary[monId] = R.Game.bestiary[monId] || { seen: 1, kills: 0 }); b.kills++; },
+    /** the teleport location of a dungeon map (the one whose world spawn is the dungeon's exit), or null */
+    dungeonLocation(def) {
+      const e = def && def.escape;
+      if (!e || !e.spawn) return null;
+      for (const id in DB.locations) { const l = DB.locations[id]; if (l.dungeon && l.spawn === e.spawn) return id; }
+      return null;
+    },
+    /**
+     * Save migration: dungeons became ワープ targets later — mark those the party has already been in
+     * (a chest opened there, a monster of its encounter zones seen, or standing in it now).
+     */
+    syncVisited(g) {
+      g.visited = g.visited || {};
+      const zoneSeen = (z) => {
+        const t = DB.encounters[z];
+        return !!(t && t.groups.some((gr) => gr.mons.some(([m]) => g.bestiary && g.bestiary[m] && (g.bestiary[m].seen || g.bestiary[m].kills))));
+      };
+      for (const mid in DB.maps) {
+        const d = DB.maps[mid];
+        if (d.type !== 'dungeon') continue;
+        const loc = State.dungeonLocation(d);
+        if (!loc || g.visited[loc]) continue;
+        const chest = Object.values(d.chests || {}).some((c) => c && c.id && g.chests && g.chests[c.id]);
+        const zones = [].concat(d.encounter || []).filter((z) => typeof z === 'string');
+        if (chest || (g.pos && g.pos.map === mid) || zones.some(zoneSeen)) g.visited[loc] = true;
+      }
+    },
     noteDrop(monId, kind) { const b = (R.Game.bestiary[monId] = R.Game.bestiary[monId] || { seen: 1, kills: 0 }); b[kind] = true; },
 
     // --------------------------------------------------- serialisation
@@ -176,6 +203,7 @@
         if (oldJp) R.Rules.migrateJpTables(c); else R.Rules.syncUnlocks(c);
         R.Rules.syncMastery(c);
       }
+      State.syncVisited(g);
       R.Game = g;
       if (R.Battle) R.Battle.autoCarry = false;
       return true;

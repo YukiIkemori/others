@@ -59,6 +59,15 @@
     return '';
   }
   Menu.gearTag = gearTag;
+  /** sort key for the candidate list: a weapon's 攻撃力 (or 魔力 when that is its point), armour 守備力+魔法防御,
+   *  accessories by the member-aware 最強装備 score */
+  function gearRank(c, id) {
+    const it = DB.items[id];
+    if (!it) return -1;
+    if (it.type === 'weapon') return Math.max(it.atk || 0, it.mag || 0);
+    if (it.type === 'acc') return R.Rules.itemScore(c, id);
+    return (it.def || 0) + (it.mdef || 0) * 0.5;
+  }
 
   let C = null;
   const cls = () => C || (C = build());
@@ -101,13 +110,15 @@
         const c = this.c;
         const cur = R.Rules.stats(c);
         const now = c.equip[slot] || null;
-        // the item worn right now is listed (marked E) so you can see what you would replace
-        const items = [{ label: '外す', id: null }]
-          .concat(now ? [{ label: Menu.kit.itemLabel(now), id: now, d: 0, worn: true }] : [])
-          .concat(ids.map((id) => ({ label: Menu.kit.itemLabel(id), id, d: gearScore(c, slot, id, cur) })));
-        const start = now ? 1 : 0;
+        // strongest first (攻撃力/魔力 for weapons, 守備力 for armour); the item worn right now sits
+        // in its place in that order (marked E) so you can see what you would replace
+        const rows = ids.filter((id) => id !== now).map((id) => ({ label: Menu.kit.itemLabel(id), id, d: gearScore(c, slot, id, cur) }));
+        if (now) rows.push({ label: Menu.kit.itemLabel(now), id: now, d: 0, worn: true });
+        rows.sort((a, b) => gearRank(c, b.id) - gearRank(c, a.id) || (b.worn ? 1 : 0) - (a.worn ? 1 : 0));
+        const items = [{ label: '外す', id: null }].concat(rows);
+        const wornAt = items.findIndex((r) => r.worn);
         const list = new R.UI.List({
-          x: 4, y: 46, w: 248, rows: ROWS, items, index: now ? 1 : ids.length ? 1 : start,
+          x: 4, y: 46, w: 248, rows: ROWS, items, index: wornAt > 0 ? wornAt : rows.length ? 1 : 0,
           title: slot === 'shield' && dual(c) ? '左手' : LABEL[slot],
           onChange: () => this.updatePreview(),
           drawItem: (row, x, y, w) => this.drawCand(row, x, y, w),
@@ -124,6 +135,7 @@
       }
       inputCand() {
         const cd = this.cand;
+        if (In().pressed('y') && cd.list.item && cd.list.item.id) { R.sfx('confirm'); this.flow(() => Menu.itemDetail(cd.list.item.id)); return; }
         const r = cd.list.update();
         if (r === 'cancel') { this.mode = 'slot'; this.cand = null; this.preview = null; return; }
         if (r !== 'select') return;
@@ -158,8 +170,8 @@
         const K = Menu.kit;
         const c = this.c;
         // header: member (or the highlighted item's description while choosing)
-        G().window(4, 4, 248, 40);
         const cd = this.mode === 'cand' ? this.cand : null;
+        G().window(4, 4, 248, 40, cd && cd.list.item && cd.list.item.id ? { title: 'Y：詳細' } : undefined);
         if (cd) {
           const row = cd.list.item;
           const text = row && row.id ? (DB.items[row.id].desc || '') : '今の装備を外す。';
