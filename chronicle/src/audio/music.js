@@ -19,73 +19,91 @@
     CA2: 'D | Em7 | Bm | A | D | G | Em7 A7 | Bm G | Em7 A7 | D |',
   };
   const HARP_ROLL = "l8 R F O T' F' T' O F";
+  // Crest's theme stays the studio's: Chronicle quotes THEME.TA on a music box (legend, the
+  // ending's E7 — DESIGN §11.10.2), through the shared motif table
+  Object.assign(R.Audio.MOTIFS, {
+    CREST_TA: THEME.TA, CREST_TA4: 'd4. e8 a2 | g4. f+8 e4 d4 | <b4. >c+8 d4 f+4 | e1 |',
+    CREST_CA: THEME_CHORDS.CA, CREST_CA4: 'D | Em7 | Bm | A |',
+  });
 
   // ================================================================ title
-  // D major, 88 bpm. Horn call (4) → theme on violin (8) → bridge on flute (8)
-  // → theme on trumpet with a rising close (10). Loops to the violin theme.
+  // Chronicle's main theme 「語り部の主題」 ($TELLER, music_chronicle.js). E minor → G major,
+  // 3/4, ♩=92 (DESIGN §11.10.3): harp prelude with the rising page-turn (4) → flute theme (8)
+  // → violin B strain (8) → tutti theme (8) → oboe epilogue on the motif head, turning back to
+  // E minor (8). Loops from the prelude (36 bars, 70 s).
+  const PAGE3 = "l8 R F O T' F' O'", ROLL3 = "l8 R F O T' O F";
   M.title = {
-    tempo: 88, key: 'D', gain: 0.75,
-    echo: { time: 0.34, fb: 0.35, wet: 0.3, lp: 3000 },
-    chords: `@I D | G/D | G*3 D/F# | Asus4 A |
-      L @A $CA @B $CB @A2 $CA2`,
-    defs: Object.assign({}, THEME, THEME_CHORDS),
+    tempo: 92, meter: '3/4', key: 'G', gain: 0.85,
+    echo: { time: 0.326, fb: 0.35, wet: 0.3, lp: 3200 },
+    chords: `
+      L @P Em | C | Am7 | Dsus4*2 D |
+      @A $TC $TCA
+      @B $TCB
+      @T $TC $TCA
+      @C Cmaj7 | Bm7 | Am7 | D | Cmaj7 | Am7 | B7sus4*2 B7 | B7 |`,
+    defs: {
+      CODA: 'e4. f+8 g8 b8 | a4. f+8 d4 | >c4. <b8 a4 | f+2. | e4. d8 e4 | c2 e4 | e2 d+4 | <b2.> |',
+    },
     ch: [
-      { inst: 'horn', vol: 1, pan: 0.05, echo: 0.3, mml: `
-        o4 q7 d4. e8 a2 | b4. >c+8 d2< | b4 a4 g4 f+4 | e1 |
-        L o5 @violin $TA @flute $TB @trumpet $TA2` },
-      { inst: 'horn', harm: 0, oct: -1, vol: 0.5, pan: -0.3, echo: 0.25 },
-      { inst: 'strings', vol: 0.36, pan: -0.15, echo: 0.3, pat: 'C1', range: [55, 76], voices: 4 },
-      { inst: 'harp', vol: 0.5, pan: 0.3, echo: 0.3, range: [50, 62], pats: { I: '', A: HARP_ROLL } },
-      { inst: 'contra', vol: 0.75, range: [36, 55], pats: { I: 'R1', A: 'l2 R R', A2: "l4 R R F, R" } },
+      { inst: 'flute', vol: 1, pan: 0.05, echo: 0.3, mml: `
+        L o5 q7 r2. | r2. | r2. | r2. |
+        @flute $TELLER $TELLER_ANS
+        @violin $TELLER_B
+        @violin $TELLER $TELLER_ANS
+        @oboe $CODA` },
+      { inst: 'clarinet', harm: 0, vol: 0.38, pan: -0.3, echo: 0.25 },
+      { inst: 'flute', vol: 0.5, pan: 0.2, echo: 0.3, mml: `L o5 q7 [r2. |]20 $TELLER $TELLER_ANS [r2. |]8` },
+      { inst: 'horn', harm: 2, oct: -1, vol: 0.5, pan: -0.25, echo: 0.25 },
+      { inst: 'harp', vol: 0.52, pan: 0.3, echo: 0.35, range: [43, 59], pats: { P: PAGE3, A: PAGE3, B: ROLL3, T: PAGE3, C: ROLL3 } },
+      { inst: 'strings', vol: 0.3, pan: -0.15, echo: 0.3, range: [55, 74], voices: 3, pats: { P: 'C2.', T: 'C4 C4 C4', C: 'C2.' } },
+      { inst: 'contra', vol: 0.6, range: [31, 50], pats: { P: 'R2.', B: 'l4 R2 F', C: 'R2.' } },
       { inst: 'timp', vol: 0.5, echo: 0.1, mml: `
-        o2 v11 d4 r4 a4 r4 | d4 r4 d8 d8 d4 | g4 r4 g8 g8 f+4 | v8 [a32]16 v11 [a32]8 v14 a4 |
-        L v12 d4 r2. | r1 | r1 | a4 r2. | d4 r2. | g4 r2. | a4 r4 a8 a8 a4 | d4 r2. |
-        v10 b4 r2. | r1 | g4 r2. | r1 | e4 r2. | r1 | r1 | v8 [a32]16 v11 [a32]8 v14 a4 |
-        v13 d4 r2. | r1 | b4 r2. | a4 r2. | d4 r2. | g4 r2. | e4 r4 a8 a8 a4 | b4 r4 g4 r4 | e4 r4 a8 a8 a4 | d2 r2 |` },
-      { inst: 'drums', vol: 0.55, echo: 0.15, mml: `
-        {bc}1 | r1 | r1 | l16 v6 [s]4 v8 [s]4 v10 [s]4 v13 [s]4 l8 v12 |
-        L {bc}1 | r1 | r1 | r1 | b4 r2. | r1 | r1 | r1 |
-        c1 | r1 | r1 | r1 | c1 | r1 | r1 | l16 v6 [s]4 v8 [s]4 v10 [s]4 v13 [s]4 l8 v12 |
-        {bc}1 | r1 | r1 | r1 | {bc}1 | r1 | b4 r2. | b4 r2. | b4 r4 b4 r4 | {bc}1 |` },
+        L o2 [r2. |]19 v7 [d32]8 v10 [d32]8 v13 d4 |
+        v12 e4 r2 | c4 r2 | d4 r2 | g4 r2 | e4 r2 | c4 r2 | d4 r4 d4 | g4 r2 | [r2. |]8` },
+      { inst: 'drums', vol: 0.5, echo: 0.15, mml: `
+        L [r2. |]4 i2. | [r2. |]3 i2. | [r2. |]3
+        [z4 z4 z4 |]7 l16 v6 s s s s v8 s s s s v10 s s s s l4 v12 |
+        {bc}2. | [r2. |]3 c2. | r2. | r2. | b4 r2 |
+        i2. | [r2. |]3 i2. | [r2. |]3` },
     ],
   };
 
   // ================================================================ overworld
-  // F major march, 112 bpm. Intro 2 bars, then A A' B A' (32 bars, loop).
+  // The B strain of 「語り部の主題」 ($TELLER4_B) as a walking song: D major, ♩=112, horn and
+  // flute over pizzicato, a march that does not shout (DESIGN §11.10.3, P2). Horn call 2 →
+  // flute (8) → horn (8) → clarinet strain of the road (8) → flute and horn together (8).
   M.overworld = {
-    tempo: 112, key: 'F', gain: 0.83,
+    tempo: 112, key: 'D', gain: 0.81,
     echo: { time: 0.268, fb: 0.28, wet: 0.22, lp: 3200 },
     chords: `
-      @I F | C7 |
-      L @A F | C/E | Dm | Bb C7 | F/A | Bb Gm | Dm Gm7 | C7sus4 C7 |
-      F | C/E | Dm | Bb C7 | Dm | Bb | Gm7 C7 | F |
-      @B Bb | F/A | Gm | Dm | Eb | Bb/D | Csus4 | C7 |
-      @A F | C/E | Dm | Bb C7 | Dm | Bb | Gm7 C7 | F |`,
+      @I D | Asus4 A |
+      L @A G | A | F#m | Bm | Em | A/C# | D G | Asus4 A |
+      G | A | F#m | Bm | Em | A/C# | D G | Asus4 A |
+      @B Bm | G | D | A | Bm | G | Em7 | A7 |
+      @A G | A | F#m | Bm | Em | A/C# | D G | Asus4 A |`,
     defs: {
-      P1: 'c4. f8 a4 f4 | g8 f8 e8 d8 c4. c8 | d4. f8 a4 >d4< | >d4 c4< b-4',
-      AE: 'g4 | a4. g8 f4 a4 | b-4. a8 g4 b-4 | a4. f8 d4 f4 | g2 e4 r4 |',
-      AF: '>c4< | >d4. c8 <a4 >d4< | >d4. c8 <b-4 f4 | b-4. a8 g4 e4 | f2. r4 |',
-      DA: '{kc}8 h8 s8. s16 k8 h8 s8 h8 | k8 h8 s8. s16 k8 k8 s8 h8 | k8 h8 s8. s16 k8 h8 s8 h8 | k8 h8 s8. s16 k8 k8 s16 s16 s8 |',
-      DA2: '{kc}8 h8 s8. s16 k8 h8 s8 h8 | k8 h8 s8. s16 k8 k8 s8 h8 | k8 h8 s8. s16 k8 h8 s8 h8 | k8 s16 s16 s8 s16 s16 k8 s16 s16 s8 s8 |',
-      DB: '{kc}4 h8 h8 x4 h8 h8 | k4 h8 h8 x4 h8 k8 | k4 h8 h8 x4 h8 h8 | k4 h8 h8 x4 h8 k8 |',
-      DB2: 'k4 h8 h8 x4 h8 h8 | k4 h8 h8 x4 h8 k8 | k4 h8 h8 x4 h8 h8 | l16 v8 s s s s v10 s s s s v12 s s s s v14 s s s s v12 l8 |',
+      ROAD: 'd4 f+4 b4. a8 | g4. f+8 e4 d4 | f+4 a4 >d4. c+8< | c+4 e4 a2 | d4 f+4 b4. >c+8< | >d4. c+8 <b4 g4 | e4 g4 b4 >d4< | >c+2 <a4 g4 |',
+      MA: 'k4 s8. s16 k4 s4 | k4 s8. s16 k8 k8 s4 |',
+      MF: 'k4 s8. s16 l16 s s s s s s s s l8 |',
+      MB: 'k4 x8 x8 k4 x8 x8 |',
     },
     ch: [
-      { inst: 'trumpet', vol: 1, pan: 0.1, echo: 0.3, mml: `
-        o5 l8 q7
-        c8. c16 f8. f16 a4 >c4< | b-8 a8 g8 e8 c4 r4 |
-        L $P1 $AE $P1 $AF
-        @flute d4 f4 b-4. a8 | a4. g8 f4 c4 | d4 g4 b-4. a8 | a4. g8 f4 d4 |
-        e-4 g4 b-4. >c8< | >d4. c8< b-4 f4 | g4 f4 g4 >c4< | >c2< b-4 g4 |
-        @trumpet $P1 $AF` },
-      { inst: 'horn', harm: 0, oct: -1, vol: 0.47, pan: -0.3, echo: 0.25 },
-      { inst: 'strings', vol: 0.38, pan: -0.15, echo: 0.2, pat: 'C1', range: [53, 74], voices: 3 },
+      { inst: 'flute', vol: 1, pan: 0.1, echo: 0.3, mml: `
+        o5 q7 r1 | r1 |
+        L o5 k-5 @flute $TELLER4_B k0 [r1 |]8
+        o5 @clarinet $ROAD
+        o5 k-5 @flute $TELLER4_B k0` },
+      { inst: 'clarinet', harm: 0, vol: 0.36, pan: -0.3, echo: 0.25 },
+      { inst: 'horn', vol: 0.8, pan: -0.15, echo: 0.25, mml: `
+        o4 q7 a4. b8 >d2< | e4. f+8 e2 |
+        L [r1 |]8 o4 k-5 $TELLER4_B k0 [r1 |]8 o4 k-5 $TELLER4_B k0` },
+      { inst: 'strings', vol: 0.34, pan: -0.15, echo: 0.2, pat: 'C1', range: [53, 74], voices: 3 },
       { inst: 'pizz', vol: 0.33, pan: 0.35, echo: 0.15, q: 4, range: [55, 72], voices: 3,
-        pats: { I: '', A: 'l8 r C r C r C r C', B: 'l8 a b c b a b c b' } },
+        pats: { I: 'l4 C r C r', A: 'l8 r C r C r C r C', B: 'l8 a b c b a b c b' } },
       { inst: 'bass', vol: 0.66, q: 6, range: [36, 58], pats: { I: 'l4 R r R r', A: 'l4 R F, R F,', B: 'l4 R F O A' } },
-      { inst: 'drums', vol: 0.5, echo: 0.08, mml: `
-        l16 v7 [s]8 v9 [s]8 | v11 [s]8 v14 [s]4 r4 | v12 l8
-        L $DA $DA2 $DA $DA2 $DB $DB2 $DA $DA2` },
+      { inst: 'drums', vol: 0.48, echo: 0.08, mml: `
+        {kc}4 r4 s8. s16 s4 | k4 r4 s8. s16 s8 s8 |
+        L [$MA]4 [$MA]3 k4 s8. s16 k4 s4 | $MF [$MB]7 $MF {kc}4 s8. s16 k4 s4 | k4 s8. s16 k8 k8 s4 | [$MA]3` },
     ],
   };
 
@@ -234,32 +252,49 @@
   };
 
   // ================================================================ ending
-  // Reprise of the main theme: tender (♩=75: harp intro, flute theme, violin
-  // bridge), then triumphant (♩=96: trumpet theme with march drums), broad close.
+  // Reprise of 「語り部の主題」 (4/4 lines, $TELLER4…): it begins on a music box and harp (♩72),
+  // the flute takes the B strain (♩84), the whole orchestra sings the theme in the middle (♩96),
+  // the music box remembers Crest's theme (THEME.TA, 4 bars, DESIGN §11.10.2), and a broad
+  // close slows to ♩60. 34 bars ≈ 103 s; loops from the start.
+  const ROLL4 = "l8 R F O T' F' T' O F";
   M.ending = {
-    tempo: 75, key: 'D', gain: 0.75,
-    echo: { time: 0.417, fb: 0.35, wet: 0.3, lp: 3000 },
+    tempo: 72, key: 'G', gain: 0.72,
+    echo: { time: 0.417, fb: 0.38, wet: 0.32, lp: 3000 },
     chords: `
-      L @I D | G/D |
-      @A $CA @B $CB @A2 $CA2
-      @F G/D | D |`,
-    defs: Object.assign({}, THEME, THEME_CHORDS, {
+      L @I Em | Cmaj7 |
+      @A $TC $TCA4
+      @B $TCB4
+      @T $TC $TCA4
+      @Q G | Am7 | Em | D |
+      @F C | G/B | Am7 D7 | G |`,
+    defs: {
       DA: '{kc}8 h8 s8. s16 k8 h8 s8 h8 | k8 h8 s8. s16 k8 k8 s8 h8 | k8 h8 s8. s16 k8 h8 s8 h8 | k8 h8 s8. s16 k8 k8 s16 s16 s8 |',
-    }),
+      CLOSE: 'e2 g2 | d1 | t72 c2 f+2 | t60 g1 |',
+    },
     ch: [
       { inst: 'flute', vol: 1, pan: 0.05, echo: 0.35, mml: `
-        L t75 o5 q7 r1 | r1 |
-        @flute $TA @violin $TB t96 @trumpet $TA2 t84 >d1 | t66 d1< |` },
-      { inst: 'horn', harm: 0, oct: -1, vol: 0.45, pan: -0.3, echo: 0.25 },
-      { inst: 'strings', vol: 0.34, pan: -0.15, echo: 0.3, pat: 'C1', range: [55, 76], voices: 4 },
-      { inst: 'harp', vol: 0.5, pan: 0.3, echo: 0.35, range: [50, 62], pats: { I: HARP_ROLL, F: 'C1' } },
-      { inst: 'bass', vol: 0.68, q: 7, range: [36, 55], pats: { I: 'R1', A: 'l2 R R', A2: 'l4 R F, R F,', F: 'R1' } },
-      { inst: 'timp', vol: 0.52, echo: 0.1, mml: `
-        L o2 r1 | r1 | [r1 |]16
-        v13 d4 r2. | r1 | b4 r2. | a4 r2. | d4 r2. | g4 r2. | e4 r4 a8 a8 a4 | b4 r4 g4 r4 | e4 r4 a8 a8 a4 | d2 r2 |
-        v9 [d32]16 v11 [d32]8 v13 d4 | v14 d2 r2 |` },
-      { inst: 'drums', vol: 0.45, echo: 0.1, mml: `
-        L r1 | r1 | [r1 |]16 $DA $DA {kc}4 r2. | r1 | {bc}1 | r1 |` },
+        L t72 o5 q7 [r1 |]10
+        t84 @flute $TELLER4_B
+        t96 @violin $TELLER4 $TELLER4_ANS
+        t72 [r1 |]4
+        t80 $CLOSE` },
+      { inst: 'clarinet', harm: 0, vol: 0.38, pan: -0.3, echo: 0.3 },
+      { inst: 'musicbox', vol: 0.95, pan: 0.2, echo: 0.45, mml: `
+        L o5 q8 [r1 |]2 $TELLER4 $TELLER4_ANS [r1 |]16 k5 $CREST_TA4 k0 [r1 |]4` },
+      { inst: 'trumpet', vol: 0.6, pan: -0.1, echo: 0.3, mml: `
+        L o5 q7 [r1 |]18 $TELLER4 $TELLER4_ANS [r1 |]4 e2 g2 | d1 | c2 f+2 | g1 |` },
+      { inst: 'horn', harm: 3, oct: -1, min: 46, vol: 0.48, pan: -0.3, echo: 0.25 },
+      { inst: 'harp', vol: 0.5, pan: 0.3, echo: 0.35, range: [43, 60], pats: { I: ROLL4, T: 'C2 C2', Q: ROLL4, F: 'C1' } },
+      { inst: 'strings', vol: 0.32, pan: -0.15, echo: 0.3, range: [55, 76], voices: 4, pats: { I: '', A: 'C1', T: 'C2 C2', Q: 'C1' } },
+      { inst: 'bass', vol: 0.66, q: 7, range: [36, 55], pats: { I: 'R1', B: 'l2 R R', T: 'l4 R F, R F,', Q: 'R1' } },
+      { inst: 'timp', vol: 0.44, echo: 0.1, mml: `
+        L o2 [r1 |]17 v9 [d32]16 v12 [d32]8 v14 d4 |
+        v13 e4 r2. | c4 r2. | d4 r2. | g4 r2. | e4 r2. | c4 r2. | d4 r4 d4 r4 | g4 r2. |
+        [r1 |]4 v9 [c32]16 v12 [c32]8 v14 c4 | g4 r2. | a4 r4 d4 r4 | v14 g1 |` },
+      { inst: 'drums', vol: 0.4, echo: 0.12, mml: `
+        L r1 | r1 | i1 | [r1 |]7
+        [z4 z4 z4 z4 |]7 l16 v6 s s s s v8 s s s s v10 s s s s v12 s s s s l4 |
+        $DA $DA [r1 |]4 {bc}1 | r1 | r1 | {bc}1 |` },
     ],
   };
 

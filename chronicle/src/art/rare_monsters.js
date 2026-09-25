@@ -925,5 +925,41 @@
   const SIZES = { rare_hare: 48, rare_lizard: 48, rare_bird: 48, rare_whale: 64, rare_idol: 48 };
   for (const id in S) R.Gfx.def('mon:' + id, S[id]);
   const A = (R.Art = R.Art || {});
-  A.rareMonsters = { ids: Object.keys(SIZES), sizes: SIZES };
+
+  /**
+   * All 23 rare-monster sprites (DESIGN §9.10.2, sizes s 32 / m 48 / l 64): the 6 kept
+   * from Crest (5 here, rare_prism in postgame.js) and the 17 new ones in
+   * rare_monsters_b.js. Plain data, so it does not depend on the load order.
+   */
+  const RARE = {
+    rare_hare: 48, rare_fawn: 48, rare_glassmoth: 48, rare_acorn: 32, rare_lizard: 48, rare_idol: 48,
+    rare_bird: 48, rare_icefox: 48, rare_lotus: 32, rare_teapot: 32, rare_bellsnail: 48, rare_whale: 64,
+    rare_hermit: 48, rare_hedgehog: 32, rare_prism: 48, rare_monkey: 48, rare_turtle: 48, rare_sheep: 48,
+    rare_clockbird: 32, rare_bookworm: 32, rare_quill: 32, rare_goldfish: 32, rare_tapir: 64,
+  };
+  /** rare monster id (DB.monsters, A12 rare.js) → sprite id, in §9.10.2 order */
+  const BY_MON = {
+    rm_jewel_hare: 'rare_hare', rm_bloom_fawn: 'rare_fawn', rm_glass_moth: 'rare_glassmoth', rm_acorn_prince: 'rare_acorn',
+    rm_diamond_lizard: 'rare_lizard', rm_gold_idol: 'rare_idol', rm_aurora_bird: 'rare_bird', rm_icetail_fox: 'rare_icefox',
+    rm_lotus_sprite: 'rare_lotus', rm_ghost_teapot: 'rare_teapot', rm_bell_snail: 'rare_bellsnail', rm_star_whale: 'rare_whale',
+    rm_treasure_crab: 'rare_hermit', rm_gem_hedgehog: 'rare_hedgehog', rm_prisma: 'rare_prism', rm_spa_monkey: 'rare_monkey',
+    rm_volcano_turtle: 'rare_turtle', rm_moon_sheep: 'rare_sheep', rm_clock_bird: 'rare_clockbird', rm_bookworm: 'rare_bookworm',
+    rm_golden_quill: 'rare_quill', rm_memory_fish: 'rare_goldfish', rm_dream_tapir: 'rare_tapir',
+  };
+  A.RARE_SPRITES = RARE;
+  A.RARE_BY_MON = BY_MON;
+  // every species also answers to 'mon:<monster id>' (§11.4.1), in case data leaves out `sprite`
+  for (const m in BY_MON) R.Gfx.def('mon:' + m, () => R.Gfx.get('mon:' + BY_MON[m]));
+  A.rareMonsters = { ids: Object.keys(RARE), sizes: RARE, crest: Object.keys(SIZES).concat(['rare_prism']) };
+
+  /**
+   * The rare-sprite toolkit (z-buffer Scene, materials, jewels, sparkles, finish) for
+   * rare_monsters_b.js. Files sorting before this one must look it up inside their
+   * factories (R.Art.RareTK), never at load time.
+   */
+  A.RareTK = {
+    Scene, mat, gradMat, ramp, mix, darken, hash, clamp, toRgb, toHex, toHsv, fromHsv,
+    stamp, stampM, on, sym, jewel, sparkle, crystal, crystalEdges, shave, finish,
+    GOLD, RUBY, SAPH, JADE, PINK, SPARK, OUT, INK, WHITE,
+  };
 })(window.RPG);

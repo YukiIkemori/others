@@ -1,8 +1,9 @@
-// Field: the map screen (DESIGN §7.2). One opaque layer that draws tiles,
-// objects and y-sorted sprites, moves the party in 8 directions one whole tile at a time (no half steps; owner request)
-// grid (caterpillar trail),
-// runs NPC AI, doors/locks, damage floors, warps, step events, encounters and
-// the ship, plus the public R.Field API used by title/menu/events/debug.
+// Field: the map screen (DESIGN §3.3.10, §11.6). One opaque layer that draws tiles,
+// objects and y-sorted sprites, moves the party (a caterpillar of up to 4) in 8
+// directions one whole tile at a time (no half steps: owner request, BRIEF A7),
+// runs NPC AI, doors, damage floors, secret passages, warps, step events,
+// encounters (with 魔除け / 誘い寄せ items), tier chests and the wipe → respawn
+// sequence, plus the public R.Field API used by title/menu/events/debug.
 //
 // Map runtime objects come from R.FieldMap.compile (field_map.js); scripted
 // actions (talk, chests, signs, events) run through R.Events (events_runtime.js)
@@ -13,18 +14,20 @@
   const DB = R.DB;
   const TS = 16;
 
-  // frames per tile (a half step takes half, a diagonal half step √2× that: same px/frame in every direction).
+  // frames per tile (a diagonal step takes √2× that: same px/frame in every direction).
   // 16px / 6 = 2⅔ map px per frame = exactly 8 device px at the default field scale (3, see VIEW).
   const WALK = 6, DASH = 4, SAIL = 6, SAIL_DASH = 3, NPC_STEP = 16;
   const SCRIPT_WALK = 8; // cutscene party walks keep their original pacing
   const BUMP_EVERY = 20;
-  // pushing an NPC (DESIGN §7.2): after PUSH_FRAMES of walking into it — or at once when pushed
+  // pushing an NPC (DESIGN §2.3): after PUSH_FRAMES of walking into it — or at once when pushed
   // again within PUSH_AGAIN frames — it side-steps (PUSH_STEP frames); a displaced standing NPC
   // heads back to its post PUSH_BACK frames later, when the party is not next to it
   const PUSH_FRAMES = 14, PUSH_AGAIN = 45, PUSH_STEP = 10, PUSH_BACK = 360;
   const BANNER_FRAMES = 130;
-  const ANIM_RATE = { sea: 16, water: 16, lava: 24, magma: 24, poison: 24, wall_torch: 8, warp_pad: 8, barrier: 8, seal: 16 };
+  const ENC_GRACE = 6; // no random battle in the first 6 steps after a battle / entering a map (§4.11.1)
+  const ANIM_RATE = { sea: 16, water: 16, lava: 24, magma: 24, poison: 24, bog: 20, fog: 32, fog_wall: 24, river: 12, sandstorm: 10, marsh_fog: 24, wall_torch: 8, warp_pad: 8, barrier: 8, seal: 16 };
   const SPIN = { down: 'left', left: 'up', up: 'right', right: 'down' };
+  const partyMax = () => R.PARTY_MAX || 4;
 
   // ------------------------------------------------------------ view (field zoom)
   // The field draws with its own scale on the R.SCALE× canvas: V.z device px
@@ -55,9 +58,31 @@
   let L = null; // the FieldLayer
   let M = null; // current map runtime (R.FieldMap)
 
-  const dirTo = (a, b) => (b.x > a.x ? 'right' : b.x < a.x ? 'left' : b.y > a.y ? 'down' : b.y < a.y ? 'up' : null);
   const isDoor = (id) => typeof id === 'string' && id.startsWith('door');
-  const leaderName = () => R.State.leader().name;
+  const goldWord = () => (R.Events && R.Events.GOLD) || 'ゴールド';
+  /** where a new game starts (DB.config.start, the legacy R.State.START, else the first map) */
+  function startPoint() {
+    const c = DB.config && DB.config.start;
+    if (c && DB.maps[c.map]) return c;
+    const s = R.State && R.State.START;
+    if (s && DB.maps[s.map]) return s;
+    const first = Object.keys(DB.maps)[0];
+    return { map: first || null, spawn: 'entrance', dir: 'down' };
+  }
+  /** party sprite key (R.Party.spriteKey, DESIGN §3.1.2); a plain townsfolk sheet while the art is missing */
+  function spriteKey(c) {
+    let k = null;
+    try { if (R.Party && R.Party.spriteKey) k = R.Party.spriteKey(c); } catch (e) { k = null; }
+    if (!k) {
+      if (c.id === 'hero') k = 'party:hero_' + (c.gender || 'm') + '_' + (c.heroType || 'warrior');
+      else { const d = DB.companions && DB.companions[c.id]; k = 'party:' + ((d && d.sprite) || c.id); }
+    }
+    if (!R.Gfx.has(k)) {
+      const alt = c.gender === 'f' ? 'npc:woman' : 'npc:man';
+      if (R.Gfx.has(alt)) return alt;
+    }
+    return k;
+  }
 
   // ------------------------------------------------------------ tile art
   // The map (tiles + decor) is pre-rendered into a cache canvas that is only
@@ -68,8 +93,8 @@
   //     slides along; crossing its edge shifts the pixels and draws only the
   //     newly exposed strip.
   // Animated tiles / decor redraw just their own cells when their frame changes.
-  // (Previously the whole 17×15 buffer was redrawn at every tile crossing and
-  // every 8 frames on maps with water, which showed up as frame-time spikes.)
+  // Decor marked `over:true` (roof eaves, canopies, arches) is not cached: it is
+  // drawn after the sprites so the party walks under it.
   const WHOLE_MAX = 12000; // cells: cache the whole map when (w+2·V.padx)·(h+2·V.pady) fits
   const MARG = 3; // sliding window margin (cells) on each side of the view
   const CH = 8; // whole-map cache chunk (cells)
@@ -180,6 +205,7 @@
       for (let j = r0; j <= r1 + 2; j++) {
         for (let i = c0 - 1; i <= c1 + 1; i++) {
           const x = TC.x0 + i, y = TC.y0 + j;
+          if (m.decorOver(x, y)) continue; // drawn above the sprites
           let g = decorGfx(m, x, y);
           if (!g) continue;
           if (Array.isArray(g)) {
@@ -198,19 +224,18 @@
   function scanAnim(i0, j0, i1, j1) {
     const m = M;
     if (i0 === undefined) { TC.anim = []; TC.danim = []; i0 = 0; j0 = 0; i1 = TC.w - 1; j1 = TC.h - 1; }
-    for (let j = j0; j <= j1; j++) {
-      for (let i = i0; i <= i1; i++) {
-        const x = TC.x0 + i, y = TC.y0 + j;
-        const g = cellGfx(m, x, y);
-        if (Array.isArray(g)) {
-          let plain = true; // no decor can overlap this cell: a plain blit is enough
-          if (m.decor) for (let jj = y; jj <= y + 2 && plain; jj++) for (let ii = x - 1; ii <= x + 1; ii++) if (m.decorAt(ii, jj)) { plain = false; break; }
-          TC.anim.push({ x, y, plain });
-        }
-        const dg = m.decor && decorGfx(m, x, y);
-        if (Array.isArray(dg)) TC.danim.push({ x, y });
-      }
+    for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) addAnim(TC.x0 + i, TC.y0 + j);
+  }
+  function addAnim(x, y) {
+    const m = M;
+    const g = cellGfx(m, x, y);
+    if (Array.isArray(g)) {
+      let plain = true; // no decor can overlap this cell: a plain blit is enough
+      if (m.decor) for (let jj = y; jj <= y + 2 && plain; jj++) for (let ii = x - 1; ii <= x + 1; ii++) if (m.decorAt(ii, jj) && !m.decorOver(ii, jj)) { plain = false; break; }
+      TC.anim.push({ x, y, plain });
     }
+    const dg = m.decor && !m.decorOver(x, y) && decorGfx(m, x, y);
+    if (Array.isArray(dg)) TC.danim.push({ x, y });
   }
   function tcCanvas(w, h) {
     const pw = w * TS, ph = h * TS;
@@ -247,6 +272,11 @@
     const i0 = ci * CH, j0 = cj * CH, i1 = Math.min(TC.w, i0 + CH) - 1, j1 = Math.min(TC.h, j0 + CH) - 1;
     redrawRect(i0 * TS, j0 * TS, (i1 - i0 + 1) * TS, (j1 - j0 + 1) * TS);
     scanAnim(i0, j0, i1, j1);
+  }
+  /** is cache cell (i,j) already drawn (whole-map cache: its chunk is done)? */
+  function tcHas(i, j) {
+    if (i < 0 || j < 0 || i >= TC.w || j >= TC.h) return false;
+    return !TC.whole || !!TC.chunks[Math.floor(j / CH) * TC.cw + Math.floor(i / CH)];
   }
   /** whole-map cache: make sure the view's chunks exist, then fill others nearest-first within a time budget */
   function tcFill(ox, oy, budgetMs) {
@@ -293,6 +323,25 @@
       if (x < TC.x0 - 1 || y < TC.y0 || x > TC.x0 + TC.w || y > TC.y0 + TC.h + 1) TC.drawn.delete(k);
     }
     scanAnim();
+  }
+  /** patch the cells a door / tilePatch / found secret changed (the rest of the cache stays) */
+  function tcPatch(cells) {
+    const drop = new Set();
+    for (const [x0, y0] of cells) {
+      const x = unwrap(M, x0, TC.x0 + TC.w / 2, 'w'), y = unwrap(M, y0, TC.y0 + TC.h / 2, 'h');
+      const i = x - TC.x0, j = y - TC.y0;
+      if (!tcHas(i, j)) continue;
+      redrawRect(i * TS, j * TS, TS, TS);
+      drop.add(cellKey(x, y));
+    }
+    if (!drop.size) return;
+    TC.anim = TC.anim.filter((a) => !drop.has(cellKey(a.x, a.y)));
+    for (const k of drop) addAnimKey(k);
+  }
+  function addAnimKey(k) {
+    const x = (k % 4096) - 1024, y = Math.floor(k / 4096) - 1024;
+    const g = cellGfx(M, x, y);
+    if (Array.isArray(g)) TC.anim.push({ x, y, plain: false });
   }
   /** Generate (and cache) the art of cells around the sliding window a little
    *  every frame, so a slide only copies ready-made canvases. Context tiles
@@ -364,14 +413,13 @@
     const ox = Math.floor(camX / TS), oy = Math.floor(camY / TS);
     if (TC.uid !== M.uid || !TC.cv || TC.z !== V.z) tcRebuild(ox, oy);
     else if (TC.ver !== M.version) {
-      // doors opened on this visit patch single cells; anything else redraws everything
-      const dirty = (M.dirtyCells || []).filter((d) => d.v > TC.ver && d.v <= M.version);
+      // doors opened, secrets found and small tilePatches patch their cells; anything else redraws everything
+      const dirty = (M.dirty || []).filter((d) => d.v > TC.ver && d.v <= M.version);
       if (dirty.length === M.version - TC.ver) {
         TC.ver = M.version;
-        for (const d of dirty) {
-          const lx = (unwrap(M, d.x, TC.x0 + TC.w / 2, 'w') - TC.x0) * TS, ly = (unwrap(M, d.y, TC.y0 + TC.h / 2, 'h') - TC.y0) * TS;
-          if (lx >= 0 && ly >= 0 && lx < TC.w * TS && ly < TC.h * TS) redrawRect(lx, ly, TS, TS);
-        }
+        const cells = [];
+        for (const d of dirty) for (const c of d.cells) cells.push(c);
+        tcPatch(cells);
       } else tcRebuild(ox, oy);
     }
     if (TC.whole) { if (TC.left) tcFill(ox, oy, 0); }
@@ -411,23 +459,20 @@
   }
 
   // ------------------------------------------------------------ the layer
-  // Movement (DESIGN §7.2): the leader's collision box is one tile (16×16)
-  // anchored at P[0].x/y, in tile units on a half-tile (8px) grid. A position is
-  // valid when every tile the box overlaps is passable. Each move is one half
-  // step in up to 8 directions (diagonals check the whole swept rectangle, so
-  // no corner is ever cut); blocked diagonals slide along the free axis and a
-  // push into a wall that is only half in the way nudges half a tile sideways.
+  // Movement (DESIGN §2.3): the leader's collision box is one tile (16×16)
+  // anchored at P[0].x/y, in tile units. A position is valid when every tile
+  // the box overlaps is passable. Each move is one whole step in up to 8
+  // directions (diagonals check the whole swept rectangle, so no corner is ever
+  // cut); blocked diagonals slide along the free axis.
   //
-  // Tile-based rules use `cell`, the leader's logical tile: on each axis it is
-  // the tile the box last fully occupied (it only changes when the box is
-  // aligned on that axis), so it is always one of the tiles under the box.
-  // Step events, warps, stairs, damage floors and the saved position fire /
-  // are taken when `cell` changes — once per tile entered. A warp or step
-  // event first glides the box onto its tile. Encounters, poison, walk-heal
-  // and 魔除け count the distance walked, so half steps count half.
-  // Step size in tiles. Crest moved on a half-tile grid; Chronicle's owner found that stressful,
-  // so every step is one whole tile (8 directions and wall sliding stay). The grid code below is
-  // step-size generic: with STEP = 1 positions are always whole tiles and corner assist never fires.
+  // Tile-based rules use `cell`, the leader's logical tile. Step events, warps,
+  // stairs, damage floors, secret passages and the saved position fire / are
+  // taken when `cell` changes — once per tile entered. Encounters, walk-heal and
+  // the 魔除け / 誘い寄せ steps count the distance walked (a diagonal step is 1).
+  // Crest moved on a half-tile grid; Chronicle's owner found that stressful, so
+  // every step is one whole tile (8 directions and wall sliding stay). The grid
+  // code below is step-size generic: with STEP = 1 positions are always whole
+  // tiles and the corner assist never fires.
   const STEP = 1;
   const HALF = STEP;
   const EPS = 1e-6;
@@ -452,37 +497,46 @@
     constructor() {
       super();
       this.opaque = true;
-      this.P = [0, 1, 2].map(() => ({ x: 0, y: 0, dir: 'down' })); // P[0] = leader box (tile units, half-tile grid)
+      this.P = [{ x: 0, y: 0, dir: 'down' }]; // P[0] = leader box (tile units); followers after it (party size)
       this.cell = { x: 0, y: 0 }; // the leader's logical tile (see above)
       this.trail = [{ x: 0, y: 0 }]; // leader positions, newest first (caterpillar path)
       this.mv = null; // party move {t,dur,from,kind,len,scripted,resolve}
       this.arrived = null; // the move that just completed {kind,dist,changed} (processed in update)
       this.carry = 0; // frames left over from the move that just ended (keeps chained steps exact)
-      this.walked = 0; // tiles walked since the last whole step (poison / 魔除け / walk-heal)
+      this.walked = 0; // tiles walked since the last whole step (walk-heal / 魔除け steps)
       this.shipPos = null; // exact ship position this visit {x,y,ref} (saves keep the whole tile)
       this.locks = 0; // >0 while warping / processing a step / in battle
       this.walking = false; // a step is chained (no idle frame between steps)
       this.bumpT = 0;
-      this.clock = 0; // walk animation clock
+      this.clock = 0; // walk animation clock (advances only while moving: idle members stand on frame 0)
       this.lift = 0; // teleport lift (px, negative = up)
       this.liftAnim = null;
       this.banner = null;
       this.encCount = 20;
+      this.grace = ENC_GRACE;
       this.spawnName = null;
       this.heldBlock = null;
       this._fm = null; this._fmT = -99;
+      this.syncParty();
     }
 
     // ------------------------------------------------------------ helpers
     get lead() { return this.P[0]; }
+    /** the caterpillar has one body per active member (1..4); new followers appear on the last one */
+    syncParty() {
+      const n = Math.max(1, Math.min(partyMax(), (R.Game && R.Game.party && R.Game.party.length) || 1));
+      while (this.P.length < n) { const l = this.P[this.P.length - 1]; this.P.push({ x: l.x, y: l.y, dir: l.dir }); }
+      if (this.P.length > n) this.P.length = n;
+    }
     place(x, y, dir, cell) {
       if (M && M.wrap) {
-        // keep the logical tile inside the map (the box may hang half a tile over the seam)
+        // keep the logical tile inside the map
         const c0 = cell || { x: Math.round(x), y: Math.round(y) };
         const sx = c0.x - M.wx(c0.x), sy = c0.y - M.wy(c0.y);
         x -= sx; y -= sy;
         cell = { x: c0.x - sx, y: c0.y - sy };
       }
+      this.syncParty();
       for (const p of this.P) { p.x = x; p.y = y; if (dir) p.dir = dir; }
       this.cell = cell ? { x: cell.x, y: cell.y } : { x: Math.round(x), y: Math.round(y) };
       this.trail = [{ x, y }];
@@ -492,27 +546,32 @@
       const c = this.cell;
       R.Game.pos = { map: M.id, x: c.x, y: c.y, dir: this.P[0].dir, spawn: this.spawnName };
     }
-    resetEnc() { this.encCount = M.encRate * U.rf(0.6, 1.4); }
-    /** party-wide field mods: strongest encounterPct, max walkHeal, any noFloorDamage/treasureSense */
+    resetEnc() { this.encCount = M.encRate * U.rf(0.6, 1.4); this.grace = ENC_GRACE; }
+    /** party-wide field mods (R.Party.fieldMods, DESIGN §3.3.4): encounterPct (strongest magnitude,
+     *  opposite signs of the same size cancel, −50..+50), walkHeal (max). Cached for 20 frames. */
     fieldMods() {
       if (this._fm && R.Engine.frame - this._fmT < 20) return this._fm;
-      const out = { encounterPct: 0, walkHeal: 0, noFloorDamage: false, treasureSense: false };
-      for (const c of R.State.alive()) {
-        let m;
-        try { m = R.Rules.mods(c); } catch (e) { continue; }
-        const e = m.encounterPct || 0, cur = out.encounterPct;
-        if (Math.abs(e) > Math.abs(cur) || (Math.abs(e) === Math.abs(cur) && e < cur)) out.encounterPct = e;
-        out.walkHeal = Math.max(out.walkHeal, m.walkHeal || 0);
-        if (m.noFloorDamage) out.noFloorDamage = true;
-        if (m.treasureSense) out.treasureSense = true;
+      let out = null;
+      try { if (R.Party && R.Party.fieldMods) out = Object.assign({ encounterPct: 0, walkHeal: 0 }, R.Party.fieldMods()); } catch (e) { out = null; }
+      if (!out) {
+        out = { encounterPct: 0, walkHeal: 0, noFloorDamage: false };
+        let best = 0, tie = false;
+        for (const c of R.State.alive()) {
+          const m = memberMods(c);
+          const e = m.encounterPct || 0;
+          if (Math.abs(e) > Math.abs(best)) { best = e; tie = false; } else if (e && Math.abs(e) === Math.abs(best) && e !== best) tie = true;
+          out.walkHeal = Math.max(out.walkHeal, m.walkHeal || 0);
+          if (m.noFloorDamage) out.noFloorDamage = true;
+        }
+        out.encounterPct = tie ? 0 : U.clamp(best, -50, 50);
       }
       this._fm = out; this._fmT = R.Engine.frame;
       return out;
     }
-    /** order of drawn members: leader (first living) then the others in party order */
+    /** order of drawn members: leader (first living) then the others in party order (up to 4) */
     members() {
       const party = R.Game.party, lead = R.State.leader();
-      return [lead].concat(party.filter((c) => c !== lead)).slice(0, 3);
+      return [lead].concat(party.filter((c) => c !== lead)).slice(0, partyMax());
     }
     /** leader position (tiles) at fraction `a` of the current fixed step */
     leadAt(a) {
@@ -528,7 +587,7 @@
     }
     /** follower i: the point GAP·i back along the leader's path from `lead`, facing its motion */
     followerAt(i, lead) {
-      const keep = this.P[i].dir;
+      const keep = (this.P[i] || this.P[this.P.length - 1]).dir;
       if (this.mv && this.mv.kind === 'land') return { x: lead.x, y: lead.y, dir: this.P[0].dir };
       let need = GAP * i, a = lead;
       for (let j = lead.back ? 1 : 0; j < this.trail.length; j++) {
@@ -586,7 +645,7 @@
       return new Promise((res) => { this.liftAnim = { from: this.lift, to, t: 0, dur: Math.max(1, frames), resolve: res }; });
     }
     aligned() { return isInt(this.P[0].x) && isInt(this.P[0].y); }
-    /** the ship's exact position on this map {x,y} or null */
+    /** the ship's exact position on this map {x,y} or null (the ship is dormant unless the world uses one) */
     shipXY() {
       const sh = R.Game.ship;
       if (!sh || !M || sh.map !== M.id) return null;
@@ -612,7 +671,7 @@
       const sx = c.x < 0 ? M.w : c.x >= M.w ? -M.w : 0, sy = c.y < 0 ? M.h : c.y >= M.h ? -M.h : 0;
       if (!sx && !sy) return;
       const mvp = (o) => { if (o) { o.x += sx; o.y += sy; } };
-      for (const q of this.P) mvp(q);
+      for (const p of this.P) mvp(p);
       for (const t of this.trail) mvp(t);
       mvp(this.cell);
       const moves = new Set();
@@ -633,7 +692,7 @@
       return null;
     }
     sailOk(x, y) { return M.sailable(x, y) && !M.npcAt(x, y); }
-    /** what a half step by (dx,dy) from (fx,fy) would do:
+    /** what a step by (dx,dy) from (fx,fy) would do:
      *  {kind:'walk'|'sail'|'land'|'board', x, y} | {kind:'exit', ex} | {kind:'lock'} | null (blocked) */
     plan(dx, dy, fx, fy) {
       const p = this.P[0], g = R.Game;
@@ -644,7 +703,6 @@
       if (g.onShip) {
         if (cells.every(([x, y]) => this.sailOk(x, y))) return { kind: 'sail', x: tx, y: ty };
         if (dx && dy) return null;
-        // step ashore: the box leaves the hull for the land beyond (a whole tile from an aligned ship)
         const lx = dx ? (isInt(fx) ? fx + dx : tx) : fx, ly = dy ? (isInt(fy) ? fy + dy : ty) : fy;
         const land = rectCells(lx, ly, lx, ly);
         if (land.every(([x, y]) => !this.footBlock(x, y) && !M.tile(x, y).lock)) return { kind: 'land', x: lx, y: ly };
@@ -667,12 +725,11 @@
       const doors = cells.filter(([x, y]) => isDoor(M.tileAt(x, y)) && !M.opened.has(M.idx(x, y)));
       return { kind: 'walk', x: tx, y: ty, doors };
     }
-    /** corner assist: pushing d into an edge that is only half in the way → a half step sideways that lets the next step pass */
+    /** corner assist (half-step grids only; never fires with whole steps) */
     nudge(d) {
       const p = this.P[0], hz = !!HORIZ[d];
       if (isInt(hz ? p.y : p.x)) return null;
       const dx = U.DX[d], dy = U.DY[d];
-      // try the side of the logical tile first
       const toward = hz ? Math.sign(this.cell.y - p.y) : Math.sign(this.cell.x - p.x);
       for (const s of [toward || 1, -(toward || 1)]) {
         const side = hz ? this.plan(0, s) : this.plan(s, 0);
@@ -702,12 +759,11 @@
       const p = this.P[0], g = R.Game;
       const from = { x: p.x, y: p.y };
       const len = Math.hypot(nx - p.x, ny - p.y);
-      // hold B (or Shift) while moving to dash; "いつでもダッシュ" inverts it
+      // hold B (or Shift) while moving to dash; 「常にダッシュ」 inverts it
       const dash = !!R.Settings.alwaysDash !== !!(R.Input.down('b') || R.Input.down('dash'));
       const perTile = o.dur || (kind === 'sail' ? (dash ? SAIL_DASH : SAIL) : (dash ? DASH : WALK));
       const dur = Math.max(1, perTile * Math.max(len, EPS));
       if (kind === 'land') {
-        // everyone steps ashore together (followers are never left standing on the hull)
         this.shipPos = { x: from.x, y: from.y, ref: g.ship };
         g.onShip = false; R.bgm(M.bgm);
       }
@@ -733,7 +789,7 @@
         let len = 0;
         for (let i = 1; i < this.trail.length; i++) {
           len += segLen(this.trail[i].x - this.trail[i - 1].x, this.trail[i].y - this.trail[i - 1].y);
-          if (len > GAP * (this.P.length - 1) + 1) { this.trail.length = i + 1; break; }
+          if (len > GAP * (partyMax() - 1) + 1) { this.trail.length = i + 1; break; }
         }
       }
       if (g.onShip && mv.kind !== 'board') {
@@ -751,7 +807,7 @@
       this.runLocked(() => R.Events.run(async (ev) => { R.sfx('locked'); await ev.say('鍵がかかっている。'); }, { self: 'lock' }));
       return false;
     }
-    /** held directions → one half step (8 directions, wall sliding, corner assist); true if moving */
+    /** held directions → one step (8 directions, wall sliding); true if moving */
     tryMove(hx, vy, last) {
       const p = this.P[0];
       const hd = dirOf(hx, 0), vd = dirOf(0, vy);
@@ -786,7 +842,7 @@
     }
 
     // ------------------------------------------------------------ pushing NPCs aside
-    /** the pushable NPC that alone blocks a half step toward d (null if a wall is in the way too) */
+    /** the pushable NPC that alone blocks a step toward d (null if a wall is in the way too) */
     npcAhead(d) {
       if (R.Game.onShip) return null;
       const p = this.P[0], tx = p.x + U.DX[d] * HALF, ty = p.y + U.DY[d] * HALF;
@@ -814,13 +870,13 @@
       this.push = null;
       return this.shove(npc, d);
     }
-    /** move npc one tile out of the way: sideways first (the side the party's box leaves free), then
-     *  straight ahead; if it cannot move anywhere, it swaps places with the leader */
+    /** move npc one tile out of the way: sideways first, then straight ahead; if it cannot move
+     *  anywhere, it swaps places with the leader (BRIEF A3: 「動けなければ場所を入れ替える」) */
     shove(npc, d) {
       const p = this.P[0], hz = !!HORIZ[d];
-      const off = hz ? p.y - npc.y : p.x - npc.x; // the box hangs toward this side of the NPC
+      const off = hz ? p.y - npc.y : p.x - npc.x;
       let side = hz ? ['up', 'down'] : ['left', 'right'];
-      if (off > EPS) side = side.reverse(); // the box is lower / further right: dodge up / left
+      if (off > EPS) side = side.reverse();
       else if (!(off < -EPS) && U.rng() < 0.5) side = side.reverse();
       for (const nd of side.concat([d])) {
         const nx = npc.x + U.DX[nd], ny = npc.y + U.DY[nd];
@@ -833,7 +889,7 @@
       // boxed in: trade places (only from a whole tile, straight at the NPC)
       const c = this.cell, dx = U.DX[d], dy = U.DY[d];
       if (!this.aligned() || M.wx(c.x + dx) !== npc.x || M.wy(c.y + dy) !== npc.y) return false;
-      if (M.warpAt(c.x, c.y) || M.eventsAt(c.x, c.y, 'step').length || isDoor(M.tileAt(c.x, c.y))) return false;
+      if (M.warpCell(c.x, c.y) || M.eventsAt(c.x, c.y, 'step').length || isDoor(M.tileAt(c.x, c.y))) return false;
       this.npcStep(npc, M.wx(c.x), M.wy(c.y), U.opposite(d), WALK);
       if (!npc.move || npc.move === 'still' || npc.move === 'spin') npc.backT = PUSH_BACK;
       npc.ai = U.ri(90, 150);
@@ -880,7 +936,7 @@
     }
 
     // ------------------------------------------------------------ arrival
-    /** sync part of a completed half step; returns an async task when something must happen */
+    /** sync part of a completed step; returns an async task when something must happen */
     onArrive(a) {
       const g = R.Game;
       const p = this.P[0], c = this.cell;
@@ -895,7 +951,7 @@
       }
       this.savePos();
       if (a.changed) R.emit('step', M.id, c.x, c.y);
-      // distance-based effects: one "step" per whole tile walked
+      // distance-based effects: one "step" per whole tile walked (a diagonal step is 1)
       this.walked += a.dist;
       let whole = 0;
       while (this.walked >= 1 - EPS) { this.walked -= 1; whole++; }
@@ -903,42 +959,32 @@
       const tasks = [];
       const t = M.tile(c.x, c.y);
       if (!g.onShip && (whole || a.changed)) {
-        const fm = this.fieldMods();
-        const fallen = [];
-        const hurt = a.changed && t.damage > 0 && !fm.noFloorDamage;
-        if (hurt) {
-          for (const m of R.State.alive()) { m.hp = Math.max(0, m.hp - t.damage); if (m.hp <= 0) { m.status = {}; fallen.push(m); } }
-          R.Engine.flashScreen('#ff2010', 8);
-          R.sfx('step_damage');
-        }
-        let poisoned = false;
-        for (let k = 0; k < whole; k++) {
+        // damage floors (DESIGN §3.3.10-10): a share of max HP, never below 1 HP (nobody falls on the field)
+        const pct = t.damagePct || 0, flat = t.damage || 0;
+        if (a.changed && (pct > 0 || flat > 0)) {
+          let hurt = false;
           for (const m of R.State.alive()) {
-            if (m.status && m.status.poison) { poisoned = true; if (m.hp > 1) m.hp--; }
+            if (memberMods(m).noFloorDamage) continue;
+            const max = maxHp(m);
+            const loss = pct > 0 ? Math.max(1, Math.round(max * pct / 100)) : flat;
+            if (m.hp > 1) { m.hp = Math.max(1, m.hp - loss); hurt = true; }
           }
-          if (fm.walkHeal > 0) for (const m of R.State.alive()) m.hp = Math.min(R.Rules.stats(m).hp, m.hp + fm.walkHeal);
+          if (hurt) { R.Engine.flashScreen('#ff2010', 8); R.sfx('step_damage'); }
         }
-        if (poisoned && !hurt) R.Engine.flashScreen('#9020c0', 5);
-        if (!R.State.alive().length) return () => Field.gameOver();
-        if (fallen.length) {
-          tasks.push(() => R.Events.run(async (ev) => {
-            R.sfx('death');
-            for (const m of fallen) await ev.say(m.name + 'は力尽きた……');
-          }, { self: 'floor' }));
-        }
+        const fm = this.fieldMods();
+        if (fm.walkHeal > 0 && whole) for (const m of R.State.alive()) m.hp = Math.min(maxHp(m), m.hp + fm.walkHeal * whole);
       }
-      for (let k = 0; k < whole && g.repelSteps > 0; k++) {
-        g.repelSteps--;
-        if (g.repelSteps === 0) {
-          tasks.push(() => R.Events.run(async (ev) => { await ev.say('魔除けの効果が切れた。'); }, { self: 'repel' }));
-        }
+      this.encItemSteps(whole, tasks);
+      // secret passage: the first time a cell of it is entered (DESIGN §3.3.10-11)
+      if (a.changed && !g.onShip && M.isSecret(c.x, c.y)) {
+        const task = discoverSecret(c.x, c.y);
+        if (task) tasks.push(task);
       }
-      // step events, then warps (once per tile entered; the box glides onto the tile first), then encounters
+      // step events, then warps (once per tile entered), then encounters
       if (a.changed || a.kind === 'align') {
         const evs = M.eventsAt(c.x, c.y, 'step');
         const w = !evs.length && M.warpAt(c.x, c.y);
         if ((evs.length || w) && !this.aligned()) {
-          // pending: the triggers run when the glide ends ('align' arrival); damage/poison already applied
           this.startMove('align', c.x, c.y, p.dir);
           return tasks.length ? seq(tasks) : null;
         }
@@ -952,37 +998,60 @@
       if (!tasks.length && a.dist > 0) {
         const zone = this.encounterStep(t, a.dist);
         if (zone) return () => Field.encounter(zone);
-      }
+      } else if (a.dist > 0) this.grace = Math.max(0, this.grace - a.dist);
       return tasks.length ? seq(tasks) : null;
+    }
+    /** 魔除け / 誘い寄せ: count the steps down; when they run out, say so (STYLE_JA §9) */
+    encItemSteps(whole, tasks) {
+      const g = R.Game, e = g.encItem;
+      if (!e || !whole) return;
+      e.steps = (e.steps || 0) - whole;
+      if (e.steps > 0) return;
+      g.encItem = null;
+      const it = e.id && DB.items[e.id], act = e.id && DB.actions && DB.actions[e.id];
+      const text = it ? it.name + 'の効果が切れた。' : act ? act.name + 'の効き目が切れた。' : (e.pct < 0 ? '魔除けの香' : '誘い寄せの香') + 'の効果が切れた。';
+      tasks.push(() => R.Events.run(async (ev) => { R.sfx('cancel'); await ev.say(text); }, { self: 'encItem' }));
     }
     /** advance the encounter counter by `dist` tiles walked; returns a zone id when a battle starts */
     encounterStep(t, dist) {
       const g = R.Game;
+      const inGrace = this.grace > 0;
+      this.grace = Math.max(0, this.grace - (dist == null ? 1 : dist));
       if (Field.noEncounter) return null;
       const c = this.cell;
       const zone = M.zoneAt(c.x, c.y);
       if (!zone) return null;
-      // 気配消し / 魔除けの香 only keep away monsters the party has outgrown (DQ せいすい rule)
-      if (g.repelSteps > 0 && this.repelBlocks(zone)) return null;
       const rate = t.enc == null ? 1 : t.enc;
       if (!(rate > 0)) return null;
-      const mult = Math.max(0, 1 + (this.fieldMods().encounterPct || 0) / 100);
+      const e = g.encItem;
+      const item = e && !e.weakOnly ? Math.max(0, 1 + (e.pct || 0) / 100) : 1; // 誘い寄せ ×2; 魔除け keeps the rate (weakOnly)
+      const mult = Math.max(0, 1 + (this.fieldMods().encounterPct || 0) / 100) * item;
       this.encCount -= rate * mult * (dist == null ? 1 : dist);
-      if (this.encCount > 0) return null;
+      if (this.encCount > 0 || inGrace) return null;
       this.resetEnc();
       if (!DB.encounters[zone]) { R.FieldMap.warn(M.id, 'unknown encounter zone ' + zone); return null; }
       if (!R.Battle || !R.Battle.start) return null;
+      // 魔除けの香 / 影隠れ: only monsters the party has outgrown stay away (§4.11.1)
+      if (e && e.weakOnly && this.outgrown(zone)) return null;
       return zone;
     }
-    /** repel works only once the party's average level has reached the top of the zone's level band */
-    repelBlocks(zone) {
-      const z = DB.encounters[zone];
-      if (!z || z.lv == null) return true;
-      const top = Array.isArray(z.lv) ? z.lv[z.lv.length - 1] : z.lv; // the top of the zone's band
-      const alive = (R.Game.party || []).filter((c) => c.hp > 0);
-      if (!alive.length) return true;
-      const avg = alive.reduce((n, c) => n + c.level, 0) / alive.length;
-      return avg >= top;
+    /** has the party outgrown the zone? (average level of the living ≥ Lb(zone, map) + 3) */
+    outgrown(zone) {
+      const alive = R.State.alive();
+      if (!alive.length) return false;
+      const avg = alive.reduce((n, c) => n + (c.level || 1), 0) / alive.length;
+      let lb = null;
+      try {
+        if (R.Rules && R.Rules.zoneLevel) {
+          const z = R.Rules.zoneLevel(zone, M);
+          lb = typeof z === 'number' ? z : z && z.Lb != null ? z.Lb : null;
+        }
+      } catch (err) { lb = null; }
+      if (lb == null) {
+        const z = DB.encounters[zone];
+        if (z && z.lv != null) lb = Array.isArray(z.lv) ? z.lv[0] : z.lv;
+      }
+      return lb != null && avg >= lb + 3;
     }
     async useWarp(w) {
       const id = M.tileAt(this.cell.x, this.cell.y);
@@ -993,7 +1062,7 @@
     }
 
     // ------------------------------------------------------------ A button
-    /** cells right in front of the box (the first whole tiles past its leading edge; two when it straddles) */
+    /** cells right in front of the box (the first whole tiles past its leading edge) */
     frontCells() {
       const p = this.P[0], d = p.dir, c = this.cell;
       const out = [];
@@ -1008,6 +1077,7 @@
       }
       return out;
     }
+    /** A: the NPC in front (or across a counter) → chest → sign → examine event in front → underfoot */
     examine() {
       const p = this.P[0], d = p.dir;
       const front = this.frontCells();
@@ -1022,24 +1092,21 @@
       }
       for (const [fx, fy] of front) {
         const sign = M.signAt(fx, fy);
-        if (sign) return this.runLocked(() => R.Events.run(async (ev) => { await ev.say(sign.text); }, { self: 'sign' }));
+        if (sign) return this.runLocked(() => R.Events.read(sign));
       }
-      const own = rectCells(p.x, p.y, p.x, p.y).sort((a, b) => (a[0] === this.cell.x && a[1] === this.cell.y ? -1 : b[0] === this.cell.x && b[1] === this.cell.y ? 1 : 0));
-      const under = new Set(own.map(([x, y]) => x + ',' + y));
+      const own = rectCells(p.x, p.y, p.x, p.y);
       for (const [x, y] of front.concat(own)) {
         const evs = M.eventsAt(x, y, 'examine');
         if (evs.length) {
           const e = evs[0];
           return this.runLocked(() => R.Events.run(e.id, { self: e.id, trigger: 'examine', once: e.once, x, y }));
         }
-        const h = M.hiddenAt(x, y);
-        if (h) return this.runLocked(() => findHidden(h, under.has(x + ',' + y)));
       }
       return null;
     }
     talk(npc) {
       if (npc.mv) { npc.mv = null; }
-      if (!npc.sprite.startsWith('mon:') && !npc.fixedDir) npc.dir = U.opposite(this.P[0].dir);
+      if (!npc.sprite.startsWith('mon:') && !npc.sprite.startsWith('obj:') && !npc.fixedDir) npc.dir = U.opposite(this.P[0].dir);
       npc.ai = 90;
       return R.Events.talk(npc);
     }
@@ -1053,6 +1120,7 @@
     update() {
       if (!M || !R.Game) return;
       if (this.bumpT > 0) this.bumpT--;
+      if (wipe) { this.walking = false; this.carry = 0; return; }
       if (this.locks > 0 || R.Events.busy()) { this.walking = false; this.carry = 0; return; }
       if (this.mv) return;
       if (this.arrived) {
@@ -1063,7 +1131,7 @@
         if (this.mv) return; // gliding onto a warp / event tile
       }
       const In = R.Input;
-      // Y opens the menu (B is held for dashing, so it no longer does)
+      // Y opens the menu (B is held for dashing, so it does not)
       if (In.pressed('y')) { this.walking = false; this.carry = 0; this.openMenu(); return; }
       if (In.pressed('a')) { this.walking = false; this.carry = 0; this.examine(); return; }
       const last = In.dir();
@@ -1088,6 +1156,7 @@
       const g = R.Game;
       if (!g || !M) return;
       g.playFrames = (g.playFrames || 0) + 1;
+      if (this.P.length !== Math.max(1, Math.min(partyMax(), g.party.length))) { this.syncParty(); this.syncFollowers(); }
       const mv = this.mv;
       if (mv) {
         mv.t++;
@@ -1107,11 +1176,10 @@
           }
         }
         this.syncFollowers();
-      } else {
-        this.clock += 0.5;
-        if (this.last && ++this.last.t > -EPS) this.last = null;
-      }
-      this.tickNpcs(R.Engine.top() === this && this.locks === 0 && !R.Events.busy());
+      } else if (this.last && ++this.last.t > -EPS) this.last = null;
+      // a wipe runs once nothing holds the field (DESIGN §4.12.2: no lock, no event, then the game over)
+      if (wipe && !wipe.running && this.locks === 0 && !R.Events.busy()) runWipe();
+      this.tickNpcs(R.Engine.top() === this && this.locks === 0 && !R.Events.busy() && !wipe);
       const la = this.liftAnim;
       if (la) {
         la.t++;
@@ -1124,6 +1192,8 @@
       const msg = R.UI && R.UI._msg;
       if (this.banner && msg && !msg.closed && msg.resolveText && R.Engine.layers.includes(msg)) this.banner = null;
     }
+    /** is the party walking (for the walk frames; idle members stand on frame 0, RS1 style) */
+    moving() { return !!(this.mv || this.walking); }
     tickNpcs(ai) {
       for (const n of M.npcs) {
         if (!n.present) { if (n.path) finishPath(n); continue; }
@@ -1158,10 +1228,11 @@
     npcCanEnter(x, y, n, own) {
       if (!M.inMap(x, y) || !M.walkable(x, y)) return false; // NPCs never cross a wrapping map's seam
       const id = M.tileAt(x, y), t = M.tile(x, y);
-      if (t.counter || t.damage || t.warpIcon || isDoor(id) || id.startsWith('stairs') || id === 'warp_pad') return false;
+      if (t.counter || t.damage || t.damagePct || t.warpIcon || isDoor(id) || id.startsWith('stairs') || id === 'warp_pad') return false;
+      if (M.isSecret(x, y)) return false; // townsfolk never give a secret passage away
       // the party may cut across trees / benches / flowerbeds, townsfolk keep to open ground
       if (id === 'tree' || M.decorAt(x, y)) return false;
-      if (M.warpAt(x, y) || M.chestAt(x, y) || M.eventIdx.has(M.idx(x, y)) || M.signAt(x, y)) return false;
+      if (M.warpCell(x, y) || M.chestAt(x, y) || M.eventIdx.has(M.idx(x, y)) || M.signAt(x, y)) return false;
       if (M.npcAt(x, y, n)) return false;
       if (this.partyOn(x, y)) return false;
       const sh = this.shipXY();
@@ -1202,12 +1273,13 @@
       this.coversScreen = drawTiles(cam.x, cam.y); // next frame the engine may skip its clear
       this.drawObjects(cam);
       this.drawSprites(cam);
+      this.drawOver(cam);
       c.restore();
       // overlays in UI px
       if (this.banner) this.drawBanner();
       if (Field.showCoords) {
-        const p = this.P[0], c = this.cell;
-        G.text(M.id + ' ' + c.x + ',' + c.y + (this.aligned() ? '' : ' (' + p.x + ',' + p.y + ')') + (R.Game.onShip ? ' ship' : ''), 3, R.H - 11, { size: 8, color: G.C.yellow, shadow: true });
+        const p = this.P[0], cl = this.cell;
+        G.text(M.id + ' ' + cl.x + ',' + cl.y + (this.aligned() ? '' : ' (' + p.x + ',' + p.y + ')') + (R.Game.onShip ? ' ship' : ''), 3, R.H - 11, { size: 8, color: G.C.yellow, shadow: true });
       }
     }
     inView(cam, px, py, pad) {
@@ -1220,26 +1292,16 @@
     }
     drawObjects(cam) {
       const G = R.Gfx;
-      if (M.chests.length) {
-        const g = G.get('obj:chest');
-        for (const c of M.chests) {
-          if (!c.present) continue;
-          const o = this.objPx(cam, c.x, c.y);
-          if (!this.inView(cam, o.x, o.y, 16)) continue;
-          const img = Array.isArray(g) ? g[R.Game.chests[c.id] ? 1 : 0] || g[0] : g;
-          blit(img, o.x - cam.x, o.y - cam.y);
-        }
-      }
-      if (M.hidden.length && this.fieldMods().treasureSense) {
-        const g = G.get('obj:sparkle');
-        const f = Math.floor(R.Engine.frame / 8);
-        for (const h of M.hidden) {
-          if (R.Game.chests[h.id] || !R.State.check(h.cond)) continue;
-          const o = this.objPx(cam, h.x, h.y);
-          if (!this.inView(cam, o.x, o.y, 16)) continue;
-          const img = Array.isArray(g) ? g[f % g.length] : g;
-          blit(img, o.x - cam.x, o.y - cam.y);
-        }
+      if (!M.chests.length) return;
+      const plain = G.get('obj:chest');
+      const rare = G.has('obj:chest_rare') ? G.get('obj:chest_rare') : plain;
+      for (const c of M.chests) {
+        if (!c.present) continue;
+        const o = this.objPx(cam, c.x, c.y);
+        if (!this.inView(cam, o.x, o.y, 16)) continue;
+        const g = isRareChest(c) ? rare : plain;
+        const img = Array.isArray(g) ? g[R.Game.chests[c.id] ? 1 : 0] || g[0] : g;
+        blit(img, o.x - cam.x, o.y - cam.y);
       }
     }
     drawSprites(cam) {
@@ -1267,20 +1329,22 @@
       }
       if (!g.onShip) {
         const mem = this.members();
-        for (let i = mem.length - 1; i >= 0; i--) {
+        const n = Math.min(mem.length, this.P.length);
+        for (let i = n - 1; i >= 0; i--) {
           const pos = this.renderPos(i);
           list.push({ y: pos.y, pri: 5 - i, x: pos.x, member: mem[i], i, dir: pos.dir });
         }
       }
       list.sort((a, b) => a.y - b.y || a.pri - b.pri);
+      const walking = this.moving(); // RS1: no stepping in place (idle members stand on frame 0)
       const pf = Math.floor(this.clock / 8);
       for (const s of list) {
         const sx = s.x - cam.x, sy = s.y - cam.y;
         if (s.npc) {
           const n = s.npc;
           const spr = G.get(n.sprite);
-          const moving = !!n.mv;
-          const img = n.sprite.startsWith('mon:') ? (Array.isArray(spr) ? spr[af % spr.length] : spr) : sheetFrame(spr, n.dir, moving ? Math.floor(n.mv.t / 8) + n.seq : af + n.seq);
+          const animated = n.sprite.startsWith('mon:') || n.sprite.startsWith('obj:');
+          const img = animated ? (Array.isArray(spr) ? spr[af % spr.length] : sheetFrame(spr, 'down', af)) : sheetFrame(spr, n.dir, n.mv ? Math.floor(n.mv.t / 8) + n.seq + 1 : 0);
           if (img) {
             // battle-size monster art standing on the map is drawn at half size (bottom-aligned on its tile)
             const mon = n.sprite.startsWith('mon:') || n.sprite.startsWith('fieldmon:');
@@ -1297,22 +1361,41 @@
           }
         } else {
           const c = s.member;
-          const img = sheetFrame(G.get('party:' + c.id + ':' + c.job), s.dir, pf);
+          const img = sheetFrame(G.get(spriteKey(c)), s.dir, walking ? pf + (s.i & 1) + 1 : 0);
           if (img) blit(img, sx + 8 - (img.width >> 1), sy + TS - img.height + Math.round(this.lift), c.hp > 0 ? null : { alpha: 0.5 });
         }
       }
     }
+    /** decor with over:true (eaves, canopies, arches): drawn above the sprites */
+    drawOver(cam) {
+      if (!M.overCells.length) return;
+      for (const oc of M.overCells) {
+        const o = this.objPx(cam, oc.x, oc.y);
+        if (!this.inView(cam, o.x, o.y, 48)) continue;
+        let g = decorGfx(M, oc.x, oc.y);
+        if (Array.isArray(g)) g = g[frameOf(g, decorRate(M, oc.x, oc.y))];
+        if (g) blit(g, o.x - cam.x + ((TS - g.width) >> 1), o.y - cam.y + TS - g.height);
+      }
+    }
     drawBanner() {
+      // DESIGN §11.6.2: (128 − w/2, 8, w, 22), w = textWidth + 24, 130 frames
       const G = R.Gfx, b = this.banner;
       const a = b.t < 10 ? b.t / 10 : BANNER_FRAMES - b.t < 16 ? (BANNER_FRAMES - b.t) / 16 : 1;
-      const w = Math.ceil(G.textWidth(b.text)) + 28;
-      const x = (R.W - w) >> 1, y = 10;
+      const w = Math.ceil(G.textWidth(b.text)) + 24;
+      const x = Math.round(R.W / 2 - w / 2), y = 8;
       const c = G.ctx;
       c.globalAlpha = a;
-      G.window(x, y, w, 26);
-      G.text(b.text, R.W / 2, y + 7, { align: 'center' });
+      G.window(x, y, w, 22);
+      G.text(b.text, R.W / 2, y + 5, { align: 'center' });
       c.globalAlpha = 1;
     }
+  }
+
+  function memberMods(c) {
+    try { return (R.Rules && R.Rules.mods && R.Rules.mods(c)) || {}; } catch (e) { return {}; }
+  }
+  function maxHp(c) {
+    try { return R.Rules.stats(c).hp; } catch (e) { return c.hp; }
   }
 
   // ------------------------------------------------------------ scripted NPC walks
@@ -1345,65 +1428,113 @@
     if (r) r();
   }
 
-  // ------------------------------------------------------------ chests & hidden items
-  // message phrases are joined by R.Events.lines: a new line starts only where
-  // the next phrase would overflow the window (long names break before the verb)
-  const FULL = 'しかし、これ以上は持てない！';
+  // ------------------------------------------------------------ chests
+  // Chest contents are resolved when the chest is opened (DESIGN §3.3.10-3, §8.12.1):
+  // `pool` → R.Tier.chest(def, map) (tier = def.tier ?? map.chestTier ?? R.Game.tier), then
+  // recorded in R.Game.chests[id] = {item, n} | {gold}. The 99 cap and the jingle use the
+  // resolved item. A roll that could not be taken (full inventory) is kept for this session,
+  // so re-opening shows the same thing.
+  const chestRolls = {};
+  const isRareChest = (c) => c.pool === 'p_rare' || c.rare === true;
+  function rollPool(c) {
+    const pool = DB.pools && DB.pools[c.pool];
+    const tiers = pool && (pool.tiers || pool);
+    if (!Array.isArray(tiers) || !tiers.length) return null;
+    const T = c.tier != null ? c.tier : M && M.chestTier != null ? M.chestTier : (R.Game.tier || 0);
+    const row = tiers[U.clamp(T | 0, 0, tiers.length - 1)];
+    if (!Array.isArray(row) || !row.length) return null;
+    const e = U.weighted(row, 'w');
+    if (!e) return null;
+    return e.gold != null ? { gold: e.gold } : { item: e.item, n: e.n || 1 };
+  }
+  function resolveChest(c) {
+    if (chestRolls[c.id]) return chestRolls[c.id];
+    let r = null;
+    if (c.pool) {
+      const had = R.Game.chests[c.id];
+      try {
+        if (R.Tier && R.Tier.rollChest) r = R.Tier.rollChest(c, M); // draws without recording
+        else if (R.Tier && R.Tier.chest) r = R.Tier.chest(c, M);
+      } catch (e) { R.warn('R.Tier chest roll failed for ' + c.id, e); r = null; }
+      if (!had) delete R.Game.chests[c.id]; // the field records the chest once it is really opened
+      if (!r || (r.item == null && r.gold == null)) r = rollPool(c);
+      if (!r) R.FieldMap.warn(M.id, 'chest ' + c.id + ': pool ' + c.pool + ' gave nothing');
+    } else if (c.gold) r = { gold: c.gold };
+    else if (c.item) r = { item: c.item, n: c.n || 1 };
+    r = r ? { item: r.item, n: r.item ? r.n || 1 : undefined, gold: r.gold } : {};
+    if (r.item && !DB.items[r.item]) { R.warn('chest ' + c.id + ': unknown item ' + r.item); r = {}; }
+    return (chestRolls[c.id] = r);
+  }
+  /** the jingle for a found item (DESIGN §11.6.3): key → keyitem, 超レア → superrare, レア → rare, else item */
+  function itemJingle(it) {
+    if (!it) return 'item';
+    if (it.type === 'key') return 'keyitem';
+    if (it.grade === 'super') return 'superrare';
+    if (it.grade === 'rare') return 'rare';
+    return 'item';
+  }
+  const itemMark = (it) => (it && (it.grade === 'rare' || it.grade === 'super') ? '★' : '');
   function openChest(c) {
     return R.Events.run(async (ev) => {
       const g = R.Game;
-      const name = leaderName();
       const lines = R.Events.lines;
-      const it = c.item && DB.items[c.item];
-      if (it && R.State.count(c.item) + c.n > 99) {
+      const res = resolveChest(c);
+      const it = res.item && DB.items[res.item];
+      if (it && R.State.count(res.item) + res.n > 99) {
         R.sfx('buzzer');
-        await ev.say(lines('宝箱の中には', it.name + 'が入っている。') + '\n' + FULL);
+        await ev.say(lines('宝箱の中には', itemMark(it) + it.name + 'が', '入っている。') + '\nこれ以上は持てない。');
         return;
       }
       R.sfx('chest');
       if (c.troop) {
-        // mimic: the box stays shut unless the monster is beaten
+        // a box that bites: it stays shut unless the monster is beaten
         await ev.wait(10);
         await ev.say('なんと、宝箱は魔物だった！');
         if ((await ev.battle(c.troop)) !== 'win') return;
       }
-      g.chests[c.id] = true;
+      g.chests[c.id] = res.gold != null ? { gold: res.gold } : it ? { item: res.item, n: res.n } : {};
+      delete chestRolls[c.id];
+      R.emit('chest', c.id, g.chests[c.id], M.id);
       await ev.wait(10);
-      const opened = name + 'は宝箱を開けた！\n';
-      if (c.gold) {
-        R.State.addGold(c.gold);
+      const opened = '{leader}は宝箱を開けた！\n';
+      if (res.gold != null) {
+        R.State.addGold(res.gold);
         R.sfx('gold');
-        await ev.say(opened + c.gold + 'ゴールドを手に入れた！');
+        await ev.say(opened + res.gold + goldWord() + 'を手に入れた！');
       } else if (it) {
-        R.State.addItem(c.item, c.n);
-        await ev.gotItem(opened + lines(...R.Events.gotPhrases(it.name, c.n, '手に入れた！')), it.type === 'key' ? 'keyitem' : 'item');
+        R.State.addItem(res.item, res.n);
+        await ev.gotItem(opened + lines(...R.Events.gotPhrases(itemMark(it) + it.name, res.n, '手に入れた！')), itemJingle(it));
       } else {
         await ev.say(opened + 'しかし、空っぽだった！');
       }
     }, { self: c.id, chest: c });
   }
-  function findHidden(h, underfoot) {
-    return R.Events.run(async (ev) => {
-      const name = leaderName();
-      const lines = R.Events.lines;
-      const look = name + 'は' + (underfoot ? '足元' : 'あたり') + 'を調べた。\n';
-      if (h.gold) {
-        R.Game.chests[h.id] = true;
-        R.State.addGold(h.gold);
-        R.sfx('gold');
-        await ev.say(look + 'なんと、' + h.gold + 'ゴールドを見つけた！');
-        return;
-      }
-      const it = DB.items[h.item];
-      if (!it) { R.Game.chests[h.id] = true; return; }
-      if (R.State.count(h.item) + h.n > 99) {
-        await ev.say(look + lines('なんと、', it.name + 'を', '見つけた！') + '\n' + FULL);
-        return;
-      }
-      R.Game.chests[h.id] = true;
-      R.State.addItem(h.item, h.n);
-      await ev.gotItem(look + lines('なんと、', ...R.Events.gotPhrases(it.name, h.n, '見つけた！')), it.type === 'key' ? 'keyitem' : 'item');
-    }, { self: h.id, hidden: h });
+
+  // ------------------------------------------------------------ secret passages
+  /** the passage around (x,y) is found: every connected secret cell is recorded at once, the art
+   *  of those cells switches to the found look, and the notice + sound play once (§3.3.10-11) */
+  function discoverSecret(x, y) {
+    const g = R.Game;
+    g.secrets = g.secrets || {};
+    const key0 = R.FieldMap.secretKey(M.id, M.wx(x), M.wy(y));
+    if (g.secrets[key0]) return null;
+    const cells = [], seen = new Set(), todo = [[M.wx(x), M.wy(y)]];
+    while (todo.length && cells.length < 64) {
+      const [cx, cy] = todo.pop();
+      const k = M.wx(cx) + ',' + M.wy(cy);
+      if (seen.has(k)) continue;
+      seen.add(k);
+      if (!M.isSecret(cx, cy)) continue;
+      cells.push([M.wx(cx), M.wy(cy)]);
+      for (const d of U.DIRS) todo.push([cx + U.DX[d], cy + U.DY[d]]);
+    }
+    for (const [cx, cy] of cells) g.secrets[R.FieldMap.secretKey(M.id, cx, cy)] = true;
+    M.touch(cells);
+    R.emit('secret', M.id, x, y);
+    return () => R.Events.run(async () => {
+      R.sfx('secret');
+      await R.UI.notice('隠し通路を見つけた！', 60);
+    }, { self: 'secret' });
   }
 
   /** an opened door is drawn as the floor beyond it (else the floor we came from) */
@@ -1411,11 +1542,66 @@
     const bx = x + U.DX[d], by = y + U.DY[d], fx = x - U.DX[d], fy = y - U.DY[d];
     const ok = (tx, ty) => M.inBounds(tx, ty) && M.walkable(tx, ty) && !isDoor(M.tileAt(tx, ty)) && !M.tile(tx, ty).warpIcon;
     M.opened.set(i, ok(bx, by) ? M.tileAt(bx, by) : ok(fx, fy) ? M.tileAt(fx, fy) : 'floor');
-    M.version++;
-    (M.dirtyCells = M.dirtyCells || []).push({ v: M.version, x, y }); // the renderer patches just this cell
+    M.touch([[M.wx(x), M.wy(y)]]); // the renderer patches just this cell
   }
   function seq(tasks) {
     return async () => { for (const t of tasks) await t(); };
+  }
+
+  // ------------------------------------------------------------ wipe → respawn (DESIGN §4.12.2)
+  // A lost battle (random, event or boss) asks for a wipe; it runs once the field is free (no
+  // lock, no event: the aborted event has unwound), so when R.GameOver.run() resolves the
+  // invariants ①–⑥ hold. The respawn warp does not start the town's onEnter while the game
+  // over is still showing (that raced its message window and could leave an event waiting for
+  // ever — the Crest 「城で復活したあと固まる」 freeze); it runs once, after the sequence (⑦).
+  let wipe = null; // {promise, resolve, running}
+  let wiping = false;
+  let pendingEnter = null; // {prev, dark} held back while wiping
+  function requestWipe() {
+    if (!wipe) {
+      let resolve;
+      const promise = new Promise((r) => { resolve = r; });
+      wipe = { promise, resolve, running: false };
+    }
+    if (!L || !R.Engine.layers.includes(L)) runWipe();
+    return wipe.promise;
+  }
+  async function runWipe() {
+    const w = wipe;
+    if (!w || w.running) return;
+    w.running = true;
+    wiping = true;
+    pendingEnter = null;
+    try {
+      if (R.Game) R.Game.encItem = null;
+      if (R.Battle) R.Battle.autoCarry = false;
+      if (R.UI && R.UI.closeMessage) R.UI.closeMessage();
+      if (R.GameOver && R.GameOver.run) await R.GameOver.run();
+      else await fallbackGameOver();
+    } catch (e) {
+      R.Engine.reportError(e);
+    } finally {
+      wiping = false;
+      if (R.Game) R.Game.encItem = null;
+      if (L) { L.locks = 0; L.arrived = null; L.walking = false; L._fm = null; }
+      if (R.Engine.fadeAlpha > 0 && !R.Engine._fade) R.Engine.fade(0, 0);
+      wipe = null;
+      w.resolve();
+      const pe = pendingEnter;
+      pendingEnter = null;
+      if (pe) afterEnter(pe.prev, pe.dark);
+    }
+  }
+  /** the game over when the menu owner's R.GameOver is absent (tests / partial builds) */
+  async function fallbackGameOver() {
+    const before = R.Game.gold;
+    R.State.wipeRecover();
+    if (R.Game) R.Game.encItem = null;
+    await Field.respawn();
+    if (R.Engine.fadeAlpha > 0) await R.Engine.fadeIn(20);
+    let text = '{hero}たちは目を覚ました。';
+    if (before > 0 && R.Game.gold < before) text += '\n所持金が半分になった。';
+    await R.UI.say(text, { keep: false });
   }
 
   // ------------------------------------------------------------ map loading
@@ -1449,8 +1635,15 @@
     const sh = g.ship;
     g.onShip = !!(sh && sh.map === m.id && sh.x === s.x && sh.y === s.y && !m.walkable(s.x, s.y));
     if (g.onShip) sh.dir = L.P[0].dir;
+    // ワープ先 (DESIGN §3.3.2, Part A6): the map's location — towns and every dungeon floor
+    g.visited = g.visited || {};
     if (m.location) g.visited[m.location] = true;
-    else if (m.type === 'dungeon') { const loc = R.State.dungeonLocation(m.def); if (loc) g.visited[loc] = true; }
+    else if (m.type === 'dungeon' && R.State.dungeonLocation) { const loc = R.State.dungeonLocation(m.def); if (loc) g.visited[loc] = true; }
+    // 全滅したときの戻り先 = the last town entered (DESIGN §1.0 0.8, §3.3.10-5)
+    if (m.isTown && !m.noRespawn) {
+      const rs = m.respawnSpawn && m.hasSpawn(m.respawnSpawn) ? m.respawnSpawn : m.hasSpawn('entrance') ? 'entrance' : null;
+      if (rs) g.respawn = { map: m.id, spawn: rs };
+    }
     L.resetEnc();
     L._fm = null;
     L.banner = null;
@@ -1459,73 +1652,100 @@
     R.emit('mapload', m.id);
     return true;
   }
+  /** map def `enterDark`: the screen stays black after loading (the onEnter script fades in itself,
+   *  e.g. an opening told on a black screen). A cond: dark only while it holds. */
+  function isDark() {
+    const d = M && M.def.enterDark;
+    return !!(d && M.onEnter && (d === true || R.State.check(d)));
+  }
   /** after the screen is visible: banner + onEnter event (queued, never awaited) */
-  function afterEnter(prev) {
+  function afterEnter(prev, dark) {
     if (!M) return;
-    if (M.name && !M.isWorld && (!prev || prev.name !== M.name)) L.banner = { text: M.name, t: 0 };
-    if (M.onEnter) R.Events.run(M.onEnter, { trigger: 'enter', self: M.id, onlyOnMap: M.id, defer: true });
+    if (wiping) { pendingEnter = { prev, dark }; return; }
+    if (M.name && !M.isWorld && (!prev || prev.name !== M.name) && !dark) L.banner = { text: M.name, t: 0 };
+    if (M.onEnter) {
+      const p = R.Events.run(M.onEnter, { trigger: 'enter', self: M.id, onlyOnMap: M.id, defer: true });
+      // safety net: never leave the screen black after an enterDark map's script
+      if (dark) Promise.resolve(p).then(() => { if (R.Engine.fadeAlpha >= 1 && !R.Engine._fade) R.Engine.fadeIn(20); });
+    } else if (dark && R.Engine.fadeAlpha > 0) R.Engine.fadeIn(20);
   }
 
   // ------------------------------------------------------------ public API
   const Field = (R.Field = {
     noEncounter: false,
     showCoords: false,
-    WALK, DASH,
+    WALK, DASH, ENC_GRACE,
     get map() { return M; },
     get layer() { return L; },
+    /** a wipe is waiting to start or running (the game over sequence) */
+    get wipePending() { return !!wipe; },
+    get wiping() { return wiping; },
     ZOOMS: Object.keys(ZOOM_DIV),
     /** current field view {zoom, z (device px per map px), w, h (map px)} — follows Settings.fieldZoom */
     view() { updateView(); return { zoom: V.key, z: V.z, w: V.w, h: V.h }; },
     /** top-left of the view in map px (null off the field) */
     camera() { return L && M && R.Game ? L.camera() : null; },
+    startPoint,
+    spriteKey,
 
-    /** entry point after title / new game */
+    /** entry point after title / new game (default: DB.config.start) */
     async start(mapId, spawn) {
       if (!R.Game) R.State.newGame();
       R.Events.reset();
+      wipe = null; wiping = false; pendingEnter = null;
       const lay = ensureLayer(true);
       lay.locks++;
+      let dark = false;
       try {
         R.Engine.fade(1, 0);
-        const st = R.State.START;
-        if (!load(mapId || st.map, spawn != null ? spawn : mapId ? 'entrance' : st.spawn)) load(st.map, st.spawn);
-        await R.Engine.fadeIn(24);
+        const st = startPoint();
+        const ok = mapId && DB.maps[mapId] && load(mapId, spawn != null ? spawn : 'entrance');
+        if (!ok && st.map) load(st.map, st.spawn, st.dir);
+        dark = isDark();
+        if (!dark) await R.Engine.fadeIn(24);
       } finally { unlock(lay); }
-      afterEnter(null);
+      afterEnter(null, dark);
     },
     /** continue from R.Game.pos (after loading a save) */
     async resume() {
       R.Events.reset();
+      wipe = null; wiping = false; pendingEnter = null;
       const lay = ensureLayer(true);
       const pos = R.Game.pos || {};
       lay.locks++;
+      let dark = false;
       try {
         R.Engine.fade(1, 0);
-        const st = R.State.START;
+        const st = startPoint();
         let ok = false;
         if (pos.map && DB.maps[pos.map]) ok = load(pos.map, pos.x != null ? { x: pos.x, y: pos.y, dir: pos.dir } : pos.spawn, pos.dir);
-        if (!ok) load(st.map, st.spawn);
-        await R.Engine.fadeIn(24);
+        if (!ok && st.map) load(st.map, st.spawn, st.dir);
+        dark = isDark();
+        if (!dark) await R.Engine.fadeIn(24);
       } finally { unlock(lay); }
-      afterEnter(null);
+      afterEnter(null, dark);
     },
-    /** warp(map, spawnName | {x,y}, {dir, fade=true}) */
+    /** warp(map, spawnName | {x,y}, {dir, fade=true, frames, sfx}) */
     async warp(mapId, spawn, opts) {
       const o = opts || {};
       if (!DB.maps[mapId]) { R.warn('warp: unknown map', mapId); return false; }
       const lay = ensureLayer();
       const prev = M;
       lay.locks++;
+      let dark = false;
       try {
         const fade = o.fade !== false;
+        if (o.sfx) R.sfx(o.sfx);
         if (fade) await R.Engine.fadeOut(o.frames || 12);
         load(mapId, spawn, o.dir);
-        if (fade) await R.Engine.fadeIn(o.frames || 12);
+        dark = isDark();
+        if (fade && !dark) await R.Engine.fadeIn(o.frames || 12);
       } finally { unlock(lay); }
-      afterEnter(prev);
+      afterEnter(prev, dark);
       return true;
     },
-    /** fly to a visited location (ability / wing): R.DB.locations[locId] */
+    /** fly to a visited location (menu 「ワープ」 / 語り部の羽ペン): R.DB.locations[locId].
+     *  Lands on its world spawn; a town or dungeon entrance there is entered at once (§10.6.3). */
     async teleport(locId) {
       const loc = DB.locations[locId];
       if (!loc) { R.warn('teleport: unknown location', locId); return false; }
@@ -1537,6 +1757,8 @@
       try {
         const g = R.Game;
         if (g.onShip && M) { g.onShip = false; lay.place(lay.cell.x, lay.cell.y, 'down'); }
+        R.sfx('quill'); // §11.6.7: 羽ペン → teleport → 暗転
+        await R.Engine.wait(18);
         R.sfx('teleport');
         await lay.liftTo(-(V.h + 40), 26);
         await R.Engine.fadeOut(10);
@@ -1549,31 +1771,43 @@
         await R.Engine.fadeIn(10);
         await lay.liftTo(0, 22);
       } finally { lay.lift = 0; unlock(lay); }
-      // landing on a town / castle entrance tile enters it at once (no step off and back on)
+      // landing on a town / dungeon entrance tile enters it at once (no step off and back on)
       const p = lay.cell;
       const w = M && !R.Game.onShip && M.warpAt(p.x, p.y);
       if (w && !M.eventsAt(p.x, p.y, 'step').length) { await lay.useWarp(w); return true; }
       afterEnter(prev);
       return true;
     },
-    /** visited teleport targets [{id,name}] in R.DB.locations order */
+    /** visited ワープ targets [{id, name, kind, region}] in DESIGN §10.6.3 order:
+     *  regions prologue → r_forest … r_star → finale, towns before dungeons, then DB.locations order */
     teleportList() {
-      return Object.keys(DB.locations).filter((id) => R.Game.visited[id]).map((id) => ({ id, name: DB.locations[id].name }));
+      const locs = DB.locations || {}, vis = (R.Game && R.Game.visited) || {};
+      const order = ['prologue'].concat(Object.keys(DB.regions || {}).filter((r) => r !== 'prologue' && r !== 'finale' && r !== 'postgame'), ['finale', 'postgame']);
+      const rank = (r) => { const i = order.indexOf(r); return i < 0 ? order.length : i; };
+      const kr = (k) => (k === 'town' ? 0 : k === 'dungeon' ? 1 : 2);
+      const ids = Object.keys(locs);
+      const at = {}; ids.forEach((id, i) => { at[id] = i; });
+      return ids.filter((id) => vis[id]).map((id) => {
+        const l = locs[id];
+        return { id, name: l.name, kind: l.kind || (l.dungeon ? 'dungeon' : 'town'), region: l.region || null };
+      }).sort((a, b) => rank(a.region) - rank(b.region) || kr(a.kind) - kr(b.kind) || at[a.id] - at[b.id]);
     },
     canExit() { return !!(M && M.escape && M.escape.to && DB.maps[M.escape.to]); },
-    /** teleport works outdoors/in towns, not inside dungeons (map.noTeleport overrides) */
+    /** ワープ works outdoors / in towns, not inside dungeons (map.noTeleport overrides) */
     canTeleport() {
       if (!M) return false;
       if (M.def.noTeleport != null) return !M.def.noTeleport;
       return M.type !== 'dungeon';
     },
-    /** leave the dungeon (ability / escape_rope) */
+    /** leave the dungeon (menu 「脱出」 / 帰り道の鈴): §11.6.7 bell → warp → 暗転 */
     async exitDungeon() {
       if (!Field.canExit()) return false;
       const lay = ensureLayer();
       const e = M.escape;
       lay.locks++;
       try {
+        R.sfx('bell');
+        await R.Engine.wait(20);
         R.sfx('warp');
         R.Engine.flashScreen('#ffffff', 14);
         await lay.liftTo(-12, 8);
@@ -1581,21 +1815,31 @@
       } finally { unlock(lay); }
       return Field.warp(e.to, e.spawn, { dir: e.dir || 'down', frames: 16 });
     },
-    repel(steps) { R.Game.repelSteps = Math.max(R.Game.repelSteps || 0, steps | 0); },
+    /** 魔除け / 誘い寄せ (DESIGN §3.2.1 encItem): {id, pct, steps, weakOnly}; replaces the previous one */
+    setEncItem(o) {
+      if (!R.Game) return null;
+      R.Game.encItem = o ? { id: o.id || null, pct: o.pct || 0, steps: o.steps || 100, weakOnly: !!o.weakOnly } : null;
+      if (L) L._fm = null;
+      return R.Game.encItem;
+    },
+    /** legacy: repel(steps) = 魔除け for n steps */
+    repel(steps) { return Field.setEncItem({ id: null, pct: -100, steps: steps | 0, weakOnly: true }); },
     setRespawnHere() {
       if (!M || !L) return;
       const p = L.cell;
       R.Game.respawn = { map: M.id, x: p.x, y: p.y, dir: L.P[0].dir };
     },
-    /** warp to R.Game.respawn (after a wipe) */
+    /** warp to R.Game.respawn (after a wipe; the last town entered) */
     respawn() {
-      const r = R.Game.respawn || { map: R.State.START.map, spawn: R.State.START.spawn };
-      const map = DB.maps[r.map] ? r.map : R.State.START.map;
-      R.Game.onShip = false;
-      return Field.warp(map, r.x != null ? { x: r.x, y: r.y, dir: r.dir } : r.spawn, { dir: r.dir || 'down' });
+      const g = R.Game;
+      let r = g.respawn;
+      if (!r || !DB.maps[r.map]) { const st = startPoint(); r = { map: st.map, spawn: st.spawn, dir: st.dir }; }
+      g.onShip = false;
+      if (!r.map) return Promise.resolve(false);
+      return Field.warp(r.map, r.x != null ? { x: r.x, y: r.y, dir: r.dir } : r.spawn || 'entrance', { dir: r.dir || 'down' });
     },
     /** re-evaluate NPC conds / tilePatches (after flags change) */
-    refresh() { if (M) M.refresh(); },
+    refresh() { if (M) M.refresh(); if (L) { L.syncParty(); L._fm = null; } },
     isBusy() { return !!L && (L.locks > 0 || !!L.mv) || R.Events.busy(); },
 
     /** battle backdrop for the current position */
@@ -1610,7 +1854,8 @@
       const th = M.theme && DB.themes[M.theme];
       return (th && th.bbg) || (enc && enc.bg) || 'cave';
     },
-    /** random encounter in zone (default: the current position's zone) */
+    /** random encounter in zone (default: the current position's zone). A loss asks for the wipe,
+     *  which runs after this returns and the field lock is released (§4.12.2). */
     async encounter(zone) {
       zone = zone || (M && L && M.zoneAt(L.cell.x, L.cell.y));
       if (!zone || !R.Battle || !R.Battle.start) return null;
@@ -1618,16 +1863,28 @@
       lay.locks++;
       let res;
       try {
-        res = await R.Battle.start({ zone, bg: Field.battleBg(zone) });
-        if (res === 'lose') await Field.gameOver();
+        const o = { zone, bg: Field.battleBg(zone) };
+        if (M && M.lvOff != null) o.lvOff = M.lvOff;
+        res = await R.Battle.start(o);
       } finally { unlock(lay); }
+      if (L) L.resetEnc();
+      if (res === 'lose') requestWipe();
       return res;
     },
-    /** wipe: game-over screen (menu owner) or plain recover + respawn */
-    async gameOver() {
-      if (R.GameOver && R.GameOver.run) await R.GameOver.run();
-      else { R.State.wipeRecover(); await Field.respawn(); }
+    /** ask for the wipe sequence (runs when the field is free); resolves when the party is back on its feet */
+    requestWipe,
+    /** run the wipe sequence now (game-over screen by the menu owner, or a plain recover + respawn) */
+    gameOver() {
+      const p = requestWipe();
+      runWipe();
+      return p;
     },
+
+    // ---- secret passages (DESIGN §3.3.10-11)
+    isSecretFound(mapId, x, y) { return !!(R.Game && R.Game.secrets && R.Game.secrets[R.FieldMap.secretKey(mapId, x, y)]); },
+    /** found secret-passage cells (the chronicle screen shows 「隠し通路　n/総数」) */
+    secretsFound() { return R.Game && R.Game.secrets ? Object.keys(R.Game.secrets).length : 0; },
+    secretTotal() { return R.FieldMap.secretTotal(); },
 
     // ---- scripting hooks (events_runtime / debug)
     npc(id) { return M ? M.npc(id) : null; },
@@ -1658,7 +1915,7 @@
     },
     /** leader tile position {x,y,dir}: the logical tile (whole tiles; see the layer's `cell`) */
     pos() { return L ? { x: L.cell.x, y: L.cell.y, dir: L.P[0].dir } : null; },
-    /** exact leader box position {x,y,dir} in tiles (multiples of ½) */
+    /** exact leader box position {x,y,dir} in tiles */
     exactPos() { return L ? { x: L.P[0].x, y: L.P[0].y, dir: L.P[0].dir } : null; },
     /** the tile in front of the leader (the first of frontCells) */
     front() {
@@ -1667,5 +1924,7 @@
       return { x, y };
     },
     parsePath,
+    /** resolve a chest's contents without opening it (tests / tools) */
+    peekChest(c) { return resolveChest(c); },
   });
 })(window.RPG);

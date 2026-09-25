@@ -1,4 +1,4 @@
-// Music (battles): battle, boss, lastboss. Original compositions; format
+// Music (battles): battle, boss, lastboss (Chronicle), valzard (Crest's lastboss). Original compositions; format
 // documented at the top of src/core/audio.js.
 (function (R) {
   'use strict';
@@ -90,10 +90,11 @@
     ],
   };
 
-  // ================================================================ lastboss
-  // D minor, 158 bpm, epic & multi-section: organ/choir intro, driving A, dark
-  // lyrical B, the main theme turned minor (C), chromatic diminished climb (D).
-  M.lastboss = {
+  // ================================================================ valzard 魔王の残影
+  // Crest's final battle, moved here unchanged (DESIGN §11.10.3: "今のクレストの lastboss の
+  // 定義をそのまま"). D minor, 158 bpm, epic & multi-section: organ/choir intro, driving A,
+  // dark lyrical B, Crest's main theme turned minor (C), chromatic diminished climb (D).
+  M.valzard = {
     tempo: 158, key: 'Dm', gain: 0.72,
     echo: { time: 0.19, fb: 0.25, wet: 0.2, lp: 2800 },
     chords: `
@@ -137,6 +138,56 @@
         {gc}1 | b1 | b2 b2 | l16 s s s s t t t t m m m m f f f f l8 |
         L $DA $DA $DA $DA $DB $DB $DA $DA
         {kc}8 k8 s8 k8 {kc}8 k8 s8 k8 | {kc}8 k8 s8 k8 {kc}8 k8 s8 k8 | {kc}8 k8 s8 k8 {kc}8 k8 s8 k8 | l16 s s s s t t t t m m m m f f f f l8 |` },
+    ],
+  };
+
+  // ================================================================ lastboss ネムレア
+  // 「語り部の主題」 in E minor, 4/4, ♩=160 (DESIGN §11.10.3): organ and choir prelude on the
+  // motif head → the motif turned minor over driving strings (A) → a trumpet charge (A2) → horn
+  // and choir (B) → the theme in G major on trumpet, "the name given back" (C) → a diminished
+  // climb back to B7 (D). Intro 4 + loop 40 bars = 60 s.
+  M.lastboss = {
+    tempo: 160, key: 'Em', gain: 0.71,
+    echo: { time: 0.188, fb: 0.25, wet: 0.2, lp: 2800 },
+    chords: `
+      @I Em*3 D | Em/D | Cmaj7 | B7 |
+      L @A $TCM Em | C | Am6 B7 | Em |
+      @A2 Em | D | C | B7 | Em | D | C Am | B7 |
+      @B C | D | G | Em | Am | F#m7b5 | B7sus4 | B7 |
+      @C Cmaj7 | Am | D | G | Cmaj7 | Am | G/D D7 | G |
+      @D Em | C | Am | F#m7b5 | Cmaj7 | C#dim7 | B7sus4 | B7 |`,
+    defs: {
+      MIN_ANS: 'o5 e4. f+8 g4 b4 | o6 e4. d8 c2 | o6 c4 o5 b8 a8 b4 o6 d+4 | o6 e1 |',
+      CHARGE: `o4 b4 o5 e4 d8 e8 f+8 g8 | o5 f+4. e8 d4 o4 a4 | o5 e4 d8 c8 o4 g4 o5 c4 | o4 b4. a8 f+4 d+4 |
+               o4 e8 f+8 g8 a8 b4 o5 e4 | o5 d4. c8 o4 b4 a4 | o4 g4 e4 a4 o5 c4 | o4 b2 o5 d+2 |`,
+      HORN: 'o4 e2 g2 | o4 f+2 a2 | o4 g2 b2 | o4 b1 | o4 a2 o5 c2 | o4 a2 f+2 | o4 e2 f+2 | o4 d+1 |',
+      CLIMB: 'o5 g2 b2 | o6 c2 e2 | o6 c2 o5 a2 | o5 a1 | o5 g2 b2 | o5 a+2 g2 | o5 e1 | o5 d+1 |',
+      LA: '{kc}8 h8 s8 h8 k8 k8 s8 h8 | k8 h8 s8 h8 k8 s16 s16 t16 t16 m16 m16 |',
+      FILL: 'l16 s s s s t t t t m m m m f f f f l8 |',
+    },
+    ch: [
+      { inst: 'organ', vol: 1, pan: 0.05, echo: 0.25, mml: `
+        o4 q8 e2. f+4 | g2 b2 | >c1< | b1 |
+        L q7 @violin o5 $TELLER4_MIN $MIN_ANS
+        @trumpet $CHARGE
+        q8 @horn $HORN
+        q7 @trumpet o5 $TELLER4 $TELLER4_ANS
+        @violin $CLIMB` },
+      { inst: 'brass', harm: 0, oct: -1, min: 46, vol: 0.45, pan: -0.3, echo: 0.2 },
+      { inst: 'organ', vol: 0.3, pan: -0.2, echo: 0.25, range: [50, 65], voices: 3, pats: { I: 'C1', A2: '', B: 'C1' } },
+      { inst: 'choir', vol: 0.4, pan: 0.25, echo: 0.3, range: [57, 72], voices: 3, pats: { I: 'C1', A: '', B: 'C2 C2', C: 'C1' } },
+      { inst: 'strings', vol: 0.55, pan: 0.35, echo: 0.15, q: 3, range: [55, 72], voices: 3,
+        pats: { I: '', A: 'l8 C C C C C C C C', A2: 'l8 C r C r r C r C', B: 'q8 C2 C2', C: 'l8 C r r C r C r r', D: 'l16 a b c b a b c b a b c b a b c b' } },
+      { inst: 'synbass', vol: 0.68, q: 6, range: [28, 47],
+        pats: { I: 'R1', A: 'l8 !R R O R R O R O', A2: 'l8 !R R R R !R R R R', B: 'l4 R R R R', C: 'l8 !R O R O R O R O', D: 'l8 R R R R R R R R' } },
+      { inst: 'timp', vol: 0.5, echo: 0.1, range: [36, 50],
+        pats: { I: 'l4 R r r r', A: 'l4 R r R r', A2: 'l4 R r r r', B: 'l2 R R', C: 'l4 R r R R', D: 'l8 R R l4 R r R' } },
+      { inst: 'drums', vol: 0.44, echo: 0.06, mml: `
+        {gc}1 | b1 | b2 b2 | $FILL
+        L [$LA]4 [$LA]4
+        [{kc}4 h8 h8 s4 h8 k8 | k4 h8 h8 s4 h8 h8 |]3 {kc}4 h8 h8 s4 h8 k8 | k4 h8 h8 s8 s8 t8 m8 |
+        {kc}8 h8 s8. s16 k8 h8 s8 h8 | [k8 h8 s8. s16 k8 h8 s8 h8 |]5 k8 h8 s8. s16 k8 k8 s16 s16 s8 | {kc}8 k8 s8 k8 {kc}8 k8 s8 k8 |
+        [{kc}8 k8 s8 k8 k8 k8 s8 k8 |]6 l16 s s t t m m f f s s t t m m f f l8 | $FILL` },
     ],
   };
 

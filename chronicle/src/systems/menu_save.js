@@ -1,39 +1,59 @@
-// Field menu: セーブ (3 slots + 冒険の合言葉 export), 設定 (all settings,
-// applied immediately) and the DOM overlay used to show / enter a 合言葉 code
-// (also used by the title screen).
+// Field menu: セーブ (DESIGN §11.7.14: 記録1〜3 + 冒険の合言葉), 設定 (§11.7.15: 12 rows, applied at
+// once) and the DOM overlay that shows / takes a 冒険の合言葉 (also used by the title screen).
+//   R.Menu.saveScreen(o) / saveMenu(o) → Promise<bool saved>   R.Menu.settings()   R.Menu.codeOverlay({mode, code})
+//   R.Menu.drawSlot(i, slot, x, y, w, h, {dim})   R.Menu.SETTINGS (rows)
 (function (R) {
   'use strict';
   const G = () => R.Gfx;
   const In = () => R.Input;
   const Menu = (R.Menu = R.Menu || {});
+  const K = () => Menu.kit;
 
   // ------------------------------------------------------------ slot summaries
-  /** draw one save slot window. s: {summary}|null */
+  /** 第N章 of a save summary (序章 at tier 0, クリア after the ending) */
+  function slotChapter(m) {
+    if (m.clear) return 'クリア';
+    const t = m.tier != null ? m.tier : 0;
+    return t > 0 ? '年代記 第' + t + '章' : '年代記 序章';
+  }
+  /** one 記録 window (§11.7.14). s: {summary} | null */
   function drawSlot(i, s, x, y, w, h, opts) {
     const o = opts || {};
+    const C = G().C;
     G().window(x, y, w, h);
-    const dim = o.dim;
-    G().text('冒険の書' + (i + 1), x + 16, y + 7, { color: dim ? G().C.gray : G().C.yellow });
-    if (!s) { G().text('―― データなし ――', x + w / 2, y + 25, { align: 'center', color: G().C.dark }); return; }
+    const dim = !!o.dim;
+    G().text('記録' + (i + 1), x + 8, y + 6, { color: dim ? K().COL.gray : C.yellow });
+    if (!s) { G().text('――　空き　――', x + w / 2, y + 24, { align: 'center', color: K().COL.gray }); return; }
     const m = s.summary || {};
-    G().text(m.time || '', x + w - 10, y + 7, { align: 'right', color: dim ? G().C.gray : G().C.white });
-    // cleared games show a star, and the post-game 称号 when earned
-    if (m.title || m.clear) G().text('★' + (m.title || 'クリア'), x + 80, y + 7, { color: dim ? G().C.gray : G().C.gold });
-    Menu.kit.fitText((m.names || []).join('  '), x + 16, y + 21, w - 26, { color: dim ? G().C.gray : G().C.white });
-    G().text(m.place || '', x + 16, y + 35, { color: dim ? G().C.gray : G().C.cyan });
-    if (m.gold != null) G().text(m.gold + ' G', x + w - 10, y + 35, { align: 'right', color: dim ? G().C.gray : G().C.white });
+    const hero = m.hero || (m.names && m.names[0] ? String(m.names[0]).replace(/\s*Lv\d+$/, '') : '');
+    K().fitText(hero, x + 48, y + 6, 64, { color: dim ? K().COL.gray : '#ffffff' });
+    G().text('Lv' + (m.level || 1), x + 116, y + 6, { color: dim ? K().COL.gray : '#ffffff' });
+    G().text(m.time || '', x + w - 8, y + 6, { align: 'right', color: dim ? K().COL.gray : '#ffffff' });
+    (m.sprites || []).slice(0, 4).forEach((key, k) => {
+      const sx = x + 8 + 18 * k, sy = y + 24;
+      let img = null;
+      if (key && G().has(key)) {
+        const v = G().get(key);
+        img = v && v.down ? (Array.isArray(v.down) ? v.down[0] : v.down) : Array.isArray(v) ? v[0] : v;
+      }
+      if (img) G().draw(img, sx + Math.round((16 - img.width) / 2), sy + 24 - img.height, dim ? { alpha: 0.5 } : null);
+      else { G().rect(sx + 5, sy + 3, 6, 6, '#8a90a8'); G().rect(sx + 3, sy + 10, 10, 12, '#5a6080'); }
+    });
+    K().fitText(m.place || '', x + 90, y + 22, w - 98, { color: dim ? K().COL.gray : C.cyan });
+    G().text(m.clear ? 'クリア' + (m.title ? '　' + m.title : '') : slotChapter(m), x + 90, y + 36, { color: dim ? K().COL.gray : m.clear ? C.gold : K().COL.sub });
+    if (m.gold != null) G().text(m.gold + 'ゴールド', x + w - 8, y + 36, { align: 'right', color: dim ? K().COL.gray : '#ffffff' });
   }
   Menu.drawSlot = drawSlot;
 
   // ------------------------------------------------------------ DOM code overlay
   /**
-   * Show the 冒険の合言葉 overlay over the canvas.
-   * o: {mode:'export'|'import', code}  → Promise(code string | null)
+   * The 冒険の合言葉 overlay over the canvas. o: {mode:'export'|'import', code} → Promise(string | null)
+   * (import: the text typed in; export / cancel: null). Game input is off while it is open. null in node.
    */
   Menu.codeOverlay = function (o) {
     return new Promise((resolve) => {
       if (typeof document === 'undefined') { resolve(null); return; }
-      const imp = o.mode === 'import';
+      const imp = o && o.mode === 'import';
       const host = document.getElementById('game') || document.body;
       const cv = document.getElementById('screen');
       const r = cv ? cv.getBoundingClientRect() : { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
@@ -41,27 +61,27 @@
       box.id = 'code-overlay';
       Object.assign(box.style, {
         position: 'fixed', left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px',
-        boxSizing: 'border-box', padding: Math.max(8, r.width * 0.035) + 'px', background: 'rgba(0,0,12,0.93)',
-        display: 'flex', flexDirection: 'column', gap: '8px', zIndex: 50, color: '#fff',
+        boxSizing: 'border-box', padding: Math.max(8, r.width * 0.035) + 'px', background: 'rgba(11,16,36,0.96)',
+        display: 'flex', flexDirection: 'column', gap: '8px', zIndex: 50, color: '#f0e8d0',
         fontFamily: '"DotGothic16", monospace', fontSize: Math.max(13, Math.round(r.width / 26)) + 'px',
-        border: '3px solid #fff', borderRadius: '8px',
+        border: '3px solid #f0e8d0', borderRadius: '8px',
       });
       const title = document.createElement('div');
       title.textContent = '冒険の合言葉';
       title.style.color = '#ffe45a';
       const hint = document.createElement('div');
-      hint.textContent = imp ? '合言葉を貼り付けて「決定」を押してください。' : '「コピー」で合言葉を保存しておけば、別の端末でも続きから遊べます。';
+      hint.textContent = imp ? '合言葉の入力：貼り付けて「決定」を押す。' : '「コピー」で写せば、別の端末でも遊べる。';
       hint.style.fontSize = '0.8em';
       hint.style.lineHeight = '1.4';
       const ta = document.createElement('textarea');
-      ta.value = o.code || '';
+      ta.value = (o && o.code) || '';
       ta.readOnly = !imp;
       ta.spellcheck = false;
       ta.setAttribute('autocapitalize', 'off');
       ta.setAttribute('autocomplete', 'off');
       Object.assign(ta.style, {
         flex: '1 1 auto', minHeight: '40px', width: '100%', boxSizing: 'border-box', resize: 'none',
-        background: '#10142c', color: '#e8ecff', border: '2px solid #6a78c0', borderRadius: '4px',
+        background: '#16203e', color: '#f0e8d0', border: '2px solid #6a78c0', borderRadius: '4px',
         fontFamily: 'monospace', fontSize: '12px', wordBreak: 'break-all', padding: '6px',
       });
       const row = document.createElement('div');
@@ -71,7 +91,7 @@
         b.textContent = label;
         Object.assign(b.style, {
           font: 'inherit', fontSize: '0.9em', color: '#fff', background: primary ? '#2a3c9a' : '#2a2a3a',
-          border: '2px solid #fff', borderRadius: '6px', padding: '6px 14px', cursor: 'pointer', minWidth: '5em',
+          border: '2px solid #f0e8d0', borderRadius: '6px', padding: '6px 14px', cursor: 'pointer', minWidth: '5em',
         });
         b.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); fn(b); });
         row.appendChild(b);
@@ -88,7 +108,7 @@
         done = true;
         document.removeEventListener('keydown', onKey, true);
         box.remove();
-        R.Input.enabled = wasEnabled;
+        R.Input.enabled = wasEnabled !== false;
         R.Input.consume();
         try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) { /* ignore */ }
         resolve(v);
@@ -112,7 +132,7 @@
           if (!ok) {
             try { ta.focus(); ta.select(); ok = document.execCommand && document.execCommand('copy'); } catch (e) { ok = false; }
           }
-          msg.textContent = ok ? 'コピーしました。' : '合言葉を選択してコピーしてください。';
+          msg.textContent = ok ? 'コピーした。' : '合言葉を選んで、写しておいてください。';
           msg.style.color = ok ? '#6ee07a' : '#ffb03c';
           if (!ok) { ta.focus(); ta.select(); }
           b.blur();
@@ -125,36 +145,38 @@
     });
   };
 
-  /** export the current game as a code and show it */
+  /** export the current game as a 冒険の合言葉 and show it */
   Menu.showCode = async function () {
     let code = null;
     try { code = await R.Save.exportCode(R.State.serialize()); } catch (e) { console.error(e); }
-    if (!code) { await Menu.kit.msg('合言葉を作れなかった……。'); return; }
+    if (!code) { R.sfx('buzzer'); await K().msg('合言葉を作れなかった。'); return; }
     await Menu.codeOverlay({ mode: 'export', code });
   };
 
   let C = null;
   const cls = () => C || (C = build());
-  /** save screen (menu セーブ, church お祈り, events). → true if saved */
+  /** save screen (menu セーブ, events, the ending). → true if saved */
   Menu.saveScreen = (o) => R.Engine.run(new (cls().SaveScreen)(o || {}));
-  Menu.saveMenu = Menu.saveScreen; // name used by events_runtime (ev.saveMenu)
+  Menu.saveMenu = Menu.saveScreen; // the name events_runtime uses (ev.saveMenu)
   /** settings screen (field menu & title) */
   Menu.settings = () => R.Engine.run(new (cls().SettingsScreen)());
 
-  // ------------------------------------------------------------ settings rows
+  // ------------------------------------------------------------ settings rows (§11.7.15, STYLE_JA §8)
+  const onOff = [true, false];
   const SETTINGS = [
-    { key: 'msgSpeed', label: 'メッセージ速度', values: [0, 1, 2, 3], names: ['遅い', '普通', '速い', '瞬間'], desc: 'メッセージが表示される速さを選びます。' },
-    { key: 'battleSpeed', label: '戦闘速度', values: [0, 1, 2], names: ['普通', '速い', '最速'], desc: '戦闘演出の速さを選びます。' },
-    { key: 'bgmVolume', label: 'BGMの音量', vol: true, desc: '音楽の音量を調節します。' },
-    { key: 'sfxVolume', label: '効果音の音量', vol: true, desc: '効果音の音量を調節します。' },
-    { key: 'alwaysDash', label: 'いつでもダッシュ', values: [false, true], names: ['オフ', 'オン'], desc: 'ふだんはBボタン（Shift）を押しながら移動でダッシュ。\nオンにすると常に走り、押している間は歩きます。' },
-    { key: 'fieldZoom', label: 'フィールドの広さ', values: ['normal', 'wide', 'wider'], names: ['標準', '広め', '広い'], desc: 'マップ画面にどこまで映すかを選びます。\n広くするほど、まわりが広く見渡せます。' },
-    { key: 'windowColor', label: 'ウインドウの色', values: ['black', 'blue', 'green', 'red'], names: ['黒', '青', '緑', '赤'], desc: 'ウインドウの色を変えます。' },
-    { key: 'touchPad', label: 'タッチパッド', values: ['auto', 'on', 'off'], names: ['自動', '表示', '隠す'], desc: '画面上のボタンを表示するか選びます。' },
-    { key: 'padConfirm', label: '決定ボタン', values: ['right', 'bottom'], names: ['右', '下'], desc: 'パッドの決定ボタン。右＝○／任天堂のA、\n下＝×／XboxのA。反対側がキャンセルです。' },
-    { key: 'autoKeep', label: 'オート継続', values: [true, false], names: ['する', 'しない'], desc: 'オート戦闘を次の戦闘にも引き継ぎます。\nボス戦・イベント戦闘は手動で始まります。' },
-    { key: 'cursorMemory', label: 'カーソル記憶', values: [true, false], names: ['オン', 'オフ'], desc: '戦闘で前回選んだコマンドを記憶します。' },
+    { key: 'msgSpeed', label: 'メッセージ速度', values: [0, 1, 2, 3], names: ['遅い', 'ふつう', '速い', '一瞬'], desc: 'メッセージが出る速さを選ぶ。' },
+    { key: 'battleSpeed', label: '戦闘速度', values: [0, 1, 2], names: ['ふつう', '速い', 'とても速い'], desc: '戦闘の演出の速さを選ぶ。' },
+    { key: 'bgmVolume', label: 'BGM', vol: true, desc: '音楽の大きさ。←→で変える。' },
+    { key: 'sfxVolume', label: '効果音', vol: true, desc: '効果音の大きさ。←→で変える。' },
+    { key: 'alwaysDash', label: '常にダッシュ', values: onOff, names: ['する', 'しない'], desc: 'するなら、Bを押している間だけ歩く。' },
+    { key: 'fieldZoom', label: 'フィールドの広さ', values: ['normal', 'wide', 'wider'], names: ['ふつう', 'ひろい', 'もっとひろい'], desc: 'マップに映す広さ。すぐに変わる。' },
+    { key: 'windowColor', label: 'ウインドウの色', values: ['ink', 'black', 'blue', 'green', 'red'], names: ['紺', '黒', '青', '緑', '赤'], desc: 'ウインドウの色を変える。' },
+    { key: 'touchPad', label: 'タッチパッド', values: ['auto', 'on', 'off'], names: ['自動', '出す', '出さない'], desc: '画面のボタンを出すかどうか。' },
+    { key: 'padConfirm', label: '決定ボタン', values: ['right', 'bottom'], names: ['右', '下'], desc: 'パッドの決定ボタンの位置。' },
+    { key: 'autoKeep', label: 'オート継続', values: onOff, names: ['する', 'しない'], desc: '次の戦闘もオートで始める（ボス戦は手動）' },
+    { key: 'cursorMemory', label: 'カーソル記憶', values: onOff, names: ['する', 'しない'], desc: '戦闘のコマンドの位置を覚えておく。' },
   ];
+  Menu.SETTINGS = SETTINGS;
 
   function applySetting(key) {
     const S = R.Settings;
@@ -162,19 +184,22 @@
       try { R.Audio.setVolumes(S.bgmVolume, S.sfxVolume); } catch (e) { console.error(e); }
     }
     if (key === 'touchPad' && R.applyTouchSetting) { try { R.applyTouchSetting(); } catch (e) { console.error(e); } }
+    if (key === 'fieldZoom' && R.Field && typeof R.Field.view === 'function') { try { R.Field.view(); } catch (e) { /* the field redraws itself */ } }
     if (R.Save && R.Save.saveSettings) R.Save.saveSettings();
   }
+  Menu.applySetting = applySetting;
 
   function build() {
-    const K = Menu.kit;
+    const Kt = K();
 
     // ============================================================ セーブ
-    class SaveScreen extends K.Screen {
+    class SaveScreen extends Kt.Screen {
       constructor(o) {
         super();
         this.o = o;
         this.slots = null;
         this.index = R.Save.lastSlot || 0;
+        if (this.index >= 3) this.index = 0;
         this.flow(() => this.load());
       }
       async load() { this.slots = await R.Save.list(); }
@@ -188,33 +213,36 @@
       }
       async save(i) {
         const n = i + 1;
-        if (this.slots[i] && !(await K.yesno('冒険の書' + n + 'に上書きしますか？'))) return;
+        if (this.slots[i] && !(await Kt.yesno('記録' + n + 'に上書きしますか？'))) return;
         let ok = false;
         try { ok = await R.Save.save(i, R.State.serialize()); } catch (e) { console.error(e); }
-        if (!ok) { R.sfx('buzzer'); await K.msg('記録に失敗しました。'); return; }
+        if (!ok) { R.sfx('buzzer'); await Kt.msg('記録に失敗した。'); return; }
         this.saved = true;
         await this.load();
-        R.jingle('save'); // plays on after the screen closes — input is not held hostage by the jingle
-        await K.say('冒険の書' + n + 'に記録しました。');
+        R.jingle('save');
+        await Kt.say('記録' + n + 'に書き記した。');
         this.close(true);
       }
       render() {
-        const ys = [4, 62, 120];
         for (let i = 0; i < 3; i++) {
-          drawSlot(i, this.slots ? this.slots[i] : null, 4, ys[i], 248, 56);
-          if (this.index === i) G().cursor(10, ys[i] + 8, !this.busy);
+          const y = 4 + 58 * i;
+          drawSlot(i, this.slots ? this.slots[i] : null, 4, y, 248, 56);
+          if (this.index === i) G().cursor(0, y + 7, !this.busy);
         }
-        if (!this.slots) G().text('読み込み中…', 128, 30, { align: 'center', color: G().C.gray });
+        if (!this.slots) G().text('読み込んでいる……', 128, 30, { align: 'center', color: Kt.COL.gray });
         if (!this.o.noCode) {
-          G().window(4, 178, 248, 26);
-          G().text('冒険の合言葉を見る', 20, 185, { color: G().C.cyan });
-          if (this.index === 3) G().cursor(10, 186, !this.busy);
+          G().window(4, 178, 248, 20);
+          G().text('冒険の合言葉を見る', 20, 182, { color: G().C.cyan });
+          if (this.index === 3) G().cursor(8, 183, !this.busy);
         }
+        G().window(4, 200, 248, 20);
+        G().text(this.index === 3 ? '今の冒険を、文字の合言葉にして写しておく。' : 'どの記録に書き記しますか？', 14, 204, { color: Kt.COL.sub, size: 8 });
       }
     }
 
     // ============================================================ 設定
-    class SettingsScreen extends K.Screen {
+    const LH = 14;
+    class SettingsScreen extends Kt.Screen {
       constructor() {
         super();
         this.index = 0;
@@ -228,13 +256,13 @@
         const s = SETTINGS[this.index];
         let step = 0;
         if (d === 'left') step = -1;
-        if (d === 'right' || (In().pressed('a') && !s.vol)) step = 1; // A never touches a volume bar (no wrap to mute)
+        if (d === 'right' || (In().pressed('a') && !s.vol)) step = 1; // A never touches a volume bar (no wrap to silence)
         if (!step) return;
         const S = R.Settings;
         if (s.vol) {
           const v = Math.round((S[s.key] || 0) * 10);
           const nv = Math.max(0, Math.min(10, v + step));
-          if (nv === v) return;
+          if (nv === v) { R.sfx('buzzer'); return; }
           S[s.key] = nv / 10;
         } else {
           let k = s.values.indexOf(S[s.key]);
@@ -247,35 +275,31 @@
       }
       render() {
         const S = R.Settings;
-        // row pitch shrinks (16 → 13) once the list is long enough that the
-        // description window below would drop under two lines
-        const LH = Math.max(13, Math.min(16, Math.floor(154 / (SETTINGS.length + 1))));
-        const h = 16 + (SETTINGS.length + 1) * LH - 4;
+        const h = 12 * LH + 16; // 184
         G().window(4, 4, 248, h, { title: '設定' });
         SETTINGS.forEach((s, i) => {
-          const y = 14 + i * LH;
+          const y = 12 + i * LH;
           const sel = i === this.index;
-          G().text(s.label, 20, y, { color: sel ? G().C.white : '#c8c8d8' });
-          const vx = 196;
+          G().text(s.label, 20, y, { color: sel ? '#ffffff' : Kt.COL.sub });
           if (s.vol) {
             const v = Math.round((S[s.key] || 0) * 10);
-            for (let k = 0; k < 10; k++) G().rect(158 + k * 7, y + 3, 5, 7, k < v ? (sel ? '#ffe45a' : '#c0c0d0') : '#303044');
+            for (let k = 0; k < 10; k++) G().rect(160 + k * 7, y + 3, 5, 7, k < v ? (sel ? G().C.yellow : '#c0c0d0') : '#2a3050');
           } else {
             const k = Math.max(0, s.values.indexOf(S[s.key]));
-            G().text(s.names[k], vx, y, { align: 'center', color: sel ? G().C.yellow : G().C.white });
+            Kt.fitText(s.names[k], 196, y, 70, { align: 'center', color: sel ? G().C.yellow : '#ffffff' });
+            if (sel) {
+              G().text('◀', 150, y, { color: Kt.COL.gray });
+              G().text('▶', 242, y, { align: 'right', color: Kt.COL.gray });
+            }
           }
-          if (sel && !s.vol) K.lrArrows(vx - 34, vx + 33, y + 2);
           if (sel) G().cursor(8, y + 1, !this.busy);
         });
-        const by = 14 + SETTINGS.length * LH;
+        const by = 12 + SETTINGS.length * LH;
         G().text('戻る', 20, by, { color: G().C.cyan });
         if (this.index === SETTINGS.length) G().cursor(8, by + 1, !this.busy);
-        // description + window colour preview (only as many lines as the window holds)
+        G().window(4, h + 6, 248, 224 - h - 10);
         const s = SETTINGS[this.index];
-        const dh = 224 - h - 12;
-        G().window(4, h + 8, 248, dh);
-        const text = s ? s.desc : '設定を終えて戻ります。';
-        G().wrap(text, 226).slice(0, Math.max(1, Math.floor((dh - 12) / 14))).forEach((l, i) => G().text(l, 14, h + 16 + i * 14));
+        Kt.fitText(s ? s.desc : '設定を終えて戻る。', 14, h + 12, 228);
       }
     }
     return { SaveScreen, SettingsScreen };

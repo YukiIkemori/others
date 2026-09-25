@@ -1,5 +1,5 @@
-// Party figure parts: heads, faces, hair, bodies (per outfit style), capes,
-// headgear and the job → style table. See chars.js for the palette letters.
+// Party figure parts: heads, faces, hair, bodies (per outfit style), capes and
+// headgear. See chars.js for the palette letters; chars_party.js has the party table.
 (function (R) {
   'use strict';
   const A = (R.Art = R.Art || {});
@@ -54,6 +54,16 @@
     sharp: {
       down: L(8, ['....ee....ee....', '.....e....e.....', '....m......m....']),
       right: L(8, ['..........ee....', '..........e.....', '............m...']),
+    },
+    // old: eyes narrowed to one row, a 1px crease at each outer corner (dokka, bartolo, boden, berna, lazaro)
+    old: {
+      down: L(8, ['................', '...dee....eed...', '................']),
+      right: L(8, ['................', '..........eed...', '................']),
+    },
+    // narrow: long slit eyes (2px, one row) with a 1px lid shadow above (shigure, sylvain, morga)
+    narrow: {
+      down: L(8, ['....d......d....', '....ee....ee....']),
+      right: L(8, ['...........d....', '..........ee....']),
     },
   };
 
@@ -1409,60 +1419,7 @@
     ]),
   };
 
-  // ------------------------------------------------------------ characters
-  P.party = {
-    yuki: {
-      gender: 'm',
-      hair: ['#2a1810', '#4e2e1c', '#74482a', '#a06c40'],
-      skin: ['#d8966a', '#f4c49c', '#fde2c8'],
-      eye: '#1c1428',
-      head: [P.head, P.face.boy],
-      hairPart: P.hairYuki,
-    },
-    non: {
-      gender: 'f',
-      hair: ['#4e2632', '#8a4a54', '#bc7676', '#e8a8a4'],
-      skin: ['#dc9c78', '#f8d0b0', '#fff0e0'],
-      eye: '#3a1c28',
-      head: [P.head, P.face.gentle],
-      hairPart: P.hairNon,
-    },
-    metem: {
-      gender: 'f',
-      hair: ['#4a3e6c', '#7c70a8', '#aca2d4', '#dcd6f2'],
-      skin: ['#dc9c78', '#f8d0b0', '#fff0e0'],
-      eye: '#2c1850',
-      acc: '#e0385c',
-      head: [P.head, P.face.sharp],
-      hairPart: [P.hairMetem, P.ribbon],
-      bow: ['QQ.QQ', 'RQPQR', 'QQ.QQ'],
-    },
-  };
-
-  // ------------------------------------------------------------ job styles
-  // body: body style (bodyF for the girls), hat, cape; colors(outfit) → palette groups;
-  // *Map: letter remaps for that layer (e.g. cape drawn in trim colours).
-  const pantsDark = '#3c3a54';
-  P.jobs = {
-    _default: { body: 'fighter', bodyF: 'fighterF' },
-    warrior: { body: 'fighter', bodyF: 'fighterF', hat: 'horned', colors: (o) => ({ steel: o.sub, acc2: '#4a3c44' }) },
-    priest: { body: 'robe', hat: 'mitre' },
-    mage: { body: 'robe', hat: 'witch' },
-    thief: { body: 'light', bodyF: 'lightF', hat: 'bandana', colors: () => ({ acc2: '#4a3a30' }) },
-    knight: { body: 'armor', hat: 'plume', cape: 'long' },
-    monk: { body: 'gi', hat: 'headband', colors: (o) => ({ acc2: o.sub }) },
-    whitemage: { body: 'robe', hat: 'hood' },
-    blackmage: { body: 'robe', hat: 'wide' },
-    hunter: { body: 'light', bodyF: 'lightF', hat: 'feather', colors: () => ({ acc2: '#4a4030' }) },
-    bard: { body: 'light', bodyF: 'lightF', hat: 'beret', cape: 'mantle', colors: () => ({ acc2: pantsDark }) },
-    alchemist: { body: 'coat', hat: 'goggles', colors: () => ({ acc2: '#4a3c34', leather: '#6a4a30' }) },
-    spellblade: { body: 'armor', hat: 'hood', cape: 'long', hatMap: { A: 'D', B: 'E', C: 'F', E: 'I' } },
-    paladin: { body: 'armor', hat: 'winged', cape: 'long', capeMap: { D: 'G', E: 'H', F: 'I' }, bodyMap: { D: 'G', E: 'H', F: 'I', G: 'D', H: 'E', I: 'F' } },
-    ninja: { body: 'ninja', hat: 'ninja', colors: () => ({ leather: '#3a3440' }) },
-    sage: { body: 'robe', hat: 'turban' },
-    dragoon: { body: 'armor', hat: 'dragon', cape: 'long' },
-    timemage: { body: 'robe', hat: 'tophat' },
-    darkknight: { body: 'armor', hat: 'dark', cape: 'long', colors: () => ({ leather: '#2c2430' }) },
-    hero: { body: 'armor', hat: 'circlet', cape: 'crest' },
-  };
+  // The party table (20 companions + the hero) is in chars_party.js; it replaces
+  // the Crest per-job looks (DESIGN §11.3.2).
+  P.party = P.party || {};
 })(window.RPG);

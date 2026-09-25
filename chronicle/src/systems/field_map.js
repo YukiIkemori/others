@@ -1,17 +1,30 @@
-// Field map loader: compiles R.DB.maps[id] (DESIGN §7.1) into a runtime map.
-//   const m = R.FieldMap.compile('regnas_town');
+// Field map loader: compiles R.DB.maps[id] (DESIGN §3.3.10, Crest §7.1) into a runtime map.
+//   const m = R.FieldMap.compile('lute');
 //   m.tileAt(x,y) m.tile(x,y) m.npcAt(x,y) m.chestAt(x,y) m.warpAt(x,y) ...
 // Rows → tile ids through the map's legend; mark chars place objects (with an
-// `under` tile); explicit object lists are merged; duplicate npc/chest/hidden
-// ids get _2, _3… suffixes; tilePatches and conds are re-applied by refresh().
-// Pure logic (no DOM): also used by tools and the minimap.
+// `under` tile); explicit object lists are merged; duplicate npc/chest ids get
+// _2, _3… suffixes (give chests explicit ids: DESIGN §3.1.4); tilePatches and
+// conds are re-applied by refresh(). Pure logic (no DOM): also used by tools
+// and the minimap.
+//
+// Chronicle additions: warp `cond` at runtime, chest `pool`/`tier` (resolved by
+// the field when opened), per-map `decorLegend`, `over:true` decor (drawn above
+// the sprites by the field), secret passages (`secret_*` tiles), `lvOff`,
+// `chestTier`, `region`, `respawnSpawn`/`noRespawn`/`partySwap`, `escape`
+// as {to|map, spawn, dir}. Hidden items (`hidden`) are not part of this game
+// (DESIGN §1.0 0.20): they are ignored with a warning.
 (function (R) {
   'use strict';
   const DB = R.DB;
 
   const DEFAULT_ENC_RATE = { world: 26, dungeon: 22 };
-  const DEFAULT_BGM = { world: 'overworld', town: 'town', castle: 'castle', dungeon: 'dungeon', shrine: 'shrine' };
+  const DEFAULT_BGM = { world: 'overworld', town: 'town', village: 'village', castle: 'castle', dungeon: 'dungeon', shrine: 'shrine' };
+  /** map types that count as 「町・城・村」 (automatic respawn point, party swap) */
+  const TOWN_TYPES = { town: 1, village: 1, castle: 1 };
   const DIRS = { up: 1, down: 1, left: 1, right: 1 };
+  // tilePatch changes up to this many cells are patched in place (the renderer redraws just
+  // those cells and their neighbours); bigger changes rebuild the whole tile cache
+  const DIRTY_MAX = 400;
 
   const warned = {};
   function warn(mapId, msg) {
@@ -19,6 +32,20 @@
     if (warned[k]) return;
     warned[k] = 1;
     R.warn('map ' + mapId + ': ' + msg);
+  }
+  const check = (cond) => cond == null || R.State.check(cond);
+  /** a secret-passage tile id (DESIGN §3.3.10-11): `secret_*` or a tile with `secret:true` */
+  function isSecretTile(id) {
+    if (typeof id !== 'string') return false;
+    if (id.startsWith('secret_')) return true;
+    const t = DB.tiles[id];
+    return !!(t && t.secret);
+  }
+  const secretKey = (mapId, x, y) => mapId + ':' + x + ',' + y;
+  function normEscape(e) {
+    if (!e) return null;
+    const to = e.to || e.map;
+    return to ? Object.assign({}, e, { to }) : null;
   }
 
   let uidSeq = 0;
@@ -32,8 +59,9 @@
       this.name = def.name || '';
       this.type = def.type || 'town';
       this.isWorld = this.type === 'world';
-      // world maps wrap around (a torus, like the classic overworlds): walking / sailing off an
-      // edge comes back in at the opposite one. `wrap:false` on a world map turns it off.
+      this.isTown = !!TOWN_TYPES[this.type];
+      // world maps wrap around (a torus): walking off an edge comes back in at the opposite one.
+      // `wrap:false` on a world map turns it off.
       this.wrap = def.wrap != null ? !!def.wrap : this.isWorld;
       this.legendName = def.legend || (this.isWorld ? 'world' : 'local');
       this.legend = DB.legends[this.legendName] || {};
@@ -47,8 +75,13 @@
       this.zones = Array.isArray(def.zones) ? def.zones : [];
       this.defaultZone = def.defaultZone || null;
       this.exit = def.exit || null;
-      this.escape = def.escape || null;
+      this.escape = normEscape(def.escape);
       this.location = def.location || null;
+      this.region = def.region || null;
+      this.lvOff = def.lvOff != null ? def.lvOff : null;
+      this.chestTier = def.chestTier != null ? def.chestTier : null;
+      this.respawnSpawn = def.respawnSpawn || null;
+      this.noRespawn = !!def.noRespawn;
       this.onEnter = def.onEnter || null;
       this.bbg = def.bbg || null;
       this.patches = Array.isArray(def.tilePatches) ? def.tilePatches : [];
@@ -57,11 +90,13 @@
       this.chests = [];
       this.warps = [];
       this.events = [];
-      this.hidden = [];
+      this.hidden = []; // always empty (hidden items are not used)
       this.signs = [];
+      this.overCells = []; // cells whose decor has over:true (drawn above the sprites)
       this.opened = new Map(); // door cell -> tile id drawn there once opened (this visit)
+      this.dirty = []; // [{v, cells:[[x,y]…]}] cells to redraw for version v
       this.gfx = {}; // render cache: tileId -> canvas | canvas[]
-      this.wcache = []; // render cache: world cell -> R.Art.worldTile result
+      this.wcache = []; // render cache: cell -> R.Art.worldTile / localTile result
     }
 
     /** inside the map rows (raw coordinates, ignores wrapping) */
@@ -76,11 +111,15 @@
     tileAt(x, y) { return this.inBounds(x, y) ? this.tiles[this.idx(x, y)] : this.outside; }
     /** tile definition (never null) */
     tile(x, y) { return DB.tiles[this.tileAt(x, y)] || EMPTY; }
+    /** is (x,y) a secret passage (walkable wall)? */
+    isSecret(x, y) { return this.inBounds(x, y) && isSecretTile(this.tileAt(x, y)); }
 
-    /** decor id at (x,y) or null (DESIGN §7.1 decor layer) */
+    /** decor id at (x,y) or null (decor layer) */
     decorAt(x, y) { return this.decor && this.inBounds(x, y) ? this.decor[this.idx(x, y)] : null; }
     /** decor definition at (x,y) or null */
     decorDef(x, y) { const d = this.decorAt(x, y); return d ? DB.decor[d] || null : null; }
+    /** decor drawn above the sprites (roof eaves, tree canopies, arches) */
+    decorOver(x, y) { const d = this.decorDef(x, y); return !!(d && d.over); }
     /** can the player talk across (x,y)? (counter tiles and counter-like furniture) */
     counterAt(x, y) { const d = this.decorDef(x, y); return !!(this.tile(x, y).counter || (d && d.counter)); }
 
@@ -88,7 +127,7 @@
     walkable(x, y) {
       if (!this.inBounds(x, y)) return false;
       const dd = this.decorDef(x, y);
-      if (dd && !dd.pass) return false;
+      if (dd && !dd.pass && !dd.over) return false;
       const t = this.tile(x, y);
       if (t.pass) return true;
       return !!(t.flagPass && !t.shipWhenFlag && R.State.flag(t.flagPass));
@@ -112,18 +151,24 @@
     }
     npc(id) { return this.npcs.find((n) => n.id === id) || null; }
     chestAt(x, y) { if (!this.inBounds(x, y)) return null; const c = this.chestIdx.get(this.idx(x, y)); return c && c.present ? c : null; }
-    warpAt(x, y) { return this.inBounds(x, y) ? this.warpIdx.get(this.idx(x, y)) || null : null; }
-    signAt(x, y) { const s = this.inBounds(x, y) && this.signIdx.get(this.idx(x, y)); return s && R.State.check(s.cond) ? s : null; }
-    hiddenAt(x, y) {
-      const h = this.inBounds(x, y) && this.hiddenIdx.get(this.idx(x, y));
-      return h && R.State.check(h.cond) && !R.Game.chests[h.id] ? h : null;
+    /** the first warp on (x,y) whose cond holds (warps may carry a runtime cond: DESIGN §3.3.10-6) */
+    warpAt(x, y) {
+      if (!this.inBounds(x, y)) return null;
+      const list = this.warpIdx.get(this.idx(x, y));
+      if (!list) return null;
+      for (const w of list) if (check(w.cond)) return w;
+      return null;
     }
+    /** is there any warp on (x,y), whatever its cond (NPCs keep off such cells) */
+    warpCell(x, y) { return this.inBounds(x, y) && this.warpIdx.has(this.idx(x, y)); }
+    signAt(x, y) { const s = this.inBounds(x, y) && this.signIdx.get(this.idx(x, y)); return s && check(s.cond) ? s : null; }
+    hiddenAt() { return null; }
     /** events at (x,y) with the given trigger whose cond holds and whose once-flag is unset */
     eventsAt(x, y, trigger) {
       if (!this.inBounds(x, y)) return [];
       const list = this.eventIdx.get(this.idx(x, y));
       if (!list) return [];
-      return list.filter((e) => e.trigger === trigger && R.State.check(e.cond) && !(e.once && R.State.flag(e.once)));
+      return list.filter((e) => e.trigger === trigger && check(e.cond) && !(e.once && R.State.flag(e.once)));
     }
     /** resolve a spawn name or {x,y,dir} → {x,y,dir} (never null) */
     spawn(s) {
@@ -140,7 +185,8 @@
       }
       return { x: 0, y: 0, dir: 'down' };
     }
-    /** encounter zone id at (x,y) (world zones first match → defaultZone → encounter) */
+    hasSpawn(name) { return typeof name === 'string' && !!this.spawns[name]; }
+    /** encounter zone id at (x,y) (zones first match → defaultZone → encounter) */
     zoneAt(x, y) {
       if (this.wrap) { x = this.wx(x); y = this.wy(y); }
       for (const z of this.zones) if (x >= z.x && y >= z.y && x < z.x + z.w && y < z.y + z.h) return z.zone;
@@ -150,26 +196,59 @@
     exitFor(dir) {
       const e = this.exit;
       if (!e) return null;
-      if (e.to) return e;
-      return e[dir] && e[dir].to ? e[dir] : null;
+      if (e.to) return check(e.cond) ? e : null;
+      return e[dir] && e[dir].to && check(e[dir].cond) ? e[dir] : null;
     }
 
-    /** re-apply tilePatches and object conds (after flags change) */
+    /** mark cells for a redraw (doors opened, secrets found): bumps the version, one dirty entry */
+    touch(cells) {
+      this.version++;
+      const out = [];
+      for (const [x, y] of cells) {
+        if (!this.inBounds(x, y)) continue;
+        this.wcache[this.idx(x, y)] = undefined;
+        if (this.dcache) this.dcache[this.idx(x, y)] = undefined;
+        out.push([x, y]);
+      }
+      this.dirty.push({ v: this.version, cells: out });
+      if (this.dirty.length > 64) this.dirty.splice(0, this.dirty.length - 64);
+    }
+
+    /** re-apply tilePatches and object conds (after flags / vars / items change) */
     refresh() {
       const next = this.base.slice();
       for (const p of this.patches) {
-        if (!R.State.check(p.cond)) continue;
+        if (!check(p.cond)) continue;
         const id = p.tile || this.legend[p.ch];
         if (!DB.tiles[id]) { warn(this.id, 'tilePatch with unknown tile ' + (p.tile || p.ch)); continue; }
         const pw = p.w || 1, ph = p.h || 1;
-        for (let y = p.y; y < p.y + ph; y++) for (let x = p.x; x < p.x + pw; x++) if (this.inBounds(x, y)) next[this.idx(x, y)] = id;
+        for (let y = p.y; y < p.y + ph; y++) for (let x = p.x; x < p.x + pw; x++) if (this.inMap(x, y)) next[y * this.w + x] = id;
       }
-      let changed = !this.tiles;
-      if (this.tiles) for (let i = 0; i < next.length; i++) if (next[i] !== this.tiles[i]) { changed = true; break; }
-      this.tiles = next;
-      if (changed) { this.version++; this.wcache = []; this.dcache = []; }
-      for (const n of this.npcs) n.present = !n.hidden && (n.forced || R.State.check(n.cond));
-      for (const c of this.chests) c.present = R.State.check(c.cond);
+      if (!this.tiles) { this.tiles = next; this.version++; }
+      else {
+        const changed = [];
+        for (let i = 0; i < next.length; i++) if (next[i] !== this.tiles[i]) changed.push(i);
+        this.tiles = next;
+        if (changed.length > DIRTY_MAX) { this.version++; this.wcache = []; this.dcache = []; }
+        else if (changed.length) {
+          // context art (autotiling) looks at the 8 neighbours: redraw those too
+          const cells = new Map();
+          for (const i of changed) {
+            const cx = i % this.w, cy = (i / this.w) | 0;
+            for (let dy = -1; dy <= 1; dy++) {
+              for (let dx = -1; dx <= 1; dx++) {
+                const x = cx + dx, y = cy + dy;
+                if (!this.inBounds(x, y)) continue;
+                const k = this.idx(x, y);
+                if (!cells.has(k)) cells.set(k, [this.wx(x), this.wy(y)]);
+              }
+            }
+          }
+          this.touch([...cells.values()]);
+        }
+      }
+      for (const n of this.npcs) n.present = !n.hidden && (n.forced || check(n.cond));
+      for (const c of this.chests) c.present = check(c.cond);
     }
   }
   const EMPTY = { pass: false };
@@ -184,12 +263,15 @@
     const marks = def.marks || {};
     for (const ch in marks) if (ch in legend) warn(id, 'mark char "' + ch + '" is also a legend char (mark wins)');
 
-    // outside tile: legend char, or tile id
+    // outside tile: legend char, or tile id (required on every local map: DESIGN §3.3.10 / validate V5)
     const outDefault = m.isWorld ? 'sea' : 'void';
     if (def.outside != null) {
       m.outside = legend[def.outside] || (DB.tiles[def.outside] ? def.outside : null);
       if (!m.outside) { warn(id, 'unknown outside tile "' + def.outside + '"'); m.outside = outDefault; }
-    } else m.outside = outDefault;
+    } else {
+      m.outside = outDefault;
+      if (!m.isWorld) warn(id, 'local map without `outside` (DESIGN §3.3.10)');
+    }
 
     const npcIds = {}, chestIds = {};
     const uniq = (used, base) => {
@@ -203,6 +285,7 @@
     const base = new Array(m.w * m.h);
     const bad = {};
     let ragged = false;
+    let hiddenSeen = 0;
 
     const add = {
       npc(o, x, y) {
@@ -221,21 +304,14 @@
       chest(o, x, y) {
         const c = Object.assign({}, o);
         c.x = x != null ? x : o.x | 0; c.y = y != null ? y : o.y | 0;
-        if (!o.id) warn(id, 'chest without id at ' + c.x + ',' + c.y);
+        if (!o.id) warn(id, 'chest without id at ' + c.x + ',' + c.y + ' (give every chest an explicit id)');
         c.id = uniq(chestIds, o.id || id + '_chest_' + c.x + '_' + c.y);
-        c.n = o.n || 1;
+        if (o.item) c.n = o.n || 1;
         if (o.item && !DB.items[o.item]) warn(id, 'chest ' + c.id + ' has unknown item ' + o.item);
+        if (o.pool && DB.pools && Object.keys(DB.pools).length && !DB.pools[o.pool]) warn(id, 'chest ' + c.id + ' has unknown pool ' + o.pool);
         m.chests.push(c);
       },
-      hidden(o, x, y) {
-        const h = Object.assign({}, o);
-        h.x = x != null ? x : o.x | 0; h.y = y != null ? y : o.y | 0;
-        if (!o.id) warn(id, 'hidden item without id at ' + h.x + ',' + h.y);
-        h.id = uniq(chestIds, o.id || id + '_hidden_' + h.x + '_' + h.y);
-        h.n = o.n || 1;
-        if (o.item && !DB.items[o.item]) warn(id, 'hidden ' + h.id + ' has unknown item ' + o.item);
-        m.hidden.push(h);
-      },
+      hidden() { hiddenSeen++; },
       warp(o, x, y) {
         const w = Object.assign({}, o);
         w.x = x != null ? x : o.x | 0; w.y = y != null ? y : o.y | 0;
@@ -292,9 +368,10 @@
     }
     if (ragged) warn(id, 'rows have unequal lengths (padded with the outside tile)');
 
-    // decor layer (optional): same size as rows; ' ' and '.' mean nothing
+    // decor layer (optional): same size as rows; ' ' and '.' mean nothing.
+    // `decorLegend` adds / overrides characters for this map only (DESIGN §11.2.10).
     if (Array.isArray(def.decor) && def.decor.length) {
-      const dl = DB.legends.decor || {};
+      const dl = Object.assign({}, DB.legends.decor || {}, def.decorLegend || {});
       const dec = new Array(m.w * m.h).fill(null);
       const dbad = {};
       if (def.decor.length !== m.h) warn(id, 'decor has ' + def.decor.length + ' rows, map has ' + m.h);
@@ -307,6 +384,7 @@
           const did = dl[ch];
           if (!did || !DB.decor[did]) { dbad[ch] = 1; continue; }
           dec[y * m.w + x] = did;
+          if (DB.decor[did].over) m.overCells.push({ x, y });
         }
       }
       const dk = Object.keys(dbad);
@@ -324,15 +402,16 @@
     for (const o of def.chests || []) add.chest(o);
     for (const o of def.warps || []) add.warp(o);
     for (const o of def.events || []) add.event(o);
-    for (const o of def.hidden || []) add.hidden(o);
     for (const o of def.signs || []) add.sign(o);
+    if (Array.isArray(def.hidden)) hiddenSeen += def.hidden.length;
+    if (hiddenSeen) warn(id, hiddenSeen + ' hidden item(s) ignored: this game has no hidden items (DESIGN §1.0 0.20)');
 
     // bounds check
     const oob = (kind, o) => { if (!m.inMap(o.x, o.y)) warn(id, kind + ' out of bounds at ' + o.x + ',' + o.y); };
-    for (const k of ['npcs', 'chests', 'warps', 'events', 'hidden', 'signs']) for (const o of m[k]) oob(k, o);
+    for (const k of ['npcs', 'chests', 'warps', 'events', 'signs']) for (const o of m[k]) oob(k, o);
     for (const k in m.spawns) oob('spawn ' + k, m.spawns[k]);
     for (const n of m.npcs) {
-      if (!n.text && !n.event && n.sprite.startsWith('npc:')) warn(id, 'npc ' + n.id + ' has neither text nor event');
+      if (n.text == null && !n.event && n.sprite.startsWith('npc:')) warn(id, 'npc ' + n.id + ' has neither text nor event');
       if (n.event && !DB.events[n.event]) warn(id, 'npc ' + n.id + ' uses unknown event ' + n.event);
     }
     for (const e of m.events) if (e.id && !DB.events[e.id]) warn(id, 'unknown event ' + e.id);
@@ -341,18 +420,22 @@
     m.base = base;
     const index = (list) => { const mp = new Map(); for (const o of list) if (m.inMap(o.x, o.y)) mp.set(m.idx(o.x, o.y), o); return mp; };
     m.chestIdx = index(m.chests);
-    m.warpIdx = index(m.warps);
     m.signIdx = index(m.signs);
-    m.hiddenIdx = index(m.hidden);
-    m.eventIdx = new Map();
-    for (const e of m.events) {
-      if (!m.inMap(e.x, e.y)) continue;
-      const k = m.idx(e.x, e.y);
-      if (!m.eventIdx.has(k)) m.eventIdx.set(k, []);
-      m.eventIdx.get(k).push(e);
-    }
+    m.hiddenIdx = new Map();
+    const listIndex = (list) => {
+      const mp = new Map();
+      for (const o of list) {
+        if (!m.inMap(o.x, o.y)) continue;
+        const k = m.idx(o.x, o.y);
+        if (!mp.has(k)) mp.set(k, []);
+        mp.get(k).push(o);
+      }
+      return mp;
+    };
+    m.warpIdx = listIndex(m.warps);
+    m.eventIdx = listIndex(m.events);
     if (R.Game) m.refresh();
-    else { m.tiles = base.slice(); for (const n of m.npcs) n.present = true; for (const c of m.chests) c.present = true; }
+    else { m.tiles = base.slice(); m.version = 1; for (const n of m.npcs) n.present = true; for (const c of m.chests) c.present = true; }
     return m;
   }
 
@@ -370,7 +453,9 @@
     const has = (id) => { const m = peek(id); return !!(m && (!name || m.spawns[name])); };
     if (DB.maps.world && has('world')) return 'world';
     for (const id in DB.maps) if (DB.maps[id].type === 'world' && has(id)) return id;
-    return DB.maps.world ? 'world' : null;
+    if (DB.maps.world) return 'world';
+    for (const id in DB.maps) if (DB.maps[id].type === 'world') return id;
+    return null;
   }
   /** coordinates {x,y,dir} of a spawn name on map id (default: the world map holding it) */
   function spawnPos(name, id) {
@@ -380,10 +465,10 @@
     return m.spawns[name] ? Object.assign({}, m.spawns[name]) : null;
   }
 
-  /** may the party push this NPC aside (DESIGN §7.2)? Works on compiled NPCs and raw map data.
+  /** may the party push this NPC aside (DESIGN §2.3, §10.13.10)? Works on compiled NPCs and raw data.
    *  Stays put: `fixed:true`, monsters / objects (non-`npc:` sprites), conditional NPCs (story
-   *  blockers such as the east gate soldier) and standing NPCs with an event (shops, inns, priests,
-   *  kings: they keep their post). `push:true` forces pushable. Wanderers are always pushable. */
+   *  blockers) and standing NPCs with an event (shops, inns, the tavern: they keep their post).
+   *  `push:true` forces pushable. Wanderers are always pushable. */
   function pushable(n) {
     if (!n || n.fixed) return false;
     if (n.push) return true;
@@ -393,5 +478,34 @@
     return (n.move || 'still') === 'wander' || !n.event;
   }
 
-  R.FieldMap = { FieldMap, compile, peek, spawnPos, findWorld, warn, pushable, DEFAULT_BGM };
+  // ---------------------------------------------------------- secret passages
+  /** secret-passage cells [[x,y]…] of a map (its rows, before tilePatches) */
+  function secretCells(id) {
+    const m = peek(id);
+    if (!m) return [];
+    const out = [];
+    for (let y = 0; y < m.h; y++) for (let x = 0; x < m.w; x++) if (isSecretTile(m.base[y * m.w + x])) out.push([x, y]);
+    return out;
+  }
+  let secretCache = null;
+  /** {total, byMap:{id:n}} over every map (the chronicle screen shows 「隠し通路　n/総数」) */
+  function secretStats() {
+    const ids = Object.keys(DB.maps);
+    const key = ids.length + ':' + ids.map((k) => (DB.maps[k].rows || []).length).join(',');
+    if (secretCache && secretCache.key === key) return secretCache;
+    const byMap = {};
+    let total = 0;
+    for (const id of ids) {
+      const n = secretCells(id).length;
+      if (n) { byMap[id] = n; total += n; }
+    }
+    return (secretCache = { key, total, byMap });
+  }
+
+  R.FieldMap = {
+    FieldMap, compile, peek, spawnPos, findWorld, warn, pushable, DEFAULT_BGM, TOWN_TYPES,
+    isSecretTile, secretKey, secretCells, secretStats,
+    /** total number of secret-passage cells in the game */
+    secretTotal() { return secretStats().total; },
+  };
 })(window.RPG);

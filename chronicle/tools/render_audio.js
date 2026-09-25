@@ -15,6 +15,11 @@
 //
 // Levels are measured pre-limiter at full volume. Targets: BGM ≈ -17 LUFS (K-weighted, ungated),
 // jingles ≈ -16, peaks < -1.5 dBFS; --suggest prints the per-track gains that reach them.
+// Long render lists are split across fresh browsers (one page holding 100+ s buffers crashes).
+//
+// require('./render_audio') → { BGM, JINGLES, SFX (the DESIGN §11.11.4 lists, = R.Audio.IDS), RANGE,
+//   loadNode, lint, listDrift, render, withPage, PAGE_FN } — used by tools/test_audio.js,
+//   tools/check_audio.js and qa's validate.js; main() only runs when executed directly.
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -26,12 +31,17 @@ const FILES = [
   'src/core/ns.js', 'src/core/audio.js',
   ...fs.readdirSync(path.join(ROOT, 'src/audio')).filter((f) => f.endsWith('.js')).sort().map((f) => 'src/audio/' + f),
 ];
-const BGM = 'title overworld sea town village castle shrine dungeon cave tower pyramid ice volcano lastdungeon battle boss lastboss ending'.split(' ');
-const JINGLES = 'victory levelup jobup item keyitem inn save gameover rare'.split(' ');
+// The normative id lists (DESIGN §11.11.4). src/core/audio.js carries the same lists as R.Audio.IDS;
+// `lint` fails if the two drift apart. qa's validate.js can require() this file for them.
+const BGM = ('title overworld sea town village castle shrine ending dungeon cave tower pyramid ice volcano ' +
+  'lastdungeon battle boss lastboss valzard tavern home rival tension sorrow boss2 rarebattle superboss ' +
+  'postgame forest ghost hollowking legend').split(' ');
+const JINGLES = 'victory levelup item keyitem inn save gameover rare superrare chapter recruit'.split(' ');
 const SFX = ('cursor confirm confirm_soft cancel buzzer menu_open attack hit crit miss enemy_attack hurt ' +
   'magic fire ice thunder wind holy dark earth water heal revive buff debuff status poison sleep death ' +
   'enemy_die boss_die escape stairs door locked chest item gold step_damage ship bump warp teleport ' +
-  'steal jump breath roar shake').split(' ');
+  'steal jump breath roar shake glimmer golden light freeze burn quill page swap bell unlock arrow ' +
+  'lash parry secret').split(' ');
 const TARGET = { bgm: -17, jingle: -16 }; // K-weighted loudness (LUFS, ungated) at full volume
 const PEAK_MAX = -1.5; // dBFS pre-limiter
 
@@ -43,7 +53,9 @@ const RANGE = {
   flute: [60, 98], oboe: [58, 91], clarinet: [50, 91], square: [48, 96], pulse: [48, 96], thin: [48, 96],
   harp: [36, 96], pizz: [36, 84], harpsi: [41, 89], guitar: [40, 84],
   bell: [60, 100], celesta: [60, 108], marimba: [45, 96], glock: [72, 108],
+  musicbox: [60, 98], warpbox: [55, 96], swell: [36, 84],
 };
+const DECAYING = /^(harp|pizz|guitar|marimba|harpsi|bell|celesta|glock|timp|musicbox|warpbox)$/;
 const NAMES = ['c', 'c#', 'd', 'eb', 'e', 'f', 'f#', 'g', 'ab', 'a', 'bb', 'b'];
 const nn = (m) => NAMES[m % 12] + (Math.floor(m / 12) - 1);
 
@@ -115,7 +127,7 @@ function lint(R, ids, verbose) {
         const snd = [];
         for (const e of pitched) {
           if (e.tick <= t && e.tick + e.len * 0.99 > t && e.tick + e.len - t >= 12) {
-            const dec = /^(harp|pizz|guitar|marimba|harpsi|bell|celesta|glock|timp)$/.test(e.inst);
+            const dec = DECAYING.test(e.inst);
             if (dec && t - e.tick >= 48) continue; // decayed plucks no longer clash
             // a clash matters when a note is struck on a beat, or is long enough to be heard as held
             const pos = e.tick % bar;
@@ -149,6 +161,20 @@ function lint(R, ids, verbose) {
     problems += bad;
   }
   return problems;
+}
+
+// the tool's lists must equal R.Audio.IDS (src/core/audio.js)
+function listDrift(R) {
+  const out = [];
+  const I = R.Audio.IDS || {};
+  for (const [name, mine, theirs] of [['bgm', BGM, I.bgm], ['jingles', JINGLES, I.jingles], ['sfx', SFX, I.sfx]]) {
+    const a = new Set(mine), b = new Set(theirs || []);
+    const onlyTool = mine.filter((x) => !b.has(x)), onlyCore = (theirs || []).filter((x) => !a.has(x));
+    if (onlyTool.length || onlyCore.length || mine.length !== (theirs || []).length) {
+      out.push(`${name}: tool-only [${onlyTool.join(' ')}] core-only [${onlyCore.join(' ')}]`);
+    }
+  }
+  return out;
 }
 
 function show(R, id, chIdx) {
@@ -280,8 +306,17 @@ const PAGE_FN = async ({ kind, id, sr, wav, inst, midi, dur, only }) => {
 async function render(ids, opts) {
   const R = loadNode();
   const rows = [];
-  await withPage(async (page) => {
-    for (const [kind, id] of ids) {
+  // a fresh browser every few long renders: one page accumulating 100+ s offline buffers crashes
+  const chunks = [];
+  let cur = [], weight = 0;
+  for (const it of ids) {
+    const w = it[0] === 'bgm' ? 3 : 1;
+    if (weight + w > 24 && cur.length) { chunks.push(cur); cur = []; weight = 0; }
+    cur.push(it); weight += w;
+  }
+  if (cur.length) chunks.push(cur);
+  for (const chunk of chunks) await withPage(async (page) => {
+    for (const [kind, id] of chunk) {
       const t = Date.now();
       const r = await page.evaluate(PAGE_FN, { kind, id, sr: 32000, wav: opts.wav });
       if (r.wav) { fs.writeFileSync(path.join(OUT, `${kind}_${id}.wav`), Buffer.from(r.wav, 'base64')); delete r.wav; }
@@ -337,11 +372,14 @@ async function main() {
     const ids = args.length ? args : all;
     const missing = all.filter((id) => !R.DB.music[id]);
     const missSfx = SFX.filter((id) => !R.DB.sfx[id]);
-    if (missing.length) console.log('missing tracks: ' + missing.join(' '));
-    if (missSfx.length) console.log('missing sfx: ' + missSfx.join(' '));
+    if (missing.length) console.log('missing tracks (served by stand-ins in game): ' + missing.join(' '));
+    if (missSfx.length) console.log('missing sfx (served by stand-ins in game): ' + missSfx.join(' '));
+    const drift = listDrift(R);
+    for (const d of drift) console.log('✗ list drift: ' + d);
     const p = lint(R, ids.filter((id) => R.DB.music[id]), flags.has('--verbose'));
-    console.log(p + missing.length + missSfx.length ? `\n${p} problem(s)` : '\nall clean');
-    process.exitCode = p + missing.length + missSfx.length ? 1 : 0;
+    const total = p + missing.length + missSfx.length + drift.length;
+    console.log(total ? `\n${total} problem(s)` : '\nall clean');
+    process.exitCode = total ? 1 : 0;
   } else if (cmd === 'show') {
     show(loadNode(), args[0], args[1] != null ? +args[1] : null);
   } else if (cmd === 'render') {
@@ -433,4 +471,5 @@ async function main() {
     console.log('usage: node tools/render_audio.js lint|show|render|inst …');
   }
 }
-main().catch((e) => { console.error(e); process.exit(2); });
+module.exports = { BGM, JINGLES, SFX, RANGE, TARGET, PEAK_MAX, FILES, loadNode, lint, listDrift, render, withPage, PAGE_FN };
+if (require.main === module) main().catch((e) => { console.error(e); process.exit(2); });

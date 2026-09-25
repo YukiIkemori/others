@@ -100,7 +100,8 @@
     stone(t) { return A.themeArt('generic').floor.clone(); },
     void(t) { return t.tile(0x000000); },
   };
-  const WATER_R = [0x0c2468, 0x16389a, 0x2250b8, 0x3470d0, 0x68a0e8, 0xb0d4fc];
+  // local water: a little deeper and greyer than Crest's (RS1 palette, DESIGN §11.2.2)
+  const WATER_R = [0x0e2250, 0x183468, 0x22487e, 0x305e96, 0x5a84b4, 0x9cbcdc];
   function water(t, f) {
     const b = t.tile(WATER_R[2]);
     for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
@@ -147,9 +148,11 @@
     }
     return b;
   }
+  const LX = A.LOCAL_EXT || {};
   A.groundArt = function (name, f) {
     const t = tk();
     if (name === 'water') return water(t, f || 0);
+    if (LX.GROUND && LX.GROUND[name]) return LX.GROUND[name](t, f || 0);
     if (name === 'lava') return lava(t, f || 0);
     if (name === 'poison') return poison(t, f || 0);
     const g = GROUND[name] || GROUND.stone;
@@ -529,9 +532,13 @@
   // ---------------------------------------------------- houses (exterior)
   const PLASTER = [0x6c5838, 0xb09c78, 0xdccca8, 0xf2e6c8, 0xfff8e4];
   /** o: {window, eave (roof above), capTop, top (wall seen from above)} */
-  function housewall(o) {
+  /** the theme row of a (town) theme, or null */
+  const thRow = (theme) => (A.THEME_DEFS && theme ? A.THEME_DEFS[A.themeOf ? A.themeOf(theme) : theme] : null) || null;
+  function housewall(o, theme) {
     const t = tk(), W = A.themeArt('house').WOOD;
     o = o || {};
+    const th = thRow(theme), kind = (th && th.hw) || 'timber';
+    if (kind !== 'timber' && LX.HOUSE && LX.HOUSE[kind]) return LX.HOUSE[kind](o, th, t);
     const b = t.tile(PLASTER[3]);
     for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) if (t.hash(x, y, 101) < 0.07) b.set(x, y, PLASTER[2]);
     if (o.top) {
@@ -564,10 +571,17 @@
   }
   const ROOF = [0x3c0c0c, 0x6c1c14, 0x982c1c, 0xc0442a, 0xe06a44, 0xf49870];
   /** o: {ridge, eave, l, r, chimney} edge flags */
-  function roof(o) {
+  const RAMPS = {};
+  function roofRamp(th) {
+    const k = th.roof.join(',');
+    return RAMPS[k] || (RAMPS[k] = A.THEME_EXT.grad(th.roof[0], th.roof[1], 6));
+  }
+  function roof(o, theme) {
     const t = tk();
     o = o || {};
-    const R_ = ROOF;
+    const th = thRow(theme), kind = (th && th.roofKind) || 'tile';
+    const R_ = th && th.roof && A.THEME_EXT ? roofRamp(th) : ROOF;
+    if (kind !== 'tile' && LX.ROOF && LX.ROOF[kind]) return LX.ROOF[kind](o, R_, th, t);
     const b = t.tile();
     // barrel tiles in aligned columns; each course overlaps the one below
     for (let y = 0; y < 16; y++) {
@@ -612,24 +626,44 @@
   //  * fences and bridges drawn over that ground / canal water
   const XT = {
     TALL: { wall: 1, wall_torch: 1, door: 1, door_silver: 1, door_gold: 1, housewall: 1, roof: 1, bookshelf: 1, shelf: 1, pillar: 1, statue: 1, tree: 1 },
-    GROUND: { floor: 1, lgrass: 1, dirt: 1, wood: 1, carpet: 1, sand: 1, snowfloor: 1, ice: 1, flowers: 1 },
+    GROUND: { floor: 1, lgrass: 1, dirt: 1, wood: 1, carpet: 1, sand: 1, snowfloor: 1, ice: 1, flowers: 1, mud: 1 },
     WATERISH: { water: 1, lbridge_h: 1, lbridge_v: 1 },
   };
-  const COB = [0x4a463e, 0x7c7666, 0x9e9784, 0xb8b19c, 0xd4cdb8]; // town floor ramp (tiles_theme 'town')
+  const COB = [0x46423a, 0x6e685a, 0x8e8674, 0xaaa28c, 0xc4bca6]; // town floor ramp (tiles_theme 'town', DESIGN §11.2.2)
+  const COB0 = COB;
   const DIRT = [0x5c4028, 0x806040, 0xa07c54, 0xb89468, 0xd0ae80];
+  const DIRT0 = DIRT;
+  const MUD_R = [0x2c241c, 0x40362a, 0x54483a, 0x6a5c4a, 0x80725e];
   const MOSS = [0x3e4c2a, 0x4a5e30, 0x587236];
   const PUDDLE = [0x2c3850, 0x4a5c7c, 0x6c84a8, 0xa4bcd8, 0xdce8f4];
-  /** ground kind of a tile id: grass | dirt | cobble | sand | snow | water | floor | other */
+  // (data flag first: tiles_theme.js, which defines A.isTownTheme, loads after this file)
+  const townTheme = (theme) => {
+    const d = theme && R.DB.themes && R.DB.themes[theme];
+    if (d && d.town) return true;
+    return A.isTownTheme ? A.isTownTheme(theme) : theme === 'town';
+  };
+  /** the street ramp of a town theme (cobbles, flags, blocks, boards, dirt …) */
+  function paveRamp(theme) {
+    const th = thRow(theme);
+    return th && th.town && th.fl ? th.fl : COB;
+  }
+  /** ground kind of a town theme's 'floor' (the street): cobble | dirt | board */
+  function streetKind(theme) {
+    const th = thRow(theme);
+    const f = th && th.floor;
+    return f === 'dirt' ? 'dirt' : f === 'planks' ? 'board' : 'cobble';
+  }
+  /** ground kind of a tile id: grass | dirt | cobble | board | sand | snow | water | floor | other */
   function kindOf(id, theme) {
     if (id === 'lgrass' || id === 'flowers') return 'grass';
-    if (id === 'dirt') return 'dirt';
-    if (id === 'floor') return theme === 'town' ? 'cobble' : 'floor';
+    if (id === 'dirt' || id === 'mud') return 'dirt';
+    if (id === 'floor') return townTheme(theme) ? streetKind(theme) : 'floor';
     if (id === 'sand') return 'sand';
     if (id === 'snowfloor') return 'snow';
     if (XT.WATERISH[id]) return 'water';
     return 'other';
   }
-  const EXT_KIND = { grass: 1, dirt: 1, cobble: 1, sand: 1, snow: 1 };
+  const EXT_KIND = { grass: 1, dirt: 1, cobble: 1, board: 1, sand: 1, snow: 1 };
   /** weighted variant pick from a position hash; table [[weight, id], ...] (first entry = plain) */
   function pickVar(x, y, seed, table) {
     const h = tk().hash(x, y, seed);
@@ -640,6 +674,8 @@
   const VAR = {
     grass: [[0.62, 0], [0.08, 1], [0.07, 2], [0.07, 3], [0.06, 4], [0.06, 5], [0.02, 6], [0.02, 7]],
     dirt: [[0.6, 0], [0.1, 1], [0.08, 2], [0.04, 3], [0.07, 4], [0.06, 5], [0.05, 6]],
+    dirtGrassy: [[0.46, 0], [0.08, 1], [0.06, 2], [0.03, 3], [0.24, 4], [0.07, 5], [0.06, 6]],
+    board: [[0.7, 0], [0.12, 1], [0.1, 2], [0.08, 3]],
     cobble: [[0.7, 0], [0.07, 1], [0.05, 2], [0.07, 3], [0.06, 4], [0.02, 5], [0.02, 6], [0.01, 7]],
     sand: [[0.66, 0], [0.12, 1], [0.08, 2], [0.07, 3], [0.07, 4]],
     snow: [[0.66, 0], [0.1, 1], [0.1, 2], [0.07, 3], [0.07, 4]],
@@ -696,8 +732,8 @@
       b.set(7, 9, DIRT[1]); b.set(10, 10, DIRT[4]);
     }
   }
-  function dirtDetail(b, v) {
-    const t = tk(), G = t.PAL.tgrass;
+  function dirtDetail(b, v, P) {
+    const t = tk(), G = t.PAL.tgrass, DIRT = P || DIRT0;
     if (v === 1) { pebble(b, 4, 5, true); pebble(b, 11, 9, false); pebble(b, 7, 12, false); }
     else if (v === 2) { blob(b, 8, 8, 5.5, 4, (x, y, c, e) => (e > 0.75 && (x + y) % 2 ? undefined : t.mul(c, 0.88))); }
     else if (v === 3) { puddle(b, 7, 8.5, 3, 1.4); }
@@ -709,8 +745,8 @@
       b.set(10, 9, DIRT[4]); b.set(5, 6, DIRT[4]);
     }
   }
-  function cobbleDetail(b, v) {
-    const t = tk();
+  function cobbleDetail(b, v, P) {
+    const t = tk(), COB = P || COB0;
     if (v === 1) { // crack across a stone
       for (const [x, y] of [[5, 5], [6, 6], [6, 7], [7, 8], [8, 8], [9, 9], [9, 10]]) { b.set(x, y, COB[0]); b.set(x + 1, y, t.mul(b.get(x + 1, y), 1.12)); }
     } else if (v === 2) { // moss in the joints
@@ -749,7 +785,16 @@
       b.hline(7, 10, 9, S[4]); b.set(8, 8, S[4]); b.set(9, 8, S[3]); b.set(10, 10, R_[0]);
     }
   }
-  const DETAIL = { grass: grassDetail, dirt: dirtDetail, cobble: cobbleDetail, sand: sandDetail, snow: snowDetail };
+  /** boardwalk planks: a knot, nail heads, a damp stain (variants come from the theme floor) */
+  function boardDetail(b, v, P) {
+    const t = tk();
+    P = P || GREY_BOARD;
+    if (v === 1) { const y = 1 + 4 * ((v * 3) % 4); for (let x = 3; x < 13; x += 5) { b.set(x, y + 1, P[0]); } }
+    else if (v === 2) blob(b, 8, 9, 5, 3, (x, y, c, e) => (e > 0.7 && (x + y) % 2 ? undefined : t.mix(c, 0x2c3a2a, 0.3)));
+    else if (v === 3) { b.set(6, 6, P[1]); b.set(7, 6, P[0]); b.set(6, 7, P[2]); }
+  }
+  const GREY_BOARD = [0x241c14, 0x3a2e22, 0x524232, 0x6a5842, 0x827054, 0x9c8a6c];
+  const DETAIL = { grass: grassDetail, dirt: dirtDetail, cobble: cobbleDetail, board: boardDetail, sand: sandDetail, snow: snowDetail };
 
   // --- edges ---------------------------------------------------------------
   /** ragged grass fringe along the given sides; noise in world coords runs on across tiles */
@@ -769,8 +814,8 @@
     if (sides.se) corner(15, 15, -1, -1);
   }
   /** kerb of long stones where a cobbled plaza meets a lawn (4 px band) */
-  function kerb(b, sides, gx, gy) {
-    const P = COB;
+  function kerb(b, sides, gx, gy, PV) {
+    const P = PV || COB;
     // across the band from the lawn side inward: joint, lit edge, stone, shade (N/W); S/E mirror it
     const inN = [P[0], P[4], P[3], P[1]], inS = [P[1], P[3], P[4], P[0]];
     const px = (prof, g, k) => {
@@ -786,8 +831,8 @@
     }
   }
   /** cobbles crumbling into a dirt path: joints fill with earth, edge stones go missing */
-  function wornEdge(b, sides, gx, gy) {
-    const t = tk();
+  function wornEdge(b, sides, gx, gy, PV) {
+    const t = tk(), COB = PV || COB0;
     for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
       const d = Math.min(sides.n ? y : 99, sides.s ? 15 - y : 99, sides.w ? x : 99, sides.e ? 15 - x : 99);
       if (d > 4) continue;
@@ -807,7 +852,7 @@
   // walls, tall tiles and decor furniture cast soft shadows, light from the top-left),
   // so indoor and outdoor floors match. Thin street props (lamps, sign posts) carry
   // their own small shadow and cast no band on the cell below.
-  const THIN_DECOR = { lamp: 1, sign_item: 1, sign_weapon: 1, sign_armor: 1, sign_inn: 1, sign_church: 1 };
+  const THIN_DECOR = { lamp: 1, sign_item: 1, sign_weapon: 1, sign_armor: 1, sign_inn: 1, sign_church: 1, sign_tavern: 1, sign_magic: 1, signpost: 1, laundry: 1, palm: 1, mast: 1, telescope: 1, net_rack: 1 };
   const PROXY = new WeakMap();
   function shadeMap(m) {
     if (typeof m !== 'object' || !m) return m;
@@ -838,13 +883,20 @@
     const at = (dx, dy) => m.tileAt(x + dx, y + dy);
     const k = (dx, dy) => kindOf(at(dx, dy), theme);
     const sh = shadeSig(m, x, y);
-    const v = VAR[kind] ? pickVar(x, y, kind === 'grass' ? 231 : 233, VAR[kind]) : 0;
+    const thr = thRow(theme);
+    const vt = kind === 'dirt' && thr && thr.grassy && id === 'floor' ? VAR.dirtGrassy : VAR[kind];
+    const v = vt ? pickVar(x, y, kind === 'grass' ? 231 : 233, vt) : 0;
+    const PV = id === 'floor' && townTheme(theme) ? paveRamp(theme) : id === 'mud' ? MUD_R : null;
     const fv = id === 'flowers' ? Math.floor(tk().hash(x, y, 235) * 4) : 0;
     const N = k(0, -1), S = k(0, 1), W = k(-1, 0), E = k(1, 0);
     let edge = '';
     const sides = {};
     if (kind === 'cobble') {
       const e = (q) => (q === 'grass' || q === 'sand' || q === 'snow' ? 'k' : q === 'dirt' ? 'w' : '0');
+      edge = e(N) + e(S) + e(W) + e(E);
+    } else if (kind === 'board') {
+      // the boardwalk stands a little above the ground: lit edge north, a dark lip and shadow south
+      const e = (q) => (q === 'board' ? '0' : '1');
       edge = e(N) + e(S) + e(W) + e(E);
     } else if (kind === 'dirt' || kind === 'sand' || kind === 'snow') {
       const g = (q) => (q === 'grass' ? '1' : '0');
@@ -860,17 +912,18 @@
       let b;
       if (id === 'flowers') b = GROUND.flowers(t, fv);
       else b = A.floorBuf(id === 'floor' ? 'theme:' + (theme || 'generic') : id).clone();
-      if (DETAIL[kind] && v) DETAIL[kind](b, v);
-      if (kind === 'cobble' && edge !== '0000') {
+      if (DETAIL[kind] && v) DETAIL[kind](b, v, PV || undefined);
+      if (kind === 'board') boardEdges(b, edge);
+      else if (kind === 'cobble' && edge !== '0000') {
         const ks = { n: edge[0] === 'k', s: edge[1] === 'k', w: edge[2] === 'k', e: edge[3] === 'k' };
         const ws = { n: edge[0] === 'w', s: edge[1] === 'w', w: edge[2] === 'w', e: edge[3] === 'w' };
         // moss creeps into the joints near the lawn
         for (let yy = 0; yy < 16; yy++) for (let xx = 0; xx < 16; xx++) {
           const d = Math.min(ks.n ? yy : 99, ks.s ? 15 - yy : 99, ks.w ? xx : 99, ks.e ? 15 - xx : 99);
-          if (d < 8 && b.get(xx, yy) === COB[0] && t.hash(x * 16 + xx, y * 16 + yy, 237) < 0.7 - d * 0.08) b.set(xx, yy, MOSS[(xx + yy) % 2]);
+          if (d < 8 && b.get(xx, yy) === (PV || COB)[0] && t.hash(x * 16 + xx, y * 16 + yy, 237) < 0.7 - d * 0.08) b.set(xx, yy, MOSS[(xx + yy) % 2]);
         }
-        wornEdge(b, ws, x * 16, y * 16);
-        kerb(b, ks, x * 16, y * 16);
+        wornEdge(b, ws, x * 16, y * 16, PV || undefined);
+        kerb(b, ks, x * 16, y * 16, PV || undefined);
       } else if (edge && edge !== '00000000') {
         fringe(b, { n: edge[0] === '1', s: edge[1] === '1', w: edge[2] === '1', e: edge[3] === '1', nw: edge[4] === '1', ne: edge[5] === '1', sw: edge[6] === '1', se: edge[7] === '1' }, x * 16, y * 16);
       }
@@ -880,6 +933,19 @@
     return { key, build, kind };
   }
   /** ground canvas for an outdoor ground cell, or null (not an outdoor ground) */
+  function boardEdges(b, edge) {
+    const t = tk();
+    if (!edge || edge === '0000') return;
+    const [N, S, W, E] = edge.split('').map((c) => c === '1');
+    for (let i = 0; i < 16; i++) {
+      if (N) { b.set(i, 0, t.shade(b.get(i, 0), 0.18)); }
+      if (S) { b.set(i, 13, t.mul(b.get(i, 13), 0.8)); b.set(i, 14, 0x1c1610); b.set(i, 15, t.mul(0x2e2418, 1)); }
+      if (W) b.set(0, i, t.shade(b.get(0, i), 0.12));
+      if (E) b.set(15, i, t.mul(b.get(15, i), 0.7));
+    }
+    // posts under the south edge
+    if (S) for (const x of [2, 13]) { b.set(x, 14, 0x4a3a28); b.set(x, 15, 0x3a2c1e); b.set(x + 1, 15, 0x2a1e14); }
+  }
   function extGroundTile(m, x, y, id, theme) {
     const spec = groundSpec(m, x, y, id, theme);
     if (!EXT_KIND[spec.kind]) return null;
@@ -899,7 +965,7 @@
   }
   /** does water at (x,y) sit in outdoor ground (town canals, garden ponds)? */
   function outdoorWater(m, x, y, theme) {
-    if (theme === 'town') return true;
+    if (townTheme(theme)) return true;
     for (const [dx, dy] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) if (EXT_KIND[kindOf(m.tileAt(x + dx, y + dy), theme)]) return true;
     return false;
   }
@@ -908,7 +974,7 @@
     return xcached('cn|' + sig + '|' + theme, () => {
       const t = tk();
       const [N, S, W, E, NW, NE, SW, SE] = sig.split('');
-      const P = COB, D = DIRT;
+      const P = paveRamp(theme), D = DIRT;
       const bankCol = 0x0a1840;
       // lip ramps [shade, top, lit] and bank-face colours for earthen banks
       const LIP = { e: [t.PAL.tgrass[1], t.PAL.tgrass[3], t.PAL.tgrass[4]], s: [t.PAL.sand[1], t.PAL.sand[3], t.PAL.sand[4]], n: [t.PAL.snow[1], t.PAL.snow[3], t.PAL.snow[4]], d: [D[1], D[2], D[3]] };
@@ -1026,7 +1092,7 @@
     vote(-1, 1, 0.5); vote(1, 1, 0.5); vote(-1, -1, 0.25); vote(1, -1, 0.25);
     let g = null, bs = 0;
     for (const k in score) if (score[k] > bs) { bs = score[k]; g = k; }
-    if (!g) g = theme === 'town' || !theme || theme === 'generic' ? 'lgrass' : 'floor';
+    if (!g) g = townTheme(theme) || !theme || theme === 'generic' ? 'lgrass' : 'floor';
     const s = (dx, dy) => (m.tileAt(x + dx, y + dy) === 'fence' ? '1' : '0');
     const j = s(-1, 0) + s(1, 0) + s(0, -1) + s(0, 1);
     const spec = groundSpec(m, x, y, g, theme);
@@ -1046,6 +1112,10 @@
     lbridge_h: 'water', lbridge_v: 'water',
   };
   const ANIM = { warp_pad: 4, seal: 2 }; // (bridges animate their water only in context tiles)
+  // Chronicle objects (tiles_local_ext.js): closed passages and the story stones
+  Object.assign(OBJ, LX.OBJ || {});
+  Object.assign(DEFAULT_FLOOR, LX.DEFAULT_FLOOR || {});
+  Object.assign(ANIM, LX.ANIM || {});
   A.OBJECT_IDS = Object.keys(DEFAULT_FLOOR);
   A.DEFAULT_FLOOR = DEFAULT_FLOOR;
   /** object Buf on a floor Buf (cloned internally); ctx {l,r,u,d,f} */
@@ -1068,17 +1138,23 @@
   def('tile:water', () => tk().frames(4, (f) => water(tk(), f)));
   def('tile:lava', () => tk().frames(2, (f) => lava(tk(), f)));
   def('tile:poison', () => tk().frames(2, (f) => poison(tk(), f)));
+  def('tile:bog', () => tk().frames(4, (f) => A.groundArt('bog', f)));
+  def('tile:mud', () => A.floorBuf('mud').toCanvas());
   // objects
   for (const id of A.OBJECT_IDS) def('tile:' + id, () => objTile(id, DEFAULT_FLOOR[id]));
-  // houses
+  // houses (plain, and per town theme)
   def('tile:housewall', () => housewall({ window: true }).toCanvas());
   def('tile:roof', () => roof({}).toCanvas());
+  for (const theme of Object.keys(R.DB.themes || {})) {
+    if (!townTheme(theme)) continue;
+    def('tile:' + theme + ':housewall', () => housewall({ window: true }, theme).toCanvas());
+    def('tile:' + theme + ':roof', () => roof({}, theme).toCanvas());
+  }
   // themed object variants: indoor & dungeon objects stand on the theme's floor
   const THEME_OBJS = ['counter', 'table', 'chair', 'bed', 'bookshelf', 'shelf', 'pot', 'barrel', 'crate', 'altar', 'statue',
-    'pedestal', 'warp_pad', 'seal', 'pit', 'grave', 'sign'];
-  const OUTDOOR_THEMES = { town: 1 };
+    'pedestal', 'warp_pad', 'seal', 'pit', 'grave', 'sign'].concat(LX.THEME_OBJS || []);
   for (const theme of Object.keys(R.DB.themes || {})) {
-    if (OUTDOOR_THEMES[theme]) continue;
+    if (townTheme(theme)) continue;
     for (const id of THEME_OBJS) def('tile:' + theme + ':' + id, () => objTile(id, 'theme:' + theme));
   }
   // a tile id added to the data later without art gets a neutral floor, never the magenta placeholder
@@ -1095,7 +1171,7 @@
     if (typeof base !== 'function' || base._exterior) return;
     const wrapped = function (map, x, y) {
       const id = map.tileAt(x, y);
-      const theme = map.theme && A.THEME_DEFS && A.THEME_DEFS[map.theme] ? map.theme : 'generic';
+      const theme = A.themeAt ? A.themeAt(map, x, y) : A.themeOf ? A.themeOf(map.theme) : 'generic';
       if (id === 'fence') return fenceTile(map, x, y, theme);
       if (id === 'water') return (outdoorWater(map, x, y, theme) && canalTile(map, x, y, theme)) || base(map, x, y);
       if (id === 'lbridge_h' || id === 'lbridge_v') return outdoorWater(map, x, y, theme) ? bridgeTile(map, x, y, id, theme) : base(map, x, y);

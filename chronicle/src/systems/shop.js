@@ -1,192 +1,277 @@
-// Town services (DESIGN §8): shops (買う / 売る with equip markers per member and
-// stat preview, quantity input, "equip now?"), the inn and the church.
-//   await R.Shop.open(shopId)   await R.Shop.inn(price) → bool   await R.Shop.church()
+// Town services (DESIGN §11.7.16): shops (買う / 売る with the tier stock of R.Tier.shopItems, the side
+// panel of the 4 members — × cannot / E wearing / ▲▼ strength change / ○ no numbers — ←→ to pick the
+// member whose full stat change is shown, L/R to narrow long gear lists by kind, Y for the detail popup,
+// "equip now?" with buy-back of what comes off) and the inn (everyone, the reserve too, healed and raised).
+//   await R.Shop.open(shopId)   await R.Shop.inn(price) → bool
 (function (R) {
   'use strict';
   const DB = R.DB;
   const G = () => R.Gfx;
   const In = () => R.Input;
   const Shop = (R.Shop = R.Shop || {});
-
-  const EQUIP = { weapon: 1, shield: 1, head: 1, body: 1, acc: 1 };
-  const isGear = (it) => !!(it && EQUIP[it.type]);
-  const sellPrice = (it) => (it && it.price > 0 && it.type !== 'key' ? Math.floor(it.price / 2) : 0);
   const K = () => R.Menu.kit;
+
+  const GEAR = { weapon: 1, shield: 1, head: 1, body: 1, hands: 1, feet: 1, acc: 1 };
+  const isGear = (it) => !!(it && GEAR[it.type]);
+  const sellable = (it) => !!(it && it.type !== 'key' && (it.price || 0) > 0 && !it.unique);
+  const sellPrice = (it) => (sellable(it) ? Math.floor(it.price / 2) : 0);
+  Shop.sellPrice = sellPrice;
   // explicit flags: a reused message window would otherwise inherit noWait from the last prompt
   const say = (t, o) => R.UI.say(t, Object.assign({ noWait: false, keep: false, auto: 0 }, o));
   const ask = async (t, items, o) => { await say(t, { noWait: true }); return R.UI.choose(items, o || {}); };
+  const yesno = (t) => R.UI.yesno(t);
 
-  /** the stat a piece of gear is compared on */
-  function keyStat(it) {
-    if (!it) return 'atk';
-    if (it.type === 'weapon') return it.mag > (it.atk || 0) ? 'mag' : 'atk';
-    if (it.type === 'acc') {
-      const st = it.stats || {};
-      const best = ['str', 'vit', 'agi', 'int', 'mnd', 'luk'].sort((a, b) => (st[b] || 0) - (st[a] || 0))[0];
-      if (st[best]) return { str: 'atk', vit: 'def', agi: 'agi', int: 'mag', mnd: 'mdef', luk: 'luk' }[best];
-      if (it.def) return 'def';
-      if (it.mdef) return 'mdef';
-      return null;
-    }
-    return 'def';
+  /** the goods of a shop: R.Tier.shopItems (tier stock, §8.11.1), else its fixed items */
+  function stock(shopId) {
+    const shop = DB.shops[shopId];
+    const ids = R.Tier && R.Tier.shopItems ? R.Tier.shopItems(shopId) : (shop && shop.items) || [];
+    return ids.filter((id) => DB.items[id]);
   }
-  const STAT_SHORT = { atk: '攻撃力', def: '守備力', mag: '魔力', mdef: '魔法防御', agi: '素早さ', luk: '運' };
+  Shop.stock = stock;
 
-  /** delta of the key stat if member c equipped item id (null if cannot) */
-  function gearDelta(c, id) {
+  /** the slot a bought piece would go to for member c (the first empty fitting slot, else the weaker one) */
+  function slotFor(c, id) {
+    const Kt = K();
+    const list = Kt.slotsFor(id).filter((s) => Kt.canEquip(c, id, s));
+    if (!list.length) return null;
+    const empty = list.find((s) => !c.equip[s]);
+    if (empty) return empty;
+    if (list.length === 1) return list[0];
+    // both filled: the one where the new piece gains the most
+    let best = list[0], bv = -Infinity;
+    for (const s of list) { const v = R.Menu.candScore(Kt.previewDiff(c, s, id), s, R.Menu.gearStyle(c)); if (v > bv) { bv = v; best = s; } }
+    return best;
+  }
+  Shop.slotFor = slotFor;
+
+  /**
+   * the side-panel mark of gear `id` for member c (§11.7.16): {mark:'×'|'E'|'▲'|'▼'|'○'|'―', n, slot, diff}
+   * ▲▼ are the candidate score of the equipment list (max(Δ攻,Δ術)+Δ守+floor(Δ術防/2)).
+   */
+  function gearMark(c, id) {
+    const Kt = K();
     const it = DB.items[id];
-    const slot = R.Rules.itemSlot(id);
-    if (!slot || !R.Rules.canEquip(c, id, slot)) return null;
-    const k = keyStat(it);
-    if (!k) return { stat: null, d: 0, same: c.equip[slot] === id };
-    const cur = R.Rules.stats(c);
-    const nxt = R.Menu.previewStats ? R.Menu.previewStats(c, slot, id) : cur;
-    return { stat: k, d: (nxt[k] || 0) - (cur[k] || 0), same: c.equip[slot] === id };
+    const slots = Kt.slotsFor(id);
+    if (slots.some((s) => c.equip[s] === id)) return { mark: 'E', slot: slots.find((s) => c.equip[s] === id) };
+    const slot = slotFor(c, id);
+    if (!slot) return { mark: '×' };
+    const diff = Kt.previewDiff(c, slot, id);
+    const n = Math.round(R.Menu.candScore(diff, slot, R.Menu.gearStyle(c)));
+    const numbers = it.type === 'weapon' || it.type !== 'acc' || Object.keys(it.stats || {}).some((k) => it.stats[k]);
+    if (!numbers) return { mark: '○', slot, diff, n: 0 };
+    return { mark: n > 0 ? '▲' : n < 0 ? '▼' : '―', n: Math.abs(n), slot, diff };
   }
-  Shop.gearDelta = gearDelta;
+  Shop.gearMark = gearMark;
 
-  // ------------------------------------------------------------ frame (gold window)
+  // ------------------------------------------------------------ gold window
   class GoldLayer extends R.Layer {
     draw() {
-      G().window(172, 4, 80, 24);
-      G().text(R.Game.gold + ' G', 244, 10, { align: 'right', color: G().C.white });
+      G().window(172, 4, 80, 24, { title: 'ゴールド' });
+      G().text(String(R.Game.gold), 244, 10, { align: 'right' });
     }
   }
 
   // ------------------------------------------------------------ buy / sell lists
-  const LIST = { x: 4, y: 4, w: 166, rows: 9 };
+  const FILTERS = [null, 'weapon', 'shield', 'head', 'body', 'hands', 'feet', 'acc'];
+  const FILTER_NAMES = ['全部', '武器', '盾', '頭', '体', '手', '足', 'アクセサリ'];
+  const state = { member: 0, filter: 0 };
   class ShopList extends R.Layer {
     /** mode 'buy' | 'sell' */
     constructor(mode, ids, index) {
       super();
       this.mode = mode;
-      this.ids = ids;
-      this.list = new R.UI.List(Object.assign({}, LIST, {
-        items: ids.map((id) => ({ id, disabled: mode === 'sell' && !sellPrice(DB.items[id]) })),
-        index: index || 0,
-        drawItem: (row, x, y, w) => this.drawRow(row, x, y, w),
-      }));
-      if (!this.list.rows) this.list.rows = 1;
+      this.all = ids;
+      this.member = Math.min(state.member, R.Game.party.length - 1);
+      // L/R narrows the list by kind only when it holds gear of several kinds and does not fit (§8.16-2)
+      const kinds = new Set(ids.map((id) => DB.items[id].type).filter((t) => GEAR[t]));
+      this.canFilter = kinds.size > 1 && ids.length > 9;
+      this.filter = this.canFilter ? state.filter : 0;
+      this.list = new R.UI.List({ x: 4, y: 4, w: 166, rows: 9, items: [], drawItem: (row, x, y, w) => this.drawRow(row, x, y, w) });
+      this.apply(index || 0);
+    }
+    apply(index) {
+      const f = FILTERS[this.filter];
+      this.ids = f ? this.all.filter((id) => DB.items[id].type === f) : this.all.slice();
+      if (!this.ids.length) { this.filter = 0; this.ids = this.all.slice(); }
+      this.list.setItems(this.ids.map((id) => ({ id, disabled: this.mode === 'sell' && !sellable(DB.items[id]) })), false);
+      this.list.index = Math.min(index || 0, Math.max(0, this.ids.length - 1));
+      this.list.scrollTo();
+      this.list.title = this.canFilter ? FILTER_NAMES[this.filter] : undefined;
     }
     update() {
       const cur = this.list.item && this.list.item.id;
-      if (R.Input.pressed('y') && cur && R.Menu.itemDetail) { R.sfx('confirm'); R.Menu.itemDetail(cur); return; }
+      const party = R.Game.party;
+      if (In().pressed('y') && cur) { R.Menu.itemDetail(cur, { member: party[this.member] }); return; }
+      const lr = K().memberStep();
+      if (lr && this.canFilter) {
+        this.filter = (this.filter + (lr < 0 ? FILTERS.length - 1 : 1)) % FILTERS.length;
+        state.filter = this.filter;
+        R.sfx('page');
+        this.apply(0);
+        return;
+      }
+      const d = In().dirRepeat();
+      if (d === 'left' || d === 'right') {
+        this.member = K().cycle(this.member, d === 'left' ? -1 : 1, party.length);
+        state.member = this.member;
+        R.sfx('cursor');
+        return;
+      }
       const r = this.list.update();
-      if (r === 'select') this.close(this.list.index);
-      else if (r === 'cancel') this.close(-1);
+      if (r === 'select') this.close(this.list.item.id);
+      else if (r === 'cancel') this.close(null);
     }
     drawRow(row, x, y, w) {
+      const Kt = K();
       const it = DB.items[row.id];
-      K().drawIcon(it, x - 2, y + 2);
-      const name = it.name + (it.rare ? '★' : '');
-      const price = this.mode === 'buy' ? it.price : sellPrice(it);
+      Kt.drawIcon(it, x - 2, y + 2);
+      const price = this.mode === 'buy' ? it.price || 0 : sellPrice(it);
       const afford = this.mode === 'sell' || R.Game.gold >= price;
-      const col = row.disabled ? G().C.gray : it.rare ? G().C.yellow : G().C.white;
-      K().fitText(name, x + 9, y, w - 44, { color: col });
-      G().text(price ? String(price) : '―', x + w - 4, y, { align: 'right', color: row.disabled ? G().C.gray : afford ? G().C.white : G().C.red });
+      Kt.fitText(Kt.itemLabel(row.id), x + 9, y, w - 46, { color: row.disabled ? Kt.COL.gray : Kt.itemColor(row.id) });
+      G().text(price ? String(price) : '―', x + w - 2, y, { align: 'right', color: row.disabled ? Kt.COL.gray : afford ? '#ffffff' : G().C.red });
     }
     draw() {
+      const Kt = K();
       this.list.draw();
+      if (this.canFilter) {
+        // small plates flanking the title plate on the top border: L◀ 全部 ▶R
+        const L = this.list, th = Kt.theme();
+        const tw = Math.ceil(G().textWidth(L.title || '')) + 8;
+        const tx = L.x + Math.floor((L.w - tw) / 2);
+        const py = Math.max(0, L.y - 3);
+        G().rect(tx - 16, py, 16, 8, th.fill);
+        G().text('L◀', tx - 2, L.y - 2, { align: 'right', color: Kt.COL.sub, size: 8 });
+        G().rect(tx + tw, py, 16, 8, th.fill);
+        G().text('▶R', tx + tw + 2, L.y - 2, { color: Kt.COL.sub, size: 8 });
+      }
       const id = this.list.item && this.list.item.id;
       const it = id && DB.items[id];
-      // side panel
+      const party = R.Game.party;
       G().window(172, 30, 80, 118);
       if (it && isGear(it)) {
-        R.Game.party.forEach((c, i) => {
-          const y = 36 + i * 36;
-          const d = gearDelta(c, id);
-          K().drawSprite(c, 186, y + 26, { dark: !d, darkAmt: 0.75, frame: d ? Math.floor(R.Engine.frame / 20) : 0 });
-          G().text(c.name, 198, y + 1, { color: d ? G().C.white : G().C.gray });
-          if (!d) G().text('×', 244, y + 14, { align: 'right', color: G().C.gray });
-          else if (d.same) G().text('E', 244, y + 14, { align: 'right', color: G().C.yellow });
-          else if (d.stat) {
-            const col = d.d > 0 ? G().C.green : d.d < 0 ? G().C.red : G().C.gray;
-            G().text((d.d > 0 ? '+' : '') + d.d, 244, y + 14, { align: 'right', color: col });
-          } else G().text('○', 244, y + 14, { align: 'right', color: G().C.white });
+        party.forEach((c, i) => {
+          const y = 36 + 28 * i;
+          const mk = gearMark(c, id);
+          const sel = i === this.member;
+          if (sel) G().rect(175, y - 2, 74, 27, Kt.blink(20) ? '#2a3a74' : '#243266');
+          Kt.drawSpriteAt(c, 176, y, { dark: mk.mark === '×', darkAmt: 0.7, frame: mk.mark !== '×' && sel ? Math.floor(R.Engine.frame / 20) : 0 });
+          Kt.fitText(c.name, 194, y + 1, 54, { color: mk.mark === '×' ? Kt.COL.gray : '#ffffff' });
+          const my = y + 13;
+          if (mk.mark === '×') G().text('×', 194, my, { color: Kt.COL.gray });
+          else if (mk.mark === 'E') G().text('E', 194, my, { color: G().C.cyan });
+          else if (mk.mark === '○') G().text('○', 194, my);
+          else if (mk.mark === '―') G().text('―', 194, my, { color: Kt.COL.zero });
+          else G().text(mk.mark + mk.n, 194, my, { color: mk.mark === '▲' ? G().C.green : G().C.red });
         });
       } else if (it) {
-        G().text('所持数', 180, 38, { color: G().C.gray });
+        G().text('持っている数', 180, 38, { color: Kt.COL.sub, size: 8 });
         G().text(R.State.count(id) + '個', 244, 52, { align: 'right' });
-        if (this.mode === 'sell' && sellPrice(it)) {
-          G().text('売値', 180, 72, { color: G().C.gray });
-          G().text(sellPrice(it) + ' G', 244, 86, { align: 'right', color: G().C.yellow });
+        if (this.mode === 'sell') {
+          G().text('売値', 180, 72, { color: Kt.COL.sub, size: 8 });
+          G().text(sellable(it) ? sellPrice(it) + 'ゴールド' : '―', 244, 86, { align: 'right', color: sellable(it) ? G().C.yellow : Kt.COL.gray });
+        } else if (it.use) {
+          G().text(it.use.battle && it.use.field ? 'いつでも' : it.use.field ? '移動中' : it.use.battle ? '戦闘中' : '', 244, 110, { align: 'right', color: Kt.COL.sub, size: 8 });
         }
       }
       // description (in place of the shopkeeper's message)
       G().window(8, 150, 240, 68, it ? { title: 'Y：詳細' } : undefined);
-      if (!it) { G().text(this.mode === 'sell' ? '売れる物を持っていない。' : '', 18, 157, { color: G().C.gray }); return; }
-      const lines = G().wrap(it.desc || '', 220).slice(0, 3);
-      lines.forEach((l, i) => G().text(l, 18, 157 + i * 14));
-      if (isGear(it) && lines.length < 3 && R.Menu.gearSummary) {
-        const sum = R.Menu.gearSummary(it);
-        if (sum) K().fitText(sum, 18, 157 + lines.length * 14, 220, { color: G().C.cyan });
-      }
+      if (!it) { G().text(this.mode === 'sell' ? '売れる物を持っていない。' : '', 18, 157, { color: Kt.COL.gray }); return; }
+      String(it.desc || '').split('\n').slice(0, 2).forEach((l, i) => Kt.fitText(l, 18, 156 + i * 14, 220));
+      if (isGear(it)) {
+        const c = party[this.member];
+        const mk = gearMark(c, id);
+        if (mk.diff) {
+          const segs = [{ text: c.name + '：', color: Kt.COL.sub }];
+          let any = false;
+          const KEYS = ['atk1', 'atk2', 'mag', 'def', 'mdef', 'hit', 'eva', 'crit', 'str', 'vit', 'dex', 'agi', 'int', 'mnd'];
+          for (const k of KEYS) {
+            const v = mk.diff[k];
+            if (!v) continue;
+            if (any) segs.push({ text: '　' });
+            segs.push({ text: Kt.STAT_NAMES[k] + Kt.signed(v), color: v > 0 ? G().C.green : G().C.red });
+            any = true;
+          }
+          if (!any) segs.push({ text: '変わる能力はない', color: Kt.COL.gray });
+          Kt.drawSegs(segs, 18, 184, 220);
+        } else {
+          Kt.fitText(c.name + '：' + (mk.mark === 'E' ? '装備している' : '装備できない'), 18, 184, 220, { color: Kt.COL.gray });
+        }
+        G().text('←→：人を選ぶ', 18, 200, { color: Kt.COL.gray, size: 8 });
+      } else if (it.use) G().text(R.Menu.effectPhrases ? R.Menu.effectPhrases(it.use.effects).map((p) => p.text).join('　') : '', 18, 184, { color: G().C.cyan, size: 8 });
     }
   }
 
   // ------------------------------------------------------------ flows
-  async function buy(shop) {
-    const ids = (shop.items || []).filter((id) => DB.items[id]);
+  async function buy(shopId) {
+    const ids = stock(shopId);
+    if (!ids.length) { await say('あいにく、今は品切れでして……。'); return; }
     let idx = 0;
     for (;;) {
       R.UI.closeMessage();
-      const i = await R.Engine.run(new ShopList('buy', ids, idx));
-      if (i < 0) return;
-      idx = i;
-      const id = ids[i], it = DB.items[id];
-      if (R.Game.gold < it.price) { R.sfx('buzzer'); await say('お金が足りないようですね。'); continue; }
-      if (isGear(it) && !(await R.UI.yesno(it.name + 'ですね。\n' + it.price + 'ゴールドになりますが、\nよろしいですか？'))) continue;
-      if (isGear(it)) await buyGear(id, it);
+      const L = new ShopList('buy', ids, idx);
+      const id = await R.Engine.run(L);
+      if (!id) return;
+      idx = Math.max(0, L.ids.indexOf(id));
+      const it = DB.items[id];
+      if (R.Game.gold < (it.price || 0)) { R.sfx('buzzer'); await say('お金が足りないようですね。'); continue; }
+      if (isGear(it)) await buyGear(id, it, R.Game.party[L.member]);
       else await buyItems(id, it);
     }
   }
 
   async function buyItems(id, it) {
-    const room = 99 - R.State.count(id);
+    const room = R.State.room ? R.State.room(id) : 99 - R.State.count(id);
     if (room <= 0) { await say('それ以上は持てないようですね。'); return; }
-    const max = Math.max(1, Math.min(room, Math.floor(R.Game.gold / Math.max(1, it.price))));
-    await say(it.name + 'をいくつお求めですか？', { noWait: true });
-    // always the number window (even when only 1 is affordable), so B can still cancel
+    const max = Math.max(1, Math.min(room, Math.floor(R.Game.gold / Math.max(1, it.price || 1))));
+    await say(it.name + 'ですね。\nいくつお求めですか？', { noWait: true });
     const n = await R.UI.number({ min: 1, max, initial: 1, price: it.price, label: it.name.length > 6 ? '個数' : it.name, w: 132 });
     if (n < 1) return;
-    const total = it.price * n;
+    const total = (it.price || 0) * n;
     if (!R.State.takeGold(total)) { R.sfx('buzzer'); await say('お金が足りないようですね。'); return; }
     R.State.addItem(id, n);
     R.sfx('gold');
-    await say(it.name + 'を' + n + '個お買い上げですね。\n毎度ありがとうございます！');
+    await say(it.name + 'を' + n + '個ですね。\n毎度ありがとうございます！');
   }
 
-  async function buyGear(id, it) {
-    const slot = R.Rules.itemSlot(id);
-    const who = R.Game.party.filter((c) => R.Rules.canEquip(c, id));
-    if (!who.length && !(await R.UI.yesno('それを装備できる方は\nいらっしゃらないようですが……\nそれでもお買いになりますか？'))) return;
-    if (!R.State.takeGold(it.price)) { R.sfx('buzzer'); await say('お金が足りないようですね。'); return; }
+  async function buyGear(id, it, focus) {
+    const Kt = K();
+    const party = R.Game.party;
+    const can = (c) => !!slotFor(c, id);
+    const who = party.filter(can);
+    if (!who.length && !(await yesno(it.name + 'を装備できる方は\nいらっしゃらないようですが、\nそれでもお買いになりますか？'))) return;
+    if (who.length && !(await yesno(it.name + 'ですね。\n' + it.price + 'ゴールドになりますが、\nよろしいですか？'))) return;
+    if ((R.State.room ? R.State.room(id) : 99 - R.State.count(id)) <= 0) { await say('それ以上は持てないようですね。'); return; }
+    if (!R.State.takeGold(it.price || 0)) { R.sfx('buzzer'); await say('お金が足りないようですね。'); return; }
     R.State.addItem(id, 1);
     R.sfx('gold');
-    const cand = who.filter((c) => c.equip[slot] !== id);
+    const cand = who.filter((c) => !Kt.slotsFor(id).some((s) => c.equip[s] === id) || R.State.count(id) > 0);
     if (!cand.length) { await say('毎度ありがとうございます！'); return; }
-    if (!(await R.UI.yesno('毎度ありがとうございます！\nこのまま装備していかれますか？'))) return;
-    let c = cand[0];
+    if (!(await yesno('毎度ありがとうございます！\nこのまま装備していかれますか？'))) return;
+    let c = cand.includes(focus) ? focus : cand[0];
     if (cand.length > 1) {
       R.UI.closeMessage();
-      const k = await R.Menu.pickMember({
-        title: '誰が装備する？', initial: R.Game.party.indexOf(cand[0]), x: 100, y: 34,
-        valid: (m) => cand.includes(m),
-      });
+      const k = await R.Menu.pickMember({ title: '誰が装備する？', initial: party.indexOf(c), x: 100, y: 34, valid: (m) => cand.includes(m) });
       if (k < 0) return;
-      c = R.Game.party[k];
+      c = party[k];
     }
-    const old = c.equip[slot];
-    const w = c.equip.weapon && DB.items[c.equip.weapon];
-    const also = slot === 'weapon' && it.twoHanded && c.equip.shield ? c.equip.shield : slot === 'shield' && w && w.twoHanded ? c.equip.weapon : null;
-    R.Rules.equip(c, slot, id);
+    let slot = slotFor(c, id);
+    const slots = Kt.slotsFor(id).filter((s) => Kt.canEquip(c, id, s));
+    if (slots.length > 1 && slots.every((s) => c.equip[s])) {
+      R.UI.closeMessage();
+      const j = await R.UI.choose(slots.map((s) => ({ label: Kt.slotName(s), right: Kt.itemName(c.equip[s]) })), { x: 76, y: 60, w: 172, title: 'どこに付ける？', initial: Math.max(0, slots.indexOf(slot)) });
+      if (j < 0) return;
+      slot = slots[j];
+    }
+    const r = Kt.equip(c, slot, id);
+    if (!r.ok) { R.sfx('buzzer'); await say(r.reason || '装備できないようですね。'); return; }
     R.sfx('item');
-    await say(c.name + 'は' + it.name + 'を装備した！', { keep: true });
-    for (const oldId of [old, also].filter(Boolean)) {
+    const shieldOff = slot !== 'shield' && r.removed.some((x) => DB.items[x] && DB.items[x].type === 'shield');
+    await say(c.name + 'は' + it.name + 'を装備した！' + (shieldOff ? '\n盾を外した。' : ''), { keep: true });
+    for (const oldId of r.removed) {
       const o = DB.items[oldId];
       const p = sellPrice(o);
-      if (!p) continue;
-      if (await R.UI.yesno('今までの' + o.name + 'を\n' + p + 'ゴールドで買い取りましょうか？')) {
+      if (!p || R.State.count(oldId) <= 0) continue;
+      if (await yesno('今までの' + o.name + 'を\n' + p + 'ゴールドで買い取りましょうか？')) {
         R.State.removeItem(oldId, 1);
         R.State.addGold(p);
         R.sfx('gold');
@@ -200,12 +285,13 @@
       R.UI.closeMessage();
       const ids = R.State.items((it) => it.type !== 'key').map((e) => e.id);
       if (!ids.length) { await say('お売りいただける物を\nお持ちでないようですね。'); return; }
-      const i = await R.Engine.run(new ShopList('sell', ids, Math.min(idx, ids.length - 1)));
-      if (i < 0) return;
-      idx = i;
-      const id = ids[i], it = DB.items[id];
+      const L = new ShopList('sell', ids, Math.min(idx, ids.length - 1));
+      const id = await R.Engine.run(L);
+      if (!id) return;
+      idx = Math.max(0, ids.indexOf(id));
+      const it = DB.items[id];
       const p = sellPrice(it);
-      if (!p) { R.sfx('buzzer'); await say('それはお買い取りできません。'); continue; }
+      if (!p) { R.sfx('buzzer'); await say('これは売れない。'); continue; }
       const have = R.State.count(id);
       let n = 1;
       if (have > 1) {
@@ -213,7 +299,7 @@
         n = await R.UI.number({ min: 1, max: have, initial: 1, price: p, label: it.name.length > 6 ? '個数' : it.name, w: 132 });
         if (n < 1) continue;
       }
-      if (!(await R.UI.yesno(it.name + (n > 1 ? n + '個' : '') + 'なら\n' + p * n + 'ゴールドで買い取りましょう。\nよろしいですか？'))) continue;
+      if (!(await yesno(it.name + (n > 1 ? 'を' + n + '個' : '') + 'なら\n' + p * n + 'ゴールドで買い取りましょう。\nよろしいですか？'))) continue;
       R.State.removeItem(id, n);
       R.State.addGold(p * n);
       R.sfx('gold');
@@ -222,7 +308,7 @@
   }
 
   let active = null; // GoldLayer of the open shop (a cleared engine never leaves it stuck)
-  /** open shop R.DB.shops[shopId] (buy / sell) */
+  /** open shop R.DB.shops[shopId] (買う / 売る) */
   Shop.open = async function (shopId) {
     const shop = DB.shops[shopId];
     if (!shop) { R.warn('Shop.open: unknown shop', shopId); return; }
@@ -231,11 +317,11 @@
     try {
       let first = true, last = 0;
       for (;;) {
-        const greet = first ? 'いらっしゃいませ！' + (shop.name ? '　ここは' + shop.name + 'です。' : '') + '\n何をお求めですか？' : 'ほかにも何かご用はありますか？';
+        const greet = first ? 'いらっしゃいませ！　何をお求めですか？' : 'ほかにも何かご用はありますか？';
         first = false;
         const i = await ask(greet, ['買う', '売る', 'やめる'], { initial: last });
         if (i >= 0) last = i;
-        if (i === 0) await buy(shop);
+        if (i === 0) await buy(shopId);
         else if (i === 1) await sell();
         else break;
       }
@@ -247,13 +333,14 @@
     }
   };
 
-  // ------------------------------------------------------------ inn
-  /** standard inn dialogue: heal, respawn here. → true if the party stayed */
+  // ------------------------------------------------------------ inn (§4.12.3)
+  /** the inn: everyone in the party and the reserve healed and raised. → true if the party stayed */
   Shop.inn = async function (price) {
+    if (price == null) price = R.Tier && R.Tier.innPrice ? R.Tier.innPrice() : 10;
     price = Math.max(0, price | 0);
     const gold = R.Engine.push(new GoldLayer());
     try {
-      if (!(await R.UI.yesno('旅人の宿屋へようこそ。\nひと晩' + price + 'ゴールドです。\nお泊まりになりますか？'))) {
+      if (!(await yesno('ひと晩' + price + 'ゴールドです。\nお泊まりになりますか？'))) {
         await say('またのお越しをお待ちしております。');
         return false;
       }
@@ -262,75 +349,18 @@
       R.UI.closeMessage();
       R.Engine.remove(gold);
       await R.Engine.fadeOut(40);
-      R.State.healAll({ living: true }); // an inn does not raise the dead — that is the church's work
+      if (R.State.healAll) R.State.healAll({ reserve: true });
+      for (const c of R.State.all ? R.State.all() : R.Game.party) c.status = {};
       await R.jingle('inn');
       await R.Engine.wait(30);
       if (R.Field && R.Field.setRespawnHere) R.Field.setRespawnHere();
       await R.Engine.fadeIn(40);
-      const down = R.Game.party.some((c) => c.hp <= 0);
-      await say('おはようございます。\n昨夜はよくお休みになれましたか？\f' +
-        (down ? '倒れているお仲間は、教会で\n生き返らせてもらってくださいね。\f' : '') + 'では、いってらっしゃいませ。');
+      await say('おはようございます。いってらっしゃいませ。');
       return true;
     } finally {
       R.UI.closeMessage();
       R.Engine.remove(gold);
+      if (R.Engine.fadeAlpha > 0 && !R.Engine._fade) R.Engine.fade(0, 0);
     }
   };
-
-  // ------------------------------------------------------------ church
-  /** church: save (お祈り) / revive / cure poison; sets the respawn point */
-  Shop.church = async function () {
-    if (R.Field && R.Field.setRespawnHere) R.Field.setRespawnHere();
-    const gold = R.Engine.push(new GoldLayer());
-    try {
-      let text = 'ここは神の家。\n今日はどんなご用かな？', last = 0;
-      for (;;) {
-        // the cursor stays where it was (mashing A after a revive must not open the save screen)
-        const i = await ask(text, ['お祈りをする', '生き返らせる', '毒の治療', 'やめる'], { initial: last });
-        if (i >= 0) last = i;
-        text = 'ほかにもご用はあるかな？';
-        if (i === 0) {
-          await say('では、神にこれまでの\n冒険を報告するがよい。');
-          R.UI.closeMessage();
-          R.Engine.remove(gold);
-          const saved = R.Menu && R.Menu.saveScreen ? await R.Menu.saveScreen({ church: true }) : false;
-          R.Engine.push(gold);
-          if (saved) await say('神のご加護があらんことを。', { keep: true });
-        } else if (i === 1 || i === 2) {
-          await treat(i === 1);
-        } else break;
-      }
-      await say('そなたたちに、神のご加護が\nありますように。');
-    } finally {
-      R.UI.closeMessage();
-      R.Engine.remove(gold);
-    }
-  };
-
-  async function treat(revive) {
-    const need = R.Game.party.filter((c) => (revive ? c.hp <= 0 : c.hp > 0 && c.status && c.status.poison));
-    if (!need.length) { await say(revive ? '倒れている者はおらんようじゃ。' : '毒に冒された者はおらんようじゃ。', { keep: true }); return; }
-    const priceOf = (c) => (revive ? 10 * c.level : 10);
-    let c = need[0];
-    if (need.length > 1) {
-      await say(revive ? '誰を生き返らせるのじゃ？' : '誰の毒を治すのじゃ？', { noWait: true });
-      const k = await R.UI.choose(need.map((m) => ({ label: m.name, right: priceOf(m) + 'G' })), { w: 118 });
-      if (k < 0) return;
-      c = need[k];
-    }
-    const price = priceOf(c);
-    if (!(await R.UI.yesno(c.name + (revive ? 'を生き返らせるには' : 'の毒を治すには') + '\n' + price + 'ゴールドいただくが、よいかな？'))) return;
-    if (!R.State.takeGold(price)) { R.sfx('buzzer'); await say('お金が足りないようじゃな。', { keep: true }); return; }
-    if (revive) {
-      c.hp = R.Rules.stats(c).hp;
-      c.status = {};
-      R.sfx('revive');
-      R.Engine.flashScreen('#ffffff', 10);
-      await say('おお、神よ！\n' + c.name + 'にふたたび命の光を！\fなんと、' + c.name + 'が生き返った！', { keep: true });
-    } else {
-      delete c.status.poison;
-      R.sfx('heal');
-      await say(c.name + 'の体から毒が消え去った。', { keep: true });
-    }
-  }
 })(window.RPG);

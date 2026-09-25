@@ -8,10 +8,11 @@
 //                    palette variants (hue +110, hue -120, hue 40 / sat 0.6 / bri 0.8)
 //                    and a 1x copy on black
 //   zoom             (--only zoom --ids a,b) base sprites only at --scale, for close inspection
-//   context_<bg>     sprites standing on real battle backdrops at the game's 3x scale,
-//                    laid out like the battle scene (feet on the ground line y=130)
-// Loads only core + data + art sources (no game boot), so it works while other
-// systems are mid-edit.
+//   context_<bg>     full battle screens (256x224 at the game's 4x = 1024x896): backdrop,
+//                    sprites laid out like the battle scene (feet on GROUND = 130), the 4 party
+//                    windows of DESIGN §11.11.3 and the command box
+// Loads only core + art sources (no data, no game boot), so it works while other
+// systems are mid-edit; page errors from other owners' files are listed but do not fail the run.
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -32,7 +33,7 @@ const VARIANTS = [{ hue: 110 }, { hue: -120 }, { hue: 40, sat: 0.6, bri: 0.8 }];
 function sources() {
   const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]);
   const list = ['ns.js', 'input.js', 'gfx.js'].map((f) => path.join(ROOT, 'src/core', f));
-  for (const d of ['data', 'art']) {
+  for (const d of ['art']) {
     const dir = path.join(ROOT, 'src', d);
     if (fs.existsSync(dir)) list.push(...walk(dir).filter((f) => f.endsWith('.js')).sort((a, b) => a.localeCompare(b)));
   }
@@ -82,24 +83,45 @@ window.SHEET = (function () {
     });
     return cv.toDataURL();
   }
-  /** battle-scene layout on a backdrop, at 3x */
+  // ---- the battle screen of §11.5.1 / §11.11.3: 256x224, 4 party windows, command box
+  const WIN = { xs: [3, 66, 129, 192], y: 5, w: 61, h: 46 }, BOX = { x: 8, y: 150, w: 240, h: 68 }, GROUND = 130;
+  function win(c, x, y, w, h, s) {
+    c.fillStyle = '#f0e8d0'; c.fillRect(x * s, y * s, w * s, h * s);
+    c.fillStyle = '#0b1024'; c.fillRect((x + 1) * s, (y + 1) * s, (w - 2) * s, (h - 2) * s);
+    c.fillStyle = '#16203e'; c.fillRect((x + 2) * s, (y + 2) * s, (w - 4) * s, (h - 4) * s);
+  }
+  /** battle-scene layout on a backdrop at scale s (the game draws at 4x): feet on GROUND,
+   *  sprites taller than 64 sink (§11.4.2), the 4 party windows and the command box on top */
   function context(bg, groups, s) {
-    const W = 256, H = 144, GROUND = 130;
-    const [cv, c] = canvas(W * s, groups.length * (H * s + 6), '#000');
+    const names = ['Arun', 'Brigi', 'Marta', 'Sylva'];
+    const [cv, c] = canvas(256 * s, groups.length * (224 * s + 8), '#000');
     groups.forEach((g, gi) => {
-      const oy = gi * (H * s + 6);
+      const oy = gi * (224 * s + 8);
+      c.fillStyle = '#000'; c.fillRect(0, oy, 256 * s, 224 * s);
       let b = G.has('bbg:' + bg) ? G.get('bbg:' + bg) : null;
       if (Array.isArray(b)) b = b[0];
-      if (b) c.drawImage(b, 0, oy, W * s, H * s);
-      else { c.fillStyle = '#5a8a4a'; c.fillRect(0, oy, W * s, H * s); }
+      if (b) c.drawImage(b, 0, oy, 256 * s, 144 * s);
+      else { c.fillStyle = '#5a8a4a'; c.fillRect(0, oy, 256 * s, 144 * s); }
       const imgs = g.map((m) => (typeof m === 'string' ? G.get('mon:' + m) : G.variant('mon:' + m[0], m[1])));
       const total = imgs.reduce((a, i) => a + i.width, 0);
       const gap = imgs.length > 1 ? Math.min(8, (244 - total) / (imgs.length - 1)) : 0;
       let x = 128 - (total + gap * (imgs.length - 1)) / 2;
       imgs.forEach((img) => {
-        c.drawImage(img, Math.round(x) * s, oy + (GROUND - img.height) * s, img.width * s, img.height * s);
+        const feet = GROUND + Math.max(0, Math.min(20, Math.round((img.height - 64) / 2.4)));
+        c.drawImage(img, Math.round(x) * s, oy + (feet - img.height) * s, img.width * s, img.height * s);
         x += img.width + gap;
       });
+      c.save(); c.translate(0, oy);
+      WIN.xs.forEach((wx, i) => {
+        win(c, wx, WIN.y, WIN.w, WIN.h, s);
+        c.font = (8 * s) + 'px monospace'; c.textBaseline = 'top';
+        c.fillStyle = '#f0e8d0'; c.fillText(names[i], (wx + 5) * s, (WIN.y + 4) * s);
+        c.fillStyle = '#b0e8a0'; c.fillText('HP 123', (wx + 5) * s, (WIN.y + 16) * s);
+        c.fillStyle = '#a0c8ff'; c.fillText('MP  45', (wx + 5) * s, (WIN.y + 26) * s);
+        c.fillStyle = '#ffd890'; c.fillText('WP  12', (wx + 5) * s, (WIN.y + 36) * s);
+      });
+      win(c, BOX.x, BOX.y, BOX.w, BOX.h, s);
+      c.restore();
     });
     return cv.toDataURL();
   }
@@ -158,12 +180,12 @@ ${src.map((f) => `<script src="file://${f}"></script>`).join('\n')}
       cave: [['skeleton', 'ghost', 'eyeball', 'mimic'], ['lizardman', 'scorpion', 'mummy']],
       desert: [['scorpion', 'mummy', ['snake', { hue: 40, sat: 0.6, bri: 0.8 }]], [['wolf', { hue: -120 }], ['goblin', { hue: 110 }], ['bat', { hue: 110 }], ['rat', { hue: -120 }]]],
     };
-    for (const bg in groups) save('context_' + bg, await run(`SHEET.context(${JSON.stringify(bg)}, ${JSON.stringify(groups[bg])}, 3)`));
+    for (const bg in groups) save('context_' + bg, await run(`SHEET.context(${JSON.stringify(bg)}, ${JSON.stringify(groups[bg])}, 4)`));
   }
   const stats = await run(`(() => { const G = RPG.Gfx; return { warned: Object.keys(G._warned) }; })()`);
   console.log('built in', Date.now() - t0, 'ms; missing:', stats.warned.join(' ') || '-');
-  for (const e of errors) console.log('[page]', e);
+  for (const e of errors) console.log('[page]', e.split('\n').slice(0, 3).join(' | '));
   await browser.close();
-  if (errors.length) process.exitCode = 1;
+  if (errors.some((e) => /monsters_[abc]\.js|_sheet_page/.test(e) || !/file:\/\//.test(e))) process.exitCode = 1;
 }
 main().catch((e) => { console.error(e); process.exit(2); });

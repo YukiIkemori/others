@@ -1,4 +1,4 @@
-// Battle backdrops 'bbg:<id>' (256x144, DESIGN §4). DQ5-style layered scenes:
+// Battle backdrops 'bbg:<id>' (256x144, DESIGN §11.2.13). Owner: A16a. DQ5-style layered scenes:
 // banded sky, distant layer (mountains, dunes, trees, walls …), and a ground
 // plane in perspective. The strip where monsters stand (y ≈ 110–140) is kept
 // calm so sprites read clearly. Painted once on first use and cached.
@@ -470,57 +470,6 @@
     for (let i = 0; i < 70; i++) { const x = Math.floor(r() * W), y = 50 + Math.floor(r() * 50); b.set(x, y, 0xffffff); }
     stageShadow(b, 132, 110, 7, 0.9);
   };
-  S.swamp = (b) => {
-    const T = tk();
-    sky(b, 0, 98, [[0, 0x1c2020], [0.45, 0x3c4438], [0.8, 0x646c50], [1, 0x7c8460]], 8);
-    // far treeline in the mist
-    treeRow(b, 92, 7, 10, [0x2c3426, 0x343e2c, 0x3c4832], 61, { lift: 0.5, squash: 1.2 });
-    range(b, 94, 5, [0x262c20, 0x2c3424, 0x323c28, 0x384430], { freq: 0.03, seed: 61, round: true, oct: 2 });
-    // dead trees
-    const tree = (x, y, h, dir) => {
-      const c0 = 0x14120c, c1 = 0x2a241a;
-      for (let i = 0; i < 3; i++) b.line(x + i, y, x + dir * 3 + i, y - h, i ? c1 : c0);
-      b.line(x + dir * 2, Math.round(y - h * 0.55), x + dir * 12, Math.round(y - h * 0.78), c0);
-      b.line(x + dir * 12, Math.round(y - h * 0.78), x + dir * 15, Math.round(y - h * 0.7), c0);
-      b.line(x + dir * 3, y - h, x - dir * 7, y - h - 7, c0);
-      b.line(x - dir * 7, y - h - 7, x - dir * 9, y - h - 5, c0);
-      b.line(x + dir * 7, Math.round(y - h * 0.68), x + dir * 9, y - h + 1, c0);
-    };
-    tree(28, 98, 40, 1); tree(222, 97, 36, -1); tree(170, 94, 18, 1); tree(76, 94, 14, -1);
-    // mud flats and poisoned pools
-    plane(b, 96, [0x3c3048, 0x4a3858, 0x443452], {
-      stripes: 5,
-      tex: (x, y, z) => {
-        const v = T.fnoise(x, y * (6 - z * 3.5), 28, 256, 63);
-        if (v < 0.34) {
-          // pool surface: dark murky water with streaks of reflected sky
-          if (T.hash(x >> 3, y, 67) < 0.08) return 0x8c80a8;
-          return v < 0.3 ? 0x2a2040 : 0x32284a;
-        }
-        if (v < 0.36) return 0x5c4c70;
-        const h = T.hash(x, y, 65);
-        if (z > 0.3 && z < 0.72) return h < 0.02 ? 0x362a44 : null;
-        if (h < 0.05) return 0x2c2438;
-        if (h > 0.985) return 0x6c8c48;
-        return null;
-      },
-    });
-    // bubbles on the pools
-    for (const [x, y] of [[60, 104], [190, 112], [140, 102], [36, 136], [226, 138]]) { b.set(x, y, 0xd8c8f0); b.set(x - 1, y + 1, 0x9c88c0); b.set(x + 1, y + 1, 0x9c88c0); b.set(x, y + 2, 0x6c5c84); }
-    // reeds in the foreground corners
-    const reeds = (x0, n, seed) => {
-      const r = T.rng(seed);
-      for (let i = 0; i < n; i++) {
-        const x = x0 + Math.floor(r() * 26), h = 10 + Math.floor(r() * 16), lean = r() < 0.5 ? -1 : 1;
-        b.line(x, 143, x + lean * 2, 143 - h, r() < 0.5 ? 0x3c4c24 : 0x546830);
-        if (r() < 0.4) { b.rect(x + lean * 2, 143 - h - 3, 2, 4, 0x5c3c1c); }
-      }
-    };
-    reeds(0, 12, 69); reeds(230, 12, 71);
-    // low fog band
-    for (let y = 86; y < 102; y++) for (let x = 0; x < W; x++) if (T.bayer(x, y) < 0.35 * (1 - Math.abs(y - 94) / 8)) b.set(x, y, T.mix(b.get(x, y), 0xa0a890, 0.45));
-    stageShadow(b, 132, 110, 7, 0.9);
-  };
   S.wasteland = (b) => {
     const T = tk();
     sky(b, 0, 96, [[0, 0x3c2448], [0.45, 0x8c4c48], [0.8, 0xd88c50], [1, 0xf0c070]], 9);
@@ -869,13 +818,30 @@
     vignette(b, 0.4, 0);
   };
 
+  // ------------------------------------------------------------ registry
+  // Helpers for the other backdrop files: src/art/battlebg_*.js register scenes
+  // into A.BBG_SCENES (they load first and look the helpers up lazily).
+  A.BBG = { W, H, grad, sky, n1, fbm1, range, peaks, cloud, stars, treeRow, pineRow, plane, tiledFloor, brickWall, column, wallTorch, vignette, stageShadow, formation, spikes, mounds };
+  Object.assign(S, A.BBG_SCENES || {}); // new scenes and the redrawn swamp (§11.0 0.15) win
   const IDS = ['grass', 'forest', 'hills', 'desert', 'snow', 'swamp', 'wasteland', 'sea', 'cave', 'fort', 'watercave',
-    'pyramid', 'ice', 'volcano', 'tower', 'shrine', 'castle', 'demon', 'throne'];
+    'pyramid', 'ice', 'volcano', 'tower', 'shrine', 'castle', 'demon', 'throne',
+    'tree', 'manor', 'ship', 'mine', 'library', 'oblivion', 'ashland', 'jungle', 'beach', 'peak', 'hollow', 'ring'];
+  // what an id draws while its scene is missing (§11.1.3, §11.2.13)
+  const FALLBACK = { tree: 'forest', manor: 'castle', ship: 'sea', mine: 'cave', library: 'castle', oblivion: 'demon',
+    ashland: 'wasteland', jungle: 'forest', beach: 'sea', peak: 'snow', hollow: 'library', ring: 'oblivion' };
   A.BBG_IDS = IDS;
+  A.BBG_FALLBACK = FALLBACK;
+  function sceneOf(id) {
+    let k = id;
+    for (let n = 0; n < 4 && !S[k] && FALLBACK[k]; n++) k = FALLBACK[k];
+    return S[k] || S.grass;
+  }
+  const pending = IDS.filter((id) => !S[id]);
+  if (pending.length) (R.Art.PENDING = R.Art.PENDING || []).push(...pending.map((id) => 'bbg:' + id));
   function make(id) {
     const T = tk();
     const b = T.buf(W, H, 0x000000);
-    (S[id] || S.grass)(b);
+    sceneOf(id)(b);
     return b.toCanvas();
   }
   for (const id of IDS) R.Gfx.def('bbg:' + id, () => make(id));

@@ -1,4 +1,4 @@
-// Music (dungeons): dungeon, cave, tower, pyramid, ice, volcano, lastdungeon, abyss (post-game).
+// Music (dungeons): dungeon, cave, tower, pyramid, ice, volcano, lastdungeon (+ Crest's abyss as material).
 // Original compositions; format documented at the top of src/core/audio.js.
 (function (R) {
   'use strict';
@@ -204,10 +204,12 @@
     ],
   };
 
-  // ================================================================ abyss (post-game)
-  // F minor, 66 bpm, vast and cold: a slow heartbeat, a choir drone, a celesta
+  // ================================================================ abyss (Crest's post-game) — material only
+  // Chronicle has no `abyss` id (DESIGN §11.11.4; its post-game is `postgame`), so this track
+  // is kept unregistered as material in R.Audio.MATERIAL (like jobup's melody: reusable, never
+  // called). F minor, 66 bpm, vast and cold: a slow heartbeat, a choir drone, a celesta
   // line that keeps sinking by half steps, a low horn answer. A (16) B (8).
-  M.abyss = {
+  const ABYSS = {
     tempo: 66, key: 'Fm', gain: 0.86,
     echo: { time: 0.455, fb: 0.5, wet: 0.42, lp: 2000 },
     chords: `
@@ -233,4 +235,5 @@
   };
 
   Object.assign(R.DB.music, M);
+  R.Audio.MATERIAL = Object.assign(R.Audio.MATERIAL || {}, { abyss: ABYSS });
 })(window.RPG);

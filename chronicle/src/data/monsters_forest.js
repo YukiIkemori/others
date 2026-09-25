@@ -1,0 +1,191 @@
+// ルミナス・クロニクル — 雑魚の魔物: 地方1 ヴェルダの森（ハチ・キノコ・人食い花・妖精・魔木）
+// 担当 A11 mons。正は DESIGN.md §9.5.2（系統と段）・§9.12（戦利品の割り当て）・§9.8（goldName）。
+// 能力値の絶対値（hp atk mag def mdef agi exp gold）は書かない: R.Mon.fillStats（battle）が onData で
+// 名目のレベル lv・大きさ size・倍率 s・報酬 rw から作る（§9.1.2）。eva は §9.2.3 の規則の値。
+// 絵は mon:<id>（art-mons の MON_COMPOSE。§9.4.6）。hue/sat/bri は書かない（§9.0 の 0.6）。
+(function (R) {
+  'use strict';
+  Object.assign(R.DB.monsters, {
+    // ---- bee ハチ（虫・s・飛ぶ）: 森の花畑のハチ。針は毒・しびれ・雨のような連射へ。最後は女王。
+    bee_1: {
+      name: '花バチ', sprite: 'bee_1', lineage: 'bee', stage: 1, lv: 7, size: 's', race: 'insect',
+      flags: ['flying'], s: { hp: 0.85, agi: 1.35 }, eva: 15,
+      elem: { fire: 1.5, wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 0.5 },
+      actions: [{ id: 'attack', w: 4 }, { id: 'e_sting', w: 2 }],
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_bow_leaf', rate: 32 }, super: { item: 'w_dagger_sr_stinger', rate: 256 } },
+      desc: '花の蜜を守る黄色いハチ。\n近づく者に針を向ける。',
+    },
+    bee_2: {
+      name: '毒針バチ', sprite: 'bee_2', lineage: 'bee', stage: 2, lv: 19, size: 's', race: 'insect',
+      flags: ['flying'], s: { hp: 0.85, atk: 1.05, agi: 1.35 }, eva: 15,
+      elem: { fire: 1.5, wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 1 },
+      actions: [{ id: 'attack', w: 3 }, { id: 'e_poison_sting', w: 3 }],
+      drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'w_staff_sprout', rate: 32 }, super: { item: 'w_spear_sr_venomneedle', rate: 256 } },
+      desc: '紫のしまのハチ。毒針に刺されると\nじわじわ体力を失う。',
+    },
+    bee_3: {
+      name: 'しびれバチ', sprite: 'bee_3', lineage: 'bee', stage: 3, lv: 31, size: 's', race: 'insect',
+      flags: ['flying'], s: { hp: 0.9, agi: 1.35 }, eva: 15,
+      elem: { fire: 1.5, wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 0.5 },
+      actions: [{ id: 'attack', w: 3 }, { id: 'e_numb_sting', w: 3 }],
+      drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'bd_leaf_mail', rate: 32 }, super: { item: 'hn_sr_numb_gloves', rate: 256 } },
+      desc: '体にぱちぱち火花をまとう。\n針で刺されると動けなくなる。',
+    },
+    bee_4: {
+      name: '千本バチ', sprite: 'bee_4', lineage: 'bee', stage: 4, lv: 43, size: 's', race: 'insect',
+      flags: ['flying'], s: { hp: 0.9, atk: 1.1, agi: 1.35 }, eva: 15,
+      elem: { fire: 1.5, wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 0.5 },
+      actions: [{ id: 'attack', w: 2 }, { id: 'e_needles', w: 3 }, { id: 'e_poison_sting', w: 1 }],
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_spear_hornet', rate: 32 }, super: { item: 'w_bow_sr_thousand', rate: 256 } },
+      desc: '体じゅうが針のハチ。針を\n雨のように撃ちこんでくる。',
+    },
+    bee_5: {
+      name: '女王バチ', sprite: 'bee_5', lineage: 'bee', stage: 5, lv: 55, size: 's', race: 'insect',
+      flags: ['flying'], s: { hp: 1.4, atk: 1.05, mag: 1.1, agi: 1.2 }, eva: 12,
+      elem: { fire: 1.5, wind: 1.5, earth: 0.5 }, phys: {}, statusRes: { poison: 0.5 },
+      actions: [{ id: 'attack', w: 2 }, { id: 'e_call_lesser', w: 2, cond: { countBelow: 6 } }, { id: 'e_heal_all', w: 2, cond: { hpBelow: 0.7 } }, { id: 'e_poison_sting', w: 2 }],
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_millennium_seed', rate: 32 }, super: { item: 'ft_sr_whirl', rate: 128 } },
+      desc: '森いちばんの巣を治める女王。\n千本バチを呼び寄せる。',
+    },
+    // ---- mushroom キノコ（植物・s）: 胞子で眠らせ、毒にし、惑わせる。長老は森を癒やす。
+    mushroom_1: {
+      name: 'ころりダケ', sprite: 'mushroom_1', lineage: 'mushroom', stage: 1, lv: 7, size: 's', race: 'plant',
+      flags: [], s: { hp: 1.3, atk: 1.13, agi: 0.6, mag: 1.25 }, eva: 5,
+      elem: { fire: 1.5, water: 0.5, earth: 0.75 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
+      actions: [{ id: 'attack', w: 4 }, { id: 'e_sleep_spore', w: 2 }],
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'hd_mushroom_cap', rate: 32 }, super: { item: 'hd_sr_nap_cap', rate: 256 } },
+      desc: '胞子を吸うところりと眠って\nしまう。のんきな赤いキノコ。',
+    },
+    mushroom_2: {
+      name: 'まだらダケ', sprite: 'mushroom_2', lineage: 'mushroom', stage: 2, lv: 19, size: 's', race: 'plant',
+      flags: [], s: { hp: 1.3, atk: 0.9, agi: 0.6 }, eva: 5,
+      elem: { fire: 1.5, water: 0.5, earth: 0.75 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 1 },
+      actions: [{ id: 'attack', w: 3 }, { id: 'e_poison_spore', w: 3 }],
+      drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'w_staff_sprout', rate: 32 }, super: { item: 'w_club_sr_toadstool', rate: 256 } },
+      desc: '紫にまだらの毒キノコ。\n胞子を吸うと毒がまわる。',
+    },
+    mushroom_3: {
+      name: 'まどいダケ', sprite: 'mushroom_3', lineage: 'mushroom', stage: 3, lv: 31, size: 's', race: 'plant',
+      flags: [], s: { hp: 1.2, mag: 1.1, agi: 0.7 }, eva: 5,
+      elem: { fire: 1.5, water: 0.5, earth: 0.75 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
+      actions: [{ id: 'attack', w: 3 }, { id: 'e_confuse_spore', w: 3 }, { id: 'e_sleep_spore', w: 1 }],
+      drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'ac_fairy_dust', rate: 32 }, super: { item: 'ac_sr_dream_spore', rate: 256 } },
+      desc: 'あやしく光るキノコ。胞子を\n吸うと敵も味方も分からない。',
+    },
+    mushroom_4: {
+      name: '長老ダケ', sprite: 'mushroom_4', lineage: 'mushroom', stage: 4, lv: 43, size: 's', race: 'plant', affinity: 'earth',
+      flags: [], s: { hp: 1.4, mag: 1.2, mdef: 1.2, agi: 0.6 }, eva: 5,
+      elem: { fire: 1.5, water: 0.5, wind: 1.5, earth: 0.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
+      actions: [{ id: 'attack', w: 2 }, { id: 'e_spore_storm', w: 2 }, { id: 'e_heal_all', w: 2, cond: { hpBelow: 0.7 } }, { id: 'e_confuse_spore', w: 1 }],
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'hd_fairy_circlet', rate: 32 }, super: { item: 'w_staff_sr_elder_cap', rate: 256 } },
+      desc: '白いひげをたくわえた古キノコ。\n胞子の嵐で森を守る。',
+    },
+    // ---- plant 人食い花（植物・m）: かみつく花。いばら、毒の息、夜咲き、そして千年咲き続ける光の花へ。
+    plant_1: {
+      name: 'かみつき花', sprite: 'plant_1', lineage: 'plant', stage: 1, lv: 7, size: 'm', race: 'plant',
+      flags: [], s: { hp: 1.1, atk: 1.05, agi: 0.8 }, eva: 5,
+      elem: { fire: 1.5, water: 0.5, earth: 0.75 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
+      actions: [{ id: 'attack', w: 4 }, { id: 'e_bite', w: 2 }],
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_bow_leaf', rate: 32 }, super: { item: 'w_whip_sr_vine', rate: 256 } },
+      desc: '道ばたの花のふりをして、\n通る者にかみつく。',
+    },
+    plant_2: {
+      name: 'いばら花', sprite: 'plant_2', lineage: 'plant', stage: 2, lv: 19, size: 'm', race: 'plant',
+      flags: [], s: { hp: 1.1, atk: 1.1, agi: 0.8 }, eva: 5,
+      elem: { fire: 1.5, water: 0.5, earth: 0.75 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
+      actions: [{ id: 'attack', w: 3 }, { id: 'e_thorn_vine', w: 2 }, { id: 'e_bind', w: 2 }],
+      drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'w_staff_sprout', rate: 32 }, super: { item: 'bd_sr_thorn_mail', rate: 256 } },
+      desc: 'とげだらけのつるをのばし、\n絡めとって動けなくする。',
+    },
+    plant_3: {
+      name: '毒吹き花', sprite: 'plant_3', lineage: 'plant', stage: 3, lv: 31, size: 'm', race: 'plant',
+      flags: [], s: { hp: 1.1, mag: 0.76, agi: 0.8, atk: 0.69 }, eva: 5,
+      elem: { fire: 1.5, water: 0.5, earth: 0.75 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
+      actions: [{ id: 'attack', w: 2 }, { id: 'e_poison_breath', w: 3 }, { id: 'e_bite', w: 2 }],
+      drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'bd_leaf_mail', rate: 32 }, super: { item: 'ac_sr_poison_bloom', rate: 256 } },
+      desc: '紫の花びらから毒の息を吐く。\n風下に立ってはいけない。',
+    },
+    plant_4: {
+      name: '夜咲き花', sprite: 'plant_4', lineage: 'plant', stage: 4, lv: 43, size: 'm', race: 'plant', affinity: 'dark',
+      flags: [], s: { hp: 1.15, mag: 1.15, agi: 0.85 }, eva: 5,
+      elem: { fire: 1.5, water: 0.5, earth: 0.75, light: 1.5, dark: 0.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
+      actions: [{ id: 'attack', w: 2 }, { id: 'e_sleep_pollen', w: 2 }, { id: 'e_life_suck', w: 2 }, { id: 'e_bite', w: 1 }],
+      drops: { normal: { item: 'i_stone_dark', rate: 8 }, rare: { item: 'w_spear_hornet', rate: 32 }, super: { item: 'w_staff_sr_moonbloom', rate: 256 } },
+      desc: '月の夜にだけ開く青い花。\n眠らせて命を吸う。',
+    },
+    plant_5: {
+      name: '千年花', sprite: 'plant_5', lineage: 'plant', stage: 5, lv: 55, size: 'm', race: 'plant', affinity: 'light',
+      flags: [], s: { hp: 1.3, mag: 1.2, mdef: 1.2, agi: 0.8 }, eva: 5,
+      elem: { fire: 1.5, water: 0.5, earth: 0.75, light: 0.25, dark: 1.5 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
+      actions: [{ id: 'attack', w: 2 }, { id: 'e_heal_all', w: 2, cond: { hpBelow: 0.8 } }, { id: 'e_flash', w: 2 }, { id: 'e_spore_storm', w: 1 }, { id: 'e_regen_self', w: 1, cond: { once: true } }],
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_millennium_seed', rate: 32 }, super: { item: 'bd_sr_thousand_petal', rate: 256 } },
+      desc: '千年咲き続ける白い花。\n光を放って仲間を癒やす。',
+    },
+    // ---- fairy 妖精（妖精・s・飛ぶ）: 森の小さな住人。いたずら、花の癒やし、霧の歌、そして妖精の姫。
+    fairy_1: {
+      name: 'いたずら妖精', sprite: 'fairy_1', lineage: 'fairy', stage: 1, lv: 7, size: 's', race: 'fairy',
+      flags: ['flying'], s: { hp: 0.8, mag: 1.1, agi: 1.4 }, eva: 15,
+      elem: { wind: 1.5, earth: 0.5, light: 0.5, dark: 1.5 }, phys: { pierce: 1.25 }, statusRes: { confuse: 0.5 },
+      actions: [{ id: 'attack', w: 4 }, { id: 'e_prank', w: 2 }, { id: 'e_wind_blade', w: 1 }],
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_bow_leaf', rate: 32 }, super: { item: 'ft_sr_prank_shoes', rate: 256 } },
+      desc: 'くすくす笑って人を転ばせる\n森の妖精。悪気はない。',
+    },
+    fairy_2: {
+      name: '花の妖精', sprite: 'fairy_2', lineage: 'fairy', stage: 2, lv: 19, size: 's', race: 'fairy', affinity: 'light',
+      flags: ['flying'], s: { hp: 0.85, mag: 1.2, mdef: 1.1, agi: 1.3 }, eva: 15,
+      elem: { wind: 1.5, earth: 0.5, light: 0.25, dark: 1.5 }, phys: { pierce: 1.25 }, statusRes: { confuse: 0.5 },
+      actions: [{ id: 'attack', w: 2 }, { id: 'e_heal_ally', w: 3, cond: { hpBelow: 0.7 } }, { id: 'e_light_ray', w: 2 }],
+      drops: { normal: { item: 'i_ether', rate: 8 }, rare: { item: 'ac_honey_charm', rate: 32 }, super: { item: 'w_staff_sr_petal', rate: 256 } },
+      desc: '花から生まれる妖精。傷ついた\n仲間に花の粉を振りかける。',
+    },
+    fairy_3: {
+      name: '霧の妖精', sprite: 'fairy_3', lineage: 'fairy', stage: 3, lv: 31, size: 's', race: 'fairy', affinity: 'water',
+      flags: ['flying'], s: { hp: 0.85, mag: 1.2, agi: 1.3 }, eva: 15,
+      elem: { water: 0.25, wind: 1.5, earth: 1.5, light: 0.5, dark: 1.5 }, phys: { pierce: 1.25 }, statusRes: { confuse: 0.5 },
+      actions: [{ id: 'attack', w: 2 }, { id: 'e_lullaby', w: 2 }, { id: 'e_water_bolt', w: 2 }, { id: 'e_hush', w: 1 }],
+      drops: { normal: { item: 'i_ether', rate: 8 }, rare: { item: 'ac_fairy_dust', rate: 32 }, super: { item: 'hd_sr_mist_veil', rate: 256 } },
+      desc: '朝霧にまぎれて歌う妖精。\n歌を聞くとまぶたが重くなる。',
+    },
+    fairy_4: {
+      name: '妖精姫', sprite: 'fairy_4', lineage: 'fairy', stage: 4, lv: 43, size: 's', race: 'fairy', affinity: 'light',
+      flags: ['flying'], s: { mag: 1.3, mdef: 1.2, agi: 1.3 }, eva: 15,
+      elem: { wind: 1.5, earth: 0.5, light: 0.25, dark: 1.5 }, phys: { pierce: 1.25 }, statusRes: { confuse: 0.5 },
+      actions: [{ id: 'attack', w: 1 }, { id: 'e_heal_all', w: 2, cond: { hpBelow: 0.8 } }, { id: 'e_charm', w: 2 }, { id: 'e_light_ray', w: 2 }, { id: 'e_veil_ally', w: 1, cond: { every: [4, 0] } }],
+      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'hd_fairy_circlet', rate: 32 }, super: { item: 'ac_sr_fairy_tiara', rate: 256 } },
+      desc: '妖精たちの小さなお姫さま。\n魅了のまなざしで人を惑わす。',
+    },
+    // ---- treant 魔木（植物・l）: 森を歩き回る木。根で縛り、いばらで打ち、最後は森の古老になる。
+    treant_1: {
+      name: 'さまよい木', sprite: 'treant_1', lineage: 'treant', stage: 1, lv: 7, size: 'l', race: 'plant', affinity: 'earth',
+      flags: [], s: { hp: 1.3, def: 1.2, agi: 0.7 }, eva: 5,
+      elem: { fire: 1.5, water: 0.5, wind: 1.5, earth: 0.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
+      actions: [{ id: 'attack', w: 4 }, { id: 'e_root_bind', w: 2 }, { id: 'e_sweep', w: 1 }],
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'hd_mushroom_cap', rate: 32 }, super: { item: 'w_club_sr_wander', rate: 256 } },
+      desc: '夜のうちに場所を変える木。\n森の道が変わるのはこのせい。',
+    },
+    treant_2: {
+      name: 'いばら木', sprite: 'treant_2', lineage: 'treant', stage: 2, lv: 19, size: 'l', race: 'plant', affinity: 'earth',
+      flags: [], s: { hp: 1.3, atk: 0.91, def: 1.2, agi: 0.7, mag: 0.83 }, eva: 5,
+      elem: { fire: 1.5, water: 0.5, wind: 1.5, earth: 0.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
+      actions: [{ id: 'attack', w: 3 }, { id: 'e_thorn_vine', w: 2 }, { id: 'e_sweep', w: 2 }],
+      drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'ac_honey_charm', rate: 32 }, super: { item: 'sh_sr_bramble', rate: 256 } },
+      desc: 'とげの生えた枝をふり回す。\n近づくだけで傷だらけになる。',
+    },
+    treant_3: {
+      name: 'こけむし大木', sprite: 'treant_3', lineage: 'treant', stage: 3, lv: 31, size: 'l', race: 'plant', affinity: 'earth',
+      flags: [], s: { hp: 1.4, def: 1.25, mdef: 1.1, agi: 0.65 }, eva: 5,
+      elem: { fire: 1.5, water: 0.5, wind: 1.5, earth: 0.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
+      actions: [{ id: 'attack', w: 2 }, { id: 'e_regen_self', w: 1, cond: { once: true } }, { id: 'e_root_bind', w: 2 }, { id: 'e_stomp', w: 2 }],
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'bd_leaf_mail', rate: 32 }, super: { item: 'bd_sr_moss_bark', rate: 256 } },
+      desc: '全身がこけと花におおわれた老木。\n根を張って傷をふさぐ。',
+    },
+    treant_4: {
+      name: '古老の木', sprite: 'treant_4', lineage: 'treant', stage: 4, lv: 43, size: 'l', race: 'plant', affinity: 'earth',
+      flags: [], s: { hp: 1.5, mag: 0.73, def: 1.25, agi: 0.6, atk: 0.64 }, eva: 5,
+      elem: { fire: 1.5, water: 0.5, wind: 1.5, earth: 0.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
+      actions: [{ id: 'attack', w: 2 }, { id: 'e_quake', w: 2 }, { id: 'e_heal_all', w: 1, cond: { hpBelow: 0.6 } }, { id: 'e_root_bind', w: 2 }],
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_spear_hornet', rate: 32 }, super: { item: 'w_staff_sr_elder_root', rate: 256 } },
+      desc: '千年樹の兄弟とも呼ばれる木。\n大地を揺らして森を守る。',
+    },
+  });
+})(window.RPG);

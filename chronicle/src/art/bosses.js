@@ -2285,4 +2285,17 @@
 
   // ------------------------------------------------------------ registry
   for (const id in S) R.Gfx.def('mon:' + id, S[id]);
+  R.Art = R.Art || {};
+  R.Art.bossesA = {
+    ids: Object.keys(S),
+    sizes: { boss_goblin_chief: [64, 64], boss_bandit: [64, 64], boss_serpent: [96, 80], boss_sphinx: [96, 80], boss_frost_giant: [96, 96], boss_flame_lord: [96, 96], boss_star_guardian: [96, 96], boss_general_a: [96, 96], boss_general_b: [96, 96], boss_demon_king: [112, 96], boss_demon_king2: [128, 112] },
+  };
+  // Shared toolkit for the other boss files (bosses_b.js). They load BEFORE this
+  // file (underscore names sort first), so they must look it up inside factories.
+  R.Art.BossTK = {
+    G, OUT, INK, WHITE, rgb, hex, hsv, fromHsv, mix, dk, ramp, rng, hash,
+    mask, cap, bez, tube, curve, sym, both, bbox, edt, sphereN, cylN, shade, part, put, bump, on, stamp,
+    glow, cracks, scales, edgeLight, finish, fireFill, tongue, star4, shard,
+    GOLD, STEEL, EYE_RED, FIRE, ICE, ROCK, MAGMA, ARMOR, CORE, BLACK, SOUL, HORN, DARKFIRE,
+  };
 })(window.RPG);

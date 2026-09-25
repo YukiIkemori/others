@@ -1,0 +1,2322 @@
+{
+  "_doc": "A11 balance overlay on the DESIGN.md §9 tables (found with tools/sim_zones.js). check_mons.js --write applies it; check_mons.js verifies src/data == DESIGN ⊕ this file. monsters.<id>.<field> replaces that field; encounters.<zone>.groups replaces the zone's groups. Every entry carries a why.",
+  "monsters": {
+    "jelly_1": {
+      "s": {
+        "hp": 1.1,
+        "atk": 1.13,
+        "agi": 0.8,
+        "mag": 1.25
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 4.4% → 5.9% (damage ×1.25 on s.atk/s.mag; lineage moved up only)"
+    },
+    "seabird_1": {
+      "s": {
+        "hp": 0.9,
+        "agi": 1.3,
+        "atk": 1.25,
+        "mag": 1.25
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 4.4% → 6.2% (damage ×1.25 on s.atk/s.mag; lineage moved up only)"
+    },
+    "crab_1": {
+      "s": {
+        "hp": 0.95,
+        "def": 1.4,
+        "agi": 0.8,
+        "atk": 1.25,
+        "mag": 1.25
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 4.0% → 5.3% (damage ×1.25 on s.atk/s.mag; lineage moved up only)"
+    },
+    "mushroom_1": {
+      "s": {
+        "hp": 1.3,
+        "atk": 1.13,
+        "agi": 0.6,
+        "mag": 1.25
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 4.6% → 5.8% (damage ×1.25 on s.atk/s.mag; lineage moved up only)"
+    },
+    "treant_2": {
+      "s": {
+        "hp": 1.3,
+        "atk": 0.91,
+        "def": 1.2,
+        "agi": 0.7,
+        "mag": 0.83
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 12.9% → 11.1% (damage ×0.83 on s.atk/s.mag; lineage moved down only)"
+    },
+    "paper_1": {
+      "s": {
+        "hp": 0.9,
+        "mag": 1.38,
+        "agi": 1.1,
+        "atk": 1.25
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 4.6% → 6.4% (damage ×1.25 on s.atk/s.mag; lineage moved up only)"
+    },
+    "plant_3": {
+      "s": {
+        "hp": 1.1,
+        "mag": 0.76,
+        "agi": 0.8,
+        "atk": 0.69
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 15.9% → 11.6% (damage ×0.69 on s.atk/s.mag; lineage moved down only)"
+    },
+    "treant_4": {
+      "s": {
+        "hp": 1.5,
+        "mag": 0.73,
+        "def": 1.25,
+        "agi": 0.6,
+        "atk": 0.64
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 17.3% → 12.2% (damage ×0.64 on s.atk/s.mag; lineage moved down only)"
+    },
+    "spider_1": {
+      "s": {
+        "agi": 1.1,
+        "atk": 1.25,
+        "mag": 1.25
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 3.7% → 4.4% (damage ×1.25 on s.atk/s.mag; lineage moved up only)"
+    },
+    "scorpion_1": {
+      "s": {
+        "def": 1.2,
+        "atk": 1.25,
+        "mag": 1.25
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 5.6% → 6.9% (damage ×1.25 on s.atk/s.mag; lineage moved up only)"
+    },
+    "snake_1": {
+      "s": {
+        "atk": 1.31,
+        "agi": 1.05,
+        "mag": 1.25
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 5.4% → 6.4% (damage ×1.25 on s.atk/s.mag; lineage moved up only)"
+    },
+    "sandworm_2": {
+      "s": {
+        "hp": 1.25,
+        "def": 1.3,
+        "agi": 0.65,
+        "atk": 0.75,
+        "mag": 0.75
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 14.4% → 10.7% (damage ×0.75 on s.atk/s.mag; lineage moved down only)"
+    },
+    "sandworm_3": {
+      "s": {
+        "hp": 1.35,
+        "atk": 0.61,
+        "def": 1.2,
+        "agi": 0.65,
+        "mag": 0.53
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 20.9% → 10.5% (damage ×0.53 on s.atk/s.mag; lineage moved down only)"
+    },
+    "mummy_1": {
+      "s": {
+        "hp": 1.15,
+        "agi": 0.8,
+        "atk": 1.25,
+        "mag": 1.25
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 2.3% → 2.9% (damage ×1.25 on s.atk/s.mag; lineage moved up only)"
+    },
+    "bat_3": {
+      "s": {
+        "hp": 0.9,
+        "mag": 0.61,
+        "agi": 1.3,
+        "atk": 0.56
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 20.1% → 11.5% (damage ×0.56 on s.atk/s.mag; lineage moved down only)"
+    },
+    "bat_5": {
+      "s": {
+        "hp": 1.3,
+        "mag": 0.85,
+        "agi": 1.25,
+        "atk": 0.71
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 15.4% → 10.4% (damage ×0.71 on s.atk/s.mag; lineage moved down only)"
+    },
+    "owl_1": {
+      "s": {
+        "hp": 0.95,
+        "agi": 1.2,
+        "atk": 1.25,
+        "mag": 1.25
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 3.8% → 4.9% (damage ×1.25 on s.atk/s.mag; lineage moved up only)"
+    },
+    "frostling_2": {
+      "s": {
+        "hp": 0.9,
+        "mag": 1.01,
+        "agi": 1.1,
+        "atk": 0.84
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 11.3% → 9.9% (damage ×0.84 on s.atk/s.mag; lineage moved down only)"
+    },
+    "yeti_2": {
+      "s": {
+        "hp": 1.25,
+        "atk": 0.76,
+        "def": 1.1,
+        "agi": 0.8,
+        "mag": 0.63
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 17.5% → 11.6% (damage ×0.63 on s.atk/s.mag; lineage moved down only)"
+    },
+    "mammoth_2": {
+      "s": {
+        "hp": 1.35,
+        "atk": 0.92,
+        "def": 1.3,
+        "agi": 0.65,
+        "mag": 0.8
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 13.4% → 11.9% (damage ×0.8 on s.atk/s.mag; lineage moved down only)"
+    },
+    "wolf_3": {
+      "s": {
+        "hp": 1.05,
+        "atk": 0.73,
+        "mag": 0.76,
+        "agi": 1.15
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 15.7% → 9.7% (damage ×0.69 on s.atk/s.mag; lineage moved down only)"
+    },
+    "frostling_3": {
+      "s": {
+        "hp": 0.95,
+        "mag": 0.6,
+        "agi": 1.15,
+        "atk": 0.5
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 23.7% → 10.4% (damage ×0.48 on s.atk/s.mag; lineage moved down only)"
+    },
+    "frostling_4": {
+      "s": {
+        "hp": 1.15,
+        "atk": 0.83,
+        "mag": 0.8,
+        "agi": 1.05
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 15.0% → 11.2% (damage ×0.72 on s.atk/s.mag; lineage moved down only)"
+    },
+    "yeti_3": {
+      "s": {
+        "hp": 1.35,
+        "atk": 0.69,
+        "agi": 0.8,
+        "mag": 0.58
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 19.3% → 11.4% (damage ×0.58 on s.atk/s.mag; lineage moved down only)"
+    },
+    "mammoth_3": {
+      "s": {
+        "hp": 1.45,
+        "atk": 0.61,
+        "def": 1.25,
+        "agi": 0.65,
+        "mag": 0.51
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 22.1% → 11.7% (damage ×0.51 on s.atk/s.mag; lineage moved down only)"
+    },
+    "wolf_5": {
+      "s": {
+        "hp": 1.3,
+        "atk": 0.86,
+        "agi": 1.2,
+        "mag": 0.75
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 14.5% → 11.1% (damage ×0.75 on s.atk/s.mag; lineage moved down only)"
+    },
+    "frostling_5": {
+      "s": {
+        "hp": 1.3,
+        "atk": 0.74,
+        "mag": 0.81,
+        "agi": 1.05
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 16.1% → 12.7% (damage ×0.68 on s.atk/s.mag; lineage moved down only)"
+    },
+    "frog_1": {
+      "s": {
+        "hp": 1.1,
+        "atk": 1.25,
+        "mag": 1.25
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 5.7% → 7.0% (damage ×1.25 on s.atk/s.mag; lineage moved up only)"
+    },
+    "wisp_1": {
+      "s": {
+        "hp": 0.85,
+        "mag": 0.92,
+        "agi": 1.2,
+        "atk": 0.77
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 14.0% → 10.5% (damage ×0.77 on s.atk/s.mag; lineage moved down only)"
+    },
+    "wisp_2": {
+      "s": {
+        "hp": 0.85,
+        "mag": 0.77,
+        "agi": 1.2,
+        "atk": 0.64
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 17.0% → 11.7% (damage ×0.64 on s.atk/s.mag; lineage moved down only)"
+    },
+    "wisp_3": {
+      "s": {
+        "hp": 0.9,
+        "mag": 0.93,
+        "agi": 1.2,
+        "atk": 0.77
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 13.9% → 9.3% (damage ×0.77 on s.atk/s.mag; lineage moved down only)"
+    },
+    "lizardman_4": {
+      "s": {
+        "hp": 1.3,
+        "atk": 0.95,
+        "def": 1.1,
+        "mag": 0.79
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 11.7% → 10.0% (damage ×0.79 on s.atk/s.mag; lineage moved down only)"
+    },
+    "wisp_4": {
+      "s": {
+        "hp": 0.95,
+        "mag": 0.5,
+        "agi": 1.2,
+        "atk": 0.5
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 42.6% → 17.5% (damage ×0.09 on s.atk/s.mag; lineage moved down only)"
+    },
+    "ghost_4": {
+      "s": {
+        "hp": 1.05,
+        "mag": 0.55,
+        "mdef": 1.2,
+        "atk": 0.5
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 21.3% → 12.4% (damage ×0.44 on s.atk/s.mag; lineage moved down only)"
+    },
+    "ghost_5": {
+      "s": {
+        "hp": 1.3,
+        "mag": 0.5,
+        "mdef": 1.25,
+        "atk": 0.5
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 31.1% → 13.5% (damage ×0.22 on s.atk/s.mag; lineage moved down only)"
+    },
+    "doll_1": {
+      "s": {
+        "def": 1.1,
+        "atk": 1.25,
+        "mag": 1.25
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 3.6% → 4.3% (damage ×1.25 on s.atk/s.mag; lineage moved up only)"
+    },
+    "merman_2": {
+      "s": {
+        "hp": 1.05,
+        "atk": 0.98,
+        "mag": 0.85
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 12.6% → 10.7% (damage ×0.85 on s.atk/s.mag; lineage moved down only)"
+    },
+    "merman_3": {
+      "s": {
+        "hp": 0.95,
+        "atk": 0.5,
+        "mag": 0.75,
+        "mdef": 1.2
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 19.3% → 10.4% (damage ×0.58 on s.atk/s.mag; lineage moved down only)"
+    },
+    "merman_4": {
+      "s": {
+        "hp": 1.25,
+        "atk": 0.96,
+        "def": 1.25,
+        "mag": 0.83
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 12.8% → 10.6% (damage ×0.83 on s.atk/s.mag; lineage moved down only)"
+    },
+    "kraken_2": {
+      "s": {
+        "hp": 1.2,
+        "atk": 0.84,
+        "agi": 0.85,
+        "mag": 0.76
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 14.1% → 10.6% (damage ×0.76 on s.atk/s.mag; lineage moved down only)"
+    },
+    "kraken_3": {
+      "s": {
+        "hp": 1.25,
+        "atk": 0.61,
+        "mag": 0.64,
+        "agi": 0.85
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 20.2% → 11.2% (damage ×0.55 on s.atk/s.mag; lineage moved down only)"
+    },
+    "skeleton_1": {
+      "s": {
+        "atk": 1.31,
+        "mag": 1.25
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 3.1% → 4.1% (damage ×1.25 on s.atk/s.mag; lineage moved up only)"
+    },
+    "goblin_1": {
+      "s": {
+        "atk": 1.38,
+        "mag": 1.25
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 5.1% → 6.8% (damage ×1.25 on s.atk/s.mag; lineage moved up only)"
+    },
+    "mole_1": {
+      "s": {
+        "hp": 1.1,
+        "atk": 1.31,
+        "agi": 0.9,
+        "mag": 1.25
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 5.6% → 7.4% (damage ×1.25 on s.atk/s.mag; lineage moved up only)"
+    },
+    "golem_2": {
+      "s": {
+        "hp": 1.35,
+        "atk": 0.71,
+        "def": 1.4,
+        "agi": 0.6,
+        "mag": 0.64
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 17.0% → 10.7% (damage ×0.64 on s.atk/s.mag; lineage moved down only)"
+    },
+    "golem_3": {
+      "s": {
+        "hp": 1.4,
+        "atk": 0.64,
+        "mag": 0.67,
+        "def": 1.35,
+        "agi": 0.6
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 19.1% → 10.8% (damage ×0.58 on s.atk/s.mag; lineage moved down only)"
+    },
+    "crystal_3": {
+      "s": {
+        "hp": 0.95,
+        "mag": 0.53,
+        "def": 1.2,
+        "atk": 0.5
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 27.2% → 11.7% (damage ×0.42 on s.atk/s.mag; lineage moved down only)"
+    },
+    "imp_2": {
+      "s": {
+        "hp": 0.9,
+        "mag": 0.89,
+        "agi": 1.2,
+        "atk": 0.77
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 14.0% → 11.0% (damage ×0.77 on s.atk/s.mag; lineage moved down only)"
+    },
+    "orc_2": {
+      "s": {
+        "hp": 1.25,
+        "atk": 0.92,
+        "mdef": 0.85,
+        "agi": 0.8,
+        "mag": 0.74
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 14.7% → 10.8% (damage ×0.74 on s.atk/s.mag; lineage moved down only)"
+    },
+    "chimera_2": {
+      "s": {
+        "hp": 1.2,
+        "atk": 0.61,
+        "mag": 0.59
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 20.9% → 12.0% (damage ×0.53 on s.atk/s.mag; lineage moved down only)"
+    },
+    "imp_3": {
+      "s": {
+        "hp": 0.95,
+        "mag": 0.72,
+        "agi": 1.2,
+        "atk": 0.63
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 17.5% → 10.7% (damage ×0.63 on s.atk/s.mag; lineage moved down only)"
+    },
+    "imp_4": {
+      "s": {
+        "mag": 0.75,
+        "agi": 1.2,
+        "atk": 0.6
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 18.5% → 10.9% (damage ×0.6 on s.atk/s.mag; lineage moved down only)"
+    },
+    "orc_3": {
+      "s": {
+        "hp": 1.35,
+        "atk": 0.8,
+        "def": 1.05,
+        "agi": 0.8,
+        "mag": 0.64
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 17.2% → 11.2% (damage ×0.64 on s.atk/s.mag; lineage moved down only)"
+    },
+    "chimera_3": {
+      "s": {
+        "hp": 1.3,
+        "atk": 0.5,
+        "mag": 0.5
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 31.1% → 19.0% (damage ×0.13 on s.atk/s.mag; lineage moved down only)"
+    },
+    "salamander_5": {
+      "s": {
+        "hp": 1.3,
+        "atk": 0.61,
+        "mag": 0.59
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 17.2% → 10.1% (damage ×0.53 on s.atk/s.mag; lineage moved down only)"
+    },
+    "gargoyle_3": {
+      "s": {
+        "hp": 1.1,
+        "atk": 0.77,
+        "mag": 0.77,
+        "def": 1.3
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 15.7% → 11.2% (damage ×0.7 on s.atk/s.mag; lineage moved down only)"
+    },
+    "automaton_3": {
+      "s": {
+        "mag": 0.95,
+        "def": 1.1,
+        "mdef": 1.2,
+        "atk": 0.76
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 14.2% → 10.6% (damage ×0.76 on s.atk/s.mag; lineage moved down only)"
+    },
+    "eyeball_4": {
+      "s": {
+        "mag": 0.92,
+        "mdef": 1.2,
+        "agi": 1.1,
+        "atk": 0.74
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 14.7% → 12.1% (damage ×0.74 on s.atk/s.mag; lineage moved down only)"
+    },
+    "darkmage_4": {
+      "s": {
+        "hp": 0.95,
+        "atk": 0.6,
+        "mag": 1.11,
+        "def": 0.85,
+        "mdef": 1.3
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 13.5% → 10.8% (damage ×0.8 on s.atk/s.mag; lineage moved down only)"
+    },
+    "wyvern_3": {
+      "s": {
+        "hp": 1.25,
+        "atk": 0.91,
+        "mag": 0.87,
+        "agi": 1.15
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 12.6% → 10.3% (damage ×0.79 on s.atk/s.mag; lineage moved down only)"
+    },
+    "eyeball_5": {
+      "s": {
+        "hp": 1.3,
+        "mag": 0.62,
+        "mdef": 1.25,
+        "agi": 1.05,
+        "atk": 0.5
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 23.6% → 10.7% (damage ×0.48 on s.atk/s.mag; lineage moved down only)"
+    },
+    "armor_3": {
+      "s": {
+        "hp": 1.25,
+        "atk": 0.84,
+        "def": 1.35,
+        "mag": 0.76
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 14.2% → 10.0% (damage ×0.76 on s.atk/s.mag; lineage moved down only)"
+    },
+    "scribe_1": {
+      "s": {
+        "mag": 1.5,
+        "mdef": 1.2,
+        "atk": 1.25
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 2.9% → 3.9% (damage ×1.25 on s.atk/s.mag; lineage moved up only)"
+    },
+    "demon_1": {
+      "s": {
+        "hp": 1.15,
+        "atk": 0.98,
+        "mag": 0.9
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 13.2% → 10.9% (damage ×0.81 on s.atk/s.mag; lineage moved down only)"
+    },
+    "chaos_1": {
+      "s": {
+        "hp": 1.25,
+        "atk": 0.51,
+        "agi": 0.9,
+        "mag": 0.5
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 22.5% → 10.7% (damage ×0.42 on s.atk/s.mag; lineage moved down only)"
+    },
+    "demon_2": {
+      "s": {
+        "hp": 1.3,
+        "atk": 0.96,
+        "def": 1.15,
+        "mag": 0.76
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 14.1% → 11.8% (damage ×0.76 on s.atk/s.mag; lineage moved down only)"
+    },
+    "void_2": {
+      "s": {
+        "hp": 1.3,
+        "atk": 0.51,
+        "mag": 0.5
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 21.9% → 10.5% (damage ×0.4 on s.atk/s.mag; lineage moved down only)"
+    },
+    "chaos_2": {
+      "s": {
+        "hp": 1.4,
+        "atk": 0.5,
+        "mag": 0.5,
+        "agi": 0.9
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 28.5% → 11.9% (damage ×0.4 on s.atk/s.mag; lineage moved down only)"
+    },
+    "demon_3": {
+      "s": {
+        "hp": 1.4,
+        "atk": 0.5,
+        "mag": 0.5
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 25.0% → 14.0% (damage ×0.27 on s.atk/s.mag; lineage moved down only)"
+    },
+    "void_3": {
+      "s": {
+        "hp": 1.45,
+        "atk": 0.54,
+        "mag": 0.52
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 22.1% → 8.7% (damage ×0.41 on s.atk/s.mag; lineage moved down only)"
+    },
+    "chaos_3": {
+      "s": {
+        "hp": 1.55,
+        "atk": 0.5,
+        "mag": 0.5,
+        "agi": 0.9
+      },
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 30.8% → 12.3% (damage ×0.32 on s.atk/s.mag; lineage moved down only)"
+    }
+  },
+  "encounters": {
+    "zw_snow": {
+      "groups": [
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@wolf",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@frostling",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@owl",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@yeti",
+              1,
+              1
+            ],
+            [
+              "@wolf",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@mammoth",
+              1,
+              1
+            ],
+            [
+              "@owl",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@wolf",
+              1,
+              3
+            ],
+            [
+              "@frostling",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "@yeti",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 30,
+          "mons": [
+            [
+              "@mammoth",
+              2,
+              2
+            ]
+          ],
+          "tierMin": 6,
+          "tierMax": 7
+        },
+        {
+          "w": 12,
+          "mons": [
+            [
+              "@owl",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 6,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@quicksilver",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 1,
+          "mons": [
+            [
+              "@quicksilver",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 6,
+          "tierMax": 7
+        }
+      ],
+      "why": "§9.13.3 L6: the §8.6.5 T8-set species must be met ≥0.65 per battle in some zone; at T6–7 (after the lineage reaches its last stage) this zone gets a herd group of it (大王マンモス ×2 w30, 賢者フクロウ 3–4 w12; +1 白銀ゼリー weight so metal stays 2.5%)."
+    },
+    "z_r_snow_peak": {
+      "groups": [
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@frostling",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@wolf",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@bat",
+              4,
+              5
+            ]
+          ]
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@yeti",
+              1,
+              1
+            ],
+            [
+              "@frostling",
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@owl",
+              2,
+              3
+            ],
+            [
+              "@wolf",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "@yeti",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 15,
+          "mons": [
+            [
+              "@yeti",
+              2,
+              2
+            ]
+          ],
+          "tierMin": 6,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@mirror",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 5
+        }
+      ],
+      "why": "§9.13.3 L6: the §8.6.5 T8-set species must be met ≥0.65 per battle in some zone; at T6–7 (after the lineage reaches its last stage) this zone gets a herd group of it (大雪男 ×2 w15)."
+    },
+    "zw_mine": {
+      "groups": [
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@goblin",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@mole",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@beetle",
+              4,
+              5
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@golem",
+              1,
+              1
+            ],
+            [
+              "@goblin",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@rat",
+              4,
+              5
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@mole",
+              1,
+              3
+            ],
+            [
+              "@beetle",
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "@golem",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 17,
+          "mons": [
+            [
+              "@golem",
+              2,
+              2
+            ]
+          ],
+          "tierMin": 6,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@quicksilver",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        }
+      ],
+      "why": "§9.13.3 L6: the §8.6.5 T8-set species must be met ≥0.65 per battle in some zone; at T6–7 (after the lineage reaches its last stage) this zone gets a herd group of it (宝玉兵 ×2 w17)."
+    },
+    "zw_ash": {
+      "groups": [
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@salamander",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@imp",
+              4,
+              5
+            ]
+          ]
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@orc",
+              1,
+              1
+            ],
+            [
+              "@imp",
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@chimera",
+              1,
+              1
+            ],
+            [
+              "@salamander",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@orc",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@salamander",
+              1,
+              3
+            ],
+            [
+              "@imp",
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "w": 14,
+          "mons": [
+            [
+              "@orc",
+              2,
+              2
+            ]
+          ],
+          "tierMin": 6,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@quicksilver",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        }
+      ],
+      "why": "§9.13.3 L6: the §8.6.5 T8-set species must be met ≥0.65 per battle in some zone; at T6–7 (after the lineage reaches its last stage) this zone gets a herd group of it (大鬼の頭目 ×2 w14)."
+    },
+    "zw_star": {
+      "groups": [
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@eyeball",
+              4,
+              5
+            ]
+          ]
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@darkmage",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@automaton",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@wyvern",
+              1,
+              1
+            ],
+            [
+              "@eyeball",
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@wyvern",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@darkmage",
+              1,
+              3
+            ],
+            [
+              "@automaton",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 14,
+          "mons": [
+            [
+              "@wyvern",
+              2,
+              2
+            ]
+          ],
+          "tierMin": 6,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@quicksilver",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        }
+      ],
+      "why": "§9.13.3 L6: the §8.6.5 T8-set species must be met ≥0.65 per battle in some zone; at T6–7 (after the lineage reaches its last stage) this zone gets a herd group of it (嵐飛竜 ×2 w14)."
+    },
+    "z_r_forest_maze": {
+      "groups": [
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@bee",
+              4,
+              5
+            ]
+          ]
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@plant",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@spider",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@fairy",
+              2,
+              4
+            ],
+            [
+              "@bee",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@treant",
+              1,
+              1
+            ],
+            [
+              "@plant",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@spider",
+              1,
+              3
+            ],
+            [
+              "@bee",
+              2,
+              3
+            ]
+          ]
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "@treant",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@mirror",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 5
+        }
+      ],
+      "why": "§9.13.3 L6: 女郎グモ (spider_4, T8 set) 0.61 → 0.69 per battle: spider 2–4 weight 7 → 9."
+    },
+    "zw_marsh": {
+      "groups": [
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@frog",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@lizardman",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@jelly",
+              4,
+              5
+            ]
+          ]
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@wisp",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 5
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@wisp",
+              2,
+              3
+            ],
+            [
+              "@lizardman",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 6
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@frog",
+              1,
+              3
+            ],
+            [
+              "@lizardman",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@ghost",
+              2,
+              3
+            ],
+            [
+              "@wisp",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@quicksilver",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        }
+      ],
+      "why": "M1: packs of 4–5 黄泉の火 (wisp_4, AoE magic 4/7 of its actions) took 16–20% of the party HP per battle; from T6 the pack is 2–3 wisps with 1–2 lizardmen."
+    },
+    "z_r_marsh_bog": {
+      "groups": [
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@frog",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@wisp",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 5
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@wisp",
+              2,
+              3
+            ],
+            [
+              "@frog",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 6
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@lizardman",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@mushroom",
+              4,
+              5
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@ghost",
+              1,
+              3
+            ],
+            [
+              "@frog",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@jelly",
+              2,
+              4
+            ],
+            [
+              "@wisp",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@mirror",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 5
+        }
+      ],
+      "why": "M1: packs of 4–5 黄泉の火 (wisp_4) — from T6 the pack is 2–3 wisps with 1–2 frogs."
+    },
+    "z_r_marsh_manor": {
+      "groups": [
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@ghost",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@doll",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@spider",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@wisp",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 5
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@wisp",
+              2,
+              3
+            ],
+            [
+              "@doll",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 6
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@doll",
+              1,
+              3
+            ],
+            [
+              "@ghost",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "@spider",
+              1,
+              3
+            ],
+            [
+              "@wisp",
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "w": 2,
+          "mons": [
+            [
+              "@mimic",
+              1,
+              1
+            ]
+          ],
+          "solo": true
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@mirror",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 5
+        }
+      ],
+      "why": "M5: average strength was 2.96–2.99 (< 3.0) → ghost 2–3 → 2–4; L6: 冥界の霊王 (ghost_5) 0.61 → 0.70 per battle; M1: from T6 the wisp pack is 2–3 黄泉の火 with 1–2 dolls."
+    },
+    "z_finale_archive_lo": {
+      "groups": [
+        {
+          "w": 9,
+          "mons": [
+            [
+              "scribe_1",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "book_1",
+              4,
+              5
+            ]
+          ]
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "scribe_2",
+              1,
+              3
+            ],
+            [
+              "book_1",
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "w": 12,
+          "mons": [
+            [
+              "book_2",
+              3,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "paper_3",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "paper_4",
+              1,
+              1
+            ],
+            [
+              "scribe_1",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "armor_4",
+              2,
+              3
+            ],
+            [
+              "scribe_2",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 2,
+          "mons": [
+            [
+              "mimic_4",
+              1,
+              1
+            ]
+          ],
+          "solo": true
+        },
+        {
+          "w": 2,
+          "mons": [
+            [
+              "platinum_1",
+              1,
+              1
+            ]
+          ]
+        }
+      ],
+      "why": "§9.13.3 L6: 呪いの書 (book_2, T8 set) 0.46 → 0.72 per battle: book_2 3–4 weight 7 → 12."
+    },
+    "z_finale_archive_hi": {
+      "groups": [
+        {
+          "w": 8,
+          "mons": [
+            [
+              "scribe_2",
+              2,
+              3
+            ],
+            [
+              "scribe_3",
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "book_3",
+              3,
+              4
+            ],
+            [
+              "scribe_3",
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "w": 10,
+          "mons": [
+            [
+              "demon_1",
+              1,
+              1
+            ],
+            [
+              "scribe_3",
+              1,
+              1
+            ],
+            [
+              "book_3",
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "w": 13,
+          "mons": [
+            [
+              "demon_1",
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "scribe_2",
+              2,
+              3
+            ],
+            [
+              "book_3",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 9,
+          "mons": [
+            [
+              "demon_1",
+              1,
+              1
+            ],
+            [
+              "scribe_2",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "scribe_3",
+              2,
+              3
+            ]
+          ]
+        },
+        {
+          "w": 3,
+          "mons": [
+            [
+              "paper_4",
+              1,
+              1
+            ],
+            [
+              "book_2",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 3,
+          "mons": [
+            [
+              "platinum_1",
+              1,
+              1
+            ]
+          ]
+        }
+      ],
+      "why": "§9.13.3 L6: four T8-set species live here (白衣の写本師 scribe_2, 白衣の司書長 scribe_3, 白紙の書 book_3, 忘れられた魔兵 demon_1: 0.57/0.26/0.51/0.34 per battle) → rebuilt so each is met ≥0.65 per battle (average strength 3.33)."
+    },
+    "z_postgame_oblivion_hi": {
+      "groups": [
+        {
+          "w": 8,
+          "mons": [
+            [
+              "void_2",
+              1,
+              3
+            ],
+            [
+              "void_1",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "chaos_2",
+              1,
+              1
+            ],
+            [
+              "void_1",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "demon_3",
+              1,
+              1
+            ],
+            [
+              "demon_2",
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "ghost_5",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "goblin_5",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "salamander_5",
+              2,
+              3
+            ],
+            [
+              "imp_5",
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "eyeball_5",
+              4,
+              5
+            ]
+          ]
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "skeleton_5",
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "jelly_5",
+              3,
+              5
+            ],
+            [
+              "bat_5",
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "void_3",
+              1,
+              1
+            ],
+            [
+              "void_1",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 4,
+          "mons": [
+            [
+              "chaos_3",
+              1,
+              1
+            ],
+            [
+              "void_1",
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "w": 3,
+          "mons": [
+            [
+              "platinum_2",
+              1,
+              1
+            ]
+          ]
+        }
+      ],
+      "why": "M5: a lone 混沌の祖獣 (strength 1.8) was below the 2.2 group minimum → with one 虚無の騎士 (2.8)."
+    }
+  }
+}

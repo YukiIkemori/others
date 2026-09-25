@@ -17,16 +17,42 @@
   const A = (R.Art = R.Art || {});
   const tk = () => A.TK;
 
-  const WALL = { wall: 1, wall_torch: 1, door: 1, door_silver: 1, door_gold: 1 };
+  // wall-like cells: drawn in 3/4 view and seen as wall by their neighbours
+  // (closed doors and secret passages look like the wall they are set in)
+  const WALL = { wall: 1, wall_torch: 1, door: 1, door_silver: 1, door_gold: 1, lockdoor: 1, rock_door: 1, secret_wall: 1 };
+  const DOORISH = { door: 1, door_silver: 1, door_gold: 1, lockdoor: 1, rock_door: 1 };
   const HOUSE = { housewall: 1, roof: 1 };
   // tiles that stand up and cast a shadow on the ground south/east of them
-  const TALL = { wall: 1, wall_torch: 1, door: 1, door_silver: 1, door_gold: 1, housewall: 1, roof: 1, bookshelf: 1, shelf: 1, pillar: 1, statue: 1, tree: 1 };
-  const GROUND = { floor: 1, lgrass: 1, dirt: 1, wood: 1, carpet: 1, sand: 1, snowfloor: 1, ice: 1, flowers: 1 };
+  const TALL = { wall: 1, wall_torch: 1, door: 1, door_silver: 1, door_gold: 1, housewall: 1, roof: 1, bookshelf: 1, shelf: 1, pillar: 1, statue: 1, tree: 1,
+    lockdoor: 1, rock_door: 1, secret_wall: 1, vine_wall: 1, ice_wall: 1, story_stone: 1, story_stone_blank: 1 };
+  const GROUND = { floor: 1, lgrass: 1, dirt: 1, wood: 1, carpet: 1, sand: 1, snowfloor: 1, ice: 1, flowers: 1, mud: 1 };
   const GRASSY = { lgrass: 1, flowers: 1 };
-  const LIQUID = { water: 4, lava: 2, poison: 2 };
-  const JOIN = { counter: 1, table: 1, bed: 1, fence: 1 };
-  const ANIM_OBJ = { warp_pad: 4, seal: 2, lbridge_h: 4, lbridge_v: 4 };
+  const LIQUID = { water: 4, lava: 2, poison: 2, bog: 4 };
+  const JOIN = { counter: 1, table: 1, bed: 1, fence: 1, vine_wall: 1, ice_wall: 1, fog_wall: 1 };
+  const ANIM_OBJ = { warp_pad: 4, seal: 2, lbridge_h: 4, lbridge_v: 4, fog_wall: 2 };
+  /** map column x reduced to the theme's wall-face period (faces vary along the wall) */
+  const facePos = (theme, x) => { const p = (A.themeArt(theme).period) || 1; return ((x % p) + p) % p; };
+  /** has the party already found the secret passage at (x,y)? (R.Game.secrets, §3.3.10-11) */
+  function secretFound(m, x, y) {
+    const G = R.Game;
+    return !!(G && G.secrets && G.secrets[m.id + ':' + x + ',' + y]);
+  }
 
+  const OUTDOOR_G = { 'theme:forest': 1, 'theme:snow': 1, 'theme:swamp': 1 };
+  /**
+   * The theme of a cell: a map may paint areas in other themes with
+   * def.themeAreas = [{x, y, w, h, theme}] (the last area containing the cell wins),
+   * e.g. the patchwork forest of the Depths of Oblivion (§11.2.11). Else map.theme.
+   */
+  function themeAt(m, x, y) {
+    const areas = m && m.def && m.def.themeAreas;
+    if (areas && areas.length) for (let i = areas.length - 1; i >= 0; i--) {
+      const a = areas[i];
+      if (x >= a.x && y >= a.y && x < a.x + (a.w || 1) && y < a.y + (a.h || 1)) return a.theme;
+    }
+    return m && m.theme;
+  }
+  A.themeAt = (m, x, y) => (A.themeOf ? A.themeOf(themeAt(m, x, y)) : 'generic');
   const CACHE = new Map();
   function cached(key, make) {
     let v = CACHE.get(key);
@@ -127,7 +153,8 @@
   function variantAt(m, x, y, gname) {
     if (!A.floorVariant || !A.floorVaries || !A.floorVaries(gname)) return 0;
     const h = tk().hash(x, y, 7001 + salt(m));
-    const plain = gname === 'lgrass' ? 0.64 : gname === 'theme:cave' ? 0.3 : 0.58;
+    // outdoor dungeons (forest, snow, swamp) get more ground variety (DESIGN §11.2.8)
+    const plain = gname === 'lgrass' ? 0.64 : gname === 'theme:cave' ? 0.3 : OUTDOOR_G[gname] ? 0.42 : 0.58;
     return h < plain ? 0 : h < plain + 0.2 ? 1 : h < plain + 0.32 ? 2 : 3;
   }
   /** floor decor this cell's floor paints itself: 'alt' | 'crack' | '' */
@@ -140,12 +167,12 @@
   }
   /** used by the decor art: does the floor at (x,y) already show this decor? */
   // grounds the outdoor tiler (tiles_local.js wraps localTile) paints itself: not ours
-  const EXT_IDS = { lgrass: 1, flowers: 1, dirt: 1, sand: 1, snowfloor: 1 };
-  const extTakes = (id, theme) => !!(A.localTile && A.localTile._exterior) && (EXT_IDS[id] || (id === 'floor' && theme === 'town'));
+  const EXT_IDS = { lgrass: 1, flowers: 1, dirt: 1, sand: 1, snowfloor: 1, mud: 1 };
+  const extTakes = (id, theme) => !!(A.localTile && A.localTile._exterior) && (EXT_IDS[id] || (id === 'floor' && A.isTownTheme && A.isTownTheme(theme)));
   A.floorHandlesDecor = function (m, x, y, kind) {
     const id = m.tileAt(x, y);
     if (!GROUND[id] || id === 'carpet') return false;
-    const theme = m.theme && A.THEME_DEFS[m.theme] ? m.theme : 'generic';
+    const theme = A.themeOf ? A.themeOf(m.theme) : 'generic';
     if (extTakes(id, theme)) return false;
     return floorFx(m, x, y, groundName(id, theme)) === (kind === 'tile_alt' ? 'alt' : kind);
   };
@@ -217,45 +244,63 @@
       const key = 'wt|' + theme + '|' + +e.n + +e.w + +e.e;
       return cached(key, () => canvas(A.wallTop(theme, e)));
     }
-    const cap = !wallish(up);
+    const cap = !wallish(up), px = facePos(theme, x);
     if (id === 'wall_torch') {
-      return cached('wf|' + theme + '|' + cap + '|torch', () => tk().frames(2, (f) => { const b = A.wallFace(theme, cap); A.drawTorch(b, f); return b; }));
+      return cached('wf|' + theme + '|' + cap + '|' + px + '|torch', () => tk().frames(2, (f) => A.themeTorch(theme, A.wallFace(theme, cap, px), f)));
     }
-    return cached('wf|' + theme + '|' + cap, () => canvas(A.wallFace(theme, cap)));
+    return cached('wf|' + theme + '|' + cap + '|' + px, () => canvas(A.wallFace(theme, cap, px)));
+  }
+  /** a secret passage: exactly the wall it is set in (face or top), plus the faint hint */
+  function secretTile(m, x, y, theme) {
+    const up = m.tileAt(x, y - 1), down = m.tileAt(x, y + 1);
+    const l = m.tileAt(x - 1, y), r = m.tileAt(x + 1, y);
+    const found = secretFound(m, x, y);
+    if (wallish(down)) {
+      const e = { n: !wallish(up), w: !wallish(l), e: !wallish(r) };
+      return cached('sw|t|' + theme + '|' + +e.n + +e.w + +e.e + '|' + found, () => canvas(A.secretWallArt(theme, { top: true, edges: e, found })));
+    }
+    const cap = !wallish(up), px = facePos(theme, x);
+    return cached('sw|f|' + theme + '|' + cap + '|' + px + '|' + found, () => canvas(A.secretWallArt(theme, { capTop: cap, x: px, found })));
   }
   function doorTile(m, x, y, id, theme) {
     const up = m.tileAt(x, y - 1), l = m.tileAt(x - 1, y), r = m.tileAt(x + 1, y);
     if (l === 'housewall' || r === 'housewall') {
       const eave = up === 'roof';
       const cap = !eave && up !== 'housewall';
-      return cached('hd|' + id + '|' + eave + cap, () => canvas(A.drawDoor(A.houseWallArt({ eave, capTop: cap, plain: true }), id, eave ? 3 : 2, 'wood')));
+      const top = eave ? 3 : 2;
+      return cached('hd|' + id + '|' + theme + '|' + eave + cap, () => {
+        const b = A.drawDoor(A.houseWallArt({ eave, capTop: cap, plain: true }, theme), id === 'lockdoor' || id === 'rock_door' ? 'door' : id, top, 'wood');
+        return canvas(id === 'lockdoor' ? A.lockOverlay(b, top, theme) : b);
+      });
     }
-    const cap = !wallish(up) && !HOUSE[up];
-    return cached('wd|' + theme + '|' + id + '|' + cap, () => canvas(A.doorArt(theme, id, cap)));
+    const cap = !wallish(up) && !HOUSE[up], px = facePos(theme, x);
+    if (id === 'lockdoor') return cached('ld|' + theme + '|' + cap + '|' + px, () => canvas(A.lockDoorArt(theme, cap, px)));
+    if (id === 'rock_door') return cached('rd|' + theme + '|' + cap + '|' + px, () => canvas(A.rockDoorArt(theme, cap, px)));
+    return cached('wd|' + theme + '|' + id + '|' + cap + '|' + px, () => canvas(A.doorArt(theme, id, cap, null, px)));
   }
 
   // ------------------------------------------------------------ houses
-  function houseWallTile(m, x, y) {
+  function houseWallTile(m, x, y, theme) {
     const up = m.tileAt(x, y - 1), down = m.tileAt(x, y + 1);
     const l = m.tileAt(x - 1, y), r = m.tileAt(x + 1, y);
-    const hw = (id) => id === 'housewall' || id === 'door' || id === 'door_silver' || id === 'door_gold';
+    const hw = (id) => id === 'housewall' || !!DOORISH[id];
     if (down === 'housewall') {
       const e = { n: !(hw(up) || up === 'roof'), w: !hw(l), e: !hw(r) };
-      return cached('hwt|' + +e.n + +e.w + +e.e, () => canvas(A.houseWallArt({ top: true, edges: e })));
+      return cached('hwt|' + theme + '|' + +e.n + +e.w + +e.e, () => canvas(A.houseWallArt({ top: true, edges: e }, theme)));
     }
     const eave = up === 'roof';
     const cap = !eave && up !== 'housewall';
     // windows on alternate facade cells, never right beside a door
-    const nearDoor = /^door/.test(l) || /^door/.test(r);
+    const nearDoor = !!DOORISH[l] || !!DOORISH[r];
     const window = !nearDoor && (x % 3 !== 0);
-    return cached('hwf|' + eave + cap + window, () => canvas(A.houseWallArt({ eave, capTop: cap, window })));
+    return cached('hwf|' + theme + '|' + eave + cap + window, () => canvas(A.houseWallArt({ eave, capTop: cap, window }, theme)));
   }
-  function roofTile(m, x, y) {
+  function roofTile(m, x, y, theme) {
     const isR = (id) => id === 'roof';
     const o = { ridge: !isR(m.tileAt(x, y - 1)), eave: !isR(m.tileAt(x, y + 1)), l: !isR(m.tileAt(x - 1, y)), r: !isR(m.tileAt(x + 1, y)) };
     o.chimney = o.ridge && !o.l && !o.r && tk().hash(x, y, 227) < 0.25;
-    const key = 'rf|' + +o.ridge + +o.eave + +o.l + +o.r + +o.chimney;
-    return cached(key, () => canvas(A.roofArt(o)));
+    const key = 'rf|' + theme + '|' + +o.ridge + +o.eave + +o.l + +o.r + +o.chimney;
+    return cached(key, () => canvas(A.roofArt(o, theme)));
   }
 
   // ------------------------------------------------------------ liquids
@@ -272,7 +317,7 @@
       return t.frames(nf, (f) => {
         const b = A.groundArt(id, f);
         const fl = A.floorBuf(bank);
-        const lipCol = id === 'lava' ? 0x2a1410 : id === 'poison' ? 0x1c0c24 : 0x0a1840;
+        const lipCol = id === 'lava' ? 0x2a1410 : id === 'poison' ? 0x1c0c24 : id === 'bog' ? 0x0e1410 : 0x0a1840;
         if (!N) {
           // the bank's edge and the shadowed wall of the basin
           for (let x0 = 0; x0 < 16; x0++) {
@@ -282,7 +327,7 @@
         }
         if (!W) for (let y0 = 0; y0 < 16; y0++) { b.set(0, y0, lipCol); b.set(1, y0, t.mix(b.get(1, y0), lipCol, 0.4)); }
         if (!E) for (let y0 = 0; y0 < 16; y0++) { b.set(15, y0, lipCol); }
-        if (!S) for (let x0 = 0; x0 < 16; x0++) { b.set(x0, 15, id === 'water' ? ((x0 + f) % 3 ? 0xd0e8ff : 0x88b8f0) : id === 'lava' ? 0xffe070 : 0xc090e0); }
+        if (!S) for (let x0 = 0; x0 < 16; x0++) { b.set(x0, 15, id === 'water' ? ((x0 + f) % 3 ? 0xd0e8ff : 0x88b8f0) : id === 'lava' ? 0xffe070 : id === 'bog' ? ((x0 + f) % 4 ? 0x5a6c5c : 0x7a8c78) : 0xc090e0); }
         return b;
       });
     });
@@ -317,11 +362,12 @@
   // ------------------------------------------------------------ public
   A.localTile = function (map, x, y) {
     const id = map.tileAt(x, y);
-    const theme = map.theme && A.THEME_DEFS[map.theme] ? map.theme : 'generic';
-    if (WALL[id]) return id.startsWith('door') ? doorTile(map, x, y, id, theme) : wallTile(map, x, y, id, theme);
+    const theme = A.themeAt(map, x, y);
+    if (id === 'secret_wall') return secretTile(map, x, y, theme);
+    if (WALL[id]) return DOORISH[id] ? doorTile(map, x, y, id, theme) : wallTile(map, x, y, id, theme);
     if (GROUND[id]) return groundTile(map, x, y, id, theme);
-    if (id === 'housewall') return houseWallTile(map, x, y);
-    if (id === 'roof') return roofTile(map, x, y);
+    if (id === 'housewall') return houseWallTile(map, x, y, theme);
+    if (id === 'roof') return roofTile(map, x, y, theme);
     if (LIQUID[id]) return liquidTile(map, x, y, id, theme);
     if (id in A.DEFAULT_FLOOR) return objectTile(map, x, y, id, theme);
     if (id === 'pillar' || id === 'rock') {

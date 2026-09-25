@@ -986,5 +986,33 @@
   // ------------------------------------------------------------ registry
   for (const id in S) R.Gfx.def('mon:' + id, S[id]);
   const A = (R.Art = R.Art || {});
-  A.Postgame = { SPRITES: Object.keys(S) };
+  const SIZES = { boss_abyss: [128, 112], rare_prism: [48, 48], void_wraith: [48, 48], chaos_beast: [64, 64] };
+  /**
+   * Composition anchors (DESIGN §9.4.3, pixel coordinates of the finished sprite) for the
+   * two post-game base sprites: 虚無の騎士 void_1..3 and 混沌の獣 chaos_1..3 get their
+   * crown / cape / aura / crystals parts from R.Art.compose (A14a). Added key by key, and
+   * only where monsters_parts.js has not already defined that base.
+   */
+  const ANCHORS = {
+    void_wraith: {
+      head: [24, 4], headW: 12, brow: [24, 8], eyes: [[20, 11], [27, 11]], mouth: [24, 16], neck: [24, 19],
+      back: [24, 20], body: [24, 25], hand: [14, 29], hand2: [40, 31], tail: [24, 42], feet: [24, 46],
+    },
+    chaos_beast: {
+      head: [32, 17], headW: 20, brow: [32, 20], eyes: [[25, 28], [39, 28], [27, 21], [37, 21], [32, 19]], mouth: [32, 40], neck: [32, 45],
+      back: [32, 25], body: [32, 47], hand: [12, 54], hand2: [51, 54], tail: [55, 34], feet: [32, 62],
+    },
+  };
+  const AN = (A.MON_ANCHORS = A.MON_ANCHORS || {});
+  for (const id in ANCHORS) if (!AN[id]) AN[id] = ANCHORS[id];
+  // monsters_compose.js sorts before this file and lists the void_ / chaos_ lineage in
+  // R.Art.PENDING while these two bases are not registered yet; now they are, so those
+  // entries are stale (only rows built on these two bases are removed)
+  if (A.PENDING) {
+    for (let i = A.PENDING.length - 1; i >= 0; i--) {
+      const row = A.MON_COMPOSE && A.MON_COMPOSE[String(A.PENDING[i]).replace(/^mon:/, '')];
+      if (row && ANCHORS[row[0]] && R.Gfx.has('mon:' + row[0])) A.PENDING.splice(i, 1);
+    }
+  }
+  A.Postgame = { SPRITES: Object.keys(S), SIZES, ANCHORS, BASES: ['void_wraith', 'chaos_beast'] };
 })(window.RPG);

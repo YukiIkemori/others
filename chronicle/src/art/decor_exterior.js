@@ -379,7 +379,40 @@
       pal: { k: INK, y: GOLD[4], G: GOLD[2] },
     },
   };
-  const PANEL = { weapon: [0xf2e4be, 0xfcf4dc, 0xd2bc8c], armor: [0xf2e4be, 0xfcf4dc, 0xd2bc8c], item: [0xf2e4be, 0xfcf4dc, 0xd2bc8c],
+  // Chronicle: the tavern (a foaming tankard) and the magic shop (a star over a staff)
+  SIGN_ICON.tavern = {
+    rows: [
+      '..wwwww...',
+      '.wWwwwWw..',
+      'kwwwwwwwk.',
+      'kYyYYYYkkk',
+      'kyYYYyYk.k',
+      'kYYYYYYk.k',
+      'kyYYyYYk.k',
+      'kYYYYYYkkk',
+      'kyYYYYYk..',
+      'kGGGGGGk..',
+      '.kkkkkk...',
+    ],
+    pal: { k: INK, w: 0xf4f0e4, W: 0xffffff, Y: 0xd89a2c, y: 0xf4c460, G: 0x8c5a14 },
+  };
+  SIGN_ICON.magic = {
+    rows: [
+      '.....y....',
+      '....yWy...',
+      '.yyyYWYyy.',
+      '..yYWWYy..',
+      '...yYYy...',
+      '..yY.kYy..',
+      '..y.kbk.y.',
+      '....kbk...',
+      '....kBk...',
+      '....kbk...',
+      '.....k....',
+    ],
+    pal: { k: INK, y: GOLD[3], Y: GOLD[4], W: GOLD[5], b: 0x9c7ad0, B: 0x6c4ca0 },
+  };
+  const PANEL = { tavern: [0x6c4424, 0x8c5c34, 0x4c2c14], magic: [0x24305c, 0x3a4a84, 0x141c40], weapon: [0xf2e4be, 0xfcf4dc, 0xd2bc8c], armor: [0xf2e4be, 0xfcf4dc, 0xd2bc8c], item: [0xf2e4be, 0xfcf4dc, 0xd2bc8c],
     inn: [0xf2e4be, 0xfcf4dc, 0xd2bc8c], church: [0xdce6f4, 0xf6faff, 0xaebcd4] };
   function shopSign(kind) {
     const L = buf(16, 32);
@@ -854,7 +887,7 @@
   def('decor:flowerbed', () => flowerbed({ l: false, r: false, u: false, d: false }, 0, 0, 0, 1));
   def('decor:hedge', () => hedge({ l: false, r: false, u: false, d: false }, 0, 0));
   def('decor:lamp', () => [0, 1, 2, 3].map(lamp));
-  for (const k of ['item', 'weapon', 'armor', 'inn', 'church']) def('decor:sign_' + k, () => shopSign(k));
+  for (const k of ['item', 'weapon', 'armor', 'inn', 'church', 'tavern', 'magic']) def('decor:sign_' + k, () => shopSign(k));
   def('decor:stall', () => stall({ l: false, r: false }, 0, 0, 0));
   def('decor:fountain', () => fountainPieces(1, 1)['0,0']);
   def('decor:cart', () => cart(0));
@@ -863,6 +896,6 @@
   def('decor:well_small', () => wellSmall());
 
   /** ids drawn by this file (sheet tool) */
-  A.DECOR_EXTERIOR = ['flowerbed', 'hedge', 'lamp', 'sign_item', 'sign_weapon', 'sign_armor', 'sign_inn', 'sign_church',
+  A.DECOR_EXTERIOR = ['flowerbed', 'hedge', 'lamp', 'sign_item', 'sign_weapon', 'sign_armor', 'sign_inn', 'sign_church', 'sign_tavern', 'sign_magic',
     'stall', 'fountain', 'cart', 'haystack', 'bush', 'well_small'];
 })(window.RPG);

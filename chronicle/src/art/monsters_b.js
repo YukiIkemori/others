@@ -1522,4 +1522,10 @@
   for (const id in S) R.Gfx.def('mon:' + id, S[id]);
   const A = (R.Art = R.Art || {});
   A.monstersB = { ids: Object.keys(SIZES), sizes: SIZES };
+  // shared 2.5-D scene toolkit (monsters_c.js and other art modules reuse it
+  // inside their factories; look it up lazily: `const T = R.Art.MonScene`)
+  A.MonScene = {
+    Scene, mat, ramp, mix, darken, hash, clamp, stamp, stampM, shadeLine, shave, finish, flame, paintFlame,
+    texScales, texFur, texStone, sym, OUT, INK, WHITE,
+  };
 })(window.RPG);

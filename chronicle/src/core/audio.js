@@ -22,10 +22,55 @@
 // Patterns: R bass  T 3rd  F 5th  S 7th/6th  N 9th  O octave  A approach to the
 //       next bass · a-f voiced chord notes (low→high) · C whole voicing · r rest
 //       ' up / , down an octave · lengths like MML · l8 · q1-8 gate · ! accent.
+// Shared motifs: R.Audio.MOTIFS = {name: 'mml'} are macros every track can use
+//       ($TELLER …); a track's own defs win over a motif of the same name.
+//
+// Chronicle (DESIGN §11.10 / §11.11.4):
+//   R.Audio.IDS      = {bgm[32], jingles[11], sfx[62]} — the normative id lists
+//   R.Audio.FALLBACK = {bgm, jingles, sfx}: id → stand-in used while an id has no
+//                      definition (a content file failed to load); R.Audio.PENDING
+//                      lists the ids currently served by a stand-in (push only)
+//   R.Audio.duck(db, frames) — dip the music bus briefly (glimmer ピコーン)
 (function (R) {
   'use strict';
   const DB = R.DB;
   const TPW = 192; // ticks per whole note (quarter 48, 8th 24, triplet 8th 16)
+  const MOTIFS = {}; // shared MML / chord macros (filled by src/audio/*.js)
+
+  // ============================================================ id lists (DESIGN §11.11.4)
+  const words = (s) => s.trim().split(/\s+/);
+  const IDS = {
+    bgm: words(`title overworld sea town village castle shrine ending dungeon cave tower pyramid ice
+      volcano lastdungeon battle boss lastboss valzard tavern home rival tension sorrow boss2 rarebattle
+      superboss postgame forest ghost hollowking legend`),
+    jingles: words('victory levelup item keyitem inn save gameover rare superrare chapter recruit'),
+    sfx: words(`cursor confirm confirm_soft cancel buzzer menu_open attack hit crit miss enemy_attack hurt
+      magic fire ice thunder wind holy dark earth water heal revive buff debuff status poison sleep death
+      enemy_die boss_die escape stairs door locked chest item gold step_damage ship bump warp teleport
+      steal jump breath roar shake glimmer golden light freeze burn quill page swap bell unlock arrow
+      lash parry secret`),
+  };
+  // stand-ins (DESIGN §11.10.3 / §11.10.5 「代わり」); chains resolve (valzard → boss2 → boss)
+  const FALLBACK = {
+    bgm: {
+      valzard: 'boss2', hollowking: 'boss2', tavern: 'town', home: 'village', rival: 'boss', tension: 'dungeon',
+      sorrow: 'shrine', boss2: 'boss', rarebattle: 'battle', superboss: 'lastboss', postgame: 'lastdungeon',
+      forest: 'cave', ghost: 'dungeon', legend: 'shrine',
+    },
+    jingles: { superrare: 'rare', chapter: 'keyitem', recruit: 'item' },
+    sfx: {
+      glimmer: 'magic', golden: 'item', light: 'holy', freeze: 'ice', burn: 'fire', quill: 'item', page: 'cursor',
+      swap: 'confirm_soft', bell: 'warp', unlock: 'door', arrow: 'attack', lash: 'attack', parry: 'crit', secret: 'door',
+    },
+  };
+  function standIn(table, reg, id) {
+    for (let k = 0, x = id; k < 6; k++) {
+      x = table[x];
+      if (!x) return null;
+      if (reg[x]) return x;
+    }
+    return null;
+  }
   const LOOKAHEAD = 0.12;
   const TICK_MS = 25;
   const PC = { c: 0, d: 2, e: 4, f: 5, g: 7, a: 9, b: 11 };
@@ -406,12 +451,12 @@
   // ============================================================ compile a track
   const cache = {};
   function compile(id) {
-    const d = DB.music[id];
+    const d = DB.music[id] || DB.music[standIn(FALLBACK.bgm, DB.music, id) || standIn(FALLBACK.jingles, DB.music, id)];
     if (!d) return null;
     if (cache[id] && cache[id].src === d) return cache[id];
     const warns = [];
     const bar = meterTicks(d.meter);
-    const defs = d.defs || {};
+    const defs = Object.assign({}, MOTIFS, d.defs || {});
     const prog = d.chords ? parseProg(d.chords, bar, defs, warns) : null;
     const scale = keyScale(d.key);
     const parts = d.ch.map((c, ci) => {
@@ -521,6 +566,12 @@
     celesta: { fm: [4, 1.6, 0.25], env: [0.002, 1.1, 0, 0.6], vol: 0.25 },
     marimba: { osc: [{ w: 'sine' }, { w: 'sine', mul: 4, vol: 0.4, dec: 0.05 }], env: [0.002, 0.55, 0, 0.18], vol: 0.37 },
     glock: { osc: [{ w: 'sine' }, { w: 'sine', mul: 2.76, vol: 0.35, dec: 0.3 }, { w: 'sine', mul: 5.4, vol: 0.2, dec: 0.1 }], env: [0.001, 1.5, 0, 0.8], vol: 0.22 },
+    // music box (オルゴール): a comb tine — pure fundamental with a slow beat, a quick
+    // metallic partial; warpbox = the same box wound down (slow pitch wobble)
+    musicbox: { osc: [{ w: 'sine' }, { w: 'sine', det: 6, vol: 0.55 }, { w: 'sine', mul: 3, vol: 0.28, dec: 0.1 }, { w: 'sine', mul: 5.8, vol: 0.1, dec: 0.035 }], env: [0.001, 1.3, 0, 0.55], vol: 0.2 },
+    warpbox: { osc: [{ w: 'sine' }, { w: 'sine', det: -9, vol: 0.6 }, { w: 'sine', mul: 3, vol: 0.25, dec: 0.12 }], env: [0.001, 1.5, 0, 0.6], vol: 0.21, vib: [2.6, 28, 0] },
+    // swell: a pad that fades in over the whole note and stops dead (tape played backwards)
+    swell: { osc: [{ w: 'sawtooth', det: -7 }, { w: 'triangle', det: 7, vol: 0.9 }], lp: { f: 1500, q: 0.6 }, env: [0.85, 0.1, 1, 0.03], vol: 0.13 },
     // bass
     bass: { osc: [{ w: 'bass' }], lp: { f: 800, q: 1.4, env: [2400, 0.004, 0.14] }, env: [0.004, 0.4, 0.6, 0.06], vol: 0.24 },
     tri: { osc: [{ w: 'triangle' }], env: [0.004, 0.2, 0.85, 0.05], vol: 0.2 },
@@ -576,12 +627,22 @@
         this.master.connect(L); L.connect(dest);
       } else this.master.connect(dest);
       this.music = ctx.createGain();
+      this.duckG = ctx.createGain(); // R.Audio.duck(): short dips under a showcase SFX
       const warm = ctx.createBiquadFilter();
       warm.type = 'lowpass'; warm.frequency.value = 11500; warm.Q.value = 0.5;
-      this.music.connect(warm); warm.connect(this.master);
+      this.music.connect(this.duckG); this.duckG.connect(warm); warm.connect(this.master);
       this.sfxBus = ctx.createGain();
       this.sfxBus.connect(this.master);
       this.sfxEcho = makeEcho(ctx, this.sfxBus, { time: 0.09, fb: 0.3, wet: 0.5, lp: 4500 });
+    }
+    /** dip the music by `db` (negative) for `hold` s from `t`, recovering over 0.25 s */
+    duck(db, hold, t) {
+      const g = this.duckG.gain, now = this.ctx.currentTime, at = Math.max(now, t != null ? t : now);
+      const lv = Math.pow(10, Math.min(0, db) / 20);
+      holdParam(g, at);
+      g.linearRampToValueAtTime(lv, at + 0.03);
+      g.setValueAtTime(lv, at + 0.03 + Math.max(0, hold));
+      g.linearRampToValueAtTime(1, at + 0.03 + Math.max(0, hold) + 0.25);
     }
     setWave(osc, w) {
       if (w === 'sine' || w === 'square' || w === 'sawtooth' || w === 'triangle') { osc.type = w; return; }
@@ -940,6 +1001,8 @@
     }
     wet(v) { this.send.gain.value = v; return this; }
     gain(v) { this.out.gain.value = v; return this; }
+    /** dip the music under this sound: S.duck(db, holdSeconds, t) */
+    duck(db, hold, t) { this.mx.duck(db, hold, this.t0 + (t || 0)); return this; }
   }
   function playSfx(mx, def, t) {
     const c = mx.ctx, out = c.createGain(), send = c.createGain();
@@ -1000,8 +1063,19 @@
     if (ctx.state !== 'running' && ctx.state !== 'closed') { try { ctx.resume(); } catch (e) { /* ignore */ } }
   }
 
+  const known = (id) => !!(DB.music[id] || standIn(FALLBACK.bgm, DB.music, id) || standIn(FALLBACK.jingles, DB.music, id));
+  const sfxDef = (id) => DB.sfx[id] || DB.sfx[standIn(FALLBACK.sfx, DB.sfx, id)];
+  const prevA = R.Audio; // keep ids other files pushed onto PENDING before this file ran
   const A = (R.Audio = {
     TPW, INST, DRUMS, Mixer, Playback, compile, playSfx, parseMML, parseProg, parseChord, meterTicks,
+    IDS, FALLBACK, MOTIFS,
+    PENDING: (prevA && prevA.PENDING) || [],
+    /** the id that actually sounds for `id` (itself, its stand-in, or null) */
+    resolve(kind, id) {
+      const reg = kind === 'sfx' ? DB.sfx : DB.music;
+      if (reg[id]) return id;
+      return standIn(kind === 'sfx' ? FALLBACK.sfx : kind === 'jingle' || kind === 'jingles' ? FALLBACK.jingles : FALLBACK.bgm, reg, id);
+    },
     get current() { return cur ? cur.id : null; },
     get ready() { return !!mx; },
     get context() { return ctx; },
@@ -1039,7 +1113,7 @@
     /** loop a track; the same id already current → no-op. opts.fade (frames) crossfades */
     playBGM(id, opts) {
       if (!id) { A.stopBGM(opts && opts.fade); return; }
-      if (!DB.music[id]) { warnOnce('bgm:' + id, `audio: unknown BGM '${id}'`); return; }
+      if (!known(id)) { warnOnce('bgm:' + id, `audio: unknown BGM '${id}'`); return; }
       if (cur && cur.id === id) { if (mx && !pb && !jin) startCur(); return; }
       const f = opts && opts.fade ? opts.fade / 60 : 0;
       stopPb(f || 0.06);
@@ -1069,7 +1143,7 @@
     },
     /** fanfare: pauses BGM, plays once, resumes BGM; resolves when it ends */
     playJingle(id) {
-      if (!mx || !DB.music[id] || !(running() || Date.now() - initAt < 1500)) return Promise.resolve();
+      if (!mx || !known(id) || !(running() || Date.now() - initAt < 1500)) return Promise.resolve();
       const song = compile(id);
       if (!song) return Promise.resolve();
       if (jin) finishJingle(jin, false);
@@ -1084,7 +1158,7 @@
     },
     sfx(id) {
       if (!mx || !(running() || Date.now() - initAt < 1500)) return;
-      const def = DB.sfx[id];
+      const def = sfxDef(id);
       if (!def) { warnOnce('sfx:' + id, `audio: unknown sfx '${id}'`); return; }
       const now = ctx.currentTime;
       if (lastSfx[id] != null && now - lastSfx[id] < 0.03 && now >= lastSfx[id]) return;
@@ -1092,6 +1166,11 @@
       const list = (liveSfx[id] = (liveSfx[id] || []).filter((x) => x.end > now));
       if (list.length >= 3) list.shift().kill(now);
       list.push(playSfx(mx, def, now + 0.005));
+    },
+    /** dip the BGM by `db` (e.g. -6) for `frames` (60 fps), then recover in 0.25 s. No-op when locked */
+    duck(db, frames) {
+      if (!mx || !running()) return;
+      mx.duck(db != null ? +db : -6, (frames != null ? +frames : 18) / 60);
     },
     setVolumes(bgm, sfx) {
       if (bgm != null) vols.bgm = +bgm;
@@ -1144,7 +1223,7 @@
       o = o || {};
       const m = new Mixer(octx, octx.destination, { limiter: !!o.limiter });
       m.sfxBus.gain.value = o.volume != null ? o.volume : 1;
-      return { start: 0.02, end: playSfx(m, DB.sfx[id], 0.02).end };
+      return { start: 0.02, end: playSfx(m, sfxDef(id), 0.02).end };
     },
     renderNote(octx, inst, midi, dur, vel) {
       const m = new Mixer(octx, octx.destination, { limiter: false });
@@ -1152,4 +1231,24 @@
       m.voice(INST[inst], m.music, midi, 0.02, dur, vel || 1);
     },
   });
+
+  // After every file has loaded (main.js / tools call R.runDataHooks): give every listed id
+  // that still has no definition its stand-in (the same object / a forwarding SFX) and list it
+  // in PENDING, so callers never hit silence and qa can count what is left (DESIGN §11.1.3).
+  function registerStandIns() {
+    const add = (kind, list, reg, table) => {
+      for (const id of list) {
+        if (reg[id]) continue;
+        const to = standIn(table, reg, id);
+        if (!to) continue;
+        if (kind === 'sfx') reg[id] = (S) => reg[to](S); else reg[id] = reg[to];
+        if (!A.PENDING.includes(id)) A.PENDING.push(id);
+      }
+    };
+    add('bgm', IDS.bgm, DB.music, FALLBACK.bgm);
+    add('jingle', IDS.jingles, DB.music, FALLBACK.jingles);
+    add('sfx', IDS.sfx, DB.sfx, FALLBACK.sfx);
+  }
+  A.registerStandIns = registerStandIns;
+  if (R.onData) R.onData(registerStandIns);
 })(window.RPG);

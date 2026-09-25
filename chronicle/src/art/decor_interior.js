@@ -702,7 +702,9 @@
     }, { f, drop: [1, 0, 0.24] });
   }
 
-  function stove(f) {
+  const SNOWY = { snow: 1, ice: 1, town_snow: 1 };
+  /** kitchen stove (2 frames); strong: the high winter fire of the snow country */
+  function stove(f, strong) {
     return piece(16, 16, (L, t, U, O) => {
       // brick body
       for (let y = 7; y <= 14; y++) for (let x = 1; x <= 14; x++) {
@@ -734,6 +736,12 @@
       const st = f ? [[6, 0], [9, 0]] : [[7, 0], [8, 0]];
       for (const [x, y] of st) O.put(x, y, 0xffffff, 0.55);
       glow(O, 7.5, 13, 4, f ? 0.12 : 0.16);
+      if (strong) {
+        // flames licking out of the mouth and round the cauldron, a wide red glow
+        for (const [x, y] of f ? [[6, 9], [9, 8], [5, 7], [10, 9], [7, 8]] : [[7, 9], [8, 8], [6, 8], [10, 8], [9, 9]]) L.set(x, y, y < 9 ? FIRE[4] : FIRE[3]);
+        L.set(f ? 8 : 7, 7, FIRE[5]);
+        glow(O, 7.5, 10, 7.5, f ? 0.16 : 0.2, 0xff5020);
+      }
     }, { f, contact: [8.5, 14.6, 7.5, 1.4, 0.34] });
   }
 
@@ -1198,7 +1206,7 @@
   /** riser palette (dark → light, 5) for the map's theme / the tile under it */
   function daisPal(m, x, y) {
     if (m && m.tileAt(x, y) === 'carpet') return [RED[0], RED[1], RED[2], RED[3], RED[4]];
-    const th = m && m.theme && A.THEME_DEFS && A.THEME_DEFS[m.theme];
+    const th = m && m.theme && A.THEME_DEFS && A.THEME_DEFS[A.themeOf ? A.themeOf(m.theme) : m.theme];
     if (!th) return [STONE[0], STONE[1], STONE[2], STONE[3], STONE[4]];
     if (!th.fl) return [WOOD[0], WOOD[1], WOOD[2], WOOD[3], WOOD[4]];
     return th.fl.slice(0, 5);
@@ -1244,7 +1252,7 @@
   function daisTop(m, x, y) {
     const id = m.tileAt(x, y);
     if (id === 'carpet' || !A.floorBuf) return null;
-    if (id === 'floor') return 'theme:' + (m.theme && A.THEME_DEFS && A.THEME_DEFS[m.theme] ? m.theme : 'generic');
+    if (id === 'floor') return 'theme:' + (A.themeOf ? A.themeOf(m.theme) : 'generic');
     return R.DB.tiles[id] && R.DB.tiles[id].pass ? id : null;
   }
   function daisAuto(m, x, y) {
@@ -1391,7 +1399,12 @@
   }
 
   // ------------------------------------------------------------ theme-aware wall pieces
-  const STONE_THEMES = { castle: 1, fort: 1, tower: 1, shrine: 1, demon: 1, pyramid: 1, ice: 1, cave: 1, water: 1, volcano: 1 };
+  const STONE_THEMES = { castle: 1, fort: 1, tower: 1, shrine: 1, demon: 1, pyramid: 1, ice: 1, cave: 1, water: 1, volcano: 1,
+    library: 1, oblivion: 1, mine: 1, snow: 1, town_sand: 1, town_snow: 1, town_mine: 1, town_ash: 1, town_star: 1, town_white: 1 };
+  // homes: curtained wooden windows (Chronicle: the manor, the great tree, village houses)
+  const HOMELY = { house: 1, manor: 1, tree: 1, town_roa: 1, town_forest: 1, town_marsh: 1, town_isle: 1 };
+  /** the theme whose art a map uses (fallback chain, DESIGN §11.1.3) */
+  const thm = (m) => (A.themeOf ? A.themeOf(m && m.theme) : (m && m.theme) || 'generic');
   /** window frame ramp (6) from a theme's wall colours, so frames match the masonry */
   function framePal(theme) {
     const th = A.THEME_DEFS && A.THEME_DEFS[theme];
@@ -1400,13 +1413,14 @@
     return [w[0], w[1], w[2], w[3], w[4], tk().shade(w[4], 0.3)];
   }
   function windowAuto(m) {
-    const th = m.theme;
-    if (th === 'house') return cached('win|house', () => windowRect('wood', true));
+    const th = thm(m);
+    if (th === 'ship') return cached('win|ship', () => porthole());
+    if (HOMELY[th]) return cached('win|house', () => windowRect('wood', true));
     if (STONE_THEMES[th]) return cached('win|' + th, () => windowRect(framePal(th), false));
     return null;
   }
   function windowArchAuto(m, x, y) {
-    const th = m.theme, long = y > 0 && !!WALLISH[m.tileAt(x, y - 1)];
+    const th = thm(m), long = y > 0 && !!WALLISH[m.tileAt(x, y - 1)];
     const kind = th === 'shrine' ? 'stained' : th === 'demon' ? 'dark' : 'leaded';
     const S = th === 'demon' || (STONE_THEMES[th] && framePal(th) !== STONE) ? framePal(th) : STONE;
     if (kind === 'leaded' && S === STONE && !long) return null;
@@ -1417,17 +1431,34 @@
   /** banners: long (two tiles) on a wall that continues above; demon colours in the demon castle */
   function bannerAuto(C, kind) {
     return (m, x, y) => {
-      const demon = m.theme === 'demon', long = !!WALLISH[m.tileAt(x, y - 1)] && y > 0;
+      const demon = thm(m) === 'demon' || thm(m) === 'oblivion', long = !!WALLISH[m.tileAt(x, y - 1)] && y > 0;
       if (!demon && !long) return null;
       const col = demon ? (kind === 'tail' ? DEMON_RED : PURPLE) : C;
       return cached('bn|' + kind + '|' + demon + '|' + long, () => banner(col, kind, demon ? 'eye' : null, long));
     };
   }
-  const FIRE_PAL = { castle: STONE, fort: WARM, house: BRICK, tower: STONE, shrine: STONE, demon: [0x140a18, 0x281c34, 0x3c2c4c, 0x524066, 0x6c5884, 0x8c78a4] };
+  const FIRE_PAL = { castle: STONE, fort: WARM, house: BRICK, tower: STONE, shrine: STONE, demon: [0x140a18, 0x281c34, 0x3c2c4c, 0x524066, 0x6c5884, 0x8c78a4],
+    manor: [0x221c26, 0x3a3240, 0x544a5c, 0x6e6478, 0x8a8094, 0xa89eb0], library: STONE, mine: WARM, tree: BRICK,
+    town_roa: WARM, town_forest: BRICK, town_snow: STONE, town_marsh: WARM, town_mine: WARM, town_ash: BRICK, town_star: STONE, town_white: STONE, town_sand: BRICK, town_isle: STONE };
   function fireplaceAuto(m) {
-    const P = FIRE_PAL[m.theme];
+    const th = thm(m), P = FIRE_PAL[th];
     if (!P) return null;
-    return cached('fp|' + m.theme, () => [0, 1, 2].map((f) => fireplace(f, P).canvas()));
+    return cached('fp|' + th, () => [0, 1, 2].map((f) => fireplace(f, P).canvas()));
+  }
+  /** a brass-rimmed porthole (ship interiors) */
+  function porthole() {
+    return cv(piece(16, 16, (L) => {
+      const B = [0x5c3c08, 0x8c6414, 0xbc8c1c, 0xe0b430, 0xf8dc60];
+      for (let y = 2; y <= 13; y++) for (let x = 2; x <= 13; x++) {
+        const d = Math.hypot(x - 7.5, y - 7.5);
+        if (d > 5.6) continue;
+        if (d > 4.3) { L.set(x, y, x + y < 15 ? B[4] : x + y > 16 ? B[1] : B[2]); continue; }
+        const q = (y - 3) / 9;
+        L.set(x, y, q < 0.35 ? GLASS[4] : q < 0.6 ? GLASS[3] : q < 0.75 ? 0x3c6a8c : 0x2c4c6c); // sky and sea
+      }
+      for (const a of [0, 1.57, 3.14, 4.71]) L.set(Math.round(7.5 + Math.cos(a) * 5), Math.round(7.5 + Math.sin(a) * 5), B[0]);
+      L.set(5, 5, 0xffffff); L.set(6, 4, GLASS[5]); L.set(5, 6, GLASS[5]);
+    }, { drop: [1, 1, 0.3] }));
   }
   // floor overlays the floor tile already paints (tiles_auto): nothing to draw on top
   let EMPTY = null;
@@ -1441,7 +1472,7 @@
     const e = inFloor('tile_alt')(m, x, y);
     if (e) return e;
     if (m.tileAt(x, y) !== 'floor' || !A.floorVariant) return null;
-    const th = m.theme && A.THEME_DEFS && A.THEME_DEFS[m.theme] ? m.theme : 'generic';
+    const th = thm(m);
     return cached('alt|' + th + '|' + shadeKey(m, x, y), () => {
       const b = A.floorVariant('theme:' + th, 'alt'), img = new Img(16, 16).buf(b);
       return floorShade(img, m, x, y).canvas();
@@ -1485,6 +1516,11 @@
   };
   for (const id in D) R.Gfx.def('decor:' + id, D[id]);
   A.INTERIOR_DECOR = Object.keys(D);
+  // shared kit for the other decor files (decor_life/outdoor/dungeon.js look it up lazily)
+  A.DecorKit = {
+    Img, piece, cv, contact, dropShadow, glow, grid, panel, scatter, component, edges, ekey, cached, floorShade, NONE_E, shadeKey, thm,
+    P: { INK, SH, WOOD, WALNUT, IRON, STONE, WARM, GOLD, RED, BLUE, GREEN, PURPLE, CLOTH, CREAM, BURLAP, CLAY, BRICK, FIRE, GLASS, STEEL, SKIN, LEAF, GLOW },
+  };
 
   Object.assign(A.decorAuto, {
     rug: rugAuto('rug'),
@@ -1498,6 +1534,7 @@
     banner_blue: bannerAuto(BLUE, 'tail'),
     window_arch: windowArchAuto,
     fireplace: fireplaceAuto,
+    stove: (m) => (SNOWY[thm(m)] ? cached('stove|snow', () => [0, 1].map((f) => stove(f, true).canvas())) : null),
     tile_alt: tileAltAuto,
     crack: inFloor('crack'),
   });

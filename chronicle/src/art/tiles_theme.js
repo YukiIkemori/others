@@ -29,6 +29,31 @@
     demon: { fl: [0x0a0610, 0x1a1224, 0x2a1e38, 0x3a2c4a, 0x4e3e60], floor: 'demon', wl: [0x0e0814, 0x20162c, 0x322444, 0x46345c, 0x5e4878], wall: 'dbricks', door: 'demon', col: 'spike' },
   };
   const WOOD = [0x3c200c, 0x5c3416, 0x7c4c22, 0x9c6632, 0xbc8448, 0xd8a468];
+  // Chronicle theme rows and materials (src/art/tiles_theme_ext.js, loaded before this file)
+  const EXT = A.THEME_EXT || {};
+  Object.assign(TH, EXT.TH || {});
+  for (const k in EXT.TH_PATCH || {}) TH[k] = Object.assign({}, TH[k], EXT.TH_PATCH[k]);
+
+  /**
+   * The theme whose art draws `theme`: itself when it has a row here, else its
+   * R.DB.themes[theme].fallback chain (DESIGN §11.1.3), else 'generic'.
+   */
+  function themeOf(theme) {
+    let th = theme, n = 0;
+    while (th && !TH[th] && n++ < 8) {
+      const d = R.DB.themes && R.DB.themes[th];
+      th = d && d.fallback;
+    }
+    return th && TH[th] ? th : 'generic';
+  }
+  A.themeOf = themeOf;
+  /** is `theme` an outdoor town theme (town, town_*)? streets, lawns and houses outdoors */
+  A.isTownTheme = (theme) => {
+    const th = TH[themeOf(theme)];
+    return !!(th && th.town);
+  };
+  /** outdoor dungeon themes (forest, snow, swamp): extra ground variety */
+  A.isOutdoorTheme = (theme) => { const th = TH[themeOf(theme)]; return !!(th && (th.outdoor || th.town)); };
 
   // ------------------------------------------------------------ helpers
   /** periodic Voronoi over w×h with points pts → per-pixel {id, d1, d2, cx, cy} */
@@ -220,6 +245,7 @@
       return b;
     },
   };
+  Object.assign(FLOOR, EXT.FLOOR || {});
 
   // ------------------------------------------------------------ wall faces
   // face textures are 16x16 (drawn below a cap when the floor is above)
@@ -231,15 +257,17 @@
       for (let i = 0; i < 256; i++) if (b.p[i] === P[0]) b.p[i] = t.hash(i, 2, 5) < 0.5 ? 0x5a0c16 : 0x2e0810;
       return b;
     },
-    plaster(t, P) {
+    plaster(t, P, x, th) {
       const b = t.tile(P[3]);
       for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
         if (t.hash(x, y, 51) < 0.08) b.set(x, y, P[2]);
       }
-      // wainscot (bottom) and a beam post
-      for (let y = 10; y < 16; y++) for (let x = 0; x < 16; x++) b.set(x, y, y === 10 ? WOOD[4] : y === 15 ? WOOD[1] : x % 4 === 3 ? WOOD[2] : WOOD[3]);
-      b.hline(0, 15, 11, WOOD[2]);
-      b.vline(15, 0, 9, WOOD[2]); b.vline(0, 0, 9, WOOD[3]);
+      // wainscot (bottom) and a beam post; a painted band instead of wood where the theme says so
+      const Wn = th && th.wainscot ? [th.wainscot[0], th.wainscot[1], th.wainscot[2], th.wainscot[3], th.wainscot[4]] : WOOD;
+      for (let y = 10; y < 16; y++) for (let x = 0; x < 16; x++) b.set(x, y, y === 10 ? Wn[4] : y === 15 ? Wn[1] : x % 4 === 3 ? Wn[2] : Wn[3]);
+      b.hline(0, 15, 11, Wn[2]);
+      if (th && th.wainscot) { b.vline(15, 0, 9, P[2]); b.vline(0, 0, 9, P[4]); }
+      else { b.vline(15, 0, 9, WOOD[2]); b.vline(0, 0, 9, WOOD[3]); }
       return b;
     },
     rock(t, P) {
@@ -283,13 +311,19 @@
       }
       return b;
     },
-    marble(t, P) {
+    marble(t, P, x, th) {
       const b = bricks(t.tile(), P, 16, 8, { seed: 7 });
-      for (let x = 0; x < 16; x++) { b.set(x, 5, 0x3c64b4); b.set(x, 6, 0x2c4c9c); }
-      for (let x = 1; x < 16; x += 4) b.set(x, 5, 0x78a0e0);
+      const band = th && th.band;
+      const c0 = band ? t.shade(band, 0.1) : 0x3c64b4, c1 = band ? t.mul(band, 0.72) : 0x2c4c9c, c2 = band ? t.shade(band, 0.45) : 0x78a0e0;
+      for (let x = 0; x < 16; x++) { b.set(x, 5, c0); b.set(x, 6, c1); }
+      for (let x = 1; x < 16; x += 4) b.set(x, 5, c2);
       return b;
     },
   };
+  A.THEME_FACE_BASE = FACE;
+  Object.assign(FACE, EXT.FACE || {});
+  // faces that vary along the wall (map column modulo the period)
+  const FACE_PERIOD = { canopy: 4, bark: 3, wallpaper: 5, reeds: 4, hull: 2, shelves: 4, void: 4, logs: 3, timber: 3 };
   // top surface of thick walls (seen from above)
   const TOP = {
     // large dressed blocks seen from above, a notch darker than the lit cap
@@ -330,33 +364,47 @@
     },
   };
   const TOP_OF = { plaster: 'beam', rock: 'rock', iceblock: 'stone' };
+  Object.assign(TOP, EXT.TOP || {});
+  Object.assign(TOP_OF, EXT.TOP_OF || {});
 
   // ------------------------------------------------------------ per theme cache
   const ART = {};
   function art(theme) {
-    theme = TH[theme] ? theme : 'generic';
+    theme = themeOf(theme);
     if (ART[theme]) return ART[theme];
     const t = tk(), th = TH[theme];
     const flPal = th.fl || WOOD.slice(1);
-    const a = { theme, th, WOOD };
+    const a = { theme, th, WOOD, faces: {} };
     a.floor = FLOOR[th.floor](t, th.fl || WOOD);
-    a.face = FACE[th.wall](t, th.wl);
-    if (theme === 'volcano') {
-      // glowing magma seams between the rocks
-      for (let i = 0; i < 256; i++) {
-        if (a.face.p[i] !== th.wl[0]) continue;
-        const h = t.hash(i, 7, 13);
-        if (h < 0.45) a.face.p[i] = h < 0.15 ? 0xff9028 : 0xc83810;
-      }
-    }
-    const topKind = TOP_OF[th.wall] || 'stone';
+    a.period = FACE_PERIOD[th.wall] || 1;
+    a.face = faceAt(a, 0);
+    const topKind = th.top || TOP_OF[th.wall] || 'stone';
     a.top = TOP[topKind](t, th.tp || th.wl);
     a.topKind = topKind;
     // cap = 4 px strip at the top of a face whose upper neighbour is floor
-    a.capColors = topKind === 'rock' ? [th.wl[0], th.wl[2], th.wl[3], th.wl[4]] : topKind === 'beam' ? [WOOD[0], WOOD[3], WOOD[4], WOOD[5]] : [th.wl[0], th.wl[3], th.wl[4], th.wl[th.wl.length - 1]];
+    a.capColors = topKind === 'rock' || topKind === 'snowcap' ? [th.wl[0], th.wl[2], th.wl[3], th.wl[4]]
+      : topKind === 'beam' && th.wall !== 'wallpaper' && th.wall !== 'logs' ? [WOOD[0], WOOD[3], WOOD[4], WOOD[5]]
+        : [th.wl[0], th.wl[3], th.wl[4], th.wl[th.wl.length - 1]];
     a.flPal = flPal;
     ART[theme] = a;
     return a;
+  }
+  /** the wall face of column x (faces with a period vary along the wall) */
+  function faceAt(a, x) {
+    const k = a.period > 1 ? ((x % a.period) + a.period) % a.period : 0;
+    let f = a.faces[k];
+    if (f) return f;
+    const t = tk(), th = a.th;
+    f = FACE[th.wall](t, th.wl, k, th);
+    if (a.theme === 'volcano' || a.theme === 'town_ash') {
+      // glowing magma seams between the rocks
+      for (let i = 0; i < 256; i++) {
+        if (f.p[i] !== th.wl[0]) continue;
+        const h = t.hash(i, 7, 13);
+        if (h < (a.theme === 'volcano' ? 0.45 : 0.12)) f.p[i] = h < 0.05 || (a.theme === 'volcano' && h < 0.15) ? 0xff9028 : 0xc83810;
+      }
+    }
+    return (a.faces[k] = f);
   }
   A.themeArt = art;
   A.THEME_DEFS = TH;
@@ -387,6 +435,11 @@
   };
   const MOSSY = { town: 1, cave: 1, fort: 1, water: 1, generic: 1, pyramid: 0 };
   const FORMAL = { castle: 1, shrine: 1, tower: 1 };
+  Object.assign(ALT, EXT.ALT || {});
+  Object.assign(MOSSY, EXT.MOSSY || {});
+  Object.assign(FORMAL, EXT.FORMAL || {});
+  const VARF = EXT.VARF || {};
+  const MOSS_OF = EXT.MOSS_OF || {};
   const D4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
   /** flood-fill the non-separator pixels of a 16x16 texture on the torus */
   function regions(b, isSep) {
@@ -421,7 +474,7 @@
     if (kind === 'marble' || kind === 'ice') return (v) => v === c(P[1]);
     if (kind === 'demon') return (v) => v === 0x3c0a10;
     if (kind === 'basalt') return (v) => v === c(P[0]) || v === 0x6a1c0c;
-    if (kind === 'dirt') return () => false;
+    if (kind === 'dirt' || VARF[kind] || kind === 'roots') return () => false;
     return (v) => v === c(P[0]);
   }
   /** pixels of region r that touch a separator */
@@ -476,9 +529,17 @@
       }
       return b;
     }
+    if (VARF[kind]) return VARF[kind](b, P, v, rng, t, theme);
+    if (kind === 'roots') {
+      // heartwood: a darker ring knot, a resin streak or a split along the grain
+      if (v === 1) { const cx = 3 + Math.floor(rng() * 10), cy = 3 + Math.floor(rng() * 10); b.set(cx, cy, P[0]); b.set(cx + 1, cy, P[1]); b.set(cx - 1, cy, P[1]); b.set(cx, cy - 1, P[1]); b.set(cx, cy + 1, P[1]); }
+      else if (v === 2) { const y = 2 + Math.floor(rng() * 12); for (let x = 2; x < 12; x++) if (rng() < 0.8) b.set(x, y + (x > 7 ? 1 : 0), P[1]); }
+      else if (v === 3) { const x = 4 + Math.floor(rng() * 8), y = 4 + Math.floor(rng() * 8); b.set(x, y, 0xd8b048); b.set(x + 1, y, 0xb08830); b.set(x, y + 1, 0x906c20); }
+      return b;
+    }
     if (kind === 'dirt') {
       // a fresh speckle / pebble layout (the noise is shared, so it still tiles)
-      if (theme !== 'town') { const nb = FLOOR.dirt(t, P, 1 + (seed & 0xffff)); b.p.set(nb.p); }
+      if (!A.isTownTheme(theme)) { const nb = FLOOR.dirt(t, P, 1 + (seed & 0xffff)); b.p.set(nb.p); }
       if (v === 1) for (let k = 0; k < 3; k++) { const x = Math.floor(rng() * 14) + 1, y = Math.floor(rng() * 14) + 1; b.set(x, y, P[3]); b.set(x + 1, y, P[4] || P[3]); b.set(x, y + 1, P[1]); b.set(x + 1, y + 1, P[0]); }
       else if (v === 2) { const cx = 4 + rng() * 8, cy = 4 + rng() * 8; b.each((x, y, c) => (((x - cx) / 4.5) ** 2 + ((y - cy) / 3) ** 2 < 1 && (x + y) % 2 === 0 ? t.mul(c, 0.86) : undefined)); }
       else if (v === 3) { const x = 3 + Math.floor(rng() * 9), y = 3 + Math.floor(rng() * 9); b.set(x, y, P[4] || P[3]); b.set(x + 1, y - 1, P[4] || P[3]); b.set(x + 2, y, P[3]); b.set(x + 1, y, P[1]); b.set(x + 3, y + 1, P[3]); }
@@ -516,7 +577,7 @@
         for (let i = 0; i < 256; i++) if (isSep(b.p[i])) grout.push(i);
         if (grout.length) {
           const i0 = grout[Math.floor(rng() * grout.length)];
-          const MOSS = [0x2c5a24, 0x3c7a2c, 0x5a9a3c];
+          const MOSS = MOSS_OF[theme] || [0x2c5a24, 0x3c7a2c, 0x5a9a3c];
           for (let k = 0; k < 7; k++) {
             const x = (i0 & 15) + Math.floor(rng() * 5) - 2, y = (i0 >> 4) + Math.floor(rng() * 3) - 1;
             const j = (y & 15) * 16 + (x & 15);
@@ -581,23 +642,31 @@
   A.floorHasAlt = (gname) => gname.startsWith('theme:') || gname === 'wood';
   A.floorHasCrack = (gname) => gname.startsWith('theme:') || gname === 'wood' || gname === 'dirt';
 
-  /** wall face (+cap when capTop) as a Buf */
-  function wallFace(a, capTop) {
-    const t = tk(), b = a.face.clone(), C = a.capColors;
+  const CAPS = EXT.CAPS || {}, FACE_AT = EXT.FACE_AT || {}, TOP_EDGE = EXT.TOP_EDGE || {};
+  /** wall face (+cap when capTop) of map column x as a Buf */
+  function wallFace(a, capTop, x) {
+    const t = tk(), b = faceAt(a, x || 0).clone(), C = a.capColors, kind = a.th.wall;
     if (capTop) {
-      for (let x = 0; x < 16; x++) {
-        b.set(x, 0, C[0]); b.set(x, 1, C[2]); b.set(x, 2, (x + 1) % 4 ? C[2] : C[1]); b.set(x, 3, C[3]);
+      if (CAPS[kind]) CAPS[kind](b, a.th.wl, t, x || 0);
+      else {
+        for (let x = 0; x < 16; x++) {
+          b.set(x, 0, C[0]); b.set(x, 1, C[2]); b.set(x, 2, (x + 1) % 4 ? C[2] : C[1]); b.set(x, 3, C[3]);
+        }
+        for (let x = 0; x < 16; x++) b.set(x, 4, t.mul(b.get(x, 4), 0.7));
       }
-      for (let x = 0; x < 16; x++) b.set(x, 4, t.mul(b.get(x, 4), 0.7));
-    } else {
+      if (a.th.wall === 'snowrock') for (let x = 0; x < 16; x++) { b.set(x, 0, 0xc8d4e2); b.set(x, 1, 0xffffff); b.set(x, 2, 0xf0f4f8); if (t.hash(x, 0, 71) < 0.5) b.set(x, 3, 0xe0e8f0); }
+      if (a.th.roofSnow || a.th.snowy) for (let x = 0; x < 16; x++) { b.set(x, 0, 0xe8eef4); if (t.hash(x, 1, 73) < 0.5) b.set(x, 1, 0xd8e0ea); }
+    } else if (!CAPS[kind] || kind === 'wallpaper' || kind === 'shelves') {
       for (let x = 0; x < 16; x++) b.set(x, 0, C[3]);
       for (let x = 0; x < 16; x++) b.set(x, 1, t.mul(b.get(x, 1), 0.75));
     }
+    if (FACE_AT[kind]) FACE_AT[kind](b, t, a.th.wl, x || 0, capTop);
     return b;
   }
   /** wall top (thick wall interior); edges {n,w,e,s}: true where the neighbour is not wall */
   function wallTop(a, e) {
     const t = tk(), b = a.top.clone(), C = a.capColors;
+    if (TOP_EDGE[a.topKind]) { TOP_EDGE[a.topKind](b, e, a.th.wl, t); return b; }
     const ink = C[0];
     if (e.n) b.hline(0, 15, 0, ink);
     if (e.w) b.vline(0, 0, 15, ink);
@@ -608,8 +677,54 @@
     if (e.n) for (let x = e.w ? 1 : 0; x < (e.e ? 15 : 16); x++) b.set(x, 1, C[3]);
     return b;
   }
-  A.wallFace = (theme, capTop) => wallFace(art(theme), capTop);
+  A.wallFace = (theme, capTop, x) => wallFace(art(theme), capTop, x);
   A.wallTop = (theme, edges) => wallTop(art(theme), edges || {});
+
+  // ------------------------------------------------------------ secret passages
+  // A secret wall is the theme wall itself plus a hint you notice only when you
+  // look for it: a fine crack and a slightly off-colour patch (DESIGN §3.3.10-11).
+  // Once found (R.Game.secrets) the crack is plain and a dotted outline of the
+  // opening shows on the face (a 1px line of lit dots along the passage).
+  /** paint the hint onto a wall Buf; mode 'face' | 'top'; found = already discovered */
+  function secretHint(a, b, mode, found, x) {
+    const t = tk(), P = a.th.wl, dark = t.mul(P[0], 0.8), lit = P[Math.min(P.length - 1, 4)];
+    const s = ((x || 0) * 7) & 15;
+    const y0 = mode === 'top' ? 3 : 7;
+    // colour unevenness: a soft patch one step off
+    for (let y = y0; y < Math.min(16, y0 + 6); y++) for (let i = 4; i < 12; i++) {
+      const e = ((i - 7.5) / 4) ** 2 + ((y - y0 - 2.5) / 3) ** 2;
+      if (e < 1 && (i + y) % 2 === 0) b.set(i, y, t.mul(b.get(i, y), found ? 0.84 : 0.9));
+    }
+    // the crack (short and thin until found)
+    const path = [[6, 0], [7, 1], [7, 2], [8, 3], [8, 4], [9, 5], [8, 6], [9, 7]];
+    const n = found ? path.length : 5;
+    for (let k = 0; k < n; k++) {
+      const [px, py] = path[k];
+      const X = px + (s % 3) - 1, Y = y0 + py;
+      if (Y > 15) break;
+      b.set(X, Y, dark);
+      if (found && Y + 1 < 16) b.set(X + 1, Y, t.mix(b.get(X + 1, Y), lit, 0.5));
+    }
+    if (found) {
+      b.set(10, y0 + 5, dark); b.set(11, y0 + 6, dark);
+      // dotted outline of the opening (1px dots, every other pixel)
+      const col = t.shade(lit, 0.35);
+      if (mode === 'face') {
+        for (let i = 3; i <= 12; i += 2) b.set(i, 15, col);
+        for (let y = 6; y <= 14; y += 2) { b.set(3, y, col); b.set(12, y, col); }
+        for (let i = 5; i <= 10; i += 2) b.set(i, 5, col);
+      } else {
+        for (let y = 0; y < 16; y += 2) { b.set(3, y, col); b.set(12, y, col); }
+      }
+    }
+    return b;
+  }
+  A.secretWallArt = function (theme, o) {
+    o = o || {};
+    const a = art(theme);
+    const b = o.top ? wallTop(a, o.edges || {}) : wallFace(a, o.capTop !== false, o.x || 0);
+    return secretHint(a, b, o.top ? 'top' : 'face', !!o.found, o.x || 0);
+  };
 
   // ------------------------------------------------------------ torch
   function torch(b, f, x0) {
@@ -632,6 +747,15 @@
     b.set(x0 + 1, 4, 0xfff8d0);
   }
   A.drawTorch = torch;
+  const TORCH = EXT.TORCH || {};
+  /** the wall light of a theme (torch, glowing mushrooms, lantern, lamp, wisp) onto a face Buf */
+  function themeTorch(a, b, f) {
+    const st = a.th.torch;
+    if (st && TORCH[st]) TORCH[st](b, f, tk());
+    else torch(b, f);
+    return b;
+  }
+  A.themeTorch = (theme, b, f) => themeTorch(art(theme), b, f);
 
   // ------------------------------------------------------------ doors
   const LEAF = {
@@ -700,11 +824,114 @@
     return b;
   }
   /** door in a theme wall face; kind: 'door' | 'door_silver' | 'door_gold' */
-  function door(a, kind, capTop, leafName) {
-    return drawDoor(wallFace(a, capTop), kind, capTop ? 4 : 2, leafName || a.th.door);
+  function door(a, kind, capTop, leafName, x) {
+    return drawDoor(wallFace(a, capTop, x), kind, capTop ? 4 : 2, leafName || a.th.door);
   }
   A.drawDoor = drawDoor;
-  A.doorArt = (theme, kind, capTop, leaf) => door(art(theme), kind, capTop, leaf);
+  A.doorArt = (theme, kind, capTop, leaf, x) => door(art(theme), kind, capTop, leaf, x);
+
+  // ------------------------------------------------------------ closed doors
+  // lockdoor: the theme's door barred with iron and a padlock, or sealed with the
+  // theme's mark (DESIGN §11.2.9); rock_door: a round stone slab rolled across a
+  // doorway cut in the theme's own rock (tombs, mines, the volcano).
+  const BRASS = [0x3c2808, 0x6c4c10, 0x9c7418, 0xc89c28, 0xf0cc50, 0xfff0a0];
+  const IRONB = [0x121218, 0x26262e, 0x42424e, 0x646472, 0x8c8c9c];
+  const SEAL_OF = {
+    shrine: [0x1c3070, 0x4270c4, 0xa0c4f4, 0xffffff], castle: [0x5c3c08, 0xbc8c1c, 0xf8dc60, 0xfff4b0],
+    library: [0x5c3c08, 0xbc8c1c, 0xf8dc60, 0xfff4b0], town_white: [0x5c3c08, 0xbc8c1c, 0xf8dc60, 0xfff4b0],
+    tower: 'stars', town_star: 'stars',
+    oblivion: [0x101016, 0x545462, 0xe4e2dc, 0xffffff], demon: [0x3c0810, 0xa02030, 0xf07080, 0xffd0d8],
+    tree: [0x1c4a3c, 0x3c9c84, 0xa8ece0, 0xffffff], manor: [0x2a1c34, 0x6c4c8c, 0xc8a8e8, 0xffffff],
+  };
+  function lockDoor(a, capTop, x) {
+    const top = capTop ? 4 : 2;
+    return lockOverlay(drawDoor(wallFace(a, capTop, x), 'door', top, a.th.door), top, a.theme);
+  }
+  /** bars + padlock (or the theme's seal) over a door Buf whose opening starts at row top */
+  function lockOverlay(b, top, theme) {
+    const t = tk();
+    const seal = SEAL_OF[theme];
+    if (!seal) {
+      // two heavy iron bars bolted across the leaves
+      for (const y of [top + 3, 13]) {
+        for (let i = 1; i <= 14; i++) { b.set(i, y - 1, IRONB[3]); b.set(i, y, IRONB[2]); b.set(i, y + 1, IRONB[0]); }
+        for (const i of [2, 13]) { b.set(i, y, IRONB[4]); b.set(i + 1, y, IRONB[1]); }
+        b.set(1, y - 1, IRONB[4]); b.set(14, y + 1, IRONB[0]);
+      }
+      // padlock hooked over the upper bar
+      const py = top + 3;
+      b.set(6, py - 1, IRONB[4]); b.set(6, py, IRONB[3]); b.set(6, py + 1, IRONB[3]);
+      b.set(7, py - 2, IRONB[4]); b.set(8, py - 2, IRONB[3]); b.set(9, py - 1, IRONB[2]); b.set(9, py, IRONB[2]); b.set(9, py + 1, IRONB[1]);
+      for (let y = py + 2; y <= py + 6; y++) for (let i = 5; i <= 10; i++) {
+        const c = i === 5 ? BRASS[4] : i === 10 ? BRASS[1] : y === py + 2 ? BRASS[5] : y === py + 6 ? BRASS[1] : i < 8 ? BRASS[3] : BRASS[2];
+        b.set(i, y, c);
+      }
+      b.set(7, py + 4, 0x100808); b.set(8, py + 4, 0x100808); b.set(7, py + 5, 0x100808);
+      b.set(4, py + 3, IRONB[0]); b.set(11, py + 3, IRONB[0]); b.hline(5, 10, py + 7, IRONB[0]);
+      return b;
+    }
+    // a sealing mark over the seam: a ring with the theme's sign, faintly aglow
+    const cx = 7.5, cy = top + 6.5;
+    for (let y = top + 1; y < 16; y++) for (let i = 1; i < 15; i++) {
+      const d = Math.hypot(i - cx, y - cy);
+      if (d < 6.5 && d >= 4.6 && (i + y) % 2 === 0) b.set(i, y, t.mix(b.get(i, y), seal === 'stars' ? 0xc0d0ff : seal[2], 0.3));
+    }
+    if (seal === 'stars') {
+      // star chart: a navy disc, gold rim, a constellation joined by faint lines
+      for (let y = top + 1; y < 16; y++) for (let i = 2; i < 14; i++) {
+        const d = Math.hypot(i - cx, y - cy);
+        if (d <= 4.6) b.set(i, y, d > 3.8 ? (i + y < cx + cy ? BRASS[4] : BRASS[2]) : d > 3.2 ? 0x141c40 : 0x1c2858);
+      }
+      const st = [[5, -2], [7, -3], [10, -1], [9, 1], [6, 2], [8, 3]];
+      for (let k = 0; k + 1 < st.length; k++) b.line(st[k][0], cy + st[k][1], st[k + 1][0], cy + st[k + 1][1], 0x4a5c9c);
+      for (const [i, dy] of st) b.set(i, cy + dy, 0xfff4c0);
+      b.set(7, cy - 3, 0xffffff);
+      return b;
+    }
+    for (let y = top + 1; y < 16; y++) for (let i = 2; i < 14; i++) {
+      const d = Math.hypot(i - cx, y - cy);
+      if (d <= 4.6) b.set(i, y, d > 3.7 ? (i + y < cx + cy ? seal[2] : seal[1]) : d > 3 ? seal[0] : t.mix(seal[0], seal[1], 0.35));
+    }
+    // the sign: a four-pointed star with a bright heart
+    for (let k = -2; k <= 2; k++) { b.set(7 + (k < 0 ? 0 : 1) * 0 + 0, cy + k, seal[2]); b.set(8, cy + k, seal[1]); }
+    for (let k = -2; k <= 2; k++) { b.set(7 + k, cy, seal[2]); b.set(8 + k, cy + 1, seal[1]); }
+    b.set(7, cy, seal[3]); b.set(8, cy, seal[3]);
+    b.set(5, cy - 2, seal[2]); b.set(10, cy - 2, seal[1]); b.set(5, cy + 3, seal[1]); b.set(10, cy + 3, seal[1]);
+    return b;
+  }
+  function rockDoor(a, capTop, x) {
+    const t = tk(), P = NOT_STONE[a.th.wall] ? ROCK_PAL : a.th.wl, top = capTop ? 4 : 2;
+    const b = wallFace(a, capTop, x);
+    const R_ = P.length > 5 ? P.slice(1) : P;
+    // the dark doorway behind
+    for (let y = top; y < 16; y++) for (let i = 1; i <= 14; i++) {
+      if (y === top && (i < 4 || i > 11)) continue;
+      if (y === top + 1 && (i < 2 || i > 13)) continue;
+      b.set(i, y, 0x0c0806);
+    }
+    // the slab, rolled a little to the right of the opening
+    const cx = 8.6, cy = top + 6.4, r = 6.1;
+    for (let y = top; y < 16; y++) for (let i = 1; i < 16; i++) {
+      const dx = (i + 0.5 - cx) / r, dy = (y + 0.5 - cy) / r, d2 = dx * dx + dy * dy;
+      if (d2 > 1) continue;
+      const nz = Math.sqrt(1 - d2);
+      const l = (-dx * 0.6 - dy * 0.7 + nz * 0.6 + 0.3) / 1.3;
+      b.set(i, y, t.pickRamp(R_, l, i, y, 0.6));
+    }
+    // carved ring, a sigil, cracks and dust
+    for (let y = top; y < 16; y++) for (let i = 1; i < 16; i++) {
+      const d = Math.hypot(i + 0.5 - cx, y + 0.5 - cy);
+      if (d > 3.6 && d < 4.4) b.set(i, y, (i + y) % 3 ? R_[0] : R_[1]);
+    }
+    b.set(8, Math.round(cy) - 1, R_[0]); b.set(9, Math.round(cy), R_[0]); b.set(8, Math.round(cy) + 1, R_[0]); b.set(7, Math.round(cy), R_[0]);
+    b.set(8, Math.round(cy), R_[R_.length - 1]);
+    b.line(12, top + 3, 13, top + 6, R_[0]); b.set(4, 13, R_[0]); b.set(5, 14, R_[0]);
+    for (let i = 2; i < 15; i++) if ((i * 7) % 5 < 2) b.set(i, 15, t.mul(b.get(i, 15), 0.7));
+    return b;
+  }
+  A.lockDoorArt = (theme, capTop, x) => lockDoor(art(theme), capTop, x);
+  A.lockOverlay = (b, top, theme) => lockOverlay(b, top, theme);
+  A.rockDoorArt = (theme, capTop, x) => rockDoor(art(theme), capTop, x);
 
   // ------------------------------------------------------------ pillars
   const COL = {
@@ -721,6 +948,14 @@
     const floor = (fl || a.floor).clone();
     const L = t.buf(16, 16);
     const kind = th.col;
+    const XCOL = EXT.COL || {};
+    if (XCOL[kind]) {
+      XCOL[kind](L, t, th);
+      L.outline(t.mul(th.wl[0], 0.8));
+      floor.shadowOf(L, 2, 1, 0.65);
+      floor.blit(L, 0, 0);
+      return floor;
+    }
     if (kind === 'stalag' || kind === 'basalt') {
       const P = th.wl;
       L.poly([[3, 15.5], [5, 6], [7, 0.5], [9, 0.5], [11, 6], [13, 15.5]], P[2]);
@@ -764,7 +999,7 @@
   function stairs(a, dir) {
     const t = tk(), th = a.th;
     const b = a.floor.clone();
-    const S = th.wl, F = a.flPal;
+    const S = th.wall === 'canopy' || th.wall === 'reeds' ? ROCK_PAL : th.wall === 'void' ? th.fl : th.wl, F = a.flPal;
     if (dir === 'up') {
       // four steps climbing away from the viewer, narrowing toward the top
       // (perspective); treads brighten upward, the top opens into shadow
@@ -803,10 +1038,13 @@
   }
 
   // ------------------------------------------------------------ rock
+  // boulders where the theme's wall is not stone (forest, reeds, bark, hull, books …)
+  const ROCK_PAL = [0x2a2a28, 0x46463e, 0x646458, 0x828274, 0xa0a090, 0xbcbcac];
+  const NOT_STONE = { canopy: 1, reeds: 1, bark: 1, hull: 1, wallpaper: 1, shelves: 1, logs: 1, plaster: 1, void: 1 };
   function rock(a, fl) {
     const t = tk(), th = a.th;
     const floor = (fl || a.floor).clone();
-    const P = th.theme === 'ice' ? th.wl : th.wl;
+    const P = NOT_STONE[th.wall] ? ROCK_PAL : th.wl;
     const L = t.buf(16, 16);
     const ramp = P.length > 5 ? P.slice(1) : P;
     L.shadeEllipse(8, 9, 6.5, 5.5, ramp, { dither: 0.6 });
@@ -814,19 +1052,29 @@
     for (let y = 14; y < 16; y++) for (let x = 0; x < 16; x++) if (y === 15) L.set(x, y, null);
     L.line(8, 6, 10, 9, ramp[0]); L.line(10, 9, 9, 12, ramp[0]); L.set(5, 7, ramp[ramp.length - 1]); L.set(6, 6, ramp[ramp.length - 1]);
     L.outline(t.mul(P[0], 0.7));
+    if (th.snowy || th.wall === 'snowrock') for (let x = 0; x < 16; x++) for (let y = 0; y < 16; y++) {
+      const c = L.get(x, y);
+      if (c !== t.NONE && c !== t.c(t.mul(P[0], 0.7)) && (L.get(x, y - 1) === t.NONE || L.get(x, y - 2) === t.NONE)) L.set(x, y, y < 8 ? 0xf4f8fc : 0xdce4ee);
+    }
     floor.shadowOf(L, 2, 1, 0.6);
     floor.blit(L, 0, 0);
     return floor;
   }
 
   // ------------------------------------------------------------ register
-  const THEMED = ['floor', 'wall', 'wall_torch', 'door', 'door_silver', 'door_gold', 'pillar', 'stairs_up', 'stairs_down', 'rock'];
+  const THEMED = ['floor', 'wall', 'wall_torch', 'door', 'door_silver', 'door_gold', 'pillar', 'stairs_up', 'stairs_down', 'rock', 'lockdoor', 'rock_door', 'secret_wall'];
   function make(theme, id) {
     const t = tk(), a = art(theme);
     switch (id) {
       case 'floor': return a.floor.toCanvas();
-      case 'wall': return wallFace(a, true).toCanvas();
-      case 'wall_torch': return t.frames(2, (f) => { const b = wallFace(a, true); torch(b, f); return b; });
+      // the plain wall (used by the field for cells beyond a map's edge): the solid mass of the
+      // wall seen from above, so a dungeon's surroundings read as rock, not as stacked wall faces
+      // (every in-map wall cell is drawn by the context tiler: face, cap or top as it stands)
+      case 'wall': return wallTop(a, {}).toCanvas();
+      case 'wall_torch': return t.frames(2, (f) => themeTorch(a, wallFace(a, true), f));
+      case 'lockdoor': return lockDoor(a, true, 0).toCanvas();
+      case 'rock_door': return rockDoor(a, true, 0).toCanvas();
+      case 'secret_wall': return secretHint(a, wallFace(a, true), 'face', false, 0).toCanvas();
       case 'door': case 'door_silver': case 'door_gold': return door(a, id, true).toCanvas();
       case 'pillar': return pillar(a).toCanvas();
       case 'stairs_up': return stairs(a, 'up').toCanvas();
@@ -846,6 +1094,6 @@
   // themes added to R.DB.themes that this file does not know fall back to generic art
   for (const theme of Object.keys(R.DB.themes || {})) {
     if (TH[theme]) continue;
-    for (const id of THEMED) R.Gfx.def('tile:' + theme + ':' + id, () => make('generic', id));
+    for (const id of THEMED) R.Gfx.def('tile:' + theme + ':' + id, () => make(theme, id)); // art() resolves the fallback
   }
 })(window.RPG);

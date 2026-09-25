@@ -257,7 +257,75 @@ const THEME_ROOM = {
     '............',
   ],
 };
-const THEMES = ['town', 'castle', 'house', 'cave', 'fort', 'pyramid', 'water', 'ice', 'volcano', 'tower', 'shrine', 'demon'];
+const THEMES_CREST = ['town', 'castle', 'house', 'cave', 'fort', 'pyramid', 'water', 'ice', 'volcano', 'tower', 'shrine', 'demon'];
+const THEMES_DUNGEON = ['forest', 'tree', 'snow', 'manor', 'swamp', 'ship', 'mine', 'library', 'oblivion'];
+const THEMES_TOWN = ['town', 'town_roa', 'town_forest', 'town_sand', 'town_snow', 'town_marsh', 'town_isle', 'town_mine', 'town_ash', 'town_star', 'town_white'];
+const THEMES = THEMES_CREST.concat(THEMES_DUNGEON, THEMES_TOWN.slice(1));
+
+// ------------------------------------------------------------ study maps (art-local review)
+// dungeon: every themed / closed / secret tile of a theme in context ('%' secrets:
+// the one marked F is drawn "found"); town: streets, houses, lawn, canal, an interior
+const STUDY = {
+  dungeon: {
+    rows: [
+      '################',
+      '#i##D##E##O##%##',
+      '#..............#',
+      '#.l..r...S..s..#',
+      '#..............#',
+      '####%####.######',
+      '#......#.......#',
+      '#.VV.II#GGG..Q.U#'.slice(0, 16),
+      '#......#.......#',
+      '#.zz...%..www..#',
+      '#.zzz.....w~w..#',
+      '################',
+    ],
+    found: [[13, 1], [7, 9]],
+    decor: null,
+  },
+  town: {
+    rows: [
+      'TTTTTTTTTTTTTTTTTTTT',
+      'T,,RRRRRRR,,,RRRRR,T',
+      'T,,RRRRRRR,,,RRRRR,T',
+      'T,,BBBDBBB,,,BBDBB,T',
+      'T,,,,,.,,,,,,,,.,,,T',
+      'T,..............,,,T',
+      'T,..............:::T',
+      'T,,,,,.,,,,,,,,,:,,T',
+      'T######D###,,~~~|~~T',
+      'T#________#,,~~~|~~T',
+      'T#__t_____#,,,,,:,,T',
+      'T#________E,,,,,:,,T',
+      'TTTTTTTTTTTTTTTTTTTT',
+    ],
+    decor: [
+      '                    ',
+      '                    ',
+      '                    ',
+      '   w  4 w     w 7   ',
+      '    3        1   h  ',
+      '                    ',
+      '                    ',
+      '  3          3      ',
+      '  w  $  w           ',
+      '  A C  F  Z         ',
+      '   n n              ',
+      '  &&     e          ',
+      '                    ',
+    ],
+  },
+};
+/** R.DB.maps def for a study map of a theme */
+function studyDef(kind, theme) {
+  const S = STUDY[kind];
+  return {
+    name: kind + ':' + theme, type: kind === 'town' ? 'town' : 'dungeon', legend: 'local', theme, bgm: 'town',
+    outside: kind === 'town' ? 'T' : '#', rows: S.rows.slice(), decor: S.decor ? S.decor.map((r) => r.replace(/ /g, '.')) : undefined,
+    spawns: { entrance: { x: 2, y: 2 } }, npcs: [], found: S.found || [],
+  };
+}
 
 /** R.DB.maps def for a demo room */
 function roomDef(key) {
@@ -299,7 +367,8 @@ const FRAME = +opt('frame', 0);
 function sources() {
   const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]);
   const list = ['ns.js', 'input.js', 'gfx.js'].map((f) => path.join(ROOT, 'src/core', f));
-  for (const d of ['data', 'art', 'maps']) {
+  // maps are only needed with --maps (other owners' map files must not break art review)
+  for (const d of args.includes('--maps') ? ['data', 'art', 'maps'] : ['data', 'art']) {
     const dir = path.join(ROOT, 'src', d);
     if (fs.existsSync(dir)) list.push(...walk(dir).filter((f) => f.endsWith('.js')).sort((a, b) => a.localeCompare(b)));
   }
@@ -323,9 +392,15 @@ window.SHEET = (function () {
     return m.theme && G.has('tile:' + m.theme + ':' + id) ? G.get('tile:' + m.theme + ':' + id) : G.get('tile:' + id);
   }
   function compile(def) {
-    R.DB.maps.__sheet = def;
-    const m = R.FieldMap.compile('__sheet');
-    delete R.DB.maps.__sheet;
+    const id = def.id || '__sheet';
+    R.DB.maps[id] = def;
+    const m = R.FieldMap.compile(id);
+    delete R.DB.maps[id];
+    if (def.found && def.found.length) {
+      R.Game = R.Game || {};
+      R.Game.secrets = R.Game.secrets || {};
+      for (const [x, y] of def.found) R.Game.secrets[id + ':' + x + ',' + y] = true;
+    }
     return m;
   }
   /** render like the field: base (localTile) → decor (bottom-aligned) → npcs */
@@ -361,7 +436,7 @@ window.SHEET = (function () {
   // every decor id in three contexts
   function decorSheet(scale, themes) {
     const ids = window.SHEET_IDS || Object.keys(R.DB.decor);
-    const auto = { rug: [3, 3], rug_blue: [3, 2], dais: [4, 2], table_long: [4, 1], bench: [3, 1], mosaic: [3, 3], hedge: [3, 1], fountain: [2, 2], stall: [3, 1] };
+    const auto = { rug: [3, 3], rug_blue: [3, 2], dais: [4, 2], table_long: [4, 1], bench: [3, 1], mosaic: [3, 3], hedge: [3, 1], fountain: [2, 2], stall: [3, 1], stage: [3, 2], rails: [3, 1] };
     const cells = ids.map((id) => {
       const d = R.DB.decor[id];
       const frames = (() => { const g = G.get('decor:' + id); return Array.isArray(g) ? g.length : 1; })();
@@ -379,11 +454,13 @@ window.SHEET = (function () {
           let r = '';
           for (let x = 0; x < w; x++) {
             const inside = cell.d.wall ? (y === 0 && x >= 1 && x <= cell.aw) : (y >= 1 && y <= cell.ah && x >= 1 && x <= cell.aw);
-            r += inside ? Object.keys(R.DB.legends.decor).find((k) => R.DB.legends.decor[k] === cell.id) : '.';
+            r += inside ? (Object.keys(R.DB.legends.decor).find((k) => R.DB.legends.decor[k] === cell.id) || '|') : '.';
           }
           dec.push(r);
         }
-        const m = compile({ name: 's', type: 'town', legend: 'local', theme: th, rows, decor: dec, spawns: { e: { x: 0, y: 1 } } });
+        // ids on water (boat, hot spring, sunken bell) stand on a pond
+        if (/^(boat|hot_spring|sunken_bell)$/.test(cell.id)) for (let y = 1; y < rows.length; y++) rows[y] = rows[y].replace(/\./g, '~');
+        const m = compile({ name: 's', type: 'town', legend: 'local', theme: th, rows, decor: dec, decorLegend: { '|': cell.id }, outside: '#', spawns: { e: { x: 0, y: 1 } } });
         const fr = [];
         for (let f = 0; f < cell.frames; f++) fr.push(render(m, f, { noNpc: true }));
         return fr;
@@ -450,7 +527,7 @@ window.SHEET = (function () {
     parts.forEach((p, i) => { const x = (i % cols) * cw + 4, y = Math.floor(i / cols) * ch + 4; label(c, p.name, x, y); c.drawImage(p.cv, x, y + 16); });
     return cv.toDataURL();
   }
-  return { decorSheet, roomsSheet, grid };
+  return { decorSheet, roomsSheet, grid, render, up };
 })();
 `;
 
@@ -507,6 +584,18 @@ ${sources().map((f) => `<script src="file://${f}"></script>`).join('\n')}
   if (ONLY.includes('themes')) {
     const list = THEMES.map((th) => { const def = roomDef('theme'); def.theme = th; return { name: th, def }; });
     save('themes', await page.evaluate(([l, s, f]) => SHEET.grid(l, s, f, 3), [list, Math.max(1, SCALE - 1), FRAME]));
+  }
+  if (ONLY.includes('study')) {
+    // --study dungeon|town (both by default), --themes a,b,… ; one PNG per two themes
+    const kinds = opt('study', 'dungeon,town').split(',');
+    for (const kind of kinds) {
+      const themes = opt('themes') ? opt('themes').split(',') : kind === 'town' ? THEMES_TOWN : THEMES_DUNGEON;
+      for (let i = 0; i < themes.length; i += 2) {
+        const pair = themes.slice(i, i + 2);
+        const list = pair.map((th) => { const d = studyDef(kind, th); d.id = 'study_' + kind + '_' + th; return { name: th, def: d }; });
+        save('study_' + kind + '_' + pair.join('+'), await page.evaluate(([l, sc, f]) => SHEET.grid(l, sc, f, 2), [list, SCALE, FRAME]));
+      }
+    }
   }
   if (ONLY.includes('rooms')) {
     const list = Object.keys(ROOMS).filter((k) => !opt('room') || opt('room').split(',').includes(k)).map((k) => ({ name: k + ' — ' + ROOMS[k].name + ' (' + ROOMS[k].theme + ')', def: roomDef(k) }));

@@ -269,6 +269,14 @@
       o.post(q);
       q.each((x, y, c) => { const e = p.get(x + dx, y + dy); if (e == null || e === OUT) p.set(x + dx, y + dy, c); });
     }
+    // see-through membranes (o.sheer = Set of colours): interior pixels of those colours are
+    // thinned to a checker, so only opaque pixels are used (DESIGN §11.4.2)
+    if (o.sheer) {
+      const is = (x, y) => o.sheer.has(p.get(x, y));
+      const holes = [];
+      p.each((x, y) => { if (is(x, y) && is(x - 1, y) && is(x + 1, y) && is(x, y - 1) && is(x, y + 1) && ((x + y) & 1)) holes.push([x, y]); });
+      for (const [x, y] of holes) p.set(x, y, null);
+    }
     return p.toCanvas();
   }
 
@@ -463,7 +471,6 @@
     capsule(wm, 12, 15, 4.6, 17, 1.4, 2.5, 1);
     sym(wm);
     const p = shade(wm, wingR, { depth: 2, light: [-0.4, -0.9, 0.7], global: 0.4, amb: 0.3 });
-    p.each((x, y, c) => (c === wingR[0] ? c + 'e0' : c === wingR[1] ? c + 'd0' : c + 'c8'));
     both(W, (X) => { p.line(X(12), 12, X(5), 5, '#6a8ab0'); p.line(X(8), 9, X(3), 8, '#6a8ab0'); p.line(X(11), 15, X(4), 17, '#6a8ab0'); });
     // abdomen with bands and a stinger
     const am = mask(W, H);
@@ -502,7 +509,7 @@
     p.set(15, 8, yel[4]); p.set(16, 8, yel[3]); p.set(15, 11, yel[1]); p.set(16, 11, yel[1]);
     // mandibles
     both(W, (X) => { p.set(X(14), 13, INK); p.set(X(13), 13, INK); p.set(X(13), 14, INK); p.set(X(14), 14, '#e8dcc0'); p.set(X(15), 14, INK); });
-    return finish(p, { float: true });
+    return finish(p, { float: true, sheer: new Set(wingR) });
   };
 
   // Wisp: a floating ghost-flame with hollow eyes, flickering tongues and sparks.

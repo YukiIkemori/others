@@ -1,7 +1,10 @@
-// NPC field sprites ('npc:<type>', DESIGN §4): extra hair styles, beards,
-// headgear, bodies and props, plus one figure spec + palette per NPC type.
-// Humans reuse the party parts (chars_parts.js); animals, the ghost and the
-// spirit have their own builders at the end.
+// NPC field sprites ('npc:<type>'): the 30 Crest types (DESIGN §11.3.4 「再利用」)
+// with their extra hair styles, beards, headgear, bodies and props, plus one
+// figure spec + palette per NPC type. Humans reuse the party parts
+// (chars_parts.js); animals, the ghost and the spirit have their own builders
+// at the end. Chronicle changes: the knight's cape is blue and the sage's robe
+// plum, so townsfolk never read as bartolo or the hero mage (§5.3.7 rule).
+// The story characters are in chars_story.js, the new town folk in chars_town.js.
 (function (R) {
   'use strict';
   const A = (R.Art = R.Art || {});
@@ -1205,7 +1208,7 @@
   def('knight', () => ({
     capeBack: use(P.cape.long.back, {}), cape: P.cape.long, body: P.body.armor,
     head: faceM(), hair: use(P.hairShort, { clipY: 6 }), hat: P.hat.plume,
-  }), { main: '#b8c0cc', sub: '#b83838', trim: '#e0c050', hair: hairOf.black, skin: skinA });
+  }), { main: '#b8c0cc', sub: '#3458a8', trim: '#e0c050', hair: hairOf.black, skin: skinA });
   def('old_man', () => ({
     body: P.body.robe, head: faceM(), hair: P.hairBald, beard: P.beard, over: P.over.cane,
   }), { main: '#7a6a52', sub: '#b8a680', trim: '#5a4a3a', hair: hairOf.white, skin: skinA });
@@ -1238,7 +1241,7 @@
   }), { main: '#2c2838', sub: '#e8e4f0', trim: '#f4f4f8', hair: hairOf.brown, skin: skinA });
   def('sage', () => ({
     body: P.body.robe, head: faceM(), hair: use(P.hairShort, { clipY: 6 }), beard: P.beard, hat: P.hat.hood, over: P.over.staff,
-  }), { main: '#4a5aa0', sub: '#e0d8a8', trim: '#e8c040', hair: hairOf.white, skin: skinA });
+  }), { main: '#6a3c7c', sub: '#e0d8a8', trim: '#e8c040', hair: hairOf.white, skin: skinA });
   def('elder', () => ({
     body: P.body.robe, head: faceM(), hair: P.hairBald, beard: P.beard, over: P.over.staff,
   }), { main: '#5a7a4a', sub: '#e0d8b8', trim: '#d8b040', hair: hairOf.white, skin: skinA });
@@ -1580,6 +1583,7 @@
         let last = g.length - 1;
         while (last > 0 && !/[^.]/.test(g[last])) last--;
         CA.stamp(buf, { y: 22 - last, g }, pal, false, 0);
+        CA.closeEdges(buf);
         CA.outline(buf, CA.OUTLINE);
         out[dir].push(CA.toCanvas(buf));
       }
