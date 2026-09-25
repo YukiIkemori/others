@@ -38,12 +38,12 @@ const sy = R.Rules.stats(y);
 y.hp = 10;
 let r = R.Menu.applyFieldEffect({ effects: [{ type: 'heal', power: 30, scale: 0 }] }, y, [y], { item: true });
 ok(y.hp >= 10 + 28 && y.hp <= 10 + 32, 'herb heals ~30 (hp ' + y.hp + ')');
-ok(r.changed && /HPが \d+ かいふくした/.test(r.lines[0]), 'heal message: ' + r.lines[0]);
+ok(r.changed && /HPが\d+回復した/.test(r.lines[0]), 'heal message: ' + r.lines[0]);
 // heal to full
 y.hp = sy.hp - 3;
 r = R.Menu.applyFieldEffect({ effects: [{ type: 'heal', power: 30 }] }, y, [y], { item: true });
 eq(y.hp, sy.hp, 'heal clamps to max');
-ok(/ぜんかい/.test(r.lines[0]), 'full heal message');
+ok(/全回復/.test(r.lines[0]), 'full heal message');
 // no effect on full / dead
 r = R.Menu.applyFieldEffect({ effects: [{ type: 'heal', power: 30 }] }, y, [y], { item: true });
 ok(!r.changed, 'heal on full HP changes nothing');
@@ -53,7 +53,7 @@ ok(!R.Menu.affects([{ type: 'heal', power: 30 }], m), 'heal does not affect the 
 ok(R.Menu.affects([{ type: 'revive', pct: 0.5 }], m), 'revive affects the dead');
 r = R.Menu.applyFieldEffect({ effects: [{ type: 'revive', pct: 0.5 }] }, y, [m], { item: true });
 eq(m.hp, Math.floor(R.Rules.stats(m).hp * 0.5), 'revive to 50%');
-ok(/いきかえった/.test(r.lines[0]), 'revive message');
+ok(/生き返った/.test(r.lines[0]), 'revive message');
 // healMp with itemPct
 m.mp = 0;
 r = R.Menu.applyFieldEffect({ effects: [{ type: 'healMp', power: 5 }] }, y, [m], { item: true });
@@ -68,7 +68,7 @@ eq(Object.keys(n.status).length, 0, 'cure all');
 const str0 = R.Rules.stats(y).str;
 r = R.Menu.applyFieldEffect({ effects: [{ type: 'grow', stat: 'str', n: 2 }] }, y, [y], { item: true });
 eq(R.Rules.stats(y).str, str0 + 2, 'grow str +2');
-ok(/ちからが 2 あがった/.test(r.lines[0]), 'grow message: ' + r.lines[0]);
+ok(/力が2上がった/.test(r.lines[0]), 'grow message: ' + r.lines[0]);
 const hp0 = R.Rules.stats(y).hp, cur0 = y.hp;
 R.Menu.applyFieldEffect({ effects: [{ type: 'grow', stat: 'hp', n: 8 }] }, y, [y], { item: true });
 ok(R.Rules.stats(y).hp > hp0 && y.hp > cur0, 'grow hp raises max and current HP');

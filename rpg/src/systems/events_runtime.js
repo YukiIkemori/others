@@ -23,6 +23,35 @@
   const fmt = (text) => String(text == null ? '' : text).replace(/\{leader\}/g, leaderName());
   const closeWin = () => { if (R.UI && R.UI.closeMessage) R.UI.closeMessage(); };
 
+  /** width of the message window's text area (logical px) */
+  function msgWidth() {
+    const M = R.UI && R.UI.MSG;
+    return M ? M.w - M.pad * 2 : 220;
+  }
+  function textW(s) {
+    try { return R.Gfx.textWidth(s); } catch (e) { return String(s).length * (R.Gfx.FS || 10.7); } // no canvas (node tools)
+  }
+  /**
+   * Join message phrases, starting a new line only where the next phrase would
+   * overflow the message window, so long names break at a phrase boundary:
+   *   lines('メテムは', 'サファイアのロッドを', '手に入れた！')
+   *   → 'メテムはサファイアのロッドを\n手に入れた！'
+   */
+  function lines(...parts) {
+    const w = msgWidth(), out = [];
+    let line = '';
+    for (const p of parts) {
+      if (!p) continue;
+      if (line && textW(line + p) > w) { out.push(line); line = p; } else line += p;
+    }
+    out.push(line);
+    return out.join('\n');
+  }
+  /** 「〇〇を手に入れた！」 phrases: item (+ count) and the verb, for lines() */
+  function gotPhrases(itemName, n, verb) {
+    return [itemName + 'を', (n > 1 ? n + '個' : '') + verb];
+  }
+
   /** message + jingle together; resolves when both are done (DQ "got item" fanfare) */
   function gotItem(text, jingleId) {
     const j = R.jingle(jingleId);
@@ -62,18 +91,18 @@
       gold() { return R.Game.gold; },
       takeGold(n) { return R.State.takeGold(n); },
 
-      /** 「ユウキは ✕✕を てにいれた！」 + jingle ('keyitem' for key items) */
+      /** 「{leader}は✕✕を手に入れた！」 (line break before 手に入れた when it would overflow) + jingle ('keyitem' for key items) */
       async give(item, n = 1, opts) {
         const o = opts || {};
         const it = DB.items[item];
         if (!it) { R.warn('ev.give: unknown item', item); return false; }
         if (R.State.count(item) + n > 99) {
-          if (!o.silent) await ev.say(leaderName() + 'は ' + it.name + 'を もらった。\nしかし もう これいじょう もてない！');
+          if (!o.silent) await ev.say(lines(leaderName() + 'は', it.name + 'を', '受け取ろうとした。') + '\nしかし、これ以上は持てない！');
           return false;
         }
         R.State.addItem(item, n);
         if (!o.silent) {
-          await gotItem(leaderName() + 'は ' + it.name + 'を ' + (n > 1 ? n + 'こ ' : '') + 'てにいれた！', it.type === 'key' ? 'keyitem' : 'item');
+          await gotItem(lines(leaderName() + 'は', ...gotPhrases(it.name, n, '手に入れた！')), it.type === 'key' ? 'keyitem' : 'item');
         }
         return true;
       },
@@ -81,7 +110,7 @@
         R.State.addGold(n);
         if (opts && opts.silent) return;
         R.sfx('gold');
-        await ev.say(leaderName() + 'は ' + n + 'ゴールドを てにいれた！');
+        await ev.say(lines(leaderName() + 'は', n + 'ゴールドを', '手に入れた！'));
       },
 
       // ------------------------------------------------------------ battle
@@ -233,43 +262,43 @@
 
   // ------------------------------------------------------------ fallbacks (used only when the menu owner's services are absent)
   async function fallbackInn(ev, price) {
-    const yes = await ev.yesno('たびびとの やどやへ ようこそ。\nひとばん ' + price + 'ゴールドですが おとまりに なりますか？');
-    if (!yes) { await ev.say('またの おこしを おまちしております。'); return false; }
-    if (!R.State.takeGold(price)) { await ev.say('おや おかねが たりないようですね。'); return false; }
-    await ev.say('では ごゆっくり おやすみください。');
+    const yes = await ev.yesno('旅人の宿屋へようこそ。\nひと晩' + price + 'ゴールドです。\nお泊まりになりますか？');
+    if (!yes) { await ev.say('またのお越しをお待ちしております。'); return false; }
+    if (!R.State.takeGold(price)) { await ev.say('おや、お金が足りないようですね。'); return false; }
+    await ev.say('では、ごゆっくりお休みください。');
     closeWin();
     await R.Engine.fadeOut(30);
     R.State.healAll();
     await R.jingle('inn');
     await R.Engine.wait(20);
     await R.Engine.fadeIn(30);
-    await ev.say('おはようございます。\nでは いってらっしゃいませ。');
+    await ev.say('おはようございます。\nいってらっしゃいませ。');
     return true;
   }
   async function fallbackChurch(ev) {
     for (;;) {
-      const i = await ev.ask('ここは かみの いえ。\nきょうは どんな ごようかな？', ['おいのりをする', 'いきかえらせる', 'どくの ちりょう', 'やめる']);
+      const i = await ev.ask('ここは神の家。\n今日はどのようなご用かな？', ['お祈りをする', '生き返らせる', '毒の治療', 'やめる']);
       if (i === 0) { await ev.saveMenu(); continue; }
       if (i === 1 || i === 2) {
         const need = R.Game.party.filter((c) => (i === 1 ? c.hp <= 0 : c.hp > 0 && c.status && c.status.poison));
-        if (!need.length) { await ev.say(i === 1 ? 'いきかえらせる ひとは いないようじゃ。' : 'どくに おかされた ひとは いないようじゃ。'); continue; }
+        if (!need.length) { await ev.say(i === 1 ? '生き返らせる者はいないようじゃ。' : '毒に冒された者はいないようじゃ。'); continue; }
         const c = need[0];
         const price = i === 1 ? c.level * 10 : 10;
-        if (!(await ev.yesno(c.name + 'を ' + (i === 1 ? 'いきかえらせるには' : 'なおすには') + ' ' + price + 'ゴールド いただくが よいかな？'))) continue;
-        if (!R.State.takeGold(price)) { await ev.say('おかねが たりないようじゃな。'); continue; }
-        if (i === 1) { c.hp = R.Rules.stats(c).hp; c.status = {}; R.sfx('revive'); await ev.say('おお かみよ！\n' + c.name + 'に いまいちど きかいを あたえたまえ！'); }
-        else { delete c.status.poison; R.sfx('heal'); await ev.say(c.name + 'の からだから どくが きえさった。'); }
+        if (!(await ev.yesno(c.name + 'を' + (i === 1 ? '生き返らせるには' : '治すには') + '\n' + price + 'ゴールドいただくが、よいかな？'))) continue;
+        if (!R.State.takeGold(price)) { await ev.say('お金が足りないようじゃな。'); continue; }
+        if (i === 1) { c.hp = R.Rules.stats(c).hp; c.status = {}; R.sfx('revive'); await ev.say('おお、神よ！\n' + c.name + 'に今ひとたびの\n命を与えたまえ！'); }
+        else { delete c.status.poison; R.sfx('heal'); await ev.say(c.name + 'の体から毒が消え去った。'); }
         continue;
       }
-      await ev.say('あなたに かみの ごかごが ありますように。');
+      await ev.say('あなたに神のご加護がありますように。');
       return;
     }
   }
   async function quickSave(ev) {
-    if (!(await ev.yesno('ぼうけんの きろくを つけますか？'))) return false;
+    if (!(await ev.yesno('冒険の記録をつけますか？'))) return false;
     const ok = await R.Save.save(R.Save.lastSlot || 0, R.State.serialize());
-    if (ok) { await R.jingle('save'); await ev.say('ぼうけんの きろくを つけました。'); }
-    else await ev.say('きろくに しっぱいしました。');
+    if (ok) { await R.jingle('save'); await ev.say('冒険の記録をつけました。'); }
+    else await ev.say('記録に失敗しました。');
     return ok;
   }
 
@@ -338,10 +367,12 @@
     talk(npc) {
       const ctx = { self: npc.id, npc, trigger: 'talk' };
       if (npc.event) return Events.run(npc.event, ctx);
-      const pages = npc.text != null ? npc.text : '……。';
+      const pages = npc.text != null ? npc.text : '……';
       return Events.run(async (ev) => { await ev.say(pages); }, ctx);
     },
     gotItem,
+    lines,
+    gotPhrases,
     makeEv,
   });
 })(window.RPG);

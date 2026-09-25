@@ -263,7 +263,7 @@
       const o = this.o, w = o.w || 120, h = o.price != null ? 42 : 28;
       const x = o.x != null ? o.x : R.W - 8 - w, y = o.y != null ? o.y : MSG.y - h - 2;
       G().window(x, y, w, h);
-      G().text((o.label || 'かず') , x + 10, y + 8);
+      G().text(o.label || '個数', x + 10, y + 8);
       G().text('× ' + this.v, x + w - 10, y + 8, { align: 'right' });
       if (o.price != null) G().text((o.price * this.v) + ' G', x + w - 10, y + 22, { align: 'right', color: G().C.yellow });
     }

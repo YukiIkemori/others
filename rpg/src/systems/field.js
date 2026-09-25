@@ -261,7 +261,7 @@
       if (t.lock && !M.opened.has(i)) {
         if (!R.State.hasItem(t.lock)) {
           this.heldBlock = d; // don't repeat the message while the direction stays held
-          this.runLocked(() => R.Events.run(async (ev) => { R.sfx('locked'); await ev.say('かぎが かかっている。'); }, { self: 'lock' }));
+          this.runLocked(() => R.Events.run(async (ev) => { R.sfx('locked'); await ev.say('鍵がかかっている。'); }, { self: 'lock' }));
           return false;
         }
       }
@@ -315,14 +315,14 @@
         if (fallen.length) {
           tasks.push(() => R.Events.run(async (ev) => {
             R.sfx('death');
-            for (const c of fallen) await ev.say(c.name + 'は ちからつきた……。');
+            for (const c of fallen) await ev.say(c.name + 'は力尽きた……');
           }, { self: 'floor' }));
         }
       }
       if (g.repelSteps > 0) {
         g.repelSteps--;
         if (g.repelSteps === 0) {
-          tasks.push(() => R.Events.run(async (ev) => { await ev.say('まよけの こうかが きれた。'); }, { self: 'repel' }));
+          tasks.push(() => R.Events.run(async (ev) => { await ev.say('魔除けの効果が切れた。'); }, { self: 'repel' }));
         }
       }
       // step events, then warps, then encounters
@@ -626,57 +626,63 @@
   }
 
   // ------------------------------------------------------------ chests & hidden items
+  // message phrases are joined by R.Events.lines: a new line starts only where
+  // the next phrase would overflow the window (long names break before the verb)
+  const FULL = 'しかし、これ以上は持てない！';
   function openChest(c) {
     return R.Events.run(async (ev) => {
       const g = R.Game;
       const name = leaderName();
+      const lines = R.Events.lines;
       const it = c.item && DB.items[c.item];
       if (it && R.State.count(c.item) + c.n > 99) {
         R.sfx('buzzer');
-        await ev.say('たからばこの なかには ' + it.name + 'が はいっている。\nしかし もう これいじょう もてない！');
+        await ev.say(lines('宝箱の中には', it.name + 'が入っている。') + '\n' + FULL);
         return;
       }
       R.sfx('chest');
       if (c.troop) {
         // mimic: the box stays shut unless the monster is beaten
         await ev.wait(10);
-        await ev.say('なんと たからばこは まものだった！');
+        await ev.say('なんと、宝箱は魔物だった！');
         if ((await ev.battle(c.troop)) !== 'win') return;
       }
       g.chests[c.id] = true;
       await ev.wait(10);
+      const opened = name + 'は宝箱を開けた！\n';
       if (c.gold) {
         R.State.addGold(c.gold);
         R.sfx('gold');
-        await ev.say(name + 'は たからばこを あけた！\n' + c.gold + 'ゴールドを てにいれた！');
+        await ev.say(opened + c.gold + 'ゴールドを手に入れた！');
       } else if (it) {
         R.State.addItem(c.item, c.n);
-        await ev.gotItem(name + 'は たからばこを あけた！\n' + it.name + 'を ' + (c.n > 1 ? c.n + 'こ ' : '') + 'てにいれた！', it.type === 'key' ? 'keyitem' : 'item');
+        await ev.gotItem(opened + lines(...R.Events.gotPhrases(it.name, c.n, '手に入れた！')), it.type === 'key' ? 'keyitem' : 'item');
       } else {
-        await ev.say(name + 'は たからばこを あけた！\nしかし からっぽだった！');
+        await ev.say(opened + 'しかし、空っぽだった！');
       }
     }, { self: c.id, chest: c });
   }
   function findHidden(h, underfoot) {
     return R.Events.run(async (ev) => {
       const name = leaderName();
-      const look = name + 'は ' + (underfoot ? 'あしもと' : 'あたり') + 'を しらべた。\n';
+      const lines = R.Events.lines;
+      const look = name + 'は' + (underfoot ? '足元' : 'あたり') + 'を調べた。\n';
       if (h.gold) {
         R.Game.chests[h.id] = true;
         R.State.addGold(h.gold);
         R.sfx('gold');
-        await ev.say(look + 'なんと ' + h.gold + 'ゴールドを みつけた！');
+        await ev.say(look + 'なんと、' + h.gold + 'ゴールドを見つけた！');
         return;
       }
       const it = DB.items[h.item];
       if (!it) { R.Game.chests[h.id] = true; return; }
       if (R.State.count(h.item) + h.n > 99) {
-        await ev.say(look + 'なんと ' + it.name + 'を みつけた！\nしかし もう これいじょう もてない！');
+        await ev.say(look + lines('なんと、', it.name + 'を', '見つけた！') + '\n' + FULL);
         return;
       }
       R.Game.chests[h.id] = true;
       R.State.addItem(h.item, h.n);
-      await ev.gotItem(look + 'なんと ' + it.name + 'を ' + (h.n > 1 ? h.n + 'こ ' : '') + 'みつけた！', it.type === 'key' ? 'keyitem' : 'item');
+      await ev.gotItem(look + lines('なんと、', ...R.Events.gotPhrases(it.name, h.n, '見つけた！')), it.type === 'key' ? 'keyitem' : 'item');
     }, { self: h.id, hidden: h });
   }
 

@@ -13,11 +13,11 @@
 
   // ------------------------------------------------------------ labels
   const STAT_NAMES = {
-    hp: 'さいだいHP', mp: 'さいだいMP', str: 'ちから', vit: 'たいりょく', agi: 'すばやさ', int: 'かしこさ', mnd: 'せいしん', luk: 'うんのよさ',
-    atk: 'こうげき', def: 'しゅび', mag: 'まりょく', mdef: 'まぼうぎょ', hit: 'めいちゅう', eva: 'かいひ', crit: 'かいしん',
+    hp: '最大HP', mp: '最大MP', str: '力', vit: '体力', agi: '素早さ', int: '知力', mnd: '精神', luk: '運',
+    atk: '攻撃力', def: '守備力', mag: '魔力', mdef: '魔法防御', hit: '命中', eva: '回避', crit: '会心',
   };
-  const ELEM_NAMES = { fire: 'ほのお', ice: 'こおり', thunder: 'いかずち', wind: 'かぜ', earth: 'だいち', water: 'みず', holy: 'ひかり', dark: 'やみ' };
-  const STATUS_NAMES = { poison: 'どく', sleep: 'ねむり', paralyze: 'まひ', confuse: 'こんらん', silence: 'ふうじ', blind: 'くらやみ', death: 'そくし', regen: 'さいせい' };
+  const ELEM_NAMES = { fire: '炎', ice: '氷', thunder: '雷', wind: '風', earth: '大地', water: '水', holy: '聖', dark: '闇' };
+  const STATUS_NAMES = { poison: '毒', sleep: '眠り', paralyze: '麻痺', confuse: '混乱', silence: '沈黙', blind: '暗闇', death: '即死', regen: '再生' };
   const KIND_NAMES = { action: 'アクション', reaction: 'リアクション', support: 'サポート', field: 'フィールド' };
   const KIND_COLORS = { action: '#ff9a5a', reaction: '#6fd8ff', support: '#8ce07a', field: '#e8c860' };
   const ELEMS = ['fire', 'ice', 'thunder', 'wind', 'earth', 'water', 'holy', 'dark'];
@@ -93,7 +93,7 @@
       return G().C.white;
     },
     statusText(c) {
-      if (c.hp <= 0) return { text: 'しに', color: G().C.dead };
+      if (c.hp <= 0) return { text: '戦闘不能', color: G().C.dead };
       const s = c.status || {};
       for (const k of ['poison', 'sleep', 'paralyze', 'confuse', 'silence', 'blind']) if (s[k]) return { text: statusName(k), color: G().C.purple };
       return null;
@@ -190,8 +190,9 @@
         const st = R.Rules.stats(c);
         K.drawSprite(c, x + 26, ry + 26, { frame: i === this.index ? Math.floor(R.Engine.frame / 16) : 0, alpha: ok ? 1 : 0.45 });
         const col = ok ? K.condColor(c) : G().C.gray;
-        G().text(c.name, x + 40, ry + 1, { color: col });
         const stt = K.statusText(c);
+        // long names shrink so they never run into the status label (e.g. 戦闘不能)
+        K.fitText(c.name, x + 40, ry + 1, w - 50 - (stt ? G().textWidth(stt.text) + 4 : 0), { color: col });
         if (stt) G().text(stt.text, x + w - 10, ry + 1, { align: 'right', color: ok ? stt.color : G().C.gray });
         const tc = ok ? G().C.white : G().C.gray;
         G().text('H', x + 40, ry + 14, { color: tc });
@@ -270,7 +271,7 @@
       if (e.type === 'repel') {
         const steps = e.steps || 150;
         if (R.Field && R.Field.repel) R.Field.repel(steps); else R.Game.repelSteps = Math.max(R.Game.repelSteps || 0, steps);
-        out.lines.push('まものたちが よりつかなく なった！');
+        out.lines.push('魔物が寄りつかなくなった！');
         out.changed = true;
         continue;
       }
@@ -284,7 +285,7 @@
             const before = c.hp;
             c.hp = Math.min(st.hp, c.hp + Math.round(healAmount(e, user, c, isItem)));
             const d = c.hp - before;
-            out.lines.push(c.hp >= st.hp ? c.name + 'の HPが ぜんかい した！' : c.name + 'の HPが ' + d + ' かいふくした！');
+            out.lines.push(c.hp >= st.hp ? c.name + 'のHPが全回復した！' : c.name + 'のHPが' + d + '回復した！');
             out.changed = true;
             break;
           }
@@ -292,7 +293,7 @@
             if (c.hp <= 0 || c.mp >= st.mp) break;
             const before = c.mp;
             c.mp = Math.min(st.mp, c.mp + Math.round((e.power || 0) * itemMul));
-            out.lines.push(c.mp >= st.mp ? c.name + 'の MPが ぜんかい した！' : c.name + 'の MPが ' + (c.mp - before) + ' かいふくした！');
+            out.lines.push(c.mp >= st.mp ? c.name + 'のMPが全回復した！' : c.name + 'のMPが' + (c.mp - before) + '回復した！');
             out.changed = true;
             break;
           }
@@ -300,7 +301,7 @@
             if (c.hp > 0) break;
             c.hp = Math.max(1, Math.floor(st.hp * (e.pct != null ? e.pct : 0.25)));
             c.status = {};
-            out.lines.push('なんと ' + c.name + 'が いきかえった！');
+            out.lines.push('なんと、' + c.name + 'が生き返った！');
             out.changed = true;
             break;
           }
@@ -311,7 +312,7 @@
             const cured = list.filter((k) => s[k]);
             if (!cured.length) break;
             for (const k of cured) delete s[k];
-            out.lines.push(cured.length > 1 ? c.name + 'は すっかり げんきに なった！' : c.name + 'の ' + statusName(cured[0]) + 'が きえた！');
+            out.lines.push(cured.length > 1 ? c.name + 'はすっかり元気になった！' : c.name + 'の' + statusName(cured[0]) + 'が治った！');
             out.changed = true;
             break;
           }
@@ -324,7 +325,7 @@
             if (e.stat === 'hp') c.hp = Math.min(s1.hp, c.hp + (s1.hp - s0.hp));
             if (e.stat === 'mp') c.mp = Math.min(s1.mp, c.mp + (s1.mp - s0.mp));
             const gain = e.stat === 'hp' || e.stat === 'mp' ? s1[e.stat] - s0[e.stat] || n : n;
-            out.lines.push(c.name + 'の ' + (STAT_NAMES[e.stat] || e.stat) + 'が ' + gain + ' あがった！');
+            out.lines.push(c.name + 'の' + (STAT_NAMES[e.stat] || e.stat) + 'が' + gain + '上がった！');
             out.changed = true;
             break;
           }
@@ -349,8 +350,8 @@
   /** choose a teleport destination → location id or null */
   async function chooseTown() {
     const list = R.Field && R.Field.teleportList ? R.Field.teleportList() : [];
-    if (!list.length) { await K.msg('とんでいける ばしょが ない！'); return null; }
-    const i = await R.UI.choose(list.map((l) => l.name), { y: 40, title: 'どこへ？', rows: Math.min(list.length, 9) });
+    if (!list.length) { await K.msg('飛んでいける場所がない！'); return null; }
+    const i = await R.UI.choose(list.map((l) => l.name), { y: 40, title: 'どこへ行く？', rows: Math.min(list.length, 9) });
     return i < 0 ? null : list[i].id;
   }
 
@@ -387,7 +388,7 @@
     const it = DB.items[id];
     const u = it && it.use;
     if (!u || u.field === false || !(u.effects || []).length || (!u.field && u.battle)) {
-      await K.msg(it && it.type === 'consumable' ? 'それは いま つかえない。' : 'それは つかう ものでは ない。');
+      await K.msg(it && it.type === 'consumable' ? 'それは今は使えない。' : 'それは使うものではない。');
       return false;
     }
     const lead = itemUser();
@@ -395,47 +396,47 @@
     if (hasType(eff, 'teleport') || hasType(eff, 'exit')) {
       const tp = hasType(eff, 'teleport');
       if (tp ? !(R.Field && R.Field.canTeleport && R.Field.canTeleport()) : !(R.Field && R.Field.canExit && R.Field.canExit())) {
-        await K.msg('ここでは つかえない ようだ。');
+        await K.msg('ここでは使えないようだ。');
         return false;
       }
       let loc = null;
       if (tp) { loc = await chooseTown(); if (!loc) return false; }
       R.State.removeItem(id, 1);
-      afterMenu([lead.name + 'は ' + it.name + 'を つかった！'], tp ? { teleport: loc } : { exit: true });
+      afterMenu([lead.name + 'は' + it.name + 'を使った！'], tp ? { teleport: loc } : { exit: true });
       return 'exit';
     }
     if (hasType(eff, 'repel') && !needsPick(u.target)) {
       R.State.removeItem(id, 1);
       const r = Menu.applyFieldEffect(u, lead, [], { item: true });
       R.sfx('item');
-      await K.msg(lead.name + 'は ' + it.name + 'を つかった！\n' + r.lines.join('\n'));
+      await K.msg(lead.name + 'は' + it.name + 'を使った！\n' + r.lines.join('\n'));
       return true;
     }
     if (!needsPick(u.target)) {
       const targets = u.target === 'self' ? [lead] : R.Game.party.slice();
-      if (!targets.some((c) => affects(eff, c))) { await K.msg('いまは つかう ひつようが ない ようだ。'); return false; }
+      if (!targets.some((c) => affects(eff, c))) { await K.msg('今は使う必要がないようだ。'); return false; }
       R.State.removeItem(id, 1);
       const r = Menu.applyFieldEffect(u, lead, targets, { item: true });
       R.sfx(hasType(eff, 'revive') ? 'revive' : 'heal');
-      await K.msg(lead.name + 'は ' + it.name + 'を つかった！\n' + r.lines.join('\n'));
+      await K.msg(lead.name + 'は' + it.name + 'を使った！\n' + r.lines.join('\n'));
       return true;
     }
     // pick a target, repeatedly while the item lasts (FF-style quick healing)
     let used = false, last = 0;
     const valid = validFor(u.target, eff);
-    if (!R.Game.party.some((c) => valid(c) && affects(eff, c))) { await K.msg('いまは つかう ひつようが ない ようだ。'); return false; }
+    if (!R.Game.party.some((c) => valid(c) && affects(eff, c))) { await K.msg('今は使う必要がないようだ。'); return false; }
     for (;;) {
       if (!R.State.count(id)) break;
       const i = await Menu.pickMember({ title: it.name + ' ×' + R.State.count(id), valid, initial: last });
       if (i < 0) break;
       last = i;
       const c = R.Game.party[i];
-      if (!affects(eff, c)) { R.sfx('buzzer'); await K.msg('いまは つかう ひつようが ない ようだ。'); continue; }
+      if (!affects(eff, c)) { R.sfx('buzzer'); await K.msg('今は使う必要がないようだ。'); continue; }
       R.State.removeItem(id, 1);
       const r = Menu.applyFieldEffect(u, lead, [c], { item: true });
       used = true;
       R.sfx(hasType(eff, 'revive') ? 'revive' : hasType(eff, 'grow') ? 'buff' : 'heal');
-      await K.msg(lead.name + 'は ' + it.name + 'を つかった！\n' + r.lines.join('\n'));
+      await K.msg(lead.name + 'は' + it.name + 'を使った！\n' + r.lines.join('\n'));
     }
     return used;
   };
@@ -443,9 +444,9 @@
   /** can c use ability ab in the field right now? → '' or reason */
   Menu.abilityBlock = function (c, abId) {
     const ab = DB.abilities[abId];
-    if (!ab) return 'つかえない';
-    if (c.hp <= 0) return 'たおれている';
-    if (c.mp < R.Rules.mpCost(c, abId)) return 'MPが たりない';
+    if (!ab) return '使えない';
+    if (c.hp <= 0) return '倒れている';
+    if (c.mp < R.Rules.mpCost(c, abId)) return 'MPが足りない';
     return '';
   };
 
@@ -454,65 +455,65 @@
     const ab = DB.abilities[abId];
     if (!ab) return false;
     const cost = R.Rules.mpCost(c, abId);
-    const verb = ab.magic ? 'を となえた！' : 'を つかった！';
+    const verb = ab.magic ? 'を唱えた！' : 'を使った！';
     const block = Menu.abilityBlock(c, abId);
-    if (block) { R.sfx('buzzer'); await K.msg(block === 'MPが たりない' ? 'MPが たりない！' : c.name + 'は ' + block + '。'); return false; }
+    if (block) { R.sfx('buzzer'); await K.msg(block === 'MPが足りない' ? 'MPが足りない！' : c.name + 'は' + block + '。'); return false; }
     const eff = ab.effects || [];
     if (hasType(eff, 'teleport') || hasType(eff, 'exit')) {
       const tp = hasType(eff, 'teleport');
       if (tp ? !(R.Field && R.Field.canTeleport && R.Field.canTeleport()) : !(R.Field && R.Field.canExit && R.Field.canExit())) {
-        await K.msg('ここでは つかえない ようだ。');
+        await K.msg('ここでは使えないようだ。');
         return false;
       }
       let loc = null;
       if (tp) { loc = await chooseTown(); if (!loc) return false; }
       c.mp -= cost;
-      afterMenu([c.name + 'は ' + ab.name + verb], tp ? { teleport: loc } : { exit: true });
+      afterMenu([c.name + 'は' + ab.name + verb], tp ? { teleport: loc } : { exit: true });
       return 'exit';
     }
     if (hasType(eff, 'repel') && !needsPick(ab.target)) {
       c.mp -= cost;
       const r = Menu.applyFieldEffect(ab, c, [], {});
       R.sfx('magic');
-      await K.msg(c.name + 'は ' + ab.name + verb + '\n' + r.lines.join('\n'));
+      await K.msg(c.name + 'は' + ab.name + verb + '\n' + r.lines.join('\n'));
       return true;
     }
     if (!needsPick(ab.target)) {
       const targets = ab.target === 'self' ? [c] : R.Game.party.slice();
-      if (!targets.some((t) => affects(eff, t))) { await K.msg('いまは つかう ひつようが ない ようだ。'); return false; }
+      if (!targets.some((t) => affects(eff, t))) { await K.msg('今は使う必要がないようだ。'); return false; }
       c.mp -= cost;
       const r = Menu.applyFieldEffect(ab, c, targets, {});
       R.sfx(hasType(eff, 'revive') ? 'revive' : 'heal');
-      await K.msg(c.name + 'は ' + ab.name + verb + '\n' + r.lines.join('\n'));
+      await K.msg(c.name + 'は' + ab.name + verb + '\n' + r.lines.join('\n'));
       return true;
     }
     let used = false, last = R.Game.party.indexOf(c);
     const valid = validFor(ab.target, eff);
-    if (!R.Game.party.some((t) => valid(t) && affects(eff, t))) { await K.msg('いまは つかう ひつようが ない ようだ。'); return false; }
+    if (!R.Game.party.some((t) => valid(t) && affects(eff, t))) { await K.msg('今は使う必要がないようだ。'); return false; }
     for (;;) {
       if (c.mp < cost || c.hp <= 0) break;
       const i = await Menu.pickMember({ title: ab.name + (cost ? ' MP' + cost : ''), valid, initial: last });
       if (i < 0) break;
       last = i;
       const t = R.Game.party[i];
-      if (!affects(eff, t)) { R.sfx('buzzer'); await K.msg('いまは つかう ひつようが ない ようだ。'); continue; }
+      if (!affects(eff, t)) { R.sfx('buzzer'); await K.msg('今は使う必要がないようだ。'); continue; }
       c.mp -= cost;
       const r = Menu.applyFieldEffect(ab, c, [t], {});
       used = true;
       R.sfx(hasType(eff, 'revive') ? 'revive' : 'heal');
-      await K.msg(c.name + 'は ' + ab.name + verb + '\n' + r.lines.join('\n'));
+      await K.msg(c.name + 'は' + ab.name + verb + '\n' + r.lines.join('\n'));
     }
     return used;
   };
 
   // ------------------------------------------------------------ main menu
   const COMMANDS = [
-    { id: 'items', label: 'どうぐ' }, { id: 'abilities', label: 'アビリティ' },
-    { id: 'equip', label: 'そうび' }, { id: 'jobs', label: 'ジョブ' },
-    { id: 'set', label: 'セット' }, { id: 'status', label: 'つよさ' },
-    { id: 'order', label: 'ならびかえ' }, { id: 'book', label: 'ずかん' },
-    { id: 'map', label: 'ちず' }, { id: 'save', label: 'セーブ' },
-    { id: 'settings', label: 'せってい' },
+    { id: 'items', label: '道具' }, { id: 'abilities', label: 'アビリティ' },
+    { id: 'equip', label: '装備' }, { id: 'jobs', label: 'ジョブ' },
+    { id: 'set', label: 'セット' }, { id: 'status', label: '強さ' },
+    { id: 'order', label: '並び替え' }, { id: 'book', label: '図鑑' },
+    { id: 'map', label: '地図' }, { id: 'save', label: 'セーブ' },
+    { id: 'settings', label: '設定' },
   ];
   const onWorld = () => !!(R.Field && R.Field.map && R.Field.map.isWorld);
   let lastCmd = 0;
@@ -564,7 +565,7 @@
   function drawGold(x, y, w) {
     G().window(x, y, w, 44);
     K.labelNum('ゴールド', R.Game.gold + ' G', x + 12, y + 8, w - 24);
-    K.labelNum('プレイじかん', U.playTime(R.Game.playFrames || 0), x + 12, y + 22, w - 24);
+    K.labelNum('プレイ時間', U.playTime(R.Game.playFrames || 0), x + 12, y + 22, w - 24);
   }
   Menu.drawGold = drawGold;
 
@@ -593,7 +594,7 @@
     const t = objectiveText();
     if (!t) return;
     const lines = G().wrap(t, w - 22).slice(0, 4);
-    G().window(x, y, w, 16 + lines.length * 14 - 2 + 2, { title: 'つぎの もくてき' });
+    G().window(x, y, w, 16 + lines.length * 14 - 2 + 2, { title: '次の目的' });
     lines.forEach((l, i) => G().text(l, x + 11, y + 9 + i * 14));
   }
 

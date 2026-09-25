@@ -226,6 +226,15 @@
       this.ready = true;
       await R.Engine.fadeIn(14);
       if (this.eng.boss) { R.sfx('roar'); R.Engine.shake(24, 2); await R.Engine.wait(20); }
+      if (this.o.rare) {
+        // rare monster: golden flashes + fanfare before the usual appearance message
+        for (let i = 0; i < 2; i++) { R.Engine.flashScreen('#ffe890', 14); await R.Engine.wait(12); }
+        this.rareGlow = true;
+        const j = R.jingle('rare');
+        await this.say('めったに出会えない魔物が現れた！');
+        await j;
+        await this.frames(10);
+      }
     }
     async play(gen) { for (const ev of gen) await this.handle(ev); }
 
@@ -675,6 +684,21 @@
         else if (v.blink > 0 && Math.floor(v.blink / 3) % 2 === 0) G().drawTinted(v.img, x, y, '#ffffff', 0.55);
         else if (targeted) G().drawTinted(v.img, x, y, '#ffffff', 0.18 + 0.18 * Math.sin(F * 0.2));
         else G().draw(v.img, x, y, alpha < 1 ? { alpha } : undefined);
+        if (m.d && m.d.flags && m.d.flags.includes('rare')) this.drawSparkles(v, x, y, F);
+      }
+    }
+    /** twinkling stars around a rare monster */
+    drawSparkles(v, x, y, F) {
+      const g = G();
+      for (let k = 0; k < 5; k++) {
+        const t = (F + k * 37) % 90;
+        if (t > 30) continue;
+        const px = x + ((k * 53 + Math.floor((F + k * 37) / 90) * 29) % Math.max(8, v.w));
+        const py = y + ((k * 31 + Math.floor((F + k * 37) / 90) * 17) % Math.max(8, v.img.height - 4));
+        const r = t < 15 ? Math.ceil(t / 5) : Math.ceil((30 - t) / 5);
+        const c = k % 2 ? '#fff6c0' : '#ffffff';
+        g.rect(px, py - r, 1, r * 2 + 1, c);
+        g.rect(px - r, py, r * 2 + 1, 1, c);
       }
     }
     /** returns true when the dissolve is finished */
@@ -826,6 +850,11 @@
   async function start(o) {
     o = o || {};
     if (!R.Game) throw new Error('R.Battle.start: no game in progress');
+    // rare monster: a plain random encounter may be replaced by the zone's rare monster
+    if (o.zone && !o.troop && !o.mons && !o.noRare) {
+      const rr = DB.rareEncounters && DB.rareEncounters[o.zone];
+      if (rr && DB.monsters[rr.mon] && U.r() < rr.rate) o = Object.assign({}, o, { mons: [[rr.mon, 1]], rareMon: rr.mon });
+    }
     const troop = o.troop && DB.troops[o.troop];
     const zone = o.zone && DB.encounters[o.zone];
     const mons = B.buildMons(o);
@@ -845,7 +874,7 @@
     // battle ended in auto (boss/event battles always start manual)
     const randomFight = !!(o.zone && !o.troop && !o.mons && !o.canLose && !eng.noEscape && !eng.boss);
     const autoStart = randomFight && R.Settings.autoKeep !== false && !!B.autoCarry;
-    const scene = new BattleScene(eng, { bg, bgm, canLose: !!o.canLose, autoStart });
+    const scene = new BattleScene(eng, { bg, bgm, canLose: !!o.canLose, autoStart, rare: !!o.rareMon });
     B.current = scene;
     let res;
     try {

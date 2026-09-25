@@ -1,5 +1,5 @@
-// Field menu: そうび — per member, per slot, with live stat previews
-// (↑ green / ↓ red), さいきょう (optimize) and はずす. Dual wield puts a one-handed
+// Field menu: 装備 — per member, per slot, with live stat previews
+// (↑ green / ↓ red), 最強装備 (optimize) and 外す. Dual wield puts a one-handed
 // weapon in the shield slot when the member may use two swords.
 (function (R) {
   'use strict';
@@ -9,8 +9,8 @@
   const Menu = (R.Menu = R.Menu || {});
 
   const SLOTS = ['weapon', 'shield', 'head', 'body', 'acc'];
-  const LABEL = { weapon: 'ぶき', shield: 'たて', head: 'あたま', body: 'からだ', acc: 'アクセサリ' };
-  const SHOW = [['atk', 'こうげき'], ['def', 'しゅび'], ['mag', 'まりょく'], ['mdef', 'まぼうぎょ'], ['agi', 'すばやさ'], ['eva', 'かいひ'], ['hp', 'さいだいHP'], ['mp', 'さいだいMP']];
+  const LABEL = { weapon: '武器', shield: '盾', head: '頭', body: '体', acc: 'アクセサリ' };
+  const SHOW = [['atk', '攻撃力'], ['def', '守備力'], ['mag', '魔力'], ['mdef', '魔法防御'], ['agi', '素早さ'], ['eva', '回避'], ['hp', '最大HP'], ['mp', '最大MP']];
   const ROWS = 6;
   let lastMember = 0;
 
@@ -77,7 +77,7 @@
       openCand(slot, ids) {
         const c = this.c;
         const cur = R.Rules.stats(c);
-        const items = [{ label: 'はずす', id: null }].concat(ids.map((id) => {
+        const items = [{ label: '外す', id: null }].concat(ids.map((id) => {
           const it = DB.items[id];
           const k = slot === 'shield' && it.type === 'weapon' ? 'atk2' : keyStat(slot, it);
           const d = previewStats(c, slot, id)[k] - cur[k];
@@ -86,7 +86,7 @@
         const start = Math.max(0, ids.indexOf(c.equip[slot]) + 1);
         const list = new R.UI.List({
           x: 4, y: 46, w: 248, rows: ROWS, items, index: ids.length ? (start || 1) : 0,
-          title: slot === 'shield' && dual(c) ? 'ひだりて' : LABEL[slot],
+          title: slot === 'shield' && dual(c) ? '左手' : LABEL[slot],
           onChange: () => this.updatePreview(),
           drawItem: (row, x, y, w) => this.drawCand(row, x, y, w),
         });
@@ -117,11 +117,11 @@
         const c = this.c;
         const before = JSON.stringify(c.equip);
         R.Rules.optimize(c);
-        if (JSON.stringify(c.equip) === before) await Menu.kit.msg('いまの そうびが いちばん つよい ようだ。');
-        else { R.sfx('item'); await Menu.kit.msg(c.name + 'は さいきょうの そうびに かえた！'); }
+        if (JSON.stringify(c.equip) === before) await Menu.kit.msg('今の装備がいちばん強いようだ。');
+        else { R.sfx('item'); await Menu.kit.msg(c.name + 'は最強の装備に変えた！'); }
       }
       drawCand(row, x, y, w) {
-        if (!row.id) { G().text('はずす', x, y, { color: G().C.cyan }); return; }
+        if (!row.id) { G().text('外す', x, y, { color: G().C.cyan }); return; }
         const it = DB.items[row.id];
         Menu.kit.drawIcon(it, x, y + 2);
         G().text(row.label, x + 11, y, { color: it.rare ? G().C.yellow : G().C.white });
@@ -136,7 +136,7 @@
         const cd = this.mode === 'cand' ? this.cand : null;
         if (cd) {
           const row = cd.list.item;
-          const text = row && row.id ? (DB.items[row.id].desc || '') : 'いまの そうびを はずす。';
+          const text = row && row.id ? (DB.items[row.id].desc || '') : '今の装備を外す。';
           G().wrap(text, 226).slice(0, 2).forEach((l, i) => G().text(l, 15, 11 + i * 14));
         } else {
           K.drawSprite(c, 26, 38, { frame: Math.floor(R.Engine.frame / 20) });
@@ -152,21 +152,21 @@
           G().window(4, 46, 248, 96);
           SLOTS.forEach((s, i) => {
             const y = 54 + i * 14;
-            const lbl = s === 'shield' && dual(c) ? 'ひだりて' : LABEL[s];
+            const lbl = s === 'shield' && dual(c) ? '左手' : LABEL[s];
             G().text(lbl, 20, y, { color: G().C.gray });
             const id = c.equip[s];
-            if (s === 'shield' && !id && twoHanded(c)) G().text('（りょうてもち）', 90, y, { color: G().C.gray });
+            if (s === 'shield' && !id && twoHanded(c)) G().text('（両手持ち）', 90, y, { color: G().C.gray });
             else if (id) { K.drawIcon(DB.items[id], 78, y + 2); G().text(K.itemLabel(id), 90, y, { color: DB.items[id].rare ? G().C.yellow : G().C.white }); }
             else G().text('―――', 90, y, { color: G().C.dark });
           });
-          G().text('さいきょう そうび', 20, 54 + 5 * 14, { color: G().C.cyan });
+          G().text('最強装備', 20, 54 + 5 * 14, { color: G().C.cyan });
           G().cursor(10, 55 + this.row * 14, !this.busy);
         }
         // stats
         G().window(4, 144, 248, 74);
         const cur = R.Rules.stats(c), nxt = this.preview;
         // dual wield: show the off-hand attack in place of evasion
-        const show = cur.atk2 || (nxt && nxt.atk2) ? SHOW.map((e) => (e[0] === 'eva' ? ['atk2', 'ひだりて'] : e)) : SHOW;
+        const show = cur.atk2 || (nxt && nxt.atk2) ? SHOW.map((e) => (e[0] === 'eva' ? ['atk2', '左手'] : e)) : SHOW;
         show.forEach(([k, label], i) => {
           const x = 14 + (i % 2) * 118, y = 152 + Math.floor(i / 2) * 14;
           G().text(label, x, y, { color: G().C.gray });

@@ -9,7 +9,7 @@
 
   Object.assign(DB.maps, {
     fx_world: {
-      name: 'テストの せかい', type: 'world', legend: 'world', bgm: 'overworld',
+      name: 'テストの世界', type: 'world', legend: 'world', bgm: 'overworld',
       rows: [
         '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
         '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
@@ -54,7 +54,7 @@
     },
 
     fx_town: {
-      name: 'テストの まち', type: 'town', legend: 'local', theme: 'town', bgm: 'town',
+      name: 'テストの町', type: 'town', legend: 'local', theme: 'town', bgm: 'town',
       location: 'fx_town', outside: ',',
       rows: [
         ',,,,,,,,,,,,,,,,,,,,,,',
@@ -78,15 +78,15 @@
         '@': { spawn: 'entrance', dir: 'up', under: ':' },
         'A': { npc: { id: 'shopkeeper', sprite: 'npc:merchant', dir: 'down', event: 'fx_shop' }, under: '_' },
         '$': { chest: { id: 'fx_town_c1', item: 'holy_water', n: 2 }, under: '_' },
-        'G': { npc: { id: 'kid', sprite: 'npc:boy', move: 'wander', text: ['ぼく いつか ぼうけんしゃに なるんだ！'] }, under: ',' },
+        'G': { npc: { id: 'kid', sprite: 'npc:boy', move: 'wander', text: ['ぼく、いつか冒険者になるんだ！'] }, under: ',' },
         'E': { npc: { id: 'elder', sprite: 'npc:elder', dir: 'left', event: 'fx_elder' }, under: ',' },
-        'H': { npc: { id: 'guard', sprite: 'npc:soldier', move: 'spin', text: 'この まちは へいわだよ。\fでも そとには まものが いるから きをつけてね。' }, under: ',' },
-        '%': { sign: { text: 'ここは テストの まち。\nきたに いどが ある。' }, under: 'm' },
+        'H': { npc: { id: 'guard', sprite: 'npc:soldier', move: 'spin', text: 'この町は平和だよ。\fでも、外には魔物がいるから\n気をつけてね。' }, under: ',' },
+        '%': { sign: { text: 'ここはテストの町。\n北に井戸がある。' }, under: 'm' },
         '&': { hidden: { id: 'fx_town_h1', item: 'seed_str' }, under: 'W' },
       },
       npcs: [
         { id: 'priest', x: 16, y: 5, sprite: 'npc:priest', dir: 'down', event: 'fx_church' },
-        { id: 'ghost_girl', x: 4, y: 11, sprite: 'npc:girl', move: 'wander', cond: 'fx_elder_done', text: 'ちょうろうさんと おはなし したんだね！' },
+        { id: 'ghost_girl', x: 4, y: 11, sprite: 'npc:girl', move: 'wander', cond: 'fx_elder_done', text: '長老さんとお話ししたんだね！' },
       ],
       hidden: [{ id: 'fx_town_h2', x: 19, y: 2, gold: 50 }],
       events: [{ x: 10, y: 12, id: 'fx_step_hello', trigger: 'step', once: 'fx_step_hello_done' }],
@@ -95,7 +95,7 @@
     },
 
     fx_dungeon_1: {
-      name: 'テストの どうくつ', type: 'dungeon', legend: 'local', theme: 'cave', bgm: 'cave',
+      name: 'テストの洞窟', type: 'dungeon', legend: 'local', theme: 'cave', bgm: 'cave',
       encounter: 'fx_d1', encRate: 12,
       rows: [
         '####################',
@@ -118,7 +118,7 @@
     },
 
     fx_dungeon_2: {
-      name: 'テストの どうくつ ちか2かい', type: 'dungeon', legend: 'local', theme: 'cave', bgm: 'cave',
+      name: 'テストの洞窟 地下2階', type: 'dungeon', legend: 'local', theme: 'cave', bgm: 'cave',
       encounter: 'fx_d2',
       rows: [
         '##i###i####',
@@ -142,7 +142,7 @@
   });
 
   Object.assign(DB.locations, {
-    fx_town: { name: 'テストの まち', map: 'fx_world', spawn: 'fx_town', dock: 'fx_dock' },
+    fx_town: { name: 'テストの町', map: 'fx_world', spawn: 'fx_town', dock: 'fx_dock' },
   });
 
   Object.assign(DB.events, {
@@ -150,34 +150,34 @@
       run: async (ev) => {
         if (ev.flag('fx_town_seen')) return;
         ev.setFlag('fx_town_seen');
-        await ev.say('テストの まちに ついた。');
+        await ev.say('テストの町に着いた。');
       },
     },
     fx_step_hello: {
       run: async (ev) => {
-        await ev.say('いしだたみの みちが つづいている。');
+        await ev.say('石畳の道が続いている。');
       },
     },
     fx_elder: {
       meta: { gives: ['flag:fx_elder_done', 'item:gold_key'] },
       run: async (ev) => {
         ev.npc('elder').face('player');
-        if (ev.flag('fx_elder_done')) { await ev.say('ふねは みなみの はまべに あるぞ。'); return; }
-        await ev.say('おお {leader}よ。 よくぞ まいった。');
-        const i = await ev.ask('わしの ねがいを きいて くれるか？', ['はい', 'いいえ']);
-        if (i !== 0) { await ev.say('そうか……。 きが かわったら また きておくれ。'); return; }
-        await ev.say('では これを もっていくがよい。');
+        if (ev.flag('fx_elder_done')) { await ev.say('船は南の浜辺にあるぞ。'); return; }
+        await ev.say('おお、{leader}よ。\nよくぞ参った。');
+        const i = await ev.ask('わしの願いを聞いてくれるか？', ['はい', 'いいえ']);
+        if (i !== 0) { await ev.say('そうか……。\n気が変わったら、また来ておくれ。'); return; }
+        await ev.say('では、これを持っていくがよい。');
         await ev.give('gold_key');
         ev.giveShip('fx_dock');
         ev.setFlag('fx_elder_done');
-        await ev.say('みなみの はまべに ふねも よういした。\nきを つけて いくのじゃぞ。');
+        await ev.say('南の浜辺に船も用意した。\n気をつけて行くのじゃぞ。');
         await ev.npc('elder').walk('LL');
         ev.npc('elder').face('right');
       },
     },
     fx_shop: {
       run: async (ev) => {
-        await ev.say('いらっしゃい！ どうぐやへ ようこそ。');
+        await ev.say('いらっしゃい！　道具屋へようこそ。');
         await ev.shop('regnas_item');
       },
     },
@@ -185,12 +185,12 @@
     fx_boss: {
       meta: { gives: ['flag:fx_boss_done'] },
       run: async (ev) => {
-        await ev.say('ゴーレムが たちはだかった！');
+        await ev.say('ゴーレムが立ちはだかった！');
         const r = await ev.battle('fx_golem', { noEscape: true });
         if (r !== 'win') return false;
         ev.npc('boss').hide();
         ev.setFlag('fx_boss_done');
-        await ev.say('ふういんが とけた！');
+        await ev.say('封印が解けた！');
       },
     },
   });

@@ -1,4 +1,4 @@
-// Field menu: どうぐ (consumables / equipment / key items; use, discard) and
+// Field menu: 道具 (consumables / equipment / key items; use, discard) and
 // アビリティ (field-usable action abilities per member).
 (function (R) {
   'use strict';
@@ -8,9 +8,9 @@
   const Menu = (R.Menu = R.Menu || {});
 
   const TABS = [
-    { id: 'use', label: 'どうぐ', pred: (it) => it.type === 'consumable' },
-    { id: 'gear', label: 'そうび', pred: (it) => ['weapon', 'shield', 'head', 'body', 'acc'].includes(it.type) },
-    { id: 'key', label: 'だいじなもの', pred: (it) => it.type === 'key' },
+    { id: 'use', label: '道具', pred: (it) => it.type === 'consumable' },
+    { id: 'gear', label: '装備品', pred: (it) => ['weapon', 'shield', 'head', 'body', 'acc'].includes(it.type) },
+    { id: 'key', label: '大事なもの', pred: (it) => it.type === 'key' },
   ];
   const ROWS = 8;
   let lastTab = 0;
@@ -19,12 +19,12 @@
   function gearSummary(it) {
     const K = Menu.kit;
     const parts = [];
-    if (it.atk) parts.push('こうげき' + it.atk);
-    if (it.def) parts.push('しゅび' + it.def);
-    if (it.mag) parts.push('まりょく' + it.mag);
-    if (it.mdef) parts.push('まぼうぎょ' + it.mdef);
+    if (it.atk) parts.push('攻撃力' + it.atk);
+    if (it.def) parts.push('守備力' + it.def);
+    if (it.mag) parts.push('魔力' + it.mag);
+    if (it.mdef) parts.push('魔法防御' + it.mdef);
     const st = it.stats || {};
-    for (const k of ['str', 'vit', 'agi', 'int', 'mnd', 'luk', 'hp', 'mp']) if (st[k]) parts.push(K.STAT_NAMES[k].replace('さいだい', '') + (st[k] > 0 ? '+' : '') + st[k]);
+    for (const k of ['str', 'vit', 'agi', 'int', 'mnd', 'luk', 'hp', 'mp']) if (st[k]) parts.push(K.STAT_NAMES[k].replace('最大', '') + (st[k] > 0 ? '+' : '') + st[k]);
     if (it.element) parts.push(K.elemName(it.element));
     return parts.join(' ');
   }
@@ -38,7 +38,7 @@
   Menu.abilityScreen = () => R.Engine.run(new (cls().AbilityScreen)());
 
   function build() {
-    // ------------------------------------------------------------ どうぐ
+    // ------------------------------------------------------------ 道具
     class ItemScreen extends Menu.kit.Screen {
       constructor() {
         super();
@@ -68,10 +68,10 @@
         const K = Menu.kit;
         const it = e.item;
         const tab = TABS[this.tab].id;
-        if (tab === 'key') { await K.msg(it.name + 'は だいじに しまってある。'); return; }
+        if (tab === 'key') { await K.msg(it.name + 'は大切にしまってある。'); return; }
         const u = it.use || {};
         const usable = !!(u.field && (u.effects || []).length);
-        const opts = tab === 'use' ? [{ label: 'つかう', disabled: !usable }, 'すてる'] : ['そうびする', 'すてる'];
+        const opts = tab === 'use' ? [{ label: '使う', disabled: !usable }, '捨てる'] : ['装備する', '捨てる'];
         const row = this.list.index - this.list.top;
         const i = await R.UI.choose(opts, { x: 160, y: Math.min(30 + 8 + row * 14 - 4, 118), w: 88 });
         if (i < 0) return;
@@ -86,26 +86,26 @@
         const K = Menu.kit;
         const slot = R.Rules.itemSlot(e.id);
         const ok = (c) => R.Rules.canEquip(c, e.id, slot);
-        if (!R.Game.party.some(ok)) { R.sfx('buzzer'); await K.msg('だれも そうび できない。'); return; }
-        const k = await Menu.pickMember({ title: 'だれが そうびする？', valid: ok, initial: Math.max(0, R.Game.party.findIndex(ok)) });
+        if (!R.Game.party.some(ok)) { R.sfx('buzzer'); await K.msg('誰も装備できない。'); return; }
+        const k = await Menu.pickMember({ title: '誰が装備する？', valid: ok, initial: Math.max(0, R.Game.party.findIndex(ok)) });
         if (k < 0) return;
         const c = R.Game.party[k];
         if (!R.Rules.equip(c, slot, e.id)) { R.sfx('buzzer'); return; }
         R.sfx('item');
-        await K.msg(c.name + 'は ' + e.item.name + 'を そうびした！');
+        await K.msg(c.name + 'は' + e.item.name + 'を装備した！');
       }
       async discard(e) {
         const K = Menu.kit;
         const it = e.item;
         let n = 1;
         if (e.count > 1) {
-          n = await R.UI.number({ min: 1, max: e.count, initial: 1, label: 'すてる かず', x: 128, y: 100, w: 120 });
+          n = await R.UI.number({ min: 1, max: e.count, initial: 1, label: '捨てる数', x: 128, y: 100, w: 120 });
           if (n < 0) return;
         }
-        if (!(await K.yesno(it.name + (n > 1 ? 'を ' + n + 'こ' : 'を') + ' すてますか？'))) return;
+        if (!(await K.yesno(it.name + 'を' + (n > 1 ? n + '個' : '') + '捨てますか？'))) return;
         R.State.removeItem(e.id, n);
         R.sfx('confirm_soft');
-        await K.msg(R.State.leader().name + 'は ' + it.name + 'を すてた。');
+        await K.msg(R.State.leader().name + 'は' + it.name + 'を捨てた。');
       }
       drawRow(row, x, y, w, sel) {
         const e = row.e, it = e.item;
@@ -126,7 +126,7 @@
         });
         K.lrArrows(12, 243, 12);
         this.list.draw();
-        if (!this.entries.length) G().text('なにも もっていない。', 20, 38, { color: G().C.gray });
+        if (!this.entries.length) G().text('何も持っていない。', 20, 38, { color: G().C.gray });
         // description
         G().window(4, 158, 248, 60);
         const e = this.cur;
@@ -144,9 +144,9 @@
           }
         } else if (it.type === 'consumable') {
           const u = it.use || {};
-          const where = u.field && u.battle ? 'どこでも つかえる' : u.field ? 'フィールドで つかえる' : u.battle ? 'せんとうで つかえる' : '';
+          const where = u.field && u.battle ? 'いつでも使える' : u.field ? 'フィールドで使える' : u.battle ? '戦闘中に使える' : '';
           if (where) G().text(where, 15, 194, { color: G().C.gray });
-          if (it.price) G().text('うりね ' + Math.floor(it.price / 2) + 'G', 242, 194, { align: 'right', color: G().C.gray });
+          if (it.price) G().text('売値 ' + Math.floor(it.price / 2) + 'G', 242, 194, { align: 'right', color: G().C.gray });
         }
       }
     }
@@ -184,7 +184,7 @@
           const block = Menu.abilityBlock(this.c, id);
           if (block) {
             R.sfx('buzzer');
-            this.flow(() => Menu.kit.msg(block === 'MPが たりない' ? 'MPが たりない！' : this.c.name + 'は ' + block + '。'));
+            this.flow(() => Menu.kit.msg(block === 'MPが足りない' ? 'MPが足りない！' : this.c.name + 'は' + block + '。'));
             return;
           }
           R.sfx('confirm');
@@ -215,7 +215,7 @@
         G().text('MP', 150, 23); G().text(c.mp + '/' + st.mp, 236, 23, { align: 'right' });
         K.lrArrows(10, 246, 17);
         this.list.draw();
-        if (!this.abs.length) G().text('つかえる アビリティが ない。', 20, 50, { color: G().C.gray });
+        if (!this.abs.length) G().text('使えるアビリティがない。', 20, 50, { color: G().C.gray });
         G().window(4, 170, 248, 46);
         const row = this.list.item;
         if (row) {

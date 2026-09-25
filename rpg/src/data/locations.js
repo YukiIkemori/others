@@ -4,14 +4,14 @@
 (function (R) {
   'use strict';
   Object.assign(R.DB.locations, {
-    regnas:       { name: 'レグナス',       map: 'world', spawn: 'regnas_castle', dock: 'regnas_dock' },
-    milt:         { name: 'ミルト',         map: 'world', spawn: 'milt_village',  dock: 'milt_dock' },
-    porta:        { name: 'ポルタ',         map: 'world', spawn: 'porta_town',    dock: 'porta_dock' },
-    elfin:        { name: 'エルフィン',     map: 'world', spawn: 'elfin_village', dock: 'elfin_dock' },
-    salva:        { name: 'サルバ',         map: 'world', spawn: 'salva_town',    dock: 'salva_dock' },
-    frost:        { name: 'フロスト',       map: 'world', spawn: 'frost_village', dock: 'frost_dock' },
-    arcana:       { name: 'アルカナ',       map: 'world', spawn: 'arcana_city',   dock: 'arcana_dock' },
-    light_temple: { name: 'ひかりの神殿',   map: 'world', spawn: 'light_temple',  dock: 'light_temple_dock' },
-    edge_shrine:  { name: 'さいはての ほこら', map: 'world', spawn: 'edge_shrine', dock: 'edge_shrine_dock' },
+    regnas:       { name: 'レグナス城',     map: 'world', spawn: 'regnas_castle', dock: 'regnas_dock' },
+    milt:         { name: 'ミルトの村',     map: 'world', spawn: 'milt_village',  dock: 'milt_dock' },
+    porta:        { name: '港町ポルタ',     map: 'world', spawn: 'porta_town',    dock: 'porta_dock' },
+    elfin:        { name: '森の村エルフィン', map: 'world', spawn: 'elfin_village', dock: 'elfin_dock' },
+    salva:        { name: '砂漠の町サルバ', map: 'world', spawn: 'salva_town',    dock: 'salva_dock' },
+    frost:        { name: '雪の村フロスト', map: 'world', spawn: 'frost_village', dock: 'frost_dock' },
+    arcana:       { name: '魔法都市アルカナ', map: 'world', spawn: 'arcana_city',   dock: 'arcana_dock' },
+    light_temple: { name: '光の神殿',       map: 'world', spawn: 'light_temple',  dock: 'light_temple_dock' },
+    edge_shrine:  { name: '最果ての祠',     map: 'world', spawn: 'edge_shrine', dock: 'edge_shrine_dock' },
   });
 })(window.RPG);

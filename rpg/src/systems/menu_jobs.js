@@ -1,6 +1,6 @@
 // Field menu: ジョブ (FFT-style job board: every job by tier, member sprite in
 // that job's outfit, job level pips, ★ mastered, locked jobs dark with their
-// requirements), アビリティを おぼえる (spend JP) and セット (ability slots).
+// requirements), アビリティを覚える (spend JP) and セット (ability slots).
 (function (R) {
   'use strict';
   const DB = R.DB;
@@ -32,7 +32,8 @@
   /** things a job change took off, as message lines */
   function removedLines(c, removed) {
     if (!removed || !removed.length) return [];
-    return [c.name + 'は ' + removed.map((id) => Menu.kit.itemName(id)).join(' ') + 'を はずした。'];
+    const names = removed.map((id) => Menu.kit.itemName(id));
+    return [c.name + 'は' + names.join(names.length > 2 ? '、' : 'と') + 'を外した。'];
   }
 
   async function doChangeJob(c, job) {
@@ -40,10 +41,10 @@
     const removed = R.Rules.changeJob(c, job);
     if (removed == null) { R.sfx('buzzer'); return false; }
     R.sfx('buff');
-    const lines = [c.name + 'は ' + K.jobName(job) + 'に なった！'].concat(removedLines(c, removed));
+    const lines = [c.name + 'は' + K.jobName(job) + 'になった！'].concat(removedLines(c, removed));
     await K.msg(lines.join('\n'));
     if (removed.length && R.Rules.optimize) {
-      if (await K.yesno('さいきょうの そうびに しますか？')) {
+      if (await K.yesno('最強の装備にしますか？')) {
         R.Rules.optimize(c);
         R.sfx('item');
       }
@@ -116,12 +117,12 @@
         const c = this.c, job = this.job;
         if (!R.Rules.isJobUnlocked(c, job)) {
           R.sfx('buzzer');
-          await K.msg(K.jobName(job) + 'に なるには\n' + (DB.jobs[job].req || []).map(reqText).join(' と ') + 'が ひつようだ。');
+          await K.msg(K.jobName(job) + 'になるには\n' + (DB.jobs[job].req || []).map(reqText).join('と') + 'が必要だ。');
           return;
         }
         R.sfx('confirm');
         const cur = c.job === job;
-        const opts = [{ label: 'ジョブを かえる', disabled: cur }, { label: 'アビリティを おぼえる' }];
+        const opts = [{ label: 'ジョブを変える', disabled: cur }, { label: 'アビリティを覚える' }];
         const cx = this.cellX(this.r, this.i);
         const i = await R.UI.choose(opts, { x: cx > 120 ? 8 : 116, y: 58, w: 132, initial: cur ? 1 : 0 });
         if (i === 0) await doChangeJob(c, job);
@@ -161,7 +162,7 @@
       }
       renderTitle() {
         const c = this.c;
-        const t = c.name + 'の ジョブ';
+        const t = c.name + 'のジョブ';
         const tw = Math.ceil(G().textWidth(t)) + 8;
         const tx = 128 - (tw >> 1);
         const focus = this.r < 0;
@@ -178,15 +179,15 @@
         const x = 14, y = 163;
         if (!open) {
           G().text(j.name, x, y, { color: G().C.gray });
-          G().text('みかいほう', 242, y, { align: 'right', color: G().C.red });
-          G().text('ひつよう', x, y + 14, { color: G().C.gray });
+          G().text('未解放', 242, y, { align: 'right', color: G().C.red });
+          G().text('条件', x, y + 14, { color: G().C.gray });
           (j.req || []).forEach((rq, k) => {
             const ok = R.Rules.jobLevel(c, rq[0]) >= rq[1];
             const now = R.Rules.jobLevel(c, rq[0]);
             const col = ok ? G().C.green : G().C.white;
             const yy = y + 14 + k * 14;
             G().text(reqText(rq), x + 58, yy, { color: col });
-            G().text(ok ? 'OK' : 'いま Lv' + now, 242, yy, { align: 'right', color: ok ? G().C.green : G().C.gray });
+            G().text(ok ? 'OK' : '現在 Lv' + now, 242, yy, { align: 'right', color: ok ? G().C.green : G().C.gray });
           });
           return;
         }
@@ -197,15 +198,15 @@
         const mast = R.Rules.isMastered(c, job);
         G().text(j.name, x, y, { color: mast ? G().C.gold : G().C.white });
         const tags = [];
-        if (job === c.job) tags.push(['いまの ジョブ', G().C.cyan]);
+        if (job === c.job) tags.push(['現在のジョブ', G().C.cyan]);
         else if (job === c.set.sub) tags.push(['サブ', '#6ad0a0']);
         let tx = x + G().textWidth(j.name) + 8;
         for (const [t, col] of tags) { G().text(t, tx, y, { color: col }); tx += G().textWidth(t) + 6; }
         G().text('Lv ' + lv + (mast ? ' ★' : ''), 242, y, { align: 'right', color: mast ? G().C.gold : G().C.white });
         G().text('JP ' + rec.jp, x, y + 14, { color: G().C.yellow });
         const nx = R.Rules.jpToNextLevel(c, job);
-        G().text(nx > 0 ? 'つぎの Lvまで ' + nx : 'Lv MAX', x + 70, y + 14, { color: G().C.gray });
-        G().text('わざ ' + got + '/' + all.length, 242, y + 14, { align: 'right', color: mast ? G().C.gold : G().C.white });
+        G().text(nx > 0 ? '次のLvまで ' + nx : 'Lv MAX', x + 70, y + 14, { color: G().C.gray });
+        G().text('習得 ' + got + '/' + all.length, 242, y + 14, { align: 'right', color: mast ? G().C.gold : G().C.white });
         G().wrap(j.desc || '', 226).slice(0, 2).forEach((l, k) => G().text(l, x, y + 28 + k * 14));
       }
       renderMember() {
@@ -220,7 +221,7 @@
         G().text('サブ', x, y + 28, { color: G().C.gray });
         G().text(c.set.sub ? K.jobName(c.set.sub) : '―――', x + 44, y + 28, { color: c.set.sub ? G().C.white : G().C.dark });
         G().text('ジョブ ' + open + '/' + all.length, 242, y + 28, { align: 'right' });
-        G().text('◀▶ で なかまを かえる', x, y + 42, { color: G().C.gray });
+        G().text('◀▶で仲間を切り替え', x, y + 42, { color: G().C.gray });
         G().text('★ ' + mast, 242, y + 42, { align: 'right', color: mast ? G().C.gold : G().C.gray });
       }
     }
@@ -254,19 +255,19 @@
       }
       async learn(id) {
         const c = this.c, ab = DB.abilities[id];
-        if (R.Rules.learned(c, id)) { await K.msg(ab.name + 'は もう おぼえている。'); return; }
+        if (R.Rules.learned(c, id)) { await K.msg(ab.name + 'はもう覚えている。'); return; }
         const chk = R.Rules.canLearn(c, id);
-        if (!chk.ok) { R.sfx('buzzer'); await K.msg('JPが たりない！\n（' + ab.name + 'には ' + (ab.jp || 0) + 'JP ひつようだ）'); return; }
-        if (!(await K.yesno((ab.jp || 0) + 'JPで ' + ab.name + 'を おぼえますか？'))) return;
+        if (!chk.ok) { R.sfx('buzzer'); await K.msg('JPが足りない！\n（' + ab.name + 'には' + (ab.jp || 0) + 'JP必要だ）'); return; }
+        if (!(await K.yesno((ab.jp || 0) + 'JPで' + ab.name + 'を覚えますか？'))) return;
         R.Rules.learn(c, id);
         R.sfx('buff');
-        await K.msg(c.name + 'は ' + ab.name + 'を おぼえた！');
+        await K.msg(c.name + 'は' + ab.name + 'を覚えた！');
         if (R.Rules.isMastered(c, this.job)) {
           await R.jingle('jobup');
-          await K.msg(c.name + 'は ' + K.jobName(this.job) + 'を マスターした！');
+          await K.msg(c.name + 'は' + K.jobName(this.job) + 'をマスターした！');
         }
         if (ab.kind !== 'action' && !c.set[ab.kind]) {
-          if (await K.yesno(ab.name + 'を\n' + K.KIND_NAMES[ab.kind] + 'に セットしますか？')) {
+          if (await K.yesno(ab.name + 'を\n' + K.KIND_NAMES[ab.kind] + 'にセットしますか？')) {
             const before = Object.assign({}, c.equip);
             R.Rules.setSlot(c, ab.kind, id);
             R.sfx('confirm');
@@ -279,7 +280,7 @@
         const got = R.Rules.learned(c, row.id);
         badge(ab.kind, x, y);
         G().text(ab.name, x + 14, y, { color: got ? G().C.gray : G().C.white });
-        if (got) { check(x + w - 34, y + 2); G().text('ずみ', x + w - 8, y, { align: 'right', color: G().C.gray }); }
+        if (got) { check(x + w - 34, y + 2); G().text('済み', x + w - 8, y, { align: 'right', color: G().C.gray }); }
         else {
           const rec = c.jobs[this.job] || { jp: 0 };
           G().text(String(ab.jp || 0), x + w - 8, y, { align: 'right', color: rec.jp >= (ab.jp || 0) ? G().C.yellow : G().C.red });
@@ -295,7 +296,7 @@
         G().text(String(rec.jp), 240, 11, { align: 'right', color: G().C.yellow });
         if (this.jobs.length > 1) K.lrArrows(10, 246, 13);
         this.list.draw();
-        if (!this.list.items.length) G().text('おぼえられる わざが ない。', 20, 44, { color: G().C.gray });
+        if (!this.list.items.length) G().text('覚えられるアビリティがない。', 20, 44, { color: G().C.gray });
         G().window(4, 164, 248, 54);
         const row = this.list.item;
         if (!row) return;
@@ -303,7 +304,7 @@
         G().text(K.KIND_NAMES[ab.kind] || '', 14, 171, { color: K.KIND_COLORS[ab.kind] });
         const right = [];
         if (ab.kind === 'action' && ab.mp) right.push('MP ' + R.Rules.mpCost(c, row.id));
-        if (ab.kind === 'action' && ab.fieldUse) right.push('フィールドでも');
+        if (ab.kind === 'action' && ab.fieldUse) right.push('フィールドでも使える');
         G().text(right.join('  '), 242, 171, { align: 'right', color: G().C.gray });
         G().wrap(ab.desc || '', 226).slice(0, 2).forEach((l, k) => G().text(l, 14, 185 + k * 14));
       }
@@ -317,10 +318,10 @@
       { slot: 'support', label: 'サポート' },
       { slot: 'field', label: 'フィールド' },
     ];
-    const subLabel = (job) => (DB.jobs[job] ? (DB.jobs[job].command || 'とくぎ') : '？？？');
+    const subLabel = (job) => (DB.jobs[job] ? (DB.jobs[job].command || '特技') : '？？？');
     const subDesc = (c, job) => {
       const acts = R.Rules.actionList(c, job).map(K.abName);
-      return K.jobName(job) + 'の わざを つかう。' + (acts.length ? '\n' + acts.join(' ') : '');
+      return K.jobName(job) + 'のアビリティを使う。' + (acts.length ? '\n' + acts.join('、') : '');
     };
 
     class SetScreen extends K.Screen {
@@ -351,9 +352,9 @@
         if (In().pressed('a')) {
           const slot = SET_ROWS[this.row].slot;
           const opts = R.Rules.slotOptions(this.c, slot);
-          if (!opts.length && !this.c.set[slot]) { R.sfx('buzzer'); this.flow(() => K.msg('セットできる アビリティを まだ おぼえていない。')); return; }
+          if (!opts.length && !this.c.set[slot]) { R.sfx('buzzer'); this.flow(() => K.msg('セットできるアビリティを\nまだ覚えていない。')); return; }
           R.sfx('confirm');
-          const items = [{ label: 'はずす', value: null }].concat(opts.map((v) => ({ label: slot === 'sub' ? subLabel(v) : K.abName(v), value: v })));
+          const items = [{ label: '外す', value: null }].concat(opts.map((v) => ({ label: slot === 'sub' ? subLabel(v) : K.abName(v), value: v })));
           const cur = this.c.set[slot];
           const k = items.findIndex((it) => it.value === cur);
           this.opt = { slot, list: new R.UI.List({ x: 110, y: 36, w: 142, rows: 8, items, index: k >= 0 ? k : Math.min(1, items.length - 1), title: SET_ROWS[this.row].label, drawItem: (row, x, y, w) => this.drawOpt(row, x, y, w) }) };
@@ -373,7 +374,7 @@
         this.flow(() => reportUnequip(c, before));
       }
       drawOpt(row, x, y, w) {
-        if (row.value == null) { G().text('はずす', x, y, { color: G().C.cyan }); return; }
+        if (row.value == null) { G().text('外す', x, y, { color: G().C.cyan }); return; }
         const on = this.c.set[this.opt.slot] === row.value;
         if (this.opt.slot === 'sub') {
           G().text(row.label, x, y, { color: on ? G().C.yellow : G().C.white });
@@ -386,9 +387,9 @@
       descText() {
         const c = this.c;
         let slot, v;
-        if (this.opt) { slot = this.opt.slot; const it = this.opt.list.item; v = it ? it.value : null; if (v == null) return { head: 'はずす', text: 'この わくを からっぽに する。' }; }
+        if (this.opt) { slot = this.opt.slot; const it = this.opt.list.item; v = it ? it.value : null; if (v == null) return { head: '外す', text: 'この枠を空にする。' }; }
         else { slot = SET_ROWS[this.row].slot; v = c.set[slot]; }
-        if (!v) return { head: '', text: 'A: セットする アビリティを えらぶ' };
+        if (!v) return { head: '', text: 'Aボタンでセットするアビリティを選ぶ。' };
         if (slot === 'sub') return { head: subLabel(v) + '（' + K.jobName(v) + '）', text: subDesc(c, v) };
         const ab = DB.abilities[v];
         return { head: ab ? ab.name + '（' + K.jobName(ab.job) + '）' : '', text: (ab && ab.desc) || '' };

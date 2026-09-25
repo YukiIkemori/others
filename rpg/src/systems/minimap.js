@@ -1,4 +1,4 @@
-// World map screen (ちず): the overworld at 2 px per tile (128x112 → 256x224),
+// World map screen (地図): the overworld at 2 px per tile (128x112 → 256x224),
 // terrain colours, location icons (visited towns highlighted), a blinking
 // party marker and the ship. Any button closes.   await R.Minimap.open()
 (function (R) {

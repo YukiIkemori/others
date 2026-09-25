@@ -55,6 +55,8 @@ async function clearMsgs(max = 20) {
   }
 }
 const msgText = () => { const m = R.UI._msg; return m && !m.closed ? m.pages.map((p) => p.join('')).join('|') : ''; };
+/** window lines as shown: lines joined by '/', pages by '|' */
+const msgLines = () => { const m = R.UI._msg; return m && !m.closed ? m.pages.map((p) => p.join('/')).join('|') : ''; };
 const pos = () => R.Field.pos();
 async function walk(path) {
   for (const d of R.Field.parsePath(path)) {
@@ -106,8 +108,8 @@ async function newGame(map, spawn) {
   await newGame('fx_town', 'entrance');
   eq(pos(), { x: 10, y: 14, dir: 'up' }, 'start pos');
   ok(R.Game.visited.fx_town, 'visited via location');
-  ok(R.Field.layer.banner && R.Field.layer.banner.text === 'テストの まち', 'location banner');
-  ok(/テストの まちに ついた/.test(msgText()), 'onEnter event message');
+  ok(R.Field.layer.banner && R.Field.layer.banner.text === 'テストの町', 'location banner');
+  ok(/テストの町に着いた/.test(msgText()), 'onEnter event message');
   ok(R.Field.isBusy(), 'field frozen during event');
   await clearMsgs();
   ok(R.State.flag('fx_town_seen'), 'onEnter flag');
@@ -126,12 +128,12 @@ async function newGame(map, spawn) {
   ok(moved >= 0, 'walked up after holding');
   // walked from y14 → step event at y12 stops at 12
   eq(pos().y, 12, 'stopped by step event at 10,12');
-  ok(/いしだたみ/.test(msgText()), 'step event text');
+  ok(/石畳/.test(msgText()), 'step event text');
   await clearMsgs();
   ok(R.State.flag('fx_step_hello_done'), 'once flag set after step event');
   await walk('D');
   await walk('U');
-  ok(!/いしだたみ/.test(msgText()), 'once step event does not repeat');
+  ok(!/石畳/.test(msgText()), 'once step event does not repeat');
   // caterpillar
   const lay = R.Field.layer;
   eq(lay.P.map((p) => [p.x, p.y]), [[10, 12], [10, 13], [10, 12]], 'followers follow trail');
@@ -158,7 +160,7 @@ async function newGame(map, spawn) {
   // talk across counter
   await press('a');
   await step(5);
-  ok(/どうぐやへ ようこそ/.test(msgText()), 'talk across counter');
+  ok(/道具屋へようこそ/.test(msgText()), 'talk across counter');
   eq(R.Field.map.npc('shopkeeper').dir, 'down', 'npc faces player');
   await clearMsgs();
   ok(warnings.some((x) => /shop system missing/.test(x)), 'ev.shop without R.Shop warns');
@@ -171,7 +173,7 @@ async function newGame(map, spawn) {
   jingleLog.length = 0;
   await press('a');
   await step(20);
-  ok(/たからばこを あけた！/.test(msgText()) && /2こ てにいれた/.test(msgText()), 'chest message: ' + msgText());
+  eq(msgLines(), 'ユウキは宝箱を開けた！/' + R.DB.items.holy_water.name + 'を2個手に入れた！', 'chest message');
   ok(R.Game.chests.fx_town_c1, 'chest opened state');
   eq(R.State.count('holy_water') - hw0, 2, 'chest item added');
   ok(jingleLog.includes('item'), 'item jingle');
@@ -191,7 +193,7 @@ async function newGame(map, spawn) {
   await walk('D'); // (14,10)
   await press('a');
   await step(10);
-  ok(/なんと たねの/.test(msgText()) || /みつけた/.test(msgText()), 'hidden item message: ' + msgText());
+  eq(msgLines(), 'ユウキはあたりを調べた。/なんと、' + R.DB.items.seed_str.name + 'を見つけた！', 'hidden item message');
   ok(R.Game.chests.fx_town_h1 && R.State.count('seed_str') === 1, 'hidden item taken');
   await clearMsgs();
   // elder at (18,11): stand (17,11) facing right
@@ -201,7 +203,7 @@ async function newGame(map, spawn) {
   eq(pos(), { x: 17, y: 11, dir: 'right' }, 'facing elder');
   await press('a');
   await step(10);
-  ok(/よくぞ まいった/.test(msgText()) && /ユウキ/.test(msgText()), '{leader} replaced: ' + msgText());
+  ok(/よくぞ参った/.test(msgText()) && /ユウキよ/.test(msgText()), '{leader} replaced: ' + msgText());
   await press('a'); await step(10);
   // choice window: pick はい
   ok(R.Engine.top().list, 'choice open');
@@ -252,11 +254,11 @@ async function newGame(map, spawn) {
   await walk('R'); await walk('L');
   eq(R.fxBattleLog.length, 0, 'no encounter while repelled');
   await walk('R');
-  ok(/まよけの こうかが きれた/.test(msgText()), 'repel expiry notice');
+  ok(/魔除けの効果が切れた/.test(msgText()), 'repel expiry notice');
   await clearMsgs();
   R.Field.noEncounter = true;
   // encounterPct from a member's equipment mods: -100 → none
-  R.DB.items.fx_ring = { name: 'テストのゆびわ', type: 'acc', price: 0, mods: { encounterPct: -100 } };
+  R.DB.items.fx_ring = { name: 'テストの指輪', type: 'acc', price: 0, mods: { encounterPct: -100 } };
   R.Game.party[2].equip.acc = 'fx_ring';
   R.Field.noEncounter = false; lay._fm = null;
   eq(lay.fieldMods().encounterPct, -100, 'strongest encounterPct');
@@ -318,7 +320,7 @@ async function newGame(map, spawn) {
   sfxLog.length = 0;
   await walk('R');
   eq(pos().x, 5, 'locked door blocks');
-  ok(/かぎが かかっている/.test(msgText()), 'locked message');
+  ok(msgText() === '鍵がかかっている。', 'locked message');
   ok(sfxLog.includes('locked'), 'locked sfx');
   await clearMsgs();
   // gold chest at (3,3)
@@ -326,7 +328,7 @@ async function newGame(map, spawn) {
   const g0 = R.Game.gold;
   await press('a'); await step(20);
   eq(R.Game.gold - g0, 120, 'gold chest');
-  ok(/120ゴールドを てにいれた/.test(msgText()), 'gold chest text');
+  ok(/120ゴールドを手に入れた！/.test(msgText()), 'gold chest text');
   await clearMsgs();
   // key chest at (16,7)
   R.Field.setPlayerPos(15, 7, 'right');
@@ -347,7 +349,7 @@ async function newGame(map, spawn) {
   ok(hp1.every((h, i) => h === hp0[i] - 3), 'poison floor damage 3 each: ' + hp0 + ' → ' + hp1);
   ok(sfxLog.includes('step_damage'), 'damage sfx');
   // noFloorDamage mod
-  R.DB.items.fx_boots = { name: 'テストのくつ', type: 'acc', price: 0, mods: { noFloorDamage: true } };
+  R.DB.items.fx_boots = { name: 'テストの靴', type: 'acc', price: 0, mods: { noFloorDamage: true } };
   R.Game.party[0].equip.acc = 'fx_boots'; lay._fm = null;
   await walk('D'); await walk('U');
   eq(R.Game.party.map((c) => c.hp), hp1, 'noFloorDamage');
@@ -437,7 +439,7 @@ async function newGame(map, spawn) {
   await settle(300); await tp;
   eq([pos().x, pos().y], [5, 7], 'teleport to location spawn');
   eq([R.Game.ship.x, R.Game.ship.y], [11, 15], 'ship moved to dock');
-  eq(R.Field.teleportList(), [{ id: 'fx_town', name: 'テストの まち' }], 'teleportList');
+  eq(R.Field.teleportList(), [{ id: 'fx_town', name: 'テストの町' }], 'teleportList');
   R.Field.setRespawnHere();
   eq(R.Game.respawn, { map: 'fx_world', x: 5, y: 7, dir: 'down' }, 'setRespawnHere');
   // save → load → resume
@@ -505,6 +507,18 @@ async function newGame(map, spawn) {
   await clearMsgs(10); await step(5);
   eq(await rm, [true, true, false], 'take/takeGold/give full');
   eq(R.Game.gold - g1, 20, 'giveGold/takeGold');
+  // got-item wording: one line when it fits, else the break comes before the verb
+  const lines = R.Events.lines;
+  eq(lines('ユウキは', '薬草を', '手に入れた！'), 'ユウキは薬草を手に入れた！', 'lines: fits on one line');
+  eq(lines('ユウキユウキは', 'サファイアのロッドを', '手に入れた！'), 'ユウキユウキはサファイアのロッドを\n手に入れた！', 'lines: break before the verb');
+  R.Game.party[0].name = 'アレクサンド';
+  R.DB.items.fx_long = { name: 'サファイアのロッド', type: 'consumable', price: 0 };
+  R.DB.events.fx_give_long = { run: async (ev) => { await ev.give('fx_long', 2); } };
+  const rgl = R.Events.run('fx_give_long');
+  await step(10);
+  eq(msgLines(), 'アレクサンドはサファイアのロッドを/2個手に入れた！', 'ev.give long name layout');
+  await clearMsgs(10); await rgl;
+  R.Game.party[0].name = 'ユウキ';
   // inn fallback
   R.Game.gold = 100;
   for (const c of R.Game.party) c.hp = 1;
@@ -529,7 +543,7 @@ async function newGame(map, spawn) {
   R.Game.inv = { herb: 1 };
   let lockMsgs = 0;
   const origSay = R.UI.say;
-  R.UI.say = function (t, o) { if (/かぎが/.test(t)) lockMsgs++; return origSay.call(this, t, o); };
+  R.UI.say = function (t, o) { if (/鍵が/.test(t)) lockMsgs++; return origSay.call(this, t, o); };
   R.Input._set('right', true);
   for (let i = 0; i < 80; i++) { await step(1); const top = R.Engine.top(); if (top && top.constructor.name === 'MessageLayer' && top.resolveText && top.shown >= top.pageLen()) { R.Input._set('a', true); await step(2); R.Input._set('a', false); } }
   R.Input._set('right', false);
@@ -557,7 +571,7 @@ async function newGame(map, spawn) {
   await press('a'); await clearMsgs(20); await settle(200); await clearMsgs(10);
   ok(R.Game.chests.fx_mimic_c && R.State.count('herb') === herbs + 1, 'mimic win: item');
   // per-edge exits: rows ragged-free 5 wide, walls at edges → use setPlayerPos on the edge
-  R.DB.maps.fx_edge = { name: 'せきしょ', type: 'town', rows: [',,,,,', ',,,,,', ',,,,,'], marks: {},
+  R.DB.maps.fx_edge = { name: '関所', type: 'town', rows: [',,,,,', ',,,,,', ',,,,,'], marks: {},
     spawns: { entrance: { x: 2, y: 1 } }, exit: { left: { to: 'fx_town', spawn: 'entrance' }, right: { to: 'fx_world', spawn: 'fx_town' } } };
   await R.Field.warp('fx_edge', 'entrance', { fade: false }); await settle();
   R.Field.setPlayerPos(4, 1, 'right');
@@ -569,7 +583,7 @@ async function newGame(map, spawn) {
   eq(R.Field.map.id, 'fx_town', 'left edge exit');
   await walk('D'); await settle();
   // new game resets a stuck event: event awaiting a window that got cleared
-  R.DB.events.fx_stuck = { run: async (ev) => { await ev.say('まっている'); R.State.setFlag('fx_stuck_after'); } };
+  R.DB.events.fx_stuck = { run: async (ev) => { await ev.say('待っている'); R.State.setFlag('fx_stuck_after'); } };
   R.Events.run('fx_stuck');
   await step(5);
   ok(R.Events.busy(), 'stuck event busy');

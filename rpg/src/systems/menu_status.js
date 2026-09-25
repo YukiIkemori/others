@@ -1,5 +1,5 @@
-// Field menu: つよさ (3-page status per member), ならびかえ (swap order) and
-// ずかん (monster book: list + detail with sprite, stats, drops, resistances).
+// Field menu: 強さ (3-page status per member), 並び替え (swap order) and
+// 図鑑 (monster book: list + detail with sprite, stats, drops, resistances).
 (function (R) {
   'use strict';
   const DB = R.DB;
@@ -17,16 +17,16 @@
   Menu.statusScreen = (o) => R.Engine.run(new (cls().StatusScreen)(o || {}));
   Menu.bookScreen = () => R.Engine.run(new (cls().BookScreen)());
 
-  /** ならびかえ: pick two members and swap them (repeat until B) */
+  /** 並び替え: pick two members and swap them (repeat until B) */
   Menu.orderScreen = async function () {
     const party = R.Game.party;
     let a = 0;
     for (;;) {
-      a = await Menu.pickMember({ title: 'だれを いれかえる？', initial: a, x: 53, y: 40 });
+      a = await Menu.pickMember({ title: '誰を入れ替える？', initial: a, x: 53, y: 40 });
       if (a < 0) return;
       const b = await Menu.pickMember({
-        title: 'だれと いれかえる？', initial: a, x: 53, y: 40, mark: a,
-        info: (x, y) => { G().window(x, y, 150, 24); G().text(party[a].name + 'と …', x + 12, y + 6, { color: G().C.yellow }); },
+        title: '誰と入れ替える？', initial: a, x: 53, y: 40, mark: a,
+        info: (x, y) => { G().window(x, y, 150, 24); G().text(party[a].name + 'と…', x + 12, y + 6, { color: G().C.yellow }); },
       });
       if (b < 0 || b === a) continue;
       [party[a], party[b]] = [party[b], party[a]];
@@ -67,8 +67,8 @@
   function build() {
     const K = Menu.kit;
 
-    // ============================================================ つよさ
-    const PAGES = ['のうりょく', 'そうび・アビリティ', 'たいせい・とくせい'];
+    // ============================================================ 強さ
+    const PAGES = ['能力', '装備・アビリティ', '耐性・特性'];
     class StatusScreen extends K.Screen {
       constructor(o) {
         super();
@@ -110,22 +110,22 @@
         else this.page3(c, st);
       }
       page1(c, st) {
-        G().window(4, 46, 122, 128, { title: 'きほん' });
-        const L = [['HP', c.hp + '/' + st.hp], ['MP', c.mp + '/' + st.mp], ['ちから', st.str], ['たいりょく', st.vit], ['すばやさ', st.agi], ['かしこさ', st.int], ['せいしん', st.mnd], ['うんのよさ', st.luk]];
+        G().window(4, 46, 122, 128, { title: '基本' });
+        const L = [['HP', c.hp + '/' + st.hp], ['MP', c.mp + '/' + st.mp], ['力', st.str], ['体力', st.vit], ['素早さ', st.agi], ['知力', st.int], ['精神', st.mnd], ['運', st.luk]];
         L.forEach(([k, v], i) => { G().text(k, 13, 55 + i * 14, { color: G().C.gray }); G().text(String(v), 117, 55 + i * 14, { align: 'right', color: i === 0 ? K.condColor(c) === G().C.purple ? G().C.white : K.condColor(c) : G().C.white }); });
-        G().window(130, 46, 122, 128, { title: 'せんとう' });
-        const Rr = [['こうげき', st.atk2 ? st.atk + '/' + st.atk2 : st.atk], ['しゅび', st.def], ['まりょく', st.mag], ['まぼうぎょ', st.mdef], ['めいちゅう', st.hit], ['かいひ', st.eva], ['かいしん', st.crit + '%'], ['ぞくせい', st.element ? K.elemName(st.element) : 'なし']];
+        G().window(130, 46, 122, 128, { title: '戦闘' });
+        const Rr = [['攻撃力', st.atk2 ? st.atk + '/' + st.atk2 : st.atk], ['守備力', st.def], ['魔力', st.mag], ['魔法防御', st.mdef], ['命中', st.hit], ['回避', st.eva], ['会心', st.crit + '%'], ['属性', st.element ? K.elemName(st.element) : 'なし']];
         Rr.forEach(([k, v], i) => { G().text(k, 139, 55 + i * 14, { color: G().C.gray }); G().text(String(v), 243, 55 + i * 14, { align: 'right' }); });
         G().window(4, 176, 248, 44);
-        G().text('けいけんち', 14, 183, { color: G().C.gray });
+        G().text('経験値', 14, 183, { color: G().C.gray });
         G().text(String(c.exp), 240, 183, { align: 'right' });
-        G().text('つぎの レベルまで', 14, 197, { color: G().C.gray });
+        G().text('次のレベルまで', 14, 197, { color: G().C.gray });
         const nx = R.Rules.expToNext(c);
         G().text(c.level >= R.Rules.MAX_LEVEL ? '―' : String(nx), 240, 197, { align: 'right', color: G().C.yellow });
       }
       page2(c) {
-        G().window(4, 46, 248, 86, { title: 'そうび' });
-        const SL = [['weapon', 'ぶき'], ['shield', R.Rules.mods(c, { ignoreEquip: true }).twoSwords ? 'ひだりて' : 'たて'], ['head', 'あたま'], ['body', 'からだ'], ['acc', 'アクセサリ']];
+        G().window(4, 46, 248, 86, { title: '装備' });
+        const SL = [['weapon', '武器'], ['shield', R.Rules.mods(c, { ignoreEquip: true }).twoSwords ? '左手' : '盾'], ['head', '頭'], ['body', '体'], ['acc', 'アクセサリ']];
         SL.forEach(([s, lbl], i) => {
           const y = 55 + i * 14;
           G().text(lbl, 14, y, { color: G().C.gray });
@@ -151,58 +151,58 @@
       page3(c, st) {
         const m = st.mods || {};
         const res = m.elemResist || {}, boost = m.elemBoost || {};
-        G().window(4, 46, 248, 72, { title: 'ぞくせい' });
+        G().window(4, 46, 248, 72, { title: '属性' });
         K.ELEMS.forEach((e, i) => {
           const x = 14 + (i % 2) * 120, y = 55 + Math.floor(i / 2) * 14;
           G().text(K.elemName(e), x, y, { color: G().C.gray });
           const r = res[e];
           let t = '―', col = G().C.dark;
-          if (r != null && r < 0) { t = 'きゅうしゅう'; col = G().C.cyan; }
-          else if (r === 0) { t = 'むこう'; col = G().C.green; }
-          else if (r != null && r < 1) { t = 'たいせい'; col = G().C.green; }
-          else if (r != null && r > 1) { t = 'よわい'; col = G().C.red; }
-          if (boost[e]) { t = (t === '―' ? '' : t + ' ') + 'いりょく+' + boost[e]; col = t.startsWith('いりょく') ? G().C.orange : col; }
+          if (r != null && r < 0) { t = '吸収'; col = G().C.cyan; }
+          else if (r === 0) { t = '無効'; col = G().C.green; }
+          else if (r != null && r < 1) { t = '半減'; col = G().C.green; }
+          else if (r != null && r > 1) { t = '弱点'; col = G().C.red; }
+          if (boost[e]) { t = (t === '―' ? '' : t + ' ') + '威力+' + boost[e]; col = t.startsWith('威力') ? G().C.orange : col; }
           G().text(t, x + 110, y, { align: 'right', color: col });
         });
-        G().window(4, 120, 248, 72, { title: 'じょうたい' });
+        G().window(4, 120, 248, 72, { title: '状態異常' });
         const imm = m.statusImmune || [];
         ['poison', 'sleep', 'paralyze', 'confuse', 'silence', 'blind', 'death'].forEach((s, i) => {
           const x = 14 + (i % 2) * 120, y = 129 + Math.floor(i / 2) * 14;
           G().text(K.statusName(s), x, y, { color: G().C.gray });
           const on = imm.includes(s);
-          G().text(on ? 'むこう' : '―', x + 110, y, { align: 'right', color: on ? G().C.green : G().C.dark });
+          G().text(on ? '無効' : '―', x + 110, y, { align: 'right', color: on ? G().C.green : G().C.dark });
         });
         G().window(4, 194, 248, 26);
         const tr = traits(m);
-        K.fitText(tr.length ? tr.join(' ') : 'とくせい なし', 14, 201, 228, { color: tr.length ? G().C.white : G().C.dark });
+        K.fitText(tr.length ? tr.join('・') : '特性なし', 14, 201, 228, { color: tr.length ? G().C.white : G().C.dark });
       }
     }
 
     /** short labels for notable modifiers */
     function traits(m) {
       const t = [];
-      if (m.twoSwords) t.push('にとうりゅう');
-      if (m.regen) t.push('さいせい');
-      if (m.walkHeal) t.push('あるいて かいふく');
-      if (m.encounterPct < 0) t.push('まものよけ');
-      if (m.encounterPct > 0) t.push('まものよせ');
-      if (m.noFloorDamage) t.push('ゆかダメージ むこう');
-      if (m.treasureSense) t.push('たからさがし');
-      if (m.expPct) t.push('EXP+' + m.expPct + '%');
+      if (m.twoSwords) t.push('二刀流');
+      if (m.regen) t.push('再生');
+      if (m.walkHeal) t.push('歩行回復');
+      if (m.encounterPct < 0) t.push('魔物よけ');
+      if (m.encounterPct > 0) t.push('魔物寄せ');
+      if (m.noFloorDamage) t.push('床ダメージ無効');
+      if (m.treasureSense) t.push('宝探し');
+      if (m.expPct) t.push('経験値+' + m.expPct + '%');
       if (m.jpPct) t.push('JP+' + m.jpPct + '%');
       if (m.goldPct) t.push('G+' + m.goldPct + '%');
       if (m.dropPct || m.rarePct) t.push('ドロップ+' + ((m.dropPct || 0) + (m.rarePct || 0)) + '%');
-      if (m.stealPct) t.push('ぬすみ+' + m.stealPct + '%');
-      if (m.mpCostPct) t.push('MPしょうひ' + m.mpCostPct + '%');
-      if (m.healPct) t.push('かいふく+' + m.healPct + '%');
-      if (m.magicPct) t.push('まほう+' + m.magicPct + '%');
-      if (m.physPct) t.push('こうげき+' + m.physPct + '%');
-      if (m.escapePct) t.push('にげあし+' + m.escapePct + '%');
-      if (m.preemptPct) t.push('せんせい+' + m.preemptPct + '%');
+      if (m.stealPct) t.push('盗み+' + m.stealPct + '%');
+      if (m.mpCostPct) t.push('消費MP' + m.mpCostPct + '%');
+      if (m.healPct) t.push('回復+' + m.healPct + '%');
+      if (m.magicPct) t.push('魔法+' + m.magicPct + '%');
+      if (m.physPct) t.push('物理+' + m.physPct + '%');
+      if (m.escapePct) t.push('逃走+' + m.escapePct + '%');
+      if (m.preemptPct) t.push('先制+' + m.preemptPct + '%');
       return t;
     }
 
-    // ============================================================ ずかん
+    // ============================================================ 図鑑
     class BookScreen extends K.Screen {
       constructor() {
         super();
@@ -259,10 +259,10 @@
       render() {
         if (this.detail) { this.renderDetail(); return; }
         G().window(4, 4, 248, 40);
-        G().text('モンスター ずかん', 14, 10, { color: G().C.yellow });
-        G().text('みつけた', 14, 24, { color: G().C.gray });
+        G().text('モンスター図鑑', 14, 10, { color: G().C.yellow });
+        G().text('見つけた', 14, 24, { color: G().C.gray });
         G().text(this.nSeen + '/' + this.all, 110, 24, { align: 'right' });
-        G().text('たおした', 130, 24, { color: G().C.gray });
+        G().text('倒した', 130, 24, { color: G().C.gray });
         G().text(this.nBeat + '/' + this.all, 240, 24, { align: 'right' });
         this.list.draw();
         // preview
@@ -272,13 +272,13 @@
           G().rect(164, 150, 80, 1, '#2a2a40');
           drawMon(m, 204, 148, 80, 90, false);
           const r = rec(id) || {};
-          G().text('たおした', 164, 158, { color: G().C.gray });
+          G().text('倒した数', 164, 158, { color: G().C.gray });
           G().text(String(r.kills || 0), 244, 172, { align: 'right' });
         } else if (m) {
           G().text('？', 204, 100, { align: 'center', color: G().C.dark, size: 24 });
         }
         G().window(4, 188, 248, 30);
-        G().text(m && seen(id) ? 'A: くわしく みる' : 'まだ であって いない', 14, 196, { color: G().C.gray });
+        G().text(m && seen(id) ? 'Aボタンで詳しく見る' : 'まだ出会っていない', 14, 196, { color: G().C.gray });
       }
       renderDetail() {
         const id = this.id, m = DB.monsters[id], r = rec(id) || {};
@@ -300,13 +300,13 @@
       detail1(m, r, b) {
         const q = (v) => (b ? String(v) : '？？？');
         G().window(114, 32, 138, 104);
-        const rows = [['レベル', m.lv], ['HP', m.hp], ['こうげき', m.atk], ['しゅび', m.def], ['すばやさ', m.agi], ['たおした', r.kills || 0]];
+        const rows = [['レベル', m.lv], ['HP', m.hp], ['攻撃力', m.atk], ['守備力', m.def], ['素早さ', m.agi], ['倒した数', r.kills || 0]];
         rows.forEach(([k, v], i) => {
           G().text(k, 124, 40 + i * 14, { color: G().C.gray });
           G().text(i === 5 ? String(v) : q(v), 242, 40 + i * 14, { align: 'right', color: i === 5 ? G().C.cyan : G().C.white });
         });
         G().window(4, 138, 248, 82);
-        G().text('EXP', 14, 145, { color: G().C.gray }); G().text(q(m.exp), 80, 145, { align: 'right' });
+        G().text('経験値', 14, 145, { color: G().C.gray }); G().text(q(m.exp), 80, 145, { align: 'right' });
         G().text('ゴールド', 92, 145, { color: G().C.gray }); G().text(q(m.gold), 170, 145, { align: 'right' });
         G().text('JP', 182, 145, { color: G().C.gray }); G().text(q(m.jp), 242, 145, { align: 'right' });
         const drop = (slot, flag) => {
@@ -323,33 +323,33 @@
         const q = (v) => (b ? String(v) : '？？？');
         G().window(114, 32, 138, 104);
         const acts = m.actsPerTurn || 1;
-        const rows = [['MP', q(m.mp || 0)], ['まりょく', q(m.mag || 0)], ['まぼうぎょ', q(m.mdef || 0)], ['かいひ', b ? (m.eva != null ? m.eva : 3) + '%' : '？？？'], ['こうどう', b ? acts + 'かい' : '？？？']];
+        const rows = [['MP', q(m.mp || 0)], ['魔力', q(m.mag || 0)], ['魔法防御', q(m.mdef || 0)], ['回避', b ? (m.eva != null ? m.eva : 3) + '%' : '？？？'], ['行動回数', b ? acts + '回' : '？？？']];
         rows.forEach(([k, v], i) => {
           G().text(k, 124, 40 + i * 14, { color: G().C.gray });
           G().text(v, 242, 40 + i * 14, { align: 'right' });
         });
-        G().window(4, 138, 248, 82, { title: 'とくちょう' });
-        if (!b) { G().text('たおすと わかる。', 14, 150, { color: G().C.dark }); return; }
+        G().window(4, 138, 248, 82, { title: '特徴' });
+        if (!b) { G().text('倒すと分かる。', 14, 150, { color: G().C.dark }); return; }
         const el = m.elem || {};
         const weak = [], strong = [];
         for (const e of K.ELEMS) {
           const v = el[e] == null ? 1 : el[e];
           if (v > 1) weak.push(K.elemName(e));
-          else if (v < 0) strong.push(K.elemName(e) + '(きゅうしゅう)');
-          else if (v === 0) strong.push(K.elemName(e) + '(むこう)');
+          else if (v < 0) strong.push(K.elemName(e) + '(吸収)');
+          else if (v === 0) strong.push(K.elemName(e) + '(無効)');
           else if (v < 1) strong.push(K.elemName(e));
         }
         const sr = m.statusRes || {};
         const immune = Object.keys(sr).filter((s) => sr[s] >= 1).map(K.statusName);
-        const FL = { boss: 'ボス', metal: 'メタル', undead: 'アンデッド', flying: 'ひこう', dragon: 'ドラゴン', flee: 'にげやすい' };
+        const FL = { boss: 'ボス', metal: 'メタル', undead: 'アンデッド', flying: '飛行', dragon: 'ドラゴン', flee: '逃げやすい' };
         const tags = (m.flags || []).map((f) => FL[f]).filter(Boolean);
         const lines = [
-          ['よわい', weak.join(' ') || 'なし', weak.length ? G().C.green : G().C.gray],
-          ['つよい', strong.join(' ') || 'なし', strong.length ? G().C.orange : G().C.gray],
-          ['きかない', immune.join(' ') || 'なし', immune.length ? G().C.white : G().C.gray],
+          ['弱点', weak.join('・') || 'なし', weak.length ? G().C.green : G().C.gray],
+          ['耐性', strong.join('・') || 'なし', strong.length ? G().C.orange : G().C.gray],
+          ['効かない', immune.join('・') || 'なし', immune.length ? G().C.white : G().C.gray],
         ];
-        if (m.steal && m.steal.item) lines.push(['ぬすめる', r.steal ? K.itemLabel(m.steal.item) : '？？？', r.steal ? G().C.white : G().C.dark]);
-        if (tags.length) lines.push(['しゅぞく', tags.join(' '), G().C.yellow]);
+        if (m.steal && m.steal.item) lines.push(['盗める', r.steal ? K.itemLabel(m.steal.item) : '？？？', r.steal ? G().C.white : G().C.dark]);
+        if (tags.length) lines.push(['種族', tags.join('・'), G().C.yellow]);
         lines.slice(0, 5).forEach(([k, v, col], i) => {
           G().text(k, 14, 147 + i * 14, { color: G().C.gray });
           K.fitText(v, 76, 147 + i * 14, 166, { color: col });
