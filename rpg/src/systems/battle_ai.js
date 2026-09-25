@@ -241,27 +241,23 @@
     else if (m.status.confuse) t *= 0.5;
     return t;
   }
-  /** the party's expected damage on m in one round of plain attacks (commandable members) */
-  function partyDpr(eng, m) {
-    let d = 0;
-    for (const p of eng.living('party')) if (p.commandable()) d += eng.expectAttack(p, m);
-    return Math.max(1, d);
-  }
+  /**
+   * a target counts as finished once the expected damage aimed at it reaches 85 % of its HP:
+   * expected damage already includes misses, and a 15 % margin keeps a third member from being
+   * spent on a sliver (sim: fewer rounds and less damage taken than a full 100 % cover)
+   */
+  const FOCUS_COVER = 0.85;
   /**
    * living foes, best focus target first. plan (optional): damage already planned this round —
    * foes that are dead-in-expectation go last.
    */
   function focusOrder(eng, plan) {
     const foes = eng.living('mon');
-    const COVER = R.FOCUS_COVER || 1;
-    const left = (m) => Math.max(0, m.hp * COVER - ((plan && plan.dmg.get(m)) || 0));
+    const left = (m) => Math.max(0, m.hp * FOCUS_COVER - ((plan && plan.dmg.get(m)) || 0));
     const rows = foes.map((m) => {
       const l = left(m);
-      const MODE = R.FOCUS_MODE || 'a';
-      let score;
-      if (MODE === 'a') score = threat(eng, m) / Math.max(1, Math.ceil(l / partyDpr(eng, m) - 1e-9));
-      else if (MODE === 'b') score = threat(eng, m) / Math.max(1, l);
-      else score = threat(eng, m) / Math.max(1, l) * (l <= partyDpr(eng, m) ? 2 : 1);
+      // damage it deals per HP the party must still spend on it: low HP and hard hitters first
+      const score = threat(eng, m) / Math.max(1, l);
       // dead-in-expectation: last, the least over-covered one first (the likeliest survivor)
       return { m, l, score: l > 0 ? score : -((plan && plan.dmg.get(m)) || 0) / Math.max(1, m.hp) };
     });
@@ -282,7 +278,7 @@
     if (!free.includes(u)) free.push(u);
     const planned = (m) => (plan && plan.dmg.get(m)) || 0;
     for (const m of order) {
-      const need = m.hp * (R.FOCUS_COVER || 1) - planned(m);
+      const need = m.hp * FOCUS_COVER - planned(m);
       if (need <= 0) continue;
       const ds = free.map((p) => eng.expectAttack(p, m));
       const total = ds.reduce((a, b) => a + b, 0);
