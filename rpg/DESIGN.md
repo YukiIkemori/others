@@ -19,7 +19,7 @@ A complete, polished, browser-playable **Japanese command RPG**:
   (**job command + サブアクション + リアクション + サポート + フィールド**).
 * **Loot**: every monster has a normal drop and a **rare drop**; a monster book (ずかん) tracks what you found.
 * **Modern QoL**: always-dash (toggle), save anywhere outside battle, auto-battle, fast messages, battle
-  speed, optimize equipment, visible next objective, teleport to visited towns, dungeon escape, world map,
+  speed, optimize equipment, visible next objective, teleport (ワープ) to visited towns and dungeon entrances (`DB.locations` with `dungeon:true`; old saves: `State.syncVisited`), dungeon escape, world map,
   no lost EXP on a wipe (only half the gold), generous escape rates, encounter-control abilities.
 * **Language**: all in-game text is Japanese for adult players: **natural modern kanji-kana mixed text**, no
   DQ-style inter-phrase spaces. Follow **STYLE_JA.md** (rules + glossary of canonical terms) exactly.

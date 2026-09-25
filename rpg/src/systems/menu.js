@@ -436,7 +436,7 @@
   async function chooseTown() {
     const list = R.Field && R.Field.teleportList ? R.Field.teleportList() : [];
     if (!list.length) { await K.msg('飛んでいける場所がない！'); return null; }
-    const i = await R.UI.choose(list.map((l) => l.name), { y: 40, title: 'どこへ行く？', rows: Math.min(list.length, 9) });
+    const i = await R.UI.choose(list.map((l) => l.name), { y: 16, title: 'どこへ行く？', rows: Math.min(list.length, 11) });
     return i < 0 ? null : list[i].id;
   }
 
