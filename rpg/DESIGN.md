@@ -261,6 +261,30 @@ levels and unlocks are unchanged.
 Mastered (★) = all abilities of the job learned. **Mastery bonus** (`masterBonus` in jobs.js, summed by
 `R.Rules.masterBonus(c)`, text `Rules.masterBonusText(job)`): flat stats added for good, in every job (like seeds),
 once the job is mastered; learning the last ability also raises current HP/MP by the bonus.
+**Signature ability** (`masterTrait: '<abilityId>'` in jobs.js — one of the job's own support/reaction abilities;
+`Rules.jobMasterTrait(job)`, `Rules.signatures(c)`, `Rules.reactions(c)`): once the job is mastered it is ALWAYS active for
+that character in every job without taking a slot — a support's mods are merged by `Rules.mods` (not doubled when the
+same ability is also slotted), a reaction joins the slotted one (`Engine.reactionsOf`; they roll in order, slot first, and at
+most one fires per member per hit). Menus: 「マスター特典 HP+10 力+3／常時：反撃」 (`Rules.masterPerkText`) — shown as
+「マスター特典 ？？？」 until someone in the party has mastered the job (`Rules.perkKnown`); the mastery message announces it;
+つよさ (jobs page) lists the member's 常時 abilities.
+
+| job | signature (常時) | job | signature (常時) |
+|---|---|---|---|
+| 戦士 | 反撃 (reaction 30 %) | 魔法剣士 | 文武の道 (力・知力+10 %) |
+| 僧侶 | 精神アップ (+20 %) | パラディン | 不屈の誓い (KO → 50 % HP once) |
+| 魔法使い | 知力アップ (+15 %) | 忍者 | 二刀流 |
+| 盗賊 | ついでに盗む (new: a landed 戦う steals at 70 % of the 盗む chance, rare ×0.5, silent on failure) | 賢者 | MP半減 |
+| ナイト | 守りの構え (start def +1) | 竜騎士 | 竜の力 (weapon dmg +20 %) |
+| 武闘家 | 修行 (EXP +20 %) | 時空術師 | 俊足 (start agi +1) |
+| 白魔術師 | 回復アップ (+30 %) | 暗黒騎士 | 力アップ (+20 %) |
+| 黒魔術師 | 属性アップ (+25 %) | 勇者 | 勇者の心 (HP・全能力 +10 %) |
+| 狩人 | 獲物狩り (drops +100 %) | | |
+| 吟遊詩人 | 学びの心 (JP +20 %) | | |
+| 薬師 | 道具の知識 (items +50 %) | | |
+
+Balance after the signatures (sim_postgame): アビスロード HP 11000→13000, atk 485→620, mag 280→350 (prepared Lv55 ≈58–68 %);
+abyss regulars HP ×1.25, atk/mag ×1.2; ゴブリン親分 hp 480→500, atk 54→57 (the focus-fire AI, boss_wind Lv6 ≈87 %).
 
 | job | bonus | job | bonus |
 |---|---|---|---|
@@ -358,6 +382,7 @@ statusImmune:['poison','sleep',...]
 startBuffs:{agi:1, def:1}   regen:true   twoSwords:true   unarmed:N (flat atk bonus when no weapon)
 equip:['sword','heavy','shield','helm',...]            // extra equip permissions
 expPct jpPct goldPct dropPct rarePct stealPct          // rewards
+autoSteal:N (a landed 戦う also steals at N % of the 盗む chance)
 // field-only (effective from the フィールド slot or equipment)
 encounterPct (−50 halves, +100 doubles)  walkHeal:N (HP per step)  noFloorDamage:true
 ```
@@ -477,6 +502,15 @@ R.DB.objectives[id] = { text:'つぎの もくてき …' }
 * **MP economy** (playtest 「MP枯渇早い」): character MP growth ≈+30 % (chars.js) and the big tier-3/4 spells ≈20 %
   cheaper (e.g. プロミネンス/絶対零度 24, 星くずの雨/流星雨 28, 聖母の祈り/希望の光 32). A careful player leaves each
   dungeon floor with ≥30 % MP (`sim_balance` crawl warns below that); the free-spending AI uses ≈1–19 % MP per fight.
+* **Party AI focus fire** (オート / sim; playtest 「殴る対象を分散化しすぎてる」, `R.BattleAI.focusOrder / assignTarget`):
+  foes are ranked by threat (expected damage per round) ÷ HP still to deal; the members still to plan are split over them in
+  that order — each target gets the cheapest set of attackers whose expected damage reaches 85 % of its HP (a strong hitter is
+  not spent on a sliver), leftovers move to the next one, a foe nobody can finish this round takes everyone. Single-target
+  skills go to the assigned target (another foe only when they kill it); group/all spells keep their niche on packs. A member
+  whose target fell mid-round (and リピート's fallen targets) retarget to the focus target, counting the attacks still pending
+  (`Engine.pendingPlan`) — never a random foe.
+* **ついでに盗む** (mod `autoSteal`: %, 盗賊's signature): a landed 戦う (both swings, counters too) also tries to steal with
+  `stealChance × autoSteal/100`; the rare item at half the 盗む rate; one steal per monster; silent on failure.
 * Status success: `chance × (1 − resist)`; immunities from `statusImmune`/accessories.
 * **Metal** monsters: physical damage 0–1 (critical still hits for 1–3), immune to all magic except `percent`.
 * **Escape**: chance `0.5 + 0.1 × attempts + (partyAvgAgi − enemyAvgAgi)/200`, clamp 0.3–1; bosses/`noEscape` impossible.

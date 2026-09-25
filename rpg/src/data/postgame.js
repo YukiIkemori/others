@@ -19,6 +19,8 @@
 //     ≈35 %, no death immunity on the healer ≈27 %, no revive-on-KO ≈50 %, no elemental
 //     resistance ≈54 %, shop weapons ≈41 %.
 //     (Retuned after the MP / mastery-bonus pass: HP 7300→11000, atk 390→485, mag 260→280.)
+//     (Retuned for the always-on signature abilities of mastered jobs + the focus-fire AI:
+//      HP 11000→13000, atk 485→620, mag 280→350 → prepared Lv55 ≈58–68 %; regulars HP ×1.25, atk/mag ×1.2.)
 //     魔王 (boss_king2) falls 100 % to the same parties in 6–11 rounds.
 //
 // abyss_lord's pattern (actsPerTurn 3; `every` counts its own actions, 3 per round):
@@ -40,12 +42,12 @@
   const expFor = (L) => (L <= 1 ? 0 : 8 * Math.pow(L - 1, 2.6) + 10 * (L - 1));
   const late = (L) => { const t = Math.min(1, Math.max(0, (L - 16) / 14)); return t * t * (3 - 2 * t); };
   const curve = (L) => ({
-    hp: (7 + 5 * L + 0.28 * L * L) * (1 + 0.15 * late(L)),
-    atk: (10 + 3.8 * L) * (1 + 0.12 * late(L)) * 1.04, // +4 %: mastered jobs now give stat bonuses
+    hp: (7 + 5 * L + 0.28 * L * L) * (1 + 0.15 * late(L)) * 1.25, // ×1.25: the signatures shortened the fights (3.2 → 3.8 rounds again)
+    atk: (10 + 3.8 * L) * (1 + 0.12 * late(L)) * 1.2, // +20 % (was +4 %): mastery stat bonuses + always-on signature abilities
     def: 1 + 2.1 * L,
     mdef: L,
     agi: 4 + 1.8 * L,
-    mag: 5 + 2.4 * L,
+    mag: (5 + 2.4 * L) * 1.2,
     // monsters.js' reward factor is frozen at Lv45 (it would explode past the main game)
     exp: ((expFor(L + 2.5) - expFor(L + 1.5)) / 14.4) * Math.exp(0.1 - 2 * (Math.min(L, 45) / 40) + 1.8 * Math.pow(Math.min(L, 45) / 40, 2)),
     jp: 5 + 1.15 * L,

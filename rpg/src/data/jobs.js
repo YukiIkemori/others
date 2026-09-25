@@ -112,7 +112,7 @@
       desc: '鍛えた拳で戦う武術家。\n武器がなくても強い。',
       mult: { hp: 1.3, mp: 0.7, str: 1.25, vit: 1.1, agi: 1.15, int: 0.65, mnd: 1.0, luk: 1.0 },
       masterBonus: { hp: 15, str: 4 },
-      masterTrait: 'monk_ibuki',
+      masterTrait: 'monk_training',
       weapons: ['claw'], heads: ['hat'], bodies: ['light'],
       innate: { unarmed: 12 },
       abilities: [

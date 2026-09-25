@@ -23,7 +23,7 @@
 // The player side is the game's auto-battle AI (R.BattleAI.partyAction) plus two things a
 // player does: the healers decide first (so the attacker keeps attacking), and when the boss
 // has raised its stats someone who knows かいじゅ (dispel) dispels it (the auto AI never does).
-// Targets: regulars — prepared Lv50 wins 100 %, loses 25–45 % HP per fight;
+// Targets: regulars — prepared Lv50 wins 100 %, loses 22–45 % HP per fight;
 //          abyss_lord — prepared Lv55 wins 50–75 % in 12–25 rounds, levels-only Lv65 < 10 %;
 //          boss_king2 (魔王) clearly easier than abyss_lord for the same parties.
 'use strict';
@@ -291,7 +291,7 @@ const SIZE_OF = { eyeball: 's', mimic: 's', jelly: 's', golem: 'l', wyvern: 'l',
 const groupWidth = (grp) => grp.mons.reduce((s, [id, , b]) => s + SPRITE_W[SIZE_OF[DB.monsters[id].sprite] || 'm'] * b, 0);
 
 if (ONLY.includes('zones')) {
-  console.log('\n=== ABYSS REGULARS ===  (prepared party, no items; target: win 100 %, HP lost 25–45 % per fight)');
+  console.log('\n=== ABYSS REGULARS ===  (prepared party, no items; target: win 100 %, HP lost 22–45 % per fight)');
   for (const z of ZONES) {
     const e = DB.encounters[z];
     if (!e) { W(`zone ${z} missing`); continue; }
@@ -308,7 +308,9 @@ if (ONLY.includes('zones')) {
         if (L === 50 && r.winPct < 98) W(`${z}@Lv50 #${gi} ${groupLabel(grp)}: win ${f1(r.winPct)}%`);
       });
       console.log(`${pad(z, 9)} Lv${L}  win ${padL(f0(avg.winPct), 3)}%  rounds ${f1(avg.rounds)}  hp-${padL(f0(avg.hpLost), 3)}%  deaths ${f1(avg.deaths)}  exp ${padL(f0(avg.exp), 6)}  jp ${padL(f0(avg.jp), 4)}  gold ${padL(f0(avg.gold), 5)}`);
-      if (L === 50 && (avg.hpLost < 25 || avg.hpLost > 45)) W(`${z}@Lv50: party loses ${f0(avg.hpLost)}% HP per fight (target 25–45)`);
+      // lower bound 22 % (was 25): mastered jobs' always-on signature abilities (回復アップ, 守りの構え …) give the
+      // prepared party more sustain; the healer tops up at 40 %, so harder hitters mostly cost MP, not HP
+      if (L === 50 && (avg.hpLost < 22 || avg.hpLost > 45)) W(`${z}@Lv50: party loses ${f0(avg.hpLost)}% HP per fight (target 22–45)`);
       if (VERBOSE || L === 50) for (const l of rows) console.log(l);
     }
   }

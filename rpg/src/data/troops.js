@@ -21,7 +21,7 @@
   Object.assign(R.DB.monsters, {
     goblin_chief: boss({
       name: 'ゴブリン親分', sprite: 'boss_goblin_chief', lv: 7,
-      hp: 480, mp: 0, atk: 54, def: 15, agi: 14, mag: 8, mdef: 6, exp: 160, gold: 180, jp: 60,
+      hp: 500, mp: 0, atk: 57, def: 15, agi: 14, mag: 8, mdef: 6, exp: 160, gold: 180, jp: 60,
       fam: ['beast'], statusRes: Object.assign({}, BOSS_RES, { poison: 0.3, blind: 0.3 }),
       actions: [['attack', 6], ['en_club_storm', 2], ['en_shout', 2, { round: 2 }], ['en_herb', 3, { hpBelow: 0.4, once: true }]],
       drop: { item: 'seed_str', rate: 1 }, rare: { item: 'swallow_sword', rate: 4 }, steal: { item: 'healing_grass', rare: 'power_bracer' },
