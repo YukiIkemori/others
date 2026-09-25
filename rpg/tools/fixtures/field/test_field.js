@@ -58,8 +58,8 @@ const msgText = () => { const m = R.UI._msg; return m && !m.closed ? m.pages.map
 /** window lines as shown: lines joined by '/', pages by '|' */
 const msgLines = () => { const m = R.UI._msg; return m && !m.closed ? m.pages.map((p) => p.join('/')).join('|') : ''; };
 const pos = () => R.Field.pos();
-/** walk whole tiles: hold each direction until the leader's box is headed for the next tile
- *  (two half steps), then release (the running half step completes) */
+/** walk whole tiles: hold each direction until the leader's box is headed for the next tile,
+ *  then release (the running step completes) */
 async function walk(path) {
   for (const d of R.Field.parsePath(path)) {
     const L = R.Field.layer;
@@ -144,21 +144,19 @@ async function newGame(map, spawn) {
   ok(R.State.flag('fx_town_seen'), 'onEnter flag');
   ok(!R.UI._msg || R.UI._msg.closed, 'window closed at event end');
 
-  // no turn-in-place delay: a tap walks half a tile (8px) at once
+  // no turn-in-place delay: a tap walks one whole tile at once (never half a tile)
   await press('left', 1);
-  eq(xp(), [9.5, 14], 'tap walks half a tile immediately');
-  eq(pos(), { x: 10, y: 14, dir: 'left' }, 'logical tile stays until the box is aligned');
-  await press('left', 1); await settle();
-  eq(xp(), [9, 14], 'second tap: aligned on the next tile');
-  eq(pos(), { x: 9, y: 14, dir: 'left' }, 'logical tile follows once aligned');
+  eq(xp(), [9, 14], 'tap walks a whole tile immediately');
+  await settle();
+  eq(pos(), { x: 9, y: 14, dir: 'left' }, 'logical tile = the box tile once the step ends');
   await settle();
   await walk('R');
   eq(pos(), { x: 10, y: 14, dir: 'right' }, 'walked back');
   // walking timing: the move starts on the first frame the direction is held,
-  // and consecutive half steps chain with no idle frame (WALK/2 frames each)
+  // and consecutive steps chain with no idle frame (WALK frames each)
   R.Input._set('up', true);
   await step(1);
-  ok(!!R.Field.layer.mv && R.Field.layer.mv.dur === R.Field.WALK / 2, 'half step starts on the first held frame (WALK/2=' + R.Field.WALK / 2 + ')');
+  ok(!!R.Field.layer.mv && R.Field.layer.mv.dur === R.Field.WALK, 'step starts on the first held frame (WALK=' + R.Field.WALK + ')');
   let moved = -1;
   const arrivals = [];
   for (let i = 0; i < 40; i++) {
@@ -166,7 +164,7 @@ async function newGame(map, spawn) {
     if (pos().y === 13 && moved < 0) moved = i;
     if (R.Field.layer.mv && R.Field.layer.mv.t === 0) arrivals.push(i);
   }
-  ok(arrivals.length >= 2 && arrivals[0] === R.Field.WALK / 2 - 1 && arrivals[1] - arrivals[0] === R.Field.WALK / 2, 'next half step starts right as the last ends (' + arrivals + ')');
+  ok(arrivals.length >= 1 && arrivals[0] === R.Field.WALK - 1, 'next step starts right as the last ends (' + arrivals + ')');
   R.Input._set('up', false);
   await settle();
   ok(moved >= 0, 'walked up after holding');
@@ -185,15 +183,15 @@ async function newGame(map, spawn) {
   // dash timing
   R.Settings.alwaysDash = true;
   await hold('up', 1);
-  ok(lay.mv && lay.mv.dur === R.Field.DASH / 2, 'dash = ' + R.Field.DASH + ' frames/tile (' + (lay.mv && lay.mv.dur) + ' per half step)');
+  ok(lay.mv && lay.mv.dur === R.Field.DASH, 'dash = ' + R.Field.DASH + ' frames/tile (' + (lay.mv && lay.mv.dur) + ')');
   let fr = 0;
   while (lay.mv && fr < 20) { await step(1); fr++; }
-  ok(fr <= R.Field.DASH / 2, 'dash half step ends in time (' + fr + ')');
+  ok(fr <= R.Field.DASH, 'dash step ends in time (' + fr + ')');
   await settle();
   // いつでもダッシュ + holding B = walk
   R.Input._set('b', true);
   await hold('down', 1);
-  ok(lay.mv && lay.mv.dur === R.Field.WALK / 2, 'always-dash: holding B walks');
+  ok(lay.mv && lay.mv.dur === R.Field.WALK, 'always-dash: holding B walks');
   R.Input._set('b', false);
   R.Settings.alwaysDash = false;
   await settle();
@@ -201,7 +199,7 @@ async function newGame(map, spawn) {
   for (const btn of ['b', 'dash']) {
     R.Input._set(btn, true);
     await hold('up', 1);
-    ok(lay.mv && lay.mv.dur === R.Field.DASH / 2, 'hold ' + btn + ' + move = dash');
+    ok(lay.mv && lay.mv.dur === R.Field.DASH, 'hold ' + btn + ' + move = dash');
     R.Input._set(btn, false);
     await settle();
   }
@@ -320,7 +318,7 @@ async function newGame(map, spawn) {
   const lvSave = R.Game.party.map((c) => c.level);
   R.Game.party.forEach((c) => { c.level = 10; });
   R.Field.repel(3);
-  R.Field.layer.walked = 0; // whole tiles from here (a half step left over would shift the count)
+  R.Field.layer.walked = 0; // whole tiles from here (a diagonal's √2 left over would shift the count)
   R.fxBattleLog.length = 0;
   R.Field.layer.encCount = 0.1;
   await walk('R'); await walk('L');
@@ -693,7 +691,7 @@ async function newGame(map, spawn) {
   eq(pos().y, 10, 'field responsive after reset');
   ok(!R.State.flag('fx_stuck_after'), 'stale event never continues');
 
-  // --------------------------------------------------------------- 8 directions / half tiles
+  // --------------------------------------------------------------- 8 directions / whole tiles
   console.log('free movement');
   {
     let stepHits = 0;
@@ -723,16 +721,19 @@ async function newGame(map, spawn) {
       await R.Field.warp('fx_open', 'entrance', { fade: false }); await settle();
       L.place(x, y, dir, cell); L.savePos();
     };
-    // diagonal: both axes in one half step, facing kept when it is one of the held directions
+    // diagonal: both axes in one whole-tile step, facing kept when it is one of the held directions
+    const whole = () => Number.isInteger(L.P[0].x) && Number.isInteger(L.P[0].y);
     await go(1, 5, 'down');
     R.Input._set('right', true); R.Input._set('up', true);
     await step(1);
-    eq(xp(), [1.5, 4.5], 'diagonal half step');
-    ok(Math.abs(L.mv.dur - R.Field.WALK / 2 * Math.SQRT2) < 1e-9, 'diagonal half step takes √2× (same px/frame)');
-    await step(40);
+    eq(xp(), [2, 4], 'diagonal step = one whole tile on both axes');
+    ok(Math.abs(L.mv.dur - R.Field.WALK * Math.SQRT2) < 1e-9, 'diagonal step takes √2× (same px/frame)');
+    let allWhole = true;
+    for (let i = 0; i < 80; i++) { await step(1); if (!whole()) allWhole = false; }
     R.Input._set('right', false); R.Input._set('up', false); await settle();
+    ok(allWhole, 'every step targets a whole tile (diagonal walk past a wall block, then along the top wall)');
     eq(xp()[1], 1, 'diagonal walk stops at the top wall');
-    ok(xp()[0] > 5, 'then slides along the wall (' + xp() + ')');
+    ok(xp()[0] > 5 && whole(), 'then walks along the wall on whole tiles (' + xp() + ')');
     eq(L.P[0].dir, 'right', 'facing the slide');
     // no jitter: sampled between fixed steps (Engine.alpha), the drawn position advances at a constant
     // rate across step boundaries, straight and diagonal, walking and dashing (fractional step lengths)
@@ -760,115 +761,120 @@ async function newGame(map, spawn) {
       if (worst > 1e-9) console.log(samples.map((p) => p.x.toFixed(3) + "," + p.y.toFixed(3)).join(" "));
       ok(worst < 1e-9, 'constant drawn speed ' + keys.join('+') + (dash ? ' dash' : '') + ' (worst deviation ' + worst.toExponential(2) + ' tiles per ¼ frame)');
     }
-    // diagonal into the corner of a wall block: the swept cells include the corner → slide, no corner cutting
+    // diagonal into a wall block: blocked → one whole tile along the free (last pressed) axis
     await go(2, 1, 'right');
     R.Input._set('down', true); R.Input._set('right', true);
     await step(1);
-    eq(xp(), [2.5, 1], 'corner cell blocked → slide along the free (last pressed) axis');
+    eq(xp(), [3, 1], 'diagonal target blocked → whole tile along the free (last pressed) axis');
     R.Input._set('down', false); R.Input._set('right', false); await settle();
-    // corner assist: pushing up into an edge that is only half in the way shifts half a tile sideways
-    await go(2.5, 3, 'up', { x: 3, y: 3 });
-    await holdDirs(['up'], 1);
-    eq(xp(), [2, 3], 'corner nudge toward the free side');
-    eq(L.P[0].dir, 'up', 'nudge keeps facing');
-    await holdDirs(['up'], 8);
-    eq(xp()[0], 2, 'then passes the corner');
-    ok(xp()[1] < 3, 'moved up past the wall (' + xp() + ')');
-    // no nudge against a full wall
+    // no corner cutting: the target is free but a tile beside the diagonal is a wall → whole tile along the free axis
+    await go(2, 2, 'up');
+    R.Input._set('right', true); R.Input._set('up', true);
+    await step(1);
+    eq(xp(), [2, 1], 'corner cell blocked → no corner cutting, whole tile up (last pressed)');
+    R.Input._set('right', false); R.Input._set('up', false); await settle();
+    // both axes blocked: stop (no half-tile sidestep)
+    await go(1, 1, 'down');
+    await holdDirs(['left', 'up'], 6);
+    eq(xp(), [1, 1], 'diagonal into a corner: no movement');
+    // no sidestep against a wall (the old half-step corner assist is gone)
     await go(3, 3, 'up');
     await holdDirs(['up'], 6);
-    eq(xp(), [3, 3], 'full wall: no movement');
-    // step event: fires once when the box aligns on the tile (diagonal approach)
+    eq(xp(), [3, 3], 'full wall: no movement, no sidestep');
+    await go(4, 3, 'left');
+    await holdDirs(['up'], 1); await settle();
+    eq(xp(), [4, 2], 'next to the wall block: whole-tile step up');
+    // step event: fires once when the party enters the tile (diagonal approach)
     await go(5, 3, 'down');
     stepHits = 0;
-    await holdDirs(['right', 'down'], 1); // (5.5,3.5)
-    eq(stepHits, 0, 'half over the event tile: nothing yet');
     await holdDirs(['right', 'down'], 1); await clearMsgs(); // (6,4)
-    eq(stepHits, 1, 'aligned on the event tile: fired');
-    await holdDirs(['right'], 1); await holdDirs(['left'], 1); await clearMsgs(); // (6.5,4) → (6,4)
-    eq(stepHits, 1, 'jiggling within the tile never re-fires');
-    // entering with a half offset on the other axis: the box glides onto the tile, then the event runs (once)
-    await go(5, 4.5, 'right', { x: 5, y: 4 });
-    stepHits = 0;
-    await holdDirs(['right'], 4); await clearMsgs(); await settle();
-    eq([stepHits, xp()[0], xp()[1]], [1, 6, 4], 'half-offset entry: glide onto the tile, fire once');
-    // warps too
-    await go(8, 5.5, 'right', { x: 8, y: 5 });
-    await holdDirs(['right'], 4); await settle(200); await clearMsgs();
-    eq(R.Field.map.id, 'fx_town', 'warp from a half-offset approach');
-    // talk / chest from half positions: the tile in front of the box (either tile when it straddles two)
-    await go(3.5, 5, 'down', { x: 3, y: 5 });
+    eq([stepHits, xp()[0], xp()[1]], [1, 6, 4], 'diagonal onto the event tile: fired once');
+    await holdDirs(['down'], 1); await clearMsgs(); await settle();
+    eq(stepHits, 1, 'leaving the tile does not fire');
+    // warps too (diagonal approach)
+    await go(8, 4, 'right');
+    await holdDirs(['right', 'down'], 1); await settle(200); await clearMsgs();
+    eq(R.Field.map.id, 'fx_town', 'warp from a diagonal approach');
+    // talk / chest: the tile in front of the box
+    await go(4, 5, 'down');
     await press('a'); await step(5);
-    ok(/こんにちは/.test(msgText()), 'talk from a half position');
+    ok(/こんにちは/.test(msgText()), 'talk to the npc in front');
     await clearMsgs();
     eq(R.Field.map.npc('fx_n').dir, 'up', 'npc turns to the player');
-    await go(8.5, 2.5, 'up', { x: 8, y: 2 });
-    eq(R.Field.front(), { x: 8, y: 1 }, 'front = first whole tile beyond the box');
+    await go(9, 2, 'up');
+    eq(R.Field.front(), { x: 9, y: 1 }, 'front = the tile beyond the box');
     await press('a'); await step(20);
-    ok(R.Game.chests.fx_open_c, 'chest from a half position (both axes offset)');
+    ok(R.Game.chests.fx_open_c, 'chest in front');
     await clearMsgs();
-    // blocked by NPC / chest boxes
-    await go(4.5, 4, 'down', { x: 4, y: 4 });
+    // blocked by NPC boxes (this one keeps its post: a standing NPC with an event)
+    await go(4, 4, 'down');
     let overlap = false;
     R.Input._set('down', true);
     for (let i = 0; i < 20; i++) { await step(1); const p = L.leadAt(0); if (Math.abs(p.x - 4) < 1 - 1e-9 && Math.abs(p.y - 6) < 1 - 1e-9) overlap = true; }
     R.Input._set('down', false); await settle();
     ok(!overlap, 'never overlaps the npc');
-    eq(xp()[0], 5, 'nudged around the npc that was half in the way');
-    ok(xp()[1] > 5, 'and walked on past it (' + xp() + ')');
+    eq(xp(), [4, 5], 'stops on the whole tile before the npc');
     // caterpillar: followers one tile back along the leader's path, facing their motion
     await go(1, 5, 'right');
-    await holdDirs(['right'], 12);
-    await holdDirs(['right', 'up'], 6);
+    await walk('RR');
+    await holdDirs(['right', 'up'], 1);
     const P = L.P;
-    // leader went right 2 tiles (1→3) then 2 diagonal half steps up-right → (4, 4): the path back is
-    // two diagonals (√½ tile each) then straight left
+    // leader went right 2 tiles (1→3) then one diagonal step up-right → (4, 4): the path back is
+    // one diagonal (√2 tiles) then straight left
     eq(xp(), [4, 4], 'leader after straight + diagonal');
-    const back = (d) => { const diag = Math.SQRT1_2 * 2; return d <= diag ? [4 - d / Math.SQRT2, 4 + d / Math.SQRT2] : [3 - (d - diag), 5]; };
+    const back = (d) => (d <= Math.SQRT2 ? [4 - d / Math.SQRT2, 4 + d / Math.SQRT2] : [3 - (d - Math.SQRT2), 5]);
     const near = (a, b) => Math.abs(a[0] - b[0]) < 1e-9 && Math.abs(a[1] - b[1]) < 1e-9;
     ok(near([P[1].x, P[1].y], back(1)), 'follower 1 one tile back along the path: ' + [P[1].x, P[1].y] + ' vs ' + back(1));
     ok(near([P[2].x, P[2].y], back(2)), 'follower 2 two tiles back along the path: ' + [P[2].x, P[2].y] + ' vs ' + back(2));
     eq([P[1].dir, P[2].dir], ['right', 'right'], 'followers face their own motion');
     // saves keep whole tiles only
-    await go(3.5, 4.5, 'left', { x: 3, y: 4 });
+    await go(3, 4, 'left');
     const sv = JSON.parse(JSON.stringify(R.State.serialize()));
-    eq([sv.game.pos.x, sv.game.pos.y], [3, 4], 'save stores the logical whole tile');
+    eq([sv.game.pos.x, sv.game.pos.y], [3, 4], 'save stores the whole tile');
     R.State.deserialize(sv);
     const rr = R.Field.resume(); await step(40); await rr;
     L = R.Field.layer;
     eq(xp(), [3, 4], 'resume on the whole tile');
-    sv.game.pos.x = 3.5; sv.game.pos.y = 4.4; // a fractional position (never written) still loads
+    sv.game.pos.x = 3.5; sv.game.pos.y = 4.4; // a fractional position (old half-step saves) still loads
     R.State.deserialize(sv);
     const rr2 = R.Field.resume(); await step(40); await rr2;
     L = R.Field.layer; // resume builds a fresh layer
-    eq(xp(), [4, 4], 'fractional saved position rounds to a whole tile');
-    // scripted party walks align onto the whole tile first
-    await go(5.5, 3, 'down', { x: 5, y: 3 });
+    eq(xp(), [4, 4], 'fractional saved position snaps to the nearest whole tile');
+    sv.game.pos.x = 2.5; sv.game.pos.y = 2; // rounding would land in the wall block at (3,2)
+    R.State.deserialize(sv);
+    const rr3 = R.Field.resume(); await step(40); await rr3;
+    L = R.Field.layer;
+    eq(xp(), [2, 2], 'half-tile save next to a wall snaps to the walkable tile');
+    eq(pos(), { x: 2, y: 2, dir: 'left' }, 'logical tile = the snapped tile');
+    // scripted party walks move whole tiles
+    await go(5, 3, 'down');
     R.DB.events.fx_pw2 = { run: async (ev) => { await ev.player.walk('D'); } };
     const pw = R.Events.run('fx_pw2'); await step(60); await pw;
-    eq(xp(), [5, 4], 'ev.player.walk from a half position: aligned whole-tile steps');
-    // encounters count distance: a half step counts half
+    eq(xp(), [5, 4], 'ev.player.walk: whole-tile steps');
+    // encounters count distance: one tile = one encounter step
     await R.Field.warp('fx_world', { x: 6, y: 9 }, { fade: false }); await settle();
     R.Field.noEncounter = false; R.Game.repelSteps = 0;
     L.encCount = 50; L._fm = null;
     const rate = R.Field.map.tile(6, 9).enc == null ? 1 : R.Field.map.tile(6, 9).enc;
     await holdDirs(['right'], 1);
-    ok(Math.abs(50 - L.encCount - rate * 0.5) < 1e-9, 'half step = half an encounter step (' + (50 - L.encCount) + ')');
+    ok(Math.abs(50 - L.encCount - rate) < 1e-9, 'one tile = one encounter step (' + (50 - L.encCount) + ')');
     R.Field.noEncounter = true;
-    // ship: board from a half position, sail diagonally, saves keep whole tiles
+    // ship: board, sail diagonally, saves keep whole tiles
     R.Game.ship = { map: 'fx_world', x: 11, y: 15, dir: 'left' };
     R.Game.onShip = false;
-    L.place(10, 14.5, 'right', { x: 10, y: 14 });
+    L.place(10, 15, 'right');
     await holdDirs(['right'], 1); await settle();
-    ok(R.Game.onShip, 'boarded from a half position');
+    ok(R.Game.onShip, 'boarded');
     eq(xp(), [11, 15], 'onto the ship');
     L.place(20, 5, 'right'); R.Game.ship = { map: 'fx_world', x: 20, y: 5, dir: 'right' };
     await holdDirs(['right', 'down'], 1);
-    eq(xp(), [20.5, 5.5], 'diagonal sailing');
-    eq([R.Game.ship.x, R.Game.ship.y, R.Game.pos.x, R.Game.pos.y], [20, 5, 20, 5], 'ship / pos saved on whole tiles');
+    eq(xp(), [21, 6], 'diagonal sailing: one whole tile');
+    eq([R.Game.ship.x, R.Game.ship.y, R.Game.pos.x, R.Game.pos.y], [21, 6, 21, 6], 'ship / pos saved on whole tiles');
     R.Input._set('b', true);
-    await holdDirs(['right'], 1); // sail dash: 1.5 frames per half step (fractions carry)
-    ok(Math.abs(L.P[0].x - 21) < 1e-9, 'sail dash half step');
+    R.Input._set('right', true); await step(1);
+    ok(L.mv && Math.abs(L.mv.dur - R.Field.SAIL_DASH) < 1e-9, 'sail dash: SAIL_DASH frames per tile');
+    R.Input._set('right', false); await settle();
+    ok(Math.abs(L.P[0].x - 22) < 1e-9, 'sail dash step ends on a whole tile');
     R.Input._set('b', false);
     // land from the ship: everyone ashore, ship left on a whole tile
     L.place(12, 15, 'left'); R.Game.ship = { map: 'fx_world', x: 12, y: 15, dir: 'left' }; R.Game.onShip = true;

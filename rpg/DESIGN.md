@@ -584,34 +584,32 @@ visible bosses). NPCs block movement. Talking to an NPC across a `counter` tile 
 NPC flags: `fixed:true` never pushed aside, `push:true` always pushable (see §7.2 *Pushing NPCs*).
 
 ### 7.2 Field behaviour (owner: field)
-* Free movement on a half-tile grid: the leader's collision box is one tile (16×16) anchored at its position
-  (tile units, multiples of ½); a position is valid when every tile the box overlaps is passable (tiles, decor,
-  NPCs, chests, locked doors without the key; sailable tiles + no NPC when aboard). Each move is one **half step
-  (8px) in 8 directions**: diagonals need the whole swept rectangle free (no corner cutting), otherwise the party
-  slides along the free axis (most recently pressed first); pushing into an edge that is only half in the way
-  nudges half a tile sideways (corner assist). Speeds are per tile — 6 frames walking, 4 dashing (dash while
-  holding B/Shift; optional always-dash), sailing 6 / 3 — and a half step takes half of that, a diagonal half
-  step √2× (same px/frame in every direction). Moves start on the first frame a direction is held and chain
-  without idle frames; fractional frame lengths carry over and rendering interpolates across step boundaries
-  (Engine.alpha), so the drawn speed is constant. Facing: the held direction (diagonal: keeps the current facing
-  if it is one of the two held keys, else the most recently pressed; sliding faces the slide).
-* Logical tile (`layer.cell`, `R.Field.pos()`): per axis the tile the box last fully occupied (it changes only
-  when the box is aligned on that axis), so it is always a tile under the box. Step events, warps/stairs,
-  damage floors and `R.emit('step')` fire when it changes — exactly once per tile entered (jiggling inside a tile
-  never re-fires); a step event / warp first glides the box onto its tile. Map-edge exits fire when the box
-  would leave the map. Encounters, poison, walk-heal and 魔除け count the distance walked (half steps count
-  half; `R.Game.steps` counts whole tiles). A/talk/chests/signs use the first whole tile beyond the box's
-  leading edge (both tiles when the box straddles two), examine also the tiles under the box.
-  `R.Field.exactPos()` gives the box position.
-* Scripted party movement (`walkParty`, `ev.player.walk`, `setPlayerPos`, warps) stays on whole tiles; a
-  scripted walk from a half position first glides onto the logical tile.
-* Saves: `R.Game.pos` / `R.Game.ship` hold whole tiles only (the logical tile); positions are rounded on load.
+* Tile movement in 8 directions (playtest 「半歩ずれるのがストレス」: the old half-tile grid, corner assist and
+  half-tile wall sliding were removed — the party always stops on whole tiles, like the classic games). The
+  leader's collision box is one tile (16×16) anchored at its position (tile units); a tile may be entered when it is
+  passable (tiles, decor, NPCs, chests, locked doors without the key; sailable tiles + no NPC when aboard). Each move
+  is **one whole tile in 8 directions**: a diagonal needs all three tiles of the swept 2×2 square free (no corner
+  cutting); if it is blocked the party walks one whole tile along the free axis instead (most recently pressed
+  first), and stops (bump) when neither is free — there is never a sideways nudge. Speeds are per tile — 6 frames
+  walking, 4 dashing (dash while holding B/Shift; optional always-dash), sailing 6 / 3 — a diagonal step takes √2×
+  (same px/frame in every direction). Moves start on the first frame a direction is held and chain without idle
+  frames; fractional frame lengths carry over and rendering interpolates across step boundaries (Engine.alpha), so
+  the drawn motion is smooth and constant. Facing: the held direction (diagonal: keeps the current facing if it is
+  one of the two held keys, else the most recently pressed; sliding faces the slide).
+* Logical tile (`layer.cell`, `R.Field.pos()`) = the box's tile once a step ends. Step events, warps/stairs, damage
+  floors and `R.emit('step')` fire when it changes — exactly once per tile entered. Map-edge exits fire when the box
+  would leave the map. Encounters, poison, walk-heal and 魔除け count the distance walked (a diagonal counts √2;
+  `R.Game.steps` counts whole tiles). A/talk/chests/signs use the tile in front, examine also the tile underfoot.
+  `R.Field.exactPos()` gives the box position (whole tiles except mid-step).
+* Scripted party movement (`walkParty`, `ev.player.walk`, `setPlayerPos`, warps) stays on whole tiles.
+* Saves: `R.Game.pos` / `R.Game.ship` hold whole tiles only. A fractional saved position (saves from the old
+  half-step movement) snaps on load to the nearest surrounding whole tile the party can stand on (or the ship's tile).
 * Party caterpillar: the other two members follow the leader's actual path (position history) one tile apart
   (path distance), facing their own motion (dead members still follow, like DQ ghosts are not needed).
 * Camera centred on the leader, clamped to map edges (small maps centred) — except on wrapping maps.
 * **World wraparound** (playtest 「端っこで見えない壁」): `type:'world'` maps wrap like a torus (`map.wrap`; `wrap:false`
   turns it off). `FieldMap` normalises coordinates modulo w/h in `idx/tileAt/decorAt/walkable/npcAt/zoneAt/...`
-  (`inBounds` is always true, `inMap` is the raw check), so walking, sailing, diagonals and half steps simply continue
+  (`inBounds` is always true, `inMap` is the raw check), so walking, sailing and diagonals simply continue
   past an edge. The logical tile stays inside the map: when a step ends with it past an edge, `rewrap()` moves every
   position (party, trail, the step still being drawn, ship pos, tile-cache window) by a whole map size, so the drawn
   screen never changes. The camera is not clamped; the tile cache always slides on wrapping maps (cells take the art of
@@ -643,7 +641,7 @@ NPC flags: `fixed:true` never pushed aside, `push:true` always pushable (see §7
 * Chests (`obj:chest`), signs, NPC talk (NPC turns to face). **No hidden items**: every treasure in the game is a
   visible chest (the old examine-to-find `hidden` objects were abolished — tools/validate.js flags any left).
 * Ship: owned when `R.Game.ship` is set. Walk into it to board (the party glides onto the hull); sail with the same
-  half-step / diagonal rules on `ship` tiles; pushing toward land steps ashore (everyone together, a whole tile
+  whole-tile / diagonal rules on `ship` tiles; pushing toward land steps ashore (everyone together, a whole tile
   from an aligned hull) and leaves the ship there (saved on its logical tile).
   `barrier` tiles become sailable when flag `barrier_broken` is set.
 * Menu: Y opens the field menu (owner: menu → `R.Menu.open()`); B is held to dash.

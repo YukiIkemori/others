@@ -1,6 +1,6 @@
 // Field: the map screen (DESIGN §7.2). One opaque layer that draws tiles,
-// objects and y-sorted sprites, moves the party in 8 directions on a half-tile
-// grid (caterpillar trail),
+// objects and y-sorted sprites, moves the party tile by tile in 8 directions
+// (caterpillar trail),
 // runs NPC AI, doors/locks, damage floors, warps, step events, encounters and
 // the ship, plus the public R.Field API used by title/menu/events/debug.
 //
@@ -13,7 +13,7 @@
   const DB = R.DB;
   const TS = 16;
 
-  // frames per tile (a half step takes half, a diagonal half step √2× that: same px/frame in every direction).
+  // frames per tile (a diagonal step takes √2× that: same px/frame in every direction).
   // 16px / 6 = 2⅔ map px per frame = exactly 8 device px at the default field scale (3, see VIEW).
   const WALK = 6, DASH = 4, SAIL = 6, SAIL_DASH = 3, NPC_STEP = 16;
   const SCRIPT_WALK = 8; // cutscene party walks keep their original pacing
@@ -412,20 +412,19 @@
 
   // ------------------------------------------------------------ the layer
   // Movement (DESIGN §7.2): the leader's collision box is one tile (16×16)
-  // anchored at P[0].x/y, in tile units on a half-tile (8px) grid. A position is
-  // valid when every tile the box overlaps is passable. Each move is one half
-  // step in up to 8 directions (diagonals check the whole swept rectangle, so
-  // no corner is ever cut); blocked diagonals slide along the free axis and a
-  // push into a wall that is only half in the way nudges half a tile sideways.
+  // anchored at P[0].x/y, in tile units, and always stops on whole tiles
+  // (the old half-tile grid / corner assist were dropped at the owner's request:
+  // 「半歩ずれるのがストレス」). Each move is one whole tile in up to 8 directions;
+  // a diagonal needs all three tiles of the swept 2×2 square free (no corner
+  // cutting), otherwise the party walks one whole tile along the free axis (the
+  // most recently pressed one first) or stops.
   //
-  // Tile-based rules use `cell`, the leader's logical tile: on each axis it is
-  // the tile the box last fully occupied (it only changes when the box is
-  // aligned on that axis), so it is always one of the tiles under the box.
-  // Step events, warps, stairs, damage floors and the saved position fire /
-  // are taken when `cell` changes — once per tile entered. A warp or step
-  // event first glides the box onto its tile. Encounters, poison, walk-heal
-  // and 魔除け count the distance walked, so half steps count half.
-  const HALF = 0.5;
+  // Tile-based rules use `cell`, the leader's logical tile (= the box position
+  // once a step has ended). Step events, warps, stairs, damage floors and the
+  // saved position fire / are taken when `cell` changes — once per tile entered.
+  // Encounters, poison, walk-heal and 魔除け count the distance walked
+  // (a diagonal counts √2).
+  const STEP = 1;
   const EPS = 1e-6;
   const GAP = 1; // follower spacing along the leader's path (tiles)
   const isInt = (v) => Math.abs(v - Math.round(v)) < EPS;
@@ -445,7 +444,7 @@
     constructor() {
       super();
       this.opaque = true;
-      this.P = [0, 1, 2].map(() => ({ x: 0, y: 0, dir: 'down' })); // P[0] = leader box (tile units, half-tile grid)
+      this.P = [0, 1, 2].map(() => ({ x: 0, y: 0, dir: 'down' })); // P[0] = leader box (tile units, whole tiles between steps)
       this.cell = { x: 0, y: 0 }; // the leader's logical tile (see above)
       this.trail = [{ x: 0, y: 0 }]; // leader positions, newest first (caterpillar path)
       this.mv = null; // party move {t,dur,from,kind,len,scripted,resolve}
@@ -470,7 +469,7 @@
     get lead() { return this.P[0]; }
     place(x, y, dir, cell) {
       if (M && M.wrap) {
-        // keep the logical tile inside the map (the box may hang half a tile over the seam)
+        // keep the logical tile inside the map
         const c0 = cell || { x: Math.round(x), y: Math.round(y) };
         const sx = c0.x - M.wx(c0.x), sy = c0.y - M.wy(c0.y);
         x -= sx; y -= sy;
@@ -626,12 +625,12 @@
       return null;
     }
     sailOk(x, y) { return M.sailable(x, y) && !M.npcAt(x, y); }
-    /** what a half step by (dx,dy) from (fx,fy) would do:
+    /** what a one-tile step by (dx,dy) from (fx,fy) would do:
      *  {kind:'walk'|'sail'|'land'|'board', x, y} | {kind:'exit', ex} | {kind:'lock'} | null (blocked) */
     plan(dx, dy, fx, fy) {
       const p = this.P[0], g = R.Game;
       if (fx == null) { fx = p.x; fy = p.y; }
-      const tx = fx + dx * HALF, ty = fy + dy * HALF;
+      const tx = fx + dx * STEP, ty = fy + dy * STEP;
       // only the cells the box moves into (never stuck on a tile it already covers, e.g. after setPos)
       const cells = rectCells(fx, fy, tx, ty).filter(([x, y]) => !boxHits(fx, fy, x, y));
       if (g.onShip) {
@@ -659,21 +658,6 @@
       if (lock) return { kind: 'lock' };
       const doors = cells.filter(([x, y]) => isDoor(M.tileAt(x, y)) && !M.opened.has(M.idx(x, y)));
       return { kind: 'walk', x: tx, y: ty, doors };
-    }
-    /** corner assist: pushing d into an edge that is only half in the way → a half step sideways that lets the next step pass */
-    nudge(d) {
-      const p = this.P[0], hz = !!HORIZ[d];
-      if (isInt(hz ? p.y : p.x)) return null;
-      const dx = U.DX[d], dy = U.DY[d];
-      // try the side of the logical tile first
-      const toward = hz ? Math.sign(this.cell.y - p.y) : Math.sign(this.cell.x - p.x);
-      for (const s of [toward || 1, -(toward || 1)]) {
-        const side = hz ? this.plan(0, s) : this.plan(s, 0);
-        if (!side || (side.kind !== 'walk' && side.kind !== 'sail')) continue;
-        const fwd = this.plan(dx, dy, side.x, side.y);
-        if (fwd && fwd.kind !== 'lock' && fwd.kind !== 'exit') return side;
-      }
-      return null;
     }
     /** carry out a plan; true if the party moves / warps */
     exec(pl, face) {
@@ -744,7 +728,7 @@
       this.runLocked(() => R.Events.run(async (ev) => { R.sfx('locked'); await ev.say('鍵がかかっている。'); }, { self: 'lock' }));
       return false;
     }
-    /** held directions → one half step (8 directions, wall sliding, corner assist); true if moving */
+    /** held directions → one whole-tile step (8 directions; a blocked diagonal walks along the free axis); true if moving */
     tryMove(hx, vy, last) {
       const p = this.P[0];
       const hd = dirOf(hx, 0), vd = dirOf(0, vy);
@@ -752,15 +736,11 @@
       if (hx && vy) {
         const pd = this.plan(hx, vy);
         if (movable(pd)) return this.exec(pd, p.dir === hd || p.dir === vd ? p.dir : last);
-        // slide along whichever axis is free (the most recently pressed one first)
+        // blocked diagonal: one whole tile along whichever axis is free (the most recently pressed one first), else stop
         const order = HORIZ[last] ? [[hx, 0, hd], [0, vy, vd]] : [[0, vy, vd], [hx, 0, hd]];
         for (const [dx, dy, d] of order) {
           const pl = this.plan(dx, dy);
           if (movable(pl)) return this.exec(pl, d);
-        }
-        for (const [, , d] of order) {
-          const nd = this.nudge(d);
-          if (nd) return this.exec(nd, d);
         }
         p.dir = last;
         return this.bump();
@@ -771,18 +751,16 @@
       const pl = this.plan(hx, vy);
       if (movable(pl)) return this.exec(pl, d);
       if (pl && pl.kind === 'lock') return this.lockedMsg(d);
-      const nd = this.nudge(d);
-      if (nd) return this.exec(nd, d);
       const pushed = this.pushNpc(d);
       if (pushed) return pushed === true; // 'aside': the NPC is stepping out of the way (no bump)
       return this.bump();
     }
 
     // ------------------------------------------------------------ pushing NPCs aside
-    /** the pushable NPC that alone blocks a half step toward d (null if a wall is in the way too) */
+    /** the pushable NPC that alone blocks a step toward d (null if a wall is in the way too) */
     npcAhead(d) {
       if (R.Game.onShip) return null;
-      const p = this.P[0], tx = p.x + U.DX[d] * HALF, ty = p.y + U.DY[d] * HALF;
+      const p = this.P[0], tx = p.x + U.DX[d] * STEP, ty = p.y + U.DY[d] * STEP;
       let npc = null;
       for (const [x, y] of rectCells(p.x, p.y, tx, ty)) {
         if (boxHits(p.x, p.y, x, y)) continue;
@@ -873,7 +851,7 @@
     }
 
     // ------------------------------------------------------------ arrival
-    /** sync part of a completed half step; returns an async task when something must happen */
+    /** sync part of a completed step; returns an async task when something must happen */
     onArrive(a) {
       const g = R.Game;
       const p = this.P[0], c = this.cell;
@@ -1426,6 +1404,22 @@
   function flushPaths(m) {
     if (m) for (const n of m.npcs) if (n.path || n.pathResolve) { n.path = []; finishPath(n); }
   }
+  /** a saved position → whole tiles. Saves from the old half-tile movement may hold x.5 values:
+   *  take the nearest of the (up to 4) surrounding tiles the party can stand on (or the ship's tile). */
+  function snapPos(m, pos) {
+    const x = +pos.x || 0, y = +pos.y || 0, out = { x: Math.round(x), y: Math.round(y), dir: pos.dir };
+    if (isInt(x) && isInt(y)) return pos;
+    const sh = R.Game.ship;
+    const cand = [];
+    for (const cx of [...new Set([Math.floor(x), Math.ceil(x)])]) {
+      for (const cy of [...new Set([Math.floor(y), Math.ceil(y)])]) cand.push({ x: cx, y: cy, d: Math.hypot(cx - x, cy - y) + (cx === out.x && cy === out.y ? 0 : 1e-3) });
+    }
+    cand.sort((a, b) => a.d - b.d);
+    const ok = (c) => m.inBounds(c.x, c.y) && ((m.walkable(c.x, c.y) && !m.npcAt(c.x, c.y) && !m.chestAt(c.x, c.y)) ||
+      (sh && sh.map === m.id && sh.x === c.x && sh.y === c.y));
+    const hit = cand.find(ok);
+    return hit ? { x: hit.x, y: hit.y, dir: pos.dir } : out;
+  }
   /** load a map and place the party (no fades, no events) */
   function load(mapId, spawn, dir) {
     const m = R.FieldMap.compile(mapId);
@@ -1433,7 +1427,7 @@
     flushPaths(M);
     if (L.mv && L.mv.resolve) L.mv.resolve();
     M = m;
-    let s = m.spawn(spawn == null ? 'entrance' : spawn);
+    let s = m.spawn(spawn == null ? 'entrance' : spawn && typeof spawn === 'object' && spawn.x != null ? snapPos(m, spawn) : spawn);
     if (!m.inBounds(s.x, s.y)) { R.FieldMap.warn(m.id, 'position ' + s.x + ',' + s.y + ' is outside the map'); s = m.spawn('entrance'); }
     L.place(s.x, s.y, dir || s.dir || L.P[0].dir);
     L.shipPos = null; L.walked = 0;
@@ -1463,7 +1457,7 @@
   const Field = (R.Field = {
     noEncounter: false,
     showCoords: false,
-    WALK, DASH,
+    WALK, DASH, SAIL, SAIL_DASH,
     get map() { return M; },
     get layer() { return L; },
     ZOOMS: Object.keys(ZOOM_DIV),
@@ -1651,7 +1645,7 @@
     },
     /** leader tile position {x,y,dir}: the logical tile (whole tiles; see the layer's `cell`) */
     pos() { return L ? { x: L.cell.x, y: L.cell.y, dir: L.P[0].dir } : null; },
-    /** exact leader box position {x,y,dir} in tiles (multiples of ½) */
+    /** exact leader box position {x,y,dir} in tiles (whole tiles except mid-step) */
     exactPos() { return L ? { x: L.P[0].x, y: L.P[0].y, dir: L.P[0].dir } : null; },
     /** the tile in front of the leader (the first of frontCells) */
     front() {
