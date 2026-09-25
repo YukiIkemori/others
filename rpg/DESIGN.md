@@ -351,6 +351,11 @@ Elements: `fire ice thunder wind earth water holy dark`.
 R.DB.encounters[zoneId] = { lv:[min,max], bg:'grass', groups:[{w:10, mons:[['monId',min,max], ...]}] }
   // ≤ 3 distinct species per group, ≤ 8 monsters total (≤ 4 of a large 64px species, bosses alone)
 R.DB.troops[id] = { mons:[['monId',min,max],...], bg, bgm:'boss'|'lastboss', noEscape:true }
+R.DB.rareEncounters[zoneId] = { mon:'rare_x', rate:0.015 } // a plain random encounter in that zone is replaced by the
+  // rare monster with this chance (golden flashes + 'rare' jingle + 「めったに出会えない魔物が現れた！」, sparkles,
+  // always starts manual even with auto carry-over). Rare monsters: flags ['rare','flee'], fleeRate, optional `appear`
+  // (entrance line) and `attackFx`; their exclusive item (`exclusive:<monId>` on the item) drops at 1/64–1/128 and a rare
+  // steal of it is ~1/64 (never from shared pools / chests).
 R.DB.shops[id]  = { name?, items:[itemIds] }
 R.DB.locations[id] = { name, map:'world', spawn:'<world spawn name>', dock?:'<world spawn on sea>' }  // teleport targets
 R.DB.objectives[id] = { text:'つぎの もくてき …' }

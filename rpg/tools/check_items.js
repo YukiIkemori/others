@@ -250,7 +250,8 @@ for (const k in RARE) for (const id of RARE[k]) {
   rareListed[id] = k;
   if (k !== 'seeds' && I[id].band !== +k.slice(4)) err(`ITEM_RARE.${k}: ${id} has band ${I[id].band}`);
 }
-for (const id in I) if (I[id].rare && !rareListed[id]) err(`${id}: rare item missing from R.ITEM_RARE`);
+// exclusive items (a single monster's rare drop) are deliberately kept out of the shared pools
+for (const id in I) if (I[id].rare && !I[id].exclusive && !rareListed[id]) err(`${id}: rare item missing from R.ITEM_RARE`);
 
 // --------------------------------------------------- monotonic tiers
 function monotonic(list, key, label) {

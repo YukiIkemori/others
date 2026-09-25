@@ -442,7 +442,8 @@
    * Close the sprite: centre it horizontally (by its bbox), stand its lowest
    * pixel on the second-to-last row, add the outline, then post(q) paints
    * un-outlined extras (sparkles) in the sprite's own coordinates, shifted
-   * with it. o.dx nudges the centring (asymmetric silhouettes).
+   * with it. o.dx nudges the centring (asymmetric silhouettes); o.after(p, dx,
+   * dy) may recolour the finished pixels (e.g. a glowing rim instead of the outline).
    */
   function finish(p, post, o) {
     o = o || {};
@@ -497,17 +498,26 @@
     for (let i = -2; i <= 2; i++) sc.tube([[23.5 + i * 2.4, 33.5, 1.7, 10], [23.5 + i * 2.6, 37 - Math.abs(i) * 0.8, 0.5, 10]], { m: cream, g: 'ruff' });
     // big hind feet, little front paws tucked on the belly
     sym(W, (X, s) => {
-      sc.ell(X(12.5), 43.6, 5, 3, { m: fur, g: 'foot' + s, z: 8, rz: 3.5 });
+      sc.ell(X(13), 43.4, 4.6, 3.2, { m: fur, g: 'foot' + s, z: 8, rz: 3.5 });
       sc.ell(X(19.2), 38.8, 2.5, 2.1, { m: fur, g: 'paw' + s, z: 13, rz: 2.5 });
     });
     // head with cheek puffs and a cream muzzle
     sc.ell(23.5, 19, 9.6, 7.8, { m: fur, g: 'head', z: 8, rz: 8 });
     sym(W, (X) => sc.ell(X(15.8), 22, 4, 3.2, { m: fur, g: 'head', z: 9, rz: 4 }));
     sc.ell(23.5, 23.3, 4.2, 2.6, { m: cream, g: 'muzzle', z: 15, rz: 3, soft: true });
+    // fluffy tufts: cheeks, shoulders and a curl on the crown
+    sym(W, (X) => {
+      sc.tube([[X(13.5), 21.8, 1.4, 9], [X(10.4), 22.6, 0.4, 9]], { m: fur, g: 'head' });
+      sc.tube([[X(13.8), 24, 1.3, 9], [X(11), 25.6, 0.4, 9]], { m: fur, g: 'head' });
+      sc.tube([[X(13), 29, 1.4, 3], [X(10.6), 29.6, 0.4, 3]], { m: fur, g: 'body' });
+    });
+    sc.tube([[23.5, 11.5, 1.6, 9], [22.6, 8.6, 1.1, 9], [24.4, 7.4, 0.8, 9], [25.4, 8.6, 0.4, 9]], { m: fur, g: 'head' });
     // fur strands on the flanks, crown and feet
     sc.carve([[12, 30], [11, 33]], -1).carve([[35, 30], [36, 33]], -1).carve([[14, 37], [13, 39]], -1).carve([[33, 37], [34, 39]], -1);
     sc.carve([[21, 12], [22, 13]], -1).carve([[26, 12], [25, 13]], -1);
-    for (const x of [10, 12, 14, 33, 35, 37]) sc.carve([[x, 43], [x, 45]], -1);
+    for (const x of [11, 13, 15, 32, 34, 36]) sc.carve([[x, 45], [x, 46]], -2);
+    // a cream tuft of belly fur between the feet
+    sc.ell(23.5, 43.2, 4.6, 2.8, { m: cream, g: 'tuft', z: 6, rz: 2.5, soft: true });
     const p = sc.render({ ground: 0.02 });
     for (const x of [18, 20, 27, 29]) on(p, x, 40, FUR[1]); // paw toes
     // eyes: big glossy ruby eyes with two highlights
@@ -655,7 +665,7 @@
         if (!best || d < best[0]) best = [d, i, j];
       }
       const [d, i, j] = best, dx = x - best[1] * 3, dy = y - best[2] * 3;
-      const lvl = clamp(HIDE.indexOf(orig[y * W + x]) - 1, 0, 3);
+      const lvl = HIDE.indexOf(orig[y * W + x]) >= 3 ? 2 : 1; // two tones keep the palette small
       const t = TINTS[((Math.floor(i / 2) + Math.floor(j / 2)) % 6 + 6) % 6];
       let c;
       if (d >= 3) c = '#1c1a4e';
@@ -671,7 +681,7 @@
       sparkle(q, 10, 17, 'small', 'p');
       sparkle(q, 46, 26, 'dot');
       sparkle(q, 5, 22, 'dot');
-    }, { dx: 0 });
+    });
   };
 
   /**
@@ -715,7 +725,6 @@
     // ribbon tail: two long streamers from the rump, twisting as they fall, each ending in a curl
     sc.tube([[28, 29, 1.7, -3], [34, 30.2, 1.9, -3], [39.5, 32.5, 0.7, -3], [44, 36.5, 1.8, -3], [44.6, 41.5, 1.5, -3], [41, 45.3, 1.1, -3], [37, 44.6, 0.8, -3], [37, 41.8, 0.5, -3]], { m: ribbon, g: 'ribA', steps: 5 });
     sc.tube([[28, 30.5, 1.6, -1], [32, 34, 1.8, -1], [33.5, 38.5, 0.7, -1], [31.5, 43, 1.6, -1], [27.5, 46.3, 1.1, -1], [24.2, 45.2, 0.8, -1], [24.6, 42.6, 0.5, -1]], { m: ribbon, g: 'ribB', steps: 5 });
-    for (const [tx, ty, g] of [[34.5, 30, 'fan1'], [33, 33.5, 'fan2']]) sc.tube([[27, 28, 2, 0], [tx, ty, 0.6, 0]], { m: ribbon, g });
     // far wing: two feather tips peeking up behind the near one
     sc.poly([[22, 19], [19.5, 10], [17, 4.5], [20.5, 7.5], [21, 1.5], [24, 8], [25, 16]], { m: far, g: 'far', z: -8, bevel: 2 });
     // near wing: one raised fan with six pointed primaries; feather splits carved in
@@ -733,19 +742,19 @@
     // slender S-curved neck, head turned to the viewer, gold beak
     sc.tube([[19, 22, 3.4, 6], [15, 18, 2.3, 7], [13, 14, 2.2, 8], [12.5, 11, 2.4, 8]], { m: body, g: 'body', steps: 5 });
     sc.region((x, y) => sc.isG(x, y, 'body') && y > 13 && y < 23 && x < 12.5 + (y - 13) * 0.62 && x > 8, chest);
-    sc.ell(12.2, 10.2, 4, 3.7, { m: body, g: 'head', z: 9, rz: 4 });
+    sc.ell(12.2, 10, 4.5, 4.1, { m: body, g: 'head', z: 9, rz: 4.2 });
     sc.tube([[9, 11, 1.2, 13], [5.6, 11.8, 0.9, 13], [2.8, 13.2, 0.4, 13]], { m: gold, g: 'beak' });
     // crest plumes sweeping back from the crown
-    sc.tube([[14, 7.4, 0.9, 5], [17, 4.5, 0.7, 5], [20.5, 3.8, 0.5, 5]], { m: body, g: 'crest' });
-    sc.tube([[12.5, 7, 0.9, 6], [13.6, 3.6, 0.7, 6], [15.6, 1.2, 0.5, 6]], { m: body, g: 'crest' });
+    sc.tube([[14.5, 7, 1.2, 5], [17.5, 4.2, 0.9, 5], [21, 3.6, 0.6, 5]], { m: wing, g: 'crest' });
+    sc.tube([[13, 6.4, 1.2, 6], [14.2, 3, 0.9, 6], [16.4, 0.9, 0.6, 6]], { m: wing, g: 'crest' });
     const p = sc.render();
     // eye with a dark mask stripe, ruby glint
-    stamp(p, 9, 9, ['kkk', 'kwr', '.kk'], { k: INK, r: '#e02858', w: WHITE });
-    p.set(12, 9, INK); p.set(13, 8, INK);
-    p.set(5, 11, GOLD[6]); p.set(6, 11, GOLD[5]);
+    stamp(p, 8, 8, ['.eee.', 'ekkke', 'ekwrk', 'ekkke', '.eee.'], { k: INK, r: '#e02858', w: WHITE, e: '#f0fff6' });
+    p.set(13, 9, INK); p.set(14, 8, INK);
+    p.set(5, 11, GOLD[6]); p.set(6, 11, GOLD[5]); p.set(4, 12, GOLD[5]);
     // jewels tipping the crest
-    jewel(p, 20.8, 3.8, 1, 1, PINK);
-    jewel(p, 15.8, 1.2, 1, 1, PINK);
+    jewel(p, 21.4, 3.6, 1, 1, PINK);
+    jewel(p, 16.8, 1, 1, 1, PINK);
     return finish(p, (q) => {
       sparkle(q, 5, 4, 'star', 'c');
       sparkle(q, 40, 28, 'small', 'p');
@@ -805,7 +814,7 @@
     // bright motes glowing inside the nebula belly
     for (const [x, y] of [[14, 45], [22, 47], [29, 44], [35, 49], [42, 45], [26, 51], [47, 41]]) if (p.get(x, y) && !navySet.has(p.get(x, y))) p.set(x, y, WHITE);
     // eye: small, kind, with a star-shaped highlight; a long smiling mouth
-    stamp(p, 12, 34, ['.kk.', 'kwbk', 'kbbk', '.kk.'], { k: INK, w: WHITE, b: '#2a3a8a' });
+    stamp(p, 11, 33, ['.kkk.', 'kwwbk', 'kwbbk', 'kbbck', '.kkk.'], { k: INK, w: WHITE, b: '#2a3a8a', c: '#7ad8ff' });
     p.line(4, 41, 10, 42, INK); p.line(11, 42, 18, 41.5, INK); p.set(19, 40, INK); p.set(20, 39, INK);
     for (const [x, y] of [[8, 39], [9, 39], [16, 38]]) on(p, x, y, '#ff90c0'); // blush
     // a crescent-moon jewel on the brow (gold set, pale moonstone)
@@ -840,8 +849,8 @@
     // a wide fan of rays behind the head, long ones tipped with jade beads
     const HY = 13;
     const beads = [];
-    for (let i = 0; i < 11; i++) {
-      const a = Math.PI * (1.02 + (i / 10) * 0.96);
+    for (let i = 0; i < 9; i++) {
+      const a = Math.PI * (1.03 + (i / 8) * 0.94);
       const ax = Math.cos(a), ay = Math.sin(a);
       const long = i % 2 === 0;
       const L = Math.hypot(ax * 16.5, ay * 12.4) * (long ? 1 : 0.8);

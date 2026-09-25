@@ -77,11 +77,16 @@
         return v < 0.35 ? I[1] : v > 0.7 ? I[3] : I[2];
       });
     },
-    flowers(t) {
+    /** v (0..3) rotates the flower colours and mirrors the spots (variety in flower fields) */
+    flowers(t, v) {
+      v = v || 0;
       const b = GROUND.lgrass(t), G = t.PAL.tgrass;
       const cols = [[0xf04848, 0xa01818], [0xf8e040, 0xb08810], [0xffffff, 0xa0a8c0], [0xf890d0, 0xb04880]];
-      const spots = [[3, 3, 0], [11, 2, 1], [7, 7, 2], [14, 9, 3], [2, 11, 1], [9, 13, 0], [5, 15, 3]];
-      for (const [x, y, k] of spots) {
+      let spots = [[3, 3, 0], [11, 2, 1], [7, 7, 2], [14, 9, 3], [2, 11, 1], [9, 13, 0], [5, 15, 3]];
+      if (v & 1) spots = spots.map(([x, y, k]) => [15 - x, y, k]);
+      if (v & 2) spots = spots.map(([x, y, k]) => [x, (y + 8) & 15, k]);
+      for (const [x, y, k0] of spots) {
+        const k = (k0 + v) % 4;
         const [c1, c2] = cols[k];
         b.wset(x, y + 1, G[1]); b.wset(x - 1, y + 1, G[2]); b.wset(x + 1, y + 1, G[1]);
         b.wset(x, y, c1); b.wset(x - 1, y, c2); b.wset(x + 1, y, c2); b.wset(x, y - 1, c2);
@@ -443,27 +448,34 @@
       for (const [x, y, k] of [[4, 3, 4], [5, 4, 4], [9, 2, 4], [3, 7, 3], [11, 10, 0], [8, 11, 0], [13, 7, 0]]) L.set(x, y, F[k]);
     }, { outline: 0x0c2410, sx: 2, sy: 1 });
   };
+  // Rail fence: one post per cell, rails toward every fence neighbour (runs,
+  // corners, T-joins); drawn over whatever ground the cell stands on.
   OBJ.fence = (fl, ctx) => {
     const t = tk(), W = A.themeArt('house').WOOD;
     ctx = ctx || {};
-    const vertical = (ctx.u || ctx.d) && !(ctx.l || ctx.r);
     return t.stamp(fl, (L) => {
-      if (vertical) {
-        L.rect(6, 0, 4, 16, null);
-        L.vline(7, 0, 15, W[4]); L.vline(8, 0, 15, W[2]);
-        L.rect(6, 5, 4, 6, W[3]); L.hline(6, 9, 5, W[5]); L.vline(9, 5, 10, W[1]);
-        return;
-      }
-      const x0 = ctx.l ? 0 : 2, x1 = ctx.r ? 15 : 13;
-      for (const y of [6, 10]) { L.hline(x0, x1, y, W[4]); L.hline(x0, x1, y + 1, W[2]); }
-      for (const x of [2, 10]) { if ((x === 2 && !ctx.l && x0 > 2) || x < x0 || x > x1) continue; L.rect(x, 3, 3, 11, W[3]); L.vline(x, 3, 13, W[4]); L.vline(x + 2, 3, 13, W[1]); L.hline(x, x + 2, 3, W[5]); }
+      const railH = (x0, x1) => {
+        for (const y of [6, 10]) { L.hline(x0, x1, y, W[4]); L.hline(x0, x1, y + 1, W[2]); }
+        for (let x = x0; x <= x1; x++) if (x % 5 === 2) { L.set(x, 6, W[5]); L.set(x, 10, W[5]); }
+      };
+      const railV = (y0, y1) => { L.vline(7, y0, y1, W[4]); L.vline(8, y0, y1, W[2]); for (let y = y0; y <= y1; y++) if (y % 5 === 1) L.set(7, y, W[5]); };
+      if (ctx.l) railH(0, 5);
+      if (ctx.r) railH(9, 15);
+      if (ctx.u) railV(0, 3);
+      if (ctx.d) railV(13, 15);
+      // post with a lit cap
+      const top = ctx.u && !ctx.l && !ctx.r ? 4 : 3;
+      L.rect(6, top, 3, 14 - top, W[3]);
+      L.vline(6, top, 13, W[4]); L.vline(8, top, 13, W[1]);
+      L.hline(6, 8, top, W[5]); L.set(7, top + 1, W[4]);
+      L.set(6, 13, W[2]); L.hline(7, 8, 13, W[0]);
     }, { sx: 1, sy: 1 });
   };
   function bridge(dir) {
     return (fl, ctx) => {
       const t = tk(), W = A.themeArt('house').WOOD;
       const f = (ctx && ctx.f) || 0;
-      const b = water(t, f);
+      const b = ctx && ctx.water ? ctx.water.clone() : water(t, f);
       if (dir === 'h') {
         b.tint(0, 13, 16, 2, 0.7);
         b.rect(0, 3, 16, 10, W[3]);
@@ -553,6 +565,411 @@
   A.houseWallArt = housewall;
   A.roofArt = roof;
 
+  // ------------------------------------------------------ exterior grounds
+  // Outdoor ground with life in it (installed as a wrapper around the context
+  // tiler R.Art.localTile, see the end of this file):
+  //  * variety by position hash — grass tufts, tiny flowers, pebbles, clover;
+  //    dirt pebbles, puddles, damp patches, footprints; cobble cracks, moss,
+  //    worn stones, puddles, a missing stone; sand ripples, snow drifts …
+  //  * edges — cobbled plazas get a kerb of long stones where they meet grass
+  //    and crumble into dirt paths; grass overhangs dirt / sand / snow with a
+  //    ragged fringe that runs continuously along the edge (world coordinates)
+  //  * soft shadows under tall neighbours (walls, houses, trees), as elsewhere
+  //  * water beside outdoor ground: canals with stone coping and a wall face
+  //    (cobbles, paths, buildings) or earthen banks with a grass lip (lawns)
+  //  * fences and bridges drawn over that ground / canal water
+  const XT = {
+    TALL: { wall: 1, wall_torch: 1, door: 1, door_silver: 1, door_gold: 1, housewall: 1, roof: 1, bookshelf: 1, shelf: 1, pillar: 1, statue: 1, tree: 1 },
+    GROUND: { floor: 1, lgrass: 1, dirt: 1, wood: 1, carpet: 1, sand: 1, snowfloor: 1, ice: 1, flowers: 1 },
+    WATERISH: { water: 1, lbridge_h: 1, lbridge_v: 1 },
+  };
+  const COB = [0x4a463e, 0x7c7666, 0x9e9784, 0xb8b19c, 0xd4cdb8]; // town floor ramp (tiles_theme 'town')
+  const DIRT = [0x5c4028, 0x806040, 0xa07c54, 0xb89468, 0xd0ae80];
+  const MOSS = [0x3c5a24, 0x557a2e, 0x6e963a];
+  const PUDDLE = [0x2c3850, 0x4a5c7c, 0x6c84a8, 0xa4bcd8, 0xdce8f4];
+  /** ground kind of a tile id: grass | dirt | cobble | sand | snow | water | floor | other */
+  function kindOf(id, theme) {
+    if (id === 'lgrass' || id === 'flowers') return 'grass';
+    if (id === 'dirt') return 'dirt';
+    if (id === 'floor') return theme === 'town' ? 'cobble' : 'floor';
+    if (id === 'sand') return 'sand';
+    if (id === 'snowfloor') return 'snow';
+    if (XT.WATERISH[id]) return 'water';
+    return 'other';
+  }
+  const EXT_KIND = { grass: 1, dirt: 1, cobble: 1, sand: 1, snow: 1 };
+  /** weighted variant pick from a position hash; table [[weight, id], ...] (first entry = plain) */
+  function pickVar(x, y, seed, table) {
+    const h = tk().hash(x, y, seed);
+    let acc = 0;
+    for (const [w, v] of table) { acc += w; if (h < acc) return v; }
+    return table[0][1];
+  }
+  const VAR = {
+    grass: [[0.62, 0], [0.08, 1], [0.07, 2], [0.07, 3], [0.06, 4], [0.06, 5], [0.02, 6], [0.02, 7]],
+    dirt: [[0.6, 0], [0.1, 1], [0.08, 2], [0.04, 3], [0.07, 4], [0.06, 5], [0.05, 6]],
+    cobble: [[0.64, 0], [0.07, 1], [0.07, 2], [0.07, 3], [0.06, 4], [0.03, 5], [0.03, 6], [0.03, 7]],
+    sand: [[0.66, 0], [0.12, 1], [0.08, 2], [0.07, 3], [0.07, 4]],
+    snow: [[0.66, 0], [0.1, 1], [0.1, 2], [0.07, 3], [0.07, 4]],
+  };
+  // --- detail painters (16x16 Buf, variant v) ------------------------------
+  function tuft(b, x, y, G) {
+    b.set(x, y, G[5]); b.set(x + 2, y, G[5]);
+    b.set(x - 1, y + 1, G[4]); b.set(x, y + 1, G[4]); b.set(x + 2, y + 1, G[4]); b.set(x + 1, y + 1, G[3]);
+    b.set(x - 1, y + 2, G[2]); b.set(x, y + 2, G[4]); b.set(x + 1, y + 2, G[4]); b.set(x + 2, y + 2, G[4]); b.set(x + 3, y + 2, G[2]);
+    b.set(x, y + 3, G[1]); b.set(x + 1, y + 3, G[1]); b.set(x + 2, y + 3, G[1]);
+  }
+  function pebble(b, x, y, big) {
+    const S = [0x5c5850, 0x8c887c, 0xb8b4a6, 0xe0dccc];
+    if (big) { b.set(x, y, S[3]); b.set(x + 1, y, S[2]); b.set(x, y + 1, S[2]); b.set(x + 1, y + 1, S[1]); b.set(x + 2, y + 1, S[0]); b.set(x + 1, y + 2, S[0]); }
+    else { b.set(x, y, S[3]); b.set(x + 1, y, S[1]); b.set(x, y + 1, S[0]); }
+  }
+  function puddle(b, cx, cy, rx, ry, rim) {
+    const t = tk();
+    for (let y = Math.floor(cy - ry - 1); y <= Math.ceil(cy + ry + 1); y++) for (let x = Math.floor(cx - rx - 1); x <= Math.ceil(cx + rx + 1); x++) {
+      const e = ((x - cx) / (rx + 0.5)) ** 2 + ((y - cy) / (ry + 0.5)) ** 2;
+      if (e > 1.35) continue;
+      if (e > 1) { if (rim != null) b.set(x, y, t.mix(b.get(x, y), rim, 0.45)); continue; }
+      const top = y < cy - ry * 0.35;
+      b.set(x, y, top ? PUDDLE[1] : e > 0.6 ? PUDDLE[2] : PUDDLE[2]);
+    }
+    b.set(Math.round(cx - rx * 0.4), Math.round(cy - ry * 0.1), PUDDLE[4]);
+    b.set(Math.round(cx - rx * 0.4) + 1, Math.round(cy - ry * 0.1), PUDDLE[3]);
+    b.set(Math.round(cx + rx * 0.3), Math.round(cy + ry * 0.4), PUDDLE[3]);
+  }
+  /** apply fn to pixels inside an ellipse (blob) */
+  function blob(b, cx, cy, rx, ry, fn) {
+    for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+      const e = ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2;
+      if (e <= 1) { const r = fn(x, y, b.get(x, y), e); if (r != null) b.set(x, y, r); }
+    }
+  }
+  function grassDetail(b, v) {
+    const t = tk(), G = t.PAL.tgrass;
+    if (v === 1) { tuft(b, 5, 6, G); tuft(b, 10, 10, G); }
+    else if (v === 2) { tuft(b, 9, 4, G); b.set(4, 11, G[5]); b.set(3, 12, G[4]); b.set(5, 12, G[4]); b.set(4, 12, G[2]); }
+    else if (v === 3) { // tiny white & yellow flowers
+      for (const [x, y, c] of [[4, 5, 0xfcfcf0], [10, 8, 0xf8e048], [6, 11, 0xfcfcf0], [12, 13, 0xfcfcf0]]) { b.set(x, y, c); b.set(x, y + 1, G[1]); b.set(x + 1, y + 1, G[2]); }
+    } else if (v === 4) { pebble(b, 5, 8, true); pebble(b, 11, 11, false); }
+    else if (v === 5) { // clover patch
+      blob(b, 8, 8.5, 4.2, 3.2, (x, y, c, e) => (e > 0.7 && (x + y) % 2 ? undefined : G[2]));
+      for (const [x, y] of [[6, 7], [9, 7], [8, 9], [10, 10], [5, 9]]) { b.set(x, y, G[4]); b.set(x + 1, y, G[3]); }
+    } else if (v === 6) { // a little mushroom
+      b.set(9, 8, 0xd83828); b.set(10, 8, 0xd83828); b.set(8, 9, 0xb02018); b.set(9, 9, 0xd83828); b.set(10, 9, 0xd83828); b.set(11, 9, 0x8c1810);
+      b.set(9, 8, 0xfff0e0); b.set(10, 10, 0xf0e8d0); b.set(9, 10, 0xf0e8d0); b.set(11, 10, G[1]);
+    } else if (v === 7) { // worn bare patch
+      blob(b, 8, 9, 4, 2.6, (x, y, c, e) => (e > 0.72 && (x + y) % 2 ? undefined : e > 0.5 ? DIRT[3] : DIRT[2]));
+      b.set(7, 9, DIRT[1]); b.set(10, 10, DIRT[4]);
+    }
+  }
+  function dirtDetail(b, v) {
+    const t = tk(), G = t.PAL.tgrass;
+    if (v === 1) { pebble(b, 4, 5, true); pebble(b, 11, 9, false); pebble(b, 7, 12, false); }
+    else if (v === 2) { blob(b, 8, 8, 5.5, 4, (x, y, c, e) => (e > 0.75 && (x + y) % 2 ? undefined : t.mul(c, 0.88))); }
+    else if (v === 3) { puddle(b, 8, 9, 3.6, 1.7, DIRT[0]); }
+    else if (v === 4) { tuft(b, 7, 7, G); }
+    else if (v === 5) { // footprints
+      for (const [x, y] of [[4, 3], [6, 6], [8, 9], [10, 12]]) { b.set(x, y, DIRT[1]); b.set(x, y + 1, DIRT[1]); b.set(x + 1, y + 1, DIRT[0]); }
+    } else if (v === 6) { // wheel ruts
+      for (let y = 0; y < 16; y++) { if (y % 5 !== 2) { b.set(4, y, t.mul(b.get(4, y), 0.84)); b.set(11, y, t.mul(b.get(11, y), 0.84)); } b.set(5, y, t.mix(b.get(5, y), DIRT[3], 0.4)); }
+    }
+  }
+  function cobbleDetail(b, v) {
+    const t = tk();
+    if (v === 1) { // crack across a stone
+      for (const [x, y] of [[5, 5], [6, 6], [6, 7], [7, 8], [8, 8], [9, 9], [9, 10]]) { b.set(x, y, COB[0]); b.set(x + 1, y, t.mul(b.get(x + 1, y), 1.12)); }
+    } else if (v === 2) { // moss in the joints
+      blob(b, 8, 8, 6, 5, (x, y, c) => (c === COB[0] ? MOSS[(x + y) % 3 === 0 ? 2 : 1] : undefined));
+    } else if (v === 3) { // worn / polished stones
+      blob(b, 8, 8, 6, 4.5, (x, y, c, e) => (c === COB[0] || (e > 0.7 && (x + y) % 2) ? undefined : t.mul(c, 1.07)));
+    } else if (v === 4) { // dark stain
+      blob(b, 7, 9, 4.5, 3, (x, y, c, e) => (e > 0.7 && (x + y) % 2 ? undefined : t.mul(c, 0.86)));
+    } else if (v === 5) { puddle(b, 8, 8.5, 3.4, 1.6, COB[0]); }
+    else if (v === 6) { // a missing stone
+      blob(b, 8, 8, 3, 2.2, (x, y, c, e) => (e > 0.6 ? DIRT[1] : DIRT[2]));
+      b.set(7, 7, DIRT[0]); pebble(b, 8, 8, false);
+    } else if (v === 7) { // iron drain grate
+      const I = [0x1c1c24, 0x3a3a48, 0x6a6a7c];
+      b.rect(5, 6, 6, 4, I[0]);
+      for (let x = 5; x <= 10; x++) b.set(x, 6, I[2]);
+      for (const x of [6, 8, 10]) b.vline(x, 7, 9, I[1]);
+      b.hline(5, 10, 10, COB[4]); b.vline(11, 6, 10, COB[1]);
+    }
+  }
+  function sandDetail(b, v) {
+    const t = tk(), S = t.PAL.sand;
+    if (v === 1) { for (let x = 1; x < 15; x++) { const y = 6 + Math.round(Math.sin(x / 2.4) * 1.2); b.set(x, y, S[2]); b.set(x, y - 1, S[4]); const y2 = y + 6; if (x > 3 && x < 13) { b.set(x, y2, S[2]); b.set(x, y2 - 1, S[4]); } } }
+    else if (v === 2) { pebble(b, 5, 9, true); b.set(11, 5, 0xfff4e4); b.set(12, 5, 0xe8a8a0); b.set(11, 6, 0xc88880); }
+    else if (v === 3) { for (const [x, y] of [[6, 10], [8, 9], [9, 10], [10, 8], [7, 8]]) { b.set(x, y, 0xa0a048); b.set(x, y - 1, 0xc8c870); } b.hline(6, 10, 11, S[1]); }
+    else if (v === 4) { blob(b, 8, 8, 5, 3.5, (x, y, c, e) => (e > 0.7 && (x + y) % 2 ? undefined : t.mul(c, 0.93))); }
+  }
+  function snowDetail(b, v) {
+    const t = tk(), S = t.PAL.snow;
+    if (v === 1) { for (const [x, y] of [[4, 3], [7, 6], [5, 9], [8, 12]]) { b.set(x, y, S[1]); b.set(x, y + 1, S[2]); b.set(x + 1, y, S[2]); } }
+    else if (v === 2) { blob(b, 8, 9, 5, 2.8, (x, y, c, e) => (y < 9 ? S[4] : e > 0.6 ? S[2] : S[4])); b.hline(5, 11, 12, S[2]); }
+    else if (v === 3) { for (const [x, y] of [[3, 4], [11, 6], [6, 11], [13, 13]]) { b.set(x, y, 0xffffff); b.set(x + 1, y + 1, S[2]); } }
+    else if (v === 4) { const R_ = [0x3c3e48, 0x64666e, 0x8c8e98]; b.rect(6, 9, 5, 2, R_[1]); b.hline(6, 10, 9, R_[2]); b.set(10, 10, R_[0]); b.hline(6, 10, 8, S[4]); b.set(7, 7, S[4]); b.set(8, 8, S[3]); }
+  }
+  const DETAIL = { grass: grassDetail, dirt: dirtDetail, cobble: cobbleDetail, sand: sandDetail, snow: snowDetail };
+
+  // --- edges ---------------------------------------------------------------
+  /** ragged grass fringe along the given sides; noise in world coords runs on across tiles */
+  function fringe(b, sides, gx, gy) {
+    const t = tk(), G = t.PAL.tgrass;
+    for (let i = 0; i < 16; i++) {
+      if (sides.n) { const d = 1 + Math.round(t.vnoise(gx + i, 0, 3, 4096, 211) * 2.6); for (let k = 0; k < d; k++) b.set(i, k, k === d - 1 ? G[2] : G[3]); if (d === 3 && (gx + i) % 3 === 0) b.set(i, d, G[1]); }
+      if (sides.s) { const d = 1 + Math.round(t.vnoise(gx + i, 0, 3, 4096, 213) * 1.8); for (let k = 0; k < d; k++) b.set(i, 15 - k, k === d - 1 ? G[4] : G[3]); }
+      if (sides.w) { const d = 1 + Math.round(t.vnoise(0, gy + i, 3, 4096, 215) * 2.4); for (let k = 0; k < d; k++) b.set(k, i, k === d - 1 ? G[2] : G[3]); }
+      if (sides.e) { const d = 1 + Math.round(t.vnoise(0, gy + i, 3, 4096, 217) * 2.4); for (let k = 0; k < d; k++) b.set(15 - k, i, k === d - 1 ? G[2] : G[3]); }
+    }
+    // inner corners (grass only diagonally)
+    const corner = (x0, y0, sx, sy) => { b.set(x0, y0, G[3]); b.set(x0 + sx, y0, G[2]); b.set(x0, y0 + sy, G[2]); };
+    if (sides.nw) corner(0, 0, 1, 1);
+    if (sides.ne) corner(15, 0, -1, 1);
+    if (sides.sw) corner(0, 15, 1, -1);
+    if (sides.se) corner(15, 15, -1, -1);
+  }
+  /** kerb of long stones where a cobbled plaza meets a lawn (4 px band) */
+  function kerb(b, sides, gx, gy) {
+    const P = COB;
+    // across the band from the lawn side inward: joint, lit edge, stone, shade (N/W); S/E mirror it
+    const inN = [P[0], P[4], P[3], P[1]], inS = [P[1], P[3], P[4], P[0]];
+    const px = (prof, g, k) => {
+      const c = prof[k];
+      if (c === P[0] || c === P[1]) return c;
+      return g % 6 === 0 ? P[0] : g % 6 === 1 ? P[4] : c;
+    };
+    for (let i = 0; i < 16; i++) for (let k = 0; k < 4; k++) {
+      if (sides.n) b.set(i, k, px(inN, gx + i, k));
+      if (sides.s) b.set(i, 15 - k, px(inS, gx + i, k));
+      if (sides.w) b.set(k, i, px(inN, gy + i, k));
+      if (sides.e) b.set(15 - k, i, px(inS, gy + i, k));
+    }
+  }
+  /** cobbles crumbling into a dirt path: joints fill with earth, edge stones go missing */
+  function wornEdge(b, sides, gx, gy) {
+    const t = tk();
+    for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+      const d = Math.min(sides.n ? y : 99, sides.s ? 15 - y : 99, sides.w ? x : 99, sides.e ? 15 - x : 99);
+      if (d > 4) continue;
+      const c = b.get(x, y), h = t.hash(gx + x, gy + y, 229);
+      if (c === COB[0] && d < 4) b.set(x, y, DIRT[1]);
+      else if (d < 2 && h < 0.55) b.set(x, y, h < 0.2 ? DIRT[3] : DIRT[2]);
+      else if (d < 3 && h < 0.18) b.set(x, y, DIRT[2]);
+    }
+  }
+  function shadows(b, sh) {
+    const t = tk();
+    if (sh[0] === '1') for (let x = 0; x < 16; x++) { b.set(x, 0, t.mul(b.get(x, 0), 0.58)); b.set(x, 1, t.mul(b.get(x, 1), 0.7)); if (x % 2) b.set(x, 2, t.mul(b.get(x, 2), 0.85)); }
+    if (sh[1] === '1') for (let y = sh[0] === '1' ? 3 : 0; y < 16; y++) { b.set(0, y, t.mul(b.get(0, y), 0.7)); if (y % 2) b.set(1, y, t.mul(b.get(1, y), 0.85)); }
+    if (sh[2] === '1' && sh[0] !== '1' && sh[1] !== '1') { b.set(0, 0, t.mul(b.get(0, 0), 0.6)); b.set(1, 0, t.mul(b.get(1, 0), 0.75)); b.set(0, 1, t.mul(b.get(0, 1), 0.75)); }
+  }
+  const XCACHE = new Map();
+  function xcached(key, make) { let v = XCACHE.get(key); if (v === undefined) { v = make(); XCACHE.set(key, v); } return v; }
+  /** signature + builder of the ground Buf of kind `kind` (tile id `id`) at (x,y) */
+  function groundSpec(m, x, y, id, theme) {
+    const kind = kindOf(id, theme);
+    const at = (dx, dy) => m.tileAt(x + dx, y + dy);
+    const k = (dx, dy) => kindOf(at(dx, dy), theme);
+    const sh = (XT.TALL[at(0, -1)] ? '1' : '0') + (XT.TALL[at(-1, 0)] ? '1' : '0') + (XT.TALL[at(-1, -1)] ? '1' : '0');
+    const v = VAR[kind] ? pickVar(x, y, kind === 'grass' ? 231 : 233, VAR[kind]) : 0;
+    const fv = id === 'flowers' ? Math.floor(tk().hash(x, y, 235) * 4) : 0;
+    const N = k(0, -1), S = k(0, 1), W = k(-1, 0), E = k(1, 0);
+    let edge = '';
+    const sides = {};
+    if (kind === 'cobble') {
+      const e = (q) => (q === 'grass' || q === 'sand' || q === 'snow' ? 'k' : q === 'dirt' ? 'w' : '0');
+      edge = e(N) + e(S) + e(W) + e(E);
+    } else if (kind === 'dirt' || kind === 'sand' || kind === 'snow') {
+      const g = (q) => (q === 'grass' ? '1' : '0');
+      edge = g(N) + g(S) + g(W) + g(E);
+      edge += (N !== 'grass' && W !== 'grass' && k(-1, -1) === 'grass' ? '1' : '0') + (N !== 'grass' && E !== 'grass' && k(1, -1) === 'grass' ? '1' : '0') +
+        (S !== 'grass' && W !== 'grass' && k(-1, 1) === 'grass' ? '1' : '0') + (S !== 'grass' && E !== 'grass' && k(1, 1) === 'grass' ? '1' : '0');
+    }
+    // fringe / kerb noise runs in world coordinates: key on the position modulo the pattern
+    const needPos = edge && /[1kw]/.test(edge);
+    const key = 'xg|' + id + '|' + theme + '|' + v + '|' + fv + '|' + edge + '|' + sh + '|' + (needPos ? x + ',' + y : '');
+    const build = () => {
+      const t = tk();
+      let b;
+      if (id === 'flowers') b = GROUND.flowers(t, fv);
+      else b = A.floorBuf(id === 'floor' ? 'theme:' + (theme || 'generic') : id).clone();
+      if (DETAIL[kind] && v) DETAIL[kind](b, v);
+      if (kind === 'cobble' && edge !== '0000') {
+        const ks = { n: edge[0] === 'k', s: edge[1] === 'k', w: edge[2] === 'k', e: edge[3] === 'k' };
+        const ws = { n: edge[0] === 'w', s: edge[1] === 'w', w: edge[2] === 'w', e: edge[3] === 'w' };
+        // moss creeps into the joints near the lawn
+        for (let yy = 0; yy < 16; yy++) for (let xx = 0; xx < 16; xx++) {
+          const d = Math.min(ks.n ? yy : 99, ks.s ? 15 - yy : 99, ks.w ? xx : 99, ks.e ? 15 - xx : 99);
+          if (d < 8 && b.get(xx, yy) === COB[0] && t.hash(x * 16 + xx, y * 16 + yy, 237) < 0.7 - d * 0.08) b.set(xx, yy, MOSS[(xx + yy) % 2]);
+        }
+        wornEdge(b, ws, x * 16, y * 16);
+        kerb(b, ks, x * 16, y * 16);
+      } else if (edge && edge !== '00000000') {
+        fringe(b, { n: edge[0] === '1', s: edge[1] === '1', w: edge[2] === '1', e: edge[3] === '1', nw: edge[4] === '1', ne: edge[5] === '1', sw: edge[6] === '1', se: edge[7] === '1' }, x * 16, y * 16);
+      }
+      shadows(b, sh);
+      return b;
+    };
+    return { key, build, kind };
+  }
+  /** ground canvas for an outdoor ground cell, or null (not an outdoor ground) */
+  function extGroundTile(m, x, y, id, theme) {
+    const spec = groundSpec(m, x, y, id, theme);
+    if (!EXT_KIND[spec.kind]) return null;
+    return xcached(spec.key, () => spec.build().toCanvas());
+  }
+
+  // --- canals & banks ------------------------------------------------------
+  /** side style next to water: 'k' stone coping, 'e' earth bank, '' water */
+  function bankStyle(id, theme) {
+    const q = kindOf(id, theme);
+    if (q === 'water' || id === 'void') return '';
+    if (q === 'grass' || id === 'tree') return 'e';
+    if (q === 'sand') return 's';
+    if (q === 'snow') return 'n';
+    return 'k';
+  }
+  /** does water at (x,y) sit in outdoor ground (town canals, garden ponds)? */
+  function outdoorWater(m, x, y, theme) {
+    if (theme === 'town') return true;
+    for (const [dx, dy] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) if (EXT_KIND[kindOf(m.tileAt(x + dx, y + dy), theme)]) return true;
+    return false;
+  }
+  function canalFrames(sig, theme) {
+    // sig: N S W E (k/e/-) + inner corners NW NE SW SE (k/e/-)
+    return xcached('cn|' + sig + '|' + theme, () => {
+      const t = tk();
+      const [N, S, W, E, NW, NE, SW, SE] = sig.split('');
+      const P = COB, D = DIRT;
+      const bankCol = 0x0a1840;
+      // lip ramps [shade, top, lit] and bank-face colours for earthen banks
+      const LIP = { e: [t.PAL.tgrass[1], t.PAL.tgrass[3], t.PAL.tgrass[4]], s: [t.PAL.sand[1], t.PAL.sand[3], t.PAL.sand[4]], n: [t.PAL.snow[1], t.PAL.snow[3], t.PAL.snow[4]] };
+      const FACE = { e: [D[1], D[0]], s: [t.PAL.sand[1], t.PAL.sand[0]], n: [t.PAL.snow[1], t.PAL.snow[0]] };
+      const make = (f) => {
+        const b = water(t, f);
+        // the water under a north bank lies in its shadow
+        if (N !== '-') for (let x = 0; x < 16; x++) for (let y = 0; y < 16; y++) { const k = y < 8 ? 0.72 : y < 10 ? 0.86 : 1; if (k < 1) b.set(x, y, t.mul(b.get(x, y), k)); }
+        if (W !== '-') for (let y = 0; y < 16; y++) { b.set(4, y, t.mul(b.get(4, y), 0.8)); b.set(5, y, t.mul(b.get(5, y), 0.9)); }
+        // north: coping + wall face (stone) or grass lip + earth bank
+        if (N === 'k') {
+          for (let x = 0; x < 16; x++) {
+            const j = x % 8 === 0;
+            b.set(x, 0, P[4]); b.set(x, 1, j ? P[1] : P[3]); b.set(x, 2, P[0]);
+            const dk = t.mul(P[0], 0.8);
+            b.set(x, 3, x % 8 === 0 ? dk : P[2]); b.set(x, 4, x % 8 === 0 ? dk : P[1]);
+            b.set(x, 5, dk);
+            b.set(x, 6, x % 8 === 4 ? dk : t.mul(P[1], 0.85));
+            b.set(x, 7, (x + f) % 5 === 0 ? 0x88b0e0 : bankCol);
+          }
+        } else if (LIP[N]) {
+          const G = LIP[N], F = FACE[N];
+          for (let x = 0; x < 16; x++) {
+            const d = 1 + Math.round(t.vnoise(x, 0, 3, 16, 241) * 1.4);
+            for (let y = 0; y < d; y++) b.set(x, y, G[1]);
+            b.set(x, d, G[0]);
+            for (let y = d + 1; y <= 5; y++) b.set(x, y, y === d + 1 ? F[0] : (x + y) % 4 === 0 ? F[1] : t.mul(F[0], 0.8));
+            b.set(x, 6, (x + f) % 5 === 0 ? 0x88b0e0 : bankCol);
+          }
+        }
+        // west / east: coping seen from above, or a grass lip
+        const vside = (s, X) => {
+          const dir = X === 0 ? 1 : -1;
+          if (s === 'k') {
+            for (let y = 0; y < 16; y++) {
+              const j = y % 8 === 3;
+              b.set(X, y, X === 0 ? P[3] : P[2]);
+              b.set(X + dir, y, j ? P[1] : X === 0 ? P[4] : P[3]);
+              b.set(X + dir * 2, y, X === 0 ? P[2] : P[4]);
+              b.set(X + dir * 3, y, P[0]);
+            }
+          } else if (LIP[s]) {
+            const G = LIP[s], F = FACE[s];
+            for (let y = 0; y < 16; y++) {
+              const d = 1 + Math.round(t.vnoise(0, y, 3, 16, X ? 245 : 243) * 1.4);
+              for (let k = 0; k < d; k++) b.set(X + dir * k, y, G[1]);
+              b.set(X + dir * d, y, G[0]);
+              b.set(X + dir * (d + 1), y, F[0]);
+            }
+          }
+        };
+        vside(W === '-' ? '' : W, 0);
+        vside(E === '-' ? '' : E, 15);
+        // south: the near coping's top, or the near bank's grass edge
+        if (S === 'k') {
+          for (let x = 0; x < 16; x++) {
+            b.set(x, 12, (x + f) % 4 === 0 ? 0xb8d8f8 : t.mul(b.get(x, 12), 0.85));
+            b.set(x, 13, P[0]); b.set(x, 14, x % 8 === 5 ? P[1] : P[4]); b.set(x, 15, P[3]);
+          }
+        } else if (LIP[S]) {
+          const G = LIP[S], F = FACE[S];
+          for (let x = 0; x < 16; x++) {
+            const d = 1 + Math.round(t.vnoise(x, 0, 3, 16, 247) * 1.2);
+            b.set(x, 15 - d - 1, (x + f) % 3 ? 0xc8e0fc : 0x88b8f0);
+            b.set(x, 15 - d, F[0]);
+            for (let k = 0; k < d; k++) b.set(x, 15 - k, k === d - 1 ? G[2] : G[1]);
+          }
+        }
+        // inner corners: a block of coping (or a tuft of bank) where only the diagonal is land
+        const cornerBlock = (s, x0, y0, north) => {
+          if (s === 'k') {
+            b.rect(x0, y0, 3, 3, P[3]); b.set(x0, y0, P[4]); b.set(x0 + 1, y0, P[4]); b.set(x0 + 2, y0 + 2, P[1]);
+            if (north) for (let y = y0 + 3; y <= y0 + 5; y++) for (let x = x0; x < x0 + 3; x++) b.set(x, y, y === y0 + 4 ? t.mul(P[0], 0.8) : P[1]);
+          } else if (LIP[s]) { const G = LIP[s]; b.rect(x0, y0, 3, 2, G[1]); b.set(x0 + 1, y0 + 2, G[0]); b.set(x0, y0 + 2, G[0]); }
+        };
+        if (NW !== '-') cornerBlock(NW, 0, 0, true);
+        if (NE !== '-') cornerBlock(NE, 13, 0, true);
+        if (SW !== '-') cornerBlock(SW, 0, 13, false);
+        if (SE !== '-') cornerBlock(SE, 13, 13, false);
+        return b;
+      };
+      return [0, 1, 2, 3].map(make);
+    });
+  }
+  function canalSig(m, x, y, theme) {
+    const st = (dx, dy) => bankStyle(m.tileAt(x + dx, y + dy), theme) || '-';
+    const N = st(0, -1), S = st(0, 1), W = st(-1, 0), E = st(1, 0);
+    const inner = (dx, dy, a, b2) => (a === '-' && b2 === '-' ? st(dx, dy) : '-');
+    return N + S + W + E + inner(-1, -1, N, W) + inner(1, -1, N, E) + inner(-1, 1, S, W) + inner(1, 1, S, E);
+  }
+  function canalTile(m, x, y, theme) {
+    const sig = canalSig(m, x, y, theme);
+    if (sig === '--------') return null;
+    return xcached('cnv|' + sig + '|' + theme, () => canalFrames(sig, theme).map((b) => b.toCanvas()));
+  }
+  function bridgeTile(m, x, y, id, theme) {
+    const sig = canalSig(m, x, y, theme);
+    return xcached('br|' + id + '|' + sig + '|' + theme, () => {
+      const fr = canalFrames(sig, theme);
+      return fr.map((wb, f) => OBJ[id](null, { f, water: wb }).toCanvas());
+    });
+  }
+
+  // --- fences over their ground --------------------------------------------
+  function fenceTile(m, x, y, theme) {
+    // the ground the fence stands on: weighted vote of the neighbours, else the theme's lawn
+    const score = {};
+    const vote = (dx, dy, w) => {
+      let id = m.tileAt(x + dx, y + dy);
+      if (!XT.GROUND[id]) return;
+      if (id === 'flowers') id = 'lgrass';
+      score[id] = (score[id] || 0) + w;
+    };
+    vote(0, 1, 3); vote(-1, 0, 2); vote(1, 0, 2); vote(0, -1, 1.5);
+    vote(-1, 1, 0.5); vote(1, 1, 0.5); vote(-1, -1, 0.25); vote(1, -1, 0.25);
+    let g = null, bs = 0;
+    for (const k in score) if (score[k] > bs) { bs = score[k]; g = k; }
+    if (!g) g = theme === 'town' || !theme || theme === 'generic' ? 'lgrass' : 'floor';
+    const s = (dx, dy) => (m.tileAt(x + dx, y + dy) === 'fence' ? '1' : '0');
+    const j = s(-1, 0) + s(1, 0) + s(0, -1) + s(0, 1);
+    const spec = groundSpec(m, x, y, g, theme);
+    return xcached('fn|' + spec.key + '|' + j, () => {
+      const fl = EXT_KIND[spec.kind] ? spec.build() : A.floorBuf(g === 'floor' ? 'theme:' + (theme || 'generic') : g).clone();
+      if (!EXT_KIND[spec.kind]) shadows(fl, (XT.TALL[m.tileAt(x, y - 1)] ? '1' : '0') + (XT.TALL[m.tileAt(x - 1, y)] ? '1' : '0') + '0');
+      return OBJ.fence(fl, { l: j[0] === '1', r: j[1] === '1', u: j[2] === '1', d: j[3] === '1' }).toCanvas();
+    });
+  }
+
   // ------------------------------------------------------------ registry
   // default floor under each object for the generic 'tile:<id>'
   const DEFAULT_FLOOR = {
@@ -601,4 +1018,26 @@
   R.onBoot(() => {
     for (const id of Object.keys(R.DB.tiles)) if (!R.Gfx.has('tile:' + id)) def('tile:' + id, () => A.floorBuf('stone').toCanvas());
   });
+
+  // ------------------------------------------- context tiler: outdoor grounds
+  // Wraps R.Art.localTile (tiles_auto.js, loaded before this file) so outdoor
+  // grounds, fences, canals and bridges use the exterior art above; everything
+  // else (walls, houses, interiors, dungeons) is left to the base tiler.
+  function installExterior() {
+    const base = A.localTile;
+    if (typeof base !== 'function' || base._exterior) return;
+    const wrapped = function (map, x, y) {
+      const id = map.tileAt(x, y);
+      const theme = map.theme && A.THEME_DEFS && A.THEME_DEFS[map.theme] ? map.theme : 'generic';
+      if (id === 'fence') return fenceTile(map, x, y, theme);
+      if (id === 'water') return (outdoorWater(map, x, y, theme) && canalTile(map, x, y, theme)) || base(map, x, y);
+      if (id === 'lbridge_h' || id === 'lbridge_v') return outdoorWater(map, x, y, theme) ? bridgeTile(map, x, y, id, theme) : base(map, x, y);
+      if (XT.GROUND[id]) return extGroundTile(map, x, y, id, theme) || base(map, x, y);
+      return base(map, x, y);
+    };
+    wrapped._exterior = true;
+    A.localTile = wrapped;
+  }
+  installExterior();
+  R.onBoot(installExterior);
 })(window.RPG);

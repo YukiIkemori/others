@@ -49,7 +49,7 @@ async function main() {
     while (Date.now() - t0 < (ms || 15000)) { if (await ev(js)) return true; await page.waitForTimeout(100); }
     return false;
   };
-  const msgShown = `!!(R.UI._msg && !R.UI._msg.closed && R.UI._msg.resolveText) && R.Engine.fadeAlpha === 0`;
+  const msgShown = `!!(R.UI._msg && !R.UI._msg.closed && R.UI._msg.resolveText && R.UI._msg.shown >= R.UI._msg.pageLen()) && R.Engine.fadeAlpha === 0`;
   const onlyField = async () => JSON.stringify(await ev(`R.Engine.layers.map(l=>l.constructor.name)`)) === '["FieldLayer"]';
 
   const T = {};
@@ -170,10 +170,15 @@ async function main() {
   T.inn = async () => {
     await setup('fx_town', 'entrance', { dead: true });
     await ev(`(R.Events.run(async ev => { window.__inn = await ev.inn(20); }), 1)`);
-    await keys('w500,a,w300,a,w300');
-    await until(`R.Engine.fadeAlpha > 0`, 5000); // the night fade has begun
+    await until(`R.Engine.top().constructor.name === 'ChoiceLayer'`);
+    await keys('a,w300'); // はい
     await until(msgShown);
-    await keys('a,w300,a,w400');
+    await keys('a');      // good night
+    await until(`R.Engine.fadeAlpha > 0`, 5000);
+    await until(msgShown); // good morning (after the inn jingle)
+    await keys('a,w200');
+    await until(msgShown); // second page
+    await keys('a,w400');
     await until(`window.__inn !== undefined`, 3000);
     const st = await ev(`({inn:window.__inn, full:R.Game.party.map(c=>c.hp===R.Rules.stats(c).hp), r:R.Game.respawn, g:R.Game.gold})`);
     check('inn healed everyone', st.inn === true && st.full.every(Boolean), st);

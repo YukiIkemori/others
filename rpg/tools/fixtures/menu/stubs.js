@@ -9,58 +9,58 @@
   // ---------------------------------------------------------------- jobs
   const W = (o) => Object.assign({ mult: { hp: 1, mp: 1, str: 1, vit: 1, agi: 1, int: 1, mnd: 1, luk: 1 }, heads: ['hat'], bodies: ['light', 'robe'], shield: false }, o);
   const JOBS = {
-    warrior: W({ name: 'せんし', tier: 1, command: 'わざ', desc: 'ぶきと たてで たたかう きほんの せんし。', weapons: ['sword', 'axe', 'spear'], shield: true, heads: ['helm', 'hat'], bodies: ['heavy', 'light'], outfit: { main: '#3a64c8', sub: '#c8ccd8', trim: '#e0b040' }, mult: { hp: 1.2, mp: 0.6, str: 1.2, vit: 1.15, agi: 1, int: 0.7, mnd: 0.8, luk: 1 } }),
-    priest: W({ name: 'そうりょ', tier: 1, command: 'いのり', desc: 'かいふくの いのりを ささげる そうりょ。', weapons: ['staff'], outfit: { main: '#e8e8f0', sub: '#4a8ad0', trim: '#e0b040' } }),
-    mage: W({ name: 'まほうつかい', tier: 1, command: 'まほう', desc: 'こうげきの まほうを あやつる。', weapons: ['rod', 'knife'], outfit: { main: '#7a3ca8', sub: '#3a2a60', trim: '#f0d060' } }),
-    thief: W({ name: 'とうぞく', tier: 1, command: 'ぬすむ', desc: 'すばやく てきの どうぐを ぬすむ。', weapons: ['knife'], outfit: { main: '#4a8a3a', sub: '#6a4a2a', trim: '#c0c0c0' } }),
-    knight: W({ name: 'ナイト', tier: 2, command: 'きしどう', req: [['warrior', 3]], weapons: ['sword', 'spear'], shield: true, heads: ['helm'], bodies: ['heavy'], outfit: { main: '#b8c0d0', sub: '#2a4a9a', trim: '#e0c050' } }),
-    monk: W({ name: 'ぶとうか', tier: 2, command: 'けんぽう', req: [['warrior', 2], ['priest', 2]], weapons: ['claw'], outfit: { main: '#e07a2a', sub: '#302820', trim: '#f0e0a0' } }),
-    whitemage: W({ name: 'しろまどうし', tier: 2, command: 'しろまほう', req: [['priest', 3]], weapons: ['staff'], outfit: { main: '#f4f4f4', sub: '#c83a3a', trim: '#e0b040' } }),
-    blackmage: W({ name: 'くろまどうし', tier: 2, command: 'くろまほう', req: [['mage', 3]], weapons: ['rod'], outfit: { main: '#2a2a50', sub: '#6a4ab0', trim: '#e0c040' } }),
-    hunter: W({ name: 'かりゅうど', tier: 2, command: 'かり', req: [['thief', 3]], weapons: ['bow', 'knife'], outfit: { main: '#5a7a2a', sub: '#8a5a2a', trim: '#d0c090' } }),
-    bard: W({ name: 'ぎんゆうしじん', tier: 2, command: 'うた', req: [['priest', 2], ['thief', 2]], weapons: ['harp', 'knife'], outfit: { main: '#3aa0a0', sub: '#e0e0a0', trim: '#c04a8a' } }),
-    alchemist: W({ name: 'くすりし', tier: 2, command: 'ちょうごう', req: [['mage', 2], ['thief', 2]], weapons: ['knife', 'staff'], outfit: { main: '#8a6a3a', sub: '#e0d0b0', trim: '#4a9a4a' } }),
-    spellblade: W({ name: 'まほうけんし', tier: 3, command: 'まほうけん', req: [['knight', 3], ['blackmage', 3]], weapons: ['sword'], shield: true, heads: ['helm', 'hat'], bodies: ['heavy', 'light'], outfit: { main: '#3a3ab0', sub: '#b03a3a', trim: '#e0e0e0' } }),
-    paladin: W({ name: 'パラディン', tier: 3, command: 'せいけん', req: [['knight', 5], ['whitemage', 4]], weapons: ['sword', 'spear'], shield: true, heads: ['helm'], bodies: ['heavy'], outfit: { main: '#f0f0f0', sub: '#3a6ad0', trim: '#f0c040' } }),
-    ninja: W({ name: 'にんじゃ', tier: 3, command: 'にんぽう', req: [['hunter', 4], ['monk', 3]], weapons: ['katana', 'knife'], outfit: { main: '#303040', sub: '#8a2a2a', trim: '#a0a0b0' }, innate: { twoSwords: true } }),
-    sage: W({ name: 'けんじゃ', tier: 3, command: 'けんじゃのじゅつ', req: [['whitemage', 5], ['blackmage', 5]], weapons: ['staff', 'rod'], outfit: { main: '#2a8a5a', sub: '#f0e0b0', trim: '#e0b040' } }),
-    dragoon: W({ name: 'りゅうきし', tier: 3, command: 'りゅうぎ', req: [['knight', 4], ['hunter', 4]], weapons: ['spear'], shield: true, heads: ['helm'], bodies: ['heavy'], outfit: { main: '#4a3a8a', sub: '#2a8a8a', trim: '#e0c050' } }),
-    timemage: W({ name: 'じくうまどうし', tier: 3, command: 'じくう', req: [['blackmage', 4], ['bard', 3]], weapons: ['rod', 'staff'], outfit: { main: '#c0a030', sub: '#402a60', trim: '#f0f0f0' } }),
-    darkknight: W({ name: 'あんこくきし', tier: 3, command: 'あんこく', req: [['warrior', 6], ['blackmage', 4]], weapons: ['sword', 'axe'], shield: true, heads: ['helm'], bodies: ['heavy'], outfit: { main: '#2a2030', sub: '#6a1a2a', trim: '#8a8a9a' } }),
-    hero: W({ name: 'ゆうしゃ', tier: 4, command: 'ゆうしゃのちから', req: [['paladin', 5], ['spellblade', 5]], weapons: ['sword', 'spear', 'axe'], shield: true, heads: ['helm', 'hat'], bodies: ['heavy', 'light'], outfit: { main: '#2a60d0', sub: '#e03a3a', trim: '#f0d040' } }),
+    warrior: W({ name: '戦士', tier: 1, command: '技', desc: '武器と盾で戦う、基本の戦士。', weapons: ['sword', 'axe', 'spear'], shield: true, heads: ['helm', 'hat'], bodies: ['heavy', 'light'], outfit: { main: '#3a64c8', sub: '#c8ccd8', trim: '#e0b040' }, mult: { hp: 1.2, mp: 0.6, str: 1.2, vit: 1.15, agi: 1, int: 0.7, mnd: 0.8, luk: 1 } }),
+    priest: W({ name: '僧侶', tier: 1, command: '祈り', desc: '回復の祈りをささげる僧侶。', weapons: ['staff'], outfit: { main: '#e8e8f0', sub: '#4a8ad0', trim: '#e0b040' } }),
+    mage: W({ name: '魔法使い', tier: 1, command: '魔法', desc: '攻撃魔法を操る。', weapons: ['rod', 'knife'], outfit: { main: '#7a3ca8', sub: '#3a2a60', trim: '#f0d060' } }),
+    thief: W({ name: '盗賊', tier: 1, command: '盗む', desc: '素早く敵の道具を盗む。', weapons: ['knife'], outfit: { main: '#4a8a3a', sub: '#6a4a2a', trim: '#c0c0c0' } }),
+    knight: W({ name: 'ナイト', tier: 2, command: '騎士道', req: [['warrior', 3]], weapons: ['sword', 'spear'], shield: true, heads: ['helm'], bodies: ['heavy'], outfit: { main: '#b8c0d0', sub: '#2a4a9a', trim: '#e0c050' } }),
+    monk: W({ name: '武闘家', tier: 2, command: '拳法', req: [['warrior', 2], ['priest', 2]], weapons: ['claw'], outfit: { main: '#e07a2a', sub: '#302820', trim: '#f0e0a0' } }),
+    whitemage: W({ name: '白魔術師', tier: 2, command: '白魔法', req: [['priest', 3]], weapons: ['staff'], outfit: { main: '#f4f4f4', sub: '#c83a3a', trim: '#e0b040' } }),
+    blackmage: W({ name: '黒魔術師', tier: 2, command: '黒魔法', req: [['mage', 3]], weapons: ['rod'], outfit: { main: '#2a2a50', sub: '#6a4ab0', trim: '#e0c040' } }),
+    hunter: W({ name: '狩人', tier: 2, command: '狩猟', req: [['thief', 3]], weapons: ['bow', 'knife'], outfit: { main: '#5a7a2a', sub: '#8a5a2a', trim: '#d0c090' } }),
+    bard: W({ name: '吟遊詩人', tier: 2, command: '歌', req: [['priest', 2], ['thief', 2]], weapons: ['harp', 'knife'], outfit: { main: '#3aa0a0', sub: '#e0e0a0', trim: '#c04a8a' } }),
+    alchemist: W({ name: '薬師', tier: 2, command: '調合', req: [['mage', 2], ['thief', 2]], weapons: ['knife', 'staff'], outfit: { main: '#8a6a3a', sub: '#e0d0b0', trim: '#4a9a4a' } }),
+    spellblade: W({ name: '魔法剣士', tier: 3, command: '魔法剣', req: [['knight', 3], ['blackmage', 3]], weapons: ['sword'], shield: true, heads: ['helm', 'hat'], bodies: ['heavy', 'light'], outfit: { main: '#3a3ab0', sub: '#b03a3a', trim: '#e0e0e0' } }),
+    paladin: W({ name: 'パラディン', tier: 3, command: '聖剣', req: [['knight', 5], ['whitemage', 4]], weapons: ['sword', 'spear'], shield: true, heads: ['helm'], bodies: ['heavy'], outfit: { main: '#f0f0f0', sub: '#3a6ad0', trim: '#f0c040' } }),
+    ninja: W({ name: '忍者', tier: 3, command: '忍法', req: [['hunter', 4], ['monk', 3]], weapons: ['katana', 'knife'], outfit: { main: '#303040', sub: '#8a2a2a', trim: '#a0a0b0' }, innate: { twoSwords: true } }),
+    sage: W({ name: '賢者', tier: 3, command: '秘術', req: [['whitemage', 5], ['blackmage', 5]], weapons: ['staff', 'rod'], outfit: { main: '#2a8a5a', sub: '#f0e0b0', trim: '#e0b040' } }),
+    dragoon: W({ name: '竜騎士', tier: 3, command: '槍術', req: [['knight', 4], ['hunter', 4]], weapons: ['spear'], shield: true, heads: ['helm'], bodies: ['heavy'], outfit: { main: '#4a3a8a', sub: '#2a8a8a', trim: '#e0c050' } }),
+    timemage: W({ name: '時空術師', tier: 3, command: '時空魔法', req: [['blackmage', 4], ['bard', 3]], weapons: ['rod', 'staff'], outfit: { main: '#c0a030', sub: '#402a60', trim: '#f0f0f0' } }),
+    darkknight: W({ name: '暗黒騎士', tier: 3, command: '暗黒剣', req: [['warrior', 6], ['blackmage', 4]], weapons: ['sword', 'axe'], shield: true, heads: ['helm'], bodies: ['heavy'], outfit: { main: '#2a2030', sub: '#6a1a2a', trim: '#8a8a9a' } }),
+    hero: W({ name: '勇者', tier: 4, command: '奇跡', req: [['paladin', 5], ['spellblade', 5]], weapons: ['sword', 'spear', 'axe'], shield: true, heads: ['helm', 'hat'], bodies: ['heavy', 'light'], outfit: { main: '#2a60d0', sub: '#e03a3a', trim: '#f0d040' } }),
   };
   for (const id in JOBS) {
     JOBS[id].abilities = [];
-    JOBS[id].desc = JOBS[id].desc || JOBS[id].name + 'の みちを きわめる ものの ジョブ。';
+    JOBS[id].desc = JOBS[id].desc || JOBS[id].name + 'の道を極める者のジョブ。';
     put(DB.jobs, id, JOBS[id]);
   }
 
   // ------------------------------------------------------------- abilities
   const AB = {
-    warrior_power_slash: { name: 'ちからため', kind: 'action', jp: 50, mp: 0, target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.5 }], desc: 'ちからを こめて てきを きりつける。' },
-    warrior_counter: { name: 'カウンター', kind: 'reaction', jp: 200, trigger: 'hitPhys', chance: 0.35, react: { type: 'counter' }, desc: 'こうげきを うけると ときどき はんげきする。' },
-    warrior_hp_up: { name: 'HPアップ', kind: 'support', jp: 250, mods: { hpPct: 20 }, desc: 'さいだいHPが 20% あがる。' },
-    warrior_equip_axe: { name: 'おのそうび', kind: 'support', jp: 150, mods: { equip: ['axe'] }, desc: 'どの ジョブでも おのを そうびできる。' },
-    warrior_first_aid: { name: 'おうきゅうてあて', kind: 'action', jp: 80, mp: 0, target: 'self', effects: [{ type: 'heal', power: 20, scale: 0.3 }], fieldUse: true, desc: 'じぶんの キズを てあてする。' },
-    priest_heal: { name: 'ヒール', kind: 'action', jp: 50, mp: 3, magic: true, target: 'ally', effects: [{ type: 'heal', power: 28, scale: 0.6 }], fieldUse: true, desc: 'なかま ひとりの HPを かいふくする。' },
-    priest_cure: { name: 'キュア', kind: 'action', jp: 80, mp: 2, magic: true, target: 'ally', effects: [{ type: 'cure', statuses: ['poison'] }], fieldUse: true, desc: 'なかま ひとりの どくを なおす。' },
-    priest_heal_all: { name: 'ヒールオール', kind: 'action', jp: 300, mp: 10, magic: true, target: 'allies', effects: [{ type: 'heal', power: 40, scale: 0.5 }], fieldUse: true, desc: 'みかた ぜんいんの HPを かいふくする。' },
-    priest_revive: { name: 'リバイブ', kind: 'action', jp: 400, mp: 12, magic: true, target: 'ally_dead', effects: [{ type: 'revive', pct: 0.5 }], fieldUse: true, desc: 'たおれた なかまを いきかえらせる。' },
-    priest_mp_regain: { name: 'MPかいしゅう', kind: 'reaction', jp: 300, trigger: 'hitMagic', chance: 0.5, react: { type: 'mp', power: 5 }, desc: 'まほうを うけると MPを かいふくする。' },
-    priest_walk_heal: { name: 'いやしのあゆみ', kind: 'field', jp: 200, mods: { walkHeal: 1 }, desc: 'あるくたびに HPが すこし かいふくする。' },
-    mage_fire: { name: 'ファイア', kind: 'action', jp: 50, mp: 3, magic: true, target: 'enemy', effects: [{ type: 'damage', formula: 'magic', power: 20, element: 'fire' }], desc: 'てき ひとりを ほのおで やく。' },
-    mage_teleport: { name: 'テレポート', kind: 'action', jp: 150, mp: 8, magic: true, target: 'self', effects: [{ type: 'teleport' }], fieldUse: true, desc: 'おとずれた 町へ いっしゅんで とぶ。' },
-    mage_exit: { name: 'エスケープ', kind: 'action', jp: 120, mp: 6, magic: true, target: 'self', effects: [{ type: 'exit' }], fieldUse: true, desc: 'どうくつや とうから だっしゅつする。' },
-    mage_mp_up: { name: 'MPアップ', kind: 'support', jp: 250, mods: { mpPct: 20 }, desc: 'さいだいMPが 20% あがる。' },
-    thief_steal: { name: 'ぬすむ', kind: 'action', jp: 50, target: 'enemy', effects: [{ type: 'steal' }], desc: 'てきから どうぐを ぬすむ。' },
-    thief_repel: { name: 'しのびあし', kind: 'action', jp: 100, mp: 4, target: 'self', effects: [{ type: 'repel', steps: 120 }], fieldUse: true, desc: 'しばらく まものに であいにくくなる。' },
-    thief_treasure: { name: 'たからさがし', kind: 'field', jp: 150, mods: { treasureSense: true }, desc: 'かくされた どうぐが ひかって みえる。' },
-    thief_encounter_down: { name: 'けはいけし', kind: 'field', jp: 300, mods: { encounterPct: -50 }, desc: 'まものに であう かくりつが はんぶんに なる。' },
-    thief_evade: { name: 'みかわし', kind: 'reaction', jp: 200, trigger: 'hitPhys', chance: 0.3, react: { type: 'buff', stat: 'agi', stages: 1 }, desc: 'こうげきを うけると すばやさが あがる。' },
-    ninja_dual: { name: 'にとうりゅう', kind: 'support', jp: 500, mods: { twoSwords: true }, desc: 'ぶきを ふたつ もてる。' },
-    knight_cover: { name: 'かばう', kind: 'reaction', jp: 300, trigger: 'allyLowHp', chance: 0.6, react: { type: 'cover' }, desc: 'よわった なかまを かばう。' },
-    knight_equip_shield: { name: 'たてそうび', kind: 'support', jp: 200, mods: { equip: ['shield', 'heavy', 'helm'] }, desc: 'たてと おもい よろいを そうびできる。' },
-    whitemage_holy: { name: 'ホーリー', kind: 'action', jp: 600, mp: 30, magic: true, target: 'enemy', effects: [{ type: 'damage', formula: 'magic', power: 120, element: 'holy' }], desc: 'せいなる ひかりで てきを うつ。' },
+    warrior_power_slash: { name: 'ちからため', kind: 'action', jp: 50, mp: 0, target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.5 }], desc: '力を込めて敵を斬りつける。' },
+    warrior_counter: { name: 'カウンター', kind: 'reaction', jp: 200, trigger: 'hitPhys', chance: 0.35, react: { type: 'counter' }, desc: '攻撃を受けると、ときどき反撃する。' },
+    warrior_hp_up: { name: 'HPアップ', kind: 'support', jp: 250, mods: { hpPct: 20 }, desc: '最大HPが20%上がる。' },
+    warrior_equip_axe: { name: '斧装備', kind: 'support', jp: 150, mods: { equip: ['axe'] }, desc: 'どのジョブでも斧を装備できる。' },
+    warrior_first_aid: { name: '応急手当', kind: 'action', jp: 80, mp: 0, target: 'self', effects: [{ type: 'heal', power: 20, scale: 0.3 }], fieldUse: true, desc: '自分の傷を手当てする。' },
+    priest_heal: { name: 'ヒール', kind: 'action', jp: 50, mp: 3, magic: true, target: 'ally', effects: [{ type: 'heal', power: 28, scale: 0.6 }], fieldUse: true, desc: '仲間ひとりのHPを回復する。' },
+    priest_cure: { name: 'キュア', kind: 'action', jp: 80, mp: 2, magic: true, target: 'ally', effects: [{ type: 'cure', statuses: ['poison'] }], fieldUse: true, desc: '仲間ひとりの毒を治す。' },
+    priest_heal_all: { name: 'ヒールオール', kind: 'action', jp: 300, mp: 10, magic: true, target: 'allies', effects: [{ type: 'heal', power: 40, scale: 0.5 }], fieldUse: true, desc: '味方全員のHPを回復する。' },
+    priest_revive: { name: 'リバイブ', kind: 'action', jp: 400, mp: 12, magic: true, target: 'ally_dead', effects: [{ type: 'revive', pct: 0.5 }], fieldUse: true, desc: '倒れた仲間を生き返らせる。' },
+    priest_mp_regain: { name: 'MP回収', kind: 'reaction', jp: 300, trigger: 'hitMagic', chance: 0.5, react: { type: 'mp', power: 5 }, desc: '魔法を受けるとMPを回復する。' },
+    priest_walk_heal: { name: '癒しの歩み', kind: 'field', jp: 200, mods: { walkHeal: 1 }, desc: '歩くたびにHPが少し回復する。' },
+    mage_fire: { name: 'ファイア', kind: 'action', jp: 50, mp: 3, magic: true, target: 'enemy', effects: [{ type: 'damage', formula: 'magic', power: 20, element: 'fire' }], desc: '敵ひとりを炎で焼く。' },
+    mage_teleport: { name: 'テレポート', kind: 'action', jp: 150, mp: 8, magic: true, target: 'self', effects: [{ type: 'teleport' }], fieldUse: true, desc: '訪れた町へ一瞬で飛ぶ。' },
+    mage_exit: { name: 'エスケープ', kind: 'action', jp: 120, mp: 6, magic: true, target: 'self', effects: [{ type: 'exit' }], fieldUse: true, desc: '洞窟や塔から脱出する。' },
+    mage_mp_up: { name: 'MPアップ', kind: 'support', jp: 250, mods: { mpPct: 20 }, desc: '最大MPが20%上がる。' },
+    thief_steal: { name: '盗む', kind: 'action', jp: 50, target: 'enemy', effects: [{ type: 'steal' }], desc: '敵から道具を盗む。' },
+    thief_repel: { name: '忍び足', kind: 'action', jp: 100, mp: 4, target: 'self', effects: [{ type: 'repel', steps: 120 }], fieldUse: true, desc: 'しばらく魔物に出会いにくくなる。' },
+    thief_treasure: { name: '宝探し', kind: 'field', jp: 150, mods: { treasureSense: true }, desc: '隠された道具が光って見える。' },
+    thief_encounter_down: { name: '気配消し', kind: 'field', jp: 300, mods: { encounterPct: -50 }, desc: '魔物に出会う確率が半分になる。' },
+    thief_evade: { name: '見切り', kind: 'reaction', jp: 200, trigger: 'hitPhys', chance: 0.3, react: { type: 'buff', stat: 'agi', stages: 1 }, desc: '攻撃を受けると素早さが上がる。' },
+    ninja_dual: { name: '二刀流', kind: 'support', jp: 500, mods: { twoSwords: true }, desc: '武器をふたつ持てる。' },
+    knight_cover: { name: 'かばう', kind: 'reaction', jp: 300, trigger: 'allyLowHp', chance: 0.6, react: { type: 'cover' }, desc: '弱った仲間をかばう。' },
+    knight_equip_shield: { name: '盾装備', kind: 'support', jp: 200, mods: { equip: ['shield', 'heavy', 'helm'] }, desc: '盾と重い鎧を装備できる。' },
+    whitemage_holy: { name: 'ホーリー', kind: 'action', jp: 600, mp: 30, magic: true, target: 'enemy', effects: [{ type: 'damage', formula: 'magic', power: 120, element: 'holy' }], desc: '聖なる光で敵を撃つ。' },
   };
   for (const id in AB) {
     AB[id].job = AB[id].job || id.split('_')[0];
@@ -74,9 +74,9 @@
     if (DB.jobs[jid] !== JOBS[jid]) continue;
     const j = JOBS[jid];
     const extra = [
-      ['act1', { name: j.command.slice(0, 6) + 'I', kind: 'action', jp: 100, mp: 4, target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.3 }], desc: j.name + 'の きほんの わざ。' }],
-      ['act2', { name: j.command.slice(0, 6) + 'II', kind: 'action', jp: 350, mp: 9, target: 'enemies', effects: [{ type: 'damage', formula: 'magic', power: 40 }], desc: 'てき ぜんたいに ' + j.name + 'の ひでんを はなつ。' }],
-      ['sup', { name: j.name.slice(0, 5) + 'のこころ', kind: 'support', jp: 400, mods: { atkPct: 5 }, desc: j.name + 'の こころえで こうげきりょくが すこし あがる。' }],
+      ['act1', { name: j.command.slice(0, 6) + 'I', kind: 'action', jp: 100, mp: 4, target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.3 }], desc: j.name + 'の基本の技。' }],
+      ['act2', { name: j.command.slice(0, 6) + 'II', kind: 'action', jp: 350, mp: 9, target: 'enemies', effects: [{ type: 'damage', formula: 'magic', power: 40 }], desc: '敵全体に' + j.name + 'の秘伝を放つ。' }],
+      ['sup', { name: j.name.slice(0, 5) + 'のこころ', kind: 'support', jp: 400, mods: { atkPct: 5 }, desc: j.name + 'の心得で攻撃力が少し上がる。' }],
     ];
     for (const [k, a] of extra) {
       const id = jid + '_' + k;
@@ -87,22 +87,22 @@
 
   // -------------------------------------------------------------- monsters
   const MON = {
-    blue_jelly: { name: 'ブルージェリー', sprite: 'jelly', lv: 1, hp: 8, mp: 0, atk: 9, def: 4, agi: 4, mag: 0, mdef: 2, exp: 2, gold: 3, jp: 2, drop: { item: 'herb', rate: 8 }, rare: { item: 'seed_hp', rate: 128 }, desc: 'ぷるぷる ふるえる あおい ゼリー。 よわいが むれで おそってくる。' },
-    red_jelly: { name: 'レッドジェリー', sprite: 'jelly', hue: 150, lv: 3, hp: 16, mp: 4, atk: 14, def: 8, agi: 6, mag: 8, mdef: 4, exp: 6, gold: 6, jp: 3, elem: { fire: 0.5, ice: 2 }, drop: { item: 'antidote', rate: 8 }, rare: { item: 'clover', rate: 128 }, desc: 'ほのおを すった ゼリー。 からだが ほんのり あたたかい。' },
-    cave_bat: { name: 'ほらあなコウモリ', sprite: 'bat', lv: 2, hp: 12, mp: 0, atk: 12, def: 5, agi: 12, mag: 0, mdef: 3, exp: 4, gold: 4, jp: 2, flags: ['flying'], drop: { item: 'eye_drop', rate: 8 }, rare: { item: 'seed_agi', rate: 128 }, desc: 'くらやみを すみかに する コウモリ。' },
-    goblin: { name: 'ゴブリン', sprite: 'goblin', lv: 4, hp: 30, mp: 0, atk: 18, def: 10, agi: 8, mag: 0, mdef: 5, exp: 10, gold: 12, jp: 4, drop: { item: 'herb', rate: 6 }, rare: { item: 'copper_knife', rate: 64 }, desc: 'いたずら ずきな こおに。 ぶきを ふりまわして おそってくる。' },
-    metal_jelly: { name: 'メタルジェリー', sprite: 'jelly', sat: 0, bri: 1.2, lv: 12, hp: 4, mp: 10, atk: 30, def: 999, agi: 120, mag: 10, mdef: 999, exp: 1200, gold: 20, jp: 60, flags: ['metal', 'flee'], drop: { item: 'mana_drop', rate: 4 }, rare: { item: 'seed_luk', rate: 32 }, desc: 'はがねの ように かたい ゼリー。 すぐに にげだす。' },
-    golem: { name: 'ストーンゴーレム', sprite: 'golem', lv: 16, hp: 220, mp: 0, atk: 70, def: 60, agi: 10, mag: 0, mdef: 20, exp: 180, gold: 90, jp: 20, elem: { thunder: 2, earth: 0 }, drop: { item: 'healing_grass', rate: 8 }, rare: { item: 'iron_ring', rate: 64 }, desc: 'いにしえの まほうで うごく いしの きょじん。' },
-    goblin_chief: { name: 'ゴブリンキング', sprite: 'boss_goblin_chief', lv: 6, hp: 260, mp: 20, atk: 26, def: 14, agi: 10, mag: 6, mdef: 8, exp: 120, gold: 150, jp: 30, flags: ['boss'], desc: 'かぜの どうくつを すみかに した ゴブリンの おやだま。' },
+    blue_jelly: { name: 'ブルージェリー', sprite: 'jelly', lv: 1, hp: 8, mp: 0, atk: 9, def: 4, agi: 4, mag: 0, mdef: 2, exp: 2, gold: 3, jp: 2, drop: { item: 'herb', rate: 8 }, rare: { item: 'seed_hp', rate: 128 }, desc: 'ぷるぷる震える青いゼリー。弱いが群れで襲ってくる。' },
+    red_jelly: { name: 'レッドジェリー', sprite: 'jelly', hue: 150, lv: 3, hp: 16, mp: 4, atk: 14, def: 8, agi: 6, mag: 8, mdef: 4, exp: 6, gold: 6, jp: 3, elem: { fire: 0.5, ice: 2 }, drop: { item: 'antidote', rate: 8 }, rare: { item: 'clover', rate: 128 }, desc: '炎を吸ったゼリー。体がほんのり温かい。' },
+    cave_bat: { name: 'ほら穴コウモリ', sprite: 'bat', lv: 2, hp: 12, mp: 0, atk: 12, def: 5, agi: 12, mag: 0, mdef: 3, exp: 4, gold: 4, jp: 2, flags: ['flying'], drop: { item: 'eye_drop', rate: 8 }, rare: { item: 'seed_agi', rate: 128 }, desc: '暗闇をすみかにするコウモリ。' },
+    goblin: { name: 'ゴブリン', sprite: 'goblin', lv: 4, hp: 30, mp: 0, atk: 18, def: 10, agi: 8, mag: 0, mdef: 5, exp: 10, gold: 12, jp: 4, drop: { item: 'herb', rate: 6 }, rare: { item: 'copper_knife', rate: 64 }, desc: 'いたずら好きな小鬼。武器を振り回して襲ってくる。' },
+    metal_jelly: { name: 'メタルジェリー', sprite: 'jelly', sat: 0, bri: 1.2, lv: 12, hp: 4, mp: 10, atk: 30, def: 999, agi: 120, mag: 10, mdef: 999, exp: 1200, gold: 20, jp: 60, flags: ['metal', 'flee'], drop: { item: 'mana_drop', rate: 4 }, rare: { item: 'seed_luk', rate: 32 }, desc: '鋼のように硬いゼリー。すぐに逃げ出す。' },
+    golem: { name: 'ストーンゴーレム', sprite: 'golem', lv: 16, hp: 220, mp: 0, atk: 70, def: 60, agi: 10, mag: 0, mdef: 20, exp: 180, gold: 90, jp: 20, elem: { thunder: 2, earth: 0 }, drop: { item: 'healing_grass', rate: 8 }, rare: { item: 'iron_ring', rate: 64 }, desc: 'いにしえの魔法で動く石の巨人。' },
+    goblin_chief: { name: 'ゴブリンキング', sprite: 'boss_goblin_chief', lv: 6, hp: 260, mp: 20, atk: 26, def: 14, agi: 10, mag: 6, mdef: 8, exp: 120, gold: 150, jp: 30, flags: ['boss'], desc: '風の洞窟をすみかにしたゴブリンの親玉。' },
   };
   for (const id in MON) put(DB.monsters, id, MON[id]);
 
   // ------------------------------------------------------ objectives, locations
   put(DB, 'objectives', {});
-  put(DB.objectives, 'obj_start', { text: 'レグナスの おうさまに あいに いこう。' });
-  put(DB.objectives, 'obj_wind', { text: 'ミルトの むらの きたに ある かぜの どうくつで かぜの もんしょうを てにいれよう。' });
-  put(DB.locations, 'regnas', { name: 'レグナス', map: 'fx_world', spawn: 'fx_town' });
-  put(DB.locations, 'milt', { name: 'ミルト', map: 'fx_world', spawn: 'fx_village' });
+  put(DB.objectives, 'obj_start', { text: 'レグナス城の王様に会いに行こう。' });
+  put(DB.objectives, 'obj_wind', { text: 'ミルトの村の北にある風の洞窟で、風の紋章を手に入れよう。' });
+  put(DB.locations, 'regnas', { name: '城下町レグナス', map: 'fx_world', spawn: 'fx_town' });
+  put(DB.locations, 'milt', { name: 'ミルトの村', map: 'fx_world', spawn: 'fx_village' });
 
   // ------------------------------------------------------------------- art
   const G = R.Gfx;

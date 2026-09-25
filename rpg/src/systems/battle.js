@@ -257,7 +257,11 @@
 
     // ------------------------------------------------------- start
     *begin() {
-      for (const g of this.groups()) yield this.m(g.n > 1 ? `${g.name}が${g.n}匹現れた！` : `${g.name}が現れた！`);
+      for (const g of this.groups()) {
+        const d = g.units && g.units[0] && g.units[0].d;
+        if (g.n === 1 && d && d.appear) { yield this.m(d.appear); continue; } // rare monsters' own entrance line
+        yield this.m(g.n > 1 ? `${g.name}が${g.n}匹現れた！` : `${g.name}が現れた！`);
+      }
       if (this.live && R.State && R.Game) for (const g of this.groups()) R.State.seen(g.id);
       if (this.o.surprise !== undefined) this.surprise = this.o.surprise || null; // forced ('pre'|'ambush'|null)
       else if (!this.o.noSurprise && !this.boss) {
@@ -890,7 +894,7 @@
       if (!s || t.stolen || (!s.item && !s.rare)) { yield this.m(`${t.name}は何も持っていない！`); return; }
       if (!U.chance(this.stealChance(u, t))) { yield this.m('しかし盗めなかった！'); return; }
       let item = s.item, rare = false;
-      if (s.rare && (!s.item || U.chance(this.rareStealChance(u, eff)))) { item = s.rare; rare = true; }
+      if (s.rare && (!s.item || U.chance(this.rareStealChance(u, eff, t)))) { item = s.rare; rare = true; }
       t.stolen = true;
       this.giveItem(item);
       this.stolen.push({ mon: t.id, item, rare });
@@ -905,8 +909,13 @@
       if (t.boss) p *= 0.5;
       return Math.min(0.98, p);
     }
-    rareStealChance(u, eff) {
-      return Math.min(1, (0.125 + ((eff && eff.rareBonus) || 0)) * (1 + this.pct(u, 'rarePct') / 100));
+    rareStealChance(u, eff, t) {
+      const bonus = (eff && eff.rareBonus) || 0;
+      // rare monsters' exclusive items stay as precious as their 1/64–1/128 drop
+      if (t && t.d && t.d.flags && t.d.flags.includes('rare')) {
+        return Math.min(1, (1 / 64 + bonus * 0.04) * (1 + this.pct(u, 'rarePct') / 100));
+      }
+      return Math.min(1, (0.125 + bonus) * (1 + this.pct(u, 'rarePct') / 100));
     }
 
     *scan(t) {
