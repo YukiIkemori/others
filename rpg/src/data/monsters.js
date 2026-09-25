@@ -3,7 +3,8 @@
 // across the regions). Stats come from a level curve × per-monster multipliers,
 // tuned with tools/sim_balance.js against the party model of each region:
 //   hp 7+5L+0.28L²   atk 10+3.8L   def 1+2.1L   mdef L   agi 4+1.8L   mag 5+2.4L
-//   (hp +15 % and atk +12 % phased in from Lv16 to Lv30)
+//   (hp +15 % and atk +12 % phased in from Lv16 to Lv30; atk & mag then ×0.87 → ×0.90 by Lv34 = `soft`,
+//   the playtest's 「敵の攻撃が痛い」 pass: ≈5–15 % party HP lost per random fight at the arrival level)
 //   exp: (EXP a party ≈1.5 levels above needs for its next level) / 14.4, × a smooth factor fitted
 //        so that natural play (≈9 fights per region, 5–9 per dungeon floor, bosses) meets §7.4's levels
 //   jp  5+1.15L (≈ 12·Lv² JP earned at Lv)      gold 6+8L+0.3L² (≈ 50–100 % of each town's gear)

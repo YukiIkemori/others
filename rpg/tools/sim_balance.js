@@ -15,8 +15,9 @@
 // Sections: party (the model) · zones (every encounter group at the arrival level) ·
 // bosses (±2 levels) · crawl (a dungeon floor / whole dungeon without resting) ·
 // campaign (a natural playthrough: levels, JP, gold vs shop prices) · loot (rare drops).
-// Targets: zones win ≈100 %, 2–5 rounds, 5–25 % party HP lost (a bit more late);
-// bosses 60–90 % at the stage's upper level with healing, 6–15 rounds;
+// Targets: zones win ≈100 %, 2–5 rounds, 5–25 % party HP lost (a bit more late; `dmg` = raw damage taken);
+// bosses 60–90 % at the stage's upper level with healing, 6–15 rounds; crawl: every floor survived
+// and left with ≥30 % MP (a careful player);
 // campaign: 20–40 fights per band, ≈1 job level per 6–10 fights early; the JP table scales by
 // tier (Rules.jpTable) so a tier-2/3/4 job still takes ≈50–90 fights to Lv8 when monsters pay more JP.
 // The simulated party uses the game's own battle AI (R.BattleAI), which spends MP

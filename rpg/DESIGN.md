@@ -238,8 +238,43 @@ Utility consumables (exact ids): `wing` (teleport to a visited town), `escape_ro
   outfit:{main:'#hex', sub:'#hex', trim:'#hex'}, // party sprite clothing colours
 }
 ```
-JP table (cumulative JP earned in the job): Lv1 0, Lv2 100, Lv3 250, Lv4 450, Lv5 700, Lv6 1000, Lv7 1400, Lv8 2000.
-Mastered (★) = all abilities of the job learned.
+JP table (cumulative JP earned in the job) — base (tier 1): Lv1 0, Lv2 100, Lv3 250, Lv4 450, Lv5 700, Lv6 1000,
+Lv7 1400, Lv8 2000. Higher tiers scale it (`R.Rules.JP_TIER_MULT`, rounded to 10; playtest: intermediate/advanced
+jobs levelled too fast because monsters pay more JP later) — read it through `R.Rules.jpTable(job)` /
+`jpForJobLevel(job, lv)` / `jobLevel` / `jpToNextLevel`, never `JP_TABLE` directly:
+
+| tier | × | Lv2 | Lv3 | Lv4 | Lv5 | Lv6 | Lv7 | Lv8 |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 1 | 100 | 250 | 450 | 700 | 1000 | 1400 | 2000 |
+| 2 | 1.6 | 160 | 400 | 720 | 1120 | 1600 | 2240 | 3200 |
+| 3 | 2.25 | 230 | 560 | 1010 | 1580 | 2250 | 3150 | 4500 |
+| 4 | 2.75 | 280 | 690 | 1240 | 1930 | 2750 | 3850 | 5500 |
+
+Pacing (`node tools/sim_balance.js`, campaign): every tier takes ≈50–70 fights from job Lv1 to Lv8; tier-2 jobs
+open ≈Lv8–11, tier 3 ≈Lv15–25 (パラディン ≈20, 賢者 ≈24), 勇者 ≈Lv30. Mastering a job costs ≈1.2–1.5× its Lv8 JP on tier 1–2
+and ≈0.9–1.1× on tier 3–4 (`tools/check_jobs.js`).
+**Unlocks are permanent** (`c.unlocked[jobId] = true`, recorded by `Rules.syncUnlocks` on JP gain / job change /
+load): a job stays open even if its requirements are no longer met. A job that is the current job, the sub-command
+or has JP / learned abilities also counts as open. Saves from before the tier tables (`R.Game.jpTables` missing) are
+migrated on load (`Rules.migrateJpTables`): each job's JP total moves to the same place on its new table, so job
+levels and unlocks are unchanged.
+Mastered (★) = all abilities of the job learned. **Mastery bonus** (`masterBonus` in jobs.js, summed by
+`R.Rules.masterBonus(c)`, text `Rules.masterBonusText(job)`): flat stats added for good, in every job (like seeds),
+once the job is mastered; learning the last ability also raises current HP/MP by the bonus.
+
+| job | bonus | job | bonus |
+|---|---|---|---|
+| 戦士 | HP+10 力+3 | 魔法剣士 | MP+5 力+3 知力+3 |
+| 僧侶 | MP+5 精神+3 | パラディン | HP+20 体力+3 精神+3 |
+| 魔法使い | MP+5 知力+3 | 忍者 | 力+2 素早さ+5 |
+| 盗賊 | 素早さ+3 運+2 | 賢者 | MP+12 知力+3 精神+3 |
+| ナイト | HP+15 体力+4 | 竜騎士 | HP+15 力+5 |
+| 武闘家 | HP+15 力+4 | 時空術師 | MP+10 素早さ+4 知力+2 |
+| 白魔術師 | MP+8 精神+4 | 暗黒騎士 | HP+20 力+5 |
+| 黒魔術師 | MP+8 知力+4 | 勇者 | HP+20 MP+10 力・体力・素早さ・知力・精神+3 |
+| 狩人 | 力+2 素早さ+4 | | |
+| 吟遊詩人 | MP+5 精神+2 運+3 | | |
+| 薬師 | HP+10 MP+5 精神+2 | | |
 
 **Job tree (ids fixed):**
 | Tier | id | name | requirements |
@@ -433,7 +468,15 @@ R.DB.objectives[id] = { text:'つぎの もくてき …' }
   **Percent**: `targetHP × power` (fails on bosses).
 * **Heal**: `(power + mnd × scale) × rand(0.95..1.05) × (1 + healPct/100)`; `pct` heals a fraction of max HP.
 * **Element multipliers**: product of monster `elem[e]` (or party `elemResist`) and 1 + `elemBoost`/100.
-* Buff stage multipliers: −2 ×0.67, −1 ×0.8, 0 ×1, +1 ×1.25, +2 ×1.5 (moderate on purpose: buffs help, they never wall off damage).
+* Buff stage multipliers: −2 ×0.6, −1 ×0.8, 0 ×1, +1 ×1.3, +2 ×1.6 (`STAGES` in battle.js; moderate on purpose: buffs help,
+  they never wall off damage — 硬くなる is +1 def).
+* **Enemy damage** (playtest 「全体的に敵の攻撃が痛い」): regular monsters' atk and mag are ×0.87 up to Lv18, easing to
+  ×0.90 by Lv34 (`soft` in monsters.js / rare.js), and the regular breath tiers were cut ≈15 %. Target per random fight
+  at the arrival level (`sim_balance` zones, `dmg`): ≈5–15 % of the party's HP early, ≈5–16 % late. Bosses keep their
+  own stats (troops.js): 60–90 % wins at the stage's upper level in 6–15 rounds.
+* **MP economy** (playtest 「MP枯渇早い」): character MP growth ≈+30 % (chars.js) and the big tier-3/4 spells ≈20 %
+  cheaper (e.g. プロミネンス/絶対零度 24, 星くずの雨/流星雨 28, 聖母の祈り/希望の光 32). A careful player leaves each
+  dungeon floor with ≥30 % MP (`sim_balance` crawl warns below that); the free-spending AI uses ≈1–19 % MP per fight.
 * Status success: `chance × (1 − resist)`; immunities from `statusImmune`/accessories.
 * **Metal** monsters: physical damage 0–1 (critical still hits for 1–3), immune to all magic except `percent`.
 * **Escape**: chance `0.5 + 0.1 × attempts + (partyAvgAgi − enemyAvgAgi)/200`, clamp 0.3–1; bosses/`noEscape` impossible.

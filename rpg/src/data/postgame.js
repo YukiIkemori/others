@@ -8,16 +8,17 @@
 // Everything is a normal R.DB entry, so the bestiary (ずかん) lists and counts it.
 //
 // Balance — tools/sim_postgame.js (real battle engine; see its header for the party models):
-//   abyss regulars: a prepared Lv50 party wins every fight and loses ≈26–28 % HP per fight
+//   abyss regulars: a prepared Lv50 party wins every fight and loses ≈24–27 % HP per fight
 //     (the healer tops up at 40 %); a party fresh from the demon king (Lv42, shop gear)
-//     wins ≈93–96 % of the fights on floors 1–2 and ≈81–86 % on floors 3–4.
-//   abyss_lord: prepared Lv55 (mastered jobs, abyss chest gear, 明鏡の護符 ×2 + はじゃのこころ
-//     & 命のお守り, かいじゅ, ふくつのちかい — no rare drop needed) wins ≈55–63 % in ≈19 rounds
-//     (Lv52 ≈37 %, Lv58 ≈81 %; better supports or rare drops ≈66–73 %); a Lv65 "levels only"
-//     party wins 0 % (still 0 % at Lv99, ≈1 % at Lv80 with the amulets).
-//     Taking one piece of the preparation away: no status immunity ≈1 %, one member without it
-//     ≈23 %, no death immunity on the healer ≈27 %, no revive-on-KO ≈38 %, never dispelling
-//     ≈33 %, no elemental resistance ≈41 %, shop weapons ≈22 %.
+//     wins ≈97–99 % of the fights on floors 1–2 and ≈93–97 % on floors 3–4.
+//   abyss_lord: prepared Lv55 (mastered jobs — incl. their mastery bonuses —, abyss chest gear,
+//     明鏡の護符 ×2 + はじゃのこころ & 命のお守り, かいじゅ, ふくつのちかい — no rare drop needed) wins
+//     ≈67 % in ≈23 rounds (Lv52 ≈43 %, Lv58 ≈86 %; with rare drops ≈69 %); a Lv65 "levels only"
+//     party wins 0 % (still 0 % at Lv99 and at Lv80 with the amulets).
+//     Taking one piece of the preparation away: no status immunity ≈0 %, one member without it
+//     ≈35 %, no death immunity on the healer ≈27 %, no revive-on-KO ≈50 %, no elemental
+//     resistance ≈54 %, shop weapons ≈41 %.
+//     (Retuned after the MP / mastery-bonus pass: HP 7300→11000, atk 390→485, mag 260→280.)
 //     魔王 (boss_king2) falls 100 % to the same parties in 6–11 rounds.
 //
 // abyss_lord's pattern (actsPerTurn 3; `every` counts its own actions, 3 per round):
@@ -40,7 +41,7 @@
   const late = (L) => { const t = Math.min(1, Math.max(0, (L - 16) / 14)); return t * t * (3 - 2 * t); };
   const curve = (L) => ({
     hp: (7 + 5 * L + 0.28 * L * L) * (1 + 0.15 * late(L)),
-    atk: (10 + 3.8 * L) * (1 + 0.12 * late(L)),
+    atk: (10 + 3.8 * L) * (1 + 0.12 * late(L)) * 1.04, // +4 %: mastered jobs now give stat bonuses
     def: 1 + 2.1 * L,
     mdef: L,
     agi: 4 + 1.8 * L,
@@ -321,7 +322,7 @@
     // ================================================= 裏ボス
     abyss_lord: {
       name: 'アビスロード', sprite: 'boss_abyss', lv: 70, actsPerTurn: 3,
-      hp: 10200, mp: 0, atk: 470, def: 180, agi: 110, mag: 275, mdef: 110, eva: 2,
+      hp: 11000, mp: 0, atk: 485, def: 180, agi: 110, mag: 280, mdef: 110, eva: 2,
       exp: 60000, gold: 30000, jp: 3000,
       flags: ['boss', 'dragon'], statusRes: BOSS_RES,
       fam: ['shade'],
