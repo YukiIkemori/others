@@ -95,6 +95,8 @@
     en_thunder2: spell('雷の雨', 8, 'enemies', [magic(8, 0.4, 'thunder')], 'thunder2'),
     en_thunder3: spell('雷神の怒り', 14, 'enemies', [magic(26, 0.6, 'thunder')], 'thunder3'),
     en_wind: spell('かまいたち', 3, 'group', [magic(8, 0.4, 'wind')], 'wind'),
+    // 風のこだま (風の洞窟, Lv3–6 party): a mild all-party gust — two of them must not wipe a fresh party
+    en_gust: spell('つむじ風', 3, 'group', [magic(3, 0.2, 'wind')], 'wind'),
     en_wind2: spell('竜巻', 8, 'enemies', [magic(18, 0.5, 'wind')], 'wind2'),
     en_water: spell('水鉄砲', 3, 'enemy', [magic(12, 0.55, 'water')], 'water'),
     en_dark: spell('闇の玉', 4, 'enemy', [magic(16, 0.6, 'dark')], 'dark'),

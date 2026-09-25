@@ -216,6 +216,7 @@
       const ab = DB.abilities[id];
       if (!ab) return 'none';
       if (ab.magic && u.status.silence) return 'silence';
+      if (ab.oncePerBattle && u.used && u.used[id]) return 'once';
       if (u.mp < this.mpCost(u, id, ab)) return 'mp';
       if (!ab.effects || !ab.effects.some((e) => BATTLE_EFFECT[e.type])) return 'field';
       if (u.isParty && this.noEscape && B.isEscape(ab)) return 'noescape';
@@ -719,6 +720,12 @@
         case 'allies':
           return (act.effects || []).some((e) => e.type === 'revive') ? side : friends;
         case 'self': return [u];
+        case 'ally_other': {
+          // never the user itself (e.g. 命分け)
+          if (chosen && chosen.alive && chosen.side === u.side && chosen !== u) return [chosen];
+          const t = friends.filter((x) => x !== u).sort((a, b) => a.hpRate() - b.hpRate())[0];
+          return t ? [t] : [];
+        }
         case 'ally_dead': {
           if (chosen && !chosen.alive && !chosen.gone && chosen.side === u.side) return [chosen];
           const t = side.find((x) => !x.alive);
@@ -737,6 +744,17 @@
     }
 
     *useAbility(u, id, ab, chosen, item) {
+      if (!item && ab.oncePerBattle && u.used[id]) {
+        yield this.m(this.announce(u, ab));
+        yield this.m('しかしこの戦いではもう使えない！');
+        return;
+      }
+      if (ab.target === 'ally_other' && !this.targets(u, ab, chosen).length) {
+        // nobody else to help: nothing is paid
+        yield this.m(this.announce(u, ab, item));
+        yield this.m('しかし何も起こらなかった！');
+        return;
+      }
       if (!item) {
         if (ab.magic && u.status.silence) {
           yield this.m(this.announce(u, ab));

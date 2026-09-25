@@ -63,7 +63,7 @@ html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden;touch-a
 body{display:flex;align-items:center;justify-content:center;font-family:"DotGothic16",monospace;color:#fff}
 #game{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100vw;height:100vh;height:100dvh}
 #screen{display:block;image-rendering:pixelated;image-rendering:crisp-edges;background:#000;box-shadow:0 0 0 1px #222}
-#touchpad{display:none;width:100%;max-width:560px;box-sizing:border-box;padding:10px 18px 14px;justify-content:space-between;align-items:center;flex:0 0 auto}
+#touchpad{display:none;position:relative;width:100%;max-width:560px;box-sizing:border-box;padding:50px 18px 14px;justify-content:space-between;align-items:center;flex:0 0 auto}
 #game.touch #touchpad{display:flex}
 .tp-dpad{position:relative;width:150px;height:150px;flex:0 0 auto}
 .tp-btn{position:absolute;background:#2a2a36;border:2px solid #555a70;border-radius:10px;color:#cfd3e6;font:bold 22px sans-serif;display:flex;align-items:center;justify-content:center;box-sizing:border-box}
@@ -73,12 +73,15 @@ body{display:flex;align-items:center;justify-content:center;font-family:"DotGoth
 .tp-left{left:0;top:50px;width:54px;height:50px}
 .tp-right{right:0;top:50px;width:54px;height:50px}
 .tp-center{position:absolute;left:50px;top:50px;width:50px;height:50px;background:#2a2a36}
-.tp-ab{position:relative;width:170px;height:130px;flex:0 0 auto}
-.tp-a,.tp-b{border-radius:50%;width:74px;height:74px}
-.tp-a{right:0;top:6px;background:#6a2830;border-color:#b05060}
-.tp-b{left:0;bottom:0;background:#28406a;border-color:#5070b0}
-.tp-a.on{background:#a04050}.tp-b.on{background:#4060a0}
-@media (orientation:landscape){#game.touch{flex-direction:row}#game.touch #touchpad{position:absolute;inset:0;max-width:none;pointer-events:none;padding:0 12px}#game.touch .tp-dpad,#game.touch .tp-ab{pointer-events:auto}#game.touch #touchpad{align-items:flex-end;padding-bottom:20px}}
+.tp-ab{position:relative;width:190px;height:150px;flex:0 0 auto}
+.tp-a,.tp-b,.tp-y{border-radius:50%;width:74px;height:74px}
+.tp-a{right:0;top:22px;background:#6a2830;border-color:#b05060}
+.tp-b{left:42px;bottom:0;background:#28406a;border-color:#5070b0}
+.tp-y{left:0;top:0;width:60px;height:60px;font-size:19px;background:#2c5234;border-color:#58a068}
+.tp-a.on{background:#a04050}.tp-b.on{background:#4060a0}.tp-y.on{background:#3f7a4c}
+.tp-l,.tp-r{top:8px;width:84px;height:36px;border-radius:18px;font-size:17px}
+.tp-l{left:18px}.tp-r{right:18px}
+@media (orientation:landscape){#game.touch{flex-direction:row}#game.touch #touchpad{position:absolute;inset:0;max-width:none;pointer-events:none;padding:0 12px}#game.touch .tp-dpad,#game.touch .tp-ab,#game.touch .tp-l,#game.touch .tp-r{pointer-events:auto}#game.touch .tp-l{left:14px;top:14px}#game.touch .tp-r{right:14px;top:14px}#game.touch #touchpad{align-items:flex-end;padding-bottom:20px}}
 `;
 
 // Embed a subset of DotGothic16 (OFL) containing every character used in the

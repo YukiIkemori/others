@@ -6,7 +6,7 @@
   const DB = R.DB;
 
   const FOE_TARGETS = { enemy: 1, enemies: 1, group: 1, random: 1 };
-  const ALLY_TARGETS = { ally: 1, allies: 1, self: 1, ally_any: 1 };
+  const ALLY_TARGETS = { ally: 1, allies: 1, self: 1, ally_any: 1, ally_other: 1 };
   const DISABLING = ['paralyze', 'sleep', 'confuse'];
   const has = (act, type) => !!(act && act.effects && act.effects.some((e) => e.type === type));
   const effOf = (act, type) => act.effects.find((e) => e.type === type);
@@ -28,6 +28,7 @@
     const ab = DB.abilities[id];
     if (!ab || ab.kind !== 'action') return false;
     if (ab.magic && u.status.silence) return false;
+    if (ab.oncePerBattle && u.used && u.used[id]) return false;
     return (ab.mp || 0) <= u.mp;
   }
   /**
@@ -53,13 +54,15 @@
       case 'self':
         if (heal && u.hpRate() > 0.6) return null;
         return { type: 'ability', id, target: u };
-      case 'ally': case 'ally_any': {
+      case 'ally': case 'ally_any': case 'ally_other': {
+        const pool = ab.target === 'ally_other' ? mons.filter((m) => m !== u) : mons;
+        if (!pool.length) return null;
         if (heal) {
-          const t = mons.filter((m) => m.hpRate() < 0.6).sort((a, b) => a.hpRate() - b.hpRate())[0];
+          const t = pool.filter((m) => m.hpRate() < 0.6).sort((a, b) => a.hpRate() - b.hpRate())[0];
           return t ? { type: 'ability', id, target: t } : null;
         }
         const b = has(ab, 'buff') && effOf(ab, 'buff');
-        const cand = b ? mons.filter((m) => m.buffs[b.stat] < 2) : mons;
+        const cand = b ? pool.filter((m) => m.buffs[b.stat] < 2) : pool;
         return cand.length ? { type: 'ability', id, target: U.pick(cand) } : null;
       }
       case 'allies':
@@ -156,7 +159,9 @@
     for (const o of acts) {
       if (!has(o.ab, 'heal') || !ALLY_TARGETS[o.ab.target]) continue;
       if (o.ab.target === 'self' && hurt[0] !== u) continue;
-      const targets = o.ab.target === 'allies' ? mates : [o.ab.target === 'self' ? u : hurt[0]];
+      const other = hurt.find((p) => p !== u);
+      if (o.ab.target === 'ally_other' && !other) continue;
+      const targets = o.ab.target === 'allies' ? mates : [o.ab.target === 'self' ? u : o.ab.target === 'ally_other' ? other : hurt[0]];
       let gain = 0;
       for (const t of targets) gain += Math.min(eng.expectHeal(u, o.ab, t, o.item), Math.max(0, t.mhp - t.hp - (plan.heal.get(t) || 0)));
       if (o.ab.target === 'allies' && !many) gain *= 0.6;
@@ -182,7 +187,7 @@
       if (!bad.length) continue;
       const o = acts.find((x) => {
         const cu = has(x.ab, 'cure') && effOf(x.ab, 'cure');
-        return cu && ALLY_TARGETS[x.ab.target] && x.ab.target !== 'self' && (cu.statuses === 'all' || bad.some((s) => cu.statuses.includes(s)));
+        return cu && ALLY_TARGETS[x.ab.target] && x.ab.target !== 'self' && !(x.ab.target === 'ally_other' && p === u) && (cu.statuses === 'all' || bad.some((s) => cu.statuses.includes(s)));
       });
       if (o) { plan.cured.add(p); reserve(plan, o); return cmdOf(o, p); }
     }
@@ -206,7 +211,7 @@
       if (o.item || !has(o.ab, 'buff')) continue;
       const b = effOf(o.ab, 'buff');
       if (b.stages > 0 && ALLY_TARGETS[o.ab.target]) {
-        const t = o.ab.target === 'self' ? u : eng.living('party').find((p) => p.buffs[b.stat] < 1 && !plan.buffed.has(p.key + b.stat));
+        const t = o.ab.target === 'self' ? u : eng.living('party').find((p) => p.buffs[b.stat] < 1 && !plan.buffed.has(p.key + b.stat) && !(o.ab.target === 'ally_other' && p === u));
         if (t && t.buffs[b.stat] < 1) { plan.buffed.add(t.key + b.stat); return cmdOf(o, t); }
       }
       if (b.stages < 0 && FOE_TARGETS[o.ab.target]) {

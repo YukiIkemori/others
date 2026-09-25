@@ -223,7 +223,10 @@
       const a = DB.abilities[abilityId];
       if (!a || !a.mp) return 0;
       const m = Rules.mods(c);
-      return Math.max(0, Math.round(a.mp * (100 + (m.mpCostPct || 0)) / 100));
+      const pct = m.mpCostPct || 0;
+      // reductions round down (but an MP ability never becomes free); increases round up
+      const v = a.mp * (100 + pct) / 100;
+      return Math.max(1, pct < 0 ? Math.floor(v + 1e-9) : Math.ceil(v - 1e-9));
     },
 
     // -------------------------------------------------------- equipment

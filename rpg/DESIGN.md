@@ -125,7 +125,7 @@ mirrorX outline(c,{diag}) replace each blit toCanvas`), `recolor(canvas,map)`, `
 ### Save & settings (`src/core/save.js`)
 `R.Settings` = `{msgSpeed 0-3, battleSpeed 0-2, bgmVolume, sfxVolume, alwaysDash, windowColor, touchPad, cursorMemory}`;
 `R.Save.saveSettings()`. Slots (async): `R.Save.list() load(slot) save(slot,data) remove(slot)`,
-`exportCode(data)`/`importCode(str)` (ふっかつのじゅもん). 3 slots.
+`exportCode(data)`/`importCode(str)` (冒険の合言葉 — a portable text save code). 3 slots.
 
 ### Rules (`src/systems/rules.js`) and State (`src/systems/state.js`)
 See the source; key functions:
@@ -270,7 +270,7 @@ Start: ユウキ warrior (knows `warrior_power_slash`), ノン priest (`priest_h
 ```
 { name, job, kind:'action'|'reaction'|'support'|'field', jp, desc,
   // action
-  mp?, magic?:bool (silence blocks it; MP cost mods apply), target, effects:[...], fx, fieldUse?:bool,
+  mp?, magic?:bool (silence blocks it; MP cost mods apply), target, effects:[...], fx, fieldUse?:bool, oncePerBattle?:bool,
   // reaction
   trigger:'hitPhys'|'hitMagic'|'hitAny'|'lowHp'|'allyLowHp'|'ko', chance:0..1, react:{...},
   // support / field
@@ -278,7 +278,10 @@ Start: ユウキ warrior (knows `warrior_power_slash`), ノン priest (`priest_h
 }
 ```
 **target**: `enemy` (one) · `enemies` (all) · `group` (every enemy of the chosen target's species) ·
-`random` (effects repeat on random enemies; use `hits`) · `ally` · `allies` · `self` · `ally_dead` · `ally_any`.
+`random` (effects repeat on random enemies; use `hits`) · `ally` · `ally_other` (a living ally other than the user, e.g. 命分け) ·
+`allies` · `self` · `ally_dead` · `ally_any`.
+`oncePerBattle: true` — each unit may use it only once per battle (greyed out afterwards; AI respects it).
+MP cost with `mpCostPct` mods: reductions round down, increases round up, never below 1 for an ability that costs MP.
 
 **effects** (applied in order to each target):
 | type | fields | meaning |
@@ -615,10 +618,19 @@ ship, flags, chests and event `meta` (`needs`/`gives`). Keep `meta` accurate for
 
 ## 8. Menus (owner: menu)
 
-Field menu (B): **どうぐ / アビリティ / そうび / ジョブ / セット / つよさ / ならびかえ / ずかん / ちず(overworld only) / セーブ / せってい**,
+Field menu (B): **どうぐ / アビリティ / 満タン / そうび / ジョブ / セット / つよさ / ならびかえ / ずかん / ちず(overworld only) / セーブ / せってい**,
 with a gold + playtime + next-objective window. Details:
 * **どうぐ**: consumables usable in the field, equipment list, だいじなもの tab; use / すてる.
 * **アビリティ**: field-usable action abilities (heal, cure, revive, teleport, exit, repel).
+* **Repeat use**: after using a targeted item / field ability the target picker stays open on the same member
+  (result shown in a small window; A = use again, B = back); it closes when the item runs out or MP is short.
+  The list keeps its cursor on the item used.
+* **満タン**: heals the whole party with learned field abilities, cheapest MP per HP first (near-ties → the caster
+  with the most MP); cures poison; revives a fallen healer only when no living member can heal. If HP is still
+  missing it asks before using healing items (cheapest one that covers the gap; never rare / % / party-wide items).
+  Ends with a summary window (casts × count and MP, items used, who is still hurt / poisoned / down).
+* **Member switch**: every per-member screen (アビリティ, 装備, ジョブ, おぼえる, セット, 強さ) switches member with
+  L / R (keyboard Q / E, pad shoulders); ←→ also works where it does not move a cursor. Headers show small L / R marks.
 * **そうび**: per character, per slot; shows stat changes (↑ green / ↓ red) for candidates; **さいきょう** (optimize) and **はずす**.
 * **ジョブ**: FFT-style job board: every job in a grid with state (locked shows requirements), job level and ★ mastered;
   change job; **アビリティをおぼえる** (spend that job's JP on its abilities; shows cost, JP available, kind, desc).
@@ -626,10 +638,10 @@ with a gold + playtime + next-objective window. Details:
 * **つよさ**: stats, EXP to next level, job level/JP of current job, equipment, set abilities, resistances.
 * **ずかん**: monsters seen/defeated, sprite, stats once defeated, drop & rare drop names once obtained (else ？？？).
 * **ちず**: overworld map with party and ship markers.
-* **セーブ**: 3 slots + ふっかつのじゅもん export; **せってい**: settings (message speed, battle speed, volumes,
+* **セーブ**: 3 slots + 冒険の合言葉 (text save code) export; **せってい**: settings (message speed, battle speed, volumes,
   always dash, window color, touch pad).
 Shops (buy/sell with equip-ability markers per character and stat preview), inn, church (save / revive / cure poison),
-title screen (はじめから / つづきから / ふっかつのじゅもん / せってい), game over.
+title screen (はじめから / つづきから / 冒険の合言葉 / 設定), game over.
 New game → **name entry** (`R.NameEntry.run()`, src/systems/nameentry.js): grid of ひらがな/カタカナ/英数字 plus a
 DOM keyboard/IME input; no kanji; confirmation screen. Settings also include `padConfirm` ('right' default = ○ /
 Nintendo A confirms; 'bottom') and `autoKeep` (auto battle carries over to the next random encounter; boss/event

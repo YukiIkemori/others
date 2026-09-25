@@ -460,6 +460,7 @@
       const why = this.eng.unusable(u, id);
       if (why === 'silence') return '魔法を封じられている！';
       if (why === 'mp') return 'MPが足りない！';
+      if (why === 'once') return 'この戦いではもう使えない。';
       if (why === 'field') return '戦闘中は使えない。';
       if (why === 'noescape') return 'この戦いからは逃げられない！';
       return ab.desc || '';
@@ -486,7 +487,7 @@
     // ------------------------------------------------------------ targeting
     async pickTarget(u, type) {
       if (type === 'enemy' || type === 'group') return this.pickEnemy(u, type === 'group');
-      if (type === 'ally' || type === 'ally_any' || type === 'ally_dead') return this.pickAlly(u, type);
+      if (type === 'ally' || type === 'ally_any' || type === 'ally_dead' || type === 'ally_other') return this.pickAlly(u, type);
       if (type === 'enemies' || type === 'random' || type === 'allies') return this.confirmAll(type);
       return null; // self needs no choice
     }
@@ -535,11 +536,12 @@
     }
     async pickAlly(u, type) {
       const party = this.eng.party;
-      const ok = (p) => (type === 'ally' ? p.alive : type === 'ally_dead' ? !p.alive : true);
+      const ok = (p) => (type === 'ally' ? p.alive : type === 'ally_other' ? p.alive && p !== u : type === 'ally_dead' ? !p.alive : true);
       const cands = party.filter(ok);
       if (!cands.length) { R.sfx('buzzer'); return BACK; }
-      let t = type === 'ally_dead' ? cands[0] : type === 'ally' ? cands.slice().sort((a, b) => a.hpRate() - b.hpRate())[0] : u;
-      if (type === 'ally' && t.hpRate() >= 1) t = ok(u) ? u : cands[0];
+      const most = type === 'ally' || type === 'ally_other';
+      let t = type === 'ally_dead' ? cands[0] : most ? cands.slice().sort((a, b) => a.hpRate() - b.hpRate())[0] : u;
+      if (most && t.hpRate() >= 1) t = ok(u) ? u : cands[0];
       let i = party.indexOf(t);
       const prevPanel = this.panel;
       this.panel = Object.assign({}, prevPanel, { help: () => { const p = party[i]; return `${p.name}  HP ${p.hp}/${p.mhp}  MP ${p.mp}/${p.mmp}`; }, helpCenter: true });

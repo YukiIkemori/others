@@ -65,6 +65,7 @@
     },
     iconKey(it) {
       if (!it) return null;
+      if (it.icon && G().has('icon:' + it.icon)) return it.icon;
       switch (it.type) {
         case 'weapon': return it.wtype;
         case 'shield': return 'shield';
@@ -110,12 +111,29 @@
       G().text(String(value), x + w, y, { align: 'right', color: o.color || G().C.white });
     },
     /** blinking left/right arrows around a header (member switch hint) */
-    lrArrows(x1, x2, y) {
+    lrArrows(x1, x2, y, keys) {
+      // member switch: small L / R key labels just inside the arrows (they do not blink)
+      if (keys) {
+        G().text('L', x1 + 6, y + 1, { size: 7, color: '#8890b0' });
+        G().text('R', x2 - 6, y + 1, { size: 7, color: '#8890b0', align: 'right' });
+      }
       if (Math.floor(R.Engine.frame / 20) % 2) return;
       for (let i = 0; i < 4; i++) {
         G().rect(x1 + i, y + 4 - i, 1, 1 + i * 2, '#ffffff');
         G().rect(x2 - i, y + 4 - i, 1, 1 + i * 2, '#ffffff');
       }
+    },
+    /** L/R (keyboard Q/E, pad shoulders) member switch: -1, +1 or 0. Safe before 'l'/'r' exist. */
+    memberStep() {
+      const I = In();
+      if (!I || typeof I.pressed !== 'function') return 0;
+      if (I.pressed('l')) return -1;
+      if (I.pressed('r')) return 1;
+      return 0;
+    },
+    /** small 「L/R」 hint (member switch); align 'left' | 'right' | 'center' */
+    lrHint(x, y, align) {
+      G().text('L/R', x, y, { size: 7, color: '#8890b0', align: align || 'left' });
     },
     /** rectangle selection frame (grid cursors) */
     frame(x, y, w, h, color, blink) {
@@ -176,13 +194,22 @@
       if (In().pressed('a')) {
         const c = this.party[this.index];
         if (this.o.valid && !this.o.valid(c)) { R.sfx('buzzer'); return; }
+        if (this.o.use) {
+          // repeat mode: the picker stays open on the same member after each use
+          const r = this.o.use(this.index) || {};
+          if (r.fail) R.sfx('buzzer');
+          if (r.lines && r.lines.length) { this.note = r.lines.slice(-3); this.noteFail = !!r.fail; this.noteAt = R.Engine.frame; }
+          if (r.done) { this.last = r; this.close(this.index); }
+          return;
+        }
         R.sfx('confirm');
         this.close(this.index);
       } else if (In().pressed('b')) { R.sfx('cancel'); this.close(-1); }
     }
     render() {
       const { x, y, w, h } = this;
-      G().window(x, y, w, h, { title: this.o.title });
+      const title = typeof this.o.title === 'function' ? this.o.title() : this.o.title;
+      G().window(x, y, w, h, { title });
       this.party.forEach((c, i) => {
         const ry = y + 8 + i * this.rowH;
         const ok = !this.o.valid || this.o.valid(c);
@@ -205,9 +232,19 @@
         if (i === this.index) G().cursor(x + 5, ry + 8, !this.busy);
       });
       if (this.o.info) this.o.info(x, y + h + 2);
+      if (this.note) {
+        // result of the last use (non-blocking: A uses it again, B closes)
+        const ny = R.H - 6 - (16 + this.note.length * 14 - 2);
+        G().window(4, ny, R.W - 8, 16 + this.note.length * 14 - 2);
+        this.note.forEach((l, i) => K.fitText(l, 15, ny + 8 + i * 14, R.W - 30, { color: this.noteFail ? G().C.gray : G().C.white }));
+      }
     }
   }
-  /** choose a party member → index or -1. o: {title, valid(c), initial, x, y, info(x,y)} */
+  /**
+   * choose a party member → index or -1. o: {title (string | fn), valid(c), initial, x, y, info(x,y),
+   * use(i) → {lines, fail, done}}. With `use` the picker stays open after each pick (repeat use) and
+   * shows the returned lines below; it closes on B or when use() returns done.
+   */
   Menu.pickMember = (o) => R.Engine.run(new PickerLayer(o || {}));
 
   // ------------------------------------------------------------ field effects
@@ -215,10 +252,10 @@
   const hasType = (effects, t) => targetsOf(effects).some((e) => e.type === t);
 
   /** amount of a heal effect in the field (matches battle when R.Battle.healAmount exists) */
-  function healAmount(eff, user, target, isItem) {
+  function healAmount(eff, user, target, isItem, expect) {
     const st = R.Rules.stats(target);
     if (eff.pct) return Math.ceil(st.hp * eff.pct);
-    if (R.Battle && typeof R.Battle.healAmount === 'function') {
+    if (!expect && R.Battle && typeof R.Battle.healAmount === 'function') {
       try {
         const v = R.Battle.healAmount(user, target, eff, { item: isItem, field: true });
         if (typeof v === 'number' && isFinite(v)) return Math.max(0, Math.round(v));
@@ -228,7 +265,13 @@
     const us = user ? R.Rules.stats(user) : { mnd: 0 };
     const scale = eff.scale != null ? eff.scale : isItem ? 0 : 0.6;
     const bonus = isItem ? (um.itemPct || 0) : (um.healPct || 0);
-    return Math.max(1, Math.round(((eff.power || 0) + us.mnd * scale) * U.rf(0.95, 1.05) * (1 + bonus / 100)));
+    return Math.max(1, Math.round(((eff.power || 0) + us.mnd * scale) * (expect ? 1 : U.rf(0.95, 1.05)) * (1 + bonus / 100)));
+  }
+  /** expected HP a def ({effects}) heals on target (no randomness; 0 if it does not heal) */
+  function expectHeal(def, user, target, isItem) {
+    let n = 0;
+    for (const e of targetsOf(def && def.effects)) if (e.type === 'heal') n += healAmount(e, user, target, isItem, true);
+    return n;
   }
 
   /** would effects change anything for c? (prevents wasting items) */
@@ -338,14 +381,44 @@
   };
 
   // ------------------------------------------------------------ use flows
-  const needsPick = (t) => t === 'ally' || t === 'ally_dead' || t === 'ally_any';
-  function validFor(target, effects) {
+  const needsPick = (t) => t === 'ally' || t === 'ally_dead' || t === 'ally_any' || t === 'ally_other';
+  function validFor(target, effects, user) {
     return (c) => {
+      if (target === 'ally_other' && c === user) return false;
       if (target === 'ally_dead') return c.hp <= 0;
       if (target === 'ally_any') return true;
       if (hasType(effects, 'revive') && !effects.some((e) => e.type !== 'revive')) return c.hp <= 0;
       return c.hp > 0;
     };
+  }
+
+  /**
+   * Repeat-use target picker (item or ability): stays open on the same member after each use
+   * so the same thing can be used again at once; closes on B or when it can no longer be paid.
+   * spend() pays one use, canPay() says whether another use is possible.
+   * → true if used at least once
+   */
+  async function repeatPick(o) {
+    const { eff, valid, user, verbLine, canPay, spend, def, isItem } = o;
+    const party = R.Game.party;
+    let used = false, lastLines = null, done = false;
+    await Menu.pickMember({
+      title: o.title, valid, initial: o.initial,
+      use: (i) => {
+        const c = party[i];
+        if (!affects(eff, c)) return { fail: true, lines: [c.name + 'には今は使う必要がないようだ。'] };
+        spend();
+        const r = Menu.applyFieldEffect(def, user, [c], { item: isItem });
+        used = true;
+        R.sfx(hasType(eff, 'revive') ? 'revive' : hasType(eff, 'grow') ? 'buff' : 'heal');
+        lastLines = [verbLine].concat(r.lines);
+        done = !canPay();
+        return { lines: lastLines, done };
+      },
+    });
+    // the last use emptied the stock / MP: show its result before going back to the list
+    if (done && lastLines) await K.msg(lastLines.concat(o.outLine ? [o.outLine] : []).slice(0, 4).join('\n'));
+    return used;
   }
 
   /** choose a teleport destination → location id or null */
@@ -422,27 +495,18 @@
       await K.msg(lead.name + 'は' + it.name + 'を使った！\n' + r.lines.join('\n'));
       return true;
     }
-    // pick a target, repeatedly while the item lasts (FF-style quick healing)
-    let used = false;
-    const valid = validFor(u.target, eff);
-    const needy = () => R.Game.party.findIndex((c) => valid(c) && affects(eff, c));
-    let last = needy();
+    // pick a target, repeatedly while the item lasts (the picker stays open on the same member)
+    const valid = validFor(u.target, eff, lead);
+    const last = R.Game.party.findIndex((c) => valid(c) && affects(eff, c));
     if (last < 0) { await K.msg('今は使う必要がないようだ。'); return false; }
-    for (;;) {
-      if (!R.State.count(id)) break;
-      if (used) { const k = needy(); if (k < 0) break; if (!affects(eff, R.Game.party[last])) last = k; } // nobody left who needs it
-      const i = await Menu.pickMember({ title: it.name + ' ×' + R.State.count(id), valid, initial: last });
-      if (i < 0) break;
-      last = i;
-      const c = R.Game.party[i];
-      if (!affects(eff, c)) { R.sfx('buzzer'); await K.msg('今は使う必要がないようだ。'); continue; }
-      R.State.removeItem(id, 1);
-      const r = Menu.applyFieldEffect(u, lead, [c], { item: true });
-      used = true;
-      R.sfx(hasType(eff, 'revive') ? 'revive' : hasType(eff, 'grow') ? 'buff' : 'heal');
-      await K.msg(lead.name + 'は' + it.name + 'を使った！\n' + r.lines.join('\n'));
-    }
-    return used;
+    return repeatPick({
+      eff, valid, user: lead, def: u, isItem: true, initial: last,
+      title: () => it.name + ' ×' + R.State.count(id),
+      verbLine: lead.name + 'は' + it.name + 'を使った！',
+      canPay: () => R.State.count(id) > 0,
+      spend: () => R.State.removeItem(id, 1),
+      outLine: it.name + 'はもうない。',
+    });
   };
 
   /** can c use ability ab in the field right now? → '' or reason */
@@ -491,39 +555,226 @@
       await K.msg(c.name + 'は' + ab.name + verb + '\n' + r.lines.join('\n'));
       return true;
     }
-    let used = false;
-    const valid = validFor(ab.target, eff);
-    const needy = () => R.Game.party.findIndex((t) => valid(t) && affects(eff, t));
+    const valid = validFor(ab.target, eff, c);
     // the cursor starts on someone who needs it (the most hurt for heals), not on the caster
     const hurt = R.Game.party.map((t, i) => [t, i]).filter(([t]) => valid(t) && affects(eff, t))
       .sort((a, b) => a[0].hp / R.Rules.stats(a[0]).hp - b[0].hp / R.Rules.stats(b[0]).hp);
-    let last = hurt.length ? hurt[0][1] : -1;
+    const last = hurt.length ? hurt[0][1] : -1;
     if (last < 0) { await K.msg('今は使う必要がないようだ。'); return false; }
-    for (;;) {
-      if (c.mp < cost || c.hp <= 0) break;
-      if (used) { const k = needy(); if (k < 0) break; if (!affects(eff, R.Game.party[last])) last = k; } // nobody left who needs it
-      const i = await Menu.pickMember({ title: ab.name + (cost ? ' MP' + cost : ''), valid, initial: last });
-      if (i < 0) break;
-      last = i;
-      const t = R.Game.party[i];
-      if (!affects(eff, t)) { R.sfx('buzzer'); await K.msg('今は使う必要がないようだ。'); continue; }
-      c.mp -= cost;
-      const r = Menu.applyFieldEffect(ab, c, [t], {});
-      used = true;
-      R.sfx(hasType(eff, 'revive') ? 'revive' : 'heal');
-      await K.msg(c.name + 'は' + ab.name + verb + '\n' + r.lines.join('\n'));
-    }
-    return used;
+    return repeatPick({
+      eff, valid, user: c, def: ab, isItem: false, initial: last,
+      title: () => ab.name + (cost ? ' MP' + cost : ''),
+      verbLine: c.name + 'は' + ab.name + verb,
+      canPay: () => c.hp > 0 && c.mp >= cost,
+      spend: () => { c.mp -= cost; },
+      outLine: cost ? c.name + 'はMPが足りなくなった。' : '',
+    });
   };
+
+  // ------------------------------------------------------------ 満タン (field auto-heal)
+  const missing = (c) => (c.hp > 0 ? Math.max(0, R.Rules.stats(c).hp - c.hp) : 0);
+  const HEAL_TARGETS = { ally: 1, ally_other: 1, ally_any: 1, self: 1, allies: 1 };
+  const onlyHeals = (def) => {
+    const e = targetsOf(def && def.effects);
+    return HEAL_TARGETS[def.target] && e.some((x) => x.type === 'heal') && e.every((x) => x.type === 'heal' || x.type === 'cure') && !e.some((x) => x.hpCost);
+  };
+  const curesPoison = (def) => !!HEAL_TARGETS[def.target] && targetsOf(def && def.effects).some((x) => x.type === 'cure' && (x.statuses === 'all' || (x.statuses || []).includes('poison')));
+  /** field abilities of c that pass `pred` (HP heals / poison cures / revives) */
+  const fieldAbs = (c, pred) => (R.Rules.fieldActions(c) || []).filter((id) => DB.abilities[id] && pred(DB.abilities[id]));
+  const plainHeal = (u) => onlyHeals(u) && !targetsOf(u.effects).some((x) => x.pct);
+  /** single-target field items for 満タン: plain heals (no %/revive/MP, not rare) or poison cures */
+  function fieldItems(pred) {
+    return R.State.items((it) => it.type === 'consumable' && !it.rare && it.use && it.use.field && (it.use.target === 'ally' || it.use.target === 'ally_any') && pred(it.use))
+      .map((e) => e.id);
+  }
+
+  /**
+   * Heal the whole party as cheaply as possible (the 満タン command).
+   * Phase 'abilities': poison cures, then HP heals by the best HP per MP (ties → the caster with
+   * the most MP left); a fallen healer is revived only when no living member can heal.
+   * Phase 'items' (only when asked): the cheapest item that covers the gap, poison cures.
+   * → log {abs:{key:{c, id, n, mp}}, items:{id:n}, cured:[names], revived:[names]}
+   */
+  Menu.autoHeal = function (o) {
+    const opts = o || {};
+    const log = opts.log || { abs: {}, items: {}, cured: [], revived: [] };
+    const party = R.Game.party;
+    const alive = () => party.filter((c) => c.hp > 0);
+    const note = (c, id, cost) => {
+      const k = c.id + ':' + id;
+      const e = log.abs[k] || (log.abs[k] = { c, id, n: 0, mp: 0 });
+      e.n++; e.mp += cost;
+    };
+    const cast = (c, id, targets) => {
+      const ab = DB.abilities[id], cost = R.Rules.mpCost(c, id);
+      c.mp -= cost;
+      const had = targets.filter((t) => t.status && t.status.poison);
+      Menu.applyFieldEffect(ab, c, targets, {});
+      for (const t of had) if (!t.status.poison && !log.cured.includes(t.name)) log.cured.push(t.name);
+      note(c, id, cost);
+    };
+    const pay = (c, id) => c.hp > 0 && c.mp >= R.Rules.mpCost(c, id);
+    if (!opts.items) {
+      for (let guard = 0; guard < 300; guard++) {
+        // 1) poison
+        const sick = alive().filter((c) => c.status && c.status.poison);
+        let done = false;
+        if (sick.length) {
+          let best = null;
+          for (const c of alive()) {
+            for (const id of fieldAbs(c, curesPoison)) {
+              if (!pay(c, id)) continue;
+              const ab = DB.abilities[id], cost = R.Rules.mpCost(c, id);
+              const tg = ab.target === 'allies' ? sick : ab.target === 'self' ? (sick.includes(c) ? [c] : []) : sick.filter((t) => ab.target !== 'ally_other' || t !== c).slice(0, 1);
+              if (!tg.length) continue;
+              const v = tg.length / Math.max(cost, 0.5);
+              if (!best || v > best.v * 1.1 || (v > best.v / 1.1 && c.mp > best.c.mp)) best = { c, id, tg, v };
+            }
+          }
+          if (best) { cast(best.c, best.id, best.tg); done = true; }
+        }
+        if (done) continue;
+        // 2) HP
+        const need = alive().filter((c) => missing(c) > 0);
+        if (!need.length) break;
+        let best = null;
+        for (const c of alive()) {
+          for (const id of fieldAbs(c, onlyHeals)) {
+            if (!pay(c, id)) continue;
+            const ab = DB.abilities[id], cost = R.Rules.mpCost(c, id);
+            const sets = ab.target === 'allies' ? [alive()] : ab.target === 'self' ? [[c]]
+              : need.filter((t) => ab.target !== 'ally_other' || t !== c).map((t) => [t]);
+            for (const tg of sets) {
+              const gain = tg.reduce((sum, t) => sum + Math.min(expectHeal(ab, c, t, false), missing(t)), 0);
+              if (gain <= 0) continue;
+              const v = gain / Math.max(cost, 0.5);
+              // cheapest MP per HP; near-equal ones → the caster with the most MP left, then the bigger heal
+              if (!best || v > best.v * 1.1 || (v > best.v / 1.1 && (c.mp > best.c.mp || (c === best.c && gain > best.gain)))) best = { c, id, tg, v, gain };
+            }
+          }
+        }
+        if (best) { cast(best.c, best.id, best.tg); continue; }
+        // 3) HP still missing and nobody alive can heal it: revive a fallen healer who has the MP (only then)
+        const fallen = party.find((c) => c.hp <= 0 && fieldAbs(c, onlyHeals).some((id) => c.mp >= R.Rules.mpCost(c, id)));
+        if (!fallen) break;
+        let rv = null;
+        for (const c of alive()) for (const id of fieldAbs(c, (ab) => targetsOf(ab.effects).some((e) => e.type === 'revive'))) {
+          const ab = DB.abilities[id];
+          if (ab.target === 'allies' || ab.target === 'self' || !pay(c, id)) continue;
+          if (!rv || R.Rules.mpCost(c, id) < rv.cost) rv = { c, id, cost: R.Rules.mpCost(c, id) };
+        }
+        if (!rv) break;
+        cast(rv.c, rv.id, [fallen]);
+        if (fallen.hp > 0) log.revived.push(fallen.name);
+      }
+      return log;
+    }
+    // items
+    const user = itemUser();
+    for (let guard = 0; guard < 300; guard++) {
+      const sick = alive().find((c) => c.status && c.status.poison);
+      if (sick) {
+        const ids = fieldItems(curesPoison).filter((id) => R.State.count(id) > 0)
+          .sort((a, b) => (DB.items[a].price || 0) - (DB.items[b].price || 0));
+        if (ids.length) {
+          R.State.removeItem(ids[0], 1);
+          Menu.applyFieldEffect(DB.items[ids[0]].use, user, [sick], { item: true });
+          log.items[ids[0]] = (log.items[ids[0]] || 0) + 1;
+          if (!sick.status.poison && !log.cured.includes(sick.name)) log.cured.push(sick.name);
+          continue;
+        }
+      }
+      const need = alive().filter((c) => missing(c) > 0).sort((a, b) => missing(b) - missing(a));
+      if (!need.length) break;
+      const t = need[0], gap = missing(t);
+      const cands = fieldItems(plainHeal).filter((id) => R.State.count(id) > 0)
+        .map((id) => ({ id, h: expectHeal(DB.items[id].use, user, t, true), p: DB.items[id].price || 0 }));
+      if (!cands.length) break;
+      const cover = cands.filter((x) => x.h >= gap).sort((a, b) => a.p - b.p || a.h - b.h);
+      const pick = cover[0] || cands.sort((a, b) => b.h - a.h || a.p - b.p)[0];
+      R.State.removeItem(pick.id, 1);
+      Menu.applyFieldEffect(DB.items[pick.id].use, user, [t], { item: true });
+      log.items[pick.id] = (log.items[pick.id] || 0) + 1;
+    }
+    return log;
+  };
+
+  /** 満タン command: abilities first, items only when the player agrees; then a summary */
+  Menu.fullHeal = async function () {
+    const party = R.Game.party;
+    const hurt = () => party.some((c) => missing(c) > 0 || (c.hp > 0 && c.status && c.status.poison));
+    if (!hurt()) { await K.msg('みんな元気いっぱいだ。'); return false; }
+    const log = Menu.autoHeal();
+    const casts = Object.keys(log.abs).length;
+    if (casts) R.sfx('heal');
+    let asked = false;
+    if (hurt() && (fieldItems(plainHeal).length || (party.some((c) => c.hp > 0 && c.status && c.status.poison) && fieldItems(curesPoison).length))) {
+      asked = true;
+      const why = casts ? 'アビリティだけでは回復しきれなかった。' : '回復できるアビリティがない。';
+      if (await K.yesno(why + '\n道具も使いますか？')) {
+        const before = JSON.stringify(log.items);
+        Menu.autoHeal({ items: true, log });
+        if (JSON.stringify(log.items) !== before) R.sfx('heal');
+      }
+    }
+    await summary(log, asked);
+    return casts > 0 || Object.keys(log.items).length > 0;
+  };
+
+  async function summary(log, asked) {
+    const party = R.Game.party;
+    const lines = [];
+    for (const k of Object.keys(log.abs)) {
+      const e = log.abs[k];
+      lines.push({ t: e.c.name + '：' + abName(e.id) + '×' + e.n, r: e.mp ? 'MP ' + e.mp : '' });
+    }
+    for (const id of Object.keys(log.items)) lines.push({ t: '道具：' + itemName(id) + '×' + log.items[id], r: '残り' + R.State.count(id) });
+    if (!lines.length) lines.push({ t: asked ? '何も使わなかった。' : '回復する手段がない。', gray: true });
+    const foot = [];
+    if (log.revived.length) foot.push({ t: log.revived.join('、') + 'が生き返った！', c: G().C.green });
+    if (log.cured.length) foot.push({ t: log.cured.join('、') + 'の毒が治った！', c: G().C.green });
+    const left = party.filter((c) => missing(c) > 0);
+    const dead = party.filter((c) => c.hp <= 0);
+    const sick = party.filter((c) => c.hp > 0 && c.status && c.status.poison);
+    if (!left.length && !sick.length) foot.push({ t: dead.length ? '動ける仲間のHPは満タンになった！' : '全員のHPが満タンになった！', c: G().C.yellow });
+    else if (left.length) foot.push({ t: left.map((c) => c.name).join('、') + 'は回復しきれなかった。', c: G().C.hpLow });
+    if (sick.length) foot.push({ t: sick.map((c) => c.name).join('、') + 'は毒のままだ。', c: G().C.purple });
+    if (dead.length) foot.push({ t: dead.map((c) => c.name).join('、') + 'は倒れている。', c: G().C.dead });
+    await R.Engine.run(new SummaryLayer(lines, foot));
+  }
+
+  class SummaryLayer extends Screen {
+    constructor(lines, foot) { super(); this.lines = lines.slice(0, 9); this.foot = foot.slice(0, 4); }
+    input() { if (In().pressed('a') || In().pressed('b')) { R.sfx('confirm'); this.close(); } }
+    render() {
+      const x = 4, w = R.W - 8;
+      const h = 22 + this.lines.length * 14 + (this.foot.length ? 6 + this.foot.length * 14 : 0);
+      const y = Math.max(4, R.H - 6 - h);
+      G().window(x, y, w, h, { title: '満タン' });
+      let yy = y + 10;
+      for (const l of this.lines) {
+        K.fitText(l.t, x + 12, yy, w - 80, { color: l.gray ? G().C.gray : G().C.white });
+        if (l.r) G().text(l.r, x + w - 12, yy, { align: 'right', color: G().C.cyan });
+        yy += 14;
+      }
+      if (this.foot.length) {
+        yy += 2;
+        G().rect(x + 8, yy, w - 16, 1, '#50587c');
+        yy += 4;
+        for (const f of this.foot) { K.fitText(f.t, x + 12, yy, w - 24, { color: f.c }); yy += 14; }
+      }
+      if (Math.floor(R.Engine.frame / 20) % 2) G().cursor(x + w - 14, y + h - 12, true);
+    }
+  }
 
   // ------------------------------------------------------------ main menu
   const COMMANDS = [
     { id: 'items', label: '道具' }, { id: 'abilities', label: 'アビリティ' },
-    { id: 'equip', label: '装備' }, { id: 'jobs', label: 'ジョブ' },
-    { id: 'set', label: 'セット' }, { id: 'status', label: '強さ' },
-    { id: 'order', label: '並び替え' }, { id: 'book', label: '図鑑' },
-    { id: 'map', label: '地図' }, { id: 'save', label: 'セーブ' },
-    { id: 'settings', label: '設定' },
+    { id: 'fullheal', label: '満タン' }, { id: 'equip', label: '装備' },
+    { id: 'jobs', label: 'ジョブ' }, { id: 'set', label: 'セット' },
+    { id: 'status', label: '強さ' }, { id: 'order', label: '並び替え' },
+    { id: 'book', label: '図鑑' }, { id: 'map', label: '地図' },
+    { id: 'save', label: 'セーブ' }, { id: 'settings', label: '設定' },
   ];
   const onWorld = () => !!(R.Field && R.Field.map && R.Field.map.isWorld);
   let lastCmd = 0;
@@ -552,6 +803,7 @@
         set: Menu.setScreen, status: Menu.statusScreen, order: Menu.orderScreen, book: Menu.bookScreen,
         save: Menu.saveScreen, settings: Menu.settings,
       };
+      if (cmd === 'fullheal') { await Menu.fullHeal(); return; }
       if (cmd === 'map') {
         this.hidden = true;
         try { await R.Minimap.open(); } finally { this.hidden = false; }

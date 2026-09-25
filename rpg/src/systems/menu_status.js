@@ -91,9 +91,10 @@
       get c() { return R.Game.party[this.m]; }
       input() {
         const d = In().dirRepeat();
-        if (d === 'left' || d === 'right') {
+        const lr = K.memberStep();
+        if (d === 'left' || d === 'right' || lr) {
           const n = R.Game.party.length;
-          this.m = (this.m + (d === 'left' ? n - 1 : 1)) % n;
+          this.m = (this.m + ((lr || (d === 'left' ? -1 : 1)) < 0 ? n - 1 : 1)) % n;
           lastMember = this.m;
           R.sfx('cursor');
         } else if (d === 'up' || d === 'down') {
@@ -117,7 +118,7 @@
         G().text(K.jobName(c.job) + ' Lv' + R.Rules.jobLevel(c, c.job), 42, 24, { color: G().C.cyan });
         G().text('JP ' + ((c.jobs[c.job] && c.jobs[c.job].jp) || 0), 240, 24, { align: 'right', color: G().C.yellow });
         G().text((this.page + 1) + '/' + PAGES.length, 240, 10, { align: 'right', color: G().C.gray });
-        K.lrArrows(8, 248, 18);
+        K.lrArrows(8, 248, 18, true);
         if (this.page === 0) this.page1(c, st);
         else if (this.page === 1) this.page2(c, st);
         else this.page3(c, st);

@@ -171,9 +171,10 @@
       }
       input() {
         const d = In().dirRepeat();
-        if (d === 'left' || d === 'right') {
+        const lr = Menu.kit.memberStep();
+        if (d === 'left' || d === 'right' || lr) {
           const n = R.Game.party.length;
-          this.m = (this.m + (d === 'left' ? n - 1 : 1)) % n;
+          this.m = (this.m + ((lr || (d === 'left' ? -1 : 1)) < 0 ? n - 1 : 1)) % n;
           lastMember = this.m;
           R.sfx('cursor');
           this.refresh(false);
@@ -213,7 +214,7 @@
         G().text(K.jobName(c.job), 44, 23, { color: G().C.cyan });
         G().text('HP', 150, 10); G().text(c.hp + '/' + st.hp, 236, 10, { align: 'right', color: K.condColor(c) === G().C.purple ? G().C.white : K.condColor(c) });
         G().text('MP', 150, 23); G().text(c.mp + '/' + st.mp, 236, 23, { align: 'right' });
-        K.lrArrows(10, 246, 17);
+        K.lrArrows(10, 246, 17, true);
         this.list.draw();
         if (!this.abs.length) G().text('使えるアビリティがない。', 20, 50, { color: G().C.gray });
         G().window(4, 170, 248, 46);

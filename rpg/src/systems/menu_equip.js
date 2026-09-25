@@ -70,9 +70,10 @@
       input() {
         if (this.mode === 'cand') return this.inputCand();
         const d = In().dirRepeat();
-        if (d === 'left' || d === 'right') {
+        const lr = Menu.kit.memberStep();
+        if (d === 'left' || d === 'right' || lr) {
           const n = R.Game.party.length;
-          this.m = (this.m + (d === 'left' ? n - 1 : 1)) % n;
+          this.m = (this.m + ((lr || (d === 'left' ? -1 : 1)) < 0 ? n - 1 : 1)) % n;
           lastMember = this.m;
           R.sfx('cursor');
           return;
@@ -156,7 +157,7 @@
           G().text(c.name, 42, 11, { color: K.condColor(c) });
           G().text('Lv' + c.level, 42, 25);
           G().text(K.jobName(c.job), 150, 11, { color: G().C.cyan });
-          K.lrArrows(10, 246, 20);
+          K.lrArrows(10, 246, 20, true);
         }
         // slots
         if (cd) {

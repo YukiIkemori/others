@@ -88,10 +88,11 @@
       input() {
         if (!this.rows.length) { if (In().pressed('b') || In().pressed('a')) { R.sfx('cancel'); this.close(); } return; }
         const d = In().dirRepeat();
-        // Shift (dash) switches member from anywhere on the board
-        if (In().pressed('dash')) {
+        // L/R (or Shift) switches member from anywhere on the board
+        const lr = K.memberStep() || (In().pressed('dash') ? 1 : 0);
+        if (lr) {
           const n = R.Game.party.length;
-          this.m = (this.m + 1) % n;
+          this.m = (this.m + (lr < 0 ? n - 1 : 1)) % n;
           lastMember = this.m;
           R.sfx('cursor');
           return;
@@ -142,7 +143,14 @@
         const w = Math.ceil(Math.max(...opts.map((o) => G().textWidth(o.label)))) + 32; // sized to the longest label
         const i = await R.UI.choose(opts, { x: cx > 120 ? 8 : 248 - w, y: 58, w, initial: cur ? 1 : 0 });
         if (i === 0) await doChangeJob(c, job);
-        else if (i === 1) { this.hidden = true; try { await Menu.learnScreen(c, job); } finally { this.hidden = false; } }
+        else if (i === 1) {
+          this.hidden = true;
+          let who = null;
+          try { who = await Menu.learnScreen(c, job); } finally { this.hidden = false; }
+          // L/R inside おぼえる may have switched member: the board follows
+          const k = who && typeof who === 'object' ? R.Game.party.indexOf(who) : -1;
+          if (k >= 0 && k !== this.m) { this.m = k; lastMember = k; }
+        }
       }
       render() {
         const c = this.c;
@@ -258,6 +266,19 @@
       }
       input() {
         const d = In().dirRepeat();
+        const lr = K.memberStep();
+        if (lr) {
+          // L/R: next member, on the same job when they have it (else their current job)
+          const party = R.Game.party, n = party.length;
+          const k = (party.indexOf(this.c) + (lr < 0 ? n - 1 : 1)) % n;
+          this.c = party[k];
+          lastMember = k;
+          this.jobs = R.Rules.unlockedJobs(this.c);
+          if (!this.jobs.includes(this.job)) this.job = this.c.job;
+          R.sfx('cursor');
+          this.refresh(false);
+          return;
+        }
         if ((d === 'left' || d === 'right') && this.jobs.length > 1) {
           let k = this.jobs.indexOf(this.job);
           k = (k + (d === 'left' ? this.jobs.length - 1 : 1)) % this.jobs.length;
@@ -267,7 +288,7 @@
           return;
         }
         const r = this.list.update();
-        if (r === 'cancel') this.close();
+        if (r === 'cancel') this.close(this.c);
         else if (r === 'select') this.flow(() => this.learn(this.list.item.id));
       }
       async learn(id) {
@@ -308,8 +329,9 @@
         const rec = c.jobs[this.job] || { jp: 0 };
         G().window(4, 4, 248, 30);
         K.drawSprite(c, 24, 30, { job: this.job, frame: Math.floor(R.Engine.frame / 20) });
-        G().text(j ? j.name : '', 38, 11, { color: R.Rules.isMastered(c, this.job) ? G().C.gold : G().C.white });
-        G().text('JP', 162, 11, { color: G().C.gray });
+        K.fitText(c.name, 38, 11, 56, { color: K.condColor(c) });
+        K.fitText(j ? j.name : '', 98, 11, 62, { color: R.Rules.isMastered(c, this.job) ? G().C.gold : G().C.cyan });
+        G().text('JP', 166, 11, { color: G().C.gray });
         G().text(String(rec.jp), 240, 11, { align: 'right', color: G().C.yellow });
         if (this.jobs.length > 1) K.lrArrows(10, 246, 13);
         this.list.draw();
@@ -352,9 +374,10 @@
       input() {
         if (this.opt) return this.inputOpt();
         const d = In().dirRepeat();
-        if (d === 'left' || d === 'right') {
+        const lr = K.memberStep();
+        if (d === 'left' || d === 'right' || lr) {
           const n = R.Game.party.length;
-          this.m = (this.m + (d === 'left' ? n - 1 : 1)) % n;
+          this.m = (this.m + ((lr || (d === 'left' ? -1 : 1)) < 0 ? n - 1 : 1)) % n;
           lastMember = this.m;
           R.sfx('cursor');
           return;
@@ -417,7 +440,7 @@
         K.drawSprite(c, 24, 30, { frame: Math.floor(R.Engine.frame / 20) });
         G().text(c.name, 38, 11, { color: K.condColor(c) });
         G().text(K.jobName(c.job), 104, 11, { color: G().C.cyan });
-        K.lrArrows(10, 246, 13);
+        K.lrArrows(10, 246, 13, true);
         G().window(4, 36, 248, 16 + SET_ROWS.length * 24 - 6);
         SET_ROWS.forEach((r, i) => {
           const y = 44 + i * 24;

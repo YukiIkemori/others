@@ -4,7 +4,7 @@
 // built the way a player would have it at each point of the game.
 //
 //   node tools/sim_balance.js                 everything (≈1 min)
-//   node tools/sim_balance.js --only party,zones,bosses,crawl,campaign,loot
+//   node tools/sim_balance.js --only party,zones,echo,bosses,crawl,campaign,loot
 //   node tools/sim_balance.js --zones w_start,d_wind1 --n 300 --boss boss_wind --seed 7
 //   options: --both (zones also at the leave level) --verbose (every group) --grind (campaign fights until the plan level)
 //
@@ -27,7 +27,7 @@ const { DB, U, Rules, State } = R;
 
 const argv = process.argv.slice(2);
 const arg = (k, d) => { const i = argv.indexOf('--' + k); return i >= 0 ? argv[i + 1] : d; };
-const ONLY = arg('only', 'party,zones,bosses,campaign,crawl,loot').split(',');
+const ONLY = arg('only', 'party,zones,echo,bosses,campaign,crawl,loot').split(',');
 const N = +arg('n', 200);
 const SEED = +arg('seed', 1234);
 const ZONE_FILTER = arg('zones', null) ? arg('zones').split(',') : null;
@@ -283,6 +283,36 @@ if (ONLY.includes('zones')) {
       }
     }
   });
+}
+
+// ================================================================= echo
+// Request K: 風のこだま's all-party wind in the first dungeon felt brutal. The worst groups
+// with it, at Lv3–5 (Lv3 also in Regnas' cheaper gear), incl. an ambush round
+// (the monsters act alone first): no one-round wipes, and normal fights stay easy.
+if (ONLY.includes('echo')) {
+  console.log('\n=== WIND ECHO (風のこだま) ===  (ambush = monsters act alone in round 1)');
+  const GROUPS = [
+    [['kaze_kodama', 2, 2], ['hora_bat', 1, 1]],
+    [['kaze_kodama', 2, 2], ['doku_take', 2, 2]],
+    [['kaze_kodama', 2, 2], ['iwa_jelly', 1, 1]],
+    [['kaze_kodama', 3, 3]],
+  ];
+  for (const [si, L, tag] of [[0, 3, 'regnas gear'], [1, 3, 'milt gear'], [2, 4, ''], [2, 5, '']]) {
+    const party = buildParty(si, L), inv = bagFor(si);
+    for (const g of GROUPS) {
+      const n = Math.max(100, N / 2);
+      let wipe1 = 0, hp1 = 0, worst = 0;
+      for (let i = 0; i < n; i++) {
+        const r = R.Battle.simulate({ party, inv, mons: g, surprise: 'ambush', maxRounds: 1, seed: SEED * 131 + i * 17 });
+        if (r.result === 'lose') wipe1++;
+        hp1 += 100 - r.partyHpPct; worst = Math.max(worst, 100 - r.partyHpPct);
+      }
+      const full = runGroup(party, inv, g, n);
+      console.log(`Lv${L} ${pad(tag, 12)} ${pad(groupLabel({ mons: g }), 30)} ambush round: hp-${padL(f0(hp1 / n), 3)}% (worst ${padL(f0(worst), 3)}%) wipe ${f0((100 * wipe1) / n)}%  |  fight: win ${padL(f0(full.winPct), 3)}% hp-${padL(f0(full.hpLost), 3)}% dead ${f1(full.deaths)}`);
+      if (wipe1) W(`echo: ${groupLabel({ mons: g })} wipes a Lv${L} party in one ambush round ${f0((100 * wipe1) / n)}% of the time`);
+      if (full.winPct < 97) W(`echo: ${groupLabel({ mons: g })} vs Lv${L}${tag ? ' (' + tag + ')' : ''}: win ${f0(full.winPct)}%`);
+    }
+  }
 }
 
 // ================================================================ bosses

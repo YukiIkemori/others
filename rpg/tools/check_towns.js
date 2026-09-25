@@ -265,6 +265,14 @@ window.TOWNPNG = function (id, flags, items) {
     if (!g) { const t = m.tileAt(x, y); if (t === 'void') continue; g = m.theme && G.has('tile:' + m.theme + ':' + t) ? G.get('tile:' + m.theme + ':' + t) : G.get('tile:' + t); }
     g = one(g); if (g) c.drawImage(g, x * 16, y * 16);
   }
+  // decor layer (second pass: tall props overlap the row above)
+  if (m.decor) for (let y = 0; y < m.h; y++) for (let x = 0; x < m.w; x++) {
+    const d = m.decorAt(x, y);
+    if (!d) continue;
+    let g = R.Art && R.Art.decorTile ? R.Art.decorTile(m, x, y) : null;
+    if (!g && G.has('decor:' + d)) g = G.get('decor:' + d);
+    g = one(g); if (g) c.drawImage(g, x * 16 + ((16 - g.width) >> 1), y * 16 + 16 - g.height);
+  }
   const chest = G.get('obj:chest');
   for (const ch of m.chests) if (ch.present) c.drawImage(one(chest), ch.x * 16, ch.y * 16);
   const list = m.npcs.filter((n) => n.present).sort((a, b) => a.y - b.y);

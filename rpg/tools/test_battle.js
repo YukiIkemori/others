@@ -969,5 +969,61 @@ sec('qa fixes');
   }
 }
 
+sec('oncePerBattle / ally_other / mpCost');
+{
+  // test-only abilities (added to the tb_caster job list)
+  DB.abilities.tb_once = { name: '一度きり', job: 'tb_caster', kind: 'action', jp: 1, desc: 'テスト', mp: 0, target: 'ally_any', oncePerBattle: true, effects: [{ type: 'healMp', power: 5, hpCost: 0.1 }], fx: 'mp' };
+  DB.abilities.tb_share = { name: '命分けテスト', job: 'tb_caster', kind: 'action', jp: 1, desc: 'テスト', mp: 0, target: 'ally_other', effects: [{ type: 'heal', pct: 0.6, hpCost: 0.25 }], fx: 'heal' };
+  DB.jobs.tb_caster.abilities.push('tb_once', 'tb_share');
+  const e = mk({ mons: ['tb_boss'] });
+  const non = P(e, 1);
+  non.c.jobs.tb_caster.learned.push('tb_once', 'tb_share');
+  ok(!e.unusable(non, 'tb_once'), 'oncePerBattle usable at first');
+  ok(R.BattleAI.abilityOptions(e, non).some((o) => o.id === 'tb_once'), 'AI sees the once ability at first');
+  let ev = use(e, non, 'tb_once', P(e, 2));
+  ok(e.unusable(non, 'tb_once') === 'once', 'oncePerBattle: not selectable again');
+  ok(!R.BattleAI.abilityOptions(e, non).some((o) => o.id === 'tb_once'), 'AI skips a used once ability');
+  const mp0 = P(e, 2).mp;
+  ev = use(e, non, 'tb_once', P(e, 2));
+  ok(said(ev, 'もう使えない') && P(e, 2).mp === mp0, 'a queued second use does nothing');
+  ok(!e.unusable(P(e, 2), 'tb_once') || e.unusable(P(e, 2), 'tb_once') !== 'once', 'once is per unit');
+  // monsters too
+  const m = Mo(e, 0);
+  m.d = Object.assign({}, m.d, { actions: [{ id: 'tb_once', w: 1 }] });
+  ok(R.BattleAI.monster(e, m).id === 'tb_once', 'monster may use a once ability');
+  m.used.tb_once = true;
+  ok(R.BattleAI.monster(e, m).type === 'attack', 'monster AI respects oncePerBattle');
+  // ally_other: never the user
+  non.hp = 5; P(e, 0).hp = P(e, 0).mhp; P(e, 2).hp = Math.floor(P(e, 2).mhp / 2);
+  let t = e.targets(non, DB.abilities.tb_share, non);
+  ok(t.length === 1 && t[0] !== non, 'ally_other retargets away from the user');
+  t = e.targets(non, DB.abilities.tb_share, P(e, 0));
+  ok(t[0] === P(e, 0), 'ally_other keeps a chosen other ally');
+  ok(e.targets(non, DB.abilities.tb_share, null)[0] === P(e, 2), 'ally_other default = most hurt other ally');
+  // AI: only the caster is hurt → no ally_other heal on itself
+  P(e, 2).hp = P(e, 2).mhp;
+  for (let i = 0; i < 20; i++) {
+    const cmds = R.BattleAI.partyCommands(e);
+    const c = cmds[1];
+    ok(!(c && c.id === 'tb_share' && c.target === non), 'AI never aims ally_other at the user');
+  }
+  // alone: nothing to target, nothing paid
+  const e2 = mk({ mons: ['tb_boss'], party: [R.fxBattleParty(10)[1]] });
+  const solo = P(e2, 0);
+  solo.c.jobs.tb_caster.learned.push('tb_share');
+  solo.hp = solo.mhp;
+  const hp0 = solo.hp;
+  ev = use(e2, solo, 'tb_share', solo);
+  ok(solo.hp === hp0 && said(ev, '何も起こらなかった'), 'ally_other with nobody else: no effect, no HP cost');
+  // Rules.mpCost: reductions round down, min 1
+  const c = R.fxBattleChar('metem', 'tb_caster', 10, ['tb_saver', 'tb_fire', 'tb_heal'], {}, { support: 'tb_saver' });
+  ok(R.Rules.mpCost(c, 'tb_fire') === 1, 'mpCost 3 × 50% → 1 (floor)');
+  DB.abilities.tb_cheap = { name: '安い', job: 'tb_caster', kind: 'action', jp: 1, mp: 1, target: 'enemy', effects: [], fx: 'fire' };
+  ok(R.Rules.mpCost(c, 'tb_cheap') === 1, 'mpCost never below 1');
+  ok(R.Rules.mpCost(c, 'tb_ether') === 0, 'mp 0 stays free');
+  delete DB.abilities.tb_cheap;
+  DB.jobs.tb_caster.abilities.splice(DB.jobs.tb_caster.abilities.indexOf('tb_once'), 2);
+}
+
 console.log(`battle tests: ${passes} passed, ${fails} failed`);
 process.exit(fails ? 1 : 0);

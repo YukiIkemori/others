@@ -26,6 +26,10 @@
   const expFor = (L) => (L <= 1 ? 0 : 8 * Math.pow(L - 1, 2.6) + 10 * (L - 1));
   // late-game boost: the party's jobs, abilities and gear snowball after the ship
   const late = (L) => { const t = Math.min(1, Math.max(0, (L - 16) / 14)); return t * t * (3 - 2 * t); };
+  // early game (request K): the first regions paid out too generously — EXP and gold are
+  // scaled down at Lv1 (×lo) and eased back to the plain curve by Lv`end`
+  const early = (L, lo, end) => { const t = Math.min(1, Math.max(0, (L - 1) / (end - 1))); return lo + (1 - lo) * t * t * (3 - 2 * t); };
+  const EXP_EARLY = [0.72, 8], GOLD_EARLY = [0.6, 9];
   const curve = (L) => ({
     hp: (7 + 5 * L + 0.28 * L * L) * (1 + 0.15 * late(L)),
     atk: (10 + 3.8 * L) * (1 + 0.12 * late(L)),
@@ -33,9 +37,9 @@
     mdef: L,
     agi: 4 + 1.8 * L,
     mag: 5 + 2.4 * L,
-    exp: ((expFor(L + 2.5) - expFor(L + 1.5)) / 14.4) * Math.exp(0.1 - 2 * (L / 40) + 1.8 * (L / 40) * (L / 40)),
+    exp: ((expFor(L + 2.5) - expFor(L + 1.5)) / 14.4) * Math.exp(0.1 - 2 * (L / 40) + 1.8 * (L / 40) * (L / 40)) * early(L, ...EXP_EARLY),
     jp: 5 + 1.15 * L,
-    gold: 6 + 8 * L + 0.3 * L * L,
+    gold: (6 + 8 * L + 0.3 * L * L) * early(L, ...GOLD_EARLY),
   });
   const UNDEAD_RES = { poison: 1, death: 1, sleep: 1, confuse: 0.5 };
   const GOLEM_RES = { poison: 1, sleep: 0.6, confuse: 1, death: 0.6, blind: 0.5 };
@@ -185,10 +189,10 @@
     }),
     kaze_kodama: M('風のこだま', 'wisp', 4, {
       fam: ['gale', 'light', 'float'],
-      s: { hp: 0.9, mag: 1.3, mdef: 1.5, def: 0.8, agi: 1.2 }, mp: 12, hue: -80, sat: 1.1, flags: ['flying'],
-      a: [['attack', 3], ['en_wind', 3]],
+      s: { hp: 0.9, mag: 1.3, mdef: 1.5, def: 0.8, agi: 1.2 }, mp: 6, hue: -80, sat: 1.1, flags: ['flying'],
+      a: [['attack', 4], ['en_gust', 2]],
       drop: ['wing', 12], rare: ['clover', 96], steal: ['wing', 'clover'],
-      desc: '洞窟を吹き抜ける風が形を得た精霊。\nかまいたちを起こす。',
+      desc: '洞窟を吹き抜ける風が形を得た精霊。\nつむじ風を起こす。',
     }),
     doku_take: M('毒ダケ', 'mushroom', 4, {
       fam: ['plant'],
