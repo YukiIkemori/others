@@ -274,6 +274,13 @@ section('context tiler');
     try { if (A.decorTile) A.decorTile(dm, 2, 1); } catch (e) { derr++; if (derr < 4) console.log('    decor ' + id + ' on ' + theme + ': ' + e.message); }
   }
   ok(derr === 0, 'decor context builders run for every id (' + derr + ' errors)');
+  // themeAreas: patchwork maps (§11.2.11 継ぎはぎの森)
+  const pm = mapOf('oblivion', rows);
+  pm.def = { themeAreas: [{ x: 0, y: 0, w: 4, h: 8, theme: 'forest' }, { x: 2, y: 5, w: 2, h: 2, theme: 'snow' }] };
+  ok(A.themeAt(pm, 1, 1) === 'forest' && A.themeAt(pm, 3, 6) === 'snow' && A.themeAt(pm, 6, 2) === 'oblivion', 'themeAt honours def.themeAreas (last area wins)');
+  const fm = mapOf('forest', rows); fm.id = pm.id; fm._artSalt = undefined;
+  const fa = A.localTile(pm, 1, 2), fb = A.localTile(fm, 1, 2);
+  ok(fa === fb, 'a forest area inside an oblivion map draws forest art');
   G.makeCanvas = real;
   if (VERBOSE) console.log('    (' + made + ' stub canvases)');
 }

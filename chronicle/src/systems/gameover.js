@@ -21,7 +21,7 @@
     for (let i = 0; i < PIECES; i++) {
       out.push({
         x: 12 + (i * 232) / PIECES + rnd() * 14,
-        y: -10 - rnd() * 230,
+        y: -8 + rnd() * 200, // already drifting all over the screen when the text fades in
         v: 0.18 + rnd() * 0.22, // px per frame
         amp: 3 + rnd() * 6,
         ph: rnd() * Math.PI * 2,

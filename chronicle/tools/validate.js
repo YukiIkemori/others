@@ -929,6 +929,27 @@ function run(opts) {
         if (dd && !dd.pass && !obj) W(V, o, `${w}: npc ${nn.id} stands on furniture ${P2.decorAt(nn.x, nn.y)}`);
       }
       for (const wp of P2.warps) if (!P2.inMap(wp.x, wp.y)) E(V, o, `${w}: warp out of bounds @${wp.x},${wp.y}`);
+      // doors and warp cells must be enterable: furniture (without pass/over) in front of a door walls a building off
+      if (d.type !== 'world') {
+        const free = (x, y) => {
+          if (!P2.inMap(x, y)) return false;
+          const t = DB.tiles[P2.tileAt(x, y)], dd = P2.decorDef(x, y);
+          return !!(t && (t.pass || t.lock || t.closed) && !(dd && !dd.pass && !dd.over));
+        };
+        const blockedBy = (x, y) => { const dd = P2.decorDef(x, y); const t = DB.tiles[P2.tileAt(x, y)]; return dd && !dd.pass && !dd.over && t && t.pass ? `${P2.decorAt(x, y)}@${x},${y}` : null; };
+        const cells = new Map();
+        for (let y = 0; y < P2.h; y++) for (let x = 0; x < P2.w; x++) { const tid = P2.tileAt(x, y); if (/^door/.test(tid) || (DB.tiles[tid] || {}).door) cells.set(y * P2.w + x, [x, y, 2, tid]); }
+        for (const wp of P2.warps) if (P2.inMap(wp.x, wp.y)) { const k = wp.y * P2.w + wp.x; if (!cells.has(k)) cells.set(k, [wp.x, wp.y, 1, 'warp→' + wp.to]); }
+        for (const [x, y, need, what] of cells.values()) {
+          const nb = [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([dx, dy]) => [x + dx, y + dy]);
+          const nFree = nb.filter(([xx, yy]) => free(xx, yy)).length;
+          const onEdge = x === 0 || y === 0 || x === P2.w - 1 || y === P2.h - 1;
+          if (nFree < (onEdge ? 1 : need)) {
+            const by = nb.map(([xx, yy]) => blockedBy(xx, yy)).filter(Boolean);
+            E(V, o, `${w}: ${what} at ${x},${y} cannot be passed through` + (by.length ? ` (blocked by decor ${by.join(', ')})` : ` (only ${nFree} walkable neighbour)`));
+          }
+        }
+      }
       if (d.type === 'town' || d.type === 'village' || d.type === 'castle') {
         if (!P2.spawns.entrance && kind !== 'house') E(V, o, `${w}: town map without spawn 'entrance'`);
         if (kind === 'town' && C.TOWNS[id] && id !== 'roa' && !P2.spawns.inn) E(V, o, `${w}: town map without spawn 'inn' (§10.6.1)`);

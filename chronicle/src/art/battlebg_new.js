@@ -474,14 +474,14 @@
       for (let y = 0; y < 100; y++) { b.set(ex, y, ST[4]); b.set(ex + side, y, ST[3]); }
     }
     // marble floor
-    B.tiledFloor(b, 100, 60, [0x9a9caa, 0xdcdee6, 0xeceef4, 0xffffff], { tileW: 30, rowH: 12, fog: 0xc4c6d0 });
+    B.tiledFloor(b, 100, 60, [0xb4b6c2, 0xdcdee6, 0xe8eaf0, 0xf8f8fc], { tileW: 30, rowH: 12, fog: 0xc4c6d0 });
     // light shafts slanting down from the window
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
       const u = (x - 128) - (y - 20) * 0.35;
       const wdt = 16 + y * 0.12;
       if (Math.abs(u) < wdt) { const a = (1 - Math.abs(u) / wdt) * 0.3; if (y > 108) b.set(x, y, T.mix(b.get(x, y), 0xfffff0, a * 0.7)); else if (T.bayer(x, y) < a * 1.2) b.set(x, y, T.mix(b.get(x, y), 0xfffff0, 0.5)); }
     }
-    calm(b, 0.8);
+    calm(b, 1);
     // drifting pages
     const PC = [0x8a8a96, 0xc8c8d2, 0xf6f6f8, 0xb0b0bc];
     const r = T.rng(83);
@@ -576,7 +576,7 @@
     reeds(b, 40, 30, 101, 8, 73, [0x3a4430, 0x485438, 0x5a6844]); reeds(b, 190, 26, 100, 8, 75, [0x3a4430, 0x485438, 0x5a6844]);
     // low mist over the water
     mist(b, 100, 5, 0xb4bca8, 0.7, false);
-    calm(b, 0.8, 30, 226);
+    calm(b, 0.95, 30, 226);
     for (const [x0, x1] of [[0, 44], [212, 256]]) for (let y = 104; y < 144; y++) for (let x = x0; x < x1; x++) {
       const d = x0 === 0 ? 1 - x / 44 : (x - 212) / 44;
       if (T.bayer(x, y) < d * 0.45) b.set(x, y, T.mix(b.get(x, y), 0xa8b09c, 0.5));
@@ -791,6 +791,8 @@
       b.set(x, y, c);
     }
     glow(b, cx, cy, 30, 22, 0xfff4d0, 0.8);
+    // below the horizon the turning sky sinks into a pale haze the group stands on
+    for (let y = 98; y < H; y++) { const k = Math.min(0.6, (y - 98) / 16 * 0.6); for (let x = 0; x < W; x++) b.set(x, y, T.mix(b.get(x, y), 0x5c78b4, k)); }
     // a whirl of pages underfoot (flattened spiral)
     const PC = [0x7a7870, 0xc4c2b8, 0xf8f6ee, 0xa8a69c];
     for (let arm = 0; arm < 2; arm++) for (let k = 0; k < 40; k++) {

@@ -12149,14 +12149,14 @@ try{
       for (let y = 0; y < 100; y++) { b.set(ex, y, ST[4]); b.set(ex + side, y, ST[3]); }
     }
     // marble floor
-    B.tiledFloor(b, 100, 60, [0x9a9caa, 0xdcdee6, 0xeceef4, 0xffffff], { tileW: 30, rowH: 12, fog: 0xc4c6d0 });
+    B.tiledFloor(b, 100, 60, [0xb4b6c2, 0xdcdee6, 0xe8eaf0, 0xf8f8fc], { tileW: 30, rowH: 12, fog: 0xc4c6d0 });
     // light shafts slanting down from the window
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
       const u = (x - 128) - (y - 20) * 0.35;
       const wdt = 16 + y * 0.12;
       if (Math.abs(u) < wdt) { const a = (1 - Math.abs(u) / wdt) * 0.3; if (y > 108) b.set(x, y, T.mix(b.get(x, y), 0xfffff0, a * 0.7)); else if (T.bayer(x, y) < a * 1.2) b.set(x, y, T.mix(b.get(x, y), 0xfffff0, 0.5)); }
     }
-    calm(b, 0.8);
+    calm(b, 1);
     // drifting pages
     const PC = [0x8a8a96, 0xc8c8d2, 0xf6f6f8, 0xb0b0bc];
     const r = T.rng(83);
@@ -12251,7 +12251,7 @@ try{
     reeds(b, 40, 30, 101, 8, 73, [0x3a4430, 0x485438, 0x5a6844]); reeds(b, 190, 26, 100, 8, 75, [0x3a4430, 0x485438, 0x5a6844]);
     // low mist over the water
     mist(b, 100, 5, 0xb4bca8, 0.7, false);
-    calm(b, 0.8, 30, 226);
+    calm(b, 0.95, 30, 226);
     for (const [x0, x1] of [[0, 44], [212, 256]]) for (let y = 104; y < 144; y++) for (let x = x0; x < x1; x++) {
       const d = x0 === 0 ? 1 - x / 44 : (x - 212) / 44;
       if (T.bayer(x, y) < d * 0.45) b.set(x, y, T.mix(b.get(x, y), 0xa8b09c, 0.5));
@@ -12466,6 +12466,8 @@ try{
       b.set(x, y, c);
     }
     glow(b, cx, cy, 30, 22, 0xfff4d0, 0.8);
+    // below the horizon the turning sky sinks into a pale haze the group stands on
+    for (let y = 98; y < H; y++) { const k = Math.min(0.6, (y - 98) / 16 * 0.6); for (let x = 0; x < W; x++) b.set(x, y, T.mix(b.get(x, y), 0x5c78b4, k)); }
     // a whirl of pages underfoot (flattened spiral)
     const PC = [0x7a7870, 0xc4c2b8, 0xf8f6ee, 0xa8a69c];
     for (let arm = 0; arm < 2; arm++) for (let k = 0; k < 40; k++) {
@@ -24734,7 +24736,9 @@ try{
     }, { f, drop: [1, 0, 0.24] });
   }
 
-  function stove(f) {
+  const SNOWY = { snow: 1, ice: 1, town_snow: 1 };
+  /** kitchen stove (2 frames); strong: the high winter fire of the snow country */
+  function stove(f, strong) {
     return piece(16, 16, (L, t, U, O) => {
       // brick body
       for (let y = 7; y <= 14; y++) for (let x = 1; x <= 14; x++) {
@@ -24766,6 +24770,12 @@ try{
       const st = f ? [[6, 0], [9, 0]] : [[7, 0], [8, 0]];
       for (const [x, y] of st) O.put(x, y, 0xffffff, 0.55);
       glow(O, 7.5, 13, 4, f ? 0.12 : 0.16);
+      if (strong) {
+        // flames licking out of the mouth and round the cauldron, a wide red glow
+        for (const [x, y] of f ? [[6, 9], [9, 8], [5, 7], [10, 9], [7, 8]] : [[7, 9], [8, 8], [6, 8], [10, 8], [9, 9]]) L.set(x, y, y < 9 ? FIRE[4] : FIRE[3]);
+        L.set(f ? 8 : 7, 7, FIRE[5]);
+        glow(O, 7.5, 10, 7.5, f ? 0.16 : 0.2, 0xff5020);
+      }
     }, { f, contact: [8.5, 14.6, 7.5, 1.4, 0.34] });
   }
 
@@ -25558,6 +25568,7 @@ try{
     banner_blue: bannerAuto(BLUE, 'tail'),
     window_arch: windowArchAuto,
     fireplace: fireplaceAuto,
+    stove: (m) => (SNOWY[thm(m)] ? cached('stove|snow', () => [0, 1].map((f) => stove(f, true).canvas())) : null),
     tile_alt: tileAltAuto,
     crack: inFloor('crack'),
   });
@@ -29916,27 +29927,30 @@ try{
     sc.carve([[19, 31], [17, 44]], -1).carve([[28, 31], [30, 44]], -1).carve([[14, 36], [11.5, 44]], -1);
     sc.carve([[18, 31], [16, 44]], 1).carve([[27, 31], [29, 44]], 1);
     const p = sc.render();
-    // the quill: a long white feather, its nib in the fist
+    // the quill: a long white feather held up in the fist, leaning outward so
+    // its broad vane stands clear of the coat; the dark nib shows under the fist
     const q = R.Gfx.pix(W, H);
-    // a feather along a gently curved shaft (nib in the fist at the bottom)
-    const shaftAt = (t) => [10.8 - 4.6 * t - 0.8 * Math.sin(t * Math.PI), 32 - 23.5 * t];
+    const shaftAt = (t) => [11 - 7.4 * t - 1.3 * Math.sin(t * Math.PI), 30.4 - 24.6 * t];
     const Lp = [], Rp = [];
-    for (let i = 0; i <= 16; i++) {
-      const t = i / 16, [x, y] = shaftAt(t), env = t < 0.14 ? 0 : Math.pow(Math.sin(Math.PI * (t - 0.14) / 0.86), 0.7);
-      Lp.push([x - 1.3 * env, y + 0.6 * env]); Rp.push([x + 2.5 * env, y + 1.2 * env]);
+    for (let i = 0; i <= 20; i++) {
+      const t = i / 20, [x, y] = shaftAt(t);
+      const env = t < 0.16 ? 0 : Math.pow(Math.sin(Math.PI * Math.min(1, (t - 0.16) / 0.84)), 0.6);
+      Lp.push([x - 2.7 * env, y + 0.5 * env]); Rp.push([x + 1.3 * env, y + 0.9 * env]);
     }
-    q.poly(Lp.concat(Rp.reverse()), quill.r[2]);
-    q.each((x, y, c) => { const t = (32 - y) / 23.5, [sx] = shaftAt(Math.max(0, Math.min(1, t))); return x > sx + 1.2 ? quill.r[1] : x < sx - 0.4 ? quill.r[3] : undefined; });
-    // barbs: little notches running up and out from the shaft
-    for (let t = 0.24; t < 0.9; t += 0.13) {
-      const [x, y] = shaftAt(t);
-      q.line(Math.round(x + 0.6), Math.round(y), Math.round(x + 2.2), Math.round(y - 1.2), quill.r[0]);
-      if (q.get(Math.round(x - 1), Math.round(y)) != null) q.set(Math.round(x - 1), Math.round(y), quill.r[1]);
+    q.poly(Lp.concat(Rp.slice().reverse()), quill.r[2]);
+    // the outer half of the vane catches the light, the inner half is a step darker
+    q.each((x, y) => { const [sx] = shaftAt(Math.max(0, Math.min(1, (30.4 - y) / 24.6))); return x > sx + 0.5 ? quill.r[1] : x < sx - 1.5 ? quill.r[3] : undefined; });
+    // barbs: small notches in the outer edge, running up and out
+    for (const t of [0.34, 0.5, 0.66, 0.8]) {
+      const [x, y] = shaftAt(t), ex = Math.round(x - 2.7 * Math.pow(Math.sin(Math.PI * (t - 0.16) / 0.84), 0.6));
+      q.set(ex, Math.round(y) + 1, null); q.set(ex + 1, Math.round(y) + 1, quill.r[1]);
     }
-    for (let t = 0; t <= 1; t += 0.03) { const [x, y] = shaftAt(t); q.set(Math.round(x), Math.round(y), t < 0.16 ? '#6a6e88' : '#a0a4b8'); }
-    q.set(11, 33, '#40404c'); q.set(11, 34, INK);
+    // the shaft (rachis) and the nib
+    for (let t = 0; t <= 1; t += 0.02) { const [x, y] = shaftAt(t); q.set(Math.round(x), Math.round(y), t < 0.14 ? '#8a8ea4' : '#b4b8c8'); }
+    q.set(11, 31, '#6a6e88'); q.set(11, 32, '#40404c'); q.set(11, 33, INK);
     R.Art.MonTK.put(p, q, 'dark');
-    over(p, 11, 30, skin.r[1]); over(p, 12, 30, skin.r[0]);
+    // the fist closed over the shaft
+    over(p, 10, 29, skin.r[2]); over(p, 12, 29, skin.r[1]); over(p, 10, 30, skin.r[1]); over(p, 12, 30, skin.r[0]); over(p, 11, 30, skin.r[1]);
     // the badge: the Archive's open book, in gold
     stamp2(p, 19, 23, ['.yy...yy.', 'ywwy.ywwy', 'ywwwywwwy', 'yyyyyyyyy', '....d....'], { y: '#d0b040', w: '#fff0b0', d: '#8a6a20' });
     // glinting round spectacles in the dark
@@ -30082,7 +30096,7 @@ try{
   // reaching out like arms with twig fingers, a crown of leaves on top, and
   // three or four roots splayed like feet.
   SIZES.treant = 64;
-  ANCHORS.treant = { head: [31, 11], brow: [31, 32], eyes: [[26, 36], [37, 36]], mouth: [31, 44], neck: [31, 29], back: [31, 22], body: [31, 42], hand: [6, 23], hand2: [57, 21], tail: [31, 55], feet: [31, 62], headW: 30 };
+  ANCHORS.treant = { head: [31, 11], brow: [31, 32], eyes: [[26, 36], [37, 36]], mouth: [31, 44], neck: [31, 29], back: [31, 22], body: [31, 42], hand: [6, 27], hand2: [57, 27], tail: [31, 55], feet: [31, 62], headW: 30 };
   S.treant = () => {
     const T = TS(), W = 64, H = 64;
     const barkTex = (x, y) => { const r = T.hash(x, Math.floor(y / 3), 11); return r < 0.16 ? -1 : r > 0.93 ? 1 : 0; };
@@ -30098,16 +30112,17 @@ try{
     ]) sc.tube(pts.map((q) => q.concat([z])), { m: bark, g: 'roots' });
     // the trunk, a little bent
     sc.tube([[31.5, 57, 9.2, 0], [31, 46, 8.8, 0], [32, 35, 8.2, 0], [31.5, 28, 7.8, 0]], { m: bark, g: 'trunk' });
-    // arm branches with twig fingers
-    sc.tube([[25, 35, 3.6, 3], [17, 31, 2.9, 3], [11, 26.5, 2.4, 3], [8, 24, 1.8, 3]], { m: bark, g: 'armL' });
-    for (const [x, y] of [[2.2, 21.5], [3, 27.5], [6.4, 17.6]]) sc.tube([[8, 24, 1.5, 4], [(8 + x) / 2, (24 + y) / 2, 1, 4], [x, y, 0.5, 4]], { m: bark, g: 'armL' });
-    sc.tube([[38, 33, 3.6, 3], [46, 30.5, 2.9, 3], [52.5, 26, 2.3, 3], [55.5, 22, 1.8, 3]], { m: bark, g: 'armR' });
-    for (const [x, y] of [[61, 18.6], [60.4, 24.6], [55, 15.4]]) sc.tube([[55.5, 22, 1.5, 4], [(55.5 + x) / 2, (22 + y) / 2, 1, 4], [x, y, 0.5, 4]], { m: bark, g: 'armR' });
-    // leaves on the arms
-    for (const [x, y, r] of [[14, 29, 2.6], [48.5, 28.6, 2.6], [5, 19.6, 1.8], [58, 17.4, 1.8]]) sc.ell(x, y - 1.6, r, r * 0.8, { m: leaf, g: 'lv' + x, z: 6, rz: 2 });
+    // arm branches out of the sides of the trunk, reaching out and up below the
+    // crown, the tips split into twig fingers
+    sc.tube([[24.5, 39.5, 3.4, 3], [17, 37.4, 2.8, 3], [11, 33, 2.3, 3], [7, 28.4, 1.8, 3]], { m: bark, g: 'armL' });
+    for (const [x, y] of [[1.6, 25.2], [2.6, 31.4], [5.6, 21.6]]) sc.tube([[7, 28.4, 1.5, 4], [(7 + x) / 2, (28.4 + y) / 2, 1, 4], [x, y, 0.5, 4]], { m: bark, g: 'armL' });
+    sc.tube([[39, 39.5, 3.4, 3], [46.5, 37.4, 2.8, 3], [52.5, 33, 2.3, 3], [56.5, 28.4, 1.8, 3]], { m: bark, g: 'armR' });
+    for (const [x, y] of [[61.8, 25.2], [60.8, 31.4], [57.8, 21.6]]) sc.tube([[56.5, 28.4, 1.5, 4], [(56.5 + x) / 2, (28.4 + y) / 2, 1, 4], [x, y, 0.5, 4]], { m: bark, g: 'armR' });
+    // leaves sprouting on the arms
+    for (const [x, y, r] of [[14.6, 33.6, 2.4], [49, 33.6, 2.4], [3.4, 21.6, 1.8], [60, 21.6, 1.8]]) sc.ell(x, y - 1.6, r, r * 0.8, { m: leaf, g: 'lv' + x, z: 6, rz: 2 });
     // crown of leaves: a heap of clumps, each shaded as its own ball (soft seams)
     const CL = [
-      [31.5, 23, 15, 6.6, 0], [17.5, 23.4, 6.6, 5.8, 1], [45.5, 23.4, 6.6, 5.8, 1], [11.4, 25.6, 4, 3.4, 2], [51.6, 25.6, 4, 3.4, 2],
+      [31.5, 23, 15, 6.6, 0], [17.5, 23.4, 6.6, 5.8, 1], [45.5, 23.4, 6.6, 5.8, 1], [12.6, 25, 3.4, 3, 2], [50.4, 25, 3.4, 3, 2],
       [24, 17.4, 7, 6, 2], [39, 17.4, 7, 6, 2], [31.5, 15.2, 6, 4.6, 3], [18, 17.8, 4.2, 3.6, 0], [45, 17.8, 4.2, 3.6, 0],
       [22, 27.6, 5, 3, 4], [31.5, 28.4, 5.4, 3, 5], [41, 27.6, 5, 3, 4], [29, 11.8, 3.2, 2.2, 1], [35, 12, 3, 2.2, 1],
     ];
@@ -30129,7 +30144,7 @@ try{
     ], { k: '#201008' });
     // foliage: leaf-shaped glints on the lit clumps, dark gaps between clumps
     const L = leaf.r;
-    for (const [x, y] of [[21, 13], [27, 10], [33, 11], [37, 13], [15, 19], [42, 19], [29, 14], [10, 23], [20, 20], [35, 17], [48, 21]]) {
+    for (const [x, y] of [[21, 13], [27, 10], [33, 11], [37, 13], [15, 19], [42, 19], [29, 14], [11, 23], [20, 20], [35, 17], [48, 21]]) {
       over(p, x, y, L[6]); over(p, x + 1, y, L[5]); over(p, x, y + 1, L[5]);
     }
     return finish(p);
@@ -38105,6 +38120,21 @@ try{
     return !!(G && G.secrets && G.secrets[m.id + ':' + x + ',' + y]);
   }
 
+  const OUTDOOR_G = { 'theme:forest': 1, 'theme:snow': 1, 'theme:swamp': 1 };
+  /**
+   * The theme of a cell: a map may paint areas in other themes with
+   * def.themeAreas = [{x, y, w, h, theme}] (the last area containing the cell wins),
+   * e.g. the patchwork forest of the Depths of Oblivion (§11.2.11). Else map.theme.
+   */
+  function themeAt(m, x, y) {
+    const areas = m && m.def && m.def.themeAreas;
+    if (areas && areas.length) for (let i = areas.length - 1; i >= 0; i--) {
+      const a = areas[i];
+      if (x >= a.x && y >= a.y && x < a.x + (a.w || 1) && y < a.y + (a.h || 1)) return a.theme;
+    }
+    return m && m.theme;
+  }
+  A.themeAt = (m, x, y) => (A.themeOf ? A.themeOf(themeAt(m, x, y)) : 'generic');
   const CACHE = new Map();
   function cached(key, make) {
     let v = CACHE.get(key);
@@ -38205,7 +38235,8 @@ try{
   function variantAt(m, x, y, gname) {
     if (!A.floorVariant || !A.floorVaries || !A.floorVaries(gname)) return 0;
     const h = tk().hash(x, y, 7001 + salt(m));
-    const plain = gname === 'lgrass' ? 0.64 : gname === 'theme:cave' ? 0.3 : 0.58;
+    // outdoor dungeons (forest, snow, swamp) get more ground variety (DESIGN §11.2.8)
+    const plain = gname === 'lgrass' ? 0.64 : gname === 'theme:cave' ? 0.3 : OUTDOOR_G[gname] ? 0.42 : 0.58;
     return h < plain ? 0 : h < plain + 0.2 ? 1 : h < plain + 0.32 ? 2 : 3;
   }
   /** floor decor this cell's floor paints itself: 'alt' | 'crack' | '' */
@@ -38413,7 +38444,7 @@ try{
   // ------------------------------------------------------------ public
   A.localTile = function (map, x, y) {
     const id = map.tileAt(x, y);
-    const theme = A.themeOf ? A.themeOf(map.theme) : 'generic';
+    const theme = A.themeAt(map, x, y);
     if (id === 'secret_wall') return secretTile(map, x, y, theme);
     if (WALL[id]) return DOORISH[id] ? doorTile(map, x, y, id, theme) : wallTile(map, x, y, id, theme);
     if (GROUND[id]) return groundTile(map, x, y, id, theme);
@@ -40090,7 +40121,7 @@ try{
     if (typeof base !== 'function' || base._exterior) return;
     const wrapped = function (map, x, y) {
       const id = map.tileAt(x, y);
-      const theme = A.themeOf ? A.themeOf(map.theme) : 'generic';
+      const theme = A.themeAt ? A.themeAt(map, x, y) : A.themeOf ? A.themeOf(map.theme) : 'generic';
       if (id === 'fence') return fenceTile(map, x, y, theme);
       if (id === 'water') return (outdoorWater(map, x, y, theme) && canalTile(map, x, y, theme)) || base(map, x, y);
       if (id === 'lbridge_h' || id === 'lbridge_v') return outdoorWater(map, x, y, theme) ? bridgeTile(map, x, y, id, theme) : base(map, x, y);
@@ -40711,6 +40742,16 @@ try{
       b.rect(6, 4, 4, 6, 0x3a3a44); b.rect(7, 5, 2, 4, f ? 0xffd070 : 0xffe898); b.set(7, 5, 0xfff8d0);
       b.hline(6, 9, 3, 0x5a5a66); b.hline(6, 9, 10, 0x2a2a34); b.set(7, 11, 0x2a2a34); b.set(8, 11, 0x2a2a34);
     },
+    /** the ghost ship's lamp: a lantern burning pale blue-white (§11.2.11 「青白い灯」) */
+    ghostlamp(b, f, t) {
+      for (let y = 0; y < 12; y++) for (let x = 2; x < 14; x++) {
+        const d = Math.hypot(x - 7.5, y - 7);
+        if (d < (f ? 5.4 : 6) && (d < 3.2 || (x + y + f) % 2 === 0)) b.set(x, y, t.mix(b.get(x, y), 0xa8d8ff, d < 3.2 ? 0.28 : 0.15));
+      }
+      b.hline(5, 10, 2, 0x2a2a30); b.set(10, 3, 0x2a2a30); b.set(10, 1, 0x4a4a54);
+      b.rect(6, 4, 4, 6, 0x2e3440); b.rect(7, 5, 2, 4, f ? 0xb8e4ff : 0xe0f4ff); b.set(7, 5, 0xffffff);
+      b.hline(6, 9, 3, 0x4a5260); b.hline(6, 9, 10, 0x22262e); b.set(7, 11, 0x22262e); b.set(8, 11, 0x22262e);
+    },
     /** a small oil lamp in a wall niche (library) */
     candle(b, f, t) {
       for (let y = 0; y < 14; y++) for (let x = 3; x < 13; x++) {
@@ -40743,7 +40784,7 @@ try{
     snow: { fl: [0x8a94a8, 0xaab2c2, 0xcad0da, 0xe0e4ec, 0xf4f6fa], floor: 'snowfield', wl: [0x4a5264, 0x6a7488, 0x8a94a8, 0xaab2c2, 0xcad0da, 0xe8ecf0], wall: 'snowrock', door: 'ice', col: 'ice', outdoor: true },
     manor: { fl: [0x2c2020, 0x46302c, 0x5c403a, 0x74524a, 0x8c665c], floor: 'parquet', wl: [0x2a2432, 0x423a4c, 0x5a5066, 0x72687e, 0x8c8298], wall: 'wallpaper', door: 'wood', col: 'wood', torch: 'lantern' },
     swamp: { fl: [0x222618, 0x323620, 0x42482a, 0x545a34, 0x686e42], floor: 'peat', wl: [0x141a10, 0x1e2818, 0x2a3620, 0x384628, 0x485834, 0x5e6c44], wall: 'reeds', door: 'wood', col: 'deadtree', torch: 'wisp', outdoor: true },
-    ship: { fl: [0x2a2018, 0x40302a, 0x564236, 0x6c5644, 0x846c58, 0x9c846c], floor: 'planks', wl: [0x1a1614, 0x2e2622, 0x443830, 0x5a4a3e, 0x72604e, 0x8a7864], wall: 'hull', door: 'wood', col: 'mast', torch: 'lantern' },
+    ship: { fl: [0x2a2018, 0x40302a, 0x564236, 0x6c5644, 0x846c58, 0x9c846c], floor: 'planks', wl: [0x1a1614, 0x2e2622, 0x443830, 0x5a4a3e, 0x72604e, 0x8a7864], wall: 'hull', door: 'wood', col: 'mast', torch: 'ghostlamp' },
     mine: { fl: [0x2e2620, 0x463a30, 0x5c4e40, 0x746452, 0x8c7c68], floor: 'dirt', wl: [0x201810, 0x3a2c20, 0x54402e, 0x6c5640, 0x866e54, 0xa08a6c], wall: 'timber', door: 'wood', col: 'wood', torch: 'lantern' },
     library: { fl: [0x7a7c88, 0xa0a2ae, 0xc4c6d0, 0xdcdee6, 0xf2f2f6], floor: 'marble', wl: [0x6c6e7c, 0x8e909e, 0xb0b2c0, 0xcacce0, 0xe6e8f4], wall: 'shelves', door: 'shrine', col: 'marble', torch: 'candle', band: 0x8c6414 },
     oblivion: { fl: [0x6a6a78, 0x9898a6, 0xc4c4cc, 0xe4e2dc, 0xf8f6ee], floor: 'paper', wl: [0x18181e, 0x2a2a34, 0x3e3e4a, 0x545462, 0x6c6c7a, 0x8a8a98], wall: 'void', door: 'demon', col: 'marble', torch: 'wisp' },
@@ -57883,7 +57924,7 @@ try{
     for (let i = 0; i < PIECES; i++) {
       out.push({
         x: 12 + (i * 232) / PIECES + rnd() * 14,
-        y: -10 - rnd() * 230,
+        y: -8 + rnd() * 200, // already drifting all over the screen when the text fades in
         v: 0.18 + rnd() * 0.22, // px per frame
         amp: 3 + rnd() * 6,
         ph: rnd() * Math.PI * 2,

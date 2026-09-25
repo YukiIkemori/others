@@ -8,9 +8,12 @@
 //      of their base), build time
 //   P2 opaque pixels only (alpha 0 or 255, §11.4.2)
 //   P3 stands on the ground: the lowest opaque row is the bottom row (H−1, the outline) — flyers may float
-//      up to 4 rows
-//   P4 outline: ≥ 85 % of the silhouette's outer ring is near black (luma < 0.2); the see-through shades
-//      use the light outline of §9.11.6 instead (#a0b0e0)
+//      up to 4 rows, the shades (whose feet dissolve) 2
+//   P4 outline: ≥ 78 % of the silhouette's outer ring (pixels next to the outside, not to see-through
+//      holes) is near black (luma < 0.2); free-floating motes / letters take the rest. The shades use the
+//      light outline of §9.11.6 instead (#a0b0e0)
+//   Compose rows (§9.11.6 table): P1 (size = the base's), P2 and P7 fail; P3–P6 only warn, since their
+//      shape, outline and palette come from the base and art-mons' parts and filters
 //   P5 colour count within 8..256 (SFC palette discipline), fill ≥ 18 % of the canvas, bbox ≥ 55 % wide
 //   P6 horizontal balance: the centre of mass within ±22 % of the width from the centre
 //   P7 the battle band (§11.4.2): the rows hidden under the windows (y < 56 after the sink) hold no eye —
@@ -55,6 +58,17 @@ window.CHECK = function (ids, bosses) {
     if (Array.isArray(cv)) cv = cv[0];
     const w = cv.width, h = cv.height, d = cv.getContext('2d').getImageData(0, 0, w, h).data;
     const on = (x, y) => x >= 0 && y >= 0 && x < w && y < h && d[(y * w + x) * 4 + 3] > 0;
+    // empty pixels connected to the canvas edge (4-neighbour): the outside. Checker holes are not.
+    const outside = new Uint8Array(w * h), st = [];
+    for (let x = 0; x < w; x++) { st.push([x, 0], [x, h - 1]); }
+    for (let y = 0; y < h; y++) { st.push([0, y], [w - 1, y]); }
+    while (st.length) {
+      const [x, y] = st.pop();
+      if (x < 0 || y < 0 || x >= w || y >= h || outside[y * w + x] || on(x, y)) continue;
+      outside[y * w + x] = 1;
+      st.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+    }
+    const out_ = (x, y) => x < 0 || y < 0 || x >= w || y >= h || outside[y * w + x];
     let semi = 0, n = 0, sx = 0, x0 = w, x1 = -1, y0 = h, y1 = -1, ring = 0, dark = 0;
     const cols = new Set();
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
@@ -63,9 +77,8 @@ window.CHECK = function (ids, bosses) {
       if (a !== 255) semi++;
       n++; sx += x; cols.add((d[i] << 16) | (d[i + 1] << 8) | d[i + 2]);
       if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
-      if (!on(x - 1, y) || !on(x + 1, y) || !on(x, y - 1) || !on(x, y + 1)) {
-        // outer ring only: the empty neighbour must reach the canvas edge through empty pixels horizontally or vertically
-        ring++;
+      if (out_(x - 1, y) || out_(x + 1, y) || out_(x, y - 1) || out_(x, y + 1)) {
+        ring++; // the outer ring only (next to the outside, not to a see-through hole)
         if (lum(d[i], d[i + 1], d[i + 2]) < 0.2) dark++;
       }
     }
@@ -83,7 +96,9 @@ window.CHECK = function (ids, bosses) {
     const b0 = Array.isArray(base) ? base[0] : base;
     if (!c || c.width !== b0.width || c.height !== b0.height) stand.push(id);
   }
-  return { out, alias, stand, face: (R.Art.bossesB || {}).face || {}, compose: R.Art.MON_COMPOSE_BOSSES, warned: Object.keys(G._warned) };
+  const base = {};
+  for (const id in R.Art.MON_COMPOSE_BOSSES) { let b = G.get('mon:' + R.Art.MON_COMPOSE_BOSSES[id][0]); if (Array.isArray(b)) b = b[0]; base[id] = [b.width, b.height]; }
+  return { out, alias, stand, base, face: (R.Art.bossesB || {}).face || {}, compose: R.Art.MON_COMPOSE_BOSSES, warned: Object.keys(G._warned) };
 };
 `;
 
@@ -107,28 +122,35 @@ ${sources().map((f) => `<script src="file://${f}"></script>`).join('\n')}
     const fail = (id, m) => { fails++; console.log('FAIL', id, m); };
     const sink = (h) => Math.max(0, Math.min(20, Math.round((h - 64) / 2.4)));
     const rows = [];
+    let warns = 0;
+    const warn = (id, m) => { warns++; console.log('warn', id, m); };
     for (const id of IDS) {
       const r = res.out[id], ros = ROSTER.SPRITES[id];
       const want = ros ? ros[2] : null;
       if (!r) { fail(id, 'not built'); continue; }
+      // compose rows: size, opacity and the eye band are ours; shape, outline and palette come from the
+      // base and art-mons' parts / filters, so those are reported as warnings
+      const composed = !!(res.compose && res.compose[id]);
+      const soft = (m) => (composed ? warn(id, m + ' (compose row)') : fail(id, m));
       // P1
       if (want && (r.w !== want[0] || r.h !== want[1])) fail(id, `P1 size ${r.w}x${r.h}, want ${want.join('x')}`);
+      if (composed && res.base[id] && (res.base[id][0] !== r.w || res.base[id][1] !== r.h)) fail(id, `P1 compose size ${r.w}x${r.h} != base ${res.base[id].join('x')}`);
       if (r.ms > 400) fail(id, `P1 build ${r.ms} ms`);
       // P2
       if (r.semi) fail(id, `P2 ${r.semi} semi-transparent pixels`);
       // P3
-      const floatOk = FLYERS.has(id) ? 4 : 0;
-      if (r.lowest < r.h - 1 - floatOk) fail(id, `P3 lowest row ${r.lowest}, want ${r.h - 1}${floatOk ? ' (flyer: ≥ ' + (r.h - 1 - floatOk) + ')' : ''}`);
+      const floatOk = FLYERS.has(id) ? 4 : LIGHT_OUTLINE.has(id) ? 2 : 0;
+      if (r.lowest < r.h - 1 - floatOk) soft( `P3 lowest row ${r.lowest}, want ${r.h - 1}${floatOk ? ' (may float: ≥ ' + (r.h - 1 - floatOk) + ')' : ''}`);
       // P4
       const darkShare = r.dark / Math.max(1, r.ring);
-      if (!LIGHT_OUTLINE.has(id) && darkShare < 0.85) fail(id, `P4 outer ring only ${(darkShare * 100).toFixed(0)} % dark`);
+      if (!LIGHT_OUTLINE.has(id) && darkShare < 0.78) soft(`P4 outer ring only ${(darkShare * 100).toFixed(0)} % dark`);
       // P5
-      if (r.cols < 8 || r.cols > 256) fail(id, `P5 ${r.cols} colours`);
-      if (r.fill < 0.18) fail(id, `P5 fill ${(r.fill * 100).toFixed(0)} %`);
-      if ((r.bbox[2] - r.bbox[0] + 1) / r.w < 0.55) fail(id, `P5 bbox width ${r.bbox[2] - r.bbox[0] + 1}/${r.w}`);
+      if (r.cols < 8 || r.cols > 256) soft(`P5 ${r.cols} colours`);
+      if (r.fill < 0.18) soft(`P5 fill ${(r.fill * 100).toFixed(0)} %`);
+      if ((r.bbox[2] - r.bbox[0] + 1) / r.w < 0.55) soft(`P5 bbox width ${r.bbox[2] - r.bbox[0] + 1}/${r.w}`);
       // P6
       const off = (r.com - (r.w - 1) / 2) / r.w;
-      if (Math.abs(off) > 0.22) fail(id, `P6 centre of mass off by ${(off * 100).toFixed(0)} %`);
+      if (Math.abs(off) > 0.22) soft(`P6 centre of mass off by ${(off * 100).toFixed(0)} %`);
       // P7
       const top = 130 + sink(r.h) - r.h, hidden = Math.max(0, 56 - top);
       const f = res.face[id];
@@ -144,7 +166,7 @@ ${sources().map((f) => `<script src="file://${f}"></script>`).join('\n')}
     if (warned.length) fail('page', 'missing graphics: ' + warned.join(','));
     if (VERBOSE || fails) for (const r of rows) console.log(r.join('  '));
     const t = rows.map((r) => parseInt(r[2], 10));
-    console.log(`check_art-boss: ${IDS.length} sprites, build ${Math.min(...t)}–${Math.max(...t)} ms (sum ${t.reduce((a, b) => a + b, 0)}), ${fails} failed`);
+    console.log(`check_art-boss: ${IDS.length} sprites, build ${Math.min(...t)}–${Math.max(...t)} ms (sum ${t.reduce((a, b) => a + b, 0)}), ${fails} failed, ${warns} warnings`);
   } finally {
     await browser.close();
   }

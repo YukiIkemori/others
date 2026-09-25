@@ -145,27 +145,34 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   hero.c.wp = 0;
   await press('b'); await step(1); await press('a'); await step(2);
   ok(S.panel.left.items.slice(1).every((it) => it.disabled), 'C12 WP 0 → every tech gray');
-  ok(S.panel.left.index === 1, 'C13 cursor memory per list (weapon1 list remembered index 1)', S.panel.left.index);
+  ok(S.panel.left.index === 0, 'C13 a list reopens where it was last chosen (nothing chosen yet → top)', S.panel.left.index);
+  await press('right'); await step(1);
   ok(S.panel.help() === 'WPが足りない！', 'C14 help WPが足りない！', S.panel.help());
+  sfx.length = 0;
   await press('a'); await step(2);
-  ok(sfx[sfx.length - 1] === 'buzzer', 'C15 a gray tech buzzes');
+  ok(sfx[sfx.length - 1] === 'buzzer' && S.panel.left.title === DB.weaponTypes.sword.name, 'C15 a gray tech buzzes and stays in the list', sfx);
   hero.c.wp = 40;
   await press('b'); await step(1); await press('b'); await step(2);
   ok(S.panel.left.items[0].label === '戦う', 'C16 B from the first member → the party menu');
   await press('a'); await step(2);
   ok(S.panel.left.index === 0 && hero.c.mem.cmd === 0, 'C17 command cursor remembered in c.mem.cmd');
   // members one after another: B goes back to the previous member
-  await press('a'); await step(2); await press('a'); await step(2); // 剣 → 攻撃
+  await press('a'); await step(2); // 剣
+  await press('a'); await step(2); // 攻撃
   await press('a'); await step(2); // target → the first enemy
   ok(S.acting === S.eng.party[1], 'C18 the next member after a command', S.acting && S.acting.name);
   await press('b'); await step(2);
-  ok(S.acting === hero, 'C19 B → back to the previous member');
-  // finish: attack with everyone
-  for (let k = 0; k < 4 && !cmds; k++) { await press('a'); await step(2); await press('a'); await step(2); await press('a'); await step(2); }
-  await step(4);
-  ok(Array.isArray(cmds) && cmds.filter(Boolean).length === 3, 'C20 three living members → three commands (the dead one is skipped)', cmds && cmds.map((c) => c && c.type));
+  ok(S.acting === hero && S.panel.left.title === hero.c.name, 'C19 B → back to the previous member');
+  // finish: every member attacks (A through 剣 → 攻撃 → the first enemy)
+  for (let k = 0; k < 40 && !cmds; k++) { await press('a'); await step(2); }
+  await step(2);
+  ok(Array.isArray(cmds) && cmds.filter(Boolean).length === 4, 'C20 four commands', cmds && cmds.map((c) => c && c.type));
   ok(cmds && cmds[0].type === 'attack' && cmds[0].slot === 'weapon1' && cmds[0].target && !cmds[0].target.isParty, 'C21 attack command shape {type, slot, target}', cmds && { type: cmds[0].type, slot: cmds[0].slot });
-  ok(!cmds[2], 'C22 no command for the member who is down');
+  S = BUI.open({ mons: std(), tweak: (p) => { p[2].hp = 0; } });
+  cmds = null;
+  S.commandPhase().then((c) => { cmds = c; });
+  for (let k = 0; k < 40 && !cmds; k++) { await press('a'); await step(2); }
+  ok(cmds && cmds.filter(Boolean).length === 3 && !cmds[2], 'C22 the member who is down gets no command', cmds && cmds.map((c) => c && c.type));
 
   // middle row with a front-only weapon: 攻撃 gray + 中列からは届かない。
   S = BUI.open({ mons: std(), tweak: (p) => { p[0].row = 'middle'; } });
@@ -210,36 +217,38 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   section('T targets');
   S = BUI.open({ mons: [{ id: 'goblin_2' }, { id: 'goblin_2' }, { id: 'goblin_2' }, { id: 'wolf_2', golden: true }] });
   let tgt;
-  const pick = (type, keys) => new Promise(async (res) => { S.pickTarget(S.eng.party[0], type).then(res); await step(2); for (const k of keys) { await press(k); await step(1); } });
-  let pr = pick('ally', ['left']); await step(1);
+  const pick = (type) => S.pickTarget(S.eng.party[0], type);
+  let pr = pick('ally'); await step(2); await press('left'); await step(1);
   ok(S.picking && S.picking.ally === S.eng.party[3], 'T1 ally cursor wraps over all four members (0 ← → 3)', S.picking && S.picking.ally && S.picking.ally.idx);
   ok(/^マルタ　HP \d+\/\d+　MP \d+\/\d+　WP \d+\/\d+$/.test(S.panel.help()), 'T2 ally help: name HP MP WP', S.panel.help());
   await press('a'); tgt = await pr;
   ok(tgt === S.eng.party[3], 'T3 the chosen ally is returned');
   S.eng.party[1].c.hp = 0;
-  pr = pick('ally', ['right']); await step(1);
+  pr = pick('ally'); await step(2); await press('right'); await step(1);
   ok(S.picking.ally === S.eng.party[2], 'T4 ally skips the one who is down');
   await press('b'); tgt = await pr;
-  pr = pick('ally_dead', []); await step(1);
+  pr = pick('ally_dead'); await step(2);
   ok(S.picking.ally === S.eng.party[1], 'T5 ally_dead starts on the one who is down');
   await press('a'); tgt = await pr;
   S.eng.party[1].c.hp = 100;
-  pr = pick('enemy', []); await step(1);
+  pr = pick('enemy'); await step(2);
   ok(S.panel.help() === S.eng.mons[0].name && /Ａ$/.test(S.eng.mons[0].name), 'T6 enemy help = name with its letter', S.panel.help());
   await press('left'); await step(1);
   ok(S.picking.units[0] === S.eng.mons[3] && S.panel.helpColor() === R.Gfx.C.gold, 'T7 enemy cursor wraps; a golden name in gold');
   await press('a'); tgt = await pr;
   ok(S.eng.party[0].c.mem.target === S.eng.mons[3].key, 'T8 the enemy target is remembered (unit key)');
-  pr = pick('group', []); await step(1);
-  ok(S.panel.help() === S.eng.mons[0].base + '　3匹', 'T9 group help 「小鬼の斧兵　3匹」', S.panel.help());
+  pr = pick('group'); await step(2);
+  ok(S.panel.help() === S.eng.mons[3].name, 'T9 group choice starts on the remembered target (the golden one, alone)', S.panel.help());
+  await press('left'); await step(1);
+  ok(S.panel.help() === S.eng.mons[0].base + '　3匹' && S.picking.units.length === 3, 'T9b group help 「小鬼の斧兵　3匹」', S.panel.help());
   await press('b'); await pr;
-  pr = pick('enemies', []); await step(1);
+  pr = pick('enemies'); await step(2);
   ok(S.panel.help() === '敵全体' && S.picking.units.length === 4, 'T10 敵全体');
   await press('b'); await pr;
-  pr = pick('random', []); await step(1);
+  pr = pick('random'); await step(2);
   ok(S.panel.help() === '敵全体にランダム', 'T11 敵全体にランダム');
   await press('b'); await pr;
-  pr = pick('allies', []); await step(1);
+  pr = pick('allies'); await step(2);
   ok(S.panel.help() === '味方全員' && S.isPicked(S.eng.party[2]), 'T12 味方全員 raises every window');
   await press('b'); await pr;
   ok((await S.pickTarget(S.eng.party[0], 'party')) === null && (await S.pickTarget(S.eng.party[0], 'self')) === null, 'T13 party / self: no choice');
@@ -253,7 +262,9 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   const combo = DB.actions[pickC.combo];
   const firstEl = Object.keys(DB.elements).find((e) => combo.elements.includes(e));
   ok(B.ui.bannerOf(combo).color === DB.elements[firstEl].color, 'G3 a spell banner takes its first element colour (official order)', [combo.elements, firstEl]);
-  ok(B.ui.bannerOf(DB.actions[pickC.tech]).w === 128, 'G4 banner width ≥ 128');
+  const bt = B.ui.bannerOf(DB.actions[pickC.tech]);
+  ok(bt.w === Math.max(128, Math.ceil(R.Gfx.textWidth(bt.name, 16)) + 40), 'G4 banner width = max(128, tw + 40)', bt.w);
+  ok(B.ui.bannerOf({ name: 'ひかり', kind: 'tech' }).w === 128, 'G4b a short name keeps the 128 minimum');
   const long = B.ui.bannerOf(DB.actions.bui_t_long);
   ok(long.w === Math.max(128, Math.ceil(R.Gfx.textWidth(DB.actions.bui_t_long.name, 16)) + 40) && long.w <= 176, 'G5 8-character name: w = tw + 40 (≈168)', long.w);
   for (const spd of [0, 1, 2]) {
@@ -266,11 +277,13 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     await step(1);
     ok(sfx[0] === 'glimmer' && S.winFx[0].glow > 0, 'G6 ピコーン + the window glows (speed ' + spd + ')');
     await until(() => back >= 0, 40);
-    ok(back === 12, 'G7 the handler hands back at frame 12 (speed ' + spd + ')', back);
+    const t0 = S.glim.t0;
+    back = back + F0 - t0;
+    ok(back === 12, 'G7 the handler hands back at frame 12 after the ピコーン (speed ' + spd + ')', back);
     let fxAt = -1;
     S.playFx({ t: 'fx', fx: 'slash', user: S.eng.party[0], targets: [S.eng.mons[0]], kind: 'ability' });
     const n0 = S.fxList.length;
-    await until(() => { if (S.fxList.length > n0 && fxAt < 0) fxAt = R.Engine.frame - F0; return fxAt >= 0; }, 120);
+    await until(() => { if (S.fxList.length > n0 && fxAt < 0) fxAt = R.Engine.frame - t0; return fxAt >= 0; }, 120);
     const H = Math.max(36, Math.round(50 / [1, 1.6, 2.6][spd]));
     ok(fxAt >= H && fxAt <= H + 1, 'G8 the next fx starts at frame H = max(36, 50/spd) (speed ' + spd + ')', { fxAt, H });
     ok(S.glim && S.glim.name === DB.actions[pickC.tech].name, 'G9 banner holds the tech name');
@@ -282,8 +295,9 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   S = BUI.open({ mons: std() });
   let second = -1;
   const F1 = R.Engine.frame;
-  S.handle({ t: 'glimmer', u: S.eng.party[0], id: pickC.tech, kind: 'tech' });
-  S.handle({ t: 'glimmer', u: S.eng.party[1], id: pickC.tech, kind: 'tech' }).then(() => { second = R.Engine.frame; });
+  // events play one after another (scene.play), as the engine yields them
+  S.handle({ t: 'glimmer', u: S.eng.party[0], id: pickC.tech, kind: 'tech' })
+    .then(() => S.handle({ t: 'glimmer', u: S.eng.party[1], id: pickC.tech, kind: 'tech' })).then(() => { second = R.Engine.frame; });
   await until(() => second >= 0, 200);
   ok(second - F1 >= 50 + 6 + 12, 'G11 the second banner waits for the first to close', second - F1);
   // a whole round through the scripted engine: glimmer → message → fx (waits) → damage
@@ -409,9 +423,9 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     phase = 'end';
   })();
   await step(3);
-  // round 1: everyone attacks by hand
-  for (let k = 0; k < 3; k++) { await press('a'); await step(2); await press('a'); await step(2); await press('a'); await step(2); await press('a'); await step(2); }
-  await until(() => rounds >= 1 && phase === 'input', 800);
+  // round 1: everyone attacks by hand (A through 戦う → 剣 → 攻撃 → the first enemy)
+  for (let k = 0; k < 40 && phase === 'input'; k++) { await press('a'); await step(2); }
+  await until(() => rounds >= 1 && phase === 'input' && S.panel, 1200);
   ok(S.panel && !S.panel.left.isDisabled(1), 'P1 リピート is selectable after a round of commands');
   await press('right'); await step(1);
   ok(S.panel.help() === '前と同じ行動を、Bを押すまで続ける。', 'P2 リピート help', S.panel.help());
@@ -461,8 +475,8 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   ok(FX.resolve(null, { kind: 'spell', elements: ['light'], effects: [{ type: 'damage' }] }).kind === 'holy', 'F4 an element without fx id uses DB.elements[el].fx (light → holy)');
   ok(FX.sfxFor('holy', { kind: 'spell', elements: ['light'] }) === DB.elements.light.sfx, 'F5 element sound from DB.elements (light)');
   ok(FX.sfxFor('arrow', null) === 'arrow' && FX.sfxFor('lash', null) === 'lash' && FX.sfxFor('stance', null) === 'buff', 'F6 new fx sounds arrow / lash / buff');
-  const g = FX.glyphs('orange');
-  ok(g && g['0'], 'F7 orange digits');
+  FX.glyphs('orange');
+  ok(R.Gfx.has('bfx:digits_orange'), 'F7 orange digits');
   // every fx id the data writes resolves to an effect by its exact id (no keyword guessing)
   const used = new Set();
   const addFx = (f) => { for (const x of [].concat(f || [])) if (x) used.add(String(x)); };

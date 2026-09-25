@@ -42,8 +42,8 @@
     return dx;
   }
 
-  function sheetHelp() {
-    const list = spells();
+  function sheetHelp(from, n) {
+    const list = spells().slice(from || 0, (from || 0) + (n || 77));
     const H = 8 + list.length * 20 + 8;
     const G = prepare(H);
     let y = 6;
@@ -58,18 +58,17 @@
     return list.map((a) => ({ id: a.id, descW: +G.textWidth(a.desc).toFixed(1) }));
   }
 
-  function sheetList() {
+  function sheetList(from, n) {
     const list = spells();
-    const pages = Math.ceil(list.length / 6);
+    const p0 = Math.floor((from || 0) / 6), pages = Math.min(Math.ceil(list.length / 6) - p0, n ? Math.ceil(n / 6) : 99);
     const H = 6 + pages * 72 + 4;
     const G = prepare(H);
     const items = list.map((a) => ({ label: a.name, right: 'M' + a.mp, color: undefined }));
-    for (let p = 0; p < pages; p++) {
-      const L = new R.UI.List({ x: 8, y: 6 + p * 72, w: 240, h: 68, cols: 2, rows: 3, lineH: 16, padY: 10, title: '術', items, index: p * 6, active: false });
+    for (let q = 0; q < pages; q++) {
+      const p = p0 + q;
+      const L = new R.UI.List({ x: 8, y: 6 + q * 72, w: 240, h: 68, cols: 2, rows: 3, lineH: 16, padY: 10, title: '術', items, index: p * 6, active: false });
       L.top = p * 3;
       L.draw({ showInactiveCursor: true });
-      // 左の余白に、そのページの最初の術の段
-      G.text(STEP(list[p * 6]), 2, 6 + p * 72 + 28, { size: 16 / 3 * 1.5, color: G.C.gray });
     }
     return { pages };
   }
@@ -105,32 +104,32 @@
     // 属性
     G.window(4, 4, 248, 40, { title: '属性' });
     EL.forEach((e, i) => {
-      const d = R.DB.elements[e], x = 14 + i * 40;
+      const d = R.DB.elements[e], x = 10 + i * 40;
       G.rect(x, 16, 10, 10, d.color);
       if (G.has(d.icon)) G.draw(G.get(d.icon), x + 14, 17, { w: 8, h: 8 });
       G.text(d.name, x + 25, 14, { color: d.color });
       G.text('弱' + R.DB.elements[d.weakTo].name, x + 2, 28, { size: 8, color: G.C.gray });
     });
     // 状態の印
-    G.window(4, 48, 248, 64, { title: '状態の印' });
+    G.window(4, 48, 248, 60, { title: '状態の印' });
     const st = Object.keys(R.DB.statuses);
     st.forEach((s, i) => {
-      const d = R.DB.statuses[s], col = i % 5, row = Math.floor(i / 5);
-      const x = 14 + col * 47, y = 58 + row * 17;
+      const d = R.DB.statuses[s], col = i % 4, row = Math.floor(i / 4);
+      const x = 12 + col * 60, y = 57 + row * 12;
       const key = 'bfx:icon_' + s;
       if (G.has(key)) G.draw(G.get(key), x, y + 2, { w: 8, h: 8 });
       G.text(d.icon || '―', x + 10, y, { color: d.bad ? '#ff9090' : '#90e0ff' });
-      G.fitText(d.name, x + 22, y + 1, 24, { size: 8, color: G.C.white });
+      G.fitText(d.name, x + 22, y + 1, 34, { size: 8, color: G.C.white });
     });
     // 状態の文（{name} に 5 字の名前を入れて 20 字の窓に収まるか）
-    G.window(4, 116, 248, 104, { title: '状態の文（5 字の名前）' });
+    G.window(4, 112, 248, 110, { title: '状態の文（5 字の名前）' });
     const nm = 'ヴィオラン';
     const lines = [];
     for (const s of st) { const d = R.DB.statuses[s]; if (d.on) lines.push(d.on.replace('{name}', nm)); if (d.off) lines.push(d.off.replace('{name}', nm)); }
     const over = [];
     lines.slice(0, 26).forEach((t, i) => {
       const col = i % 2, row = Math.floor(i / 2);
-      const x = 12 + col * 120, y = 126 + row * 7.2;
+      const x = 12 + col * 120, y = 120 + row * 7.4;
       const w = G.textWidth(t);
       if (w > 220) over.push(t);
       G.fitText(t, x, y, 114, { size: 6, color: w > 220 ? G.C.red : G.C.white });
@@ -138,9 +137,9 @@
     return { over, lines: lines.length };
   }
 
-  R.spellsSheet = function (page) {
-    if (page === 'help') return sheetHelp();
-    if (page === 'list') return sheetList();
+  R.spellsSheet = function (page, from, n) {
+    if (page === 'help') return sheetHelp(from, n);
+    if (page === 'list') return sheetList(from, n);
     if (page === 'banner') return sheetBanner();
     if (page === 'marks') return sheetMarks();
     return null;

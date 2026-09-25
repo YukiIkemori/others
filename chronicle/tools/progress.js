@@ -121,7 +121,7 @@ function bfs(model, s, opt) {
     const t = DB.tiles[tid];
     if (!t) return false;
     const dd = P.decorDef(x, y);
-    if (dd && !dd.pass) return false;
+    if (dd && !dd.pass && !dd.over) return false;
     if (M.isSecret(R, tid)) return !opt.noSecret;
     if (t.lock && !s.items.has(t.lock)) return false;
     if (t.pass) return true;

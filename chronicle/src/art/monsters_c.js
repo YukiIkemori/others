@@ -845,7 +845,7 @@
   // reaching out like arms with twig fingers, a crown of leaves on top, and
   // three or four roots splayed like feet.
   SIZES.treant = 64;
-  ANCHORS.treant = { head: [31, 11], brow: [31, 32], eyes: [[26, 36], [37, 36]], mouth: [31, 44], neck: [31, 29], back: [31, 22], body: [31, 42], hand: [6, 23], hand2: [57, 21], tail: [31, 55], feet: [31, 62], headW: 30 };
+  ANCHORS.treant = { head: [31, 11], brow: [31, 32], eyes: [[26, 36], [37, 36]], mouth: [31, 44], neck: [31, 29], back: [31, 22], body: [31, 42], hand: [6, 27], hand2: [57, 27], tail: [31, 55], feet: [31, 62], headW: 30 };
   S.treant = () => {
     const T = TS(), W = 64, H = 64;
     const barkTex = (x, y) => { const r = T.hash(x, Math.floor(y / 3), 11); return r < 0.16 ? -1 : r > 0.93 ? 1 : 0; };
@@ -861,16 +861,17 @@
     ]) sc.tube(pts.map((q) => q.concat([z])), { m: bark, g: 'roots' });
     // the trunk, a little bent
     sc.tube([[31.5, 57, 9.2, 0], [31, 46, 8.8, 0], [32, 35, 8.2, 0], [31.5, 28, 7.8, 0]], { m: bark, g: 'trunk' });
-    // arm branches with twig fingers
-    sc.tube([[25, 35, 3.6, 3], [17, 31, 2.9, 3], [11, 26.5, 2.4, 3], [8, 24, 1.8, 3]], { m: bark, g: 'armL' });
-    for (const [x, y] of [[2.2, 21.5], [3, 27.5], [6.4, 17.6]]) sc.tube([[8, 24, 1.5, 4], [(8 + x) / 2, (24 + y) / 2, 1, 4], [x, y, 0.5, 4]], { m: bark, g: 'armL' });
-    sc.tube([[38, 33, 3.6, 3], [46, 30.5, 2.9, 3], [52.5, 26, 2.3, 3], [55.5, 22, 1.8, 3]], { m: bark, g: 'armR' });
-    for (const [x, y] of [[61, 18.6], [60.4, 24.6], [55, 15.4]]) sc.tube([[55.5, 22, 1.5, 4], [(55.5 + x) / 2, (22 + y) / 2, 1, 4], [x, y, 0.5, 4]], { m: bark, g: 'armR' });
-    // leaves on the arms
-    for (const [x, y, r] of [[14, 29, 2.6], [48.5, 28.6, 2.6], [5, 19.6, 1.8], [58, 17.4, 1.8]]) sc.ell(x, y - 1.6, r, r * 0.8, { m: leaf, g: 'lv' + x, z: 6, rz: 2 });
+    // arm branches out of the sides of the trunk, reaching out and up below the
+    // crown, the tips split into twig fingers
+    sc.tube([[24.5, 39.5, 3.4, 3], [17, 37.4, 2.8, 3], [11, 33, 2.3, 3], [7, 28.4, 1.8, 3]], { m: bark, g: 'armL' });
+    for (const [x, y] of [[1.6, 25.2], [2.6, 31.4], [5.6, 21.6]]) sc.tube([[7, 28.4, 1.5, 4], [(7 + x) / 2, (28.4 + y) / 2, 1, 4], [x, y, 0.5, 4]], { m: bark, g: 'armL' });
+    sc.tube([[39, 39.5, 3.4, 3], [46.5, 37.4, 2.8, 3], [52.5, 33, 2.3, 3], [56.5, 28.4, 1.8, 3]], { m: bark, g: 'armR' });
+    for (const [x, y] of [[61.8, 25.2], [60.8, 31.4], [57.8, 21.6]]) sc.tube([[56.5, 28.4, 1.5, 4], [(56.5 + x) / 2, (28.4 + y) / 2, 1, 4], [x, y, 0.5, 4]], { m: bark, g: 'armR' });
+    // leaves sprouting on the arms
+    for (const [x, y, r] of [[14.6, 33.6, 2.4], [49, 33.6, 2.4], [3.4, 21.6, 1.8], [60, 21.6, 1.8]]) sc.ell(x, y - 1.6, r, r * 0.8, { m: leaf, g: 'lv' + x, z: 6, rz: 2 });
     // crown of leaves: a heap of clumps, each shaded as its own ball (soft seams)
     const CL = [
-      [31.5, 23, 15, 6.6, 0], [17.5, 23.4, 6.6, 5.8, 1], [45.5, 23.4, 6.6, 5.8, 1], [11.4, 25.6, 4, 3.4, 2], [51.6, 25.6, 4, 3.4, 2],
+      [31.5, 23, 15, 6.6, 0], [17.5, 23.4, 6.6, 5.8, 1], [45.5, 23.4, 6.6, 5.8, 1], [12.6, 25, 3.4, 3, 2], [50.4, 25, 3.4, 3, 2],
       [24, 17.4, 7, 6, 2], [39, 17.4, 7, 6, 2], [31.5, 15.2, 6, 4.6, 3], [18, 17.8, 4.2, 3.6, 0], [45, 17.8, 4.2, 3.6, 0],
       [22, 27.6, 5, 3, 4], [31.5, 28.4, 5.4, 3, 5], [41, 27.6, 5, 3, 4], [29, 11.8, 3.2, 2.2, 1], [35, 12, 3, 2.2, 1],
     ];
@@ -892,7 +893,7 @@
     ], { k: '#201008' });
     // foliage: leaf-shaped glints on the lit clumps, dark gaps between clumps
     const L = leaf.r;
-    for (const [x, y] of [[21, 13], [27, 10], [33, 11], [37, 13], [15, 19], [42, 19], [29, 14], [10, 23], [20, 20], [35, 17], [48, 21]]) {
+    for (const [x, y] of [[21, 13], [27, 10], [33, 11], [37, 13], [15, 19], [42, 19], [29, 14], [11, 23], [20, 20], [35, 17], [48, 21]]) {
       over(p, x, y, L[6]); over(p, x + 1, y, L[5]); over(p, x, y + 1, L[5]);
     }
     return finish(p);
