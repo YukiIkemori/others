@@ -1,0 +1,618 @@
+[
+ {
+  "look": "berna",
+  "name": "ベルナ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 1,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "fine",
+  "name": "フィーネ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 1,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "otto",
+  "name": "オットー",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 1,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "rowell",
+  "name": "ロウェル",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 1,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "bartolo",
+  "name": "バルトロ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "basil",
+  "name": "バジル",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "belladonna",
+  "name": "ベラドナ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "boden",
+  "name": "ボーデン",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "brigitta",
+  "name": "ブリギッタ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "dokka",
+  "name": "ドッカ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "ferno",
+  "name": "フェルノ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "hagen",
+  "name": "ハーゲン",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "hero_f_mage",
+  "name": "旅の術師",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "hero_f_ranger",
+  "name": "旅の狩人",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "hero_f_spellblade",
+  "name": "旅の術剣士",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "hero_f_wanderer",
+  "name": "旅人",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "hero_f_warrior",
+  "name": "旅の剣士",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "hero_m_mage",
+  "name": "旅の術師",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "hero_m_ranger",
+  "name": "旅の狩人",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "hero_m_spellblade",
+  "name": "旅の術剣士",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "hero_m_wanderer",
+  "name": "旅人",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "hero_m_warrior",
+  "name": "旅の剣士",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "原画のシートの表情（sprite_pipe）を使用中"
+ },
+ {
+  "look": "ilse",
+  "name": "イルゼ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "marta",
+  "name": "マルタ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "morga",
+  "name": "モルガ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "noela",
+  "name": "ノエラ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "rouga",
+  "name": "ロウガ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "selma",
+  "name": "セルマ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "shigure",
+  "name": "シグレ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "sylvain",
+  "name": "シルヴァン",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "teo",
+  "name": "テオ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "titta",
+  "name": "ティッタ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "viola",
+  "name": "ヴィオラ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "zafira",
+  "name": "ザフィラ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 2,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "elm",
+  "name": "エルム",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 3,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "npc_ben",
+  "name": "ベン",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 3,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "npc_gord",
+  "name": "ゴード",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 3,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "npc_hanna",
+  "name": "ハンナ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 3,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "npc_hans",
+  "name": "ハンス",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 3,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "npc_pim",
+  "name": "ピム",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 3,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "npc_pim_mother",
+  "name": "ピムの母",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 3,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "npc_rita",
+  "name": "リタ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 3,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "npc_roy",
+  "name": "ロイ",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 3,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "npc_yura_elder",
+  "name": "ユラの長老",
+  "exprs": [
+   "neutral",
+   "smile",
+   "sad",
+   "angry",
+   "surprise"
+  ],
+  "priority": 3,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ }
+]

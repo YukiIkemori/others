@@ -31,8 +31,10 @@
       tasks.push(() => {
         const B = new RZ.Builder();
         const pt = rig.field.build(B, L, DIR[d], fr, { lantern });
-        const r = RZ.render(B, rig.renderOpts({ scale: sc, light: rig.light('field') }));
+        const ro = rig.renderOpts({ scale: sc, light: rig.light('field') });
+        const r = RZ.render(B, ro);
         const f = cast.limitColors(RZ.frame(r), cast.maxColors('field'));
+        if (d === 's' && fr === 0) f.skin = cast.skinColors((B2, L2) => rig.field.build(B2, L2, DIR[d], fr, { lantern }), L, ro, f);
         const rel = (q) => (q ? [Math.round(q[0] * sc), Math.round(q[1] * sc)] : null);
         f.anchors = { head: rel(pt.head) };
         if (pt.lantern) f.anchors.lantern = rel(pt.lantern);
@@ -68,7 +70,7 @@
     for (const f of frames) { w = Math.max(w, f.c.width); h = Math.max(h, f.c.height); }
     const headR = Math.round(9 * (o.L && o.L.headScale ? o.L.headScale / 0.88 : 1) * o.sc);
     return { frames, poses, fps, anchors, w, h,
-      meta: { look, source: o.source, placeholder: o.source !== 'sprite', skin: o.L ? cast.skinColors([frames[idx.s0]], o.L) : [], headR, lantern: lant, scale: o.sc } };
+      meta: { look, source: o.source, placeholder: o.source !== 'sprite', skin: frames[idx.s0].skin || [], headR, lantern: lant, scale: o.sc } };
   }
   cast._finishField = finishField;
 

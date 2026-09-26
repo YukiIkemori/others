@@ -635,49 +635,15 @@ SCALE_REFS = {'btl': ['idle_a', 'step', 'bare_idle', 'thrust_ready'], 'fld': ['w
 SCALE_SKIP = {'ko', 'act_lie', 'sleep_lie'}      # lying: the head is turned 90 degrees, the match is not reliable
 
 
-def scale2x(img):
-    """EPX / Scale2x on RGBA pixel art (edges stay crisp, diagonals get smoothed by one pixel)"""
-    H, W = img.shape[:2]
-    p = np.pad(img, ((1, 1), (1, 1), (0, 0)), mode='edge')
-    E = p[1:-1, 1:-1]
-    B, D, F, Hh = p[:-2, 1:-1], p[1:-1, :-2], p[1:-1, 2:], p[2:, 1:-1]
-    eq = lambda a, b: (a == b).all(-1)
-    c = ~eq(B, Hh) & ~eq(D, F)
-    out = np.zeros((H * 2, W * 2, 4), img.dtype)
-    out[0::2, 0::2] = np.where((c & eq(D, B))[..., None], D, E)
-    out[0::2, 1::2] = np.where((c & eq(B, F))[..., None], F, E)
-    out[1::2, 0::2] = np.where((c & eq(D, Hh))[..., None], D, E)
-    out[1::2, 1::2] = np.where((c & eq(Hh, F))[..., None], F, E)
-    return out
+scale2x, rescale_pixel = P.scale2x, P.rescale_pixel
 
 
-def rescale_pixel(img, k):
-    """Resize pixel art by k: Scale2x up to >= 2k, then each target pixel takes the most common colour of its
-    source block (alpha by majority; dark outline colours win ties). Keeps 1-pixel outlines better than nearest."""
-    src, f = img, 1
-    while f < 2 * k:
-        src, f = scale2x(src), f * 2
-    H, W = img.shape[:2]
-    th, tw = max(1, int(round(H * k))), max(1, int(round(W * k)))
-    ys = np.linspace(0, src.shape[0], th + 1)
-    xs = np.linspace(0, src.shape[1], tw + 1)
-    out = np.zeros((th, tw, 4), np.uint8)
-    for j in range(th):
-        for i in range(tw):
-            blk = src[int(ys[j]):max(int(ys[j]) + 1, int(ys[j + 1])), int(xs[i]):max(int(xs[i]) + 1, int(xs[i + 1]))].reshape(-1, 4)
-            op = blk[blk[:, 3] > 0]
-            if len(op) * 2 < len(blk):
-                continue
-            u, cnt = np.unique(op, axis=0, return_counts=True)
-            lum = u[:, :3].astype(int).sum(1)
-            out[j, i] = u[np.lexsort((lum, -cnt))[0]]
-    return out
-
-
-def check_scale(runs, rep, tol_redo=0.2, tol_check=0.15, fix=True):
+def check_scale(runs, rep, tol_redo=0.2, tol_check=0.12, fix=True):
     """Drawn scale of each pose (head size vs the reference poses, tools/bodyscale.py). The bounding box misses a pose
-    drawn smaller with a raised sword (the sword keeps the box at the target height). Poses off by more than ~18 %
-    are rescaled as a fallback (Scale2x + majority sampling) and a redraw is asked for."""
+    drawn smaller with a raised sword (the sword keeps the box at the target height). Each pose's scale is taken
+    relative to the median of its group (battle / field) — the head match reads tilted heads a little small, so the
+    group median is the '100 %'. Off by more than 20 %: a redraw is asked for and the pose is rescaled as a
+    fallback (Scale2x + majority sampling); 12-20 %: look at it."""
     from bodyscale import head_crop, scale_of
     from facing import group_of
     allsp = {sid: (n, v) for n, sp in runs.items() for sid, v in sp.items()}
@@ -685,31 +651,40 @@ def check_scale(runs, rep, tol_redo=0.2, tol_check=0.15, fix=True):
         refs = [(r, head_crop(allsp[r][1]['img'])) for r in SCALE_REFS[g] if r in allsp]
         if len(refs) < 2:
             continue
+        meas = []
         for n, sp in runs.items():
             if group_of(n) != g:
                 continue
             spec = SHEETS[n]
             for sid, v in sp.items():
-                if sid.startswith('wpn_') or sid in SCALE_SKIP or sid in spec.get('no_scale', []):
+                if sid.startswith('wpn_') or sid in SCALE_SKIP or sid in SCALE_REFS[g]:   # the references define 100 %
                     continue
-                rr = [h for r, h in refs if r != sid]
-                sc, per = scale_of(v['img'], rr)
-                v['scale'] = round(sc, 3)
-                name = slot_name(n, v['row'], v['col'])
-                num = v['row'] * spec['cols'] + v['col'] + 1
-                pct = int(round(100 * sc))
-                if abs(np.log(sc)) > np.log(1 + tol_redo):
-                    big = sc > 1
-                    k = 1.0 / sc
-                    if fix:
-                        v['img'] = rescale_pixel(v['img'], k)
-                        v['fixed'] = v.get('fixed', []) + ['rescaled %.2f' % k]
-                    rep.add(n, 'redo', 'scale', '%s がほかのポーズより%s描かれている（頭の大きさで約 %d%%）。仮に %d%% に拡大縮小して使う' % (
-                        name, '大きく' if big else '小さく', pct, int(round(100 * k))), slot=sid, scale=sc, per_ref=per,
-                        ask='シート%dの%d番（%s）だけ%s描かれている（ほかの約 %d%%）。ほかのポーズと同じ縮尺（頭の大きさをそろえる）にして、同じ条件で描き直して' % (
-                            n, num, spec['ja'][v['row']][v['col']], '大きく' if big else '小さく', pct))
-                elif abs(np.log(sc)) > np.log(1 + tol_check):
-                    rep.add(n, 'check', 'scale_small', '%s の縮尺が少し違う（頭の大きさで約 %d%%）。並べて見て気になるなら描き直し' % (name, pct), slot=sid, scale=sc, per_ref=per)
+                sc, per = scale_of(v['img'], [h for r, h in refs if r != sid])
+                meas.append((n, sid, v, sc, per))
+        if not meas:
+            continue
+        base = float(np.median([m[3] for m in meas]))
+        for n, sid, v, sc_raw, per in meas:
+            spec = SHEETS[n]
+            sc = sc_raw / base
+            v['scale'] = round(sc, 3)
+            name = slot_name(n, v['row'], v['col'])
+            num = v['row'] * spec['cols'] + v['col'] + 1
+            pct = int(round(100 * sc))
+            if abs(np.log(sc)) > np.log(1 + tol_redo):
+                big = sc > 1
+                k = 1.0 / sc
+                if fix:
+                    v['img'] = rescale_pixel(v['img'], k)
+                    v['fixed'] = v.get('fixed', []) + ['rescaled %.2f' % k]
+                rep.add(n, 'redo', 'scale', '%s がほかのポーズより%s描かれている（頭の大きさで約 %d%%）。%s' % (
+                    name, '大きく' if big else '小さく', pct, '仮に %d%% に拡大縮小して使う' % int(round(100 * k)) if fix else ''),
+                    slot=sid, scale=sc, per_ref=per, group_median=base,
+                    ask='シート%dの%d番（%s）だけ%s描かれている（頭の大きさがほかのポーズの約 %d%%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して' % (
+                        n, num, spec['ja'][v['row']][v['col']], '大きく' if big else '小さく', pct))
+            elif abs(np.log(sc)) > np.log(1 + tol_check):
+                rep.add(n, 'check', 'scale_small', '%s の縮尺が少し違う（頭の大きさで約 %d%%）。並べて見て気になるなら描き直し' % (name, pct),
+                        slot=sid, scale=sc, per_ref=per, group_median=base)
 
 
 def check_facing(runs, fc, rep):
@@ -885,7 +860,7 @@ def check_breath(runs, rep):
         dh = abs(a.shape[0] - b.shape[0])
         if best[0] == 0 and dh == 0:
             rep.add(5, 'check', 'breath_same', '待機AとBが同じ絵。呼吸に見えない（ゲームで 1 ドットの呼吸を足す）')
-        elif frac > 0.12 or dh > 4:
+        elif frac > 0.18 or dh > 4:   # the sword tip moving 2-3 dots alone changes ~10 % of the outline
             rep.add(5, 'check', 'breath_big', '待機AとBの差が大きい（輪郭の %.0f%%、身長差 %d ドット）。交互に出すと跳ねて見えないか見る' % (100 * frac, dh))
 
 

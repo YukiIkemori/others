@@ -1,0 +1,7 @@
+{
+ "_note": "Arun v1 sheets (2026-09-26): sheet 7's weapon-less windup / slash are drawn in a different arm pose than sheet 6's armed ones, so the blade method puts the hand in the wrong place. Grip = the fist of the bare pose (sprite px), angle in image degrees (0 = right, 90 = down, 180 = left).",
+ "attach": {
+  "bare_windup": {"grip": [46, 13], "angle": -55},
+  "bare_slash": {"grip": [5, 37], "angle": 145}
+ }
+}

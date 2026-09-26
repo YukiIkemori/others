@@ -62,30 +62,30 @@
     return fr;
   };
   /**
-   * コマの中の肌の色の一覧（hd_check_hair の meta.skin）。各色を L の素材の段のうち一番近い物で分け、肌に分けられた色だけ
+   * 肌の色の一覧（hd_check_hair の meta.skin）。同じ骨組みを肌だけ目印の色（緑）にしてもう 1 回焼き、目印の画素と同じ所の色を集める。
+   * build(B, L) = Builder に積む関数、opts = RZ.render の値、fr = 色を減らした後のコマ（同じ大きさ）
    */
-  cast.skinColors = function (frames, L) {
-    const MM = R.Art.rig.M();
-    const mats = [];
-    const add = (m, isSkin) => { if (m && m.r && !mats.some((q) => q.m === m)) mats.push({ m, isSkin }); };
-    add(L.skin, true);
-    for (const v of Object.values(L)) add(v, false);
-    for (const v of Object.values(MM)) add(v, false);
-    const seen = new Map(), out = [];
-    for (const fr of frames) {
-      const c = fr.c, d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
-      for (let i = 0; i < d.length; i += 4) {
-        if (d[i + 3] < 128) continue;
-        const k = (d[i] << 16) | (d[i + 1] << 8) | d[i + 2];
-        if (seen.has(k)) continue;
-        let best = null, bd = 1e9;
-        for (const q of mats) for (const r of q.m.r) { const dd = Math.abs(r[0] - d[i]) + Math.abs(r[1] - d[i + 1]) + Math.abs(r[2] - d[i + 2]); if (dd < bd) { bd = dd; best = q; } }
-        const sk = !!(best && best.isSkin);
-        seen.set(k, sk);
-        if (sk) out.push('#' + k.toString(16).padStart(6, '0'));
-      }
+  cast.skinColors = function (build, L, opts, fr) {
+    const RZ = R.Hd.RZ;
+    const MARK = RZ.mat({ keys: ['#00ff00', '#00ff00'], n: 2, flat: true, outline: '#00ff00' });
+    const B = new RZ.Builder();
+    build(B, Object.assign({}, L, { skin: MARK }));
+    const r = RZ.render(B, opts);
+    const c = fr.c;
+    if (r.canvas.width !== c.width || r.canvas.height !== c.height) return [];
+    const m = r.canvas.getContext('2d').getImageData(0, 0, c.width, c.height).data, d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+    const sk = new Set(), other = new Set();
+    for (let i = 0; i < d.length; i += 4) {
+      if (m[i + 3] < 128 || d[i + 3] < 128) continue;
+      const k = (d[i] << 16) | (d[i + 1] << 8) | d[i + 2];
+      if (m[i + 1] > 150 && m[i] < 90 && m[i + 2] < 90) sk.add(k); else other.add(k);
     }
-    return out;
+    // 肌だけに使われた色（髪・服・縁と同じ色は数えない。暗い縁の色も除く）
+    const lum = (k) => (0.2126 * ((k >> 16) & 255) + 0.7152 * ((k >> 8) & 255) + 0.0722 * (k & 255)) / 255;
+    const near = (a, b) => Math.abs(((a >> 16) & 255) - ((b >> 16) & 255)) + Math.abs(((a >> 8) & 255) - ((b >> 8) & 255)) + Math.abs((a & 255) - (b & 255)) < 40;
+    const oth = Array.from(other);
+    // 検査は「差 40 未満」で肌と数えるので、髪・服の色と見分けのつかない肌の色は一覧から外す（見分けられる肌の色だけ）
+    return Array.from(sk).filter((k) => !other.has(k) && lum(k) > 0.35 && !oth.some((o) => near(o, k))).map((k) => '#' + k.toString(16).padStart(6, '0'));
   };
   cast.maxColors = function (kind) { const C = (R.Hd.STYLE && R.Hd.STYLE.colors) || {}; return ((C[kind] || [0, kind === 'btl' ? 80 : 55])[1]) - 4; };
 
@@ -112,13 +112,15 @@
       });
     }
     const sc = BTL_SCALE;
-    let pts0 = null;
+    let pts0 = null, skin = [];
     const tasks = specs.map((s, i) => () => {
       const p = rig.frameSpec(s.sp, s.useBase ? base : null);
       const B = new RZ.Builder();
       const pt = rig.draw(B, L, p);
-      const r = RZ.render(B, rig.renderOpts({ flip: true, scale: sc, light: rig.light('btl') }));
+      const ro = rig.renderOpts({ flip: true, scale: sc, light: rig.light('btl') });
+      const r = RZ.render(B, ro);
       const f = cast.limitColors(RZ.frame(r), cast.maxColors('btl'));
+      if (i === 0) skin = cast.skinColors((B2, L2) => rig.draw(B2, L2, p), L, ro, f);
       const rel = (q) => [Math.round(-q[0] * sc), Math.round(q[1] * sc)];
       f.anchors = { head: rel(pt.head), hand: rel(pt.hand) };
       if (i === 0) pts0 = { pt, rel };
@@ -131,7 +133,7 @@
       let w = 0, h = 0;
       for (const f of frames) { w = Math.max(w, f.c.width); h = Math.max(h, f.c.height); }
       return { frames, poses, fps: Object.assign({}, rig.BATTLE_FPS), anchors, w, h,
-        meta: { look, wtype, facing: 'left', source: 'rig', placeholder: true, skin: cast.skinColors([frames[0]], L), headR: Math.round(pt.headR * sc) } };
+        meta: { look, wtype, facing: 'left', source: 'rig', placeholder: true, skin, headR: Math.round(pt.headR * sc) } };
     }, 'btl');
   }
   cast._rigBattle = rigBattle;

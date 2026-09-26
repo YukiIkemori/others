@@ -28,7 +28,7 @@
     K.path(g, [[29, 0], [29, 55]], 'r', 2);
     K.rect(g, 22, 26, 16, 9, 'e');                          // 広場
     K.rect(g, 24, 28, 12, 5, 'c');                          //   広場の石畳の輪
-    K.rect(g, 27, 29, 6, 3, 'e');
+    K.rect(g, 27, 29, 6, 3, '*');                          //   真ん中の花壇（歌の碑）
     K.path(g, [[22, 30], [9, 30], [9, 29]], 'r', 2);       // 広場 → 宿
     K.path(g, [[37, 30], [44, 30], [44, 29]], 'r', 2);     // 広場 → 道具屋
     K.path(g, [[29, 38], [13, 38], [13, 45], [18, 45]], 'r', 1);   // → ピムの家
@@ -46,26 +46,25 @@
     K.rect(g, 20, 12, 18, 2, '=');                          // つり橋（道の上を渡る）
     K.rect(g, 4, 32, 9, 7, '=');                            // T3 の足場
     K.put(g, 10, 12, ':'); K.put(g, 47, 12, ':'); K.put(g, 27, 14, ':'); K.put(g, 13, 35, ':');
-    // 幹のマス（足場の穴。地面では大木の物が立つ）
-    for (const [x, y] of [[15, 12], [42, 12], [8, 35]]) K.put(g, x, y, 'Y');
 
     // ---------------------------------------------------------------- 建物
     const O = [];
     const B = (id, x, y, w, h, o) => Object.assign({ type: 'building', id, x, y, w, h, wall: 2, roof: 'thatch', mat: 'log', windows: 2 }, o || {});
     O.push(B('fern_b_inn', 5, 24, 9, 5, { door: { x: 9, y: 28, to: { map: 'fern_inn', spawn: 'door' } }, sign: 'inn', windows: 3, lamp: true, flowers: true, roof: 'moss', mat: 'log', chimney: true }));
     O.push(B('fern_b_shop', 41, 24, 7, 5, { door: { x: 44, y: 28, to: { map: 'fern_shop', spawn: 'door' } }, sign: 'item', lamp: true, awning: true, roof: 'thatch' }));
-    O.push(B('fern_b_gord', 21, 3, 6, 4, { door: { x: 24, y: 6, to: { map: 'fern_gord', spawn: 'door' } }, roof: 'bark', mat: 'log', lamp: true }));
-    O.push(B('fern_b_search', 33, 3, 7, 5, { door: { x: 36, y: 7, to: { map: 'fern_search', spawn: 'door' } }, roof: 'shingle', mat: 'plank', lamp: true, sign: 'guild' }));
+    O.push(B('fern_b_gord', 21, 3, 6, 4, { door: { x: 24, y: 6, to: { map: 'fern_gord', spawn: 'door' } }, roof: 'thatch', mat: 'log', lamp: true, chimney: true }));
+    O.push(B('fern_b_search', 33, 3, 7, 5, { door: { x: 36, y: 7, to: { map: 'fern_search', spawn: 'door' } }, roof: 'moss', mat: 'plank', lamp: true, sign: 'guild' }));
     O.push(B('fern_b_rita', 49, 5, 6, 5, { door: { x: 52, y: 9, to: { map: 'fern_rita', spawn: 'door' } }, roof: 'moss', mat: 'bark', windows: 2, flowers: true, lamp: true }));
     O.push(B('fern_b_pim', 15, 41, 6, 4, { door: { x: 18, y: 44, to: { map: 'fern_pim_home', spawn: 'door' } }, roof: 'thatch', mat: 'log', flowers: true }));
-    O.push(B('fern_b_house1', 37, 40, 6, 4, { door: { x: 40, y: 43 }, roof: 'bark', mat: 'log', windows: 1 }));
+    O.push(B('fern_b_house1', 37, 40, 6, 4, { door: { x: 40, y: 43 }, roof: 'thatch', mat: 'log', windows: 2, flowers: true }));
     O.push(B('fern_b_house2', 4, 4, 6, 4, { roof: 'moss', mat: 'bark', windows: 1 }));
     O.push(B('fern_b_house3', 47, 34, 6, 4, { roof: 'thatch', mat: 'log', windows: 2 }));
-    O.push(B('fern_b_shed', 22, 44, 4, 3, { roof: 'bark', mat: 'plank', windows: 0, small: true }));
+    O.push(B('fern_b_shed', 22, 44, 4, 3, { roof: 'thatch', mat: 'plank', windows: 0, small: true, chimney: false }));
 
     // 大木（幹）と足場の灯り
-    O.push(K.prop('tree_giant', 15, 12), K.prop('tree_giant', 42, 12), K.prop('tree_giant', 8, 35));
-    O.push(K.prop('tree_giant', 54, 12));                   // いちばん高い木（リタの家の脇）
+    // 大木（足場を支える幹。地面の層に立つ）
+    O.push(K.prop('tree_giant', 15, 8), K.prop('tree_giant', 43, 8), K.prop('tree_giant', 3, 36), K.prop('tree_giant', 20, 16));
+    O.push(K.prop('tree_giant', 56, 11));                   // いちばん高い木（リタの家の脇）
     for (const [x, y] of [[12, 10], [18, 14], [39, 10], [45, 14], [22, 12], [35, 13], [5, 33], [11, 38]]) O.push(K.prop('lantern', x, y, { lv: 1 }));
     // 町の宝箱 2（見える所だけ。1 つは北西の足場の上）
     O.push(K.chest('fern_c1', 18, 10, { lv: 1, pool: 'p_T' }), K.chest('fern_c2', 55, 30, { item: 'i_revive', n: 1 }));
@@ -74,6 +73,8 @@
     O.push(K.prop('board', 24, 27), K.exam(25, 27, 'fern_board'));
     O.push(K.prop('stall', 34, 27), K.prop('crate', 36, 27), K.prop('sack', 36, 28));
     O.push(K.prop('bench', 23, 32), K.prop('bench', 36, 32), K.prop('well', 25, 33));
+    O.push(K.prop('songstone', 29, 30, { variant: 0 }), K.exam(30, 30, 'fern_monument'));            // 千年樹の歌の碑
+    O.push(K.prop('lantern', 27, 29), K.prop('lantern', 32, 31), K.prop('flower_pot', 23, 35), K.prop('planter', 34, 35), K.prop('bench', 26, 35), K.prop('crate', 38, 28));
     O.push(K.sign(31, 36, '森の村フェルン\n――歌は森の道しるべ'));
     O.push(K.sign(27, 51, '↑ フェルン　↓ 森の道'));
     O.push(K.sign(31, 3, '↑ 迷いの森\n（捜索隊の許しなく入るべからず）'));
@@ -96,7 +97,17 @@
     const keep = new Set();
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if ('rkcY:'.includes(K.at(g, x, y))) keep.add(x + ',' + y);
     for (const o of O) if (o.type === 'building' && o.door) for (let dy = 0; dy <= 2; dy++) keep.add(o.door.x + ',' + (o.door.y + dy));
-    K.scatter(g, O, 'firefly', 12, [2, 2, 56, 52], ',.', 'fff', { keep, gap: 5 });
+    // 家の角に小物を 2〜3 個ずつ（通りの真ん中は空ける。STYLE_REFERENCE §6.2）
+    for (const [x, y, ids] of [
+      [4, 23, ['barrel', 'crate']], [14, 24, ['flower_pot']], [40, 23, ['barrel', 'sack']], [48, 27, ['crate']], [20, 3, ['log', 'crate']], [27, 4, ['barrel']],
+      [32, 5, ['barrel', 'crate']], [48, 6, ['flower_pot']], [14, 40, ['crate']], [21, 41, ['flower_pot']], [36, 40, ['sack']], [43, 40, ['barrel']],
+      [46, 33, ['hay']], [53, 36, ['crate', 'barrel']], [22, 43, ['log']], [26, 44, ['sack']],
+    ]) ids.forEach((id, i) => { const q = K.prop(id, x, y + i); if (!O.some((o) => o.x === q.x && o.y === q.y)) O.push(q); });
+    // 村の中の木（樹上の村の森の感じ。道・戸口・足場の下は空ける）
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if ('=:'.includes(K.at(g, x, y))) keep.add(x + ',' + y);
+    K.scatter(g, O, ['tree', 'pine', 'tree', 'bush'], 26, [3, 3, 54, 50], ',', 'ftree', { keep, gap: 4, variant: true });
+    K.scatter(g, O, 'firefly', 14, [2, 2, 56, 52], ',.', 'fff', { keep, gap: 5 });
+    K.scatter(g, O, ['mushroom_glow', 'flower_pot', 'rock_small'], 14, [2, 2, 56, 52], ',.', 'fdeco', { keep, gap: 4, variant: true });
     K.scatter(g, O, ['rock_small', 'flower_pot', 'stump'], 10, [2, 2, 56, 52], ',', 'frk', { keep, gap: 5, variant: true });
 
     // ---------------------------------------------------------------- 人
@@ -128,6 +139,11 @@
       K.npc('hen', 'ani_hen', 11, 50, { name: 'にわとり', dir: 's', move: 'wander', talk: [L('コッコッ。')], reward: null }),
       K.npc('singer', 'npc_bard_1', 38, 17, { name: '吟遊詩人', dir: 's', talk: [L('千年樹の歌？\n……おれも探しているんだ。\n吟遊詩人の名折れだよ。'), L('cleared_r_forest', 'リタの歌を聞いたかい？\nあれこそ、この森の歌さ。\n吟遊詩人も、かなわないよ。')], reward: null }),
     ];
+
+    // 人の立つマスと、その前後左右には散らした物を置かない（話しかけられるように）
+    const near = new Set();
+    for (const n of N) for (const [dx, dy] of [[0, 0], [0, 1], [0, -1], [1, 0], [-1, 0]]) near.add((n.x + dx) + ',' + (n.y + dy) + ',' + (n.lv || 0));
+    for (let i = O.length - 1; i >= 0; i--) { const o = O[i]; if (o.type === 'prop' && near.has(o.x + ',' + o.y + ',' + (o.lv || 0))) O.splice(i, 1); }
 
     K.def('fern', {
       name: '森の村フェルン', kind: 'town', region: 'r_forest', location: 'fern', theme: 'treetop',

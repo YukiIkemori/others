@@ -62,18 +62,19 @@
     x.drawImage(fr.c, 0, 0, w, h);
     return { c, ox: Math.round(fr.ox * k), oy: Math.round(fr.oy * k), id: fr.id, points: fr.points, k };
   }
-  /** 絵の中の肌の色（hd_check_hair 用。原画のパレットから肌らしい色） */
-  function skinOf(m) {
-    const pal = (m && m.palette) || [];
-    return pal.filter((h) => { const r = parseInt(h.slice(1, 3), 16), g = parseInt(h.slice(3, 5), 16), b = parseInt(h.slice(5, 7), 16); return r > 190 && g > 140 && b > 100 && r > g && g > b && r - b > 40 && r - b < 110; }).slice(0, 6);
-  }
-  /** 頭の中心（描く点からの相対）: points.head は頭のてっぺん → 頭の半径だけ下 */
+  /** 頭の中心（描く点からの相対）: 体の中心の列のまわりで一番上の不透明な行（武器を掲げても頭を拾う）から頭の半径だけ下 */
   function headAnchor(fr, headR) {
-    const p = fr.points && fr.points.head;
-    if (!p) return null;
+    const c = fr.c, w = c.width, h = c.height, d = c.getContext('2d').getImageData(0, 0, w, h).data;
     const k = fr.k || 1;
-    const a = fr.flipX ? -1 : 1;
-    return [Math.round((p[0] * k - fr.ox) * a), Math.round(p[1] * k + headR - fr.oy)];
+    const cp = fr.points && fr.points.center;
+    const cx = cp ? Math.round(cp[0] * k) : fr.ox;
+    const band = Math.max(3, Math.round(headR * 0.6));
+    for (let y = 0; y < h; y++) {
+      let sx = 0, n = 0;
+      for (let x = Math.max(0, cx - band); x <= Math.min(w - 1, cx + band); x++) if (d[(y * w + x) * 4 + 3] > 0) { sx += x; n++; }
+      if (n >= 2) return [Math.round(sx / n - fr.ox), Math.round(y + headR - fr.oy)];
+    }
+    return null;
   }
 
   // ------------------------------------------------------------------ 戦闘
@@ -204,7 +205,7 @@
     anchors.fx = [anchors.hand[0] - 10, anchors.hand[1]];
     let w = 0, h = 0;
     for (const f of frames) { w = Math.max(w, f.c.width); h = Math.max(h, f.c.height); }
-    return { frames, poses, fps: Object.assign({}, fps), anchors, w, h, meta: { skin: skinOf(m), headR, height: g0.height } };
+    return { frames, poses, fps: Object.assign({}, fps), anchors, w, h, meta: { headR, height: g0.height, skinCheck: 'skip: the source palette shares colors between hair and skin' } };
   }
   SP._build = build;
 
@@ -259,7 +260,7 @@
       const ha = src && headAnchor(src, headR);
       if (ha && !frames_[i].anchors) frames_[i].anchors = { head: ha };
     }
-    return { frames: frames_, poses, fps, anchors, w, h, meta: { look, source: 'sprite', skin: skinOf(F.meta), headR, lantern: anchorsL, scale: o.scale || 1.15 } };
+    return { frames: frames_, poses, fps, anchors, w, h, meta: { look, source: 'sprite', skinCheck: 'skip: shared palette', headR, lantern: anchorsL, scale: o.scale || 1.15 } };
   };
   /** 手にランタン（原画にランタンが無いうちは焼いた小物を手の位置に重ねる）。手 = 腰の少し上の高さの、体の一番外の列 */
   function withLantern(fr, lant, dir, anchorsL, d, lift) {

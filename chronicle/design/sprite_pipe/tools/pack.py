@@ -116,6 +116,67 @@ def weapon_axis(im, kind):
     return [int(round(g[0])), int(round(g[1]))], [int(round(tip[0])), int(round(tip[1]))], round(ang, 1), int(round(L)) + 1
 
 
+def blade_axis(im, min_len=10):
+    """The sword blade in an armed pose: the longest elongated run of light, low-chroma (steel) pixels.
+    -> dict(hilt, tip, angle, length) in im coords (tip = the end farther from the body), or None."""
+    lab = P.srgb_to_lab(im[..., :3].astype(np.float64))
+    a = im[..., 3] > 0
+    L, A, Bb = lab[..., 0], lab[..., 1], lab[..., 2]
+    m = a & (L > 50) & (np.hypot(A, Bb) < 16)
+    lb, k = nd.label(m, structure=np.ones((3, 3)))
+    best = None
+    for i in range(1, k + 1):
+        ys, xs = np.where(lb == i)
+        if len(xs) < 8:
+            continue
+        pts = np.stack([xs, ys], 1).astype(float)
+        c = pts.mean(0)
+        _, s, vt = np.linalg.svd(pts - c, full_matrices=False)
+        if s[0] / (s[1] + 1e-6) < 4:
+            continue
+        d = vt[0]
+        t = (pts - c) @ d
+        ln = t.max() - t.min()
+        if ln >= min_len and (best is None or ln > best[0]):
+            best = (ln, c, d, t.min(), t.max(), lb == i)
+    if best is None:
+        return None
+    ln, c, d, t0, t1, mask = best
+    body = a & ~mask
+    by, bx = np.where(body)
+    bc = np.array([bx.mean(), by.mean()]) if len(bx) else c
+    e0, e1 = c + d * t0, c + d * t1
+    tip, hilt = (e0, e1) if np.linalg.norm(e0 - bc) > np.linalg.norm(e1 - bc) else (e1, e0)
+    ang = math.degrees(math.atan2(tip[1] - hilt[1], tip[0] - hilt[0]))
+    return dict(hilt=hilt, tip=tip, angle=ang, length=float(ln) + 1)
+
+
+def attach_from_blade(bare, armed, handle_off):
+    """Weapon attach for a bare pose from the blade of its armed twin: the blade gives the angle exactly; the hand
+    (grip) is handle_off px behind the blade's hilt end; both are carried into bare coords by body registration.
+    Works when the bare and armed bodies differ a little (the diff method needs them to overlap)."""
+    b = blade_axis(armed)
+    if b is None:
+        return None
+    dx, dy, sc = register(bare, armed, mode='all', search=6)
+    d = (b['tip'] - b['hilt']) / max(1e-6, np.linalg.norm(b['tip'] - b['hilt']))
+    g = b['hilt'] - d * handle_off
+    # armed local -> bare local (both bottom-aligned; bare shifted by dx, dy)
+    ox = -dx
+    oy = (bare.shape[0] - armed.shape[0]) - dy
+    grip = [int(round(g[0] + ox)), int(round(g[1] + oy))]
+    tip = [int(round(b['tip'][0] + ox)), int(round(b['tip'][1] + oy))]
+    # snap the grip onto the bare body (the fist) when it landed in the air
+    a = bare[..., 3] > 0
+    if not (0 <= grip[1] < a.shape[0] and 0 <= grip[0] < a.shape[1] and a[grip[1], grip[0]]):
+        dist, (iy, ix) = nd.distance_transform_edt(~a, return_indices=True)
+        gy, gx = min(max(grip[1], 0), a.shape[0] - 1), min(max(grip[0], 0), a.shape[1] - 1)
+        if dist[gy, gx] <= 4:
+            grip = [int(ix[gy, gx]), int(iy[gy, gx])]
+    return dict(grip=grip, tip=tip, angle=round(b['angle'], 1), length=int(round(b['length'] + handle_off)),
+                blade=round(b['length'], 1), fit=round(sc, 3), method='blade')
+
+
 def attach_from_diff(bare, armed):
     """Weapon pixels = armed minus bare (after registration). -> dict(grip, tip, angle) in bare coords, or None."""
     dx, dy, sc = register(bare, armed, mode='all', search=6)
@@ -243,35 +304,56 @@ def pack(char, od, runs, rep, colors=52):
                 anc[sid] = (bax - dx, hi - (hb - bay) - dy + spr[sid].get('air', 0) * 0)
                 regs[sid] = dict(to=base, dx=dx, dy=dy, fit=round(s, 3))
     # ---- weapon attach (sheet 7 row 1 vs the armed poses of sheets 5/6)
+    # ---- weapons first: scale to the sword the character holds (sheet 7 row 2 is often drawn larger)
+    wids = [s for s in ('wpn_sword', 'wpn_greatsword', 'wpn_dagger', 'wpn_bow', 'wpn_staff') if s in fin]
+    held = [b['length'] for b in (blade_axis(fin[s]) for s in ('step', 'guard', 'hit', 'windup', 'slash', 'thrust_ready', 'thrust') if s in fin) if b]
+    wscale = 1.0
+    if 'wpn_sword' in fin and len(held) >= 3:
+        bw = blade_axis(fin['wpn_sword'])
+        if bw:
+            r = float(np.median(held)) / bw['length']
+            if abs(np.log(r)) > np.log(1.12):
+                wscale = r
+                for s in wids:
+                    fin[s] = finish(P.rescale_pixel(fin[s], r), pal)
+                    Image.fromarray(fin[s]).save(os.path.join(od, 'sprites', s + '.png'))
+                rep.add(7, 'auto', 'weapon_scale', '武器だけの5つが、手に持った剣より約 %d%% の大きさで描かれていた（刃 %.0f / %.0f ドット）。体に合わせて %d%% に縮めた' % (
+                    round(100 / r), bw['length'], np.median(held), round(100 * r)))
+    wpn = {}
+    for sid in wids:
+        g, t, a, ln = weapon_axis(fin[sid], sid[4:])
+        wpn[sid] = dict(grip=g, tip=t, angle=a, length=ln)
+        if wscale != 1.0:
+            wpn[sid]['scaled'] = round(wscale, 3)
+        anc[sid] = tuple(g)
+    # hand position behind the blade: the sword's grip (handle centre) minus the blade end, in weapon px
+    handle_off = 8.0
+    if 'wpn_sword' in wpn:
+        bw = blade_axis(fin['wpn_sword'])
+        if bw:
+            handle_off = float(np.hypot(*(np.array(wpn['wpn_sword']['grip']) - bw['hilt'])))
     attach = {}
     arm = SHEETS[7]['armed']
     for bare, armed in arm.items():
         if bare in fin and armed in fin:
-            at = attach_from_diff(fin[bare], fin[armed])
-            if at is not None and at['fit'] < 1.1:
-                rep.add(7, 'check', 'attach_fit', '%s と %s の体が重ならない（大きさ・位置・ポーズが違う）。武器の位置はあてにならない' % (bare, armed), slot=bare)
-                at['unreliable'] = True
+            at = attach_from_blade(fin[bare], fin[armed], handle_off)
+            if at is None:              # blade hidden (sheathed / behind the body): the difference of the two
+                at = attach_from_diff(fin[bare], fin[armed])
+                if at is not None:
+                    at['method'] = 'diff'
             if at is None:
-                rep.add(7, 'check', 'attach', '%s と %s の差から武器の位置が取れない（武器ありと武器なしがほぼ同じ）。手の位置を手で入れる' % (bare, armed), slot=bare)
-            else:
-                attach[bare] = at
-                # the bare pose sits where the armed one does: same anchor offset
-                if bare in anc and armed in anc:
-                    dx, dy, _ = register(fin[bare], fin[armed], mode='all')
-                    anc[bare] = (anc[armed][0] - dx, fin[bare].shape[0] - (fin[armed].shape[0] - anc[armed][1]) - dy)
+                rep.add(7, 'check', 'attach', '%s と %s から武器の位置が取れない。手の位置を configs/overrides で入れる' % (bare, armed), slot=bare)
+                continue
+            if at['fit'] < 0.35:
+                rep.add(7, 'check', 'attach_fit', '%s と %s の体の形がかなり違う。武器の持ち手の位置を review/weapons_tryon.png で見る' % (bare, armed), slot=bare)
+                at['unreliable'] = True
+            attach[bare] = at
+            # the bare pose sits where the armed one does: same anchor offset
+            if bare in anc and armed in anc:
+                dx, dy, _ = register(fin[bare], fin[armed], mode='all')
+                anc[bare] = (anc[armed][0] - dx, fin[bare].shape[0] - (fin[armed].shape[0] - anc[armed][1]) - dy)
         elif bare in fin:
             rep.add(7, 'check', 'attach', '%s の武器ありの絵（%s）が無いので、武器の位置が取れない' % (bare, armed), slot=bare)
-    wpn = {}
-    for sid in ('wpn_sword', 'wpn_greatsword', 'wpn_dagger', 'wpn_bow', 'wpn_staff'):
-        if sid in fin:
-            g, t, a, ln = weapon_axis(fin[sid], sid[4:])
-            wpn[sid] = dict(grip=g, tip=t, angle=a, length=ln)
-            anc[sid] = tuple(g)
-    if 'wpn_sword' in wpn and 'bare_idle' in attach:
-        ls, la = wpn['wpn_sword']['length'], attach['bare_idle']['length']
-        if la > 0 and abs(ls / la - 1) > 0.2:
-            rep.add(7, 'check', 'weapon_scale', '武器だけの片手剣（長さ %.0f）と、待機Aの剣（長さ %.0f）の縮尺が違う' % (ls, la))
-
     # ---- manual overrides: configs/overrides/<char>.json  {"anchors": {id: [x, y]}, "attach": {bare_id: {grip, angle}}}
     ov_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'configs', 'overrides', char + '.json')
     if os.path.exists(ov_path):
@@ -283,6 +365,12 @@ def pack(char, od, runs, rep, colors=52):
             if k in fin:
                 attach[k] = dict(attach.get(k, {}), **v, manual=True)
                 attach[k].pop('unreliable', None)
+                if 'tip' not in v:     # tip = the held sword's length along the set angle
+                    Ls = wpn.get('wpn_sword', {}).get('length', attach[k].get('length', 30))
+                    ga = math.radians(attach[k]['angle'])
+                    attach[k]['tip'] = [int(round(attach[k]['grip'][0] + Ls * math.cos(ga))), int(round(attach[k]['grip'][1] + Ls * math.sin(ga)))]
+                # a hand-set grip settles the 'look at the grip' notes for that pose
+                rep.items = [i for i in rep.items if not (i['code'] in ('attach', 'attach_fit') and i['slot'] == k)]
         for k, v in ov.get('weapons', {}).items():
             if k in wpn:
                 wpn[k].update(v)
@@ -338,6 +426,11 @@ def pack(char, od, runs, rep, colors=52):
                          [{'frame': f, 'ms': 110 if i == 0 else 220, 'dx': -24 if k.startswith('attack') else 0, 'hit': i == len(fs) - 1 and k.startswith('attack'),
                            'fx_at': 'front'} for i, f in enumerate(fs)] +
                          [{'frame': 'idle_a', 'ms': 200, 'dx': 0, 'ease': 'in_out'}] * (k.startswith('attack'))}
+        if 'hit' in fin:
+            an['hurt'] = {'keys': [{'frame': 'hit', 'ms': 80, 'dx': 6, 'ease': 'out'}, {'frame': 'hit', 'ms': 240, 'dx': 6},
+                                   {'frame': 'idle_a' if 'idle_a' in fin else 'hit', 'ms': 200, 'dx': 0, 'ease': 'in_out'}]}
+        if 'ko' in fin:
+            an['ko_fall'] = {'keys': [{'frame': f, 'ms': m, 'dx': 6} for f, m in (('hit', 160), ('weak', 320), ('ko', 900)) if f in fin]}
         for s in ('guard', 'hit', 'weak', 'ko', 'glimmer', 'item', 'evade', 'flee', 'sleep', 'confuse', 'cover', 'step'):
             if s in fin:
                 an[s] = {'frames': [s], 'ms': [0]}

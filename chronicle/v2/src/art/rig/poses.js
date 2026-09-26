@@ -47,23 +47,23 @@
   // ---------- 戦闘のポーズ（§2.5.7）。1 コマ = [ポーズ名, extra]、'~a>b@t' は a と b の間（t）のつなぎのコマ
   // 系統ごとの攻撃: 剣 slash・大剣 smash・短剣 thrust・弓 shoot・杖 smash（BSCENE の ATTACK_POSE）。どの look もどの系統でも全部のポーズを持つ
   rig.BATTLE = {
-    idle: [['idle', { br: 0 }], ['idle', { br: 0.25 }], ['idle', { br: 0.5 }], ['idle', { br: 0.75 }]],
-    step: [['~idle>step@0.5'], ['step']],
+    idle: [['idle', { br: 0 }], ['idle', { br: 0.5 }]],
+    step: [['step']],
     windup: [['windup']],
-    slash: [['~ready>windup@0.6'], ['windup'], ['slash'], ['follow']],
-    thrust: [['thrust_ready'], ['~thrust_ready>thrust@0.5'], ['thrust'], ['thrust']],
-    smash: [['~idle>smash_up@0.6'], ['smash_up'], ['smash'], ['smash']],
-    shoot: [['draw'], ['draw', { sq: 0.4 }], ['shoot'], ['shoot']],
-    cast: [['cast'], ['~cast>cast_up@0.5'], ['cast_up'], ['~cast>cast_up@0.5']],
-    item: [['item'], ['item', { aN: 2.1, eN: -0.6 }]],
+    slash: [['windup'], ['slash'], ['follow']],
+    thrust: [['thrust_ready'], ['thrust'], ['thrust']],
+    smash: [['smash_up'], ['smash'], ['smash']],
+    shoot: [['draw'], ['shoot'], ['shoot']],
+    cast: [['cast'], ['cast_up'], ['cast_up'], ['cast']],
+    item: [['item']],
     guard: [['guard']],
     hit: [['hurt'], ['~hurt>idle@0.35']],
-    weak: [['weak', { br: 0 }], ['weak', { br: 0.5 }]],
-    ko: [['~hurt>ko@0.5'], ['ko']],
-    victory: [['~idle>victory@0.5'], ['victory'], ['victory', { br: 0.5 }]],
+    weak: [['weak']],
+    ko: [['hurt'], ['ko']],
+    victory: [['~idle>victory@0.5'], ['victory']],
     evade: [['evade']],
   };
-  rig.BATTLE_FPS = { idle: 4, step: 10, windup: 8, slash: 12, thrust: 12, smash: 10, shoot: 9, cast: 6, item: 6, guard: 4, hit: 10, weak: 3, ko: 8, victory: 5, evade: 8 };
+  rig.BATTLE_FPS = { idle: 2, step: 10, windup: 8, slash: 9, thrust: 9, smash: 8, shoot: 7, cast: 5, item: 6, guard: 4, hit: 10, weak: 3, ko: 8, victory: 5, evade: 8 };
   // 系統ごとに武器の構えを少し変える（大剣は両手で肩にかつぐ・杖は立てる）
   rig.WTYPE_IDLE = {
     greatsword: { aN: 0.9, eN: 1.5, w: 2.5, aF: 0.4, eF: 1.3 },

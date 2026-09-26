@@ -58,10 +58,11 @@ def _best(F, F2, R):
     return float(np.sqrt(max(ssd[k], 0) / area)), (int(k[0]), int(k[1]))
 
 
-def match(im, ref, top=0.6):
+def match(im, ref, top=0.6, rots=(0,)):
     """-> (scale, rms error, (y, x), mirrored, rotation) of the best placement of ref (resized, rotated, mirrored)
     inside the upper part of im. Coarse search (scale step 0.05, rotation +-24 deg in 12 deg steps), then a fine
-    one around the best (0.0125, 6 deg). Heads tilt in action poses; without rotation a tilted head reads small."""
+    one around the best (0.0125). rots: template rotations to try (heads tilt in action poses; rotating did not
+    change the result much on the Arun sheets, so the default is none — it is 5x slower)."""
     F = _feat(im)
     H = F.shape[0]
     F = F[:max(8, int(H * top) + ref.shape[0])]
@@ -80,9 +81,9 @@ def match(im, ref, top=0.6):
                     e = r[0] * (1 + 0.02 * abs(np.log(s)) + 0.002 * abs(rot))
                     if e < best[0]:
                         best = (e, float(s), r[1], mir, rot)
-    run(np.arange(0.55, 1.451, 0.05), (-24, -12, 0, 12, 24), (False, True))
+    run(np.arange(0.55, 1.451, 0.05), rots, (False, True))
     s0, rot0, mir0 = best[1], best[4], best[3]
-    run(np.arange(s0 - 0.05, s0 + 0.051, 0.0125), (rot0 - 6, rot0, rot0 + 6), (mir0,))
+    run(np.arange(s0 - 0.05, s0 + 0.051, 0.0125), (rot0,), (mir0,))
     return best[1], best[0], best[2], best[3], best[4]
 
 

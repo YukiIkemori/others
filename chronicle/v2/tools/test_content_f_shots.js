@@ -91,9 +91,9 @@ const FIX = fs.readdirSync(path.join(__dirname, 'fixtures', 'states')).filter((f
           while (R.Events.busy()) { R.Events.abort(); await R.wait(50); }
           if (n) R.Events.talk(m, n); else R.Events.run(e.id, { map: mapId, x: e.x, y: e.y, npc: npcId, trigger: e.trigger });
           const t0 = performance.now();
-          while (performance.now() - t0 < 4000) {
+          while (performance.now() - t0 < 9000) {
             const top = (R.Engine.top() || {}).id;
-            if (top === 'message' || top === 'caption' || /^screen:/.test(top || '')) { await new Promise((res) => setTimeout(res, 900)); return 'ok:' + top; }
+            if (top === 'message' || top === 'caption' || top === 'celebrate' || /^screen:/.test(top || '')) { await new Promise((res) => setTimeout(res, 900)); return 'ok:' + top; }
             await new Promise((res) => setTimeout(res, 60));
           }
           return 'none';

@@ -258,6 +258,25 @@ const yuraR = rewardCount(['yura', 'yura_inn']);
 ok(`ユラ: 見返りのある人 6 人以上（${yuraR.n}）`, yuraR.n >= 6);
 ok(`ユラ: 見返りの種類 4 種以上（${yuraR.kinds}: ${yuraR.list.join(' ')}）`, yuraR.kinds >= 4);
 ok(`ユラ: 空気だけの人 4 人まで（${yuraR.air}）`, yuraR.air <= 4);
+// 町の飾りの密度（STYLE_REFERENCE §6.2・§9: 1 画面（ふつう 30×17 マス）に 25〜40）と、通りの中央の空き
+for (const id of ['fern', 'yura']) {
+  state(R, {});
+  const m = R.DB.maps[id];
+  const cnt = [];
+  for (let y0 = 0; y0 + 17 <= m.h; y0 += 4) for (let x0 = 0; x0 + 30 <= m.w; x0 += 5) {
+    let n = 0;
+    for (const o of m.objects) if (o.x != null && (!o.cond || R.State.check(o.cond)) && ['prop', 'chest', 'sign', 'building', 'waylamp', 'brazier'].includes(o.type) && o.x >= x0 && o.x < x0 + 30 && o.y >= y0 && o.y < y0 + 17) n++;
+    cnt.push(n);
+  }
+  cnt.sort((a, b) => a - b);
+  const med = cnt[cnt.length >> 1];
+  ok(`${id}: 1 画面の飾り 中央値 25〜40（最小 ${cnt[0]}・中央 ${med}・最大 ${cnt[cnt.length - 1]}）`, med >= 25 && med <= 40 && cnt[0] >= 15);
+}
+{
+  const m = R.DB.maps.fern;
+  const onRoad = m.objects.filter((o) => o.type === 'prop' && (o.lv || 0) === 0 && (R.DB.props[o.id] || {}).solid && (o.x === 29 || o.x === 30) && [...R.MapUtil.grid(m)[o.y]][o.x] === 'r');
+  ok('fern: 大通り（2 マス）の真ん中に硬い物を置かない', onRoad.length === 0, onRoad.map((o) => o.id + '@' + o.x + ',' + o.y));
+}
 ok('新しい話の印（npc.key）が talk のある人すべてに', MY_MAPS.every((id) => (R.DB.maps[id].npcs || []).every((n) => !n.talk || n.key)));
 
 // ================================================================ 6. 筋を通す（node の ev の見本で、2 本の道を最後まで）

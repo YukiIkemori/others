@@ -125,6 +125,16 @@
     await ev.say('rita', '森の道しるべの石を探して。\n迷いの森の中に、\n三つあるはずよ。');
   }, { meta: { needs: [], gives: ['lead:l_forest_song', 'flag:forest_rita_talked'] } });
 
+  // 広場の千年樹の歌の碑（解決の前は下半分が白くかすれている）
+  E('fern_monument', async (ev) => {
+    if (ev.flag('cleared_r_forest')) {
+      await ev.say(null, '千年樹の歌の碑。\n文字が、彫り直されている。');
+      await ev.caption(F().SONG, { ms: 4200 });
+      return;
+    }
+    await ev.say(null, ['千年樹の歌の碑だ。', '♪　眠れ森の主、千の年輪に……\nその先は、文字が白くかすれて\n読めない。']);
+  });
+
   E('fern_rita_stone', async (ev) => {
     await ev.say(null, ['歌の家の祭壇に、小さな石が\n祭ってある。', '歌の石の、かけらだろうか。\n表に、音符のような刻みがある。']);
   });

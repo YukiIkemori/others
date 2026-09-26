@@ -15,13 +15,13 @@
     const BASE = { kind: 'dungeon', region: 'prologue', location: 'lighthouse', theme: 'lighthouse', bgm: 'tower', bbg: 'tower', light: { ambient: '#56608a', k: 0.6, mood: 'tower' }, meta: { chestsInfo: true } };
     const LEG = {
       '#': { mat: 'wall_stone', solid: true, rise: 2 },
-      '.': { mat: 'stone_floor' },
+      '.': { mat: 'wood_floor' },
       ',': { mat: 'grass' },
       o: { mat: 'flowers' },
       r: { mat: 'rock', solid: true, rise: 1 },
       '~': { mat: 'sea', walk: false },
       c: { mat: 'carpet' },
-      S: { mat: 'wall_stone', solid: true, rise: 2, secret: true, floor: 'stone_floor' },
+      S: { mat: 'wall_stone', solid: true, rise: 2, secret: true, floor: 'wood_floor' },
     };
 
     // ================================================================ 1 階（36×32）
@@ -32,7 +32,7 @@
       rect(g, 6, 22, 24, 6, ',');
       rect(g, 15, 27, 6, 5, ',');
       blob(g, 7, 26, 2, 2, 'o', 'lh1_fl1', [',']); blob(g, 28, 27, 2, 1, 'o', 'lh1_fl2', [',']);
-      for (const [x, y] of [[4, 25], [5, 28], [31, 24], [30, 28], [9, 30], [26, 30], [3, 27]]) put(g, x, y, 'r');
+      const capeRocks = [[4, 25], [5, 28], [31, 24], [30, 28], [9, 30], [26, 30], [3, 27]];
       // 塔（外の壁 2 マス、上は 3 マス）
       rect(g, 4, 0, 28, 23, '#');
       rect(g, 6, 3, 24, 18, '.');
@@ -62,7 +62,7 @@
         P('bookshelf', 20, 3), P('bookshelf', 21, 3), P('table', 25, 10), P('chair', 24, 10), P('net', 20, 19),
         // 岬
         ...PS('lamp_post', [[15, 23], [20, 23]]), P('bollard', 11, 29), P('bollard', 24, 29),
-        ...PS('rock_small', [[8, 23], [28, 23], [12, 27], [23, 26]]), P('stump', 6, 24), P('log', 29, 25),
+        ...PS('rock_small', [[8, 23], [28, 23], [12, 27], [23, 26]]), ...PS('rock', capeRocks.filter(([x, y]) => g[y][x] === ',')), P('stump', 6, 24), P('log', 29, 25),
         K.sign(21, 25, 'ファロス灯台\n灯台守のほか、立ち入りを禁ず。'),
         K.exam(17, 22, 'lighthouse_1_door', { cond: '!prologue_key' }),
         K.exam(18, 22, 'lighthouse_1_door', { cond: '!prologue_key' }),

@@ -130,7 +130,10 @@ def mirror_score(f, fm, refs):
 
 
 def group_of(n):
-    return 'face' if n == 9 else 'btl' if n in (5, 6, 7, 8) else 'fld'
+    """reference group of a sheet, by its kind (brief_spec): face | btl | fld; None for a design sheet"""
+    from brief_spec import SHEETS
+    k = SHEETS[n]['kind'] if n in SHEETS else None
+    return {'face': 'face', 'battle': 'btl', 'field': 'fld'}.get(k)
 
 
 class Feat:

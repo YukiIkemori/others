@@ -97,9 +97,55 @@ for s in SHEETS.values():
     s.setdefault('register', {})
     s.setdefault('row_kind', [None] * s['rows'])
 
+# roles used by sheets.py / pack.py instead of fixed sheet numbers (so other layouts — the companions' — can reuse them)
+#   row_set[r]     the packed set a row goes to: field | battle | battle_bare | weapons | face
+#   lantern        the field rows carry the lantern in the left hand (Arun's sheets 1 / 2 only)
+#   register_mode  how register frames are aligned: 'upper' (default) | 'lower' (breathing: the feet stay) | 'all'
+#   armed          weapon-less pose -> the armed pose it copies (None: no armed twin, generic sword grip)
+#   body_h         body height written into the packed JSON (target_height); target_h is what the size check measures
+SET_OF_KIND = {'field': 'field', 'battle': 'battle', 'face': 'face'}
+for _n, _s in SHEETS.items():
+    _s.setdefault('row_set', [('weapons' if rk == 'weapon_row' else 'battle_bare' if _n == 7 else SET_OF_KIND[_s['kind']])
+                              for rk in _s['row_kind']])
+    _s.setdefault('lantern', _n in (1, 2))
+    _s.setdefault('register_mode', 'all' if _s['kind'] == 'face' else 'lower' if _n == 5 else 'upper')
+    _s.setdefault('body_h', _s['target_h'])
+    _s.setdefault('label', str(_n))
+
 # order in which the brief asks for the sheets (validator prints in this order)
 ORDER = [1, 2, 3, 5, 6, 7, 9, 4, 8]
 
+# who the sheets are for. Arun by default; tools/companion_spec.py swaps in a companion's layouts (use_profile).
+#   ask_prefix  put before every paste-ready redo line (「仲間セルマ（selma）のシート3の2番…」)
+PROFILE = dict(char='arun', name='アルン', ask_prefix='', title='', weapon='sword', companion=None)
+
+
+def use_profile(sheets, order, profile):
+    """Replace the sheet layouts in place (sheets.py / pack.py / facing.py hold references to SHEETS and ORDER)."""
+    SHEETS.clear()
+    SHEETS.update(sheets)
+    ORDER[:] = order
+    PROFILE.update(profile)
+
+
+def label(n):
+    """sheet number as the owner knows it ('4b' for a companion's split sheet 4)"""
+    return SHEETS[n].get('label', str(n)) if n in SHEETS else str(n)
+
+
+def rows_of(set_name, present=None):
+    """[(sheet, row)] of the rows that go to one packed set, in brief order (present: only these sheets)"""
+    return [(n, r) for n in ORDER if n in SHEETS and (present is None or n in present)
+            for r, rs in enumerate(SHEETS[n]['row_set']) if rs == set_name]
+
+
+def armed_map():
+    """(sheet with the weapon-less row, {bare_id: armed_id or None}) or (None, {})"""
+    for n in ORDER:
+        if n in SHEETS and SHEETS[n].get('armed'):
+            return n, SHEETS[n]['armed']
+    return None, {}
+
 
 def slot_name(n, r, c):
-    return 'シート%d の %d 番（%s）' % (n, r * SHEETS[n]['cols'] + c + 1, SHEETS[n]['ja'][r][c])
+    return 'シート%s の %d 番（%s）' % (label(n), r * SHEETS[n]['cols'] + c + 1, SHEETS[n]['ja'][r][c])

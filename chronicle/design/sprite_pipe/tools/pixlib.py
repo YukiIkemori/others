@@ -560,3 +560,43 @@ def estimate_period(profiles, lo=1.8, hi=12.0, step=0.01, band=(0.8, 1.25)):
     sel = (ps >= p0 * band[0]) & (ps <= p0 * band[1])
     w = pw[sel] ** 2
     return float((ps[sel] * w).sum() / w.sum()), float(p0)
+
+
+# ------------------------------------------------------------------ resize (pixel art)
+def scale2x(img):
+    """EPX / Scale2x on RGBA pixel art (edges stay crisp, diagonals get smoothed by one pixel)"""
+    H, W = img.shape[:2]
+    p = np.pad(img, ((1, 1), (1, 1), (0, 0)), mode='edge')
+    E = p[1:-1, 1:-1]
+    B, D, F, Hh = p[:-2, 1:-1], p[1:-1, :-2], p[1:-1, 2:], p[2:, 1:-1]
+    eq = lambda a, b: (a == b).all(-1)
+    c = ~eq(B, Hh) & ~eq(D, F)
+    out = np.zeros((H * 2, W * 2, 4), img.dtype)
+    out[0::2, 0::2] = np.where((c & eq(D, B))[..., None], D, E)
+    out[0::2, 1::2] = np.where((c & eq(B, F))[..., None], F, E)
+    out[1::2, 0::2] = np.where((c & eq(D, Hh))[..., None], D, E)
+    out[1::2, 1::2] = np.where((c & eq(Hh, F))[..., None], F, E)
+    return out
+
+
+def rescale_pixel(img, k):
+    """Resize pixel art by k: Scale2x up to >= 2k, then each target pixel takes the most common colour of its
+    source block (alpha by majority; dark outline colours win ties). Keeps 1-pixel outlines better than nearest."""
+    src, f = img, 1
+    while f < 2 * k:
+        src, f = scale2x(src), f * 2
+    H, W = img.shape[:2]
+    th, tw = max(1, int(round(H * k))), max(1, int(round(W * k)))
+    ys = np.linspace(0, src.shape[0], th + 1)
+    xs = np.linspace(0, src.shape[1], tw + 1)
+    out = np.zeros((th, tw, 4), np.uint8)
+    for j in range(th):
+        for i in range(tw):
+            blk = src[int(ys[j]):max(int(ys[j]) + 1, int(ys[j + 1])), int(xs[i]):max(int(xs[i]) + 1, int(xs[i + 1]))].reshape(-1, 4)
+            op = blk[blk[:, 3] > 0]
+            if len(op) * 2 < len(blk):
+                continue
+            u, cnt = np.unique(op, axis=0, return_counts=True)
+            lum = u[:, :3].astype(int).sum(1)
+            out[j, i] = u[np.lexsort((lum, -cnt))[0]]
+    return out
