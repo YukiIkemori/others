@@ -798,7 +798,7 @@
     constructor() {
       super();
       this.list = new R.UI.List({
-        x: 4, y: 4, w: 150, cols: 2, rows: 7, padX: 15, index: lastCmd,
+        x: 4, y: 4, w: 138, cols: 2, rows: 7, lineH: 13, padX: 13, padY: 7, index: lastCmd,
         items: COMMANDS.map((c) => ({
           label: c.label,
           disabled: (c.id === 'map' && !(onWorld() && R.Minimap && R.Minimap.open)) ||
@@ -847,37 +847,42 @@
       try { res = await fn({ fromMenu: true }); } finally { this.hidden = false; }
       if (res === 'exit' || Menu._after) this.close('exit');
     }
+    // compact layout: commands + gold + objective down the left, one slim party window top-right;
+    // the field stays visible on the right and below
     render() {
       this.list.draw();
-      const titled = !!R.Game.title;
-      drawGold(4, 118, 150);
-      drawParty(156, 4);
-      drawObjective(4, titled ? 178 : 164, 248, titled ? 2 : 3);
+      const top = this.list.y + this.list.h + 2;
+      const gh = drawGold(4, top, 138);
+      drawParty(158, 4);
+      drawObjective(4, top + gh + 2, 138, 4);
     }
   }
 
+  /** gold + play time on one line (★称号 below when earned); returns the window height */
   function drawGold(x, y, w) {
     const title = R.Game.title; // 称号 earned in the post-game
-    G().window(x, y, w, title ? 58 : 44);
-    K.labelNum('ゴールド', R.Game.gold + ' G', x + 12, y + 8, w - 24);
-    K.labelNum('プレイ時間', U.playTime(R.Game.playFrames || 0), x + 12, y + 22, w - 24);
-    if (title) G().text('★' + title, x + 12, y + 36, { color: G().C.gold });
+    const h = title ? 34 : 20;
+    G().window(x, y, w, h);
+    G().text(R.Game.gold + ' G', x + 10, y + 4);
+    G().text(U.playTime(R.Game.playFrames || 0), x + w - 10, y + 4, { align: 'right', color: G().C.gray });
+    if (title) K.fitText('★' + title, x + 10, y + 18, w - 20, { color: G().C.gold });
+    return h;
   }
   Menu.drawGold = drawGold;
 
+  /** one window: name + Lv, then H / M, per member (DQ style) */
   function drawParty(x, y) {
-    const w = 96, h = 46;
+    const w = 94, rowH = 30, n = R.Game.party.length;
+    G().window(x, y, w, 8 + n * rowH + 2);
     R.Game.party.forEach((c, i) => {
-      const yy = y + i * (h + 2);
-      G().window(x, yy, w, h);
+      const yy = y + 5 + i * rowH;
       const col = K.condColor(c);
-      G().text(c.name, x + 10, yy + 6, { color: col });
-      G().text('Lv' + c.level, x + w - 9, yy + 6, { align: 'right', color: col });
-      K.fitText(K.jobLabel(c, c.job), x + 10, yy + 19, w - 20, { color: K.jobColor(c, c.job, G().C.cyan) });
-      G().text('H', x + 10, yy + 32, { color: col });
-      G().text(String(c.hp), x + 45, yy + 32, { align: 'right', color: col });
-      G().text('M', x + 51, yy + 32, { color: col });
-      G().text(String(c.mp), x + w - 9, yy + 32, { align: 'right', color: col });
+      K.fitText(c.name, x + 8, yy, w - 44, { color: col });
+      G().text('Lv' + c.level, x + w - 8, yy, { align: 'right', color: col });
+      G().text('H', x + 8, yy + 13, { color: G().C.gray });
+      G().text(String(c.hp), x + 44, yy + 13, { align: 'right', color: col });
+      G().text('M', x + 50, yy + 13, { color: G().C.gray });
+      G().text(String(c.mp), x + w - 8, yy + 13, { align: 'right', color: col });
     });
   }
   Menu.drawParty = drawParty;
