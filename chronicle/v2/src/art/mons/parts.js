@@ -72,7 +72,7 @@
 
   // 鉄の板（鉄甲ガニ）: 甲羅に鋲を打った板を 3 枚
   PARTS.armor_plates = function (B, pts, o, ctx) {
-    const m = BZ.mat({ keys: ctx.golden ? BZ.goldKeys(['#141828', '#2a3244', '#465266', '#6a7688', '#9aa4b2']) : ['#141828', '#2a3244', '#465266', '#6a7688', '#9aa4b2'], n: 6, spec: 1, specPow: 14, wrap: 0.2, amb: 0.12 });
+    const m = BZ.mat({ keys: ctx.golden ? BZ.goldKeys(['#10142a', '#222a3e', '#384458', '#56627a', '#7e8aa0']) : ['#10142a', '#222a3e', '#384458', '#56627a', '#7e8aa0'], n: 6, wrap: 0.15, amb: 0.1 });
     const rivet = BZ.mat({ keys: ['#3a3848', '#e8e4dc'], n: 2, flat: true });
     const sh = pts.shell || pts.body || [0, -12, 12, 8];
     const [cx, cy, rx, ry] = sh;
