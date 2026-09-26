@@ -88,7 +88,8 @@
           if (yy + u(20) > rp.y + rp.h) return;
           R.UIK.text(g, N[s] || s, xx, yy + u(1), { size: u(12), color: C.text3 });
           const id = c.equip[s];
-          if (id) S.itemLabel(g, id, xx + u(60), yy, { size: u(14), maxW: ew - u(60) });
+          if (id && tall) R.UIK.text(g, S.item(id).name, xx + u(60), yy, { size: u(14), color: S.gradeColor(S.item(id)) || C.text, maxW: ew - u(60) });
+          else if (id) S.itemLabel(g, id, xx + u(60), yy, { size: u(14), maxW: ew - u(60) });
           else R.UIK.text(g, 'なし', xx + u(60), yy, { size: u(14), color: C.disabled });
         });
       }

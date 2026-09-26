@@ -24,7 +24,9 @@ const ST = {
 };
 
 async function openAt(S, st, o) {
-  const P = await B.open(S, PAGE, o);
+  // ?fixture= で起動する（タイトルを開かない。タイトルを閉じると Flow が新しいゲームへ進むため）
+  const P = await B.open(S, PAGE + '?fixture=' + (st.map.id === 'field_fern' ? 'field_fern' : 'field_pharos'), o);
+  await B.waitFor(P.page, "(RPG.Engine.top()||{}).id==='field'", 8000);
   await P.page.evaluate(FX);
   await P.page.evaluate(async (fx) => {
     const R = window.RPG;

@@ -67,7 +67,7 @@
       const top = b.y + u(46), memH = u(88);
       let gr, dp, mp;
       if (tall) {
-        dp = { x: b.x, y: top, w: b.w, h: u(290) };
+        dp = { x: b.x, y: top, w: b.w, h: u(318) };
         mp = { x: b.x, y: dp.y + dp.h + u(10), w: b.w, h: memH };
         gr = { x: b.x, y: mp.y + mp.h + u(10), w: b.w, h: b.y + b.h - (mp.y + mp.h + u(10)) };
       } else {
@@ -98,7 +98,7 @@
         const f = this.mode === 'swap' && i === this.mi;
         if (f) R.UIK.focus(g, r, R.Engine.time, { cursor: false });
         S.faceCircle(g, c.look, r.x + u(24), r.y + r.h / 2, u(20), { dim: this.mode === 'swap' && c.id === 'hero' });
-        R.UIK.text(g, c.name, r.x + u(52), r.y + r.h / 2 - u(9), { size: u(14), weight: 700, color: c.id === 'hero' && this.mode === 'swap' ? C.disabled : f ? C.goldHi : C.text, maxW: r.w - u(56) });
+        if (!tall) R.UIK.text(g, c.name, r.x + u(52), r.y + r.h / 2 - u(9), { size: u(14), weight: 700, color: c.id === 'hero' && this.mode === 'swap' ? C.disabled : f ? C.goldHi : C.text, maxW: r.w - u(56) });
       });
       S.prompts(g, this.mode === 'swap' ? [{ btn: 'a', label: '交代' }, { btn: 'b', label: 'やめる' }] : [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '出る' }]);
     },
