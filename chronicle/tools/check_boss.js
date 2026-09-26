@@ -233,7 +233,14 @@ console.log('§9.7.3 rareEncounters');
   const j = DESIGN.indexOf('});', i);
   const sandbox = { rareEncounters: {} };
   new Function('R', DESIGN.slice(i, j + 3))({ DB: sandbox });
-  same('rareEncounters', DB.rareEncounters, sandbox.rareEncounters);
+  // rows other owners derive for the §10.6.4 rare-monster rooms (a copy of a zone with the rate ÷ 3) are not A12's
+  const mine = {};
+  for (const [z, r] of Object.entries(DB.rareEncounters)) {
+    const base = Object.entries(sandbox.rareEncounters).find(([bz, b]) => bz !== z && b.mon === r.mon);
+    if (sandbox.rareEncounters[z] || !base) mine[z] = r;
+    else same('rare room ' + z + ' (copy of ' + base[0] + ', rate ÷ 3)', r, { mon: base[1].mon, rate: Math.max(1, Math.ceil(base[1].rate / 3)) });
+  }
+  same('rareEncounters', mine, sandbox.rareEncounters);
 }
 
 // ------------------------------------------------------------------ §9.12.7 / §9.12.8 drops

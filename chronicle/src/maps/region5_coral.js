@@ -129,9 +129,162 @@
     },
     // 記録院の立て札 (tier 1~, §10.9.1): the notice board by the bridge
     tilePatches: [{ cond: C.t1, x: 47, y: 13, ch: 'm' }],
-    npcs: [],
-    signs: [],
-    chests: [],
+    npcs: [
+      // --- the harbour master and the ferry
+      K.npc('drake', 'sailor', 10, 13, { event: 'coral_drake', dir: 'left', fixed: true }),
+      K.npc('ferry', 'sailor', 3, 14, { event: 'common_ferry', ferryFrom: 'coral', dir: 'right', fixed: true }),
+      K.npc('ship', 'obj:ship', 1, 15, { dir: 'left', fixed: true, text: '定期船だ。白い帆をたたんで、\n波に揺られている。' }),
+      K.folk('pier_fisher', 'fisher', 4, 6, [
+        { cond: C.post, text: '孫が、グレン船長の舟歌を\n覚えてきたんだ。\n網を引くときの歌にいいってな。' },
+        { cond: REG, text: '夜の漁に出られるように\nなったんだ。霧が出ても、\n舟歌を歌えば迷わねえ。' },
+        { text: '霧の夜は、漁に出られねえ。\n幽霊船の灯について行ったら、\nおしまいだからな。' },
+      ], { dir: 'up' }),
+      K.folk('quay_sailor', 'sailor', 11, 22, [
+        { cond: C.fog, text: '内海の霧が晴れたってな。\nこれで、どこへでも\n船を出せるぜ。' },
+        { cond: REG, text: 'レグナスの商船が来るように\nなって、港がにぎやかだ。\n荷運びで腕がぱんぱんさ。' },
+        { cond: C.ship, text: 'ネレイの桟橋に、幽霊船が\n横づけされたって本当か？\n……おれは近づかねえぞ。' },
+        { text: 'この島の船乗りはな、霧の夜は\n舟歌を歌って、互いの船の\n場所を知らせ合ったもんだ。\f……その歌を、今は誰も\n歌えねえんだ。' },
+      ], { dir: 'left' }),
+      K.folk('pier_boy', 'boy', 6, 30, [
+        { cond: REG, text: 'あれがレグナスの船だよ！\n東の大陸から、海を\nこえてきたんだって！' },
+        { text: 'この桟橋はね、むかしは\n大きな船が泊まったんだって。\n今は、だれも来ないけど。' },
+      ], { dir: 'left', move: 'wander', cond: '!isles_never' }),
+      // --- after the clear: the Regnas merchant ship (§10.8.6 クリア後)
+      K.npc('regnas_merchant', 'merchant', 5, 30, { event: 'common_shop', shop: 'coral_regnas', dir: 'right', cond: REG, fixed: true,
+        greet: '東の大陸のレグナスから来ました。\n珍しい品もありますよ。' }),
+      K.npc('regnas_ship', 'obj:r5_regnas_ship', 1, 31, { dir: 'left', cond: REG, fixed: true,
+        text: 'レグナスの商船だ。\n東の大陸から来たらしい。\n見なれない紋章の帆が\n風をはらんでいる。' }),
+      K.folk('regnas_sailor', 'sailor', 7, 31, [
+        { cond: C.fog, text: '霧が晴れたなら、次は\nビブリア島にも寄ってみたい。\n本の都なんだろう？' },
+        { text: 'レグナスは、東の古い王国さ。\nこの島々とは、昔から\n行き来があったんだ。\f舟歌が戻ったと聞いて、\nやっと船を出せたんだよ。' },
+      ], { dir: 'up', cond: REG }),
+      // --- the market plaza
+      K.npc('folk_a', 'man', 26, 22, { event: 'story_rumor', rumor: 'coral_a', move: 'wander', push: true }),
+      K.npc('folk_b', 'woman', 36, 23, { event: 'story_rumor', rumor: 'coral_b', move: 'wander', push: true }),
+      K.folk('scribe', 'scribe', 29, 15, '古い本はありませんか。\n記録院で、大切に保管\nいたします。',
+        { cond: [C.t4, { tierBelow: 7 }], move: 'wander' }),
+      K.folk('fruit_seller', 'woman', 26, 18, [
+        { cond: C.post, text: 'お祭りの日には、この広場で\n舟歌を歌うのよ。\nあなたも来てちょうだい。' },
+        { cond: REG, text: 'レグナスの船が、珍しい\n果物を運んできたの。\n今年はにぎやかになるわ。' },
+        { text: '島の果物はいかが？\n……といっても、船が出ないから、\n売れ残りばかりなのよ。' },
+      ], { dir: 'down', fixed: true }),
+      K.folk('fish_seller', 'fisher', 35, 18, [
+        { cond: REG, text: '夜の漁が戻って、\nとれたての魚が並ぶように\nなったよ。見ていきな！' },
+        { cond: C.t4, text: '記録院のお触れで、\n漁の歌の本まで持って\nいかれちまった。……物騒だ。' },
+        { text: '霧の夜に漁に出られなくて、\n並べる魚も少ないんだ。\nまったく、困ったもんだよ。' },
+      ], { dir: 'down', fixed: true }),
+      K.folk('bench_old', 'old_man', 26, 24, [
+        { cond: C.post, text: 'グレンとは、子どものころ\nよく遊んだもんじゃ。\n……あいつ、帰ってきたんじゃな。' },
+        { cond: C.t6, text: '子守歌の文句が出てこん。\nかかあが歌ってくれたのに、\nどうしてじゃろうなあ。' },
+        { cond: REG, text: 'グレン船長の舟歌を、\nまた聞けるとはのう。\n長生きはするもんじゃ。' },
+        { text: '六十年前の嵐の夜、グレン船長は\n仲間の船を助けに出て、\nそれっきり帰らなんだ。\f船長の舟歌を歌えば、霧でも\n迷わん……はずじゃったが、\n続きが、どうしても出てこん。' },
+      ], { dir: 'right' }),
+      K.folk('plaza_boy', 'boy', 32, 24, [
+        { cond: REG, text: 'ぼく、舟歌を覚えたんだ！\n♪　霧の海でも、迷いはしない\n……へへっ、続きも言えるよ！' },
+        { text: '幽霊船ってこわいの？\nでも、ちょっと見てみたいな。' },
+      ], { move: 'wander' }),
+      K.folk('plaza_girl', 'girl', 24, 21, [
+        { cond: C.fog, text: '海の真ん中の霧が\n晴れたんだって！\nどんな島があるのかなあ。' },
+        { cond: REG, text: '桟橋にね、大きな船が\n来てるの！　帆に、\n見たことない紋章があるの。' },
+        { text: '夜になるとね、海の向こうで\n青白い灯がゆれるの。\nお母さんは見ちゃだめって。' },
+      ], { move: 'wander' }),
+      K.folk('dog', 'dog', 38, 20, 'ワン！　ワン！', { move: 'wander' }),
+      // --- the inn 「白波亭」
+      K.npc('inn', 'innkeeper', 20, 7, { event: 'common_inn', fixed: true }),
+      K.folk('inn_guest', 'merchant', 18, 10, [
+        { cond: C.t4, text: '記録院のお触れの話で、\n宿の客はもちきりさ。\n本を持つ客は、そわそわしてる。' },
+        { cond: REG, text: '定期船が夜も出るように\nなったってね。\nやっと商いに戻れるよ。' },
+        { text: '夜の便が止まっていてね。\n霧が出る晩は、幽霊船が\n出るからだそうだ。' },
+      ], { dir: 'left' }),
+      K.folk('inn_maid', 'woman', 16, 8, [
+        { cond: REG, text: 'レグナスのお客さんが\n泊まっていくのよ。\n毎日大忙しだわ！' },
+        { text: '泊まっていくなら、主人に\n声をかけてね。\n窓から見える海がきれいよ。' },
+      ], { move: 'wander' }),
+      // --- the tavern 「かもめ亭」
+      K.npc('tavern', 'bartender', 29, 6, { event: 'common_tavern', fixed: true }),
+      K.folk('bard', 'bard', 36, 6, [
+        { cond: REG, text: '♪　霧の海でも、迷いはしない\n岬の灯が、おれを呼ぶから\f……いい歌だろう？\nこの島いちばんの舟歌さ。' },
+        { text: 'この島には、霧の夜に歌う\n舟歌があったんだ。\nでも、節も文句も、\nまるで思い出せない。\f吟遊詩人の名折れだよ。' },
+      ], { dir: 'down', fixed: true }),
+      K.folk('tavern_sailor', 'sailor', 28, 10, [
+        { cond: C.post, text: '今夜も舟歌で乾杯だ！\n……ひっく。\n歌は、忘れちゃいけねえな。' },
+        { cond: REG, text: '船長の船は、朝日の中へ\n消えていったそうだ。\n……帰れたんだな、あの人は。' },
+        { text: '幽霊船について行った仲間の\n船が、岩礁で座礁したんだ。\n霧の中で、舟歌が聞こえた\nって言ってたよ……。' },
+      ], { dir: 'right' }),
+      K.folk('tavern_captain', 'captain', 32, 9, [
+        { cond: C.fog, text: '内海の霧が晴れたそうだな。\n白い塔が見えるとか。\nおれの船で行ってみるか。' },
+        { cond: REG, text: 'グレン船長は、船乗りの\n鑑だよ。仲間を見捨てず、\n約束も忘れなかった。' },
+        { text: 'グレン船長を知ってるかい。\n嵐の夜、仲間を救いに出て\n帰らなかった男さ。\nこの港の、誇りなんだ。' },
+      ], { dir: 'left' }),
+      K.folk('waitress', 'dancer', 33, 7, [
+        { cond: REG, text: '今夜はレグナスの船乗りの\n歓迎会なの。\nあなたも飲んでいって！' },
+        { text: 'いらっしゃい！\n仲間を探すなら、マスターに\n声をかけてね。\n入れ替えもできるのよ。' },
+      ], { move: 'wander' }),
+      // --- the item shop
+      K.npc('shop_item', 'merchant', 14, 20, { event: 'common_shop', shop: 'coral_item', fixed: true }),
+      K.folk('shop_customer', 'old_woman', 18, 23, [
+        { cond: REG, text: '夜の漁が戻ったから、\nせがれに気つけの薬を\n買ってやるのさ。' },
+        { text: '船乗りの家はね、いつも\n傷薬を切らさないんだよ。\n海は、何があるか分からない。' },
+      ], { dir: 'left' }),
+      // --- the weapon & armour shop
+      K.npc('shop_weapon', 'dwarf', 26, 32, { event: 'common_shop', shop: 'coral_weapon', fixed: true }),
+      K.npc('shop_armor', 'merchant', 35, 32, { event: 'common_shop', shop: 'coral_armor', fixed: true }),
+      K.folk('arms_customer', 'soldier', 31, 35, [
+        { cond: REG, text: 'この島の防具は、軽くて\n水に強いのが自慢だ。\n海の上なら、これに限る。' },
+        { text: '幽霊船には骸骨の船乗りが\n乗っているらしい。\n打つ武器が効くと聞いたぞ。' },
+      ], { dir: 'up' }),
+      // --- homes
+      K.folk('fisher_wife', 'woman', 44, 22, [
+        { cond: C.t6, text: '子守歌の続きが、どうしても\n思い出せないの。\nこの子に歌ってあげたいのに。' },
+        { cond: REG, text: 'うちの人が、夜の漁から\n無事に帰ってきたの。\n霧も、もうこわくないわ。' },
+        { text: 'うちの人の船も、霧の夜に\n灯を見たんですって。\nついて行かなくて、よかった。' },
+      ], { dir: 'down' }),
+      K.folk('house_girl', 'girl', 42, 23, [
+        { cond: REG, text: 'お父さんがね、舟歌を\n教えてくれたの！\nねえ、いっしょに歌おう？' },
+        { text: 'お父さん、夜の漁に\n行けないの。霧が出たら、\nお船が迷っちゃうんだって。' },
+      ], { move: 'wander' }),
+      K.folk('net_maker', 'old_man', 16, 33, [
+        { cond: C.post, text: '網を編みながら、舟歌を\n歌うのが一番じゃ。\n手が、節を覚えておる。' },
+        { cond: REG, text: '♪　霧の海でも……\nそうじゃ、これじゃ！\n手が勝手に動きよる。' },
+        { text: '昔は、網を編むときも\n舟歌を歌ったもんじゃ。\n今は、手が止まってしまう。' },
+      ], { dir: 'left' }),
+      K.folk('grandson', 'boy', 18, 35, [
+        { cond: REG, text: 'じいちゃんの網、前より\nきれいになったんだ。\n歌いながら編むんだって。' },
+        { text: 'じいちゃん、網を編みながら\nため息ばっかりつくんだ。' },
+      ], { move: 'wander' }),
+      // --- the sailors' memorial garden
+      K.folk('widow', 'old_woman', 43, 34, [
+        { cond: REG, text: 'グレン船長たちが、やっと\n帰ってきたんだね。\n……花を、替えてあげなくちゃ。' },
+        { text: 'ここは、海で帰らなかった\n船乗りたちの碑だよ。\n毎朝、花を替えに来るのさ。' },
+      ], { dir: 'up' }),
+      // --- the beach and the warehouse
+      K.folk('porter', 'man', 44, 13, [
+        { cond: REG, text: '倉庫はレグナスの荷で\nいっぱいだ！　入れる\nすき間なんてないぜ。' },
+        { text: '倉庫は荷がたまる一方でね。\n夜の便が止まってるから、\n運び出せないんだ。' },
+      ], { dir: 'down', fixed: true }),
+      K.folk('shell_girl', 'girl', 20, 39, [
+        { cond: C.t4, text: '白い服の人がね、貝がらに\n書いた字を見せてって\n言うの。……へんなの。' },
+        { cond: REG, text: '貝がらにね、歌を刻むんだよ。\nマリナおばあちゃんが、\n教えてくれたの！' },
+        { text: '貝がらを集めてるの。\n耳に当てると、\n波の音がするんだよ。' },
+      ], { move: 'wander' }),
+      K.folk('cat', 'cat', 34, 38, 'ニャーオ。', { move: 'wander' }),
+      // --- the scene spots for story_after_clear (§10.8.0-7). Hidden until the story shows them.
+      K.npc('st_rival', 'rowell', 17, 15, { dir: 'up', cond: 'st_show_rival', fixed: true }),
+      K.npc('st_fine', 'fine', 19, 15, { dir: 'up', cond: 'st_show_fine', fixed: true }),
+      K.npc('st_extra', 'scribe', 15, 15, { dir: 'up', cond: 'st_show_extra', fixed: true }),
+    ],
+    signs: [
+      K.sign(47, 13, '伝承をお持ちの方は、\n記録院の出張所へ。\n大切に保管いたします。', C.t1),
+      K.sign(47, 16, '港町コーラル\n西の港から、定期船が出ています。'),
+      K.sign(9, 16, '定期船乗り場\nファロス・ロッホ行き'),
+      K.sign(30, 22, 'コーラルの泉\n「舟歌を絶やすな。\n霧の海の、道しるべ」'),
+      K.sign(43, 31, '海に消えた船乗りたちの碑\f「六十年前の嵐の夜、\n仲間を救いに出た\nグレン船長と、その船の者たち、\nここに眠る」'),
+      K.sign(44, 31, '碑の前に、白い花が\n供えられている。'),
+    ],
+    chests: [
+      K.chest('coral_c1', 19, 31, 'p_supply'),
+      K.chest('coral_c2', 46, 24, 'p_gold'),
+    ],
     events: [],
   };
 

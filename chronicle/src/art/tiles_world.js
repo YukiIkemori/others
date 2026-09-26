@@ -1309,7 +1309,8 @@
           col = below < 0.52 ? FG[0] : below < 0.68 ? FG[1] : above < 0.68 ? FG[3] : FG[2];
           if (col === FG[2]) {
             // puffs inside the bank: lit crowns, grey undersides where a puff ends above a thinner patch
-            const bl = blob[y * 16 + x], bd = blob[((y + 2) & 15) * 16 + x], bu = blob[((y + 15) & 15) * 16 + x];
+            // (sampled half a cell down, so the puff edges fall mid-cell rather than on the cell rows)
+            const bl = blob[((y + 7) & 15) * 16 + x], bd = blob[((y + 9) & 15) * 16 + x], bu = blob[((y + 6) & 15) * 16 + x];
             if (bl > 0.5 && bd < bl - 0.4) col = bz < 0.6 ? FG[1] : FG[2];
             else if (bl > 0.82 && bz < 0.5) col = FG[3];
             else if (bl > 0.6 && bu < bl - 0.3) col = FG[3];

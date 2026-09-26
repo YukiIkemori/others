@@ -73,6 +73,10 @@
       if (this.opts.pos === 'middle') this.box.y = 78;
     }
     setText(text, opts, resolve) {
+      // a new say into a window that is still showing an earlier say supersedes it: settle the
+      // earlier promise first, or its caller (e.g. an onEnter event) waits forever and the
+      // event runner stays busy (the Crest 「城で復活したあと固まる」 freeze)
+      if (this.resolveText && this.resolveText !== resolve) { const prev = this.resolveText; this.resolveText = null; try { prev(); } catch (e) { console.error(e); } }
       // options never carry over from the previous say (only the position does)
       this.opts = Object.assign({ pos: this.opts.pos }, opts || {});
       this.box.y = this.opts.pos === 'top' ? 6 : this.opts.pos === 'middle' ? 78 : MSG.y;

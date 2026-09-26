@@ -10,7 +10,8 @@
 // The object's key order is the official order (N = 1..8). Chapter numbers shown in the
 // chronicle are the clear order (R.Game.regionsCleared), not chapter.no (§10.4).
 // Summaries are the §10.8 texts, re-broken to at most 12 full-width characters per line for the
-// chronicle's right-hand panel (§11.7.10); the words are unchanged.
+// chronicle's right-hand panel (§11.7.10); the words are unchanged. Hints stay exactly as §10.8
+// (2 lines, up to 14 characters): the prologue's P10 shows them two per message window.
 (function (R) {
   'use strict';
   Object.assign(R.DB.regions, {

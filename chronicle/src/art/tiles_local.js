@@ -500,14 +500,17 @@
     ctx = ctx || {};
     if (ctx.snow) return snowFir(fl);
     if (ctx.ash) return ashTree(fl);
+    // deep-forest trees (forest dungeons): the canopy ramp of the forest theme (§11.2.8)
+    const FD = ctx.deep ? [0x162a16, 0x20381e, 0x2c4a26, 0x3c5e30, 0x587642] : F;
     return t.stamp(fl, (L) => {
+      const F = FD;
       L.rect(7, 11, 3, 5, tr[1]); L.vline(7, 11, 15, tr[2]); L.set(9, 15, tr[0]);
       const ramp = [F[0], F[1], F[2], F[3], F[4]];
       L.shadeEllipse(8, 7, 6.8, 6, ramp, { dither: 0.7, amb: 0.25 });
       L.shadeEllipse(5, 5, 3.4, 3, ramp, { dither: 0.7, amb: 0.5 });
       L.shadeEllipse(10.5, 4.2, 3.2, 2.8, ramp, { dither: 0.7, amb: 0.5 });
       for (const [x, y, k] of [[4, 3, 4], [5, 4, 4], [9, 2, 4], [3, 7, 3], [11, 10, 0], [8, 11, 0], [13, 7, 0]]) L.set(x, y, F[k]);
-    }, { outline: 0x0c2410, sx: 2, sy: 1 });
+    }, { outline: ctx.deep ? 0x08120a : 0x0c2410, sx: 2, sy: 1 });
   };
   // Rail fence: one post per cell, rails toward every fence neighbour (runs,
   // corners, T-joins); drawn over whatever ground the cell stands on.

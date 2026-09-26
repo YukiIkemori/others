@@ -14,6 +14,18 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined') {
       vline(x, y0, y1, ch) { for (let y = Math.min(y0, y1); y <= Math.max(y0, y1); y++) D[y][x] = ch; },
       pts(list, ch) { for (const [x, y] of list) T[y][x] = ch; },
       dpts(list, ch) { for (const [x, y] of list) D[y][x] = ch; },
+      /** wall torches: wall cells with walkable floor below, spaced out (every `every` columns) */
+      torches(every = 9, off = 0) {
+        const fl = (c) => c !== '#' && c !== 'i' && c !== '%' && c !== 'O';
+        for (let y = 1; y < H - 1; y++) {
+          let last = -99;
+          for (let x = 1; x < W - 1; x++) {
+            if (T[y][x] !== '#' || !fl(T[y + 1][x]) || T[y - 1][x] !== '#') continue;
+            if (!(T[y][x - 1] === '#' && T[y][x + 1] === '#')) continue;
+            if ((x + y * 5 + off) % every === 0 && x - last > 4) { T[y][x] = 'i'; last = x; }
+          }
+        }
+      },
     };
     return g;
   };
@@ -42,10 +54,9 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined') {
     g.carve(4, 3, 21, 9);
     g.carve(11, 10, 13, 12);          // dead-end niche (chest)
     // east: junction → the pool cavern → north to the stairs
-    g.carve(34, 16, 38, 18);
     g.carve(36, 8, 48, 22);
     g.carve(39, 11, 45, 17, '~');     // underground pool
-    g.carve(40, 14, 44, 14, '=');     // plank bridge over the pool
+    g.carve(39, 14, 45, 14, '=');     // plank bridge over the pool
     g.carve(44, 3, 49, 7);            // stairs landing
     g.carve(40, 2, 43, 5);            // side niche off the landing (chest)
     // south-east: the lamp room / old store off the entrance hall
@@ -58,7 +69,7 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined') {
     // stairs, warps
     g.put(47, 3, 's');
     // wall torches (on wall cells facing rooms)
-    g.pts([[20, 32], [31, 32], [22, 12], [29, 12], [8, 2], [16, 2], [45, 2], [38, 7], [44, 26], [6, 35]], 'i');
+    g.torches(8, 0);
     // props (terrain)
     g.pts([[18, 34], [18, 35], [33, 34], [19, 39], [32, 39], [5, 4], [6, 4], [20, 4], [36, 9], [47, 21], [42, 28], [47, 37], [2, 21]], 'o');
     g.pts([[19, 34], [33, 35], [5, 8], [20, 8], [37, 21], [42, 37], [48, 29]], 'j');
@@ -125,7 +136,7 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined') {
     // bites
     g.pts([[3, 3], [12, 3], [3, 9], [38, 3], [30, 12], [38, 12], [44, 3], [51, 3], [44, 14], [51, 14], [28, 20], [44, 20], [28, 27], [44, 27], [2, 18], [2, 23], [44, 36], [51, 36], [42, 40], [51, 45], [4, 45], [22, 38], [27, 38], [38, 33]], '#');
     // torches
-    g.pts([[7, 2], [34, 2], [48, 2], [36, 19], [20, 17], [10, 31], [46, 29], [12, 41], [25, 37], [45, 39]], 'i');
+    g.torches(8, 3);
     // props
     g.pts([[11, 4], [11, 8], [31, 4], [37, 4], [45, 4], [50, 4], [3, 19], [3, 22], [15, 19], [29, 26], [43, 26], [9, 33], [25, 33], [5, 44], [23, 39]], 'o');
     g.pts([[31, 11], [37, 11], [45, 13], [50, 13], [14, 22], [43, 21], [9, 42], [26, 43], [45, 31], [50, 31], [43, 44], [50, 41]], 'j');
@@ -175,7 +186,7 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined') {
     // pillars in the hall
     g.pts([[9, 5], [18, 5], [9, 8], [18, 8]], 'l');
     // torches
-    g.pts([[7, 31], [20, 34], [31, 27], [33, 17], [5, 15], [11, 1], [16, 1], [14, 16]], 'i');
+    g.torches(7, 1);
     // props
     g.pts([[29, 29], [33, 29], [29, 36], [11, 33], [4, 17], [12, 17], [41, 31]], 'o');
     g.pts([[30, 29], [33, 36], [4, 21], [40, 19], [25, 26]], 'j');

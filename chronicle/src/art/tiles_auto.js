@@ -80,9 +80,11 @@
   // tree species by theme: firs in the snow, scorched trees in the ash lands
   const FIR_THEMES = { town_snow: 1, snow: 1, ice: 1 };
   const ASH_THEMES = { town_ash: 1, volcano: 1 };
+  const DEEP_THEMES = { forest: 1, tree: 1, swamp: 1 };
   function treeStyle(theme, gname) {
     if (gname === 'snowfloor' || gname === 'snow' || FIR_THEMES[theme]) return 'snow';
     if (ASH_THEMES[theme]) return 'ash';
+    if (DEEP_THEMES[theme]) return 'deep';
     return '';
   }
   /** the ground an object stands on: weighted vote of the neighbours */
@@ -366,6 +368,7 @@
       const c = ctx ? { l: ctx[0] === '1', r: ctx[1] === '1', u: ctx[2] === '1', d: ctx[3] === '1' } : {};
       if (gname === 'snowfloor' || gname === 'snow' || style === 'snow') c.snow = true;
       else if (style === 'ash') c.ash = true;
+      else if (style === 'deep') c.deep = true;
       const nf = ANIM_OBJ[id] || 1;
       const fl = A.floorBuf(gname);
       if (nf > 1) return tk().frames(nf, (f) => A.objectArt(id, fl, Object.assign({ f }, c)));

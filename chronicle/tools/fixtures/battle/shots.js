@@ -21,9 +21,20 @@
   S.zone = async function (zone, o) {
     o = o || {};
     await boot(o);
-    R.Events.run((ev) => ev.battle(Object.assign({ zone, noRare: o.rare !== 'force', golden: o.golden, rare: o.rare, glimmerForce: o.glimmerForce, surprise: null }, o.battle || {})), { self: 'debug' });
+    if (o.seed != null) R.U.seed(o.seed);
+    R.Events.run((ev) => ev.battle(Object.assign({ zone, noRare: o.rare !== 'force', noGolden: !o.golden, golden: o.golden, rare: o.rare, glimmerForce: o.glimmerForce, surprise: null }, o.battle || {})), { self: 'debug' });
+    if (o.auto) autoWhenReady(o.speed);
     return zone;
   };
+  /** turn オート on as soon as the scene exists (before its first command phase) */
+  function autoWhenReady(speed) {
+    let n = 0;
+    const t = setInterval(() => {
+      const sc = R.Battle && R.Battle.current;
+      if (sc) { sc.auto = true; sc.autoCancel = false; if (speed) R.Engine.speed = speed; clearInterval(t); }
+      else if (++n > 200) clearInterval(t);
+    }, 10);
+  }
   S.glimmer = function (zone, o) { return S.zone(zone, Object.assign({}, o, { glimmerForce: 'hero' })); };
   S.metal = async function (o) {
     o = o || {};

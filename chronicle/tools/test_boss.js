@@ -31,7 +31,15 @@ ok(RARES.length === 23, `23 rare monsters (got ${RARES.length})`);
 ok(EB.length === 191, `191 eb_ actions (got ${EB.length})`);
 ok(TROOPS.filter((t) => /^tr_b_/.test(t)).length === 26, '26 boss troops');
 ok(!!DB.troops.tr_tutorial, 'tutorial troop');
-ok(Object.keys(DB.rareEncounters).length === 23, '23 rare encounter rows');
+// my rows = src/data/rare_encounters.js; other owners may add §10.6.4 rare-monster rooms (a copy of one of my
+// zones with the rate ÷ 3, e.g. z_r_marsh_teaparty, z_postgame_oblivion_den) — checked apart
+const MYRARE = (() => { const sb = { DB: { rareEncounters: {} } }; new Function('R', fs.readFileSync(path.join(__dirname, '..', 'src', 'data', 'rare_encounters.js'), 'utf8'))(sb); return sb.DB.rareEncounters; })();
+ok(Object.keys(MYRARE).length === 23, '23 rare encounter rows');
+for (const [z, r] of Object.entries(DB.rareEncounters)) {
+  if (MYRARE[z]) { ok(DB.rareEncounters[z].mon === MYRARE[z].mon, `${z} row not overwritten`); continue; }
+  const base = Object.values(MYRARE).find((b) => b.mon === r.mon);
+  ok(!!base && r.rate === Math.max(1, Math.ceil(base.rate / 3)), `rare room ${z}: copy of a rare row with rate ÷ 3`);
+}
 ok(EB.slice(0, 64).every((id) => RARES.some((r) => DB.monsters[r].actions.some((a) => a.id === id))), 'first 64 eb_ are rare-monster actions');
 
 // ------------------------------------------------------------------ monster shape
@@ -116,7 +124,7 @@ for (const id of ['b_rowell1', 'b_rowell2', 'b_nemrea1', 'b_nemrea2', 'b_root', 
 
 section('rare monsters (§9.10)');
 const zonesOf = {};
-for (const [z, r] of Object.entries(DB.rareEncounters)) { (zonesOf[r.mon] = zonesOf[r.mon] || []).push(z); ok(r.rate >= 1 && Number.isInteger(r.rate), `${z} rate is a denominator`); }
+for (const [z, r] of Object.entries(MYRARE)) { (zonesOf[r.mon] = zonesOf[r.mon] || []).push(z); ok(r.rate >= 1 && Number.isInteger(r.rate), `${z} rate is a denominator`); }
 for (const id of RARES) {
   const d = DB.monsters[id];
   ok((zonesOf[id] || []).length === 1, `${id} in exactly one zone (${zonesOf[id]})`);
@@ -132,7 +140,7 @@ for (const id of RARES) {
   ok(/^ac_rs_/.test(dr.super.item) || /sr_/.test(dr.super.item), `${id} super slot relic / fixed-tier super`);
   ok(/^i_/.test(dr.normal.item), `${id} normal slot is its own item`);
 }
-ok(DB.rareEncounters.z_postgame_oblivion_hi.rate === 200 && DB.monsters.rm_dream_tapir.actsPerTurn === 2 && DB.monsters.rm_dream_tapir.rankAdd === 1, 'dream tapir is the super-rare monster (1/200, 2 acts, rankAdd 1)');
+ok(MYRARE.z_postgame_oblivion_hi.rate === 200 && DB.monsters.rm_dream_tapir.actsPerTurn === 2 && DB.monsters.rm_dream_tapir.rankAdd === 1, 'dream tapir is the super-rare monster (1/200, 2 acts, rankAdd 1)');
 const encZones = Object.keys(DB.encounters || {});
 if (encZones.length) for (const z of Object.keys(DB.rareEncounters)) ok(encZones.includes(z), `rare zone ${z} exists in DB.encounters`);
 else warn('DB.encounters empty (mons A11) — zone ids not checked');

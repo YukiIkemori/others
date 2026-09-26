@@ -102,10 +102,10 @@
   K.deco(g, 38, 29, '..w..A..');
   // 記録院 本院: the great desk, lecterns, piles of books, chairs
   K.deco(g, 10, 8, '.D.');
-  K.deco(g, 5, 9, 'hh');
-  K.deco(g, 16, 9, 'hh');
-  K.deco(g, 5, 11, 'hh');
-  K.deco(g, 16, 11, 'hh');
+  K.put(g, 5, 9, 'hh');
+  K.put(g, 16, 9, 'hh');
+  K.put(g, 5, 11, 'hh');
+  K.put(g, 16, 11, 'hh');
   K.deco(g, 7, 12, '>');
   K.deco(g, 15, 12, '>');
   K.deco(g, 4, 13, '{');
@@ -117,18 +117,18 @@
   K.deco(g, 43, 12, 'Q');
   K.deco(g, 34, 11, '>');
   K.deco(g, 36, 11, '{');
-  K.deco(g, 30, 12, 'hh');
-  K.deco(g, 40, 12, 'hh');
+  K.put(g, 30, 12, 'hh');
+  K.put(g, 40, 12, 'hh');
   // the inn: rug, chairs, plant
   K.deco(g, 7, 23, '&&');
-  K.deco(g, 9, 23, 'h');
-  K.deco(g, 11, 23, 'h');
+  K.put(g, 9, 23, 'h');
+  K.put(g, 11, 23, 'h');
   K.deco(g, 4, 24, 'Z');
   K.deco(g, 9, 19, 'y');
   // the tavern: chairs round the tables, a stage
-  K.deco(g, 40, 20, 'h.h');
-  K.deco(g, 35, 23, 'h.h');
-  K.deco(g, 40, 23, 'h.h');
+  K.put(g, 40, 20, 'h h');
+  K.put(g, 35, 23, 'h h');
+  K.put(g, 40, 23, 'h h');
   K.deco(g, 43, 19, 'Z');
   // shops
   K.deco(g, 4, 30, 'q');
@@ -136,7 +136,7 @@
   K.deco(g, 25, 30, 'U');
   K.deco(g, 20, 33, 'Z');
   // homes
-  K.deco(g, 33, 31, 'h.h');
+  K.put(g, 33, 31, 'h h');
   K.deco(g, 32, 33, '&');
   K.deco(g, 40, 31, '!');
   K.deco(g, 42, 33, '?');
