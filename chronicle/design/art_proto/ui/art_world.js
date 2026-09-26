@@ -246,7 +246,7 @@
     // sea: moon glitter band + lighthouse beam
     const isW = (x, y) => wT(Math.floor(x / TS), Math.floor(y / TS)) === '~';
     TD.moonWater(ctx, W, H, isW, [], 11);
-    { const R = rng(2); ctx.save(); ctx.globalCompositeOperation = 'lighter'; for (let i = 0; i < 900; i++) { const y = 9 * TS + R() * (H - 9 * TS), x = 25 * TS + (R() - 0.5) * (80 + (y - 9 * TS) * 0.12); if (!isW(x, y)) continue; ctx.fillStyle = `rgba(200,215,255,${0.15 + R() * 0.35})`; ctx.fillRect(Math.floor(x), Math.floor(y), 2 + Math.floor(R() * 6), 1); } ctx.restore(); }
+    { const R = rng(2); ctx.save(); ctx.globalCompositeOperation = 'lighter'; for (let i = 0; i < 2200; i++) { const y = 9 * TS + R() * (H - 9 * TS), x = 25 * TS + (R() - 0.5) * (80 + (y - 9 * TS) * 0.12); if (!isW(x, y)) continue; ctx.fillStyle = `rgba(225,232,255,${0.35 + R() * 0.6})`; ctx.fillRect(Math.floor(x), Math.floor(y), 3 + Math.floor(R() * 7), 1); } ctx.restore(); }
     TD.drawEmissive(ctx, emits);
     { const lx = 30.5 * TS, ly = 16.1 * TS - 78; ctx.save(); ctx.globalCompositeOperation = 'lighter';
       const beam = (a, len, w, k) => { const g = ctx.createLinearGradient(lx, ly, lx + Math.cos(a) * len, ly + Math.sin(a) * len); g.addColorStop(0, `rgba(255,236,190,${k})`); g.addColorStop(1, 'rgba(255,236,190,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + Math.cos(a - w) * len, ly + Math.sin(a - w) * len); ctx.lineTo(lx + Math.cos(a + w) * len, ly + Math.sin(a + w) * len); ctx.closePath(); ctx.fill(); };

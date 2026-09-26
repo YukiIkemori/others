@@ -42,7 +42,7 @@
       if (id === 'arun') ENV.glow(x, px + 16, py - 16, 120, [255, 190, 110], 0.5);
     });
     BATTLE_ART.fireflies(x, 30, [W * 0.5, H * 0.55, W * 0.5, H * 0.4], 9, [[255, 200, 120], [140, 240, 220]]);
-    ENV.post(x, { dofPx: 0, bloom: 0.6, thr: 0.6, vig: 0.65, grade: { sh: [-4, 2, 16], hi: [16, 8, -8], sat: 1.05, con: 1.08, lift: 0 } });
+    ENV.post(x, { dofPx: 0, bloom: 0.6, thr: 0.6, vig: 0.65, grade: { sh: [16, -6, 22], hi: [18, 8, -8], sat: 1.05, con: 1.06, lift: 8 } });
     return c;
   }
   G.TITLE_ART = { title };
