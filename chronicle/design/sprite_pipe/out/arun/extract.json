@@ -1,0 +1,299 @@
+{
+ "sheet": "../../art_ref/hero_sheet_owner.png",
+ "warnings": [],
+ "groups": {
+  "battle": {
+   "detected_period": 2.902,
+   "cell": 1.953,
+   "ref_src_height": 125,
+   "native_height_at_detected": 43.1,
+   "target_h": 64
+  },
+  "turnaround": {
+   "detected_period": 3.341,
+   "cell": 3.341,
+   "ref_src_height": 166,
+   "native_height_at_detected": 49.7,
+   "target_h": 48
+  },
+  "main": {
+   "detected_period": 5.032,
+   "cell": 5.032,
+   "ref_src_height": 453,
+   "native_height_at_detected": 90.0,
+   "target_h": null
+  },
+  "face": {
+   "detected_period": 5.91,
+   "cell": 5.91,
+   "ref_src_height": 237,
+   "native_height_at_detected": 40.1,
+   "target_h": null
+  },
+  "faces3": {
+   "detected_period": 3.8,
+   "cell": 3.8,
+   "ref_src_height": 98,
+   "native_height_at_detected": 25.8,
+   "target_h": null
+  }
+ },
+ "sprites": {
+  "btl_idle": {
+   "group": "battle",
+   "kind": "battle",
+   "src_box": [
+    432,
+    204,
+    565,
+    338
+   ],
+   "cell": 1.953,
+   "size": [
+    62,
+    63
+   ],
+   "flipped": true,
+   "colors": 60
+  },
+  "btl_attack": {
+   "group": "battle",
+   "kind": "battle",
+   "src_box": [
+    614,
+    213,
+    801,
+    340
+   ],
+   "cell": 1.953,
+   "size": [
+    93,
+    60
+   ],
+   "flipped": true,
+   "colors": 60
+  },
+  "btl_skill": {
+   "group": "battle",
+   "kind": "battle",
+   "src_box": [
+    772,
+    212,
+    922,
+    340
+   ],
+   "cell": 1.953,
+   "size": [
+    65,
+    60
+   ],
+   "flipped": true,
+   "colors": 60
+  },
+  "btl_damage": {
+   "group": "battle",
+   "kind": "battle",
+   "src_box": [
+    948,
+    215,
+    1092,
+    339
+   ],
+   "cell": 1.953,
+   "size": [
+    52,
+    59
+   ],
+   "flipped": true,
+   "colors": 60
+  },
+  "btl_defeat": {
+   "group": "battle",
+   "kind": "battle",
+   "src_box": [
+    1117,
+    259,
+    1278,
+    340
+   ],
+   "cell": 1.953,
+   "size": [
+    77,
+    36
+   ],
+   "flipped": true,
+   "colors": 60
+  },
+  "btl_victory": {
+   "group": "battle",
+   "kind": "battle",
+   "src_box": [
+    1306,
+    169,
+    1401,
+    339
+   ],
+   "cell": 1.953,
+   "size": [
+    45,
+    81
+   ],
+   "flipped": true,
+   "colors": 60
+  },
+  "fld_down": {
+   "group": "turnaround",
+   "kind": "field",
+   "src_box": [
+    39,
+    779,
+    155,
+    954
+   ],
+   "cell": 3.341,
+   "size": [
+    33,
+    50
+   ],
+   "flipped": false,
+   "colors": 57
+  },
+  "fld_3q": {
+   "group": "turnaround",
+   "kind": "field",
+   "src_box": [
+    169,
+    779,
+    287,
+    954
+   ],
+   "cell": 3.341,
+   "size": [
+    34,
+    51
+   ],
+   "flipped": false,
+   "colors": 60
+  },
+  "fld_side": {
+   "group": "turnaround",
+   "kind": "field",
+   "src_box": [
+    304,
+    779,
+    406,
+    954
+   ],
+   "cell": 3.341,
+   "size": [
+    27,
+    50
+   ],
+   "flipped": false,
+   "colors": 59
+  },
+  "fld_up": {
+   "group": "turnaround",
+   "kind": "field",
+   "src_box": [
+    421,
+    779,
+    529,
+    953
+   ],
+   "cell": 3.341,
+   "size": [
+    30,
+    50
+   ],
+   "flipped": false,
+   "colors": 53
+  },
+  "stand_main": {
+   "group": "main",
+   "kind": "stand",
+   "src_box": [
+    30,
+    150,
+    363,
+    608
+   ],
+   "cell": 5.032,
+   "size": [
+    65,
+    87
+   ],
+   "flipped": false,
+   "colors": 55
+  },
+  "face_big": {
+   "group": "face",
+   "kind": "face",
+   "src_box": [
+    430,
+    449,
+    650,
+    686
+   ],
+   "cell": 5.91,
+   "size": [
+    39,
+    40
+   ],
+   "flipped": false,
+   "colors": 54
+  },
+  "face_normal": {
+   "group": "faces3",
+   "kind": "face",
+   "src_box": [
+    657,
+    479,
+    741,
+    577
+   ],
+   "cell": 3.8,
+   "size": [
+    24,
+    27
+   ],
+   "flipped": false,
+   "colors": 53
+  },
+  "face_serious": {
+   "group": "faces3",
+   "kind": "face",
+   "src_box": [
+    751,
+    479,
+    836,
+    577
+   ],
+   "cell": 3.8,
+   "size": [
+    24,
+    27
+   ],
+   "flipped": false,
+   "colors": 52
+  },
+  "face_smile": {
+   "group": "faces3",
+   "kind": "face",
+   "src_box": [
+    846,
+    479,
+    931,
+    577
+   ],
+   "cell": 3.8,
+   "size": [
+    25,
+    28
+   ],
+   "flipped": false,
+   "colors": 52
+  }
+ },
+ "palette_shared_colors": 60
+}

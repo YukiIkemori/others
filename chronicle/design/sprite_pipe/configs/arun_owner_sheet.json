@@ -1,0 +1,156 @@
+{
+ "character": "arun",
+ "sheet": "../../art_ref/hero_sheet_owner.png",
+ "bg": "paper",
+ "paper_rgb": [
+  243,
+  240,
+  235
+ ],
+ "palette": {
+  "kinds": [
+   "battle",
+   "field"
+  ],
+  "k": 60,
+  "k_other": 56,
+  "merge_de": 3.0,
+  "orphan_de": 12.0
+ },
+ "groups": [
+  {
+   "name": "battle",
+   "kind": "battle",
+   "box": [
+    432,
+    160,
+    1420,
+    342
+   ],
+   "rows": 1,
+   "cols": 6,
+   "ids": [
+    "btl_idle",
+    "btl_attack",
+    "btl_skill",
+    "btl_damage",
+    "btl_defeat",
+    "btl_victory"
+   ],
+   "ref": "btl_idle",
+   "scale": "fit",
+   "target_h": 64,
+   "flip": true,
+   "effects": "drop",
+   "shadow_band": 0.14
+  },
+  {
+   "name": "turnaround",
+   "kind": "field",
+   "box": [
+    30,
+    770,
+    540,
+    958
+   ],
+   "rows": 1,
+   "cols": 4,
+   "ids": [
+    "fld_down",
+    "fld_3q",
+    "fld_side",
+    "fld_up"
+   ],
+   "ref": "fld_down",
+   "scale": "auto",
+   "target_h": 48,
+   "shadow_band": 0.08
+  },
+  {
+   "name": "main",
+   "kind": "stand",
+   "box": [
+    30,
+    150,
+    398,
+    640
+   ],
+   "rows": 1,
+   "cols": 1,
+   "ids": [
+    "stand_main"
+   ],
+   "scale": "native",
+   "shadow_band": 0.1,
+   "min_frac": 0.05
+  },
+  {
+   "name": "face",
+   "kind": "face",
+   "box": [
+    430,
+    448,
+    650,
+    686
+   ],
+   "rows": 1,
+   "cols": 1,
+   "ids": [
+    "face_big"
+   ],
+   "scale": "native",
+   "floor_shadow": false,
+   "boxes": [
+    [
+     430,
+     448,
+     650,
+     686
+    ]
+   ],
+   "pad": 0
+  },
+  {
+   "name": "faces3",
+   "kind": "face",
+   "box": [
+    656,
+    478,
+    934,
+    578
+   ],
+   "rows": 1,
+   "cols": 3,
+   "ids": [
+    "face_normal",
+    "face_serious",
+    "face_smile"
+   ],
+   "scale": "native",
+   "floor_shadow": false,
+   "bg": "paper",
+   "pad": 0,
+   "boxes": [
+    [
+     657,
+     479,
+     741,
+     577
+    ],
+    [
+     751,
+     479,
+     836,
+     577
+    ],
+    [
+     846,
+     479,
+     931,
+     577
+    ]
+   ],
+   "pockets": false
+  }
+ ]
+}

@@ -15,6 +15,7 @@
   const stack = []; // [{scene, params, resolve}]
   const waits = []; // [{at, resolve}] Engine.time が at を越えたら解決
   const untils = []; // [{pred, resolve}]
+  const ticks = []; // [fn(dt, real)] 場面の外の毎フレームの仕事（プレイ時間・音など）
   const overlays = []; // [{id, draw(g), z}] すべての場面の上に描く物（通知・タッチの操作パッド・暗転）
   let raf = 0, last = 0, frozen = false;
 
@@ -89,6 +90,9 @@
       while (stack.length) Engine.pop(undefined);
     },
 
+    /** 場面の外の毎フレームの仕事を足す: fn(dt, realMs) */
+    addTick(fn) { if (!ticks.includes(fn)) ticks.push(fn); },
+
     // ---------------------------------------------------------------- 重ね描き
     /** 全部の場面の上に描く物を登録（id が同じなら入れ替え）。z が大きいほど上 */
     overlay(id, draw, z) {
@@ -154,6 +158,7 @@
       Engine.time += dt;
       Engine.frame++;
       if (R.Input && R.Input.update) R.Input.update(dt);
+      for (let i = 0; i < ticks.length; i++) { try { ticks[i](dt, frozen ? 0 : real); } catch (e) { report(e); } }
       // 待ち
       for (let i = waits.length - 1; i >= 0; i--) {
         if (Engine.time >= waits[i].at) { const w = waits[i]; waits.splice(i, 1); w.resolve(); }
@@ -177,7 +182,6 @@
       }
       const top = Engine.top();
       if (top && top.update) { try { top.update(dt); } catch (e) { report(e); } }
-      if (R.Audio && R.Audio.tick) { try { R.Audio.tick(); } catch (e) { /* audio never breaks the loop */ } }
     },
 
     render() {

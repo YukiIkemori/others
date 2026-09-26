@@ -50,6 +50,48 @@
 
   R.warn = function (...a) { console.warn('[RPG]', ...a); };
 
+  // ---------------------------------------------------------------- 仮の実装（core/stubs/*.js）
+  // 各担当の契約（§2.5）の仮の実装。読み込み時は登録するだけで、全ファイルを読んだ後の R.Stubs.install() が
+  // 「まだ無い関数・値」だけを埋める（本物のファイルがあればそちらが勝つ。一部だけ本物でも残りを埋める）。
+  // 呼ばれた回数は R.Stubs.calls に数える（QA の check_stubs が「仮の実装が 1 回も呼ばれない」を確かめる）。
+  R.Stubs = R.Stubs || { ns: {}, data: [], calls: {}, installed: {} };
+  /** 名前空間の仮の実装を登録（path は 'Hd'・'UIK.Message' など） */
+  R.Stubs.define = function (path, obj) { R.Stubs.ns[path] = Object.assign(R.Stubs.ns[path] || {}, obj); };
+  /** データの仮の登録（R.DB[kind][id] が無いときだけ入る） */
+  R.Stubs.defineData = function (kind, id, obj) { R.Stubs.data.push({ kind, id, obj }); };
+  R.Stubs.install = function () {
+    if (R.Stubs._done) return R.Stubs.installed;
+    R.Stubs._done = true;
+    const paths = Object.keys(R.Stubs.ns).sort((a, b) => a.split('.').length - b.split('.').length);
+    for (const path of paths) {
+      const keys = path.split('.');
+      let parent = R;
+      for (let i = 0; i < keys.length - 1; i++) parent = parent[keys[i]] = parent[keys[i]] || {};
+      const last = keys[keys.length - 1];
+      const target = parent[last] = parent[last] || {};
+      const stub = R.Stubs.ns[path];
+      const filled = [];
+      for (const k of Object.keys(stub)) {
+        if (target[k] !== undefined) continue;
+        const v = stub[k];
+        if (typeof v === 'function' && !/^class\s/.test(Function.prototype.toString.call(v)) && !/^[A-Z]/.test(k)) {
+          const name = path + '.' + k;
+          target[k] = function () { R.Stubs.calls[name] = (R.Stubs.calls[name] || 0) + 1; return v.apply(this, arguments); };
+        } else target[k] = v;
+        filled.push(k);
+      }
+      if (filled.length) R.Stubs.installed[path] = filled;
+    }
+    for (const d of R.Stubs.data) {
+      const t = (R.DB[d.kind] = R.DB[d.kind] || {});
+      if (d.id === '*') { for (const k of Object.keys(d.obj)) if (t[k] === undefined) t[k] = d.obj[k]; continue; }
+      if (t[d.id] === undefined) { t[d.id] = d.obj; (R.Stubs.installed['DB.' + d.kind] = R.Stubs.installed['DB.' + d.kind] || []).push(d.id); }
+    }
+    return R.Stubs.installed;
+  };
+  /** 呼ばれた仮の実装の一覧 [[name, n]…] */
+  R.Stubs.report = function () { return Object.keys(R.Stubs.calls).sort().map((k) => [k, R.Stubs.calls[k]]); };
+
   // 起動の手順（main.js）: 全ファイル → R.Stubs.install() → R.runDataHooks() → R.onBoot の順
   R._bootHooks = R._bootHooks || [];
   R.onBoot = function (fn) { R._bootHooks.push(fn); };

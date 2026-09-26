@@ -134,10 +134,7 @@ def fit_grid(rgb, mask, p_hint=None):
     if p_hint:
         px = py = p_hint
     else:
-        px, _ = period(gx)
-        py, _ = period(gy)
-        p = (px + py) / 2          # pixels are square: share the estimate
-        px = py = p
+        px = py = estimate_period([gx, gy])[0]   # pixels are square: one estimate for both axes
     xs = fit_lines(gx, px, rgb.shape[1])
     ys = fit_lines(gy, py, rgb.shape[0])
     return xs, ys, px
@@ -329,7 +326,7 @@ def fix_outline(img, pal, outline_rgb, light_L=62.0, fringe_de=10.0, paper=None)
 
 
 # ------------------------------------------------------------------ keying (extra modes)
-def remove_floor_shadow(rgb, fg, band=0.10, chroma_max=10.0, L_min=34.0):
+def remove_floor_shadow(rgb, fg, band=0.10, chroma_max=12.0, L_min=28.0):
     """Soft floor shadows under the feet are neutral grey and touch the boots. Inside the bottom
     `band` of the sprite's bbox, flood from the background through neutral, not-too-dark pixels."""
     lab = srgb_to_lab(rgb)
@@ -363,43 +360,37 @@ def key_magenta(rgb, key=(255, 0, 255), tol=90.0, spill=0.35):
     return fg, key
 
 
-def auto_slice(fg, rows, cols, min_area=0.004, join=6):
-    """Split one panel / whole sheet into rows×cols sprite boxes from its foreground.
+def auto_slice(fg, rows, cols, join=6, min_rel=0.08):
+    """Split one panel / whole sheet into rows×cols sprites from its foreground.
     Components closer than `join` px are merged (detached hair tufts, scarf ends, sword tips).
-    Returns list of (y0, y1, x0, x1) in reading order, len may differ from rows*cols (caller warns)."""
+    Returns a list of boolean masks (panel-sized) in reading order — masks, not boxes, so sprites
+    whose bounding boxes overlap (a sword reaching over the neighbour) stay separate.
+    The count may differ from rows*cols (the caller warns)."""
     H, W = fg.shape
     m = nd.binary_dilation(fg, iterations=join)
     lab, n = nd.label(m)
-    objs = nd.find_objects(lab)
-    boxes = []
-    for i, o in enumerate(objs):
-        area = (lab[o] == i + 1).sum()
-        if area < min_area * H * W / max(1, rows * cols) * rows * cols / 4 and area < 400:
-            continue
-        y0, y1 = o[0].start + join, o[0].stop - join
-        x0, x1 = o[1].start + join, o[1].stop - join
-        boxes.append([max(0, y0), min(H, y1), max(0, x0), min(W, x1), area])
-    if not boxes:
+    if n == 0:
         return []
-    boxes.sort(key=lambda b: -b[4])
-    boxes = boxes[: rows * cols * 2]
-    # drop tiny ones relative to the biggest
-    big = boxes[0][4]
-    boxes = [b for b in boxes if b[4] > big * 0.08]
-    # group into rows by vertical centre (1-D k-means with `rows` centres)
-    cy = np.array([(b[0] + b[1]) / 2 for b in boxes])
-    if rows > 1:
+    areas = nd.sum(fg, lab, range(1, n + 1))
+    big = areas.max()
+    keep = [i + 1 for i in range(n) if areas[i] > big * min_rel]
+    objs = nd.find_objects(lab)
+    cy = np.array([(objs[k - 1][0].start + objs[k - 1][0].stop) / 2 for k in keep])
+    cx = np.array([(objs[k - 1][1].start + objs[k - 1][1].stop) / 2 for k in keep])
+    if rows > 1 and len(keep) >= rows:
         cen = np.quantile(cy, np.linspace(0.1, 0.9, rows))
         for _ in range(20):
             a = np.abs(cy[:, None] - cen[None]).argmin(1)
             cen = np.array([cy[a == r].mean() if (a == r).any() else cen[r] for r in range(rows)])
+        order_rows = np.argsort(cen)
     else:
-        a = np.zeros(len(boxes), int)
+        a = np.zeros(len(keep), int)
+        order_rows = [0]
     out = []
-    for r in np.argsort(cen) if rows > 1 else [0]:
-        rb = [boxes[i] for i in range(len(boxes)) if a[i] == r]
-        rb.sort(key=lambda b: b[2])
-        out.extend([tuple(b[:4]) for b in rb])
+    for r in order_rows:
+        idx = [i for i in range(len(keep)) if a[i] == r]
+        idx.sort(key=lambda i: cx[i])
+        out.extend([fg & (lab == keep[i]) for i in idx])
     return out
 
 
@@ -409,3 +400,163 @@ def bbox(mask):
     if len(ys) == 0:
         return None
     return ys[0], ys[-1] + 1, xs[0], xs[-1] + 1
+
+
+# ------------------------------------------------------------------ resampling v2 (default)
+def kuwahara(rgb, r=1):
+    """Edge-preserving smoothing: each pixel takes the mean of the least-varied of its 4 quadrant
+    windows ((r+1)×(r+1)). Flattens the AI's texture noise, keeps hard edges and dark lines."""
+    a = rgb.astype(np.float64)
+    L = lum(a)
+    k = r + 1
+    means, vars_ = [], []
+    mean_c = np.stack([nd.uniform_filter(a[..., i], size=k, mode='nearest') for i in range(3)], -1)
+    mL = nd.uniform_filter(L, size=k, mode='nearest')
+    vL = nd.uniform_filter(L * L, size=k, mode='nearest') - mL * mL
+    # uniform_filter window of size k is centred at offset floor(k/2); quadrant = shift so window is
+    # anchored at the pixel
+    o = k // 2
+    for dy, dx in ((-o, -o), (-o, r - o), (r - o, -o), (r - o, r - o)):
+        means.append(shift2(mean_c, dy, dx))
+        vars_.append(shift2(vL, dy, dx))
+    V = np.stack(vars_, 0)
+    M = np.stack(means, 0)
+    idx = V.argmin(0)
+    out = np.take_along_axis(M, idx[None, ..., None].repeat(3, -1), 0)[0]
+    return np.clip(out, 0, 255)
+
+
+def shift2(a, dy, dx):
+    """value at (y, x) = a[y+dy, x+dx] with edge clamping"""
+    H, W = a.shape[:2]
+    yi = np.clip(np.arange(H) + dy, 0, H - 1)
+    xi = np.clip(np.arange(W) + dx, 0, W - 1)
+    return a[yi][:, xi]
+
+
+def sample_grid_avg(rgb, mask, xs, ys, alpha_min=0.5, dark_L=24.0, dark_frac=0.3, trim=0.25):
+    """Per cell: Lab trimmed mean of the (masked) pixels — except when enough of the cell is very
+    dark (outline, eyes, lashes), then the dark pixels win. Thin dark lines survive the downscale,
+    light texture noise averages out."""
+    H, W = len(ys) - 1, len(xs) - 1
+    out = np.zeros((H, W, 4), np.uint8)
+    lab = srgb_to_lab(rgb)
+    for j in range(H):
+        y0, y1 = ys[j], ys[j + 1]
+        for i in range(W):
+            x0, x1 = xs[i], xs[i + 1]
+            m = mask[y0:y1, x0:x1]
+            if m.mean() < alpha_min:
+                continue
+            px = rgb[y0:y1, x0:x1][m].astype(np.float64)
+            pl = lab[y0:y1, x0:x1][m]
+            dark = pl[:, 0] < dark_L
+            if dark.mean() >= dark_frac and not dark.all():
+                sel = dark
+            else:
+                # trim the pixels farthest from the cell's median (soft cell borders)
+                med = np.median(pl, 0)
+                d = ((pl - med) ** 2).sum(1)
+                n = max(1, int(round(len(pl) * (1 - trim))))
+                sel = np.argsort(d)[:n]
+            out[j, i, :3] = np.clip(np.mean(px[sel], 0), 0, 255)
+            out[j, i, 3] = 255
+    return out
+
+
+def mode_filter(img, pal, de_max=10.0, passes=1):
+    """Cluster cleanup: a pixel whose 3×3 neighbourhood is dominated (>=5 of 8) by one other colour
+    within de_max takes that colour. Unifies ragged clusters without touching real edges."""
+    img = img.copy()
+    H, W = img.shape[:2]
+    for _ in range(passes):
+        src = img.copy()
+        a = src[..., 3] > 0
+        for y in range(1, H - 1):
+            for x in range(1, W - 1):
+                if not a[y, x]:
+                    continue
+                win = src[y - 1:y + 2, x - 1:x + 2].reshape(-1, 4)
+                win = np.delete(win, 4, 0)
+                win = win[win[:, 3] > 0]
+                if len(win) < 6:
+                    continue
+                vals, cnt = np.unique(win[:, :3], axis=0, return_counts=True)
+                k = cnt.argmax()
+                if cnt[k] >= 5 and not (vals[k] == src[y, x, :3]).all():
+                    de = np.linalg.norm(srgb_to_lab(vals[k].astype(float)) - srgb_to_lab(src[y, x, :3].astype(float)))
+                    if de < de_max:
+                        img[y, x, :3] = vals[k]
+    return img
+
+
+def selout(img, pal, max_L=42.0, factor=0.45):
+    """Selective outline: silhouette pixels lighter than max_L are replaced by the palette colour
+    nearest to a darkened, slightly warm-shifted version of themselves (keeps hue, reads as a line)."""
+    img = img.copy()
+    H, W = img.shape[:2]
+    a = img[..., 3] > 0
+    er = nd.binary_erosion(a, structure=np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]]), border_value=0)
+    edge = a & ~er
+    pl = srgb_to_lab(pal.astype(np.float64))
+    for y, x in zip(*np.where(edge)):
+        c = srgb_to_lab(img[y, x, :3].astype(float))
+        if c[0] <= max_L:
+            continue
+        t = np.array([c[0] * factor, c[1] * 0.8, c[2] * 0.8 + 2])
+        k = ((pl - t) ** 2).sum(1).argmin()
+        img[y, x, :3] = pal[k]
+    return img
+
+
+def fill_pockets(rgb, fg, paper, tol=12.0, min_px=3):
+    """Paper-coloured pockets enclosed by the sprite (gaps between the legs, under the arm) —
+    not reachable by the border flood — are background too."""
+    lab = srgb_to_lab(rgb)
+    pl = srgb_to_lab(np.array(paper, float))
+    pap = np.linalg.norm(lab - pl, axis=-1) < tol
+    lid, n = nd.label(pap & fg)
+    for i in range(1, n + 1):
+        s = lid == i
+        if s.sum() >= min_px:
+            fg = fg & ~s
+    return fg
+
+
+def period_by_cuts(gx, gy, lo=1.8, hi=9.0, step=0.05, keep=0.9):
+    """Robust pixel-size estimate: for each candidate p fit the cut lines (DP) on both axes and score
+    the mean edge energy at the cuts (normalised). Harmonics (2p, 3p) score about as well as p, so
+    the smallest p within `keep` of the best score wins."""
+    res = []
+    for p in np.arange(lo, hi, step):
+        sc = []
+        for prof in (gx, gy):
+            span = len(prof) + 1
+            cuts = fit_lines(prof, p, span)
+            e = np.zeros(span + 1); e[1:span] = prof[:span - 1]; e /= e.mean() + 1e-9
+            inner = cuts[(cuts > 0) & (cuts < span)]
+            sc.append(e[inner].mean() if len(inner) else 0)
+        res.append((np.mean(sc), p))
+    best = max(r[0] for r in res)
+    for s, p in res:
+        if s >= best * keep:
+            return float(p), res
+    return float(res[0][1]), res
+
+
+def estimate_period(profiles, lo=1.8, hi=12.0, step=0.01, band=(0.8, 1.25)):
+    """Pixel size from the summed power spectrum of edge profiles (x and y, one or many sprites).
+    AI sheets are not on an exact grid, so the answer is the power-weighted centroid of the band
+    around the strongest peak rather than the peak itself."""
+    ps = np.arange(lo, hi, step)
+    pw = np.zeros(len(ps))
+    for g in profiles:
+        g = g - g.mean()
+        n = np.arange(len(g))
+        Z = np.exp(2j * np.pi * n[None, :] / ps[:, None]) @ g
+        pw += np.abs(Z) ** 2 / max(1, len(g))
+    k = pw.argmax()
+    p0 = ps[k]
+    sel = (ps >= p0 * band[0]) & (ps <= p0 * band[1])
+    w = pw[sel] ** 2
+    return float((ps[sel] * w).sum() / w.sum()), float(p0)
