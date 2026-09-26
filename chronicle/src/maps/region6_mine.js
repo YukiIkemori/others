@@ -32,7 +32,7 @@
   // ================================================================ 地下1階
   const f1 = Object.assign(base('深き坑道　地下1階'), {
     encounter: K.ZONE,
-    // @rows deep_mine_1  (drafted with tools/fixtures/reg6/draft_mine.js 1)
+    // @rows deep_mine_1  (drafted with tools/fixtures/reg6/drafts/draft_mine.js 1)
     rows: [
       '####################################################',
       '###########################################i########',
@@ -162,7 +162,7 @@
     encounter: K.ZONE, lvOff: 2,
     // the den behind the secret passage: its own zone (rare monsters ×3, §10.6.4)
     zones: [{ x: 31, y: 29, w: 7, h: 5, zone: K.DEN_ZONE }],
-    // @rows deep_mine_2  (drafted with tools/fixtures/reg6/draft_mine.js 2)
+    // @rows deep_mine_2  (drafted with tools/fixtures/reg6/drafts/draft_mine.js 2)
     rows: [
       '######################################################',
       '######################################################',
@@ -296,7 +296,7 @@
   // ================================================================ 七の層 (boss floor: no lvOff)
   const f3 = Object.assign(base('深き坑道　七の層'), {
     encounter: K.ZONE,
-    // @rows deep_mine_3  (drafted with tools/fixtures/reg6/draft_mine.js 3)
+    // @rows deep_mine_3  (drafted with tools/fixtures/reg6/drafts/draft_mine.js 3)
     rows: [
       '##############################################',
       '###############i######i#######################',

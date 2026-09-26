@@ -23,7 +23,7 @@
     exit: { to: 'world', spawn: 'dovan' },
     onEnter: 'dovan_intro',
     decorLegend: { '|': 'forge', ':': 'ore_pile', ',': 'cradle' },
-    // @rows dovan  (drafted with tools/fixtures/reg6/draft_dovan.js)
+    // @rows dovan  (drafted with tools/fixtures/reg6/drafts/draft_dovan.js)
     rows: [
       'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',
       'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',

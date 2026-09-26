@@ -625,8 +625,9 @@ function testTime() {
   measure('stargaze expected steps / random battles (first visit ×2.5, encRate ' + rate + ')', towerSteps + ' / ' + battles);
   ok(d1 >= 60, '1F is a real walk (shortest ' + d1 + ' ≥ 60)');
   ok(battles >= 20 && battles <= 60, 'stargaze random battles in 20–60 (' + battles + ')');
-  // minutes: ~0.25 s per step, ~45 s per battle
-  const min = Math.round((towerSteps * 0.25 + battles * 45) / 60);
+  // minutes: ~0.3 s per step, ~55 s per random battle (4 members, menus), ~10 min for the two bosses,
+  // Fine, the retelling and the lanterns
+  const min = Math.round((towerSteps * 0.3 + battles * 55) / 60 + 10);
   measure('stargaze dungeon time estimate', min + ' min');
   ok(min >= 40 && min <= 90, 'dungeon time in 40–90 min (§10.14: 60–80)');
 }
