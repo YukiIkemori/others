@@ -93,7 +93,7 @@ def edge_profiles(rgb, mask):
     return gx.sum(0), gy.sum(1)   # gx[i] = edge between column i and i+1
 
 
-def fit_lines(prof, p, span, slack=0.36, lam=0.6):
+def fit_lines(prof, p, span, slack=0.36, lam=1.5, cut_cost=1.0):
     """Cut positions 0 = c0 < c1 < … <= span (cut at c means boundary between pixel c-1 and c).
     Maximise edge energy at cuts, penalise gaps away from the period p."""
     e = np.zeros(span + 1)
@@ -114,7 +114,7 @@ def fit_lines(prof, p, span, slack=0.36, lam=0.6):
             q = c - g
             if q <= 0 or best[q] == NEG:
                 continue
-            v = best[q] + e[c] - lam * ((g - p) / p) ** 2 * 4
+            v = best[q] + e[c] - cut_cost - lam * ((g - p) / p) ** 2 * 4
             if v > best[c]:
                 best[c] = v
                 prev[c] = q
@@ -326,3 +326,86 @@ def fix_outline(img, pal, outline_rgb, light_L=62.0, fringe_de=10.0, paper=None)
             if paper is not None and np.linalg.norm(L - pl) < fringe_de:
                 img[y, x] = 0
     return img
+
+
+# ------------------------------------------------------------------ keying (extra modes)
+def remove_floor_shadow(rgb, fg, band=0.10, chroma_max=10.0, L_min=34.0):
+    """Soft floor shadows under the feet are neutral grey and touch the boots. Inside the bottom
+    `band` of the sprite's bbox, flood from the background through neutral, not-too-dark pixels."""
+    lab = srgb_to_lab(rgb)
+    ys = np.where(fg.any(1))[0]
+    if len(ys) == 0:
+        return fg
+    y_top = int(ys[-1] - band * (ys[-1] - ys[0] + 1))
+    chroma = np.hypot(lab[..., 1], lab[..., 2])
+    cand = (chroma < chroma_max) & (lab[..., 0] > L_min)
+    cand[:y_top] = False
+    seed = ~fg
+    grow = cand | seed
+    lab_id, _ = nd.label(grow)
+    ids = np.unique(lab_id[seed])
+    ids = ids[ids > 0]
+    shadow = np.isin(lab_id, ids) & cand
+    return fg & ~shadow
+
+
+def key_magenta(rgb, key=(255, 0, 255), tol=90.0, spill=0.35):
+    """Flat chroma-key background (#FF00FF). Pixels close to the key are background; pixels that
+    are a blend of the key and the sprite (anti-aliased fringe) are dropped when their 'magenta
+    excess' (min(R,B)-G) is large relative to their brightness."""
+    a = rgb.astype(np.float64)
+    d = np.linalg.norm(a - np.array(key, float), axis=-1)
+    fg = d > tol
+    mag = (np.minimum(a[..., 0], a[..., 2]) - a[..., 1]) / 255.0
+    fringe = mag > spill
+    fg &= ~fringe
+    fg = nd.binary_opening(fg, structure=np.ones((2, 2)))
+    return fg, key
+
+
+def auto_slice(fg, rows, cols, min_area=0.004, join=6):
+    """Split one panel / whole sheet into rows×cols sprite boxes from its foreground.
+    Components closer than `join` px are merged (detached hair tufts, scarf ends, sword tips).
+    Returns list of (y0, y1, x0, x1) in reading order, len may differ from rows*cols (caller warns)."""
+    H, W = fg.shape
+    m = nd.binary_dilation(fg, iterations=join)
+    lab, n = nd.label(m)
+    objs = nd.find_objects(lab)
+    boxes = []
+    for i, o in enumerate(objs):
+        area = (lab[o] == i + 1).sum()
+        if area < min_area * H * W / max(1, rows * cols) * rows * cols / 4 and area < 400:
+            continue
+        y0, y1 = o[0].start + join, o[0].stop - join
+        x0, x1 = o[1].start + join, o[1].stop - join
+        boxes.append([max(0, y0), min(H, y1), max(0, x0), min(W, x1), area])
+    if not boxes:
+        return []
+    boxes.sort(key=lambda b: -b[4])
+    boxes = boxes[: rows * cols * 2]
+    # drop tiny ones relative to the biggest
+    big = boxes[0][4]
+    boxes = [b for b in boxes if b[4] > big * 0.08]
+    # group into rows by vertical centre (1-D k-means with `rows` centres)
+    cy = np.array([(b[0] + b[1]) / 2 for b in boxes])
+    if rows > 1:
+        cen = np.quantile(cy, np.linspace(0.1, 0.9, rows))
+        for _ in range(20):
+            a = np.abs(cy[:, None] - cen[None]).argmin(1)
+            cen = np.array([cy[a == r].mean() if (a == r).any() else cen[r] for r in range(rows)])
+    else:
+        a = np.zeros(len(boxes), int)
+    out = []
+    for r in np.argsort(cen) if rows > 1 else [0]:
+        rb = [boxes[i] for i in range(len(boxes)) if a[i] == r]
+        rb.sort(key=lambda b: b[2])
+        out.extend([tuple(b[:4]) for b in rb])
+    return out
+
+
+def bbox(mask):
+    ys = np.where(mask.any(1))[0]
+    xs = np.where(mask.any(0))[0]
+    if len(ys) == 0:
+        return None
+    return ys[0], ys[-1] + 1, xs[0], xs[-1] + 1
