@@ -103,7 +103,7 @@
     K.fill(g, 4, 3, 28, 14, '.'); // the study
     K.put(g, 18, 28, 's');
     K.fill(g, 16, 28, 5, 1, '.'); K.put(g, 18, 28, 's');
-    K.put(g, 29, 3, 'S');
+    K.put(g, 29, 2, 'S'); // the stairs up, set into the north wall (as on 2F/3F): 29,3 is the only way in
     K.fill(g, 17, 6, 3, 11, '+');
     K.fill(g, 16, 9, 5, 5, '+');
     // shelves along the walls, reading tables, the desk
@@ -135,13 +135,14 @@
       rows: K.rows(g), decor: K.decor(g),
       spawns: {
         from_prev: { x: 18, y: 27, dir: 'up' },
-        from_next: { x: 28, y: 3, dir: 'down' },
+        from_next: { x: 28, y: 3, dir: 'down' }, // beside the seal's cell (a spawn must stand on floor whatever the flags)
       },
       warps: [
         K.warp(18, 28, 'archive_4', 'from_next'),
-        K.warp(29, 3, 'archive_6', 'from_prev', { cond: 'final_lazaro' }),
+        K.warp(29, 2, 'archive_6', 'from_prev', { cond: 'final_lazaro' }),
       ],
-      // the white paper that seals the stairs until ラザロ has fallen
+      // the white paper that seals the foot of the stairs until ラザロ has fallen (the warp's own tile
+      // stays walkable stairs; the seal in front of it is the only way up)
       tilePatches: [{ cond: '!final_lazaro', x: 29, y: 3, ch: '3' }],
       npcs: [
         K.npc('rest', 'obj:lantern', 13, 23, { event: 'common_rest', fixed: true }),

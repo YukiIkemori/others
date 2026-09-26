@@ -167,7 +167,9 @@
   K.deco(g, 20, 25, '3');
   K.deco(g, 27, 25, '3');
   K.deco(g, 8, 7, '{'); K.deco(g, 14, 7, '{'); K.deco(g, 17, 8, '=');
-  K.deco(g, 35, 11, 'rr'); K.deco(g, 35, 12, 'rr'); K.deco(g, 31, 9, '='); K.deco(g, 41, 9, '='); K.deco(g, 30, 11, '='); K.deco(g, 42, 11, '='); K.deco(g, 33, 10, '&'); K.deco(g, 38, 10, '&'); K.deco(g, 11, 10, '=');
+  K.deco(g, 35, 11, 'rr'); K.deco(g, 35, 12, 'rr'); K.deco(g, 31, 9, '='); K.deco(g, 30, 11, '='); K.deco(g, 42, 11, '='); K.deco(g, 33, 10, '&'); K.deco(g, 38, 10, '&'); K.deco(g, 11, 10, '=');
+  // the reading nook east of the chest: a round rug under the reading lamp (A22.6 density)
+  K.deco(g, 37, 8, '&');
   K.deco(g, 13, 16, '=');
   K.deco(g, 31, 22, '=');
   K.deco(g, 25, 27, '=');

@@ -8,6 +8,7 @@
 //        酒場のマスター: 仲間を探す（recruit のときだけ）/ 入れ替える / 並びと隊列 / 装備をあずかる / やめる。
 //        状態は R.Party・R.Rules の API だけで変える（recruit・swap・setParty・setOrder・setRow・unequipAll）。
 //   R.Tavern.LINES      マスターの台詞（§5.5.5）       R.Tavern.announceJoin(c|id, {jingle, bench})
+//   R.Tavern.favored(apt) → [[名前, 色, 'S'|'A'], …]  候補の「得意」（オーナー指示: 特性と得手不得手の表は出さない）
 (function (R) {
   'use strict';
   const G = () => R.Gfx;
@@ -97,7 +98,6 @@
       this.ids = this.mode === 'browse' ? unrecruited() : candidates().filter((id) => DB.companions[id]);
       this.cur = 0;
       if (this.mode === 'start') { const i = this.ids.findIndex((id) => !isRecruited(id)); this.cur = Math.max(0, i); }
-      this.page = 0;
       this.chosen = [];
       this.busy = false;
     }
@@ -114,8 +114,7 @@
     update() {
       if (this.busy || this.closed) return;
       const d = In().dirRepeat();
-      if (d === 'up' || d === 'down') this.move(d === 'up' ? -1 : 1);
-      if (d === 'left' || d === 'right') { this.page ^= 1; R.sfx('page'); }
+      if (d === 'up' || d === 'down' || d === 'left' || d === 'right') this.move(d === 'up' || d === 'left' ? -1 : 1);
       if (In().repeat('l')) this.move(-1);
       if (In().repeat('r')) this.move(1);
       if (In().pressed('b')) {
@@ -173,75 +172,60 @@
         if (i === this.cur && Math.floor(R.Engine.frame / 20) % 4 !== 3) g.strokeRect(x - 2, y - 1, 20, 26, C.white);
       });
       if (!this.ids.length) g.text(LINES.none, 128, 30, { align: 'center', color: '#c8c8d8' });
-      g.window(4, 68, 248, 154, { title: (this.page + 1) + '/2' });
+      g.window(4, 68, 248, 154);
       const id = this.id;
-      if (id) (this.page ? drawPage2 : drawPage1)(id, walk);
-      if (Math.floor(R.Engine.frame / 16) % 2 === 0) {
-        if (this.page === 0) arrow(240, 206, 1); else arrow(10, 206, -1);
-      }
+      if (id) drawCandidate(id, walk);
     }
   }
-  function arrow(x, y, dir) {
-    for (let i = 0; i < 4; i++) G().rect(dir > 0 ? x + i : x + 3 - i, y + 1 + i, 1, 9 - i * 2, '#ffffff');
-  }
-  /** 1 ページ目: 絵・名前・性別 年齢 肩書・役割 隊列・プロフィール・得手不得手 */
-  function drawPage1(id, walk) {
-    const g = G(), C = g.C, kit = K(), d = DB.companions[id];
-    kit.drawFigure(kit.defKey(id), 12, 72, { scale: 2, frame: walk });
-    g.text(d.name, 52, 72, { size: 16 });
-    g.text((d.gender === 'f' ? '女' : '男') + '　' + d.age + '歳　' + d.title, 52, 92, { color: '#c8c8d8' });
-    g.text(kit.ROLE_NAMES[d.role] + '　' + kit.ROW_NAMES[d.row] + (d.kin && d.kin !== '人間' ? '　' + d.kin : ''), 52, 106, { color: C.cyan });
-    String(d.profile || '').split('\n').forEach((l, i) => g.fitText(l, 12, 124 + 14 * i, 230));
-    kit.drawAptWide(d.apt, 12, 166, { pitch: 14, gap: 2 });
-  }
   /**
-   * the ability bonuses of a set of starting gear (§8.1.2: 鉄の胸当て 腕力+2・鉄の額当て 体力+1 …, the
-   * weapons included), summed over the slots → {str:n, …}. Items not registered yet add nothing.
+   * the favoured lines of a companion (オーナー指示: 候補には得意だけを見せる): the S weapons / elements, then the A
+   * ones → [[name, colour, letter], …] (weapons first, in the DB order; elements in their colour)
    */
-  function gearBonus(equip) {
-    const out = {};
-    for (const s of SLOTS) {
-      const it = equip && equip[s] ? DB.items[equip[s]] : null;
-      if (!it || !it.stats) continue;
-      for (const k of Object.keys(it.stats)) if (typeof it.stats[k] === 'number') out[k] = (out[k] || 0) + it.stats[k];
+  function favored(apt) {
+    const kit = K(), out = [];
+    for (const l of ['S', 'A']) {
+      for (const w of kit.W) if (apt && apt.w[w] === l) out.push([kit.wname(w), '#ffffff', l]);
+      for (const e of kit.E) if (apt && apt.e[e] === l) out.push([kit.ename(e), kit.ecolor(e), l]);
     }
     return out;
   }
-  /** the names of the starting armour in slot order (盾・頭・体) */
-  const armorNames = (e) => ['shield', 'head', 'body'].filter((s) => e && e[s]).map((s) => K().itemName(e[s]));
-  /** 2 ページ目: 能力 6 つ（初期装備の分は緑の +n）・成長・個性・出身・初期装備・始めの技と術 */
-  function drawPage2(id) {
+  /**
+   * 候補の 1 枚（§11.8.4。オーナー指示: 特性は画面に出さない・得手不得手の表も出さない）: 絵・名前・成長、
+   * 性別 年齢 肩書・役割 隊列・得意（S と A）、プロフィール 3 行、能力 6 つ（3 列 × 2 行、値と 20px の棒 = 値 ÷ 3）
+   */
+  function drawCandidate(id, walk) {
     const g = G(), C = g.C, kit = K(), d = DB.companions[id];
-    const e = d.startEquip || {};
-    const plus = gearBonus(e);
+    kit.drawFigure(kit.defKey(id), 12, 74, { scale: 2, frame: walk });
+    g.text(d.name, 52, 72, { size: 16 });
+    let gx = 244;
+    [['WP', 'wp'], ['MP', 'mp'], ['HP', 'hp']].forEach(([lab, k]) => {
+      g.text(d.growth[k], gx, 76, { align: 'right', color: kit.aptColor(d.growth[k]) });
+      g.text(lab, gx - 8, 76, { align: 'right', color: '#c8c8d8' });
+      gx -= 34;
+    });
+    g.text((d.gender === 'f' ? '女' : '男') + '　' + d.age + '歳　' + d.title, 52, 92, { color: '#c8c8d8' });
+    g.text(kit.ROLE_NAMES[d.role] + '　' + kit.ROW_NAMES[d.row] + (d.kin && d.kin !== '人間' ? '　' + d.kin : ''), 52, 106, { color: C.cyan });
+    let x = 52;
+    g.text('得意：', x, 120, { color: '#c8c8d8' });
+    x += g.textWidth('得意：');
+    for (const [name, col, l] of favored(d.apt)) {
+      const w = g.textWidth(name) + g.textWidth(l);
+      if (x + w > 244) break;
+      g.text(name, x, 120, { color: col });
+      g.text(l, x + g.textWidth(name), 120, { color: kit.aptColor(l) });
+      x += w + 8;
+    }
+    String(d.profile || '').split('\n').slice(0, 3).forEach((l, i) => g.fitText(l, 12, 138 + 14 * i, 232));
+    g.rect(12, 182, 232, 1, '#3a4470');
     kit.STATS.forEach((s, k) => {
-      const y = 74 + 14 * k, v = d.stats[s], b = plus[s] || 0;
-      g.text(kit.STAT_NAMES[s], 12, y, { color: '#c8c8d8' });
-      g.text(String(v), 62, y, { align: 'right' });
-      if (b) g.text('+' + b, 64, y, { color: C.green });
-      kit.statBar(78, y + 4, v, { bonus: b, scale: 0.78 });
+      const cx = 12 + 78 * (k % 3), y = 188 + 14 * Math.floor(k / 3), v = d.stats[s];
+      g.text(kit.STAT_NAMES[s], cx, y, { color: '#c8c8d8' });
+      g.text(String(v), cx + 50, y, { align: 'right' });
+      const a = Math.max(1, Math.min(20, Math.round(v / 3)));
+      g.rect(cx + 54, y + 5, 20, 3, '#1c2442');
+      g.rect(cx + 54, y + 5, a, 3, C.cyan);
+      g.rect(cx + 54, y + 5, a, 1, '#c8f0ff');
     });
-    let gx = 132;
-    [['HP', 'hp'], ['MP', 'mp'], ['WP', 'wp']].forEach(([lab, k]) => {
-      g.text(lab, gx, 74, { color: '#c8c8d8' });
-      g.text(d.growth[k], gx + 13, 74, { color: kit.aptColor(d.growth[k]) });
-      gx += 38;
-    });
-    g.text('個性：', 132, 92, { color: '#c8c8d8' });
-    g.fitText(d.innate.name, 132 + g.textWidth('個性：'), 92, 80, { color: C.gold });
-    kit.jbreak(d.innate.desc, 110).forEach((l, i) => g.text(l, 136, 106 + 14 * i));
-    g.text('出身：', 132, 138, { color: '#c8c8d8' });
-    g.fitText(d.from, 132 + g.textWidth('出身：'), 138, 84);
-    const label = (t, x, y) => { g.text(t, x, y, { color: '#c8c8d8' }); return x + g.textWidth(t); };
-    let x = label('武器1：', 12, 162);
-    g.fitText(kit.itemName(e.weapon1), x, 162, 92);
-    x = label('武器2：', 128, 162);
-    g.fitText(e.weapon2 ? kit.itemName(e.weapon2) : '――', x, 162, 244 - x, { color: e.weapon2 ? C.white : '#8c90a8' });
-    x = label('防具：', 12, 176);
-    g.fitText(armorNames(e).join('・') || '――', x, 176, 244 - x);
-    const acts = (d.startTechs || []).concat(d.startSpells || []).map(kit.actionName);
-    x = label('始めの技・術：', 12, 192);
-    g.fitText(acts.join('・') || '――', x, 192, 244 - x, { color: C.white });
   }
 
   // ------------------------------------------------------------ 入れ替える（§11.8.5）
@@ -402,7 +386,7 @@
     }
   }
   const tri = (x, y, dir) => K().tri(x, y, dir);
-  /** カーソルの人の要約: 肩書・役割・隊列、個性、得手不得手 3 行 */
+  /** カーソルの人の要約: 肩書・役割・隊列、プロフィールの 1 行目（主人公はタイプの説明）、得手不得手 3 行 */
   function drawInfo(c, x, y) {
     const g = G(), C = g.C, kit = K();
     const d = DB.companions[c.id];
@@ -417,9 +401,8 @@
       g.text(c.name, x, y);
       g.text(d.title + '　' + kit.ROLE_NAMES[d.role], x + 62, y, { color: '#c8c8d8' });
       g.text(kit.ROW_NAMES[c.row] || '', x + 232, y, { align: 'right', color: c.row === 'middle' ? C.cyan : C.orange });
-      g.text('個性：', x, y + 14, { color: '#c8c8d8' });
-      g.text(d.innate.name, x + 32, y + 14, { color: C.gold });
-      g.fitText(d.innate.desc, x + 36 + g.textWidth(d.innate.name), y + 14, 232 - 36 - g.textWidth(d.innate.name));
+      // オーナー指示: 特性（innate）は画面に出さない → the hero's type line has its counterpart in the profile's first line
+      g.fitText(String(d.profile || '').split('\n')[0], x, y + 14, 232, { color: '#c8c8d8' });
     }
     kit.drawAptWide(kit.aptOf(c), x, y + 30, { pitch: 14, gap: 2 });
   }
@@ -547,7 +530,6 @@
         const c = opts.recruit ? call('recruit', ids[i]) : null;
         if (!show) continue;
         show.cur = Math.max(0, show.ids.indexOf(ids[i]));
-        show.page = 0;
         await announceJoin(c || ids[i], { jingle: i === 0, bench: !!c && reserve().length > before });
       }
       if (show) { R.UI.closeMessage(); show.close(); }
@@ -572,7 +554,7 @@
     browse() { return unrecruited().length ? R.Engine.run(new ChooseLayer({ mode: 'browse' })) : say(LINES.none).then(() => R.UI.closeMessage()); },
     swapScreen(o) { return R.Engine.run(new SwapLayer(o || {})); },
     deposit,
-    unrecruited,
+    unrecruited, favored,
     _ChooseLayer: ChooseLayer, _SwapLayer: SwapLayer, _CommandLayer: CommandLayer, _DepositLayer: DepositLayer,
   };
 })(window.RPG);

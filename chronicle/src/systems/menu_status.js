@@ -266,9 +266,11 @@
           G().text('得意分野：' + (f.id ? nm : '―'), 14, 184, { color: G().C.yellow });
           Kt.fitText(desc, 14, 198, 228);
         } else {
-          const inn = (DB.companions[c.id] && DB.companions[c.id].innate) || {};
-          G().text('個性：' + (inn.name || '―'), 14, 184, { color: G().C.yellow });
-          Kt.fitText(String(inn.desc || '').split('\n')[0], 14, 198, 228);
+          // オーナー指示: 特性（innate）は画面に出さない → the favoured weapons / elements (S, then A) and the profile's first line
+          const d = DB.companions[c.id] || {};
+          const fav = R.Tavern && R.Tavern.favored ? R.Tavern.favored(d.apt).map((f) => f[0] + f[2]).join('　') : '';
+          Kt.fitText('得意：' + (fav || '―'), 14, 184, 228, { color: G().C.yellow });
+          Kt.fitText(String(d.profile || '').split('\n')[0], 14, 198, 228);
         }
       }
       pageActs(c, pg, kind) {
@@ -328,7 +330,10 @@
       }
       pageResist(c, st) {
         G().window(4, 46, 248, 174, { title: '耐性' });
-        const m = st.mods || (R.Rules && R.Rules.mods ? R.Rules.mods(c) : {}) || {};
+        // オーナー指示: 特性（innate）は画面に出さない → a companion's list is its equipment's only (the id is blanked so
+        // R.Rules.mods finds no innate; the innate still works in play)
+        const own = c.id !== 'hero' && R.Rules && R.Rules.mods;
+        const m = (own ? R.Rules.mods(Object.assign({}, c, { id: '' })) : st.mods || (R.Rules && R.Rules.mods ? R.Rules.mods(c) : {})) || {};
         const er = st.elemResist || m.elemResist || {};
         const boost = st.elemBoost || m.elemBoost || {};
         Kt.elems().forEach((e, i) => {
@@ -340,8 +345,8 @@
         });
         G().rect(12, 98, 232, 1, '#3a4470');
         G().text('状態の守り', 14, 102, { color: Kt.COL.sub });
-        const imm = st.statusImmune || m.statusImmune || [];
-        const res = st.statusResist || m.statusResist || {};
+        const imm = (own ? m.statusImmune : st.statusImmune || m.statusImmune) || [];
+        const res = (own ? m.statusResist : st.statusResist || m.statusResist) || {};
         const ph = [];
         if (imm.length) ph.push({ text: imm.map(Kt.statusName).join('・') + 'が効かない', color: G().C.green });
         const rs = Object.keys(res).filter((s) => res[s] && !imm.includes(s));

@@ -142,13 +142,13 @@
 
   // A10b.2: 鏡・金貨・本の 3 つのアイコン（icon:mirror coin book、担当 art-chars）。絵がまだ無い版では、前の絵に戻す
   // （アイコンの無い品を一覧に出さない）。絵が入れば、このままで新しい絵になる。
-  const ICON_FALLBACK = { 'icon:mirror': 'icon:acc', 'icon:coin': 'icon:powder', 'icon:book': 'icon:potion' };
+  const ICON_FALLBACK = { i_lens: 'icon:acc', i_gold_bar: 'icon:acc', i_gold_coins: 'icon:powder', i_wisdom_page: 'icon:potion' };
   R.ItemsUse.iconFallback = () => Object.assign({}, ICON_FALLBACK);
   R.onData(() => {
     if (!R.Gfx || !R.Gfx.has) return;
-    for (const id of IDS) {
-      const it = R.DB.items[id], fb = ICON_FALLBACK[it.icon];
-      if (fb && !R.Gfx.has(it.icon)) it.icon = fb;
+    for (const [id, fb] of Object.entries(ICON_FALLBACK)) {
+      const it = R.DB.items[id];
+      if (it && !R.Gfx.has(it.icon)) it.icon = fb;
     }
   });
 

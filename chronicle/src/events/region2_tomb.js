@@ -41,8 +41,9 @@
     await ev.caption('三つの文字が、\nひとつの名になった。\n――ハザル。', { frames: 210 });
     ev.setObjective('obj_desert_3', { region: REGION });
     ev.refresh();
+    ev.sfx('unlock'); // the rock door rolls aside (§11.13: ev.sfx('unlock') + ev.flash)
+    await ev.flash('#e8d8b0', 6);
     if (ev.map === 'sand_tomb_3') {
-      ev.sfx('unlock');
       await ev.shake(24, 2);
       await ev.say('どこかで、重い岩戸の\n動く音がした……。');
     } else {
@@ -73,6 +74,8 @@
       ev.sfx('shake');
       await ev.shake(24, 2);
       ev.refresh();
+      ev.sfx('unlock'); // a closed way opens (§11.13: ev.sfx('unlock') + ev.flash)
+      await ev.flash('#e8d8b0', 8);
       await ev.say('砂もぐりが砂の底へ沈むと、\n流れていた砂が、\nぴたりと止まった。');
       await ev.say('南の通路を、歩いて\n渡れそうだ。');
     },
@@ -175,7 +178,8 @@
       await ev.caption('その夜は、町の宿で眠った。');
       ev.heal();
       await ev.warp('kasim', 'inn', { fade: false });
-      if (R.Engine.fadeAlpha > 0) await ev.fadeIn(40);
+      // story_after_clear shows 「翌朝――」 on the black and lights the town itself (D6); the fade-in
+      // below only covers the case where it has no scene to play
       if (R.DB.events.story_after_clear) await ev.call('story_after_clear');
       if (R.Engine.fadeAlpha > 0) await ev.fadeIn(20);
     },

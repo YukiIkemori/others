@@ -3,6 +3,9 @@
 // regions obj_<rs>_<n> (src/events/region<N>_*.js), prologue obj_p_* (src/events/prologue*.js).
 //   text: shown in the menu's objective window and the chronicle. {left} = regions not yet
 //   cleared, {cleared} = regions cleared (replaced by the menu).
+// obj_w_roa / obj_w_to_lute / obj_w_keeper / obj_w_lighthouse are kept only as aliases of the
+// prologue's obj_p_* (same texts; §10.13.8 still lists them and validate/test_world check them).
+// Nothing in src/ sets them: the prologue sets obj_p_*, and config.startObjective is obj_p_roa.
 (function (R) {
   'use strict';
   Object.assign(R.DB.objectives, {

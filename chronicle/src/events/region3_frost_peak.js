@@ -27,6 +27,9 @@
       ev.sfx('fire');
       await ev.flash('#ffb060', 8);
       await ev.say('冬至の火種が、赤く輝いた。');
+      ev.closeMessage();
+      ev.sfx('unlock'); // the ice walls melt: a closed way opens (§11.13: ev.sfx('unlock') + ev.flash)
+      await ev.flash('#fff0e0', 6);
       await ev.say('洞窟の奥で、氷のとける音がする……。');
     },
   };
@@ -56,6 +59,8 @@
       ev.sfx('ice');
       await ev.shake(24, 3);
       ev.refresh();
+      ev.sfx('unlock'); // the giant's wall breaks (§11.13: ev.sfx('unlock') + ev.flash)
+      await ev.flash('#e8f4ff', 8);
       await ev.say('巨人の体が砕け散り、\n氷の壁が崩れ落ちた！');
       await ev.say('奥に、上へ続く階段が見える。');
     },
@@ -128,8 +133,10 @@
       await ev.caption('その夜は、町の宿で眠った。');
       ev.heal();
       await ev.warp('yule', 'inn', { fade: false });
-      await ev.fadeIn(30);
+      // story_after_clear shows 「翌朝――」 on the black and lights the village itself (D6); the
+      // fade-in below only covers the case where it has no scene to play
       if (has('story_after_clear')) await ev.call('story_after_clear');
+      if (R.Engine.fadeAlpha > 0) await ev.fadeIn(30);
     },
   };
 

@@ -301,6 +301,74 @@ process.on("exit", (c) => { if (!global.__done) console.log("[test ended early (
   ok(r.done, 'T24 open({recruit:false}) closes with やめる');
   reset();
 
+  // ------------------------------------------------------------ I: オーナー指示 — 特性（innate）は画面に出さない
+  console.log('I  the innate trait is never on screen');
+  // every string drawn during one render (Gfx.text / fitText)
+  const drawn = () => {
+    const out = [], G0 = R.Gfx, t0 = G0.text, f0 = G0.fitText;
+    G0.text = function (str) { out.push(String(str)); return t0.apply(this, arguments); };
+    G0.fitText = function (str) { out.push(String(str)); return f0.apply(this, arguments); };
+    try { R.Engine.render(); } finally { G0.text = t0; G0.fitText = f0; }
+    return out.join('\n');
+  };
+  const leaks = (txt) => Object.keys(R.DB.companions).filter((id) => {
+    const d = R.DB.companions[id], inn = d.innate;
+    // イルゼの肩書は特性と同じ「星読み」: the name only counts when it is not the title
+    return (inn.name !== d.title && txt.includes(inn.name)) || txt.includes(inn.desc) || /個性|特性/.test(txt);
+  });
+  R.NGFixture.game();
+  reset();
+  const CL = new R.Tavern._ChooseLayer({ mode: 'start', count: 3 });
+  CL.busy = true;
+  R.Engine.push(CL);
+  const bad = [], chart = [], shown = [];
+  for (let i = 0; i < CL.ids.length; i++) {
+    CL.cur = i;
+    const d = R.DB.companions[CL.ids[i]];
+    const txt = drawn();
+    if (leaks(txt).length) bad.push(CL.ids[i]);
+    if (/^武器$|^術$/m.test(txt)) chart.push(CL.ids[i]);
+    const fav = R.Tavern.favored(d.apt);
+    const want = [d.name, d.title, d.profile.split('\n')[0], '得意：'].concat(fav.slice(0, 2).map((f) => f[0]), R.CharCreate.kit.STATS.map((k) => String(d.stats[k])));
+    if (!want.every((w) => txt.includes(w))) shown.push(CL.ids[i]);
+  }
+  eq(bad, [], 'I1 仲間を選ぶ: no candidate shows its trait name or effect');
+  eq(chart, [], 'I2 仲間を選ぶ: no S〜D aptitude chart for candidates');
+  eq(shown, [], 'I3 仲間を選ぶ: name, title, profile, 得意 (S first), and the six stats are shown on one page');
+  ok(R.DB.companions.selma && R.Tavern.favored(R.DB.companions.selma.apt)[0].join() === '剣,#ffffff,S', 'I4 favored(): S before A (セルマ → 剣S)');
+  reset();
+  R.NGFixture.party(['brigitta', 'marta', 'sylvain'], { level: 20, reserve: ['selma', 'morga', 'titta'] });
+  const SL = new R.Tavern._SwapLayer({});
+  SL.busy = true;
+  R.Engine.push(SL);
+  const bad2 = [];
+  for (let k = 0; k < R.Game.party.length; k++) { SL.side = 0; SL.ai = k; if (leaks(drawn()).length) bad2.push(R.Game.party[k].id); }
+  for (let k = 0; k < R.Game.reserve.length; k++) { SL.side = 1; SL.ri = k; if (leaks(drawn()).length) bad2.push(R.Game.reserve[k].id); }
+  eq(bad2, [], 'I5 入れ替える (party and reserve): no trait name or effect');
+  reset();
+  if (R.Menu && R.Menu.statusScreen) {
+    const bad3 = [];
+    const selma = R.Game.reserve.find((c) => c.id === 'selma');
+    R.Game.party.push(selma); R.Game.reserve = R.Game.reserve.filter((c) => c !== selma);
+    const p0 = R.Menu.statusScreen({ member: R.Game.party.length - 1 });
+    await frames(3);
+    const ST = top();
+    const nP = ST && ST.pages ? ST.pages.length : 0;
+    let resist = '';
+    for (let i = 0; i < nP; i++) {
+      ST.page = i;
+      const txt = drawn();
+      if (leaks(txt).length) bad3.push(ST.pages[i].kind);
+      if (ST.pages[i].kind === 'resist') resist = txt;
+    }
+    ok(nP > 0, 'I6 強さ opens for a companion', topName());
+    eq(bad3, [], 'I7 強さ: no page shows the trait name or effect');
+    ok(resist && !/まひ|気絶/.test(resist), 'I8 強さ 耐性: セルマ\'s innate まひ・気絶 resistance is not listed (gear only)');
+    reset();
+    await Promise.race([p0, frames(2)]);
+  }
+  drawErrors = drawErrors.filter(Boolean);
+
   // ------------------------------------------------------------ S: title
   console.log('S  title');
   const calls = [];

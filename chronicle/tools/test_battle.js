@@ -394,6 +394,81 @@ guard('magic', () => {
   ok(dealt > 0 && mage.hp === Math.min(mage.mhp, 10 + Math.round(dealt * dark.effects[0].drain)), 'drain heals round(dealt × drain)');
 });
 
+// ================================================================ Part A13: proficiency raises power
+sec('proficiency power (A13)');
+guard('proficiency power', () => {
+  const e = mk({ mons: ['tb_goblin', 'tb_dummy'] });
+  const hero = P(e, 0), mage = P(e, 2), gob = Mo(e, 0), dummy = Mo(e, 1);
+  const PTS = R.Rules.K.PROF_PTS;
+  const X = (u, t, a, o) => e.roll(u, t, a.effects[0], Object.assign({ act: a, kind: a.kind, expect: true }, o || {})).dmg;
+  const fire = DB.actions.tb_s_fire, steam = DB.actions.tb_s_steam, heal = DB.actions.tb_s_heal;
+  for (const k in mage.c.eprof) mage.c.eprof[k] = 0;
+  for (const k in hero.c.wprof) hero.c.wprof[k] = 0;
+  const f0 = X(mage, dummy, fire);
+  mage.c.eprof.fire = PTS[5];
+  near(X(mage, dummy, fire) / f0, 1.15, 1e-9, 'spell: element rank 5 → ×1.15');
+  mage.c.eprof.fire = PTS[10];
+  near(X(mage, dummy, fire) / f0, 1.30, 1e-9, 'spell: element rank 10 → ×1.30 (max)');
+  mage.c.eprof.fire = 0;
+  near(X(mage, dummy, fire) / f0, 1, 1e-9, 'spell: rank 0 → ×1');
+  // combo: the average rank of its elements
+  const s0 = X(mage, dummy, steam);
+  mage.c.eprof.fire = PTS[6]; mage.c.eprof.water = PTS[2];
+  near(X(mage, dummy, steam) / s0, 1.12, 1e-9, 'combo: ranks 6 and 2 → average 4 → ×1.12');
+  mage.c.eprof.fire = 0; mage.c.eprof.water = 0;
+  // healing spells too (battle and the AI's estimate share R.Mon.healAmount)
+  const h0 = e.expectHeal(mage, heal, hero);
+  mage.c.eprof.light = PTS[5];
+  near(e.expectHeal(mage, heal, hero) / h0, 1.15, 0.02, 'heal spell: light rank 5 → ×1.15 (rounded HP)');
+  const n = R.Mon.healAmount(mage, hero, heal.effects[0], { action: heal });
+  ok(n === Math.round(h0 * 1.15) || Math.abs(n - h0 * 1.15) <= 1, 'healAmount with the action applies the bonus');
+  ok(R.Mon.healAmount(mage, hero, heal.effects[0], { item: true, action: heal }) === R.Mon.healAmount(mage, hero, heal.effects[0], { item: true }), 'items get no proficiency bonus');
+  mage.c.eprof.light = 0;
+  // plain attack and techs: the weapon type in the slot used; weapon2 uses its own type
+  equip(hero, 'shield', null); equip(hero, 'weapon2', 'tb_dagger');
+  const atk = (slot) => e.roll(hero, dummy, SURE(), { slot, attack: true, expect: true }).dmg;
+  const a1 = atk('weapon1'), a2 = atk('weapon2'), ea2 = e.expectAttack(hero, dummy, 'weapon2');
+  hero.c.wprof.sword = PTS[5];
+  near(atk('weapon1') / a1, 1.15, 1e-9, 'attack with weapon1: sword rank 5 → ×1.15');
+  near(atk('weapon2') / a2, 1, 1e-9, 'attack with weapon2 (dagger rank 0) is not raised by the sword rank');
+  hero.c.wprof.dagger = PTS[10];
+  near(atk('weapon2') / a2, 1.30, 1e-9, 'attack with weapon2: its own type (dagger rank 10) → ×1.30');
+  const cut = DB.actions.tb_t_cut;
+  const t0 = (slot) => { const sv = [hero.c.wprof.sword, hero.c.wprof.dagger]; hero.c.wprof.sword = 0; hero.c.wprof.dagger = 0; const d = X(hero, dummy, cut, { slot, W: hero.weapon(slot) }); hero.c.wprof.sword = sv[0]; hero.c.wprof.dagger = sv[1]; return d; };
+  near(X(hero, dummy, cut, { slot: 'weapon1', W: hero.weapon('weapon1') }) / t0('weapon1'), 1.15, 1e-9, 'tech from weapon1 → sword rank');
+  near(X(hero, dummy, cut, { slot: 'weapon2', W: hero.weapon('weapon2') }) / t0('weapon2'), 1.30, 1e-9, 'tech from weapon2 → dagger rank');
+  near(e.expectAttack(hero, dummy, 'weapon2') / ea2, 1.30, 1e-9, 'the AI estimate (expectAttack) sees the bonus');
+  // monsters are unaffected
+  ok(e.profMul(gob, { attack: true }) === 1 && e.profMul(gob, { act: fire, kind: 'spell' }) === 1, 'monsters: profMul 1');
+  const m0 = e.roll(gob, hero, SURE(), { attack: true, expect: true }).dmg;
+  for (const k in hero.c.wprof) hero.c.wprof[k] = 999;
+  near(e.roll(gob, hero, SURE(), { attack: true, expect: true }).dmg, m0, 1e-9, "a monster's hit does not change with the target's proficiency");
+  // items / 魔石 get nothing
+  const pot = DB.items.tb_firepot;
+  mage.c.eprof.fire = 999;
+  near(e.roll(mage, gob, pot.use.effects[0], { act: pot.use, item: pot, kind: 'item', expect: true }).dmg, 0.8 * 21 * 1.5, 1e-6, 'tier-formula items: no proficiency bonus');
+  mage.c.eprof.fire = 0;
+  // Part A13b: the engine's MP cost follows R.Rules.mpCost (1段目 free at rank 5)
+  if (DB.actions.s_fire_1) {
+    mage.c.eprof.fire = PTS[5];
+    ok(e.mpCost(mage, 's_fire_1') === 0 && !e.unusable(mage, 's_fire_1'), 'A13b: 1段目 fire spell costs MP 0 at fire rank 5');
+    mage.mp = 0;
+    ok(!e.unusable(mage, 's_fire_1'), 'A13b: castable with MP 0');
+    mage.c.eprof.fire = 0;
+    ok(e.unusable(mage, 's_fire_1') === 'mp', 'A13b: rank 0 needs MP again');
+    // the auto AI (thrift, 雑魚戦) casts a free 1段目 spell instead of 攻撃 / 防御 when it hits
+    const e2 = mk({ mons: ['tb_goblin', 'tb_goblin'] });
+    const mg = P(e2, 2);
+    if (!mg.c.spells.includes('s_fire_1')) mg.c.spells.push('s_fire_1');
+    mg.mp = 0;
+    const before = AI.partyCommands(e2, { thrift: true, items: false })[2];
+    ok(!(before && before.type === 'spell'), 'A13b: MP 0 at rank 0 → no spell');
+    mg.c.eprof.fire = PTS[5];
+    const cmd = AI.partyCommands(e2, { thrift: true, items: false })[2];
+    ok(cmd && cmd.type === 'spell' && cmd.id === 's_fire_1', 'A13b: the free 1段目 spell is chosen in thrift mode', JSON.stringify(cmd && { type: cmd.type, id: cmd.id }));
+  }
+});
+
 // ================================================================ effects
 sec('heal/revive/items');
 guard('heal', () => {

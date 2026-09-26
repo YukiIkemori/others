@@ -347,13 +347,20 @@ async function run(id, o) {
   gate('archive_2', 'archive_2_boss', { x: 36, y: 2 });
   gate('archive_3', 'archive_3_rowell', { x: 20, y: 2 }, [], ['k_rowell_note']);
   gate('archive_4', 'archive_4_boss', { x: 23, y: 3 });
-  gate('archive_5', 'archive_5_lazaro', { x: 29, y: 3 }, ['final_lazaro']);
+  gate('archive_5', 'archive_5_lazaro', { x: 29, y: 2 }, ['final_lazaro']);
   gate('archive_6', 'archive_6_boss', { x: 15, y: 9 });
   // the sealed door and the paper seal
   { const m = compileWith('archive_3', []); ok(!m.walkable(19, 4), 'archive_3 door sealed without the note'); }
   { const m = compileWith('archive_3', [], ['k_rowell_note']); ok(m.walkable(19, 4), 'archive_3 door opens with the note'); }
   { const m = compileWith('archive_5', []); ok(!m.walkable(29, 3), 'archive_5 stairs sealed'); }
   { const m = compileWith('archive_5', ['final_lazaro']); ok(m.walkable(29, 3), 'archive_5 stairs open after ラザロ'); }
+  { // the warp up stands on the stairs themselves (never on the seal), reachable only across the seal's cell
+    const m = compileWith('archive_5', []);
+    const w = m.warps.find((x) => x.to === 'archive_6');
+    ok(w && m.walkable(w.x, w.y) && m.tileAt(w.x, w.y) !== 'seal', 'archive_5 warp up on a walkable stairs tile');
+    const seen = bfs(m, m.spawns.from_prev, {});
+    ok(w && !near(seen, w.x, w.y), 'archive_5 warp up unreachable while sealed');
+  }
   // secret passages: one each on archive_2 and archive_4 (§10.6.4), the reward behind them only through it
   for (const [id, chest] of [['archive_2', 'archive_2_c1'], ['archive_4', 'archive_4_c1']]) {
     const m = compileWith(id, ['final_golem', 'final_shades']);

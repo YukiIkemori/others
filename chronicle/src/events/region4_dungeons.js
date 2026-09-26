@@ -121,6 +121,7 @@
       await ev.say('……ゴーン……。');
       if (n >= 3) {
         ev.closeMessage();
+        ev.sfx('unlock'); // the fog gate lifts (§11.13: ev.sfx('unlock') + ev.flash)
         await ev.flash('#e8ecff', 12);
         ev.sfx('bell');
         await ev.say('三つの鐘が鳴りわたると、\n霧が一か所に集まっていく……！');
@@ -217,9 +218,8 @@
       await ev.caption('その夜は、町の宿で眠った。');
       ev.heal();
       await ev.warp('loch', 'inn', { fade: false });
-      // morning at the inn: show the town before the story's scene (it does not fade in by itself —
-      // its caption 「翌朝――」 hands the black back), then never leave the screen dark
-      await ev.fadeIn(30);
+      // story_after_clear shows 「翌朝――」 on the black and lights the town itself (D6); the fade-in
+      // below only covers the case where it has no scene to play
       if (R.DB.events.story_after_clear) await ev.call('story_after_clear');
       if (R.Engine && R.Engine.fadeAlpha > 0) await ev.fadeIn(30);
       ev.bgm();

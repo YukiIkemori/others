@@ -1,5 +1,5 @@
 {
- "when": "2026-09-26T13:42:43.877Z",
+ "when": "2026-09-26T14:25:55.697Z",
  "html": "dist/index.html",
  "results": [
   {
@@ -19,14 +19,13 @@
   },
   {
    "no": 4,
-   "title": "仲間を選ぶ（1 ページ・2 ページ、2 人選んだ状態）",
+   "title": "仲間を選ぶ（1 ページ。2 人選んだ状態。オーナー指示: 特性は画面に出さない）",
    "status": "PASS",
    "detail": "",
    "files": [
-    "design/shots/04_choose_page1.png",
-    "design/shots/04_choose_page2.png"
+    "design/shots/04_choose.png"
    ],
-   "ms": 3005
+   "ms": 12569
   },
   {
    "no": 5,
@@ -182,7 +181,7 @@
    "files": [
     "design/shots/15_tavern_swap.png"
    ],
-   "ms": 1883
+   "ms": 9921
   },
   {
    "no": 16,

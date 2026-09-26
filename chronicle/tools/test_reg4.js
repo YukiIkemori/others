@@ -399,8 +399,10 @@ const has = (log, kind, a) => log.some((l) => l[0] === kind && (a == null || l[1
   ok(iClear > 0 && iHeal > iClear && iWarp > iClear && iAfter > iWarp, 'E', 'boss: clearRegion → heal → warp loch inn → story_after_clear (§10.8.0-3)');
   ok(r.log.some((l) => l[0] === 'warp' && l[1] === 'loch' && l[2] === 'inn'), 'E', 'boss: the night at the inn of Loch');
   {
+    // D6: story_after_clear shows 「翌朝――」 on the black and lights the town itself; the region
+    // does not fade in first (that lit the town, dimmed it for the caption and lit it again)
     const iFade = order.indexOf('fadeIn:', iWarp);
-    ok(iFade > iWarp && iFade < iAfter, 'E', 'boss: the screen fades in at the inn before story_after_clear (never a black morning)');
+    ok(iFade < 0 || iFade > iAfter, 'E', 'boss: no fade-in between the warp to the inn and story_after_clear (no double fade)');
   }
   ok(r.log.some((l) => l[0] === 'caption' && l[1] === 'その夜は、町の宿で眠った。'), 'E', 'boss: 「その夜は、町の宿で眠った。」');
   ok(['child_nico', 'child_lina', 'child_bram', 'melda'].every((c) => has(r.log, 'show', c)), 'E', 'boss: the children and Melda appear');

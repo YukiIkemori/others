@@ -224,7 +224,7 @@ check('C8', 'アイコン（§11.3.6 の既存と el_<属性>）・並び（sort
     if (!it) { errs.push(`${id} が無い`); continue; }
     const drawn = R.Gfx && R.Gfx.has && R.Gfx.has(want);
     if (drawn && it.icon !== want) errs.push(`${id} の icon ${it.icon} ≠ ${want}`);
-    else if (!drawn && it.icon !== FB[want]) errs.push(`${id} の icon ${it.icon}（${want} の絵が無い間は ${FB[want]}）`);
+    else if (!drawn && it.icon !== FB[id]) errs.push(`${id} の icon ${it.icon}（${want} の絵が無い間は ${FB[id]}）`);
     else if (!drawn) pending.push(`${id}→${want.slice(5)}`);
   }
   if (pending.length) notes.push(...pending.map((p) => 'pending ' + p));

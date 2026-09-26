@@ -699,6 +699,75 @@ test('newChar: companions (§5.3.5, §5.0 0.6)', () => {
   eq(Ru.aptitude(Ru.newChar({ id: 'fx_mage' })).e, { fire: 2, water: 0.6, wind: 0.6, earth: 1.5, light: 0.6, dark: 1 }, 'aptitude multipliers');
 });
 
+test('proficiency power: Part A13 profPowerMul (spells by element rank, techs / attacks by the used weapon type)', () => {
+  fresh([]);
+  const P = K.PROF_PTS;
+  eq(K.PROF_POWER, { perRank: 0.03, max: 0.30 }, 'K.PROF_POWER');
+  const c = Ru.newChar({ id: 'fx_warrior' });
+  c.equip = Ru.emptyEquip();
+  for (const w of Ru.WTYPES) c.wprof[w] = 0;
+  for (const e of Ru.ELEMENTS) c.eprof[e] = 0;
+  const A = DB.actions;
+  // spells: +3 % per rank of the element, ranks 0 / 5 / 10
+  near(Ru.profPowerMul(c, A.fx_s_step3), 1, 1e-9, 'rank 0 → ×1');
+  c.eprof.fire = P[5];
+  near(Ru.profPowerMul(c, A.fx_s_step3), 1.15, 1e-9, 'rank 5 → ×1.15');
+  near(Ru.profPowerMul(c, 'fx_s_step3'), 1.15, 1e-9, 'an action id works too');
+  eq(Ru.profPowerPct(c, A.fx_s_step3), 15, 'profPowerPct 15');
+  c.eprof.fire = 999;
+  near(Ru.profPowerMul(c, A.fx_s_step3), 1.30, 1e-9, 'rank 10 → ×1.30 (the max)');
+  // combo / triple: the average rank of the elements
+  c.eprof.fire = P[6]; c.eprof.wind = P[2];
+  near(Ru.profPowerMul(c, A.fx_s_pair), 1 + 0.03 * 4, 1e-9, 'pair: ranks 6 and 2 → average 4 → ×1.12');
+  c.eprof.light = P[1];
+  near(Ru.profPowerMul(c, A.fx_s_triple), 1 + 0.03 * 3, 1e-9, 'triple: ranks 6, 2, 1 → average 3 → ×1.09');
+  // techs and plain attacks: the weapon type in the slot actually used
+  c.equip.weapon1 = 'fx_sword_5'; c.equip.weapon2 = 'fx_axe_5';
+  c.wprof.sword = P[5]; c.wprof.axe = P[10];
+  near(Ru.profPowerMul(c, null, 'weapon1'), 1.15, 1e-9, 'attack with weapon1 (sword rank 5) → ×1.15');
+  near(Ru.profPowerMul(c, null, 'weapon2'), 1.30, 1e-9, 'attack with weapon2 uses its own type (axe rank 10) → ×1.30');
+  near(Ru.profPowerMul(c, 'attack'), 1.15, 1e-9, "'attack' with no slot → the default weapon (weapon1)");
+  near(Ru.profPowerMul(c, A.fx_t_cost, 'weapon1'), 1.15, 1e-9, 'tech from weapon1 → sword rank');
+  near(Ru.profPowerMul(c, A.fx_t_cost, 'weapon2'), 1.30, 1e-9, 'tech from weapon2 → axe rank');
+  c.equip.weapon1 = null; c.equip.weapon2 = null; c.wprof.fist = P[3];
+  near(Ru.profPowerMul(c, null, null), 1.09, 1e-9, 'bare hands → 体術 rank 3 → ×1.09');
+  // no bonus for items and non-actions
+  near(Ru.profPowerMul(c, { kind: 'item' }), 1, 1e-9, 'an item → ×1');
+  near(Ru.profPowerMul(null, A.fx_s_step3), 1, 1e-9, 'no character → ×1');
+});
+
+test('proficiency MP: Part A13b 1段目 MP 0 at element rank 5, 2段目 half at rank 8', () => {
+  fresh([]);
+  const P = K.PROF_PTS;
+  eq(K.PROF_MP, { freeRank: 5, freeStep: 1, halfRank: 8, halfStep: 2 }, 'K.PROF_MP');
+  const c = Ru.newChar({ id: 'fx_warrior' });
+  c.equip = Ru.emptyEquip();
+  for (const e of Ru.ELEMENTS) c.eprof[e] = 0;
+  const A = DB.actions;
+  // the fixture's 1段目 fire spell (MP 7)
+  eq(Ru.mpCost(c, 'fx_s_cost'), 7, 'rank 0: full MP');
+  c.eprof.fire = P[4];
+  eq(Ru.mpCost(c, 'fx_s_cost'), 7, 'rank 4: full MP');
+  c.eprof.fire = P[5];
+  eq(Ru.mpCost(c, 'fx_s_cost'), 0, 'rank 5: 1段目 MP 0');
+  eq(Ru.profMpKind(c, 'fx_s_cost'), 'free', "profMpKind 'free'");
+  eq(Ru.mpCost(c, 'fx_s_step3'), 6, '3段目 unaffected');
+  eq(Ru.profMpKind(c, 'fx_s_step3'), null, 'profMpKind null');
+  c.eprof.fire = 999; c.eprof.wind = 999; c.eprof.light = 999;
+  eq(Ru.mpCost(c, 'fx_s_pair'), A.fx_s_pair.mp, 'pair spells unaffected');
+  eq(Ru.mpCost(c, 'fx_s_triple'), A.fx_s_triple.mp, 'triple spells unaffected');
+  // a real 2段目 spell (if the data has one): half, rounded up, at rank 8
+  const two = Object.keys(A).find((id) => A[id].kind === 'spell' && A[id].step === 2 && (A[id].elements || []).length === 1 && A[id].mp % 2 === 1);
+  if (two) {
+    const el = A[two].elements[0];
+    c.eprof[el] = P[7];
+    eq(Ru.mpCost(c, two), A[two].mp, '2段目 at rank 7: full');
+    c.eprof[el] = P[8];
+    eq(Ru.mpCost(c, two), Math.ceil(A[two].mp / 2), '2段目 at rank 8: half, rounded up');
+    eq(Ru.profMpKind(c, two), 'half', "profMpKind 'half'");
+  } else ok(false, 'no odd-MP 2段目 spell in the data');
+});
+
 test('proficiency: train points, profPct, catch-up (§4.9.1)', () => {
   const g = fresh([]);
   const c = Ru.newChar({ id: 'fx_warrior' });

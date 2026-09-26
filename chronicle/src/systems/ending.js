@@ -42,6 +42,7 @@
     lazaro: ['小さな部屋で、ミラの肖像画の', 'そばに座り、古い本を', '手で書き写している。'],
   };
   const LH = { title: 26, sub: 18, head: 16, name: 16, small: 14 };
+  const ROAD = R.H - 30; // the credits' road line: the party walks on it
 
   // ------------------------------------------------------------ small drawing helpers
   function sheetFrame(key, dir, f) {
@@ -186,10 +187,16 @@
       draw(L) {
         const g = G(), c = g.ctx;
         drawMotes(L.motes, L.t, 0.8);
+        // the walking party owns the band above the road: the text fades out before it reaches their
+        // heads, so a line never runs over the walkers (A22)
+        const frames = walkers.map((key) => sheetFrame(key, 'right', 0)).filter(Boolean);
+        const tallest = frames.reduce((m, im) => Math.max(m, im.height || 0), 0);
+        const band = frames.length ? ROAD - tallest - 4 : R.H - 24; // the lowest y a line's foot may reach
+        const floor = band - 16; // a line's top (16 px tall at most) at or above this
         for (const it of items) {
           const y = Math.round(it.y - this.pos);
-          if (y < -24 || y > R.H - 36) continue;
-          c.globalAlpha = Math.max(0, Math.min(1, (y + 8) / 36, (R.H - 40 - y) / 30));
+          if (y < -24 || y > floor) continue;
+          c.globalAlpha = Math.max(0, Math.min(1, (y + 8) / 36, (floor - y) / 30));
           if (it.kind === 'title') g.text(it.v, 128, y, { align: 'center', size: 16, color: '#fff4c8', shadow: '#3a2a60' });
           else if (it.kind === 'sub') g.text(it.v, 128, y, { align: 'center', color: '#e0d8ff', shadow: '#000' });
           else if (it.kind === 'head') g.text(it.v, 128, y, { align: 'center', color: g.C.gold, shadow: '#000' });
@@ -199,12 +206,12 @@
         c.globalAlpha = 1;
         // the party walks along the bottom, a storyteller and her companions on the road
         const span = R.W + 90;
-        g.rect(0, R.H - 30, R.W, 1, '#1c2040');
+        g.rect(0, ROAD, R.W, 1, '#1c2040');
         walkers.forEach((key, i) => {
           const img = sheetFrame(key, 'right', Math.floor(this.walk / 10) % 2);
           if (!img) return;
           const x = ((this.walk * 0.3 - i * 20) % span + span) % span - 40;
-          g.draw(img, Math.round(x), R.H - 30 - img.height + 1);
+          g.draw(img, Math.round(x), ROAD - img.height + 1);
         });
       },
     };

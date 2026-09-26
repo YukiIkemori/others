@@ -528,6 +528,8 @@
     PAGES,
     /** play the bonus scene; resolves after it has faded back out */
     async bonusScene(opts) {
+      // headless tools (node: no canvas, no frame loop) can neither show nor close it: nothing to play
+      if (!R.Gfx || !R.Gfx.ctx) return;
       const prevBgm = R.Audio && R.Audio.current;
       await R.Engine.fadeOut(40);
       if (R.UI && R.UI.closeMessage) R.UI.closeMessage();

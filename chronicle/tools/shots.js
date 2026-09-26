@@ -182,7 +182,7 @@ def('1-3', 'タイトル・主人公の作成・名前入力', async (X) => {
 });
 
 // ---- #4 companions, #15 the swap screen (newgame fixture)
-def(4, '仲間を選ぶ（1 ページ・2 ページ、2 人選んだ状態）', async (X) => {
+def(4, '仲間を選ぶ（1 ページ。2 人選んだ状態。オーナー指示: 特性は画面に出さない）', async (X) => {
   await X.load(['newgame']);
   await X.ev(() => { window.RPG.NGFixture.show('choose'); });
   // the advice line comes first (A to read on)
@@ -194,10 +194,7 @@ def(4, '仲間を選ぶ（1 ページ・2 ページ、2 人選んだ状態）', 
     await X.press('down');
   }
   await X.wait(300);
-  await X.shot('04_choose_page1', '2 人選んだ状態・1 ページ');
-  await X.press('right');
-  await X.wait(300);
-  await X.shot('04_choose_page2', '同・2 ページ');
+  await X.shot('04_choose', '2 人選んだ状態（名前・肩書・得意・プロフィール・能力。特性と得手不得手の表は出さない）');
 });
 def(15, '酒場の入れ替え（控え 10 人）', async (X) => {
   await X.load(['newgame']);

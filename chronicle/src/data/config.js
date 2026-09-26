@@ -2,7 +2,7 @@
 //   start          where 「はじめから」 begins: the master's house in ロアの里 (§10.7 P1)
 //   startGold      0 — ベルナ hands over 50 gold and 3 salves in P2 (§8.9)
 //   startItems     {} (same reason)
-//   startObjective the first "次の目的"
+//   startObjective the first "次の目的" (the prologue's obj_p_roa; obj_w_roa is only its alias)
 //   defaultHero    the hero before the creation screen / R.debug.quickStart (§5.0 の 0.13)
 //   innPrice       inn price by effective tier 0..9 (R.Tier.innPrice(); §4.12.3)
 //   postgameStart  position and respawn after the ending (§10.10 E10)
@@ -15,7 +15,7 @@
     start: { map: 'roa_house', spawn: 'bed', dir: 'down' },
     startGold: 0,
     startItems: {},
-    startObjective: 'obj_w_roa',
+    startObjective: 'obj_p_roa',
     defaultHero: { name: 'アルン', gender: 'm', type: 'warrior', favor: { kind: 'weapon', id: 'sword' } },
     innPrice: [10, 16, 24, 32, 42, 54, 66, 80, 96, 112],
     postgameStart: { map: 'roa', spawn: 'entrance' },
