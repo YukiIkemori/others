@@ -1,8 +1,8 @@
 // Swap the code-drawn hero ("arun") of the approved UI mocks for the pipeline's sprite sheets.
 // Loaded after the mock modules and before main.js (see index.html). The sheets arrive as data URLs in
 // window.__HERO (set by tools/preview.js via addInitScript) so canvases stay untainted on file://.
-//   ?hero_btl=<frame id>   battle frame for the command view (default idle_0)
-//   ?hero_fld=<frame id>   field frame in the town (default left_1)
+//   ?hero_btl=<frame id>   battle frame for the command view (default idle_a)
+//   ?hero_fld=<frame id>   field frame in the town (default walk_left_1)
 //   ?hero_light=0          skip the sprite night relight (warm key / blue rim)
 'use strict';
 (function (G) {
@@ -48,18 +48,18 @@
   }
 
   // ---- battle: RIG.draw(B, LOOKS.arun, pose) + RZ.render(B, …) → our frame
-  const POSE_TO_FRAME = { ready: 'idle_0', idle: 'idle_0', slash: 'skill', thrust: 'attack', victory: 'victory', hurt: 'damage', down: 'defeat' };
+  const POSE_TO_FRAME = { ready: 'idle_a', idle: 'idle_a', slash: 'slash', thrust: 'thrust', victory: 'victory_a', hurt: 'hit', down: 'ko' };
   const pose0 = RIG.pose;
   RIG.pose = function (name, extra) { const r = pose0(name, extra); Object.defineProperty(r, '__name', { value: name, enumerable: false }); return r; };
   const draw0 = RIG.draw;
   RIG.draw = function (B, L, P) {
-    if (G.BATTLE_ART && L === BATTLE_ART.LOOKS.arun) { B.__hero = (P && POSE_TO_FRAME[P.__name]) || 'idle_0'; return; }
+    if (G.BATTLE_ART && L === BATTLE_ART.LOOKS.arun) { B.__hero = (P && POSE_TO_FRAME[P.__name]) || 'idle_a'; return; }
     return draw0.apply(this, arguments);
   };
   const render0 = RZ.render;
   RZ.render = function (B, o) {
     if (B && B.__hero) {
-      const id = Q.get('hero_btl') && B.__hero === 'idle_0' ? Q.get('hero_btl') : B.__hero;
+      const id = Q.get('hero_btl') && B.__hero === 'idle_a' ? Q.get('hero_btl') : B.__hero;
       return frame('battle', id, { key: -1, rim: true }); // lantern is to the party's left (front)
     }
     return render0.apply(this, arguments);
@@ -68,7 +68,7 @@
   const fsprite0 = FIELD_CHAR.sprite;
   FIELD_CHAR.sprite = function (L, dir, fr, o) {
     if (L === BATTLE_ART.LOOKS.arun) {
-      const id = Q.get('hero_fld') || (dir + '_' + (fr || 0));
+      const id = Q.get('hero_fld') || ('walk_' + dir + '_' + (fr || 0));
       return frame('field', id, { key: 1 });
     }
     return fsprite0.apply(this, arguments);

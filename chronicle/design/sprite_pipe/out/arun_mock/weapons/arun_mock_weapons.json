@@ -178,7 +178,8 @@
     0,
     2
    ],
-   "angle": 179.6
+   "angle": 179.6,
+   "length": 29
   },
   "wpn_greatsword": {
    "grip": [
@@ -189,7 +190,8 @@
     0,
     3
    ],
-   "angle": 179.8
+   "angle": 179.8,
+   "length": 36
   },
   "wpn_dagger": {
    "grip": [
@@ -200,7 +202,8 @@
     0,
     2
    ],
-   "angle": 178.7
+   "angle": 178.7,
+   "length": 18
   },
   "wpn_bow": {
    "grip": [
@@ -211,7 +214,8 @@
     4,
     27
    ],
-   "angle": 90.9
+   "angle": 90.9,
+   "length": 28
   },
   "wpn_staff": {
    "grip": [
@@ -222,7 +226,8 @@
     0,
     2
    ],
-   "angle": 180.0
+   "angle": 180.0,
+   "length": 33
   }
  }
 }

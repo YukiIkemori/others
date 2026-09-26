@@ -227,28 +227,30 @@ def main():
     br, seams = breathing(imgs[poses[0]])
     frames, pts = [], {}
     for i, f in enumerate(br):
-        fid = 'idle_%d' % i
+        fid = ('idle_a', 'idle_m', 'idle_b', 'idle_m2')[i]
         frames.append((fid, f, foot_anchor(imgs[poses[0]])))
         pts[fid] = points(f, fid)
+    CANON = {'btl_attack': 'thrust', 'btl_skill': 'slash', 'btl_damage': 'hit', 'btl_defeat': 'ko', 'btl_victory': 'victory_a'}
+    frames = [f for f in frames if f[0] != 'idle_m2']
     for p in poses[1:]:
-        fid = p.replace('btl_', '')
+        fid = CANON.get(p, p.replace('btl_', ''))
         frames.append((fid, imgs[p], foot_anchor(imgs[p], lying=p in lying)))
         pts[fid] = points(imgs[p], fid)
     cells, cell, anchor = layout(frames)
     anims = {
-        'idle': {'frames': ['idle_0', 'idle_1', 'idle_2', 'idle_1'], 'ms': [420, 160, 420, 160], 'loop': True},
+        'idle': {'frames': ['idle_a', 'idle_m', 'idle_b', 'idle_m'], 'ms': [420, 160, 420, 160], 'loop': True},
         # tween-friendly: each key has an offset (art px, relative to the home position) the engine
         # interpolates between; the sprite swaps at the key
-        'attack': {'keys': [
-            {'frame': 'idle_0', 'ms': 80, 'dx': 0, 'dy': 0, 'ease': 'out'},
-            {'frame': 'attack', 'ms': 180, 'dx': -46, 'dy': 0, 'ease': 'in_out', 'note': 'dash toward the target'},
-            {'frame': 'skill', 'ms': 140, 'dx': -52, 'dy': 0, 'ease': 'out', 'hit': True, 'fx_at': 'front', 'note': 'slash; the arc is drawn by the game'},
-            {'frame': 'skill', 'ms': 120, 'dx': -52, 'dy': 0},
-            {'frame': 'idle_0', 'ms': 220, 'dx': 0, 'dy': 0, 'ease': 'in_out', 'note': 'return'}]},
-        'damage': {'keys': [{'frame': 'damage', 'ms': 60, 'dx': 3, 'flash': True}, {'frame': 'damage', 'ms': 240, 'dx': 3},
-                            {'frame': 'idle_0', 'ms': 120, 'dx': 0}]},
-        'defeat': {'frames': ['damage', 'defeat'], 'ms': [160, 0], 'loop': False},
-        'victory': {'frames': ['victory'], 'ms': [0], 'loop': False},
+        'attack_sword': {'keys': [
+            {'frame': 'idle_a', 'ms': 80, 'dx': 0, 'dy': 0, 'ease': 'out'},
+            {'frame': 'thrust', 'ms': 180, 'dx': -46, 'dy': 0, 'ease': 'in_out', 'note': 'dash toward the target'},
+            {'frame': 'slash', 'ms': 140, 'dx': -52, 'dy': 0, 'ease': 'out', 'hit': True, 'fx_at': 'front', 'note': 'slash; the arc is drawn by the game'},
+            {'frame': 'slash', 'ms': 120, 'dx': -52, 'dy': 0},
+            {'frame': 'idle_a', 'ms': 220, 'dx': 0, 'dy': 0, 'ease': 'in_out', 'note': 'return'}]},
+        'hit': {'keys': [{'frame': 'hit', 'ms': 60, 'dx': 3, 'flash': True}, {'frame': 'hit', 'ms': 240, 'dx': 3},
+                         {'frame': 'idle_a', 'ms': 120, 'dx': 0}]},
+        'ko': {'frames': ['hit', 'ko'], 'ms': [160, 0], 'loop': False},
+        'victory': {'frames': ['victory_a'], 'ms': [0], 'loop': False},
     }
     report['battle'] = dict(cell=cell, anchor=anchor, height=int(imgs[poses[0]].shape[0]), seams=seams)
     bsheet = write_set(od, char, 'battle', cells, cell, anchor, anims, shared,
@@ -266,23 +268,23 @@ def main():
         wf = walk_frames(im, kind, leg_frac=fl.get('leg_frac', 0.20))
         wf = [repair_outline(f, outline) if i % 2 else f for i, f in enumerate(wf)]
         for i, f in enumerate([wf[0], wf[1], wf[3]]):
-            fid = '%s_%d' % (d, i)
+            fid = 'walk_%s_%d' % (d, i)
             fr.append((fid, f, foot_anchor(wf[0])))
             fpts[fid] = points(f, fid)
     # right = mirrored left
     for i in range(3):
-        fid, f, (ax, ay) = [x for x in fr if x[0] == 'left_%d' % i][0]
+        fid, f, (ax, ay) = [x for x in fr if x[0] == 'walk_left_%d' % i][0]
         m = f[:, ::-1].copy()
-        fr.append(('right_%d' % i, m, (f.shape[1] - 1 - ax, ay)))
-        fpts['right_%d' % i] = points(m, 'right_%d' % i)
+        fr.append(('walk_right_%d' % i, m, (f.shape[1] - 1 - ax, ay)))
+        fpts['walk_right_%d' % i] = points(m, 'walk_right_%d' % i)
     if 'threeq' in views:
         im = load(od, views['threeq'])
-        fr.append(('threeq_0', im, foot_anchor(im)))
-        fpts['threeq_0'] = points(im, 'threeq_0')
+        fr.append(('stand_threeq', im, foot_anchor(im)))
+        fpts['stand_threeq'] = points(im, 'stand_threeq')
     cells, cell, anchor = layout(fr)
-    fanims = {d: {'frames': ['%s_0' % d, '%s_1' % d, '%s_0' % d, '%s_2' % d], 'ms': [150] * 4, 'loop': True}
+    fanims = {'walk_' + d: {'frames': ['walk_%s_0' % d, 'walk_%s_1' % d, 'walk_%s_0' % d, 'walk_%s_2' % d], 'ms': [150] * 4, 'loop': True}
               for d in ('down', 'up', 'left', 'right')}
-    fanims.update({'stand_' + d: {'frames': ['%s_0' % d], 'ms': [0]} for d in ('down', 'up', 'left', 'right')})
+    fanims.update({'stand_' + d: {'frames': ['walk_%s_0' % d], 'ms': [0]} for d in ('down', 'up', 'left', 'right')})
     report['field'] = dict(cell=cell, anchor=anchor)
     fsheet = write_set(od, char, 'field', cells, cell, anchor, fanims, shared,
                        dict(directions=['down', 'up', 'left', 'right'], target_height=fl.get('target_h', 48),

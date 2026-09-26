@@ -30,6 +30,28 @@
       const p = R.Game.pos || {};
       await R.Field.enter(p.map, { x: p.x, y: p.y, dir: p.dir }, { fade: 260, noAutosave: true });
     },
+    /**
+     * 全滅して「宿から」「タイトルへ」を選んだ後の共通の片付け（契約の版 2、§2.5.3）。
+     * 呼ぶのは BSCENE だけ: 戦闘の場面を外した後、R.Battle.start の Promise を {result:'abort', to} で解決する**前**に await する。
+     *   'inn'  : 走っているイベントを R.Events.abort()（ev.battle はその後の guard で止まる）→ 開いた画面・会話を閉じる →
+     *            R.Game.lastInn（{map,x,y,dir}）→ 無ければ lastTown → 無ければ R.DB.config.start へ R.Field.enter
+     *            （所持金半分と全快 = R.State.wipeRecover() は BSCENE が先に呼ぶ）
+     *   'title': R.Events.abort() → R.Flow.title()（await しない。タイトルの画面が開いたら戻る）
+     * FIELD（歩いて出た戦闘）と EVENTS（ev.battle）は 'abort' を受けても何もしなくてよい。
+     */
+    async wipe(to) {
+      if (R.Events && R.Events.busy && R.Events.busy()) R.Events.abort();
+      if (to === 'title') { Flow.title(); return; }
+      // フィールドより上に積まれた物（メニュー・会話）を閉じる
+      const st = R.Engine.stack;
+      for (let i = st.length - 1; i >= 0; i--) { if (st[i].id === 'field') break; R.Engine.remove(st[i]); }
+      if (R.UIK && R.UIK.Message && R.UIK.Message.busy()) R.UIK.Message.close();
+      const G = R.Game || {};
+      const s = (R.DB.config && R.DB.config.start) || {};
+      const p = G.lastInn || G.lastTown || null;
+      if (p && p.map) await R.Field.enter(p.map, p.x != null ? { x: p.x, y: p.y, dir: p.dir || 's' } : p.spawn, { fade: 260, noAutosave: true });
+      else await R.Field.enter(s.map, s.spawn, { fade: 260, noAutosave: true });
+    },
   });
 
   function waitFonts() {
@@ -55,6 +77,8 @@
     R.Input.onAnyPress(() => { try { R.Audio.init(); } catch (e) { console.error(e); } });
     await waitFonts();
     R.Engine.addTick((dt, real) => { if (R.Game && R.Engine.has('field')) R.Game.playMs = (R.Game.playMs || 0) + real; });
+    // 焼く列（版 2）: 毎フレーム R.Hd.pump(予算 3 ms) を CORE が 1 回だけ呼ぶ。ほかの担当は pump を呼ばない（暗転中の同期の焼きは R.Hd.now）
+    R.Engine.addTick(() => { if (R.Hd && R.Hd.pump) R.Hd.pump((R.Hd.BUDGET && R.Hd.BUDGET.frameBakeMs) || 3); });
     for (const fn of R._bootHooks) { try { await fn(); } catch (e) { console.error('boot hook failed', e); } }
     R.Engine.start(canvas);
     if (R.loadErrors.length) console.error('LOAD ERRORS:\n' + R.loadErrors.join('\n'));

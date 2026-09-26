@@ -92,6 +92,8 @@
     },
     save(slot) {
       if (!SLOTS.includes(slot)) { R.warn('bad save slot ' + slot); return false; }
+      // 戦闘の中はセーブしない（Part A「戦闘の外ならどこでも」。戦闘の直前の写しは checkpoint を使う）
+      if (R.Engine && R.Engine.has && R.Engine.has('battle')) { R.warn('save refused during battle: ' + slot); return false; }
       let rec;
       try { rec = { ver: VER, card: makeCard(), state: serialize(), t: Date.now() }; } catch (e) { console.error('[save]', e); return false; }
       const ok = rawSet('slot_' + slot, JSON.stringify(rec));

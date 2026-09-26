@@ -216,6 +216,7 @@
     36
    ],
    "angle": 179.2,
+   "length": 26,
    "weapon_px": 107,
    "fit": 1.439
   },
@@ -229,6 +230,7 @@
     2
    ],
    "angle": -25.2,
+   "length": 38,
    "weapon_px": 516,
    "fit": 0.782,
    "unreliable": true

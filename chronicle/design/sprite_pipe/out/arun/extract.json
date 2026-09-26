@@ -58,7 +58,7 @@
    ],
    "flipped": true,
    "sheet": "../../art_ref/hero_sheet_owner.png",
-   "colors": 60
+   "colors": 50
   },
   "btl_attack": {
    "group": "battle",
@@ -76,7 +76,7 @@
    ],
    "flipped": true,
    "sheet": "../../art_ref/hero_sheet_owner.png",
-   "colors": 60
+   "colors": 50
   },
   "btl_skill": {
    "group": "battle",
@@ -94,7 +94,7 @@
    ],
    "flipped": true,
    "sheet": "../../art_ref/hero_sheet_owner.png",
-   "colors": 60
+   "colors": 50
   },
   "btl_damage": {
    "group": "battle",
@@ -112,7 +112,7 @@
    ],
    "flipped": true,
    "sheet": "../../art_ref/hero_sheet_owner.png",
-   "colors": 60
+   "colors": 49
   },
   "btl_defeat": {
    "group": "battle",
@@ -130,7 +130,7 @@
    ],
    "flipped": true,
    "sheet": "../../art_ref/hero_sheet_owner.png",
-   "colors": 60
+   "colors": 50
   },
   "btl_victory": {
    "group": "battle",
@@ -148,7 +148,7 @@
    ],
    "flipped": true,
    "sheet": "../../art_ref/hero_sheet_owner.png",
-   "colors": 60
+   "colors": 50
   },
   "fld_down": {
    "group": "turnaround",
@@ -166,7 +166,7 @@
    ],
    "flipped": false,
    "sheet": "../../art_ref/hero_sheet_owner.png",
-   "colors": 57
+   "colors": 49
   },
   "fld_3q": {
    "group": "turnaround",
@@ -184,7 +184,7 @@
    ],
    "flipped": false,
    "sheet": "../../art_ref/hero_sheet_owner.png",
-   "colors": 60
+   "colors": 50
   },
   "fld_side": {
    "group": "turnaround",
@@ -202,7 +202,7 @@
    ],
    "flipped": false,
    "sheet": "../../art_ref/hero_sheet_owner.png",
-   "colors": 59
+   "colors": 49
   },
   "fld_up": {
    "group": "turnaround",
@@ -220,7 +220,7 @@
    ],
    "flipped": false,
    "sheet": "../../art_ref/hero_sheet_owner.png",
-   "colors": 53
+   "colors": 45
   },
   "stand_main": {
    "group": "main",
@@ -313,5 +313,5 @@
    "colors": 52
   }
  },
- "palette_shared_colors": 60
+ "palette_shared_colors": 50
 }

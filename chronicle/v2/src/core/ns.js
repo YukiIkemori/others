@@ -28,6 +28,8 @@
     'heroTypes', 'companions', 'weaponTypes', 'elements', 'statuses', 'techs', 'spells',
     'monsters', 'lineages', 'enemyActions', 'encounters', 'troops', 'bosses', 'bossActions',
     'rare', 'rareEncounters', 'music', 'sfx',
+    // 版 2（V2_PLAN §2.11）: 手紙（CONTENT）・説明の札（MENUS）・素材と物の一覧（TERRAIN。node で id を確かめる用）
+    'letters', 'tips', 'materials', 'props',
   ]) R.DB[k] = R.DB[k] || {};
 
   // 読み込みの失敗（build.js が各ファイルを try/catch で包んでここへ積む）と登録の重なり
@@ -54,7 +56,15 @@
   // 各担当の契約（§2.5）の仮の実装。読み込み時は登録するだけで、全ファイルを読んだ後の R.Stubs.install() が
   // 「まだ無い関数・値」だけを埋める（本物のファイルがあればそちらが勝つ。一部だけ本物でも残りを埋める）。
   // 呼ばれた回数は R.Stubs.calls に数える（QA の check_stubs が「仮の実装が 1 回も呼ばれない」を確かめる）。
-  R.Stubs = R.Stubs || { ns: {}, data: [], calls: {}, installed: {} };
+  R.Stubs = R.Stubs || { ns: {}, data: [], calls: {}, installed: {}, claimed: {} };
+  /**
+   * 本物の担当が「この名前空間は全部自分が持つ。仮の実装で穴を埋めないで」と言う（版 2）。
+   * 仮の実装の関数どうしは中の状態（例: 仮の FIELD の st）を共有するので、本物と仮が混ざると食い違う。
+   * 名前空間を丸ごと本物にしたら、そのファイルの先頭で R.Stubs.claim('Field') を呼ぶ（子の 'Field.camera' なども含む）。
+   * 途中までの間は claim しなくてよい（足りない関数だけ仮が埋める。R.Stubs.installed で何が埋まったか見られる）。
+   */
+  R.Stubs.claim = function (path) { (R.Stubs.claimed = R.Stubs.claimed || {})[path] = true; };
+  const isClaimed = (path) => Object.keys(R.Stubs.claimed || {}).some((c) => path === c || path.indexOf(c + '.') === 0);
   /** 名前空間の仮の実装を登録（path は 'Hd'・'UIK.Message' など） */
   R.Stubs.define = function (path, obj) { R.Stubs.ns[path] = Object.defineProperties(R.Stubs.ns[path] || {}, Object.getOwnPropertyDescriptors(obj)); };
   /** データの仮の登録（R.DB[kind][id] が無いときだけ入る） */
@@ -64,6 +74,7 @@
     R.Stubs._done = true;
     const paths = Object.keys(R.Stubs.ns).sort((a, b) => a.split('.').length - b.split('.').length);
     for (const path of paths) {
+      if (isClaimed(path)) continue;
       const keys = path.split('.');
       let parent = R;
       for (let i = 0; i < keys.length - 1; i++) parent = parent[keys[i]] = parent[keys[i]] || {};

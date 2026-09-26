@@ -347,8 +347,9 @@ def pack(char, od, runs, rep, colors=52):
         if r1:
             written['battle_bare'] = write_rows(od, char, 'battle_bare', [r1], pal, dict(
                 facing='left', attach={k: v for k, v in attach.items()},
-                attach_note='draw a weapon on a bare pose: rotate the weapon image about its grip by (attach.angle - weapon.angle) '
-                            'and put its grip on points.grip. Angles in image coords (0 = +x, 90 = +y, 180 = pointing left).'), {})
+                attach_note='draw a weapon on a bare pose: rotate the weapon image (as drawn on sheet 7, tip to the left) about its grip '
+                            'by (attach.angle - 180) degrees and put its grip on points.grip. Angles in image coords '
+                            '(0 = +x, 90 = +y, 180 = pointing left); positive = clockwise on screen.'), {})
         r2 = [(s, fin[s], anc[s], pts(s)) for s in SHEETS[7]['ids'][1] if s in fin]
         if r2:
             written['weapons'] = write_rows(od, char, 'weapons', [r2], pal, dict(weapons=wpn), {})
@@ -383,7 +384,7 @@ def tryon(od, char, fin, attach, wpn, anc):
     for bare, at in attach.items():
         row_t = []
         for wid, w in wpn.items():
-            im, g = rotate_about(fin[wid], w['grip'], at['angle'] - w['angle'])
+            im, g = rotate_about(fin[wid], w['grip'], at['angle'] - 180.0)
             body = fin[bare]
             pad = 40
             c = np.zeros((body.shape[0] + 2 * pad, body.shape[1] + 2 * pad, 4), np.uint8)
