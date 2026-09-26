@@ -336,7 +336,11 @@ class Driver {
       const want = (pol.companions || ['brigitta', 'marta', 'sylvain']).filter((id) => c.ids.includes(id) && !c.chosen.includes(id));
       const target = want[0] || c.ids.find((id) => !c.chosen.includes(id));
       if (c.chosen.length >= c.count) return 'wait';
-      if (c.id !== target) return 'down';
+      if (c.id !== target) {
+        // オーナー指示 A15: a 10-wide grid — ↑↓ change the row (same column), →  steps along the row (wrapping)
+        const COLS = 10, ti = c.ids.indexOf(target);
+        return Math.floor(ti / COLS) !== Math.floor(c.cur / COLS) ? 'down' : 'right';
+      }
       return 'a';
     }
     if (t === 'GameOverLayer') return s.gameover.canSkip ? 'a' : 'wait';
@@ -625,10 +629,12 @@ async function slice(D, S, o) {
     await D.until((s) => s.top === 'MainMenu', 3000, 'the main menu');
     await D.wait(200);
     await D.shot('10_menu');
-    const pages = [['道具', 'items'], ['装備', 'equip'], ['強さ', 'status']];
+    // オーナー指示 A15: no 強さ command — → from the commands focuses the party cards, A opens that member's 強さ
+    const pages = [['道具', 'items'], ['装備', 'equip'], [null, 'status']];
     const opened = [];
     for (const [idx, nm] of pages) {
-      await navList(D, idx);
+      if (idx) await navList(D, idx);
+      else { for (let i = 0; i < 2; i++) { await D.press('right'); await D.wait(80); } }
       await D.press('a');
       await D.until((s) => s.top !== 'MainMenu' || (s.list && s.list.hidden), 3000, 'the ' + nm + ' screen');
       await D.wait(250);
@@ -637,6 +643,7 @@ async function slice(D, S, o) {
       await D.shot('11_menu_' + nm);
       opened.push(nm + ':' + s.top);
       for (let i = 0; i < 6; i++) { const t = await D.st(); if (t.top === 'MainMenu' && !(t.list && t.list.hidden)) break; await D.press('b'); await D.wait(80); }
+      if (!idx) { await D.press('left'); await D.wait(80); } // back from the party cards to the commands
     }
     await D.press('b');
     await D.idle(5000);

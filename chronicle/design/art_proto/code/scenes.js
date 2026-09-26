@@ -84,6 +84,20 @@
       for (let k = 0; k < h; k++) put(X + (k === h - 1 && R() < 0.5 ? (R() < 0.5 ? -1 : 1) : 0), Y - k, lighter ? (k === h - 1 ? cHi : RZ.mix(base, cHi, 0.5)) : cLo);
       if (lighter) put(X, Y + 1, cLo);
     }
+    // clover / darker leafy patches and pebbles
+    for (let i = 0; i < 90; i++) {
+      const cx = R() * 512, cy = HZ + 10 + R() * (448 - HZ), d = Math.min(1, (cy - HZ) / (FIELD - HZ)), rr = 4 + d * 14 * R();
+      for (let k = 0; k < rr * rr * 0.9; k++) {
+        const a = R() * 6.28, r = Math.sqrt(R()) * rr, X = Math.round(cx + Math.cos(a) * r * 1.6), Y = Math.round(cy + Math.sin(a) * r * 0.6);
+        if (X < 0 || X >= 512 || Y < HZ || Y >= 448) continue; const q = (Y * 512 + X) * 4; if (D[q] > D[q + 1]) continue;
+        const lf = R(); put(X, Y, lf < 0.5 ? gr[2] : lf < 0.85 ? gr[4] : gr[6]);
+      }
+    }
+    for (let i = 0; i < 260; i++) {
+      const X = Math.floor(R() * 512), Y = Math.floor(HZ + 6 + R() * (448 - HZ)); const d = Math.min(1, (Y - HZ) / (FIELD - HZ));
+      const s = RZ.ramp(['#3a3630', '#6a645a', '#a49c8c', '#d8d0bc'], 4);
+      put(X, Y, s[1]); if (d > 0.4) { put(X + 1, Y, s[2]); put(X, Y - 1, s[3]); put(X + 1, Y + 1, s[0]); }
+    }
     x.putImageData(img, 0, 0);
     return c;
   }
@@ -124,7 +138,7 @@
         const y = HZ + 8 + Math.pow(R(), 0.8) * (FIELD - HZ + 10), d = (y - HZ) / (FIELD - HZ), tx = R() * 512;
         const py = HZ + 62 + Math.sin(tx * 0.011 + 0.8) * 16 + (tx - 256) * 0.05; if (Math.abs(y - py) < 3 + 26 * d) continue;
         ENV.tuft(D, tx, y, 3 + d * 6, R, y);
-        if (R() < 0.35 && d > 0.2) ENV.flower(D, tx + 3, y + 1, [ENV.EM.petalW, ENV.EM.petalY, ENV.EM.petalP, ENV.EM.petalB][Math.floor(R() * 4)], y + 0.5);
+        if (R() < 0.35 && d > 0.2) { const pm = [ENV.EM.petalW, ENV.EM.petalY, ENV.EM.petalP, ENV.EM.petalB][Math.floor(R() * 4)]; for (let k = 0; k < 3; k++) ENV.flower(D, tx + 3 + k * 4 + R() * 2, y + 1 + R() * 3, pm, y + 0.5 + k * 0.01); }
       }
       const r2 = RZ.render(D, {}); ENV.blit(x, r2, 0, 0, 1);
       L.decor = c; }
@@ -233,7 +247,7 @@
     ENV.motes(ctx, 26, [0, 120, 1024, 460], [255, 240, 190], 5 + Math.floor(t * 4));
     // foreground (blurred, DOF)
     drawLayer(L.fg, 5);
-    ENV.post(ctx, { region: [0, 0, 1024, FIELD * K], dofTop: [0, 150], dofBot: [520, 606], dofPx: 3.5, bloom: 0.5, thr: 0.66, vig: 0.5 });
+    ENV.post(ctx, { region: [0, 0, 1024, FIELD * K], dofTop: [0, 150], dofBot: [520, 606], dofPx: 3.5, bloom: 0.45, thr: 0.74, vig: 0.5 });
     if (opt.noUI) return;
     const byId = Object.fromEntries(PARTY.map((p) => [p.id, p]));
     UI.battle(ctx, { title: opt.title || '氷狼', actor: 'アルン', cmds: ['剣', '術', '防御', '道具'], sel: 0, cur: 0,

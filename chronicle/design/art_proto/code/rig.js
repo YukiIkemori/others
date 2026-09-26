@@ -58,11 +58,11 @@
     windup: { lean: -0.12, tilt: -0.08, aN: -2.4, eN: -0.3, w: -2.2, aF: 0.6, eF: 0.8, lN: 0.5, kN: -0.6, lF: -0.4, kF: -0.3, cape: 0.3 },
     slash: { lean: 0.38, tilt: 0.12, aN: 1.35, eN: 0.25, w: 1.35, aF: -0.6, eF: 0.4, lN: 0.8, kN: -0.7, lF: -0.55, kF: -0.1, cape: 1, smear: 1, sq: 0.5, mouth: 1 },
     follow: { lean: 0.3, aN: 0.5, eN: 0.35, w: 0.6, aF: -0.5, eF: 0.4, lN: 0.75, kN: -0.8, lF: -0.5, kF: -0.15, cape: 0.8, sq: 0.3 },
-    cast: { lean: -0.06, tilt: -0.1, aN: 2.3, eN: 0.35, w: 2.8, aF: 1.6, eF: 0.4, lN: 0.2, kN: -0.15, lF: -0.2, kF: -0.1, cape: 0.6, glow: 1, eyes: 0.5 },
+    cast: { lean: -0.06, tilt: -0.1, aN: 1.55, eN: 0.25, w: 2.6, aF: 1.6, eF: 0.4, lN: 0.2, kN: -0.15, lF: -0.2, kF: -0.1, cape: 0.6, glow: 1, eyes: 0.5 },
     hurt: { x: -3, lean: -0.35, tilt: -0.25, aN: -0.3, eN: 0.6, w: 2.8, aF: -0.9, eF: 0.3, lN: 0.35, kN: -0.3, lF: -0.5, kF: -0.3, cape: -0.6, eyes: 0, sq: 1, mouth: 1 },
     kneel: { y: 0, lean: 0.35, tilt: 0.3, aN: 0.1, eN: 0.25, w: 3.0, aF: 0.5, eF: 0.9, lN: 1.45, kN: -1.45, lF: -0.15, kF: -1.35, cape: -0.2, eyes: 0.5, sq: 0.6 },
     ko: { rot: -1.5, lean: -0.1, tilt: -0.1, aN: 0.3, eN: 0.2, w: 0.6, aF: -0.5, eF: 0.1, lN: 0.1, kN: -0.1, lF: -0.1, kF: -0.3, cape: -0.4, eyes: 0 },
-    victory: { lean: -0.05, tilt: -0.15, aN: 2.9, eN: 0.2, w: 3.1, aF: -0.35, eF: 1.6, lN: 0.15, kN: -0.05, lF: -0.18, kF: -0.05, cape: 0.5, mouth: 2 },
+    victory: { lean: -0.05, tilt: -0.15, aN: -2.65, eN: -0.15, w: -2.95, aF: -0.35, eF: 1.6, lN: 0.15, kN: -0.05, lF: -0.18, kF: -0.05, cape: 0.5, mouth: 2 },
   };
   function pose(name, extra) { return Object.assign({}, P0, POSES[name] || {}, extra || {}); }
   const ease = (t) => t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
@@ -160,7 +160,7 @@
 
     // --- far arm ---
     const arm = (side, a, e, z, hand) => {
-      const sh = T(side > 0 ? -2.0 : 2.6, -11.8);
+      const sh = T(side > 0 ? -2.4 : 2.6, side > 0 ? -10.8 : -11.8);
       const el = add(sh, [dir(a)[0] * 5.6, dir(a)[1] * 5.6]);
       const wr = add(el, [dir(a + e)[0] * 5.0, dir(a + e)[1] * 5.0]);
       const ga = grp('arm' + side), gg = grp('glove' + side);
@@ -169,7 +169,7 @@
       if (!L.robe) E(el[0], el[1], 2.3, 1.5, L.boots, z + 0.03, { g: gg, rot: a + e + PI / 2 });
       const hd = add(wr, [dir(a + e)[0] * 1.2, dir(a + e)[1] * 1.2]);
       E(hd[0], hd[1], 2.1, 2.1, L.robe ? SK : L.boots, z + 0.05, { g: grp('hand' + side) });
-      if (L.armor && side > 0) E(sh[0] + 0.3, sh[1] + 0.3, 3.6, 3.1, L.metal, z + 0.1, { g: grp('pauld' + side), rot: lean });
+      if (L.armor && side > 0) E(sh[0] - 0.2, sh[1] + 0.2, 3.3, 2.8, L.metal, z + 0.1, { g: grp('pauld' + side), rot: lean });
       if (L.armor && side < 0) E(sh[0] + 0.3, sh[1] + 0.3, 3.2, 2.8, L.metal, z + 0.1, { g: grp('pauld' + side), rot: lean });
       return hd;
     };

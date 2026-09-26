@@ -6,7 +6,7 @@
   const dir = (a) => [Math.sin(a), Math.cos(a)];
 
   const MM = {
-    slime: mat({ keys: ['#040c34', '#0a2a6c', '#1458b0', '#2a92e0', '#6cd0ff', '#d8f8ff'], n: 8, spec: 1, specPow: 8, wrap: 0.7, amb: 0.28, rim: '#e0f8ff', rimK: 0.8, alpha: 0.93 }),
+    slime: mat({ keys: ['#040a30', '#0a2466', '#124ea6', '#2382d4', '#52b8f4', '#bce8ff'], n: 8, spec: 1, specPow: 8, wrap: 0.7, amb: 0.28, rim: '#e0f8ff', rimK: 0.8, alpha: 0.93 }),
     slimeCore: mat({ keys: ['#1a1450', '#3c3c9c', '#7aa0e0', '#c8f0ff', '#ffffff'], n: 6, wrap: 0.6, amb: 0.4, alpha: 0.93, ao: 0 }),
     slimeHi: mat({ keys: ['#60c0ff', '#9ad8ff'], n: 2, flat: true }),
     slimeEye: mat({ keys: ['#000806', '#02120e'], n: 2, flat: true }),
