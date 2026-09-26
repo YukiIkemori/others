@@ -3,6 +3,8 @@
 (function (R) {
   'use strict';
   const defs = {}, cache = new Map(), pins = new Set();
+  const jobs = []; // [{job, prio}] R.Hd.schedule の列（仮: 優先の高い順に ms まで step）
+  const tracked = {}; // kind → {id: bytes}（R.Hd.track）
   const MOOD = {
     night: { ambient: '#3a3f78', lightDir: [-0.4, -1], shadow: 'rgba(8,8,24,0.45)', grade: { sh: '#1a1840', hi: '#ffe2b0', lift: 0.04, sat: 0.9 }, vignette: 0.35, bloom: 0.2 },
   };
@@ -37,7 +39,23 @@
       return cache.get(k);
     },
     want() {},
-    pump() { return 0; },
+    /** 1 フレームの焼く仕事（CORE の main.js が毎フレーム 1 回だけ呼ぶ）。仮: schedule の仕事だけを ms まで進める */
+    pump(ms) {
+      const t0 = Date.now();
+      jobs.sort((a, b) => b.prio - a.prio);
+      while (jobs.length && Date.now() - t0 < (ms || 3)) {
+        const e = jobs[0];
+        try { e.job.step(Math.max(0.5, (ms || 3) - (Date.now() - t0))); } catch (err) { console.error('[Hd stub job]', err); e.job.done = true; }
+        if (e.job.done) { jobs.shift(); if (e.job.onDone) { try { e.job.onDone(e.job.result); } catch (err) { console.error(err); } } }
+      }
+      return Date.now() - t0;
+    },
+    /** 版 2: 焼く仕事（K.bakeJob。TERRAIN のチャンク・CAST の大きい絵など）を共通の列に積む。prio が大きいほど先 */
+    schedule(job, prio) { if (job && !job.done) jobs.push({ job, prio: prio || 0 }); return job; },
+    /** 版 2: R.Hd の外で持つ焼いた絵（FIELD のチャンク・UIK のすりガラス）の量を届ける。bytes = null で消す */
+    track(kind, id, bytes) { const t = (tracked[kind] = tracked[kind] || {}); if (bytes == null) delete t[id]; else t[id] = bytes; },
+    /** 版 2: 'hd:bld:xx' → 'prop' など（R.Contract.HD_KINDS）。stats().byKind の名前 */
+    kindOf(key) { const k = String(key).split(':')[1]; return (R.Contract && R.Contract.HD_KINDS[k]) || k || 'other'; },
     ready(key, opts) { return cache.has(ck(key, opts)); },
     draw(g, frame, x, y, o) {
       if (!frame || !frame.c) return;
@@ -53,7 +71,12 @@
     mood(id) { return MOOD[id] || MOOD.night; },
     grade(canvas) { return canvas; },
     quality() { return R.Settings.get('fx'); },
-    stats() { return { bytes: 0, byKind: {}, queue: 0, bakedMs: {} }; },
+    stats() {
+      const byKind = {};
+      let bytes = 0;
+      for (const k of Object.keys(tracked)) for (const id of Object.keys(tracked[k])) { byKind[k] = (byKind[k] || 0) + tracked[k][id]; bytes += tracked[k][id]; }
+      return { bytes, byKind, queue: jobs.length, bakedMs: {} };
+    },
     pin(key) { pins.add(key); },
     unpin(key) { pins.delete(key); },
   });
