@@ -473,7 +473,7 @@
     c.restore();
   }
 
-  G.SCENES = { sheet, mons, battle, town, dungeon };
+  G.SCENES = { sheet, mons, battle, town, dungeon, _heroAttack: heroAttack };
   const v = Q.get('view') || 'sheet';
   (async () => {
     try { await document.fonts.load('500 30px ZenMaru'); await document.fonts.load('700 30px ZenMaru');

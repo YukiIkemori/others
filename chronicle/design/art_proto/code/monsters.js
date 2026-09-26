@@ -6,9 +6,9 @@
   const dir = (a) => [Math.sin(a), Math.cos(a)];
 
   const MM = {
-    slime: mat({ keys: ['#040a30', '#0a2466', '#124ea6', '#2382d4', '#52b8f4', '#bce8ff'], n: 8, spec: 1, specPow: 8, wrap: 0.7, amb: 0.28, rim: '#e0f8ff', rimK: 0.8, alpha: 0.93 }),
+    slime: mat({ keys: ['#06202a', '#0c3e48', '#1a6a6a', '#2e9486', '#62c0a4', '#b8ecd4'], n: 8, spec: 1, specPow: 8, wrap: 0.7, amb: 0.28, rim: '#e0f8ff', rimK: 0.8, alpha: 0.93 }),
     slimeCore: mat({ keys: ['#1a1450', '#3c3c9c', '#7aa0e0', '#c8f0ff', '#ffffff'], n: 6, wrap: 0.6, amb: 0.4, alpha: 0.93, ao: 0 }),
-    slimeHi: mat({ keys: ['#60c0ff', '#9ad8ff'], n: 2, flat: true }),
+    slimeHi: mat({ keys: ['#bff0e0', '#e8fff4'], n: 2, flat: true }),
     slimeEye: mat({ keys: ['#000806', '#02120e'], n: 2, flat: true }),
     fur: mat({ keys: ['#0a0e2c', '#182656', '#2e4886', '#5476b4', '#8cacdc', '#d0e2f6'], n: 8, wrap: 0.22, amb: 0.1, rim: '#fff4e0', tex: 2.2, tsx: 0.35, tsy: 1.3 }),
     furDk: mat({ keys: ['#080a20', '#141e46', '#26386c', '#46609a', '#7a96c8'], n: 7, wrap: 0.22, amb: 0.1, tex: 2.0, tsx: 0.35, tsy: 1.3 }),
@@ -44,7 +44,7 @@
     B.ell(1 * sx, y0 - 6.5 * sy, 11 * sx, 4.2 * sy, MM.slime, 1.05, { g: B.group(), bulge: 0.2, shadeOff: 2, noAO: true });
     B.ell(-4 * sx, y0 - 12 * sy, 3.2, 3, MM.slimeCore, 1.1, { g: B.group(), bulge: 0.8 });
     // bubbles
-    [[-10, -9, 1.3], [-2, -5, 0.9], [6, -21, 1.0], [-7, -18, 0.8]].forEach(([x, y, r]) => B.ell(x * sx, y0 + y * sy, r, r, MM.slime, 1.2, { g: B.group(), shadeOff: 2, noAO: true }));
+    [[-10, -9, 1.1], [7, -22, 0.8]].forEach(([x, y, r]) => B.ell(x * sx, y0 + y * sy, r, r, MM.slime, 1.2, { g: B.group(), shadeOff: 2, noAO: true }));
     // face
     [[4.5, 3.8, 2.4], [11.4, 3.2, 1.7]].forEach(([x, h, w], i) => {
       B.ell(x * sx, y0 - 13.5 * sy, w, h, MM.slimeEye, 1.3);

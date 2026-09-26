@@ -183,6 +183,7 @@
           if (s > 0.55) idx += m.spec * 3;
         }
         if (m.sheen) { const ny = n[1]; if (ny > m.sheen[0] && ny < m.sheen[1] && lam > 0.25) idx += 1.6; }
+        if (o.tones && nn > o.tones) { const st = (nn - 1) / (o.tones - 1); idx = Math.round(clamp(idx, 0, nn - 1) / st) * st; }
         idx = clamp(Math.round(idx), 0, nn - 1);
         col = R[idx];
         if (m.spec && idx === nn - 1 && m.spec > 0.8) col = mix(col, [255, 255, 250], 0.5);
@@ -191,6 +192,8 @@
         const rt = Math.pow(1 - clamp(n[2], 0, 1), 1.5) * Math.max(0, rd) * L.rimK;
         if (rt > 0.32 && !occl[k]) col = mix(col, L.rimC || m.rimC, m.rimK * (rt > 0.55 ? 1 : 0.6));
       }
+      if (o.sat != null && !m.glow) { const lu = col[0] * 0.3 + col[1] * 0.59 + col[2] * 0.11, s = o.sat; col = [lu + (col[0] - lu) * s, lu + (col[1] - lu) * s, lu + (col[2] - lu) * s];
+        if (o.tint) { const w = lu / 255; col = [col[0] + o.tint[0] * (1 - w) + o.tint[3] * w, col[1] + o.tint[1] * (1 - w) + o.tint[4] * w, col[2] + o.tint[2] * (1 - w) + o.tint[5] * w]; } }
       let r = col[0] * L.mul[0], g = col[1] * L.mul[1], b = col[2] * L.mul[2];
       if (m.glow) { r = Math.max(r, col[0]); g = Math.max(g, col[1]); b = Math.max(b, col[2]); }
       // point lights (world space): model px → world
@@ -226,7 +229,8 @@
         let c = p.m.ol;
         // lit side outline is a deeper version of the local colour (softer), shadow side dark
         const lit = (x - best % W) * key[0] + (y - Math.floor(best / W)) * key[1] > 0;
-        if (lit) c = mix(c, [src[best * 4], src[best * 4 + 1], src[best * 4 + 2]], 0.35);
+        if (o.olMix != null) c = mix([src[best * 4], src[best * 4 + 1], src[best * 4 + 2]], [c[0] * 0.5, c[1] * 0.4, c[2] * 0.5], o.olMix + (lit ? -0.2 : 0));
+        else if (lit) c = mix(c, [src[best * 4], src[best * 4 + 1], src[best * 4 + 2]], 0.35);
         const q = k * 4; D[q] = c[0] * L.mul[0] ** 0.5; D[q + 1] = c[1] * L.mul[1] ** 0.5; D[q + 2] = c[2] * L.mul[2] ** 0.5; D[q + 3] = 255;
       }
     }
