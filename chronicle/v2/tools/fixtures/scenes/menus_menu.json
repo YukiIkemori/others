@@ -1,1 +1,6 @@
-{ "scene": "screen", "desc": "MENUS: ハブ", "state": "menus_party", "id": "menu" }
+{
+ "scene": "screen",
+ "desc": "MENUS: menu（1 枚で開く。§3.11 の撮影用）",
+ "state": "menus_party",
+ "id": "menu"
+}

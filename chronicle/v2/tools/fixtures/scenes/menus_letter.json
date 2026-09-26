@@ -1,0 +1,9 @@
+{
+ "scene": "screen",
+ "desc": "MENUS: letter（1 枚で開く。§3.11 の撮影用）",
+ "state": "menus_party",
+ "id": "letter",
+ "params": {
+  "id": "menus_sample"
+ }
+}

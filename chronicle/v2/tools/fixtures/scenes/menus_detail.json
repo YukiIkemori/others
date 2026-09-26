@@ -1,0 +1,10 @@
+{
+ "scene": "screen",
+ "desc": "MENUS: detail（1 枚で開く。§3.11 の撮影用）",
+ "state": "menus_party",
+ "id": "detail",
+ "params": {
+  "kind": "item",
+  "id": "w_sword_coral"
+ }
+}

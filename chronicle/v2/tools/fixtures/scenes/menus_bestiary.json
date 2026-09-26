@@ -1,0 +1,6 @@
+{
+ "scene": "screen",
+ "desc": "MENUS: bestiary（1 枚で開く。§3.11 の撮影用）",
+ "state": "menus_party",
+ "id": "bestiary"
+}

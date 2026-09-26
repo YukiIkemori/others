@@ -1,1 +1,6 @@
-{ "scene": "screen", "desc": "MENUS: skills", "state": "menus_party", "id": "skills" }
+{
+ "scene": "screen",
+ "desc": "MENUS: skills（1 枚で開く。§3.11 の撮影用）",
+ "state": "menus_party",
+ "id": "skills"
+}

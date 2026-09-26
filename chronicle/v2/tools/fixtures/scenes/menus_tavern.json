@@ -1,1 +1,9 @@
-{ "scene": "screen", "desc": "MENUS: tavern", "state": "menus_party", "id": "tavern" }
+{
+ "scene": "screen",
+ "desc": "MENUS: tavern（1 枚で開く。§3.11 の撮影用）",
+ "state": "menus_party",
+ "id": "tavern",
+ "params": {
+  "swap": true
+ }
+}

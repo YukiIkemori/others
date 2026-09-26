@@ -93,7 +93,7 @@
         g.moveTo(q.x, q.y - s); g.lineTo(q.x + s * 0.7, q.y + s * 0.6); g.lineTo(q.x, q.y + s * 0.25); g.lineTo(q.x - s * 0.7, q.y + s * 0.6); g.closePath(); g.fill(); g.stroke(); g.restore();
       }
       // 凡例
-      const lg = tall ? { x: b.x, y: area.y + area.h + u(12), w: b.w, h: u(76) } : { x: b.x, y: area.y + area.h + u(8), w: Math.min(b.w - u(140), u(560)), h: u(36) };
+      const lg = tall ? { x: b.x, y: dy + dh + u(20), w: b.w, h: u(76) } : { x: b.x, y: area.y + area.h + u(8), w: Math.min(b.w - u(140), u(560)), h: u(36) };
       R.UIK.panel(g, lg, { dense: true });
       const items = [['diamond', '町'], ['dot', 'ダンジョン'], ['pin', '目印の手がかり'], ['arrow', 'いま']];
       items.forEach(([kind, lab], i) => {

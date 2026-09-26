@@ -1,1 +1,9 @@
-{ "scene": "screen", "desc": "MENUS: partySelect", "state": "menus_party", "id": "partySelect" }
+{
+ "scene": "screen",
+ "desc": "MENUS: partySelect（1 枚で開く。§3.11 の撮影用）",
+ "state": "menus_party",
+ "id": "partySelect",
+ "params": {
+  "count": 3
+ }
+}

@@ -21,12 +21,12 @@
     for (const k of main) keys.push(k);
     for (const k of RAW.concat(ABIL)) if (!keys.includes(k) && (val(cur, k) || val(it, k))) keys.push(k);
     // 両手の武器は盾を外す（盾の値も下がる）
-    const out = keys.map((k) => ({ k, name: N[k] || k, before: val(cur, k), after: val(it, k), d: val(it, k) - val(cur, k) }));
-    if (it && slot === 'weapon1' && R.Rules.isTwoHanded(id) && c.equip.shield) {
-      const sh = S.item(c.equip.shield);
-      for (const r of out) if (!RAW.includes(r.k) || r.k === 'def' || r.k === 'mdef' || r.k === 'eva') { const v = val(sh, r.k); if (v) { r.before += v; r.d -= v; } }
-    }
-    return out;
+    const sh = it && slot === 'weapon1' && R.Rules.isTwoHanded(id) && c.equip.shield ? S.item(c.equip.shield) : null;
+    if (sh) for (const k of RAW.concat(ABIL)) if (!keys.includes(k) && val(sh, k)) keys.push(k);
+    return keys.map((k) => {
+      const before = val(cur, k) + (sh ? val(sh, k) : 0), after = val(it, k);
+      return { k, name: N[k] || k, before, after, d: after - before };
+    });
   };
   /** いちばん大きな増減 1 つ（ほかの仲間・店の行） */
   S.bestDelta = function (rows) {
