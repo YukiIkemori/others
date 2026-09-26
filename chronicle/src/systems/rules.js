@@ -104,6 +104,9 @@
     CATCHUP: 2,
     START_PROF: { S: 15, A: 5 },
     JOIN_PROF: { S: 0.8, A: 0.7, B: 0.5, C: 0.3, D: 0.1 },
+    // Part A13 (2026-09-26): proficiency raises power — +perRank per rank (0–10) of the spell's element(s) (average for
+    // combos / triples) or of the used weapon's type (techs, plain attacks), at most +max. Damage and healing only.
+    PROF_POWER: { perRank: 0.03, max: 0.30 },
     // §4.9.3–4.9.4 — glimmer (R.Glimmer reads these)
     GLIM: {
       base: { tech: 0.012, secret: 0.006, single: 0.015, comboA: 0.012, comboB: 0.010, triple: 0.008 },
@@ -647,6 +650,38 @@
       return r;
     },
     rankOf(c, kind, id) { return Rules.profRank(Rules.prof(c, kind, id)); },
+    /**
+     * Part A13 — the proficiency rank behind an action: a spell → the average rank of its elements; a tech or a plain
+     * attack (action null / 'attack') → the rank of the weapon type in `slot` ('weapon1'|'weapon2'; undefined = the
+     * default weapon; bare hands or null with no weapon = 体術). Items and anything else → null (no bonus).
+     */
+    profPowerRank(c, action, slot) {
+      if (!c) return null;
+      const a = typeof action === 'string' ? (action === 'attack' ? null : DB.actions[action]) : action;
+      if (a && a.kind === 'spell') {
+        const els = (a.elements || []).filter((e) => ELEMENTS.includes(e));
+        if (!els.length) return null;
+        return els.reduce((s, e) => s + Rules.rankOf(c, 'e', e), 0) / els.length;
+      }
+      if (a && a.kind !== 'tech') return null;
+      const eq = c.equip || {};
+      let s = slot;
+      if (s !== 'weapon1' && s !== 'weapon2') s = eq.weapon1 ? 'weapon1' : eq.weapon2 ? 'weapon2' : null;
+      const it = s ? itemOf(eq[s]) : null;
+      let w = it && it.wtype;
+      if (!w) w = !eq.weapon1 && !eq.weapon2 ? 'fist' : (a && a.wtype) || null;
+      if (!w || !WTYPES.includes(w)) return null;
+      return Rules.rankOf(c, 'w', w);
+    },
+    /** Part A13 — power multiplier 1 + min(max, perRank × rank) of profPowerRank (1 when nothing applies) */
+    profPowerMul(c, action, slot) {
+      const r = Rules.profPowerRank(c, action, slot);
+      if (r == null) return 1;
+      const P = K.PROF_POWER;
+      return 1 + Math.min(P.max, Math.max(0, P.perRank * r));
+    },
+    /** Part A13 — the bonus as a whole percentage for the screens (「熟練の補正 +9%」) */
+    profPowerPct(c, action, slot) { return Math.round((Rules.profPowerMul(c, action, slot) - 1) * 100); },
     /** PEXP(T) — the catch-up line (T = R.Tier.effective()) */
     pexp(T) {
       if (T == null) T = R.Tier ? R.Tier.effective() : 0;
