@@ -121,7 +121,7 @@ if (!process.argv.includes('--no-tools')) {
     let good = true;
     if (name === 'validate') good = /: 0 error/.test(line);
     else if (name === 'progress') good = /first ok\s+last ok/.test(line);
-    else if (name === 'density') good = / 0 warning/.test(r.text.split('\n').filter((l) => /\[R3\]/.test(l)).length ? 'x' : ' 0 warning');
+    else if (name === 'density') good = / 0 warning/.test(r.text.split('\n').filter((l) => /^WARN .*\[R3\]/.test(l)).length ? 'x' : ' 0 warning');
     else if (name === 'text') good = /0 error/.test(line) && !/\[R3\].*ERROR|ERROR.*\[R3\]/.test(r.text);
     else good = r.code === 0;
     if (!good) bad++;
