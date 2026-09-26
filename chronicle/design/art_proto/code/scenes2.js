@@ -14,31 +14,31 @@
   // ---------- restrained palette looks (same rig, different data) ----------
   const cl = (keys, o) => mat(Object.assign({ keys, n: 6, wrap: 0.3, tex: 0.5, tsx: 1.4, tsy: 0.3 }, o));
   const hr = (keys) => mat({ keys, n: 6, sheen: [-0.62, -0.28], wrap: 0.35, amb: 0.22, tex: 1.1, tsx: 0.25, tsy: 1.6 });
-  const skin = mat({ keys: ['#4a2a2a', '#83503f', '#b67c62', '#dcac8c', '#f2d2b4'], n: 6, rim: '#fff0d8', wrap: 0.45, amb: 0.3 });
+  const skin = mat({ keys: ['#3e2224', '#744436', '#a86e56', '#cf9c7e', '#e8c4a4'], n: 6, rim: '#fff0d8', wrap: 0.45, amb: 0.3 });
   const brass = mat({ keys: ['#2e2010', '#5e4424', '#8e7040', '#bca068', '#e8d8a8'], n: 6, metal: true, spec: 1, specPow: 10 });
   const steel = mat({ keys: ['#22262e', '#454c58', '#727a86', '#a4acb4', '#dce0e2'], n: 6, metal: true, spec: 1, specPow: 10 });
   const leather = mat({ keys: ['#221610', '#3e2a1e', '#5c4030', '#7e5c44', '#a07e60'], n: 6, tex: 0.9, tsx: 0.8, tsy: 0.8 });
   const leatherDk = mat({ keys: ['#16100e', '#2a201a', '#40322a', '#58483c'], n: 5 });
   const base = G.RIG.LOOKS;
   const LOOKS2 = {
-    arun: Object.assign({}, base.arun, { skin, hair: hr(['#1a120e', '#33221a', '#4e3526', '#6e4c36', '#93684a', '#b88c68']),
+    arun: Object.assign({}, base.arun, { skin, hair: hr(['#140c0a', '#261813', '#3a241a', '#523424', '#6e4a32', '#8e6446']),
       top: cl(['#1a1e28', '#2c3444', '#434e62', '#5e6a7e', '#8490a0']), cape: cl(['#1c1014', '#34191e', '#4e262a', '#6c3a38', '#8c5448']),
       trim: brass, pants: cl(['#1c1814', '#302a24', '#48403a', '#625850']), boots: leather, belt: leatherDk, metal: steel,
       eye: mat({ keys: ['#101820', '#243848', '#46687c', '#8cb0c0'], n: 4, flat: true }) }),
-    selma: Object.assign({}, base.selma, { skin, hair: hr(['#1e100c', '#3c1e14', '#5c2e1e', '#7c422c', '#9c5c40', '#bc805c']),
+    selma: Object.assign({}, base.selma, { skin, hair: hr(['#1a0c0a', '#321410', '#4e2016', '#6c3020', '#8a4430', '#a85e44']),
       top: cl(['#161a14', '#262c22', '#3a4232', '#525a46', '#727a62']), trim: leather, pants: cl(['#181412', '#2a2420', '#403830', '#585048']),
       boots: leatherDk, belt: leather, metal: steel, eye: mat({ keys: ['#101810', '#24382a', '#48684c', '#90b094'], n: 4, flat: true }) }),
     sylvan: Object.assign({}, base.sylvan, { skin, hair: hr(['#22201a', '#3e3a2e', '#5e5844', '#827a5e', '#a69e80', '#c8c2a4']),
       top: cl(['#161a14', '#262e22', '#384430', '#4e5c40', '#6c7a58']), cape: cl(['#14160f', '#22271a', '#343c28', '#4a5438', '#667052']),
       trim: leather, pants: cl(['#1a1812', '#2c2820', '#443e32', '#5e5646']), boots: leather, belt: leatherDk, metal: brass,
       eye: mat({ keys: ['#0e1814', '#1e3a2e', '#3e6a56', '#88b0a0'], n: 4, flat: true }) }),
-    viola: Object.assign({}, base.viola, { skin, hair: hr(['#18121c', '#2c2232', '#44364a', '#5e4e64', '#7e6c84', '#a292a6']),
+    viola: Object.assign({}, base.viola, { skin, hair: hr(['#120c16', '#221828', '#34263c', '#4a3a52', '#64526c', '#806c88']),
       top: cl(['#3c3630', '#665e54', '#8e8676', '#b6ae9a', '#d8d0ba']), pants: cl(['#3c3630', '#665e54', '#8e8676', '#b6ae9a']),
       trim: brass, belt: cl(['#1e1622', '#342638', '#4c3a52', '#66526c']), boots: leatherDk, metal: brass,
       eye: mat({ keys: ['#181020', '#382a48', '#66527c', '#a894b8'], n: 4, flat: true }) }),
   };
   const STYLE = { tones: 5, sat: 0.9, olMix: 0.82, tint: [6, -2, 10, 10, 4, -8] };
-  const LIGHT = { key: [0.2, -0.62, 0.76], rim: [0.9, -0.3, -0.4], rimC: hex('#ffe4b0'), rimK: 1.6, mul: [1.02, 0.98, 0.92] };
+  const LIGHT = { key: [0.2, -0.62, 0.76], rim: [0.9, -0.3, -0.4], rimC: hex('#ffd8a0'), rimK: 1.25, mul: [0.94, 0.88, 0.84] };
 
   // ---------- ground plane ----------
   const yToZ = (y) => 1200 / (y - HZV);               // distance
@@ -191,6 +191,12 @@
     { const gc = mk(1024, 896), gx = gc.getContext('2d'); gx.imageSmoothingEnabled = false; gx.drawImage(S.ground, 0, 0, 1024, 896);
       const m = gx.createLinearGradient(0, GROUND_TOP, 0, GROUND_TOP + 60); m.addColorStop(0, 'rgba(0,0,0,0)'); m.addColorStop(1, 'rgba(0,0,0,1)');
       gx.globalCompositeOperation = 'destination-in'; gx.fillStyle = m; gx.fillRect(0, 0, 1024, 896); ctx.drawImage(gc, 0, 0); }
+    // sun: flare + shafts + haze veil from the upper right
+    ENV.glow(ctx, SUN[0], SUN[1], 700, [255, 236, 200], 0.55);
+    ENV.glow(ctx, SUN[0], SUN[1], 200, [255, 250, 235], 0.8);
+    ENV.rays(ctx, SUN[0], SUN[1], [[2.05, 70, 900, 0.16], [2.3, 50, 900, 0.12], [1.85, 60, 800, 0.1], [2.55, 40, 800, 0.08]], [255, 236, 200]);
+    { const h = ctx.createLinearGradient(1024, 0, 560, 460); h.addColorStop(0, 'rgba(255,240,215,0.36)'); h.addColorStop(0.5, 'rgba(255,240,215,0.08)'); h.addColorStop(1, 'rgba(255,240,215,0)');
+      ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.fillStyle = h; ctx.fillRect(0, 0, 1024, 896); ctx.restore(); }
     // actors
     const acts = [];
     PARTY.forEach((p) => acts.push(Object.assign({ foe: false, sc: 1.12 }, p)));
@@ -223,15 +229,9 @@
       if (hitU >= 0 && hitU < 0.7) spark(420, 560, hitU / 0.7);
       if (hitU >= 0.05 && hitU < 1.6) { const u = Math.min(1, (hitU - 0.05) / 0.25), fade = hitU > 1.3 ? 1 - (hitU - 1.3) / 0.3 : 1; ctx.save(); ctx.globalAlpha = fade; UI.text(ctx, '128', 400, 470 - Math.sin(u * Math.PI) * 24 - u * 8, { px: 40, w: 700, align: 'center' }); ctx.restore(); }
     }
-    // sun: flare + shafts + haze veil from the upper right
-    ENV.glow(ctx, SUN[0], SUN[1], 700, [255, 236, 200], 0.55);
-    ENV.glow(ctx, SUN[0], SUN[1], 200, [255, 250, 235], 0.8);
-    ENV.rays(ctx, SUN[0], SUN[1], [[2.05, 70, 900, 0.16], [2.3, 50, 900, 0.12], [1.85, 60, 800, 0.1], [2.55, 40, 800, 0.08]], [255, 236, 200]);
-    { const h = ctx.createLinearGradient(1024, 0, 560, 460); h.addColorStop(0, 'rgba(255,240,215,0.36)'); h.addColorStop(0.5, 'rgba(255,240,215,0.08)'); h.addColorStop(1, 'rgba(255,240,215,0)');
-      ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.fillStyle = h; ctx.fillRect(0, 0, 1024, 896); ctx.restore(); }
     ENV.motes(ctx, 30, [300, 200, 724, 500], [255, 230, 190], 7 + Math.floor(t * 4));
     layer(S.fg, 7, 0, true);
-    ENV.post(ctx, { dofTop: [250, 420], dofBot: [770, 890], dofPx: 4.5, bloom: 0.7, thr: 0.6, vig: 0.62,
+    ENV.post(ctx, { dofTop: [250, 420], dofBot: [770, 890], dofPx: 4.5, bloom: 0.55, thr: 0.7, vig: 0.62,
       grade: { sh: [6, -4, 10], hi: [20, 8, -14], sat: 1.04, con: 1.16, lift: 0 } });
     // bottom-edge warm glow (foreground light bleed)
     ENV.glow(ctx, 760, 900, 300, [255, 190, 130], 0.35);
