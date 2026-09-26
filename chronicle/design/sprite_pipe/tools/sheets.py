@@ -1005,6 +1005,11 @@ def main():
     check_palette(runs, ref_pal, rep)
     check_breath(runs, rep)
     check_faces(runs, rep)
+    # natives again: the checks may have fixed some (lantern mirror, rescale) — native/ is what --repack reads
+    for n, sp in runs.items():
+        for sid, v in sp.items():
+            if v.get('fixed'):
+                Image.fromarray(v['img']).save(os.path.join(od, 'native', sid + '.png'))
     for n in runs:
         review(n, found[n], states[n], runs[n], rep, od)
     # facing scores into the state

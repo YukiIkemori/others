@@ -379,28 +379,49 @@ def rotate_about(im, grip, ang):
     return r[b[0]:b[1], b[2]:b[3]], (pad - b[2], pad - b[0])
 
 
+def paste(dst, im, x, y):
+    """alpha-paste im onto dst at (x, y), clipped to dst (the weapon may reach past the canvas)"""
+    H, W = dst.shape[:2]
+    h, w = im.shape[:2]
+    x0, y0, x1, y1 = max(0, x), max(0, y), min(W, x + w), min(H, y + h)
+    if x1 <= x0 or y1 <= y0:
+        return dst
+    src = im[y0 - y:y1 - y, x0 - x:x1 - x]
+    a = src[..., 3:] > 0
+    dst[y0:y1, x0:x1] = np.where(a, src, dst[y0:y1, x0:x1])
+    return dst
+
+
 def tryon(od, char, fin, attach, wpn, anc):
+    """review/weapons_tryon.png: every weapon on every bare pose (rows = poses, columns = weapons)"""
     tiles = []
     for bare, at in attach.items():
         row_t = []
         for wid, w in wpn.items():
             im, g = rotate_about(fin[wid], w['grip'], at['angle'] - 180.0)
             body = fin[bare]
-            pad = 40
-            c = np.zeros((body.shape[0] + 2 * pad, body.shape[1] + 2 * pad, 4), np.uint8)
-            c[pad:pad + body.shape[0], pad:pad + body.shape[1]] = body
-            x, y = pad + at['grip'][0] - g[0], pad + at['grip'][1] - g[1]
-            a = im[..., 3:] > 0
-            sub = c[y:y + im.shape[0], x:x + im.shape[1]]
-            c[y:y + im.shape[0], x:x + im.shape[1]] = np.where(a, im, sub)
+            if im.size == 0 or body.size == 0:
+                continue
+            # canvas big enough for the body and the rotated weapon wherever the grip puts it
+            gx, gy = at['grip']
+            L = max(0, g[0] - gx) + 2
+            T = max(0, g[1] - gy) + 2
+            R = max(0, (im.shape[1] - g[0]) - (body.shape[1] - gx)) + 2
+            B = max(0, (im.shape[0] - g[1]) - (body.shape[0] - gy)) + 2
+            c = np.zeros((body.shape[0] + T + B, body.shape[1] + L + R, 4), np.uint8)
+            paste(c, body, L, T)
+            paste(c, im, L + gx - g[0], T + gy - g[1])
             row_t.append(c)
-        tiles.append(row_t)
-    cw = max(t.shape[1] for r in tiles for t in r)
-    ch = max(t.shape[0] for r in tiles for t in r)
-    out = Image.new('RGBA', (cw * len(tiles[0]), ch * len(tiles)), (92, 92, 104, 255))
+        if row_t:
+            tiles.append(row_t)
+    if not tiles:
+        return
+    cw = max(t.shape[1] for r in tiles for t in r) + 4
+    ch = max(t.shape[0] for r in tiles for t in r) + 4
+    out = Image.new('RGBA', (cw * max(len(r) for r in tiles), ch * len(tiles)), (92, 92, 104, 255))
     for j, r in enumerate(tiles):
         for i, t in enumerate(r):
-            out.alpha_composite(Image.fromarray(t), (i * cw, j * ch))
+            out.alpha_composite(Image.fromarray(t), (i * cw + (cw - t.shape[1]) // 2, j * ch + (ch - t.shape[0]) // 2))
     os.makedirs(os.path.join(od, 'review'), exist_ok=True)
     out.resize((out.width * 3, out.height * 3), Image.NEAREST).save(os.path.join(od, 'review', 'weapons_tryon.png'))
 
