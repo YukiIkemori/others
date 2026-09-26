@@ -203,11 +203,11 @@ process.on("exit", (c) => { if (!global.__done) console.log("[test ended early (
   reset();
   r = await drive(() => TV.chooseStart({ count: 3, announce: true }), [
     'a', // master's advice
-    'down*9,a', // brigitta (10th)
+    'right*9,a', // brigitta (10th: row 1, column 10)
     'b', // B removes the last choice
     'a', // brigitta again
-    'down*9,a', // marta (19th)
-    'up*8,a', // sylvain (11th) → 3 chosen → この3人と旅立ちますか？
+    'down,a', // marta (20th: ↓ keeps the column, row 2)
+    'left*9,a', // sylvain (11th: row 2, column 1) → 3 chosen → この3人と旅立ちますか？
     async () => { ok(topName() === 'ChoiceLayer', 'T1 the yes/no after three picks', topName()); },
     'a', // はい
     'a*6', // join lines (3 × 2)
@@ -219,7 +219,7 @@ process.on("exit", (c) => { if (!global.__done) console.log("[test ended early (
   const g0 = R.Game;
   R.NGFixture.game();
   reset();
-  r = await drive(() => TV.chooseStart({ count: 3, recruit: false, announce: false, advice: false }), ['a', 'down,a', 'down,a', 'down,a', 'down,a', 'up,a', 'down,a', 'a'], { settle: 20 });
+  r = await drive(() => TV.chooseStart({ count: 3, recruit: false, announce: false, advice: false }), ['a', 'right,a', 'right,a', 'right,a', 'right,a', 'left,a', 'right,a', 'a'], { settle: 20 });
   eq([r.value, R.Game.party.length], [['selma', 'hagen', 'basil'], 1], 'T5 recruit:false returns ids only; a 4th pick is refused, re-pressing un-picks');
   R.Game = g0;
   reset();
@@ -368,6 +368,36 @@ process.on("exit", (c) => { if (!global.__done) console.log("[test ended early (
     await Promise.race([p0, frames(2)]);
   }
   drawErrors = drawErrors.filter(Boolean);
+
+  // ------------------------------------------------------------ K: オーナー指示 A15 — the pick grid moves by row / column
+  console.log('K  the companion grid: up/down = rows, left/right = columns');
+  {
+    reset();
+    const GL = new R.Tavern._ChooseLayer({ mode: 'browse' });
+    GL.ids = Array.from({ length: 20 }, (_, i) => 'g' + i);
+    const at = (cur, d) => { GL.cur = cur; GL.moveGrid(d); return GL.cur; };
+    eq(at(0, 'down'), 10, 'K1 down from the top-left goes to the second row, same column');
+    eq(at(13, 'up'), 3, 'K2 up from row 2 goes to row 1, same column');
+    eq(at(3, 'up'), 13, 'K3 up from the top row wraps to the bottom row');
+    eq(at(14, 'down'), 4, 'K4 down from the bottom row wraps to the top row');
+    eq(at(0, 'right'), 1, 'K5 right steps one column');
+    eq(at(9, 'right'), 0, 'K6 right at the row end wraps within the row');
+    eq(at(10, 'left'), 19, 'K7 left at the row start wraps within the row');
+    GL.ids = Array.from({ length: 13 }, (_, i) => 'g' + i);
+    eq(at(8, 'down'), 12, 'K8 down onto a short last row clamps to its last figure');
+    eq(at(11, 'right'), 12, 'K9 right on a short row');
+    eq(at(12, 'right'), 10, 'K10 right wraps on the short row');
+    const SL2 = new R.Tavern._ChooseLayer({ mode: 'start', count: 3 });
+    R.Engine.push(SL2);
+    await frames(2);
+    const c0 = SL2.cur;
+    await press('down');
+    await frames(2);
+    ok(SL2.ids.length <= 10 || SL2.cur === (c0 + 10) % (Math.ceil(SL2.ids.length / 10) * 10) || SL2.cur === Math.min(c0 + 10, SL2.ids.length - 1) || SL2.cur === c0 % 10,
+      'K11 ↓ on the live pick-3 screen moves a row, not one to the right', { from: c0, to: SL2.cur });
+    ok(SL2.cur !== c0 + 1, 'K12 ↓ never just steps right', { from: c0, to: SL2.cur });
+    reset();
+  }
 
   // ------------------------------------------------------------ S: title
   console.log('S  title');
