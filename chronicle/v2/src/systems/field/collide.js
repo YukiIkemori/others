@@ -1,5 +1,6 @@
 // FIELD — 当たり（V2_PLAN §2.5.9・§2.11）。マスの読み方は R.MapUtil（自前で読まない）。
-//   R.Field.passable(map, x, y, fromDir, lv = 0) → bool   マス・物だけの当たり（人は含めない。QA の到達の検査も使う）
+//   R.Field.passable(map, x, y, fromDir, lv = 0) → bool   マスだけの当たり（仮の実装と同じ。物・人は含めない。QA の到達の検査も使う）
+//   R.Field._walkable(...) → マス＋物の当たり（宝箱・泉・建物…）
 //     - legend の walk:false・solid（secret は「通れる壁」なので通れる）
 //     - 2 つの高さ（フェルン）: lv 1 は deck と ladder のマスだけ。lv 0 は deck の下をくぐれる（deck のマスも地面として歩ける）
 //     - 一方通行（E5）: map.oneway [{x, y, dir}] のマスは dir の向きに進むときだけ入れる（fromDir = 進む向き 's'|'n'|'e'|'w'。斜めは入れない）
@@ -57,9 +58,10 @@
     if (!cellOk(map, x, y, lv)) return false;
     const ow = onewayAt(map, x, y);
     if (ow && fromDir != null && fromDir !== ow.dir) return false;
-    if (objBlocks(map, x, y, lv)) return false;
     return true;
   };
+  /** マスと物（宝箱・泉・建物…）の当たり。人は含めない（歩く・NPC が使う） */
+  F._walkable = function (map, x, y, fromDir, lv) { return F.passable(map, x, y, fromDir, lv) && !objBlocks(map, x, y, lv || 0); };
 
   /** 高さの移り: from（今の lv）から (x, y) に入ったあとの lv。はしご → 足場は 1、はしご → 地面は 0 */
   F._lvAfter = function (map, fx, fy, x, y, lv) {
@@ -75,7 +77,7 @@
   /** 高さを考えた「入れるか」（人を除く）。lv 0 からはしごを経ずに足場へ上がれない（下をくぐるだけ）、lv 1 は足場とはしごだけ */
   F._canEnter = function (map, fx, fy, x, y, lv, dir) {
     const to = F._lvAfter(map, fx, fy, x, y, lv);
-    if (!F.passable(map, x, y, dir, to)) return false;
+    if (!F._walkable(map, x, y, dir, to)) return false;
     // はしごの上で lv 1 → 地面（足場でない所）へは降りられない（はしごの両端から出る）
     if (lv === 1 && to === 0) {
       const from = R.MapUtil.cell(map, fx, fy) || {};
@@ -96,7 +98,7 @@
     return null;
   };
   F._blocked = function (x, y, lv) {
-    return !F.passable(S.map, x, y, null, lv || 0) || !!F._npcAt(x, y, lv || 0);
+    return !F._walkable(S.map, x, y, null, lv || 0) || !!F._npcAt(x, y, lv || 0);
   };
   F._onewayAt = onewayAt;
   F._objBlocks = objBlocks;

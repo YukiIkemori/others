@@ -22,7 +22,9 @@
     scale: { btl: 1.12, field: 1 },  // 焼く倍率（戦闘の人物 全高 約 60 art px）
     height: { btl: [56, 62], field: [34, 40] },            // 全高（art px）
     colors: { btl: [40, 80], field: [25, 55] },            // 1 コマの色数
-    size: { s: [22, 30], m: [30, 45], l: [45, 90], boss: [90, 120] },   // 魔物の高さの段（論理 px、STYLE_REFERENCE R1・R2）
+    // 魔物の高さの段（art px = v2 の論理 px）。STYLE_REFERENCE R1・R2 の値（S 22〜30・M 30〜45・ボス 90〜120）は旧の論理 px（人 30）なので 2 倍にした。
+    // 人（戦闘 約 60）に対して 雑魚 1.0〜1.7 倍・大きい雑魚 2〜2.3 倍・ボス 3〜4 倍（STYLE_REFERENCE §0.8）
+    size: { s: [44, 60], m: [60, 90], l: [90, 140], boss: [180, 240] },
     outlineDark: 0.24,    // 外周の画素の 90% 以上がこの輝度未満
     minBlack: 1,          // 純黒を使わない: どの色も r+g+b >= minBlack
     noBlack: '#070812',   // 「黒」が要る所に使う色

@@ -1,5 +1,5 @@
 // BEAST: ボス 根食らい（ヴェルダの森の地方ボス・千年樹。tr_b_rooteater）— hd:boss:boss_rooteater
-// と、その子分の根（b_root）— hd:mon:b_root（V2_PLAN の名前）・hd:boss:boss_root・hd:mon:boss_root（魔物データの sprite 'boss_root'）
+// と、その子分の根（b_root）— hd:mon:b_root（V2_PLAN の名前）・hd:boss:b_root（v2 の魔物データ: sprite 'b_root'・flags boss）・hd:boss:boss_root・hd:mon:boss_root（旧データの sprite）
 // 腐った根の塊。うろの中の大きな目 1 つが視線の的。影は赤紫へ（STYLE_REFERENCE §4.2）、腐れの紫の点と光る菌。
 // 予告の構え tele: 「根が地面にもぐった……」— 地を這う根が土へもぐり、ひびが光り、体を低く構える（次の手番に前列へ根の全体攻撃）。
 (function (R) {
@@ -48,7 +48,7 @@
       roots.forEach(([fx, k], i) => {
         const len = tele ? 0.45 : 1;
         const s0 = b(fx * 0.25, -22), end = [X + fx * len + (fx > 0 ? atk * 6 : 0), -1];
-        B.strand([s0, [s0[0] + (end[0] - s0[0]) * 0.4, -18 + k * 10], [end[0] - (fx > 0 ? 5 : -5), -4], end], 6 - i * 0.3, 1.6, i % 2 ? P.barkDk : P.bark, i < 3 ? 0.3 + i * 0.01 : 1.6 + i * 0.01, { seg: 8 });
+        B.strand([s0, [s0[0] + (end[0] - s0[0]) * 0.4, -18 + k * 10], [end[0] - (fx > 0 ? 5 : -5), -4], end], 5.2 - i * 0.3, 1.4, P.barkDk, i < 3 ? 0.3 + i * 0.01 : 0.9 + i * 0.01, { seg: 8 });
         if (tele) {
           B.ell(end[0], -1.2, 5, 1.8, P.soil, 1.7 + i * 0.01, { bulge: 0.5 });
           B.cap(end[0] - 4, -0.6, end[0] + 5 + (fx > 0 ? 8 : -8), -0.3, 0.5, 0.4, P.crack, 1.72 + i * 0.01, { noAO: true });
@@ -62,7 +62,7 @@
       });
       // 体（こぶの塊）
       const gb = B.group();
-      [[0, -44, 30, 34, 0], [-14, -30, 20, 20, 0.2], [10, -70, 22, 20, -0.2], [-12, -74, 18, 16, 0.3], [16, -30, 18, 18, -0.1]].forEach(([x, y, rx, ry, rot], i) => B.ell(...b(x, y), rx, ry, i === 0 ? P.bark : (i % 2 ? P.barkDk : P.bark), 1 + i * 0.01, { g: gb, rot, bulge: 0.85 }));
+      [[0, -46, 30, 34, 0], [-18, -24, 22, 20, 0.2], [10, -72, 22, 20, -0.2], [-12, -76, 18, 16, 0.3], [18, -24, 20, 18, -0.1], [0, -16, 30, 14, 0]].forEach(([x, y, rx, ry, rot], i) => B.ell(...b(x, y), rx, ry, i === 0 ? P.bark : (i % 2 ? P.barkDk : P.bark), 1 + i * 0.01, { g: gb, rot, bulge: 0.85 }));
       for (let i = 0; i < 7; i++) { const x = -24 + i * 8; B.fold(...b(x, -14), ...b(x + (i % 2 ? 4 : -4), -80), 0.9, gb, -2); }
       // 腐れの紫と光る点
       [[-18, -52, 9, 6], [-4, -24, 7, 4], [-22, -80, 6, 4]].forEach(([x, y, rx, ry], i) => B.ell(...b(x, y), rx, ry, P.rot, 1.2 + i * 0.01, { bulge: 0.5, noAO: true }));
@@ -72,11 +72,11 @@
       B.ell(...b(-28, -40), 6, 9, P.moss, 1.26, { bulge: 0.6, rot: 0.3 });
       [[-24, -60, 6], [-28, -52, 4.5], [22, -82, 5]].forEach(([x, y, r], i) => { const q = b(x, y); B.ell(q[0], q[1], r, r * 0.45, P.shroom, 1.4 + i * 0.01, { bulge: 0.6, rot: x < 0 ? 0.2 : -0.2 }); });
       // 口（右の前）と歯
-      const mo = b(17 + atk * 3, -40);
+      const mo = b(19 + atk * 3, -38);
       const op = 0.45 + atk * 0.6 + tele * 0.2 - hit * 0.25;
-      B.ell(mo[0], mo[1], 12 + atk * 2, 9 + op * 8, P.maw, 1.5);
+      B.ell(mo[0], mo[1], 14 + atk * 2, 10 + op * 9, P.maw, 1.5);
       for (let k = 0; k < 7; k++) {
-        const a = -PI * 0.85 + k * 0.28, rx = 12 + atk * 2, ry = 9 + op * 8;
+        const a = -PI * 0.85 + k * 0.28, rx = 14 + atk * 2, ry = 10 + op * 9;
         const ex = mo[0] + C(a) * rx, ey = mo[1] + S(a) * ry;
         B.poly([[ex - 2, ey - 0.5], [ex + 2, ey - 0.5], [mo[0] + C(a) * rx * 0.55, mo[1] + S(a) * ry * 0.45]], P.tooth, 1.55 + k * 0.001, { bevel: 0.6, noAO: true });
         const bx = mo[0] + C(-a) * rx, by = mo[1] + S(-a) * ry;
@@ -84,7 +84,8 @@
       }
       // 手前の枝の腕（根の爪）
       const sh = b(20, -58), el = [sh[0] + 14 + atk * 10, sh[1] + 8 - atk * 6 + hit * 6], cl = [el[0] + 10 + atk * 8, el[1] + 16 - atk * 6];
-      B.strand([sh, el, cl], 6, 2.5, P.bark, 1.8, { seg: 7 });
+      B.strand([sh, [sh[0] + 6, sh[1] - 6], el, cl], 5, 2.2, P.barkDk, 1.8, { seg: 8 });
+      B.strand([[el[0] - 3, el[1] - 2], [el[0] - 1, el[1] - 12], [el[0] + 4, el[1] - 16]], 1.8, 0.5, P.barkDk, 1.79, { seg: 4 });
       [[4, 5], [6, 1], [1, 7]].forEach(([dx, dy]) => B.strand([cl, [cl[0] + dx * 0.6, cl[1] + dy * 0.5], [cl[0] + dx, cl[1] + dy + 2]], 1.8, 0.5, P.barkDk, 1.81, { seg: 3 }));
       // 大きな目（視線の的）
       const ey = b(9, -68);
@@ -122,5 +123,5 @@
   };
 
   (BZ._bossDefs = BZ._bossDefs || []).push(['boss_rooteater', boss]);
-  (BZ._bossDefs = BZ._bossDefs || []).push(['b_root', root, ['hd:mon:b_root', 'hd:boss:boss_root', 'hd:mon:boss_root']]);
+  (BZ._bossDefs = BZ._bossDefs || []).push(['b_root', root, ['hd:mon:b_root', 'hd:boss:b_root', 'hd:boss:boss_root', 'hd:mon:boss_root']]);
 })(window.RPG);

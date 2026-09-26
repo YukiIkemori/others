@@ -263,7 +263,7 @@
       g.fillStyle = gr; g.fillRect(0, L.stageH - 70, R.W, 70);
       g.fillStyle = '#0c0c14'; g.fillRect(0, L.stageH - 1, R.W, R.H - L.stageH + 1);
     }
-    _.actors.lanternPool(g, { lantern, tall: L.tall }, t);
+    _.actors.lanternPool(g, { lantern, tall: L.tall, baked: !!(sh && sh.frames) }, t);
     // 人と敵（足もとの y の順）
     const order = st.actors.slice().sort((a, b) => a.y - b.y);
     for (const a of order) _.actors.shadow(g, st, a);

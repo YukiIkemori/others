@@ -78,7 +78,7 @@ async function monsSheet(P, list, mood, file, title) {
     gr.addColorStop(0, mood ? '#3c4250' : '#5a6070'); gr.addColorStop(1, mood ? '#50525a' : '#6a7080');
     g.fillStyle = mood ? '#8a8272' : '#646a78'; g.fillRect(0, 0, W, H);
     if (!mood) { g.fillStyle = gr; g.fillRect(0, 0, W, H); }
-    const cols = Math.min(6, list.length), rows = Math.ceil(list.length / cols);
+    const cols = Math.min(list.length > 4 && list.some((id) => /boss/.test(id)) ? 3 : 6, list.length), rows = Math.ceil(list.length / cols);
     const cw = W / cols, ch = (H - 20) / rows;
     const info = [];
     list.forEach((id, i) => {

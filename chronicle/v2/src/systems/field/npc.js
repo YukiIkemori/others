@@ -41,11 +41,11 @@
     return false;
   }
   function freeFor(n, x, y) {
-    return F.passable(S.map, x, y, null, n.lv) && !occupied(x, y, n.lv, n);
+    return F._walkable(S.map, x, y, null, n.lv) && !occupied(x, y, n.lv, n);
   }
   function openness(n, x, y) {
     let k = 0;
-    for (let i = 0; i < 4; i++) if (F.passable(S.map, x + ORTHO[i][0], y + ORTHO[i][1], null, n.lv)) k++;
+    for (let i = 0; i < 4; i++) if (F._walkable(S.map, x + ORTHO[i][0], y + ORTHO[i][1], null, n.lv)) k++;
     return k;
   }
   function stepTo(n, x, y, ms) {

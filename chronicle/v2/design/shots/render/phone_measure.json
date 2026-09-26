@@ -1,0 +1,199 @@
+{
+ "date": "2026-09-26",
+ "shots": [
+  "v2/design/shots/render/phone_lightmap_map.png",
+  "v2/design/shots/render/phone_lightmap_day.png",
+  "v2/design/shots/render/phone_lightmap_10.png",
+  "v2/design/shots/render/phone_mood_town_night.png",
+  "v2/design/shots/render/phone_mood_forest_night.png",
+  "v2/design/shots/render/phone_mood_cave.png",
+  "v2/design/shots/render/phone_mood_night.png",
+  "v2/design/shots/render/phone_mood_interior.png",
+  "v2/design/shots/render/phone_mood_dark.png",
+  "v2/design/shots/render/phone_mood_tree.png",
+  "v2/design/shots/render/phone_mood_tower.png",
+  "v2/design/shots/render/phone_mood_coast.png",
+  "v2/design/shots/render/phone_post_off.png",
+  "v2/design/shots/render/phone_post_on.png",
+  "v2/design/shots/render/phone_fx_low.png",
+  "v2/design/shots/render/phone_fx_off.png",
+  "v2/design/shots/render/phone_bright_085.png",
+  "v2/design/shots/render/phone_bright_125.png",
+  "v2/design/shots/render/phone_tier_0.png",
+  "v2/design/shots/render/phone_tier_4.png",
+  "v2/design/shots/render/phone_tier_8.png"
+ ],
+ "measure": {
+  "lightmap_10": {
+   "lum": 0.165,
+   "p5": 0.05,
+   "p95": 0.371,
+   "bright": 0.002,
+   "darkHue": 256,
+   "darkSat": 0.648,
+   "corner": 0.437
+  },
+  "mood_town_night": {
+   "lum": 0.165,
+   "p5": 0.05,
+   "p95": 0.371,
+   "bright": 0.002,
+   "darkHue": 256,
+   "darkSat": 0.648,
+   "corner": 0.434
+  },
+  "mood_forest_night": {
+   "lum": 0.186,
+   "p5": 0.067,
+   "p95": 0.383,
+   "bright": 0.002,
+   "darkHue": 236,
+   "darkSat": 0.565,
+   "corner": 0.509
+  },
+  "mood_cave": {
+   "lum": 0.2,
+   "p5": 0.062,
+   "p95": 0.441,
+   "bright": 0.002,
+   "darkHue": 253,
+   "darkSat": 0.606,
+   "corner": 0.436
+  },
+  "mood_night": {
+   "lum": 0.198,
+   "p5": 0.073,
+   "p95": 0.392,
+   "bright": 0.002,
+   "darkHue": 250,
+   "darkSat": 0.578,
+   "corner": 0.548
+  },
+  "mood_interior": {
+   "lum": 0.21,
+   "p5": 0.074,
+   "p95": 0.401,
+   "bright": 0.003,
+   "darkHue": 272,
+   "darkSat": 0.433,
+   "corner": 0.563
+  },
+  "mood_dark": {
+   "lum": 0.125,
+   "p5": 0.048,
+   "p95": 0.342,
+   "bright": 0.002,
+   "darkHue": 251,
+   "darkSat": 0.649,
+   "corner": 0.533
+  },
+  "mood_tree": {
+   "lum": 0.203,
+   "p5": 0.075,
+   "p95": 0.397,
+   "bright": 0.002,
+   "darkHue": 227,
+   "darkSat": 0.516,
+   "corner": 0.511
+  },
+  "mood_tower": {
+   "lum": 0.184,
+   "p5": 0.068,
+   "p95": 0.379,
+   "bright": 0.002,
+   "darkHue": 252,
+   "darkSat": 0.574,
+   "corner": 0.496
+  },
+  "mood_coast": {
+   "lum": 0.202,
+   "p5": 0.073,
+   "p95": 0.397,
+   "bright": 0.003,
+   "darkHue": 241,
+   "darkSat": 0.582,
+   "corner": 0.538
+  },
+  "post_off": {
+   "lum": 0.195,
+   "p5": 0.063,
+   "p95": 0.42,
+   "bright": 0.006,
+   "darkHue": 242,
+   "darkSat": 0.607,
+   "corner": 0.803
+  },
+  "post_on": {
+   "lum": 0.165,
+   "p5": 0.05,
+   "p95": 0.372,
+   "bright": 0.002,
+   "darkHue": 256,
+   "darkSat": 0.648,
+   "corner": 0.432
+  },
+  "fx_low": {
+   "lum": 0.156,
+   "p5": 0.046,
+   "p95": 0.345,
+   "bright": 0.002,
+   "darkHue": 257,
+   "darkSat": 0.659,
+   "corner": 0.435
+  },
+  "fx_off": {
+   "lum": 0.189,
+   "p5": 0.063,
+   "p95": 0.4,
+   "bright": 0.005,
+   "darkHue": 242,
+   "darkSat": 0.608,
+   "corner": 0.982
+  },
+  "bright_085": {
+   "lum": 0.14,
+   "p5": 0.041,
+   "p95": 0.316,
+   "bright": 0,
+   "darkHue": 257,
+   "darkSat": 0.656,
+   "corner": 0.43
+  },
+  "bright_125": {
+   "lum": 0.206,
+   "p5": 0.062,
+   "p95": 0.464,
+   "bright": 0.006,
+   "darkHue": 257,
+   "darkSat": 0.649,
+   "corner": 0.437
+  },
+  "tier_0": {
+   "lum": 0.165,
+   "p5": 0.05,
+   "p95": 0.37,
+   "bright": 0.002,
+   "darkHue": 256,
+   "darkSat": 0.648,
+   "corner": 0.442
+  },
+  "tier_4": {
+   "lum": 0.196,
+   "p5": 0.062,
+   "p95": 0.395,
+   "bright": 0.003,
+   "darkHue": 254,
+   "darkSat": 0.627,
+   "corner": 0.502
+  },
+  "tier_8": {
+   "lum": 0.239,
+   "p5": 0.079,
+   "p95": 0.431,
+   "bright": 0.004,
+   "darkHue": 252,
+   "darkSat": 0.606,
+   "corner": 0.572
+  }
+ }
+}

@@ -84,6 +84,7 @@ if (SLICE) {
       R.State.newGame({ seed: 1 });
       const m = member(sp);
       const learned = [];
+      if (run === 0) for (const id of m.c.techs.concat(m.c.spells)) P[id] = 1;   // 初めから覚えている技・術も範囲に入る
       const o = (T, boss) => ({ T, boss, learned });
       for (let i = 0; i < 35; i++) battle(m, o(0, false), rnd);
       battle(m, o(0, true), rnd); battle(m, o(0, true), rnd);                 // チュートリアル・ページ食らい

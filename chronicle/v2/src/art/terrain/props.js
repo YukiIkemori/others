@@ -111,13 +111,14 @@
       const m = mats(), rare = /^rare/.test(f), open = /open$/.test(f), lid = rare ? m.rareLid : m.chestLid, body = rare ? m.rareBody : m.chestBody, band = rare ? m.silver : m.gold;
       B.poly([[-10, 0], [10, 0], [10, -10], [-10, -10]], body, 0, { bevel: 1.4 });
       if (open) {
-        B.poly([[-10, -10], [10, -10], [9, -13], [-9, -13]], m.dark, 0.05);
-        B.poly([[-10, -12], [10, -12], [10, -22], [-10, -22]], lid, 0.1, { bevel: 1.4, ny: 0.4 });
+        // ふたは奥へ倒れて内側（暗い）が見え、箱の口は黒い（MODERN_UI §7.5）
+        B.poly([[-10, -10], [10, -10], [9, -15], [-9, -15]], m.dark, 0.05, { bevel: 0.5 });
+        B.poly([[-9.5, -15], [9.5, -15], [8.5, -22], [-8.5, -22]], lid, 0.02, { bevel: 1.2, ny: 0.7, shadeOff: -2 });
       } else {
         B.poly([[-10.5, -9], [10.5, -9], [10, -16], [7, -19], [-7, -19], [-10, -16]], lid, 0.1, { bevel: 2.5, ny: -0.5 });
         B.rect(-10.5, -10, 21, 2, m.gold, 0.2);
       }
-      [-6.5, 6.5].forEach((x) => B.rect(x - 1.2, open ? -22 : -19, 2.4, open ? 22 : 19, band, 0.25));
+      [-6.5, 6.5].forEach((x) => { B.rect(x - 1.2, open ? -10 : -19, 2.4, open ? 10 : 19, band, 0.25); if (open) B.rect(x - 1.1, -22, 2.2, 7, band, 0.03); });
       if (!open) B.rect(-2, -12, 4, 4.5, m.gold, 0.3);
     },
     spring(B, o, f) {
@@ -202,7 +203,7 @@
     dec_tuft(B, o) { const m = mats(), r = R.Hd.RZ.rng((o.v || 0) + 17); for (let i = 0; i < 5; i++) { const x = (i - 2) * 1.6 + (r() - 0.5), L = 3 + r() * 3; B.cap(x, 0, x + (r() - 0.5) * 3, -L, 0.7, 0.3, o.leaf === 'moss' ? m.leafMoss : m.leaf, 0.1 + i * 0.01); } },
     dec_flowers(B, o) { const m = mats(), r = R.Hd.RZ.rng((o.v || 0) + 19); for (let i = 0; i < 4; i++) { const x = (r() - 0.5) * 8, y = -(r() * 4); B.cap(x, y, x, y - 3, 0.4, 0.3, m.leaf, 0.1); B.ell(x, y - 4, 1.3, 1, [m.petalP, m.petalY, m.petalW][i % 3], 0.2); } },
     dec_pebbles(B, o) { const m = mats(), r = R.Hd.RZ.rng((o.v || 0) + 23); for (let i = 0; i < 3; i++) B.ell((r() - 0.5) * 8, -1 - r() * 2, 1.4 + r(), 1, m.stone, 0.1 + i * 0.01, { bulge: 0.7 }); },
-    dec_mush(B, o) { const m = mats(), r = R.Hd.RZ.rng((o.v || 0) + 29); for (let i = 0; i < 2; i++) { const x = (i - 0.5) * 3 + r(), h = 2 + r() * 2; B.cap(x, 0, x, -h, 0.5, 0.4, m.mushStem, 0.1); B.ell(x, -h - 0.6, 1.6, 1, m.mush, 0.2); } return { light: [0, -3], cyan: true, small: true }; },
+    dec_mush(B, o) { const m = mats(), r = R.Hd.RZ.rng((o.v || 0) + 29); for (let i = 0; i < 3; i++) { const x = (i - 1) * 2.6 + r(), h = 1.2 + r() * 1.6; B.cap(x, 0, x, -h, 0.6, 0.5, m.mushStem, 0.1 + i * 0.01); B.ell(x, -h - 0.8, 1.9 - i * 0.2, 1.4, m.mush, 0.2 + i * 0.01); } return { light: [0, -3], cyan: true, small: true }; },
     dec_leaves(B, o) { const m = mats(), r = R.Hd.RZ.rng((o.v || 0) + 31); for (let i = 0; i < 4; i++) B.ell((r() - 0.5) * 10, -r() * 3, 1.6, 0.9, [m.fruit, m.pot, m.sack][i % 3], 0.1 + i * 0.01, { rot: r() * 3 }); },
   };
 

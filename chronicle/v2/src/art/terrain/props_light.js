@@ -97,7 +97,8 @@
           const color = /crystal|mushroom|songstone/.test(o.id) ? S.crystalColor : spec.color;
           L(lx, fy - 4 * s, spec.r, color, spec.k, 'pool', spec.kind, o.id + '@' + o.x + ',' + o.y);
           if (/lamp|lantern|beacon|torch|crystal|stove/.test(o.id)) L(lx, ly, 24, color, 0.7, 'point', spec.kind, o.id);
-          G(lx, ly, { r: (o.id === 'beacon' ? 60 : /crystal|mushroom/.test(o.id) ? 20 : 22) * s, core: (o.id === 'beacon' ? 9 : 3) * s, halo: (o.id === 'beacon' ? 60 : 22) * s, color, k: 0.9, type: spec.kind });
+          const soft = /crystal|mushroom|songstone/.test(o.id);
+          G(lx, ly, { r: (o.id === 'beacon' ? 60 : soft ? 18 : 22) * s, core: (o.id === 'beacon' ? 9 : soft ? 1.5 : 3) * s, halo: (o.id === 'beacon' ? 60 : soft ? 18 : 22) * s, color, k: soft ? 0.55 : 0.9, type: spec.kind });
           break;
         }
         default: break;
@@ -146,7 +147,7 @@
       const g = c.getContext('2d');
       g.drawImage(fr.c, pad + dx, pad + dy);
       g.globalCompositeOperation = 'source-in'; g.fillStyle = 'rgb(10,8,26)'; g.fillRect(0, 0, c.width, c.height);
-      out = { c: blur(c, 5 * s), ox: fr.ox + pad, oy: fr.oy + pad };
+      out = soft(c, 4, fr.ox + pad, fr.oy + pad);
     } else {
       // 足もとを軸に: (px, py) → (px − 0.45 py, −0.22 py)（py < 0 が上 → 右下へ伸びる）
       const H = fr.oy, below = Math.ceil((h - fr.oy) * 0.22), W2 = w + Math.ceil(H * 0.45) + pad * 2, H2 = Math.ceil(H * 0.22) + below + pad * 2;
@@ -156,10 +157,17 @@
       g.drawImage(fr.c, -fr.ox, -fr.oy);
       g.setTransform(1, 0, 0, 1, 0, 0);
       g.globalCompositeOperation = 'source-in'; g.fillStyle = 'rgb(10,8,26)'; g.fillRect(0, 0, c.width, c.height);
-      out = { c: blur(c, 2 * s), ox: pad + fr.ox, oy: pad + below };
+      out = soft(c, 2, pad + fr.ox, pad + below);
     }
     m[kind] = out;
     return out;
   };
-  function blur(c, r) { try { return R.Hd && R.Hd.blur ? R.Hd.blur(c, r) : c; } catch (e) { return c; } }
+  /** ぼかしの代わりに 1/k に縮めた絵（描くときに k 倍へ滑らかに広げる = 柔らかい縁。R.Hd.blur より十分速い） */
+  function soft(c, k, ox, oy) {
+    const w = Math.max(1, Math.ceil(c.width / k)), h = Math.max(1, Math.ceil(c.height / k)), d = T._u.canvas(w, h);
+    if (!d) return { c, ox, oy, k: 1 };
+    const g = d.getContext('2d'); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+    g.drawImage(c, 0, 0, w * k, h * k, 0, 0, w, h);
+    return { c: d, ox, oy, k };
+  }
 })(window.RPG);

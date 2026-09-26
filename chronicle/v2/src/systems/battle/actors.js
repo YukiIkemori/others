@@ -25,9 +25,19 @@
     try { return now ? R.Hd.now(a.key, a.opts) : R.Hd.get(a.key, a.opts); } catch (e) { return null; }
   };
 
+  // 敵の絵の高さの上限（論理 px。MODERN_UI §2.1: 魔物は人の 1.16 倍前後、ボスは段の 1.2 倍まで）。
+  // 焼いた絵がこれより大きいときは縮めて置く（R.Hd.draw の scale は縮小だけ）
+  const CAP = { s: 52, m: 84, l: 116, boss: 168 };
+  A.scaleOf = function (a, sh) {
+    if (!sh || a.side === 'party') return 1;
+    const vis = (sh.meta && sh.meta.visH) || sh.h || 0;
+    const cap = (a.boss ? CAP.boss : CAP[a.size] || CAP.m) * (R.layout === 'tall' ? 0.85 : 1);
+    return vis > cap ? cap / vis : 1;
+  };
   /** 絵の高さ（ねらいの印・数字の位置） */
   A.height = function (a) {
     const sh = a.sheetRef;
+    if (sh && a.side !== 'party') return Math.max(24, ((sh.meta && sh.meta.visH) || sh.h || 60) * A.scaleOf(a, sh) * 0.95);
     if (sh && sh.anchors && sh.anchors.head) return Math.max(24, -sh.anchors.head[1] || 0) || 70;
     if (sh && sh.h) return sh.h * 0.9;
     if (a.side === 'party') return 70;
@@ -187,8 +197,9 @@
       fi = LOOP[pose] ? fi % list.length : Math.min(list.length - 1, fi);
       const fr = sh.frames[list[fi]] || sh.frames[0];
       const x = a.x + (v.dx || 0), y = a.y + (v.dy || 0);
-      R.Hd.draw(g, fr, x, y, {});
-      if (v.flash > 0) { g.globalCompositeOperation = 'lighter'; R.Hd.draw(g, fr, x, y, { alpha: v.flash * 0.8 }); }
+      const sc = A.scaleOf(a, sh);
+      R.Hd.draw(g, fr, x, y, sc < 1 ? { scale: sc } : {});
+      if (v.flash > 0) { g.globalCompositeOperation = 'lighter'; R.Hd.draw(g, fr, x, y, sc < 1 ? { alpha: v.flash * 0.8, scale: sc } : { alpha: v.flash * 0.8 }); }
     } else {
       if (a.side === 'party') partyPlaceholder(g, a, Object.assign({}, v, { pose }), t);
       else enemyPlaceholder(g, a, Object.assign({}, v, { pose }), t);
@@ -307,6 +318,17 @@
   /** ランタンの光だまり（毎フレーム。加算の絵 1 枚＋芯） */
   A.lanternPool = function (g, L, t) {
     const [x, y] = L.lantern;
+    if (L.baked) {
+      // 戦闘背景（hd:bbg）に光だまりとランタンが焼いてある: 揺らぎの芯だけ足す
+      if (R.Settings.get('reduceMotion')) return;
+      g.save(); g.globalCompositeOperation = 'lighter';
+      const a = 0.12 + Math.sin(t / 130) * 0.04 + Math.sin(t / 47) * 0.02;
+      const gr = g.createRadialGradient(x, y - 10, 1, x, y - 10, 70);
+      gr.addColorStop(0, `rgba(255,220,160,${a})`); gr.addColorStop(1, 'rgba(255,220,160,0)');
+      g.fillStyle = gr; g.fillRect(x - 70, y - 80, 140, 140);
+      g.restore();
+      return;
+    }
     const flick = 1 + (R.Settings.get('reduceMotion') ? 0 : Math.sin(t / 130) * 0.03 + Math.sin(t / 47) * 0.015);
     g.save();
     g.globalCompositeOperation = 'lighter';

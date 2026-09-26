@@ -15,7 +15,7 @@ const fs = require('fs');
 const STD = ['bartolo', 'marta', 'sylvain'];
 /** 縦切りの出現表と、その表で戦う一行（§3.1 の筋） */
 const ZONES = {
-  zw_prologue: { tier: 0, kind: 'start', members: [], gl: 2, note: '主人公 1 人（仲間を選ぶ前）' },
+  zw_prologue: { tier: 0, kind: 'start', members: [], gl: 2, solo: true, gear: 'start', note: '主人公 1 人（仲間を選ぶ前、初めの装備）' },
   zw_peninsula: { tier: 0, kind: 'prologue', members: STD },
   z_lighthouse: { tier: 0, kind: 'prologue', members: STD },
   z_well: { tier: 0, kind: 'prologue', members: STD },
@@ -88,6 +88,8 @@ function runZone(R, zone, n, seed) {
   const party = buildParty(R, Object.assign({ seed: 7 }, z));
   const items = { i_potion: 5, i_antidote: 2 };
   const res = { zone, n, win: 0, rounds: [], hp: [], down: 0, wipe: 0, timeout: 0, mp: [], groups: {} };
+  // 雑魚戦は MP 6 割で始める（旧の §9.13.1 と同じ。道中で MP は減っていく）
+  for (const c of party) c.mp = Math.round(R.Rules.stats(c).maxMp * 0.6);
   for (let i = 0; i < n; i++) {
     const s = R.BattleCore.simulate({ party, zone, tier: z.tier, seed: `${seed}:${zone}:${i}`, inv: items, maxRounds: 30 });
     if (s.result === 'none') continue;
@@ -113,6 +115,8 @@ function runZone(R, zone, n, seed) {
 
 function judge(r) {
   const f = [];
+  // 主人公 1 人の表（仲間を選ぶ前）: 勝率 97% 以上だけ（旧の M4）。ほかの数字は参考
+  if ((ZONES[r.zone] || {}).solo) { if (r.winPct < 97) f.push(`solo win ${r.winPct.toFixed(1)} < 97`); return f; }
   if (r.winPct < TARGET.win) f.push(`win ${r.winPct.toFixed(1)} < ${TARGET.win}`);
   if (r.rounds < TARGET.roundsLo || r.rounds > TARGET.roundsHi) f.push(`rounds ${r.rounds.toFixed(2)} ∉ ${TARGET.roundsLo}–${TARGET.roundsHi}`);
   if (r.hpLoss < TARGET.hpZoneLo || r.hpLoss > TARGET.hpZoneHi) f.push(`HP loss ${r.hpLoss.toFixed(1)} ∉ ${TARGET.hpZoneLo}–${TARGET.hpZoneHi}`);
@@ -140,7 +144,7 @@ function main() {
     console.log(`${z.padEnd(16)} ${r.winPct.toFixed(1).padStart(5)}  ${r.rounds.toFixed(2).padStart(5)}  ${r.hpLoss.toFixed(1).padStart(5)} ${r.p95.toFixed(1).padStart(5)}  ${r.downPct.toFixed(1).padStart(5)}  ${r.wipePct.toFixed(2).padStart(5)}  ${r.mpUsed.toFixed(1).padStart(5)}  ${r.fail.length ? 'FAIL ' + r.fail.join('; ') : 'pass'}`);
     if (argv.includes('--groups')) for (const g of r.groups.slice(0, 6)) console.log(`    ${g.group.padEnd(34)} n=${g.n} HP ${g.hp.toFixed(1)}% rounds ${g.rounds.toFixed(2)}`);
   }
-  const all = out.filter((r) => r.n);
+  const all = out.filter((r) => r.n && !(ZONES[r.zone] || {}).solo);   // 主人公 1 人の表は平均に入れない
   const avgHp = mean(all.map((r) => r.hpLoss)), avgRounds = mean(all.map((r) => r.rounds));
   const overall = [];
   if (avgHp < TARGET.hpLo || avgHp > TARGET.hpHi) overall.push(`mean HP loss ${avgHp.toFixed(1)} ∉ ${TARGET.hpLo}–${TARGET.hpHi}`);

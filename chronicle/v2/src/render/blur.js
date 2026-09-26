@@ -1,6 +1,6 @@
 // RENDER: R.Hd.blur(canvas, r) → 新しい canvas（同じ大きさ）。ctx.filter を使わない（V2_PLAN §2.1、ART_REWORK 0.4）
 // 横と縦の箱ぼかしを 3 回（ガウスに近い）。色は不透明度を掛けてからぼかす（縁が黒ずまない）。
-// r が大きいときは先に縮めてからぼかし、滑らかに戻す（速さのため。r > 8 で 1/2、r > 16 で 1/4）。UIK のすりガラスは 1/4 の絵をこれでぼかす。
+// r が大きいときは先に縮めてからぼかし、滑らかに戻す（速さのため。r > 2.5 で 1/2、r > 10 で 1/4。ぼけた絵なので見分けがつかない）。UIK のすりガラスは 1/4 の絵をこれでぼかす。
 (function (R) {
   'use strict';
   const Hd = (R.Hd = R.Hd || {});
@@ -84,7 +84,7 @@
     const ox = out.getContext('2d');
     r = +r || 0;
     if (r <= 0.3) { ox.drawImage(canvas, 0, 0); return out; }
-    const f = r > 16 ? 4 : r > 8 ? 2 : 1;
+    const f = r > 10 ? 4 : r > 2.5 ? 2 : 1;
     const sw = Math.max(1, Math.ceil(w / f)), sh = Math.max(1, Math.ceil(h / f));
     const tmp = f === 1 ? out : Hd.RZ.canvas(sw, sh);
     const tx = tmp.getContext('2d');

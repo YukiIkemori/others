@@ -330,8 +330,6 @@
     }
     phys /= party.length; mag /= party.length;
     let t = Math.max(phys, mag, 1) * (m.actsPerTurn ? m.actsPerTurn() : 1);
-    if (m.reserved) t *= 2;
-    if (m.d && m.d.leader) t *= 2;   // 群れの頭（倒せば群れが逃げる）
     if (!m.canAct()) t *= 0.3;
     else if (m.status.confuse) t *= 0.5;
     return t;
@@ -598,11 +596,15 @@
     assess(eng, plan);
     const tele = pendingTelegraphs(eng);
     const cmds = [];
+    // 守るのは、予約された大技を受けると危ない人だけ（見込みのダメージの 1.25 倍より HP が少ない人）。ほかは攻め続ける
     const guardFor = (u) => {
       for (const t of tele) {
         const g = t.guard;
-        if (g === 'defend') return true;
-        if (g === 'back' && eng.effRow(u) === 'front') return true;
+        const a = ACT(t.next);
+        const hits = (g === 'defend' || (g === 'back' && eng.effRow(u) === 'front'));
+        if (!hits || !a) continue;
+        const d = eng.expectDamage(t.m, a, u);
+        if (u.hp <= d * 1.25) return true;
       }
       return false;
     };
@@ -625,18 +627,18 @@
       for (const t of tele) {
         const m = /^element:(\w+)$/.exec(t.guard || '');
         if (!m || elemDone.has(t.m)) continue;
-        const o = acts.find((x) => dmgOf(x.ab) && FOE_TARGETS[x.ab.target] && ((x.ab.elements || []).includes(m[1]) || dmgOf(x.ab).element === m[1]));
-        if (o) { cmds[u.idx] = cmdOf(o, t.m); elemDone.add(t.m); done = true; break; }
+        const o = all.find((x) => dmgOf(x.ab) && FOE_TARGETS[x.ab.target] && ((x.ab.elements || []).includes(m[1]) || dmgOf(x.ab).element === m[1]));
+        if (o) { reserve(plan, o); cmds[u.idx] = cmdOf(o, t.m); elemDone.add(t.m); done = true; break; }
       }
       if (done) continue;
-      if (tele.length && (guardFor(u) || tele.some((t) => /^element:/.test(t.guard) && !elemDone.has(t.m)))) { cmds[u.idx] = { type: 'defend' }; continue; }
+      if (tele.length && guardFor(u)) { cmds[u.idx] = { type: 'defend' }; continue; }
       // 3. 考えどころの相手（群れの頭・火に弱い根）
       const leader = eng.living('mon').find((m) => m.d.leader);
       const burnable = eng.living('mon').find((m) => m.d.onBurn || m.d.onKilledBy);
       if (burnable && !(eng.flags[(burnable.d.onBurn || burnable.d.onKilledBy).flag])) {
         const el = (burnable.d.onBurn || burnable.d.onKilledBy).element;
-        const o = acts.find((x) => dmgOf(x.ab) && FOE_TARGETS[x.ab.target] && ((x.ab.elements || []).includes(el) || dmgOf(x.ab).element === el));
-        if (o) { cmds[u.idx] = cmdOf(o, burnable); continue; }
+        const o = all.find((x) => dmgOf(x.ab) && FOE_TARGETS[x.ab.target] && ((x.ab.elements || []).includes(el) || dmgOf(x.ab).element === el) && !(x.item && plan.items[x.id] >= eng.count(x.id)));
+        if (o) { reserve(plan, o); cmds[u.idx] = cmdOf(o, burnable); continue; }
       }
       if (leader) {
         const o = offense(eng, u, acts.filter((x) => x.ab.target === 'enemy'), plan);

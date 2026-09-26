@@ -1,0 +1,6 @@
+{
+  "scene": "battle",
+  "desc": "BSCENE: 本物の BattleCore と絵で森の狼（tr_a21_forest_wolves）",
+  "state": "core_stub_road",
+  "setup": { "troop": "tr_a21_forest_wolves", "bg": "forest" }
+}

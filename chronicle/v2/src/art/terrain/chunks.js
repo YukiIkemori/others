@@ -185,16 +185,25 @@
     this.maxStep = 0;
     this.i = 0;
     this.prof = {};    // 仕事の順ごとの時間（G1 の報告・perf 用）
+    this.profMax = {}; // 1 回の呼び出しの最長
   }
-  const PHASES = ['prep', 'mats', 'sprites', 'ground', 'rise', 'macro', 'put', 'deck', 'shadow', 'draw', 'light', 'emissive', 'finish'];
+  // 一度に済ませる仕事の平均の時間（ms。走らせながら覚える）。step の残りに収まらなければ先に戻る
+  const AVG = {}, ATOMIC = { prep: 1, rise: 1, deck: 1, light: 1, emissive: 1, finish: 1, putB: 1, putA: 1 };
+  T._phaseAvg = AVG;
+  const PHASES = ['prep', 'mats', 'sprites', 'ground', 'rise', 'putA', 'putB', 'deck', 'shadow', 'draw', 'light', 'emissive', 'finish'];
   Job.prototype.step = function (ms) {
     if (this.done) return true;
     const t0 = U().now(), deadline = t0 + (ms == null ? 3 : ms);
     try {
       while (!this.done) {
         const ph = PHASES[this.phase], p0 = U().now();
+        // 切れ目の無い仕事（光の地図など）は、残りの時間に収まらなければ次の step へ回す（1 step は ms を超えない）
+        if (p0 - t0 > 0.05 && this.i === 0 && AVG[ph] && p0 + AVG[ph] > deadline) break;
         const fin = this['_' + ph](deadline);
-        this.prof[ph] = (this.prof[ph] || 0) + U().now() - p0;
+        const dt = U().now() - p0;
+        this.prof[ph] = (this.prof[ph] || 0) + dt;
+        if (dt > (this.profMax[ph] || 0)) this.profMax[ph] = dt;
+        if (fin && ATOMIC[ph]) AVG[ph] = AVG[ph] ? AVG[ph] * 0.8 + dt * 0.2 : dt;
         if (fin) { this.phase++; this.i = 0; if (this.phase >= PHASES.length) { this.done = true; break; } }
         if (U().now() >= deadline) break;
       }
@@ -216,8 +225,10 @@
     this.amb = T.ambient(map, this.tier);
     this.st = stateOf(map, this.o.state);
     this.size = CHUNK * t;
-    this.X0 = this.cx * CHUNK * t; this.Y0 = this.cy * CHUNK * t;
-    const c0x = this.cx * CHUNK, c0y = this.cy * CHUNK;
+    // o.shift = [px, py]（テストだけ: チャンクの格子をずらして焼き、境で模様がつながるかを比べる。tile の倍数）
+    const sh = this.o.shift || [0, 0];
+    this.X0 = this.cx * CHUNK * t + sh[0]; this.Y0 = this.cy * CHUNK * t + sh[1];
+    const c0x = Math.floor(this.X0 / t), c0y = Math.floor(this.Y0 / t);
     this.cells = [c0x, c0y, c0x + CHUNK, c0y + CHUNK];
     this.C = cellReader(map, this.st, this.theme, c0x - 5, c0y - 3, c0x + CHUNK + 5, c0y + CHUNK + 6);
     const plan = planOf(map, this.st, this.theme, t, this.amb);
@@ -324,32 +335,46 @@
     return true;
   };
 
-  // 大きなゆらぎ（4 マスで一周する素材の繰り返しを見えなくする。4×4 px ごとに世界の座標のノイズで明暗）
-  Job.prototype._macro = function () {
-    const t = this.tile, S = this.size, px = this.px, u = U(), X0 = this.X0, Y0 = this.Y0, B = 4;
-    for (let by = 0; by < S; by += B) for (let bx = 0; bx < S; bx += B) {
-      const wx = X0 + bx + 2, wy = Y0 + by + 2;
-      const c = this.C(Math.floor(wx / t), Math.floor(wy / t));
-      if (c.raised) continue;
-      const amp = T._matInfo(c.mat).macro;
-      if (!amp) continue;
-      const k = 32 / t, n = u.vn(wx * k, wy * k, 176, 7) * 0.7 + u.vn(wx * k, wy * k, 56, 8) * 0.3;
-      const f = (n - 0.5) * 2 * amp;
-      if (f > -0.01 && f < 0.01) continue;
-      for (let y = by; y < by + B; y++) for (let x = bx; x < bx + B; x++) px[y * S + x] = T._shade(px[y * S + x], f);
+  // 大きなゆらぎ（4 マスで一周する素材の繰り返しを見えなくする）。8 px ごとの世界の座標のノイズを小さな絵にして、滑らかに広げて soft-light で重ねる
+  // （標本はチャンクの端を含む 8 px の格子なので、隣のチャンクと同じ値でつながる）
+  Job.prototype._macro2 = function () {
+    const t = this.tile, S = this.size, u = U(), X0 = this.X0, Y0 = this.Y0, B = 8, N = S / B + 1, k = 32 / t;
+    const c = u.canvas(N, N), g = c.getContext('2d'), img = g.createImageData(N, N), d = img.data;
+    let any = false;
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+      const wx = X0 + i * B, wy = Y0 + j * B, cell = this.C(Math.floor(wx / t), Math.floor(wy / t));
+      const amp = cell.raised ? 0 : T._matInfo(cell.mat).macro || 0;
+      const n = u.vn(wx * k, wy * k, 176, 7) * 0.7 + u.vn(wx * k, wy * k, 56, 8) * 0.3;
+      const v = Math.round(128 + (n - 0.5) * 2 * amp * 255 * 1.6), q = (j * N + i) * 4;
+      if (amp) any = true;
+      d[q] = d[q + 1] = d[q + 2] = u.clamp(v, 0, 255); d[q + 3] = 255;
     }
+    if (!any) return true;
+    g.putImageData(img, 0, 0);
+    const bg = this.bg;
+    bg.save(); bg.globalCompositeOperation = 'soft-light'; bg.imageSmoothingEnabled = true;
+    bg.drawImage(c, 0.5, 0.5, N - 1, N - 1, 0, 0, S, S);
+    bg.restore();
     return true;
   };
 
-  Job.prototype._put = function () {
+  // base に置く（putImageData を上と下の 2 回に分ける: 1 回の仕事を短く）
+  Job.prototype._putA = function () {
     const S = this.size, c = U().canvas(S, S);
     if (!c) throw new Error('no canvas');
     const g = c.getContext('2d');
     const img = g.createImageData(S, S);
     new Uint32Array(img.data.buffer).set(this.px);
-    g.putImageData(img, 0, 0);
-    this.base = c; this.bg = g;
+    g.putImageData(img, 0, 0, 0, 0, S, S >> 1);
+    this.base = c; this.bg = g; this.img = img;
     this.px = null;
+    return true;
+  };
+  Job.prototype._putB = function () {
+    const S = this.size;
+    this.bg.putImageData(this.img, 0, 0, 0, S >> 1, S, S - (S >> 1));
+    this.img = null;
+    this._macro2();
     return true;
   };
 
@@ -412,8 +437,8 @@
       }
       const sh = T._shadowOf(fr, it.shadow, s);
       if (!sh) continue;
-      g.save(); g.globalAlpha = it.shadow === 'block' ? 0.5 : 0.42; g.globalCompositeOperation = 'multiply';
-      g.drawImage(sh.c, Math.round(it.x - X0 - sh.ox), Math.round(it.y - Y0 - sh.oy));
+      g.save(); g.globalAlpha = it.shadow === 'block' ? 0.5 : 0.42; g.globalCompositeOperation = 'multiply'; g.imageSmoothingEnabled = true;
+      g.drawImage(sh.c, Math.round(it.x - X0 - sh.ox), Math.round(it.y - Y0 - sh.oy), sh.c.width * sh.k, sh.c.height * sh.k);
       g.restore();
       if (it.shadow === 'tall') blob(g, it.x - X0, it.y - Y0 - s, Math.max(6 * s, fr.c.width * 0.3), Math.max(2.5 * s, fr.c.width * 0.1), 0.55);
       if (it.bld) {
@@ -460,6 +485,7 @@
   };
 
   Job.prototype._light = function () {
+    if (this.o.noLight) { this.chunkLights = []; this.glows = []; this.emissive = []; return true; }
     const map = this.map, t = this.tile, s = this.s, X0 = this.X0, Y0 = this.Y0, S = this.size;
     const env = { tile: t, st: this.st, bld: (o) => { try { return R.Hd.now(T.building(o), { tile: t }); } catch (e) { return null; } } };
     const all = lightsCached(map, env, this.plan);
@@ -581,7 +607,7 @@
     const todo = [];
     const mats = new Set([theme.ground, map.outside || theme.outside, 'deck']);
     for (const k of Object.keys(map.legend || {})) { const e = map.legend[k]; mats.add(T._underOf(e.mat, theme)); if (e.floor) mats.add(e.floor); if (T._matInfo(e.mat).face) todo.push({ face: T._matInfo(e.mat).face, rise: Math.max(1, e.rise || 1) }); }
-    for (const m of mats) if (m) todo.push({ mat: m });
+    for (const m of mats) if (m) todo.push({ mat: m }, { thr: m });
     const st = stateOf(map, o.state), amb = T.ambient(map, o.tier), plan = planOf(map, st, theme, tile, amb);
     const seen = new Set();
     for (const it of plan.items.concat(plan.dyn)) { const k = it.key + JSON.stringify(it.opts || null); if (!seen.has(k)) { seen.add(k); todo.push({ key: it.key, opts: it.opts }); } }
@@ -594,6 +620,12 @@
       if (id === 'tree_giant' && hh) continue;
       todo.push({ key: 'hd:prop:' + id, opts });
     }
+    // 地面の飾り・藪・根（チャンクで使う形の変化を全部）
+    const leafMoss = theme.leaf === 'moss';
+    for (const id of Object.keys(theme.decor || {})) for (let v = 0; v < 4; v++) { const o2 = { v }; if (leafMoss) o2.leaf = 'moss'; if (s !== 1) o2.s = s; todo.push({ key: 'hd:prop:' + id, opts: o2 }); }
+    const talls = new Set(Object.keys(map.legend || {}).map((k) => T._matInfo(map.legend[k].mat).tall));
+    if (talls.has('bush')) for (let v = 0; v < 4; v++) { const o2 = leafMoss ? { v, leaf: 'moss' } : { v }; if (s !== 1) o2.s = s; todo.push({ key: 'hd:prop:bush', opts: o2 }); }
+    if (talls.has('roots')) for (let v = 0; v < 4; v++) { const o2 = { v }; if (s !== 1) o2.s = s; todo.push({ key: 'hd:prop:roots', opts: o2 }); }
     const job = { kind: 'prewarm', done: false, result: null, i: 0, n: todo.length, ms: 0,
       step(ms) {
         const t0 = U().now(), deadline = t0 + (ms == null ? 3 : ms);
@@ -601,6 +633,7 @@
           const w = todo[job.i];
           if (w.mat) { if (!T._sheet(w.mat, tile, deadline).done) break; }
           else if (w.face) T._faceSheet(w.face, tile, w.rise);
+          else if (w.thr) T._thrTable(w.thr, tile);
           else if (w.key && R.Hd.has(w.key) && !R.Hd.ready(w.key, w.opts)) { try { R.Hd.now(w.key, w.opts); } catch (e) { console.error('[Terrain] prewarm', w.key, e); } }
           job.i++;
           if (U().now() > deadline) break;

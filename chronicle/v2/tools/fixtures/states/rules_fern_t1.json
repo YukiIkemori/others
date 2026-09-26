@@ -1,0 +1,15 @@
+{
+  "desc": "RULES: フェルンの行商の前。ティア 1、仲間 brigitta（弓）・titta（短剣）・teo（杖・火）。伸びる一品物 u_hans_axe（もらったティア 1）",
+  "hero": { "type": "spellblade", "sex": "f", "name": "リーネ", "fav": "greatsword" },
+  "party": ["hero", "brigitta", "titta", "teo"],
+  "reserve": ["selma"],
+  "tier": 1,
+  "gl": "auto",
+  "prof": "auto",
+  "flags": {},
+  "vars": {},
+  "items": { "u_hans_axe": 1, "w_bow_2": 1, "w_dagger_1": 1, "i_salve": 3 },
+  "gold": 2400,
+  "leads": [],
+  "map": { "id": "stub_road", "spawn": "start" }
+}

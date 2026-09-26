@@ -20,19 +20,18 @@
   };
 
   // ------------------------------------------------------------------ 大きさの段
-  // 人物の全高は R.Hd.STYLE.height.btl（RENDER）の中ほど、段の数字は R.Hd.STYLE.size（人物 = 30 の物差し）
-  BZ.PERSON_REF = 30;             // STYLE_REFERENCE §4.3 の物差しの人物
-  BZ.TIERS_REF = { s: [22, 30], m: [30, 45], l: [45, 90], add: [40, 70], boss: [90, 120] };
+  // 段は R.Hd.STYLE.size（RENDER。v2 の論理 px = STYLE_REFERENCE R1・R2 の値を人物 30 → 60 に合わせて 2 倍した物）。
+  // 無い段（add = 中ボス・追加）と STYLE が無いときは、STYLE_REFERENCE の物差し（人物 = 30）を人物の全高に合わせて使う。
+  BZ.PERSON_REF = 30;
+  BZ.TIERS_REF = { s: [22, 30], m: [30, 45], l: [45, 70], add: [40, 70], boss: [90, 120] };
   BZ.person = function () {
     const S = (R.Hd && R.Hd.STYLE) || {}, h = S.height && S.height.btl;
     return h ? (h[0] + h[1]) / 2 : 60;
   };
-  BZ.tierRef = function (t) {
-    const S = (R.Hd && R.Hd.STYLE) || {};
-    return (S.size && S.size[t]) || BZ.TIERS_REF[t] || BZ.TIERS_REF.m;
-  };
   BZ.tierPx = function (t) {
-    const r = BZ.tierRef(t), k = BZ.person() / BZ.PERSON_REF;
+    const S = (R.Hd && R.Hd.STYLE) || {};
+    if (S.size && S.size[t]) return S.size[t].slice();
+    const r = BZ.TIERS_REF[t] || BZ.TIERS_REF.m, k = BZ.person() / BZ.PERSON_REF;
     return [Math.round(r[0] * k), Math.round(r[1] * k)];
   };
   /** 段の中の高さ（stage 1 は下寄り、2 は +10% ほど上。ART_REWORK §2.5「段が上がるほど少し大きく」） */

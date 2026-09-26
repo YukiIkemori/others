@@ -17,39 +17,50 @@
   function mask(id, tile, combo, phx, phy) {
     const key = id + '|' + tile;
     const tab = (masks[key] = masks[key] || new Array(256));
-    const k = combo * 16 + (phy & 3) * 4 + (phx & 3);
+    const m = T._matInfo(id), hard = m.edge === 'hard' || !m.amp;
+    const k = combo * 16 + (hard ? 0 : (phy & 3) * 4 + (phx & 3));   // 硬い境は位相に依らない
     if (tab[k]) return tab[k];
-    return (tab[k] = makeMask(T._matInfo(id), tile, combo, phx & 3, phy & 3));
+    maskBytes += tile * tile;
+    return (tab[k] = makeMask(id, m, tile, combo, phx & 3, phy & 3, hard));
   }
-  function makeMask(m, tile, combo, phx, phy) {
-    const u = U(), c00 = combo & 1, c10 = (combo >> 1) & 1, c01 = (combo >> 2) & 1, c11 = (combo >> 3) & 1;
-    const hard = m.edge === 'hard' || !m.amp, amp = m.amp || 0, seed = (R.U.hash(m.name || 'm') % 997) + 11;
-    const k = 32 / tile, E = tile + 6, inside = new Uint8Array(E * E);
-    const at = (x, y) => {
-      const fu = (x + 0.5) / tile, fv = (y + 0.5) / tile;
-      if (hard) {
-        const qx = fu < 0.5 ? 0 : 1, qy = fv < 0.5 ? 0 : 1;
-        return qy ? (qx ? c11 : c01) : qx ? c10 : c00;
-      }
-      const f = c00 * (1 - fu) * (1 - fv) + c10 * fu * (1 - fv) + c01 * (1 - fu) * fv + c11 * fu * fv;
-      // 世界の座標（周期 4 マス = 128 u）で決まるノイズ
-      const wu = (phx * tile + tile / 2 + x + 0.5) * k, wv = (phy * tile + tile / 2 + y + 0.5) * k;
-      const n = u.pn(wu, wv, 16, seed) * 0.65 + u.pn(wu, wv, 8, seed + 1) * 0.35;
-      return f > 0.5 + (n - 0.5) * 2 * amp ? 1 : 0;
-    };
-    for (let y = -3; y < tile + 3; y++) for (let x = -3; x < tile + 3; x++) inside[(y + 3) * E + x + 3] = at(x, y);
-    const out = new Uint8Array(tile * tile);
-    const I = (x, y) => inside[(y + 3) * E + x + 3];
-    for (let y = 0; y < tile; y++) for (let x = 0; x < tile; x++) {
-      if (I(x, y)) {
-        out[y * tile + x] = I(x - 1, y) && I(x + 1, y) && I(x, y - 1) && I(x, y + 1) ? 1 : 2;
-      } else {
-        let near = 0;
-        for (let dy = -2; dy <= 2 && !near; dy++) for (let dx = -2; dx <= 2; dx++) { if (Math.abs(dx) + Math.abs(dy) > 2) continue; if (I(x + dx, y + dy)) { near = 1; break; } }
-        out[y * tile + x] = near ? 3 : 0;
+  let maskBytes = 0;
+  T._maskBytes = () => maskBytes;
+  // やわらかい境のしきい値の表（素材 × tile ごとに 1 回。周期 4 マス = 4 tile 四方）: thr = 0.5 + (ノイズ − 0.5) × 2 × amp
+  const thrTabs = {};
+  function thrTable(id, m, tile) {
+    const key = id + '|' + tile;
+    if (thrTabs[key]) return thrTabs[key];
+    const u = U(), S = tile * 4, k = 32 / tile, amp = m.amp || 0, seed = (R.U.hash(m.name || 'm') % 997) + 11, t = new Float32Array(S * S);
+    for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
+      const wu = (x + 0.5) * k, wv = (y + 0.5) * k;
+      t[y * S + x] = 0.5 + ((u.pn(wu, wv, 16, seed) * 0.65 + u.pn(wu, wv, 8, seed + 1) * 0.35) - 0.5) * 2 * amp;
+    }
+    return (thrTabs[key] = t);
+  }
+  T._thrTable = function (id, tile) { const m = T._matInfo(id); if (m.edge !== 'hard' && m.amp) thrTable(id, m, tile); };
+  function makeMask(id, m, tile, combo, phx, phy, hard) {
+    const c00 = combo & 1, c10 = (combo >> 1) & 1, c01 = (combo >> 2) & 1, c11 = (combo >> 3) & 1;
+    const E = tile + 6, inside = new Uint8Array(E * E), S = tile * 4, half = tile >> 1;
+    const thr = hard ? null : thrTable(id, m, tile);
+    for (let y = -3; y < tile + 3; y++) {
+      const fv = (y + 0.5) / tile, Y = ((((phy * tile + half + y) % S) + S) % S) * S;
+      for (let x = -3; x < tile + 3; x++) {
+        const fu = (x + 0.5) / tile;
+        let v;
+        if (hard) { const qx = fu < 0.5 ? 0 : 1, qy = fv < 0.5 ? 0 : 1; v = qy ? (qx ? c11 : c01) : qx ? c10 : c00; }
+        else {
+          const f = c00 * (1 - fu) * (1 - fv) + c10 * fu * (1 - fv) + c01 * (1 - fu) * fv + c11 * fu * fv;
+          v = f > thr[Y + ((((phx * tile + half + x) % S) + S) % S)] ? 1 : 0;
+        }
+        inside[(y + 3) * E + x + 3] = v;
       }
     }
-    if (R.Hd && R.Hd.track) R.Hd.track('chunk', 'terrain:mask:' + (m.name || '') + ':' + tile + ':' + combo + ':' + phx + phy, tile * tile);
+    const out = new Uint8Array(tile * tile);
+    for (let y = 0; y < tile; y++) for (let x = 0; x < tile; x++) {
+      const q = (y + 3) * E + x + 3;
+      if (inside[q]) out[y * tile + x] = inside[q - 1] && inside[q + 1] && inside[q - E] && inside[q + E] ? 1 : 2;
+      else out[y * tile + x] = inside[q - 1] || inside[q + 1] || inside[q - E] || inside[q + E] || inside[q - 2] || inside[q + 2] || inside[q - 2 * E] || inside[q + 2 * E] || inside[q - E - 1] || inside[q - E + 1] || inside[q + E - 1] || inside[q + E + 1] ? 3 : 0;
+    }
     return out;
   }
   T._mask = mask;

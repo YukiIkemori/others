@@ -1,0 +1,15 @@
+{
+  "desc": "RULES: ファロスの武具屋の前。ティア 0、標準のパーティ（主人公 戦士・剣 ＋ bartolo 大剣・marta 杖・sylvain 弓、STATS_REWORK §8.4）。袋に T0〜T1 の装備",
+  "hero": { "type": "warrior", "sex": "m", "name": "アルン", "fav": "sword" },
+  "party": ["hero", "bartolo", "marta", "sylvain"],
+  "reserve": [],
+  "tier": 0,
+  "gl": "auto",
+  "prof": "auto",
+  "flags": {},
+  "vars": {},
+  "items": { "w_sword_1": 1, "w_greatsword_1": 1, "bd_mail_1": 1, "hd_helm_0": 1, "ac_str_0": 2, "i_salve": 5, "i_potion": 2 },
+  "gold": 800,
+  "leads": [],
+  "map": { "id": "stub_road", "spawn": "start" }
+}

@@ -25,7 +25,7 @@
       let b = o;
       if (!b) {
         const nx = px + back[0], ny = py + back[1];
-        if (S.map && F.passable(S.map, nx, ny, null, S.lv) && !F._npcAt(nx, ny, S.lv)) { px = nx; py = ny; }
+        if (S.map && F._walkable(S.map, nx, ny, null, S.lv) && !F._npcAt(nx, ny, S.lv)) { px = nx; py = ny; }
         b = { x: px, y: py, lv: S.lv, dir: S.dir };
       }
       return { id: w.id, look: w.look, guest: !!w.guest, x: b.x, y: b.y, lv: b.lv || 0, dir: b.dir || S.dir, fx: b.x, fy: b.y, moving: false };

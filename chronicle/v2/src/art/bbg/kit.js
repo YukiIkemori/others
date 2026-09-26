@@ -6,7 +6,8 @@
 //           front（手前のぼけた岩や草。昼の色・環境光を掛ける）/ post（光る物のにじみ。加算 'lighter' で重ねる）
 //   meta:   {mood（MOODS）, lantern:{x, y}（光だまりの中心・ランタンの足元）, horizon（地平の y）, lightTop（環境光を掛け始める y）,
 //            feather, postMode:'lighter', layout, ambient（R.Hd.mood が無いときの控えの色）, foes:{x0, x1, y0, y1}（敵を置く所）, party:[[x, y]×4]}
-// 描く順（BSCENE。R.Beast.stage が見本）: back → ground → 影と人と敵（y の順）→ front → R.Light.compose(rect: lightTop より下) → post（lighter）→ R.Post.frame
+// 描く順（BSCENE。R.Beast.stage が見本）: back → [層: ground → 影と人と敵（y の順）→ front → 層にだけ光（R.Light.map を層の不透明な所で切り抜いて multiply）] → post（lighter）→ R.Post.frame
+// （空と遠景は夜の色で焼き済みなので光を掛けない。層ごと掛けるので、地平より上に出た大きいボスも光が途切れない。meta.light = 'layer'）
 // 画素を作るのは焼くときだけ（毎フレームは置くだけ）。ctx.filter は使わない（ぼかしは縮小と拡大）。
 (function (R) {
   'use strict';
@@ -143,6 +144,11 @@
       }
     }
     x.putImageData(img, 0, 0);
+    if (o.wallShadow) {   // 屋内・洞窟: 壁の根元の接地の影（床の奥の端を暗く）
+      const gr = x.createLinearGradient(0, g.GT, 0, g.GT + o.wallShadow * g.s);
+      gr.addColorStop(0, 'rgba(10,8,20,0.75)'); gr.addColorStop(1, 'rgba(10,8,20,0)');
+      x.fillStyle = gr; x.fillRect(0, g.GT, W, o.wallShadow * g.s);
+    }
     return c;
   };
 
@@ -250,7 +256,13 @@
 
   // ------------------------------------------------------------------ 光（RENDER の R.Light.compose が仮の間の控え。試作の lightmap）
   /** rect の中を環境光（掛け算）＋光だまり（足し算で光の地図に）で夜にする。o = {ambient, lights:[{x,y,r,color,k,sy}], top, feather} */
-  BZ.stageLight = function (g, rect, o) {
+  /** 光の地図だけ（W×H の不透明な canvas）。R.Light.map が仮の実装のときの控え */
+  BZ.lightMap = function (W, H, o) {
+    const c = mk(W, H);
+    BZ.stageLight(c.getContext('2d'), { x: 0, y: 0, w: W, h: H }, Object.assign({ top: -100, feather: 1 }, o), true);
+    return c;
+  };
+  BZ.stageLight = function (g, rect, o, raw) {
     const W = Math.ceil(rect.w), H = Math.ceil(rect.h);
     const lm = mk(W, H), lx = lm.getContext('2d');
     const top = (o.top != null ? o.top : rect.y) - rect.y, fe = o.feather || 40;
@@ -266,6 +278,7 @@
       rg.addColorStop(0, rgba(c, k)); rg.addColorStop(0.4, rgba(c, k * 0.55)); rg.addColorStop(1, rgba(c, 0));
       lx.fillStyle = rg; lx.fillRect(-L.r, -L.r, L.r * 2, L.r * 2); lx.restore();
     }
+    if (raw) { g.drawImage(lm, rect.x, rect.y); return; }
     g.save(); g.globalCompositeOperation = 'multiply'; g.drawImage(lm, rect.x, rect.y); g.restore();
   };
 
@@ -292,7 +305,7 @@
     }
     return {
       frames, poses, anchors: { lantern: L.lantern }, w: W, h: H,
-      meta: { mood: def.mood, lantern: L.lantern, horizon: g.GT, lightTop: g.GT, feather: 0, postMode: 'lighter', layout: g.tall ? 'tall' : 'wide',
+      meta: { mood: def.mood, lantern: L.lantern, horizon: g.GT, lightTop: g.GT, feather: 0, light: 'layer', postMode: 'lighter', layout: g.tall ? 'tall' : 'wide',
         ambient: def.ambient, foes: L.foes, party: L.party, bakeMs: Math.round((performance.now() - t0) * 10) / 10, id },
     };
   };
@@ -356,8 +369,13 @@
   BZ.stage = function (g, sh, o) {
     o = o || {};
     const m = sh.meta, W = sh.w, H = sh.h;
-    const lay = (name, mode) => { for (const i of sh.poses[name] || []) { g.save(); if (mode) g.globalCompositeOperation = mode; R.Hd.draw(g, sh.frames[i], 0, 0); g.restore(); } };
-    lay('back'); lay('ground');
+    const lay = (ctx, name, mode) => { for (const i of sh.poses[name] || []) { ctx.save(); if (mode) ctx.globalCompositeOperation = mode; R.Hd.draw(ctx, sh.frames[i], 0, 0); ctx.restore(); } };
+    lay(g, 'back');
+    // 地面・影・人と敵・手前を 1 枚の層に描き、その層にだけ光を掛ける（空と遠景は掛けない。人や大きいボスが地平より上に出ても光が途切れない）
+    const Lc = K._layer && K._layer.width === W && K._layer.height === H ? K._layer : (K._layer = mk(W, H));
+    const lx = Lc.getContext('2d');
+    lx.setTransform(1, 0, 0, 1, 0, 0); lx.globalCompositeOperation = 'source-over'; lx.clearRect(0, 0, W, H);
+    lay(lx, 'ground');
     const foes = (o.foes || []).map((id) => {
       const key = /^(boss|mon):/.test(id) ? 'hd:' + id : 'hd:mon:' + id;
       return { key, sh: R.Hd.now(key, {}) };
@@ -371,20 +389,25 @@
     });
     m.party.forEach(([x, y], i) => { const p = partySprite(i); acts.push({ sh: p.sh, fi: p.frame, x, y, foe: false }); });
     acts.sort((a, b) => a.y - b.y);
-    const lx = m.lantern.x;
-    for (const a of acts) { const fr = a.sh.frames[a.fi]; silhouetteShadow(g, fr, a.x, a.y, lx, 0.55); footShadow(g, a.x, a.y, Math.max(14, (a.sh.w || 40) * 0.42), 0.6); }
-    for (const a of acts) R.Hd.draw(g, a.sh.frames[a.fi], a.x, a.y);
-    lay('front');
+    const lxp = m.lantern.x;
+    for (const a of acts) { const fr = a.sh.frames[a.fi]; silhouetteShadow(lx, fr, a.x, a.y, lxp, 0.55); footShadow(lx, a.x, a.y, Math.max(14, (a.sh.w || 40) * 0.42), 0.6); }
+    for (const a of acts) R.Hd.draw(lx, a.sh.frames[a.fi], a.x, a.y);
+    lay(lx, 'front');
     const amb = (() => { const bad = (R.Stubs.installed.Hd || []).includes('mood'); const md = !bad && R.Hd.mood(m.mood); return (md && md.ambient) || m.ambient || 'rgb(92,84,150)'; })();
     const lk = Math.min(W, H * 16 / 9);
-    const lights = [{ x: lx, y: m.lantern.y - 6, r: Math.round(lk * 0.34), color: 'rgb(255,200,130)', k: 0.8, sy: 0.55 }, { x: lx, y: m.lantern.y - 4, r: Math.round(lk * 0.12), color: 'rgb(255,228,186)', k: 0.45, sy: 0.6 }];
-    const realLight = !((R.Stubs.installed.Light || []).includes('compose'));
-    const rect = { x: 0, y: m.lightTop, w: W, h: H - m.lightTop };
-    if (realLight) R.Light.compose(g, rect, { ambient: amb, k: 1, lights });
-    else BZ.stageLight(g, { x: 0, y: 0, w: W, h: H }, { ambient: amb, top: m.lightTop, feather: 1, lights });
-    lay('post', m.postMode || 'lighter');
+    const lights = [{ x: lxp, y: m.lantern.y - 6, r: Math.round(lk * 0.34), color: 'rgb(255,200,130)', k: 0.8, sy: 0.55 }, { x: lxp, y: m.lantern.y - 4, r: Math.round(lk * 0.12), color: 'rgb(255,228,186)', k: 0.45, sy: 0.6 }];
+    const realLight = !((R.Stubs.installed.Light || []).includes('map'));
+    const map = realLight ? R.Light.map({ x: 0, y: 0, w: W, h: H }, { ambient: amb, k: 1, lights, mood: m.mood }) : BZ.lightMap(W, H, { ambient: amb, lights });
+    const T = K._mask && K._mask.width === W && K._mask.height === H ? K._mask : (K._mask = mk(W, H));
+    const tx = T.getContext('2d');
+    tx.globalCompositeOperation = 'source-over'; tx.clearRect(0, 0, W, H); tx.imageSmoothingEnabled = true;
+    tx.drawImage(map, 0, 0, W, H);
+    tx.globalCompositeOperation = 'destination-in'; tx.drawImage(Lc, 0, 0);
+    lx.globalCompositeOperation = 'multiply'; lx.drawImage(T, 0, 0); lx.globalCompositeOperation = 'source-over';
+    g.drawImage(Lc, 0, 0);
+    lay(g, 'post', m.postMode || 'lighter');
     if (!((R.Stubs.installed.Post || []).includes('frame'))) R.Post.frame(g, {});
-    return { foes: acts.filter((a) => a.foe).map((a) => ({ key: a.key, x: a.x, y: a.y, w: a.sh.w, h: a.sh.h })), party: m.party, light: realLight ? 'R.Light' : 'fallback', ambient: amb };
+    return { foes: acts.filter((a) => a.foe).map((a) => ({ key: a.key, x: a.x, y: a.y, w: a.sh.w, h: a.sh.h })), party: m.party, light: realLight ? 'R.Light.map' : 'fallback', ambient: amb };
   };
   // 背景のファイル（bbg_*.js）は名前順で kit.js より先に読まれるので、K._defs に積んだ物をここで登録する
   for (const [id, def] of K._defs || []) K.define(id, def);

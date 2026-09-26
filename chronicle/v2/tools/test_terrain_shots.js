@@ -30,7 +30,7 @@ window.__tt = function (map, o) {
     for (let cx = Math.floor(cam[0] / S); cx <= Math.floor((cam[0] + W) / S); cx++) {
       const job = T.bakeChunk(map, cx, cy, { tile, tier: o.tier || 0, state: st });
       while (!job.done) job.step(3);
-      res.push(job.result); stats.push({ cx, cy, ms: +job.ms.toFixed(2), steps: job.steps, maxStep: +job.maxStep.toFixed(2), prof: job.prof });
+      res.push(job.result); stats.push({ cx, cy, ms: +job.ms.toFixed(2), steps: job.steps, maxStep: +job.maxStep.toFixed(2), prof: job.prof, profMax: job.profMax });
     }
   const mood = T.ambient(map, o.tier || 0).mood;
   const props = [].concat(...res.map((r) => r.props)).sort((a, b) => a.sortY - b.sortY);
@@ -70,7 +70,7 @@ window.__tt = function (map, o) {
   await P.page.evaluate(PAGE);
   const list = [];
   for (const th of THEMES9) list.push({ name: th, map: MAPS[th], o: { tile, label: `テーマ ${th}（tile ${tile}）`, lantern: null } });
-  list.push({ name: 'chests', map: MAPS.chests, o: { tile, cam: [0, 0], state: { chests: MAPS.chests.opened }, label: '宝箱 × 8 種の床（左: 閉じた、中: 開けた、右: レア）' } });
+  list.push({ name: 'chests', map: MAPS.chests, o: { tile, cam: [0, -70], state: { chests: MAPS.chests.opened }, label: '宝箱 × 8 種の床（左: 閉じた、中: 開けた、右: レア）' } });
   list.push({ name: 'lights', map: MAPS.lights, o: { tile, cam: [0, -60], state: { lamps: MAPS.lights.lamps }, label: '泉・燭台（消えた／ともった）・灯籠（消えた／ともった）・レバー・松明' } });
   if (MAPS.world.lamps) list.find((e) => e.name === 'world').o.state = { lamps: MAPS.world.lamps };
   const out = [];
@@ -83,7 +83,7 @@ window.__tt = function (map, o) {
     await B.shot(P.page, file);
     const ms = r.chunks.map((c) => c.ms), max = r.chunks.map((c) => c.maxStep);
     console.log(`${e.name.padEnd(15)} prewarm ${String(r.prewarmMs).padStart(7)} ms  chunks ${r.chunks.length}  bake avg ${(ms.reduce((a, b) => a + b, 0) / ms.length).toFixed(2)} max ${Math.max(...ms).toFixed(2)} ms  step max ${Math.max(...max).toFixed(2)} ms  props ${r.props} glows ${r.glows} lights ${r.lights} → ${path.relative(process.cwd(), file)}`);
-    if (args.includes('--prof')) { const P2 = {}; for (const c of r.chunks) for (const k of Object.keys(c.prof)) P2[k] = (P2[k] || 0) + c.prof[k] / r.chunks.length; console.log('   phases avg ms: ' + Object.keys(P2).map((k) => k + ' ' + P2[k].toFixed(2)).join(', ')); }
+    if (args.includes('--prof')) { const P2 = {}; for (const c of r.chunks) for (const k of Object.keys(c.prof)) P2[k] = (P2[k] || 0) + c.prof[k] / r.chunks.length; console.log('   phases avg ms: ' + Object.keys(P2).map((k) => k + ' ' + P2[k].toFixed(2)).join(', ')); const M2 = {}; for (const c of r.chunks) for (const k of Object.keys(c.profMax)) M2[k] = Math.max(M2[k] || 0, c.profMax[k]); console.log('   phases max 1 call: ' + Object.keys(M2).map((k) => k + ' ' + M2[k].toFixed(2)).join(', ')); }
     out.push(Object.assign({ name: e.name }, r));
   }
   const errs = P.errors.concat(await P.page.evaluate('RPG.loadErrors.filter((e) => !/duplicate/.test(e))'));

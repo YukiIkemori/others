@@ -114,13 +114,16 @@
     // ---- 右上（縦持ちは左上の下）: 手がかりの札・小地図
     let ry = s.t + U(18);
     const cw = tall ? Math.min(R.W - s.l - s.r - U(32), U(330)) : U(244);
-    const cx0 = tall ? s.l + U(16) : R.W - s.r - U(16) - cw;
+    // タッチの操作パッドが出ているときは、右上のメニューのボタンを避ける
+    let right = R.W - s.r - U(16);
+    if (!tall && R.Input.touchVisible()) { const sp = R.Input.touchSpots().y; if (sp) right = Math.min(right, sp.x - sp.r - U(12)); }
+    const cx0 = tall ? s.l + U(16) : right - cw;
     if (tall) ry = Math.max(ly, s.t + U(96));
     if (c.lead) {
       leadCard(g, cx0, ry, cw, c.lead);
       ry += U(62);
     }
-    if (c.showMini) F.minimap.draw(g, tall ? cx0 : R.W - s.r - U(16) - U(138), ry + U(2), U(138), U(150));
+    if (c.showMini) F.minimap.draw(g, tall ? cx0 : right - U(138), ry + U(2), U(138), U(150));
     // ---- 吹き出し（近づいたときだけ）
     if (top && !F._locked() && !S.mv && !R.Events.busy()) {
       const f = F._front();

@@ -228,15 +228,15 @@ const MAPS = {};
 // 宝箱 × 8 種の床（WORLD_REDESIGN §6.3。開けた箱も）
 {
   const floors = ['grass', 'moss_earth', 'dirt', 'cobble', 'stone_floor', 'wood_floor', 'cave_floor', 'bark_floor'];
-  const W = 34, H = 12, g = G(W, H, 'x');
+  const W = 30, H = 12, g = G(W, H, 'x');
   const legend = { x: { mat: 'wall_stone', solid: true } };
   const objects = [];
   floors.forEach((f, i) => {
     const ch = String.fromCharCode(97 + i);
     legend[ch] = { mat: f };
-    const x0 = 1 + (i % 4) * 8, y0 = 1 + Math.floor(i / 4) * 5;
-    rect(g, x0, y0, 7, 4, ch);
-    objects.push({ type: 'chest', id: 'ch_' + f + '_c', x: x0 + 1, y: y0 + 1, item: 'i_potion' }, { type: 'chest', id: 'ch_' + f + '_o', x: x0 + 3, y: y0 + 1, item: 'i_potion' }, { type: 'chest', id: 'ch_' + f + '_r', x: x0 + 5, y: y0 + 1, pool: 'p_rare' });
+    const x0 = 1 + (i % 4) * 7, y0 = 1 + Math.floor(i / 4) * 5;
+    rect(g, x0, y0, 6, 4, ch);
+    objects.push({ type: 'chest', id: 'ch_' + f + '_c', x: x0 + 1, y: y0 + 1, item: 'i_potion' }, { type: 'chest', id: 'ch_' + f + '_o', x: x0 + 3, y: y0 + 1, item: 'i_potion' }, { type: 'chest', id: 'ch_' + f + '_r', x: x0 + 4, y: y0 + 2, pool: 'p_rare' });
   });
   MAPS.chests = base('tt_chests', '宝箱と床（見本）', 'dungeon', 'lighthouse', g, legend, { outside: 'wall_stone', light: { ambient: '#6c62ac', k: 0.55, mood: 'tower' }, objects, opened: floors.map((f) => 'ch_' + f + '_o') });
   MAPS.chests.floors = floors;

@@ -8,7 +8,7 @@
   const S = Math.sin, C = Math.cos;
 
   const spec = {
-    tier: 'boss', at: 0.45, h: 92, vis: 84, fly: true,
+    tier: 'boss', at: 0.45, h: 100, vis: 93, fly: true,
     pal: {
       wing: { keys: ['#241a3a', '#463a5c', '#6e6078', '#978a94', '#bcb0ac', '#ddd4c6'], n: 7, wrap: 0.5, amb: 0.22, tex: 1.6, tsx: 0.4, tsy: 0.4 },
       wingDk: { keys: ['#1a1230', '#2e2446', '#4a3c5c', '#6a5a70', '#8a7a86'], n: 6, wrap: 0.45, amb: 0.2, tex: 1.4, tsx: 0.4, tsy: 0.4 },
@@ -26,32 +26,30 @@
     draw(B, P, st) {
       const atk = st.atk || 0, hit = st.hit || 0, tele = st.tele || 0;
       const fl = tele ? (st.t < 0.5 ? 0 : 0.25) : (st.t < 0.5 ? 0 : 1);
-      const X = atk * 10 - hit * 6, Y = -54 + S(st.t * PI * 2) * 2 - tele * 5 + atk * 4;
+      const X = atk * 10 - hit * 6, Y = -40 + S(st.t * PI * 2) * 2 - tele * 5 + atk * 4;
       const p = (x, y) => [X + x, Y + y];
-      const up = 1 - fl * 0.6 + tele * 0.25 - hit * 0.3;
-      // 翅: 付け根 → 前縁 → 先 → 外縁（波）→ 後ろ
+      const up = 1 - fl * 0.5 + tele * 0.3 - hit * 0.35;
+      // 翅の形（付け根が原点、+x が前・上が −y）。前翅は丸い三角で上後ろへ、後翅は下後ろへ
+      const FORE = [[0, 0], [7, -16], [7, -32], [0, -44], [-12, -48], [-24, -42], [-30, -30], [-28, -16], [-20, -6], [-9, -1]];
+      const HIND = [[0, 0], [-6, -12], [-18, -18], [-30, -15], [-36, -6], [-32, 4], [-20, 8], [-8, 5]];
       const wing = (side, fore, z, m) => {
-        const root = fore ? p(-2, -6) : p(-4, 0);
-        const ang = fore ? (-1.95 + (1 - up) * 0.8 + side * 0.35) : (-2.6 + (1 - up) * 0.6 + side * 0.25);
-        const L = fore ? 46 : 32;
-        const tip = [root[0] + C(ang) * L, root[1] + S(ang) * L];
-        const back = fore ? [root[0] - 26, root[1] + 10 - (1 - up) * 8] : [root[0] - 18, root[1] + 16];
-        const mid = [(tip[0] + back[0]) / 2, (tip[1] + back[1]) / 2];
-        const bulge = fore ? 9 : 8;
-        const nx = -(back[1] - tip[1]), ny = back[0] - tip[0], nl = Math.hypot(nx, ny) || 1;
-        const out = [mid[0] - nx / nl * bulge, mid[1] - ny / nl * bulge];
-        const pts = [root, [root[0] + C(ang) * L * 0.5 + 2, root[1] + S(ang) * L * 0.5 - 3], tip, [tip[0] * 0.7 + out[0] * 0.3, tip[1] * 0.7 + out[1] * 0.3], out, [out[0] * 0.6 + back[0] * 0.4, out[1] * 0.6 + back[1] * 0.4 + 2], back, [root[0] - 6, root[1] + 6]];
+        const root = fore ? p(-1 - (side < 0 ? 5 : 0), -6 - (side < 0 ? 2 : 0)) : p(-5 - (side < 0 ? 4 : 0), 0);
+        const ky = fore ? up : 0.75 + up * 0.25, kx = side < 0 ? 0.85 : 1;
+        const rot = (fore ? 0 : 0.1) + (side < 0 ? -0.12 : 0);
+        const T = (q) => { const x = q[0] * kx, y = q[1] * ky; return [root[0] + x * C(rot) - y * S(rot), root[1] + x * S(rot) + y * C(rot)]; };
+        const pts = (fore ? FORE : HIND).map(T);
         const g = B.group();
-        B.poly(pts, m, z, { g, bevel: 4, nx: side * 0.15, ny: -0.2 });
-        // 翅脈の帯
-        B.fold(root[0], root[1], tip[0], tip[1], 1.2, g, -1.4);
-        B.fold(root[0], root[1], out[0], out[1], 0.9, g, -1);
-        B.fold(root[0], root[1], back[0] * 0.8 + root[0] * 0.2, back[1] * 0.8 + root[1] * 0.2, 0.9, g, -1);
+        B.poly(pts, m, z, { g, bevel: 5, nx: side * 0.1, ny: -0.15 });
+        const tip = fore ? pts[4] : pts[4], out = fore ? pts[6] : pts[5];
+        // 翅脈
+        (fore ? [3, 5, 7] : [3, 5]).forEach((k) => B.fold(root[0], root[1], pts[k][0], pts[k][1], 0.8, g, -1.2));
         // 外縁の帯
-        for (let k = 0; k < 4; k++) { const t = 0.2 + k * 0.2; const a = [tip[0] * (1 - t) + out[0] * t, tip[1] * (1 - t) + out[1] * t]; B.ell(a[0], a[1], 2.8, 1.8, P.band, z + 0.01, { noAO: true, rot: ang }); }
-        return { root, tip, out, back, mid, ang };
+        const edge = fore ? [3, 4, 5, 6, 7] : [3, 4, 5];
+        edge.forEach((k, j) => { const q = pts[k], r = pts[k - 1]; B.ell((q[0] + r[0]) / 2, (q[1] + r[1]) / 2, 3.2, 2, P.band, z + 0.01, { noAO: true, rot: Math.atan2(q[1] - r[1], q[0] - r[0]) }); });
+        const c = T(fore ? [-13, -26] : [-20, -6]);
+        return { root, tip, out, c, ang: rot - PI / 2 };
       };
-      // 奥の翅（後翅 → 前翅）
+      // 奥の翅
       wing(-1, false, 0.2, P.wingDk);
       const farF = wing(-1, true, 0.3, P.wingDk);
       // 触角（羽状）
@@ -79,9 +77,9 @@
       // 手前の翅（後翅 → 前翅）と目玉模様
       wing(1, false, 2.0, P.wing);
       const F = wing(1, true, 2.2, P.wing);
-      const sp = [F.root[0] * 0.38 + F.tip[0] * 0.3 + F.out[0] * 0.32, F.root[1] * 0.38 + F.tip[1] * 0.3 + F.out[1] * 0.32];
-      B.ell(sp[0], sp[1], 8.5, 7.5, P.spot, 2.3, { rot: F.ang + PI / 2, noAO: true });
-      B.ell(sp[0], sp[1], 6, 5.2, P.ring, 2.31, { rot: F.ang + PI / 2, noAO: true });
+      const sp = F.c;
+      B.ell(sp[0], sp[1], 8, 7 * (0.6 + up * 0.4), P.spot, 2.3, { noAO: true });
+      B.ell(sp[0], sp[1], 5.8, 5 * (0.6 + up * 0.4), P.ring, 2.31, { noAO: true });
       B.ell(sp[0] + 0.5, sp[1], 3.6, 3.2, tele ? P.glow : P.core, 2.32, { noAO: true });
       B.rect(sp[0] - 1.4, sp[1] - 1.6, 1, 1, P.white, 2.33);
       // 翅の縁のりん粉の光（予告）

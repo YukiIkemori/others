@@ -1,0 +1,6 @@
+{
+  "scene": "battle",
+  "desc": "BSCENE: 本物の BattleCore と絵で根食らい（tr_b_rooteater）",
+  "state": "core_stub_road",
+  "setup": { "troop": "tr_b_rooteater", "boss": true }
+}

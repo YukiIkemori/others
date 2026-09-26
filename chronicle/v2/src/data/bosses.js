@@ -447,6 +447,10 @@
   // @@V2-BEGIN 縦切りのボスの考えどころ（WORLD_REDESIGN §4.10・E18、V2_PLAN §3.6、BATTLE）。数値 s は sim_bosses で合わせる
   {
     const P = LIST.b_pageeater, M = LIST.b_moth, RE = LIST.b_rooteater, RT = LIST.b_root;
+    // 数値（s）は tools/sim_bosses.js の 3 本立てで合わせた（2026-09-26、標準の一行・そのティアの店の品）
+    P.s = { hp: 1.1, atk: 1 };
+    M.s = { hp: 1.2, atk: 1 };
+    RE.s = { hp: 0.9, atk: 0.6, mag: 0.6 };
     // ページ食らい: 紙吹雪（ランダム 3 回）を「紙を吸いこむ → 紙吹雪（全体）」の予告に置き換え
     P.actions = A([['attack', 4], ['eb_page_gather', 2, { every: [3, 1] }], ['eb_eat_words', 1, { every: [4, 3] }], ['eb_ink_spit', 1, { every: [4, 1] }], ['eb_devour', 1]]);
     // ダストウィング: 眠りのりん粉を「羽の光 → 眠りのりん粉（全体、強い）」の予告に
@@ -463,7 +467,8 @@
       name: '狼の群れ頭', sprite: 'boss_wolflord', bossType: 'mid', lv: 8, actsPerTurn: 1, size: 'l',
       race: 'beast', flags: ['boss'], eva: 10,
       elem: { fire: 1.25, earth: 0.75 }, phys: {}, statusRes: { sleep: 0.25 },
-      actions: A([['attack', 3], ['eb_lord_bite', 2], ['eb_lord_breath', 2, { every: [3, 1], countBelow: 5 }]]),
+      actions: A([['attack', 3], ['eb_lord_bite', 2], ['eb_lord_breath', 2, { every: [2, 0], countBelow: 6 }]]),
+      s: { hp: 1.6 },
       leader: { msg: '頭を失った狼たちは、散り散りに逃げていった！' },
       drops: MID('i_ether'),
       desc: '森の狼たちを率いる大きな灰色狼。\n遠吠えひとつで仲間を呼ぶ。',

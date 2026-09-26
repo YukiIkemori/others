@@ -199,11 +199,16 @@
   }
   /** 森の天蓋（葉の塊を上から。左上の月で明るく） */
   function canopyGen() {
-    const blob = stones({ nc: 8, nr: 8, ramp: PAL.canopy, mortar: [8, 16, 10], seed: 91, gap: 0.6 });
+    // 葉の塊を上から（大小 2 つの塊の重なり、左上の月で塊の上が明るい。目地の線は出さない）
+    const big = stones({ nc: 8, nr: 8, ramp: PAL.canopy, mortar: PAL.canopy[1], seed: 91, gap: 0.15 });
+    const small = stones({ nc: 16, nr: 16, ramp: PAL.canopy, mortar: PAL.canopy[1], seed: 95, gap: 0.15 });
     return function (u, v) {
-      const b = blob(u, v);
-      const l = pn(u, v, 4, 92), m = pn(u, v, 32, 93);
-      return mix(b, pick(PAL.canopy, 0.3 + (l - 0.5) * 0.5 + (m - 0.5) * 0.3), 0.45);
+      const a = big(u, v), b = small(u, v);
+      const leaf = pn(u, v, 2, 92), m = pn(u, v, 32, 93);
+      let c = mix(a, b, 0.4);
+      c = mix(c, pick(PAL.canopy, 0.35 + (leaf - 0.5) * 0.7 + (m - 0.5) * 0.3), 0.35);
+      if (leaf > 0.8) c = mix(c, PAL.canopy[5], 0.35);
+      return c;
     };
   }
 
@@ -216,7 +221,7 @@
     grass: { name: '草地', gen: () => grassGen({}), pri: 30, edge: 'soft', amp: 0.28, walk: true, rim: 0.08, halo: -0.1, macro: 0.14 },
     tall_grass: { name: '深い草', gen: () => grassGen({ tall: true, lift: -0.05, blades: 0.5 }), pri: 32, edge: 'soft', amp: 0.32, walk: true, rim: 0.12, halo: -0.14, macro: 0.12 },
     flowers: { name: '花畑', gen: () => grassGen({ flowers: true, lift: 0.03 }), pri: 31, edge: 'soft', amp: 0.3, walk: true, rim: 0.06, halo: -0.08, macro: 0.1 },
-    moss_earth: { name: '苔の土', gen: () => earthGen({ ramp: PAL.dirt, moss: true, seed: 33, lift: -0.08 }), pri: 28, edge: 'soft', amp: 0.3, walk: true, halo: -0.08, macro: 0.14 },
+    moss_earth: { name: '苔の土', gen: () => earthGen({ ramp: PAL.dirt, moss: true, seed: 33, lift: 0.02 }), pri: 28, edge: 'soft', amp: 0.3, walk: true, halo: -0.08, macro: 0.14 },
     dirt: { name: '土', gen: () => earthGen({ ramp: PAL.dirt, seed: 34 }), pri: 20, edge: 'soft', amp: 0.26, walk: true, halo: -0.06, macro: 0.12 },
     road: { name: '土の道', gen: () => earthGen({ ramp: PAL.road, ruts: true, seed: 35, lift: 0.04 }), pri: 22, edge: 'soft', amp: 0.24, walk: true, rim: -0.06, halo: -0.1, macro: 0.08 },
     cobble: { name: '石畳', gen: () => stones({ nc: 14, nr: 18, ramp: PAL.cobble, mortar: MORTAR, flat: true, seed: 2 }), pri: 40, edge: 'soft', amp: 0.12, walk: true, rim: -0.2, halo: -0.14, macro: 0.06 },
