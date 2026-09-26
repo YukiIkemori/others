@@ -129,10 +129,20 @@ function parseActions(cell) {
     return a;
   });
 }
+/** SYSTEMS_REWORK (A18 §2.5, A19 §3.2): the save remap (src/data/remap_a19.js) turns DESIGN's old drop ids into today's ids */
+const REMAP_ITEMS = (() => {
+  try {
+    const box = { console };
+    box.window = box;
+    require('vm').createContext(box);
+    for (const f of ['src/core/ns.js', 'src/data/remap_a19.js']) require('vm').runInContext(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'), box);
+    return (box.RPG.DB.remap || {}).items || {};
+  } catch (e) { return {}; }
+})();
 function parseDrops(cell) {
   const rows = cell.split('<br>').map((x) => x.trim());
   if (rows.length !== 3) throw new Error('drops ' + cell);
-  const slot = (t) => { const m = t.match(/^([a-z0-9_]+) 1\/(\d+)$/); if (!m) throw new Error('drop ' + t); return { item: m[1], rate: Number(m[2]) }; };
+  const slot = (t) => { const m = t.match(/^([a-z0-9_]+) 1\/(\d+)$/); if (!m) throw new Error('drop ' + t); return { item: REMAP_ITEMS[m[1]] || m[1], rate: Number(m[2]) }; };
   return { normal: slot(rows[0]), rare: slot(rows[1]), super: slot(rows[2]) };
 }
 

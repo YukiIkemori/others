@@ -130,11 +130,12 @@ console.log(`  mean build time ${ms.toFixed(1)} ms per sheet`);
 ok(ms <= 30, `build ≤ 30 ms per sheet (${ms.toFixed(1)})`);
 ok(A.battlerKey('selma', { wtype: 'bow' }) === 'btl:selma:bow' && A.battlerKey('selma', { wtype: 'bow', grade: 'rare' }) === 'btl:selma:bow:rare', 'battlerKey');
 const DB = R.DB;
-const findW = (wt, g) => Object.keys(DB.items).find((k) => DB.items[k].wtype === wt && (!g || DB.items[k].grade === g));
+const findW = (wt, g) => Object.keys(DB.items).find((k) => DB.items[k].wtype === wt && !DB.items[k].art && (!g || DB.items[k].grade === g));   // a plain item (no katana / club art shape, A19)
 const c = { id: 'hero', gender: 'f', heroType: 'mage', equip: { weapon1: null, weapon2: findW('bow') } };
 ok(A.battlerWtype(c) === 'bow' && A.battlerWtype({ equip: {} }) === 'fist' && A.battlerWtype('selma') === 'fist', 'battlerWtype (other slot / none / id)');
 c.equip.weapon1 = findW('spear');
 ok(A.battlerWtype(c) === 'spear' && A.battlerWtype(c, 'weapon2') === 'bow', 'battlerWtype slot');
+ok(A.battlerWtype({ equip: { weapon1: 'w_sword_uchi' } }) === 'katana' && A.battlerWtype({ equip: { weapon1: 'w_axe_cudgel' } }) === 'club', 'item art picks the shape (A19: 打ち刀 → katana, 木の棍棒 → club)');
 const sc = A.battler(c);
 ok(sc.look === 'hero_f_mage' && sc.wtype === 'spear', 'battler(CharState) uses spriteKey look and weapon1 (' + sc.key + ')');
 const rareW = findW('sword', 'rare');

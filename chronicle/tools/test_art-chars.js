@@ -62,7 +62,9 @@ for (const t of NEW_NPC) ok(t in CA.npcs, 'npc:' + t + ' has its own art (not a 
 const OBJ = ['chest', 'chest_rare', 'sparkle', 'shadow', 'glimmer', 'quill', 'lantern', 'page', 'crest_glow', 'ship'];
 for (const o of OBJ) ok(G.has('obj:' + o), 'obj:' + o + ' registered');
 const WT = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'club', 'staff', 'katana', 'fist', 'whip'];
-if (R.DB.weaponTypes && Object.keys(R.DB.weaponTypes).length) ok(JSON.stringify(Object.keys(R.DB.weaponTypes).sort()) === JSON.stringify(WT.slice().sort()), 'DB.weaponTypes = the 11 families');
+// SYSTEMS_REWORK §3.1 (A19): 7 weapon types; the icon:club / icon:katana art stays for the mace line and the katana swords (item `icon`)
+const WT7 = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'staff'];
+if (R.DB.weaponTypes && Object.keys(R.DB.weaponTypes).length) ok(JSON.stringify(Object.keys(R.DB.weaponTypes).sort()) === JSON.stringify(WT7.slice().sort()), 'DB.weaponTypes = the 7 families (A19)');
 const ICON_KEYS = WT.concat('shield head body hands feet acc herb potion key'.split(' '), ['fire', 'water', 'wind', 'earth', 'light', 'dark'].map((e) => 'el_' + e));
 for (const i of ICON_KEYS) ok(G.has('icon:' + i), 'icon:' + i + ' registered (§3.1.2)');
 // §11.3.6 gives the P2 grid of every new icon (or names the icon it copies). Ours must be
