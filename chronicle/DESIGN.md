@@ -1990,7 +1990,11 @@ gold(L) = 2 + 0.5L + 0.07L²
 
 #### 4.14.3 ボス
 ```
-hpBoss(L) = hp(L) × (0.65 + 0.05 × clamp((L − 6)/6, 0, 10))   // 後ろの係数は、ティアが進むほど味方の技・術が増える分
+hpBoss(L) = hp(L) × (0.65 + 0.025 × (clamp(L, 18, 51) − 18))   // A12.0（ボスの釣り合いの見直し）。L18（T2）までは 0.65、
+                                                                  // 6 レベルで +0.15、L51（T7 の地方ボス）で 1.475 に止める
+                                                                  // （旧 0.65 + 0.05 × clamp((L−6)/6, 0, 10) は、T0 で長く T7 で短すぎた。
+                                                                  //   地方ボスが T0 11.7 ラウンド・T7 7.0 ラウンド。§4.17.3-B4）
+（`R.Rules.K.hpBoss(L)`。`R.Mon.hpBoss` はこれを呼ぶ）
 （hp(L) は §4.14.2 の式。Part A13 の MON_HP_PROF を含む）
 ボスの HP  = hpBoss(Lb) × hpMul                                  // ボス（旗 boss）の伸縮（§4.14.2）も hp の代わりに hpBoss の比を使う
 ほかの能力 = 曲線 × 下の倍率（ボスごとに ±20% の個性）
@@ -2000,9 +2004,11 @@ hpBoss(L) = hp(L) × (0.65 + 0.05 × clamp((L − 6)/6, 0, 10))   // 後ろの�
 | 地方の中ボス | +2 | 10 | ×1.3 | ×1.3 | ×1.1 | ×1.1 | 1〜2 | 5〜7 |
 | 地方ボス | +3 | 18 | ×1.5 | ×1.4 | ×1.2 | ×1.2 | 2 | 8〜11 |
 | 最終ダンジョンの中ボス | +2 | 20 | ×1.5 | ×1.5 | ×1.2 | ×1.2 | 2 | 9〜12 |
-| ラスボス（2段階） | +4 | 30 / 36 | ×1.6 | ×1.6 | ×1.25 | ×1.3 | 2 / 3 | 合わせて 16〜22 |
-| 裏ボス | +8 | 45 | ×1.8 | ×1.8 | ×1.3 | ×1.4 | 3 | 18〜25 |
-- 例: 地方ボスの HP は T0（Lb 9）で 456、T4（Lb 33）で 3161、T7（Lb 51）で 7356。地方の中ボスは T0 で 221、T4 で 1661。ラスボス（Lb 58）は 16029 → 19235、裏ボス（Lb 68）は 33389。
+| ラスボス（2段階） | +4 | 30 / **17** | ×1.6 / **×0.68** | ×1.6 / **×0.68** | ×1.25 / **×0.65** | ×1.3 / **×0.65** | 2 / 3 | 合わせて 16〜22 |
+| 裏ボス | +8 | 45 | **×1.25** | **×1.25** | ×1.3 | ×1.4 | 3 | 18〜25 |
+- 例（`K.hpBoss` で計算。個性 `s` は掛けない）: 地方ボスの HP は T0（Lb 9）で 455、T4（Lb 33）で 4192、T7（Lb 51）で 12703。地方の中ボスは T0（Lb 8）で 223、T4（Lb 32）で 2161。ラスボス（Lb 58）は 26189 → 14840、裏ボス（Lb 68）は 51390。
+- **ラスボス2 と裏ボスの倍率（A2.2・A12.1。`K.BOSS.last2` `K.BOSS.super`）**: ラスボス2 は ×36・×1.6・×1.25・×1.3 では、`b_nemrea2` の `s` をどの能力も下限 0.5 にしても標準のパーティ（Lv58）が勝てなかった（C2 48〜56%）。hpMul 17・atk/mag ×0.68・def/mdef ×0.65・agi ×0.65・行動 3 回にして、`s` なしで C2 ≈ 84%・17.8 ラウンド（`sim_balance` seed 20260925 --n 200）。裏ボスは atk/mag ×1.8 → **×1.25**（`b_ouroboros` の `s` が下限 0.5 に張り付いていたため。§4.14.2 の 0.5〜2.0 の中に戻す）。
+- **個性 `s` の範囲**: §9.11.2 のとおり ±20%（0.8〜1.2）が目安、絶対の範囲は §4.14.2 の 0.5〜2.0。範囲の外のボスは §9.11.2 の「`s` の記録」に書く。
 - お供の雑魚を付けるときは、ボスの hpMul をその分減らす。
 - ボスの経験値 = 曲線 × 20（中ボス ×10、ラスボス ×40）、お金 ×15。閃き rank +2、EF 2.5。
 - ボスの行動は、単体（atk ×1.5 → 軽装に約 20%）6 割・全体（P 0.6〜0.8 → 全員に 12〜15%）4 割くらいを目安にする（ボスは K.MOB をかけないので、この値のまま。編集で確かめた）。
@@ -9015,9 +9021,9 @@ phases: [{ hpBelow: 0.5, msg: '…', set: { actsPerTurn?, elem?, phys?, buffs?: 
 | `rival` | ロウェル | +2 | 10 | ×1.3 | ×1.3 | ×1.1 | ×1.1 | 1 / 2 | ×10・×15 |
 | `fmid` | 終盤の中ボス | +2 | 20 | ×1.5 | ×1.5 | ×1.2 | ×1.2 | 2（ラザロは 1→2） | ×20・×15 |
 | `last1` | ラスボス1 | +4 | 30 | ×1.6 | ×1.6 | ×1.25 | ×1.3 | 2 | ×40・×15 |
-| `last2` | ラスボス2 | +4 | 36 | ×1.6 | ×1.6 | ×1.25 | ×1.3 | 3 | ×40・×15 |
+| `last2` | ラスボス2 | +4 | 17 | ×0.68 | ×0.68 | ×0.65 | ×0.65 | 3 | ×40・×15 |
 | `echo` | 魔王の残影 | +4 | 30 | ×1.7 | ×1.7 | ×1.25 | ×1.3 | 2（段階で 3） | ×30・×15 |
-| `super` | 円環竜 | +8 | 45 | ×1.8 | ×1.8 | ×1.3 | ×1.4 | 3 | ×40・×15 |
+| `super` | 円環竜 | +8 | 45 | ×1.25 | ×1.25 | ×1.3 | ×1.4 | 3 | ×40・×15 |
 | `add` | お供 | 編成と同じ | `hpShare` | 主のボスと同じ | 同じ | 同じ | 同じ | 1 | ×2・×2 |
 ```
 hp = round(hpBoss(lv) × (hpShare ?? hpMul))        hpBoss は§4.14.3
@@ -9025,36 +9031,54 @@ hp = round(hpBoss(lv) × (hpShare ?? hpMul))        hpBoss は§4.14.3
 ```
 - `lv` は編成の Lb（`scale:'tier'` の編成は、データの `lv` を LZ(0)+lvOff で書いておき、戦闘で伸縮する）。お供の雑魚（`'@mummy'` など）は雑魚の規則のまま、同じ Lb で出る。
 - 地方の中ボス・ボスの**ボスごとの個性は `s`（±20%）で付けてよい**（シミュレーターの結果で直す）。この表では全員 1 にしてある。
+- **`s` の記録**（A2.2。ボスの釣り合いの見直し〔`sim_bosses` X1〜X5・`sim_balance` C〕のあとで ±20% を外れているもの。絶対の範囲 0.5〜2.0 の外は無い。下の表の HP は `s` を掛ける前の値）:
+  | ボス | bossType | `s` | 理由 |
+  |---|---|---|---|
+  | `b_pageeater` | prologue | hp 1.7 | 序章の主人公＋3 人で 5〜7 ラウンド |
+  | `b_moth` | mid | hp 1.65 | 中ボスが 3 ラウンドで倒れた |
+  | `b_icegiant` `b_rockeater` | mid | hp 1.35 | 同上 |
+  | `b_hellhound` | mid | hp 1.35・atk/mag 0.7 | 同上。全体の火で崩れやすい |
+  | `b_rowell1` `b_rowell2` | rival | hp 1.35 | 負けてよい戦闘だが、勝てる目の長さ |
+  | `b_whitedragon` | region | hp 1.35・atk/mag 0.6 | 硬く長く、一撃は軽く |
+  | `b_rooteater` `b_lavabeast` `b_stareater` `b_captain` | region | atk/mag 0.6（hp 0.8〜1.1） | 行動 2 回の全体攻撃が重すぎた |
+  | `b_sandking` | region | atk/mag 0.7・hp 0.8 | 同上 |
+  | `b_mistbeast` `b_ironwarden` | region | atk/mag **0.5**（下限。hp 0.7 / 0.9） | 同上。これ以上は下げられないので、残りは行動の重みで直す |
+  | `b_root` `b_mist_double` | add | atk/mag **0.5**（下限） | お供の手数 |
+  | `b_shade_sword` `b_shade_prayer` `b_shade_star` | fmid | atk/mag 0.6・hp 0.9 | 3 体が同時に動く |
+  | `b_valzard_echo` | echo | atk/mag 0.7・hp 0.9 | |
+  | `b_nemrea1` | last1 | hp 0.55・atk/mag 0.9 | hpBoss の新しい曲線（L58 で ×1.475）の分 |
+  | `b_ouroboros` | super | hp 0.6・atk/mag 0.55 | `K.BOSS.super` を ×1.25 にしたあとの値 |
+  - 下限 0.5 に張り付いているもの（`b_mistbeast` `b_ironwarden` `b_root` `b_mist_double`）は、これ以上の調整を `K.BOSS` か行動の側で行う（boss・battle の担当）。
 - HP の例（§4.14.3 の検算と同じ値になる）:
 
 | 編成 | HP（ティア / Lb） |
 |---|---|
-| `tr_b_pageeater` | T0(Lb8): pageeater 243 |
-| `tr_b_moth` | T0(Lb8): moth 221<br>T3(Lb26): moth 1153<br>T7(Lb50): moth 3924 |
-| `tr_b_rooteater` | T0(Lb9): root 38 / rooteater 380<br>T3(Lb27): root 185 / rooteater 1845<br>T7(Lb51): root 613 / rooteater 6130 |
-| `tr_b_sandworm` | T0(Lb8): sandworm 221<br>T3(Lb26): sandworm 1153<br>T7(Lb50): sandworm 3924 |
-| `tr_b_sandking` | T0(Lb9): sandking 405<br>T3(Lb27): sandking 1968<br>T7(Lb51): sandking 6539 |
-| `tr_b_icegiant` | T0(Lb8): icegiant 221<br>T3(Lb26): icegiant 1153<br>T7(Lb50): icegiant 3924 |
-| `tr_b_whitedragon` | T0(Lb9): whitedragon 456<br>T3(Lb27): whitedragon 2214<br>T7(Lb51): whitedragon 7356 |
-| `tr_b_dolls` | T0(Lb8): doll_violin 44 / doll_conductor 89 / doll_drum 44 / doll_flute 44<br>T3(Lb26): doll_violin 231 / doll_conductor 461 / doll_drum 231 / doll_flute 231<br>T7(Lb50): doll_violin 785 / doll_conductor 1570 / doll_drum 785 / doll_flute 785 |
-| `tr_b_mistbeast` | T0(Lb9): mistbeast 456<br>T3(Lb27): mistbeast 2214<br>T7(Lb51): mistbeast 7356 |
-| `tr_b_octopus` | T0(Lb8): tentacle 33 / octopus 155<br>T3(Lb26): tentacle 173 / octopus 807<br>T7(Lb50): tentacle 589 / octopus 2747 |
-| `tr_b_captain` | T0(Lb9): captain 405<br>T3(Lb27): captain 1968<br>T7(Lb51): captain 6539 |
-| `tr_b_rockeater` | T0(Lb8): rockeater 221<br>T3(Lb26): rockeater 1153<br>T7(Lb50): rockeater 3924 |
-| `tr_b_ironwarden` | T0(Lb9): ironwarden 456<br>T3(Lb27): ironwarden 2214<br>T7(Lb51): ironwarden 7356 |
-| `tr_b_hellhound` | T0(Lb8): hellhound 221<br>T3(Lb26): hellhound 1153<br>T7(Lb50): hellhound 3924 |
-| `tr_b_lavabeast` | T0(Lb9): lavabeast 456<br>T3(Lb27): lavabeast 2214<br>T7(Lb51): lavabeast 7356 |
-| `tr_b_orrery` | T0(Lb8): orrery 221<br>T3(Lb26): orrery 1153<br>T7(Lb50): orrery 3924 |
-| `tr_b_stareater` | T0(Lb9): stareater 456<br>T3(Lb27): stareater 2214<br>T7(Lb51): stareater 7356 |
-| `tr_b_rowell1` | T2(Lb20): rowell1 751 |
-| `tr_b_rowell2` | T5(Lb38): rowell2 2284 |
-| `tr_b_bookgolem` | T8(Lb56): bookgolem 9924 |
-| `tr_b_heroshades` | T8(Lb56): shade_sword 3970 / shade_prayer 2977 / shade_star 2977 |
-| `tr_b_lazaro` | T8(Lb56): lazaro 9924 |
-| `tr_b_nemrea1` | T8(Lb58): nemrea1 16029 |
-| `tr_b_nemrea2` | T8(Lb58): nemrea2 19235 |
-| `tr_b_valzard_echo` | T9(Lb64): valzard_echo 19788 |
-| `tr_b_ouroboros` | T9(Lb68): ouroboros 33389 |
+| `tr_b_pageeater` | T0(Lb8): pageeater 245 |
+| `tr_b_moth` | T0(Lb8): moth 223<br>T3(Lb26): moth 1325<br>T7(Lb50): moth 6716 |
+| `tr_b_rooteater` | T0(Lb9): root 38 / rooteater 379<br>T3(Lb27): root 217 / rooteater 2168<br>T7(Lb51): root 1059 / rooteater 10585 |
+| `tr_b_sandworm` | T0(Lb8): sandworm 223<br>T3(Lb26): sandworm 1325<br>T7(Lb50): sandworm 6716 |
+| `tr_b_sandking` | T0(Lb9): sandking 404<br>T3(Lb27): sandking 2313<br>T7(Lb51): sandking 11291 |
+| `tr_b_icegiant` | T0(Lb8): icegiant 223<br>T3(Lb26): icegiant 1325<br>T7(Lb50): icegiant 6716 |
+| `tr_b_whitedragon` | T0(Lb9): whitedragon 455<br>T3(Lb27): whitedragon 2602<br>T7(Lb51): whitedragon 12703 |
+| `tr_b_dolls` | T0(Lb8): doll_violin 45 / doll_conductor 89 / doll_drum 45 / doll_flute 45<br>T3(Lb26): doll_violin 265 / doll_conductor 530 / doll_drum 265 / doll_flute 265<br>T7(Lb50): doll_violin 1343 / doll_conductor 2687 / doll_drum 1343 / doll_flute 1343 |
+| `tr_b_mistbeast` | T0(Lb9): mistbeast 455<br>T3(Lb27): mistbeast 2602<br>T7(Lb51): mistbeast 12703 |
+| `tr_b_octopus` | T0(Lb8): tentacle 33 / octopus 156<br>T3(Lb26): tentacle 199 / octopus 928<br>T7(Lb50): tentacle 1007 / octopus 4701 |
+| `tr_b_captain` | T0(Lb9): captain 404<br>T3(Lb27): captain 2313<br>T7(Lb51): captain 11291 |
+| `tr_b_rockeater` | T0(Lb8): rockeater 223<br>T3(Lb26): rockeater 1325<br>T7(Lb50): rockeater 6716 |
+| `tr_b_ironwarden` | T0(Lb9): ironwarden 455<br>T3(Lb27): ironwarden 2602<br>T7(Lb51): ironwarden 12703 |
+| `tr_b_hellhound` | T0(Lb8): hellhound 223<br>T3(Lb26): hellhound 1325<br>T7(Lb50): hellhound 6716 |
+| `tr_b_lavabeast` | T0(Lb9): lavabeast 455<br>T3(Lb27): lavabeast 2602<br>T7(Lb51): lavabeast 12703 |
+| `tr_b_orrery` | T0(Lb8): orrery 223<br>T3(Lb26): orrery 1325<br>T7(Lb50): orrery 6716 |
+| `tr_b_stareater` | T0(Lb9): stareater 455<br>T3(Lb27): stareater 2602<br>T7(Lb51): stareater 12703 |
+| `tr_b_rowell1` | T2(Lb20): rowell1 741 |
+| `tr_b_rowell2` | T5(Lb38): rowell2 3301 |
+| `tr_b_bookgolem` | T8(Lb56): bookgolem 16468 |
+| `tr_b_heroshades` | T8(Lb56): shade_sword 6587 / shade_prayer 4940 / shade_star 4940 |
+| `tr_b_lazaro` | T8(Lb56): lazaro 16468 |
+| `tr_b_nemrea1` | T8(Lb58): nemrea1 26189 |
+| `tr_b_nemrea2` | T8(Lb58): nemrea2 14840 |
+| `tr_b_valzard_echo` | T9(Lb64): valzard_echo 30904 |
+| `tr_b_ouroboros` | T9(Lb68): ouroboros 51390 |
 
 #### 9.11.3 ボスごとの仕掛け（何が効くか）
 | 編成 | 仕掛け |

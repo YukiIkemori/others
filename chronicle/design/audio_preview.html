@@ -11,7 +11,7 @@ small,i{color:var(--mute)}audio{height:32px;max-width:100%}code{font-size:12px}a
 button{font-size:12px;margin-top:2px}
 </style></head><body>
 <h1>ルミナス・クロニクル — 音の試聴</h1>
-<p>BGM 24 曲（17.3 MB）、ボイス 164 本（6.0 MB）。ファイルは <code>assets/bgm/</code> <code>assets/voice/</code>。
+<p>BGM 32 曲（22.6 MB）、ボイス 164 本（6.0 MB）。ファイルは <code>assets/bgm/</code> <code>assets/voice/</code>。
 「loop seam」はループの継ぎ目（終わり6秒 → ループ先頭）を試聴します。作り直し: <code>node tools/lyria_bgm.js --only &lt;id&gt; --force</code> / <code>node tools/voice_tts.js --only &lt;id&gt; --force</code>。</p>
 <p><a href="#bgm">BGM</a> · <a href="#hero">主人公の戦闘ボイス</a> · <a href="#voice">台詞</a></p>
 <h2 id="bgm">BGM</h2>
@@ -85,31 +85,31 @@ button{font-size:12px;margin-top:2px}
 <td><audio controls preload="none" src="../assets/bgm/tension.ogg"></audio><br><button data-seam="../assets/bgm/tension.ogg" data-ls="16.533" data-le="46.07">loop seam</button> <small>loop 16.53–46.07 s · -18 LUFS · 521 KB · match 0.293</small></td>
 <td><small>A tense story scene or the battle with the archive's chief: suspense and urgency, a clock is ticking, a clear driving beat.</small></td></tr>
 <tr id="bgm-sorrow"><td><b>sorrow</b><br><small>悲しい場面・ビブリア</small></td>
-<td><i>not generated (synth track plays)</i></td>
+<td><audio controls preload="none" src="../assets/bgm/sorrow.ogg"></audio><br><button data-seam="../assets/bgm/sorrow.ogg" data-ls="7.686" data-le="64.985">loop seam</button> <small>loop 7.69–64.98 s · -18 LUFS · 667 KB · match 0.908</small></td>
 <td><small>A sad scene: quiet, bittersweet memory of someone lost, a lonely melody that still carries warmth.</small></td></tr>
 <tr id="bgm-boss2"><td><b>boss2</b><br><small>地方ボス・中ボス</small></td>
-<td><i>not generated (synth track plays)</i></td>
+<td><audio controls preload="none" src="../assets/bgm/boss2.ogg"></audio><br><button data-seam="../assets/bgm/boss2.ogg" data-ls="21.2" data-le="72.405">loop seam</button> <small>loop 21.20–72.41 s · -18 LUFS · 810 KB · match 0.782</small></td>
 <td><small>Regional boss and mid-boss battles: heavier and darker than the normal boss theme, a monstrous presence, menacing but exciting.</small></td></tr>
 <tr id="bgm-rarebattle"><td><b>rarebattle</b><br><small>レア魔物・金色の個体</small></td>
-<td><i>not generated (synth track plays)</i></td>
+<td><audio controls preload="none" src="../assets/bgm/rarebattle.ogg"></audio><br><button data-seam="../assets/bgm/rarebattle.ogg" data-ls="17.694" data-le="51.174">loop seam</button> <small>loop 17.69–51.17 s · -18 LUFS · 603 KB · match 0.628</small></td>
 <td><small>A rare golden monster appears and will flee at any moment: bright, playful and slightly comic chase music, &quot;don't let it escape!&quot;.</small></td></tr>
 <tr id="bgm-superboss"><td><b>superboss</b><br><small>裏ボス（円環竜）</small></td>
-<td><i>not generated (synth track plays)</i></td>
+<td><audio controls preload="none" src="../assets/bgm/superboss.ogg"></audio><br><button data-seam="../assets/bgm/superboss.ogg" data-ls="17.16" data-le="100.88">loop seam</button> <small>loop 17.16–100.88 s · -18 LUFS · 1099 KB · match 0.876</small></td>
 <td><small>Battle with the secret super-boss, an ouroboros dragon of endless stories: a long epic multi-section battle — prelude, relentless main section, a quiet eerie middle, a massive climax.</small></td></tr>
 <tr id="bgm-postgame"><td><b>postgame</b><br><small>忘却の底（裏ダンジョン）</small></td>
 <td><audio controls preload="none" src="../assets/bgm/postgame.ogg"></audio><br><button data-seam="../assets/bgm/postgame.ogg" data-ls="13.166" data-le="47.432">loop seam</button> <small>loop 13.17–47.43 s · -18 LUFS · 525 KB · match 0.673</small></td>
 <td><small>The bottom of oblivion, a secret dungeon of forgotten things: hollow, dreamlike, floating in a forgotten void, beautiful and uneasy.</small></td></tr>
 <tr id="bgm-forest"><td><b>forest</b><br><small>迷いの森・千年樹</small></td>
-<td><i>not generated (synth track plays)</i></td>
+<td><audio controls preload="none" src="../assets/bgm/forest.ogg"></audio><br><button data-seam="../assets/bgm/forest.ogg" data-ls="17.415" data-le="59.134">loop seam</button> <small>loop 17.41–59.13 s · -18 LUFS · 638 KB · match 0.857</small></td>
 <td><small>A mystical deep forest and a thousand-year-old tree: gentle wonder, mist between giant trunks, a place that remembers old songs.</small></td></tr>
 <tr id="bgm-ghost"><td><b>ghost</b><br><small>霧の館・沼・幽霊船</small></td>
-<td><i>not generated (synth track plays)</i></td>
+<td><audio controls preload="none" src="../assets/bgm/ghost.ogg"></audio><br><button data-seam="../assets/bgm/ghost.ogg" data-ls="18.855" data-le="58.295">loop seam</button> <small>loop 18.86–58.30 s · -18 LUFS · 627 KB · match 0.667</small></td>
 <td><small>A misty haunted manor, bell-sunken marsh and ghost ship: eerie, haunted and melancholic waltz, candle flames flickering, sad rather than violent.</small></td></tr>
 <tr id="bgm-hollowking"><td><b>hollowking</b><br><small>虚ろの王</small></td>
-<td><i>not generated (synth track plays)</i></td>
+<td><audio controls preload="none" src="../assets/bgm/hollowking.ogg"></audio><br><button data-seam="../assets/bgm/hollowking.ogg" data-ls="16.974" data-le="46.974">loop seam</button> <small>loop 16.97–46.97 s · -18 LUFS · 501 KB · match 0.987</small></td>
 <td><small>The void king reveals itself: unsettling and void-like, a blank page tearing, with brief hushed breaks between phrases that never fully stop the pulse.</small></td></tr>
 <tr id="bgm-legend"><td><b>legend</b><br><small>伝説を語る場面</small></td>
-<td><i>not generated (synth track plays)</i></td>
+<td><audio controls preload="none" src="../assets/bgm/legend.ogg"></audio><br><button data-seam="../assets/bgm/legend.ogg" data-ls="9.009" data-le="38.073">loop seam</button> <small>loop 9.01–38.07 s · -18 LUFS · 410 KB · match 0.91</small></td>
 <td><small>A legend told by an old bard by the fire: legendary, gentle and warm, the feeling of a timeless tale.</small></td></tr></table>
 <h2 id="hero">主人公の戦闘ボイス</h2>
 <h3>主人公（男）— Signature Voice <code>voice_akrep1z0wngp</code></h3><table><tr><td><code>v_hero_m_attack_1</code></td><td>attack</td><td>はあっ！</td><td><audio controls preload="none" src="../assets/voice/v_hero_m_attack_1.ogg"></audio></td></tr>
@@ -124,7 +124,7 @@ button{font-size:12px;margin-top:2px}
 <tr><td><code>v_hero_m_ko_1</code></td><td>ko</td><td>ここまで……か……</td><td><audio controls preload="none" src="../assets/voice/v_hero_m_ko_1.ogg"></audio></td></tr>
 <tr><td><code>v_hero_m_victory_1</code></td><td>victory</td><td>よし、勝った！</td><td><audio controls preload="none" src="../assets/voice/v_hero_m_victory_1.ogg"></audio></td></tr>
 <tr><td><code>v_hero_m_victory_2</code></td><td>victory</td><td>この物語は、まだ続く。</td><td><audio controls preload="none" src="../assets/voice/v_hero_m_victory_2.ogg"></audio></td></tr></table>
-<h3>主人公（女）— Echo <code>voice_4i7w55bqctzy</code></h3><table><tr><td><code>v_hero_f_attack_1</code></td><td>attack</td><td>はあっ！</td><td><audio controls preload="none" src="../assets/voice/v_hero_f_attack_1.ogg"></audio></td></tr>
+<h3>主人公（女）— ja-jp-assistant-4 (prebuilt, female, 22, Tokyo) <code>ja-jp-assistant-4</code></h3><table><tr><td><code>v_hero_f_attack_1</code></td><td>attack</td><td>はあっ！</td><td><audio controls preload="none" src="../assets/voice/v_hero_f_attack_1.ogg"></audio></td></tr>
 <tr><td><code>v_hero_f_attack_2</code></td><td>attack</td><td>せいっ！</td><td><audio controls preload="none" src="../assets/voice/v_hero_f_attack_2.ogg"></audio></td></tr>
 <tr><td><code>v_hero_f_attack_3</code></td><td>attack</td><td>くらえっ！</td><td><audio controls preload="none" src="../assets/voice/v_hero_f_attack_3.ogg"></audio></td></tr>
 <tr><td><code>v_hero_f_glimmer_1</code></td><td>glimmer</td><td>……見えた！</td><td><audio controls preload="none" src="../assets/voice/v_hero_f_glimmer_1.ogg"></audio></td></tr>
@@ -211,7 +211,7 @@ button{font-size:12px;margin-top:2px}
 <tr><td><code>v_berna_lute_04</code></td><td>全部を語り直して、年代記を書き上げなさい。それが、あなたの修業の仕上げだよ。</td><td><audio controls preload="none" src="../assets/voice/v_berna_lute_04.ogg"></audio></td><td><small>Inspiring charge, affectionate trust, resolute pace, clear encouraging volume.</small></td></tr>
 <tr><td><code>v_berna_lute_05</code></td><td>どこから回ってもいい。あなたの足で、あなたの順番で語り直していけばいいのさ。</td><td><audio controls preload="none" src="../assets/voice/v_berna_lute_05.ogg"></audio></td><td><small>Reassuring freedom, benevolent smile, easygoing relaxed pace, warm gentle volume.</small></td></tr>
 <tr><td><code>v_berna_roa_01</code></td><td>そちらのお嬢さんは……どこかで……。</td><td><audio controls preload="none" src="../assets/voice/v_berna_roa_01.ogg"></audio></td><td><small>Confused nostalgia, fading memory stirring, slow hesitant pace, soft wondering volume.</small></td></tr>
-<tr><td><code>v_berna_roa_02</code></td><td>おかえり。……よく、ここまで書いたね。</td><td><audio controls preload="none" src="../assets/voice/v_berna_roa_02.ogg"></audio></td><td><small>Tearful pride, emotional homecoming, trembling warm pace, rich choked volume.</small></td></tr>
+<tr><td><code>v_berna_roa_02</code></td><td>おかえり。……よく、ここまで書いたね。</td><td><audio controls preload="none" src="../assets/voice/v_berna_roa_02.ogg"></audio></td><td><small>Tearful pride, emotional homecoming, trembling warm pace, rich choked volume. Pronunciation: 書いた is read &quot;かいた&quot; (ka-i-ta, &quot;wrote&quot; — the hero wrote the chronicle); do NOT say &quot;かえった&quot; (returned).</small></td></tr>
 <tr><td><code>v_berna_roa_03</code></td><td>始まりの年代記は、ビブリアの大書庫の頂にある。わたしの師匠が、そう言っていた。</td><td><audio controls preload="none" src="../assets/voice/v_berna_roa_03.ogg"></audio></td><td><small>Sage remembrance, guiding legacy, steady reverent pace, clear medium volume.</small></td></tr>
 <tr><td><code>v_berna_roa_04</code></td><td>これを持ってお行き。わたしが若いころ、師匠からもらった首飾りだよ。</td><td><audio controls preload="none" src="../assets/voice/v_berna_roa_04.ogg"></audio></td><td><small>Loving blessing, passing the torch, tender slow pace, soft affectionate volume.</small></td></tr>
 <tr><td><code>v_berna_ending_01</code></td><td>これは、ある語り部の物語。</td><td><audio controls preload="none" src="../assets/voice/v_berna_ending_01.ogg"></audio></td><td><small>Classic storytelling, nostalgic warmth, lyrical steady pace, comforting medium volume.</small></td></tr>

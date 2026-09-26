@@ -472,12 +472,14 @@ The synth stays the default. Recorded files only *override* it when they exist; 
 - **Voices**: `node tools/voice_tts.js` (casting, profiles, per-line directions, hero lines: `design/voice/casting.json`)
   → `assets/voice/<id>.ogg` (Vorbis mono 24 kHz, trimmed, −16 LUFS, peak ≤ −1 dBFS; effects for giant / king /
   golem / automaton / ghosts). 140 story lines + 24 hero battle clips (`v_hero_<m|f>_<kind>_<n>`).
+  Male hero = custom voice Signature Voice; female hero = prebuilt `ja-jp-assistant-4` (the custom Echo voice
+  sounded male). ≤ 3 lines use generateContent (100 req/day per model); `--batch` sends them through the Batch API.
 - **Hero battle voice**: `R.Audio.battleVoice(kind[, gender])`, kinds `attack glimmer spell hurt ko victory`; picks a
   random clip for `R.State.hero().gender`, never the same twice in a row, own voice volume, no BGM duck.
 - **BGM**: `node tools/lyria_bgm.js` → `assets/bgm/<id>.ogg` (Vorbis 96 kbps, −18 LUFS) + `<id>.json` whose
   `loopStart/loopEnd` come from an automatic loop search (spectral self-similarity + onset phase + a baked
   crossfade at the seam; `analysis` records the score). Reference vibes: `cave` + `dungeon` = urban-noir funk
   groove, `village` + `home` = warm canyon-village acoustic theme.
-- **Build**: everything is embedded by default (24 BGM + 164 voice ≈ 23 MB → dist/index.html ≈ 37 MB; with all 32
-  BGM ≈ 44 MB, under the 60 MB limit). If it grows past that: `node tools/build.js --bgm external` (serve dist/ over http).
+- **Build**: everything is embedded by default (all 32 BGM + 164 voice ≈ 28.6 MB → dist/index.html ≈ 44 MB, under the
+  60 MB limit). If it grows past that: `node tools/build.js --bgm external` (serve dist/ over http).
 - **Listening page**: `node tools/audio_preview.js` → `design/audio_preview.html` (players for every file, loop-seam button).

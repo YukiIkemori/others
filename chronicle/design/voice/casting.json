@@ -4,7 +4,7 @@
   "voice: a prebuilt voice id from GET /v1beta/voices (type prebuilt → speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName) or a custom replicated voice (type custom → speechConfig.voiceConfig.voice).",
   "profile/style go into the prompt (English); lines[<id>] is the per-line acting direction; fx is a post effect of tools/voice_tts.js (FX table: pitch / echo).",
   "hero: the silent protagonist only has short battle voices, one set per gender (R.State.hero().gender m/f): v_hero_<g>_<kind>_<n>, played by R.Audio.battleVoice(kind).",
-  "Custom voice assignment: both custom voices were sampled and their median F0 estimated (YIN): Signature Voice ≈ 139 Hz, Echo ≈ 140 Hz — too close to tell, so by the lead's rule Signature Voice = male hero, Echo = female hero. NOTE: both read as adult male voices.",
+  "Hero voices: the male hero uses the custom voice Signature Voice (median F0 ≈ 139 Hz). Both custom voices read as adult male, so the female hero was recast (2026-09-26) to the prebuilt ja-jp-assistant-4 (female, 22, Tokyo; auditioned against ja-jp-training-6 / ja-jp-commercial-6): median F0 of her 12 clips ≈ 309 Hz vs 216 Hz for the male set (calm lines ≈ 180–210 Hz vs ≈ 124 Hz).",
   "readings[<id>]: what the TTS is asked to say instead of the script text, for words it misreads (the check still compares with the script)."
  ],
  "model": "gemini-3.8-flash-tts",
