@@ -1,0 +1,27 @@
+{
+  "loopStart": 23.568,
+  "loopEnd": 93.295,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. The world-map travelling song: adventurous and wide open, a sense of walking across green hills toward a far horizon, confident but not bombastic. A heroic horn and flute melody over a bright marching rhythm. Tempo 112 BPM, 4/4 time, key of D major. Instrumentation: french horns and flute lead, pizzicato and bowed strings, marching snare, light timpani, warm string pads, harp runs. Form: short 2-bar pickup, verse melody, a soaring bridge, return to the verse. Duration: 100 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[B3]]",
+    "generated": "2026-09-26T11:51:53.044Z",
+    "rawSeconds": 106.6,
+    "takes": 2
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -6.5,
+    "gainDb": -6.5,
+    "peakLimited": false,
+    "loopScore": 0.934,
+    "seamCorr": 0.554,
+    "xfade": 0.6,
+    "medianDb": -22.2,
+    "longestSilence": 0,
+    "seamLevelDiffDb": 0.7,
+    "seamJump": 0.0109,
+    "maxStep": 0.0354
+  }
+}
