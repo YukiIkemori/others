@@ -5,7 +5,8 @@
 //   obj:r5_ghost_wreck   the same hull after the clear, lying on the rocks: no lights, sails in rags,
 //                        listing a little. 80×64.
 //   obj:r5_beacon        岬の灯, the old stone beacon on the Nerei cape (16×32, 2 frames: the flame).
-//   obj:r5_regnas_ship   the Regnas merchant ship at Coral after the clear: obj:ship with red-gold sails.
+//   obj:r5_regnas_ship   the Regnas merchant ship at Coral after the clear: a sound, bright merchantman
+//                        (oak hull, cream sails with the red Regnas band, gold trim). 80×64, 2 frames.
 // The field draws obj: sprites bottom-aligned on their tile (the waterline sits on that tile's row).
 (function (R) {
   'use strict';
@@ -20,7 +21,7 @@
   const INK = '#0c0a10';
 
   /** a tiny deterministic noise so the tatters are the same every time */
-  const hash = (x, y, s) => { let h = (x * 374761393 + y * 668265263 + (s || 0) * 2246822519) >>> 0; h = ((h ^ (h >>> 13)) * 1274126177) >>> 0; return (h ^ (h >>> 16)) / 4294967296; };
+  const hash = (x, y, s) => { let h = (x * 374761393 + y * 668265263 + (s || 0) * 2246822519) >>> 0; h = ((h ^ (h >>> 13)) * 1274126177) >>> 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
 
   function hull(p, ramp, tilt) {
     const dy = (x) => Math.round((tilt || 0) * (x - 40) / 40);
@@ -71,7 +72,7 @@
         const h = hash(x, y, seed);
         // ragged lower edge and holes
         if (y > y1 - 4 && h < torn * ((y - (y1 - 4)) / 4)) continue;
-        if (h < torn * 0.18) continue;
+        if (h < torn * 0.34) continue;
         const k = x <= x0 - bulge + 1 ? 0 : x >= x1 - bulge - 1 ? 1 : (y - y0) % 5 === 0 ? 1 : 2 + (h > 0.7 ? 1 : 0);
         p.set(x, y, ramp[Math.min(ramp.length - 1, k)]);
       }
@@ -168,14 +169,32 @@
   G.def('obj:r5_beacon', () => two(beacon(0), beacon(1)));
   G.def('obj:r5_ghost_ship', () => two(ghost(0), ghost(1)));
   G.def('obj:r5_ghost_wreck', () => { const w = wreck(); return two(w, w); });
-  // the Regnas merchant ship: the ferry's hull with red-gold sails (a hue shift of obj:ship)
-  G.def('obj:r5_regnas_ship', () => {
-    const src = G.get('obj:ship');
-    const conv = (c) => (c && c.getContext ? G.hsvShift(c, 150, 1.1, 1) : c);
-    if (!src) return G.placeholder(32, 32);
-    if (Array.isArray(src)) return src.map(conv);
-    const out = {};
-    for (const k of Object.keys(src)) out[k] = Array.isArray(src[k]) ? src[k].map(conv) : conv(src[k]);
-    return out;
-  });
+  // the Regnas merchant ship at Coral after the clear: the same build as Glen's ship, but sound and
+  // bright — warm oak, full cream sails with a red band, gold trim, a red-gold pennant. 80×64, bow left.
+  const OAK = ['#3a2416', '#58361e', '#7a4c2a', '#9a6436', '#c08a4c'];
+  const CANVAS = ['#b89c78', '#d8c29c', '#eee0c0', '#fff6e2'];
+  function regnas(f) {
+    const p = new G.Pix(80, 64);
+    const pen = f ? [[29, 0], [39, 2], [33, 3], [29, 4]] : [[29, 0], [38, 1], [34, 3], [29, 4]];
+    p.poly(pen, '#c83a2a');
+    p.hline(30, 33, 2, '#f0c040');
+    sail(p, 19, 7, 37, 19, CANVAS, 1, 0);
+    sail(p, 20, 21, 36, 33, CANVAS, 2, 0);
+    sail(p, 43, 12, 57, 23, CANVAS, 3, 0);
+    sail(p, 44, 25, 56, 34, CANVAS, 4, 0);
+    // the red band of the Regnas houses across the lower sails
+    p.each((x, y, c) => (CANVAS.includes(c) && ((y >= 27 && y <= 29 && x >= 20 && x <= 36) || (y >= 29 && y <= 31 && x >= 44 && x <= 56)) ? (c === CANVAS[0] ? '#8a2a20' : '#c8402e') : undefined));
+    masts(p, 0, false);
+    hull(p, OAK, 0);
+    // gold trim along the gunwale and a painted stripe
+    for (let x = 10; x <= 60; x++) p.set(x, 38, '#e0b040');
+    for (let x = 62; x <= 76; x++) p.set(x, 30, '#e0b040');
+    p.outline(INK);
+    // warm lamplight in the stern windows, the bow lantern lit
+    for (const x of [64, 68, 72]) p.rect(x, 32, 2, 2, f ? '#ffe08a' : '#ffd070');
+    // a little wake at the waterline
+    for (let x = 6; x < 76; x++) if (hash(x + f * 5, 53, 13) < 0.35 && !p.get(x, 53)) p.set(x, 53, '#e8f4ff90');
+    return p.toCanvas();
+  }
+  G.def('obj:r5_regnas_ship', () => two(regnas(0), regnas(1)));
 })(window.RPG);

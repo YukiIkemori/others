@@ -441,6 +441,11 @@ R.Field.npc = () => ({});
   ok(R.State.flag('isles_fine'), 'ghost_ship_3_fine: isles_fine');
   if (!hadStory) ok(has(t.log, '待っている人がいる限り、\n物語は終わらない。'), 'ghost_ship_3_fine: fallback line (§10.9.4)');
   else ok(t.log.calls.includes('story_fine_isles'), 'ghost_ship_3_fine: calls story_fine_isles');
+  ok(has(t.log, '船長室の扉が、ひとりでに\n音もなく開いた……。'), 'ghost_ship_3_fine: the cabin door opens');
+  // talked to again after coming back to the floor: only her closing words, no second door scene
+  t = await run('ghost_ship_3_fine');
+  ok(!has(t.log, '船長室の扉が、ひとりでに\n音もなく開いた……。') && (hadStory ? t.log.calls.includes('story_fine_isles') : t.log.say.length > 0), 'ghost_ship_3_fine: talked to again → closing line only');
+  ok(P.ghost_ship_3.npcs.find((n) => n.id === 'fine').event === 'ghost_ship_3_fine', 'ghost_ship_3: the girl in grey can be talked to (ghost_ship_3_fine)');
   // --- 7/8 the captain: lose, then win
   t = await run('ghost_ship_3_boss', { battles: ['lose'] });
   ok(t.r === false && !R.State.flag('isles_boss') && !(R.Game.regionsCleared || []).includes('r_isles'), 'ghost_ship_3_boss: lost → false, nothing set');

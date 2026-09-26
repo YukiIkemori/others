@@ -43,7 +43,10 @@
     o = o || {};
     await R.debug.quickStart({ tier: o.tier || 0, level: o.level || 1, gear: 'tier', noEncounter: true });
     const zone = Object.keys(R.DB.rareEncounters).find((z) => R.DB.rareEncounters[z].mon === mon);
-    R.Events.run((ev) => ev.battle({ zone, rare: 'force' }), { self: 'debug' });
+    // the field picks the backdrop from where the party stands (the debug start is on the world map), so pass
+    // the zone's own backdrop to show the fight as it looks in that zone
+    const enc = R.DB.encounters[zone] || {};
+    R.Events.run((ev) => ev.battle(Object.assign({ zone, rare: 'force' }, enc.bg ? { bg: enc.bg } : {})), { self: 'debug' });
     return zone;
   };
   S.state = function () {

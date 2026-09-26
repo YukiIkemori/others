@@ -345,27 +345,37 @@ if (XS.includes(2)) {
   while (trios.length < nTrio) trios.push(pickTrio());
   const bosses = [...MID, ...REGION];
   const per = +arg('per', USE_REAL ? 1 : 3);
-  const combos = [];
-  for (const h of HEROES) for (const t of trios) {
+  const play = (h, t, k) => {
     let w = 0, n = 0, rounds = 0;
-    for (const tr of bosses) for (let i = 0; i < per; i++) {
+    for (const tr of bosses) for (let i = 0; i < k; i++) {
       const T = Math.floor(rng() * 8);
       const r = fight(tr, Object.assign({ tier: T, members: ['hero', ...t], level: levelFor(tr, T), known: knownFor(tr, T) }, h));
       w += r.win ? 1 : 0; n++; rounds += r.rounds;
     }
-    combos.push({ hero: h.heroType + ':' + h.favor.id, trio: t, win: w / n, rounds: rounds / n });
+    return { win: w / n, rounds: rounds / n };
+  };
+  const combos = [];
+  for (const h of HEROES) for (const t of trios) combos.push(Object.assign({ h, hero: h.heroType + ':' + h.favor.id, trio: t }, play(h, t, per)));
+  const k10 = Math.max(1, Math.floor(combos.length / 10));
+  // Stage 2: with one battle per boss a combo's win rate moves in steps of 1/16 and its binomial noise
+  // (±7 pt) alone puts the worst of 200 combos near 70 %. The combos that screen as the lowest and highest
+  // 10 % (wins and rounds) are played again with fresh battles and judged on those (no selection bias).
+  const per2 = +arg('per2', USE_REAL ? 3 : 0);
+  if (per2 > 0) {
+    const byWin = combos.slice().sort((a, b) => a.win - b.win), byR = combos.slice().sort((a, b) => a.rounds - b.rounds);
+    const again = new Set([...byWin.slice(0, k10), ...byWin.slice(-k10), ...byR.slice(0, k10), ...byR.slice(-k10)]);
+    for (const c of again) { c.screen = c.win; Object.assign(c, play(c.h, c.trio, per2)); }
   }
   combos.sort((a, b) => a.win - b.win);
   const wins = combos.map((c) => c.win);
   const med = wins[Math.floor(wins.length / 2)];
-  const k10 = Math.max(1, Math.floor(wins.length / 10));
   const lowAvg = wins.slice(0, k10).reduce((s, x) => s + x, 0) / k10, topAvg = wins.slice(-k10).reduce((s, x) => s + x, 0) / k10;
   const rs = combos.map((c) => c.rounds).sort((a, b) => a - b);
   const rLow = rs.slice(0, k10).reduce((s, x) => s + x, 0) / k10, rTop = rs.slice(-k10).reduce((s, x) => s + x, 0) / k10;
-  say(`  combos ${combos.length} (${HEROES.length} heroes × ${trios.length} trios), ${bosses.length} bosses × ${per} battle(s) at random T0–T7`);
+  say(`  combos ${combos.length} (${HEROES.length} heroes × ${trios.length} trios), ${bosses.length} bosses × ${per} battle(s) at random T0–T7` + (per2 > 0 ? `; the lowest/highest 10 % replayed with ${per2} fresh battle(s) per boss` : ''));
   say('  worst: ' + combos.slice(0, 6).map((c) => `${c.hero}+${c.trio.join('/')} ${pc(c.win)}`).join(', '));
   say('  best : ' + combos.slice(-3).map((c) => `${c.hero}+${c.trio.join('/')} ${pc(c.win)}`).join(', '));
-  out.X2 = { combos: combos.length, min: wins[0], median: med, top10: topAvg, low10: lowAvg, roundsRatio: rTop / rLow, worst: combos.slice(0, 12) };
+  out.X2 = { combos: combos.length, min: wins[0], median: med, top10: topAvg, low10: lowAvg, roundsRatio: rTop / rLow, worst: combos.slice(0, 12).map(({ h, ...c }) => c) };
   check('X2 min', wins[0] >= 0.70, `every combo ≥70%: min ${pc(wins[0])}`);
   check('X2 median', med >= 0.88, `median ≥88%: ${pc(med)}`);
   check('X2 spread (B3)', topAvg - lowAvg <= 0.20 && rTop / rLow <= 1.6, `top10%−low10% ≤20pt: ${Math.round((topAvg - lowAvg) * 100)}pt; rounds high/low ≤1.6: ${(rTop / rLow).toFixed(2)}`);
@@ -375,25 +385,41 @@ if (XS.includes(2)) {
 // ------------------------------------------------------------------ X3 gimmicks
 if (XS.includes(3)) {
   say('\nX3  gimmicks fire at least once per battle (average over T0/T2/T4/T6/T7; fixed-tier bosses at their tier)');
+  // [troop, key, uses per battle, share of battles with at least one, label]
   const G = [
-    ['tr_b_dolls', 'encore', (r) => r.encore, '楽団のアンコール'],
-    ['tr_b_rooteater', 'feed', (r) => r.feed, '根の触手の養分'],
-    ['tr_b_mistbeast', 'double', (r) => r.summon.b_mist_double || 0, '霧の分身'],
-    ['tr_b_octopus', 'regrow', (r) => r.summon.b_tentacle || 0, '足の生え直し'],
-    ['tr_b_ironwarden', 'phase75', (r) => r.phase['b_ironwarden#0'] || 0, '鉄の番人 HP75%'],
-    ['tr_b_ironwarden', 'phase30', (r) => r.phase['b_ironwarden#1'] || 0, '鉄の番人 HP30%'],
-    ['tr_b_lavabeast', 'phase', (r) => r.phase['b_lavabeast#0'] || 0, '溶岩の巨獣 冷える'],
-    ['tr_b_ouroboros', 'rewind', (r) => r.rewind, '円環竜の巻き戻し'],
+    ['tr_b_dolls', 'encore', (r) => r.encore, (r) => r.any.eb_encore || 0, '楽団のアンコール'],
+    ['tr_b_rooteater', 'feed', (r) => r.feed, (r) => r.any.eb_feed || 0, '根の触手の養分'],
+    ['tr_b_mistbeast', 'double', (r) => r.summon.b_mist_double || 0, (r) => r.any['summon:b_mist_double'] || 0, '霧の分身'],
+    ['tr_b_octopus', 'regrow', (r) => r.summon.b_tentacle || 0, (r) => r.any['summon:b_tentacle'] || 0, '足の生え直し'],
+    ['tr_b_ironwarden', 'phase75', (r) => r.phase['b_ironwarden#0'] || 0, (r) => r.phase['b_ironwarden#0'] || 0, '鉄の番人 HP75%'],
+    ['tr_b_ironwarden', 'phase30', (r) => r.phase['b_ironwarden#1'] || 0, (r) => r.phase['b_ironwarden#1'] || 0, '鉄の番人 HP30%'],
+    ['tr_b_lavabeast', 'phase', (r) => r.phase['b_lavabeast#0'] || 0, (r) => r.phase['b_lavabeast#0'] || 0, '溶岩の巨獣 冷える'],
+    ['tr_b_ouroboros', 'rewind', (r) => r.rewind, (r) => r.any.eb_rewind || 0, '円環竜の巻き戻し'],
   ];
   out.X3 = [];
   const cache = {};
-  for (const [tr, key, get, label] of G) {
+  // "1戦に1回以上": at least one per battle on average, and in (nearly) every battle — a gimmick the party can
+  // cut short on purpose (kill the conductor first, clear the roots) is allowed to miss a few fights (≥ 80 %)
+  for (const [tr, key, get, share, label] of G) {
     const tiers = DB.troops[tr].scale === 'tier' ? [0, 2, 4, 6, 7] : [DB.troops[tr].tier];
-    const cs = tiers.map((T) => cache[tr + T] || (cache[tr + T] = runCase(tr, T, Math.max(20, Math.round(N / 2)), tr === 'tr_b_ouroboros' ? { gear: 'strong' } : {})));
+    const cs = tiers.map((T) => cache[tr + T] || (cache[tr + T] = runCase(tr, T, Math.max(20, Math.round(N / 2)), tr === 'tr_b_ouroboros' ? { gear: 'strong', level: 64 } : {})));
     const v = cs.reduce((s, c) => s + get(c), 0) / cs.length;
-    out.X3.push({ tr, key, label, perBattle: v });
-    check('X3 ' + key, v >= 1, `${label}: ${v.toFixed(2)} per battle (≥1)`);
+    const sh = cs.reduce((s, c) => s + share(c), 0) / cs.length;
+    out.X3.push({ tr, key, label, perBattle: v, share: sh });
+    check('X3 ' + key, v >= 1 && sh >= 0.8, `${label}: ${v.toFixed(2)} per battle (≥1), in ${pc(sh)} of battles (≥80%)`);
   }
+  // for information: how often each "n手ごと" move of §9.11.4 is used (the SCHEDULED ones of bosses.js carry
+  // weight ×100 on their turn; the others keep the table weight and compete with the rest by weight, §9.1.7)
+  const everyMoves = [];
+  for (const tr of [...MID, ...REGION, ...FMID, 'tr_b_pageeater', 'tr_b_nemrea1', 'tr_b_nemrea2', 'tr_b_valzard_echo']) {
+    const ids = new Set();
+    for (const [ref] of DB.troops[tr].mons) if (DB.monsters[ref]) for (const a of DB.monsters[ref].actions || []) if (a.cond && a.cond.every) ids.add(a.id);
+    if (!ids.size) continue;
+    const T = DB.troops[tr].scale === 'tier' ? 4 : DB.troops[tr].tier;
+    const c = cache[tr + T] || (cache[tr + T] = runCase(tr, T, Math.max(20, Math.round(N / 2)), /valzard/.test(tr) ? { gear: 'strong', level: 64 } : {}));
+    for (const id of ids) everyMoves.push(`${id} ${(c.used[id] || 0).toFixed(1)}/${pc(c.any[id] || 0)}`);
+  }
+  say('  info "n手ごと" moves (uses per battle / share of battles, T4 or the fixed tier): ' + everyMoves.join(', '));
   // for information: the other summons and phases (not X3 criteria)
   const INFO = [['tr_b_rooteater', 'b_root'], ['tr_b_sandking', null], ['tr_b_captain', null], ['tr_b_bookgolem', 'book_1'], ['tr_b_lazaro', 'scribe_1']];
   for (const [tr, id] of INFO) {
@@ -441,6 +467,9 @@ if (XS.includes(5)) {
   say('  by tier: ' + Object.entries(byT).map(([t, l]) => 'T' + t + ' ' + pc(l.reduce((s, x) => s + x, 0) / l.length)).join('  '));
   out.X5 = { avg, byT };
   check('X5 glimmer', avg >= 0.5, `P(someone glimmers) per boss battle: ${pc(avg)}`);
+  // "T1 以降" read per tier as well: every tier's boss battles on their own
+  const lowT = Object.entries(byT).map(([t, l]) => [t, l.reduce((s, x) => s + x, 0) / l.length]).filter(([, v]) => v < 0.5);
+  check('X5 glimmer per tier', !lowT.length, `every tier ≥50%: ${lowT.length ? lowT.map(([t, v]) => 'T' + t + ' ' + pc(v)).join(' ') + ' below' : 'all'}`);
 }
 
 if (JSON_OUT) fs.writeFileSync(JSON_OUT, JSON.stringify(out, null, 1));
