@@ -506,7 +506,7 @@ crit('G2b', '1 つの地方の閃き（ティアごとの平均）', perT.map(f1
 crit('G3', 'ボス戦（T1 以降）で誰かが閃く確率', `${Math.round(mean(bossT1) * 100)}%`, mean(bossT1) >= 0.5, '50% 以上');
 {
   const t = mean(aw.cs.map((c) => c.total)), main = aw.byW.sword || 0, sec = aw.byW.axe || 0;
-  crit('G4a', '戦士型（武器 2 系統）のクリア時の数', `計 ${f1(t)}（主 ${f1(main)}・2 つ目 ${f1(sec)}）`, t >= 17 && t <= 22 && main >= 9.5 && main <= 11 && sec >= 6 && sec <= 10, '計 17〜22、主 10〜11、2 つ目 6〜10');
+  crit('G4a', '戦士型（武器 2 系統）のクリア時の数', `計 ${f1(t)}（主 ${f1(main)}・2 つ目 ${f1(sec)}）`, t >= 17 && t <= 22 && main >= 9.5 && main <= 11 && sec >= 6 && sec <= 10, '計 17〜22、主 10〜11（lv1〜9 で数えると 10 が全部。平均 9.5 以上）、2 つ目 6〜10');
 }
 function mageCrit(id, s, label, guide) {
   const t = mean(s.cs.map((c) => c.total)), si = mean(s.cs.map((c) => c.single)), a = mean(s.cs.map((c) => c.comboA)), b = mean(s.cs.map((c) => c.comboB)), tr = mean(s.cs.map((c) => c.triple)), st = s.byW.staff || 0;
