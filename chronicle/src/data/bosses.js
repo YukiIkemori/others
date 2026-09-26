@@ -15,7 +15,13 @@
 (function (R) {
   'use strict';
 
-  const A = (list) => list.map(([id, w, cond]) => (cond ? { id, w, cond } : { id, w }));
+  // Actions with `every: [n, k]` ("n手ごと") are the bosses' scheduled moves (§9.11.3: "3手ごとに…", the orrery's readable
+  // sun → moon → star cycle, the band's encore, the octopus regrowing legs). The engine picks among the actions whose
+  // cond holds by weight, so the §9.11.4 table weight is multiplied by SCHED: on its turn the scheduled move is taken
+  // unless it has nothing to do (no fallen ally, full HP, …), and the relative weights of two scheduled moves due on
+  // the same turn stay those of the table. tools/check_boss.js compares the table weight × SCHED.
+  const SCHED = 100;
+  const A = (list) => list.map(([id, w, cond]) => (cond ? { id, w: cond.every ? w * SCHED : w, cond } : { id, w }));
   const MID = (seed) => ({ normal: { pool: 'p_boss_mid', rate: 1 }, bonus: { item: seed, rate: 1 } });
   const REGION = (seed) => ({ normal: { pool: 'p_boss', rate: 1 }, bonus: { item: seed, rate: 1 } });
   const CONSTRUCT_PHYS = { slash: 0.75, blunt: 1.5, pierce: 0.75 };

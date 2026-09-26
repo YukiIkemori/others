@@ -527,6 +527,9 @@ const SECTIONS = [
     await clearMsgs(); await settle();
     ok(R.Field.isSecretFound('fx_world', 38, 25) && R.Field.isSecretFound('fx_world', 40, 25), 'the connected passage is recorded');
     eq(R.Field.secretsFound(), 3, 'found count');
+    R.Game.secrets['fx_world:1,1'] = true; R.Game.secrets['no_such_map:2,2'] = true; // stale save keys
+    eq(R.Field.secretsFound(), 3, 'found count ignores cells that are not secret passages');
+    delete R.Game.secrets['fx_world:1,1']; delete R.Game.secrets['no_such_map:2,2'];
     sayLog.length = 0;
     await walk('R'); await step(4);
     ok(!said(/隠し通路/), 'second cell: no second notice');
@@ -1004,9 +1007,11 @@ const SECTIONS = [
     ok(R.Field.spriteKey(R.Game.party[0]) === 'party:hero_f_mage' || R.Field.spriteKey(R.Game.party[0]).startsWith('npc:'), 'hero sprite key ' + R.Field.spriteKey(R.Game.party[0]));
     R.Tavern = null; R.CharCreate = null;
     // caption: auto after frames, A goes on; a black screen stays black around it
+    R.Field.layer.banner = { text: R.Field.map.name || 'x', t: 0 };
     const cp = R.Events.run((ev) => ev.caption('……ねえ、聞こえる？', { frames: 60 }));
     await step(14);
     eq(topName(), 'StageLayer', 'caption stage on top');
+    eq(R.Field.layer.banner, null, 'the map-name banner goes away under a caption');
     await step(20); await press('a');
     const tCap = totalSteps;
     await until(cp, 400);

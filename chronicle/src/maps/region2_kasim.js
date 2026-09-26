@@ -140,9 +140,9 @@
     ],
     npcs: [
       // --- the story spots below the inn (§10.8.0-7; story_after_clear shows them)
-      K.npc('st_rival', 'rowell', 9, 15, { dir: 'up', cond: 'st_show_rival', fixed: true }),
-      K.npc('st_fine', 'fine', 11, 15, { dir: 'up', cond: 'st_show_fine', fixed: true }),
-      K.npc('st_extra', 'scribe', 7, 15, { dir: 'up', cond: 'st_show_extra', fixed: true }),
+      K.npc('st_rival', 'rowell', 9, 15, { dir: 'up', cond: 'st_show_rival', fixed: true, text: '……' }),
+      K.npc('st_fine', 'fine', 11, 15, { dir: 'up', cond: 'st_show_fine', fixed: true, text: '……' }),
+      K.npc('st_extra', 'scribe', 7, 15, { dir: 'up', cond: 'st_show_extra', fixed: true, text: '……' }),
 
       // --- 隊商宿 (the inn)
       K.npc('inn', 'innkeeper', 5, 7, { event: 'common_inn', fixed: true, greet: '隊商宿へようこそ。\n砂を落として、\nゆっくり休んでいってください。' }),

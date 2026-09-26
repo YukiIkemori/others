@@ -6,6 +6,7 @@
 //   node tools/gen_world.js --ascii     print the finished map with coordinates
 //   node tools/gen_world.js --dump f    on failure, write the unfinished map to f
 //   node tools/gen_world.js --out f     write the map to f instead (tools/test_world.js compares)
+//   node tools/gen_world.js --quiet     no progress notes
 //   node tools/gen_world.js --p2 | --no-p2
 //                                       use the optional P2 world tiles (jungle deadforest river
 //                                       cliff ruins loc_port loc_mine, §11.2.3) always / never.
@@ -29,6 +30,16 @@ const path = require('path');
 
 const W = 128, H = 112, BORDER = 4;
 const argv = process.argv.slice(2);
+{ // unknown options (e.g. --help) print the usage instead of silently rewriting the map
+  const FLAGS = ['--dry', '--ascii', '--p2', '--no-p2', '--quiet'], WITH_ARG = ['--dump', '--out'];
+  for (let i = 0; i < argv.length; i++) {
+    if (WITH_ARG.includes(argv[i]) && argv[i + 1]) { i++; continue; }
+    if (FLAGS.includes(argv[i])) continue;
+    process.stderr.write(`gen_world: unknown option ${argv[i]}\n` +
+      fs.readFileSync(__filename, 'utf8').split('\n').slice(1, 16).map((l) => l.replace(/^\/\/ ?/, '')).join('\n') + '\n');
+    process.exit(2);
+  }
+}
 const OUT = argv.includes('--out') ? path.resolve(argv[argv.indexOf('--out') + 1]) : path.resolve(__dirname, '..', 'src', 'maps', 'world.js');
 
 // ------------------------------------------------------------------ tiles

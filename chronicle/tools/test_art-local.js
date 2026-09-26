@@ -308,5 +308,18 @@ section('text');
   }
 }
 
+section('outside trees & tree species (field draws outside cells with tile:<theme>:<outside>)');
+{
+  const A = R.Art, TH = R.DB.themes;
+  ok(typeof A.natGround === 'function' && typeof A.treeStyle === 'function' && typeof A.outsideTile === 'function', 'R.Art.natGround / treeStyle / outsideTile');
+  for (const th of Object.keys(TH)) ok(R.Gfx.has('tile:' + th + ':tree'), 'tile:' + th + ':tree registered (outside trees follow the theme)');
+  const NG = { town_snow: 'snowfloor', town_sand: 'sand', town_ash: 'dirt', town: 'lgrass', town_roa: 'lgrass', town_forest: 'lgrass', town_isle: 'lgrass', town_white: 'lgrass', forest: 'floor', swamp: 'floor', snow: 'floor' };
+  for (const th in NG) ok(A.natGround(th) === NG[th], 'natural ground of ' + th + ' = ' + NG[th] + ' (got ' + A.natGround(th) + ')');
+  const TS = { town_snow: 'snow', snow: 'snow', ice: 'snow', town_ash: 'ash', volcano: 'ash', town: '', forest: '', town_sand: '', town_isle: '' };
+  for (const th in TS) ok(A.treeStyle(th, 'lgrass') === TS[th], 'tree species in ' + th + ' = ' + (TS[th] || 'broadleaf'));
+  ok(A.treeStyle('town', 'snowfloor') === 'snow', 'a tree on snow is a fir in any theme');
+  ok(typeof A.ashTreeArt === 'function', 'scorched tree art (R.Art.ashTreeArt)');
+}
+
 console.log('\ntest_art-local: ' + pass + ' passed, ' + fail + ' failed');
 if (fail) { console.log(fails.slice(0, 40).map((f) => ' - ' + f).join('\n')); process.exit(1); }

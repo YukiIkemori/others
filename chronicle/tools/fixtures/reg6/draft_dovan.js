@@ -242,7 +242,7 @@ if (typeof require === 'undefined' || typeof module === 'undefined') { /* browse
   for (let y = 12; y <= 24; y++) dec(40, y, '-');
   for (let x = 40; x <= 47; x++) dec(x, 24, '-');
   for (let y = 24; y <= 33; y++) dec(47, y, '-');
-  dec(33, 3, '/');           // an old cart at the shaft mouth
+  dec(34, 3, '/');           // an old cart at the shaft mouth
   put(32, 3, 'm');           // 第一坑 sign
   // ---- the ore depot (SE yard)
   fill(42, 26, 51, 35, ':');
@@ -270,6 +270,9 @@ if (typeof require === 'undefined' || typeof module === 'undefined') { /* browse
   for (const [x, y] of [[8, 40], [13, 41], [24, 40], [29, 40], [37, 41], [46, 39]]) dec(x, y, 'h');
   for (const [x, y] of [[10, 37], [16, 37], [23, 37], [34, 37], [41, 37], [5, 37]]) dec(x, y, 'f');
   dec(25, 36, '3'); dec(28, 36, '3');
+  for (const [x, y] of rock) if (y >= 36) put(x, y, 'r');
+  for (let x = 18; x <= 32; x++) if (T[42][x] === '.') put(x, 42, ',');
+  for (let x = 24; x <= 29; x++) if (T[43][x] === '.') put(x, 43, ',');
   // street features
   for (const [x, y] of [[4, 12], [21, 12], [47, 12]]) dec(x, y, '1');
   dec(28, 11, 'h'); dec(16, 25, 'h'); dec(36, 25, 'h');

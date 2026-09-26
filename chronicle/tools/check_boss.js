@@ -61,6 +61,7 @@ function parseActions(s) {
         else err('cannot parse cond ' + part);
       }
       a.cond = c;
+      if (c.every) a.w *= 100; // bosses.js SCHED: scheduled moves ("n手ごと") dominate on their turn
     }
     return a;
   }).filter(Boolean);

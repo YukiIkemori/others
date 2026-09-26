@@ -48,4 +48,30 @@
   DB.maps.al_snowtown = mk('雪の村（試験）', 'town_snow', '*', 'T');
   DB.maps.al_sandtown = mk('砂の町（試験）', 'town_sand', 'd', 'd', decor.map((r) => r.replace(/;/g, ')')));
   DB.maps.al_ashtown = mk('火の町（試験）', 'town_ash', ':', 'T', decor.map((r) => r.replace(/;/g, '_')));
+  // the forest maze (theme forest, outside 'T', DESIGN §10.6.2-10): trees on the forest floor
+  DB.maps.al_forestout = {
+    name: '迷いの森（試験）', type: 'dungeon', legend: 'local', theme: 'forest', bgm: 'forest', outside: 'T',
+    rows: [
+      'TTTTTTTTTTTTTTTTTT',
+      'T......TT........T',
+      'T..T.......###...T',
+      'T.....TTT..#i#.T.T',
+      'T..............~~T',
+      'TT...T...T....~~~T',
+      'T................T',
+      'TTTTTTTT..TTTTTTTT',
+    ],
+    decor: [
+      '..................',
+      '..*...........*...',
+      '.........*........',
+      '..................',
+      '....*.............',
+      '..................',
+      '...........*......',
+      '..................',
+    ],
+    spawns: { entrance: { x: 8, y: 6, dir: 'up' } },
+    npcs: [],
+  };
 })(window.RPG);
