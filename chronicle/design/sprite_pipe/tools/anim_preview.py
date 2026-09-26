@@ -18,9 +18,11 @@ od = os.path.abspath(args[0])
 sets = args[1:] or ['battle', 'field']
 char = os.path.basename(od)
 for st in sets:
-    jp = os.path.join(od, st, '%s_%s.json' % (char, st))
-    if not os.path.exists(jp):
+    import glob
+    jps = glob.glob(os.path.join(od, st, '*_%s.json' % st))
+    if not jps:
         continue
+    jp = jps[0]
     js = json.load(open(jp))
     sheet = Image.open(os.path.join(od, st, js['image'])).convert('RGBA')
     cw, ch = js['cell']

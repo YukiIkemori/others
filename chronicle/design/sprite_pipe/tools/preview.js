@@ -13,10 +13,12 @@ const args = process.argv.slice(2);
 const char = args[0] && !args[0].includes(':') && !['battle', 'town', 'glimmer', 'victory'].some((v) => args[0].startsWith(v)) ? args.shift() : 'arun';
 const views = args.length ? args : ['battle', 'battle_noui', 'glimmer', 'victory', 'town', 'town_noui'];
 const od = path.join(HERE, 'out', char);
-const set = (k) => ({
-  png: 'data:image/png;base64,' + fs.readFileSync(path.join(od, k, `${char}_${k}.png`)).toString('base64'),
-  json: JSON.parse(fs.readFileSync(path.join(od, k, `${char}_${k}.json`), 'utf8')),
-});
+// the sheet files are <character>_<set>.* — the out dir may be named differently (out/arun_v1 holds arun_*.png)
+const set = (k) => {
+  const j = fs.readdirSync(path.join(od, k)).find((f) => f.endsWith(`_${k}.json`));
+  const json = JSON.parse(fs.readFileSync(path.join(od, k, j), 'utf8'));
+  return { png: 'data:image/png;base64,' + fs.readFileSync(path.join(od, k, json.image)).toString('base64'), json };
+};
 const HERO = { battle: set('battle'), field: set('field') };
 (async () => {
   fs.mkdirSync(path.join(od, 'preview'), { recursive: true });
