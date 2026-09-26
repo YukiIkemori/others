@@ -1,0 +1,367 @@
+{
+ "_readme": [
+  "Casting and direction for tools/voice_tts.js (Gemini TTS gemini-3.8-flash-tts). Speaker ids = tools/voice_script.js SPEAKERS.",
+  "voice: a prebuilt voice id from GET /v1beta/voices (type prebuilt → speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName) or a custom replicated voice (type custom → speechConfig.voiceConfig.voice).",
+  "profile/style go into the prompt (English); lines[<id>] is the per-line acting direction; fx is a post effect of tools/voice_tts.js (FX table: pitch / echo).",
+  "hero: the silent protagonist only has short battle voices, one set per gender (R.State.hero().gender m/f): v_hero_<g>_<kind>_<n>, played by R.Audio.battleVoice(kind).",
+  "Custom voice assignment: both custom voices were sampled and their median F0 estimated (YIN): Signature Voice ≈ 139 Hz, Echo ≈ 140 Hz — too close to tell, so by the lead's rule Signature Voice = male hero, Echo = female hero. NOTE: both read as adult male voices."
+ ],
+ "model": "gemini-3.8-flash-tts",
+ "speakers": {
+  "fine": {
+   "voice": "ja-jp-csagent-8",
+   "type": "prebuilt",
+   "profile": "Fine, a girl who looks about 15 in a grey hooded cloak; in truth the first storyteller from a thousand years ago. Quiet, clear, gentle, a little old-fashioned; her body is fading.",
+   "style": "soft and clear young female voice, calm and mysterious, never loud; tender pauses",
+   "fx": null
+  },
+  "rowell": {
+   "voice": "ja-jp-tutor-4",
+   "type": "prebuilt",
+   "profile": "Rowell, a 20-year-old male archivist of the Archive and the hero's rival. Stiff, proud and sarcastic at first; later full of doubt, then a loyal ally.",
+   "style": "young male voice, crisp and cool, clipped sentences; emotions break through in later scenes",
+   "fx": null
+  },
+  "berna": {
+   "voice": "ja-jp-assistant-6",
+   "type": "prebuilt",
+   "profile": "Berna, a storyteller woman of about 70, the hero's mentor who raised the hero. Soft, warm and a little mischievous grandmother.",
+   "style": "elderly female voice, warm and gentle with a playful smile, relaxed pace",
+   "fx": null
+  },
+  "lazaro": {
+   "voice": "ja-jp-podcaster-1",
+   "type": "prebuilt",
+   "profile": "Lazaro, the 60-year-old Grand Scribe of the Archive, the final human antagonist. Always polite and calm; lost his daughter Mira in a war twenty years ago.",
+   "style": "mature male voice, soft-spoken, very polite, chilling calm; grief underneath",
+   "fx": null
+  },
+  "king": {
+   "voice": "ja-jp-storyteller-4",
+   "type": "prebuilt",
+   "profile": "The Hollow King, primordial oblivion itself and the last boss. Nameless, formless, vast and cold.",
+   "style": "deep, slow, inhuman male voice full of contempt; heavy and resonant",
+   "fx": "king"
+  },
+  "nemrea": {
+   "voice": "ja-jp-assistant-9",
+   "type": "prebuilt",
+   "profile": "Nemrea, the Hollow King after being called by its true name for the first time: fading into sleep, surprised, at peace. Ageless and androgynous.",
+   "style": "soft androgynous voice, breathy, slow, filled with wonder, almost childlike",
+   "fx": "spirit"
+  },
+  "noa": {
+   "voice": "ja-jp-storyteller-11",
+   "type": "prebuilt",
+   "profile": "Noa, a woman in her thirties in Biblia, a city that is forgetting everything; the childhood friend of Mira. Gentle, kind, a little sad.",
+   "style": "gentle adult female voice, soft and warm, sad undertone",
+   "fx": null
+  },
+  "valzard": {
+   "voice": "algenib",
+   "type": "prebuilt",
+   "profile": "The lingering shadow of the legendary demon lord Valzard, feared and forgotten for three hundred years.",
+   "style": "deep gravelly male voice, slow and heavy, weary dread, echoing",
+   "fx": "valzard"
+  },
+  "elm": {
+   "voice": "ja-jp-advisor-9",
+   "type": "prebuilt",
+   "profile": "Elm, the ancient lord of the forest who dwells in a thousand-year-old tree. Calm, old and wise; remorseful, then grateful.",
+   "style": "deep, textured, resonant old male voice, slow and solemn",
+   "fx": "spirit"
+  },
+  "hazal": {
+   "voice": "ja-jp-advisor-3",
+   "type": "prebuilt",
+   "profile": "Hazal, a desert king sealed in his tomb whose name was forgotten; anguished, then relieved when the name returns.",
+   "style": "regal male voice, hoarse and dry, anguished then relieved",
+   "fx": "spirit"
+  },
+  "giant": {
+   "voice": "ja-jp-concierge-12",
+   "type": "prebuilt",
+   "profile": "The ice giant guarding the white dragon's peak: enormous, slow, threatening.",
+   "style": "deep booming male voice, slow and heavy",
+   "fx": "giant"
+  },
+  "neve": {
+   "voice": "ja-jp-training-10",
+   "type": "prebuilt",
+   "profile": "Neve, the noble white dragon (female) of the frozen peak. Majestic and cold at first, then warm and grateful.",
+   "style": "low, majestic mature female voice, dignified and resonant",
+   "fx": "spirit"
+  },
+  "melda": {
+   "voice": "ja-jp-tutor-1",
+   "type": "prebuilt",
+   "profile": "Melda, the ghost of the kind witch who once owned the misty manor. Elegant mature woman, gentle and melancholic.",
+   "style": "elegant gentle female voice, soft and wistful",
+   "fx": "spirit"
+  },
+  "mistwitch": {
+   "voice": "ja-jp-tutor-1",
+   "type": "prebuilt",
+   "profile": "The mist-eater monster imitating the witch Melda's shape and voice to lure children; broken, creepy syllables.",
+   "style": "eerie, whispering, broken syllables with unnatural pauses",
+   "fx": "mist"
+  },
+  "marina": {
+   "voice": "ja-jp-training-12",
+   "type": "prebuilt",
+   "profile": "Marina, a very old woman of a cape village who has waited sixty years for her beloved captain's ship to come home.",
+   "style": "frail elderly female voice, tender and tearful, slow",
+   "fx": null
+  },
+  "glen": {
+   "voice": "ja-jp-podcaster-4",
+   "type": "prebuilt",
+   "profile": "Captain Glen, the ghost of a sea captain in his forties who forgot his way home; rough seaman, anguished, then tender.",
+   "style": "rough, warm male voice of a seaman; confused anguish, then tenderness",
+   "fx": "ghost"
+  },
+  "guardian": {
+   "voice": "ja-jp-advisor-8",
+   "type": "prebuilt",
+   "profile": "The Iron Warden, an ancient iron golem guarding the mine by a pact with the smith god. Heavy, stern, metallic.",
+   "style": "deep stern male voice, slow and heavy, mechanical weight",
+   "fx": "guardian"
+  },
+  "sentinel": {
+   "voice": "ja-jp-training-11",
+   "type": "prebuilt",
+   "profile": "The Celestial Sentinel, an ancient star-orrery automaton speaking in broken mechanical syllables.",
+   "style": "flat, monotone, robotic, evenly spaced syllables",
+   "fx": "sentinel"
+  }
+ },
+ "hero": {
+  "voices": {
+   "m": {
+    "voice": "voice_akrep1z0wngp",
+    "name": "Signature Voice",
+    "type": "custom",
+    "f0Hz": 139
+   },
+   "f": {
+    "voice": "voice_4i7w55bqctzy",
+    "name": "Echo",
+    "type": "custom",
+    "f0Hz": 140
+   }
+  },
+  "profile": {
+   "m": "The hero, a young apprentice storyteller (male) who never speaks in the story; only battle cries.",
+   "f": "The hero, a young apprentice storyteller (female) who never speaks in the story; only battle cries."
+  },
+  "style": "young, bright, determined hero; short energetic battle voice",
+  "shoutKinds": [
+   "attack",
+   "hurt"
+  ],
+  "lines": {
+   "attack": [
+    {
+     "text": "はあっ！",
+     "note": "sharp attack shout on a sword swing, short and powerful"
+    },
+    {
+     "text": "せいっ！",
+     "note": "quick crisp strike cry, energetic"
+    },
+    {
+     "text": "くらえっ！",
+     "note": "fierce shout, putting full strength into the blow"
+    }
+   ],
+   "glimmer": [
+    {
+     "text": "……見えた！",
+     "note": "a sharp inhale, then sudden inspiration: a new technique flashes into mind; excited, bright"
+    },
+    {
+     "text": "今だ……そこっ！",
+     "note": "a flash of insight in battle, focused then decisive"
+    }
+   ],
+   "spell": [
+    {
+     "text": "言の葉よ、力を！",
+     "note": "casting a spell, calling on the power of words, confident and ringing"
+    },
+    {
+     "text": "届けっ！",
+     "note": "releasing a spell with conviction, strong"
+    }
+   ],
+   "hurt": [
+    {
+     "text": "ぐっ……！",
+     "note": "taking a hit, short pained grunt"
+    },
+    {
+     "text": "うあっ！",
+     "note": "struck hard, short pained cry"
+    }
+   ],
+   "ko": [
+    {
+     "text": "ここまで……か……",
+     "note": "collapsing in battle, weak, fading breath"
+    }
+   ],
+   "victory": [
+    {
+     "text": "よし、勝った！",
+     "note": "relieved and happy after winning a battle, bright"
+    },
+    {
+     "text": "この物語は、まだ続く。",
+     "note": "calm confident smile after victory"
+    }
+   ]
+  }
+ },
+ "lines": {
+  "v_berna_ending_01": "Classic storytelling, nostalgic warmth, lyrical steady pace, comforting medium volume.",
+  "v_berna_ending_02": "Fond reassurance, playful twinkle, relaxed melodic pace, warm gentle volume.",
+  "v_berna_ending_03": "Fairy-tale cadence, gentle closure, trailing slow pace, soft fading volume.",
+  "v_berna_lute_01": "Reverent presentation, warm encouragement, measured pace, steady supportive volume.",
+  "v_berna_lute_02": "Caring provision, nurturing warmth, pleasant unhurried pace, soft bright volume.",
+  "v_berna_lute_03": "Serious gravity, mentor's concern, deliberate pace, lowered solemn volume.",
+  "v_berna_lute_04": "Inspiring charge, affectionate trust, resolute pace, clear encouraging volume.",
+  "v_berna_lute_05": "Reassuring freedom, benevolent smile, easygoing relaxed pace, warm gentle volume.",
+  "v_berna_prologue_01": "Cheerful warmth, maternal kindness, brisk lively pace, inviting medium volume.",
+  "v_berna_prologue_02": "Gentle pride, grandmotherly care, steady pace, soft clear volume.",
+  "v_berna_prologue_03": "Playful curiosity, fond affection, warm relaxed pace, tender medium volume.",
+  "v_berna_prologue_04": "Guiding mentor, anticipatory warmth, gentle unhurried pace, welcoming volume.",
+  "v_berna_roa_01": "Confused nostalgia, fading memory stirring, slow hesitant pace, soft wondering volume.",
+  "v_berna_roa_02": "Tearful pride, emotional homecoming, trembling warm pace, rich choked volume.",
+  "v_berna_roa_03": "Sage remembrance, guiding legacy, steady reverent pace, clear medium volume.",
+  "v_berna_roa_04": "Loving blessing, passing the torch, tender slow pace, soft affectionate volume.",
+  "v_elm_forest_01": "Awakening clarity, ancient remorse, measured slow pace, deep resonant volume.",
+  "v_elm_forest_02": "Solemn mythic memory, heavy sorrow, rhythmic deliberate pace, deep timbered volume.",
+  "v_elm_forest_03": "Nostalgic affection, ancient peace, unhurried stately pace, warm deep volume.",
+  "v_elm_forest_04": "Profound guilt, sorrowful confession, heavy dragging pace, muted rumbling volume.",
+  "v_elm_forest_05": "Sincere dignity, deep humble gratitude, slow bowing pace, resonant warm volume.",
+  "v_elm_forest_06": "Reassuring benevolent authority, gentle closure, steady unhurried pace, rich calm volume.",
+  "v_fine_ash_01": "Profound archaic wisdom, calm conviction, measured pace, quiet volume.",
+  "v_fine_ending_01": "Peaceful dissolution, serene acceptance, slow drifting pace, faint whisper.",
+  "v_fine_ending_02": "Tender parting plea, deeply emotional, lingering slow pace, delicate whisper.",
+  "v_fine_forest_01": "Serious perception, low intensity, measured pace, hushed volume.",
+  "v_fine_isles_01": "Melancholy yet hopeful, quiet conviction, slow pace, soft volume.",
+  "v_fine_lighthouse_01": "Quiet wisdom, gentle reassurance, moderate pace, soft clear volume.",
+  "v_fine_lighthouse_02": "Deep faith, tender and intimate, slow pace, gentle whisper.",
+  "v_fine_marsh_01": "Subtle warning, quiet mystery, deliberate pace, low soft volume.",
+  "v_fine_naming_01": "Sacred finality, selfless devotion, high emotional intensity, clear radiant volume.",
+  "v_fine_oblivion_01": "Eerie gravity, ancient dread, solemn slow pace, hushed low volume.",
+  "v_fine_oblivion_02": "Tragic exposition, chilling clarity, deliberate pace, subdued ominous volume.",
+  "v_fine_roa_01": "Heartfelt compassion, gentle urging, slow pace, tender soft volume.",
+  "v_fine_roa_02": "Bittersweet acceptance, selfless resignation, lingering slow pace, quiet whisper.",
+  "v_fine_roa_03": "Fading presence, ethereal farewell, slow pace, soft fading whisper.",
+  "v_fine_shades_01": "Awe and reverence, quiet realization, slow pace, subdued volume.",
+  "v_fine_shades_02": "Wistful relief, tender marvel, gentle pace, soft whisper.",
+  "v_fine_snow_01": "Poignant realization, gentle insight, slow pace, soft volume.",
+  "v_fine_t1_01": "Faint satisfaction, subtle weariness, slow pace, gentle breathy volume.",
+  "v_fine_t1_02": "Playful mystique, airy detachment, unhurried pace, soft whisper.",
+  "v_fine_t3_01": "Warm approval, understated praise, steady pace, quiet volume.",
+  "v_fine_t3_02": "Gentle plea, tinged with quiet loneliness, slow pace, soft volume.",
+  "v_fine_t6_01": "Heavy sorrow, fading presence, very slow pace, fragile whisper.",
+  "v_fine_t6_02": "Deep sympathy, hesitant grief, halting pace, faint soft volume.",
+  "v_fine_t8_01": "Solemn revelation, dignified clarity, deliberate pace, clear medium volume.",
+  "v_fine_t8_02": "Mythic nostalgia, poetic storytelling, steady slow pace, quiet reverence.",
+  "v_fine_t8_03": "Ancient exposition, reflective gravity, measured pace, calm medium volume.",
+  "v_fine_t8_04": "Imminent dread, solemn warning, controlled intensity, steady quiet volume.",
+  "v_fine_t8_05": "Quiet hope and purpose, focused intensity, brisk pace, clear volume.",
+  "v_fine_t8_06": "Gentle summons, wistful determination, measured pace, soft yet firm volume.",
+  "v_giant_peak_01": "Brute menace, freezing intimidation, slow stomping pace, booming guttural volume.",
+  "v_glen_dawn_01": "Peaceful homecoming, immense devotion, slow tender pace, soft loving whisper.",
+  "v_glen_ship_01": "Confused singing fading into agony, fragmented stumbling pace, strained raspy volume.",
+  "v_glen_ship_02": "Tormented panic, desperate identity crisis, frenzied erratic pace, screaming anguished volume.",
+  "v_glen_ship_03": "Epiphany of love, sudden breaking dawn, stunned slow pace, tender clearing volume.",
+  "v_glen_ship_04": "Heartfelt sorrow and resolve, tearful smile, steadying pace, warm resonant volume.",
+  "v_guardian_mine_01": "Stern mechanical judgment, stony ancient voice, rigid slow pace, booming heavy volume.",
+  "v_guardian_mine_02": "Relentless executioner, unwavering duty, heavy rhythmic pace, threatening loud volume.",
+  "v_guardian_mine_03": "Calm acceptance, mechanical shutdown, descending slow pace, fading low volume.",
+  "v_hazal_tomb_01": "Agonized rage of a forgotten king, dry raspy fury, jagged desperate pace, cracked shouting.",
+  "v_hazal_tomb_02": "Pitiful pleading, desperate fading thirst, strained gasping pace, raspy ragged whisper.",
+  "v_hazal_tomb_03": "Profound relief, soul-soothing recognition, slow tremulous pace, soft exhaling volume.",
+  "v_hazal_tomb_04": "Tearful gratitude, dignified royal peace, gentle lingering pace, warm resting volume.",
+  "v_king_altar_01": "Absolute cosmic nihilism, vast uncaring malice, rhythmic slow pace, deafening booming volume.",
+  "v_king_altar_02": "Monolithic arrogance, dismissive mockery, slow crushing pace, heavy resonant volume.",
+  "v_king_altar_03": "Annoyed persistence, immutable void, cold monotonous pace, oppressive deep volume.",
+  "v_king_archive_01": "Cruel mockery, sinister satisfaction, dragging sadistic pace, low rumbling volume.",
+  "v_king_naming_01": "Shocked fury, crumbling existence, sharp abrupt pace, bellowing frantic volume.",
+  "v_king_shades_01": "Deep ancient contempt, booming resonant echo, slow deliberate pace, thundering volume.",
+  "v_lazaro_archive_01": "Chilling politeness, weary greeting, smooth unhurried pace, calm medium volume.",
+  "v_lazaro_archive_02": "Haunting grief, quiet suppressed sorrow, slow heavy pace, hushed low volume.",
+  "v_lazaro_archive_03": "Bitter cynicism, hollow disgust, dragging pace, dark muttered volume.",
+  "v_lazaro_archive_04": "Fanatical serenity, twisted philosophy, calm measured pace, persuasive quiet volume.",
+  "v_lazaro_archive_05": "Cold disappointment, pitiless resolve, slow deliberate pace, chillingly polite volume.",
+  "v_lazaro_archive_06": "Relentless execution, deadly calm conviction, firm steady pace, icy controlled volume.",
+  "v_lazaro_archive_07": "Sudden emotional breakdown, piercing memory, fractured halting pace, cracking tearful volume.",
+  "v_lazaro_ending_01": "Utter heartbreak, profound tearful longing, weeping slow pace, devastated faint whisper.",
+  "v_marina_dawn_01": "Pure tender love, sixty years of waiting ending, slow gentle pace, tearful soft volume.",
+  "v_marina_dawn_02": "Deep peaceful relief, tearful gratitude, relaxed sighing pace, soft blessed whisper.",
+  "v_marina_nerei_01": "Nostalgic warmth, recognition stirring, slow tearful pace, trembling soft volume.",
+  "v_marina_pier_01": "Breathless shock, overwhelming emotional surge, gasping quick pace, fragile cracked volume.",
+  "v_melda_manor_01": "Soft polite surprise, ethereal elegance, light calm pace, gentle airy volume.",
+  "v_melda_manor_02": "Distressed innocence, earnest clarification, hurried defensive pace, soft pleading volume.",
+  "v_melda_manor_03": "Solemn exposition, heroic memory, measured steady pace, melancholic clear volume.",
+  "v_melda_manor_04": "Sorrowful lament, quiet regret, drooping slow pace, fading fragile volume.",
+  "v_melda_manor_05": "Hopeful entrustment, urgent prayer, focused gentle pace, earnest soft volume.",
+  "v_melda_marsh_01": "Radiant gratitude, peaceful release, bright gentle pace, warm joyful whisper.",
+  "v_mistwitch_marsh_01": "Creepy lure, broken glitched cadence, halting unnatural pace, eerie whispering falsetto volume.",
+  "v_nemrea_ending_01": "Gentle wonder, childlike awe, fragile slow pace, soft ethereal whisper.",
+  "v_nemrea_ending_02": "Deep peaceful surrender, drifting into slumber, trailing slow pace, fading breathy whisper.",
+  "v_neve_peak_01": "Piercing ferocity, frosty territorial roar, aggressive sharp pace, booming ferocious volume.",
+  "v_neve_peak_02": "Soft melting awe, vulnerable warmth, hesitant tender pace, gentle breathy volume.",
+  "v_neve_peak_03": "Noble serenity, benevolent dragon majesty, calm steady pace, resonant clear volume.",
+  "v_noa_biblia_01": "Timid curiosity, sudden startled recognition, cautious pace, soft questioning volume.",
+  "v_noa_biblia_02": "Melancholic pride, tender sorrow, gentle rhythmic pace, fragile soft volume.",
+  "v_noa_biblia_03": "Quiet despair, helpless sympathy, slow heavy pace, hushed mournful volume.",
+  "v_noa_biblia_04": "Languishing grief, painful recollection, hesitant uneven pace, choked quiet volume.",
+  "v_noa_biblia_05": "Breathless relief, tearful joy, gasping slow pace, tremulous soft volume.",
+  "v_noa_biblia_06": "Fond nostalgia, smiling through tears, sweet gentle pace, warm breathy volume.",
+  "v_noa_ending_01": "Peaceful closure, heartfelt message to heaven, bright tender pace, clear ringing volume.",
+  "v_rowell_biblia_01": "Grim dismay, witnessing tragic void, slow pace, hushed horrified volume.",
+  "v_rowell_biblia_02": "Cautious hope, gentle concern, hesitant pace, soft questioning volume.",
+  "v_rowell_biblia_03": "Tactical urgency, focused briefing, quick efficient pace, lowered sharp volume.",
+  "v_rowell_biblia_04": "Grounded camaraderie, resolute anticipation, steady pace, clear warm volume.",
+  "v_rowell_ending_01": "Tender empathy, healing closure, gentle slow pace, soft warm volume.",
+  "v_rowell_prologue_01": "Cold disdain, bureaucratic arrogance, crisp brisk pace, sharp medium volume.",
+  "v_rowell_prologue_02": "Dismissive superiority, stiff authority, firm pace, projecting clear volume.",
+  "v_rowell_roa_01": "Reliable determination, renewed purpose, brisk pace, steady confident volume.",
+  "v_rowell_roa_02": "Action-oriented resolve, dependable ally, brisk pace, firm clear volume.",
+  "v_rowell_seal_01": "Focused determination, readying for clash, firm pace, confident medium volume.",
+  "v_rowell_seal_02": "Solemn incantation, commanding authority, deliberate rhythmic pace, ringing loud volume.",
+  "v_rowell_seal_03": "Sudden alertness, bracing for fight, tense sharp pace, clipped medium volume.",
+  "v_rowell_seal_04": "Heroic defiance, desperate urgency, explosive pace, roaring fierce volume.",
+  "v_rowell_t2_01": "Irritated condescension, smug greeting, brisk pace, sharp medium volume.",
+  "v_rowell_t2_02": "Stern reprimand, authoritarian impatience, hurried pace, raised firm volume.",
+  "v_rowell_t2_03": "Aggressive resolve, ready to strike, rapid pace, harsh loud volume.",
+  "v_rowell_t2_04": "Gritted frustration, wounded pride, strained pace, clipped tense volume.",
+  "v_rowell_t2_05": "Bitter warning, haughty parting shot, sharp pace, biting medium volume.",
+  "v_rowell_t2_06": "Reluctant debt, stiff begrudging pride, fast clipped pace, curt volume.",
+  "v_rowell_t2_07": "Smug satisfaction, haughty mockery, relaxed pace, commanding medium volume.",
+  "v_rowell_t4_01": "Defiant tension, lingering grudge, measured pace, firm guarded volume.",
+  "v_rowell_t4_02": "Somber gravity, uneasy awe, hushed pace, low tense volume.",
+  "v_rowell_t4_03": "Vehement defense, masking inner doubts, intense pace, sharp defensive volume.",
+  "v_rowell_t5_01": "Fierce pride, determined challenge, fast pace, forceful loud volume.",
+  "v_rowell_t5_02": "Conflicted bewilderment, mounting frustration, uneven pace, agitated volume.",
+  "v_rowell_t5_03": "Desperate fury, cracking conviction, sudden outburst, shouting high volume.",
+  "v_rowell_t5_04": "Shaken foundation, crumbling worldview, hesitant slow pace, stunned quiet whisper.",
+  "v_rowell_t5_05": "Hollow victory, bitter confusion, trailing slow pace, muttering low volume.",
+  "v_rowell_t7_01": "Earnest urgency, dropping haughtiness, abrupt halting pace, subdued medium volume.",
+  "v_rowell_t7_02": "Somber resolution, honest vulnerability, steady deliberate pace, quiet firm volume.",
+  "v_rowell_t7_03": "Cold horror, uncovering betrayal, grim deliberate pace, tense low volume.",
+  "v_rowell_t7_04": "Trembling outrage, bitter realization, sharp pace, breathy strained volume.",
+  "v_rowell_t7_05": "Devastating grief, quiet anguish, halting slow pace, cracking soft volume.",
+  "v_rowell_t7_06": "Resolute alliance, urgent trust, rapid steady pace, clear firm volume.",
+  "v_rowell_t7_07": "Final defiance, burning bridges, decisive pace, resonant unwavering volume.",
+  "v_sentinel_star_01": "Monotone synthetic warning, glitchy fragmented cadence, robotic disjointed pace, flat metallic volume.",
+  "v_valzard_oblivion_01": "Stunned realization, ancient dread awakening, slow raspy pace, hollow rumbling volume.",
+  "v_valzard_oblivion_02": "Weary anguish, lingering terror of centuries, dragging heavy pace, low gravelly volume.",
+  "v_valzard_oblivion_03": "Faint reverence, defeat and memory, dying slow pace, fading raspy whisper."
+ }
+}

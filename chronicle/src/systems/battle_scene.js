@@ -652,7 +652,7 @@
     pop(u, n, color) {
       const r = this.rectOf(u);
       const same = this.pops.filter((p) => p.u === u && p.t < 20).length;
-      const x = u.isParty ? r.cx : r.cx;
+      const x = r.cx;
       const y = (u.isParty ? Math.max(42, r.cy - 8) : Math.max(42, r.y + r.h * 0.4)) - same * 9;
       this.pops.push({ u, x, y, str: n == null ? 'MISS' : String(n), color, t: 0, party: !!u.isParty });
     }
@@ -1691,14 +1691,15 @@
       const h = bg.height || 144;
       if (h < FIELD.h) G().draw(bg, 0, h, { sx: 0, sy: h - 1, sw: bg.width || 256, sh: 1, w: FIELD.w, h: FIELD.h - h });
     }
-    /** monsters and members sorted by their feet (a member who ran in stands before / behind by y — §11.5.1) */
+    /** monsters and members sorted by their feet; a member who ran in is drawn in front of every monster, so a
+     *  front-row monster never hides someone attacking the row behind it (§11.5.1) */
     drawUnits() {
       const items = [];
       for (const v of this.vis.values()) {
         if (v.gone || (!v.m.alive && !v.die && !v.flee)) continue;
         items.push({ y: v.y + v.h, o: 0, i: v.i, v });
       }
-      for (const v of this.pvs || []) items.push({ y: v.y, o: 1, i: v.i, pv: v });
+      for (const v of this.pvs || []) items.push({ y: v.away ? 10000 + v.y : v.y, o: 1, i: v.i, pv: v });
       items.sort((a, b) => a.y - b.y || a.o - b.o || a.i - b.i);
       for (const v of this.pvs || []) this.drawShadow(v);
       for (const it of items) { if (it.v) this.drawMonster(it.v); else this.drawMember(it.pv); }

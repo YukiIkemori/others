@@ -23,8 +23,9 @@
 //        WAV, PCM 16-bit mono 24 kHz.
 //   The prompt: "# AUDIO PROFILE … ## DIRECTOR'S NOTES … ## TRANSCRIPT <line>" — with a plain
 //   "Say sadly: <line>" prefix the model sometimes reads the direction aloud, so every take is checked:
-//   POST …/models/gemini-3.5-transcribe:generateContent  {contents:[{parts:[{inlineData:{mimeType:'audio/wav',
-//   data}}, {text:'Transcribe …'}]}]} → parts[].audioTranscription.text, compared with the line.
+//   POST …/models/gemini-3.8-flash:generateContent {contents:[{parts:[{inlineData:{mimeType:'audio/wav',data}},
+//   {text:'<the line> … reply JSON {heard, match, extra}'}]}]} — a listening check that allows kanji/kana
+//   variants (gemini-3.5-transcribe → parts[].audioTranscription.text also works, but spells differently).
 //
 // ------------------------------------------------------------------ post-processing (ffmpeg)
 //   trim silence (≤ 60 ms before, 150 ms after), optional per-speaker effect (casting.json `fx`: pitch /
@@ -41,6 +42,7 @@ const CASTING = path.join(ROOT, 'design', 'voice', 'casting.json');
 const OUT = path.join(ROOT, 'assets', 'voice');
 const TTS_MODEL = process.env.TTS_MODEL || 'gemini-3.8-flash-tts';
 const STT_MODEL = process.env.STT_MODEL || 'gemini-3.5-transcribe';
+const JUDGE_MODEL = process.env.JUDGE_MODEL || 'gemini-3.8-flash';
 
 // ------------------------------------------------------------------ the lines
 function loadCasting(file) { return JSON.parse(fs.readFileSync(file || CASTING, 'utf8')); }
@@ -108,6 +110,16 @@ async function transcribe(wav) {
   const json = await GA.geminiPost(STT_MODEL, { contents: [{ parts: [{ inlineData: { mimeType: 'audio/wav', data: wav.toString('base64') } }, { text: 'Transcribe this Japanese speech exactly as spoken. Output only the transcript.' }] }] }, { timeoutSec: 120 });
   return GA.partsOf(json).text.trim();
 }
+/** listen to a take: does it say exactly the line (spelling variants allowed) and nothing else?
+ *  → {match, heard, extra, note}. JUDGE_MODEL (gemini-3.8-flash) hears the audio. */
+async function judge(wav, line) {
+  const q = 'You check voice-over takes for a Japanese game. The script line is:\n「' + spoken(line.text) + '」\n' +
+    'Listen to the audio. Reply ONLY JSON: {"heard":"<what is said, in Japanese>","match":true|false,"extra":"<any words said that are not in the line, e.g. English stage directions, else empty>","note":"<max 12 words on delivery>"}. ' +
+    'match = the audio says the whole line and nothing else; different kanji/kana spelling of the same words, katakana robot speech read as normal words, pauses, breaths and the omission of "……" are fine.';
+  const json = await GA.geminiPost(JUDGE_MODEL, { contents: [{ parts: [{ inlineData: { mimeType: 'audio/wav', data: wav.toString('base64') } }, { text: q }] }], generationConfig: { responseMimeType: 'application/json' } }, { timeoutSec: 120 });
+  const t = GA.partsOf(json).text;
+  try { const j = JSON.parse(t.slice(t.indexOf('{'), t.lastIndexOf('}') + 1)); return { match: !!j.match, heard: String(j.heard || ''), extra: String(j.extra || ''), note: String(j.note || '') }; } catch (e) { return { match: false, heard: t.slice(0, 80), extra: '', note: 'unparsable judge reply' }; }
+}
 
 // ------------------------------------------------------------------ audio processing
 const FX = {
@@ -155,6 +167,7 @@ function processWav(wavBytes, line, sp, o) {
   let ch = [GA.mono(d.channels)];
   ch = trim(ch, d.rate, 0.06, 0.15);
   if (sp.fx) ch = trim(applyFx(ch, d.rate, sp.fx), d.rate, 0.03, 0.5);
+  ch = GA.limitTo(ch, d.rate, o.lufs); // gain to the target, true-peak limiter at −1 dBFS
   let n = GA.normalise(ch, d.rate, o.lufs, -1);
   // very short shouts: ebur128 cannot gate < 0.4 s reliably → RMS-based fallback (≈ −16 dBFS RMS)
   if (!isFinite(n.before.I)) {
@@ -219,21 +232,22 @@ async function main(argv, E) {
           const p = GA.partsOf(json);
           if (!p.audio.length) { console.log(`  ${l.id}: no audio (${p.finishReason || p.blocked || p.text})`); continue; }
           const w = p.audio[0].bytes;
-          const h = await transcribe(w);
-          const s = similarity(l.text, h);
-          const leaked = /[A-Za-z]{4,}/.test(h) && !/[A-Za-z]{4,}/.test(l.text);
+          const jd = await judge(w, l);
+          const h = jd.heard, sim0 = similarity(l.text, h);
+          const leaked = (/[A-Za-z]{4,}/.test(h) && !/[A-Za-z]{4,}/.test(l.text)) || /[A-Za-z]{4,}/.test(jd.extra);
           const pr = processWav(w, l, sp, o), ck = check(pr, l);
-          const need = l.shout ? 0.0 : l.hero ? 0.4 : 0.72;
-          const good = !leaked && s >= need && !ck.problems.length;
-          const q = s - (leaked ? 1 : 0) - ck.problems.length * 0.5;
-          if (!best || q > best.q) best = { w, h, s, q, good };
+          const ok = l.shout ? !leaked : (jd.match && !leaked);
+          const s = ok ? Math.max(sim0, 0.9) : sim0;
+          const good = ok && !ck.problems.length;
+          const q = (ok ? 1 : 0) + sim0 * 0.5 - (leaked ? 1 : 0) - ck.problems.length * 0.5;
+          if (!best || q > best.q) best = { w, h, s, q, good, note: jd.note };
           if (good) break;
-          console.log(`  ${l.id}: retry (heard "${h}", sim ${s.toFixed(2)}${leaked ? ', direction read aloud' : ''}${ck.problems.length ? ', ' + ck.problems.join('; ') : ''})`);
+          console.log(`  ${l.id}: retry (heard "${h}"${jd.extra ? ', extra "' + jd.extra + '"' : ''}${ck.problems.length ? ', ' + ck.problems.join('; ') : ''})`);
         }
         if (!best) throw new Error('no audio after ' + o.tries + ' tries');
         wav = best.w; heard = best.h; sim = best.s;
         fs.writeFileSync(rawFile, wav);
-        fs.writeFileSync(rawFile + '.json', JSON.stringify({ id: l.id, voice: sp.voice, heard, similarity: sim, prompt: buildPrompt(C, l), generated: new Date().toISOString() }, null, 1));
+        fs.writeFileSync(rawFile + '.json', JSON.stringify({ id: l.id, voice: sp.voice, heard, similarity: sim, note: best.note, matched: best.good, prompt: buildPrompt(C, l), generated: new Date().toISOString() }, null, 1));
         if (!best.good) console.log(`  ${l.id}: kept the best take (sim ${sim.toFixed(2)}) — listen to it`);
       }
       const pr = processWav(wav, l, sp, o), ck = check(pr, l);
@@ -259,5 +273,5 @@ async function main(argv, E) {
   return fails ? 1 : 0;
 }
 
-module.exports = { loadCasting, allLines, buildPrompt, requestBody, similarity, spoken, main, FX };
+module.exports = { judge, transcribe, loadCasting, allLines, buildPrompt, requestBody, similarity, spoken, main, FX };
 if (require.main === module) main(process.argv.slice(2), process.env).then((c) => { process.exitCode = c; }, (e) => { console.error('[voice] ' + GA.redact(e.message || e)); process.exitCode = 1; });

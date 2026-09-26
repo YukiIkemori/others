@@ -138,6 +138,17 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     const r1 = S.rectOf(Q[1]);
     ok(r2.side === 'party' && S.pv(Q[2]) && S.pops[0].y > r1.cy && S.pops[0].y + 7 > r2.head[1], 'L20b a member\'s number sits below the upper member\'s chest', { y: S.pops[0].y, upperCy: r1.cy, head: r2.head[1] });
   }
+  {
+    // draw order: a member who ran in is drawn after every monster (a front-row monster must not hide them)
+    const v = S.pvs[0], order = [];
+    const dm = S.drawMonster, dp = S.drawMember;
+    S.drawMonster = (mv) => order.push('m'); S.drawMember = (pv) => order.push(pv === v ? 'V' : 'p');
+    v.away = true; v.y = 100;
+    S.drawUnits();
+    const lastM = order.lastIndexOf('m'), iv = order.indexOf('V');
+    S.drawMonster = dm; S.drawMember = dp; v.away = false; S.updateHomes(true);
+    ok(lastM >= 0 && iv > lastM, 'L20c a ran-in member is drawn in front of every monster', order.join(''));
+  }
   const rm = S.rectOf(S.eng.mons[0]);
   S.pop(S.eng.mons[0], 3, 'white');
   eq([S.pops[2].x, S.pops[2].y], [rm.cx, Math.max(42, rm.y + rm.h * 0.4)], 'L21 monster numbers at 40 % of the sprite');

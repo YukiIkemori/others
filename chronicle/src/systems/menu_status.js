@@ -272,8 +272,9 @@
         }
       }
       pageActs(c, pg, kind) {
-        G().window(4, 46, 248, 174, { title: pg.title });
         const list = pg.list || [];
+        // content-sized (Part A11): as tall as the longer of the two columns
+        G().window(4, 46, 248, 16 + Math.max(2, Math.min(11, list.length)) * 15, { title: pg.title });
         if (!list.length) { G().text(kind === 'tech' ? 'まだ技を覚えていない。' : 'まだ術を覚えていない。', 16, 56, { color: Kt.COL.gray }); return; }
         list.forEach((id, i) => {
           const a = DB.actions[id];
@@ -418,7 +419,8 @@
           : !frontAlive || eff.some((r, i) => r !== rows[i])
             ? ['前列が全員倒れて', 'いるので、中列が', '前に出て戦う。']
             : ['前列が全員倒れる', 'と、中列が前に', '出て戦う。'];
-        lines.forEach((l, i) => G().text(l, 164, 50 + i * 14, { color: !frontAlive ? G().C.yellow : Kt.COL.gray, size: 8 }));
+        // re-wrapped to the window (compact menus raise size 8 to the readable floor, Part A11)
+        G().wrap(lines.join(''), 82, 8).slice(0, 4).forEach((l, i) => G().text(l, 164, 50 + i * 14, { color: !frontAlive ? G().C.yellow : Kt.COL.gray, size: 8 }));
         G().text('Aで選ぶ', 164, 112, { color: Kt.COL.gray, size: 8 });
         G().window(4, 140, 248, 80);
         ['前列：敵に狙われやすい。', '中列：受ける物理のダメージが減る。', '中列からは剣や斧などが届かない。', '槍・弓・鞭と術は、どこからでも届く。']

@@ -1,0 +1,27 @@
+{
+  "loopStart": 15.023,
+  "loopEnd": 75.024,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. Deep mine tunnels and wet echoing caverns turned impossibly cool: a dark, jazzy urban-noir funk groove in E minor, \"the coolest sewer in the world\" energy. A deep walking-then-slap bass line locks with tight, crisp drums; staccato brass stabs and a funky clavinet answer each other; a smoky tenor saxophone or muted trumpet plays a sly, memorable minor melody. Dripping water echoes and a hint of metallic percussion like distant pickaxes. Stylish, sneaky, groovy, never scary. Tempo 96 BPM, 4/4 time, key of E minor. Instrumentation: walking and slap electric bass, tight dry funk drums, clavinet, brass section stabs, muted trumpet, tenor saxophone, rhodes electric piano, small metallic percussion, dripping echo. Form: bass groove intro, sax/trumpet theme over the groove, brass and clavinet call-and-response, walking bass break, theme again. Duration: 90 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[B4]]",
+    "generated": "2026-09-26T11:53:45.294Z",
+    "rawSeconds": 91,
+    "takes": 2
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -5.3,
+    "gainDb": -6,
+    "peakLimited": false,
+    "loopScore": 0.804,
+    "seamCorr": 0.797,
+    "xfade": 0.6,
+    "medianDb": -23,
+    "longestSilence": 0.6,
+    "seamLevelDiffDb": 4.9,
+    "seamJump": 0.0288,
+    "maxStep": 0.1263
+  }
+}

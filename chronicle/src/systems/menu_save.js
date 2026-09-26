@@ -172,6 +172,7 @@
     { key: 'alwaysDash', label: '常にダッシュ', values: onOff, names: ['する', 'しない'], desc: 'するなら、Bを押している間だけ歩く。' },
     { key: 'fieldZoom', label: 'フィールドの広さ', values: ['normal', 'wide', 'wider'], names: ['ふつう', 'ひろい', 'もっとひろい'], desc: 'マップに映す広さ。すぐに変わる。' },
     { key: 'windowColor', label: 'ウインドウの色', values: ['ink', 'black', 'blue', 'green', 'red'], names: ['紺', '黒', '青', '緑', '赤'], desc: 'ウインドウの色を変える。' },
+    { key: 'menuSize', label: 'メニューの表示', values: ['compact', 'large'], names: ['コンパクト', '大きく'], desc: 'メニューの窓と文字の大きさを選ぶ。' },
     { key: 'touchPad', label: 'タッチパッド', values: ['auto', 'on', 'off'], names: ['自動', '出す', '出さない'], desc: '画面のボタンを出すかどうか。' },
     { key: 'padConfirm', label: '決定ボタン', values: ['right', 'bottom'], names: ['右', '下'], desc: 'パッドの決定ボタンの位置。' },
     { key: 'autoKeep', label: 'オート継続', values: onOff, names: ['する', 'しない'], desc: '次の戦闘もオートで始める（ボス戦は手動）' },
@@ -242,7 +243,7 @@
     }
 
     // ============================================================ 設定
-    const LH = 13; // 13 rows (12 settings + 戻る) fit above the help window
+    const LH = 13; // 14 rows (13 settings + 戻る) and the one-line help window fit the 224 frame
     class SettingsScreen extends Kt.Screen {
       constructor() {
         super();
@@ -276,7 +277,7 @@
       }
       render() {
         const S = R.Settings;
-        const h = (SETTINGS.length + 1) * LH + 16; // 13 × 13 + 16 = 185
+        const h = (SETTINGS.length + 1) * LH + 16; // 14 × 13 + 16 = 198
         G().window(4, 4, 248, h, { title: '設定' });
         SETTINGS.forEach((s, i) => {
           const y = 12 + i * LH;
@@ -298,9 +299,9 @@
         const by = 12 + SETTINGS.length * LH;
         G().text('戻る', 20, by, { color: G().C.cyan });
         if (this.index === SETTINGS.length) G().cursor(8, by + 1, !this.busy);
-        G().window(4, h + 6, 248, 224 - h - 10);
+        G().window(4, h + 2, 248, 20);
         const s = SETTINGS[this.index];
-        Kt.fitText(s ? s.desc : '設定を終えて戻る。', 14, h + 12, 228);
+        Kt.fitText(s ? s.desc : '設定を終えて戻る。', 14, h + 6, 228);
       }
     }
     return { SaveScreen, SettingsScreen };

@@ -201,6 +201,16 @@
       this.index = R.U.clamp(this.index, 0, Math.max(0, items.length - 1));
       this.scrollTo();
     }
+    /** content-sized list (BRIEF A11): as many visible rows as items, between min and max; the height follows */
+    fitRows(max, min) {
+      const n = R.U.clamp(Math.ceil(this.items.length / this.cols), min || 1, max);
+      if (n !== this.rows || this._fitH !== this.h) {
+        this.rows = n;
+        this.h = this._fitH = this.padY * 2 + n * this.lineH - 2;
+        this.scrollTo();
+      }
+      return this;
+    }
     get item() { return this.items[this.index]; }
     isDisabled(i) { const it = this.items[i]; return it && typeof it === 'object' && it.disabled; }
     scrollTo() {

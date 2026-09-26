@@ -65,7 +65,8 @@
 
   // ------------------------------------------------------------ gold window
   class GoldLayer extends R.Layer {
-    draw() {
+    draw() { K().inFrame(() => this.render()); }
+    render() {
       G().window(172, 4, 80, 24);
       G().text('G', 180, 10, { color: '#c8c8d8' });
       R.Menu.kit.fitText(String(R.Game.gold), 244, 10, 56, { align: 'right' });
@@ -131,7 +132,8 @@
       Kt.fitText(Kt.itemLabel(row.id), x + 9, y, w - 46, { color: row.disabled ? Kt.COL.gray : Kt.itemColor(row.id) });
       G().text(price ? String(price) : '―', x + w - 2, y, { align: 'right', color: row.disabled ? Kt.COL.gray : afford ? '#ffffff' : G().C.red });
     }
-    draw() {
+    draw() { K().inFrame(() => this.render()); }
+    render() {
       const Kt = K();
       this.list.draw();
       if (this.canFilter) {
@@ -198,7 +200,7 @@
           Kt.fitText(c.name + '：' + (mk.mark === 'E' ? '装備している' : '装備できない'), 18, 184, 220, { color: Kt.COL.gray });
         }
         G().text('←→：人を選ぶ', 18, 200, { color: Kt.COL.gray, size: 8 });
-      } else if (it.use) G().text(R.Menu.effectPhrases ? R.Menu.effectPhrases(it.use.effects).map((p) => p.text).join('　') : '', 18, 184, { color: G().C.cyan, size: 8 });
+      } else if (it.use) Kt.fitText(R.Menu.effectPhrases ? R.Menu.effectPhrases(it.use.effects).map((p) => p.text).join('　') : '', 18, 184, 220, { color: G().C.cyan, size: 8 });
     }
   }
 

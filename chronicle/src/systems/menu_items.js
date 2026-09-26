@@ -609,31 +609,32 @@
           if (on) G().rect(TAB_X[i], 21, Math.ceil(G().textWidth(t.label)), 1, G().C.yellow);
         });
         if (TABS[this.tab].id === 'gear') {
-          G().text('L◀', 190, 11, { align: 'right', color: Kt.COL.gray, size: 8 });
-          Kt.fitText(FILTER_NAMES[this.filter], 213, 10, 42, { align: 'center', color: this.filter ? G().C.cyan : Kt.COL.sub });
-          G().text('▶R', 236, 11, { color: Kt.COL.gray, size: 8 });
+          G().text('L◀', 188, 11, { align: 'right', color: Kt.COL.gray, size: 8 });
+          Kt.fitText(FILTER_NAMES[this.filter], 210, 10, 40, { align: 'center', color: this.filter ? G().C.cyan : Kt.COL.sub });
+          G().text('▶R', 232, 11, { color: Kt.COL.gray, size: 8 });
         }
-        this.list.draw();
+        this.list.fitRows(8, 3).draw();
+        const dy = this.list.y + this.list.h + 2 - 158; // the description window follows the list
         if (!this.entries.length) G().text(TABS[this.tab].id === 'gear' && this.filter ? 'この種類の装備品は持っていない。' : '何も持っていない。', 20, 38, { color: Kt.COL.gray });
-        G().window(4, 158, 248, 60, this.cur ? { title: 'Y：詳細' } : undefined);
+        G().window(4, 158 + dy, 248, 60, this.cur ? { title: 'Y：詳細' } : undefined);
         const e = this.cur;
         if (!e) return;
         const it = e.item;
         const lines = String(it.desc || '').split('\n').slice(0, 2);
-        lines.forEach((l, i) => Kt.fitText(l, 14, 167 + i * 14, 226));
+        lines.forEach((l, i) => Kt.fitText(l, 14, 167 + dy + i * 14, 226));
         if (TABS[this.tab].id === 'gear') {
-          Kt.fitText(gearSummary(it), 14, 196, 150, { color: G().C.cyan });
+          Kt.fitText(gearSummary(it), 14, 196 + dy, 150, { color: G().C.cyan });
           const party = R.Game.party;
           const n = party.length;
           party.forEach((c, i) => {
             const x = 234 - 18 * (n - 1 - i);
             const ok = Kt.slotsFor(e.id).some((s) => Kt.canEquip(c, e.id, s));
-            Kt.drawSpriteAt(c, x, 190, { dark: !ok, darkAmt: 0.7, frame: ok ? Math.floor(R.Engine.frame / 20) : 0 });
+            Kt.drawSpriteAt(c, x, 190 + dy, { dark: !ok, darkAmt: 0.7, frame: ok ? Math.floor(R.Engine.frame / 20) : 0 });
           });
         } else if (it.type === 'consumable') {
-          G().text(useWhere(it.use), 14, 198, { color: Kt.COL.gray });
-          if (it.price) G().text('売値 ' + Math.floor(it.price / 2) + 'ゴールド', 242, 198, { align: 'right', color: Kt.COL.gray });
-        } else if (it.use && it.use.field) G().text('Aで使う（使っても無くならない）', 14, 198, { color: Kt.COL.gray });
+          G().text(useWhere(it.use), 14, 198 + dy, { color: Kt.COL.gray });
+          if (it.price) G().text('売値 ' + Math.floor(it.price / 2) + 'ゴールド', 242, 198 + dy, { align: 'right', color: Kt.COL.gray });
+        } else if (it.use && it.use.field) G().text('Aで使う（使っても無くならない）', 14, 198 + dy, { color: Kt.COL.gray });
       }
     }
 
@@ -708,16 +709,17 @@
         G().text((c.wp || 0) + '/' + (st.wp || 0), 232, 10, { align: 'right' });
         G().text(c.hp <= 0 ? '戦闘不能' : '移動中に使える術だけ、白で出る。', 34, 24, { color: c.hp <= 0 ? G().C.dead : Kt.COL.gray, size: 8 });
         Kt.lrHint(244, 26);
-        this.list.draw();
+        this.list.fitRows(8, 3).draw();
+        const dy = this.list.y + this.list.h + 2 - 176; // the description window follows the list
         if (!this.rows.length) G().text('覚えている技・術がない。', 20, 54, { color: Kt.COL.gray });
         const row = this.list.item;
-        G().window(4, 176, 248, 44, row ? { title: 'Y：詳細' } : undefined);
+        G().window(4, 176 + dy, 248, 44, row ? { title: 'Y：詳細' } : undefined);
         if (!row) return;
         const a = DB.actions[row.id];
-        if (this.note) { G().text(this.note, 14, 184, { color: G().C.yellow }); return; }
-        Kt.fitText(String(a.desc || '').split('\n')[0], 14, 184, 226);
+        if (this.note) { G().text(this.note, 14, 184 + dy, { color: G().C.yellow }); return; }
+        Kt.fitText(String(a.desc || '').split('\n')[0], 14, 184 + dy, 226);
         const tag = row.spell ? (row.ok ? '移動中に使える' : '戦闘中だけ使える') : '技は戦闘中だけ使える';
-        G().text(tag, 14, 200, { color: Kt.COL.gray, size: 8 });
+        G().text(tag, 14, 200 + dy, { color: Kt.COL.gray, size: 8 });
       }
     }
 

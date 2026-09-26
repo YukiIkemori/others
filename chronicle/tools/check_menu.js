@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // check_menu.js (menu A5) — the field menu, shops and the game over against the written spec. Reads DESIGN.md /
 // STYLE_JA.md themselves, so a spec edit the code did not follow shows up here.
-//   C1 main-menu commands = the §11.7.1 order                  C2 settings rows = the §11.7.15 table (12 rows, keys, defaults in save.js)
+//   C1 main-menu commands = the §11.7.1 order                  C2 settings rows = the §11.7.15 table (13 rows, keys, defaults in save.js)
 //   C3 the fixed texts of STYLE_JA §9 that the menu owns appear verbatim in the menu sources
 //   C4 every sfx / jingle id the menu files play is in the §11.11.4 lists
 //   C5 names for everything the screens print: races, statuses, weapon types, elements, action targets, item types
@@ -54,7 +54,7 @@ const section = (h) => { const i = DESIGN.indexOf(h); if (i < 0) return ''; cons
     const h = have[i];
     if (!h || h.key !== r.key || h.label !== r.label) err('C2', 'row ' + (i + 1) + ': ' + JSON.stringify(h) + ' ≠ spec ' + r.label + ' ' + r.key);
   });
-  if (rows.length !== 13) err('C2', 'the §11.7.15 table should list 13 rows (with 戻る), found ' + rows.length);
+  if (rows.length !== 14) err('C2', 'the §11.7.15 table should list 14 rows (with 戻る), found ' + rows.length);
   const saveSrc = fs.readFileSync(path.join(ROOT, 'src/core/save.js'), 'utf8');
   const defBlock = (saveSrc.match(/DEFAULT_SETTINGS = \{([\s\S]*?)\};/) || [])[1] || '';
   for (const x of M.SETTINGS) {
@@ -66,7 +66,7 @@ const section = (h) => { const i = DESIGN.indexOf(h); if (i < 0) return ''; cons
   if (R.Settings.windowColor !== 'ink') err('C2', 'windowColor default should be ink, is ' + R.Settings.windowColor);
   if (R.Settings.fieldZoom !== 'wide') err('C2', 'fieldZoom default should be wide, is ' + R.Settings.fieldZoom);
   const h = (M.SETTINGS.length + 1) * 13 + 16;
-  if (h !== 185) err('C2', 'window height'); else ok('C2', specRows.length + ' settings + 戻る = 13 rows, height 185, defaults present');
+  if (h !== 198) err('C2', 'window height'); else ok('C2', specRows.length + ' settings + 戻る = 14 rows, height 198, defaults present');
 }
 
 // ---------------------------------------------------------------- C3 fixed texts

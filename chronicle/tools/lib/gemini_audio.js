@@ -159,4 +159,19 @@ function normalise(channels, rate, target, ceil) {
   return { channels: gain(channels, g), gainDb: 20 * Math.log10(g), before: L, limited };
 }
 
-module.exports = { API_BASE, apiKey, redact, geminiPost, partsOf, ffmpegPath, decode, encode, loudness, peak, gain, mono, rmsDb, normalise, sleep };
+/** gain towards `target` LUFS and a look-ahead limiter at `ceilDb` (ffmpeg alimiter) so peaky speech reaches it */
+function limitTo(channels, rate, target, ceilDb) {
+  const L = loudness(channels, rate);
+  if (!isFinite(L.I)) return channels;
+  const g = Math.pow(10, (target - L.I) / 20), ceil = Math.pow(10, (ceilDb != null ? ceilDb : -1.5) / 20);
+  const x = gain(channels, g);
+  if (peak(x) <= ceil) return x;
+  const r = ff(['-f', 'f32le', '-ar', String(rate), '-ac', String(x.length), '-i', '-', '-af', `alimiter=limit=${ceil.toFixed(4)}:attack=2:release=40:level=disabled`, '-f', 'f32le', '-'], interleave(x));
+  const buf = r.stdout, ch = x.length, n = Math.floor(buf.length / 4 / ch);
+  const all = new Float32Array(buf.buffer, buf.byteOffset, n * ch);
+  const out = Array.from({ length: ch }, () => new Float32Array(n));
+  for (let i = 0; i < n; i++) for (let c = 0; c < ch; c++) out[c][i] = all[i * ch + c];
+  return out;
+}
+
+module.exports = { limitTo, API_BASE, apiKey, redact, geminiPost, partsOf, ffmpegPath, decode, encode, loudness, peak, gain, mono, rmsDb, normalise, sleep };

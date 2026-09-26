@@ -293,20 +293,21 @@
       }
       drawCandInfo() {
         const cd = this.cand;
-        cd.list.draw();
+        cd.list.fitRows(7, 3).draw();
+        const y0 = cd.list.y + cd.list.h + 2; // 付けると follows the list (content-sized list, Part A11)
         const row = cd.list.item;
-        G().window(4, 168, 248, 52, { title: '付けると' });
+        G().window(4, y0, 248, 52, { title: '付けると' });
         if (!row) return;
         const segs = otherChanges(row.diff || {}, cd.slot);
-        if (!segs.length || row.worn) G().text(row.worn ? '今付けている。' : 'ほかに変わる能力はない。', 14, 174, { color: Kt.COL.gray });
+        if (!segs.length || row.worn) G().text(row.worn ? '今付けている。' : 'ほかに変わる能力はない。', 14, y0 + 6, { color: Kt.COL.gray });
         else {
           const lines = Menu.packLines ? Menu.packLines(segs, 2, 228) : [{ segs }];
-          lines.forEach((l, i) => Kt.drawSegs(l.segs, 14, 174 + i * 14, 228));
+          lines.forEach((l, i) => Kt.drawSegs(l.segs, 14, y0 + 6 + i * 14, 228));
         }
         const notes = [];
         if (row.id && Kt.isTwoHanded(row.id) && this.c.equip.shield && cd.slot !== 'shield') notes.push('両手持ち：盾は外れる');
         if (row.id && DB.items[row.id].quirk) notes.push('クセのあるアイテム（Yで詳細）');
-        if (notes.length) Kt.fitText(notes.join('　'), 14, 202, 228, { color: G().C.yellow });
+        if (notes.length) Kt.fitText(notes.join('　'), 14, y0 + 34, 228, { color: G().C.yellow });
       }
       render() {
         this.drawHeader();

@@ -36,6 +36,10 @@
     noReserve: '控えの仲間がいない。',
     noGear: '控えの仲間は、何も装備していない。',
   };
+  // the field menu kit's frame (BRIEF A11 compact menus): the 仲間 screens draw at the menu UI scale
+  const MK = () => (R.Menu && R.Menu.kit) || null;
+  const inFrame = (fn) => (MK() ? MK().inFrame(fn) : fn());
+  const compact = () => !!(MK() && !MK().large());
   const nm = (s, name) => String(s).replace(/\{name\}/g, name);
   const SLOTS = ['weapon1', 'weapon2', 'shield', 'head', 'body', 'hands', 'feet', 'acc1', 'acc2'];
 
@@ -243,7 +247,7 @@
   class SwapLayer extends R.Layer {
     constructor(o) {
       super();
-      this.opaque = true;
+      this.opaque = !compact(); // compact: the field (or the tavern) stays visible around the windows
       this.o = o || {};
       this.side = 0; // 0 = 出撃, 1 = 控え
       this.ai = 0; this.ri = 0; this.rtop = 0;
@@ -356,8 +360,11 @@
       R.UI.closeMessage();
     }
     draw() {
+      if (this.opaque) K().backdrop();
+      inFrame(() => this.render());
+    }
+    render() {
       const g = G(), C = g.C, kit = K();
-      kit.backdrop();
       const walk = Math.floor(R.Engine.frame / 16) % 2;
       const blink = Math.floor(R.Engine.frame / 8) % 2 === 0;
       g.window(4, 4, 124, 126, { title: '出撃' });
@@ -448,7 +455,8 @@
         if (!reserve().some((m) => gearCount(m))) this.close();
       }).catch((e) => R.Engine.reportError(e)).finally(() => { this.busy = false; R.Input.consume(); });
     }
-    draw() {
+    draw() { inFrame(() => this.render()); }
+    render() {
       const g = G(), C = g.C;
       this.list.draw({ showInactiveCursor: true });
       const it = this.list.item;
@@ -517,7 +525,7 @@
         else if (id === 'deposit') await deposit({ master: this.o.recruit });
       } finally { this.hidden = false; }
     }
-    draw() { if (!this.hidden) this.list.draw({ showInactiveCursor: true }); }
+    draw() { if (!this.hidden) inFrame(() => this.list.draw({ showInactiveCursor: true })); }
   }
 
   R.Tavern = {

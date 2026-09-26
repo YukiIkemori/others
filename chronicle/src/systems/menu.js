@@ -493,7 +493,7 @@
     G().text(String(c.mp), x + 64, y + 15, { align: 'right', color: ok ? '#ffffff' : COL.gray });
     G().text('W', x + 70, y + 15, { color: ok ? COL.sub : COL.gray });
     G().text(String(c.wp || 0), x + 104, y + 15, { align: 'right', color: ok ? '#ffffff' : COL.gray });
-    if (c.hp <= 0) G().text('戦闘不能', x + w - 8, y + 15, { align: 'right', color: G().C.dead, size: 8 });
+    if (c.hp <= 0) K.fitText('戦闘不能', x + w - 8, y + 15, w - 114, { align: 'right', color: G().C.dead, size: 8 });
     else K.rowBadge(x + w - 24, y + 15, effectiveRow(c));
   }
   K.drawMemberRow = drawMemberRow;
@@ -912,7 +912,8 @@
       K.fitText(warpLabel(l), x + 2, y, 144, { color: l.kind === 'dungeon' ? COL.sub : '#ffffff' });
     }
     render() {
-      G().window(4, 4, 248, 198, { title: 'どこへ行く？' });
+      this.list.fitRows(13, 3); // content-sized (Part A11): only as tall as the visited places need
+      G().window(4, 4, 248, this.list.h, { title: 'どこへ行く？' });
       this.list.draw();
     }
   }
@@ -1139,7 +1140,7 @@
 
   // compact main menu (BRIEF A11, §11.7.1 Part A11 版), in the virtual screen of the 0.75 scale (341×298):
   // one slim command column on the left, 4 party cards and the gold window to its right, the objective strip below.
-  const CM = { x: 6, y: 6, w: 84, lineH: 12, card: { x: 92, w: 164, h: 34, pitch: 36 }, gold: { h: 60 }, obj: { h: 36 } };
+  const CM = { x: 6, y: 6, w: 84, lineH: 12, card: { x: 92, w: 176, h: 34, pitch: 36 }, gold: { h: 60 }, obj: { h: 36 } };
   CM.h = 12 + COMMANDS.length * CM.lineH - 2; // 202
   class MainMenu extends Screen {
     constructor() {
@@ -1255,7 +1256,7 @@
   }
   Menu.drawMemberWindow = drawMemberWindow;
   /**
-   * a compact party card (main menu, Part A11): (x, y, w≈164, h 34), 2 lines beside the sprite:
+   * a compact party card (main menu, Part A11): (x, y, w≈176, h 34), 2 lines beside the sprite:
    *   [絵] 名前                H 999/999
    *        前 Lv34   M 150    W  99
    */
@@ -1271,8 +1272,8 @@
     const ly = y + 19;
     K.rowBadge(x + 26, ly - 1, effectiveRow(c));
     G().text('Lv' + c.level, x + 44, ly, { color: '#ffffff' });
-    G().text('M', R1 - 82, ly, { color: COL.sub });
-    G().text(String(c.mp), R1 - 54, ly, { align: 'right' });
+    G().text('M', R1 - 86, ly, { color: COL.sub });
+    G().text(String(c.mp), R1 - 58, ly, { align: 'right' });
     G().text('W', R1 - 46, ly, { color: COL.sub });
     G().text(String(c.wp || 0), R1, ly, { align: 'right' });
   }

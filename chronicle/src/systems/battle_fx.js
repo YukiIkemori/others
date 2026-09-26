@@ -465,9 +465,12 @@
     const tip = c.user && c.user.tip;
     for (const r of c.targets) {
       for (let k = 0; k < n; k++) {
-        const d = k * 3, oy = k ? U.rf(-8, 8) : 0, ox = k ? U.rf(-6, 6) : 0, slope = U.ri(-4, 4);
+        const d = k * 3, ox = k ? U.rf(-6, 6) : 0;
         const reach = dir && tip ? U.clamp(Math.round(dir * (r.cx + ox - tip[0])), 8, 34) : 34;
         const edge = reach < 34 ? r.cx + ox - dir * reach : null; // nothing is drawn past the tip
+        // stepped in: the weapon goes in level at the tip's height (kept on the target's body); else the body's middle
+        const cy = edge != null ? U.clamp(tip[1], r.y + 4, r.y + r.h - 4) : r.cy;
+        const oy = k ? U.rf(edge != null ? -4 : -8, edge != null ? 4 : 8) : 0, slope = edge != null ? U.ri(-1, 1) : U.ri(-4, 4);
         inst(s, 16 + d, layerOf(r), (g, t) => {
           const a = t - d;
           if (a < 0) return;
@@ -475,7 +478,7 @@
           if (a < 9) {
             if (dir) {
               // a thrust from the user's side, level (±4 slope): the head leads toward the target (§11.5.12)
-              const hx = r.cx + ox - dir * reach * (1 - q), hy = r.cy + oy - slope * (1 - q);
+              const hx = r.cx + ox - dir * reach * (1 - q), hy = cy + oy - slope * (1 - q);
               for (let i = 0; i < 26; i++) {
                 const x = Math.round(hx - dir * i);
                 if (edge != null && dir * (edge - x) > 0) break;
@@ -486,13 +489,14 @@
               for (let i = 0; i < 26; i++) g.rect(x0 - i, y0 + i - 1, 3, i < 6 ? 3 : 2, i < 6 ? '#ffffff' : i < 14 ? '#c8dcff' : '#7aa0e8');
             }
           }
-          if (a >= 4) g.draw(get('spark'), r.cx + ox - 9, r.cy + oy - 9, { w: 18, h: 18, alpha: Math.max(0, 1 - (a - 4) / 10) });
+          if (a >= 4) g.draw(get('spark'), r.cx + ox - 9, cy + oy - 9, { w: 18, h: 18, alpha: Math.max(0, 1 - (a - 4) / 10) });
         });
       }
+      const ringY = dir && tip && dir * (r.cx - tip[0]) < 34 ? U.clamp(tip[1], r.y + 4, r.y + r.h - 4) : r.cy;
       if (L >= 3) inst(s, 30, layerOf(r), (g, t) => {
         if (t < 14 || t > 28) return;
         const ri = RING_R[Math.min(RING_R.length - 1, Math.floor((t - 14) / 2))];
-        g.draw(ring(ri, '#c8dcff'), r.cx - ri - 1.5, r.cy - ri - 1.5, { alpha: (28 - t) / 14 });
+        g.draw(ring(ri, '#c8dcff'), r.cx - ri - 1.5, ringY - ri - 1.5, { alpha: (28 - t) / 14 });
       });
     }
     return 8 + (n - 1) * 3;

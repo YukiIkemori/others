@@ -117,7 +117,14 @@
     },
 
     // ------------------------------------------------------------ text
-    font(size) { return `${size || Gfx.FS}px ${Gfx.FONT}`; },
+    // under a UI scale below 1 (compact menus) no text gets smaller than 8 logical px (32 device px, about
+    // 12 CSS px on a phone in portrait): smaller sizes asked for (hints at size 8) are raised to that floor
+    MIN_SCALED_TEXT: 8,
+    font(size) {
+      let s = size || Gfx.FS;
+      if (Gfx.uiScale < 1 && s * Gfx.uiScale < Gfx.MIN_SCALED_TEXT) s = Gfx.MIN_SCALED_TEXT / Gfx.uiScale;
+      return `${s}px ${Gfx.FONT}`;
+    },
     /**
      * Draw text. opts: {color, size, align:'left'|'right'|'center', shadow:bool|color, alpha}
      * (x,y) is the top-left (or top-right/top-center per align).
@@ -154,7 +161,7 @@
      */
     wrap(str, width, size) {
       str = R.Text ? R.Text.fmt(str) : String(str);
-      const key = str + '\u0000' + width + '\u0000' + (size || '');
+      const key = str + '\u0000' + width + '\u0000' + Gfx.font(size);
       const hit = WRAP_CACHE.get(key);
       if (hit) return hit.slice();
       const out = [];
