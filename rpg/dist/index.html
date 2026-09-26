@@ -32574,6 +32574,23 @@ try{
         m.resolve = resolve;
       });
     }
+    /** 「★レアアイテム！」 popup with the item; stays until A or ↓ (after a short moment, so a held A can't skip it) */
+    rarePopup(item) {
+      return new Promise((resolve) => { this.popup = { item, t: 0, resolve }; });
+    }
+    drawPopup() {
+      const p = this.popup;
+      if (!p) return;
+      const it = DB.items[p.item] || { name: p.item };
+      const name = (R.Menu && R.Menu.kit ? R.Menu.kit.itemLabel(p.item) : it.name);
+      const w = Math.max(150, Math.ceil(G().textWidth(name)) + 56), h = 50;
+      const x = (R.W - w) >> 1, y = 58;
+      G().window(x, y, w, h, { title: '★レアアイテム！' });
+      if (R.Menu && R.Menu.kit) R.Menu.kit.drawIcon(it, x + 14, y + 14);
+      G().text(name, x + 26, y + 11, { color: G().C.yellow });
+      G().text('を手に入れた！', x + 26, y + 27);
+      if (p.t >= 24 && (R.Engine.frame >> 4) & 1) G().text('▼', x + w - 12, y + h - 13, { align: 'right' });
+    }
     waitKey() {
       return new Promise((resolve) => {
         const m = this.msg;
@@ -32728,6 +32745,8 @@ try{
           return s.frames(6);
         case 'gain':
           R.sfx(ev.rare ? 'item' : 'steal');
+          // a rare item always gets a popup that waits for A / ↓, whatever the message speed
+          if (ev.rare && ev.item) return s.rarePopup(ev.item);
           return;
         case 'rare':
           R.Engine.flashScreen('#fff4b0', 26);
@@ -33027,6 +33046,17 @@ try{
 
     // ------------------------------------------------------------ layer hooks
     update() {
+      if (this.popup) {
+        const p = this.popup;
+        if (p.t >= 24 && (In().pressed('a') || In().pressed('down'))) {
+          R.sfx('confirm_soft');
+          if (In().pressed('down')) this.downLatch = true;
+          In().consume();
+          this.popup = null;
+          p.resolve();
+        }
+        return;
+      }
       if (this.auto && !this.autoCancel && In().pressed('b')) { this.autoCancel = true; R.sfx('cancel'); }
       if (this.repeating && !this.repeatCancel && In().pressed('b')) { this.repeatCancel = true; R.sfx('cancel'); }
       const m = this.msg;
@@ -33051,6 +33081,7 @@ try{
     }
     tick() {
       if (this.wipe) this.wipe.t++;
+      if (this.popup) this.popup.t++;
       const s = this.spd;
       for (const v of this.vis.values()) {
         for (const k of ['flash', 'shake', 'blink', 'lunge', 'dodge', 'appear']) if (v[k] > 0) v[k] = Math.max(0, v[k] - s);
@@ -33087,6 +33118,7 @@ try{
       this.drawPops(true);
       if (this.panel) this.drawPanel(); else this.drawMsg();
       this.drawAuto();
+      this.drawPopup();
     }
     drawWipe() {
       const k = this.wipe.t / this.wipe.n;
