@@ -7,3 +7,7 @@ rpg/.*.js
 rpg/.towns_resume.js
 rpg/.qa_round1.json
 rpg/.user_requests.txt
+rpg/promo/*.mp4
+rpg/promo/frames/
+rpg/promo/stills/
+rpg/promo/preview.png
