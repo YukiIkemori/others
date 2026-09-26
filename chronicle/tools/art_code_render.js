@@ -25,6 +25,8 @@ async function withPage(b, q, fn) {
   fs.mkdirSync(OUT, { recursive: true });
   const b = await playwright.chromium.launch();
   const shots = [
+    ['battle2', 'view=battle2', 'mock2_battle.png'],
+    ['town2', 'view=town2', 'mock2_town.png'],
     ['battle', 'view=battle', 'mock_battle.png'],
     ['battle', 'view=battle&smooth=1', 'mock_battle_smooth.png'],
     ['town', 'view=town&t=0.3', 'mock_town.png'],
@@ -40,27 +42,28 @@ async function withPage(b, q, fn) {
     await withPage(b, q, async (p) => { await p.locator('#screen').screenshot({ path: path.join(OUT, f) }); });
     console.log('→', f, Date.now() - t0 + 'ms');
   }
-  if (want('anim')) {
+  for (const [key, view, name, crop] of [['anim', 'battle', 'anim_hero_attack', [200, 170, 640, 400]], ['anim2', 'battle2', 'anim2_hero_attack', [150, 330, 720, 450]]]) {
+    if (!want(key)) continue;
     const fdir = path.join(OUT, 'frames'); fs.rmSync(fdir, { recursive: true, force: true }); fs.mkdirSync(fdir);
-    await withPage(b, 'view=battle&noUI=1', async (p) => {
+    await withPage(b, 'view=' + view + '&noUI=1', async (p) => {
       const N = 54, fps = 24;
       for (let i = 0; i < N; i++) {
         const t = i / fps;
-        const data = await p.evaluate(async (t) => {
-          await SCENES.battle({ t, act: 'attack', noUI: true });
-          const c = document.getElementById('screen'), o = document.createElement('canvas'); o.width = 640; o.height = 400;
-          o.getContext('2d').drawImage(c, 200, 170, 640, 400, 0, 0, 640, 400); return o.toDataURL('image/png');
-        }, t);
+        const data = await p.evaluate(async ([t, view, cr]) => {
+          await SCENES[view]({ t, act: 'attack', noUI: true });
+          const c = document.getElementById('screen'), o = document.createElement('canvas'); o.width = cr[2]; o.height = cr[3];
+          o.getContext('2d').drawImage(c, cr[0], cr[1], cr[2], cr[3], 0, 0, cr[2], cr[3]); return o.toDataURL('image/png');
+        }, [t, view, crop]);
         fs.writeFileSync(path.join(fdir, `f${String(i).padStart(3, '0')}.png`), Buffer.from(data.split(',')[1], 'base64'));
       }
     });
     const ff = require(path.join(ROOT, 'tools/lib/gemini_audio.js')).ffmpegPath();
     const inp = path.join(fdir, 'f%03d.png');
-    cp.execFileSync(ff, ['-y', '-loglevel', 'error', '-framerate', '24', '-i', inp, '-vf', 'split[a][b];[a]palettegen=max_colors=192:stats_mode=full[p];[b][p]paletteuse=dither=sierra2_4a', '-loop', '0', path.join(OUT, 'anim_hero_attack.gif')]);
-    cp.execFileSync(ff, ['-y', '-loglevel', 'error', '-framerate', '24', '-i', inp, '-c:v', 'libwebp', '-lossless', '0', '-q:v', '90', '-loop', '0', path.join(OUT, 'anim_hero_attack.webp')]);
+    cp.execFileSync(ff, ['-y', '-loglevel', 'error', '-framerate', '24', '-i', inp, '-vf', 'split[a][b];[a]palettegen=max_colors=192:stats_mode=full[p];[b][p]paletteuse=dither=sierra2_4a', '-loop', '0', path.join(OUT, name + '.gif')]);
+    cp.execFileSync(ff, ['-y', '-loglevel', 'error', '-framerate', '24', '-i', inp, '-c:v', 'libwebp', '-lossless', '0', '-q:v', '90', '-loop', '0', path.join(OUT, name + '.webp')]);
     // contact strip of every 3rd frame
-    cp.execFileSync(ff, ['-y', '-loglevel', 'error', '-framerate', '24', '-i', inp, '-vf', "select='not(mod(n\\,3))',scale=320:-1,tile=6x3", '-frames:v', '1', path.join(OUT, 'anim_hero_attack_strip.png')]);
-    console.log('→ anim_hero_attack.gif/.webp + strip');
+    cp.execFileSync(ff, ['-y', '-loglevel', 'error', '-framerate', '24', '-i', inp, '-vf', "select='not(mod(n\\,3))',scale=320:-1,tile=6x3", '-frames:v', '1', path.join(OUT, name + '_strip.png')]);
+    console.log('→', name, '.gif/.webp + strip');
   }
   await b.close();
 })();

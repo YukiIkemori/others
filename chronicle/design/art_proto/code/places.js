@@ -59,12 +59,13 @@
 
   // ---------- town ----------
   const TW = {
-    plaster: ramp(['#6a5a4c', '#a89684', '#d8c8b0', '#f0e4cc', '#fff6e4'], 7),
+    plaster: ramp(['#5e5046', '#948472', '#c0ae96', '#dccab0', '#eee0c8'], 7),
     timber: ramp(['#1c100a', '#36200f', '#54341c', '#74502e'], 5),
-    roofR: ramp(['#4a1a12', '#7c2c1c', '#ac4428', '#d86a3c', '#f4a070'], 7),
-    roofS: ramp(['#1c2638', '#2e4058', '#465e7c', '#6a86a4', '#a4bcd4'], 7),
+    roofR: ramp(['#3e1c16', '#643024', '#8a4630', '#ae6444', '#cc8a62'], 7),
+    roofS: ramp(['#1e2430', '#323c4c', '#4a5666', '#687484', '#9aa2ac'], 7),
     stone: ramp(['#28262a', '#48454a', '#6c686a', '#94908a', '#bcb6aa'], 7),
     glassOn: ramp(['#a04a10', '#e08a28', '#ffc860', '#fff0b0'], 4),
+    glassDay: ramp(['#141c28', '#26344a', '#46607a', '#9cb4c4'], 4),
   };
   function house(px, o) {
     const { x0, x1, yb, wall, roof } = o, R = rng(o.seed);
@@ -107,7 +108,7 @@
     // windows (emissive recorded)
     (o.windows || []).forEach(([wx, wy, ww, wh]) => {
       for (let y = wy - 1; y < wy + wh + 1; y++) for (let x = wx - 1; x < wx + ww + 1; x++) px.set(x, y, TW.timber[1]);
-      px.fill(wx, wy, wx + ww, wy + wh, (x, y) => { const mid = x === wx + (ww >> 1) || y === wy + (wh >> 1); return mid ? TW.timber[2] : pick(TW.glassOn, 0.9 - (y - wy) / wh * 0.5 + (vnoise(x, y, 23) - 0.5) * 0.2); });
+      px.fill(wx, wy, wx + ww, wy + wh, (x, y) => { const mid = x === wx + (ww >> 1) || y === wy + (wh >> 1); return mid ? TW.timber[2] : pick(o.day ? TW.glassDay : TW.glassOn, (o.day ? 0.25 + ((x - wx + (y - wy)) % 7 < 2 ? 0.6 : 0) : 0.9 - (y - wy) / wh * 0.5) + (vnoise(x, y, 23) - 0.5) * 0.2); });
       for (let x = wx - 2; x < wx + ww + 2; x++) { px.set(x, wy + wh + 1, TW.timber[3]); px.set(x, wy + wh + 2, TW.timber[1]); }
       o.emit.push([wx + ww / 2, wy + wh / 2, ww]);
     });

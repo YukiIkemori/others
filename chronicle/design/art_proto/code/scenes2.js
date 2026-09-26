@@ -14,7 +14,7 @@
   // ---------- restrained palette looks (same rig, different data) ----------
   const cl = (keys, o) => mat(Object.assign({ keys, n: 6, wrap: 0.3, tex: 0.5, tsx: 1.4, tsy: 0.3 }, o));
   const hr = (keys) => mat({ keys, n: 6, sheen: [-0.62, -0.28], wrap: 0.35, amb: 0.22, tex: 1.1, tsx: 0.25, tsy: 1.6 });
-  const skin = mat({ keys: ['#3e2224', '#744436', '#a86e56', '#cf9c7e', '#e8c4a4'], n: 6, rim: '#fff0d8', wrap: 0.45, amb: 0.3 });
+  const skin = mat({ keys: ['#46282a', '#84523f', '#bb866a', '#deb496', '#f4d8c0'], n: 6, rim: '#fff0d8', wrap: 0.45, amb: 0.3 });
   const brass = mat({ keys: ['#2e2010', '#5e4424', '#8e7040', '#bca068', '#e8d8a8'], n: 6, metal: true, spec: 1, specPow: 10 });
   const steel = mat({ keys: ['#22262e', '#454c58', '#727a86', '#a4acb4', '#dce0e2'], n: 6, metal: true, spec: 1, specPow: 10 });
   const leather = mat({ keys: ['#221610', '#3e2a1e', '#5c4030', '#7e5c44', '#a07e60'], n: 6, tex: 0.9, tsx: 0.8, tsy: 0.8 });
