@@ -72,7 +72,22 @@ class Floor:
     def dec(self, pts, ch):
         for x, y in pts:
             self.d[y][x] = ch
+    def fix_decor(self):
+        """wall decor (icicles) must hang on a rock cell right above the floor; floor decor must lie on floor"""
+        for y in range(self.h):
+            for x in range(self.w):
+                ch = self.d[y][x]
+                if ch == '^' and self.g[y][x] != '#':
+                    self.d[y][x] = '.'
+                    if y > 0 and self.g[y - 1][x] == '#': self.d[y - 1][x] = '^'
+                elif ch in ';z' and self.g[y][x] != self.fl:
+                    self.d[y][x] = '.'
+        for y in range(self.h - 1):
+            for x in range(self.w):
+                if self.d[y][x] == '^' and self.g[y + 1][x] not in (self.fl, 'e'):
+                    self.d[y][x] = '.'
     def rows(self):
+        self.fix_decor()
         return [''.join(r) for r in self.g], [''.join(r) for r in self.d]
 
 def box(x0, y0, x1, y1):

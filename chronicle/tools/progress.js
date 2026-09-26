@@ -292,7 +292,8 @@ function analyse(R, o) {
   for (const m of unreached) E(V.expectedMapOwner(m) || 'A18a', `map ${m} is never reached`);
   if (chestsMissing.length) W('A22', `${chestsMissing.length} chest(s) unreachable: ${chestsMissing.slice(0, 12).join(' ')}${chestsMissing.length > 12 ? ' …' : ''}`);
   if (!full.flags.has('game_clear')) E('A19', `game_clear is never reached (regions cleared: ${full.cleared.join(' ') || 'none'})`);
-  for (const r of realRegions) if (!full.cleared.includes(r)) E(REGION_OWNER[r] || 'A18a', `region ${r} is never cleared`);
+  const neverCleared = new Set(realRegions.filter((r) => !full.cleared.includes(r)));
+  for (const r of neverCleared) E(REGION_OWNER[r] || 'A18a', `region ${r} is never cleared`);
   // 3. postgame
   const pgReached = resFull.reachedMaps.has('oblivion_5');
   out.postgame = { oblivion5: pgReached, pgClear: full.flags.has('pg_clear') };
@@ -316,8 +317,8 @@ function analyse(R, o) {
       runFix(b, { until: (st) => st.cleared.includes(r) });
       const okB = b.cleared.includes(r);
       out.regionTable[r] = { first: okA, last: okB, others7: got7 };
-      if (!okA) E(REGION_OWNER[r], `region ${r} cannot be cleared first (at tier 0 with no other region cleared): its gate depends on another region or on the tier`);
-      if (!okB) E(REGION_OWNER[r], `region ${r} cannot be cleared last (after the 7 others): a condition closes it once other regions are cleared`);
+      if (!okA && !neverCleared.has(r)) E(REGION_OWNER[r], `region ${r} cannot be cleared first (at tier 0 with no other region cleared): its gate depends on another region or on the tier`);
+      if (!okB && !neverCleared.has(r)) E(REGION_OWNER[r], `region ${r} cannot be cleared last (after the 7 others): a condition closes it once other regions are cleared`);
     }
     // whole-game orders: reversed and rotated
     const orders = [realRegions.slice().reverse(), realRegions.slice(3).concat(realRegions.slice(0, 3)), realRegions.slice(5).concat(realRegions.slice(0, 5))];
