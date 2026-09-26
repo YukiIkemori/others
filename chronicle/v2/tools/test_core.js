@@ -154,11 +154,15 @@ function ok(name, cond, info) {
   const badMap = JSON.parse(JSON.stringify(R.DB.maps.stub_road)); badMap.objects.push({ type: 'chest', id: 'x', x: 1, y: 1 });
   ok('check map rejects a chest on the world map (A27)', !R.Contract.check('map', badMap).ok);
   ok('battleEvent kinds', R.Contract.check('battleEvent', { t: 'dmg', uid: 'e_0', n: 3 }).ok && !R.Contract.check('battleEvent', { t: 'nope' }).ok);
-  const B = R.BattleCore.create({ troop: 'tr_stub' });
+  const B = R.BattleCore.create({ troop: 'tr_tutorial' });
   ok('battle object names', R.Contract.check('battle', B).ok, R.Contract.check('battle', B).errors);
   ok('units shape', B.units.every((u) => R.Contract.check('unit', u).ok));
-  const evs = B.round();
-  ok('stub battle ends in one round with valid events', B.over === 'win' && evs.every((e) => R.Contract.check('battleEvent', e).ok));
+  const evs = [];
+  for (let i = 0; i < 60 && !B.over; i++) {
+    for (const u of B.units.filter((x) => x.side === 'party' && x.hp > 0)) { const foe = B.units.find((x) => x.side === 'enemy' && x.hp > 0); B.submit(u.uid, { cmd: 'attack', target: foe ? foe.uid : null }); }
+    evs.push(...B.round());
+  }
+  ok('battle runs to an end with valid events', !!B.over && evs.every((e) => R.Contract.check('battleEvent', e).ok), { over: B.over, bad: evs.filter((e) => !R.Contract.check('battleEvent', e).ok).slice(0, 3) });
   ok('rewards shape', R.Contract.check('rewards', B.rewards()).ok);
   const ev = R.Events.makeEv({});
   ok('ev names (§2.5.10)', R.Contract.check('ev', ev).ok, R.Contract.check('ev', ev).errors);

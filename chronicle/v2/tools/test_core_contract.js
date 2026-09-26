@@ -77,13 +77,23 @@ ok('not new after hearing', !R.Events.isNew(m, npc));
 R.Game.flags.later = true;
 ok('new again when the line changes', R.Events.isNew(m, npc));
 
-// ---------------------------------------------------------------- 戦闘（仮）
-const B = R.BattleCore.create({ troop: 'tr_stub' });
+// ---------------------------------------------------------------- 戦闘（本物の BattleCore: 終わるまで全員で攻撃）
+R.Party.restoreAll();
+const B = R.BattleCore.create({ troop: 'tr_tutorial' });
 ok('battle object v2 names (escape, finish)', C.check('battle', B).ok, C.check('battle', B).errors);
-B.round();
+const bevs = [];
+for (let i = 0; i < 60 && !B.over; i++) {
+  for (const u of B.units.filter((x) => x.side === 'party' && x.hp > 0)) {
+    const foe = B.units.find((x) => x.side === 'enemy' && x.hp > 0);
+    B.submit(u.uid, { cmd: 'attack', target: foe ? foe.uid : null });
+  }
+  bevs.push(...B.round());
+}
+ok('battle ends (win/lose/escape) with valid events', !!B.over && bevs.every((e) => C.check('battleEvent', e).ok), { over: B.over, bad: bevs.filter((e) => !C.check('battleEvent', e).ok).slice(0, 3) });
 const gold0 = R.Game.gold;
 const rw = B.finish();
-ok('finish applies once', R.Game.gold === gold0 + rw.gold && B.finish() === rw && R.Game.gold === gold0 + rw.gold);
+if (B.over === 'win') ok('finish applies once (gold added once)', rw && R.Game.gold === gold0 + rw.gold && B.finish() === rw && R.Game.gold === gold0 + rw.gold && C.check('rewards', rw).ok);
+else ok('finish applies once (not a win → null, gold unchanged)', rw === null && B.finish() === null && R.Game.gold === gold0);
 ok('enemy unit uses monster size s|m|l', B.units.filter((u) => u.side === 'enemy').every((u) => ['s', 'm', 'l'].includes(u.size)));
 
 // ---------------------------------------------------------------- 焼く列（仮）
