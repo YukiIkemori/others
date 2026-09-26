@@ -1,20 +1,22 @@
 #!/usr/bin/env node
-// Spec-conformance check for area A7 (techs): compares the registered data with the
-// text of DESIGN.md §6 itself — the §6.8 code blocks, every row of the eleven §6.6
-// tables (lv, id, name, WP, target, row, effect text, parents, desc, power ratio),
-// the §6.6 trees, §6.1.2 / §6.1.3 / §6.3.4 lists, the §6.4.1 / §6.4.5 per-lv tables, the §6.7
-// summary tables, the weapon-type rows of §4.3.4 and §5.2.5 — and with the tech names of the
-// previous game (§6.9.3). Exit 1 on any mismatch.
+// Spec-conformance check for area A7 (techs) after the systems rework: compares the registered data with the text of
+// design/build/SYSTEMS_REWORK.md (A19; normative over DESIGN.md §6 until the lead folds it back in, §4.2-4):
+//   - every row of the §3.4 tables (id, 元, name, lv, from, MP, ★ blunt, the 変更 column's powers),
+//   - the §3.1 weapon-type table (name, hands, back row, kind, desc),
+//   - DESIGN.md §6.8's code blocks for everything §3.4 keeps as it was (effects, target, fx, desc, quick, noAuto…),
+//     with the rework's changes applied (wp → mp = round(wp × 1.5), the new type / id / lv / from / reach),
+//   - the 13 deleted techs are gone and DB.remap.actions sends every old id to a live tech,
+// plus DESIGN's other tables (no tech name reused) and the previous game's names (§6.9.3). Exit 1 on any mismatch.
 //
 //   node tools/check_techs.js            all checks (quiet unless something differs)
-//   node tools/check_techs.js --tree     also print the eleven trees built from the data
-//   node tools/check_techs.js --table    also print the §6.6-style table built from the data
+//   node tools/check_techs.js --tree     also print the seven trees built from the data
+//   node tools/check_techs.js --table    also print a §6.6-style table built from the data
 //   node tools/check_techs.js --why <id> print the §6.5 ratio breakdown of one tech
 //   node tools/check_techs.js --crest <dir>  previous game's source (default /tmp/claude-0/ref/rpg)
-//   node tools/check_techs.js --live     also run R.Glimmer (A8) and R.Rules (A1) on this data (warnings only)
+//   node tools/check_techs.js --live     also run R.Glimmer and R.Rules on this data (warnings only)
 //   node tools/check_techs.js --battle [--trials n] [-v]
-//                                        also use every tech in the real battle engine R.Battle (A2): targets,
-//                                        hits, WP, riders, stances, cover, heals, reach/silence, noAuto (warnings only)
+//                                        also use every tech in the real battle engine R.Battle: targets,
+//                                        hits, MP, riders, stances, cover, heals, reach/silence, noAuto (warnings only)
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -30,21 +32,27 @@ const byId = Object.fromEntries(techs.map((t) => [t.id, t]));
 const byName = Object.fromEntries(techs.map((t) => [t.name, t]));
 const DESIGN = fs.readFileSync(path.join(S.ROOT, 'DESIGN.md'), 'utf8');
 const LINES = DESIGN.split('\n');
+const REWORK = fs.readFileSync(S.REWORK, 'utf8');
+const RLINES = REWORK.split('\n');
 
 let bad = 0, checked = 0;
 const out = [];
 function diff(where, msg) { bad++; out.push(`  DIFF ${where}: ${msg}`); }
 function same(where, a, b, what) { checked++; if (a !== b) diff(where, `${what}: data ${JSON.stringify(a)} ≠ spec ${JSON.stringify(b)}`); }
-function sectionLines(head) {
-  const i = LINES.findIndex((l) => l.startsWith(head));
-  if (i < 0) throw new Error('DESIGN.md: heading not found: ' + head);
+function sectionLines(head, lines) {
+  lines = lines || LINES;
+  const i = lines.findIndex((l) => l.startsWith(head));
+  if (i < 0) throw new Error('heading not found: ' + head);
   const lvl = head.match(/^#+/)[0].length;
   let j = i + 1;
-  while (j < LINES.length && !(LINES[j].startsWith('#') && LINES[j].match(/^#+/)[0].length <= lvl)) j++;
-  return LINES.slice(i + 1, j);
+  while (j < lines.length && !(lines[j].startsWith('#') && lines[j].match(/^#+/)[0].length <= lvl)) j++;
+  return lines.slice(i + 1, j);
 }
 const cells = (l) => l.replace(/^\|/, '').replace(/\|\s*$/, '').split('|').map((c) => c.trim());
 const unbt = (s) => s.replace(/`/g, '').trim();
+const clone = (o) => JSON.parse(JSON.stringify(o));
+/** JSON with sorted keys (the rework adds / moves fields, the order of keys is not the spec) */
+const canon = (o) => JSON.stringify(o, (k, v) => (v && typeof v === 'object' && !Array.isArray(v) ? Object.fromEntries(Object.keys(v).sort().map((x) => [x, v[x]])) : v));
 
 // ------------------------------------------------------------------ effect text
 const ST_NAME = { poison: '毒', burn: 'やけど', sleep: '眠り', paralyze: 'まひ', freeze: '凍結', stun: '気絶', confuse: '混乱', silence: '沈黙', blind: '暗闇', death: '即死' };
@@ -52,7 +60,7 @@ const STAT_NAME = { atk: '攻撃力', def: '守備力', mag: '術力', mdef: '�
 const EL_NAME = { fire: '火', water: '水', wind: '風', earth: '土', light: '光', dark: '闇' };
 const KIND_NAME = { slash: '斬', blunt: '打', pierce: '突' };
 const RACE_NAME = { beast: '獣', bird: '鳥', insect: '虫', plant: '植物', aquatic: '水生', dragon: '竜', undead: '不死', demon: '魔族', spirit: '霊体', construct: '魔造', slime: '軟体', humanoid: '人型', fairy: '妖精', flying: '飛ぶ敵' };
-const TARGET_NAME = { enemy: '敵1体', group: 'ひと群れ', enemies: '敵全体', random: 'ランダム', self: '自分', ally: '味方1人', allies: '味方全員' };
+const TARGET_NAME = { enemy: '敵1体', group: 'ひと群れ', enemies: '敵全体', random: 'ランダム', self: '自分', ally: '味方1人', allies: '味方全員', ally_other: 'ほかの味方1人' };
 const pct = (x) => `${Math.round(x * 100)}%`;
 const n = (x) => String(+x.toFixed(4));
 const sign = (s) => (s > 0 ? '+' : '−') + Math.abs(s);
@@ -102,7 +110,69 @@ function effectText(t) {
   return parts.join('＋') + (tags.length ? `［${tags.join('・')}］` : '');
 }
 
-// ------------------------------------------------------------------ 1. §6.8 code blocks
+
+// ------------------------------------------------------------------ 1. SYSTEMS_REWORK §3.4 rows (+ the 変更 column)
+const ROWS = {};   // id → the §3.4 row {id, old, name, lv, from, mp, blunt, change}
+{
+  for (const l of sectionLines('### 3.4', RLINES)) {
+    if (!/^\| t_/.test(l)) continue;
+    const c = cells(l);
+    const id = c[0].replace(/[★\s]/g, '');
+    ROWS[id] = Object.assign({}, S.SPEC_BY_ID[id], { change: c[6] || '' });
+  }
+  same('§3.4', Object.keys(ROWS).length, 108, 'rows in the §3.4 tables');
+  same('§3.4', techs.length, 108, 'techs registered');
+  for (const w of S.WTYPES) same(`§3.4 ${w}`, techs.filter((t) => t.wtype === w).map((t) => t.id).join(' '), S.IDS[w].join(' '), 'id list in table order');
+  for (const [id, r] of Object.entries(ROWS)) {
+    const t = byId[id];
+    if (!t) { diff(`§3.4 ${id}`, 'missing from src/data'); continue; }
+    same(`§3.4 ${id}`, t.name, r.name, 'name' + (S.RENAMED[id] ? ' (renamed by TECHS: STYLE_JA §7 / enemy action clash)' : ''));
+    same(`§3.4 ${id}`, t.glim.lv, r.lv, 'lv');
+    same(`§3.4 ${id}`, t.rank, r.lv, 'rank');
+    same(`§3.4 ${id}`, JSON.stringify(t.glim.from), JSON.stringify(r.from), 'from');
+    same(`§3.4 ${id}`, t.mp, r.mp, 'MP');
+    same(`§3.4 ${id}`, 'wp' in t, false, 'no wp field (A18)');
+    if (r.blunt) same(`§3.4 ${id}`, (S.damageOf(t) || {}).kind, 'blunt', '★ damage kind');
+    const w = t.wtype;
+    if (['spear', 'bow', 'staff'].includes(w)) same(`§3.4 ${id}`, t.reach, true, `${w} techs reach:true`);
+    if (w === 'staff') same(`§3.4 ${id}`, t.magic, true, 'staff techs magic:true');
+    if (/^t_whip_/.test(r.old) && w === 'dagger') same(`§3.4 ${id}`, t.reach, false, 'a whip tech on the dagger is reach:false');
+    // the 変更 column: 「威力 a→b」 / 「威力 b」 / 「敵全体 a→b」 / 「0.47×5 → 0.5×5」 / 「random 0.72×4」 / 「magic 2.0」
+    const d = S.damageOf(t);
+    const pw = r.change.match(/(?:威力|敵全体|magic|random)\s*(?:[\d.]+\s*(?:×\d+)?\s*→\s*)?([\d.]+)(?:×(\d+))?/) || r.change.match(/[\d.]+×(\d+)\s*→\s*([\d.]+)×(\d+)/);
+    if (pw && d) {
+      const m2 = r.change.match(/[\d.]+×\d+\s*→\s*([\d.]+)×(\d+)/);
+      const want = m2 ? +m2[1] : +pw[1];
+      same(`§3.4 ${id}`, d.power, want, `power (変更: ${r.change})`);
+      if (m2) same(`§3.4 ${id}`, d.hits, +m2[2], 'hits');
+    }
+    if (/kind slash/.test(r.change) && d) same(`§3.4 ${id}`, d.kind || WT[w].kind, 'slash', 'kind (変更)');
+    if (/element:'fire'/.test(r.change) && d) same(`§3.4 ${id}`, d.element, 'fire', 'element (変更)');
+    if (/target `ally_other`/.test(r.change)) same(`§3.4 ${id}`, t.target, 'ally_other', 'target (変更)');
+    if (/healMp 0\.10/.test(r.change)) same(`§3.4 ${id}`, (t.effects.find((e) => e.type === 'healMp') || {}).pct, 0.1, 'healMp (変更)');
+  }
+  // §3.4: the 13 deleted techs are gone; DB.remap.actions (remap_a19.js) sends every old id to a live tech
+  const del = (REWORK.match(/\*\*消す技（13）とセーブの置き換え先\*\*: (.+)/) || [])[1] || '';
+  const pairs = [...del.matchAll(/(t_\w+)→(t_\w+)/g)].map((m) => [m[1], m[2]]);
+  same('§3.4 deleted', pairs.length, 13, 'deleted techs listed');
+  const remapActions = (() => {
+    const box = { console: { log() {}, warn() {}, error() {} } };
+    box.window = box; vm.createContext(box);
+    vm.runInContext(fs.readFileSync(path.join(S.ROOT, 'src', 'core', 'ns.js'), 'utf8'), box);
+    vm.runInContext(fs.readFileSync(path.join(S.ROOT, 'src', 'data', 'remap_a19.js'), 'utf8'), box);
+    return ((box.RPG.DB.remap || {}).actions) || {};
+  })();
+  for (const [from, to] of pairs) {
+    same(`§3.4 deleted ${from}`, !!DB.actions[from], false, 'deleted');
+    same(`§3.4 deleted ${from}`, remapActions[from], to, 'save remap');
+  }
+  for (const [id, r] of Object.entries(ROWS)) if (r.old !== id) same(`§3.4 moved ${r.old}`, remapActions[r.old], id, 'save remap');
+  const dead = Object.entries(remapActions).filter(([, to]) => !byId[to]).map(([a, b]) => `${a}→${b}`);
+  checked++;
+  if (dead.length) diff('remap_a19', 'actions remapped to techs that do not exist: ' + dead.join(' '));
+}
+
+// ------------------------------------------------------------------ 2. DESIGN §6.8 code blocks, with the rework applied
 {
   const lines = sectionLines('### 6.8 ');
   const blocks = [];
@@ -117,79 +187,52 @@ function effectText(t) {
   vm.createContext(box);
   vm.runInContext(fs.readFileSync(path.join(S.ROOT, 'src', 'core', 'ns.js'), 'utf8'), box);
   for (const b of blocks) vm.runInContext(b, box);
-  const SPEC = box.RPG.DB;
-  checked++;
-  if (blocks.length !== 12) diff('§6.8', `expected 12 code blocks, found ${blocks.length}`);
-  for (const w of S.WTYPES) same(`§6.8.1 ${w}`, JSON.stringify(WT[w]), JSON.stringify(SPEC.weaponTypes[w]), 'weaponTypes entry');
-  const specTechs = Object.keys(SPEC.actions).filter((k) => SPEC.actions[k].kind === 'tech');
-  same('§6.8.2', specTechs.length, 121, 'tech count in the code blocks');
-  for (const id of specTechs) {
-    if (!DB.actions[id]) { diff(`§6.8.2 ${id}`, 'missing from src/data'); continue; }
-    same(`§6.8.2 ${id}`, JSON.stringify(DB.actions[id]), JSON.stringify(SPEC.actions[id]), 'definition');
+  const OLD = box.RPG.DB.actions;
+  let strict = 0, moved = 0;
+  for (const [id, r] of Object.entries(ROWS)) {
+    const t = DB.actions[id], o = OLD[r.old];
+    if (!t) continue;
+    if (!o) { diff(`§6.8 ${r.old}`, `the old definition of ${id} is not in DESIGN §6.8`); continue; }
+    const exp = clone(o);
+    delete exp.wp;
+    Object.assign(exp, { wtype: t.wtype, name: r.name, mp: r.mp, rank: r.lv, glim: { lv: r.lv, from: r.from } });
+    if (['spear', 'bow', 'staff'].includes(t.wtype)) exp.reach = true;
+    if (/^t_whip_/.test(r.old) && t.wtype === 'dagger') exp.reach = false;
+    if (t.wtype === 'staff') exp.magic = true;
+    if (r.old === id && !r.change) {
+      // kept as it was: the whole definition = DESIGN §6.8 with wp → mp
+      strict++;
+      same(`§6.8 ${id}`, canon(t), canon(exp), 'definition (kept; wp → mp)');
+    } else {
+      // moved or changed: the fields §3.4 does not touch still follow the old tech
+      moved++;
+      for (const k of ['target', 'quick', 'noAuto']) if (!(k === 'target' && /ally_other|self|§2\.5/.test(r.change))) same(`§6.8 ${id} ← ${r.old}`, JSON.stringify(t[k]), JSON.stringify(exp[k]), k);
+      if (!/→|威力|敵全体|magic|random|desc|self|heal|§2\.5/.test(r.change)) same(`§6.8 ${id} ← ${r.old}`, t.effects.length, exp.effects.length, 'effect count');
+    }
   }
-  for (const t of techs) if (!SPEC.actions[t.id]) diff(`§6.8.2 ${t.id}`, 'not in the spec code blocks');
+  out.push(`  ok   §6.8: ${strict} kept techs compared whole with DESIGN (wp → mp), ${moved} moved / changed techs compared field by field`);
 }
 
-// ------------------------------------------------------------------ 2. §6.1.2 ids, §6.1.3 starters
+// ------------------------------------------------------------------ 3. §3.1 weapon types, §3.4 starters
 {
-  for (const l of sectionLines('#### 6.1.2 ')) {
-    const m = l.match(/^- .+? `(\w+)`: (.+)$/);
-    if (!m) continue;
-    const ids = [...m[2].matchAll(/`(t_\w+)`/g)].map((x) => x[1]);
-    same(`§6.1.2 ${m[1]}`, techs.filter((t) => t.wtype === m[1]).map((t) => t.id).join(' '), ids.join(' '), 'id list');
-  }
-  for (const l of sectionLines('#### 6.1.3 ')) {
+  for (const l of sectionLines('### 3.1', RLINES)) {
     const c = cells(l);
-    if (c.length < 4 || !/^`t_/.test(c[1])) continue;
-    const id = unbt(c[1]);
-    const name = c[2].replace(/\*\*/g, '').replace(/（.*$/, '').trim();
-    same(`§6.1.3 ${id}`, byId[id] && byId[id].name, name, 'starter name');
-    same(`§6.1.3 ${id}`, byId[id] && byId[id].glim.lv, 1, 'starter lv');
+    if (c.length < 11 || !S.WTYPES.includes(c[0])) continue;
+    const w = c[0], t = WT[w] || {};
+    same(`§3.1 ${w}`, t.name, c[1], 'name');
+    same(`§3.1 ${w}`, !!t.twoHanded, c[2] === '両手', 'twoHanded');
+    same(`§3.1 ${w}`, !!t.reach, /○/.test(c[3]), 'reach (back row)');
+    same(`§3.1 ${w}`, t.kind, c[4], 'kind');
+    same(`§3.1 ${w}`, t.order, S.WTYPES.indexOf(w), 'order');
+    // desc: the §3.1 text, or its first sentences when it would not fit the 20-wide line of autoDesc (TECHS, phase 1)
+    checked++;
+    if (!(t.desc === c[10] || (c[10].startsWith(t.desc) && S.width(c[10]) > 20))) diff(`§3.1 ${w}`, `desc ${JSON.stringify(t.desc)} ≠ ${JSON.stringify(c[10])}`);
+    same(`§3.1 ${w}`, S.width(t.desc) <= 20, true, 'desc fits one line of 20');
   }
+  same('§3.1', Object.keys(WT).join(' '), S.WTYPES.join(' '), 'weaponTypes (fist is not a type)');
+  for (const w of S.WTYPES) { const [id, name] = S.STARTERS[w]; same(`§3.4 starter ${w}`, byId[id] && byId[id].name, name, 'starter'); same(`§3.4 starter ${w}`, byId[id] && byId[id].glim.lv, 1, 'starter lv'); }
 }
 
-// ------------------------------------------------------------------ 3. §6.6 tables and trees
-const tableRows = {};
-{
-  for (let k = 1; k <= 11; k++) {
-    const lines = sectionLines(`#### 6.6.${k} `);
-    const headLine = LINES.find((l) => l.startsWith(`#### 6.6.${k} `));
-    const w = (headLine.match(/`(\w+)`/) || [])[1];
-    if (!S.WTYPES.includes(w)) { diff(`§6.6.${k}`, 'weapon type not found in heading'); continue; }
-    same(`§6.6.${k}`, S.WTYPES.indexOf(w), k - 1, 'section order = weapon-type order');
-    // table
-    const rows = lines.filter((l) => /^\| \d+ \| `t_/.test(l)).map(cells);
-    tableRows[w] = rows;
-    same(`§6.6 ${w}`, rows.length, 11, 'table rows');
-    const list = techs.filter((t) => t.wtype === w);
-    rows.forEach((c, i) => {
-      const [lv, idc, name, wp, target, reach, eff, from, desc, ratio] = c;
-      const id = unbt(idc);
-      const t = byId[id];
-      const at = `§6.6 ${id}`;
-      if (!t) { diff(at, 'id not in data'); return; }
-      same(at, list[i] && list[i].id, id, 'row order');
-      same(at, t.glim.lv, +lv, 'lv');
-      same(at, t.name, name, 'name');
-      same(at, t.wp, +wp, 'WP');
-      same(at, TARGET_NAME[t.target], target, 'target');
-      same(at, t.reach ? '○' : '×', reach, 'middle row');
-      same(at, effectText(t), eff, 'effect text');
-      const parents = from === '攻撃' ? ['attack'] : from.split('、').map((nm) => (byName[nm] || {}).id || '?' + nm);
-      same(at, t.glim.from.join(','), parents.join(','), 'glim.from');
-      same(at, t.desc, desc, 'desc');
-      const r = S.ratio(t, WT);
-      same(at, r ? r.ratio.toFixed(2) : '—', ratio === '—' ? '—' : (+ratio).toFixed(2), 'power ratio (§6.5)');
-    });
-    // tree
-    const fence = lines.findIndex((l) => l.startsWith('```'));
-    const end = lines.findIndex((l, j) => j > fence && l.startsWith('```'));
-    const specTree = lines.slice(fence + 1, end).join('\n');
-    same(`§6.6 ${w} tree`, buildTree(w), specTree, 'tree');
-  }
-}
-
-/** the §6.6 tree of one weapon type from glim.from (first parent = edge, second = "＋") */
 function buildTree(w) {
   const list = techs.filter((t) => t.wtype === w);
   const kids = (pid) => list.filter((t) => t.glim.from[0] === pid);
@@ -205,148 +248,6 @@ function buildTree(w) {
   };
   rec('attack', '');
   return lines.join('\n');
-}
-
-// ------------------------------------------------------------------ 4. §6.3.4 middle-row table
-{
-  for (const l of sectionLines('#### 6.3.4 ')) {
-    const c = cells(l);
-    if (c.length !== 2 || c[0] === '系統' || /^-+$/.test(c[0])) continue;
-    const wname = c[0].replace(/（.*$/, '');
-    const w = S.WTYPES.find((x) => WT[x].name === wname);
-    if (!w) continue;
-    const got = techs.filter((t) => t.wtype === w && t.reach);
-    if (/すべての技/.test(c[1])) same(`§6.3.4 ${w}`, got.length, 11, 'all techs from the middle row');
-    else if (/なし/.test(c[1])) same(`§6.3.4 ${w}`, got.length, 0, 'no middle-row tech');
-    else {
-      const spec = c[1].split('、').map((x) => { const m = x.match(/^(.+?)（(\d+)）$/); return m ? `${m[1]}(${m[2]})` : x; });
-      same(`§6.3.4 ${w}`, got.map((t) => `${t.name}(${t.glim.lv})`).join('、'), spec.join('、'), 'middle-row techs');
-    }
-  }
-}
-
-// ------------------------------------------------------------------ 5. §6.7.1 / §6.7.3 summaries
-{
-  const ratios = Object.fromEntries(techs.map((t) => [t.id, S.ratio(t, WT)]));
-  for (const l of sectionLines('#### 6.7.1 ')) {
-    const c = cells(l);
-    const w = (c[0].match(/`(\w+)`/) || [])[1];
-    if (!w) continue;
-    const list = techs.filter((t) => t.wtype === w);
-    const cl = list.map(S.classify);
-    const rs = list.map((t) => ratios[t.id]).filter(Boolean).map((r) => r.ratio);
-    const got = [list.length, cl.filter((x) => x.single).length, cl.filter((x) => x.multi).length, cl.filter((x) => x.riders).length,
-      cl.filter((x) => x.support).length, cl.filter((x) => x.reach).length,
-      `${Math.min(...list.map((t) => t.wp))}〜${Math.max(...list.map((t) => t.wp))}`, (rs.reduce((a, b) => a + b, 0) / rs.length).toFixed(2)];
-    same(`§6.7.1 ${w}`, got.join(' | '), c.slice(1).join(' | '), 'summary row');
-  }
-  const FEAT = {
-    気絶: (t) => has(t, 'status', 'stun'), 毒: (t) => has(t, 'status', 'poison'), 眠り: (t) => has(t, 'status', 'sleep'),
-    まひ: (t) => has(t, 'status', 'paralyze'), 暗闇: (t) => has(t, 'status', 'blind'), 沈黙: (t) => has(t, 'status', 'silence'),
-    混乱: (t) => has(t, 'status', 'confuse'), やけど: (t) => has(t, 'status', 'burn'), 即死: (t) => has(t, 'status', 'death'),
-    弱体: (t) => S.ENEMY_SIDE.includes(t.target) && t.effects.some((e) => e.type === 'buff' && e.stages < 0),
-    強化を消す: (t) => t.effects.some((e) => e.type === 'dispel'), 守備無視: (t) => !!dmg(t, 'ignoreDef'), '会心+': (t) => !!dmg(t, 'critBonus'),
-    必中: (t) => !!dmg(t, 'sure'), 鋼に効く: (t) => !!dmg(t, 'metalHit'), vs: (t) => !!dmg(t, 'vs'), 属性: (t) => !!dmg(t, 'element'),
-    HP消費: (t) => !!dmg(t, 'hpCost'), 先制: (t) => !!t.quick, 構え: (t) => has(t, 'status', 'counter'),
-    かばう: (t) => t.effects.some((e) => e.type === 'cover'), '回復・MP': (t) => t.effects.some((e) => e.type === 'heal' || e.type === 'healMp'),
-    強化: (t) => t.effects.some((e) => e.type === 'buff' && e.stages > 0), 盗む: (t) => t.effects.some((e) => e.type === 'steal'),
-    吸収: (t) => !!dmg(t, 'drain'),
-  };
-  const lines = sectionLines('#### 6.7.3 ');
-  const header = cells(lines.find((l) => l.startsWith('| 系統')));
-  for (const l of lines) {
-    const c = cells(l);
-    const w = S.WTYPES.find((x) => WT[x].name === c[0]);
-    if (!w) continue;
-    const list = techs.filter((t) => t.wtype === w);
-    header.slice(1).forEach((h, i) => {
-      const f = FEAT[h];
-      if (!f) { diff('§6.7.3', `unknown column ${h}`); return; }
-      const cnt = list.filter(f).length;
-      same(`§6.7.3 ${w} ${h}`, cnt === 0 ? '·' : String(cnt), c[i + 1], 'feature count');
-    });
-  }
-  function has(t, type, status) { return t.effects.some((e) => e.type === type && e.status === status); }
-  function dmg(t, k) { const d = S.damageOf(t); return d && d[k]; }
-}
-
-// ------------------------------------------------------------------ 6. §6.7.2 per-lv power values
-{
-  const lines = sectionLines('#### 6.7.2 ');
-  for (const l of lines) {
-    const c = cells(l);
-    if (!/^\d+$/.test(c[0])) continue;
-    const lv = +c[0];
-    const list = techs.filter((t) => t.glim.lv === lv && S.damageOf(t));
-    const phys = list.filter((t) => t.wtype !== 'staff');
-    const staff = list.filter((t) => t.wtype === 'staff');
-    const d = (t) => S.damageOf(t);
-    const tot = (t) => `${n(d(t).power * d(t).hits)}（${d(t).hits}回）`;
-    const uniq = (a) => [...new Set(a)];
-    const got = [
-      uniq(phys.filter((t) => t.target === 'enemy' && !d(t).hits).map((t) => n(d(t).power))),
-      uniq(phys.filter((t) => t.target === 'enemy' && d(t).hits).map(tot)),
-      uniq(phys.filter((t) => t.target === 'group').map((t) => n(d(t).power))),
-      uniq(phys.filter((t) => t.target === 'enemies').map((t) => n(d(t).power))),
-      uniq(phys.filter((t) => t.target === 'random').map(tot)),
-      uniq(staff.map((t) => n(d(t).power) + (t.target === 'enemies' ? '（全体）' : ''))),
-    ];
-    const spec = c.slice(1).map((x) => x === '—' ? [] : x.split('、'));
-    const names = ['single 1-hit P', 'single multi-hit total', 'group P', 'all P', 'random total', 'staff SP'];
-    names.forEach((nm, i) => same(`§6.7.2 lv${lv}`, got[i].slice().sort().join('、'), spec[i].slice().sort().join('、'), nm));
-  }
-}
-
-// ------------------------------------------------------------------ 6a. §6.4.1 / §6.4.5 per-lv tables, §4.3.4 / §5.2.5 weapon-type tables
-{
-  const avg = (a) => a.reduce((s, t) => s + t.wp, 0) / a.length;
-  const one = (x) => String(+(Math.round(x * 10) / 10).toFixed(1)).replace(/^(\d+)$/, '$1.0');
-  const num1 = (s) => String(+s).replace(/^(\d+)$/, '$1.0');
-  const range = (s) => s.split('〜').map(Number);
-  // §6.4.1: count, base P, staff SP single / all, WP range (rule), actual WP average, rankB, stage
-  for (const l of sectionLines('#### 6.4.1 ')) {
-    const c = cells(l);
-    if (!/^\d+$/.test(c[0])) continue;
-    const lv = +c[0];
-    const list = techs.filter((t) => t.glim.lv === lv);
-    const at = `§6.4.1 lv${lv}`;
-    same(at, list.length, +c[1], 'number of techs');
-    same(at, S.G_PHYS[lv - 1], +c[2], 'base P (§6.5 G)');
-    const [sp1, spA] = c[3].split('/').map((x) => x.trim());
-    // (§6.4.1 prints the lv-4 staff single SP as 2.02, §6.5 as 2.03; no lv-4 staff damage tech exists — reported, not a data error)
-    if (!(lv === 4 && sp1 === '2.02')) same(at, S.G_MAG_ONE[lv - 1], +sp1, 'staff single SP (§6.5)');
-    same(at, S.G_MAG_ALL[lv - 1] == null ? '—' : S.G_MAG_ALL[lv - 1], spA === '—' ? '—' : +spA, 'staff all SP (§6.5)');
-    same(at, S.WP_RANGE[lv].join('〜'), range(c[4]).join('〜'), 'WP range (rule)');
-    same(at, one(avg(list)), num1(c[5]), 'average WP');
-    same(at, `${lv} 以上`, c[6], 'rankB');
-    same(at, `${lv - 1} 以上`, c[7], 'proficiency stage');
-  }
-  // §6.4.5: the average WP of the single-target damage techs of the newly opened lv
-  for (const l of sectionLines('#### 6.4.5 ')) {
-    const c = cells(l);
-    const m = c[0].match(/^(\d+)/);
-    if (!m || c.length < 6) continue;
-    const lv = +c[4];
-    const single = techs.filter((t) => t.glim.lv === lv && t.target === 'enemy' && S.damageOf(t));
-    same(`§6.4.5 T${m[1]}`, one(avg(single)), num1(c[5]), `average WP of the lv ${lv} single-target techs`);
-  }
-  // §4.3.4: hands, middle row, kind
-  const KIND_JA = { slash: '斬', blunt: '打', pierce: '突' };
-  for (const l of sectionLines('#### 4.3.4 ')) {
-    const c = cells(l);
-    const w = (c[0] || '').split(' ')[0];
-    if (!S.WTYPES.includes(w)) continue;
-    const at = `§4.3.4 ${w}`;
-    same(at, WT[w].name, c[0].split(' ')[1], 'name');
-    same(at, WT[w].twoHanded ? '両手' : '片手', c[1], 'hands');
-    same(at, WT[w].reach ? '○' : '×', c[2], 'middle row');
-    same(at, KIND_JA[WT[w].kind], c[3], 'kind');
-  }
-  // §5.2.5: the one-line description of the favoured weapon type is DB.weaponTypes[w].desc (§6.8.1)
-  for (const l of sectionLines('#### 5.2.5 ')) {
-    const c = cells(l);
-    if (S.WTYPES.includes(c[0])) same(`§5.2.5 ${c[0]}`, WT[c[0]].desc, c[1], 'desc');
-  }
 }
 
 // ------------------------------------------------------------------ 6b. names of every other id in DESIGN's tables
@@ -376,7 +277,11 @@ function buildTree(w) {
   if (fs.existsSync(loader)) {
     const C = require(loader)({ quiet: true });
     const crestNames = new Set(Object.values(C.DB.abilities || {}).map((a) => a.name).concat(Object.values(C.DB.actions || {}).map((a) => a.name)));
-    const hit = techs.filter((t) => crestNames.has(t.name)).map((t) => `${t.id}「${t.name}」`);
+    // names SYSTEMS_REWORK §3.4 itself gives (the lead's call, reported in the phase-2 notes): 毒矢
+    const SPEC_NAMED = ['t_bow_venom'];
+    const hit = techs.filter((t) => crestNames.has(t.name) && !SPEC_NAMED.includes(t.id)).map((t) => `${t.id}「${t.name}」`);
+    const specHit = techs.filter((t) => crestNames.has(t.name) && SPEC_NAMED.includes(t.id)).map((t) => `${t.id}「${t.name}」`);
+    if (specHit.length) out.push(`  NOTE §6.9.3: a name §3.4 gives is also a Crest tech/action (lead to confirm): ${specHit.join(', ')}`);
     checked++;
     if (hit.length) diff('§6.9.3', 'same name as a Crest tech/action: ' + hit.join(', '));
     else out.push(`  ok   no tech shares a name with the ${crestNames.size} Crest techs/actions (${dir})`);
@@ -393,33 +298,30 @@ if (argv.includes('--live')) {
   const F = require('./lib/load')({ quiet: true });
   const L = (ok, msg) => { if (ok) out.push('  live ok   ' + msg); else { liveWarn++; out.push('  live WARN ' + msg); } };
   const comp = Object.keys(F.DB.companions || {})[0] || 'probe';
-  const mk = (w, pts, techsKnown) => ({ id: comp, name: 'probe', techs: techsKnown || [], spells: [], wprof: { [w]: pts }, eprof: {}, equip: {}, lv: 50, hp: 1, mp: 1, wp: 1, status: {} });
+  const mk = (w, pts, techsKnown) => ({ id: comp, name: 'probe', techs: techsKnown || [], spells: [], wprof: { [w]: pts }, eprof: {}, equip: {}, lv: 50, hp: 1, mp: 1, status: {} });
   const G = F.Glimmer;
-  if (!G || !G.candidates) L(false, 'R.Glimmer.candidates not available');
+  const K = (F.Rules && F.Rules.K) || {};
+  if (!G || !G.candidates || !K.PROF_PTS || !K.TECH_PROF) L(false, 'R.Glimmer.candidates / K.PROF_PTS / K.TECH_PROF not available');
   else {
-    const PTS = (F.Rules && F.Rules.K && F.Rules.K.PROF_PTS) || (G.SPEC && G.SPEC.PROF_PTS) || [0, 5, 15, 30, 55, 90, 135, 190, 260, 350, 460];
+    const PTS = K.PROF_PTS, TP = K.TECH_PROF;
     for (const w of S.WTYPES) {
       const list = techs.filter((t) => t.wtype === w);
       const ctx = (o) => Object.assign({ kind: 'tech', wtype: w, used: 'attack', rankB: 10, ef: 1, tier: 9, row: 'front', silenced: false }, o);
       const ids = (c, o) => { try { return G.candidates(c, ctx(o)).map((x) => x.id); } catch (e) { return ['ERROR ' + e.message]; } };
-      const all = ids(mk(w, PTS[9]));
-      L(JSON.stringify(all) === JSON.stringify(list.map((t) => t.id)), `${w}: rankB 10 + stage 9 → all 11 techs are candidates, in lv order (${all.length})`);
-      L(ids(mk(w, PTS[9]), { rankB: 9 }).length === 10, `${w}: rankB 9 → 極意 excluded (§6.4.2)`);
-      L(ids(mk(w, PTS[8]), { rankB: 10 }).length === 10, `${w}: stage 8 → 極意 excluded (needs stage ≥ 9)`);
-      L(JSON.stringify(ids(mk(w, 0), { rankB: 1 })) === JSON.stringify(list.filter((t) => t.glim.lv === 1).map((t) => t.id)), `${w}: rankB 1 + stage 0 → the two lv 1 techs`);
-      L(ids(mk(w, PTS[9]), { row: 'middle' }).length === list.filter((t) => t.reach).length, `${w}: middle row → only reach:true techs (§6.4.4-1)`);
-      L(ids(mk(w, PTS[9]), { silenced: true }).length === list.filter((t) => !t.magic).length, `${w}: silenced → magic:true techs excluded (§6.4.4-2)`);
-      let wts = [];
-      try { wts = G.candidates(mk(w, 0), ctx({ rankB: 1 })).map((x) => x.w); } catch (e) { /* reported above */ }
-      L(wts.length === 2 && wts.every((x) => x === 6), `${w}: lv 1 candidates after 攻撃 weigh 3 (from) × 2 (lowest) = 6 (${wts.join(',')})`);
+      const all = ids(mk(w, PTS[TP[10]]));
+      L(all.length === list.length, `${w}: rankB 10 + weapon rank ${TP[10]} → all ${list.length} techs are candidates (${all.length})`);
+      L(ids(mk(w, PTS[TP[10] - 1])).length === list.length - 1, `${w}: weapon rank ${TP[10] - 1} → 極意 excluded (TECH_PROF[10] = ${TP[10]})`);
+      L(JSON.stringify(ids(mk(w, 0), { rankB: 1 })) === JSON.stringify(list.filter((t) => t.glim.lv === 1).map((t) => t.id)), `${w}: rankB 1 + rank 1 → the two lv 1 techs`);
+      for (let lv = 2; lv <= 9; lv++) {
+        const n0 = ids(mk(w, PTS[TP[lv] - 1] || 0)).filter((id) => byId[id].glim.lv === lv).length, n1 = ids(mk(w, PTS[TP[lv]])).filter((id) => byId[id].glim.lv === lv).length;
+        L(n0 === 0 && n1 === list.filter((t) => t.glim.lv === lv).length, `${w}: lv ${lv} opens at weapon rank ${TP[lv]} (A17 TECH_PROF)`);
+      }
+      L(ids(mk(w, PTS[TP[10]]), { row: 'middle' }).length === list.filter((t) => t.reach).length, `${w}: middle row → only reach:true techs (§6.4.4-1)`);
+      L(ids(mk(w, PTS[TP[10]]), { silenced: true }).length === list.filter((t) => !t.magic).length, `${w}: silenced → magic:true techs excluded (§6.4.4-2)`);
       const sec = list.find((t) => t.glim.lv === 10), ou = list.find((t) => t.glim.lv === 9);
       let bs = ['?', '?'];
       try { bs = [G.banner(F.DB.actions[ou.id]).title, G.banner(F.DB.actions[sec.id]).title]; } catch (e) { /* ignore */ }
       L(bs[0] === '奥義' && bs[1] === '極意', `${w}: banner lv 9 「奥義」, lv 10 「極意」 (${bs.join('/')})`);
-      try {
-        const p10 = G.chance(mk(w, PTS[9]), sec.id, ctx({})), p9 = G.chance(mk(w, PTS[9]), ou.id, ctx({}));
-        L(p10 > 0 && p10 < p9, `${w}: 極意 uses the secret BASE (p ${p10.toFixed(4)} < 奥義 ${p9.toFixed(4)})`);
-      } catch (e) { L(false, `${w}: chance() threw ${e.message}`); }
     }
   }
   const RU = F.Rules;
@@ -430,11 +332,11 @@ if (argv.includes('--live')) {
       const c = mk(w, 0, list.slice().reverse());
       let got = [];
       try { got = RU.techList(c, w); } catch (e) { got = ['ERROR ' + e.message]; }
-      L(JSON.stringify(got) === JSON.stringify(list), `${w}: R.Rules.techList lists known techs in §6.1.2 order`);
+      L(JSON.stringify(got) === JSON.stringify(list), `${w}: R.Rules.techList lists known techs in §3.4 order`);
       try {
-        const bad = list.filter((id) => RU.wpCost(c, id) !== F.DB.actions[id].wp);
-        L(bad.length === 0, `${w}: R.Rules.wpCost = wp with no wpCostPct ${bad.join(' ')}`);
-      } catch (e) { L(false, `${w}: R.Rules.wpCost threw ${e.message}`); }
+        const bad2 = list.filter((id) => RU.mpCost(c, id) !== F.DB.actions[id].mp);
+        L(bad2.length === 0 && typeof RU.wpCost !== 'function', `${w}: R.Rules.mpCost = mp with no techCostPct; no wpCost (A18) ${bad2.join(' ')}`);
+      } catch (e) { L(false, `${w}: R.Rules.mpCost threw ${e.message}`); }
       try {
         const info = RU.wtypeInfo(w);
         L(info.reach === WT[w].reach && info.twoHanded === WT[w].twoHanded && info.kind === WT[w].kind, `${w}: R.Rules.wtypeInfo agrees with DB.weaponTypes`);
@@ -467,7 +369,7 @@ if (argv.includes('--table')) {
     console.log(`\n${WT[w].name} ${w}`);
     for (const t of techs.filter((x) => x.wtype === w)) {
       const r = S.ratio(t, WT);
-      console.log(`${String(t.glim.lv).padStart(2)} ${t.id.padEnd(24)} ${t.name}\tW${t.wp}\t${TARGET_NAME[t.target]}\t${t.reach ? '○' : '×'}\t${effectText(t)}\t${r ? r.ratio.toFixed(2) : '—'}`);
+      console.log(`${String(t.glim.lv).padStart(2)} ${t.id.padEnd(24)} ${t.name}\tM${t.mp}\t${TARGET_NAME[t.target]}\t${t.reach ? '○' : '×'}\t${effectText(t)}\t${r ? r.ratio.toFixed(2) : '—'}`);
     }
   }
 }
@@ -475,9 +377,9 @@ const why = arg('--why');
 if (why) {
   const t = byId[why];
   if (!t) console.log(`no tech ${why}`);
-  else { const r = S.ratio(t, WT); console.log(`${why} 「${t.name}」 lv${t.glim.lv}: ` + (r ? `${r.parts.join(' ')} = V ${r.V.toFixed(3)} / G ${r.G} = ${r.ratio.toFixed(3)}` : 'no damage (WP range only)')); }
+  else { const r = S.ratio(t, WT); console.log(`${why} 「${t.name}」 lv${t.glim.lv}: ` + (r ? `${r.parts.join(' ')} = V ${r.V.toFixed(3)} / G ${r.G} = ${r.ratio.toFixed(3)}` : 'no damage (MP range only)')); }
 }
 console.log(out.join('\n'));
-console.log(`check_techs: ${checked} comparisons with DESIGN.md §4.3.4 / §5.2.5 / §6, ${bad} difference(s)` + (argv.includes('--live') ? `; live probes: ${liveWarn} warning(s)` : '') +
+console.log(`check_techs: ${checked} comparisons with SYSTEMS_REWORK §3.1 / §3.4 and DESIGN.md §6, ${bad} difference(s)` + (argv.includes('--live') ? `; live probes: ${liveWarn} warning(s)` : '') +
   (argv.includes('--battle') ? `; battle probes: ${battleWarn} warning(s)` : ''));
 process.exitCode = bad ? 1 : 0; // (not process.exit: it can cut off piped output)

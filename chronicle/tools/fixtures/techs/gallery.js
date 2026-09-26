@@ -1,9 +1,9 @@
 // Visual check for area A7 (techs), loaded by `node tools/build.js --with tools/fixtures/techs`
 // into debug_techs.html. Draws, for one weapon type, what the battle screen shows of its
 // techs — with the battle screen's own geometry (DESIGN §11.5.3; R.Battle.HELP / BOX):
-//   * the help strip (240×19 window, desc drawn with fitText in 220px) for all 11 techs,
+//   * the help strip (240×19 window, desc drawn with fitText in 220px) for all the type's techs (up to 17),
 //   * the tech list window (R.UI.List 240×68, 2 columns × 3 rows, lineH 16, padY 10,
-//     「攻撃」 first, W + cost on the right; names squeezed to fit before the cost; drawn like battle_scene.js drawListItem) as its two pages,
+//     「攻撃」 first, M + cost on the right; names squeezed to fit before the cost; drawn like battle_scene.js drawListItem) as its two pages,
 //   * the same list from the middle row (reach:false techs and a non-reaching 攻撃 grey).
 // A desc wider than 220px (it would be squeezed) gets a red bar at the strip's right end.
 //
@@ -19,7 +19,7 @@
   }
 
   /** logical height of one sheet */
-  const SHEET_H = 44 + 11 * 19 + 10 + 3 * 80 + 6;
+  const SHEET_H = 44 + 17 * 19 + 10 + 3 * 80 + 6;   // up to 17 techs a type (sword, SYSTEMS_REWORK §3.4)
 
   function drawSheet(w, y0) {
     const G = R.Gfx, WT = R.DB.weaponTypes[w];
@@ -48,7 +48,7 @@
     y += 10;
     // the tech list, both pages, front row
     const items = (mid) => [{ label: '攻撃', disabled: mid && !WT.reach }].concat(list.map((t) => ({
-      label: t.name, right: 'W' + t.wp, disabled: mid && !t.reach,
+      label: t.name, right: 'M' + t.mp, disabled: mid && !t.reach,
     })));
     // same item drawing as battle_scene.js drawListItem (not exported): cost right-aligned
     // 13px short of the column end, so the next column's cursor does not touch it
@@ -98,7 +98,7 @@
       report[w] = list.map((t) => ({
         id: t.id,
         nameW: +G.textWidth(t.name).toFixed(1),
-        squeeze: +Math.min(1, (109 - 16 - G.textWidth('W' + t.wp)) / G.textWidth(t.name)).toFixed(3),
+        squeeze: +Math.min(1, (109 - 16 - G.textWidth('M' + t.mp)) / G.textWidth(t.name)).toFixed(3),
         descW: +G.textWidth(t.desc).toFixed(1),
       }));
     });
@@ -111,7 +111,7 @@
     for (const id of Object.keys(R.DB.actions)) {
       const t = R.DB.actions[id];
       if (!t || t.kind !== 'tech') continue;
-      const room = 109 - 16 - G.textWidth('W' + t.wp);
+      const room = 109 - 16 - G.textWidth('M' + t.mp);
       const sq = Math.min(1, room / G.textWidth(t.name));
       const dw = G.textWidth(t.desc);
       out.minSqueeze = Math.min(out.minSqueeze, sq);

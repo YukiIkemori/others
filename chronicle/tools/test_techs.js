@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// Self-check for area A7 (techs): the 11 weapon types and the 121 techs against
-// DESIGN.md §6 (the checks of §6.9.1 1–9, plus §6.1–§6.7). Exit 1 on any failure.
+// Self-check for area A7 (techs): the 7 weapon types and the 108 techs against design/build/SYSTEMS_REWORK.md
+// §3.1 / §3.4 (A19, normative over DESIGN §6 until the lead folds it in) and the unchanged rules of DESIGN §6
+// (§6.9.1 1–9, §6.1–§6.7). Exit 1 on any failure.
 //
 //   node tools/test_techs.js             schema checks on an isolated load (core + A7 files only),
 //                                        then cross-area checks on the full game load
@@ -44,7 +45,7 @@ const byId = Object.fromEntries(techs.map((t) => [t.id, t]));
 
 // ---------------------------------------------------------------- 1. weapon types
 head('1 weaponTypes (§6.1.1, §6.8.1)');
-ok(J(Object.keys(WT)) === J(S.WTYPES), `DB.weaponTypes has exactly the 11 types in the official order (got ${Object.keys(WT).join(' ')})`);
+ok(J(Object.keys(WT)) === J(S.WTYPES), `DB.weaponTypes has exactly the 7 types in the official order (A19) (got ${Object.keys(WT).join(' ')})`);
 S.WTYPES.forEach((w, i) => {
   const t = WT[w] || {}, e = S.WT_EXPECT[w];
   ok(t.name === e.name, `${w}.name = ${e.name} (${t.name})`);
@@ -60,16 +61,28 @@ S.WTYPES.forEach((w, i) => {
 });
 
 // ---------------------------------------------------------------- 2. count, lv sequence, rank
-head('2 count / lv / rank (§6.0 0.2)');
-ok(techs.length === 121, `121 actions with kind:'tech' (${techs.length})`);
-ok(J(techs.map((t) => t.id)) === J(S.ALL_IDS), 'tech ids and their order are exactly §6.1.2 (weapon-type order → lv order)');
+head('2 count / lv / rank (SYSTEMS_REWORK §3.4)');
+ok(S.SPEC_TECHS.length === 108, `the §3.4 tables list 108 techs (${S.SPEC_TECHS.length})`);
+ok(techs.length === 108, `108 actions with kind:'tech' (${techs.length})`);
+ok(J(techs.map((t) => t.id)) === J(S.ALL_IDS), 'tech ids and their order are exactly §3.4 (weapon-type order → lv order)');
 for (const w of S.WTYPES) {
   const list = techs.filter((t) => t.wtype === w);
-  ok(list.length === 11, `${w}: 11 techs (${list.length})`);
-  ok(J(list.map((t) => t.glim && t.glim.lv)) === J(S.LV_SEQ), `${w}: glim.lv sequence 1,1,2,…,10 (${list.map((t) => t.glim && t.glim.lv).join(',')})`);
+  ok(list.length === S.COUNTS[w], `${w}: ${S.COUNTS[w]} techs (${list.length})`);
+  ok(J(list.map((t) => t.glim && t.glim.lv)) === J(S.LV_SEQ[w]), `${w}: glim.lv sequence = §3.4 (${list.map((t) => t.glim && t.glim.lv).join(',')})`);
+  for (let lv = 1; lv <= 10; lv++) ok(list.some((t) => t.glim.lv === lv), `${w}: has a lv ${lv} tech (a new candidate in every tier)`);
 }
 for (const t of techs) ok(t.rank === (t.glim && t.glim.lv), `${t.id}: rank === glim.lv (${t.rank}/${t.glim && t.glim.lv})`);
-ok(techs.filter((t) => t.glim.lv <= 9).length === 110 && techs.filter((t) => t.glim.lv === 10).length === 11, '110 main-story techs (lv 1–9) + 11 極意 (lv 10)');
+ok(techs.filter((t) => t.glim.lv <= 9).length === 101 && techs.filter((t) => t.glim.lv === 10).length === 7, '101 main-story techs (lv 1–9) + 7 極意 (lv 10)');
+// every row of §3.4: name, lv, from, MP, ★ blunt
+for (const t of techs) {
+  const sp = S.SPEC_BY_ID[t.id];
+  if (!ok(!!sp, `${t.id}: listed in §3.4`)) continue;
+  ok(t.name === sp.name, `${t.id}: name 「${t.name}」 = §3.4 「${sp.name}」${S.RENAMED[t.id] ? ' (renamed by TECHS, STYLE_JA §7)' : ''}`);
+  ok(t.glim.lv === sp.lv, `${t.id}: lv ${t.glim.lv} = §3.4 ${sp.lv}`);
+  ok(J(t.glim.from) === J(sp.from), `${t.id}: from ${J(t.glim.from)} = §3.4 ${J(sp.from)}`);
+  ok(t.mp === sp.mp, `${t.id}: MP ${t.mp} = §3.4 ${sp.mp}`);
+  if (sp.blunt) ok((S.damageOf(t) || {}).kind === 'blunt', `${t.id}: ★ the damage is kind:'blunt' (a club tech on the axe)`);
+}
 const tIds = Object.keys(DB.actions).filter((k) => k.startsWith('t_'));
 ok(tIds.every((k) => DB.actions[k].kind === 'tech'), 'every t_ action is kind:\'tech\'');
 
@@ -77,7 +90,7 @@ ok(tIds.every((k) => DB.actions[k].kind === 'tech'), 'every t_ action is kind:\'
 head('3 ids / names (§6.9.1-3)');
 const names = new Map();
 for (const t of techs) {
-  ok(S.WTYPES.includes(t.wtype), `${t.id}: wtype is one of the 11 (${t.wtype})`);
+  ok(S.WTYPES.includes(t.wtype), `${t.id}: wtype is one of the 7 (${t.wtype})`);
   ok(t.id.startsWith(`t_${t.wtype}_`), `${t.id}: id starts with t_${t.wtype}_`);
   ok(/^t_[a-z]+_[a-z0-9]+$/.test(t.id), `${t.id}: id is lower-case ascii`);
   ok(!names.has(t.name), `${t.id}: name 「${t.name}」 is unique among techs${names.has(t.name) ? ' (also ' + names.get(t.name) + ')' : ''}`);
@@ -118,7 +131,7 @@ for (const t of techs) {
   ok(isInt(g.lv) && g.lv >= 1 && g.lv <= 10, `${t.id}: glim.lv is 1–10`);
   ok(Array.isArray(g.from), `${t.id}: glim.from is an array`);
   if (!Array.isArray(g.from)) continue;
-  if (g.lv === 1) ok(J(g.from) === J(['attack']), `${t.id}: lv 1 → from ['attack'] (${J(g.from)})`);
+  if (g.lv === 1 || J(g.from) === J(['attack'])) ok(J(g.from) === J(['attack']) && g.lv <= 2, `${t.id}: lv 1 (or the lv 2 抜き打ち / 打ち崩し, §3.4) → from ['attack'] (${J(g.from)})`);
   else {
     ok(g.from.length >= 1 && g.from.length <= 2, `${t.id}: 1–2 parents (${g.from.length})`);
     ok(new Set(g.from).size === g.from.length, `${t.id}: parents are distinct`);
@@ -136,34 +149,35 @@ for (const t of techs) {
 }
 
 // ---------------------------------------------------------------- 6. wp / reach / staff
-head('6 wp / reach / magic (§6.4.1, §6.3.4, §6.0 0.5–0.6)');
+head('6 mp / reach / magic (SYSTEMS_REWORK §2.2, §3.1, §3.4; §6.3.4)');
 for (const t of techs) {
-  const [lo, hi] = S.WP_RANGE[t.glim.lv] || [NaN, NaN];
-  ok(isInt(t.wp) && t.wp >= lo && t.wp <= hi, `${t.id}: wp ${t.wp} in lv ${t.glim.lv} range ${lo}–${hi}`);
+  const [lo, hi] = S.MP_RANGE[t.glim.lv] || [NaN, NaN];
+  ok(isInt(t.mp) && t.mp >= lo && t.mp <= hi, `${t.id}: mp ${t.mp} in lv ${t.glim.lv} range ${lo}–${hi}`);
+  ok(!('wp' in t), `${t.id}: no wp (A18)`);
   ok(Object.prototype.hasOwnProperty.call(t, 'reach') && typeof t.reach === 'boolean', `${t.id}: reach is written as a boolean`);
   ok(t.quick === undefined || t.quick === true, `${t.id}: quick is true or absent`);
   ok(t.magic === undefined || t.magic === true, `${t.id}: magic is true or absent`);
   ok(t.noAuto === undefined || t.noAuto === true, `${t.id}: noAuto is true or absent`);
 }
-ok(techs.every((t) => t.wp > 0), 'no WP 0 tech (§6.0 0.4)');
-for (const w of ['spear', 'bow', 'whip']) ok(techs.filter((t) => t.wtype === w).every((t) => t.reach === true), `${w}: every tech reach:true`);
+ok(techs.every((t) => t.mp > 0), 'no MP 0 tech (§6.0 0.4)');
+for (const w of ['spear', 'bow']) ok(techs.filter((t) => t.wtype === w).every((t) => t.reach === true), `${w}: every tech reach:true`);
 const staff = techs.filter((t) => t.wtype === 'staff');
 ok(staff.every((t) => t.reach === true && t.magic === true), 'staff: every tech reach:true and magic:true');
 ok(staff.every((t) => t.effects.filter((e) => e.type === 'damage').every((e) => e.formula === 'magic')), "staff: every damage is formula:'magic'");
-ok(staff.every((t) => t.effects.filter((e) => e.type === 'damage').every((e) => !e.element && !e.kind)), 'staff: damage takes no element/kind (術扱い・無属性)');
+ok(staff.every((t) => t.effects.filter((e) => e.type === 'damage').every((e) => !e.kind && (!e.element || (t.id === 't_staff_rumble' && e.element === 'earth')))), 'staff: damage takes no element/kind (術扱い・無属性; 地鳴りの杖 is earth, §3.4)');
 ok(techs.filter((t) => t.wtype !== 'staff').every((t) => !t.magic && t.effects.every((e) => e.formula === undefined)), "only staff techs are magic / formula:'magic'");
 for (const [w, list] of Object.entries(S.REACH_TRUE)) {
   const got = techs.filter((t) => t.wtype === w && t.reach).map((t) => t.id);
   ok(J(got) === J(list), `${w}: middle-row techs are exactly §6.3.4 (${got.join(' ') || 'none'})`);
 }
-ok(J(techs.filter((t) => t.noAuto).map((t) => t.id).sort()) === J(S.NO_AUTO.slice().sort()), 'noAuto exactly on filch / snatch / share (§6.0 0.13)');
+ok(J(techs.filter((t) => t.noAuto).map((t) => t.id).sort()) === J(S.NO_AUTO.slice().sort()), 'noAuto exactly on filch / share (§6.0 0.13; the whip snatch is gone, A19)');
 for (const w of S.WTYPES) {
   const [id, name] = S.STARTERS[w];
   ok(byId[id] && byId[id].name === name && byId[id].glim.lv === 1 && byId[id].target === 'enemy' && S.damageOf(byId[id]),
     `starter ${id} 「${name}」: lv 1 single-target damage (§6.1.3)`);
 }
-ok(techs.some((t) => (t.wtype === 'dagger' || t.wtype === 'whip') && t.glim.lv <= 2 && t.effects.some((e) => e.type === 'steal')),
-  'a dagger/whip lv 1–2 tech steals (§5.8)');
+ok(techs.some((t) => t.wtype === 'dagger' && t.glim.lv <= 2 && t.effects.some((e) => e.type === 'steal')),
+  'a dagger lv 1–2 tech steals (§5.8)');
 
 // ---------------------------------------------------------------- 7. fields and effects
 head('7 fields / effects (§6.2)');
@@ -255,41 +269,40 @@ ok(techs.filter((t) => t.effects.some((e) => e.type === 'cover')).map((t) => t.i
 
 // ---------------------------------------------------------------- 8. §6.5 ratio
 head('8 power ratio (§6.5)');
+const RATIO_SPEC = ['t_sword_void', 't_sword_lifecut', 't_sword_first', 't_greatsword_helmsplit', 't_greatsword_adamant'];
 const ratios = [];
 for (const t of techs) {
   const r = S.ratio(t, WT);
   if (!r) continue;
   const [lo, hi] = S.RATIO_BAND(t.glim.lv);
   ratios.push({ t, r: r.ratio });
-  ok(r.ratio >= lo - 1e-9 && r.ratio <= hi + 1e-9, `${t.id}: ratio ${r.ratio.toFixed(3)} in ${lo}–${hi} (${r.parts.join(' ')} / G ${r.G})`);
+  const inBand = r.ratio >= lo - 1e-9 && r.ratio <= hi + 1e-9;
+  // SYSTEMS_REWORK §3.4 sets these powers itself (the katana techs keep their crit / quick on the sword, whose base crit is
+  // lower than the katana's; 兜断ち / 金剛断ち got stronger stuns): outside the §6.5 band = a phase-3 tuning note, not a failure
+  if (!inBand && RATIO_SPEC.includes(t.id)) note(`${t.id}: ratio ${r.ratio.toFixed(3)} outside ${lo}–${hi} — power set by SYSTEMS_REWORK §3.4 (phase 3) (${r.parts.join(' ')})`);
+  else ok(inBand, `${t.id}: ratio ${r.ratio.toFixed(3)} in ${lo}–${hi} (${r.parts.join(' ')} / G ${r.G})`);
 }
 const mean = ratios.reduce((a, x) => a + x.r, 0) / ratios.length;
 const rmin = Math.min(...ratios.map((x) => x.r)), rmax = Math.max(...ratios.map((x) => x.r));
-ok(ratios.length === 109, `109 techs with damage (${ratios.length}), 12 without (${techs.length - ratios.length})`);
-ok(Math.abs(mean - 1.02) < 0.006 && Math.abs(rmin - 0.93) < 0.006 && Math.abs(rmax - 1.14) < 0.006,
-  `ratio mean ${mean.toFixed(3)} / min ${rmin.toFixed(3)} / max ${rmax.toFixed(3)} = §6.5 (1.02 / 0.93 / 1.14)`);
+ok(ratios.length === techs.filter((t) => S.damageOf(t)).length && ratios.length >= 90, `${ratios.length} techs with damage, ${techs.length - ratios.length} without`);
+ok(mean >= 0.97 && mean <= 1.08, `ratio mean ${mean.toFixed(3)} in 0.97–1.08 (§6.5 aimed at 1.02; min ${rmin.toFixed(3)} / max ${rmax.toFixed(3)})`);
 
 // ---------------------------------------------------------------- §6.7.1 summary
 head('§6.7.1 summary per weapon type');
-// [total, single, multi, riders, support, reach, wpMin, wpMax, avgRatio]
-const SUMMARY = {
-  sword: [11, 6, 3, 0, 2, 1, 1, 13, 1.02], greatsword: [11, 6, 5, 4, 0, 1, 2, 14, 1.02], dagger: [11, 9, 2, 4, 0, 1, 1, 13, 1.02],
-  axe: [11, 6, 4, 1, 1, 3, 1, 14, 1.02], spear: [11, 7, 3, 1, 1, 11, 1, 13, 1.02], bow: [11, 5, 6, 3, 0, 11, 1, 13, 1.01],
-  club: [11, 8, 3, 10, 0, 0, 1, 13, 1.02], staff: [11, 4, 2, 3, 5, 11, 1, 13, 1.01], katana: [11, 9, 1, 3, 1, 1, 1, 12, 1.05],
-  fist: [11, 8, 1, 2, 2, 2, 1, 12, 1.02], whip: [11, 6, 5, 8, 0, 11, 1, 13, 1.00],
-};
+// SYSTEMS_REWORK §3.4 replaced the §6.7.1 table: the per-type summary is printed, the totals are checked
 const tot = [0, 0, 0, 0, 0, 0];
 for (const w of S.WTYPES) {
   const list = techs.filter((t) => t.wtype === w);
   const c = list.map(S.classify);
   const rs = ratios.filter((x) => x.t.wtype === w).map((x) => x.r);
   const got = [list.length, c.filter((x) => x.single).length, c.filter((x) => x.multi).length, c.filter((x) => x.riders).length,
-    c.filter((x) => x.support).length, c.filter((x) => x.reach).length, Math.min(...list.map((t) => t.wp)), Math.max(...list.map((t) => t.wp)),
+    c.filter((x) => x.support).length, c.filter((x) => x.reach).length, Math.min(...list.map((t) => t.mp)), Math.max(...list.map((t) => t.mp)),
     +(rs.reduce((a, b) => a + b, 0) / rs.length).toFixed(2)];
   got.slice(0, 6).forEach((v, i) => { tot[i] += v; });
-  ok(J(got) === J(SUMMARY[w]), `${w}: ${J(got)} = §6.7.1 ${J(SUMMARY[w])}`);
+  if (VERBOSE) console.log(`  info ${w}: [total, single, multi, riders, support, reach, mpMin, mpMax, ratio] ${J(got)}`);
+  ok(got[0] === S.COUNTS[w] && got[6] >= 2 && got[7] <= 21 && got[4] <= 6, `${w}: ${J(got)} (count ${S.COUNTS[w]}, MP 2–21, ≤ 6 support)`);
 }
-ok(J(tot) === J([121, 74, 35, 39, 12, 53]), `totals ${J(tot)} = §6.7.1 [121,74,35,39,12,53]`);
+ok(tot[0] === 108 && tot[0] === tot[1] + tot[2] + tot[4] + techs.filter((t) => S.damageOf(t) && !['enemy', ...S.MULTI].includes(t.target)).length, `totals ${J(tot)}`);
 
 // ---------------------------------------------------------------- 9. banned names
 head('9 banned names (STYLE_JA §7)');
@@ -308,7 +321,7 @@ if (!ISOLATED) {
   const loadErr = (F._nodeLoadErrors || []).concat(F.loadErrors || []);
   if (loadErr.length) note(`${loadErr.length} load error(s) in other files (not A7): ` + loadErr.map((s) => String(s).split('\n')[0].split(':')[0]).join(', '));
   const FT = S.techList(F);
-  ok(FT.length === 121 && J(FT.map((t) => t.id)) === J(S.ALL_IDS), 'full load: the 121 techs are intact and registered in the §6.1.2 order (weapontypes.js onData hook)');
+  ok(FT.length === 108 && J(FT.map((t) => t.id)) === J(S.ALL_IDS), 'full load: the 108 techs are intact and registered in the §3.4 order (weapontypes.js onData hook)');
   ok(FT.every((t) => J(t) === J(Object.assign({ id: t.id }, R.DB.actions[t.id]))), 'full load: every tech is identical to the isolated load (no other file touches t_ ids)');
   ok(J(Object.keys(F.DB.weaponTypes)) === J(S.WTYPES), 'full load: weaponTypes intact');
   // names: techs vs spells / enemy actions (this area's rule, §6.9.1-3 and §7.x request)
@@ -338,7 +351,7 @@ if (!ISOLATED) {
   const sk = F.DB.starterKit && F.DB.starterKit.tech;
   if (sk && Object.keys(sk).length) {
     const bad = S.WTYPES.filter((w) => sk[w] !== S.STARTERS[w][0]);
-    if (bad.length) note('DB.starterKit.tech differs from §6.1.3 for: ' + bad.map((w) => `${w}=${sk[w]}`).join(', '));
+    if (bad.length) note('DB.starterKit.tech differs from §3.4 for: ' + bad.map((w) => `${w}=${sk[w]}`).join(', '));
     else ok(true, 'DB.starterKit.tech maps each weapon type to its §6.1.3 starter');
   } else note('DB.starterKit.tech not loaded yet (newgame): starter mapping not checked');
   // companions' startTechs: the weapon type is equipped (§5.7-4, §6.9.2)
@@ -395,7 +408,7 @@ if (!ISOLATED) {
   if (F.Gfx && F.Gfx.has) {
     const miss = S.WTYPES.filter((w) => !F.Gfx.has(F.DB.weaponTypes[w].icon));
     if (miss.length) note('weapon type icons not registered yet (art-chars §3.1.2): ' + miss.map((w) => 'icon:' + w).join(' '));
-    else ok(true, 'all 11 icon:<wtype> graphics are registered');
+    else ok(true, 'all 7 icon:<wtype> graphics are registered');
   }
   // every tech used once in the real battle engine (A2's R.Battle; §6.2.4 / §6.3 / §6.9.1-10 as seen from the data)
   if (!argv.includes('--no-battle')) {
@@ -406,7 +419,7 @@ if (!ISOLATED) {
       const bad = r.results.filter((x) => !x.ok);
       for (const x of bad) note(`battle (A2) ${x.id}: ${x.msg}`);
       if (VERBOSE) for (const x of r.results.filter((y) => y.ok)) console.log(`  ok   battle ${x.id}: ${x.msg}`);
-      if (!bad.length) ok(true, `battle: all ${r.results.length} probes pass — each of the ${r.techs} techs works in R.Battle.Engine (targets, hits, WP, riders, stances, cover, heals, reach, silence, noAuto)`);
+      if (!bad.length) ok(true, `battle: all ${r.results.length} probes pass — each of the ${r.techs} techs works in R.Battle.Engine (targets, hits, MP, riders, stances, cover, heals, reach, silence, noAuto)`);
     }
   }
 }

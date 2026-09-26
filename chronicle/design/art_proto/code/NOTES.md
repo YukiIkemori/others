@@ -110,3 +110,19 @@ UI を細線・半透明に（右上に仲間一覧、コマンドは小さな�
 - `design/art_proto/code/scenes2.js` 2 回目の戦闘（遠近の地面・逆光・落ち影・薄い UI・抑えた色の見た目データ）
 - `design/art_proto/code/scenes3.js` 2 回目の町（遠近の石畳の上に家の正面を立てるジオラマ風）
 - `tools/art_code_render.js`（全出力の作成）、`tools/art_code_shot.js`（1 枚だけ撮る）
+
+---
+
+## 6. 3 回目の修正（A16 追記3「耳が大きい／剃り込み／後頭部まではげて見える」への対応、2026-09-26）
+
+- 原因: 髪の塊（`hairmass`）が頭の楕円より**奥**（z 9.6）にあり、頭の外にはみ出した分しか見えなかった。上の `haircap` は頭頂だけを覆うので、
+  側頭部・耳のまわり・後頭部・うなじが肌のまま → 「剃り込み」「後ろまではげ」に見えた。耳（z 10.15）は肌の楕円で、髪が無い所に大きく出ていた。
+- 直し（`rig.js` の `hair()`）: **髪の殻（`hairshell`）**を頭の**手前**（z 10.25）に足した。頭の座標で、顔（x > 約 0.5）以外の
+  頭頂・側頭・耳・後頭・うなじを 1 枚の面取り多角形で覆い、前の縁は目のすぐ後ろで**もみあげ**になって顎の高さまで下りる。
+  毛の溝（`fold` 3 本）と、うなじ・もみあげの毛先（`strand` 3 本）で「ヘルメット」に見えないようにした。形は見た目データ `L.shell = {front, nape, burn}` で調整できる。
+- 耳: 人の耳は**描かない**（髪の下）。`L.ears === 'show'` か髪なし（`hairStyle:'none'`）のときだけ小さく（1.2×1.7）描く。エルフの耳は髪の殻の上に細く短く出す（フードがあればフードの上）。
+- 頭身: 髪の量が増えた分、頭を **0.88 倍**（首の付け根を中心に、頭・顔・髪の部品をまとめて縮める `headScale`。`L.headScale` / `RIG.setHeadScale`）。
+  2 回目の見た目（`scenes2.js` の `LOOKS2`）は既定 0.88、`?head=1` で元の大きさと比べられる。
+- 新しい出力: `out/sheet2_party_poses.png`（2 回目の配色・画素の大きさでの 4 人 × 9 ポーズ）、`out/sheet2_heads_zoom.png`（頭の拡大）、
+  `out/sheet2_headscale1_compare.png`（頭 1.0 倍との比較）。`mock2_battle.png`・`anim2_*`・`sheet_party_poses.png`・`sheet_hero_zoom.png` も作り直した。
+  1 枚だけ: `node tools/art_code_shot.js sheet2 out.png "z=6&poses=idle,hurt"`（view=sheet2 は `scenes2.js`）。

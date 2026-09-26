@@ -1,6 +1,6 @@
 // Battle probe for area A7 (techs): runs every tech through the real battle engine
 // (R.Battle.Engine, owner A2) and checks what DESIGN §6.2–§6.3 says the tech does there —
-// the announcement, the WP paid, unusable reasons (reach / silence), quick, the hit counts
+// the announcement, the MP paid (A18), unusable reasons (reach / silence), quick, the hit counts
 // and targets, element, HP cost, drain, the riders after a landed hit (status, debuff, steal,
 // dispel), counter stances {slot, power, parry, critBonus} and counters, cover and ×mul
 // redirection, heal / healMp pct / cure / own-side buffs, vs multipliers (race, flag, status id),
@@ -78,7 +78,7 @@ function run(F, S, opts) {
     const collect = (gen) => { const ev = []; for (const e of gen) ev.push(e); return ev; };
     const cmdFor = (eng, t) => {
       const pu = eng.party[0];
-      const target = t.target === 'enemy' || t.target === 'group' ? eng.mons[0] : t.target === 'ally' ? eng.party[1] : t.target === 'self' ? pu : null;
+      const target = t.target === 'enemy' || t.target === 'group' ? eng.mons[0] : t.target === 'ally' || t.target === 'ally_other' ? eng.party[1] : t.target === 'self' ? pu : null;
       return { type: 'tech', id: t.id, slot: 'weapon1', target };
     };
 
@@ -94,7 +94,7 @@ function run(F, S, opts) {
       const pu = eng.party[0];
 
       // ---- usability (§6.3.1, §6.3.4, §3.3.8 unusable)
-      rec(eng.unusable(pu, t.id, 'weapon1') == null, t.id, `usable in the front row with full WP (unusable = ${eng.unusable(pu, t.id, 'weapon1')})`);
+      rec(eng.unusable(pu, t.id, 'weapon1') == null, t.id, `usable in the front row with full MP (unusable = ${eng.unusable(pu, t.id, 'weapon1')})`);
       rec(eng.isQuick(cmdFor(eng, t)) === !!t.quick, t.id, `quick ${!!t.quick} → acts in the first slot of the round (§4.5.2)`);
       try {
         const em = engine(t, monA, (c1) => { c1.row = 'middle'; });
@@ -131,12 +131,13 @@ function run(F, S, opts) {
         }
       }
 
-      // ---- one use: announcement, WP
+      // ---- one use: announcement, MP (A18: techs pay MP)
       let ev;
-      const wp0 = pu.wp, cost = eng.wpCost(pu, t.id);
+      const mp0 = pu.mp, cost = eng.mpCost(pu, t.id);
       try { ev = collect(eng.turn(pu, cmdFor(eng, t))); } catch (e) { rec(false, t.id, `using it threw: ${e.stack.split('\n').slice(0, 2).join(' ')}`); continue; }
       rec(ev.some((e) => e.t === 'msg' && e.text === `${pu.name}の${t.name}！`), t.id, `announced 「${pu.name}の${t.name}！」 (§6.2.4-E)`);
-      rec(cost === Math.max(1, t.wp) && wp0 - pu.wp === cost, t.id, `pays WP ${t.wp} (paid ${wp0 - pu.wp}, wpCost ${cost})`);
+      const selfMp = ['allies', 'self'].includes(t.target) && t.effects.some((e) => e.type === 'healMp');   // 千年の祈り gives some back to its user
+      rec(cost === Math.max(1, t.mp) && (selfMp ? mp0 - pu.mp <= cost : mp0 - pu.mp === cost), t.id, `pays MP ${t.mp} (paid ${mp0 - pu.mp}, mpCost ${cost})`);
 
       // ---- repeated trials
       const agg = { fxOk: 0, dmg: 0, el: 0, cost: 0, drain: 0, rider: 0, landedTrials: 0, stance: 0, counter: 0, parry: 0, cover: 0, coverDmg: 0, heal: 0, mp: 0, cure: 0, buff: 0, err: null };
@@ -150,7 +151,7 @@ function run(F, S, opts) {
           if (t.effects.some((e) => e.type === 'dispel')) m0.buffs.atk = 2;
           if (d && d.drain) u.hp = Math.max(1, Math.floor(u.mhp / 2));
           if (t.effects.some((e) => e.type === 'heal')) { u.hp = 1; ally.hp = 1; }
-          if (t.effects.some((e) => e.type === 'healMp')) { u.mp = 0; ally.mp = 0; }
+          if (t.effects.some((e) => e.type === 'healMp')) { u.mp = e2.mpCost(u, t.id); ally.mp = 0; }   // A18: the user pays MP first (then has 0)
           const cure = t.effects.find((e) => e.type === 'cure');
           if (cure) for (const s of cure.statuses) { u.status[s] = true; u.turns[s] = 3; }
           const hp0 = u.hp;
@@ -191,15 +192,15 @@ function run(F, S, opts) {
               if (ea.some((e) => e.t === 'cover' && e.u === u && e.ally === ally)) agg.cover++;
               if (!ea.some((e) => e.t === 'dmg' && e.u === ally)) agg.coverDmg++;
             } else if (eff.type === 'heal') {
-              const tg = t.target === 'self' ? [u] : t.target === 'ally' ? [ally] : [u, ally];
+              const tg = t.target === 'self' ? [u] : t.target === 'ally' || t.target === 'ally_other' ? [ally] : [u, ally];
               if (tg.every((x) => x.hp > 1)) agg.heal++;
             } else if (eff.type === 'healMp') {
-              const tg = t.target === 'ally' ? [ally] : [u, ally];
+              const tg = t.target === 'ally' || t.target === 'ally_other' ? [ally] : [u, ally];
               if (tg.every((x) => x.mp === Math.min(x.mmp, Math.max(1, Math.ceil(x.mmp * eff.pct))))) agg.mp++;
             } else if (eff.type === 'cure') {
               if (eff.statuses.every((s) => !u.status[s])) agg.cure++;
             } else if (eff.type === 'buff' && !d) {
-              const tg = t.target === 'self' ? [u] : t.target === 'ally' ? [ally] : [u, ally];
+              const tg = t.target === 'self' ? [u] : t.target === 'ally' || t.target === 'ally_other' ? [ally] : [u, ally];
               if (tg.every((x) => x.buffs[eff.stat] === eff.stages)) agg.buff++;
             }
           }
