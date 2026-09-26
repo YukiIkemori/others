@@ -4,6 +4,9 @@
 //   node tools/voice_tts.js                  every missing line of design/voice/script.csv + the hero's battle voices
 //   node tools/voice_tts.js --only v_fine_t1_01,v_rowell_t2_03     these ids      --speaker rowell   one speaker
 //   node tools/voice_tts.js --hero           only the hero's battle voices       --no-hero   skip them
+//   node tools/voice_tts.js --battle         only battle voices (companions b_<char>_<kind>_<n> from
+//                                            design/voice/battle_lines.csv + the hero)   --no-battle  skip the companions'
+//                                            --char selma,hagen   only these companions' battle lines
 //   node tools/voice_tts.js --force          regenerate files that exist        --dry-run   print prompts only
 //   node tools/voice_tts.js --reprocess      redo trim / effects / loudness from the cached raw WAVs (no API)
 //   options: --lufs <n> (default -16)  --raw <dir> (default $TMPDIR/voice_raw)  --report <file.json>
@@ -65,9 +68,24 @@ function allLines(C) {
       }
     }
   }
+  if (C.battle) {
+    const BV = require('./battle_voice');
+    const shoutKinds = C.battle.shoutKinds || ['attack', 'hurt'];
+    for (const b of BV.loadLines()) {
+      out.push({
+        id: b.id, speaker: 'b_' + b.char, battle: b.char, kind: b.kind, text: b.text, direction: b.direction, scene: 'battle',
+        est: Math.max(0.5, BV.spokenLen(b.text) / 7 + 0.3), shout: shoutKinds.includes(b.kind),
+      });
+    }
+  }
   return out;
 }
 function speakerOf(C, line) {
+  if (line.battle) {
+    const b = C.battle && C.battle.cast[line.battle];
+    if (!b) throw new Error('no battle casting for ' + line.battle);
+    return b;
+  }
   if (line.hero) { const v = C.hero.voices[line.hero]; return Object.assign({ profile: C.hero.profile[line.hero] || C.hero.profile, style: C.hero.style }, v); }
   const s = C.speakers[line.speaker];
   if (!s) throw new Error('no casting for speaker ' + line.speaker);
@@ -80,6 +98,7 @@ function buildPrompt(C, line) {
   const notes = [
     `Style: ${sp.style}`,
     line.direction ? `This line: ${line.direction}` : '',
+    line.shout && line.battle ? 'A short battle shout: one quick burst, well under one and a half seconds, no drawn-out vowels.' : '',
     'Language: natural, native Tokyo-standard Japanese, performed by a professional anime/game voice actor. Pauses at "……" and "――". Do not read these notes aloud; say only the transcript.',
   ].filter(Boolean).join('\n');
   const said = (C.readings || {})[line.id] || spoken(line.text); // kana reading for words the model misreads
@@ -137,14 +156,15 @@ const FX = {
   spirit: { p: 1.0, af: 'aecho=0.8:0.6:110|230:0.22|0.12' },
   ghost: { p: 1.0, af: 'aecho=0.8:0.6:140|290:0.25|0.15' },
 };
+/** fx: a FX table key, or {p, af} (e.g. {p: 1.06} = a plain pitch shift for a battle-cast `pitch`) */
 function applyFx(ch, rate, fx) {
-  const f = FX[fx];
+  const f = typeof fx === 'object' && fx ? fx : FX[fx];
   if (!f) return ch;
   const tmp = path.join(os.tmpdir(), `lc_fx_${process.pid}_${Date.now()}.wav`);
   const out = tmp.replace(/\.wav$/, '_o.wav');
   GA.encode(ch, rate, tmp);
   const pad = 'apad=pad_dur=0.6';
-  const chain = (f.p !== 1 ? [`asetrate=${Math.round(rate * f.p)}`, `aresample=${rate}`, `atempo=${(1 / f.p).toFixed(4)}`] : []).concat([pad, f.af]);
+  const chain = (f.p !== 1 ? [`asetrate=${Math.round(rate * f.p)}`, `aresample=${rate}`, `atempo=${(1 / f.p).toFixed(4)}`] : []).concat([pad]).concat(f.af ? [f.af] : []);
   const { spawnSync } = require('child_process');
   const r = spawnSync(GA.ffmpegPath(), ['-hide_banner', '-y', '-i', tmp, '-af', chain.join(','), '-ar', String(rate), out]);
   if (r.status !== 0) throw new Error('fx ffmpeg: ' + String(r.stderr).slice(-300));
@@ -171,6 +191,7 @@ function processWav(wavBytes, line, sp, o) {
   let ch = [GA.mono(d.channels)];
   ch = trim(ch, d.rate, 0.06, 0.15);
   if (sp.fx) ch = trim(applyFx(ch, d.rate, sp.fx), d.rate, 0.03, 0.5);
+  else if (sp.pitch && sp.pitch !== 1) ch = trim(applyFx(ch, d.rate, { p: sp.pitch }), d.rate, 0.03, 0.15);
   ch = GA.limitTo(ch, d.rate, o.lufs, -3); // gain to the target, limiter at −3 dBFS (Vorbis overshoots ~2 dB on decode)
   let n = GA.normalise(ch, d.rate, o.lufs, -1);
   // very short shouts: ebur128 cannot gate < 0.4 s reliably → RMS-based fallback (≈ −16 dBFS RMS)
@@ -186,7 +207,8 @@ function check(p, line) {
   const db = GA.rmsDb(p.channels[0], p.rate, 0.05);
   const loudFrames = db.filter((v) => v > -40).length * 0.05;
   const problems = [];
-  const lo = line.shout ? 0.2 : Math.max(0.35, line.est * 0.35), hi = line.shout ? 3.5 : Math.max(3, line.est * 2.6 + 1.5);
+  // companion battle shouts must stay short (≤ ~1.5 s, BRIEF A37: they are cut off by the next voice anyway)
+  const lo = line.shout ? 0.2 : Math.max(0.35, line.est * 0.35), hi = line.shout ? (line.battle ? 1.6 : 3.5) : Math.max(3, line.est * 2.6 + 1.5);
   if (dur < lo || dur > hi) problems.push(`duration ${dur.toFixed(2)} s outside ${lo.toFixed(1)}–${hi.toFixed(1)} s`);
   if (loudFrames < Math.min(0.2, dur * 0.3)) problems.push('almost silent');
   if (pk > 0.9995) problems.push('clipped');
@@ -200,6 +222,9 @@ async function main(argv, E) {
   let lines = allLines(C);
   if (argv.includes('--hero')) lines = lines.filter((l) => l.hero);
   if (argv.includes('--no-hero')) lines = lines.filter((l) => !l.hero);
+  if (argv.includes('--battle')) lines = lines.filter((l) => l.battle || l.hero);
+  if (argv.includes('--no-battle')) lines = lines.filter((l) => !l.battle);
+  if (arg('--char')) { const want = arg('--char').split(','); lines = lines.filter((l) => want.includes(l.battle)); }
   if (arg('--only')) { const want = arg('--only').split(','); lines = lines.filter((l) => want.includes(l.id)); }
   if (arg('--speaker')) { const want = arg('--speaker').split(','); lines = lines.filter((l) => want.includes(l.speaker)); }
   const outDir = path.resolve(arg('--out', OUT));
