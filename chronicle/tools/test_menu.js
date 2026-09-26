@@ -421,8 +421,8 @@ section('warp list and the main menu');
 section('settings, save, shop, chronicle, books');
 {
   const S = M.SETTINGS;
-  ok(S.length === 11, '11 settings + 戻る = 12 rows (§11.7.15)', S.length);
-  ok(S.map((s) => s.label).join(' ') === 'メッセージ速度 戦闘速度 BGM 効果音 常にダッシュ フィールドの広さ ウインドウの色 タッチパッド 決定ボタン オート継続 カーソル記憶', 'setting labels (STYLE_JA §8)', S.map((s) => s.label));
+  ok(S.length === 12, '12 settings + 戻る = 13 rows (§11.7.15)', S.length);
+  ok(S.map((s) => s.label).join(' ') === 'メッセージ速度 戦闘速度 BGM 効果音 ボイスの音量 常にダッシュ フィールドの広さ ウインドウの色 タッチパッド 決定ボタン オート継続 カーソル記憶', 'setting labels (STYLE_JA §8)', S.map((s) => s.label));
   ok(S.every((s) => s.key in R.DEFAULT_SETTINGS), 'every setting has a default (save.js)', S.filter((s) => !(s.key in R.DEFAULT_SETTINGS)).map((s) => s.key));
   ok(S.every((s) => s.vol || s.values.includes(R.DEFAULT_SETTINGS[s.key])), 'every default is one of the values');
   ok(S.every((s) => s.vol || s.values.length === s.names.length), 'values and names match');
@@ -433,7 +433,8 @@ section('settings, save, shop, chronicle, books');
   ok(S.find((s) => s.key === 'autoKeep').desc === '次の戦闘もオートで始める（ボス戦は手動）', 'オート継続 description');
   ok(S.every((s) => W(s.desc) <= 228), 'setting descriptions fit one line (228px)', S.filter((s) => W(s.desc) > 228).map((s) => s.desc));
   ok(S.every((s) => s.vol || s.names.every((n) => W(n) <= 70)), 'value names fit 70px');
-  ok(12 * 14 + 16 === 184, 'the settings window is 184 tall');
+  ok((S.length + 1) * 13 + 16 === 185, 'the settings window is 185 tall (pitch 13)');
+  ok(R.DEFAULT_SETTINGS.voiceVolume === 0.8 && R.DEFAULT_SETTINGS.settingsVer === 4, 'voiceVolume 0.8, settingsVer 4');
 }
 {
   freshGame();

@@ -149,7 +149,7 @@
       ev.closeMessage();
       ev.sfx('roar');
       await ev.shake(16, 2);
-      await ev.say('……タチイリ、キンシ。\nホシノナヲ、モタヌモノハ、\nトオサナイ……。');
+      await ev.say('……タチイリ、キンシ。\nホシノナヲ、モタヌモノハ、\nトオサナイ……。', { voice: 'v_sentinel_star_01' });
       const r = await ev.battle('tr_b_orrery');
       if (r !== 'win') return false;
       ev.setFlag('star_mid');

@@ -22,17 +22,24 @@ const section = (s) => { if (VERBOSE) console.log('\n' + s); };
 
 // ---------------------------------------------------------------- headless graphics / audio
 const sizes = {};
-function box(w, h) { return { width: w, height: h, getContext: () => null }; }
+function box(w, h) {
+  // a stand-in canvas that also reads as a frame list (fx sprites like bfx:flame are arrays)
+  const b = { width: w, height: h, getContext: () => null, length: 4, map: (f) => [0, 1, 2, 3].map((i) => f(b, i)) };
+  for (let i = 0; i < 4; i++) b[i] = b;
+  return b;
+}
 const FS = R.Gfx.FS;
 R.Gfx.ctx = {
   font: '', globalAlpha: 1,
   measureText(s) { const px = parseFloat(String(this.font)) || FS; return { width: (R.Text && R.Text.approxWidth ? R.Text.approxWidth(s) : [...s].length * FS) * (px / FS) }; },
   save() {}, restore() {}, translate() {}, scale() {}, beginPath() {}, rect() {}, clip() {}, fillRect() {}, fillText() {}, drawImage() {}, setTransform() {},
+  createLinearGradient() { return { addColorStop() {} }; }, fillStyle: '#000', textAlign: 'left', textBaseline: 'top', imageSmoothingEnabled: false,
 };
 const realGet = R.Gfx.get.bind(R.Gfx);
 R.Gfx.get = (k) => {
   if (k.startsWith('mon:')) return sizes[k] || (sizes[k] = box(48, 48));
   if (k.startsWith('bfx:') || k.startsWith('obj:') || k.startsWith('icon:') || k.startsWith('bbg:')) return box(16, 16);
+  if (k.startsWith('party:')) { const f = box(16, 24); return { down: [f, f], up: [f, f], left: [f, f], right: [f, f] }; }
   return realGet(k);
 };
 R.Gfx.variant = (k) => R.Gfx.get(k);
@@ -40,6 +47,8 @@ const sfx = [], jingles = [];
 let jingleHold = null; // when set, R.jingle(id) returns this promise (the super-rare fanfare test)
 R.sfx = (id) => { sfx.push(id); };
 R.jingle = (id) => { jingles.push(id); return jingleHold || Promise.resolve(); };
+// party battle sprites: the scene's own stand-in (R.Art.battler needs a canvas — §11.4.4.3 代わり; SV-ART tests its own)
+if (R.Art) { R.Art._battlerNode = R.Art.battler; delete R.Art.battler; }
 R.Settings.battleSpeed = 1; R.Settings.msgSpeed = 2; R.Settings.cursorMemory = true; R.Settings.autoKeep = true;
 
 const A = BUI.api;
@@ -51,44 +60,86 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
 (async () => {
   // ================================================================ L — layout constants (§11.5.1)
   section('L layout');
-  eq(B.WIN, { xs: [3, 66, 129, 192], y: 5, w: 61, h: 46 }, 'L1 WIN');
-  ok(B.WIN_BOTTOM === 56, 'L2 WIN_BOTTOM 56');
-  eq(B.HELP, { x: 8, y: 133, w: 240, h: 19 }, 'L3 HELP');
-  eq([B.BOX.x, B.BOX.y, B.BOX.w, B.BOX.h], [8, 150, 240, 68], 'L4 BOX');
-  ok(B.GROUND === 130, 'L5 GROUND');
-  eq(B.BANNER, { y: 64, h: 32 }, 'L6 BANNER');
-  eq(B.CARD, { y: 64 }, 'L7 CARD');
-  ok(B.WIN.xs[3] + B.WIN.w <= 256 - 3, 'L8 four windows fit 256 px with a 3 px margin');
-
+  const LY = B.LAYOUT;
+  eq(LY.FIELD, { x: 0, y: 0, w: 256, h: 152 }, 'L1 FIELD');
+  eq([LY.MSG, LY.MSG_BIG, LY.HELP], [{ x: 4, y: 4, w: 248, h: 34, lines: 2 }, { x: 4, y: 4, w: 248, h: 62, lines: 4 }, { x: 4, y: 4, w: 248, h: 19 }], 'L2 MSG / MSG_BIG / HELP');
+  eq([LY.LIST, LY.CMD, LY.STATUS], [{ x: 4, y: 64, w: 168, rows: 5, lineH: 14, padY: 8 }, { x: 4, y: 152, w: 88, h: 68 }, { x: 94, y: 152, w: 158, h: 68 }], 'L3 LIST / CMD / STATUS');
+  eq([LY.BANNER, LY.CARD, LY.EZ], [{ cx: 88, y: 44, h: 32 }, { x: 8, y: 76, w: 168 }, { x0: 4, x1: 172, cx: 88 }], 'L4 BANNER / CARD / EZ');
+  eq(LY.PARTY, { front: 192, middle: 216, zig: [0, 4, 0, 4], step: 10, y: { 1: [126], 2: [112, 136], 3: [106, 124, 142], 4: [100, 116, 132, 148] } }, 'L5 PARTY');
+  ok(B.HELP === LY.HELP && B.BANNER === LY.BANNER && B.CARD === LY.CARD, 'L6 R.Battle.HELP / BANNER / CARD are the new values');
+  eq([B.WIN, B.WIN_BOTTOM, [B.BOX.x, B.BOX.y, B.BOX.w, B.BOX.h], B.GROUND], [{ xs: [3, 66, 129, 192], y: 5, w: 61, h: 46 }, 56, [8, 150, 240, 68], 130], 'L7 legacy WIN / WIN_BOTTOM / BOX / GROUND keep their values');
+  ok(LY.CMD.x + LY.CMD.w < LY.STATUS.x && LY.STATUS.x + LY.STATUS.w <= 256 - 4 && LY.CMD.y + LY.CMD.h <= 224 - 4, 'L8 CMD and STATUS side by side inside the screen');
+  // enemyLayout (§11.5.13): 1–8 monsters of 32 / 48 / 64, big sprites + escorts — inside x 4–172, every one ≥ 50 % visible
+  const boxes = (w, h, n) => Array.from({ length: n }, () => ({ w, h }));
+  // the share of each sprite's box not covered by a sprite drawn after it (a nearer row, or later in the same row)
+  const visibleShare = (pos, list) => list.map((it) => {
+    const p = pos.get(it);
+    const over = list.filter((o) => o !== it && (pos.get(o).feet > p.feet || (pos.get(o).feet === p.feet && list.indexOf(o) > list.indexOf(it))));
+    let n = 0, hid = 0;
+    for (let y = p.y; y < p.feet; y++) for (let x = p.x; x < p.x + it.w; x++) {
+      n++;
+      if (over.some((o) => { const q = pos.get(o); return x >= q.x && x < q.x + o.w && y >= q.y && y < q.feet; })) hid++;
+    }
+    return 1 - hid / n;
+  });
+  const layoutOk = (list, name, need) => {
+    const pos = B.enemyLayout(list);
+    const inside = list.every((it) => { const p = pos.get(it); return p && p.x >= 4 && p.x + it.w <= 172; });
+    const vis = visibleShare(pos, list);
+    need = need == null ? 0.5 : need;
+    ok(inside && vis.every((v) => v >= need), 'L9 enemyLayout ' + name + ': inside x 4–172, each ≥ ' + Math.round(need * 100) + ' % visible', { inside, vis: vis.map((v) => v.toFixed(2)), pos: list.map((it) => [pos.get(it).x, pos.get(it).feet]) });
+    return pos;
+  };
+  // 32 / 48 px up to 8 and 64 px up to 4 keep half of each sprite; the extreme crowds (5–8 of 64 px, never in the
+  // encounter data) still show a third
+  for (const w of [32, 48, 64]) for (let n = 1; n <= 8; n++) layoutOk(boxes(w, w, n), `${n}×${w}`, w === 64 && n > 4 ? 0.3 : 0.5);
+  layoutOk(boxes(32, 32, 3).concat(boxes(48, 48, 3), boxes(64, 64, 2)), 'mixed 8');
+  let pos = layoutOk(boxes(48, 48, 1), '1×48');
+  const one = [...pos.values()][0];
+  ok(one.feet === 134 && one.rows === 1 && one.x === 88 - 24, 'L10 one monster: feet 134, centred on x 88', one);
+  const eight = boxes(32, 32, 8);
+  pos = B.enemyLayout(eight);
+  ok(eight.every((it, i) => pos.get(it).feet === (i % 2 ? 142 : 114)) && pos.get(eight[0]).x > pos.get(eight[1]).x, 'L11 eight 32s: two rows (even ids behind at 114, odd in front at 142), the back row shifted right', eight.map((it) => [pos.get(it).x, pos.get(it).feet]));
+  const nine = boxes(64, 64, 8);
+  pos = B.enemyLayout(nine);
+  ok(nine.every((it, i) => pos.get(it).feet === [102, 122, 142][i % 3]), 'L12 eight 64s: three rows 102 / 122 / 142', nine.map((it) => pos.get(it).feet));
+  const boss = { w: 128, h: 112 }, esc = boxes(48, 48, 2), bl = [esc[0], boss, esc[1]];
+  pos = B.enemyLayout(bl);
+  const pb = pos.get(boss);
+  ok(pb.x === 24 && pb.y === 34 && pb.feet === 146, 'L13 a 128×112 boss: x 24–152, top 34, feet 146', pb);
+  ok(esc.every((e) => pos.get(e).feet === 114) && Math.max(...esc.map((e) => pos.get(e).x + 48)) === 172, 'L14 its escorts behind (feet 114), right-aligned to 172', esc.map((e) => pos.get(e)));
+  // the party (§11.5.14): feet by row and number of members
   let S = BUI.open({ mons: std() });
   const P = S.eng.party;
-  ok(P.length === 4 && S.winFx.length === 4, 'L9 four party windows', P.length);
-  P.forEach((p, i) => {
-    const r = S.rectOf(p), x = B.WIN.xs[i];
-    eq([r.x, r.y, r.w, r.h, r.cx, r.cy, r.bottom, r.side], [x, 5, 61, 46, x + 30, 28, 51, 'party'], 'L10 rectOf party ' + i);
-  });
+  ok(P.length === 4 && S.pvs.length === 4 && S.winFx.length === 4, 'L15 four members on screen', P.length);
+  eq(S.pvs.map((v) => [v.homeX, v.homeY]), [[192, 100], [220, 116], [216, 132], [196, 148]], 'L16 feet: front 192 / middle 216 + zig 0 4 0 4, y 100 116 132 148');
+  for (const n of [1, 2, 3]) {
+    const Sn = BUI.open({ mons: std(), size: n, tweak: (p) => { for (const c of p) c.row = 'front'; } });
+    eq(Sn.pvs.map((v) => v.homeY), LY.PARTY.y[n], 'L17 ' + n + ' member(s): y ' + LY.PARTY.y[n].join(' '));
+  }
+  S = BUI.open({ mons: std(), tweak: (p) => { p[0].hp = 0; p[3].hp = 0; } });
+  eq(S.pvs.map((v) => v.homeX), [192, 196, 192, 196], 'L18 the front row down: the middle row counts as the front (x 192)');
+  // rectOf a member = the sprite box + anchors (screen coordinates)
+  S = BUI.open({ mons: std() });
+  const r0 = S.rectOf(S.eng.party[0]);
+  ok(r0.side === 'party' && r0.bottom === 100 && r0.feet[0] === 192 && r0.x < 192 && r0.x + r0.w > 192 && r0.y < 100 && r0.head[1] < r0.cy && Array.isArray(r0.cast) && Array.isArray(r0.tip), 'L19 rectOf(member): sprite box, feet, head, cast, tip', r0);
   S.pop(P[2], 12, 'white'); S.pop(P[2], 5, 'green');
-  eq([S.pops[0].x, S.pops[0].y + 4, S.pops[1].y + 4], [159, 62, 71], 'L11 party popups centred at (x+30, y+57 + n×9)');
-  // feet sinking (§11.4.2): h ≤ 64 none, 96 → +13, 112 → +20, 128 → +20 (clamp)
-  eq([64, 96, 112, 128, 48].map((h) => B.Scene.feet(h)), [130, 143, 150, 150, 130], 'L12 feet = GROUND + clamp(round((h−64)/2.4), 0, 20)');
-  // one row: centred, gap ≤ 8
-  const pos1 = S.arrange(S.eng.mons);
-  const xs = S.eng.mons.map((m) => pos1.get(m).x);
-  ok(xs[0] === Math.round(128 - (4 * 48 + 3 * 8) / 2) && xs[1] - xs[0] === 56, 'L13 one row centred, gap 8', xs);
-  // two rows when the total width > 256 with ≥ 4 monsters: 1st/3rd/5th behind (feet −12), 2nd/4th in front
-  sizes['mon:bui_big'] = box(64, 64);
-  S = BUI.open({ mons: [1, 2, 3, 4, 5].map(() => ({ id: 'wolf_2', sprite: 'bui_big' })) });
-  const pos2 = S.arrange(S.eng.mons);
-  const rows = S.eng.mons.map((m) => pos2.get(m));
-  ok(rows[0].back && !rows[1].back && rows[2].back && !rows[3].back && rows[4].back, 'L14 two rows: odd-numbered at the back', rows.map((r) => r.back));
-  ok(rows[0].y + 64 === 118 && rows[1].y + 64 === 130, 'L15 back row feet GROUND−12', [rows[0].y, rows[1].y]);
-  const back = rows.filter((r) => r.back), front = rows.filter((r) => !r.back);
-  ok(Math.abs((back[0].x + back[2].x + 64) / 2 - 128) <= 1 && Math.abs((front[0].x + front[1].x + 64) / 2 - 128) <= 1, 'L16 each row centred');
-  S = BUI.open({ mons: [1, 2, 3].map(() => ({ id: 'wolf_2', sprite: 'bui_big' })) });
-  ok([...S.vis.values()].every((v) => !v.back), 'L17 three wide monsters stay in one row (overlap allowed)');
+  const r2 = S.rectOf(P[2]);
+  eq([S.pops[0].x, S.pops[0].y, S.pops[1].y], [r2.head[0], Math.max(42, r2.head[1] - 12), Math.max(42, r2.head[1] - 12) - 9], 'L20 member numbers above the head, 9 px up per stacked number');
+  const rm = S.rectOf(S.eng.mons[0]);
+  S.pop(S.eng.mons[0], 3, 'white');
+  eq([S.pops[2].x, S.pops[2].y], [rm.cx, Math.max(42, rm.y + rm.h * 0.4)], 'L21 monster numbers at 40 % of the sprite');
+  // the member entering commands steps forward 10 px (6 frames at speed 1)
+  S = BUI.open({ mons: std() });
+  S.commandPhase();
+  await step(2); await press('a'); await step(8);
+  ok(S.acting === P[0] || S.acting === S.eng.party[0], 'L22 the first member is entering commands');
+  ok(S.pvs[0].x === 182 && S.pvs[1].x === 220, 'L23 the one entering commands stands 10 px forward', S.pvs.map((v) => v.x));
+  await press('b'); await step(8);
+  ok(S.pvs[0].x === 192, 'L24 back to the party menu: back in place', S.pvs[0].x);
 
-  // ================================================================ W — status windows
-  section('W windows');
+  // ================================================================ W — the STATUS panel (§11.5.2)
+  section('W status');
   S = BUI.open({ mons: std() });
   const [h0, b0, s0, m0] = S.eng.party;
   eq(S.eng.party.map((p) => S.rowOf(p)), ['front', 'middle', 'middle', 'front'], 'W1 row tags use the effective row');
@@ -100,7 +151,6 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   eq(S.iconsOf(b0), ['poison', 'burn', 'silence', 'regen', 'cover', 'up', 'down'], 'W3 icons in DB.statuses order, then up / down');
   ok(Object.keys(DB.statuses).filter((s) => s !== 'death').every((s) => R.Gfx.has('bfx:icon_' + s)), 'W4 every status has a bfx:icon_');
   for (const k of ['burn', 'freeze', 'stun', 'veil', 'counter', 'nimble', 'cover']) ok(!!FX.icons[k], 'W5 new icon ' + k);
-  // DESIGN §11.3.6 grids and colours
   const ICON_SPEC = {
     burn: ['#ff8a30', '...#....', '..##....', '..###.#.', '.#####..', '.######.', '.##..##.', '..####..', '........'],
     freeze: ['#a8ecff', '...#....', '.#.#.#..', '..###...', '#######.', '..###...', '.#.#.#..', '...#....', '........'],
@@ -116,16 +166,37 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   S.winFx[0].glow = 40; await step(20);
   ok(S.winFx[0].glow === 20, 'W7 glimmer glow counts real frames', S.winFx[0].glow);
   R.Settings.battleSpeed = 1;
-  // name tags at y − 3; the raised (acting) window's name stays on screen (y ≥ 0)
+  // every part of a row inside the 158-px window with the worst row (5-char names, 999 / 150 / 99)
   {
-    const names = {}, keep = {};
+    S = BUI.open({ mons: std(), tweak: (p) => { p[0].hp = 999; p[0].mp = 150; p[0].wp = 99; } });
+    const drawn = [], keep = {};
     for (const k of ['window', 'rect', 'text', 'fitText', 'draw', 'strokeRect']) keep[k] = R.Gfx[k];
-    for (const k of ['window', 'rect', 'text', 'draw', 'strokeRect']) R.Gfx[k] = () => {};
-    R.Gfx.fitText = (s, x, y) => { names[s] = y; };
-    S.acting = h0;
-    try { S.drawWindows(); } finally { Object.assign(R.Gfx, keep); S.acting = null; }
-    ok(names[b0.name] === B.WIN.y - 3 && names[m0.name] === B.WIN.y - 3, 'W8 names sit on the top border at y − 3', names);
-    ok(names[h0.name] === 0, 'W9 the raised window keeps its name inside the screen', names[h0.name]);
+    for (const k of ['window', 'rect', 'draw', 'strokeRect']) R.Gfx[k] = () => {};
+    const W = (s) => R.Gfx.textWidth(String(s));
+    R.Gfx.text = (s, x, y, o) => { const w = W(s); const al = (o && o.align) || 'left'; drawn.push({ s: String(s), x0: al === 'right' ? x - w : x, x1: al === 'right' ? x : x + w, y }); };
+    R.Gfx.fitText = (s, x, y, maxW) => { drawn.push({ s: String(s), x0: x, x1: x + Math.min(maxW, W(s)), y, fit: maxW }); };
+    try { S.drawStatus(); } finally { Object.assign(R.Gfx, keep); }
+    const X0 = LY.STATUS.x + 3, X1 = LY.STATUS.x + LY.STATUS.w - 3;
+    ok(drawn.length >= 4 * 8 && drawn.every((d) => d.x0 >= X0 && d.x1 <= X1), 'W8 every part of every row inside the STATUS window', drawn.filter((d) => d.x0 < X0 || d.x1 > X1));
+    const row0 = drawn.filter((d) => d.y === 159).sort((a, b) => a.x0 - b.x0);
+    ok(row0.every((d, i) => i === 0 || d.x0 >= row0[i - 1].x1 + 1.5), 'W9 no two parts of a row touch (999 / 150 / 99)', row0.map((d) => [d.s, Math.round(d.x0), Math.round(d.x1)]));
+    eq([...new Set(drawn.map((d) => d.y))].sort((a, b) => a - b), [159, 173, 187, 201], 'W10 row text at y 159 173 187 201');
+    ok(drawn.filter((d) => d.fit === 46).length === 4, 'W11 names fitted into 46 px');
+  }
+  // fx and numbers are clipped to the battlefield (y < 152): every fx draw happens inside the FIELD clip
+  {
+    S = BUI.open({ mons: std() });
+    const ctx = R.Gfx.ctx, keep = { save: ctx.save, restore: ctx.restore, rect: ctx.rect, clip: ctx.clip };
+    const stack = []; let last = null, clip = null, bad = 0, seen = 0;
+    ctx.save = () => stack.push(clip); ctx.restore = () => { clip = stack.pop() || null; };
+    ctx.rect = (x, y, w, h) => { last = [x, y, w, h]; }; ctx.clip = () => { clip = last; };
+    for (const id of ['slash3', 'fire3', 'breath_fire', 'smoke', 'arrow3', 'holy3', 'earth3']) {
+      R.BattleFX.play(S, id, { user: S.rectOf(id === 'breath_fire' ? S.eng.mons[0] : S.eng.party[3]), targets: id === 'breath_fire' ? S.eng.party.map((p) => S.rectOf(p)) : [S.rectOf(S.eng.mons[0])], dir: id === 'breath_fire' ? 1 : -1 });
+    }
+    S.pop(S.eng.party[3], 999, 'white');
+    for (const f of S.fxList) { const d = f.draw; f.draw = (g, t) => { seen++; if (!clip || clip[1] !== 0 || clip[3] !== 152) bad++; d(g, t); }; }
+    try { for (let i = 0; i < 6; i++) { await step(3); S.draw(); } } finally { Object.assign(ctx, keep); }
+    ok(seen > 0 && bad === 0 && S.fxList.every((f) => f.layer === 'mid'), 'W12 every fx is drawn inside the FIELD clip (0, 0, 256, 152), all on the mid layer', { seen, bad });
   }
 
   // ================================================================ C — command menus, cursor memory, help
@@ -137,27 +208,29 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   ok(S.panel && S.panel.left && S.panel.enemies, 'C1 the party menu shows with the enemy window');
   eq(S.panel.left.items.map((i) => (typeof i === 'object' ? i.label : i)), ['戦う', 'リピート', 'オート', '逃げる'], 'C2 戦う リピート / オート 逃げる');
   ok(S.panel.left.isDisabled(1), 'C3 リピート gray before any command this battle');
-  await press('right'); await step(1);
+  await press('down'); await step(1);
   ok(S.panel.help() === 'くり返す行動がまだない。', 'C4 help of a gray リピート', S.panel.help());
-  await press('left'); await press('a'); await step(2);
+  await press('up'); await press('a'); await step(2);
   const hero = S.eng.party[0];
   eq(S.panel.left.items.map((i) => i.label), R.Rules.commands(hero.c).map((k) => k.name), 'C5 the member menu = R.Rules.commands order');
-  ok(S.panel.left.title === hero.c.name && S.acting === hero, 'C6 title is the name; the acting window rises');
+  ok(S.panel.left.title === hero.c.name && S.acting === hero, 'C6 title is the name; the member steps forward');
+  ok(S.panel.left.x === B.LAYOUT.CMD.x && S.panel.left.y === B.LAYOUT.CMD.y && S.panel.left.cols === 2, 'C6b the member menu is in CMD (2 columns)');
   await press('a'); await step(2); // 剣 → 攻撃 + techs
   const L = S.panel.left;
   ok(L.items[0].label === '攻撃' && !L.items[0].right, 'C7 攻撃 first, no cost');
+  ok(L.x === 4 && L.y === 64 && L.w === 168 && L.cols === 1 && L.rows === 5 && S.panel.under && S.panel.under.title === hero.c.name, 'C7b the tech list is LIST (1 column of 5) with the member menu kept in CMD');
   const techIds = R.Rules.techList(hero.c, 'sword', 'weapon1');
   ok(L.items.length === techIds.length + 1 && L.items.slice(1).every((it, i) => it.right === 'W' + R.Rules.wpCost(hero.c, techIds[i])), 'C8 techs with W and the cost', L.items.slice(1, 3));
   ok(L.title === DB.weaponTypes.sword.name, 'C9 list title = the weapon type name', L.title);
   ok(/で攻撃する。$/.test(S.panel.help()), 'C10 help of 攻撃 names the weapon', S.panel.help());
-  await press('right'); await step(1);
+  await press('down'); await step(1);
   ok(S.panel.help() === DB.actions[techIds[0]].desc, 'C11 help = the tech desc');
   // WP short → gray + 「WPが足りない！」
   hero.c.wp = 0;
   await press('b'); await step(1); await press('a'); await step(2);
   ok(S.panel.left.items.slice(1).every((it) => it.disabled), 'C12 WP 0 → every tech gray');
   ok(S.panel.left.index === 0, 'C13 a list reopens where it was last chosen (nothing chosen yet → top)', S.panel.left.index);
-  await press('right'); await step(1);
+  await press('down'); await step(1);
   ok(S.panel.help() === 'WPが足りない！', 'C14 help WPが足りない！', S.panel.help());
   sfx.length = 0;
   await press('a'); await step(2);
@@ -221,8 +294,9 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   S = BUI.open({ mons: std(), noEscape: true });
   S.partyMenu(); await step(2);
   ok(S.panel.left.isDisabled(3), 'C32 逃げる gray in a no-escape battle');
-  await press('down'); await press('right'); await step(1);
+  await press('down'); await press('down'); await press('down'); await step(1);
   ok(S.panel.help() === 'この戦いからは逃げられない！', 'C33 help of the gray 逃げる', S.panel.help());
+  eq([S.panel.left.x, S.panel.left.y, S.panel.left.cols, S.panel.left.rows], [4, 152, 1, 4], 'C34 the party menu: one column of four in CMD');
 
   // ================================================================ T — targeting
   section('T targets');
@@ -243,9 +317,13 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   await press('a'); tgt = await pr;
   S.eng.party[1].c.hp = 100;
   pr = pick('enemy'); await step(2);
-  ok(S.panel.help() === S.eng.mons[0].name && /Ａ$/.test(S.eng.mons[0].name), 'T6 enemy help = name with its letter', S.panel.help());
+  const cx = (m) => S.vis.get(m).x + S.vis.get(m).w / 2;
+  const byX = S.eng.mons.slice().sort((x, y) => cx(x) - cx(y) || S.vis.get(x).row - S.vis.get(y).row);
+  ok(S.picking.units[0] === byX[0] && S.panel.help() === byX[0].name && /[Ａ-Ｈ]$/.test(byX[0].name), 'T6 the cursor starts on the leftmost; help = name with its letter', S.panel.help());
   await press('left'); await step(1);
-  ok(S.picking.units[0] === S.eng.mons[3] && S.panel.helpColor() === R.Gfx.C.gold, 'T7 enemy cursor wraps; a golden name in gold');
+  ok(S.picking.units[0] === byX[3], 'T6b ← wraps round to the rightmost (screen x order)', S.panel.help());
+  for (let k = 0; k < 4 && !S.picking.units[0].golden; k++) { await press('right'); await step(1); }
+  ok(S.picking.units[0] === S.eng.mons[3] && S.panel.helpColor() === R.Gfx.C.gold, 'T7 a golden name in gold');
   await press('a'); tgt = await pr;
   ok(S.eng.party[0].c.mem.target === S.eng.mons[3].key, 'T8 the enemy target is remembered (unit key)');
   pr = pick('group'); await step(2);
@@ -290,13 +368,14 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     await until(() => back >= 0, 40);
     const t0 = S.glim.t0;
     back = back + F0 - t0;
-    ok(back === 12, 'G7 the handler hands back at frame 12 after the ピコーン (speed ' + spd + ')', back);
-    let fxAt = -1;
+    ok(back === 14, 'G7 the handler hands back at frame 14 after the ピコーン (speed ' + spd + ')', back);
+    ok(S.glim.bulb && S.pvs[0].tmp && S.pvs[0].tmp.pose === 'idle', 'G7b the bulb shows over the member, who stands up (idle frame 0)');
+    let actAt = -1;
+    const act0 = S.actStart;
     S.playFx({ t: 'fx', fx: 'slash', user: S.eng.party[0], targets: [S.eng.mons[0]], kind: 'ability' });
-    const n0 = S.fxList.length;
-    await until(() => { if (S.fxList.length > n0 && fxAt < 0) fxAt = R.Engine.frame - t0; return fxAt >= 0; }, 120);
+    await until(() => { if (S.actStart !== act0 && actAt < 0) actAt = S.actStart - t0; return actAt >= 0; }, 120);
     const H = Math.max(36, Math.round(50 / [1, 1.6, 2.6][spd]));
-    ok(fxAt >= H && fxAt <= H + 1, 'G8 the next fx starts at frame H = max(36, 50/spd) (speed ' + spd + ')', { fxAt, H });
+    ok(actAt >= H && actAt <= H + 1, 'G8 the new tech starts (the run-in) at frame H = max(36, 50/spd) (speed ' + spd + ')', { actAt, H });
     ok(S.glim && S.glim.name === DB.actions[pickC.tech].name, 'G9 banner holds the tech name');
     await step(8);
     ok(!S.glim, 'G10 the banner is gone after H + 6');
@@ -311,7 +390,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     .then(() => S.handle({ t: 'glimmer', u: S.eng.party[1], id: pickC.tech, kind: 'tech' })).then(() => { second = R.Engine.frame; });
   await until(() => second >= 0, 200);
   const H1 = Math.max(36, Math.round(50 / S.spd));
-  ok(second - F1 >= H1 + 6 + 12, 'G11 the second banner waits for the first to close', { waited: second - F1, H: H1 });
+  ok(second - F1 >= H1 + 6 + 14, 'G11 the second banner waits for the first to close', { waited: second - F1, H: H1 });
   // a whole round through the scripted engine: glimmer → message → fx (waits) → damage
   S = BUI.open({ mons: std(), script: { glimmer: [{ round: 1, idx: 0, id: pickC.tech }], monsIdle: true } });
   const log = [];
@@ -404,10 +483,11 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   eng.mons.push(new Mon({ id: 'goblin_2' }, 2), new Mon({ id: 'goblin_2' }, 3));
   S.handle({ t: 'summon', units: [2, 3] });
   const vn = S.vis.get(eng.mons[3]);
-  ok(vn && vn.x >= 256 && vn.move && vn.appear > 0, 'E9 a summoned monster starts off screen at the nearer edge', vn && vn.x);
+  ok(vn && vn.x + vn.w <= 0 && vn.move && vn.appear > 0, 'E9 a summoned monster slides in from the left edge', vn && vn.x);
   await step(16);
-  const fin = eng.mons.map((m) => S.vis.get(m).x);
-  ok(!vn.move && fin[0] < fin[1] && fin[1] < fin[2] && fin[2] < fin[3] && Math.abs((fin[0] + fin[3] + 48) / 2 - 128) <= 1, 'E10 then all four are re-centred in order', fin);
+  const fin = eng.mons.map((m) => [S.vis.get(m).x, S.vis.get(m).y + S.vis.get(m).h]);
+  const want = S.arrange(eng.mons);
+  ok(!vn.move && eng.mons.every((m, i) => fin[i][0] === want.get(m).x && fin[i][0] >= 4 && fin[i][0] + 48 <= 172), 'E10 then all four stand where enemyLayout puts them (x 4–172)', fin);
   // level ups: one levelup jingle per victory
   S = BUI.open({ mons: std(), script: { levelUps: [{ idx: 0, level: 35 }, { idx: 1, level: 35 }] } });
   jingles.length = 0;
@@ -439,7 +519,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   for (let k = 0; k < 40 && phase === 'input'; k++) { await press('a'); await step(2); }
   await until(() => rounds >= 1 && phase === 'input' && S.panel, 1200);
   ok(S.panel && !S.panel.left.isDisabled(1), 'P1 リピート is selectable after a round of commands');
-  await press('right'); await step(1);
+  await press('down'); await step(1);
   ok(S.panel.help() === '前と同じ行動を、Bを押すまで続ける。', 'P2 リピート help', S.panel.help());
   const before = S.eng.rounds.length;
   await press('a'); await step(2);
@@ -564,7 +644,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
       await step(1);
       if (scene.eng.round !== lastRound) { lastRound = scene.eng.round; if (scene.repeating) repeatRounds++; }
       const pl = scene.panel && scene.panel.left;
-      if (pl && pl.items[0] === '戦う') { menus++; ok(!pl.isDisabled(1), 'R2b リピート enabled after the first round'); await press('right'); await press('a'); }
+      if (pl && pl.items[0] === '戦う') { menus++; ok(!pl.isDisabled(1), 'R2b リピート enabled after the first round'); await press('down'); await press('a'); }
       else if (scene.msg.key) await press('a');
     }
     ok(res === 'win' || res === 'lose' || res === 'escape', 'R3 the battle runs to its end (' + res + ')', res);
@@ -592,7 +672,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     B.autoCarry = false;
     // 逃げる (the party menu's 4th command) ends the battle with 'escape'
     let r = await realRun({ mons: [['wolf_1', 2]], tier: 1, bg: 'grass', surprise: null }, async (s) => {
-      if (partyMenuOf(s)) { await press('down'); await press('right'); await press('a'); } else if (s.msg.key) await press('a');
+      if (partyMenuOf(s)) { await press('down'); await press('down'); await press('down'); await press('a'); } else if (s.msg.key) await press('a');
     });
     ok(r.res === 'escape' && B.last.result === 'escape', 'R6 逃げる on the real engine returns escape', r.res);
     // リピート then B: the round finishes, the party menu comes back on 戦う with repeat off; リピート can be chosen again
@@ -603,7 +683,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
       if (pm) {
         if (stage === 0) { stage = 1; await press('a'); return; } // 戦う (round 1 by hand)
         if (stage === 2) backAt = { idx: pm.index, repeating: s.repeating, round: s.eng.round, canRepeat: !pm.isDisabled(1) };
-        if (stage === 1 || stage === 2) { stage++; await press('right'); await press('a'); } // リピート (again after the stop)
+        if (stage === 1 || stage === 2) { stage++; await press('down'); await press('a'); } // リピート (again after the stop)
         return;
       }
       const pl = s.panel && s.panel.left;
@@ -618,7 +698,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     for (const c of R.Game.party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; c.status = {}; }
     let menus = 0;
     r = await realRun({ mons: [['wolf_1', 2]], tier: 1, bg: 'grass', surprise: null }, async (s) => {
-      if (partyMenuOf(s)) { menus++; await press('down'); await press('a'); } else if (s.msg.key) await press('a');
+      if (partyMenuOf(s)) { menus++; await press('down'); await press('down'); await press('a'); } else if (s.msg.key) await press('a');
     });
     ok(r.res === 'win' && menus === 1 && B.autoCarry === true, 'R9 オート runs the battle to the end and sets autoCarry', { res: r.res, menus, carry: B.autoCarry });
     ok(B.prepare({ zone: Object.keys(DB.encounters)[0] }).autoStart !== undefined, 'R10 prepare reports autoStart');

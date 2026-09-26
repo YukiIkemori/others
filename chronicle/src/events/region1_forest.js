@@ -278,7 +278,7 @@
       const again = ev.flag('forest_fine');
       await ev.wait(12);
       f.face('player');
-      if (!again) await ev.say('この根の奥に、伝承の核があるわ。\n……根を食べているものがいる。');
+      if (!again) await ev.say('この根の奥に、伝承の核があるわ。\n……根を食べているものがいる。', { voice: 'v_fine_forest_01' });
       const t = ev.tier();
       if (t >= 6) await ev.say('……もう、あまり時間がないの。');
       else if (t >= 3) await ev.say('わたしのことは気にしないで。\n先へ進みなさい。');
@@ -337,12 +337,12 @@
       elm.show();
       elm.face('player');
       await ev.wait(30);
-      await ev.say('……思い出した。わたしは、\nこの森を守ると誓ったのだった。', TOP);
-      await ev.say('千年前の火の夜……。\n燃える森を前に、わたしは\nこの木に宿り、火を封じた。', TOP);
-      await ev.say('村の者たちは、歌で\nわたしの眠りを守ると\n約束してくれた。', TOP);
-      await ev.say('歌が絶えて、わたしは約束を\n忘れた。森を閉ざし、\n人を迷わせてしまった……。', TOP);
-      await ev.say('語り部よ、礼を言う。', TOP);
-      await ev.say('森の道は、もう閉ざさぬ。\n木こりたちも、じきに\n村へ帰れるだろう。', TOP);
+      await ev.say('……思い出した。わたしは、\nこの森を守ると誓ったのだった。', { ...TOP, voice: 'v_elm_forest_01' });
+      await ev.say('千年前の火の夜……。\n燃える森を前に、わたしは\nこの木に宿り、火を封じた。', { ...TOP, voice: 'v_elm_forest_02' });
+      await ev.say('村の者たちは、歌で\nわたしの眠りを守ると\n約束してくれた。', { ...TOP, voice: 'v_elm_forest_03' });
+      await ev.say('歌が絶えて、わたしは約束を\n忘れた。森を閉ざし、\n人を迷わせてしまった……。', { ...TOP, voice: 'v_elm_forest_04' });
+      await ev.say('語り部よ、礼を言う。', { ...TOP, voice: 'v_elm_forest_05' });
+      await ev.say('森の道は、もう閉ざさぬ。\n木こりたちも、じきに\n村へ帰れるだろう。', { ...TOP, voice: 'v_elm_forest_06' });
       ev.closeMessage();
       await ev.clearRegion(REGION);
       await ev.wait(20);

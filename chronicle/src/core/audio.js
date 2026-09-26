@@ -31,6 +31,13 @@
 //                      definition (a content file failed to load); R.Audio.PENDING
 //                      lists the ids currently served by a stand-in (push only)
 //   R.Audio.duck(db, frames) — dip the music bus briefly (glimmer ピコーン)
+//
+// Recorded media (BRIEF A9/A10, design/notes/audio.md §13): window.RPG_MEDIA (written by tools/build.js
+// from assets/bgm/ and assets/voice/) = {bgm:{id:{src,loopStart,loopEnd,gain,loop}}, voice:{id:{src}}}.
+//   playBGM/pushBGM/popBGM(id) play assets/bgm/<id>.* instead of the synth track when listed (decoded on
+//   first use, looped between loopStart/loopEnd s; decode failure → synth). Jingles stay synthesised.
+//   R.Audio.playVoice(id) → handle|null, stopVoice(handle?) — own bus (Settings.voiceVolume), BGM −9 dB
+//   while a line plays. setVolumes(bgm, sfx, voice).
 (function (R) {
   'use strict';
   const DB = R.DB;
@@ -628,9 +635,12 @@
       } else this.master.connect(dest);
       this.music = ctx.createGain();
       this.duckG = ctx.createGain(); // R.Audio.duck(): short dips under a showcase SFX
+      this.voiceDuck = ctx.createGain(); // held lower while a voice line plays (R.Audio.playVoice)
       const warm = ctx.createBiquadFilter();
       warm.type = 'lowpass'; warm.frequency.value = 11500; warm.Q.value = 0.5;
-      this.music.connect(this.duckG); this.duckG.connect(warm); warm.connect(this.master);
+      this.music.connect(this.duckG); this.duckG.connect(this.voiceDuck); this.voiceDuck.connect(warm); warm.connect(this.master);
+      this.voiceBus = ctx.createGain(); // voice lines: own volume, not ducked, not echoed
+      this.voiceBus.connect(this.master);
       this.sfxBus = ctx.createGain();
       this.sfxBus.connect(this.master);
       this.sfxEcho = makeEcho(ctx, this.sfxBus, { time: 0.09, fb: 0.3, wet: 0.5, lp: 4500 });
@@ -972,6 +982,64 @@
 
   Playback.count = 0;
 
+  // ============================================================ recorded BGM (BRIEF A10)
+  // assets/bgm/<id>.(ogg|mp3|m4a|wav) → tools/build.js lists it in window.RPG_MEDIA.bgm[id] =
+  // {src, loopStart?, loopEnd?, gain?, loop?}. A FilePlayback has the Playback interface the
+  // controller uses (id serial file position() endTime stop() schedule() dispose()), so push/pop,
+  // jingles, fades, volume and ducking behave exactly as for a synthesised track.
+  const FILE_GAIN = 0.7; // mastered files are far louder than the synth tracks (gain ≈ 0.8–1 on −18 LUFS)
+  class FilePlayback {
+    constructor(mx, id, buf, meta, o) {
+      const c = mx.ctx;
+      meta = meta || {};
+      this.mx = mx; this.id = id; this.file = true; this.serial = ++Playback.count; this.stopped = false;
+      const dur = buf.duration;
+      let ls = Math.max(0, +meta.loopStart || 0), le = +meta.loopEnd || dur;
+      if (!(le <= dur)) le = dur;
+      if (!(le > ls + 0.1)) { ls = 0; le = dur; }
+      this.dur = dur; this.loopStart = ls; this.loopEnd = le;
+      this.loop = meta.loop !== false && o.loop !== false;
+      let pos = Math.max(0, o.pos || 0);
+      if (this.loop && pos >= le) pos = ls + ((pos - ls) % (le - ls));
+      if (!this.loop) pos = Math.min(pos, dur);
+      const at = o.at, gain = meta.gain != null ? +meta.gain : FILE_GAIN;
+      this.t0 = at - pos;
+      this.out = c.createGain();
+      const G = this.out.gain;
+      G.value = o.fadeIn ? 0 : gain;
+      if (o.fadeIn) { G.setValueAtTime(0, at); G.linearRampToValueAtTime(gain, at + o.fadeIn); }
+      else G.setValueAtTime(gain, at);
+      this.out.connect(o.dest);
+      const s = (this.src = c.createBufferSource());
+      s.buffer = buf;
+      s.loop = this.loop;
+      if (this.loop) { s.loopStart = ls; s.loopEnd = le; }
+      s.connect(this.out);
+      s.start(at, pos);
+      this.nodes = [s, this.out];
+    }
+    schedule() { /* the buffer source plays by itself */ }
+    position(now) {
+      const raw = now - this.t0;
+      if (raw < 0) return 0;
+      if (!this.loop) return Math.min(raw, this.dur);
+      if (raw < this.loopEnd) return raw;
+      return this.loopStart + ((raw - this.loopStart) % (this.loopEnd - this.loopStart));
+    }
+    get endTime() { return this.t0 + this.dur; }
+    stop(fade) {
+      if (this.stopped) return;
+      this.stopped = true;
+      const now = this.mx.ctx.currentTime, G = this.out.gain;
+      fade = Math.max(0.02, fade || 0);
+      holdParam(G, now);
+      G.linearRampToValueAtTime(0, now + fade);
+      try { this.src.stop(now + fade + 0.05); } catch (e) { /* not started yet */ }
+      if (this.mx.live) setTimeout(() => this.dispose(), (fade + 0.4) * 1000);
+    }
+    dispose() { for (const n of this.nodes) { try { n.disconnect(); } catch (e) { /* ignore */ } } }
+  }
+
   // ============================================================ SFX kit
   // R.DB.sfx.id = function (S) { S.tone({...}); S.noise({...}); } — times in seconds from now.
   class Kit {
@@ -1025,14 +1093,96 @@
   let pb = null;         // Playback of cur (null while paused by a jingle / not unlocked)
   let jin = null;        // active jingle {pb, resolve, end}
   const stack = [];      // pushBGM stack of {id, pos}
-  const vols = { bgm: 0.6, sfx: 0.7 };
+  const vols = { bgm: 0.6, sfx: 0.7, voice: 0.8 };
   const liveSfx = {}, lastSfx = {}, warned = {};
+
+  // ------------------------------------------------ recorded media (BGM files, voice lines)
+  // window.RPG_MEDIA = {bgm:{id:{src,...}}, voice:{id:{src}}} is written by tools/build.js (data: URLs
+  // when embedded, relative URLs with --bgm external / in debug.html). Missing → nothing changes.
+  const MEDIA_KEEP = { bgm: 6, voice: 24 }; // decoded buffers kept (PCM is ≈ 21 MB per stereo minute)
+  const VOICE_DUCK_DB = -9;                 // BGM level under a voice line
+  const bufs = { bgm: new Map(), voice: new Map() };
+  let useSerial = 0;
+  let voice = null;                         // the voice line playing {id, src, out, stopped}
+  function mediaEntry(kind, id) {
+    const M = (typeof window !== 'undefined' && window.RPG_MEDIA) || R.MEDIA;
+    const t = M && M[kind];
+    return (id && t && Object.prototype.hasOwnProperty.call(t, id) && t[id]) || null;
+  }
+  function bytesOf(src) {
+    if (/^data:/.test(src)) {
+      const s = atob(src.slice(src.indexOf(',') + 1)), u = new Uint8Array(s.length);
+      for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i);
+      return Promise.resolve(u.buffer);
+    }
+    return fetch(src).then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer(); });
+  }
+  function decodeBuf(ab) {
+    return new Promise((res, rej) => {
+      try { const p = ctx.decodeAudioData(ab, res, rej); if (p && p.then) p.then(res, rej); } catch (e) { rej(e); }
+    });
+  }
+  /** drop the least recently used decoded buffers beyond MEDIA_KEEP (never the ones in use) */
+  function trimBufs(kind) {
+    const cache = bufs[kind], keep = MEDIA_KEEP[kind];
+    const busy = new Set([cur && cur.id, voice && voice.id, ...stack.map((e) => e && e.id)]);
+    const done = [...cache.entries()].filter(([id, c]) => c.state === 'ok' && !busy.has(id)).sort((a, b) => a[1].used - b[1].used);
+    while (done.length > keep) cache.delete(done.shift()[0]);
+  }
+  /** {state:'loading'|'ok'|'fail', buf, p} for a listed file (decoding starts on the first call) */
+  function loadBuffer(kind, id) {
+    const e = mediaEntry(kind, id);
+    if (!e || !ctx) return null;
+    const cache = bufs[kind];
+    let c = cache.get(id);
+    if (c) { c.used = ++useSerial; return c; }
+    c = { state: 'loading', buf: null, used: ++useSerial };
+    cache.set(id, c);
+    c.p = bytesOf(e.src).then(decodeBuf).then(
+      (buf) => { c.buf = buf; c.state = 'ok'; trimBufs(kind); return c; },
+      (err) => { c.state = 'fail'; warnOnce(kind + 'file:' + id, `audio: cannot decode ${kind} file '${id}' (${err && err.message || err})` + (kind === 'bgm' ? ' — using the synth track' : '')); return c; });
+    return c;
+  }
+  function voiceDuck(on) {
+    if (!mx) return;
+    const g = mx.voiceDuck.gain, now = ctx.currentTime;
+    holdParam(g, now);
+    g.linearRampToValueAtTime(on ? Math.pow(10, VOICE_DUCK_DB / 20) : 1, now + (on ? 0.15 : 0.4));
+  }
+  function endVoice(h, fade) {
+    if (!h || h.stopped) return;
+    h.stopped = true;
+    if (voice === h) voice = null;
+    if (h.src) {
+      const now = ctx.currentTime;
+      holdParam(h.out.gain, now);
+      h.out.gain.linearRampToValueAtTime(0, now + (fade || 0.08));
+      try { h.src.stop(now + (fade || 0.08) + 0.03); } catch (e) { /* ignore */ }
+      if (mx.live) setTimeout(() => { try { h.src.disconnect(); h.out.disconnect(); } catch (e) { /* ignore */ } }, 600);
+    }
+    if (!voice) voiceDuck(false);
+  }
 
   function warnOnce(k, msg) { if (!warned[k]) { warned[k] = 1; R.warn(msg); } }
   function running() { return !!(ctx && ctx.state === 'running'); }
   function startCur(o) {
     o = o || {};
     if (!mx || !cur) return;
+    const fe = mediaEntry('bgm', cur.id);
+    if (fe) {
+      const c = loadBuffer('bgm', cur.id);
+      if (c && c.state === 'ok') {
+        pb = new FilePlayback(mx, cur.id, c.buf, fe, { dest: mx.music, at: ctx.currentTime + (o.delay || 0.03), pos: cur.pos || 0, fadeIn: o.fadeIn });
+        return;
+      }
+      if (c && c.state === 'loading') {
+        // start once decoded — unless the track changed meanwhile (the same `cur` object survives jingles)
+        const want = cur;
+        c.p.then(() => { if (cur === want && !pb && !jin && mx) startCur({ fadeIn: Math.max(0.05, o.fadeIn || 0) }); });
+        return;
+      }
+      // decode failed → the synthesised track (if there is one)
+    }
     const song = compile(cur.id);
     if (!song) { warnOnce('bgm:' + cur.id, `audio: unknown BGM '${cur.id}'`); return; }
     pb = new Playback(mx, song, { dest: mx.music, at: ctx.currentTime + (o.delay || 0.03), pos: cur.pos || 0, fadeIn: o.fadeIn });
@@ -1063,7 +1213,7 @@
     if (ctx.state !== 'running' && ctx.state !== 'closed') { try { ctx.resume(); } catch (e) { /* ignore */ } }
   }
 
-  const known = (id) => !!(DB.music[id] || standIn(FALLBACK.bgm, DB.music, id) || standIn(FALLBACK.jingles, DB.music, id));
+  const known = (id) => !!(mediaEntry('bgm', id) || DB.music[id] || standIn(FALLBACK.bgm, DB.music, id) || standIn(FALLBACK.jingles, DB.music, id));
   const sfxDef = (id) => DB.sfx[id] || DB.sfx[standIn(FALLBACK.sfx, DB.sfx, id)];
   const prevA = R.Audio; // keep ids other files pushed onto PENDING before this file ran
   const A = (R.Audio = {
@@ -1091,7 +1241,7 @@
       initAt = Date.now();
       mx = new Mixer(ctx, ctx.destination, { live: true });
       const S = R.Settings || {};
-      A.setVolumes(S.bgmVolume != null ? S.bgmVolume : vols.bgm, S.sfxVolume != null ? S.sfxVolume : vols.sfx);
+      A.setVolumes(S.bgmVolume != null ? S.bgmVolume : vols.bgm, S.sfxVolume != null ? S.sfxVolume : vols.sfx, S.voiceVolume != null ? S.voiceVolume : vols.voice);
       unlock();
       setInterval(() => { try { pump(); } catch (e) { console.error('[audio]', e); } }, TICK_MS);
       try {
@@ -1102,6 +1252,8 @@
         for (const ev of ['pointerdown', 'pointerup', 'touchend', 'keydown', 'click']) window.addEventListener(ev, unlock, { passive: true });
       } catch (e) { /* no DOM (tests) */ }
       if (cur && !pb && !jin) startCur({ fadeIn: 0.05 });
+      // the battle track is pushed often: decode its recorded version early (no-op without a file)
+      for (const id of ['battle']) if (mediaEntry('bgm', id)) setTimeout(() => loadBuffer('bgm', id), 1500);
       // compile the remaining tracks in idle slices so the first battle never hitches
       const ids = Object.keys(DB.music);
       const idle = window.requestIdleCallback ? (f) => window.requestIdleCallback(f, { timeout: 1000 }) : (f) => setTimeout(f, 120);
@@ -1172,12 +1324,50 @@
       if (!mx || !running()) return;
       mx.duck(db != null ? +db : -6, (frames != null ? +frames : 18) / 60);
     },
-    setVolumes(bgm, sfx) {
+    // ------------------------------------------------ voice lines (BRIEF A9)
+    /** play assets/voice/<id>.* (stops the previous line, ducks the BGM). → handle | null (no file,
+     *  volume 0, locked audio). Never throws; a missing / broken file is silent. */
+    playVoice(id) {
+      if (voice) endVoice(voice);
+      if (!mx || !id || !(vols.voice > 0) || !(running() || Date.now() - initAt < 1500)) return null;
+      if (!mediaEntry('voice', id)) return null;
+      const h = { id, stopped: false, src: null, out: null };
+      voice = h;
+      const c = loadBuffer('voice', id);
+      const go = () => {
+        if (h.stopped || voice !== h || !c || c.state !== 'ok') { if (voice === h && c && c.state === 'fail') endVoice(h); return; }
+        const now = ctx.currentTime;
+        h.out = ctx.createGain();
+        h.out.connect(mx.voiceBus);
+        h.src = ctx.createBufferSource();
+        h.src.buffer = c.buf;
+        h.src.connect(h.out);
+        h.src.onended = () => { if (!h.stopped) { h.src = null; endVoice(h); } };
+        h.src.start(now + 0.01);
+        voiceDuck(true);
+      };
+      if (!c) return null;
+      if (c.state === 'ok') go(); else if (c.state === 'loading') c.p.then(go);
+      return h;
+    },
+    /** stop the voice line (only `h` when given: an older say never stops a newer line) */
+    stopVoice(h) {
+      if (h && h !== voice) { h.stopped = true; return; }
+      if (voice) endVoice(voice);
+    },
+    get voice() { return voice && !voice.stopped ? voice.id : null; },
+    /** is there a recorded file for this id? kind 'bgm' | 'voice' */
+    hasFile(kind, id) { return !!mediaEntry(kind, id); },
+    VOICE_DUCK_DB, FILE_GAIN, FilePlayback,
+    _mxVoiceDuck() { return mx ? mx.voiceDuck : null; }, // tests
+
+    setVolumes(bgm, sfx, vo) {
       if (bgm != null) vols.bgm = +bgm;
       if (sfx != null) vols.sfx = +sfx;
+      if (vo != null) { vols.voice = +vo; if (!(vols.voice > 0) && voice) endVoice(voice); }
       if (!mx) return;
       const now = ctx.currentTime;
-      for (const [node, v] of [[mx.music, vols.bgm], [mx.sfxBus, vols.sfx]]) {
+      for (const [node, v] of [[mx.music, vols.bgm], [mx.sfxBus, vols.sfx], [mx.voiceBus, vols.voice]]) {
         holdParam(node.gain, now);
         node.gain.linearRampToValueAtTime(volCurve(v), now + 0.05);
       }
@@ -1186,7 +1376,8 @@
     debug() {
       const now = ctx ? ctx.currentTime : 0;
       return {
-        ctx: ctx ? ctx.state : 'none', current: cur ? cur.id : null, playing: pb ? pb.id : null,
+        ctx: ctx ? ctx.state : 'none', current: cur ? cur.id : null, playing: pb ? pb.id : null, file: !!(pb && pb.file),
+        voice: voice && !voice.stopped ? voice.id : null,
         serial: pb ? pb.serial : 0, pos: +(pb ? pb.position(now) : cur ? cur.pos : 0).toFixed(2),
         jingle: jin ? jin.pb.id : null, stack: stack.map((e) => e && e.id), volumes: Object.assign({}, vols),
       };

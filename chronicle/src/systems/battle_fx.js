@@ -5,11 +5,11 @@
 // §11.5.12 / §6.2.6 (fx ids), §7.3.4-7 (fx arrays — chained by the scene).
 //
 // R.BattleFX.play(scene, fxId, ctx) starts an animation and returns the number
-// of frames until its impact. ctx: {user: rect|null, targets:[rect], ab, kind, rate}
-// rect = {x,y,w,h,cx,cy,bottom,side:'mon'|'party'}. The scene owns the instance
-// list (scene.addFx) and draws 'mid' instances above the monsters and 'top'
-// instances above the status windows. ctx.rate > 1 plays the effect faster
-// (the 2nd+ fx of an fx array run at 60 % length: rate = 1 / 0.6).
+// of frames until its impact. ctx: {user: rect|null, targets:[rect], ab, kind, rate, dir}
+// rect = {x,y,w,h,cx,cy,bottom,side:'mon'|'party'} (+ for members, Part A8 side view: feet head hand tip cast
+// points of the battle sprite). dir (§11.5.12 Part A8): −1 party → enemy (leftward), +1 enemy → party
+// (rightward), 0 same side / self. Every instance is 'mid' (inside the battlefield, clipped to y < 152 by the
+// scene). ctx.rate > 1 plays the effect faster (the 2nd+ fx of an fx array run at 60 % length: rate = 1 / 0.6).
 //
 // fx ids — data writes them EXACTLY (DESIGN §11.5.12); an optional trailing digit 1–3 is the size:
 //   slash pierce strike claw bite arrow lash stance · fire ice thunder wind earth water holy dark
@@ -427,16 +427,21 @@
   // ------------------------------------------------------------ effects
   const FX = {};
   const lvl = (id) => { const m = /(\d)\s*$/.exec(id || ''); return m ? U.clamp(+m[1], 1, 3) : 1; };
-  const layerOf = (r) => (r.side === 'party' ? 'top' : 'mid');
+  const layerOf = () => 'mid'; // side view: every fx is on the battlefield (§11.5.12)
   const ease = (x) => 1 - (1 - x) * (1 - x);
   let RATE = 1; // playback rate of the effect being started (fx arrays: 2nd+ at 60 % length)
-  function inst(scene, life, layer, draw) { scene.addFx({ life, layer, draw, t: 0, rate: RATE }); }
+  function inst(scene, life, layer, draw) { scene.addFx({ life, layer: 'mid', draw, t: 0, rate: RATE }); }
+  /** the direction of an effect: −1 leftward (party → enemy), +1 rightward (enemy → party), 0 none */
+  const dirOf = (c) => (c && (c.dir === 1 || c.dir === -1) ? c.dir : 0);
 
   FX.slash = (s, c, L) => {
     for (const r of c.targets) {
       const n = L >= 3 ? 3 : L;
       for (let k = 0; k < n; k++) {
-        const flip = k % 2 === 1 ? true : c.kind !== 'attack' && U.chance(0.5);
+        // 1st arc: party → enemy from upper right to lower left (unflipped), enemy → party from upper left
+        // (flipped); the 2nd the other way; never random (§11.5.12)
+        const first = dirOf(c) === 1;
+        const flip = k % 2 === 1 ? !first : first;
         const d = k * 4, dx = k === 2 ? 0 : (k ? 4 : 0), gold = L >= 3 && k === 2;
         inst(s, 16 + d, layerOf(r), (g, t) => {
           const a = t - d;
@@ -454,15 +459,24 @@
   };
   FX.pierce = (s, c, L) => {
     const n = L >= 3 ? 5 : L >= 2 ? 3 : 1;
+    const dir = dirOf(c); // the thrust travels from the user's side toward the target (−1: right → left)
     for (const r of c.targets) {
       for (let k = 0; k < n; k++) {
-        const d = k * 3, oy = k ? U.rf(-8, 8) : 0, ox = k ? U.rf(-6, 6) : 0;
+        const d = k * 3, oy = k ? U.rf(-8, 8) : 0, ox = k ? U.rf(-6, 6) : 0, slope = U.ri(-4, 4);
         inst(s, 16 + d, layerOf(r), (g, t) => {
           const a = t - d;
           if (a < 0) return;
           const q = ease(Math.min(1, a / 5));
-          const x0 = r.cx + ox - 34 + 34 * q, y0 = r.cy + oy + 34 - 34 * q;
-          if (a < 9) for (let i = 0; i < 26; i++) g.rect(x0 - i, y0 + i - 1, 3, i < 6 ? 3 : 2, i < 6 ? '#ffffff' : i < 14 ? '#c8dcff' : '#7aa0e8');
+          if (a < 9) {
+            if (dir) {
+              // a thrust from the user's side, level (±4 slope): the head leads toward the target (§11.5.12)
+              const hx = r.cx + ox - dir * (34 - 34 * q), hy = r.cy + oy - slope * (1 - q);
+              for (let i = 0; i < 26; i++) g.rect(Math.round(hx - dir * i), Math.round(hy - (slope * i) / 26) - 1, 2, i < 6 ? 3 : 2, i < 6 ? '#ffffff' : i < 14 ? '#c8dcff' : '#7aa0e8');
+            } else {
+              const x0 = r.cx + ox - 34 + 34 * q, y0 = r.cy + oy + 34 - 34 * q;
+              for (let i = 0; i < 26; i++) g.rect(x0 - i, y0 + i - 1, 3, i < 6 ? 3 : 2, i < 6 ? '#ffffff' : i < 14 ? '#c8dcff' : '#7aa0e8');
+            }
+          }
           if (a >= 4) g.draw(get('spark'), r.cx + ox - 9, r.cy + oy - 9, { w: 18, h: 18, alpha: Math.max(0, 1 - (a - 4) / 10) });
         });
       }
@@ -503,7 +517,9 @@
     const n = L >= 3 ? 3 : L;
     for (const r of c.targets) {
       for (let k = 0; k < n; k++) {
-        const d = k * 5, flip = k % 2 === 1, ox = k === 2 ? 6 : 0;
+        // the 1st rake follows dir (the sprite rakes left → right: enemy → party unflipped), the 2nd the other way
+        const firstFlip = dirOf(c) === -1;
+        const d = k * 5, flip = k % 2 === 1 ? !firstFlip : firstFlip, ox = k === 2 ? 6 : 0;
         inst(s, 16 + d, layerOf(r), (g, t) => {
           const a = t - d;
           if (a < 0) return;
@@ -530,16 +546,24 @@
     return 10;
   };
 
-  /** projectile from a party caster's window to each target; returns travel frames (0 for monsters) */
+  /** where a member's projectile starts: a spell from the cast point, a tech (staff…) from the weapon tip (§11.5.12) */
+  function originOf(c) {
+    const u = c.user;
+    const spell = c.ab && (c.ab.kind === 'spell' || c.ab.magic);
+    const p = (spell ? u.cast || u.tip : u.tip || u.cast) || [u.cx, u.cy];
+    return { x: p[0], y: p[1] };
+  }
+  /** projectile from a party caster to each enemy target; returns travel frames (0 for monsters / allies) */
   function travel(s, c, drawOrb, T) {
     const from = c.user;
     if (!from || from.side !== 'party' || !c.targets.length || c.targets[0].side === 'party') return 0;
     T = T || 10;
+    const o = originOf(c);
     for (const r of c.targets) {
-      inst(s, T, 'top', (g, t) => {
+      inst(s, T, 'mid', (g, t) => {
         const k = t / T;
-        const x = from.cx + (r.cx - from.cx) * k;
-        const y = from.bottom + (r.cy - from.bottom) * k - Math.sin(k * Math.PI) * 12;
+        const x = o.x + (r.cx - o.x) * k;
+        const y = o.y + (r.cy - o.y) * k - Math.sin(k * Math.PI) * 12;
         drawOrb(g, x, y, t);
       });
     }
@@ -564,9 +588,10 @@
     pixLine(g, tx, ty, tx - ux * 3 - nx * 2, ty - uy * 3 - ny * 2, glow ? '#ffe45a' : '#f0f0f0');
   }
   function arrowShot(s, c, r, delay, T, glow, off) {
-    const from = c.user && c.user !== r ? { x: c.user.cx, y: c.user.side === 'party' ? c.user.bottom : c.user.cy } : { x: r.cx - 70, y: r.cy + 40 };
+    // from the bow's tip for a member, from the middle of the sprite for a monster (§11.5.12)
+    const from = c.user && c.user !== r ? (c.user.side === 'party' && c.user.tip ? { x: c.user.tip[0], y: c.user.tip[1] } : { x: c.user.cx, y: c.user.cy }) : { x: r.cx + 70 * (dirOf(c) || -1) * -1, y: r.cy - 30 };
     const tx = r.cx + (off ? off[0] : 0), ty = r.cy + (off ? off[1] : 0);
-    inst(s, delay + T + 12, from.y < 70 && r.side !== 'party' ? 'top' : layerOf(r), (g, t) => {
+    inst(s, delay + T + 12, 'mid', (g, t) => {
       const a = t - delay;
       if (a < 0) return;
       if (a < T) {
@@ -585,16 +610,16 @@
   FX.arrow = (s, c, L) => {
     const T = 8;
     if (L >= 3) {
-      // a rain of shining arrows from the upper left onto every target
+      // a rain of shining arrows from the user's side, above (party → enemy: from the upper right. §11.5.12)
       R.Engine.flashScreen('#fff4c0', 6);
+      const dir = dirOf(c) || -1;
       let last = 0;
       for (const r of c.targets) {
         for (let i = 0; i < 9; i++) {
           const d = i * 2 + U.ri(0, 2), ox = U.rf(-r.w * 0.4, r.w * 0.4), oy = U.rf(-r.h * 0.3, r.h * 0.3);
           const tx = r.cx + ox, ty = r.cy + oy;
-          const sx = tx - 40, sy = Math.min(tx, ty) < 0 ? -20 : ty - 90;
-          // the rain falls from behind the window band (mid layer) for monster targets
-          inst(s, d + T + 12, r.side === 'party' ? 'top' : 'mid', (g, t) => {
+          const sx = tx - dir * 40, sy = ty - 90;
+          inst(s, d + T + 12, 'mid', (g, t) => {
             const a = t - d;
             if (a < 0) return;
             if (a < T) { const k = (a + 1) / T; drawArrow(g, sx + (tx - sx) * k, sy + (ty - sy) * k, tx - sx, ty - sy, true); }
@@ -611,6 +636,7 @@
   };
 
   // ---- whip (lash / lash2 twice / lash3 a shining thorn whip). DESIGN §11.5.12
+  /** one crack of the whip; flip = it starts on the right of the target (the party's side) */
   function lashOnce(s, r, delay, flip, glow) {
     const dir = flip ? -1 : 1;
     // bezier from above one side to the target, with a swinging control point
@@ -655,20 +681,22 @@
     });
   }
   FX.lash = (s, c, L) => {
+    // the swing starts on the user's side (party → enemy: upper right), the 2nd from the other side (§11.5.12)
+    const fromRight = dirOf(c) !== 1;
     for (const r of c.targets) {
-      lashOnce(s, r, 0, false, L >= 3);
-      if (L >= 2) lashOnce(s, r, 8, true, L >= 3);
+      lashOnce(s, r, 0, fromRight, L >= 3);
+      if (L >= 2) lashOnce(s, r, 8, !fromRight, L >= 3);
     }
     if (L >= 3) R.Engine.flashScreen('#fff4c0', 5);
     return L >= 2 ? 14 : 6;
   };
 
-  // ---- stance (反撃の構え・かばう): the user's window flashes and four light corners close in
+  // ---- stance (反撃の構え・かばう): four light corners close in round the sprite (the scene flashes it white)
   FX.stance = (s, c) => {
     const r = c.user || c.targets[0];
     if (!r) return 0;
-    inst(s, 26, 'top', (g, t) => {
-      if (t < 10) g.rect(r.x + 2, r.y + 2, r.w - 4, r.h - 4, 'rgba(255,255,255,' + (0.7 * (1 - t / 10)).toFixed(3) + ')');
+    inst(s, 26, 'mid', (g, t) => {
+      if (t < 10 && r.side !== 'party') g.rect(r.x + 2, r.y + 2, r.w - 4, r.h - 4, 'rgba(255,255,255,' + (0.5 * (1 - t / 10)).toFixed(3) + ')');
       const k = Math.min(1, t / 8), off = Math.round(8 * (1 - k)), L = 6;
       const alpha = t > 18 ? Math.max(0, (26 - t) / 8) : 1;
       if (alpha <= 0) return;
@@ -752,7 +780,7 @@
       for (let b = 0; b < 1 + L; b++) {
         const pts = [];
         let x = r.cx + U.rf(-10, 10), y = -4;
-        const ty = r.side === 'party' ? r.y + r.h : r.cy;
+        const ty = r.cy;
         while (y < ty) { pts.push([x, y]); y += U.rf(6, 12); x += U.rf(-7, 7) + (r.cx - x) * 0.18; }
         pts.push([r.cx, ty]);
         bolts.push({ pts, d: b * 5 });
@@ -770,13 +798,14 @@
               g.rect(Math.round(x), Math.round(y), 1, 1, '#ffffff');
             }
           }
-          g.draw(get('glow_gold'), r.cx - 16, (r.side === 'party' ? r.y + r.h : r.cy) - 16);
+          g.draw(get('glow_gold'), r.cx - 16, r.cy - 16);
         }
       });
     }
     return 16;
   };
   FX.wind = (s, c, L) => {
+    const dir = dirOf(c) || 1; // the gusts blow the way the spell goes (party → enemy: right to left)
     for (const r of c.targets) {
       const parts = [];
       for (let i = 0; i < 12 + L * 5; i++) parts.push({ a0: U.rf(0, Math.PI * 2), h: U.rf(0, 1), d: U.rf(0, 8), s: U.chance(0.5) ? 2 : 1 });
@@ -794,8 +823,8 @@
         for (const q of gusts) {
           const a = t - q.d;
           if (a < 0 || a > 14) continue;
-          const x = r.x - 20 + (r.w + 40) * (a / 14);
-          g.rect(Math.round(x - q.len), Math.round(q.y), Math.round(q.len), 1, 'rgba(255,255,255,0.8)');
+          const x = dir > 0 ? r.x - 20 + (r.w + 40) * (a / 14) : r.x + r.w + 20 - (r.w + 40) * (a / 14);
+          g.rect(Math.round(dir > 0 ? x - q.len : x), Math.round(q.y), Math.round(q.len), 1, 'rgba(255,255,255,0.8)');
         }
       });
     }
@@ -806,9 +835,9 @@
     for (const r of c.targets) {
       const parts = [];
       for (let i = 0; i < 4 + L * 2; i++) parts.push({ x: r.cx + U.rf(-r.w * 0.4, r.w * 0.4), d: U.rf(0, 12), s: U.chance(0.5) ? 2 : 1.5, spin: U.chance(0.5) });
-      const top = r.side === 'party' ? -10 : Math.max(40, r.y - 30);
+      const top = r.side === 'party' ? r.y - 40 : Math.max(40, r.y - 30);
       inst(s, 40, layerOf(r), (g, t) => {
-        const land = r.side === 'party' ? r.y + r.h - 6 : r.bottom - 4;
+        const land = r.side === 'party' ? r.bottom - 2 : r.bottom - 4;
         for (const p of parts) {
           const a = t - p.d;
           if (a < 0) continue;
@@ -828,7 +857,7 @@
       for (let i = 0; i < 10 + L * 4; i++) parts.push({ x: r.cx + U.rf(-8, 8), d: U.rf(6, 16), vx: U.rf(-2, 2), vy: U.rf(2.5, 4.2), bub: U.chance(0.35) });
       const colH = Math.max(40, r.h + 12);
       inst(s, 38, layerOf(r), (g, t) => {
-        const base = r.side === 'party' ? r.y + r.h : r.bottom;
+        const base = r.bottom;
         const k = t < 8 ? ease(t / 8) : t < 20 ? 1 : Math.max(0, 1 - (t - 20) / 8);
         if (k > 0) {
           const h = colH * k, w = 20 + L * 6;
@@ -854,7 +883,7 @@
       const cols = L >= 3 ? [0, -14, 14, -26, 26] : L >= 2 ? [0, -12, 12] : [0];
       inst(s, 36, layerOf(r), (g, t) => {
         const k = t < 8 ? t / 8 : t > 26 ? Math.max(0, (36 - t) / 10) : 1;
-        const top = r.side === 'party' ? r.y + r.h : r.bottom;
+        const top = r.bottom;
         cols.forEach((ox, i) => { const kk = Math.max(0, Math.min(1, (t - i * 2) / 8)) * (i ? 0.7 : 1); if (kk > 0) g.draw(get('pillar'), r.cx - 12 + ox, top - 150, { alpha: Math.min(k, kk), h: 150 }); });
         for (const p of tws) { const a = t - p.d; if (a >= 0 && a < 12) g.draw(get('tw_white'), p.x - 3, p.y - a * 0.8 - 3, { alpha: 1 - a / 12 }); }
       });
@@ -916,19 +945,26 @@
       dark: { img: () => get('orb_purple'), glow: 'glow_purple' },
       none: { img: () => get('smoke')[0], glow: 'glow_white' },
     }[variant || 'none'];
-    const from = c.user || { cx: 128, cy: 90 };
+    // from the monster's mouth (cx, y + h × 0.35) in a cone to random points of the targets (§11.5.12 Part A8)
+    const u = c.user;
+    const from = u ? { x: u.cx, y: u.side === 'mon' ? u.y + u.h * 0.35 : u.cy } : { x: 88, y: 100 };
+    const tg = c.targets.length ? c.targets : [{ x: 190, y: 100, w: 40, h: 40 }];
     const parts = [];
-    for (let i = 0; i < 40; i++) parts.push({ tx: U.rf(0, 256), ty: U.rf(10, 60), d: U.rf(0, 18), s: U.rf(0.8, 1.8) });
-    inst(s, 42, 'top', (g, t) => {
+    for (let i = 0; i < 40; i++) {
+      const r = tg[i % tg.length];
+      parts.push({ tx: r.x + U.rf(-0.1, 1.1) * r.w, ty: r.y + U.rf(0, 1) * r.h, d: U.rf(0, 18), s: U.rf(0.8, 1.8) });
+    }
+    const band = tg[0].side === 'party' ? [170, 56, 86, 96] : [0, 40, 176, 110];
+    inst(s, 42, 'mid', (g, t) => {
       const img = V.img();
       for (const p of parts) {
         const a = (t - p.d) / 20;
         if (a < 0 || a > 1) continue;
-        const x = from.cx + (p.tx - from.cx) * a, y = from.cy + (p.ty - from.cy) * a;
+        const x = from.x + (p.tx - from.x) * a, y = from.y + (p.ty - from.y) * a;
         const w = img.width * p.s * (0.6 + a), h = img.height * p.s * (0.6 + a);
         g.draw(img, x - w / 2, y - h / 2, { w, h, alpha: Math.min(1, (1 - a) * 3) });
       }
-      if (t > 12 && t < 34) g.draw(get(V.glow), 0, 0, { w: 256, h: 70, alpha: 0.35 * Math.sin(((t - 12) / 22) * Math.PI) });
+      if (t > 12 && t < 34) g.draw(get(V.glow), band[0], band[1], { w: band[2], h: band[3], alpha: 0.35 * Math.sin(((t - 12) / 22) * Math.PI) });
     });
     return 26;
   };
@@ -1008,7 +1044,7 @@
     for (const r of c.targets) {
       inst(s, 40, layerOf(r), (g, t) => {
         const k = t < 10 ? t / 10 : Math.max(0, (40 - t) / 16);
-        const top = r.side === 'party' ? r.y + r.h : r.bottom;
+        const top = r.bottom;
         g.draw(get('pillar'), r.cx - 12, top - 150, { alpha: k, h: 150 });
       });
     }
@@ -1166,10 +1202,11 @@
   FX.counter = (s, c) => FX.stance(s, c);
   FX.cover = (s, c) => FX.stance(s, c);
   FX.steal = (s, c) => {
+    const dir = dirOf(c) || 1; // the streak comes from the thief's side (party → enemy: right to left)
     for (const r of c.targets) {
       inst(s, 18, layerOf(r), (g, t) => {
         const k = Math.min(1, t / 8);
-        for (let i = 0; i < 20; i++) g.rect(r.cx - 30 + 60 * k - i * 2, r.cy - 4 + (i % 3), 2, 1, i < 4 ? '#ffffff' : '#9ac0ff');
+        for (let i = 0; i < 20; i++) g.rect(r.cx - dir * (30 - 60 * k - i * 2), r.cy - 4 + (i % 3), 2, 1, i < 4 ? '#ffffff' : '#9ac0ff');
         if (t > 6) g.draw(get('tw_gold'), r.cx - 3, r.cy - 3 - (t - 6), { alpha: Math.max(0, 1 - (t - 6) / 12) });
       });
     }
@@ -1226,15 +1263,44 @@
     return h;
   };
   FX.warp = (s, c) => sparkles(s, c, 'white', { n: 14 });
-  /** caster sparkle (party member casting a spell) */
+  /**
+   * a member casting a spell (§11.5.12 Part A8): a magic circle in the element's colour turns at the feet (a dotted
+   * 24×6 ellipse, 10 frames) while six motes gather at the cast point
+   */
   FX.cast = (s, c) => {
     const r = c.user;
     if (!r) return 0;
-    inst(s, 16, 'top', (g, t) => {
-      for (let i = 0; i < 6; i++) {
-        const ang = (i / 6) * Math.PI * 2 + t * 0.25;
-        g.draw(get(i % 2 ? 'tw_white' : 'tw_gold'), r.cx + Math.cos(ang) * (22 - t) - 3, r.cy + Math.sin(ang) * (10 - t * 0.4) - 3, { alpha: Math.min(1, (16 - t) / 5) });
+    const els = elementsOf(c.ab);
+    const order = Object.keys((DB && DB.elements) || {});
+    const el = order.find((e) => els.includes(e)) || els[0];
+    const col = (el && DB.elements && DB.elements[el] && DB.elements[el].color) || '#ffffff';
+    const lite = G().mix ? G().mix(col, '#ffffff', 0.55) : '#ffffff';
+    const feet = r.feet || [r.cx, r.bottom];
+    const cp = r.cast || [r.cx - 8, r.cy];
+    inst(s, 18, 'mid', (g, t) => {
+      const fade = t > 12 ? Math.max(0, (18 - t) / 6) : Math.min(1, (t + 2) / 4);
+      if (fade <= 0) return;
+      const cv = g.ctx, a0 = cv.globalAlpha;
+      cv.globalAlpha = a0 * fade;
+      // the circle: 24×6 ellipse of dots turning (every 3rd step lit), a brighter inner ring
+      const N = 28;
+      for (let i = 0; i < N; i++) {
+        const ang = (i / N) * Math.PI * 2 + t * 0.35;
+        if ((i + Math.floor(t)) % 3 === 0) continue;
+        g.rect(Math.round(feet[0] + Math.cos(ang) * 12), Math.round(feet[1] + Math.sin(ang) * 3), 1, 1, i % 2 ? col : lite);
       }
+      for (let i = 0; i < 12; i++) {
+        const ang = (i / 12) * Math.PI * 2 - t * 0.5;
+        g.rect(Math.round(feet[0] + Math.cos(ang) * 6), Math.round(feet[1] + Math.sin(ang) * 1.5), 1, 1, lite);
+      }
+      // motes rising to the hand
+      for (let i = 0; i < 6; i++) {
+        const k = Math.min(1, t / 12), ang = (i / 6) * Math.PI * 2 + t * 0.2;
+        const x = cp[0] + Math.cos(ang) * 14 * (1 - k), y = cp[1] + Math.sin(ang) * 10 * (1 - k) + (feet[1] - cp[1]) * (1 - k) * 0.5;
+        g.draw(get(i % 2 ? 'tw_white' : 'tw_gold'), x - 3, y - 3, { alpha: k < 1 ? 1 : 0.6 });
+      }
+      if (t >= 8 && t < 14) twinkle(g, cp[0], cp[1], t < 11 ? 2 : 1, lite);
+      cv.globalAlpha = a0;
     });
     return 10;
   };

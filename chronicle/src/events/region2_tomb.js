@@ -140,7 +140,7 @@
       if (ev.flag('desert_boss')) return;
       const king = ev.npc('boss');
       await ev.say('祭壇の前に、砂でできた\n王の姿が立っている……。');
-      await ev.say('……わが名を……\nわが名を、返せ……！');
+      await ev.say('……わが名を……\nわが名を、返せ……！', { voice: 'v_hazal_tomb_01' });
       ev.closeMessage();
       ev.sfx('roar');
       await ev.shake(20, 3);
@@ -150,7 +150,7 @@
       // the name is given back (伝承の語り直し)
       await ev.wait(20);
       await ev.say('砂の王の体が、\nさらさらと崩れはじめた。');
-      await ev.say('……わが名を……だれか……。');
+      await ev.say('……わが名を……だれか……。', { voice: 'v_hazal_tomb_02' });
       ev.closeMessage();
       ev.sfx('quill');
       await ev.wait(20);
@@ -158,8 +158,8 @@
       ev.closeMessage();
       ev.sfx('light');
       await ev.flash('#fff8e0', 16);
-      await ev.say('ハザル……そうだ、\nそれがわたしの名だ。');
-      await ev.say('民は、約束を覚えていて\nくれたのだな……。');
+      await ev.say('ハザル……そうだ、\nそれがわたしの名だ。', { voice: 'v_hazal_tomb_03' });
+      await ev.say('民は、約束を覚えていて\nくれたのだな……。', { voice: 'v_hazal_tomb_04' });
       ev.closeMessage();
       ev.sfx('earth');
       await ev.flash('#e8d8b0', 12);

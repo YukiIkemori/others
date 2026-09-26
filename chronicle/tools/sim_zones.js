@@ -783,9 +783,49 @@ function refit(file, outFile) {
   console.log(`[sim_zones] refit: ${n} species corrected from ${G.length} group results → ${outFile}`);
 }
 
+/** --tilt-t0 <avg> --fit <out.json>: dungeon zones (lvOff ≥ 1) at T0. lvOff +1 is a much larger share of the level at T0
+ *  (Lb 7 vs 6) than later (×1.38 HP lost at T0–1, ×1.0 at T7), so at T0 only the zone's groups are re-weighted toward
+ *  the lighter ones (w × e^(λ·(strength − mean)), λ < 0) until the average strength is <avg> (M5 floor 3.0). The groups
+ *  eligible at T0 get a tierMax:0 copy with the new weight; the originals start at T1. No battles are run. */
+function tiltT0(target, outFile) {
+  const base = CM.loadTuning();
+  base.encounters = base.encounters || {};
+  const E = CM.expected();
+  let n = 0;
+  for (const [zid, z] of Object.entries(E.encounters)) {
+    if (z.tier !== 'dyn' || !(z.lvOff >= 1)) continue;
+    const el = CM.eligibleGroups(DB, Object.assign({}, z), 0).filter(({ g, ms }) => !g.solo && !CM.isMetalGroup(DB, ms));
+    const st = el.map(({ ms }) => CM.groupStrength(DB, ms));
+    const W = el.map(({ g }) => g.w);
+    const mean = (lam) => { let a = 0, b = 0; el.forEach((_, i) => { const w = W[i] * Math.exp(lam * st[i]); a += w * st[i]; b += w; }); return a / b; };
+    if (mean(0) <= target) continue;
+    let lo = -5, hi = 0;
+    for (let k = 0; k < 60; k++) { const m = (lo + hi) / 2; if (mean(m) > target) hi = m; else lo = m; }
+    const lam = lo;
+    const s0 = el.reduce((a, _, i) => a + W[i] * st[i], 0) / W.reduce((a, b) => a + b, 0);
+    const neu = new Map(el.map(({ g }, i) => [g, Math.max(0.5, Math.round(2 * W[i] * Math.exp(lam * (st[i] - s0))) / 2)]));
+    const groups = [];
+    for (const g of z.groups) {
+      if (neu.has(g)) {
+        const lowCopy = Object.assign({}, g, { w: neu.get(g), tierMax: 0 });
+        delete lowCopy.tierMin;
+        groups.push(lowCopy);
+        groups.push(Object.assign({}, g, { tierMin: Math.max(1, g.tierMin || 0) }));
+      } else groups.push(g);
+    }
+    const why = `sim_zones --tilt-t0 ${target}: lvOff ${z.lvOff} makes T0 ×1.38 harder than T1+ (M2 order independence); at T0 the groups are re-weighted to average strength ${target} (was ${s0.toFixed(2)})`;
+    const prev = base.encounters[zid] && base.encounters[zid].why;
+    base.encounters[zid] = { groups, why: prev && !/tilt-t0/.test(prev) ? prev + ' ／ ' + why : why };
+    n++;
+  }
+  fs.writeFileSync(outFile, JSON.stringify(base, null, 2) + '\n');
+  console.log(`[sim_zones] tilt-t0: ${n} dungeon zones re-weighted at T0 → ${outFile}`);
+}
+
 // ================================================================ main
 function pct(x, d = 1) { return (100 * x).toFixed(d) + '%'; }
 function main() {
+  if (opt('tilt-t0', null)) { tiltT0(Number(opt('tilt-t0')), opt('fit')); return; }
   if (opt('refit', null)) { refit(opt('refit'), opt('fit', null) || (() => { throw new Error('--refit needs --fit <out.json>'); })()); return; }
   const useReal = realEngineOk();
   const t0 = Date.now();

@@ -135,7 +135,7 @@
     run: async (ev) => {
       if (ev.flag('isles_ship')) { await ev.call('nerei_marina'); return; }
       await ev.say('{hero}は、光る貝がらを\nマリナに渡した。');
-      await ev.say('……ああ、この歌だよ。');
+      await ev.say('……ああ、この歌だよ。', { voice: 'v_marina_nerei_01' });
       await ev.say('今夜、桟橋で歌ってみる。\nあの人に届くかもしれない。');
       ev.closeMessage();
       await ev.fadeOut(40);
@@ -168,7 +168,7 @@
         await ev.flash('#b8d8ff', 16);
         await ev.say('幽霊船が、桟橋に横づけされた……！', TOP);
         m.face('left');
-        await ev.say('あの人の船だ……。', TOP);
+        await ev.say('あの人の船だ……。', { ...TOP, voice: 'v_marina_pier_01' });
         await ev.say('{hero}、どうか、あの人に\nこの歌を届けておくれ。\nわたしは、ここで待っているよ。\n六十年、待ったんだもの。', TOP);
         ev.closeMessage();
         obj(ev, 'obj_isles_4');
@@ -300,7 +300,7 @@
     const f = npcOn(ev, 'fine') ? ev.npc('fine') : null;
     if (f) f.face('player');
     await ev.wait(16);
-    if (!again) await ev.say('待っている人がいる限り、\n物語は終わらない。');
+    if (!again) await ev.say('待っている人がいる限り、\n物語は終わらない。', { voice: 'v_fine_isles_01' });
     const end = t >= 6 ? '……もう、あまり時間がないの。' : t >= 3 ? 'わたしのことは気にしないで。\n先へ進みなさい。' : '……気をつけて。';
     await ev.say(end);
     ev.closeMessage();
@@ -329,8 +329,8 @@
     },
     run: async (ev) => {
       if (ev.flag('isles_boss') || ev.cleared(RS)) return;
-      await ev.say('♪　霧の海でも……迷い……\n……続きが、出てこない……。');
-      await ev.say('おれは……どこへ帰るんだった？\n誰が、待っていた……？\n思い出せない……思い出せない！');
+      await ev.say('♪　霧の海でも……迷い……\n……続きが、出てこない……。', { voice: 'v_glen_ship_01' });
+      await ev.say('おれは……どこへ帰るんだった？\n誰が、待っていた……？\n思い出せない……思い出せない！', { voice: 'v_glen_ship_02' });
       ev.closeMessage();
       ev.sfx('roar');
       await ev.shake(24, 3);
@@ -348,8 +348,8 @@
       ev.closeMessage();
       await ev.caption('♪　霧の海でも、迷いはしない\n岬の灯が、おれを呼ぶから', { frames: 210 });
       ev.sfx('quill');
-      await ev.say('……マリナ。そうだ、\nおれは帰ると約束したんだ。');
-      await ev.say('岬の灯は、あいつだったのか。\n六十年も、待たせちまったな。\n……帰ろう。');
+      await ev.say('……マリナ。そうだ、\nおれは帰ると約束したんだ。', { voice: 'v_glen_ship_03' });
+      await ev.say('岬の灯は、あいつだったのか。\n六十年も、待たせちまったな。\n……帰ろう。', { voice: 'v_glen_ship_04' });
       ev.closeMessage();
       await ev.fadeOut(40);
       // dawn at the pier (§10.8.6 #8)
@@ -366,9 +366,9 @@
         await ev.say('夜明けの桟橋に、\nひとつの影が降り立った。', TOP);
         ev.closeMessage();
         await ev.wait(20);
-        await ev.say('おかえりなさい、グレン。', TOP);
+        await ev.say('おかえりなさい、グレン。', { ...TOP, voice: 'v_marina_dawn_01' });
         await ev.wait(10);
-        await ev.say('ただいま、マリナ。', TOP);
+        await ev.say('ただいま、マリナ。', { ...TOP, voice: 'v_glen_dawn_01' });
         ev.closeMessage();
         await ev.wait(40);
         await dawn.fade(0.95, 60);
@@ -383,7 +383,7 @@
         ev.closeMessage();
         await dawn.fade(0.3, 40);
         m.face('down');
-        await ev.say('……ありがとう。\nあの人は、やっと帰ってきた。', TOP);
+        await ev.say('……ありがとう。\nあの人は、やっと帰ってきた。', { ...TOP, voice: 'v_marina_dawn_02' });
         ev.closeMessage();
         await ev.wait(20);
         await ev.clearRegion(RS);

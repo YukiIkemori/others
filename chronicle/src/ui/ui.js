@@ -89,7 +89,27 @@
       this.pages = pages.length ? pages : [['']];
       this.page = 0; this.shown = 0; this.waiting = false; this.autoT = 0;
       this.resolveText = resolve;
+      this.stopVoice();
+      this.startVoice();
     }
+    // voice line (BRIEF A9): opts.voice = 'id' (the whole say) or ['id', …] (one per page). Starts with the
+    // page, stops when the player advances past it / the window closes / a new say replaces it.
+    // No file, volume 0 or no audio → silent (R.Audio.playVoice returns null).
+    voiceId() {
+      const v = this.opts.voice;
+      return Array.isArray(v) ? v[this.page] || null : this.page === 0 ? v || null : null;
+    }
+    startVoice() {
+      const id = this.voiceId();
+      if (!id) return;
+      try { this.voiceH = R.Audio && R.Audio.playVoice ? R.Audio.playVoice(id) : null; } catch (e) { console.error(e); }
+    }
+    stopVoice() {
+      const h = this.voiceH;
+      this.voiceH = null;
+      if (h) { try { R.Audio.stopVoice(h); } catch (e) { console.error(e); } }
+    }
+    onRemove() { this.stopVoice(); }
     pageLen() { return this.pages[this.page].join('').length; }
     speed() {
       const s = this.opts.speed != null ? this.opts.speed : R.Settings.msgSpeed;
@@ -122,11 +142,17 @@
       if (In().pressed('a') || In().pressed('b') || In().pressed('down')) { sfx('confirm_soft'); this.advance(); }
     }
     advance() {
-      if (this.page < this.pages.length - 1) { this.page++; this.shown = 0; this.autoT = 0; return; }
+      if (this.page < this.pages.length - 1) {
+        this.page++; this.shown = 0; this.autoT = 0;
+        if (Array.isArray(this.opts.voice)) { this.stopVoice(); this.startVoice(); }
+        return;
+      }
       this.finish();
     }
     finish() {
       const r = this.resolveText; this.resolveText = null;
+      // noWait (a question follows): the line keeps playing under the choice until the window moves on
+      if (!this.opts.noWait) this.stopVoice();
       if (!this.opts.keep) { if (UI._msg === this) UI._msg = null; this.close(); }
       else R.Input.consume();
       if (r) r();
@@ -313,7 +339,8 @@
      * Show text in the message window. Resolves when the player dismisses it.
      * opts: {keep:bool (leave window open for the next say/choose),
      *        noWait:bool (resolve as soon as the text is typed; implies keep),
-     *        pos:'bottom'|'top'|'middle', auto:frames, speed:0..3}
+     *        pos:'bottom'|'top'|'middle', auto:frames, speed:0..3,
+     *        voice:'v_<speaker>_<scene>_<nn>' | [id per page] (assets/voice/<id>.*; silent when missing)}
      * '\n' = newline, '\f' = page break. Long text is wrapped & paginated.
      */
     say(text, opts) {

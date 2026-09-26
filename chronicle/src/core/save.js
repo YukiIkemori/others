@@ -16,6 +16,7 @@
     battleSpeed: 1, // 0 normal, 1 fast, 2 fastest
     bgmVolume: 0.6,
     sfxVolume: 0.7,
+    voiceVolume: 0.8, // voice lines of the story characters (BRIEF A9); 0 = off
     alwaysDash: false, // dash = hold B (or Shift) while moving; this makes running the default
     fieldZoom: 'wide', // field view: 'normal' (16×14 tiles) | 'wide' (≈21×19) | 'wider' (32×28); see field.js VIEW
     windowColor: 'ink', // ink | black | blue | green | red
@@ -23,7 +24,7 @@
     cursorMemory: true, // battle command cursor remembers last choice
     padConfirm: 'right', // gamepad confirm button: 'right' (○/Nintendo A) or 'bottom' (×/Xbox A)
     autoKeep: true, // auto battle carries over to the next random encounter
-    settingsVer: 3, // bumped when a default changes for existing players (see migrateSettings)
+    settingsVer: 4, // bumped when a default changes for existing players (see migrateSettings)
   };
   /** bring settings stored by an older version up to date (in place) */
   function migrateSettings(s) {
@@ -31,6 +32,8 @@
     // v2: dash moved to "hold B"; always-dash is now off by default
     if (v < 2) s.alwaysDash = false;
     if (v < 3 && (!s.windowColor || s.windowColor === 'black')) s.windowColor = 'ink';
+    // v4: voice lines (ボイスの音量) — older settings have no value yet
+    if (v < 4 && !(typeof s.voiceVolume === 'number' && s.voiceVolume >= 0 && s.voiceVolume <= 1)) s.voiceVolume = DEFAULT_SETTINGS.voiceVolume;
     s.settingsVer = DEFAULT_SETTINGS.settingsVer;
     return v < DEFAULT_SETTINGS.settingsVer;
   }

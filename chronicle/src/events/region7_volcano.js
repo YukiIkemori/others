@@ -105,7 +105,7 @@
       await ev.wait(12);
       const t = Math.min(7, ev.tier());
       const close = t >= 6 ? '……もう、あまり時間がないの。' : t >= 3 ? 'わたしのことは気にしないで。\n先へ進みなさい。' : '……気をつけて。';
-      if (!again) await ev.say('燃え尽きることと、\n忘れられることは、違うわ。');
+      if (!again) await ev.say('燃え尽きることと、\n忘れられることは、違うわ。', { voice: 'v_fine_ash_01' });
       await ev.say(close);
       ev.closeMessage();
       if (t >= 3 && !again) await ev.caption('フィーネの足元が、\n透けて見えた。');

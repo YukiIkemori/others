@@ -1,4 +1,4 @@
-// Field menu: セーブ (DESIGN §11.7.14: 記録1〜3 + 冒険の合言葉), 設定 (§11.7.15: 12 rows, applied at
+// Field menu: セーブ (DESIGN §11.7.14: 記録1〜3 + 冒険の合言葉), 設定 (§11.7.15: 13 rows, applied at
 // once) and the DOM overlay that shows / takes a 冒険の合言葉 (also used by the title screen).
 //   R.Menu.saveScreen(o) / saveMenu(o) → Promise<bool saved>   R.Menu.settings()   R.Menu.codeOverlay({mode, code})
 //   R.Menu.drawSlot(i, slot, x, y, w, h, {dim})   R.Menu.SETTINGS (rows)
@@ -168,6 +168,7 @@
     { key: 'battleSpeed', label: '戦闘速度', values: [0, 1, 2], names: ['ふつう', '速い', 'とても速い'], desc: '戦闘の演出の速さを選ぶ。' },
     { key: 'bgmVolume', label: 'BGM', vol: true, desc: '音楽の大きさ。←→で変える。' },
     { key: 'sfxVolume', label: '効果音', vol: true, desc: '効果音の大きさ。←→で変える。' },
+    { key: 'voiceVolume', label: 'ボイスの音量', vol: true, desc: '声の大きさ。0で声を出さない。' },
     { key: 'alwaysDash', label: '常にダッシュ', values: onOff, names: ['する', 'しない'], desc: 'するなら、Bを押している間だけ歩く。' },
     { key: 'fieldZoom', label: 'フィールドの広さ', values: ['normal', 'wide', 'wider'], names: ['ふつう', 'ひろい', 'もっとひろい'], desc: 'マップに映す広さ。すぐに変わる。' },
     { key: 'windowColor', label: 'ウインドウの色', values: ['ink', 'black', 'blue', 'green', 'red'], names: ['紺', '黒', '青', '緑', '赤'], desc: 'ウインドウの色を変える。' },
@@ -180,8 +181,8 @@
 
   function applySetting(key) {
     const S = R.Settings;
-    if ((key === 'bgmVolume' || key === 'sfxVolume') && R.Audio && R.Audio.setVolumes) {
-      try { R.Audio.setVolumes(S.bgmVolume, S.sfxVolume); } catch (e) { console.error(e); }
+    if ((key === 'bgmVolume' || key === 'sfxVolume' || key === 'voiceVolume') && R.Audio && R.Audio.setVolumes) {
+      try { R.Audio.setVolumes(S.bgmVolume, S.sfxVolume, S.voiceVolume); } catch (e) { console.error(e); }
     }
     if (key === 'touchPad' && R.applyTouchSetting) { try { R.applyTouchSetting(); } catch (e) { console.error(e); } }
     if (key === 'fieldZoom' && R.Field && typeof R.Field.view === 'function') { try { R.Field.view(); } catch (e) { /* the field redraws itself */ } }
@@ -241,7 +242,7 @@
     }
 
     // ============================================================ 設定
-    const LH = 14;
+    const LH = 13; // 13 rows (12 settings + 戻る) fit above the help window
     class SettingsScreen extends Kt.Screen {
       constructor() {
         super();
@@ -275,7 +276,7 @@
       }
       render() {
         const S = R.Settings;
-        const h = 12 * LH + 16; // 184
+        const h = (SETTINGS.length + 1) * LH + 16; // 13 × 13 + 16 = 185
         G().window(4, 4, 248, h, { title: '設定' });
         SETTINGS.forEach((s, i) => {
           const y = 12 + i * LH;

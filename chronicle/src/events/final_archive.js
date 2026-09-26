@@ -82,11 +82,11 @@
         rowell.face('up');
         ev.player.face(rx > p.x ? 'right' : 'left');
       }
-      await ev.say('待たせたな。……ここが、\n封印の扉だ。');
+      await ev.say('待たせたな。……ここが、\n封印の扉だ。', { voice: 'v_rowell_seal_01' });
       ev.closeMessage();
       ev.player.face('up');
       await ev.say('ロウェルは手帳を開き、\n封印の言葉を読み上げた。');
-      await ev.say('「白き書の扉よ、\n名を持つ者のために開け」');
+      await ev.say('「白き書の扉よ、\n名を持つ者のために開け」', { voice: 'v_rowell_seal_02' });
       ev.closeMessage();
       ev.sfx('unlock');
       ev.setFlag('final_rowell');
@@ -100,8 +100,8 @@
         await Promise.all(scribes.map((s) => s.walk('U10')));
         rowell.face('down');
       }
-      await ev.say('院長の書記たちか……。');
-      await ev.say('ここは、おれが引き受ける。\n行け、語り部！');
+      await ev.say('院長の書記たちか……。', { voice: 'v_rowell_seal_03' });
+      await ev.say('ここは、おれが引き受ける。\n行け、語り部！', { voice: 'v_rowell_seal_04' });
       ev.closeMessage();
       if (staged) {
         await ev.wait(10);
@@ -121,7 +121,7 @@
       S.autoPos(ev);
       if (ev.flag('final_shades')) return;
       await ev.say('どこからか、低い声が響いた。');
-      await ev.say('海の向こうの、名を忘れられた\n勇者たちよ……。');
+      await ev.say('海の向こうの、名を忘れられた\n勇者たちよ……。', { voice: 'v_king_shades_01' });
       ev.closeMessage();
       ev.sfx('dark');
       await ev.flash('#c8d0ff', 12);
@@ -133,8 +133,8 @@
       await ev.flash('#ffffff', 10);
       await ev.say('影は、光の粒になって\n消えていった。');
       await ev.say('フィーネの声が聞こえた。');
-      await ev.say('三百年前、東の大陸で魔王を\n討った勇者たちの影……。');
-      await ev.say('名は忘れられても、物語は\n残っていたのね。');
+      await ev.say('三百年前、東の大陸で魔王を\n討った勇者たちの影……。', { voice: 'v_fine_shades_01' });
+      await ev.say('名は忘れられても、物語は\n残っていたのね。', { voice: 'v_fine_shades_02' });
       ev.setFlag('final_shades');
     },
   };
@@ -167,20 +167,20 @@
       await ev.wait(20);
       await lz.walk('D4', 20);
       lz.face('down');
-      await ev.say(say('lazaro', 'よく来ましたね、語り部。'));
-      await ev.say(say('lazaro', '二十年前、伝承戦争で\n娘のミラを失いました。'));
-      await ev.say(say('lazaro', 'どちらの伝承が正しいか……\nそんなことのために。'));
-      await ev.say(say('lazaro', '忘れてしまえば、争いも\n悲しみも、初めから\n無かったことになる。'));
-      await ev.say(say('lazaro', 'それが救いなのですよ。\n……それでも、あなたは\n書くのですね。'));
-      await ev.say(say('lazaro', 'ならば、その筆を\n折らせていただきましょう。'));
+      await ev.say(say('lazaro', 'よく来ましたね、語り部。'), { voice: 'v_lazaro_archive_01' });
+      await ev.say(say('lazaro', '二十年前、伝承戦争で\n娘のミラを失いました。'), { voice: 'v_lazaro_archive_02' });
+      await ev.say(say('lazaro', 'どちらの伝承が正しいか……\nそんなことのために。'), { voice: 'v_lazaro_archive_03' });
+      await ev.say(say('lazaro', '忘れてしまえば、争いも\n悲しみも、初めから\n無かったことになる。'), { voice: 'v_lazaro_archive_04' });
+      await ev.say(say('lazaro', 'それが救いなのですよ。\n……それでも、あなたは\n書くのですね。'), { voice: 'v_lazaro_archive_05' });
+      await ev.say(say('lazaro', 'ならば、その筆を\n折らせていただきましょう。'), { voice: 'v_lazaro_archive_06' });
       const r = await ev.battle('tr_b_lazaro');
       if (r !== 'win') return false;
       ev.bgm('sorrow');
-      await ev.say(say('lazaro', '……なぜだ。忘れたはずの\nあの子の笑顔が……\n今になって……。'));
+      await ev.say(say('lazaro', '……なぜだ。忘れたはずの\nあの子の笑顔が……\n今になって……。'), { voice: 'v_lazaro_archive_07' });
       ev.closeMessage();
       ev.sfx('dark');
       await ev.shake(16, 2);
-      await ev.say(say('king', 'よくやった、ラザロ。\nおまえの悲しみは、じつに\n美味であった。'));
+      await ev.say(say('king', 'よくやった、ラザロ。\nおまえの悲しみは、じつに\n美味であった。'), { voice: 'v_king_archive_01' });
       ev.closeMessage();
       ev.sfx('warp');
       await ev.flash('#ffffff', 16);
@@ -237,7 +237,7 @@
     await ev.say('{hero}は、八枚のページの\n破れ目に浮かぶ名を、\n年代記に書き記した。');
     ev.closeMessage();
     await ev.caption('――ネムレア。', { size: 16, frames: 150 });
-    await ev.say(say('king', '名を……呼んだな……！'));
+    await ev.say(say('king', '名を……呼んだな……！'), { voice: 'v_king_naming_01' });
     ev.closeMessage();
     ev.sfx('roar');
     await ev.shake(24, 4);
@@ -247,7 +247,7 @@
     if (b) b.sprite = R.Gfx.has('mon:boss_nemrea2') ? 'mon:boss_nemrea2' : b.sprite;
     await ev.flash('#ffffff', 10);
     await ev.say('紙片の影が、ひとつの形を\n結んでいく……！');
-    await ev.say(say('fine', 'わたしの最後の光を、\nあなたたちに。'));
+    await ev.say(say('fine', 'わたしの最後の光を、\nあなたたちに。'), { voice: 'v_fine_naming_01' });
     ev.closeMessage();
     ev.sfx('heal');
     await ev.flash('#fffbe0', 16);
@@ -267,7 +267,7 @@
         ev.closeMessage();
         ev.sfx('dark');
         await ev.shake(20, 2);
-        await ev.say(say('king', '名もなく、形もなく、\nわれはすべてを白紙に還す。'));
+        await ev.say(say('king', '名もなく、形もなく、\nわれはすべてを白紙に還す。'), { voice: 'v_king_altar_01' });
         const r1 = await ev.battle('tr_b_nemrea1', { noEscape: true });
         if (r1 !== 'win') return false;
         ev.setFlag('final_nemrea1');
@@ -275,10 +275,10 @@
         ev.sfx('page');
         await ev.flash('#ffffff', 10);
         await ev.say('紙片の渦から、ラザロの体が\n投げ出された。');
-        await ev.say(say('king', '無駄だ。名なきものは、\n消えぬ。'));
+        await ev.say(say('king', '無駄だ。名なきものは、\n消えぬ。'), { voice: 'v_king_altar_02' });
         ev.closeMessage();
       } else {
-        await ev.say(say('king', 'また来たか……。\n名なきものは、消えぬ。'));
+        await ev.say(say('king', 'また来たか……。\n名なきものは、消えぬ。'), { voice: 'v_king_altar_03' });
         ev.closeMessage();
       }
       await naming(ev, retry);

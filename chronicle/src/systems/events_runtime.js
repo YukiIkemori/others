@@ -267,10 +267,20 @@
       get lastBattle() { return R.Battle ? R.Battle.last || null : null; },
 
       // ------------------------------------------------------------ text
+      /** opts as R.UI.say (keep is on); opts.voice:'v_<speaker>_<scene>_<nn>' plays assets/voice/<id>.* with
+       *  the line (fixed story characters only, BRIEF A9; list: node tools/voice_script.js) */
       async say(text, opts) {
         const t = pickText(text);
         if (t == null) return;
-        if (Array.isArray(t)) { for (const p of t) await ev.say(p, opts); return; }
+        if (Array.isArray(t)) {
+          // opts.voice: an array gives one line per text, a single id belongs to the first text only
+          const v = opts && opts.voice;
+          for (let i = 0; i < t.length; i++) {
+            const o = v ? Object.assign({}, opts, { voice: Array.isArray(v) ? v[i] : i === 0 ? v : null }) : opts;
+            await ev.say(t[i], o);
+          }
+          return;
+        }
         await R.UI.say(t, Object.assign({ keep: true }, opts));
       },
       async ask(text, choices, opts) {

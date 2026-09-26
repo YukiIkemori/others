@@ -42,8 +42,8 @@
     meta: { needs: [], gives: ['flag:pro_met_rowell'] },
     run: async (ev) => {
       if (!ev.flag('pro_met_rowell')) {
-        await ev.say('……語り部の見習いか。灯台の伝承なら、\nきのう記録院が写し取った。');
-        await ev.say('伝承は記録院が責任をもって保管する。\n語り部の出る幕じゃない。');
+        await ev.say('……語り部の見習いか。灯台の伝承なら、\nきのう記録院が写し取った。', { voice: 'v_rowell_prologue_01' });
+        await ev.say('伝承は記録院が責任をもって保管する。\n語り部の出る幕じゃない。', { voice: 'v_rowell_prologue_02' });
         ev.setFlag('pro_met_rowell');
         return;
       }
@@ -145,9 +145,9 @@
       await berna.walk('U');
       berna.face('up');
       await ev.say('夜通し歩いてきたよ。……よくやったね、\n{hero}。');
-      await ev.say('これは、あなたの年代記だよ。\n語り部はみんな、自分の\n年代記を持って旅に出るんだ。');
+      await ev.say('これは、あなたの年代記だよ。\n語り部はみんな、自分の\n年代記を持って旅に出るんだ。', { voice: 'v_berna_lute_01' });
       await ev.give('k_chronicle');
-      await ev.say('それから、これもお持ち。\n語り部の羽ペンと、\n帰り道の鈴だよ。');
+      await ev.say('それから、これもお持ち。\n語り部の羽ペンと、\n帰り道の鈴だよ。', { voice: 'v_berna_lute_02' });
       await ev.give('k_quill', 1, { silent: true });
       await ev.give('k_bell', 1, { silent: true });
       await ev.gotItem(R.Events.lines('{hero}は', '語り部の羽ペンと', '帰り道の鈴を', '手に入れた！'), 'keyitem');
@@ -160,14 +160,14 @@
         ev.caption('年代記に序章\n『灯台守の歌』が記された。', { highlight: '『灯台守の歌』', frames: 180 }),
         ev.jingle('chapter'),
       ]);
-      await ev.say('この大陸には八つの大きな伝承がある。\nその全部が、いま白紙になりかけている。');
-      await ev.say('全部を語り直して、\n年代記を書き上げなさい。それが、\nあなたの修業の仕上げだよ。');
+      await ev.say('この大陸には八つの大きな伝承がある。\nその全部が、いま白紙になりかけている。', { voice: 'v_berna_lute_03' });
+      await ev.say('全部を語り直して、\n年代記を書き上げなさい。それが、\nあなたの修業の仕上げだよ。', { voice: 'v_berna_lute_04' });
       const hints = Object.keys(R.DB.regions || {}).map((id) => R.DB.regions[id].hint).filter(Boolean);
       if (hints.length) {
         await ev.say('旅の人から、こんなうわさを\n聞いたよ。');
         for (let i = 0; i < hints.length; i += 2) await ev.say(hints.slice(i, i + 2).join('\n'));
       }
-      await ev.say('どこから回ってもいい。\nあなたの足で、あなたの順番で\n語り直していけばいいのさ。');
+      await ev.say('どこから回ってもいい。\nあなたの足で、あなたの順番で\n語り直していけばいいのさ。', { voice: 'v_berna_lute_05' });
       ev.closeMessage();
       const m = ev.npc('master');
       await m.walk('L2');

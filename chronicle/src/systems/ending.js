@@ -267,8 +267,8 @@
     const m = onField() ? R.Field.map : null;
     const boss = m && m.npc('boss');
     await ev.wait(30);
-    await ev.say(said('nemrea', '名を……呼ばれたのは……\nはじめてだ……。'));
-    await ev.say(said('nemrea', '……ああ……\n眠い……。'));
+    await ev.say(said('nemrea', '名を……呼ばれたのは……\nはじめてだ……。'), { voice: 'v_nemrea_ending_01' });
+    await ev.say(said('nemrea', '……ああ……\n眠い……。'), { voice: 'v_nemrea_ending_02' });
     ev.closeMessage();
     ev.sfx('holy');
     await ev.flash('#ffffff', 20);
@@ -286,8 +286,8 @@
     const f = fine ? ev.npc('st_fine') : null;
     if (f) f.face('player');
     await ev.say(said('fine', 'ありがとう、{hero}。\nこれで王は、物語の中で\n眠り続ける。'));
-    await ev.say(said('fine', 'わたしも、物語に還る時間。'));
-    await ev.say(said('fine', '……語り継いでね。\nわたしのことも、\nあなたの旅のことも。'));
+    await ev.say(said('fine', 'わたしも、物語に還る時間。'), { voice: 'v_fine_ending_01' });
+    await ev.say(said('fine', '……語り継いでね。\nわたしのことも、\nあなたの旅のことも。'), { voice: 'v_fine_ending_02' });
     ev.closeMessage();
     ev.sfx('light');
     await ev.flash('#fffbe0', 24);
@@ -306,11 +306,11 @@
     }));
     await ev.wait(30);
     await ev.say('大書庫の入口で、\nラザロが目を覚ました。');
-    await ev.say(said('lazaro', '……ミラ。\nああ、ミラ……。'));
+    await ev.say(said('lazaro', '……ミラ。\nああ、ミラ……。'), { voice: 'v_lazaro_ending_01' });
     ev.closeMessage();
     if (st.rw) { await st.rw.walk('L2'); st.rw.face('left'); }
     await ev.say('ロウェルが、ラザロに\nそっと肩を貸した。');
-    await ev.say(said('rowell', '帰りましょう、院長。\n……ミラさんの話を、\n聞かせてください。'));
+    await ev.say(said('rowell', '帰りましょう、院長。\n……ミラさんの話を、\n聞かせてください。'), { voice: 'v_rowell_ending_01' });
     ev.closeMessage();
     await ev.wait(40);
   }
@@ -330,7 +330,7 @@
     await ev.say('ええ……ええ！\nちゃんと、呼んであげる。\n何度でも。');
     ev.closeMessage();
     if (st.noa) st.noa.face('up');
-    await ev.say('ノア「ミラ。あなたの歌、\nみんなに届いたよ。」');
+    await ev.say('ノア「ミラ。あなたの歌、\nみんなに届いたよ。」', { voice: 'v_noa_ending_01' });
     ev.closeMessage();
     await ev.caption('♪　白い本のページに、\nあなたの名を書こう\n忘れないように、なくさぬように', { frames: 240 });
     await ev.wait(20);
@@ -346,7 +346,7 @@
     }));
     await ev.wait(30);
     await ev.say('ロアの里の語り石のそばで、\nベルナが子どもたちに\n物語を語っていた。');
-    await ev.say(said('berna', 'これは、ある語り部の物語。'));
+    await ev.say(said('berna', 'これは、ある語り部の物語。'), { voice: 'v_berna_ending_01' });
     await ev.say(said('berna', 'その語り部の名は、{hero}。'));
     ev.closeMessage();
     ev.sfx('quill');
@@ -356,7 +356,7 @@
     await ev.caption('それは、九つ目の\n伝承になった。', { frames: 150 });
     if (st.a) st.a.face('right');
     await ev.say('子ども「海の向こうにも、伝説って\nあるの？」');
-    await ev.say(said('berna', 'あるとも。三人の勇者が、\n魔王を倒したお話がね。'));
+    await ev.say(said('berna', 'あるとも。三人の勇者が、\n魔王を倒したお話がね。'), { voice: 'v_berna_ending_02' });
     await ev.say(said('berna', 'でも、それはまた今度。\n今日は、{hero}の話の\n続きをしようね。'));
     ev.closeMessage();
     await ev.wait(40);
@@ -371,7 +371,7 @@
     await ev.caption('それから、しばらくして――');
     await ev.say('子ども「ねえ、フィーネって誰？」');
     if (st.berna) { st.berna.face('up'); await ev.wait(40); st.berna.face('down'); }
-    await ev.say(said('berna', 'それは、また別のお話。'));
+    await ev.say(said('berna', 'それは、また別のお話。'), { voice: 'v_berna_ending_03' });
     ev.closeMessage();
     await ev.wait(60);
   }

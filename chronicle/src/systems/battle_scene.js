@@ -1,14 +1,18 @@
-// DQ-style battle scene (owner: bui A3 — DESIGN §11.5): backdrop + monsters, four
-// party status windows on top, command menus / messages at the bottom. It drives a
-// R.Battle.Engine and only animates the events the engine yields (battle.js), so
-// real battles and R.Battle.simulate share every rule. The scene alone plays sounds,
-// jingles and screen shakes (§3.3.8).
+// Side-view battle scene (owner: SV-SCENE — DESIGN §11.5, Part A8 版). RS2-style composition: the monsters stand on
+// the left (front-facing sprites as drawn), the party of four stands on the right in a column facing left (the middle
+// row one step back), a status panel at the bottom right (row tag, name, H/M/W per member), commands at the bottom
+// left and a message / help window at the top that shows only when there is text. It drives a R.Battle.Engine and
+// only animates the events the engine yields (battle.js), so real battles and R.Battle.simulate share every rule.
+// The scene alone plays sounds, jingles and screen shakes (§3.3.8).
 //
 //   const result = await R.Battle.start({zone|troop|mons, bg, bgm, canLose, noEscape, surprise,
 //                                        noRare, noGolden, tier, lvOff, glimmerForce, members});
 //   → 'win' | 'lose' | 'escape'          R.Battle.last = {result, rounds, killed, exp, gold, drops, glimmers, levelUps, …}
 //
-// Public layout constants (§11.5.1 / §11.11.3): R.Battle.WIN WIN_BOTTOM HELP BOX GROUND BANNER CARD.
+// Public: R.Battle.LAYOUT (§11.5.1), R.Battle.enemyLayout(list) (§11.5.13), R.Battle.HELP / BANNER / CARD (new values),
+// and the legacy front-view constants WIN WIN_BOTTOM BOX GROUND (values unchanged, unused by the screen — other owners'
+// tools still read them). Party battle sprites come from R.Art.battler (SV-ART, §11.4.4); while it is not there the
+// scene builds its own stand-in sheet from the field sprite (§11.4.4.3 「代わり」).
 (function (R) {
   'use strict';
   const U = R.U;
@@ -17,16 +21,30 @@
   const In = () => R.Input;
   const B = (R.Battle = R.Battle || {});
 
-  // layout constants (DESIGN §11.5.1 / §11.11.3 — public: R.Battle.WIN / BOX / HELP …)
-  const WIN = { xs: [3, 66, 129, 192], y: 5, w: 61, h: 46 }; // 4 party status windows (y 5–51, bottom tags to 55)
-  const WIN_BOTTOM = 56; // bottom edge of the window band (every Crest "52" became this)
-  const HELP = { x: 8, y: 133, w: 240, h: 19 }; // help / target strip (command input only)
-  const BOX = { x: 8, y: 150, w: 240, h: 68, lines: 4 }; // bottom window (commands / 4 message lines)
-  const GROUND = 130; // monsters' feet
-  const BANNER = { y: 64, h: 32 }; // glimmer tech-name banner
-  const CARD = { y: 64 }; // drop card
-  const ENEMY_WIN = { x: 138, y: 150, w: 110, h: 68 }; // enemy names beside the party / member command window (§11.5.4)
-  const CMD_W = 128;
+  // ------------------------------------------------------------ layout (DESIGN §11.5.1 — R.Battle.LAYOUT)
+  const FIELD = { x: 0, y: 0, w: 256, h: 152 };
+  const MSG = { x: 4, y: 4, w: 248, h: 34, lines: 2 };
+  const MSG_BIG = { x: 4, y: 4, w: 248, h: 62, lines: 4 };
+  const HELP = { x: 4, y: 4, w: 248, h: 19 };
+  const LIST = { x: 4, y: 64, w: 168, rows: 5, lineH: 14, padY: 8 };
+  const CMD = { x: 4, y: 152, w: 88, h: 68 };
+  const STATUS = { x: 94, y: 152, w: 158, h: 68 };
+  const BANNER = { cx: 88, y: 44, h: 32 };
+  const CARD = { x: 8, y: 76, w: 168 };
+  const EZ = { x0: 4, x1: 172, cx: 88 };
+  const PARTY = { front: 192, middle: 216, zig: [0, 4, 0, 4], step: 10, y: { 1: [126], 2: [112, 136], 3: [106, 124, 142], 4: [100, 116, 132, 148] } };
+  const LAYOUT = { FIELD, MSG, MSG_BIG, HELP, LIST, CMD, STATUS, BANNER, CARD, EZ, PARTY };
+  // STATUS columns (§11.5.2; x from the window's left): letters at h / m / w, values right-aligned at hp / mp / wp
+  const SCOL = { tag: 5, name: 20, nameW: 46, h: 70, hp: 96, m: 101, mp: 127, w: 132, wp: 152 };
+  // legacy (front view): kept with their old values for the tools that still read them (§11.5.1). Not used on screen.
+  const WIN = { xs: [3, 66, 129, 192], y: 5, w: 61, h: 46 };
+  const WIN_BOTTOM = 56;
+  const BOX = { x: 8, y: 150, w: 240, h: 68, lines: 4 };
+  const GROUND = 130;
+
+  // enemy rows (§11.5.13)
+  const ROW_FEET = { 1: [134], 2: [114, 142], 3: [102, 122, 142] };
+  const BIG_H = 80, BIG_FEET = 146, ROW_W = 164, ROW_W3 = 196, GAP = 6, BACK_SHIFT = 8;
 
   const AUTO_OPTS = { thrift: true, items: 'auto' }; // オート: conserve MP, items only as a last resort
   const BACK = { back: true };
@@ -35,6 +53,8 @@
   const GLOW_FILL = '#fff0a0', GLOW_EDGE = '#ffd24a';
   const GLOW_FRAMES = 40;
   const GLIM_MIN = 36; // the tech's own fx never starts earlier than this after the ピコーン (§11.0 0.5)
+  const GLIM_HANDBACK = 14; // the glimmer handler returns here: the 「…を閃いた！」 line types under the open banner
+  const RAY_COL = '#fff6c0';
   // unusable(u, id, slot) → help line (§11.5.3 / STYLE_JA §9)
   const WHY = {
     wp: 'WPが足りない！', mp: 'MPが足りない！', silence: '術を封じられている！', reach: '中列からは届かない。',
@@ -46,6 +66,109 @@
   // used only while DB.statuses is empty (order of §7.9.2)
   const BASE_STATUSES = ['poison', 'burn', 'sleep', 'paralyze', 'freeze', 'stun', 'confuse', 'silence', 'blind', 'regen', 'veil', 'counter', 'nimble', 'cover'];
   const GRADE_RANK = { normal: 0, rare: 1, super: 2 };
+
+  // ------------------------------------------------------------ party battle sprites (§11.4.4 — SV-ART's API)
+  // The table of §11.4.4.4; R.Art.BATTLER is the reference once SV-ART has landed it.
+  const BAT_FALLBACK = {
+    W: 48, H: 40, FEET: [24, 39],
+    POSES: ['idle', 'walk', 'slash', 'thrust', 'smash', 'shoot', 'punch', 'lash', 'cast', 'item', 'guard', 'hit', 'weak', 'ko', 'victory'],
+    FRAMES: { idle: 2, walk: 2, slash: 3, thrust: 3, smash: 3, shoot: 3, punch: 3, lash: 3, cast: 3, item: 2, guard: 1, hit: 1, weak: 2, ko: 1, victory: 2 },
+    IMPACT: { slash: 1, thrust: 1, smash: 1, shoot: 2, punch: 1, lash: 1, cast: 2, item: 1 },
+    FAMILY: { sword: 'slash', katana: 'slash', greatsword: 'slash', axe: 'smash', club: 'smash', staff: 'smash', spear: 'thrust', dagger: 'thrust', bow: 'shoot', fist: 'punch', whip: 'lash' },
+  };
+  const HOLD = { idle: [24, 24], walk: [4, 4], slash: [5, 3, 10], thrust: [5, 3, 10], smash: [6, 3, 10], shoot: [6, 4, 10], punch: [4, 3, 10], lash: [5, 3, 10], cast: [6, 10, 8], item: [6, 10], guard: [1], hit: [12], weak: [30, 30], ko: [1], victory: [12, 12] };
+  const LOOPS = { idle: 1, walk: 1, guard: 1, weak: 1, ko: 1, victory: 1 };
+  const BAT = () => (R.Art && R.Art.BATTLER && R.Art.BATTLER.FAMILY ? R.Art.BATTLER : BAT_FALLBACK);
+  const familyOf = (wtype) => BAT().FAMILY[wtype] || BAT_FALLBACK.FAMILY[wtype] || 'punch';
+
+  /** the frame of a pose t frames after it started (sheets without their own frame()) */
+  function frameAt(sheet, pose, t) {
+    const p = sheet.poses[pose] || sheet.poses.idle;
+    const fr = p.frames, n = fr.length;
+    if (n <= 1) return fr[0];
+    const hold = p.hold && p.hold.length ? p.hold : fr.map(() => 8);
+    const total = hold.reduce((s, x) => s + x, 0) || 1;
+    if (!p.loop && t >= total) return fr[n - 1];
+    let tt = p.loop ? ((Math.floor(t) % total) + total) % total : Math.max(0, t);
+    for (let i = 0; i < n; i++) { if (tt < hold[i]) return fr[i]; tt -= hold[i]; }
+    return fr[n - 1];
+  }
+  const FB_SHEETS = new Map();
+  /**
+   * Stand-in sheet (§11.4.4.3 代わり): the field sprite (16×24) standing on the feet point (24, 39) of a 48×40 frame,
+   * with a few offsets so the choreography still reads (lean back, lunge, kneel, lie down, hop). Works without a
+   * canvas (node): the frames then carry anchors and no image.
+   */
+  function fallbackSheet(c, wtype) {
+    let look = 'party';
+    if (typeof c === 'string') look = 'party:' + c; // a look id ('selma', 'hero_m_mage' …)
+    else { try { look = R.Party && R.Party.spriteKey ? R.Party.spriteKey(c) : 'party:' + (c && c.id); } catch (e) { look = 'party:' + (c && c.id); } }
+    const key = look + ':' + (wtype || 'fist');
+    if (FB_SHEETS.has(key)) return FB_SHEETS.get(key);
+    let fs = null;
+    try { fs = G().has(look) ? G().get(look) : null; } catch (e) { fs = null; }
+    const pickF = (dir, i) => { const l = fs && fs[dir]; return l && l.length ? l[i % l.length] : null; };
+    const canvasOf = (src, dx, dy, rot) => {
+      if (!src || !src.width) return null;
+      try {
+        const cv = G().makeCanvas(48, 40), x = cv.getContext('2d');
+        if (!x) return null;
+        x.imageSmoothingEnabled = false;
+        if (rot) { x.translate(24 + dx, 31 + dy); x.rotate(Math.PI / 2); x.drawImage(src, -8, -12); } // head to the right (back)
+        else x.drawImage(src, 16 + dx, 15 + dy);
+        return cv;
+      } catch (e) { return null; }
+    };
+    const mk = (src, dx, dy, o) => {
+      o = o || {};
+      const rot = !!o.rot;
+      const box = rot ? { x: 12 + dx, y: 23 + dy, w: 24, h: 16 } : { x: 16 + dx, y: 15 + dy, w: 16, h: Math.min(24, 39 - (15 + dy) + 1) };
+      const head = rot ? [34 + dx, 30 + dy] : [24 + dx, 15 + dy];
+      const tip = o.tip || [box.x - 2, box.y + 12];
+      return {
+        img: canvasOf(src, dx, dy, rot), feet: [24, 39], head, hit: rot ? [24 + dx, 31 + dy] : [24 + dx, 28 + dy],
+        hand: [box.x + 2, box.y + 15], tip, cast: [box.x - 3, box.y + 13], box,
+      };
+    };
+    const L0 = pickF('left', 0), L1 = pickF('left', 1), D0 = pickF('down', 0);
+    const atk = (lead) => [mk(L0, 2, 0), mk(L1 || L0, -4, 0, { tip: [8, 26] }), mk(L0, lead, 0)];
+    const F = {
+      idle: [mk(L0, 0, 0), mk(L0, 0, 0)], walk: [mk(L1 || L0, 0, 0), mk(L0, 0, -1)],
+      slash: atk(-2), thrust: atk(-2), smash: atk(-2), punch: atk(-2), lash: atk(-2),
+      shoot: [mk(L0, 1, 0), mk(L0, 2, 0), mk(L0, 0, 0, { tip: [12, 26] })],
+      cast: [mk(L0, 0, 0), mk(L0, 0, -1), mk(L0, -2, 0)], item: [mk(L0, 0, 0), mk(L0, -1, -1)],
+      guard: [mk(L0, 1, 2)], hit: [mk(L0, 3, 1)], weak: [mk(L0, 0, 4), mk(L0, 0, 5)], ko: [mk(L0, 0, 0, { rot: true })],
+      victory: [mk(D0 || L0, 0, 0), mk(D0 || L0, 0, -1)],
+    };
+    const poses = {};
+    for (const p of BAT_FALLBACK.POSES) poses[p] = { frames: F[p], hold: HOLD[p].slice(), loop: !!LOOPS[p], impact: BAT_FALLBACK.IMPACT[p] != null ? BAT_FALLBACK.IMPACT[p] : null };
+    const sh = { key: 'bsv:' + key, look, wtype: wtype || 'fist', family: familyOf(wtype || 'fist'), W: 48, H: 40, poses, pending: true, stand: true };
+    sh.frame = (pose, t) => frameAt(sh, pose, t);
+    FB_SHEETS.set(key, sh);
+    return sh;
+  }
+  /** weapon type of a slot (the other slot, then fist) — R.Art.battlerWtype when SV-ART has landed */
+  function wtypeOf(c, slot) {
+    if (R.Art && R.Art.battlerWtype) { try { return R.Art.battlerWtype(c, slot) || 'fist'; } catch (e) { /* fall through */ } }
+    const eq = (c && c.equip) || {};
+    const s = slot || 'weapon1', o = s === 'weapon1' ? 'weapon2' : 'weapon1';
+    const it = DB.items[eq[s]] || DB.items[eq[o]];
+    return (it && it.wtype) || 'fist';
+  }
+  /** the battle sheet of a member (R.Art.battler; the stand-in while it is missing or throws) */
+  function battlerSheet(c, wtype) {
+    const A = R.Art;
+    if (A && typeof A.battler === 'function') {
+      try {
+        const s = A.battler(c, wtype ? { wtype } : undefined);
+        if (s && s.poses && s.poses.idle && s.poses.idle.frames && s.poses.idle.frames.length) return s;
+      } catch (e) { /* stand-in below */ }
+    }
+    return fallbackSheet(c, wtype || wtypeOf(c, 'weapon1'));
+  }
+  const sheetFrame = (sh, pose, t) => (typeof sh.frame === 'function' ? sh.frame(pose, t) : frameAt(sh, pose, t)) || frameAt(sh, 'idle', 0);
+  const poseHold = (sh, pose) => { const p = sh.poses[pose]; return p && p.hold && p.hold.length ? p.hold : HOLD[pose] || [8]; };
+  const poseImpact = (sh, pose) => { const p = sh.poses[pose]; const i = p && p.impact != null ? p.impact : BAT().IMPACT[pose]; return i == null ? 1 : i; };
 
   // ------------------------------------------------------------ small helpers
   function mem(c) {
@@ -85,6 +208,13 @@
     cmds.forEach((c, i) => { out[i] = c ? Object.assign({}, c) : c; });
     return out;
   }
+  let ITEM_USES = null;
+  /** is this action an item's use block (items carry no kind of their own on the fx event) */
+  function isItemUse(ab) {
+    if (!ab || ab.kind) return false;
+    if (!ITEM_USES) { ITEM_USES = new Set(); for (const id in DB.items) if (DB.items[id].use) ITEM_USES.add(DB.items[id].use); }
+    return ITEM_USES.has(ab);
+  }
 
   // item names in battle: ★ (rare, yellow) / ★ (super, pink) / ◆ (unique, cyan) — menu's kit when it has the new API
   function kit() { return R.Menu && R.Menu.kit && R.Menu.kit.itemColor ? R.Menu.kit : null; }
@@ -123,6 +253,118 @@
     return k && G().has(k) ? k : 'icon:acc';
   }
 
+  // ------------------------------------------------------------ monster sprites and the enemy layout (§11.5.13)
+  function monKey(m) { const d = m.d || {}; return 'mon:' + (m.spriteOverride || m.sprite || d.sprite || d.baseId || m.id); }
+  function monImage(m) {
+    const d = m.d || {};
+    const key = monKey(m);
+    const opts = {};
+    if (d.hue) opts.hue = d.hue;
+    if (d.sat != null) opts.sat = d.sat;
+    if (d.bri != null) opts.bri = d.bri;
+    if (isGolden(m)) opts.tint = GOLD_TINT;
+    let img = Object.keys(opts).length ? G().variant(key, opts) : G().get(key);
+    if (Array.isArray(img)) img = img[0];
+    return img;
+  }
+  /** one row: sprite offsets (gaps ≤ 6, overlap ≤ half of the narrower sprite) and its default left x */
+  function rowShape(items, sz, feet, shift, right) {
+    const n = items.length;
+    const ws = items.map((it) => sz(it).w);
+    const tot = ws.reduce((s, w) => s + w, 0);
+    const span = EZ.x1 - EZ.x0;
+    let gap = n > 1 ? Math.min(GAP, (ROW_W - tot) / (n - 1)) : 0;
+    if (n > 1) {
+      const minW = Math.min(...ws);
+      gap = Math.max(gap, -Math.floor(minW / 2));
+      if (tot + gap * (n - 1) > span) gap = Math.max(-Math.floor(minW / 2), (span - tot) / (n - 1));
+    }
+    const width = tot + gap * Math.max(0, n - 1);
+    const offs = [];
+    let x = 0;
+    for (let i = 0; i < n; i++) { offs.push(Math.round(x)); x += ws[i] + gap; }
+    let x0 = right ? EZ.x1 - width : EZ.cx + shift - width / 2;
+    x0 = Math.max(EZ.x0, Math.min(x0, EZ.x1 - width));
+    return { items, feet, feetDef: feet, offs, width, x0: Math.round(x0), def: Math.round(x0) };
+  }
+  /** share of each sprite's box not covered by the ones drawn after it (feet order, then list order) */
+  function visibility(rows, sz, only) {
+    const boxes = [];
+    rows.forEach((r) => r.items.forEach((it, i) => { const z = sz(it); boxes.push({ it, row: r, x: r.x0 + r.offs[i], y: r.feet - z.h, w: z.w, h: z.h, feet: r.feet, k: boxes.length }); }));
+    const out = new Map();
+    for (const A of boxes) {
+      if (only && A.row !== only) continue;
+      const over = boxes.filter((Bx) => Bx !== A && (Bx.feet > A.feet || (Bx.feet === A.feet && Bx.k > A.k)) && Bx.x < A.x + A.w && Bx.x + Bx.w > A.x && Bx.y < A.y + A.h && Bx.y + Bx.h > A.y);
+      if (!over.length) { out.set(A.it, 1); continue; }
+      let n = 0, hid = 0;
+      for (let y = A.y + 1; y < A.y + A.h; y += 3) for (let x = A.x + 1; x < A.x + A.w; x += 3) { n++; if (over.some((Bx) => x >= Bx.x && x < Bx.x + Bx.w && y >= Bx.y && y < Bx.y + Bx.h)) hid++; }
+      out.set(A.it, n ? 1 - hid / n : 1);
+    }
+    return out;
+  }
+  /**
+   * R.Battle.enemyLayout(list [, sizeOf]) → Map(item → {x, y, row, rows, feet}) (x y = the sprite's top left).
+   * list: monster units (their sprite decides the size) or plain {w, h, flying}. §11.5.13: rows and feet by the
+   * table; each row centred on x 88, the back rows 8 px further right; when a back row would hide under the one in
+   * front (less than 60 % of a sprite showing) it slides sideways to the nearest place that shows the most.
+   */
+  function enemyLayout(list, sizeOf) {
+    const cache = new Map();
+    const sz = (it) => {
+      if (cache.has(it)) return cache.get(it);
+      let w = 32, h = 32;
+      if (it && typeof it.w === 'number' && typeof it.h === 'number' && !it.d && !it.id) { w = it.w; h = it.h; }
+      else {
+        let img = null;
+        try { img = sizeOf ? sizeOf(it) : monImage(it); } catch (e) { img = null; }
+        if (img) { w = img.width || w; h = img.height || h; }
+      }
+      const r = { w, h };
+      cache.set(it, r);
+      return r;
+    };
+    const out = new Map();
+    const n = list.length;
+    if (!n) return out;
+    const width = (row) => row.reduce((s, it) => s + sz(it).w, 0) + GAP * Math.max(0, row.length - 1);
+    const rows = []; // back to front
+    const big = list.filter((it) => sz(it).h >= BIG_H);
+    if (big.length) {
+      // big sprites in front (feet 146, centred), the rest behind them right-aligned — split in two when too wide
+      const rest = list.filter((it) => sz(it).h < BIG_H);
+      let backRows = rest.length ? [rest] : [];
+      if (rest.length && width(rest) > ROW_W) backRows = [rest.filter((_, i) => i % 2 === 0), rest.filter((_, i) => i % 2 === 1)];
+      const feetB = backRows.length === 2 ? [102, 122] : [114];
+      backRows.forEach((row, ri) => rows.push(rowShape(row, sz, feetB[ri], 0, true)));
+      rows.push(rowShape(big, sz, BIG_FEET, 0, false));
+    } else {
+      let rowsN = 1;
+      if (!(width(list) <= ROW_W && n <= 3)) {
+        rowsN = 2;
+        const two = [list.filter((_, i) => i % 2 === 0), list.filter((_, i) => i % 2 === 1)];
+        if (two.some((r) => width(r) > ROW_W3)) rowsN = 3;
+      }
+      for (let r = 0; r < rowsN; r++) rows.push(rowShape(list.filter((_, i) => i % rowsN === r), sz, ROW_FEET[rowsN][r], (rowsN - 1 - r) * BACK_SHIFT, false));
+    }
+    // back rows slide sideways only when the row in front would hide them (front row first, then further back)
+    for (let r = rows.length - 2; r >= 0; r--) {
+      const row = rows[r];
+      const minVis = () => Math.min(...visibility(rows, sz, row).values());
+      if (minVis() >= 0.6) continue;
+      let best = row.def, bestScore = -Infinity;
+      for (let x0 = EZ.x0; x0 <= EZ.x1 - row.width; x0 += 2) {
+        row.x0 = x0;
+        const score = Math.min(0.6, minVis()) * 1000 - Math.abs(x0 - row.def);
+        if (score > bestScore) { bestScore = score; best = x0; }
+      }
+      row.x0 = best;
+      // still under half showing: the row stands up to 6 px further back (§11.5.13 allows ±6 px)
+      for (let up = 2; up <= 6 && minVis() < 0.5; up += 2) row.feet = row.feetDef - up;
+    }
+    rows.forEach((row, ri) => row.items.forEach((it, i) => out.set(it, { x: row.x0 + row.offs[i], y: row.feet - sz(it).h, row: ri, rows: rows.length, feet: row.feet })));
+    return out;
+  }
+
   // ------------------------------------------------------------ the scene
   class BattleScene extends R.Layer {
     constructor(eng, o) {
@@ -134,108 +376,220 @@
       this.fxList = [];
       this.pops = [];
       this.msg = { lines: [], start: 0, ch: 0, need: 0, hold: 0, wait: 0, key: false, resolve: null };
+      this.big = false; // MSG_BIG: rewards, defeat, escape (§11.5.5)
       this.input = null;
       this.panel = null;
+      this.cmdList = null; // the member's command list while one of its lists is open (drawn gray in CMD)
       this.auto = !!this.o.autoStart;
       this.autoCancel = false;
       this.repeating = false; // リピート: on until B (this battle only, never in c.mem — §11.5.3a)
       this.repeatCancel = false;
       this.lastCmds = null;
-      this.acting = null;
+      this.acting = null; // the member entering commands (steps forward, STATUS band)
+      this.actor = null; // the unit whose action is playing
       this.picking = null; // {units:[...]} | {ally} | {allies:true}
-      this.winFx = eng.party.map(() => ({ shake: 0, flash: 0, glow: 0, raise: 0 }));
+      this.winFx = eng.party.map(() => ({ shake: 0, flash: 0, glow: 0, raise: 0 })); // STATUS row effects
       this.partyIdx = 0;
-      this.glim = null; // glimmer banner {u, t0, H, name, title, color, w}
-      this.glimUntil = 0; // the next fx waits until this frame
+      this.glim = null; // glimmer {u, t0, H, name, title, color, w, bulb}
+      this.glimUntil = 0; // the next action waits until this frame
       this.card = null; // drop card {grade, item, t0, transient}
-      this.dim = 0; // super-rare: backdrop + monsters darkened
+      this.dim = 0; // super-rare: the field darkened
       this.locked = false; // super-rare jingle: key waits refuse input until it ends
       this.levelJingle = false;
       this.log = { glimmers: [], drops: [], levelUps: [], stolen: [] };
       this.goldenShown = new Set();
+      this.roundCmds = null;
+      this.inRound = false;
+      this.victoryPose = false;
+      this.actStart = 0;
       this.layout();
+      this.layoutParty();
     }
     get spd() { return [1, 1.6, 2.6][R.Settings.battleSpeed] || 1.6; }
+    /** length of a motion (§11.5.16): n / spd, オート・リピート中は移動 ×0.6・攻撃のポーズ ×0.8 */
+    dur(n, kind) {
+      const k = this.auto || this.repeating ? (kind === 'move' ? 0.6 : 0.8) : 1;
+      return Math.max(1, Math.ceil((n / this.spd) * k));
+    }
 
-    // ------------------------------------------------------------ layout
-    spriteKey(m) { const d = m.d || {}; return 'mon:' + (m.spriteOverride || m.sprite || d.sprite || d.baseId || m.id); }
-    monImg(m) {
-      const d = m.d || {};
-      const key = this.spriteKey(m);
-      const opts = {};
-      if (d.hue) opts.hue = d.hue;
-      if (d.sat != null) opts.sat = d.sat;
-      if (d.bri != null) opts.bri = d.bri;
-      if (isGolden(m)) opts.tint = GOLD_TINT;
-      let img = Object.keys(opts).length ? G().variant(key, opts) : G().get(key);
-      if (Array.isArray(img)) img = img[0];
-      return img;
-    }
-    /** feet of a sprite of height h: tall ones sink (§11.4.2) */
-    static feet(h, back) { return GROUND - (back ? 12 : 0) + U.clamp(Math.round((h - 64) / 2.4), 0, 20); }
-    /** positions for units in display order: one centred row, or two rows when > 256 px and ≥ 4 (§11.4.2) */
-    arrange(list) {
-      const imgs = new Map(list.map((m) => [m, this.visImg(m)]));
-      const total = list.reduce((s, m) => s + imgs.get(m).width, 0);
-      const two = total > 256 && list.length >= 4;
-      // odd-numbered (1st, 3rd, …) go to the back row (drawn first), even-numbered to the front
-      const rows = two ? [list.filter((_, i) => i % 2 === 0), list.filter((_, i) => i % 2 === 1)] : [list];
-      const out = new Map();
-      rows.forEach((row, ri) => {
-        const back = two && ri === 0;
-        const tot = row.reduce((s, m) => s + imgs.get(m).width, 0);
-        const gap = row.length > 1 ? Math.min(8, (244 - tot) / (row.length - 1)) : 0;
-        let x = 128 - (tot + gap * (row.length - 1)) / 2;
-        for (const m of row) {
-          const img = imgs.get(m);
-          out.set(m, { x: Math.round(x), y: BattleScene.feet(img.height, back) - img.height, back });
-          x += img.width + gap;
-        }
-      });
-      return out;
-    }
-    visImg(m) { const v = this.vis && this.vis.get(m); return v ? v.img : this.monImg(m); }
+    // ------------------------------------------------------------ monsters (§11.5.13)
+    spriteKey(m) { return monKey(m); }
+    monImg(m) { return monImage(m); }
+    visImg(m) { const v = this.vis && this.vis.get(m); return v ? v.img : monImage(m); }
     newVis(m, i, img) {
       return {
-        m, img, x: 0, y: 0, w: img.width, h: img.height, i, back: false,
-        flash: 0, shake: 0, blink: 0, lunge: 0, dodge: 0, appear: 0, appearN: 20, solid: 0, gflash: 0,
+        m, img, x: 0, y: 0, w: img ? img.width : 32, h: img ? img.height : 32, i, row: 0, rows: 1, back: false,
+        flash: 0, shake: 0, blink: 0, lunge: 0, lungeN: 12, dodge: 0, appear: 0, appearN: 20, solid: 0, gflash: 0,
         die: null, flee: null, gone: false, move: null, spk: [], fly: flagOf(m, 'flying'),
       };
+    }
+    /** positions of a list (display order): R.Battle.enemyLayout with this scene's sprites; .back = not the front row */
+    arrange(list) {
+      const pos = enemyLayout(list, (m) => this.visImg(m));
+      for (const p of pos.values()) p.back = p.row < p.rows - 1;
+      return pos;
     }
     layout() {
       this.vis = new Map();
       const list = this.eng.mons;
-      list.forEach((m, i) => this.vis.set(m, this.newVis(m, i, this.monImg(m))));
-      const pos = this.arrange(list);
-      for (const [m, p] of pos) Object.assign(this.vis.get(m), p);
+      list.forEach((m, i) => this.vis.set(m, this.newVis(m, i, monImage(m))));
+      for (const [m, p] of this.arrange(list)) Object.assign(this.vis.get(m), { x: p.x, y: p.y, row: p.row, rows: p.rows, back: p.back });
     }
-    /** summoned monsters: re-arrange everyone still standing; newcomers slide in from the nearer edge (§11.4.2) */
+    /** summoned monsters: everyone still standing is laid out again; newcomers slide in from the left edge (§11.5.13) */
     relayout(newcomers) {
       const fresh = new Set(newcomers);
-      for (const m of newcomers) if (!this.vis.has(m)) this.vis.set(m, this.newVis(m, this.eng.mons.indexOf(m), this.monImg(m)));
+      for (const m of newcomers) if (!this.vis.has(m)) this.vis.set(m, this.newVis(m, this.eng.mons.indexOf(m), monImage(m)));
       const list = this.eng.mons.filter((m) => fresh.has(m) || (m.alive && !this.vis.get(m).gone && !this.vis.get(m).die));
-      const pos = this.arrange(list);
-      for (const [m, p] of pos) {
+      for (const [m, p] of this.arrange(list)) {
         const v = this.vis.get(m);
-        v.back = p.back;
+        v.row = p.row; v.rows = p.rows; v.back = p.back;
         if (fresh.has(m)) {
-          const fromLeft = p.x + v.w / 2 < 128;
-          v.x = fromLeft ? -v.w - 4 : R.W + 4; v.y = p.y;
+          v.x = -v.w - 4; v.y = p.y;
           v.appear = 12; v.appearN = 12;
           v.die = null; v.flee = null; v.gone = false;
         }
         v.move = { x0: v.x, y0: v.y, x1: p.x, y1: p.y, t: 0, n: 12 };
       }
     }
-    /** geometry used by effects and damage numbers */
+
+    // ------------------------------------------------------------ party (§11.5.14)
+    layoutParty() {
+      this.pvs = this.eng.party.map((p, i) => ({
+        p, i, x: 0, y: 0, homeX: 0, homeY: 0, lift: 0, glide: null, move: null, act: null, tmp: null, flash: null,
+        shake: 0, push: null, hop: null, nudge: null, away: false, flee: null, alt: null, sheets: {},
+      }));
+      this.pvMap = new Map(this.pvs.map((v) => [v.p, v]));
+      this.updateHomes(true);
+    }
+    pv(u) { return u && this.pvMap ? this.pvMap.get(u) || null : null; }
+    homeOf(p, i) {
+      const n = U.clamp(this.eng.party.length, 1, 4);
+      const ys = PARTY.y[n];
+      const y = ys[Math.min(i, ys.length - 1)];
+      const x = (this.rowOf(p) === 'middle' ? PARTY.middle : PARTY.front) + (PARTY.zig[i] || 0);
+      return [x, y];
+    }
+    /** homes follow the effective row (a middle row whose front has fallen moves up); snap = no walk */
+    updateHomes(snap) {
+      for (const v of this.pvs || []) {
+        const [x, y] = this.homeOf(v.p, v.i);
+        v.homeX = x; v.homeY = y;
+        if (snap) { v.x = x; v.y = y; v.glide = null; }
+      }
+    }
+    sheetOf(v) {
+      const w = v.alt || wtypeOf(v.p.c, 'weapon1');
+      return v.sheets[w] || (v.sheets[w] = battlerSheet(v.p.c, w));
+    }
+    /** the pose a member shows when not acting (§11.5.14) */
+    restPose(v) {
+      const p = v.p, st = p.status || {};
+      if (!p.alive) return { pose: 'ko', fi: 0 };
+      if (this.victoryPose) return { pose: 'victory' };
+      const cmd = this.inRound && this.roundCmds && this.roundCmds[p.idx];
+      if (this.inRound && ((cmd && cmd.type === 'defend') || p.defending)) return { pose: 'guard', fi: 0 };
+      if (st.sleep) return { pose: 'weak', fi: 0 };
+      if (st.paralyze || st.freeze || st.stun) return { pose: 'idle', fi: 0 };
+      if (p.hp <= p.mhp * 0.25) return { pose: 'weak' };
+      return { pose: 'idle' };
+    }
+    poseOf(v) {
+      const F = R.Engine.frame;
+      if (v.flee) return { pose: 'walk', t: F - v.flee.f0, flip: true };
+      if (v.move) return { pose: v.move.pose, fi: v.move.fi, t: F - v.move.f0 };
+      if (v.tmp && F < v.tmp.until) return v.tmp;
+      if (v.act) return v.act;
+      if (v.glide) return { pose: 'walk', t: F - v.glide.f0 };
+      if (v.hop) return { pose: 'walk', fi: 1 };
+      const r = this.restPose(v);
+      if (r.fi == null) r.t = F + v.i * 11; // the breath of each member is out of step
+      return r;
+    }
+    frameOf(v) {
+      const sh = this.sheetOf(v);
+      const q = this.poseOf(v);
+      const pose = sh.poses[q.pose] ? q.pose : 'idle';
+      const fr = sh.poses[pose].frames;
+      const f = q.fi != null ? fr[U.clamp(q.fi, 0, fr.length - 1)] : sheetFrame(sh, pose, q.t || 0);
+      return { f: f || fr[0], flip: !!q.flip, pose };
+    }
+    /** the member's feet on screen, with the small hit / dodge / escape offsets */
+    posOf(v) {
+      const F = R.Engine.frame;
+      let x = v.x;
+      const wave = (o, amp) => { if (!o) return 0; const q = (F - o.f0) / o.n; return q >= 0 && q < 1 ? Math.sin(q * Math.PI) * amp : 0; };
+      x += wave(v.push, 3) + wave(v.hop, 8) + wave(v.nudge, 4);
+      if (v.shake > 0) x += Math.floor(v.shake) % 4 < 2 ? 2 : -2;
+      if (v.flee) x += Math.max(0, F - v.flee.f0) * (80 / 24);
+      const st = v.p.status || {};
+      if (st.confuse && v.p.alive && !v.act && !v.move) x += Math.floor(F / 24) % 2;
+      return [Math.round(x), Math.round(v.y - (v.lift || 0))];
+    }
+    /** scripted walk / hop of a member; resolves on arrival (n already scaled) */
+    moveTo(v, x, y, n, o) {
+      o = o || {};
+      return new Promise((res) => {
+        if (v.move && v.move.res) v.move.res();
+        v.glide = null;
+        v.move = { x0: v.x, y0: v.y, x1: x, y1: y, t: -(o.delay || 0), n: Math.max(1, n), arc: o.arc || 0, pose: o.pose || 'walk', fi: o.fi != null ? o.fi : null, f0: R.Engine.frame, res };
+      });
+    }
+    /** a member in front of the enemy hops back home (back to front, walk frame 0, a 4 px arc — §11.5.15) */
+    async returnHome(v) {
+      v.act = null;
+      if (!v.away) return;
+      await this.moveTo(v, v.homeX, v.homeY, this.dur(10, 'move'), { pose: v.p.alive ? 'walk' : 'ko', fi: 0, arc: v.p.alive ? 4 : 0 });
+      v.away = false;
+      v.alt = null;
+    }
+    /** everyone home and out of their action poses (next actor, end of the round, victory, escape) */
+    settle() {
+      const away = (this.pvs || []).filter((v) => v.away);
+      for (const v of this.pvs || []) if (!v.away) { v.act = null; v.alt = null; }
+      return away.length ? Promise.all(away.map((v) => this.returnHome(v))) : null;
+    }
+    /** run up to the target(s): 12 px right of the right edge, at their feet (§11.5.15 立つ所) */
+    async runTo(v, foes) {
+      const rs = foes.map((t) => this.rectOf(t));
+      let x = Math.max(...rs.map((r) => r.x + r.w)) + 12;
+      const ys = foes.map((t) => { const mv = this.vis.get(t); return mv ? mv.y + mv.h : this.rectOf(t).bottom; });
+      const y = U.clamp(Math.round(ys.reduce((s, q) => s + q, 0) / ys.length), 100, 148);
+      x = Math.round(Math.min(x, v.homeX - 8));
+      if (v.away && Math.abs(v.x - x) < 1 && Math.abs(v.y - y) < 1) return;
+      v.act = null;
+      v.away = true;
+      await this.moveTo(v, x, y, this.dur(12, 'move'), { pose: 'walk' });
+    }
+    walkIn() {
+      // the party walks in from the right while the screen brightens (16 frames, 3 frames apart — §11.5.9)
+      (this.pvs || []).forEach((v, i) => {
+        if (!v.p.alive) return;
+        v.x = v.homeX + 56;
+        this.moveTo(v, v.homeX, v.homeY, 16, { pose: 'walk', delay: i * 3 });
+      });
+    }
+
+    /** geometry used by effects, numbers and cursors (§11.5.17 rectOf) */
     rectOf(u) {
-      if (u.isParty) {
-        const x = WIN.xs[u.idx] != null ? WIN.xs[u.idx] : WIN.xs[3], y = WIN.y;
-        return { x, y, w: WIN.w, h: WIN.h, cx: x + 30, cy: y + 23, bottom: y + WIN.h, side: 'party' };
+      if (u && u.isParty) {
+        const v = this.pv(u);
+        if (!v) return { x: 200, y: 100, w: 20, h: 28, cx: 210, cy: 114, bottom: 128, side: 'party', feet: [210, 128], head: [210, 100], hand: [204, 114], tip: [200, 110], cast: [198, 112] };
+        const { f } = this.frameOf(v);
+        const [X, Y] = this.posOf(v);
+        const ox = X - 24, oy = Y - 39;
+        const b = (f && f.box) || { x: 16, y: 15, w: 16, h: 24 };
+        const P = (a, d) => (a ? [ox + a[0], oy + a[1]] : d);
+        const hit = P(f && f.hit, [X, oy + b.y + b.h / 2]);
+        return {
+          x: ox + b.x, y: oy + b.y, w: b.w, h: b.h, cx: hit[0], cy: hit[1], bottom: Y, side: 'party', feet: [X, Y],
+          head: P(f && f.head, [X, oy + b.y]), hand: P(f && f.hand, [ox + b.x, hit[1]]), tip: P(f && f.tip, [ox + b.x - 2, hit[1]]),
+          cast: P(f && f.cast, [ox + b.x - 3, hit[1]]),
+        };
       }
       const v = this.vis.get(u);
-      if (!v) return { x: 112, y: 70, w: 32, h: 32, cx: 128, cy: 88, bottom: 100, side: 'mon' };
-      return { x: v.x, y: v.y, w: v.w, h: v.h, cx: v.x + v.w / 2, cy: v.y + v.h * 0.55, bottom: v.y + v.h - 2, side: 'mon' };
+      if (!v) return { x: 72, y: 90, w: 32, h: 32, cx: 88, cy: 108, bottom: 120, side: 'mon', head: [88, 90], cast: [88, 101] };
+      const cx = v.x + v.w / 2;
+      return { x: v.x, y: v.y, w: v.w, h: v.h, cx, cy: v.y + v.h * 0.55, bottom: v.y + v.h - 2, side: 'mon', head: [cx, v.y], cast: [cx, v.y + v.h * 0.35] };
     }
     addFx(f) { this.fxList.push(f); }
     rowOf(p) {
@@ -264,27 +618,30 @@
     // ------------------------------------------------------------ helpers
     frames(n) { return R.Engine.wait(Math.max(1, Math.ceil(n / this.spd))); }
     ask(fn) { return new Promise((res) => { this.input = fn; this.inputRes = res; }); }
+    /** a number above a unit (§11.5.6): monsters at 40 % of the sprite, members above the head */
     pop(u, n, color) {
       const r = this.rectOf(u);
       const same = this.pops.filter((p) => p.u === u && p.t < 20).length;
-      const x = r.cx;
-      const y = u.isParty ? WIN.y + 57 - 4 + same * 9 : Math.max(WIN_BOTTOM, r.y + r.h * 0.4) - same * 9;
-      this.pops.push({ u, x, y, str: n == null ? 'MISS' : String(n), color, t: 0, party: u.isParty });
+      const x = u.isParty ? r.head[0] : r.cx;
+      const y = (u.isParty ? Math.max(42, r.head[1] - 12) : Math.max(42, r.y + r.h * 0.4)) - same * 9;
+      this.pops.push({ u, x, y, str: n == null ? 'MISS' : String(n), color, t: 0, party: !!u.isParty });
     }
 
     // ------------------------------------------------------------ messages
+    get msgBox() { return this.big || this.paged ? MSG_BIG : MSG; }
     clearMsg() { const m = this.msg; m.lines = []; m.start = 0; m.ch = 0; m.need = 0; }
     async say(text) {
-      const lines = G().wrap(text, BOX.w - 20);
+      const box = this.msgBox;
+      const lines = G().wrap(text, box.w - 20);
       // paged mode (rewards): never scroll unread lines away — wait for a key and start a new page
-      if (this.paged && this.msg.lines.length && this.msg.lines.length + lines.length > BOX.lines) {
+      if (this.paged && this.msg.lines.length && this.msg.lines.length + lines.length > box.lines) {
         await this.waitKey();
         this.clearMsg();
       }
       return new Promise((resolve) => {
         const m = this.msg;
         m.lines = m.lines.concat(lines);
-        while (m.lines.length > BOX.lines) m.lines.shift();
+        while (m.lines.length > box.lines) m.lines.shift();
         m.start = m.lines.length - lines.length;
         m.ch = 0;
         m.need = lines.join('').length;
@@ -324,13 +681,18 @@
         await this.goldenEntrance(); // for an engine that yields no {t:'golden'}
         while (!eng.result) {
           const ambush = eng.round === 0 && eng.surprise === 'ambush';
+          this.updateHomes(false); // a middle row whose front has fallen steps up (§11.5.14)
           const cmds = ambush ? null : await this.commandPhase();
           // リピート repeats what was really entered last round (menus, リピート or オート); 逃げる never repeats
           if (cmds && !cmds.flee && cmds.some(Boolean)) this.lastCmds = copyCmds(cmds);
           this.panel = null;
           this.acting = null;
+          this.roundCmds = cmds || null;
+          this.inRound = true;
           await this.play(eng.playRound(cmds));
-          this.acting = null;
+          await this.settle();
+          this.inRound = false;
+          this.actor = null;
           this.clearTransientCard();
         }
         result = eng.result;
@@ -366,6 +728,7 @@
       R.Engine.fadeAlpha = 1;
       this.opaque = true;
       this.ready = true;
+      this.walkIn();
       await R.Engine.fadeIn(14);
       if (this.eng.boss) { R.sfx('roar'); R.Engine.shake(24, 2); await R.Engine.wait(20); }
       if (this.o.rare || this.eng.mons.some(isRareMon)) {
@@ -392,23 +755,27 @@
     async defeat() {
       if (R.Audio && R.Audio.stopBGM) R.Audio.stopBGM(20);
       this.clearMsg();
+      this.big = true;
       await this.say(this.o.canLose ? '{hero}たちは力つきた……。' : '{hero}たちは全滅した……。');
       await this.waitKey();
     }
 
-    // ------------------------------------------------------------ events
+    // ------------------------------------------------------------ events (§11.5.15 — the choreography)
     async handle(ev) {
       const s = this;
       switch (ev.t) {
         case 'msg': return s.say(ev.text);
         case 'clear': s.clearMsg(); return;
-        case 'actor':
+        case 'actor': {
           s.clearMsg();
           s.lastFx = null;
           s.clearTransientCard();
-          s.acting = ev.u && ev.u.isParty ? ev.u : null;
+          const back = s.settle(); // the one who stepped in hops back before the next one acts
+          if (back) await back;
+          s.actor = ev.u || null;
           if (ev.u && !ev.u.isParty && s.vis.get(ev.u)) { s.vis.get(ev.u).blink = 10; await s.frames(8); }
           return;
+        }
         case 'fx': return s.playFx(ev);
         case 'dmg': return s.onDamage(ev);
         case 'heal':
@@ -416,7 +783,10 @@
           return;
         case 'miss': {
           R.sfx(ev.parry ? 'parry' : 'miss'); // 反撃の構え's parry rings like steel
-          if (!ev.u.isParty && s.vis.get(ev.u)) s.vis.get(ev.u).dodge = 12;
+          if (ev.u && !ev.u.isParty && s.vis.get(ev.u)) s.vis.get(ev.u).dodge = 12;
+          const v = s.pv(ev.u);
+          if (v && !ev.parry) v.hop = { f0: R.Engine.frame, n: s.dur(12, 'atk') }; // a member sidesteps to the right
+          if (v && ev.parry) v.flash = { col: '#ffffff', a: 0.55, n: 6 };
           s.pop(ev.u, null, 'gray');
           return s.frames(6);
         }
@@ -427,7 +797,8 @@
         case 'die': return s.onDie(ev);
         case 'revive': {
           if (!ev.u.isParty) { const v = s.vis.get(ev.u); if (v) { v.die = null; v.flee = null; v.gone = false; v.appear = 20; v.appearN = 20; } }
-          if (s.lastFx !== 'revive') { s.lastFx = 'revive'; R.BattleFX.play(s, 'revive', { targets: [s.rectOf(ev.u)] }); }
+          else { const v = s.pv(ev.u); if (v) v.tmp = null; }
+          if (s.lastFx !== 'revive') { s.lastFx = 'revive'; R.BattleFX.play(s, 'revive', { targets: [s.rectOf(ev.u)], dir: 0 }); }
           else R.sfx('revive');
           return s.frames(12);
         }
@@ -441,22 +812,30 @@
           if (v) v.flee = { t: 0 };
           return s.frames(18);
         }
-        case 'escape':
-          if (ev.ok) { R.sfx('escape'); await s.frames(24); }
-          return;
-        case 'cover':
-          // かばう: the one who steps in rises (§11.5.10a)
+        case 'escape': return s.onEscape(ev);
+        case 'cover': {
+          // かばう: the one who steps in walks in front of the one protected and guards (§11.5.10a)
           R.sfx('jump');
-          if (ev.u && ev.u.isParty) s.acting = ev.u;
+          const v = s.pv(ev.u), al = s.pv(ev.ally);
+          if (v && al && v !== al) {
+            v.away = true;
+            v.act = null;
+            await s.moveTo(v, Math.round(al.x - 14), al.y, s.dur(8, 'move'), { pose: 'walk' });
+            v.act = { pose: 'guard', fi: 0 };
+            return;
+          }
           return s.frames(10);
+        }
         case 'counter':
-        case 'react':
-          // autoCounter / 反撃の構え: parry sound, the window rises 3px for 6 frames, then the counter's own fx.
-          // autoRevive ({kind:'revive'}) only rises: the revive pillar and 「…は立ち上がった！」 follow
+        case 'react': {
+          // autoCounter / 反撃の構え: parry sound and a white flash, then the counter's own fx (a normal attack).
+          // autoRevive ({kind:'revive'}) only flashes: the revive pillar and 「…は立ち上がった！」 follow
           if (ev.t === 'counter' || ev.kind !== 'revive') R.sfx('parry');
-          if (ev.u && ev.u.isParty && s.winFx[ev.u.idx]) s.winFx[ev.u.idx].raise = 6;
+          const v = s.pv(ev.u);
+          if (v) { v.flash = { col: '#ffffff', a: 0.55, n: 6 }; if (s.winFx[ev.u.idx]) s.winFx[ev.u.idx].raise = 6; }
           else if (ev.u && s.vis.get(ev.u)) s.vis.get(ev.u).blink = 6;
           return s.frames(6);
+        }
         case 'gain': return s.onGain(ev);
         case 'rare': // old engine form of a rare drop
           R.Engine.flashScreen('#fff4b0', 16);
@@ -475,10 +854,14 @@
           return;
         }
         case 'prof': return; // proficiency rank-ups are not shown in battle (§11.5.6)
-        case 'victory':
+        case 'victory': {
+          const back = s.settle();
+          if (back) await back;
+          s.victoryPose = true; // everyone standing raises the weapon (§11.5.10)
           if (R.Audio && R.Audio.stopBGM) R.Audio.stopBGM(6);
           R.jingle('victory');
           return;
+        }
         case 'jingle':
           if (ev.id === 'levelup') { if (s.levelJingle) return; s.levelJingle = true; }
           R.jingle(ev.id);
@@ -499,30 +882,102 @@
       const end = this.glim.t0 + this.glim.H + 6, F = R.Engine.frame;
       if (end > F) await R.Engine.wait(end - F);
     }
+    /** the weapon slot of a member's plain attack: the event's, else the round's command, else weapon1 */
+    slotOf(u, ev) {
+      if (ev && ev.slot) return ev.slot;
+      const c = u && u.isParty && this.roundCmds && this.roundCmds[u.idx];
+      if (c && c.slot && (c.type === 'attack' || c.type === 'tech')) return c.slot;
+      if (u && u.isParty && typeof u.defaultSlot === 'function') { try { return u.defaultSlot() || 'weapon1'; } catch (e) { /* weapon1 */ } }
+      return 'weapon1';
+    }
+    /** how a member performs an action (§11.5.15): melee run-in / bow / spell / item / stance / a pose in place */
+    modeOf(ev, u, ab, foes, list, slot) {
+      if (ev.item || isItemUse(ab)) return { kind: 'item' };
+      if (ab && (ab.kind === 'spell' || ab.magic)) return { kind: 'spell' };
+      const k0 = R.BattleFX.resolve(list[0], ab).kind;
+      if (k0 === 'stance' || (ab && (ab.effects || []).some((e) => e.type === 'cover'))) return { kind: 'stance' };
+      const wtype = ab && ab.kind === 'tech' && ab.wtype ? ab.wtype : wtypeOf(u.c, slot || 'weapon1');
+      const family = familyOf(wtype);
+      if (!foes.length) return { kind: 'pose', family, wtype };
+      return { kind: family === 'shoot' ? 'bow' : 'melee', family, wtype };
+    }
     async playFx(ev) {
       await this.waitGlimmer();
-      const user = ev.user ? this.rectOf(ev.user) : null;
-      const targets = (ev.targets || []).filter(Boolean).map((t) => this.rectOf(t));
-      const monUser = ev.user && !ev.user.isParty;
+      this.actStart = R.Engine.frame;
+      const u = ev.user || null;
+      const tunits = (ev.targets || []).filter(Boolean);
       const ab = ev.ab || null;
-      if (monUser && ev.kind === 'attack' && this.vis.get(ev.user)) { this.vis.get(ev.user).lunge = 12; await this.frames(7); }
-      if (ev.user && ev.user.isParty && ab && (ab.kind === 'spell' || ab.magic) && ev.kind !== 'counter' && !ev.again) {
-        R.BattleFX.FX.cast(this, { user });
-        R.sfx('magic');
-        await this.frames(10);
-      }
-      if (monUser && ev.kind !== 'attack' && this.vis.get(ev.user)) { this.vis.get(ev.user).blink = 10; await this.frames(6); }
+      const slot = u && u.isParty ? this.slotOf(u, ev) : null;
       let ids = ev.fx;
-      if (!ids && ev.kind === 'attack') ids = this.weaponFx(ev.user, ev.slot);
+      if (!ids && (ev.kind === 'attack' || ev.kind === 'counter')) ids = this.weaponFx(u, slot);
       const list = (Array.isArray(ids) ? ids : [ids]).filter((x) => x != null);
       if (!list.length) list.push(null);
-      // fx arrays (§7.3.4-7): left to right, the 2nd+ at 60 % length; numbers come at the last one's impact
+      const foes = u ? tunits.filter((t) => !!t.isParty !== !!u.isParty) : [];
+      const dir = !u || !foes.length ? 0 : u.isParty ? -1 : 1; // §11.5.12: −1 party → enemy (left), +1 enemy → party
+      const v = u && u.isParty ? this.pv(u) : null;
+      if (v) return this.partyAct(ev, v, tunits, foes, ab, list, dir, slot);
+      const mv = u && !u.isParty ? this.vis.get(u) : null;
+      if (mv && ev.kind === 'attack') {
+        // a monster's attack: it hops 8 px toward the party, the fx lands on the member (§11.5.15)
+        mv.lungeN = this.dur(12, 'atk'); mv.lunge = mv.lungeN;
+        await R.Engine.wait(Math.ceil(mv.lungeN * 0.55));
+      } else if (mv) { mv.blink = 10; await this.frames(6); }
+      await this.chain(list, u ? () => this.rectOf(u) : () => null, tunits, ab, ev.kind, dir);
+    }
+    /** fx arrays (§7.3.4-7): left to right, the 2nd+ at 60 % length; numbers come at the last one's impact */
+    async chain(list, userRect, tunits, ab, kind, dir) {
       for (let i = 0; i < list.length; i++) {
         const rate = i === 0 ? 1 : 1 / 0.6;
         this.lastFx = R.BattleFX.resolve(list[i], ab).kind;
-        const hold = R.BattleFX.play(this, list[i], { user, targets, ab, kind: ev.kind, rate });
+        const hold = R.BattleFX.play(this, list[i], { user: userRect(), targets: tunits.map((t) => this.rectOf(t)), ab, kind, rate, dir });
         await this.frames(hold);
       }
+    }
+    async partyAct(ev, v, tunits, foes, ab, list, dir, slot) {
+      const u = v.p;
+      const mode = this.modeOf(ev, u, ab, foes, list, slot);
+      const w1 = wtypeOf(u.c, 'weapon1');
+      if (mode.wtype) v.alt = mode.wtype !== w1 ? mode.wtype : null; // weapon2 / another type's tech: that weapon's sheet
+      const sh = this.sheetOf(v);
+      const rect = () => this.rectOf(u);
+      const wait = (n) => R.Engine.wait(n);
+      const holdOf = (pose, k, rate) => this.dur((poseHold(sh, pose)[k] || 6) * (rate || 1), 'atk');
+      if (mode.kind === 'melee' || mode.kind === 'bow' || mode.kind === 'pose') {
+        const fam = sh.poses[mode.family] ? mode.family : 'punch';
+        if (mode.kind === 'melee' && !ev.again) await this.runTo(v, foes);
+        const imp = poseImpact(sh, fam), last = sh.poses[fam].frames.length - 1;
+        for (let i = 0; i < list.length; i++) {
+          const rate = i === 0 && !ev.again ? 1 : 0.6; // repeated swings at 60 % (§11.5.15)
+          for (let k = 0; k < imp; k++) { v.act = { pose: fam, fi: k }; await wait(holdOf(fam, k, rate)); }
+          v.act = { pose: fam, fi: imp };
+          this.lastFx = R.BattleFX.resolve(list[i], ab).kind;
+          const h = R.BattleFX.play(this, list[i], { user: rect(), targets: tunits.map((t) => this.rectOf(t)), ab, kind: ev.kind, rate: i === 0 ? 1 : 1 / 0.6, dir });
+          await wait(Math.max(holdOf(fam, imp, rate), Math.ceil(h / this.spd)));
+          v.act = { pose: fam, fi: last };
+        }
+        return;
+      }
+      if (mode.kind === 'spell') {
+        if (!ev.again && ev.kind !== 'counter') {
+          v.act = { pose: 'cast', fi: 0 };
+          await wait(holdOf('cast', 0));
+          v.act = { pose: 'cast', fi: 1 };
+          R.BattleFX.FX.cast(this, { user: rect(), ab });
+          R.sfx('magic');
+          await wait(holdOf('cast', 1));
+        }
+        v.act = { pose: 'cast', fi: 2 };
+        return this.chain(list, rect, tunits, ab, ev.kind, dir);
+      }
+      if (mode.kind === 'item') {
+        if (!ev.again) { v.act = { pose: 'item', fi: 0 }; await wait(holdOf('item', 0)); }
+        v.act = { pose: 'item', fi: 1 };
+        return this.chain(list, rect, tunits, ab, ev.kind, dir);
+      }
+      // 構え・かばう: guard, and the sprite flashes white (§11.5.12 stance)
+      v.act = { pose: 'guard', fi: 0 };
+      v.flash = { col: '#ffffff', a: 0.7, n: 10 };
+      return this.chain(list, rect, tunits, ab, ev.kind, dir);
     }
     /** the fx of a plain attack when the event carries none: the weapon type's fx (§6.8.1) */
     weaponFx(u, slot) {
@@ -540,7 +995,15 @@
       if (u.isParty) {
         if (ev.n > 0) {
           const f = this.winFx[u.idx];
-          if (f) { f.shake = 18; f.flash = 14; }
+          if (f) f.flash = 14; // the STATUS row blinks red (§11.5.2)
+          const v = this.pv(u);
+          if (v && !ev.mp && !ev.wp) {
+            // のけぞり: hit pose, pushed 3 px to the right and back, a 2 px shake (§11.5.15)
+            const n = this.dur(12, 'atk'), F = R.Engine.frame;
+            v.tmp = { pose: 'hit', fi: 0, until: F + n };
+            v.push = { f0: F, n };
+            v.shake = 6;
+          }
           if (!ev.mp && !ev.wp) R.Engine.shake(dot ? 6 : 12, ev.crit ? 4 : 2);
           R.sfx(ev.kind === 'poison' ? 'poison' : ev.kind === 'burn' ? 'burn' : 'hurt');
         }
@@ -556,6 +1019,8 @@
       if (u.isParty) {
         R.sfx('death');
         if (this.winFx[u.idx]) this.winFx[u.idx].flash = 16;
+        const v = this.pv(u);
+        if (v) { v.act = null; v.tmp = { pose: 'hit', fi: 0, until: R.Engine.frame + 6 }; } // hit 6 → ko
         return this.frames(12);
       }
       const v = this.vis.get(u);
@@ -572,6 +1037,22 @@
         await this.frames(14);
       }
     }
+    async onEscape(ev) {
+      const back = this.settle();
+      if (back) await back;
+      const alive = (this.pvs || []).filter((v) => v.p.alive);
+      const F = R.Engine.frame;
+      if (ev.ok) {
+        // everyone standing turns round and runs off to the right, 2 frames apart (§11.5.10)
+        R.sfx('escape');
+        this.big = true;
+        alive.forEach((v, i) => { v.flee = { f0: F + i * 2 }; });
+        await R.Engine.wait(24 + alive.length * 2);
+        return;
+      }
+      alive.forEach((v) => { v.nudge = { f0: F, n: 8 }; }); // a failed escape: a step to the right and back
+      await R.Engine.wait(8);
+    }
     async onStatus(ev) {
       const s = ev.s;
       if (!ev.on || s === 'death') return;
@@ -579,7 +1060,7 @@
       // statuses from weapons / damage skills get their own puff (a spell for that status already showed one)
       const key = s === 'counter' || s === 'cover' ? 'stance' : s;
       if (this.lastFx !== key && FX[key] && !(ev.u && ev.u.isParty && key === 'stance')) {
-        R.BattleFX.play(this, key, { user: this.rectOf(ev.u), targets: [this.rectOf(ev.u)] });
+        R.BattleFX.play(this, key, { user: this.rectOf(ev.u), targets: [this.rectOf(ev.u)], dir: 0 });
         return this.frames(10);
       }
       R.sfx({ poison: 'poison', sleep: 'sleep', burn: 'burn', freeze: 'freeze' }[s] || 'status');
@@ -611,7 +1092,7 @@
         this.card = { grade: 'rare', item: ev.item, t0: R.Engine.frame };
         return this.frames(6);
       }
-      // super rare: the scene darkens, the fanfare plays to the end before any key is taken (§11.5.8)
+      // super rare: the field darkens, the fanfare plays to the end before any key is taken (§11.5.8)
       this.dim = 0.45;
       this.card = { grade: 'super', item: ev.item, t0: R.Engine.frame };
       R.Engine.flashScreen('#ffe0f4', 10);
@@ -631,6 +1112,11 @@
       R.sfx('golden');
       await R.Engine.wait(14);
     }
+    /**
+     * 閃き (§11.5.7 Part A8): ピコーン → the bulb lights over the member's head (with four rays) and the STATUS row
+     * glows → the tech-name banner opens on the enemy side (frames 8–14) → the line types (frame 14) → the new tech
+     * waits until frame H = max(36, 50 / spd) (never shortened by オート・リピート) and is then performed.
+     */
     async onGlimmer(ev) {
       // one banner at a time: a second glimmer in the same round waits until the first has closed
       await this.waitGlimmerClosed();
@@ -638,14 +1124,21 @@
       const ab = actionOf(ev.id) || {};
       R.sfx('glimmer');
       if (R.Audio && R.Audio.duck) { try { R.Audio.duck(-6, 18); } catch (e) { /* optional */ } }
-      if (u && u.isParty && this.winFx[u.idx]) this.winFx[u.idx].glow = GLOW_FRAMES;
-      R.Engine.flashScreen('#fff8d0', 4);
       const H = Math.max(GLIM_MIN, Math.round(50 / this.spd));
-      this.glim = Object.assign({ u, t0: R.Engine.frame, H, id: ev.id, kind: ev.kind }, bannerOf(ab, ev.kind));
-      this.glimUntil = this.glim.t0 + H;
+      const F = R.Engine.frame;
+      const v = u && u.isParty ? this.pv(u) : null;
+      if (v) {
+        if (this.winFx[u.idx]) this.winFx[u.idx].glow = GLOW_FRAMES;
+        v.act = null;
+        v.tmp = { pose: 'idle', fi: 0, until: F + H }; // stands up (even from weak) and looks up
+        v.flash = { col: '#ffffff', a: 0.6, n: 2 };
+      }
+      R.Engine.flashScreen('#fff8d0', 4);
+      this.glim = Object.assign({ u, t0: F, H, id: ev.id, kind: ev.kind, bulb: !!v }, bannerOf(ab, ev.kind));
+      this.glimUntil = F + H;
       this.log.glimmers.push({ char: u && u.c ? u.c.id : null, id: ev.id, kind: ev.kind || ab.kind });
-      // frame 12: the banner is open — hand back so the 「〇〇は〇〇を閃いた！」 line types under it
-      await R.Engine.wait(12);
+      // frame 14: the banner is open — hand back so the 「〇〇は〇〇を閃いた！」 line types under it
+      await R.Engine.wait(GLIM_HANDBACK);
     }
     async onPhase(ev) {
       const v = this.vis.get(ev.u);
@@ -657,7 +1150,7 @@
         // swap the sprite at frame 6, keeping the feet and the centre
         const feet = v.y + v.h, cx = v.x + v.w / 2;
         ev.u.spriteOverride = ev.sprite;
-        v.img = this.monImg(ev.u);
+        v.img = monImage(ev.u);
         v.w = v.img.width; v.h = v.img.height;
         v.x = Math.round(cx - v.w / 2); v.y = feet - v.h;
         v.mask = null;
@@ -672,11 +1165,12 @@
       await this.frames(14);
     }
 
-    // ------------------------------------------------------------ commands
+    // ------------------------------------------------------------ commands (§11.5.3)
     /** the commands of one round (menus, オート or リピート); the panel is closed when it returns */
     async commandPhase() {
       const cmds = await this.commandInput();
       this.panel = null;
+      this.cmdList = null;
       return cmds;
     }
     async commandInput() {
@@ -709,11 +1203,11 @@
     }
     get canRepeat() { return !!(this.lastCmds && this.lastCmds.some(Boolean)); }
     async partyMenu() {
-      // 戦う リピート / オート 逃げる
+      // 戦う / リピート / オート / 逃げる — one column in CMD (§11.5.3)
       const ids = ['fight', 'repeat', 'auto', 'flee'];
       const canRepeat = this.canRepeat;
       const list = new R.UI.List({
-        x: BOX.x, y: BOX.y, w: CMD_W, h: BOX.h, cols: 2, rows: 2, lineH: 16, padY: 10, cancel: false,
+        x: CMD.x, y: CMD.y, w: CMD.w, h: CMD.h, cols: 1, rows: 4, lineH: 14, padY: 6, cancel: false,
         items: ['戦う', { label: 'リピート', disabled: !canRepeat }, 'オート', { label: '逃げる', disabled: !!this.eng.noEscape }],
         index: this.partyIdx,
       });
@@ -752,6 +1246,7 @@
         k++;
       }
       this.acting = null;
+      this.cmdList = null;
       return cmds;
     }
     battleItems(reserved) {
@@ -773,24 +1268,25 @@
         label: k.name || (k.type === 'spell' ? '術' : k.type === 'defend' ? '防御' : k.type === 'item' ? '道具' : k.wtype),
         disabled: k.type === 'item' && !this.battleItems(reserved).some((x) => x.n > 0),
       }));
-      const list = new R.UI.List({ x: BOX.x, y: BOX.y, w: CMD_W, h: BOX.h, items, cols: 2, rows: 3, lineH: 16, padY: 10, title: c.name, index: Math.min(m.cmd || 0, items.length - 1) });
+      const list = new R.UI.List({ x: CMD.x, y: CMD.y, w: CMD.w, h: CMD.h, items, cols: 2, rows: 3, lineH: 16, padY: 10, title: c.name, index: Math.min(m.cmd || 0, items.length - 1) });
       if (list.isDisabled(list.index)) list.index = 0;
-      this.acting = u;
+      this.acting = u; // steps forward (§11.5.14) and gets the STATUS band
       for (;;) {
         this.panel = { left: list, enemies: true };
+        this.cmdList = list;
         list.active = true;
         const i = await this.ask(() => { const r = list.update(); return r === 'select' ? list.index : r === 'cancel' ? -1 : undefined; });
-        if (i < 0) return BACK;
+        if (i < 0) { this.cmdList = null; return BACK; }
         m.cmd = i;
         const k = cmds[i];
         list.active = false;
         let r = BACK;
         if (k.type === 'weapon') r = await this.weaponMenu(u, k);
         else if (k.type === 'spell') r = await this.spellMenu(u);
-        else if (k.type === 'defend') return { type: 'defend' };
+        else if (k.type === 'defend') { this.cmdList = null; return { type: 'defend' }; }
         else if (k.type === 'item') r = await this.itemMenu(u, reserved);
         else if (k.type === 'attack') { const t = await this.pickTarget(u, 'enemy'); if (t !== BACK) r = { type: 'attack', slot: k.slot || null, target: t }; }
-        if (r !== BACK) return r;
+        if (r !== BACK) { this.cmdList = null; return r; }
       }
     }
     /** why the plain 攻撃 of a weapon slot can't be chosen (null = usable): only 'reach' (§4.5.3) */
@@ -805,8 +1301,9 @@
       const it = slot && c.equip && DB.items[c.equip[slot]];
       return it ? it.name : null;
     }
+    /** a tech / spell / item list: one column of five on the enemy side (LIST, §11.5.3) */
     listOpts(title, items, index) {
-      return { x: BOX.x, y: BOX.y, w: BOX.w, h: BOX.h, items, cols: 2, rows: 3, lineH: 16, padY: 10, title, index: U.clamp(index || 0, 0, Math.max(0, items.length - 1)), drawItem: drawListItem };
+      return { x: LIST.x, y: LIST.y, w: LIST.w, items, cols: 1, rows: LIST.rows, lineH: LIST.lineH, padY: LIST.padY, title, index: U.clamp(index || 0, 0, Math.max(0, items.length - 1)), drawItem: drawListItem };
     }
     /** 攻撃 + the techs of that slot's weapon type; right column W and the cost (§11.5.3) */
     async weaponMenu(u, k) {
@@ -830,7 +1327,7 @@
         return (r.ab && r.ab.desc) || '';
       };
       for (;;) {
-        this.panel = { left: list, help };
+        this.panel = { left: list, under: this.cmdList, help };
         list.active = true;
         const i = await this.ask(() => { const r = list.update(); return r === 'select' ? list.index : r === 'cancel' ? -1 : undefined; });
         if (i < 0) return BACK;
@@ -858,7 +1355,7 @@
       const list = new R.UI.List(this.listOpts('術', items, m.list.spell));
       const help = () => { const r = rows[list.index]; return r ? (r.why ? WHY[r.why] || '' : (r.ab && r.ab.desc) || '') : ''; };
       for (;;) {
-        this.panel = { left: list, help };
+        this.panel = { left: list, under: this.cmdList, help };
         list.active = true;
         const i = await this.ask(() => { const r = list.update(); return r === 'select' ? list.index : r === 'cancel' ? -1 : undefined; });
         if (i < 0) return BACK;
@@ -885,7 +1382,7 @@
         return helpLine(x.it.desc);
       };
       for (;;) {
-        this.panel = { left: list, help };
+        this.panel = { left: list, under: this.cmdList, help };
         list.active = true;
         const i = await this.ask(() => { const r = list.update(); return r === 'select' ? list.index : r === 'cancel' ? -1 : undefined; });
         if (i < 0) return BACK;
@@ -897,7 +1394,7 @@
       }
     }
 
-    // ------------------------------------------------------------ targeting
+    // ------------------------------------------------------------ targeting (§11.5.3: the list closes while aiming)
     async pickTarget(u, type) {
       if (type === 'enemy' || type === 'group') return this.pickEnemy(u, type === 'group');
       if (type === 'ally' || type === 'ally_any' || type === 'ally_dead' || type === 'ally_other') return this.pickAlly(u, type);
@@ -909,7 +1406,7 @@
       const foes = type !== 'allies';
       const prevPanel = this.panel;
       const label = foes ? (type === 'random' ? '敵全体にランダム' : '敵全体') : '味方全員';
-      this.panel = Object.assign({}, prevPanel, { help: () => label, helpCenter: true });
+      this.panel = Object.assign({}, prevPanel, { help: () => label, helpCenter: true, hideList: true });
       this.picking = foes ? { units: this.eng.mons.filter((m) => m.alive) } : { allies: true };
       const r = await this.ask(() => {
         if (In().pressed('a')) { R.sfx('confirm'); return null; }
@@ -927,24 +1424,40 @@
       for (const m of eng.mons) if (m.alive) { if (!by.has(m.id)) by.set(m.id, []); by.get(m.id).push(m); }
       return [...by.values()];
     }
+    /**
+     * enemies: ←→ in screen x order (the back row first at the same x), ↑↓ between the rows (the nearest x in the
+     * next row that has someone — §11.5.3)
+     */
     async pickEnemy(u, group) {
       const m = mem(u.c);
-      const vx = (x) => (this.vis.get(x) ? this.vis.get(x).x : 0);
-      const alive = this.eng.mons.filter((x) => x.alive).sort((a, b) => vx(a) - vx(b));
+      const vx = (x) => { const v = this.vis.get(x); return v ? v.x + v.w / 2 : 0; };
+      const vr = (x) => { const v = this.vis.get(x); return v ? v.row : 0; };
+      const byX = (a, b) => vx(a[0]) - vx(b[0]) || vr(a[0]) - vr(b[0]);
+      const alive = this.eng.mons.filter((x) => x.alive);
       if (!alive.length) return BACK;
-      const choices = group ? this.groupsOf().sort((a, b) => vx(a[0]) - vx(b[0])) : alive.map((x) => [x]);
+      const choices = (group ? this.groupsOf() : alive.map((x) => [x])).sort(byX);
       let i = Math.max(0, choices.findIndex((l) => l.some((x) => x.key === m.target)));
       const prevPanel = this.panel;
       const name = () => { const l = choices[i]; return group && l.length > 1 ? `${l[0].base || l[0].name}　${l.length}匹` : l[0].name; };
       const color = () => { const l = choices[i]; return isGolden(l[0]) ? G().C.gold : isMetal(l[0]) ? METAL_COL : null; };
-      this.panel = Object.assign({}, prevPanel, { help: name, helpColor: color, helpCenter: true });
+      this.panel = Object.assign({}, prevPanel, { help: name, helpColor: color, helpCenter: true, hideList: true });
       this.picking = { units: choices[i] };
+      const rowStep = (d) => {
+        // the nearest (by x) choice in the next row up / down that has one; the same as ←→ when there is one row
+        const r0 = vr(choices[i][0]), x0 = vx(choices[i][0]);
+        const rows = [...new Set(choices.map((l) => vr(l[0])))].sort((a, b) => a - b);
+        if (rows.length < 2) return (i + d + choices.length) % choices.length;
+        const k = rows.indexOf(r0);
+        const r1 = rows[(k + d + rows.length) % rows.length];
+        let best = i, bd = Infinity;
+        choices.forEach((l, j) => { if (vr(l[0]) === r1 && Math.abs(vx(l[0]) - x0) < bd) { bd = Math.abs(vx(l[0]) - x0); best = j; } });
+        return best;
+      };
       const r = await this.ask(() => {
         const d = In().dirRepeat();
         if (d && choices.length > 1) {
-          i = (i + (d === 'left' || d === 'up' ? -1 : 1) + choices.length) % choices.length;
-          this.picking.units = choices[i];
-          R.sfx('cursor');
+          const j = group || d === 'left' || d === 'right' ? (i + (d === 'left' || d === 'up' ? -1 : 1) + choices.length) % choices.length : rowStep(d === 'up' ? -1 : 1);
+          if (j !== i) { i = j; this.picking.units = choices[i]; R.sfx('cursor'); }
         }
         if (In().pressed('a')) { R.sfx('confirm'); return choices[i][0]; }
         if (In().pressed('b')) { R.sfx('cancel'); return BACK; }
@@ -970,14 +1483,14 @@
         const p = party[i];
         return `${p.name}　HP ${p.hp}/${p.mhp}　MP ${p.mp}/${p.mmp}　WP ${wpOf(p)}/${mwpOf(p)}`;
       };
-      this.panel = Object.assign({}, prevPanel, { help: line, helpCenter: true });
+      this.panel = Object.assign({}, prevPanel, { help: line, helpCenter: true, hideList: true });
       this.picking = { ally: party[i] };
       const r = await this.ask(() => {
         const d = In().dirRepeat();
         if (d) {
           const step = d === 'left' || d === 'up' ? -1 : 1;
           let j = i;
-          // the cursor goes round all members (% party.length — the Crest code had % 3)
+          // the cursor goes round all members (% party.length)
           for (let k = 0; k < n; k++) { j = (j + step + n) % n; if (ok(party[j])) break; }
           if (j !== i && ok(party[j])) { i = j; this.picking.ally = party[i]; R.sfx('cursor'); }
         }
@@ -1019,7 +1532,8 @@
       const s = this.spd;
       const F = R.Engine.frame;
       for (const v of this.vis.values()) {
-        for (const k of ['flash', 'shake', 'blink', 'lunge', 'dodge', 'appear', 'solid']) if (v[k] > 0) v[k] = Math.max(0, v[k] - s);
+        for (const k of ['flash', 'shake', 'blink', 'dodge', 'appear', 'solid']) if (v[k] > 0) v[k] = Math.max(0, v[k] - s);
+        if (v.lunge > 0) v.lunge--; // already scaled (dur)
         if (v.gflash > 0) v.gflash--;
         if (v.move) {
           v.move.t += s;
@@ -1047,6 +1561,7 @@
           }
         }
       }
+      for (const v of this.pvs || []) this.tickMember(v, F);
       for (const f of this.winFx) {
         if (f.shake > 0) f.shake = Math.max(0, f.shake - s);
         if (f.flash > 0) f.flash = Math.max(0, f.flash - s);
@@ -1057,6 +1572,36 @@
       if (this.fxList.length) this.fxList = this.fxList.filter((f) => (f.t += s * (f.rate || 1)) < f.life);
       if (this.pops.length) this.pops = this.pops.filter((p) => (p.t += s) < 52);
       this.tickMsg();
+    }
+    tickMember(v, F) {
+      if (v.move) {
+        const mv = v.move;
+        mv.t++;
+        const q = U.clamp(mv.t / mv.n, 0, 1);
+        v.x = mv.x0 + (mv.x1 - mv.x0) * q;
+        v.y = mv.y0 + (mv.y1 - mv.y0) * q;
+        v.lift = mv.arc ? Math.sin(q * Math.PI) * mv.arc : 0;
+        if (q >= 1) { v.move = null; v.lift = 0; v.x = mv.x1; v.y = mv.y1; mv.res(); }
+      } else if (!v.away && !v.flee) {
+        // input: the member entering commands stands one step forward (§11.5.14); homes follow the effective row
+        const goal = v.homeX - (this.acting === v.p && this.panel && !this.inRound ? PARTY.step : 0);
+        if (Math.abs(v.x - goal) > 0.01 || Math.abs(v.y - v.homeY) > 0.01) {
+          if (!v.glide || v.glide.x1 !== goal || v.glide.y1 !== v.homeY) {
+            const small = Math.abs(goal - v.x) <= PARTY.step + 0.5 && Math.abs(v.homeY - v.y) < 1;
+            v.glide = { x0: v.x, y0: v.y, x1: goal, y1: v.homeY, t: 0, n: this.dur(small ? 6 : 8, 'move'), f0: F };
+          }
+          const gl = v.glide;
+          gl.t++;
+          const q = Math.min(1, gl.t / gl.n);
+          v.x = gl.x0 + (gl.x1 - gl.x0) * q;
+          v.y = gl.y0 + (gl.y1 - gl.y0) * q;
+          if (q >= 1) { v.x = gl.x1; v.y = gl.y1; v.glide = null; }
+        } else v.glide = null;
+      }
+      if (v.tmp && F >= v.tmp.until) v.tmp = null;
+      for (const k of ['push', 'hop', 'nudge']) if (v[k] && F - v[k].f0 >= v[k].n) v[k] = null;
+      if (v.shake > 0) v.shake--;
+      if (v.flash && --v.flash.n <= 0) v.flash = null;
     }
     /** a random opaque pixel of a monster sprite (relative to the screen) */
     opaquePoint(v) {
@@ -1074,23 +1619,28 @@
       return [v.x + p[0], v.y + p[1]];
     }
 
-    // ------------------------------------------------------------ drawing
+    // ------------------------------------------------------------ drawing (§11.5.1: back to front, fx clipped to FIELD)
     draw() {
       if (!this.ready) { if (this.wipe) this.drawWipe(); return; }
-      G().clear('#000');
+      const g = G(), c = g.ctx;
+      g.clear('#000');
+      c.save();
+      c.beginPath(); c.rect(FIELD.x, FIELD.y, FIELD.w, FIELD.h); c.clip();
       this.drawBackdrop();
-      this.drawMonsters();
+      this.drawUnits();
       this.drawFx('mid');
-      this.drawEnemyCursor();
-      this.drawPops(false);
-      if (this.dim > 0) G().rect(0, 0, R.W, BOX.y, 'rgba(0,0,0,' + this.dim + ')');
-      this.drawWindows();
-      this.drawBulb();
       this.drawFx('top');
-      this.drawPops(true);
+      this.drawCursors();
+      this.drawPops();
+      this.drawBulb();
+      if (this.dim > 0) g.rect(FIELD.x, FIELD.y, FIELD.w, FIELD.h, 'rgba(0,0,0,' + this.dim + ')');
+      c.restore();
+      this.drawTop();
+      this.drawList();
       this.drawBanner();
       this.drawCard();
-      if (this.panel) this.drawPanel(); else this.drawMsg();
+      this.drawCmd();
+      this.drawStatus();
       this.drawAuto();
     }
     drawWipe() {
@@ -1104,35 +1654,91 @@
       const id = this.o.bg || 'grass';
       let bg = G().has('bbg:' + id) ? G().get('bbg:' + id) : R.BattleFX.fallbackBg(id);
       if (Array.isArray(bg)) bg = bg[Math.floor(R.Engine.frame / 16) % bg.length];
+      if (!bg) return;
       G().draw(bg, 0, 0);
+      // y 144–151: the backdrop's last row repeated (§11.5.1)
+      const h = bg.height || 144;
+      if (h < FIELD.h) G().draw(bg, 0, h, { sx: 0, sy: h - 1, sw: bg.width || 256, sh: 1, w: FIELD.w, h: FIELD.h - h });
     }
-    drawMonsters() {
-      const F = R.Engine.frame;
-      const list = [...this.vis.values()].sort((a, b) => (a.back === b.back ? a.i - b.i : a.back ? -1 : 1));
-      for (const v of list) {
-        const m = v.m;
-        if (v.gone || (!m.alive && !v.die && !v.flee)) continue;
-        let x = v.x, y = v.y, alpha = 1;
-        if (v.fly && !v.die) y += Math.round(Math.sin(F / 18 + v.i) * 2);
-        if (v.shake > 0) x += Math.floor(v.shake) % 4 < 2 ? 2 : -2;
-        if (v.lunge > 0) y += Math.round(Math.sin(((12 - v.lunge) / 12) * Math.PI) * 5);
-        if (v.dodge > 0) x += Math.round(Math.sin(((12 - v.dodge) / 12) * Math.PI) * 10);
-        if (v.appear > 0) alpha = 1 - v.appear / (v.appearN || 20);
-        if (v.flee) {
-          x += v.flee.t * 5 * (v.x + v.w / 2 < 128 ? -1 : 1);
-          alpha = 1 - v.flee.t / 18;
-          if (alpha <= 0) { v.gone = true; continue; }
-        }
-        if (v.die) { if (this.drawDying(v, x, y)) v.gone = true; continue; }
-        const targeted = this.picking && this.picking.units && this.picking.units.includes(m);
-        if (v.solid > 0) G().drawTinted(v.img, x, y, '#ffffff', 0.9);
-        else if (v.flash > 0 && Math.floor(v.flash / 2) % 2 === 0) G().drawTinted(v.img, x, y, '#ffffff', 0.9);
-        else if (v.gflash > 0 && Math.floor(v.gflash / 4) % 2 === 0) G().drawTinted(v.img, x, y, '#fff4b0', 0.85);
-        else if (v.blink > 0 && Math.floor(v.blink / 3) % 2 === 0) G().drawTinted(v.img, x, y, '#ffffff', 0.55);
-        else if (targeted) G().drawTinted(v.img, x, y, '#ffffff', 0.18 + 0.18 * Math.sin(F * 0.2));
-        else G().draw(v.img, x, y, alpha < 1 ? { alpha } : undefined);
-        if (isRareMon(m)) this.drawSparkles(v, x, y, F);
-        if (v.spk.length) this.drawGoldSparkles(v, F);
+    /** monsters and members sorted by their feet (a member who ran in stands before / behind by y — §11.5.1) */
+    drawUnits() {
+      const items = [];
+      for (const v of this.vis.values()) {
+        if (v.gone || (!v.m.alive && !v.die && !v.flee)) continue;
+        items.push({ y: v.y + v.h, o: 0, i: v.i, v });
+      }
+      for (const v of this.pvs || []) items.push({ y: v.y, o: 1, i: v.i, pv: v });
+      items.sort((a, b) => a.y - b.y || a.o - b.o || a.i - b.i);
+      for (const v of this.pvs || []) this.drawShadow(v);
+      for (const it of items) { if (it.v) this.drawMonster(it.v); else this.drawMember(it.pv); }
+    }
+    drawMonster(v) {
+      const F = R.Engine.frame, m = v.m;
+      let x = v.x, y = v.y, alpha = 1;
+      if (v.fly && !v.die) y += Math.round(Math.sin(F / 18 + v.i) * 2);
+      if (v.shake > 0) x += Math.floor(v.shake) % 4 < 2 ? 2 : -2;
+      if (v.lunge > 0) x += Math.round(Math.sin(((v.lungeN - v.lunge) / v.lungeN) * Math.PI) * 8); // toward the party
+      if (v.dodge > 0) x -= Math.round(Math.sin(((12 - v.dodge) / 12) * Math.PI) * 10); // away from the party
+      if (v.appear > 0) alpha = 1 - v.appear / (v.appearN || 20);
+      if (v.flee) {
+        x -= v.flee.t * 5; // runs off to the left edge
+        alpha = 1 - v.flee.t / 18;
+        if (alpha <= 0) { v.gone = true; return; }
+      }
+      if (v.die) { if (this.drawDying(v, x, y)) v.gone = true; return; }
+      const targeted = this.picking && this.picking.units && this.picking.units.includes(m);
+      const g = G();
+      if (v.solid > 0) g.drawTinted(v.img, x, y, '#ffffff', 0.9);
+      else if (v.flash > 0 && Math.floor(v.flash / 2) % 2 === 0) g.drawTinted(v.img, x, y, '#ffffff', 0.9);
+      else if (v.gflash > 0 && Math.floor(v.gflash / 4) % 2 === 0) g.drawTinted(v.img, x, y, '#fff4b0', 0.85);
+      else if (v.blink > 0 && Math.floor(v.blink / 3) % 2 === 0) g.drawTinted(v.img, x, y, '#ffffff', 0.55);
+      else if (targeted) g.drawTinted(v.img, x, y, '#ffffff', 0.18 + 0.18 * Math.sin(F * 0.2));
+      else g.draw(v.img, x, y, alpha < 1 ? { alpha } : undefined);
+      if (isRareMon(m)) this.drawSparkles(v, x, y, F);
+      if (v.spk.length) this.drawGoldSparkles(v, F);
+    }
+    /** a 3-px ellipse of black 50 % (a checkerboard) under each member, as wide as the body (§11.5.14) */
+    drawShadow(v) {
+      if (v.flee) return;
+      const { f } = this.frameOf(v);
+      const [X] = this.posOf(v);
+      const Y = Math.round(v.y);
+      const w = Math.max(10, Math.min(30, (f && f.box && f.box.w) || 16) + 2);
+      const a = w / 2, g = G();
+      for (let dy = -1; dy <= 1; dy++) {
+        const half = Math.round(a * Math.sqrt(1 - (dy / 1.8) * (dy / 1.8)));
+        for (let x = -half; x <= half; x++) if (((X + x + Y + dy) & 1) === 0) g.rect(X + x, Y + dy, 1, 1, '#000000');
+      }
+    }
+    drawMember(v) {
+      const g = G(), F = R.Engine.frame, p = v.p;
+      const { f, flip } = this.frameOf(v);
+      if (!f) return;
+      const [X, Y] = this.posOf(v);
+      const x = X - 24, y = Y - 39;
+      const st = p.status || {};
+      if (f.img) {
+        const picked = this.isPicked(p) && Math.floor(F / 10) % 3 !== 2;
+        if (v.flash) g.drawTinted(f.img, x, y, v.flash.col, v.flash.a);
+        else if (st.freeze && p.alive) g.drawTinted(f.img, x, y, '#a8ecff', 0.4);
+        else if (picked) g.drawTinted(f.img, x, y, '#ffffff', 0.18 + 0.12 * Math.sin(F * 0.2));
+        else g.draw(f.img, x, y, flip ? { flip: true } : undefined);
+      }
+      if (v.flee) return;
+      const head = f.head || [24, 15];
+      const hx = x + head[0], hy = y + head[1];
+      // status icons on the back (right) side, three at a time (§11.5.14)
+      const icons = this.iconsOf(p);
+      if (icons.length) {
+        const pages = Math.ceil(icons.length / 3);
+        const pg = pages > 1 ? Math.floor(F / 60) % pages : 0;
+        const top = p.alive ? hy : y + ((f.box && f.box.y) || 23) - 9;
+        icons.slice(pg * 3, pg * 3 + 3).forEach((s, k) => g.draw(R.BattleFX.get('icon_' + s), X + 10, top + k * 9));
+      }
+      // 眠り: a zzz rises over the head every 60 frames
+      if (st.sleep && p.alive) {
+        const t = (F + v.i * 17) % 60;
+        if (t < 36) g.draw(R.BattleFX.get('zzz'), hx + 3 + Math.floor(t / 12), hy - 7 - Math.floor(t / 4), { alpha: t > 24 ? (36 - t) / 12 : 1 });
       }
     }
     /** twinkling stars around a rare monster (white and pale gold, period 90 frames) */
@@ -1182,21 +1788,25 @@
       return false;
     }
     drawFx(layer) {
-      for (const f of this.fxList) if (f.layer === layer) f.draw(G(), f.t);
+      for (const f of this.fxList) if ((f.layer || 'mid') === layer) f.draw(G(), f.t);
     }
-    drawEnemyCursor() {
-      if (!this.picking || !this.picking.units || Math.floor(R.Engine.frame / 10) % 3 === 2) return;
-      for (const m of this.picking.units) {
+    /** ▼ over the aimed monsters (a ▶ on the left of one whose top hides under the help strip) and members */
+    drawCursors() {
+      if (!this.picking || Math.floor(R.Engine.frame / 10) % 3 === 2) return;
+      for (const m of this.picking.units || []) {
         const v = this.vis.get(m);
         if (!v) continue;
-        // a tall monster whose top is under the window band gets a → on its left instead of a ↓ above
-        if (v.y - 9 < WIN_BOTTOM) { rightArrow(Math.max(2, v.x - 8), Math.round(Math.max(WIN_BOTTOM + 8, v.y + Math.min(v.h / 2, 40)))); continue; }
+        if (v.y - 9 < 26) { rightArrow(Math.max(2, v.x - 8), Math.round(Math.max(34, v.y + Math.min(v.h / 2, 40)))); continue; }
         downArrow(Math.round(v.x + v.w / 2), v.y - 9);
       }
+      for (const v of this.pvs || []) {
+        if (!this.isPicked(v.p)) continue;
+        const r = this.rectOf(v.p);
+        downArrow(r.head[0], r.head[1] - 10);
+      }
     }
-    drawPops(party) {
+    drawPops() {
       for (const p of this.pops) {
-        if (p.party !== party) continue;
         const gl = R.BattleFX.glyphs(p.color);
         const w = p.str.length * 6 + 1;
         const alpha = p.t > 40 ? (52 - p.t) / 12 : 1;
@@ -1211,87 +1821,40 @@
     }
     isPicked(p) { return !!(this.picking && (this.picking.ally === p || (this.picking.allies && !p.gone))); }
     theme() { const T = G().WINDOW_THEMES; return T[R.Settings.windowColor] || T.ink || T.black; }
-    drawWindows() {
-      const g = G(), C = g.C, F = R.Engine.frame;
-      const theme = this.theme();
-      this.eng.party.forEach((p, i) => {
-        const f = this.winFx[i];
-        if (!f || WIN.xs[i] == null) return;
-        let x = WIN.xs[i], y = WIN.y;
-        if (f.shake > 0) x += Math.round(Math.sin(f.shake * 1.3) * 2);
-        const picked = this.isPicked(p);
-        if (this.acting === p || picked || f.raise > 0) y -= 3;
-        const red = f.flash > 0 && Math.floor(f.flash / 3) % 2 === 0;
-        const th = red ? g.WINDOW_THEMES.red : theme;
-        g.window(x, y, WIN.w, WIN.h, { theme: red ? 'red' : undefined });
-        // glimmer glow: 40 frames of warm light fading out; a gold inner edge blinks for the first 16
-        if (f.glow > 0) {
-          const t = GLOW_FRAMES - f.glow;
-          const c = g.ctx, a0 = c.globalAlpha;
-          c.globalAlpha = a0 * 0.35 * (f.glow / GLOW_FRAMES);
-          g.rect(x + 3, y + 3, WIN.w - 6, WIN.h - 6, GLOW_FILL);
-          c.globalAlpha = a0;
-          if (t < 16 && Math.floor(t / 4) % 2 === 0) g.strokeRect(x + 2, y + 2, 57, 42, GLOW_EDGE);
-        }
-        const col = p.hp <= 0 ? C.dead : p.hp < p.mhp * 0.25 ? C.yellow : C.white;
-        // name on the top border
-        const nw = Math.min(52, Math.ceil(g.textWidth(p.name)));
-        const tw = nw + 8, tx = x + Math.floor((WIN.w - tw) / 2);
-        g.rect(tx, y, tw, 5, th.fill);
-        // name at y − 3 (§11.5.2); a raised window (y 2) would push the kana's top row off the screen, so the
-        // name never goes above the screen's first row (it rises 2 px instead of 3 there)
-        g.fitText(p.name, tx + 4, Math.max(0, y - 3), 52, { color: col });
-        g.text('H', x + 6, y + 6, { color: col });
-        g.text(String(p.hp), x + 54, y + 6, { color: col, align: 'right' });
-        g.text('M', x + 6, y + 17, { color: col });
-        g.text(String(p.mp), x + 54, y + 17, { color: col, align: 'right' });
-        g.text('W', x + 6, y + 28, { color: col });
-        g.text(String(wpOf(p)), x + 54, y + 28, { color: col, align: 'right' });
-        // bottom border: row tag (left) — the row that really applies (effectiveRow)
-        const mid = this.rowOf(p) === 'middle';
-        const fill2 = th.fill2 || th.fill;
-        g.rect(x + 4, y + 39, 15, 8, fill2);
-        g.text(mid ? '中' : '前', x + 6, y + 38, { color: mid ? C.cyan : C.orange });
-        // bottom border: status icons (right), up to 3; more rotate every 60 frames
-        const icons = this.iconsOf(p);
-        if (icons.length) {
-          const pages = Math.ceil(icons.length / 3);
-          const pg = pages > 1 ? Math.floor(F / 60) % pages : 0;
-          const show = icons.slice(pg * 3, pg * 3 + 3);
-          const iw = show.length * 9 + 3, ix = x + 56 - iw;
-          g.rect(ix, y + 39, iw, 8, fill2);
-          show.forEach((s, k) => g.draw(R.BattleFX.get('icon_' + s), ix + 2 + k * 9, y + 39));
-        }
-        if (picked && Math.floor(F / 10) % 3 !== 2) upArrow(WIN.xs[i] + 30, WIN.y + 51);
-      });
-    }
-    /** the glimmer bulb under the member's window: rises 8px in 8 frames, frames 0/1 swap every 4 */
+    /** the glimmer bulb over the head (§11.5.7): rises 6 px as it appears, frames 0/1 every 4, four rays spread */
     drawBulb() {
       const gl = this.glim;
-      if (!gl || !gl.u || !gl.u.isParty) return;
+      if (!gl || !gl.bulb) return;
       const t = R.Engine.frame - gl.t0;
       if (t < 0 || t > gl.H) return;
-      const x0 = WIN.xs[gl.u.idx];
-      if (x0 == null) return;
+      const v = this.pv(gl.u);
+      if (!v) return;
+      const r = this.rectOf(gl.u);
       const img = G().has('obj:glimmer') ? G().get('obj:glimmer') : R.BattleFX.get('bulb');
       const fr = Array.isArray(img) ? img[Math.floor(t / 4) % img.length] : img;
-      const dy = t < 8 ? Math.round(8 * (1 - t / 8)) : 0;
-      G().draw(fr, x0 + 30 - 8, WIN_BOTTOM + 1 + dy, t < 8 ? { alpha: t / 8 } : undefined);
+      const bx = Math.round(r.head[0] - 8), by = Math.round(r.head[1] - 17 + (t < 6 ? 6 * (1 - t / 6) : 0));
+      G().draw(fr, bx, by, t < 6 ? { alpha: Math.max(0.15, t / 6) } : undefined);
+      if (t < 8) {
+        const cx = bx + 8, cy = by + 7, d = 8 + t, g = G(), c = g.ctx, a0 = c.globalAlpha;
+        c.globalAlpha = a0 * (1 - t / 8);
+        for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) for (let k = 0; k < 3; k++) g.rect(cx + sx * (d + k), cy + sy * (d + k), 1, 1, RAY_COL);
+        c.globalAlpha = a0;
+      }
     }
-    /** the tech-name banner: opens 6→12, stays until H, closes H→H+6 (§11.5.7) */
+    /** the tech-name banner: opens 8→14, stays until H, closes H→H+6 (§11.5.7) */
     drawBanner() {
       const gl = this.glim;
       if (!gl) return;
       const t = R.Engine.frame - gl.t0;
       let h;
-      if (t < 6) return;
-      if (t < 12) h = (BANNER.h * (t - 6)) / 6;
+      if (t < 8) return;
+      if (t < 14) h = (BANNER.h * (t - 8)) / 6;
       else if (t <= gl.H) h = BANNER.h;
       else if (t <= gl.H + 6) h = BANNER.h * (1 - (t - gl.H) / 6);
       else return;
       h = Math.round(h);
       if (h < 2) return;
-      const g = G(), w = gl.w, x = Math.round(128 - w / 2), cy = BANNER.y + BANNER.h / 2;
+      const g = G(), w = gl.w, x = Math.round(BANNER.cx - w / 2), cy = BANNER.y + BANNER.h / 2;
       const y = Math.round(cy - h / 2);
       if (h < 10) {
         const th = this.theme();
@@ -1303,7 +1866,7 @@
       const c = g.ctx;
       c.save();
       c.beginPath(); c.rect(x, y + 3, w, h - 6); c.clip();
-      g.text(gl.name, 128, BANNER.y + 8, { size: 16, align: 'center', color: gl.color, shadow: '#000' });
+      g.text(gl.name, BANNER.cx, BANNER.y + 8, { size: 16, align: 'center', color: gl.color, shadow: '#000' });
       c.restore();
       if (h >= BANNER.h - 4) titlePlate(x, BANNER.y, w, gl.title, gl.titleColor || g.C.white, this.theme());
     }
@@ -1313,7 +1876,7 @@
       if (!cd) return;
       const g = G(), C = g.C, F = R.Engine.frame, t = F - cd.t0;
       const sup = cd.grade === 'super';
-      const x = 44, y = sup ? 62 : CARD.y, w = 168, h = sup ? 46 : 30;
+      const x = CARD.x, y = sup ? CARD.y - 2 : CARD.y, w = CARD.w, h = sup ? 46 : 30;
       // pops open over 5 frames
       const k = Math.min(1, (t + 1) / 5);
       if (k < 1) {
@@ -1330,7 +1893,7 @@
       if (sup) g.text('ほかでは手に入らない一品', x + 14, y + 24, { color: '#c8c8d8' });
       if (sup) {
         // seven pink and white crosses round the card, radius 1–3, blinking on a 20-frame cycle
-        const P = [[x - 6, y + 8], [x + 30, y - 7], [x + 104, y - 8], [x + w + 5, y + 12], [x + w - 16, y + h + 6], [x + 58, y + h + 7], [x - 5, y + h - 6]];
+        const P = [[x + 4, y - 6], [x + 30, y - 7], [x + 104, y - 8], [x + w + 4, y + 12], [x + w - 16, y + h + 6], [x + 58, y + h + 7], [x + 2, y + h + 5]];
         P.forEach(([px, py], i) => {
           const q = (t + i * 7) % 20;
           const r = q < 10 ? 1 + Math.floor(q / 4) : Math.max(0, 3 - Math.floor((q - 10) / 3));
@@ -1338,41 +1901,56 @@
         });
       } else {
         // two white crosses left and right of the card
-        [[x - 7, y + h / 2], [x + w + 6, y + h / 2]].forEach(([px, py], i) => {
+        [[x + 3, y - 5], [x + w + 5, y + h / 2]].forEach(([px, py], i) => {
           const q = (t + i * 10) % 20;
           const r = q < 10 ? 1 + Math.floor(q / 4) : Math.max(0, 3 - Math.floor((q - 10) / 3));
           if (r > 0) R.BattleFX.twinkle(g, px, py, Math.min(3, r), '#ffffff', '#ffffff');
         });
       }
     }
+    /** the top window: the help / target strip while commands are entered, else the message window (only with text) */
+    drawTop() {
+      const p = this.panel;
+      const s = p && p.help ? p.help() : '';
+      if (s) {
+        const g = G();
+        g.window(HELP.x, HELP.y, HELP.w, HELP.h);
+        const color = (p.helpColor && p.helpColor()) || undefined;
+        const room = HELP.w - 16;
+        if (p.helpCenter) {
+          const w = Math.min(room, g.textWidth(s));
+          g.fitText(s, Math.round(HELP.x + (HELP.w - w) / 2), HELP.y + 4, room, { color });
+        } else g.fitText(s, HELP.x + 8, HELP.y + 4, room, { color });
+        return;
+      }
+      this.drawMsg();
+    }
     drawMsg() {
       const m = this.msg;
-      G().window(BOX.x, BOX.y, BOX.w, BOX.h);
+      if (!m.lines.length) return; // no text, no window: the field stays open (§11.5.5)
+      const box = this.msgBox;
+      G().window(box.x, box.y, box.w, box.h);
       let left = Math.floor(m.ch);
       m.lines.forEach((line, i) => {
         let s = line;
         if (i >= m.start) { s = line.slice(0, Math.max(0, left)); left -= line.length; }
-        G().text(s, BOX.x + 10, BOX.y + 7 + i * 14);
+        G().text(s, box.x + 10, box.y + 5 + i * 14);
       });
-      if (m.resolve && m.key && m.ch >= m.need && !this.locked) G().moreArrow(BOX.x + BOX.w / 2 - 3, BOX.y + BOX.h - 8);
+      if (m.resolve && m.key && m.ch >= m.need && !this.locked) G().moreArrow(box.x + box.w - 16, box.y + box.h - 9);
     }
-    drawPanel() {
+    /** the tech / spell / item list on the enemy side; closed while a target is chosen (§11.5.3) */
+    drawList() {
       const p = this.panel;
-      if (!p.left) this.drawMsg(); // a target choice with no list under it keeps the message window
-      if (p.enemies && p.left) this.drawEnemyList(ENEMY_WIN.x, ENEMY_WIN.y, ENEMY_WIN.w, ENEMY_WIN.h);
-      // help / target strip first: the command window's title tab may overlap its bottom border
-      if (p.help) {
-        const s = p.help();
-        if (s) {
-          G().window(HELP.x, HELP.y, HELP.w, HELP.h);
-          const color = (p.helpColor && p.helpColor()) || undefined;
-          if (p.helpCenter) {
-            const w = Math.min(HELP.w - 20, G().textWidth(s));
-            G().fitText(s, Math.round(HELP.x + (HELP.w - w) / 2), HELP.y + 4, HELP.w - 20, { color });
-          } else G().fitText(s, HELP.x + 10, HELP.y + 4, HELP.w - 20, { color });
-        }
-      }
-      if (p.left) p.left.draw({ showInactiveCursor: true });
+      if (!p || !p.left || p.left.y === CMD.y || p.hideList) return;
+      p.left.draw({ showInactiveCursor: true });
+    }
+    /** CMD: the party / member menu while commands are entered, else the enemy names (§11.5.4) */
+    drawCmd() {
+      const p = this.panel;
+      let drawn = false;
+      if (p && p.under) { p.under.draw({ showInactiveCursor: true }); drawn = true; }
+      if (p && p.left && p.left.y === CMD.y && !drawn) { p.left.draw({ showInactiveCursor: true }); drawn = true; }
+      if (!drawn) this.drawEnemyNames();
     }
     /** enemy names: one line per species group (golden ones apart), ≤ 4 lines (§11.5.4) */
     enemyGroups() {
@@ -1387,32 +1965,70 @@
       }
       return out;
     }
-    drawEnemyList(x, y, w, h) {
-      const g = G(), C = g.C;
-      g.window(x, y, w, h);
-      this.enemyGroups().slice(0, 4).forEach((gr, i) => {
-        const ty = y + 8 + i * 14;
-        const nw = Math.ceil(g.textWidth(String(gr.n)));
-        const color = gr.gold ? C.gold : gr.metal ? METAL_COL : C.white;
-        g.fitText(gr.name, x + 9, ty, w - 22 - nw, { color });
-        g.text(String(gr.n), x + 101, ty, { align: 'right', color });
+    drawEnemyNames() {
+      const g = G(), C = g.C, x = CMD.x, y = CMD.y;
+      g.window(x, y, CMD.w, CMD.h);
+      const gr = this.enemyGroups();
+      const lines = gr.length > 4 ? gr.slice(0, 3).concat([{ name: `ほか${gr.length - 3}組`, n: '', more: true }]) : gr;
+      lines.forEach((l, i) => {
+        const ty = y + 7 + i * 14;
+        const color = l.gold ? C.gold : l.metal ? METAL_COL : C.white;
+        g.fitText(l.name, x + 8, ty, l.more ? 74 : 64, { color });
+        if (!l.more) g.text(String(l.n), x + 82, ty, { align: 'right', color });
       });
     }
+    /** STATUS: one row per member — row tag, name, H / M / W (§11.5.2) */
+    drawStatus() {
+      const g = G(), C = g.C, F = R.Engine.frame;
+      const th = this.theme();
+      const fill2 = th.fill2 || th.fill;
+      const band = g.mix ? g.mix(th.fill, th.border, 0.16) : fill2;
+      const x = STATUS.x;
+      g.window(x, STATUS.y, STATUS.w, STATUS.h);
+      this.eng.party.slice(0, 4).forEach((p, i) => {
+        const y = STATUS.y + 7 + i * 14;
+        const f = this.winFx[i] || {};
+        const inputting = this.acting === p && this.panel && !this.inRound;
+        const picked = this.isPicked(p);
+        if (inputting || (picked && Math.floor(F / 10) % 3 !== 2)) g.rect(x + 3, y - 1, 152, 13, band);
+        if (f.glow > 0) {
+          const t = GLOW_FRAMES - f.glow;
+          const c = g.ctx, a0 = c.globalAlpha;
+          c.globalAlpha = a0 * 0.35 * (f.glow / GLOW_FRAMES);
+          g.rect(x + 3, y - 1, 152, 13, GLOW_FILL);
+          c.globalAlpha = a0;
+          if (t < 16 && Math.floor(t / 4) % 2 === 0) g.strokeRect(x + 3, y - 1, 152, 13, GLOW_EDGE);
+        }
+        const red = f.flash > 0 && Math.floor(f.flash / 3) % 2 === 0;
+        const col = red ? C.red : p.hp <= 0 ? C.dead : p.hp < p.mhp * 0.25 ? C.yellow : C.white;
+        const mid = this.rowOf(p) === 'middle';
+        g.rect(x + SCOL.tag, y + 1, 12, 11, fill2);
+        g.text(mid ? '中' : '前', x + SCOL.tag + 1, y, { color: mid ? C.cyan : C.orange });
+        g.fitText(p.name, x + SCOL.name, y, SCOL.nameW, { color: col });
+        g.text('H', x + SCOL.h, y, { color: col });
+        g.text(String(p.hp), x + SCOL.hp, y, { color: col, align: 'right' });
+        g.text('M', x + SCOL.m, y, { color: col });
+        g.text(String(p.mp), x + SCOL.mp, y, { color: col, align: 'right' });
+        g.text('W', x + SCOL.w, y, { color: col });
+        g.text(String(wpOf(p)), x + SCOL.wp, y, { color: col, align: 'right' });
+      });
+    }
+    /** オート・リピート: the badge on CMD's top border (§11.5.11) */
     drawAuto() {
       if (!this.auto && !this.repeating) return;
+      const g = G();
       const cancel = this.auto ? this.autoCancel : this.repeatCancel;
       const name = this.auto ? 'オート' : 'リピート';
       const s = cancel ? name + '解除' : name + '　Bで解除';
-      const w = Math.ceil(G().textWidth(s)) + 16;
-      G().window(BOX.x + BOX.w - w, BOX.y - 20, w, 20);
-      G().text(s, BOX.x + BOX.w - w + 8, BOX.y - 16, { color: cancel ? G().C.yellow : G().C.white });
+      const tw = Math.min(80, Math.ceil(g.textWidth(s)));
+      g.rect(CMD.x + 2, CMD.y - 3, tw + 4, 8, this.theme().fill);
+      g.fitText(s, CMD.x + 4, CMD.y - 3, 80, { color: cancel ? g.C.yellow : g.C.white });
     }
   }
 
   /**
-   * one row of a 2-column battle list (techs / spells / items): the name squeezed into
-   * colW − 16 − width(cost) (= 77 px for 'W12', §11.5.3), the cost right-aligned 13 px before the
-   * next column so it never touches that column's cursor
+   * one row of the one-column battle list (techs / spells / items): the name in ≈ 124 px (8 characters fit unsqueezed,
+   * §11.5.3), the cost right-aligned at the right edge
    */
   function drawListItem(it, x, y, w) {
     const g = G(), colW = w + 4;
@@ -1421,8 +2037,9 @@
     const color = (typeof it === 'object' && it.color) || (dis ? g.C.gray : g.C.white);
     const right = typeof it === 'object' && it.right != null && it.right !== '' ? String(it.right) : null;
     if (right) {
-      g.fitText(label, x, y, colW - 16 - g.textWidth(right), { color });
-      g.text(right, x + colW - 13, y, { color, align: 'right' });
+      const rw = g.textWidth(right);
+      g.fitText(label, x, y, colW - 10 - rw, { color });
+      g.text(right, x + colW - 6, y, { color, align: 'right' });
     } else g.fitText(label, x, y, colW - 8, { color });
   }
   /** title plate on a window's top border in a given colour (Gfx.window only draws white titles) */
@@ -1449,7 +2066,7 @@
       if (lv >= 10) { title = '極意'; color = C.super; titleColor = C.super; } else if (lv === 9) { title = '奥義'; color = C.gold; titleColor = C.gold; }
     }
     const tw = Math.ceil(G().textWidth(name, 16));
-    const w = Math.max(128, tw + 40);
+    const w = Math.min(168, Math.max(128, tw + 40));
     return { name, title, color, titleColor, w };
   }
 
@@ -1461,14 +2078,6 @@
     for (let i = 0; i < 5; i++) g.rect(cx - 5 + i, y + i, 11 - i * 2, 1, '#000000');
     g.rect(cx, y + 5, 1, 1, '#000000');
     for (let i = 0; i < 5; i++) g.rect(cx - 4 + i, y + i, 9 - i * 2, 1, '#ffffff');
-  }
-  /** ▲ whose tip is at (cx, y) */
-  function upArrow(cx, y) {
-    const g = G();
-    g.rect(cx, y - 1, 1, 1, '#000000');
-    for (let i = 0; i < 5; i++) g.rect(cx - i - 1, y + i, i * 2 + 3, 1, '#000000');
-    g.rect(cx - 5, y + 5, 11, 1, '#000000');
-    for (let i = 0; i < 5; i++) g.rect(cx - i, y + i, i * 2 + 1, 1, '#ffffff');
   }
   /** ▶ whose tip is at (x + 4, cy) */
   function rightArrow(x, cy) {
@@ -1622,7 +2231,9 @@
 
   Object.assign(B, {
     start, prepare, setupBattle, Scene: BattleScene, current: null, last: B.last || null,
-    WIN, WIN_BOTTOM, HELP, BOX, GROUND, BANNER, CARD, ENEMY_WIN,
-    ui: { itemLabel, itemColor, iconKey, bannerOf, helpLine, WHY },
+    LAYOUT, STATUS_COLS: SCOL, enemyLayout: (list, sizeOf) => enemyLayout(list || [], sizeOf),
+    HELP, BANNER, CARD,
+    WIN, WIN_BOTTOM, BOX, GROUND, // legacy (front view): values unchanged for other owners' tools (§11.5.1)
+    ui: { itemLabel, itemColor, iconKey, bannerOf, helpLine, WHY, battlerSheet, fallbackSheet, wtypeOf, familyOf, BAT_FALLBACK },
   });
 })(window.RPG);

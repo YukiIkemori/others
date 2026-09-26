@@ -1,4 +1,4 @@
-// Battle UI fixture (bui A3): a battle stage for screenshots without the rest of the game.
+// Battle UI fixture (SV-SCENE, was bui A3): a battle stage for screenshots without the rest of the game (Part A8 side view).
 // Loaded after src/ by `node tools/build.js --with tools/fixtures/bui` (→ debug_bui.html) and by
 // tools/test_bui.js in node. Real data (DB.*), rules and art are used whenever they are there; the few
 // things a screenshot needs that the data does not have (an 8-character tech name) are fixture entries
@@ -135,6 +135,8 @@
       R.Input._set(b, true); await api.step(hold || 1);
       R.Input._set(b, false); await api.step(1);
     },
+    /** step until fn() is true (at most max frames); returns the frames waited or −1 */
+    async until(fn, max) { for (let i = 0; i < (max || 600); i++) { if (fn()) return i; await api.step(1); } return -1; },
     async keys(list) { for (const k of list.split(',').map((s) => s.trim()).filter(Boolean)) { if (/^\d+$/.test(k)) await api.step(+k); else await api.press(k); } },
     shots: [],
     shot(label) {
@@ -176,9 +178,9 @@
     const S = BUI.open({ mons: std(), tweak: worst });
     await atCommands(S);
     await a.step(30); a.shot('party_menu');
-    a.zoom('zoom_windows_right', 128, 0, 128, 60, 2);
-    await a.keys('right'); await a.step(2); a.shot('party_menu_repeat_gray');
-    await a.keys('left,a'); await a.step(4); a.shot('member_menu_hero');
+    a.zoom('zoom_status', 92, 150, 162, 72, 2);
+    await a.keys('down'); await a.step(2); a.shot('party_menu_repeat_gray');
+    await a.keys('up,a'); await a.step(4); a.shot('member_menu_hero');
     await a.step(60); a.shot('member_menu_icons_page2');
   };
   SC.member = async (a) => {
@@ -193,7 +195,7 @@
     S.acting = u;
     S.weaponMenu(u, R.Rules.commands(u.c)[0]); await a.step(4); a.shot('tech_list');
     await a.keys('up,right'); await a.step(4); a.shot('tech_list_8char_wp_short');
-    a.zoom('zoom_tech_list', 8, 150, 240, 68, 2);
+    a.zoom('zoom_tech_list', 2, 56, 174, 96, 2);
     await a.keys('left'); await a.step(4); a.shot('tech_list_w7_ok');
   };
   SC.reach = async (a) => {
@@ -355,7 +357,7 @@
       S.fxList = [];
       const u = fromParty ? S.eng.party[1] : S.eng.mons[0];
       const t = fromParty ? S.eng.mons.slice(0, id === 'stance' ? 0 : 1) : [S.eng.party[0]];
-      const h = R.BattleFX.play(S, id, { user: S.rectOf(u), targets: t.map((x) => S.rectOf(x)), ab: null, kind: 'ability' });
+      const h = R.BattleFX.play(S, id, { user: S.rectOf(u), targets: t.map((x) => S.rectOf(x)), ab: null, kind: 'ability', dir: fromParty ? (t.length ? -1 : 0) : 1 });
       // fx instances run at the battle speed: impact after h / spd real frames
       const imp = Math.max(2, Math.ceil(h / S.spd));
       const f1 = Math.max(1, Math.round(imp * 0.45));
@@ -417,12 +419,12 @@
     for (let i = 0; i < 60 && !S.eng.round; i++) { await a.press('a'); await a.step(1); if (i === 2) a.shot('real_member_menu'); }
     await a.step(50); a.shot('real_round1');
     for (let i = 0; i < 900 && !menu(); i++) await a.step(1);
-    await a.press('right'); a.shot('real_repeat_help');
+    await a.press('down'); a.shot('real_repeat_help');
     await a.press('a'); await a.step(60); a.shot('real_repeating');
     for (let i = 0; i < 3000 && !BUI.result; i++) {
       await a.step(1);
       if (S.paged && S.msg.key && !a.rewardsShot) { a.rewardsShot = true; a.shot('real_rewards'); }
-      if (menu()) { await a.press('right'); await a.press('a'); }
+      if (menu()) { await a.press('down'); await a.press('a'); }
       else if (S.msg.key) await a.press('a');
     }
     a.rewardsShot = false;
@@ -455,6 +457,218 @@
     S.play(S.eng.rewards());
     await a.step(80); a.shot('rewards');
     await a.press('a'); await a.step(60); a.shot('levelup');
+  };
+
+  // ================================================================ side view (Part A8, §11.5.17)
+  const weaponOf = (wtype) => {
+    const ids = Object.keys(DB.items).filter((id) => DB.items[id].type === 'weapon' && DB.items[id].wtype === wtype);
+    return ids.find((id) => !DB.items[id].grade || DB.items[id].grade === 'normal') || ids[0] || null;
+  };
+  const arm = (c, wtype) => { const id = weaponOf(wtype); if (id) { c.equip.weapon1 = id; c.equip.weapon2 = null; } };
+  const five = () => [{ id: 'goblin_2' }, { id: 'wolf_2' }, { id: 'goblin_2' }, { id: 'bat_1' }, { id: 'jelly_1' }];
+  /** size of a boss sprite without forcing the ones still being drawn (their factory throws) */
+  const bossSize = (id) => {
+    const k = 'mon:' + (DB.monsters[id].sprite || id);
+    let im = null;
+    if (k in G()._cache) im = G()._cache[k];
+    else { const f = G()._defs[k]; if (!f) return null; try { im = f(); G()._cache[k] = im; } catch (e) { return null; } }
+    if (Array.isArray(im)) im = im[0];
+    return im ? { id, w: im.width, h: im.height } : null;
+  };
+  /** one round of the scripted engine with these party commands; resolves after everyone is home */
+  function round(S, cmds) {
+    S.roundCmds = cmds; S.inRound = true;
+    BUI.roundDone = false;
+    return S.play(S.eng.playRound(cmds)).then(() => S.settle()).then(() => { S.inRound = false; BUI.roundDone = true; });
+  }
+  SC.sv_normal = async (a) => {
+    // grass, five small monsters, four members (front 2 / middle 2); the member entering commands steps forward
+    const S = BUI.open({ mons: five(), bg: 'grass' });
+    await atCommands(S); await a.step(20); a.shot('party_menu');
+    await a.keys('a'); await a.step(12); a.shot('member_step');
+    await a.keys('a,a'); await a.step(12); a.shot('member_second');
+  };
+  SC.sv_boss = async (a) => {
+    const list = P().bosses.map(bossSize).filter((x) => x && x.w <= 160).sort((x, y) => y.h - x.h);
+    const tall = list.find((x) => x.h >= 112) || list[0];
+    const S = BUI.open({ mons: [{ id: tall.id }], bg: 'castle' });
+    await atCommands(S); await a.step(10); a.shot('boss_' + tall.h);
+    const mid = list.find((x) => x.w >= 96 && x.w <= 136 && x.h >= 80) || list[1];
+    BUI.open({ mons: [{ id: mid.id }, { id: 'goblin_2' }, { id: 'goblin_2' }], bg: 'cave' });
+    await a.step(10); a.shot('boss_and_two');
+    // the party runs up to the boss and strikes
+    const S3 = BUI.open({ mons: [{ id: tall.id }], bg: 'castle', script: { monsIdle: true } });
+    const v = S3.pv(S3.eng.party[0]);
+    const cmds = []; cmds[0] = { type: 'attack', slot: 'weapon1', target: S3.eng.mons[0] };
+    round(S3, cmds);
+    await a.until(() => v.act && v.act.fi >= 1, 400); await a.step(3); a.shot('boss_melee');
+    void S;
+  };
+  async function glimShots(a, id, label, idx) {
+    const S = BUI.open({ mons: five() });
+    const u = S.eng.party[idx || 0];
+    (async () => { await S.handle({ t: 'glimmer', u, id, kind: DB.actions[id].kind }); await S.handle({ t: 'msg', text: `${u.name}は${DB.actions[id].name}を閃いた！` }); })();
+    await a.step(3); a.shot(label + '_f3');
+    await a.step(9); a.shot(label + '_f12');
+    await a.step(20); a.shot(label + '_f32');
+  }
+  SC.sv_glimmer = async (a) => {
+    await glimShots(a, P().tech, 'tech', 1);
+    await glimShots(a, P().oogi, 'oogi', 0);
+    await glimShots(a, P().combo, 'combo', 3);
+  };
+  SC.sv_cast = async (a) => {
+    // マルタ casts: frame 1 of cast with the magic circle, the fire ball flying from the cast point, the heal spell
+    const fire = DB.actions.s_fire_1 ? 's_fire_1' : P().spell;
+    let S = BUI.open({ mons: five(), script: { monsIdle: true } });
+    let v = S.pv(S.eng.party[3]);
+    let cmds = []; cmds[3] = { type: 'spell', id: fire, target: S.eng.mons[1] };
+    round(S, cmds);
+    await a.until(() => v.act && v.act.pose === 'cast' && v.act.fi === 1, 400); await a.step(4); a.shot('cast_circle');
+    await a.until(() => v.act && v.act.fi === 2, 100); await a.step(4); a.shot('cast_fireball');
+    await a.step(8); a.shot('cast_hit');
+    const heal = DB.actions.s_light_1 ? 's_light_1' : P().spell;
+    S = BUI.open({ mons: five(), script: { monsIdle: true }, tweak: (p) => { p[0].hp = 40; } });
+    v = S.pv(S.eng.party[3]);
+    cmds = []; cmds[3] = { type: 'spell', id: heal, target: S.eng.party[0] };
+    round(S, cmds);
+    await a.until(() => v.act && v.act.fi === 2, 400); await a.step(8); a.shot('cast_heal');
+    // a combination spell with its fx array
+    S = BUI.open({ mons: five(), script: { monsIdle: true } });
+    v = S.pv(S.eng.party[3]);
+    cmds = []; cmds[3] = { type: 'spell', id: P().combo, target: S.eng.mons[0] };
+    round(S, cmds);
+    await a.until(() => v.act && v.act.fi === 2, 400); await a.step(10); a.shot('cast_combo');
+  };
+  async function meleeShots(a, wtype) {
+    const S = BUI.open({ mons: five(), script: { monsIdle: true }, tweak: (p) => { arm(p[0], wtype); p[0].row = 'front'; } });
+    const v = S.pv(S.eng.party[0]);
+    const cmds = []; cmds[0] = { type: 'attack', slot: 'weapon1', target: S.eng.mons[1] };
+    round(S, cmds);
+    await a.until(() => v.move && !v.move.arc && v.move.t > v.move.n * 0.5, 400); a.shot(wtype + '_1run');
+    await a.until(() => v.act && v.act.fi === 1, 200); a.shot(wtype + '_2swing');
+    await a.step(4); a.shot(wtype + '_3hit');
+    await a.until(() => v.move && v.move.arc && v.move.t > 3, 600); a.shot(wtype + '_4back');
+    await a.until(() => BUI.roundDone, 300);
+  }
+  SC.sv_melee = async (a) => { for (const w of ['sword', 'spear', 'axe', 'fist', 'whip']) await meleeShots(a, w); };
+  SC.sv_bow = async (a) => {
+    const S = BUI.open({ mons: five(), script: { monsIdle: true }, tweak: (p) => { arm(p[2], 'bow'); } });
+    const v = S.pv(S.eng.party[2]);
+    const cmds = []; cmds[2] = { type: 'attack', slot: 'weapon1', target: S.eng.mons[0] };
+    round(S, cmds);
+    await a.until(() => v.act && v.act.pose === 'shoot' && v.act.fi === 1, 400); a.shot('bow_draw');
+    await a.until(() => v.act && v.act.fi === 2, 100); await a.step(3); a.shot('bow_arrow');
+    await a.step(6); a.shot('bow_hit');
+  };
+  SC.sv_enemy_attack = async (a) => {
+    const S = BUI.open({ mons: [{ id: 'wolf_2' }, { id: 'goblin_2' }], script: { monDamage: 37 } });
+    const v = S.pv(S.eng.party[0]), m = S.vis.get(S.eng.mons[0]);
+    round(S, []);
+    await a.until(() => m.lunge > 0, 400); await a.step(3); a.shot('lunge');
+    await a.until(() => v.tmp && v.tmp.pose === 'hit', 200); await a.step(3); a.shot('recoil');
+    const small = P().bosses.map(bossSize).filter((x) => x && x.w <= 160 && x.h <= 100)[0];
+    const S2 = BUI.open({ mons: [{ id: small ? small.id : 'wolf_2' }], bg: 'cave' });
+    S2.playFx({ t: 'fx', fx: 'breath_fire', user: S2.eng.mons[0], targets: S2.eng.party.slice(), kind: 'ability' });
+    await a.step(18); a.shot('breath');
+  };
+  SC.sv_victory = async (a) => {
+    const S = BUI.open({ mons: five(), tweak: (p) => { p[1].hp = 20; } });
+    for (const m of S.eng.mons) m.hp = 0;
+    S.handle({ t: 'victory' });
+    await a.step(14); a.shot('victory');
+    await a.step(12); a.shot('victory_b');
+    if (typeof document === 'undefined') return;
+    // the 30 looks in their victory pose (frame 0) on the grass backdrop
+    R.Engine.render();
+    const g = G();
+    const bg = g.has('bbg:grass') ? g.get('bbg:grass') : null;
+    g.clear('#000'); if (bg) { g.draw(bg, 0, 0); g.draw(bg, 0, 144, { sx: 0, sy: 143, sw: 256, sh: 1, w: 256, h: 80 }); }
+    const ids = (R.Art && R.Art.Chars && R.Art.Chars.PARTY_IDS) || [];
+    ids.forEach((id, i) => {
+      const sh = R.Battle.ui.battlerSheet(id);
+      const f = sh.poses.victory.frames[0];
+      const x = 13 + (i % 10) * 25, y = 70 + Math.floor(i / 10) * 60;
+      if (f.img) g.draw(f.img, x - 24, y - 39);
+      g.text(String(i + 1), x - 3, y + 2, { color: '#fff', shadow: '#000', size: 8 });
+    });
+    api.shots.push({ label: 'victory_all30', data: g.canvas.toDataURL('image/png') });
+  };
+  SC.sv_middle = async (a) => {
+    BUI.open({ mons: five() });
+    await a.step(4); a.shot('middle_two');
+    BUI.open({ mons: five(), tweak: (p) => { p[0].row = 'front'; p[1].row = 'middle'; p[2].row = 'middle'; p[3].row = 'middle'; } });
+    await a.step(4); a.shot('middle_three');
+    // the front row falls: the middle row counts as the front and steps up at the next round
+    const S = BUI.open({ mons: five() });
+    await a.step(2);
+    S.eng.party[0].hp = 0; S.eng.party[3].hp = 0;
+    await a.step(2); a.shot('front_fallen');
+    S.updateHomes(false); await a.step(3); a.shot('middle_stepping_up');
+    await a.step(12); a.shot('middle_up');
+  };
+  SC.sv_weak_ko = async (a) => {
+    BUI.open({ mons: five(), tweak: (p) => { p[0].hp = 30; p[1].hp = 0; p[2].status = { sleep: true }; p[3].status = { freeze: true }; } });
+    await a.step(4); a.shot('weak_ko_sleep_freeze');
+    await a.step(20); a.shot('weak_ko_b');
+    a.zoom('zoom_party', 160, 60, 96, 92, 2);
+  };
+  SC.sv_lists = async (a) => {
+    const S = BUI.open({ mons: five(), tweak: (p) => { p[0].wp = 7; } });
+    S.commandPhase();
+    await a.step(2); await a.keys('a'); await a.step(4); // 戦う → the hero's menu (steps forward)
+    await a.keys('a'); await a.step(8); a.shot('tech_list');
+    await a.keys('up'); await a.step(4); a.shot('tech_list_8char_wp_short');
+    await a.keys('down,down'); await a.step(2); await a.keys('a'); await a.step(4); a.shot('target_enemy');
+    await a.keys('down'); await a.step(4); a.shot('target_enemy_row');
+    await a.keys('b'); await a.step(4); a.shot('list_back');
+    const S2 = BUI.open({ mons: five() });
+    S2.acting = S2.eng.party[3];
+    S2.pickTarget(S2.eng.party[3], 'ally'); await a.step(4); a.shot('target_ally');
+    await a.keys('b'); await a.step(2);
+    S2.pickTarget(S2.eng.party[3], 'enemies'); await a.step(4); a.shot('target_all');
+    await a.keys('b'); await a.step(2);
+    S2.pickTarget(S2.eng.party[3], 'allies'); await a.step(4); a.shot('target_allies');
+  };
+  SC.sv_many = async (a) => {
+    BUI.open({ mons: ['bat_1', 'bat_1', 'bat_1', 'jelly_1', 'jelly_1', 'jelly_1', 'rat_1', 'rat_1'].map((id) => ({ id })) });
+    await a.step(4); a.shot('eight_32');
+    BUI.open({ mons: ['goblin_2', 'wolf_2', 'goblin_2', 'wolf_2', 'goblin_2'].map((id) => ({ id })) });
+    await a.step(4); a.shot('five_48');
+    const S = BUI.open({ mons: [{ id: 'goblin_2' }, { id: 'goblin_2' }] });
+    const eng = S.eng;
+    const Mon = Object.getPrototypeOf(eng.mons[0]).constructor;
+    eng.mons.push(new Mon({ id: 'goblin_2' }, 2), new Mon({ id: 'goblin_2' }, 3));
+    eng.relabel();
+    S.handle({ t: 'summon', units: [2, 3] });
+    await a.step(4); a.shot('summon_slide');
+    await a.step(16); a.shot('summon_done');
+  };
+  SC.sv_worst = async (a) => {
+    const S = BUI.open({ mons: five(), tweak: worst });
+    await atCommands(S); await a.keys('a'); await a.step(12); a.shot('worst');
+    a.zoom('zoom_status', 92, 150, 162, 72, 2);
+  };
+  SC.sv_auto = async (a) => {
+    let S = BUI.open({ mons: five(), script: { monDamage: 1, partyDamage: 1 } });
+    S.auto = true; // (the scripted engine has no party AI: the round is given its commands)
+    round(S, S.eng.party.map(() => ({ type: 'attack', slot: 'weapon1', target: S.eng.mons[0] })));
+    await a.step(30); a.shot('auto_on');
+    S.autoCancel = true; await a.step(2); a.shot('auto_cancel');
+    S = BUI.open({ mons: five(), script: { monDamage: 1, partyDamage: 1 } });
+    S.lastCmds = S.eng.party.map(() => ({ type: 'attack', slot: 'weapon1', target: S.eng.mons[0] }));
+    S.repeating = true;
+    (async () => { const c = await S.commandPhase(); await round(S, c); })();
+    await a.step(30); a.shot('repeat_on');
+    S.repeatCancel = true; await a.step(2); a.shot('repeat_cancel');
+  };
+  SC.sv_escape = async (a) => {
+    const S = BUI.open({ mons: five() });
+    S.handle({ t: 'escape', ok: true });
+    await a.step(10); a.shot('escape_run');
+    const S2 = BUI.open({ mons: five(), noEscape: true });
+    S2.handle({ t: 'escape', ok: false }); await a.step(4); a.shot('escape_fail');
+    void S;
   };
 
   BUI.run = async function (name) {

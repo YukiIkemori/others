@@ -67,9 +67,9 @@
         ev.player.face('up');
         await ev.wait(16);
       }
-      await ev.say(say('fine', 'ベルナさん。\nあなたの弟子の物語を、\n聞いてくれる？'));
-      await ev.say(say('berna', 'そちらのお嬢さんは……\nどこかで……。'));
-      await ev.say(say('fine', '……いいの。わたしのことは、\nいつか思い出してくれれば。'));
+      await ev.say(say('fine', 'ベルナさん。\nあなたの弟子の物語を、\n聞いてくれる？'), { voice: 'v_fine_roa_01' });
+      await ev.say(say('berna', 'そちらのお嬢さんは……\nどこかで……。'), { voice: 'v_berna_roa_01' });
+      await ev.say(say('fine', '……いいの。わたしのことは、\nいつか思い出してくれれば。'), { voice: 'v_fine_roa_02' });
       ev.closeMessage();
       ev.bgm('shrine');
       await ev.say('フィーネは、八枚のページを\n一枚ずつ読み上げた。');
@@ -83,11 +83,11 @@
       ev.bgm('home');
       if (berna) { berna.face('down'); await ev.wait(10); }
       await ev.say(say('berna', '……{hero}……！\nああ、どうして\n忘れていたのかしら。'));
-      await ev.say(say('berna', 'おかえり。……よく、\nここまで書いたね。'));
+      await ev.say(say('berna', 'おかえり。……よく、\nここまで書いたね。'), { voice: 'v_berna_roa_02' });
       ev.setFlag('st_berna_forgot');
       // 4. the way on
-      await ev.say(say('berna', '始まりの年代記は、\nビブリアの大書庫の頂にある。\nわたしの師匠が、\nそう言っていた。'));
-      await ev.say(say('rowell', '島へは、ファロスの港から\n船を出させる。……おれも行く。'));
+      await ev.say(say('berna', '始まりの年代記は、\nビブリアの大書庫の頂にある。\nわたしの師匠が、\nそう言っていた。'), { voice: 'v_berna_roa_03' });
+      await ev.say(say('rowell', '島へは、ファロスの港から\n船を出させる。……おれも行く。'), { voice: 'v_rowell_roa_01' });
       ev.closeMessage();
       // 5. the pages' light clears the fog of the inner sea
       if (rowell) rowell.face('right');
@@ -100,12 +100,12 @@
       ev.refresh();
       // 6. the master's parting gift
       if (!ev.flag('roa_berna_gift')) {
-        await ev.say(say('berna', 'これを持ってお行き。\nわたしが若いころ、師匠から\nもらった首飾りだよ。'));
+        await ev.say(say('berna', 'これを持ってお行き。\nわたしが若いころ、師匠から\nもらった首飾りだよ。'), { voice: 'v_berna_roa_04' });
         await ev.give('ac_berna_charm');
         ev.setFlag('roa_berna_gift');
       }
       await ev.say(say('berna', '行っておいで、{hero}。\n今度こそ、ちゃんと\n覚えているからね。'));
-      await ev.say(say('fine', '……先に、島で待っているわ。'));
+      await ev.say(say('fine', '……先に、島で待っているわ。'), { voice: 'v_fine_roa_03' });
       ev.closeMessage();
       if (staged) {
         ev.sfx('magic');
@@ -113,7 +113,7 @@
         fine.hide();
         await ev.wait(16);
       }
-      await ev.say(say('rowell', 'おれは先に港へ行って、\n船を用意させておく。\nファロスで会おう。'));
+      await ev.say(say('rowell', 'おれは先に港へ行って、\n船を用意させておく。\nファロスで会おう。'), { voice: 'v_rowell_roa_02' });
       ev.closeMessage();
       if (staged) {
         rowell.face('right');

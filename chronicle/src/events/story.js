@@ -63,8 +63,8 @@
     ev.bgm();
     await ev.say('手紙をたたむと、\n宿の前に、灰色のマントの\n少女が立っていた。');
     await visit(ev, 'st_fine', async () => {
-      await ev.say(say('fine', '一つ目……。\nあと、七つね。'));
-      await ev.say(say('fine', 'わたし？　ただの、\n通りすがりよ。'));
+      await ev.say(say('fine', '一つ目……。\nあと、七つね。'), { voice: 'v_fine_t1_01' });
+      await ev.say(say('fine', 'わたし？　ただの、\n通りすがりよ。'), { voice: 'v_fine_t1_02' });
     }, { vanish: true });
     await ev.say('少女の姿は、朝の光の中に\n溶けるように消えた。');
   }
@@ -74,20 +74,20 @@
     let won = false;
     await visit(ev, 'st_rival', async () => {
       ev.bgm('tension');
-      await ev.say('また会ったな、語り部。');
-      await ev.say('伝承を言いふらして回るのは、\nもうやめろ。記録院が写して\n保管すれば、それで十分だ。');
-      await ev.say('口で言っても分からない\nなら、力ずくで止める。');
+      await ev.say('また会ったな、語り部。', { voice: 'v_rowell_t2_01' });
+      await ev.say('伝承を言いふらして回るのは、\nもうやめろ。記録院が写して\n保管すれば、それで十分だ。', { voice: 'v_rowell_t2_02' });
+      await ev.say('口で言っても分からない\nなら、力ずくで止める。', { voice: 'v_rowell_t2_03' });
       won = await rivalFight(ev, 'tr_b_rowell1');
       ev.setFlag('st_rival_duel1');
       if (won) {
-        await ev.say('……くっ。その筆、\nまぐれではないようだな。');
-        await ev.say('覚えておけ。伝承は、\n人を縛る鎖にもなる。');
+        await ev.say('……くっ。その筆、\nまぐれではないようだな。', { voice: 'v_rowell_t2_04' });
+        await ev.say('覚えておけ。伝承は、\n人を縛る鎖にもなる。', { voice: 'v_rowell_t2_05' });
         ev.setFlag('st_rival_won1');
         await ev.say('ロウェルは、銀の筆を\n投げてよこした。');
         await ev.give('ac_rival_pen');
-        await ev.say('受け取っておけ。\n借りを作るのは好かない。');
+        await ev.say('受け取っておけ。\n借りを作るのは好かない。', { voice: 'v_rowell_t2_06' });
       } else {
-        await ev.say('これが力の差だ。\n……頭を冷やせ、語り部。');
+        await ev.say('これが力の差だ。\n……頭を冷やせ、語り部。', { voice: 'v_rowell_t2_07' });
       }
     });
     ev.heal();
@@ -104,8 +104,8 @@
     await ev.say('手紙の字は、ところどころ\n乱れていた。');
     ev.bgm();
     await visit(ev, 'st_fine', async () => {
-      await ev.say(say('fine', '三つ目。よくやったわ。'));
-      await ev.say(say('fine', '……わたしはフィーネ。\n名前くらいは、覚えておいて。'));
+      await ev.say(say('fine', '三つ目。よくやったわ。'), { voice: 'v_fine_t3_01' });
+      await ev.say(say('fine', '……わたしはフィーネ。\n名前くらいは、覚えておいて。'), { voice: 'v_fine_t3_02' });
       ev.setFlag('st_t3');
       ev.closeMessage();
       await ev.caption('フィーネの指先が、\nかすかに透けて見えた。');
@@ -122,9 +122,9 @@
       await ev.say(say('scribe', '従わぬ者は、記録院の敵と\nみなす！'));
     });
     await visit(ev, 'st_rival', async () => {
-      if (ev.flag('st_rival_won1')) await ev.say(say('rowell', '……また会ったな。\nこの前の借りは、まだ\n返していないぞ。'));
-      await ev.say(say('rowell', '……聞いたか。\n院長は本気だ。'));
-      await ev.say(say('rowell', '院長は、悲しみのない世界を\n作ろうとしている。\nおまえには分からないだろうが。'));
+      if (ev.flag('st_rival_won1')) await ev.say(say('rowell', '……また会ったな。\nこの前の借りは、まだ\n返していないぞ。'), { voice: 'v_rowell_t4_01' });
+      await ev.say(say('rowell', '……聞いたか。\n院長は本気だ。'), { voice: 'v_rowell_t4_02' });
+      await ev.say(say('rowell', '院長は、悲しみのない世界を\n作ろうとしている。\nおまえには分からないだろうが。'), { voice: 'v_rowell_t4_03' });
     });
     ev.bgm();
     await ev.caption('内海の白い霧が、\nいっそう濃くなったという。');
@@ -135,18 +135,18 @@
     let won = false;
     await visit(ev, 'st_rival', async () => {
       ev.bgm('tension');
-      if (ev.flag('st_rival_won1')) await ev.say(say('rowell', '今度は、まぐれとは言わせない。'));
-      await ev.say(say('rowell', 'なぜだ……。おまえが語り直した\n伝承は、また人の口にのぼる。'));
-      await ev.say(say('rowell', 'それが争いの種になると、\nなぜ分からない！'));
+      if (ev.flag('st_rival_won1')) await ev.say(say('rowell', '今度は、まぐれとは言わせない。'), { voice: 'v_rowell_t5_01' });
+      await ev.say(say('rowell', 'なぜだ……。おまえが語り直した\n伝承は、また人の口にのぼる。'), { voice: 'v_rowell_t5_02' });
+      await ev.say(say('rowell', 'それが争いの種になると、\nなぜ分からない！'), { voice: 'v_rowell_t5_03' });
       won = await rivalFight(ev, 'tr_b_rowell2');
       ev.setFlag('st_rival_duel2');
       if (won) {
-        await ev.say(say('rowell', '……おれは……本当に、\n正しいのか……。'));
+        await ev.say(say('rowell', '……おれは……本当に、\n正しいのか……。'), { voice: 'v_rowell_t5_04' });
         ev.setFlag('st_rival_won2');
         await ev.say('ロウェルは、傷だらけの\n手甲を外して、足元に置いた。');
         await ev.give('hn_rival_bracer');
       } else {
-        await ev.say(say('rowell', '……勝ったのに、どうしてだ。\n少しも、すっきりしない。'));
+        await ev.say(say('rowell', '……勝ったのに、どうしてだ。\n少しも、すっきりしない。'), { voice: 'v_rowell_t5_05' });
       }
     });
     ev.heal();
@@ -162,9 +162,9 @@
   async function t6(ev) {
     ev.bgm('sorrow');
     await visit(ev, 'st_fine', async () => {
-      await ev.say('六つ目……。');
+      await ev.say('六つ目……。', { voice: 'v_fine_t6_01' });
       await ev.say('{hero}。ロアの里へ、\n帰ってあげて。');
-      await ev.say('あなたの師匠は、もう……。');
+      await ev.say('あなたの師匠は、もう……。', { voice: 'v_fine_t6_02' });
       ev.closeMessage();
       await ev.caption('フィーネの足元は、\nもう半分ほど透けていた。');
     }, { vanish: true, sprite: 'npc:fine_fade' });
@@ -177,15 +177,15 @@
     ev.bgm('tension');
     await ev.say('宿の前に、傷を負った\nロウェルが倒れこんできた！');
     await visit(ev, 'st_rival', async () => {
-      await ev.say('……待ってくれ。話がある。');
-      if (ev.flag('st_rival_won2')) await ev.say('おまえに負けてから、ずっと\n考えていた。……答えが出た。');
-      await ev.say('院長は、白の書に伝承を写すと、\nその伝承が人の心から消えると\n知っていた。');
-      await ev.say('知っていて、おれたちに\n写させていたんだ。');
-      await ev.say('おれは、自分の母の顔を\n思い出せない。自分の日記を、\n白の書に写したからだ。');
-      await ev.say('これを持っていけ。大書庫の\n封印の扉を開ける言葉が\n書いてある。');
+      await ev.say('……待ってくれ。話がある。', { voice: 'v_rowell_t7_01' });
+      if (ev.flag('st_rival_won2')) await ev.say('おまえに負けてから、ずっと\n考えていた。……答えが出た。', { voice: 'v_rowell_t7_02' });
+      await ev.say('院長は、白の書に伝承を写すと、\nその伝承が人の心から消えると\n知っていた。', { voice: 'v_rowell_t7_03' });
+      await ev.say('知っていて、おれたちに\n写させていたんだ。', { voice: 'v_rowell_t7_04' });
+      await ev.say('おれは、自分の母の顔を\n思い出せない。自分の日記を、\n白の書に写したからだ。', { voice: 'v_rowell_t7_05' });
+      await ev.say('これを持っていけ。大書庫の\n封印の扉を開ける言葉が\n書いてある。', { voice: 'v_rowell_t7_06' });
       await ev.give('k_rowell_note');
       ev.setFlag('st_rival_defect');
-      await ev.say('おれは、もう記録院には\n戻らない。');
+      await ev.say('おれは、もう記録院には\n戻らない。', { voice: 'v_rowell_t7_07' });
     }, { slow: true });
     ev.bgm();
   }
@@ -198,12 +198,12 @@
     ev.bgm('shrine');
     await visit(ev, 'st_fine', async () => {
       await ev.say('八つ目。……ありがとう、\n{hero}。');
-      await ev.say('今なら話せるわ。わたしは\nフィーネ。千年前、始まりの\n年代記を書いた語り部。');
-      await ev.say('世界がまだ白い闇だったころ、\nわたしは最初の物語を語って、\nその闇を眠らせた。');
-      await ev.say('海の向こうでは、紋章が\n魔王を封じたという。\nこの大陸では、物語が\n封印になったの。');
-      await ev.say('その闇――虚ろの王が、\nいま目を覚ましかけている。');
-      await ev.say('八枚がそろった今なら、\n内海の霧を払える。');
-      await ev.say('ロアの里へ。すべてが\n始まった場所へ、帰りましょう。');
+      await ev.say('今なら話せるわ。わたしは\nフィーネ。千年前、始まりの\n年代記を書いた語り部。', { voice: 'v_fine_t8_01' });
+      await ev.say('世界がまだ白い闇だったころ、\nわたしは最初の物語を語って、\nその闇を眠らせた。', { voice: 'v_fine_t8_02' });
+      await ev.say('海の向こうでは、紋章が\n魔王を封じたという。\nこの大陸では、物語が\n封印になったの。', { voice: 'v_fine_t8_03' });
+      await ev.say('その闇――虚ろの王が、\nいま目を覚ましかけている。', { voice: 'v_fine_t8_04' });
+      await ev.say('八枚がそろった今なら、\n内海の霧を払える。', { voice: 'v_fine_t8_05' });
+      await ev.say('ロアの里へ。すべてが\n始まった場所へ、帰りましょう。', { voice: 'v_fine_t8_06' });
     }, { vanish: true, sprite: 'npc:fine_fade' });
     ev.setFlag('st_fine_reveal');
     ev.setObjective('obj_s_final_roa');

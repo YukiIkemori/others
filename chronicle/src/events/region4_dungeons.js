@@ -79,11 +79,11 @@
         await ev.say('三つの鐘の鎖に、鍵を\n差して、歌いながら引くの。\n……子どもたちを、お願い。');
         return;
       }
-      await ev.say('……驚かせてしまったわね。\nわたしはメルダ。\nこの館の、昔の主よ。');
-      await ev.say('わたしは子どもたちをさらってなどいない。\n霧が、わたしの姿をまねているの。');
-      await ev.say('昔、沼の霧から魔物が\nあふれたとき、わたしは\n七つの鐘を沈めて、\n鐘の音で霧を封じたの。');
-      await ev.say('でも、町の人たちが\n鐘の歌を忘れて、\n鐘は鳴らなくなった……。');
-      await ev.say('沼の鐘を鳴らして。これは鐘の鍵。そして、\nこれが鐘の歌よ。');
+      await ev.say('……驚かせてしまったわね。\nわたしはメルダ。\nこの館の、昔の主よ。', { voice: 'v_melda_manor_01' });
+      await ev.say('わたしは子どもたちをさらってなどいない。\n霧が、わたしの姿をまねているの。', { voice: 'v_melda_manor_02' });
+      await ev.say('昔、沼の霧から魔物が\nあふれたとき、わたしは\n七つの鐘を沈めて、\n鐘の音で霧を封じたの。', { voice: 'v_melda_manor_03' });
+      await ev.say('でも、町の人たちが\n鐘の歌を忘れて、\n鐘は鳴らなくなった……。', { voice: 'v_melda_manor_04' });
+      await ev.say('沼の鐘を鳴らして。これは鐘の鍵。そして、\nこれが鐘の歌よ。', { voice: 'v_melda_manor_05' });
       ev.closeMessage();
       await ev.give('k_marsh_key', 1);
       ev.sfx('bell');
@@ -154,7 +154,7 @@
       f.face('player');
       await ev.wait(16);
       const t = ev.tier();
-      if (!again) await ev.say('霧は形を持たないから、\n誰の姿にでもなれるの。');
+      if (!again) await ev.say('霧は形を持たないから、\n誰の姿にでもなれるの。', { voice: 'v_fine_marsh_01' });
       if (t >= 6) await ev.say('……もう、あまり時間がないの。');
       else if (t >= 3) await ev.say('わたしのことは気にしないで。\n先へ進みなさい。');
       else await ev.say('……気をつけて。');
@@ -184,7 +184,7 @@
       ev.closeMessage();
       ev.sfx('roar');
       await ev.shake(20, 3);
-      await ev.say('……オイデ……コドモタチ……\nワスレラレタ……\nカネノ……ウタ……。');
+      await ev.say('……オイデ……コドモタチ……\nワスレラレタ……\nカネノ……ウタ……。', { voice: 'v_mistwitch_marsh_01' });
       const r = await ev.battle('tr_b_mistbeast');
       if (r !== 'win') return false;
       ev.setFlag('marsh_boss');
@@ -205,7 +205,7 @@
       m.show();
       m.face('player');
       await ev.wait(20);
-      await ev.say('ありがとう、語り部さん。これでまた、\n町の朝に鐘が鳴るわ。');
+      await ev.say('ありがとう、語り部さん。これでまた、\n町の朝に鐘が鳴るわ。', { voice: 'v_melda_marsh_01' });
       ev.closeMessage();
       // the lore is told again (§10.8.0-3 伝承の語り直し)
       await ev.caption(K.BELL_SONG || '♪　鳴れよ、七つの鐘', { frames: 210 });

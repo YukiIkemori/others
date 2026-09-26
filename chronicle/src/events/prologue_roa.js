@@ -27,12 +27,12 @@
       await ev.wait(30);
       await ev.fadeIn(48);
       await ev.wait(20);
-      await ev.say('おはよう。今日は大事な日だよ。');
-      await ev.say('語り部の名簿に、\nあなたのことを書いておかないとね。');
-      await ev.say('さあ、見習いさん。\nあなたがどんな子だったか、\nもう一度聞かせておくれ。');
+      await ev.say('おはよう。今日は大事な日だよ。', { voice: 'v_berna_prologue_01' });
+      await ev.say('語り部の名簿に、\nあなたのことを書いておかないとね。', { voice: 'v_berna_prologue_02' });
+      await ev.say('さあ、見習いさん。\nあなたがどんな子だったか、\nもう一度聞かせておくれ。', { voice: 'v_berna_prologue_03' });
       await ev.createHero();
       await ev.say('{hero}。……うん、いい名前だ。');
-      await ev.say('支度ができたら、\nわたしの書見台までおいで。\n話しておきたいことがあるんだ。');
+      await ev.say('支度ができたら、\nわたしの書見台までおいで。\n話しておきたいことがあるんだ。', { voice: 'v_berna_prologue_04' });
       ev.closeMessage();
       await berna.walk('DL5U');
       berna.face('down');

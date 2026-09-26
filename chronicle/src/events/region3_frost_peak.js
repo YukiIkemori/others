@@ -48,7 +48,7 @@
       ev.closeMessage();
       ev.sfx('roar');
       await ev.shake(20, 3);
-      await ev.say('……ここより上へは、\n誰も通さぬ……。');
+      await ev.say('……ここより上へは、\n誰も通さぬ……。', { voice: 'v_giant_peak_01' });
       const r = await ev.battle('tr_b_icegiant');
       if (r !== 'win') return false;
       ev.setFlag('snow_mid');
@@ -76,7 +76,7 @@
       f.face('player');
       await ev.wait(16);
       const t = Math.min(7, ev.tier());
-      if (!again) await ev.say('凍っているのは、竜の体じゃない。\n心のほうよ。');
+      if (!again) await ev.say('凍っているのは、竜の体じゃない。\n心のほうよ。', { voice: 'v_fine_snow_01' });
       if (t >= 6) await ev.say('……もう、あまり時間がないの。');
       else if (t >= 3) await ev.say('わたしのことは気にしないで。\n先へ進みなさい。');
       else await ev.say('……気をつけて。');
@@ -103,7 +103,7 @@
       ev.closeMessage();
       ev.sfx('roar');
       await ev.shake(24, 4);
-      await ev.say('……去れ……人の子よ……。\nこの峰に、もはや\n語るべき物語はない……！');
+      await ev.say('……去れ……人の子よ……。\nこの峰に、もはや\n語るべき物語はない……！', { voice: 'v_neve_peak_01' });
       const r = await ev.battle('tr_b_whitedragon');
       if (r !== 'win') return false;
       ev.setFlag('snow_boss');
@@ -118,8 +118,8 @@
       await ev.caption('人々は冬至の夜に火をともし、\n竜の物語を峰へ届けた。\n――その約束は、今も続く。', { frames: 210 });
       ev.refresh(); // the calm dragon (neve) takes the fierce one's place
       await ev.flash('#ffffff', 10);
-      await ev.say('……あたたかい。人の子らは、\nわたしを忘れてはいなかったのか。');
-      await ev.say('吹雪は、わたしが鎮めよう。語り部よ、\n礼を言う。');
+      await ev.say('……あたたかい。人の子らは、\nわたしを忘れてはいなかったのか。', { voice: 'v_neve_peak_02' });
+      await ev.say('吹雪は、わたしが鎮めよう。語り部よ、\n礼を言う。', { voice: 'v_neve_peak_03' });
       ev.closeMessage();
       await ev.clearRegion('r_snow');
       // §10.8.0-3: a night at the village inn, then the morning scene (story)

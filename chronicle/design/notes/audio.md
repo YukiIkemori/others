@@ -433,3 +433,24 @@ Requests to other owners (they call ids, never edit audio files):
   zone-based world BGM; `ev.bgm('tavern')` in the tavern; `chapter` + `quill` in `ev.clearRegion`; `recruit` in
   `ev.recruit`.
 - menus: `page` when turning 技の書/術の書 pages, `swap` for party/row changes (else `confirm_soft`).
+
+---------------------------------------------------------------------------------------------------
+## 13. Recorded media: Lyria BGM files and voice lines (BRIEF Part A9 / A10, 2026-09-26)
+
+The synth stays the default. Recorded files only *override* it when they exist; with no files nothing changes.
+
+| what | where | how it is played |
+|---|---|---|
+| BGM file | `assets/bgm/<id>.(ogg\|m4a\|mp3\|wav)` (+ `<id>.json` `{loopStart, loopEnd, gain, loop}` s) | `playBGM/pushBGM/popBGM(id)` decode it on first use (`decodeAudioData`, LRU of 6 buffers; `battle` is pre-decoded 1.5 s after `init`) and loop it with an `AudioBufferSourceNode` (`FilePlayback`, same interface as `Playback`). Fades, push/pop position, jingle pause/resume, `stopBGM`, BGM volume, `duck()` all apply unchanged (it goes into `mx.music`). Default level `FILE_GAIN` 0.7 (json `gain` overrides). Decode failure → one warning + the synth track of the same id. Jingles are always synthesised. |
+| voice line | `assets/voice/<id>.(ogg\|m4a\|mp3\|wav)`, id `v_<speaker>_<scene>_<nn>` | `ev.say(text, {voice:id})` / `R.UI.say(text, {voice})` → `R.Audio.playVoice(id)` when the say starts, `stopVoice(handle)` when the player advances past it, the window closes or another say replaces it (`voice:[…]` = one id per `\f` page; `noWait` keeps it under the question). Own bus `mx.voiceBus` (setting **ボイスの音量** `voiceVolume`, default 0.8, 0 = off), the music path is held at −9 dB (`mx.voiceDuck`, 0.15 s down / 0.4 s up). Missing file / no audio → silent, no error. |
+
+- **Build**: `tools/build.js` lists the files in `window.RPG_MEDIA` (before the game code). Default: base64 `data:` URLs
+  inside dist/index.html. `--bgm external` / `--voice external`: copies to `dist/bgm/`, `dist/voice/` with relative URLs
+  (serve dist over http; `file://` cannot fetch them — the game then falls back to the synth). debug.html loads from
+  `assets/` by relative URL. `--media <dir> --out <dir>` for tests. Never a URL to another host.
+- **Lyria**: `tools/lyria_bgm.js` + `design/bgm/prompts.json` (32 ids, tempo/key copied from the synth tracks). See the
+  file header for credentials (Vertex `lyria-002` REST predict ≈30 s clips / Gemini API Lyria RealTime WebSocket), the
+  loop crossfade and ffmpeg. `--dry-run` sends nothing; no key → prints setup, exit 0.
+- **Voice script**: `node tools/voice_script.js` → `design/voice/script.csv|md` (140 lines, 18 fixed characters; the
+  hero and the 20 companions never speak; lines with `{hero}` are not voiced). `--check` for CI.
+- **Tests**: `node tools/test_media.js` (fake AudioContext + a real Chromium decode of `tools/fixtures/media/`).

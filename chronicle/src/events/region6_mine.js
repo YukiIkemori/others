@@ -174,8 +174,8 @@
       ev.closeMessage();
       ev.sfx('roar');
       await ev.shake(20, 3);
-      await ev.say('……誓いを忘れた者よ。\n七の層より下を掘った者よ。');
-      await ev.say('鍛冶神との約束により、\nわれは、この山を守る。\n去らぬなら、打ち砕くのみ。');
+      await ev.say('……誓いを忘れた者よ。\n七の層より下を掘った者よ。', { voice: 'v_guardian_mine_01' });
+      await ev.say('鍛冶神との約束により、\nわれは、この山を守る。\n去らぬなら、打ち砕くのみ。', { voice: 'v_guardian_mine_02' });
       ev.closeMessage();
       const r = await ev.battle('tr_b_ironwarden');
       if (r !== 'win') return false;
@@ -187,7 +187,7 @@
       await ev.flash('#fff4d0', 12);
       const song = (R.Reg6 && R.Reg6.SONG) || [];
       for (const s of song) await ev.caption(s, { frames: 210 });
-      await ev.say('……誓いは、まだ生きていたか。ならば、\nわれは眠ろう。');
+      await ev.say('……誓いは、まだ生きていたか。ならば、\nわれは眠ろう。', { voice: 'v_guardian_mine_03' });
       ev.closeMessage();
       ev.sfx('holy');
       await ev.flash('#ffffff', 16);

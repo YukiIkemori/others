@@ -45,7 +45,7 @@
         await ev.wait(10);
         rowell.face('right');
       }
-      await ev.say(say('rowell', '……ひどいな。町じゅうが、\n白紙になりかけている。'));
+      await ev.say(say('rowell', '……ひどいな。町じゅうが、\n白紙になりかけている。'), { voice: 'v_rowell_biblia_01' });
       ev.closeMessage();
       if (atDock) {
         noa = S.actor(ev, 'st_noa', 'npc:woman', 29, 35, 'right');
@@ -53,13 +53,13 @@
         noa.face('down');
         rowell.face('up');
       }
-      await ev.say('ノア「あなたたち、この町の人じゃ\nないわね。……ロウェル？」');
-      await ev.say(say('rowell', 'ノアさん。あんたは、\n覚えているのか。'));
-      await ev.say('ノア「ミラに教わった歌を、\n毎晩歌っていたから……\nわたしだけ、忘れずにいるの。」');
-      await ev.say('ノア「ここは記録院の町、ビブリア。\nでも、みんな大事なことを\n忘れてしまったの。」');
-      await ev.say('ノア「院長さまのお嬢さん……\nミラは、わたしの友だちだった。\n二十年前の戦争で……。」');
-      await ev.say(say('rowell', '大書庫の中は、院長の書記たちで\nいっぱいだ。3階の封印の扉は、\nおれの手帳の言葉で開く。'));
-      await ev.say(say('rowell', 'おれは、町の北の門で待つ。\n支度ができたら、来てくれ。'));
+      await ev.say('ノア「あなたたち、この町の人じゃ\nないわね。……ロウェル？」', { voice: 'v_noa_biblia_01' });
+      await ev.say(say('rowell', 'ノアさん。あんたは、\n覚えているのか。'), { voice: 'v_rowell_biblia_02' });
+      await ev.say('ノア「ミラに教わった歌を、\n毎晩歌っていたから……\nわたしだけ、忘れずにいるの。」', { voice: 'v_noa_biblia_02' });
+      await ev.say('ノア「ここは記録院の町、ビブリア。\nでも、みんな大事なことを\n忘れてしまったの。」', { voice: 'v_noa_biblia_03' });
+      await ev.say('ノア「院長さまのお嬢さん……\nミラは、わたしの友だちだった。\n二十年前の戦争で……。」', { voice: 'v_noa_biblia_04' });
+      await ev.say(say('rowell', '大書庫の中は、院長の書記たちで\nいっぱいだ。3階の封印の扉は、\nおれの手帳の言葉で開く。'), { voice: 'v_rowell_biblia_03' });
+      await ev.say(say('rowell', 'おれは、町の北の門で待つ。\n支度ができたら、来てくれ。'), { voice: 'v_rowell_biblia_04' });
       ev.closeMessage();
       if (rowell) {
         await rowell.walk('L');
@@ -108,9 +108,9 @@
         await ev.say('ミラの歌を、町のみんなが\n歌えるようになったの。\n……ありがとう。');
         await ev.say('♪　白い本のページに、\nあなたの名を書こう\n忘れないように、なくさぬように');
       } else if (ev.flag('final_lazaro')) {
-        await ev.say('院長さまに……会ったの？\n……そう。ミラのことを、\n思い出してくれたのね。');
+        await ev.say('院長さまに……会ったの？\n……そう。ミラのことを、\n思い出してくれたのね。', { voice: 'v_noa_biblia_05' });
       } else {
-        await ev.say('ミラはね、歌が好きな子だった。\n「名前は、呼ばれるために\nあるのよ」って、よく言ってたわ。');
+        await ev.say('ミラはね、歌が好きな子だった。\n「名前は、呼ばれるために\nあるのよ」って、よく言ってたわ。', { voice: 'v_noa_biblia_06' });
       }
       await stay(ev);
     },

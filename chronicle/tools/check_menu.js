@@ -47,14 +47,14 @@ const section = (h) => { const i = DESIGN.indexOf(h); if (i < 0) return ''; cons
   const s = section('#### 11.7.15 ');
   const rows = [...s.matchAll(/^\| (?:\*\*)?([^|*]+?)(?:\*\*)? \| (?:`([a-zA-Z]+)`)? *\|/gm)].map((m) => ({ label: m[1].trim(), key: m[2] || null })).filter((r) => r.label !== '行' && !/^-+$/.test(r.label));
   const have = M.SETTINGS.map((x) => ({ label: x.label, key: x.key || null }));
-  // the table has 戻る as its 12th row; the screen adds 戻る itself
+  // the table has 戻る as its 13th row; the screen adds 戻る itself
   const specRows = rows.filter((r) => r.key);
   if (specRows.length !== have.length) err('C2', 'settings rows ' + have.length + ' ≠ spec ' + specRows.length);
   specRows.forEach((r, i) => {
     const h = have[i];
     if (!h || h.key !== r.key || h.label !== r.label) err('C2', 'row ' + (i + 1) + ': ' + JSON.stringify(h) + ' ≠ spec ' + r.label + ' ' + r.key);
   });
-  if (rows.length !== 12) err('C2', 'the §11.7.15 table should list 12 rows (with 戻る), found ' + rows.length);
+  if (rows.length !== 13) err('C2', 'the §11.7.15 table should list 13 rows (with 戻る), found ' + rows.length);
   const saveSrc = fs.readFileSync(path.join(ROOT, 'src/core/save.js'), 'utf8');
   const defBlock = (saveSrc.match(/DEFAULT_SETTINGS = \{([\s\S]*?)\};/) || [])[1] || '';
   for (const x of M.SETTINGS) {
@@ -65,8 +65,8 @@ const section = (h) => { const i = DESIGN.indexOf(h); if (i < 0) return ''; cons
   }
   if (R.Settings.windowColor !== 'ink') err('C2', 'windowColor default should be ink, is ' + R.Settings.windowColor);
   if (R.Settings.fieldZoom !== 'wide') err('C2', 'fieldZoom default should be wide, is ' + R.Settings.fieldZoom);
-  const h = 12 * 14 + 16;
-  if (h !== 184) err('C2', 'window height'); else ok('C2', specRows.length + ' settings + 戻る = 12 rows, height 184, defaults present');
+  const h = (M.SETTINGS.length + 1) * 13 + 16;
+  if (h !== 185) err('C2', 'window height'); else ok('C2', specRows.length + ' settings + 戻る = 13 rows, height 185, defaults present');
 }
 
 // ---------------------------------------------------------------- C3 fixed texts

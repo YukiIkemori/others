@@ -79,8 +79,8 @@
       await ev.wait(16);
       f.face('player');
       await ev.wait(20);
-      await ev.say('言葉を失った灯は、\n言葉で取り戻すの。');
-      await ev.say('……あなたなら、できるわ。');
+      await ev.say('言葉を失った灯は、\n言葉で取り戻すの。', { voice: 'v_fine_lighthouse_01' });
+      await ev.say('……あなたなら、できるわ。', { voice: 'v_fine_lighthouse_02' });
       ev.closeMessage();
       ev.sfx('magic');
       await ev.flash('#e8ecff', 10);
