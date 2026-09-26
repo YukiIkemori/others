@@ -104,7 +104,6 @@
       ],
       npcs: [
         K.npc('katri', 'npc_pim_mother', 6, 4, { name: 'カトリ', title: 'ピムの母', dir: 's', talk: 'fern_pim_mother', reward: 'lead', pushable: false }),
-        K.npc('pim_home', 'npc_pim', 4, 7, { name: 'ピム', dir: 'e', talk: 'fern_pim_home_talk', cond: ['forest_found_pim', 'cleared_r_forest'], reward: 'news' }),
       ],
     });
   });
