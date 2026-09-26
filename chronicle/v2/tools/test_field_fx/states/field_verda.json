@@ -1,0 +1,2 @@
+{ "desc": "FIELD: 迷いの森の入口（ダンジョン・小地図）", "hero": { "type": "warrior", "sex": "m", "name": "アルン" }, "party": ["hero", "selma", "viola", "marta"], "reserve": [], "tier": 0, "gl": "auto", "prof": "auto",
+  "flags": {"field_hat": true}, "vars": {}, "items": {}, "gold": 120, "leads": ["l_field_demo"], "map": { "id": "field_verda", "spawn": "entry" } }

@@ -1,0 +1,2 @@
+{ "desc": "FIELD: 迷いの森の泉の前（足あと・宝箱）", "hero": { "type": "warrior", "sex": "m", "name": "アルン" }, "party": ["hero", "selma", "viola", "marta"], "reserve": [], "tier": 0, "gl": "auto", "prof": "auto",
+  "flags": {"field_hat": true}, "vars": {}, "items": {}, "gold": 120, "leads": [], "map": { "id": "field_verda", "spawn": "spring" } }

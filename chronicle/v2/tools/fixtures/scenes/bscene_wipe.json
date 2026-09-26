@@ -1,0 +1,17 @@
+{
+  "scene": "battle",
+  "desc": "BSCENE の見本の戦闘（台本 wipe、src/systems/battle/demo.js）",
+  "state": "core_stub_road",
+  "setup": {
+    "demo": "wipe",
+    "mons": [
+      [
+        "stub_slime",
+        1
+      ]
+    ],
+    "bg": "cave",
+    "boss": false,
+    "autoInput": true
+  }
+}

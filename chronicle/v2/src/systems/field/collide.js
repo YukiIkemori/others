@@ -1,0 +1,103 @@
+// FIELD — 当たり（V2_PLAN §2.5.9・§2.11）。マスの読み方は R.MapUtil（自前で読まない）。
+//   R.Field.passable(map, x, y, fromDir, lv = 0) → bool   マス・物だけの当たり（人は含めない。QA の到達の検査も使う）
+//     - legend の walk:false・solid（secret は「通れる壁」なので通れる）
+//     - 2 つの高さ（フェルン）: lv 1 は deck と ladder のマスだけ。lv 0 は deck の下をくぐれる（deck のマスも地面として歩ける）
+//     - 一方通行（E5）: map.oneway [{x, y, dir}] のマスは dir の向きに進むときだけ入れる（fromDir = 進む向き 's'|'n'|'e'|'w'。斜めは入れない）
+//     - 物: 宝箱・泉（2×2）・燭台・灯籠・看板・建物（扉のマスを除く）・R.DB.props の solid（soft は通り抜け）・レバー／穴のスイッチ
+//   R.Field._blocked(x, y, lv) → 人（NPC）を含めた当たり（今のマップ）
+(function (R) {
+  'use strict';
+  const F = (R.Field = R.Field || {});
+  const S = (F._s = F._s || {});
+
+  const SOLID_TYPES = { chest: 1, spring: 1, brazier: 1, waylamp: 1, sign: 1 };
+
+  /** 物の当たり（lv ごと）。建物は扉のマスだけ通れる */
+  function objBlocks(map, x, y, lv) {
+    const list = R.MapUtil.objectsAt(map, x, y);
+    for (let i = 0; i < list.length; i++) {
+      const o = list[i];
+      if ((o.lv || 0) !== (lv || 0)) continue;
+      if (SOLID_TYPES[o.type]) return true;
+      if (o.type === 'building') {
+        const d = o.door;
+        if (d && d.x === x && d.y === y) continue;
+        return true;
+      }
+      if (o.type === 'switch') { if (o.look === 'lever') return true; continue; }
+      if (o.type === 'prop') {
+        const meta = (R.DB.props && R.DB.props[o.id]) || {};
+        if (meta.solid && !meta.soft && !o.soft) return true;
+      }
+    }
+    return false;
+  }
+
+  function onewayAt(map, x, y) {
+    const ow = map && map.oneway;
+    if (!ow || !ow.length) return null;
+    for (let i = 0; i < ow.length; i++) if (ow[i].x === x && ow[i].y === y) return ow[i];
+    return null;
+  }
+
+  /** マスだけ（物・人を除く）: lv で歩けるか */
+  function cellOk(map, x, y, lv) {
+    const c = R.MapUtil.cell(map, x, y);
+    if (!c) return false;
+    if (lv === 1) return !!(c.deck || c.ladder) && !(c.solid && !c.secret);
+    if (c.walk === false) return false;
+    if (c.solid && !c.secret) return false;
+    return true;
+  }
+
+  F.passable = function (map, x, y, fromDir, lv) {
+    if (typeof map === 'string') map = R.DB.maps[map];
+    if (!map) return false;
+    lv = lv || 0;
+    if (!cellOk(map, x, y, lv)) return false;
+    const ow = onewayAt(map, x, y);
+    if (ow && fromDir != null && fromDir !== ow.dir) return false;
+    if (objBlocks(map, x, y, lv)) return false;
+    return true;
+  };
+
+  /** 高さの移り: from（今の lv）から (x, y) に入ったあとの lv。はしご → 足場は 1、はしご → 地面は 0 */
+  F._lvAfter = function (map, fx, fy, x, y, lv) {
+    const c = R.MapUtil.cell(map, x, y) || {};
+    if (c.ladder) return lv;
+    if (c.deck) {
+      if (lv === 1) return 1;
+      const from = R.MapUtil.cell(map, fx, fy) || {};
+      return from.ladder ? 1 : 0;
+    }
+    return 0;
+  };
+  /** 高さを考えた「入れるか」（人を除く）。lv 0 からはしごを経ずに足場へ上がれない（下をくぐるだけ）、lv 1 は足場とはしごだけ */
+  F._canEnter = function (map, fx, fy, x, y, lv, dir) {
+    const to = F._lvAfter(map, fx, fy, x, y, lv);
+    if (!F.passable(map, x, y, dir, to)) return false;
+    // はしごの上で lv 1 → 地面（足場でない所）へは降りられない（はしごの両端から出る）
+    if (lv === 1 && to === 0) {
+      const from = R.MapUtil.cell(map, fx, fy) || {};
+      if (!from.ladder) return false;
+    }
+    return true;
+  };
+
+  /** 今のマップで人（NPC）が (x, y, lv) にいるか → NPC の状態 | null */
+  F._npcAt = function (x, y, lv) {
+    const list = S.npcs || [];
+    for (let i = 0; i < list.length; i++) {
+      const n = list[i];
+      if (!n.vis) continue;
+      if ((n.lv || 0) !== (lv || 0)) continue;
+      if ((n.x === x && n.y === y) || (n.mv && n.mv.tx === x && n.mv.ty === y)) return n;
+    }
+    return null;
+  };
+  F._blocked = function (x, y, lv) {
+    return !F.passable(S.map, x, y, null, lv || 0) || !!F._npcAt(x, y, lv || 0);
+  };
+  F._onewayAt = onewayAt;
+  F._objBlocks = objBlocks;
+})(window.RPG);

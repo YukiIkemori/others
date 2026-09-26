@@ -1,0 +1,6 @@
+{
+  "scene": "battle",
+  "desc": "BSCENE の見本の戦闘（台本 boss_wolflord、src/systems/battle/demo.js）",
+  "state": "core_stub_road",
+  "setup": { "demo": "boss_wolflord", "mons": [["stub_slime", 1]], "bg": "forest", "boss": true }
+}

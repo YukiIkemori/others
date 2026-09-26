@@ -1,0 +1,2 @@
+{ "desc": "FIELD: 港町（町・桟橋・街灯・NPC）。目印の手がかりあり", "hero": { "type": "warrior", "sex": "m", "name": "アルン" }, "party": ["hero", "selma", "viola", "marta"], "reserve": [], "tier": 0, "gl": "auto", "prof": "auto",
+  "flags": {}, "vars": {}, "items": {}, "gold": 120, "leads": ["l_field_demo"], "map": { "id": "field_pharos", "spawn": "plaza" } }

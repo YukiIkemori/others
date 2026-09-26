@@ -1,0 +1,2 @@
+{ "desc": "FIELD: 樹上の村（足場の下の道 lv 0）", "hero": { "type": "warrior", "sex": "m", "name": "アルン" }, "party": ["hero", "selma", "viola", "marta"], "reserve": [], "tier": 0, "gl": "auto", "prof": "auto",
+  "flags": {}, "vars": {}, "items": {}, "gold": 120, "leads": [], "map": { "id": "field_fern", "spawn": "under" } }

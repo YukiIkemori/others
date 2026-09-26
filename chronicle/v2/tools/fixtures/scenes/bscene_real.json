@@ -1,0 +1,6 @@
+{
+  "scene": "battle",
+  "desc": "BSCENE: 本物（か仮）の R.BattleCore で仮の編成の戦闘",
+  "state": "core_stub_road",
+  "setup": { "troop": "tr_stub" }
+}

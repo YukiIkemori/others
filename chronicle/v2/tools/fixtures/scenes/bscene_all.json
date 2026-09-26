@@ -1,0 +1,17 @@
+{
+  "scene": "battle",
+  "desc": "BSCENE の見本の戦闘（台本 all、src/systems/battle/demo.js）",
+  "state": "core_stub_road",
+  "setup": {
+    "demo": "all",
+    "mons": [
+      [
+        "stub_slime",
+        1
+      ]
+    ],
+    "bg": "night",
+    "boss": false,
+    "autoInput": true
+  }
+}
