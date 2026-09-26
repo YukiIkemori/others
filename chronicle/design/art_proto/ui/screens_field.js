@@ -50,5 +50,5 @@
     K.device(); ctx.drawImage(out, 0, 0); K.logical();
     return { W, H, tall, vx: tall ? vxT : vx, vy: tall ? vyT : vy };
   };
-  SCREENS.town_raw = async function (o) { const s = TOPDOWN.town(); G.fieldView(o, s, 96, 176, 176, 0); };
+  SCREENS.town_raw = async function (o) { const s = TOPDOWN.town(); G.fieldView(o, s, 32, 6, 240, 0); };
 })(window);

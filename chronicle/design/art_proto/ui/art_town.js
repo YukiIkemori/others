@@ -33,8 +33,8 @@
     water: ramp(['#08121e', '#0e1e2e', '#15293c', '#1e384c', '#2c4c60', '#446a7c'], 8),
     plaster: ramp(['#4e4a46', '#7a746a', '#a49c8c', '#c8bea8', '#e2d8c2', '#f0e8d6'], 8),
     stoneW: ramp(['#2e2824', '#4c423a', '#6c5e52', '#8c7c6c', '#a89886', '#c0b09a'], 8),
-    slate: ramp(['#141a26', '#222a3a', '#323e52', '#46546a', '#5e6e84', '#7c8ca0'], 8),
-    terra: ramp(['#2e140e', '#4c2216', '#6c3420', '#8c4a30', '#aa6444', '#c2825c'], 8),
+    slate: ramp(['#1a2232', '#2c3850', '#42526c', '#5a6c88', '#7a8ca6', '#9eaec6'], 8),
+    terra: ramp(['#34160e', '#562618', '#7a3a24', '#9c5434', '#bc724c', '#d6946a'], 8),
     timber: ramp(['#180e08', '#2e1c0e', '#4a3018', '#664626', '#7e5c36'], 6),
     door: ramp(['#1e1008', '#38200e', '#54341a', '#704a28', '#8a603a'], 6),
     glass: ramp(['#7a3408', '#c0661c', '#ee9a3c', '#ffc86a', '#ffe6a8'], 6),
@@ -371,68 +371,107 @@
   function glowA(ctx, x, y, r, c, a) { ENV.glow(ctx, x, y, r, c, a); }
 
   // ================================================================== TOWN: 港町ファロス (pier town)
-  const TW_W = 34, TW_H = 38;
-  function shoreX(ty) { return ty < 18 ? 23 : 21; }
+  // ================================================================== TOWN: 港町ファロス (pier town, WORLD_REDESIGN §5.3)
+  // upper town (buildings + beacon plaza) → retaining wall with stairs → harbour promenade → piers over the sea
+  const TW_W = 32, TW_H = 38, PLAZA = [11, 10.2];
   function townTile(tx, ty) {
-    if (tx < 0 || ty < 0 || tx >= TW_W || ty >= TW_H) return '~';
-    const sx = shoreX(ty);
-    if ((ty === 9 || ty === 10) && tx >= sx && tx <= 33) return '=';
-    if ((ty === 25 || ty === 26) && tx >= sx && tx <= 31) return '=';
-    if (tx >= sx) return '~';
-    if (tx >= 8 && tx <= 17 && ty >= 13 && ty <= 21) return '_';
-    if (tx <= 1 && ty >= 9 && ty <= 11) return ',';
-    if (tx >= 17 && tx <= 20 && ty >= 30) return ',';
-    if (tx <= 2 && ty >= 18 && ty <= 20) return ',';
+    if (tx < 0 || tx >= TW_W || ty < 0) return '.';
+    if (ty >= TW_H) return '~';
+    if (ty === 13) return tx >= 14 && tx <= 17 ? 's' : 'w';       // retaining wall face / stairs
+    if (ty === 14 || ty === 15) return 'p';                         // promenade
+    if (ty >= 16) {
+      if ((tx === 6 || tx === 7) && ty <= 30) return '=';
+      if ((tx === 22 || tx === 23) && ty <= 33) return '=';
+      if (tx >= 24 && tx <= 30 && ty >= 26 && ty <= 30) return '=';   // shed platform
+      if (tx >= 11 && tx <= 13 && ty >= 32 && ty <= 34) return 'r';   // beacon rock
+      return '~';
+    }
+    if (ty >= 8 && ty <= 12 && tx >= 3 && tx <= 27) return '_';
+    if ((tx <= 2 || tx >= 29) && ty >= 9 && ty <= 12) return ',';
+    if (ty <= 5 && (tx === 8 || tx === 19 || tx === 26)) return 'a';
     return '.';
   }
   const BUILDINGS = [
-    { name: 'inn', tx: 1, ty: 0, tw: 8, th: 8, wall: 3, roof: 'slate', mat: 'plaster', door: { x: 96 }, windows: [30, 60, 130, 160, 196].filter((x) => x < 250), win2: [30, 70, 130, 170, 210], chimney: 200, sign: { x: 112, kind: 'inn' }, beam: true, shutters: 'b', flowers: true },
-    { name: 'tavern', tx: 11, ty: 1, tw: 10, th: 7, wall: 3, roof: 'terra', mat: 'stone', door: { x: 150, w: 18, open: true }, windows: [40, 90, 210, 270], win2: [40, 110, 200, 270], chimney: 60, sign: { x: 172, kind: 'mug' }, beam: false, hip: true },
-    { name: 'shop', tx: 1, ty: 12, tw: 6, th: 6, wall: 2, roof: 'slate', mat: 'plaster', door: { x: 120 }, windows: [40, 80], sign: { x: 138, kind: 'bag' }, awning: { x: 60, w: 76 }, shutters: 'g', hip: true },
-    { name: 'shed', tx: 15, ty: 23, tw: 5, th: 5, wall: 2, roof: 'slate', mat: 'plank', door: { x: 80, w: 20 }, windows: [34], sign: { x: 104, kind: 'anchor' } },
-    { name: 'house1', tx: 1, ty: 21, tw: 6, th: 6, wall: 2, roof: 'terra', mat: 'plaster', door: { x: 60 }, windows: [26, 150], chimney: 140, shutters: 'b', flowers: true },
-    { name: 'house2', tx: 8, ty: 29, tw: 7, th: 6, wall: 2, roof: 'slate', mat: 'stone', door: { x: 150 }, windows: [40, 90], chimney: 30, hip: true },
-    { name: 'weapons', tx: 1, ty: 30, tw: 6, th: 6, wall: 2, roof: 'terra', mat: 'stone', door: { x: 96 }, windows: [36, 150], sign: { x: 114, kind: 'sword' } },
+    { name: 'inn', tx: 0, ty: 0, tw: 8, th: 6, wall: 3, roof: 'slate', mat: 'plaster', door: { x: 96 }, windows: [30, 60, 150, 200, 232], win2: [30, 70, 130, 180, 226], chimney: 196, sign: { x: 112, kind: 'inn' }, beam: true, shutters: 'b', flowers: true, dormers: [60, 180] },
+    { name: 'tavern', tx: 9, ty: 0, tw: 10, th: 6, wall: 3, roof: 'terra', mat: 'stone', door: { x: 160, w: 18, open: true }, windows: [40, 96, 220, 276], win2: [40, 110, 200, 276], chimney: 60, sign: { x: 182, kind: 'mug' }, hip: true },
+    { name: 'shop', tx: 20, ty: 1, tw: 6, th: 5, wall: 2, roof: 'slate', mat: 'plaster', door: { x: 132 }, windows: [36, 84], sign: { x: 150, kind: 'bag' }, awning: { x: 60, w: 80 }, shutters: 'g', hip: true },
+    { name: 'house', tx: 27, ty: 0, tw: 6, th: 6, wall: 3, roof: 'terra', mat: 'plaster', door: { x: 50 }, windows: [110, 160], win2: [30, 110, 160], chimney: 150, shutters: 'b', flowers: true, beam: true, dormers: [90] },
+    { name: 'shed', tx: 25, ty: 26, tw: 5, th: 4, wall: 2, roof: 'slate', mat: 'plank', door: { x: 80, w: 20 }, windows: [34], sign: { x: 104, kind: 'anchor' } },
   ];
-
+  function plazaAt(x, y) {
+    const cx = PLAZA[0] * TS, cy = PLAZA[1] * TS, dx = x + 0.5 - cx, dy = (y + 0.5 - cy) * 1.25, r = Math.hypot(dx, dy);
+    if (r < 150) {
+      const ring = Math.floor(r / 13), er = r - ring * 13, circ = Math.max(1, Math.round(2 * Math.PI * (ring * 13 + 6) / 16));
+      const a = (Math.atan2(dy, dx) / (2 * Math.PI) + 0.5 + (ring & 1) * 0.5 / circ), seg = Math.floor(a * circ), ea = (a * circ - seg);
+      if (er < 1 || ea < 0.06 * (8 / Math.max(3, ring))) return P.flagMortar;
+      let l = 0.5 + (H3(seg, ring, 2) - 0.5) * 0.3 + (vnoise(x * 0.4, y * 0.4, 7) - 0.5) * 0.18 + (ring % 4 === 0 ? 0.12 : 0);
+      if (er < 2.2) l += 0.1; if (er > 11) l -= 0.12;
+      return pick(P.flag, l);
+    }
+    return flagAt(x, y);
+  }
   function townGround() {
     const W = TW_W * TS, H = TW_H * TS, buf = new Buf(W, H);
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-      // organic borders between soft materials
       const jx = x + (vnoise(x * 0.08, y * 0.08, 51) - 0.5) * 14, jy = y + (vnoise(x * 0.08, y * 0.08, 52) - 0.5) * 14;
-      const t = townTile(Math.floor(x / TS), Math.floor(y / TS));
-      const ts = townTile(Math.floor(jx / TS), Math.floor(jy / TS));
+      const tx = Math.floor(x / TS), ty = Math.floor(y / TS), t = townTile(tx, ty), ts = townTile(Math.floor(jx / TS), Math.floor(jy / TS));
       let c;
       if (t === '~') c = waterAt(x, y);
-      else if (t === '=') c = plankAt(x, y, true);
+      else if (t === '=') c = plankAt(x, y, tx >= 24 && ty >= 26 ? true : false);
+      else if (t === 'r') c = pick(P.quay, 0.4 + (vnoise(x * 0.12, y * 0.12, 61) - 0.5) * 0.6);
+      else if (t === 'p') c = cobbleAt(x, y, { cw: 16, ch: 11, ramp: P.flag });
+      else if (t === 'a') c = mix(cobbleAt(x, y), [10, 10, 18], 0.55);
+      else if (t === 'w' || t === 's') c = [30, 28, 30];
       else if (ts === ',' && t !== '_') c = grassAt(x, y);
-      else if (t === '_') c = flagAt(x, y);
+      else if (t === '_') c = plazaAt(x, y);
       else c = cobbleAt(x, y);
+      // puddles on the street reflect the sky a little
+      if (t === '.' && vnoise(x * 0.03, y * 0.05, 71) > 0.78) c = mix(c, [40, 56, 84], 0.45);
       const q = (y * W + x) * 4; buf.d[q] = c[0]; buf.d[q + 1] = c[1]; buf.d[q + 2] = c[2]; buf.d[q + 3] = 255;
     }
-    // quay: kerb on land edges next to water, vertical face into the water below
+    // retaining wall (row 14): kerb on top, stone face, ivy; stairs in the middle
+    const wy = 13 * TS;
+    buf.fill(0, wy, W, wy + TS, (x, y) => {
+      const tx = Math.floor(x / TS), e = y - wy;
+      if (townTile(tx, 13) === 's') {
+        const st = Math.floor(e / 8), es = e - st * 8, edge = x < 14 * TS + 4 || x >= 18 * TS - 4;
+        if (edge) return pick(P.quay, 0.55 + (H3(st, x >> 2, 3) - 0.5) * 0.2 - (x >= 18 * TS - 4 ? 0.25 : 0));
+        return pick(P.flag, es < 2 ? 0.85 : es > 5 ? 0.25 : 0.55 - st * 0.03 + (vnoise(x * 0.3, y, 4) - 0.5) * 0.15);
+      }
+      if (e < 4) return pick(P.quay, e === 0 ? 0.95 : 0.7 + (H3(x >> 4, 1, 2) - 0.5) * 0.2);
+      const row = Math.floor((e - 4) / 7), k = Math.floor((x + (row & 1) * 8) / 16), ex = (x + (row & 1) * 8) % 16, ey = (e - 4) % 7;
+      if (ex === 0 || ey === 0) return [22, 20, 24];
+      let l = 0.42 + (H3(k, row, 7) - 0.5) * 0.3 - e * 0.006 + (vnoise(x * 0.4, y * 0.4, 5) - 0.5) * 0.15;
+      if (ey === 1) l += 0.1;
+      const c = pick(P.quay, l);
+      if (vnoise(x * 0.07, 0, 81) > 0.62 && e < 4 + vnoise(x * 0.3, 1, 82) * 22) return pick(P.grass, 0.35 + (vnoise(x * 0.9, y * 0.9, 83) - 0.5) * 0.6); // ivy
+      return c;
+    });
+    // AO under the retaining wall
+    for (let x = 0; x < W; x++) for (let k = 0; k < 8; k++) { if (townTile(Math.floor(x / TS), 13) === 's') continue; buf.set(x, 14 * TS + k, [8, 8, 16], 0.5 * (1 - k / 8)); }
+    // quay: kerb + face above the water; piers: beam, pilings, shadow
     for (let ty = 0; ty < TW_H; ty++) for (let tx = 0; tx < TW_W; tx++) {
       const t = townTile(tx, ty); if (t === '~') continue;
-      const land = t !== '=';
-      const below = townTile(tx, ty + 1), right = townTile(tx + 1, ty);
-      const x0 = tx * TS, y0 = ty * TS;
-      if (land && right === '~') buf.fill(x0 + TS - 5, y0, x0 + TS, y0 + TS + (below === '~' ? 4 : 0), (x, y) => { const k = Math.floor(y / 9); const e = y - k * 9; return e === 0 ? [26, 24, 26] : pick(P.quay, 0.62 + (H3(k, tx, 3) - 0.5) * 0.3 - (x - x0 - TS + 5) * 0.08); });
+      const below = townTile(tx, ty + 1), x0 = tx * TS, y0 = ty * TS;
+      const land = t === 'p' || t === 'r';
       if (below === '~') {
         if (land) {
-          buf.fill(x0, y0 + TS - 4, x0 + TS, y0 + TS, (x, y) => { const k = Math.floor(x / 12); return x % 12 === 0 ? [26, 24, 26] : pick(P.quay, y === y0 + TS - 4 ? 0.85 : 0.6 + (H3(k, ty, 4) - 0.5) * 0.25); });
-          buf.fill(x0, y0 + TS, x0 + TS, y0 + TS + 14, (x, y) => { const e = y - y0 - TS, row = Math.floor(e / 5), k = Math.floor((x + (row & 1) * 6) / 12), ex = (x + (row & 1) * 6) % 12; if (ex === 0 || e % 5 === 0) return [20, 20, 24]; let l = 0.42 - e * 0.02 + (H3(k, row + ty * 3, 6) - 0.5) * 0.3; const c = pick(P.quay, l); return e > 9 ? mix(c, [30, 60, 60], 0.45) : c; });
-          buf.fill(x0, y0 + TS + 14, x0 + TS, y0 + TS + 17, (x, y) => (vnoise(x * 0.3, y, 9) > 0.45 ? [150, 180, 190] : null));
-        } else {
-          // pier: front beam + pilings + shadow on the water
+          buf.fill(x0, y0 + TS - 4, x0 + TS, y0 + TS, (x, y) => { const k = Math.floor(x / 12); return x % 12 === 0 ? [26, 24, 26] : pick(P.quay, y === y0 + TS - 4 ? 0.9 : 0.62 + (H3(k, ty, 4) - 0.5) * 0.25); });
+          buf.fill(x0, y0 + TS, x0 + TS, y0 + TS + 16, (x, y) => { const e = y - y0 - TS, row = Math.floor(e / 5), k = Math.floor((x + (row & 1) * 6) / 12), ex = (x + (row & 1) * 6) % 12; if (ex === 0 || e % 5 === 0) return [20, 20, 24]; const l = 0.44 - e * 0.02 + (H3(k, row + ty * 3, 6) - 0.5) * 0.3; const c = pick(P.quay, l); return e > 10 ? mix(c, [30, 64, 64], 0.5) : c; });
+          buf.fill(x0, y0 + TS + 16, x0 + TS, y0 + TS + 19, (x, y) => (vnoise(x * 0.3, y, 9) > 0.45 ? [150, 180, 190] : null));
+        } else if (t === '=') {
           buf.fill(x0, y0 + TS, x0 + TS, y0 + TS + 4, (x, y) => pick(P.plank, y === y0 + TS ? 0.7 : 0.25));
           buf.fill(x0, y0 + TS + 4, x0 + TS, y0 + TS + 20, (x, y) => { const px = (x - x0) % 16; if (px >= 2 && px < 6) return pick(P.plank, 0.35 - (y - y0 - TS) * 0.012 + (px === 2 ? 0.15 : 0)); return mix(buf.get(x, y), [4, 8, 14], 0.55 - (y - y0 - TS) * 0.02); });
         }
       }
-      if (!land && townTile(tx, ty - 1) === '~') buf.fill(x0, y0, x0 + TS, y0 + 2, () => pick(P.plank, 0.2));
+      // pier sides: dark edge lines + shadow on the water to the right (moon from the upper left)
+      if (t === '=') {
+        if (townTile(tx - 1, ty) === '~') buf.fill(x0, y0, x0 + 2, y0 + TS, () => pick(P.plank, 0.15));
+        if (townTile(tx + 1, ty) === '~') { buf.fill(x0 + TS - 2, y0, x0 + TS, y0 + TS, () => pick(P.plank, 0.12)); buf.fill(x0 + TS, y0, x0 + TS + 12, y0 + TS, (x, y) => mix(buf.get(x, y), [4, 8, 14], 0.5 * (1 - (x - x0 - TS) / 12))); }
+      }
     }
     return buf;
   }
-
   function place(list, kind, tx, ty, o) { const r = prop(kind, o); list.push({ r, x: Math.round(tx * TS), y: Math.round(ty * TS), kind, o: o || {} }); return r; }
   function person(list, L, dir, frame, tx, ty, o) { const r = FIELD_CHAR.sprite(L, dir, frame, o); list.push({ r, x: Math.round(tx * TS), y: Math.round(ty * TS), kind: 'person', o: o || {} }); return r; }
 
@@ -558,37 +597,34 @@
     const c = g.done(); const ctx = c.getContext('2d');
     const list = [];
     const blds = BUILDINGS.map(building);
-    // props
     const LOOK = BATTLE_ART.LOOKS, NP = BATTLE_ART.NPC;
-    place(list, 'beacon', 13, 17.4);
-    [[8.4, 12.7], [17.6, 12.7], [8.4, 21.6], [17.6, 21.6]].forEach(([x, y]) => place(list, 'lamp', x, y));
-    [[22.4, 8.8], [22.4, 15.5], [20.4, 22.6], [33.2, 9.6], [30.8, 25.4], [10, 9.2]].forEach(([x, y]) => place(list, 'lamp', x, y));
-    [[22.5, 12.2], [22.5, 13.4], [22.5, 19.6], [20.5, 24.2], [20.5, 29.6], [20.5, 33.5]].forEach(([x, y]) => place(list, 'bollard', x, y));
-    place(list, 'barrel', 20.6, 12.6); place(list, 'barrel', 21.2, 13.2); place(list, 'crate', 21.3, 11.8); place(list, 'crate', 19.8, 20.8); place(list, 'barrel', 19.2, 21.3); place(list, 'net', 21.3, 16.4);
-    place(list, 'stall', 15.2, 19.4); place(list, 'board', 10.6, 9.4);
-    place(list, 'bench', 9.6, 15.2); place(list, 'bench', 16.4, 15.2);
-    place(list, 'table', 13.4, 8.9); place(list, 'table', 17.8, 8.9); place(list, 'barrel', 19.9, 8.5);
-    place(list, 'tree', 9.1, 20.9, { h: 62, seed: 4 }); place(list, 'tree', 0.9, 11.2, { h: 70, seed: 9 }); place(list, 'tree', 18.6, 31.8, { h: 74, seed: 12 }); place(list, 'bush', 1.6, 19.8, { seed: 3 }); place(list, 'bush', 17.8, 34.6, { seed: 8 });
-    place(list, 'chest', 32.1, 10.6);
-    place(list, 'ship', 28.2, 14.2); place(list, 'rowboat', 27.5, 20.2);
-    place(list, 'well', 11.6, 26.8);
-    // people
-    person(list, LOOK.arun, 'down', 1, 11.5, 14.35, { lantern: true, ldx: 8 });
-    person(list, LOOK.selma, 'down', 2, 11.5, 13.25);
-    person(list, LOOK.sylvan, 'down', 0, 11.5, 12.15);
-    person(list, LOOK.viola, 'down', 1, 11.5, 11.05);
-    person(list, NP.girl, 'up', 0, 11.5, 15.75);
-    person(list, NP.merchant, 'down', 0, 15.2, 18.6);
-    person(list, NP.sailor, 'left', 0, 27, 9.8);
-    person(list, NP.innkeeper, 'down', 0, 5.2, 8.9);
+    place(list, 'beacon', PLAZA[0], PLAZA[1] + 0.35);
+    [[3.4, 8.2], [27.6, 8.2], [3.4, 12.7], [27.6, 12.7], [13.3, 12.9], [18.7, 12.9], [1.5, 15.6], [30.5, 15.6], [22.5, 33.6], [7.5, 30.4]].forEach(([x, y]) => place(list, 'lamp', x, y));
+    [[4, 15.8], [10, 15.8], [20, 15.8], [26, 15.8]].forEach(([x, y]) => place(list, 'bollard', x, y));
+    place(list, 'stall', 21.2, 11.3); place(list, 'stall', 24.6, 11.3); place(list, 'board', 7.7, 7.4);
+    place(list, 'bench', 6.2, 10.8); place(list, 'bench', 15.6, 9.2);
+    place(list, 'table', 12.3, 6.9); place(list, 'table', 16.6, 6.9); place(list, 'barrel', 19.2, 6.5); place(list, 'barrel', 8.6, 6.4);
+    place(list, 'barrel', 2.4, 14.9); place(list, 'barrel', 3.0, 15.4); place(list, 'crate', 1.4, 15.3); place(list, 'net', 27.6, 15.3); place(list, 'crate', 28.8, 14.8);
+    place(list, 'tree', 1.2, 10.6, { h: 64, seed: 9 }); place(list, 'tree', 30.2, 10.8, { h: 60, seed: 4 }); place(list, 'bush', 1.8, 12.8, { seed: 3 }); place(list, 'bush', 29.6, 12.9, { seed: 8 });
+    place(list, 'chest', 24.3, 15.3);
+    place(list, 'ship', 14.2, 20.4); place(list, 'rowboat', 3.4, 21.6); place(list, 'rowboat', 26.6, 21.2, { flip: true });
+    place(list, 'beacon', 12.5, 33.4, { scale: 1.3 });
+    person(list, LOOK.arun, 'left', 1, 14.45, 11.7, { lantern: true, ldx: -4 });
+    person(list, LOOK.selma, 'left', 2, 15.45, 11.7);
+    person(list, LOOK.sylvan, 'left', 0, 16.45, 11.7);
+    person(list, LOOK.viola, 'left', 1, 17.45, 11.7);
+    person(list, NP.girl, 'right', 0, 13.15, 11.7);
+    person(list, NP.merchant, 'down', 0, 21.2, 10.6);
+    person(list, NP.sailor, 'down', 0, 12.5, 15.2);
+    person(list, NP.innkeeper, 'down', 0, 3.9, 6.9);
     const { lights, emits } = composeScene(ctx, list, blds);
-    lightmap(ctx, W, H, 'rgb(62,74,124)', lights);
+    lightmap(ctx, W, H, 'rgb(76,90,146)', lights);
     const isWater = (x, y) => townTile(Math.floor(x / TS), Math.floor(y / TS)) === '~';
-    moonWater(ctx, W, H, isWater, lights.filter((L) => L.r >= 100 && isWater(L.x + 4, L.y + 40)).map((L) => ({ x: L.x, y: L.y })), 5);
+    moonWater(ctx, W, H, isWater, lights.filter((L) => L.r >= 100).map((L) => ({ x: L.x, y: L.y + 14 })), 5);
     drawEmissive(ctx, emits);
     signIcons(ctx, emits);
-    fireflies(ctx, W, H, 40, 17);
-    Object.assign(townCache, { c, W, H, blds, list });
+    fireflies(ctx, W, H, 36, 17);
+    Object.assign(townCache, { c, W, H, blds, list, tile: townTile });
     return townCache;
   }
   function fireflies(ctx, W, H, n, seed, cols) {

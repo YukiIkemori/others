@@ -10,7 +10,7 @@
 //   options: --seed N  --zones z1,z2  --troops t1,t2  --verbose (per zone / troop / combo lines)  --json out.json
 // exit 1 when an item FAILs (items the engine or data cannot run yet are SKIP and listed, not failures).
 //
-// Items (§4.17.3): A1 hits to kill · A2 mob fights (win, rounds, HP loss mean/zone/p95, downs, wipes) · A3 MP/WP per
+// Items (§4.17.3): A1 hits to kill · A2 mob fights (win, rounds, HP loss mean/zone/p95, downs, wipes) · A3 MP per
 // fight, caster casts · A3b one dungeon floor · B1 bosses · B2 any three · B3 no best three · B4 order independence ·
 // B5 per-companion fairness (§5.4.3) · C1 final region · C2 last boss (2 forms) · C3 superboss · D1 int build ·
 // D2 str/dex builds · D3 cloth fragility · D4 int and glimmer · E1 growth · E2 max HP from grinding · I weakness
@@ -115,7 +115,7 @@ function A2() {
   for (const [z, e] of list) for (const T of zoneTiers(e)) {
     const kind = zoneKind(e);
     const n = NBASE;
-    const acc = { z, T, region: e.region, n: 0, win: 0, rounds: [], loss: [], net: [], down: 0, wipe: 0, mp: [], wp: [], casts: 0 };
+    const acc = { z, T, region: e.region, n: 0, win: 0, rounds: [], loss: [], net: [], down: 0, wipe: 0, mp: [], casts: 0 };
     for (let i = 0; i < n; i++) {
       const p = startAt(standardParty(Math.min(T, 9), kind), 0.6);
       const r = fight(p, { zone: z, tier: T, noRare: true, golden: false, rare: false });
@@ -125,28 +125,28 @@ function A2() {
       if (r.result === 'win') acc.win++;
       if (r.result === 'lose') acc.wipe++;
       if (r.anyDown) acc.down++;
-      acc.rounds.push(r.rounds); acc.loss.push(r.hpLostPct); acc.net.push(r.netLossPct); acc.mp.push(r.mpUsedPct); acc.wp.push(r.wpUsedPct);
+      acc.rounds.push(r.rounds); acc.loss.push(r.hpLostPct); acc.net.push(r.netLossPct); acc.mp.push(r.mpUsedPct);
       const ci = casterIndex(p); if (ci >= 0) acc.casts += r.casts[ci] || 0;
     }
     if (!acc.n) continue;
     (e.region === 'postgame' ? pgData : zoneData).push(acc);
-    if (VERBOSE) log(`  ${z.padEnd(24)} T${T} n${acc.n} win ${f1(pct(acc.win, acc.n))}% rounds ${f2(mean(acc.rounds))} HP-${f1(mean(acc.loss))}% (p95 ${f1(q(acc.loss, 0.95))}) net-${f1(mean(acc.net))}% down ${f1(pct(acc.down, acc.n))}% MP ${f1(mean(acc.mp))}% WP ${f1(mean(acc.wp))}% casts ${f2(acc.casts / acc.n)}`);
+    if (VERBOSE) log(`  ${z.padEnd(24)} T${T} n${acc.n} win ${f1(pct(acc.win, acc.n))}% rounds ${f2(mean(acc.rounds))} HP-${f1(mean(acc.loss))}% (p95 ${f1(q(acc.loss, 0.95))}) net-${f1(mean(acc.net))}% down ${f1(pct(acc.down, acc.n))}% MP ${f1(mean(acc.mp))}% casts ${f2(acc.casts / acc.n)}`);
   }
   if (!zoneData.length) { res('A2', 'SKIP', '-', '', 'no zone could be simulated'); return; }
   if (pgData.length) {
     const L = pgData.flatMap((a) => a.loss), W = pgData.reduce((s2, a) => s2 + a.win, 0), N = pgData.reduce((s2, a) => s2 + a.n, 0);
     res('A2pg', 'INFO', `post-game mobs: win ${f1(pct(W, N))}% HP-loss ${f1(mean(L))}% (p95 ${f1(q(L, 0.95))}%) — ${pgData.map((a) => `${a.z} ${f1(mean(a.loss))}%`).join(' ')}`, 'not a §4.17.3 item', 'party Lv LZ(9)+1');
   }
-  const all = { n: 0, win: 0, down: 0, wipe: 0, rounds: [], loss: [], mp: [], wp: [], casts: 0 };
-  for (const a of zoneData) { all.n += a.n; all.win += a.win; all.down += a.down; all.wipe += a.wipe; all.rounds.push(...a.rounds); all.loss.push(...a.loss); all.mp.push(...a.mp); all.wp.push(...a.wp); all.casts += a.casts; }
+  const all = { n: 0, win: 0, down: 0, wipe: 0, rounds: [], loss: [], mp: [], casts: 0 };
+  for (const a of zoneData) { all.n += a.n; all.win += a.win; all.down += a.down; all.wipe += a.wipe; all.rounds.push(...a.rounds); all.loss.push(...a.loss); all.mp.push(...a.mp); all.casts += a.casts; }
   const zoneMeans = zoneData.map((a) => ({ k: `${a.z}@T${a.T}`, m: mean(a.loss) }));
   const outZ = zoneMeans.filter((x) => x.m < 5 || x.m > 15);
   const winP = pct(all.win, all.n), rnd = mean(all.rounds), lossM = mean(all.loss), p95 = q(all.loss, 0.95), downP = pct(all.down, all.n), wipeP = pct(all.wipe, all.n);
   const ok = winP >= 99.5 && rnd >= 2.5 && rnd <= 3.5 && lossM >= 8 && lossM <= 12 && !outZ.length && p95 <= 20 && downP <= 3 && wipeP <= 0.1;
   res('A2', ok ? 'PASS' : 'FAIL', `win ${f1(winP)}% rounds ${f2(rnd)} HP-loss ${f1(lossM)}% (zones ${f1(Math.min(...zoneMeans.map((x) => x.m)))}–${f1(Math.max(...zoneMeans.map((x) => x.m)))}%) p95 ${f1(p95)}% downs ${f1(downP)}% wipes ${f2(wipeP)}%`,
     'win ≥ 99.5 · rounds 2.5–3.5 · loss 8–12 (every zone 5–15) · p95 ≤ 20 · downs ≤ 3 · wipes ≤ 0.1', `${zoneData.length} zone×tier, ${all.n} fights${outZ.length ? '; out of 5–15: ' + outZ.slice(0, 6).map((x) => `${x.k} ${f1(x.m)}`).join(' ') : ''}`);
-  const mpM = mean(all.mp), wpM = mean(all.wp), cpb = all.casts / all.n;
-  res('A3', mpM <= 12 && wpM <= 12 && cpb >= 0.75 ? 'PASS' : 'FAIL', `MP ${f1(mpM)}% WP ${f1(wpM)}% of max per fight; caster casts ${f2(cpb)}/fight`, 'MP, WP ≤ 12% · casts ≥ 0.75', 'fights start at 60% MP/WP (§4.17.1)');
+  const mpM = mean(all.mp), cpb = all.casts / all.n;
+  res('A3', mpM <= 12 && cpb >= 0.75 ? 'PASS' : 'FAIL', `MP ${f1(mpM)}% of max per fight (techs + spells); caster casts ${f2(cpb)}/fight`, 'MP ≤ 12% · casts ≥ 0.75', 'fights start at 60% MP (§4.17.1, SYSTEMS_REWORK §4.3)');
   // B4: per region, zones across tiers within ±15% of their mean
   const byRegion = {};
   for (const a of zoneData) if (/^r_/.test(a.region) && typeof DB.encounters[a.z].tier !== 'number') (byRegion[a.region] = byRegion[a.region] || []).push(a);

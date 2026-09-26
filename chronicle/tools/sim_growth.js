@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Growth simulator (rules A1): levels and HP/MP/WP through a whole playthrough,
+// Growth simulator (rules A1): levels and HP/MP through a whole playthrough,
 // what grinding buys, and how far the reserve (60% EXP) and late joiners fall behind.
 // DESIGN.md §4.2, §4.17.3 E1/E2, §5.5.4, §12.3.
 //
