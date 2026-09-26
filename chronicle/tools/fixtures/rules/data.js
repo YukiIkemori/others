@@ -97,6 +97,8 @@
     fx_acc_nospell: { name: '補封', type: 'acc', tier: 0, grade: 'super', price: 100, quirk: true, mods: { noSpell: true, strPct: 20 } },
     fx_acc_lure: { name: '補呼', type: 'acc', tier: 0, grade: 'normal', price: 100, mods: { encounterPct: 50 } },
     fx_acc_cost_up: { name: '補費', type: 'acc', tier: 0, grade: 'rare', price: 100, quirk: true, mods: { mpCostPct: 25, wpCostPct: 25 } },
+    fx_acc_poor: { name: '補貧', type: 'acc', tier: 0, grade: 'super', price: 100, quirk: true, mods: { goldPct: -50, expPct: -50 } },
+    fx_acc_luck: { name: '補運', type: 'acc', tier: 0, grade: 'rare', price: 100, mods: { rarePct: 20, superPct: 20 } },
     fx_only: { name: '専用', type: 'acc', tier: 0, grade: 'rare', price: 100, only: ['fx_mage'], units: 'i1' },
     fx_gender: { name: '女用', type: 'head', weight: 'cloth', tier: 0, grade: 'rare', gender: 'f', units: 'm1' },
     // consumables / key items for inventory tests

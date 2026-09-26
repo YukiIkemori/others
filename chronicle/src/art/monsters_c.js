@@ -333,7 +333,9 @@
     // the core: a glowing orb inside the big prism, like an eye
     const core = R.Gfx.pix(W, H); core.ellipse(15.5, 15.5, 3.5, 3.5, 1);
     core.each((x, y) => { const d = Math.hypot(x - 15.5, y - 15.5); p.set(x, y, d < 2 ? '#ffffff' : d < 3 ? '#e4fbff' : C[5]); });
-    p.vline(15, 14, 17, '#2a4070'); p.vline(16, 14, 17, '#4670a4');
+    // a round dark pupil in a pale blue iris (an eye, not a ring), a catch-light at the top left
+    for (const [x, y] of [[15, 14], [16, 14], [14, 15], [17, 15], [14, 16], [17, 16], [15, 17], [16, 17]]) p.set(x, y, '#80c0e0');
+    p.set(15, 15, '#2a4070'); p.set(16, 15, '#1c2c58'); p.set(15, 16, '#1c2c58'); p.set(16, 16, '#2a4070');
     p.set(14, 13, '#ffffff'); p.set(13, 14, '#ffffff');
     // internal glints
     p.line(12, 8, 13, 6, '#ffffff'); p.set(18, 21, C[6]); p.set(19, 20, C[5]);
@@ -871,10 +873,10 @@
     // crown, the tips split into twig fingers
     sc.tube([[24.5, 39.5, 3.4, 3], [17, 37.4, 2.8, 3], [11, 33, 2.3, 3], [7, 28.4, 1.8, 3]], { m: bark, g: 'armL' });
     for (const [x, y] of [[1.6, 25.2], [2.6, 31.4], [5.6, 21.6]]) sc.tube([[7, 28.4, 1.5, 4], [(7 + x) / 2, (28.4 + y) / 2, 1, 4], [x, y, 0.5, 4]], { m: bark, g: 'armL' });
-    sc.tube([[39, 39.5, 3.4, 3], [46.5, 37.4, 2.8, 3], [52.5, 33, 2.3, 3], [56.5, 28.4, 1.8, 3]], { m: bark, g: 'armR' });
-    for (const [x, y] of [[61.8, 25.2], [60.8, 31.4], [57.8, 21.6]]) sc.tube([[56.5, 28.4, 1.5, 4], [(56.5 + x) / 2, (28.4 + y) / 2, 1, 4], [x, y, 0.5, 4]], { m: bark, g: 'armR' });
+    sc.tube([[38.5, 39.5, 3.4, 3], [46, 37.4, 2.8, 3], [52, 33, 2.3, 3], [56, 28.4, 1.8, 3]], { m: bark, g: 'armR' });
+    for (const [x, y] of [[61.4, 25.2], [60.4, 31.4], [57.4, 21.6]]) sc.tube([[56, 28.4, 1.5, 4], [(56 + x) / 2, (28.4 + y) / 2, 1, 4], [x, y, 0.5, 4]], { m: bark, g: 'armR' });
     // leaves sprouting on the arms
-    for (const [x, y, r] of [[14.6, 33.6, 2.4], [49, 33.6, 2.4], [3.4, 21.6, 1.8], [60, 21.6, 1.8]]) sc.ell(x, y - 1.6, r, r * 0.8, { m: leaf, g: 'lv' + x, z: 6, rz: 2 });
+    for (const [x, y, r] of [[14.6, 33.6, 2.4], [48.4, 33.6, 2.4], [3.4, 21.6, 1.8], [59.6, 21.6, 1.8]]) sc.ell(x, y - 1.6, r, r * 0.8, { m: leaf, g: 'lv' + x, z: 6, rz: 2 });
     // crown of leaves: a heap of clumps, each shaded as its own ball (soft seams)
     const CL = [
       [31.5, 23, 15, 6.6, 0], [17.5, 23.4, 6.6, 5.8, 1], [45.5, 23.4, 6.6, 5.8, 1], [12.6, 25, 3.4, 3, 2], [50.4, 25, 3.4, 3, 2],

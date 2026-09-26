@@ -4,6 +4,7 @@
 //   - sheets are {down,up,left,right} × 2 frames of 16x24, left = mirrored right
 //   - opaque pixels only (except the ghostly types and the fading girl)
 //   - feet on the bottom: lowest opaque row is 23 (the outline under row-22 feet)
+//   - the side view's frame 0 is the standing pose (feet together; frame 1 is the stride)
 //   - the silhouette outline is the 1px ink colour, and no figure touches the frame edge
 //   - colour counts, build times
 //   - distinguishability: pixel difference between every pair of down-facing frames
@@ -85,12 +86,19 @@ window.CHECK = function (minDiff) {
       let diff = 0; for (let i = 0; i < a.length; i += 4) if (a[i + 3] !== b[i + 3] || a[i] !== b[i]) diff++;
       if (diff < 4) F(key + ': ' + d + ' frames 0/1 are (almost) the same (' + diff + ' px)');
     }
+    // the side view's frame 0 is the standing pose (§11.0 0.20: a figure that stands shows frame 0):
+    // its feet (rows 20-22) never spread wider than the stride of frame 1
+    if (!opts.animal && !opts.still) {
+      const spread = (cv) => { const p = px(cv); let mn = 99, mx = -1; for (let y = 20; y <= 22; y++) for (let x = 0; x < 16; x++) if (p[(y * 16 + x) * 4 + 3] && hex(p, (y * 16 + x) * 4) !== OUTL) { mn = Math.min(mn, x); mx = Math.max(mx, x); } return mx - mn; };
+      const s0 = spread(sh.right[0]), s1 = spread(sh.right[1]);
+      if (s0 > s1) F(key + ': right0 is mid-stride (feet ' + s0 + ' px) but frame 0 must be the standing pose (frame 1: ' + s1 + ' px)');
+    }
     maxColors = Math.max(maxColors, colors.size); sumColors += colors.size;
     if (colors.size > 40) W(key + ': ' + colors.size + ' colours');
     downs[name] = px(sh.down[0]);
   }
   for (const id of CA.PARTY_IDS) sheetCheck('party:' + id, id, { party: true });
-  for (const t of CA.NPC_TYPES) sheetCheck('npc:' + t, 'npc:' + t, { ghostly: GHOSTLY.has(t), still: t === 'fine_fade' });
+  for (const t of CA.NPC_TYPES) sheetCheck('npc:' + t, 'npc:' + t, { ghostly: GHOSTLY.has(t), still: t === 'fine_fade', animal: ANIMAL.has(t) || t === 'spirit' });
   res.stats.sheets = nSheets; res.stats.buildMs = Math.round(tBuild); res.stats.maxColors = maxColors; res.stats.avgColors = Math.round(sumColors / nSheets);
   res.stats.edgeFrames = edgeHits;
   for (const k in edgeOf) (/^party:/.test(k) ? F : W)(k + ': colour pixels on the frame edge, outline cut off (' + edgeOf[k].join(' ') + ')');

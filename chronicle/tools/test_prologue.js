@@ -439,7 +439,15 @@ async function testPlay() {
   R.Settings.alwaysDash = true;
   const flush = () => new Promise((r) => setImmediate(r));
   let frames = 0;
-  async function step(k = 1) { for (let i = 0; i < k; i++) { frames++; if (frames > 600000) throw new Error('frame budget'); R.Engine.step(); await flush(); } }
+  // P1 「暗転のまま」: the lowest fade alpha seen before the first caption (1 = the room never showed)
+  let darkWatch = false, darkMin = 1, stageFade = null;
+  async function step(k = 1) {
+    for (let i = 0; i < k; i++) {
+      frames++; if (frames > 600000) throw new Error('frame budget');
+      R.Engine.step(); await flush();
+      if (darkWatch && stageFade == null) darkMin = Math.min(darkMin, R.Engine.fadeAlpha);
+    }
+  }
   async function press(b) { R.Input._set(b, true); await step(2); R.Input._set(b, false); await step(2); }
   const fieldTop = () => R.Engine.top() === R.Field.layer;
   /** answer every window with A (yes / first choice) until the field is free */
@@ -457,6 +465,7 @@ async function testPlay() {
   // captions (ev.caption → the stage layer) are recorded too
   const capLog = [];
   { const push0 = R.Engine.push; R.Engine.push = function (L) {
+    if (L && typeof L.setCaption === 'function' && darkWatch && stageFade == null) stageFade = L.fadeTaken;
     if (L && typeof L.setCaption === 'function') { const sc = L.setCaption.bind(L); L.setCaption = (t, o) => { capLog.push(R.Text.fmt(t)); return sc(t, o); }; }
     return push0.call(this, L);
   }; }
@@ -469,7 +478,11 @@ async function testPlay() {
 
   // ---- new game → P1
   R.State.newGame();
+  darkWatch = true;
   ok(await go(R.Field.start('roa_house', 'bed')), 'P1 intro runs to the end');
+  darkWatch = false;
+  eq(darkMin, 1, 'P1 the screen stays black until the opening captions (enterDark)');
+  eq(stageFade, 1, 'P1 the captions take over the black screen (暗転のまま)');
   ok(R.Engine.fadeAlpha === 0, 'P1: the screen is visible after the intro');
   ok(g().flags.pro_start && g().flags.hero_created, 'P1 flags pro_start + hero_created');
   eq(g().objective, 'obj_p_roa', 'P1 objective');

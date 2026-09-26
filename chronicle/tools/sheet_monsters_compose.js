@@ -253,6 +253,8 @@ window.SHEET = (function () {
   /** pixel checks for every MON_COMPOSE_MOBS id (numbers for the tests) */
   function check() {
     const ids = mobIds(), res = { ids: ids.length, items: {}, errors: [], warnings: [], ms: 0 };
+    // build every base first, so the timings below are the composition alone
+    for (const id of ids) one(G.get('mon:' + A.MON_COMPOSE_MOBS[id][0]));
     const t0 = performance.now();
     const hashes = {};
     for (const id of ids) {
@@ -272,8 +274,30 @@ window.SHEET = (function () {
         hash = Math.imul(hash ^ (a ? (d[i * 4] << 16) | (d[i * 4 + 1] << 8) | d[i * 4 + 2] : 0x1000001), 16777619) >>> 0;
       }
       const st = cv._compose || {};
-      const item = { base: e[0], w: W, h: H, bw: base.width, bh: base.height, semi, opaque, top, bottom, ms: Math.round(ms * 10) / 10,
-        hash: hash.toString(16), partPx: st.partPx || 0, filter: e[3] || null, parts: (e[2] || []).map((p) => p[0]), missing: st.missing || [] };
+      // dominant hue of the recoloured base alone (no parts, no filter): saturation × value weighted
+      const bare = A.compose(e[0], e[1], [], null, id), bd = bare.getContext('2d').getImageData(0, 0, bare.width, bare.height).data;
+      let hx = 0, hy = 0, sw = 0, sn = 0;
+      const bins = new Array(12).fill(0);
+      for (let i = 0; i < bd.length; i += 4) {
+        if (!bd[i + 3]) continue;
+        const r = bd[i] / 255, g = bd[i + 1] / 255, b = bd[i + 2] / 255, mx = Math.max(r, g, b), mn = Math.min(r, g, b), dd = mx - mn;
+        if (mx < 0.15) continue;
+        let hh = 0;
+        if (dd) hh = mx === r ? ((g - b) / dd) % 6 : mx === g ? (b - r) / dd + 2 : (r - g) / dd + 4;
+        hh = ((hh * 60 + 360) % 360) * Math.PI / 180;
+        const sat = mx ? dd / mx : 0, wgt = sat * mx;
+        hx += Math.cos(hh) * wgt; hy += Math.sin(hh) * wgt; sw += sat; sn++;
+        bins[Math.floor(((hh * 180) / Math.PI) / 30) % 12] += wgt;
+      }
+      // base bottom row (feet stay where the base had them)
+      let bbot = -1;
+      const bdd = base.getContext('2d').getImageData(0, 0, base.width, base.height).data;
+      for (let i = 0; i < base.width * base.height; i++) if (bdd[i * 4 + 3]) bbot = Math.max(bbot, Math.floor(i / base.width));
+      const item = { base: e[0], w: W, h: H, bw: base.width, bh: base.height, semi, opaque, top, bottom, baseBottom: bbot, ms: Math.round(ms * 10) / 10,
+        hash: hash.toString(16), partPx: st.partPx || 0, openEdge: st.openEdge || 0, anchorsAuto: !!st.anchorsAuto, filter: e[3] || null,
+        parts: (e[2] || []).map((p) => p[0]), missing: st.missing || [],
+        hue: Math.round((Math.atan2(hy, hx) * 180 / Math.PI + 360) % 360), sat: sn ? Math.round((sw / sn) * 100) / 100 : 0,
+        hueBins: bins.map((v, i) => [v, i * 30 + 15]).sort((p, q) => q[0] - p[0]).slice(0, 3).map((b) => b[1]) };
       res.items[id] = item;
       (hashes[item.hash] = hashes[item.hash] || []).push(id);
       item.mask = mask.join('');
@@ -292,6 +316,12 @@ window.SHEET = (function () {
     }
     for (const id of ids) delete res.items[id].mask;
     res.dupes = Object.values(hashes).filter((l) => l.length > 1);
+    // the bosses' table (A15) goes through the same compose: every part / filter it names must exist
+    res.bosses = {};
+    for (const id in A.MON_COMPOSE_BOSSES || {}) {
+      const cv = img(id), st = cv._compose || {};
+      res.bosses[id] = { w: cv.width, h: cv.height, missing: st.missing || [], partPx: st.partPx || 0, openEdge: st.openEdge || 0, composed: !!cv._compose };
+    }
     res.ms = Math.round(performance.now() - t0);
     res.warned = Object.keys(G._warned);
     return res;

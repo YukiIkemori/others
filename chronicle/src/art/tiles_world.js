@@ -148,7 +148,7 @@
   /** spatial weight (0..1) of the cells flagged in mask9, per extended pixel */
   function effWeight(mask9) {
     const W = weights(), out = new Float32Array(EW * EW);
-    for (let i = 0; i < EW * EW; i++) { let s = 0; for (let j = 0; j < 9; j++) if (mask9[j]) s += W[i * 9 + j]; out[i] = s; }
+    for (let i = 0; i < EW * EW; i++) { let s = 0; for (let j = 0; j < 9; j++) if (mask9[j]) s += W[i * 9 + j] * (+mask9[j]); out[i] = s; }
     return out;
   }
 
@@ -200,14 +200,17 @@
       else if (v > 0.7 && dith(x, y, (v - 0.7) * 2)) plain.p[y * 16 + x] = PL[4];
     }
     TEX[PLAIN] = [plain.p];
-    // desert: one soft dune crest per tile, fine grain
+    // desert: two soft dune crests per tile (one long, one short), lit edge dithered, fine grain
     const D = WP.desert;
     TEX[DESERT] = [mk((x, y) => {
-      const cy = 6 + 2.2 * Math.sin(((x + 2) * Math.PI * 2) / 16);
-      const d = y - cy;
-      if (d > -0.5 && d <= 0.5) return D[4];
-      if (d > 0.5 && d <= 1.5) return D[2];
-      if (d > 1.5 && d <= 2.5 && x % 2 === 0) return D[2];
+      const c1 = 4 + 1.8 * Math.sin(((x + 2) * Math.PI * 2) / 16), c2 = 11.5 + 1.2 * Math.sin(((x + 9) * Math.PI * 4) / 16);
+      const on2 = Math.sin(((x + 5) * Math.PI * 2) / 16) > -0.2; // the short crest fades out part of the way
+      for (const [cy, on] of [[c1, true], [c2, on2]]) {
+        if (!on) continue;
+        const d = y - cy;
+        if (d > -0.5 && d <= 0.5) return t.bayer(x, y) < 0.7 ? D[4] : D[3];
+        if (d > 0.5 && d <= 1.5) return t.bayer(x, y) < 0.6 ? D[2] : D[3];
+      }
       const h = t.hash(x, y, 17);
       if (h < 0.05) return D[2];
       if (h > 0.96) return D[4];
@@ -389,8 +392,18 @@
     const FOG_BLOBS = [[3, 4, 6.5, 4.6], [11.5, 2.5, 5.5, 4], [8, 10.5, 7, 4.6], [14.5, 12.5, 5, 3.6], [1.5, 13.5, 4.2, 3]];
     PER.fog = [0, 1, 2, 3].map((F) => blobs(FOG_BLOBS, 4 * F));
     // marsh mist: long thin wisps, 2 images 8 px apart
-    const MIST_BLOBS = [[4, 3, 7.5, 1.7], [12.5, 8.5, 6.5, 1.5], [6, 13.5, 8, 1.6]];
+    const MIST_BLOBS = [[4, 3, 11, 2.4], [12.5, 8.5, 12, 2.1], [0, 13.5, 10, 2]];
     PER.mist = [0, 1].map((F) => blobs(MIST_BLOBS, 8 * F));
+    // sandstorm: slanted streaks (1 px down every 3 px) blowing east, 4 px per image
+    const STREAKS = [[1, 2, 7], [9, 7, 6], [4, 11, 8], [12, 14, 5]];
+    PER.sand = [0, 1, 2, 3].map((F) => {
+      const a = new Uint8Array(256);
+      for (const [x0, y0, len] of STREAKS) for (let k = 0; k < len; k++) {
+        const x = (((x0 + k + 4 * F) % 16) + 16) % 16, y = (y0 + Math.floor(k / 3)) % 16;
+        a[y * 16 + x] = k >= len - 2 ? 2 : 1; // bright head at the leading (east) end
+      }
+      return a;
+    });
     return PER;
   }
 
@@ -407,7 +420,7 @@
     return sprite('crown' + v + tone, () => {
       const t = T, F = WP.forest, b = t.buf(13, 12);
       let ramp = [F[1], F[2], F[3], F[4], F[5]];
-      if (tone === 1) ramp = ramp.map((c) => t.mix(c, 0x6c7038, 0.16)); // 色むら (hidden passage)
+      if (tone === 1) ramp = ramp.map((c) => t.mix(c, 0x747a3a, 0.3)); // 色むら (hidden passage)
       if (tone === 2) ramp = [F[1], F[2], F[3], F[4], t.mix(F[4], F[5], 0.5)];
       const rx = v % 2 ? 5.4 : 5.8, ry = v > 1 ? 5.0 : 5.3;
       b.shadeEllipse(6, 5.6, rx, ry, ramp, { dither: 0.7, amb: 0.25, lx: -0.7, ly: -0.8 });
@@ -605,7 +618,8 @@
       b.outline(k === SNOW ? 0x121622 : 0x1c140c);
       for (let x = 0; x < W; x++) if (b.get(x, base + 1) !== t.NONE) b.set(x, base + 1, null);
       if (foot) for (const [x, y] of [[3 + v, base + 1], [W - 5, base + 1], [px + 1, base + 2]]) { b.set(x, y, Rk[2]); b.set(x + 1, y, Rk[1]); }
-      if (sec === 2) { for (const y of [base - 1, base + 1]) b.set(px - 2, y, WP.road[3]); b.set(px - 3, base + 2, WP.road[2]); }
+      // found: a dotted trail at the foot (kept inside the cell, the only one the field redraws)
+      if (sec === 2) { for (const y of [base - 2, base]) b.set(px - 2, y, WP.road[3]); b.set(px - 3, base - 1, WP.road[2]); }
       return { buf: b, ox: -2, oy: 15 - base };
     });
   }
@@ -821,7 +835,12 @@
         return (id === 'jungle' ? 'J' : 'F') + p4 + '.' + e + '.' + inner + s;
       }
       case 'snowforest': return 'S' + ((((x + y) % 2) + 2) % 2);
-      case 'deadforest': return 'D' + ((((x + 3 * y) % 3) + 3) % 3);
+      case 'deadforest': {
+        // dead trees inside a marsh fog carry the fog too (the patch only turns marsh cells into marsh_fog)
+        let fogNear = false;
+        for (const [dx, dy] of DIRS4) if (at(dx, dy) === 'marsh_fog') fogNear = true;
+        return 'D' + ((((x + 3 * y) % 3) + 3) % 3) + (fogNear ? 'e' : '');
+      }
       case 'hills': return 'H' + k + '.' + ((((x + y) % 2) + 2) % 2);
       case 'mountain': case 'secret_rock': {
         let n = 0;
@@ -1032,18 +1051,19 @@
     const fld = field(c9);
     const rocky9 = d9.map((d) => d && (d[0] === 'M' || d[0] === 'C'));
     // weather weights
-    const zMask = d9.map((d) => d === 'Z'), eMask = d9.map((d) => d === 'E');
+    const zMask = d9.map((d) => d === 'Z'), eMask = d9.map((d) => (d === 'E' ? 1 : d && d[0] === 'D' && d[2] === 'e' ? 0.85 : 0));
     const sandW = zMask.some(Boolean) ? effWeight(zMask) : null;
     // sea fog density: weighted mean over the water cells around (open sea counts 0, fog 0.62/0.88/1 by depth)
     let fogD = null;
     if (d9.some((d) => d && d[0] === 'g')) {
       fogD = new Float32Array(EW * EW);
-      const dens9 = d9.map((d, j) => (d && d[0] === 'g' ? [0.62, 0.88, 1][+d[1]] : -1));
+      // (open water weighs half, so even a one-cell bank reads as fog, thinning at its edges)
+      const dens9 = d9.map((d, j) => (d && d[0] === 'g' ? [0.9, 1, 1.05][+d[1]] : -1));
       const water9 = c9.map((k, j) => dens9[j] >= 0 || isWater(k));
       for (let i = 0; i < EW * EW; i++) {
         let num = 0, den = 0, fogw = 0;
-        for (let j = 0; j < 9; j++) { if (!water9[j]) continue; const w = W[i * 9 + j]; den += w; if (dens9[j] >= 0) { num += w * dens9[j]; fogw += w; } }
-        fogD[i] = den > 0.001 && fogw > 0 ? (num / den) * Math.min(1, fogw * 6) : 0;
+        for (let j = 0; j < 9; j++) { if (!water9[j]) continue; const w = W[i * 9 + j]; if (dens9[j] >= 0) { num += w * dens9[j]; fogw += w; den += w; } else den += w * 0.45; }
+        fogD[i] = den > 0.001 && fogw > 0 ? (num / den) * Math.min(1, fogw * 5) : 0;
       }
     }
     const mfogW = eMask.some(Boolean) ? effWeight(eMask) : null;
@@ -1262,18 +1282,14 @@
       if (sandW && sandW[i] > 0) {
         const w = sandW[i], bz = t.bayer(x, y);
         if (bz < w) b.p[p] = t.mix(b.p[p], WP.haze, 0.2);
-        const lane = ((x - y) % 16 + 16) % 16, u = ((x + y - 4 * sandF) % 16 + 16) % 16;
-        let on = -1;
-        if (lane === 1 && u < 5) on = u < 2 ? 0 : 1;
-        else if (lane === 7 && ((u + 6) % 16) < 4) on = ((u + 6) % 16) < 1.5 ? 0 : 1;
-        else if (lane === 12 && ((u + 11) % 16) < 3) on = 1;
-        if (on >= 0 && bz < w * 1.3) b.p[p] = on === 0 ? 0xf2e8d0 : t.mix(b.p[p], 0xe8d8b0, 0.6);
+        const st = PER.sand[sandF][p];
+        if (st && bz < w * 1.4) b.p[p] = st === 2 ? 0xf2e8d0 : t.mix(b.p[p], 0xece0c0, 0.55);
       }
       // marsh fog: pale wisps, checker-dithered (half transparent)
       if (mfogW && mfogW[i] > 0) {
         const a = mfogW[i] * mist[p] * 1.25;
-        if (a > 0.3 && ((x + y + mF) & 1) === 0) b.p[p] = t.mix(b.p[p], a > 0.7 ? FG[2] : FG[1], a > 0.55 ? 0.7 : 0.5);
-        else if (a > 0.72) b.p[p] = t.mix(b.p[p], FG[0], 0.35);
+        if (a > 0.34 && ((x + y + mF) & 1) === 0) b.p[p] = t.mix(b.p[p], a > 0.7 ? FG[2] : FG[1], a > 0.6 ? 0.6 : 0.42);
+        else if (a > 0.7) b.p[p] = t.mix(b.p[p], FG[0], 0.28);
       }
     }
   }
@@ -1285,7 +1301,7 @@
       const x = axis === 'v' ? 8 : k, y = axis === 'v' ? k : 8;
       const wob = (k % 5 === 2) ? 1 : 0;
       const px = axis === 'v' ? x + wob : x, py = axis === 'v' ? y : y + wob;
-      if (!found) { if (k % 3 !== 1) b.set(px, py, t.mix(b.get(px, py), F[0], 0.55)); continue; }
+      if (!found) { if (k % 3 !== 1) b.set(px, py, t.mix(b.get(px, py), F[0], 0.7)); continue; }
       b.set(px, py, F[0]);
       if (axis === 'v') b.set(px + 1, py, F[1]); else b.set(px, py + 1, F[1]);
       if (k % 2 === 0) b.set(px, py, R2[2]);
@@ -1303,6 +1319,15 @@
   A.worldTileStats = () => { const o = {}; for (const k of CACHE.keys()) { const id = k.split('|')[0]; o[id] = (o[id] || 0) + 1; } return o; };
   /** drop cached cells (e.g. after R.Game.secrets changed); the field keeps its own per-cell cache */
   A.worldTileReset = () => CACHE.clear();
+  /** battle backdrop for a world cell: roads, bridges over land and ruins take the backdrop of
+   *  the ground they lie on (a desert road fights in the desert); other tiles keep their data bbg */
+  const CLASS_BBG = { [GRASS]: 'grass', [PLAIN]: 'grass', [DESERT]: 'desert', [SNOW]: 'snow', [SWAMP]: 'swamp', [BEACH]: 'beach', [WASTE]: 'wasteland', [MARSH]: 'swamp', [ASH]: 'ashland' };
+  const GROUND_BBG = new Set(['road', 'bridge_h', 'bridge_v', 'ruins']);
+  A.worldBbg = (m, x, y) => {
+    const id = m.tileAt(x, y), t = R.DB.tiles[id] || {};
+    if (GROUND_BBG.has(id)) { const k = resolveClass(m, x, y); if (CLASS_BBG[k]) return CLASS_BBG[k]; }
+    return t.bbg || null;
+  };
   /** (tests) the ground-class field of a cell over its 20×20 extended area (2 px margin) */
   A.worldTileField = (m, x, y) => { tk(); return { cls: field(classes9(m, x, y)).cls, EW, MG }; };
   A.WORLD_CLASS = { TCLS, clsOf, isWater, NAMES: ['sea', 'barrier', 'grass', 'plain', 'desert', 'snow', 'swamp', 'beach', 'waste', 'magma', 'marsh', 'ash', 'fog'] };

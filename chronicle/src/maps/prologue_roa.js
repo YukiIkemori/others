@@ -200,6 +200,7 @@
     name: 'ロアの里', type: 'town', theme: 'house', bgm: 'home',
     location: 'roa', region: 'prologue', outside: '#', noRespawn: true,
     onEnter: 'roa_house_intro',
+    enterDark: '!pro_start', // P1: black until the opening narration fades the room in
     // @rows roa_house
     rows: [
       '####################',

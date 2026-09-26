@@ -52,16 +52,30 @@
     }
     for (let y = 196; y < H; y++) for (let x = (y % 2); x < W; x += 2) p.set(x, y, '#18243e');
     for (let y = 212; y < H; y++) for (let x = ((y + 1) % 2); x < W; x += 2) p.set(x, y, '#18243e');
-    // the island offshore with the thin tower (Biblia's great library), dark against the dusk
-    const IS = '#2a2c40', IS2 = '#22243a';
-    p.poly([[164, HORIZON + 1], [176, 104], [188, 100], [198, 97], [214, 96], [226, 99], [238, 104], [248, 109], [254, HORIZON + 1]], IS);
-    p.poly([[196, 98], [202, 92], [210, 90], [218, 92], [222, 97]], IS);
-    p.rect(206, 58, 6, 34, IS);
-    p.rect(205, 62, 8, 2, IS); p.rect(205, 72, 8, 2, IS); p.rect(205, 82, 8, 2, IS);
-    p.rect(207, 52, 4, 6, IS); p.set(208, 49, IS); p.set(209, 49, IS); p.rect(208, 50, 2, 2, IS);
-    p.rect(200, 84, 18, 8, IS); p.rect(198, 88, 22, 4, IS2);
-    p.set(209, 66, '#fff0b0'); p.set(209, 76, '#e8c060'); p.set(203, 88, '#e8c060'); p.set(214, 89, '#fff0b0');
-    for (let x = 166; x < 254; x++) p.set(x, HORIZON + 1, '#3a3c5a');
+    // the island offshore with the thin tower (Biblia's great library), dark against the dusk:
+    // a rocky low spur, a hill carrying the library hall, and the tower rising out of it
+    const IS = '#2a2c40', IS2 = '#222336', RIM = '#3c3a5a', WIN = '#ffe8a0', WIN2 = '#d8a850';
+    p.poly([[158, HORIZON + 1], [163, 109], [170, 108], [176, 109], [181, HORIZON + 1]], IS);
+    p.poly([[172, HORIZON + 1], [182, 107], [190, 104], [197, 100], [204, 97], [212, 96], [221, 97], [229, 100], [237, 104], [245, 107], [252, 109], [255, HORIZON + 1]], IS);
+    p.poly([[221, 97], [229, 100], [237, 104], [245, 107], [252, 109], [255, HORIZON + 1], [226, HORIZON + 1], [224, 104]], IS2);
+    for (const [x, y] of [[164, 109], [165, 108], [183, 106], [186, 105], [191, 103], [195, 101], [199, 99], [203, 97]]) p.hline(x, x + 2, y, RIM);
+    // the library hall on the hilltop: a long roof with a gable, lit windows
+    p.rect(197, 89, 26, 8, IS);
+    p.poly([[195, 90], [203, 85], [217, 85], [225, 90]], IS);
+    p.hline(196, 224, 90, RIM);
+    p.rect(219, 89, 4, 8, IS2);
+    for (const x of [200, 204, 216, 220]) { p.set(x, 92, WIN2); p.set(x, 93, WIN2); }
+    p.rect(209, 91, 3, 5, '#3a3040'); p.set(210, 91, WIN);
+    // the tower: three tiers with cornices, a lantern and a slim spire (its tip stays below the gold rule at y 49)
+    p.rect(206, 72, 8, 17, IS); p.rect(214, 72, 1, 17, IS2);
+    p.rect(205, 71, 10, 2, RIM);
+    p.rect(207, 63, 6, 8, IS); p.rect(212, 63, 1, 8, IS2);
+    p.rect(206, 62, 8, 1, RIM);
+    p.rect(208, 57, 4, 5, IS);
+    p.vline(209, 52, 56, IS); p.vline(210, 54, 56, IS); p.set(209, 51, RIM);
+    p.set(209, 58, '#fff4c8'); p.set(210, 58, '#fff4c8'); p.set(209, 59, WIN); p.set(210, 59, WIN2);
+    for (const [x, y] of [[208, 65], [210, 75], [208, 81]]) { p.set(x, y, WIN); p.set(x, y + 1, WIN2); }
+    for (let x = 160; x < 255; x++) if (x % 3) p.set(x, HORIZON + 1, '#3a3c5a');
     // the cape (left) and the Pharos lighthouse
     const CP = '#141a30', CP2 = '#1c2440', CP3 = '#0c1022';
     p.poly([[0, 88], [14, 86], [30, 84], [44, 86], [58, 92], [68, 100], [76, 108], [82, HORIZON + 6], [0, HORIZON + 10]], CP);
@@ -129,20 +143,25 @@
     p.outline('#1c1420');
     return p.toCanvas();
   }
-  /** a drifting bank of mist: overlapping soft lobes (drawn at partial opacity over the island) */
-  function buildFog(w, h, seed) {
+  /**
+   * a bank of mist: a low band with a bumpy upper edge, flat underneath, a brighter crown and dithered
+   * fringes (drawn at 50% over the island so its silhouette still reads through)
+   */
+  function buildWisp(w, h, seed) {
     const p = G().pix(w, h);
     let sd = seed;
     const rnd = () => { sd = (sd * 16807) % 2147483647; return sd / 2147483647; };
-    const lobes = 4 + Math.floor(rnd() * 3);
-    for (let i = 0; i < lobes; i++) {
-      const cx = w * (0.18 + 0.64 * (i / Math.max(1, lobes - 1))) + (rnd() - 0.5) * 6;
-      const ry = h * (0.28 + rnd() * 0.22), rx = w * (0.14 + rnd() * 0.1);
-      p.ellipse(cx, h - ry - 1, rx, ry, '#d8dcf0');
+    const ph = [rnd() * 6.28, rnd() * 6.28, rnd() * 6.28];
+    for (let x = 0; x < w; x++) {
+      const env = Math.pow(Math.sin((Math.PI * (x + 0.5)) / w), 0.6);
+      const bump = 0.6 + 0.25 * Math.sin(x / 5 + ph[0]) + 0.15 * Math.sin(x / 2.3 + ph[1]);
+      const top = Math.round((h - 1) * (1 - env * bump));
+      for (let y = top; y < h; y++) {
+        const edge = y === top, bottom = y === h - 1;
+        if ((edge || bottom) && (x + y) % 2 === 1) continue; // ragged, dithered fringe
+        p.set(x, y, y <= top + 1 ? '#f0f2fc' : '#d8dcf0');
+      }
     }
-    p.ellipse(w / 2, h - 3, w / 2 - 1, 2, '#d8dcf0');
-    // lighter crowns on each lobe
-    p.each((x, y) => (p.get(x, y - 2) == null && y < h - 3 ? '#f0f2fc' : undefined));
     return p.toCanvas();
   }
   function buildQuill() {
@@ -429,14 +448,15 @@
       for (let k = 0; k < 4; k++) g.rect(206 + ((k * 5 + Math.floor(f / 24)) % 6), HORIZON + 4 + k * 3, 2 + (k % 2), 1, '#7a6a70');
       ctx.globalAlpha = 1;
     }
-    /** white mist around the island (50% dither), drifting left and right */
+    /** white mist around the island (#d8dcf0 at 50%): thin wisps drifting left and right at their own pace */
     drawFog(f) {
       const g = G(), ctx = g.ctx;
-      if (!fogCache) fogCache = [buildFog(56, 12, 7), buildFog(44, 10, 19), buildFog(64, 14, 31), buildFog(36, 9, 43)];
-      const banks = [[0, 168, 94, 1], [1, 206, 86, -0.8], [2, 196, 101, 0.6], [3, 232, 99, -1.2], [1, 176, 106, 1.3]];
-      banks.forEach(([i, x, y, k], n) => {
-        const ox = x + Math.sin(f / 170 + n * 1.7) * 6 * k;
-        ctx.globalAlpha = n === 4 ? 0.3 : 0.42;
+      if (!fogCache) fogCache = [buildWisp(84, 7, 7), buildWisp(52, 6, 19), buildWisp(46, 6, 31), buildWisp(34, 5, 43)];
+      // [wisp, centre x, top y, sway (px), speed]: the waterline, the right slope, the left hill, the hall's foot
+      const banks = [[0, 204, 106, 7, 1], [1, 238, 102, 6, -0.7], [2, 184, 101, 5, 0.8], [3, 216, 92, 4, -1.1]];
+      banks.forEach(([i, x, y, amp, k], n) => {
+        const ox = x + Math.sin((f / 190) * k + n * 1.9) * amp;
+        ctx.globalAlpha = 0.5;
         g.draw(fogCache[i], Math.round(ox - fogCache[i].width / 2), y);
       });
       ctx.globalAlpha = 1;

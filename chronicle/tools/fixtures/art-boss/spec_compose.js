@@ -1,6 +1,7 @@
 // DESIGN §9.11.6 boss compose table, transcribed verbatim (normative), for test_art-boss.js T1.
 // FIXES: rows whose hsb the art deliberately differs from, with the reason (see bosses_compose.js
 // and the A15a report): a hue rotation of 25° / 60° contradicts the table's own description.
+(function () {
 'use strict';
 const TABLE = {
   b_sandworm: ['boss_serpent', { hue: 25, sat: 0.7, bri: 1.05 }, []],
@@ -28,4 +29,8 @@ const CREST_FACE = {
   boss_frost_giant: 20, boss_flame_lord: 24, boss_star_guardian: 22, boss_serpent: 17, boss_general_b: 20,
   boss_bandit: 12, boss_general_a: 22, boss_demon_king: 22, doll: 12, ghost: 16, kraken: 31, sandworm: 17,
 };
-module.exports = { TABLE, FIXES, CREST_FACE };
+const EXPORTS = { TABLE, FIXES, CREST_FACE };
+// node tools require() this file; build.js --with may also load it in the page (then it is inert data)
+if (typeof module !== 'undefined' && module.exports) module.exports = EXPORTS;
+else if (typeof window !== 'undefined' && window.RPG) (window.RPG.artBossFixture = window.RPG.artBossFixture || {}).spec = EXPORTS;
+})();

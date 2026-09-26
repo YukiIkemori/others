@@ -274,8 +274,11 @@
     if (e && typeof e === 'object') return { ref: e.id || e.mon, a: e.n != null ? e.n : 1, b: undefined };
     return { ref: e, a: 1, b: undefined };
   }
-  /** monster ids for a battle: spec [['@wolf',1,3], ['bat_2',2], 'jelly_1'] at tier T; ≤ 8, each species kept together */
-  function buildList(spec, tier) {
+  /**
+   * monster ids for a battle: spec [['@wolf',1,3], ['bat_2',2], 'jelly_1'] at tier T; ≤ 8, each species kept together
+   * (opts.keepOrder: the spec's own left → right order, for troops such as お供・ボス・お供)
+   */
+  function buildList(spec, tier, opts) {
     const T = tier == null ? tierNow() : tier;
     const out = [];
     for (const e of spec || []) {
@@ -285,6 +288,7 @@
       const n = b != null ? U.ri(a, b) : a != null ? a : 1;
       for (let i = 0; i < n && out.length < 8; i++) out.push(id);
     }
+    if (opts && opts.keepOrder) return out;
     const firstAt = {};
     out.forEach((id, i) => { if (!(id in firstAt)) firstAt[id] = i; });
     return out.map((id, i) => [firstAt[id], i, id]).sort((x, y) => x[0] - y[0] || x[1] - y[1]).map((x) => x[2]);

@@ -51,7 +51,8 @@ const section = (h) => { const i = DESIGN.indexOf(h); if (i < 0) return ''; cons
   }
   // §11.11.3 repeats them
   const s3 = section('#### 11.11.3');
-  if (!/xs:\[3, 66, 129, 192\]/.test(s3.replace(/\s+/g, ' ').replace(/\[\s*/g, '[').replace(/\s*\]/g, ']'))) warn('K1', '§11.11.3 no longer lists WIN xs [3, 66, 129, 192]');
+  if (!s3.replace(/\s+/g, '').includes('xs:[' + B.WIN.xs.join(',') + ']')) warn('K1', '§11.11.3 no longer lists WIN xs ' + B.WIN.xs.join(','));
+  else okk('K1', '§11.11.3 agrees');
 }
 
 // ---------------------------------------------------------------- K2 status icons
@@ -75,7 +76,7 @@ const section = (h) => { const i = DESIGN.indexOf(h); if (i < 0) return ''; cons
   const exact = (id) => { const b = String(id).toLowerCase().replace(/\d+$/, ''); return !!FX.FX[b] || b.startsWith('breath'); };
   const lists = {};
   const s626 = section('#### 6.2.6');
-  lists['§6.2.6'] = [...s626.matchAll(/`([a-z]+\d?)`/g)].map((m) => m[1]).filter((x) => !['fx'].includes(x));
+  lists['§6.2.6'] = [...s626.matchAll(/`([a-z]+\d?)`/g)].map((m) => m[1]).filter((x) => !['fx', 'resolve'].includes(x));
   const s9142 = section('#### 9.14.2');
   const four = /④ 使う fx: `([^`]+)`/.exec(s9142);
   lists['§9.14.2 ④'] = four ? four[1].replace(/\(([^)]*)\)/g, (m0, a) => ' ' + a.split(/\s+/).map((x) => 'breath' + x).join(' ')).split(/\s+/).filter(Boolean) : [];

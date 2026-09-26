@@ -29,8 +29,7 @@
   function lib() {
     if (LIB) return LIB;
     const T = R.Art.BossTK;
-    const { G, OUT, INK, WHITE, mix, dk, ramp, rng, hash, mask, cap, bez, tube, curve, sym, both, bbox, edt, sphereN, cylN, shade, part, put, bump, on, stamp, glow, scales, edgeLight, star4, GOLD } = T;
-    void [sym, bbox, cylN, scales, edgeLight, GOLD, hash, rng, dk, glow, star4];
+    const { G, OUT, INK, WHITE, mix, ramp, rng, hash, mask, cap, bez, tube, curve, both, edt, sphereN, cylN, shade, part, put, bump, on, stamp, glow, scales, edgeLight } = T;
 
     // -------------------------------------------------------------- extra helpers
     /**

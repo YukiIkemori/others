@@ -159,6 +159,11 @@
     for (const dir of ['down', 'up', 'right']) {
       for (let f = 0; f < 2; f++) out[dir].push(toCanvas(figure(spec, pal, dir, f)));
     }
+    // The side-view parts author frame 0 mid-stride and frame 1 passing (feet together). A figure
+    // that stands still shows frame 0 (DESIGN §11.0 0.20, §11.3.1), so the passing pose goes first:
+    // standing NPCs and a halted party face left/right with their feet together, and walking still
+    // alternates the two poses.
+    out.right.reverse();
     out.left = out.right.map((c) => R.Gfx.flipH(c));
     return out;
   }

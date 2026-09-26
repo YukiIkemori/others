@@ -696,7 +696,7 @@
   }
   PARTS.flower = (p, a, o) => {
     const T = TK(), k = o.baseK, hw = headW(o);
-    const r = k < 1.3 ? 1.8 : k < 1.8 ? 2.6 : 3.4;
+    const r = k < 1.3 ? 2.2 : k < 1.8 ? 2.6 : 3.4;
     const onHead = !(o.anchors.at && o.anchors.at.flower);
     const x = onHead ? a[0] + Math.round(hw * 0.28) : a[0], y = Math.max(Math.ceil(r), a[1] - Math.round(r * 0.6));
     const petal = o.c || '#ff90c0';
@@ -857,7 +857,8 @@
       }
       return;
     }
-    const r = k < 1.3 ? 1 : k < 1.8 ? 1.5 : 2;
+    // the glow fills the base's own eye: anchors.eyeR for bases with big eyes (the eyeball, the owl)
+    const r = an.eyeR || (k < 1.3 ? 1 : k < 1.8 ? 1.5 : 2);
     const doEye = (e, small) => {
       const rr = small ? Math.max(0.5, r - 0.8) : r;
       for (let y = -Math.ceil(rr); y <= Math.ceil(rr); y++) for (let x = -Math.ceil(rr); x <= Math.ceil(rr); x++) {

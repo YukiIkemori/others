@@ -75,9 +75,10 @@
       const fr = kit.frameOf(key, opt.dir, opt.frame);
       const g = G();
       if (fr) {
-        if (opt.dim) g.ctx.globalAlpha = 0.35;
+        const a0 = g.ctx.globalAlpha;
+        g.ctx.globalAlpha = a0 * (opt.dim ? 0.35 : opt.alpha != null ? opt.alpha : 1);
         g.draw(fr, x, y, { w: 16 * s, h: 24 * s });
-        g.ctx.globalAlpha = 1;
+        g.ctx.globalAlpha = a0;
         return;
       }
       const c = opt.dim ? '#20243a' : '#3a3e5c';
@@ -157,11 +158,34 @@
       g.text('術', x, y + 33, { color: G().C.cyan });
       E.forEach((e, k) => cell('e', e, x + 26 + 20 * k, y + 33, kit.ename(e), kit.ecolor(e)));
     },
-    statBar(x, y, v) {
-      const g = G();
-      g.rect(x, y, 48, 4, '#1c2442');
-      g.rect(x, y, Math.max(1, Math.round(v * 0.8)), 4, g.C.cyan);
-      g.rect(x, y, Math.max(1, Math.round(v * 0.8)), 1, '#c8f0ff');
+    /** a 48px ability bar (value × 0.8px, §11.8.2); o.bonus adds a green piece after it (the gear's share) */
+    statBar(x, y, v, o) {
+      const g = G(), opt = o || {};
+      const k = opt.scale || 0.8, W = 48;
+      const a = Math.min(W, Math.max(1, Math.round(v * k)));
+      g.rect(x, y, W, 4, '#1c2442');
+      g.rect(x, y, a, 4, g.C.cyan);
+      g.rect(x, y, a, 1, '#c8f0ff');
+      const b = Math.min(W - a, Math.round((opt.bonus || 0) * k));
+      if (b > 0) { g.rect(x + a, y, b, 4, g.C.green); g.rect(x + a, y, b, 1, '#c8ffd0'); }
+    },
+    /**
+     * a short Japanese phrase in at most two lines of maxW: one line when it fits, else a break after a
+     * particle or 、 (never inside にくい・手に入る・ついでに・落とし) with both lines fitting and 4 or more
+     * characters on the second — the most even of those. Falls back to Gfx.wrap.
+     */
+    jbreak(text, maxW) {
+      const g = G(), s = String(text || '');
+      if (g.textWidth(s) <= maxW) return [s];
+      const ch = [...s];
+      let best = -1, bestW = Infinity;
+      for (let i = 1; i < ch.length - 3; i++) {
+        const a = ch[i - 1], b = ch[i];
+        if (!'、をがにでとはの'.includes(a) || (a === 'に' && 'く入'.includes(b)) || (a === 'で' && b === 'に') || (a === 'と' && b === 'し')) continue;
+        const w1 = g.textWidth(ch.slice(0, i).join('')), w2 = g.textWidth(ch.slice(i).join(''));
+        if (w1 <= maxW && w2 <= maxW && Math.max(w1, w2) <= bestW) { best = i; bestW = Math.max(w1, w2); }
+      }
+      return best < 0 ? g.wrap(s, maxW).slice(0, 2) : [ch.slice(0, best).join(''), ch.slice(best).join('')];
     },
     /** SFC-style dusk gradient used behind the new-game screens */
     backdrop() {

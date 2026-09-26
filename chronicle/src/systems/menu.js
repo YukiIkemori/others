@@ -468,7 +468,7 @@
     K.drawSpriteAt(c, x + 10, y + 3, { frame: o.anim ? Math.floor(R.Engine.frame / 16) : 0, alpha: ok ? 1 : 0.4 });
     const col = ok ? K.condColor(c) : COL.gray;
     K.fitText(c.name, x + 30, y + 2, 52, { color: col });
-    G().text('H', x + 86, y + 2, { color: ok ? COL.sub : COL.gray });
+    G().text('H', x + 88, y + 2, { color: ok ? COL.sub : COL.gray });
     G().text(c.hp + '/' + (st.hp || 0), x + w - 8, y + 2, { align: 'right', color: col });
     G().text('M', x + 30, y + 15, { color: ok ? COL.sub : COL.gray });
     G().text(String(c.mp), x + 64, y + 15, { align: 'right', color: ok ? '#ffffff' : COL.gray });
@@ -493,7 +493,8 @@
       this.w = o.w || 150;
       this.h = 14 + this.list.length * ROW_H;
       this.x = o.x != null ? o.x : R.W - this.w - 4;
-      this.y = o.y != null ? o.y : 40;
+      // y 36: the top border hides whole text rows of the lists below (rows at 38 / 40 would peek out at 40)
+      this.y = o.y != null ? o.y : 36;
     }
     input() {
       const d = In().dirRepeat();
@@ -869,9 +870,11 @@
     constructor(list) {
       super();
       this.items = list;
-      // padX 94: the cursor sits just before the place name, the region name is drawn in the gutter
+      // the window (4,4,248,216) is drawn here with its title; the list covers only the place column
+      // (x 100, w 152) so its scroll arrows sit at x 176, clear of the title plate. The cursor stays just
+      // before the place name (x 98 − 10) and the region name is drawn in the gutter at x 16.
       this.list = new R.UI.List({
-        x: 4, y: 4, w: 248, h: 198, rows: 13, lineH: 14, padX: 94, padY: 8, title: 'どこへ行く？', wrap: true,
+        x: 100, y: 4, w: 152, h: 216, rows: 14, lineH: 14, padX: -2, padY: 8, window: false, wrap: true, colW: 150,
         items: list.map((l) => ({ label: warpLabel(l), l })),
         drawItem: (row, x, y, w, i) => this.drawRow(row, x, y, i),
       });
@@ -888,7 +891,10 @@
       if (!prev || prev.region !== l.region || i === this.list.top) K.fitText(groupName(l.region), 16, y, 76, { color: G().C.cyan });
       K.fitText(warpLabel(l), x + 2, y, 144, { color: l.kind === 'dungeon' ? COL.sub : '#ffffff' });
     }
-    render() { this.list.draw(); }
+    render() {
+      G().window(4, 4, 248, 216, { title: 'どこへ行く？' });
+      this.list.draw();
+    }
   }
   Menu.chooseWarp = async function () {
     const list = warpList();

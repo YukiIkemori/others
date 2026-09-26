@@ -16,7 +16,7 @@
     meta: { needs: [], gives: ['flag:hero_created', 'flag:pro_start'] },
     run: async (ev) => {
       if (ev.flag('pro_start') || ev.map !== 'roa_house') return;
-      await ev.fadeOut(0); // 暗転のまま (the captions keep the black screen)
+      await ev.fadeOut(0); // 暗転のまま (the map has enterDark; the captions keep the screen black)
       const berna = ev.npc('berna');
       berna.setPos(14, 4, 'up');
       ev.player.setPos(14, 3, 'down');
@@ -40,18 +40,6 @@
       ev.setObjective('obj_p_roa');
     },
   };
-  // Field.start fades the first map in before its onEnter runs; for the very first scene the
-  // screen must stay black (P1 「暗転のまま」). Start the intro as soon as roa_house loads — its
-  // first step blacks the screen out before anything is drawn. The onEnter run that follows
-  // finds pro_start set and does nothing.
-  if (R.on) {
-    R.on('mapload', (id) => {
-      if (id !== 'roa_house' || !R.Game || R.State.flag('pro_start')) return;
-      if (R.Events.busy && R.Events.busy()) return;
-      R.Events.run('roa_house_intro', { trigger: 'enter', self: 'roa_house', onlyOnMap: 'roa_house' });
-    });
-  }
-
   // ------------------------------------------------------------ P2 師匠ベルナ
   const P2 = [
     'そうそう、大事な話があるんだ。',

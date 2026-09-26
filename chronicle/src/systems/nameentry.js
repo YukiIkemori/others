@@ -47,7 +47,8 @@
     [{ id: 'page0', label: 'ひらがな' }, { id: 'page1', label: 'カタカナ' }, { id: 'page2', label: '英数字' }, { id: 'auto', label: 'おまかせ' }],
     [{ id: 'del', label: '1字消す' }, { id: 'kbd', label: 'キーボード' }, { id: 'ok', label: '決定' }, null],
   ];
-  const CMD_XS = [20, 80, 146, 200]; // 60 apart, nudged so the ▶ never touches キーボード
+  // §11.8.3 has x = 16 + 60c; nudged so every ▶ (10px left of its label) keeps 4px or more from the label before it
+  const CMD_XS = [20, 78, 146, 200];
   const CMD_X = (c) => CMD_XS[c], CMD_Y = (r) => 192 + 14 * r;
   const CELL_X = (c) => 22 + 22 * c + (c >= 5 ? 6 : 0), CELL_Y = (r) => 67 + 12.8 * r;
 

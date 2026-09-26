@@ -12,19 +12,24 @@
 //   zoom             bases only, 4 per row at --scale (close inspection)
 //   grid             bases only, 7 per row at 3x (overview)
 //   anchors          bases at 6x with the R.Art.monstersC.anchors points drawn on top
-//   context_<bg>     full battle screens (256x224 at 4x = 1024x896, like the game) with the
-//                    4 party windows of §11.11.3 (WIN xs 3/66/129/192, y 5, 61x46), the
-//                    command box, and the sprites standing on GROUND = 130 (§11.4.2 layout)
+//   context_<bg>     full battle screens (256x224 at 4x = 1024x896, like the game) drawn by the
+//                    shared mock tools/fixtures/mons-base/battle_screen.js with the real R.Gfx
+//                    windows and font: the 4 party windows of §11.11.3 (x 3/66/129/192, y 5, 61x46),
+//                    the command list and the enemy names, the monsters on GROUND = 130 laid out
+//                    like battle_scene (§11.4.2). Groups are lineage stages (mon:<spriteId>, i.e. the
+//                    base with A14a's parts on it, falling back to the bare recoloured base)
 //   check            prints per base: size, opaque bbox, centring, bottom-row coverage,
 //                    colour count, semi-transparent pixels, outline colour share, headroom
 //                    above the head anchor, value range; exits 1 on a problem
-// Loads only core + art sources (no data, no game boot), so it works while other
-// systems are mid-edit; page errors from other owners' files are listed but do not fail the run.
+// Loads core + data + art sources (no game boot; data only for the monster names), so it works while
+// other systems are mid-edit; page errors from other owners' files are listed but do not fail the run.
 'use strict';
 const fs = require('fs');
 const path = require('path');
 let playwright;
 try { playwright = require('playwright'); } catch (e) { playwright = require('/opt/node22/lib/node_modules/playwright'); }
+
+const CTX = require('./fixtures/mons-base/node/context');
 
 const ROOT = path.resolve(__dirname, '..');
 const args = process.argv.slice(2);
@@ -59,7 +64,7 @@ const HEADROOM = { fairy: 5, beetle: 4, doll: 8, seabird: 6, mole: 8, automaton:
 function sources() {
   const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]);
   const list = ['ns.js', 'input.js', 'gfx.js'].map((f) => path.join(ROOT, 'src/core', f));
-  for (const d of ['art']) {
+  for (const d of ['data', 'art']) {
     const dir = path.join(ROOT, 'src', d);
     if (fs.existsSync(dir)) list.push(...walk(dir).filter((f) => f.endsWith('.js')).sort((a, b) => a.localeCompare(b)));
   }
@@ -160,47 +165,6 @@ window.SHEET = (function () {
     let lx = 8;
     return cv.toDataURL();
   }
-  // ---- the battle screen of §11.5.1 / §11.11.3 (4 party windows)
-  const WIN = { xs: [3, 66, 129, 192], y: 5, w: 61, h: 46 }, BOX = { x: 8, y: 150, w: 240, h: 68 }, GROUND = 130;
-  function win(c, x, y, w, h, s) {
-    c.fillStyle = '#f0e8d0'; c.fillRect(x * s, y * s, w * s, h * s);
-    c.fillStyle = '#0b1024'; c.fillRect((x + 1) * s, (y + 1) * s, (w - 2) * s, (h - 2) * s);
-    c.fillStyle = '#16203e'; c.fillRect((x + 2) * s, (y + 2) * s, (w - 4) * s, (h - 4) * s);
-  }
-  function screen(c, oy, bg, sprites, s, names) {
-    c.fillStyle = '#000'; c.fillRect(0, oy, 256 * s, 224 * s);
-    let b = G.has('bbg:' + bg) ? G.get('bbg:' + bg) : null;
-    if (Array.isArray(b)) b = b[0];
-    if (b) c.drawImage(b, 0, oy, 256 * s, 144 * s);
-    else { c.fillStyle = '#5a8a4a'; c.fillRect(0, oy, 256 * s, 144 * s); }
-    // monsters: layout of battle_scene (total ≤ 244, gap ≤ 8), feet on GROUND, tall ones sink
-    const imgs = sprites.map((m) => (typeof m === 'string' ? G.get('mon:' + m) : G.variant('mon:' + m[0], m[1])));
-    const total = imgs.reduce((a, i) => a + i.width, 0);
-    const gap = imgs.length > 1 ? Math.min(8, (244 - total) / (imgs.length - 1)) : 0;
-    let x = 128 - (total + gap * (imgs.length - 1)) / 2;
-    imgs.forEach((img) => {
-      const feet = GROUND + Math.max(0, Math.min(20, Math.round((img.height - 64) / 2.4)));
-      c.drawImage(img, Math.round(x) * s, oy + (feet - img.height) * s, img.width * s, img.height * s);
-      x += img.width + gap;
-    });
-    // party windows + command box
-    c.save(); c.translate(0, oy);
-    WIN.xs.forEach((wx, i) => {
-      win(c, wx, WIN.y, WIN.w, WIN.h, s);
-      c.font = (8 * s) + 'px monospace'; c.fillStyle = '#f0e8d0'; c.textBaseline = 'top';
-      c.fillText(names[i], (wx + 5) * s, (WIN.y + 4) * s);
-      c.fillStyle = '#b0e8a0'; c.fillText('HP 123', (wx + 5) * s, (WIN.y + 16) * s);
-      c.fillStyle = '#a0c8ff'; c.fillText('MP  45', (wx + 5) * s, (WIN.y + 26) * s);
-      c.fillStyle = '#ffd890'; c.fillText('WP  12', (wx + 5) * s, (WIN.y + 36) * s);
-    });
-    win(c, BOX.x, BOX.y, BOX.w, BOX.h, s);
-    c.restore();
-  }
-  function context(bg, groups, s) {
-    const [cv, c] = canvas(256 * s, groups.length * (224 * s + 8), '#000');
-    groups.forEach((g, gi) => screen(c, gi * (224 * s + 8), bg, g, s, ['Arun', 'Brigi', 'Marta', 'Sylva']));
-    return cv.toDataURL();
-  }
   /** QA numbers per base */
   function check(ids, sizes, headroom) {
     const AN = (R.Art.monstersC && R.Art.monstersC.anchors) || {};
@@ -244,7 +208,7 @@ window.SHEET = (function () {
         value: +(q(0.95) - q(0.05)).toFixed(2), float: !!(a && a.float) };
     });
   }
-  return { sheet, grid, anchors, context, check, times };
+  return { sheet, grid, anchors, check, times };
 })();
 `;
 
@@ -253,9 +217,12 @@ async function main() {
   const src = sources();
   fs.writeFileSync(path.join(OUT, '_sheet_page.js'), PAGE);
   const pageFile = path.join(OUT, '_sheet.html');
-  fs.writeFileSync(pageFile, `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>
+  fs.writeFileSync(path.join(OUT, '_context_page.js'), CTX.PAGE);
+  fs.writeFileSync(pageFile, `<!DOCTYPE html><html><head><meta charset="utf-8">${CTX.head()}</head><body>
 ${src.map((f) => `<script src="file://${f}"></script>`).join('\n')}
+${CTX.script()}
 <script src="file://${path.join(OUT, '_sheet_page.js')}"></script>
+<script src="file://${path.join(OUT, '_context_page.js')}"></script>
 </body></html>`);
 
   const browser = await playwright.chromium.launch();
@@ -263,7 +230,7 @@ ${src.map((f) => `<script src="file://${f}"></script>`).join('\n')}
     const page = await (await browser.newContext({ viewport: { width: 800, height: 600 } })).newPage();
     const errors = [];
     page.on('pageerror', (e) => errors.push(String(e.stack || e)));
-    page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') errors.push(m.text()); });
+    page.on('console', (m) => { if ((m.type() === 'error' || m.type() === 'warning') && !/willReadFrequently/.test(m.text())) errors.push(m.text()); });
     await page.goto('file://' + pageFile);
     await page.waitForTimeout(150);
     const save = (name, url) => {
@@ -286,19 +253,25 @@ ${src.map((f) => `<script src="file://${f}"></script>`).join('\n')}
     if (ONLY.includes('grid')) save('grid', await run(`SHEET.grid(${J(ids)}, 3, 7)`));
     if (ONLY.includes('anchors')) save('anchors', await run(`SHEET.anchors(${J(ids)}, 6)`));
     if (ONLY.includes('context')) {
+      // lineage stages where they live (§9.5 regions → §11.2.13 backdrops); '*' = golden
       const groups = {
-        forest: [['fairy', 'treant', 'fairy'], [['fairy', { hue: 300 }], 'spider', ['treant', { hue: 30, sat: 0.8 }]]],
-        swamp: [['frog', 'doll', 'frog'], ['spider', ['frog', { hue: 180, sat: 1.3 }], ['doll', { sat: 0.4, bri: 0.7 }], 'spider']],
-        snow: [['owl', 'mammoth', 'owl'], [['owl', { hue: 270, sat: 1.1 }], ['mammoth', { sat: 0.2, bri: 1.25 }]]],
-        sea: [['seabird', 'seabird', 'seabird'], [['seabird', { sat: 0.3, bri: 0.75 }], 'crab', ['seabird', { hue: 30, sat: 0.7 }]]],
-        cave: [['beetle', 'mole', 'crystal', 'beetle'], [['mole', { hue: 10, sat: 1.1 }], ['crystal', { hue: 180, sat: 1.3 }], ['beetle', { hue: -40, sat: 1.2 }], ['mole', { hue: 20, sat: 0.7, bri: 0.85 }]]],
-        tower: [['automaton', 'crystal', 'automaton'], [['automaton', { hue: 160, sat: 0.8 }], ['crystal', { hue: 250, sat: 1.3, bri: 0.85 }], 'darkmage']],
-        shrine: [['scribe', 'book', 'scribe', 'book'], [['book', { hue: 250, sat: 1.2, bri: 0.8 }], 'scribe', ['book', { sat: 0, bri: 1.3 }]]],
+        forest: [['fairy_1', 'treant_1', 'fairy_1'], ['fairy_2', 'treant_3', 'fairy_4*'], ['treant_2', 'fairy_3', 'treant_4']],
+        swamp: [['frog_1', 'spider_1', 'frog_1'], ['doll_1', 'frog_2', 'spider_2', 'doll_2'], ['spider_3', 'doll_3', 'frog_4*']],
+        snow: [['owl_1', 'mammoth_1', 'owl_2'], ['owl_3', 'mammoth_3', 'owl_4*'], ['mammoth_2', 'owl_1']],
+        beach: [['seabird_1', 'seabird_1', 'seabird_2'], ['seabird_3', 'seabird_4', 'seabird_1*']],
+        mine: [['beetle_1', 'mole_1', 'crystal_1', 'beetle_1'], ['mole_2', 'crystal_2', 'beetle_3', 'mole_4'], ['crystal_3', 'mirror_1', 'crystal_4', 'beetle_4*'], ['mole_3', 'beetle_2', 'mirror_2']],
+        tower: [['automaton_1', 'automaton_2', 'automaton_1'], ['automaton_3', 'automaton_4', 'automaton_1*']],
+        library: [['scribe_1', 'book_1', 'scribe_1', 'book_1'], ['book_2', 'scribe_2', 'book_3', 'scribe_3']],
+        manor: [['b_doll_violin', 'b_doll_conductor', 'b_doll_drum', 'b_doll_flute']],
+        cave: [['beetle', 'fairy', 'book', 'crystal'], ['frog', 'doll', 'seabird', 'mole'], ['automaton', 'scribe', 'owl', 'spider'], ['treant', 'mammoth']],
       };
-      const only = (g) => g.map((row) => row.filter((m) => !IDS || IDS.includes(typeof m === 'string' ? m : m[0]))).filter((row) => row.length);
+      const table = CTX.compose();
+      const base = (e) => { const id = Array.isArray(e) ? e[0] : e.replace(/\*$/, ''); return table[id] ? table[id][0] : id; };
+      const only = (g) => g.map((row) => row.filter((m) => !IDS || IDS.includes(base(m)))).filter((row) => row.length);
+      await run(CTX.FONT_READY);
       for (const bg in groups) {
         const g = only(groups[bg]);
-        if (g.length) save('context_' + bg, await run(`SHEET.context(${J(bg)}, ${J(g)}, 4)`));
+        if (g.length) save('context_' + bg, await run(`CONTEXT(${J(bg)}, ${J(g)}, 4, ${J(table)})`));
       }
     }
     if (ONLY.includes('check')) {
@@ -325,7 +298,7 @@ ${src.map((f) => `<script src="file://${f}"></script>`).join('\n')}
     console.log('build ms:', Object.entries(stats.times).map(([k, v]) => k + ' ' + v).join(', '));
     console.log('missing:', stats.warned.join(' ') || '-');
     for (const e of errors) console.log('[page]', e.split('\n').slice(0, 3).join(' | '));
-    if (errors.some((e) => /monsters_[abc]\.js|_sheet_page/.test(e) || !/file:\/\//.test(e))) process.exitCode = 1;
+    if (errors.some((e) => /monsters_[abc]\.js|_sheet_page|_context_page|battle_screen\.js/.test(e) || !/file:\/\//.test(e))) process.exitCode = 1;
   } finally {
     await browser.close();
   }

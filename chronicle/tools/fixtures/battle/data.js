@@ -170,6 +170,7 @@
     tb_s_wprest: spell('テスト気力回復', ['water'], 2, 3, 'allies', [{ type: 'healWp', pct: 0.3 }], { fx: 'mp' }),
     tb_s_party: spell('テスト全員', ['light'], 6, 10, 'party', [{ type: 'revive', pct: 0.25 }, { type: 'heal', pct: 0.2 }], { fx: 'revive' }),
     tb_s_melt: spell('テスト溶かし', ['fire'], 2, 3, 'enemy', [mdmg(0.2)], { fx: 'fire1' }),
+    tb_s_raise: spell('テスト呼び戻し', ['light'], 6, 9, 'ally_dead', [{ type: 'revive', pct: 0.5 }], { fx: 'revive' }),
   });
 
   // ------------------------------------------------------------------ enemy actions

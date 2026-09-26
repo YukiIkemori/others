@@ -59,7 +59,7 @@
   let M = null; // current map runtime (R.FieldMap)
 
   const isDoor = (id) => typeof id === 'string' && id.startsWith('door');
-  const goldWord = () => (R.Events && R.Events.GOLD) || 'ゴールド';
+  const goldWord = () => R.Events.GOLD; // the one currency word (DESIGN §3.3.10-9, events_runtime.js)
   /** where a new game starts (DB.config.start, the legacy R.State.START, else the first map) */
   function startPoint() {
     const c = DB.config && DB.config.start;
@@ -995,10 +995,13 @@
         }
         if (w) { tasks.push(() => this.useWarp(w)); return seq(tasks); }
       }
-      if (!tasks.length && a.dist > 0) {
-        const zone = this.encounterStep(t, a.dist);
+      // the step still counts toward the next battle when something else happens on it (a found
+      // secret passage, an expired 魔除け): the battle then waits for the next step (§3.3.10-11:
+      // 「出現・毒の数え方はふつうの床と同じ」)
+      if (a.dist > 0) {
+        const zone = this.encounterStep(t, a.dist, tasks.length > 0);
         if (zone) return () => Field.encounter(zone);
-      } else if (a.dist > 0) this.grace = Math.max(0, this.grace - a.dist);
+      }
       return tasks.length ? seq(tasks) : null;
     }
     /** 魔除け / 誘い寄せ: count the steps down; when they run out, say so (STYLE_JA §9) */
@@ -1012,8 +1015,9 @@
       const text = it ? it.name + 'の効果が切れた。' : act ? act.name + 'の効き目が切れた。' : (e.pct < 0 ? '魔除けの香' : '誘い寄せの香') + 'の効果が切れた。';
       tasks.push(() => R.Events.run(async (ev) => { R.sfx('cancel'); await ev.say(text); }, { self: 'encItem' }));
     }
-    /** advance the encounter counter by `dist` tiles walked; returns a zone id when a battle starts */
-    encounterStep(t, dist) {
+    /** advance the encounter counter by `dist` tiles walked; returns a zone id when a battle starts.
+     *  `hold`: count only — a counter that ran out fights on the next step */
+    encounterStep(t, dist, hold) {
       const g = R.Game;
       const inGrace = this.grace > 0;
       this.grace = Math.max(0, this.grace - (dist == null ? 1 : dist));
@@ -1027,7 +1031,7 @@
       const item = e && !e.weakOnly ? Math.max(0, 1 + (e.pct || 0) / 100) : 1; // 誘い寄せ ×2; 魔除け keeps the rate (weakOnly)
       const mult = Math.max(0, 1 + (this.fieldMods().encounterPct || 0) / 100) * item;
       this.encCount -= rate * mult * (dist == null ? 1 : dist);
-      if (this.encCount > 0 || inGrace) return null;
+      if (this.encCount > 0 || inGrace || hold) return null;
       this.resetEnc();
       if (!DB.encounters[zone]) { R.FieldMap.warn(M.id, 'unknown encounter zone ' + zone); return null; }
       if (!R.Battle || !R.Battle.start) return null;
@@ -1172,7 +1176,10 @@
           if (mv.scripted) { this.savePos(); if (mv.resolve) mv.resolve(); }
           else {
             this.carry = Math.min(0, mv.t - mv.dur); this.carryF = R.Engine.frame;
-            this.arrived = { kind: mv.kind, dist: mv.kind === 'board' || mv.kind === 'align' ? 0 : mv.len, changed };
+            // steps walked (§4.11.1): the larger of the two axes — a diagonal step is 1, like a straight one
+            // (mv.len, the Euclidean length, only sets the duration / walk animation)
+            const dist = mv.kind === 'board' || mv.kind === 'align' ? 0 : segLen(mv.to.x - mv.from.x, mv.to.y - mv.from.y);
+            this.arrived = { kind: mv.kind, dist, changed };
           }
         }
         this.syncFollowers();
@@ -1465,15 +1472,10 @@
     if (r.item && !DB.items[r.item]) { R.warn('chest ' + c.id + ': unknown item ' + r.item); r = {}; }
     return (chestRolls[c.id] = r);
   }
-  /** the jingle for a found item (DESIGN §11.6.3): key → keyitem, 超レア → superrare, レア → rare, else item */
-  function itemJingle(it) {
-    if (!it) return 'item';
-    if (it.type === 'key') return 'keyitem';
-    if (it.grade === 'super') return 'superrare';
-    if (it.grade === 'rare') return 'rare';
-    return 'item';
-  }
-  const itemMark = (it) => (it && (it.grade === 'rare' || it.grade === 'super') ? '★' : '');
+  // the jingle (§11.6.3: key → keyitem, 超レア → superrare, レア → rare, else item) and the name
+  // mark (★ レア・超レア, ◆ 一品物: §8.2.8) are the event runtime's, so chests and ev.give agree
+  const itemJingle = (it) => R.Events.itemJingle(it);
+  const itemMark = (it) => R.Events.itemMark(it);
   function openChest(c) {
     return R.Events.run(async (ev) => {
       const g = R.Game;

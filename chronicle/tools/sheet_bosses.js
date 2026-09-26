@@ -123,13 +123,6 @@ window.SHEET = (function () {
     if (f && G.has('bbg:' + f)) return [f, ' (stand-in for ' + bg + ')'];
     return [null, ' (no bbg:' + bg + ')'];
   }
-  function tinted(im, color, amt) {
-    const [t, tc] = canvas(im.width, im.height, null);
-    tc.drawImage(im, 0, 0); tc.globalCompositeOperation = 'source-in'; tc.fillStyle = color; tc.fillRect(0, 0, im.width, im.height);
-    const [o, oc] = canvas(im.width, im.height, null);
-    oc.drawImage(im, 0, 0); oc.globalAlpha = amt; oc.drawImage(t, 0, 0);
-    return o;
-  }
   /** one battle screen (1024x896, the game's 4x) with sprites ids (left→right) and enemy names */
   function scene(ids, names, bg, o) {
     o = o || {};

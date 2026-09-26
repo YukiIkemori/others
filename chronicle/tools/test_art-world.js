@@ -62,6 +62,22 @@ for (const id in SPEC) {
 ok(T.swamp.damagePct === 2 && !T.swamp.damage, 'swamp uses damagePct 2 instead of a fixed damage (§3.3.10-10)');
 ok(!T.marsh.damage && !T.marsh.damagePct, 'marsh does no damage (毒なし)');
 ok(T.loc_pyramid.name === '王墓', 'loc_pyramid is named 王墓 (this world has no pyramids)');
+ok(T.beach.bbg === 'beach', 'beach fights on the new beach backdrop (§11.2.11 P2)');
+// roads and bridges take the backdrop of the ground under them (R.Art.worldBbg)
+{
+  const mk = (rows) => ({ w: rows[0].length, h: rows.length, tileAt(x, y) { return x < 0 || y < 0 || y >= rows.length || x >= rows[0].length ? 'sea' : L[rows[y][x]]; } });
+  const wb = R.Art.worldBbg;
+  ok(typeof wb === 'function', 'R.Art.worldBbg exists');
+  if (wb) {
+    ok(wb(mk(['ddd', 'drd', 'ddd']), 1, 1) === 'desert', 'road in the desert → desert backdrop');
+    ok(wb(mk(['***', '*r*', '***']), 1, 1) === 'snow', 'road in the snow → snow backdrop');
+    ok(wb(mk(['mmm', 'mrm', 'mmm']), 1, 1) === 'swamp', 'road in the marsh → swamp backdrop');
+    ok(wb(mk(['aaa', 'ara', 'aaa']), 1, 1) === 'ashland', 'road on ash → ashland backdrop');
+    ok(wb(mk(['...', '.r.', '...']), 1, 1) === 'grass', 'road on grass → grass backdrop');
+    ok(wb(mk(['~~~', '===', '~~~']), 1, 1) === 'grass', 'bridge over the sea keeps its data backdrop');
+    ok(wb(mk(['TTT', 'TTT', 'TTT']), 1, 1) === 'forest', 'other tiles keep their data backdrop');
+  }
+}
 for (const id of Object.keys(T).filter((k) => k.startsWith('loc_'))) ok(T[id].warpIcon && T[id].enc === 0 && T[id].pass, id + ' walkable icon without encounters');
 
 // ------------------------------------------------------------ §11.11.2 legend

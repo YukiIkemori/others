@@ -5,10 +5,12 @@
 //                                                    lengths, loop points, instrument ranges, harmony
 //                                                    (non-chord tones on strong beats, semitone clashes)
 //   node tools/render_audio.js show <id> [ch]        print a track bar by bar: chords + notes of a channel
-//   node tools/render_audio.js render [ids…] [--sfx] [--jingles] [--bgm] [--wav] [--suggest]
+//   node tools/render_audio.js render [ids…] [--sfx] [--jingles] [--bgm] [--wav] [--suggest] [--seed N]
 //                                                    render through an OfflineAudioContext in Chromium,
 //                                                    report duration / peak / RMS / clipping / silence gaps,
-//                                                    optionally write WAVs to /tmp/claude-0/audio/
+//                                                    optionally write WAVs to /tmp/claude-0/audio/.
+//                                                    Renders are reproducible: noise offsets come from a
+//                                                    seeded generator (per id by default, or --seed N)
 //   node tools/render_audio.js stems <id>            loudness of each channel alone (mix balance)
 //   node tools/render_audio.js spectro <id> [secs]   log-frequency spectrogram PNG (visual timbre check)
 //   node tools/render_audio.js inst                  loudness of every instrument (calibration)
@@ -210,8 +212,17 @@ async function withPage(fn) {
   try { return await fn(page); } finally { await browser.close(); }
 }
 
-// in-page: render and analyse; returns stats (+ base64 16-bit WAV)
-const PAGE_FN = async ({ kind, id, sr, wav, inst, midi, dur, only }) => {
+// in-page: render and analyse; returns stats (+ base64 16-bit WAV). `seed` makes the render
+// reproducible: the only randomness in the synth is where a noise burst starts reading the noise
+// buffer (Mixer.noise → Math.random), which moves the peaks of noisy SFX by ±1 dB between runs.
+const PAGE_FN = async (args) => {
+  const rnd = Math.random;
+  if (args.seed != null) {
+    let s = (args.seed >>> 0) || 0x2545f491;
+    Math.random = () => { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; return (s >>> 0) / 4294967296; };
+  }
+  try { return await PAGE_RENDER(args); } finally { Math.random = rnd; }
+  async function PAGE_RENDER({ kind, id, sr, wav, inst, midi, dur, only }) {
   const R = window.RPG;
   let info, len;
   if (kind === 'inst') len = dur + 1.5;
@@ -301,7 +312,10 @@ const PAGE_FN = async ({ kind, id, sr, wav, inst, midi, dur, only }) => {
     out.wav = btoa(s);
   }
   return out;
+  }
 };
+// default seed of a render: stable per id, so two runs of the same content measure the same
+const seedOf = (kind, id) => { let h = 0x811c9dc5; for (const ch of `${kind}:${id}`) { h ^= ch.charCodeAt(0); h = Math.imul(h, 0x01000193); } return h >>> 0; };
 
 async function render(ids, opts) {
   const R = loadNode();
@@ -316,9 +330,10 @@ async function render(ids, opts) {
   }
   if (cur.length) chunks.push(cur);
   for (const chunk of chunks) await withPage(async (page) => {
-    for (const [kind, id] of chunk) {
+    for (const [kind, id, seedArg] of chunk) {
       const t = Date.now();
-      const r = await page.evaluate(PAGE_FN, { kind, id, sr: 32000, wav: opts.wav });
+      const seed = seedArg != null ? seedArg : opts.seed != null ? opts.seed : seedOf(kind, id);
+      const r = await page.evaluate(PAGE_FN, { kind, id, sr: 32000, wav: opts.wav, seed });
       if (r.wav) { fs.writeFileSync(path.join(OUT, `${kind}_${id}.wav`), Buffer.from(r.wav, 'base64')); delete r.wav; }
       const cur = kind === 'sfx' ? 1 : (R.DB.music[id].gain != null ? R.DB.music[id].gain : 1);
       const target = kind === 'bgm' ? TARGET.bgm : kind === 'jingle' ? TARGET.jingle : null;
@@ -328,13 +343,13 @@ async function render(ids, opts) {
         const pk = r.peak + 20 * Math.log10(sug / cur);
         if (pk > PEAK_MAX) sug *= Math.pow(10, (PEAK_MAX - pk) / 20);
       }
-      rows.push({ kind, id, ...r, sug });
+      rows.push({ kind, id, seed, ...r, sug });
       const flag = r.clip || r.peak > -0.5 || r.gaps.length ? '✗' : '✓';
       console.log(`${flag} ${kind.padEnd(6)} ${id.padEnd(13)} dur ${r.dur.toFixed(2).padStart(6)}s  peak ${r.peak.toFixed(1).padStart(6)}  rms ${r.rms.toFixed(1).padStart(6)}  lufs ${r.lufs.toFixed(1).padStart(6)}  st[${r.stMin.toFixed(0)},${r.stMax.toFixed(0)}]` +
         (r.seamBefore != null ? `  seam ${r.seamBefore.toFixed(0)}/${r.seamAfter.toFixed(0)}` : '') +
         `  clip ${r.clip}` + (r.gaps.length ? `  gaps ${JSON.stringify(r.gaps)}` : '') +
         (kind === 'sfx' ? `  audible ${r.audible.toFixed(2)}s` : '') +
-        (sug != null ? `  gain ${cur.toFixed(2)}→${sug.toFixed(2)}` : '') + `  (${((Date.now() - t) / 1000).toFixed(1)}s)`);
+        (sug != null ? `  gain ${cur.toFixed(2)}→${sug.toFixed(2)}` : '') + (seedArg != null ? `  seed ${seedArg}` : '') + `  (${((Date.now() - t) / 1000).toFixed(1)}s)`);
     }
   });
   if (opts.suggest) {
@@ -365,7 +380,9 @@ async function main() {
   const argv = process.argv.slice(2);
   const cmd = argv[0] || 'lint';
   const flags = new Set(argv.filter((a) => a.startsWith('--')));
-  const args = argv.slice(1).filter((a) => !a.startsWith('--'));
+  const si = argv.indexOf('--seed');
+  const seed = si >= 0 ? +argv[si + 1] : undefined;
+  const args = argv.slice(1).filter((a, i) => !a.startsWith('--') && !(si >= 0 && i + 1 === si + 1));
   if (cmd === 'lint') {
     const R = loadNode();
     const all = [...BGM, ...JINGLES];
@@ -393,7 +410,7 @@ async function main() {
       if (!any || flags.has('--jingles')) list.push(...JINGLES.filter((id) => R.DB.music[id]).map((id) => ['jingle', id]));
       if (!any || flags.has('--sfx')) list.push(...SFX.filter((id) => R.DB.sfx[id]).map((id) => ['sfx', id]));
     }
-    const rows = await render(list, { wav: flags.has('--wav'), suggest: flags.has('--suggest') });
+    const rows = await render(list, { wav: flags.has('--wav'), suggest: flags.has('--suggest'), seed });
     const bad = rows.filter((r) => r.clip || r.peak > -0.5 || r.gaps.length);
     console.log(bad.length ? `\n${bad.length} with problems` : '\nno clipping, no silence gaps');
     if (flags.has('--wav')) console.log('WAVs in ' + OUT);
@@ -471,5 +488,5 @@ async function main() {
     console.log('usage: node tools/render_audio.js lint|show|render|inst …');
   }
 }
-module.exports = { BGM, JINGLES, SFX, RANGE, TARGET, PEAK_MAX, FILES, loadNode, lint, listDrift, render, withPage, PAGE_FN };
+module.exports = { BGM, JINGLES, SFX, RANGE, TARGET, PEAK_MAX, FILES, loadNode, lint, listDrift, render, withPage, PAGE_FN, seedOf };
 if (require.main === module) main().catch((e) => { console.error(e); process.exit(2); });

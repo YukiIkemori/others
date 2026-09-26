@@ -109,7 +109,8 @@
     R.Engine.fadeAlpha = 0;
     R.Engine.flash.frames = 0;
     R.Engine._shake.frames = 0;
-    const party = setupGame(o.party);
+    let party = setupGame(o.party);
+    if (o.size) party = party.slice(0, o.size);
     if (o.tweak) o.tweak(party);
     const inv = R.Game.inv;
     let eng = null;
@@ -297,8 +298,16 @@
   };
   SC.boss = async (a) => {
     // the tallest boss sprite (≈ 112): how much of the head hides behind the window band
-    const list = P().bosses.map((id) => { const d = DB.monsters[id]; let img = G().get('mon:' + (d.sprite || id)); if (Array.isArray(img)) img = img[0]; return { id, h: img.height, w: img.width }; })
-      .filter((x) => x.w <= 160).sort((x, y) => y.h - x.h);
+    // sprites still being drawn (their factory throws) are left out without touching the cache
+    const size = (id) => {
+      const k = 'mon:' + (DB.monsters[id].sprite || id);
+      if (k in G()._cache) { let im = G()._cache[k]; if (Array.isArray(im)) im = im[0]; return im; }
+      const f = G()._defs[k];
+      if (!f) return null;
+      try { let im = f(); if (Array.isArray(im)) im = im[0]; G()._cache[k] = im; return im; } catch (e) { return null; }
+    };
+    const list = P().bosses.map((id) => { const img = size(id); return img && { id, h: img.height, w: img.width }; })
+      .filter((x) => x && x.w <= 160).sort((x, y) => y.h - x.h);
     const S = BUI.open({ mons: [{ id: list[0].id }], bg: 'castle' });
     await atCommands(S); await a.step(10); a.shot('boss_tall_' + list[0].h);
     BUI.open({ mons: [{ id: list[3].id }], bg: 'cave' });
@@ -391,6 +400,40 @@
     await a.step(6); a.shot('eight_small');
     BUI.open({ mons: ['orc_2', 'mammoth_1', 'yeti_2', 'treant_3', 'orc_2'].map((id) => ({ id })) });
     await a.step(6); a.shot('two_rows');
+  };
+  SC.real_battle = async (a) => {
+    // the real thing: R.Battle.start on the real engine (A2), the scene's own flow, リピート after round 1
+    R.Engine.clear();
+    setupGame();
+    for (const c of R.Game.party) c.row = 'front';
+    R.Battle.autoCarry = false;
+    BUI.result = null;
+    R.Battle.start({ mons: [['wolf_1', 2], ['goblin_2', 1]], tier: 2, bg: 'forest' }).then((r) => { BUI.result = r; });
+    await a.step(2);
+    const S = R.Battle.current;
+    const menu = () => S.panel && S.panel.left && S.panel.left.items[0] === '戦う';
+    for (let i = 0; i < 400 && !menu(); i++) await a.step(1);
+    a.shot('real_party_menu');
+    for (let i = 0; i < 60 && !S.eng.round; i++) { await a.press('a'); await a.step(1); if (i === 2) a.shot('real_member_menu'); }
+    await a.step(50); a.shot('real_round1');
+    for (let i = 0; i < 900 && !menu(); i++) await a.step(1);
+    await a.press('right'); a.shot('real_repeat_help');
+    await a.press('a'); await a.step(60); a.shot('real_repeating');
+    for (let i = 0; i < 3000 && !BUI.result; i++) {
+      await a.step(1);
+      if (S.paged && S.msg.key && !a.rewardsShot) { a.rewardsShot = true; a.shot('real_rewards'); }
+      if (menu()) { await a.press('right'); await a.press('a'); }
+      else if (S.msg.key) await a.press('a');
+    }
+    a.rewardsShot = false;
+  };
+  SC.solo = async (a) => {
+    // the tutorial fight (members:['hero']): one window, still at x 3; two companions at x 3 / 66
+    const S = BUI.open({ mons: [{ id: 'jelly_1' }, { id: 'jelly_1' }], size: 1 });
+    await atCommands(S); await a.step(10); a.shot('solo_party_menu');
+    BUI.open({ mons: [{ id: 'jelly_1' }], size: 2 });
+    await a.step(4); a.shot('two_members');
+    void S;
   };
   SC.flow = async (a) => {
     // the whole scene from the wipe: intro → appearance lines → party menu

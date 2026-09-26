@@ -693,6 +693,8 @@
     for (const L of back) { put(R0, L.pix, 'dark'); for (let i = 0; i < W * H; i++) if (L.pix.d[i] != null) { dirty[i] = 1; partMask[i] = 1; } }
     // the base goes over the back layers: its own pixels only need an outline where an erasure exposed them
     for (let i = 0; i < W * H; i++) if (P.d[i] != null) { R0.d[i] = P.d[i]; dirty[i] = exposed[i]; partMask[i] = 0; }
+    // glow and vapour of back parts that stay visible around the base count as part pixels too
+    for (let i = 0; i < W * H; i++) if (P.d[i] == null && R0.d[i] != null) partMask[i] = 1;
     for (const L of front) { put(R0, L.pix, 'dark'); for (let i = 0; i < W * H; i++) if (L.pix.d[i] != null) { dirty[i] = 1; partMask[i] = 1; } }
     // outline every transparent pixel next to a pixel the parts added or exposed (§9.4.3 step 4)
     const src = R0.d.slice();
@@ -706,6 +708,16 @@
       }
       if (need) { R0.d[i] = OUT; partMask[i] = 1; }
     }
+    // self-check: a solid pixel a part added must never border transparency without its outline
+    let openEdge = 0;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const i = y * W + x;
+      if (!dirty[i] || R0.d[i] == null || lum(R0.d[i]) < 0.1) continue;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const X = x + dx, Y = y + dy;
+        if (X >= 0 && Y >= 0 && X < W && Y < H && R0.d[Y * W + X] == null) { openEdge++; break; }
+      }
+    }
     for (const L of front) for (let i = 0; i < W * H; i++) if (L.fx.d[i] != null) { R0.d[i] = L.fx.d[i]; partMask[i] = 1; }
     let partPx = 0;
     for (let i = 0; i < W * H; i++) if (partMask[i]) partPx++;
@@ -715,7 +727,7 @@
       else { missing.push('filter:' + filter); R.warn('compose: unknown filter', filter); }
     }
     const outCv = R0.toCanvas();
-    outCv._compose = { partPx, missing, base, filter: filter || null };
+    outCv._compose = { partPx, missing, base, filter: filter || null, openEdge, anchorsAuto: !!anc.auto };
     return outCv;
   }
   A.compose = compose;

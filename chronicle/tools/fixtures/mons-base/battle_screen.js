@@ -12,6 +12,14 @@
 //   and the enemy-name window (138,150,110,68) with the group counts.
 //
 //   RPG.MonsBaseScreen.draw(ctx, scale, offsetY, { bg, mons: [{ img, name, gold, fly }], frame })
+//   RPG.MonsBaseScreen.entry(e, table)   → { img, name, gold, fly } for a group entry:
+//       'fairy_2' a lineage stage (mon:<spriteId>, i.e. the base with A14a's parts; if that does not
+//       build, the bare base with the stage's palette), 'fairy_2*' the same golden (tint #ffd24a),
+//       'fairy' a bare base, ['fairy', {hue, sat, bri}] a recoloured bare base. table = compose rows
+//       {spriteId: [base, hsb, filter?]} (default R.Art.MON_COMPOSE). Names: R.DB.monsters (golden:
+//       goldName, else 金色の／金の + name, §9.8); a bare base is named after the stage that uses
+//       exactly that palette.
+//   RPG.MonsBaseScreen.sheet(bg, groups, scale, table) → PNG data URL, one screen per group
 (function (R) {
   'use strict';
   const WIN = { xs: [3, 66, 129, 192], y: 5, w: 61, h: 46 };
@@ -119,5 +127,45 @@
       G.ctx = prev;
     }
   }
-  R.MonsBaseScreen = { WIN, BOX, ENEMY, GROUND, PARTY, feet, arrange, draw };
+  const GOLD = { tint: '#ffd24a' };
+  const sameHsb = (a, b) => JSON.stringify(Object.keys(a).sort().map((k) => [k, a[k]])) === JSON.stringify(Object.keys(b).sort().map((k) => [k, b[k]]));
+  function baseSize(base) {
+    const A = R.Art || {};
+    for (const k of ['monstersA', 'monstersB', 'monstersC']) if (A[k] && A[k].sizes && A[k].sizes[base]) return A[k].sizes[base];
+    return 0;
+  }
+  // [base, hsb, filter] (parsed from DESIGN.md) or [base, hsb, parts, filter?] (R.Art.MON_COMPOSE)
+  const filterOf = (r) => (typeof r[2] === 'string' ? r[2] : r[3] || null);
+  const goldName = (d) => d.goldName || (d.name.length <= 5 ? '金色の' : '金の') + d.name;
+  function entry(e, table) {
+    const G = R.Gfx, DB = (R.DB && R.DB.monsters) || {};
+    table = table || (R.Art && R.Art.MON_COMPOSE) || {};
+    let id = e, hsb = null, gold = false;
+    if (Array.isArray(e)) { id = e[0]; hsb = e[1] || {}; } else if (/\*$/.test(e)) { id = e.slice(0, -1); gold = true; }
+    const row = table[id];
+    let img, name = id, fly = false, d = null;
+    if (row && !hsb) {
+      let key = null;
+      if (G.has('mon:' + id)) { const cv = G.get('mon:' + id); if (cv && cv.width === baseSize(row[0])) key = 'mon:' + id; }
+      img = key ? (gold ? G.variant(key, GOLD) : G.get(key)) : G.variant('mon:' + row[0], Object.assign({}, row[1] || {}, gold ? GOLD : {}));
+      d = DB[id];
+    } else {
+      hsb = hsb || {};
+      img = Object.keys(hsb).length ? G.variant('mon:' + id, hsb) : G.get('mon:' + id);
+      const hit = Object.keys(table).find((k) => table[k][0] === id && !filterOf(table[k]) && sameHsb(table[k][1] || {}, hsb));
+      d = hit ? DB[hit] : null;
+    }
+    if (d) { name = gold ? goldName(d) : d.name; fly = (d.flags || []).includes('flying'); }
+    if (Array.isArray(img)) img = img[0];
+    return { img, name, gold, fly };
+  }
+  function sheet(bg, groups, s, table) {
+    const cv = document.createElement('canvas');
+    cv.width = 256 * s; cv.height = groups.length * (224 * s + 8) - 8;
+    const c = cv.getContext('2d');
+    c.fillStyle = '#000'; c.fillRect(0, 0, cv.width, cv.height);
+    groups.forEach((g, gi) => draw(c, s, gi * (224 * s + 8), { bg, mons: g.map((e) => entry(e, table)) }));
+    return cv.toDataURL();
+  }
+  R.MonsBaseScreen = { WIN, BOX, ENEMY, GROUND, PARTY, feet, arrange, draw, entry, sheet };
 })(window.RPG);

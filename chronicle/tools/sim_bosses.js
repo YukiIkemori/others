@@ -5,7 +5,8 @@
 //   node tools/sim_bosses.js --x 1,3 --n 40   only X1 and X3, 40 battles per case
 //   node tools/sim_bosses.js --boss tr_b_dolls --tier 3 [--log]   one troop (per-battle log with --log)
 //   node tools/sim_bosses.js --engine model   A12's compact rules model (tools/fixtures/boss/lib/model.js)
-//   node tools/sim_bosses.js --tune [--write] [--boss id]   calibrate the per-boss `s` (see below)
+//   node tools/sim_bosses.js --tune [--write] [--keep] [--boss id,id] [--hp-grid a,b] [--atk-grid a,b]   calibrate the per-boss `s`
+//   node tools/sim_bosses.js --sx "b_x:def=0.6,agi=0.8;b_y:hp=1"   try other `s` values (not written)
 //   node tools/sim_bosses.js --json out.json  write every number
 //
 // Engines: 'real' = the Chronicle battle engine (R.Battle.Engine + R.BattleAI.partyCommands, the same
@@ -155,6 +156,14 @@ function setS(id, s) {
 
 // --s1: run with the design values (every boss s = 1) instead of the calibrated @@S block
 if (arg('s1', false)) for (const id in DB.monsters) if (/^b_/.test(id)) setS(id, {});
+// --sx 'b_nemrea2:def=0.6,mdef=0.6;b_nemrea1:hp=1': try other `s` values on top of the current ones (not written)
+if (arg('sx', false)) for (const part of String(arg('sx')).split(';').filter(Boolean)) {
+  const [id, kv] = part.split(':');
+  if (!DB.monsters[id]) { console.error('--sx: unknown monster ' + id); process.exit(2); }
+  const s = Object.assign({}, DB.monsters[id].s || {});
+  for (const e of (kv || '').split(',').filter(Boolean)) { const [k, v] = e.split('='); s[k] = +v; }
+  setS(id, s);
+}
 
 // ------------------------------------------------------------------ report helpers
 const out = { engine: USE_REAL ? 'real' : 'model', seed: SEED, n: N, checks: [] };
@@ -192,7 +201,8 @@ if (arg('tune', false)) {
   const base = {};
   // start from s = 1 (the design values) unless --keep
   for (const id in DB.monsters) if (/^b_/.test(id)) base[id] = arg('keep', false) ? Object.assign({}, DB.monsters[id].s || {}) : {};
-  const apply = (tr, m) => { for (const id of bossIdsOf(tr)) setS(id, Object.assign({}, base[id], { hp: (base[id].hp || 1) * m.hp, atk: (base[id].atk || 1) * m.atk, mag: (base[id].mag || 1) * m.atk })); };
+  const cl = (x) => Math.min(2, Math.max(0.5, Math.round(x * 100) / 100));      // §4.14.2: 0.5–2.0
+  const apply = (tr, m) => { for (const id of bossIdsOf(tr)) setS(id, Object.assign({}, base[id], { hp: cl((base[id].hp || 1) * m.hp), atk: cl((base[id].atk || 1) * m.atk), mag: cl((base[id].mag || 1) * m.atk) })); };
   const evalCase = (tr, m, tiers, n, o) => {
     apply(tr, m);
     const cs = tiers.map((T) => runCase(tr, T, n, o));
@@ -200,10 +210,12 @@ if (arg('tune', false)) {
       rounds: cs.reduce((s, c) => s + c.rounds, 0) / cs.length, roundsWin: cs.reduce((s, c) => s + c.roundsWin, 0) / cs.length, ko: cs.reduce((s, c) => s + c.ko, 0) / cs.length, cs };
   };
   const coarse = !!arg('coarse', USE_REAL);
-  const HP = coarse ? [0.5, 0.7, 0.9, 1.1, 1.35, 1.65, 2.0] : [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.35, 1.5, 1.65, 1.8, 2.0, 2.2];
-  const ATK = coarse ? [0.5, 0.6, 0.7, 0.85, 1] : [0.5, 0.55, 0.6, 0.65, 0.7, 0.8, 0.9, 1, 1.1];
+  // multipliers on the starting s (§4.14.2: species s stays within 0.5–2.0); --hp-grid / --atk-grid '0.8,1,1.2' override
+  const list = (k) => (arg(k, false) ? String(arg(k)).split(',').map(Number) : null);
+  const HP = list('hp-grid') || (coarse ? [0.5, 0.7, 0.9, 1.1, 1.35, 1.65, 2.0] : [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.35, 1.5, 1.65, 1.8, 2.0]);
+  const ATK = list('atk-grid') || (coarse ? [0.5, 0.6, 0.7, 0.85, 1] : [0.5, 0.55, 0.6, 0.65, 0.7, 0.8, 0.9, 1, 1.1]);
   const n1 = +arg('n1', coarse ? 8 : 20), n2 = +arg('n2', coarse ? 24 : 60);
-  const troops = ONE ? [ONE] : ['tr_b_pageeater', ...MID, ...REGION, 'tr_b_rowell1', 'tr_b_rowell2', ...FMID, 'tr_b_nemrea1', 'tr_b_nemrea2', 'tr_b_valzard_echo', 'tr_b_ouroboros'];
+  const troops = ONE ? String(ONE).split(',') : ['tr_b_pageeater', ...MID, ...REGION, 'tr_b_rowell1', 'tr_b_rowell2', ...FMID, 'tr_b_nemrea1', 'tr_b_nemrea2', 'tr_b_valzard_echo', 'tr_b_ouroboros'];
   const result = {};
   for (const tr of troops) {
     const k = kindOf(tr);
@@ -240,13 +252,13 @@ if (arg('tune', false)) {
     const old = /\/\/ @@S-BEGIN\n  const S = \{\n([\s\S]*?)  \};\n  \/\/ @@S-END/.exec(src);
     const cur = {};
     if (old) for (const line of old[1].split('\n')) { const mm = /^\s+(b_\w+): (\{.*\}),/.exec(line); if (mm) cur[mm[1]] = mm[2]; }
-    const r2 = (x) => Math.round(x * 100) / 100;
     for (const tr in result) {
       const m = result[tr].m;
       for (const id of bossIdsOf(tr)) {
-        const s = {};
-        if (m.hp !== 1) s.hp = r2((base[id].hp || 1) * m.hp);
-        if (m.atk !== 1) { s.atk = r2((base[id].atk || 1) * m.atk); s.mag = r2((base[id].mag || 1) * m.atk); }
+        const s = Object.assign({}, base[id]);            // --keep: other keys (def, mdef, agi) stay as they were
+        s.hp = cl((base[id].hp || 1) * m.hp);
+        s.atk = cl((base[id].atk || 1) * m.atk); s.mag = cl((base[id].mag || 1) * m.atk);
+        for (const k of Object.keys(s)) if (s[k] === 1) delete s[k];
         if (Object.keys(s).length) cur[id] = '{ ' + Object.entries(s).map(([k2, v]) => k2 + ': ' + v).join(', ') + ' }'; else delete cur[id];
       }
     }

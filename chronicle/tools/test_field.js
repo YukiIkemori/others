@@ -411,11 +411,20 @@ const SECTIONS = [
     await step(80);
     eq(await rp, [3, true, 'fx_open', 9], 'ev state helpers / npc setPos + walk');
     eq(xp(), [3, 2], 'ev.player.walk');
-    // walk-distance counting (a diagonal step is one step)
+    // walk-distance counting (a diagonal step is one step, §4.11.1: 「斜めの 1 歩も 1 歩」)
     const s0 = R.Game.steps;
     await go(2, 5, 'right');
     await holdDirs(['right', 'up'], 1);
     eq(R.Game.steps - s0, 1, 'a diagonal step counts 1');
+    await go(2, 5, 'right');
+    const s1 = R.Game.steps;
+    for (let i = 0; i < 3; i++) await holdDirs(['right', 'up'], 1);
+    eq([xp(), R.Game.steps - s1, R.Field.layer.walked], [[5, 2], 3, 0], 'three diagonal steps count 3 (no √2 carry)');
+    R.Field.setEncItem({ id: 'i_ward_incense', pct: -100, steps: 5, weakOnly: true });
+    await go(2, 5, 'right');
+    for (let i = 0; i < 2; i++) await holdDirs(['right', 'up'], 1);
+    eq(R.Game.encItem && R.Game.encItem.steps, 3, '魔除け steps: a diagonal step uses 1');
+    R.Game.encItem = null;
   }),
 
   run('view', async () => {
@@ -558,8 +567,10 @@ const SECTIONS = [
     await newGame('fx_world', 'start', { encounters: true });
     const L = R.Field.layer;
     R.fxBattleLog.length = 0; R.fxBattleResult = 'win';
-    // random battles happen on the fx_w1 zone, with the tile's backdrop
-    for (let i = 0; i < 80 && !R.fxBattleLog.length; i++) await walk(i % 2 ? 'L' : 'R');
+    // random battles happen on the fx_w1 zone, with the tile's backdrop (on grass, enc 1: the
+    // counter of at most 26 × 1.4 runs out within 50 steps even with シルヴァン's −25 %)
+    R.Field.setPlayerPos(16, 18, 'right');
+    for (let i = 0; i < 120 && !R.fxBattleLog.length; i++) await walk(i % 2 ? 'L' : 'R');
     ok(R.fxBattleLog.length > 0, 'random encounter');
     const b0 = R.fxBattleLog[0] || {};
     eq(b0.zone, 'fx_w1', 'zone from the rectangle');
@@ -589,6 +600,12 @@ const SECTIONS = [
     eq(lure, base * 2, '誘い寄せ doubles the rate');
     const ward = await walkCost(() => { R.Field.setEncItem({ id: 'i_ward_incense', pct: -100, steps: 100, weakOnly: true }); });
     eq(ward, base, '魔除け (weakOnly) keeps the rate');
+    R.Game.encItem = null;
+    // a diagonal step costs one step (§4.11.1): grass (14,17) → road (15,16)
+    L.grace = 0; L.encCount = 1000; L._fm = null;
+    R.Field.setPlayerPos(14, 17, 'right');
+    await holdDirs(['right', 'up'], 1);
+    eq([pos().x, pos().y, +(1000 - L.encCount).toFixed(6)], [15, 16, base], 'a diagonal step onto the road costs the same as a straight one');
     // encounterPct from equipment / innate: the strongest size, capped ±50
     const ring = { name: 'テストの指輪', type: 'acc', price: 0, mods: { encounterPct: -100 } };
     R.DB.items.fx_ring = ring;
@@ -630,6 +647,23 @@ const SECTIONS = [
       ok(msgText().includes(R.DB.actions[spell].name + 'の効き目が切れた。'), 'spell expiry line: ' + msgText());
       await clearMsgs();
     }
+    // the step that finds a secret passage still counts; a battle it would start waits one step
+    R.Field.noEncounter = false;
+    await R.Field.warp('fx_world', { x: 37, y: 25, dir: 'right' }, { fade: false }); await settle();
+    L.grace = 0; L.encCount = 0.5; L._fm = null;
+    const nS = R.fxBattleLog.length;
+    sayLog.length = 0;
+    await walk('R'); await step(4);
+    ok(said(/隠し通路を見つけた！/) && R.fxBattleLog.length === nS && L.encCount <= 0, 'secret step: notice, counted (' + L.encCount.toFixed(2) + '), no battle yet');
+    await clearMsgs(); await settle(200);
+    await walk('R'); await settle(200);
+    eq(R.fxBattleLog.length, nS + 1, 'the held battle comes on the next step');
+    eq(L.grace, R.Field.ENC_GRACE, 'grace after it');
+    // an event battle gives the same 6-step grace
+    L.grace = 0;
+    await R.Events.run((ev) => ev.battle('fx_golem')); await settle(200);
+    eq(L.grace, R.Field.ENC_GRACE, 'grace after an event battle');
+    R.Field.noEncounter = true;
     // lvOff of the map is passed to the battle (fx_dungeon_2 lvOff 2)
     await R.Field.warp('fx_dungeon_2', 'from_prev', { fade: false }); await settle();
     R.fxBattleLog.length = 0;

@@ -397,16 +397,20 @@
     petalAt(-156, 13, 3, -5, petalB, 'pb3');
     petalAt(-24, 13, 3, -5, petalB, 'pb4');
     petalAt(-90, 15, 2.6, -7, petalB, 'pb0');
-    // the sprite: hair, head, body hugging her knees
-    sc.ell(16, 11.4, 5.4, 4.8, { m: hair, g: 'hair', z: 2, rz: 5 });
-    sc.tube([[11.8, 12, 1.8, 3], [11, 15.5, 1.5, 3], [11.8, 18, 0.6, 3]], { m: hair, g: 'hair' });
-    sc.tube([[20.2, 12, 1.8, 3], [21, 15.5, 1.5, 3], [20.2, 18, 0.6, 3]], { m: hair, g: 'hair' });
-    sc.ell(16, 13, 3.8, 3.4, { m: skin, g: 'face', z: 6, rz: 3.4 });
-    sc.tube([[12.6, 9.8, 1.9, 8], [16, 8.6, 2.1, 8], [19.4, 9.8, 1.9, 8]], { m: hair, g: 'fringe' });
-    sc.ell(16, 19, 3.4, 3, { m: petal, g: 'dress', z: 3, rz: 3 });
-    sc.ell(14.4, 19.6, 2, 2.3, { m: skin, g: 'knees', z: 7, rz: 2 });
-    sc.ell(17.6, 19.6, 2, 2.3, { m: skin, g: 'knees', z: 7, rz: 2 });
-    sc.tube([[12.4, 18, 1, 8], [14.4, 21, 1, 9], [17.6, 21, 1, 9], [19.6, 18, 1, 8]], { m: skin, g: 'arms' });
+    // the sprite: a big chibi head of hair over a round face, a leaf-green shift, and
+    // her knees drawn up under her chin with both arms wrapped round them
+    const DRESS = ['#1e5a3a', '#2e7c4c', '#4ea464', '#78c880', '#b0e8a8'];
+    const dress = mat('', { ramp: DRESS, bias: 0.06 });
+    sc.ell(16, 10.6, 6.4, 5.6, { m: hair, g: 'hair', z: 2, rz: 5 });
+    sc.tube([[10.6, 11, 2, 3], [9.8, 14.5, 1.7, 3], [10.4, 17.4, 0.7, 3]], { m: hair, g: 'hair' });
+    sc.tube([[21.4, 11, 2, 3], [22.2, 14.5, 1.7, 3], [21.6, 17.4, 0.7, 3]], { m: hair, g: 'hair' });
+    sc.ell(16, 12.6, 4.6, 3.9, { m: skin, g: 'face', z: 6, rz: 3.6 });
+    sc.tube([[11.8, 9.4, 2, 8], [16, 8, 2.3, 8], [20.2, 9.4, 2, 8]], { m: hair, g: 'fringe' });
+    sc.ell(16, 19.6, 4.4, 3, { m: dress, g: 'dress', z: 3, rz: 3 });
+    sc.ell(14.2, 19.8, 2, 1.9, { m: dress, g: 'knees', z: 6, rz: 1.8 });
+    sc.ell(17.8, 19.8, 2, 1.9, { m: dress, g: 'knees', z: 6, rz: 1.8 });
+    sc.tube([[11.6, 18.6, 0.8, 7], [12.8, 21, 0.8, 9], [15.2, 21.6, 0.9, 10]], { m: skin, g: 'armL' });
+    sc.tube([[20.4, 18.6, 0.8, 7], [19.2, 21, 0.8, 9], [16.8, 21.6, 0.9, 10]], { m: skin, g: 'armR' });
     // front petals cupping her
     petalAt(-176, 10.5, 2.6, 4, petal, 'pf0');
     petalAt(-4, 10.5, 2.6, 4, petal, 'pf1');
@@ -421,10 +425,11 @@
     for (const [x, y] of [[7, 13], [24, 13], [4, 19], [28, 19]]) on(p, x, y, PET[6]);
     // face: big shining eyes, rosy cheeks, a small smile
     const eye = { k: '#1e3a34', g: '#3a9a7a', w: WHITE };
-    stamp(p, 13, 12, ['kk', 'wk', 'gk'], eye);
-    stamp(p, 17, 12, ['kk', 'wk', 'gk'], eye);
-    p.set(12, 15, '#f4a0a0'); p.set(20, 15, '#f4a0a0');
-    p.set(15, 15, '#c05868'); p.set(16, 15, '#c05868');
+    stamp(p, 12, 12, ['kk', 'wk', 'gk'], eye);
+    stamp(p, 19, 12, ['kk', 'wk', 'gk'], eye);
+    p.set(11, 12, '#1e3a34'); p.set(21, 12, '#1e3a34');
+    for (const x of [11, 12, 20, 21]) p.set(x, 15, '#f4a0a0');
+    stamp(p, 15, 15, ['k.k', '.k.'], { k: '#b04860' });
     // the crown of water drops
     jewel(p, 16, 5.8, 1.3, 1.9, ['#0c3a5a', '#1a6a9a', '#3aaad8', '#80e0f8', '#d0faff', '#ffffff'], { shape: 'drop', bezel: ['#1a4a4a', '#3a8a7a', '#78c8b0', '#b8f0e0', '#e8fff8'] });
     for (const x of [13, 19]) { on(p, x, 8, '#b8f4ff'); p.set(x, 7, '#e8ffff'); }
@@ -451,17 +456,20 @@
     const gold = mat('', { ramp: GOLD.slice(1), spec: 0.9, bias: 0.1 });
     const dark = mat('#1c1430', { n: 3, dark: 0.3, flat: true, line: '#0c0818' });
     const sc = new Scene(W, H);
-    // handle loop (behind the body), a slim spout curving up, the round body
-    sc.tube([[21.5, 14.5, 1, -2], [25, 14, 1, -2], [27, 16.5, 1, -2], [26.2, 20, 1, -2], [22.5, 21.6, 0.9, -2]], { m: por, g: 'handle' });
-    sc.ell(15, 18.8, 8.4, 6.2, { m: por, g: 'body', z: 0, rz: 7 });
-    sc.tube([[8.6, 20.5, 1.8, 3], [5.6, 19, 1.2, 4], [4, 16, 1, 4], [3, 13, 1, 4], [2, 11.6, 1.2, 4]], { m: por, g: 'spout' });
-    sc.ell(15, 25, 5.2, 1.4, { m: gold, g: 'foot', z: 3, rz: 1.2 });
-    // the dark gap under the lifted lid, then the lid and its knob
-    sc.ell(15, 12, 5.4, 1.8, { m: dark, g: 'gap', z: 2, rz: 1 });
-    sc.ell(15.4, 8.4, 5.6, 2.6, { m: por, g: 'lid', z: 6, rz: 2.4 });
-    sc.ell(15.4, 10.2, 5.8, 0.9, { m: gold, g: 'lidrim', z: 7, rz: 0.8 });
-    // cups on saucers, floating low on either side
-    for (const [cx, cy, g] of [[4.4, 27.4, 'cupL'], [26.6, 28, 'cupR']]) {
+    // handle loop (behind the body), a slim spout curving up, the round body; the pot
+    // hangs in the air well above the ground line
+    sc.tube([[21.5, 13, 1, -2], [25, 12.5, 1, -2], [27, 15, 1, -2], [26.2, 18.5, 1, -2], [22.5, 20.1, 0.9, -2]], { m: por, g: 'handle' });
+    sc.ell(15, 17.3, 8.4, 6.2, { m: por, g: 'body', z: 0, rz: 7 });
+    sc.tube([[8.6, 19, 1.8, 3], [5.6, 17.5, 1.2, 4], [4, 14.5, 1, 4], [3, 11.5, 1, 4], [2, 10.1, 1.2, 4]], { m: por, g: 'spout' });
+    sc.ell(15, 23.5, 5.2, 1.4, { m: gold, g: 'foot', z: 3, rz: 1.2 });
+    // the dark gap under the lid, lifted clear of the pot, then the lid and its knob
+    sc.ell(15, 10.4, 5.6, 2.6, { m: dark, g: 'gap', z: 2, rz: 1 });
+    sc.ell(15.4, 6, 5.6, 2.6, { m: por, g: 'lid', z: 6, rz: 2.4 });
+    sc.ell(15.4, 7.8, 5.8, 0.9, { m: gold, g: 'lidrim', z: 7, rz: 0.8 });
+    // two cups on their saucers bobbing in the air at different heights: one low under
+    // the spout, one higher under the handle
+    const CUPS = [[5, 27.6, 'cupL'], [27.2, 23.2, 'cupR']];
+    for (const [cx, cy, g] of CUPS) {
       sc.ell(cx, cy + 1.9, 3.8, 1, { m: por, g: g + 's', z: 10, rz: 1 });
       sc.ell(cx, cy, 2.4, 1.9, { m: por, g, z: 11, rz: 2 });
       sc.cut((x, y) => sc.isG(x, y, g) && y < cy - 1.2);
@@ -469,30 +477,35 @@
     const p = sc.render({ ground: 0.02, depth: 0.08 });
     // blue floral pattern: two flowers on the front, leaves and a band round the shoulder
     const B = '#4060c0', B2 = '#7894e8', B3 = '#2a3a88';
-    stamp(p, 10, 17, ['.b.b.', 'bbwbb', '.bwb.', 'bbwbb', '.b.b.'], { b: B, w: B2 });
-    stamp(p, 17, 19, ['.b.', 'bwb', '.b.'], { b: B, w: B2 });
-    for (const [x, y] of [[15, 19], [16, 20], [14, 21], [13, 22], [20, 18], [21, 17], [9, 21], [19, 22]]) on(p, x, y, B3);
-    for (let x = 8; x <= 22; x++) if ((x & 1) === 0) on(p, x, 15, B);
-    for (const [x, y] of [[3, 14], [4, 14], [26, 16], [27, 16]]) on(p, x, y, B);
-    on(p, 9, 16, WHITE); on(p, 10, 16, WHITE); on(p, 9, 17, POR[4]);
-    // two round glowing eyes peeping out of the gap
-    stamp(p, 11, 11, ['WWy', 'Wky'], { y: '#c8d0f0', W: '#ffffff', k: '#1a1030' });
-    stamp(p, 17, 11, ['yWW', 'ykW'], { y: '#c8d0f0', W: '#ffffff', k: '#1a1030' });
+    stamp(p, 10, 16, ['.b.b.', 'bbwbb', '.bwb.', 'bbwbb', '.b.b.'], { b: B, w: B2 });
+    stamp(p, 17, 18, ['.b.', 'bwb', '.b.'], { b: B, w: B2 });
+    for (const [x, y] of [[15, 18], [16, 19], [14, 20], [13, 21], [20, 17], [21, 16], [9, 20], [19, 21]]) on(p, x, y, B3);
+    for (let x = 8; x <= 22; x++) if ((x & 1) === 0) on(p, x, 14, B);
+    for (const [x, y] of [[3, 14], [4, 14], [26, 15], [27, 15]]) on(p, x, y, B);
+    on(p, 9, 15, WHITE); on(p, 10, 15, WHITE); on(p, 9, 16, POR[4]);
+    // two round glowing eyes peeping out of the dark gap
+    const EYE = ['.yy.', 'yWky', '.yy.'];
+    stamp(p, 10, 9, EYE, { y: '#c8d8ff', W: '#ffffff', k: '#1a1030' });
+    stamp(p, 17, 9, EYE, { y: '#c8d8ff', W: '#ffffff', k: '#1a1030' });
     // the knob: a sapphire in a gold setting; blue rims on the cups
-    jewel(p, 15.4, 5, 1.4, 1.4, SAPH, { bezel: GOLD });
-    for (const [cx, cy] of [[4.4, 27.4], [26.6, 28]]) {
+    jewel(p, 15.4, 2.6, 1.4, 1.4, SAPH, { bezel: GOLD });
+    for (const [cx, cy] of CUPS) {
       const x0 = Math.round(cx), y0 = Math.round(cy);
       for (let dx = -2; dx <= 2; dx++) on(p, x0 + dx, y0 - 1, dx === -1 ? B2 : B);
       on(p, x0 - 1, y0, WHITE);
+      on(p, x0 + 1, y0 + 1, B3);
     }
     return finish(p, (q) => {
       // steam curling up from the spout
       const ST = ['#e0e8ff', '#ffffff', '#c8d4f0'];
-      for (const [x, y, k] of [[3, 9, 0], [2, 8, 0], [2, 7, 2], [3, 6, 0], [4, 5, 1], [5, 5, 0], [6, 6, 2], [6, 7, 0], [5, 7, 2], [4, 3, 0], [3, 2, 2], [7, 2, 0], [8, 3, 1]]) q.set(x, y, ST[k]);
+      for (const [x, y, k] of [[3, 8, 0], [2, 7, 0], [2, 6, 2], [3, 5, 0], [4, 4, 1], [5, 4, 0], [6, 5, 2], [6, 6, 0], [5, 6, 2], [4, 2, 0], [3, 1, 2], [7, 1, 0], [8, 2, 1]]) q.set(x, y, ST[k]);
+      // tea drips falling from the spout and a ripple of sparkle under the floating pot
+      q.set(1, 12, '#c89050'); q.set(1, 14, '#e0b070');
       sparkle(q, 27, 5, 'star', 'y');
-      sparkle(q, 23, 24, 'small', 'c');
-      sparkle(q, 30, 11, 'dot');
-      sparkle(q, 10, 29, 'dot');
+      sparkle(q, 20, 29, 'small', 'c');
+      sparkle(q, 13, 29, 'dot');
+      sparkle(q, 30, 18, 'dot');
+      sparkle(q, 11, 31, 'dot');
     });
   };
 

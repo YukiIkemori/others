@@ -153,15 +153,17 @@
       g.window(4, 2, 248, 60, { title });
       const walk = Math.floor(R.Engine.frame / 16) % 2;
       this.ids.forEach((id, i) => {
-        const x = 11 + 24 * (i % 10), y = 8 + 27 * Math.floor(i / 10);
+        // 2 rows × 10 (§11.8.4: x = 11 + 24i; the rows sit 1px higher than the sketch so the second row's
+        // cursor frame and number plates stay inside the window's border line at y 59)
+        const x = 11 + 24 * (i % 10), y = 7 + 26 * Math.floor(i / 10);
         const dim = this.mode === 'start' && isRecruited(id) && !this.chosen.includes(id);
         kit.drawFigure(kit.defKey(id), x, y, { frame: i === this.cur ? walk : 0, dim });
         const n = this.chosen.indexOf(id);
         if (n >= 0) {
           const th = g.WINDOW_THEMES[(R.Settings && R.Settings.windowColor) || 'ink'] || g.WINDOW_THEMES.ink;
-          g.rect(x + 10, y + 13, 8, 12, th.fill2 || '#000');
-          g.strokeRect(x + 10, y + 13, 8, 12, C.yellow);
-          g.text(String(n + 1), x + 11.5, y + 14, { color: C.yellow });
+          g.rect(x + 10, y + 12, 8, 11, th.fill2 || '#000');
+          g.strokeRect(x + 10, y + 12, 8, 11, C.yellow);
+          g.text(String(n + 1), x + 11.5, y + 12.5, { color: C.yellow });
         }
         if (i === this.cur && Math.floor(R.Engine.frame / 20) % 4 !== 3) g.strokeRect(x - 2, y - 1, 20, 26, C.white);
       });
@@ -187,14 +189,32 @@
     String(d.profile || '').split('\n').forEach((l, i) => g.fitText(l, 12, 124 + 14 * i, 230));
     kit.drawAptWide(d.apt, 12, 166, { pitch: 14, gap: 2 });
   }
-  /** 2 ページ目: 能力 6 つ・成長・個性・初期装備・始めの技と術 */
+  /**
+   * the ability bonuses of a set of starting gear (§8.1.2: 鉄の胸当て 腕力+2・鉄の額当て 体力+1 …, the
+   * weapons included), summed over the slots → {str:n, …}. Items not registered yet add nothing.
+   */
+  function gearBonus(equip) {
+    const out = {};
+    for (const s of SLOTS) {
+      const it = equip && equip[s] ? DB.items[equip[s]] : null;
+      if (!it || !it.stats) continue;
+      for (const k of Object.keys(it.stats)) if (typeof it.stats[k] === 'number') out[k] = (out[k] || 0) + it.stats[k];
+    }
+    return out;
+  }
+  /** the names of the starting armour in slot order (盾・頭・体) */
+  const armorNames = (e) => ['shield', 'head', 'body'].filter((s) => e && e[s]).map((s) => K().itemName(e[s]));
+  /** 2 ページ目: 能力 6 つ（初期装備の分は緑の +n）・成長・個性・出身・初期装備・始めの技と術 */
   function drawPage2(id) {
     const g = G(), C = g.C, kit = K(), d = DB.companions[id];
+    const e = d.startEquip || {};
+    const plus = gearBonus(e);
     kit.STATS.forEach((s, k) => {
-      const y = 74 + 14 * k;
+      const y = 74 + 14 * k, v = d.stats[s], b = plus[s] || 0;
       g.text(kit.STAT_NAMES[s], 12, y, { color: '#c8c8d8' });
-      g.text(String(d.stats[s]), 70, y, { align: 'right' });
-      kit.statBar(74, y + 4, d.stats[s]);
+      g.text(String(v), 62, y, { align: 'right' });
+      if (b) g.text('+' + b, 64, y, { color: C.green });
+      kit.statBar(78, y + 4, v, { bonus: b, scale: 0.78 });
     });
     let gx = 132;
     [['HP', 'hp'], ['MP', 'mp'], ['WP', 'wp']].forEach(([lab, k]) => {
@@ -202,17 +222,21 @@
       g.text(d.growth[k], gx + 13, 74, { color: kit.aptColor(d.growth[k]) });
       gx += 38;
     });
-    g.text('個性：', 132, 96, { color: '#c8c8d8' });
-    g.fitText(d.innate.name, 164, 96, 80, { color: C.gold });
-    g.wrap(d.innate.desc, 112).slice(0, 2).forEach((l, i) => g.text(l, 136, 110 + 14 * i));
+    g.text('個性：', 132, 92, { color: '#c8c8d8' });
+    g.fitText(d.innate.name, 132 + g.textWidth('個性：'), 92, 80, { color: C.gold });
+    kit.jbreak(d.innate.desc, 110).forEach((l, i) => g.text(l, 136, 106 + 14 * i));
     g.text('出身：', 132, 138, { color: '#c8c8d8' });
-    g.fitText(d.from, 164, 138, 84);
-    const e = d.startEquip || {};
-    g.fitText('武器1：' + kit.itemName(e.weapon1) + (e.shield ? '　盾：' + kit.itemName(e.shield) : ''), 12, 164, 228);
-    g.fitText('武器2：' + (e.weapon2 ? kit.itemName(e.weapon2) : '――'), 12, 178, 228);
+    g.fitText(d.from, 132 + g.textWidth('出身：'), 138, 84);
+    const label = (t, x, y) => { g.text(t, x, y, { color: '#c8c8d8' }); return x + g.textWidth(t); };
+    let x = label('武器1：', 12, 162);
+    g.fitText(kit.itemName(e.weapon1), x, 162, 92);
+    x = label('武器2：', 128, 162);
+    g.fitText(e.weapon2 ? kit.itemName(e.weapon2) : '――', x, 162, 244 - x, { color: e.weapon2 ? C.white : '#8c90a8' });
+    x = label('防具：', 12, 176);
+    g.fitText(armorNames(e).join('・') || '――', x, 176, 244 - x);
     const acts = (d.startTechs || []).concat(d.startSpells || []).map(kit.actionName);
-    g.text('始めの技・術：', 12, 194, { color: '#c8c8d8' });
-    g.fitText(acts.join('・') || '――', 12 + g.textWidth('始めの技・術：'), 194, 228 - g.textWidth('始めの技・術：'), { color: C.white });
+    x = label('始めの技・術：', 12, 192);
+    g.fitText(acts.join('・') || '――', x, 192, 244 - x, { color: C.white });
   }
 
   // ------------------------------------------------------------ 入れ替える（§11.8.5）
@@ -338,13 +362,14 @@
       const blink = Math.floor(R.Engine.frame / 8) % 2 === 0;
       g.window(4, 4, 124, 126, { title: '出撃' });
       party().forEach((m, k) => {
+        // row of 28: figure (x+8, y+6+28k), the name on the first line, Lv and the 前/中 plate on the second
         const y = 4 + 8 + 28 * k;
         const picked = this.pick && this.pick.id === m.id;
         if (picked && blink) { g.ctx.globalAlpha = 0.35; g.rect(8, y - 3, 116, 27, '#6fd8ff'); g.ctx.globalAlpha = 1; }
         kit.drawFigure(kit.charKey(m), 12, y - 2, { frame: this.side === 0 && k === this.ai ? walk : 0 });
-        g.fitText(m.name, 32, y, 52, { color: m.hp <= 0 ? C.dead : C.white });
-        g.text('Lv' + (m.level || 1), 107, y, { align: 'right', color: '#c8c8d8' });
-        kit.drawRowTag(m.row, 110, y + 11);
+        g.fitText(m.name, 32, y, 88, { color: m.hp <= 0 ? C.dead : C.white });
+        g.text('Lv' + (m.level || 1), 34, y + 12, { color: '#c8c8d8' });
+        kit.drawRowTag(m.row, 108, y + 11);
         if (this.side === 0 && k === this.ai) g.cursor(4 + 2, y + 5, !this.busy);
       });
       for (let k = party().length; k < maxParty(); k++) g.text('――', 32, 12 + 28 * k, { color: '#4c5070' });
@@ -361,14 +386,11 @@
       if (!rs.length) g.text('いない', 191, 60, { align: 'center', color: '#4c5070' });
       if (this.rtop > 0) tri(191, 7, -1);
       if (this.rtop + 8 < rs.length) tri(191, 123, 1);
-      g.window(4, 132, 248, 88);
+      // after the first pick the lower window's title asks for the second one (nothing covers the lists)
+      const who = this.pick ? party().concat(rs).find((m) => m.id === this.pick.id) : null;
+      g.window(4, 132, 248, 88, { title: who ? who.name + 'と入れ替える人は？' : null });
       const c = this.cur;
-      if (c) drawInfo(c, 12, 138);
-      if (this.pick) {
-        const who = party().concat(rs).find((m) => m.id === this.pick.id);
-        g.window(60, 110, 136, 20);
-        g.fitText((who ? who.name : '') + 'と入れ替える人は？', 128, 114, 124, { align: 'center', color: C.yellow });
-      }
+      if (c) drawInfo(c, 12, 141);
     }
   }
   const tri = (x, y, dir) => K().tri(x, y, dir);

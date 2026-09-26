@@ -241,7 +241,14 @@
       if (it.crit) p.push('会心' + sgn(it.crit));
       return p.join('　');
     }
-    if (it.type === 'acc') return '―';
+    if (it.type === 'acc') {
+      // most accessories carry no numbers: the row stays empty and the popup closes the gap
+      const p = [];
+      if (it.atk) p.push('攻撃力' + sgn(it.atk));
+      if (it.def) p.push('守備力' + sgn(it.def));
+      if (it.mdef) p.push('術防' + sgn(it.mdef));
+      return p.join('　');
+    }
     const p = ['守備力 ' + (it.def || 0), '術防 ' + (it.mdef || 0)];
     if (it.type === 'shield' && it.eva) p.push('回避' + sgn(it.eva));
     return p.join('　');

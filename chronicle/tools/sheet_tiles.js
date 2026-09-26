@@ -11,6 +11,7 @@
 //   anim     the animated world sample (sea fog, sandstorm, marsh fog, rivers),
 //            8 consecutive field frames (one per 16 game frames)
 //   zoom     one world sample (--sample N) cropped with --crop x,y,w,h at --scale
+//            (--found: its hidden passages drawn as found)
 //   icons    every location icon at 4x on grass / desert / snow / marsh
 //   worldmap the real world map (src/maps) if one is defined, at 1x
 //            (--crop x,y,w,h in cells renders that part at --scale; --state
@@ -190,9 +191,13 @@ window.SHEET = (function () {
     return cv.toDataURL();
   }
   /** one sample (index) cropped [x,y,w,h] at a big scale, with its actors */
-  function zoom(list, idx, crop, scale) {
+  function zoom(list, idx, crop, scale, found) {
     const d = list[idx || 0];
     const m = fakeMap(d.rows, 'world', null, true);
+    if (found) { // show hidden passages as found (R.Game.secrets['<map>:<x>,<y>'])
+      R.Game = R.Game || {}; R.Game.secrets = {};
+      for (let y = 0; y < m.h; y++) for (let x = 0; x < m.w; x++) if ((R.DB.tiles[m.tileAt(x, y)] || {}).secret) R.Game.secrets[m.id + ':' + x + ',' + y] = true;
+    }
     crop = crop || [0, 0, m.w, m.h];
     const a = drawMap(m, true, scale, ${FRAME}, crop);
     if (d.actors) actors(a.getContext('2d'), d.actors, scale, crop[0], crop[1]);
@@ -283,7 +288,8 @@ window.SHEET = (function () {
       // help band and command box
       c.strokeStyle = 'rgba(255,255,255,0.35)'; c.lineWidth = 1; c.strokeRect(x + 8 * scale, y + 133 * scale, 240 * scale, 19 * scale);
       c.globalAlpha = 0.97; c.fillStyle = '#16203e'; c.fillRect(x + 8 * scale, y + 150 * scale, 240 * scale, 68 * scale); c.globalAlpha = 1;
-      label(c, id + (R.Art.BBG_FALLBACK && R.Art.BBG_FALLBACK[id] ? '  (fallback ' + R.Art.BBG_FALLBACK[id] + ')' : ''), x + 12 * scale, y + 156 * scale, '#f0e8d0');
+      const pend = (R.Art.PENDING || []).includes('bbg:' + id);
+      label(c, id + (pend ? '  (no scene yet: draws ' + R.Art.BBG_FALLBACK[id] + ')' : R.Art.BBG_FALLBACK && R.Art.BBG_FALLBACK[id] ? '  (new; fallback would be ' + R.Art.BBG_FALLBACK[id] + ')' : ''), x + 12 * scale, y + 156 * scale, pend ? '#ff8080' : '#f0e8d0');
     });
     return cv.toDataURL();
   }
@@ -325,7 +331,7 @@ ${SAMPLES.map((f) => `<script src="file://${f}"></script>`).join('\n')}
     if (ONLY.includes('tiles')) save('tiles', await run(`SHEET.tiles(${SCALE}, ${ids})`));
     if (ONLY.includes('world')) save('world', await run(`SHEET.mapSheet(window.SAMPLES.world, ${Math.max(1, SCALE - 1)}, ${FRAME}, false)`));
     if (ONLY.includes('anim')) save('anim', await run(`SHEET.anim(window.SAMPLES.world, ${Math.max(1, SCALE - 1)})`));
-    if (ONLY.includes('zoom')) save('zoom', await run(`SHEET.zoom(window.SAMPLES.world, ${+opt('sample', 0)}, ${crop}, ${SCALE})`));
+    if (ONLY.includes('zoom')) save('zoom', await run(`SHEET.zoom(window.SAMPLES.world, ${+opt('sample', 0)}, ${crop}, ${SCALE}, ${args.includes('--found')})`));
     if (ONLY.includes('icons')) save('icons', await run(`SHEET.icons(${Math.max(1, SCALE - 1)})`));
     if (ONLY.includes('worldmap')) save('worldmap', await run(`SHEET.worldmap(${FRAME}, ${crop}, ${SCALE}, ${JSON.stringify(opt('state', 'start'))})`));
     if (ONLY.includes('themes')) save('themes', await run(`SHEET.themes(${SCALE})`));

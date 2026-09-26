@@ -353,8 +353,8 @@
       tex: (x, y, z) => {
         const u = (x - 128) / (0.35 + z * 1.2);
         if ((((u % 18) + 18) % 18) < 1.2) return 0x221a14;
-        const sheen = Math.abs(x - 190 + z * 30) < 4 + z * 14 && T.hash(x, y, 57) < 0.22;
-        if (sheen && !(z > 0.28 && z < 0.74)) return 0x68687c;
+        // moonlight glinting on the wet far deck (short streaks, none near the group)
+        if (z < 0.26 && Math.abs(x - 190) < 26 && (y + (x >> 3)) % 3 === 0 && T.hash(x >> 2, y, 57) < 0.5) return 0x5e5a66;
         return T.hash(x, y, 55) < 0.04 ? 0x30261c : null;
       },
     });

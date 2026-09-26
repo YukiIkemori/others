@@ -20,8 +20,9 @@
 //      forms read by value, not by hue
 //   C8 the outline survives every lineage recolour and the golden tint (C5 with luminance
 //      < 0.13: a desaturated, brightened #120c16 is ~0.10 and still reads as outline)
-//   C9 new bases: anchor points sit on the sprite (eyes, body, mouth on opaque pixels,
-//      head within 2 px of the silhouette top in its column, feet within 1 px of the bottom)
+//   C9 new bases: anchor points sit on the sprite (eyes, body, mouth on opaque pixels; hand, hand2,
+//      neck, back, brow, tail within 2 px of one; head within 2 px of the silhouette top in its
+//      column, feet within 1 px of the bottom)
 //   C10 build time ≤ 150 ms per base (typical 2–15 ms; the limit only catches runaway factories
 //       on a busy shared machine)
 //   C11 Crest bases unchanged: canvas hash equals tools/fixtures/mons-base/hashes.json
@@ -122,6 +123,9 @@ window.CHECK = function (ids, variants) {
       const top = HEAD_UNDER.includes(id) ? a.head[1] - 1 : m.top(a.head[0]);
       if (top < 0 || Math.abs(top + 1 - a.head[1]) > 2) res.anchor.push('head ' + a.head + ' vs silhouette top ' + (top + 1));
       if (Math.abs(a.feet[1] - (m.bbox[3] - 1)) > 1) res.anchor.push('feet ' + a.feet + ' vs bottom ' + (m.bbox[3] - 1));
+      // weapons, shields, bells and capes hang on these: within 2 px of the sprite
+      const near = (p) => { for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) if (m.at(p[0] + dx, p[1] + dy)) return true; return false; };
+      for (const k of ['hand', 'hand2', 'neck', 'back', 'brow', 'tail']) if (!near(a[k])) res.anchor.push(k + ' ' + a[k] + ' more than 2 px off the sprite');
     }
     return res;
   });

@@ -156,11 +156,9 @@ const overNames = (sp) => [].concat(sp.over || []).map((o) => partName(P.over, o
 
 section('§11.3.3 story characters = the spec table');
 // Named deviations (reported in the A13 report):
-//   fine   hair: a hood fringe (hairHooded) instead of hairLong — the long hair would be cut off under the
-//          deep hood anyway; the fringe keeps "銀白が少し見える" and fine unlike morga (hairLong + hood + robe).
 //   berna  cane: over.caneOut, the same walking stick one pixel out from the wide robe (over.cane vanishes on it);
 //          colours: the table lists マント / 服 / 縁, so the mantle colour is `sub` (the mantle part draws in sub).
-const DEV533 = { fine: { hair: ['hairLong', 'hairHooded'] }, berna: { over: ['cane', 'caneOut'] } };
+const DEV533 = { berna: { over: ['cane', 'caneOut'] } };
 for (const r of T533) {
   const t = r[0].replace(/`/g, '').slice(4), parts = r[2] || '', cols = r[3] || '';
   const sp = npcSpec(t), dev = DEV533[t] || {};
@@ -183,6 +181,8 @@ for (const r of T533) {
     const want = dev.over && dev.over[0] === m[1] ? dev.over[1] : m[1];
     ok(overNames(sp).includes(want), `npc:${t} over.${want}`);
   }
+  const PROPS533 = { 三つ編み: 'braidSide', 襟を立てる: 'collar', 後ろで結ぶ: 'napeTail', 黒い手帳: 'notebook', 銀の筆: 'brush', 本の紋: 'bookCrest' };
+  for (const k in PROPS533) if (parts.includes(k)) ok(overNames(sp).includes(PROPS533[k]), `npc:${t} ${PROPS533[k]} (${k})`);
   const beard = /(?:ひげ|口ひげ) `(\w+)`/.exec(parts);
   if (beard) ok(partName(P, sp.beard) === beard[1], `npc:${t} beard ${beard[1]}`);
   const pal = CA.npcs[t].pal, three = hexes(cols).slice(0, 3);
@@ -233,6 +233,36 @@ section('new parts (§5.3.8) exist');
 for (const n of ['hairPony', 'hairTail', 'hairBraid', 'hairCurly', 'hairCrop', 'hairWave', 'hairHime', 'hairSide', 'hairHeroM', 'hairHeroF', 'face.old', 'face.narrow', 'over.eyepatch', 'over.freckles', 'over.earrings', 'over.quill'])
   ok(CA.hasPart(n), 'part ' + n);
 for (const id of CA.PARTY_IDS) ok(CA.pendingParts(P.party[id]).length === 0, `${id} uses no stand-in part`);
+// the stand-ins (§5.3.8 「代わり」) are the spec's, and the fallback path really draws them
+const T538 = rows(between('#### 5.3.8', '#### 5.3.9')).filter((r) => /^`/.test(r[1] || ''));
+ok(T538.length === 16, `§5.3.8 has 16 part rows (got ${T538.length})`);
+for (const r of T538) {
+  const ids = r[1].match(/`([\w.:]+)`/g).map((s) => s.slice(1, -1));
+  const alt = none(r[4]) ? [] : r[4].replace(/`/g, '').split('/').map((s) => s.trim());
+  ids.forEach((id, i) => {
+    if (id.startsWith('npc:')) { ok(JSON.stringify(CA.NPC_FALLBACK[id.slice(4)]) === JSON.stringify([(alt[0] || '').slice(4)]), `${id} stand-in ${alt[0]}`); return; }
+    const want = alt.length ? alt[i] || alt[0] : null;
+    ok(id in CA.PART_FALLBACK && CA.PART_FALLBACK[id] === want, `${id} stand-in ${want || 'なし'} (have ${CA.PART_FALLBACK[id]})`);
+    if (want) ok(CA.hasPart(want), `stand-in part ${want} exists`);
+  });
+}
+{
+  const real = P.hairPony;
+  delete P.hairPony;
+  try {
+    ok(JSON.stringify(CA.pendingParts(P.party.selma)) === '["hairPony"]' && CA.part('hairPony') === P.hairNon, 'a missing part is listed as pending and drawn with its stand-in');
+    const h = CA.partySpec(P.party.selma).hair;
+    ok(h.length === 1 && (h[0] === P.hairNon || Object.getPrototypeOf(h[0]) === P.hairNon), 'partySpec uses the stand-in part');
+  } finally { P.hairPony = real; }
+}
+// NPC stand-ins (§11.3.3 / §11.3.4 「代わり」): the base type of the recolour
+for (const [r, col] of T533.map((r) => [r, 5]).concat(T534.map((r) => [r, 4]))) {
+  const base = /`npc:([a-z_]+)`/.exec(r[col] || '');
+  for (const key of r[0].match(/npc:[a-z_]+/g)) {
+    const t = key.slice(4), fb = CA.NPC_FALLBACK[t];
+    ok(fb && base && fb[0] === base[1] && (CA.NPC_TYPES.includes(fb[0])), `npc:${t} stand-in npc:${base && base[1]} (have ${fb && fb[0]})`);
+  }
+}
 
 // ------------------------------------------------------------------ distinguishability
 section('distinguishability (§5.3.7 rule)');
@@ -245,10 +275,13 @@ for (const id of CA.PARTY_IDS) {
   if (seen[k]) { dup++; ok(false, `${seen[k]} and ${id} share hair part + body ${k}`); } else seen[k] = id;
 }
 ok(dup === 0, 'no two of the 30 party looks share hair part + body');
-// companions vs townsfolk: never the same hair + body + hat triple as an NPC type
+// companions vs townsfolk: never the same hair + body + hat + beard + cape as a town NPC type.
+// The fixed story characters (§11.3.3) are left to the pixel-distance check of check_art-chars.js:
+// their parts come from the spec (フィーネ = robe + hood + hairLong, like モルガ) and colour tells them apart.
+const STORY = new Set(T533.flatMap((r) => r[0].match(/npc:[a-z_]+/g)).map((k) => k.slice(4)));
 const npcTriples = {};
 for (const t of CA.NPC_TYPES) {
-  const n = CA.npcs[t]; if (!n || !n.spec) continue;
+  const n = CA.npcs[t]; if (!n || !n.spec || STORY.has(t)) continue;
   const sp = n.spec();
   const nm = (p) => { if (!p) return '-'; for (const k in P) if (P[k] === p || Object.getPrototypeOf(p) === P[k]) return k; for (const g of ['body', 'hat']) for (const k in P[g]) if (P[g][k] === p || Object.getPrototypeOf(p) === P[g][k]) return k; return '?'; };
   const hair = [].concat(sp.hair || []).map(nm).join('+');
@@ -319,7 +352,7 @@ if (R.Party && typeof R.Party.spriteKey === 'function') {
 } else console.log('  (R.Party.spriteKey not loaded yet — skipped)');
 // item icons: default rule (§8.2.8) and explicit icons must resolve
 if (DB.items && Object.keys(DB.items).length) {
-  const EL = (it) => (it.stone && (it.stone.element || it.stone.el)) || it.element;
+  const EL = (it) => (typeof it.stone === 'string' ? it.stone : it.stone && (it.stone.element || it.stone.el)) || it.element;
   const def = (it) => {
     if (it.icon) return it.icon.startsWith('icon:') ? it.icon : 'icon:' + it.icon;
     if (it.type === 'weapon') return 'icon:' + it.wtype;

@@ -270,6 +270,7 @@ test('gear: autoDesc fits 2 lines × 20 for every item', () => {
   ok(/ただし経験値が減る。/.test(d), 'quirk sentence kept when shortening: ' + d);
   eq(Ru.autoDesc({ type: 'acc', grade: 'rare', mods: { elemResist: { fire: 0.5, water: 0.5 } } }), '火・水のダメージを減らす。', 'grouped resist');
   eq(Ru.autoDesc({ type: 'acc', grade: 'rare', mods: { statusImmune: ['sleep', 'confuse', 'silence'] } }), '眠り・混乱・沈黙が効かない。', 'immune list');
+  eq(Ru.autoDesc(DB.items.fx_acc_luck), 'レアと超レアのアイテムを落としやすい。', 'rarePct + superPct in one sentence');
 });
 
 test('equip: slots, two-handed and the shield (§3.3.3 rules 1–6)', () => {
@@ -464,6 +465,18 @@ test('optimize: two-handed weapon2 vs shield (§4.4.1)', () => {
   ok(pp.score >= s0, 'phys score ≥ now');
   const r = Ru.applyLoadout(c, pm);
   eq([r.ok, c.equip.weapon2, c.equip.shield], [true, null, 'fx_sh_c5'], 'applied');
+  // the stronger of two same-type weapons goes to weapon1 (items c wears are candidates, §4.4.1)
+  c.equip.weapon1 = 'fx_sword_3'; c.equip.weapon2 = 'fx_sword_5'; c.equip.shield = null;
+  for (const k of Object.keys(g.inv)) delete g.inv[k];
+  const inv0 = clone(g.inv);
+  const psw = Ru.optimize(c, 'phys');
+  eq([psw.equip.weapon1, psw.equip.weapon2], ['fx_sword_5', 'fx_sword_3'], 'weapons swap places');
+  eq(g.inv, inv0, 'optimize stays pure');
+  const rsw = Ru.applyLoadout(c, psw);
+  eq([rsw.ok, c.equip.weapon1, c.equip.weapon2, rsw.removed], [true, 'fx_sword_5', 'fx_sword_3', []], 'swap applied, nothing removed');
+  eq(g.inv, inv0, 'inventory unchanged by a swap');
+  eq(Ru.optimize(c, 'phys').changes, [], 'no swap back');
+  eq(Ru.optimize(c, 'magic').changes, [], 'no swap when the score is the same (magic ignores weapon atk)');
   // weapon1 two-handed → no shield ever
   c.equip.weapon1 = 'fx_gs_5'; g.inv.fx_gs_5 = 0; c.equip.shield = null;
   const pg = Ru.optimize(c, 'magic');
@@ -535,6 +548,9 @@ test('mods: party sums, caps, reserve excluded (§3.3.16, §5.3.4)', () => {
   eq(Pa.mod('goldPct'), 150, 'Party.mod reads partyMods');
   b.hp = 0;
   eq(Ru.partyMods().escapePct, 100, 'the fallen do not count');
+  b.hp = 1;
+  a.equip.acc1 = 'fx_acc_poor'; a.equip.acc2 = 'fx_acc_poor'; b.equip.acc1 = 'fx_acc_poor';
+  eq(Ru.partyMods().goldPct, -100, 'quirk sums stop at −100 (never a negative reward)');
   // reserve innate does not count
   const g2 = fresh([]);
   const r = Ru.newChar({ id: 'fx_warrior' });
@@ -583,6 +599,10 @@ test('commands, tech/spell lists, costs, rows (§3.3.3)', () => {
   c.spells = ['fx_s_triple', 'fx_s_cost', 'fx_s_pair'];
   eq(Ru.spellList(c), ['fx_s_cost', 'fx_s_pair', 'fx_s_triple'], 'spell order');
   eq(Ru.fieldSpells(c), ['fx_s_cost'], 'field spells');
+  for (const w of Ru.WTYPES) {
+    const data = Object.keys(DB.actions).filter((id) => !id.startsWith('fx_') && DB.actions[id].kind === 'tech' && DB.actions[id].wtype === w);
+    if (data.length) eq(Ru.techList({ techs: data.slice().reverse(), equip: Ru.emptyEquip() }, w), data, 'tech data order ' + w);
+  }
   if (DB.actions.s_fire_1 && DB.actions.s_fire_2 && DB.actions.s_water_1) {
     c.spells = ['s_water_1', 's_fire_2', 's_fire_1'];
     eq(Ru.spellList(c), ['s_fire_1', 's_fire_2', 's_water_1'], 'real spell order (§7.2.2)');
@@ -853,7 +873,7 @@ test('State.check: every key (§3.2.3)', () => {
   if (!hasReal('companions', 20)) return;
   const g = fresh(['marta']);
   Pa.recruit('teo', { toParty: false });
-  St.setFlag('a'); St.setVar('v', 3); St.addItem('fx_key');
+  St.setFlag('a'); St.setVar('v', 3); St.setVar('neg', -2); St.addItem('fx_key');
   g.regionsCleared = ['r_forest', 'r_desert']; g.tier = 2;
   const T = [
     [null, true], [true, true], [false, false], ['a', true], ['!a', false], ['b', false], ['!b', true], [['a', '!b'], true], [['a', 'b'], false],
@@ -866,6 +886,7 @@ test('State.check: every key (§3.2.3)', () => {
     [{ var: 'v' }, true], [{ var: 'w' }, false], [{ var: 'v', gte: 3 }, true], [{ var: 'v', gte: 4 }, false], [{ var: 'v', lt: 4 }, true], [{ var: 'v', lt: 3 }, false],
     [{ var: 'v', eq: 3 }, true], [{ var: 'v', eq: 2 }, false], [{ postgame: true }, false], [{ postgame: false }, true],
     [{ flag: 'a', tier: 2, member: 'marta' }, true], [{ flag: 'a', tier: 5 }, false],
+    ['', true], [{ var: 'neg' }, false], [{ var: 'neg', lt: 0 }, true],
   ];
   for (const [c, want] of T) eq(St.check(c), want, JSON.stringify(c));
   St.setFlag('game_clear');
@@ -917,6 +938,10 @@ test('books: bestiary, drops, learned (§3.2.1, §3.3.2)', () => {
   eq([g.records.rareDrops, g.records.superDrops, g.records.goldens], [1, 1, 1], 'records');
   St.seen('fx_rare');
   eq(g.records.rareMons, 1, 'rare monster met');
+  St.seen('fx_rare');
+  eq(g.records.rareMons, 2, 'every encounter with a rare monster counts');
+  St.seen('fx_mon');
+  eq(g.records.rareMons, 2, 'ordinary monsters do not');
   St.noteLearned('hero', 'fx_t_cost'); St.noteLearned('hero', 'fx_t_cost'); St.noteLearned('fx_mage', 'fx_t_cost'); St.noteLearned('hero', 'fx_s_cost');
   eq([g.book.tech.fx_t_cost, g.book.spell.fx_s_cost], [['hero', 'fx_mage'], ['hero']], 'books');
   eq(St.learnedBy('fx_s_cost'), ['hero'], 'learnedBy');
@@ -1093,8 +1118,11 @@ test('save: old-save safety (§3.2.5 steps 2–9)', () => {
   g.party.splice(2, 1);
   g.reserve = [marta, clone(marta)];                // duplicate id
   g.party.push({ id: 'unknown_companion', name: 'x', equip: {} });
+  g.pos = { map: 'renamed_map', x: 3, y: 4, dir: 'up' };
+  g.respawn = { map: 'fx_town', spawn: 'inn' };
   ok(St.deserialize(d), 'loads');
   const G = R.Game;
+  eq([G.pos.map, G.pos.spawn], ['fx_town', 'inn'], 'a vanished map falls back to the respawn town');
   eq(G.secrets, {}, 'secrets filled');
   eq(G.records.glimmers, 0, 'records filled');
   ok(!(('repel' + 'Steps') in G) && G.encItem === null, 'old repel counter dropped, encItem null');
@@ -1198,6 +1226,7 @@ test('setHero: re-create the hero, keep progress (§3.3.11 ev.createHero)', () =
   eq(c.spells.includes(DB.starterKit.spell.water), true, 'starting spell');
   eq(Ru.aptLetters(c).e.light, 'A', 'mage pair element A');
   ok((g.book.spell[DB.starterKit.spell.water] || []).includes('hero'), 'spell booked');
+  ok(!(g.book.tech[DB.starterKit.tech.sword] || []).includes('hero'), 'the placeholder hero\'s tech left the tech book');
   eq([c.hp, c.mp], [Ru.stats(c).hp, Ru.stats(c).mp], 'healed');
   // later (hero_created set): equipment and knowledge stay
   St.setFlag('hero_created');

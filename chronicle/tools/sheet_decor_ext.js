@@ -158,12 +158,14 @@ window.DSHEET = (function () {
   }
   // a column of grounds: grass, cobbles, dirt, snow
   let GROUNDS = [',', '.', ':', '*'];
-  function pieceStrip(dch, scale) {
+  function pieceStrip(dch, scale, id) {
     // one map per ground: 3 wide x 3 high, decor in the middle of the bottom row
+    // (map-legend-only decor goes through the map's decorLegend on '|'; boats and hot springs on water)
     const parts = [];
-    for (const gch of GROUNDS) {
+    const onWater = /^(boat|hot_spring|sunken_bell)$/.test(id || '');
+    for (const gch of onWater ? ['~'] : GROUNDS) {
       const rows = [gch.repeat(3), gch.repeat(3), gch.repeat(3)];
-      const m = compile({ rows, decor: ['   ', '   ', ' ' + dch + ' '] });
+      const m = compile({ rows, decor: ['   ', '   ', ' ' + (dch || '|') + ' '], decorLegend: dch ? undefined : { '|': id } });
       const n = nframes(m);
       for (let f = 0; f < n; f++) parts.push(render(m, f, scale));
     }
@@ -176,7 +178,7 @@ window.DSHEET = (function () {
     const legend = R.DB.legends.decor, ch = {};
     for (const k in legend) ch[legend[k]] = k;
     const rows = [];
-    for (const id of ids) rows.push({ name: id + ' (' + (R.DB.decor[id] || {}).name + ')', parts: pieceStrip(ch[id], scale) });
+    for (const id of ids) rows.push({ name: id + ' (' + (R.DB.decor[id] || {}).name + ')', parts: pieceStrip(ch[id], scale, id) });
     // joined / context pieces
     const combos = [
       ['hedges', [',,,,,,,,,,,,,,', ',,,,,,,,,,,,,,', ',,,,,,,,,,,,,,', ',,,,,,,,,,,,,,', ',,,,,,,,,,,,,,', ',,,,,,,,,,,,,,'],

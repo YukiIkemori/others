@@ -78,7 +78,17 @@
       R.State.setFlag('cleared_' + id);
     }
     if (RS[id]) R.State.setFlag(RS[id] + '_boss');
+    // the region's page, as ev.clearRegion hands it over (so the chronicle screen matches the tier)
+    const page = DB.regions && DB.regions[id] && DB.regions[id].fragment;
+    if (page && DB.items[page] && !R.State.hasItem(page)) R.State.addItem(page, 1);
     return g.tier;
+  }
+  /** undo clearState (debug.tier going down) */
+  function unclearState(id) {
+    R.State.setFlag('cleared_' + id, false);
+    if (RS[id]) R.State.setFlag(RS[id] + '_boss', false);
+    const page = DB.regions && DB.regions[id] && DB.regions[id].fragment;
+    if (page && R.State.count(page)) R.State.removeItem(page, R.State.count(page));
   }
   /** normal shop gear of tier ≤ T: for weapons the same weapon type, else the same line / type */
   function tierGear(c, T) {
@@ -121,7 +131,8 @@
      *   (also accepts top-level gender / type / fav|favor / name)
      * Defaults: DB.config.defaultHero, ['brigitta','marta','sylvain'], tier 0, level 1, map 'lute' spawn 'inn',
      * the prologue finished (its flags, k_chronicle/k_quill/k_bell, visited roa/lute/lighthouse, objective obj_regions).
-     * tier > 0 clears the first `tier` regions in the §10.8.1 order. prologue:true starts before the prologue.
+     * tier > 0 clears the first `tier` regions in the §10.8.1 order (cleared_<id>, <rs>_boss and the region's
+     * page, as ev.clearRegion would leave them). prologue:true starts before the prologue.
      */
     async quickStart(o) {
       o = o || {};
@@ -205,9 +216,7 @@
       const g = need();
       n = U.clamp(n | 0, 0, 8);
       const regs = regionOrder();
-      for (const id of (g.regionsCleared || []).slice()) {
-        if (regs.indexOf(id) >= n) { R.State.setFlag('cleared_' + id, false); if (RS[id]) R.State.setFlag(RS[id] + '_boss', false); }
-      }
+      for (const id of (g.regionsCleared || []).slice()) if (regs.indexOf(id) >= n) unclearState(id);
       g.regionsCleared = (g.regionsCleared || []).filter((id) => regs.indexOf(id) < n);
       g.tier = g.regionsCleared.length;
       for (let i = 0; i < n && i < regs.length; i++) if (!g.regionsCleared.includes(regs[i])) clearState(regs[i]);

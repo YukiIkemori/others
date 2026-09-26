@@ -37,7 +37,7 @@
       hand: [25, 16], hand2: [5, 21], tail: [3, 24], feet: [16, 30] },
     mimic: { head: [16, 6], headW: 18, brow: [16, 8], eyes: [[12, 15], [19, 15]], mouth: [16, 17], neck: [16, 20], back: [16, 5], body: [16, 25],
       hand: [4, 22], hand2: [28, 22], tail: [16, 25], feet: [16, 31] },
-    eyeball: { head: [16, 5], headW: 16, brow: [16, 7], eyes: [[16, 16]], mouth: [16, 21], neck: [16, 22], back: [16, 10], body: [16, 15],
+    eyeball: { eyeR: 3.6, head: [16, 5], headW: 16, brow: [16, 7], eyes: [[16, 16]], mouth: [16, 21], neck: [16, 22], back: [16, 10], body: [16, 15],
       hand: [6, 26], hand2: [26, 26], tail: [16, 26], feet: [16, 30], float: true },
     // ------------------------------------------------------------ medium 48
     goblin: { head: [25, 9], headW: 14, brow: [23, 11], eyes: [[19, 13], [27, 13]], mouth: [23, 21], neck: [23, 24], back: [23, 20], body: [23, 30],
@@ -109,6 +109,8 @@
     frog: { at: { spots: [23, 24, 0.36, 0.18] } },
     mole: { clawAt: [[8, 22], [39, 22]], clawDir: -90 },
     automaton: { collar: false },
+    owl: { eyeR: 3 },
+    book: { eyeR: 2 },
     scribe: { erase: { hand: [[3, 7, 10, 26, 'all']], hand2: [[30, 27, 42, 41, 'wood']] } },
   });
   const AN = (A.MON_ANCHORS = A.MON_ANCHORS || {});

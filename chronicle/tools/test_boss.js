@@ -99,7 +99,7 @@ for (const id of BOSSES) {
   if (d.bossType === 'add') ok(!!DB.monsters[d.addOf] && DB.monsters[d.addOf].bossType !== 'add', `${id} addOf ${d.addOf}`);
   if (d.hpShare != null) ok(d.hpShare > 0 && d.hpShare <= 20, `${id} hpShare`);
   ok(!d.statusRes || !('death' in d.statusRes) || d.statusRes.death >= 0.8, `${id} death res (boss default 1 applies otherwise)`);
-  if (d.s) for (const [k, v] of Object.entries(d.s)) ok(['hp', 'atk', 'mag', 'def', 'mdef', 'agi'].includes(k) && v >= 0.4 && v <= 2.5, `${id} s.${k} ${v}`);
+  if (d.s) for (const [k, v] of Object.entries(d.s)) ok(['hp', 'atk', 'mag', 'def', 'mdef', 'agi'].includes(k) && v >= 0.5 && v <= 2.0, `${id} s.${k} ${v} within 0.5–2.0 (§4.14.2)`);
 }
 // troop hp shares add up to the bossType multiplier (§9.11.2)
 const HPMUL = { mid: 10, region: 18, fmid: 20 };

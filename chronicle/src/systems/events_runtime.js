@@ -69,7 +69,13 @@
     if (it.grade === 'rare') return 'rare';
     return 'item';
   }
-  const itemMark = (it) => (it && (it.grade === 'rare' || it.grade === 'super') ? '★' : '');
+  /** the mark before an item's name in messages (§8.2.8, STYLE_JA §9): ◆ for a one-off reward
+   *  (`unique`), ★ for レア・超レア, none for the rest — the same rule as the menus' itemLabel */
+  function itemMark(it) {
+    if (!it) return '';
+    if (it.unique) return '◆';
+    return it.grade === 'rare' || it.grade === 'super' ? '★' : '';
+  }
 
   /**
    * NPC / sign text (DESIGN §3.2.4): a string ('\f' separates pages), an array of pages, or an
@@ -330,6 +336,8 @@
         if (lay) lay.locks++;
         let res;
         try { res = await R.Battle.start(o); } finally { if (lay) lay.locks = Math.max(0, lay.locks - 1); }
+        // no random battle in the first 6 steps after any battle (§4.11.1)
+        if (lay && lay.resetEnc && f.map) lay.resetEnc();
         st.battles.push(res);
         if (res === 'lose') {
           if (o.canLose) {
@@ -584,12 +592,14 @@
       const scale = quill && quill.width <= 8 ? 4 : 2;
       const q = { img: quill, x: R.W / 2 - 40, y: 100, scale };
       st.els.push(q);
-      st.line = { x0: R.W / 2 - 40, x1: R.W / 2 - 40, y: 100 + (quill ? (quill.height * scale) / 2 : 8) };
+      // the pen line runs just under the nib, and grows to wherever the nib is
+      const nib = nibOf(quill, scale);
+      st.line = { x0: q.x + nib.x, x1: q.x + nib.x, y: 100 + nib.y + 1 };
       R.sfx('quill');
       for (let f = 1; f <= 40; f++) {
         q.x = R.W / 2 - 40 + f * 2;
         q.y = 100 + Math.round(Math.sin(f / 3) * 2);
-        st.line.x1 = q.x - 4;
+        st.line.x1 = q.x + nib.x;
         await R.Engine.wait(1);
       }
       await R.Engine.wait(12);
@@ -624,6 +634,21 @@
     closeWin();
     if (R.Field) R.Field.refresh();
     return g.tier;
+  }
+  /** where the pen touches the page: the lowest opaque pixel of the image (the leftmost one in that
+   *  row), as an offset from the image's centre at `scale` (the stage draws images centred) */
+  function nibOf(img, scale) {
+    const s = scale || 1;
+    if (!img || !img.getContext) return { x: -6 * s, y: 7 * s };
+    try {
+      const w = img.width, h = img.height, d = img.getContext('2d').getImageData(0, 0, w, h).data;
+      for (let y = h - 1; y >= 0; y--) {
+        for (let x = 0; x < w; x++) {
+          if (d[(y * w + x) * 4 + 3] > 128) return { x: (x + 0.5 - w / 2) * s, y: (y + 1 - h / 2) * s };
+        }
+      }
+    } catch (e) { /* no pixel access: the default below */ }
+    return { x: -6 * s, y: 7 * s };
   }
   /** call fn once per frame until stop() (frame-driven, no timers) */
   function setIntervalFrames(fn) {
@@ -733,6 +758,7 @@
     caption,
     pickText,
     itemJingle,
+    itemMark,
     gotItem,
     lines,
     gotPhrases,

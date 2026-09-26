@@ -444,6 +444,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   const nAtB = S.eng.rounds.length;
   await until(() => phase === 'input' && S.panel, 800);
   ok(!S.repeating && S.panel && S.panel.left.index === 0 && S.eng.rounds.length === nAtB, 'P7 the round ended, repeat stopped, party menu on 戦う', { rounds: S.eng.rounds.length - nAtB, idx: S.panel && S.panel.left.index });
+  ok(!S.repeating && !S.repeatCancel && !S.auto, 'P7b the リピート解除 badge is gone (S-R1)');
   // flee is never repeated
   const fl = []; fl.flee = true;
   const lc = S.lastCmds;

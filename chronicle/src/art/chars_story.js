@@ -68,7 +68,7 @@
     right: L(12, ['..........HG....']),
     attach: 'body',
   };
-  // bangs that show under a deep hood (fine, scribe, teller): fringe + two front locks
+  // bangs that show under a deep hood (scribe, teller): fringe + two front locks
   P.hairHooded = {
     down: L(6, ['....2343343.....', '....3.2..2.3....', '...32......23...', '...2........2...', '...2........2...', '...1........1...']),
     right: L(6, ['........3433....', '..........32....', '...........2....']),
@@ -94,9 +94,10 @@
     body: P.body.coat, head: head('sharp'), hair: P.hairShort, over: [P.over.collar, P.over.napeTail, P.over.notebook],
   }), () => ({ main: '#f0f0ec', sub: '#303038', trim: '#d0b040', hair: HAIR().black, skin: SKIN().A, acc2: '#3c3c48', leather: '#3c3440' }));
 
-  // fine: grey robe and deep grey hood, silver-white hair under it, pale skin
+  // fine: grey robe and deep grey hood, her long silver-white hair (hairLong, §11.3.3) showing
+  // round the face and below the hood's edge, pale skin
   const fineSpec = () => ({
-    body: P.body.robe, head: head('gentle'), hair: P.hairHooded, hat: P.hat.hood,
+    body: P.body.robe, head: head('gentle'), hair: P.hairLong, hat: P.hat.hood,
   });
   const finePal = () => ({ main: '#8a8a94', sub: '#c8c8d0', trim: '#e8e0c0', hair: ['#c0c4d0', '#d8dce4', '#eceef4', '#ffffff'], skin: SKIN().pale, eye: '#3a3c58', leather: '#5a5a64' });
   lazy('fine', fineSpec, finePal);
@@ -109,7 +110,8 @@
       const pal = CA.palette(Object.assign({ acc2: '#44405c', acc: '#d83c5c' }, n.pal));
       const out = { down: [], up: [], left: [], right: [] };
       for (const d of ['down', 'up', 'right']) {
-        const src = CA.figure(spec, pal, d, 0);
+        // her standing pose: the same frame npc:fine stands on (CA.sheet puts the side view's passing pose first)
+        const src = CA.figure(spec, pal, d, d === 'right' ? 1 : 0);
         for (const ph of [0, 1]) {
           const buf = src.map((c, i) => {
             const x = i % 16, y = Math.floor(i / 16);

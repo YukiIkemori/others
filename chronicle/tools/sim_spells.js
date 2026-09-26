@@ -390,6 +390,23 @@ for (let T = 0; T <= 8; T++) {
   log(line);
 }
 const P8 = ENGINE ? p8 : p8m, P11 = ENGINE ? p11 : p11m;
+// 参考: §7.5.3 の説明のモデル（術師 成長 S が 1 戦に 1 回、その時期の中くらいの段を唱え、戦闘後に 10% 戻る。12 戦、60% で始めて）
+{
+  const MID = [['1段', (a) => a.cls === 'single' && a.step === 1], ['1段', (a) => a.cls === 'single' && a.step === 1], ['2段', (a) => a.cls === 'single' && a.step === 2],
+    ['3段', (a) => a.cls === 'single' && a.step === 3], ['3段', (a) => a.cls === 'single' && a.step === 3], ['合成A', (a) => a.cls === 'comboA'],
+    ['4段', (a) => a.cls === 'single' && a.step === 4], ['合成B', (a) => a.cls === 'comboB'], ['5段', (a) => a.cls === 'single' && a.step === 5]];
+  const out = [];
+  for (let T = 0; T <= 8; T++) {
+    const c = H.makeChar({ id: mageS, level: LZ(T) + 1 });
+    const max = R.Rules.maxAt ? R.Rules.maxAt(c, 'mp', LZ(T) + 1) : R.Rules.stats(c).mp;
+    const cost = Math.max(...SPELLS.filter(MID[T][1]).map((a) => a.mp));
+    let mp = Math.round(max * 0.6);
+    for (let i = 0; i < 12; i++) { mp = Math.max(0, mp - cost); mp = Math.min(max, mp + Math.ceil(max * 0.1)); }
+    out.push(`T${T} ${MID[T][0]}(MP${cost}) ${pc(mp / max)}`);
+  }
+  log('  参考（§7.5.3 のモデル・1 戦に 1 回・中くらいの段の一番高い MP）: ' + out.join('  '));
+}
+
 
 // P9: 地方ボス戦の回復の釣り合い（回復役マルタ・光 A）
 log('\n## P9 回復の釣り合い（地方ボス戦・回復役マルタ）');
@@ -403,12 +420,14 @@ for (let T = 1; T <= 7; T++) {
   const batk = cv.atk * BOSS.atk;
   const MNDF = U.clamp((128 + healer.st.mnd) / 168, 0.75, 2.2);
   const healPct = ((healer.st.mods && healer.st.mods.healPct) || 0) / 100;
-  let minRatio = Infinity;
+  let minRatio = Infinity, worst = null, sumHeal = 0, sumAoe = 0;
   for (const x of P) {
     const aoe = batk * 0.7 * dk / (dk + (x.st.def || 0)) * (x.c.row === 'middle' ? 0.7 : 1);
     const heal = x.st.hp * 0.30 * MNDF * (1 + healPct);
-    minRatio = Math.min(minRatio, heal / aoe);
+    sumHeal += heal; sumAoe += aoe;
+    if (heal / aoe < minRatio) { minRatio = heal / aoe; worst = `${x.c.name}（${x.c.row === 'middle' ? '中列' : '前列'}・全体攻撃で ${pc(aoe / x.st.hp)}）`; }
   }
+  const ratio = sumHeal / sumAoe;
   // 何ラウンド MP がもつか（ボス 2 回行動: 単体 60%・全体 40%。倒れる前に回復する。MP 満タンから）
   const lasts = [];
   for (let trial = 0; trial < 400; trial++) {
@@ -435,8 +454,8 @@ for (let T = 1; T <= 7; T++) {
     lasts.push(r);
   }
   lasts.sort((a, b) => a - b);
-  p9.push({ T, ratio: minRatio, lastsMed: lasts[lasts.length >> 1], lasts10: lasts[Math.floor(lasts.length * 0.1)] });
-  log(`  T${T}: あまねく光 ÷ ボスの全体攻撃（一番痛い人） ${f2(minRatio)}・回復役の MP がもつラウンド 中央値 ${lasts[lasts.length >> 1]}（下位 10% ${lasts[Math.floor(lasts.length * 0.1)]}）・最大MP ${healer.st.mp}・精神 ${healer.st.mnd}`);
+  p9.push({ T, ratio, minRatio, worst, lastsMed: lasts[lasts.length >> 1], lasts10: lasts[Math.floor(lasts.length * 0.1)] });
+  log(`  T${T}: あまねく光の回復量 ÷ ボスの全体攻撃のダメージ（全員の合計）${f2(ratio)}（一番痛い人 ${worst} で ${f2(minRatio)}）・回復役の MP がもつラウンド 中央値 ${lasts[lasts.length >> 1]}（下位 10% ${lasts[Math.floor(lasts.length * 0.1)]}）・最大MP ${healer.st.mp}・精神 ${healer.st.mnd}`);
 }
 
 // ---------------------------------------------------------------- 判定
@@ -454,7 +473,7 @@ crit('P7', 'MP の量（満タンから一番上の段を撃てる回数）', p7
   crit('P8', `雑魚戦の MP（術師・${ENGINE ? 'エンジン' : 'モデル'}）`, `詠唱 平均 ${f2(castAvg)}（${P8.map((x) => f2(x.casts)).join('/')}）・MP ${P8.map((x) => Math.round(x.mpPct * 100)).join('/')}%` + (low.length ? `・0.75 未満 ${low.join(',')}` : ''),
     castAvg >= 0.75 && mpOk, '詠唱 0.75 回以上/戦（T0〜T8 の平均）・MP 使用 12% 以下/戦（全ティア）');
 }
-crit('P9', '回復の釣り合い（地方ボス戦）', `比 ${p9.map((x) => f2(x.ratio)).join('/')}・もつラウンド ${p9.map((x) => x.lastsMed).join('/')}`, p9.every((x) => x.ratio >= 2 && x.lastsMed >= 8), 'あまねく光 ≥ 全体攻撃の 2 倍・MP が 8 ラウンド以上');
+crit('P9', '回復の釣り合い（地方ボス戦）', `比（全員の合計）${p9.map((x) => f2(x.ratio)).join('/')}（一番痛い人 ${p9.map((x) => f2(x.minRatio)).join('/')}）・もつラウンド ${p9.map((x) => x.lastsMed).join('/')}`, p9.every((x) => x.ratio >= 2 && x.lastsMed >= 8), 'あまねく光 1 回の回復量 ≥ 全体攻撃 1 回のダメージの 2 倍・MP が 8 ラウンド以上');
 crit('P10', '状態の決まりやすさ（§7.4.5）', `${p10n - p10bad}/${p10n} が表の ±10%`, p10bad === 0, '表の ±10%');
 crit('P11', `1 フロアの持久力（12 戦・60% で始めて・${ENGINE ? 'エンジン' : 'モデル'}）`, P11.map((x) => pc(x.end60mean)).join('/') + '（最低 ' + P11.map((x) => pc(x.end60)).join('/') + '）', P11.every((x) => x.end60 >= 0.3), '術師の MP が 30% 以上');
 

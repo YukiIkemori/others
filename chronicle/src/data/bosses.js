@@ -5,7 +5,10 @@
 // `lv`, `bossType` and `hpShare` with the §9.11.2 table (hp = hpBoss(lv) × (hpShare ??
 // hpMul), others = curve(lv) × the bossType multipliers × `s`). `lv` is the troop's Lb:
 // tier-scaled troops write LZ(0) + lvOff and are stretched to the battle's Lb.
-// `s` holds the per-boss personality (±20 %, set with tools/sim_bosses.js).
+// `s` holds the per-boss personality, set with tools/sim_bosses.js on the real engine. DESIGN
+// §9.11.2 asks for ±20 %; the calibrated values go further (mid bosses hp ×1.35–1.65, region
+// and last bosses atk ×0.5–0.85) because the bossType table is off for the current engine and
+// party model. They stay inside the species range 0.5–2.0 (§4.14.2); reported to the lead.
 // `addOf` names the leader of an 'add' (お供) so the add can take its multipliers.
 // Element / strike / status values are final (§9.0 0.5); status resistances list only
 // the boss's own additions (battle takes max with the boss defaults of §4.8.3).
@@ -55,10 +58,10 @@
     b_shade_prayer: { hp: 1.1, atk: 0.7, mag: 0.7 },
     b_shade_star: { hp: 1.1, atk: 0.7, mag: 0.7 },
     b_lazaro: { hp: 1.35 },
-    b_nemrea1: { hp: 0.7 },
-    b_nemrea2: { hp: 0.5, atk: 0.5, mag: 0.5 },
-    b_valzard_echo: { hp: 1.65 },
-    b_ouroboros: { hp: 0.7, atk: 0.5, mag: 0.5 },
+    b_nemrea1: { hp: 0.8 },
+    b_nemrea2: { hp: 0.5, atk: 0.5, mag: 0.5, def: 0.5, mdef: 0.5, agi: 0.5 },
+    b_valzard_echo: { hp: 0.9, atk: 0.85, mag: 0.85 },
+    b_ouroboros: { hp: 0.5, atk: 0.5, mag: 0.5 },
   };
   // @@S-END
 

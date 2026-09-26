@@ -86,8 +86,26 @@
     }
     g.window(4, 186, 248, 34);
     const d = plan.diff;
-    const parts = Ru.DIFF_KEYS.filter((k) => d[k]).map((k) => Ru.DIFF_NAMES[k] + (d[k] > 0 ? '+' : '') + d[k]);
-    g.fitText(plan.changes.length ? parts.join('　') : '今の装備がいちばんだ。', 12, 197, 232, { color: plan.changes.length ? C().white : '#c8c8d8' });
+    if (!plan.changes.length) { g.text('今の装備がいちばんだ。', 12, 197, { color: '#c8c8d8' }); return; }
+    // the changed values, green up / red down, wrapped onto two lines
+    const parts = Ru.DIFF_KEYS.filter((k) => d[k]).map((k) => ({ t: Ru.DIFF_NAMES[k] + (d[k] > 0 ? '+' : '') + d[k], up: d[k] > 0 }));
+    const lines = [[]];
+    let w = 0;
+    for (const p of parts) {
+      const pw = g.textWidth(p.t) + 8;
+      if (w + pw > 232 && lines[lines.length - 1].length && lines.length < 2) { lines.push([]); w = 0; }
+      lines[lines.length - 1].push(p); w += pw;
+    }
+    lines.forEach((ln, i) => {
+      let x = 12;
+      const total = ln.reduce((a, p) => a + g.textWidth(p.t) + 8, 0);
+      const squeeze = total > 232 ? 232 / total : 1;
+      for (const p of ln) {
+        const pw = (g.textWidth(p.t) + 8) * squeeze;
+        g.fitText(p.t, x, 190 + i * 14, pw - 2, { color: p.up ? C().green : C().red });
+        x += pw;
+      }
+    });
   }
   function apt(c) {
     const g = G(), Ru = R.Rules;
@@ -140,9 +158,9 @@
     const g = G();
     const party = R.Game.party;
     const cols = [C().orange, C().cyan, C().green, C().pink];
-    plot(4, 4, 248, 124, 'hp', 1000, [250, 500, 750, 999], '最大HP　Lv1〜99（今の装備で）', party, cols);
-    plot(4, 130, 122, 68, 'mp', 150, [50, 100, 150], '最大MP', party, cols);
-    plot(130, 130, 122, 68, 'wp', 100, [50, 99], '最大WP', party, cols);
+    plot(4, 4, 248, 112, 'hp', 1000, [250, 500, 750, 999], '最大HP　Lv1〜99（今の装備で）', party, cols);
+    plot(4, 118, 122, 80, 'mp', 150, [50, 100, 150], '最大MP', party, cols);
+    plot(130, 118, 122, 80, 'wp', 100, [50, 99], '最大WP', party, cols);
     g.window(4, 200, 248, 20);
     party.forEach((c, i) => {
       g.rect(12 + i * 60, 207, 6, 6, cols[i]);

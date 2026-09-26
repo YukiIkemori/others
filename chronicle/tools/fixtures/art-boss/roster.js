@@ -1,6 +1,7 @@
 // Boss art roster for the art-boss tools (A15a): sheet_bosses.js, test_art-boss.js,
 // check_art-boss.js. Transcribed from DESIGN §9.11.4 (names, sprites, troops,
 // backdrops) and §9.11.6 (sizes). CommonJS; not loaded by the game.
+(function () {
 'use strict';
 
 // sprite id → [backdrop, display name, [w, h], kind, flying]
@@ -103,4 +104,8 @@ const BG_FALLBACK = { tree: 'forest', manor: 'castle', ship: 'sea', mine: 'cave'
 // ids of the §9.11.6 compose table (normative), for the tests
 const COMPOSE_IDS = ['b_sandworm', 'b_sandking', 'b_doll_conductor', 'b_doll_violin', 'b_doll_drum', 'b_doll_flute', 'b_mist_double', 'b_octopus', 'b_captain', 'b_rockeater', 'b_ironwarden', 'b_lavabeast_cold', 'b_rowell2', 'b_valzard_echo'];
 
-module.exports = { SPRITES, LEGACY, BOSSES, TROOPS, BG_FALLBACK, COMPOSE_IDS };
+const EXPORTS = { SPRITES, LEGACY, BOSSES, TROOPS, BG_FALLBACK, COMPOSE_IDS };
+// node tools require() this file; build.js --with may also load it in the page (then it is inert data)
+if (typeof module !== 'undefined' && module.exports) module.exports = EXPORTS;
+else if (typeof window !== 'undefined' && window.RPG) (window.RPG.artBossFixture = window.RPG.artBossFixture || {}).roster = EXPORTS;
+})();

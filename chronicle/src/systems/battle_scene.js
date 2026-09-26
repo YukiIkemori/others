@@ -69,6 +69,17 @@
   }
   /** the six element ids in their official order (DB.elements key order) */
   const elemOrder = () => { const k = Object.keys(DB.elements || {}); return k.length ? k : ['fire', 'water', 'wind', 'earth', 'light', 'dark']; };
+  /** オート: the party AI with the in-game options (battle_ai's own AUTO_OPTS when it defines them) */
+  function autoCommands(eng) {
+    const AI = R.BattleAI;
+    return AI && AI.partyCommands ? AI.partyCommands(eng, AI.AUTO_OPTS || AUTO_OPTS) : [];
+  }
+  /** a 2-line item desc on the 1-line help strip: joined when it still reads (≥ 7 px a character), else its first line */
+  function helpLine(desc) {
+    const lines = String(desc || '').split('\n');
+    const joined = lines.join('');
+    return G().textWidth(joined) * (7 / (32 / 3)) <= HELP.w - 20 ? joined : lines[0];
+  }
   function copyCmds(cmds) {
     const out = [];
     cmds.forEach((c, i) => { out[i] = c ? Object.assign({}, c) : c; });
@@ -404,7 +415,7 @@
           if (ev.n > 0) s.pop(ev.u, ev.n, ev.wp ? 'orange' : ev.mp ? 'cyan' : 'green');
           return;
         case 'miss': {
-          R.sfx('miss');
+          R.sfx(ev.parry ? 'parry' : 'miss'); // 反撃の構え's parry rings like steel
           if (!ev.u.isParty && s.vis.get(ev.u)) s.vis.get(ev.u).dodge = 12;
           s.pop(ev.u, null, 'gray');
           return s.frames(6);
@@ -671,7 +682,7 @@
     async commandInput() {
       const eng = this.eng;
       if (this.auto && this.autoCancel) { this.auto = false; this.autoCancel = false; B.autoCarry = false; }
-      if (this.auto) return R.BattleAI && R.BattleAI.partyCommands ? R.BattleAI.partyCommands(eng, AUTO_OPTS) : [];
+      if (this.auto) return autoCommands(eng);
       // リピート stays on until B; B stops it before the next input and the party menu opens on 戦う
       if (this.repeating && this.repeatCancel) { this.repeating = false; this.repeatCancel = false; this.partyIdx = 0; }
       if (this.repeating && this.lastCmds) return this.repeatCmds();
@@ -681,7 +692,7 @@
         const r = await this.partyMenu();
         if (r === 'auto') {
           this.auto = true; this.autoCancel = false; B.autoCarry = true;
-          return R.BattleAI && R.BattleAI.partyCommands ? R.BattleAI.partyCommands(eng, AUTO_OPTS) : [];
+          return autoCommands(eng);
         }
         if (r === 'repeat') { this.repeating = true; this.repeatCancel = false; return this.repeatCmds(); }
         if (r === 'flee') return { flee: true };
@@ -871,7 +882,7 @@
         const x = list0[list.index];
         if (!x) return '';
         if (x.noEsc) return WHY.noescape;
-        return String(x.it.desc || '').replace(/\n/g, '');
+        return helpLine(x.it.desc);
       };
       for (;;) {
         this.panel = { left: list, help };
@@ -1610,6 +1621,6 @@
   Object.assign(B, {
     start, prepare, setupBattle, Scene: BattleScene, current: null, last: B.last || null,
     WIN, WIN_BOTTOM, HELP, BOX, GROUND, BANNER, CARD, ENEMY_WIN,
-    ui: { itemLabel, itemColor, iconKey, bannerOf, WHY },
+    ui: { itemLabel, itemColor, iconKey, bannerOf, helpLine, WHY },
   });
 })(window.RPG);

@@ -251,4 +251,6 @@
   for (const id in D) R.Gfx.def('decor:' + id, D[id]);
   // snow drifts over snowy ground take a bluer shadow: identical art is fine on grass too
   A.OUTDOOR_DECOR = Object.keys(D);
+  // the exterior review sheet lists these too (decor_exterior.js loads first)
+  if (Array.isArray(A.DECOR_EXTERIOR)) for (const id of A.OUTDOOR_DECOR) if (!A.DECOR_EXTERIOR.includes(id)) A.DECOR_EXTERIOR.push(id);
 })(window.RPG);

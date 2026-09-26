@@ -40,7 +40,8 @@ const C = A.monstersC || {};
 t('T0 my files load in node without errors', () => { eq(myErrors, []); });
 t('T1 monstersC lists exactly the 14 new bases of §9.4.2', () => { eq(Object.keys(C.sizes || {}).sort(), Object.keys(NEW).sort()); eq((C.ids || []).slice().sort(), Object.keys(NEW).sort()); });
 t('T2 monstersC sizes match §9.4.2 (32/48/64)', () => { for (const id in NEW) eq(C.sizes[id], NEW[id], id); });
-t('T3 size mix is 4 small / 8 medium / 2 large', () => {
+// §9.4.2's table gives 4/8/2 (beetle, fairy, book, crystal are 32); §9.0 row 0.8 says 5/7/2 — the table is followed
+t('T3 size mix is 4 small / 8 medium / 2 large (the §9.4.2 table)', () => {
   const n = { 32: 0, 48: 0, 64: 0 };
   for (const id in C.sizes) n[C.sizes[id]]++;
   eq(n, { 32: 4, 48: 8, 64: 2 });
@@ -148,6 +149,50 @@ t('T19 monsters_c.js sorts after monsters_a/b and after the underscore files (lo
   const list = fs.readdirSync(path.join(ROOT, 'src/art')).filter((f) => f.endsWith('.js')).map((f) => path.join(ROOT, 'src/art', f)).sort((a, b) => a.localeCompare(b));
   const i = (n) => list.findIndex((f) => f.endsWith('/' + n));
   ok(i('monsters_a.js') < i('monsters_b.js') && i('monsters_b.js') < i('monsters_c.js'));
+});
+
+// ---- the shared battle-screen mock of the contact sheets and the gallery fixture (§11.5.1, §11.4.2)
+const FIX = path.join(ROOT, 'tools/fixtures/mons-base');
+function screenMock() {
+  const sb = { window: {}, document: {} };
+  sb.window.RPG = { Gfx: {}, Art: {}, DB: {} };
+  vm.createContext(sb);
+  vm.runInContext(fs.readFileSync(path.join(FIX, 'battle_screen.js'), 'utf8'), sb, { filename: 'battle_screen.js' });
+  return sb.window.RPG.MonsBaseScreen;
+}
+t('T20 fixtures parse; battle_screen.js publishes RPG.MonsBaseScreen {draw, entry, sheet, arrange, feet}', () => {
+  for (const f of fs.readdirSync(FIX).filter((f) => f.endsWith('.js'))) new vm.Script(fs.readFileSync(path.join(FIX, f), 'utf8'), { filename: f });
+  const S = screenMock();
+  for (const k of ['draw', 'entry', 'sheet', 'arrange', 'feet']) ok(typeof S[k] === 'function', k);
+  eq([S.WIN.xs, S.WIN.y, S.WIN.w, S.WIN.h], [[3, 66, 129, 192], 5, 61, 46], 'WIN (§11.11.3)');
+  eq([S.ENEMY.x, S.ENEMY.y, S.ENEMY.w, S.ENEMY.h, S.GROUND], [138, 150, 110, 68, 130]);
+});
+t('T21 the mock lays monsters out like battle_scene: feet = GROUND + clamp(round((h-64)/2.4),0,20), back row -12, gap <= 8, two rows over 256 px with 4+', () => {
+  const S = screenMock();
+  eq([32, 48, 64, 96, 112, 160].map((h) => S.feet(h)), [130, 130, 130, 143, 150, 150]);
+  eq(S.feet(64, true), 118);
+  const im = (w) => ({ width: w, height: w });
+  eq(S.arrange([im(48), im(48), im(48)]).map((p) => p.x), [48, 104, 160]);
+  const two = S.arrange([im(64), im(64), im(64), im(64), im(64)]);
+  eq(two.map((p) => p.back), [true, false, true, false, true]);
+  eq(two.map((p) => p.y), [54, 66, 54, 66, 54]);
+});
+t('T22 every context/gallery entry names a compose row of DESIGN (§9.4.6, §9.11.6) or a registered base', () => {
+  const table = require('./fixtures/mons-base/node/context').compose();
+  eq(Object.keys(table).length, rows.length, 'compose rows');
+  const bases = new Set(Object.keys(Object.assign({}, OLD_A, OLD_B, NEW)));
+  const bad = [];
+  for (const f of ['tools/sheet_monsters_a.js', 'tools/sheet_monsters_b.js', 'tools/sheet_monsters_c.js', 'tools/fixtures/mons-base/gallery.js']) {
+    const src = fs.readFileSync(path.join(ROOT, f), 'utf8');
+    const m = src.match(/(?:const groups = \{|const PAGES = \[)([\s\S]*?)\n\s*(?:\};|\];)/);
+    ok(m, f + ': no groups');
+    for (const q of m[1].matchAll(/'([a-z0-9_]+)\*?'/g)) {
+      const id = q[1];
+      if (['forest', 'swamp', 'snow', 'beach', 'mine', 'tower', 'library', 'manor', 'cave', 'sea', 'desert', 'volcano', 'demon', 'grass'].includes(id)) continue;
+      if (!table[id] && !bases.has(id)) bad.push(f + ': ' + id);
+    }
+  }
+  eq(bad, []);
 });
 
 console.log(`test_mons-base: ${pass} passed, ${fail} failed (compose rows parsed: ${rows.length})`);

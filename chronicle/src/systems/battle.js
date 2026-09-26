@@ -1853,7 +1853,8 @@
       return defs.length ? Math.max(1, Math.round(sum * share * (1 + U.clamp(pct, cap.expMin, cap.exp) / 100))) : 0;
     }
     computeRewards() {
-      const defs = this.killed.map((m) => m.d);
+      // plain {exp, lv} per kill (the scaled / golden values of this battle; a monster def's own `def` is its 守備力)
+      const defs = this.killed.map((m) => ({ exp: m.d.exp || 0, lv: m.d.lv || 1, gold: m.d.gold || 0 }));
       let gold = 0;
       for (const d of defs) gold += d.gold || 0;
       gold = Math.round(gold * (1 + this.partyMod('goldPct') / 100));
@@ -2045,15 +2046,17 @@
       spec = o.mons;
       Lb = o.lv != null ? o.lv : LZ(Tb) + (o.lvOff || 0);
     } else if (troop) {
+      // a troop's own tier is fixed (最終地方・裏); scale:'tier' troops follow the current tier (§4.14.1)
       kind = 'troop';
-      Tb = o.tier != null ? o.tier : troop.tier != null ? troop.tier : cur;
+      Tb = troop.tier != null ? troop.tier : cur;
       spec = troop.mons;
       if (o.lv != null) Lb = o.lv;
       else if (troop.lv != null && troop.scale !== 'tier') Lb = troop.lv;
       else if (troop.scale === 'tier' || troop.tier != null || troop.lvOff != null) Lb = LZ(Tb) + (o.lvOff != null ? o.lvOff : troop.lvOff || 0);
     } else if (zone) {
+      // a zone's numeric tier is fixed (prologue 0, final 8, post-game 9); 'dyn' follows the current tier (§4.14.1)
       kind = 'zone';
-      Tb = o.tier != null ? o.tier : typeof zone.tier === 'number' ? zone.tier : cur;
+      Tb = typeof zone.tier === 'number' ? zone.tier : cur;
       if (o.lv != null) Lb = o.lv;
       else if (zone.lv && zone.lv.length) Lb = U.ri(zone.lv[0], zone.lv[zone.lv.length - 1]);
       else if (o.lvOff != null) Lb = LZ(Tb) + o.lvOff;
@@ -2074,7 +2077,7 @@
       }
       if (!spec) { const g = R.Mon && R.Mon.zoneGroup ? R.Mon.zoneGroup(o.zone, Tb) : null; spec = g ? g.mons : null; }
     } else return null;
-    const ids = R.Mon && R.Mon.buildList ? R.Mon.buildList(spec || [], Tb) : [];
+    const ids = R.Mon && R.Mon.buildList ? R.Mon.buildList(spec || [], Tb, { keepOrder: kind === 'troop' }) : [];
     if (!ids.length) return null;
     let gi = -1;
     if (kind === 'zone' && !rare && !o.noGolden && o.golden !== false && R.Mon && R.Mon.rollGolden) {

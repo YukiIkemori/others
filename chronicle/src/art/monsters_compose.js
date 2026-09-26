@@ -7,7 +7,7 @@
 // The table is §9.4.6 verbatim, except seven stage-2+ entries that were a pure colour shift of an earlier
 // stage (beetle_2, crystal_2..4, frog_3, darkmage_2, darkmage_3). Each got the part its bestiary text
 // describes (marked "+ (A14a)"), so every stage of a lineage reads as a different monster, not a recolour.
-// Fourteen hue values were corrected (marked "colour (A14a)") where §9.4.6's numbers, applied to the real
+// Fifteen hue values were corrected (marked "colour (A14a)") where §9.4.6's numbers, applied to the real
 // base colours, gave a colour the monster's own name or bestiary text contradicts (紅水晶 came out green,
 // ゼリー将軍 "赤いゼリー" green, 砂ヘビ green, 毒ガエル "青と黄色" purple, …). Measured with the dominant hue
 // of the recoloured base (tools/check_mons-parts.js, check "colour words").
@@ -84,7 +84,7 @@
     snake_1: ['snake', { hue: -70, sat: 0.7, bri: 1.1 }, []], // colour (A14a): 砂と同じ色
     snake_2: ['snake', { hue: 20, sat: 0.8, bri: 0.85 }, [['rattle', { c: '#e0c080' }]]],
     snake_3: ['snake', { hue: 60, sat: 1.1 }, [['eyes_glow', { c: '#ff3030' }], ['hood', { c: '#5a8030', style: 'cobra' }]]],
-    snake_4: ['snake', { hue: -85, sat: 1, bri: 0.8 }, [['horns', { c: '#d8c090', len: 's' }], ['armor_plates', { c: '#a88040' }]]], // colour (A14a): 砂の大蛇
+    snake_4: ['snake', { hue: -75, sat: 1, bri: 0.8 }, [['horns', { c: '#d8c090', len: 's' }], ['armor_plates', { c: '#a88040' }]]], // colour (A14a): 砂の大蛇
     // mummy ミイラ
     mummy_1: ['mummy', {}, []],
     mummy_2: ['mummy', { hue: 250, sat: 0.4, bri: 0.9 }, [['eyes_glow', { c: '#b040ff' }]]],
@@ -155,7 +155,7 @@
     spider_1: ['spider', {}, []],
     spider_2: ['spider', { hue: 250, sat: 1.1 }, [['spots', { c: '#80ff40' }]]],
     spider_3: ['spider', { sat: 0.3, bri: 0.4 }, [['eyes_glow', { c: '#ff2020', style: 'many' }]]],
-    spider_4: ['spider', { hue: 40, sat: 1.3, bri: 0.9 }, [['eyes_glow', { c: '#ffd040', style: 'many' }], ['spots', { c: '#ffd040', style: 'stripes' }]]],
+    spider_4: ['spider', { hue: 15, sat: 1.3, bri: 0.9 }, [['eyes_glow', { c: '#ffd040', style: 'many' }], ['spots', { c: '#ffd040', style: 'stripes' }]]], // colour (A14a): 金と黒のしま
     // merman 魚人
     merman_1: ['merman', {}, []],
     merman_2: ['merman', { hue: -30 }, [['helm', { c: '#708090', style: 'fin' }]]],

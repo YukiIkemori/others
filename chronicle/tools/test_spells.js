@@ -446,6 +446,48 @@ section('補助');
   ok(G.spellId(['wind', 'fire'], 'A') === 's_fire_wind_a' && G.spellId(['dark', 'light', 'earth']) === 's_earth_light_dark', 'spellId は属性を並べ直す');
 }
 
+section('本物の戦闘エンジンとのつなぎ（§3.3.7・§4.9.2-5・§7.0 の 0.12。R.Battle.Engine があるときだけ）');
+if (R.Battle && typeof R.Battle.Engine === 'function' && /Glimmer/.test(String(R.Battle.Engine))) {
+  const run = (c, mons, cmds, o) => {
+    const eng = new R.Battle.Engine(Object.assign({ party: [c], mons, tier: 4, lv: 31, glimTier: 4, glimmerForce: 'hero' }, o || {}));
+    const evs = [];
+    for (const e of eng.begin()) evs.push(e);
+    const u = eng.party[0];
+    const before = { mp: u.mp, hp: u.hp };
+    for (const e of eng.playRound(cmds(u, eng))) evs.push(e);
+    return { u, evs, before, msgs: evs.filter((e) => e.t === 'msg').map((e) => e.text), glim: evs.filter((e) => e.t === 'glimmer') };
+  };
+  // 1. 蘇生の術を閃いたが倒れた味方がいない → 覚えて、元の行動（ひだまり）を消費ありで行う（§7.0 の 0.12）
+  {
+    const c = H.makeChar({ heroType: 'mage', favor: { kind: 'element', id: 'light' }, spells: ['s_light_1', 's_light_2', 's_light_3'], level: 30 });
+    c.eprof = { fire: 0, water: 0, wind: 0, earth: 0, light: PTS(6), dark: 0 };
+    const s = R.Rules.stats(c); c.hp = Math.round(s.hp * 0.5); c.mp = s.mp; c.wp = s.wp;
+    const r = run(c, ['jelly_2'], (u) => [{ type: 'spell', id: 's_light_1', target: u }]);
+    ok(r.glim.length === 1 && r.glim[0].id === 's_light_4', `エンジン: 候補が蘇生だけ → s_light_4 を閃く（${r.glim.map((g) => g.id)}）`);
+    ok(c.spells.includes('s_light_4'), 'エンジン: 閃いた術を覚える');
+    ok(r.msgs.some((m) => m.includes('よみがえりの光を閃いた！')), 'エンジン: 「〜は〈術名〉を閃いた！」');
+    ok(r.msgs.some((m) => m.includes('ひだまりを唱えた')) && r.u.hp > r.before.hp, 'エンジン: 対象が無いので元の行動（ひだまり）を行う');
+    ok(r.before.mp - r.u.mp === R.Rules.mpCost(c, 's_light_1'), `エンジン: 元の行動は MP を使う（${r.before.mp} → ${r.u.mp}）`);
+  }
+  // 2. 合成術を閃く → 行動を置き換え、MP を使わない（§4.9.2-5）
+  {
+    const c = H.makeChar({ heroType: 'mage', favor: { kind: 'element', id: 'water' }, spells: ['s_water_1', 's_water_2', 's_water_3', 's_wind_1', 's_wind_2', 's_wind_3'], level: 30 });
+    c.eprof = { fire: 0, water: PTS(5), wind: PTS(5), earth: 0, light: 0, dark: 0 };
+    const s = R.Rules.stats(c); c.hp = s.hp; c.mp = s.mp; c.wp = s.wp;
+    const r = run(c, ['jelly_2', 'jelly_2'], (u, eng) => [{ type: 'spell', id: 's_water_1', target: eng.mons[0] }]);
+    ok(r.glim.length === 1 && r.glim[0].id === 's_water_wind_a' && r.glim[0].kind === 'spell', `エンジン: 水の術で 吹雪 を閃く（${r.glim.map((g) => g.id)}）`);
+    ok(r.msgs.some((m) => m.includes('吹雪を唱えた')), 'エンジン: 閃いた術で行動を置き換える');
+    ok(r.u.mp === r.before.mp, `エンジン: 閃いた術は MP を使わない（${r.before.mp} → ${r.u.mp}）`);
+  }
+  // 3. glimmerForce で防御 → 武器1の系統の一番低い覚えていない技（§3.3.7）
+  {
+    const c = H.makeChar({ heroType: 'warrior', favor: { kind: 'weapon', id: 'sword' }, techs: [], level: 10, equip: { weapon1: 'w_sword_iron' } });
+    const s = R.Rules.stats(c); c.hp = s.hp; c.mp = s.mp; c.wp = s.wp;
+    const r = run(c, ['rat_1'], () => [{ type: 'defend' }], { tier: 0, lv: 2, glimTier: 0 });
+    ok(r.glim.length === 1 && DB.actions[r.glim[0].id].wtype === 'sword' && DB.actions[r.glim[0].id].glim.lv === 1, `エンジン: 防御でも glimmerForce で剣の格 1 を閃く（${r.glim.map((g) => g.id)}）`);
+  }
+} else console.log('  （新しい戦闘エンジンがまだ無いので飛ばす）');
+
 function U(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
 
 console.log(`\n${pass} passed, ${fail} failed`);

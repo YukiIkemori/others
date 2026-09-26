@@ -833,7 +833,9 @@
      * 最強装備 (§4.4.1) — a pure calculation: nothing on c, the inventory or other
      * members changes. Changes weapon1 weapon2 shield head body hands feet only;
      * accessories, quirk items, other members' gear, the weapon types of the weapon
-     * slots and empty weapon slots are left alone. → Plan {mode, equip, changes, diff, score}
+     * slots and empty weapon slots are left alone. Candidates are the inventory and what
+     * c wears (two weapons of the same type may trade slots when that scores higher).
+     * → Plan {mode, equip, changes, diff, score}
      */
     optimize(c, mode, opts) {
       mode = mode === 'magic' || mode === 'balance' ? mode : 'phys';
@@ -884,7 +886,8 @@
               if (cand.id && (s === 'weapon1' || s === 'weapon2') && Rules.isTwoHanded(cand.id)) t.equip.shield = null;
               const sc = Rules.loadoutScore(Rules.stats(t), mode);
               const it = itemOf(cand.id);
-              if (sc > bestScore + 1e-9 || (Math.abs(sc - bestScore) <= 1e-9 && better(it, bestIt, cand.id === cur, best.id === cur))) {
+              // a swap must raise the score (on a tie the two slots would just trade places back and forth)
+              if (sc > bestScore + 1e-9 || (!cand.swap && Math.abs(sc - bestScore) <= 1e-9 && better(it, bestIt, cand.id === cur, best.id === cur))) {
                 best = cand; bestScore = sc; bestIt = it;
               }
             }

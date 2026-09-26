@@ -634,7 +634,16 @@ function fightReal(z, T, ms, monIds, partyKind) {
   if (partyKind === 'standard') b = PM.standard(R, tier);
   else if (partyKind === 'phys') b = PM.build(R, { tier, members: ['hero', 'hagen', 'brigitta', 'sylvain'], heroType: 'warrior', favor: { kind: 'weapon', id: 'sword' }, build: 'phys', gear: 'shop' });
   else if (partyKind === 'magic') { const c = PM.COMBOS.find((x) => x.no === 2); b = PM.build(R, { tier, members: ['hero', ...c.members], heroType: c.heroType, favor: c.favor, build: 'magic', gear: 'shop' }); }
-  else b = PM.build(R, { tier: 0, members: ['hero'], heroType: 'warrior', favor: { kind: 'weapon', id: 'sword' }, gear: 'shop', level: U.ri(1, 3) });
+  else {
+    // the prologue hero: default hero type (warrior, sword) with its starting kit only (§5.1.4: weapon, body, head, shield)
+    b = PM.build(R, { tier: 0, members: ['hero'], heroType: 'warrior', favor: { kind: 'weapon', id: 'sword' }, gear: 'shop', level: U.ri(1, 3) });
+    const ht = (DB.heroTypes || {}).warrior || {};
+    const c = b.party[0];
+    const kit = Object.assign({ weapon1: ht.defaultWeapon || c.equip.weapon1 }, ht.startEquip || {});
+    for (const slot of Object.keys(c.equip)) c.equip[slot] = kit[slot] || null;
+    const st = R.Rules.stats(c);
+    c.hp = st.hp; c.mp = st.mp; c.wp = st.wp;
+  }
   if (partyKind !== 'hero') for (const c of b.party) { c.mp = Math.ceil((c.mp || 0) * 0.6); c.wp = Math.ceil((c.wp || 0) * 0.6); }
   const o = { party: b.party, inv: b.inv, mons: monIds.map((id) => [id, 1]), tier, seed: Math.floor(U.r() * 1e9), maxRounds: 30, noRare: true, noGolden: true };
   if (z.lv) o.lv = U.ri(z.lv[0], z.lv[1]); else o.lvOff = z.lvOff || 0;

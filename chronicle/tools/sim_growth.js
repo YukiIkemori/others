@@ -199,7 +199,7 @@ console.log(`Final region: party level before the last boss ${f1(avg(finLv))} (s
 // checks (§4.17.3 E1/E2, §4.2.2)
 for (let T = 0; T < 8; T++) {
   const r = rows[T], a = (k) => avg(r[k] || [0]), d = a('act') - K.LZ(T);
-  check(d >= 2 - 0.5 && d <= 5 + 0.5, `E1 T${T}: level at the region boss LZ${d >= 0 ? '+' : ''}${f1(d)} within LZ+2..+5`);
+  check(d >= 2 - 1e-9 && d <= 5 + 1e-9, `E1 T${T}: level at the region boss LZ${d >= 0 ? '+' : ''}${f1(d)} within LZ+2..+5`);
   check(a('lagAfter') <= 3, `E1 T${T}: reserve lag at the end of the region ${f1(a('lagAfter'))} ≤ 3 (before the boss ${f1(a('lag'))})`);
   check(a('g100') <= 3, `E1 T${T}: +100 battles → +${f1(a('g100'))} levels ≤ 3`);
   if (T >= 2) check(a('hp100') <= 0.10, `E2 T${T}: +100 battles → max HP +${(a('hp100') * 100).toFixed(1)}% ≤ 10%`);

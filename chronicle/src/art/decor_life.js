@@ -449,4 +449,6 @@
   A.decorAuto.stage = stageAuto;
   A.decorAuto.rug_round = (m, x, y) => K().cached('rr|' + K().shadeKey(m, x, y), () => rugRoundImg(m, x, y).canvas());
   A.LIFE_DECOR = Object.keys(D);
+  // the interior review lists (decor_interior.js loads first; decor_dungeon.js loads before both)
+  if (Array.isArray(A.INTERIOR_DECOR)) for (const id of A.LIFE_DECOR.concat(A.DUNGEON_DECOR || [])) if (!A.INTERIOR_DECOR.includes(id)) A.INTERIOR_DECOR.push(id);
 })(window.RPG);
