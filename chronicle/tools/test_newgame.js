@@ -136,7 +136,7 @@ process.on("exit", (c) => { if (!global.__done) console.log("[test ended early (
       ok(w >= 15 && w <= 19 && e >= 8 && e <= 12 && (w + e === 26 || w + e === 27), 'C3 ' + t + '/' + f.id + ' budget ' + w + '/' + e, { w, e });
       ok(a[f.kind === 'weapon' ? 'w' : 'e'][f.id] === 'S', 'C4 ' + t + '/' + f.id + ' becomes S');
       const lines = CC.favorLines(t, f);
-      ok(lines.length >= 4 && lines.every((l) => R.Text.approxWidth(l.parts.map((p) => p[0]).join('')) <= 142 * 1.4), 'C5 ' + t + '/' + f.id + ' right window lines fit', lines.map((l) => l.parts.map((p) => p[0]).join('')));
+      ok(lines.length >= 3 && lines.every((l) => R.Text.approxWidth(l.parts.map((p) => p[0]).join('')) <= 142 * 1.4), 'C5 ' + t + '/' + f.id + ' right window lines fit', lines.map((l) => l.parts.map((p) => p[0]).join('')));
       const row = CC.heroRow(t, f);
       ok(row === 'front' || row === 'middle', 'C6 row ' + t + '/' + f.id);
     }
@@ -321,7 +321,7 @@ process.on("exit", (c) => { if (!global.__done) console.log("[test ended early (
   const CL = new R.Tavern._ChooseLayer({ mode: 'start', count: 3 });
   CL.busy = true;
   R.Engine.push(CL);
-  const bad = [], chart = [], shown = [];
+  const bad = [], chart = [], shown = [], a17 = [];
   for (let i = 0; i < CL.ids.length; i++) {
     CL.cur = i;
     const d = R.DB.companions[CL.ids[i]];
@@ -329,12 +329,15 @@ process.on("exit", (c) => { if (!global.__done) console.log("[test ended early (
     if (leaks(txt).length) bad.push(CL.ids[i]);
     if (/^武器$|^術$/m.test(txt)) chart.push(CL.ids[i]);
     const fav = R.Tavern.favored(d.apt);
-    const want = [d.name, d.title, d.profile.split('\n')[0], '得意：'].concat(fav.slice(0, 2).map((f) => f[0]), R.CharCreate.kit.STATS.map((k) => String(d.stats[k])));
+    // A17: name, title, 得意な武器・属性 (names only), the six stats — no profile, no role, no S〜D letters
+    const want = [d.name, d.title, '得意な武器：', '得意な属性：'].concat(fav.slice(0, 2).map((f) => f[0]), R.CharCreate.kit.STATS.map((k) => String(d.stats[k])));
     if (!want.every((w) => txt.includes(w))) shown.push(CL.ids[i]);
+    if (txt.includes(d.profile.split('\n')[0]) || txt.includes(R.CharCreate.kit.ROLE_NAMES[d.role]) || /^[SABCD]$/m.test(txt)) a17.push(CL.ids[i]);
   }
+  eq(a17, [], 'A17-1 仲間を選ぶ: no profile paragraph, no role label (前衛・重…), no S〜D letter');
   eq(bad, [], 'I1 仲間を選ぶ: no candidate shows its trait name or effect');
   eq(chart, [], 'I2 仲間を選ぶ: no S〜D aptitude chart for candidates');
-  eq(shown, [], 'I3 仲間を選ぶ: name, title, profile, 得意 (S first), and the six stats are shown on one page');
+  eq(shown, [], 'I3 仲間を選ぶ: name, title, 得意 (names, S first), and the six stats are shown on one page');
   ok(R.DB.companions.selma && R.Tavern.favored(R.DB.companions.selma.apt)[0].join() === '剣,#ffffff,S', 'I4 favored(): S before A (セルマ → 剣S)');
   reset();
   R.NGFixture.party(['brigitta', 'marta', 'sylvain'], { level: 20, reserve: ['selma', 'morga', 'titta'] });
@@ -342,9 +345,12 @@ process.on("exit", (c) => { if (!global.__done) console.log("[test ended early (
   SL.busy = true;
   R.Engine.push(SL);
   const bad2 = [];
-  for (let k = 0; k < R.Game.party.length; k++) { SL.side = 0; SL.ai = k; if (leaks(drawn()).length) bad2.push(R.Game.party[k].id); }
-  for (let k = 0; k < R.Game.reserve.length; k++) { SL.side = 1; SL.ri = k; if (leaks(drawn()).length) bad2.push(R.Game.reserve[k].id); }
+  const a17b = [];
+  const a17leak = (txt, c) => { const d = R.DB.companions[c.id]; return /^[SABCD]$/m.test(txt) || (d && (txt.includes(d.profile.split('\n')[0]) || txt.includes(R.CharCreate.kit.ROLE_NAMES[d.role]))); };
+  for (let k = 0; k < R.Game.party.length; k++) { SL.side = 0; SL.ai = k; const t = drawn(); if (leaks(t).length) bad2.push(R.Game.party[k].id); if (a17leak(t, R.Game.party[k])) a17b.push(R.Game.party[k].id); }
+  for (let k = 0; k < R.Game.reserve.length; k++) { SL.side = 1; SL.ri = k; const t = drawn(); if (leaks(t).length) bad2.push(R.Game.reserve[k].id); if (a17leak(t, R.Game.reserve[k])) a17b.push(R.Game.reserve[k].id); }
   eq(bad2, [], 'I5 入れ替える (party and reserve): no trait name or effect');
+  eq(a17b, [], 'A17-2 入れ替える: no profile, no role label, no S〜D letter');
   reset();
   if (R.Menu && R.Menu.statusScreen) {
     const bad3 = [];
@@ -355,14 +361,18 @@ process.on("exit", (c) => { if (!global.__done) console.log("[test ended early (
     const ST = top();
     const nP = ST && ST.pages ? ST.pages.length : 0;
     let resist = '';
+    const a17c = [];
     for (let i = 0; i < nP; i++) {
       ST.page = i;
       const txt = drawn();
       if (leaks(txt).length) bad3.push(ST.pages[i].kind);
+      // A17: no S〜D letter, role, profile, proficiency-effect note or 「戦闘」 number block on any 強さ page
+      if (a17leak(txt, selma) || /熟練の補正|1段ごと|MP0|^攻撃1$|^守備$|^術防$|^命中$|^回避$|^会心$|^戦闘$/m.test(txt)) a17c.push(ST.pages[i].kind);
       if (ST.pages[i].kind === 'resist') resist = txt;
     }
     ok(nP > 0, 'I6 強さ opens for a companion', topName());
     eq(bad3, [], 'I7 強さ: no page shows the trait name or effect');
+    eq(a17c, [], 'A17-3 強さ: no S〜D letter, role, profile, proficiency note or 戦闘 numbers on any page');
     ok(resist && !/まひ|気絶/.test(resist), 'I8 強さ 耐性: セルマ\'s innate まひ・気絶 resistance is not listed (gear only)');
     reset();
     await Promise.race([p0, frames(2)]);

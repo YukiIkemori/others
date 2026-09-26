@@ -224,7 +224,7 @@
       ], { dir: 'up', push: true }),
 
       // --- 畑と家
-      K.talk('farmer', 'farmer', 33, 35, [
+      K.talk('farmer', 'farmer', 31, 35, [
         { cond: C.post, text: '今年は豊作だ！\n火山の灰は、雨に溶けると\nいい肥やしになるんだとさ。' },
         { cond: C.clear, text: '見てくれ、芽が出たんだ！\n灰がやんで、日が差して。\nまた一からやり直すさ。' },
         { text: '畑が灰に埋まって、\n麦も豆も全滅だ。\nこのままじゃ、冬を越せん。' },

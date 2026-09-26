@@ -81,25 +81,23 @@ section('T1 detail lines for every item');
     if (a.kind !== 'tech' && a.kind !== 'spell') continue;
     try {
       const L = M.detailLines(id, { member: hero() });
-      // 7 rows; 8 with the member's 「熟練の補正」 row (Part A13) under 威力 for a damage / heal action
-      if (L.length !== ((a.effects || []).some((e) => e.type === 'damage' || e.type === 'heal') || R.Rules.profMpKind(hero(), id) ? 8 : 7)) abad++;
+      // 7 rows (オーナー指示 A17: no 「熟練の補正」 / 「熟練でMP0」 row any more)
+      if (L.length !== 7 || /熟練/.test(L.map((l) => l.text).join(''))) abad++;
       for (const l of L) { const w = W(l.text || ''); if (w > aw) { aw = w; aworst = id + ' 「' + l.text + '」'; } }
     } catch (e) { abad++; }
   }
-  ok(abad === 0, 'T1 every tech / spell gives the 7 rows (8 with 熟練の補正)', abad);
+  ok(abad === 0, 'T1 every tech / spell gives the 7 rows (A17: no proficiency-bonus row)', abad);
   {
-    // Part A13 / A13b: the member's proficiency bonus and the MP cut on the Y popup
+    // Part A13b / A17: the MP cut shows only as the cost itself (cyan), never as a note
     const h = hero();
     const keep = JSON.parse(JSON.stringify(h.eprof || {}));
-    h.eprof = Object.assign({}, h.eprof, { fire: R.Rules.K.PROF_PTS[5] });
+    h.eprof = Object.assign({}, h.eprof, { fire: R.Rules.K.PROF_PTS[Math.min(5, R.Rules.K.PROF_PTS.length - 1)] });
     const L = DB.actions.s_fire_1 && M.detailLines('s_fire_1', { member: h });
     if (L) {
-      ok(L.length === 8 && /^熟練の補正 \+15%（火）　熟練でMP0$/.test(L[4].text), 'A13 row 4 = 熟練の補正 +15%（火）　熟練でMP0', L[4].text);
-      ok(L[0].right === 'M 0' && L[0].rightColor === R.Gfx.C.cyan, 'A13b MP 0 in cyan on row 0', [L[0].right, L[0].rightColor]);
-      ok(L[7].text === String(DB.actions.s_fire_1.desc || '').split('\n')[0], 'A13 the description stays the last row', L[7].text);
+      ok(L.length === 7 && !/熟練|%/.test(L.map((l) => l.text).join('')), 'A17 no 熟練の補正 / MP0 note on the Y popup', L.map((l) => l.text));
+      if (R.Rules.profMpKind(h, 's_fire_1')) ok(L[0].right === 'M 0' && L[0].rightColor === R.Gfx.C.cyan, 'A13b MP 0 in cyan on row 0', [L[0].right, L[0].rightColor]);
+      ok(L[6].text === String(DB.actions.s_fire_1.desc || '').split('\n')[0], 'A13 the description stays the last row', L[6].text);
     }
-    const L0 = DB.actions.s_fire_1 && M.detailLines('s_fire_1', {});
-    if (L0) ok(L0.length === 7 && !/熟練/.test(L0.map((l) => l.text).join('')), 'A13 no member → the 7 rows, no bonus row', L0.length);
     h.eprof = keep;
   }
   ok(aw <= 341, 'T1 tech / spell rows ≤ 341px: widest ' + Math.round(aw) + 'px', aworst);
@@ -488,6 +486,11 @@ section('settings, save, shop, chronicle, books');
   if (acc) ok(R.Shop.gearMark(c, acc).mark === '○', 'shop mark ○ for gear without numbers', R.Shop.gearMark(c, acc));
   const worn = c.equip.body;
   if (worn) ok(R.Shop.gearMark(c, worn).mark === 'E', 'shop mark E for what the member wears');
+  // オーナー指示 A17: no ←→ member switch in the shop; the "who wears it" default is the member it helps most
+  const bm = R.Shop.bestMember(wpn);
+  ok(!bm || R.Shop.gearMark(bm, wpn).mark !== '×', 'A17 bestMember() picks someone who can wear it', bm && bm.id);
+  const shopSrc = require('fs').readFileSync(require('path').join(__dirname, '../src/systems/shop.js'), 'utf8');
+  ok(!/人を選ぶ/.test(shopSrc) && !/mk\.mark \+ mk\.n/.test(shopSrc), 'A17 the shop draws no 「←→：人を選ぶ」 and no ▲n numbers');
   const uni = Object.keys(DB.items).find((id) => DB.items[id].unique);
   ok(R.Shop.sellPrice(DB.items[uni]) === 0 && R.Shop.sellPrice(DB.items.i_salve) === Math.floor(DB.items.i_salve.price / 2), 'unique items do not sell; others at half price');
 }

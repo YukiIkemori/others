@@ -260,7 +260,7 @@
       K.talk('home_old', 'old_woman', 32, 32, lines(
         '亡くなった夫の口ぐせを、\n思い出したよ。\n「今日も、いい日だ」ってね。',
         'この家には、誰かと\n住んでいた気がするの。\n……気のせいかしら。'), { dir: 'left', push: true }),
-      K.talk('home_man', 'man', 41, 32, lines(
+      K.talk('home_man', 'man', 40, 32, lines(
         '娘が、機織りの歌を\n歌ってくれるんだ。\n母親ゆずりの、いい声だよ。',
         '機織り機があるのに、\n使い方が分からない。\n……俺のものだったかな。'), { dir: 'down', push: true }),
       // --- the harbour

@@ -220,7 +220,7 @@
       K.npc('shop_item', 'merchant', 13, 26, { event: 'common_shop', shop: 'loch_item', fixed: true }),
       K.npc('shop_weapon', 'dwarf', 23, 26, { event: 'common_shop', shop: 'loch_weapon', fixed: true }),
       K.npc('shop_armor', 'merchant', 29, 26, { event: 'common_shop', shop: 'loch_armor', fixed: true }),
-      K.talk('smith_customer', 'man', 26, 29, [
+      K.talk('smith_customer', 'man', 24, 29, [
         { cond: CLEAR, text: '霧が晴れたら、\n鎧の手入れが楽になったよ。\nさびなくなったからな。' },
         { text: '湿原じゃ、剣も鎧も\nすぐさびる。油を\n切らさないことだ。' },
       ], { dir: 'up', push: true }),
