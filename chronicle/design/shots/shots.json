@@ -1,0 +1,296 @@
+{
+ "when": "2026-09-26T09:22:20.483Z",
+ "html": "dist/index.html",
+ "results": [
+  {
+   "no": "1-3",
+   "title": "タイトル・主人公の作成・名前入力",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/01_title.png",
+    "design/shots/01_title_menu.png",
+    "design/shots/02_create_type.png",
+    "design/shots/02_create_favor.png",
+    "design/shots/03_name_entry.png",
+    "design/shots/02_create_confirm.png"
+   ],
+   "ms": 15161
+  },
+  {
+   "no": 4,
+   "title": "仲間を選ぶ（1 ページ・2 ページ、2 人選んだ状態）",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/04_choose_page1.png",
+    "design/shots/04_choose_page2.png"
+   ],
+   "ms": 3005
+  },
+  {
+   "no": 15,
+   "title": "酒場の入れ替え（控え 10 人）",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/15_tavern_swap.png"
+   ],
+   "ms": 1883
+  },
+  {
+   "no": 5,
+   "title": "ワールドマップ（森・山・街道・海岸、砂嵐、湿地の霧）",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/05_world_lute.png",
+    "design/shots/05_world_sandstorm.png",
+    "design/shots/05_world_marsh_fog.png",
+    "design/shots/05_world_sea_fog.png"
+   ],
+   "ms": 6090
+  },
+  {
+   "no": 6,
+   "title": "町 2 つ（ファロス・カシム）と屋内（酒場・道具屋）、4 人の隊列",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/06_town_lute.png",
+    "design/shots/06_interior_tavern.png",
+    "design/shots/06_interior_item_shop.png",
+    "design/shots/06_town_kasim.png"
+   ],
+   "ms": 6622
+  },
+  {
+   "no": 7,
+   "title": "ダンジョン 4 つ（迷いの森・幽霊船・深き坑道・白の大書庫）",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/07_dungeon_verda_maze_1.png",
+    "design/shots/07_dungeon_ghost_ship_1.png",
+    "design/shots/07_dungeon_deep_mine_1.png",
+    "design/shots/07_dungeon_archive_1.png",
+    "design/shots/07_dungeon_lighthouse_2.png"
+   ],
+   "ms": 5824
+  },
+  {
+   "no": 18,
+   "title": "フィールドの広さ 3 つ（同じ町の同じ場所）",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/18_zoom_normal.png",
+    "design/shots/18_zoom_wide.png",
+    "design/shots/18_zoom_wider.png",
+    "design/shots/18_zoom_wider_dungeon.png"
+   ],
+   "ms": 4403
+  },
+  {
+   "no": 19,
+   "title": "隠し通路を見つけた瞬間",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/19_secret_found.png"
+   ],
+   "ms": 2310
+  },
+  {
+   "no": 8,
+   "title": "戦闘: command",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/08_battle_command.png",
+    "design/shots/08_battle_member_menu.png"
+   ],
+   "ms": 1015
+  },
+  {
+   "no": 9,
+   "title": "戦闘: techs",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/09_battle_tech_list_top.png",
+    "design/shots/09_battle_tech_list.png"
+   ],
+   "ms": 1020
+  },
+  {
+   "no": 10,
+   "title": "戦闘: glimmer",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/10_glimmer.png",
+    "design/shots/10_glimmer_b.png"
+   ],
+   "ms": 971
+  },
+  {
+   "no": 10,
+   "title": "戦闘: glimmer_oogi",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/10_glimmer_oogi.png"
+   ],
+   "ms": 1009
+  },
+  {
+   "no": 11,
+   "title": "戦闘: drop_super",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/11_drop_super.png",
+    "design/shots/11_drop_super_b.png"
+   ],
+   "ms": 995
+  },
+  {
+   "no": 12,
+   "title": "戦闘: golden",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/12_golden_intro.png",
+    "design/shots/12_golden.png"
+   ],
+   "ms": 881
+  },
+  {
+   "no": 12,
+   "title": "戦闘: rare",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/12_rare_intro.png"
+   ],
+   "ms": 847
+  },
+  {
+   "no": 13,
+   "title": "戦闘: boss",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/13_boss_tall_112.png",
+    "design/shots/13_boss_96.png"
+   ],
+   "ms": 1676
+  },
+  {
+   "no": 22,
+   "title": "戦闘: repeat",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/22_battle_repeat_on.png",
+    "design/shots/22_battle_repeat_cancel.png"
+   ],
+   "ms": 1006
+  },
+  {
+   "no": 14,
+   "title": "メニュー・装備・強さ・技の書・術の書・図鑑・年代記（T5）",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/14_menu_main.png",
+    "design/shots/14_menu_main_worst.png",
+    "design/shots/14_menu_equip.png",
+    "design/shots/14_menu_status.png",
+    "design/shots/14_menu_status_2.png",
+    "design/shots/14_menu_items.png",
+    "design/shots/14_menu_chronicle.png",
+    "design/shots/14_menu_techbook.png",
+    "design/shots/14_menu_spellbook.png",
+    "design/shots/14_menu_bestiary.png",
+    "design/shots/14_menu_bestiary_detail.png"
+   ],
+   "ms": 11739
+  },
+  {
+   "no": 20,
+   "title": "装備の候補の一覧（術師の頭）",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/20_equip_candidates_head.png"
+   ],
+   "ms": 3220
+  },
+  {
+   "no": 21,
+   "title": "Y の詳細ポップアップ 4 枚",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/21_detail_super_weapon.png",
+    "design/shots/21_detail_rare_armor.png",
+    "design/shots/21_detail_shop_acc.png",
+    "design/shots/21_detail_combo_spell.png"
+   ],
+   "ms": 7038
+  },
+  {
+   "no": 22,
+   "title": "ワープの一覧",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/22_warp_list.png",
+    "design/shots/22_warp_list_scrolled.png"
+   ],
+   "ms": 4693
+  },
+  {
+   "no": 16,
+   "title": "地方クリアの演出（羽ペンと章の題）",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/16_chapter_1.png",
+    "design/shots/16_chapter_2.png",
+    "design/shots/16_chapter_3.png",
+    "design/shots/16_chapter_4.png"
+   ],
+   "ms": 6281
+  },
+  {
+   "no": 17,
+   "title": "ゲームオーバー・エンディングの後日談・クレジット",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/17_gameover.png",
+    "design/shots/17_ending_01.png",
+    "design/shots/17_ending_02.png",
+    "design/shots/17_ending_03.png",
+    "design/shots/17_ending_04.png",
+    "design/shots/17_ending_05.png",
+    "design/shots/17_ending_06.png",
+    "design/shots/17_ending_07.png",
+    "design/shots/17_ending_08.png",
+    "design/shots/17_ending_09.png",
+    "design/shots/17_ending_10.png",
+    "design/shots/17_ending_11.png",
+    "design/shots/17_ending_12.png"
+   ],
+   "ms": 61190
+  }
+ ],
+ "pending": {
+  "art": [],
+  "audio": []
+ },
+ "errors": []
+}

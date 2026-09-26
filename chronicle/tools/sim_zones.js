@@ -871,8 +871,8 @@ function main() {
     out.M.M4 = { pass: okm, win: r.agg.win, worst: r.agg.minWinAll };
   }
   // ---------------- per-species danger report (not a criterion: helps tune lineage s and group sizes)
-  //   --species          a pure group worth 3.2 standard monsters of every species at its representative tier
-  //                      (the middle of the tiers where '@' picks that stage), HP lost / rounds
+  //   --species          a pure group worth 3.2 standard monsters of every species over the tiers where '@' picks
+  //                      that stage (world lvOff 0 and dungeon lvOff 1 alternately), HP lost / rounds
   //   --fit <out.json>   also write a candidate overlay (the current one ⊕ s.hp / s.atk / s.mag per species) that moves
   //                      every species toward HP lost FIT_LOST and FIT_ROUNDS rounds; damped, so run it 2–3 times
   //                      (--tuning <previous out.json>) and then check M1 with --tuning
@@ -880,7 +880,7 @@ function main() {
     const FIT = opt('fit', null);
     const L_T = Number(opt('fit-lost', 0.095)), R_T = Number(opt('fit-rounds', 2.8)), DAMP = Number(opt('fit-damp', 0.8));
     const Dd = CM.parseDesign();
-    console.log(`\nspecies danger — a pure group worth 3.2 standard monsters at the stage's representative tier (HP lost / rounds)${FIT ? ` → fit to ${pct(L_T)} / ${R_T}` : ''}`);
+    console.log(`\nspecies danger — a pure group worth 3.2 standard monsters over the stage's tiers, lvOff 0/1 (HP lost / rounds)${FIT ? ` → fit to ${pct(L_T)} / ${R_T}` : ''}`);
     U.seed(SEED + 9);
     const rows = [];
     for (const [lid, L] of Object.entries(DB.lineages)) {
@@ -889,9 +889,17 @@ function main() {
         if ((m.flags || []).includes('metal')) continue;
         const T = CM.midTier(Dd, Dd.mons[st.mon] || m, st.mon);
         const cnt = Math.max(1, Math.min(8, Math.round(3.2 / CM.SIZE_W[m.size])));
-        const z = { tier: T, lvOff: 0 };
+        // every tier where '@' picks this stage, alternating world (lvOff 0) and dungeon (lvOff 1) levels
+        const k = L.stages.indexOf(st);
+        const t1 = Math.min(9, k + 1 < L.stages.length ? L.stages[k + 1].tier - 1 : 9);
+        const tiers = [];
+        for (let t = Math.min(9, st.tier); t <= Math.max(t1, st.tier); t++) tiers.push(t);
         const rs = [];
-        for (let i = 0; i < Math.max(20, N); i++) rs.push(fight(z, T, [[st.mon, cnt, cnt]], 'standard', useReal));
+        const n = Math.max(20, N, 2 * tiers.length);
+        for (let i = 0; i < n; i++) {
+          const Ti = tiers[i % tiers.length];
+          rs.push(fight({ tier: Ti, lvOff: Math.floor(i / tiers.length) % 2 }, Ti, [[st.mon, cnt, cnt]], 'standard', useReal));
+        }
         const lost = rs.reduce((a, r) => a + r.lost, 0) / rs.length, rounds = rs.reduce((a, r) => a + r.rounds, 0) / rs.length;
         // a pure group of `cnt` is worth cnt × SIZE_W, not exactly 3.2: compare like with like
         const w = cnt * CM.SIZE_W[m.size] / 3.2;
