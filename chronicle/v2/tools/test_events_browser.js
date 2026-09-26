@@ -88,8 +88,9 @@ const run = (p, id) => p.evaluate((id) => { window.__evDone = false; RPG.Events.
       P = await openAt(S, ST.fern, { phone });
       await run(P.page, 'ev_song');
       await B.waitFor(P.page, "RPG.Mini.state() && RPG.Mini.state().phase === 'play' && RPG.Mini.state().lit >= 0", 5000);
-      await P.page.waitForTimeout(120);
+      await P.page.evaluate('RPG.Engine.pause()');
       await shot(P.page, 'song_listen' + tag);
+      await P.page.evaluate('RPG.Engine.resume()');
       const DIR = ['up', 'right', 'down', 'left', 'a'];
       for (let round = 0; round < 3; round++) {
         await B.waitFor(P.page, "RPG.Mini.state() && RPG.Mini.state().phase === 'input'", 12000);

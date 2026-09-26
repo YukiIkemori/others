@@ -187,7 +187,7 @@
   function drawSeq(g, st) {
     const U = R.UIK.u, T = R.UIK.T, C = T.color;
     const now = R.Engine.time, dt = now - st.phaseT;
-    const P = frame(g, st, st.title, st.th.sub + '　・　歌あわせ');
+    const P = frame(g, st, st.title, st.th.sub + ' · 歌あわせ');
     const { x, y, w, h, tall } = P;
     g.save();
     g.globalAlpha = P.a;
@@ -195,11 +195,20 @@
     const rtxt = `第 ${Math.min(st.round + 1, st.rounds)} 節 / ${st.rounds}`;
     R.UIK.text(g, rtxt, x + w - U(22), y + U(46), { size: U(13), weight: 700, color: C.text2, align: 'right' });
     // 歌の石: 菱形に並べる（↑→↓←、5 つ目は中央 = A）
-    const cx = x + w / 2, cy = y + (tall ? U(250) : U(196));
+    const cx = x + w / 2, cy = y + (tall ? U(262) : U(212));
     const d = U(tall ? 104 : 88), r = U(tall ? 38 : 32);
     const pos = [[0, -1], [1, 0], [0, 1], [-1, 0], [0, 0]];
     st.rects.length = 0;
-    for (let k = 0; k < st.n; k++) {
+    // 石の輪（苔の輪と、節の流れの細い線）
+    g.save();
+    const ring = g.createRadialGradient(cx, cy, d * 0.3, cx, cy, d * 1.5);
+    ring.addColorStop(0, rgba(st.th.tint, 0.10)); ring.addColorStop(0.7, rgba(st.th.tint, 0.04)); ring.addColorStop(1, rgba(st.th.tint, 0));
+    g.fillStyle = ring; g.beginPath(); g.ellipse(cx, cy, d * 1.6, d * 1.25, 0, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = rgba(st.th.tint, 0.22); g.lineWidth = U(1); g.setLineDash([U(2), U(6)]);
+    g.beginPath(); g.ellipse(cx, cy, d * 1.25, d * 0.92, 0, 0, Math.PI * 2); g.stroke();
+    g.restore();
+    const showStones = st.phase !== 'result';
+    for (let k = 0; k < st.n && showStones; k++) {
       const px = cx + pos[k][0] * d * (k === 1 || k === 3 ? 1.25 : 1), py = cy + pos[k][1] * d * 0.92;
       st.rects[k] = { x: px, y: py, r };
       const col = hexRgb(st.th.glow[k]);
@@ -219,6 +228,11 @@
       body.addColorStop(0, lit ? rgba(col, 0.95) : 'rgba(70,78,92,0.95)');
       body.addColorStop(1, lit ? rgba(col.map((c) => Math.round(c * 0.55)), 0.95) : 'rgba(34,38,50,0.95)');
       g.fillStyle = body; g.beginPath(); g.arc(px, py, r, 0, Math.PI * 2); g.fill();
+      if (!lit) {   // 眠っている石にも、色の名残り
+        const inner = g.createRadialGradient(px, py - r * 0.2, 0, px, py, r);
+        inner.addColorStop(0, rgba(col, 0.22)); inner.addColorStop(1, rgba(col, 0.02));
+        g.fillStyle = inner; g.beginPath(); g.arc(px, py, r, 0, Math.PI * 2); g.fill();
+      }
       g.lineWidth = U(1.5); g.strokeStyle = lit ? 'rgba(255,250,230,0.9)' : rgba(col, 0.55); g.stroke();
       // 刻み（色ごとの印）
       g.strokeStyle = lit ? 'rgba(40,30,20,0.55)' : rgba(col, 0.85); g.lineWidth = U(2.2); g.lineCap = 'round';
@@ -230,10 +244,10 @@
       void litK;
     }
     // 下: 節の音の数（くり返した所まで光る）
-    const dotsY = y + (tall ? U(420) : U(340));
+    const dotsY = y + (tall ? U(432) : U(352));
     const L = st.seq.length, gap = U(22);
     const x0 = cx - ((L - 1) * gap) / 2;
-    for (let i = 0; i < L; i++) {
+    for (let i = 0; i < L && showStones; i++) {
       const done = i < st.input.length;
       const showNote = st.phase === 'play' && Math.floor(dt / st.tempo) >= i;
       const col = hexRgb(st.th.glow[st.seq[i]]);
@@ -253,7 +267,10 @@
     if (st.phase === 'result') {
       const k = Math.min(1, dt / 420);
       g.save(); g.globalAlpha *= k;
-      g.fillStyle = 'rgba(8,10,18,0.72)'; R.UIK.rr(g, x + U(40), y + U(96), w - U(80), h - U(150), U(12)); g.fill();
+      g.fillStyle = 'rgba(8,10,18,0.55)'; R.UIK.rr(g, x + U(40), y + U(96), w - U(80), h - U(150), U(12)); g.fill();
+      const halo = g.createRadialGradient(cx, y + U(178), 0, cx, y + U(178), U(120));
+      halo.addColorStop(0, rgba(st.th.tint, 0.18)); halo.addColorStop(1, rgba(st.th.tint, 0));
+      g.fillStyle = halo; g.fillRect(x + U(40), y + U(96), w - U(80), h - U(150));
       R.UIK.text(g, '歌あわせの ひょうか', cx, y + U(116), { size: U(13), weight: 700, color: C.text2, align: 'center', track: U(2) });
       const rc = st.rank === 'S' ? C.superRare : st.rank === 'A' ? C.goldHi : st.rank === 'B' ? C.rare : C.text2;
       R.UIK.text(g, st.rank, cx, y + U(142), { size: U(64), weight: 700, family: 'en', color: rc, align: 'center', shadow: 'rgba(236,180,90,0.35)', blur: 12 });
@@ -327,7 +344,7 @@
   }
   function drawTiming(g, st) {
     const U = R.UIK.u, C = R.UIK.T.color;
-    const P = frame(g, st, st.title, st.th.sub + '　・　間合い');
+    const P = frame(g, st, st.title, st.th.sub + ' · 間合い');
     const { x, y, w, h } = P;
     g.save(); g.globalAlpha = P.a;
     const bx = x + U(40), bw = w - U(80), by = y + h / 2 - U(10), bh = U(20);
