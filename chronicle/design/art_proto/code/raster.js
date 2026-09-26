@@ -21,7 +21,7 @@
     return out;
   }
   function mat(o) {
-    const m = Object.assign({ n: 7, spec: 0, specPow: 18, rim: '#ffe2b0', rimK: 0.55, wrap: 0.25, amb: 0.18, flat: false, outline: null, ao: 1 }, o);
+    const m = Object.assign({ tex: 0, tsx: 0.5, tsy: 0.5, n: 7, spec: 0, specPow: 18, rim: '#ffe2b0', rimK: 0.55, wrap: 0.25, amb: 0.18, flat: false, outline: null, ao: 1 }, o);
     m.r = ramp(m.keys, m.n);
     m.rimC = hex(m.rim);
     m.ol = m.outline ? hex(m.outline) : m.r[0].map((v) => v * 0.45);
@@ -66,7 +66,7 @@
       if (r2 > 1) return null;
       let nx = u * p.bulge, ny = v * p.bulge;
       if (p.rot) { const c = Math.cos(p.rot), s = Math.sin(p.rot); const t = nx * c - ny * s; ny = nx * s + ny * c; nx = t; }
-      return [nx, ny, Math.sqrt(Math.max(0, 1 - r2)) + (1 - p.bulge)];
+      return [nx, ny, Math.sqrt(Math.max(0, 1 - r2)) + (1 - p.bulge), dx, dy];
     }
     if (p.t === 'c') {
       const vx = p.x2 - p.x1, vy = p.y2 - p.y1, L2 = vx * vx + vy * vy || 1e-6;
@@ -75,12 +75,12 @@
       const dx = x - qx, dy = y - qy, d2 = dx * dx + dy * dy;
       if (d2 > r * r) return null;
       const k = 1 / Math.max(r, 1e-3);
-      return [dx * k, dy * k, Math.sqrt(Math.max(0, 1 - d2 * k * k))];
+      return [dx * k, dy * k, Math.sqrt(Math.max(0, 1 - d2 * k * k)), (p.t0 || 0) + t * Math.sqrt(L2), (dx * vy - dy * vx) / Math.sqrt(L2)];
     }
     if (p.t === 'r') {
       const hw = p.w / 2, hh = p.h / 2, dx = (x - p.x - hw) / hw, dy = (y - p.y - hh) / hh;
       if (sc > 1.5) { if (dx ** 4 + dy ** 4 > 1) return null; } else if (Math.abs(dx) > 1 || Math.abs(dy) > 1) return null;
-      return [dx * 0.3, dy * 0.3, 1];
+      return [dx * 0.3, dy * 0.3, 1, x, y];
     }
     if (p.t === 'p') {
       const pts = p.pts; let inside = false, best = 1e9, bx = 0, by = 0;
@@ -96,7 +96,7 @@
       const d = Math.sqrt(best); let nx = p.nx, ny = p.ny;
       if (d < p.bevel && d > 1e-4) { const tl = (1 - d / p.bevel) * 0.85; nx -= bx / d * tl; ny -= by / d * tl; }
       const nz = Math.sqrt(Math.max(0.05, 1 - nx * nx - ny * ny));
-      return [nx, ny, nz];
+      return [nx, ny, nz, x - pts[0][0], y - pts[0][1]];
     }
     return null;
   }
@@ -107,7 +107,7 @@
     let a = 1e9, b = 1e9, c = -1e9, d = -1e9; for (const q of p.pts) { a = Math.min(a, q[0]); b = Math.min(b, q[1]); c = Math.max(c, q[0]); d = Math.max(d, q[1]); } return [a, b, c, d];
   }
 
-  const DEF_LIGHT = { key: [-0.55, -0.6, 0.58], rim: [0.8, -0.25, -0.55], mul: [1, 1, 1], pts: [], rimC: null, rimK: 1 };
+  const DEF_LIGHT = { key: [-0.35, -0.62, 0.7], rim: [0.8, -0.25, -0.55], mul: [1, 1, 1], pts: [], rimC: null, rimK: 1 };
 
   // render(builder, {scale, flip, light, outline, ssaa}) → {canvas, ox, oy}  (ox,oy = model origin in canvas px)
   function render(B, o) {
@@ -122,7 +122,7 @@
     const W = Math.ceil((x1 - x0) * sc) + pad * 2 + 1, H = Math.ceil((y1 - y0) * sc) + pad * 2 + 1;
     const N = W * H;
     const zb = new Float32Array(N).fill(-1e9), pid = new Int32Array(N).fill(-1);
-    const nxb = new Float32Array(N), nyb = new Float32Array(N), nzb = new Float32Array(N), dl = new Float32Array(N);
+    const nxb = new Float32Array(N), nyb = new Float32Array(N), nzb = new Float32Array(N), dl = new Float32Array(N), tub = new Float32Array(N), tvb = new Float32Array(N);
     prims.forEach((p, i) => {
       const b = bbox(p);
       const ax = fl > 0 ? b[0] : -b[2], bx = fl > 0 ? b[2] : -b[0];
@@ -132,7 +132,7 @@
         const mx = fl * (px + 0.5 - ox) / sc, my = (py + 0.5 - oy) / sc;
         const n = hit(p, mx, my, sc); if (!n) continue;
         const k = py * W + px, z = p.z + (p.zr ? n[2] * p.zr : 0);
-        if (z >= zb[k]) { zb[k] = z; pid[k] = i; nxb[k] = n[0] * fl; nyb[k] = n[1]; nzb[k] = n[2]; }
+        if (z >= zb[k]) { zb[k] = z; pid[k] = i; nxb[k] = n[0] * fl; nyb[k] = n[1]; nzb[k] = n[2]; tub[k] = n[3]; tvb[k] = n[4]; }
       }
     });
     // shade modifiers (folds, seams)
@@ -176,6 +176,7 @@
           const e = -n[1] * 0.5 + 0.5; lv = clamp(lv * 0.65 + (e > 0.62 ? 0.45 : e < 0.38 ? 0.08 : -0.12), 0, 1);
         }
         let idx = lv * (nn - 1) + dl[k] - occl[k] * (m.ao) + (p.shadeOff || 0);
+        if (m.tex) idx += (vnoise(tub[k] * m.tsx, tvb[k] * m.tsy, (p.g * 7919) % 1000) - 0.5) * m.tex;
         if (m.spec) {
           const d = 2 * (n[0] * key[0] + n[1] * key[1] + n[2] * key[2]);
           const rz = d * n[2] - key[2]; const s = Math.pow(Math.max(0, rz), m.specPow);
@@ -241,10 +242,17 @@
     }
     return { canvas: cv, ox, oy };
   }
+  function h2(x, y, s) { let h = (x * 374761393 + y * 668265263 + s * 2147483647) | 0; h = (h ^ (h >>> 13)) * 1274126177 | 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; }
+  function vnoise(x, y, s) {
+    const xi = Math.floor(x), yi = Math.floor(y), fx = x - xi, fy = y - yi;
+    const a = h2(xi, yi, s), b = h2(xi + 1, yi, s), c = h2(xi, yi + 1, s), d = h2(xi + 1, yi + 1, s);
+    const ux = fx * fx * (3 - 2 * fx), uy = fy * fy * (3 - 2 * fy);
+    return a + (b - a) * ux + (c - a) * uy + (a - b - c + d) * ux * uy;
+  }
   function norm3(v) { const l = Math.hypot(v[0], v[1], v[2]); return [v[0] / l, v[1] / l, v[2] / l]; }
 
   // deterministic RNG
   function rng(seed) { let s = seed >>> 0 || 1; return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; }
 
-  G.RZ = { Builder, render, mat, ramp, hex, mix, clamp, rng };
+  G.RZ = { Builder, render, mat, ramp, hex, mix, clamp, rng, vnoise };
 })(window);

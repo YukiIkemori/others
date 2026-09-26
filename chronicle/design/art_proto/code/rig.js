@@ -18,12 +18,12 @@
     steel: mat({ keys: ['#1c2230', '#3e4a60', '#7c8ca4', '#c4d0de', '#ffffff'], n: 8, metal: true, spec: 1, specPow: 10, rim: '#ffe8c0' }),
     gold: mat({ keys: ['#3a1e08', '#7a4a14', '#c08a2c', '#f0c860', '#fff4c0'], n: 7, metal: true, spec: 1, specPow: 10 }),
     iron: mat({ keys: ['#16181e', '#2e323c', '#565c68', '#8c94a0', '#d6dce4'], n: 7, metal: true, spec: 0.8, specPow: 12 }),
-    leather: mat({ keys: ['#24120c', '#4a2818', '#7a4428', '#a8683c', '#d49a64'], n: 7 }),
+    leather: mat({ keys: ['#24120c', '#4a2818', '#7a4428', '#a8683c', '#d49a64'], n: 7, tex: 0.9, tsx: 0.8, tsy: 0.8 }),
     leatherDk: mat({ keys: ['#140c0a', '#2c1a14', '#4a2c20', '#6c4430', '#946448'], n: 6 }),
     wood: mat({ keys: ['#2a160c', '#5a341c', '#8c5a30', '#b8844c', '#e0b27a'], n: 6 }),
   };
-  const cloth = (keys, o) => mat(Object.assign({ keys, n: 7, wrap: 0.3 }, o));
-  const hairM = (keys) => mat({ keys, n: 8, sheen: [-0.62, -0.28], wrap: 0.35, amb: 0.22 });
+  const cloth = (keys, o) => mat(Object.assign({ keys, n: 7, wrap: 0.3, tex: 0.5, tsx: 1.4, tsy: 0.3 }, o));
+  const hairM = (keys) => mat({ keys, n: 8, sheen: [-0.62, -0.28], wrap: 0.35, amb: 0.22, tex: 1.1, tsx: 0.25, tsy: 1.6 });
   const eyeM = (keys) => mat({ keys, n: 4, flat: true });
 
   // ---------- party looks (data only) ----------

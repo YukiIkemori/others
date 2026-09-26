@@ -161,7 +161,7 @@ const PP = {
   },
   /** god rays: long soft additive beams from the upper left */
   rays(list, col = 'rgba(255,226,160,0.22)') {
-    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'screen';
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'lighter';
     for (const r of list) {
       ctx.save(); ctx.translate(r.x, r.y); ctx.rotate(r.a || 0.5);
       const gr = ctx.createLinearGradient(0, 0, 0, r.len); gr.addColorStop(0, r.c || col); gr.addColorStop(1, 'rgba(0,0,0,0)');
@@ -255,7 +255,7 @@ function battleScene(anim) {
   ctx.drawImage(A.bbg, 0, 0, 1024, F);
   if (FX) {
     PP.dof(0.95, 0, 4, 0, F * 1.9); // background trees soft
-    PP.rays([{ x: 330, y: -40, w: 90, len: 700, a: -0.42 }, { x: 520, y: -40, w: 60, len: 650, a: -0.42 }, { x: 700, y: -60, w: 110, len: 700, a: -0.42 }, { x: 150, y: -40, w: 50, len: 600, a: -0.42 }]);
+    PP.rays([{ x: 330, y: -40, w: 110, len: 720, a: -0.42 }, { x: 520, y: -40, w: 70, len: 650, a: -0.42 }, { x: 700, y: -60, w: 130, len: 720, a: -0.42 }, { x: 150, y: -40, w: 60, len: 600, a: -0.42 }], 'rgba(255,220,150,0.30)');
     PP.dapple(20, 360, 1000, 600, 46);
   }
   // actors (device px units) sorted by feet
@@ -276,9 +276,9 @@ function battleScene(anim) {
     PP.lightmap('rgb(214,214,226)', [{ x: 420, y: 330, r: 560, c: 'rgba(60,52,30,1)', sy: 0.6 }, { x: 800, y: 380, r: 300, c: 'rgba(40,36,24,1)', sy: 0.6 }]);
     // foreground layer (close to the camera, out of focus)
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
-    spr('fg.ferns', 60, F + 40, 1, { filter: 'blur(3px) brightness(0.55)', devH: PIX ? undefined : 180 });
-    spr('fg.rock', 980, F + 30, 1, { filter: 'blur(3px) brightness(0.5)', devH: PIX ? undefined : 130 });
-    spr('fg.flowers', 870, F + 36, 1, { filter: 'blur(2.5px) brightness(0.6)', devH: PIX ? undefined : 120 });
+    spr('fg.ferns', 50, F + 6, 1, { filter: 'blur(3px) brightness(0.55)', devH: PIX ? undefined : 180 });
+    spr('fg.rock', 990, F + 4, 1, { filter: 'blur(3px) brightness(0.5)', devH: PIX ? undefined : 130 });
+    spr('fg.flowers', 880, F + 10, 1, { filter: 'blur(2.5px) brightness(0.6)', devH: PIX ? undefined : 120 });
     spr('fg.branch', 1010, 150, 1, { filter: 'blur(4px) brightness(0.45)', ax: 1, ay: 1, devH: PIX ? undefined : 170 });
     ctx.restore();
     PP.dust(40, 60, 1000, 560, 70);
@@ -395,9 +395,9 @@ const toDev = (x, y) => ({ x: x * Z, y: y * Z });
 
 function town() {
   mapT(); ctx.imageSmoothingEnabled = !PIX;
-  ctx.fillStyle = texFill(ctx, 'ground.' + G.GRASS, 90); ctx.fillRect(0, 0, MW, MH);
-  groundLayer('ground.' + G.COBBLE, 70, [rect(-10, 150, 360, 50, 10), rect(146, -10, 58, 320, 10), rect(112, 136, 132, 84, 26)], 2.5);
-  groundLayer('ground.' + G.FLOWERS, 90, [rect(250, 232, 100, 70, 24), rect(-10, 238, 76, 70, 24)], 5);
+  ctx.fillStyle = texFill(ctx, 'ground.' + G.GRASS, 64); ctx.fillRect(0, 0, MW, MH);
+  groundLayer('ground.' + G.COBBLE, 44, [rect(-10, 150, 360, 50, 10), rect(146, -10, 58, 320, 10), rect(112, 136, 132, 84, 26)], 2.5);
+  groundLayer('ground.' + G.FLOWERS, 64, [rect(250, 232, 100, 70, 24), rect(-10, 238, 76, 70, 24)], 5);
   const items = [
     ['town.house', 74, 140], ['town.shop', 272, 140], ['town.house', 62, 318], ['town.shop', 296, 318],
     ['town.tree', 18, 150], ['town.tree', 330, 150], ['town.tree', 232, 60], ['town.tree', 118, 40],
@@ -410,7 +410,7 @@ function town() {
   if (FX) {
     const lamps = [[136, 150 - 33], [216, 150 - 33], [136, 214 - 33]].map(([x, y]) => toDev(x, y));
     const win = [[64, 110], [84, 110], [264, 96], [286, 96], [262, 126]].map(([x, y]) => toDev(x, y));
-    PP.lightmap('rgb(120,112,150)', [
+    PP.lightmap('rgb(150,140,176)', [
       ...lamps.map((p) => ({ x: p.x, y: p.y + 60, r: 170, c: 'rgba(255,170,90,1)', core: 0.25, c2: 'rgba(180,110,60,1)', sy: 0.75 })),
       { x: 900, y: 120, r: 700, c: 'rgba(150,110,70,1)' }, // setting sun from the upper right
     ]);
@@ -435,10 +435,10 @@ function world() {
   ctx.fillStyle = texFill(ctx, 'ground.' + G.SEA, 110); ctx.fillRect(0, 0, MW, MH);
   const land = [(c) => { c.moveTo(40, -10); c.bezierCurveTo(10, 80, 60, 150, 30, 230); c.bezierCurveTo(10, 290, 120, 320, 220, 310); c.lineTo(360, 300); c.lineTo(360, -10); c.closePath(); }];
   const sand = [(c) => { c.moveTo(30, -10); c.bezierCurveTo(0, 80, 50, 150, 20, 230); c.bezierCurveTo(0, 300, 120, 330, 220, 320); c.lineTo(360, 312); c.lineTo(360, -10); c.closePath(); }];
-  groundLayer('ground.' + G.SAND, 80, sand, 3);
-  groundLayer('ground.' + G.GRASS, 110, land, 2.5);
-  groundLayer('ground.' + G.FLOWERS, 110, [(c) => c.ellipse(240, 250, 50, 30, 0, 0, 7), (c) => c.ellipse(160, 40, 40, 20, 0, 0, 7)], 8);
-  groundLayer('ground.' + G.DIRT, 60, [(c) => { c.moveTo(120, 300); c.bezierCurveTo(140, 220, 200, 200, 190, 150); c.bezierCurveTo(180, 100, 240, 90, 262, 60); c.lineTo(272, 66); c.bezierCurveTo(252, 100, 196, 106, 204, 150); c.bezierCurveTo(212, 206, 152, 226, 134, 304); c.closePath(); }], 2);
+  groundLayer('ground.' + G.SAND, 60, sand, 3);
+  groundLayer('ground.' + G.GRASS, 64, land, 2.5);
+  groundLayer('ground.' + G.FLOWERS, 64, [(c) => c.ellipse(240, 250, 50, 30, 0, 0, 7), (c) => c.ellipse(160, 40, 40, 20, 0, 0, 7)], 8);
+  groundLayer('ground.' + G.DIRT, 44, [(c) => { c.moveTo(120, 300); c.bezierCurveTo(140, 220, 200, 200, 190, 150); c.bezierCurveTo(180, 100, 240, 90, 262, 60); c.lineTo(272, 66); c.bezierCurveTo(252, 100, 196, 106, 204, 150); c.bezierCurveTo(212, 206, 152, 226, 134, 304); c.closePath(); }], 2);
   const items = [];
   for (const [x, y] of [[250, 44], [292, 60], [334, 80], [318, 34], [226, 26], [350, 116], [276, 96]]) items.push(['world.mountain', x, y]);
   for (const [x, y] of [[92, 96], [70, 136], [118, 132], [64, 180], [110, 178], [88, 214], [140, 100], [52, 100], [136, 204]]) items.push(['world.forest', x, y]);
@@ -462,8 +462,8 @@ function world() {
 function dungeon() {
   mapT(); ctx.imageSmoothingEnabled = !PIX;
   ctx.fillStyle = '#07080c'; ctx.fillRect(0, 0, MW, MH);
-  groundLayer('ground.' + G.STONE, 48, [rect(24, 74, 292, 240, 2), rect(140, -10, 64, 100, 0)], 0.6);
-  groundLayer('ground.' + G.CARPET, 60, [rect(152, 96, 40, 220, 2)], 0.6);
+  groundLayer('ground.' + G.STONE, 40, [rect(24, 74, 292, 240, 2), rect(140, -10, 64, 100, 0)], 0.6);
+  groundLayer('ground.' + G.CARPET, 40, [rect(152, 96, 40, 220, 2)], 0.6);
   mapT();
   // back wall: repeat the wall piece
   const wall = A['dungeon.wall'];
@@ -483,7 +483,7 @@ function dungeon() {
     ['dungeon.torch', 124, 62, { noShadow: 1 }], ['dungeon.torch', 220, 62, { noShadow: 1 }],
     ['dungeon.pillar', 84, 170], ['dungeon.pillar', 260, 170], ['dungeon.pillar', 84, 262], ['dungeon.pillar', 260, 262],
     ['dungeon.desk', 250, 214], ['dungeon.chest', 60, 206], ['dungeon.books', 110, 222, { noShadow: 1 }], ['dungeon.books', 232, 120, { noShadow: 1 }],
-    ['dungeon.stairs', 172, 316, { noShadow: 1 }],
+    ['dungeon.stairs', 172, 296, { noShadow: 1 }], ['dungeon.shelf', 136, wb + 1, { noShadow: 1 }], ['dungeon.shelf', 30, 150, { noShadow: 1 }], ['dungeon.shelf', 30, 250, { noShadow: 1 }], ['dungeon.shelf', 312, 150, { noShadow: 1 }], ['dungeon.shelf', 312, 250, { noShadow: 1 }], ['dungeon.chest', 290, 120],
     ['field.back', 172, 200],
   ];
   drawObjects(items, { skew: 0, len: 0.5, alpha: 0.4 });
@@ -496,7 +496,7 @@ function dungeon() {
       { x: HERO.x, y: HERO.y + 40, r: 260, c: 'rgba(120,130,170,1)', core: 0.3 },
       { x: 520, y: 560, r: 220, c: 'rgba(90,120,170,1)', sy: 0.5 }, // moonlight pool under the ceiling crack
     ]);
-    PP.rays([{ x: 560, y: -60, w: 120, len: 700, a: 0.12, c: 'rgba(150,190,255,0.28)' }]);
+    PP.rays([{ x: 560, y: -60, w: 130, len: 720, a: 0.12, c: 'rgba(150,190,255,0.30)' }]);
     PP.glow([{ x: T1.x, y: T1.y, r: 70, c: 'rgba(255,190,110,0.95)' }, { x: T2.x, y: T2.y, r: 70, c: 'rgba(255,190,110,0.95)' }, { x: C.x, y: C.y - 20, r: 36, c: 'rgba(255,210,140,0.9)' }]);
     PP.dust(420, 100, 700, 700, 60, 'rgba(200,220,255,0.8)');
     PP.bloom(0.6, 1.8, 7);

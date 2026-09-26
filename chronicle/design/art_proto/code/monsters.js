@@ -8,15 +8,15 @@
   const MM = {
     slime: mat({ keys: ['#021a2a', '#043e52', '#08766e', '#18b08a', '#5ae4ac', '#c8fff0'], n: 8, spec: 1, specPow: 8, wrap: 0.35, amb: 0.14, rim: '#d0fff0', rimK: 0.8, alpha: 0.93 }),
     slimeCore: mat({ keys: ['#10382a', '#2c6a3a', '#6aa040', '#c8d060', '#fff4a0'], n: 6, wrap: 0.6, amb: 0.4, alpha: 0.93, ao: 0 }),
-    slimeEye: mat({ keys: ['#021816', '#08302c'], n: 2, flat: true }),
-    fur: mat({ keys: ['#0c1030', '#1c2a5a', '#34508c', '#6484c0', '#a4c0e6', '#e4f0fc'], n: 8, wrap: 0.22, amb: 0.1, rim: '#fff4e0' }),
-    furDk: mat({ keys: ['#080a20', '#141e46', '#26386c', '#46609a', '#7a96c8'], n: 7, wrap: 0.22, amb: 0.1 }),
+    slimeEye: mat({ keys: ['#000806', '#02120e'], n: 2, flat: true }),
+    fur: mat({ keys: ['#0c1030', '#1c2a5a', '#34508c', '#6484c0', '#a4c0e6', '#e4f0fc'], n: 8, wrap: 0.22, amb: 0.1, rim: '#fff4e0', tex: 2.2, tsx: 0.35, tsy: 1.3 }),
+    furDk: mat({ keys: ['#080a20', '#141e46', '#26386c', '#46609a', '#7a96c8'], n: 7, wrap: 0.22, amb: 0.1, tex: 2.0, tsx: 0.35, tsy: 1.3 }),
     ice: mat({ keys: ['#061a48', '#0c3ca0', '#1a7ee0', '#4cc8ff', '#b4f0ff', '#ffffff'], n: 8, outline: '#04103a', spec: 1, specPow: 5, wrap: 0.2, amb: 0.35, rim: '#ffffff', rimK: 0.8, sheen: [-0.9, -0.3] }),
     nose: mat({ keys: ['#06080e', '#1c2230', '#3a4458'], n: 4, spec: 1 }),
     wolfEye: mat({ keys: ['#60f0ff', '#e8ffff'], n: 2, flat: true, glow: '#80f0ff' }),
     gums: mat({ keys: ['#3a0c1c', '#7a2a3c'], n: 2, flat: true }),
-    gSkin: mat({ keys: ['#10200c', '#24441a', '#44722c', '#76a844', '#b4d878', '#e8f8b8'], n: 8, wrap: 0.45, amb: 0.28, rim: '#fff0c0' }),
-    gLeather: mat({ keys: ['#1a0e08', '#3a2014', '#62381e', '#8c5a30', '#b8844c'], n: 7 }),
+    gSkin: mat({ keys: ['#10200c', '#24441a', '#44722c', '#76a844', '#b4d878', '#e8f8b8'], n: 8, wrap: 0.45, amb: 0.28, rim: '#fff0c0', tex: 0.8, tsx: 0.6, tsy: 0.6 }),
+    gLeather: mat({ keys: ['#1a0e08', '#3a2014', '#62381e', '#8c5a30', '#b8844c'], n: 7, tex: 1.2, tsx: 0.4, tsy: 1.2 }),
     gCloth: mat({ keys: ['#1c0c0c', '#3c1a16', '#643024', '#8c4a34'], n: 6 }),
   };
 
@@ -97,7 +97,7 @@
     leg(P(-14, -25), 0, 3, false, false);
     // neck + head
     const gn = B.group();
-    const hd = P(22 + lg * 3, -44 + lg * 5);
+    const hd = P(22 + lg * 3, -41 + lg * 5);
     B.cap(...P(10, -32), hd[0] - 4, hd[1] + 2, 9, 7, F, 1.5, { g: gn });
     // ruff: layered fur strands around the neck/chest
     for (let i = 0; i < 9; i++) {
