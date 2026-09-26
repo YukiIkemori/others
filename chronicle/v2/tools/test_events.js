@@ -494,5 +494,16 @@ R.DB.events.story_t1 = { async run(ev, ctx) { ran.push('t1:' + ctx.reason); } };
   ok('config.defaultHero is K.hero', C.check('hero', R.DB.config.defaultHero).ok);
   ok('innPrice 10 tiers', R.DB.config.innPrice.length === 10);
 
+  section('lore・painCount（CONTENT-F の依頼 65・CONTENT-P 53）');
+  R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'アルン' }, seed: 9 });
+  const evL = R.Events.makeEv({});
+  ok('ev.lore(id): first time → true and flag id', evL.lore('lo_test_x') === true && G().flags.lo_test_x === true);
+  ok('ev.lore(id): again → false (callers keep once)', evL.lore('lo_test_x') === false);
+  ok('painCount 0 on a new game', R.State.painCount() === 0);
+  G().choices.ch_forest_write = 'pain';
+  ok('painCount counts ch_*_write === pain', R.State.painCount() === 1);
+  G().vars.pain_count = 2;
+  ok('painCount takes vars.pain_count when larger', R.State.painCount() === 2);
+
   done('test_events');
 })().catch((e) => { console.error(e); process.exitCode = 1; });

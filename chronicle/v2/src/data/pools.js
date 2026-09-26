@@ -6,8 +6,10 @@
 //     ほかに p_supply p_gold p_stone p_gear p_weapon p_armor p_acc p_boss p_boss_mid p_super
 // - 装備のプールは品の line・tier・grade・src から R.onData で作る（品の数値を埋める順に依らない）。
 // - プールには盗み専用（src 'steal'）・一品物（'unique'）・報酬・遺物・魔物の品（'mdrop'）を入れない。
-//   p_super（ダンジョンの奥の箱・ボス。STATS_REWORK §10.1）は魔物の超レアの枠から外れる品の行き先で、
-//   どの品を移すかは BATTLE の魔物の drops（§10.1）が決まってから絞る。今は同じティアの魔物の超レア（'mdrop'／'super'）を入れておく。
+// - §10.1（STATS_REWORK）: 魔物の枠を失った品の行き先。tools/port/trim_drops.js が残す品を選び、ほかは消した。
+//   p_rare は帯のレア（'drop'）＋どの魔物も落とさなくなった魔物のレア（'mdrop'、約 30）、
+//   p_super・p_boss はどの魔物も落とさない超レア（*_super.js の帯の品＋魔物の超レアから移した約 30）。
+//   魔物がまだ落とす品は入れない（H2: 魔物から落ちる超レアは 1 体だけ）。
 (function (R) {
   'use strict';
   const RB = [1, 1, 3, 3, 5, 5, 7, 7, 9, 9];                                   // ティア → レアの帯
@@ -32,8 +34,16 @@
     const all = Object.entries(R.DB.items);
     const ids = (pred) => all.filter(([, it]) => it && pred(it)).map(([id]) => id);
     const normal = (T, slots) => ids((it) => it.src === 'shop' && it.tier === T && it.line && !String(it.line).startsWith('charm_') && slots.includes(it.slot));
+    // 魔物がドロップで落とす品（steal を除く）
+    const dropped = new Set();
+    for (const m of Object.values(R.DB.monsters || {})) {
+      const d = (m && m.drops) || {};
+      for (const k of ['normal', 'rare', 'super']) if (d[k] && d[k].item) dropped.add(d[k].item);
+    }
+    const free = (id) => !dropped.has(id);
     const rare = (T) => ids((it) => it.src === 'drop' && it.grade === 'rare' && EQ.includes(it.slot) && it.tier === RB[T]);
-    const sup = (T) => ids((it) => (it.src === 'mdrop' || it.src === 'super') && it.grade === 'super' && EQ.includes(it.slot) && it.tier === T);
+    const mrare = (T) => ids((it) => it.src === 'mdrop' && it.grade === 'rare' && EQ.includes(it.slot) && (it.tier === T || it.tier === RB[T])).filter(free);
+    const sup = (T) => ids((it) => (it.src === 'mdrop' || it.src === 'super') && it.grade === 'super' && EQ.includes(it.slot) && it.tier === T).filter(free);
     const P = (fn) => ({ tiers: TIERS.map(fn) });
     const W1 = (list, w) => list.map((item) => ({ item, w: w || 1 }));
     // 表の中の重みを合計 total にならす（p_T の混ぜ方）
@@ -46,10 +56,11 @@
       p_weapon: P((T) => W1(normal(T, ['weapon']))),
       p_armor: P((T) => W1(normal(T, ARMOR))),
       p_acc: P((T) => W1(normal(T, ['acc']))),
-      p_rare: P((T) => [...W1(rare(T), 2), ...(T >= 4 ? E([['i_lifedew', 2], ['i_phoenix', 2], ['i_grace', 1]]) : [])]),
-      p_boss: P((T) => W1(rare(T))),
+      p_rare: P((T) => [...W1(rare(T), 2), ...W1(mrare(T), 1), ...(T >= 4 ? E([['i_lifedew', 2], ['i_phoenix', 2], ['i_grace', 1]]) : [])]),
+      p_boss: P((T) => [...W1(rare(T), 3), ...W1(sup(T), 1)]),
       p_boss_mid: P((T) => W1(normal(T, EQ))),
-      p_super: P((T) => W1(sup(T))),
+      // 空のティアは近いティア（下を先に）の品で埋める（深い階の 1 箱が空にならないように）
+      p_super: P((T) => { for (let d = 0; d < 10; d++) for (const t of [T - d, T + d]) { if (t < 0 || t > 9) continue; const l = sup(t); if (l.length) return W1(l); } return []; }),
     };
     pools.p_T = P((T) => [...scale(pools.p_supply.tiers[T], MIX.supply), ...scale(pools.p_gear.tiers[T], MIX.gear), ...scale(pools.p_gold.tiers[T], MIX.gold)]);
     for (const id of Object.keys(pools)) R.def('pools', id, pools[id]);

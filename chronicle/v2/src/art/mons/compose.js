@@ -314,7 +314,7 @@
   };
 
   /** 魔物の 1 枚（hd:mon:<id>）。opts {golden} */
-  BZ.bakeMon = function (id, opts) {
+  BZ.bakeMon = function (id, opts, asJob) {
     const s = BZ.monSpec(id);
     if (!s) return null;
     opts = opts || {};
@@ -324,7 +324,7 @@
       px, fly: !!s.B.fly,
       frames: BZ.monFrames(s.B),
       meta: { kind: 'mon', id, base: s.base, stage: s.stage, tier: s.B.tier, fly: !!s.B.fly, golden: !!opts.golden, targetPx: Math.round(px) },
-    });
+    }, asJob);
   };
   /** 待機 2・攻撃 1・被弾 1（ART_REWORK §2.5）。土台が frames を持てばそれ */
   BZ.monFrames = function (base) {
@@ -335,6 +335,6 @@
   };
 
   for (const id of BZ.SLICE_MONS) {
-    (BZ._pending = BZ._pending || []).push(['hd:mon:' + id, (opts) => BZ.bakeMon(id, opts), { kind: 'mon', owner: 'BEAST' }]);
+    (BZ._pending = BZ._pending || []).push(['hd:mon:' + id, (opts) => BZ.bakeMon(id, opts, true), { kind: 'mon', owner: 'BEAST' }]);
   }
 })(window.RPG);

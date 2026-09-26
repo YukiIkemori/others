@@ -21,13 +21,16 @@
   K.rgba = rgba;
 
   /** 縮めて拡げるぼかし（ctx.filter を使わない。r ≈ ぼかしの半径 px） */
-  K.soften = function (src, r) {
+  K.soften = function (src, r) { return BZ.runSync(() => K.softenG(src, r)); };
+  /** soften の切れ端版（縮めた後に一度止まれる）。bake の中は yield* K.softenG */
+  K.softenG = function* (src, r) {
     if (r <= 0.5) return src;
     const f = Math.max(1.5, r * 0.9);
     const w = Math.max(1, Math.round(src.width / f)), h = Math.max(1, Math.round(src.height / f));
     const a = mk(w, h), ax = a.getContext('2d');
     ax.imageSmoothingEnabled = true; ax.imageSmoothingQuality = 'high';
     ax.drawImage(src, 0, 0, w, h);
+    yield* K.tick();
     const b = mk(src.width, src.height), bx = b.getContext('2d');
     bx.imageSmoothingEnabled = true; bx.imageSmoothingQuality = 'high';
     bx.drawImage(a, 0, 0, src.width, src.height);
@@ -126,12 +129,14 @@
   /**
    * o = {a: ramp の鍵（外側）, b: ramp の鍵（空き地・道）, seed, pebbles, far: 遠くの霞の色, clear(u, v) → >0 で空き地（既定は楕円）}
    */
-  K.ground = function (g, o) {
-    const RZ = BZ.rz(), { ramp, clamp, mix, vnoise } = RZ;
+  K.ground = function (g, o) { return BZ.runSync(() => K.groundG(g, o)); };
+  K.groundG = function* (g, o) {
+    const RZ = BZ.rz(), { ramp, clamp, mix, vnoise } = RZ, S = K._S;
     const W = Math.ceil(g.W), H = Math.ceil(g.H), c = mk(W, H), x = c.getContext('2d'), img = x.createImageData(W, H), D = img.data;
     const A = ramp(o.a, 8), Bm = ramp(o.b, 8), far = o.far || [236, 216, 184], sd = o.seed || 1;
     const clearF = o.clear || ((u, v, n2, n3) => 1 - Math.hypot((u - g.clearU) / g.clearRx, (v - 16.8) / 3.6) + (n2 - 0.5) * 0.55 + (n3 - 0.5) * 0.2);
     for (let py = g.GT; py < H; py++) {
+      if (S && (py & 3) === 0 && S.clk()) yield;
       const y = py + 0.5, z = K.yToZ(g, y);
       for (let px = 0; px < W; px++) {
         const u = (px + 0.5 - g.cx) * z / g.UD * 12, v = z * 12;
@@ -162,8 +167,9 @@
   };
 
   // ------------------------------------------------------------------ 遠景の崖（画素）
-  K.cliff = function (g, o) {
-    const RZ = BZ.rz(), { ramp, clamp, mix, hex, vnoise } = RZ;
+  K.cliff = function (g, o) { return BZ.runSync(() => K.cliffG(g, o)); };
+  K.cliffG = function* (g, o) {
+    const RZ = BZ.rz(), { ramp, clamp, mix, hex, vnoise } = RZ, S = K._S;
     const W = Math.ceil(g.W), H = Math.ceil(g.H), c = mk(W, H), x = c.getContext('2d'), img = x.createImageData(W, H), D = img.data, R_ = RZ.rng(o.seed);
     const rock = ramp(o.rock, 8), top = ramp(o.top, 6), haze = hex(o.haze);
     const s = g.s, base = o.base * s;
@@ -174,6 +180,7 @@
       prof[i] = Math.round(h / 3) * 3 + (vnoise(i * 0.6, 2, o.seed) - 0.5) * 1;
     }
     for (let i = 0; i < W; i++) for (let y = Math.max(0, Math.floor(base - prof[i])); y < base && y < H; y++) {
+      if (S && y === Math.max(0, Math.floor(base - prof[i])) && (i & 15) === 0 && S.clk()) yield;
       const dy = y - (base - prof[i]);
       const yy = y + vnoise(i * 0.1, 3, o.seed) * 3;
       const band = Math.floor(yy / o.strata), bandT = (yy % o.strata) / o.strata;
@@ -189,7 +196,7 @@
     if (o.trees) {
       const B = new RZ.Builder(), nt = Math.round(o.trees * W / 480);
       for (let k = 0; k < nt; k++) { const i = Math.floor(R_() * W), y = base - prof[i] + 1; K.conifer(B, i, y, (5 + R_() * 7) * (o.treeS || 1) * s, R_, y); }
-      K.blit(x, RZ.render(B, { outline: false, light: K.LIGHT, sat: 0.7 }), 0, 0);
+      K.blit(x, yield* K.renderG(B, { outline: false, light: K.LIGHT, sat: 0.7 }), 0, 0);
     }
     return { canvas: c, prof, base };
   };
@@ -291,24 +298,44 @@
     g.save(); g.globalCompositeOperation = 'multiply'; g.drawImage(lm, rect.x, rect.y); g.restore();
   };
 
+  // ------------------------------------------------------------------ 切れ端で焼く（P2、§2.10）
+  // 背景の bake は generator（*bake）。K._S は今 step している仕事の時計（S.clk() が true なら中で yield）。同期で焼くときは null
+  K._S = null;
+  K.renderG = function* (B, ro) { return yield* BZ.renderG(BZ.rz(), B, ro, K._S); };
+  K.tick = function* () { if (K._S && K._S.clk()) yield; };
+
   // ------------------------------------------------------------------ 背景の登録
   K.IDS = [];
   /** def = {mood, ambient, bake(g, L, ctx) → {back, ground, front, post}} */
   K.define = function (id, def) {
     K.IDS.push(id);
     (BZ.BBG_IDS = BZ.BBG_IDS || []).push(id);
-    (BZ._pending = BZ._pending || []).push(['hd:bbg:' + id, (opts) => K.bake(id, def, opts || {}), { kind: 'bbg', owner: 'BEAST', mood: def.mood }]);
+    (BZ._pending = BZ._pending || []).push(['hd:bbg:' + id, (opts) => K.bakeJob(id, def, opts || {}), { kind: 'bbg', owner: 'BEAST', mood: def.mood }]);
   };
-  K.bake = function (id, def, opts) {
+  /** 同期で焼く（見本・テスト）。R.Hd の factory は bakeJob（切れ端で）。画素は同じ */
+  K.bake = function (id, def, opts) { const j = K.bakeJob(id, def, opts); while (!j.done) j.step(1e9); return j.result; };
+  K.bakeJob = function (id, def, opts) {
+    let spent = 0, SS = null;
+    const j = BZ.job((S) => { SS = S; return bakeGen(id, def, opts, S, () => spent); }, 'bbg');
+    const step = j.step;
+    j.step = function (ms) {
+      const prev = K._S; const a = performance.now();
+      K._S = SS;
+      try { step(ms); } finally { K._S = prev; spent += performance.now() - a; }
+    };
+    return j;
+  };
+  function* bakeGen(id, def, opts, S, spentMs) {
     const W = Math.round(opts.w || R.W || 960), H = Math.round(opts.h || R.H || 540);
-    const t0 = performance.now();
     const g = K.geo(W, H, def.geo);
     const L = K.layoutFor(g);
-    const layers = def.bake(g, L, { W, H, RZ: BZ.rz() });
+    const out = def.bake(g, L, { W, H, RZ: BZ.rz() });
+    const layers = out && typeof out.next === 'function' ? yield* out : out;
     const frames = [], poses = {};
     for (const name of ['back', 'ground', 'front', 'post']) {
       const c = layers[name];
       if (!c) continue;
+      yield* K.tick();
       K.noBlack(c);
       poses[name] = [frames.length];
       frames.push({ c, ox: 0, oy: 0 });
@@ -316,9 +343,9 @@
     return {
       frames, poses, anchors: { lantern: L.lantern }, w: W, h: H,
       meta: { mood: def.mood, lantern: L.lantern, horizon: g.GT, lightTop: g.GT, feather: 0, light: 'layer', postMode: 'lighter', layout: g.tall ? 'tall' : 'wide',
-        ambient: def.ambient, foes: L.foes, party: L.party, bakeMs: Math.round((performance.now() - t0) * 10) / 10, id },
+        ambient: def.ambient, foes: L.foes, party: L.party, bakeMs: Math.round(spentMs() * 10) / 10, id },
     };
-  };
+  }
 
   // ------------------------------------------------------------------ 見本の組み立て（BSCENE の描く順の見本。スクショと図鑑の試しに使う）
   const PARTY_COLORS = [['#2e4ea0', '#c46a2c'], ['#843a2c', '#cc4c26'], ['#3c7a4a', '#c4bc78'], ['#9486aa', '#76489a']];

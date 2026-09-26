@@ -93,6 +93,8 @@ if (require.main !== module) return;
 
 // =====================================================================================================
 const CHECK = process.argv.includes('--check');
+// STATS_REWORK §10.1: 魔物の枠を失い、宝箱にも移さなかった品（tools/port/trim_drops.js が選んで書く）
+const TRIM_10_1 = new Set((() => { try { return JSON.parse(fs.readFileSync(path.join(__dirname, 'trim_10_1.json'), 'utf8')).deleted || []; } catch (e) { return []; } })());
 const R = loadOld();
 const I = R.DB.items;
 const FILE = R.__fileOf.items;
@@ -348,6 +350,7 @@ for (const id of Object.keys(I)) {
   delete o.units_;   // （無い）
   if (nid !== id) log.renamed++;
   const file = FILE[id] || 'items_misc.js';
+  if (TRIM_10_1.has(nid)) { log.trimmed = (log.trimmed || 0) + 1; continue; }   // §10.1 で消した魔物の品（trim_drops.js）
   (out[file] = out[file] || {})[nid] = o;
 }
 
@@ -429,7 +432,7 @@ for (const f of Object.keys(out)) for (const id of Object.keys(out[f])) { if (al
 for (const id of Object.keys(stealItems)) if (allNew[id]) dup.push(id);
 console.log('items', total, '+ steal', Object.keys(stealItems).length, counts);
 console.log('by slot', bySlot);
-console.log('renamed', log.renamed, 'dropped', DROPPED.length, 'quirk stripped', log.stripped, 'kept', log.kept.length, 'desc from appendix', log.descFromAppx, 'abil written', log.abilWritten);
+console.log('renamed', log.renamed, 'dropped', DROPPED.length, 'quirk stripped', log.stripped, 'kept', log.kept.length, 'desc from appendix', log.descFromAppx, 'abil written', log.abilWritten, '§10.1 trimmed', log.trimmed || 0);
 if (log.noQuirkFound.length) console.log('quirk items with nothing removed:', log.noQuirkFound.join(' '));
 if (dup.length) { console.log('DUPLICATE ids:', dup.join(' ')); process.exitCode = 1; }
 if (log.kept.length !== 35) { console.log('kept quirk items != 35:', log.kept.join(' ')); process.exitCode = 1; }

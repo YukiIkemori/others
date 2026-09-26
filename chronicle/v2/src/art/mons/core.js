@@ -195,14 +195,40 @@
     const hm = o.fly ? (b.y1 - b.y0) : Math.max(1, -b.y0);
     return Math.max(0.2, (px - 2) / hm);
   };
-  BZ.bakeSheet = function (o) {
-    const RZ = BZ.rz(), S = BZ.style(), L = o.light || BZ.light();
+  /**
+   * 切れ端で焼く仕事（K.bakeJob）: genFn(S) の generator を step(ms) ごとに進める。S.clk() が true になったら中で yield する
+   * （R.Hd.RZ.gen も同じ S で止まる）。ボス 1 コマ 20〜50 ms を R.Hd.pump の 1 フレーム 3 ms に分けるため（P2、§2.10）
+   */
+  BZ.job = function (genFn, kind) {
+    const clock = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    let deadline = 0;
+    const S = { clk: () => clock() > deadline };
+    const it = genFn(S);
+    const j = {
+      kind: kind || 'mon', done: false, result: null,
+      step(ms) { if (j.done) return; deadline = clock() + Math.max(0.1, ms); const r = it.next(); if (r.done) { j.done = true; j.result = r.value || null; } },
+    };
+    return j;
+  };
+  BZ.runSync = function (genFn) { const it = genFn(null); let r = it.next(); while (!r.done) r = it.next(); return r.value; };
+  /** RZ.render を切れ端で（RZ.gen が無い控えのラスタライザでは一度に） */
+  BZ.renderG = function* (RZ, B, ro, S) { if (RZ.gen) return yield* RZ.gen(B, ro, S); return RZ.render(B, ro); };
+
+  /** Sheet を焼く。asJob なら K.bakeJob を返す（R.Hd の factory はこちら。R.Hd.now は最後まで回す）。画素はどちらも同じ */
+  BZ.bakeSheet = function (o, asJob) {
+    if (asJob) return BZ.job((S) => sheetGen(o, S), (o.meta && o.meta.kind) || 'mon');
+    return BZ.runSync((S) => sheetGen(o, S));
+  };
+  function* sheetGen(o, S) {
+    const RZ = BZ.rz(), ST = BZ.style(), L = o.light || BZ.light();
+    const t0 = (typeof performance !== 'undefined' ? performance.now() : Date.now());
     if (o.px && !o.scale) o.scale = BZ.fitScale(o, o.px);
     const P = BZ.palette(o.pal, { variant: o.variant, golden: o.golden });
     const frames = [], poses = {};
     let box0 = null;
-    const t0 = (typeof performance !== 'undefined' ? performance.now() : Date.now());
-    o.frames.forEach((f, i) => {
+    for (let i = 0; i < o.frames.length; i++) {
+      const f = o.frames[i];
+      if (S && S.clk()) yield;
       const B = new RZ.Builder();
       const st = Object.assign({ t: 0, stage: o.stage || 1, golden: !!o.golden }, f.st || {});
       const pts = o.draw(B, P, st, RZ) || {};
@@ -211,7 +237,8 @@
         const fn = BZ.PARTS && BZ.PARTS[name];
         if (fn) fn(B, pts, po || {}, { P, st, golden: !!o.golden, RZ });
       }
-      const r = RZ.render(B, { scale: o.scale, light: L, tones: S.tones, sat: S.sat, olMix: S.olMix, tint: S.tint, pad: 2 });
+      const r = yield* BZ.renderG(RZ, B, { scale: o.scale, light: L, tones: ST.tones, sat: ST.sat, olMix: ST.olMix, tint: ST.tint, pad: 2 }, S);
+      if (S && S.clk()) yield;
       const box = BZ.finish(r.canvas);
       if (i === 0) box0 = { box, ox: r.ox, oy: r.oy };
       const anchors = {};
@@ -219,7 +246,7 @@
       anchors.feet = { x: 0, y: 0 };
       frames.push({ c: r.canvas, ox: Math.round(r.ox), oy: Math.round(r.oy), anchors });
       (poses[f.pose] = poses[f.pose] || []).push(i);
-    });
+    }
     const ms = (typeof performance !== 'undefined' ? performance.now() : Date.now()) - t0;
     const a0 = frames[0].anchors;
     const b = box0.box;
@@ -229,9 +256,9 @@
       anchors: Object.assign({}, a0),
       // 見た目の大きさ（足元から上の高さ・外形の幅。BSCENE の並べ方 enemyLayout が読む）
       w: b.w, h: Math.round(box0.oy - b.y),
-      meta: Object.assign({ bakeMs: Math.round(ms * 10) / 10, frames: frames.length, visH: b.h, top: Math.round(b.y - box0.oy), left: Math.round(b.x - box0.ox), right: Math.round(b.x + b.w - box0.ox) }, o.meta || {}),
+      meta: Object.assign({ bakeMs: Math.round(ms * 10) / 10, frames: frames.length, visH: b.h, top: Math.round(b.y - box0.oy), left: Math.round(b.x - box0.ox), right: Math.round(b.x + b.w - box0.ox), facing: 'right' }, o.meta || {}),
     };
-  };
+  }
 
   // ------------------------------------------------------------------ ボス（hd:boss:<sprite>）
   /** 待機 2・攻撃 1・被弾 1・予告の構え tele 2（ART_REWORK §2.5、V2_PLAN §2.5.7）。spec.frames で足してよい */
@@ -242,18 +269,18 @@
   ];
   BZ.BOSSES = BZ.BOSSES || {};
   /** spec = {tier:'boss'|'add', at: 段の中の位置 0〜1, h, pal, draw, frames?} */
-  BZ.bakeBoss = function (id, opts) {
+  BZ.bakeBoss = function (id, opts, asJob) {
     const b = BZ.BOSSES[id];
     if (!b) return null;
     opts = opts || {};
     const px = BZ.targetPx(b.tier || 'boss', 1, b.at != null ? b.at : 0.5);
     return BZ.bakeSheet({ draw: b.draw, pal: b.pal, golden: !!opts.golden, px, fly: !!b.fly, frames: b.frames || BZ.BOSS_FRAMES,
-      fps: { idle: 2, tele: 5 }, meta: { kind: b.tier === 'add' ? 'mon' : 'boss', id, tier: b.tier || 'boss', fly: !!b.fly, targetPx: Math.round(px), focus: b.focus || 'eye' } });
+      fps: { idle: 2, tele: 5 }, meta: { kind: b.tier === 'add' ? 'mon' : 'boss', id, tier: b.tier || 'boss', fly: !!b.fly, targetPx: Math.round(px), focus: b.focus || 'eye' } }, asJob);
   };
   /** ボスの登録（ファイルの読み込み順に依らない）。keys = 登録するキーの一覧 */
   BZ.defBoss = function (id, spec, keys) {
     BZ.BOSSES[id] = spec;
-    for (const k of keys || ['hd:boss:' + id]) (BZ._pending = BZ._pending || []).push([k, (opts) => BZ.bakeBoss(id, opts), { kind: k.split(':')[1], owner: 'BEAST', boss: id }]);
+    for (const k of keys || ['hd:boss:' + id]) (BZ._pending = BZ._pending || []).push([k, (opts) => BZ.bakeBoss(id, opts, true), { kind: k.split(':')[1], owner: 'BEAST', boss: id }]);
     (BZ.BOSS_KEYS = BZ.BOSS_KEYS || []).push((keys || ['hd:boss:' + id])[0]);
   };
   // boss/*.js は名前順でこのファイルより先に読まれるので、BZ._bossDefs に積んだ物をここで登録する

@@ -247,6 +247,7 @@
       const py0 = Math.max(0, Math.floor(b[1] * sc + oy) - 1), py1 = Math.min(H - 1, Math.ceil(b[3] * sc + oy) + 1);
       const t = c.t;
       for (let py = py0; py <= py1; py++) {
+        if (S && (py & 15) === 15 && S.clk()) yield;
         const my = (py + 0.5 - oy) / sc;
         if (!span(c, my)) continue;
         let xs = px0, xe = px1;
@@ -307,6 +308,7 @@
     const k0 = key[0], k1 = key[1], k2 = key[2], rm0 = rim[0], rm1 = rim[1];
     const mul0 = L.mul[0], mul1 = L.mul[1], mul2 = L.mul[2], rimK = L.rimK, pts = L.pts, npl = pts.length, wk = o.wk || 1;
     const sat = o.sat, tint = o.tint, tones = o.tones;
+    if (S && S.clk()) yield;
     const cv = mk(W, H);
     const cx = cv.getContext('2d'), img = cx.createImageData(W, H), D = img.data;
     for (let y = oY0; y <= oY1; y++) {
@@ -398,6 +400,7 @@
         }
       }
     }
+    if (S && S.clk()) yield;
     cx.putImageData(img, 0, 0);
     if (o.ssaa > 1) {
       const c2 = mk(Math.ceil(W / o.ssaa), Math.ceil(H / o.ssaa));
@@ -428,5 +431,5 @@
   /** render の結果 {canvas, ox, oy} → Sheet のコマ {c, ox, oy}（ox, oy は整数に丸める） */
   function frame(r, anchors) { const f = { c: r.canvas, ox: Math.round(r.ox), oy: Math.round(r.oy) }; if (anchors) f.anchors = anchors; return f; }
 
-  Hd.RZ = { Builder, render, job, mat, ramp, hex, mix, clamp, rng, vnoise, seed, frame, canvas: mk, norm3 };
+  Hd.RZ = { Builder, render, job, gen: renderGen, mat, ramp, hex, mix, clamp, rng, vnoise, seed, frame, canvas: mk, norm3 };
 })(window.RPG);

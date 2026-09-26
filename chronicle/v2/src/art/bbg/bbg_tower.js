@@ -6,8 +6,9 @@
   const K = (BZ.bbg = BZ.bbg || {});
   const def = {
     mood: 'tower', ambient: 'rgb(108,98,172)', geo: { clearRx: 13, gt: 206 },
-    bake(g, L, c) {
+    *bake(g, L, c) {
       const { W, H, RZ } = c, R_ = RZ.rng(63), s = g.s, { vnoise, clamp, mix, ramp, hex } = RZ;
+      yield* K.tick();
       // ---- back: 湾曲した石の壁（夜の色で焼く。窓の外だけ空）
       const back = K.mk(W, H), bx = back.getContext('2d');
       const sky = K.mk(W, g.GT), sx = sky.getContext('2d');
@@ -17,7 +18,7 @@
       const img = bx.createImageData(W, g.GT), D = img.data;
       const stone = ramp(['#16121e', '#241e2e', '#342c3e', '#463c4e', '#5a4e5e', '#706272'], 8);
       const skyD = sx.getImageData(0, 0, W, g.GT).data;
-      for (let y = 0; y < g.GT; y++) for (let x = 0; x < W; x++) {
+      for (let y = 0; y < g.GT; y++) { if ((y & 3) === 0) yield* K.tick(); for (let x = 0; x < W; x++) {
         const q = (y * W + x) * 4;
         if (inWin(x, y)) { D[q] = skyD[q]; D[q + 1] = skyD[q + 1]; D[q + 2] = skyD[q + 2]; D[q + 3] = 255; continue; }
         const th = (x - W / 2) / W * 2.2;                       // 壁の丸み（中ほどが手前）
@@ -37,7 +38,7 @@
         let cc = stone[clamp(Math.round(l * 7), 0, 7)];
         cc = mix(cc, [40, 44, 90], 0.25);
         D[q] = cc[0]; D[q + 1] = cc[1]; D[q + 2] = cc[2]; D[q + 3] = 255;
-      }
+      } }
       bx.putImageData(img, 0, 0);
       // 窓の格子と窓台、壁の燭台、石の段（奥）
       { const B = new RZ.Builder(), iron = K.EM('iron'), stoneM = K.EM('stone', { keys: ['#1a1622', '#2c2636', '#443c4c', '#5e5464', '#7a6e7c', '#9a8e98'] });
@@ -52,11 +53,12 @@
         }
         // 奥のらせん階段（右の壁に沿う段）
         for (let i = 0; i < 7; i++) { const x = W * 0.72 + i * 14 * s, y = g.GT - 8 * s - i * 12 * s; B.rect(x, y, 16 * s, 5 * s, stoneM, 2.4 + i * 0.01); }
-        K.blit(bx, RZ.render(B, { light: K.LIGHT, tones: 5, olMix: 0.82, sat: 0.8 }), 0, 0); }
+        K.blit(bx, yield* K.renderG(B, { light: K.LIGHT, tones: 5, olMix: 0.82, sat: 0.8 }), 0, 0); }
       bx.globalCompositeOperation = 'multiply'; bx.fillStyle = 'rgb(150,140,190)'; bx.fillRect(0, 0, W, g.GT);
       bx.globalCompositeOperation = 'source-over';
+      yield* K.tick();
       // ---- ground: 敷石（放射と同心の目地）
-      const ground = K.ground(g, {
+      const ground = yield* K.groundG(g, {
         a: ['#3a3440', '#524a56', '#6c626c', '#877c84', '#a2969a', '#bcb0b0'], b: ['#4a3e3c', '#665650', '#846e62', '#a08874', '#b8a08a', '#d0bca4'], seed: 14, far: [70, 64, 96], farK: 0.75, pebbles: false, wallShadow: 26,
         pix: (col, u, v) => {
           const r = Math.hypot(u * 0.9, (v - 16) * 2.4), a = Math.atan2(v - 16, u);
@@ -73,15 +75,17 @@
         const barrel = (x, y, k) => { B.cap(x, y - 2 * k, x, y - 16 * k, 7 * k, 7 * k, wood, 1); [4, 12].forEach((d) => B.cap(x - 7 * k, y - d * k, x + 7 * k, y - d * k, 0.9 * k, 0.9 * k, K.EM('iron'), 1.1)); };
         barrel(W * 0.08, g.GT + 34 * s, s * 1.1); barrel(W * 0.93, g.GT + 50 * s, s * 1.2);
         B.rect(W * 0.14, g.GT + 20 * s, 18 * s, 14 * s, wood, 1);
-        K.blit(gx, RZ.render(B, { light: K.LIGHT, tones: 5, olMix: 0.82, sat: 0.8 }), 0, 0); }
+        K.blit(gx, yield* K.renderG(B, { light: K.LIGHT, tones: 5, olMix: 0.82, sat: 0.8 }), 0, 0); }
       const lr = K.lantern(1.3 * K.scaleAt(g, L.lantern.y) * s / 1.205);
       K.blit(gx, lr, L.lantern.x, L.lantern.y);
+      yield* K.tick();
       // ---- front: 手前の石柱の影（左右の端、ぼかす）
       const front = K.mk(W, H), fx = front.getContext('2d');
       { const B = new RZ.Builder(), st = K.EM('stone', { keys: ['#161220', '#261e30', '#3a3044', '#52465a', '#6c5e70', '#8a7c8a'] });
         B.cap(-6 * s, H + 10, -10 * s, -10, 20 * s, 20 * s, st, 1);
         B.cap(W + 8 * s, H + 10, W + 10 * s, -10, 18 * s, 18 * s, st, 1);
-        K.blit(fx, RZ.render(B, { light: K.LIGHT, tones: 5, olMix: 0.82, sat: 0.8 }), 0, 0); }
+        K.blit(fx, yield* K.renderG(B, { light: K.LIGHT, tones: 5, olMix: 0.82, sat: 0.8 }), 0, 0); }
+      yield* K.tick();
       // ---- post: 燭台の灯・窓の月明かりの筋・舞う埃・ランタン
       const post = K.mk(W, H), px = post.getContext('2d');
       for (const sxp of [W * 0.62, W * 0.9]) { K.glow(px, sxp, 120 * s - 3 * s, 60 * s, [255, 180, 100], 0.55); K.glow(px, sxp, 120 * s - 3 * s, 8 * s, [255, 240, 200], 0.9); }
@@ -93,7 +97,7 @@
       K.fireflies(px, 18, [W * 0.2, 40 * s, W * 0.4, g.GT + 80 * s], 13, [[200, 210, 255], [255, 230, 190]], 0.6);
       K.glow(px, L.lantern.x, L.lantern.y - 9 * s, 100 * s, [255, 190, 110], 0.5);
       K.glow(px, L.lantern.x, L.lantern.y - 9 * s, 20 * s, [255, 240, 200], 0.85);
-      return { back, ground, front: K.soften(front, 4), post };
+      return { back, ground, front: yield* K.softenG(front, 4), post };
     },
   };
   const PI2 = Math.PI * 2;

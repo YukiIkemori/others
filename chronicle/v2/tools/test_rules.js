@@ -136,7 +136,11 @@ section('§8 weapon types and slots (A29)');
   const w = Object.values(DB.items).filter((it) => it.slot === 'weapon');
   const by = {}; for (const it of w) by[it.wtype] = (by[it.wtype] || 0) + 1;
   ok('every weapon is one of the 5 types', w.every((it) => K.WTYPES.includes(it.wtype)), by);
-  ok('type counts near §8.3 (sword ~60, greatsword ~55–62, dagger 35, bow 30, staff 46)', by.sword >= 50 && by.greatsword >= 50 && by.dagger >= 35 && by.bow >= 30 && by.staff >= 46, by);
+  // §8.3 の数（sword ~60, greatsword ~55–62, dagger 35, bow 30, staff 46）から §10.1 で消した魔物の武器（trim_10_1.json）を引いた数
+  const TRIM = require('./port/trim_10_1.json').deleted;
+  const tw = {}; for (const id of TRIM) { const m = /^w_([a-z]+)_/.exec(id); if (m) tw[m[1]] = (tw[m[1]] || 0) + 1; }
+  const need = { sword: 50, greatsword: 50, dagger: 35, bow: 30, staff: 46 };
+  ok('type counts near §8.3 after the §10.1 trim', Object.keys(need).every((k) => by[k] >= need[k] - (tw[k] || 0) && by[k] >= 15), { by, trimmed: tw });
   ok('no axe / spear ids left', !Object.keys(DB.items).some((id) => /^w_(axe|spear)_/.test(id)));
   ok('maul line w_greatsword_club + maul_1..9 (blunt, 1.35)', DB.items.w_greatsword_club && [1, 2, 3, 4, 5, 6, 7, 8, 9].every((T) => DB.items[`w_greatsword_maul_${T}`] && DB.items[`w_greatsword_maul_${T}`].kind === 'blunt' && DB.items[`w_greatsword_maul_${T}`].mult === 1.35));
   ok('rapier astat str+dex', JSON.stringify(DB.items.w_sword_coral.astat) === '["str","dex"]' && DB.items.w_sword_coral.art === 'rapier');
@@ -248,7 +252,8 @@ section('data: techs and spells');
 section('data: items');
 {
   const ids = Object.keys(DB.items).filter((id) => DB.items[id].slot !== 'key');
-  ok('about 1060 items (1024 ported + 36 steal + 6 unique)', ids.length >= 1060, ids.length);
+  const trimmed = require('./port/trim_10_1.json').deleted.length;
+  ok('about 1060 items (1024 ported + 36 steal + 6 unique) less the §10.1 trim (' + trimmed + ')', ids.length >= 1060 - trimmed && trimmed >= 150 && trimmed <= 200, ids.length);
   const bad = ids.filter((id) => !chk('item', DB.items[id]).ok);
   ok('every item fits K.item', !bad.length, bad.slice(0, 5).map((id) => [id, chk('item', DB.items[id]).errors]));
   const badIcon = ids.filter((id) => !C.ICONS.includes(DB.items[id].icon));
@@ -401,6 +406,36 @@ section('glimmer');
   ok('chance in (0, cap]', p > 0 && p <= K.GLIM.cap, p);
   ok('learn adds once', R.Glimmer.learn(h, cands[0].id, { quiet: true }) && !R.Glimmer.learn(h, cands[0].id, { quiet: true }) && h.techs.includes(cands[0].id));
   ok('params: boss EF 2.5, rankB = Tb + 1 + 2', (() => { const q = R.Glimmer.params([{ side: 'enemy', boss: true }], 0); return q.ef === 2.5 && q.rankB === 3; })());
+}
+
+section('§10.1 drop slots and chest pools (A30)');
+{
+  const mobs = Object.entries(DB.monsters).filter(([id, m]) => !/^(b_|rm_)/.test(id) && !(m.flags || []).includes('boss') && !(m.flags || []).includes('rare'));
+  const rs = mobs.filter(([, m]) => m.drops && m.drops.rare).length / mobs.length, ss = mobs.filter(([, m]) => m.drops && m.drops.super).length / mobs.length;
+  ok('rare slots on about 25% of normal monsters, super about 9%', rs >= 0.2 && rs <= 0.3 && ss >= 0.06 && ss <= 0.12, { rs, ss });
+  const T = require('./port/trim_10_1.json');
+  ok('trimmed items are gone', T.deleted.every((id) => !DB.items[id]));
+  const pooled = new Set(); for (const p of Object.values(DB.pools)) for (const t of p.tiers) for (const e of t) if (e.item) pooled.add(e.item);
+  ok('kept monster items (≈30 rare, ≈30 super) are in chest pools', T.rareToChest.every((id) => pooled.has(id)) && T.superToChest.every((id) => pooled.has(id)) && T.rareToChest.length >= 25 && T.superToChest.length >= 25);
+  const dropped = new Set(); for (const m of Object.values(DB.monsters)) for (const k of ['normal', 'rare', 'super']) if (m.drops && m.drops[k] && m.drops[k].item) dropped.add(m.drops[k].item);
+  ok('p_super has no item a monster drops (H2)', DB.pools.p_super.tiers.every((t) => t.every((e) => !dropped.has(e.item))));
+  ok('p_super has items at every tier', DB.pools.p_super.tiers.every((t) => t.length > 0));
+  ok('no pool holds a steal-only item', [...pooled].every((id) => DB.items[id].src !== 'steal'));
+}
+
+section('fieldUse・new items (MENUS 50, CONTENT-F 64)');
+{
+  R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'アルン', fav: 'sword' }, seed: 4 });
+  const h = R.Game.chars.hero, mx = R.Rules.stats(h).maxHp;
+  h.hp = 1;
+  const r = R.Rules.fieldUse(DB.items.i_salve, null, [h]);
+  ok('fieldUse heal: hp up, {changed, lines}', r.changed && r.lines.length === 1 && h.hp > 1 && h.hp <= mx, r);
+  h.hp = 0;
+  R.Rules.fieldUse(DB.items.i_revive, null, [h]);
+  ok('fieldUse revive: back on its feet', h.hp >= 1 && Array.isArray(h.status));
+  h.hp = mx;
+  ok('fieldUse on a full char: no change', !R.Rules.fieldUse(DB.items.i_salve, null, [h]).changed);
+  ok('ac_climb_shoes: acc, normal, K.item', DB.items.ac_climb_shoes && DB.items.ac_climb_shoes.slot === 'acc' && chk('item', DB.items.ac_climb_shoes).ok);
 }
 
 done('test_rules');
