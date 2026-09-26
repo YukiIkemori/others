@@ -276,9 +276,9 @@ function battleScene(anim) {
     PP.lightmap('rgb(214,214,226)', [{ x: 420, y: 330, r: 560, c: 'rgba(60,52,30,1)', sy: 0.6 }, { x: 800, y: 380, r: 300, c: 'rgba(40,36,24,1)', sy: 0.6 }]);
     // foreground layer (close to the camera, out of focus)
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
-    spr('fg.ferns', 50, F + 6, 1, { filter: 'blur(3px) brightness(0.55)', devH: PIX ? undefined : 180 });
-    spr('fg.rock', 990, F + 4, 1, { filter: 'blur(3px) brightness(0.5)', devH: PIX ? undefined : 130 });
-    spr('fg.flowers', 880, F + 10, 1, { filter: 'blur(2.5px) brightness(0.6)', devH: PIX ? undefined : 120 });
+    spr('fg.ferns', 50, F + 6, 1, { filter: 'blur(2.5px) brightness(0.8)', devH: PIX ? undefined : 190 });
+    spr('fg.rock', 990, F + 4, 1, { filter: 'blur(2.5px) brightness(0.75)', devH: PIX ? undefined : 140 });
+    spr('fg.flowers', 880, F + 10, 1, { filter: 'blur(2px) brightness(0.85)', devH: PIX ? undefined : 130 });
     spr('fg.branch', 1010, 150, 1, { filter: 'blur(4px) brightness(0.45)', ax: 1, ay: 1, devH: PIX ? undefined : 170 });
     ctx.restore();
     PP.dust(40, 60, 1000, 560, 70);
@@ -400,7 +400,7 @@ function town() {
   groundLayer('ground.' + G.FLOWERS, 64, [rect(250, 232, 100, 70, 24), rect(-10, 238, 76, 70, 24)], 5);
   const items = [
     ['town.house', 74, 140], ['town.shop', 272, 140], ['town.house', 62, 318], ['town.shop', 296, 318],
-    ['town.tree', 18, 150], ['town.tree', 330, 150], ['town.tree', 232, 60], ['town.tree', 118, 40],
+    ['town.tree', 18, 150], ['town.tree', 330, 150], ['town.house', 300, 52], ['town.shop', 50, 52], ['town.tree', 226, 70], ['town.tree', 118, 40],
     ['town.well', 246, 186], ['town.lamp', 136, 150], ['town.lamp', 216, 150], ['town.lamp', 136, 214],
     ['town.bush', 114, 142], ['town.bush', 236, 146], ['town.crates', 312, 172], ['town.bench', 104, 208], ['town.pot', 128, 146], ['town.pot', 226, 146],
     ['town.fence', 262, 228], ['town.fence', 280, 228], ['town.fence', 22, 232],
@@ -489,7 +489,7 @@ function dungeon() {
   drawObjects(items, { skew: 0, len: 0.5, alpha: 0.4 });
   if (FX) {
     const T1 = toDev(124, 50), T2 = toDev(220, 50), C = toDev(262, 190), HERO = toDev(172, 186);
-    PP.lightmap('rgb(34,38,62)', [
+    PP.lightmap('rgb(52,56,86)', [
       { x: T1.x, y: T1.y + 60, r: 330, c: 'rgba(255,160,80,1)', core: 0.2, c2: 'rgba(190,100,50,1)' },
       { x: T2.x, y: T2.y + 60, r: 330, c: 'rgba(255,160,80,1)', core: 0.2, c2: 'rgba(190,100,50,1)' },
       { x: C.x, y: C.y, r: 170, c: 'rgba(255,190,110,1)', core: 0.2, c2: 'rgba(150,100,60,1)' },
