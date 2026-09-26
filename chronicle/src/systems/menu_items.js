@@ -361,7 +361,7 @@
       L[1] = { text: segs.map((s) => s.text).join(''), segs };
     }
     const reach = !tech || !!a.reach;
-    L[2] = { text: '対象：' + (TARGET_NAMES[a.target] || '―') + '　中列から：' + (reach ? '届く' : '届かない') };
+    L[2] = { text: '対象：' + (TARGET_NAMES[a.target] || '―') + '　後列から：' + (reach ? '届く' : '届かない') };
     // the first damage / heal / revive effect
     const effs = a.effects || [];
     const dmg = effs.find((e) => e.type === 'damage');

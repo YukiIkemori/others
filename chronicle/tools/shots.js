@@ -310,7 +310,7 @@ def(19, '隠し通路を見つけた瞬間', async (X) => {
 
 // ---- #8–#13, #22b battle screens (bui fixture scenarios)
 const BUI_SHOTS = [
-  [8, 'command', { party_menu: '08_battle_command', member_menu_hero: '08_battle_member_menu' }, '4 人（5 字の名前 2 人・中列 2 人・状態 2 つ・戦闘不能 1 人）'],
+  [8, 'command', { party_menu: '08_battle_command', member_menu_hero: '08_battle_member_menu' }, '4 人（5 字の名前 2 人・後列 2 人・状態 2 つ・戦闘不能 1 人）'],
   [9, 'techs', { tech_list_8char_wp_short: '09_battle_tech_list', tech_list: '09_battle_tech_list_top' }, '8 字の技名・WP の足りない技'],
   [10, 'glimmer', { glimmer_f12: '10_glimmer', glimmer_f32: '10_glimmer_b' }, '技名の札が開いた瞬間'],
   [10, 'glimmer_oogi', { glimmer_oogi_f12: '10_glimmer_oogi' }, '奥義の閃き'],

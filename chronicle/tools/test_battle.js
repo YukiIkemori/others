@@ -64,7 +64,7 @@ guard('constants', () => {
   ok(e.dk === 90 && e.lv === 10 && e.tier === 2, 'DK(Lb) = 40 + 5 Lb (Lb 10 → 90)');
   ok(B.K('ROW').middleTaken === 0.7 && B.K('ROW').weight.front === 2 && B.K('ROW').weight.middle === 1, 'row constants (0.7, 2 : 1)');
   ok(B.K('RESERVE_RATE') === 0.6 && B.K('DEFEND') === 0.5, 'reserve 60 %, defend × 0.5');
-  ok(typeof B.reasonText('wp') === 'string' && B.reasonText('reach') === '中列からは届かない。', 'reason texts');
+  ok(typeof B.reasonText('wp') === 'string' && B.reasonText('reach') === '後列からは届かない。', 'reason texts');
 });
 
 // ================================================================ R.Mon
@@ -1256,7 +1256,7 @@ guard('6.9.1-10', () => {
   ok(!AI.abilityOptions(ux, uh).some((o) => o.id === 'tb_t_cut'), 'the AI does not offer it');
   const hp0 = Mo(ux, 0).hp;
   ev = quiet(() => use(ux, uh, 'tb_t_cut', Mo(ux, 0), { slot: 'weapon1' }));
-  ok(Mo(ux, 0).hp === hp0 && count(ev, 'dmg') === 0 && uh.wp === 99 && said(ev, '中列からは届かない'), 'used anyway: refused, no damage, no WP');
+  ok(Mo(ux, 0).hp === hp0 && count(ev, 'dmg') === 0 && uh.wp === 99 && said(ev, '後列からは届かない'), 'used anyway: refused, no damage, no WP');
   um.wp = 99; um.status.silence = true; um.turns.silence = 3;
   ok(ux.unusable(um, 'tb_t_mind', 'weapon1') === 'silence', "silenced: a staff (magic) tech → 'silence'");
   ok(!AI.abilityOptions(ux, um).some((o) => o.id === 'tb_t_mind'), 'the AI does not offer it while silenced');

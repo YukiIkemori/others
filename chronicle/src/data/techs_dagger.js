@@ -18,7 +18,7 @@
       fx: 'poison', rank: 2, glim: { lv: 2, from: ['t_dagger_vital'] },
     },
     t_dagger_knives: {
-      kind: 'tech', wtype: 'dagger', name: '刃つぶて', desc: '小刀を2本投げる。中列からも届く。', wp: 3, target: 'random', reach: true,
+      kind: 'tech', wtype: 'dagger', name: '刃つぶて', desc: '小刀を2本投げる。後列からも届く。', wp: 3, target: 'random', reach: true,
       effects: [{ type: 'damage', power: 0.9, hits: 2 }],
       fx: 'pierce', rank: 3, glim: { lv: 3, from: ['t_dagger_filch'] },
     },

@@ -3,7 +3,7 @@
   'use strict';
   Object.assign(R.DB.actions, {
     t_staff_mind: {
-      kind: 'tech', wtype: 'staff', name: '念じ打ち', desc: '術力で打つ念の一撃。中列からも届く。', wp: 1, target: 'enemy', reach: true, magic: true,
+      kind: 'tech', wtype: 'staff', name: '念じ打ち', desc: '術力で打つ念の一撃。後列からも届く。', wp: 1, target: 'enemy', reach: true, magic: true,
       effects: [{ type: 'damage', formula: 'magic', power: 1.2 }],
       fx: 'magic', rank: 1, glim: { lv: 1, from: ['attack'] },
     },

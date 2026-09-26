@@ -95,7 +95,7 @@
       elem: { water: 1.5, wind: 0.75, light: 0.25, dark: 1.5 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_arrow', w: 3 }],
       drops: { normal: { item: 'i_clear', rate: 8 }, rare: { item: 'w_bow_star', rate: 32 }, super: { item: 'w_bow_sr_clockwork', rate: 256 } },
-      desc: '弓を組みこまれたからくり兵。\n中列の者もねらってくる。',
+      desc: '弓を組みこまれたからくり兵。\n後列の者もねらってくる。',
     },
     automaton_3: {
       name: 'からくり術兵', sprite: 'automaton_3', lineage: 'automaton', stage: 3, lv: 31, size: 'm', race: 'construct', affinity: 'light',

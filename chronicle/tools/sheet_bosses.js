@@ -113,8 +113,8 @@ window.SHEET = (function () {
   const PARTY = [
     { name: 'アルン', hp: 212, mp: 18, wp: 24, row: '前' },
     { name: 'ブリギッタ', hp: 187, mp: 6, wp: 31, row: '前' },
-    { name: 'マルタ', hp: 141, mp: 45, wp: 9, row: '中' },
-    { name: 'シルヴァン', hp: 96, mp: 99, wp: 18, row: '中' },
+    { name: 'マルタ', hp: 141, mp: 45, wp: 9, row: '後' },
+    { name: 'シルヴァン', hp: 96, mp: 99, wp: 18, row: '後' },
   ];
   const sink = (h) => Math.max(0, Math.min(20, Math.round((h - 64) / 2.4)));
   function backdrop(bg) {

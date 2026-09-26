@@ -173,14 +173,14 @@
         const tgt = (Menu.TARGET_NAMES && Menu.TARGET_NAMES[a.target]) || '―';
         const reach = !tech || !!a.reach;
         if (tech) {
-          Kt.fitText('対象：' + tgt + '　中列から：' + (reach ? '届く' : '届かない'), x + 10, y + 20, 228);
+          Kt.fitText('対象：' + tgt + '　後列から：' + (reach ? '届く' : '届かない'), x + 10, y + 20, 228);
           Kt.fitText(String(a.desc || '').split('\n')[0], x + 10, y + 34, 228);
           G().text(kindText, x + 10, y + 48, { color: Kt.COL.sub });
         } else {
           Kt.drawSegs(elemSegs(), x + 10, y + 20, 110);
           Kt.fitText('対象：' + tgt, x + 238, y + 20, 110, { align: 'right' });
           Kt.fitText(String(a.desc || '').split('\n')[0], x + 10, y + 34, 228);
-          G().text(a.field ? '移動中にも使える。' : '中列からも届く。', x + 10, y + 48, { color: Kt.COL.sub });
+          G().text(a.field ? '移動中にも使える。' : '後列からも届く。', x + 10, y + 48, { color: Kt.COL.sub });
         }
         const who = knowers(this.kind, id);
         Kt.fitText(who.length ? '覚えている：' + who.map((c) => c.name).join('　') : 'まだ誰も覚えていない。', x + 10, y + 62, 228,

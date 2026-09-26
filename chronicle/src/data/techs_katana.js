@@ -38,7 +38,7 @@
       fx: 'slash3', rank: 6, glim: { lv: 6, from: ['t_katana_fold', 't_katana_riposte'] },
     },
     t_katana_void: {
-      kind: 'tech', wtype: 'katana', name: '虚空斬り', desc: '見えない刃で斬る。中列からも届く。', wp: 6, target: 'enemy', reach: true,
+      kind: 'tech', wtype: 'katana', name: '虚空斬り', desc: '見えない刃で斬る。後列からも届く。', wp: 6, target: 'enemy', reach: true,
       effects: [{ type: 'damage', power: 2.2, critBonus: 10 }],
       fx: 'wind2', rank: 7, glim: { lv: 7, from: ['t_katana_dash', 't_katana_steel'] },
     },

@@ -206,8 +206,8 @@ process.on("exit", (c) => { if (!global.__done) console.log("[test ended early (
     'right*9,a', // brigitta (10th: row 1, column 10)
     'b', // B removes the last choice
     'a', // brigitta again
-    'down,a', // marta (20th: ↓ keeps the column, row 2)
-    'left*9,a', // sylvain (11th: row 2, column 1) → 3 chosen → この3人と旅立ちますか？
+    'down,left,a', // marta (19th: ↓ keeps the column on row 2, ← one step)
+    'left*8,a', // sylvain (11th: row 2, column 1) → 3 chosen → この3人と旅立ちますか？
     async () => { ok(topName() === 'ChoiceLayer', 'T1 the yes/no after three picks', topName()); },
     'a', // はい
     'a*6', // join lines (3 × 2)
@@ -219,7 +219,7 @@ process.on("exit", (c) => { if (!global.__done) console.log("[test ended early (
   const g0 = R.Game;
   R.NGFixture.game();
   reset();
-  r = await drive(() => TV.chooseStart({ count: 3, recruit: false, announce: false, advice: false }), ['a', 'right,a', 'right,a', 'right,a', 'right,a', 'left,a', 'right,a', 'a'], { settle: 20 });
+  r = await drive(() => TV.chooseStart({ count: 3, recruit: false, announce: false, advice: false }), ['a', 'right,a', 'right,a', 'down,a', 'right,a', 'left,a', 'right,a', 'a'], { settle: 20 });
   eq([r.value, R.Game.party.length], [['selma', 'hagen', 'basil'], 1], 'T5 recruit:false returns ids only; a 4th pick is refused, re-pressing un-picks');
   R.Game = g0;
   reset();

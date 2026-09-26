@@ -20,8 +20,8 @@
   const APT = { S: '#ffd24a', A: '#6ee07a', B: '#ffffff', C: '#a0a0a8', D: '#707080' };
   const STATS = ['str', 'vit', 'dex', 'agi', 'int', 'mnd'];
   const STAT_NAMES = { str: '腕力', vit: '体力', dex: '器用さ', agi: '素早さ', int: '知力', mnd: '精神' };
-  const ROLE_NAMES = { guard: '前衛・重', striker: '前衛・軽', ranged: '中列・武器', caster: '術・攻め', healer: '術・癒やし', hybrid: '武器と術' };
-  const ROW_NAMES = { front: '前列', middle: '中列' };
+  const ROLE_NAMES = { guard: '前衛・重', striker: '前衛・軽', ranged: '後列・武器', caster: '術・攻め', healer: '術・癒やし', hybrid: '武器と術' };
+  const ROW_NAMES = { front: '前列', middle: '後列' };
   const REACH_ANY = { spear: 1, bow: 1, whip: 1 };
   // names used until the item / action owners have registered theirs (DESIGN §5.1.2〜§5.1.4)
   const ITEM_NAMES = {
@@ -108,7 +108,7 @@
       g.rect(x, y, 13, 12, col);
       g.ctx.globalAlpha = 1;
       g.rect(x, y + 11, 13, 1, col);
-      g.text(mid ? '中' : '前', x + 1, y, { color: col });
+      g.text(mid ? '後' : '前', x + 1, y, { color: col });
     },
     /** letters of a def with the favour applied (heroes) or as written (companions) */
     aptOf(c) {

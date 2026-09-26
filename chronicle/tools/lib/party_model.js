@@ -690,7 +690,7 @@ const COMBOS = [
   { no: 1, name: '標準', heroType: 'warrior', favor: { kind: 'weapon', id: 'sword' }, members: ['brigitta', 'marta', 'sylvain'] },
   { no: 2, name: '全員術師', heroType: 'mage', favor: { kind: 'element', id: 'fire' }, members: ['teo', 'ilse', 'morga'] },
   { no: 3, name: '回復なしの前衛', heroType: 'warrior', favor: { kind: 'weapon', id: 'greatsword' }, members: ['hagen', 'rouga', 'titta'] },
-  { no: 4, name: '全員中列', heroType: 'ranger', favor: { kind: 'weapon', id: 'bow' }, members: ['brigitta', 'sylvain', 'zafira'] },
+  { no: 4, name: '全員後列', heroType: 'ranger', favor: { kind: 'weapon', id: 'bow' }, members: ['brigitta', 'sylvain', 'zafira'] },
   { no: 5, name: '重装の壁', heroType: 'warrior', favor: { kind: 'weapon', id: 'club' }, members: ['selma', 'dokka', 'bartolo'] },
   { no: 6, name: '回復だらけ', heroType: 'mage', favor: { kind: 'element', id: 'light' }, members: ['marta', 'noela', 'basil'] },
   { no: 7, name: '万能型', heroType: 'wanderer', favor: { kind: 'weapon', id: 'spear' }, members: ['viola', 'ferno', 'belladonna'] },

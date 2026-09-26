@@ -61,9 +61,9 @@
   const STAT_NAME = { str: '腕力', vit: '体力', dex: '器用さ', agi: '素早さ', int: '知力', mnd: '精神' };
   const LOCAL_WT_DESC = {   // §6.8.1 の desc の控え（weapontypes.js が読めないとき）
     sword: '片手持ち。盾と合わせて攻守に強い。', greatsword: '両手持ち。重い一撃で敵をなぎ倒す。', dagger: '器用さで戦う。会心が出やすい。',
-    axe: '命中は低いが、一撃の威力が高い。', spear: '両手持ち。中列からでも届く。', bow: '両手持ち。中列から確実に射る。',
+    axe: '命中は低いが、一撃の威力が高い。', spear: '両手持ち。後列からでも届く。', bow: '両手持ち。後列から確実に射る。',
     club: '打撃で、硬い敵や骨の敵に強い。', staff: '術の威力を高める。杖の技は術に近い。', katana: '腕力と器用さで戦う。会心が出やすい。',
-    fist: '拳で戦う。腕力と素早さが大事。', whip: '中列から届き、敵の動きを乱す。',
+    fist: '拳で戦う。腕力と素早さが大事。', whip: '後列から届き、敵の動きを乱す。',
   };
   const gearStat = (T, n, grade) => Math.max(1, Math.round(n * LK.U[T])) * LK.GRADE_MULT[grade || 'normal'];
 

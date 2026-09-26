@@ -258,7 +258,7 @@ section('技の候補（§4.9.3・§6.4.4）');
     ok(x.w === want, `重み ${x.id} = ${want}（from ×3・一番低い格 ×2）`);
   }
   const midCs = G.candidates(w, Object.assign({}, ctx, { row: 'middle' }));
-  ok(midCs.every((x) => S(x.id).reach === true), '中列では reach:false の技を外す（§6.4.4-1）');
+  ok(midCs.every((x) => S(x.id).reach === true), '後列では reach:false の技を外す（§6.4.4-1）');
   const st = H.makeChar({ id: 'teo', level: 30, wprof: { staff: PTS(9) } });
   const stc = Object.assign({}, base, { kind: 'tech', wtype: 'staff', used: 'attack', rankB: 10 });
   ok(G.candidates(st, stc).length > 0 && G.candidates(st, Object.assign({}, stc, { silenced: true })).every((x) => !S(x.id).magic), '沈黙なら magic:true の技（杖）を外す');

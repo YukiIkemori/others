@@ -31,7 +31,7 @@
     if (icon) G.draw(icon, 14, y0 + 10, { w: 8, h: 8 });
     else G.text('？', 12, y0 + 7, { color: G.C.red });
     G.text(`${WT.name}　${w}`, 26, y0 + 7, { color: G.C.yellow });
-    const tags = [WT.twoHanded ? '両手持ち' : '片手持ち', { slash: '斬', blunt: '打', pierce: '突' }[WT.kind], WT.reach ? '中列から届く' : '前列から'];
+    const tags = [WT.twoHanded ? '両手持ち' : '片手持ち', { slash: '斬', blunt: '打', pierce: '突' }[WT.kind], WT.reach ? '後列から届く' : '前列から'];
     G.text(tags.join('・'), 244, y0 + 7, { align: 'right', color: G.C.cyan });
     G.text(WT.desc, 14, y0 + 22);
     // help strips, one per tech (battle: window(8, HELP.y, 240, 19), text at +10,+4, max 220)
@@ -70,7 +70,7 @@
     // middle row: page with the most reach:false techs greyed, cursor on the first usable tech
     const mid = items(true);
     const firstOk = Math.max(0, mid.findIndex((it) => !it.disabled));
-    page(mid, firstOk >= 6 ? 3 : 0, y, WT.name + '（中列）', firstOk);
+    page(mid, firstOk >= 6 ? 3 : 0, y, WT.name + '（後列）', firstOk);
     return list;
   }
 

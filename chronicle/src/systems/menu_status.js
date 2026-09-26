@@ -194,7 +194,7 @@
         Kt.fitText(c.name, 34, 10, 58, { color: Kt.condColor(c) });
         G().text('Lv' + c.level, 118, 10, { align: 'right' });
         const row = Kt.effectiveRow(c);
-        G().text(row === 'middle' ? '中列' : '前列', 126, 10, { color: row === 'middle' ? G().C.cyan : G().C.orange });
+        G().text(row === 'middle' ? '後列' : '前列', 126, 10, { color: row === 'middle' ? G().C.cyan : G().C.orange });
         if (c.hp <= 0) G().text('戦闘不能', 154, 10, { color: G().C.dead });
         G().text('ページ ' + (this.page + 1) + '/' + this.pages.length, 244, 10, { align: 'right', color: Kt.COL.sub });
         Kt.fitText(Kt.subtitle(c, true), 34, 24, 170, { color: Kt.COL.sub });
@@ -432,20 +432,20 @@
         G().window(156, 4, 96, 134, { title: '隊列' });
         G().text('前列', 166, 14, { color: G().C.orange });
         G().text(rows.filter((r) => r !== 'middle').length + '人', 242, 14, { align: 'right' });
-        G().text('中列', 166, 28, { color: G().C.cyan });
+        G().text('後列', 166, 28, { color: G().C.cyan });
         G().text(rows.filter((r) => r === 'middle').length + '人', 242, 28, { align: 'right' });
         const frontAlive = party.some((c) => c.hp > 0 && (c.row || 'front') !== 'middle');
         const lines = !rows.some((r) => r !== 'middle')
-          ? ['中列だけだと、', '全員が前列と', 'して戦う。']
+          ? ['後列だけだと、', '全員が前列と', 'して戦う。']
           : !frontAlive || eff.some((r, i) => r !== rows[i])
-            ? ['前列が全員', '倒れたので、', '中列が前に', '出て戦う。']
-            : ['前列が全員', '倒れると、', '中列が前に', '出て戦う。'];
+            ? ['前列が全員', '倒れたので、', '後列が前に', '出て戦う。']
+            : ['前列が全員', '倒れると、', '後列が前に', '出て戦う。'];
         // broken at phrase boundaries (compact menus raise size 8 to the readable floor, Part A11); wrap() only
         // as a guard for a phrase wider than the window
         G().wrap(lines.join('\n'), 82, 8).slice(0, 4).forEach((l, i) => G().text(l, 164, 50 + i * 14, { color: !frontAlive ? G().C.yellow : Kt.COL.gray, size: 8 }));
         G().text('Aで選ぶ', 164, 112, { color: Kt.COL.gray, size: 8 });
         G().window(4, 140, 248, 80);
-        ['前列：敵に狙われやすい。', '中列：受ける物理のダメージが減る。', '中列からは剣や斧などが届かない。', '槍・弓・鞭と術は、どこからでも届く。']
+        ['前列：敵に狙われやすい。', '後列：受ける物理のダメージが減る。', '後列からは剣や斧などが届かない。', '槍・弓・鞭と術は、どこからでも届く。']
           .forEach((l, i) => Kt.fitText(l, 14, 147 + i * 16, 228, { color: i ? '#ffffff' : '#ffffff' }));
       }
     }

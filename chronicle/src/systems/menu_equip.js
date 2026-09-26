@@ -240,7 +240,7 @@
         G().text('Lv' + c.level, 118, 10, { align: 'right' });
         Kt.fitText(Kt.subtitle(c), 34, 24, 150, { color: Kt.COL.sub });
         const row = Kt.effectiveRow(c);
-        G().text(row === 'middle' ? '中列' : '前列', 244, 10, { align: 'right', color: row === 'middle' ? G().C.cyan : G().C.orange });
+        G().text(row === 'middle' ? '後列' : '前列', 244, 10, { align: 'right', color: row === 'middle' ? G().C.cyan : G().C.orange });
         Kt.lrHint(244, 24);
       }
       drawSlots() {

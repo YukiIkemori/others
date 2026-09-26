@@ -13,7 +13,7 @@
       fx: 'slash2', rank: 1, glim: { lv: 1, from: ['attack'] },
     },
     t_axe_throw: {
-      kind: 'tech', wtype: 'axe', name: '回し投げ', desc: '斧を投げて2回当てる。中列からも届く。', wp: 3, target: 'random', reach: true,
+      kind: 'tech', wtype: 'axe', name: '回し投げ', desc: '斧を投げて2回当てる。後列からも届く。', wp: 3, target: 'random', reach: true,
       effects: [{ type: 'damage', power: 0.8, hits: 2 }],
       fx: 'slash', rank: 2, glim: { lv: 2, from: ['t_axe_cleave'] },
     },
@@ -43,7 +43,7 @@
       fx: 'slash3', rank: 7, glim: { lv: 7, from: ['t_axe_woodcut', 't_axe_cliff'] },
     },
     t_axe_storm: {
-      kind: 'tech', wtype: 'axe', name: '嵐投げ', desc: '斧を4回投げつける。中列からも届く。', wp: 8, target: 'random', reach: true,
+      kind: 'tech', wtype: 'axe', name: '嵐投げ', desc: '斧を4回投げつける。後列からも届く。', wp: 8, target: 'random', reach: true,
       effects: [{ type: 'damage', power: 0.65, hits: 4 }],
       fx: 'slash2', rank: 8, glim: { lv: 8, from: ['t_axe_throw', 't_axe_whirl'] },
     },

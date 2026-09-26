@@ -406,7 +406,7 @@
   }
   const GLIM_REACH = { wpMin: 0.5, perBattle: 2 };
   /**
-   * (d) 閃きねらい for a slot whose 攻撃 cannot reach (中列の杖): the cheapest known reach:true damage tech of that slot's
+   * (d) 閃きねらい for a slot whose 攻撃 cannot reach (後列の杖): the cheapest known reach:true damage tech of that slot's
    * weapon type (念じ打ち, WP 1), while that type still has glimmer candidates from the middle row — tried before the
    * 攻撃 of weapon 2 (§4.13.2-d, 「届かなければ武器2」). 雑魚戦 only, WP ≥ 50 %, at most GLIM_REACH.perBattle a fight
    * (the rest of the WP budget stays for the §4.17.3 A3 ≤ 12 % line). → {o, slot} | null
@@ -505,7 +505,7 @@
     const single = (d, m) => (m === focus ? value(d, m) : d >= left(m) && left(m) > 0 ? value(d, m) * 0.9 : -1);
     // the plain attack on the focus target (the 雑魚戦 prefers the slot whose techs can still be glimmered)
     let ba = bestAttack(eng, u, focus);
-    // a slot that cannot reach but has a reach tech with open candidates goes first (中列の杖 → 念じ打ち, not the 鞭)
+    // a slot that cannot reach but has a reach tech with open candidates goes first (後列の杖 → 念じ打ち, not the 鞭)
     const gr = eng.boss ? null : glimReach(eng, u, acts);
     let grCmd = null, grD = 0;
     if (gr) { grD = eng.expectDamage(u, gr.o.ab, focus, { slot: gr.slot }); if (grD > 0) grCmd = cmdOf(gr.o, focus); }

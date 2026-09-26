@@ -11,9 +11,9 @@
     axe: { name: '斧', order: 3, twoHanded: false, reach: false, kind: 'slash', icon: 'icon:axe', fx: 'slash2',
       desc: '命中は低いが、一撃の威力が高い。' },
     spear: { name: '槍', order: 4, twoHanded: true, reach: true, kind: 'pierce', icon: 'icon:spear', fx: 'pierce',
-      desc: '両手持ち。中列からでも届く。' },
+      desc: '両手持ち。後列からでも届く。' },
     bow: { name: '弓', order: 5, twoHanded: true, reach: true, kind: 'pierce', icon: 'icon:bow', fx: 'arrow',
-      desc: '両手持ち。中列から確実に射る。' },
+      desc: '両手持ち。後列から確実に射る。' },
     club: { name: '棍棒', order: 6, twoHanded: false, reach: false, kind: 'blunt', icon: 'icon:club', fx: 'strike',
       desc: '打撃で、硬い敵や骨の敵に強い。' },
     staff: { name: '杖', order: 7, twoHanded: false, reach: false, kind: 'blunt', icon: 'icon:staff', fx: 'strike',
@@ -23,7 +23,7 @@
     fist: { name: '体術', order: 9, twoHanded: false, reach: false, kind: 'blunt', icon: 'icon:fist', fx: 'strike',
       desc: '拳で戦う。腕力と素早さが大事。' },
     whip: { name: '鞭', order: 10, twoHanded: false, reach: true, kind: 'blunt', icon: 'icon:whip', fx: 'lash',
-      desc: '中列から届き、敵の動きを乱す。' },
+      desc: '後列から届き、敵の動きを乱す。' },
   });
 
   // The techs_<wtype>.js files load in file-name order (axe, bow, club…), so after

@@ -79,7 +79,7 @@
     });
     const mid = p.row === 'middle';
     G.rect(x + 4, y + 39, 15, 8, theme.fill2 || theme.fill);
-    G.text(mid ? '中' : '前', x + 6, y + 38, { color: mid ? C.cyan : C.orange });
+    G.text(mid ? '後' : '前', x + 6, y + 38, { color: mid ? C.cyan : C.orange });
   }
   /**
    * Draw the screen into the 2D context `c` at `s`× with its top at `oy` (device px).

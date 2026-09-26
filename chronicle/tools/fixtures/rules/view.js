@@ -29,7 +29,7 @@
     g.text('Lv' + c.level, 150, 10, { align: 'right' });
     g.text(heroLine(c), 34, 24, { color: '#c8c8d8' });
     const row = R.Rules.effectiveRow(c);
-    g.text(row === 'middle' ? '中列' : '前列', 244, 10, { align: 'right', color: row === 'middle' ? C().cyan : C().orange });
+    g.text(row === 'middle' ? '後列' : '前列', 244, 10, { align: 'right', color: row === 'middle' ? C().cyan : C().orange });
     g.text(page, 244, 24, { align: 'right', color: '#808090' });
   }
   function sheet(c) {

@@ -33,7 +33,7 @@
       fx: 'slash3', rank: 5, glim: { lv: 5, from: ['t_greatsword_flat'] },
     },
     t_greatsword_quake: {
-      kind: 'tech', wtype: 'greatsword', name: '地割り', desc: '土の衝撃で敵全体を打つ。中列からも届く。', wp: 6, target: 'enemies', reach: true,
+      kind: 'tech', wtype: 'greatsword', name: '地割り', desc: '土の衝撃で敵全体を打つ。後列からも届く。', wp: 6, target: 'enemies', reach: true,
       effects: [{ type: 'damage', power: 1.15, element: 'earth' }],
       fx: 'earth2', rank: 6, glim: { lv: 6, from: ['t_greatsword_whirl', 't_greatsword_desperate'] },
     },

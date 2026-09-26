@@ -540,7 +540,7 @@ async function testPlay() {
   mark = sayLog.length; await talk('otto');
   ok(g().flags.pro_key && R.State.hasItem('k_lighthouse_key'), 'P7 the key');
   eq(g().objective, 'obj_p_lighthouse', 'P7 objective');
-  ok(said(/前列と中列/, mark) && said(/武器は2つまで/, mark) && said(/『オート』/, mark), 'P7 the three lessons');
+  ok(said(/前列と後列/, mark) && said(/武器は2つまで/, mark) && said(/『オート』/, mark), 'P7 the three lessons');
   // ---- P8
   ok(await go(R.Field.warp('lighthouse_1', 'entrance')), 'to lighthouse_1');
   eq(R.Field.map.tileAt(18, 24), 'door', 'P8 the key opens the tower door');

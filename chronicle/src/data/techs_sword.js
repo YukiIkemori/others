@@ -38,7 +38,7 @@
       fx: 'holy2', rank: 6, glim: { lv: 6, from: ['t_sword_thrust', 't_sword_bulwark'] },
     },
     t_sword_bladewind: {
-      kind: 'tech', wtype: 'sword', name: '刃風', desc: '刃の風で敵全体を斬る。中列からも届く。', wp: 7, target: 'enemies', reach: true,
+      kind: 'tech', wtype: 'sword', name: '刃風', desc: '刃の風で敵全体を斬る。後列からも届く。', wp: 7, target: 'enemies', reach: true,
       effects: [{ type: 'damage', power: 1.2 }],
       fx: 'wind2', rank: 7, glim: { lv: 7, from: ['t_sword_wheel'] },
     },

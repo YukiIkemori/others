@@ -43,7 +43,7 @@
     beast: '獣', construct: '魔造', insect: '虫', humanoid: '人型', spirit: '霊体', plant: '植物', demon: '魔族', aquatic: '水生',
     undead: '不死', fairy: '妖精', bird: '鳥', slime: '軟体', ooze: '軟体', dragon: '竜', human: '人',
   };
-  const ROLE_NAMES = { guard: '前衛・重', striker: '前衛・軽', ranged: '中列・武器', caster: '術・攻め', healer: '術・癒やし', hybrid: '武器と術' };
+  const ROLE_NAMES = { guard: '前衛・重', striker: '前衛・軽', ranged: '後列・武器', caster: '術・攻め', healer: '術・癒やし', hybrid: '武器と術' };
   const APT_COLOR = { S: '#ffd24a', A: '#6ee07a', B: '#ffffff', C: '#a0a0a8', D: '#707080' };
   const COL = {
     sub: '#c8c8d8', // labels / supplementary text (§11.1.1)
@@ -364,7 +364,7 @@
       const th = K.theme();
       G().rect(x, y, 15, 8, th.fill2 || th.fill);
       const mid = row === 'middle';
-      G().text(mid ? '中' : '前', x + 2, y - 1, { color: mid ? G().C.cyan : G().C.orange });
+      G().text(mid ? '後' : '前', x + 2, y - 1, { color: mid ? G().C.cyan : G().C.orange });
     },
     /** a row badge inside a window (picker, shop): 前 / 中 on a dark plate */
     rowBadge(x, y, row) {
@@ -372,7 +372,7 @@
       const col = mid ? G().C.cyan : G().C.orange;
       G().rect(x, y, 14, 13, '#0a0e20');
       G().rect(x, y, 14, 1, col); G().rect(x, y + 12, 14, 1, col);
-      G().text(mid ? '中' : '前', x + 2, y + 1, { color: col });
+      G().text(mid ? '後' : '前', x + 2, y + 1, { color: col });
     },
     theme() {
       const T = G().WINDOW_THEMES;

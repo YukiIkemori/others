@@ -108,7 +108,7 @@
   };
   const elemName = (e) => (DB.elements && DB.elements[e] && DB.elements[e].name) || NAMES.elem[e] || e;
   // why an action cannot be chosen → help text (§11.5.3; STYLE_JA §9)
-  const UNUSABLE_TEXT = { wp: 'WPが足りない！', mp: 'MPが足りない！', silence: '術を封じられている！', reach: '中列からは届かない。', field: '戦闘中は使えない。', noescape: 'この戦いからは逃げられない！', seal: 'この武器では技が使えない。', none: '今は使えない。' };
+  const UNUSABLE_TEXT = { wp: 'WPが足りない！', mp: 'MPが足りない！', silence: '術を封じられている！', reach: '後列からは届かない。', field: '戦闘中は使えない。', noescape: 'この戦いからは逃げられない！', seal: 'この武器では技が使えない。', none: '今は使えない。' };
 
   // default normal-attack animation per lineage (monsters) and per weapon type (party; DB.weaponTypes[w].fx first)
   const MON_ATTACK_FX = {
@@ -1389,7 +1389,7 @@
         if (u.isParty && kind === 'tech') {
           if (a.magic && u.status.silence) { yield* refuse(this, 'しかし術を封じられている！'); return res; }
           // §6.4.4-1: a reach:false tech cannot be used from the middle row (the row may have changed since the command)
-          if (!a.reach && this.effRow(u) === 'middle') { yield* refuse(this, 'しかし中列からは届かない！'); return res; }
+          if (!a.reach && this.effRow(u) === 'middle') { yield* refuse(this, 'しかし後列からは届かない！'); return res; }
           const cost = this.wpCost(u, id);
           if (u.wp < cost) { yield* refuse(this, 'しかしWPが足りない！'); return res; }
           u.wp -= cost; this.stats.wpUsed += cost;

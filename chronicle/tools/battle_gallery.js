@@ -9,7 +9,7 @@
 //     --sheet      also write DIR/sheet.png: every shot at 1× with its label (a contact sheet)
 //     --no-build   use the existing debug_bui.html
 //     --compare DIR  also write OUT/compare.png: the before shots in DIR (design/shots/before_frontview) beside the
-//                  after shots of the same moments (Part A8: 通常戦闘・ボス戦・閃き・術・勝利・中列・瀕死/戦闘不能)
+//                  after shots of the same moments (Part A8: 通常戦闘・ボス戦・閃き・術・勝利・後列・瀕死/戦闘不能)
 // Exit code 1 when a scenario throws or the page logs an error.
 'use strict';
 const fs = require('fs');
@@ -33,7 +33,7 @@ const PAIRS = [
   ['閃きの瞬間', 'glimmer__glimmer_f12.png', 'sv_glimmer__oogi_f12.png'],
   ['術の詠唱', 'fx_chain__fx_chain_8.png', 'sv_cast__cast_circle.png'],
   ['勝利', 'levelup__rewards.png', 'sv_victory__victory_rewards.png'],
-  ['中列の配置', 'reach__reach_attack_gray.png', 'sv_middle__middle_three.png'],
+  ['後列の配置', 'reach__reach_attack_gray.png', 'sv_middle__middle_three.png'],
   ['瀕死・戦闘不能', 'command__member_menu_hero.png', 'sv_weak_ko__weak_ko_sleep_freeze.png'],
 ];
 

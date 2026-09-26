@@ -33,7 +33,7 @@
       fx: 'strike2', rank: 5, glim: { lv: 5, from: ['t_fist_onetwo', 't_fist_knee'] },
     },
     t_fist_farstrike: {
-      kind: 'tech', wtype: 'fist', name: '遠当て', desc: '気を放って打つ。中列からも届く。', wp: 5, target: 'enemy', reach: true,
+      kind: 'tech', wtype: 'fist', name: '遠当て', desc: '気を放って打つ。後列からも届く。', wp: 5, target: 'enemy', reach: true,
       effects: [{ type: 'damage', power: 2 }],
       fx: 'wind2', rank: 6, glim: { lv: 6, from: ['t_fist_palm', 't_fist_breath'] },
     },
