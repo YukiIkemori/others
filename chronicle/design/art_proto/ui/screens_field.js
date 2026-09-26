@@ -130,3 +130,8 @@
     }
   };
 })(window);
+(function (G) {
+  const SCREENS = G.SCREENS;
+  SCREENS.dungeon_raw = async function (o) { const s = TOPDOWN.dungeon(); G.fieldView(o, s, 0, 40, 60, 0, { thr: 0.55 }); };
+  SCREENS.field_raw = async function (o) { const s = TOPDOWN.world(); G.fieldView(o, s, 64, 64, 256, 0, { thr: 0.58 }); };
+})(window);

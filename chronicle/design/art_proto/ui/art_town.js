@@ -151,8 +151,8 @@
       if (shut) { const SR = shut === 'g' ? P.shutterG : P.shutterB; [[wx - 7, wx - 2], [wx + w + 2, wx + w + 7]].forEach(([a, bb]) => buf.fill(a, wy - 1, bb, wy + h + 1, (x, y) => pick(SR, 0.55 + ((x - a) % 3 === 0 ? -0.25 : 0) + (y === wy - 1 ? 0.2 : 0)))); }
       emit.push({ kind: 'win', x: wx, y: wy, w, h });
     };
-    const winH = b.wall >= 3 ? 16 : 15, lowY = wy1 - 8 - (b.wall >= 3 ? 28 : 26);
-    (b.windows || []).forEach((wx) => drawWin(wx, lowY, 12, winH, b.shutters));
+    const winH = b.small ? 10 : b.wall >= 3 ? 16 : 15, lowY = b.winY != null ? wy0 + b.winY : wy1 - 8 - (b.wall >= 3 ? 28 : 26);
+    (b.windows || []).forEach((wx) => drawWin(wx, lowY, b.small ? 9 : 12, winH, b.shutters));
     (b.win2 || []).forEach((wx) => drawWin(wx, wy0 + 14, 12, 14, b.shutters));
     // flower boxes under the lower windows
     if (b.flowers) (b.windows || []).forEach((wx) => {
@@ -163,7 +163,7 @@
     });
     // --- door
     if (b.door) {
-      const dw = b.door.w || 16, dh = 25, dx = x0 + b.door.x - dw / 2, dy = wy1 - 8 - dh + 6;
+      const dw = b.door.w || (b.small ? 12 : 16), dh = b.door.h || 25, dx = x0 + b.door.x - dw / 2, dy = wy1 - 8 - dh + 6;
       buf.fill(dx - 3, dy - 4, dx + dw + 3, wy1 - 2, (x, y) => { const d = Math.abs(x + 0.5 - (dx + dw / 2)) / (dw / 2 + 3); return (y - (dy - 4)) >= (1 - Math.sqrt(Math.max(0, 1 - d * d))) * 6 ? pick(P.stoneW, 0.7 - (H3(x >> 2, y >> 2, 3) * 0.2)) : null; });
       buf.fill(dx, dy, dx + dw, wy1 - 2, (x, y) => {
         const d = Math.abs(x + 0.5 - (dx + dw / 2)) / (dw / 2); if ((y - dy) < (1 - Math.sqrt(Math.max(0, 1 - d * d))) * 5) return null;
@@ -336,6 +336,27 @@
       B.ell(0, -8, 20, 8, M.water, 0.1, { bulge: 0.15 });
       B.cap(0, -8, 0, -26, 4.5, 3.6, M.stone, 0.2); B.ell(0, -28, 8, 3.4, M.stone, 0.25, { bulge: 0.4 }); B.ell(0, -29, 6, 2.2, M.water, 0.3, { bulge: 0.1 });
       return { light: [0, -24], cyan: true, big: true };
+    },
+    tower(B) { // ruined watchtower (a side dungeon), cyan light in the doorway
+      const st = mat({ keys: ['#1a1a20', '#2e2e36', '#48464e', '#646068', '#848088'], n: 6, tex: 2.2, tsx: 0.35, tsy: 0.6 });
+      B.ell(0, -2, 26, 10, st, 0, { bulge: 0.4 });
+      B.cap(0, -6, 0, -70, 20, 18, st, 0.1);
+      B.poly([[-18, -70], [-6, -80], [4, -72], [12, -84], [18, -70]], st, 0.15, { bevel: 3 });
+      B.poly([[-6, -6], [6, -6], [6, -24], [0, -30], [-6, -24]], M.glowC, 0.2, { bevel: 0.5 });
+      [[-12, -44], [10, -52]].forEach(([x, y]) => B.poly([[x - 2, y], [x + 2, y], [x + 2, y - 7], [x - 2, y - 7]], M.glowC, 0.2, { bevel: 0.3 }));
+      for (let i = 0; i < 5; i++) B.ell(-22 + i * 11, -3 - (i % 2) * 2, 5, 3, st, 0.3 + i * 0.01, { bulge: 0.8 });
+      return { light: [0, -18], cyan: true, big: true };
+    },
+    lighthouse(B) { // the prologue lighthouse on its rock (world landmark)
+      const wall = mat({ keys: ['#3a3834', '#5c5850', '#86806e', '#b0a88e', '#d4ccb0'], n: 6, tex: 1, tsx: 0.3, tsy: 1.4 });
+      const red = mat({ keys: ['#2a0a08', '#4e1410', '#76221a', '#9c3626'], n: 5 });
+      B.ell(0, -2, 22, 8, M.stone, 0, { bulge: 0.5 });
+      B.cap(0, -4, 0, -70, 14, 9, wall, 0.1);
+      [-22, -46].forEach((y) => B.cap(-12 + (y === -46 ? 1.5 : 0), y, 12 - (y === -46 ? 1.5 : 0), y, 2.4, 2.4, red, 0.15));
+      B.ell(0, -72, 13, 4, M.iron, 0.2, { bulge: 0.4 });
+      B.poly([[-8, -74], [8, -74], [8, -86], [-8, -86]], M.glowW, 0.25, { bevel: 0.4 });
+      B.poly([[-10, -86], [10, -86], [0, -96]], red, 0.3, { bevel: 2 });
+      return { light: [0, -80], big: true };
     },
     rock(B, o) { const R = rng(o && o.seed || 7); ENV.rock(B, 0, 0, (o && o.s) || 10, R, 0, !!(o && o.moss)); },
     stairs(B) { for (let i = 0; i < 4; i++) B.poly([[-14 + i, -i * 5], [14 - i, -i * 5], [14 - i, -i * 5 - 5], [-14 + i, -i * 5 - 5]], M.stone, i * 0.01, { bevel: 1, ny: -0.6 }); },
