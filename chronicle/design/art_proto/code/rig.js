@@ -17,7 +17,7 @@
     // metals
     steel: mat({ keys: ['#1c2230', '#3e4a60', '#7c8ca4', '#c4d0de', '#ffffff'], n: 8, metal: true, spec: 1, specPow: 10, rim: '#ffe8c0' }),
     gold: mat({ keys: ['#3a1e08', '#7a4a14', '#c08a2c', '#f0c860', '#fff4c0'], n: 7, metal: true, spec: 1, specPow: 10 }),
-    iron: mat({ keys: ['#16181e', '#2e323c', '#565c68', '#8c94a0', '#d6dce4'], n: 7, metal: true, spec: 0.8, specPow: 12 }),
+    iron: mat({ keys: ['#1a1c24', '#3a404c', '#646c7a', '#9ca4b0', '#e2e8ee'], n: 7, metal: true, spec: 0.8, specPow: 12 }),
     leather: mat({ keys: ['#24120c', '#4a2818', '#7a4428', '#a8683c', '#d49a64'], n: 7, tex: 0.9, tsx: 0.8, tsy: 0.8 }),
     leatherDk: mat({ keys: ['#140c0a', '#2c1a14', '#4a2c20', '#6c4430', '#946448'], n: 6 }),
     wood: mat({ keys: ['#2a160c', '#5a341c', '#8c5a30', '#b8844c', '#e0b27a'], n: 6 }),
@@ -210,6 +210,7 @@
       else if (p.mouth === 2) R(H(5.4, 6.2)[0], H(5.4, 6.2)[1], 2.6, 1.3, M.mouth, 10.6, { shade: 0 });
       else R(H(5.8, 6.6)[0], H(5.8, 6.6)[1], 1.6, 0.7, M.mouth, 10.6, { shade: 0 });
       R(H(1.2, 4.6)[0], H(1.2, 4.6)[1], 2.2, 0.9, M.blush, 10.59);
+      R(H(6.4, 4.2)[0], H(6.4, 4.2)[1], 0.9, 0.9, SK, 10.58, { shadeOff: -2 });
     }
     // ear
     if (L.ears === 'goblin') { Pl([H(-1, -1), H(-3, 5), H(-17, 1), H(-19, -3)], SK, 10.15, { g: grp('ear'), bevel: 2.2 }); F(H(-4, 1), H(-15, -1), 0.8, g.ear, -1.5); }

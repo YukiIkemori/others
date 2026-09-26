@@ -60,7 +60,7 @@ async function main() {
       console.log(`anim ${clip}: ${n} frames`);
     }
     // the key-frame strip, then drop the 1024×896 frames (≈1 MB each) unless --keep-frames
-    spawnSync('python3', [path.join(ROOT, 'tools/art_anim_strip.py'), adir, path.join(DIR, 'sheets/anim_strip.png')], { stdio: 'inherit' });
+    spawnSync('python3', [path.join(ROOT, 'tools/art_anim_strip.py'), adir, path.join(DIR, `sheets/${pre}strip.png`)], { stdio: 'inherit' });
     if (!argv.includes('--keep-frames')) fs.rmSync(adir, { recursive: true, force: true });
   } else {
     for (const style of arg('--styles', 'anime,chibi,storybook').split(',')) {

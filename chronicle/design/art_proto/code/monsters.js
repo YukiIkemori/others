@@ -6,10 +6,11 @@
   const dir = (a) => [Math.sin(a), Math.cos(a)];
 
   const MM = {
-    slime: mat({ keys: ['#021a2a', '#043e52', '#08766e', '#18b08a', '#5ae4ac', '#c8fff0'], n: 8, spec: 1, specPow: 8, wrap: 0.35, amb: 0.14, rim: '#d0fff0', rimK: 0.8, alpha: 0.93 }),
-    slimeCore: mat({ keys: ['#10382a', '#2c6a3a', '#6aa040', '#c8d060', '#fff4a0'], n: 6, wrap: 0.6, amb: 0.4, alpha: 0.93, ao: 0 }),
+    slime: mat({ keys: ['#040c34', '#0a2a6c', '#1458b0', '#2a92e0', '#6cd0ff', '#d8f8ff'], n: 8, spec: 1, specPow: 8, wrap: 0.7, amb: 0.28, rim: '#e0f8ff', rimK: 0.8, alpha: 0.93 }),
+    slimeCore: mat({ keys: ['#1a1450', '#3c3c9c', '#7aa0e0', '#c8f0ff', '#ffffff'], n: 6, wrap: 0.6, amb: 0.4, alpha: 0.93, ao: 0 }),
+    slimeHi: mat({ keys: ['#60c0ff', '#9ad8ff'], n: 2, flat: true }),
     slimeEye: mat({ keys: ['#000806', '#02120e'], n: 2, flat: true }),
-    fur: mat({ keys: ['#0c1030', '#1c2a5a', '#34508c', '#6484c0', '#a4c0e6', '#e4f0fc'], n: 8, wrap: 0.22, amb: 0.1, rim: '#fff4e0', tex: 2.2, tsx: 0.35, tsy: 1.3 }),
+    fur: mat({ keys: ['#0a0e2c', '#182656', '#2e4886', '#5476b4', '#8cacdc', '#d0e2f6'], n: 8, wrap: 0.22, amb: 0.1, rim: '#fff4e0', tex: 2.2, tsx: 0.35, tsy: 1.3 }),
     furDk: mat({ keys: ['#080a20', '#141e46', '#26386c', '#46609a', '#7a96c8'], n: 7, wrap: 0.22, amb: 0.1, tex: 2.0, tsx: 0.35, tsy: 1.3 }),
     ice: mat({ keys: ['#061a48', '#0c3ca0', '#1a7ee0', '#4cc8ff', '#b4f0ff', '#ffffff'], n: 8, outline: '#04103a', spec: 1, specPow: 5, wrap: 0.2, amb: 0.35, rim: '#ffffff', rimK: 0.8, sheen: [-0.9, -0.3] }),
     nose: mat({ keys: ['#06080e', '#1c2230', '#3a4458'], n: 4, spec: 1 }),
@@ -47,6 +48,7 @@
     // face
     [[4.5, 3.8, 2.4], [11.4, 3.2, 1.7]].forEach(([x, h, w], i) => {
       B.ell(x * sx, y0 - 13.5 * sy, w, h, MM.slimeEye, 1.3);
+      B.rect(x * sx - w * 0.1, y0 - 13.5 * sy + h * 0.35, 1, 1, MM.slimeHi, 1.31);
       B.rect(x * sx - w * 0.2, y0 - 13.5 * sy - h * 0.7, 1, 1, M.white, 1.31);
     });
     B.cap(6.5 * sx, y0 - 8.4 * sy, 10 * sx, y0 - 8.6 * sy, 0.55, 0.55, MM.slimeEye, 1.3);
@@ -97,11 +99,11 @@
     leg(P(-14, -25), 0, 3, false, false);
     // neck + head
     const gn = B.group();
-    const hd = P(22 + lg * 3, -41 + lg * 5);
-    B.cap(...P(10, -32), hd[0] - 4, hd[1] + 2, 9, 7, F, 1.5, { g: gn });
+    const hd = P(23 + lg * 3, -38 + lg * 5);
+    B.cap(...P(10, -31), hd[0] - 4, hd[1] + 1, 10, 7.5, F, 1.5, { g: gn });
     // ruff: layered fur strands around the neck/chest
-    for (let i = 0; i < 9; i++) {
-      const a = -0.9 + i * 0.28, r = 8 + (i % 2);
+    for (let i = 0; i < 12; i++) {
+      const a = -1.1 + i * 0.24, r = 9 + (i % 3);
       const o = P(12 + Math.cos(a) * 3, -32 + Math.sin(a) * 3);
       B.strand([o, [o[0] + Math.cos(a + 1.2) * r * 0.5, o[1] + Math.sin(a + 1.2) * r * 0.6 + 2], [o[0] + Math.cos(a + 1.6) * r * 0.9 - 2, o[1] + r * 0.9]], 2.6, 0.3, F, 1.6 + i * 0.01, { seg: 5, shadeOff: (i % 3) - 0.5 });
     }

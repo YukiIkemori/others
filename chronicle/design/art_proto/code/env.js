@@ -14,7 +14,7 @@
     grass: mat({ keys: ['#0e2410', '#1c4418', '#2e6a1e', '#4a8e26', '#7cb434', '#c0e060'], n: 7, wrap: 0.4, amb: 0.3, rim: '#fff8c0', rimK: 0.7, outline: '#0c2410' }),
     stone: mat({ keys: ['#161a22', '#2c323e', '#4c5460', '#747c84', '#a4aaa8', '#d8d8cc'], n: 7, tex: 2.2, tsx: 0.5, tsy: 0.5, wrap: 0.2, amb: 0.1 }),
     moss: mat({ keys: ['#142410', '#2a4a18', '#4a7424', '#7ca03a', '#b4cc5c'], n: 6, tex: 2.5, tsx: 0.8, tsy: 0.8 }),
-    cloud: mat({ keys: ['#6a7aa8', '#9ca8cc', '#c8d0e6', '#eef0f8', '#ffffff'], n: 7, wrap: 0.6, amb: 0.35, rim: '#fff4dc', rimK: 0.9, outline: '#aab4d4', ao: 0.6 }),
+    cloud: mat({ keys: ['#8a98c4', '#b0bcdc', '#d4dcee', '#f2f4fa', '#ffffff'], n: 6, wrap: 0.7, amb: 0.4, rim: '#fff4dc', rimK: 0.9, ao: 0 }),
     petalW: mat({ keys: ['#b0b4c8', '#ffffff'], n: 2, flat: true, noOutline: true }),
     petalY: mat({ keys: ['#c08010', '#ffe060'], n: 2, flat: true, noOutline: true }),
     petalP: mat({ keys: ['#c04868', '#ff9ab8'], n: 2, flat: true, noOutline: true }),
@@ -74,27 +74,36 @@
     B.ell(x, y + 1, w * 0.52, w * 0.07, EM.cloud, 0.9, { bulge: 0.5 });
   }
 
-  // ---------- ridge (mountains) straight into pixels ----------
+  // ---------- mountains: peaks with a sunlit (left) face and a shadow face, erosion gullies, snow caps ----------
   function ridge(ctx, W, H, o) {
     const img = ctx.getImageData(0, 0, W, H), D = img.data, R = rng(o.seed);
-    const ramp = o.ramp.map(hex), snow = o.snow ? o.snow.map(hex) : null, haze = hex(o.haze);
-    const hgt = new Float32Array(W + 2);
-    for (let x = -1; x <= W; x++) {
-      let h = 0, a = 1, f = o.freq;
-      for (let k = 0; k < 5; k++) { h += (1 - Math.abs(vnoise(x * f, 0.5, o.seed + k) * 2 - 1)) * a; a *= 0.5; f *= 2.1; }
-      hgt[x + 1] = o.base - h * o.amp;
-    }
+    const lit = o.ramp.map(hex), snow = o.snow ? o.snow.map(hex) : null, haze = hex(o.haze);
+    const peaks = [];
+    for (let i = 0; i < o.count; i++) peaks.push({ x: (i + 0.2 + R() * 0.6) / o.count * (W + 80) - 40, top: o.base - o.amp * (0.45 + R() * 0.55), s: 0.45 + R() * 0.5, s2: 0.45 + R() * 0.5 });
     for (let x = 0; x < W; x++) {
-      const top = hgt[x + 1], sl = hgt[x + 2] - hgt[x];
-      for (let y = Math.max(0, Math.floor(top)); y < Math.min(H, o.bottom); y++) {
-        const dep = (y - top) / (o.bottom - top + 1);
-        // light: slopes rising to the right face the sun (upper-left)
-        let l = 0.5 + clamp(sl * 0.35, -0.45, 0.45) + (vnoise(x * 0.09, y * 0.35, o.seed) - 0.5) * 0.35 - dep * 0.3;
+      // topmost surface = min over peaks
+      for (let y = 0; y < Math.min(H, o.bottom); y++) {
+        let best = null, bt = 1e9;
+        for (const p of peaks) {
+          const dx = x - p.x, sl = dx < 0 ? p.s : p.s2;
+          const ty = p.top + Math.abs(dx) * sl + (vnoise(x * 0.08, p.x, o.seed) - 0.5) * 5 + (vnoise(x * 0.3, p.x, o.seed + 1) - 0.5) * 1.6;
+          if (y >= ty && ty < bt) { bt = ty; best = p; }
+        }
+        if (!best) continue;
+        const dx = x - best.x, dep = y - bt, fromTop = y - best.top;
+        // spine wanders as it descends
+        const spine = best.x + (vnoise(y * 0.06, best.x, o.seed + 2) - 0.5) * fromTop * 0.9;
+        let l = x < spine ? 0.72 : 0.3;
+        // gullies radiating from the peak
+        const ang = Math.atan2(x - best.x, fromTop + 6);
+        const gul = vnoise(ang * 9, fromTop * 0.05, o.seed + 4);
+        l += (gul - 0.5) * 0.45 + (vnoise(x * 0.15, y * 0.15, o.seed + 5) - 0.5) * 0.15 - Math.min(0.2, dep * 0.004);
+        if (dep < 1.2) l += x < spine ? 0.15 : 0.05; // bright ridge edge
         let c;
-        const snowLine = o.snowLine + (vnoise(x * 0.05, 3, o.seed + 9) - 0.5) * 16 + (y - top) * 0.2;
-        if (snow && y < snowLine && (vnoise(x * 0.2, y * 0.2, o.seed + 3) > 0.28 || y < top + 3)) c = snow[clamp(Math.round(l * (snow.length - 1)), 0, snow.length - 1)];
-        else c = ramp[clamp(Math.round(l * (ramp.length - 1)), 0, ramp.length - 1)];
-        const hz = clamp(o.hazeK + dep * o.hazeBottom, 0, 1);
+        const sd = o.snowDepth * best.s * 1.6 * (0.7 + vnoise(ang * 7, 0, o.seed + 6) * 0.6);
+        if (snow && fromTop < sd && (fromTop < sd * 0.6 || gul > 0.45)) c = snow[clamp(Math.round(l * (snow.length - 1)), 0, snow.length - 1)];
+        else c = lit[clamp(Math.round(l * (lit.length - 1)), 0, lit.length - 1)];
+        const hz = clamp(o.hazeK + (y - (o.base - o.amp)) / (o.bottom - o.base + o.amp) * o.hazeBottom, 0, 1);
         c = mix(c, haze, hz);
         const q = (y * W + x) * 4; D[q] = c[0]; D[q + 1] = c[1]; D[q + 2] = c[2]; D[q + 3] = 255;
       }
