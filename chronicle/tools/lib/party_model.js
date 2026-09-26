@@ -28,11 +28,11 @@
 //   rareBand 7 — for rare, S for super) when the member's build stat has one and its weapon type matches the set's
 //   (buildSets: true forces the set whatever the weapon, false turns it off).
 // Every member gets EXPECT(T) techs/spells (§4.17.1, §6.10: the main weapon's and favoured elements' actions
-// in glim.lv order), proficiencies at profAt (equipped weapon types and the spells' elements at least PEXP(T)),
-// full HP/MP/WP, status {}. Works on partial data: missing registries are reported in `notes`, never thrown.
+// in glim.lv order), proficiencies at profAt (the main weapon at least PROF_TRACK(T), the second one half of it, the chosen
+// elements 0.8 of it — SYSTEMS_REWORK §4.3), full HP/MP, status {}. Works on partial data: missing registries are reported in `notes`, never thrown.
 'use strict';
 
-const WTYPES = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'club', 'staff', 'katana', 'fist', 'whip'];
+const WTYPES = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'staff'];   // SYSTEMS_REWORK §3.1 (A19)
 const ELEMENTS = ['fire', 'water', 'wind', 'earth', 'light', 'dark'];
 const STATS = ['str', 'vit', 'dex', 'agi', 'int', 'mnd'];
 const SLOTS = ['weapon1', 'weapon2', 'shield', 'head', 'body', 'hands', 'feet', 'acc1', 'acc2'];
@@ -41,16 +41,20 @@ const UPGRADE_ORDER = ['weapon1', 'body', 'head', 'shield', 'hands', 'feet', 'we
 const APTF = { S: 0.8, A: 0.7, B: 0.5, C: 0.3, D: 0.1 };
 const APTN = { S: 4, A: 3, B: 2, C: 1, D: 0 };
 // §4.3.4 attack stat per weapon type (the "phys" build stat); 'sd' = (str+dex)/2 → the larger of the two
-const WSTAT = { sword: 'str', greatsword: 'str', dagger: 'dex', axe: 'str', spear: 'sd', bow: 'dex', club: 'str', staff: 'int', katana: 'sd', fist: 'sa', whip: 'dex' };
+const WSTAT = { sword: 'str', greatsword: 'str', dagger: 'dex', axe: 'str', spear: 'sd', bow: 'dex', staff: 'int' };
+const REACH = { spear: true, bow: true, staff: true };   // SYSTEMS_REWORK §3.1: the staff reaches from the back row
 const TWO_HANDED = { greatsword: true, spear: true, bow: true };
 
 // DESIGN §4.18.1 (used only when R.Rules.K is missing or partial)
 const K_FALLBACK = {
   W: [8, 14, 21, 30, 40, 51, 64, 78, 94, 112], U: [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6],
   LZ: (T) => 6 + 6 * T, D: (T) => 70 + 30 * T, DK: (L) => 40 + 5 * L,
-  PROF_PTS: [0, 5, 15, 30, 55, 90, 135, 190, 260, 350, 460], PEXP: [15, 40, 70, 100, 135, 175, 220, 270, 330, 400],
+  // A17 (SYSTEMS_REWORK §1.2): rank r (1..100) needs round(11·(r−1)^1.18) points; index 0 unused
+  PROF_PTS: [0].concat(Array.from({ length: 100 }, (_, i) => Math.round(11 * Math.pow(i, 1.18)))),
+  PEXP: [25, 186, 311, 445, 585, 730, 880, 1034, 1191, 1352],
+  PROF_TRACK: [180, 370, 555, 745, 935, 1125, 1315, 1505, 1675, 1850], TECH_PROF: [0, 1, 3, 8, 14, 20, 26, 32, 40, 50, 60],
   GLIM: { expect: [2, 4, 6, 8, 10, 12, 14, 16, 17, 19] }, GRADE_MULT: { normal: 1, rare: 2, super: 3 },
-  AFTER: { mpPct: 0.10, wpPct: 0.10 }, MOB: { atk: 0.6, mag: 0.6 }, RESERVE_RATE: 0.6,
+  AFTER: { mpPct: 0.12 }, MOB: { atk: 0.6, mag: 0.6 }, RESERVE_RATE: 0.6,
 };
 const RB = [1, 1, 3, 3, 5, 5, 7, 7, 9, 9];
 
@@ -110,14 +114,14 @@ function fallbackNewChar(R, spec, notes) {
   const DB = R.DB;
   const kit = DB.starterKit || {};
   const profFrom = (apt) => {
-    const P = (kit.prof) || { S: 15, A: 5 };
+    const P = (kit.prof) || { S: 25, A: 11 };
     const w = {}, e = {};
     for (const t of WTYPES) w[t] = P[(apt.w || {})[t]] || 0;
     for (const el of ELEMENTS) e[el] = P[(apt.e || {})[el]] || 0;
     return { w, e };
   };
   const equip = {}; for (const s of SLOTS) equip[s] = null;
-  const base = { level: 1, exp: 0, hp: 1, mp: 0, wp: 0, bonus: { hp: 0, mp: 0, wp: 0 }, status: {}, equip, techs: [], spells: [],
+  const base = { level: 1, exp: 0, hp: 1, mp: 0, bonus: { hp: 0, mp: 0 }, status: {}, equip, techs: [], spells: [],
     mem: { cmd: 0, list: {}, item: 0, target: null }, joined: { tier: 0, frame: 0 }, counts: { battles: 0, kills: 0, glimmers: 0 } };
   if (spec.id === 'hero') {
     const hs = spec.heroSpec;
@@ -134,7 +138,7 @@ function fallbackNewChar(R, spec, notes) {
     const of = (T && T.onFavor && T.onFavor[hs.favor.kind]) || { techs: [], spells: [] };
     c.techs = (fw && kit.tech && kit.tech[hs.favor.id] ? [kit.tech[hs.favor.id]] : []).concat(of.techs || []);
     c.spells = (!fw && kit.spell && kit.spell[hs.favor.id] ? [kit.spell[hs.favor.id]] : []).concat(of.spells || []);
-    c.row = T && T.row && T.row !== 'auto' ? T.row : (wt && ['spear', 'bow', 'whip'].includes(wt)) || !fw ? 'middle' : 'front';
+    c.row = T && T.row && T.row !== 'auto' ? T.row : (wt && REACH[wt]) || !fw ? 'middle' : 'front';
     return c;
   }
   const D = (DB.companions || {})[spec.id];
@@ -163,7 +167,7 @@ function statsOf(R, c) {
 }
 function fullRestore(R, c) {
   const st = statsOf(R, c);
-  if (st) { c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; }
+  if (st) { c.hp = st.hp; c.mp = st.mp; }
   c.status = {};
 }
 
@@ -208,7 +212,7 @@ function quirkCost(it) {
   const m = it.mods || {};
   if (m.noSpell || m.hpLoss) return null;
   const neg = (k) => (typeof m[k] === 'number' && m[k] < 0 ? -m[k] : 0), pos = (k) => (typeof m[k] === 'number' && m[k] > 0 ? m[k] : 0);
-  let c = 3 * neg('hpPct') + 2 * neg('defPct') + 2 * neg('mdefPct') + 3 * neg('spd') + 3 * neg('eva') + 3 * neg('hit') + 4 * pos('takenPct') + pos('mpCostPct') + pos('wpCostPct');
+  let c = 3 * neg('hpPct') + 2 * neg('defPct') + 2 * neg('mdefPct') + 3 * neg('spd') + 3 * neg('eva') + 3 * neg('hit') + 4 * pos('takenPct') + pos('mpCostPct') + pos('techCostPct');
   for (const v of Object.values(m.elemResist || {})) if (typeof v === 'number' && v > 1) c += 15 * (v - 1) / 0.5;
   return c;
 }
@@ -262,8 +266,8 @@ function weaponTypes(R, c) {
     // a second weapon type a player would carry: the best other apt that is usable from the member's row
     const mid = c.row === 'middle';
     // a one-handed main weapon keeps its shield: the second weapon is one-handed too
-    w2 = ranked.find((t) => t !== w1 && (!mid || ['spear', 'bow', 'whip'].includes(t)) && (!TWO_HANDED[t] || TWO_HANDED[w1]) && t !== 'staff') || null;
-    if (w1 === 'staff' && !w2) w2 = 'whip';
+    w2 = ranked.find((t) => t !== w1 && (!mid || REACH[t]) && (!TWO_HANDED[t] || TWO_HANDED[w1]) && t !== 'staff') || null;
+    // SYSTEMS_REWORK §3.5: the casters carry the staff alone (no second weapon)
   }
   return [w1, w2];
 }
@@ -451,14 +455,15 @@ function learnFor(R, c, o, info) {
   for (const s of c.spells || []) { const a = R.DB.actions[s]; for (const el of (a && a.elements) || []) if (!els.slice(0, 1).includes(el)) { els.splice(els.indexOf(el), 1); els.unshift(el); } }
   const nEl = build === 'magic' ? 3 : build === 'balanced' ? 2 : 1;
   const myEls = els.slice(0, nEl);
-  // proficiencies: at least profAt(T, apt); the weapons in use and the chosen elements at least PEXP(T)
-  const PEXP = kk.PEXP || K_FALLBACK.PEXP;
+  // proficiencies (SYSTEMS_REWORK §4.3): at least profAt(T, apt); the main weapon PROF_TRACK(T), the second one ×0.5,
+  // the chosen elements ×0.8
+  const TRACK = kk.PROF_TRACK || K_FALLBACK.PROF_TRACK, TP = kk.TECH_PROF || K_FALLBACK.TECH_PROF;
   for (const w of WTYPES) c.wprof[w] = Math.max(c.wprof[w] || 0, profAt(T, (apt.w || {})[w]));
   for (const el of ELEMENTS) c.eprof[el] = Math.max(c.eprof[el] || 0, profAt(T, (apt.e || {})[el]));
-  if (info.w1) c.wprof[info.w1] = Math.max(c.wprof[info.w1], PEXP[T]);
-  if (info.w2) c.wprof[info.w2] = Math.max(c.wprof[info.w2], Math.round(PEXP[T] * 0.75));
-  if (build !== 'phys') for (const el of myEls) c.eprof[el] = Math.max(c.eprof[el], PEXP[T]);
-  const techOk = (t) => t.a.glim.lv <= cap && t.a.glim.lv <= 9 && profRank(R, c.wprof[t.a.wtype] || 0) >= t.a.glim.lv - 1 && !have.has(t.id);
+  if (info.w1) c.wprof[info.w1] = Math.max(c.wprof[info.w1], TRACK[T]);
+  if (info.w2) c.wprof[info.w2] = Math.max(c.wprof[info.w2], Math.round(TRACK[T] * 0.5));
+  if (build !== 'phys') for (const el of myEls) c.eprof[el] = Math.max(c.eprof[el], Math.round(TRACK[T] * 0.8));
+  const techOk = (t) => t.a.glim.lv <= cap && t.a.glim.lv <= 9 && profRank(R, c.wprof[t.a.wtype] || 0) >= TP[t.a.glim.lv] && !have.has(t.id);
   const spellOk = (s) => {
     const a = s.a;
     if (have.has(s.id) || a.glim.lv > cap) return false;
@@ -617,7 +622,6 @@ function afterBattle(R, party, result) {
     c.hp = st.hp;
     if (result === 'win') {
       c.mp = Math.min(st.mp, c.mp + Math.ceil(st.mp * A.mpPct));
-      c.wp = Math.min(st.wp, c.wp + Math.ceil(st.wp * A.wpPct));
     }
   }
 }
@@ -625,14 +629,14 @@ function afterBattle(R, party, result) {
 /**
  * One battle through the real engine (R.Battle.simulate) with extra counting. R.BattleAI.partyCommands is
  * wrapped for the call so the commands the AI chose are counted per member (spells cast, techs used, items).
- * Returns simulate's result ＋ { hpLostPct, anyDown, downs, mpUsedPct, wpUsedPct, mpUsedBy:[], casts:[], techs:[], items:[], cmdsBy:[] }
+ * Returns simulate's result ＋ { hpLostPct, anyDown, downs, mpUsedPct, mpUsedBy:[], casts:[], techs:[], items:[], cmdsBy:[] }
  * or null when the engine is not available.
  */
 function runBattle(R, o) {
   if (!R.Battle || !R.Battle.simulate) return null;
   const party0 = o.party;
-  const stat0 = party0.map((c) => statsOf(R, c) || { hp: c.hp, mp: c.mp, wp: c.wp });
-  const hp0 = party0.map((c) => c.hp), mp0 = party0.map((c) => c.mp), wp0 = party0.map((c) => c.wp);
+  const stat0 = party0.map((c) => statsOf(R, c) || { hp: c.hp, mp: c.mp });
+  const hp0 = party0.map((c) => c.hp), mp0 = party0.map((c) => c.mp);
   const casts = party0.map(() => 0), techs = party0.map(() => 0), items = party0.map(() => 0), attacks = party0.map(() => 0);
   const AI = R.BattleAI;
   const orig = AI && AI.partyCommands;
@@ -656,24 +660,22 @@ function runBattle(R, o) {
   try { r = R.Battle.simulate(o); } finally { if (orig) AI.partyCommands = orig; }
   if (!r) return null;
   const end = r.party || [];
-  let hpMax = 0, hpLost = 0, mpMax = 0, mpUsed = 0, wpMax = 0, wpUsed = 0, downs = 0;
+  let hpMax = 0, hpLost = 0, mpMax = 0, mpUsed = 0, downs = 0;
   const mpUsedBy = [];
   for (let i = 0; i < party0.length; i++) {
     const e = end[i] || party0[i];
     hpMax += stat0[i].hp || 0; hpLost += Math.max(0, hp0[i] - Math.max(0, e.hp || 0));
     mpMax += stat0[i].mp || 0; const mu = Math.max(0, mp0[i] - (e.mp || 0)); mpUsed += mu; mpUsedBy.push(stat0[i].mp ? mu / stat0[i].mp : 0);
-    wpMax += stat0[i].wp || 0; wpUsed += Math.max(0, wp0[i] - (e.wp || 0));
     if ((e.hp || 0) <= 0) downs++;
   }
   // the engine's own counters win when it has them (§3.3.8 simulate): casts/techs keyed by char id, mpUsedBy by index
   const byId = (o2, fallback) => (o2 && typeof o2 === 'object' && !Array.isArray(o2) ? party0.map((c) => o2[c.id] || 0) : fallback);
   const mpBy = Array.isArray(r.mpUsedBy) ? r.mpUsedBy.map((v, i) => (stat0[i] && stat0[i].mp ? v / stat0[i].mp : 0)) : mpUsedBy;
-  const mpU = r.mpUsed != null ? r.mpUsed : mpUsed, wpU = r.wpUsed != null ? r.wpUsed : wpUsed;
+  const mpU = r.mpUsed != null ? r.mpUsed : mpUsed;
   return Object.assign(r, {
     netLossPct: hpMax ? (100 * hpLost) / hpMax : 0,                                      // HP missing at the end
     hpLostPct: r.hpLossPct != null ? r.hpLossPct : hpMax ? (100 * hpLost) / hpMax : 0,   // damage taken / party max HP (§4.17.3 A2)
     mpUsedPct: mpMax ? (100 * mpU) / mpMax : 0,
-    wpUsedPct: wpMax ? (100 * wpU) / wpMax : 0,
     downs, anyDown: downs > 0 || (r.deaths || 0) > 0, mpUsedBy: mpBy,
     casts: byId(r.casts, casts), techs: byId(r.techs, techs), items, attacks,
   });
@@ -691,11 +693,11 @@ const COMBOS = [
   { no: 2, name: '全員術師', heroType: 'mage', favor: { kind: 'element', id: 'fire' }, members: ['teo', 'ilse', 'morga'] },
   { no: 3, name: '回復なしの前衛', heroType: 'warrior', favor: { kind: 'weapon', id: 'greatsword' }, members: ['hagen', 'rouga', 'titta'] },
   { no: 4, name: '全員後列', heroType: 'ranger', favor: { kind: 'weapon', id: 'bow' }, members: ['brigitta', 'sylvain', 'zafira'] },
-  { no: 5, name: '重装の壁', heroType: 'warrior', favor: { kind: 'weapon', id: 'club' }, members: ['selma', 'dokka', 'bartolo'] },
+  { no: 5, name: '重装の壁', heroType: 'warrior', favor: { kind: 'weapon', id: 'axe' }, members: ['selma', 'dokka', 'bartolo'] },   // club → axe (mace line, A19)
   { no: 6, name: '回復だらけ', heroType: 'mage', favor: { kind: 'element', id: 'light' }, members: ['marta', 'noela', 'basil'] },
   { no: 7, name: '万能型', heroType: 'wanderer', favor: { kind: 'weapon', id: 'spear' }, members: ['viola', 'ferno', 'belladonna'] },
   { no: 8, name: '年長組', heroType: 'spellblade', favor: { kind: 'element', id: 'earth' }, members: ['boden', 'bartolo', 'morga'] },
-  { no: 9, name: '速さ', heroType: 'ranger', favor: { kind: 'weapon', id: 'katana' }, members: ['rouga', 'titta', 'zafira'] },
+  { no: 9, name: '速さ', heroType: 'ranger', favor: { kind: 'weapon', id: 'dagger' }, members: ['rouga', 'titta', 'zafira'] },   // katana is not a ranger option after A19
   { no: 10, name: '斬るだけ', heroType: 'warrior', favor: { kind: 'weapon', id: 'axe' }, members: ['hagen', 'viola', 'shigure'] },
   { no: 11, name: '属性が1つだけ', heroType: 'warrior', favor: { kind: 'weapon', id: 'sword' }, members: ['selma', 'basil', 'bartolo'] },
   { no: 12, name: 'レア狙い', heroType: 'wanderer', favor: { kind: 'element', id: 'dark' }, members: ['ferno', 'noela', 'boden'] },

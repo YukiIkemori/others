@@ -14,7 +14,7 @@
 //   node tools/sim_zones.js --retilt all.json --fit out.json  M2: re-weight each zone's groups per stage band from a --json run
 //   node tools/sim_zones.js --tuning cand.json   run on DESIGN ⊕ a candidate overlay (in memory)
 //
-// Criteria (§9.13.1; party = §4.17.1 standard party, auto battle, mob fights start with MP/WP 60%, HP full):
+// Criteria (§9.13.1; party = §4.17.1 standard party, auto battle, mob fights start with MP 60%, HP full):
 //   M1 win ≥ 99.5%, rounds 2.5–3.5, HP lost per battle (share of the party's max HP) mean 8–12% overall and 5–15% in
 //      every zone×tier, p95 ≤ 20%, battles where someone falls ≤ 3%, wipes ≤ 0.1%
 //   M2 order independence: per zone, T0..T7 rounds / HP lost / win within ±15% of their mean
@@ -72,11 +72,12 @@ const K = {
   SIZE: { s: { hp: 0.7, atk: 0.9, def: 0.9 }, m: { hp: 1, atk: 1, def: 1 }, l: { hp: 2.0, atk: 1.15, def: 1.1 } },
   W: [8, 14, 21, 30, 40, 51, 64, 78, 94, 112], U: [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6],
   EXPECT: [2, 4, 6, 8, 10, 12, 14, 16, 17, 19],
-  GH: { S: 1.25, A: 1.12, B: 1.0, C: 0.9, D: 0.8 }, GM: { S: 1.3, A: 1.15, B: 1.0, C: 0.8, D: 0.6 },
+  GH: { S: 1.25, A: 1.12, B: 1.0, C: 0.9, D: 0.8 }, GM: { S: 1.3, A: 1.15, B: 1.0, C: 0.85, D: 0.7 },   // K.GROW.mp (A18)
   WT: { sword: [1.0, 0, 2, 'slash'], greatsword: [1.4, -5, 2, 'slash'], dagger: [0.75, 8, 10, 'pierce'], axe: [1.15, -10, 4, 'slash'],
-    spear: [1.25, 0, 2, 'pierce'], bow: [1.1, 5, 4, 'pierce'], club: [1.05, 0, 2, 'blunt'], staff: [0.6, 0, 0, 'blunt'],
-    katana: [1.05, 0, 10, 'slash'], fist: [0.9, 5, 5, 'blunt'], whip: [0.8, 0, 2, 'blunt'] },
-  REACH: ['spear', 'bow', 'whip'],
+    spear: [1.25, 0, 2, 'pierce'], bow: [1.1, 5, 4, 'pierce'], staff: [0.6, 0, 0, 'blunt'] },   // SYSTEMS_REWORK §3.1 (A19): 7 types
+  REACH: ['spear', 'bow', 'staff'],
+  // A17 (SYSTEMS_REWORK §1.2, §4.3): the model's main weapon sits at PROF_TRACK[T]; a tech of glim.lv L needs rank TECH_PROF[L]
+  PROF_TRACK: [180, 370, 555, 745, 935, 1125, 1315, 1505, 1675, 1850], TECH_PROF: [0, 1, 3, 8, 14, 20, 26, 32, 40, 50, 60],
   TIMED: { sleep: [2, 4], paralyze: [1, 3], freeze: [1, 2], stun: [1, 1], confuse: [2, 4], silence: [3, 5], blind: [3, 5], burn: [3, 3], regen: [5, 5], veil: [3, 3] },
   DISABLE: ['sleep', 'paralyze', 'freeze', 'stun'],
 };
@@ -89,21 +90,23 @@ function curve(L) {
 }
 const HPlv = (L) => 17.5 + 14.7 * Math.pow(L - 1, 0.9);
 const MPlv = (L) => 8 + 2.6 * Math.pow(L - 1, 0.85);
-const WPlv = (L) => 5 + 1.8 * Math.pow(L - 1, 0.85);
+const profRankOf = (pts) => { let r = 1; while (r < 100 && pts >= Math.round(11 * Math.pow(r, 1.18))) r++; return r; };   // A17: rank r needs round(11·(r−1)^1.18)
 const gearStat = (T, units) => Math.max(1, Math.round(units * K.U[T]));
 const stageMul = (s) => K.STAGE[(s | 0) + 2];
 
 // ================================================================ MODEL: party (§4.17.1 standard party)
 // Types from §4.2.1. Gear = tier-T normal set, stat units to the type's stats (§4.3.3), levels LZ(T)+1.
 const TYPES = {
-  warrior: { str: 50, vit: 44, dex: 30, agi: 28, int: 18, mnd: 30, g: { hp: 'A', mp: 'C', wp: 'A' } },
-  mage: { str: 18, vit: 24, dex: 30, agi: 34, int: 52, mnd: 42, g: { hp: 'C', mp: 'A', wp: 'C' } },
-  hunter: { str: 26, vit: 30, dex: 55, agi: 44, int: 20, mnd: 25, g: { hp: 'B', mp: 'C', wp: 'B' } },
+  // growth: SYSTEMS_REWORK §2.3 (A18: no wp; the new mp = the better of the old mp and wp)
+  warrior: { str: 50, vit: 44, dex: 30, agi: 28, int: 18, mnd: 30, g: { hp: 'A', mp: 'B' } },
+  mage: { str: 18, vit: 24, dex: 30, agi: 34, int: 52, mnd: 42, g: { hp: 'C', mp: 'S' } },
+  hunter: { str: 26, vit: 30, dex: 55, agi: 44, int: 20, mnd: 25, g: { hp: 'B', mp: 'A' } },
 };
 // Known actions at tier T: those a mob fight of tier T can have taught (glim.lv ≤ rank T+1, §4.9.3/§9.2.3), lowest
 // glim.lv first, at most EXPECT(T) (§4.17.1). Spells also need the element proficiency, approximated by the same cap.
 function techsFor(wtype, T, n) {
-  return Object.entries(DB.actions).filter(([, a]) => a.kind === 'tech' && a.wtype === wtype && a.glim && a.glim.lv <= T + 1)
+  const rank = profRankOf(K.PROF_TRACK[T]);
+  return Object.entries(DB.actions).filter(([, a]) => a.kind === 'tech' && a.wtype === wtype && a.glim && a.glim.lv <= T + 1 && rank >= K.TECH_PROF[a.glim.lv])
     .sort((a, b) => a[1].glim.lv - b[1].glim.lv).slice(0, n == null ? K.EXPECT[T] : n).map(([id]) => id);
 }
 function spellsFor(els, T, n) {
@@ -129,18 +132,17 @@ function member(name, kind, row, T, L, extra) {
   const def = Math.round(D(T) * share * WGT[0]);
   const mdef = Math.round(D(T) * share * WGT[1]) + Math.floor(st.mnd / 2);
   const [mult, hitAdd, critAdd, pkind] = K.WT[wtype];
-  const S = { sword: st.str, axe: st.str, club: st.str, greatsword: st.str, katana: (st.str + st.dex) / 2, spear: (st.str + st.dex) / 2, bow: st.dex, staff: (st.str + st.int) / 2 }[wtype];
+  const S = { sword: st.str, axe: st.str, greatsword: st.str, dagger: st.dex, spear: (st.str + st.dex) / 2, bow: st.dex, staff: (st.str + st.int) / 2 }[wtype];
   const W = Math.round(K.W[T] * mult);
   const atk = Math.round(W * (64 + S) / 64);
   const Wm = isMage ? K.W[T] : Math.round(K.W[T] * 0.5);
   const mag = Math.round(Wm * (64 + st.int) / 64);
   const mhp = Math.min(999, Math.round(HPlv(L) * K.GH[type.g.hp] * (160 + st.vit) / 200));
-  const mmp = Math.min(150, Math.round(MPlv(L) * K.GM[type.g.mp]));
-  const mwp = Math.min(99, Math.round(WPlv(L) * K.GM[type.g.wp]));
+  const mmp = Math.min(250, Math.round(MPlv(L) * K.GM[type.g.mp]));
   const els = (extra && extra.els) || (isMage ? ['light', 'water'] : []);
   const u = {
     side: 'party', name, kind, row, wtype, pkind, reach: K.REACH.includes(wtype),
-    mhp, hp: mhp, mmp, mp: Math.ceil(mmp * 0.6), mwp, wp: Math.ceil(mwp * 0.6),
+    mhp, hp: mhp, mmp, mp: Math.ceil(mmp * 0.6),
     atk, mag, def, mdef, hit: 90 + Math.floor(st.dex / 4) + hitAdd, crit: 2 + Math.floor(st.dex / 16) + critAdd,
     eva: Math.min(60, Math.floor(st.agi / 5) + (shield ? WGT[2] : 0)), spd: st.agi, mnd: st.mnd, int: st.int, dex: st.dex,
     spells: isMage ? spellsFor(els, T) : [],
@@ -183,7 +185,7 @@ function prologueHero(L) {
     h.mhp = h.hp = Math.round(HPlv(L) * K.GH[ht.growth.hp] * (160 + st.vit) / 200);
     h.techs = []; // the hero knows 1 entry tech at most; keep the model to plain attacks
   }
-  h.mp = h.mmp; h.wp = h.mwp; // the prologue starts rested
+  h.mp = h.mmp; // the prologue starts rested
   return [h];
 }
 function inventory() { return { potion: 6, revive: 3, ether: 3 }; } // §4.17.1: 回復 35% ×6、蘇生 ×3、MP 30% ×3
@@ -213,7 +215,7 @@ function Battle(party, monIds, Lb, opts) {
   this.party = party; this.Lb = Lb; this.DK = DKf(Lb); this.round = 0; this.result = null; this.opts = opts || {};
   this.mons = monIds.map((id, i) => monUnit(id, Lb, i));
   this.inv = inventory();
-  this.taken = 0; this.fell = 0; this.casts = 0; this.mpUsed = 0; this.wpUsed = 0; this.baitDone = new Set();
+  this.taken = 0; this.fell = 0; this.casts = 0; this.mpUsed = 0; this.baitDone = new Set();
 }
 const P = Battle.prototype;
 P.alive = function (side) { return (side === 'party' ? this.party : this.mons).filter((u) => u.alive && !u.gone); };
@@ -342,8 +344,7 @@ P.useAction = function (u, id, target) {
     return;
   }
   if (u.side === 'party') {
-    if (act.mp) { u.mp -= act.mp; this.mpUsed += act.mp; this.casts++; }
-    if (act.wp) { u.wp -= act.wp; this.wpUsed += act.wp; }
+    if (act.mp) { u.mp -= act.mp; this.mpUsed += act.mp; if (act.kind === 'spell') this.casts++; }   // techs pay MP too (A18)
   }
   u.used && (u.used[id] = true);
   let tg;
@@ -428,7 +429,7 @@ P.monPick = function (u) {
   return 'attack';
 };
 
-// ---------------- party AI (§4.13.2, simplified: revive → heal → cure → focus-fire offense with WP/MP thrift)
+// ---------------- party AI (§4.13.2, simplified: revive → heal → cure → focus-fire offense with MP thrift)
 P.expectAction = function (u, id, t) {
   if (id === 'attack') return this.roll(u, t, { type: 'damage', formula: 'phys', power: 1 }, null, true).dmg;
   const act = DB.actions[id];
@@ -441,7 +442,6 @@ P.affordable = function (u, id, thrift) {
   if (!a) return true;
   if (a.mp && (u.mp < a.mp || (thrift && u.mp < u.mmp * 0.3) || u.status.silence)) return false;
   if (a.magic && u.status.silence) return false;
-  if (a.wp && (u.wp < a.wp || (thrift && u.wp < u.mwp * 0.3))) return false;
   if (a.kind === 'tech' && a.reach === false && this.effRow(u) === 'middle') return false;
   return true;
 };
@@ -502,14 +502,14 @@ P.partyCommands = function () {
     if (!opts.length) { cmds.set(u, { defend: true }); continue; }
     const tgt = order.find((m) => assigned.get(m) < m.hp * 0.85) || order[0];
     // mob-fight thrift (§4.13.2-5): a tech/spell only if an AoE kills ≥2, or a single-target one secures a kill the
-    // plain attack would not (the fight ends a round earlier); never below 30% WP/MP (affordable(…, true))
+    // plain attack would not (the fight ends a round earlier); never below 30% MP (affordable(…, true))
     const left = Math.max(1, tgt.hp - assigned.get(tgt));
     const atkDmg = canHit ? this.expectAction(u, 'attack', tgt) : 0;
     let best = canHit ? { id: 'attack', val: Math.min(left, atkDmg) } : null;
     for (const o of opts) {
       if (o.id === 'attack') continue;
       const a = DB.actions[o.id];
-      const cost = (a.wp || 0) + (a.mp || 0);
+      const cost = a.mp || 0;
       if (a.target === 'enemies' || a.target === 'random' || a.target === 'group') {
         const hitSet = a.target === 'group' ? order.filter((m) => m.id === tgt.id) : order;
         const per = (m) => this.expectAction(u, o.id, m) / (a.target === 'random' ? hitSet.length : 1);
@@ -636,8 +636,7 @@ function fight(z, T, ms, partyKind, useReal) {
   const mmp = party.reduce((s, u) => s + u.mmp, 0);
   const b = new Battle(party, monIds, Lb, { T }).run(30);
   const net = party.reduce((s, u) => s + (u.mhp - Math.max(0, u.hp)), 0) / mhp;
-  const mwp = party.reduce((s, u) => s + u.mwp, 0);
-  return { win: b.result === 'win', rounds: b.round, lost: b.taken / mhp, taken: net, fell: b.fell > 0, wipe: b.result === 'lose', casts: b.casts, mpUsed: b.mpUsed / Math.max(1, mmp), wpUsed: b.wpUsed / Math.max(1, mwp) };
+  return { win: b.result === 'win', rounds: b.round, lost: b.taken / mhp, taken: net, fell: b.fell > 0, wipe: b.result === 'lose', casts: b.casts, mpUsed: b.mpUsed / Math.max(1, mmp) };
 }
 function fightReal(z, T, ms, monIds, partyKind) {
   const tier = z.tier === 'dyn' ? T : z.tier;
@@ -653,16 +652,16 @@ function fightReal(z, T, ms, monIds, partyKind) {
     const kit = Object.assign({ weapon1: ht.defaultWeapon || c.equip.weapon1 }, ht.startEquip || {});
     for (const slot of Object.keys(c.equip)) c.equip[slot] = kit[slot] || null;
     const st = R.Rules.stats(c);
-    c.hp = st.hp; c.mp = st.mp; c.wp = st.wp;
+    c.hp = st.hp; c.mp = st.mp;
   }
-  if (partyKind !== 'hero') for (const c of b.party) { c.mp = Math.ceil((c.mp || 0) * 0.6); c.wp = Math.ceil((c.wp || 0) * 0.6); }
+  if (partyKind !== 'hero') for (const c of b.party) c.mp = Math.ceil((c.mp || 0) * 0.6);
   const o = { party: b.party, inv: b.inv, mons: monIds.map((id) => [id, 1]), tier, seed: Math.floor(U.r() * 1e9), maxRounds: 30, noRare: true, noGolden: true };
   if (z.lv) o.lv = U.ri(z.lv[0], z.lv[1]); else o.lvOff = z.lvOff || 0;
   const res = PM.runBattle(R, o);
   const mhp = b.party.reduce((s, c) => s + ((R.Rules.stats(c) || {}).hp || c.hp), 0);
   const taken = res.damageTaken != null ? Math.min(1, res.damageTaken / mhp) : res.hpLostPct / 100;
   return { win: res.result === 'win', rounds: res.rounds, lost: (res.hpLostPct != null ? res.hpLostPct : 100 * taken) / 100, taken: (res.netLossPct || 0) / 100, fell: !!res.anyDown, wipe: res.result === 'lose',
-    casts: (res.casts || []).reduce((x, y) => x + y, 0), mpUsed: (res.mpUsedPct || 0) / 100, wpUsed: (res.wpUsedPct || 0) / 100 };
+    casts: (res.casts || []).reduce((x, y) => x + y, 0), mpUsed: (res.mpUsedPct || 0) / 100 };
 }
 function stats(arr) {
   const n = arr.length || 1;
@@ -680,7 +679,7 @@ function runZoneTier(zid, T, partyKind, n, useReal) {
     for (let i = 0; i < n; i++) rs.push(fight(z, T, ms, partyKind, useReal));
     groups.push({ g, ms, excluded, rs });
   }
-  const agg = { win: 0, rounds: 0, lost: 0, taken: 0, fell: 0, wipe: 0, casts: 0, mpUsed: 0, wpUsed: 0, w: 0, lostAll: [] };
+  const agg = { win: 0, rounds: 0, lost: 0, taken: 0, fell: 0, wipe: 0, casts: 0, mpUsed: 0, w: 0, lostAll: [] };
   for (const G of groups) {
     const w = G.g.w;
     const win = G.rs.filter((r) => r.win).length / G.rs.length;
@@ -688,14 +687,14 @@ function runZoneTier(zid, T, partyKind, n, useReal) {
     const lost = stats(G.rs.map((r) => r.lost));
     const fell = G.rs.filter((r) => r.fell).length / G.rs.length;
     const wipe = G.rs.filter((r) => r.wipe).length / G.rs.length;
-    G.sum = { win, rounds, lost: lost.mean, p95: lost.p95, fell, wipe, casts: stats(G.rs.map((r) => r.casts)).mean, mpUsed: stats(G.rs.map((r) => r.mpUsed)).mean, wpUsed: stats(G.rs.map((r) => r.wpUsed || 0)).mean, taken: stats(G.rs.map((r) => r.taken || 0)).mean };
+    G.sum = { win, rounds, lost: lost.mean, p95: lost.p95, fell, wipe, casts: stats(G.rs.map((r) => r.casts)).mean, mpUsed: stats(G.rs.map((r) => r.mpUsed)).mean, taken: stats(G.rs.map((r) => r.taken || 0)).mean };
     if (G.excluded) continue;
-    agg.w += w; agg.win += w * win; agg.rounds += w * rounds; agg.lost += w * lost.mean; agg.fell += w * fell; agg.wipe += w * wipe; agg.casts += w * G.sum.casts; agg.mpUsed += w * G.sum.mpUsed; agg.wpUsed += w * G.sum.wpUsed; agg.taken += w * G.sum.taken;
+    agg.w += w; agg.win += w * win; agg.rounds += w * rounds; agg.lost += w * lost.mean; agg.fell += w * fell; agg.wipe += w * wipe; agg.casts += w * G.sum.casts; agg.mpUsed += w * G.sum.mpUsed; agg.taken += w * G.sum.taken;
     // p95 over the zone's battle distribution: sample each group's battles proportionally to its weight
     const k = Math.max(1, Math.round(w * 4));
     for (let i = 0; i < k; i++) for (const r of G.rs) agg.lostAll.push(r.lost);
   }
-  for (const key of ['win', 'rounds', 'lost', 'taken', 'fell', 'wipe', 'casts', 'mpUsed', 'wpUsed']) agg[key] /= agg.w || 1;
+  for (const key of ['win', 'rounds', 'lost', 'taken', 'fell', 'wipe', 'casts', 'mpUsed']) agg[key] /= agg.w || 1;
   agg.p95 = stats(agg.lostAll).p95;
   delete agg.lostAll;
   // a 400-battle sample of this zone×tier's mixture (for the pooled distribution)
@@ -1009,9 +1008,9 @@ function main() {
     }
   }
   if (ONLY.includes('M1')) {
-    console.log('\nM1 standard party (§4.17.1), auto — per zone × tier: win, rounds, HP lost mean/p95 (taken), someone fell, wipe, MP/WP used, casts');
+    console.log('\nM1 standard party (§4.17.1), auto — per zone × tier: win, rounds, HP lost mean/p95 (taken), someone fell, wipe, MP used, casts');
     let bad = 0, warnZ = 0;
-    const all = { lost: 0, taken: 0, rounds: 0, w: 0, mp: 0, wp: 0 };
+    const all = { lost: 0, taken: 0, rounds: 0, w: 0, mp: 0 };
     const pool = [];
     let line = '';
     for (const r of results) {
@@ -1025,8 +1024,8 @@ function main() {
       if (a.p95 > 0.20) soft.push('p95');
       if (a.fell > 0.03) soft.push('fell');
       const prologue = DB.encounters[r.zid].region === 'prologue';
-      if (!prologue) { all.lost += a.lost; all.taken += a.taken; all.rounds += a.rounds; all.w++; all.mp += a.mpUsed; all.wp += a.wpUsed; pool.push(...r.sample); }
-      const txt = `${tag.padEnd(26)} win ${pct(a.win)} rnd ${a.rounds.toFixed(2)} lost ${pct(a.lost)} p95 ${pct(a.p95)} (net ${pct(a.taken)}) fell ${pct(a.fell)} wipe ${pct(a.wipe, 2)} mp ${pct(a.mpUsed)} wp ${pct(a.wpUsed)} cast ${a.casts.toFixed(2)}` +
+      if (!prologue) { all.lost += a.lost; all.taken += a.taken; all.rounds += a.rounds; all.w++; all.mp += a.mpUsed; pool.push(...r.sample); }
+      const txt = `${tag.padEnd(26)} win ${pct(a.win)} rnd ${a.rounds.toFixed(2)} lost ${pct(a.lost)} p95 ${pct(a.p95)} (net ${pct(a.taken)}) fell ${pct(a.fell)} wipe ${pct(a.wipe, 2)} mp ${pct(a.mpUsed)} cast ${a.casts.toFixed(2)}` +
         (hard.length ? '  ✗ ' + hard.join(',') : '') + (soft.length ? '  (' + soft.join(',') + ')' : '');
       if (prologue) { line += '  · ' + txt + '  [prologue: the hero-alone case is M4]\n'; continue; }
       if (hard.length) { bad++; console.log('  ✗ ' + txt); } else if (soft.length) { warnZ++; line += '  ~ ' + txt + '\n'; } else line += '  ✓ ' + txt + '\n';
@@ -1038,7 +1037,7 @@ function main() {
     const chk = [['HP lost mean', P.lost, P.lost >= 0.08 && P.lost <= 0.12, '8–12%'], ['rounds', P.rounds, P.rounds >= 2.5 && P.rounds <= 3.5, '2.5–3.5'],
       ['p95', P.p95, P.p95 <= 0.20, '≤20%'], ['someone fell', P.fell, P.fell <= 0.03, '≤3%'], ['wipe', P.wipe, P.wipe <= 0.001, '≤0.1%'], ['win', P.win, P.win >= 0.995, '≥99.5%']];
     console.log(`  pooled over ${all.w} mid/finale/postgame zone×tier (${pool.length} battles): ` + chk.map(([k, v, okk, rng]) => `${k} ${k === 'rounds' ? v.toFixed(2) : pct(v)} ${okk ? '✓' : '✗'}(${rng})`).join('  '));
-    console.log(`  net loss after in-battle healing ${pct(P.taken)}, MP used ${pct(all.mp / n)}, WP used ${pct(all.wp / n)} of max per battle; ${warnZ} zone×tier with per-zone warnings (rounds/p95/fell)`);
+    console.log(`  net loss after in-battle healing ${pct(P.taken)}, MP used ${pct(all.mp / n)} of max per battle; ${warnZ} zone×tier with per-zone warnings (rounds/p95/fell)`);
     const okPool = chk.every((c) => c[2]);
     if (!okPool) bad++;
     console.log(bad ? `  M1 FAIL (${bad - (okPool ? 0 : 1)} zone×tier out of range${okPool ? '' : '; pooled criteria off'})` : '  M1 PASS');
