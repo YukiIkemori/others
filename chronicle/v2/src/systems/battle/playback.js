@@ -10,7 +10,7 @@
   const sfx = (id) => { try { R.Audio.sfx(id); } catch (e) { /* ignore */ } };
 
   const WFX = { sword: 'slash', greatsword: 'smash', dagger: 'thrust', bow: 'shoot', staff: 'smash' };
-  const ELEMS = ['fire', 'ice', 'thunder', 'wind', 'earth', 'light', 'dark'];
+  const ELEMS = ['fire', 'water', 'ice', 'thunder', 'wind', 'earth', 'light', 'dark'];
   const SLOT_ICON = { shield: 'shield', head: 'helm', body: 'armor', hands: 'glove', feet: 'boots', acc: 'ring', use: 'potion', key: 'key' };
   P.itemName = (id) => { const d = R.DB.items && R.DB.items[id]; return (d && d.name) || (_.names && _.names[id]) || String(id); };
   P.itemIcon = (id) => { const d = (R.DB.items && R.DB.items[id]) || {}; return d.icon || (d.slot === 'weapon' ? d.wtype || 'sword' : SLOT_ICON[d.slot]) || 'gem'; };
@@ -203,16 +203,39 @@
   }
 
   // ---------------------------------------------------------------- 1 ラウンドの演出
+  // データの fx の名前（技・術・道具。段の数字つき）→ R.BFX の効果の id
+  const FX_ALIAS = {
+    water: 'ice', holy: 'light', arrow: 'shoot', pierce: 'thrust', strike: 'smash', explosion: 'fire', magic: 'light', gravity: 'dark',
+    death: 'dark', drain: 'dark', poison: 'status', sleep: 'status', silence: 'status', regen: 'heal', cure: 'heal', stance: 'buff', scan: 'buff',
+  };
+  function bfxId(name) {
+    if (!name) return null;
+    if (R.BFX.defs[name]) return name;
+    const base = String(name).replace(/\d+$/, '');
+    if (R.BFX.defs[base]) return base;
+    const a = FX_ALIAS[base];
+    return a && R.BFX.defs[a] ? a : null;
+  }
+  P.bfxId = bfxId;
+  /** 合成術（2・3 属性）の演出の並び: データの fxs（RULES の依頼 14。fx は先頭の属性だけ）→ BFX の id の配列（重ならない） */
+  function fxsFor(e) {
+    const dbk = e.cmd === 'skill' ? 'techs' : e.cmd === 'spell' ? 'spells' : e.cmd === 'item' ? 'items' : null;
+    const d = (dbk && R.DB[dbk] && R.DB[dbk][e.id]) || {};
+    const list = (d.fxs || (d.use && d.use.fxs) || []).map(bfxId).filter(Boolean);
+    return list.length > 1 ? [...new Set(list)] : null;
+  }
   function fxFor(st, e) {
     const u = st.unit(e.uid) || {};
     const dbk = e.cmd === 'skill' ? 'techs' : e.cmd === 'spell' ? 'spells' : e.cmd === 'item' ? 'items' : null;
     const d = (dbk && R.DB[dbk] && R.DB[dbk][e.id]) || {};
-    if (d.fx && R.BFX.defs[d.fx]) return d.fx;
+    const dfx = bfxId(d.fx || (d.use && d.use.fx));
+    if (dfx) return dfx;
     let el = d.element || (ELEMS.includes(e.kind) ? e.kind : null);
     // データに属性が無ければ、この行動の最初のダメージの kind（属性）を使う
     if (!el && st._evs) {
       for (let i = st._evi + 1; i < st._evs.length; i++) { const x = st._evs[i]; if (x.t === 'act' || x.t === 'turn') break; if (x.t === 'dmg' && ELEMS.includes(x.kind)) { el = x.kind; break; } }
     }
+    if (el) el = bfxId(el) || el;   // 水 → ice の絵など
     if (e.cmd === 'spell' || e.cmd === 'item') {
       const toAlly = (e.targets || []).some((t) => (st.unit(t) || {}).side === u.side);
       if (toAlly) return d.mp != null && /mp|ether|魔力/.test(e.id + (d.name || '')) ? 'mp' : 'heal';
@@ -226,7 +249,7 @@
   async function returnActor(st, ctx) {
     const uid = ctx.actor;
     if (uid && st.banner && st.glim && st.glim.uid === uid) _.glimmer.release(st);
-    ctx.actor = null; ctx.act = null; ctx.fx = null;
+    ctx.actor = null; ctx.act = null; ctx.fx = null; ctx.fxs = null;
     if (!uid) return;
     const v = st.vis[uid];
     if (!v) return;
@@ -240,7 +263,7 @@
     if (ctx.actor) await returnActor(st, ctx);
     const u = st.unit(e.uid);
     if (!u) return;
-    ctx.actor = e.uid; ctx.act = e; ctx.fx = fxFor(st, e); ctx.hits = 0;
+    ctx.actor = e.uid; ctx.act = e; ctx.fx = fxFor(st, e); ctx.fxs = fxsFor(e); ctx.hits = 0;
     const an = u.name;
     st.head = e.cmd === 'attack' ? { name: `${an}の攻撃`, t0: R.Engine.time } : { name: e.name || '', sub: an, t0: R.Engine.time };
     if (st.tele && st.tele.uid === e.uid) { st.tele = null; }
@@ -283,6 +306,13 @@
     const onBody = /^(fire|ice|earth|heal|mp|revive)$/.test(id);
     const a = st.actor(e.uid);
     P.fx(st, id, c.x, onBody && a ? a.y - 40 : c.y, { flip });
+    // 合成術: 残りの属性の演出を少しずつ遅らせて重ねる（最初の一撃だけ）
+    if (ctx.fxs && ctx.hits === 0) {
+      ctx.fxs.filter((f) => f !== id).forEach((f, i) => {
+        const body = /^(fire|ice|earth|heal|mp|revive)$/.test(f);
+        P.fx(st, f, c.x + (i % 2 ? 8 : -8), body && a ? a.y - 40 : c.y, { flip, t0: st.clock + 110 * (i + 1) });
+      });
+    }
     if (id !== 'hit' && !/^(heal|mp|revive)$/.test(id)) P.fx(st, 'hit', c.x + (flip ? 6 : -6), c.y, { flip, t0: st.clock + 60 });
     const ES = { fire: 'fire', ice: 'ice', thunder: 'thunder', wind: 'wind', earth: 'earth', light: 'holy', dark: 'dark', shoot: 'arrow' };
     if (ES[id] && ctx.hits === 0) sfx(ES[id]);
@@ -325,6 +355,21 @@
   H.status = async (st, e) => {
     const v = st.vis[e.uid];
     if (!v) return;
+    // 強化・弱体（BATTLE 34-3）: {id:'buff_<atk|def|mag|mdef|agi>', on, stage:-2..2}
+    const bm = /^buff_(atk|def|mag|mdef|agi)$/.exec(e.id || '');
+    if (bm) {
+      const BN = { atk: '攻撃', def: '防御', mag: '魔力', mdef: '魔防', agi: '素早さ' };
+      const stg = e.stage | 0;
+      const up = stg > 0;
+      v.status = v.status.filter((x) => (x.id || x) !== e.id);
+      if (e.on && stg) v.status.push(e.id);
+      const a0 = st.actor(e.uid);
+      if (a0 && e.on && stg) P.fx(st, up ? 'buff' : 'debuff', a0.x, a0.y - 40, {});
+      P.pop(st, e.uid, !e.on || !stg ? `${BN[bm[1]]}が元に戻った` : `${BN[bm[1]]}${up ? '↑' : '↓'}${Math.abs(stg) > 1 ? '↑↓'[up ? 0 : 1] : ''}`, 'status');
+      sfx(e.on && stg ? (up ? 'buff' : 'debuff') : 'heal');
+      await st.pwait(240);
+      return;
+    }
     const name = R.BFX.statusName ? R.BFX.statusName(e.id) : e.id;
     const has = v.status.some((s) => (s.id || s) === e.id);
     if (e.on && !has) v.status.push(e.id);
@@ -364,6 +409,13 @@
   };
   H.glimmer = async (st, e, ctx) => { await _.glimmer.play(st, e, ctx); };
   H.telegraph = async (st, e) => {
+    // 予約が消えた（風で吹き飛んだ・眠った。BATTLE 34-2）: 端の文を消して構えを戻す
+    if (e.cancel || (!e.text && !e.next)) {
+      if (st.tele && st.tele.uid === e.uid) st.tele = null;
+      const v0 = st.vis[e.uid];
+      if (v0 && v0.pose === 'tele') { v0.pose = 'idle'; v0.poseT = R.Engine.time; }
+      return;
+    }
     st.tele = { uid: e.uid, text: e.text, tint: e.tint || '#8fd6d8', t0: R.Engine.time };
     const v = st.vis[e.uid];
     if (v) { v.pose = e.pose || 'tele'; v.poseT = R.Engine.time; }

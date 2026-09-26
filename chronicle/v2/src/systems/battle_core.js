@@ -1960,7 +1960,7 @@
         out.push({ t: 'act', uid: uidOf(ev.user), cmd: ev.cmd || CMD_OF_KIND[ev.kind] || 'enemy', id: ev.id || (ev.ab && ev.ab.id) || 'attack', name: ev.name || (ev.ab && ev.ab.name) || '', targets: (ev.targets || []).map(uidOf), fx: ev.fx || null, counter: ev.kind === 'counter' || undefined, telegraphing: ev.telegraphing || undefined });
         break;
       case 'dmg': {
-        const e = { t: 'dmg', uid: uidOf(ev.u), n: ev.n, crit: !!ev.crit, weak: !!ev.weak, kind: ev.mp ? 'mp' : ev.kind || 'phys' };
+        const e = { t: 'dmg', uid: uidOf(ev.u), n: ev.n, crit: !!ev.crit, weak: !!ev.weak, kind: ev.mp ? 'mp' : ev.el && ev.kind !== 'cost' ? ev.el : ev.kind || 'phys' };   // 属性があれば kind は属性（BSCENE の依頼 28）
         if (ev.mp) e.mp = true;
         if (ev.el) e.el = ev.el;
         out.push(e);

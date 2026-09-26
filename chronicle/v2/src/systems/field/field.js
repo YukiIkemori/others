@@ -56,7 +56,11 @@
     enter() { R.Input.touchLayout('field'); },
     exit() {},
     onLayout() { F.hud.refresh(); },
-    tick(dt) { if (S.map) { F._tickMove(); F._tickNpcs(dt); F.camera._tick(); } },
+    tick(dt) {
+      // 暗転の間（入る前）: 次のマップの焼きを進める（画面は暗くなっていくだけなので 1 フレーム 8 ms まで）
+      if (S.entering && S.pre) F.chunks.preStep(8);
+      if (S.map) { F._tickMove(); F._tickNpcs(dt); F.camera._tick(); }
+    },
     update() {
       if (!S.map) return;
       if (S.mv || S.arriving || S.entering || F._locked() || R.Engine.fade.a > 0.01 || R.Events.busy()) return;
@@ -97,6 +101,8 @@
     const onStack = R.Engine.stack.includes(scene);
     S.entering++;
     try {
+      // 暗くなる間に、行き先の見える範囲を焼き始める（歩いている間に始めていればその続き。§2.10）
+      if (onStack && S.map !== map) F.chunks.preload(mapId, spawn);
       if (onStack && fade) await R.Engine.fadeTo(1, fade / 2);
       if (S.map) R.emit('map:leave', { map: S.map.id });
       const from = S.map ? S.map.id : null;
@@ -124,14 +130,19 @@
       try { if (map.bgm) R.Audio.bgm(map.bgm, { fade: 600 }); } catch (e) { /* 音が無くても止めない */ }
       // 暗転の中で: 素材・物・人の絵を先に焼き、見える範囲のチャンクを焼く（§2.10 マップに入る）
       F.camera._snap();
-      F.chunks.reset();
+      const t0 = typeof performance !== 'undefined' ? performance.now() : Date.now();
+      if (from !== map.id || S.chTile !== F._tile()) F.chunks.reset();   // 同じマップの中の移り（森の出口の入れ替え）は焼いた物を使い続ける
+      else S.stat.adopted = F.chunks.stats().ready;
       F.chunks.prewarm();
+      S.stat.enterMs = (typeof performance !== 'undefined' ? performance.now() : Date.now()) - t0;
+      try { if (R.Mon.resetEncounter && G) R.Mon.resetEncounter(G.steps || 0); } catch (e) { /* */ }   // 安全な歩数を数え直す（BATTLE）
       F.minimap.reveal();
       F.hud.refresh();
       S.placeT0 = R.Engine.time;
       R.emit('map:enter', { map: map.id, from });
       if (fade) await R.Engine.fadeTo(0, fade / 2);
     } finally { S.entering--; }
+    F.chunks.lookAhead();   // 入口のすぐ横の出口（屋内の扉など）の先も列で先に焼いておく
     if (!o.noAutosave) { try { R.Save.autosave('map'); } catch (e) { console.error(e); } }
     // on:'enter' のトリガー（onEnter。入るたび、once なら 1 回）
     const G = R.Game;

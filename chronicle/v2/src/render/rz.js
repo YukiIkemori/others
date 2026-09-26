@@ -187,16 +187,39 @@
 
   // 使い回すバッファ（POOL_PX 画素まで。大きい物はその回だけ作る）
   const POOL_PX = 400000;
-  let pool = null;
+  let pool = null, poolBusy = false;
   function buffers(N) {
-    if (N > POOL_PX) return mkBuf(N);
+    if (N > POOL_PX || poolBusy) return mkBuf(N);   // 大きい物・途中で止まっている仕事が使っている間は、その回だけ作る
     if (!pool || pool.cap < N) pool = mkBuf(Math.min(POOL_PX, Math.max(N, pool ? pool.cap * 2 : 65536)));
+    poolBusy = true;
     return pool;
   }
+  function release(buf) { if (buf === pool) poolBusy = false; }
   function mkBuf(n) { return { cap: n, zb: new Float32Array(n), pid: new Int32Array(n), nx: new Float32Array(n), ny: new Float32Array(n), nz: new Float32Array(n), dl: new Float32Array(n), tu: new Float32Array(n), tv: new Float32Array(n), occl: new Float32Array(n) }; }
 
   // render(builder, {scale, flip, light, outline, ssaa}) → {canvas, ox, oy}  (ox,oy = model origin in canvas px)
   function render(B, o) {
+    const it = renderGen(B, o, null);
+    let r = it.next();
+    while (!r.done) r = it.next();
+    return r.value;
+  }
+  /**
+   * 切れ端で焼く（K.bakeJob の形）: RZ.job(B, o) → {kind, done, result, step(ms)}。result は render と同じ {canvas, ox, oy}（同じ画素）。
+   * ボス・戦闘背景の大きい絵を R.Hd.pump の 1 フレーム 3 ms に収めるために使う
+   */
+  function job(B, o, kind) {
+    const clock = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    let deadline = 0;
+    const S = { clk: () => clock() > deadline };
+    const it = renderGen(B, o, S);
+    const j = {
+      kind: kind || 'other', done: false, result: null,
+      step(ms) { if (j.done) return; deadline = clock() + Math.max(0.1, ms); const r = it.next(); if (r.done) { j.done = true; j.result = r.value; } },
+    };
+    return j;
+  }
+  function* renderGen(B, o, S) {
     o = Object.assign({ scale: 1, flip: false, outline: true, ssaa: 1, pad: 2, wx: 0, wy: 0 }, o);
     const L = Object.assign({}, DEF_LIGHT, o.light || {});
     const sc = o.scale * o.ssaa, fl = o.flip ? -1 : 1;
@@ -209,13 +232,15 @@
     const ox = Math.ceil(-x0 * sc) + pad, oy = Math.ceil(-y0 * sc) + pad;
     const W = Math.ceil((x1 - x0) * sc) + pad * 2 + 1, H = Math.ceil((y1 - y0) * sc) + pad * 2 + 1;
     const N = W * H;
-    const buf = buffers(N);
+    const buf = S ? mkBuf(N) : buffers(N);   // 切れ端の仕事は自分のバッファ（途中で捨てられても使い回しの物を塞がない）
     const zb = buf.zb, pid = buf.pid, nxb = buf.nx, nyb = buf.ny, nzb = buf.nz, dl = buf.dl, tub = buf.tu, tvb = buf.tv, occl = buf.occl;
     zb.fill(-1e9, 0, N); pid.fill(-1, 0, N); dl.fill(0, 0, N);
     // 不透明な画素の外枠（AO・陰・縁の走査をここだけにする）
     let oX0 = W, oY0 = H, oX1 = -1, oY1 = -1;
     const cp = prims.map(compile);
+    try {
     for (let i = 0; i < NP; i++) {
+      if (S && S.clk()) yield;
       const c = cp[i], b = boxes[i], zr = c.zr, pz = c.z;
       const ax = fl > 0 ? b[0] : -b[2], bx = fl > 0 ? b[2] : -b[0];
       const px0 = Math.max(0, Math.floor(ax * sc + ox) - 1), px1 = Math.min(W - 1, Math.ceil(bx * sc + ox) + 1);
@@ -248,6 +273,7 @@
     for (let i = 0; i < NP; i++) { const p = prims[i]; G[i] = p.g; NOAO[i] = p.noAO ? 1 : 0; AOK[i] = p.m.ao && !p.m.flat ? 1 : 0; }
     // shade modifiers (folds, seams)
     for (const q of mods) {
+      if (S && S.clk()) yield;
       const b = bbox(q); const ax = fl > 0 ? b[0] : -b[2], bx = fl > 0 ? b[2] : -b[0];
       const cq = compile(q), arr = Array.isArray(q.target);
       for (let py = Math.max(0, Math.floor(b[1] * sc + oy)); py <= Math.min(H - 1, Math.ceil(b[3] * sc + oy)); py++)
@@ -259,7 +285,9 @@
     }
     // ambient occlusion lines: a pixel next to a nearer part of another group darkens
     const aoR = Math.max(1, Math.round(o.scale * o.ssaa * 0.6));
-    for (let y = oY0; y <= oY1; y++) for (let x = oX0; x <= oX1; x++) {
+    for (let y = oY0; y <= oY1; y++) {
+      if (S && (y & 7) === 0 && S.clk()) yield;
+      for (let x = oX0; x <= oX1; x++) {
       const k = y * W + x, pi = pid[k]; if (pi < 0) continue;
       occl[k] = 0;
       if (!AOK[pi]) continue;
@@ -274,13 +302,16 @@
       }
       occl[k] = hitN;
     }
+    }
     const key = norm3(L.key), rim = norm3(L.rim);
     const k0 = key[0], k1 = key[1], k2 = key[2], rm0 = rim[0], rm1 = rim[1];
     const mul0 = L.mul[0], mul1 = L.mul[1], mul2 = L.mul[2], rimK = L.rimK, pts = L.pts, npl = pts.length, wk = o.wk || 1;
     const sat = o.sat, tint = o.tint, tones = o.tones;
     const cv = mk(W, H);
     const cx = cv.getContext('2d'), img = cx.createImageData(W, H), D = img.data;
-    for (let y = oY0; y <= oY1; y++) for (let x = oX0; x <= oX1; x++) {
+    for (let y = oY0; y <= oY1; y++) {
+      if (S && (y & 7) === 0 && S.clk()) yield;
+      for (let x = oX0; x <= oX1; x++) {
       const k = y * W + x, pi = pid[k];
       if (pi < 0) continue;
       const p = prims[pi], m = p.m, n0 = nxb[k], n1 = nyb[k], n2 = nzb[k];
@@ -335,11 +366,14 @@
       }
       const q = k * 4; D[q] = clamp(r, 0, 255); D[q + 1] = clamp(g, 0, 255); D[q + 2] = clamp(b, 0, 255); if (D[q] + D[q + 1] + D[q + 2] < 3) { D[q] = 7; D[q + 1] = 8; D[q + 2] = 18; } D[q + 3] = m.alpha != null ? m.alpha * 255 : 255;
     }
+    }
     // outline（縁の画素は不透明な画素を読むだけで、不透明な画素は書き換えないので写しは要らない）
     if (o.outline && oX1 >= 0) {
       const ow = o.ssaa, sm0 = mul0 ** 0.5, sm1 = mul1 ** 0.5, sm2 = mul2 ** 0.5, olMix = o.olMix;
       const ya = Math.max(0, oY0 - ow), yb = Math.min(H - 1, oY1 + ow), xa = Math.max(0, oX0 - ow), xb = Math.min(W - 1, oX1 + ow);
-      for (let y = ya; y <= yb; y++) for (let x = xa; x <= xb; x++) {
+      for (let y = ya; y <= yb; y++) {
+        if (S && (y & 7) === 0 && S.clk()) yield;
+        for (let x = xa; x <= xb; x++) {
         const k = y * W + x; if (pid[k] >= 0) continue;
         let best = -1, bz = -1e9;
         if (ow === 1) {   // よくある場合（上・左・右・下の順は下の一般の式と同じ）
@@ -361,6 +395,7 @@
         if (olMix != null) { const t = olMix + (lit ? -0.2 : 0), a0 = ol[0] * 0.5, a1 = ol[1] * 0.4, a2 = ol[2] * 0.5; c0 = s0 + (a0 - s0) * t; c1 = s1 + (a1 - s1) * t; c2 = s2 + (a2 - s2) * t; }
         else if (lit) { c0 = c0 + (s0 - c0) * 0.35; c1 = c1 + (s1 - c1) * 0.35; c2 = c2 + (s2 - c2) * 0.35; }
         const q = k * 4; D[q] = c0 * sm0; D[q + 1] = c1 * sm1; D[q + 2] = c2 * sm2; D[q + 3] = 255; if (D[q] + D[q + 1] + D[q + 2] < 3) { D[q] = 7; D[q + 1] = 8; D[q + 2] = 18; }
+        }
       }
     }
     cx.putImageData(img, 0, 0);
@@ -374,6 +409,7 @@
       return { canvas: c2, ox: ox / o.ssaa, oy: oy / o.ssaa };
     }
     return { canvas: cv, ox, oy };
+    } finally { release(buf); }
   }
   function h2(x, y, s) { let h = (x * 374761393 + y * 668265263 + s * 2147483647) | 0; h = (h ^ (h >>> 13)) * 1274126177 | 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; }
   function vnoise(x, y, s) {
@@ -392,5 +428,5 @@
   /** render の結果 {canvas, ox, oy} → Sheet のコマ {c, ox, oy}（ox, oy は整数に丸める） */
   function frame(r, anchors) { const f = { c: r.canvas, ox: Math.round(r.ox), oy: Math.round(r.oy) }; if (anchors) f.anchors = anchors; return f; }
 
-  Hd.RZ = { Builder, render, mat, ramp, hex, mix, clamp, rng, vnoise, seed, frame, canvas: mk, norm3 };
+  Hd.RZ = { Builder, render, job, mat, ramp, hex, mix, clamp, rng, vnoise, seed, frame, canvas: mk, norm3 };
 })(window.RPG);

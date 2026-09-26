@@ -2,7 +2,8 @@
 //   1 歩 1 マス、8 方向、押した最初のフレームから動く、連続歩行（前の歩の終わりの時刻から次の歩を数える＝止まらない）、補間描画。
 //   斜めは両隣が通れるときだけ。通れない斜めは空いた軸へ壁沿いに滑る（角を切らない）。
 //   タイルに入った瞬間に 1 回だけ判定（隠し通路・スイッチの床・階段と扉・出口・step のトリガー・出現）。出現と歩数は歩いた数。
-//   NPC は押し続けると 1 歩よける・動けなければ入れ替わる（npc.js）。R.Field.encounter.suppress(n) / ward(n)。
+//   NPC は押し続けると 1 歩よける・動けなければ入れ替わる（npc.js）。R.Field.encounter.suppress(n) / ward(n) / lure(n)。
+//   R.Field.light(r, steps)（松明 i_torch）: 暗がりで一行の灯りの半径を r マスに steps 歩のあいだ広げる（dark.js）。
 (function (R) {
   'use strict';
   const F = (R.Field = R.Field || {});
@@ -88,6 +89,7 @@
   F._arrive = function () {
     const m = S.map, G = R.Game;
     S.stat.arrive++;
+    if (S.torch && S.torch.steps > 0 && --S.torch.steps <= 0) { S.torch = null; F.hud.toast('松明の 火が 消えた', { icon: 'lamp', anchor: 'bl' }); }
     if (G) {
       G.steps = (G.steps || 0) + 1;
       const p = G.pos || (G.pos = {});
@@ -95,6 +97,8 @@
     }
     R.emit('step', { map: m.id, x: S.x, y: S.y });
     F.minimap.reveal();
+    F.chunks.lookAhead();
+    F.hud.step();
     // 隠し通路（入った瞬間に見つける）
     const c = R.MapUtil.cell(m, S.x, S.y);
     if (c && c.secret && G && !R.MapUtil.secretFound(m.id, S.x, S.y)) {
@@ -155,10 +159,21 @@
     if (S.suppress > 0) { S.suppress--; return null; }
     const ward = S.ward > 0;
     if (S.ward > 0) S.ward--;
+    const lure = S.lure > 0;
+    if (S.lure > 0) S.lure--;
     const zone = R.MapUtil.zoneAt(m, S.x, S.y);
     if (!zone || F.safeAt(S.x, S.y)) return null;
-    const setup = R.Mon.encounter(zone, { tier: R.Tier.get(), dark: F.dark.battleDark(S.x, S.y), steps: G.steps || 0, ward });
+    const o = { tier: R.Tier.get(), dark: F.dark.battleDark(S.x, S.y), steps: G.steps || 0, ward };
+    let setup = R.Mon.encounter(zone, o);
+    // 呼び寄せの香（i_lure、出現 +100%）: 出なかった歩にもう 1 回だけ同じ率で振る（前の戦闘から 6 歩の間は振らない）
+    if (!setup && lure && (G.steps || 0) - (S.lastBattleStep || -1e9) >= 6) {
+      const z = R.DB.encounters && R.DB.encounters[zone];
+      const p = z && R.Mon.stepChance ? R.Mon.stepChance(zone, z) : 0;
+      if (p > 0 && R.rng(G.seed + ':lure:' + zone + ':' + G.steps).next() < p) setup = R.Mon.encounter(zone, Object.assign({}, o, { force: true }));
+    }
     if (!setup) return null;
+    if (!setup.bg && S.map.bbg) setup.bg = S.map.bbg;   // 出現表に背景が無ければマップの bbg（BATTLE の依頼）
+    S.lastBattleStep = G.steps || 0;
     return (async () => {
       R.emit('encounter', { zone });
       F.lock('battle');
@@ -169,6 +184,16 @@
   const E = (F.encounter = F.encounter || {});
   E.suppress = function (n) { S.suppress = n == null ? 10 : n; };
   E.ward = function (n) { S.ward = n == null ? 100 : n; };
+  /** 呼び寄せの香（MENUS の依頼。i_lure: encounter +100%）: n 歩のあいだ出現の率を 2 倍に */
+  E.lure = function (n) { S.lure = n == null ? 100 : n; };
+  /** 松明（RULES・MENUS の依頼。i_torch: use.effects [{type:'light', r, steps}]）。暗がりの外で使っても働く（歩数は減る） → true */
+  F.light = function (r, steps) {
+    S.torch = { r: Math.max(1, r || 6), steps: steps == null ? 200 : steps };
+    try { R.Audio.sfx('lamp'); } catch (e) { /* */ }
+    return true;
+  };
+  /** 今の松明 {r, steps} | null（HUD・テスト用） */
+  F.torch = function () { return S.torch && S.torch.steps > 0 ? { r: S.torch.r, steps: S.torch.steps } : null; };
 
   // ---------------------------------------------------------------- 調べる（A）
   function frontObj(x, y, lv) {

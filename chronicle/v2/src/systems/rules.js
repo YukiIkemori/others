@@ -135,6 +135,7 @@
     PARTY_KEYS: ['goldPct', 'dropPct', 'rarePct', 'superPct', 'rareEncPct', 'goldenPct', 'preemptPct', 'escapePct'],
     // §4.11 出現・先制・逃走
     ENC: { world: 26, dungeon: 22, randLo: 0.6, randHi: 1.4, safeSteps: 6 },
+    DARK: { ambush: 0.08, stat: 1.1 },   // 暗がりの闇の強まり（E6。BATTLE が読む：先手を取られる率・闇の魔物の能力の倍率）
     ENC_ITEM: { repel: { pct: -100, steps: 100, weakOnly: true }, lure: { pct: 100, steps: 100 }, weakMargin: 3 },
     PREEMPT: 1 / 16, PREEMPT_RATIO: [0.5, 2],
     ESCAPE: { base: 0.55, step: 0.12, agi: 0.5, min: 0.25, max: 0.95 },

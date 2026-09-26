@@ -4,7 +4,8 @@
 //   state = {grid: R.MapUtil.grid(map), chests, lit, lamps, secrets}（R.Game の今の値）。
 //   マップに入る暗転の中で prewarm と見える範囲を焼く。見える範囲に焼けていないチャンクが来たら、その場で焼き切る（stat.miss に数える）。
 //   TERRAIN の結果に base が無い間（仮の実装）は、ここで素材の色から仮の地面を焼く（fb）。宝箱・燭台・隠し通路・tilePatches が変わったら、
-//   そのチャンクだけ焼き直す（焼き終わるまで古い絵を出す）。
+//   そのチャンクだけ焼き直す（焼き終わるまで古い絵を出す）。焼き直すチャンクは R.Terrain.dirty の返す一覧と R.Terrain.takeDirty（'terrain:dirty'）。
+//   次のマップ: 出口・扉・階段に近づいたら（と F.enter の暗転の前から）その先の見える範囲を列で先に焼き（CK.preload）、入ったら使い回す。
 (function (R) {
   'use strict';
   const F = (R.Field = R.Field || {});
@@ -17,46 +18,60 @@
 
   function map() { return S.map; }
   function all() { return S.chunks || (S.chunks = new Map()); }
-  function state() {
-    const G = R.Game || {}, id = S.map.id;
+  function state(m) {
+    const G = R.Game || {}, id = m.id;
     return {
-      grid: R.MapUtil.grid(S.map), chests: (G.chests && G.chests[id]) || [], lit: (G.lit && G.lit[id]) || [],
+      grid: R.MapUtil.grid(m), chests: (G.chests && G.chests[id]) || [], lit: (G.lit && G.lit[id]) || [],
       lamps: G.lamps || {}, secrets: (G.secrets && G.secrets[id]) || [],
     };
   }
-  function tid(e) { return S.map.id + ':' + S.chTile + ':' + e.cx + ',' + e.cy; }
+  function tid(e) { return e.m.id + ':' + e.tile + ':' + e.cx + ',' + e.cy; }
 
-  /** 全部捨てる（マップ・広さが変わった） */
+  /** 全部捨てる（マップ・広さが変わった）。先に焼いてあった次のマップ（CK.preload）が今のマップなら、それを使い回す */
   CK.reset = function () {
     for (const e of all().values()) drop(e);
     all().clear();
     S.chGen = (S.chGen || 0) + 1;
     S.chTile = F._tile();
     S.lastGrid = S.map ? R.MapUtil.grid(S.map) : null;
+    S.stat.adopted = 0;
+    const P = S.pre;
+    S.pre = null;
+    if (!P) return;
+    if (S.map && P.m === S.map && P.tile === S.chTile && P.sig === gridSig(S.map)) {
+      for (const e of P.list) { if (e.dead) continue; all().set(e.key, e); e.used = R.Engine.frame; if (e.ready) S.stat.adopted++; }
+      S.preDone = !P.pj || P.pj.done;
+    } else for (const e of P.list) drop(e);
   };
   function drop(e) {
     e.dead = true;
     if (e.bytes) R.Hd.track('chunk', e.tid, null);
   }
+  function gridSig(m) { return R.MapUtil.grid(m).join('\n'); }
 
-  function request(cx, cy, prio) {
-    const e = { cx, cy, key: cy * KEYW + cx, ready: false, base: null, over: null, lights: null, glows: null, props: null, fb: false, bytes: 0, used: R.Engine.frame, gen: S.chGen, dead: false, job: null, next: null };
+  function entry(m, cx, cy) {
+    const e = { m, tile: S.chTile, cx, cy, key: cy * KEYW + cx, ready: false, base: null, over: null, lights: null, glows: null, props: null, fb: false, bytes: 0, used: R.Engine.frame, dead: false, job: null, next: null };
     e.tid = tid(e);
+    return e;
+  }
+  function request(cx, cy, prio) {
+    const e = entry(S.map, cx, cy);
     all().set(e.key, e);
     e.job = makeJob(e, prio);
     return e;
   }
-  /** TERRAIN の仕事を包む（K.bakeJob）。終わったら結果を当てる（base が無ければ仮の地面） */
+  /** TERRAIN の仕事を包む（K.bakeJob）。終わったら結果を当てる（base が無ければ仮の地面）。捨てたチャンク（dead）には当てない */
   function makeJob(e, prio, rebake) {
-    const m = S.map, tile = S.chTile, gen = S.chGen;
+    const m = e.m, tile = e.tile;
     let tj = null;
     const job = {
       kind: 'chunk', done: false, result: null,
       step(ms) {
         if (job.done) return true;
-        if (!canBake()) { job.done = true; if (!e.dead) apply(e, null, rebake); return true; }   // node（キャンバスなし）: 焼かずに済ませる
+        if (e.dead) { job.done = true; return true; }
+        if (!canBake()) { job.done = true; apply(e, null, rebake); return true; }   // node（キャンバスなし）: 焼かずに済ませる
         try {
-          if (!tj) tj = R.Terrain.bakeChunk(m, e.cx, e.cy, { tile, tier: R.Tier.get(), state: state() });
+          if (!tj) tj = R.Terrain.bakeChunk(m, e.cx, e.cy, { tile, tier: R.Tier.get(), state: state(m) });
           if (tj && !tj.done) tj.step(ms);
         } catch (err) {
           if (!S.bakeErr) { S.bakeErr = true; console.error('[field] chunk bake failed (the plain ground is used)', err); }
@@ -65,7 +80,7 @@
         if (!tj || tj.done) {
           job.done = true;
           job.result = tj ? tj.result : null;
-          if (!e.dead && gen === S.chGen && S.map === m) apply(e, job.result, rebake);
+          if (!e.dead) apply(e, job.result, rebake);
         }
         return job.done;
       },
@@ -75,13 +90,13 @@
     return job;
   }
   function apply(e, res, rebake) {
-    if (!res || !res.base) res = fallback(S.map, e.cx, e.cy, S.chTile, res);
+    if (!res || !res.base) res = fallback(e.m, e.cx, e.cy, e.tile, res);
     e.base = res.base; e.over = res.over || null;
     e.lights = res.lights || []; e.glows = res.glows || []; e.props = res.props || [];
     e.fb = !!res.fb;
     e.ready = true;
     if (rebake) e.next = null;
-    const px = CH() * S.chTile;
+    const px = CH() * e.tile;
     const bytes = (e.base ? px * px * 4 : 0) + (e.over ? px * px * 4 : 0);
     if (bytes !== e.bytes) { e.bytes = bytes; R.Hd.track('chunk', e.tid, bytes || null); }
   }
@@ -114,6 +129,7 @@
   CK.sync = function () {
     if (!S.map) return;
     if (S.chTile !== F._tile()) CK.reset();
+    if (S.dirtyPending) takeDirty();
     const v = CK.view(view), A = all(), f = R.Engine.frame;
     // 進む向きに 2 チャンク先まで
     const mv = S.mv;
@@ -138,6 +154,88 @@
     }
     if ((f & 31) === 0) evict(ax0 - 1, ay0 - 1, ax1 + 1, ay1 + 1);
   };
+
+  // ================================================================ 次のマップを先に焼く（§2.10 マップに入る 150 ms）
+  /** (x, y) にいるときに見える範囲（チャンク座標）。カメラと同じ決まり（端で止まる・小さいマップは中央） */
+  function viewAt(m, x, y, tile, out) {
+    const n = CH(), cs = n * tile;
+    let cx = x * tile + tile / 2 - R.W / 2, cy = y * tile + tile / 2 - R.H / 2;
+    const mw = m.w * tile, mh = m.h * tile;
+    cx = mw <= R.W ? (mw - R.W) / 2 : Math.max(0, Math.min(mw - R.W, cx));
+    cy = mh <= R.H ? (mh - R.H) / 2 : Math.max(0, Math.min(mh - R.H, cy));
+    const mx = Math.ceil(m.w / n) - 1, my = Math.ceil(m.h / n) - 1;
+    out.x0 = Math.max(0, Math.floor(cx / cs)); out.y0 = Math.max(0, Math.floor(cy / cs));
+    out.x1 = Math.min(mx, Math.floor((cx + R.W - 1) / cs)); out.y1 = Math.min(my, Math.floor((cy + R.H - 1) / cs));
+    return out;
+  }
+  const preView = {};
+  /**
+   * 次に入りそうなマップ（mapId と spawn）の素材・物（TERRAIN の prewarm）と、そこで見える範囲のチャンクを列に積む（prio は低め）。
+   * 入ったとき（CK.reset）に同じマップ・同じ広さ・同じマスなら使い回す。同じ行き先なら何もしない。
+   */
+  CK.preload = function (mapId, spawn) {
+    const m = R.DB.maps[mapId];
+    if (!m || !S.map || m === S.map || !canBake()) return null;
+    const tile = F._tile();
+    const sp = R.MapUtil.spawn(m, spawn);
+    const key = m.id + ':' + tile + ':' + sp.x + ',' + sp.y;
+    if (S.pre && S.pre.key === key) return S.pre;
+    if (S.pre) for (const e of S.pre.list) drop(e);
+    const P = (S.pre = { key, m, tile, sig: gridSig(m), list: [], t0: now() });
+    try {
+      const pj = R.Terrain.prewarm(m, { tile, tier: R.Tier.get() });
+      if (pj) { P.pj = pj; R.Hd.schedule(pj, 45); }
+    } catch (e) { console.error('[field] preload prewarm', e); }
+    const v = viewAt(m, sp.x, sp.y, tile, preView);
+    const cx0 = (v.x0 + v.x1) / 2, cy0 = (v.y0 + v.y1) / 2;
+    for (let cy = v.y0; cy <= v.y1; cy++) for (let cx = v.x0; cx <= v.x1; cx++) {
+      const e = entry(m, cx, cy);
+      e.tile = tile;
+      P.list.push(e);
+      makeJob(e, 40 - Math.round(Math.hypot(cx - cx0, cy - cy0)));
+    }
+    return P;
+  };
+  /** 暗転の間（入る前）: 先に焼く仕事を ms だけ進める（列の 3 ms を待たずに） */
+  CK.preStep = function (ms) {
+    const P = S.pre;
+    if (!P) return true;
+    const t0 = now();
+    if (P.pj && !P.pj.done) { P.pj.step(ms); if (now() - t0 >= ms) return false; }
+    for (const e of P.list) {
+      if (e.ready || e.dead || !e.job || e.job.done) continue;
+      e.job.step(Math.max(1, ms - (now() - t0)));
+      if (now() - t0 >= ms) return false;
+    }
+    return true;
+  };
+  CK.preStats = function () {
+    const P = S.pre;
+    if (!P) return null;
+    return { map: P.m.id, n: P.list.length, ready: P.list.filter((e) => e.ready && !e.fb).length, prewarm: !P.pj || P.pj.done };
+  };
+  /** 歩いている間: 近くの出口・扉・階段・建物の入口（8 マス以内の最も近い物）の先を先に焼く。離れたら捨てる */
+  CK.lookAhead = function () {
+    const m = S.map;
+    if (!m) return;
+    let best = null, bd = 9;   // 8 マス以内（歩いて 2 秒）
+    const see = (x, y, w, h, to) => {
+      if (!to || !to.map || to.map === m.id) return;
+      const dx = Math.max(x - S.x, 0, S.x - (x + (w || 1) - 1)), dy = Math.max(y - S.y, 0, S.y - (y + (h || 1) - 1));
+      const d = Math.max(dx, dy);
+      if (d < bd) { bd = d; best = to; }
+    };
+    const ex = m.exits || [];
+    for (let i = 0; i < ex.length; i++) { const e = ex[i]; if (!e.cond || R.State.check(e.cond)) see(e.x, e.y, e.w, e.h, e.to); }
+    const ob = m.objects || [];
+    for (let i = 0; i < ob.length; i++) {
+      const o = ob[i];
+      if ((o.type === 'stairs' || o.type === 'door') && o.to && (!o.cond || R.State.check(o.cond))) see(o.x, o.y, 1, 1, o.to);
+      else if (o.type === 'building' && o.door && o.door.to) see(o.door.x, o.door.y, 1, 1, o.door.to);
+    }
+    if (best) CK.preload(best.map, best.spawn);
+    else if (S.pre && !S.entering) { for (const e of S.pre.list) drop(e); S.pre = null; }   // 離れた: 持たない（チャンクの予算）
+  };
   /** 持つ範囲の外（ヒステリシス 1）と、予算（BUDGET.mb.chunk）を超えた分を古い順に捨てる */
   function evict(x0, y0, x1, y1) {
     const A = all();
@@ -158,28 +256,43 @@
     if (!S.map) return;
     const t0 = now();
     try {
-      const pj = canBake() ? R.Terrain.prewarm(S.map, { tile: S.chTile }) : null;
+      const pj = !canBake() ? null : S.stat.adopted && S.preDone ? null : R.Terrain.prewarm(S.map, { tile: S.chTile });
       const t1 = now();
       while (pj && !pj.done && now() - t1 < 150) pj.step(4);
       if (pj && !pj.done) R.Hd.schedule(pj, 130);
     } catch (e) { console.error('[field] prewarm', e); }
-    const v = CK.view(view);
+    const v = CK.view(view), A = all();
     for (let cy = v.y0; cy <= v.y1; cy++) for (let cx = v.x0; cx <= v.x1; cx++) {
-      const e = request(cx, cy, null);
+      let e = A.get(cy * KEYW + cx);
+      if (e && e.ready) continue;                 // 先に焼いてあった（CK.preload）
+      if (!e) e = request(cx, cy, null);
       finishNow(e, e.job, 60);
     }
-    S.stat.enterMs = now() - t0;
+    S.stat.prewarmMs = now() - t0;
     CK.sync();
   };
 
   /** (x, y) のマスが変わった（宝箱・燭台・隠し通路・灯籠）: TERRAIN に知らせ、光の届く範囲のチャンクを焼き直す */
   CK.dirtyAt = function (x, y, r) {
     if (!S.map) return;
-    try { R.Terrain.dirty(S.map, x, y); } catch (e) { console.error(e); }
+    let list = null;
+    try { list = R.Terrain.dirty(S.map, x, y); } catch (e) { console.error(e); }
+    try { R.Terrain.takeDirty && R.Terrain.takeDirty(S.map.id); } catch (e) { /* */ }   // 今の一覧で焼き直すので、たまった分は空にする
+    S.dirtyPending = false;
     const n = CH(), rr = r == null ? 4 : r;
     const cx0 = Math.floor((x - rr) / n), cx1 = Math.floor((x + rr) / n), cy0 = Math.floor((y - rr) / n), cy1 = Math.floor((y + rr) / n);
-    for (let cy = cy0; cy <= cy1; cy++) for (let cx = cx0; cx <= cx1; cx++) rebake(cx, cy);
+    // TERRAIN の一覧（灯りの届く範囲・隠し通路の上の面）＋仮の地面の光だまりの範囲
+    if (Array.isArray(list)) for (const q of list) rebake(q[0], q[1]);
+    for (let cy = cy0; cy <= cy1; cy++) for (let cx = cx0; cx <= cx1; cx++) { const e = all().get(cy * KEYW + cx); if (e && (e.fb || !Array.isArray(list))) rebake(cx, cy); }
   };
+  /** ほかの担当が R.Terrain.dirty を呼んだ分（'terrain:dirty'）: たまった一覧を受け取って焼き直す */
+  function takeDirty() {
+    S.dirtyPending = false;
+    let list = null;
+    try { list = R.Terrain.takeDirty ? R.Terrain.takeDirty(S.map.id) : null; } catch (e) { list = null; }
+    if (list) for (const q of list) rebake(q[0], q[1]);
+  }
+  R.on('terrain:dirty', (d) => { if (S.map && d && d.map === S.map.id) S.dirtyPending = true; });
   CK.dirtyAll = function () { for (const e of all().values()) rebake(e.cx, e.cy); };
   function rebake(cx, cy) {
     const e = all().get(cy * KEYW + cx);
@@ -209,7 +322,7 @@
   CK.stats = function () {
     let n = 0, ready = 0, bytes = 0, fb = 0;
     for (const e of all().values()) { n++; if (e.ready) ready++; if (e.fb) fb++; bytes += e.bytes; }
-    return { n, ready, bytes, fb, miss: S.stat.miss, enterMs: S.stat.enterMs || 0 };
+    return { n, ready, bytes, fb, miss: S.stat.miss, enterMs: S.stat.enterMs || 0, adopted: S.stat.adopted || 0 };
   };
 
   // ================================================================ 仮の地面（TERRAIN の base が来るまで）

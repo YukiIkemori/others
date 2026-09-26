@@ -3,6 +3,8 @@
 //   暗い膜で覆う。膜は 1/4 の解像度の 1 枚に、焼いておいた穴の絵を destination-out で抜く（毎フレーム新しい物を作らない）。
 //   宝箱と泉のきらめきは膜の上（layers.js）。範囲に入ったら場所の名前の横に「暗い」（hud.js）。
 //   灯りの外で始まった戦闘は setup.dark（R.Mon.encounter の o.dark）。一行のランタンは数えない（燭台・泉の灯りだけ）。
+//   松明（i_torch、RULES の use {type:'light', r, steps}）: R.Field.light(r, steps) の間は一行の灯りが r マスになり、灯りの中として数える。
+//   範囲の縁は 1.5 マスかけて少しずつ暗くする（四角い線に見せない、CONTENT-F の依頼）。
 (function (R) {
   'use strict';
   const F = (R.Field = R.Field || {});
@@ -13,6 +15,8 @@
   const vis = { px: 0, py: 0 };
 
   D.on = function () { return !!(S.map && S.map.dark); };
+  /** 一行の灯りの半径（マス）: 松明の間は広い */
+  D.partyR = function () { return S.torch && S.torch.steps > 0 ? Math.max(D.PARTY_R, S.torch.r) : D.PARTY_R; };
   /** (x, y) が燭台（ともした）・泉の光の中か */
   D.litAt = function (x, y) {
     const m = S.map, G = R.Game || {};
@@ -27,11 +31,12 @@
   /** 見えるか（暗がりの外、一行の周り、灯りの中）。テスト・小地図用 */
   D.visibleAt = function (x, y) {
     if (!D.on() || !R.MapUtil.darkAt(S.map, x, y)) return true;
-    if (Math.hypot(S.x - x, S.y - y) <= D.PARTY_R + 0.01) return true;
+    if (Math.hypot(S.x - x, S.y - y) <= D.partyR() + 0.01) return true;
     return D.litAt(x, y);
   };
   /** 出現の setup.dark: 暗がりの中で、灯りの外 */
   D.battleDark = function (x, y) {
+    if (S.torch && S.torch.steps > 0) return false;   // 松明を掲げている間は灯りの中
     return !!(S.map && R.MapUtil.darkAt(S.map, x, y) && !D.litAt(x, y));
   };
 
@@ -73,14 +78,21 @@
         if (e.cond != null && !R.State.check(e.cond)) continue;
         if (!e.rect) { mg.fillRect(0, 0, mask.width, mask.height); continue; }
         const r = e.rect;
-        mg.fillRect((r[0] * t - cx) / 4 + 1, (r[1] * t - cy) / 4 + 1, (r[2] * t) / 4, (r[3] * t) / 4);
+        // 縁をぼかす: 外へ 1.5 マス・内へ 0.5 マスの間を 6 枚の薄い膜で重ねる（重なった内側が 0.93 になる）
+        const x0 = (r[0] * t - cx) / 4 + 1, y0 = (r[1] * t - cy) / 4 + 1, w0 = (r[2] * t) / 4, h0 = (r[3] * t) / 4, q = t / 4;
+        mg.fillStyle = 'rgba(5,6,18,0.36)';
+        for (let k = 0; k < 6; k++) {
+          const o = q * (1.5 - (k * 2) / 5);   // 1.5 → -0.5 マス
+          mg.fillRect(x0 - o, y0 - o, w0 + o * 2, h0 + o * 2);
+        }
+        mg.fillStyle = 'rgba(5,6,18,0.93)';
       }
     }
     mg.globalCompositeOperation = 'destination-out';
     // 一行のランタン（4 マス）: 少し揺らぐ
     F._vis(vis);
     const fl = 1 + Math.sin(R.Engine.time / 170) * 0.025;
-    punch((vis.px + 0.5) * t - cx, (vis.py + 0.5) * t - cy, (D.PARTY_R + 0.9) * t * fl);
+    punch((vis.px + 0.5) * t - cx, (vis.py + 0.5) * t - cy, (D.partyR() + 0.9) * t * fl);
     const lit = (G.lit && G.lit[m.id]) || [];
     for (const o of m.objects || []) {
       if (o.type === 'brazier' && lit.includes(o.id)) punch((o.x + 0.5) * t - cx, (o.y + 0.5) * t - cy, (D.LAMP_R + 0.9) * t);

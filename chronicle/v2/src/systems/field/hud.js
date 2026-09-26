@@ -12,7 +12,7 @@
   const S = (F._s = F._s || {});
   const H = (F.hud = F.hud || {});
   const TWO_H = 2 * 3600 * 1000;
-  const FAC = { inn: 'inn', shop: 'shop', tavern: 'chat', item: 'bag', weapon: 'sword', armor: 'shield', church: 'light', guild: 'journal', records: 'book' };
+  const FAC = { inn: 'inn', shop: 'shop', tavern: 'chat', item: 'bag', weapon: 'sword', armor: 'shield', church: 'light', guild: 'journal', records: 'book', record: 'book' };
   const PROMPTS_TOWN = [{ btn: 'y', label: 'メニュー' }, { btn: 'x', label: '地図' }, { btn: 'b', label: '走る' }];
   const PROMPTS_DUN = [{ btn: 'y', label: 'メニュー' }, { btn: 'x', label: '地図' }, { btn: 'b', label: '走る' }];
   const DIR_ANGLE = { n: 0, ne: Math.PI / 4, e: Math.PI / 2, se: Math.PI * 0.75, s: Math.PI, sw: -Math.PI * 0.75, w: -Math.PI / 2, nw: -Math.PI / 4 };
@@ -30,6 +30,10 @@
     const meta = m.meta || {};
     const loc = m.location && R.DB.locations[m.location];
     c.sub = meta.sub || meta.floor || (m.kind === 'world' && loc ? loc.name : '') || '';
+    // ワールドの地方の名前（CONTENT-P の meta.areas = [{rect, name, sub}]。上から最初に合う物）
+    const ar = areaAt(m, S.x, S.y);
+    c.area = ar;
+    if (ar) { c.name = ar.name || c.name; c.sub = ar.sub || ''; }
     // 施設のアイコン（町）: 建物の看板から
     c.icons = [];
     if (m.kind === 'town') for (const o of m.objects || []) if (o.type === 'building' && o.sign && FAC[o.sign] && !c.icons.includes(FAC[o.sign])) c.icons.push(FAC[o.sign]);
@@ -56,6 +60,20 @@
       if (L) c.lead = { title: L.title, where: [L.dir ? DIR_JA[L.dir] : '', L.place || ''].filter(Boolean).join('・'), ang: L.dir != null && DIR_ANGLE[L.dir] != null ? DIR_ANGLE[L.dir] : null };
     } catch (e) { c.lead = null; }
     c.showMini = m.kind === 'dungeon' && meta.minimap !== false;
+  };
+
+  function areaAt(m, x, y) {
+    const A = m.meta && m.meta.areas;
+    if (!A) return null;
+    for (let i = 0; i < A.length; i++) if (R.MapUtil.inRect(x, y, A[i].rect)) return A[i];
+    return null;
+  }
+  /** 歩くたび（ワールド）: 地方が変わったら札を出し直す */
+  H.step = function () {
+    const m = S.map;
+    if (!m || !m.meta || !m.meta.areas) return;
+    const ar = areaAt(m, S.x, S.y);
+    if (S.hud && ar !== S.hud.area) { H.refresh(); S.placeT0 = R.Engine.time; }
   };
 
   /** 場所の札を出している強さ 0〜1（入ったとき 2.4 秒、ダンジョンは常に） */

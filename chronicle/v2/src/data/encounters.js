@@ -884,7 +884,7 @@
   // bg: 無ければマップの bbg（FIELD）。rate: 1 歩の出現の率の倍率（街道 0.3、WORLD_REDESIGN §2.2）。
   // 組の数は tools/sim_zones.js（標準の一行、雑魚戦 2.5〜3.5 ラウンド・HP の減り 8〜12%）で合わせた（2026-09-26）
   Object.assign(R.DB.encounters, {
-    zw_peninsula: { region: 'prologue', tier: 0, lv: [4, 6], bg: null, groups: [
+    zw_peninsula: { region: 'prologue', tier: 0, lv: [4, 6], bg: 'coast', groups: [
       { w: 8, mons: [['jelly_1', 3, 4]] },
       { w: 8, mons: [['rat_1', 3, 3]] },
       { w: 6, mons: [['seabird_1', 3, 3]] },
@@ -905,7 +905,7 @@
       { w: 3, mons: [['bat_2', 1, 2], ['bat_1', 2, 3]] },
       { w: 3, mons: [['rat_2', 1, 2], ['rat_1', 1, 2]] },
     ] },
-    zw_forest: { region: 'r_forest', tier: 'dyn', lvOff: 0, bg: null, groups: [
+    zw_forest: { region: 'r_forest', tier: 'dyn', lvOff: 0, bg: 'forest', groups: [
       { w: 7, mons: [['bee_1', 4, 4]] },
       { w: 6, mons: [['mushroom_1', 2, 3], ['bee_1', 1, 3]] },
       { w: 9, mons: [['plant_1', 2, 3]] },
@@ -919,7 +919,7 @@
       { w: 5, mons: [['plant_2', 2, 3]], tierMin: 1 },
       { w: 4, mons: [['fairy_2', 2, 3]], tierMin: 1 },
     ] },
-    zw_forest_road: { region: 'r_forest', tier: 'dyn', lvOff: 0, bg: null, rate: 0.3, groups: [
+    zw_forest_road: { region: 'r_forest', tier: 'dyn', lvOff: 0, bg: 'forest', rate: 0.3, groups: [
       { w: 7, mons: [['bee_1', 4, 4]] },
       { w: 6, mons: [['mushroom_1', 3, 4]] },
       { w: 7, mons: [['plant_1', 2, 3]] },
@@ -960,5 +960,7 @@
       { w: 3, mons: [['crab_2', 1, 1], ['jelly_2', 1, 1]] },
     ] },
   });
+  // ワールドの出現表の戦闘背景（CONTENT-P の依頼 56: ワールドの map.bbg は 1 つしか書けない）。zw_prologue は移した表のまま、bg だけ
+  if (R.DB.encounters.zw_prologue) R.DB.encounters.zw_prologue.bg = 'coast';
   // @@V2-END
 })(window.RPG);

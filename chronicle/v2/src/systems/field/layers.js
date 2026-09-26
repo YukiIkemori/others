@@ -1,9 +1,11 @@
 // FIELD — 描く順（MODERN_UI §7.2 の F0〜F8、V2_PLAN §2.10・§2.11）
-//   地面（チャンクの base）→ lv 0 の立っている物と人（足もとの y で並べる）→ チャンクの over（屋根の張り出し・足場・木の葉）→
-//   lv 1 の人（足場の上）→ 発光の描き直し（芯＋にじみ、30 個まで）→ 先頭の光の輪 → 暗がりの膜（E6）→
+//   地面（チャンクの base）→ 先頭の光の輪（地面に。人の上に重ねると白く飛ぶ）→ lv 0 の立っている物と人（足もとの y で並べる）→
+//   チャンクの over（屋根の張り出し・足場・木の葉）→ lv 1 の人（足場の上）→ 発光の描き直し（芯＋にじみ、30 個まで）→ 暗がりの膜（E6）→
 //   宝箱と泉のきらめき（膜の上、WORLD §6.3）→ 新しい話の印 → 光の明滅 → R.Post.frame → HUD。
 //   人の絵は hd:field:<look>（opts {scale, lantern}）。登録が無い間は dev だけ仮の人形（index.html では影だけ）。
-//   物の絵は TERRAIN のチャンクの props（キー）。仮の地面（fb）の間は、ここで宝箱・泉・燭台・灯籠・建物などを簡単な形で描く。
+//   物の絵は TERRAIN のチャンクの props（R.Hd.get(p.key, p.opts) の poses[p.frame]、fps があれば時間で回す、p.cond が真の間だけ）。
+//   仮の地面（fb）の間は、ここで宝箱・泉・燭台・灯籠・建物などを簡単な形で描く。
+//   光の輪は R.Light.ring(g, x, y, r, t, {mood})（環境光を渡すと輪の色が合う）。
 (function (R) {
   'use strict';
   const F = (R.Field = R.Field || {});
@@ -15,6 +17,7 @@
   const pool = [];
   let used = 0;
   const OPTS = {};
+  const RING = { mood: null };
   const byY = (a, b) => a.y - b.y || a.o - b.o;
 
   function ent(kind, ref, y, lv, o) {
@@ -90,6 +93,14 @@
     let real = false;
     F.chunks.eachVisible((e) => { if (e.base) g.drawImage(e.base, e.cx * cs - cx, e.cy * cs - cy); if (!e.fb) real = true; });
     S.realTerrain = real;
+    // 先頭のランタンの光の輪（STYLE_REFERENCE R4。効果 off で消える）: 地面に掛ける（人の絵の上に足すと先頭が白く飛ぶ、CAST の依頼）
+    const q = R.Hd.quality();
+    F._vis(vis);
+    const lx = Math.round((vis.px + 0.5) * t - cx), ly = Math.round((vis.py + 0.72) * t - cy);
+    if (q !== 'off') {
+      RING.mood = (S.amb && S.amb.mood) || (m.light && m.light.mood) || 'night';
+      R.Light.ring(g, lx, ly, F.dark.on() ? F.dark.partyR() * t : 88 * (t / 32), R.Engine.time, RING);
+    }
     // F4: 立っている物と人
     used = 0;
     collect(t, real);
@@ -102,12 +113,7 @@
     for (let i = 0; i < n; i++) { const e = sorted[i]; if (e.lv === 1) drawEnt(g, e, t, cx, cy); }
     void list;
     // F6: 発光の描き直し（芯＋にじみ）
-    const q = R.Hd.quality();
     glows(g, t, cx, cy, real);
-    // 先頭のランタンの光の輪（STYLE_REFERENCE R4。効果 off で消える）
-    F._vis(vis);
-    const lx = Math.round((vis.px + 0.5) * t - cx), ly = Math.round((vis.py + 0.72) * t - cy);
-    if (q !== 'off') R.Light.ring(g, lx, ly, F.dark.on() ? 4 * t : 88 * (t / 32), R.Engine.time);
     // 暗がり（E6）
     F.dark.draw(g, cam);
     // 膜の上: 宝箱・泉のきらめき、新しい話の印
@@ -140,7 +146,11 @@
     if (real) {
       F.chunks.eachVisible((e) => {
         const P = e.props || [];
-        for (let i = 0; i < P.length; i++) ent('prop', P[i], P[i].sortY, P[i].lv, 0);
+        for (let i = 0; i < P.length; i++) {
+          const pp = P[i];
+          if (pp.cond != null && !R.State.check(pp.cond)) continue;   // 足あと（帽子を持つ間だけ）など
+          ent('prop', pp, pp.sortY, pp.lv, 0);
+        }
       });
     }
     const objs = m.objects || [];
@@ -196,12 +206,17 @@
     }
     if (e.kind === 'prop') {
       const p = e.ref;
-      const sh = R.Hd.get(p.key);
+      const sh = R.Hd.get(p.key, p.opts);
       if (!sh) return;
       let fi = 0;
-      if (typeof p.frame === 'string') fi = (sh.poses[p.frame] || [0])[0];
-      else if (typeof p.frame === 'number') fi = p.frame;
-      else if (sh.fps && sh.poses.idle) { const P = sh.poses.idle; fi = P[Math.floor(tm / (1000 / (sh.fps.idle || 4))) % P.length]; }
+      if (typeof p.frame === 'number') fi = p.frame;
+      else {
+        // pose（無ければ default）。fps があれば時間で回す（泉のゆらぎ・かがり火）。位置で位相をずらす
+        const name = typeof p.frame === 'string' && sh.poses[p.frame] ? p.frame : sh.poses.default ? 'default' : sh.poses.idle ? 'idle' : null;
+        const P = name ? sh.poses[name] : [0];
+        const fps = sh.fps && name && (typeof sh.fps === 'number' ? sh.fps : sh.fps[name]);
+        fi = P.length > 1 && fps ? P[Math.floor((tm + (p.x * 7 + p.y * 13)) / (1000 / fps)) % P.length] : P[0];
+      }
       R.Hd.draw(g, sh.frames[fi] || sh.frames[0], p.x - cx, p.y - cy);
       return;
     }
