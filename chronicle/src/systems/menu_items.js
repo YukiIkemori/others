@@ -344,7 +344,8 @@
     const L = [];
     const c = member || null;
     const costN = c ? K().cost(c, id) : tech ? a.wp || 0 : a.mp || 0;
-    L[0] = { text: a.name, color: WHITE, right: (tech ? 'W ' : 'M ') + costN, rightColor: WHITE, big: true };
+    const cut = c && !tech && R.Rules && R.Rules.profMpKind ? R.Rules.profMpKind(c, id) : null;
+    L[0] = { text: a.name, color: WHITE, right: (tech ? 'W ' : 'M ') + costN, rightColor: cut ? G().C.cyan : WHITE, big: true };
     if (tech) {
       const lv = (a.glim && a.glim.lv) || a.rank || 1;
       L[1] = { text: K().wtypeName(a.wtype) + 'の技　格' + lv + (lv === 9 ? '（奥義）' : lv >= 10 ? '（極意）' : ''), color: SUB };
@@ -402,6 +403,19 @@
     const knowers = (book[id] || []).map((cid) => K().charById(cid)).filter(Boolean).map((ch) => ch.name);
     L[5] = knowers.length ? { text: '覚えている：' + knowers.join('　') } : { text: 'まだ誰も覚えていない。', color: GRAY };
     L[6] = { text: String(a.desc || '').split('\n')[0] };
+    // Part A13: the member's proficiency bonus on damage / healing (and A13b's MP cut), on a row of its own under 威力
+    if (c && R.Rules && R.Rules.profPowerPct) {
+      const segs = [];
+      if (dmg || effs.some((e) => e.type === 'heal')) {
+        const pct = R.Rules.profPowerPct(c, a);
+        const src = tech ? K().wtypeName(a.wtype) : (a.elements || []).length > 1 ? '平均' : K().elemName((a.elements || [])[0]);
+        segs.push({ text: '熟練の補正 ', color: SUB }, { text: '+' + pct + '%', color: pct > 0 ? G().C.orange : GRAY }, { text: '（' + src + '）', color: SUB });
+      }
+      if (cut) segs.push({ text: (segs.length ? '　' : '') + (cut === 'free' ? '熟練でMP0' : '熟練でMP半分'), color: G().C.cyan });
+      if (segs.length) {
+        L.splice(4, 0, { text: segs.map((q) => q.text).join(''), segs });
+      }
+    }
     return L;
   }
 
@@ -462,8 +476,8 @@
         } else {
           this.title = DB.actions[id].kind === 'tech' ? '技' : '術';
           this.rows = this.lines;
-          this.sep = 6;
-          this.box = { x: 8, y: 56, w: 240, h: 114 + 4 };
+          this.sep = this.lines.length - 1; // the description (the last row) under a thin rule
+          this.box = { x: 8, y: this.lines.length > 7 ? 49 : 56, w: 240, h: 16 + this.lines.length * 14 + 4 };
         }
       }
       input() {
@@ -696,7 +710,8 @@
         const ix = row.spell ? Math.max(1, (a.elements || []).length) * 9 + 2 : 11;
         Kt.fitText(a.name, x + ix, y, w - ix - 40, { color: col });
         const cst = Kt.cost(this.c, row.id);
-        G().text((row.spell ? 'M' : 'W') + cst, x + w - 6, y, { align: 'right', color: col });
+        const cc = row.spell && row.ok && Kt.costColor ? Kt.costColor(this.c, row.id) : null; // Part A13b: MP cut by proficiency
+        G().text((row.spell ? 'M' : 'W') + cst, x + w - 6, y, { align: 'right', color: cc || col });
       }
       render() {
         const c = this.c, st = Kt.stats(c);

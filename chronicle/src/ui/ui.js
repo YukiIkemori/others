@@ -279,7 +279,7 @@
           const room = right ? rEnd - 6 - G().textWidth(right) : this.cols > 1 ? this.colW - 6 : 0;
           if (room > 0) G().fitText(label, x, y, room, { color });
           else G().text(label, x, y, { color });
-          if (right) G().text(right, x + rEnd, y, { color, align: 'right' });
+          if (right) G().text(right, x + rEnd, y, { color: (!dis && it.rightColor) || color, align: 'right' });
         }
         if (sel && (this.active || o.showInactiveCursor)) G().cursor(x - 10, y + 1, this.active);
       }

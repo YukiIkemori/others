@@ -81,11 +81,27 @@ section('T1 detail lines for every item');
     if (a.kind !== 'tech' && a.kind !== 'spell') continue;
     try {
       const L = M.detailLines(id, { member: hero() });
-      if (L.length !== 7) abad++;
+      // 7 rows; 8 with the member's 「熟練の補正」 row (Part A13) under 威力 for a damage / heal action
+      if (L.length !== ((a.effects || []).some((e) => e.type === 'damage' || e.type === 'heal') || R.Rules.profMpKind(hero(), id) ? 8 : 7)) abad++;
       for (const l of L) { const w = W(l.text || ''); if (w > aw) { aw = w; aworst = id + ' 「' + l.text + '」'; } }
     } catch (e) { abad++; }
   }
-  ok(abad === 0, 'T1 every tech / spell gives the 7 rows', abad);
+  ok(abad === 0, 'T1 every tech / spell gives the 7 rows (8 with 熟練の補正)', abad);
+  {
+    // Part A13 / A13b: the member's proficiency bonus and the MP cut on the Y popup
+    const h = hero();
+    const keep = JSON.parse(JSON.stringify(h.eprof || {}));
+    h.eprof = Object.assign({}, h.eprof, { fire: R.Rules.K.PROF_PTS[5] });
+    const L = DB.actions.s_fire_1 && M.detailLines('s_fire_1', { member: h });
+    if (L) {
+      ok(L.length === 8 && /^熟練の補正 \+15%（火）　熟練でMP0$/.test(L[4].text), 'A13 row 4 = 熟練の補正 +15%（火）　熟練でMP0', L[4].text);
+      ok(L[0].right === 'M 0' && L[0].rightColor === R.Gfx.C.cyan, 'A13b MP 0 in cyan on row 0', [L[0].right, L[0].rightColor]);
+      ok(L[7].text === String(DB.actions.s_fire_1.desc || '').split('\n')[0], 'A13 the description stays the last row', L[7].text);
+    }
+    const L0 = DB.actions.s_fire_1 && M.detailLines('s_fire_1', {});
+    if (L0) ok(L0.length === 7 && !/熟練/.test(L0.map((l) => l.text).join('')), 'A13 no member → the 7 rows, no bonus row', L0.length);
+    h.eprof = keep;
+  }
   ok(aw <= 341, 'T1 tech / spell rows ≤ 341px: widest ' + Math.round(aw) + 'px', aworst);
   const pairSpell = Object.keys(DB.actions).find((id) => DB.actions[id].kind === 'spell' && (DB.actions[id].elements || []).length === 2);
   if (pairSpell) {

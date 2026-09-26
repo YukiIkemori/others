@@ -1408,7 +1408,9 @@
       const rows = ids.map((id) => ({ id, ab: actionOf(id), why: eng.unusable ? eng.unusable(u, id) || null : null }));
       const items = rows.map((r) => {
         const cost = R.Rules && R.Rules.mpCost ? R.Rules.mpCost(c, r.id) : (r.ab && r.ab.mp) || 0;
-        return { label: r.ab ? r.ab.name : r.id, right: 'M' + cost, disabled: !!r.why };
+        // Part A13b: an MP cut by proficiency (0 / half) shows in cyan
+        const cut = R.Rules && R.Rules.profMpKind ? R.Rules.profMpKind(c, r.id) : null;
+        return { label: r.ab ? r.ab.name : r.id, right: 'M' + cost, rightColor: cut ? G().C.cyan : null, disabled: !!r.why };
       });
       if (!items.length) { R.sfx('buzzer'); return BACK; }
       const list = new R.UI.List(this.listOpts('術', items, m.list.spell));
@@ -2146,7 +2148,7 @@
     if (right) {
       const rw = g.textWidth(right);
       g.fitText(label, x, y, colW - 10 - rw, { color });
-      g.text(right, x + colW - 6, y, { color, align: 'right' });
+      g.text(right, x + colW - 6, y, { color: (!dis && it.rightColor) || color, align: 'right' });
     } else g.fitText(label, x, y, colW - 8, { color });
   }
   /** title plate on a window's top border in a given colour (Gfx.window only draws white titles) */

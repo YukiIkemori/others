@@ -210,6 +210,14 @@
     ev.bgm();
   }
 
+  /** the screen visible (a finished or running fade-out is taken back) and the map's music on */
+  async function lit(ev) {
+    const Eng = R.Engine;
+    if (Eng && (Eng.fadeAlpha > 0 || (Eng._fade && Eng._fade.to > 0))) await ev.fadeIn(24);
+    ev.bgm();
+  }
+  S.lit = lit;
+
   const SCENES = { 1: t1, 2: t2, 3: t3, 4: t4, 5: t5, 6: t6, 7: t7, 8: t8 };
   S.SCENES = SCENES;
 
@@ -237,6 +245,10 @@
       if (!todo.length) return;
       ev.closeMessage();
       await ev.caption('翌朝――');
+      // the caption hands a black screen back when the region faded out for the night (it takes the
+      // fade over and returns it): the morning is always shown lit, with the town's music (D6).
+      // A caller that faded in first leaves fadeAlpha at 0, so nothing fades twice.
+      await lit(ev);
       for (const k of todo) {
         await SCENES[k](ev);
         ev.closeMessage();
@@ -244,6 +256,9 @@
       }
       S.dropActors();
       ev.refresh();
+      // a tier scene may end on a fade-out or its own track (battle, 'sorrow'): never hand the
+      // region caller a dark screen or a scene's music
+      await lit(ev);
     },
   };
 

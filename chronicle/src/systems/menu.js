@@ -155,6 +155,8 @@
     if (kind === 'wp' || a.kind === 'tech') return has(Rl(), 'wpCost') ? Rl().wpCost(c, id) : a.wp || 0;
     return has(Rl(), 'mpCost') ? Rl().mpCost(c, id) : a.mp || 0;
   };
+  /** Part A13b: the colour of a spell's MP when proficiency cut it (0 / half), else null */
+  const costColor = (c, id) => (c && has(Rl(), 'profMpKind') && Rl().profMpKind(c, id) ? G().C.cyan : null);
   const spellOrder = (id) => (DB.actions[id] && DB.actions[id].order) || 999;
   function spellList(c) {
     if (has(Rl(), 'spellList')) return (Rl().spellList(c) || []).filter((id) => DB.actions[id]);
@@ -267,7 +269,7 @@
     ELEMS: ELEMS_DEFAULT,
     wtypes, elems, elemName, elemColor, statusName, wtypeName, raceName, itemName, actName,
     slots, slotName, slotGroup, slotsFor, isTwoHanded, holdsTwoHanded, canEquip, equipIssue, equip, stats, atkOf, statVector, previewDiff,
-    cost, spellList, techList, allTechs, techOrder, effectiveRow, spriteKey, heroOf, allChars, charById, prologueDone, hasItem, aptLetters, subtitle,
+    cost, costColor, spellList, techList, allTechs, techOrder, effectiveRow, spriteKey, heroOf, allChars, charById, prologueDone, hasItem, aptLetters, subtitle,
     gradeOf, itemMark,
 
     /** 「★炎の剣」: the rarity mark (★ rare / super, ◆ one-of-a-kind reward) and the name (§8.2.8) */

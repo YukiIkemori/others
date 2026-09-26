@@ -284,7 +284,8 @@
           if (kind === 'tech') Kt.drawIcon({ type: 'weapon', wtype: a.wtype }, x, y + 2);
           else { Kt.drawElemIcons(a.elements || [], x, y + 2); ix = (a.elements || []).length * 9 + 1; }
           Kt.fitText(a.name, x + ix, y, 116 - ix - 30, {});
-          G().text((kind === 'tech' ? 'W' : 'M') + Kt.cost(c, id), x + 112, y, { align: 'right', color: Kt.COL.sub });
+          const cc = kind === 'spell' && Kt.costColor ? Kt.costColor(c, id) : null; // Part A13b: MP cut by proficiency
+          G().text((kind === 'tech' ? 'W' : 'M') + Kt.cost(c, id), x + 112, y, { align: 'right', color: cc || Kt.COL.sub });
         });
       }
       pageProf(c) {
@@ -305,11 +306,25 @@
         Kt.elems().forEach((e, i) => drawRow(132, 54 + i * 14, Kt.elemName(e), apt.e && apt.e[e], rank('e', e)));
         // the legend (pitch 14: the compact menus draw these notes at the full text size, Part A11)
         const ly = 54 + 6 * 14 + 4;
-        G().text('文字：閃きやすさ', 132, ly, { color: Kt.COL.sub, size: 8 });
-        ['S', 'A', 'B', 'C', 'D'].forEach((L, i) => G().text(L, 132 + i * 12, ly + 14, { color: Kt.APT_COLOR[L] }));
-        G().text('数と棒：熟練度', 132, ly + 30, { color: Kt.COL.sub, size: 8 });
-        G().text('使うほど伸びて、', 132, ly + 44, { color: Kt.COL.gray, size: 8 });
-        G().text('上の技・術を閃く。', 132, ly + 58, { color: Kt.COL.gray, size: 8 });
+        ['S', 'A', 'B', 'C', 'D'].forEach((L, i) => G().text(L, 132 + i * 10, ly, { color: Kt.APT_COLOR[L] }));
+        G().text('閃きやすさ', 244, ly, { color: Kt.COL.sub, size: 8, align: 'right' });
+        G().text('数と棒：熟練度', 132, ly + 14, { color: Kt.COL.sub, size: 8 });
+        // Part A13: 熟練の補正 of the weapon(s) in hand; A13b: the MP cuts reached
+        const P = (R.Rules && R.Rules.K && R.Rules.K.PROF_POWER) || { perRank: 0.03 };
+        const pp = (slot) => (R.Rules && R.Rules.profPowerPct ? R.Rules.profPowerPct(c, null, slot) : 0);
+        const w1 = c.equip && c.equip.weapon1, w2 = c.equip && c.equip.weapon2;
+        const bonus = w1 && w2 ? '+' + pp('weapon1') + '%/+' + pp('weapon2') + '%' : '+' + pp(w2 && !w1 ? 'weapon2' : 'weapon1') + '%';
+        G().text('熟練の補正', 132, ly + 28, { color: Kt.COL.sub, size: 8 });
+        G().text(bonus, 244, ly + 28, { color: G().C.orange, size: 8, align: 'right' });
+        G().text('1段ごとに威力+' + Math.round(P.perRank * 100) + '%', 132, ly + 42, { color: Kt.COL.gray, size: 8 });
+        const M = (R.Rules && R.Rules.K && R.Rules.K.PROF_MP) || { freeRank: 5, halfRank: 8 };
+        const free = Kt.elems().filter((e) => rank('e', e) >= M.freeRank);
+        const half = free.filter((e) => rank('e', e) >= M.halfRank);
+        let mpNote, mpCol = G().C.cyan;
+        if (half.length) mpNote = half.map(Kt.elemName).join('') + '8：1段目MP0・2段目半分';
+        else if (free.length) mpNote = free.map(Kt.elemName).join('') + '5：1段目がMP0';
+        else { mpNote = M.freeRank + '段で1段目の術がMP0'; mpCol = Kt.COL.gray; }
+        Kt.fitText(mpNote, 132, ly + 56, 112, { color: mpCol, size: 8 });
       }
       pageResist(c, st) {
         G().window(4, 46, 248, 174, { title: '耐性' });

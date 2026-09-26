@@ -185,7 +185,12 @@
     ev.setFlag('pg_clear');
     ev.setObjective('obj_s_pg_clear');
     await ev.say('{hero}は、「' + TITLE + '」と\n呼ばれるようになった。');
+    ev.closeMessage();
+    // the closing picture of the side chapter: the 外伝 panel, the 称号 and 「おしまい」 (R.Postgame, §10.12);
+    // it fades back to the field and restores the music by itself
+    if (R.Postgame && R.Postgame.bonusScene) await R.Postgame.bonusScene({ title: R.Game.title });
     ev.bgm();
+    if (R.Engine.fadeAlpha > 0) await ev.fadeIn(30);
   }
   K.TITLE = TITLE;
 })(window.RPG);
