@@ -119,7 +119,7 @@ window.SHEET = (function () {
   function weapons(looks) {
     const s = 2, fam = B.FAMILY, cw = 48 * s + 4, ch = 40 * s + 6;
     const ws = Object.keys(fam);
-    const [cv, c] = canvas(8 + 90 + looks.length * 5 * cw + 20, 8 + ws.length * ch + 8 * 60, '#404050');
+    const [cv, c] = canvas(8 + 90 + looks.length * 5 * cw + 20, 8 + ws.length * ch + 11 * 60, '#404050');
     ws.forEach((w, r) => {
       const y = 6 + r * ch;
       label(c, w + ' → ' + fam[w], 6, y + 30, '#f0e8d0', 11);

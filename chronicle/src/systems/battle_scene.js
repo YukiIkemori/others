@@ -346,8 +346,9 @@
       }
       for (let r = 0; r < rowsN; r++) rows.push(rowShape(list.filter((_, i) => i % rowsN === r), sz, ROW_FEET[rowsN][r], (rowsN - 1 - r) * BACK_SHIFT, false));
     }
-    // back rows slide sideways only when the row in front would hide them (front row first, then further back)
-    for (let r = rows.length - 2; r >= 0; r--) {
+    // back rows slide sideways only when the row in front would hide them (front row first, then further back).
+    // Not behind a big sprite: its escorts peek out at its upper right as placed (§11.5.13)
+    for (let r = big.length ? -1 : rows.length - 2; r >= 0; r--) {
       const row = rows[r];
       const minVis = () => Math.min(...visibility(rows, sz, row).values());
       if (minVis() >= 0.6) continue;

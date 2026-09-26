@@ -71,10 +71,11 @@
   function thrust(st) {
     const two = st === 'two' || st === 'spear';
     const dg = st === 'dagger' || st === 'fist';
+    const lng = st === 'spear' || st === 'staff'; // long shafts: hold further back so the head stays on the canvas
     return [
-      fr({ n: [20, 22], h: [21, 29], fn: [18, 36], ff: [26, 36], hn: dg ? [21, 28] : [19, 29], hf: two ? null : [25, 25], w: W('F'), cape: 2 }),
-      fr({ n: [25, 22], h: [24, 29], fn: [18, 36], ff: [30, 36], hn: dg ? [31, 26] : [28, 27], hf: two ? null : [21, 28], w: W('F'), cape: 3 }),
-      fr({ n: [25, 23], h: [24, 30], fn: [18, 36], ff: [30, 36], hn: dg ? [30, 27] : [27, 28], hf: two ? null : [22, 29], w: W('F'), cape: 3 }),
+      fr({ n: [20, 22], h: [21, 29], fn: [18, 36], ff: [26, 36], hn: dg ? [21, 28] : lng ? [15, 29] : [19, 29], hf: two ? null : [25, 25], w: W(lng ? 'F' : 'F'), cape: 2 }),
+      fr({ n: [25, 22], h: [24, 29], fn: [18, 36], ff: [30, 36], hn: dg ? [31, 26] : lng ? [23, 27] : [28, 27], hf: two ? null : [21, 28], w: W('F'), cape: 3 }),
+      fr({ n: [25, 23], h: [24, 30], fn: [18, 36], ff: [30, 36], hn: dg ? [30, 27] : lng ? [22, 28] : [27, 28], hf: two ? null : [22, 29], w: W('F'), cape: 3 }),
     ];
   }
   function smash(st) {
@@ -82,7 +83,7 @@
     return [
       fr({ n: [21, 22], h: [22, 29], fn: [19, 36], ff: [26, 36], hn: [21, 15], hf: two ? null : [24, 16], w: W('BU', 'back'), cape: 2 }),
       fr({ n: [25, 23], h: [24, 29], fn: [18, 36], ff: [30, 36], hn: [30, 24], hf: two ? null : [28, 25], w: W('FD'), cape: 3 }),
-      fr({ n: [26, 25], h: [24, 31], fn: [18, 36], ff: [30, 36], hn: [30, 30], hf: two ? null : [28, 30], w: W('F'), cape: 3 }),
+      fr({ n: [26, 25], h: [24, 31], fn: [18, 36], ff: [30, 36], hn: st === 'staff' ? [29, 27] : [30, 30], hf: two ? null : [28, 30], w: W(st === 'staff' ? 'FD' : 'F'), cape: 3 }),
     ];
   }
   function shoot(st) {
