@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 // Spec-conformance check for area A9 (weapons): reads the weapon tables straight out of DESIGN.md and diffs every one of
-// the 301 weapons against them (names, types, tiers, effects and quirks, units, numbers, prices, descs, droppers).
+// the 260 weapons against them (names, types, tiers, effects and quirks, units, numbers, prices, descs, droppers).
+// SYSTEMS_REWORK §3.2 (A19) is applied to every row: a katana / club / fist / whip row names its new id (the save remap,
+// src/data/remap_a19.js); a merged row's item must be gone; a kept row takes its §3.2 type, name, mult / kind / art and the
+// crit / hit its type change adds, WP keys become their MP keys (§2.5), and its old series keeps deciding the units.
 //   §8.4.1 (normal 120: names + atk/mag/price), §8.5 (band rare 59), §8.6.5 (hand-made super 10 + assignment),
 //   §8.7.2 / §9.12.7 (fixed-tier super 2), §9.12.4 (monster super 79 + §8.6.5 rows), §9.12.5 (monster rare 31),
 //   §9.12.6 (counts per weapon type), §9.12.8 (boss super), and every `w_…` id DESIGN.md mentions.
@@ -92,10 +95,15 @@ const mergeShape = (a, b) => {
   }
   return o;
 };
-/** 品から効果の部分だけ（twoHanded は大剣・槍・弓の既定を除く） */
+/** 品から効果の部分だけ（twoHanded は大剣・槍・弓の既定を除く。§3.2 の系統の変更で付いた crit / hit は除く） */
 function effectShape(it) {
   const o = {};
-  for (const k of S.WEAPON_FIELDS) if (it[k] !== undefined && !(k === 'twoHanded' && S.TWO_HANDED.includes(it.wtype))) o[k] = it[k];
+  const adj = S.typeAdjust(it);
+  for (const k of S.WEAPON_FIELDS) {
+    if (it[k] === undefined || (k === 'twoHanded' && (S.TWO_HANDED.includes(it.wtype) || (S.KEPT[it._id] && S.TWO_HANDED.includes(it.wtype))))) continue;
+    const v = (k === 'crit' || k === 'hit') && adj[k] ? it[k] - adj[k] : it[k];
+    if (!((k === 'crit' || k === 'hit') && v === 0)) o[k] = v;
+  }
   if (it.mods && Object.keys(it.mods).length) o.mods = it.mods;
   if (it.statsAdd) o.statsAdd = it.statsAdd;
   return o;
@@ -108,6 +116,22 @@ const statsFrom = (s) => {
 const withAdd = (st, add) => { const o = Object.assign({}, st); for (const [k, v] of Object.entries(add || {})) o[k] = (o[k] || 0) + v; return o; };
 const statsEq = (a, b) => same(Object.fromEntries(Object.entries(a || {}).filter(([, v]) => v)), Object.fromEntries(Object.entries(b || {}).filter(([, v]) => v)));
 const seen = new Set();
+/** A19: the DESIGN row's id → the item now (merged rows: the item must be gone → null) */
+const merged = [];
+function nowOf(id) {
+  const to = S.NOW(id);
+  if (to === null) { ok(!DB.items[id], `${id}: merged by SYSTEMS_REWORK §3.2 (→ ${S.REMAP[id]}), gone`); merged.push(id); return null; }
+  return to;
+}
+/** a table's effect shape after A18 (wpCostPct → techCostPct …) */
+function a18(shape) {
+  const o = JSON.parse(JSON.stringify(shape));
+  if (o.mods) for (const [k, to] of Object.entries(S.A18_KEY)) if (k in o.mods) { o.mods[to] = o.mods[k]; delete o.mods[k]; }
+  return o;
+}
+/** a table desc that SYSTEMS_REWORK §2.5 / §3.2 rewrote (WP, the removed types' words, 「術／技のMP」) */
+const reworded = (desc) => /WP|鞭|爪|拳|MPの消費/.test(desc);
+const typeOfNow = (id, tableW) => (S.KEPT[id] ? S.oldType(id) : tableW);
 /** 表の名前（STYLE_JA に合わせて直した品は直した後の名前。表がもう直っていれば、そのまま） */
 function tableName(id, name) {
   const d = S.NAME_DEVIATIONS[id];
@@ -128,18 +152,28 @@ console.log('## §8.4.1 normal weapons');
   const cols = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'club', 'staff', 'katana', 'fist', 'whip'];
   const nameRows = sec.filter((l) => /^\| `w_[a-z_]+_<T>`/.test(l)).map(cells);
   ok(nameRows.length === 12, `§8.4.1 name table has 12 series (${nameRows.length})`);
+  const NEWLINE = { w_club: 'w_axe_mace' };   // §3.3: the club line is the axe's mace line; katana / fist / whip lines are merged
   for (const c of nameRows) {
-    const line = bt(c[0]).match(/^(w_[a-z_]+)_<T>/)[1];
-    const wtype = JA_W[c[1]];
+    const oline = bt(c[0]).match(/^(w_[a-z_]+)_<T>/)[1];
+    const owtype = JA_W[c[1]];
+    const line = NEWLINE[oline] || oline;
     const L = S.LINES.find((x) => x.line === line);
     for (let T = 0; T <= 9; T++) {
-      const id = S.normalId(L, T), it = DB.items[id];
+      let id;
+      if (!L) {   // katana / fist / whip: T0 打ち刀 is kept on its own line, the rest merged
+        const oid = T === 0 ? { w_katana: 'w_katana_uchi', w_fist: 'w_fist_leather', w_whip: 'w_whip_leather' }[oline] : `${oline}_${T}`;
+        id = nowOf(oid);
+        if (!id) continue;
+      } else id = S.normalId(L, T);
+      const it = DB.items[id];
       seen.add(id);
       if (!ok(it, `${id} exists`)) continue;
-      const [a, m] = atkRows[T][1 + cols.indexOf(wtype)].split('/').map(Number);
+      const wtype = it.wtype === owtype || S.KEPT[id] ? it.wtype : owtype;
+      const [, m] = atkRows[T][1 + cols.indexOf(owtype)].split('/').map(Number);
+      const a = Math.round(S.W[T] * S.expectMult(id, it.wtype));
       const price = +atkRows[T][12];
-      ok(it.name === c[3 + T] && it.wtype === wtype && it.tier === T && it.grade === 'normal' && it.src === 'shop' && it.line === line,
-        `${id} = ${c[3 + T]} ${wtype} T${T} (${it.name} ${it.wtype} T${it.tier})`);
+      ok(it.name === c[3 + T] && it.wtype === wtype && it.tier === T && it.grade === 'normal' && it.src === 'shop' && it.line === (L ? line : id),
+        `${id} = ${c[3 + T]} ${wtype} T${T} (${it.name} ${it.wtype} T${it.tier} line ${it.line})`);
       ok(it.atk === a && it.mag === m && it.price === price, `${id} ${a}/${m} ${price} (${it.atk}/${it.mag} ${it.price})`);
       const st = Object.fromEntries([...it.units.matchAll(/([svdaim])(\d)/g)].map((x) => [{ s: 'str', v: 'vit', d: 'dex', a: 'agi', i: 'int', m: 'mnd' }[x[1]], x[2]]));
       const ability = c[2];   // 腕力×2 / 腕力・器用さ
@@ -178,18 +212,22 @@ const shortOf = (q) => Object.entries(q).map(([k, v]) => k === 'elemResist' ? Ob
 
 // ---------------------------------------------------------------- §8.5 帯のレア・§8.6.5 手作りの超レア（同じ列の表）
 function checkHandRow(c, grade, src, exclusive) {
-  const [idc, name, kind, T, am, ab, fxc, qc, price, desc] = c;
-  const id = bt(idc), it = DB.items[id];
+  const [idc, name0, kind, T, am, ab, fxc, qc, price, desc] = c;
+  const id = nowOf(bt(idc));
+  if (!id) return;
+  const it = DB.items[id];
   seen.add(id);
   if (!ok(it, `${id} exists`)) return;
-  const wtype = JA_W[kind.replace(/（.*?）/, '')];
+  const name = S.NEW_NAMES[id] || name0;
+  const wtype = S.KEPT[id] ? it.wtype : JA_W[kind.replace(/（.*?）/, '')];
   ok(it.name === name && it.wtype === wtype && it.tier === +T && it.grade === grade && it.src === src, `${id} = ${name} ${wtype} T${T} ${grade}/${src} (${it.name} ${it.wtype} T${it.tier} ${it.grade}/${it.src})`);
   if (exclusive) ok(it.exclusive === exclusive, `${id} exclusive ${exclusive} (${it.exclusive})`);
-  const [a, m] = am.split('/').map(Number);
+  const [a0, m] = am.split('/').map(Number);
+  const a = S.KEPT[id] ? Math.round(S.W[+T] * S.expectMult(id, it.wtype)) : a0;
   ok(it.atk === a && it.mag === m && it.price === +price, `${id} ${a}/${m} ${price} (${it.atk}/${it.mag} ${it.price})`);
   ok(statsEq(it.stats, withAdd(statsFrom(ab), it.statsAdd)), `${id} stats ${ab} (${J(it.stats)})`);
   const fx = fxc === '—' ? {} : frag(fxc), q = qc === '—' ? {} : frag(qc);
-  const want = mergeShape(toItemShape(fx), toItemShape(q));
+  const want = a18(mergeShape(toItemShape(fx), toItemShape(q)));
   const sd = S.SPEC_DEVIATIONS[id];
   if (grade === 'rare' && qc === '—' && it.quirk) {
     // D3: the table has no quirk yet (the effect part still has to equal the table, with the §8.5 onHit fix of SPEC_DEVIATIONS)
@@ -207,23 +245,24 @@ function checkHandRow(c, grade, src, exclusive) {
     ok(same(effectShape(it), want), `${id} effects+quirks ${J(want)} (${J(effectShape(it))})`);
   }
   ok(!!it.quirk === (qc !== '—'), `${id} quirk flag ${qc !== '—'} (${it.quirk})`);
-  ok(it.desc === desc.replace(/／/g, '\n'), `${id} desc = table text ${J(desc)} (${J(it.desc)})`);
+  if (reworded(desc) && it.desc !== desc.replace(/／/g, '\n')) { ok(!/WP|鞭/.test(it.desc), `${id} desc reworded by SYSTEMS_REWORK §2.5 / §3.2, no WP / 鞭 (${J(it.desc)})`); dev.a19 = (dev.a19 || []).concat(id); }
+  else ok(it.desc === desc.replace(/／/g, '\n'), `${id} desc = table text ${J(desc)} (${J(it.desc)})`);
 }
 console.log('## §8.5 band rares');
 {
   const rows = sectionLines(/^### 8\.5 /, /^### 8\.6 /).filter((l) => /^\| `w_/.test(l)).map(cells);
-  ok(rows.length === 59, `§8.5 lists 59 weapons (${rows.length})`);
+  ok(rows.length === 59, `§8.5 lists 59 weapons (${rows.length}; 12 merged by §3.2)`);
   for (const c of rows) checkHandRow(c, 'rare', 'drop');
 }
 console.log('## §8.6.5 hand-made supers');
 {
   const sec = sectionLines(/^#### 8\.6\.5 /, /^#### 8\.6\.6 /);
   const assign = {};
-  for (const l of sec.filter((x) => x.startsWith('| ') && x.includes('→'))) for (const m of l.matchAll(/`(w_[a-z_]+)` → `([a-z0-9_]+)`/g)) assign[m[1]] = m[2];
+  for (const l of sec.filter((x) => x.startsWith('| ') && x.includes('→'))) for (const m of l.matchAll(/`(w_[a-z_]+)` → `([a-z0-9_]+)`/g)) assign[S.NOW(m[1]) || m[1]] = m[2];
   ok(Object.keys(assign).length === 10, `§8.6.5 assigns 10 weapons (${Object.keys(assign).length})`);
   const rows = sec.filter((l) => /^\| `w_/.test(l)).map(cells);
   ok(rows.length === 10, `§8.6.5 lists 10 weapons (${rows.length})`);
-  for (const c of rows) checkHandRow(c, 'super', 'super', assign[bt(c[0])]);
+  for (const c of rows) checkHandRow(c, 'super', 'super', assign[S.NOW(bt(c[0])) || bt(c[0])]);
 }
 console.log('## §8.7.2 / §9.12.7 fixed-tier supers');
 {
@@ -235,7 +274,7 @@ console.log('## §8.7.2 / §9.12.7 fixed-tier supers');
     const units = (c[6].match(/`([svdaim\d]+)`/) || [])[1];
     const row = [c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], c[9], c[10]];
     checkHandRow(row, 'super', 'super', mon);
-    const it = DB.items[bt(c[1])];
+    const it = DB.items[S.NOW(bt(c[1]))];
     if (it) {
       ok(it.units === units, `${bt(c[1])} units ${units} (${it.units})`);
       // §9.12.7 の略記と §8.7.2 の表が同じ品を言っている
@@ -243,7 +282,7 @@ console.log('## §8.7.2 / §9.12.7 fixed-tier supers');
       const sh = l && l.match(new RegExp(bt(c[1]) + '` [^（]+（[^。]+。([^）]+)）'));
       if (ok(sh, `§9.12.7 has the shorthand of ${bt(c[1])}`)) {
         const [fx, q] = sh[1].split('｜').map((x) => x.replace(/^\s*Q:\s*/, '').trim());
-        ok(same(effectShape(it), mergeShape(shorthand(fx, it.tier), shorthand(q, it.tier))), `${bt(c[1])} = §9.12.7 shorthand ${sh[1]}`);
+        ok(same(effectShape(it), a18(mergeShape(shorthand(fx, it.tier), shorthand(q, it.tier)))), `${bt(c[1])} = §9.12.7 shorthand ${sh[1]}`);
       }
     }
   }
@@ -256,31 +295,35 @@ console.log('## §9.12.4 monster supers');
   ok(rows.length === 88, `§9.12.4 has 88 weapon rows (79 + 9 of §8.6.5) (${rows.length})`);
   let n08 = 0;
   for (const c of rows) {
-    const mon = bt(c[0]), id = bt(c[1]), it = DB.items[id];
+    const mon = bt(c[0]), id = nowOf(bt(c[1]));
+    if (!id) continue;
+    const it = DB.items[id];
     seen.add(id);
     if (!ok(it, `${id} exists`)) continue;
     ok(it.exclusive === mon && it.grade === 'super' && it.src === 'super' && it.tier === +c[4], `${id} exclusive ${mon}, super, T${c[4]} (${it.exclusive} T${it.tier})`);
-    const nm = tableName(id, c[2]);
+    const nm = S.NEW_NAMES[id] || tableName(id, c[2]);
     ok(it.name === nm, `${id} name ${nm} (${it.name})`);
     if (c[3].includes('8.6.5')) continue;
     n08++;
-    const wtype = c[3].replace('武器・', '');
-    ok(it.wtype === wtype, `${id} wtype ${wtype} (${it.wtype})`);
+    const owtype = c[3].replace('武器・', ''), wtype = S.KEPT[id] ? S.oldType(id) : owtype;
+    ok(S.KEPT[id] ? S.oldType(S.KEPT[id]) === owtype : it.wtype === owtype, `${id} wtype ${owtype}${S.KEPT[id] ? ' → ' + it.wtype + ' (§3.2)' : ''} (${it.wtype})`);
     const [fx, q] = c[6].split('｜').map((x) => x.replace(/^\s*Q:\s*/, '').trim());
-    const want = mergeShape(shorthand(fx, it.tier), shorthand(q, it.tier));
+    const want = a18(mergeShape(shorthand(fx, it.tier), shorthand(q, it.tier)));
     ok(same(effectShape(it), want), `${id} = ${c[6]} (${J(effectShape(it))})`);
     ok(it.quirk === true, `${id} quirk:true`);
     if (S.UNITS_FIX[id]) {
-      ok(it.units === S.UNITS_FIX[id] && it.units !== S.monsterWeaponUnits(wtype, mon), `${id} units ${S.UNITS_FIX[id]} (A10a.5: off the stat its quirk lowers; §8.6.2 gives ${S.monsterWeaponUnits(wtype, mon)}) (${it.units})`);
-      console.log(`  note ${id}: units ${S.monsterWeaponUnits(wtype, mon)} → ${S.UNITS_FIX[id]}（A10a.5）`);
+      ok(it.units === S.UNITS_FIX[id] && it.units !== S.monsterWeaponUnits(owtype, mon), `${id} units ${S.UNITS_FIX[id]} (A10a.5: off the stat its quirk lowers; §8.6.2 gives ${S.monsterWeaponUnits(wtype, mon)}) (${it.units})`);
+      console.log(`  note ${id}: units ${S.monsterWeaponUnits(owtype, mon)} → ${S.UNITS_FIX[id]}（A10a.5）`);
       dev.units.push(id);
-    } else ok(it.units === S.monsterWeaponUnits(wtype, mon), `${id} units ${S.monsterWeaponUnits(wtype, mon)} by §8.6.2 (${it.units})`);
+    } else ok(it.units === S.monsterWeaponUnits(owtype, mon), `${id} units ${S.monsterWeaponUnits(owtype, mon)} by §8.6.2 (${it.units})`);
+    void wtype;
     const price = Math.round(S.PRICE[it.tier] * 1.6 / 10) * 10 * 6;
     ok(it.price === price, `${id} price ${price} (${it.price})`);
     // desc: 効果・クセのどれも、長い形か短い形で書かれている
     for (const k of fx.split(/\s+/).concat(q.split(/\s+/))) {
       // 1 語の略記 → {key: value} 1 つ（mods の中身も 1 段に出す）→ §8.2.7 の [長い形, 短い形]
-      const [key, val] = Object.entries(shorthand(k, it.tier)).flatMap(([kk, vv]) => (kk === 'mods' ? Object.entries(vv) : [[kk, vv]]))[0];
+      let [key, val] = Object.entries(shorthand(k, it.tier)).flatMap(([kk, vv]) => (kk === 'mods' ? Object.entries(vv) : [[kk, vv]]))[0];
+      key = S.A18_KEY[key] || key;
       const p = WI.phrase({ [key]: val }, false);
       const flat = it.desc.replace('\n', '');
       ok(flat.includes(p[0]) || flat.includes(p[1]), `${id} desc says「${p[0]}」for ${k} (${J(it.desc)})`);
@@ -293,11 +336,13 @@ console.log('## §9.12.5 monster rares');
   const rows = sectionLines(/^#### 9\.12\.5 /, /^#### 9\.12\.6 /).filter((l) => /^\| `w_/.test(l)).map(cells);
   ok(rows.length === 31, `§9.12.5 has 31 weapon rows (${rows.length})`);
   for (const c of rows) {
-    const id = bt(c[0]), it = DB.items[id];
+    const id = nowOf(bt(c[0]));
+    if (!id) continue;
+    const it = DB.items[id];
     seen.add(id);
     if (!ok(it, `${id} exists`)) continue;
-    const wtype = c[2].replace('武器・', ''), mons = [...c[5].matchAll(/`([a-z0-9_]+)`/g)].map((m) => m[1]);
-    const nm = tableName(id, c[1]);
+    const owtype = c[2].replace('武器・', ''), wtype = S.KEPT[id] ? it.wtype : owtype, mons = [...c[5].matchAll(/`([a-z0-9_]+)`/g)].map((m) => m[1]);
+    const nm = S.NEW_NAMES[id] || tableName(id, c[1]);
     ok(it.name === nm && it.wtype === wtype && it.tier === +c[3] && it.grade === 'rare' && it.src === 'mdrop', `${id} = ${nm} ${wtype} T${c[3]} rare/mdrop (${it.name})`);
     const [rfx, rq] = c[4].split('｜').map((x) => x.replace(/^\s*Q:\s*/, '').trim());
     if (!rq && it.quirk) {
@@ -310,23 +355,21 @@ console.log('## §9.12.5 monster rares');
       }
       d3Rows.push(`| \`${id}\` | ${c[1]} | ${c[2]} | ${c[3]} | ${rfx} ｜ Q: ${shortOf(qq)} | ${c[5]} |`);
     } else {
-      ok(same(effectShape(it), mergeShape(shorthand(rfx, it.tier), rq ? shorthand(rq, it.tier) : {})), `${id} = ${c[4]} (${J(effectShape(it))})`);
+      ok(same(effectShape(it), a18(mergeShape(shorthand(rfx, it.tier), rq ? shorthand(rq, it.tier) : {}))), `${id} = ${c[4]} (${J(effectShape(it))})`);
       ok(!!it.quirk === !!rq, `${id} quirk flag ${!!rq} (${it.quirk})`);
     }
     ok(J(WI.MRARE_DROPPERS[id]) === J(mons), `${id} droppers ${mons.join(' ')} (${(WI.MRARE_DROPPERS[id] || []).join(' ')})`);
-    ok(it.units === S.monsterWeaponUnits(wtype, mons[0]), `${id} units ${S.monsterWeaponUnits(wtype, mons[0])} (${it.units})`);
+    ok(it.units === S.monsterWeaponUnits(owtype, mons[0]), `${id} units ${S.monsterWeaponUnits(owtype, mons[0])} (${it.units})`);
     ok(it.price === Math.round(S.PRICE[it.tier] * 1.6 / 10) * 10 * 3, `${id} price ×3 (${it.price})`);
   }
 }
 console.log('## §9.12.6 counts, §9.12.8 boss super');
 {
-  const rows = sectionLines(/^#### 9\.12\.6 /, /^#### 9\.12\.7 /).filter((l) => /^\| w:/.test(l)).map(cells);
-  ok(rows.length === 11, `§9.12.6 has 11 weapon rows (${rows.length})`);
-  for (const c of rows) {
-    const w = c[0].slice(2);
-    const r = WI.all().filter((id) => DB.items[id].src === 'mdrop' && DB.items[id].wtype === w).length;
-    const s = WI.all().filter((id) => DB.items[id].grade === 'super' && DB.items[id].wtype === w && !/^(b_|rm_)/.test(DB.items[id].exclusive)).length;
-    ok(r === +c[1] && s === +c[2], `§9.12.6 ${w}: rare ${c[1]} super ${c[2]} (${r} ${s})`);
+  // §9.12.6's per-type counts → SYSTEMS_REWORK §3.2's table (normal / band rare / mdrop / super per type, 260)
+  for (const [w, want] of Object.entries(S.COUNT_32)) {
+    const of = (f) => WI.all().filter((id) => DB.items[id].wtype === w && f(DB.items[id])).length;
+    const got = [of((it) => it.grade === 'normal'), of((it) => it.src === 'drop'), of((it) => it.src === 'mdrop'), of((it) => it.grade === 'super')];
+    ok(J(got) === J(want), `§3.2 ${w}: ${J(want)} (${J(got)})`);
   }
   const b = sectionLines(/^#### 9\.12\.8 /, /^### 9\.13 /).find((l) => l.includes('w_sword_sr_echo'));
   ok(b && b.includes('b_valzard_echo') && DB.items.w_sword_sr_echo.exclusive === 'b_valzard_echo', '§9.12.8 w_sword_sr_echo is the super of b_valzard_echo');
@@ -338,10 +381,11 @@ console.log('## every w_ id in DESIGN.md');
   const all = new Set();
   for (const l of MD) for (const m of l.matchAll(/`(w_[a-z0-9_]+)`/g)) all.add(m[1]);
   const skip = (id) => /_$/.test(id) || /^w_(sword|greatsword|dagger|axe|spear|bow|club|staff|staff_prayer|katana|fist|whip)$/.test(id);
-  const missing = [...all].filter((id) => !skip(id) && !DB.items[id]);
-  ok(missing.length === 0, `every weapon id DESIGN.md names exists (${all.size} ids; missing: ${missing.join(' ')})`);
+  const missing = [...all].filter((id) => !skip(id) && S.NOW(id) !== null && !DB.items[S.NOW(id)]);
+  ok(missing.length === 0, `every weapon id DESIGN.md names exists under its SYSTEMS_REWORK §3.2 id (${all.size} ids; missing: ${missing.join(' ')})`);
   const unchecked = WI.all().filter((id) => !seen.has(id));
-  ok(unchecked.length === 0, `every one of the 301 weapons was compared with a DESIGN.md row (${unchecked.join(' ')})`);
+  ok(unchecked.length === 0, `every one of the 260 weapons was compared with a DESIGN.md row (${unchecked.join(' ')})`);
+  console.log(`  info ${merged.length} DESIGN rows merged by §3.2; ${Object.keys(S.KEPT).length} katana / club / fist / whip weapons kept under new ids; ${(dev.a19 || []).length} descs reworded by §2.5 / §3.2`);
 }
 
 if (ROWS && d3Rows.length) console.log('\n## D3 rows for DESIGN.md (§8.5 then §9.12.5)\n' + d3Rows.join('\n'));
