@@ -65,10 +65,12 @@
   Menu.chronicleEntries = chronicleEntries;
   /** 「隠し通路　n/総数」 counts */
   function secretCounts() {
-    const found = Object.keys((R.Game && R.Game.secrets) || {}).length;
-    let total = 0;
-    try { total = R.FieldMap && R.FieldMap.secretTotal ? R.FieldMap.secretTotal() : 0; } catch (e) { total = 0; }
-    return { found, total: Math.max(total, found) };
+    // R.Field.secretsFound() counts only cells that are still secret passages (an old save may name
+    // cells of a map redrawn since), so found never exceeds the total
+    let found = 0, total = 0;
+    try { total = R.Field && R.Field.secretTotal ? R.Field.secretTotal() : R.FieldMap && R.FieldMap.secretTotal ? R.FieldMap.secretTotal() : 0; } catch (e) { total = 0; }
+    try { found = R.Field && R.Field.secretsFound ? R.Field.secretsFound() : 0; } catch (e) { found = 0; }
+    return { found: Math.min(found, total), total };
   }
   Menu.secretCounts = secretCounts;
 
@@ -120,7 +122,8 @@
       /** the right panel: text starting at (x+8, y+8), 134px wide */
       drawEntry(e, x, y) {
         const tx = x + 8, W = 134;
-        const lines = (s, y0, col, max) => String(s || '').split('\n').slice(0, max || 12).forEach((l, i) => Kt.fitText(l, tx, y0 + i * 14, W, { color: col || '#ffffff' }));
+        // wrapped (not squeezed) to the panel width: a 14-char hint line takes two lines
+        const lines = (s, y0, col, max) => G().wrap(String(s || ''), W).slice(0, max || 12).forEach((l, i) => Kt.fitText(l, tx, y0 + i * 14, W, { color: col || '#ffffff' }));
         if (e.kind === 'prologue') {
           G().text('序章', tx, y + 8, { color: Kt.COL.sub });
           Kt.fitText('『' + (e.title || '') + '』', tx, y + 22, W, { color: G().C.gold });
