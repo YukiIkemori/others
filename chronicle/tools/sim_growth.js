@@ -176,10 +176,10 @@ for (let run = 0; run < RUNS; run++) {
 // ---------------------------------------------------------------- report
 const f1 = (x) => (Math.round(x * 10) / 10).toFixed(1);
 console.log(`sim_growth — ${RUNS} runs, seed ${SEED}, ${MODEL ? 'standard-monster model' : 'zone data (R.Mon)'}\n`);
-console.log('HP/MP/WP curves (§4.2.2; standard growth B, vit 40, no gear):');
-console.log('  L    HPlv   MPlv  WPlv   gain/L(HP)');
+console.log('HP/MP curves (§4.2.2; standard growth B, vit 40, no gear; WP gone, SYSTEMS_REWORK A18):');
+console.log('  L    HPlv   MPlv   gain/L(HP)');
 for (const L of [1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 99]) {
-  console.log('  ' + String(L).padStart(2) + '  ' + [Ru.lvCurve('hp', L), Ru.lvCurve('mp', L), Ru.lvCurve('wp', L)].map((v) => f1(v).padStart(6)).join(' ') +
+  console.log('  ' + String(L).padStart(2) + '  ' + [Ru.lvCurve('hp', L), Ru.lvCurve('mp', L)].map((v) => f1(v).padStart(6)).join(' ') +
     '   ' + f1(L > 1 ? Ru.lvCurve('hp', L) - Ru.lvCurve('hp', L - 1) : 0).padStart(5));
 }
 console.log(`\nPrologue: party level ${f1(avg(proLv.map((p) => p.before)))} before the prologue boss, ${f1(avg(proLv.map((p) => p.after)))} after it (target ≈ 5, §4.2.3)`);
@@ -212,10 +212,15 @@ for (let L = 3; L <= 99; L++) if (Ru.lvCurve('hp', L) - Ru.lvCurve('hp', L - 1) 
 check(mono, 'HP gain per level never grows (diminishing returns)');
 const top = Ru.newChar({ id: 'hagen', level: 99 });
 if (top) {
-  top.bonus = { hp: 200, mp: 30, wp: 30 };
+  const BC = (K.BONUS_CAP) || { hp: 200, mp: 50 };
+  top.bonus = { hp: BC.hp || 200, mp: BC.mp || 50 };
   const s = Ru.stats(top);
-  check(s.hp <= 999 && s.mp <= 150 && s.wp <= 99, `caps at Lv99 with seeds: ${s.hp}/${s.mp}/${s.wp} ≤ 999/150/99`);
+  check(s.hp <= 999 && s.mp <= 250, `caps at Lv99 with seeds eaten to the cap: ${s.hp}/${s.mp} ≤ 999/250`);
 }
+// SYSTEMS_REWORK §4.3 (sim_growth): max MP per growth letter (no gear, no seeds)
+console.log('\nMax MP by growth letter (§2.3; K.GROW.mp × MPlv):');
+console.log('  L   ' + ['S', 'A', 'B', 'C', 'D'].map((g) => g.padStart(5)).join(''));
+for (const L of [1, 10, 20, 30, 40, 50, 60, 70, 99]) console.log('  ' + String(L).padStart(2) + '  ' + ['S', 'A', 'B', 'C', 'D'].map((g) => String(Math.min(K.MP.cap || 250, Math.round(Ru.lvCurve('mp', L) * K.GROW.mp[g]))).padStart(5)).join(''));
 for (const l of results) console.log(l);
 console.log(`\n${results.length - failures}/${results.length} checks passed`);
 process.exit(failures ? 1 : 0);

@@ -58,7 +58,7 @@ function standardParty(T, kind) { return party(`std:${T}:${kind || 'mob'}`, () =
 // §4.17.1: mobs at LZ(T)+1, but the final region (finale) at Lv 56; the post-game zones are not a §4.17.3 A2 region
 const zoneKind = (e) => (e.region === 'finale' ? 'final' : 'mob');
 function startAt(p, frac) {
-  for (const c of p.party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = Math.round(st.mp * frac); c.wp = Math.round(st.wp * frac); c.status = {}; }
+  for (const c of p.party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = Math.round(st.mp * frac); c.status = {}; }
   return p;
 }
 function casterIndex(p) { return p.party.findIndex((c) => ['marta', 'noela', 'teo', 'ilse', 'morga', 'boden'].includes(c.id) || (c.id === 'hero' && c.heroType === 'mage')); }

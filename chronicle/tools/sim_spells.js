@@ -356,7 +356,7 @@ function engineFloor(T, n, startPct) {
     if (!r) return null;
     out.push({ casts: r.casts[mi], mpPct: r.mpUsedBy[mi], hp: r.hpLostPct / 100, result: r.result });
     const end = r.party || [];
-    for (let k = 0; k < party0.length; k++) if (end[k]) { party0[k].hp = end[k].hp; party0[k].mp = end[k].mp; party0[k].wp = end[k].wp; }
+    for (let k = 0; k < party0.length; k++) if (end[k]) { party0[k].hp = end[k].hp; party0[k].mp = end[k].mp; }
     PM.afterBattle(R, party0, r.result === 'lose' ? 'lose' : 'win');
     for (const c of party0) if (c.hp <= 0) c.hp = R.Rules.stats(c).hp;   // 倒れた人は次の戦闘の前に戻す（蘇生の道具・術）
   }

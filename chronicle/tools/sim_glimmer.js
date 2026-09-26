@@ -67,7 +67,7 @@ function simChar(id, base, patch) {
 // §4.9.5 の型（シミュレーター専用の仮の仲間。sandbox の DB にだけ足す）
 simChar('_sim_warrior', 'selma', { stats: { str: 50, vit: 44, dex: 30, agi: 28, int: 18, mnd: 30 }, w: { sword: 'A', axe: 'B' } });
 simChar('_sim_mage', 'teo', { stats: { str: 18, vit: 24, dex: 30, agi: 34, int: 52, mnd: 42 },
-  w: { staff: 'A', whip: 'B' }, e: { fire: 'A', water: 'C', wind: 'A', earth: 'B', light: 'C', dark: 'C' } });
+  w: { staff: 'A' }, e: { fire: 'A', water: 'C', wind: 'A', earth: 'B', light: 'C', dark: 'C' } });
 for (const L of ['S', 'A', 'B', 'C', 'D']) simChar('_sim_one_' + L, 'selma', { stats: { str: 50, vit: 44, dex: 30, agi: 28, int: 18, mnd: 30 }, w: { sword: L } });
 for (const L of ['S', 'A', 'B', 'C', 'D']) simChar('_sim_stone_' + L, 'selma', { stats: { str: 34, vit: 34, dex: 34, agi: 33, int: 30, mnd: 32 }, e: { light: L } });
 simChar('_sim_recruit', 'hagen', { stats: { str: 50, vit: 44, dex: 30, agi: 28, int: 18, mnd: 30 }, w: { greatsword: 'B', axe: 'B' } });
@@ -77,9 +77,10 @@ const PROFILES = {
   hero: { weapons: [W('weapon1', 'sword', 0.62), W('weapon2', 'axe', 0.30)], row: 'front' },
   brigitta: { weapons: [W('weapon1', 'spear', 0.62), W('weapon2', 'bow', 0.30)], row: 'middle' },
   sylvain: { weapons: [W('weapon1', 'bow', 0.62), W('weapon2', 'dagger', 0.30)], row: 'middle' },
-  marta: { weapons: [W('weapon1', 'staff', 0.5), W('weapon2', 'whip', 0.5)], row: 'middle', elements: ['water', 'light', 'wind'], casts: 0.9, bossSpell: 0.7, stones: true },
+  marta: { weapons: [W('weapon1', 'staff', 1)],   // SYSTEMS_REWORK §3.5: the casters carry the staff alone
+    row: 'middle', elements: ['water', 'light', 'wind'], casts: 0.9, bossSpell: 0.7, stones: true },
   warrior: { weapons: [W('weapon1', 'sword', 0.62), W('weapon2', 'axe', 0.30)], row: 'front' },
-  mage: { weapons: [W('weapon1', 'staff', 0.6), W('weapon2', 'whip', 0.4)], row: 'middle', elements: ['fire', 'wind', 'earth'], casts: 0.75, bossSpell: 0.65, stones: true },
+  mage: { weapons: [W('weapon1', 'staff', 1)], row: 'middle', elements: ['fire', 'wind', 'earth'], casts: 0.75, bossSpell: 0.65, stones: true },
   one: { weapons: [W('weapon1', 'sword', 0.92)], row: 'front' },
   recruit: { weapons: [W('weapon1', 'greatsword', 0.65), W('weapon2', 'axe', 0.35)], row: 'front' },   // 候補の開いている人は「攻撃」（§4.13.2-d）
 };
@@ -103,7 +104,7 @@ function reachHunt(m, b, x) {
   if (b.boss || p.row !== 'middle' || (b.hunts || 0) >= REACH_HUNT) return null;
   const kts = knownTechs(c, x.w, 'middle').filter((id) => { const a = DB.actions[id]; return FOE_T[a.target] && a.effects.some((e) => e.type === 'damage' && e.formula !== 'percent'); });
   if (!kts.length) return null;
-  kts.sort((a, z) => (DB.actions[a].wp || 0) - (DB.actions[z].wp || 0) || DB.actions[a].glim.lv - DB.actions[z].glim.lv);
+  kts.sort((a, z) => (DB.actions[a].mp || 0) - (DB.actions[z].mp || 0) || DB.actions[a].glim.lv - DB.actions[z].glim.lv);
   if (!G.candidates(c, { kind: 'tech', wtype: x.w, used: kts[0], rankB: b.rankB, ef: b.ef, tier: b.T, row: 'middle', silenced: false }).length) return null;
   b.hunts = (b.hunts || 0) + 1;
   return { kind: 'tech', wtype: x.w, slot: x.slot, used: kts[0], actionId: kts[0] };
@@ -511,7 +512,7 @@ const engineCheck = [];
               if (!e) continue;
               party[k].techs = e.techs.slice(); party[k].spells = e.spells.slice();
               party[k].wprof = Object.assign({}, e.wprof); party[k].eprof = Object.assign({}, e.eprof);
-              party[k].hp = e.hp; party[k].mp = e.mp; party[k].wp = e.wp;
+              party[k].hp = e.hp; party[k].mp = e.mp;
             }
             PM.afterBattle(R, party, r.result === 'lose' ? 'lose' : 'win');
             for (const c of party) if (c.hp <= 0) c.hp = R.Rules.stats(c).hp;
