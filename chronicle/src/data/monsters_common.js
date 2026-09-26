@@ -9,7 +9,7 @@
     // ---- jelly ゼリー（軟体・s）: どこにでもいる水辺のゼリー。段が上がるほど、泡・毒・兵隊・虹と姿を変える。
     jelly_1: {
       name: 'ぷちゼリー', sprite: 'jelly_1', lineage: 'jelly', stage: 1, lv: 7, size: 's', race: 'slime',
-      flags: [], s: { hp: 1.6, atk: 1.04, agi: 0.8, mag: 1.16 }, eva: 5,
+      flags: [], s: { hp: 1.38, atk: 0.9, agi: 0.8 }, eva: 5,
       elem: { fire: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: {},
       actions: [{ id: 'attack', w: 6 }, { id: 'e_tackle', w: 2 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'ac_jelly_ring', rate: 32 }, super: { item: 'ac_sr_jelly_heart', rate: 256 } },
@@ -17,7 +17,7 @@
     },
     jelly_2: {
       name: 'あわゼリー', sprite: 'jelly_2', lineage: 'jelly', stage: 2, lv: 19, size: 's', race: 'slime', affinity: 'water',
-      flags: [], s: { hp: 2.35, mag: 0.77, agi: 0.9, atk: 0.71 }, eva: 5,
+      flags: [], s: { hp: 2.35, mag: 0.88, agi: 0.9, atk: 0.82 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_water_bolt', w: 2 }, { id: 'e_bubbles', w: 2 }],
       drops: { normal: { item: 'i_stone_water', rate: 8 }, rare: { item: 'sh_bubble', rate: 32 }, super: { item: 'w_staff_sr_bubble', rate: 256 } },
@@ -25,7 +25,7 @@
     },
     jelly_3: {
       name: '毒ゼリー', sprite: 'jelly_3', lineage: 'jelly', stage: 3, lv: 31, size: 's', race: 'slime',
-      flags: [], s: { hp: 2.5, atk: 0.55, mag: 0.55 }, eva: 5,
+      flags: [], s: { hp: 2.5, atk: 0.6, mag: 0.6 }, eva: 5,
       elem: { fire: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: { poison: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_poison_spit', w: 3 }, { id: 'e_split', w: 1, cond: { hpAbove: 0.5, countBelow: 6 } }],
       drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'hn_jelly_glove', rate: 32 }, super: { item: 'w_whip_sr_venomjelly', rate: 256 } },
@@ -33,7 +33,7 @@
     },
     jelly_4: {
       name: 'ゼリー将軍', sprite: 'jelly_4', lineage: 'jelly', stage: 4, lv: 43, size: 's', race: 'slime',
-      flags: [], s: { hp: 2.5, atk: 0.6, def: 1.1, mag: 0.57 }, eva: 5,
+      flags: [], s: { hp: 2.5, atk: 0.7, def: 1.1, mag: 0.67 }, eva: 5,
       elem: { fire: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_howl', w: 2, cond: { every: [3, 0] } }, { id: 'e_crush', w: 2 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'hd_jelly_helm', rate: 32 }, super: { item: 'w_sword_sr_jellygeneral', rate: 256 } },
@@ -41,7 +41,7 @@
     },
     jelly_5: {
       name: '虹ゼリー', goldName: '金色ゼリー', sprite: 'jelly_5', lineage: 'jelly', stage: 5, lv: 55, size: 's', race: 'slime',
-      flags: [], s: { hp: 2.5, mag: 0.5, mdef: 1.2, atk: 0.5 }, eva: 5,
+      flags: [], s: { hp: 2.5, mag: 0.44, mdef: 1.2, atk: 0.44 }, eva: 5,
       elem: { fire: 0.75, water: 0.75, wind: 0.75, earth: 0.75, light: 0.75, dark: 0.75 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_prism_ray', w: 3 }, { id: 'e_split', w: 1, cond: { hpAbove: 0.5, countBelow: 6 } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_rainbow_drop', rate: 32 }, super: { item: 'sh_sr_phantom', rate: 128 } },
@@ -50,7 +50,7 @@
     // ---- rat ネズミ（獣・s）: 人里と坑道と船にすみつくネズミ。歯と数で押してくる。
     rat_1: {
       name: '野ネズミ', sprite: 'rat_1', lineage: 'rat', stage: 1, lv: 7, size: 's', race: 'beast',
-      flags: [], s: { hp: 1.55, agi: 1.2, atk: 0.59, mag: 0.59 }, eva: 5,
+      flags: [], s: { hp: 1.54, agi: 1.2, atk: 0.74, mag: 0.74 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 5 }, { id: 'e_bite', w: 2 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'ft_rat_sandal', rate: 32 }, super: { item: 'w_dagger_sr_rattooth', rate: 256 } },
@@ -58,7 +58,7 @@
     },
     rat_2: {
       name: '毒牙ネズミ', sprite: 'rat_2', lineage: 'rat', stage: 2, lv: 19, size: 's', race: 'beast',
-      flags: [], s: { hp: 2.08, atk: 0.5, agi: 1.2, mag: 0.5 }, eva: 5,
+      flags: [], s: { hp: 1.94, atk: 0.57, agi: 1.2, mag: 0.57 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_poison_bite', w: 3 }, { id: 'e_call', w: 1, cond: { countBelow: 6 } }],
       drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'hn_rat_claw', rate: 32 }, super: { item: 'ac_sr_plague_tail', rate: 256 } },
@@ -66,7 +66,7 @@
     },
     rat_3: {
       name: '鉄歯ネズミ', sprite: 'rat_3', lineage: 'rat', stage: 3, lv: 31, size: 's', race: 'beast',
-      flags: [], s: { atk: 0.54, def: 1.25, hp: 2.5, mag: 0.5 }, eva: 5,
+      flags: [], s: { atk: 0.6, def: 1.25, hp: 2.5, mag: 0.55 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_gnaw', w: 3 }, { id: 'e_bite', w: 1 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_club_rat', rate: 32 }, super: { item: 'hn_sr_iron_tooth', rate: 256 } },
@@ -74,7 +74,7 @@
     },
     rat_4: {
       name: 'ネズミの頭領', sprite: 'rat_4', lineage: 'rat', stage: 4, lv: 43, size: 's', race: 'beast',
-      flags: [], s: { hp: 1.78, atk: 0.74, mag: 0.67 }, eva: 5,
+      flags: [], s: { hp: 1.75, atk: 0.76, mag: 0.69 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_call_lesser', w: 2, cond: { countBelow: 6 } }, { id: 'e_double', w: 2 }, { id: 'e_howl', w: 1 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'hd_rat_bandana', rate: 32 }, super: { item: 'ac_sr_rat_king_ring', rate: 256 } },
@@ -83,7 +83,7 @@
     // ---- bat コウモリ（獣・s・飛ぶ）: 暗い所ならどこにでも。血を吸い、音で惑わせ、最後は闇の貴族になる。
     bat_1: {
       name: '小コウモリ', sprite: 'bat_1', lineage: 'bat', stage: 1, lv: 7, size: 's', race: 'beast',
-      flags: ['flying'], s: { hp: 1.68, agi: 1.4, atk: 0.65, mag: 0.65 }, eva: 15,
+      flags: ['flying'], s: { hp: 1.47, agi: 1.4, atk: 0.79, mag: 0.79 }, eva: 15,
       elem: { fire: 1.25, wind: 1.5, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 5 }, { id: 'e_bite', w: 1 }],
       drops: { normal: { item: 'i_clear', rate: 8 }, rare: { item: 'ac_bat_fang', rate: 32 }, super: { item: 'ft_sr_bat_wing', rate: 256 } },
@@ -91,7 +91,7 @@
     },
     bat_2: {
       name: '血吸いコウモリ', sprite: 'bat_2', lineage: 'bat', stage: 2, lv: 19, size: 's', race: 'beast',
-      flags: ['flying'], s: { hp: 2.5, agi: 1.35, atk: 0.66, mag: 0.66 }, eva: 15,
+      flags: ['flying'], s: { hp: 2.5, agi: 1.35, atk: 0.7, mag: 0.7 }, eva: 15,
       elem: { fire: 1.25, wind: 1.5, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_drain_bite', w: 3 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_dagger_bloodbat', rate: 32 }, super: { item: 'w_katana_sr_crimson', rate: 256 } },
@@ -99,7 +99,7 @@
     },
     bat_3: {
       name: '音波コウモリ', sprite: 'bat_3', lineage: 'bat', stage: 3, lv: 31, size: 's', race: 'beast',
-      flags: ['flying'], s: { hp: 1.06, mag: 0.5, agi: 1.3, atk: 0.5 }, eva: 15,
+      flags: ['flying'], s: { hp: 1.66, mag: 0.3, agi: 1.3, atk: 0.3 }, eva: 15,
       elem: { fire: 1.25, wind: 1.5, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_sonic', w: 3 }],
       drops: { normal: { item: 'i_clear', rate: 8 }, rare: { item: 'hd_sonic_band', rate: 32 }, super: { item: 'hd_sr_echo_hood', rate: 256 } },
@@ -107,7 +107,7 @@
     },
     bat_4: {
       name: '闇コウモリ', sprite: 'bat_4', lineage: 'bat', stage: 4, lv: 43, size: 's', race: 'beast', affinity: 'dark',
-      flags: ['flying'], s: { hp: 2.5, mag: 0.62, agi: 1.35, atk: 0.55 }, eva: 15,
+      flags: ['flying'], s: { hp: 2.5, mag: 0.67, agi: 1.35, atk: 0.59 }, eva: 15,
       elem: { fire: 1.25, wind: 1.5, earth: 0.5, light: 1.5, dark: 0.25 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_dark_bolt', w: 2 }, { id: 'e_drain_bite', w: 2 }],
       drops: { normal: { item: 'i_stone_dark', rate: 8 }, rare: { item: 'bd_night_cloak', rate: 32 }, super: { item: 'w_bow_sr_nightwing', rate: 256 } },
@@ -115,7 +115,7 @@
     },
     bat_5: {
       name: 'コウモリ公', sprite: 'bat_5', lineage: 'bat', stage: 5, lv: 55, size: 's', race: 'beast', affinity: 'dark',
-      flags: ['flying'], s: { hp: 2.5, mag: 0.5, agi: 1.25, atk: 0.5 }, eva: 12,
+      flags: ['flying'], s: { hp: 2.5, mag: 0.39, agi: 1.25, atk: 0.39 }, eva: 12,
       elem: { fire: 1.25, wind: 1.5, earth: 0.5, light: 1.5, dark: 0.25 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_life_suck', w: 3 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_dark_mist', w: 2 }],
       drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'ac_count_brooch', rate: 32 }, super: { item: 'w_dagger_sr_moonfang', rate: 128 } },
@@ -124,7 +124,7 @@
     // ---- paper 虚ろの使い（霊体・大きさは段ごと）: 伝承が忘れられた場所に生まれる、白い紙のような魔物。記憶と力を「白紙」にする。
     paper_1: {
       name: '白紙の小鬼', goldName: '金紙の小鬼', sprite: 'paper_1', lineage: 'paper', stage: 1, lv: 19, size: 's', race: 'spirit',
-      flags: [], s: { hp: 2.5, mag: 1.02, agi: 1.1, atk: 0.94 }, eva: 5,
+      flags: [], s: { hp: 2.5, agi: 1.1, mag: 1.1 }, eva: 5,
       elem: { fire: 1.5, light: 0.25, dark: 1.5 }, phys: { slash: 1.25, blunt: 0.75 }, statusRes: { poison: 1, death: 1, confuse: 0.5, sleep: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_forget', w: 3 }, { id: 'e_paper_cut', w: 2 }],
       drops: { normal: { item: 'i_ether', rate: 8 }, rare: { item: 'ac_blank_page', rate: 32 }, super: { item: 'ac_sr_first_letter', rate: 256 } },
@@ -132,7 +132,7 @@
     },
     paper_2: {
       name: '白紙の獣', goldName: '金紙の獣', sprite: 'paper_2', lineage: 'paper', stage: 2, lv: 31, size: 'm', race: 'spirit',
-      flags: [], s: { agi: 1.1, hp: 2.34, mag: 0.96 }, eva: 5,
+      flags: [], s: { agi: 1.1, hp: 2.45, atk: 1.05 }, eva: 5,
       elem: { fire: 1.5, light: 0.25, dark: 1.5 }, phys: { slash: 1.25, blunt: 0.75 }, statusRes: { poison: 1, death: 1, confuse: 0.5, sleep: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_bite', w: 2 }, { id: 'e_forget', w: 2 }, { id: 'e_erase_all', w: 1, cond: { every: [4, 1] } }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'bd_blank_coat', rate: 32 }, super: { item: 'w_spear_sr_whiteline', rate: 256 } },
@@ -140,7 +140,7 @@
     },
     paper_3: {
       name: '白紙の騎士', goldName: '金紙の騎士', sprite: 'paper_3', lineage: 'paper', stage: 3, lv: 43, size: 'm', race: 'spirit',
-      flags: [], s: { hp: 2.5, atk: 0.86, def: 1.2, agi: 0.85, mag: 0.77 }, eva: 5,
+      flags: [], s: { hp: 2.5, atk: 0.92, def: 1.2, agi: 0.85, mag: 0.82 }, eva: 5,
       elem: { fire: 1.5, light: 0.25, dark: 1.5 }, phys: { slash: 1.25, blunt: 0.75 }, statusRes: { poison: 1, death: 1, confuse: 0.5, sleep: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_slash', w: 2 }, { id: 'e_forget', w: 2 }, { id: 'e_erase_all', w: 1, cond: { every: [3, 2] } }],
       drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'sh_blank_shield', rate: 32 }, super: { item: 'sh_sr_unwritten', rate: 256 } },
@@ -148,7 +148,7 @@
     },
     paper_4: {
       name: '白紙の竜', goldName: '金紙の竜', sprite: 'paper_4', lineage: 'paper', stage: 4, lv: 55, size: 'l', race: 'spirit',
-      flags: ['flying'], s: { hp: 2.5, atk: 0.5, mag: 0.5 }, eva: 12,
+      flags: ['flying'], s: { hp: 2.5, atk: 0.54, mag: 0.54 }, eva: 12,
       elem: { fire: 1.5, wind: 1.5, earth: 0.5, light: 0.25, dark: 1.5 }, phys: { slash: 1.25, blunt: 0.75 }, statusRes: { poison: 1, death: 1, confuse: 0.5, sleep: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_blank_breath', w: 3 }, { id: 'e_forget', w: 2 }, { id: 'e_tail', w: 1 }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_greatsword_blank', rate: 32 }, super: { item: 'w_greatsword_sr_eraser', rate: 256 } },
@@ -157,7 +157,7 @@
     // ---- crab カニ（水生・m）: 浜から洞窟まで。甲羅はだんだん城のように大きくなる。
     crab_1: {
       name: '浜ガニ', sprite: 'crab_1', lineage: 'crab', stage: 1, lv: 7, size: 'm', race: 'aquatic',
-      flags: [], s: { hp: 1.16, def: 1.4, agi: 0.8, atk: 1.08, mag: 1.08 }, eva: 5,
+      flags: [], s: { hp: 1.06, def: 1.4, agi: 0.8, atk: 1.12, mag: 1.12 }, eva: 5,
       elem: { fire: 0.75, water: 0.5, earth: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 5 }, { id: 'e_pincer', w: 2 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'sh_crab_shell', rate: 32 }, super: { item: 'w_fist_sr_crabclaw', rate: 256 } },
@@ -165,7 +165,7 @@
     },
     crab_2: {
       name: '鉄甲ガニ', sprite: 'crab_2', lineage: 'crab', stage: 2, lv: 19, size: 'm', race: 'aquatic', affinity: 'water',
-      flags: [], s: { def: 1.7, mdef: 0.8, agi: 0.7, hp: 1.29, atk: 1.21, mag: 1.21 }, eva: 5,
+      flags: [], s: { def: 1.7, mdef: 0.8, agi: 0.7, hp: 1.38, atk: 1.47, mag: 1.47 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_pincer', w: 2 }, { id: 'e_harden', w: 2, cond: { once: true } }],
       drops: { normal: { item: 'i_stone_water', rate: 8 }, rare: { item: 'bd_crab_plate', rate: 32 }, super: { item: 'sh_sr_ironshell', rate: 256 } },
@@ -173,7 +173,7 @@
     },
     crab_3: {
       name: '泡吹きガニ', sprite: 'crab_3', lineage: 'crab', stage: 3, lv: 31, size: 'm', race: 'aquatic', affinity: 'water',
-      flags: [], s: { def: 1.4, hp: 1.28, atk: 0.91 }, eva: 5,
+      flags: [], s: { def: 1.4, hp: 1.28, mag: 1.12, atk: 1.02 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_bubbles', w: 2 }, { id: 'e_water_bolt', w: 2 }],
       drops: { normal: { item: 'i_ether', rate: 8 }, rare: { item: 'hd_foam_cap', rate: 32 }, super: { item: 'w_bow_sr_foamshot', rate: 256 } },
@@ -181,7 +181,7 @@
     },
     crab_4: {
       name: '城ガニ', sprite: 'crab_4', lineage: 'crab', stage: 4, lv: 43, size: 'm', race: 'aquatic', affinity: 'water',
-      flags: [], s: { hp: 2.02, def: 1.6, agi: 0.6, atk: 0.76, mag: 0.76 }, eva: 5,
+      flags: [], s: { hp: 1.99, def: 1.6, agi: 0.6 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_pincer', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_crush', w: 2 }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'sh_castle_shell', rate: 32 }, super: { item: 'bd_sr_castle_carapace', rate: 256 } },
@@ -190,7 +190,7 @@
     // ---- seabird カモメ（鳥・m・飛ぶ）: 海辺と船の上を飛ぶカモメ。嵐を呼び、光り物を盗む。
     seabird_1: {
       name: '浜カモメ', sprite: 'seabird_1', lineage: 'seabird', stage: 1, lv: 7, size: 'm', race: 'bird',
-      flags: ['flying'], s: { hp: 1.42, agi: 1.3, atk: 0.87, mag: 0.87 }, eva: 15,
+      flags: ['flying'], s: { hp: 1.42, agi: 1.3, atk: 0.97, mag: 0.97 }, eva: 15,
       elem: { wind: 1.5, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 5 }, { id: 'e_peck', w: 2 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'ac_gull_feather', rate: 32 }, super: { item: 'ft_sr_gull_boots', rate: 256 } },
@@ -198,7 +198,7 @@
     },
     seabird_2: {
       name: '嵐カモメ', sprite: 'seabird_2', lineage: 'seabird', stage: 2, lv: 19, size: 'm', race: 'bird', affinity: 'wind',
-      flags: ['flying'], s: { hp: 2.27, mag: 0.5, agi: 1.3, atk: 0.5 }, eva: 15,
+      flags: ['flying'], s: { hp: 2.16, mag: 0.4, agi: 1.3, atk: 0.4 }, eva: 15,
       elem: { fire: 1.5, wind: 0.25, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_gust', w: 3 }],
       drops: { normal: { item: 'i_stone_wind', rate: 8 }, rare: { item: 'w_bow_gull', rate: 32 }, super: { item: 'w_spear_sr_stormbeak', rate: 256 } },
@@ -206,7 +206,7 @@
     },
     seabird_3: {
       name: 'ぬすみカモメ', sprite: 'seabird_3', lineage: 'seabird', stage: 3, lv: 31, size: 'm', race: 'bird',
-      flags: ['flying'], s: { hp: 1.97, atk: 0.71, agi: 1.35, mag: 0.68 }, rw: { gold: 2 }, eva: 15,
+      flags: ['flying'], s: { hp: 2.5, atk: 0.8, agi: 1.35, mag: 0.77 }, rw: { gold: 2 }, eva: 15,
       elem: { wind: 1.5, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_peck_eyes', w: 2 }, { id: 'e_dive', w: 2 }],
       drops: { normal: { item: 'i_clear', rate: 8 }, rare: { item: 'hd_thief_bandana', rate: 32 }, super: { item: 'ac_sr_gull_loot', rate: 256 } },
@@ -214,7 +214,7 @@
     },
     seabird_4: {
       name: '長老カモメ', sprite: 'seabird_4', lineage: 'seabird', stage: 4, lv: 43, size: 'm', race: 'bird', affinity: 'wind',
-      flags: ['flying'], s: { hp: 1.92, mag: 0.53, agi: 1.2, atk: 0.5 }, eva: 12,
+      flags: ['flying'], s: { hp: 2.33, mag: 0.56, agi: 1.2, atk: 0.54 }, eva: 12,
       elem: { fire: 1.5, wind: 0.25, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_dive', w: 2 }, { id: 'e_gust', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'bd_gull_robe', rate: 32 }, super: { item: 'hd_sr_sea_wind', rate: 256 } },
@@ -223,7 +223,7 @@
     // ---- mimic 宝箱（魔造・s）: 宝箱に化けた魔物。お金をたくさん持ち、レアを落としやすい。
     mimic_1: {
       name: '牙の宝箱', sprite: 'mimic_1', lineage: 'mimic', stage: 1, lv: 7, size: 's', race: 'construct',
-      flags: [], s: { hp: 1.35, atk: 0.69, def: 1.2, agi: 0.9, mag: 0.6 }, rw: { gold: 3 }, eva: 5,
+      flags: [], s: { hp: 1.2, atk: 0.97, def: 1.2, agi: 0.9, mag: 0.83 }, rw: { gold: 3 }, eva: 5,
       elem: { water: 1.25, wind: 0.75 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_bite', w: 3 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'ac_mimic_tongue', rate: 16 }, super: { item: 'ac_sr_greedy', rate: 128 } },
@@ -231,7 +231,7 @@
     },
     mimic_2: {
       name: '毒牙の宝箱', sprite: 'mimic_2', lineage: 'mimic', stage: 2, lv: 19, size: 's', race: 'construct',
-      flags: [], s: { hp: 2.24, atk: 0.53, def: 1.2, agi: 0.9, mag: 0.5 }, rw: { gold: 3 }, eva: 5,
+      flags: [], s: { hp: 2.21, atk: 0.59, def: 1.2, agi: 0.9, mag: 0.56 }, rw: { gold: 3 }, eva: 5,
       elem: { water: 1.25, wind: 0.75 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_poison_bite', w: 2 }, { id: 'e_bite', w: 2 }],
       drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'ac_mimic_key', rate: 16 }, super: { item: 'hn_sr_greedy_hand', rate: 128 } },
@@ -239,7 +239,7 @@
     },
     mimic_3: {
       name: '呪いの宝箱', sprite: 'mimic_3', lineage: 'mimic', stage: 3, lv: 31, size: 's', race: 'construct',
-      flags: [], s: { hp: 2.2, atk: 0.63, def: 1.2, agi: 0.9, mag: 0.52 }, rw: { gold: 3 }, eva: 5,
+      flags: [], s: { hp: 2.16, atk: 0.68, def: 1.2, agi: 0.9, mag: 0.55 }, rw: { gold: 3 }, eva: 5,
       elem: { water: 1.25, wind: 0.75 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_curse', w: 1 }, { id: 'e_abyss_fang', w: 2 }, { id: 'e_bite', w: 1 }],
       drops: { normal: { item: 'i_revive', rate: 8 }, rare: { item: 'ac_mimic_chain', rate: 16 }, super: { item: 'ac_sr_cursed_lock', rate: 128 } },
@@ -247,7 +247,7 @@
     },
     mimic_4: {
       name: '奈落の宝箱', sprite: 'mimic_4', lineage: 'mimic', stage: 4, lv: 43, size: 's', race: 'construct', affinity: 'dark',
-      flags: [], s: { hp: 2.5, atk: 0.5, mag: 0.5, def: 1.25, agi: 0.9 }, rw: { gold: 3 }, eva: 5,
+      flags: [], s: { hp: 2.5, atk: 0.3, mag: 0.3, def: 1.25, agi: 0.9 }, rw: { gold: 3 }, eva: 5,
       elem: { water: 1.25, wind: 0.75, light: 1.5, dark: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_abyss_fang', w: 2 }, { id: 'e_dark_mist', w: 2 }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_abyss_key', rate: 16 }, super: { item: 'ac_sr_coin', rate: 128 } },

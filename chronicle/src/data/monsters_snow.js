@@ -9,7 +9,7 @@
     // ---- wolf オオカミ（獣・m）: 雪原の群れ。霜の牙、吹雪の息、月夜、そしてオオカミ王。
     wolf_1: {
       name: '灰色オオカミ', goldName: '金色オオカミ', sprite: 'wolf_1', lineage: 'wolf', stage: 1, lv: 7, size: 'm', race: 'beast',
-      flags: [], s: { atk: 0.95, agi: 1.15, hp: 1.25, mag: 0.9 }, eva: 5,
+      flags: [], s: { atk: 0.98, agi: 1.15, hp: 1.23, mag: 0.93 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_bite', w: 2 }, { id: 'e_howl', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'bd_wolf_pelt', rate: 32 }, super: { item: 'w_fist_sr_greywolf', rate: 256 } },
@@ -17,7 +17,7 @@
     },
     wolf_2: {
       name: '霜牙オオカミ', sprite: 'wolf_2', lineage: 'wolf', stage: 2, lv: 19, size: 'm', race: 'beast', affinity: 'water',
-      flags: [], s: { atk: 0.7, agi: 1.15, hp: 1.81, mag: 0.63 }, eva: 5,
+      flags: [], s: { atk: 0.81, agi: 1.15, hp: 1.61, mag: 0.74 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_frost_bite', w: 3 }],
       drops: { normal: { item: 'i_stone_water', rate: 8 }, rare: { item: 'w_dagger_frost', rate: 32 }, super: { item: 'w_dagger_sr_frostfang', rate: 256 } },
@@ -25,7 +25,7 @@
     },
     wolf_3: {
       name: '吹雪オオカミ', sprite: 'wolf_3', lineage: 'wolf', stage: 3, lv: 31, size: 'm', race: 'beast', affinity: 'water',
-      flags: [], s: { hp: 1.66, atk: 0.5, mag: 0.5, agi: 1.15 }, eva: 5,
+      flags: [], s: { hp: 1.88, atk: 0.39, mag: 0.39, agi: 1.15 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_frost_breath', w: 2 }, { id: 'e_bite', w: 2 }, { id: 'e_howl', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'ac_blizzard_charm', rate: 32 }, super: { item: 'bd_sr_blizzard_fur', rate: 256 } },
@@ -33,7 +33,7 @@
     },
     wolf_4: {
       name: '月夜オオカミ', sprite: 'wolf_4', lineage: 'wolf', stage: 4, lv: 43, size: 'm', race: 'beast', affinity: 'dark',
-      flags: [], s: { atk: 0.59, agi: 1.25, hp: 2.5, mag: 0.51 }, eva: 5,
+      flags: [], s: { atk: 0.64, agi: 1.25, hp: 2.5, mag: 0.56 }, eva: 5,
       elem: { fire: 1.25, light: 1.5, dark: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_double', w: 2 }, { id: 'e_shadow_bite', w: 2 }, { id: 'e_howl', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_stone_dark', rate: 8 }, rare: { item: 'w_katana_moon', rate: 32 }, super: { item: 'w_katana_sr_matsuyoi', rate: 256 } },
@@ -41,7 +41,7 @@
     },
     wolf_5: {
       name: '氷牙のオオカミ王', sprite: 'wolf_5', lineage: 'wolf', stage: 5, lv: 55, size: 'm', race: 'beast', affinity: 'water',
-      flags: [], s: { hp: 1.55, atk: 0.5, agi: 1.2, mag: 0.5 }, eva: 5,
+      flags: [], s: { hp: 1.49, atk: 0.55, agi: 1.2, mag: 0.55 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_frost_breath', w: 2 }, { id: 'e_frost_bite', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_howl', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_fist_wolfking', rate: 32 }, super: { item: 'ac_sr_beastheart', rate: 128 } },
@@ -50,7 +50,7 @@
     // ---- yeti 雪男（獣・l）: 雪山の大男。雪玉、氷の拳、雪崩。
     yeti_1: {
       name: '雪男', sprite: 'yeti_1', lineage: 'yeti', stage: 1, lv: 7, size: 'l', race: 'beast', affinity: 'water',
-      flags: [], s: { hp: 0.98, atk: 1.11, agi: 0.8, mag: 0.97 }, eva: 5,
+      flags: [], s: { hp: 0.98, atk: 1.15, agi: 0.8 }, eva: 5,
       elem: { fire: 1.5, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_crush', w: 1 }, { id: 'e_snowball', w: 2 }, { id: 'e_headbutt', w: 1 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'bd_wolf_pelt', rate: 32 }, super: { item: 'w_fist_sr_yeti', rate: 256 } },
@@ -58,7 +58,7 @@
     },
     yeti_2: {
       name: '氷の雪男', sprite: 'yeti_2', lineage: 'yeti', stage: 2, lv: 25, size: 'l', race: 'beast', affinity: 'water',
-      flags: [], s: { hp: 1.15, atk: 0.72, def: 1.1, agi: 0.8, mag: 0.59 }, eva: 5,
+      flags: [], s: { hp: 1.15, atk: 0.8, def: 1.1, agi: 0.8, mag: 0.65 }, eva: 5,
       elem: { fire: 1.5, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_frost_fist', w: 2 }, { id: 'e_frost_breath', w: 1 }, { id: 'e_focus', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_greatsword_beastfang', rate: 32 }, super: { item: 'w_axe_sr_icefist', rate: 256 } },
@@ -66,7 +66,7 @@
     },
     yeti_3: {
       name: '大雪男', sprite: 'yeti_3', lineage: 'yeti', stage: 3, lv: 43, size: 'l', race: 'beast', affinity: 'water',
-      flags: [], s: { hp: 1.57, atk: 0.64, agi: 0.8, mag: 0.52 }, eva: 5,
+      flags: [], s: { hp: 1.35, atk: 0.69, agi: 0.8, mag: 0.56 }, eva: 5,
       elem: { fire: 1.5, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_crush', w: 2 }, { id: 'e_avalanche', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 1] } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'hd_yeti_fur', rate: 32 }, super: { item: 'hn_sr_mighty', rate: 128 } },
@@ -75,7 +75,7 @@
     // ---- frostling 氷の小鬼（妖精・m）: 雪の子どもの小鬼。こおり・つらら・ふぶき小僧から雪の大将、冬将軍へ。
     frostling_1: {
       name: 'こおり小僧', sprite: 'frostling_1', lineage: 'frostling', stage: 1, lv: 7, size: 'm', race: 'fairy', affinity: 'water',
-      flags: [], s: { hp: 1.16, mag: 0.57, agi: 1.1, atk: 0.5 }, eva: 5,
+      flags: [], s: { hp: 1.04, mag: 0.64, agi: 1.1, atk: 0.59 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5, light: 0.5, dark: 1.5 }, phys: {}, statusRes: { confuse: 0.5 },
       actions: [{ id: 'attack', w: 4 }, { id: 'e_frost', w: 2 }],
       drops: { normal: { item: 'i_stone_water', rate: 8 }, rare: { item: 'ac_snow_crystal', rate: 32 }, super: { item: 'w_fist_sr_icicle_child', rate: 256 } },
@@ -83,7 +83,7 @@
     },
     frostling_2: {
       name: 'つらら小僧', sprite: 'frostling_2', lineage: 'frostling', stage: 2, lv: 19, size: 'm', race: 'fairy', affinity: 'water',
-      flags: [], s: { hp: 1.79, mag: 0.61, agi: 1.1, atk: 0.52 }, eva: 5,
+      flags: [], s: { hp: 1.82, mag: 0.72, agi: 1.1, atk: 0.59 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5, light: 0.5, dark: 1.5 }, phys: {}, statusRes: { confuse: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_icicle', w: 3 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_dagger_frost', rate: 32 }, super: { item: 'ac_sr_glass', rate: 256 } },
@@ -91,7 +91,7 @@
     },
     frostling_3: {
       name: 'ふぶき小僧', sprite: 'frostling_3', lineage: 'frostling', stage: 3, lv: 31, size: 'm', race: 'fairy', affinity: 'water',
-      flags: [], s: { hp: 1.5, mag: 0.5, agi: 1.15, atk: 0.5 }, eva: 5,
+      flags: [], s: { hp: 1.63, mag: 0.32, agi: 1.15, atk: 0.32 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5, light: 0.5, dark: 1.5 }, phys: {}, statusRes: { confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_frost', w: 2 }, { id: 'e_frost_breath', w: 2 }, { id: 'e_hush', w: 1 }],
       drops: { normal: { item: 'i_ether', rate: 8 }, rare: { item: 'ac_blizzard_charm', rate: 32 }, super: { item: 'hd_sr_blizzard_hat', rate: 256 } },
@@ -99,7 +99,7 @@
     },
     frostling_4: {
       name: '雪の大将', sprite: 'frostling_4', lineage: 'frostling', stage: 4, lv: 43, size: 'm', race: 'fairy', affinity: 'water',
-      flags: [], s: { hp: 2.17, atk: 0.5, mag: 0.5, agi: 1.05 }, eva: 5,
+      flags: [], s: { hp: 2.22, atk: 0.48, mag: 0.48, agi: 1.05 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5, light: 0.5, dark: 1.5 }, phys: {}, statusRes: { confuse: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_frost_fist', w: 2 }, { id: 'e_frost', w: 2 }, { id: 'e_howl', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_katana_moon', rate: 32 }, super: { item: 'w_katana_sr_snowgeneral', rate: 256 } },
@@ -107,7 +107,7 @@
     },
     frostling_5: {
       name: '冬将軍', sprite: 'frostling_5', lineage: 'frostling', stage: 5, lv: 55, size: 'm', race: 'fairy', affinity: 'water',
-      flags: [], s: { hp: 2.03, atk: 0.5, mag: 0.5, agi: 1.05 }, eva: 5,
+      flags: [], s: { hp: 2.44, atk: 0.52, mag: 0.52, agi: 1.05 }, eva: 5,
       elem: { fire: 1.25, water: -1, earth: 1.5, light: 0.5, dark: 1.5 }, phys: {}, statusRes: { confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_frost', w: 2 }, { id: 'e_icicle', w: 2 }, { id: 'e_freeze_gaze', w: 1 }, { id: 'e_haste', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_fist_wolfking', rate: 32 }, super: { item: 'ft_sr_cloud', rate: 128 } },
@@ -116,7 +116,7 @@
     // ---- owl フクロウ（鳥・m・飛ぶ）: 雪の夜のフクロウ。眠りの歌、惑わしの目、そして術を使う賢者。
     owl_1: {
       name: '雪フクロウ', sprite: 'owl_1', lineage: 'owl', stage: 1, lv: 7, size: 'm', race: 'bird',
-      flags: ['flying'], s: { hp: 1.46, agi: 1.2, atk: 0.92, mag: 0.92 }, eva: 12,
+      flags: ['flying'], s: { hp: 1.53, agi: 1.2, atk: 0.96, mag: 0.96 }, eva: 12,
       elem: { wind: 1.5, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_peck', w: 2 }],
       drops: { normal: { item: 'i_stone_wind', rate: 8 }, rare: { item: 'bd_wolf_pelt', rate: 32 }, super: { item: 'hd_sr_owl_feather', rate: 256 } },
@@ -124,7 +124,7 @@
     },
     owl_2: {
       name: 'ねむりフクロウ', sprite: 'owl_2', lineage: 'owl', stage: 2, lv: 19, size: 'm', race: 'bird',
-      flags: ['flying'], s: { hp: 0.83, mag: 2.5, agi: 1.15, atk: 2.42 }, eva: 12,
+      flags: ['flying'], s: { hp: 0.95, mag: 1.1, agi: 1.15 }, eva: 12,
       elem: { wind: 1.5, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_lullaby', w: 3 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_dagger_frost', rate: 32 }, super: { item: 'ac_sr_lullaby_quill', rate: 256 } },
@@ -132,7 +132,7 @@
     },
     owl_3: {
       name: 'まどいフクロウ', sprite: 'owl_3', lineage: 'owl', stage: 3, lv: 31, size: 'm', race: 'bird',
-      flags: ['flying'], s: { hp: 1.85, mag: 0.5, agi: 1.2, atk: 0.5 }, eva: 12,
+      flags: ['flying'], s: { hp: 2.04, mag: 0.49, agi: 1.2, atk: 0.49 }, eva: 12,
       elem: { wind: 1.5, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_evil_eye', w: 2 }, { id: 'e_gust', w: 2 }],
       drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'ac_blizzard_charm', rate: 32 }, super: { item: 'hd_sr_spiral_monocle', rate: 256 } },
@@ -140,7 +140,7 @@
     },
     owl_4: {
       name: '賢者フクロウ', sprite: 'owl_4', lineage: 'owl', stage: 4, lv: 43, size: 'm', race: 'bird', affinity: 'light',
-      flags: ['flying'], s: { hp: 2.4, mag: 0.5, mdef: 1.25, agi: 1.1, atk: 0.5 }, eva: 12,
+      flags: ['flying'], s: { hp: 2.4, mag: 0.47, mdef: 1.25, agi: 1.1, atk: 0.47 }, eva: 12,
       elem: { wind: 1.5, earth: 0.5, light: 0.25, dark: 1.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 1 }, { id: 'e_light_ray', w: 2 }, { id: 'e_gust', w: 2 }, { id: 'e_ward', w: 1, cond: { once: true } }, { id: 'e_heal_all', w: 1, cond: { hpBelow: 0.6 } }],
       drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'w_katana_moon', rate: 32 }, super: { item: 'ac_sr_owl', rate: 128 } },
@@ -149,7 +149,7 @@
     // ---- mammoth マンモス（獣・l）: 雪原の巨獣。突進と踏み鳴らし。鉄の牙、そして大王。
     mammoth_1: {
       name: '雪原マンモス', sprite: 'mammoth_1', lineage: 'mammoth', stage: 1, lv: 7, size: 'l', race: 'beast',
-      flags: [], s: { atk: 1.03, def: 1.2, agi: 0.7, mag: 0.94 }, eva: 5,
+      flags: [], s: { atk: 1.1, def: 1.2, agi: 0.7, hp: 0.97 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_charge', w: 2 }, { id: 'e_stomp', w: 1 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'ac_snow_crystal', rate: 32 }, super: { item: 'bd_sr_mammoth_fur', rate: 256 } },
@@ -157,7 +157,7 @@
     },
     mammoth_2: {
       name: '鉄牙マンモス', sprite: 'mammoth_2', lineage: 'mammoth', stage: 2, lv: 25, size: 'l', race: 'beast',
-      flags: [], s: { hp: 1.08, atk: 0.91, def: 1.3, agi: 0.65, mag: 0.8 }, eva: 5,
+      flags: [], s: { hp: 1.11, atk: 1.07, def: 1.3, agi: 0.65, mag: 0.95 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_charge', w: 2 }, { id: 'e_stomp', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_greatsword_beastfang', rate: 32 }, super: { item: 'w_spear_sr_irontusk', rate: 256 } },
@@ -165,7 +165,7 @@
     },
     mammoth_3: {
       name: '大王マンモス', sprite: 'mammoth_3', lineage: 'mammoth', stage: 3, lv: 43, size: 'l', race: 'beast', affinity: 'water',
-      flags: [], s: { hp: 1.52, atk: 0.77, def: 1.25, agi: 0.65, mag: 0.64 }, eva: 5,
+      flags: [], s: { hp: 1.45, atk: 0.89, def: 1.25, agi: 0.65, mag: 0.74 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_charge', w: 2 }, { id: 'e_avalanche', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 2] } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'hd_yeti_fur', rate: 32 }, super: { item: 'ft_sr_quake', rate: 128 } },
