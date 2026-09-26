@@ -126,7 +126,8 @@
     const { lights, emits } = TD.composeScene(ctx, list, []);
     // pools glow faintly (bioluminescence)
     for (let ty = 0; ty < Ht; ty++) for (let tx = 0; tx < Wt; tx++) if (dunTile(tx, ty) === '~' && H3(tx, ty, 5) > 0.5) lights.push({ x: tx * TS + 16, y: ty * TS + 16, r: 48, c: [60, 200, 200], k: 0.35 });
-    TD.lightmap(ctx, W, H, 'rgb(46,54,92)', lights);
+    lights.forEach((L) => { L.r *= 1.35; L.k = Math.min(1.2, L.k * 1.15); });
+    TD.lightmap(ctx, W, H, 'rgb(138,120,200)', lights);
     TD.drawEmissive(ctx, emits);
     // spring: a column of light and rising motes
     { const sx = 9.5 * TS, sy = 8.9 * TS - 24; ctx.save(); ctx.globalCompositeOperation = 'lighter';
@@ -232,7 +233,7 @@
     [[25.8, 5.3], [27.2, 5.3], [22.5, 2.2], [32.5, 3.8]].forEach(([x, y]) => TD.place(list, 'lamp', x, y));
     // lanterns along the road (milestones), the campsite, the ruined tower, the lighthouse
     [[6, 9.9], [14, 9.9], [19.2, 8.9], [23.6, 8.9], [28.4, 11.9]].forEach(([x, y]) => TD.place(list, 'torch', x, y, { scale: 1.3 }));
-    TD.place(list, 'tent', 5.2, 3.6); TD.place(list, 'torch', 6.8, 3.9, { scale: 1.1 });
+    TD.place(list, 'tent', 5.2, 3.6); TD.place(list, 'beacon', 7.2, 4.1, { scale: 0.7 });
     TD.place(list, 'tower', 6.5, 14.3); TD.place(list, 'lighthouse', 30.5, 16.1);
     // party on the road
     const L = BATTLE_ART.LOOKS;
@@ -240,7 +241,8 @@
     TD.person(list, L.selma, 'right', 2, 15.6, 9.75); TD.person(list, L.sylvan, 'right', 0, 14.6, 9.75); TD.person(list, L.viola, 'right', 1, 13.6, 9.75);
     const { lights, emits, moonMask } = TD.composeScene(ctx, list, blds);
     lights.push({ x: 6.8 * TS, y: 3.9 * TS, r: 90, c: [255, 170, 90], k: 0.8 });
-    TD.lightmap(ctx, W, H, 'rgb(66,80,142)', lights, moonMask);
+    lights.forEach((L) => { if (L.r < 150) { L.r *= 1.25; L.k = Math.min(1.25, L.k * 1.2); } });
+    TD.lightmap(ctx, W, H, 'rgb(124,108,202)', lights, moonMask);
     // sea: moon glitter band + lighthouse beam
     const isW = (x, y) => wT(Math.floor(x / TS), Math.floor(y / TS)) === '~';
     TD.moonWater(ctx, W, H, isW, [], 11);

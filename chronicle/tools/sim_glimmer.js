@@ -18,7 +18,7 @@
 //   術師（§4.9.5 の型 G4b）: 杖だけ・念じ打ち（starterKit.tech.staff）で始める。武器の行動は 92%（戦士と同じ。残りは防御・道具）。
 //   術師: 雑魚戦で 1 戦に casts 回（§4.13.2-d: 候補の開いている属性の一番安い術）、ボス戦は行動の 65% を術（一番格の高い術）。
 //   術師の 2・3 つ目の属性は、魔石（§4.9.6。1 戦に 1 個）で最初の術を閃くまで始める。後列では届かない武器の「攻撃」はしない。
-// 判定（PASS/FAIL、exit 1）は §4.9.5 の表と §6.9.4 の極意。§7.12.2 の追加の項目（X1・X2）と参考の型（G4c・G4d）は目安（warn）。
+// 判定（PASS/FAIL、exit 1）は §4.9.5 の表と §6.9.4 の極意、SYSTEMS_REWORK §4.3 の P1〜P4（熟練度 1〜100）と G（読み替え）。§7.12.2 の追加の項目（X1・X2）と参考の型（G4c・G4d）は目安（warn）。
 // エンジンがあれば、モデルの通しの「地方 T の直前」の状態の標準のパーティで、T の雑魚 95 戦を R.Battle.simulate（オート）で戦い、
 // モデルの同じ 95 戦の閃きの数と比べる（参考。判定には使わない）。
 'use strict';
@@ -31,9 +31,11 @@ const H = require('./fixtures/spells/lib/harness')({ rules: opt('rules', 'auto')
 const R = H.R, DB = R.DB, G = R.Glimmer, U = R.U;
 // --k fkMax=5,fkSlope=0.5 … R.Rules.K.GLIM をこの sandbox の中だけで変えて比べる（調整の検討用）
 if (opt('k', null)) {
-  for (const kv of opt('k').split(',')) { const [k, v] = kv.split('='); R.Rules.K.GLIM[k] = +v; }
+  for (const kv of opt('k').split(',')) { const [k, v] = kv.split('='); const ks = k.split('.'); let o = R.Rules.K.GLIM; while (ks.length > 1) o = o[ks.shift()]; o[ks[0]] = +v; }
   R.Glimmer.reindex();
 }
+// --tp 0,1,3,8,… … K.TECH_PROF をこの sandbox の中だけで変えて比べる
+if (opt('tp', null)) { const v = opt('tp').split(',').map(Number); R.Rules.K.TECH_PROF.splice(0, v.length, ...v); R.Glimmer.reindex(); }
 const t0 = Date.now();
 
 const log = (...a) => { if (!QUIET) console.log(...a); };
@@ -244,7 +246,10 @@ function career(party, o) {
   let n = 0;
   for (let i = 0; i < 2; i++) count('prologue', battle(party, Object.assign(zakoBattle(0, 0, 'prologue', n++, true), { only: [heroKey] })));
   count('prologue', battle(party, { T: 0, Tb: 0, phase: 'prologue', n: n++, rankB: 1, ef: 1, force: true, only: [heroKey], tutorial: true }));
-  for (let i = 0; i < 33; i++) count('prologue', battle(party, zakoBattle(0, 0, 'prologue', n++, true)));
+  for (let i = 0; i < 33; i++) {
+    if (i === 18) snap('lighthouse');   // SYSTEMS_REWORK P1: 灯台に入る時（野の 20 戦の後。sim_growth の序章と同じ分け方）
+    count('prologue', battle(party, zakoBattle(0, 0, 'prologue', n++, true)));
+  }
   { const g = battle(party, bossBattle(0, 0, 'prologue', n++)); count('prologue', g); rec.boss.push({ T: 0, g }); }
   snap('prologue');
   // 地方 T0..T7
@@ -269,6 +274,13 @@ function career(party, o) {
   if (o.post) {
     for (let i = 0; i < 50; i++) count('post', battle(party, zakoBattle(9, 9, 'post', n++)));
     snap('post');
+    // P4: 1 系統だけで稼ぐと何戦で段階 100 か（o.grind = 見る人の key と系統）
+    if (o.grind) {
+      const m = party.find((x) => x.key === o.grind.key);
+      let k = 50;
+      while (k < 3000 && R.Rules.profRank(m.c.wprof[o.grind.w] || 0) < 100) { battle(party, zakoBattle(9, 9, 'post', n++)); k++; }
+      rec.to100 = k;
+    }
   }
   return rec;
 }
@@ -298,8 +310,12 @@ console.log(`sim_glimmer: runs=${RUNS} seed=${SEED} rules=${H.info.rules}${H.inf
 U.seed(SEED);
 
 const lv19 = (id) => DB.actions[id] && DB.actions[id].glim.lv <= 9;
+const N_TECH19 = Object.keys(DB.actions).filter((id) => DB.actions[id].kind === 'tech' && lv19(id)).length;   // A19: 101
+const N_SPELL = Object.keys(DB.actions).filter((id) => DB.actions[id].kind === 'spell' && /^s_/.test(id)).length;
+const TECH_PROF10 = (K.TECH_PROF && K.TECH_PROF[10]) || 60;
+const rk = (pts) => R.Rules.profRank(pts || 0);
 const cls = (id) => { const a = DB.actions[id]; return a.kind === 'tech' ? 'tech' : a.cls; };
-// §6.9.4: §4.9.5 の閃きの目標は技の lv 1〜9（110 個）で数える。lv 10（極意）は本編の目標の外なので数えない（secret に別に数える）。
+// §6.9.4: §4.9.5 の閃きの目標は技の lv 1〜9（A19: 101 個）で数える。lv 10（極意）は本編の目標の外なので数えない（secret に別に数える）。
 function countBy(snap, key) {
   const s = snap.find((x) => x.key === key);
   const techs = s.techs.filter(lv19);
@@ -346,9 +362,9 @@ const bookT = [], bookS = [];
 for (const r of stdRecs) {
   const t = new Set(), s = new Set();
   for (const x of r.snap.clear) { for (const id of x.techs) if (lv19(id)) t.add(id); for (const id of x.spells) s.add(id); }
-  bookT.push(t.size / 110); bookS.push(s.size / 77);
+  bookT.push(t.size / N_TECH19); bookS.push(s.size / N_SPELL);
 }
-log(`技の書（lv1〜9 の 110）: ${Math.round(mean(bookT) * 100)}%   術の書（77）: ${Math.round(mean(bookS) * 100)}%`);
+log(`技の書（lv1〜9 の ${N_TECH19}）: ${Math.round(mean(bookT) * 100)}%   術の書（${N_SPELL}）: ${Math.round(mean(bookS) * 100)}%`);
 // §6.9.4: クリア後 50 戦で、主な武器（段階 9 以上）の極意を閃く人が 1 人以上
 const MAINW = { hero: 'sword', brigitta: 'spear', sylvain: 'bow' };
 const lv10Of = (w) => TECHS[w].find((id) => DB.actions[id].glim.lv === 10);
@@ -356,7 +372,7 @@ const lv10Of = (w) => TECHS[w].find((id) => DB.actions[id].glim.lv === 10);
 const secretHit = stdRecs.map((r) => (Object.keys(MAINW).some((k) => r.snap.post.find((x) => x.key === k).techs.includes(lv10Of(MAINW[k]))) ? 1 : 0));
 const secretAtClear = mean(stdRecs.map((r) => Object.keys(MAINW).filter((k) => r.snap.clear.find((x) => x.key === k).techs.includes(lv10Of(MAINW[k]))).length));
 const secretPost = mean(stdRecs.map((r) => Object.keys(MAINW).filter((k) => r.snap.post.find((x) => x.key === k).techs.includes(lv10Of(MAINW[k]))).length));
-const rank9 = mean(stdRecs.map((r) => Object.keys(MAINW).filter((k) => R.Rules.profRank(r.snap.clear.find((x) => x.key === k).wprof[MAINW[k]]) >= 9).length));
+const rank9 = mean(stdRecs.map((r) => Object.keys(MAINW).filter((k) => R.Rules.profRank(r.snap.clear.find((x) => x.key === k).wprof[MAINW[k]]) >= TECH_PROF10).length));
 
 // B. §4.9.5 の型（戦士型 A/B・術師型 A/A/B を 0.75 回と 1.5 回）
 function archRuns(o, only) {
@@ -371,9 +387,14 @@ function archRuns(o, only) {
 // G4c は、いまの仲間の術師（テオ・イルゼ・モルガ・マルタ）の startTechs のうち杖の技を持って始める（newgame 側で念じ打ちが入れば反映される）
 const COMP_STAFF = ['teo', 'ilse', 'morga', 'marta'].map((id) => ((DB.companions[id] && DB.companions[id].startTechs) || []).filter((t) => DB.actions[t] && DB.actions[t].wtype === 'staff'));
 const compStaffTechs = COMP_STAFF.every((l) => l.length) ? COMP_STAFF[0] : [];
-const arch = archRuns({ mageTechs: compStaffTechs });                                               // 仲間の術師のいまの形（杖＋鞭、杖の技なし。§5.0 の 0.9）と 1.5 回の術師
+const arch = archRuns({ mageTechs: compStaffTechs });                                               // 仲間の術師のいまの形（杖だけ。SYSTEMS_REWORK §3.5）と 1.5 回の術師
 const archSpec = archRuns({ staffStart: true, staffOnly: true }, ['mage']); // §4.9.5 の型: 杖で戦う術師（念じ打ち = starterKit.tech.staff から）
-const archFix = archRuns({ staffStart: true }, ['mage']);                 // 杖＋鞭で念じ打ちを持って始める
+// P2・P4: 1 系統だけ（92%）の人の通し（クリア・裏 50 戦・段階 100 までの稼ぎ）
+const oneRecs = [];
+for (let r = 0; r < RUNS; r++) {
+  const party = [member('one', { id: '_sim_one_A', techs: ['t_sword_stepcut'] }, 'one')];
+  const rec = career(party, { post: true, grind: { key: 'one', w: 'sword' } }); rec.party = party; oneRecs.push(rec);
+}
 function archSummary(recs, key, label) {
   const cs = recs.map((r) => countBy(r.snap.clear, key));
   const byW = {};
@@ -384,8 +405,7 @@ function archSummary(recs, key, label) {
 log('\n## §4.9.5 の型（クリア時）');
 const aw = archSummary(arch, 'warrior', '戦士型（剣 A・斧 B）');
 const amSpec = archSummary(archSpec, 'mage', '術師型 杖・念じ打ち（0.75 回）');
-const am = archSummary(arch, 'mage', compStaffTechs.length ? '仲間の術師 杖＋鞭・startTechs' : '仲間の術師 杖＋鞭・杖の技なし');
-const am2 = archSummary(archFix, 'mage', '杖＋鞭・念じ打ちあり');
+const am = archSummary(arch, 'mage', compStaffTechs.length ? '仲間の術師 杖・startTechs' : '仲間の術師 杖・杖の技なし');
 const am15 = archSummary(arch, 'mage15', '術師型 後列（1.5 回）');
 function firstTier(recs, key, pred) {
   return recs.map((r) => { const m = r.party.find((x) => x.key === key); const e = m.learnedAt.find((x) => pred(x.id) && x.phase !== 'post'); return e ? e.T : 99; });
@@ -527,6 +547,35 @@ const engineCheck = [];
   }
 }
 
+// H. 熟練度の段階（SYSTEMS_REWORK §1.3・§4.3 P1〜P4）
+const rankAt = (recs, snapName, key, w) => recs.map((r) => { const x = r.snap[snapName] && r.snap[snapName].find((y) => y.key === key); return x ? rk(x.wprof[w]) : NaN; });
+const erankMax = (x) => Math.max(1, ...Object.values(x.eprof || {}).map(rk));
+const eAt = (recs, snapName, key) => recs.map((r) => erankMax(r.snap[snapName].find((y) => y.key === key)));
+const SNAPS = ['lighthouse', 'prologue', 'r0', 'r3', 'r7', 'clear', 'post'];
+const MAIN3 = [['hero', 'sword'], ['brigitta', 'spear'], ['sylvain', 'bow']], SEC3 = [['hero', 'axe'], ['brigitta', 'bow'], ['sylvain', 'dagger']];
+const mainAt = (s) => mean(MAIN3.map(([k, w]) => mean(rankAt(stdRecs, s, k, w))));
+const secAt = (s) => mean(SEC3.map(([k, w]) => mean(rankAt(stdRecs, s, k, w))));
+const oneAt = (s) => mean(rankAt(oneRecs, s, 'one', 'sword'));
+const m075At = (s) => mean(eAt(archSpec, s, 'mage')), m15At = (s) => mean(eAt(arch, s, 'mage15'));
+log('\n## 熟練度の段階（平均）');
+log('  時点        主な武器 62%  2 つ目 30%  1 系統 92%  術師 0.75 回  術師 1.5 回');
+for (const s of SNAPS) log(`  ${s.padEnd(10)}  ${f1(mainAt(s)).padStart(10)}  ${f1(secAt(s)).padStart(10)}  ${f1(oneAt(s)).padStart(10)}  ${f1(m075At(s)).padStart(12)}  ${f1(m15At(s)).padStart(11)}`);
+{
+  const one1 = (recs, s, k, w) => f1(mean(rankAt(recs, s, k, w)));
+  for (const s of ['prologue', 'clear']) log(`  ${s} の人ごと: hero 剣 ${one1(stdRecs, s, 'hero', 'sword')}・斧 ${one1(stdRecs, s, 'hero', 'axe')}　brigitta 槍 ${one1(stdRecs, s, 'brigitta', 'spear')}・弓 ${one1(stdRecs, s, 'brigitta', 'bow')}　sylvain 弓 ${one1(stdRecs, s, 'sylvain', 'bow')}・短剣 ${one1(stdRecs, s, 'sylvain', 'dagger')}　marta 杖 ${one1(stdRecs, s, 'marta', 'staff')}　戦士型 剣 ${one1(arch, s, 'warrior', 'sword')}・斧 ${one1(arch, s, 'warrior', 'axe')}　術師型 杖 ${one1(archSpec, s, 'mage', 'staff')}`);
+}
+// 1段目の MP 0（段階 PROF_MP.freeRank）に主属性が届くティア（術師 2 型）
+const FREE = (K.PROF_MP && K.PROF_MP.freeRank) || 14;
+const PH = ['prologue', 'r0', 'r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'clear'];
+const freeTier = (recs, key) => recs.map((r) => { const i = PH.findIndex((s) => erankMax(r.snap[s].find((y) => y.key === key)) >= FREE); return i < 0 ? 99 : Math.max(0, i - 1); });
+const ft075 = freeTier(archSpec, 'mage'), ft15 = freeTier(arch, 'mage15');
+const everyone = (recs, s) => recs.map((r) => Math.max(...r.snap[s].map((x) => Math.max(...Object.values(x.wprof || {}).map(rk), erankMax(x)))));
+const maxClear = Math.max(...everyone(stdRecs, 'clear'), ...everyone(arch, 'clear'), ...everyone(archSpec, 'clear'), ...everyone(oneRecs, 'clear'));
+const maxPost = Math.max(...everyone(stdRecs, 'post'), ...everyone(arch, 'post'), ...everyone(archSpec, 'post'), ...everyone(oneRecs, 'post'));
+const to100 = oneRecs.map((r) => r.to100);
+log(`  主属性が段階 ${FREE}（1段目の MP 0）に届くティア: 0.75 回 中央値 T${median(ft075)}・1.5 回 中央値 T${median(ft15)}`);
+log(`  本編の間の最高の段階 ${maxClear}・裏 50 戦の後 ${maxPost}・1 系統で段階 100 まで 裏 中央値 ${median(to100)} 戦（最小 ${Math.min(...to100)}・最大 ${Math.max(...to100)}）`);
+
 // ---------------------------------------------------------------- 判定（§4.9.5・§7.12.2・§6.9.4）
 console.log('\n## 判定');
 crit('G1', '序章（約 35 戦）のパーティの閃き', `平均 ${f1(mean(prol))}・${Math.round(mean(prol.map((x) => (x >= 4 ? 1 : 0))) * 100)}% の通しで 4 回以上`, mean(prol) >= 4, '4 回以上（チュートリアルを含む）');
@@ -534,17 +583,26 @@ crit('G2a', '地方ごとの閃き（パーティ）の平均', f1(mean(allRegio
 crit('G2b', '1 つの地方の閃き（ティアごとの平均）', perT.map(f1).join(' / '), perT.every((x) => x >= 3 && x <= 16), 'どの地方も 3〜16');
 crit('G3', 'ボス戦（T1 以降）で誰かが閃く確率', `${Math.round(mean(bossT1) * 100)}%`, mean(bossT1) >= 0.5, '50% 以上');
 {
+  const p1 = mainAt('prologue'), p1l = mainAt('lighthouse');
+  crit('P1', '序章の終わりの主な武器の段階（灯台に入る時）', `${f1(p1)}（${f1(p1l)}）`, p1 >= 5 && p1 <= 8 && p1l >= 2 && p1l <= 5, '5〜8（灯台に入る時 2〜5）');
+  const pm = mainAt('clear'), po = oneAt('clear'), ps = secAt('clear');
+  crit('P2', '本編クリアの段階: 主な武器・1 系統だけ・2 つ目', `${f1(pm)}・${f1(po)}・${f1(ps)}`, pm >= 70 && pm <= 85 && po <= 90 && ps >= 45 && ps <= 60, '主 70〜85、1 系統 ≤ 90、2 つ目 45〜60');
+  const a = m075At('clear'), b = m15At('clear');
+  crit('P3', '術師の主属性（クリア時）0.75 回・1.5 回、段階 14 に届くティア', `${f1(a)}・${f1(b)}、T${median(ft075)}・T${median(ft15)}`, a >= 45 && a <= 65 && b >= 55 && b <= 75 && median(ft075) >= 1 && median(ft075) <= 2 && median(ft15) >= 1 && median(ft15) <= 2, '0.75 回 45〜65、1.5 回 55〜75、段階 14 は T1〜T2');
+  crit('P4', '段階 100: 本編の最高・裏 50 戦後の最高・1 系統の稼ぎ', `${maxClear}・${maxPost}・${median(to100)} 戦`, maxClear < 100 && maxPost <= 95 && median(to100) >= 200 && median(to100) <= 500, '本編 < 100、裏 50 戦後 ≤ 95、200〜500 戦で 100');
+}
+{
   const t = mean(aw.cs.map((c) => c.total)), main = aw.byW.sword || 0, sec = aw.byW.axe || 0;
-  crit('G4a', '戦士型（武器 2 系統）のクリア時の数', `計 ${f1(t)}（主 ${f1(main)}・2 つ目 ${f1(sec)}）`, t >= 17 && t <= 22 && main >= 9.5 && main <= 11 && sec >= 6 && sec <= 10, '計 17〜22、主 10〜11（lv1〜9 で数えると 10 が全部。平均 9.5 以上）、2 つ目 6〜10');
+  const n19 = (w) => (TECHS[w] || []).filter(lv19).length;
+  crit('G4a', '戦士型（武器 2 系統）のクリア時の数', `計 ${f1(t)}（主 ${f1(main)}／${n19('sword')}・2 つ目 ${f1(sec)}）`, t >= 20 && t <= 26 && main >= 0.75 * n19('sword') && sec >= 6 && sec <= 11, `計 20〜26、主な武器の lv1〜9 の 75% 以上（${Math.ceil(0.75 * n19('sword'))}）、2 つ目 6〜11`);
 }
 function mageCrit(id, s, label, guide) {
   const t = mean(s.cs.map((c) => c.total)), si = mean(s.cs.map((c) => c.single)), a = mean(s.cs.map((c) => c.comboA)), b = mean(s.cs.map((c) => c.comboB)), tr = mean(s.cs.map((c) => c.triple)), st = s.byW.staff || 0;
-  const ok = t >= 24 && t <= 32 && si >= 9 && si <= 14 && a >= 1 && a <= 3 && b >= 0 && b <= 3 && tr <= 1 && st >= 4 && st <= 10;
-  crit(id, label, `計 ${f1(t)}（単 ${f1(si)}・A ${f1(a)}・B ${f1(b)}・三 ${f1(tr)}・杖 ${f1(st)}・ほかの技 ${f1(mean(s.cs.map((c) => c.techs)) - st)}）`, ok, '計 24〜32、単 9〜14、A 1〜3、B 0〜3、三 0〜1、杖 4〜10', guide);
+  const ok = t >= 24 && t <= 34 && st >= 4 && st <= 11;   // SYSTEMS_REWORK §4.3 G: 計 24〜34（杖の技 4〜11）
+  crit(id, label, `計 ${f1(t)}（単 ${f1(si)}・A ${f1(a)}・B ${f1(b)}・三 ${f1(tr)}・杖 ${f1(st)}・ほかの技 ${f1(mean(s.cs.map((c) => c.techs)) - st)}）`, ok, '計 24〜34、杖 4〜11', guide);
 }
 mageCrit('G4b', amSpec, '術師型（杖・後列・0.75 回・念じ打ちで始める）のクリア時の数');
-mageCrit('G4c', am, `参考: いまの仲間の術師（杖＋鞭・${compStaffTechs.length ? '杖の技 ' + compStaffTechs.join('・') + ' で始める' : '杖の技なしで始める'}）`, true);
-mageCrit('G4d', am2, '参考: 杖＋鞭で念じ打ちを持って始める', true);
+mageCrit('G4c', am, `参考: いまの仲間の術師（杖・${compStaffTechs.length ? '杖の技 ' + compStaffTechs.join('・') + ' で始める' : '杖の技なしで始める'}）`, true);
 crit('G5', '得手不得手の差（1 系統、T4 の終わり）A ÷ D', `${f2(one.A / one.D)}（A ${f1(one.A)}・D ${f1(one.D)}）`, one.A >= 1.2 * one.D, '1.2 以上');
 crit('G6', '知力の差（1 回の判定）S/Z・S/N', `${f2(pInt[2] / pInt[0])}・${f2(pInt[2] / pInt[1])}`, pInt[2] / pInt[0] >= 1.8 && pInt[2] / pInt[1] >= 1.35, 'S/Z 1.8 以上・S/N 1.35 以上');
 crit('G7', '入れ替えた仲間の追いつき（T4・0 個）', `5 個 ${median(to5)} 戦・7 個 ${median(to7)} 戦（中央値）`, median(to5) <= 30 && median(to7) <= 50, '5 個 30 戦以内・7 個 50 戦以内');
@@ -557,10 +615,10 @@ crit('X1c', '術師型（1.5 回）のクリア後 50 戦の後の 3属性', f1(
   crit('X1d', '術師型（1.5 回）が本編で閃く単属性の数', f1(si), si >= 9 && si <= 14, '9〜14', true);
 }
 crit('X2', '魔石で最初の術を閃くまで（B の人の中央値）', `${stones.B.exact} 個（1 個 ${(stones.B.p * 100).toFixed(1)}%・抽選 2000 回の中央値 ${stones.B.median}・A ${stones.A.exact}）`, stones.B.exact >= 4 && stones.B.exact <= 5, '4〜5 個', true);
-crit('X3', 'クリア後 50 戦の後、主な武器の極意を持つ人がいる', `${Math.round(mean(secretHit) * 100)}%（主な武器 3 人のうち 段階 9 以上 ${f1(rank9)}・極意 クリア時 ${f1(secretAtClear)} → 50 戦後 ${f1(secretPost)}）`, mean(secretHit) >= 0.6, '60% 以上（§6.9.4）');
+crit('X3', 'クリア後 50 戦の後、主な武器の極意を持つ人がいる', `${Math.round(mean(secretHit) * 100)}%（主な武器 3 人のうち クリア時 段階 ${TECH_PROF10} 以上 ${f1(rank9)}・極意 クリア時 ${f1(secretAtClear)} → 50 戦後 ${f1(secretPost)}）`, mean(secretHit) >= 0.6, '60% 以上（§6.9.4）');
 
 const failed = results.filter((r) => !r.ok && !r.guide);
 const warned = results.filter((r) => !r.ok && r.guide);
 console.log(`\n${results.filter((r) => !r.guide).length - failed.length}/${results.filter((r) => !r.guide).length} passed, ${warned.length} guideline warning(s)  (${((Date.now() - t0) / 1000).toFixed(1)} s)`);
-if (JSON_OUT) require('fs').writeFileSync(JSON_OUT, JSON.stringify({ runs: RUNS, seed: SEED, rules: H.info.rules, results, perT, prologue: mean(prol), bossByT, stones, one, to5: median(to5), to7: median(to7) }, null, 1));
+if (JSON_OUT) require('fs').writeFileSync(JSON_OUT, JSON.stringify({ runs: RUNS, seed: SEED, rules: H.info.rules, results, perT, prologue: mean(prol), ranks: Object.fromEntries(SNAPS.map((s) => [s, { main: mainAt(s), second: secAt(s), one: oneAt(s), mage075: m075At(s), mage15: m15At(s) }])), to100: median(to100), freeTier: [median(ft075), median(ft15)], bossByT, stones, one, to5: median(to5), to7: median(to7) }, null, 1));
 process.exitCode = failed.length ? 1 : 0;

@@ -57,21 +57,22 @@
     if (!tall) { K.diamond(ix, iy, 5, T.c.goldHi, 'rgba(60,40,10,0.9)', 1); K.glow(ix, iy, 14, [255, 220, 150], 0.5); }
     const pw = tall ? W - 32 : 760, ph = tall ? U(190) : 150, px = tall ? 16 : (W - pw) / 2, py = tall ? H - ph - 36 : H - ph - 24;
     K.fadePanel(0, py - 60, W, H - py + 60, 'bottom', 0.55);
-    K.panel(px, py, pw, ph, { a: 0.72, r: 14, blur: 8 });
+    K.paper(px, py, pw, ph);
+    const INK = '#3a2e24', INK2 = '#7a6650', NAME = '#8a4e14';
     // portrait slot (left)
     const ps = tall ? U(96) : 118;
-    K.portrait(BATTLE_ART.NPC.innkeeper, px + 14, py + (tall ? -ps * 0.45 : 16), ps, ps, { scale: tall ? 3.4 : 3.2, at: 0.5, r: 12, bg: ['#3a3040', '#171520'], ringC: 'rgba(236,201,124,0.45)' });
+    K.portrait(BATTLE_ART.NPC.innkeeper, px + 14, py + (tall ? -ps * 0.45 : 16), ps, ps, { scale: tall ? 3.4 : 3.2, at: 0.5, r: 6, bg: ['#4a3c3a', '#231c20'], ringC: 'rgba(70,50,26,0.7)' });
     const tx = px + (tall ? 16 : 150), ty = py + (tall ? ps * 0.62 : 22);
-    // name plate
     const nw = K.measure('ロザンナ', 15, 700) + U(28);
-    if (tall) { K.text('ロザンナ', px + ps + U(28), py + U(26), { size: 15, w: 700, c: T.c.gold }); K.text('宿「かもめ亭」のおかみ', px + ps + U(28), py + U(44), { size: 10.5, c: T.c.text3 }); }
-    else { K.text('ロザンナ', tx, ty + 10, { size: 15, w: 700, c: T.c.gold }); K.text('宿「かもめ亭」のおかみ', tx + nw, ty + 10, { size: 10.5, c: T.c.text3 }); K.rule(tx, px + pw - 20, ty + 20, 0.16); }
+    if (tall) { K.text('ロザンナ', px + ps + U(28), py + U(26), { size: 15, w: 700, c: NAME }); K.text('宿「かもめ亭」のおかみ', px + ps + U(28), py + U(44), { size: 10.5, c: INK2 }); }
+    else { K.text('ロザンナ', tx, ty + 10, { size: 15, w: 700, c: NAME }); K.text('宿「かもめ亭」のおかみ', tx + nw, ty + 10, { size: 10.5, c: INK2 }); ctx.fillStyle = 'rgba(90,64,34,0.35)'; ctx.fillRect(tx, ty + 20, px + pw - 20 - tx, 0.75); }
     const lines = ['灯台の灯が消えてから、夜の海はずっと荒れたまま。', 'あんたたち、灯台まで行くつもりかい？', '――なら、今夜は泊まっておいき。'];
     const ly0 = tall ? py + ps * 0.62 + U(20) : ty + 46;
-    lines.forEach((l, i) => K.text((i === 2 && tall) ? l.slice(0, 9) : l, tx, ly0 + i * U(tall ? 30 : 28), { size: tall ? 13.2 : 16.5, c: T.c.text }));
-    // typewriter caret (mid-line on the 3rd line)
+    lines.forEach((l, i) => K.text((i === 2 && tall) ? l.slice(0, 9) : l, tx, ly0 + i * U(tall ? 30 : 28), { size: tall ? 13.2 : 16.5, c: INK }));
     const cw = K.measure(lines[2].slice(0, 9), tall ? 13.2 : 16.5, 500);
-    if (tall) { ctx.fillStyle = T.c.gold; ctx.fillRect(tx + cw + 3, ly0 + 2 * U(30) - U(13), U(1.5), U(15)); }
+    if (tall) { ctx.fillStyle = NAME; ctx.fillRect(tx + cw + 3, ly0 + 2 * U(30) - U(13), U(1.5), U(15)); }
+    else K.diamond(px + pw - 22, py + ph - 18, 5, '#8a4e14', null);
+    // tail toward the speaker is not needed: the box is fixed at the bottom; the speaker gets a marker in the world
     // controls (top-right of the box): log / auto / skip; text speed chip
     if (!tall) {
       K.prompts([['x', 'ログ'], ['y', 'オート'], ['r', 'スキップ']], px + pw - 12, py - 14, { size: 10.5, gap: 12 });
@@ -83,10 +84,11 @@
     // choice box (appears when the line finishes; shown here for the mock)
     if (!tall) {
       const cx = px + pw - 210, cy = py - 124;
-      K.panel(cx, cy, 210, 92, { a: 0.78, r: 12, blur: 6 });
-      K.focus(cx + 6, cy + 10, 198, 34);
-      K.text('泊まる', cx + 28, cy + 33, { size: 15, w: 700, c: '#fff8e6' }); K.text('30 G', cx + 192, cy + 33, { size: 13, c: T.c.gold, align: 'right' });
-      K.text('やめておく', cx + 28, cy + 73, { size: 15, c: T.c.text2 });
+      K.paper(cx, cy, 210, 92, { cut: 7 });
+      ctx.save(); ctx.fillStyle = 'rgba(138,78,20,0.16)'; ctx.fillRect(cx + 8, cy + 12, 194, 32); ctx.fillStyle = '#8a4e14'; ctx.fillRect(cx + 8, cy + 12, 2, 32); ctx.restore();
+      K.diamond(cx + 18, cy + 28, 4, '#8a4e14', null);
+      K.text('泊まる', cx + 28, cy + 33, { size: 15, w: 700, c: '#3a2e24' }); K.text('30 G', cx + 192, cy + 33, { size: 13, w: 700, c: '#8a4e14', align: 'right' });
+      K.text('やめておく', cx + 28, cy + 73, { size: 15, c: '#6a5a48' });
     }
   };
 

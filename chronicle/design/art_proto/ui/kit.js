@@ -91,6 +91,16 @@
     }
     ctx.restore();
   }
+  // parchment card (dialogue): warm paper, cut corners, dark ink; reads like a lamp in the night
+  function paper(x, y, w, h, o) {
+    o = Object.assign({ cut: 9, a: 0.94 }, o);
+    const c = o.cut, path = () => { ctx.beginPath(); ctx.moveTo(x + c, y); ctx.lineTo(x + w - c, y); ctx.lineTo(x + w, y + c); ctx.lineTo(x + w, y + h - c); ctx.lineTo(x + w - c, y + h); ctx.lineTo(x + c, y + h); ctx.lineTo(x, y + h - c); ctx.lineTo(x, y + c); ctx.closePath(); };
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 22; ctx.shadowOffsetY = 6; path();
+    const g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, `rgba(240,230,206,${o.a})`); g.addColorStop(1, `rgba(222,206,176,${o.a})`); ctx.fillStyle = g; ctx.fill(); ctx.restore();
+    ctx.save(); path(); ctx.clip(); const R = Math.random; for (let i = 0; i < w * h / 60; i++) { ctx.fillStyle = `rgba(120,90,50,${0.03 + ((i * 7919) % 13) / 400})`; ctx.fillRect(x + ((i * 37.7) % w), y + ((i * 91.3) % h), 1, 1); }
+    const v = ctx.createRadialGradient(x + w / 2, y + h / 2, Math.min(w, h) * 0.3, x + w / 2, y + h / 2, Math.max(w, h) * 0.7); v.addColorStop(0, 'rgba(120,80,30,0)'); v.addColorStop(1, 'rgba(120,80,30,0.18)'); ctx.fillStyle = v; ctx.fillRect(x, y, w, h); ctx.restore();
+    ctx.save(); path(); ctx.strokeStyle = 'rgba(70,50,26,0.6)'; ctx.lineWidth = 1; ctx.stroke(); ctx.restore();
+  }
   // a panel that fades out toward one side (battle party list, dialogue band, hub rails)
   function fadePanel(x, y, w, h, side, a) {
     a = a == null ? 0.62 : a;
@@ -329,7 +339,9 @@
     device(); ctx.drawImage(t, 0, 0); logical();
   }
 
+  function keepArt() { const c = document.createElement('canvas'); c.width = cv.width; c.height = cv.height; c.getContext('2d').drawImage(cv, 0, 0); G.__art = c; }
   G.K = {
+    keepArt, paper,
     cv, ctx, S, T, F, U, begin, logical, device, rr, text, measure, frac, frost, panel, fadePanel, hline, rule, diamond, focus, glow,
     gauge, icon, glyph, prompts, bust, portrait, chip, stars, tag, vignette, dim, blurAll,
     setDevice: (d) => { DEVICE = d; }, get dev() { return DEVICE; }, get uiScale() { return uiScale; },

@@ -47,7 +47,7 @@
     const W = tall ? 540 : 960, H = tall ? 1169 : 540;
     K.begin(W, H, tall ? 1.3 : 1);
     const out = TOPDOWN.present(scene.c, tall ? vxT : vx, tall ? vyT : vy, W, H, popt);
-    K.device(); ctx.drawImage(out, 0, 0); K.logical();
+    K.device(); ctx.drawImage(out, 0, 0); K.logical(); K.keepArt();
     return { W, H, tall, vx: tall ? vxT : vx, vy: tall ? vyT : vy };
   };
   SCREENS.town_raw = async function (o) { const s = TOPDOWN.town(); G.fieldView(o, s, 32, 70, 240, 0); };
@@ -152,7 +152,7 @@
   }
   SCREENS.dungeon = async function (o) {
     const s = TOPDOWN.dungeon();
-    const v = G.fieldView(o, s, 0, 40, 60, 0, { thr: 0.55 });
+    const v = G.fieldView(o, s, 0, 40, 60, 0, { thr: 0.5, vig: 0.8, bloom: 0.85, grade: { lift: 7 } });
     const toL = (tx, ty) => [(tx * 32 - v.vx), (ty * 32 - v.vy)];
     const DUNROWS = 33;
     if (!v.tall) {
@@ -166,7 +166,7 @@
   };
   SCREENS.field = async function (o) {
     const s = TOPDOWN.world();
-    const v = G.fieldView(o, s, 64, 16, 256, 0, { thr: 0.58 });
+    const v = G.fieldView(o, s, 64, 16, 256, 0, { thr: 0.5, vig: 0.9, bloom: 0.95, vig2: 0.4 });
     if (!v.tall) {
       H.placeCard(20, 18, 'ファロス街道', '西の森へ続く道');
       H.leadCard(700, 18, 244, '森で人が消える', '西・フェルン', -Math.PI / 2);

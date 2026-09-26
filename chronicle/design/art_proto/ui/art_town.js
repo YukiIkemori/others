@@ -555,7 +555,7 @@
           const col = m.cyan ? [120, 230, 240] : [255, 188, 105];
           if (m.big) lights.push({ x: lx, y: it.y, r: 150, c: col, k: 1.0, sy: 0.65 });
           else if (m.small) lights.push({ x: lx, y: it.y, r: 40, c: col, k: 0.6, sy: 0.6 });
-          else lights.push({ x: lx, y: it.y - 4, r: it.kind === 'beacon' ? 210 : it.kind === 'ship' ? 70 : 105, c: col, k: it.kind === 'beacon' ? 0.85 : 0.9, sy: 0.62 });
+          else lights.push({ x: lx, y: it.y - 4, r: it.kind === 'beacon' ? 220 : it.kind === 'ship' ? 80 : 110, c: col, k: it.kind === 'beacon' ? 1.0 : 1.05, sy: 0.62 });
           lights.push({ x: lx, y: ly, r: 26, c: col, k: 0.7 });
           emits.push({ kind: 'point', x: lx, y: ly, cyan: m.cyan, big: it.kind === 'beacon' || m.big });
         }
@@ -568,16 +568,16 @@
   function drawEmissive(ctx, emits, t) {
     for (const e of emits) {
       if (e.kind === 'win') {
-        ctx.save(); const g = ctx.createLinearGradient(0, e.y, 0, e.y + e.h); g.addColorStop(0, 'rgba(255,214,140,0.95)'); g.addColorStop(1, 'rgba(240,140,50,0.9)');
+        ctx.save(); const g = ctx.createLinearGradient(0, e.y, 0, e.y + e.h); g.addColorStop(0, 'rgba(255,244,210,1)'); g.addColorStop(1, 'rgba(255,196,110,1)');
         ctx.fillStyle = g; ctx.fillRect(e.x, e.y, e.w, e.h); ctx.fillStyle = 'rgba(70,40,20,0.8)'; ctx.fillRect(e.x + Math.floor(e.w / 2), e.y, 1, e.h); ctx.fillRect(e.x, e.y + Math.floor(e.h * 0.45), e.w, 1); ctx.restore();
-        glowA(ctx, e.x + e.w / 2, e.y + e.h / 2, 20, [255, 180, 90], 0.35);
+        glowA(ctx, e.x + e.w / 2, e.y + e.h / 2, 26, [255, 180, 90], 0.5);
       } else if (e.kind === 'door') {
-        ctx.save(); const g = ctx.createLinearGradient(0, e.y, 0, e.y + e.h); g.addColorStop(0, 'rgba(255,220,150,0.95)'); g.addColorStop(1, 'rgba(230,130,50,0.9)'); ctx.fillStyle = g; ctx.fillRect(e.x + 1, e.y + 4, e.w - 2, e.h - 4); ctx.restore();
+        ctx.save(); const g = ctx.createLinearGradient(0, e.y, 0, e.y + e.h); g.addColorStop(0, 'rgba(255,248,225,1)'); g.addColorStop(1, 'rgba(255,200,120,1)'); ctx.fillStyle = g; ctx.fillRect(e.x + 1, e.y + 4, e.w - 2, e.h - 4); ctx.restore();
         glowA(ctx, e.x + e.w / 2, e.y + e.h / 2, 30, [255, 180, 90], 0.45);
-      } else if (e.kind === 'lamp') { glowA(ctx, e.x, e.y, 16, [255, 200, 120], 0.8); ctx.fillStyle = '#fff2c8'; ctx.fillRect(e.x - 1, e.y - 1, 3, 3); }
+      } else if (e.kind === 'lamp') { glowA(ctx, e.x, e.y, 22, [255, 200, 120], 0.9); glowA(ctx, e.x, e.y, 7, [255, 250, 230], 1); ctx.fillStyle = '#fff2c8'; ctx.fillRect(e.x - 1, e.y - 1, 3, 3); }
       else if (e.kind === 'point') {
         const c = e.cyan ? [140, 240, 250] : [255, 196, 110];
-        glowA(ctx, e.x, e.y, e.big ? 54 : e.small ? 12 : 24, c, e.big ? 0.7 : 0.7); glowA(ctx, e.x, e.y, e.big ? 8 : 4, [255, 236, 190], 0.8);
+        glowA(ctx, e.x, e.y, e.big ? 70 : e.small ? 22 : 36, c, 0.85); glowA(ctx, e.x, e.y, e.big ? 20 : e.small ? 9 : 13, [255, 248, 225], 1.0); glowA(ctx, e.x, e.y, e.big ? 9 : 5, [255, 255, 245], 1.0);
       } else if (e.kind === 'sparkle') {
         glowA(ctx, e.x, e.y, 16, [255, 240, 180], 0.7);
         ctx.fillStyle = '#fffbe8'; ctx.fillRect(e.x - 5, e.y, 11, 1); ctx.fillRect(e.x, e.y - 5, 1, 11); ctx.fillRect(e.x - 1, e.y - 1, 3, 3);
@@ -625,7 +625,8 @@
     const out = mk(vw * 2, vh * 2), o = out.getContext('2d');
     o.imageSmoothingEnabled = false; o.drawImage(src, vx, vy, vw, vh, 0, 0, vw * 2, vh * 2);
     if (opt.after) opt.after(o, vx, vy);
-    ENV.post(o, { dofPx: 0, bloom: opt.bloom == null ? 0.6 : opt.bloom, thr: opt.thr || 0.62, vig: opt.vig == null ? 0.6 : opt.vig, grade: Object.assign({ sh: [-2, 2, 14], hi: [14, 6, -8], sat: 1.05, con: 1.08, lift: 0 }, opt.grade || {}) });
+    ENV.post(o, { dofPx: 0, bloom: opt.bloom == null ? 0.6 : opt.bloom, thr: opt.thr || 0.62, vig: opt.vig == null ? 0.6 : opt.vig, grade: Object.assign({ sh: [10, -4, 20], hi: [16, 6, -10], sat: 1.05, con: 1.08, lift: 3 }, opt.grade || {}) });
+    if (opt.vig2) { const W2 = vw * 2, H2 = vh * 2, g = o.createRadialGradient(W2 / 2, H2 / 2, Math.min(W2, H2) * 0.3, W2 / 2, H2 / 2, Math.hypot(W2, H2) * 0.55); g.addColorStop(0, 'rgba(8,6,20,0)'); g.addColorStop(1, `rgba(8,6,20,${opt.vig2})`); o.fillStyle = g; o.fillRect(0, 0, W2, H2); }
     return out;
   }
 
@@ -660,7 +661,7 @@
     person(list, NP.sailor, 'down', 0, 12.5, 15.2);
     person(list, NP.innkeeper, 'down', 0, 3.9, 6.9);
     const { lights, emits, moonMask } = composeScene(ctx, list, blds);
-    lightmap(ctx, W, H, 'rgb(76,90,146)', lights, moonMask);
+    lightmap(ctx, W, H, 'rgb(92,90,160)', lights, moonMask);
     const isWater = (x, y) => townTile(Math.floor(x / TS), Math.floor(y / TS)) === '~';
     moonWater(ctx, W, H, isWater, lights.filter((L) => L.r >= 100).map((L) => ({ x: L.x, y: L.y + 14 })), 5);
     drawEmissive(ctx, emits);

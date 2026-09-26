@@ -27,13 +27,13 @@
       if (i === o.active) K.focus(x - U(8), ry - U(2), w + U(12), rowH - U(4), { strong: false, cursor: true });
       const ty = ry + U(15);
       K.tag(p.row, x + U(4), ty + U(1), 10);
-      K.text(p.name, x + U(24), ty, { size: 14, w: 700, c: p.hp / p.mhp < 0.25 ? T.c.hpLow[1] : T.c.text, shadow: true });
+      K.text(p.name, x + U(24), ty, { size: 12, w: 700, c: p.hp / p.mhp < 0.25 ? T.c.hpLow[1] : T.c.text, shadow: 'rgba(0,0,0,0.9)', blur: 5 });
       // HP / MP blocks
       const bw = (w - U(30)) / 2, bx1 = x + U(24), bx2 = bx1 + bw + U(8), vy = ry + U(33);
       const block = (bx, lab, cur, max, kind) => {
         K.text(lab, bx, vy, { size: 9.5, w: 700, c: T.c.text3, shadow: true });
-        K.frac(cur, max, bx + bw - U(2), vy, { size: 14, c: kind === 'hp' && cur / max < 0.25 ? T.c.hpLow[1] : T.c.text, shadow: true });
-        K.gauge(bx, vy + U(4), bw - U(2), cur / max, kind === 'mp' ? 'mp' : cur / max < 0.25 ? T.c.hpLow : 'hp', { h: 2.5 });
+        K.frac(cur, max, bx + bw - U(2), vy, { size: 16.5, c: kind === 'hp' && cur / max < 0.25 ? T.c.hpLow[1] : T.c.text, shadow: 'rgba(0,0,0,0.9)' });
+        K.gauge(bx, vy + U(4), bw - U(2), cur / max, kind === 'mp' ? 'mp' : cur / max < 0.25 ? T.c.hpLow : 'hp', { h: 1.5 });
       };
       block(bx1, 'HP', p.hp, p.mhp, 'hp'); block(bx2, 'MP', p.mp, p.mmp, 'mp');
     });
@@ -49,7 +49,7 @@
     const Wl = tall ? 540 : 960, Hl = tall ? 1169 : 540;
     K.begin(Wl, Hl, tall ? 1.3 : 1);
     const st = BATTLE_ART.stage(tall ? { W: 1080, H: 1300, layout: 'tall', mode: o.mode, noFoes: o.noFoes } : { W: 1920, H: 1080, layout: 'wide', mode: o.mode, noFoes: o.noFoes });
-    K.device(); ctx.drawImage(st.canvas, 0, 0); K.logical();
+    K.device(); ctx.drawImage(st.canvas, 0, 0); K.logical(); K.keepArt();
     const A = {}; st.actors.forEach((a) => { A[a.id] = { x: a.x / 2, y: a.y / 2, top: a.top / 2, left: a.left / 2, w: a.w / 2, h: a.h / 2, name: a.name, foe: a.foe }; });
     if (tall) {
       // the stage melts into the UI sheet below
@@ -69,11 +69,12 @@
     o = Object.assign({ w: 128, title: null, rowH: 26 }, o);
     const U = K.U, rowH = U(o.rowH), head = o.title ? U(26) : U(6);
     const h = head + items.length * rowH + U(8);
-    K.panel(x, y, U(o.w), h, { a: 0.66, r: 10, blur: 6 });
+    K.panel(x, y, U(o.w), h, { a: 0.6, r: 6, blur: 6, shadow: false });
+    ctx.save(); K.rr(x + 0.5, y + 0.5, U(o.w) - 1, h - 1, 6); ctx.strokeStyle = 'rgba(240,228,200,0.42)'; ctx.lineWidth = 0.5; ctx.stroke(); ctx.restore();
     if (o.title) { K.text(o.title, x + U(12), y + U(17), { size: 10.5, w: 700, c: T.c.gold }); K.rule(x + U(10), x + U(o.w) - U(10), y + U(23), 0.18); }
     items.forEach((it, i) => {
       const ry = y + head + i * rowH;
-      if (i === sel) K.focus(x + U(4), ry + U(2), U(o.w) - U(8), rowH - U(2));
+      if (i === sel) { ctx.save(); ctx.fillStyle = 'rgba(255,238,205,0.2)'; ctx.fillRect(x + U(4), ry + U(2), U(o.w) - U(8), rowH - U(2)); ctx.restore(); K.focus(x + U(4), ry + U(2), U(o.w) - U(8), rowH - U(2)); }
       const dis = it.disabled;
       if (it.icon) K.icon(it.icon, x + U(14), ry + rowH / 2 - U(7.5), U(15), dis ? T.c.disabled : i === sel ? T.c.goldHi : T.c.text2);
       K.text(it.label, x + U(it.icon ? 36 : 16), ry + rowH / 2 + U(5), { size: 14, w: i === sel ? 700 : 500, c: dis ? T.c.disabled : i === sel ? '#fff8e6' : T.c.text });
@@ -93,7 +94,7 @@
     const b = battleBase({ layout: o.layout, mode: 'cmd' });
     const { A } = b;
     if (!b.tall) {
-      K.fadePanel(600, 0, 360, 200, 'right', 0.62);
+      K.fadePanel(620, 0, 340, 200, 'right', 0.32);
       partyPanel(716, 12, 232, { active: 0 });
       turnHead(16, 14, 'アルンの番', '武器の技を選ぶ。');
       const h = A.arun;
@@ -139,7 +140,7 @@
   SCREENS.battle_tech = async function (o) {
     const b = battleBase({ layout: o.layout, mode: 'cmd' });
     const { A } = b;
-    K.fadePanel(600, 0, 360, 200, 'right', 0.62);
+    K.fadePanel(620, 0, 340, 200, 'right', 0.32);
     partyPanel(716, 12, 232, { active: 0 });
     const h = A.arun;
     const items = [{ label: '攻撃', right: '' }, { label: '二段斬り', right: 'M 4' }, { label: '稲妻突き', right: 'M 6' }, { label: '疾風剣', right: 'M 0', free: true, isNew: true }, { label: '流し斬り', right: 'M 12', disabled: true }];
@@ -160,7 +161,7 @@
   SCREENS.glimmer = async function (o) {
     const b = battleBase({ layout: o.layout, mode: 'glimmer' });
     const { A } = b;
-    K.fadePanel(600, 0, 360, 200, 'right', 0.62);
+    K.fadePanel(620, 0, 340, 200, 'right', 0.32);
     partyPanel(716, 12, 232, { active: -1, glow: 0 });
     // bulb over the head (glimmer)
     const h = A.arun;

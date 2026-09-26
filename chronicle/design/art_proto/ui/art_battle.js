@@ -25,14 +25,14 @@
       trim: brass, pants: cl(['#1c1814', '#302a24', '#48403a', '#625850']), boots: leather, belt: leatherDk, metal: steel,
       eye: mat({ keys: ['#101820', '#243848', '#46687c', '#8cb0c0'], n: 4, flat: true }) }),
     selma: Object.assign({}, base.selma, { skin, hair: hr(['#1a0c0a', '#321410', '#4e2016', '#6c3020', '#8a4430', '#a85e44']),
-      top: cl(['#161a14', '#262c22', '#3a4232', '#525a46', '#727a62']), trim: leather, pants: cl(['#181412', '#2a2420', '#403830', '#585048']),
+      top: cl(['#240e0c', '#421a16', '#62281f', '#843a2c', '#a85640']), trim: leather, pants: cl(['#181412', '#2a2420', '#403830', '#585048']),
       boots: leatherDk, belt: leather, metal: steel, eye: mat({ keys: ['#101810', '#24382a', '#48684c', '#90b094'], n: 4, flat: true }) }),
     sylvan: Object.assign({}, base.sylvan, { skin, hair: hr(['#22201a', '#3e3a2e', '#5e5844', '#827a5e', '#a69e80', '#c8c2a4']),
       top: cl(['#161a14', '#262e22', '#384430', '#4e5c40', '#6c7a58']), cape: cl(['#14160f', '#22271a', '#343c28', '#4a5438', '#667052']),
       trim: leather, pants: cl(['#1a1812', '#2c2820', '#443e32', '#5e5646']), boots: leather, belt: leatherDk, metal: brass,
       eye: mat({ keys: ['#0e1814', '#1e3a2e', '#3e6a56', '#88b0a0'], n: 4, flat: true }) }),
     viola: Object.assign({}, base.viola, { skin, hair: hr(['#120c16', '#221828', '#34263c', '#4a3a52', '#64526c', '#806c88']),
-      top: cl(['#3c3630', '#665e54', '#8e8676', '#b6ae9a', '#d8d0ba']), pants: cl(['#3c3630', '#665e54', '#8e8676', '#b6ae9a']),
+      top: cl(['#2c2438', '#4a3e5c', '#6c5e84', '#9486aa', '#bcb0cc']), pants: cl(['#2c2438', '#4a3e5c', '#6c5e84', '#9486aa']),
       trim: brass, belt: cl(['#1e1622', '#342638', '#4c3a52', '#66526c']), boots: leatherDk, metal: brass,
       eye: mat({ keys: ['#181020', '#382a48', '#66527c', '#a894b8'], n: 4, flat: true }) }),
   };
@@ -336,9 +336,9 @@
       a.top = a.y - r.oy * K; a.left = a.x - r.ox * K; a.w = r.canvas.width * K; a.h = r.canvas.height * K;
     }
     // lightmap: moon-blue ambient on the ground and actors, the lantern's warm pool
-    const lights = [[lx, ly - 20, 820 * g.sy, [255, 205, 140], 0.95, 0.55], [lx, ly - 10, 260 * g.sy, [255, 230, 190], 0.5, 0.6]];
+    const lights = [[lx, ly - 20, 820 * g.sy, [255, 205, 140], 0.82, 0.55], [lx, ly - 10, 260 * g.sy, [255, 230, 190], 0.5, 0.6]];
     if (o.mode === 'glimmer') lights.push([byId('wolf').x + 60, byId('wolf').y - 90, 300, [200, 225, 255], 0.45, 0.8]);
-    lightmap(ctx, o.W, o.H, { top: g.GT - 20 * g.sy, feather: 60 * g.sy, amb: 'rgb(78,88,140)', lights });
+    lightmap(ctx, o.W, o.H, { top: g.GT - 20 * g.sy, feather: 60 * g.sy, amb: 'rgb(92,84,150)', lights });
     ENV.glow(ctx, lx, ly - 18, 200 * g.sy, [255, 190, 110], 0.55); ENV.glow(ctx, lx, ly - 18, 40 * g.sy, [255, 240, 200], 0.9);
     if (o.mode === 'glimmer') {
       const h = byId('arun'), w = byId('wolf');
@@ -359,8 +359,8 @@
     glowShrooms(ctx, g, Math.round(26 * g.W / 1024), 21);
     fireflies(ctx, Math.round(22 * o.W / 1024), [0, g.GT, o.W, o.H - g.GT - 80], 7, [[255, 200, 110], [140, 240, 220]]);
     layer(tinted(S.fg, '#232b48'), 7, true);
-    ENV.post(ctx, { dofTop: [250 * g.sy, 400 * g.sy], dofBot: [(o.H - 126 * g.sy), o.H - 6], dofPx: 4, bloom: 0.7, thr: 0.55, vig: 0.7,
-      grade: { sh: [-4, 2, 16], hi: [18, 8, -12], sat: 1.06, con: 1.12, lift: 0 } });
+    ENV.post(ctx, { dofTop: [250 * g.sy, 400 * g.sy], dofBot: [(o.H - 126 * g.sy), o.H - 6], dofPx: 4, bloom: 0.7, thr: 0.55, vig: 0.5,
+      grade: { sh: [10, -4, 20], hi: [18, 8, -12], sat: 1.06, con: 1.1, lift: 4 } });
     return { canvas: c, actors: acts, g };
   }
 

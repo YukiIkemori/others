@@ -15,14 +15,15 @@ const VIEWS = ['title', 'town', 'field', 'dungeon', 'dialogue', 'menu', 'equip',
   const list = want.length ? want : VIEWS;
   const b = await playwright.chromium.launch();
   for (const item of list) {
-    const [view, lay] = item.split(':'), layout = lay || 'wide';
+    const [view0, lay] = item.split(':'), layout = lay || 'wide';
+    const noui = view0.endsWith('_noui'), view = noui ? view0.slice(0, -5) : view0;
     const page = await (await b.newContext({ viewport: layout === 'tall' ? { width: 1080, height: 2338 } : { width: 1920, height: 1080 } })).newPage();
     page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') console.log('[' + m.type() + ']', m.text()); });
     page.on('pageerror', (e) => console.log('[pageerror]', e.stack || e));
     const t0 = Date.now();
-    await page.goto('file://' + path.join(ROOT, 'design/art_proto/ui/index.html') + '?view=' + view + '&layout=' + layout);
+    await page.goto('file://' + path.join(ROOT, 'design/art_proto/ui/index.html') + '?view=' + view + '&layout=' + layout + (noui ? '&noui=1' : ''));
     await page.waitForFunction(() => document.title === 'done' || document.title === 'err', null, { timeout: 300000 });
-    const out = path.join(ROOT, 'design/art_proto/ui/out', view + (layout === 'tall' ? '_tall' : '') + '.png');
+    const out = path.join(ROOT, 'design/art_proto/ui/out', view0 + (layout === 'tall' ? '_tall' : '') + '.png');
     await page.locator('#screen').screenshot({ path: out });
     console.log((await page.title()) === 'done' ? '→' : 'ERR', out, (Date.now() - t0) + 'ms');
     await page.close();
