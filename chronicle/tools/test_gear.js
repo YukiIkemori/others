@@ -499,7 +499,7 @@ const SETS = {
     N: ['w_dagger_8', 'w_dagger_8', 'sh_shield_8', 'hd_cap_8', 'bd_vest_8', 'hn_glove_8', 'ft_boots_8', 'ac_dex_8', 'ac_dex_8'],
     R7: ['w_dagger_r7', 'w_dagger_r7', 'sh_r7_dex', 'hd_r7_dex', 'bd_r7_dex', 'hn_r7_dex', 'ft_r7_dex', 'ac_r7_dex', 'ac_r7_dex'],
     R9: ['w_dagger_r9', 'w_dagger_r9', 'sh_r9_dex', 'hd_r9_dex', 'bd_r9_dex', 'hn_r9_dex', 'ft_r9_dex', 'ac_r9_dex', 'ac_r9_dex'],
-    S: ['w_dagger_sr_moonfang', 'w_whip_sr_silk', 'sh_sr_phantom', 'hd_sr_heaveneye', 'bd_sr_shadow', 'hn_sr_hundred', 'ft_sr_whirl', 'ac_sr_eagle', 'ac_sr_needle'],
+    S: ['w_dagger_sr_moonfang', 'w_dagger_sr_silk', 'sh_sr_phantom', 'hd_sr_heaveneye', 'bd_sr_shadow', 'hn_sr_hundred', 'ft_sr_whirl', 'ac_sr_eagle', 'ac_sr_needle'],
     table: [[54, 131], [114, 197], [168, 257], [198, 291], [234, 331]] },
 };
 // weapons are weapons' (A9) items: use them when loaded, else the §8.3.1 value of their grade (2 units at the tier)

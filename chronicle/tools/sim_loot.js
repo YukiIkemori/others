@@ -234,7 +234,7 @@ if (LS.includes(6)) {
   const SETS = {
     int: ['w_staff_sr_cosmos', 'w_staff_sr_moon', 'sh_sr_blank', 'hd_sr_dusk', 'bd_sr_starry', 'hn_sr_words', 'ft_sr_cloud', 'ac_sr_owl', 'ac_sr_ink'],
     str: ['w_sword_sr_hegemon', 'w_axe_sr_titan', 'sh_sr_steadfast', 'hd_sr_oni', 'bd_sr_dragonhide', 'hn_sr_mighty', 'ft_sr_quake', 'ac_sr_beastheart', 'ac_sr_bloodoath'],
-    dex: ['w_dagger_sr_moonfang', 'w_whip_sr_silk', 'sh_sr_phantom', 'hd_sr_heaveneye', 'bd_sr_shadow', 'hn_sr_hundred', 'ft_sr_whirl', 'ac_sr_eagle', 'ac_sr_needle'],
+    dex: ['w_dagger_sr_moonfang', 'w_dagger_sr_silk', 'sh_sr_phantom', 'hd_sr_heaveneye', 'bd_sr_shadow', 'hn_sr_hundred', 'ft_sr_whirl', 'ac_sr_eagle', 'ac_sr_needle'],
   };
   const monOf = {};
   for (const [id, d] of Object.entries(DB.monsters)) if (d.drops && d.drops.super) monOf[d.drops.super.item] = id;

@@ -34,6 +34,8 @@ const same = (a, b) => J(canon(a)) === J(canon(b));
 const R = S.loadIsolated();
 const DB = R.DB, WI = R.WeaponItems;
 if (!WI) { console.log('R.WeaponItems missing'); process.exit(1); }
+// the item's own id, for the §3.2 type adjustments (non-enumerable: it never shows in a compared shape)
+for (const id of WI.all()) if (DB.items[id]) Object.defineProperty(DB.items[id], '_id', { value: id, enumerable: false, configurable: true });
 
 // ---------------------------------------------------------------- helpers
 const JA_W = { 剣: 'sword', 大剣: 'greatsword', 短剣: 'dagger', 斧: 'axe', 槍: 'spear', 弓: 'bow', 棍棒: 'club', 杖: 'staff', 刀: 'katana', 体術: 'fist', 鞭: 'whip' };

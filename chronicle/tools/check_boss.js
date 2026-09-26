@@ -263,7 +263,7 @@ for (const c of sectionLines('#### 9.12.7').filter((l) => /^\| `rm_/.test(l)).ma
 {
   const seeds = {};
   for (const [id, d] of Object.entries(DB.monsters)) if (/^b_/.test(id) && d.drops && d.drops.bonus) seeds[d.drops.bonus.item] = (seeds[d.drops.bonus.item] || 0) + 1;
-  same('seed counts (§9.12.8)', seeds, { i_seed_hp: 9, i_seed_mp: 6, i_seed_wp: 5 });
+  same('seed counts (§9.12.8; A18: the 5 WP seeds are MP seeds, SYSTEMS_REWORK §2.5)', seeds, { i_seed_hp: 9, i_seed_mp: 11 });
   const rs = Object.entries(DB.monsters).filter(([id, d]) => /^b_/.test(id) && d.drops && (d.drops.rare || d.drops.super)).map(([id]) => id).sort();
   same('bosses with rare/super slots', rs, ['b_ouroboros', 'b_valzard_echo']);
 }
