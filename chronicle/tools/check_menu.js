@@ -158,7 +158,10 @@ const section = (h) => { const i = DESIGN.indexOf(h); if (i < 0) return ''; cons
   const specKeys = [...new Set(table.split('\n').filter((l) => l.startsWith('| `')).flatMap((l) => {
     const first = l.split('|')[1];
     return [...first.matchAll(/`([^`]+)`/g)].flatMap((m) => m[1].split(/\s+/).map((w) => w.replace(/[:*].*$/, '').replace(/\*/g, '')));
-  }).filter((k) => /^[a-zA-Z]+$/.test(k)))];
+  }).filter((k) => /^[a-zA-Z]+$/.test(k)))]
+    // SYSTEMS_REWORK §0.6 (A18): the WP keys are gone and techCostPct is new (until the lead updates §3.3.16, §4.2-4)
+    .filter((k) => !['wpPct', 'wpCostPct', 'wpRegen'].includes(k)).concat(['techCostPct']);
+  for (const k of ['wpPct', 'wpCostPct', 'wpRegen']) if (M.MOD_KEYS.includes(k)) err('C8', `the popup still phrases the WP key ${k} (A18)`);
   if (specKeys.length < 50) err('C8', '§3.3.16 table parse found only ' + specKeys.length + ' keys');
   const missing = specKeys.filter((k) => !M.MOD_KEYS.includes(k));
   if (specKeys.length && missing.length) err('C8', 'popup lacks §3.3.16 mods keys: ' + missing.join(' '));
