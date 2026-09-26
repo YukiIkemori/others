@@ -1,0 +1,27 @@
+{
+  "loopStart": 21.2,
+  "loopEnd": 72.405,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. Regional boss and mid-boss battles: heavier and darker than the normal boss theme, a monstrous presence, menacing but exciting. Tempo 148 BPM, 4/4 time, key of F minor. Instrumentation: brass chords, chromatic low bass, timpani, driving strings, heavy drums, low choir-like pads. Form: heavy intro, riff, brass theme, riff again. Duration: 85 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[B3]]",
+    "generated": "2026-09-26T14:04:32.119Z",
+    "rawSeconds": 87.5,
+    "takes": 2
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -5.6,
+    "gainDb": -6,
+    "peakLimited": false,
+    "loopScore": 0.782,
+    "seamCorr": 0.553,
+    "xfade": 0.6,
+    "medianDb": -21.9,
+    "longestSilence": 0,
+    "seamLevelDiffDb": 1.3,
+    "seamJump": 0.0076,
+    "maxStep": 0.0869
+  }
+}
