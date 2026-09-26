@@ -96,6 +96,7 @@ for (const e of (R._nodeLoadErrors || [])) if (MINE_FILES.some((f) => e.includes
 const SPEC_C = S.consumables;
 const MY_C = items((it) => it.type === 'consumable').map(([id]) => id);
 const ICON_OK = new Set(['herb', 'potion', 'drop', 'feather', 'bomb', 'powder', 'seed', 'bell', 'flute', 'rope', 'key', 'acc',
+  'mirror', 'coin', 'book',                                                     // A10b.2 (art-chars draws them)
   'el_fire', 'el_water', 'el_wind', 'el_earth', 'el_light', 'el_dark']);
 const TARGETS = new Set('enemy enemies group random ally allies self ally_dead ally_any party'.split(' '));
 const EFFECTS = new Set('damage heal healMp healWp revive cure status buff dispel steal scan escape grow teleport exit encounter cover summon special'.split(' '));
@@ -215,6 +216,18 @@ check('C8', 'アイコン（§11.3.6 の既存と el_<属性>）・並び（sort
   const incense = fam(/の香$/);
   if (incense.length !== 1 || incense[0] !== 'icon:powder') errs.push(`「〜の香」のアイコンがそろっていない: ${incense.join(' ')}`);
   for (const e of EL) if (DB.items['i_stone_' + e] && DB.items['i_stone_' + e].icon !== 'icon:el_' + e) errs.push(`i_stone_${e} の icon が el_${e} でない`);
+  // A10b.2: 見破りの鏡 = mirror、金の延べ板・古い金貨の袋 = coin、知恵のページ = book（絵がまだ無い版だけ前の絵に戻す）
+  const FB = (R.ItemsUse && R.ItemsUse.iconFallback) ? R.ItemsUse.iconFallback() : {};
+  const pending = [];
+  for (const [id, want] of [['i_lens', 'icon:mirror'], ['i_gold_bar', 'icon:coin'], ['i_gold_coins', 'icon:coin'], ['i_wisdom_page', 'icon:book']]) {
+    const it = DB.items[id];
+    if (!it) { errs.push(`${id} が無い`); continue; }
+    const drawn = R.Gfx && R.Gfx.has && R.Gfx.has(want);
+    if (drawn && it.icon !== want) errs.push(`${id} の icon ${it.icon} ≠ ${want}`);
+    else if (!drawn && it.icon !== FB[want]) errs.push(`${id} の icon ${it.icon}（${want} の絵が無い間は ${FB[want]}）`);
+    else if (!drawn) pending.push(`${id}→${want.slice(5)}`);
+  }
+  if (pending.length) notes.push(...pending.map((p) => 'pending ' + p));
   const miss = [...new Set(notes)];
   if (miss.length) errs.push(`note: 絵がまだ無いアイコン（art-chars A13 の分。無い間は種別の既定で描く）: ${miss.join(' ')}`);
   return errs;

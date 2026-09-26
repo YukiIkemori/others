@@ -331,7 +331,8 @@ section('4 effects / quirks: counts and sizes (§8.3.3–§8.3.6)', () => {
         if (!ok(lim, `${id}: ${k}=${JSON.stringify(v)} is not a quirk of §8.3.6`)) continue;
         let L = lim[qcol];
         if (k === 'expPct' && T === 9 && qcol === 1) L = -100;                                        // post-game supers
-        if (typeof L === 'number') ok(L < 0 ? v >= L : v <= L, `${id}: quirk ${k}=${v} beyond ${L}`);
+        const vals = typeof v === 'object' ? Object.values(v).filter((x) => x < 0) : [v];          // glimPct / profPct: the lowered sub-keys
+        if (typeof L === 'number') for (const x of vals) ok(L < 0 ? x >= L : x <= L, `${id}: quirk ${k}=${JSON.stringify(v)} beyond ${L}`);
         else ok(L === true, `${id}: quirk ${k} not allowed for this grade`);
         continue;
       }
@@ -397,7 +398,7 @@ const DESC_FORMS = [
   '攻撃が当たると、ついでに盗むことがある', 'ついでに盗む', 'すばやく動ける', 'すばやい', '攻撃をかわしやすい', 'かわしやすい',
   '倒れても一度だけ起き上がる', '攻撃を受けると反撃する', '反撃する', '毒の沼や熱い床で傷つかない', '会心が出やすい', 'よく当たる',
   '(?:攻撃力|守備力|術防)が上がる',
-  'ただし(?:守備力|術防|最大HP)が下がる', 'ただし受けるダメージが増える', 'ただし受ける傷が増える', 'ただし(?:術|技)が使えない', 'ただし戦闘中にHPが減る',
+  'ただし(?:守備力|守備|術防|最大HP)が下がる', 'ただし受けるダメージが増える', 'ただし受ける傷が増える', 'ただし(?:術|技)が使えない', 'ただし戦闘中にHPが減る',
   'ただし動きが遅くなる', 'ただし経験値が減る', 'ただしお金が減る', 'ただしかわしにくい', 'ただし当たりにくい', 'ただし(?:技|術)?を?閃きにくい', 'ただし守備と術防は0', `ただし${P_}が下がる`, `(?:${P_}|最大HP|守備力|術防)も下がる`,
 ].map((s) => new RegExp(`^${s}$`));
 const QUIRK_TAIL = new RegExp(`^(?:ただし|${E_}にも|(?:${P_}|最大HP|守備力|術防)も)`);

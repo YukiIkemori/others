@@ -364,7 +364,7 @@
       quirk: true,
       mods: { dropPct: 30, stealPct: 50 },
       def: 3,                 // クセ: 守備が半分（同じ T・重さの通常品の半分）
-      desc: '魔物がアイテムを落としやすい。\n盗みが成功しやすい。ただし守備力が下がる。' },
+      desc: '魔物がアイテムを落としやすい。\n盗みが成功しやすい。ただし守備が下がる。' },
     // doll_2（1/256）· spd+12 eva+6 ｜ Q: stat:str-1u
     ft_sr_dance_shoes: { name: '踊り人形の靴', type: 'feet', weight: 'cloth', grade: 'super', tier: 3, units: 'i1', src: 'super', exclusive: 'doll_2',
       quirk: true,

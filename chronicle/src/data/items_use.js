@@ -12,7 +12,8 @@
 // - 回復は割合（§4.6.4 の「道具の回復」＝最大値 × pct × (1 + itemPct/100)）。formula:'tier' は SP × W(Tb)（§4.6.3）。
 // - 治療の道具はフィールドでは使えない（状態は戦闘の終わりに消える。§7.0 の 0.9）。
 // - オートは魔石（stone）とレア魔物の道具（src:'relic'）を使わない（§4.9.6・§8.9.2。battle_ai が見る）。
-// - icon は §11.3.6 の既存の 8×8 アイコン（icon:herb potion drop feather bomb powder seed bell flute rope key acc）と icon:el_<属性>。
+// - icon は §11.3.6 の既存の 8×8 アイコン（icon:herb potion drop feather bomb powder seed bell flute rope key acc）と icon:el_<属性>、
+//   A10b.2 の icon:mirror（見破りの鏡）・coin（金の延べ板・古い金貨の袋）・book（知恵のページ）。
 //   同じ種類の品は同じ絵にそろえる（香 3 つ＝魔除け・誘い寄せ・守りは powder の香袋、鐘は bell、魔石は属性の印）。
 // - sort は道具の一覧の並び（回復 → 生き返り → MP・WP → 治療 → 香 → 戦闘の道具 → 魔石 → 実 → レア魔物の道具）。
 (function (R) {
@@ -78,7 +79,7 @@
     i_lure:     C(SHOP, '誘い寄せの香', 60, F('self', [{ type: 'encounter', pct: 100, steps: 100 }], 'debuff'), '100歩のあいだ、魔物と\nめずらしい魔物が増える。', { icon: 'powder' }),
     // 戦闘の道具
     i_smoke:    C(SHOP, '煙玉', 30, B('self', [{ type: 'escape' }], 'smoke'), '戦闘から必ず逃げ出せる。\nボスには効かない。', { icon: 'bomb' }),
-    i_lens:     C(SHOP, '見破りの鏡', 40, B('enemy', [{ type: 'scan' }], 'scan'), '敵1体のHPと弱点を\n見破る。', { icon: 'acc' }),
+    i_lens:     C(SHOP, '見破りの鏡', 40, B('enemy', [{ type: 'scan' }], 'scan'), '敵1体のHPと弱点を\n見破る。', { icon: 'mirror' }),
     i_firepot:  C(SHOP, '火炎つぼ', 50, B('group', [tierDmg(0.8, 'fire')], 'fire2'), '同じ種類の敵すべてに\n火のダメージ。', { icon: 'bomb' }),
     i_bomb:     C(SHOP, 'はじけ玉', 150, B('enemies', [tierDmg(0.7)], 'explosion'), '敵全体にダメージ。', { icon: 'bomb' }),
     i_horn:     C(SHOP, '勇みの角笛', 120, B('allies', [buff('atk', 1)], 'buff'), '味方全員の攻撃力を\n1段階上げる。', { icon: 'flute' }),
@@ -106,21 +107,21 @@
     i_glass_dust:     RM('rm_glass_moth', 'きらめくりん粉', 1200, B('enemies', [status('blind', 0.6)], 'debuff'), '敵全体の目を\nくらませることがある。', 'powder'),
     i_golden_acorn:   RM('rm_acorn_prince', '黄金のどんぐり', 5000, null, SELL, 'seed'),
     i_diamond_dust:   RM('rm_diamond_lizard', '金剛石の粉', 1200, B('ally', [buff('def', 2)], 'buff'), '味方1人の守備力を\n2段階上げる。', 'powder'),
-    i_gold_bar:       RM('rm_gold_idol', '金の延べ板', 6000, null, SELL, 'acc'),
+    i_gold_bar:       RM('rm_gold_idol', '金の延べ板', 6000, null, SELL, 'coin'),
     i_aurora_feather: RM('rm_aurora_bird', 'オーロラの羽根', 1500, BF('allies', [healMp(0.3)], 'mp'), '味方全員のMPを\n最大値の30%回復する。', 'feather'),
     i_fox_icicle:     RM('rm_icetail_fox', 'キツネのつらら', 1200, B('enemy', [status('freeze', 0.6)], 'water'), '敵1体を\n凍らせることがある。', 'drop'),
     i_lotus_dew:      RM('rm_lotus_sprite', 'はすの朝露', 1200, B('allies', [cure('all'), status('regen')], 'heal3'), '味方全員の悪い状態を治し、\n再生の状態にする。', 'drop'),
     i_ghost_tea:      RM('rm_ghost_teapot', 'おばけの紅茶', 1200, BF('ally', [heal(1), cure('all')], 'heal'), '味方1人のHPをすべて回復し、\n悪い状態を治す。', 'potion'),
     i_snail_bell:     RM('rm_bell_snail', '小さな鐘', 1000, B('allies', [cure(['sleep', 'confuse', 'stun'])], 'cure'), '味方全員の眠り・混乱・\n気絶を治す。', 'bell'),
     i_stardust:       RM('rm_star_whale', '星くずの小瓶', 1800, BF('allies', [healMp(0.4)], 'mp'), '味方全員のMPを\n最大値の40%回復する。', 'potion'),
-    i_gold_coins:     RM('rm_treasure_crab', '古い金貨の袋', 4000, null, SELL, 'powder'),
+    i_gold_coins:     RM('rm_treasure_crab', '古い金貨の袋', 4000, null, SELL, 'coin'),
     i_gem_quill:      RM('rm_gem_hedgehog', '宝石のとげ', 1200, B('enemy', [tierDmg(2.0)], 'pierce'), '敵1体に大きなダメージ。', 'feather'),
     i_prism_shard:    RM('rm_prisma', '虹晶のかけら', 1500, BF('ally', [healMp(1)], 'mp'), '味方1人のMPを\nすべて回復する。', 'drop'),
     i_spa_egg:        RM('rm_spa_monkey', '温泉たまご', 1200, BF('allies', [heal(0.7)], 'heal3'), '味方全員のHPを\n最大値の70%回復する。', 'seed'),
     i_volcano_stone:  RM('rm_volcano_turtle', '火山の熱石', 1200, B('enemies', [tierDmg(1.5, 'fire')], 'fire2'), '敵全体に火のダメージ。', 'bomb'),
     i_moon_wool:      RM('rm_moon_sheep', '月見の毛糸', 1500, BF('allies', [healWp(0.3)], 'mp'), '味方全員のWPを\n最大値の30%回復する。', 'rope'),
     i_spring_key:     RM('rm_clock_bird', 'ぜんまいの鍵', 1500, BF('ally', [healWp(1)], 'mp'), '味方1人のWPを\nすべて回復する。', 'key'),
-    i_wisdom_page:    RM('rm_bookworm', '知恵のページ', 3000, BF('ally', [healMp(1), healWp(1)], 'mp'), '味方1人のMPとWPを\nすべて回復する。', 'potion'),
+    i_wisdom_page:    RM('rm_bookworm', '知恵のページ', 3000, BF('ally', [healMp(1), healWp(1)], 'mp'), '味方1人のMPとWPを\nすべて回復する。', 'book'),
     i_golden_ink:     RM('rm_golden_quill', '黄金のインク', 4000, BF('allies', [healMp(0.5), healWp(0.5)], 'mp'), '味方全員のMPとWPを\n最大値の50%回復する。', 'potion'),
     i_memory_bubble:  RM('rm_memory_fish', '思い出のしゃぼん', 6000, BF('allies', [heal(1), healMp(1)], 'heal3'), '味方全員のHPとMPを\nすべて回復する。', 'drop'),
     i_dream_fruit:    RM('rm_dream_tapir', '夢の果実', 0, F('ally', [grow('hp', 20), grow('mp', 5), grow('wp', 5)], 'heal'), '食べると最大HPが20、\n最大MPとWPが5増える。', 'seed'),
@@ -138,6 +139,18 @@
     stones: () => ELS.map((e) => `i_stone_${e}`),
     relicOf: (monId) => IDS.find((id) => USE[id].exclusive === monId) || null,
   };
+
+  // A10b.2: 鏡・金貨・本の 3 つのアイコン（icon:mirror coin book、担当 art-chars）。絵がまだ無い版では、前の絵に戻す
+  // （アイコンの無い品を一覧に出さない）。絵が入れば、このままで新しい絵になる。
+  const ICON_FALLBACK = { 'icon:mirror': 'icon:acc', 'icon:coin': 'icon:powder', 'icon:book': 'icon:potion' };
+  R.ItemsUse.iconFallback = () => Object.assign({}, ICON_FALLBACK);
+  R.onData(() => {
+    if (!R.Gfx || !R.Gfx.has) return;
+    for (const id of IDS) {
+      const it = R.DB.items[id], fb = ICON_FALLBACK[it.icon];
+      if (fb && !R.Gfx.has(it.icon)) it.icon = fb;
+    }
+  });
 
   // §8.2.9: 数値を埋める（道具は値段・説明を表に書いたので、埋める物は無い。規則の関数がある時だけ呼ぶ）
   R.onData(() => {
