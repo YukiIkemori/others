@@ -44,7 +44,7 @@
     b_rooteater: { hp: 0.9, atk: 0.6, mag: 0.6 },
     b_root: { hp: 1, atk: 0.5, mag: 0.5 },
     b_sandworm: { hp: 1.1 },
-    b_sandking: { hp: 0.95, atk: 0.7, mag: 0.7 },
+    b_sandking: { hp: 1, atk: 0.7, mag: 0.7 },
     b_icegiant: { hp: 1.25 },
     b_whitedragon: { hp: 1.6, atk: 0.6, mag: 0.6 },
     b_doll_conductor: { hp: 0.9, atk: 0.85, mag: 0.85 },

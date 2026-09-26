@@ -34,7 +34,8 @@ def matte(a, bg, d0=None, d1=None):
     d = np.sqrt(((a - bg) ** 2).sum(-1))
     # background noise level (jpeg): distance percentile of border pixels
     border = np.concatenate([d[:6].ravel(), d[-6:].ravel(), d[:, :6].ravel(), d[:, -6:].ravel()])
-    noise = float(np.percentile(border, 99))
+    border = border[border < 70]  # subjects touching the edge are not noise
+    noise = float(np.percentile(border, 99)) if border.size else 20.0
     d0 = d0 if d0 is not None else max(28.0, noise * 1.6)
     d1 = d1 if d1 is not None else d0 + 70.0
     al = np.clip((d - d0) / (d1 - d0), 0, 1)
@@ -74,6 +75,64 @@ def rgba(f, al):
     return np.dstack([f, al * 255]).astype(np.uint8)
 
 
+def grid_pitch(a, lo=3.0, hi=24.0):
+    """estimate the pixel-art grid (pitch, phase_x, phase_y, score) of a generated 'pixel art' image from where its
+    colour edges fall (circular mean of edge positions modulo the pitch). A generated image often has sub-cells
+    (half-pitch) that score about as well: the largest multiple that keeps ≥ 80 % of the best score wins."""
+    g = a.mean(-1)
+    ex = np.abs(np.diff(g, axis=1)).sum(0)
+    ey = np.abs(np.diff(g, axis=0)).sum(1)
+
+    def score(p):
+        sc, ph = 0, []
+        for e in (ex, ey):
+            ang = 2 * np.pi * (np.arange(len(e)) + 0.5) / p
+            c, s_ = (e * np.cos(ang)).sum(), (e * np.sin(ang)).sum()
+            sc += np.hypot(c, s_) / e.sum()
+            ph.append((np.arctan2(s_, c) / (2 * np.pi) * p) % p)
+        return sc, ph[0], ph[1]
+    best = max(((score(p)[0], p) for p in np.arange(lo, hi, 0.02)))
+    p = best[1]
+    for m in (3, 2):
+        q = p * m
+        if q < hi * 1.5:
+            # refine around the multiple
+            cand = max(((score(r)[0], r) for r in np.arange(q - 0.3, q + 0.3, 0.01)))
+            if cand[0] >= 0.8 * best[0]:
+                p = cand[1]
+                break
+    sc, phx, phy = score(p)
+    return p, phx, phy, sc
+
+
+def pixelize(rgb, al, pitch, phx, phy, up):
+    """resample onto the detected grid: each output pixel = median colour of the inner half of its cell, alpha
+    thresholded (crisp pixel edges), then nearest-neighbour ×up"""
+    H, W = al.shape
+    xs = np.arange(phx + 0.5 - pitch, W, pitch); ys = np.arange(phy + 0.5 - pitch, H, pitch)
+    xs = xs[(xs + pitch > 0)]; ys = ys[(ys + pitch > 0)]
+    nx, ny = len(xs) - 1, len(ys) - 1
+    out = np.zeros((ny, nx, 4), np.float32)
+    q = pitch * 0.25
+    for j in range(ny):
+        y0, y1 = int(max(0, ys[j] + q)), int(min(H, ys[j + 1] - q)) + 1
+        for i in range(nx):
+            x0, x1 = int(max(0, xs[i] + q)), int(min(W, xs[i + 1] - q)) + 1
+            if x1 <= x0 or y1 <= y0:
+                continue
+            aa = al[y0:y1, x0:x1]
+            A = aa.mean()
+            if A < 0.5:
+                continue
+            m = aa > 0.5
+            out[j, i, :3] = np.median(rgb[y0:y1, x0:x1][m], axis=0)
+            out[j, i, 3] = 1
+    img = Image.fromarray(np.dstack([out[..., :3], out[..., 3] * 255]).astype(np.uint8), 'RGBA')
+    if up > 1:
+        img = img.resize((img.width * up, img.height * up), Image.NEAREST)
+    return img
+
+
 def cmd_sprites(o):
     a = load(o.inp)
     bg = bg_color(a)
@@ -100,12 +159,33 @@ def cmd_sprites(o):
     else:  # reading order: rows of similar top
         objs.sort(key=lambda t: (round((t[0][0].start + t[0][0].stop) / 2 / (H / o.bands)), t[0][1].start))
     hs = [int(x) for x in o.hs.split(',')] if o.hs else None
+    pix = None
+    if o.pixel:
+        pitch, phx, phy, sc = grid_pitch(a) if o.pixel == 'auto' else (float(o.pixel), 0.0, 0.0, 0)
+        pitch *= o.pitch_mult  # sample coarser than the drawn grid (e.g. 2 → one output pixel per 2×2 drawn pixels)
+        pix = (pitch, phx, phy)
+        print(f'pixel grid: pitch {pitch:.2f}px phase ({phx:.1f},{phy:.1f}) score {sc:.3f}')
     for k, (sl, lb) in enumerate(objs):
         pad = 6
         y0, y1 = max(0, sl[0].start - pad), min(H, sl[0].stop + pad)
         x0, x1 = max(0, sl[1].start - pad), min(W, sl[1].stop + pad)
         m = (lab[y0:y1, x0:x1] == lb)
         m = ndimage.binary_dilation(m, iterations=2)
+        if pix:
+            p_, px_, py_ = pix
+            th_ = (hs[k] if hs and k < len(hs) else 0)
+            if th_:  # resample the drawn art so this sprite ends up th_ device px tall (th_/up output pixels)
+                p_ = (sl[0].stop - sl[0].start) / (th_ / o.up)
+            # snap the crop to the grid so the cells stay aligned
+            x0 = int(max(0, px_ + p_ * np.floor((x0 - px_) / p_))); y0 = int(max(0, py_ + p_ * np.floor((y0 - py_) / p_)))
+            m = (lab[y0:y1, x0:x1] == lb); m = ndimage.binary_dilation(m, iterations=2)
+            img = pixelize(f[y0:y1, x0:x1], al[y0:y1, x0:x1] * m, p_, (px_ - x0) % p_, (py_ - y0) % p_, o.up)
+            if o.flip_idx and str(k) in o.flip_idx.split(','):
+                img = img.transpose(Image.FLIP_LEFT_RIGHT)
+            p = f'{o.out}_{k}.png'
+            __import__("os").makedirs(__import__("os").path.dirname(p) or ".", exist_ok=True)
+            img.save(p, optimize=True); print(p, img.size)
+            continue
         img = Image.fromarray(rgba(f[y0:y1, x0:x1], al[y0:y1, x0:x1] * m), 'RGBA')
         th = (hs[k] if hs and k < len(hs) else o.h)
         if o.scale:
@@ -114,7 +194,7 @@ def cmd_sprites(o):
             s = th / img.height
             # premultiplied resize so transparent pixels do not bleed colour into the edge
             img = resize_rgba(img, max(1, round(img.width * s)), th)
-        if o.flip:
+        if o.flip or (o.flip_idx and str(k) in o.flip_idx.split(',')):
             img = img.transpose(Image.FLIP_LEFT_RIGHT)
         p = f'{o.out}_{k}.png'
         __import__("os").makedirs(__import__("os").path.dirname(p) or ".", exist_ok=True)
@@ -192,10 +272,13 @@ def cmd_grid(o):
             box = (int(i * cw + ix), int(j * ch + iy), int((i + 1) * cw - ix), int((j + 1) * ch - iy))
             c = img.crop(box)
             s = min(c.size)
-            c = c.crop((0, 0, s, s)).resize((o.size, o.size), Image.LANCZOS)
-            t = seamless(np.asarray(c).astype(np.float32))
+            n = o.size // o.up if o.up > 1 else o.size
+            c = c.crop((0, 0, s, s)).resize((n, n), Image.LANCZOS)
+            t = Image.fromarray(np.clip(seamless(np.asarray(c).astype(np.float32)), 0, 255).astype(np.uint8))
+            if o.up > 1:
+                t = t.resize((o.size, o.size), Image.NEAREST)
             p = f'{o.out}_{k}.png'
-            Image.fromarray(np.clip(t, 0, 255).astype(np.uint8)).save(p, optimize=True)
+            t.save(p, optimize=True)
             print(p)
             k += 1
 
@@ -206,7 +289,10 @@ def cmd_fit(o):
     img = img.resize((round(img.width * s), round(img.height * s)), Image.LANCZOS)
     x = (img.width - o.w) // 2
     y = int((img.height - o.h) * o.ay)
-    img.crop((x, y, x + o.w, y + o.h)).save(o.out, quality=90)
+    img = img.crop((x, y, x + o.w, y + o.h))
+    if o.up > 1:  # pixel look: 1 art pixel = up×up output pixels
+        img = img.resize((o.w // o.up, o.h // o.up), Image.LANCZOS).resize((o.w, o.h), Image.NEAREST)
+    img.save(o.out, quality=92)
     print(o.out)
 
 
@@ -232,11 +318,12 @@ def main():
     s.add_argument('--order', default='x'); s.add_argument('--bands', type=float, default=3)
     s.add_argument('--min-area', type=float, default=0.004); s.add_argument('--join', type=int, default=10)
     s.add_argument('--flip', action='store_true'); s.add_argument('--scale', type=float, default=0); s.add_argument('--glow-kill', action='store_true')
+    s.add_argument('--pixel', default=''); s.add_argument('--up', type=int, default=2); s.add_argument('--flip-idx', default=''); s.add_argument('--pitch-mult', type=float, default=1)
     g = sp.add_parser('grid'); g.add_argument('inp'); g.add_argument('out')
     g.add_argument('--cols', type=int, default=3); g.add_argument('--rows', type=int, default=3)
-    g.add_argument('--size', type=int, default=256); g.add_argument('--inset', type=float, default=0.06)
+    g.add_argument('--size', type=int, default=256); g.add_argument('--up', type=int, default=1); g.add_argument('--inset', type=float, default=0.06)
     f = sp.add_parser('fit'); f.add_argument('inp'); f.add_argument('out')
-    f.add_argument('--w', type=int, default=1024); f.add_argument('--h', type=int, default=608); f.add_argument('--ay', type=float, default=0.5)
+    f.add_argument('--w', type=int, default=1024); f.add_argument('--h', type=int, default=608); f.add_argument('--ay', type=float, default=0.5); f.add_argument('--up', type=int, default=1)
     pv = sp.add_parser('preview'); pv.add_argument('out'); pv.add_argument('files', nargs='+')
     o = ap.parse_args()
     {'sprites': cmd_sprites, 'grid': cmd_grid, 'fit': cmd_fit, 'preview': cmd_preview}[o.cmd](o)

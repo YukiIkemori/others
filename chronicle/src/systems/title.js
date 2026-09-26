@@ -522,7 +522,7 @@
         const y = 34 + i * 60;
         if (R.Menu && R.Menu.drawSlot) R.Menu.drawSlot(i, this.slots[i], 4, y, 248, 56, { dim: !this.slots[i] });
         else drawSlot(i, this.slots[i], 4, y, 248, 56);
-        if (i === this.index) g.cursor(0, y + 7);
+        if (i === this.index) g.cursor(4 + ((R.Menu && R.Menu.SLOT_CURSOR_DX) || 10), y + 7); // inside the window, like the save screen (§11.7.14)
       }
     }
   }
@@ -530,7 +530,7 @@
   function drawSlot(i, s, x, y, w, h) {
     const g = G(), C = g.C;
     g.window(x, y, w, h);
-    g.text('記録' + (i + 1), x + 16, y + 6, { color: s ? C.yellow : C.gray });
+    g.text('記録' + (i + 1), x + 20, y + 6, { color: s ? C.yellow : C.gray });
     if (!s) { g.text('――　空き　――', x + w / 2, y + 24, { align: 'center', color: C.gray }); return; }
     const m = s.summary || {};
     const hero = typeof m.hero === 'object' ? m.hero : { name: m.hero, level: m.level };

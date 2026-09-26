@@ -69,10 +69,10 @@
 
   // ------------------------------------------------------------------ curves
   /** the monster stat curve at level L (§4.14.2) */
-  function curve(L) {
+  function curve(L, kind) {
     L = Math.max(1, +L || 1);
     const kc = R.Rules && R.Rules.K && R.Rules.K.curve;
-    if (typeof kc === 'function') return kc(L);
+    if (typeof kc === 'function') return kc(L, kind);
     const atk = 4 + 3.15 * Math.pow(L - 1, 0.9);
     const dk = 20 + 2.5 * L;
     return { hp: 6 + 2.6 * L + 0.1 * L * L, atk, mag: 0.85 * atk, def: dk, mdef: dk, agi: 24 + 0.6 * L, exp: 3 + 1.2 * L + 0.06 * L * L, gold: 2 + 0.5 * L + 0.07 * L * L };
@@ -148,6 +148,8 @@
     if ((s.agi || 1) >= (E.fastAgi || 1.3)) e = Math.max(e, E.fast);
     return e;
   }
+  /** 'mob' for a regular monster (K.curve's per-tier factor K.MOB_TIER), undefined for bosses, rare and metal ones */
+  function curveKind(d) { return has(d, 'boss') || has(d, 'rare') || has(d, 'metal') ? undefined : 'mob'; }
   /**
    * Fill the nominal stats (hp atk mag def mdef agi exp gold eva hit crit …) of monster data from its
    * level, size, multipliers s / rw and kind (§9.1.2 mobs, rare, metal; §9.11.2 bosses). Values written in
@@ -156,7 +158,7 @@
   function fillStats(def, id) {
     if (!def || def._filled) return def;
     const lv = Math.max(1, def.lv || 1);
-    const c = curve(lv);
+    const c = curve(lv, curveKind(def));
     const s = def.s || {}, rw = def.rw || {};
     const sm = (k) => (s[k] != null ? s[k] : 1);
     const set = (k, v) => { if (def[k] == null) def[k] = v; };
@@ -250,7 +252,7 @@
     d.baseId = id;
     d.flags = (base.flags || []).slice();
     if (Lb !== L0) {
-      const c0 = curve(L0), c1 = curve(Lb);
+      const ck = curveKind(base), c0 = curve(L0, ck), c1 = curve(Lb, ck);
       const raw = base._raw || {};
       const v0 = (k) => (raw[k] != null ? raw[k] : base[k]);
       for (const k of SCALE_KEYS) if (typeof base[k] === 'number') d[k] = Math.max(k === 'agi' ? 1 : 0, Math.round(v0(k) * c1[k] / c0[k]));

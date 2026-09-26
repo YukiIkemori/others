@@ -567,6 +567,12 @@ async function slice(D, S, o) {
       const tag = `${e.event}${e.npc ? '(' + e.npc.id + ')' : ''}`;
       const pre = await D.ev(() => { const h = window.RPG.State.hero(); return { t: (h.techs || []).length, s: (h.spells || []).length, lv: h.level }; });
       if (/tutorial|lighthouse_1_otto/.test(e.event) && !glimBefore) glimBefore = pre;
+      if (/boss/.test(e.event)) {
+        // the smoke walks with no encounters, so it reaches the boss at Lv1; a normal player arrives at about Lv4
+        // (check_prologue campaign: hero Lv4, companions Lv4, wins 94–95%), so the party is raised to that first
+        const low = await D.ev(() => Math.min.apply(null, window.RPG.Game.party.map((c) => c.level)));
+        if (low < 4) { await D.ev(() => window.RPG.debug.level(4)); c.note(`${e.event}: party raised from Lv${low} to Lv4 (a normal player's level here)`); }
+      }
       const how = await runPlanEntry(D, e, c, pol);
       if (how === 'already') continue;
       const seenScenes = await D.ev(() => window.__qa.scenes);

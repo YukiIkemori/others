@@ -200,9 +200,22 @@
         G.rect(p.x - 2, p.y - 2, 5, 5, '#ffffff');
       }
       if (this.name) {
-        const w = Math.ceil(G.textWidth(this.name)) + 20;
-        G.window(4, R.H - 26, w, 22, { alpha: 0.85 });
-        G.text(this.name, 14, R.H - 21);
+        // the place-name plate goes along the bottom (else top) edge where it hides the fewest marks (never the party mark)
+        const w = Math.ceil(G.textWidth(this.name)) + 20, h = 22;
+        if (!this.plate) {
+          const marks = c.icons.map((ic) => this.at(ic.x, ic.y));
+          const pp = this.pp ? this.at(this.pp.x, this.pp.y) : null;
+          const corners = [];
+          for (const y of [R.H - h - 4, 4]) for (let x = 4; x <= R.W - w - 4; x += 4) corners.push([x, y]);
+          const cost = ([x, y]) => {
+            const inside = (p) => p.x >= x - 4 && p.x <= x + w + 4 && p.y >= y - 4 && p.y <= y + h + 4;
+            return marks.filter(inside).length + (pp && inside(pp) ? 100 : 0);
+          };
+          this.plate = corners.reduce((b, k) => (cost(k) < cost(b) ? k : b), corners[0]);
+        }
+        const [x, y] = this.plate;
+        G.window(x, y, w, h, { alpha: 0.85 });
+        G.text(this.name, x + 10, y + 5);
       }
     }
   }
