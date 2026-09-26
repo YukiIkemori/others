@@ -1,0 +1,6 @@
+{
+  "scene": "battle",
+  "desc": "CORE の例: 仮の夜道から仮の戦闘をすぐ開く",
+  "state": "core_stub_road",
+  "setup": { "troop": "tr_stub" }
+}

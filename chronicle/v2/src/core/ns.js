@@ -56,7 +56,7 @@
   // 呼ばれた回数は R.Stubs.calls に数える（QA の check_stubs が「仮の実装が 1 回も呼ばれない」を確かめる）。
   R.Stubs = R.Stubs || { ns: {}, data: [], calls: {}, installed: {} };
   /** 名前空間の仮の実装を登録（path は 'Hd'・'UIK.Message' など） */
-  R.Stubs.define = function (path, obj) { R.Stubs.ns[path] = Object.assign(R.Stubs.ns[path] || {}, obj); };
+  R.Stubs.define = function (path, obj) { R.Stubs.ns[path] = Object.defineProperties(R.Stubs.ns[path] || {}, Object.getOwnPropertyDescriptors(obj)); };
   /** データの仮の登録（R.DB[kind][id] が無いときだけ入る） */
   R.Stubs.defineData = function (kind, id, obj) { R.Stubs.data.push({ kind, id, obj }); };
   R.Stubs.install = function () {
@@ -72,7 +72,9 @@
       const stub = R.Stubs.ns[path];
       const filled = [];
       for (const k of Object.keys(stub)) {
-        if (target[k] !== undefined) continue;
+        if (Object.prototype.hasOwnProperty.call(target, k) || target[k] !== undefined) continue;
+        const desc = Object.getOwnPropertyDescriptor(stub, k);
+        if (desc.get || desc.set) { Object.defineProperty(target, k, desc); filled.push(k); continue; }
         const v = stub[k];
         if (typeof v === 'function' && !/^class\s/.test(Function.prototype.toString.call(v)) && !/^[A-Z]/.test(k)) {
           const name = path + '.' + k;

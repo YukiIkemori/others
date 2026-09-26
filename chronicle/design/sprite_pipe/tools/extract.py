@@ -140,17 +140,31 @@ def extract_group(img, cfg, g, report):
 
 def main():
     cfg = load_cfg(sys.argv[1])
-    src = os.path.join(cfg['_dir'], cfg['sheet'])
-    img = np.asarray(Image.open(src).convert('RGB'))
     char = cfg['character']
     od = os.path.join(HERE, 'out', char)
     for sub in ('native', 'sprites'):
         os.makedirs(os.path.join(od, sub), exist_ok=True)
-    report = dict(sheet=cfg['sheet'], warnings=[], groups={}, sprites={})
+    # one sheet ("sheet" + "groups") or several ("sheets": [{sheet, bg, groups}, …]); missing files are skipped
+    sheets = cfg.get('sheets') or [dict(sheet=cfg['sheet'], groups=cfg['groups'])]
+    report = dict(sheet=sheets[0]['sheet'], sheets=[], warnings=[], groups={}, sprites={})
     natives = {}
-    for g in cfg['groups']:
-        natives.update(extract_group(img, cfg, g, report))
-        print('group', g['name'], report['groups'][g['name']])
+    for sh in sheets:
+        src = os.path.join(cfg['_dir'], sh['sheet'])
+        if not os.path.exists(src):
+            report['warnings'].append('missing sheet %s — skipped' % sh['sheet'])
+            continue
+        img = np.asarray(Image.open(src).convert('RGB'))
+        scfg = dict(cfg, **{k: v for k, v in sh.items() if k not in ('groups',)})
+        report['sheets'].append(sh['sheet'])
+        for g in sh['groups']:
+            g = dict(g)
+            if 'box' not in g:
+                g['box'] = [0, 0, img.shape[1], img.shape[0]]
+            got = extract_group(img, scfg, g, report)
+            for sid in got:
+                report['sprites'][sid]['sheet'] = sh['sheet']
+            natives.update(got)
+            print('group', g['name'], report['groups'][g['name']])
     for sid, n in natives.items():
         Image.fromarray(n).save(os.path.join(od, 'native', sid + '.png'))
     # shared palette (sprites that opt out — e.g. portraits — get their own)

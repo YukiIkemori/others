@@ -11,13 +11,17 @@ if '--scale' in args: i = args.index('--scale'); scale = int(args[i + 1]); del a
 if '--out' in args: i = args.index('--out'); out = args[i + 1]; del args[i:i + 2]
 od = os.path.join(HERE, 'out', char)
 rep = json.load(open(os.path.join(od, 'extract.json')))
-cfgsheet = Image.open(os.path.join(HERE, 'configs', rep['sheet'])).convert('RGB')
+_sheets = {}
+def sheet_of(sid):
+    p = rep['sprites'][sid].get('sheet', rep['sheet'])
+    if p not in _sheets: _sheets[p] = Image.open(os.path.join(HERE, 'configs', p)).convert('RGB')
+    return _sheets[p]
 ids = args or list(rep['sprites'])
 tiles = []
 for sid in ids:
     s = Image.open(os.path.join(od, 'sprites', sid + '.png'))
     big = s.resize((s.width * scale, s.height * scale), Image.NEAREST)
-    src = cfgsheet.crop(tuple(rep['sprites'][sid]['src_box']))
+    src = sheet_of(sid).crop(tuple(rep['sprites'][sid]['src_box']))
     if rep['sprites'][sid]['flipped']: src = src.transpose(Image.FLIP_LEFT_RIGHT)
     k = big.height / src.height
     src = src.resize((max(1, int(src.width * k)), big.height), Image.LANCZOS)

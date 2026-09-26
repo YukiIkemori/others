@@ -1,0 +1,397 @@
+{
+ "character": "arun",
+ "set": "battle",
+ "image": "arun_battle.png",
+ "cell": [
+  113,
+  85
+ ],
+ "anchor": [
+  68,
+  82
+ ],
+ "anchor_note": "anchor = foot contact point (x = between the feet, y = lowest opaque row); place it on the ground point",
+ "frames": {
+  "idle_0": {
+   "x": 0,
+   "y": 0,
+   "w": 113,
+   "h": 85,
+   "anchor": [
+    68,
+    82
+   ],
+   "points": {
+    "head": [
+     70,
+     20
+    ],
+    "center": [
+     72,
+     54
+    ],
+    "front": [
+     49,
+     71
+    ]
+   }
+  },
+  "idle_1": {
+   "x": 113,
+   "y": 0,
+   "w": 113,
+   "h": 85,
+   "anchor": [
+    68,
+    82
+   ],
+   "points": {
+    "head": [
+     70,
+     21
+    ],
+    "center": [
+     72,
+     54
+    ],
+    "front": [
+     49,
+     71
+    ]
+   }
+  },
+  "idle_2": {
+   "x": 226,
+   "y": 0,
+   "w": 113,
+   "h": 85,
+   "anchor": [
+    68,
+    82
+   ],
+   "points": {
+    "head": [
+     70,
+     21
+    ],
+    "center": [
+     72,
+     54
+    ],
+    "front": [
+     49,
+     71
+    ]
+   }
+  },
+  "idle_3": {
+   "x": 339,
+   "y": 0,
+   "w": 113,
+   "h": 85,
+   "anchor": [
+    68,
+    82
+   ],
+   "points": {
+    "head": [
+     70,
+     21
+    ],
+    "center": [
+     72,
+     54
+    ],
+    "front": [
+     49,
+     71
+    ]
+   }
+  },
+  "attack": {
+   "x": 452,
+   "y": 0,
+   "w": 113,
+   "h": 85,
+   "anchor": [
+    68,
+    82
+   ],
+   "points": {
+    "head": [
+     56,
+     23
+    ],
+    "center": [
+     60,
+     52
+    ],
+    "front": [
+     2,
+     40
+    ]
+   }
+  },
+  "skill": {
+   "x": 565,
+   "y": 0,
+   "w": 113,
+   "h": 85,
+   "anchor": [
+    68,
+    82
+   ],
+   "points": {
+    "head": [
+     56,
+     23
+    ],
+    "center": [
+     62,
+     55
+    ],
+    "front": [
+     29,
+     77
+    ]
+   }
+  },
+  "damage": {
+   "x": 678,
+   "y": 0,
+   "w": 113,
+   "h": 85,
+   "anchor": [
+    68,
+    82
+   ],
+   "points": {
+    "head": [
+     55,
+     24
+    ],
+    "center": [
+     63,
+     54
+    ],
+    "front": [
+     38,
+     36
+    ]
+   }
+  },
+  "defeat": {
+   "x": 791,
+   "y": 0,
+   "w": 113,
+   "h": 85,
+   "anchor": [
+    68,
+    82
+   ],
+   "points": {
+    "head": [
+     53,
+     47
+    ],
+    "center": [
+     64,
+     69
+    ],
+    "front": [
+     30,
+     77
+    ]
+   }
+  },
+  "victory": {
+   "x": 904,
+   "y": 0,
+   "w": 113,
+   "h": 85,
+   "anchor": [
+    68,
+    82
+   ],
+   "points": {
+    "head": [
+     82,
+     2
+    ],
+    "center": [
+     71,
+     48
+    ],
+    "front": [
+     48,
+     69
+    ]
+   }
+  }
+ },
+ "anims": {
+  "idle": {
+   "frames": [
+    "idle_0",
+    "idle_1",
+    "idle_2",
+    "idle_1"
+   ],
+   "ms": [
+    420,
+    160,
+    420,
+    160
+   ],
+   "loop": true
+  },
+  "attack": {
+   "keys": [
+    {
+     "frame": "idle_0",
+     "ms": 80,
+     "dx": 0,
+     "dy": 0,
+     "ease": "out"
+    },
+    {
+     "frame": "attack",
+     "ms": 180,
+     "dx": -46,
+     "dy": 0,
+     "ease": "in_out",
+     "note": "dash toward the target"
+    },
+    {
+     "frame": "skill",
+     "ms": 140,
+     "dx": -52,
+     "dy": 0,
+     "ease": "out",
+     "hit": true,
+     "fx_at": "front",
+     "note": "slash; the arc is drawn by the game"
+    },
+    {
+     "frame": "skill",
+     "ms": 120,
+     "dx": -52,
+     "dy": 0
+    },
+    {
+     "frame": "idle_0",
+     "ms": 220,
+     "dx": 0,
+     "dy": 0,
+     "ease": "in_out",
+     "note": "return"
+    }
+   ]
+  },
+  "damage": {
+   "keys": [
+    {
+     "frame": "damage",
+     "ms": 60,
+     "dx": 3,
+     "flash": true
+    },
+    {
+     "frame": "damage",
+     "ms": 240,
+     "dx": 3
+    },
+    {
+     "frame": "idle_0",
+     "ms": 120,
+     "dx": 0
+    }
+   ]
+  },
+  "defeat": {
+   "frames": [
+    "damage",
+    "defeat"
+   ],
+   "ms": [
+    160,
+    0
+   ],
+   "loop": false
+  },
+  "victory": {
+   "frames": [
+    "victory"
+   ],
+   "ms": [
+    0
+   ],
+   "loop": false
+  }
+ },
+ "palette": [
+  "#0e0b0e",
+  "#1b1113",
+  "#16151b",
+  "#261718",
+  "#1f1a1b",
+  "#311f1c",
+  "#252329",
+  "#2e2322",
+  "#3c3839",
+  "#55443c",
+  "#504b4b",
+  "#645d5a",
+  "#7b7673",
+  "#9d8f85",
+  "#beaca0",
+  "#f2ecde",
+  "#2b1316",
+  "#391719",
+  "#3e211d",
+  "#4b1b1c",
+  "#5f2824",
+  "#533025",
+  "#6e2723",
+  "#773b2c",
+  "#82332a",
+  "#9a4031",
+  "#b04837",
+  "#c45c40",
+  "#45322b",
+  "#663c2a",
+  "#5d4135",
+  "#6e5243",
+  "#7e4c2e",
+  "#7a503b",
+  "#955037",
+  "#84614c",
+  "#905f42",
+  "#7e685a",
+  "#9e6139",
+  "#92725c",
+  "#b36a4b",
+  "#a8744e",
+  "#a2775a",
+  "#968172",
+  "#ca7a48",
+  "#b9834c",
+  "#ab886d",
+  "#ba8e6a",
+  "#bc9f84",
+  "#d99669",
+  "#d99d57",
+  "#d0a885",
+  "#dca974",
+  "#d3b697",
+  "#e7bf7d",
+  "#d9c8b7",
+  "#ecc497",
+  "#e2c8a9",
+  "#f4d8ae",
+  "#f1dfc3"
+ ],
+ "facing": "left",
+ "art_px_per_sprite_px": 1,
+ "target_height": 64
+}

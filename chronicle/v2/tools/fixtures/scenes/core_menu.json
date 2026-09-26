@@ -1,0 +1,6 @@
+{
+  "scene": "screen",
+  "desc": "CORE の例: 仮の夜道でメニュー（ハブ）を開く",
+  "state": "core_stub_road",
+  "id": "menu"
+}

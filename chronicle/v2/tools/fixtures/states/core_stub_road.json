@@ -1,0 +1,15 @@
+{
+  "desc": "CORE の例: 仮の夜道に 4 人。ティア 0、gl と熟練度は標準の進み方（auto）",
+  "hero": { "type": "warrior", "sex": "m", "name": "アルン" },
+  "party": ["hero", "selma", "viola", "marta"],
+  "reserve": [],
+  "tier": 0,
+  "gl": "auto",
+  "prof": "auto",
+  "flags": {},
+  "vars": {},
+  "items": {},
+  "gold": 120,
+  "leads": [],
+  "map": { "id": "stub_road", "spawn": "start" }
+}
