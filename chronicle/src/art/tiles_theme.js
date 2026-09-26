@@ -895,21 +895,26 @@
       b.set(i, y, c);
     }
     if (lx0 >= 0) for (let y = top + 2; y < 16; y++) b.set(lx0, y, L[4]);
-    // a round porthole in the upper leaf: the clearest "door" cue on a ship
-    const pc = pair === 'L' ? 9 : pair === 'R' ? 6 : 7.5, pcy = top + 4.5;
-    for (let y = top + 2; y <= top + 7; y++) for (let i = Math.floor(pc - 3); i <= Math.ceil(pc + 3); i++) {
-      const d = Math.hypot(i + 0.5 - (pc + 0.5), y + 0.5 - (pcy + 0.5));
-      if (d > 3.1) continue;
-      put(i, y, d > 2.2 ? (i + y < pc + pcy ? BRASS[3] : BRASS[1]) : d > 1.6 ? 0x0c1a1c : 0x1c3a40);
+    // arched head: round off the outer upper corners of the doorway
+    const arch = (i, d) => { put(i, top + 1, FR); put(i, top + 2, FR); put(i + d, top + 1, FR); };
+    if (pair !== 'R') arch(lx0, 1);
+    if (pair !== 'L') arch(lx1, -1);
+    // a raised panel on each leaf (two tall rectangles) — vertical proportions read as a door
+    const pl0 = Math.max(lx0 + 2, pair === 'R' ? 2 : lx0 + 2), pl1 = Math.min(lx1 - 2, pair === 'L' ? 13 : lx1 - 2);
+    for (const [ya, yb] of [[top + 3, top + 7], [top + 9, 14]]) {
+      for (let y = ya; y <= yb; y++) { put(pl0, y, L[0]); put(pl1, y, L[4]); }
+      for (let i = pl0; i <= pl1; i++) { put(i, ya, L[0]); put(i, yb, L[4]); }
     }
-    put(Math.round(pc) - 1, Math.round(pcy) - 1, 0x9ad0d0); put(Math.round(pc), Math.round(pcy) - 1, 0x4a8088);
+    // ring pulls beside the seam (or the latch side of a single door)
+    const rx = pair === 'L' ? 13 : pair === 'R' ? 2 : lx1 - 2, ry = top + 7;
+    put(rx, ry - 1, IRONB[4]); put(rx - 1, ry, IRONB[3]); put(rx + 1, ry, IRONB[2]); put(rx, ry + 1, IRONB[1]);
     // iron hinge pins on the frame side
     const hingeLeft = pair !== 'R';
     for (const hy of [top + 3, 13]) { const i = hingeLeft ? lx0 : lx1; put(i, hy, IRONB[3]); put(i, hy + 1, IRONB[1]); put(hingeLeft ? i + 1 : i - 1, hy, IRONB[2]); }
     // latch side: iron hasp across the seam with a small brass padlock
     const seam = pair === 'L' ? 16 : pair === 'R' ? 0 : null;
     const hx = seam != null ? seam - 2 : lx1 - 3; // left x of the 4-wide lock
-    const py = top + 8;
+    const py = top + 9;
     for (let i = hx - 1; i <= hx + 4; i++) { put(i, py, IRONB[3]); put(i, py + 1, IRONB[1]); }
     put(hx + 1, py + 2, IRONB[4]); put(hx + 2, py + 2, IRONB[2]);
     for (let y = py + 3; y <= py + 5; y++) for (let i = hx; i <= hx + 3; i++) {
