@@ -1,7 +1,8 @@
 // Town services (DESIGN §11.7.16): shops (買う / 売る with the tier stock of R.Tier.shopItems, the side
-// panel of the 4 members — × cannot / E wearing / ▲▼ strength change / ○ no numbers — ←→ to pick the
-// member whose full stat change is shown, L/R to narrow long gear lists by kind, Y for the detail popup,
-// "equip now?" with buy-back of what comes off) and the inn (everyone, the reserve too, healed and raised).
+// panel of the 4 members — × cannot / E wearing / ▲▼ stronger / weaker / ― the same / ○ no numbers, all at a
+// glance with no member to pick (オーナー指示 A17: no ←→ member switch, no numbers of the change) — L/R (or ←→)
+// to narrow long gear lists by kind, Y for the detail popup, "equip now?" with buy-back of what comes off)
+// and the inn (everyone, the reserve too, healed and raised).
 //   await R.Shop.open(shopId)   await R.Shop.inn(price) → bool
 (function (R) {
   'use strict';
@@ -63,6 +64,24 @@
   }
   Shop.gearMark = gearMark;
 
+  /** the member for whom gear `id` gains the most (▲ first; null when nobody can wear it) → the "who wears it?" default */
+  function bestMember(id) {
+    let best = null, bv = -Infinity;
+    for (const c of R.Game.party) {
+      const mk = gearMark(c, id);
+      if (mk.mark === '×') continue;
+      const v = mk.mark === '▲' ? 1000 + mk.n : mk.mark === '▼' ? -mk.n : mk.mark === 'E' ? -2000 : 0;
+      if (v > bv) { bv = v; best = c; }
+    }
+    return best;
+  }
+  Shop.bestMember = bestMember;
+  // the side-panel marks (オーナー指示 A17: the mark alone, not the number of the change)
+  const MARK_TEXT = {
+    '×': ['×', () => K().COL.gray], E: ['E', () => G().C.cyan], '○': ['○', () => '#ffffff'],
+    '―': ['―', () => K().COL.zero], '▲': ['▲', () => G().C.green], '▼': ['▼', () => G().C.red],
+  };
+
   // ------------------------------------------------------------ gold window
   class GoldLayer extends R.Layer {
     draw() { K().inFrame(() => this.render()); }
@@ -76,14 +95,13 @@
   // ------------------------------------------------------------ buy / sell lists
   const FILTERS = [null, 'weapon', 'shield', 'head', 'body', 'hands', 'feet', 'acc'];
   const FILTER_NAMES = ['全部', '武器', '盾', '頭', '体', '手', '足', 'アクセサリ'];
-  const state = { member: 0, filter: 0 };
+  const state = { filter: 0 };
   class ShopList extends R.Layer {
     /** mode 'buy' | 'sell' */
     constructor(mode, ids, index) {
       super();
       this.mode = mode;
       this.all = ids;
-      this.member = Math.min(state.member, R.Game.party.length - 1);
       // L/R narrows the list by kind only when it holds gear of several kinds and does not fit (§8.16-2)
       const kinds = new Set(ids.map((id) => DB.items[id].type).filter((t) => GEAR[t]));
       this.canFilter = kinds.size > 1 && ids.length > 9;
@@ -103,20 +121,15 @@
     update() {
       const cur = this.list.item && this.list.item.id;
       const party = R.Game.party;
-      if (In().pressed('y') && cur) { R.Menu.itemDetail(cur, { member: party[this.member] }); return; }
-      const lr = K().memberStep();
+      if (In().pressed('y') && cur) { R.Menu.itemDetail(cur, { member: bestMember(cur) || party[0] }); return; }
+      // オーナー指示 A17: no member switch — L/R and ←→ both narrow a long list by kind
+      const d = In().dirRepeat();
+      const lr = K().memberStep() || (d === 'left' ? -1 : d === 'right' ? 1 : 0);
       if (lr && this.canFilter) {
         this.filter = (this.filter + (lr < 0 ? FILTERS.length - 1 : 1)) % FILTERS.length;
         state.filter = this.filter;
         R.sfx('page');
         this.apply(0);
-        return;
-      }
-      const d = In().dirRepeat();
-      if (d === 'left' || d === 'right') {
-        this.member = K().cycle(this.member, d === 'left' ? -1 : 1, party.length);
-        state.member = this.member;
-        R.sfx('cursor');
         return;
       }
       const r = this.list.update();
@@ -152,19 +165,16 @@
       const party = R.Game.party;
       G().window(172, 30, 80, 118);
       if (it && isGear(it)) {
+        // every member at a glance (オーナー指示 A17): who can wear it and whether it is stronger — marks only
         party.forEach((c, i) => {
           const y = 36 + 28 * i;
           const mk = gearMark(c, id);
-          const sel = i === this.member;
-          if (sel) G().rect(175, y - 2, 74, 27, Kt.blink(20) ? '#2a3a74' : '#243266');
-          Kt.drawSpriteAt(c, 176, y, { dark: mk.mark === '×', darkAmt: 0.7, frame: mk.mark !== '×' && sel ? Math.floor(R.Engine.frame / 20) : 0 });
+          const up = mk.mark === '▲';
+          Kt.drawSpriteAt(c, 176, y, { dark: mk.mark === '×', darkAmt: 0.7, frame: up ? Math.floor(R.Engine.frame / 20) : 0 });
           Kt.fitText(c.name, 194, y + 1, 54, { color: mk.mark === '×' ? Kt.COL.gray : '#ffffff' });
           const my = y + 13;
-          if (mk.mark === '×') G().text('×', 194, my, { color: Kt.COL.gray });
-          else if (mk.mark === 'E') G().text('E', 194, my, { color: G().C.cyan });
-          else if (mk.mark === '○') G().text('○', 194, my);
-          else if (mk.mark === '―') G().text('―', 194, my, { color: Kt.COL.zero });
-          else G().text(mk.mark + mk.n, 194, my, { color: mk.mark === '▲' ? G().C.green : G().C.red });
+          const [t, col] = MARK_TEXT[mk.mark] || ['', '#ffffff'];
+          G().text(t, 194, my, { color: col() });
         });
       } else if (it) {
         G().text('持っている数', 180, 38, { color: Kt.COL.sub, size: 8 });
@@ -181,25 +191,9 @@
       if (!it) { G().text(this.mode === 'sell' ? '売れる物を持っていない。' : '', 18, 157, { color: Kt.COL.gray }); return; }
       String(it.desc || '').split('\n').slice(0, 2).forEach((l, i) => Kt.fitText(l, 18, 156 + i * 14, 220));
       if (isGear(it)) {
-        const c = party[this.member];
-        const mk = gearMark(c, id);
-        if (mk.diff) {
-          const segs = [{ text: c.name + '：', color: Kt.COL.sub }];
-          let any = false;
-          const KEYS = ['atk1', 'atk2', 'mag', 'def', 'mdef', 'hit', 'eva', 'crit', 'str', 'vit', 'dex', 'agi', 'int', 'mnd'];
-          for (const k of KEYS) {
-            const v = mk.diff[k];
-            if (!v) continue;
-            if (any) segs.push({ text: '　' });
-            segs.push({ text: Kt.STAT_NAMES[k] + Kt.signed(v), color: v > 0 ? G().C.green : G().C.red });
-            any = true;
-          }
-          if (!any) segs.push({ text: '変わる能力はない', color: Kt.COL.gray });
-          Kt.drawSegs(segs, 18, 184, 220);
-        } else {
-          Kt.fitText(c.name + '：' + (mk.mark === 'E' ? '装備している' : '装備できない'), 18, 184, 220, { color: Kt.COL.gray });
-        }
-        G().text('←→：人を選ぶ', 18, 200, { color: Kt.COL.gray, size: 8 });
+        // one row for the whole party (オーナー指示 A17): who can wear it, no member to pick
+        const who = party.filter((c) => gearMark(c, id).mark !== '×').map((c) => c.name);
+        Kt.fitText(who.length ? '装備できる：' + who.join('・') : '誰も装備できない', 18, 184, 220, { color: who.length ? Kt.COL.sub : Kt.COL.gray });
       } else if (it.use) Kt.fitText(R.Menu.effectPhrases ? R.Menu.effectPhrases(it.use.effects).map((p) => p.text).join('　') : '', 18, 184, 220, { color: G().C.cyan, size: 8 });
     }
   }
@@ -217,7 +211,7 @@
       idx = Math.max(0, L.ids.indexOf(id));
       const it = DB.items[id];
       if (R.Game.gold < (it.price || 0)) { R.sfx('buzzer'); await say('お金が足りないようですね。'); continue; }
-      if (isGear(it)) await buyGear(id, it, R.Game.party[L.member]);
+      if (isGear(it)) await buyGear(id, it, bestMember(id));
       else await buyItems(id, it);
     }
   }
