@@ -173,6 +173,27 @@ ok('宝箱の数（ロア 1・ファロス 2・灯台 2〜4 ずつ・古井戸 3
 ok('灯台 2 階の隠し通路の先にレアの箱', (R.DB.maps.lighthouse_2.objects || []).some((o) => o.pool === 'p_rare'));
 ok('ボスの前の泉（灯台 3 階）', (R.DB.maps.lighthouse_3.objects || []).some((o) => o.type === 'spring'));
 
+// 町の飾りの密度（V2_PLAN §3.16-3 check_density: 1 画面 30×17 マスに飾り 25〜40、通りの中央は空ける）
+for (const id of ['roa', 'pharos']) {
+  const m = R.DB.maps[id];
+  const counts = [];
+  for (let cy = 8; cy < m.h - 4; cy += 6) for (let cx = 15; cx < m.w - 10; cx += 8) {
+    const c = R.MapUtil.cell(m, cx, cy);
+    if (!c || c.solid || c.walk === false) continue;
+    let n = 0;
+    for (const o of m.objects || []) {
+      if (o.x < cx - 15 || o.x > cx + 14 || o.y < cy - 8 || o.y > cy + 8) continue;
+      if (['prop', 'building', 'sign', 'chest', 'waylamp', 'examine'].includes(o.type) && !(o.type === 'examine' && (m.objects || []).some((q) => q !== o && q.x === o.x && q.y === o.y))) n++;
+    }
+    for (const nn of m.npcs || []) if (nn.x >= cx - 15 && nn.x <= cx + 14 && nn.y >= cy - 8 && nn.y <= cy + 8 && !nn.cond) n++;
+    counts.push(n);
+  }
+  counts.sort((a, b) => a - b);
+  const med = counts[counts.length >> 1];
+  console.log(`    ${id}: 1 画面の飾りと人 ${counts[0]}〜${counts[counts.length - 1]}（中央値 ${med}、${counts.length} 画面）`);
+  ok(`${id}: 1 画面の飾りの中央値 25〜45`, med >= 25 && med <= 45, med);
+}
+
 // ------------------------------------------------------------------ 5. 話す見返り
 section('5. 話す見返りのある人（WORLD_REDESIGN §3.3）');
 function rewards(ids) {
