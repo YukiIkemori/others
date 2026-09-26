@@ -38,6 +38,8 @@
 //   first use, looped between loopStart/loopEnd s; decode failure → synth). Jingles stay synthesised.
 //   R.Audio.playVoice(id) → handle|null, stopVoice(handle?) — own bus (Settings.voiceVolume), BGM −9 dB
 //   while a line plays. setVolumes(bgm, sfx, voice).
+//   R.Audio.battleVoice(kind[, gender]) — the hero's battle shout v_hero_<m|f>_<kind>_<n> (random clip, no duck;
+//   kinds attack glimmer spell hurt ko victory; gender from R.State.hero().gender). Missing → silent.
 (function (R) {
   'use strict';
   const DB = R.DB;
@@ -1163,6 +1165,19 @@
     if (!voice) voiceDuck(false);
   }
 
+  let bv = null;           // the hero's battle voice playing (R.Audio.battleVoice)
+  const bvLast = {};       // kind+gender → last clip id (no immediate repeat)
+  function endBattleVoice(h) {
+    if (!h || h.stopped) return;
+    h.stopped = true;
+    if (bv === h) bv = null;
+    if (h.src) {
+      const now = ctx.currentTime;
+      holdParam(h.out.gain, now);
+      h.out.gain.linearRampToValueAtTime(0, now + 0.05);
+      try { h.src.stop(now + 0.08); } catch (e) { /* ignore */ }
+    }
+  }
   function warnOnce(k, msg) { if (!warned[k]) { warned[k] = 1; R.warn(msg); } }
   function running() { return !!(ctx && ctx.state === 'running'); }
   function startCur(o) {
@@ -1354,6 +1369,40 @@
     stopVoice(h) {
       if (h && h !== voice) { h.stopped = true; return; }
       if (voice) endVoice(voice);
+    },
+    /** the hero's battle voice (owner 2026-09-26): kind 'attack'|'glimmer'|'spell'|'hurt'|'ko'|'victory'.
+     *  Plays a random embedded clip v_hero_<g>_<kind>_<n> (g = R.State.hero().gender 'm'|'f', or `gender`),
+     *  never the same clip twice in a row. Own voice volume, no BGM duck, does not stop a story line; a new
+     *  battle voice replaces the previous one. → handle | null (no clip / volume 0 / locked). Never throws. */
+    battleVoice(kind, gender) {
+      try {
+        if (!mx || !kind || !(vols.voice > 0) || !running()) return null;
+        let g = gender;
+        if (g !== 'm' && g !== 'f') { const h = R.State && R.State.hero && R.State.hero(); g = h && h.gender === 'f' ? 'f' : 'm'; }
+        const M = (typeof window !== 'undefined' && window.RPG_MEDIA) || R.MEDIA;
+        const pre = `v_hero_${g}_${kind}_`;
+        const ids = M && M.voice ? Object.keys(M.voice).filter((k) => k.startsWith(pre) && /^\d+$/.test(k.slice(pre.length))).sort() : [];
+        if (!ids.length) return null;
+        const pool = ids.length > 1 ? ids.filter((k) => k !== bvLast[kind + g]) : ids;
+        const id = pool[Math.floor(Math.random() * pool.length)];
+        bvLast[kind + g] = id;
+        if (bv) endBattleVoice(bv);
+        const h = (bv = { id, stopped: false, src: null, out: null });
+        const c = loadBuffer('voice', id);
+        if (!c) { bv = null; return null; }
+        const go = () => {
+          if (h.stopped || bv !== h || c.state !== 'ok') { if (bv === h && c.state === 'fail') bv = null; return; }
+          h.out = ctx.createGain();
+          h.out.connect(mx.voiceBus);
+          h.src = ctx.createBufferSource();
+          h.src.buffer = c.buf;
+          h.src.connect(h.out);
+          h.src.onended = () => { if (bv === h) bv = null; h.stopped = true; };
+          h.src.start(ctx.currentTime + 0.005);
+        };
+        if (c.state === 'ok') go(); else if (c.state === 'loading') c.p.then(go);
+        return h;
+      } catch (e) { return null; }
     },
     get voice() { return voice && !voice.stopped ? voice.id : null; },
     /** is there a recorded file for this id? kind 'bgm' | 'voice' */

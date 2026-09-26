@@ -374,7 +374,7 @@ function findLoop(chans, rate, o) {
     const out = [], gap = 1.5 / hop;
     for (const c of cands.list.sort((a, b) => b.score - a.score)) {
       if (out.some((d) => Math.abs(d.e - c.e) < gap && Math.abs(d.s - c.s) < gap)) continue;
-      out.push(refine(c));
+      out.push(Object.assign(refine(c), { s: c.s, e: c.e }));
       if (out.length >= (o.all || 3)) break;
     }
     return out;
@@ -486,14 +486,20 @@ async function processTake(t, take, o) {
   const raw = channels[0].length / rate;
   let loop = null, baked = channels, xf = 0;
   if (!o.noLoop) {
+    // candidates best-first by the signal score; with --listen each is heard twice (the model is noisy)
+    // and the first with an average seam rating ≥ 6/10 wins, else the best-rated one
     const cands = findLoop(channels, rate, { all: o.listen ? 3 : 1 }) || [];
+    loop = null;
     for (const c of cands) {
       const b = bakeLoop(channels, rate, c.start, c.end, o.xfade);
       c.baked = b.channels; c.xf = b.xfade;
-      if (o.listen) { c.heard = await listenSeam(b.channels, rate, c.loopStart, c.loopEnd); o.log(`    loop ${c.loopStart.toFixed(2)}–${c.loopEnd.toFixed(2)} score ${c.score.toFixed(3)} → seam ${c.heard.seam_smooth}/10 ${c.heard.problem || ''}`); }
+      if (!o.listen) { loop = c; break; }
+      const h1 = await listenSeam(b.channels, rate, c.loopStart, c.loopEnd), h2 = await listenSeam(b.channels, rate, c.loopStart, c.loopEnd);
+      c.heard = { seam_smooth: (h1.seam_smooth + h2.seam_smooth) / 2, problem: [h1.problem, h2.problem].filter((x) => x && x !== 'none').join(' / ') || 'none' };
+      o.log(`    loop ${c.loopStart.toFixed(2)}–${c.loopEnd.toFixed(2)} score ${c.score.toFixed(3)} → heard ${h1.seam_smooth}+${h2.seam_smooth} ${c.heard.problem}`);
+      if (c.heard.seam_smooth >= 6) { loop = c; break; }
     }
-    const rank = (c) => (c.heard ? c.heard.seam_smooth : 0) * 10 + c.score;
-    loop = cands.sort((a, b) => rank(b) - rank(a))[0] || null;
+    if (!loop && cands.length) loop = cands.slice().sort((a, b) => (b.heard ? b.heard.seam_smooth : 0) - (a.heard ? a.heard.seam_smooth : 0))[0];
     if (loop) { baked = loop.baked; xf = loop.xf; }
   }
   const nm = GA.normalise(baked, rate, o.lufs, -1);

@@ -216,6 +216,30 @@ async function audioTests() {
   ok(A.voice === null && A.playVoice('v_fine_t1_01') === null, 'voice volume 0 = off (stops and refuses)');
   A.setVolumes(0.6, 0.7, 0.8);
   ok(A.debug().volumes.voice === 0.8, 'setVolumes(bgm, sfx, voice)');
+
+  // ---------------------------------------------------------------- hero battle voice
+  const wavSrc = 'data:audio/wav;base64,' + b64(path.join(FIX, 'voice', 'v_fine_t1_01.wav'));
+  const FV = fakeAudio();
+  const hv = { v_hero_m_attack_1: { src: wavSrc }, v_hero_m_attack_2: { src: wavSrc }, v_hero_f_attack_1: { src: wavSrc } };
+  const RV = loadAudio({ AudioContext: FV.Ctx, Date: { now: () => now }, requestIdleCallback: undefined, RPG_MEDIA: { voice: hv } });
+  RV.warn = () => {};
+  const AV = RV.Audio;
+  ok(AV.battleVoice('attack') === null, 'battleVoice before init is a silent no-op');
+  AV.init();
+  let hero = { gender: 'f' };
+  RV.State = { hero: () => hero };
+  const b1 = AV.battleVoice('attack');
+  ok(b1 && b1.id === 'v_hero_f_attack_1', 'battleVoice picks the clip of the hero\'s gender (f)', b1 && b1.id);
+  hero = { gender: 'm' };
+  const seen = new Set();
+  let prev = null, repeat = false;
+  for (let i = 0; i < 12; i++) { const b = AV.battleVoice('attack'); seen.add(b.id); if (b.id === prev) repeat = true; prev = b.id; }
+  ok(seen.size === 2 && [...seen].every((k) => /^v_hero_m_attack_[12]$/.test(k)) && !repeat, 'm: random among the clips of that kind, never the same twice in a row', [...seen]);
+  ok(AV.battleVoice('victory') === null && AV.battleVoice('attack', 'x') !== null, 'a kind without clips is silent; an unknown gender falls back to the hero');
+  await sleep(20);
+  ok(findMixerDuck(AV) === 1, 'a battle voice does not duck the BGM');
+  AV.setVolumes(null, null, 0);
+  ok(AV.battleVoice('attack') === null, 'voice volume 0 = no battle voice');
 }
 /** the last ramp target of the music path's voice-duck gain (via the debug handle of the mixer) */
 function findMixerDuck(A) {
@@ -397,21 +421,31 @@ async function lyriaTests() {
   ok(JSON.stringify([...ids].sort()) === JSON.stringify([...R.Audio.IDS.bgm].sort()), 'prompts.json has one entry per BGM id (32)', ids.length);
   ok(P.tracks.every((t) => t.scene && t.mood && t.tempo && t.key && t.instrumentation && /SNES\/SFC RPG style, original melody/.test(t.style) && t.length_sec > 0 && t.loop), 'every entry: scene mood tempo key instrumentation style length loop');
   ok(P.tracks.every((t) => t.tempo === R.DB.music[t.id].tempo && t.key === R.DB.music[t.id].key), 'tempo / key match the synth tracks');
-  ok(L.selectTracks(P, []).map((t) => t.id).join() === 'title,overworld,battle,boss', 'default = first batch title,overworld,battle,boss');
+  const fb = L.selectTracks(P, []).map((t) => t.id);
+  ok(['title', 'overworld', 'battle', 'boss'].every((id) => fb.includes(id)) && fb.length <= 8, 'default = first batch (batch 1: title, overworld, battle, boss + the reference-vibe tracks)', fb);
   ok(L.selectTracks(P, ['--only', 'town,sea']).map((t) => t.id).join() === 'town,sea' && L.selectTracks(P, ['--all']).length === 32, '--only / --all');
   let threw = false; try { L.selectTracks(P, ['--only', 'nope']); } catch (e) { threw = true; }
   ok(threw, '--only with an unknown id is refused');
   const t = P.tracks.find((x) => x.id === 'battle');
   const pr = L.buildPrompt(t, P);
-  ok(/164 BPM/.test(pr) && /E minor/.test(pr) && /SNES/.test(pr) && !/[ぁ-んァ-ン一-龯]/.test(pr), 'prompt: tempo, key, style, English only', pr);
+  ok(/164 BPM/.test(pr) && /E minor/.test(pr) && /16-bit/.test(pr) && /Duration: \d+ seconds/.test(pr) && /no vocals/i.test(pr) && !/[ぁ-んァ-ン一-龯]/.test(pr), 'prompt: tempo, key, style, duration, instrumental, English only', pr);
+  const txt = JSON.stringify(P);
+  ok(!/(Final Fantasy|Chrono|Dragon Quest|Uematsu|Sugiyama|Mitsuda|Sakimoto|Zelda|Mario|Sonic|Earthbound|Donkey Kong|Wise|Kondo|Koshiro)/i.test(txt), 'prompts name no game or composer');
+  const gq = L.PROVIDERS.gemini.request({ key: 'K', model: 'lyria-3.5' }, t, P);
+  ok(gq.url === 'https://generativelanguage.googleapis.com/v1beta/models/lyria-3.5:generateContent' && gq.headers['x-goog-api-key'] === 'K' && gq.body.contents[0].parts[0].text === pr && !/key=/.test(gq.url), 'Gemini Lyria 3 generateContent request (key in the header)');
+  const mp3 = Buffer.from('ID3fake');
+  const gp = L.PROVIDERS.gemini.parse({ candidates: [{ content: { parts: [{ text: '[[A0]]' }, { inlineData: { mimeType: 'audio/mpeg', data: mp3.toString('base64') } }] } }] });
+  ok(gp.bytes.equals(mp3) && gp.mimeType === 'audio/mpeg' && gp.sections === '[[A0]]', 'Gemini response → MP3 bytes + section map');
+  let blocked = false; try { L.PROVIDERS.gemini.parse({ promptFeedback: { blockReason: 'PROHIBITED_CONTENT' } }); } catch (e) { blocked = /PROHIBITED_CONTENT/.test(e.message); }
+  ok(blocked, 'a refused take is an error that names the reason');
   const rq = L.PROVIDERS.vertex.request({ project: 'p', location: 'us-central1', token: 'T', model: 'lyria-002' }, t, P, {});
   ok(rq.url === 'https://us-central1-aiplatform.googleapis.com/v1/projects/p/locations/us-central1/publishers/google/models/lyria-002:predict' && rq.headers.Authorization === 'Bearer T' && rq.body.instances[0].prompt === pr && rq.body.instances[0].negative_prompt && rq.body.parameters.sample_count === 1, 'Vertex predict request shape');
   const wav = L.writeWav([new Float32Array([0, 0.5, -0.5])], 48000);
-  ok(L.PROVIDERS.vertex.parse({ predictions: [{ audioContent: wav.toString('base64'), mimeType: 'audio/wav' }] }).equals(wav), 'Vertex response → WAV bytes');
-  const g = L.PROVIDERS.gemini.request({ key: 'K', model: 'models/lyria-realtime-exp' }, t, P);
-  ok(g.url.startsWith('wss://generativelanguage.googleapis.com/') && g.url.endsWith('?key=K') && g.messages[0].setup.model === 'models/lyria-realtime-exp' && g.messages[2].musicGenerationConfig.bpm === 164 && g.messages[3].playbackControl === 'PLAY', 'Gemini Lyria RealTime session shape');
+  ok(L.PROVIDERS.vertex.parse({ predictions: [{ audioContent: wav.toString('base64'), mimeType: 'audio/wav' }] }).bytes.equals(wav), 'Vertex response → WAV bytes');
+  const g = L.PROVIDERS.realtime.request({ key: 'K', model: 'models/lyria-realtime-exp' }, t, P);
+  ok(g.url.startsWith('wss://generativelanguage.googleapis.com/') && g.url.endsWith('?key=K') && g.messages[0].setup.model === 'models/lyria-realtime-exp' && g.messages[2].musicGenerationConfig.bpm === 164 && g.messages[3].playbackControl === 'PLAY', 'Lyria RealTime session shape (--provider realtime)');
   ok(L.scaleOf('F#m') === 'A_MAJOR_G_FLAT_MINOR' && L.scaleOf('Em') === 'G_MAJOR_E_MINOR' && L.scaleOf('Bb') === 'B_FLAT_MAJOR_G_MINOR', 'key → scale enum');
-  ok(L.pickProvider({}, null) === null && L.pickProvider({ GOOGLE_API_KEY: 'k' }, null).name === 'gemini' && L.pickProvider({ VERTEX_PROJECT: 'p', VERTEX_ACCESS_TOKEN: 't', GOOGLE_API_KEY: 'k' }, null).name === 'vertex', 'provider choice from the environment');
+  ok(L.pickProvider({}, null) === null && L.pickProvider({ GOOGLE_API_KEY: 'k' }, null).name === 'gemini' && L.pickProvider({ VERTEX_PROJECT: 'p', VERTEX_ACCESS_TOKEN: 't' }, null).name === 'vertex' && L.pickProvider({ VERTEX_PROJECT: 'p', VERTEX_ACCESS_TOKEN: 't', GOOGLE_API_KEY: 'k' }, 'vertex').name === 'vertex', 'provider choice from the environment (Gemini first)');
   // no key: setup text, exit 0, nothing written; dry run prints requests, exit 0
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'lc_lyria_'));
   const env = Object.assign({}, process.env, { LYRIA_NO_GCLOUD: '1' });
@@ -419,8 +453,22 @@ async function lyriaTests() {
   const out1 = execFileSync('node', [path.join(ROOT, 'tools', 'lyria_bgm.js'), '--out', tmp], { env, stdio: 'pipe' }).toString();
   ok(/no credentials found/.test(out1) && /VERTEX_PROJECT/.test(out1) && /GOOGLE_API_KEY/.test(out1) && fs.readdirSync(tmp).length === 0, 'no credentials → setup steps, exit 0, nothing written');
   const out2 = execFileSync('node', [path.join(ROOT, 'tools', 'lyria_bgm.js'), '--dry-run', '--out', tmp], { env: Object.assign({}, env, { GOOGLE_API_KEY: 'SECRET123' }), stdio: 'pipe' }).toString();
-  ok((out2.match(/^=== /gm) || []).length === 4 && /title/.test(out2) && /BidiGenerateMusic/.test(out2) && !out2.includes('SECRET123') && fs.readdirSync(tmp).length === 0, 'dry run: 4 prompts + requests, key redacted, nothing written');
+  ok((out2.match(/^=== /gm) || []).length === fb.length && /title/.test(out2) && /lyria-3\.5:generateContent/.test(out2) && !out2.includes('SECRET123') && fs.readdirSync(tmp).length === 0, 'dry run: first-batch prompts + requests, key redacted, nothing written');
   fs.rmSync(tmp, { recursive: true, force: true });
+  // voice TTS tool: request shapes (no network)
+  const VT = require('./voice_tts');
+  const C = VT.loadCasting();
+  const VS = require('./voice_script');
+  const spk = Object.keys(VS.SPEAKERS);
+  ok(spk.every((k) => C.speakers[k] && C.speakers[k].voice && C.speakers[k].profile), 'casting.json casts every fixed speaker', spk.filter((k) => !C.speakers[k]));
+  const all = VT.allLines(C);
+  const hero = all.filter((l) => l.hero);
+  ok(hero.length === 24 && hero.every((l) => /^v_hero_[mf]_(attack|glimmer|spell|hurt|ko|victory)_\d$/.test(l.id)), 'hero battle voices: 12 per gender, v_hero_<g>_<kind>_<n>', hero.length);
+  const rb = VT.requestBody(C, all.find((l) => l.id === 'v_fine_t1_01'));
+  ok(rb.generationConfig.responseModalities[0] === 'AUDIO' && rb.generationConfig.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName === C.speakers.fine.voice && /## TRANSCRIPT\n一つ目……。あと、七つね。$/.test(rb.contents[0].parts[0].text), 'TTS request: prebuilt voice, profile + notes + transcript');
+  const rh = VT.requestBody(C, hero[0]);
+  ok(rh.generationConfig.speechConfig.voiceConfig.voice === C.hero.voices[hero[0].hero].voice, 'TTS request: a custom voice goes in voiceConfig.voice');
+  ok(VT.similarity('……あなたなら、できるわ。', 'あなたならできるわ') === 1 && VT.similarity('立ち入り', 'タチイリ') < 1, 'transcript similarity ignores punctuation');
   // WAV + loop smoothing
   const rate = 8000, n = rate * 3, a = new Float32Array(n);
   for (let i = 0; i < n; i++) a[i] = 0.5 * Math.sin(2 * Math.PI * 3.1 * i / rate) + 0.2 * Math.sin(2 * Math.PI * 57 * i / rate);
@@ -433,6 +481,23 @@ async function lyriaTests() {
   ok(jumpRaw > 0.2 && jumpLoop <= step * 1.5, `the loop seam is as smooth as the music (raw jump ${jumpRaw.toFixed(3)}, looped ${jumpLoop.toFixed(4)}, step ${step.toFixed(4)})`);
   const x = rate * 0.5;
   ok(Math.abs(sm[x] - a[x]) < 1e-6 && Math.abs(sm[x - 1] - a[x - 1]) < 0.01, 'the crossfade ends on the original signal');
+  // loop search: 2 s intro (noise), then a 4 s phrase repeated 5 times, then a 3 s fade → the loop is n × 4 s
+  const sr = 22050, ph = 4 * sr, intro = 2 * sr, total = intro + 5 * ph + 3 * sr, y = new Float32Array(total);
+  let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647 - 0.5);
+  for (let i = 0; i < intro; i++) y[i] = 0.2 * rnd();
+  const notes = [220, 277, 330, 262, 294, 349, 392, 247];
+  for (let i = intro; i < total; i++) {
+    const k = (i - intro) % ph, f = notes[Math.floor(k / (ph / 8))];
+    const env = i > intro + 5 * ph ? Math.max(0, 1 - (i - intro - 5 * ph) / (3 * sr)) : 1;
+    y[i] = env * (0.3 * Math.sin(2 * Math.PI * f * k / sr) + 0.15 * Math.sin(2 * Math.PI * 2 * f * k / sr) * Math.exp(-((k % (ph / 8)) / sr) * 6));
+  }
+  const lp = L.findLoop([y], sr, {});
+  const len = lp ? (lp.loopEnd - lp.loopStart) / 4 : 0;
+  ok(lp && Math.abs(len - Math.round(len)) < 0.01 && Math.round(len) >= 2 && lp.loopStart >= 1.2 && lp.loopEnd <= 2 + 5 * 4 + 0.1, 'findLoop: a whole number of phrases, after the intro, before the fade', lp && [lp.loopStart, lp.loopEnd]);
+  const bk = L.bakeLoop([y], sr, lp.start, lp.end, 0.3).channels[0];
+  const jump = Math.abs(bk[lp.end - 1] - y[lp.start]);
+  let stp = 0; for (let i = lp.start; i < lp.start + 2000; i++) stp = Math.max(stp, Math.abs(y[i + 1] - y[i]));
+  ok(bk.length === lp.end && jump <= stp * 1.5, `bakeLoop: the jump loopEnd → loopStart is as smooth as the music (${jump.toFixed(4)} ≤ ${stp.toFixed(4)})`);
 }
 
 // =========================================================================== browser

@@ -1,0 +1,27 @@
+{
+  "loopStart": 18.042,
+  "loopEnd": 50.883,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. Sailing on a regular passenger ship across an inland sea: carefree lilting 6/8 sea shanty feel, salt breeze and gulls in the imagination, sunlight on waves. Tempo 108 BPM, 6/8 time, key of A major. Instrumentation: harp arpeggios, flute and oboe melody, violin countermelody, accordion color, light tambourine and bass. Form: lilting A section, B section with violin countermelody, back to A. Duration: 70 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[B4]]\n[[E5]]",
+    "generated": "2026-09-26T12:14:07.638Z",
+    "rawSeconds": 72.2,
+    "takes": 2
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -7,
+    "gainDb": -6.9,
+    "peakLimited": false,
+    "loopScore": 0.807,
+    "seamCorr": 0.538,
+    "xfade": 0.6,
+    "medianDb": -22,
+    "longestSilence": 0.1,
+    "seamLevelDiffDb": 0.3,
+    "seamJump": 0.0115,
+    "maxStep": 0.0347
+  }
+}
