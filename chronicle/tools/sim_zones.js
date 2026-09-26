@@ -7,7 +7,10 @@
 //   node tools/sim_zones.js --only M1,M4         run a subset of the criteria
 //   node tools/sim_zones.js --engine model|real  force the built-in model / the game engine (default: auto)
 //   node tools/sim_zones.js --groups             print every group's numbers (worst first)
-//   node tools/sim_zones.js --json out.json      write all numbers
+//   node tools/sim_zones.js --json out.json      write all numbers (M1 includes every group's result)
+//   node tools/sim_zones.js --species [--fit out.json]   species danger; --fit writes a candidate overlay (see below)
+//   node tools/sim_zones.js --refit all.json --fit out.json   zone-context correction of s from a --json run
+//   node tools/sim_zones.js --tuning cand.json   run on DESIGN ⊕ a candidate overlay (in memory)
 //
 // Criteria (§9.13.1; party = §4.17.1 standard party, auto battle, mob fights start with MP/WP 60%, HP full):
 //   M1 win ≥ 99.5%, rounds 2.5–3.5, HP lost per battle (share of the party's max HP) mean 8–12% overall and 5–15% in
@@ -707,9 +710,83 @@ function runZoneTier(zid, T, partyKind, n, useReal) {
   return { zid, T, agg, groups, sample };
 }
 
+/** §9.13.1: a lineage's s moves one way for all its stages. Per lineage and stat, the direction (vs DESIGN) with the larger
+ *  total log-change wins; stages that wanted the other way keep their DESIGN value for that stat. pairs: [[lineage, monId]] */
+function projectLineages(base, Dd, pairs) {
+  const byL = {};
+  for (const [lid, id] of pairs) if (base.monsters[id] && base.monsters[id].s) (byL[lid] = byL[lid] || []).push(id);
+  for (const ids of Object.values(byL)) {
+    for (const k of ['hp', 'atk', 'mag']) {
+      const lr = ids.map((id) => { const d = (Dd.mons[id].s || {})[k]; const e = base.monsters[id].s[k]; return Math.log((e != null ? e : 1) / (d != null ? d : 1)); });
+      const up = lr.filter((x) => x > 0).reduce((a, b) => a + b, 0), dn = -lr.filter((x) => x < 0).reduce((a, b) => a + b, 0);
+      ids.forEach((id, i) => {
+        if ((up >= dn && lr[i] < 0) || (dn > up && lr[i] > 0)) {
+          const d = (Dd.mons[id].s || {})[k];
+          if (d == null || d === 1) delete base.monsters[id].s[k]; else base.monsters[id].s[k] = d;
+        }
+      });
+    }
+  }
+}
+
+/** --refit <sim_zones --json file> --fit <out.json>: zone-context correction of s (no battles are run). Every non-excluded
+ *  group's result is compared with a target proportional to its strength (HP lost FIT_LOST × strength / 3.2, rounds
+ *  FIT_ROUNDS × (strength / 3.2)^0.8); the log residual is shared among its species by strength share, and each species'
+ *  s.atk / s.mag (and s.hp for rounds) moves against its weighted residual (damped), then the lineage rule applies. */
+function refit(file, outFile) {
+  const J = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const G = (J.M && J.M.M1 && J.M.M1.groups) || [];
+  if (!G.length) throw new Error('refit: ' + file + ' has no M1 groups (run sim_zones with --json and M1)');
+  const L_T = Number(opt('fit-lost', 0.092)), R_T = Number(opt('fit-rounds', 2.8)), DAMP = Number(opt('fit-damp', 0.7));
+  const Dd = CM.parseDesign();
+  const acc = {};
+  for (const g of G) {
+    if (g.excluded || /prologue/.test(g.zone)) continue;
+    const parts = g.ms.map(([id, a, b]) => [id, CM.SIZE_W[DB.monsters[id].size] * (a + b) / 2]);
+    const st = parts.reduce((x, [, v]) => x + v, 0);
+    const rl = Math.log(Math.max(0.003, g.lost) / (L_T * st / 3.2));
+    const rr = Math.log(Math.max(0.5, g.rounds) / (R_T * Math.pow(st / 3.2, 0.8)));
+    for (const [id, v] of parts) {
+      const a = acc[id] = acc[id] || { w: 0, rl: 0, rr: 0 };
+      const w = g.w * v / st;
+      a.w += w; a.rl += w * rl; a.rr += w * rr;
+    }
+  }
+  const base = CM.loadTuning();
+  base.monsters = base.monsters || {};
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const r2 = (v) => Math.round(v * 100) / 100;
+  const pairs = [];
+  let n = 0;
+  for (const [id, a] of Object.entries(acc)) {
+    const m = DB.monsters[id];
+    if (!m.lineage || (m.flags || []).includes('metal')) continue;
+    const rl = a.rl / a.w, rr = a.rr / a.w;
+    const fh = clamp(Math.exp(-DAMP * rr / 0.8), 0.8, 1.25);
+    const fd = clamp(Math.exp(-DAMP * rl) / Math.pow(fh, 0.8), 0.7, 1.4);
+    const cur = Object.assign({}, m.s || {});
+    const sv = Object.assign({}, cur);
+    sv.hp = r2(clamp((cur.hp != null ? cur.hp : 1) * fh, 0.5, 2.5));
+    sv.atk = r2(clamp((cur.atk != null ? cur.atk : 1) * fd, 0.3, 2.5));
+    sv.mag = r2(clamp((cur.mag != null ? cur.mag : 1) * fd, 0.3, 2.5));
+    for (const k of Object.keys(sv)) if (sv[k] === 1) delete sv[k];
+    const e = base.monsters[id] = base.monsters[id] || {};
+    e.s = sv;
+    const why = `sim_zones --fit + --refit (game engine; zone groups: HP lost ×${Math.exp(rl).toFixed(2)}, rounds ×${Math.exp(rr).toFixed(2)} of the strength target)`;
+    e.why = e.desc ? why + ' ／ ' + String(e.why || '').split(' ／ ').filter((x) => x.startsWith('desc:')).join(' ／ ') : why;
+    pairs.push([m.lineage, id]);
+    n++;
+  }
+  if (!flag('fit-free')) projectLineages(base, Dd, Object.values(DB.lineages).flatMap((L) => L.stages.map((st) => [DB.monsters[st.mon].lineage, st.mon])).filter(([, id]) => base.monsters[id] && base.monsters[id].s));
+  delete base.global;
+  fs.writeFileSync(outFile, JSON.stringify(base, null, 2) + '\n');
+  console.log(`[sim_zones] refit: ${n} species corrected from ${G.length} group results → ${outFile}`);
+}
+
 // ================================================================ main
 function pct(x, d = 1) { return (100 * x).toFixed(d) + '%'; }
 function main() {
+  if (opt('refit', null)) { refit(opt('refit'), opt('fit', null) || (() => { throw new Error('--refit needs --fit <out.json>'); })()); return; }
   const useReal = realEngineOk();
   const t0 = Date.now();
   console.log(`[sim_zones] engine: ${useReal ? 'GAME ENGINE (R.Battle.simulate + party_model)' : 'MODEL (DESIGN §4 re-implementation; the game engine is not complete yet)'}; seed ${SEED}; ${N} battles per group`);
@@ -803,7 +880,8 @@ function main() {
     if (!okPool) bad++;
     console.log(bad ? `  M1 FAIL (${bad - (okPool ? 0 : 1)} zone×tier out of range${okPool ? '' : '; pooled criteria off'})` : '  M1 PASS');
     failures += bad;
-    out.M.M1 = { pass: !bad, pooled: P, rows: results.map((r) => ({ zone: r.zid, T: r.T, ...r.agg })) };
+    out.M.M1 = { pass: !bad, pooled: P, rows: results.map((r) => ({ zone: r.zid, T: r.T, ...r.agg })),
+      groups: results.flatMap((r) => r.groups.map((G) => ({ zone: r.zid, T: r.T, w: G.g.w, ms: G.ms, excluded: G.excluded, lost: G.sum.lost, rounds: G.sum.rounds, p95: G.sum.p95 }))) };
     if (flag('groups')) {
       const gs = results.flatMap((r) => r.groups.map((G) => ({ zone: r.zid, T: r.T, g: G.g.mons, ...G.sum, excl: G.excluded })));
       gs.sort((a, b) => b.lost - a.lost);
@@ -931,24 +1009,7 @@ function main() {
         const why = `sim_zones --fit (game engine, pure group ×${r.cnt} at T${r.T}): HP lost ${pct(r.lostN)} → ${pct(L_T)}, rounds ${r.roundsN.toFixed(2)} → ${R_T}`;
         e.why = e.desc ? why + ' ／ ' + String(e.why || '').split(' ／ ').filter((x) => x.startsWith('desc:')).join(' ／ ') : why;
       }
-      // §9.13.1: a lineage's s moves one way for all its stages. Per lineage and stat, the direction (vs DESIGN) with the
-      // larger total log-change wins; stages that wanted the other way keep their DESIGN value for that stat.
-      if (!flag('fit-free')) {
-        const byL = {};
-        for (const r of rows) (byL[r.lid] = byL[r.lid] || []).push(r.id);
-        for (const ids of Object.values(byL)) {
-          for (const k of ['hp', 'atk', 'mag']) {
-            const lr = ids.map((id) => { const d = (Dd.mons[id].s || {})[k]; const e = base.monsters[id].s[k]; return Math.log((e != null ? e : 1) / (d != null ? d : 1)); });
-            const up = lr.filter((x) => x > 0).reduce((a, b) => a + b, 0), dn = -lr.filter((x) => x < 0).reduce((a, b) => a + b, 0);
-            ids.forEach((id, i) => {
-              if ((up >= dn && lr[i] < 0) || (dn > up && lr[i] > 0)) {
-                const d = (Dd.mons[id].s || {})[k];
-                if (d == null || d === 1) delete base.monsters[id].s[k]; else base.monsters[id].s[k] = d;
-              }
-            });
-          }
-        }
-      }
+      if (!flag('fit-free')) projectLineages(base, Dd, rows.map((r) => [r.lid, r.id]));
       delete base.global;
       fs.writeFileSync(FIT, JSON.stringify(base, null, 2) + '\n');
       console.log(`  candidate overlay → ${FIT}`);
