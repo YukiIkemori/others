@@ -197,7 +197,7 @@
         G().text(row === 'middle' ? '後列' : '前列', 126, 10, { color: row === 'middle' ? G().C.cyan : G().C.orange });
         if (c.hp <= 0) G().text('戦闘不能', 154, 10, { color: G().C.dead });
         G().text('ページ ' + (this.page + 1) + '/' + this.pages.length, 244, 10, { align: 'right', color: Kt.COL.sub });
-        Kt.fitText(Kt.subtitle(c, true), 34, 24, 170, { color: Kt.COL.sub });
+        Kt.fitText(Kt.subtitle(c), 34, 24, 170, { color: Kt.COL.sub });
         Kt.lrHint(244, 26);
         switch (pg.kind) {
           case 'ability': this.pageAbility(c, st); break;
@@ -208,43 +208,47 @@
           default: this.pageResist(c, st); break;
         }
       }
+      /**
+       * 能力 (オーナー指示 A17): the abilities as numbers (HP・MP・WP and 腕力〜精神 with the gear's share), the EXP to the
+       * next level and what the member is good at (names only). No 「戦闘」 block — 攻撃力・守備力・命中… stay hidden.
+       */
       pageAbility(c, st) {
         const base = R.Rules && R.Rules.baseStats ? R.Rules.baseStats(c) : {};
-        G().window(4, 46, 122, 128, { title: '能力' });
-        const L = [['最大HP', c.hp + '/' + (st.hp || 0), Kt.condColor(c)], ['最大MP', c.mp + '/' + (st.mp || 0)], ['最大WP', (c.wp || 0) + '/' + (st.wp || 0)]];
+        G().window(4, 46, 122, 174, { title: '能力' });
+        const L = [['HP', c.hp + '/' + (st.hp || 0), Kt.condColor(c)], ['MP', c.mp + '/' + (st.mp || 0)], ['WP', (c.wp || 0) + '/' + (st.wp || 0)]];
         L.forEach(([k, v, col], i) => {
-          const y = 53 + i * 13;
-          G().text(k, 12, y, { color: Kt.COL.sub });
-          G().text(v, 118, y, { align: 'right', color: col || '#ffffff' });
+          const y = 55 + i * 16;
+          G().text(k, 14, y, { color: Kt.COL.sub });
+          G().text(v, 116, y, { align: 'right', color: col || '#ffffff' });
         });
-        G().rect(12, 53 + 3 * 13 - 1, 106, 1, '#3a4470');
+        G().rect(12, 55 + 3 * 16 - 1, 106, 1, '#3a4470');
         Kt.STATS6.forEach((k, i) => {
-          const y = 53 + (i + 3) * 13 + 1;
-          G().text(Kt.STAT_NAMES[k], 12, y, { color: Kt.COL.sub });
+          const y = 55 + 3 * 16 + 5 + i * 18;
+          G().text(Kt.STAT_NAMES[k], 14, y, { color: Kt.COL.sub });
           G().text(String(st[k] || 0), 86, y, { align: 'right' });
           const add = (st[k] || 0) - (base[k] != null ? base[k] : st[k] || 0);
-          if (add) G().text(Kt.signed(add), 118, y, { align: 'right', color: add > 0 ? G().C.green : G().C.red });
+          if (add) G().text(Kt.signed(add), 116, y, { align: 'right', color: add > 0 ? G().C.green : G().C.red });
         });
-        G().window(130, 46, 122, 128, { title: '戦闘' });
-        const v = Kt.statVector(st);
-        const w2 = !!c.equip.weapon2;
-        const R2 = [['攻撃1', v.atk1], ['攻撃2', w2 ? v.atk2 : '―'], ['術力', v.mag], ['守備', v.def], ['術防', v.mdef], ['命中', v.hit], ['回避', v.eva], ['会心', (v.crit || 0) + '%']];
-        R2.forEach(([k, val], i) => {
-          const y = 54 + i * 14;
-          G().text(k, 139, y, { color: Kt.COL.sub });
-          G().text(String(val), 244, y, { align: 'right', color: val === '―' ? Kt.COL.gray : '#ffffff' });
-        });
-        G().window(4, 176, 248, 44);
-        G().text('経験値', 14, 183, { color: Kt.COL.sub });
-        G().text(String(c.exp || 0), 140, 183, { align: 'right' });
-        G().text('次のレベルまで', 14, 197, { color: Kt.COL.sub });
+        G().window(130, 46, 122, 174, { title: '経験' });
+        G().text('経験値', 139, 55, { color: Kt.COL.sub });
+        G().text(String(c.exp || 0), 244, 69, { align: 'right' });
+        G().text('次のレベルまで', 139, 87, { color: Kt.COL.sub });
         const maxLv = (R.Rules && R.Rules.MAX_LEVEL) || 99;
         const nx = R.Rules && R.Rules.expToNext ? R.Rules.expToNext(c) : 0;
-        G().text(c.level >= maxLv ? '―' : String(nx), 140, 197, { align: 'right', color: G().C.yellow });
+        G().text(c.level >= maxLv ? '―' : String(nx), 244, 101, { align: 'right', color: G().C.yellow });
+        G().rect(138, 118, 106, 1, '#3a4470');
         const d = DB.companions[c.id];
         const who = c.id === 'hero' ? (c.gender === 'f' ? '主人公・女' : '主人公・男') : d ? (d.kin || '') + (d.age ? '・' + d.age + '歳' : '') : '';
-        Kt.fitText(who, 150, 183, 92, { color: Kt.COL.sub });
-        G().text('閃き ' + ((c.counts && c.counts.glimmers) || 0) + '回', 244, 197, { align: 'right', color: Kt.COL.sub });
+        Kt.fitText(who, 139, 124, 106, { color: Kt.COL.sub });
+        G().text('閃き', 139, 140, { color: Kt.COL.sub });
+        G().text(((c.counts && c.counts.glimmers) || 0) + '回', 244, 140, { align: 'right' });
+        G().rect(138, 158, 106, 1, '#3a4470');
+        // what the member is good at: names only (A17 — never the S〜D letters)
+        const apt = R.CharCreate && R.CharCreate.kit ? R.CharCreate.kit.aptOf(c) : null;
+        const fl = R.Tavern && R.Tavern.favoredLines ? R.Tavern.favoredLines(apt) : { w: [], e: [] };
+        G().text('得意', 139, 164, { color: Kt.COL.sub });
+        Kt.fitText(fl.w.join('・') || '―', 139, 180, 106, { color: fl.w.length ? '#ffffff' : Kt.COL.gray });
+        Kt.drawSegs(fl.e.length ? fl.e.map(([t, col], i) => ({ text: (i ? '・' : '') + t, color: col })) : [{ text: '―', color: Kt.COL.gray }], 139, 196, 106);
       }
       pageGear(c) {
         G().window(4, 46, 248, 130, { title: '装備' });
@@ -265,12 +269,9 @@
           const desc = (DB.starterKit && DB.starterKit.favorDesc && DB.starterKit.favorDesc[f.id]) || (f.kind !== 'element' && DB.weaponTypes[f.id] && DB.weaponTypes[f.id].desc) || '';
           G().text('得意分野：' + (f.id ? nm : '―'), 14, 184, { color: G().C.yellow });
           Kt.fitText(desc, 14, 198, 228);
-        } else {
-          // オーナー指示: 特性（innate）は画面に出さない → the favoured weapons / elements (S, then A) and the profile's first line
-          const d = DB.companions[c.id] || {};
-          const fav = R.Tavern && R.Tavern.favored ? R.Tavern.favored(d.apt).map((f) => f[0] + f[2]).join('　') : '';
-          Kt.fitText('得意：' + (fav || '―'), 14, 184, 228, { color: G().C.yellow });
-          Kt.fitText(String(d.profile || '').split('\n')[0], 14, 198, 228);
+        } else if (R.Tavern && R.Tavern.drawFavored) {
+          // オーナー指示: 特性（innate）は画面に出さない。A17: 得意は名前だけ（S〜D の文字もプロフィール文も出さない）
+          R.Tavern.drawFavored((DB.companions[c.id] || {}).apt, 14, 184, 228, 14);
         }
       }
       pageActs(c, pg, kind) {
@@ -290,43 +291,35 @@
           G().text((kind === 'tech' ? 'W' : 'M') + Kt.cost(c, id), x + 112, y, { align: 'right', color: cc || Kt.COL.sub });
         });
       }
+      /**
+       * 熟練度 (オーナー指示 A17): each weapon type and element with its rank as a number and a bar — no S〜D letters,
+       * no 「熟練の補正 +◯%」 / 「1段ごとに威力+3%」 / 「火5：1段目がMP0」 notes (the effects work unseen). The empty
+       * corner under the elements shows the member's favoured weapons / elements by name.
+       */
       pageProf(c) {
         G().window(4, 46, 248, 174, { title: '熟練度' });
-        const apt = Kt.aptLetters(c);
         const rank = (kind, id) => {
           const pts = ((kind === 'w' ? c.wprof : c.eprof) || {})[id] || 0;
           return R.Rules && R.Rules.profRank ? R.Rules.profRank(pts) : 0;
         };
-        const drawRow = (x, y, name, letter, r) => {
-          Kt.fitText(name, x, y, 26, { color: '#ffffff' });
-          const col = Kt.APT_COLOR[letter] || '#ffffff';
-          G().text(letter || '―', x + 30, y, { color: col });
-          G().text(String(r), x + 52, y, { align: 'right' });
-          for (let k = 0; k < 10; k++) G().rect(x + 56 + k * 5, y + 3, 4, 5, k < r ? col : '#2a3050');
+        const maxRank = (R.Rules && R.Rules.K && R.Rules.K.PROF_MAX) || 10;
+        const drawRow = (x, y, name, r, col) => {
+          Kt.fitText(name, x, y, 26, { color: col || '#ffffff' });
+          G().text(String(r), x + 44, y, { align: 'right' });
+          const w = 60, fill = Math.round(w * Math.min(1, r / maxRank));
+          G().rect(x + 50, y + 4, w, 4, '#2a3050');
+          if (fill) { G().rect(x + 50, y + 4, fill, 4, G().C.cyan); G().rect(x + 50, y + 4, fill, 1, '#c8f0ff'); }
         };
-        Kt.wtypes().forEach((w, i) => drawRow(12, 54 + i * 14, Kt.wtypeName(w), apt.w && apt.w[w], rank('w', w)));
-        Kt.elems().forEach((e, i) => drawRow(132, 54 + i * 14, Kt.elemName(e), apt.e && apt.e[e], rank('e', e)));
-        // the legend (pitch 14: the compact menus draw these notes at the full text size, Part A11)
-        const ly = 54 + 6 * 14 + 4;
-        ['S', 'A', 'B', 'C', 'D'].forEach((L, i) => G().text(L, 132 + i * 10, ly, { color: Kt.APT_COLOR[L] }));
-        G().text('閃きやすさ', 244, ly, { color: Kt.COL.sub, size: 8, align: 'right' });
-        G().text('数と棒：熟練度', 132, ly + 14, { color: Kt.COL.sub, size: 8 });
-        // Part A13: 熟練の補正 of the weapon(s) in hand; A13b: the MP cuts reached
-        const P = (R.Rules && R.Rules.K && R.Rules.K.PROF_POWER) || { perRank: 0.03 };
-        const pp = (slot) => (R.Rules && R.Rules.profPowerPct ? R.Rules.profPowerPct(c, null, slot) : 0);
-        const w1 = c.equip && c.equip.weapon1, w2 = c.equip && c.equip.weapon2;
-        const bonus = w1 && w2 ? '+' + pp('weapon1') + '%/+' + pp('weapon2') + '%' : '+' + pp(w2 && !w1 ? 'weapon2' : 'weapon1') + '%';
-        G().text('熟練の補正', 132, ly + 28, { color: Kt.COL.sub, size: 8 });
-        G().text(bonus, 244, ly + 28, { color: G().C.orange, size: 8, align: 'right' });
-        G().text('1段ごとに威力+' + Math.round(P.perRank * 100) + '%', 132, ly + 42, { color: Kt.COL.gray, size: 8 });
-        const M = (R.Rules && R.Rules.K && R.Rules.K.PROF_MP) || { freeRank: 5, halfRank: 8 };
-        const free = Kt.elems().filter((e) => rank('e', e) >= M.freeRank);
-        const half = free.filter((e) => rank('e', e) >= M.halfRank);
-        let mpNote, mpCol = G().C.cyan;
-        if (half.length) mpNote = half.map(Kt.elemName).join('') + '8：1段目MP0・2段目半分';
-        else if (free.length) mpNote = free.map(Kt.elemName).join('') + '5：1段目がMP0';
-        else { mpNote = M.freeRank + '段で1段目の術がMP0'; mpCol = Kt.COL.gray; }
-        Kt.fitText(mpNote, 132, ly + 56, 112, { color: mpCol, size: 8 });
+        Kt.wtypes().forEach((w, i) => drawRow(12, 54 + i * 14, Kt.wtypeName(w), rank('w', w)));
+        Kt.elems().forEach((e, i) => drawRow(132, 54 + i * 14, Kt.elemName(e), rank('e', e), Kt.elemColor(e)));
+        const ly = 54 + 6 * 14 + 6;
+        G().rect(132, ly - 3, 112, 1, '#3a4470');
+        const apt = R.CharCreate && R.CharCreate.kit ? R.CharCreate.kit.aptOf(c) : null;
+        const fl = R.Tavern && R.Tavern.favoredLines ? R.Tavern.favoredLines(apt) : { w: [], e: [] };
+        G().text('得意な武器', 132, ly + 2, { color: Kt.COL.sub });
+        Kt.fitText(fl.w.join('・') || '―', 132, ly + 16, 112, { color: fl.w.length ? '#ffffff' : Kt.COL.gray });
+        G().text('得意な属性', 132, ly + 34, { color: Kt.COL.sub });
+        Kt.drawSegs(fl.e.length ? fl.e.map(([t, col], i) => ({ text: (i ? '・' : '') + t, color: col })) : [{ text: '―', color: Kt.COL.gray }], 132, ly + 48, 112);
       }
       pageResist(c, st) {
         G().window(4, 46, 248, 174, { title: '耐性' });

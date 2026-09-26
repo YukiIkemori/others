@@ -8,7 +8,9 @@
 //        酒場のマスター: 仲間を探す（recruit のときだけ）/ 入れ替える / 並びと隊列 / 装備をあずかる / やめる。
 //        状態は R.Party・R.Rules の API だけで変える（recruit・swap・setParty・setOrder・setRow・unequipAll）。
 //   R.Tavern.LINES      マスターの台詞（§5.5.5）       R.Tavern.announceJoin(c|id, {jingle, bench})
-//   R.Tavern.favored(apt) → [[名前, 色, 'S'|'A'], …]  候補の「得意」（オーナー指示: 特性と得手不得手の表は出さない）
+//   R.Tavern.favored(apt) → [[名前, 色, 'S'|'A'], …]  候補の「得意」（オーナー指示: 特性と得手不得手の表は出さない。
+//        A17: S〜D の文字は画面に出さない — 3 つ目の文字は並び順のためだけ。画面には名前だけを描く）
+//   R.Tavern.favoredLines(apt) → {w:[名前…], e:[[名前, 色]…]}   R.Tavern.drawFavored(apt, x, y, maxW, pitch)
 (function (R) {
   'use strict';
   const G = () => R.Gfx;
@@ -202,7 +204,8 @@
   }
   /**
    * the favoured lines of a companion (オーナー指示: 候補には得意だけを見せる): the S weapons / elements, then the A
-   * ones → [[name, colour, letter], …] (weapons first, in the DB order; elements in their colour)
+   * ones → [[name, colour, letter], …] (weapons first, in the DB order; elements in their colour). The letter is
+   * for ordering only — A17: never drawn.
    */
   function favored(apt) {
     const kit = K(), out = [];
@@ -212,42 +215,46 @@
     }
     return out;
   }
+  /** the favoured names split by kind (オーナー指示 A17: names only) → {w: [name…], e: [[name, colour]…]} */
+  function favoredLines(apt) {
+    const kit = K(), w = [], e = [];
+    for (const l of ['S', 'A']) {
+      for (const x of kit.W) if (apt && apt.w[x] === l) w.push(kit.wname(x));
+      for (const x of kit.E) if (apt && apt.e[x] === l) e.push([kit.ename(x), kit.ecolor(x)]);
+    }
+    return { w, e };
+  }
+  /** 「得意な武器：剣・槍」「得意な属性：火」 on two lines (a kind with none says ―) → the lines drawn (2) */
+  function drawFavored(apt, x, y, maxW, pitch) {
+    const g = G(), f = favoredLines(apt), sub = '#c8c8d8';
+    const line = (label, parts, yy) => {
+      const segs = [[label, sub]];
+      if (!parts.length) segs.push(['―', '#707080']);
+      parts.forEach(([t, col], i) => { if (i) segs.push(['・', sub]); segs.push([t, col]); });
+      K().drawParts({ parts: segs }, x, yy, maxW);
+    };
+    line('得意な武器：', f.w.map((n) => [n, '#ffffff']), y);
+    line('得意な属性：', f.e, y + (pitch || 14));
+    return 2;
+  }
   /**
-   * 候補の 1 枚（§11.8.4。オーナー指示: 特性は画面に出さない・得手不得手の表も出さない）: 絵・名前・成長、
-   * 性別 年齢 肩書・役割 隊列・得意（S と A）、プロフィール 3 行、能力 6 つ（3 列 × 2 行、値と 20px の棒 = 値 ÷ 3）
+   * 候補の 1 枚（§11.8.4。オーナー指示: 特性は画面に出さない・得手不得手の表も出さない。A17: S〜D の文字・役割・
+   * プロフィール文も出さない）: 絵・名前、性別 年齢 肩書、隊列（種族）、得意な武器・属性（名前だけ）、能力 6 つ
+   * （2 列 × 3 行、値と 48px の棒）
    */
   function drawCandidate(id, walk) {
     const g = G(), C = g.C, kit = K(), d = DB.companions[id];
     kit.drawFigure(kit.defKey(id), 12, 74, { scale: 2, frame: walk });
-    g.text(d.name, 52, 72, { size: 16 });
-    let gx = 244;
-    [['WP', 'wp'], ['MP', 'mp'], ['HP', 'hp']].forEach(([lab, k]) => {
-      g.text(d.growth[k], gx, 76, { align: 'right', color: kit.aptColor(d.growth[k]) });
-      g.text(lab, gx - 8, 76, { align: 'right', color: '#c8c8d8' });
-      gx -= 34;
-    });
-    g.text((d.gender === 'f' ? '女' : '男') + '　' + d.age + '歳　' + d.title, 52, 92, { color: '#c8c8d8' });
-    g.text(kit.ROLE_NAMES[d.role] + '　' + kit.ROW_NAMES[d.row] + (d.kin && d.kin !== '人間' ? '　' + d.kin : ''), 52, 106, { color: C.cyan });
-    let x = 52;
-    g.text('得意：', x, 120, { color: '#c8c8d8' });
-    x += g.textWidth('得意：');
-    for (const [name, col, l] of favored(d.apt)) {
-      const w = g.textWidth(name) + g.textWidth(l);
-      if (x + w > 244) break;
-      g.text(name, x, 120, { color: col });
-      g.text(l, x + g.textWidth(name), 120, { color: kit.aptColor(l) });
-      x += w + 8;
-    }
-    String(d.profile || '').split('\n').slice(0, 3).forEach((l, i) => g.fitText(l, 12, 138 + 14 * i, 232));
-    g.rect(12, 182, 232, 1, '#3a4470');
+    g.text(d.name, 52, 74, { size: 16 });
+    g.text((d.gender === 'f' ? '女' : '男') + '　' + d.age + '歳　' + d.title, 52, 96, { color: '#c8c8d8' });
+    g.text(kit.ROW_NAMES[d.row] + (d.kin && d.kin !== '人間' ? '　' + d.kin : ''), 52, 110, { color: d.row === 'middle' ? C.cyan : C.orange });
+    drawFavored(d.apt, 12, 130, 232, 16);
+    g.rect(12, 164, 232, 1, '#3a4470');
     kit.STATS.forEach((s, k) => {
-      const cx = 12 + 78 * (k % 3), y = 188 + 14 * Math.floor(k / 3), v = d.stats[s];
+      const cx = 12 + 120 * (k % 2), y = 170 + 16 * Math.floor(k / 2), v = d.stats[s];
       g.text(kit.STAT_NAMES[s], cx, y, { color: '#c8c8d8' });
-      g.text(String(v), cx + 50, y, { align: 'right' });
-      const a = Math.max(1, Math.min(20, Math.round(v / 3)));
-      g.rect(cx + 54, y + 5, 20, 3, '#1c2442');
-      g.rect(cx + 54, y + 5, a, 3, C.cyan);
-      g.rect(cx + 54, y + 5, a, 1, '#c8f0ff');
+      g.text(String(v), cx + 62, y, { align: 'right' });
+      kit.statBar(cx + 66, y + 4, v);
     });
   }
 
@@ -409,25 +416,20 @@
     }
   }
   const tri = (x, y, dir) => K().tri(x, y, dir);
-  /** カーソルの人の要約: 肩書・役割・隊列、プロフィールの 1 行目（主人公はタイプの説明）、得手不得手 3 行 */
+  /**
+   * カーソルの人の要約（A17: 役割・プロフィール文・S〜D の文字は出さない）: 名前・肩書（主人公はタイプ）・隊列、
+   * Lv と HP・MP、得意な武器・属性（名前だけ）
+   */
   function drawInfo(c, x, y) {
     const g = G(), C = g.C, kit = K();
     const d = DB.companions[c.id];
-    if (c.id === 'hero') {
-      const T = DB.heroTypes[c.heroType];
-      const fav = c.favor ? (c.favor.kind === 'weapon' ? kit.wname(c.favor.id) : kit.ename(c.favor.id)) : '';
-      g.text(c.name, x, y);
-      g.text((T ? T.name : '') + (fav ? '　得意：' + fav : ''), x + 62, y, { color: '#c8c8d8' });
-      g.text(kit.ROW_NAMES[c.row] || '', x + 232, y, { align: 'right', color: c.row === 'middle' ? C.cyan : C.orange });
-      if (T) g.fitText(T.desc.split('\n')[0], x, y + 14, 232, { color: '#c8c8d8' });
-    } else if (d) {
-      g.text(c.name, x, y);
-      g.text(d.title + '　' + kit.ROLE_NAMES[d.role], x + 62, y, { color: '#c8c8d8' });
-      g.text(kit.ROW_NAMES[c.row] || '', x + 232, y, { align: 'right', color: c.row === 'middle' ? C.cyan : C.orange });
-      // オーナー指示: 特性（innate）は画面に出さない → the hero's type line has its counterpart in the profile's first line
-      g.fitText(String(d.profile || '').split('\n')[0], x, y + 14, 232, { color: '#c8c8d8' });
-    }
-    kit.drawAptWide(kit.aptOf(c), x, y + 30, { pitch: 14, gap: 2 });
+    const T = c.id === 'hero' ? DB.heroTypes[c.heroType] : null;
+    g.text(c.name, x, y);
+    g.text(T ? T.name : d ? d.title : '', x + 62, y, { color: '#c8c8d8' });
+    g.text(kit.ROW_NAMES[c.row] || '', x + 232, y, { align: 'right', color: c.row === 'middle' ? C.cyan : C.orange });
+    const st = R.Menu && R.Menu.kit && R.Menu.kit.stats ? R.Menu.kit.stats(c) : {};
+    g.text('Lv' + (c.level || 1) + '　HP ' + (c.hp || 0) + '/' + (st.hp || c.hp || 0) + '　MP ' + (c.mp || 0) + '/' + (st.mp || c.mp || 0), x, y + 18, { color: '#c8c8d8' });
+    drawFavored(kit.aptOf(c), x, y + 38, 232, 18);
   }
 
   // ------------------------------------------------------------ 装備をあずかる
@@ -577,7 +579,7 @@
     browse() { return unrecruited().length ? R.Engine.run(new ChooseLayer({ mode: 'browse' })) : say(LINES.none).then(() => R.UI.closeMessage()); },
     swapScreen(o) { return R.Engine.run(new SwapLayer(o || {})); },
     deposit,
-    unrecruited, favored,
+    unrecruited, favored, favoredLines, drawFavored,
     _ChooseLayer: ChooseLayer, _SwapLayer: SwapLayer, _CommandLayer: CommandLayer, _DepositLayer: DepositLayer,
   };
 })(window.RPG);

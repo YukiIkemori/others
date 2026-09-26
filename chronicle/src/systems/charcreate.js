@@ -117,47 +117,35 @@
       const d = DB.companions[c.id];
       return d ? d.apt : null;
     },
-    /** 得手不得手の 3 行（§11.8.4）: 武器 6 / 5、術 6。hi = Set('w:sword', …) blinks a gold frame */
+    /**
+     * 得意の 2 行（オーナー指示 A17: S〜D の文字は出さない。得意な武器・属性の名前だけ）: 「得意な武器：剣・槍」
+     * 「得意な属性：火」。S の名前が先、A の名前が後。o: {pitch, gap, hi: Set('w:sword', …) → gold blinking name, maxW}
+     */
     drawAptWide(apt, x, y, o) {
       const opt = o || {};
-      const pitch = opt.pitch || 14;
-      const g = G();
-      g.text('武器', x, y, { color: G().C.cyan });
-      g.text('術', x, y + pitch * 2 + (opt.gap || 2), { color: G().C.cyan });
-      const cell = (k, id, cx, cy, name, col) => {
-        const l = (apt && apt[k][id]) || '―';
-        const nw = g.textWidth(name);
-        g.text(name, cx, cy, { color: col || '#c8c8d8' });
-        g.text(l, cx + nw, cy, { color: kit.aptColor(l) });
-        if (opt.hi && opt.hi.has(k + ':' + id) && Math.floor(R.Engine.frame / 12) % 2 === 0) g.strokeRect(cx - 2, cy - 1, nw + 9, 13, G().C.gold);
-        return nw + 5.33;
+      const pitch = (opt.pitch || 14) + (opt.gap || 0);
+      const maxW = opt.maxW || 232;
+      const blink = Math.floor(R.Engine.frame / 12) % 2 === 0;
+      const sub = '#c8c8d8';
+      const pick = (k, ids, name, col) => {
+        const out = [];
+        for (const l of ['S', 'A']) for (const id of ids) if (apt && apt[k][id] === l) {
+          const hot = opt.hi && opt.hi.has(k + ':' + id);
+          out.push([name(id), hot && blink ? G().C.gold : col(id)]);
+        }
+        return out;
       };
-      let cx = x + 28;
-      W.slice(0, 6).forEach((w) => { cx += cell('w', w, cx, y, kit.wname(w)) + 10; });
-      cx = x + 28;
-      W.slice(6).forEach((w) => { cx += cell('w', w, cx, y + pitch, kit.wname(w)) + 10; });
-      E.forEach((e, k) => cell('e', e, x + 28 + 30 * k, y + pitch * 2 + (opt.gap || 2), kit.ename(e), kit.ecolor(e)));
-    },
-    /** narrow variant for the favour step (158 wide): 武器 4・4・3 and 術 6 in one line, pitch 11 */
-    drawAptNarrow(apt, x, y, o) {
-      const opt = o || {};
-      const g = G();
-      const cell = (k, id, cx, cy, name, col) => {
-        const l = (apt && apt[k][id]) || '―';
-        const nw = g.textWidth(name);
-        g.text(name, cx, cy, { color: col || '#c8c8d8' });
-        g.text(l, cx + nw, cy, { color: kit.aptColor(l) });
-        if (opt.hi && opt.hi.has(k + ':' + id) && Math.floor(R.Engine.frame / 12) % 2 === 0) g.strokeRect(cx - 2, cy - 1, nw + 9, 12, G().C.gold);
-        return nw + 5.33;
+      const line = (label, parts, yy) => {
+        const segs = [[label, sub]];
+        if (!parts.length) segs.push(['―', '#707080']);
+        parts.forEach((p, i) => { if (i) segs.push(['・', sub]); segs.push(p); });
+        drawParts({ parts: segs }, x, yy, maxW);
       };
-      g.text('武器', x, y, { color: G().C.cyan });
-      [[0, 4], [4, 8], [8, 11]].forEach(([a, b], r) => {
-        let cx = x + 26;
-        W.slice(a, b).forEach((w) => { cx += cell('w', w, cx, y + 11 * r, kit.wname(w)) + 6; });
-      });
-      g.text('術', x, y + 33, { color: G().C.cyan });
-      E.forEach((e, k) => cell('e', e, x + 26 + 20 * k, y + 33, kit.ename(e), kit.ecolor(e)));
+      line('得意な武器：', pick('w', W, kit.wname, () => '#ffffff'), y);
+      line('得意な属性：', pick('e', E, kit.ename, kit.ecolor), y + pitch);
     },
+    /** narrow variant for the favour step (a 146px column): the same 2 lines */
+    drawAptNarrow(apt, x, y, o) { kit.drawAptWide(apt, x, y, Object.assign({ pitch: 18, maxW: 146 }, o || {})); },
     /** a 48px ability bar (value × 0.8px, §11.8.2); o.bonus adds a green piece after it (the gear's share) */
     statBar(x, y, v, o) {
       const g = G(), opt = o || {};
@@ -267,11 +255,10 @@
     const n = favorName(favor);
     const lines = [
       { parts: [['得意：', '#c8c8d8'], [n, favor.kind === 'element' ? kit.ecolor(favor.id) : '#ffffff']] },
-      { parts: [[n + 'が', '#ffffff'], ['S', APT.S], ['になる', '#ffffff']] },
     ];
     const pair = (DB.starterKit.pair || {})[favor.id];
     if (T.pairElement && favor.kind === 'element' && pair) {
-      lines.push({ parts: [['組の属性：', '#c8c8d8'], [kit.ename(pair), kit.ecolor(pair)], ['も', '#ffffff'], ['A', APT.A], ['になる', '#ffffff']] });
+      lines.push({ parts: [['組の属性：', '#c8c8d8'], [kit.ename(pair), kit.ecolor(pair)], ['も得意になる', '#ffffff']] });
     }
     lines.push({ parts: [['初期の武器：', '#c8c8d8'], [kit.itemName(startWeapon(type, favor)), '#ffffff']] });
     const acts = startActions(type, favor);
@@ -449,11 +436,6 @@
       const T = DB.heroTypes[this.type];
       g.window(94, 30, 158, 98);
       kit.drawFigure(this.spriteKey(), 102, 36, { scale: 2, frame: f });
-      [['HP', 'hp'], ['MP', 'mp'], ['WP', 'wp']].forEach(([lab, k], i) => {
-        const y = 88 + 12 * i;
-        g.text(lab, 102, y, { color: '#c8c8d8' });
-        g.text(T.growth[k], 124, y, { color: kit.aptColor(T.growth[k]) });
-      });
       STATS.forEach((s, k) => {
         const y = 37 + 14 * k;
         g.text(STAT_NAMES[s], 144, y, { color: '#c8c8d8' });
@@ -463,7 +445,7 @@
       g.window(4, 130, 248, 36);
       T.desc.split('\n').forEach((l, i) => g.text(l, 14, 136 + 14 * i));
       g.window(4, 168, 248, 52);
-      kit.drawAptWide(T.apt, 12, 173, { pitch: 14, gap: 0 });
+      kit.drawAptWide(T.apt, 14, 176, { pitch: 18 });
     }
     drawFavor() {
       const g = G(), C = g.C;
@@ -492,7 +474,7 @@
       const desc = this.favor ? ((DB.starterKit.favorDesc || {})[this.favor.id] || '') : '';
       g.wrap(desc, 140).slice(0, 2).forEach((l, i) => g.text(l, 102, 136 + 14 * i));
       g.window(94, 168, 158, 52);
-      kit.drawAptNarrow(previewApt(this.type, this.favor), 100, 172, { hi: changedKeys(this.type, this.favor) });
+      kit.drawAptNarrow(previewApt(this.type, this.favor), 102, 176, { hi: changedKeys(this.type, this.favor) });
     }
     drawConfirm() {
       const g = G(), C = g.C, f = Math.floor(R.Engine.frame / 16) % 2;
@@ -517,7 +499,7 @@
         if (this.yes === i) g.cursor(x - 11, 139);
       });
       g.window(4, 166, 248, 54);
-      kit.drawAptWide(previewApt(this.type, this.favor), 12, 172, { pitch: 14, gap: 1 });
+      kit.drawAptWide(previewApt(this.type, this.favor), 14, 175, { pitch: 18 });
     }
   }
   /** blinking scroll mark: dir < 0 ▲ (more above), dir > 0 ▼ (more below) */

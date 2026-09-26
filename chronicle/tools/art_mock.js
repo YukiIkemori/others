@@ -3,7 +3,7 @@
 //
 //   node tools/art_mock.js [--styles anime,chibi,storybook] [--scenes battle,town,world,dungeon] [--anim]
 // → design/art_proto/mocks/<style>_<scene>.png (1024×896, the real in-game framing)
-//   --anim: design/art_proto/mocks/anim/<clip>_<nnn>.png frames at 30 fps + <clip>.webp/.gif (ffmpeg) + anim_strip.png
+//   --anim: frames at 30 fps → mocks/anim_<clip>.webp/.gif (ffmpeg) + sheets/anim_strip.png (frames kept with --keep-frames)
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -57,6 +57,9 @@ async function main() {
       spawnSync(ff, ['-y', '-framerate', '30', '-i', path.join(adir, `${clip}_%03d.png`), '-vf', 'scale=512:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=192[p];[b][p]paletteuse=dither=sierra2_4a', '-loop', '0', path.join(DIR, 'mocks', `anim_${clip}.gif`)]);
       console.log(`anim ${clip}: ${n} frames`);
     }
+    // the key-frame strip, then drop the 1024×896 frames (≈1 MB each) unless --keep-frames
+    spawnSync('python3', [path.join(ROOT, 'tools/art_anim_strip.py'), adir, path.join(DIR, 'sheets/anim_strip.png')], { stdio: 'inherit' });
+    if (!argv.includes('--keep-frames')) fs.rmSync(adir, { recursive: true, force: true });
   } else {
     for (const style of arg('--styles', 'anime,chibi,storybook').split(',')) {
       for (const scene of arg('--scenes', 'battle,town,world,dungeon').split(',')) {

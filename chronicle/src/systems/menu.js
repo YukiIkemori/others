@@ -216,8 +216,8 @@
     }
     return a;
   }
-  /** header line 2 (§11.7.5/§11.7.6): hero 「戦士　剣が得意」, companion 肩書 (+ role) */
-  function subtitle(c, withRole) {
+  /** header line 2 (§11.7.5/§11.7.6): hero 「戦士　剣が得意」, companion 肩書 (オーナー指示 A17: never the role 「前衛・重」) */
+  function subtitle(c) {
     if (c.id === 'hero') {
       const t = DB.heroTypes[c.heroType];
       const f = c.favor;
@@ -225,7 +225,7 @@
       return ((t && t.name) || '') + (fav ? '　' + fav : '');
     }
     const d = DB.companions[c.id] || {};
-    return (d.title || '') + (withRole && ROLE_NAMES[d.role] ? '（' + ROLE_NAMES[d.role] + '）' : '');
+    return d.title || '';
   }
 
   // ------------------------------------------------------------ item marks & colours (§8.2.8, §11.1.2)

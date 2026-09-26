@@ -1,6 +1,11 @@
+#!/usr/bin/env bash
+# Hi-res art prototype (BRIEF Part A16): cut every generated sheet in design/art_proto/raw/<style>/ into
+# design/art_proto/assets/<style>/ (keyed sprites, seamless ground textures, fitted battle backdrop) and rebuild the
+# hero cut-out rig. Tool-time only; needs python3 + numpy + pillow + scipy. Then: node tools/art_mock.js [--anim]
 set -e
-cd /home/user/others/chronicle/design/art_proto
-K="python3 /home/user/others/chronicle/tools/art_key.py"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT/design/art_proto"
+K="python3 $ROOT/tools/art_key.py"
 for s in anime chibi storybook; do
   rm -rf assets/$s; mkdir -p assets/$s
   P=raw/$s/party.jpg; [ -f raw/$s/party.v2.jpg ] && P=raw/$s/party.v2.jpg
@@ -15,5 +20,5 @@ done
 T=$(mktemp -d)
 $K sprites raw/anime/party.jpg $T/p --scale 0.5 >/dev/null
 cp $T/p_3.png ref/anime_hero_keyed.png
-python3 /home/user/others/chronicle/tools/art_rig.py ref/anime_hero_keyed.png assets/anime/rig_hero --poly "108,183 135,194 150,235 150,281 100,292 84,301 59,304 60,340 92,342 92,366 68,369 90,655 78,666 61,666 29,372 2,366 2,342 32,338 33,306 13,302 10,259 28,246 59,231 79,208" --pivot 117,205 --fill-x0 96 --scale 0.5 >/dev/null
+python3 $ROOT/tools/art_rig.py ref/anime_hero_keyed.png assets/anime/rig_hero --poly "108,183 135,194 150,235 150,281 100,292 84,301 59,304 60,340 92,342 92,366 68,369 90,655 78,666 61,666 29,372 2,366 2,342 32,338 33,306 13,302 10,259 28,246 59,231 79,208" --pivot 117,205 --fill-x0 96 --scale 0.5 >/dev/null
 rm -rf $T
