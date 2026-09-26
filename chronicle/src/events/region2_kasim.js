@@ -28,8 +28,9 @@
       const z = ev.npc('zaid');
       const p = ev.player;
       // ザイード hurries over from the caravan camp to the traveller at the gate
-      if (z.visible && p.x != null) {
-        z.setPos(p.x + 3, p.y - 2, 'left');
+      const atGate = z.visible && p.x != null && p.y >= 38;
+      if (atGate) {
+        z.setPos(p.x + 3, p.y - 1, 'left');
         await z.walk('LL');
         z.face('player');
       }
@@ -41,7 +42,7 @@
       ev.closeMessage();
       ev.setFlag('desert_start');
       ev.setObjective('obj_desert_1', { region: REGION });
-      if (z.visible) {
+      if (atGate) {
         await z.walk('RR');
         z.setPos(33, 33, 'down');
       }
