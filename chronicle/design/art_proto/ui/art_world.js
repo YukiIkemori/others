@@ -6,7 +6,7 @@
   const mk = ENV.mk;
 
   const Q = {
-    rock: ramp(['#141218', '#24212a', '#38343e', '#4e4a52', '#68626a', '#847c82'], 8),
+    rock: ramp(['#1a1820', '#2c2934', '#423e4a', '#5a5462', '#76707c', '#948c96'], 8),
     rockTop: ramp(['#08080e', '#0e0e16', '#16161f', '#1e1e28', '#282833'], 6),
     caveFloor: ramp(['#1a1c22', '#2a2c34', '#3c3e48', '#50525c', '#666872'], 8),
     sand: ramp(['#3a3226', '#5a4e3a', '#7a6c50', '#9a8a68', '#b8a682'], 7),
@@ -65,18 +65,27 @@
     const Wt = 30, Ht = DUN.length, W = Wt * TS, H = Ht * TS, buf = new TD.Buf(W, H);
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
       const jx = x + (vnoise(x * 0.07, y * 0.07, 3) - 0.5) * 16, jy = y + (vnoise(x * 0.07, y * 0.07, 4) - 0.5) * 12;
-      const t = dunTile(Math.floor(jx / TS), Math.floor(jy / TS));
+      const tr = dunTile(Math.floor(x / TS), Math.floor(y / TS)), tj = dunTile(Math.floor(jx / TS), Math.floor(jy / TS));
+      const t = tr === '#' ? '#' : (tj === '#' ? '.' : tj);
       let c;
       if (t === '#') {
         // ceiling rock seen from above: very dark, subtle lumps
         const l = 0.45 + (vnoise(x * 0.05, y * 0.05, 7) - 0.5) * 0.5 + (vnoise(x * 0.3, y * 0.3, 8) - 0.5) * 0.2;
         c = pick(Q.rockTop, l);
+        // rim where the rock top meets open floor at the sides
+        const tx = Math.floor(x / TS), ty = Math.floor(y / TS), ex = x - tx * TS;
+        if ((ex < 3 && dunTile(tx - 1, ty) !== '#') || (ex > TS - 4 && dunTile(tx + 1, ty) !== '#')) c = pick(Q.rock, 0.55);
+        if (ty > 0 && y - ty * TS < 3 && dunTile(tx, ty - 1) !== '#') c = pick(Q.rock, 0.5);
       } else if (t === '~') {
         const n = vnoise(x * 0.04, y * 0.07, 9), r = vnoise(x * 0.1, y * 0.4, 10);
         c = mix([8, 30, 44], [20, 70, 84], n * 0.8); if (r > 0.72) c = mix(c, [120, 230, 230], 0.35);
       } else {
         // wet slab floor: large flat stones + puddle sheen + moss
-        c = TD.cobbleAt(x, y, { cw: 22, ch: 15, ramp: Q.caveFloor, mortar: [14, 14, 18], flat: true });
+        const cb = TD.cobbleAt(x, y, { cw: 30, ch: 20, ramp: Q.caveFloor, mortar: [14, 14, 18], flat: true });
+        const f = 0.46 + (vnoise(x * 0.03, y * 0.04, 14) - 0.5) * 0.35 + (vnoise(x * 0.12, y * 0.12, 15) - 0.5) * 0.2 + (vnoise(x * 0.5, y * 0.5, 16) - 0.5) * 0.12;
+        c = pick(Q.caveFloor, f);
+        if (cb[0] === 14 && cb[2] === 18) c = mix(c, [10, 10, 16], 0.6); else c = mix(c, cb, 0.3);
+        if (TD.H3(x >> 1, y >> 1, 17) > 0.985) c = pick(Q.caveFloor, 0.9);
         if (vnoise(x * 0.05, y * 0.05, 12) > 0.66) c = mix(c, [30, 60, 50], 0.4);
         if (vnoise(x * 0.04, y * 0.06, 13) > 0.75) c = mix(c, [60, 80, 110], 0.3);
       }
@@ -85,7 +94,7 @@
     // wall front faces: rock tiles with floor below get a 1-tile face drawn over the floor tile top
     for (let ty = 0; ty < Ht; ty++) for (let tx = 0; tx < Wt; tx++) {
       if (dunTile(tx, ty) !== '#' || dunTile(tx, ty + 1) === '#') continue;
-      const x0 = tx * TS, y0 = (ty + 1) * TS - 4, h = 30;
+      const x0 = tx * TS, y0 = (ty + 1) * TS - 6, h = 40;
       buf.fill(x0, y0, x0 + TS, y0 + h, (x, y) => { const lip = vnoise(x * 0.2, 0, 21) * 5; const e = y - y0 - lip; if (e < 0) return null; return faceAt(x, y, e, h, 22, Q.rock); });
       // floor AO under the face
       for (let x = x0; x < x0 + TS; x++) for (let k = 0; k < 10; k++) buf.set(x, y0 + h + k, [4, 4, 10], 0.55 * (1 - k / 10));
@@ -104,8 +113,8 @@
       if (ch === 'C') TD.place(list, 'chest', tx + 0.5, ty + 0.8, { open: true });
     }
     // healing spring (WORLD_REDESIGN §6.2) and torches on wall faces
-    TD.place(list, 'spring', 9.5, 8.9);
-    [[7.5, 2.3], [20.5, 2.3], [16.5, 9.3], [3.5, 15.3]].forEach(([x, y]) => TD.place(list, 'torch', x, y + 0.7));
+    TD.place(list, 'spring', 9.5, 8.9, { scale: 1.25 });
+    [[7.5, 2.3], [20.5, 2.3], [15.5, 10.2], [18.5, 10.2], [3.5, 15.3], [26.5, 7.3], [9.5, 14.3]].forEach(([x, y]) => TD.place(list, 'torch', x, y + 0.7));
     [[4.3, 5.5, 9], [27.2, 10.5, 12], [11.4, 14.6, 8], [19.6, 7.9, 10], [22, 16.6, 9]].forEach(([x, y, s], i) => TD.place(list, 'rock', x, y, { s, seed: i + 3, moss: i % 2 === 0 }));
     // stairs down
     const dx = 24 * TS, dy = 13 * TS;
@@ -117,7 +126,7 @@
     const { lights, emits } = TD.composeScene(ctx, list, []);
     // pools glow faintly (bioluminescence)
     for (let ty = 0; ty < Ht; ty++) for (let tx = 0; tx < Wt; tx++) if (dunTile(tx, ty) === '~' && H3(tx, ty, 5) > 0.5) lights.push({ x: tx * TS + 16, y: ty * TS + 16, r: 48, c: [60, 200, 200], k: 0.35 });
-    TD.lightmap(ctx, W, H, 'rgb(30,36,64)', lights);
+    TD.lightmap(ctx, W, H, 'rgb(46,54,92)', lights);
     TD.drawEmissive(ctx, emits);
     // spring: a column of light and rising motes
     { const sx = 9.5 * TS, sy = 8.9 * TS - 24; ctx.save(); ctx.globalCompositeOperation = 'lighter';

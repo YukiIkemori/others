@@ -559,7 +559,7 @@
           emits.push({ kind: 'point', x: lx, y: ly, cyan: m.cyan, big: it.kind === 'beacon' || m.big });
         }
         if (it.o.lantern) { const lx = it.x + (it.o.ldx || 8), ly = it.y - 7; lights.push({ x: lx, y: it.y, r: 88, c: [255, 196, 120], k: 0.95, sy: 0.7 }); emits.push({ kind: 'point', x: lx, y: ly, small: true }); }
-        if (it.kind === 'chest' && !it.o.open) emits.push({ kind: 'sparkle', x: it.x + 7, y: it.y - 19 });
+        if (it.kind === 'chest' && !it.o.open) { emits.push({ kind: 'sparkle', x: it.x + 7, y: it.y - 19 }); lights.push({ x: it.x, y: it.y - 6, r: 34, c: [255, 210, 140], k: 0.7 }); }
       }
     }
     return { lights, emits, moonMask };
