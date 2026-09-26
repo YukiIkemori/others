@@ -891,6 +891,8 @@
       { w: 5, mons: [['jelly_1', 1, 2], ['crab_1', 1, 1]] },
       { w: 5, mons: [['rat_1', 1, 2], ['seabird_1', 1, 2]] },
       { w: 2, mons: [['jelly_2', 1, 1], ['jelly_1', 1, 2]] },
+      { w: 2, mons: [['seabird_2', 1, 1], ['seabird_1', 1, 2]] },
+      { w: 2, mons: [['crab_2', 1, 1], ['rat_1', 1, 2]] },
     ] },
     z_lighthouse: { region: 'prologue', tier: 0, lv: [3, 5], bg: 'tower', groups: [
       { w: 9, mons: [['bat_1', 2, 3]] },

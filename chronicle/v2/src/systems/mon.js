@@ -494,7 +494,7 @@
   function stepChance(zoneId, z) {
     const E = K('ENC');
     const avg = z.steps || (/^zw_/.test(zoneId) ? E.world : E.dungeon);
-    const base = 1 / Math.max(1, avg - E.safeSteps);
+    const base = 1 / Math.max(1, avg - E.safeSteps + 1);   // 平均の間隔 = 安全な歩数 − 1 ＋ 1/base = avg
     const mod = 1 + clamp(partyMods().encounterPct || 0, -100, 50) / 100;
     return base * (z.rate != null ? z.rate : 1) * mod;
   }

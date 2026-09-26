@@ -2042,7 +2042,7 @@
         gone: { get: () => !!u.gone, enumerable: true },
         wtype: { get: () => (P ? u.wtype : null), enumerable: true },
         golden: { get: () => !!u.golden, enumerable: true },
-        boss: { get: () => !!u.boss, enumerable: true },
+        boss: { get: () => !!u.boss && !(u.d && u.d.artKind === 'mon'), enumerable: true },   // 絵のキー（根の子分は hd:mon）
         rare: { get: () => !!u.rare, enumerable: true },
         defending: { get: () => !!u.defending, enumerable: true },
         telegraph: { get: () => (!P && u.reserved ? u.reserved.id : null), enumerable: true },
@@ -2164,6 +2164,8 @@
         if (eng.result && eng.result !== 'timeout') out.push({ t: 'end', result: eng.result });
         return out;
       },
+      /** B.finish の後の出来事（伸び {t:'grow', c, hp, mp}）。勝利の画面が rewards().grow と同じ物を出来事で読むとき */
+      afterEvents() { return finished && finished.grow ? finished.grow.map((g) => ({ t: 'grow', c: g.c, hp: g.hp, mp: g.mp })) : []; },
       rewards() {
         const rw = eng.result === 'win' ? eng.computeRewards() : { gold: 0, drops: [] };
         return {

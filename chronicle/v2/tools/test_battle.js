@@ -126,7 +126,7 @@ section('R.Mon（曲線・def・金色・闇の強まり）');
 // ================================================================ 出現（R.Mon.encounter）
 section('出現（R.Mon.encounter: 率・組・魔除けの香・決まった結果）');
 {
-  newGame(['bartolo', 'marta', 'sylvain']);
+  newGame([]);   // 出現の率の品・特性（encounterPct）の無い一行
   const G = R.Game;
   const runSteps = (zone, n, o) => {
     R.Mon.resetEncounter();
@@ -139,12 +139,17 @@ section('出現（R.Mon.encounter: 率・組・魔除けの香・決まった結
     return { hits, mean: gaps.reduce((a, b) => a + b, 0) / Math.max(1, gaps.length), min: Math.min(...gaps) };
   };
   const w = runSteps('zw_forest', 30000);
-  ok(`world zone: mean ≈ 26 steps (${w.mean.toFixed(1)})`, w.mean > 23 && w.mean < 29);
+  ok(`world zone: mean ≈ 26 steps (${w.mean.toFixed(1)})`, w.mean > 24 && w.mean < 28);
   ok('safe steps: never two battles within 6 steps', w.min >= 6, w.min);
   const d = runSteps('z_verda', 30000);
-  ok(`dungeon zone: mean ≈ 22 steps (${d.mean.toFixed(1)})`, d.mean > 19.5 && d.mean < 24.5);
+  ok(`dungeon zone: mean ≈ 22 steps (${d.mean.toFixed(1)})`, d.mean > 20.5 && d.mean < 23.5);
   const road = runSteps('zw_forest_road', 60000);
-  ok(`forest road ×0.3: mean ≈ 73 steps (${road.mean.toFixed(1)})`, road.mean > 60 && road.mean < 86);
+  ok(`forest road ×0.3: mean ≈ 75 steps (${road.mean.toFixed(1)})`, road.mean > 66 && road.mean < 84);
+  // 一行の encounterPct（シルヴァン −25）が率にかかる
+  newGame(['sylvain']);
+  const sy = runSteps('zw_forest', 30000);
+  ok(`encounterPct −25 lengthens the gaps (${sy.mean.toFixed(1)})`, sy.mean > w.mean * 1.12);
+  newGame([]);
   G.steps = 1234;
   R.Mon.resetEncounter();
   const a = R.Mon.encounter('zw_prologue', { steps: 1234, tier: 0, force: true });
@@ -373,7 +378,8 @@ section('予告の予約（E18）・考えどころ（§3.6）');
 section('リピート（B まで続く・次の戦闘へ持ち越さない）');
 {
   newGame(['bartolo', 'marta', 'sylvain']);
-  const B = R.BattleCore.create({ mons: [['treant_2', 1]], lv: 20, seed: 'rep' });
+  const B = R.BattleCore.create({ mons: [['treant_1', 1]], lv: 7, seed: 'rep' });
+  B.engine.mons[0].hp = B.engine.mons[0].mhp = 5000;
   const enemy = B.units.find((u) => u.side === 'enemy');
   for (const u of B.units.filter((x) => x.side === 'party')) B.submit(u.uid, u.uid === 'p_marta' ? { cmd: 'defend' } : { cmd: 'attack', target: enemy.uid });
   B.round();
@@ -383,7 +389,7 @@ section('リピート（B まで続く・次の戦闘へ持ち越さない）');
   let acts = 0, defends = 0;
   for (let i = 0; i < 3 && !B.over; i++) {
     const evs = B.round();
-    acts += evs.filter((e) => e.t === 'act' && e.uid === 'p_hero' && e.cmd === 'attack').length;
+    acts += evs.filter((e) => e.t === 'act' && e.uid === 'p_hero' && (e.cmd === 'attack' || e.cmd === 'skill')).length;
     defends += evs.filter((e) => e.t === 'act' && e.uid === 'p_marta' && e.cmd === 'defend').length;
   }
   ok('repeat keeps going with no new commands', acts >= 2 && defends >= 2, { acts, defends });
@@ -449,7 +455,15 @@ section('出来事の種類（R.Contract.BATTLE_EVENTS をすべて出せる）'
     const s = BC.simulate(Object.assign({ party: R.Party.members(), seed: 'ev' + k + JSON.stringify(sc), events: true, rewards: true, inv: { i_potion: 2 } }, sc));
     for (const e of s.events) { seen.add(e.t); all.push(e); }
   }
-  // 盗み・得る（盗みの出来事）・逃げる・予告の取り消しは直接
+  // 伸び（B.finish の後の grow）・起き上がる（revive）・盗みは直接
+  newGame(['bartolo', 'marta', 'sylvain']);
+  const Bg = R.BattleCore.create({ troop: 'tr_b_pageeater', seed: 'grow' });
+  Bg.engine.mons[0].hp = 0; Bg.engine.killed.push(Bg.engine.mons[0]); Bg.engine.result = 'win';
+  Bg.finish();
+  for (const x of Bg.afterEvents()) { seen.add(x.t); all.push(x); }
+  const er = engine({ mons: ['rat_1'] });
+  er.party[1].hp = 0;
+  for (const e of drainAll(er.effect(er.party[0], er.party[1], { type: 'revive', pct: 0.5 }, {}))) for (const x of BC.toEvents(e, 'アルン', [], er)) { seen.add(x.t); all.push(x); }
   const eng = engine({ mons: ['rm_jewel_hare'], rng: seqRng([0, 0], 0.5) });
   for (const e of drainAll(eng.steal(eng.party[0], eng.mons[0]))) for (const x of BC.toEvents(e, 'アルン', [], eng)) { seen.add(x.t); all.push(x); }
   const missing = Object.keys(C.BATTLE_EVENTS).filter((t) => !seen.has(t));

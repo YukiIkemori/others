@@ -3,7 +3,7 @@
 //   世界を描く場面（FIELD・BSCENE）が自分の draw の最後、HUD の前に 1 回呼ぶ。実キャンバスの画素のまま（変換は中で戻す）。
 //   - 周辺減光・暗部の持ち上げ（grade.sh と lift。真っ黒にしない）・明るさ（1 未満）は「焼いた膜 1 枚」を source-over で 1 回（いちばん軽い合成）
 //   - 彩度（grade.sat < 1 のときだけ）は saturation の塗り 1 回。明部の色（grade.hi）は毎フレームでは掛けない（人物・物は R.Hd.grade で焼くときに）
-//   - ブルームは効果「高」だけ: 1/4 に縮めて明るい所を強め（自分を 2 回掛ける ≈ 4 乗）、1/8・1/16 でぼかし、1/2 から screen で重ねる
+//   - ブルームは効果「高」だけ: 1/4 に縮めて明るい所を強め（自分を 2 回掛ける ≈ 4 乗）、1/8・1/16 でぼかし、1/4 から screen で重ねる
 //   - 設定「明るさ」（0.85 / 1 / 1.25）はここで掛ける（チャンクを焼き直さない）。1 未満は膜の中、1 より上は color-dodge（×b）
 //   効果「切」: 明るさだけ（周辺減光・色調・ブルームなし。ART_REWORK §1.5.3）。「低」: ブルームなし。
 //   値は o の物 → 無ければ mood（R.Hd.mood(o.mood || 'night')）。grade は mood の id か {sh, hi, lift, sat}、false で色調なし。
@@ -67,7 +67,7 @@
   P._film = film;
 
   function bloom(g, cv, W, H, amount) {
-    const q4 = buf('q4', W / 4, H / 4), q8 = buf('q8', W / 8, H / 8), q16 = buf('q16', W / 16, H / 16), h2 = buf('h2', W / 2, H / 2);
+    const q4 = buf('q4', W / 4, H / 4), q8 = buf('q8', W / 8, H / 8), q16 = buf('q16', W / 16, H / 16);
     const x4 = q4.x;
     x4.globalCompositeOperation = 'copy';
     x4.globalAlpha = 1;
@@ -84,12 +84,11 @@
     x4.drawImage(q8.c, 0, 0, q4.w, q4.h);
     x4.globalCompositeOperation = 'lighter';
     x4.drawImage(q16.c, 0, 0, q4.w, q4.h);
-    // 1/4 → 1/2 は滑らかに、1/2 → 画面は最近傍（ぼけた絵なので 2 画素の段は見えない。滑らかな拡大より速い）
-    h2.x.globalCompositeOperation = 'copy'; h2.x.imageSmoothingEnabled = true; h2.x.drawImage(q4.c, 0, 0, h2.w, h2.h);
+    // 1/4 → 画面は最近傍（1/16 からなだらかにした絵なので段は目立たない。滑らかな拡大はソフトの描画で 3〜4 倍重い）
     g.globalCompositeOperation = 'screen';
     g.globalAlpha = Math.min(1, amount);
     g.imageSmoothingEnabled = false;
-    g.drawImage(h2.c, 0, 0, W, H);
+    g.drawImage(q4.c, 0, 0, W, H);
     g.globalAlpha = 1;
   }
 
