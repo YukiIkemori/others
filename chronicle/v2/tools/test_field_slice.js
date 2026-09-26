@@ -45,11 +45,13 @@ function reach(R, map, starts) {
   }
   return seen;
 }
-/** tilePatches を「全部当てる」／「全部外す」の 2 つの形（条件の組み合わせのどちらかで行ければよい） */
+/** tilePatches を「全部外す」／「全部当てる」／「全部当てて条件つきの物を除く」の 3 つの形（条件の組み合わせのどれかで行ければよい） */
 function variants(map) {
   const on = Object.assign({}, map, { id: map.id + '__on', tilePatches: (map.tilePatches || []).map((p) => Object.assign({}, p, { cond: null })) });
   const off = Object.assign({}, map, { id: map.id + '__off', tilePatches: [] });
-  return [off, on];
+  // 条件つきの物（倒木・つるなど、筋で消える物）が無い形
+  const open = Object.assign({}, on, { id: map.id + '__open', objects: (map.objects || []).filter((o) => o.cond == null || o.type === 'trail') });
+  return [off, on, open];
 }
 
 function nodePart() {

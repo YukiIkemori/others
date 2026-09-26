@@ -116,7 +116,7 @@
         north: { x: 29, y: 2, dir: 's' },
         camp: { x: 30, y: 33, dir: 'n' },
         g4: { x: 45, y: 44, dir: 'e' },
-        g5: { x: 16, y: 45, dir: 'w' },
+        g5: { x: 16, y: 46, dir: 'w' },
       },
       exits: [
         { x: 28, y: 51, w: 4, h: 1, to: { map: 'fern', spawn: 'gate_n' } },

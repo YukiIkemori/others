@@ -314,7 +314,7 @@
       const po = st.partyOpts || [];
       const w2 = K.chip(g, x, y, 'リピート', { icon: 'repeat', size: 12 * k, color: st.B && st.B.repeatOn ? COL.gold : po.includes('repeat') ? COL.text2 : COL.disabled });
       st.chipRects.repeat = { x, y, w: w2, h: 22 * k }; x += w2 + 10 * k;
-      if (!st.setup.noEscape) {
+      if (!st.setup.noEscape && !(st.info && st.info.boss)) {   // ボス戦は逃げられない（BATTLE 34-11）: 札を出さない
         const w3 = K.chip(g, x, y, '逃げる', { icon: 'exit', size: 12 * k, color: po.includes('escape') ? COL.text2 : COL.disabled });
         st.chipRects.escape = { x, y, w: w3, h: 22 * k };
       }

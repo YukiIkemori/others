@@ -236,6 +236,65 @@
     };
   }
 
+  // ---------------------------------------------------------------- 戦闘背景の層と光（BEAST の依頼 22: R.Beast.stage が見本）
+  function layer(c, sh, name, mode) {
+    for (const i of (sh.poses && sh.poses[name]) || []) {
+      if (mode) { c.save(); c.globalCompositeOperation = mode; }
+      R.Hd.draw(c, sh.frames[i], 0, 0, {});
+      if (mode) c.restore();
+    }
+  }
+  const LAY = { a: null, m: null };
+  function canvasOf(k, w, h) {
+    let c = LAY[k];
+    if (!c || c.width !== w || c.height !== h) { c = LAY[k] = R.Hd.RZ.canvas(w, h); }
+    return c;
+  }
+  /** 光の地図（戦闘ごとに 1 回。灯りは背景のランタンの位置で動かない） */
+  function stageLightMap(st, sh) {
+    const m = sh.meta || {};
+    const key = [sh.w, sh.h, m.mood, m.lantern && m.lantern.x, m.lantern && m.lantern.y].join('|');
+    if (st.lmap && st.lmapKey === key) return st.lmap;
+    const W = sh.w || R.W, H = sh.h || R.H;
+    const md = R.Hd.mood ? R.Hd.mood(m.mood) : null;
+    const amb = (md && md.ambient) || m.ambient || 'rgb(92,84,150)';
+    const lk = Math.min(W, H * 16 / 9);
+    const lx = m.lantern ? m.lantern.x : W * 0.52, ly = m.lantern ? m.lantern.y : H * 0.7;
+    const lights = [{ x: lx, y: ly - 6, r: Math.round(lk * 0.34), color: 'rgb(255,200,130)', k: 0.8, sy: 0.55 }, { x: lx, y: ly - 4, r: Math.round(lk * 0.12), color: 'rgb(255,228,186)', k: 0.45, sy: 0.6 }];
+    let map = null;
+    try { map = R.Light && R.Light.map ? R.Light.map({ x: 0, y: 0, w: W, h: H }, { ambient: amb, k: 1, lights, mood: m.mood }) : null; } catch (e) { map = null; }
+    if (!map && R.Beast && R.Beast.lightMap) { try { map = R.Beast.lightMap(W, H, { ambient: amb, lights }); } catch (e) { map = null; } }
+    st.lmap = map; st.lmapKey = key;
+    return map;
+  }
+  /**
+   * 地面・影・人と敵・手前を 1 枚の層に描き、その層の不透明な所にだけ光の地図を multiply（meta.light === 'layer'）。
+   * 夜空（back）を二重に暗くせず、地平より上に出る大きいボス・人も上下で明るさが割れない。層は実キャンバスの解像度で、g と同じ変換。
+   */
+  function litStage(g, st, sh, mid) {
+    if (!g.canvas || !g.getTransform || !(R.Hd.RZ && R.Hd.RZ.canvas)) return false;
+    const map = stageLightMap(st, sh);
+    if (!map) return false;
+    const cw = g.canvas.width, ch = g.canvas.height;
+    const A = canvasOf('a', cw, ch), M = canvasOf('m', cw, ch);
+    const ax = A.getContext('2d'), mx = M.getContext('2d');
+    const tf = g.getTransform();
+    ax.setTransform(1, 0, 0, 1, 0, 0); ax.globalCompositeOperation = 'source-over'; ax.globalAlpha = 1; ax.clearRect(0, 0, cw, ch);
+    ax.setTransform(tf); ax.imageSmoothingEnabled = false;
+    mid(ax);
+    // 光の地図を層の形で切り抜く
+    mx.setTransform(1, 0, 0, 1, 0, 0); mx.globalCompositeOperation = 'source-over'; mx.clearRect(0, 0, cw, ch);
+    mx.setTransform(tf); mx.imageSmoothingEnabled = true;
+    mx.drawImage(map, 0, 0, sh.w || R.W, sh.h || R.H);
+    mx.setTransform(1, 0, 0, 1, 0, 0);
+    mx.globalCompositeOperation = 'destination-in'; mx.drawImage(A, 0, 0);
+    ax.setTransform(1, 0, 0, 1, 0, 0);
+    ax.globalCompositeOperation = 'multiply'; ax.drawImage(M, 0, 0);
+    ax.globalCompositeOperation = 'source-over';
+    g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.drawImage(A, 0, 0); g.restore();
+    return true;
+  }
+
   function draw(g, st) {
     const L = st.L, t = R.Engine.time;
     g.save();
@@ -245,13 +304,25 @@
       if (e >= 1) st.shake = null;
       else { const amp = st.shake.amp * (1 - e) * (R.Settings.get('shake') === 'weak' ? 0.4 : 1); g.translate(Math.round(Math.sin(t / 22) * amp), Math.round(Math.cos(t / 31) * amp * 0.5)); }
     }
-    // 背景
+    // 背景（BEAST の R.Beast.stage と同じ順: back → [層: ground → 影と人と敵 → front → 層にだけ光を multiply] → post（lighter）→ R.Post.frame）
     const bk = bgKey(st);
     const sh = bk && R.Hd && R.Hd.has && R.Hd.has(bk) ? R.Hd.get(bk, bgOpts()) : null;
     let lantern = L.lantern;
-    if (sh && sh.frames && sh.poses) {
-      for (const layer of ['back', 'ground']) for (const i of sh.poses[layer] || []) R.Hd.draw(g, sh.frames[i], 0, 0, {});
-      if (sh.meta && sh.meta.lantern) lantern = [sh.meta.lantern.x, sh.meta.lantern.y];
+    const baked = !!(sh && sh.frames && sh.poses);
+    if (baked && sh.meta && sh.meta.lantern) lantern = [sh.meta.lantern.x, sh.meta.lantern.y];
+    const order = st.actors.slice().sort((a, b) => a.y - b.y);
+    const mid = (c) => {
+      if (baked) layer(c, sh, 'ground');
+      _.actors.lanternPool(c, { lantern, tall: L.tall, baked }, t);
+      for (const a of order) _.actors.shadow(c, st, a);
+      for (const a of order) _.actors.draw(c, st, a);
+      if (baked) layer(c, sh, 'front');
+    };
+    if (baked) {
+      layer(g, sh, 'back');
+      const lit = litStage(g, st, sh, mid);
+      if (!lit) mid(g);
+      layer(g, sh, 'post', (sh.meta && sh.meta.postMode) || 'lighter');
     } else {
       const c = _.actors.fallbackBg(L, st.setup.bg || (st.info.troop && st.info.troop.bg) || 'night');
       if (c) g.drawImage(c, 0, 0, R.W, L.stageH);
@@ -263,15 +334,10 @@
       g.fillStyle = gr; g.fillRect(0, L.stageH - 70, R.W, 70);
       g.fillStyle = '#0c0c14'; g.fillRect(0, L.stageH - 1, R.W, R.H - L.stageH + 1);
     }
-    _.actors.lanternPool(g, { lantern, tall: L.tall, baked: !!(sh && sh.frames) }, t);
-    // 人と敵（足もとの y の順）
-    const order = st.actors.slice().sort((a, b) => a.y - b.y);
-    for (const a of order) _.actors.shadow(g, st, a);
-    for (const a of order) _.actors.draw(g, st, a);
-    if (sh && sh.poses && sh.poses.front) for (const i of sh.poses.front) R.Hd.draw(g, sh.frames[i], 0, 0, {});
+    if (!baked) mid(g);
     _.play.drawFx(g, st);
     g.restore();
-    // 仕上げ（世界の最後・HUD の前）
+    // 仕上げ（世界の最後・HUD の前。RENDER の依頼: mood は背景の meta.mood）
     if (R.Post && R.Post.frame) { try { R.Post.frame(g, { mood: (sh && sh.meta && sh.meta.mood) || 'night' }); } catch (e) { /* 仕上げは無くてもよい */ } }
     if (st.dim > 0) { g.fillStyle = `rgba(6,6,14,${st.dim})`; g.fillRect(0, 0, R.W, R.H); }
     _.glimmer.drawWorld(g, st);
