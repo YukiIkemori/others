@@ -274,9 +274,9 @@
         { text: '定期船なら、真ん中の\n桟橋から出ているぜ。\n霧の日でも、船は出すさ。' },
       ], { dir: 'down', push: true }),
       // --- the scene frames of story_after_clear (§10.8.0-7): inn +2 down, all facing up
-      K.npc('st_rival', 'rowell', 15, 15, { dir: 'up', cond: 'st_show_rival', fixed: true, text: '……。' }),
-      K.npc('st_fine', 'fine', 17, 15, { dir: 'up', cond: 'st_show_fine', fixed: true, text: '……。' }),
-      K.npc('st_extra', 'scribe', 13, 15, { dir: 'up', cond: 'st_show_extra', fixed: true, text: '……。' }),
+      K.npc('st_rival', 'rowell', 15, 15, { dir: 'up', cond: 'st_show_rival', fixed: true, text: '……' }),
+      K.npc('st_fine', 'fine', 17, 15, { dir: 'up', cond: 'st_show_fine', fixed: true, text: '……' }),
+      K.npc('st_extra', 'scribe', 13, 15, { dir: 'up', cond: 'st_show_extra', fixed: true, text: '……' }),
     ],
     signs: [
       K.sign(28, 18, [

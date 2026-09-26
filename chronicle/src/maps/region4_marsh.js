@@ -145,7 +145,7 @@
       ...chain('c', 54, 24),
       // the antechamber: 休息の灯 and the girl in grey (§10.8.0-5)
       K.npc('rest', 'obj:lantern', 26, 18, { event: 'common_rest', fixed: true }),
-      K.npc('fine', 'fine', 29, 17, { dir: 'down', cond: ['!marsh_boss', '!marsh_fine'], fixed: true, event: 'bell_marsh_1_fine' }),
+      K.npc('fine', 'fine', 29, 17, { dir: 'down', cond: '!marsh_boss', fixed: true, event: 'bell_marsh_1_fine' }),
       // the clearing: 霧食らい (visible boss, §10.6.2-6)
       K.npc('boss', 'mon:boss_mistbeast', 29, 6, { event: 'bell_marsh_1_boss', cond: '!marsh_boss', fixed: true }),
       // scene only (shown by bell_marsh_1_boss after the battle)
