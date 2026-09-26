@@ -19,7 +19,7 @@
 
   D.story_t1 = {
     once: true,
-    meta: { needs: ['cleared_r_forest'], gives: ['flag:story_t1', 'lead:l_main_margin_1'] },
+    meta: { needs: ['cleared:r_forest'], gives: ['flag:story_t1', 'lead:l_main_margin_1'] },
     run: async (ev) => {
       const E = X();
       await E.narr(ev, '{hero}に、師匠ベルナから\n手紙が届いていた。');
