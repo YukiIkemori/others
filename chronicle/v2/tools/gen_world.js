@@ -173,7 +173,6 @@ for (let y = 44; y <= 121; y++) for (let x = 12; x <= 64; x++) {
   if (n > 0.64) c = 'F';
   else if (n > 0.5 && r < 0.3) c = 'T';
   else if (r < 0.05) c = 'T';
-  else if (r > 0.985) c = 'b';
   set(x, y, c);
 }
 // 北の野: 草・花・木立

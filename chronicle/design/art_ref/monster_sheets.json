@@ -1,11 +1,10 @@
 {
- "about": "MONSTER_REQUEST.md のシート → マス → 魔物 id と大きさの段（sprite_pipe 用）。1 マス = 1 体。マスは左上から右へ、上の行から順（reading order）。空きマスはマゼンタのまま。",
- "version": 1,
+ "about": "MONSTER_REQUEST.md のシート → マス → 魔物（sprite_pipe 用）。1 マス = 1 体、マスは左上から右へ・上の行から（reading order）。空きマスはマゼンタのまま。pxPerDot はシートごとに違う（シートの中では同じ）。targetDots / targetHeight はゲームの art px（= 描いたドット数。エンジンは拡大縮小しない。w は目安）。",
+ "version": 2,
  "date": "2026-09-26",
  "source": "chronicle/design/art_ref/MONSTER_REQUEST.md",
  "rules": {
   "background": "#FF00FF",
-  "dotPx": 8,
   "facing": "right",
   "view": "3/4 side",
   "personBattleDots": 64,
@@ -13,91 +12,131 @@
   "outline": "dark colored 1 dot, no pure black",
   "noEffects": true,
   "golden": "engine",
+  "onePieceBody": true,
   "filename": "mon_s{NN}.png (NN = 2-digit sheet number); redraws mon_s{NN}_v2.png …"
  },
  "classes": {
   "S": {
-   "note": "長い辺 36〜44 ドット（目安 40）",
+   "note": "長い辺 48〜56 ドット（目安 52、上の段 56）",
    "canvas": [
     1536,
-    1024
+    1536
    ],
+   "px": 8,
    "grid": [
-    3,
+    2,
     2
    ],
    "cellDots": [
-    64,
-    64
+    96,
+    96
    ],
-   "longSide": [
-    36,
-    44
-   ],
-   "target": 40,
-   "box": [
-    56,
-    56
-   ]
-  },
-  "M": {
-   "note": "長い辺 48〜56 ドット（目安 54）",
-   "canvas": [
-    1536,
-    1024
-   ],
-   "grid": [
-    3,
-    2
-   ],
-   "cellDots": [
-    64,
-    64
+   "cellPx": [
+    768,
+    768
    ],
    "longSide": [
     48,
     56
    ],
-   "target": 54,
+   "target": 52,
+   "upper": 56,
    "box": [
-    56,
-    56
+    84,
+    84
+   ]
+  },
+  "M": {
+   "note": "長い辺 72〜84 ドット（目安 80、上の段 84）",
+   "canvas": [
+    1536,
+    1536
+   ],
+   "px": 8,
+   "grid": [
+    2,
+    2
+   ],
+   "cellDots": [
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "longSide": [
+    72,
+    84
+   ],
+   "target": 80,
+   "upper": 84,
+   "box": [
+    84,
+    84
    ]
   },
   "L": {
-   "note": "長い辺 80〜110 ドット、幅 86 × 高さ 112 の中",
+   "note": "長い辺 100〜120 ドット（目安 110、上の段 120）、幅 116 × 高さ 150 の中",
    "canvas": [
     1536,
     1024
    ],
+   "px": 6,
    "grid": [
     2,
     1
    ],
    "cellDots": [
-    96,
-    128
+    128,
+    170
+   ],
+   "cellPx": [
+    768,
+    1024
    ],
    "longSide": [
-    80,
-    110
+    100,
+    120
    ],
-   "target": 100,
+   "target": 110,
+   "upper": 120,
    "box": [
-    86,
-    112
+    116,
+    150
    ]
   },
   "B": {
-   "note": "1 枚 1 体。yoko = 1536×1024（枠 180×120 ドット）、tate = 1024×1536（枠 120×180 ドット）。targetDots はマスごと",
-   "boxYoko": [
-    180,
-    120
-   ],
-   "boxTate": [
-    120,
-    180
-   ]
+   "note": "1 枚 1 体、6 px/dot。中ボス 長い辺 150〜170、地方ボス・最後 190〜230、人の姿 身長 68〜84。targetDots はマスごと",
+   "px": 6,
+   "yoko": {
+    "canvas": [
+     1536,
+     1024
+    ],
+    "dots": [
+     256,
+     170
+    ],
+    "box": [
+     240,
+     160
+    ]
+   },
+   "tate": {
+    "canvas": [
+     1024,
+     1536
+    ],
+    "dots": [
+     170,
+     256
+    ],
+    "box": [
+     160,
+     240
+    ]
+   }
   }
  },
  "sheets": [
@@ -109,15 +148,24 @@
    "class": "S",
    "canvas": [
     1536,
-    1024
+    1536
    ],
+   "pxPerDot": 8,
    "grid": [
-    3,
+    2,
     2
    ],
    "cellDots": [
-    64,
-    64
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
    ],
    "cells": [
     {
@@ -127,7 +175,12 @@
      "sprite": "jelly_1",
      "kind": "mob",
      "size": "S",
-     "targetLongSide": 40,
+     "targetDots": {
+      "w": 39,
+      "h": 52,
+      "long": 52
+     },
+     "targetHeight": 52,
      "alsoMakes": [
       "jelly_2",
       "jelly_3",
@@ -143,7 +196,12 @@
      "sprite": "rat_1",
      "kind": "mob",
      "size": "S",
-     "targetLongSide": 40,
+     "targetDots": {
+      "w": 52,
+      "h": 36,
+      "long": 52
+     },
+     "targetHeight": 36,
      "alsoMakes": [
       "rat_2",
       "rat_3"
@@ -156,8 +214,13 @@
      "sprite": "bat_1",
      "kind": "mob",
      "size": "S",
+     "targetDots": {
+      "w": 52,
+      "h": 36,
+      "long": 52
+     },
+     "targetHeight": 36,
      "flying": true,
-     "targetLongSide": 40,
      "alsoMakes": [
       "bat_2",
       "bat_3",
@@ -171,39 +234,17 @@
      "sprite": "bee_1",
      "kind": "mob",
      "size": "S",
+     "targetDots": {
+      "w": 52,
+      "h": 36,
+      "long": 52
+     },
+     "targetHeight": 36,
      "flying": true,
-     "targetLongSide": 40,
      "alsoMakes": [
       "bee_2",
       "bee_3",
       "bee_4"
-     ]
-    },
-    {
-     "cell": 5,
-     "id": "mushroom_1",
-     "name": "ころりダケ",
-     "sprite": "mushroom_1",
-     "kind": "mob",
-     "size": "S",
-     "targetLongSide": 40,
-     "alsoMakes": [
-      "mushroom_2",
-      "mushroom_3"
-     ]
-    },
-    {
-     "cell": 6,
-     "id": "fairy_1",
-     "name": "いたずら妖精",
-     "sprite": "fairy_1",
-     "kind": "mob",
-     "size": "S",
-     "flying": true,
-     "targetLongSide": 40,
-     "alsoMakes": [
-      "fairy_2",
-      "fairy_3"
      ]
     }
    ]
@@ -213,18 +254,123 @@
    "file": "mon_s02.png",
    "star": true,
    "section": "star",
-   "class": "M",
+   "class": "S",
    "canvas": [
     1536,
-    1024
+    1536
    ],
+   "pxPerDot": 8,
    "grid": [
-    3,
+    2,
     2
    ],
    "cellDots": [
-    64,
-    64
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
+   ],
+   "cells": [
+    {
+     "cell": 1,
+     "id": "mushroom_1",
+     "name": "ころりダケ",
+     "sprite": "mushroom_1",
+     "kind": "mob",
+     "size": "S",
+     "targetDots": {
+      "w": 39,
+      "h": 52,
+      "long": 52
+     },
+     "targetHeight": 52,
+     "alsoMakes": [
+      "mushroom_2",
+      "mushroom_3"
+     ]
+    },
+    {
+     "cell": 2,
+     "id": "fairy_1",
+     "name": "いたずら妖精",
+     "sprite": "fairy_1",
+     "kind": "mob",
+     "size": "S",
+     "targetDots": {
+      "w": 39,
+      "h": 52,
+      "long": 52
+     },
+     "targetHeight": 52,
+     "flying": true,
+     "alsoMakes": [
+      "fairy_2",
+      "fairy_3"
+     ]
+    },
+    {
+     "cell": 3,
+     "id": "rm_acorn_prince",
+     "name": "どんぐり王子",
+     "sprite": "rare_acorn",
+     "kind": "rare",
+     "size": "S",
+     "targetDots": {
+      "w": 39,
+      "h": 52,
+      "long": 52
+     },
+     "targetHeight": 52
+    },
+    {
+     "cell": 4,
+     "id": "bee_5",
+     "name": "女王バチ",
+     "sprite": "bee_5",
+     "kind": "mob",
+     "size": "S",
+     "targetDots": {
+      "w": 56,
+      "h": 39,
+      "long": 56
+     },
+     "targetHeight": 39,
+     "flying": true
+    }
+   ]
+  },
+  {
+   "sheet": 3,
+   "file": "mon_s03.png",
+   "star": true,
+   "section": "star",
+   "class": "M",
+   "canvas": [
+    1536,
+    1536
+   ],
+   "pxPerDot": 8,
+   "grid": [
+    2,
+    2
+   ],
+   "cellDots": [
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
    ],
    "cells": [
     {
@@ -234,7 +380,12 @@
      "sprite": "crab_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56,
      "alsoMakes": [
       "crab_2",
       "crab_3"
@@ -247,8 +398,13 @@
      "sprite": "seabird_1",
      "kind": "mob",
      "size": "M",
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
      "flying": true,
-     "targetLongSide": 54,
      "alsoMakes": [
       "seabird_2",
       "seabird_3",
@@ -262,7 +418,12 @@
      "sprite": "plant_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
      "alsoMakes": [
       "plant_2",
       "plant_3",
@@ -276,36 +437,110 @@
      "sprite": "wolf_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56,
      "alsoMakes": [
       "wolf_2",
       "wolf_3",
       "wolf_4"
      ]
-    },
+    }
+   ]
+  },
+  {
+   "sheet": 4,
+   "file": "mon_s04.png",
+   "star": true,
+   "section": "star",
+   "class": "M",
+   "canvas": [
+    1536,
+    1536
+   ],
+   "pxPerDot": 8,
+   "grid": [
+    2,
+    2
+   ],
+   "cellDots": [
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
+   ],
+   "cells": [
     {
-     "cell": 5,
+     "cell": 1,
      "id": "rm_jewel_hare",
      "name": "宝石ウサギ",
      "sprite": "rare_hare",
      "kind": "rare",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56
     },
     {
-     "cell": 6,
+     "cell": 2,
      "id": "rm_bloom_fawn",
      "name": "花角の小鹿",
      "sprite": "rare_fawn",
      "kind": "rare",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56
+    },
+    {
+     "cell": 3,
+     "id": "rm_glass_moth",
+     "name": "ガラスアゲハ",
+     "sprite": "rare_glassmoth",
+     "kind": "rare",
+     "size": "M",
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56,
+     "flying": true
+    },
+    {
+     "cell": 4,
+     "id": "plant_5",
+     "name": "千年花",
+     "sprite": "plant_5",
+     "kind": "mob",
+     "size": "M",
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
     }
    ]
   },
   {
-   "sheet": 3,
-   "file": "mon_s03.png",
+   "sheet": 5,
+   "file": "mon_s05.png",
    "star": true,
    "section": "star",
    "class": "L",
@@ -313,13 +548,22 @@
     1536,
     1024
    ],
+   "pxPerDot": 6,
    "grid": [
     2,
     1
    ],
    "cellDots": [
-    96,
-    128
+    128,
+    170
+   ],
+   "cellPx": [
+    768,
+    1024
+   ],
+   "boxDots": [
+    116,
+    150
    ],
    "cells": [
     {
@@ -329,7 +573,12 @@
      "sprite": "treant_1",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100,
+     "targetDots": {
+      "w": 83,
+      "h": 110,
+      "long": 110
+     },
+     "targetHeight": 110,
      "alsoMakes": [
       "treant_2",
       "treant_3"
@@ -342,110 +591,12 @@
      "sprite": "b_root",
      "kind": "add",
      "size": "L",
-     "targetLongSide": 100
-    }
-   ]
-  },
-  {
-   "sheet": 4,
-   "file": "mon_s04.png",
-   "star": true,
-   "section": "star",
-   "class": "S",
-   "canvas": [
-    1536,
-    1024
-   ],
-   "grid": [
-    3,
-    2
-   ],
-   "cellDots": [
-    64,
-    64
-   ],
-   "cells": [
-    {
-     "cell": 1,
-     "id": "rm_acorn_prince",
-     "name": "どんぐり王子",
-     "sprite": "rare_acorn",
-     "kind": "rare",
-     "size": "S",
-     "targetLongSide": 40
-    },
-    {
-     "cell": 2,
-     "id": "bee_5",
-     "name": "女王バチ",
-     "sprite": "bee_5",
-     "kind": "mob",
-     "size": "S",
-     "flying": true,
-     "targetLongSide": 40
-    },
-    {
-     "cell": 3,
-     "id": "mushroom_4",
-     "name": "長老ダケ",
-     "sprite": "mushroom_4",
-     "kind": "mob",
-     "size": "S",
-     "targetLongSide": 40
-    },
-    {
-     "cell": 4,
-     "id": "fairy_4",
-     "name": "妖精姫",
-     "sprite": "fairy_4",
-     "kind": "mob",
-     "size": "S",
-     "flying": true,
-     "targetLongSide": 40
-    },
-    {
-     "cell": 5,
-     "id": "jelly_4",
-     "name": "ゼリー将軍",
-     "sprite": "jelly_4",
-     "kind": "mob",
-     "size": "S",
-     "targetLongSide": 40
-    },
-    {
-     "cell": 6,
-     "id": "rat_4",
-     "name": "ネズミの頭領",
-     "sprite": "rat_4",
-     "kind": "mob",
-     "size": "S",
-     "targetLongSide": 40
-    }
-   ]
-  },
-  {
-   "sheet": 5,
-   "file": "mon_s05.png",
-   "star": true,
-   "section": "star",
-   "class": "B",
-   "canvas": [
-    1536,
-    1024
-   ],
-   "orient": "yoko",
-   "cells": [
-    {
-     "cell": 1,
-     "id": "b_pageeater",
-     "name": "ページ食らい",
-     "sprite": "boss_pageeater",
-     "kind": "boss",
-     "size": "B",
-     "targetDots": [
-      130,
-      90
-     ]
+     "targetDots": {
+      "w": 83,
+      "h": 110,
+      "long": 110
+     },
+     "targetHeight": 110
     }
    ]
   },
@@ -455,23 +606,38 @@
    "star": true,
    "section": "star",
    "class": "B",
+   "orient": "yoko",
    "canvas": [
     1536,
     1024
    ],
-   "orient": "yoko",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    256,
+    170
+   ],
+   "boxDots": [
+    240,
+    160
+   ],
    "cells": [
     {
      "cell": 1,
-     "id": "b_wolflord",
-     "name": "狼の群れ頭",
-     "sprite": "boss_wolflord",
+     "id": "b_pageeater",
+     "name": "ページ食らい",
+     "sprite": "boss_pageeater",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      130,
-      90
-     ]
+     "targetDots": {
+      "w": 150,
+      "h": 100,
+      "long": 150
+     },
+     "targetHeight": 100
     }
    ]
   },
@@ -481,23 +647,38 @@
    "star": true,
    "section": "star",
    "class": "B",
+   "orient": "yoko",
    "canvas": [
     1536,
     1024
    ],
-   "orient": "yoko",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    256,
+    170
+   ],
+   "boxDots": [
+    240,
+    160
+   ],
    "cells": [
     {
      "cell": 1,
-     "id": "b_moth",
-     "name": "ダストウィング",
-     "sprite": "boss_moth",
+     "id": "b_wolflord",
+     "name": "狼の群れ頭",
+     "sprite": "boss_wolflord",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      160,
-      110
-     ]
+     "targetDots": {
+      "w": 160,
+      "h": 110,
+      "long": 160
+     },
+     "targetHeight": 110
     }
    ]
   },
@@ -507,11 +688,65 @@
    "star": true,
    "section": "star",
    "class": "B",
+   "orient": "yoko",
    "canvas": [
     1536,
     1024
    ],
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    256,
+    170
+   ],
+   "boxDots": [
+    240,
+    160
+   ],
+   "cells": [
+    {
+     "cell": 1,
+     "id": "b_moth",
+     "name": "ダストウィング",
+     "sprite": "boss_moth",
+     "kind": "boss",
+     "size": "B",
+     "targetDots": {
+      "w": 170,
+      "h": 115,
+      "long": 170
+     },
+     "targetHeight": 115
+    }
+   ]
+  },
+  {
+   "sheet": 9,
+   "file": "mon_s09.png",
+   "star": true,
+   "section": "star",
+   "class": "B",
    "orient": "yoko",
+   "canvas": [
+    1536,
+    1024
+   ],
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    256,
+    170
+   ],
+   "boxDots": [
+    240,
+    160
+   ],
    "cells": [
     {
      "cell": 1,
@@ -520,30 +755,128 @@
      "sprite": "boss_rooteater",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      170,
-      115
-     ]
+     "targetDots": {
+      "w": 210,
+      "h": 140,
+      "long": 210
+     },
+     "targetHeight": 140
     }
    ]
   },
   {
-   "sheet": 9,
-   "file": "mon_s09.png",
+   "sheet": 10,
+   "file": "mon_s10.png",
+   "star": false,
+   "section": "common",
+   "class": "S",
+   "canvas": [
+    1536,
+    1536
+   ],
+   "pxPerDot": 8,
+   "grid": [
+    2,
+    2
+   ],
+   "cellDots": [
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
+   ],
+   "cells": [
+    {
+     "cell": 1,
+     "id": "jelly_4",
+     "name": "ゼリー将軍",
+     "sprite": "jelly_4",
+     "kind": "mob",
+     "size": "S",
+     "targetDots": {
+      "w": 42,
+      "h": 56,
+      "long": 56
+     },
+     "targetHeight": 56
+    },
+    {
+     "cell": 2,
+     "id": "rat_4",
+     "name": "ネズミの頭領",
+     "sprite": "rat_4",
+     "kind": "mob",
+     "size": "S",
+     "targetDots": {
+      "w": 56,
+      "h": 39,
+      "long": 56
+     },
+     "targetHeight": 39
+    },
+    {
+     "cell": 3,
+     "id": "mushroom_4",
+     "name": "長老ダケ",
+     "sprite": "mushroom_4",
+     "kind": "mob",
+     "size": "S",
+     "targetDots": {
+      "w": 42,
+      "h": 56,
+      "long": 56
+     },
+     "targetHeight": 56
+    },
+    {
+     "cell": 4,
+     "id": "fairy_4",
+     "name": "妖精姫",
+     "sprite": "fairy_4",
+     "kind": "mob",
+     "size": "S",
+     "targetDots": {
+      "w": 42,
+      "h": 56,
+      "long": 56
+     },
+     "targetHeight": 56,
+     "flying": true
+    }
+   ]
+  },
+  {
+   "sheet": 11,
+   "file": "mon_s11.png",
    "star": false,
    "section": "common",
    "class": "M",
    "canvas": [
     1536,
-    1024
+    1536
    ],
+   "pxPerDot": 8,
    "grid": [
-    3,
+    2,
     2
    ],
    "cellDots": [
-    64,
-    64
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
    ],
    "cells": [
     {
@@ -553,7 +886,12 @@
      "sprite": "paper_2",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 84,
+      "h": 59,
+      "long": 84
+     },
+     "targetHeight": 59
     },
     {
      "cell": 2,
@@ -562,7 +900,12 @@
      "sprite": "paper_3",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
     },
     {
      "cell": 3,
@@ -571,41 +914,32 @@
      "sprite": "crab_4",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 84,
+      "h": 59,
+      "long": 84
+     },
+     "targetHeight": 59
     },
     {
      "cell": 4,
-     "id": "plant_5",
-     "name": "千年花",
-     "sprite": "plant_5",
-     "kind": "mob",
-     "size": "M",
-     "targetLongSide": 54
-    },
-    {
-     "cell": 5,
-     "id": "rm_glass_moth",
-     "name": "ガラスアゲハ",
-     "sprite": "rare_glassmoth",
-     "kind": "rare",
-     "size": "M",
-     "flying": true,
-     "targetLongSide": 54
-    },
-    {
-     "cell": 6,
      "id": "wolf_5",
      "name": "氷牙のオオカミ王",
      "sprite": "wolf_5",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 84,
+      "h": 59,
+      "long": 84
+     },
+     "targetHeight": 59
     }
    ]
   },
   {
-   "sheet": 10,
-   "file": "mon_s10.png",
+   "sheet": 12,
+   "file": "mon_s12.png",
    "star": false,
    "section": "common",
    "class": "L",
@@ -613,13 +947,22 @@
     1536,
     1024
    ],
+   "pxPerDot": 6,
    "grid": [
     2,
     1
    ],
    "cellDots": [
-    96,
-    128
+    128,
+    170
+   ],
+   "cellPx": [
+    768,
+    1024
+   ],
+   "boxDots": [
+    116,
+    150
    ],
    "cells": [
     {
@@ -629,8 +972,13 @@
      "sprite": "paper_4",
      "kind": "mob",
      "size": "L",
-     "flying": true,
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 120,
+      "h": 84,
+      "long": 120
+     },
+     "targetHeight": 84,
+     "flying": true
     },
     {
      "cell": 2,
@@ -639,27 +987,41 @@
      "sprite": "treant_4",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 90,
+      "h": 120,
+      "long": 120
+     },
+     "targetHeight": 120
     }
    ]
   },
   {
-   "sheet": 11,
-   "file": "mon_s11.png",
+   "sheet": 13,
+   "file": "mon_s13.png",
    "star": false,
    "section": "desert",
    "class": "M",
    "canvas": [
     1536,
-    1024
+    1536
    ],
+   "pxPerDot": 8,
    "grid": [
-    3,
+    2,
     2
    ],
    "cellDots": [
-    64,
-    64
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
    ],
    "cells": [
     {
@@ -669,7 +1031,12 @@
      "sprite": "scorpion_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56,
      "alsoMakes": [
       "scorpion_2",
       "scorpion_3",
@@ -683,7 +1050,12 @@
      "sprite": "scorpion_5",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 84,
+      "h": 59,
+      "long": 84
+     },
+     "targetHeight": 59
     },
     {
      "cell": 3,
@@ -692,7 +1064,12 @@
      "sprite": "snake_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
      "alsoMakes": [
       "snake_2",
       "snake_3"
@@ -705,36 +1082,41 @@
      "sprite": "snake_4",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
-    },
-    {
-     "cell": 5,
-     "id": "rm_diamond_lizard",
-     "name": "金剛トカゲ",
-     "sprite": "rare_lizard",
-     "kind": "rare",
-     "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
     }
    ]
   },
   {
-   "sheet": 12,
-   "file": "mon_s12.png",
+   "sheet": 14,
+   "file": "mon_s14.png",
    "star": false,
    "section": "desert",
    "class": "M",
    "canvas": [
     1536,
-    1024
+    1536
    ],
+   "pxPerDot": 8,
    "grid": [
-    3,
+    2,
     2
    ],
    "cellDots": [
-    64,
-    64
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
    ],
    "cells": [
     {
@@ -744,7 +1126,12 @@
      "sprite": "mummy_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
      "alsoMakes": [
       "mummy_2",
       "mummy_3",
@@ -758,7 +1145,12 @@
      "sprite": "mummy_5",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
     },
     {
      "cell": 3,
@@ -767,7 +1159,12 @@
      "sprite": "cactus_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
      "alsoMakes": [
       "cactus_2",
       "cactus_3"
@@ -780,23 +1177,106 @@
      "sprite": "cactus_4",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
+    }
+   ]
+  },
+  {
+   "sheet": 15,
+   "file": "mon_s15.png",
+   "star": false,
+   "section": "desert",
+   "class": "M",
+   "canvas": [
+    1536,
+    1536
+   ],
+   "pxPerDot": 8,
+   "grid": [
+    2,
+    2
+   ],
+   "cellDots": [
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
+   ],
+   "cells": [
+    {
+     "cell": 1,
+     "id": "rm_diamond_lizard",
+     "name": "金剛トカゲ",
+     "sprite": "rare_lizard",
+     "kind": "rare",
+     "size": "M",
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56
     },
     {
-     "cell": 5,
+     "cell": 2,
      "id": "rm_gold_idol",
      "name": "黄金の守護像",
      "sprite": "rare_idol",
      "kind": "rare",
      "size": "M",
-     "flying": true,
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
+     "flying": true
+    },
+    {
+     "cell": 3,
+     "id": "rm_aurora_bird",
+     "name": "オーロラ鳥",
+     "sprite": "rare_bird",
+     "kind": "rare",
+     "size": "M",
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56,
+     "flying": true
+    },
+    {
+     "cell": 4,
+     "id": "rm_icetail_fox",
+     "name": "氷尾ギツネ",
+     "sprite": "rare_icefox",
+     "kind": "rare",
+     "size": "M",
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56
     }
    ]
   },
   {
-   "sheet": 13,
-   "file": "mon_s13.png",
+   "sheet": 16,
+   "file": "mon_s16.png",
    "star": false,
    "section": "desert",
    "class": "L",
@@ -804,13 +1284,22 @@
     1536,
     1024
    ],
+   "pxPerDot": 6,
    "grid": [
     2,
     1
    ],
    "cellDots": [
-    96,
-    128
+    128,
+    170
+   ],
+   "cellPx": [
+    768,
+    1024
+   ],
+   "boxDots": [
+    116,
+    150
    ],
    "cells": [
     {
@@ -820,7 +1309,12 @@
      "sprite": "sandworm_1",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100,
+     "targetDots": {
+      "w": 83,
+      "h": 110,
+      "long": 110
+     },
+     "targetHeight": 110,
      "alsoMakes": [
       "sandworm_2"
      ]
@@ -832,21 +1326,39 @@
      "sprite": "sandworm_3",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 90,
+      "h": 120,
+      "long": 120
+     },
+     "targetHeight": 120
     }
    ]
   },
   {
-   "sheet": 14,
-   "file": "mon_s14.png",
+   "sheet": 17,
+   "file": "mon_s17.png",
    "star": false,
    "section": "desert",
    "class": "B",
+   "orient": "tate",
    "canvas": [
     1024,
     1536
    ],
-   "orient": "tate",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
    "cells": [
     {
      "cell": 1,
@@ -855,24 +1367,39 @@
      "sprite": "b_sandworm",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      110,
-      150
-     ]
+     "targetDots": {
+      "w": 120,
+      "h": 165,
+      "long": 165
+     },
+     "targetHeight": 165
     }
    ]
   },
   {
-   "sheet": 15,
-   "file": "mon_s15.png",
+   "sheet": 18,
+   "file": "mon_s18.png",
    "star": false,
    "section": "desert",
    "class": "B",
+   "orient": "tate",
    "canvas": [
     1024,
     1536
    ],
-   "orient": "tate",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
    "cells": [
     {
      "cell": 1,
@@ -881,30 +1408,41 @@
      "sprite": "b_sandking",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      115,
-      165
-     ]
+     "targetDots": {
+      "w": 150,
+      "h": 210,
+      "long": 210
+     },
+     "targetHeight": 210
     }
    ]
   },
   {
-   "sheet": 16,
-   "file": "mon_s16.png",
+   "sheet": 19,
+   "file": "mon_s19.png",
    "star": false,
    "section": "snow",
    "class": "M",
    "canvas": [
     1536,
-    1024
+    1536
    ],
+   "pxPerDot": 8,
    "grid": [
-    3,
+    2,
     2
    ],
    "cellDots": [
-    64,
-    64
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
    ],
    "cells": [
     {
@@ -914,7 +1452,12 @@
      "sprite": "frostling_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
      "alsoMakes": [
       "frostling_2",
       "frostling_3",
@@ -928,7 +1471,12 @@
      "sprite": "frostling_5",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
     },
     {
      "cell": 3,
@@ -937,8 +1485,13 @@
      "sprite": "owl_1",
      "kind": "mob",
      "size": "M",
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56,
      "flying": true,
-     "targetLongSide": 54,
      "alsoMakes": [
       "owl_2",
       "owl_3"
@@ -951,33 +1504,19 @@
      "sprite": "owl_4",
      "kind": "mob",
      "size": "M",
-     "flying": true,
-     "targetLongSide": 54
-    },
-    {
-     "cell": 5,
-     "id": "rm_aurora_bird",
-     "name": "オーロラ鳥",
-     "sprite": "rare_bird",
-     "kind": "rare",
-     "size": "M",
-     "flying": true,
-     "targetLongSide": 54
-    },
-    {
-     "cell": 6,
-     "id": "rm_icetail_fox",
-     "name": "氷尾ギツネ",
-     "sprite": "rare_icefox",
-     "kind": "rare",
-     "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 84,
+      "h": 59,
+      "long": 84
+     },
+     "targetHeight": 59,
+     "flying": true
     }
    ]
   },
   {
-   "sheet": 17,
-   "file": "mon_s17.png",
+   "sheet": 20,
+   "file": "mon_s20.png",
    "star": false,
    "section": "snow",
    "class": "L",
@@ -985,13 +1524,22 @@
     1536,
     1024
    ],
+   "pxPerDot": 6,
    "grid": [
     2,
     1
    ],
    "cellDots": [
-    96,
-    128
+    128,
+    170
+   ],
+   "cellPx": [
+    768,
+    1024
+   ],
+   "boxDots": [
+    116,
+    150
    ],
    "cells": [
     {
@@ -1001,7 +1549,12 @@
      "sprite": "yeti_1",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100,
+     "targetDots": {
+      "w": 83,
+      "h": 110,
+      "long": 110
+     },
+     "targetHeight": 110,
      "alsoMakes": [
       "yeti_2"
      ]
@@ -1013,13 +1566,18 @@
      "sprite": "yeti_3",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 90,
+      "h": 120,
+      "long": 120
+     },
+     "targetHeight": 120
     }
    ]
   },
   {
-   "sheet": 18,
-   "file": "mon_s18.png",
+   "sheet": 21,
+   "file": "mon_s21.png",
    "star": false,
    "section": "snow",
    "class": "L",
@@ -1027,13 +1585,22 @@
     1536,
     1024
    ],
+   "pxPerDot": 6,
    "grid": [
     2,
     1
    ],
    "cellDots": [
-    96,
-    128
+    128,
+    170
+   ],
+   "cellPx": [
+    768,
+    1024
+   ],
+   "boxDots": [
+    116,
+    150
    ],
    "cells": [
     {
@@ -1043,7 +1610,12 @@
      "sprite": "mammoth_1",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100,
+     "targetDots": {
+      "w": 110,
+      "h": 77,
+      "long": 110
+     },
+     "targetHeight": 77,
      "alsoMakes": [
       "mammoth_2"
      ]
@@ -1055,21 +1627,39 @@
      "sprite": "mammoth_3",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 120,
+      "h": 84,
+      "long": 120
+     },
+     "targetHeight": 84
     }
    ]
   },
   {
-   "sheet": 19,
-   "file": "mon_s19.png",
+   "sheet": 22,
+   "file": "mon_s22.png",
    "star": false,
    "section": "snow",
    "class": "B",
+   "orient": "tate",
    "canvas": [
     1024,
     1536
    ],
-   "orient": "tate",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
    "cells": [
     {
      "cell": 1,
@@ -1078,24 +1668,39 @@
      "sprite": "boss_frost_giant",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      120,
-      170
-     ]
+     "targetDots": {
+      "w": 120,
+      "h": 170,
+      "long": 170
+     },
+     "targetHeight": 170
     }
    ]
   },
   {
-   "sheet": 20,
-   "file": "mon_s20.png",
+   "sheet": 23,
+   "file": "mon_s23.png",
    "star": false,
    "section": "snow",
    "class": "B",
+   "orient": "yoko",
    "canvas": [
     1536,
     1024
    ],
-   "orient": "yoko",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    256,
+    170
+   ],
+   "boxDots": [
+    240,
+    160
+   ],
    "cells": [
     {
      "cell": 1,
@@ -1104,74 +1709,57 @@
      "sprite": "boss_whitedragon",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      180,
-      120
-     ]
+     "targetDots": {
+      "w": 230,
+      "h": 155,
+      "long": 230
+     },
+     "targetHeight": 155
     }
    ]
   },
   {
-   "sheet": 21,
-   "file": "mon_s21.png",
+   "sheet": 24,
+   "file": "mon_s24.png",
    "star": false,
    "section": "marsh",
    "class": "S",
    "canvas": [
     1536,
-    1024
+    1536
    ],
+   "pxPerDot": 8,
    "grid": [
-    3,
+    2,
     2
    ],
    "cellDots": [
-    64,
-    64
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
    ],
    "cells": [
     {
      "cell": 1,
-     "id": "bat_5",
-     "name": "コウモリ公",
-     "sprite": "bat_5",
-     "kind": "mob",
-     "size": "S",
-     "flying": true,
-     "targetLongSide": 40
-    },
-    {
-     "cell": 2,
-     "id": "paper_1",
-     "name": "白紙の小鬼",
-     "sprite": "paper_1",
-     "kind": "mob",
-     "size": "S",
-     "targetLongSide": 40
-    },
-    {
-     "cell": 3,
-     "id": "mimic_1",
-     "name": "牙の宝箱",
-     "sprite": "mimic_1",
-     "kind": "mob",
-     "size": "S",
-     "targetLongSide": 40,
-     "alsoMakes": [
-      "mimic_2",
-      "mimic_3",
-      "mimic_4"
-     ]
-    },
-    {
-     "cell": 4,
      "id": "wisp_1",
      "name": "鬼火",
      "sprite": "wisp_1",
      "kind": "mob",
      "size": "S",
+     "targetDots": {
+      "w": 39,
+      "h": 52,
+      "long": 52
+     },
+     "targetHeight": 52,
      "flying": true,
-     "targetLongSide": 40,
      "alsoMakes": [
       "wisp_2",
       "wisp_3",
@@ -1181,42 +1769,76 @@
      ]
     },
     {
-     "cell": 5,
+     "cell": 2,
      "id": "rm_lotus_sprite",
      "name": "はすの精",
      "sprite": "rare_lotus",
      "kind": "rare",
      "size": "S",
-     "targetLongSide": 40
+     "targetDots": {
+      "w": 39,
+      "h": 52,
+      "long": 52
+     },
+     "targetHeight": 52
     },
     {
-     "cell": 6,
+     "cell": 3,
      "id": "rm_ghost_teapot",
      "name": "おばけ茶器",
      "sprite": "rare_teapot",
      "kind": "rare",
      "size": "S",
-     "targetLongSide": 40
+     "targetDots": {
+      "w": 39,
+      "h": 52,
+      "long": 52
+     },
+     "targetHeight": 52
+    },
+    {
+     "cell": 4,
+     "id": "bat_5",
+     "name": "コウモリ公",
+     "sprite": "bat_5",
+     "kind": "mob",
+     "size": "S",
+     "targetDots": {
+      "w": 56,
+      "h": 39,
+      "long": 56
+     },
+     "targetHeight": 39,
+     "flying": true
     }
    ]
   },
   {
-   "sheet": 22,
-   "file": "mon_s22.png",
+   "sheet": 25,
+   "file": "mon_s25.png",
    "star": false,
    "section": "marsh",
    "class": "M",
    "canvas": [
     1536,
-    1024
+    1536
    ],
+   "pxPerDot": 8,
    "grid": [
-    3,
+    2,
     2
    ],
    "cellDots": [
-    64,
-    64
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
    ],
    "cells": [
     {
@@ -1226,8 +1848,13 @@
      "sprite": "ghost_1",
      "kind": "mob",
      "size": "M",
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
      "flying": true,
-     "targetLongSide": 54,
      "alsoMakes": [
       "ghost_2",
       "ghost_3",
@@ -1241,8 +1868,13 @@
      "sprite": "ghost_5",
      "kind": "mob",
      "size": "M",
-     "flying": true,
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84,
+     "flying": true
     },
     {
      "cell": 3,
@@ -1251,7 +1883,12 @@
      "sprite": "frog_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56,
      "alsoMakes": [
       "frog_2"
      ]
@@ -1263,112 +1900,205 @@
      "sprite": "frog_3",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 84,
+      "h": 59,
+      "long": 84
+     },
+     "targetHeight": 59,
      "alsoMakes": [
       "frog_4"
      ]
-    },
+    }
+   ]
+  },
+  {
+   "sheet": 26,
+   "file": "mon_s26.png",
+   "star": false,
+   "section": "marsh",
+   "class": "M",
+   "canvas": [
+    1536,
+    1536
+   ],
+   "pxPerDot": 8,
+   "grid": [
+    2,
+    2
+   ],
+   "cellDots": [
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
+   ],
+   "cells": [
     {
-     "cell": 5,
+     "cell": 1,
      "id": "doll_1",
      "name": "ひび割れ人形",
      "sprite": "doll_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
      "alsoMakes": [
       "doll_2",
       "doll_3"
      ]
     },
     {
-     "cell": 6,
+     "cell": 2,
      "id": "doll_4",
      "name": "貴婦人人形",
      "sprite": "doll_4",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
-    }
-   ]
-  },
-  {
-   "sheet": 23,
-   "file": "mon_s23.png",
-   "star": false,
-   "section": "marsh",
-   "class": "M",
-   "canvas": [
-    1536,
-    1024
-   ],
-   "grid": [
-    3,
-    2
-   ],
-   "cellDots": [
-    64,
-    64
-   ],
-   "cells": [
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
+    },
     {
-     "cell": 1,
+     "cell": 3,
      "id": "lizardman_1",
      "name": "沼トカゲ兵",
      "sprite": "lizardman_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
      "alsoMakes": [
       "lizardman_2",
       "lizardman_3"
      ]
     },
     {
-     "cell": 2,
+     "cell": 4,
      "id": "lizardman_4",
      "name": "トカゲの族長",
      "sprite": "lizardman_4",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
-    },
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
+    }
+   ]
+  },
+  {
+   "sheet": 27,
+   "file": "mon_s27.png",
+   "star": false,
+   "section": "marsh",
+   "class": "M",
+   "canvas": [
+    1536,
+    1536
+   ],
+   "pxPerDot": 8,
+   "grid": [
+    2,
+    2
+   ],
+   "cellDots": [
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
+   ],
+   "cells": [
     {
-     "cell": 3,
+     "cell": 1,
      "id": "spider_1",
      "name": "糸吐きグモ",
      "sprite": "spider_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56,
      "alsoMakes": [
       "spider_2",
       "spider_3"
      ]
     },
     {
-     "cell": 4,
+     "cell": 2,
      "id": "spider_4",
      "name": "女郎グモ",
      "sprite": "spider_4",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 84,
+      "h": 59,
+      "long": 84
+     },
+     "targetHeight": 59
     },
     {
-     "cell": 5,
+     "cell": 3,
      "id": "rm_bell_snail",
      "name": "鐘カタツムリ",
      "sprite": "rare_bellsnail",
      "kind": "rare",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56
+    },
+    {
+     "cell": 4,
+     "id": "rm_treasure_crab",
+     "name": "財宝ヤドカリ",
+     "sprite": "rare_hermit",
+     "kind": "rare",
+     "size": "M",
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56
     }
    ]
   },
   {
-   "sheet": 24,
-   "file": "mon_s24.png",
+   "sheet": 28,
+   "file": "mon_s28.png",
    "star": false,
    "section": "marsh",
    "class": "L",
@@ -1376,13 +2106,22 @@
     1536,
     1024
    ],
+   "pxPerDot": 6,
    "grid": [
     2,
     1
    ],
    "cellDots": [
-    96,
-    128
+    128,
+    170
+   ],
+   "cellPx": [
+    768,
+    1024
+   ],
+   "boxDots": [
+    116,
+    150
    ],
    "cells": [
     {
@@ -1392,7 +2131,12 @@
      "sprite": "b_doll_violin",
      "kind": "add",
      "size": "L",
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 83,
+      "h": 110,
+      "long": 110
+     },
+     "targetHeight": 110
     },
     {
      "cell": 2,
@@ -1401,13 +2145,18 @@
      "sprite": "b_doll_drum",
      "kind": "add",
      "size": "L",
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 83,
+      "h": 110,
+      "long": 110
+     },
+     "targetHeight": 110
     }
    ]
   },
   {
-   "sheet": 25,
-   "file": "mon_s25.png",
+   "sheet": 29,
+   "file": "mon_s29.png",
    "star": false,
    "section": "marsh",
    "class": "L",
@@ -1415,13 +2164,22 @@
     1536,
     1024
    ],
+   "pxPerDot": 6,
    "grid": [
     2,
     1
    ],
    "cellDots": [
-    96,
-    128
+    128,
+    170
+   ],
+   "cellPx": [
+    768,
+    1024
+   ],
+   "boxDots": [
+    116,
+    150
    ],
    "cells": [
     {
@@ -1431,7 +2189,12 @@
      "sprite": "b_doll_flute",
      "kind": "add",
      "size": "L",
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 83,
+      "h": 110,
+      "long": 110
+     },
+     "targetHeight": 110
     },
     {
      "cell": 2,
@@ -1440,22 +2203,40 @@
      "sprite": "b_mist_double",
      "kind": "add",
      "size": "L",
-     "flying": true,
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 83,
+      "h": 110,
+      "long": 110
+     },
+     "targetHeight": 110,
+     "flying": true
     }
    ]
   },
   {
-   "sheet": 26,
-   "file": "mon_s26.png",
+   "sheet": 30,
+   "file": "mon_s30.png",
    "star": false,
    "section": "marsh",
    "class": "B",
+   "orient": "tate",
    "canvas": [
     1024,
     1536
    ],
-   "orient": "tate",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
    "cells": [
     {
      "cell": 1,
@@ -1464,24 +2245,39 @@
      "sprite": "b_doll_conductor",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      100,
-      135
-     ]
+     "targetDots": {
+      "w": 115,
+      "h": 155,
+      "long": 155
+     },
+     "targetHeight": 155
     }
    ]
   },
   {
-   "sheet": 27,
-   "file": "mon_s27.png",
+   "sheet": 31,
+   "file": "mon_s31.png",
    "star": false,
    "section": "marsh",
    "class": "B",
+   "orient": "tate",
    "canvas": [
     1024,
     1536
    ],
-   "orient": "tate",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
    "cells": [
     {
      "cell": 1,
@@ -1490,30 +2286,41 @@
      "sprite": "boss_mistbeast",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      120,
-      165
-     ]
+     "targetDots": {
+      "w": 150,
+      "h": 210,
+      "long": 210
+     },
+     "targetHeight": 210
     }
    ]
   },
   {
-   "sheet": 28,
-   "file": "mon_s28.png",
+   "sheet": 32,
+   "file": "mon_s32.png",
    "star": false,
    "section": "isles",
    "class": "M",
    "canvas": [
     1536,
-    1024
+    1536
    ],
+   "pxPerDot": 8,
    "grid": [
-    3,
+    2,
     2
    ],
    "cellDots": [
-    64,
-    64
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
    ],
    "cells": [
     {
@@ -1523,7 +2330,12 @@
      "sprite": "merman_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
      "alsoMakes": [
       "merman_2",
       "merman_3"
@@ -1536,7 +2348,12 @@
      "sprite": "merman_4",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
     },
     {
      "cell": 3,
@@ -1545,7 +2362,12 @@
      "sprite": "skeleton_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
      "alsoMakes": [
       "skeleton_2",
       "skeleton_4"
@@ -1558,31 +2380,108 @@
      "sprite": "skeleton_3",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
-    },
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
+    }
+   ]
+  },
+  {
+   "sheet": 33,
+   "file": "mon_s33.png",
+   "star": false,
+   "section": "isles",
+   "class": "M",
+   "canvas": [
+    1536,
+    1536
+   ],
+   "pxPerDot": 8,
+   "grid": [
+    2,
+    2
+   ],
+   "cellDots": [
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
+   ],
+   "cells": [
     {
-     "cell": 5,
+     "cell": 1,
      "id": "skeleton_5",
      "name": "骸骨の提督",
      "sprite": "skeleton_5",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
     },
     {
-     "cell": 6,
-     "id": "rm_treasure_crab",
-     "name": "財宝ヤドカリ",
-     "sprite": "rare_hermit",
+     "cell": 2,
+     "id": "mole_1",
+     "name": "穴掘りモグラ",
+     "sprite": "mole_1",
+     "kind": "mob",
+     "size": "M",
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
+     "alsoMakes": [
+      "mole_2",
+      "mole_3"
+     ]
+    },
+    {
+     "cell": 3,
+     "id": "mole_4",
+     "name": "モグラ大親方",
+     "sprite": "mole_4",
+     "kind": "mob",
+     "size": "M",
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
+    },
+    {
+     "cell": 4,
+     "id": "rm_prisma",
+     "name": "プリズマ",
+     "sprite": "rare_prism",
      "kind": "rare",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80
     }
    ]
   },
   {
-   "sheet": 29,
-   "file": "mon_s29.png",
+   "sheet": 34,
+   "file": "mon_s34.png",
    "star": false,
    "section": "isles",
    "class": "L",
@@ -1590,13 +2489,22 @@
     1536,
     1024
    ],
+   "pxPerDot": 6,
    "grid": [
     2,
     1
    ],
    "cellDots": [
-    96,
-    128
+    128,
+    170
+   ],
+   "cellPx": [
+    768,
+    1024
+   ],
+   "boxDots": [
+    116,
+    150
    ],
    "cells": [
     {
@@ -1606,7 +2514,12 @@
      "sprite": "kraken_1",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100,
+     "targetDots": {
+      "w": 110,
+      "h": 77,
+      "long": 110
+     },
+     "targetHeight": 77,
      "alsoMakes": [
       "kraken_2",
       "kraken_3"
@@ -1619,13 +2532,18 @@
      "sprite": "boss_tentacle",
      "kind": "add",
      "size": "L",
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 83,
+      "h": 110,
+      "long": 110
+     },
+     "targetHeight": 110
     }
    ]
   },
   {
-   "sheet": 30,
-   "file": "mon_s30.png",
+   "sheet": 35,
+   "file": "mon_s35.png",
    "star": false,
    "section": "isles",
    "class": "L",
@@ -1633,13 +2551,22 @@
     1536,
     1024
    ],
+   "pxPerDot": 6,
    "grid": [
     2,
     1
    ],
    "cellDots": [
-    96,
-    128
+    128,
+    170
+   ],
+   "cellPx": [
+    768,
+    1024
+   ],
+   "boxDots": [
+    116,
+    150
    ],
    "cells": [
     {
@@ -1649,8 +2576,13 @@
      "sprite": "rare_whale",
      "kind": "rare",
      "size": "L",
-     "flying": true,
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 110,
+      "h": 77,
+      "long": 110
+     },
+     "targetHeight": 77,
+     "flying": true
     },
     {
      "cell": 2,
@@ -1659,8 +2591,13 @@
      "sprite": "wyvern_1",
      "kind": "mob",
      "size": "L",
+     "targetDots": {
+      "w": 110,
+      "h": 77,
+      "long": 110
+     },
+     "targetHeight": 77,
      "flying": true,
-     "targetLongSide": 100,
      "alsoMakes": [
       "wyvern_2",
       "wyvern_3"
@@ -1669,16 +2606,29 @@
    ]
   },
   {
-   "sheet": 31,
-   "file": "mon_s31.png",
+   "sheet": 36,
+   "file": "mon_s36.png",
    "star": false,
    "section": "isles",
    "class": "B",
+   "orient": "yoko",
    "canvas": [
     1536,
     1024
    ],
-   "orient": "yoko",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    256,
+    170
+   ],
+   "boxDots": [
+    240,
+    160
+   ],
    "cells": [
     {
      "cell": 1,
@@ -1687,24 +2637,39 @@
      "sprite": "b_octopus",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      160,
-      110
-     ]
+     "targetDots": {
+      "w": 170,
+      "h": 115,
+      "long": 170
+     },
+     "targetHeight": 115
     }
    ]
   },
   {
-   "sheet": 32,
-   "file": "mon_s32.png",
+   "sheet": 37,
+   "file": "mon_s37.png",
    "star": false,
    "section": "isles",
    "class": "B",
+   "orient": "tate",
    "canvas": [
     1024,
     1536
    ],
-   "orient": "tate",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
    "cells": [
     {
      "cell": 1,
@@ -1713,30 +2678,41 @@
      "sprite": "b_captain",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      115,
-      160
-     ]
+     "targetDots": {
+      "w": 140,
+      "h": 200,
+      "long": 200
+     },
+     "targetHeight": 200
     }
    ]
   },
   {
-   "sheet": 33,
-   "file": "mon_s33.png",
+   "sheet": 38,
+   "file": "mon_s38.png",
    "star": false,
    "section": "mine",
    "class": "S",
    "canvas": [
     1536,
-    1024
+    1536
    ],
+   "pxPerDot": 8,
    "grid": [
-    3,
+    2,
     2
    ],
    "cellDots": [
-    64,
-    64
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
    ],
    "cells": [
     {
@@ -1746,7 +2722,12 @@
      "sprite": "beetle_1",
      "kind": "mob",
      "size": "S",
-     "targetLongSide": 40,
+     "targetDots": {
+      "w": 52,
+      "h": 36,
+      "long": 52
+     },
+     "targetHeight": 36,
      "alsoMakes": [
       "beetle_2",
       "beetle_3",
@@ -1762,8 +2743,13 @@
      "sprite": "crystal_1",
      "kind": "mob",
      "size": "S",
+     "targetDots": {
+      "w": 39,
+      "h": 52,
+      "long": 52
+     },
+     "targetHeight": 52,
      "flying": true,
-     "targetLongSide": 40,
      "alsoMakes": [
       "crystal_2",
       "crystal_3",
@@ -1777,99 +2763,75 @@
      "sprite": "rare_hedgehog",
      "kind": "rare",
      "size": "S",
-     "targetLongSide": 40
+     "targetDots": {
+      "w": 52,
+      "h": 36,
+      "long": 52
+     },
+     "targetHeight": 36
     },
     {
      "cell": 4,
-     "id": "imp_1",
-     "name": "すす悪魔",
-     "sprite": "imp_1",
+     "id": "mimic_1",
+     "name": "牙の宝箱",
+     "sprite": "mimic_1",
      "kind": "mob",
      "size": "S",
-     "flying": true,
-     "targetLongSide": 40,
+     "targetDots": {
+      "w": 52,
+      "h": 36,
+      "long": 52
+     },
+     "targetHeight": 36,
      "alsoMakes": [
-      "imp_2",
-      "imp_3",
-      "imp_4"
-     ]
-    },
-    {
-     "cell": 5,
-     "id": "imp_5",
-     "name": "悪魔の軍師",
-     "sprite": "imp_5",
-     "kind": "mob",
-     "size": "S",
-     "flying": true,
-     "targetLongSide": 40
-    },
-    {
-     "cell": 6,
-     "id": "eyeball_1",
-     "name": "のぞき目玉",
-     "sprite": "eyeball_1",
-     "kind": "mob",
-     "size": "S",
-     "flying": true,
-     "targetLongSide": 40,
-     "alsoMakes": [
-      "eyeball_2",
-      "eyeball_3",
-      "eyeball_4"
+      "mimic_2",
+      "mimic_3",
+      "mimic_4"
      ]
     }
    ]
   },
   {
-   "sheet": 34,
-   "file": "mon_s34.png",
+   "sheet": 39,
+   "file": "mon_s39.png",
    "star": false,
    "section": "mine",
    "class": "M",
    "canvas": [
     1536,
-    1024
+    1536
    ],
+   "pxPerDot": 8,
    "grid": [
-    3,
+    2,
     2
    ],
    "cellDots": [
-    64,
-    64
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
    ],
    "cells": [
     {
      "cell": 1,
-     "id": "mole_1",
-     "name": "穴掘りモグラ",
-     "sprite": "mole_1",
-     "kind": "mob",
-     "size": "M",
-     "targetLongSide": 54,
-     "alsoMakes": [
-      "mole_2",
-      "mole_3"
-     ]
-    },
-    {
-     "cell": 2,
-     "id": "mole_4",
-     "name": "モグラ大親方",
-     "sprite": "mole_4",
-     "kind": "mob",
-     "size": "M",
-     "targetLongSide": 54
-    },
-    {
-     "cell": 3,
      "id": "goblin_1",
      "name": "小鬼",
      "sprite": "goblin_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
      "alsoMakes": [
       "goblin_2",
       "goblin_3",
@@ -1877,28 +2839,57 @@
      ]
     },
     {
-     "cell": 4,
+     "cell": 2,
      "id": "goblin_5",
      "name": "小鬼の王",
      "sprite": "goblin_5",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
     },
     {
-     "cell": 5,
-     "id": "rm_prisma",
-     "name": "プリズマ",
-     "sprite": "rare_prism",
-     "kind": "rare",
+     "cell": 3,
+     "id": "salamander_1",
+     "name": "火トカゲ",
+     "sprite": "salamander_1",
+     "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56,
+     "alsoMakes": [
+      "salamander_2",
+      "salamander_3",
+      "salamander_4"
+     ]
+    },
+    {
+     "cell": 4,
+     "id": "salamander_5",
+     "name": "炎帝トカゲ",
+     "sprite": "salamander_5",
+     "kind": "mob",
+     "size": "M",
+     "targetDots": {
+      "w": 84,
+      "h": 59,
+      "long": 84
+     },
+     "targetHeight": 59
     }
    ]
   },
   {
-   "sheet": 35,
-   "file": "mon_s35.png",
+   "sheet": 40,
+   "file": "mon_s40.png",
    "star": false,
    "section": "mine",
    "class": "L",
@@ -1906,13 +2897,22 @@
     1536,
     1024
    ],
+   "pxPerDot": 6,
    "grid": [
     2,
     1
    ],
    "cellDots": [
-    96,
-    128
+    128,
+    170
+   ],
+   "cellPx": [
+    768,
+    1024
+   ],
+   "boxDots": [
+    116,
+    150
    ],
    "cells": [
     {
@@ -1922,7 +2922,12 @@
      "sprite": "golem_1",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100,
+     "targetDots": {
+      "w": 83,
+      "h": 110,
+      "long": 110
+     },
+     "targetHeight": 110,
      "alsoMakes": [
       "golem_2"
      ]
@@ -1934,21 +2939,39 @@
      "sprite": "golem_3",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 90,
+      "h": 120,
+      "long": 120
+     },
+     "targetHeight": 120
     }
    ]
   },
   {
-   "sheet": 36,
-   "file": "mon_s36.png",
+   "sheet": 41,
+   "file": "mon_s41.png",
    "star": false,
    "section": "mine",
    "class": "B",
+   "orient": "yoko",
    "canvas": [
     1536,
     1024
    ],
-   "orient": "yoko",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    256,
+    170
+   ],
+   "boxDots": [
+    240,
+    160
+   ],
    "cells": [
     {
      "cell": 1,
@@ -1957,24 +2980,39 @@
      "sprite": "b_rockeater",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      165,
-      110
-     ]
+     "targetDots": {
+      "w": 170,
+      "h": 110,
+      "long": 170
+     },
+     "targetHeight": 110
     }
    ]
   },
   {
-   "sheet": 37,
-   "file": "mon_s37.png",
+   "sheet": 42,
+   "file": "mon_s42.png",
    "star": false,
    "section": "mine",
    "class": "B",
+   "orient": "tate",
    "canvas": [
     1024,
     1536
    ],
-   "orient": "tate",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
    "cells": [
     {
      "cell": 1,
@@ -1983,64 +3021,157 @@
      "sprite": "b_ironwarden",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      120,
-      180
-     ]
+     "targetDots": {
+      "w": 150,
+      "h": 225,
+      "long": 225
+     },
+     "targetHeight": 225
     }
    ]
   },
   {
-   "sheet": 38,
-   "file": "mon_s38.png",
+   "sheet": 43,
+   "file": "mon_s43.png",
+   "star": false,
+   "section": "ash",
+   "class": "S",
+   "canvas": [
+    1536,
+    1536
+   ],
+   "pxPerDot": 8,
+   "grid": [
+    2,
+    2
+   ],
+   "cellDots": [
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
+   ],
+   "cells": [
+    {
+     "cell": 1,
+     "id": "imp_1",
+     "name": "すす悪魔",
+     "sprite": "imp_1",
+     "kind": "mob",
+     "size": "S",
+     "targetDots": {
+      "w": 52,
+      "h": 36,
+      "long": 52
+     },
+     "targetHeight": 36,
+     "flying": true,
+     "alsoMakes": [
+      "imp_2",
+      "imp_3",
+      "imp_4"
+     ]
+    },
+    {
+     "cell": 2,
+     "id": "imp_5",
+     "name": "悪魔の軍師",
+     "sprite": "imp_5",
+     "kind": "mob",
+     "size": "S",
+     "targetDots": {
+      "w": 56,
+      "h": 39,
+      "long": 56
+     },
+     "targetHeight": 39,
+     "flying": true
+    },
+    {
+     "cell": 3,
+     "id": "eyeball_1",
+     "name": "のぞき目玉",
+     "sprite": "eyeball_1",
+     "kind": "mob",
+     "size": "S",
+     "targetDots": {
+      "w": 39,
+      "h": 52,
+      "long": 52
+     },
+     "targetHeight": 52,
+     "flying": true,
+     "alsoMakes": [
+      "eyeball_2",
+      "eyeball_3",
+      "eyeball_4"
+     ]
+    },
+    {
+     "cell": 4,
+     "id": "eyeball_5",
+     "name": "天の大目玉",
+     "sprite": "eyeball_5",
+     "kind": "mob",
+     "size": "S",
+     "targetDots": {
+      "w": 56,
+      "h": 39,
+      "long": 56
+     },
+     "targetHeight": 39,
+     "flying": true
+    }
+   ]
+  },
+  {
+   "sheet": 44,
+   "file": "mon_s44.png",
    "star": false,
    "section": "ash",
    "class": "M",
    "canvas": [
     1536,
-    1024
+    1536
    ],
+   "pxPerDot": 8,
    "grid": [
-    3,
+    2,
     2
    ],
    "cellDots": [
-    64,
-    64
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
    ],
    "cells": [
     {
      "cell": 1,
-     "id": "salamander_1",
-     "name": "火トカゲ",
-     "sprite": "salamander_1",
-     "kind": "mob",
-     "size": "M",
-     "targetLongSide": 54,
-     "alsoMakes": [
-      "salamander_2",
-      "salamander_3",
-      "salamander_4"
-     ]
-    },
-    {
-     "cell": 2,
-     "id": "salamander_5",
-     "name": "炎帝トカゲ",
-     "sprite": "salamander_5",
-     "kind": "mob",
-     "size": "M",
-     "targetLongSide": 54
-    },
-    {
-     "cell": 3,
      "id": "gargoyle_1",
      "name": "石像鬼",
      "sprite": "gargoyle_1",
      "kind": "mob",
      "size": "M",
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56,
      "flying": true,
-     "targetLongSide": 54,
      "alsoMakes": [
       "gargoyle_2",
       "gargoyle_3",
@@ -2048,28 +3179,53 @@
      ]
     },
     {
-     "cell": 4,
+     "cell": 2,
      "id": "rm_spa_monkey",
      "name": "湯けむり猿",
      "sprite": "rare_monkey",
      "kind": "rare",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80
     },
     {
-     "cell": 5,
+     "cell": 3,
      "id": "rm_volcano_turtle",
      "name": "火山ガメ",
      "sprite": "rare_turtle",
      "kind": "rare",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56
+    },
+    {
+     "cell": 4,
+     "id": "rm_moon_sheep",
+     "name": "月見ヒツジ",
+     "sprite": "rare_sheep",
+     "kind": "rare",
+     "size": "M",
+     "targetDots": {
+      "w": 80,
+      "h": 56,
+      "long": 80
+     },
+     "targetHeight": 56,
+     "flying": true
     }
    ]
   },
   {
-   "sheet": 39,
-   "file": "mon_s39.png",
+   "sheet": 45,
+   "file": "mon_s45.png",
    "star": false,
    "section": "ash",
    "class": "L",
@@ -2077,13 +3233,22 @@
     1536,
     1024
    ],
+   "pxPerDot": 6,
    "grid": [
     2,
     1
    ],
    "cellDots": [
-    96,
-    128
+    128,
+    170
+   ],
+   "cellPx": [
+    768,
+    1024
+   ],
+   "boxDots": [
+    116,
+    150
    ],
    "cells": [
     {
@@ -2093,7 +3258,12 @@
      "sprite": "orc_1",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100,
+     "targetDots": {
+      "w": 83,
+      "h": 110,
+      "long": 110
+     },
+     "targetHeight": 110,
      "alsoMakes": [
       "orc_2"
      ]
@@ -2105,13 +3275,18 @@
      "sprite": "orc_3",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 90,
+      "h": 120,
+      "long": 120
+     },
+     "targetHeight": 120
     }
    ]
   },
   {
-   "sheet": 40,
-   "file": "mon_s40.png",
+   "sheet": 46,
+   "file": "mon_s46.png",
    "star": false,
    "section": "ash",
    "class": "L",
@@ -2119,13 +3294,22 @@
     1536,
     1024
    ],
+   "pxPerDot": 6,
    "grid": [
     2,
     1
    ],
    "cellDots": [
-    96,
-    128
+    128,
+    170
+   ],
+   "cellPx": [
+    768,
+    1024
+   ],
+   "boxDots": [
+    116,
+    150
    ],
    "cells": [
     {
@@ -2135,7 +3319,12 @@
      "sprite": "chimera_1",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100,
+     "targetDots": {
+      "w": 110,
+      "h": 77,
+      "long": 110
+     },
+     "targetHeight": 77,
      "alsoMakes": [
       "chimera_2",
       "chimera_3"
@@ -2144,16 +3333,29 @@
    ]
   },
   {
-   "sheet": 41,
-   "file": "mon_s41.png",
+   "sheet": 47,
+   "file": "mon_s47.png",
    "star": false,
    "section": "ash",
    "class": "B",
+   "orient": "yoko",
    "canvas": [
     1536,
     1024
    ],
-   "orient": "yoko",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    256,
+    170
+   ],
+   "boxDots": [
+    240,
+    160
+   ],
    "cells": [
     {
      "cell": 1,
@@ -2162,24 +3364,39 @@
      "sprite": "boss_hellhound",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      165,
-      115
-     ]
+     "targetDots": {
+      "w": 170,
+      "h": 120,
+      "long": 170
+     },
+     "targetHeight": 120
     }
    ]
   },
   {
-   "sheet": 42,
-   "file": "mon_s42.png",
+   "sheet": 48,
+   "file": "mon_s48.png",
    "star": false,
    "section": "ash",
    "class": "B",
+   "orient": "yoko",
    "canvas": [
     1536,
     1024
    ],
-   "orient": "yoko",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    256,
+    170
+   ],
+   "boxDots": [
+    240,
+    160
+   ],
    "cells": [
     {
      "cell": 1,
@@ -2188,10 +3405,12 @@
      "sprite": "boss_flame_lord",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      180,
-      120
-     ],
+     "targetDots": {
+      "w": 230,
+      "h": 155,
+      "long": 230
+     },
+     "targetHeight": 155,
      "alsoMakes": [
       "b_lavabeast_cold"
      ]
@@ -2199,22 +3418,31 @@
    ]
   },
   {
-   "sheet": 43,
-   "file": "mon_s43.png",
+   "sheet": 49,
+   "file": "mon_s49.png",
    "star": false,
    "section": "star8",
    "class": "M",
    "canvas": [
     1536,
-    1024
+    1536
    ],
+   "pxPerDot": 8,
    "grid": [
-    3,
+    2,
     2
    ],
    "cellDots": [
-    64,
-    64
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
    ],
    "cells": [
     {
@@ -2224,7 +3452,12 @@
      "sprite": "darkmage_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
      "alsoMakes": [
       "darkmage_2",
       "darkmage_3",
@@ -2238,7 +3471,12 @@
      "sprite": "automaton_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
      "alsoMakes": [
       "automaton_2",
       "automaton_3"
@@ -2251,7 +3489,12 @@
      "sprite": "automaton_4",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
     },
     {
      "cell": 4,
@@ -2260,128 +3503,211 @@
      "sprite": "armor_1",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54,
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
      "alsoMakes": [
       "armor_2",
       "armor_3"
      ]
-    },
+    }
+   ]
+  },
+  {
+   "sheet": 50,
+   "file": "mon_s50.png",
+   "star": false,
+   "section": "star8",
+   "class": "M",
+   "canvas": [
+    1536,
+    1536
+   ],
+   "pxPerDot": 8,
+   "grid": [
+    2,
+    2
+   ],
+   "cellDots": [
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
+   ],
+   "cells": [
     {
-     "cell": 5,
+     "cell": 1,
      "id": "armor_4",
      "name": "黒金の鎧",
      "sprite": "armor_4",
      "kind": "mob",
      "size": "M",
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
     },
     {
-     "cell": 6,
-     "id": "rm_moon_sheep",
-     "name": "月見ヒツジ",
-     "sprite": "rare_sheep",
-     "kind": "rare",
+     "cell": 2,
+     "id": "scribe_1",
+     "name": "白衣の書記",
+     "sprite": "scribe_1",
+     "kind": "mob",
      "size": "M",
-     "flying": true,
-     "targetLongSide": 54
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
+     "alsoMakes": [
+      "scribe_2"
+     ]
+    },
+    {
+     "cell": 3,
+     "id": "scribe_3",
+     "name": "白衣の司書長",
+     "sprite": "scribe_3",
+     "kind": "mob",
+     "size": "M",
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
     }
    ]
   },
   {
-   "sheet": 44,
-   "file": "mon_s44.png",
+   "sheet": 51,
+   "file": "mon_s51.png",
    "star": false,
    "section": "star8",
    "class": "S",
    "canvas": [
     1536,
-    1024
+    1536
    ],
+   "pxPerDot": 8,
    "grid": [
-    3,
+    2,
     2
    ],
    "cellDots": [
-    64,
-    64
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
    ],
    "cells": [
     {
      "cell": 1,
-     "id": "eyeball_5",
-     "name": "天の大目玉",
-     "sprite": "eyeball_5",
-     "kind": "mob",
-     "size": "S",
-     "flying": true,
-     "targetLongSide": 40
-    },
-    {
-     "cell": 2,
      "id": "rm_clock_bird",
      "name": "ぜんまい鳥",
      "sprite": "rare_clockbird",
      "kind": "rare",
      "size": "S",
-     "flying": true,
-     "targetLongSide": 40
+     "targetDots": {
+      "w": 52,
+      "h": 36,
+      "long": 52
+     },
+     "targetHeight": 36,
+     "flying": true
     },
     {
-     "cell": 3,
+     "cell": 2,
      "id": "book_1",
      "name": "かみつき本",
      "sprite": "book_1",
      "kind": "mob",
      "size": "S",
+     "targetDots": {
+      "w": 39,
+      "h": 52,
+      "long": 52
+     },
+     "targetHeight": 52,
      "flying": true,
-     "targetLongSide": 40,
      "alsoMakes": [
       "book_2",
       "book_3"
      ]
     },
     {
-     "cell": 4,
+     "cell": 3,
      "id": "rm_bookworm",
      "name": "本の虫",
      "sprite": "rare_bookworm",
      "kind": "rare",
      "size": "S",
-     "targetLongSide": 40
+     "targetDots": {
+      "w": 39,
+      "h": 52,
+      "long": 52
+     },
+     "targetHeight": 52
     },
     {
-     "cell": 5,
+     "cell": 4,
      "id": "rm_golden_quill",
      "name": "黄金の羽ペン",
      "sprite": "rare_quill",
      "kind": "rare",
      "size": "S",
-     "flying": true,
-     "targetLongSide": 40
-    },
-    {
-     "cell": 6,
-     "id": "rm_memory_fish",
-     "name": "記憶の金魚",
-     "sprite": "rare_goldfish",
-     "kind": "rare",
-     "size": "S",
-     "flying": true,
-     "targetLongSide": 40
+     "targetDots": {
+      "w": 39,
+      "h": 52,
+      "long": 52
+     },
+     "targetHeight": 52,
+     "flying": true
     }
    ]
   },
   {
-   "sheet": 45,
-   "file": "mon_s45.png",
+   "sheet": 52,
+   "file": "mon_s52.png",
    "star": false,
    "section": "star8",
    "class": "B",
+   "orient": "tate",
    "canvas": [
     1024,
     1536
    ],
-   "orient": "tate",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
    "cells": [
     {
      "cell": 1,
@@ -2390,24 +3716,39 @@
      "sprite": "boss_star_guardian",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      115,
-      160
-     ]
+     "targetDots": {
+      "w": 120,
+      "h": 165,
+      "long": 165
+     },
+     "targetHeight": 165
     }
    ]
   },
   {
-   "sheet": 46,
-   "file": "mon_s46.png",
+   "sheet": 53,
+   "file": "mon_s53.png",
    "star": false,
    "section": "star8",
    "class": "B",
+   "orient": "yoko",
    "canvas": [
     1536,
     1024
    ],
-   "orient": "yoko",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    256,
+    170
+   ],
+   "boxDots": [
+    240,
+    160
+   ],
    "cells": [
     {
      "cell": 1,
@@ -2416,79 +3757,77 @@
      "sprite": "boss_stareater",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      180,
-      115
-     ]
+     "targetDots": {
+      "w": 230,
+      "h": 150,
+      "long": 230
+     },
+     "targetHeight": 150
     }
    ]
   },
   {
-   "sheet": 47,
-   "file": "mon_s47.png",
+   "sheet": 54,
+   "file": "mon_s54.png",
    "star": false,
    "section": "finale",
-   "class": "M",
+   "class": "S",
    "canvas": [
     1536,
-    1024
+    1536
    ],
+   "pxPerDot": 8,
    "grid": [
-    3,
+    2,
     2
    ],
    "cellDots": [
-    64,
-    64
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
    ],
    "cells": [
     {
      "cell": 1,
-     "id": "scribe_1",
-     "name": "白衣の書記",
-     "sprite": "scribe_1",
+     "id": "paper_1",
+     "name": "白紙の小鬼",
+     "sprite": "paper_1",
      "kind": "mob",
-     "size": "M",
-     "targetLongSide": 54,
-     "alsoMakes": [
-      "scribe_2"
-     ]
+     "size": "S",
+     "targetDots": {
+      "w": 39,
+      "h": 52,
+      "long": 52
+     },
+     "targetHeight": 52
     },
     {
      "cell": 2,
-     "id": "scribe_3",
-     "name": "白衣の司書長",
-     "sprite": "scribe_3",
-     "kind": "mob",
-     "size": "M",
-     "targetLongSide": 54
-    },
-    {
-     "cell": 3,
-     "id": "void_1",
-     "name": "虚無の騎士",
-     "sprite": "void_1",
-     "kind": "mob",
-     "size": "M",
-     "targetLongSide": 54,
-     "alsoMakes": [
-      "void_2"
-     ]
-    },
-    {
-     "cell": 4,
-     "id": "void_3",
-     "name": "虚無の騎士王",
-     "sprite": "void_3",
-     "kind": "mob",
-     "size": "M",
-     "targetLongSide": 54
+     "id": "rm_memory_fish",
+     "name": "記憶の金魚",
+     "sprite": "rare_goldfish",
+     "kind": "rare",
+     "size": "S",
+     "targetDots": {
+      "w": 52,
+      "h": 36,
+      "long": 52
+     },
+     "targetHeight": 36,
+     "flying": true
     }
    ]
   },
   {
-   "sheet": 48,
-   "file": "mon_s48.png",
+   "sheet": 55,
+   "file": "mon_s55.png",
    "star": false,
    "section": "finale",
    "class": "L",
@@ -2496,13 +3835,22 @@
     1536,
     1024
    ],
+   "pxPerDot": 6,
    "grid": [
     2,
     1
    ],
    "cellDots": [
-    96,
-    128
+    128,
+    170
+   ],
+   "cellPx": [
+    768,
+    1024
+   ],
+   "boxDots": [
+    116,
+    150
    ],
    "cells": [
     {
@@ -2512,7 +3860,12 @@
      "sprite": "demon_1",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 83,
+      "h": 110,
+      "long": 110
+     },
+     "targetHeight": 110
     },
     {
      "cell": 2,
@@ -2521,189 +3874,12 @@
      "sprite": "demon_2",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100
-    }
-   ]
-  },
-  {
-   "sheet": 49,
-   "file": "mon_s49.png",
-   "star": false,
-   "section": "finale",
-   "class": "B",
-   "canvas": [
-    1024,
-    1536
-   ],
-   "orient": "tate",
-   "cells": [
-    {
-     "cell": 1,
-     "id": "b_rowell1",
-     "name": "ロウェル",
-     "sprite": "boss_rowell",
-     "kind": "boss",
-     "size": "B",
-     "targetDots": [
-      50,
-      68
-     ]
-    }
-   ]
-  },
-  {
-   "sheet": 50,
-   "file": "mon_s50.png",
-   "star": false,
-   "section": "finale",
-   "class": "B",
-   "canvas": [
-    1024,
-    1536
-   ],
-   "orient": "tate",
-   "cells": [
-    {
-     "cell": 1,
-     "id": "b_rowell2",
-     "name": "ロウェル",
-     "sprite": "b_rowell2",
-     "kind": "boss",
-     "size": "B",
-     "targetDots": [
-      50,
-      68
-     ]
-    }
-   ]
-  },
-  {
-   "sheet": 51,
-   "file": "mon_s51.png",
-   "star": false,
-   "section": "finale",
-   "class": "B",
-   "canvas": [
-    1024,
-    1536
-   ],
-   "orient": "tate",
-   "cells": [
-    {
-     "cell": 1,
-     "id": "b_bookgolem",
-     "name": "本の巨人",
-     "sprite": "boss_bookgolem",
-     "kind": "boss",
-     "size": "B",
-     "targetDots": [
-      120,
-      175
-     ]
-    }
-   ]
-  },
-  {
-   "sheet": 52,
-   "file": "mon_s52.png",
-   "star": false,
-   "section": "finale",
-   "class": "B",
-   "canvas": [
-    1024,
-    1536
-   ],
-   "orient": "tate",
-   "cells": [
-    {
-     "cell": 1,
-     "id": "b_shade_sword",
-     "name": "剣の勇者の影",
-     "sprite": "boss_shade_sword",
-     "kind": "boss",
-     "size": "B",
-     "targetDots": [
-      60,
-      84
-     ]
-    }
-   ]
-  },
-  {
-   "sheet": 53,
-   "file": "mon_s53.png",
-   "star": false,
-   "section": "finale",
-   "class": "B",
-   "canvas": [
-    1024,
-    1536
-   ],
-   "orient": "tate",
-   "cells": [
-    {
-     "cell": 1,
-     "id": "b_shade_prayer",
-     "name": "祈りの勇者の影",
-     "sprite": "boss_shade_prayer",
-     "kind": "boss",
-     "size": "B",
-     "targetDots": [
-      60,
-      84
-     ]
-    }
-   ]
-  },
-  {
-   "sheet": 54,
-   "file": "mon_s54.png",
-   "star": false,
-   "section": "finale",
-   "class": "B",
-   "canvas": [
-    1024,
-    1536
-   ],
-   "orient": "tate",
-   "cells": [
-    {
-     "cell": 1,
-     "id": "b_shade_star",
-     "name": "杖の勇者の影",
-     "sprite": "boss_shade_star",
-     "kind": "boss",
-     "size": "B",
-     "targetDots": [
-      60,
-      84
-     ]
-    }
-   ]
-  },
-  {
-   "sheet": 55,
-   "file": "mon_s55.png",
-   "star": false,
-   "section": "finale",
-   "class": "B",
-   "canvas": [
-    1024,
-    1536
-   ],
-   "orient": "tate",
-   "cells": [
-    {
-     "cell": 1,
-     "id": "b_lazaro",
-     "name": "大書記ラザロ",
-     "sprite": "boss_lazaro",
-     "kind": "boss",
-     "size": "B",
-     "targetDots": [
-      60,
-      76
-     ]
+     "targetDots": {
+      "w": 90,
+      "h": 120,
+      "long": 120
+     },
+     "targetHeight": 120
     }
    ]
   },
@@ -2713,23 +3889,39 @@
    "star": false,
    "section": "finale",
    "class": "B",
+   "orient": "tate",
    "canvas": [
     1024,
     1536
    ],
-   "orient": "tate",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
    "cells": [
     {
      "cell": 1,
-     "id": "b_nemrea1",
-     "name": "虚ろの王",
-     "sprite": "boss_nemrea1",
+     "id": "b_rowell1",
+     "name": "ロウェル",
+     "sprite": "boss_rowell",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      120,
-      180
-     ]
+     "targetDots": {
+      "w": 50,
+      "h": 68,
+      "long": 68
+     },
+     "targetHeight": 68,
+     "human": true
     }
    ]
   },
@@ -2739,11 +3931,316 @@
    "star": false,
    "section": "finale",
    "class": "B",
+   "orient": "tate",
+   "canvas": [
+    1024,
+    1536
+   ],
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
+   "cells": [
+    {
+     "cell": 1,
+     "id": "b_rowell2",
+     "name": "ロウェル",
+     "sprite": "b_rowell2",
+     "kind": "boss",
+     "size": "B",
+     "targetDots": {
+      "w": 50,
+      "h": 68,
+      "long": 68
+     },
+     "targetHeight": 68,
+     "human": true
+    }
+   ]
+  },
+  {
+   "sheet": 58,
+   "file": "mon_s58.png",
+   "star": false,
+   "section": "finale",
+   "class": "B",
+   "orient": "tate",
+   "canvas": [
+    1024,
+    1536
+   ],
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
+   "cells": [
+    {
+     "cell": 1,
+     "id": "b_bookgolem",
+     "name": "本の巨人",
+     "sprite": "boss_bookgolem",
+     "kind": "boss",
+     "size": "B",
+     "targetDots": {
+      "w": 125,
+      "h": 170,
+      "long": 170
+     },
+     "targetHeight": 170
+    }
+   ]
+  },
+  {
+   "sheet": 59,
+   "file": "mon_s59.png",
+   "star": false,
+   "section": "finale",
+   "class": "B",
+   "orient": "tate",
+   "canvas": [
+    1024,
+    1536
+   ],
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
+   "cells": [
+    {
+     "cell": 1,
+     "id": "b_shade_sword",
+     "name": "剣の勇者の影",
+     "sprite": "boss_shade_sword",
+     "kind": "boss",
+     "size": "B",
+     "targetDots": {
+      "w": 60,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84,
+     "human": true
+    }
+   ]
+  },
+  {
+   "sheet": 60,
+   "file": "mon_s60.png",
+   "star": false,
+   "section": "finale",
+   "class": "B",
+   "orient": "tate",
+   "canvas": [
+    1024,
+    1536
+   ],
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
+   "cells": [
+    {
+     "cell": 1,
+     "id": "b_shade_prayer",
+     "name": "祈りの勇者の影",
+     "sprite": "boss_shade_prayer",
+     "kind": "boss",
+     "size": "B",
+     "targetDots": {
+      "w": 60,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84,
+     "human": true
+    }
+   ]
+  },
+  {
+   "sheet": 61,
+   "file": "mon_s61.png",
+   "star": false,
+   "section": "finale",
+   "class": "B",
+   "orient": "tate",
+   "canvas": [
+    1024,
+    1536
+   ],
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
+   "cells": [
+    {
+     "cell": 1,
+     "id": "b_shade_star",
+     "name": "杖の勇者の影",
+     "sprite": "boss_shade_star",
+     "kind": "boss",
+     "size": "B",
+     "targetDots": {
+      "w": 60,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84,
+     "human": true
+    }
+   ]
+  },
+  {
+   "sheet": 62,
+   "file": "mon_s62.png",
+   "star": false,
+   "section": "finale",
+   "class": "B",
+   "orient": "tate",
+   "canvas": [
+    1024,
+    1536
+   ],
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
+   "cells": [
+    {
+     "cell": 1,
+     "id": "b_lazaro",
+     "name": "大書記ラザロ",
+     "sprite": "boss_lazaro",
+     "kind": "boss",
+     "size": "B",
+     "targetDots": {
+      "w": 56,
+      "h": 76,
+      "long": 76
+     },
+     "targetHeight": 76,
+     "human": true
+    }
+   ]
+  },
+  {
+   "sheet": 63,
+   "file": "mon_s63.png",
+   "star": false,
+   "section": "finale",
+   "class": "B",
+   "orient": "tate",
+   "canvas": [
+    1024,
+    1536
+   ],
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
+   "cells": [
+    {
+     "cell": 1,
+     "id": "b_nemrea1",
+     "name": "虚ろの王",
+     "sprite": "boss_nemrea1",
+     "kind": "boss",
+     "size": "B",
+     "targetDots": {
+      "w": 160,
+      "h": 230,
+      "long": 230
+     },
+     "targetHeight": 230
+    }
+   ]
+  },
+  {
+   "sheet": 64,
+   "file": "mon_s64.png",
+   "star": false,
+   "section": "finale",
+   "class": "B",
+   "orient": "yoko",
    "canvas": [
     1536,
     1024
    ],
-   "orient": "yoko",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    256,
+    170
+   ],
+   "boxDots": [
+    240,
+    160
+   ],
    "cells": [
     {
      "cell": 1,
@@ -2752,16 +4249,79 @@
      "sprite": "boss_nemrea2",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      180,
-      120
-     ]
+     "targetDots": {
+      "w": 230,
+      "h": 155,
+      "long": 230
+     },
+     "targetHeight": 155
     }
    ]
   },
   {
-   "sheet": 58,
-   "file": "mon_s58.png",
+   "sheet": 65,
+   "file": "mon_s65.png",
+   "star": false,
+   "section": "post",
+   "class": "M",
+   "canvas": [
+    1536,
+    1536
+   ],
+   "pxPerDot": 8,
+   "grid": [
+    2,
+    2
+   ],
+   "cellDots": [
+    96,
+    96
+   ],
+   "cellPx": [
+    768,
+    768
+   ],
+   "boxDots": [
+    84,
+    84
+   ],
+   "cells": [
+    {
+     "cell": 1,
+     "id": "void_1",
+     "name": "虚無の騎士",
+     "sprite": "void_1",
+     "kind": "mob",
+     "size": "M",
+     "targetDots": {
+      "w": 60,
+      "h": 80,
+      "long": 80
+     },
+     "targetHeight": 80,
+     "alsoMakes": [
+      "void_2"
+     ]
+    },
+    {
+     "cell": 2,
+     "id": "void_3",
+     "name": "虚無の騎士王",
+     "sprite": "void_3",
+     "kind": "mob",
+     "size": "M",
+     "targetDots": {
+      "w": 63,
+      "h": 84,
+      "long": 84
+     },
+     "targetHeight": 84
+    }
+   ]
+  },
+  {
+   "sheet": 66,
+   "file": "mon_s66.png",
    "star": false,
    "section": "post",
    "class": "L",
@@ -2769,13 +4329,22 @@
     1536,
     1024
    ],
+   "pxPerDot": 6,
    "grid": [
     2,
     1
    ],
    "cellDots": [
-    96,
-    128
+    128,
+    170
+   ],
+   "cellPx": [
+    768,
+    1024
+   ],
+   "boxDots": [
+    116,
+    150
    ],
    "cells": [
     {
@@ -2785,7 +4354,12 @@
      "sprite": "demon_3",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 90,
+      "h": 120,
+      "long": 120
+     },
+     "targetHeight": 120
     },
     {
      "cell": 2,
@@ -2794,7 +4368,12 @@
      "sprite": "chaos_1",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100,
+     "targetDots": {
+      "w": 110,
+      "h": 77,
+      "long": 110
+     },
+     "targetHeight": 77,
      "alsoMakes": [
       "chaos_2"
      ]
@@ -2802,8 +4381,8 @@
    ]
   },
   {
-   "sheet": 59,
-   "file": "mon_s59.png",
+   "sheet": 67,
+   "file": "mon_s67.png",
    "star": false,
    "section": "post",
    "class": "L",
@@ -2811,13 +4390,22 @@
     1536,
     1024
    ],
+   "pxPerDot": 6,
    "grid": [
     2,
     1
    ],
    "cellDots": [
-    96,
-    128
+    128,
+    170
+   ],
+   "cellPx": [
+    768,
+    1024
+   ],
+   "boxDots": [
+    116,
+    150
    ],
    "cells": [
     {
@@ -2827,7 +4415,12 @@
      "sprite": "chaos_3",
      "kind": "mob",
      "size": "L",
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 120,
+      "h": 84,
+      "long": 120
+     },
+     "targetHeight": 84
     },
     {
      "cell": 2,
@@ -2836,21 +4429,39 @@
      "sprite": "rare_tapir",
      "kind": "rare",
      "size": "L",
-     "targetLongSide": 100
+     "targetDots": {
+      "w": 110,
+      "h": 77,
+      "long": 110
+     },
+     "targetHeight": 77
     }
    ]
   },
   {
-   "sheet": 60,
-   "file": "mon_s60.png",
+   "sheet": 68,
+   "file": "mon_s68.png",
    "star": false,
    "section": "post",
    "class": "B",
+   "orient": "tate",
    "canvas": [
     1024,
     1536
    ],
-   "orient": "tate",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    170,
+    256
+   ],
+   "boxDots": [
+    160,
+    240
+   ],
    "cells": [
     {
      "cell": 1,
@@ -2859,24 +4470,39 @@
      "sprite": "b_valzard_echo",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      120,
-      175
-     ]
+     "targetDots": {
+      "w": 150,
+      "h": 220,
+      "long": 220
+     },
+     "targetHeight": 220
     }
    ]
   },
   {
-   "sheet": 61,
-   "file": "mon_s61.png",
+   "sheet": 69,
+   "file": "mon_s69.png",
    "star": false,
    "section": "post",
    "class": "B",
+   "orient": "yoko",
    "canvas": [
     1536,
     1024
    ],
-   "orient": "yoko",
+   "pxPerDot": 6,
+   "grid": [
+    1,
+    1
+   ],
+   "cellDots": [
+    256,
+    170
+   ],
+   "boxDots": [
+    240,
+    160
+   ],
    "cells": [
     {
      "cell": 1,
@@ -2885,10 +4511,12 @@
      "sprite": "boss_ouroboros",
      "kind": "boss",
      "size": "B",
-     "targetDots": [
-      175,
-      120
-     ]
+     "targetDots": {
+      "w": 220,
+      "h": 150,
+      "long": 220
+     },
+     "targetHeight": 150
     }
    ]
   }
@@ -2897,18 +4525,17 @@
   "jelly_2": {
    "base": "jelly_1",
    "name": "あわゼリー",
-   "size": "s",
    "recolor": {
     "hue": 170
    },
    "addons": [
     "bubbles"
-   ]
+   ],
+   "targetHeight": 52
   },
   "jelly_3": {
    "base": "jelly_1",
    "name": "毒ゼリー",
-   "size": "s",
    "recolor": {
     "hue": 110,
     "sat": 1.1,
@@ -2917,34 +4544,34 @@
    "addons": [
     "drips",
     "skull_mark"
-   ]
+   ],
+   "targetHeight": 52
   },
   "jelly_5": {
    "base": "jelly_1",
    "name": "虹ゼリー",
-   "size": "s",
    "recolor": {},
    "addons": [
     "tiara"
    ],
+   "targetHeight": 52,
    "filter": "prism"
   },
   "rat_2": {
    "base": "rat_1",
    "name": "毒牙ネズミ",
-   "size": "s",
    "recolor": {
     "hue": 80,
     "sat": 0.8
    },
    "addons": [
     "eyes_glow"
-   ]
+   ],
+   "targetHeight": 36
   },
   "rat_3": {
    "base": "rat_1",
    "name": "鉄歯ネズミ",
-   "size": "s",
    "recolor": {
     "sat": 0.3,
     "bri": 0.9
@@ -2952,35 +4579,35 @@
    "addons": [
     "teeth_iron",
     "armor_plates"
-   ]
+   ],
+   "targetHeight": 36
   },
   "bat_2": {
    "base": "bat_1",
    "name": "血吸いコウモリ",
-   "size": "s",
    "recolor": {
     "hue": 55,
     "sat": 1.2
    },
    "addons": [
     "eyes_glow"
-   ]
+   ],
+   "targetHeight": 36
   },
   "bat_3": {
    "base": "bat_1",
    "name": "音波コウモリ",
-   "size": "s",
    "recolor": {
     "hue": 260
    },
    "addons": [
     "aura"
-   ]
+   ],
+   "targetHeight": 36
   },
   "bat_4": {
    "base": "bat_1",
    "name": "闇コウモリ",
-   "size": "s",
    "recolor": {
     "sat": 0.5,
     "bri": 0.55
@@ -2988,94 +4615,94 @@
    "addons": [
     "eyes_glow",
     "aura"
-   ]
+   ],
+   "targetHeight": 36
   },
   "crab_2": {
    "base": "crab_1",
    "name": "鉄甲ガニ",
-   "size": "m",
    "recolor": {
     "hue": 200,
     "sat": 0.35
    },
    "addons": [
     "armor_plates"
-   ]
+   ],
+   "targetHeight": 56
   },
   "crab_3": {
    "base": "crab_1",
    "name": "泡吹きガニ",
-   "size": "m",
    "recolor": {
     "hue": 190
    },
    "addons": [
     "bubbles"
-   ]
+   ],
+   "targetHeight": 56
   },
   "seabird_2": {
    "base": "seabird_1",
    "name": "嵐カモメ",
-   "size": "m",
    "recolor": {
     "sat": 0.3,
     "bri": 0.75
    },
    "addons": [
     "storm"
-   ]
+   ],
+   "targetHeight": 80
   },
   "seabird_3": {
    "base": "seabird_1",
    "name": "ぬすみカモメ",
-   "size": "m",
    "recolor": {
     "hue": 30,
     "sat": 0.7
    },
    "addons": [
     "bandana"
-   ]
+   ],
+   "targetHeight": 80
   },
   "seabird_4": {
    "base": "seabird_1",
    "name": "長老カモメ",
-   "size": "m",
    "recolor": {
     "bri": 1.15
    },
    "addons": [
     "beard",
     "aura"
-   ]
+   ],
+   "targetHeight": 80
   },
   "bee_2": {
    "base": "bee_1",
    "name": "毒針バチ",
-   "size": "s",
    "recolor": {
     "hue": 250,
     "sat": 0.9
    },
    "addons": [
     "stinger"
-   ]
+   ],
+   "targetHeight": 36
   },
   "bee_3": {
    "base": "bee_1",
    "name": "しびれバチ",
-   "size": "s",
    "recolor": {
     "hue": 190
    },
    "addons": [
     "sparks"
-   ]
+   ],
+   "targetHeight": 36
   },
   "bee_4": {
    "base": "bee_1",
    "name": "千本バチ",
-   "size": "s",
    "recolor": {
     "hue": -30,
     "sat": 1.1,
@@ -3083,23 +4710,23 @@
    },
    "addons": [
     "spikes"
-   ]
+   ],
+   "targetHeight": 36
   },
   "mushroom_2": {
    "base": "mushroom_1",
    "name": "まだらダケ",
-   "size": "s",
    "recolor": {
     "hue": 260
    },
    "addons": [
     "spots"
-   ]
+   ],
+   "targetHeight": 52
   },
   "mushroom_3": {
    "base": "mushroom_1",
    "name": "まどいダケ",
-   "size": "s",
    "recolor": {
     "hue": 120,
     "sat": 1.2
@@ -3107,12 +4734,12 @@
    "addons": [
     "spots",
     "aura"
-   ]
+   ],
+   "targetHeight": 52
   },
   "plant_2": {
    "base": "plant_1",
    "name": "いばら花",
-   "size": "m",
    "recolor": {
     "hue": -20,
     "sat": 0.9,
@@ -3120,24 +4747,24 @@
    },
    "addons": [
     "thorns"
-   ]
+   ],
+   "targetHeight": 80
   },
   "plant_3": {
    "base": "plant_1",
    "name": "毒吹き花",
-   "size": "m",
    "recolor": {
     "hue": -60,
     "sat": 1.1
    },
    "addons": [
     "smoke"
-   ]
+   ],
+   "targetHeight": 80
   },
   "plant_4": {
    "base": "plant_1",
    "name": "夜咲き花",
-   "size": "m",
    "recolor": {
     "hue": 230,
     "sat": 0.9,
@@ -3145,23 +4772,23 @@
    },
    "addons": [
     "aura"
-   ]
+   ],
+   "targetHeight": 80
   },
   "fairy_2": {
    "base": "fairy_1",
    "name": "花の妖精",
-   "size": "s",
    "recolor": {
     "hue": 300
    },
    "addons": [
     "flower"
-   ]
+   ],
+   "targetHeight": 52
   },
   "fairy_3": {
    "base": "fairy_1",
    "name": "霧の妖精",
-   "size": "s",
    "recolor": {
     "hue": 180,
     "sat": 0.6,
@@ -3169,12 +4796,12 @@
    },
    "addons": [
     "mist"
-   ]
+   ],
+   "targetHeight": 52
   },
   "treant_2": {
    "base": "treant_1",
    "name": "いばら木",
-   "size": "l",
    "recolor": {
     "hue": -30,
     "sat": 0.9,
@@ -3182,12 +4809,12 @@
    },
    "addons": [
     "thorns"
-   ]
+   ],
+   "targetHeight": 110
   },
   "treant_3": {
    "base": "treant_1",
    "name": "こけむし大木",
-   "size": "l",
    "recolor": {
     "hue": 30,
     "sat": 0.8
@@ -3195,35 +4822,35 @@
    "addons": [
     "moss",
     "flower"
-   ]
+   ],
+   "targetHeight": 110
   },
   "scorpion_2": {
    "base": "scorpion_1",
    "name": "毒尾サソリ",
-   "size": "m",
    "recolor": {
     "hue": 100
    },
    "addons": [
     "stinger"
-   ]
+   ],
+   "targetHeight": 56
   },
   "scorpion_3": {
    "base": "scorpion_1",
    "name": "鋼殻サソリ",
-   "size": "m",
    "recolor": {
     "sat": 0.25,
     "bri": 0.95
    },
    "addons": [
     "armor_plates"
-   ]
+   ],
+   "targetHeight": 56
   },
   "scorpion_4": {
    "base": "scorpion_1",
    "name": "死神サソリ",
-   "size": "m",
    "recolor": {
     "hue": 260,
     "sat": 0.6,
@@ -3232,12 +4859,12 @@
    "addons": [
     "skull_mark",
     "eyes_glow"
-   ]
+   ],
+   "targetHeight": 56
   },
   "snake_2": {
    "base": "snake_1",
    "name": "鈴尾ヘビ",
-   "size": "m",
    "recolor": {
     "hue": 20,
     "sat": 0.8,
@@ -3245,12 +4872,12 @@
    },
    "addons": [
     "rattle"
-   ]
+   ],
+   "targetHeight": 80
   },
   "snake_3": {
    "base": "snake_1",
    "name": "にらみヘビ",
-   "size": "m",
    "recolor": {
     "hue": 60,
     "sat": 1.1
@@ -3258,12 +4885,12 @@
    "addons": [
     "eyes_glow",
     "hood"
-   ]
+   ],
+   "targetHeight": 80
   },
   "mummy_2": {
    "base": "mummy_1",
    "name": "呪いミイラ",
-   "size": "m",
    "recolor": {
     "hue": 250,
     "sat": 0.4,
@@ -3271,12 +4898,12 @@
    },
    "addons": [
     "eyes_glow"
-   ]
+   ],
+   "targetHeight": 80
   },
   "mummy_3": {
    "base": "mummy_1",
    "name": "ミイラ神官",
-   "size": "m",
    "recolor": {
     "hue": 20,
     "sat": 0.5
@@ -3284,12 +4911,12 @@
    "addons": [
     "hood",
     "staff"
-   ]
+   ],
+   "targetHeight": 80
   },
   "mummy_4": {
    "base": "mummy_1",
    "name": "ミイラ将軍",
-   "size": "m",
    "recolor": {
     "hue": 10,
     "sat": 0.6
@@ -3298,12 +4925,12 @@
     "helm",
     "sword",
     "shield"
-   ]
+   ],
+   "targetHeight": 80
   },
   "cactus_2": {
    "base": "cactus_1",
    "name": "針サボテン",
-   "size": "m",
    "recolor": {
     "hue": -15,
     "sat": 1.1,
@@ -3311,35 +4938,35 @@
    },
    "addons": [
     "spikes"
-   ]
+   ],
+   "targetHeight": 80
   },
   "cactus_3": {
    "base": "cactus_1",
    "name": "花咲きサボテン",
-   "size": "m",
    "recolor": {
     "hue": 10
    },
    "addons": [
     "flower"
-   ]
+   ],
+   "targetHeight": 80
   },
   "sandworm_2": {
    "base": "sandworm_1",
    "name": "岩ミミズ",
-   "size": "l",
    "recolor": {
     "sat": 0.3,
     "bri": 0.85
    },
    "addons": [
     "armor_plates"
-   ]
+   ],
+   "targetHeight": 110
   },
   "wolf_2": {
    "base": "wolf_1",
    "name": "霜牙オオカミ",
-   "size": "m",
    "recolor": {
     "hue": 20,
     "sat": 0.6,
@@ -3347,12 +4974,12 @@
    },
    "addons": [
     "frost"
-   ]
+   ],
+   "targetHeight": 56
   },
   "wolf_3": {
    "base": "wolf_1",
    "name": "吹雪オオカミ",
-   "size": "m",
    "recolor": {
     "sat": 0.2,
     "bri": 1.3
@@ -3360,12 +4987,12 @@
    "addons": [
     "frost",
     "mist"
-   ]
+   ],
+   "targetHeight": 56
   },
   "wolf_4": {
    "base": "wolf_1",
    "name": "月夜オオカミ",
-   "size": "m",
    "recolor": {
     "hue": 40,
     "sat": 0.8,
@@ -3374,12 +5001,12 @@
    "addons": [
     "eyes_glow",
     "aura"
-   ]
+   ],
+   "targetHeight": 56
   },
   "yeti_2": {
    "base": "yeti_1",
    "name": "氷の雪男",
-   "size": "l",
    "recolor": {
     "hue": 20,
     "sat": 1.2
@@ -3387,35 +5014,35 @@
    "addons": [
     "crystals",
     "frost"
-   ]
+   ],
+   "targetHeight": 110
   },
   "frostling_2": {
    "base": "frostling_1",
    "name": "つらら小僧",
-   "size": "m",
    "recolor": {
     "hue": 15
    },
    "addons": [
     "crystals"
-   ]
+   ],
+   "targetHeight": 80
   },
   "frostling_3": {
    "base": "frostling_1",
    "name": "ふぶき小僧",
-   "size": "m",
    "recolor": {
     "sat": 0.4,
     "bri": 1.2
    },
    "addons": [
     "mist"
-   ]
+   ],
+   "targetHeight": 80
   },
   "frostling_4": {
    "base": "frostling_1",
    "name": "雪の大将",
-   "size": "m",
    "recolor": {
     "hue": 20,
     "sat": 1.1
@@ -3423,36 +5050,36 @@
    "addons": [
     "helm",
     "sword"
-   ]
+   ],
+   "targetHeight": 80
   },
   "owl_2": {
    "base": "owl_1",
    "name": "ねむりフクロウ",
-   "size": "m",
    "recolor": {
     "hue": 30,
     "sat": 0.7
    },
    "addons": [
     "hat"
-   ]
+   ],
+   "targetHeight": 56
   },
   "owl_3": {
    "base": "owl_1",
    "name": "まどいフクロウ",
-   "size": "m",
    "recolor": {
     "hue": 270,
     "sat": 1.1
    },
    "addons": [
     "eyes_glow"
-   ]
+   ],
+   "targetHeight": 56
   },
   "mammoth_2": {
    "base": "mammoth_1",
    "name": "鉄牙マンモス",
-   "size": "l",
    "recolor": {
     "hue": -10,
     "sat": 0.8,
@@ -3461,24 +5088,24 @@
    "addons": [
     "tusks",
     "armor_plates"
-   ]
+   ],
+   "targetHeight": 77
   },
   "ghost_2": {
    "base": "ghost_1",
    "name": "泣き霊",
-   "size": "m",
    "recolor": {
     "hue": 20,
     "sat": 1.2
    },
    "addons": [
     "drips"
-   ]
+   ],
+   "targetHeight": 80
   },
   "ghost_3": {
    "base": "ghost_1",
    "name": "呪い霊",
-   "size": "m",
    "recolor": {
     "hue": 50,
     "sat": 0.8,
@@ -3487,12 +5114,12 @@
    "addons": [
     "eyes_glow",
     "chain"
-   ]
+   ],
+   "targetHeight": 80
   },
   "ghost_4": {
    "base": "ghost_1",
    "name": "恨み霊",
-   "size": "m",
    "recolor": {
     "hue": 330,
     "sat": 1.2,
@@ -3501,36 +5128,36 @@
    "addons": [
     "chain",
     "aura"
-   ]
+   ],
+   "targetHeight": 80
   },
   "wisp_2": {
    "base": "wisp_1",
    "name": "化け火",
-   "size": "s",
    "recolor": {
     "hue": -100,
     "sat": 1.2
    },
    "addons": [
     "eyes_glow"
-   ]
+   ],
+   "targetHeight": 52
   },
   "wisp_3": {
    "base": "wisp_1",
    "name": "人魂",
-   "size": "s",
    "recolor": {
     "sat": 0.4,
     "bri": 1.2
    },
    "addons": [
     "aura"
-   ]
+   ],
+   "targetHeight": 52
   },
   "wisp_4": {
    "base": "wisp_1",
    "name": "黄泉の火",
-   "size": "s",
    "recolor": {
     "hue": 15,
     "sat": 1.2,
@@ -3539,24 +5166,24 @@
    "addons": [
     "aura",
     "skull_mark"
-   ]
+   ],
+   "targetHeight": 52
   },
   "frog_2": {
    "base": "frog_1",
    "name": "毒ガエル",
-   "size": "m",
    "recolor": {
     "hue": 125,
     "sat": 1.3
    },
    "addons": [
     "spots"
-   ]
+   ],
+   "targetHeight": 56
   },
   "frog_4": {
    "base": "frog_3",
    "name": "鐘鳴りガエル",
-   "size": "m",
    "recolor": {
     "hue": 20,
     "sat": 0.7,
@@ -3564,24 +5191,24 @@
    },
    "addons": [
     "bell"
-   ]
+   ],
+   "targetHeight": 59
   },
   "doll_2": {
    "base": "doll_1",
    "name": "踊り人形",
-   "size": "m",
    "recolor": {
     "hue": 300,
     "sat": 0.9
    },
    "addons": [
     "ribbon"
-   ]
+   ],
+   "targetHeight": 80
   },
   "doll_3": {
    "base": "doll_1",
    "name": "呪い人形",
-   "size": "m",
    "recolor": {
     "sat": 0.4,
     "bri": 0.7
@@ -3589,24 +5216,24 @@
    "addons": [
     "pins",
     "eyes_glow"
-   ]
+   ],
+   "targetHeight": 80
   },
   "lizardman_2": {
    "base": "lizardman_1",
    "name": "トカゲの槍兵",
-   "size": "m",
    "recolor": {
     "hue": 20
    },
    "addons": [
     "spear",
     "helm"
-   ]
+   ],
+   "targetHeight": 80
   },
   "lizardman_3": {
    "base": "lizardman_1",
    "name": "トカゲの呪術師",
-   "size": "m",
    "recolor": {
     "hue": 250,
     "sat": 0.8
@@ -3614,47 +5241,47 @@
    "addons": [
     "hood",
     "staff"
-   ]
+   ],
+   "targetHeight": 80
   },
   "spider_2": {
    "base": "spider_1",
    "name": "毒グモ",
-   "size": "m",
    "recolor": {
     "hue": 250,
     "sat": 1.1
    },
    "addons": [
     "spots"
-   ]
+   ],
+   "targetHeight": 56
   },
   "spider_3": {
    "base": "spider_1",
    "name": "影グモ",
-   "size": "m",
    "recolor": {
     "sat": 0.3,
     "bri": 0.4
    },
    "addons": [
     "eyes_glow"
-   ]
+   ],
+   "targetHeight": 56
   },
   "merman_2": {
    "base": "merman_1",
    "name": "魚人のもり兵",
-   "size": "m",
    "recolor": {
     "hue": -30
    },
    "addons": [
     "helm"
-   ]
+   ],
+   "targetHeight": 80
   },
   "merman_3": {
    "base": "merman_1",
    "name": "魚人の呪い師",
-   "size": "m",
    "recolor": {
     "hue": 90,
     "sat": 0.8
@@ -3662,24 +5289,24 @@
    "addons": [
     "hood",
     "staff"
-   ]
+   ],
+   "targetHeight": 80
   },
   "kraken_2": {
    "base": "kraken_1",
    "name": "八本腕ダコ",
-   "size": "l",
    "recolor": {
     "hue": -20,
     "sat": 1.2
    },
    "addons": [
     "spots"
-   ]
+   ],
+   "targetHeight": 77
   },
   "kraken_3": {
    "base": "kraken_1",
    "name": "渦潮ダコ",
-   "size": "l",
    "recolor": {
     "hue": 200,
     "sat": 0.9,
@@ -3687,32 +5314,32 @@
    },
    "addons": [
     "storm"
-   ]
+   ],
+   "targetHeight": 77
   },
   "skeleton_2": {
    "base": "skeleton_1",
    "name": "骸骨の海賊",
-   "size": "m",
    "recolor": {},
    "addons": [
     "hat",
     "eyepatch"
-   ]
+   ],
+   "targetHeight": 80
   },
   "skeleton_4": {
    "base": "skeleton_1",
    "name": "骸骨の航海士",
-   "size": "m",
    "recolor": {},
    "addons": [
     "hat",
     "cape"
-   ]
+   ],
+   "targetHeight": 80
   },
   "golem_2": {
    "base": "golem_1",
    "name": "鉄鉱兵",
-   "size": "l",
    "recolor": {
     "hue": 180,
     "sat": 0.4,
@@ -3720,12 +5347,12 @@
    },
    "addons": [
     "armor_plates"
-   ]
+   ],
+   "targetHeight": 110
   },
   "mole_2": {
    "base": "mole_1",
    "name": "かぎ爪モグラ",
-   "size": "m",
    "recolor": {
     "hue": -10,
     "sat": 0.8
@@ -3733,12 +5360,12 @@
    "addons": [
     "hat",
     "claws"
-   ]
+   ],
+   "targetHeight": 80
   },
   "mole_3": {
    "base": "mole_1",
    "name": "火薬モグラ",
-   "size": "m",
    "recolor": {
     "hue": 10,
     "sat": 1.1
@@ -3746,72 +5373,72 @@
    "addons": [
     "hat",
     "bomb"
-   ]
+   ],
+   "targetHeight": 80
   },
   "beetle_2": {
    "base": "beetle_1",
    "name": "鉄カブト",
-   "size": "s",
    "recolor": {
     "sat": 0.2,
     "bri": 0.7
    },
    "addons": [
     "armor_plates"
-   ]
+   ],
+   "targetHeight": 36
   },
   "beetle_3": {
    "base": "beetle_1",
    "name": "火花カブト",
-   "size": "s",
    "recolor": {
     "hue": -40,
     "sat": 1.2
    },
    "addons": [
     "sparks"
-   ]
+   ],
+   "targetHeight": 36
   },
   "beetle_4": {
    "base": "beetle_1",
    "name": "金剛カブト",
-   "size": "s",
    "recolor": {
     "sat": 0.3,
     "bri": 1.3
    },
    "addons": [
     "crystals"
-   ]
+   ],
+   "targetHeight": 36
   },
   "crystal_2": {
    "base": "crystal_1",
    "name": "紅水晶",
-   "size": "s",
    "recolor": {
     "hue": 150,
     "sat": 1.4
    },
    "addons": [
     "embers"
-   ]
+   ],
+   "targetHeight": 52
   },
   "crystal_3": {
    "base": "crystal_1",
    "name": "青水晶",
-   "size": "s",
    "recolor": {
     "hue": 20,
     "sat": 1.3
    },
    "addons": [
     "frost"
-   ]
+   ],
+   "targetHeight": 52
   },
   "crystal_4": {
    "base": "crystal_1",
    "name": "紫水晶",
-   "size": "s",
    "recolor": {
     "hue": 80,
     "sat": 1.3,
@@ -3820,24 +5447,24 @@
    "addons": [
     "aura",
     "runes"
-   ]
+   ],
+   "targetHeight": 52
   },
   "goblin_2": {
    "base": "goblin_1",
    "name": "小鬼の斧兵",
-   "size": "m",
    "recolor": {
     "hue": 20
    },
    "addons": [
     "axe",
     "helm"
-   ]
+   ],
+   "targetHeight": 80
   },
   "goblin_3": {
    "base": "goblin_1",
    "name": "小鬼の火薬師",
-   "size": "m",
    "recolor": {
     "hue": -40
    },
@@ -3845,12 +5472,12 @@
     "bandana",
     "goggles",
     "bomb"
-   ]
+   ],
+   "targetHeight": 80
   },
   "goblin_4": {
    "base": "goblin_1",
    "name": "小鬼の隊長",
-   "size": "m",
    "recolor": {
     "hue": 40,
     "sat": 1.1
@@ -3859,24 +5486,24 @@
     "helm",
     "sword",
     "shield"
-   ]
+   ],
+   "targetHeight": 80
   },
   "salamander_2": {
    "base": "salamander_1",
    "name": "火吹きトカゲ",
-   "size": "m",
    "recolor": {
     "hue": 10,
     "sat": 1.1
    },
    "addons": [
     "flame"
-   ]
+   ],
+   "targetHeight": 56
   },
   "salamander_3": {
    "base": "salamander_1",
    "name": "溶岩トカゲ",
-   "size": "m",
    "recolor": {
     "hue": -20,
     "sat": 1.2,
@@ -3884,12 +5511,12 @@
    },
    "addons": [
     "embers"
-   ]
+   ],
+   "targetHeight": 56
   },
   "salamander_4": {
    "base": "salamander_1",
    "name": "炎角トカゲ",
-   "size": "m",
    "recolor": {
     "hue": -10,
     "sat": 1.2
@@ -3897,33 +5524,33 @@
    "addons": [
     "horns",
     "embers"
-   ]
+   ],
+   "targetHeight": 56
   },
   "imp_2": {
    "base": "imp_1",
    "name": "火の粉悪魔",
-   "size": "s",
    "recolor": {},
    "addons": [
     "embers"
-   ]
+   ],
+   "targetHeight": 36
   },
   "imp_3": {
    "base": "imp_1",
    "name": "灰の悪魔",
-   "size": "s",
    "recolor": {
     "sat": 0.1,
     "bri": 1.1
    },
    "addons": [
     "smoke"
-   ]
+   ],
+   "targetHeight": 36
   },
   "imp_4": {
    "base": "imp_1",
    "name": "業火の悪魔",
-   "size": "s",
    "recolor": {
     "hue": 20,
     "sat": 1.2
@@ -3931,36 +5558,36 @@
    "addons": [
     "horns",
     "flame"
-   ]
+   ],
+   "targetHeight": 36
   },
   "gargoyle_2": {
    "base": "gargoyle_1",
    "name": "黒曜の石像鬼",
-   "size": "m",
    "recolor": {
     "sat": 0.3,
     "bri": 0.45
    },
    "addons": [
     "eyes_glow"
-   ]
+   ],
+   "targetHeight": 56
   },
   "gargoyle_3": {
    "base": "gargoyle_1",
    "name": "火炎の石像鬼",
-   "size": "m",
    "recolor": {
     "hue": 115,
     "sat": 1.3
    },
    "addons": [
     "embers"
-   ]
+   ],
+   "targetHeight": 56
   },
   "gargoyle_4": {
    "base": "gargoyle_1",
    "name": "石像鬼の長",
-   "size": "m",
    "recolor": {
     "sat": 0.5,
     "bri": 0.85
@@ -3968,12 +5595,12 @@
    "addons": [
     "horns",
     "crown"
-   ]
+   ],
+   "targetHeight": 56
   },
   "orc_2": {
    "base": "orc_1",
    "name": "鉄棒の大鬼",
-   "size": "l",
    "recolor": {
     "hue": -30,
     "sat": 0.9
@@ -3981,24 +5608,24 @@
    "addons": [
     "club_iron",
     "helm"
-   ]
+   ],
+   "targetHeight": 110
   },
   "chimera_2": {
    "base": "chimera_1",
    "name": "三頭獣",
-   "size": "l",
    "recolor": {
     "hue": -10,
     "sat": 1.1
    },
    "addons": [
     "horns"
-   ]
+   ],
+   "targetHeight": 77
   },
   "chimera_3": {
    "base": "chimera_1",
    "name": "業火の三頭獣",
-   "size": "l",
    "recolor": {
     "hue": -30,
     "sat": 1.3,
@@ -4007,36 +5634,36 @@
    "addons": [
     "flame",
     "horns"
-   ]
+   ],
+   "targetHeight": 77
   },
   "eyeball_2": {
    "base": "eyeball_1",
    "name": "にらみ目玉",
-   "size": "s",
    "recolor": {
     "hue": -60,
     "sat": 1.2
    },
    "addons": [
     "eyes_glow"
-   ]
+   ],
+   "targetHeight": 52
   },
   "eyeball_3": {
    "base": "eyeball_1",
    "name": "まどわし目玉",
-   "size": "s",
    "recolor": {
     "hue": 120,
     "sat": 1.2
    },
    "addons": [
     "eye3"
-   ]
+   ],
+   "targetHeight": 52
   },
   "eyeball_4": {
    "base": "eyeball_1",
    "name": "星見の目玉",
-   "size": "s",
    "recolor": {
     "hue": 200,
     "sat": 1.1,
@@ -4044,36 +5671,36 @@
    },
    "addons": [
     "halo"
-   ]
+   ],
+   "targetHeight": 52
   },
   "darkmage_2": {
    "base": "darkmage_1",
    "name": "炎の魔術師",
-   "size": "m",
    "recolor": {
     "hue": 60,
     "sat": 1.2
    },
    "addons": [
     "embers"
-   ]
+   ],
+   "targetHeight": 80
   },
   "darkmage_3": {
    "base": "darkmage_1",
    "name": "風の魔術師",
-   "size": "m",
    "recolor": {
     "hue": -150,
     "sat": 1.1
    },
    "addons": [
     "storm"
-   ]
+   ],
+   "targetHeight": 80
   },
   "darkmage_4": {
    "base": "darkmage_1",
    "name": "闇の魔術師",
-   "size": "m",
    "recolor": {
     "hue": 30,
     "sat": 1.1,
@@ -4082,24 +5709,24 @@
    "addons": [
     "aura",
     "staff"
-   ]
+   ],
+   "targetHeight": 80
   },
   "automaton_2": {
    "base": "automaton_1",
    "name": "からくり弓兵",
-   "size": "m",
    "recolor": {
     "hue": 20,
     "sat": 0.8
    },
    "addons": [
     "bow"
-   ]
+   ],
+   "targetHeight": 80
   },
   "automaton_3": {
    "base": "automaton_1",
    "name": "からくり術兵",
-   "size": "m",
    "recolor": {
     "hue": 160,
     "sat": 0.8
@@ -4107,24 +5734,24 @@
    "addons": [
     "staff",
     "runes"
-   ]
+   ],
+   "targetHeight": 80
   },
   "armor_2": {
    "base": "armor_1",
    "name": "番兵の鎧",
-   "size": "m",
    "recolor": {
     "hue": 20
    },
    "addons": [
     "shield",
     "spear"
-   ]
+   ],
+   "targetHeight": 80
   },
   "armor_3": {
    "base": "armor_1",
    "name": "騎士の鎧",
-   "size": "m",
    "recolor": {
     "hue": 200,
     "sat": 0.8
@@ -4133,24 +5760,24 @@
     "helm",
     "cape",
     "sword"
-   ]
+   ],
+   "targetHeight": 80
   },
   "wyvern_2": {
    "base": "wyvern_1",
    "name": "風切り飛竜",
-   "size": "l",
    "recolor": {
     "hue": 30,
     "sat": 1.1
    },
    "addons": [
     "horns"
-   ]
+   ],
+   "targetHeight": 77
   },
   "wyvern_3": {
    "base": "wyvern_1",
    "name": "嵐飛竜",
-   "size": "l",
    "recolor": {
     "sat": 0.3,
     "bri": 0.7
@@ -4158,22 +5785,22 @@
    "addons": [
     "storm",
     "sparks"
-   ]
+   ],
+   "targetHeight": 77
   },
   "scribe_2": {
    "base": "scribe_1",
    "name": "白衣の写本師",
-   "size": "m",
    "recolor": {},
    "addons": [
     "book",
     "quill"
-   ]
+   ],
+   "targetHeight": 80
   },
   "book_2": {
    "base": "book_1",
    "name": "呪いの書",
-   "size": "s",
    "recolor": {
     "hue": 250,
     "sat": 1.2,
@@ -4182,36 +5809,36 @@
    "addons": [
     "chain",
     "eyes_glow"
-   ]
+   ],
+   "targetHeight": 52
   },
   "book_3": {
    "base": "book_1",
    "name": "白紙の書",
-   "size": "s",
    "recolor": {
     "sat": 0,
     "bri": 1.3
    },
    "addons": [
     "aura"
-   ]
+   ],
+   "targetHeight": 52
   },
   "mimic_2": {
    "base": "mimic_1",
    "name": "毒牙の宝箱",
-   "size": "s",
    "recolor": {
     "hue": 100,
     "sat": 0.8
    },
    "addons": [
     "drips"
-   ]
+   ],
+   "targetHeight": 36
   },
   "mimic_3": {
    "base": "mimic_1",
    "name": "呪いの宝箱",
-   "size": "s",
    "recolor": {
     "hue": 240,
     "sat": 0.7
@@ -4219,12 +5846,12 @@
    "addons": [
     "chain",
     "eyes_glow"
-   ]
+   ],
+   "targetHeight": 36
   },
   "mimic_4": {
    "base": "mimic_1",
    "name": "奈落の宝箱",
-   "size": "s",
    "recolor": {
     "sat": 0.5,
     "bri": 0.45
@@ -4232,22 +5859,22 @@
    "addons": [
     "crown",
     "aura"
-   ]
+   ],
+   "targetHeight": 36
   },
   "void_2": {
    "base": "void_1",
    "name": "虚無の騎士団長",
-   "size": "m",
    "recolor": {},
    "addons": [
     "crown",
     "cape"
-   ]
+   ],
+   "targetHeight": 80
   },
   "chaos_2": {
    "base": "chaos_1",
    "name": "混沌の王獣",
-   "size": "l",
    "recolor": {
     "hue": 40,
     "sat": 1.1
@@ -4256,60 +5883,61 @@
     "crown",
     "crystals",
     "aura"
-   ]
+   ],
+   "targetHeight": 77
   },
   "quicksilver_1": {
    "base": "jelly_1",
    "name": "白銀ゼリー",
-   "size": "s",
    "recolor": {},
    "addons": [],
+   "targetHeight": 52,
    "filter": "chrome"
   },
   "quicksilver_2": {
    "base": "jelly_1",
    "name": "白銀の大ゼリー",
-   "size": "s",
    "recolor": {},
    "addons": [
     "tiara"
    ],
+   "targetHeight": 52,
    "filter": "chrome"
   },
   "mirror_1": {
    "base": "beetle_1",
    "name": "鏡カブト",
-   "size": "s",
    "recolor": {},
    "addons": [],
+   "targetHeight": 36,
    "filter": "mirror"
   },
   "mirror_2": {
    "base": "beetle_1",
    "name": "鏡の大カブト",
-   "size": "s",
    "recolor": {},
    "addons": [
     "horns"
    ],
+   "targetHeight": 36,
    "filter": "mirror"
   },
   "platinum_1": {
    "base": "wisp_1",
    "name": "白金の鬼火",
-   "size": "s",
    "recolor": {},
    "addons": [],
+   "targetHeight": 52,
    "filter": "platinum"
   },
   "platinum_2": {
    "base": "wisp_1",
    "name": "白金の大鬼火",
-   "size": "s",
    "recolor": {},
    "addons": [
     "crown"
    ],
+   "targetHeight": 52,
    "filter": "platinum"
   },
   "b_lavabeast_cold": {
@@ -4320,11 +5948,14 @@
     "sat": 0.35,
     "bri": 0.55
    },
-   "addons": []
+   "addons": [],
+   "targetHeight": 155
   }
  },
  "counts": {
-  "sheets": 61,
+  "sheets": 69,
+  "starSheets": 9,
+  "starImages": 22,
   "drawnImages": 153,
   "byClass": {
    "S": 30,
@@ -4333,8 +5964,8 @@
    "B": 29
   },
   "sheetsByClass": {
-   "S": 5,
-   "M": 12,
+   "S": 8,
+   "M": 17,
    "L": 15,
    "B": 29
   },
