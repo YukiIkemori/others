@@ -574,7 +574,7 @@ async function testPlay() {
   ok(g().flags.prologue_done, 'P10 prologue_done');
   for (const k of ['k_chronicle', 'k_quill', 'k_bell']) ok(R.State.hasItem(k), 'P10 ' + k);
   eq(g().objective, 'obj_regions', 'P10 objective obj_regions');
-  ok(said(/夜通し歩いてきたよ/, mark) && captioned(/序章\n『灯台守の歌』が記された/) && said(/八つの大きな伝承/, mark) && said(/どこの町の酒場でもね/, mark), 'P10 the master, the chapter, the eight legends, the tavern master');
+  ok(said(/夜通し歩いてきたよ/, mark) && captioned(/序章\n『灯台守の歌』が記された/) && said(/八つの大きな伝承/, mark) && said(/この店に来てくれればね/, mark), 'P10 the master, the chapter, the eight legends, the tavern master');
   const hints = Object.values(DB.regions || {}).map((r) => r.hint).filter(Boolean);
   ok(hints.length === 8 && hints.every((h) => said(new RegExp(h.split('\n')[0]), mark)), 'P10 all eight rumours');
   ok(S.jingles.includes('chapter'), 'P10 jingle chapter');

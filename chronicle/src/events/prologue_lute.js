@@ -172,7 +172,7 @@
       const m = ev.npc('master');
       await m.walk('L2');
       m.face('player');
-      await ev.say('ここに残った連中も、\nいつでも仲間にできるよ。\nどこの町の酒場でもね。');
+      await ev.say('ここに残った連中も、\nいつでも仲間にできるよ。\nこの店に来てくれればね。');
       berna.face('up');
       await ev.say('わたしは里へ帰るよ。\n……いってらっしゃい、{hero}。');
       ev.closeMessage();

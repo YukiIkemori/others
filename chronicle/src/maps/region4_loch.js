@@ -209,7 +209,7 @@
         { text: '鐘沈みの沼には、\n七つの鐘が沈んでる\nって言い伝えがあってな。' },
       ], { dir: 'right', push: true }),
       K.talk('waitress', 'woman', 30, 8, [
-        { cond: CLEAR, text: 'マスターに言えば、\n旅の仲間を紹介して\nくれるわよ。' },
+        { cond: CLEAR, text: '旅の仲間を探すなら、\n港町ファロスの酒場よ。\n定期船ですぐだから。' },
         { text: 'いらっしゃい！\n霧の日は、みんな昼から\nここに集まっちゃうのよ。' },
       ], { move: 'wander', push: true }),
       // --- the bell tower

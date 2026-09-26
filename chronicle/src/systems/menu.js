@@ -1114,14 +1114,15 @@
 
   // ------------------------------------------------------------ main menu (§11.7.1)
   // オーナー指示 A15: no 強さ command (the party cards on the right open the 強さ screen: → from the
-  // commands, ↑↓ pick a member, A opens it) and no 技の書 / 術の書 (unlearned techs / spells stay a surprise)
+  // commands, ↑↓ pick a member, A opens it) and no 技の書 / 術の書 (unlearned techs / spells stay a surprise).
+  // オーナー指示 A17: no 仲間 command — the party is changed only at the first town's tavern (R.Tavern via its master)
   const COMMANDS = [
     { id: 'items', label: '道具' }, { id: 'arts', label: '技・術' },
     { id: 'fullheal', label: '満タン' }, { id: 'equip', label: '装備' },
     { id: 'order', label: '並びと隊列' }, { id: 'book', label: '図鑑' },
     { id: 'chronicle', label: '年代記' },
     { id: 'map', label: '地図' }, { id: 'warp', label: 'ワープ' },
-    { id: 'escape', label: '脱出' }, { id: 'party', label: '仲間' },
+    { id: 'escape', label: '脱出' },
     { id: 'save', label: 'セーブ' }, { id: 'settings', label: '設定' },
   ];
   Menu.COMMANDS = COMMANDS;
@@ -1137,7 +1138,6 @@
       case 'map': return worldSeen() && !!(R.Minimap && R.Minimap.open);
       case 'warp': return canWarp();
       case 'escape': return canEscape();
-      case 'party': return !!(R.Party && typeof R.Party.canSwapHere === 'function' && R.Party.canSwapHere() && R.Tavern && R.Tavern.open);
       default: return true;
     }
   }
@@ -1146,10 +1146,10 @@
 
   // compact main menu (BRIEF A11, §11.7.1 Part A11 版), in the virtual screen of the 0.75 scale (341×298):
   // one slim command column on the left, 4 party cards and the gold window to its right, the objective strip below.
-  // オーナー指示 A15: 13 commands at pitch 14 (192 tall) = the 4 cards (144) + the gold window (48) beside them
-  const CM = { x: 6, y: 6, w: 84, lineH: 14, card: { x: 92, w: 176, h: 34, pitch: 36 }, obj: { h: 40 } };
-  CM.h = 12 + COMMANDS.length * CM.lineH - 2; // 192
-  CM.gold = { h: CM.h - 4 * CM.card.pitch }; // 48
+  // オーナー指示 A15/A17: 12 commands at pitch 15 (190 tall) = the 4 cards (144) + the gold window (46) beside them
+  const CM = { x: 6, y: 6, w: 84, lineH: 15, card: { x: 92, w: 176, h: 34, pitch: 36 }, obj: { h: 40 } };
+  CM.h = 12 + COMMANDS.length * CM.lineH - 2; // 190
+  CM.gold = { h: CM.h - 4 * CM.card.pitch }; // 46
   class MainMenu extends Screen {
     constructor() {
       super();
@@ -1228,11 +1228,6 @@
         if (cmd === 'map') {
           this.hidden = true;
           try { await R.Minimap.open(); } finally { this.hidden = false; }
-          return;
-        }
-        if (cmd === 'party') {
-          this.hidden = true;
-          try { await R.Tavern.open({ recruit: false }); } finally { this.hidden = false; }
           return;
         }
         const fn = screens[cmd];

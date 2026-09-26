@@ -274,7 +274,7 @@
       K.talk('cheer_a', 'man', 7, 14, '灯台に火が戻ったぞ！', { dir: 'right', cond: SCENE, fixed: true }),
       K.talk('cheer_b', 'woman', 11, 14, '跳ね橋も下りたそうよ！', { dir: 'left', cond: SCENE, fixed: true }),
       K.talk('cheer_c', 'boy', 6, 16, '灯台、すごく明るいね！', { dir: 'up', cond: SCENE, fixed: true }),
-      K.npc('master', 'bartender', 13, 16, { dir: 'up', cond: SCENE, fixed: true, text: 'ここに残った連中も、\nいつでも仲間にできるよ。\nどこの町の酒場でもね。' }),
+      K.npc('master', 'bartender', 13, 16, { dir: 'up', cond: SCENE, fixed: true, text: 'ここに残った連中も、\nいつでも仲間にできるよ。\nこの店に来てくれればね。' }),
     ],
     signs: [
       K.sign(32, 19, 'ファロスの広場\n「灯を絶やすな、歌を絶やすな」'),

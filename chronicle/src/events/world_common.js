@@ -2,6 +2,7 @@
 // Map owners place the NPCs; these scripts read their parameters from the NPC (ev.ctx.npc):
 //   {id:'inn',  event:'common_inn',    fixed:true [, price:n] [, greet:'…']}        宿屋 (price: R.Tier.innPrice())
 //   {id:'tavern', event:'common_tavern', fixed:true [, recruit:false] [, greet]}    酒場のマスター → ev.tavern()
+//        (オーナー指示 A17: only in the first town 'lute' — other towns' masters greet and point to ファロス)
 //   {id:'shop_item'|'shop_weapon'|'shop_armor'|'shop_magic', event:'common_shop', shop:'<shop id>', fixed:true [, greet]}
 //   {id:'ferry', event:'common_ferry', ferryFrom:'<town id>', fixed:true}           定期船の船乗り (§10.5.5)
 //   {id:'rest',  event:'common_rest', sprite:'obj:lantern', fixed:true}            休息の灯
@@ -25,10 +26,23 @@
   };
 
   // ------------------------------------------------------------ 酒場のマスター
+  // オーナー指示 A17: the party (探す・入れ替える・並びと隊列・装備をあずかる) is changed only in the first town's tavern
+  // (ファロス 語らいの灯亭, map 'lute', or a map with partyTavern:true). Elsewhere the master only talks.
+  const PARTY_TOWN = 'lute';
+  const partyTavernAt = (map) => map === PARTY_TOWN || !!(R.DB.maps && R.DB.maps[map] && R.DB.maps[map].partyTavern);
+  const BAR_LINES = ['いらっしゃい。\nゆっくり飲んでいっとくれ。', '旅の仲間を探すなら、\n港町ファロスの酒場さ。\nあそこは名簿が自慢でね。'];
   E.common_tavern = {
     meta: NONE,
+    partyTown: PARTY_TOWN,
+    partyTavernAt,
     run: async (ev) => {
       const n = npcOf(ev);
+      if (!partyTavernAt(ev.map)) {
+        // no party service here: the greeting (or the standard one) and a pointer to ファロス
+        await ev.say(n.greet || BAR_LINES[0]);
+        await ev.say(BAR_LINES[1]);
+        return;
+      }
       await greet(ev, n);
       const recruit = n.recruit !== false;
       if (ev.tavern) { await ev.tavern({ recruit }); return; }

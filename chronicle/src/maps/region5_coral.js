@@ -218,7 +218,7 @@
       ], { dir: 'left' }),
       K.folk('waitress', 'dancer', 33, 7, [
         { cond: REG, text: '今夜はレグナスの船乗りの\n歓迎会なの。\nあなたも飲んでいって！' },
-        { text: 'いらっしゃい！\n仲間を探すなら、マスターに\n声をかけてね。\n入れ替えもできるのよ。' },
+        { text: 'いらっしゃい！\n旅の仲間を探すなら、\nファロスの酒場よ。\nここは飲んで歌うお店。' },
       ], { move: 'wander' }),
       // --- the item shop
       K.npc('shop_item', 'merchant', 14, 20, { event: 'common_shop', shop: 'coral_item', fixed: true }),

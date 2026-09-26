@@ -173,7 +173,7 @@
       ], { dir: 'up', cond: NOT, push: true }),
 
       // --- 酒場
-      K.npc('tavern', 'bartender', 38, 7, { event: 'common_tavern', fixed: true, greet: '砂の町の酒場へようこそ。\n腕の立つ旅人なら、\nここで見つかるよ。' }),
+      K.npc('tavern', 'bartender', 38, 7, { event: 'common_tavern', fixed: true, greet: '砂の町の酒場へようこそ。\n冷たいのを一杯、\nどうだい？' }),
       K.npc('nadia', 'dancer', 45, 6, { event: 'kasim_nadia', dir: 'down', fixed: true }),
       K.talk('tavern_bard', 'bard', 47, 6, [
         { cond: CLEAR, text: '王の名が戻って、\n祈りの歌も最後まで\n歌えるようになったよ。' },

@@ -402,7 +402,7 @@ section('warp list and the main menu');
   ok(list.every((l, i) => i === 0 || locOrder.indexOf(list[i - 1].id) < locOrder.indexOf(l.id)), 'warp list keeps the DB.locations order (region → town → dungeon)');
   ok(M.warpLabel({ name: '迷いの森', kind: 'dungeon' }) === '迷いの森の入口' && M.warpLabel({ name: '港町ファロス', kind: 'town' }) === '港町ファロス', 'dungeon rows read 〈名前〉の入口');
   ok(M.warpGroupName('prologue') === 'ファロス半島' && M.warpGroupName('r_forest') === DB.regions.r_forest.name && M.warpGroupName('finale') === 'ビブリア島', 'group names from DB.config.warpGroups / DB.regions');
-  ok(M.COMMANDS.length === 13 && M.COMMANDS.map((c) => c.label).join(' ') === '道具 技・術 満タン 装備 並びと隊列 図鑑 年代記 地図 ワープ 脱出 仲間 セーブ 設定', 'the 13 commands in §11.7.1 order (A15: no 強さ / 技の書 / 術の書)');
+  ok(M.COMMANDS.length === 12 && M.COMMANDS.map((c) => c.label).join(' ') === '道具 技・術 満タン 装備 並びと隊列 図鑑 年代記 地図 ワープ 脱出 セーブ 設定', 'the 12 commands in §11.7.1 order (A15: no 強さ / 技の書 / 術の書; A17: no 仲間)');
   // conditions
   const saveField = { canTeleport: R.Field.canTeleport, canExit: R.Field.canExit };
   R.Game.flags.prologue_done = false;

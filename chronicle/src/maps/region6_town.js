@@ -189,7 +189,7 @@
       K.npc('tavern_bard', 'bard', 49, 7, { event: 'dovan_bard', dir: 'down', fixed: true }),
       K.talk('waitress', 'woman', 46, 5, [
         { cond: C.clr, text: '今夜は店じゅう大にぎわい！\n鉱夫さんたちが、ずっと\n歌ってるのよ。' },
-        { text: 'いらっしゃい！\n仲間を探すなら、\nマスターに声をかけてね。' },
+        { text: 'いらっしゃい！\n旅の仲間を探すなら、\nファロスの酒場よ。' },
       ], { move: 'wander', push: true }),
       K.talk('tavern_cat', 'cat', 50, 9, 'ニャー。', { move: 'wander', push: true }),
       // ---------------------------------------------------------------- the shops

@@ -1,7 +1,7 @@
 // World map screen (地図, DESIGN §11.7.11): the overworld at 2 px per tile
-// (128×112 → 256×224). The world wraps around (§10.5.1), so the map is drawn
-// rolled with the party in the middle and a dotted grey line marks the seam
-// (x = 0 / y = 0). Terrain colours (§11.2.5), location marks (visited ones bright),
+// (128×112 → 256×224). オーナー指示 A17: always the whole world as one fixed picture,
+// centred on the screen — no rolling round the party and no seam line, although the
+// world wraps (§10.5.1; everyone knows). Terrain colours (§11.2.5), location marks (visited ones bright),
 // a blinking white party mark (from inside a town / dungeon: its location or
 // exit on the world) and the place name. Any button closes.
 //   await R.Minimap.open()
@@ -155,15 +155,10 @@
       this.pp = partyWorldPos(m);
       this.name = placeName();
       this.t = 0;
-      // wrap: roll the picture so the party sits in the middle; else centre the whole map
-      const c = this.c, s = c.s;
-      if (m.wrap && this.pp) {
-        this.ox = Math.round(R.W / 2 - (this.pp.x * s + s / 2));
-        this.oy = Math.round(R.H / 2 - (this.pp.y * s + s / 2));
-      } else {
-        this.ox = Math.floor((R.W - c.w) / 2);
-        this.oy = Math.floor((R.H - c.h) / 2);
-      }
+      // オーナー指示 A17: one fixed picture of the whole world, centred (never rolled, even when the world wraps)
+      const c = this.c;
+      this.ox = Math.floor((R.W - c.w) / 2);
+      this.oy = Math.floor((R.H - c.h) / 2);
     }
     update() {
       this.t++;
@@ -173,23 +168,16 @@
         this.close();
       }
     }
-    /** screen position of a map cell's centre (the copy on screen, when the map wraps) */
+    /** screen position of a map cell's centre (kept 3px inside the picture so a mark on the edge shows whole) */
     at(x, y) {
       const c = this.c, s = c.s;
-      let sx = this.ox + x * s + (s >> 1), sy = this.oy + y * s + (s >> 1);
-      if (this.m.wrap) { sx = mod(sx, c.w); sy = mod(sy, c.h); }
-      return { x: sx, y: sy };
+      const sx = this.ox + mod(x, this.m.w) * s + (s >> 1), sy = this.oy + mod(y, this.m.h) * s + (s >> 1);
+      return { x: Math.max(this.ox + 3, Math.min(this.ox + c.w - 4, sx)), y: Math.max(this.oy + 3, Math.min(this.oy + c.h - 4, sy)) };
     }
     draw() {
       const G = R.Gfx, c = this.c, s = c.s;
       G.clear('#000');
-      if (this.m.wrap) {
-        const x0 = mod(this.ox, c.w) - c.w, y0 = mod(this.oy, c.h) - c.h;
-        for (let y = y0; y < R.H; y += c.h) for (let x = x0; x < R.W; x += c.w) G.draw(c.canvas, x, y);
-        // the seam (x = 0 column / y = 0 row edges): a dotted grey 1px line (§11.7.11)
-        for (let x = mod(this.ox, c.w); x < R.W; x += c.w) for (let y = 0; y < R.H; y += 2) G.rect(x, y, 1, 1, '#9a9aa6');
-        for (let y = mod(this.oy, c.h); y < R.H; y += c.h) for (let x = 0; x < R.W; x += 2) G.rect(x, y, 1, 1, '#9a9aa6');
-      } else G.draw(c.canvas, this.ox, this.oy);
+      G.draw(c.canvas, this.ox, this.oy);
       const r = Math.max(3, s + 1);
       for (const ic of c.icons) {
         const col = ICON[ic.id] || TOWN;
