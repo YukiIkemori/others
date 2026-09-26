@@ -16,6 +16,7 @@
   E.biblia_arrival = {
     meta: { needs: ['flag:final_open'], gives: ['flag:final_arrived'] },
     run: async (ev) => {
+      S.autoPos(ev);
       if (ev.map !== 'biblia') return;
       if (ev.flag('final_arrived')) {
         if (ev.check({ postgame: true })) ev.bgm('town');
@@ -78,6 +79,7 @@
   E.biblia_rowell = {
     meta: NONE,
     run: async (ev) => {
+      S.autoPos(ev);
       ev.npc('rowell').face('player');
       await ev.say('大書庫は、北東の丘の上だ。\n中は、院長の書記たちで\nいっぱいだろう。');
       await ev.say('3階の封印の扉は、\nおれの手帳の言葉で開く。\n……先に行って、待っている。');
@@ -100,6 +102,7 @@
   E.biblia_noa = {
     meta: NONE,
     run: async (ev) => {
+      S.autoPos(ev);
       ev.npc('noa').face('player');
       if (ev.check({ postgame: true })) {
         await ev.say('ミラの歌を、町のみんなが\n歌えるようになったの。\n……ありがとう。');
@@ -116,6 +119,7 @@
   E.biblia_portrait = {
     meta: NONE,
     run: async (ev) => {
+      S.autoPos(ev);
       if (ev.check({ postgame: true })) {
         await ev.say('大書記ラザロの肖像画だ。\nとなりに、小さな女の子の\n絵が掛けられている。');
         await ev.say('女の子は、楽しそうに\n歌っているように見えた。');
@@ -129,6 +133,7 @@
   E.biblia_statue = {
     meta: NONE,
     run: async (ev) => {
+      S.autoPos(ev);
       if (ev.check({ postgame: true })) {
         await ev.say('灰色のマントの少女の像だ。\n台座に、いつのまにか\n名前が刻まれていた。');
         await ev.caption('――フィーネ。');
@@ -142,6 +147,7 @@
   E.biblia_tome = {
     meta: NONE,
     run: async (ev) => {
+      S.autoPos(ev);
       await ev.say('書見台に、古い本が\n開いたまま置かれている。\f「紋章の大陸の伝説」');
       if (!ev.check({ postgame: true })) await ev.say('ほかの本は白紙なのに、\nこの本の字だけは、\nかすかに残っている。');
       await ev.say('三百年前、海の向こうの大陸で、\n三人の勇者が、魔王\nヴァルザードを討ったという。');

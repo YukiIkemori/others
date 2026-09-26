@@ -305,7 +305,7 @@
         }
         const notes = [];
         if (row.id && Kt.isTwoHanded(row.id) && this.c.equip.shield && cd.slot !== 'shield') notes.push('両手持ち：盾は外れる');
-        if (row.id && DB.items[row.id].quirk) notes.push('クセのある品（Yで詳細）');
+        if (row.id && DB.items[row.id].quirk) notes.push('クセのあるアイテム（Yで詳細）');
         if (notes.length) Kt.fitText(notes.join('　'), 14, 202, 228, { color: G().C.yellow });
       }
       render() {

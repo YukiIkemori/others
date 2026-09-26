@@ -18,6 +18,7 @@
 // meta tokens: needs/gives 'flag:<n>' 'item:<id>' 'region:<id>' 'recruit:<id>'; extensions read here:
 //   gives 'var:<name>+<n>' / 'var:<name>=<n>' (the "collect 3" counters), needs 'var:<name>>=<n>', 'tier:<n>', 'postgame:true'.
 //   meta.warp = {to, spawn} or [{to, spawn, needs?:[…], cond?}] (a ferry with several routes).
+//   meta.calls = [event ids] run by ev.call: each fires (once) when the caller is reachable and its own meta.needs hold.
 //
 //   node tools/progress.js [--verbose] [--owner R3] [--quick]       exit 1 unless every check passes
 //   const P = require('./progress'); P.analyse(R) → the report object (used by playthrough.js)
@@ -193,9 +194,14 @@ function run(model, s, opt) {
       // is (x,y) or its neighbours reached only through a secret cell? (for the Part A4 report)
       return res.secretCells.has(mid + ':' + x + ',' + y);
     };
-    const fire = (id, why, placement) => {
+    const fire = (id, why, placement, depth) => {
       const ev = DB.events[id];
       if (!ev || !ev.meta) return;
+      // meta.calls: events this one runs with ev.call when their own needs hold (checked again every round, since
+      // the caller — an onEnter, a dispatcher NPC — keeps running after its first time)
+      if ((depth || 0) < 4) for (const cid of ev.meta.calls || []) {
+        if (cid !== id) fire(cid, `called by ${id}`, { key: 'call:' + cid, at: placement && placement.at, secret: placement && placement.secret }, (depth || 0) + 1);
+      }
       const key = id + (placement && placement.key ? '@' + placement.key : '');
       if (s.fired.has(key)) return;
       if (!(ev.meta.needs || []).every((t) => tokenOk(t, s))) return;
@@ -318,16 +324,19 @@ function analyse(R, o) {
     out.orders = [];
     for (const ord of orders) {
       const st = cloneState(p0);
-      let ok = true;
+      let ok = true, stuckAt = null;
       for (let i = 0; i < ord.length && ok; i++) {
         const allow = new Set(ord.slice(0, i + 1));
         runFix(st, { blockRegions: realRegions.filter((x) => !allow.has(x)), until: (x) => x.cleared.includes(ord[i]) });
-        if (!st.cleared.includes(ord[i])) ok = false;
+        if (!st.cleared.includes(ord[i])) { ok = false; stuckAt = ord[i]; }
       }
       runFix(st, {});
+      const regionsOk = ok;
       ok = ok && st.flags.has('game_clear');
-      out.orders.push({ order: ord, ok, cleared: st.cleared.slice() });
-      if (!ok) E('A22', `order ${ord.join('→')}: stuck after ${st.cleared.join(' ')}`);
+      out.orders.push({ order: ord, ok, cleared: st.cleared.slice(), stuckAt });
+      // blame the region that could not be cleared in this order (a region that is never clearable, or a game_clear
+      // that is never reached, is already reported above — only an order-specific failure is new information)
+      if (!regionsOk && stuckAt && !neverCleared.has(stuckAt)) E(REGION_OWNER[stuckAt] || 'A22', `order ${ord.map((x) => x.replace(/^r_/, '')).join('→')}: ${stuckAt} cannot be cleared after ${st.cleared.join(' ') || 'nothing'}`);
     }
   }
   // 4. secret passages

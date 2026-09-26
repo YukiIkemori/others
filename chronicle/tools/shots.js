@@ -61,7 +61,12 @@ class Ctx {
     return file;
   }
   note(s) { this.notes.push({ no: this.cur, text: s }); }
-  ev(fn, arg) { return this.D.ev(fn, arg); }
+  /** evaluate in the page; never waits more than 60 s (a promise the game resolves only on input would hang) */
+  ev(fn, arg) {
+    let t;
+    const to = new Promise((res, rej) => { t = setTimeout(() => rej(new Error('page evaluate timed out (60 s)')), 60000); });
+    return Promise.race([this.D.ev(fn, arg), to]).finally(() => clearTimeout(t));
+  }
   wait(ms) { return this.D.wait(ms); }
   press(k) { return this.D.press(k); }
   st() { return this.D.st(); }
@@ -413,7 +418,7 @@ def(16, '地方クリアの演出（羽ペンと章の題）', async (X) => {
 def(17, 'ゲームオーバー・エンディングの後日談・クレジット', async (X) => {
   await X.load();
   await X.game();
-  await X.ev(() => window.RPG.debug.wipe());
+  await X.ev(() => { window.RPG.debug.wipe(); });
   await X.until((s) => s.top === 'GameOverLayer', 20000, 'the game over');
   await X.wait(1500);
   await X.shot('17_gameover', 'ゲームオーバー');
@@ -422,14 +427,16 @@ def(17, 'ゲームオーバー・エンディングの後日談・クレジッ�
   await X.load();
   await X.game({ tier: 8 });
   await X.ev(() => { window.RPG.Ending.start(); });
+  // read on with A (only when a page is fully shown); a picture every 5 s, up to 12, until the title comes back
   const t0 = Date.now();
-  let k = 0;
-  while (Date.now() - t0 < 90000 && k < 6) {
-    await X.wait(6000);
+  let k = 0, last = 0;
+  while (Date.now() - t0 < 180000 && k < 12) {
+    await X.wait(400);
     const s = await X.st();
     if (s.top === 'TitleLayer') break;
-    await X.shot('17_ending_' + (++k), 'エンディング（後日談・クレジット）');
-    if (s.top === 'MessageLayer') await X.press('a');
+    if (Date.now() - last > 5000) { last = Date.now(); await X.shot('17_ending_' + String(++k).padStart(2, '0'), 'エンディング（後日談・クレジット）'); }
+    if (s.top === 'MessageLayer' && s.msg && s.msg.waiting && s.msg.typed) await X.press('a');
+    else if (s.top === 'ChoiceLayer') await X.press('b');
   }
 });
 

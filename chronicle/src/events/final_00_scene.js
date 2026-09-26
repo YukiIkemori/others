@@ -108,6 +108,29 @@
     for (const k of Object.keys(table)) if (+k <= t && +k > bk) { bk = +k; best = table[k]; }
     return best;
   };
+  /**
+   * Scenes are often staged near a map's lower edge, where the camera stops and the party stands low on the
+   * screen, under the message window. autoPos(ev) makes this event's messages go to the top of the screen
+   * whenever the party is in the lower half of the view (checked at each say).
+   */
+  S.msgPos = function () {
+    try {
+      const cam = R.Field && R.Field.camera && R.Field.camera(), p = R.Field && R.Field.pos && R.Field.pos();
+      if (!cam || !p) return 'bottom';
+      const v = R.Field.view();
+      const sy = (p.y * 16 + 8 - cam.y) / v.h;
+      return sy > 0.52 ? 'top' : 'bottom';
+    } catch (e) { return 'bottom'; }
+  };
+  const posDone = new WeakSet();
+  S.autoPos = function (ev) {
+    if (posDone.has(ev)) return ev;
+    const say = ev.say, yesno = ev.yesno;
+    ev.say = (t, o) => say(t, Object.assign({ pos: S.msgPos() }, o || {}));
+    ev.yesno = (t) => (R.Field && R.Field.map && R.UI && R.UI.yesno ? R.UI.yesno(t, { pos: S.msgPos() }) : yesno(t));
+    posDone.add(ev);
+    return ev;
+  };
   /** the party stands still, looking at (x,y) */
   S.lookAt = function (ev, x, y) {
     const p = R.Field && R.Field.pos ? R.Field.pos() : null;

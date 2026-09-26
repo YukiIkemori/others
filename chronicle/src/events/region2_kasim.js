@@ -28,11 +28,14 @@
       const z = ev.npc('zaid');
       const p = ev.player;
       // ザイード hurries over from the caravan camp to the traveller at the gate
-      const atGate = z.visible && p.x != null && p.y >= 38;
+      // arriving through the gate (x 24..27): walk in a few steps, ザイード hurries over from his camp
+      const atGate = z.visible && p.x != null && p.y >= 38 && p.x >= 24 && p.x <= 27;
       if (atGate) {
-        z.setPos(p.x + 3, p.y - 1, 'left');
-        await z.walk('LL');
+        await p.walk('U'.repeat(p.y - 37));
+        z.setPos(p.x + 4, 37, 'left');
+        await z.walk('LLL');
         z.face('player');
+        p.face('right');
       }
       await ev.say('旅の人か。よく、この砂嵐を\n抜けてきたな。');
       await ev.say('わたしはザイード。この町の\n隊商をまとめている。');

@@ -39,8 +39,8 @@ module.exports = function manor1() {
   for (let x = 6; x <= 14; x += 2) { T.set(x, 29, 'h'); T.set(x, 32, 'h'); }
   T.pts([[3, 26], [17, 26]], 'u'); T.pts([[3, 36]], 'o');
   // kitchen
-  T.rect(4, 15, 4, 1, 'c'); T.pts([[3, 20], [3, 21], [12, 24], [11, 24]], 'o'); T.pts([[9, 15], [10, 15], [3, 24]], 'p');
-  T.set(8, 19, 't'); T.set(9, 19, 't');
+  T.rect(7, 15, 4, 1, 'c'); T.pts([[3, 20], [3, 21], [12, 24], [11, 24]], 'o'); T.pts([[3, 15], [3, 24]], 'p');
+  T.set(8, 19, 't'); T.set(9, 19, 't'); T.pts([[7, 19], [10, 19]], 'h'); T.pts([[12, 15], [12, 16], [3, 16]], 'u'); T.pts([[6, 23], [7, 23]], 'j');
   // pantry
   T.pts([[3, 4], [4, 4], [8, 4], [8, 5], [3, 8], [8, 9], [8, 13]], 'o'); T.pts([[3, 5], [3, 11], [8, 11], [3, 13]], 'p');
   T.pts([[6, 4], [7, 4]], 'u');
@@ -63,7 +63,7 @@ module.exports = function manor1() {
   // torches / portraits / windows on the north faces
   wallRow(26, [20, 29], 'i'); wallRow(26, [22, 27], 'W');
   wallRow(25, [5, 11, 15], 'w'); wallRow(25, [8], 'P');
-  wallRow(14, [5, 10], 'w'); wallRow(14, [7], '$');
+  wallRow(14, [4, 10], 'w'); wallRow(14, [7], '$');
   wallRow(3, [5], 'w');
   wallRow(3, [15, 21, 27, 33], 'W'); wallRow(3, [18, 24, 30], 'P');
   wallRow(7, [23, 26], 'i');
@@ -76,6 +76,6 @@ module.exports = function manor1() {
   D.pts([[19, 36], [30, 36]], 'Z'); D.set(30, 28, 'V'); D.set(19, 28, 'A'); D.set(45, 11, 'I');
   D.pts([[40, 25], [41, 25], [40, 28], [41, 28]], 'r'); D.rect(39, 34, 5, 1, 'r');
   D.rect(38, 2, 2, 1, '.'); D.pts([[37, 2], [46, 2]], 'Q');
-  D.pts([[4, 17], [4, 22]], 'K');
+  D.pts([[4, 17], [4, 22]], 'K'); D.pts([[3, 18], [11, 20]], 'q'); D.set(9, 22, 'S');
   return { T, D, W, H, decorLegend: { ':': 'doll_shelf', ',': 'broken_chair' } };
 };

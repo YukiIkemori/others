@@ -217,7 +217,8 @@
     meta: {
       needs: [],
       gives: ['flag:st_t1', 'flag:st_t2', 'flag:st_t3', 'flag:st_t4', 'flag:st_t5', 'flag:st_t6', 'flag:st_t7', 'flag:st_t8',
-        'flag:st_rival_duel1', 'flag:st_rival_duel2', 'flag:st_rival_defect', 'flag:st_fine_reveal', 'item:k_rowell_note'],
+        'flag:st_rival_duel1', 'flag:st_rival_duel2', 'flag:st_rival_defect', 'flag:st_fine_reveal', 'item:k_rowell_note',
+        'flag:st_rival_won1', 'flag:st_rival_won2', 'item:ac_rival_pen', 'item:hn_rival_bracer'],
       // what each tier's scene gives (tools: progress / playthrough read `byTier`)
       byTier: {
         1: ['flag:st_t1'], 2: ['flag:st_t2', 'flag:st_rival_duel1'], 3: ['flag:st_t3'], 4: ['flag:st_t4'],
@@ -226,6 +227,7 @@
       },
     },
     run: async (ev) => {
+      S.autoPos(ev);
       const t = Math.min(8, ev.tier());
       if (t < 1) return;
       const todo = [];
@@ -257,6 +259,7 @@
   E.story_home_t6 = {
     meta: { needs: ['flag:st_t6'], gives: ['flag:st_berna_forgot'] },
     run: async (ev) => {
+      S.autoPos(ev);
       if (ev.flag('st_berna_forgot')) return;
       const inRoa = ev.map === 'roa' && R.Field && R.Field.map;
       let berna = null, elder = null;
@@ -327,6 +330,7 @@
     E['story_fine_' + rs] = {
       meta: { needs: [], gives: ['flag:' + rs + '_fine'] },
       run: async (ev) => {
+      S.autoPos(ev);
         if (ev.flag(rs + '_boss')) return;
         const f = ev.npc('fine');
         const m = R.Field && R.Field.map;

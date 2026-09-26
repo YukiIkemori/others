@@ -63,7 +63,7 @@ section('T1 detail lines for every item');
   if (sw) {
     const L = M.detailLines(sw, { member });
     ok(L.length === 12, 'T1 gear popup has the 12 rows', L.length);
-    ok(/^★/.test(L[0].text) && L[0].right === '超レア★', 'T1 row 0 = ★name + 超レア★', [L[0].text, L[0].right]);
+    ok(/^★/.test(L[0].text) && L[0].right === '超レア★★', 'T1 row 0 = ★name + 超レア★★ (BRIEF A6)', [L[0].text, L[0].right]);
     ok(/(片手持ち|両手持ち)$/.test(L[1].text), 'T1 row 1 = type and hands', L[1].text);
     ok(/^攻撃力 \d+　術力 \d+/.test(L[2].text), 'T1 row 2 = 攻撃力 n　術力 n', L[2].text);
     ok(/^装備：/.test(L[8].text) && L[8].segs[1].text === member.name, 'T1 row 8 = 装備： with the member first', L[8].text);
@@ -521,11 +521,14 @@ section('game over');
     for (let i = 0; i < 800 && !done; i++) { R.Engine.step(); await settle(); }
     ok(done && said[0] === hero().name + 'たちは目を覚ました。', 'no gold → no 所持金 line', said);
     // an onEnter event of the respawn map closes the wake-up window before it is read: run() must still end (§4.12.2)
-    R.UI.say = () => { R.UI._msg = { closed: true }; return new Promise(() => {}); };
+    // (the window is closed from outside: closed, its say still pending) — and the lines are shown once more
+    let shown = 0;
+    R.UI.say = () => { shown++; R.UI._msg = { closed: true, resolveText: () => {} }; return new Promise(() => {}); };
     done = false; err = null;
     R.GameOver.run().then(() => { done = true; }, (e) => { err = e; done = true; });
     for (let i = 0; i < 800 && !done; i++) { R.Engine.step(); await settle(); }
     ok(done && !err, 'GameOver.run ends when someone else closes its message window', err && String(err));
+    ok(shown === 2, 'wake-up lines closed from outside are shown once more (the player must see them)', shown);
     R.UI._msg = null;
     // every race the bestiary prints has a Japanese name (図鑑 page 2)
     const races = [...new Set(Object.values(DB.monsters).map((m) => m.race).filter(Boolean))];

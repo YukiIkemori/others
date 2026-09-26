@@ -1,5 +1,5 @@
 // 白の大書庫 4〜6階 (archive_4..6): the last dungeon's upper floors (DESIGN §10.10.3–§10.10.4). Owner: story (A19).
-// Theme `library`, BGM `lastdungeon`, zone z_finale_archive_hi (4〜5階; 6階 is the boss floor, no random battles),
+// Theme `library`, BGM `lastdungeon`, zone z_finale_archive_hi (4〜6階; 6階 is the boss floor, no lvOff),
 // chestTier 8, location 'archive', escape → world archive_1.
 //
 // archive_4 伝説の間 (40×32) — the gallery of the eastern continent's legend: the long painted corridor, the west
@@ -188,7 +188,7 @@
 
     // the king's hall is where the library dissolves into the white of oblivion: theme `oblivion`
     // (paper floor, ink-black walls; falls back to `demon`), battle backdrop still `library`
-    R.DB.maps.archive_6 = K.check('archive_6', base('白の大書庫　虚ろの間', null, {
+    R.DB.maps.archive_6 = K.check('archive_6', base('白の大書庫　虚ろの間', K.ZONE_HI, {
       theme: 'oblivion',
       rows: K.rows(g), decor: K.decor(g),
       spawns: {

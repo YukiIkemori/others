@@ -9,7 +9,7 @@
     // ---- scribe 白衣の書記（人型・m）: 記録院の書記たち。白の書の力で相手の力と記憶を書き写して消す。
     scribe_1: {
       name: '白衣の書記', goldName: '金衣の書記', sprite: 'scribe_1', lineage: 'scribe', stage: 1, lv: 55, size: 'm', race: 'humanoid', affinity: 'light',
-      flags: [], s: { mag: 1.5, mdef: 1.2, atk: 1.25 }, eva: 5,
+      flags: [], s: { mag: 1.01, mdef: 1.2, atk: 0.84, hp: 1.38 }, eva: 5,
       elem: { light: 0.25, dark: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_transcribe', w: 2 }, { id: 'e_ink', w: 2 }, { id: 'e_light_ray', w: 1 }],
       drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'hd_scribe_hood', rate: 32 }, super: { item: 'ac_sr_ink', rate: 128 } },
@@ -17,7 +17,7 @@
     },
     scribe_2: {
       name: '白衣の写本師', goldName: '金衣の写本師', sprite: 'scribe_2', lineage: 'scribe', stage: 2, lv: 55, size: 'm', race: 'humanoid', affinity: 'light',
-      flags: [], s: { hp: 1.05, mag: 1.25, mdef: 1.25 }, eva: 5,
+      flags: [], s: { hp: 1.45, mag: 0.84, mdef: 1.25, atk: 0.67 }, eva: 5,
       elem: { light: 0.25, dark: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 1 }, { id: 'e_transcribe', w: 2 }, { id: 'e_forget', w: 2 }, { id: 'e_heal_ally', w: 1, cond: { hpBelow: 0.6 } }, { id: 'e_ward', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'bd_scribe_coat', rate: 32 }, super: { item: 'hn_sr_words', rate: 128 } },
@@ -25,7 +25,7 @@
     },
     scribe_3: {
       name: '白衣の司書長', goldName: '金衣の司書長', sprite: 'scribe_3', lineage: 'scribe', stage: 3, lv: 55, size: 'm', race: 'humanoid', affinity: 'light',
-      flags: [], s: { hp: 1.15, mag: 1.3, mdef: 1.3 }, eva: 5,
+      flags: [], s: { hp: 1.63, mag: 0.81, mdef: 1.3, atk: 0.63 }, eva: 5,
       elem: { light: 0.25, dark: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 1 }, { id: 'e_forget', w: 2 }, { id: 'e_erase_all', w: 1, cond: { every: [3, 1] } }, { id: 'e_light_ray', w: 2 }, { id: 'e_heal_all', w: 1, cond: { hpBelow: 0.6 } }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_archive_key', rate: 32 }, super: { item: 'ac_sr_needle', rate: 128 } },
@@ -34,7 +34,7 @@
     // ---- book 魔書（魔造・s）: 大書庫の本が魔物になったもの。紙なので火に弱い。
     book_1: {
       name: 'かみつき本', sprite: 'book_1', lineage: 'book', stage: 1, lv: 55, size: 's', race: 'construct',
-      flags: [], s: { hp: 0.95, atk: 1.1, agi: 1.1 }, eva: 5,
+      flags: [], s: { hp: 1.31, atk: 0.74, agi: 1.1, mag: 0.67 }, eva: 5,
       elem: { fire: 1.5, water: 1.25, wind: 0.75 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_bite', w: 2 }, { id: 'e_paper_cut', w: 2 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'hd_scribe_hood', rate: 32 }, super: { item: 'sh_sr_blank', rate: 128 } },
@@ -42,7 +42,7 @@
     },
     book_2: {
       name: '呪いの書', sprite: 'book_2', lineage: 'book', stage: 2, lv: 55, size: 's', race: 'construct', affinity: 'dark',
-      flags: [], s: { mag: 1.3, mdef: 1.2 }, eva: 5,
+      flags: [], s: { mag: 0.87, mdef: 1.2, hp: 1.38, atk: 0.67 }, eva: 5,
       elem: { fire: 1.5, water: 1.25, wind: 0.75, light: 1.5, dark: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_curse', w: 2 }, { id: 'e_dark_bolt', w: 2 }, { id: 'e_gloom', w: 1 }],
       drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'bd_scribe_coat', rate: 32 }, super: { item: 'w_staff_sr_moon', rate: 128 } },
@@ -50,7 +50,7 @@
     },
     book_3: {
       name: '白紙の書', goldName: '金紙の書', sprite: 'book_3', lineage: 'book', stage: 3, lv: 55, size: 's', race: 'construct', affinity: 'light',
-      flags: [], s: { hp: 1.05, mag: 1.3, mdef: 1.3 }, eva: 5,
+      flags: [], s: { hp: 1.49, mag: 0.81, mdef: 1.3, atk: 0.63 }, eva: 5,
       elem: { fire: 1.5, water: 1.25, wind: 0.75, light: 0.25, dark: 1.5 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_forget', w: 3 }, { id: 'e_erase_all', w: 1, cond: { every: [3, 0] } }, { id: 'e_light_ray', w: 2 }],
       drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'ac_archive_key', rate: 32 }, super: { item: 'w_staff_sr_cosmos', rate: 128 } },
@@ -59,7 +59,7 @@
     // ---- demon 魔神（魔族・l）: 海の向こうの伝説に語られた魔王の軍勢の、忘れられた影。
     demon_1: {
       name: '忘れられた魔兵', sprite: 'demon_1', lineage: 'demon', stage: 1, lv: 55, size: 'l', race: 'demon', affinity: 'dark',
-      flags: [], s: { hp: 1.15, atk: 0.98, mag: 0.9 }, eva: 5,
+      flags: [], s: { hp: 1.59, atk: 0.66, mag: 0.6 }, eva: 5,
       elem: { light: 1.5, dark: 0.25 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_dark_slash', w: 2 }, { id: 'e_fire_rain', w: 1 }, { id: 'e_howl', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_archive_key', rate: 32 }, super: { item: 'ac_sr_bloodoath', rate: 128 } },
@@ -67,7 +67,7 @@
     },
     demon_2: {
       name: '忘れられた魔将', sprite: 'demon_2', lineage: 'demon', stage: 2, lv: 61, size: 'l', race: 'demon', affinity: 'dark',
-      flags: [], s: { hp: 1.3, atk: 0.96, def: 1.15, mag: 0.76 }, eva: 5,
+      flags: [], s: { hp: 1.85, atk: 0.6, def: 1.15, mag: 0.48 }, eva: 5,
       elem: { light: 1.5, dark: 0.25 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_dark_slash', w: 2 }, { id: 'e_sweep', w: 2 }, { id: 'e_gloom', w: 1 }],
       drops: { normal: { item: 'i_phoenix', rate: 8 }, rare: { item: 'ac_void_shard', rate: 32 }, super: { item: 'hd_sr_demon_general', rate: 256 } },
@@ -75,7 +75,7 @@
     },
     demon_3: {
       name: '忘れられた魔神', sprite: 'demon_3', lineage: 'demon', stage: 3, lv: 61, size: 'l', race: 'demon', affinity: 'dark',
-      flags: [], s: { hp: 1.4, atk: 0.5, mag: 0.5 }, eva: 5,
+      flags: [], s: { hp: 1.99, atk: 0.31, mag: 0.31 }, eva: 5,
       elem: { light: 1.5, dark: 0.25 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_dark_mist', w: 2 }, { id: 'e_inferno_breath', w: 1 }, { id: 'e_death_word', w: 1 }, { id: 'e_gloom', w: 1 }, { id: 'e_dispel', w: 1, cond: { every: [4, 3] } }],
       drops: { normal: { item: 'i_phoenix', rate: 8 }, rare: { item: 'w_greatsword_chaoshorn', rate: 32 }, super: { item: 'ac_sr_demon_eye', rate: 256 } },

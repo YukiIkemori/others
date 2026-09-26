@@ -52,11 +52,11 @@ module.exports = function manor2() {
   D.rect(22, 12, 7, 2, '0'); D.set(28, 15, '|'); D.pts([[18, 16], [32, 18], [20, 19]], ',');
   D.pts([[17, 12], [33, 12], [17, 22], [33, 22]], 'Q');
   // nursery: cradle, rugs, dolls
-  D.set(10, 5, '-'); D.rect(5, 9, 3, 3, '&'.replace('&', 'r')); D.pts([[3, 12], [3, 16]], 'Z'); D.set(11, 17, 'y');
+  D.set(10, 5, "'"); D.rect(5, 9, 3, 3, '&'.replace('&', 'r')); D.pts([[3, 12], [3, 16]], 'Z'); D.set(11, 17, 'y');
   D.pts([[9, 20], [4, 18]], ',');
   // cobwebs
   D.pts([[3, 25], [11, 29], [13, 2], [40, 2], [40, 30], [21, 6], [29, 6], [44, 26], [44, 14], [3, 4], [20, 26], [12, 30]], '@');
   D.set(26, 7, 'V'); D.set(27, 10, 'Q'); D.set(43, 8, 'I'); D.pts([[43, 24], [42, 24]], 'y'.replace('y', 'A'));
   D.pts([[39, 16], [14, 12]], ',');
-  return { T, D, W, H, decorLegend: { ':': 'doll_shelf', ',': 'broken_chair', '|': 'piano', '-': 'cradle' } };
+  return { T, D, W, H, decorLegend: { ':': 'doll_shelf', ',': 'broken_chair', '|': 'piano', "'": 'cradle' } };
 };

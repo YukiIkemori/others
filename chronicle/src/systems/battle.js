@@ -1582,7 +1582,8 @@
       if (st < 0 && u.side !== t.side) {
         if (t.metal || t.status.veil) { yield fail(); return; }
         const KS = K('STATUS');
-        let p = eff.chance == null ? 1 : eff.chance * (ctx && ctx.kind === 'spell' ? this.sf(u, 'int') : 1);
+        // chance × SF (§7.3.3, §4.8.3): 知力 for spells and magic techs, 器用さ for physical techs; items and monsters 1
+        let p = eff.chance == null ? 1 : eff.chance * this.sf(u, ctx ? ctx.sf || (ctx.kind === 'spell' ? 'int' : null) : null);
         if (t.boss || t.rare) p *= KS.bossDebuff;
         if (eff.chance != null || t.boss || t.rare) p = Math.min(KS.pCap, p);
         if (!U.chance(p)) { yield fail(); return; }
@@ -1614,7 +1615,7 @@
       let p = U.clamp(S.base + (u.stat('agi') - t.stat('agi')) / S.agiDiv, S.min, S.max);
       p *= 1 + this.pct(u, 'stealPct') / 100;
       if (t.boss) p *= S.boss;
-      return Math.min(0.95, p);
+      return Math.min(1, p);
     }
     /** what a steal takes: the rare slot with min(0.5, rare drop chance × 4) (× rareMul), else the normal slot */
     stealPick(t, rareMul) {

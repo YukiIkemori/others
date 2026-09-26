@@ -75,7 +75,7 @@
       const b = ev.npc('boss');
       ev.closeMessage();
       await ev.wait(20);
-      await ev.say('崩れた玉座の前に、\n黒い影が立っている……。');
+      await ev.say('崩れた玉座の前に、\n青白い影が立っている……。');
       ev.closeMessage();
       ev.sfx('dark');
       await ev.flash('#201828', 10);

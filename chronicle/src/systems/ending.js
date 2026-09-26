@@ -148,7 +148,7 @@
         g.text(o.name, 72, 72, { color: g.C.gold, shadow: '#000' });
         // the lines beside the figure (§11.9); a line too wide for that column goes, centred, under it
         const lines = o.lines.map((ln) => (R.Text && R.Text.fmt ? R.Text.fmt(ln) : ln));
-        const wide = lines.some((ln) => g.textWidth(ln) > R.W - 72 - 6);
+        const wide = lines.some((ln) => g.textWidth(ln) > R.W - 72 - 1);
         lines.forEach((ln, i) => {
           if (wide) g.text(ln, 128, 132 + 14 * i, { align: 'center', color: '#ffffff', shadow: '#000' });
           else g.text(ln, 72, 92 + 14 * i, { color: '#ffffff', shadow: '#000' });
@@ -389,6 +389,7 @@
   }
   // ------------------------------------------------------------ the whole sequence
   async function play(ev) {
+    if (R.Story && R.Story.autoPos) R.Story.autoPos(ev);
     R.UI.closeMessage();
     R.bgm('ending', { fade: 60 });
     await voidHall(ev);

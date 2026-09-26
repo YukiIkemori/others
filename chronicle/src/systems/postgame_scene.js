@@ -1,8 +1,8 @@
-// Post-game bonus scene (深淵の主 defeated): one illustrated panel painted
-// procedurally — the three heroes seen from behind on a clifftop under an
-// aurora and a sky full of stars, the rebuilt castle of Regnas glowing far
-// across the sea — with a short epilogue, the earned 称号 (R.Game.title) and
-// 「おしまい」. Plays BGM 'ending', then restores the BGM that was playing.
+// The side chapter's closing picture (外伝『円環の竜』, DESIGN §10.12): after 円環竜オウロボラ falls, one
+// illustrated panel painted procedurally — the party seen from behind on a clifftop of ビブリア島 under an aurora,
+// a ring of stars where the dragon now sleeps, and the white tower of the great archive glowing across the inner
+// sea — with a short epilogue, the earned 称号 (R.Game.title, '大語り部') and 「おしまい」. Plays BGM 'ending',
+// then restores the BGM that was playing. Owner: story (A19); the oblivion owner's last scene calls it.
 //
 //   await R.Postgame.bonusScene()            // opts (all optional):
 //     title      称号 shown (default R.Game.title; '' skips the 称号 screen)
@@ -10,23 +10,22 @@
 //     fadeBack   false: stay faded to black on return (the caller warps, then fades in)
 //     bgm        BGM to play on return (default: the one playing before; null = silence)
 //
-// A / B advance the text (A while typing shows the page at once); at the end
-// any button closes. The layer is opaque; it fades in from black and fades out
-// back to whatever is underneath (normally the field).
+// A / B advance the text (A while typing shows the page at once); at the end any button closes. The layer is
+// opaque; it fades in from black and fades out back to whatever is underneath (normally the field).
 (function (R) {
   'use strict';
   const G = () => R.Gfx;
   const In = () => R.Input;
   const W = 256, H = 224;
 
-  // epilogue pages (STYLE_JA: kanji-kana, hero names only via placeholders)
+  // epilogue pages (STYLE_JA: 1 line ≤ 20, 4 lines a page, the hero only as {hero})
   const PAGES = [
-    '深淵の主は倒れ、\n世界の底に眠っていた混沌は\n静かに消えていった。',
-    'その夜、北の空には\n誰も見たことがないほど\n美しい光のカーテンが\n揺れていたという。',
-    '{metem}「ふふん。世界の果ての\nそのまた底まで、\n制覇しちゃったわね。」',
-    '{non}「はい。でも……\n三人一緒だったから、ですね。」',
-    '{yuki}「ああ。帰ろう。\nレグナスの灯りが、\nあんなに近くに見える。」',
-    '{yuki}、{non}、{metem}。\n深淵を越えた三人の名は、\n光の伝説の最後の頁に\n刻まれることになる――',
+    '円環竜オウロボラは、\n長い長い眠りについた。',
+    '終わらない物語は、\nようやく「おしまい」を\n迎えることができた。',
+    'その夜、内海の空には、\n星がひとつの輪を描いて\n並んでいたという。',
+    '{hero}は、年代記の\n最後の余白に、\n小さく書き添えた。',
+    '「物語は、終わる。\nだから、また新しく\n語りはじめられる」',
+    '忘れられた物語の底まで\n旅をした語り部は、\nのちに「大語り部」と\n呼ばれることになる――',
   ];
 
   // ------------------------------------------------------------ palette
@@ -59,13 +58,15 @@
     const edge = x > 170 ? (x - 170) * (x - 170) * 0.09 : 0; // falls away toward the sea
     return GROUND - 3 + Math.round(Math.sin(x / 13) * 1.5 + Math.sin(x / 5.3) * 0.8 + (x < 40 ? (40 - x) * 0.18 : 0) + edge);
   }
-  /** far shore with the castle hill (right) and low hills (left) */
+  /** far shore: ビブリア島 with the archive's hill (right) and low hills (left) */
   function farLand(x) {
-    const hill = 12 * Math.exp(-Math.pow((x - 208) / 26, 2)) + 5 * Math.exp(-Math.pow((x - 240) / 16, 2));
+    const hill = 10 * Math.exp(-Math.pow((x - 206) / 24, 2)) + 4 * Math.exp(-Math.pow((x - 236) / 14, 2));
     const left = x < 90 ? 6 * Math.exp(-Math.pow((x - 30) / 30, 2)) + 3 * Math.sin(x / 7) * Math.exp(-Math.pow((x - 30) / 30, 2)) : 0;
     const h = Math.max(hill, left);
     return h > 0.8 ? HORIZON - Math.round(h) : null;
   }
+  /** the ring of stars where the dragon sleeps (centre, radius) */
+  const RING = { x: 150, y: 38, r: 17, n: 13 };
 
   // ------------------------------------------------------------ static painting
   function paintBack() {
@@ -99,10 +100,15 @@
       const d = Math.hypot(x, y);
       if (d > 7 && d < 10 && bayer(226 + x, 24 + y) < (10 - d) / 9 && p.get(226 + x, 24 + y) !== '#fff8dc') p.set(226 + x, 24 + y, '#2a3a6a');
     }
+    // a faint halo where the ring of stars stands
+    for (let y = -RING.r - 6; y <= RING.r + 6; y++) for (let x = -RING.r - 6; x <= RING.r + 6; x++) {
+      const d = Math.abs(Math.hypot(x, y) - RING.r);
+      if (d < 4 && bayer(RING.x + x, RING.y + y) < (4 - d) / 14) p.set(RING.x + x, RING.y + y, '#26325e');
+    }
     return p.toCanvas();
   }
 
-  /** far shore, the rebuilt castle with lit windows, distant hills */
+  /** far shore: the island's hill, the great archive's white tower with lit windows, distant hills */
   function paintLand() {
     const p = G().pix(W, H);
     for (let x = 0; x < W; x++) {
@@ -110,30 +116,21 @@
       if (top == null) continue;
       for (let y = top; y < HORIZON + 1; y++) p.set(x, y, y === top ? '#1c3450' : y - top < 2 ? '#101c34' : '#0a1226');
     }
-    // castle: central keep, tall tower with a flag, two round side towers, curtain wall
-    const C = { dark: '#0a1328', mid: '#122038', lit: '#28486a', edge: '#4a7a8a', roof: '#0e1a34' };
+    // the white tower of 白の大書庫 on its hill, the town of ビブリア at its feet
+    const C = { dark: '#1a2238', mid: '#5a6480', lit: '#c8d0e8', edge: '#8a9ab8', roof: '#3a4260' };
     const rect = (x, y, w, h, c) => p.rect(x, y, w, h, c);
-    const cx = 208, base = HORIZON - 11;
-    rect(cx - 22, base - 8, 44, 9, C.mid);                       // curtain wall
-    for (let x = cx - 22; x < cx + 22; x += 3) rect(x, base - 10, 2, 2, C.mid); // crenels
-    rect(cx - 10, base - 22, 20, 15, C.mid);                     // keep
-    for (let x = cx - 10; x < cx + 10; x += 3) rect(x, base - 24, 2, 2, C.mid);
-    rect(cx - 3, base - 38, 7, 17, C.mid);                        // tall tower
-    p.poly([[cx - 4.5, base - 38], [cx + 5.5, base - 38], [cx + 0.5, base - 47]], C.roof);
-    p.vline(cx, base - 53, base - 47, C.lit); p.rect(cx + 1, base - 53, 4, 2, '#c0484a'); p.set(cx + 5, base - 52, '#8a2a3a');
-    for (const sx of [cx - 20, cx + 16]) {                        // side towers
-      rect(sx, base - 20, 5, 13, C.mid);
-      p.poly([[sx - 1.5, base - 20], [sx + 6.5, base - 20], [sx + 2.5, base - 27]], C.roof);
-      p.vline(sx + 2, base - 30, base - 27, C.lit);
+    const cx = 206, base = HORIZON - 9;
+    rect(cx - 16, base - 6, 32, 7, C.dark);                       // the terraces of the town
+    for (let x = cx - 16; x < cx + 16; x += 4) rect(x, base - 9, 3, 3, C.dark);
+    rect(cx - 6, base - 18, 12, 13, C.mid);                        // the archive's lower hall
+    rect(cx - 4, base - 44, 8, 27, C.mid);                         // the tower
+    rect(cx - 5, base - 30, 10, 2, C.edge);                        // a gallery ring
+    p.poly([[cx - 5.5, base - 44], [cx + 5.5, base - 44], [cx, base - 54]], C.roof);
+    p.vline(cx, base - 58, base - 54, C.lit);
+    for (const sx of [cx - 13, cx + 10]) {                         // two small spires
+      rect(sx, base - 14, 3, 9, C.mid);
+      p.poly([[sx - 0.5, base - 14], [sx + 3.5, base - 14], [sx + 1.5, base - 19]], C.roof);
     }
-    // aurora light catching the left edges and roofs
-    p.each((x, y, c) => {
-      if (c !== C.mid && c !== C.roof) return undefined;
-      const l = p.get(x - 1, y), u = p.get(x, y - 1);
-      if (l == null || l === '#1c3450') return C.lit;
-      if (u == null) return C.edge;
-      return undefined;
-    });
     // a faint warm haze over the living town and castle
     for (let y = HORIZON - 60; y <= HORIZON; y++) for (let x = cx - 44; x <= cx + 44; x++) {
       const d = Math.hypot((x - cx) / 44, (y - (HORIZON - 12)) / 34);
@@ -141,12 +138,12 @@
       if (bayer(x, y) < (1 - d) * 0.34) p.set(x, y, d < 0.55 ? '#3a3050' : '#2a2848');
     }
     // lit windows (static base; some flicker at runtime)
-    const WIN = [[cx - 7, base - 18], [cx - 3, base - 18], [cx + 3, base - 18], [cx + 7, base - 18], [cx, base - 33], [cx, base - 28], [cx - 18, base - 15], [cx + 18, base - 15], [cx - 5, base - 13], [cx + 5, base - 13]];
+    const WIN = [[cx - 3, base - 15], [cx + 2, base - 15], [cx, base - 40], [cx, base - 35], [cx, base - 25], [cx - 12, base - 4], [cx - 6, base - 3], [cx + 6, base - 3], [cx + 12, base - 4]];
     for (const [x, y] of WIN) { p.set(x, y, WARM[2]); p.set(x, y + 1, WARM[1]); }
     // the town at the castle's feet: rows of little lights along the shore
     const TOWN = [];
     for (let i = 0; i < 22; i++) {
-      const x = 180 + Math.floor(hash(i, 1, 4) * 60), y = HORIZON - 1 - Math.floor(hash(i, 2, 4) * 4);
+      const x = 184 + Math.floor(hash(i, 1, 4) * 46), y = HORIZON - 1 - Math.floor(hash(i, 2, 4) * 4);
       if (p.get(x, y) != null) { p.set(x, y, hash(i, 3, 4) < 0.4 ? WARM[3] : WARM[2]); TOWN.push([x, y]); }
     }
     return { canvas: p.toCanvas(), windows: WIN, town: TOWN };
@@ -257,11 +254,10 @@
     return p.toCanvas();
   }
 
-  /** a party member's back view, darkened for the night and rim-lit by the aurora */
-  function heroSprite(id) {
-    const c = R.Game && R.State.char(id);
-    const key = 'party:' + id + ':' + ((c && c.job) || (R.DB.chars[id] && R.DB.chars[id].startJob) || 'warrior');
-    let s = G().has(key) ? G().get(key) : null;
+  /** a party member's back view (a CharState), darkened for the night and rim-lit by the aurora */
+  function heroSprite(c) {
+    const key = c && R.Party && R.Party.spriteKey ? R.Party.spriteKey(c) : null;
+    const s = key && G().has(key) ? G().get(key) : null;
     if (!s) return null;
     const f = s.getContext ? s : (Array.isArray(s.up) ? s.up[0] : s.up || (Array.isArray(s.down) ? s.down[0] : s.down));
     if (!f) return null;
@@ -351,8 +347,7 @@
       this.cliff = paintCliff();
       this.aurora = makeAurora();
       this.aurora.render(0);
-      const ids = (R.Game && R.Game.party ? R.Game.party.map((c) => c.id) : ['yuki', 'non', 'metem']);
-      this.heroes = ids.map((id) => heroSprite(id));
+      this.heroes = (R.Game && R.Game.party ? R.Game.party : []).map((c) => heroSprite(c));
       this.stars = [];
       for (let i = 0; i < 46; i++) {
         this.stars.push({ x: Math.floor(hash(i, 1, 21) * W), y: Math.floor(hash(i, 2, 21) * (HORIZON - 14)), p: hash(i, 3, 21) * 6.28, s: 0.02 + hash(i, 4, 21) * 0.05, big: hash(i, 5, 21) < 0.2, c: hash(i, 6, 21) < 0.3 ? '#fff0c8' : hash(i, 6, 21) < 0.6 ? '#c8e4ff' : '#ffffff' });
@@ -411,6 +406,16 @@
         g.rect(s.x, s.y, 1, 1, s.c);
         if (s.big && k > 0.7) { g.ctx.globalAlpha = (k - 0.7) * 2.5; g.rect(s.x - 1, s.y, 3, 1, s.c); g.rect(s.x, s.y - 1, 1, 3, s.c); g.ctx.globalAlpha = 1; }
       }
+      // the ring of stars (the sleeping dragon), turning very slowly
+      for (let i = 0; i < RING.n; i++) {
+        const a = (i / RING.n) * Math.PI * 2 + t * 0.0008;
+        const x = Math.round(RING.x + Math.cos(a) * RING.r), y = Math.round(RING.y + Math.sin(a) * RING.r * 0.9);
+        const k = 0.6 + 0.4 * Math.sin(t * 0.04 + i * 1.7);
+        g.ctx.globalAlpha = k;
+        g.rect(x, y, 1, 1, '#fff4d0');
+        if (i % 3 === 0) { g.ctx.globalAlpha = k * 0.6; g.rect(x - 1, y, 3, 1, '#ffe8a8'); g.rect(x, y - 1, 1, 3, '#ffe8a8'); }
+      }
+      g.ctx.globalAlpha = 1;
       if (this.shoot) {
         const sh = this.shoot;
         for (let i = 0; i < 8; i++) {

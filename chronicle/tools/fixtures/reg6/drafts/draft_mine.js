@@ -108,8 +108,8 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined') {
     g.carve(38, 6, 46, 8);
     g.carve(44, 3, 51, 14);           // the lamp chamber (rest)
     g.carve(47, 14, 49, 30);          // the long east drift south
-    g.carve(44, 30, 51, 36);          // the rock-eater's chamber
-    g.carve(46, 36, 48, 40);          // 奥の横穴 (blocked by the rock eater)
+    g.carve(44, 30, 51, 35);          // the rock-eater's chamber
+    g.carve(47, 36, 47, 39);          // 奥の横穴 (1 wide: the rock eater blocks it)
     g.carve(42, 40, 51, 45);          // Pip's pocket
     // west: from the arrival room south — the long switchback to the stairs down
     g.carve(6, 9, 8, 18);
@@ -133,7 +133,7 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined') {
     g.carve(20, 9, 23, 13);
     g.carve(21, 8, 22, 8);
     // bites
-    g.pts([[3, 3], [12, 3], [3, 9], [38, 3], [30, 12], [38, 12], [44, 3], [51, 3], [44, 14], [51, 14], [28, 20], [44, 20], [28, 27], [44, 27], [2, 18], [2, 23], [44, 36], [51, 36], [42, 40], [51, 45], [4, 45], [22, 38], [27, 38], [38, 33]], '#');
+    g.pts([[3, 3], [12, 3], [3, 9], [38, 3], [30, 12], [38, 12], [44, 3], [51, 3], [44, 14], [51, 14], [28, 20], [44, 20], [28, 27], [44, 27], [2, 18], [2, 23], [44, 35], [51, 35], [42, 40], [51, 45], [4, 45], [22, 38], [27, 38], [38, 33]], '#');
     // torches
     g.torches(8, 3);
     // props

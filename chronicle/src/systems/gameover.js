@@ -71,22 +71,42 @@
   GameOver.Layer = GameOverLayer;
 
   let running = null; // the live GameOverLayer
-  /** R.UI.say that also resolves when someone else closes the window (an onEnter event of the
-   *  respawn map when run() is called outside Field's wipe flow) — run() must never hang (§4.12.2) */
+  /**
+   * R.UI.say that also resolves when someone else closes the window (an onEnter event of the
+   * respawn map when run() is called outside Field's wipe flow) — run() must never hang (§4.12.2).
+   * → true when the player read it and closed it, false when it was closed or replaced by someone else.
+   */
   function sayGuarded(text) {
     return new Promise((res) => {
       let done = false;
-      const fin = () => { if (!done) { done = true; res(); } };
-      R.UI.say(text, { noWait: false, keep: false, auto: 0 }).then(fin, fin);
-      const m = R.UI._msg;
+      let m = null;
+      const fin = (read) => { if (!done) { done = true; res(read); } };
+      // read = the say settled and its own window closed (A/B); a say that settles while the window
+      // stays open was replaced by another say (UI.say settles a superseded say)
+      R.UI.say(text, { noWait: false, keep: false, auto: 0 }).then(() => fin(!m || !!m.closed), () => fin(false));
+      m = R.UI._msg;
       const poll = () => {
         if (done) return;
-        if (!m || m.closed || !R.Engine.layers.includes(m)) { fin(); return; }
+        // a window its reader closed has settled its say (finish() clears resolveText before close());
+        // one closed from outside (closeMessage) still holds it
+        if (!m || m.closed || !R.Engine.layers.includes(m)) { fin(!!(m && m.closed && !m.resolveText)); return; }
         R.Engine.wait(1).then(poll);
       };
       R.Engine.wait(1).then(poll);
     });
   }
+  const eventsBusy = () => !!(R.Events && typeof R.Events.busy === 'function' && R.Events.busy());
+  /**
+   * the wake-up lines must be seen (STYLE_JA §9): when an event of the respawn map closes or replaces
+   * them (run() called outside Field's wipe flow), they are shown once more after that event is over
+   */
+  async function wakeUp(text) {
+    if (await sayGuarded(text)) return;
+    for (let f = 0; f < 3600 && eventsBusy(); f++) await R.Engine.wait(1);
+    if (R.UI && R.UI.closeMessage && R.UI._msg && !R.UI._msg.resolveText) R.UI.closeMessage();
+    await sayGuarded(text);
+  }
+  GameOver._wakeUp = wakeUp;
   /** the whole wipe sequence; resolves once the party wakes up at the respawn point */
   GameOver.run = async function () {
     if (running && R.Engine.layers.includes(running)) return;
@@ -123,7 +143,7 @@
       if (R.Engine.fadeAlpha > 0) await R.Engine.fadeIn(20);
       let text = '{hero}たちは目を覚ました。';
       if (goldBefore > 0) text += '\n所持金が半分になった。';
-      await sayGuarded(text);
+      await wakeUp(text);
     } finally {
       R.Engine.remove(L);
       if (R.UI && R.UI.closeMessage) R.UI.closeMessage();

@@ -15,6 +15,7 @@
 //   終盤   T8: 60 戦 ＋ ボス 5（Tb 8）                     クリア後 T9: 忘却の底 50 戦（§6.9.4 の極意）
 //   rank（§4.9.2）= Tb + 1、ボス +2・めずらしい魔物 +2・金色 +1。EF はボス 2.5・めずらしい魔物 2・金色 1.5。ctx.tier = その時のティア。
 //   行動: 武器は枠の配分（主な武器 62%・2 つ目 30%・残りは防御など）、雑魚は 25%・ボスは 60% を覚えた技で（残りは「攻撃」）。
+//   術師（§4.9.5 の型 G4b）: 杖だけ・念じ打ち（starterKit.tech.staff）で始める。武器の行動は 92%（戦士と同じ。残りは防御・道具）。
 //   術師: 雑魚戦で 1 戦に casts 回（§4.13.2-d: 候補の開いている属性の一番安い術）、ボス戦は行動の 65% を術（一番格の高い術）。
 //   術師の 2・3 つ目の属性は、魔石（§4.9.6。1 戦に 1 個）で最初の術を閃くまで始める。中列では届かない武器の「攻撃」はしない。
 // 判定（PASS/FAIL、exit 1）は §4.9.5 の表と §6.9.4 の極意。§7.12.2 の追加の項目（X1・X2）と参考の型（G4c・G4d）は目安（warn）。
@@ -261,7 +262,7 @@ function archetypeParty(o) {
     member('hero', { heroType: 'warrior', favor: { kind: 'weapon', id: 'sword' }, techs: ['t_sword_stepcut'] }, 'hero'),
     member('warrior', { id: '_sim_warrior', techs: ['t_sword_stepcut'] }, 'warrior'),
     member('mage', { id: '_sim_mage', spells: ['s_fire_1'], techs: mageTechs }, 'mage',
-      Object.assign({}, o.mageRow ? { row: o.mageRow } : {}, o.staffOnly ? { weapons: [W('weapon1', 'staff', 1)] } : {})),
+      Object.assign({}, o.mageRow ? { row: o.mageRow } : {}, o.staffOnly ? { weapons: [W('weapon1', 'staff', 0.92)] } : {})),
     member('mage15', { id: '_sim_mage', spells: ['s_fire_1'], techs: mageTechs }, 'mage', Object.assign({ casts: 1.5 }, o.mageRow ? { row: o.mageRow } : {})),
   ];
 }

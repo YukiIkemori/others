@@ -27,12 +27,60 @@ class Floor:
         for i, ch in enumerate(s):
             if ch != ' ':
                 self.g[y][x + i] = ch
+    def roughen(self, seed, prob, keep=(), ch=None, only=None):
+        """cave edges: floor cells touching the rock turn into rock (or `ch`) with probability prob
+        (a position hash, so the result is stable). Cells in keep, and cells whose removal would
+        leave a neighbour with fewer than 2 floor neighbours, stay floor."""
+        import hashlib
+        keep = set(keep)
+        fl = self.fl
+        def isfl(x, y): return 0 <= x < self.w and 0 <= y < self.h and self.g[y][x] in (fl, 'e', '*')
+        cand = []
+        for y in range(1, self.h - 1):
+            for x in range(1, self.w - 1):
+                if (x, y) in keep or self.g[y][x] != fl: continue
+                if only and not only(x, y): continue
+                walls = sum(1 for dx, dy in ((1,0),(-1,0),(0,1),(0,-1)) if self.g[y+dy][x+dx] == '#')
+                fls = sum(1 for dx, dy in ((1,0),(-1,0),(0,1),(0,-1)) if isfl(x+dx, y+dy))
+                if walls >= 1 and fls >= 3 and (ch or self.g[y-1][x] != '#'):
+                    h = int(hashlib.md5(('%d:%d:%d' % (seed, x, y)).encode()).hexdigest()[:8], 16) / 0xffffffff
+                    if h < prob: cand.append((x, y))
+        for x, y in cand:
+            # keep corridors 2 wide: never cut a cell whose opposite neighbours are both walls
+            W = ('#', 'r', 'I', 'l')
+            if (self.g[y][x-1] in W and self.g[y][x+1] in W) or (self.g[y-1][x] in W and self.g[y+1][x] in W): continue
+            # nor one that closes a diagonal gap (two blocked cells meeting at a corner)
+            if any(self.g[y+dy][x+dx] in W and self.g[y+dy][x] not in W and self.g[y][x+dx] not in W for dx, dy in ((1,1),(1,-1),(-1,1),(-1,-1))): continue
+            self.g[y][x] = ch or '#'
+    def rim(self, seed, prob, ch='r'):
+        """outdoor crags: rock cells beside or below the floor (not the cliff faces above it) become
+        boulders, so the edge of a snow ledge reads against the snow-covered rock"""
+        import hashlib
+        fl = set((self.fl, 'e', '*', 's', 'S'))
+        out = []
+        for y in range(self.h):
+            for x in range(self.w):
+                if self.g[y][x] != '#': continue
+                below = y + 1 < self.h and self.g[y + 1][x] in fl
+                if below: continue  # the cliff face drawn above a ledge stays rock
+                near = any(0 <= x + dx < self.w and 0 <= y + dy < self.h and self.g[y + dy][x + dx] in fl
+                           for dx, dy in ((1, 0), (-1, 0), (0, -1), (1, -1), (-1, -1)))
+                if not near: continue
+                h = int(hashlib.md5(('%d:%d:%d' % (seed, x, y)).encode()).hexdigest()[:8], 16) / 0xffffffff
+                if h < prob: out.append((x, y))
+        for x, y in out: self.g[y][x] = ch
     def dec(self, pts, ch):
         for x, y in pts:
             self.d[y][x] = ch
     def rows(self):
         return [''.join(r) for r in self.g], [''.join(r) for r in self.d]
 
+def box(x0, y0, x1, y1):
+    return [(x, y) for y in range(y0, y1 + 1) for x in range(x0, x1 + 1)]
+
+KEEP1 = set(box(21, 28, 24, 35) + box(21, 18, 24, 23) + box(38, 2, 40, 5) + [(4, 24), (3, 3), (41, 27), (13, 5), (41, 21)] + box(22, 13, 24, 15))
+KEEP2 = set(box(4, 30, 8, 33) + box(38, 1, 41, 7) + [(4, 4), (41, 25), (14, 24), (27, 5), (27, 32), (41, 12)] + box(34, 8, 42, 8) + box(3, 24, 16, 25) + box(12, 22, 15, 26) + box(13, 28, 18, 31) + box(21, 17, 24, 25))
+KEEP3 = set(box(18, 31, 22, 34) + [(26, 14), (35, 12), (4, 19), (35, 25)] + box(22, 2, 24, 12) + box(20, 10, 20, 18) + box(13, 5, 33, 5) + box(15, 11, 20, 14))
 F = {}
 # ================================================================== 1F  (ice cave, 46x36)
 f = Floor(46, 36)
@@ -57,6 +105,7 @@ f.room(35, 2, 42, 6, 1)                     # the stairs nook
 f.at([(22, 20), (23, 20), (22, 21), (23, 21)], 'I')   # 氷の壁 (k_winter_flame)
 f.at([(39, 3)], 'S')
 # floor texture: snow blown in at the mouth, glossy ice, boulders, pillars
+f.roughen(1, 0.34, KEEP1)
 f.at([(8, 26), (9, 27), (7, 27), (26, 13), (27, 13), (27, 14), (19, 16), (20, 16), (6, 11), (6, 12), (39, 16), (40, 17), (40, 16), (17, 4), (18, 4), (29, 5)], 'e')
 f.at([(5, 29), (10, 24), (17, 25), (28, 25), (16, 13), (30, 17), (4, 8), (9, 18), (41, 10), (36, 20), (14, 3), (31, 6), (42, 29), (36, 30)], 'r')
 f.at([(19, 14), (27, 16), (19, 17)], 'l')
@@ -90,6 +139,7 @@ f.room(35, 1, 42, 2, 0)                     # the ledge with the stairs up
 f.rect(38, 3, 39, 5)                        # E -> ledge, through the giant's wall
 f.at([(38, 4), (39, 4)], 'I')               # the giant's wall (opens with snow_mid)
 f.at([(40, 1)], 'S')
+f.roughen(2, 0.34, KEEP2)
 f.at([(19, 13), (26, 13), (19, 16), (26, 16)], 'l')
 f.at([(20, 24), (20, 25), (21, 24), (19, 24), (20, 26)], 'e')   # the frozen falls
 f.at([(20, 27), (21, 28), (26, 27), (27, 26), (8, 8), (7, 9), (37, 12), (38, 13), (18, 4), (19, 5)], 'e')
@@ -112,15 +162,18 @@ f.room(3, 8, 16, 13, 1)                     # upper west terrace
 f.rect(16, 12, 19, 13)                      # terrace -> the col
 f.room(19, 10, 27, 18, 1)                   # the col (fine, the lamp)
 f.rect(22, 6, 24, 10)                       # up to the summit
-f.room(12, 1, 34, 7, 2)                     # the summit plateau (the dragon)
+f.room(12, 1, 34, 6, 2)                     # the summit plateau (the dragon)
 f.put(20, 1, '#######')                     # the dragon's crag
 f.put(20, 2, '##r#r##')
 f.room(31, 10, 37, 18, 1)                   # a side shelf (chest)
 f.rect(27, 14, 31, 15)
 f.at([(21, 3), (22, 3), (24, 3), (25, 3)], 'r')     # the crag around the dragon's perch
+f.roughen(3, 0.28, KEEP3)
+f.roughen(4, 0.12, KEEP3, 'r')
+f.rim(5, 0.8)
 f.at([(18, 30), (23, 32), (31, 25), (34, 27), (7, 20), (11, 24), (9, 10), (14, 12), (33, 12), (36, 16)], 'r')
 f.at([(20, 32), (21, 31), (32, 24), (5, 22), (6, 23), (25, 13), (15, 5), (30, 5), (31, 4)], 'e')
-f.dec([(16, 31), (24, 33), (30, 28), (35, 23), (4, 18), (12, 25), (4, 9), (15, 11), (21, 12), (26, 17), (32, 11), (36, 17), (13, 3), (33, 3), (14, 6), (32, 6)], ';')
+f.dec([(16, 31), (24, 33), (30, 28), (35, 23), (4, 18), (12, 25), (4, 9), (15, 11), (21, 12), (26, 17), (32, 11), (36, 17), (13, 3), (33, 3), (15, 6), (31, 6)], ';')
 F['frost_peak_3'] = f
 
 def block(fid):

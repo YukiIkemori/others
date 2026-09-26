@@ -47,13 +47,19 @@ const R = require('./lib/load')({ quiet: true });
 const DB = R.DB;
 const U = R.U;
 // --design: run on the untuned DESIGN §9 values (s, groups) instead of src/data (DESIGN ⊕ tuning.json), for comparison
-if (flag('design')) {
-  const Dz = CM.parseDesign();
-  for (const [id, m] of Object.entries(Dz.mons)) if (DB.monsters[id]) DB.monsters[id].s = JSON.parse(JSON.stringify(m.s));
-  for (const [z, e] of Object.entries(Dz.encounters)) if (DB.encounters[z]) DB.encounters[z].groups = JSON.parse(JSON.stringify(e.groups));
+// --tuning <file>: run on DESIGN ⊕ that overlay (a candidate tuning.json), applied in memory — src/data is not touched
+function applyOverlay(E) {
+  for (const [id, m] of Object.entries(E.mons)) if (DB.monsters[id]) DB.monsters[id].s = JSON.parse(JSON.stringify(m.s || {}));
+  for (const [z, e] of Object.entries(E.encounters)) if (DB.encounters[z]) DB.encounters[z].groups = JSON.parse(JSON.stringify(e.groups));
   if (R.Mon && R.Mon.clearCache) R.Mon.clearCache();
-  if (R.Mon && R.Mon.fillStats) for (const id of Object.keys(Dz.mons)) { const m = DB.monsters[id]; for (const k of ['hp', 'atk', 'mag', 'def', 'mdef', 'agi', 'exp', 'gold', 'eva', '_filled']) delete m[k]; try { R.Mon.fillStats(m, id); } catch (e) { /* fillStats signature may differ */ } }
+  if (R.Mon && R.Mon.fillStats) for (const id of Object.keys(E.mons)) {
+    const m = DB.monsters[id];
+    for (const k of ['hp', 'atk', 'mag', 'def', 'mdef', 'agi', 'exp', 'gold', 'eva', 'hit', 'crit', '_lv', '_filled']) delete m[k];
+    try { R.Mon.fillStats(m, id); } catch (e) { /* fillStats signature may differ */ }
+  }
 }
+if (flag('design')) applyOverlay(CM.parseDesign());
+else if (opt('tuning', null)) { process.env.MONS_TUNING = opt('tuning'); applyOverlay(CM.expected()); console.log('[sim_zones] overlay ' + opt('tuning') + ' applied in memory'); }
 
 // ================================================================ constants (DESIGN §4 — model only)
 const K = {

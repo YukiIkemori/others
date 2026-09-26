@@ -560,6 +560,8 @@ async function testPlay() {
   ok(pos.x === ip.x && pos.y === ip.y, '#8 at the inn spawn (' + pos.x + ',' + pos.y + ')');
   ok(R.Engine.fadeAlpha === 0, '#8 the screen is visible again');
   ok(g().party.every((c) => c.hp > 0), '#8 healed');
+  if (DB.events.story_after_clear) ok(g().flags['st_t' + g().tier], '#8 story_after_clear ran (st_t' + g().tier + ')');
+  else ok(captioned(/翌朝――/), '#8 the next morning (fallback caption)');
   for (const id of ['st_rival', 'st_fine', 'st_extra']) ok(!R.Field.npc(id).present, 'after the scene: ' + id + ' is not shown');
   // after the clear
   mark = sayLog.length; await talk('luca');

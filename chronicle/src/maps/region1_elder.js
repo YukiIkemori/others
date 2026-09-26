@@ -216,16 +216,16 @@
     // @end elder_tree_2
     spawns: {
       from_prev: { x: 22, y: 3, dir: 'down' },
-      altar: { x: 22, y: 29, dir: 'down' },
+      altar: { x: 22, y: 26, dir: 'down' },
     },
     warps: [
       K.warp(22, 2, 'elder_tree_1', 'from_next'),
     ],
     npcs: [
       K.npc('rest', 'obj:lantern', 18, 16, { event: 'common_rest', fixed: true }),
-      K.npc('fine', 'fine', 24, 16, { dir: 'down', cond: '!forest_boss', fixed: true }),
+      K.npc('fine', 'fine', 24, 16, { event: 'elder_tree_2_fine', dir: 'down', cond: '!forest_boss', fixed: true }),
       K.npc('boss', 'mon:boss_rooteater', 22, 27, { event: 'elder_tree_2_boss', cond: '!forest_boss', fixed: true }),
-      K.npc('elm', 'spirit', 22, 30, { event: 'elder_tree_2_elm', cond: 'forest_boss', dir: 'down', fixed: true }),
+      K.npc('elm', 'spirit', 22, 29, { event: 'elder_tree_2_elm', cond: 'forest_boss', dir: 'down', fixed: true }),
     ],
     chests: [
       K.chest('elder_tree_2_c1', 3, 16, 'p_supply'),

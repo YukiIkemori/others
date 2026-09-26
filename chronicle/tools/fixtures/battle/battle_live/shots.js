@@ -1,8 +1,8 @@
 // A2 browser fixture (debug_battle_live.html: node tools/build.js --with tools/fixtures/battle/battle_live).
 // Real engine + real scene + real data, for tools/shot.js checks of what the engine produces:
-//   RPG.battleShots.zone('zw_verda', {tier: 3, level: 25, golden: 'force'})   quick start, then a zone battle
+//   RPG.battleShots.zone('zw_forest', {tier: 3, level: 25, golden: 'force'})   quick start, then a zone battle
 //   RPG.battleShots.metal({tier: 5})            a metal-only zone battle (the first zone group with a metal monster)
-//   RPG.battleShots.glimmer('zw_verda', {…})    glimmerForce 'hero': the hero's first action glimmers
+//   RPG.battleShots.glimmer('zw_forest', {…})    glimmerForce 'hero': the hero's first action glimmers
 //   RPG.battleShots.drops(['normal','rare','super'])  the next victory drops one item of each listed grade
 //   RPG.battleShots.finish()                    every monster at 1 HP (the next hit wins)
 //   RPG.battleShots.auto(speed)                 switch the running battle to オート

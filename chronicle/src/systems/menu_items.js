@@ -223,7 +223,7 @@
     if (it.type === 'key') return ['大事なもの', SUB];
     if (it.unique) return ['一品物◆', C.cyan];
     const g = it.grade || 'normal';
-    if (g === 'super') return ['超レア★', C.super];
+    if (g === 'super') return ['超レア★★', C.super]; // BRIEF A6 (lead reading): 通常 / レア★ / 超レア★★
     if (g === 'rare') return ['レア★', C.rare];
     return ['通常', WHITE];
   }
@@ -247,7 +247,7 @@
       if (it.atk) p.push('攻撃力' + sgn(it.atk));
       if (it.def) p.push('守備力' + sgn(it.def));
       if (it.mdef) p.push('術防' + sgn(it.mdef));
-      return p.join('　');
+      return p.length ? p.join('　') : '―';
     }
     const p = ['守備力 ' + (it.def || 0), '術防 ' + (it.mdef || 0)];
     if (it.type === 'shield' && it.eva) p.push('回避' + sgn(it.eva));

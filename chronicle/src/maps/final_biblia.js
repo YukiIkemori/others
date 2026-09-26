@@ -132,7 +132,7 @@
   K.deco(g, 43, 19, 'Z');
   // shops
   K.deco(g, 4, 30, 'q');
-  K.deco(g, 7, 33, 'v');
+  K.deco(g, 10, 33, 'v');
   K.deco(g, 25, 30, 'U');
   K.deco(g, 20, 33, 'Z');
   // homes
@@ -256,8 +256,8 @@
       K.talk('ship', 'obj:ship', 38, 38, '定期船だ。\nファロスの港と、\nこの島を結んでいる。', { dir: 'left', fixed: true }),
       K.talk('quay_fisher', 'fisher', 12, 36, lines(
         '海の向こうから、\n霧のない朝日が昇るんだ。\n毎朝、見とれちまうよ。',
-        '釣り竿を持って、\nここに立っていた。\nそれしか、覚えてないんだ。'), { dir: 'down', push: true }),
-      K.talk('cat', 'cat', 26, 33, 'ニャーオ。\n猫は、何も忘れていない\nような顔をしている。', { move: 'wander', push: true }),
+        '釣り道具を持って、\nここに立っていた。\nそれしか、覚えてないんだ。'), { dir: 'down', push: true }),
+      K.talk('cat', 'cat', 27, 32, 'ニャーオ。\n猫は、何も忘れていない\nような顔をしている。', { move: 'wander', push: true }),
     ],
     signs: [
       K.sign(21, 3, '書の都ビブリア\n記録院の本院のある町'),

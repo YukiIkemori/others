@@ -40,9 +40,9 @@
   const S = {
     b_pageeater: { hp: 1.35 },
     b_moth: { hp: 1.65 },
-    b_rooteater: { hp: 1.1, atk: 0.6, mag: 0.6 },
-    b_root: { hp: 1.1, atk: 0.6, mag: 0.6 },
-    b_sandworm: { hp: 1.35 },
+    b_rooteater: { hp: 0.94, atk: 0.51, mag: 0.51 },
+    b_root: { hp: 0.94, atk: 0.51, mag: 0.51 },
+    b_sandworm: { hp: 1.15 },
     b_sandking: { hp: 0.9, atk: 0.7, mag: 0.7 },
     b_icegiant: { hp: 1.35 },
     b_whitedragon: { hp: 1.35, atk: 0.6, mag: 0.6 },
@@ -50,10 +50,10 @@
     b_doll_violin: { hp: 0.9 },
     b_doll_drum: { hp: 0.9 },
     b_doll_flute: { hp: 0.9 },
-    b_mistbeast: { hp: 0.9, atk: 0.6, mag: 0.6 },
-    b_mist_double: { hp: 0.9, atk: 0.6, mag: 0.6 },
-    b_octopus: { hp: 1.35 },
-    b_tentacle: { hp: 1.35 },
+    b_mistbeast: { hp: 0.77, atk: 0.6, mag: 0.6 },
+    b_mist_double: { hp: 0.77, atk: 0.6, mag: 0.6 },
+    b_octopus: { hp: 1.15 },
+    b_tentacle: { hp: 1.15 },
     b_captain: { hp: 1.1, atk: 0.7, mag: 0.7 },
     b_rockeater: { hp: 1.35 },
     b_ironwarden: { hp: 0.9, atk: 0.7, mag: 0.7 },
@@ -71,7 +71,7 @@
     b_nemrea1: { hp: 0.8 },
     b_nemrea2: { hp: 0.5, atk: 0.5, mag: 0.5, def: 0.5, mdef: 0.5, agi: 0.5 },
     b_valzard_echo: { hp: 0.9, atk: 0.85, mag: 0.85 },
-    b_ouroboros: { hp: 0.5, atk: 0.5, mag: 0.5 },
+    b_ouroboros: { hp: 0.6, atk: 0.5, mag: 0.5 },
   };
   // @@S-END
 

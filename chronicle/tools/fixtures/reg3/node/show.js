@@ -1,5 +1,5 @@
 // R3: print a map region with decor overlaid (decor char in place of the tile when present)
-const R = require('../../lib/load')({ quiet: true });
+const R = require('../../../lib/load')({ quiet: true });
 const [id, x0, y0, x1, y1] = process.argv.slice(2);
 const m = R.DB.maps[id];
 const X0 = +x0 || 0, Y0 = +y0 || 0, X1 = x1 != null ? +x1 : m.rows[0].length - 1, Y1 = y1 != null ? +y1 : m.rows.length - 1;

@@ -20,6 +20,7 @@
   E.archive_1_enter = {
     meta: { needs: [], gives: ['flag:archive_1_enter'] },
     run: async (ev) => {
+      S.autoPos(ev);
       if (ev.flag('archive_1_enter')) return;
       await ev.wait(10);
       await ev.say('白い書架が、どこまでも\n続いている……。');
@@ -37,6 +38,7 @@
   E.archive_2_boss = {
     meta: { needs: [], gives: ['flag:final_golem'] },
     run: async (ev) => {
+      S.autoPos(ev);
       if (ev.flag('final_golem')) return;
       await ev.say('書架の本が、ひとりでに\n舞い上がった……！');
       ev.closeMessage();
@@ -57,6 +59,7 @@
   E.archive_3_door = {
     meta: NONE,
     run: async (ev) => {
+      S.autoPos(ev);
       if (ev.has('k_rowell_note') || ev.flag('final_rowell')) return;
       await ev.say('分厚い扉に、白い封印が\nほどこされている。');
       await ev.say('封印を解く言葉が\nいるようだ……。');
@@ -65,16 +68,17 @@
   E.archive_3_rowell = {
     meta: { needs: [], gives: ['flag:final_rowell'] },
     run: async (ev) => {
+      S.autoPos(ev);
       if (ev.flag('final_rowell')) return;
       const staged = ev.map === 'archive_3' && R.Field && R.Field.map;
       let rowell = null;
-      const p = staged ? R.Field.pos() : { x: 19, y: 8 };
-      const rx = p.x === 20 ? 19 : 20;
+      const p = staged ? R.Field.pos() : { x: 19, y: 5 };
+      const rx = p.x >= 20 ? 19 : 20; // he comes up the gallery beside the hero, who stands before the door
       await ev.say('後ろから、足音が近づいてくる。');
       ev.closeMessage();
       if (staged) {
         rowell = S.actor(ev, 'st_rowell', 'npc:rowell', rx, 17, 'up');
-        await rowell.walk('U8');
+        await rowell.walk('U11');
         rowell.face('up');
         ev.player.face(rx > p.x ? 'right' : 'left');
       }
@@ -93,7 +97,7 @@
       const scribes = [];
       if (staged) {
         for (const [i, x] of [[0, 18], [1, 21], [2, 20]]) scribes.push(S.actor(ev, 'st_scribe' + i, 'npc:scribe', x, 19 + i, 'up'));
-        await Promise.all(scribes.map((s) => s.walk('U5')));
+        await Promise.all(scribes.map((s) => s.walk('U10')));
         rowell.face('down');
       }
       await ev.say('院長の書記たちか……。');
@@ -114,6 +118,7 @@
   E.archive_4_boss = {
     meta: { needs: [], gives: ['flag:final_shades'] },
     run: async (ev) => {
+      S.autoPos(ev);
       if (ev.flag('final_shades')) return;
       await ev.say('どこからか、低い声が響いた。');
       await ev.say('海の向こうの、名を忘れられた\n勇者たちよ……。');
@@ -143,7 +148,9 @@
     meta: NONE,
     PAINTINGS,
     run: async (ev) => {
-      const x = ev.ctx && ev.ctx.x != null ? ev.ctx.x : (R.Field && R.Field.front ? R.Field.front().x : 8);
+      S.autoPos(ev);
+      const fr = R.Field && R.Field.front ? R.Field.front() : null;
+      const x = ev.ctx && ev.ctx.x != null ? ev.ctx.x : fr ? fr.x : 8;
       const t = PAINTINGS[x] || PAINTINGS[8];
       for (const p of t) await ev.say(p);
     },
@@ -153,6 +160,7 @@
   E.archive_5_lazaro = {
     meta: { needs: [], gives: ['flag:final_lazaro'] },
     run: async (ev) => {
+      S.autoPos(ev);
       if (ev.flag('final_lazaro')) return;
       const lz = ev.npc('lazaro');
       ev.bgm('tension');
@@ -190,6 +198,7 @@
   E.archive_5_portrait = {
     meta: NONE,
     run: async (ev) => {
+      S.autoPos(ev);
       await ev.say('女の子の肖像画だ。\n本を抱えて、笑っている。');
       await ev.say('額の下に「ミラ」と\n名前が刻まれている。');
       if (ev.flag('final_lazaro')) await ev.say('絵の裏に、小さな字で\n書き込みがある。\f「わたしの名前を、\nいつまでも呼んでね」');
@@ -198,6 +207,7 @@
   E.archive_5_seal = {
     meta: NONE,
     run: async (ev) => {
+      S.autoPos(ev);
       if (ev.flag('final_lazaro')) return;
       await ev.say('上り階段が、白い紙で\n幾重にもふさがれている。');
     },
@@ -249,6 +259,7 @@
   E.archive_6_boss = {
     meta: { needs: ['flag:final_lazaro'], gives: ['flag:final_nemrea1', 'flag:game_clear'] },
     run: async (ev) => {
+      S.autoPos(ev);
       if (ev.flag('game_clear')) return;
       const retry = ev.flag('final_nemrea1');
       if (!retry) {

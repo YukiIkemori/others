@@ -66,7 +66,7 @@ module.exports = function loch() {
   T.stamp(41, 3, [                   // 鐘楼 (bell tower) x41..47
     '#######',
     '#######',
-    '#_____#',
+    '#j___o#',
     '#_____#',
     '#_____#',
     '#_____#',
@@ -129,7 +129,7 @@ module.exports = function loch() {
     'BBBBBBBB',
     'Bk__u_bB',
     'B_____bB',
-    'B_ht___B',
+    'B___ht_B',
     'B______B',
     'BBBDBBBB',
   ]);
@@ -150,9 +150,9 @@ module.exports = function loch() {
   D.rect(13, 9, 2, 2, 'r'); D.set(20, 11, 'Z');
   // tavern
   D.pts([[26, 5], [28, 5]], 'H'); D.pts([[31, 5], [35, 5]], 'w'); D.set(33, 5, 'p');
-  D.rect(34, 6, 3, 2, '0'); D.set(36, 9, 'N');
+  D.rect(34, 6, 3, 2, '0'); D.set(36, 9, 'N'); D.set(31, 6, 'N'); D.set(30, 9, 'T');
   // bell tower
-  D.pts([[43, 4], [45, 4]], 'w'); D.set(46, 5, '@'); D.set(42, 8, ',');
+  D.pts([[43, 4], [45, 4]], 'w'); D.set(42, 6, '@'); D.set(42, 8, ',');
   // item shop
   D.set(11, 25, '$'); D.set(14, 25, 'w'); D.set(16, 25, 'k'); D.set(15, 28, '&'); D.set(16, 29, 'Z');
   // smithy
@@ -160,14 +160,14 @@ module.exports = function loch() {
   D.pts([[21, 26], [21, 29]], 'X'); D.pts([[31, 26], [31, 29]], 'Y'); D.rect(25, 27, 3, 2, 'r');
   // Emma
   D.set(37, 25, 'w'); D.set(39, 25, 'p'); D.set(41, 25, '$');
-  D.set(37, 26, '-'); D.set(41, 26, 'K'); D.set(41, 29, 'y'); D.set(37, 29, '&');
+  D.set(37, 26, "'"); D.set(41, 26, 'K'); D.set(41, 29, 'y'); D.set(37, 29, '&');
   // house A (fisher)
   D.set(11, 34, 'w'); D.set(13, 34, '['); D.set(15, 34, 'w'); 
   // house B (weaver)
   D.set(21, 34, 'w'); D.set(23, 34, 't'); D.set(25, 34, 'w');
   D.set(20, 35, '!'); D.set(22, 35, '?'); D.set(24, 38, '&');
   // house C (old man)
-  D.set(37, 34, 'w'); D.set(39, 34, 'P'); D.set(41, 34, 'w'); D.set(41, 38, 'V');
+  D.set(37, 34, 'w'); D.set(39, 34, 'P'); D.set(41, 34, 'w'); D.set(41, 38, 'V'); D.set(37, 37, '&');
   // outside: signs, lamps, stalls, boats, nets, laundry
   D.set(11, 13, '7'); D.set(28, 13, 'j'); D.set(12, 31, '4'); D.set(24, 31, '5'); D.set(28, 31, '6');
   D.pts([[10, 16], [21, 16], [36, 16], [46, 16], [21, 20], [16, 31], [32, 31], [44, 31]], '3');
@@ -176,8 +176,8 @@ module.exports = function loch() {
   D.pts([[4, 13], [1, 16], [5, 28], [3, 35], [11, 22], [34, 21], [44, 20], [51, 26]], '|'); // boats (map legend)
   D.pts([[23, 12], [7, 29]], 'N'); D.pts([[8, 7], [8, 26], [7, 38]], ','); D.pts([[8, 4]], 'U');
   D.pts([[45, 29], [47, 29], [49, 29]], ':');            // net racks
-  D.pts([[29, 35], [32, 35]], '('); D.set(31, 37, '/'); D.set(33, 38, '%');   // laundry, washtub, firewood
+  D.pts([[29, 35], [32, 35]], '('); D.set(31, 37, '"'); D.set(33, 38, '%');   // laundry, washtub, firewood
   D.pts([[45, 33], [49, 33], [42, 13]], 'h'); D.pts([[22, 7], [38, 11]], 'h');
   D.pts([[36, 21]], '.');
-  return { T, D, W, H, decorLegend: { '|': 'boat', ':': 'net_rack', ',': 'rope_coil', '/': 'washtub', '-': 'cradle' } };
+  return { T, D, W, H, decorLegend: { '|': 'boat', ':': 'net_rack', ',': 'rope_coil', '"': 'washtub', "'": 'cradle' } };
 };

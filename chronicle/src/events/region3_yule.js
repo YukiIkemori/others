@@ -32,20 +32,21 @@
     run: async (ev) => {
       if (ev.flag('snow_start')) return;
       const j = ev.npc('jorn_gate');
+      const top = { pos: 'top' }; // the gate is at the map's bottom edge: keep the speakers in sight
       await ev.wait(20);
       if (j.visible) {
-        await j.walk('D');
+        await j.walk('DD');
         j.face('player');
       }
-      await ev.say('……旅の方か。よくこの吹雪の中を\n来てくださった。');
-      await ev.say('わしは、この村の村長の\nヨルンという。');
-      await ev.say('この吹雪は、もう三か月も続いている。');
-      await ev.say('冬至の火が消えたのだ。火の物語を、\n誰も思い出せん。');
-      await ev.say('昔は、冬至の夜に集会所の\nかまどで大きな火をたき、\n北の峰の白竜さまに、\n竜の物語を届けたものじゃ。');
-      await ev.say('……よかったら、集会所の\nかまどを見てやってくれんか。\n村の北の、大きな建物じゃ。');
+      await ev.say('……旅の方か。よくこの吹雪の中を\n来てくださった。', top);
+      await ev.say('わしは、この村の村長の\nヨルンという。', top);
+      await ev.say('この吹雪は、もう三か月も続いている。', top);
+      await ev.say('冬至の火が消えたのだ。火の物語を、\n誰も思い出せん。', top);
+      await ev.say('昔は、冬至の夜に集会所の\nかまどで大きな火をたき、\n北の峰の白竜さまに、\n竜の物語を届けたものじゃ。', top);
+      await ev.say('……よかったら、集会所の\nかまどを見てやってくれんか。\n村の北の、大きな建物じゃ。', top);
       ev.closeMessage();
       if (j.visible) {
-        await j.walk('UUUU');
+        await j.walk('UUUUUU');
         j.hide();
       }
       ev.setFlag('snow_start');

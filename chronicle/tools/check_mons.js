@@ -37,7 +37,10 @@ const GOLD_NAMES = {
 // Balance overlay (tools/fixtures/mons/tuning.json): monsters.<id>.<field> / encounters.<zone>.groups replace DESIGN.
 const TUNING_FILE = path.join(ROOT, 'tools', 'fixtures', 'mons', 'tuning.json');
 function loadTuning() {
-  try { return JSON.parse(fs.readFileSync(TUNING_FILE, 'utf8')); } catch (e) { return { monsters: {}, encounters: {} }; }
+  // MONS_TUNING=<file> reads another overlay (sim_zones --tuning: try a balance change in memory before writing it)
+  const f = process.env.MONS_TUNING ? path.resolve(process.env.MONS_TUNING) : TUNING_FILE;
+  if (f === '-') return { monsters: {}, encounters: {} };
+  try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { return { monsters: {}, encounters: {} }; }
 }
 const TUNED = {}; // 'monId.field' / 'zone.groups' → why (filled by expected())
 
@@ -229,6 +232,17 @@ function parseDesign() {
   return CACHE;
 }
 
+/** middle of the tier range (0..9) in which monster m is its lineage's active stage */
+function midTier(D, m, id) {
+  const L = m.lineage && D.lineages[m.lineage];
+  if (!L) return Math.max(0, Math.min(9, m.tier || 0));
+  const st = L.stages;
+  const i = st.findIndex((x) => x.mon === id);
+  if (i < 0) return Math.max(0, Math.min(9, m.tier || 0));
+  const a = st[i].tier, b = i + 1 < st.length ? st[i + 1].tier - 1 : 9;
+  return Math.max(0, Math.min(9, Math.round((a + Math.max(a, b)) / 2)));
+}
+
 /** DESIGN data with the tuning overlay applied (deep copies) */
 function expected() {
   const D = parseDesign();
@@ -242,6 +256,21 @@ function expected() {
   for (const [z, o] of Object.entries(T.encounters || {})) {
     if (!encounters[z]) throw new Error('tuning: unknown zone ' + z);
     for (const [k, v] of Object.entries(o)) { if (k === 'why') continue; encounters[z][k] = v; TUNED['zone.' + z + '.' + k] = o.why || '?'; }
+  }
+  // global balance curve (tuning.json global: {hp:[T0..T9], dmg:[T0..T9]}): every regular non-metal monster's s.hp ×hp[t]
+  // and s.atk / s.mag ×dmg[t], t = the middle of the tier range where its lineage stage is the one '@' picks (§9.1.4).
+  // Applied after the per-monster entries, so those stay relative to the lineage (§9.13.1: all stages move one way).
+  const G = T.global;
+  if (G && G.hp && G.dmg) {
+    for (const [id, m] of Object.entries(mons)) {
+      if ((m.flags || []).includes('metal') || m.hpFixed) continue;
+      const t = midTier(D, m, id);
+      const sv = Object.assign({}, m.s || {});
+      const mul = (k, f) => { const v = Math.round((sv[k] != null ? sv[k] : 1) * f * 100) / 100; if (v === 1) delete sv[k]; else sv[k] = v; };
+      mul('hp', G.hp[t]); mul('atk', G.dmg[t]); mul('mag', G.dmg[t]);
+      m.s = sv;
+      TUNED[id + '.s(global)'] = G.why || '?';
+    }
   }
   const actions = JSON.parse(JSON.stringify(D.actions));
   for (const [id, o] of Object.entries(T.actions || {})) {

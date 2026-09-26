@@ -9,7 +9,7 @@
     // ---- salamander 火トカゲ（獣・m）: 火山の火トカゲ。火を吹き、溶岩をまとい、角を生やし、竜の王になる。
     salamander_1: {
       name: '火トカゲ', sprite: 'salamander_1', lineage: 'salamander', stage: 1, lv: 7, size: 'm', race: 'beast', affinity: 'fire',
-      flags: [], s: { atk: 1.05, agi: 1.05 }, eva: 5,
+      flags: [], s: { atk: 1.03, agi: 1.05, hp: 1.1, mag: 0.99 }, eva: 5,
       elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_fire_bite', w: 2 }],
       drops: { normal: { item: 'i_stone_fire', rate: 8 }, rare: { item: 'hd_ash_mask', rate: 32 }, super: { item: 'ft_sr_salamander', rate: 256 } },
@@ -17,7 +17,7 @@
     },
     salamander_2: {
       name: '火吹きトカゲ', sprite: 'salamander_2', lineage: 'salamander', stage: 2, lv: 19, size: 'm', race: 'beast', affinity: 'fire',
-      flags: [], s: { atk: 1.05, mag: 1.1 }, eva: 5,
+      flags: [], s: { atk: 0.94, mag: 0.98, hp: 1.18 }, eva: 5,
       elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_fire_breath', w: 2 }, { id: 'e_fire_bite', w: 1 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_axe_ember', rate: 32 }, super: { item: 'w_bow_sr_firebreath', rate: 256 } },
@@ -25,7 +25,7 @@
     },
     salamander_3: {
       name: '溶岩トカゲ', sprite: 'salamander_3', lineage: 'salamander', stage: 3, lv: 31, size: 'm', race: 'beast', affinity: 'fire',
-      flags: [], s: { hp: 1.1, atk: 1.1, def: 1.15 }, eva: 5,
+      flags: [], s: { hp: 1.39, atk: 0.89, def: 1.15, mag: 0.81 }, eva: 5,
       elem: { fire: -1, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_lava_spit', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'bd_ash_cloak', rate: 32 }, super: { item: 'bd_sr_salamander', rate: 256 } },
@@ -33,7 +33,7 @@
     },
     salamander_4: {
       name: '炎角トカゲ', sprite: 'salamander_4', lineage: 'salamander', stage: 4, lv: 43, size: 'm', race: 'beast', affinity: 'fire',
-      flags: [], s: { hp: 1.1, atk: 1.15, mag: 1.1 }, eva: 5,
+      flags: [], s: { hp: 1.47, atk: 0.82, mag: 0.79 }, eva: 5,
       elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_fire_breath', w: 2 }, { id: 'e_horn', w: 2 }, { id: 'e_focus', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_stone_fire', rate: 8 }, rare: { item: 'w_katana_ash', rate: 32 }, super: { item: 'w_spear_sr_flamehorn', rate: 256 } },
@@ -41,7 +41,7 @@
     },
     salamander_5: {
       name: '炎帝トカゲ', sprite: 'salamander_5', lineage: 'salamander', stage: 5, lv: 55, size: 'm', race: 'beast', affinity: 'fire',
-      flags: [], s: { hp: 1.3, atk: 0.61, mag: 0.59 }, eva: 5,
+      flags: [], s: { hp: 1.85, atk: 0.38, mag: 0.37 }, eva: 5,
       elem: { fire: -1, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_inferno_breath', w: 2 }, { id: 'e_fire_bite', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 1] } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_phoenix_ash', rate: 32 }, super: { item: 'bd_sr_dragonhide', rate: 128 } },
@@ -50,7 +50,7 @@
     // ---- imp 悪魔（魔族・s）: 灰の荒野の小悪魔。すす・火の粉・灰・業火、そして軍師。
     imp_1: {
       name: 'すす悪魔', sprite: 'imp_1', lineage: 'imp', stage: 1, lv: 7, size: 's', race: 'demon', affinity: 'fire',
-      flags: [], s: { hp: 0.9, atk: 1.05, agi: 1.2 }, eva: 5,
+      flags: [], s: { hp: 0.99, atk: 1.03, agi: 1.2, mag: 0.99 }, eva: 5,
       elem: { fire: 0.25, water: 1.5, light: 1.5, dark: 0.5 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 4 }, { id: 'e_thrust', w: 2 }, { id: 'e_fire_bolt', w: 1 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'hd_ash_mask', rate: 32 }, super: { item: 'w_spear_sr_soot_fork', rate: 256 } },
@@ -58,7 +58,7 @@
     },
     imp_2: {
       name: '火の粉悪魔', sprite: 'imp_2', lineage: 'imp', stage: 2, lv: 19, size: 's', race: 'demon', affinity: 'fire',
-      flags: [], s: { hp: 0.9, mag: 0.89, agi: 1.2, atk: 0.77 }, eva: 5,
+      flags: [], s: { hp: 1.06, mag: 0.8, agi: 1.2, atk: 0.69 }, eva: 5,
       elem: { fire: 0.25, water: 1.5, light: 1.5, dark: 0.5 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_fire_bolt', w: 2 }, { id: 'e_fire_rain', w: 1 }],
       drops: { normal: { item: 'i_stone_fire', rate: 8 }, rare: { item: 'w_axe_ember', rate: 32 }, super: { item: 'ac_sr_ember_horn', rate: 256 } },
@@ -66,7 +66,7 @@
     },
     imp_3: {
       name: '灰の悪魔', sprite: 'imp_3', lineage: 'imp', stage: 3, lv: 31, size: 's', race: 'demon', affinity: 'fire',
-      flags: [], s: { hp: 0.95, mag: 0.72, agi: 1.2, atk: 0.63 }, eva: 5,
+      flags: [], s: { hp: 1.2, mag: 0.58, agi: 1.2, atk: 0.51 }, eva: 5,
       elem: { fire: 0.25, water: 1.5, light: 1.5, dark: 0.5 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_ash_cloud', w: 2 }, { id: 'e_fire_rain', w: 2 }],
       drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'bd_ash_cloak', rate: 32 }, super: { item: 'bd_sr_ash_cloak_devil', rate: 256 } },
@@ -74,7 +74,7 @@
     },
     imp_4: {
       name: '業火の悪魔', sprite: 'imp_4', lineage: 'imp', stage: 4, lv: 43, size: 's', race: 'demon', affinity: 'fire',
-      flags: [], s: { mag: 0.75, agi: 1.2, atk: 0.6 }, eva: 5,
+      flags: [], s: { mag: 0.54, agi: 1.2, atk: 0.43, hp: 1.34 }, eva: 5,
       elem: { fire: 0.25, water: 1.5, light: 1.5, dark: 0.5 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_fire_rain', w: 2 }, { id: 'e_fire_bolt', w: 2 }, { id: 'e_haste', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_katana_ash', rate: 32 }, super: { item: 'w_staff_sr_hellfire', rate: 256 } },
@@ -82,7 +82,7 @@
     },
     imp_5: {
       name: '悪魔の軍師', sprite: 'imp_5', lineage: 'imp', stage: 5, lv: 55, size: 's', race: 'demon', affinity: 'dark',
-      flags: [], s: { hp: 1.1, mag: 1.3, mdef: 1.25, agi: 1.15 }, eva: 5,
+      flags: [], s: { hp: 1.56, mag: 0.81, mdef: 1.25, agi: 1.15, atk: 0.63 }, eva: 5,
       elem: { light: 1.5, dark: 0.25 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_dark_bolt', w: 2 }, { id: 'e_dispel', w: 1, cond: { every: [3, 1] } }, { id: 'e_haste', w: 1, cond: { once: true } }, { id: 'e_ward', w: 1, cond: { once: true } }, { id: 'e_gloom', w: 1 }],
       drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'ac_phoenix_ash', rate: 32 }, super: { item: 'hd_sr_dusk', rate: 128 } },
@@ -91,7 +91,7 @@
     // ---- gargoyle 石像鬼（魔族・m・飛ぶ）: 古い神殿や塔の屋根に止まる石の鬼。
     gargoyle_1: {
       name: '石像鬼', sprite: 'gargoyle_1', lineage: 'gargoyle', stage: 1, lv: 7, size: 'm', race: 'demon',
-      flags: ['flying'], s: { hp: 1.05, def: 1.3, agi: 0.95 }, eva: 12,
+      flags: ['flying'], s: { hp: 1.16, def: 1.3, agi: 0.95, atk: 0.99, mag: 0.99 }, eva: 12,
       elem: { wind: 1.5, earth: 0.5, light: 1.5, dark: 0.5 }, phys: { slash: 0.75, blunt: 1.25, pierce: 0.75 }, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 4 }, { id: 'e_claw', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'hd_ash_mask', rate: 32 }, super: { item: 'hd_sr_gargoyle_face', rate: 256 } },
@@ -99,7 +99,7 @@
     },
     gargoyle_2: {
       name: '黒曜の石像鬼', goldName: '金色の石像鬼', sprite: 'gargoyle_2', lineage: 'gargoyle', stage: 2, lv: 19, size: 'm', race: 'demon',
-      flags: ['flying'], s: { hp: 1.05, atk: 1.1, def: 1.35 }, eva: 12,
+      flags: ['flying'], s: { hp: 1.24, atk: 0.98, def: 1.35, mag: 0.9 }, eva: 12,
       elem: { wind: 1.5, earth: 0.5, light: 1.5, dark: 0.5 }, phys: { slash: 0.75, blunt: 1.25, pierce: 0.75 }, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_dive', w: 2 }, { id: 'e_claw', w: 1 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_axe_ember', rate: 32 }, super: { item: 'w_dagger_sr_obsidian', rate: 256 } },
@@ -107,7 +107,7 @@
     },
     gargoyle_3: {
       name: '火炎の石像鬼', sprite: 'gargoyle_3', lineage: 'gargoyle', stage: 3, lv: 31, size: 'm', race: 'demon', affinity: 'fire',
-      flags: ['flying'], s: { hp: 1.1, atk: 0.77, mag: 0.77, def: 1.3 }, eva: 12,
+      flags: ['flying'], s: { hp: 1.39, atk: 0.62, mag: 0.62, def: 1.3 }, eva: 12,
       elem: { fire: 0.25, water: 1.5, wind: 1.5, earth: 0.5, light: 1.5, dark: 0.5 }, phys: { slash: 0.75, blunt: 1.25, pierce: 0.75 }, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_fire_breath', w: 2 }, { id: 'e_claw', w: 2 }],
       drops: { normal: { item: 'i_stone_fire', rate: 8 }, rare: { item: 'bd_ash_cloak', rate: 32 }, super: { item: 'sh_sr_lava_gargoyle', rate: 256 } },
@@ -115,7 +115,7 @@
     },
     gargoyle_4: {
       name: '石像鬼の長', sprite: 'gargoyle_4', lineage: 'gargoyle', stage: 4, lv: 43, size: 'm', race: 'demon',
-      flags: ['flying'], s: { hp: 1.25, atk: 1.15, def: 1.35 }, eva: 12,
+      flags: ['flying'], s: { hp: 1.73, atk: 0.77, def: 1.35, mag: 0.67 }, eva: 12,
       elem: { wind: 1.5, earth: 0.5, light: 1.5, dark: 0.5 }, phys: { slash: 0.75, blunt: 1.25, pierce: 0.75 }, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_gaze', w: 2 }, { id: 'e_dive', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_katana_ash', rate: 32 }, super: { item: 'w_axe_sr_gargoyle', rate: 256 } },
@@ -124,7 +124,7 @@
     // ---- orc 大鬼（人型・l）: 荒野をのし歩く大鬼。力まかせと鉄棒。
     orc_1: {
       name: '荒野の大鬼', sprite: 'orc_1', lineage: 'orc', stage: 1, lv: 7, size: 'l', race: 'humanoid', affinity: 'fire',
-      flags: [], s: { hp: 1.2, atk: 1.2, def: 0.95, mdef: 0.85, agi: 0.8 }, rw: { gold: 1.3 }, eva: 5,
+      flags: [], s: { hp: 1.32, atk: 1.18, def: 0.95, mdef: 0.85, agi: 0.8, mag: 0.99 }, rw: { gold: 1.3 }, eva: 5,
       elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_heavy', w: 2 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_club_ashen', rate: 32 }, super: { item: 'w_greatsword_sr_frenzy', rate: 256 } },
@@ -132,7 +132,7 @@
     },
     orc_2: {
       name: '鉄棒の大鬼', sprite: 'orc_2', lineage: 'orc', stage: 2, lv: 25, size: 'l', race: 'humanoid', affinity: 'fire',
-      flags: [], s: { hp: 1.25, atk: 0.92, mdef: 0.85, agi: 0.8, mag: 0.74 }, rw: { gold: 1.3 }, eva: 5,
+      flags: [], s: { hp: 1.53, atk: 0.78, mdef: 0.85, agi: 0.8, mag: 0.63 }, rw: { gold: 1.3 }, eva: 5,
       elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_heavy', w: 2 }, { id: 'e_sweep', w: 2 }, { id: 'e_armor_break', w: 1 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_greatsword_beastfang', rate: 32 }, super: { item: 'hd_sr_berserk', rate: 256 } },
@@ -140,7 +140,7 @@
     },
     orc_3: {
       name: '大鬼の頭目', sprite: 'orc_3', lineage: 'orc', stage: 3, lv: 43, size: 'l', race: 'humanoid', affinity: 'fire',
-      flags: [], s: { hp: 1.35, atk: 0.8, def: 1.05, agi: 0.8, mag: 0.64 }, eva: 5,
+      flags: [], s: { hp: 1.86, atk: 0.54, def: 1.05, agi: 0.8, mag: 0.43 }, eva: 5,
       elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_rampage', w: 2 }, { id: 'e_focus', w: 1, cond: { once: true } }, { id: 'e_sweep', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 2] } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_fist_brimstone', rate: 32 }, super: { item: 'hd_sr_oni', rate: 128 } },
@@ -149,7 +149,7 @@
     // ---- chimera 三頭獣（獣・l）: シシ・ヤギ・ヘビの頭をもつ獣。火の息が強くなっていく。
     chimera_1: {
       name: 'まだら獣', sprite: 'chimera_1', lineage: 'chimera', stage: 1, lv: 7, size: 'l', race: 'beast', affinity: 'fire',
-      flags: [], s: { hp: 1.15, atk: 1.1 }, eva: 5,
+      flags: [], s: { hp: 1.26, atk: 1.08, mag: 0.99 }, eva: 5,
       elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_bite', w: 2 }, { id: 'e_fire_breath', w: 1 }, { id: 'e_poison_bite', w: 1 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_club_ashen', rate: 32 }, super: { item: 'hn_sr_chimera_paw', rate: 256 } },
@@ -157,7 +157,7 @@
     },
     chimera_2: {
       name: '三頭獣', sprite: 'chimera_2', lineage: 'chimera', stage: 2, lv: 25, size: 'l', race: 'beast', affinity: 'fire',
-      flags: [], s: { hp: 1.2, atk: 0.61, mag: 0.59 }, eva: 5,
+      flags: [], s: { hp: 1.46, atk: 0.52, mag: 0.5 }, eva: 5,
       elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_fire_breath', w: 2 }, { id: 'e_poison_bite', w: 1 }, { id: 'e_bite', w: 2 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'sh_wyvern_scale', rate: 32 }, super: { item: 'w_fist_sr_triple_fang', rate: 256 } },
@@ -165,7 +165,7 @@
     },
     chimera_3: {
       name: '業火の三頭獣', sprite: 'chimera_3', lineage: 'chimera', stage: 3, lv: 43, size: 'l', race: 'beast', affinity: 'fire',
-      flags: [], s: { hp: 1.3, atk: 0.5, mag: 0.5 }, eva: 5,
+      flags: [], s: { hp: 1.79, atk: 0.34, mag: 0.34 }, eva: 5,
       elem: { fire: -1, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_inferno_breath', w: 2 }, { id: 'e_bite', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 0] } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_fist_brimstone', rate: 32 }, super: { item: 'bd_sr_chimera_hide', rate: 256 } },

@@ -125,6 +125,7 @@
       await ev.caption('その夜は、町の宿で眠った。');
       ev.heal();
       await ev.warp('yule', 'inn', { fade: false });
+      await ev.fadeIn(30);
       if (has('story_after_clear')) await ev.call('story_after_clear');
     },
   };

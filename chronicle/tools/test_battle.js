@@ -670,6 +670,18 @@ guard('buffs', () => {
   const land = (t, id, n) => mean(() => { t.buffs.atk = 0; t.buffs.def = 0; t.status = {}; use(e, mage, id, t); mage.mp = 99; return t.buffs.atk < 0 || t.buffs.def < 0 ? 1 : 0; }, n || 2000);
   near(land(gob, 'tb_s_weaken'), Math.min(0.95, 0.8 * SF), 0.03, 'debuff chance × SF(int)');
   ok(land(gob, 'tb_s_break', 300) === 1, 'a debuff without chance always lands');
+  // a physical tech's debuff: chance × SF(器用さ) (§7.3.3, §4.8.3)
+  const knight = P(e, 0);
+  const saveW = knight.c.equip.weapon1;
+  equip(knight, 'weapon1', 'tb_whip');
+  const SFd = U.clamp((128 + knight.stat('dex')) / 168, 0.6, 2);
+  const landT = () => (() => { gob.buffs.agi = 0; gob.status = {}; knight.wp = 99; const r = run(e.useAction(knight, 'tb_t_trip', DB.actions.tb_t_trip, gob, { slot: knight.slotFor('whip') === false ? undefined : knight.slotFor('whip'), free: true })); return gob.alive && r.some((x) => x.t === 'dmg' && x.u === gob && x.n > 0) ? (gob.buffs.agi < 0 ? 1 : 0) : null; })();
+  if (knight.slotFor('whip') !== false) {
+    let hitN = 0, got = 0;
+    for (let i = 0; i < 2000; i++) { gob.hp = gob.mhp; const v = landT(); if (v != null) { hitN++; got += v; } }
+    near(got / Math.max(1, hitN), Math.min(0.95, 1 * SFd), 0.035, 'tech debuff chance × SF(dex)');
+  } else ok(false, 'tb_whip gives a whip slot');
+  equip(knight, 'weapon1', saveW);
   near(land(boss, 'tb_s_break'), 0.5, 0.03, 'bosses: × 0.5');
   near(land(boss, 'tb_s_weaken'), 0.8 * SF * 0.5, 0.03, 'bosses: chance × SF × 0.5');
   gob.buffs.def = 0;
@@ -707,7 +719,7 @@ guard('steal', () => {
   ok(Math.abs(pc - U.clamp(0.35 + (archer.stat('agi') - gob.stat('agi')) / 200, 0.1, 0.8)) < 1e-12, 'steal = clamp(0.35 + Δagi/200, 0.1, 0.8)');
   ok(Math.abs(e.stealChance(archer, boss) - U.clamp(0.35 + (archer.stat('agi') - boss.stat('agi')) / 200, 0.1, 0.8) * 0.5) < 1e-12, 'bosses × 0.5');
   equip(archer, 'acc1', 'tb_lucky');
-  ok(Math.abs(e.stealChance(archer, gob) - Math.min(0.95, pc * 1.5)) < 1e-12, 'stealPct +50');
+  ok(Math.abs(e.stealChance(archer, gob) - Math.min(1, pc * 1.5)) < 1e-12, 'stealPct +50 (× (1 + stealPct/100), no cap below 1)');
   equip(archer, 'acc1', null);
   let got = 0, rare = 0, tries = 0, again = 0;
   for (let i = 0; i < 3000; i++) {

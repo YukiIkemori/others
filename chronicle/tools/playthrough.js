@@ -50,7 +50,7 @@ function makeEv(R, rep, ctx) {
       lastBattle.v = R.Battle ? R.Battle.last || null : null;
       return res;
     },
-    async warp(map, spawn) { tick(); if (!DB.maps[map]) rep.problem(`ev.warp('${map}'): unknown map`); R.Game.pos = Object.assign({}, R.Game.pos, { map, spawn }); },
+    async warp(map, spawn) { tick(); if (!DB.maps[map]) rep.problem(`ev.warp('${map}'): unknown map`); R.Game.pos = Object.assign({}, R.Game.pos, { map, spawn }); if (ctx) ctx.map = map; },
     async wait() { tick(); }, async fadeOut() { tick(); }, async fadeIn() { tick(); }, async shake() { tick(); }, async flash() { tick(); },
     sfx() {}, bgm() {}, async jingle() { tick(); },
     npc() { const h = { x: 0, y: 0, dir: 'down', visible: true, face: () => h, walk: async () => { tick(); }, hide: () => h, show: () => h, setPos: () => h }; return h; },
@@ -67,12 +67,24 @@ function makeEv(R, rep, ctx) {
       const pg = DB.config && DB.config.postgameStart;
       if (pg) R.Game.pos = Object.assign({}, R.Game.pos, { map: pg.map, spawn: pg.spawn });
     },
-    async call(id) { tick(); return runEvent(R, id, rep, ctx, true); },
+    async call(id) {
+      // what the callee gives is the callee's (checked against its own meta once), not the caller's
+      tick();
+      const before = snapshot(R);
+      const sub = newRep(rep);
+      const r = await runEvent(R, id, sub, ctx, true);
+      const after = snapshot(R);
+      diffInto(sub, before, after);
+      for (const t of tokens(sub)) rep.nested.add(t);
+      for (const t of sub.nested) rep.nested.add(t);
+      if (rep.onCall) rep.onCall(id, sub);
+      return r;
+    },
     async createHero() { tick(); St.setFlag('hero_created'); return hero(); },
     async chooseCompanions(o) {
       tick();
       const ids = ['brigitta', 'marta', 'sylvain'].slice(0, (o && o.count) || 3);
-      for (const id of ids) doRecruit(R, id, rep);
+      for (const id of ids) { doRecruit(R, id, rep); rep.chosen.add(id); }   // the player's pick: not a fixed give
       return ids;
     },
     async tavern() { tick(); }, async recruit(id) { tick(); return doRecruit(R, id, rep); },
@@ -84,7 +96,7 @@ function makeEv(R, rep, ctx) {
       else { R.Game.regionsCleared.push(id); R.Game.tier = R.Game.regionsCleared.length; St.setFlag('cleared_' + id); }
       rep.regions.add(id);
       const frag = DB.regions[id] && DB.regions[id].fragment;
-      if (frag && DB.items[frag]) { St.addItem(frag, 1); rep.items.add(frag); }
+      if (frag && DB.items[frag]) { St.addItem(frag, 1); rep.nested.add('item:' + frag); }   // the page comes with region:<id>
       return R.Game.tier;
     },
     async chronicle() { tick(); },
@@ -92,11 +104,31 @@ function makeEv(R, rep, ctx) {
   return new Proxy(ev, {
     get(t, k) {
       if (k in t) return t[k];
-      if (typeof k === 'symbol' || k === 'then') return undefined;
+      if (typeof k === 'symbol' || k === 'then' || /^__/.test(k)) return undefined;   // private markers an event keeps on ev
       rep.problem(`ev.${String(k)} is not part of the ev API (§3.3.11)`);
       return async () => {};
     },
   });
+}
+
+function newRep(parent) {
+  return { flags: new Set(), items: new Set(), regions: new Set(), recruits: new Set(), chosen: new Set(), vars: new Set(), nested: new Set(),
+    battles: parent ? parent.battles : [], problems: parent ? parent.problems : [], onCall: parent ? parent.onCall : null,
+    problem(m) { this.problems.push(m); } };
+}
+function diffInto(rep, before, after) {
+  for (const f of Object.keys(after.flags)) if (after.flags[f] && !before.flags[f]) rep.flags.add(f);
+  for (const i of Object.keys(after.inv)) if ((after.inv[i] || 0) > (before.inv[i] || 0)) rep.items.add(i);
+  for (const x of after.cleared) if (!before.cleared.includes(x)) rep.regions.add(x);
+  for (const x of after.members) if (!before.members.includes(x)) rep.recruits.add(x);
+}
+function tokens(rep) {
+  const out = [];
+  for (const f of rep.flags) out.push('flag:' + f);
+  for (const i of rep.items) out.push('item:' + i);
+  for (const r of rep.regions) out.push('region:' + r);
+  for (const c of rep.recruits) if (!rep.chosen.has(c)) out.push('recruit:' + c);
+  return out;
 }
 
 function doRecruit(R, id, rep) {
@@ -166,28 +198,41 @@ async function playthrough(R, o) {
   if (o.events) order.push(...o.events.map((id) => ({ event: id })));
   else { const pr = P.analyse(R, { quick: true }); for (const l of pr.log) order.push(l); }
   const done = new Set();
+  const acc = new Map();          // event id → {declared, actual, runs, owner}
   for (const step of order) {
     const id = step.event;
     const ev = DB.events[id];
     if (!ev) continue;
     const owner = V.expectedOwner('events', id);
-    const rep = { flags: new Set(), items: new Set(), regions: new Set(), recruits: new Set(), vars: new Set(), battles: out.battles, problems: [], problem(m) { this.problems.push(m); } };
+    const rep = newRep(null);
+    rep.battles = out.battles;
+    rep.onCall = (cid, sub) => {
+      const cev = DB.events[cid];
+      if (cev && cev.meta) compareMeta(cid, cev.meta, sub, readFlags, V.expectedOwner('events', cid), E, W, R, acc);
+      done.add(cid);
+    };
     const before = snapshot(R);
     const ctx = step.at ? { map: step.at.map, npc: step.at.npc, event: step.at.event, self: step.at.npc || step.at.event || null } : {};
     if (ctx.map) R.Game.pos = Object.assign({}, R.Game.pos, { map: ctx.map });
     const r = await runEvent(R, id, rep, ctx, false);
     const after = snapshot(R);
     // actual gives from the state diff (covers direct R.State calls too)
-    for (const f of Object.keys(after.flags)) if (after.flags[f] && !before.flags[f]) rep.flags.add(f);
-    for (const i of Object.keys(after.inv)) if ((after.inv[i] || 0) > (before.inv[i] || 0)) rep.items.add(i);
-    for (const x of after.cleared) if (!before.cleared.includes(x)) rep.regions.add(x);
-    for (const x of after.members) if (!before.members.includes(x)) rep.recruits.add(x);
+    diffInto(rep, before, after);
     const once = step.at && step.at.event && step.at.event.once;
     if (once && r !== false && !R.State.flag(once)) R.State.setFlag(once);
     out.ran.push({ id, result: r, problems: rep.problems.slice() });
     for (const p of rep.problems) E(owner, p);
-    if (!done.has(id) && ev.meta) compareMeta(id, ev.meta, rep, readFlags, owner, E, W, R);
+    if (ev.meta) compareMeta(id, ev.meta, rep, readFlags, owner, E, W, R, acc);
     done.add(id);
+  }
+  // meta.gives never given over all the runs of an event (an event may give a different part each time it runs)
+  for (const [id, a] of acc) {
+    for (const t of a.declared) {
+      if (/^(var|tier|postgame):/.test(t) || a.actual.has(t)) continue;
+      if (t.startsWith('flag:') && R.State.flag(t.slice(5))) continue;           // set by some other event: progress.js decides
+      if (t.startsWith('item:') && R.State.hasItem(t.slice(5))) continue;
+      E(a.owner, `${id}: meta.gives '${t}' but no run of the event gave it (${a.runs} run(s))`);
+    }
   }
   const g = R.Game;
   out.gameClear = !!(g.flags && g.flags.game_clear); out.pgClear = !!(g.flags && g.flags.pg_clear);
@@ -200,7 +245,7 @@ async function playthrough(R, o) {
     for (const id of Object.keys(DB.events)) {
       if (done.has(id)) continue;
       try { R.State.newGame(); } catch (e) { break; }
-      const rep = { flags: new Set(), items: new Set(), regions: new Set(), recruits: new Set(), vars: new Set(), battles: [], problems: [], problem(m) { this.problems.push(m); } };
+      const rep = newRep(null);
       await runEvent(R, id, rep, {}, false);
       out.dryOnly.push(id);
       for (const p of rep.problems) E(V.expectedOwner('events', id), `${p} (run alone)`);
@@ -209,22 +254,23 @@ async function playthrough(R, o) {
   return out;
 }
 
-function compareMeta(id, meta, rep, readFlags, owner, E, W, R) {
+function compareMeta(id, meta, rep, readFlags, owner, E, W, R, acc) {
   const declared = new Set(meta.gives || []);
-  const actual = new Set();
-  for (const f of rep.flags) actual.add('flag:' + f);
-  for (const i of rep.items) actual.add('item:' + i);
-  for (const r of rep.regions) actual.add('region:' + r);
-  for (const c of rep.recruits) actual.add('recruit:' + c);
-  const auto = (t) => /^flag:(cleared_|joined_|hero_created$|game_clear$)/.test(t);
-  for (const t of declared) {
-    if (/^(var|tier|postgame):/.test(t)) continue;
-    if (t.startsWith('flag:') && R.State.flag(t.slice(5)) && !actual.has(t)) continue;     // already set by an earlier event
-    if (t.startsWith('item:') && !actual.has(t) && R.State.hasItem(t.slice(5))) continue;
-    if (!actual.has(t)) E(owner, `${id}: meta.gives '${t}' but the event did not give it`);
+  const actual = new Set(tokens(rep));
+  const nested = rep.nested || new Set();
+  const auto = (t) => /^flag:(cleared_|joined_|hero_created$|game_clear$)/.test(t) || t === 'flag:' + id;   // + the event's own once-flag
+  if (acc) {
+    const a = acc.get(id) || { declared, actual: new Set(), runs: 0, owner };
+    a.runs++;
+    for (const t of actual) a.actual.add(t);
+    for (const t of nested) a.actual.add(t);
+    acc.set(id, a);
   }
+  const seen = (acc && acc.get(id)) || null;
+  if (seen && seen.runs > 1) seen.reported = seen.reported || new Set();
   for (const t of actual) {
-    if (declared.has(t) || auto(t)) continue;
+    if (declared.has(t) || auto(t) || nested.has(t)) continue;       // nested: given by an ev.call'd event (its own meta)
+    if (seen) { seen.reported = seen.reported || new Set(); if (seen.reported.has(t)) continue; seen.reported.add(t); }
     if (t.startsWith('region:') && declared.has('flag:cleared_' + t.slice(7))) continue;
     if (t.startsWith('flag:')) {
       const f = t.slice(5);

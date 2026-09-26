@@ -870,11 +870,12 @@
     constructor(list) {
       super();
       this.items = list;
-      // the window (4,4,248,216) is drawn here with its title; the list covers only the place column
-      // (x 100, w 152) so its scroll arrows sit at x 176, clear of the title plate. The cursor stays just
-      // before the place name (x 98 − 10) and the region name is drawn in the gutter at x 16.
+      // the window (4,4,248,198) is drawn here with its title (§11.7.12: 13 rows of 14); the list covers only
+      // the place column (x 100, w 152) so its scroll arrows sit at x 176, clear of the title plate. The cursor
+      // stays just before the place name (x 98 − 10) and the region name is drawn in the gutter at x 16
+      // (squeezed to 70px so it never runs into the cursor).
       this.list = new R.UI.List({
-        x: 100, y: 4, w: 152, h: 216, rows: 14, lineH: 14, padX: -2, padY: 8, window: false, wrap: true, colW: 150,
+        x: 100, y: 4, w: 152, h: 198, rows: 13, lineH: 14, padX: -2, padY: 8, window: false, wrap: true, colW: 150,
         items: list.map((l) => ({ label: warpLabel(l), l })),
         drawItem: (row, x, y, w, i) => this.drawRow(row, x, y, i),
       });
@@ -888,11 +889,11 @@
       const l = row.l;
       const prev = this.items[i - 1];
       // the region name on the first row of each group, and on the top row after scrolling
-      if (!prev || prev.region !== l.region || i === this.list.top) K.fitText(groupName(l.region), 16, y, 76, { color: G().C.cyan });
+      if (!prev || prev.region !== l.region || i === this.list.top) K.fitText(groupName(l.region), 16, y, 70, { color: G().C.cyan });
       K.fitText(warpLabel(l), x + 2, y, 144, { color: l.kind === 'dungeon' ? COL.sub : '#ffffff' });
     }
     render() {
-      G().window(4, 4, 248, 216, { title: 'どこへ行く？' });
+      G().window(4, 4, 248, 198, { title: 'どこへ行く？' });
       this.list.draw();
     }
   }

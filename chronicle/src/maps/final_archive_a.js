@@ -262,7 +262,7 @@
       ],
       events: [
         K.exam('archive_3_door', 19, 4, { cond: { all: [{ notItem: 'k_rowell_note' }, '!final_rowell'] } }),
-        ...K.band('archive_3_rowell', 17, 8, 22, 8, { once: 'final_rowell', cond: '!final_rowell' }),
+        ...K.band('archive_3_rowell', 18, 5, 20, 5, { once: 'final_rowell', cond: '!final_rowell' }),
       ],
     }));
   }

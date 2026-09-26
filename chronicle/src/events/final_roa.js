@@ -28,23 +28,25 @@
 
   E.story_final_roa = {
     meta: {
-      needs: ['flag:st_fine_reveal'],
+      needs: ['flag:st_fine_reveal', 'tier:8'],
       gives: ['flag:final_roa', 'flag:final_open', 'flag:st_berna_forgot', 'flag:roa_berna_gift', 'item:ac_berna_charm'],
     },
     run: async (ev) => {
+      S.autoPos(ev);
       if (ev.flag('final_roa')) return;
       const staged = ev.map === 'roa' && R.Field && R.Field.map;
       ev.bgm('home');
-      // the village gate: the master in front, the hero, フィーネ (left) and ロウェル (right) coming in behind
+      // the story stone on the village green: the master in front of it, the hero; フィーネ and ロウェル come
+      // along the green from the east
       let berna = null, fine = null, rowell = null;
       if (staged) {
         await ev.fadeOut(20);
-        ev.player.setPos(30, 31, 'up');
-        berna = S.actor(ev, 'st_berna', 'npc:berna', 30, 29, 'down');
+        ev.player.setPos(22, 19, 'up');
+        berna = S.actor(ev, 'st_berna', 'npc:berna', 22, 17, 'down');
         fine = S.slot(ev, 'st_fine', S.fineSprite());
         rowell = S.slot(ev, 'st_rival');
-        fine.setPos(29, 34, 'up');
-        rowell.setPos(31, 34, 'up');
+        fine.setPos(28, 19, 'left');
+        rowell.setPos(28, 20, 'left');
         await ev.fadeIn(24);
         await ev.wait(20);
       }
@@ -57,8 +59,12 @@
       ev.closeMessage();
       // 2. フィーネ and ロウェル arrive
       if (staged) {
-        await Promise.all([fine.walk('U3'), rowell.walk('U3')]);
-        fine.face('up'); rowell.face('up');
+        await Promise.all([fine.walk('L5'), rowell.walk('L5')]);
+        await fine.walk('U');
+        fine.face('left'); rowell.face('up');
+        ev.player.face('right');
+        await ev.wait(10);
+        ev.player.face('up');
         await ev.wait(16);
       }
       await ev.say(say('fine', 'ベルナさん。\nあなたの弟子の物語を、\n聞いてくれる？'));
@@ -110,8 +116,8 @@
       await ev.say(say('rowell', 'おれは先に港へ行って、\n船を用意させておく。\nファロスで会おう。'));
       ev.closeMessage();
       if (staged) {
-        rowell.face('down');
-        await rowell.walk('D3');
+        rowell.face('right');
+        await rowell.walk('R6');
         await ev.fadeOut(20);
         S.hideSlot(ev, 'st_fine');
         S.hideSlot(ev, 'st_rival');

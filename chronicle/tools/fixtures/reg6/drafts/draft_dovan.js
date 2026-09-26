@@ -132,9 +132,9 @@ if (typeof require === 'undefined' || typeof module === 'undefined') { /* browse
     '.x.k..w.x.w.x.',
     '.|.....XX..:..',
     '.%O...........',
-    '....s.........',
+    '....g.........',
     '...n......:...',
-    '.....s...n....',
+    '.....g...n....',
     '.O..........%.',
     '..............',
   ]);
@@ -255,6 +255,9 @@ if (typeof require === 'undefined' || typeof module === 'undefined') { /* browse
   put(26, 29, 'W');
   put(26, 26, 'Y'); put(27, 26, 'm');   // 誓いの碑 (statue + plaque)
   dec(24, 29, 'e'); dec(28, 29, 'e'); dec(24, 31, '1'); dec(28, 31, '1');
+  // paving ring round the well, a cart of ore by the east lane, a notice board by the office
+  for (const [x, y] of [[25, 28], [26, 28], [27, 28], [25, 29], [27, 29], [25, 30], [26, 30], [27, 30]]) dec(x, y, 'a');
+  dec(38, 25, 'E'); dec(43, 23, 'q');
   // street furniture
   for (const [x, y] of [[15, 12], [30, 12], [2 + 13, 24], [29, 25], [23, 25], [40, 23], [12, 34], [41, 34]]) dec(x, y, '3');
   dec(8, 22, '4'); dec(33, 22, '6'); dec(19, 23, '5'); dec(42, 11, 'j'); dec(7, 11, '7');

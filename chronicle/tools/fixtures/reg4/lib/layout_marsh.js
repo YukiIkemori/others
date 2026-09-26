@@ -60,7 +60,8 @@ module.exports = function marsh() {
   // ---- plank walks over the water
   bridgeH(20, 24, 33, 2);       // west junction ↔ south junction
   bridgeV(13, 25, 30, 2);       // west junction ↔ north-west
-  bridgeV(49, 14, 19, 2);       // bell C ↔ north-east dead end
+  bridgeV(49, 14, 20, 2);       // bell C ↔ north-east dead end
+  strip(49, 21, 49, 22, 2);
   // ---- keep the centre ring apart from the sides: water moat around antechamber/clearing
   for (let y = 0; y < 24; y++) for (let x = 0; x < W; x++) {
     const inCentre = x >= 18 && x <= 40 && y <= 21;
@@ -72,13 +73,19 @@ module.exports = function marsh() {
   const shore = (x, y) => [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => { const c = T.get(x + dx, y + dy); return c === '~' || c === null; });
   const cells = [];
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) cells.push([x, y]);
-  for (const [x, y] of cells) if (T.get(x, y) === '.' && !P.get(x, y) && shore(x, y) && r() < 0.55) T.set(x, y, '#');
-  for (const [x, y] of cells) {
-    if (T.get(x, y) !== '~') continue;
-    const near = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => ['.', '#'].includes(T.get(x + dx, y + dy)));
-    if (near && r() < 0.35) T.set(x, y, 'w');
-    else if (!near && r() < 0.02) T.set(x, y, '#');           // reed tufts in open water
+  // reed beds grow in clumps along the shores (seeded, then two growth passes)
+  for (const [x, y] of cells) if (T.get(x, y) === '.' && !P.get(x, y) && shore(x, y) && r() < 0.22) T.set(x, y, '#');
+  for (let pass = 0; pass < 2; pass++) {
+    const add = [];
+    for (const [x, y] of cells) {
+      if (T.get(x, y) !== '.' || P.get(x, y) || !shore(x, y)) continue;
+      const nR = [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([dx, dy]) => T.get(x + dx, y + dy) === '#').length;
+      if (nR && r() < 0.5) add.push([x, y]);
+    }
+    for (const [x, y] of add) T.set(x, y, '#');
   }
+  // the water of the bog is murky deep bog everywhere (the map's outside is bog too)
+  for (const [x, y] of cells) if (T.get(x, y) === '~') T.set(x, y, 'w');
   for (const [x, y] of cells) {
     if (T.get(x, y) !== '.' || P.get(x, y)) continue;
     const q = r();
@@ -93,14 +100,13 @@ module.exports = function marsh() {
     strip(b.from[0], b.from[1], b.chain[0], b.chain[1], 1);
     T.set(b.chain[0], b.chain[1], '.');
     T.set(b.bell[0], b.bell[1], 'w'); D.set(b.bell[0], b.bell[1], '|');
-    for (const [dx, dy] of [[0, -1], [0, 1]]) if (T.get(b.bell[0] + dx, b.bell[1] + dy) === '~') T.set(b.bell[0] + dx, b.bell[1] + dy, 'w');
   }
   // the four bells whose chains are gone (decor only)
   for (const [x, y] of [[21, 44], [37, 22], [16, 7], [55, 34]]) { T.set(x, y, 'w'); D.set(x, y, '|'); }
   // the fog gate (closed until the three bells ring; tilePatch in the map file)
   T.rect(28, 25, 3, 1, 'G');
   // poison edges beside the paths (§10.6.2-11: about 14 cells, never across a path)
-  for (const [x, y] of [[30, 36], [30, 37], [30, 38], [34, 34], [35, 34], [36, 34], [37, 34], [38, 34], [28, 27], [28, 28], [28, 29], [8, 31], [9, 31], [12, 19]]) T.set(x, y, 'x');
+  for (const [x, y] of [[30, 37], [30, 38], [34, 34], [35, 34], [37, 32], [38, 32], [28, 28], [28, 29], [30, 26], [8, 31], [9, 31], [12, 19], [13, 19], [10, 14]]) T.set(x, y, 'x');
   // tidy the fixed spots: stand-clear cells for NPCs, chests, spawns
   for (const [x, y] of [[26, 18], [29, 17], [29, 6], [27, 5], [31, 5], [29, 4], [29, 5], [28, 46], [29, 46], [28, 47], [29, 47],
     [4, 17], [49, 9], [44, 42], [11, 8], [25, 42], [27, 19], [30, 19]]) if (T.get(x, y) !== '.') T.set(x, y, '.');

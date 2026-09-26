@@ -105,20 +105,21 @@
   E.sand_tomb_3_fine = {
     meta: { needs: [], gives: ['flag:desert_fine'], calls: ['story_fine_desert'] },
     run: async (ev) => {
-      if (ev.flag('desert_fine') || ev.flag('desert_boss')) return;
+      if (ev.flag('desert_boss')) return;
       const f = ev.npc('fine');
+      const again = ev.flag('desert_fine');
       if (R.DB.events.story_fine_desert) {
         await ev.call('story_fine_desert');
       } else {
         f.face('player');
         await ev.wait(12);
-        await ev.say(FINE_LINE);
+        if (!again) await ev.say(FINE_LINE);
         const t = ev.tier();
         if (t >= 6) await ev.say('……もう、あまり時間がないの。');
         else if (t >= 3) await ev.say('わたしのことは気にしないで。\n先へ進みなさい。');
         else await ev.say('……気をつけて。');
         ev.closeMessage();
-        if (t >= 3) await ev.caption('フィーネの足元が、\n透けて見えた。');
+        if (t >= 3 && !again) await ev.caption('フィーネの足元が、\n透けて見えた。');
         ev.sfx('magic');
         await ev.flash('#e8ecff', 10);
       }
@@ -131,7 +132,7 @@
   E.sand_tomb_3_boss = {
     meta: {
       needs: ['var:' + LETTERS + '>=3'],
-      gives: ['flag:desert_boss', 'region:' + REGION],
+      gives: ['flag:desert_boss', 'region:' + REGION, 'item:k_page_desert'],
       warp: { to: 'kasim', spawn: 'inn' },
       calls: ['story_after_clear'],
     },
