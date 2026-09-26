@@ -95,29 +95,42 @@
   }, { outline: 0x0a1608, sx: 1, sy: 1, shadowK: 0.6 });
 
   const ICE = [0x2c5480, 0x4878a8, 0x6c9cc8, 0x94c0e0, 0xbcdcf0, 0xe8f6ff];
+  // on a pale floor (the ice caves, snow, marble) the block is drawn in deep glacier blue with
+  // a dark rim, so it reads as a wall standing on the ice and not as more ice floor (R3)
+  const ICE_DEEP = [0x0e2446, 0x1a3e6c, 0x2a5c96, 0x4280bc, 0x72acdc, 0xd4eeff];
+  const paleFloor = (fl) => {
+    let lum = 0;
+    for (let i = 0; i < 256; i++) { const c = fl.p[i]; lum += ((c >> 16) & 255) * 0.3 + ((c >> 8) & 255) * 0.59 + (c & 255) * 0.11; }
+    return lum / 256 > 150;
+  };
   /** a block of blue-white ice filling the passage; bubbles and light streaks inside */
-  OBJ.ice_wall = (fl, ctx) => tk().stamp(fl, (L) => {
-    const t = tk();
-    ctx = ctx || {};
-    // joined blocks fill the corridor edge to edge; a free side rounds off
-    const lx = ctx.l ? -1 : 0, rx = ctx.r ? 17 : 16;
-    const pts = ctx.u ? [[lx, 15.5], [lx, -1], [rx, -1], [rx, 15.5]]
-      : [[lx, 15.5], [lx, ctx.l ? 2 : 4], [ctx.l ? 0 : 2, 1], [6, 0], [10, 0.5], [ctx.r ? 16 : 14, ctx.r ? 1 : 2], [rx, ctx.r ? 2 : 5], [rx, 15.5]];
-    L.poly(pts, ICE[3]);
-    L.each((x, y) => {
-      const facet = (x * 0.8 - y * 0.5 + 20) % 7;
-      let c = x < 5 ? ICE[4] : x > 11 ? ICE[2] : ICE[3];
-      if (facet < 1) c = ICE[5];
-      if (y > 12) c = t.mix(c, ICE[1], 0.35);
-      return c;
-    });
-    // streaks of light and trapped bubbles
-    L.line(3, 3, 6, 10, ICE[5]); L.line(4, 3, 7, 10, ICE[4]); L.line(10, 2, 12, 7, ICE[5]);
-    for (const [x, y] of [[8, 9], [11, 11], [5, 13], [9, 5]]) { L.set(x, y, 0xffffff); L.set(x + 1, y + 1, ICE[2]); }
-    // cracks
-    L.line(7, 12, 10, 15, ICE[1]); L.line(12, 4, 14, 8, ICE[1]);
-    if (!ctx.d) L.hline(ctx.l ? 0 : 1, ctx.r ? 15 : 14, 15, ICE[1]);
-  }, { outline: 0x1c3450, sx: 1, sy: 1, shadowK: 0.7 });
+  OBJ.ice_wall = (fl, ctx) => {
+    const pale = paleFloor(fl), I = pale ? ICE_DEEP : ICE;
+    return tk().stamp(fl, (L) => {
+      const t = tk();
+      ctx = ctx || {};
+      // joined blocks fill the corridor edge to edge; a free side rounds off
+      const lx = ctx.l ? -1 : 0, rx = ctx.r ? 17 : 16;
+      const pts = ctx.u ? [[lx, 15.5], [lx, -1], [rx, -1], [rx, 15.5]]
+        : [[lx, 15.5], [lx, ctx.l ? 2 : 4], [ctx.l ? 0 : 2, 1], [6, 0], [10, 0.5], [ctx.r ? 16 : 14, ctx.r ? 1 : 2], [rx, ctx.r ? 2 : 5], [rx, 15.5]];
+      L.poly(pts, I[3]);
+      L.each((x, y) => {
+        const facet = (x * 0.8 - y * 0.5 + 20) % 7;
+        let c = x < 5 ? I[4] : x > 11 ? I[2] : I[3];
+        if (facet < 1) c = I[5];
+        if (y > 12) c = t.mix(c, I[1], pale ? 0.55 : 0.35);
+        return c;
+      });
+      // a frosted top face where nothing is stacked above (the block has height)
+      if (pale && !ctx.u) L.each((x, y, c) => (c !== t.NONE && y <= 3 && L.get(x, y - 1) === t.NONE ? 0xe8f6ff : c));
+      // streaks of light and trapped bubbles
+      L.line(3, 3, 6, 10, I[5]); L.line(4, 3, 7, 10, I[4]); L.line(10, 2, 12, 7, I[5]);
+      for (const [x, y] of [[8, 9], [11, 11], [5, 13], [9, 5]]) { L.set(x, y, 0xffffff); L.set(x + 1, y + 1, I[2]); }
+      // cracks
+      L.line(7, 12, 10, 15, I[1]); L.line(12, 4, 14, 8, I[1]);
+      if (!ctx.d) L.hline(ctx.l ? 0 : 1, ctx.r ? 15 : 14, 15, I[pale ? 0 : 1]);
+    }, { outline: pale ? 0x08162c : 0x1c3450, sx: 1, sy: 1, shadowK: pale ? 0.55 : 0.7 });
+  };
 
   /** a bank of thick white fog; dithered so the floor shows through, it drifts (2 frames) */
   OBJ.fog_wall = (fl, ctx) => {

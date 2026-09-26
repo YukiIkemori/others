@@ -42,10 +42,10 @@
 | `v_fine_lighthouse_01` | lighthouse_3_fine (events/prologue_lighthouse.js:82) | 言葉を失った灯は、<br>言葉で取り戻すの。 | 18 | 3 | ✓ |
 | `v_fine_lighthouse_02` | lighthouse_3_fine (events/prologue_lighthouse.js:83) | ……あなたなら、できるわ。 | 13 | 2.6 | ✓ |
 | `v_fine_forest_01` | elder_tree_2_fine (events/region1_forest.js:281) | この根の奥に、伝承の核があるわ。<br>……根を食べているものがいる。 | 31 | 5.2 | ✓ |
-| `v_fine_snow_01` | frost_peak_3_fine (events/region3_frost_peak.js:79) | 凍っているのは、竜の体じゃない。<br>心のほうよ。 | 22 | 3.8 | ✓ |
-| `v_fine_marsh_01` | bell_marsh_1_fine (events/region4_dungeons.js:157) | 霧は形を持たないから、<br>誰の姿にでもなれるの。 | 22 | 3.6 | ✓ |
-| `v_fine_isles_01` | fineFallback (events/region5_isles.js:303) | 待っている人がいる限り、<br>物語は終わらない。 | 21 | 3.4 | ✓ |
-| `v_fine_ash_01` | ash_volcano_3_fine (events/region7_volcano.js:108) | 燃え尽きることと、<br>忘れられることは、違うわ。 | 22 | 3.6 | ✓ |
+| `v_fine_snow_01` | frost_peak_3_fine (events/region3_frost_peak.js:84) | 凍っているのは、竜の体じゃない。<br>心のほうよ。 | 22 | 3.8 | ✓ |
+| `v_fine_marsh_01` | bell_marsh_1_fine (events/region4_dungeons.js:158) | 霧は形を持たないから、<br>誰の姿にでもなれるの。 | 22 | 3.6 | ✓ |
+| `v_fine_isles_01` | fineFallback (events/region5_isles.js:304) | 待っている人がいる限り、<br>物語は終わらない。 | 21 | 3.4 | ✓ |
+| `v_fine_ash_01` | ash_volcano_3_fine (events/region7_volcano.js:109) | 燃え尽きることと、<br>忘れられることは、違うわ。 | 22 | 3.6 | ✓ |
 | `v_fine_t1_01` | t1 (events/story.js:66) | 一つ目……。<br>あと、七つね。 | 13 | 2.8 | ✓ |
 | `v_fine_t1_02` | t1 (events/story.js:67) | わたし？　ただの、<br>通りすがりよ。 | 16 | 2.9 | ✓ |
 | `v_fine_t3_01` | t3 (events/story.js:107) | 三つ目。よくやったわ。 | 11 | 2.3 | ✓ |
@@ -64,8 +64,8 @@
 | `v_fine_shades_01` | archive_4_boss (events/final_archive.js:136) | 三百年前、東の大陸で魔王を<br>討った勇者たちの影……。 | 25 | 4.2 | ✓ |
 | `v_fine_shades_02` | archive_4_boss (events/final_archive.js:137) | 名は忘れられても、物語は<br>残っていたのね。 | 20 | 3.3 | ✓ |
 | `v_fine_naming_01` | naming (events/final_archive.js:250) | わたしの最後の光を、<br>あなたたちに。 | 17 | 2.9 | ✓ |
-| `v_fine_ending_01` | voidHall (systems/ending.js:289) | わたしも、物語に還る時間。 | 13 | 2.4 | ✓ |
-| `v_fine_ending_02` | voidHall (systems/ending.js:290) | ……語り継いでね。<br>わたしのことも、<br>あなたの旅のことも。 | 27 | 4.7 | ✓ |
+| `v_fine_ending_01` | voidHall (systems/ending.js:296) | わたしも、物語に還る時間。 | 13 | 2.4 | ✓ |
+| `v_fine_ending_02` | voidHall (systems/ending.js:297) | ……語り継いでね。<br>わたしのことも、<br>あなたの旅のことも。 | 27 | 4.7 | ✓ |
 | `v_fine_oblivion_01` | oblivion_5_ouroboros (events/oblivion.js:154) | ここは、終わらない物語が<br>沈む場所。 | 17 | 2.9 | ✓ |
 | `v_fine_oblivion_02` | oblivion_5_ouroboros (events/oblivion.js:155) | その竜は物語の終わりを食べて、<br>同じ話を永遠にくり返させるの。 | 30 | 4.6 | ✓ |
 
@@ -107,7 +107,7 @@
 | `v_rowell_seal_02` | archive_3_rowell (events/final_archive.js:89) | 「白き書の扉よ、<br>名を持つ者のために開け」 | 18 | 2.8 | ✓ |
 | `v_rowell_seal_03` | archive_3_rowell (events/final_archive.js:103) | 院長の書記たちか……。 | 11 | 2.3 | ✓ |
 | `v_rowell_seal_04` | archive_3_rowell (events/final_archive.js:104) | ここは、おれが引き受ける。<br>行け、語り部！ | 20 | 3.5 | ✓ |
-| `v_rowell_ending_01` | archiveGate (systems/ending.js:313) | 帰りましょう、院長。<br>……ミラさんの話を、<br>聞かせてください。 | 29 | 5 | ✓ |
+| `v_rowell_ending_01` | archiveGate (systems/ending.js:320) | 帰りましょう、院長。<br>……ミラさんの話を、<br>聞かせてください。 | 29 | 5 | ✓ |
 
 ## ベルナ（師匠）　`berna`
 
@@ -126,9 +126,9 @@
 | `v_berna_roa_02` | story_final_roa (events/final_roa.js:86) | おかえり。……よく、<br>ここまで書いたね。 | 19 | 3.6 | ✓ |
 | `v_berna_roa_03` | story_final_roa (events/final_roa.js:89) | 始まりの年代記は、<br>ビブリアの大書庫の頂にある。<br>わたしの師匠が、<br>そう言っていた。 | 39 | 6.1 | ✓ |
 | `v_berna_roa_04` | story_final_roa (events/final_roa.js:103) | これを持ってお行き。<br>わたしが若いころ、師匠から<br>もらった首飾りだよ。 | 33 | 5.3 | ✓ |
-| `v_berna_ending_01` | roaTale (systems/ending.js:349) | これは、ある語り部の物語。 | 13 | 2.4 | ✓ |
-| `v_berna_ending_02` | roaTale (systems/ending.js:359) | あるとも。三人の勇者が、<br>魔王を倒したお話がね。 | 23 | 3.9 | ✓ |
-| `v_berna_ending_03` | someDaysLater (systems/ending.js:374) | それは、また別のお話。 | 11 | 2.1 | ✓ |
+| `v_berna_ending_01` | roaTale (systems/ending.js:356) | これは、ある語り部の物語。 | 13 | 2.4 | ✓ |
+| `v_berna_ending_02` | roaTale (systems/ending.js:366) | あるとも。三人の勇者が、<br>魔王を倒したお話がね。 | 23 | 3.9 | ✓ |
+| `v_berna_ending_03` | someDaysLater (systems/ending.js:381) | それは、また別のお話。 | 11 | 2.1 | ✓ |
 
 ## ラザロ（大書記）　`lazaro`
 
@@ -141,7 +141,7 @@
 | `v_lazaro_archive_05` | archive_5_lazaro (events/final_archive.js:174) | それが救いなのですよ。<br>……それでも、あなたは<br>書くのですね。 | 29 | 5 | ✓ |
 | `v_lazaro_archive_06` | archive_5_lazaro (events/final_archive.js:175) | ならば、その筆を<br>折らせていただきましょう。 | 21 | 3.4 | ✓ |
 | `v_lazaro_archive_07` | archive_5_lazaro (events/final_archive.js:179) | ……なぜだ。忘れたはずの<br>あの子の笑顔が……<br>今になって……。 | 29 | 5.4 | ✓ |
-| `v_lazaro_ending_01` | archiveGate (systems/ending.js:309) | ……ミラ。<br>ああ、ミラ……。 | 13 | 3.1 | ✓ |
+| `v_lazaro_ending_01` | archiveGate (systems/ending.js:316) | ……ミラ。<br>ああ、ミラ……。 | 13 | 3.1 | ✓ |
 
 ## 虚ろの王（ラスボス）　`king`
 
@@ -158,8 +158,8 @@
 
 | id | 場面 | 台詞 | 字 | 秒 | 済 |
 |---|---|---|---:|---:|:-:|
-| `v_nemrea_ending_01` | voidHall (systems/ending.js:270) | 名を……呼ばれたのは……<br>はじめてだ……。 | 20 | 4 | ✓ |
-| `v_nemrea_ending_02` | voidHall (systems/ending.js:271) | ……ああ……<br>眠い……。 | 11 | 2.8 | ✓ |
+| `v_nemrea_ending_01` | voidHall (systems/ending.js:277) | 名を……呼ばれたのは……<br>はじめてだ……。 | 20 | 4 | ✓ |
+| `v_nemrea_ending_02` | voidHall (systems/ending.js:278) | ……ああ……<br>眠い……。 | 11 | 2.8 | ✓ |
 
 ## ノア　`noa`
 
@@ -171,7 +171,7 @@
 | `v_noa_biblia_04` | biblia_arrival (events/final_biblia.js:60) | 院長さまのお嬢さん……<br>ミラは、わたしの友だちだった。<br>二十年前の戦争で……。 | 37 | 6.3 | ✓ |
 | `v_noa_biblia_05` | biblia_noa (events/final_biblia.js:111) | 院長さまに……会ったの？<br>……そう。ミラのことを、<br>思い出してくれたのね。 | 35 | 6.2 | ✓ |
 | `v_noa_biblia_06` | biblia_noa (events/final_biblia.js:113) | ミラはね、歌が好きな子だった。<br>「名前は、呼ばれるために<br>あるのよ」って、よく言ってたわ。 | 41 | 6.4 | ✓ |
-| `v_noa_ending_01` | bibliaMorning (systems/ending.js:333) | ミラ。あなたの歌、<br>みんなに届いたよ。 | 18 | 3.3 | ✓ |
+| `v_noa_ending_01` | bibliaMorning (systems/ending.js:340) | ミラ。あなたの歌、<br>みんなに届いたよ。 | 18 | 3.3 | ✓ |
 
 ## ヴァルザード（魔王の残影）　`valzard`
 
@@ -196,24 +196,24 @@
 
 | id | 場面 | 台詞 | 字 | 秒 | 済 |
 |---|---|---|---:|---:|:-:|
-| `v_hazal_tomb_01` | sand_tomb_3_boss (events/region2_tomb.js:143) | ……わが名を……<br>わが名を、返せ……！ | 18 | 3.7 | ✓ |
-| `v_hazal_tomb_02` | sand_tomb_3_boss (events/region2_tomb.js:153) | ……わが名を……だれか……。 | 14 | 3.2 | ✓ |
-| `v_hazal_tomb_03` | sand_tomb_3_boss (events/region2_tomb.js:161) | ハザル……そうだ、<br>それがわたしの名だ。 | 19 | 3.4 | ✓ |
-| `v_hazal_tomb_04` | sand_tomb_3_boss (events/region2_tomb.js:162) | 民は、約束を覚えていて<br>くれたのだな……。 | 20 | 3.5 | ✓ |
+| `v_hazal_tomb_01` | sand_tomb_3_boss (events/region2_tomb.js:146) | ……わが名を……<br>わが名を、返せ……！ | 18 | 3.7 | ✓ |
+| `v_hazal_tomb_02` | sand_tomb_3_boss (events/region2_tomb.js:156) | ……わが名を……だれか……。 | 14 | 3.2 | ✓ |
+| `v_hazal_tomb_03` | sand_tomb_3_boss (events/region2_tomb.js:164) | ハザル……そうだ、<br>それがわたしの名だ。 | 19 | 3.4 | ✓ |
+| `v_hazal_tomb_04` | sand_tomb_3_boss (events/region2_tomb.js:165) | 民は、約束を覚えていて<br>くれたのだな……。 | 20 | 3.5 | ✓ |
 
 ## 氷の巨人　`giant`
 
 | id | 場面 | 台詞 | 字 | 秒 | 済 |
 |---|---|---|---:|---:|:-:|
-| `v_giant_peak_01` | frost_peak_2_boss (events/region3_frost_peak.js:51) | ……ここより上へは、<br>誰も通さぬ……。 | 18 | 3.5 | ✓ |
+| `v_giant_peak_01` | frost_peak_2_boss (events/region3_frost_peak.js:54) | ……ここより上へは、<br>誰も通さぬ……。 | 18 | 3.5 | ✓ |
 
 ## 白竜ネーヴェ　`neve`
 
 | id | 場面 | 台詞 | 字 | 秒 | 済 |
 |---|---|---|---:|---:|:-:|
-| `v_neve_peak_01` | frost_peak_3_boss (events/region3_frost_peak.js:106) | ……去れ……人の子よ……。<br>この峰に、もはや<br>語るべき物語はない……！ | 33 | 6.2 | ✓ |
-| `v_neve_peak_02` | frost_peak_3_boss (events/region3_frost_peak.js:121) | ……あたたかい。人の子らは、<br>わたしを忘れてはいなかったのか。 | 30 | 5.1 | ✓ |
-| `v_neve_peak_03` | frost_peak_3_boss (events/region3_frost_peak.js:122) | 吹雪は、わたしが鎮めよう。語り部よ、<br>礼を言う。 | 23 | 3.9 | ✓ |
+| `v_neve_peak_01` | frost_peak_3_boss (events/region3_frost_peak.js:111) | ……去れ……人の子よ……。<br>この峰に、もはや<br>語るべき物語はない……！ | 33 | 6.2 | ✓ |
+| `v_neve_peak_02` | frost_peak_3_boss (events/region3_frost_peak.js:126) | ……あたたかい。人の子らは、<br>わたしを忘れてはいなかったのか。 | 30 | 5.1 | ✓ |
+| `v_neve_peak_03` | frost_peak_3_boss (events/region3_frost_peak.js:127) | 吹雪は、わたしが鎮めよう。語り部よ、<br>礼を言う。 | 23 | 3.9 | ✓ |
 
 ## メルダ（霧の館の魔女）　`melda`
 
@@ -224,13 +224,13 @@
 | `v_melda_manor_03` | mist_manor_2_melda (events/region4_dungeons.js:84) | 昔、沼の霧から魔物が<br>あふれたとき、わたしは<br>七つの鐘を沈めて、<br>鐘の音で霧を封じたの。 | 41 | 6.1 | ✓ |
 | `v_melda_manor_04` | mist_manor_2_melda (events/region4_dungeons.js:85) | でも、町の人たちが<br>鐘の歌を忘れて、<br>鐘は鳴らなくなった……。 | 29 | 4.8 | ✓ |
 | `v_melda_manor_05` | mist_manor_2_melda (events/region4_dungeons.js:86) | 沼の鐘を鳴らして。これは鐘の鍵。そして、<br>これが鐘の歌よ。 | 28 | 4.8 | ✓ |
-| `v_melda_marsh_01` | bell_marsh_1_boss (events/region4_dungeons.js:208) | ありがとう、語り部さん。これでまた、<br>町の朝に鐘が鳴るわ。 | 28 | 4.6 | ✓ |
+| `v_melda_marsh_01` | bell_marsh_1_boss (events/region4_dungeons.js:209) | ありがとう、語り部さん。これでまた、<br>町の朝に鐘が鳴るわ。 | 28 | 4.6 | ✓ |
 
 ## 霧食らい（魔女の姿）　`mistwitch`
 
 | id | 場面 | 台詞 | 字 | 秒 | 済 |
 |---|---|---|---:|---:|:-:|
-| `v_mistwitch_marsh_01` | bell_marsh_1_boss (events/region4_dungeons.js:187) | ……オイデ……コドモタチ……<br>ワスレラレタ……<br>カネノ……ウタ……。 | 32 | 6.3 | ✓ |
+| `v_mistwitch_marsh_01` | bell_marsh_1_boss (events/region4_dungeons.js:188) | ……オイデ……コドモタチ……<br>ワスレラレタ……<br>カネノ……ウタ……。 | 32 | 6.3 | ✓ |
 
 ## マリナ　`marina`
 
@@ -238,29 +238,29 @@
 |---|---|---|---:|---:|:-:|
 | `v_marina_nerei_01` | nerei_marina_song (events/region5_isles.js:138) | ……ああ、この歌だよ。 | 11 | 2.3 | ✓ |
 | `v_marina_pier_01` | nerei_marina_song (events/region5_isles.js:171) | あの人の船だ……。 | 9 | 2.1 | ✓ |
-| `v_marina_dawn_01` | ghost_ship_3_boss (events/region5_isles.js:369) | おかえりなさい、グレン。 | 12 | 2.2 | ✓ |
-| `v_marina_dawn_02` | ghost_ship_3_boss (events/region5_isles.js:386) | ……ありがとう。<br>あの人は、やっと帰ってきた。 | 22 | 4 | ✓ |
+| `v_marina_dawn_01` | ghost_ship_3_boss (events/region5_isles.js:370) | おかえりなさい、グレン。 | 12 | 2.2 | ✓ |
+| `v_marina_dawn_02` | ghost_ship_3_boss (events/region5_isles.js:387) | ……ありがとう。<br>あの人は、やっと帰ってきた。 | 22 | 4 | ✓ |
 
 ## グレン船長　`glen`
 
 | id | 場面 | 台詞 | 字 | 秒 | 済 |
 |---|---|---|---:|---:|:-:|
-| `v_glen_ship_01` | ghost_ship_3_boss (events/region5_isles.js:332) | ♪　霧の海でも……迷い……<br>……続きが、出てこない……。 | 27 | 4.9 | ✓ |
-| `v_glen_ship_02` | ghost_ship_3_boss (events/region5_isles.js:333) | おれは……どこへ帰るんだった？<br>誰が、待っていた……？<br>思い出せない……思い出せない！ | 41 | 7.2 | ✓ |
-| `v_glen_ship_03` | ghost_ship_3_boss (events/region5_isles.js:351) | ……マリナ。そうだ、<br>おれは帰ると約束したんだ。 | 23 | 4.2 | ✓ |
-| `v_glen_ship_04` | ghost_ship_3_boss (events/region5_isles.js:352) | 岬の灯は、あいつだったのか。<br>六十年も、待たせちまったな。<br>……帰ろう。 | 34 | 5.9 | ✓ |
-| `v_glen_dawn_01` | ghost_ship_3_boss (events/region5_isles.js:371) | ただいま、マリナ。 | 9 | 1.8 | ✓ |
+| `v_glen_ship_01` | ghost_ship_3_boss (events/region5_isles.js:333) | ♪　霧の海でも……迷い……<br>……続きが、出てこない……。 | 27 | 4.9 | ✓ |
+| `v_glen_ship_02` | ghost_ship_3_boss (events/region5_isles.js:334) | おれは……どこへ帰るんだった？<br>誰が、待っていた……？<br>思い出せない……思い出せない！ | 41 | 7.2 | ✓ |
+| `v_glen_ship_03` | ghost_ship_3_boss (events/region5_isles.js:352) | ……マリナ。そうだ、<br>おれは帰ると約束したんだ。 | 23 | 4.2 | ✓ |
+| `v_glen_ship_04` | ghost_ship_3_boss (events/region5_isles.js:353) | 岬の灯は、あいつだったのか。<br>六十年も、待たせちまったな。<br>……帰ろう。 | 34 | 5.9 | ✓ |
+| `v_glen_dawn_01` | ghost_ship_3_boss (events/region5_isles.js:372) | ただいま、マリナ。 | 9 | 1.8 | ✓ |
 
 ## 鉄の番人　`guardian`
 
 | id | 場面 | 台詞 | 字 | 秒 | 済 |
 |---|---|---|---:|---:|:-:|
-| `v_guardian_mine_01` | deep_mine_3_boss (events/region6_mine.js:177) | ……誓いを忘れた者よ。<br>七の層より下を掘った者よ。 | 24 | 4.3 | ✓ |
-| `v_guardian_mine_02` | deep_mine_3_boss (events/region6_mine.js:178) | 鍛冶神との約束により、<br>われは、この山を守る。<br>去らぬなら、打ち砕くのみ。 | 35 | 5.6 | ✓ |
-| `v_guardian_mine_03` | deep_mine_3_boss (events/region6_mine.js:190) | ……誓いは、まだ生きていたか。ならば、<br>われは眠ろう。 | 26 | 4.6 | ✓ |
+| `v_guardian_mine_01` | deep_mine_3_boss (events/region6_mine.js:188) | ……誓いを忘れた者よ。<br>七の層より下を掘った者よ。 | 24 | 4.3 | ✓ |
+| `v_guardian_mine_02` | deep_mine_3_boss (events/region6_mine.js:189) | 鍛冶神との約束により、<br>われは、この山を守る。<br>去らぬなら、打ち砕くのみ。 | 35 | 5.6 | ✓ |
+| `v_guardian_mine_03` | deep_mine_3_boss (events/region6_mine.js:201) | ……誓いは、まだ生きていたか。ならば、<br>われは眠ろう。 | 26 | 4.6 | ✓ |
 
 ## 天球の番人　`sentinel`
 
 | id | 場面 | 台詞 | 字 | 秒 | 済 |
 |---|---|---|---:|---:|:-:|
-| `v_sentinel_star_01` | stargaze_3_boss (events/region8_star.js:152) | ……タチイリ、キンシ。<br>ホシノナヲ、モタヌモノハ、<br>トオサナイ……。 | 32 | 5.6 | ✓ |
+| `v_sentinel_star_01` | stargaze_3_boss (events/region8_star.js:168) | ……タチイリ、キンシ。<br>ホシノナヲ、モタヌモノハ、<br>トオサナイ……。 | 32 | 5.6 | ✓ |

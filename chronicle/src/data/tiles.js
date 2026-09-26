@@ -133,6 +133,8 @@
     story_stone_blank: { name: '白紙の語り石', pass: false },
     bog:               { name: '深い沼', pass: false, anim: 4 },
     mud:               { name: 'ぬかるみ', pass: true },
+    // 流砂 (region 2, sand_tomb_2 tilePatch while the mid-boss lives; R2.1): impassable, animated
+    quicksand:         { name: '流砂', pass: false, anim: 2, closed: true },
     // --- secret passage (DESIGN §3.3.10-11, §10.6.4): looks like the theme wall
     secret_wall:       { name: '隠し通路', pass: true, themed: true, secret: true },
   });
@@ -218,6 +220,7 @@
     mine:     { name: '坑道',   bbg: 'mine',     fallback: 'cave' },
     library:  { name: '書庫',   bbg: 'library',  fallback: 'castle' },
     oblivion: { name: '忘却',   bbg: 'oblivion', fallback: 'demon' },
+    rooftop:  { name: '屋上',   bbg: 'tower',    fallback: 'tower' }, // open-air roof under the night sky (R8.2)
     // towns (DESIGN §11.2.6)
     town_roa:    { name: '語り部の里', bbg: 'grass', fallback: 'town', town: true },
     town_forest: { name: '森の村',     bbg: 'grass', fallback: 'town', town: true },

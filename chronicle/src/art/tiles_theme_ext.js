@@ -205,7 +205,34 @@
 
   // ------------------------------------------------------------ wall faces
   const TRUNK = [0x1c1008, 0x2e1c0e, 0x442c18, 0x5a3c22, 0x74502e];
+  // the night sky over the roof observatory (rooftop theme)
+  const SKY = [0x060a1e, 0x0a1230, 0x101a40, 0x1a2854, 0x2a3c70];
   const FACE = {
+    /** open-air roof (R8.2): night sky with stars above a low crenellated parapet */
+    parapet(t, P, x) {
+      const b = t.tile();
+      const s = (x | 0) * 5;
+      for (let y = 0; y < 16; y++) for (let i = 0; i < 16; i++) {
+        if (y < 7) b.set(i, y, y < 3 ? SKY[0] : y < 5 ? SKY[1] : SKY[2]);
+        else {
+          // coping row, then two courses of blocks
+          const ry = y - 7, row = ry < 2 ? -1 : (ry - 2) >> 2, by = (ry - 2) & 3;
+          const bx = (i + (row & 1 ? 4 : 0)) % 8;
+          let c = P[2];
+          if (ry === 0) c = P[4];
+          else if (ry === 1) c = P[1];
+          else if (by === 3 || bx === 7) c = P[0];
+          else if (by === 0 || bx === 0) c = P[3];
+          b.set(i, y, c);
+        }
+      }
+      // merlons: every other half-cell rises into the sky
+      for (let i = 0; i < 16; i++) if (((i >> 2) & 1) === 0) {
+        b.set(i, 5, i % 4 === 3 ? P[1] : P[4]); b.set(i, 6, i % 4 === 3 ? P[0] : P[2]);
+      }
+      for (const [i, y] of [[2, 1], [11, 3], [7, 0], [14, 1], [5, 3]]) if (t.hash(i + s, y, 721) < 0.6) b.set(i, y, t.hash(i, y + s, 723) < 0.3 ? 0xffffff : 0xa8b8f0);
+      return b;
+    },
     /** forest wall: canopy fringe over a row of trunks, dark wood depth between */
     canopy(t, P, x) {
       const b = t.tile(P[0]);
@@ -405,6 +432,7 @@
 
   // custom caps: the lit top strip of a thin wall whose upper neighbour is floor
   const CAPS = {
+    parapet() {},
     canopy(b, P, t) { for (let x = 0; x < 16; x++) { if (b.get(x, 0) !== t.NONE) b.set(x, 0, t.shade(P[5], 0.1)); if (x % 3 === 1) b.set(x, 1, P[5]); } },
     reeds(b, P, t) { for (let x = 0; x < 16; x += 2) b.set(x, Math.max(0, 16 - 16), P[5]); },
     void(b, P, t) {
@@ -430,6 +458,20 @@
 
   // ------------------------------------------------------------ wall tops
   const TOP = {
+    /** beyond the parapet: open night sky with stars (seen over the roof's edge) */
+    sky(t) {
+      const b = t.tex(16, 16, (x, y) => {
+        const v = t.fnoise(x, y, 8, 16, 731);
+        return v > 0.72 ? SKY[2] : v > 0.45 ? SKY[1] : SKY[0];
+      });
+      for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+        const h = t.hash(x, y, 733);
+        if (h < 0.009) b.set(x, y, 0xffffff);
+        else if (h < 0.024) b.set(x, y, 0x7a8ac8);
+        else if (h < 0.034) b.set(x, y, 0x3a4a88);
+      }
+      return b;
+    },
     /** a dense leaf canopy seen from above */
     canopy(t, P) {
       const b = t.tile(P[1]);
@@ -446,18 +488,27 @@
         const r = d % 3;
         b.p[y * 16 + x] = r < 0.8 ? P[1] : r < 2 ? P[3] : P[2];
       }
+      // moss and lichen in patches over the old wood (the living mass above, not the root floor)
+      for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+        const m = t.fnoise(x, y, 8, 16, 563);
+        if (m > 0.78) b.p[y * 16 + x] = (x + y) % 3 ? 0x2e3c18 : 0x405222;
+        else if (m > 0.72 && (x + y) % 2) b.p[y * 16 + x] = 0x243014;
+      }
       return b;
     },
     /** snow-capped rock seen from above */
     snowcap(t, P) {
-      // a crust of snow over the rock, a step darker and lumpier than the open snow
-      // underfoot so the raised masses read as walls (not as more walkable snow)
+      // grey-blue rock breaking through drifts of snow: the drifts are shaded blue on their
+      // lower-right and only their crests are white, and the rock shows in broad patches,
+      // so the raised masses read as crags (not as more walkable snowfield) (R3)
       const b = t.tex(16, 16, (x, y) => {
         const v = t.fnoise(x, y, 8, 16, 571) * 0.6 + t.fnoise(x, y, 4, 16, 573) * 0.4;
-        if (v < 0.22) return (x + y) % 2 ? P[2] : P[1];
-        if (v < 0.32) return 0xa8b4c4;
-        if (v < 0.5) return 0xc2ccd8;
-        return v > 0.72 ? 0xf2f6fa : 0xd8e0e8;
+        const up = t.fnoise(x - 1, y - 1, 8, 16, 571) * 0.6 + t.fnoise(x - 1, y - 1, 4, 16, 573) * 0.4;
+        if (v < 0.3) return v < 0.18 ? P[1] : (x + y) % 2 ? P[2] : P[1];
+        if (v < 0.36) return up < v ? P[3] : P[2];
+        if (v < 0.46) return up > v ? 0x8e9cb2 : 0xa4b0c2;
+        if (v < 0.62) return up > v ? 0xb2bece : 0xc8d2de;
+        return v > 0.74 ? 0xeef2f8 : 0xdae2ea;
       });
       return b;
     },
@@ -486,9 +537,26 @@
     /** nothing at all: ink void with a faint grey stir */
     void(t, P) { return t.tex(16, 16, (x, y) => (t.fnoise(x, y, 8, 16, 601) > 0.7 ? P[1] : P[0])); },
   };
-  const TOP_OF = { canopy: 'canopy', bark: 'rings', snowrock: 'snowcap', wallpaper: 'beam', reeds: 'reedtop', hull: 'rail', timber: 'rock', shelves: 'stone', void: 'void', logs: 'beam' };
+  const TOP_OF = { parapet: 'sky', canopy: 'canopy', bark: 'rings', snowrock: 'snowcap', wallpaper: 'beam', reeds: 'reedtop', hull: 'rail', timber: 'rock', shelves: 'stone', void: 'void', logs: 'beam' };
   // custom top edges (ragged instead of an ink line)
   const TOP_EDGE = {
+    // looking over the parapet: its coping runs along every side that meets the roof
+    sky(b, e, P, t) {
+      for (let i = 0; i < 16; i++) {
+        if (e.n) { b.set(i, 0, P[4]); b.set(i, 1, P[2]); b.set(i, 2, P[0]); }
+        if (e.w) { b.set(0, i, P[4]); b.set(1, i, P[2]); b.set(2, i, P[0]); }
+        if (e.e) { b.set(15, i, P[1]); b.set(14, i, P[3]); b.set(13, i, P[0]); }
+      }
+    },
+    // the crag's rim: dark rock where it drops to the snowfield, a white lip of snow above it
+    snowcap(b, e, P, t) {
+      for (let i = 0; i < 16; i++) {
+        const d = t.hash(i, 5, 615) < 0.4 ? 1 : 0;
+        if (e.n) { b.set(i, 0, P[0]); if (d) b.set(i, 1, P[1]); b.set(i, 1 + d, 0xf4f8fc); }
+        if (e.w) { b.set(0, i, P[0]); b.set(1, i, t.hash(0, i, 617) < 0.5 ? P[1] : 0xe8eef4); }
+        if (e.e) { b.set(15, i, P[0]); b.set(14, i, P[1]); }
+      }
+    },
     canopy(b, e, P, t) {
       const ink = P[0];
       for (let i = 0; i < 16; i++) {
@@ -640,13 +708,17 @@
   const TH = {
     // --- dungeons
     forest: { fl: [0x2a2a14, 0x3c3e1c, 0x4e5226, 0x626830, 0x7a803e], floor: 'moss', wl: [0x0e1a10, 0x162a16, 0x20381e, 0x2c4a26, 0x3c5e30, 0x587642], wall: 'canopy', door: 'wood', col: 'trunk', outdoor: true },
-    tree: { fl: [0x3a2616, 0x543822, 0x6c4a2e, 0x86603c, 0xa07a50], floor: 'roots', wl: [0x24160c, 0x3c2614, 0x543822, 0x6c4a2e, 0x86603c, 0xa07a50], wall: 'bark', door: 'wood', col: 'rootcol', torch: 'mushroom' },
+    tree: { fl: [0x3a2616, 0x543822, 0x6c4a2e, 0x86603c, 0xa07a50], floor: 'roots', wl: [0x24160c, 0x3c2614, 0x543822, 0x6c4a2e, 0x86603c, 0xa07a50],
+      // wall tops (end grain) two steps darker than the root floor so the mass never reads as floor (R1)
+      tp: [0x100804, 0x1e120a, 0x301e10, 0x422c18, 0x5a3e24], wall: 'bark', door: 'wood', col: 'rootcol', torch: 'mushroom' },
     snow: { fl: [0x8a94a8, 0xaab2c2, 0xcad0da, 0xe0e4ec, 0xf4f6fa], floor: 'snowfield', wl: [0x4a5264, 0x6a7488, 0x8a94a8, 0xaab2c2, 0xcad0da, 0xe8ecf0], wall: 'snowrock', door: 'ice', col: 'ice', outdoor: true },
     manor: { fl: [0x2c2020, 0x46302c, 0x5c403a, 0x74524a, 0x8c665c], floor: 'parquet', wl: [0x2a2432, 0x423a4c, 0x5a5066, 0x72687e, 0x8c8298], wall: 'wallpaper', door: 'wood', col: 'wood', torch: 'lantern' },
     swamp: { fl: [0x222618, 0x323620, 0x42482a, 0x545a34, 0x686e42], floor: 'peat', wl: [0x141a10, 0x1e2818, 0x2a3620, 0x384628, 0x485834, 0x5e6c44], wall: 'reeds', door: 'wood', col: 'deadtree', torch: 'wisp', outdoor: true },
     ship: { fl: [0x2a2018, 0x40302a, 0x564236, 0x6c5644, 0x846c58, 0x9c846c], floor: 'planks', wl: [0x1a1614, 0x2e2622, 0x443830, 0x5a4a3e, 0x72604e, 0x8a7864], wall: 'hull', door: 'wood', col: 'mast', torch: 'ghostlamp' },
     mine: { fl: [0x2e2620, 0x463a30, 0x5c4e40, 0x746452, 0x8c7c68], floor: 'dirt', wl: [0x201810, 0x3a2c20, 0x54402e, 0x6c5640, 0x866e54, 0xa08a6c], wall: 'timber', door: 'wood', col: 'wood', torch: 'lantern' },
     library: { fl: [0x7a7c88, 0xa0a2ae, 0xc4c6d0, 0xdcdee6, 0xf2f2f6], floor: 'marble', wl: [0x6c6e7c, 0x8e909e, 0xb0b2c0, 0xcacce0, 0xe6e8f4], wall: 'shelves', door: 'shrine', col: 'marble', torch: 'candle', band: 0x8c6414 },
+    // open-air roof of the star tower (R8.2): tower floor under the night sky, a low parapet
+    rooftop: { fl: [0x28243a, 0x464060, 0x625a80, 0x7e76a0, 0xa098c0], floor: 'diamond', wl: [0x242034, 0x443e5c, 0x645c80, 0x847ca2, 0xa8a0c4], wall: 'parapet', door: 'iron', col: 'marble', torch: 'lantern' },
     oblivion: { fl: [0x6a6a78, 0x9898a6, 0xc4c4cc, 0xe4e2dc, 0xf8f6ee], floor: 'paper', wl: [0x18181e, 0x2a2a34, 0x3e3e4a, 0x545462, 0x6c6c7a, 0x8a8a98], wall: 'void', door: 'demon', col: 'marble', torch: 'wisp' },
     // --- towns (outdoor; floor = street, wall = town walls & interior walls)
     town_roa: { fl: [0x4a3a24, 0x6a5434, 0x86704a, 0xa08a60, 0xb8a47a], floor: 'dirt', wl: [0x2c2a24, 0x4c4840, 0x6c665a, 0x8c8676, 0xaca694], wall: 'rubble', door: 'wood', col: 'wood', town: true, roof: [0x8a7040, 0xc8a860], roofKind: 'thatch', hw: 'timber', grassy: true },
@@ -675,6 +747,7 @@
     mine: [0x2a2220, 0x403634, 0x564a46, 0x6c5e58, 0x84766e],
     library: [0x6a6450, 0x908a70, 0xb4ac8e, 0xccc4a8, 0xe4dcc4],
     oblivion: [0x5c5c64, 0x86868e, 0xacacb2, 0xcacac8, 0xe0e0dc],
+    rooftop: [0x2c2c44, 0x464a6c, 0x62668c, 0x7e82aa, 0x9ca0c6],
     town_roa: [0x3e3a24, 0x5a5634, 0x76704a, 0x908a60, 0xaaa47a],
     town_forest: [0x3a2c1c, 0x523e28, 0x6a5236, 0x846a46, 0x9c845a],
     town_sand: [0x5c3c24, 0x845838, 0xa8744a, 0xc08e60, 0xd4a878],

@@ -9,7 +9,12 @@
 //   Q6  check_text.js: width, string extraction (comments skipped, ${…} dropped), spacing / ellipsis rules, STYLE_JA lists
 //   Q7  playthrough.js: the dry-run ev (unknown API calls reported, nested ev.call gives belong to the callee)
 //   Q8  shots.js / smoke.js: the shot list covers §11.12.2 #1–#22; --only parsing
-//   Q9  check_density.js: every town/house map is measured, rooms are found on each, walled streets are not rooms
+//   Q9  check_density.js: every town/house map is measured, rooms are found on each, walled streets are not rooms;
+//       --owner measures only that owner's maps
+//   Q10 validate CH12: the 23 rows are counted from src/data/rare_encounters.js; the §10.6.4 room zones are accepted
+//       at ⌈parent / 3⌉ with the parent's monster, and planted faults (tools/fixtures/qa/rare) are reported
+//   Q11 the QA sweep (validate --full / smoke sweep): check_battle and check_mons-base are in it; a failing tool
+//       fails validate (exit 1, check SWEEP)
 //   node tools/test_qa.js [--verbose]
 'use strict';
 const path = require('path');
@@ -307,6 +312,60 @@ function rng(seed) { let s = seed >>> 0; return () => { s ^= s << 13; s >>>= 0; 
       ok(!r.table.dovan.some((x) => x.size > 300 && x.doors >= 4), 'dovan: no street is measured as a room');
     }
     if (VERBOSE) console.log('     density:', r.findings.length, 'warning(s)');
+    // --owner: only that owner's maps are measured (the table, the rooms and the findings)
+    const owners = [...new Set(Object.values(r.ownerOf))];
+    for (const o of owners) {
+      const ro = CD.run({ R, owners: [o] });
+      const want = Object.keys(r.ownerOf).filter((id) => r.ownerOf[id] === o).sort();
+      eq(Object.keys(ro.table).sort(), want, `--owner ${o} measures only ${o}'s maps`);
+      ok(ro.findings.every((f) => f.owner === o), `--owner ${o}: every finding is ${o}'s`);
+    }
+    eq(Object.keys(CD.run({ R, owners: ['QA_NOBODY'] }).table), [], '--owner with no maps measures nothing');
+  }
+
+  // ------------------------------------------------------------------------------------------ Q10
+  section('Q10 validate CH12: rare encounter rows (§9.7.3, §10.6.4 rooms)');
+  {
+    const V = require('./validate');
+    const clean = V.run({ only: ['CH12'] }).rep.items;
+    eq(clean.filter((x) => x.level !== 'pending').map((x) => x.msg), [], 'the tree has no CH12 finding (23 rows from rare_encounters.js, rooms at ⌈base/3⌉)');
+    const { rep, L } = V.run({ only: ['CH12'], with: [path.join(ROOT, 'tools', 'fixtures', 'qa', 'rare')] });
+    const fromFile = Object.keys(L.R.DB.rareEncounters).filter((z) => L.prov.rareEncounters[z] === 'src/data/rare_encounters.js');
+    eq(fromFile.length, 23, 'src/data/rare_encounters.js registers the 23 rows');
+    const it = rep.items;
+    const has = (level, re, name) => ok(it.some((x) => x.level === level && x.check === 'CH12' && re.test(x.msg)), name);
+    has('error', /z_r_mine_den: rate 1\/40 ≠ ⌈80\/3⌉ = 1\/27/, 'a room zone whose rate is not ⌈parent/3⌉ is an error');
+    has('error', /z_r_marsh_teaparty: rm_prisma ≠ rm_ghost_teapot/, 'a room zone with another rare monster is an error');
+    has('warn', /beyond the 23 of §9\.7\.3 and the §10\.6\.4 rooms: zw_prologue_qa/, 'an unknown extra zone is still a warning');
+    ok(!it.some((x) => /z_postgame_oblivion_den/.test(x.msg)), 'an untouched room zone (z_postgame_oblivion_den) is accepted');
+    ok(!it.some((x) => /registers \d+ rare encounter row/.test(x.msg)), 'rows added by other files do not count toward the 23');
+    const mineDen = it.find((x) => /z_r_mine_den/.test(x.msg));
+    eq(mineDen && mineDen.owner, 'R6', 'the room-zone finding goes to the owner of the file that made the row (R6)');
+  }
+
+  // ------------------------------------------------------------------------------------------ Q11
+  section('Q11 the QA sweep (validate --full, smoke sweep)');
+  {
+    const V = require('./validate');
+    const tools = V.SWEEP.map((x) => x.tool);
+    ok(tools.includes('check_battle.js') && tools.includes('check_mons-base.js'), 'the sweep has check_battle (A2.4) and check_mons-base (A14b.3)');
+    eq(V.SWEEP.map((x) => x.owner), ['A2', 'A14b'], 'sweep owners');
+    const fs = require('fs'), os = require('os');
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'qa_sweep_'));
+    const bad = path.join(tmp, 'bad_tool.js'), good = path.join(tmp, 'good_tool.js');
+    fs.writeFileSync(bad, "console.log('qa: 2 error(s)'); process.exit(1);\n");
+    fs.writeFileSync(good, "console.log('qa: 0 error(s)');\n");
+    const f = V.sweepFindings([{ tool: bad, owner: 'A2', why: 'x', rc: 1, tail: 'qa: 2 error(s)' }, { tool: good, owner: 'A14b', why: 'y', rc: 0, tail: 'ok' }]);
+    ok(f.length === 1 && f[0].level === 'error' && f[0].check === 'SWEEP' && f[0].owner === 'A2', 'sweepFindings: exit ≠ 0 → one SWEEP error of that owner');
+    const { spawnSync } = require('child_process');
+    const run = (extra) => spawnSync(process.execPath, [path.join(__dirname, 'validate.js'), '--sweep-only', '--sweep-extra', extra], { encoding: 'utf8', timeout: 900000 });
+    const r1 = run(bad);
+    ok(r1.status === 1 && /ERROR \[SWEEP\]/.test(r1.stdout), 'validate --sweep-only with a failing tool exits 1 and reports it');
+    ok(/sweep (ok  |FAIL) tools\/check_battle\.js/.test(r1.stdout) && /sweep (ok  |FAIL) tools\/check_mons-base\.js/.test(r1.stdout), 'validate --sweep-only runs check_battle and check_mons-base');
+    const realOk = !/sweep FAIL tools\//.test(r1.stdout);
+    const r2 = run(good);
+    ok(r2.status === (realOk ? 0 : 1), `validate --sweep-only with a passing extra tool exits ${realOk ? 0 : 1} (the real tools ${realOk ? 'pass' : 'fail'})`);
+    fs.rmSync(tmp, { recursive: true, force: true });
   }
 
   console.log(`\ntest_qa: ${pass} passed, ${fail} failed — ${((Date.now() - t0) / 1000).toFixed(1)} s`);

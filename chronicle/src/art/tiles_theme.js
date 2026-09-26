@@ -863,7 +863,7 @@
   const SEAL_OF = {
     shrine: [0x1c3070, 0x4270c4, 0xa0c4f4, 0xffffff], castle: [0x5c3c08, 0xbc8c1c, 0xf8dc60, 0xfff4b0],
     library: [0x5c3c08, 0xbc8c1c, 0xf8dc60, 0xfff4b0], town_white: [0x5c3c08, 0xbc8c1c, 0xf8dc60, 0xfff4b0],
-    tower: 'stars', town_star: 'stars',
+    tower: 'stars', town_star: 'stars', rooftop: 'stars',
     oblivion: [0x101016, 0x545462, 0xe4e2dc, 0xffffff], demon: [0x3c0810, 0xa02030, 0xf07080, 0xffd0d8],
     tree: [0x1c4a3c, 0x3c9c84, 0xa8ece0, 0xffffff], manor: [0x2a1c34, 0x6c4c8c, 0xc8a8e8, 0xffffff],
   };
@@ -878,7 +878,7 @@
   // pair: 'L' / 'R' for the left / right leaf of a double door (lock on the seam).
   const PLANK_LOCK = { hull: 1 };
   function plankLockDoor(a, capTop, x, pair) {
-    const t = tk(), top = capTop ? 2 : 1, b = wallFace(a, capTop, x);
+    const t = tk(), top = capTop ? 1 : 0, b = wallFace(a, capTop, x);
     const L = LEAF.wood, FR = 0x120c08;
     const put = (i, y, c) => { if (i >= 0 && i < 16 && y >= 0 && y < 16) b.set(i, y, c); };
     const x0 = pair === 'R' ? -1 : 2, x1 = pair === 'L' ? 16 : 13; // frame posts (outside the tile = none)
@@ -899,33 +899,26 @@
     const arch = (i, d) => { put(i, top + 1, FR); put(i, top + 2, FR); put(i + d, top + 1, FR); };
     if (pair !== 'R') arch(lx0, 1);
     if (pair !== 'L') arch(lx1, -1);
-    // a raised panel on each leaf (two tall rectangles) — vertical proportions read as a door
-    const pl0 = Math.max(lx0 + 2, pair === 'R' ? 2 : lx0 + 2), pl1 = Math.min(lx1 - 2, pair === 'L' ? 13 : lx1 - 2);
-    for (const [ya, yb] of [[top + 3, top + 7], [top + 9, 14]]) {
-      for (let y = ya; y <= yb; y++) { put(pl0, y, L[0]); put(pl1, y, L[4]); }
-      for (let i = pl0; i <= pl1; i++) { put(i, ya, L[0]); put(i, yb, L[4]); }
-    }
-    // ring pulls beside the seam (or the latch side of a single door)
-    const rx = pair === 'L' ? 13 : pair === 'R' ? 2 : lx1 - 2, ry = top + 7;
-    put(rx, ry - 1, IRONB[4]); put(rx - 1, ry, IRONB[3]); put(rx + 1, ry, IRONB[2]); put(rx, ry + 1, IRONB[1]);
-    // iron hinge pins on the frame side
+    // iron hinge straps on the frame side (short, thin: hinges, not a chest's bands)
     const hingeLeft = pair !== 'R';
-    for (const hy of [top + 3, 13]) { const i = hingeLeft ? lx0 : lx1; put(i, hy, IRONB[3]); put(i, hy + 1, IRONB[1]); put(hingeLeft ? i + 1 : i - 1, hy, IRONB[2]); }
-    // latch side: iron hasp across the seam with a small brass padlock
-    const seam = pair === 'L' ? 16 : pair === 'R' ? 0 : null;
-    const hx = seam != null ? seam - 2 : lx1 - 3; // left x of the 4-wide lock
-    const py = top + 9;
-    for (let i = hx - 1; i <= hx + 4; i++) { put(i, py, IRONB[3]); put(i, py + 1, IRONB[1]); }
-    put(hx + 1, py + 2, IRONB[4]); put(hx + 2, py + 2, IRONB[2]);
-    for (let y = py + 3; y <= py + 5; y++) for (let i = hx; i <= hx + 3; i++) {
-      put(i, y, i === hx ? BRASS[4] : i === hx + 3 ? BRASS[1] : y === py + 3 ? BRASS[5] : y === py + 5 ? BRASS[1] : BRASS[3]);
+    for (const hy of [top + 3, 12]) for (let k = 0; k < 3; k++) put(hingeLeft ? lx0 + k : lx1 - k, hy, k === 0 ? IRONB[4] : IRONB[2]);
+    // ring pulls either side of the seam, a chain between them and a padlock hanging from it
+    const sx = pair === 'L' ? 16 : pair === 'R' ? 0 : lx1 - 2; // seam (or latch) x
+    const ry = top + 6;
+    const ring = (cx) => { put(cx, ry - 1, IRONB[4]); put(cx - 1, ry, IRONB[3]); put(cx + 1, ry, IRONB[1]); put(cx, ry + 1, IRONB[2]); put(cx, ry, 0x0c0808); };
+    ring(sx - 3); if (pair) ring(sx + 2);
+    for (let i = sx - 2; i <= sx + (pair ? 1 : -1); i++) put(i, ry + 1 + ((i & 1) ? 1 : 0), (i & 1) ? IRONB[3] : IRONB[4]);
+    const hx = sx - 2, py = ry + 3;
+    put(hx + 1, py, IRONB[4]); put(hx + 2, py, IRONB[3]);
+    for (let y = py + 1; y <= py + 4; y++) for (let i = hx; i <= hx + 3; i++) {
+      put(i, y, i === hx ? BRASS[4] : i === hx + 3 ? BRASS[1] : y === py + 1 ? BRASS[5] : y === py + 4 ? BRASS[1] : BRASS[3]);
     }
-    put(hx + 1, py + 4, 0x100808); put(hx + 2, py + 4, 0x100808);
+    put(hx + 1, py + 2, 0x100808); put(hx + 2, py + 2, 0x100808); put(hx + 1, py + 3, 0x100808);
     // the seam between the leaves of a double door
-    if (pair === 'L') for (let y = top + 1; y < 16; y++) if (y < py || y > py + 5) b.set(15, y, L[0]);
-    if (pair === 'R') for (let y = top + 1; y < 16; y++) if (y < py || y > py + 5) b.set(0, y, L[3]);
-    // threshold
-    for (let i = Math.max(0, lx0); i <= Math.min(15, lx1); i++) b.set(i, 15, t.mul(L[1], 0.6));
+    if (pair === 'L') for (let y = top + 1; y < 16; y++) if (b.get(15, y) === L[1] || b.get(15, y) === L[2] || b.get(15, y) === L[3]) b.set(15, y, L[0]);
+    if (pair === 'R') for (let y = top + 1; y < 16; y++) if (b.get(0, y) === L[1] || b.get(0, y) === L[2] || b.get(0, y) === L[3]) b.set(0, y, L[4]);
+    // threshold: a worn sill lit from above
+    for (let i = Math.max(0, lx0); i <= Math.min(15, lx1); i++) { b.set(i, 15, t.mul(L[1], 0.55)); }
     return b;
   }
   /** bars + padlock (or the theme's seal) over a door Buf whose opening starts at row top */

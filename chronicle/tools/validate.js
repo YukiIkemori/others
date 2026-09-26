@@ -10,6 +10,10 @@
 //   node tools/validate.js --quiet            errors only      --summary   counts per check and per owner only
 //   node tools/validate.js --json out.json    machine-readable findings  --with <dir>  load fixture files after src/
 //   node tools/validate.js --strict           treat "pending" (content not landed yet: empty registries) as errors too
+//   node tools/validate.js --full             also run the QA sweep (SWEEP below: check_battle A2, check_mons-base A14b; BRIEF
+//                                             A2.4 / A14b.3) as child processes; any non-zero exit is an error of that owner
+//                                             (check SWEEP) and makes validate exit 1. --sweep-only runs just the sweep;
+//                                             --sweep-extra a.js,b.js adds more tools to it (owner '?').
 //
 // "pending" findings: a registry the spec requires that is still completely empty (e.g. no maps yet) is reported
 // once as PENDING instead of hundreds of errors. PENDING counts as an error for the exit code unless --partial.
@@ -1708,8 +1712,26 @@ function run(opts) {
         if (!r) E(V, 'A12', `rareEncounters.${z} (§9.7.3: ${m}) is missing`);
         else if (r.mon !== m) E(V, 'A12', `rareEncounters.${z}: ${r.mon} (§9.7.3: ${m})`);
       }
-      const extra = Object.keys(DB.rareEncounters).filter((z) => !RARE_ZONES[z]);
-      if (extra.length) W(V, 'A12', `${extra.length} rare encounter zone(s) beyond the 23 of §9.7.3: ${extra.map((z) => z + '→' + DB.rareEncounters[z].mon).join(' ')}`);
+      // A12.4 / R4.3: the 23 rows are the ones src/data/rare_encounters.js registers; count only those
+      const RARE_FILE = 'src/data/rare_encounters.js';
+      const fromFile = Object.keys(DB.rareEncounters).filter((z) => provOf('rareEncounters', z) === RARE_FILE);
+      if (fromFile.length !== 23) E(V, 'A12', `${RARE_FILE} registers ${fromFile.length} rare encounter row(s) (§9.7.3: 23)`);
+      for (const z of fromFile) if (!RARE_ZONES[z]) E(V, 'A12', `${RARE_FILE}: rareEncounters.${z} is not one of the 23 zones of §9.7.3`);
+      // §10.6.4 「レア魔物の小部屋」: a room zone derived from a parent zone (same groups), same rare monster, rate = ⌈parent / 3⌉
+      const RARE_ROOMS = { z_r_marsh_teaparty: 'z_r_marsh_manor', z_r_mine_den: 'z_r_mine_mine', z_postgame_oblivion_den: 'z_postgame_oblivion_hi' };
+      const extra = [];
+      for (const z of Object.keys(DB.rareEncounters)) {
+        if (fromFile.includes(z)) continue;
+        const r = DB.rareEncounters[z], o = own('rareEncounters', z), parent = RARE_ROOMS[z], pr = parent && DB.rareEncounters[parent];
+        if (!parent) { extra.push(z); continue; }
+        if (!pr) { E(V, o, `rareEncounters.${z}: parent zone ${parent} (§10.6.4) has no rare row`); continue; }
+        if (r.mon !== pr.mon) E(V, o, `rareEncounters.${z}: ${r.mon} ≠ ${pr.mon} of ${parent} (§10.6.4: same rare monster)`);
+        const want = Math.max(1, Math.ceil(pr.rate / 3));
+        if (r.rate !== want) E(V, o, `rareEncounters.${z}: rate 1/${r.rate} ≠ ⌈${pr.rate}/3⌉ = 1/${want} (§10.6.4: rare rate ×3 of ${parent})`);
+        const ez = DB.encounters[z], ep = DB.encounters[parent];
+        if (ez && ep && JSON.stringify(ez.groups) !== JSON.stringify(ep.groups)) E(V, o, `encounters.${z}: groups differ from ${parent} (§10.6.4: the room zone copies its parent)`);
+      }
+      if (extra.length) W(V, 'A12', `${extra.length} rare encounter zone(s) beyond the 23 of §9.7.3 and the §10.6.4 rooms: ${extra.map((z) => z + '→' + DB.rareEncounters[z].mon + ' (' + (provOf('rareEncounters', z) || '?') + ')').join(' ')}`);
     }
     if (techs.length && techs.length !== 121) E(V, 'A7', `${techs.length} techs (121)`);
     if (spells.length && spells.length !== 77) E(V, 'A8', `${spells.length} spells (77)`);
@@ -1732,7 +1754,14 @@ function main() {
   const withDirs = arg('with') ? arg('with').split(',') : null;
   const quiet = argv.includes('--quiet'), summary = argv.includes('--summary'), partial = argv.includes('--partial');
   const t0 = Date.now();
-  const { rep, R } = run({ only, with: withDirs });
+  const full = argv.includes('--full'), sweepOnly = argv.includes('--sweep-only');
+  const { rep, R } = sweepOnly ? { rep: new Report(), R: null } : run({ only, with: withDirs });
+  if (full || sweepOnly) {
+    const res = runSweep({ extra: arg('sweep-extra') ? arg('sweep-extra').split(',') : [] });
+    for (const x of res) console.log(`sweep ${x.rc === 0 ? 'ok  ' : 'FAIL'} ${path.isAbsolute(x.tool) ? path.relative(ROOT, x.tool) : 'tools/' + x.tool} [${x.owner}] rc=${x.rc} ${(x.ms / 1000).toFixed(1)}s — ${x.tail.split('\n').slice(-1)[0]}`);
+    rep.items.push(...sweepFindings(res));
+    console.log('');
+  }
   let list = rep.items;
   if (owners) list = list.filter((x) => owners.includes(x.owner));
   const errs = list.filter((x) => x.level === 'error'), warns = list.filter((x) => x.level === 'warn'), pend = list.filter((x) => x.level === 'pending');
@@ -1759,5 +1788,36 @@ function main() {
   process.exitCode = errs.length || (pend.length && !partial) ? 1 : 0;
 }
 
-module.exports = { run, loadTracked, ownerOfFile, expectedOwner, expectedMapOwner, textWidth, stripComments, CONTRACT: C, srTierOf, band };
+// =====================================================================================================
+// QA SWEEP (--full): conformance tools of other owners that the one-pass validation must include
+// (BRIEF A2.4 check_battle, A14b.3 check_mons-base). Each runs in its own process; exit ≠ 0 → error.
+// =====================================================================================================
+const SWEEP = [
+  { tool: 'check_battle.js', owner: 'A2', why: 'BRIEF A2.4 (battle formulas vs DESIGN §4 / §9)', timeout: 300 },
+  { tool: 'check_mons-base.js', owner: 'A14b', why: 'BRIEF A14b.3 (monster base sprites, headless Chromium)', timeout: 600 },
+];
+/** runs every SWEEP tool; returns [{tool, owner, rc, ms, tail}] (rc null = could not start / timed out) */
+function runSweep(opts) {
+  opts = opts || {};
+  const { spawnSync } = require('child_process');
+  const out = [];
+  const list = SWEEP.concat((opts.extra || []).map((f) => ({ tool: path.resolve(f), owner: opts.extraOwner || '?', why: 'extra sweep tool', timeout: 600 })));
+  for (const s of list) {
+    const file = path.isAbsolute(s.tool) ? s.tool : path.join(__dirname, s.tool);
+    const t0 = Date.now();
+    if (!fs.existsSync(file)) { out.push({ ...s, rc: null, ms: 0, tail: 'tools/' + s.tool + ' is missing' }); continue; }
+    const r = spawnSync(process.execPath, [file], { cwd: ROOT, encoding: 'utf8', timeout: s.timeout * 1000, maxBuffer: 64 << 20 });
+    const text = ((r.stdout || '') + (r.stderr || '')).trim();
+    const tail = text.split('\n').slice(-(opts.tailLines || 4)).join('\n');
+    const rc = r.error ? null : r.status;
+    out.push({ ...s, rc, ms: Date.now() - t0, tail: r.error ? String(r.error.code || r.error.message) + (tail ? '\n' + tail : '') : tail, signal: r.signal || null });
+  }
+  return out;
+}
+function sweepFindings(results) {
+  return results.filter((x) => x.rc !== 0).map((x) => ({ level: 'error', check: 'SWEEP', owner: x.owner,
+    msg: `${path.isAbsolute(x.tool) ? path.relative(ROOT, x.tool) : 'tools/' + x.tool} ${x.rc == null ? 'did not finish (' + (x.signal || 'error') + ')' : 'exit ' + x.rc} — ${x.why}: ${x.tail.split('\n').slice(-2).join(' | ')}` }));
+}
+
+module.exports = { SWEEP, runSweep, sweepFindings, run, loadTracked, ownerOfFile, expectedOwner, expectedMapOwner, textWidth, stripComments, CONTRACT: C, srTierOf, band };
 if (require.main === module) main();

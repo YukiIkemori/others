@@ -11,7 +11,8 @@
 //
 //   node tools/check_density.js               every map; warnings; exit 0 (exit 1 only on load errors)
 //   node tools/check_density.js --map lute    one map, with a per-room table      --strict  exit 1 on any warning
-//   node tools/check_density.js --owner R3    only the maps of one owner          --quiet   totals only
+//   node tools/check_density.js --owner R3    only the maps of that owner (several: R3,R5): the maps, rooms, table and
+//                                             findings all come from those maps only; the summary names them   --quiet   totals only
 'use strict';
 const M = require('./lib/maps');
 
@@ -166,15 +167,19 @@ function run(opts) {
   const findings = [], table = {};
   const own = (id) => { const f = prov && prov.maps && prov.maps[id]; return f ? V.ownerOfFile(f) : V.expectedMapOwner(id) || '?'; };
   const pct = (x) => (Math.round(1000 * x) / 10) + '%';
+  const owners = opts.owners && opts.owners.length ? opts.owners : null;
+  const ownerOf = {};
   for (const id of Object.keys(DB.maps || {})) {
     if (opts.map && id !== opts.map) continue;
     const d = DB.maps[id];
     if (!['town', 'castle', 'village'].includes(d.type || 'town') && !/_house/.test(id)) continue;
+    const o = own(id);
+    if (owners && !owners.includes(o)) continue;          // --owner: only that owner's maps are measured at all
     const P = M.parseMap(R, id);
     if (!P) continue;
     const rooms = analyseMap(R, P);
     table[id] = rooms;
-    const o = own(id);
+    ownerOf[id] = o;
     const W = (msg) => findings.push({ level: 'warn', owner: o, map: id, msg: `map ${id}: ${msg}` });
     rooms.forEach((r, i) => {
       const where = `room ${i + 1} (${r.size} cells @${r.bbox[0]},${r.bbox[1]}–${r.bbox[2]},${r.bbox[3]})`;
@@ -188,16 +193,15 @@ function run(opts) {
       if (!r.doors) W(`${where}: no door into the room`);
     });
   }
-  return { findings, table };
+  return { findings, table, ownerOf };
 }
 
 function main() {
   const argv = process.argv.slice(2);
   const arg = (k) => { const i = argv.indexOf('--' + k); return i >= 0 ? argv[i + 1] : null; };
   const owners = arg('owner') ? arg('owner').split(',') : null;
-  const res = run({ map: arg('map'), with: arg('with') ? arg('with').split(',') : null });
-  let list = res.findings;
-  if (owners) list = list.filter((f) => owners.includes(f.owner));
+  const res = run({ map: arg('map'), owners, with: arg('with') ? arg('with').split(',') : null });
+  const list = res.findings;
   if (!argv.includes('--quiet')) for (const f of list) console.log(`WARN  [${f.owner}] ${f.msg}`);
   if (arg('map') && res.table[arg('map')]) {
     console.log(`\n${arg('map')}: room  size  block  soft  wall-decor/face  counters  aisle  cut  bare3x3`);
@@ -205,7 +209,10 @@ function main() {
   }
   const nMaps = Object.keys(res.table).length, nRooms = Object.values(res.table).reduce((s, r) => s + r.length, 0);
   const nStreets = Object.values(res.table).reduce((s, r) => s + ((r.streets || []).length), 0);
-  console.log(`\ncheck_density: ${list.length} warning(s) over ${nRooms} room(s) in ${nMaps} town/house map(s) (${nStreets} walled street area(s) not counted as rooms)`);
+  if (owners) {
+    console.log(`\nowner ${owners.join(',')}: ` + (nMaps ? Object.keys(res.table).map((id) => `${id} [${res.ownerOf[id]}] ${res.table[id].length} room(s)`).join(', ') : 'no town/house map'));
+  }
+  console.log(`\ncheck_density: ${list.length} warning(s) over ${nRooms} room(s) in ${nMaps} town/house map(s)${owners ? ' of ' + owners.join(',') : ''} (${nStreets} walled street area(s) not counted as rooms)`);
   process.exitCode = argv.includes('--strict') && list.length ? 1 : 0;
 }
 

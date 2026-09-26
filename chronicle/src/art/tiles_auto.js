@@ -332,16 +332,22 @@
   function liquidTile(m, x, y, id, theme) {
     const same = (dx, dy) => { const t = m.tileAt(x + dx, y + dy); return t === id || (id === 'water' && (t === 'lbridge_h' || t === 'lbridge_v')) || t === 'void'; };
     const N = same(0, -1), S = same(0, 1), W = same(-1, 0), E = same(1, 0);
-    if (N && S && W && E) return null;
+    if (N && S && W && E) {
+      // open mire: only the swamp's poison differs from the plain tile (themeAreas may paint it in)
+      if (id === 'poison' && A.poisonKind && A.poisonKind(theme) !== 'base') return cached('lq|poison|open|' + A.poisonKind(theme), () => tk().frames(2, (f) => A.groundArt('poison', f, theme)));
+      return null;
+    }
     const bankId = !N ? m.tileAt(x, y - 1) : 'floor';
     const bank = GROUND[bankId] ? groundName(bankId, theme) : 'theme:' + (theme || 'generic');
-    const key = 'lq|' + id + '|' + bank + '|' + +N + +S + +W + +E;
+    const pk = id === 'poison' && A.poisonKind ? A.poisonKind(theme) : '';
+    const PP = pk && A.POISON_PAL ? A.POISON_PAL[pk] : null;
+    const key = 'lq|' + id + '|' + bank + '|' + +N + +S + +W + +E + '|' + pk;
     return cached(key, () => {
       const t = tk(), nf = LIQUID[id];
       return t.frames(nf, (f) => {
-        const b = A.groundArt(id, f);
+        const b = A.groundArt(id, f, theme);
         const fl = A.floorBuf(bank);
-        const lipCol = id === 'lava' ? 0x2a1410 : id === 'poison' ? 0x1c0c24 : id === 'bog' ? 0x0e1410 : 0x0a1840;
+        const lipCol = id === 'lava' ? 0x2a1410 : id === 'poison' ? (PP ? PP.lip : 0x1c0c24) : id === 'bog' ? 0x0e1410 : 0x0a1840;
         if (!N) {
           // the bank's edge and the shadowed wall of the basin
           for (let x0 = 0; x0 < 16; x0++) {
@@ -351,7 +357,7 @@
         }
         if (!W) for (let y0 = 0; y0 < 16; y0++) { b.set(0, y0, lipCol); b.set(1, y0, t.mix(b.get(1, y0), lipCol, 0.4)); }
         if (!E) for (let y0 = 0; y0 < 16; y0++) { b.set(15, y0, lipCol); }
-        if (!S) for (let x0 = 0; x0 < 16; x0++) { b.set(x0, 15, id === 'water' ? ((x0 + f) % 3 ? 0xd0e8ff : 0x88b8f0) : id === 'lava' ? 0xffe070 : id === 'bog' ? ((x0 + f) % 4 ? 0x5a6c5c : 0x7a8c78) : 0xc090e0); }
+        if (!S) for (let x0 = 0; x0 < 16; x0++) { b.set(x0, 15, id === 'water' ? ((x0 + f) % 3 ? 0xd0e8ff : 0x88b8f0) : id === 'lava' ? 0xffe070 : id === 'bog' ? ((x0 + f) % 4 ? 0x5a6c5c : 0x7a8c78) : PP ? ((x0 + f) % 4 ? PP.edge : PP.P[5]) : 0xc090e0); }
         return b;
       });
     });

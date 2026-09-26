@@ -96,7 +96,10 @@
     const w = odd(T.clamp(Math.round(hw * 0.8), 7, 19));
     const n = w >= 13 ? 5 : 3;
     const band = k < 1.3 ? 2 : 3;
-    const prong = squash(a[1] - band - 1, k < 1.3 ? 3 : k < 1.8 ? 5 : 7);
+    let prong = squash(a[1] - band - 1, k < 1.3 ? 3 : k < 1.8 ? 5 : 7);
+    // head top at y 0–2 on the canvas (Crest bases like demon / orc): shorten the prongs so the crown
+    // still sits on the head from the brow line up, instead of being pushed down over the face (A14b.0)
+    if (band + prong + 1 > a[1] + 1 && a[1] - band >= 2) prong = a[1] - band;
     const H = band + prong + 1;
     const rim = fitTop(a[1], H);
     const x0 = a[0] - (w - 1) / 2, x1 = x0 + w - 1, yBand = rim - band + 1;
@@ -327,8 +330,9 @@
       const m = T.mask(p.w, p.h);
       for (const s of [-1, 1]) {
         const x0 = a[0] + s * (rx - 1), y0 = rim - Math.round(ry * 0.45);
-        const L = 3 + 3 * k;
-        T.tube(m, [[x0, y0], [x0 + s * L * 0.8, y0 - L * 0.1], [x0 + s * L * 0.9, Math.max(0, y0 - L)]], 1 + 0.35 * k, 0.35, 1, 14);
+        // horns curve outward when there is no room above the head (never clipped by the canvas top)
+        const L = 3 + 3 * k, up = Math.min(L, Math.max(2, y0 - 1));
+        T.tube(m, [[x0, y0], [x0 + s * L * 0.8, y0 - up * 0.1], [x0 + s * L * (up < L ? 1.1 : 0.9), y0 - up]], 1 + 0.35 * k, 0.35, 1, 14);
       }
       blob(p, m, hr, 1.4);
     } else if (st === 'plume') {

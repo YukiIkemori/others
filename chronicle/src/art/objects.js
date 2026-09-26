@@ -823,6 +823,40 @@
       '........',
     ],
   });
+  // accessory / item families of the armour-acc and use-item data (A10b.2), same style:
+  // a silver hand mirror, a stamped gold coin, a bound book with a gold clasp
+  Object.assign(ICONS, {
+    mirror: [
+      '..HGGH..',
+      '.HwWWwH.',
+      '.GWwwXG.',
+      '.HwwXXH.',
+      '..HXXH..',
+      '...gg...',
+      '...MN...',
+      '...NN...',
+    ],
+    coin: [
+      '..gggg..',
+      '.gGGGHg.',
+      'gGHHHHHg',
+      'gGHggHHg',
+      'gGHgGHHg',
+      'gHHHHHgg',
+      '.gHHHgg.',
+      '..gggg..',
+    ],
+    book: [
+      '.NRRRRR.',
+      'NRrrrrrR',
+      'NRrGGrrR',
+      'NRrrGrrR',
+      'NRrrrrrR',
+      'NRrrrrrR',
+      'NRRRRRRs',
+      '.Nssssss',
+    ],
+  });
   ICONS.dagger = ICONS.knife;
   ICONS.head = ICONS.helm;
   ICONS.body = ICONS.light;

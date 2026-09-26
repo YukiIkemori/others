@@ -473,13 +473,14 @@
       const ex = side < 0 ? 58 : W - 59;
       for (let y = 0; y < 100; y++) { b.set(ex, y, ST[4]); b.set(ex + side, y, ST[3]); }
     }
-    // marble floor
-    B.tiledFloor(b, 100, 60, [0xb4b6c2, 0xdcdee6, 0xe8eaf0, 0xf8f8fc], { tileW: 30, rowH: 12, fog: 0xc4c6d0 });
+    // marble floor, in the shade of the stacks: a grey-blue stone well below the white of the
+    // hero shades and Lazaro's robes, so they stand out where they stand (A15a.3)
+    B.tiledFloor(b, 100, 60, [0x4a4c5c, 0x62647a, 0x70728a, 0x80829a], { tileW: 30, rowH: 12, fog: 0x8e90a2 });
     // light shafts slanting down from the window
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
       const u = (x - 128) - (y - 20) * 0.35;
       const wdt = 16 + y * 0.12;
-      if (Math.abs(u) < wdt) { const a = (1 - Math.abs(u) / wdt) * 0.3; if (y > 108) b.set(x, y, T.mix(b.get(x, y), 0xfffff0, a * 0.7)); else if (T.bayer(x, y) < a * 1.2) b.set(x, y, T.mix(b.get(x, y), 0xfffff0, 0.5)); }
+      if (Math.abs(u) < wdt) { const a = (1 - Math.abs(u) / wdt) * 0.3; if (y > 108) b.set(x, y, T.mix(b.get(x, y), 0xfffff0, a * (y < 142 ? 0.3 : 0.6))); else if (T.bayer(x, y) < a * 1.2) b.set(x, y, T.mix(b.get(x, y), 0xfffff0, 0.5)); }
     }
     calm(b, 1);
     // drifting pages

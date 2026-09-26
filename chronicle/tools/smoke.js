@@ -17,6 +17,8 @@
 //           walk right 3 tiles; Y opens the menu, B closes it; another random battle is won.
 //   SR1     リピート (§0.7 A6-3): リピート → 3 rounds without the party command → B → the round ends and the
 //           party command comes back (repeating off) → the next battle starts without リピート.
+//   sweep   the QA sweep of validate.js (SWEEP: check_battle A2 — BRIEF A2.4, check_mons-base A14b — BRIEF A14b.3),
+//           each in its own process; a non-zero exit is a FAIL (runs first, and even without playwright).
 // Screenshots of the main screens go to --out (default: <os tmp>/chronicle_smoke).
 // The driver (class Driver: load / state / press / drive / shot) is exported for tools/shots.js.
 'use strict';
@@ -82,7 +84,7 @@ function HELPER() {
     const t = top;
     try {
       if (s.top === 'MessageLayer') s.msg = { text: (t.pages[t.page] || []).join('／'), waiting: !!t.resolveText, typed: t.shown >= t.pageLen() };
-      else if (s.top === 'ChoiceLayer' || s.top === 'MenuLayer' || s.top === 'MainMenu') s.list = { index: t.list.index, items: t.list.items.map(lab), n: t.list.items.length, hidden: !!t.hidden, busy: !!t.busy };
+      else if (s.top === 'ChoiceLayer' || s.top === 'MenuLayer' || s.top === 'MainMenu') s.list = { index: t.list.index, items: t.list.items.map(lab), n: t.list.items.length, cols: t.list.cols || 1, hidden: !!t.hidden, busy: !!t.busy };
       else if (s.top === 'CreateLayer') s.create = { step: t.step, gender: t.g, type: t.type, favor: t.favor && t.favor.id, busy: !!t.busy, yes: t.yes, name: t.name };
       else if (s.top === 'NameLayer') s.name = { cy: t.cy, cx: t.cx, cr: t.cr, cc: t.cc, str: t.str, busy: !!t.busy };
       else if (s.top === 'ChooseLayer') s.choose = { cur: t.cur, id: t.id, ids: t.ids.slice(), chosen: t.chosen.slice(), count: t.count, mode: t.mode, busy: !!t.busy, page: t.page };
@@ -95,11 +97,12 @@ function HELPER() {
         const items = pl && pl.items ? pl.items.map(lab) : null;
         s.battle = {
           input: !!t.input, party: !!(t.input && items && items[0] === '戦う' && items.length === 4), index: pl ? pl.index : null, items: items && items.slice(0, 6),
+          cols: pl && pl.cols ? pl.cols : 1,
           waitKey: !!(m.resolve && m.key && m.ch >= m.need && !t.locked), round: eng.round, result: eng.result || null,
           repeating: !!t.repeating, repeatCancel: !!t.repeatCancel, auto: !!t.auto, canRepeat: !!t.canRepeat, ready: !!t.ready,
           php: (eng.party || []).map((u) => u.hp), mhp: (eng.mons || []).map((u) => u.hp), boss: !!eng.boss,
         };
-      } else if (t && t.list && t.list.items) s.list = { index: t.list.index, items: t.list.items.map(lab), n: t.list.items.length };
+      } else if (t && t.list && t.list.items) s.list = { index: t.list.index, items: t.list.items.map(lab), n: t.list.items.length, cols: t.list.cols || 1 };
     } catch (e) { s.stateError = String(e); }
     return s;
   };
@@ -346,16 +349,14 @@ class Driver {
         if (pol.killMons) await this.ev(() => { for (const u of window.__qa.lastScene.eng.mons) if (u.hp > 1) u.hp = 1; });
         // オート (index 2) wins a battle whatever the members carry; 戦う (index 0) + 防御 each is the manual round
         const mode = pol.killMons ? 'auto' : pol.battle || 'auto';
-        if (mode === 'auto') return b.index !== 2 ? (b.index === 0 ? 'down' : b.index === 1 ? 'left' : 'up') : 'a';
-        return b.index !== 0 ? (b.index === 1 ? 'left' : 'up') : 'a';
+        return b.index === (mode === 'auto' ? 2 : 0) ? 'a' : gridStep(b.index, mode === 'auto' ? 2 : 0, b.cols);
       }
-      // a member's command window (2 columns): move to 防御 and take it; any sub-list (weapon techs, spells,
+      // a member's command window: move to 防御 and take it; any sub-list (weapon techs, spells,
       // items, a target) is left with B — a manual round is "everyone defends", which is valid in every row
       const items = b.items || [], di = items.indexOf('防御');
       if (di < 0) return 'b';
       if (b.index === di) return 'a';
-      const r0 = Math.floor(b.index / 2), r1 = Math.floor(di / 2);
-      return r0 !== r1 ? (r0 < r1 ? 'down' : 'up') : b.index < di ? 'right' : 'left';
+      return gridStep(b.index, di, b.cols);
     }
     if (t === 'StageLayer') return 'a';
     if (t === 'FieldLayer') return 'wait';
@@ -374,6 +375,14 @@ class Driver {
     await this.press(dir);
     return this.until((s) => !s.mv, 3000, 'the step to finish');
   }
+}
+/** the key that moves a list cursor from `from` toward `to` in a grid of `cols` columns (row first, then column;
+ *  the party command window is 1 column since the side-view layout, a member's command window 2) */
+function gridStep(from, to, cols) {
+  cols = Math.max(1, cols || 1);
+  const r0 = Math.floor(from / cols), r1 = Math.floor(to / cols);
+  if (r0 !== r1) return r0 < r1 ? 'down' : 'up';
+  return from < to ? 'right' : 'left';
 }
 function brief(s) {
   if (!s) return '?';
@@ -610,7 +619,7 @@ async function slice(D, S, o) {
     await D.until((s) => s.top === 'MainMenu', 3000, 'the main menu');
     await D.wait(200);
     await D.shot('10_menu');
-    const pages = [[0, 'items'], [3, 'equip'], [4, 'status']];
+    const pages = [['道具', 'items'], ['装備', 'equip'], ['強さ', 'status']];
     const opened = [];
     for (const [idx, nm] of pages) {
       await navList(D, idx);
@@ -669,7 +678,7 @@ async function slice(D, S, o) {
     await D.idle(20000);
     await D.press('y');
     await D.until((s) => s.top === 'MainMenu', 3000, 'the main menu');
-    await navList(D, 14);
+    await navList(D, 'セーブ');
     await D.press('a');
     await D.until((s) => s.top === 'SaveScreen' && s.slot.loaded, 5000, 'the save screen');
     await D.wait(150);
@@ -681,7 +690,7 @@ async function slice(D, S, o) {
     const slots = await D.ev(() => window.RPG.Save.list());
     if (!slots || !slots[0]) throw new Error('slot 1 is empty after saving');
     // the 冒険の合言葉 (row 4 of the save screen)
-    await navList(D, 14);
+    await navList(D, 'セーブ');
     await D.press('a');
     await D.until((s) => s.top === 'SaveScreen' && s.slot.loaded, 5000, 'the save screen');
     for (let i = 0; i < 3; i++) await D.press('down');
@@ -736,16 +745,20 @@ function cmpSnap(a, b) {
   if (a.reserve.join() !== b.reserve.join()) out.push(`reserve ${a.reserve} → ${b.reserve}`);
   return out;
 }
-/** move a List cursor (MainMenu, 2 columns, row-major) to index */
+/** move a List cursor (MainMenu and other lists; the column count comes from the list, row-major) to `target`:
+ *  an index, or an item label (e.g. 'セーブ') looked up in the list — the menu order is not hard-coded */
 async function navList(D, target) {
-  for (let i = 0; i < 40; i++) {
+  let last = null, same = 0;
+  for (let i = 0; i < 60; i++) {
     const s = await D.st();
     if (!s.list) throw new Error('no list on ' + s.top);
+    const want = typeof target === 'string' ? s.list.items.indexOf(target) : target;
+    if (want < 0) throw new Error(`no '${target}' in the list (${s.list.items.join(' ')})`);
     const cur = s.list.index;
-    if (cur === target) return;
-    const cols = 2;
-    const [r0, c0] = [Math.floor(cur / cols), cur % cols], [r1, c1] = [Math.floor(target / cols), target % cols];
-    await D.press(r0 !== r1 ? (r0 < r1 ? 'down' : 'up') : c0 < c1 ? 'right' : 'left');
+    if (cur === want) return;
+    same = cur === last ? same + 1 : 0; last = cur;
+    if (same > 4) break;
+    await D.press(gridStep(cur, want, s.list.cols));
   }
   throw new Error('could not move the cursor to ' + target);
 }
@@ -858,7 +871,7 @@ async function repeatCase(D, c) {
   const mons = await D.ev(async () => {
     const R = window.RPG;
     await R.debug.quickStart({ noEncounter: true, level: 30 });
-    const id = Object.keys(R.DB.monsters).find((k) => { const m = R.DB.monsters[k]; return (m.tier || 0) === 0 && !m.boss && !(m.flags || []).some((f) => f === 'rare' || f === 'metal'); });
+    const id = Object.keys(R.DB.monsters).find((k) => { const m = R.DB.monsters[k]; return (m.tier || 0) === 0 && !m.boss && !/^(b_|rm_)/.test(k) && !(m.flags || []).some((f) => f === 'boss' || f === 'rare' || f === 'metal'); });
     return [id];
   });
   await D.idle(20000);
@@ -870,8 +883,8 @@ async function repeatCase(D, c) {
   await D.drive({ battle: 'fight', menus: 'leave' }, (s) => s.top === 'BattleScene' && !s.battle.input, 20000, 'round 1 commands');
   const s2 = await D.until((s) => s.top === 'BattleScene' && s.battle.party, 30000, 'the party command of round 2');
   if (!s2.battle.canRepeat) throw new Error('リピート is not enabled after round 1');
-  // リピート (right of 戦う)
-  for (let i = 0; i < 3; i++) { const s = await D.st(); if (s.battle.index === 1) break; await D.press(s.battle.index === 0 ? 'right' : s.battle.index === 2 ? 'up' : 'left'); }
+  // リピート (index 1 of 戦う / リピート / オート / 逃げる; the window's column count decides the key)
+  for (let i = 0; i < 4; i++) { const s = await D.st(); if (s.battle.index === 1) break; await D.press(gridStep(s.battle.index, 1, s.battle.cols)); }
   await D.shot('30_repeat_select');
   const pm0 = await D.ev(() => window.__qa.pm);
   await D.press('a');
@@ -913,15 +926,32 @@ async function main() {
   const argv = process.argv.slice(2);
   const opt = (k, d) => { const i = argv.indexOf('--' + k); return i >= 0 && argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[i + 1] : d; };
   const flag = (k) => argv.includes('--' + k);
-  const only = opt('only', 'slice,SW1,SW2,SW3,SR1').split(',');
+  const only = opt('only', 'sweep,slice,SW1,SW2,SW3,SR1').split(',');
   const o = { html: path.resolve(opt('html', path.join(ROOT, 'dist', 'index.html'))), out: path.resolve(opt('out', path.join(os.tmpdir(), 'chronicle_smoke'))), verbose: flag('verbose') };
   if (!flag('no-build') && !argv.includes('--html')) {
     try { execFileSync(process.execPath, [path.join(ROOT, 'tools', 'build.js')], { stdio: 'pipe' }); } catch (e) { console.log('build failed:', String(e.stderr || e).slice(0, 400)); }
   }
-  const D = new Driver(o);
-  if (!D.pw) { console.log('SKIP smoke: playwright is not installed'); return; }
-  const S = new Stages(D, o);
   const t0 = Date.now();
+  const pre = [];                               // results of the non-browser stages
+  if (only.includes('sweep')) {
+    const V = require('./validate');
+    for (const x of V.runSweep()) {
+      const st = x.rc === 0 ? 'PASS' : 'FAIL', last = x.tail.split('\n').slice(-1)[0];
+      console.log(`${st} sweep ${x.tool} [${x.owner}] rc=${x.rc} ${(x.ms / 1000).toFixed(1)}s — ${last}`);
+      pre.push({ id: 'sweep ' + x.tool, status: st, detail: `[${x.owner}] rc=${x.rc} ${last}` });
+    }
+  }
+  const browserStages = only.filter((k) => k !== 'sweep');
+  const D = new Driver(o);
+  if (!D.pw || !browserStages.length) {
+    if (!D.pw && browserStages.length) console.log('SKIP smoke browser stages: playwright is not installed');
+    const nf = pre.filter((r) => r.status === 'FAIL').length;
+    console.log(`\nsmoke: ${pre.length - nf} pass, ${nf} fail — ${((Date.now() - t0) / 1000).toFixed(0)} s`);
+    if (nf) process.exitCode = 1;
+    return;
+  }
+  const S = new Stages(D, o);
+  S.results.push(...pre);
   console.log(`smoke: ${path.relative(ROOT, o.html)} → screenshots in ${o.out}`);
   try {
     await D.open();
@@ -942,5 +972,5 @@ async function main() {
   if (n('FAIL') || D.errors.length) process.exitCode = 1;
 }
 
-module.exports = { Driver, HELPER, KEY, brief, navList, storyPlan, runPlanEntry, givesMissing };
+module.exports = { Driver, HELPER, KEY, brief, gridStep, navList, storyPlan, runPlanEntry, givesMissing };
 if (require.main === module) main().catch((e) => { console.error(e); process.exit(2); });

@@ -9,7 +9,7 @@
     // ---- scorpion サソリ（虫・m）: 砂漠の毒虫。毒の尾、鋼の殻、死神の一刺し、そして皇帝。
     scorpion_1: {
       name: '赤サソリ', goldName: '金色サソリ', sprite: 'scorpion_1', lineage: 'scorpion', stage: 1, lv: 7, size: 'm', race: 'insect', affinity: 'earth',
-      flags: [], s: { def: 1.2, hp: 1.14, atk: 0.9, mag: 0.9 }, eva: 5,
+      flags: [], s: { hp: 1.26, atk: 1.32, mag: 1.32, def: 1.2 }, eva: 5,
       elem: { wind: 1.5, earth: 0.25 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 4 }, { id: 'e_pincer', w: 2 }, { id: 'e_poison_sting', w: 1 }],
       drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'w_dagger_scorpion', rate: 32 }, super: { item: 'w_dagger_sr_redtail', rate: 256 } },
@@ -17,7 +17,7 @@
     },
     scorpion_2: {
       name: '毒尾サソリ', sprite: 'scorpion_2', lineage: 'scorpion', stage: 2, lv: 19, size: 'm', race: 'insect', affinity: 'earth',
-      flags: [], s: { atk: 0.86, def: 1.2, hp: 1.65, mag: 0.84 }, eva: 5,
+      flags: [], s: { hp: 1.65, atk: 0.84, mag: 0.8, def: 1.2 }, eva: 5,
       elem: { wind: 1.5, earth: 0.25 }, phys: {}, statusRes: { poison: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_poison_sting', w: 3 }],
       drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'w_whip_snakeskin', rate: 32 }, super: { item: 'w_fist_sr_scorpion', rate: 256 } },
@@ -25,7 +25,7 @@
     },
     scorpion_3: {
       name: '鋼殻サソリ', sprite: 'scorpion_3', lineage: 'scorpion', stage: 3, lv: 31, size: 'm', race: 'insect', affinity: 'earth',
-      flags: [], s: { hp: 1.63, def: 1.5, agi: 0.85, atk: 0.93, mag: 0.93 }, eva: 5,
+      flags: [], s: { hp: 1.72, atk: 0.88, mag: 0.88, def: 1.5, agi: 0.85 }, eva: 5,
       elem: { wind: 1.5, earth: 0.25 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_pincer', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_numb_sting', w: 2 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'sh_scorpion_shell', rate: 32 }, super: { item: 'bd_sr_steel_carapace', rate: 256 } },
@@ -33,7 +33,7 @@
     },
     scorpion_4: {
       name: '死神サソリ', sprite: 'scorpion_4', lineage: 'scorpion', stage: 4, lv: 43, size: 'm', race: 'insect', affinity: 'earth',
-      flags: [], s: { hp: 2.5, atk: 0.66, def: 1.2, mag: 0.57 }, eva: 5,
+      flags: [], s: { hp: 2.92, atk: 0.67, mag: 0.58, def: 1.2 }, eva: 5,
       elem: { wind: 1.5, earth: 0.25 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_death_sting', w: 2 }, { id: 'e_poison_sting', w: 2 }, { id: 'e_double', w: 1 }],
       drops: { normal: { item: 'i_revive', rate: 8 }, rare: { item: 'w_katana_sand', rate: 32 }, super: { item: 'w_whip_sr_reaper', rate: 256 } },
@@ -41,7 +41,7 @@
     },
     scorpion_5: {
       name: '皇帝サソリ', sprite: 'scorpion_5', lineage: 'scorpion', stage: 5, lv: 55, size: 'm', race: 'insect', affinity: 'earth',
-      flags: [], s: { hp: 2.5, atk: 0.68, def: 1.4, agi: 0.9, mag: 0.61 }, eva: 5,
+      flags: [], s: { hp: 2.89, atk: 0.58, mag: 0.53, def: 1.4, agi: 0.9 }, eva: 5,
       elem: { wind: 1.5, earth: 0.25 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_death_sting', w: 1 }, { id: 'e_pincer', w: 2 }, { id: 'e_quake', w: 1 }, { id: 'e_harden', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_royal_ankh', rate: 32 }, super: { item: 'hn_sr_hundred', rate: 128 } },
@@ -50,7 +50,7 @@
     // ---- snake ヘビ（獣・m）: 砂漠の蛇。毒、鈴の音のおどし、にらみ、丸のみの大蛇へ。
     snake_1: {
       name: '砂ヘビ', sprite: 'snake_1', lineage: 'snake', stage: 1, lv: 7, size: 'm', race: 'beast',
-      flags: [], s: { atk: 0.93, agi: 1.05, hp: 1.35, mag: 0.9 }, eva: 5,
+      flags: [], s: { hp: 1.25, atk: 1.46, mag: 1.39, agi: 1.05 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_poison_bite', w: 2 }],
       drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'w_dagger_scorpion', rate: 32 }, super: { item: 'ft_sr_sandsnake', rate: 256 } },
@@ -58,7 +58,7 @@
     },
     snake_2: {
       name: '鈴尾ヘビ', sprite: 'snake_2', lineage: 'snake', stage: 2, lv: 19, size: 'm', race: 'beast',
-      flags: [], s: { atk: 1.05, agi: 1.1, hp: 1.67 }, eva: 5,
+      flags: [], s: { hp: 1.6, atk: 0.91, mag: 0.87, agi: 1.1 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_scare', w: 2 }, { id: 'e_poison_bite', w: 2 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_whip_snakeskin', rate: 32 }, super: { item: 'ac_sr_rattle_charm', rate: 256 } },
@@ -66,7 +66,7 @@
     },
     snake_3: {
       name: 'にらみヘビ', sprite: 'snake_3', lineage: 'snake', stage: 3, lv: 31, size: 'm', race: 'beast',
-      flags: [], s: { hp: 1.85, mag: 1.1, agi: 1.05 }, eva: 5,
+      flags: [], s: { hp: 1.8, atk: 0.88, mag: 0.97, agi: 1.05 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_gaze', w: 2 }, { id: 'e_bind', w: 2 }],
       drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'sh_scorpion_shell', rate: 32 }, super: { item: 'hd_sr_gaze_circlet', rate: 256 } },
@@ -74,7 +74,7 @@
     },
     snake_4: {
       name: '砂の大蛇', sprite: 'snake_4', lineage: 'snake', stage: 4, lv: 43, size: 'm', race: 'beast', affinity: 'earth',
-      flags: [], s: { hp: 2.5, atk: 0.68, agi: 0.95, mag: 0.59 }, eva: 5,
+      flags: [], s: { hp: 3.36, atk: 0.63, mag: 0.55, agi: 0.95 }, eva: 5,
       elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_bind', w: 2 }, { id: 'e_poison_bite', w: 2 }, { id: 'e_swallow', w: 1 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_katana_sand', rate: 32 }, super: { item: 'w_whip_sr_python', rate: 256 } },
@@ -83,7 +83,7 @@
     // ---- mummy ミイラ（不死・m）: 王墓を守る死者たち。兵、呪い、神官、将軍、そして王家の者。
     mummy_1: {
       name: 'ミイラ兵', sprite: 'mummy_1', lineage: 'mummy', stage: 1, lv: 7, size: 'm', race: 'undead',
-      flags: [], s: { hp: 1.15, agi: 0.8, atk: 2.14, mag: 2.14 }, eva: 5,
+      flags: [], s: { hp: 1.35, atk: 2.09, mag: 2.09, agi: 0.8 }, eva: 5,
       elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 4 }, { id: 'e_bandage', w: 2 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'bd_wrap_cloth', rate: 32 }, super: { item: 'hn_sr_tomb_wrap', rate: 256 } },
@@ -91,7 +91,7 @@
     },
     mummy_2: {
       name: '呪いミイラ', sprite: 'mummy_2', lineage: 'mummy', stage: 2, lv: 19, size: 'm', race: 'undead',
-      flags: [], s: { hp: 1.54, mag: 2.5, agi: 0.8, atk: 2.5 }, eva: 5,
+      flags: [], s: { hp: 1.59, atk: 1.38, mag: 1.52, agi: 0.8 }, eva: 5,
       elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_curse', w: 2 }, { id: 'e_bandage', w: 2 }],
       drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'hn_curse_wrap', rate: 32 }, super: { item: 'hd_sr_cursed_wrap', rate: 256 } },
@@ -99,7 +99,7 @@
     },
     mummy_3: {
       name: 'ミイラ神官', sprite: 'mummy_3', lineage: 'mummy', stage: 3, lv: 31, size: 'm', race: 'undead',
-      flags: [], s: { atk: 0.8, mag: 1.3, mdef: 1.3, hp: 1.77 }, eva: 5,
+      flags: [], s: { hp: 1.77, atk: 0.65, mag: 1.06, mdef: 1.3 }, eva: 5,
       elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_dark_bolt', w: 2 }, { id: 'e_revive_ally', w: 1, cond: { allyDown: true } }, { id: 'e_heal_ally', w: 1, cond: { hpBelow: 0.6 } }, { id: 'e_curse', w: 1 }],
       drops: { normal: { item: 'i_ether', rate: 8 }, rare: { item: 'w_staff_tombpriest', rate: 32 }, super: { item: 'w_staff_sr_ankh', rate: 256 } },
@@ -107,7 +107,7 @@
     },
     mummy_4: {
       name: 'ミイラ将軍', sprite: 'mummy_4', lineage: 'mummy', stage: 4, lv: 43, size: 'm', race: 'undead',
-      flags: [], s: { hp: 2.5, atk: 1.2, def: 1.15, agi: 0.85 }, eva: 5,
+      flags: [], s: { hp: 2.75, atk: 0.9, mag: 0.75, def: 1.15, agi: 0.85 }, eva: 5,
       elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_slash', w: 2 }, { id: 'e_howl', w: 1 }, { id: 'e_bandage', w: 1 }],
       drops: { normal: { item: 'i_revive', rate: 8 }, rare: { item: 'ac_scarab', rate: 32 }, super: { item: 'w_sword_sr_tombgeneral', rate: 256 } },
@@ -115,7 +115,7 @@
     },
     mummy_5: {
       name: '王家のミイラ', sprite: 'mummy_5', lineage: 'mummy', stage: 5, lv: 55, size: 'm', race: 'undead',
-      flags: [], s: { hp: 2.5, mag: 1.25, mdef: 1.2, agi: 0.85 }, eva: 5,
+      flags: [], s: { hp: 2.47, atk: 0.51, mag: 0.64, mdef: 1.2, agi: 0.85 }, eva: 5,
       elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_death_word', w: 1 }, { id: 'e_dark_mist', w: 2 }, { id: 'e_revive_ally', w: 1, cond: { allyDown: true } }, { id: 'e_curse', w: 1 }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_royal_ankh', rate: 32 }, super: { item: 'bd_sr_shadow', rate: 128 } },
@@ -124,7 +124,7 @@
     // ---- cactus サボテン（植物・m）: 砂漠をうろつくサボテン。針を飛ばし、花を咲かせ、大将になる。
     cactus_1: {
       name: 'サボテン小僧', sprite: 'cactus_1', lineage: 'cactus', stage: 1, lv: 7, size: 'm', race: 'plant',
-      flags: [], s: { hp: 1.17, def: 1.1, agi: 0.85 }, eva: 5,
+      flags: [], s: { hp: 1.29, atk: 1.32, mag: 1.32, def: 1.1, agi: 0.85 }, eva: 5,
       elem: { fire: 1.25, water: 0.5, earth: 0.75 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 4 }, { id: 'e_needles', w: 2 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'bd_wrap_cloth', rate: 32 }, super: { item: 'sh_sr_cactus', rate: 256 } },
@@ -132,7 +132,7 @@
     },
     cactus_2: {
       name: '針サボテン', sprite: 'cactus_2', lineage: 'cactus', stage: 2, lv: 19, size: 'm', race: 'plant',
-      flags: [], s: { hp: 1.86, atk: 0.67, def: 1.1, agi: 0.85, mag: 0.65 }, eva: 5,
+      flags: [], s: { hp: 1.92, atk: 0.61, mag: 0.58, def: 1.1, agi: 0.85 }, eva: 5,
       elem: { fire: 1.25, water: 0.5, earth: 0.75 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_needles', w: 4 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'hn_curse_wrap', rate: 32 }, super: { item: 'w_bow_sr_needlecactus', rate: 256 } },
@@ -140,7 +140,7 @@
     },
     cactus_3: {
       name: '花咲きサボテン', sprite: 'cactus_3', lineage: 'cactus', stage: 3, lv: 31, size: 'm', race: 'plant',
-      flags: [], s: { hp: 1.35, agi: 0.85, mag: 1.1 }, eva: 5,
+      flags: [], s: { hp: 1.78, atk: 0.73, mag: 0.81, agi: 0.85 }, eva: 5,
       elem: { fire: 1.25, water: 0.5, earth: 0.75 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_sleep_pollen', w: 2 }, { id: 'e_needles', w: 2 }, { id: 'e_heal_self', w: 1, cond: { hpBelow: 0.5 } }],
       drops: { normal: { item: 'i_ether', rate: 8 }, rare: { item: 'sh_scorpion_shell', rate: 32 }, super: { item: 'ac_sr_desert_rose', rate: 256 } },
@@ -148,7 +148,7 @@
     },
     cactus_4: {
       name: 'サボテン大将', sprite: 'cactus_4', lineage: 'cactus', stage: 4, lv: 43, size: 'm', race: 'plant', affinity: 'earth',
-      flags: [], s: { hp: 2.5, atk: 0.66, def: 1.2, agi: 0.85, mag: 0.56 }, eva: 5,
+      flags: [], s: { hp: 3.31, atk: 0.57, mag: 0.5, def: 1.2, agi: 0.85 }, eva: 5,
       elem: { fire: 1.25, water: 0.5, wind: 1.5, earth: 0.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_needles', w: 3 }, { id: 'e_focus', w: 1, cond: { once: true } }, { id: 'e_heavy', w: 1 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_katana_sand', rate: 32 }, super: { item: 'w_club_sr_cactus_king', rate: 256 } },
@@ -157,7 +157,7 @@
     // ---- sandworm ミミズ（虫・l）: 砂の下を泳ぐ巨大なミミズ。砂ぼこり、岩の体、大地の揺れ。
     sandworm_1: {
       name: '砂ミミズ', sprite: 'sandworm_1', lineage: 'sandworm', stage: 1, lv: 7, size: 'l', race: 'insect', affinity: 'earth',
-      flags: [], s: { agi: 0.7, hp: 1.2, atk: 1.05 }, eva: 5,
+      flags: [], s: { hp: 0.73, atk: 1.58, mag: 1.51, agi: 0.7 }, eva: 5,
       elem: { wind: 1.5, earth: 0.25 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 4 }, { id: 'e_swallow', w: 1 }, { id: 'e_dust', w: 2 }],
       drops: { normal: { item: 'i_stone_earth', rate: 8 }, rare: { item: 'w_dagger_scorpion', rate: 32 }, super: { item: 'bd_sr_sandworm_hide', rate: 256 } },
@@ -165,7 +165,7 @@
     },
     sandworm_2: {
       name: '岩ミミズ', sprite: 'sandworm_2', lineage: 'sandworm', stage: 2, lv: 25, size: 'l', race: 'insect', affinity: 'earth',
-      flags: [], s: { hp: 1.25, def: 1.3, agi: 0.65, atk: 0.86, mag: 0.86 }, eva: 5,
+      flags: [], s: { hp: 1.13, atk: 0.96, mag: 0.96, def: 1.3, agi: 0.65 }, eva: 5,
       elem: { wind: 1.5, earth: 0.25 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_crush', w: 2 }, { id: 'e_quake', w: 2 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_fist_wormtooth', rate: 32 }, super: { item: 'w_greatsword_sr_rockworm', rate: 256 } },
@@ -173,7 +173,7 @@
     },
     sandworm_3: {
       name: '大地ミミズ', sprite: 'sandworm_3', lineage: 'sandworm', stage: 3, lv: 43, size: 'l', race: 'insect', affinity: 'earth',
-      flags: [], s: { hp: 2.01, atk: 0.74, def: 1.2, agi: 0.65, mag: 0.64 }, eva: 5,
+      flags: [], s: { hp: 2.07, atk: 0.69, mag: 0.6, def: 1.2, agi: 0.65 }, eva: 5,
       elem: { wind: 1.5, earth: 0.25 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_swallow', w: 2 }, { id: 'e_quake', w: 2 }, { id: 'e_dust', w: 1 }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_axe_dune', rate: 32 }, super: { item: 'w_greatsword_sr_duneworm', rate: 256 } },

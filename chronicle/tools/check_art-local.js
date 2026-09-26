@@ -38,6 +38,16 @@ window.CHECK = function () {
     for (let i = 0; i < p.length; i += 4) if (p[i] !== q[i] || p[i + 1] !== q[i + 1] || p[i + 2] !== q[i + 2] || p[i + 3] !== q[i + 3]) d++;
     return d / (p.length / 4);
   }
+  /** strongest luminance change among the pixels that differ (a findable hint has at least one clear mark) */
+  function peak(a, b) {
+    const p = px(a), q = px(b);
+    let m = 0;
+    for (let i = 0; i < p.length; i += 4) {
+      const d = Math.abs((p[i] - q[i]) * 0.3 + (p[i + 1] - q[i + 1]) * 0.59 + (p[i + 2] - q[i + 2]) * 0.11);
+      if (d > m) m = d;
+    }
+    return m;
+  }
   function colours(cv) { const p = px(cv), s = new Set(); for (let i = 0; i < p.length; i += 4) if (p[i + 3]) s.add((p[i] << 16) | (p[i + 1] << 8) | p[i + 2]); return s.size; }
   function magenta(cv) { const p = px(cv); let n = 0; for (let i = 0; i < p.length; i += 4) if (p[i] === 255 && p[i + 1] === 0 && p[i + 2] === 255 && p[i + 3] === 255) n++; return n; }
   const worldIds = new Set(R.TilesWorld ? R.TilesWorld.ids : []);
@@ -124,7 +134,7 @@ window.CHECK = function () {
   delete R.DB.maps.__chk;
   res.n.contextCells = ctx;
   // ---------------------------------------------------------- secret passages: subtle until found
-  let minHint = 1, maxHint = 0, minFound = 1;
+  let minHint = 1, maxHint = 0, minFound = 1, minPeak = 255;
   for (const th of Object.keys(TH)) {
     const wall = A.wallFace(th, true, 0).toCanvas();
     const hid = A.secretWallArt(th, { capTop: true, x: 0, found: false }).toCanvas();
@@ -136,8 +146,13 @@ window.CHECK = function () {
     if (f <= h) fail('found secret of ' + th + ' does not stand out more than the hidden one');
     const top0 = A.wallTop(th, { n: true }).toCanvas(), top1 = A.secretWallArt(th, { top: true, edges: { n: true } }).toCanvas();
     if (diff(top0, top1) > 0.16) fail('secret wall top of ' + th + ' too obvious');
+    // findable (BRIEF A4 ひび・色むら・苔): the crack must stand out on the face and on the dark tops
+    const pf = peak(wall, hid), pt = peak(top0, top1);
+    minPeak = Math.min(minPeak, pf, pt);
+    if (pf < 20) fail('secret wall of ' + th + ': hint too faint on the face (peak Δ' + pf.toFixed(0) + ')');
+    if (pt < 14) fail('secret wall top of ' + th + ': hint too faint (peak Δ' + pt.toFixed(0) + ')');
   }
-  res.n.secretHint = (minHint * 100).toFixed(1) + '–' + (maxHint * 100).toFixed(1) + '% px (found ≥ ' + (minFound * 100).toFixed(1) + '%)';
+  res.n.secretHint = (minHint * 100).toFixed(1) + '–' + (maxHint * 100).toFixed(1) + '% px (found ≥ ' + (minFound * 100).toFixed(1) + '%), peak Δ ≥ ' + minPeak.toFixed(0);
   // ---------------------------------------------------------- each Chronicle theme has its own art
   let own = 0;
   for (const th of Object.keys(TH)) {
@@ -221,7 +236,7 @@ window.CHECK = function () {
   R.DB.maps.__snow = { name: 's', type: 'dungeon', legend: 'local', theme: 'snow', outside: '#', rows: SNOWM, spawns: { e: { x: 2, y: 4 } } };
   const sm = R.FieldMap.compile('__snow');
   const snowFloorL = lum(frames(A.localTile(sm, 2, 4))[0]), snowTopL = lum(frames(A.localTile(sm, 2, 1))[0]);
-  if (snowTopL > snowFloorL - 12) fail('snow: wall top (' + snowTopL.toFixed(0) + ') is not darker than the snow floor (' + snowFloorL.toFixed(0) + ')');
+  if (snowTopL > snowFloorL - 30) fail('snow: wall top (' + snowTopL.toFixed(0) + ') is not darker than the snow floor (' + snowFloorL.toFixed(0) + ')');
   res.n.pale = 'fog ≥ ' + fogMin + ' px set apart from pale floors; snow top ' + snowTopL.toFixed(0) + ' vs floor ' + snowFloorL.toFixed(0);
   res.n.outside = outTrees + ' themed outside trees, ' + banks + ' bank cells, ember ' + emberHot + ' hot / ' + emberPale + ' pale px';
   res.ms = Math.round(performance.now() - t0);

@@ -434,21 +434,27 @@
       if (!body) p.d[y * w + x] = null;
     }
   }
-  const SHADE = ['#5a6aa8', '#7e90c8', '#a8b8e4', '#d4e0f8', '#f4f8ff'];
+  // 8 tones (A15a.2): a wider ramp keeps faces, crowns and folds readable (the old 5-tone ramp
+  // flattened b_valzard_echo's face into the robe)
+  const SHADE = ['#3a4682', '#52609c', '#6a7cb6', '#8698cc', '#a4b6e2', '#c2d0f0', '#dce6fa', '#f4f8ff'];
   // 影（霧の分身・魔王の残影）: white-blue ramp, checker-dithered see-through inside, light outline
   F.shade = (p) => {
     const w = p.w, h = p.h, ring = ringOf(p), nl = lumRange(p, ring);
     const src = p.d.slice();
     const on = (x, y) => x >= 0 && y >= 0 && x < w && y < h && src[y * w + x] != null;
+    const L = (x, y) => (on(x, y) ? lum(src[y * w + x]) : null);
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
       const i = y * w + x, c = src[i];
       if (c == null) continue;
       if (ring[i]) { p.d[i] = '#a0b0e0'; continue; }
       const l = lum(c);
-      const col = l < 0.1 ? SHADE[0] : lumTo(SHADE, 0.1 + nl(l) * 0.9, 0.9);
-      // interior (2+ px from the edge) is half see-through; bright highlights stay solid
+      const col = l < 0.1 ? SHADE[0] : lumTo(SHADE, 0.08 + nl(l) * 0.92, 0.9);
+      // interior (2+ px from the edge) is half see-through; bright highlights and the pixels
+      // that draw a feature (eyes, crown points, folds: a clear step to a neighbour) stay solid
       const deep = on(x - 2, y) && on(x + 2, y) && on(x, y - 2) && on(x, y + 2);
-      p.d[i] = deep && (x + y) % 2 === 1 && l < 0.8 ? null : col;
+      let edge = false;
+      if (deep && (x + y) % 2 === 1) for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const n = L(x + dx, y + dy); if (n != null && Math.abs(n - l) > 0.16) { edge = true; break; } }
+      p.d[i] = deep && !edge && (x + y) % 2 === 1 && l < 0.8 ? null : col;
     }
   };
   const STEEL = ['#303848', '#6a7890', '#b0c0d8', '#f0f8ff'];
@@ -568,6 +574,7 @@
   A.PART_Z = Object.assign(A.PART_Z || {}, {
     armor_plates: 0, spots: 0, runes: 0, chain: 0, skull_mark: 0, embers: 0, frost: 0, moss: 0, coral: 0, crystals: 0,
     spikes: 0, thorns: 0, drips: 0, pins: 0, cape: 0, shell_tower: 0, mist: 3, flame: 0.5,
+    eye3: 0.8, // a brow eye sits under headwear (demon_3: the crown band over its upper lid)
     sword: 2, spear: 2, axe: 2, staff: 2, bow: 2, club_iron: 2, pick: 2, bomb: 2, cannon: 2, baton: 2, quill: 2, parasol: 2,
     shield: 2, book: 2, violin: 2, drum: 2, flute: 2, claws: 2,
   });
@@ -702,11 +709,25 @@
     // glow and vapour of back parts that stay visible around the base count as part pixels too
     for (let i = 0; i < W * H; i++) if (P.d[i] == null && R0.d[i] != null) partMask[i] = 1;
     for (const L of front) { put(R0, L.pix, 'dark'); for (let i = 0; i < W * H; i++) if (L.pix.d[i] != null) { dirty[i] = 1; partMask[i] = 1; } }
-    // outline every transparent pixel next to a pixel the parts added or exposed (§9.4.3 step 4)
+    // outline every transparent pixel next to a pixel the parts added or exposed (§9.4.3 step 4) —
+    // but not the see-through holes of a dither (insect / fairy / bee wings, veils): a transparent
+    // pixel with 3–4 opaque neighbours (counting the front layers' glow/dither pixels still to come)
+    // is a hole inside a surface, not the silhouette's edge, and stays open (A14b.1)
     const src = R0.d.slice();
+    const cover = new Uint8Array(W * H);
+    for (let i = 0; i < W * H; i++) if (src[i] != null) cover[i] = 1;
+    for (const L of front) for (let i = 0; i < W * H; i++) if (L.fx.d[i] != null) cover[i] = 1;
+    const hole = new Uint8Array(W * H);
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
       const i = y * W + x;
-      if (src[i] != null) continue;
+      if (cover[i]) continue;
+      let n = 0;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const X = x + dx, Y = y + dy; if (X >= 0 && Y >= 0 && X < W && Y < H && cover[Y * W + X]) n++; }
+      if (n >= 3) hole[i] = 1;
+    }
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const i = y * W + x;
+      if (src[i] != null || hole[i]) continue;
       let need = false;
       for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
         const X = x + dx, Y = y + dy;
@@ -721,7 +742,7 @@
       if (!dirty[i] || R0.d[i] == null || lum(R0.d[i]) < 0.1) continue;
       for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
         const X = x + dx, Y = y + dy;
-        if (X >= 0 && Y >= 0 && X < W && Y < H && R0.d[Y * W + X] == null) { openEdge++; break; }
+        if (X >= 0 && Y >= 0 && X < W && Y < H && R0.d[Y * W + X] == null && !hole[Y * W + X]) { openEdge++; break; }
       }
     }
     for (const L of front) for (let i = 0; i < W * H; i++) if (L.fx.d[i] != null) { R0.d[i] = L.fx.d[i]; partMask[i] = 1; }

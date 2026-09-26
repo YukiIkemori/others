@@ -135,12 +135,30 @@
       return a < 3.2 ? M[2] : M[3];
     });
   }
-  function poison(t, f) {
-    const P = [0x281030, 0x44205a, 0x642c80, 0x8444a4, 0xb070d0, 0xdcacf0];
+  // poison floor: violet toxin (dungeons) or, in the outdoor swamp, a murky green-black
+  // mire with an oily, sickly yellow-green sheen and slow bubbles (R4.5)
+  const POISON_PAL = {
+    base: { P: [0x281030, 0x44205a, 0x642c80, 0x8444a4, 0xb070d0, 0xdcacf0], lip: 0x1c0c24, edge: 0xc090e0 },
+    swamp: { P: [0x0c120a, 0x162012, 0x22301a, 0x34461e, 0x8ca034, 0xd4e070], lip: 0x080c06, edge: 0x7c8c3a, sheen: [0x4a5c2a, 0x6e8030] },
+  };
+  A.POISON_PAL = POISON_PAL;
+  const poisonKind = (theme) => (theme && A.themeOf && A.themeOf(theme) === 'swamp' ? 'swamp' : 'base');
+  A.poisonKind = poisonKind;
+  function poison(t, f, kind) {
+    const K = POISON_PAL[kind] || POISON_PAL.base, P = K.P;
     const b = t.tex(16, 16, (x, y) => {
       const v = t.fnoise(x, y, 8, 16, 97);
       return v < 0.34 ? P[1] : v > 0.7 ? P[3] : P[2];
     });
+    if (K.sheen) {
+      // an oily film drifting across the surface (shifts one pixel per frame)
+      for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+        const v = t.fnoise((x + f) & 15, y, 4, 16, 131);
+        if (v > 0.8) b.set(x, y, K.sheen[1]);
+        else if (v > 0.72 && (x + y) % 2 === 0) b.set(x, y, K.sheen[0]);
+      }
+      for (let x = 0; x < 16; x++) if (t.hash(x, 0, 137) < 0.06) b.set(x, 0, P[0]);
+    }
     const bubbles = f ? [[4, 4, 1], [12, 11, 0], [9, 3, 0]] : [[4, 5, 0], [12, 10, 1], [7, 13, 1]];
     for (const [x, y, big] of bubbles) {
       if (big) { b.wset(x, y - 1, P[4]); b.wset(x - 1, y, P[4]); b.wset(x + 1, y, P[3]); b.wset(x, y + 1, P[2]); b.wset(x, y, P[5]); }
@@ -149,12 +167,12 @@
     return b;
   }
   const LX = A.LOCAL_EXT || {};
-  A.groundArt = function (name, f) {
+  A.groundArt = function (name, f, theme) {
     const t = tk();
     if (name === 'water') return water(t, f || 0);
     if (LX.GROUND && LX.GROUND[name]) return LX.GROUND[name](t, f || 0);
     if (name === 'lava') return lava(t, f || 0);
-    if (name === 'poison') return poison(t, f || 0);
+    if (name === 'poison') return poison(t, f || 0, poisonKind(theme));
     const g = GROUND[name] || GROUND.stone;
     return g(t);
   };
@@ -1095,8 +1113,27 @@
       return [0, 1, 2, 3].map(make);
     });
   }
+  // loose objects at the water's edge (a rock on the beach, a sign, a barrel) stand on the
+  // ground around them: their bank is that ground's (a sand / grass lip), not stone coping
+  const LOOSE = { rock: 1, sign: 1, barrel: 1, crate: 1, pot: 1, grave: 1, statue: 1 };
+  function looseBank(m, x, y, theme) {
+    const score = {};
+    for (const [dx, dy, w] of [[0, -1, 2], [-1, 0, 1.5], [1, 0, 1.5], [0, 1, 1], [-1, -1, 0.5], [1, -1, 0.5]]) {
+      const id = m.tileAt(x + dx, y + dy);
+      if (LOOSE[id]) continue;
+      const s = bankStyle(id, theme);
+      if (!s || s === 'k') continue;
+      score[s] = (score[s] || 0) + w;
+    }
+    let best = '', bs = 0;
+    for (const k in score) if (score[k] > bs) { bs = score[k]; best = k; }
+    return best;
+  }
   function canalSig(m, x, y, theme) {
-    const st = (dx, dy) => bankStyle(m.tileAt(x + dx, y + dy), theme) || '-';
+    const st = (dx, dy) => {
+      const id = m.tileAt(x + dx, y + dy);
+      return (LOOSE[id] && looseBank(m, x + dx, y + dy, theme)) || bankStyle(id, theme) || '-';
+    };
     const N = st(0, -1), S = st(0, 1), W = st(-1, 0), E = st(1, 0);
     const inner = (dx, dy, a, b2) => (a === '-' && b2 === '-' ? st(dx, dy) : '-');
     return N + S + W + E + inner(-1, -1, N, W) + inner(1, -1, N, E) + inner(-1, 1, S, W) + inner(1, 1, S, E);
@@ -1174,6 +1211,31 @@
   def('tile:water', () => tk().frames(4, (f) => water(tk(), f)));
   def('tile:lava', () => tk().frames(2, (f) => lava(tk(), f)));
   def('tile:poison', () => tk().frames(2, (f) => poison(tk(), f)));
+  // 流砂 (quicksand, R2.1): sand pouring into a funnel — a spiral of ripples turning a quarter
+  // between the 2 frames, a dark throat, grains sliding in (region2_00_kit only falls back to
+  // its own drawing when this key is missing)
+  def('tile:quicksand', () => tk().frames(2, (f) => {
+    const t = tk();
+    const P = [0x4a3a1e, 0x6e5630, 0x8e7244, 0xae9060, 0xc8ac7a, 0xdcc496, 0xeadab4];
+    const b = t.tex(16, 16, (x, y) => {
+      const dx = x - 7.5, dy = (y - 7.5) * 1.15, r = Math.sqrt(dx * dx + dy * dy), a = Math.atan2(dy, dx);
+      const s = r * 0.9 + (a / (Math.PI * 2)) * 3 + f * 1.5;
+      const band = ((Math.floor(s) % 3) + 3) % 3;
+      if (r < 1.6) return P[0];
+      if (r < 2.8) return P[1];
+      if (r < 4) return band === 0 ? P[1] : P[2];
+      const k = r > 7.2 ? 4 + (band === 2 ? 1 : 0) : 2 + band;
+      return P[Math.min(6, k)];
+    });
+    // grains sliding toward the throat (move one step inward per frame)
+    for (const [gx, gy] of [[2, 3], [13, 4], [12, 12], [3, 12], [8, 1]]) {
+      const x = Math.round(gx + (7.5 - gx) * 0.18 * f), y = Math.round(gy + (7.5 - gy) * 0.18 * f);
+      b.set(x, y, P[6]); b.set(x + 1, y, P[3]);
+    }
+    return b;
+  }));
+  // the swamp's own mire (themes that fall back to swamp resolve through themeOf in the tiler)
+  def('tile:swamp:poison', () => tk().frames(2, (f) => poison(tk(), f, 'swamp')));
   def('tile:bog', () => tk().frames(4, (f) => A.groundArt('bog', f)));
   def('tile:mud', () => A.floorBuf('mud').toCanvas());
   // objects
