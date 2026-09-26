@@ -23,7 +23,7 @@
     ctx.imageSmoothingEnabled = false;
     [['slime', 170], ['wolf', 620], ['goblin', 1150]].forEach(([n, x]) => {
       const B = new RZ.Builder(); MON.draw(n, B, 0, {});
-      const r = RZ.render(B, {});
+      const r = RZ.render(B, { scale: n === 'goblin' ? 1.15 : 1 });
       ctx.drawImage(r.canvas, x - r.ox * z, 420 - r.oy * z, r.canvas.width * z, r.canvas.height * z);
     });
   }
