@@ -52,6 +52,8 @@ async function geminiPost(model, body, o) {
     if (res.ok) return JSON.parse(text);
     last = new Error(`HTTP ${res.status}: ${redact(text).slice(0, 600)}`);
     last.status = res.status;
+    // a per-day quota ("generate_requests_per_model_per_day", "retry in 11h57m…") will not clear by waiting
+    if (res.status === 429 && (/per_day|PerDay/.test(text) || /retry in \d+h/i.test(text))) { last.daily = true; throw last; }
     if (res.status === 429 || res.status >= 500) {
       const m = /retry in ([0-9.]+)s/i.exec(text);
       const wait = m ? (+m[1] + 1.5) * 1000 : Math.min(120000, 15000 * (t + 1));
@@ -62,6 +64,49 @@ async function geminiPost(model, body, o) {
     throw last;
   }
   throw last;
+}
+/** GET <API_BASE>/<name> (e.g. batches/xyz) → JSON */
+async function geminiGet(name, o) {
+  o = o || {};
+  const key = o.key || apiKey();
+  for (let t = 0; ; t++) {
+    try {
+      const res = await fetch(`${API_BASE}/${name}`, { headers: { 'x-goog-api-key': key } });
+      const text = await res.text();
+      if (res.ok) return JSON.parse(text);
+      if (t >= 5 || (res.status < 500 && res.status !== 429)) throw new Error(`HTTP ${res.status}: ${redact(text).slice(0, 300)}`);
+    } catch (e) { if (t >= 5) throw new Error(redact(e.message || e)); }
+    await sleep(10000 * (t + 1));
+  }
+}
+/** Batch API (separate quota from the per-day request limit of generateContent; typically done in 2–10 min):
+ *  POST /models/<m>:batchGenerateContent {batch:{display_name, input_config:{requests:{requests:[{request, metadata:{key}}]}}}}
+ *  → operation {name:'batches/…', metadata:{state}}; poll GET /v1beta/batches/… until BATCH_STATE_SUCCEEDED;
+ *  results in response.inlinedResponses.inlinedResponses[] = {response | error, metadata:{key}}.
+ *  reqs: [{key, request}] → Map key → {json} | {error} */
+async function batchGenerate(model, reqs, o) {
+  o = o || {};
+  const log = o.log || (() => {});
+  const op = await geminiPost(model, { batch: { display_name: o.name || 'lc-batch', input_config: { requests: { requests: reqs.map((r) => ({ request: r.request, metadata: { key: r.key } })) } } } }, { method: 'batchGenerateContent', tries: 4 });
+  const name = op.name;
+  log(`batch ${name}: ${reqs.length} request(s) queued`);
+  const t0 = Date.now();
+  let d = op;
+  for (;;) {
+    const st = d.metadata && d.metadata.state;
+    if (d.done || /SUCCEEDED|FAILED|CANCELLED|EXPIRED/.test(st || '')) break;
+    if (Date.now() - t0 > (o.maxWaitMin || 180) * 60000) throw new Error(`batch ${name} still ${st} after ${o.maxWaitMin || 180} min`);
+    await sleep(o.pollMs || 20000);
+    d = await geminiGet(name);
+    const bs = (d.metadata && d.metadata.batchStats) || {};
+    log(`batch ${name}: ${d.metadata && d.metadata.state} (${Math.round((Date.now() - t0) / 1000)} s; ok ${bs.successfulRequestCount || 0}, pending ${bs.pendingRequestCount || 0})`);
+  }
+  const outp = (d.response && d.response.inlinedResponses) || (d.metadata && d.metadata.output && d.metadata.output.inlinedResponses) || {};
+  const list = outp.inlinedResponses || [];
+  const res = new Map();
+  for (const r of list) res.set(r.metadata && r.metadata.key, r.error ? { error: JSON.stringify(r.error) } : { json: r.response });
+  if (!list.length) throw new Error(`batch ${name} ended ${d.metadata && d.metadata.state} without results: ${redact(JSON.stringify(d.error || '')).slice(0, 300)}`);
+  return res;
 }
 /** the parts of the first candidate → {text, audio:[{mimeType, bytes}]} */
 function partsOf(json) {
@@ -174,4 +219,4 @@ function limitTo(channels, rate, target, ceilDb) {
   return out;
 }
 
-module.exports = { limitTo, API_BASE, apiKey, redact, geminiPost, partsOf, ffmpegPath, decode, encode, loudness, peak, gain, mono, rmsDb, normalise, sleep };
+module.exports = { limitTo, geminiGet, batchGenerate, API_BASE, apiKey, redact, geminiPost, partsOf, ffmpegPath, decode, encode, loudness, peak, gain, mono, rmsDb, normalise, sleep };

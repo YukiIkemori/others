@@ -6,7 +6,9 @@
 //   node tools/voice_tts.js --hero           only the hero's battle voices       --no-hero   skip them
 //   node tools/voice_tts.js --force          regenerate files that exist        --dry-run   print prompts only
 //   node tools/voice_tts.js --reprocess      redo trim / effects / loudness from the cached raw WAVs (no API)
-//   options: --lufs <n> (default -16)  --tries <n> (per line, default 4)  --raw <dir> (default $TMPDIR/voice_raw)
+//   options: --lufs <n> (default -16)  --raw <dir> (default $TMPDIR/voice_raw)  --report <file.json>
+//            --direct (one generateContent call per take; --tries <n>, default 4) — default for ≤ 3 lines;
+//            otherwise the Batch API: --takes <n> per line and round (default 2), --rounds <n> (default 3)
 //
 // Casting, voice ids, per-speaker profile/style, per-line direction and the hero's battle lines live in
 // design/voice/casting.json; the lines themselves come from src/ via tools/voice_script.js.
@@ -213,54 +215,96 @@ async function main(argv, E) {
   fs.mkdirSync(rawDir, { recursive: true });
   const report = [];
   let fails = 0;
-  for (const l of lines) {
-    const file = path.join(outDir, l.id + '.ogg');
-    if (fs.existsSync(file) && !argv.includes('--force') && !reproc) continue;
-    const sp = speakerOf(C, l);
-    const rawFile = path.join(rawDir, l.id + '.wav');
-    try {
-      let wav = null, heard = '', sim = 0;
-      if (reproc) {
-        if (!fs.existsSync(rawFile)) throw new Error('no raw take in ' + rawDir);
-        wav = fs.readFileSync(rawFile);
-        const m = fs.existsSync(rawFile + '.json') ? JSON.parse(fs.readFileSync(rawFile + '.json', 'utf8')) : {};
-        heard = m.heard || ''; sim = m.similarity || 0;
-      } else {
+  const todo = lines.filter((l) => reproc || argv.includes('--force') || !fs.existsSync(path.join(outDir, l.id + '.ogg')));
+  let judgeOff = false; // the judge model hit its daily quota → fall back to the transcription model
+  /** listen to one take → {good, q, heard, sim, note} */
+  const evaluate = async (w, l, sp) => {
+    let jd;
+    if (!judgeOff) {
+      try { jd = await judge(w, l); } catch (e) { if (!e.daily) throw e; judgeOff = true; console.log('  (judge model: daily quota reached — using the transcription model from now on)'); }
+    }
+    if (!jd) { const h = await transcribe(w); jd = { heard: h, match: similarity(l.text, h) >= 0.72, extra: '', note: 'transcription check' }; }
+    const h = jd.heard, sim0 = similarity(l.text, h);
+    const leaked = (/[A-Za-z]{4,}/.test(h) && !/[A-Za-z]{4,}/.test(l.text)) || /[A-Za-z]{4,}/.test(jd.extra);
+    const ck = check(processWav(w, l, sp, o), l);
+    const ok = l.shout ? !leaked : (jd.match && !leaked);
+    return { good: ok && !ck.problems.length, q: (ok ? 1 : 0) + sim0 * 0.5 - (leaked ? 1 : 0) - ck.problems.length * 0.5, heard: h, sim: ok ? Math.max(sim0, 0.9) : sim0, note: jd.note, why: `heard "${h}"${jd.extra ? ', extra "' + jd.extra + '"' : ''}${ck.problems.length ? ', ' + ck.problems.join('; ') : ''}` };
+  };
+  /** write the chosen take: raw cache + ogg + report row */
+  const finish = (l, sp, wav, ev) => {
+    const file = path.join(outDir, l.id + '.ogg'), rawFile = path.join(rawDir, l.id + '.wav');
+    if (!reproc) {
+      fs.writeFileSync(rawFile, wav);
+      fs.writeFileSync(rawFile + '.json', JSON.stringify({ id: l.id, voice: sp.voice, heard: ev.heard, similarity: ev.sim, note: ev.note, matched: ev.good, prompt: buildPrompt(C, l), generated: new Date().toISOString() }, null, 1));
+      if (!ev.good) console.log(`  ${l.id}: kept the best take (${ev.why}) — listen to it`);
+    }
+    const pr = processWav(wav, l, sp, o), ck = check(pr, l);
+    GA.encode(pr.channels, pr.rate, file, { q: 4 });
+    const L = GA.loudness(pr.channels, pr.rate);
+    report.push({ id: l.id, speaker: l.speaker, voice: sp.voice, text: spoken(l.text), heard: ev.heard, matched: ev.good, similarity: Math.round(ev.sim * 100) / 100, note: ev.note, seconds: Math.round(ck.dur * 100) / 100, estimate: l.est, lufs: isFinite(L.I) ? L.I : null, peakDb: Math.round(ck.peakDb * 10) / 10, problems: ck.problems, bytes: fs.statSync(file).size });
+    if (ck.problems.length || !ev.good) fails++;
+    console.log(`[voice] ${l.id}: ${ck.dur.toFixed(2)} s, ${isFinite(L.I) ? L.I.toFixed(1) + ' LUFS' : 'short'}, ${ev.good ? 'ok' : 'CHECK'} "${ev.heard}"${ck.problems.length ? '  ✗ ' + ck.problems.join('; ') : ''}`);
+  };
+  if (reproc) {
+    for (const l of todo) {
+      const sp = speakerOf(C, l), rawFile = path.join(rawDir, l.id + '.wav');
+      if (!fs.existsSync(rawFile)) { console.log(`[voice] ${l.id}: no raw take in ${rawDir}`); fails++; continue; }
+      const m = fs.existsSync(rawFile + '.json') ? JSON.parse(fs.readFileSync(rawFile + '.json', 'utf8')) : {};
+      finish(l, sp, fs.readFileSync(rawFile), { heard: m.heard || '', sim: m.similarity || 0, note: m.note || '', good: m.matched !== false, why: '' });
+    }
+  } else if (argv.includes('--direct') || todo.length <= 3) {
+    // one request per take (generateContent; 10 / min and 100 / day per model)
+    for (const l of todo) {
+      const sp = speakerOf(C, l);
+      try {
         let best = null;
-        for (let t = 0; t < o.tries; t++) {
-          const json = await GA.geminiPost(TTS_MODEL, requestBody(C, l), { timeoutSec: 180, log: (s) => process.stdout.write(s.trim() + ' ') });
-          const p = GA.partsOf(json);
+        for (let t = 0; t < o.tries && !(best && best.ev.good); t++) {
+          const p = GA.partsOf(await GA.geminiPost(TTS_MODEL, requestBody(C, l), { timeoutSec: 180, log: (x) => process.stdout.write(x.trim() + ' ') }));
           if (!p.audio.length) { console.log(`  ${l.id}: no audio (${p.finishReason || p.blocked || p.text})`); continue; }
-          const w = p.audio[0].bytes;
-          const jd = await judge(w, l);
-          const h = jd.heard, sim0 = similarity(l.text, h);
-          const leaked = (/[A-Za-z]{4,}/.test(h) && !/[A-Za-z]{4,}/.test(l.text)) || /[A-Za-z]{4,}/.test(jd.extra);
-          const pr = processWav(w, l, sp, o), ck = check(pr, l);
-          const ok = l.shout ? !leaked : (jd.match && !leaked);
-          const s = ok ? Math.max(sim0, 0.9) : sim0;
-          const good = ok && !ck.problems.length;
-          const q = (ok ? 1 : 0) + sim0 * 0.5 - (leaked ? 1 : 0) - ck.problems.length * 0.5;
-          if (!best || q > best.q) best = { w, h, s, q, good, note: jd.note };
-          if (good) break;
-          console.log(`  ${l.id}: retry (heard "${h}"${jd.extra ? ', extra "' + jd.extra + '"' : ''}${ck.problems.length ? ', ' + ck.problems.join('; ') : ''})`);
+          const ev = await evaluate(p.audio[0].bytes, l, sp);
+          if (!best || ev.q > best.ev.q) best = { w: p.audio[0].bytes, ev };
+          if (!ev.good) console.log(`  ${l.id}: retry (${ev.why})`);
         }
         if (!best) throw new Error('no audio after ' + o.tries + ' tries');
-        wav = best.w; heard = best.h; sim = best.s;
-        fs.writeFileSync(rawFile, wav);
-        fs.writeFileSync(rawFile + '.json', JSON.stringify({ id: l.id, voice: sp.voice, heard, similarity: sim, note: best.note, matched: best.good, prompt: buildPrompt(C, l), generated: new Date().toISOString() }, null, 1));
-        if (!best.good) console.log(`  ${l.id}: kept the best take (sim ${sim.toFixed(2)}) — listen to it`);
+        finish(l, sp, best.w, best.ev);
+      } catch (e) { fails++; console.log(`[voice] ${l.id}: FAILED: ${GA.redact(e.message || e)}`); report.push({ id: l.id, speaker: l.speaker, failed: GA.redact(e.message || e) }); }
+    }
+  } else {
+    // Batch API rounds: `--takes` takes of every open line per round (default 2), listen, keep the first good one;
+    // the lines without a good take go into the next round (up to --rounds, default 3)
+    const takes = +arg('--takes', 2), rounds = +arg('--rounds', 3);
+    const best = new Map();
+    let open = todo.slice();
+    for (let r = 0; r < rounds && open.length; r++) {
+      console.log(`[voice] round ${r + 1}: ${open.length} line(s) × ${takes} take(s) via the Batch API`);
+      const reqs = [];
+      for (const l of open) for (let k = 0; k < takes; k++) reqs.push({ key: `${l.id}#${r}.${k}`, request: requestBody(C, l) });
+      const res = await GA.batchGenerate(TTS_MODEL, reqs, { name: 'lc-voice-r' + (r + 1), log: (x) => console.log('  ' + x) });
+      const next = [];
+      for (const l of open) {
+        const sp = speakerOf(C, l);
+        for (let k = 0; k < takes; k++) {
+          const got = res.get(`${l.id}#${r}.${k}`);
+          if (!got || got.error) { console.log(`  ${l.id}: take ${k + 1} failed ${got ? got.error.slice(0, 120) : '(missing)'}`); continue; }
+          const p = GA.partsOf(got.json);
+          if (!p.audio.length) { console.log(`  ${l.id}: take ${k + 1} without audio (${p.finishReason || p.blocked || ''})`); continue; }
+          try {
+            const ev = await evaluate(p.audio[0].bytes, l, sp);
+            const b = best.get(l.id);
+            if (!b || ev.q > b.ev.q) best.set(l.id, { w: p.audio[0].bytes, ev });
+            if (ev.good) break;
+            console.log(`  ${l.id}: take ${k + 1} rejected (${ev.why})`);
+          } catch (e) { console.log(`  ${l.id}: take ${k + 1} check failed: ${GA.redact(e.message || e).slice(0, 160)}`); }
+        }
+        const b = best.get(l.id);
+        if (b && b.ev.good) finish(l, sp, b.w, b.ev); else next.push(l);
       }
-      const pr = processWav(wav, l, sp, o), ck = check(pr, l);
-      GA.encode(pr.channels, pr.rate, file, { q: 4 });
-      const L = GA.loudness(pr.channels, pr.rate);
-      const row = { id: l.id, speaker: l.speaker, voice: sp.voice, text: spoken(l.text), heard, similarity: Math.round(sim * 100) / 100, seconds: Math.round(ck.dur * 100) / 100, estimate: l.est, lufs: isFinite(L.I) ? L.I : null, peakDb: Math.round(ck.peakDb * 10) / 10, problems: ck.problems, bytes: fs.statSync(file).size };
-      report.push(row);
-      if (ck.problems.length) fails++;
-      console.log(`[voice] ${l.id}: ${ck.dur.toFixed(2)} s, ${isFinite(L.I) ? L.I.toFixed(1) + ' LUFS' : 'short'}, sim ${sim.toFixed(2)}${ck.problems.length ? '  ✗ ' + ck.problems.join('; ') : ''}`);
-    } catch (e) {
-      fails++;
-      console.log(`[voice] ${l.id}: FAILED: ${GA.redact(e.message || e)}`);
-      report.push({ id: l.id, speaker: l.speaker, failed: GA.redact(e.message || e) });
+      open = next;
+    }
+    for (const l of open) {
+      const b = best.get(l.id);
+      if (b) finish(l, speakerOf(C, l), b.w, b.ev);
+      else { fails++; console.log(`[voice] ${l.id}: FAILED (no take)`); report.push({ id: l.id, speaker: l.speaker, failed: 'no take' }); }
     }
   }
   const rp = arg('--report');

@@ -13,6 +13,8 @@
 //            --kbps <n> (Ogg Vorbis bitrate, default 96)  --lufs <n> (loudness target, default -18)
 //            --xfade <s> (loop crossfade, default 0.6)  --no-loop (keep the clip as generated, loop whole file)
 //            --out <dir> (default assets/bgm)  --raw <dir> (raw take cache, default $TMPDIR/lyria_raw)
+//            --listen (a Gemini model listens to the 3 best loop seams of every take and picks the smoothest)
+//            --reuse (use cached raw takes that exist, generate only the missing ones)
 //
 // With no credentials it prints the setup steps below and exits 0 (nothing is written).
 //
@@ -347,6 +349,7 @@ function findLoop(chans, rate, o) {
   const eMax = Math.min(bodyEnd, nF - 1 - fwd);
   const minLag = Math.round(Math.max(o.minLoop || 0, (eMax - sMin) * hop * 0.5, 12) / hop);
   let best = { score: -2 };
+  const cands = { list: [], minScore: -2 };
   const W = back + fwd + 1;
   for (let L = minLag; L <= eMax - sMin; L++) {
     // sim[f] = cos(frame f, frame f+L), box-summed over [s-back, s+fwd]
@@ -362,9 +365,22 @@ function findLoop(chans, rate, o) {
       const sum = pre[b - lo + 1] - pre[a - lo];
       const score = sum / W + 0.03 * (L / (eMax - sMin)); // a small bonus for longer loops
       if (score > best.score) best = { score, s, e: s + L, raw: sum / W };
+      if (score > cands.minScore || cands.list.length < 40) pushCand(cands, { score, s, e: s + L, raw: sum / W });
     }
   }
   if (!(best.score > -2)) return null;
+  if (o.all) {
+    // distinct candidates (loop ends ≥ 1.5 s apart or starts ≥ 1.5 s apart), best first
+    const out = [], gap = 1.5 / hop;
+    for (const c of cands.list.sort((a, b) => b.score - a.score)) {
+      if (out.some((d) => Math.abs(d.e - c.e) < gap && Math.abs(d.s - c.s) < gap)) continue;
+      out.push(refine(c));
+      if (out.length >= (o.all || 3)) break;
+    }
+    return out;
+  }
+  return refine(best);
+  function refine(best) {
   // sample alignment: shift e by ±12 ms to best match the waveform around s
   const S = Math.round(best.s * hop * rate), E0 = Math.round(best.e * hop * rate);
   const N = Math.round(0.03 * rate), R = Math.round(0.012 * rate);
@@ -376,6 +392,11 @@ function findLoop(chans, rate, o) {
     if (c > bestC) { bestC = c; bestD = d; }
   }
   return { start: S, end: E0 + bestD, loopStart: S / rate, loopEnd: (E0 + bestD) / rate, score: best.raw, corr: bestC, bodyEnd: bodyEnd * hop, dur };
+  }
+}
+function pushCand(c, x) {
+  c.list.push(x);
+  if (c.list.length > 400) { c.list.sort((a, b) => b.score - a.score); c.list.length = 200; c.minScore = c.list[199].score; }
 }
 /** bake the seam: the X s before `end` fade into the X s before `start`; the result ends at `end` */
 function bakeLoop(chans, rate, start, end, xfadeSec) {
@@ -417,6 +438,25 @@ function analyse(chans, rate, loopStart, loopEnd) {
   return { medianDb: Math.round(med * 10) / 10, longestSilence: Math.round(longest * 0.05 * 10) / 10, seamLevelDiffDb: Math.round(seamDb * 10) / 10, seamJump: Math.round(jump * 1e4) / 1e4, maxStep: Math.round(step * 1e4) / 1e4 };
 }
 
+/** --listen: a Gemini model hears 8 s before the loop end + 8 s after the loop start (the jump at 8.0 s)
+ *  → {seam_smooth 1–10, problem}. POST …/models/gemini-3.8-flash:generateContent with the MP3 inline. */
+async function listenSeam(chans, rate, ls, le) {
+  const a = Math.round((le - 8) * rate), b = Math.round(le * rate), c = Math.round(ls * rate), d = Math.round((ls + 8) * rate);
+  const clip = chans.map((x) => { const o = new Float32Array((b - a) + (d - c)); o.set(x.subarray(Math.max(0, a), b), Math.max(0, -a)); o.set(x.subarray(c, d), b - a); return o; });
+  const tmp = path.join(os.tmpdir(), `lc_seam_${process.pid}_${Date.now()}.mp3`);
+  const { spawnSync } = require('child_process');
+  const inter = Buffer.from(Float32Array.from({ length: clip[0].length * clip.length }, (_, i) => clip[i % clip.length][Math.floor(i / clip.length)]).buffer);
+  spawnSync(GA.ffmpegPath(), ['-hide_banner', '-y', '-f', 'f32le', '-ar', String(rate), '-ac', String(clip.length), '-i', '-', '-b:a', '160k', tmp], { input: inter });
+  const bytes = fs.readFileSync(tmp); fs.rmSync(tmp, { force: true });
+  const q = 'This 16-second excerpt is a looping video-game track: at exactly 8.0 s the playback jumps from the loop end back to the loop start. Listen carefully around 8.0 s. Reply JSON {"seam_smooth":<1-10, 10 = impossible to notice>,"problem":"<what is audible at 8 s: beat skip, tempo jump, chord clash, sudden instrument change, click, or none>"}';
+  try {
+    const json = await GA.geminiPost(process.env.LISTEN_MODEL || 'gemini-3.8-flash', { contents: [{ parts: [{ inlineData: { mimeType: 'audio/mpeg', data: bytes.toString('base64') } }, { text: q }] }], generationConfig: { responseMimeType: 'application/json' } }, { timeoutSec: 180 });
+    const t = GA.partsOf(json).text;
+    const j = JSON.parse(t.slice(t.indexOf('{'), t.lastIndexOf('}') + 1));
+    return { seam_smooth: +j.seam_smooth || 0, problem: String(j.problem || '') };
+  } catch (e) { return { seam_smooth: 0, problem: 'listen failed: ' + GA.redact(e.message || e).slice(0, 80) }; }
+}
+
 // ------------------------------------------------------------------ main
 const SETUP = `
 Lyria BGM: no credentials found — nothing was generated (the game keeps its synthesised BGM).
@@ -439,15 +479,22 @@ Set ONE of these and run again (first batch = the prompts.json entries with "bat
 const redact = GA.redact;
 
 /** raw take → finished file + json. → summary */
-function processTake(t, take, o) {
+async function processTake(t, take, o) {
   let { rate, channels } = GA.decode(take.file);
   const lt = leadTrim(channels, rate, -55);
   channels = lt.channels;
   const raw = channels[0].length / rate;
   let loop = null, baked = channels, xf = 0;
   if (!o.noLoop) {
-    loop = findLoop(channels, rate, {});
-    if (loop) { const b = bakeLoop(channels, rate, loop.start, loop.end, o.xfade); baked = b.channels; xf = b.xfade; }
+    const cands = findLoop(channels, rate, { all: o.listen ? 3 : 1 }) || [];
+    for (const c of cands) {
+      const b = bakeLoop(channels, rate, c.start, c.end, o.xfade);
+      c.baked = b.channels; c.xf = b.xfade;
+      if (o.listen) { c.heard = await listenSeam(b.channels, rate, c.loopStart, c.loopEnd); o.log(`    loop ${c.loopStart.toFixed(2)}–${c.loopEnd.toFixed(2)} score ${c.score.toFixed(3)} → seam ${c.heard.seam_smooth}/10 ${c.heard.problem || ''}`); }
+    }
+    const rank = (c) => (c.heard ? c.heard.seam_smooth : 0) * 10 + c.score;
+    loop = cands.sort((a, b) => rank(b) - rank(a))[0] || null;
+    if (loop) { baked = loop.baked; xf = loop.xf; }
   }
   const nm = GA.normalise(baked, rate, o.lufs, -1);
   const dur = nm.channels[0].length / rate;
@@ -484,8 +531,8 @@ async function main(argv, E) {
   fs.mkdirSync(outDir, { recursive: true });
   fs.mkdirSync(rawDir, { recursive: true });
   const takes = Math.max(1, +arg('--takes', 1));
-  const o = { xfade: +arg('--xfade', 0.6), lufs: +arg('--lufs', -18), kbps: +arg('--kbps', 96), noLoop: argv.includes('--no-loop') };
   const log = (s) => console.log(s);
+  const o = { xfade: +arg('--xfade', 0.6), lufs: +arg('--lufs', -18), kbps: +arg('--kbps', 96), noLoop: argv.includes('--no-loop'), listen: argv.includes('--listen'), log };
   let fails = 0;
   for (const t of tracks) {
     const exists = ['ogg', 'm4a', 'mp3', 'wav'].find((e) => fs.existsSync(path.join(outDir, t.id + '.' + e)));
@@ -519,10 +566,11 @@ async function main(argv, E) {
       if (!cands.length) throw new Error('no raw take (generate first, or check --raw)');
       let best = null;
       for (const c of cands) {
-        const r = processTake(t, c, o);
+        const r = await processTake(t, c, o);
         r.take = c;
-        const q = r.loop ? r.loop.score : 0;
-        if (!best || q > (best.loop ? best.loop.score : 0)) best = r;
+        const q = r.loop ? (r.loop.heard ? r.loop.heard.seam_smooth * 10 : 0) + r.loop.score : 0;
+        r.q = q;
+        if (!best || q > best.q) best = r;
       }
       for (const e of ['ogg', 'm4a', 'mp3', 'wav']) { const p = path.join(outDir, t.id + '.' + e); if (fs.existsSync(p)) fs.unlinkSync(p); }
       const file = path.join(outDir, t.id + '.ogg');
@@ -533,7 +581,7 @@ async function main(argv, E) {
         source: Object.assign({}, best.take.meta, { rawSeconds: Math.round(best.raw * 10) / 10, takes: cands.length }),
         analysis: {
           loudnessLUFS: Math.round(best.L.I * 10) / 10, truePeakDb: best.L.TP, gainDb: Math.round(best.gainDb * 10) / 10, peakLimited: best.limited,
-          loopScore: best.loop ? Math.round(best.loop.score * 1000) / 1000 : null, seamCorr: best.loop ? Math.round(best.loop.corr * 1000) / 1000 : null,
+          loopScore: best.loop ? Math.round(best.loop.score * 1000) / 1000 : null, seamListen: best.loop && best.loop.heard ? best.loop.heard : undefined, seamCorr: best.loop ? Math.round(best.loop.corr * 1000) / 1000 : null,
           xfade: Math.round(best.xf * 1000) / 1000, ...best.an,
         },
       }, null, 2) + '\n');

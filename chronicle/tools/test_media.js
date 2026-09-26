@@ -300,12 +300,13 @@ function settingsTests() {
   section('settings: voiceVolume + migration');
   const R = require('./lib/load')({ quiet: true });
   ok(R.DEFAULT_SETTINGS.voiceVolume === 0.8 && R.Settings.voiceVolume === 0.8, 'voiceVolume default 0.8');
-  ok(R.DEFAULT_SETTINGS.settingsVer === 4, 'settingsVer bumped to 4');
+  ok(R.DEFAULT_SETTINGS.settingsVer >= 4, 'settingsVer bumped to 4 (5 since Part A11 menuSize)');
   const old = { settingsVer: 3, bgmVolume: 0.3, windowColor: 'blue' };
   const changed = R.Save.migrateSettings(old);
-  ok(changed && old.voiceVolume === 0.8 && old.settingsVer === 4 && old.bgmVolume === 0.3 && old.windowColor === 'blue', 'v3 settings gain voiceVolume 0.8, keep the rest', old);
+  ok(changed && old.voiceVolume === 0.8 && old.settingsVer === R.DEFAULT_SETTINGS.settingsVer && old.bgmVolume === 0.3 && old.windowColor === 'blue', 'v3 settings gain voiceVolume 0.8, keep the rest', old);
   const cur = { settingsVer: 4, voiceVolume: 0 };
-  ok(!R.Save.migrateSettings(cur) && cur.voiceVolume === 0, 'v4 settings keep voiceVolume 0 (off)');
+  R.Save.migrateSettings(cur);
+  ok(cur.voiceVolume === 0, 'v4 settings keep voiceVolume 0 (off)');
   const bad = { settingsVer: 3, voiceVolume: 'x' };
   R.Save.migrateSettings(bad);
   ok(bad.voiceVolume === 0.8, 'a junk value is repaired');

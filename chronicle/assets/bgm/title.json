@@ -16,6 +16,10 @@
     "gainDb": -7.2,
     "peakLimited": false,
     "loopScore": 0.66,
+    "seamListen": {
+      "seam_smooth": 10,
+      "problem": "none"
+    },
     "seamCorr": 0.541,
     "xfade": 0.6,
     "medianDb": -23.1,
