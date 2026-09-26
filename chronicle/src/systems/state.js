@@ -8,6 +8,8 @@
   const U = R.U;
 
   const MAX_ITEM = 99;
+  /** the save revision of the systems rework (A17 / A18 / A19): a save below it is migrated once (migrateA19) */
+  const REV = 19;
   const MAX_GOLD = 9999999;
   const TYPE_ORDER = { consumable: 0, weapon: 1, shield: 2, head: 3, body: 4, hands: 5, feet: 6, acc: 7, key: 8 };
   const FALLBACK_START = { map: 'roa_house', spawn: 'bed', dir: 'down' };
@@ -33,6 +35,7 @@
       return {
         game: 'chronicle',
         version: R.VERSION,
+        rev: REV,
         party: [hero],
         reserve: [],
         tier: 0,
@@ -205,7 +208,7 @@
       const c = R.Rules.newChar({ id: 'hero', heroSpec });
       if (old) {
         c.level = old.level; c.exp = old.exp;
-        c.bonus = Object.assign({ hp: 0, mp: 0, wp: 0 }, old.bonus);
+        c.bonus = Object.assign({ hp: 0, mp: 0 }, old.bonus);
         c.counts = Object.assign({ battles: 0, kills: 0, glimmers: 0 }, old.counts);
         c.joined = old.joined || c.joined;
         c.mem = old.mem || c.mem;
@@ -236,7 +239,7 @@
       R.emit('partyChange');
       return c;
     },
-    /** HP/MP/WP to max, statuses cleared, the fallen revived (party, and the reserve unless {reserve:false}) */
+    /** HP/MP to max, statuses cleared, the fallen revived (party, and the reserve unless {reserve:false}) */
     healAll(opts) {
       const list = opts && opts.reserve === false ? R.Game.party : State.all();
       for (const c of list) R.Rules.fullHeal(c);
@@ -435,6 +438,7 @@
       if (!data || data.kind !== 'chronicle' || !data.game || typeof data.game !== 'object') return false;
       let g;
       try { g = U.clone(data.game); } catch (e) { return false; }
+      const oldRev = +g.rev || 0;     // read before the template fills the missing keys (a fresh game is REV)
       const fresh = State.template();
       for (const k in fresh) if (!(k in g) || g[k] == null && fresh[k] != null) g[k] = fresh[k];
       g.game = 'chronicle';
@@ -456,6 +460,9 @@
       delete g.bestiary; delete g.jpTables;
       g.book = g.book || {};
       for (const k of ['mon', 'tech', 'spell']) if (!g.book[k] || typeof g.book[k] !== 'object') g.book[k] = {};
+      // the systems rework (SYSTEMS_REWORK §2.8, §3.9): once, before the ids that no longer exist are dropped
+      if (oldRev < REV) State.migrateA19(g);
+      g.rev = REV;
       // ids that no longer exist
       if (nonEmpty(DB.items)) for (const id in g.inv) if (!DB.items[id] || !(g.inv[id] > 0)) delete g.inv[id];
       for (const id in g.inv) g.inv[id] = Math.min(DB.items[id] && DB.items[id].type === 'key' ? 1 : MAX_ITEM, Math.floor(g.inv[id]));
@@ -517,7 +524,7 @@
       const prev = R.Game;
       R.Game = g;
       try {
-        // hp/mp/wp inside the maxima (after R.Game is set: stats may look at the game)
+        // hp/mp inside the maxima (after R.Game is set: stats may look at the game)
         for (const c of g.party.concat(g.reserve)) { R.Rules.clampHpMp(c); c.status = {}; }
         State.syncVisited(g);
       } catch (e) {
@@ -528,7 +535,86 @@
       if (R.Battle) R.Battle.autoCarry = false;
       return true;
     },
-    /** make a loaded CharState whole: 9 slots, 11+6 proficiency keys, arrays, counters (old-save safety) */
+    /**
+     * the one-time migration of a save from before the systems rework (g.rev < 19; SYSTEMS_REWORK §2.8, §3.9),
+     * with the table DB.remap (src/data/remap_a19.js). Works on the raw save (before repairChar):
+     *   1. g.inv ids replaced, counts added (99 at most, the rest is lost)
+     *   2. every member's equipment replaced (repairChar then moves a shield next to a new two-handed weapon to the bag)
+     *   3. techs / spells replaced without duplicates; the per-type list cursors (c.mem.list) cleared
+     *   4. the tech / spell book keys replaced, the learner lists merged
+     *   5. proficiency: the removed types' points go to their new type by max; element points × 2.5 (cap PROF_CAP)
+     *   6. the hero's weapon favor: remap.favor, or the first favorOptions.weapon of the type when not offered
+     *   7. WP: mp += round(1.5 × wp), bonus.mp = min(cap, bonus.mp + bonus.wp); wp and bonus.wp removed
+     */
+    migrateA19(g) {
+      const M = DB.remap || {};
+      const mItems = M.items || {}, mActs = M.actions || {}, mW = M.wtypes || {}, mFav = M.favor || {};
+      const Ru = R.Rules, K = Ru.K;
+      const item = (id) => (typeof id === 'string' && mItems[id]) || id;
+      const act = (id) => (typeof id === 'string' && mActs[id]) || id;
+      // 1. inventory
+      if (g.inv && typeof g.inv === 'object') {
+        const inv = {};
+        for (const id in g.inv) {
+          const n = Math.floor(+g.inv[id] || 0);
+          if (!(n > 0)) continue;
+          const to = item(id);
+          inv[to] = Math.min(MAX_ITEM, (inv[to] || 0) + n);
+        }
+        g.inv = inv;
+      }
+      // 4. the books
+      for (const k of ['tech', 'spell']) {
+        const b = g.book && g.book[k];
+        if (!b || typeof b !== 'object') continue;
+        const out = {};
+        for (const id in b) {
+          const to = act(id);
+          const list = Array.isArray(b[id]) ? b[id] : [];
+          out[to] = Array.from(new Set((out[to] || []).concat(list)));
+        }
+        g.book[k] = out;
+      }
+      const chars = [].concat(Array.isArray(g.party) ? g.party : [], Array.isArray(g.reserve) ? g.reserve : []);
+      for (const c of chars) {
+        if (!c || typeof c !== 'object') continue;
+        // 2. equipment
+        if (c.equip && typeof c.equip === 'object') for (const s in c.equip) if (c.equip[s]) c.equip[s] = item(c.equip[s]);
+        // 3. techs, spells
+        for (const k of ['techs', 'spells']) if (Array.isArray(c[k])) c[k] = Array.from(new Set(c[k].map(act)));
+        if (c.mem && typeof c.mem === 'object') c.mem.list = {};
+        // 5. proficiency
+        if (c.wprof && typeof c.wprof === 'object') {
+          for (const old in mW) {
+            if (!(old in c.wprof)) continue;
+            const to = mW[old];
+            c.wprof[to] = Math.max(+c.wprof[to] || 0, +c.wprof[old] || 0);
+            delete c.wprof[old];
+          }
+        }
+        if (c.eprof && typeof c.eprof === 'object') {
+          for (const e in c.eprof) c.eprof[e] = U.clamp(Math.round((+c.eprof[e] || 0) * 2.5 * 100) / 100, 0, K.PROF_CAP);
+        }
+        // 6. the hero's favor
+        if (c.id === 'hero' && c.favor && c.favor.kind === 'weapon' && c.favor.id) {
+          const ht = DB.heroTypes && DB.heroTypes[c.heroType];
+          const opts = (ht && ht.favorOptions && ht.favorOptions.weapon) || null;
+          let to = mFav[c.favor.id] || c.favor.id;
+          if (opts && opts.length && !opts.includes(to)) to = opts[0];
+          c.favor = { kind: 'weapon', id: to };
+        }
+        // 7. WP → MP (clampHpMp after loading keeps it inside the new maximum)
+        c.mp = Math.max(0, Math.floor(+c.mp || 0)) + Math.round(1.5 * (+c.wp || 0));
+        if (c.bonus && typeof c.bonus === 'object') {
+          c.bonus.mp = Math.min(K.BONUS_CAP.mp, (+c.bonus.mp || 0) + (+c.bonus.wp || 0));
+          delete c.bonus.wp;
+        }
+        delete c.wp;
+      }
+      g.rev = REV;
+      return g;
+    },
+    /** make a loaded CharState whole: 9 slots, 7+6 proficiency keys, arrays, counters (old-save safety) */
     repairChar(c, inv) {
       const Ru = R.Rules;
       const e = c.equip && typeof c.equip === 'object' ? c.equip : {};
@@ -559,7 +645,8 @@
       const known = (id) => typeof id === 'string' && (!nonEmpty(DB.actions) || !!DB.actions[id]);
       c.techs = Array.from(new Set(Array.isArray(c.techs) ? c.techs : [])).filter(known);
       c.spells = Array.from(new Set(Array.isArray(c.spells) ? c.spells : [])).filter(known);
-      c.bonus = Object.assign({ hp: 0, mp: 0, wp: 0 }, c.bonus || {});
+      c.bonus = Object.assign({ hp: 0, mp: 0 }, c.bonus || {});
+      for (const k of Object.keys(c.bonus)) if (!Ru.MAXES.includes(k)) delete c.bonus[k];
       for (const k of Ru.MAXES) c.bonus[k] = U.clamp(+c.bonus[k] || 0, 0, Ru.K.BONUS_CAP[k]);
       c.level = U.clamp((c.level | 0) || 1, 1, Ru.MAX_LEVEL);
       c.exp = Math.max(Ru.expForLevel(c.level), +c.exp || 0);
@@ -574,6 +661,7 @@
       c.joined = Object.assign({ tier: 0, frame: 0 }, c.joined || {});
       c.counts = Object.assign({ battles: 0, kills: 0, glimmers: 0 }, c.counts || {});
       for (const k of Ru.MAXES) c[k] = Math.max(0, Math.floor(+c[k] || 0));
+      delete c.wp;
       c.status = {};
       delete c.job; delete c.jobs; delete c.set; delete c.unlocked;
       return c;

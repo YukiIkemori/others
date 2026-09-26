@@ -205,7 +205,7 @@
     if (opt.act === 'attack') {
       const hero = acts.find((a) => a.id === 'arun');
       hero.pose = SCENES._heroAttack(t);
-      hero.pose.br = t * 0.8;
+      hero.pose.br = t * 0.8; hero.pose.x *= 0.62;
       const hitU = (t - 0.84) / 0.5, wlf = acts.find((a) => a.id === 'wolf');
       if (hitU >= 0 && hitU <= 1) { const k = Math.sin(Math.min(1, hitU * 1.4) * Math.PI); wlf.st = { lunge: -0.9 * k, bite: 0.8 * k }; wlf.flash = hitU < 0.25 ? 0.8 * (1 - hitU / 0.25) : 0; }
       acts.hitU = hitU;
@@ -215,7 +215,7 @@
     // long cast shadows (sun upper right → shadows fall lower left) + contact shadows
     for (const [a, r] of rendered) {
       const dx = a.pose ? -a.pose.x * a.s * a.sc * K : 0;
-      castShadow(r, a.x + dx, a.y, a.foe ? 0.55 : 0.5);
+      castShadow(r, a.x, a.y, a.foe ? 0.55 : 0.5);
       ENV.shadow(ctx, a.x + dx, a.y, (a.foe ? 60 : 22) * a.s, (a.foe ? 12 : 6) * a.s, 0.55, [30, 18, 20]);
     }
     for (const [a, r] of rendered) {
@@ -225,7 +225,7 @@
     }
     if (opt.act === 'attack') {
       const hp = acts.find((a) => a.id === 'arun').pose, hitU = acts.hitU;
-      if (hp.smear > 0.05) smear(604 - hp.x * scaleAt(560) * K - 30, 470, hp.smear);
+      if (hp.smear > 0.05) smear(604 - hp.x * scaleAt(560) * 1.12 * K - 26, 470, hp.smear);
       if (hitU >= 0 && hitU < 0.7) spark(420, 560, hitU / 0.7);
       if (hitU >= 0.05 && hitU < 1.6) { const u = Math.min(1, (hitU - 0.05) / 0.25), fade = hitU > 1.3 ? 1 - (hitU - 1.3) / 0.3 : 1; ctx.save(); ctx.globalAlpha = fade; UI.text(ctx, '128', 400, 470 - Math.sin(u * Math.PI) * 24 - u * 8, { px: 40, w: 700, align: 'center' }); ctx.restore(); }
     }

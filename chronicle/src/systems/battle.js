@@ -8,7 +8,7 @@
 // Events (the table of §3.3.8 is the reference; fields added here are optional extras):
 //   {t:'msg',text} {t:'actor',u} {t:'fx',fx,user,targets,ab,kind:'attack'|'ability'|'counter'}
 //   {t:'dmg',u,n,crit,mp,kind:'phys'|'magic'|'breath'|'tier'|'fixed'|'percent'|'poison'|'burn'|'cost',src,el}
-//   {t:'heal',u,n,mp,wp} {t:'miss',u,att,parry} {t:'crit',u} {t:'die',u,killer} {t:'revive',u}
+//   {t:'heal',u,n,mp} {t:'miss',u,att,parry} {t:'crit',u} {t:'die',u,killer} {t:'revive',u}
 //   {t:'status',u,s,on} {t:'buff',u,stat,d,dispel} {t:'flee',u} {t:'escape',ok} {t:'cover',u,ally} {t:'react',u,kind}
 //   {t:'glimmer',u,id,kind} {t:'golden',u} {t:'summon',units:[idx]} {t:'phase',u,text,sprite}
 //   {t:'gain',item,grade,stolen:true} {t:'drop',mon,name,item,grade,n} {t:'levelup',c,level,gains} {t:'prof',u,kind,id,rank}
@@ -28,7 +28,7 @@
     LZ: (T) => 6 + 6 * T,
     W: [8, 14, 21, 30, 40, 51, 64, 78, 94, 112],
     ROW: { middleTaken: 0.7, weight: { front: 2, middle: 1 }, aimMiddle: { front: 1, middle: 3 } },
-    AFTER: { mpPct: 0.1, wpPct: 0.1 },
+    AFTER: { mpPct: 0.12 },
     ESCAPE: { base: 0.55, step: 0.12, agi: 0.5, min: 0.25, max: 0.95 },
     PREEMPT: 1 / 16,
     MODCAP: { party: 150, preempt: 30, exp: 30, expMin: -100, cost: -50 },
@@ -104,11 +104,11 @@
   const NAMES = {
     elem: { fire: '火', water: '水', wind: '風', earth: '土', light: '光', dark: '闇' },
     buff: { atk: '攻撃力', def: '守備力', mag: '術力', mdef: '術防', agi: '素早さ' },
-    stat: { hp: '最大HP', mp: '最大MP', wp: '最大WP', str: '腕力', vit: '体力', dex: '器用さ', agi: '素早さ', int: '知力', mnd: '精神' },
+    stat: { hp: '最大HP', mp: '最大MP', str: '腕力', vit: '体力', dex: '器用さ', agi: '素早さ', int: '知力', mnd: '精神' },
   };
   const elemName = (e) => (DB.elements && DB.elements[e] && DB.elements[e].name) || NAMES.elem[e] || e;
   // why an action cannot be chosen → help text (§11.5.3; STYLE_JA §9)
-  const UNUSABLE_TEXT = { wp: 'WPが足りない！', mp: 'MPが足りない！', silence: '術を封じられている！', reach: '後列からは届かない。', field: '戦闘中は使えない。', noescape: 'この戦いからは逃げられない！', seal: 'この武器では技が使えない。', none: '今は使えない。' };
+  const UNUSABLE_TEXT = { mp: 'MPが足りない！', silence: '術を封じられている！', reach: '後列からは届かない。', field: '戦闘中は使えない。', noescape: 'この戦いからは逃げられない！', seal: 'この武器では技が使えない。', none: '今は使えない。' };
 
   // default normal-attack animation per lineage (monsters) and per weapon type (party; DB.weaponTypes[w].fx first)
   const MON_ATTACK_FX = {
@@ -121,12 +121,13 @@
     scribe: 'strike', book: 'strike', mimic: 'bite', void: 'slash', chaos: 'bite', demon: 'claw', quicksilver: 'strike',
     mirror: 'strike', platinum: 'strike',
   };
-  const WEAPON_FX = { sword: 'slash', greatsword: 'slash2', dagger: 'pierce', axe: 'slash2', spear: 'pierce', bow: 'arrow', club: 'strike', staff: 'strike', katana: 'slash', fist: 'strike', whip: 'lash' };
+  // the 7 weapon types (A19) + fist (素手, not a type). Items may override the look: art 'katana' / 'club' (ITEM_ART_FX)
+  const WEAPON_FX = { sword: 'slash', greatsword: 'slash2', dagger: 'pierce', axe: 'slash2', spear: 'pierce', bow: 'arrow', staff: 'strike', fist: 'strike' };
+  const ITEM_ART_FX = { katana: 'slash', club: 'strike' };
   const WTYPE_FALLBACK = {
     sword: { kind: 'slash', reach: false }, greatsword: { kind: 'slash', reach: false }, dagger: { kind: 'pierce', reach: false },
     axe: { kind: 'slash', reach: false }, spear: { kind: 'pierce', reach: true }, bow: { kind: 'pierce', reach: true },
-    club: { kind: 'blunt', reach: false }, staff: { kind: 'blunt', reach: false }, katana: { kind: 'slash', reach: false },
-    fist: { kind: 'blunt', reach: false }, whip: { kind: 'blunt', reach: true },
+    staff: { kind: 'blunt', reach: true }, fist: { kind: 'blunt', reach: false },
   };
   function wtypeInfo(w) {
     const d = DB.weaponTypes && DB.weaponTypes[w];
@@ -142,7 +143,7 @@
   /** the item of a weapon W (vs / drain / metalHit / sealTech / fx live on the item) */
   function weaponItem(W) { return (W && ((W.id && DB.items[W.id]) || W)) || EMPTY; }
   const FOE_T = { enemy: 1, enemies: 1, group: 1, random: 1 };
-  const BATTLE_EFFECT = { damage: 1, heal: 1, healMp: 1, healWp: 1, revive: 1, cure: 1, status: 1, regen: 1, buff: 1, dispel: 1, steal: 1, scan: 1, escape: 1, grow: 1, cover: 1, summon: 1, special: 1 };
+  const BATTLE_EFFECT = { damage: 1, heal: 1, healMp: 1, revive: 1, cure: 1, status: 1, regen: 1, buff: 1, dispel: 1, steal: 1, scan: 1, escape: 1, grow: 1, cover: 1, summon: 1, special: 1 };
   const GATED = { status: 1, steal: 1, dispel: 1 };
   const hasBattleEffect = (a) => !!(a && a.effects && a.effects.some((e) => BATTLE_EFFECT[e.type]));
   /** a monster (or magic:true) action that silence blocks: magic:true or a magic-formula damage effect */
@@ -187,7 +188,6 @@
       super('party', 'p' + i, eng);
       this.c = c; this.idx = i;
       c.status = {}; // statuses never outlive a battle (§3.2.6): a fresh set for this one
-      if (c.wp == null) c.wp = 0;
       if (c.mp == null) c.mp = 0;
       this.refresh();
     }
@@ -202,11 +202,8 @@
     set hp(v) { this.c.hp = v; }
     get mp() { return this.c.mp; }
     set mp(v) { this.c.mp = v; }
-    get wp() { return this.c.wp; }
-    set wp(v) { this.c.wp = v; }
     get mhp() { return this.st.hp || 1; }
     get mmp() { return this.st.mp || 0; }
-    get mwp() { return this.st.wp || 0; }
     get status() { return this.c.status; }
     set status(v) { this.c.status = v; }
     get mods() { return this.st.mods; }
@@ -272,7 +269,6 @@
       this.base = d.name; this.name = d.name;
       this.hp = this.mhp = Math.max(1, d.hp | 0);
       this.mp = this.mmp = 0;
-      this.wp = this.mwp = 0;
       this.status = {};
       this.flags = (d.flags || []).slice();
       if (this.golden && !this.flags.includes('golden')) this.flags.push('golden');
@@ -375,7 +371,7 @@
       this.said = 0;
       this.coverSeq = 0;
       this.phaseQ = new Set();
-      this.stats = { dealt: 0, taken: 0, deaths: 0, mpUsed: 0, wpUsed: 0, casts: {}, techs: {}, items: 0 };
+      this.stats = { dealt: 0, taken: 0, deaths: 0, mpUsed: 0, casts: {}, techs: {}, items: 0 };
       this.finished = false;
     }
 
@@ -440,22 +436,18 @@
     canReach(u, slot) { return this.effRow(u) !== 'middle' || this.slotReaches(u, slot); }
     /** why u cannot 攻撃 with slot (null = it can) */
     attackIssue(u, slot) { return u.isParty && !this.canReach(u, slot) ? 'reach' : null; }
-    wpCost(u, id) {
-      const a = DB.actions[id];
-      if (!u.isParty || !a || !a.wp) return 0;
-      if (R.Rules && R.Rules.wpCost) { try { const n = R.Rules.wpCost(u.c, id); if (n != null) return n; } catch (e) { /* fallback */ } }
-      return Math.max(1, Math.round(a.wp * (1 + Math.max(K('MODCAP').cost, u.mods.wpCostPct || 0) / 100)));
-    }
+    /** MP of a tech or a spell (A18: techs pay MP too; R.Rules.mpCost owns techCostPct / mpCostPct / A13b) */
     mpCost(u, id) {
       const a = DB.actions[id];
       if (!u.isParty || !a || !a.mp) return 0;
       if (R.Rules && R.Rules.mpCost) { try { const n = R.Rules.mpCost(u.c, id); if (n != null) return n; } catch (e) { /* fallback */ } }
-      return Math.max(1, Math.round(a.mp * (1 + Math.max(K('MODCAP').cost, u.mods.mpCostPct || 0) / 100)));
+      const pct = a.kind === 'tech' ? u.mods.techCostPct : u.mods.mpCostPct;
+      return Math.max(1, Math.round(a.mp * (1 + Math.max(K('MODCAP').cost, pct || 0) / 100)));
     }
-    cost(u, id) { return { wp: this.wpCost(u, id), mp: this.mpCost(u, id) }; }
+    cost(u, id) { return { mp: this.mpCost(u, id) }; }
     /**
      * why an action cannot be chosen right now (null = usable):
-     * 'wp' | 'mp' | 'silence' | 'reach' | 'field' | 'noescape' | 'seal' (sealTech weapon) | 'none'
+     * 'mp' | 'silence' | 'reach' | 'field' | 'noescape' | 'seal' (sealTech weapon) | 'none'
      */
     unusable(u, id, slot) {
       const a = DB.actions[id];
@@ -475,7 +467,7 @@
           if (weaponItem(W).sealTech) return 'seal';
           if (a.magic && u.status.silence) return 'silence';
           if (this.effRow(u) === 'middle' && !a.reach) return 'reach';
-          if (u.wp < this.wpCost(u, id)) return 'wp';
+          if (u.mp < this.mpCost(u, id)) return 'mp';
         } else if (a.kind === 'spell') {
           if (u.mods.noSpell) return 'none';
           if (u.status.silence) return 'silence';
@@ -483,6 +475,7 @@
         } else if (a.magic && u.status.silence) return 'silence';
       } else if (isMagicAct(a) && u.status.silence) return 'silence';
       if (!hasBattleEffect(a)) return 'field';
+      if (u.isParty && a.target === 'ally_other' && !this.friends(u).some((x) => x !== u)) return 'none'; // 魔力分け alone
       if (u.isParty && this.noEscape && B.isEscape(a)) return 'noescape';
       return null;
     }
@@ -490,7 +483,7 @@
       if (u.isParty) {
         const W = u.weapon(slot);
         const it = W && W.id ? DB.items[W.id] : null;
-        return (it && it.fx) || wtypeInfo(W ? W.wtype : 'fist').fx;
+        return (it && (it.fx || ITEM_ART_FX[it.art])) || wtypeInfo(W ? W.wtype : 'fist').fx;
       }
       const d = u.d;
       return d.attackFx || MON_ATTACK_FX[d.lineage] || MON_ATTACK_FX[String(d.sprite || '').split('_')[0]] || 'claw';
@@ -868,7 +861,6 @@
       else if (u.permRegen && u.hp < u.mhp) yield* this.restore(u, Math.max(1, Math.floor(u.mhp / 20)), 'hp', 'regen');
       if (u.isParty) {
         if (u.mods.mpRegen && u.mp < u.mmp) yield* this.restore(u, u.mods.mpRegen, 'mp', 'quiet');
-        if (u.mods.wpRegen && u.wp < u.mwp) yield* this.restore(u, u.mods.wpRegen, 'wp', 'quiet');
         if (u.mods.hpLoss > 0 && u.hp > 1) {
           const n = Math.min(u.hp - 1, Math.max(1, Math.floor(u.mhp * u.mods.hpLoss / 100)));
           if (n > 0) { u.hp -= n; this.stats.taken += n; yield { t: 'dmg', u, n, kind: 'cost' }; }
@@ -1296,17 +1288,17 @@
       }
     }
 
-    /** restore hp/mp/wp by n (capped). how: 'drain' | 'regen' | 'quiet' | undefined (changes the wording) */
+    /** restore hp/mp by n (capped). how: 'drain' | 'regen' | 'quiet' | undefined (changes the wording) */
     *restore(t, n, kind, how) {
       n = Math.max(0, Math.round(n));
-      const cur = kind === 'mp' ? t.mp : kind === 'wp' ? t.wp : t.hp;
-      const max = kind === 'mp' ? t.mmp : kind === 'wp' ? t.mwp : t.mhp;
+      const cur = kind === 'mp' ? t.mp : t.hp;
+      const max = kind === 'mp' ? t.mmp : t.mhp;
       const got = Math.max(0, Math.min(max - cur, n));
-      if (kind === 'mp') t.mp += got; else if (kind === 'wp') t.wp += got; else t.hp += got;
+      if (kind === 'mp') t.mp += got; else t.hp += got;
       if (got <= 0 && (how === 'drain' || how === 'regen' || how === 'quiet' || how === 'multi')) return 0;
-      yield { t: 'heal', u: t, n: got, mp: kind === 'mp', wp: kind === 'wp' };
+      yield { t: 'heal', u: t, n: got, mp: kind === 'mp' };
       if (how === 'quiet') return got;
-      const L = kind === 'mp' ? 'MP' : kind === 'wp' ? 'WP' : 'HP';
+      const L = kind === 'mp' ? 'MP' : 'HP';
       if (got > 0) yield this.m(`${t.name}の${L}が${got}回復した！`);
       else yield this.m('しかし効き目がなかった。');
       return got;
@@ -1376,7 +1368,7 @@
       return a.kind === 'spell' ? `${u.name}は${a.name}を唱えた！` : `${u.name}の${a.name}！`;
     }
     /**
-     * Run an action: pay (WP / MP / the item), announce, then every effect on every target in order.
+     * Run an action: pay (MP / the item), announce, then every effect on every target in order.
      * o: {item, slot, free (glimmer: no cost), glimmed} → {done, landed, target, targets, killed}
      */
     *useAction(u, id, a, chosen, o) {
@@ -1390,9 +1382,9 @@
           if (a.magic && u.status.silence) { yield* refuse(this, 'しかし術を封じられている！'); return res; }
           // §6.4.4-1: a reach:false tech cannot be used from the middle row (the row may have changed since the command)
           if (!a.reach && this.effRow(u) === 'middle') { yield* refuse(this, 'しかし後列からは届かない！'); return res; }
-          const cost = this.wpCost(u, id);
-          if (u.wp < cost) { yield* refuse(this, 'しかしWPが足りない！'); return res; }
-          u.wp -= cost; this.stats.wpUsed += cost;
+          const cost = this.mpCost(u, id);
+          if (u.mp < cost) { yield* refuse(this, 'しかしMPが足りない！'); return res; }
+          u.mp -= cost; this.stats.mpUsed += cost;
         } else if (u.isParty && kind === 'spell') {
           if (u.status.silence) { yield* refuse(this, 'しかし術を封じられている！'); return res; }
           const cost = this.mpCost(u, id);
@@ -1516,12 +1508,10 @@
           const n = R.Mon && R.Mon.healAmount ? R.Mon.healAmount(u, t, eff, { item: !!ctx.item, action: u.isParty && !ctx.item && (ctx.kind === 'tech' || ctx.kind === 'spell') ? ctx.act : null, slot: ctx.slot }) : Math.round(t.mhp * (eff.pct || 0));
           return yield* this.restore(t, n, 'hp', ctx.multi ? 'multi' : undefined);
         }
-        case 'healMp': case 'healWp': {
+        case 'healMp': {
           if (!t.alive) return;
-          const k = eff.type === 'healMp' ? 'mp' : 'wp';
-          const max = k === 'mp' ? t.mmp : t.mwp;
-          const n = eff.pct != null ? Math.max(1, Math.ceil(max * eff.pct)) : eff.power || 0;
-          return yield* this.restore(t, n, k, ctx.multi ? 'multi' : undefined);
+          const n = eff.pct != null ? Math.max(1, Math.ceil(t.mmp * eff.pct)) : eff.power || 0;
+          return yield* this.restore(t, n, 'mp', ctx.multi ? 'multi' : undefined);
         }
         case 'revive': {
           if (t.alive || t.gone) return;
@@ -1714,28 +1704,28 @@
     *grow(t, eff) {
       if (!t.isParty || !t.alive) return;
       const k = eff.stat;
-      if (k !== 'hp' && k !== 'mp' && k !== 'wp') return;
+      if (k !== 'hp' && k !== 'mp') return;
       const c = t.c;
-      const before = { hp: t.mhp, mp: t.mmp, wp: t.mwp };
-      const cur = { hp: t.hp, mp: t.mp, wp: t.wp };
+      const before = { hp: t.mhp, mp: t.mmp };
+      const cur = { hp: t.hp, mp: t.mp };
       let added = 0;
       if (R.Rules && R.Rules.grow) {
         // R.Rules.grow owns the cap (K.BONUS_CAP) and raises the current value with the max (§8.2.5)
         try { added = R.Rules.grow(c, k, eff.n || 1) || 0; } catch (e) { R.warn('battle: R.Rules.grow failed', e && e.message); added = 0; }
       } else {
-        const CAP = { hp: 200, mp: 30, wp: 30 };
-        c.bonus = c.bonus || { hp: 0, mp: 0, wp: 0 };
+        const CAP = { hp: 200, mp: 50 };
+        c.bonus = c.bonus || { hp: 0, mp: 0 };
         added = Math.max(0, Math.min(eff.n || 1, CAP[k] - (c.bonus[k] || 0)));
         c.bonus[k] = (c.bonus[k] || 0) + added;
       }
       if (added <= 0) { yield this.m('これ以上は効かない。'); return; }
       t.refresh();
-      for (const x of ['hp', 'mp', 'wp']) {
-        const max = x === 'hp' ? t.mhp : x === 'mp' ? t.mmp : t.mwp;
+      for (const x of ['hp', 'mp']) {
+        const max = x === 'hp' ? t.mhp : t.mmp;
         const up = Math.max(0, max - before[x]);
         t[x] = Math.min(max, Math.max(t[x], cur[x] + up));
       }
-      const gain = (k === 'hp' ? t.mhp : k === 'mp' ? t.mmp : t.mwp) - before[k];
+      const gain = (k === 'hp' ? t.mhp : t.mmp) - before[k];
       yield { t: 'buff', u: t, stat: k, d: 1, grow: true };
       yield this.m(`${t.name}の${NAMES.stat[k]}が${gain}増えた！`);
     }
@@ -1783,7 +1773,7 @@
         act = DB.actions[p.id];
         if (!act) return attack();
         const why = this.unusable(u, p.id, type === 'tech' ? slot : undefined);
-        if (why) return attack(); // R3: WP / MP / 沈黙 / 届かない → 攻撃 (防御 when nothing reaches)
+        if (why) return attack(); // R3: MP / 沈黙 / 届かない → 攻撃 (防御 when nothing reaches)
       } else if (type === 'item') {
         const it = DB.items[p.id];
         if (!it || !it.use || !it.use.battle || this.count(p.id) - (reserved[p.id] || 0) <= 0) return attack(); // R4
@@ -1898,7 +1888,7 @@
     }
     gainExp(c, n) {
       const lv0 = c.level || 1;
-      const before = { hp: this.maxOf(c, 'hp'), mp: this.maxOf(c, 'mp'), wp: this.maxOf(c, 'wp') };
+      const before = { hp: this.maxOf(c, 'hp'), mp: this.maxOf(c, 'mp') };
       let res = null;
       if (R.Rules && R.Rules.gainExp) { try { res = R.Rules.gainExp(c, n); } catch (e) { R.warn('battle: R.Rules.gainExp failed', e && e.message); } }
       else c.exp = (c.exp || 0) + n;
@@ -1906,8 +1896,8 @@
       if (res && typeof res === 'object') { levels = res.levels || 0; gains = res.gains || null; }
       else if (typeof res === 'number') levels = res;
       if (!levels) levels = (c.level || 1) - lv0;
-      if (levels > 0 && !gains) gains = { hp: this.maxOf(c, 'hp') - before.hp, mp: this.maxOf(c, 'mp') - before.mp, wp: this.maxOf(c, 'wp') - before.wp };
-      return { levels, gains: gains || { hp: 0, mp: 0, wp: 0 } };
+      if (levels > 0 && !gains) gains = { hp: this.maxOf(c, 'hp') - before.hp, mp: this.maxOf(c, 'mp') - before.mp };
+      return { levels, gains: gains || { hp: 0, mp: 0 } };
     }
     maxOf(c, k) { try { const st = R.Rules && R.Rules.stats ? R.Rules.stats(c) : null; return (st && st[k]) || 0; } catch (e) { return 0; } }
     /** victory: messages + apply EXP / gold / items (to R.Game when live) in the order of §3.3.8 */
@@ -1938,7 +1928,7 @@
         if (!jingle) { jingle = true; yield { t: 'jingle', id: 'levelup' }; }
         yield { t: 'levelup', c: e.c, u: e.u, level: e.c.level, gains: r.gains };
         yield this.m(`${e.c.name}はレベル${e.c.level}に上がった！`);
-        const parts = ['hp', 'mp', 'wp'].filter((k) => r.gains[k] > 0).map((k) => `${NAMES.stat[k]}+${r.gains[k]}`);
+        const parts = ['hp', 'mp'].filter((k) => r.gains[k] > 0).map((k) => `${NAMES.stat[k]}+${r.gains[k]}`);
         if (parts.length) yield this.m(parts.join('　'));
         if (this.live && !(R.Rules && R.Rules.gainExp)) R.emit('levelup', e.c, e.c.level);
         yield { t: 'pause' };
@@ -1990,7 +1980,7 @@
 
     // ------------------------------------------------------- the end
     /**
-     * after-battle recovery (§4.12.1): won → survivors HP full, MP/WP +10 % of max (rounded up); escaped → HP full;
+     * after-battle recovery (§4.12.1): won → survivors HP full, MP +12 % of max (K.AFTER.mpPct, rounded up); escaped → HP full;
      * statuses and buffs always go. R.Party.afterBattle is used for a live battle when it exists.
      */
     recover(result) {
@@ -2002,7 +1992,6 @@
           c.hp = p.mhp;
           if (result === 'win') {
             c.mp = Math.min(p.mmp, c.mp + Math.ceil(p.mmp * A.mpPct));
-            c.wp = Math.min(p.mwp, c.wp + Math.ceil(p.mwp * A.wpPct));
           }
         }
       }
@@ -2024,7 +2013,7 @@
         if (!partyAfter) { c.counts = c.counts || { battles: 0, kills: 0, glimmers: 0 }; c.counts.battles = (c.counts.battles || 0) + 1; }
         if (c.hp <= 0) c.hp = 0;
         if (R.Rules && R.Rules.clampHpMp) { try { R.Rules.clampHpMp(c); } catch (e) { /* ignore */ } }
-        c.hp = U.clamp(c.hp, 0, p.mhp); c.mp = U.clamp(c.mp, 0, p.mmp); c.wp = U.clamp(c.wp, 0, p.mwp);
+        c.hp = U.clamp(c.hp, 0, p.mhp); c.mp = U.clamp(c.mp, 0, p.mmp);
       }
       if (this.live) {
         const rw = this.rewardInfo;
@@ -2177,7 +2166,7 @@
    *     items (true = the AI may use any consumable; default 'auto'), ai (partyCommands options), rewards (apply EXP / drops),
    *     surprise, log, golden (true = roll like a zone battle, 'force'), rare (true = roll the rare swap, 'force'),
    *     glimmerForce, members, after (after-battle recovery), noEscape}
-   * → {result, rounds, partyHpPct, partyMpPct, partyWpPct, hpLossPct, deaths, damageDealt, damageTaken, mpUsed, wpUsed,
+   * → {result, rounds, partyHpPct, partyMpPct, hpLossPct, deaths, damageDealt, damageTaken, mpUsed,
    *    casts, techs, killed, mons, exp, gold, drops, glimmers, profUps, golden, rare, Tb, Lb, party, reserve, inv, log}
    */
   function simulate(o) {
@@ -2205,7 +2194,7 @@
       const log = o.log ? [] : null;
       const sink = log ? (ev) => { if (ev.t === 'msg') log.push(ev.text); } : null;
       const mhp0 = eng.party.reduce((s, p) => s + p.mhp, 0);
-      const mp0 = eng.party.map((p) => p.mp), wp0 = eng.party.map((p) => p.wp);
+      const mp0 = eng.party.map((p) => p.mp);
       drain(eng.begin(), sink);
       const maxR = o.maxRounds || 50;
       const ai = Object.assign({}, (R.BattleAI && R.BattleAI.AUTO_OPTS) || { thrift: true, items: 'auto' }, o.items !== undefined ? { items: o.items } : null, o.ai);
@@ -2216,7 +2205,7 @@
       if (eng.result === 'win' && o.rewards) drain(eng.rewards(), sink);
       const rw = eng.rewardInfo || (eng.result === 'win' ? eng.computeRewards() : { each: [], gold: 0, drops: [] });
       const hpEnd = eng.party.reduce((s, p) => s + Math.max(0, p.hp), 0);
-      const mpUsed = eng.stats.mpUsed, wpUsed = eng.stats.wpUsed;
+      const mpUsed = eng.stats.mpUsed;
       eng.finish();
       const sum = (k) => eng.party.reduce((s, p) => s + Math.max(0, p[k]), 0);
       const pct = (a, b) => (b ? Math.round((1000 * a) / b) / 10 : 0);
@@ -2225,14 +2214,12 @@
         rounds: eng.round,
         partyHpPct: pct(hpEnd, mhp0),
         partyMpPct: pct(sum('mp'), sum('mmp')),
-        partyWpPct: pct(sum('wp'), sum('mwp')),
         hpLossPct: pct(eng.stats.taken, mhp0),
         deaths: eng.stats.deaths,
         damageDealt: eng.stats.dealt,
         damageTaken: eng.stats.taken,
-        mpUsed, wpUsed,
+        mpUsed,
         mpUsedBy: eng.party.map((p, i) => Math.max(0, mp0[i] - p.mp)),
-        wpUsedBy: eng.party.map((p, i) => Math.max(0, wp0[i] - p.wp)),
         casts: Object.assign({}, eng.stats.casts), techs: Object.assign({}, eng.stats.techs), itemsUsed: eng.stats.items,
         killed: eng.killed.length,
         mons: eng.mons.map((m) => m.id),

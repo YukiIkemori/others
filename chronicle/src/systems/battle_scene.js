@@ -38,10 +38,9 @@
   const EZ = { x0: 4, x1: 172, cx: 88 };
   const PARTY = { front: 192, middle: 222, zig: [0, 10, 0, 10], step: 10, y: { 1: [126], 2: [112, 136], 3: [106, 124, 142], 4: [100, 116, 132, 148] } };
   const LAYOUT = { FIELD, MSG, MSG_BIG, HELP, LIST, CMD, STATUS, BANNER, CARD, EZ, PARTY };
-  // STATUS columns (§11.5.2; x from the window's left): letters at h / m / w, values right-aligned at hp / mp / wp
-  // (owner 2026-09-26: the numbers were cramped — 6 px between a value and the next letter, room for HP 9999 and a
-  // 6-kana name squeezed into nameW)
-  const SCOL = { tag: 4, name: 19, nameW: 47, h: 70, hp: 97, m: 103, mp: 127, w: 133, wp: 153 };
+  // STATUS columns (§11.5.2; x from the window's left): letters at h / m, 「現在/最大」 right-aligned at hp / mp
+  // (A18: WP is gone, so each row shows H cur/max and M cur/max; room for 999/999 and 250/250, the name fitted in nameW)
+  const SCOL = { tag: 4, name: 18, nameW: 36, h: 56, hp: 100, m: 104, mp: 154 };
   // legacy (front view): kept with their old values for the tools that still read them (§11.5.1). Not used on screen.
   const WIN = { xs: [3, 66, 129, 192], y: 5, w: 61, h: 46 };
   const WIN_BOTTOM = 56;
@@ -64,7 +63,7 @@
   const HURT_VOICE_GAP = 120; // the hero's 'hurt' shout at most every 2 s (real frames — multi-hits and DoT ticks, §11.10.8)
   // unusable(u, id, slot) → help line (§11.5.3 / STYLE_JA §9)
   const WHY = {
-    wp: 'WPが足りない！', mp: 'MPが足りない！', silence: '術を封じられている！', reach: '後列からは届かない。',
+    mp: 'MPが足りない！', silence: '術を封じられている！', reach: '後列からは届かない。',
     field: '戦闘中は使えない。', noescape: 'この戦いからは逃げられない！',
   };
   const HELP_REPEAT = '前と同じ行動を、Bを押すまで続ける。';
@@ -73,6 +72,7 @@
   // used only while DB.statuses is empty (order of §7.9.2)
   const BASE_STATUSES = ['poison', 'burn', 'sleep', 'paralyze', 'freeze', 'stun', 'confuse', 'silence', 'blind', 'regen', 'veil', 'counter', 'nimble', 'cover'];
   const GRADE_RANK = { normal: 0, rare: 1, super: 2 };
+  const ART_FX = { katana: 'slash', club: 'strike' }; // an item's art shape → its plain-attack fx (A19: 刀の剣・メイスの斧)
 
   // ------------------------------------------------------------ party battle sprites (§11.4.4 — SV-ART's API)
   // The table of §11.4.4.4; R.Art.BATTLER is the reference once SV-ART has landed it.
@@ -81,7 +81,8 @@
     POSES: ['idle', 'walk', 'slash', 'thrust', 'smash', 'shoot', 'punch', 'lash', 'cast', 'item', 'guard', 'hit', 'weak', 'ko', 'victory'],
     FRAMES: { idle: 2, walk: 2, slash: 3, thrust: 3, smash: 3, shoot: 3, punch: 3, lash: 3, cast: 3, item: 2, guard: 1, hit: 1, weak: 2, ko: 1, victory: 2 },
     IMPACT: { slash: 1, thrust: 1, smash: 1, shoot: 2, punch: 1, lash: 1, cast: 2, item: 1 },
-    FAMILY: { sword: 'slash', katana: 'slash', greatsword: 'slash', axe: 'smash', club: 'smash', staff: 'smash', spear: 'thrust', dagger: 'thrust', bow: 'shoot', fist: 'punch', whip: 'lash' },
+    // the 7 weapon types + fist (素手); katana / club stay as art shapes (item art:'katana' swords, art:'club' maces)
+    FAMILY: { sword: 'slash', greatsword: 'slash', dagger: 'thrust', axe: 'smash', spear: 'thrust', bow: 'shoot', staff: 'smash', fist: 'punch', katana: 'slash', club: 'smash' },
   };
   const HOLD = { idle: [24, 24], walk: [4, 4], slash: [5, 3, 10], thrust: [5, 3, 10], smash: [6, 3, 10], shoot: [6, 4, 10], punch: [4, 3, 10], lash: [5, 3, 10], cast: [6, 10, 8], item: [6, 10], guard: [1], hit: [12], weak: [30, 30], ko: [1], victory: [12, 12] };
   const LOOPS = { idle: 1, walk: 1, guard: 1, weak: 1, ko: 1, victory: 1 };
@@ -191,12 +192,6 @@
   const isMetal = (m) => flagOf(m, 'metal');
   const isRareMon = (m) => flagOf(m, 'rare');
   const actionOf = (id) => (DB.actions && DB.actions[id]) || null;
-  const wpOf = (u) => (u.wp != null ? u.wp : (u.c && u.c.wp) || 0);
-  function mwpOf(u) {
-    if (u.mwp != null) return u.mwp;
-    if (u.st && u.st.wp != null) return u.st.wp;
-    try { return (R.Rules.stats(u.c) || {}).wp || 0; } catch (e) { return 0; }
-  }
   /** the six element ids in their official order (DB.elements key order) */
   const elemOrder = () => { const k = Object.keys(DB.elements || {}); return k.length ? k : ['fire', 'water', 'wind', 'earth', 'light', 'dark']; };
   /** オート: the party AI with the in-game options (battle_ai's own AUTO_OPTS when it defines them) */
@@ -837,7 +832,7 @@
         case 'fx': return s.playFx(ev);
         case 'dmg': return s.onDamage(ev);
         case 'heal':
-          if (ev.n > 0) s.pop(ev.u, ev.n, ev.wp ? 'orange' : ev.mp ? 'cyan' : 'green');
+          if (ev.n > 0) s.pop(ev.u, ev.n, ev.mp ? 'cyan' : 'green');
           return;
         case 'miss': {
           R.sfx(ev.parry ? 'parry' : 'miss'); // 反撃の構え's parry rings like steel
@@ -1066,28 +1061,28 @@
       const c = u.c || {}, eq = c.equip || {};
       const it = DB.items[eq[slot || 'weapon1']] || DB.items[eq.weapon1] || DB.items[eq.weapon2];
       const wt = it ? it.wtype : 'fist';
-      return (it && it.fx) || (DB.weaponTypes && DB.weaponTypes[wt] && DB.weaponTypes[wt].fx) || 'strike';
+      return (it && (it.fx || ART_FX[it.art])) || (DB.weaponTypes && DB.weaponTypes[wt] && DB.weaponTypes[wt].fx) || 'strike';
     }
     async onDamage(ev) {
       const u = ev.u;
       if (ev.kind === 'cost') { this.pop(u, ev.n, 'gray'); return this.frames(6); }
-      const color = ev.wp ? 'orange' : ev.mp ? 'cyan' : ev.kind === 'poison' ? 'purple' : ev.kind === 'burn' ? 'orange' : ev.crit ? 'yellow' : 'white';
+      const color = ev.mp ? 'cyan' : ev.kind === 'poison' ? 'purple' : ev.kind === 'burn' ? 'orange' : ev.crit ? 'yellow' : 'white';
       const dot = ev.kind === 'poison' || ev.kind === 'burn';
       if (u.isParty) {
         if (ev.n > 0) {
           const f = this.winFx[u.idx];
           if (f) f.flash = 14; // the STATUS row blinks red (§11.5.2)
           const v = this.pv(u);
-          if (v && !ev.mp && !ev.wp) {
+          if (v && !ev.mp) {
             // のけぞり: hit pose, pushed 3 px to the right and back, a 2 px shake (§11.5.15)
             const n = this.dur(12, 'atk'), F = R.Engine.frame;
             v.tmp = { pose: 'hit', fi: 0, until: F + n };
             v.push = { f0: F, n };
             v.shake = 6;
           }
-          if (!ev.mp && !ev.wp) R.Engine.shake(dot ? 6 : 12, ev.crit ? 4 : 2);
+          if (!ev.mp) R.Engine.shake(dot ? 6 : 12, ev.crit ? 4 : 2);
           R.sfx(ev.kind === 'poison' ? 'poison' : ev.kind === 'burn' ? 'burn' : 'hurt');
-          if (u.alive && !ev.mp && !ev.wp) this.heroVoice(u, 'hurt'); // a lethal hit shouts 'ko' at the 'die' instead
+          if (u.alive && !ev.mp) this.heroVoice(u, 'hurt'); // a lethal hit shouts 'ko' at the 'die' instead
         }
       } else {
         const v = this.vis.get(u);
@@ -1347,7 +1342,7 @@
     }
     commandsOf(c) {
       if (R.Rules && R.Rules.commands) { try { return R.Rules.commands(c) || []; } catch (e) { R.warn('battle: Rules.commands failed', e); } }
-      return [{ type: 'weapon', slot: 'weapon1', wtype: 'fist', name: '体術' }, { type: 'defend', name: '防御' }, { type: 'item', name: '道具' }];
+      return [{ type: 'weapon', slot: 'weapon1', wtype: 'fist', name: '素手' }, { type: 'defend', name: '防御' }, { type: 'item', name: '道具' }];
     }
     async memberMenu(u, reserved) {
       const c = u.c, m = mem(c);
@@ -1393,7 +1388,7 @@
     listOpts(title, items, index) {
       return { x: LIST.x, y: LIST.y, w: LIST.w, items, cols: 1, rows: LIST.rows, lineH: LIST.lineH, padY: LIST.padY, title, index: U.clamp(index || 0, 0, Math.max(0, items.length - 1)), drawItem: drawListItem };
     }
-    /** 攻撃 + the techs of that slot's weapon type; right column W and the cost (§11.5.3) */
+    /** 攻撃 + the techs of that slot's weapon type; right column M and the MP cost, like spells (§11.5.3, A18) */
     async weaponMenu(u, k) {
       const c = u.c, m = mem(c), eng = this.eng;
       const key = k.slot || 'weapon1';
@@ -1402,8 +1397,8 @@
       const rows = [{ id: 'attack', why: atkWhy }].concat(techs.map((id) => ({ id, ab: actionOf(id), why: eng.unusable ? eng.unusable(u, id, k.slot) || null : null })));
       const items = rows.map((r) => {
         if (r.id === 'attack') return { label: '攻撃', disabled: !!r.why };
-        const cost = R.Rules && R.Rules.wpCost ? R.Rules.wpCost(c, r.id) : (r.ab && r.ab.wp) || 0;
-        return { label: r.ab ? r.ab.name : r.id, right: 'W' + cost, disabled: !!r.why };
+        const cost = eng.mpCost ? eng.mpCost(u, r.id) : R.Rules && R.Rules.mpCost ? R.Rules.mpCost(c, r.id) : (r.ab && r.ab.mp) || 0;
+        return { label: r.ab ? r.ab.name : r.id, right: 'M' + cost, disabled: !!r.why };
       });
       const wname = (DB.weaponTypes && DB.weaponTypes[k.wtype] && DB.weaponTypes[k.wtype].name) || k.name;
       const list = new R.UI.List(this.listOpts(wname, items, m.list[key]));
@@ -1571,7 +1566,7 @@
       const prevPanel = this.panel;
       const line = () => {
         const p = party[i];
-        return `${p.name}　HP ${p.hp}/${p.mhp}　MP ${p.mp}/${p.mmp}　WP ${wpOf(p)}/${mwpOf(p)}`;
+        return `${p.name}　HP ${p.hp}/${p.mhp}　MP ${p.mp}/${p.mmp}`;
       };
       this.panel = Object.assign({}, prevPanel, { help: line, helpCenter: true, hideList: true });
       this.picking = { ally: party[i] };
@@ -2115,7 +2110,7 @@
         if (!l.more) g.text(String(l.n), x + 82, ty, { align: 'right', color });
       });
     }
-    /** STATUS: one row per member — row tag, name, H / M / W (§11.5.2) */
+    /** STATUS: one row per member — row tag, name, H cur/max, M cur/max (§11.5.2, A18) */
     drawStatus() {
       const g = G(), C = g.C, F = R.Engine.frame;
       const th = this.theme();
@@ -2144,11 +2139,9 @@
         g.text(mid ? '後' : '前', x + SCOL.tag + 1, y, { color: mid ? C.cyan : C.orange });
         g.fitText(p.name, x + SCOL.name, y, SCOL.nameW, { color: col });
         g.text('H', x + SCOL.h, y, { color: col });
-        g.text(String(p.hp), x + SCOL.hp, y, { color: col, align: 'right' });
+        g.text(`${Math.max(0, p.hp)}/${p.mhp}`, x + SCOL.hp, y, { color: col, align: 'right' });
         g.text('M', x + SCOL.m, y, { color: col });
-        g.text(String(p.mp), x + SCOL.mp, y, { color: col, align: 'right' });
-        g.text('W', x + SCOL.w, y, { color: col });
-        g.text(String(wpOf(p)), x + SCOL.wp, y, { color: col, align: 'right' });
+        g.text(`${Math.max(0, p.mp)}/${p.mmp}`, x + SCOL.mp, y, { color: col, align: 'right' });
       });
     }
     /** オート・リピート: the badge on CMD's top border (§11.5.11) */

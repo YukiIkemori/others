@@ -32,7 +32,7 @@
       return Math.max(1, Math.floor(((h && h.level) || 1) * K().JOIN_LEVEL));
     },
     /**
-     * add a companion (§5.5.2): level joinLevel(), full HP/MP/WP, starting gear on.
+     * add a companion (§5.5.2): level joinLevel(), full HP/MP, starting gear on.
      * From the 4th companion on, proficiency catches up (§4.9.1; opts.catchUp overrides).
      * Goes to the party if there is room (and opts.toParty !== false), else the reserve.
      * Sets joined_<id>, emits 'recruit'(c) and 'partyChange'. Already recruited → that CharState.
@@ -180,8 +180,8 @@
       return out;
     },
     /**
-     * recovery after a battle (§4.12.1): win → the living get full HP and 10% of max
-     * MP/WP (rounded up); escape → the living get full HP; statuses always clear.
+     * recovery after a battle (§4.12.1): win → the living get full HP and K.AFTER.mpPct (12 %, A18) of max
+     * MP (rounded up); escape → the living get full HP; statuses always clear.
      * The fallen stay down. o.party / o.members as in award.
      */
     afterBattle(result, o) {
@@ -200,10 +200,7 @@
         if (res !== 'win' && res !== 'escape') continue;
         const st = R.Rules.stats(c);
         c.hp = st.hp;
-        if (res === 'win') {
-          c.mp = Math.min(st.mp, (c.mp || 0) + Math.ceil(st.mp * A.mpPct));
-          c.wp = Math.min(st.wp, (c.wp || 0) + Math.ceil(st.wp * A.wpPct));
-        }
+        if (res === 'win') c.mp = Math.min(st.mp, (c.mp || 0) + Math.ceil(st.mp * A.mpPct));
       }
     },
     /** tavern / inn helper: heal everyone (party and reserve) */

@@ -13,7 +13,7 @@
 //
 // fx ids — data writes them EXACTLY (DESIGN §11.5.12); an optional trailing digit 1–3 is the size:
 //   slash pierce strike claw bite arrow lash stance · fire ice thunder wind earth water holy dark
-//   explosion breath(_fire/_ice/_poison/_dark) drain gravity death · heal mp wp cure revive regen
+//   explosion breath(_fire/_ice/_poison/_dark) drain gravity death · heal mp cure revive regen
 //   buff debuff dispel · sleep poison paralyze confuse silence blind burn freeze stun veil nimble
 //   steal scan smoke song grow magic warp cast
 // KEYWORDS below only map old/loose ids (compatibility) and match on word boundaries.
@@ -1040,7 +1040,6 @@
   }
   FX.heal = (s, c, L) => sparkles(s, c, 'green', { alt: 'white', glow: 'green', n: 12 + (L - 1) * 8, glowSize: 40 + (L - 1) * 16 });
   FX.mp = (s, c, L) => sparkles(s, c, 'cyan', { alt: 'blue', glow: 'cyan', n: 12 + (L - 1) * 6 });
-  FX.wp = (s, c, L) => sparkles(s, c, 'orange', { alt: 'gold', glow: 'gold', n: 12 + (L - 1) * 6 });
   FX.cure = (s, c) => {
     for (const r of c.targets) {
       inst(s, 28, layerOf(r), (g, t) => {
@@ -1351,7 +1350,7 @@
     ['aqua', 'water'], ['wave', 'water'], ['holy', 'holy'], ['light', 'holy'], ['dark', 'dark'], ['shadow', 'dark'],
     ['drain', 'drain'], ['absorb', 'drain'], ['gravity', 'gravity'], ['death', 'death'], ['doom', 'death'],
     ['revive', 'revive'], ['raise', 'revive'], ['regen', 'regen'], ['heal', 'heal'], ['cure', 'cure'],
-    ['mp', 'mp'], ['mana', 'mp'], ['ether', 'mp'], ['wp', 'wp'], ['debuff', 'debuff'], ['down', 'debuff'], ['break', 'debuff'],
+    ['mp', 'mp'], ['mana', 'mp'], ['ether', 'mp'], ['wp', 'mp'], ['debuff', 'debuff'], ['down', 'debuff'], ['break', 'debuff'],
     ['buff', 'buff'], ['up', 'buff'], ['protect', 'buff'], ['haste', 'buff'], ['dispel', 'dispel'],
     ['sleep', 'sleep'], ['poison', 'poison'], ['paraly', 'paralyze'], ['stun', 'stun'], ['confus', 'confuse'],
     ['silen', 'silence'], ['mute', 'silence'], ['blind', 'blind'], ['burn', 'burn'], ['freeze', 'freeze'], ['steal', 'steal'], ['mug', 'steal'],
@@ -1369,7 +1368,7 @@
   const SFX = {
     slash: 'attack', pierce: 'attack', strike: 'attack', claw: 'enemy_attack', bite: 'enemy_attack', arrow: 'arrow', lash: 'lash', stance: 'buff',
     fire: 'fire', ice: 'ice', thunder: 'thunder', wind: 'wind', earth: 'earth', water: 'water', holy: 'holy', dark: 'dark', explosion: 'fire', breath: 'breath',
-    drain: 'dark', gravity: 'dark', death: 'death', heal: 'heal', mp: 'heal', wp: 'heal', cure: 'heal', revive: 'revive', regen: 'heal',
+    drain: 'dark', gravity: 'dark', death: 'death', heal: 'heal', mp: 'heal', cure: 'heal', revive: 'revive', regen: 'heal',
     buff: 'buff', debuff: 'debuff', dispel: 'magic', sleep: 'sleep', poison: 'poison', paralyze: 'status', confuse: 'status',
     silence: 'status', blind: 'status', burn: 'burn', freeze: 'freeze', stun: 'status', veil: 'buff', nimble: 'buff', counter: 'buff', cover: 'buff',
     steal: 'steal', scan: 'magic', smoke: 'escape', song: 'magic', grow: 'item', magic: 'magic', warp: 'warp', cast: 'magic',
@@ -1408,7 +1407,7 @@
       else if (dm) kind = 'slash';
       else {
         const e = effs[0];
-        kind = { heal: 'heal', healMp: 'mp', healWp: 'wp', revive: 'revive', cure: 'cure', regen: 'regen', dispel: 'dispel', steal: 'steal', scan: 'scan', escape: 'smoke', grow: 'grow', cover: 'stance' }[e.type] ||
+        kind = { heal: 'heal', healMp: 'mp', revive: 'revive', cure: 'cure', regen: 'regen', dispel: 'dispel', steal: 'steal', scan: 'scan', escape: 'smoke', grow: 'grow', cover: 'stance' }[e.type] ||
           (e.type === 'buff' ? (e.stages > 0 ? 'buff' : 'debuff') : e.type === 'status' ? (FX[e.status] ? e.status : e.status === 'death' ? 'death' : 'magic') : 'magic');
       }
     }
@@ -1449,7 +1448,7 @@
   /** every fx id this module draws (exact ids data may write, with the level digits) */
   const IDS = (() => {
     const out = [];
-    for (const k of Object.keys(FX)) { out.push(k); if (['slash', 'pierce', 'strike', 'claw', 'bite', 'arrow', 'lash', 'fire', 'ice', 'thunder', 'wind', 'earth', 'water', 'holy', 'dark', 'explosion', 'heal', 'magic', 'mp', 'wp'].includes(k)) out.push(k + '2', k + '3'); }
+    for (const k of Object.keys(FX)) { out.push(k); if (['slash', 'pierce', 'strike', 'claw', 'bite', 'arrow', 'lash', 'fire', 'ice', 'thunder', 'wind', 'earth', 'water', 'holy', 'dark', 'explosion', 'heal', 'magic', 'mp'].includes(k)) out.push(k + '2', k + '3'); }
     out.push('breath_fire', 'breath_ice', 'breath_poison', 'breath_dark');
     return out;
   })();

@@ -44,7 +44,7 @@ async function withPage(b, q, fn) {
   }
   for (const [key, view, name, crop] of [['anim', 'battle', 'anim_hero_attack', [200, 170, 640, 400]], ['anim2', 'battle2', 'anim2_hero_attack', [150, 330, 720, 450]]]) {
     if (!want(key)) continue;
-    const fdir = path.join(OUT, 'frames'); fs.rmSync(fdir, { recursive: true, force: true }); fs.mkdirSync(fdir);
+    const fdir = path.join(require('os').tmpdir(), 'art_code_frames_' + key); fs.rmSync(fdir, { recursive: true, force: true }); fs.mkdirSync(fdir, { recursive: true });
     await withPage(b, 'view=' + view + '&noUI=1', async (p) => {
       const N = 54, fps = 24;
       for (let i = 0; i < N; i++) {

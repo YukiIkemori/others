@@ -1,11 +1,13 @@
 // Rules (R.Rules): the numbers of ルミナス・クロニクル — the 6 fixed stats, derived
-// stats, 9 equipment slots, levels/EXP, HP/MP/WP growth, proficiency, battle
+// stats, 9 equipment slots, levels/EXP, HP/MP growth, proficiency 1–100, battle
 // command lists, item number filling and descriptions. DESIGN.md §3.3.3, §4, §8.2.
 // Pure logic (no DOM): node tools load this file too. Every constant lives in
 // R.Rules.K (§4.18.1) so balance changes touch one place.
+// Systems rework (BRIEF A17 / A18 / A19, design/build/SYSTEMS_REWORK.md): proficiency ranks 1–100, no WP (techs pay
+// MP too), 7 weapon types (bare hands stay as the internal key 'fist': no type, no techs, no proficiency).
 //
 // CharState (§3.2.2):
-//   { id, name, gender, heroType?, favor?, level, exp, hp, mp, wp, bonus:{hp,mp,wp},
+//   { id, name, gender, heroType?, favor?, level, exp, hp, mp, bonus:{hp,mp},
 //     status:{}, equip:{weapon1 … acc2}, wprof:{wtype:pts}, eprof:{el:pts},
 //     techs:[], spells:[], row, mem, joined, counts }
 // Stats and aptitudes are never saved: they are derived from DB.heroTypes /
@@ -17,30 +19,32 @@
 
   // ------------------------------------------------------------ ids (§3.1.1)
   const STATS = ['str', 'vit', 'dex', 'agi', 'int', 'mnd'];
-  const MAXES = ['hp', 'mp', 'wp'];
+  const MAXES = ['hp', 'mp'];
   const SLOTS = ['weapon1', 'weapon2', 'shield', 'head', 'body', 'hands', 'feet', 'acc1', 'acc2'];
   const WEAPON_SLOTS = ['weapon1', 'weapon2'];
   const ACC_SLOTS = ['acc1', 'acc2'];
-  const WTYPES = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'club', 'staff', 'katana', 'fist', 'whip'];
+  const WTYPES = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'staff'];   // A19: 7 types, in this order
+  const UNARMED = 'fist';   // bare hands: an internal key only (not in WTYPES / DB.weaponTypes; no techs, no proficiency)
   const ELEMENTS = ['fire', 'water', 'wind', 'earth', 'light', 'dark'];
   const EQUIP_TYPES = ['weapon', 'shield', 'head', 'body', 'hands', 'feet', 'acc'];
   const ITEM_TYPES = ['weapon', 'shield', 'head', 'body', 'hands', 'feet', 'acc', 'consumable', 'key'];
   const LETTERS = ['S', 'A', 'B', 'C', 'D'];
   const MAX_LEVEL = 99;
-  const CAPS = { hp: 999, mp: 150, wp: 99, stat: 999, eva: 60, crit: 60 };
+  const CAPS = { hp: 999, mp: 250, stat: 999, eva: 60, crit: 60 };
 
-  const STAT_NAMES = { str: '腕力', vit: '体力', dex: '器用さ', agi: '素早さ', int: '知力', mnd: '精神', hp: '最大HP', mp: '最大MP', wp: '最大WP' };
+  const STAT_NAMES = { str: '腕力', vit: '体力', dex: '器用さ', agi: '素早さ', int: '知力', mnd: '精神', hp: '最大HP', mp: '最大MP' };
   const SLOT_NAMES = { weapon1: '武器1', weapon2: '武器2', shield: '盾', head: '頭', body: '体', hands: '手', feet: '足', acc1: 'アクセ1', acc2: 'アクセ2' };
   const TYPE_NAMES = { weapon: '武器', shield: '盾', head: '頭', body: '体', hands: '手', feet: '足', acc: 'アクセサリ', consumable: '道具', key: '大事なもの' };
-  const WTYPE_NAMES = { sword: '剣', greatsword: '大剣', dagger: '短剣', axe: '斧', spear: '槍', bow: '弓', club: '棍棒', staff: '杖', katana: '刀', fist: '体術', whip: '鞭' };
+  const WTYPE_NAMES = { sword: '剣', greatsword: '大剣', dagger: '短剣', axe: '斧', spear: '槍', bow: '弓', staff: '杖' };
+  const UNARMED_NAME = '素手';
   const ELEMENT_NAMES = { fire: '火', water: '水', wind: '風', earth: '土', light: '光', dark: '闇' };
   const GRADE_NAMES = { normal: '通常', rare: 'レア', super: '超レア' };
   const ROW_NAMES = { front: '前列', middle: '後列' };
   const WEIGHT_NAMES = { heavy: '重装', light: '軽装', cloth: '布' };
-  // the 17 keys of a previewStats / optimize diff (§3.3.3), in the equip screen's order (§11.7.5)
-  const DIFF_KEYS = ['atk1', 'atk2', 'mag', 'def', 'mdef', 'hit', 'eva', 'crit', 'str', 'vit', 'dex', 'agi', 'int', 'mnd', 'hp', 'mp', 'wp'];
+  // the 16 keys of a previewStats / optimize diff (§3.3.3), in the equip screen's order (§11.7.5)
+  const DIFF_KEYS = ['atk1', 'atk2', 'mag', 'def', 'mdef', 'hit', 'eva', 'crit', 'str', 'vit', 'dex', 'agi', 'int', 'mnd', 'hp', 'mp'];
   const DIFF_NAMES = { atk1: '攻撃1', atk2: '攻撃2', mag: '術力', def: '守備', mdef: '術防', hit: '命中', eva: '回避', crit: '会心',
-    str: '腕力', vit: '体力', dex: '器用さ', agi: '素早さ', int: '知力', mnd: '精神', hp: '最大HP', mp: '最大MP', wp: '最大WP' };
+    str: '腕力', vit: '体力', dex: '器用さ', agi: '素早さ', int: '知力', mnd: '精神', hp: '最大HP', mp: '最大MP' };
 
   // ------------------------------------------------------ constants (§4.18.1)
   const Wt = [8, 14, 21, 30, 40, 51, 64, 78, 94, 112];
@@ -55,7 +59,9 @@
     LZ: (T) => 6 + 6 * T,
     GRADE_MULT: { normal: 1, rare: 2, super: 3 },
     PRICE_GRADE: { normal: 1, rare: 3, super: 6 },
-    // §4.3.4 — weapon type table (the data file weapontypes.js carries names and fx only)
+    // §4.3.4 — weapon type table (the data file weapontypes.js carries names and fx only). A19 (SYSTEMS_REWORK §3.1):
+    // 7 types; 刀 → 剣 (art:'katana'), 棍棒 → 斧's blunt mace line (kind:'blunt', art:'club'), 体術・鞭 gone; the staff
+    // now reaches from the back row. An item may override mult / kind / hit / crit (fillItem, weaponInfo).
     WTYPE: {
       sword: WT(1, false, 'slash', 1.00, 0, 2, ['str'], 0.5),
       greatsword: WT(2, false, 'slash', 1.40, -5, 2, ['str'], 0.5),
@@ -63,13 +69,10 @@
       axe: WT(1, false, 'slash', 1.15, -10, 4, ['str'], 0.5),
       spear: WT(2, true, 'pierce', 1.25, 0, 2, ['str', 'dex'], 0.5),
       bow: WT(2, true, 'pierce', 1.10, 5, 4, ['dex'], 0.5),
-      club: WT(1, false, 'blunt', 1.05, 0, 2, ['str'], 0.5),
-      staff: WT(1, false, 'blunt', 0.60, 0, 0, ['str', 'int'], 1.0),
-      katana: WT(1, false, 'slash', 1.05, 0, 10, ['str', 'dex'], 0.5),
-      fist: WT(1, false, 'blunt', 0.90, 5, 5, ['str', 'agi'], 0.5),
-      whip: WT(1, true, 'blunt', 0.80, 0, 2, ['dex'], 0.5),
+      staff: WT(1, true, 'blunt', 0.60, 0, 0, ['str', 'int'], 1.0),
+      fist: WT(1, false, 'blunt', 0.90, 5, 5, ['str', 'agi'], 0.5),   // bare hands only (R.Rules.UNARMED)
     },
-    UNARMED: { atk: 4, mag: 4 },            // bare hands = 体術 with W 4 (§4.3.4); Wm 4 with no weapon
+    UNARMED: { atk: 4, mag: 4 },            // bare hands (素手): W 4 with the 'fist' row above (§4.3.4); Wm 4 with no weapon
     WEIGHT: { heavy: { def: 1, mdef: 0.2, eva: 8 }, light: { def: 0.65, mdef: 0.35, eva: 5 }, cloth: { def: 0.4, mdef: 0.6, eva: 2 } },
     SLOT_SHARE: { shield: 0.20, head: 0.15, body: 0.40, hands: 0.10, feet: 0.15 },
     SLOT_UNITS: { weapon: 2, shield: 1, head: 1, body: 2, hands: 1, feet: 1, acc: 1 },
@@ -77,15 +80,13 @@
     RELIC_PRICE: { rare: 1500, super: 3000 },
     // §4.2.2 — growth
     HP: { a: 17.5, b: 14.7, p: 0.90, cap: 999 },
-    MP: { a: 8, b: 2.6, p: 0.85, cap: 150 },
-    WP: { a: 5, b: 1.8, p: 0.85, cap: 99 },
+    MP: { a: 8, b: 2.6, p: 0.85, cap: 250 },   // A18: WP gone, techs pay MP too — the curve stays, the cap 150 → 250
     VIT: { base: 160, div: 200 },
     GROW: {
       hp: { S: 1.25, A: 1.12, B: 1.00, C: 0.90, D: 0.80 },
-      mp: { S: 1.30, A: 1.15, B: 1.00, C: 0.80, D: 0.60 },
-      wp: { S: 1.30, A: 1.15, B: 1.00, C: 0.80, D: 0.60 },
+      mp: { S: 1.30, A: 1.15, B: 1.00, C: 0.85, D: 0.70 },   // A18: C / D a little higher (techs pay MP)
     },
-    BONUS_CAP: { hp: 200, mp: 30, wp: 30 },   // `grow` (seeds) — §8.2.5
+    BONUS_CAP: { hp: 200, mp: 50 },   // `grow` (seeds) — §8.2.5 (A18: MP 30 → 50)
     // §4.2.3 — EXP
     EXP: { a: 3, b: 1.2, c: 0.06, bplMax: 16, bplAmp: 12, bplTau: 12, perBattle: 3.3 },
     FALLOFF: { up: 0.75, downStep: 0.1, downMax: 10, min: 0.03 },
@@ -96,20 +97,29 @@
     ROW: { middleTaken: 0.7, weight: { front: 2, middle: 1 }, aimMiddle: { front: 1, middle: 3 } },
     STAGE: [0.63, 0.77, 1, 1.3, 1.6],
     MOB: { atk: 0.6, mag: 0.6 },
-    // §4.9.1 — proficiency
-    PROF_PTS: [0, 5, 15, 30, 55, 90, 135, 190, 260, 350, 460],
-    PEXP: [15, 40, 70, 100, 135, 175, 220, 270, 330, 400],
-    PROF_CAP: 999,
-    PROF_GAIN: { weapon: 1, techHigh: 2, techHighLv: 6, single12: 1, single35: 2, pair: 2, triple: 3, stone: 1 },
+    // §4.9.1 — proficiency. A17 (SYSTEMS_REWORK §1): points are saved, the rank 1–100 is computed.
+    // PROF_PTS[r] = the points of rank r (r = 1..100; [0] unused = 0): round(11 × (r − 1)^1.18). profRank(0) = 1.
+    PROF_PTS: [0].concat(Array.from({ length: 100 }, (_, i) => Math.round(11 * Math.pow(i, 1.18)))),
+    PROF_CAP: 2490,                        // = PROF_PTS[100]
+    // points per action: weapons as before (1, lv6+ techs 2); spells ×2–2.5 (a caster acts with spells less often)
+    PROF_GAIN: { weapon: 1, techHigh: 2, techHighLv: 6, single12: 2, single35: 5, pair: 5, triple: 7, stone: 2 },
     CATCHUP: 2,
-    START_PROF: { S: 15, A: 5 },
+    // the catch-up line PEXP(T) (points) = the points of rank [3,12,18,24,30,36,42,48,54,60]; T = R.Tier.effective()
+    PEXP: [25, 186, 311, 445, 585, 730, 880, 1034, 1191, 1352],
+    // the tier's soft line (rank): at or above PROF_SOFT.rank[T] a gain is × mul (rank 100 only by grinding after the game)
+    PROF_SOFT: { rank: [20, 28, 36, 44, 52, 60, 67, 74, 80, 90], mul: 0.3 },
+    START_PROF: { S: 25, A: 11 },          // starting points (rank 3 / 2); starterKit.prof holds the same values
     JOIN_PROF: { S: 0.8, A: 0.7, B: 0.5, C: 0.3, D: 0.1 },
-    // Part A13 (2026-09-26): proficiency raises power — +perRank per rank (0–10) of the spell's element(s) (average for
-    // combos / triples) or of the used weapon's type (techs, plain attacks), at most +max. Damage and healing only.
-    PROF_POWER: { perRank: 0.03, max: 0.30 },
-    // Part A13b (2026-09-26): element rank 5 → that element's 1段目 single spells cost MP 0; rank 8 → its 2段目 single
+    // party model / sims: the points of the main weapon in normal use in the middle of tier T
+    PROF_TRACK: [180, 370, 555, 745, 935, 1125, 1315, 1505, 1675, 1850],
+    // the tech glimmer gate: a tech of glim.lv L is a candidate from weapon rank TECH_PROF[L] (index = lv; [0] unused)
+    TECH_PROF: [0, 1, 3, 8, 14, 20, 26, 32, 40, 50, 60],
+    // Part A13 / A17: proficiency raises power — × 1 + max × ((r − 1) / 99)^exp, r = the rank of the spell's element
+    // (the average for combos / triples) or of the used weapon's type (techs, plain attacks). Damage and healing only.
+    PROF_POWER: { max: 0.30, exp: 0.75 },
+    // Part A13b / A17: element rank 14 → that element's 1段目 single spells cost MP 0; rank 32 → its 2段目 single
     // spells cost half (rounded up, at least 1). Combo / triple spells are not affected.
-    PROF_MP: { freeRank: 5, freeStep: 1, halfRank: 8, halfStep: 2 },
+    PROF_MP: { freeRank: 14, freeStep: 1, halfRank: 32, halfStep: 2 },
     // Part A13 retune: monster HP x (1 + min(max, perLv x L)) - the enemy side of the proficiency bonus (the party's
     // weapon / element rank grows with the tier: about +6 % at T0 to +24 % at T7). Folded into K.curve's hp (§4.14.2).
     MON_HP_PROF: { perLv: 0.004, max: 0.20 },
@@ -156,7 +166,7 @@
     PREEMPT: 1 / 16, PREEMPT_RATIO: [0.5, 2],
     ESCAPE: { base: 0.55, step: 0.12, agi: 0.5, min: 0.25, max: 0.95 },
     // §4.12 — after battle, inn
-    AFTER: { mpPct: 0.10, wpPct: 0.10 },
+    AFTER: { mpPct: 0.12 },   // A18: 10 → 12 % (techs pay MP too; a knob, SYSTEMS_REWORK §4.3 A3)
     INN: [10, 16, 24, 32, 42, 54, 66, 80, 96, 112],
     // §4.10.2–4.10.5 — golden, rare and metal monsters
     GOLDEN: { rate: 1 / 40, hp: 2, stat: 1.2, exp: 3, gold: 5, lvShow: 2 },
@@ -237,7 +247,7 @@
   const gameInv = () => (R.Game && R.Game.inv) || {};
 
   const Rules = (R.Rules = {
-    K, STATS, MAXES, SLOTS, WEAPON_SLOTS, ACC_SLOTS, WTYPES, ELEMENTS, EQUIP_TYPES, ITEM_TYPES, LETTERS, MAX_LEVEL, CAPS,
+    K, STATS, MAXES, SLOTS, WEAPON_SLOTS, ACC_SLOTS, WTYPES, UNARMED, ELEMENTS, EQUIP_TYPES, ITEM_TYPES, LETTERS, MAX_LEVEL, CAPS,
     STAT_NAMES, SLOT_NAMES, TYPE_NAMES, WTYPE_NAMES, ELEMENT_NAMES, GRADE_NAMES, ROW_NAMES, WEIGHT_NAMES, DIFF_KEYS, DIFF_NAMES,
 
     // ------------------------------------------------------- small formulas
@@ -286,8 +296,8 @@
       spec = spec || { id: 'hero' };
       const kit = DB.starterKit || {};
       const c = {
-        id: spec.id, name: '', gender: 'm', level: 1, exp: 0, hp: 1, mp: 0, wp: 0,
-        bonus: { hp: 0, mp: 0, wp: 0 }, status: {},
+        id: spec.id, name: '', gender: 'm', level: 1, exp: 0, hp: 1, mp: 0,
+        bonus: { hp: 0, mp: 0 }, status: {},
         equip: Rules.emptyEquip(), wprof: {}, eprof: {}, techs: [], spells: [], row: 'front',
         mem: { cmd: 0, list: {}, item: 0, target: null },
         joined: { tier: 0, frame: 0 },
@@ -326,7 +336,7 @@
       if (Rules.hasTwoHanded(c)) c.equip.shield = null;
       c.techs = uniq(techs).filter((id) => Rules.knownAction(id, 'newChar'));
       c.spells = uniq(spells).filter((id) => Rules.knownAction(id, 'newChar'));
-      // starting proficiency from the aptitude letters: S 15, A 5 (§5.0 0.6)
+      // starting proficiency from the aptitude letters: S 25, A 11 points (rank 3 / 2; §5.0 0.6, A17)
       const L = Rules.aptLetters(c), sp = kit.prof || K.START_PROF;
       for (const w of WTYPES) c.wprof[w] = sp[L.w[w]] || 0;
       for (const e of ELEMENTS) c.eprof[e] = sp[L.e[e]] || 0;
@@ -392,21 +402,21 @@
       for (const e of ELEMENTS) out.e[e] = A[L.e[e]];
       return out;
     },
-    /** growth letters {hp,mp,wp} */
+    /** growth letters {hp,mp} */
     growth(c) {
       const src = Rules.source(c);
       const g = (src && src.growth) || {};
-      return { hp: letter(g.hp), mp: letter(g.mp), wp: letter(g.wp) };
+      return { hp: letter(g.hp), mp: letter(g.mp) };
     },
 
-    // --------------------------------------------------------- HP/MP/WP
-    /** the raw level curve of hp|mp|wp before type and equipment (§4.2.2) */
+    // ------------------------------------------------------------ HP/MP
+    /** the raw level curve of hp|mp before type and equipment (§4.2.2) */
     lvCurve(key, L) {
       const P = K[key.toUpperCase()];
       return P.a + P.b * Math.pow(Math.max(0, L - 1), P.p);
     },
     /**
-     * max hp|mp|wp at `level` with c's current equipment:
+     * max hp|mp at `level` with c's current equipment:
      * HP = min(999, round(HPlv × GH × VIT) × (1 + hpPct/100) + bonus.hp), VIT = (160 + 体力)/200
      */
     maxAt(c, key, level, pre) {
@@ -423,7 +433,7 @@
     /** raise a max by an item (`grow`): returns the amount added (0 = already at the cap, §8.2.5) */
     grow(c, key, n) {
       if (!MAXES.includes(key)) return 0;
-      c.bonus = c.bonus || { hp: 0, mp: 0, wp: 0 };
+      c.bonus = c.bonus || { hp: 0, mp: 0 };
       const cur = c.bonus[key] || 0, cap = K.BONUS_CAP[key];
       const add = Math.max(0, Math.min(n | 0, cap - cur));
       if (!add) return 0;
@@ -465,7 +475,7 @@
       const C = K.MODCAP;
       if (out.expPct != null) out.expPct = U.clamp(out.expPct, C.expMin, C.exp);
       if (out.mpCostPct != null) out.mpCostPct = Math.max(C.cost, out.mpCostPct);
-      if (out.wpCostPct != null) out.wpCostPct = Math.max(C.cost, out.wpCostPct);
+      if (out.techCostPct != null) out.techCostPct = Math.max(C.cost, out.techCostPct);   // A18: the techs' MP
       if (out.encounterPct != null) out.encounterPct = U.clamp(out.encounterPct, -C.encounter, C.encounter);
       if (out.autoSteal != null) out.autoSteal = U.clamp(out.autoSteal, 0, C.autoSteal);
       if (out.glimPct) for (const k in out.glimPct) out.glimPct[k] = U.clamp(out.glimPct[k], C.glimMin, C.glim);
@@ -522,7 +532,7 @@
     weaponInfo(c, slot, fs, m) {
       const it = slot ? itemOf(c.equip[slot]) : null;
       if (slot && !it) return null;
-      const wtype = it ? it.wtype : 'fist';
+      const wtype = it ? it.wtype : UNARMED;
       const T = Rules.wtypeInfo(wtype);
       const S = T.stat.reduce((a, k) => a + fs[k], 0) / T.stat.length;
       const Wv = it ? (it.atk || 0) : K.UNARMED.atk;
@@ -545,7 +555,7 @@
     },
     /**
      * full derived stats (§4.4):
-     * { hp,mp,wp (max), str…mnd, atk/atk1/atk2, mag, def, mdef, hit, eva, crit, spd,
+     * { hp,mp (max), str…mnd, atk/atk1/atk2, mag, def, mdef, hit, eva, crit, spd,
      *   w:{weapon1, weapon2, fist}, elemResist, elemBoost, statusImmune, statusResist, mods }
      */
     stats(c) {
@@ -584,7 +594,7 @@
       return s;
     },
     isAlive(c) { return !!c && c.hp > 0; },
-    /** keep hp/mp/wp within 0..max (hp of a living member stays ≥ 1) */
+    /** keep hp/mp within 0..max (hp of a living member stays ≥ 1) */
     clampHpMp(c) {
       const st = Rules.stats(c);
       for (const k of MAXES) {
@@ -593,10 +603,10 @@
       }
       return c;
     },
-    /** HP/MP/WP to max, statuses cleared (revives) */
+    /** HP/MP to max, statuses cleared (revives) */
     fullHeal(c) {
       const st = Rules.stats(c);
-      c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; c.status = {};
+      c.hp = st.hp; c.mp = st.mp; c.status = {};
       return c;
     },
 
@@ -638,11 +648,11 @@
       return Math.max(1, v);
     },
     /**
-     * add EXP → {levels, gains:{hp,mp,wp}, level}. Current HP/MP/WP rise with the
+     * add EXP → {levels, gains:{hp,mp}, level}. Current HP/MP rise with the
      * maxima (a fallen member's HP stays 0). Emits 'levelup'(c, level) for members of R.Game.
      */
     gainExp(c, n) {
-      const res = { levels: 0, gains: { hp: 0, mp: 0, wp: 0 }, level: c.level };
+      const res = { levels: 0, gains: { hp: 0, mp: 0 }, level: c.level };
       n = Math.max(0, Math.floor(n || 0));
       if (c.level >= MAX_LEVEL) { c.exp = Math.min(c.exp + n, Rules.expForLevel(MAX_LEVEL)); return res; }
       const before = Rules.stats(c);
@@ -662,7 +672,7 @@
       }
       return res;
     },
-    /** set a level directly (debug / party model): exp and maxima follow, HP/MP/WP refilled */
+    /** set a level directly (debug / party model): exp and maxima follow, HP/MP refilled */
     setLevel(c, L) {
       c.level = U.clamp(L | 0, 1, MAX_LEVEL);
       c.exp = Rules.expForLevel(c.level);
@@ -672,17 +682,19 @@
 
     // -------------------------------------------------------- proficiency
     prof(c, kind, id) { const t = kind === 'e' ? c.eprof : c.wprof; return (t && t[id]) || 0; },
+    /** the rank 1–100 of a point total: the largest r with PROF_PTS[r] ≤ pts (at least 1; A17) */
     profRank(pts) {
       const P = K.PROF_PTS;
-      let r = 0;
-      for (let i = 0; i < P.length; i++) if (pts >= P[i]) r = i;
+      pts = +pts || 0;
+      let r = 1;
+      for (let i = 2; i < P.length; i++) { if (pts >= P[i]) r = i; else break; }
       return r;
     },
     rankOf(c, kind, id) { return Rules.profRank(Rules.prof(c, kind, id)); },
     /**
      * Part A13 — the proficiency rank behind an action: a spell → the average rank of its elements; a tech or a plain
      * attack (action null / 'attack') → the rank of the weapon type in `slot` ('weapon1'|'weapon2'; undefined = the
-     * default weapon; bare hands or null with no weapon = 体術). Items and anything else → null (no bonus).
+     * default weapon). Bare hands (素手, no proficiency), items and anything else → null (no bonus).
      */
     profPowerRank(c, action, slot) {
       if (!c) return null;
@@ -698,16 +710,21 @@
       if (s !== 'weapon1' && s !== 'weapon2') s = eq.weapon1 ? 'weapon1' : eq.weapon2 ? 'weapon2' : null;
       const it = s ? itemOf(eq[s]) : null;
       let w = it && it.wtype;
-      if (!w) w = !eq.weapon1 && !eq.weapon2 ? 'fist' : (a && a.wtype) || null;
+      if (!w) w = !eq.weapon1 && !eq.weapon2 ? UNARMED : (a && a.wtype) || null;
       if (!w || !WTYPES.includes(w)) return null;
       return Rules.rankOf(c, 'w', w);
     },
-    /** Part A13 — power multiplier 1 + min(max, perRank × rank) of profPowerRank (1 when nothing applies) */
+    /** Part A13 / A17 — power multiplier of profPowerRank: 1 + max × ((r − 1)/99)^exp (1 when nothing applies) */
     profPowerMul(c, action, slot) {
       const r = Rules.profPowerRank(c, action, slot);
       if (r == null) return 1;
-      const P = K.PROF_POWER;
-      return 1 + Math.min(P.max, Math.max(0, P.perRank * r));
+      return Rules.profPowerOf(r);
+    },
+    /** the multiplier of a rank r (1–100; a combo's average rank may be fractional): r1 ×1.00 … r100 ×1.30 */
+    profPowerOf(r) {
+      const P = K.PROF_POWER, top = K.PROF_PTS.length - 1;
+      const f = U.clamp(((+r || 1) - 1) / (top - 1), 0, 1);
+      return 1 + P.max * Math.pow(f, P.exp);
     },
     /** Part A13 — the bonus as a whole percentage for the screens (「熟練の補正 +9%」) */
     profPowerPct(c, action, slot) { return Math.round((Rules.profPowerMul(c, action, slot) - 1) * 100); },
@@ -716,9 +733,15 @@
       if (T == null) T = R.Tier ? R.Tier.effective() : 0;
       return K.PEXP[U.clamp(T | 0, 0, K.PEXP.length - 1)];
     },
+    /** PROF_SOFT.rank[T] — the tier's soft line (rank); gains at or above it are × PROF_SOFT.mul */
+    profSoft(T) {
+      if (T == null) T = R.Tier ? R.Tier.effective() : 0;
+      const S = K.PROF_SOFT.rank;
+      return S[U.clamp(T | 0, 0, S.length - 1)];
+    },
     /**
-     * add raw points: × (1 + profPct/100) and ×2 while below PEXP(T) (§4.9.1).
-     * opts.raw skips both. → {rank, up, pts}
+     * add raw points (A17, SYSTEMS_REWORK §1.3): × (1 + profPct/100), × CATCHUP while below PEXP(T),
+     * × PROF_SOFT.mul at or above the soft line of T. opts.raw skips all three. → {rank, up, pts}
      */
     addProf(c, kind, id, pts, opts) {
       const t = kind === 'e' ? (c.eprof = c.eprof || {}) : (c.wprof = c.wprof || {});
@@ -726,8 +749,10 @@
       let v = pts;
       if (!(opts && opts.raw)) {
         const m = (opts && opts.mods) || Rules.mods(c);
+        const T = opts && opts.tier;
         v *= 1 + ((m.profPct && m.profPct[id]) || 0) / 100;
-        if (cur < Rules.pexp(opts && opts.tier)) v *= K.CATCHUP;
+        if (cur < Rules.pexp(T)) v *= K.CATCHUP;
+        if (Rules.profRank(cur) >= Rules.profSoft(T)) v *= K.PROF_SOFT.mul;
       }
       const r0 = Rules.profRank(cur);
       t[id] = U.clamp(round2(cur + v), 0, K.PROF_CAP);
@@ -752,8 +777,8 @@
       }
       if (info.kind === 'attack' || info.kind === 'tech') {
         let w = info.wtype;
-        if (!w) { const it = itemOf(info.slot && c.equip[info.slot]); w = it ? it.wtype : 'fist'; }
-        if (!WTYPES.includes(w)) return ups;
+        if (!w) { const it = itemOf(info.slot && c.equip[info.slot]); w = it ? it.wtype : UNARMED; }
+        if (!WTYPES.includes(w)) return ups;   // bare hands (素手) train nothing
         const lv = a && a.glim && a.glim.lv;
         bump('w', w, info.kind === 'tech' && lv >= G.techHighLv ? G.techHigh : G.weapon);
       } else if (info.kind === 'spell') {
@@ -809,7 +834,7 @@
     },
     /** does c hold a two-handed weapon in weapon1 or weapon2? */
     hasTwoHanded(c) { return WEAPON_SLOTS.some((s) => c.equip && c.equip[s] && Rules.isTwoHanded(c.equip[s])); },
-    /** 'any' (reaches from the middle row: spear, bow, whip) or 'front' (bare hands: front) */
+    /** 'any' (reaches from the middle row: spear, bow, staff) or 'front' (bare hands: front) */
     reach(itemId) {
       const it = itemOf(itemId);
       if (!it || it.type !== 'weapon') return 'front';
@@ -1002,12 +1027,12 @@
       if (!changes.length) return { ok: true, removed: [] };
       const snapEquip = Object.assign({}, c.equip);
       const snapInv = Object.assign({}, inv);
-      const snapHp = [c.hp, c.mp, c.wp];
+      const snapHp = [c.hp, c.mp];
       const restore = () => {
         Object.assign(c.equip, snapEquip);
         for (const k of Object.keys(inv)) delete inv[k];
         Object.assign(inv, snapInv);
-        c.hp = snapHp[0]; c.mp = snapHp[1]; c.wp = snapHp[2];
+        c.hp = snapHp[0]; c.mp = snapHp[1];
       };
       const o = { inv };
       const alive = c.hp > 0;
@@ -1029,7 +1054,7 @@
 
     // -------------------------------------------------------- battle commands
     /**
-     * battle command list (§3.3.3): one per equipped weapon slot (both empty → 体術),
+     * battle command list (§3.3.3): one per equipped weapon slot (both empty → 素手),
      * 術 when spells are known (and no noSpell), 防御, 道具
      */
     commands(c) {
@@ -1039,7 +1064,7 @@
         if (!it) continue;
         out.push({ type: 'weapon', slot: s, wtype: it.wtype, name: wtypeName(it.wtype), sealed: !!it.sealTech });
       }
-      if (!out.length) out.push({ type: 'weapon', slot: null, wtype: 'fist', name: wtypeName('fist'), sealed: false });
+      if (!out.length) out.push({ type: 'weapon', slot: null, wtype: UNARMED, name: UNARMED_NAME, sealed: false });
       const m = Rules.mods(c);
       if ((c.spells || []).length && !m.noSpell) out.push({ type: 'spell', name: '術' });
       out.push({ type: 'defend', name: '防御' });
@@ -1061,9 +1086,13 @@
     },
     /** spells usable from the field menu (action.field === true), in spell order */
     fieldSpells(c) { return Rules.spellList(c).filter((id) => DB.actions[id].field === true); },
-    /** WP cost after wpCostPct (min 1; cuts round down, raises round up) */
-    wpCost(c, actionId) { return costOf(c, actionId, 'wp'); },
-    mpCost(c, actionId) { return costOf(c, actionId, 'mp'); },
+    /**
+     * the MP an action costs c (A18: techs and spells both pay MP; SYSTEMS_REWORK §2.2):
+     *   tech  max(1, round(a.mp × (1 + max(MODCAP.cost, techCostPct)/100)))
+     *   spell the A13b base (0 stays 0), then mpCostPct as before (at least 1; cuts round down, raises round up)
+     * 0 for an action with no MP. Glimmered actions are free in battle (the battle decides that, not this).
+     */
+    mpCost(c, actionId) { return costOf(c, actionId); },
     /** Part A13b — 'free' | 'half' | null: the proficiency discount on this spell's MP for c */
     profMpKind(c, actionId) {
       const a = typeof actionId === 'string' ? DB.actions[actionId] : actionId;
@@ -1084,6 +1113,7 @@
     /**
      * fill the numbers of an item from its tier/grade/units (§8.2.9): stats, atk,
      * mag, twoHanded, def, mdef, eva, price, desc, icon. Values already written are kept.
+     * A weapon's `mult` overrides its type's (atk = round(W[T] × (it.mult ?? type mult)), A19).
      */
     fillItem(it) {
       if (!it) return it;
@@ -1102,8 +1132,8 @@
         Object.defineProperty(it, '_statsAdded', { value: true, enumerable: false });
       }
       if (it.type === 'weapon') {
-        const w = K.WTYPE[it.wtype] || K.WTYPE.fist;
-        if (it.atk === undefined) it.atk = Math.round(K.W[T] * w.mult);
+        const w = K.WTYPE[it.wtype] || K.WTYPE[UNARMED];
+        if (it.atk === undefined) it.atk = Math.round(K.W[T] * (typeof it.mult === 'number' ? it.mult : w.mult));
         if (it.mag === undefined) it.mag = Math.round(K.W[T] * w.magMult);
         if (Rules.wtypeInfo(it.wtype).twoHanded) it.twoHanded = true;
       } else if (K.SLOT_SHARE[it.type] !== undefined) {
@@ -1170,7 +1200,7 @@
 
   function uniq(a) { return Array.from(new Set(a || [])); }
   function letter(v) { return LETTERS.includes(v) ? v : 'C'; }
-  function wtypeName(w) { return (DB.weaponTypes[w] && DB.weaponTypes[w].name) || WTYPE_NAMES[w] || w; }
+  function wtypeName(w) { if (w === UNARMED) return UNARMED_NAME; return (DB.weaponTypes[w] && DB.weaponTypes[w].name) || WTYPE_NAMES[w] || w; }
   function rowOf(m) { const c = m && m.c ? m.c : m; return (m && m.row) || (c && c.row) || 'front'; }
   function hpOf(m) { if (m && typeof m.hp === 'number') return m.hp; return m && m.c ? m.c.hp : 0; }
   function inGame(c) {
@@ -1233,12 +1263,17 @@
     if (step === P.halfStep && r >= P.halfRank) return Math.max(1, Math.ceil(a.mp / 2));
     return a.mp;
   }
-  function costOf(c, actionId, key) {
-    const a = DB.actions[actionId];
-    if (!a || !a[key]) return 0;
-    const b = key === 'mp' ? profMpBase(c, a) : a[key];
+  function costOf(c, actionId) {
+    const a = typeof actionId === 'string' ? DB.actions[actionId] : actionId;
+    if (!a || !a.mp) return 0;
+    const m = Rules.mods(c), cap = K.MODCAP.cost;
+    if (a.kind === 'tech') {
+      const pct = Math.max(cap, m.techCostPct || 0);
+      return Math.max(1, Math.round(a.mp * (1 + pct / 100)));
+    }
+    const b = profMpBase(c, a);
     if (!b) return 0;
-    const pct = Rules.mods(c)[key + 'CostPct'] || 0;
+    const pct = Math.max(cap, m.mpCostPct || 0);
     const v = b * (100 + pct) / 100;
     return Math.max(1, pct < 0 ? Math.floor(v + 1e-9) : Math.ceil(v - 1e-9));
   }
@@ -1318,14 +1353,13 @@
     if (pctUp.length) { const n = joinTo(pctUp.map((k) => STAT_NAMES[k])); G(n + 'が割合で上がる。', n + 'が上がる。'); }
     if (pctDown.length) B('ただし' + joinTo(pctDown.map((k) => STAT_NAMES[k])) + 'が下がる。');
     if (it.statsAdd) { const ks = STATS.filter((k) => it.statsAdd[k] < 0); if (ks.length) B('ただし' + joinTo(ks.map((k) => STAT_NAMES[k])) + 'が下がる。'); }
-    for (const k of ['hp', 'mp', 'wp']) {
+    for (const k of ['hp', 'mp']) {
       const v = m[k + 'Pct'], nm = STAT_NAMES[k];
       if (v > 0) G(nm + 'が上がる。');
       else if (v < 0) B('ただし' + nm + 'が下がる。');
     }
     if (m.regen) G('戦闘中、HPが少しずつ戻る。', 'HPが戻る。');
     if (m.mpRegen > 0) G('戦闘中、MPが少しずつ戻る。', 'MPが戻る。');
-    if (m.wpRegen > 0) G('戦闘中、WPが少しずつ戻る。', 'WPが戻る。');
     if (m.startBuffs) {
       const ks = Object.keys(m.startBuffs).filter((k) => m.startBuffs[k] > 0);
       if (ks.length) { const n = joinTo(ks.map((k) => BUFF_NAMES[k] || k)); G('戦闘の始めに' + n + 'が上がる。', '始めに' + n + 'が上がる。'); }
@@ -1342,10 +1376,13 @@
     if (m.magicPct < 0) B('ただし術が弱くなる。');
     if (m.healPct > 0) G('回復の術がよく効く。');
     if (m.itemPct > 0) G('回復の道具がよく効く。');
-    if (m.mpCostPct < 0) G('術のMPの消費が減る。', 'MPの消費が減る。');
-    if (m.wpCostPct < 0) G('技のWPの消費が減る。', 'WPの消費が減る。');
-    if (m.mpCostPct > 0) B('ただしMPの消費が増える。');
-    if (m.wpCostPct > 0) B('ただしWPの消費が増える。');
+    // A18: mpCostPct = the spells' MP, techCostPct = the techs' MP (SYSTEMS_REWORK §2.5)
+    if (m.mpCostPct < 0 && m.techCostPct < 0) G('術と技のMPの消費が減る。', 'MPの消費が減る。');
+    else if (m.mpCostPct < 0) G('術のMPの消費が減る。', 'MPの消費が減る。');
+    else if (m.techCostPct < 0) G('技のMPの消費が減る。', '技のMPが減る。');
+    if (m.mpCostPct > 0 && m.techCostPct > 0) B('ただし術と技のMPの消費が増える。', 'ただしMPの消費が増える。');
+    else if (m.mpCostPct > 0) B('ただし術のMPの消費が増える。', 'ただしMPの消費が増える。');
+    else if (m.techCostPct > 0) B('ただし技のMPの消費が増える。', 'ただし技のMPが増える。');
     if (m.glimPct) {
       const pos = Object.keys(m.glimPct).filter((k) => m.glimPct[k] > 0);
       const neg = Object.keys(m.glimPct).filter((k) => m.glimPct[k] < 0);

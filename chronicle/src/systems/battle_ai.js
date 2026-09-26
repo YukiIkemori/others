@@ -132,7 +132,7 @@
   }
   /**
    * battle-usable techs (of the equipped weapon types, per slot) and spells of u (noAuto excluded, §6.2.7).
-   * → [{id, ab, type:'tech'|'spell', slot, wp, mp, cost}]
+   * → [{id, ab, type:'tech'|'spell', slot, mp, cost}] (A18: techs and spells share MP)
    */
   function abilityOptions(eng, u) {
     const out = [];
@@ -148,8 +148,8 @@
         const key = id + '|' + slot;
         if (seen.has(key)) continue;
         seen.add(key);
-        const wp = eng.wpCost(u, id);
-        out.push({ id, ab: a, type: 'tech', slot, wp, mp: 0, cost: wp });
+        const mp = eng.mpCost(u, id);
+        out.push({ id, ab: a, type: 'tech', slot, mp, cost: mp });
       }
     }
     if (!u.mods.noSpell) {
@@ -158,15 +158,35 @@
         if (!a || a.kind !== 'spell' || a.noAuto) continue;
         if (eng.unusable(u, id)) continue;
         const mp = eng.mpCost(u, id);
-        out.push({ id, ab: a, type: 'spell', slot: undefined, wp: 0, mp, cost: mp });
+        out.push({ id, ab: a, type: 'spell', slot: undefined, mp, cost: mp });
       }
     }
     return out;
   }
-  /** fraction of u's own pools an option spends (WP/max WP + MP/max MP) */
-  const spend = (u, o) => (o.wp ? o.wp / Math.max(1, u.mwp) : 0) + (o.mp ? o.mp / Math.max(1, u.mmp) : 0);
-  /** the pool an option draws from is below 30 % (雑魚戦では使わない, §4.13.2) */
-  const lowPool = (u, o) => (o.wp && u.wp < u.mwp * 0.3) || (o.mp && u.mp < u.mmp * 0.3);
+  /** fraction of u's MP an option spends */
+  const spend = (u, o) => (o.mp ? o.mp / Math.max(1, u.mmp) : 0);
+  /** MP is below 30 % (雑魚戦では技も術も使わない, §4.13.2) */
+  const lowPool = (u, o) => !!(o.mp && u.mp < u.mmp * 0.3);
+  const HEAL_RESERVE = { pct: 0.3, heals: 2 };
+  /** a member's own healing spells (heal / revive on allies) are what makes them a 術師・回復役 (A18 §2.6) */
+  const isCare = (a) => !!(a && a.kind === 'spell' && (has(a, 'heal') || has(a, 'revive')) && (ALLY_TARGETS[a.target] || a.target === 'ally_dead'));
+  /**
+   * u's healing role → {healer, healCost (MP of the cheapest heal/revive spell), reserve (MP a 雑魚戦 must leave:
+   * max(30 % of max MP, 2 heals))}. Taken from the spells u knows (not only the ones affordable right now), so the
+   * role does not flip off as MP runs low. Cached on the plan per round.
+   */
+  function careOf(eng, u, plan) {
+    const memo = plan && (plan.care = plan.care || new Map());
+    if (memo && memo.has(u)) return memo.get(u);
+    let healCost = Infinity;
+    if (u.isParty && !u.mods.noSpell) for (const id of spellIds(u.c)) { const a = DB.actions[id]; if (isCare(a)) healCost = Math.min(healCost, eng.mpCost(u, id)); }
+    const healer = healCost !== Infinity;
+    const r = { healer, healCost: healer ? healCost : 0, reserve: healer ? Math.max(u.mmp * HEAL_RESERVE.pct, HEAL_RESERVE.heals * healCost) : 0 };
+    if (memo) memo.set(u, r);
+    return r;
+  }
+  /** 雑魚戦: may a 術師・回復役 spend o's MP on something other than healing (enough left afterwards)? */
+  const careOk = (u, o, care) => !care.healer || !o.mp || u.mp - o.mp >= care.reserve;
   const rareItem = (it) => !!(it && (it.grade === 'rare' || it.grade === 'super' || it.rare || it.src === 'relic'));
   /**
    * consumables the AI may use for u. mode true: any but rare / 魔石 (simulator); 'auto' (in-game オート): revive items when
@@ -197,7 +217,7 @@
         const ok = (rev && !partyRevive) || (heal && !rev && !selfHeal) || (cure && !heal && !rev && (cure.statuses === 'all' || cure.statuses.some((s) => !partyCure.has(s))));
         if (!ok) continue;
       }
-      out.push({ id, ab: it.use, type: 'item', cost: 0, wp: 0, mp: 0, item: it });
+      out.push({ id, ab: it.use, type: 'item', cost: 0, mp: 0, item: it });
     }
     return out;
   }
@@ -404,15 +424,19 @@
     }
     return undefined;
   }
-  const GLIM_REACH = { wpMin: 0.5, perBattle: 2 };
+  const GLIM_REACH = { mpMin: 0.5, perBattle: 2, casterMpMin: 0.6, casterTechPct: 0.05 };
   /**
-   * (d) 閃きねらい for a slot whose 攻撃 cannot reach (後列の杖): the cheapest known reach:true damage tech of that slot's
-   * weapon type (念じ打ち, WP 1), while that type still has glimmer candidates from the middle row — tried before the
-   * 攻撃 of weapon 2 (§4.13.2-d, 「届かなければ武器2」). 雑魚戦 only, WP ≥ 50 %, at most GLIM_REACH.perBattle a fight
-   * (the rest of the WP budget stays for the §4.17.3 A3 ≤ 12 % line). → {o, slot} | null
+   * (d) 閃きねらい for a slot whose 攻撃 cannot reach from the middle row (the staff reaches since A19, so this is e.g. a
+   * dagger's 刃つぶて): the cheapest known reach:true damage tech of that slot's weapon type, while that type still has
+   * glimmer candidates from the middle row — tried before the 攻撃 of weapon 2 (§4.13.2-d). 雑魚戦 only, MP ≥ 50 %
+   * (a member who knows spells: MP ≥ 60 % and the tech costs ≤ 5 % of max MP), at most GLIM_REACH.perBattle a fight
+   * (the rest of the MP stays for the §4.17.3 A3 ≤ 12 % line). → {o, slot} | null
    */
-  function glimReach(eng, u, acts) {
-    if (eng.boss || !u.mwp || u.wp < u.mwp * GLIM_REACH.wpMin) return null;
+  function glimReach(eng, u, acts, plan) {
+    const caster = spellIds(u.c).length > 0;
+    const mpMin = caster ? GLIM_REACH.casterMpMin : GLIM_REACH.mpMin;
+    if (eng.boss || !u.mmp || u.mp < u.mmp * mpMin) return null;
+    const care = careOf(eng, u, plan);
     const mem = (eng.aiMem = eng.aiMem || {});
     const key = u.c.id || u.key;
     if (mem[key] && (mem[key].reach || 0) >= GLIM_REACH.perBattle) return null;
@@ -422,10 +446,11 @@
       const opts = acts.filter((o) => {
         if (o.type !== 'tech' || o.slot !== slot || !o.ab.reach || !FOE_TARGETS[o.ab.target]) return false;
         const de = dmgOf(o.ab);
-        return de && de.formula !== 'percent' && !lowPool(u, o);
+        if (caster && o.mp > u.mmp * GLIM_REACH.casterTechPct) return false;
+        return de && de.formula !== 'percent' && !lowPool(u, o) && careOk(u, o, care);
       });
       if (!opts.length) continue;
-      opts.sort((a, b) => a.wp - b.wp || ((a.ab.glim && a.ab.glim.lv) || a.ab.rank || 0) - ((b.ab.glim && b.ab.glim.lv) || b.ab.rank || 0));
+      opts.sort((a, b) => a.mp - b.mp || ((a.ab.glim && a.ab.glim.lv) || a.ab.rank || 0) - ((b.ab.glim && b.ab.glim.lv) || b.ab.rank || 0));
       if (!candidatesOpen(eng, u, glimCtx(eng, u, 'tech', { wtype: W.wtype, used: opts[0].id }))) continue;
       return { o: opts[0], slot };
     }
@@ -505,8 +530,8 @@
     const single = (d, m) => (m === focus ? value(d, m) : d >= left(m) && left(m) > 0 ? value(d, m) * 0.9 : -1);
     // the plain attack on the focus target (the 雑魚戦 prefers the slot whose techs can still be glimmered)
     let ba = bestAttack(eng, u, focus);
-    // a slot that cannot reach but has a reach tech with open candidates goes first (後列の杖 → 念じ打ち, not the 鞭)
-    const gr = eng.boss ? null : glimReach(eng, u, acts);
+    // a slot that cannot reach but has a reach tech with open candidates goes first (e.g. 後列の短剣 → 刃つぶて)
+    const gr = eng.boss ? null : glimReach(eng, u, acts, plan);
     let grCmd = null, grD = 0;
     if (gr) { grD = eng.expectDamage(u, gr.o.ab, focus, { slot: gr.slot }); if (grD > 0) grCmd = cmdOf(gr.o, focus); }
     if (!grCmd && !eng.boss && ba.reach) {
@@ -519,7 +544,7 @@
     const v0 = Math.max(1, best.score);
     const totalLeft = pool.reduce((s, m) => s + left(m), 0);
     const perRound = Math.max(1, plan.perRound || v0);
-    // 雑魚戦: WP / MP only for a skill that kills 2+ or ends the fight a round earlier, never when attacks finish it
+    // 雑魚戦: MP only for a skill that kills 2+ or ends the fight a round earlier, never when attacks finish it
     const mobGate = (v, kills) => {
       if (totalLeft <= perRound) return false;
       if (kills >= 2) return true;
@@ -527,8 +552,10 @@
       const withIt = Math.ceil(Math.max(0, totalLeft - (v - v0)) / perRound);
       return withIt < now;
     };
-    const healer = acts.some((o) => o.type === 'spell' && has(o.ab, 'heal') && ALLY_TARGETS[o.ab.target]);
-    const healCost = healer ? Math.min(...acts.filter((o) => o.type === 'spell' && has(o.ab, 'heal') && ALLY_TARGETS[o.ab.target]).map((o) => o.mp)) : 0;
+    // A18 §2.6: techs and spells share MP. A 術師・回復役 keeps MP for healing: 雑魚戦 → at least careOf().reserve left
+    // after any non-healing MP action; boss → one heal left (now covers techs too)
+    const care = careOf(eng, u, plan);
+    const healer = care.healer, healCost = care.healCost;
     for (const o of acts) {
       if (o.item) continue;
       const de = dmgOf(o.ab);
@@ -536,6 +563,7 @@
       if (!eng.boss) {
         if (plan.thrift && lowPool(u, o)) continue;
         if (de.formula === 'percent') continue;
+        if (plan.thrift && !careOk(u, o, care) && !has(o.ab, 'heal')) continue;
       } else if (healer && o.mp && u.mp - o.mp < healCost && !has(o.ab, 'heal')) continue; // keep one heal
       const t0 = o.ab.target;
       const cands = t0 === 'enemy' || t0 === 'group' ? pool : [pool[0]];
@@ -553,8 +581,8 @@
           hits.push([t, d]);
         }
         if (v <= 0) continue;
-        // Part A13b: a free (MP 0 / WP 0) skill needs no gate — a caster's 0-MP 1段目 spell beats 攻撃 whenever it hits harder
-        const free = !o.mp && !o.wp;
+        // Part A13b: a free (MP 0) skill needs no gate — a caster's 0-MP 1段目 spell beats 攻撃 whenever it hits harder
+        const free = !o.mp;
         if (!eng.boss && plan.thrift && !free && !mobGate(v, kills)) continue;
         const pen = spend(u, o) * v0 * (eng.boss ? 0.4 : plan.thrift ? 2.5 : 1.2);
         const hpCost = o.ab.effects.reduce((mx, e) => Math.max(mx, e.hpCost || 0), 0) * u.mhp;
@@ -601,7 +629,7 @@
   }
   /**
    * commands for every commandable party member (array by party index).
-   * opts: {items: true|'auto'|false, thrift: bool (in-game オート: conserve WP / MP in ordinary fights)}
+   * opts: {items: true|'auto'|false, thrift: bool (in-game オート: conserve MP in ordinary fights)}
    */
   function partyCommands(eng, opts) {
     opts = opts || AUTO_OPTS;
@@ -616,6 +644,6 @@
   R.BattleAI = {
     AUTO_OPTS, monster, monCommand, condOk, monUsable, pickPartyTarget,
     partyCommands, partyAction, abilityOptions, itemOptions, newPlan, assess, threat,
-    focusOrder, focusTarget, assignTarget, bestAttack, glimCast, glimSlot, glimReach, candidatesOpen, FOCUS_COVER, GLIM_REACH,
+    focusOrder, focusTarget, assignTarget, bestAttack, glimCast, glimSlot, glimReach, candidatesOpen, careOf, FOCUS_COVER, GLIM_REACH, HEAL_RESERVE,
   };
 })(window.RPG);

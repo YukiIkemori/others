@@ -41,7 +41,9 @@
       //   bossLate … ボス戦（EF ≥ ef.boss）の判定 ×min(2, 1 + 0.4 × max(0, T − 4))。T5〜T7 のボス戦でも誰かが閃く 50% 以上（§9.13.2 X5。A12.5）
       tier0: 1.7, tier0Known: 3, bossLate: { from: 4, slope: 0.4, max: 2 },
     },
-    PROF_PTS: [0, 5, 15, 30, 55, 90, 135, 190, 260, 350, 460],
+    // A17 (SYSTEMS_REWORK §1.2, §1.4): ranks 1–100, and the weapon rank a tech of glim.lv L needs (index = lv)
+    PROF_PTS: [0].concat(Array.from({ length: 100 }, (_, i) => Math.round(11 * Math.pow(i, 1.18)))),
+    TECH_PROF: [0, 1, 3, 8, 14, 20, 26, 32, 40, 50, 60],
     MODCAP: { glim: 40, glimMin: -100 },
   };
   let warned = false, kcache = null, kref = null, gref = null;
@@ -57,6 +59,7 @@
     kcache = {
       GLIM: g,
       PROF_PTS: (k && k.PROF_PTS) || SPEC.PROF_PTS,
+      TECH_PROF: (k && k.TECH_PROF) || SPEC.TECH_PROF,
       MODCAP: Object.assign({}, SPEC.MODCAP, (k && k.MODCAP) || {}),
     };
     return kcache;
@@ -87,8 +90,8 @@
   function profRank(pts) {
     if (R.Rules && typeof R.Rules.profRank === 'function') return R.Rules.profRank(pts || 0);
     const P = K().PROF_PTS;
-    let r = 0;
-    for (let i = 0; i < P.length; i++) if ((pts || 0) >= P[i]) r = i;
+    let r = 1;
+    for (let i = 2; i < P.length; i++) if ((pts || 0) >= P[i]) r = i;
     return r;
   }
   function charDef(c) {
@@ -170,13 +173,14 @@
     const list = idx().techs[ctx.wtype] || [];
     const rankB = ctx.rankB || 0;
     const pr = profRank(c.wprof ? c.wprof[ctx.wtype] : 0);
+    const TP = K().TECH_PROF;
     const out = [];
     if (ctx.sealTech) return out;
     for (const id of list) {
       if (has(c.techs, id)) continue;
       const a = DB.actions[id];
       const lv = a.glim.lv;
-      if (lv > rankB || pr < lv - 1) continue;
+      if (lv > rankB || pr < (TP[lv] != null ? TP[lv] : TP[TP.length - 1])) continue;   // A17: weapon rank ≥ TECH_PROF[lv]
       if (ctx.row === 'middle' && !a.reach) continue;   // §6.4.4-1
       if (ctx.silenced && a.magic) continue;             // §6.4.4-2
       out.push({ id, a, lv });
@@ -290,8 +294,9 @@
     }
     if (!wtype) {
       const it = c.equip && c.equip.weapon1 && DB.items[c.equip.weapon1];
-      wtype = (it && it.wtype) || 'fist';
+      wtype = (it && it.wtype) || null;   // bare hands (素手) have no techs
     }
+    if (!wtype) return null;
     const list = (idx().techs[wtype] || []).filter((id) => !has(c.techs, id));
     if (!list.length) return null;
     const ok = (id) => { const a = DB.actions[id]; return !(ctx.row === 'middle' && !a.reach) && !(ctx.silenced && a.magic); };
