@@ -171,7 +171,7 @@ function processWav(wavBytes, line, sp, o) {
   let ch = [GA.mono(d.channels)];
   ch = trim(ch, d.rate, 0.06, 0.15);
   if (sp.fx) ch = trim(applyFx(ch, d.rate, sp.fx), d.rate, 0.03, 0.5);
-  ch = GA.limitTo(ch, d.rate, o.lufs); // gain to the target, true-peak limiter at −1 dBFS
+  ch = GA.limitTo(ch, d.rate, o.lufs, -3); // gain to the target, limiter at −3 dBFS (Vorbis overshoots ~2 dB on decode)
   let n = GA.normalise(ch, d.rate, o.lufs, -1);
   // very short shouts: ebur128 cannot gate < 0.4 s reliably → RMS-based fallback (≈ −16 dBFS RMS)
   if (!isFinite(n.before.I)) {
