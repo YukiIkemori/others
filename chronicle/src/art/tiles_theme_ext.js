@@ -80,15 +80,19 @@
       }
       return b;
     },
-    /** open snow: soft drifts with blue shadow, glints */
+    /** open snow: wind ripples (sastrugi) with a blue shadow under each crest, glints.
+     *  The ripples run across the cell edges (periodic 16) and wander, so a field of
+     *  snow reads as one surface instead of a grid of identical cells. */
     snowfield(t, P) {
+      const shade = t.mix(P[2], P[3], 0.45);
       const b = t.tex(16, 16, (x, y) => {
-        const v = t.fnoise(x, y, 8, 16, 421);
-        if (v < 0.3) return (x + y) % 2 ? P[2] : P[3];
-        if (v > 0.74) return P[4];
-        return P[3];
+        const w = y + 1.8 * Math.sin((x / 16) * Math.PI * 2 + 0.4) + 0.9 * Math.sin((x / 8) * Math.PI * 2 + 1.7);
+        const band = ((w % 8) + 8) % 8, h = t.hash(x, y, 423);
+        if (band < 0.9) return h < 0.75 ? shade : P[3];
+        if (band < 1.8) return h < 0.55 ? P[4] : P[3];
+        return h < 0.025 ? shade : P[3];
       });
-      for (const [x, y] of [[2, 3], [10, 1], [7, 9], [13, 11], [4, 14]]) { b.wset(x, y, 0xffffff); b.wset(x + 1, y + 1, P[2]); }
+      for (const [x, y] of [[3, 5], [11, 2], [13, 12]]) b.wset(x, y, 0xffffff);
       return b;
     },
     /** parquet: basket weave of slats, varnished */
@@ -446,11 +450,14 @@
     },
     /** snow-capped rock seen from above */
     snowcap(t, P) {
+      // a crust of snow over the rock, a step darker and lumpier than the open snow
+      // underfoot so the raised masses read as walls (not as more walkable snow)
       const b = t.tex(16, 16, (x, y) => {
         const v = t.fnoise(x, y, 8, 16, 571) * 0.6 + t.fnoise(x, y, 4, 16, 573) * 0.4;
-        if (v < 0.2) return (x + y) % 2 ? P[2] : P[1];
-        if (v < 0.3) return 0xc8d2de;
-        return v > 0.7 ? 0xffffff : v > 0.5 ? 0xf0f4f8 : 0xdfe6ee;
+        if (v < 0.22) return (x + y) % 2 ? P[2] : P[1];
+        if (v < 0.32) return 0xa8b4c4;
+        if (v < 0.5) return 0xc2ccd8;
+        return v > 0.72 ? 0xf2f6fa : 0xd8e0e8;
       });
       return b;
     },

@@ -190,7 +190,20 @@ class Driver {
     this.ctx = await this.browser.newContext({ viewport: { width: this.o.size[0] + 40, height: this.o.size[1] + 40 } });
     this.page = await this.ctx.newPage();
     this.page.on('console', (m) => {
-      if (m.type() === 'error') { const t = m.text(); this.errors.push({ stage: this.stage, text: '[console.error] ' + t }); console.log(`   ✗ [${this.stage}] console.error: ${t.slice(0, 300)}`); }
+      if (m.type() === 'error') {
+        const t = m.text();
+        // a source file that failed to load (the dist wrapper and main.js print it on every page load): once, tagged
+        if (/^(LOAD ERRORS:|src\/[\w/.-]+\.js[: ])/.test(t)) {
+          this.seenLoadErrors = this.seenLoadErrors || new Set();
+          const key = (t.match(/src\/[\w/.-]+\.js/) || [t.split('\n')[0]])[0];
+          if (this.seenLoadErrors.has(key)) return;
+          this.seenLoadErrors.add(key);
+          this.errors.push({ stage: this.stage, text: '[console.error] ' + t, load: true });
+          console.log(`   ✗ [${this.stage}] load error: ${t.replace(/^LOAD ERRORS:\s*/, '').split('\n')[0].slice(0, 200)}`);
+          return;
+        }
+        this.errors.push({ stage: this.stage, text: '[console.error] ' + t }); console.log(`   ✗ [${this.stage}] console.error: ${t.slice(0, 300)}`);
+      }
       else if (m.type() === 'warning') { this.warnCount++; if (this.o.verbose) console.log('   · warn:', m.text().slice(0, 200)); }
     });
     this.page.on('pageerror', (e) => { const t = String((e && e.stack) || e); this.errors.push({ stage: this.stage, text: '[pageerror] ' + t }); console.log(`   ✗ [${this.stage}] pageerror: ${t.slice(0, 300)}`); });
@@ -205,7 +218,14 @@ class Driver {
     const ok = await this.page.evaluate(HELPER);
     if (!ok) throw new Error('RPG not booted');
     const le = await this.page.evaluate(() => (window.RPG && window.RPG.loadErrors) || []);
-    for (const e of le) { this.errors.push({ stage: this.stage, text: '[loadError] ' + e }); console.log(`   ✗ [${this.stage}] loadError: ${e}`); }
+    this.seenLoadErrors = this.seenLoadErrors || new Set();
+    for (const e of le) {
+      const key = (String(e).match(/src\/[\w/.-]+\.js/) || [String(e).split('\n')[0]])[0];
+      if (this.seenLoadErrors.has(key)) continue;        // the same file fails on every page load: report it once
+      this.seenLoadErrors.add(key);
+      this.errors.push({ stage: this.stage, text: '[loadError] ' + e, load: true });
+      console.log(`   ✗ [${this.stage}] loadError: ${String(e).split('\n')[0]}`);
+    }
     if (o.settings !== false) {
       await this.page.evaluate((s) => { const S = window.RPG.Settings; Object.assign(S, s); }, Object.assign({ msgSpeed: 3, battleSpeed: 2 }, o.settingsVals || {}));
     }

@@ -1215,7 +1215,7 @@ guard('escape', () => {
   // preempt
   const pre = mk({ mons: ['tb_goblin'], surprise: 'pre', noSurprise: false });
   let ev = run(pre.begin());
-  ok(said(ev, '魔物たちは、まだこちらに気づいていない。先手を取った！'), 'preempt line');
+  ok(said(ev, '魔物たちは、まだこちらに気づいていない。\n先手を取った！'), 'preempt line');
   ev = quiet(() => run(pre.playRound([{ type: 'defend' }, { type: 'defend' }, { type: 'defend' }, { type: 'defend' }])));
   ok(!ev.some((x) => x.t === 'actor' && x.u && !x.u.isParty), 'preempt: the monsters skip round 1');
   const pre2 = mk({ mons: ['tb_goblin'], surprise: 'pre', noSurprise: false });

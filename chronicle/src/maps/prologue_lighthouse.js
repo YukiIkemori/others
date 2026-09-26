@@ -272,6 +272,10 @@
     warps: [
       K.warp(13, 20, 'lighthouse_2', 'from_next'),
     ],
+    // §8.12.4: 1–2 p_supply per lighthouse floor — one in the landing, across from the rest lamp
+    chests: [
+      K.chest('lighthouse_3_c1', 18, 19, 'p_supply'),
+    ],
     npcs: [
       K.npc('rest', 'obj:lantern', 8, 19, { event: 'common_rest', fixed: true }),
       K.npc('fine', 'fine', 13, 16, { dir: 'down', event: 'lighthouse_3_fine', cond: '!lighthouse_3_fine', fixed: true }),

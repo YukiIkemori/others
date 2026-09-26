@@ -78,7 +78,7 @@ if (typeof require === 'undefined' || typeof module === 'undefined') { /* browse
   stamp(36, 2, [
     'BBBBBBBBBBBBBBBB',
     'BBBBBBBBBBBBBBBB',
-    'Bo__o_________oB',
+    'Bo_______o____oB',
     'B_cccccc_______B',
     'B_h_h_h________B',
     'B______hth_____B',
@@ -87,12 +87,12 @@ if (typeof require === 'undefined' || typeof module === 'undefined') { /* browse
     'BBBBBBBBDBBBBBBB',
   ], [
     '................',
-    '.w.HHH.w..p.w.i.',
-    '..N.....k.......',
+    '...HH...w..p..i.',
+    '..N.........U...',
     '................',
     '................',
-    '............000.',
-    '............000.',
+    '................',
+    '............00..',
     '.Z..............',
     '................',
   ]);
@@ -100,7 +100,7 @@ if (typeof require === 'undefined' || typeof module === 'undefined') { /* browse
   stamp(2, 14, [
     'BBBBBBBBBB',
     'BBBBBBBBBB',
-    'Bu_uu__opB',
+    'Bu_u___opB',
     'B________B',
     'B_cccc___B',
     'B________B',
@@ -132,9 +132,9 @@ if (typeof require === 'undefined' || typeof module === 'undefined') { /* browse
     '.x.k..w.x.w.x.',
     '.|.....XX..:..',
     '.%O...........',
-    '..............',
-    '..........:...',
-    '..............',
+    '....s.........',
+    '...n......:...',
+    '.....s...n....',
     '.O..........%.',
     '..............',
   ]);
@@ -172,12 +172,12 @@ if (typeof require === 'undefined' || typeof module === 'undefined') { /* browse
   ], [
     '............',
     '.[..w..}..w.',
-    '.....{......',
+    '....{..A....',
     '.....D......',
     '............',
-    '............',
-    '..&.........',
-    '..........Z.',
+    '.......T....',
+    '..&.....&...',
+    '.Z........Z.',
     '............',
   ]);
   // ---- 家 A (miner_a) x2..10 y27..33, door (6,33)
@@ -192,10 +192,10 @@ if (typeof require === 'undefined' || typeof module === 'undefined') { /* browse
   ], [
     '.........',
     '.w..p..w.',
-    '......K..',
-    '.......C.',
+    '.......K.',
     '.........',
-    '.&.......',
+    '.........',
+    '.&....y..',
     '.........',
   ]);
   // ---- 家 B (Pip's grandmother) x13..21 y27..33, door (17,33)
@@ -210,9 +210,9 @@ if (typeof require === 'undefined' || typeof module === 'undefined') { /* browse
   ], [
     '.........',
     '.w.$..w..',
-    '.K.......',
+    '.K.?.....',
     '.........',
-    '......?..',
+    '.........',
     '.......&.',
     '.........',
   ]);
@@ -230,7 +230,7 @@ if (typeof require === 'undefined' || typeof module === 'undefined') { /* browse
     '.w..p.w..',
     '.C.......',
     '..,......',
-    '.......y.',
+    '.........',
     '.&.......',
     '.........',
   ]);

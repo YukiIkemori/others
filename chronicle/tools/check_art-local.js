@@ -201,6 +201,28 @@ window.CHECK = function () {
   }
   if (emberHot < 10) fail('decor:ember has only ' + emberHot + ' red-hot px');
   if (emberPale > 6) fail('decor:ember has ' + emberPale + ' pale px (reads as sticks)');
+  // ---------------------------------------------------------- readability on pale floors
+  // a fog bank must read as a barrier on snow / marble / paper (not as more floor), and
+  // a snow-covered wall top must be a step darker than the open snow underfoot
+  const lum = (cv) => { const p = px(cv); let s = 0, n = 0; for (let i = 0; i < p.length; i += 4) if (p[i + 3] > 128) { s += p[i] * 0.3 + p[i + 1] * 0.59 + p[i + 2] * 0.11; n++; } return n ? s / n : 0; };
+  const apart = (cv, ref) => { const p = px(cv); let n = 0; for (let i = 0; i < p.length; i += 4) if (Math.abs(p[i] * 0.3 + p[i + 1] * 0.59 + p[i + 2] * 0.11 - ref) > 30) n++; return n; };
+  const FOG = ['#######', '#.....#', '#.GGG.#', '#.....#', '#######'];
+  let fogMin = 999;
+  for (const th of ['snow', 'library', 'oblivion', 'town_white', 'town_isle']) {
+    R.DB.maps.__fog = { name: 'f', type: TH[th].town ? 'town' : 'dungeon', legend: 'local', theme: th, outside: '#', rows: FOG, spawns: { e: { x: 1, y: 1 } } };
+    const fm = R.FieldMap.compile('__fog');
+    const floorL = lum(frames(A.localTile(fm, 1, 1))[0]);
+    const cv = frames(A.localTile(fm, 3, 2))[0];
+    const n = apart(cv, floorL);
+    fogMin = Math.min(fogMin, n);
+    if (n < 70) fail(th + ': fog_wall has only ' + n + ' px set apart from the floor (hard to see)');
+  }
+  const SNOWM = ['#####', '#####', '#####', '#...#', '#...#', '#...#', '#####'];
+  R.DB.maps.__snow = { name: 's', type: 'dungeon', legend: 'local', theme: 'snow', outside: '#', rows: SNOWM, spawns: { e: { x: 2, y: 4 } } };
+  const sm = R.FieldMap.compile('__snow');
+  const snowFloorL = lum(frames(A.localTile(sm, 2, 4))[0]), snowTopL = lum(frames(A.localTile(sm, 2, 1))[0]);
+  if (snowTopL > snowFloorL - 12) fail('snow: wall top (' + snowTopL.toFixed(0) + ') is not darker than the snow floor (' + snowFloorL.toFixed(0) + ')');
+  res.n.pale = 'fog ≥ ' + fogMin + ' px set apart from pale floors; snow top ' + snowTopL.toFixed(0) + ' vs floor ' + snowFloorL.toFixed(0);
   res.n.outside = outTrees + ' themed outside trees, ' + banks + ' bank cells, ember ' + emberHot + ' hot / ' + emberPale + ' pale px';
   res.ms = Math.round(performance.now() - t0);
   res.warned = Object.keys(G._warned || {});
@@ -230,6 +252,7 @@ async function main() {
     console.log('max colours in a tile: ' + res.n.maxTileColours + ';  largest decor: ' + res.n.decorMax);
     console.log('secret hint: ' + res.n.secretHint + ';  themes with their own art: ' + res.n.themesWithOwnArt);
     console.log('outside: ' + res.n.outside);
+    console.log('pale floors: ' + res.n.pale);
     if (res.warned.length) console.log('placeholder warnings: ' + res.warned.join(' '));
     for (const f of res.fails) console.log('  FAIL ' + f);
     const bad = res.fails.length + res.warned.filter((k) => /^(tile|decor):/.test(k)).length + mine.length;

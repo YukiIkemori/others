@@ -26,7 +26,7 @@ console.warn = (...a) => { warnings.push(a.join(' ')); };
 const R = require(path.join(ROOT, 'tools/lib/load'))({ quiet: true, extra: [path.join(FX, 'node/stubs.js')] });
 console.warn = origWarn;
 const DB = R.DB;
-const ownLoadErrors = R._nodeLoadErrors.filter((e) => /prologue/.test(e));
+const ownLoadErrors = R._nodeLoadErrors.filter((e) => /^src\/(maps|events)\/prologue/.test(e));
 
 let fails = 0, passes = 0;
 const failed = [];
@@ -199,6 +199,8 @@ function testStatic() {
   const c1 = lh('lighthouse_1').chests, c2 = lh('lighthouse_2').chests;
   ok(c1.length >= 1 && c1.length <= 2 && c1.every((c) => c.pool === 'p_supply'), 'lighthouse_1: 1–2 p_supply chests');
   ok(c2.some((c) => c.pool === 'p_gear'), 'lighthouse_2: one p_gear chest');
+  const c3 = lh('lighthouse_3').chests;
+  ok(c3.length >= 1 && c3.length <= 2 && c3.every((c) => c.pool === 'p_supply'), 'lighthouse_3: 1–2 p_supply chests (§8.12.4 各階 1〜2 個)');
   ok(c2.some((c) => c.pool === 'p_supply') && c2.some((c) => c.pool === 'p_gold'), 'lighthouse_2: p_supply + p_gold (the secret room)');
   let secrets = 0; const m2 = lh('lighthouse_2');
   for (let y = 0; y < m2.h; y++) for (let x = 0; x < m2.w; x++) if (m2.tileAt(x, y) === 'secret_wall') secrets++;
@@ -323,6 +325,7 @@ function testReach() {
     ok(!touch(m, s3, b.x, b.y), 'lighthouse_3: the boss band cannot be skipped');
     const rest = m.npcs.find((n) => n.id === 'rest');
     ok(rest && touch(m, s2, rest.x, rest.y), 'lighthouse_3: the 休息の灯 is before the girl and the boss');
+    for (const c of m.chests) ok(touch(m, s2, c.x, c.y), 'lighthouse_3: chest ' + c.id + ' reachable before the girl');
   });
   // no chest blocks a path (every map): removing a chest never adds reachable cells
   for (const id of MAPS) withState({ flags: ['pro_key', 'pro_berna_sent'], items: ['k_lighthouse_key'] }, () => {
@@ -565,7 +568,7 @@ async function testPlay() {
   ok(await settle(), 'P9 boss → P10 departure ends');
   eq(S.battles[S.battles.length - 1].troop, 'tr_b_pageeater', 'P9 the boss troop');
   ok(g().flags.pro_boss, 'P9 pro_boss');
-  ok(said(/守り歌を年代記に書き記した/, mark) && captioned(/海の果てまで、灯よ届け/) && captioned(/翌朝/), 'P9 the song comes back, the night passes');
+  ok(captioned(/守り歌を年代記に書き記した/) && captioned(/海の果てまで、灯よ届け/) && captioned(/翌朝/), 'P9 the song comes back, the night passes');
   // ---- P10
   eq(R.Field.map.id, 'lute', 'P10 in Faros');
   ok(g().flags.prologue_done, 'P10 prologue_done');

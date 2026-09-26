@@ -112,7 +112,7 @@
         return;
       }
       if (ev.cleared(REGION)) {
-        await ev.say('ハザル王に捧げる踊りよ。\n名前を呼ぶところで、\nくるっと回るの！');
+        await ev.say('ハザル王にささげる踊りよ。\n名前を呼ぶところで、\nくるっと回るの！');
         ev.sfx('glimmer');
         await ev.say('ゆうべは、町じゅうの人が\n声をそろえて呼んでくれたわ。\n……{hero}、ありがとう。');
         return;

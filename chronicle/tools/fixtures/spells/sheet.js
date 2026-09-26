@@ -99,7 +99,7 @@
   }
 
   function sheetMarks() {
-    const H = 224;
+    const H = 232;
     const G = prepare(H);
     // 属性
     G.window(4, 4, 248, 40, { title: '属性' });
@@ -122,17 +122,21 @@
       G.fitText(d.name, x + 22, y + 1, 34, { size: 8, color: G.C.white });
     });
     // 状態の文（{name} に 5 字の名前を入れて 20 字の窓に収まるか）
-    G.window(4, 112, 248, 110, { title: '状態の文（5 字の名前）' });
+    G.window(4, 112, 248, 116, { title: '状態の文（5 字の名前）' });
     const nm = 'ヴィオラン';
     const lines = [];
-    for (const s of st) { const d = R.DB.statuses[s]; if (d.on) lines.push(d.on.replace('{name}', nm)); if (d.off) lines.push(d.off.replace('{name}', nm)); }
     const over = [];
-    lines.slice(0, 26).forEach((t, i) => {
-      const col = i % 2, row = Math.floor(i / 2);
-      const x = 12 + col * 120, y = 120 + row * 7.4;
-      const w = G.textWidth(t);
-      if (w > 220) over.push(t);
-      G.fitText(t, x, y, 114, { size: 6, color: w > 220 ? G.C.red : G.C.white });
+    // 1 行に 1 つの状態: 左がかかったとき（on）、右が切れたとき（off）
+    st.forEach((s, row) => {
+      const d = R.DB.statuses[s];
+      [d.on, d.off].forEach((raw, col) => {
+        if (!raw) return;
+        const t = raw.replace('{name}', nm);
+        lines.push(t);
+        const w = G.textWidth(t);
+        if (w > 220) over.push(t);
+        G.fitText(t, 12 + col * 120, 119 + row * 6.7, 114, { size: 6, color: w > 220 ? G.C.red : G.C.white });
+      });
     });
     return { over, lines: lines.length };
   }

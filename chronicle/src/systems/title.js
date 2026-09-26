@@ -514,9 +514,8 @@
     }
     draw() {
       const g = G();
-      g.ctx.globalAlpha = 0.6;
-      g.rect(0, 0, R.W, R.H, '#05060f');
-      g.ctx.globalAlpha = 1;
+      // an opaque night backdrop: half-covered logo letters must not peek out between the slot windows
+      g.rect(0, 0, R.W, R.H, '#070818');
       g.window(40, 6, 176, 24);
       g.text('どの記録から始めますか？', 128, 12, { align: 'center' });
       for (let i = 0; i < this.n; i++) {

@@ -520,6 +520,17 @@ section('game over');
     R.GameOver.run().then(() => { done = true; }, (e) => { err = e; done = true; });
     for (let i = 0; i < 800 && !done; i++) { R.Engine.step(); await settle(); }
     ok(done && said[0] === hero().name + 'たちは目を覚ました。', 'no gold → no 所持金 line', said);
+    // an onEnter event of the respawn map closes the wake-up window before it is read: run() must still end (§4.12.2)
+    R.UI.say = () => { R.UI._msg = { closed: true }; return new Promise(() => {}); };
+    done = false; err = null;
+    R.GameOver.run().then(() => { done = true; }, (e) => { err = e; done = true; });
+    for (let i = 0; i < 800 && !done; i++) { R.Engine.step(); await settle(); }
+    ok(done && !err, 'GameOver.run ends when someone else closes its message window', err && String(err));
+    R.UI._msg = null;
+    // every race the bestiary prints has a Japanese name (図鑑 page 2)
+    const races = [...new Set(Object.values(DB.monsters).map((m) => m.race).filter(Boolean))];
+    const raw = races.filter((r) => M.kit.raceName(r) === r || !M.kit.raceName(r));
+    ok(!raw.length, 'every monster race (' + races.length + ') has a display name', raw);
     R.UI.say = realSay;
     R.Field = oldField;
     finish();

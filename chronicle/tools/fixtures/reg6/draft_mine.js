@@ -162,39 +162,40 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined') {
     // arrival from the stairs (south-west)
     g.carve(3, 32, 12, 39);
     g.put(4, 38, 'S');
-    // winding approach: east along the bottom, north up the east side, west along the top
+    // winding approach: east along the bottom, north up the east side, west along the upper gallery
     g.carve(12, 35, 30, 37);
     g.carve(28, 28, 34, 37);          // hall of broken carts
     g.carve(34, 30, 41, 32);
     g.carve(39, 18, 42, 31);
     g.carve(24, 18, 42, 21);          // the upper gallery
-    g.carve(24, 21, 27, 26);          // dead-end niche (chest)
-    // west branch from the arrival room: north to a chest room and back
+    g.carve(26, 21, 29, 26);          // dead-end niche (chest)
+    // west branch from the arrival room: north to a store room (chest)
     g.carve(6, 22, 8, 31);
-    g.carve(3, 16, 13, 22);
-    // the door of the seventh layer (rock door) at the west end of the upper gallery
-    g.carve(18, 19, 23, 20);
-    g.put(17, 19, 'O'); g.put(17, 20, 'O');   // 七の層の岩戸 (2 wide)
-    // beyond: the antechamber (rest + Fine), then the warden's hall to the north
-    g.carve(11, 17, 16, 22);
-    g.carve(12, 12, 15, 16);
-    g.carve(6, 2, 21, 11);            // the warden's hall
+    g.carve(2, 16, 9, 22);
+    // 七の層の岩戸 (2 tall) at the west end of the upper gallery
+    g.put(23, 19, 'O'); g.put(23, 20, 'O');
+    // beyond: the antechamber (rest + Fine), the corridor, the warden's hall
+    g.carve(16, 17, 22, 22);
+    g.carve(17, 12, 20, 16);
+    g.carve(8, 2, 25, 11);
     // bites
-    g.pts([[3, 32], [12, 32], [3, 39], [12, 39], [28, 28], [34, 28], [3, 16], [13, 16], [6, 2], [21, 2], [6, 11], [21, 11], [42, 18], [11, 22], [16, 22]], '#');
-    g.pts([[7, 3], [8, 3], [19, 3], [20, 3], [7, 10], [20, 10]], 'r');
+    g.pts([[3, 32], [12, 32], [3, 39], [12, 39], [28, 28], [34, 28], [2, 16], [9, 16], [2, 22], [8, 2], [25, 2], [8, 11], [25, 11], [42, 18], [16, 17], [16, 22], [22, 17], [22, 22]], '#');
+    // the breach: the shaft dug below the seventh layer, fallen rock around it
+    g.pts([[15, 3], [16, 3], [18, 3], [14, 4], [19, 4]], 'r');
+    g.put(16, 2, 'q'); g.put(17, 2, 'q');
     // pillars in the hall
-    g.pts([[9, 5], [18, 5], [9, 8], [18, 8]], 'l');
-    // torches
+    g.pts([[11, 5], [22, 5], [11, 8], [22, 8]], 'l');
     g.torches(7, 1);
     // props
-    g.pts([[29, 29], [33, 29], [29, 36], [11, 33], [4, 17], [12, 17], [41, 31]], 'o');
-    g.pts([[30, 29], [33, 36], [4, 21], [40, 19], [25, 26]], 'j');
+    g.pts([[29, 29], [33, 29], [29, 36], [11, 33], [3, 17], [8, 17], [41, 31]], 'o');
+    g.pts([[30, 29], [33, 36], [3, 21], [40, 19], [27, 26]], 'j');
     // rails end at the cart hall
     g.hline(13, 30, 36, '-');
     g.vline(31, 29, 36, '-');
     g.dec(31, 29, '/'); g.dec(22, 36, '/');
-    g.dpts([[5, 33], [11, 38], [30, 33], [40, 25], [26, 19], [8, 17], [12, 13], [15, 13]], '@');
-    g.dpts([[32, 31], [10, 21], [26, 21]], ':');
+    g.dpts([[5, 33], [11, 38], [30, 33], [40, 25], [25, 19], [4, 17], [17, 13], [20, 13]], '@');
+    g.dpts([[32, 31], [7, 21], [28, 21], [9, 3], [24, 10]], ':');
+    g.dpts([[14, 3], [17, 4], [13, 5], [20, 5], [16, 6], [18, 7]], 'z');
     return g;
   };
 

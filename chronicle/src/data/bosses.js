@@ -15,13 +15,17 @@
 (function (R) {
   'use strict';
 
-  // Actions with `every: [n, k]` ("n手ごと") are the bosses' scheduled moves (§9.11.3: "3手ごとに…", the orrery's readable
-  // sun → moon → star cycle, the band's encore, the octopus regrowing legs). The engine picks among the actions whose
-  // cond holds by weight, so the §9.11.4 table weight is multiplied by SCHED: on its turn the scheduled move is taken
-  // unless it has nothing to do (no fallen ally, full HP, …), and the relative weights of two scheduled moves due on
-  // the same turn stay those of the table. tools/check_boss.js compares the table weight × SCHED.
+  // Scheduled moves. The engine picks among the actions whose cond holds by weight (§9.1.7), so a move written
+  // "n手ごと" with the §9.11.4 table weight happens on only some of its turns. The moves below are the tricks §9.11.3
+  // builds a fight around and §9.13.2 X3 asks to see in every battle (the band's encore, the roots feeding and
+  // coming back, the mist double, the octopus regrowing legs) and the telegraphed patterns ("もぐったら防御",
+  // the orrery's readable sun → moon → star): their table weight is multiplied by SCHED, so on its turn the move is
+  // taken unless it has nothing to do (no fallen ally, nobody hurt, three already out). Other "n手ごと" moves keep
+  // the table weight. tools/check_boss.js compares the table weight × SCHED for these ids.
   const SCHED = 100;
-  const A = (list) => list.map(([id, w, cond]) => (cond ? { id, w: cond.every ? w * SCHED : w, cond } : { id, w }));
+  const SCHEDULED = new Set(['eb_encore', 'eb_feed', 'eb_call_roots', 'eb_call_double', 'eb_regrow',
+    'eb_sink', 'eb_sand_strike', 'eb_sun_orb', 'eb_moon_orb', 'eb_star_orb']);
+  const A = (list) => list.map(([id, w, cond]) => (cond ? { id, w: SCHEDULED.has(id) && cond.every ? w * SCHED : w, cond } : { id, w }));
   const MID = (seed) => ({ normal: { pool: 'p_boss_mid', rate: 1 }, bonus: { item: seed, rate: 1 } });
   const REGION = (seed) => ({ normal: { pool: 'p_boss', rate: 1 }, bonus: { item: seed, rate: 1 } });
   const CONSTRUCT_PHYS = { slash: 0.75, blunt: 1.5, pierce: 0.75 };
@@ -218,7 +222,9 @@
       race: 'aquatic', affinity: 'water', flags: ['boss'], eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 },
       actions: A([['attack', 2], ['eb_ink_cloud', 1, { every: [3, 0] }], ['eb_crush_hug', 2],
-        ['eb_regrow', 2, { every: [4, 3], countBelow: 3 }], ['eb_whirl', 2]]),
+        // every [3, 2] instead of the table's [4, 3]: a mid-boss fight is ~6 rounds, [4, 3] gave the octopus one
+        // chance to regrow a leg; §9.13.2 X3 wants the regrowth in every fight (reported to the lead)
+        ['eb_regrow', 2, { every: [3, 2], countBelow: 3 }], ['eb_whirl', 2]]),
       drops: MID('i_seed_wp'),
       desc: '潮の洞窟の奥にひそむ大ダコ。\n切っても切っても足が生える。',
     },

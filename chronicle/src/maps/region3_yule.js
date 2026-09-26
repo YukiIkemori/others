@@ -29,7 +29,7 @@
     t4: { tier: 4 }, flame: 'snow_flame',
   };
   // the blizzard: street cells snowed over until the region is cleared
-  const DRIFT = [[3, 13, 15, 2], [35, 13, 14, 2], [3, 25, 22, 2], [27, 25, 22, 2], [25, 27, 2, 15], [19, 21, 2, 2], [31, 15, 2, 2]];
+  const DRIFT = [[3, 13, 15, 2], [35, 13, 14, 2], [3, 25, 22, 2], [27, 25, 22, 2], [25, 27, 2, 11], [24, 38, 4, 4], [19, 21, 2, 2], [31, 15, 2, 2]];
 
   const def = {
     name: '雪の村ユール', type: 'town', theme: 'town_snow', bgm: 'village',
@@ -44,41 +44,41 @@
       'TTTT***********TTTBBBBBBBBBBBBBBBBB*TT**********TTTT',
       'TTTBBBBBBBBBBBB***BBBBBBBBBBBBBBBBB***BBBBBBBBBBBBTT',
       'TT*BBBBBBBBBBBB***B_u____ccc____u_B***BBBBBBBBBBBBTT',
-      'TT*Bb_b____c__B***B_______________B***Bo_________BTT',
-      'TT*Bb_b____c__B***B__h_h_____h_h__B***B_ccccc____BTT',
+      'TT*Bb_b____c__B*T*B_______________B***Bo_________BTT',
+      'TT*Bb_b____c__B***B__h_h_____h_h__B*T*B_ccccc____BTT',
       'TT*B_______c__B***B__tttt___tttt__B***B__________BTT',
-      'TT*B__________B***B___h_h_____h_h_B***B_hth__hth_BTT',
-      'TT*Bb_b___hth_B***B_______________B***B__________BTT',
-      'TT*Bb_b_______B***Bo_____________oB***B_hth____p_BTT',
+      'TT*B__________BT**B___h_h_____h_h_B***B_hth__hth_BTT',
+      'TT*Bb_b___hth_B*T*B_______________BT**B__________BTT',
+      'TT*Bb_b_______B***Bo_____________oB*T*B_hth____p_BTT',
       'TT*BBBBBDBBBBBB***B_p___________p_B***BBBBBDBBBBBBTT',
       'TT****************BBBBBBBBDBBBBBBBB***************TT',
       'TT*..............................................TTT',
       'TTT..............................................TTT',
       'TTT****************..............****************TTT',
-      'TT*BBBBBBBBBB******..W...........****BBBBBBBBBBBBBTT',
       'TT*BBBBBBBBBB******..............****BBBBBBBBBBBBBTT',
-      'TT*Buu____uuB******......Y.......****B___________BTT',
-      'TT*B__ccc___B******..............****B_ccc___ccc_BTT',
-      'TT*B________B******..............****B___________BTT',
-      'TT*Bo______pB******..............****B___________BTT',
+      'TT*BBBBBBBBBB*RRRR*..............****BBBBBBBBBBBBBTT',
+      'TT*Buu____uuB*RRRR*..............****B___________BTT',
+      'TT*B__ccc___B*RRRR*..............****B_ccc___ccc_BTT',
+      'TTTB________B*BBBB*..............****B___________BTT',
+      'TTTBo______pB******..............****B___________BTT',
       'TT*B________B******..............****Bo_________oBTT',
       'TT*BBBBDBBBBB************..**********BBBBBBDBBBBBBTT',
       'TTT**********************..**********************TTT',
       'TTT..............................................TTT',
       'TTT..............................................TTT',
-      'TTT**********************..**********************TTT',
+      'TTT**********************..********************T*TTT',
       'TT*BBBBBBBBBBB***********..**************eeeeeee**TT',
-      'TT*BBBBBBBBBBB**BBBBBBBB*..**BBBBBBBBB**eeeeeeeee*TT',
-      'TT*Bb______kkB**BBBBBBBB*..**BBBBBBBBB**eeee~eeee*TT',
-      'TT*Bb________B**Bb____oB*..**Bb_b__kkB**eeeeeeeee*TT',
+      'TT*BBBBBBBBBBB**BBBBBBBB*..**BBBBBBBBBT*eeeeeeeee*TT',
+      'TT*Bb______kkB**BBBBBBBB*..T*BBBBBBBBB**eeee~eeee*TT',
+      'TT*Bb________B**Bb____oB*..*TBb_b__kkB**eeeeeeeee*TT',
       'TT*B___hth___B**Bb_____B*..**Bb_b____B**eeeeeeee**TT',
-      'TT*B_________B**B______B*..**B_______B****eeeee***TT',
-      'TT*B_______b_B**B____t_B*..**B_th____B************TT',
+      'TT*B_________BT*B______B*..**B_______B****eeeee***TT',
+      'TT*B_______b_B*TB____t_B*..**B_th____B************TT',
       'TT*Bp______b_B**Bj_____B*..**B_______B**FFF**FFF*TTT',
       'TT*BBBBBDBBBBB**BBBDBBBB*..**BBBBDBBBB**F******F*TTT',
       'TTT**********************..*************F******F*TTT',
-      'TTT***********T**********..**********T**F******F*TTT',
-      'TTTT***********T******TT*..*TT******T***FFFFFFFF*TTT',
+      'TTT***********T*********....*******T*T**F******F*TTT',
+      'TTTT***********T******TT....TT******T***FFFFFFFF*TTT',
       'TTTTTTTTTTTTTTTTTTTTTTT*....*TTTTTTTTTTTTTTTTTTTTTTT',
       'TTTTTTTTTTTTTTTTTTTTTTTT....TTTTTTTTTTTTTTTTTTTTTTTT',
     ],
@@ -95,33 +95,33 @@
       '.....y..............e.....r.....e...........&&......',
       '.............Z......eee...r...eee...................',
       '....................?.....r.....!...................',
-      '.......;..7..........^..........^.........^..j..^...',
+      '...3...;..7.....M....^..........^.3.......^..j..3...',
       '....................................................',
       '....................................;...............',
-      '....;..........;...3............3...................',
-      '................;............;....;.................',
+      '....;......3...;...3............3...................',
+      '................;....u.......;....;.................',
       '.....$..k.w....................;...;...x.x.w.c.c....',
-      '...............%......................X....|....Y...',
+      '...............%...................(..X....|....Y...',
       '...............%......e.......e.....................',
-      '...........Z.......;...........;;.%.................',
-      '......................................X.........Y...',
+      '...........Z..U....;...........;;.%.................',
+      '..............q%%..................(..X.........Y...',
       '....q.....q........3............3......O.......O....',
-      '....................................................',
-      '........4........;............u..;.......5...6......',
+      '..................................U.................',
+      '........4........3...............;3......5...6......',
       '....................................................',
       '....................................;...............',
-      '..............;;.......]...........;...;............',
+      '....E........3;;.......]...........;..3;............',
       '....................................................',
       '....w.^.p.^.w.......................................',
       '......F..A.......w...^........w.^.p.^.%.............',
       '....................X.............K.................',
       '....................................................',
       '.....&&...........s................:................',
-      '....V...................%.............;.............',
+      '....V..................3%...3.........;.............',
       '.....Z................%........&&...?...............',
       '..........E.........................................',
-      '....%...#...%%........;.....];......................',
-      '.....;;.................3..3........................',
+      '....%.......%%........;.....];......................',
+      '.....;;#................3..3........................',
       '....................................................',
       '....................................................',
       '....................................................',
@@ -138,6 +138,7 @@
       // --- the intro: the chief meets the traveller at the gate (yule_intro)
       npc('jorn_gate', 'elder', 25, 35, { event: 'yule_intro', cond: '!snow_start', fixed: true }),
       // --- 集会所 (the meeting hall)
+      npc('statue', 'obj:r3_dragon_statue', 25, 18, { event: 'yule_statue', fixed: true }),
       npc('hearth', 'obj:r3_hearth_cold', 26, 4, { event: 'yule_hearth', cond: '!snow_flame', fixed: true }),
       npc('hearth_lit', 'obj:r3_hearth_lit', 26, 4, { event: 'yule_hearth', cond: 'snow_flame', fixed: true }),
       npc('sonja', 'girl', 24, 5, { event: 'yule_sonja', dir: 'down', fixed: true }),
@@ -169,7 +170,7 @@
       ], { dir: 'right', push: true }),
       talk('tav_old', 'old_man', 47, 8, [
         { cond: C.t4, text: '記録院の書記が来て、\n古い本を持っていきおった。\n物騒な世の中じゃ。' },
-        { cond: C.clr, text: '吹雪の晩の昔話を、\nまた酒の肴にできるわい。' },
+        { cond: C.clr, text: '吹雪の晩の昔話を、\nまた酒のつまみにできるわい。' },
         { text: 'この酒場もな、昔は\n竜の歌で盛り上がったもんじゃ。' },
       ], { dir: 'left', push: true }),
       talk('tav_bard', 'bard', 45, 10, [
@@ -247,7 +248,6 @@
       npc('st_extra', 'scribe', 6, 14, { dir: 'up', cond: 'st_show_extra', fixed: true }),
     ],
     signs: [
-      sign(25, 18, '白竜ネーヴェの像だ。\n「北の峰の白き竜、\n吹雪を鎮め、村を守る」'),
       sign(23, 27, 'この先、北は集会所。\n南へ行けば、村の出口。'),
       sign(28, 37, 'ユールの村\f北西の峰は、白竜の峰。\n吹雪の日は近づくべからず。'),
       sign(21, 16, '古い井戸だ。\n水が凍りついている。'),
@@ -270,88 +270,153 @@
   const G = R.Gfx;
   function px(c, x, y, col, w, h) { c.fillStyle = col; c.fillRect(x, y, w || 1, h || 1); }
   const hsh = (x, y, s) => { let n = (x * 374761393 + y * 668265263 + s * 2246822519) >>> 0; n = (n ^ (n >>> 13)) * 1274126177 >>> 0; return (n ^ (n >>> 16)) / 4294967296; };
-  const STONE = ['#2a2e3a', '#454b5c', '#626a7e', '#8088a0', '#a6aec2', '#c8d0de'];
-  /** the stone body of the hearth (48×40): chimney breast, mantel beam, carved jambs, the arch */
+  const STONE = ['#262a36', '#404657', '#5c6478', '#7a8299', '#9ea6bc', '#c4ccdc'];
+  // the great hearth, 64×56: a chimney breast carved with the white dragon rising into the wall,
+  // a wide mantel beam, carved jambs (the old story), the arched firebox and the hearthstones.
+  // The lowest 16 px are exactly 48 wide (x 8..55) so it stands on its three cells.
+  const HW = 64, HH = 56;
+  const inBox = (x, y) => x >= 17 && x <= 46 && y >= 30 && (y >= 36 || ((x - 31.5) / 15) ** 2 + ((y - 36) / 7) ** 2 <= 1);
+  const inBody = (x, y) => (y < 22 ? x >= 20 && x <= 43 : x >= 8 && x <= 55);
   function hearthBody(c, lit) {
-    const W = 48, H = 40;
-    const inArch = (x, y) => x >= 13 && x <= 34 && y >= 18 && (y >= 23 || ((x - 23.5) / 11) ** 2 + ((y - 23) / 6) ** 2 <= 1);
-    for (let y = 0; y < H; y++) {
-      for (let x = 0; x < W; x++) {
-        const chim = y < 12 && (x < 9 || x > 38);
-        if (chim || inArch(x, y)) continue;
-        // coursed stones: rows 5px high, joints staggered
-        const row = Math.floor(y / 5), off = row % 2 ? 4 : 0;
-        const jx = (x + off) % 9 === 0, jy = y % 5 === 0;
-        let k = jx || jy ? 1 : 2 + Math.floor(hsh(Math.floor((x + off) / 9), row, 3) * 2.2);
-        if (!jx && !jy && (y % 5 === 1)) k = Math.min(5, k + 1); // lit top edge of each stone
-        if (x === 0 || x === W - 1 || (y < 12 && (x === 9 || x === 38))) k = 0;
+    for (let y = 0; y < HH; y++) {
+      for (let x = 0; x < HW; x++) {
+        if (!inBody(x, y) || inBox(x, y)) continue;
+        const row = Math.floor(y / 5), off = row % 2 ? 5 : 0;
+        const jx = (x + off) % 10 === 0, jy = y % 5 === 0;
+        let k = jx || jy ? 1 : 2 + Math.floor(hsh(Math.floor((x + off) / 10), row, 3) * 2.2);
+        if (!jx && !jy && y % 5 === 1) k = Math.min(5, k + 1);
+        if (x === 8 || x === 55 || (y < 22 && (x === 20 || x === 43))) k = 0;
         px(c, x, y, STONE[k]);
       }
     }
+    // the white dragon carved on the chimney breast (pale relief)
+    const RL = '#dfe4f0', RS = '#8e96ac';
+    const dragon = [[31, 3], [32, 3], [30, 4], [33, 4], [29, 5], [34, 6], [33, 7], [32, 8], [31, 9], [30, 10], [30, 11], [31, 12], [32, 13], [33, 14], [34, 15],
+      [34, 16], [33, 17], [26, 6], [25, 7], [24, 8], [25, 9], [27, 9], [28, 8], [36, 7], [37, 8], [38, 7], [37, 10], [38, 9], [32, 5], [29, 17], [30, 18], [31, 18]];
+    for (const [x, y] of dragon) { px(c, x, y, RL); px(c, x + 1, y + 1, RS); }
+    px(c, 31, 4, '#7ac8ff'); // its eye
     // the mantel beam
-    for (let x = 2; x < 46; x++) { px(c, x, 12, '#6a4a2a'); px(c, x, 13, '#8a6238'); px(c, x, 14, '#5a3c22'); px(c, x, 15, '#2e1e12'); }
-    px(c, 2, 12, '#2e1e12', 1, 4); px(c, 45, 12, '#2e1e12', 1, 4);
-    // the carved story on the jambs: little figures (a dragon, a flame, people) in pale lines
-    const carve = '#d8dcea';
-    [[4, 20], [5, 19], [6, 19], [7, 20], [8, 21], [5, 21], [6, 22], [4, 26], [5, 25], [6, 26], [5, 27], [5, 28], [8, 30], [9, 29], [9, 31], [10, 30],
-      [39, 19], [40, 20], [41, 19], [42, 20], [40, 22], [41, 22], [39, 26], [39, 27], [40, 25], [41, 26], [41, 27], [38, 30], [39, 29], [40, 30], [43, 30], [43, 29]].forEach(([x, y]) => px(c, x, y, carve));
+    for (let x = 4; x < 60; x++) { px(c, x, 22, '#6a4a2a'); px(c, x, 23, '#8e663a'); px(c, x, 24, '#7a5630'); px(c, x, 25, '#5a3c22'); px(c, x, 26, '#2e1e12'); }
+    for (const x of [4, 59]) px(c, x, 22, '#2e1e12', 1, 5);
+    for (let x = 6; x < 58; x += 7) px(c, x, 24, '#4a3018'); // pegs / carved knots
+    // the carved story on the jambs: a flame, people around it, the dragon over the peak
+    const carve = [[11, 30], [12, 29], [13, 30], [12, 31], [12, 32], [10, 36], [10, 37], [11, 38], [14, 36], [14, 37], [13, 38], [12, 35],
+      [11, 42], [12, 41], [13, 42], [14, 43], [10, 43], [12, 46], [13, 45], [14, 46],
+      [50, 29], [51, 30], [52, 29], [53, 30], [51, 32], [52, 32], [50, 36], [51, 35], [52, 36], [53, 37], [49, 37],
+      [50, 42], [51, 41], [52, 42], [50, 44], [52, 44], [51, 46]];
+    for (const [x, y] of carve) px(c, x, y, RL);
     // the firebox
-    for (let y = 18; y < H; y++) for (let x = 13; x <= 34; x++) {
-      if (!inArch(x, y)) continue;
-      const depth = Math.min(1, (y - 18) / 18);
-      px(c, x, y, lit ? (y > 33 ? '#3a1a0c' : '#1a0c08') : (y > 33 ? '#2a2c34' : '#101218'));
-      if (!lit && y > 34 && hsh(x, y, 9) < 0.35) px(c, x, y, '#5a5c66'); // cold ash
-      void depth;
+    for (let y = 30; y < HH; y++) for (let x = 17; x <= 46; x++) {
+      if (!inBox(x, y)) continue;
+      px(c, x, y, lit ? (y > 48 ? '#3a1a0c' : '#1c0e08') : (y > 48 ? '#2a2c34' : '#0e1016'));
+      if (!lit && y > 49 && hsh(x, y, 9) < 0.35) px(c, x, y, '#5a5c66');
     }
-    // the hearth stones in front
-    for (let x = 11; x <= 36; x++) { px(c, x, 38, STONE[3]); px(c, x, 39, STONE[1]); if (x % 6 === 0) px(c, x, 38, STONE[1]); }
-    // frost on the cold stones / warm light on the lit ones
+    for (let x = 16; x <= 47; x++) if (!inBox(x, 29) && inBox(x, 31)) px(c, x, 30, STONE[5]); // the arch's lit edge
+    // hearthstones
+    for (let x = 10; x <= 53; x++) { px(c, x, 53, STONE[4]); px(c, x, 54, STONE[3]); px(c, x, 55, STONE[1]); if (x % 7 === 3) px(c, x, 53, STONE[1], 1, 3); }
     if (!lit) {
-      for (let i = 0; i < 70; i++) {
-        const x = Math.floor(hsh(i, 1, 5) * W), y = Math.floor(hsh(i, 2, 5) * H);
-        if (!inArch(x, y) && !(y < 12 && (x < 9 || x > 38))) px(c, x, y, i % 3 ? '#e8f0ff' : '#b8c8e0');
+      for (let i = 0; i < 110; i++) {
+        const x = Math.floor(hsh(i, 1, 5) * HW), y = Math.floor(hsh(i, 2, 5) * HH);
+        if (inBody(x, y) && !inBox(x, y)) px(c, x, y, i % 3 ? '#e8f0ff' : '#b8c8e0');
       }
-      for (let x = 2; x < 46; x += 1) if (hsh(x, 7, 1) < 0.6) px(c, x, 12, '#e8f0ff'); // snow on the mantel
+      for (let x = 4; x < 60; x++) if (hsh(x, 7, 1) < 0.65) px(c, x, 22, '#eef4ff');
+      c.globalCompositeOperation = 'source-atop';
+      c.fillStyle = 'rgba(70,100,160,0.18)'; c.fillRect(0, 0, HW, HH);
+      c.globalCompositeOperation = 'source-over';
     } else {
       c.globalCompositeOperation = 'source-atop';
-      const gr = c.createRadialGradient(24, 30, 4, 24, 30, 30);
-      gr.addColorStop(0, 'rgba(255,150,60,0.55)');
+      const gr = c.createRadialGradient(32, 44, 4, 32, 44, 40);
+      gr.addColorStop(0, 'rgba(255,150,60,0.6)');
+      gr.addColorStop(0.6, 'rgba(255,120,40,0.18)');
       gr.addColorStop(1, 'rgba(255,120,40,0)');
-      c.fillStyle = gr; c.fillRect(0, 0, W, H);
+      c.fillStyle = gr; c.fillRect(0, 0, HW, HH);
       c.globalCompositeOperation = 'source-over';
     }
   }
   function logs(c, charred) {
-    const L = charred ? ['#1a1210', '#2e221c', '#463630'] : ['#3a2212', '#6a4424', '#8a6238'];
-    for (let x = 16; x <= 31; x++) { px(c, x, 34, L[2]); px(c, x, 35, L[1]); px(c, x, 36, L[0]); }
-    for (let i = 0; i < 12; i++) { px(c, 18 + i, 32 - (i >> 2), L[1]); px(c, 18 + i, 33 - (i >> 2), L[0]); }
-    for (let i = 0; i < 10; i++) { px(c, 29 - i, 31 - (i >> 2), L[2]); px(c, 29 - i, 32 - (i >> 2), L[0]); }
-    px(c, 16, 34, L[0]); px(c, 31, 34, L[0]);
-    if (charred) for (const [x, y] of [[20, 34], [25, 35], [28, 34], [22, 31]]) px(c, x, y, '#6a6c74');
+    const L = charred ? ['#1a1210', '#2e221c', '#463630'] : ['#3a2212', '#6a4424', '#8e663a'];
+    for (let x = 20; x <= 43; x++) { px(c, x, 49, L[2]); px(c, x, 50, L[1]); px(c, x, 51, L[0]); }
+    for (let i = 0; i < 16; i++) { px(c, 22 + i, 47 - (i >> 2), L[1]); px(c, 22 + i, 48 - (i >> 2), L[0]); }
+    for (let i = 0; i < 14; i++) { px(c, 41 - i, 46 - (i >> 2), L[2]); px(c, 41 - i, 47 - (i >> 2), L[0]); }
+    px(c, 20, 49, L[0], 1, 3); px(c, 43, 49, L[0], 1, 3);
+    if (charred) for (const [x, y] of [[24, 49], [30, 50], [36, 49], [27, 45], [38, 44]]) px(c, x, y, '#6a6c74');
   }
   function flames(c, f) {
     const FL = ['#8a1a08', '#d8401a', '#f4822a', '#ffc04a', '#fff2b0'];
-    for (let x = 15; x <= 32; x++) {
-      const hgt = 7 + Math.floor(9 * Math.sin((x - 15) / 17 * Math.PI) + 4 * hsh(x, f, 11));
+    for (let x = 19; x <= 44; x++) {
+      const hgt = 8 + Math.floor(12 * Math.sin((x - 19) / 25 * Math.PI) + 5 * hsh(x, f, 11));
       for (let i = 0; i < hgt; i++) {
-        const y = 33 - i;
-        const k = i < 2 ? 1 : i > hgt - 3 ? (i === hgt - 1 ? 0 : 1) : Math.min(4, 2 + Math.floor((hgt - i) / 4 * hsh(x, i + f * 7, 12) * 1.6));
+        const y = 48 - i;
+        if (!inBox(x, y)) continue;
+        const k = i < 2 ? 1 : i >= hgt - 1 ? 0 : i >= hgt - 3 ? 1 : Math.min(4, 2 + Math.floor((hgt - i) / 5 * hsh(x, i + f * 7, 12) * 1.7));
         px(c, x, y, FL[k]);
       }
     }
-    for (let i = 0; i < 6; i++) px(c, 16 + Math.floor(hsh(i, f, 13) * 16), 16 + Math.floor(hsh(i, f, 14) * 8), i % 2 ? '#ffe07a' : '#ff9a3a'); // sparks
+    for (let i = 0; i < 8; i++) px(c, 20 + Math.floor(hsh(i, f, 13) * 24), 28 + Math.floor(hsh(i, f, 14) * 10), i % 2 ? '#ffe07a' : '#ff9a3a');
   }
   if (!G.has('obj:r3_hearth_cold')) G.def('obj:r3_hearth_cold', () => {
-    const cv = G.makeCanvas(48, 40), c = cv.getContext('2d');
+    const cv = G.makeCanvas(HW, HH), c = cv.getContext('2d');
     hearthBody(c, false); logs(c, true);
     return [cv];
   });
   if (!G.has('obj:r3_hearth_lit')) G.def('obj:r3_hearth_lit', () => [0, 1, 2].map((f) => {
-    const cv = G.makeCanvas(48, 40), c = cv.getContext('2d');
+    const cv = G.makeCanvas(HW, HH), c = cv.getContext('2d');
     hearthBody(c, true); logs(c, false); flames(c, f); logs(c, false);
-    for (let x = 16; x <= 31; x++) if (hsh(x, f, 21) < 0.5) px(c, x, 33, '#ffc04a');
+    for (let x = 21; x <= 42; x++) if (hsh(x, f, 21) < 0.5) px(c, x, 48, '#ffc04a');
     return cv;
   }));
+  // 白竜ネーヴェの像 (32×44): a seated stone dragon with folded wings on a snowy plinth
+  if (!G.has('obj:r3_dragon_statue')) G.def('obj:r3_dragon_statue', () => {
+    const cv = G.makeCanvas(32, 44), c = cv.getContext('2d');
+    const S = ['#2e3342', '#4c5468', '#6c768c', '#8e98ae', '#b4bccc', '#dce2ec'];
+    const shape = [
+      '..............55................',
+      '.............5443...............',
+      '............54433..3............',
+      '...........544332.43............',
+      '..........544422.433............',
+      '..........54420..332............',
+      '...........4422.................',
+      '.....5......4432................',
+      '....543.....44322......55.......',
+      '...5433....544322.....5443......',
+      '...5433...5444322....54432......',
+      '..54432..54443322...544332......',
+      '..54432.544443322..5443322......',
+      '..5443254444433221.54433221.....',
+      '...543544444433221544433221.....',
+      '....4454444443332254443322......',
+      '.....44444444333222444332.......',
+      '......4444444333322244321.......',
+      '......44444443333222.431........',
+      '.......4444433332221.3..........',
+      '.......444443333222.............',
+      '......5444433332221.............',
+      '.....54444333332221...33........',
+      '.....444443333322221.3223.......',
+      '....5444433333222221.32231......',
+      '....44444333332222211.2221......',
+      '....44443333322222111.1211......',
+      '...544433333222221111..11.......',
+      '...4444333332222211111..........',
+      '..544433333222222111111.........',
+      '..44443333322222211111111.......',
+    ];
+    shape.forEach((row, y) => { for (let x = 0; x < row.length; x++) { const k = row[x]; if (k !== '.') px(c, x, y + 1, S[+k]); } });
+    px(c, 13, 4, '#7ac8ff'); // the eye
+    // the plinth (16 wide at the bottom, snow on top)
+    for (let y = 32; y < 44; y++) for (let x = 6; x < 26; x++) {
+      const w = y < 35 ? [6, 25] : [8, 23];
+      if (x < w[0] || x > w[1]) continue;
+      let k = y === 32 || y === 35 ? 5 : x === w[0] || x === w[1] ? 1 : y > 40 ? 1 : 3;
+      if (y > 35 && (x + y) % 6 === 0) k = 2;
+      px(c, x, y, S[k]);
+    }
+    for (let x = 5; x < 27; x++) if (hsh(x, 3, 8) < 0.7) px(c, x, 31, '#f4f8ff');
+    for (const [x, y] of [[13, 1], [14, 1], [12, 2], [4, 8], [5, 8], [23, 8], [24, 8], [3, 10]]) px(c, x, y, '#ffffff'); // snow on the crest
+    px(c, 9, 38, '#2e3342', 14, 1); // the carved line
+    return [cv];
+  });
   if (!G.has('obj:r3_snowman')) G.def('obj:r3_snowman', () => {
     const cv = G.makeCanvas(16, 24), c = cv.getContext('2d');
     const S = ['#6a7a98', '#a8b8d0', '#dce6f2', '#ffffff'];

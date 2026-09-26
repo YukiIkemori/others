@@ -189,7 +189,7 @@
     rows: [
       '############################################',
       '#################rrrrrrrrrr#################',
-      '##############rrr....aa....rrr##############',
+      '##############rrr..........rrr##############',
       '############rr..............rr##############',
       '###########rLL..............LLr#############',
       '###########r..................r#############',
@@ -229,8 +229,8 @@
     decor: [
       '............................................',
       '............................................',
-      '............................................',
-      '............................................',
+      '......................._....................',
+      '...................._.......................',
       '..............._............,...............',
       '............................................',
       '........................_...................',
@@ -271,8 +271,10 @@
     tilePatches: [{ cond: K.C.murals3, x: 20, y: 19, ch: '.' }],
     npcs: [
       K.npc('rest', 'obj:lantern', 18, 16, { event: 'common_rest', fixed: true }),
-      K.npc('fine', 'fine', 21, 15, { cond: ['!ash_boss', '!ash_fine'], fixed: true }),
-      K.npc('egg', 'obj:r7_egg', 21, 2, { cond: '!ash_boss', fixed: true, text: 'x' }),
+      K.npc('fine', 'fine', 21, 15, { event: 'ash_volcano_3_fine', cond: ['!ash_boss', '!ash_fine'], fixed: true }),
+      K.npc('egg', 'obj:r7_egg', 21, 2, { cond: '!ash_boss', fixed: true, text: '灰をかぶった、大きな卵だ。\nさわると、かすかに温かい……。' }),
+      K.npc('egg_open', 'obj:r7_egg_open', 21, 2, { cond: 'ash_boss', fixed: true, text: '割れた卵のからだ。\nまだ、ほんのりと温かい。' }),
+      K.npc('firebird', 'obj:r7_firebird', 21, 5, { cond: 'ash_boss', fixed: true, text: [{ cond: 'final_open', text: '火の鳥が、北の空を\nじっと見つめている。' }, { text: '火の鳥が、赤い翼を広げて\n山を見守っている。' }] }),
       K.npc('boss', 'mon:boss_flame_lord', 21, 7, { event: 'ash_volcano_3_boss', cond: '!ash_boss', fixed: true }),
     ],
     chests: [K.chest('ash_volcano_3_c1', 9, 24, 'p_supply'), K.chest('ash_volcano_3_c2', 38, 24, 'p_gold'), K.chest('ash_volcano_3_c3', 9, 33, 'p_supply')],
@@ -283,4 +285,100 @@
   R.DB.maps.ash_volcano_3 = K.checkRows('ash_volcano_3', f3);
   R.DB.maps.ash_volcano_2 = K.checkRows('ash_volcano_2', f2);
   R.DB.maps.ash_volcano_1 = K.checkRows('ash_volcano_1', f1);
+
+  // ------------------------------------------------------------ set pieces (台本の演出, §11.2.11)
+  // 火の鳥の卵 (ashen, glowing cracks; 2 frames), the hatched shell, and 火の鳥 itself (2 wing frames).
+  // Drawn here as region art (keys obj:r7_*); pixel art built from shapes with a dark outline pass.
+  const Pix = R.Gfx.Pix;
+  const hex = (n) => '#' + (n >>> 0).toString(16).padStart(6, '0');
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const pick = (ramp, t) => hex(ramp[Math.max(0, Math.min(ramp.length - 1, Math.round(t * (ramp.length - 1))))]);
+  /** dark outline on every empty pixel that touches a filled one (4-neighbours) */
+  function outline(p, col) {
+    const add = [];
+    for (let y = 0; y < p.h; y++) for (let x = 0; x < p.w; x++) {
+      if (p.get(x, y) != null) continue;
+      if (p.get(x - 1, y) != null || p.get(x + 1, y) != null || p.get(x, y - 1) != null || p.get(x, y + 1) != null) add.push([x, y]);
+    }
+    for (const [x, y] of add) p.set(x, y, col);
+    return p;
+  }
+  const ASH = [0x2a201e, 0x44363a, 0x5e4e4c, 0x7c6a64, 0x9e8a80, 0xc4b2a4];
+  const FIRE = [0x8a1808, 0xc03010, 0xe85a18, 0xff9028, 0xffc840, 0xfff0a0];
+  function eggShape(p, y0, glowT, cracks) {
+    const cx = 7.5, cy = 11.5;
+    for (let y = y0; y < 20; y++) for (let x = 0; x < 16; x++) {
+      const top = y < cy ? 0.8 + 0.2 * ((y - 2) / (cy - 2)) : 1;
+      const dx = (x - cx) / (6.4 * top), dy = (y - cy) / 8.4;
+      const r2 = dx * dx + dy * dy;
+      if (r2 > 1) continue;
+      const light = 0.55 - dx * 0.35 - dy * 0.45 + (1 - r2) * 0.25;
+      p.set(x, y, pick(ASH, light));
+    }
+    if (cracks) {
+      const c1 = [[5, 8], [6, 9], [6, 10], [7, 11], [6, 12], [6, 13], [7, 14], [8, 15], [8, 16]];
+      const c2 = [[10, 6], [10, 7], [9, 8], [10, 9], [11, 10], [11, 11], [10, 12]];
+      const c3 = [[3, 14], [4, 15], [5, 15], [5, 16]];
+      for (const [x, y] of [].concat(c1, c2, c3)) p.set(x, y, pick(FIRE, 0.45 + glowT * 0.4));
+      for (const [x, y] of [[6, 10], [7, 11], [10, 9], [6, 13]]) p.set(x, y, pick(FIRE, 0.75 + glowT * 0.25));
+    }
+    return p;
+  }
+  function egg(glowT) {
+    const p = eggShape(new Pix(16, 20), 0, glowT, true);
+    return outline(p, '#1a0e0a').toCanvas();
+  }
+  function eggOpen() {
+    const p = new Pix(16, 20);
+    eggShape(p, 11, 0, false);
+    // jagged rim and the warm glow inside
+    const rim = [11, 12, 11, 13, 12, 11, 12, 13, 11, 12, 13, 12, 11, 12, 13, 12];
+    for (let x = 0; x < 16; x++) for (let y = 0; y < rim[x]; y++) p.set(x, y, null);
+    for (let x = 3; x <= 12; x++) for (let y = rim[x]; y <= rim[x] + 2; y++) if (p.get(x, y) != null) p.set(x, y, pick(FIRE, 0.9 - (y - rim[x]) * 0.25 - Math.abs(x - 7.5) * 0.05));
+    // two shell chips on the altar
+    p.set(1, 18, pick(ASH, 0.6)).set(2, 18, pick(ASH, 0.4)).set(14, 19, pick(ASH, 0.5));
+    return outline(p, '#1a0e0a').toCanvas();
+  }
+  function bird(up) {
+    const W = 32, H = 30, p = new Pix(W, H);
+    const tri = (ax, ay, bx, by, cx, cy, fn) => {
+      const minx = Math.floor(Math.min(ax, bx, cx)), maxx = Math.ceil(Math.max(ax, bx, cx));
+      const miny = Math.floor(Math.min(ay, by, cy)), maxy = Math.ceil(Math.max(ay, by, cy));
+      const s = (x1, y1, x2, y2, x3, y3) => (x1 - x3) * (y2 - y3) - (x2 - x3) * (y1 - y3);
+      for (let y = miny; y <= maxy; y++) for (let x = minx; x <= maxx; x++) {
+        const d1 = s(x, y, ax, ay, bx, by), d2 = s(x, y, bx, by, cx, cy), d3 = s(x, y, cx, cy, ax, ay);
+        const neg = d1 < 0 || d2 < 0 || d3 < 0, pos = d1 > 0 || d2 > 0 || d3 > 0;
+        if (!(neg && pos)) fn(x, y);
+      }
+    };
+    const both = (fn) => (x, y) => { fn(x, y); fn(W - 1 - x, y); };
+    // tail plumes
+    tri(13, 19, 18, 19, 15.5, 29, both((x, y) => p.set(x, y, pick(FIRE, 0.75 - (y - 19) / 12))));
+    tri(12, 19, 14, 20, 8, 28, both((x, y) => p.set(x, y, pick(FIRE, 0.6 - (y - 19) / 14))));
+    // wings: bright at the shoulder, red at the tips (feather bands every 3 px)
+    const wing = up ? [13, 12, 0, 1, 9, 19] : [13, 13, 0, 15, 10, 21];
+    tri(...wing, both((x, y) => {
+      const d = Math.hypot(x - 13, y - 13) / 14;
+      const band = ((x + y) % 3 === 0) ? 0.12 : 0;
+      p.set(x, y, pick(FIRE, 0.95 - d * 0.9 - band));
+    }));
+    // body and head
+    for (let y = 9; y < 23; y++) for (let x = 10; x < 22; x++) {
+      const dx = (x - 15.5) / 4.2, dy = (y - 16) / 6.4;
+      if (dx * dx + dy * dy <= 1) p.set(x, y, pick(FIRE, 0.95 - Math.abs(dx) * 0.35 - (dy > 0 ? dy * 0.2 : 0)));
+    }
+    for (let y = 4; y < 13; y++) for (let x = 11; x < 21; x++) {
+      const dx = (x - 15.5) / 3.3, dy = (y - 8) / 3.3;
+      if (dx * dx + dy * dy <= 1) p.set(x, y, pick(FIRE, 0.98 - (dx * dx + dy * dy) * 0.3));
+    }
+    // crest of three flames
+    for (const [x, y0, y1] of [[15, 0, 4], [16, 0, 4], [13, 2, 5], [18, 2, 5], [12, 3, 5], [19, 3, 5]]) for (let y = y0; y <= y1; y++) p.set(x, y, pick(FIRE, 0.6 + (y - y0) * 0.1));
+    // eyes and beak
+    p.set(14, 8, '#3a0a04').set(17, 8, '#3a0a04').set(15, 10, '#ffe8a0').set(16, 10, '#ffe8a0').set(15, 11, '#c86818').set(16, 11, '#c86818');
+    return outline(p, '#3a0804').toCanvas();
+  }
+  const G = R.Gfx;
+  if (!G.has('obj:r7_egg')) G.def('obj:r7_egg', () => [egg(0), egg(1)]);
+  if (!G.has('obj:r7_egg_open')) G.def('obj:r7_egg_open', () => [eggOpen()]);
+  if (!G.has('obj:r7_firebird')) G.def('obj:r7_firebird', () => [bird(true), bird(true), bird(false), bird(false)]);
 })(window.RPG);

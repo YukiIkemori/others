@@ -2,7 +2,7 @@
 // 閃きの頻度のシミュレーター（担当 A8。DESIGN §4.9.5・§7.12.2・§6.9.4・§12.3 の G）。
 //
 //   node tools/sim_glimmer.js [--runs 24] [--seed 1] [--rules auto|shim|real] [--json out.json] [-q]
-//                             [--acts 3] [--boss-acts 9] [--k fkSlope=0.6,fkMax=6] [--no-engine]
+//                             [--acts 3] [--boss-acts 9] [--k fkSlope=0.6,fkMax=6] [--no-engine] [--catchup-only]
 //     --acts / --boss-acts  1 戦の 1 人の行動の数（感度を見る用）  --k  K.GLIM をこの sandbox の中だけで変えて比べる
 //     --no-engine           本物の戦闘エンジン（R.Battle.simulate）での確かめ（参考の節）を飛ばす
 //
@@ -280,6 +280,11 @@ function countBy(snap, key) {
   return out;
 }
 
+if (args.includes('--catchup-only')) {   // G7 だけを速く見る（--k と組み合わせて K.GLIM の感度を見る）
+  const x = catchUp();
+  console.log(`G7 追いつき: 5 個 ${median(x.to5)} 戦・7 個 ${median(x.to7)} 戦（中央値）`);
+  return;
+}
 // A. 標準のパーティ（§4.17.1）: 序章・地方ごと・ボス戦・技の書と術の書・クリア後の極意
 const stdRecs = [];
 for (let r = 0; r < RUNS; r++) {
@@ -327,19 +332,16 @@ const rank9 = mean(stdRecs.map((r) => Object.keys(MAINW).filter((k) => R.Rules.p
 // B. §4.9.5 の型（戦士型 A/B・術師型 A/A/B を 0.75 回と 1.5 回）
 function archRuns(o, only) {
   const recs = [];
-  const saveReach = DB.weaponTypes.staff.reach;
-  if (o.staffReach) DB.weaponTypes.staff.reach = true;
-  for (let r = 0; r < RUNS; r++) {
+    for (let r = 0; r < RUNS; r++) {
     let party = archetypeParty(o);
     if (only) party = party.filter((m) => only.includes(m.key));
     const rec = career(party, { post: true }); rec.party = party; recs.push(rec);
   }
-  DB.weaponTypes.staff.reach = saveReach;
   return recs;
 }
-const arch = archRuns({});
-const archFix = archRuns({ staffStart: true }, ['mage']);
-const archStaff = archRuns({ staffReach: true, staffOnly: true }, ['mage']);
+const arch = archRuns({});                                               // 仲間の術師のいまの形（杖＋鞭、杖の技なし。§5.0 の 0.9）と 1.5 回の術師
+const archSpec = archRuns({ staffStart: true, staffOnly: true }, ['mage']); // §4.9.5 の型: 杖で戦う術師（念じ打ち = starterKit.tech.staff から）
+const archFix = archRuns({ staffStart: true }, ['mage']);                 // 杖＋鞭で念じ打ちを持って始める
 function archSummary(recs, key, label) {
   const cs = recs.map((r) => countBy(r.snap.clear, key));
   const byW = {};
@@ -349,9 +351,9 @@ function archSummary(recs, key, label) {
 }
 log('\n## §4.9.5 の型（クリア時）');
 const aw = archSummary(arch, 'warrior', '戦士型（剣 A・斧 B）');
-const am = archSummary(arch, 'mage', '術師型 中列（0.75 回）');
-const am2 = archSummary(archFix, 'mage', '術師型 中列＋念じ打ち');
-const am3 = archSummary(archStaff, 'mage', '術師型 中列・杖が届く・杖だけ');
+const amSpec = archSummary(archSpec, 'mage', '術師型 杖・念じ打ち（0.75 回）');
+const am = archSummary(arch, 'mage', '仲間の術師 杖＋鞭・杖の技なし');
+const am2 = archSummary(archFix, 'mage', '杖＋鞭・念じ打ちあり');
 const am15 = archSummary(arch, 'mage15', '術師型 中列（1.5 回）');
 function firstTier(recs, key, pred) {
   return recs.map((r) => { const m = r.party.find((x) => x.key === key); const e = m.learnedAt.find((x) => pred(x.id) && x.phase !== 'post'); return e ? e.T : 99; });
@@ -389,9 +391,11 @@ const pInt = [0, 60, 180].map((add) => {
 log(`\n## 知力の差（T8・火 A・格 7 の候補）: 知力 52 ${(pInt[0] * 100).toFixed(2)}%  112 ${(pInt[1] * 100).toFixed(2)}%  232 ${(pInt[2] * 100).toFixed(2)}%`);
 
 // E. 入れ替えた仲間の追いつき（T4 で技も術も 0、武器 2 系統 B）
-const to5 = [], to7 = [];
+function catchUp() {
+  const to5 = [], to7 = [];
 for (let r = 0; r < 400; r++) {
-  const m = member('recruit', { id: '_sim_recruit', techs: [] }, 'recruit');
+  // 器用さは T4 の装備の分を足す（§4.9.4 の例の「ティア 4 … 器用さ 49」と同じ条件）
+  const m = member('recruit', { id: '_sim_recruit', techs: [], add: { dex: 19 } }, 'recruit');
   if (typeof R.Rules.catchUpProf === 'function') R.Rules.catchUpProf(m.c, 4);
   else for (const w of H.WT) m.c.wprof[w] = Math.max(m.c.wprof[w] || 0, Math.round(PEXP[4] * ({ S: 0.8, A: 0.7, B: 0.5, C: 0.3, D: 0.1 })[R.Rules.aptLetter ? R.Rules.aptLetter(m.c, 'w', w) : 'B']));
   m.c.techs = []; m.c.spells = [];
@@ -405,6 +409,9 @@ for (let r = 0; r < 400; r++) {
   }
   to5.push(n5 == null ? 999 : n5); to7.push(n7 == null ? 999 : n7);
 }
+  return { to5, to7 };
+}
+const { to5, to7 } = catchUp();
 log(`\n## 入れ替えた仲間（T4・0 個・武器 2 系統 B）: 5 個まで 中央値 ${median(to5)} 戦、7 個まで 中央値 ${median(to7)} 戦`);
 
 // F. 魔石の入口（術 0 の人が魔石を使い続ける。T0 の普通の戦闘・覚えている技 1）
@@ -496,9 +503,9 @@ function mageCrit(id, s, label, guide) {
   const ok = t >= 24 && t <= 32 && si >= 9 && si <= 14 && a >= 1 && a <= 3 && b >= 0 && b <= 3 && tr <= 1 && st >= 4 && st <= 10;
   crit(id, label, `計 ${f1(t)}（単 ${f1(si)}・A ${f1(a)}・B ${f1(b)}・三 ${f1(tr)}・杖 ${f1(st)}・ほかの技 ${f1(mean(s.cs.map((c) => c.techs)) - st)}）`, ok, '計 24〜32、単 9〜14、A 1〜3、B 0〜3、三 0〜1、杖 4〜10', guide);
 }
-mageCrit('G4b', am, '術師型（中列・0.75 回）のクリア時の数');
-mageCrit('G4c', am2, '参考: 念じ打ちを持って始める', true);
-mageCrit('G4d', am3, '参考: 杖の「攻撃」が中列から届く（鞭なし）', true);
+mageCrit('G4b', amSpec, '術師型（杖・中列・0.75 回・念じ打ちで始める）のクリア時の数');
+mageCrit('G4c', am, '参考: いまの仲間の術師（杖＋鞭・杖の技なしで始める）', true);
+mageCrit('G4d', am2, '参考: 杖＋鞭で念じ打ちを持って始める', true);
 crit('G5', '得手不得手の差（1 系統、T4 の終わり）A ÷ D', `${f2(one.A / one.D)}（A ${f1(one.A)}・D ${f1(one.D)}）`, one.A >= 1.2 * one.D, '1.2 以上');
 crit('G6', '知力の差（1 回の判定）S/Z・S/N', `${f2(pInt[2] / pInt[0])}・${f2(pInt[2] / pInt[1])}`, pInt[2] / pInt[0] >= 1.8 && pInt[2] / pInt[1] >= 1.35, 'S/Z 1.8 以上・S/N 1.35 以上');
 crit('G7', '入れ替えた仲間の追いつき（T4・0 個）', `5 個 ${median(to5)} 戦・7 個 ${median(to7)} 戦（中央値）`, median(to5) <= 30 && median(to7) <= 50, '5 個 30 戦以内・7 個 50 戦以内');

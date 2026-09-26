@@ -43,6 +43,12 @@ function parseMap(s, dict) {
   }
   return o;
 }
+// the scheduled moves of bosses.js (their table weight × 100 in the data)
+const SCHEDULED = new Set((/const SCHEDULED = new Set\(\[([^\]]*)\]/.exec(fs.readFileSync(path.join(__dirname, '..', 'src', 'data', 'bosses.js'), 'utf8')) || ['', ''])[1].match(/eb_\w+/g) || []);
+// deliberate differences from the §9.11.4 table (reported to the lead)
+const DEVIATIONS = [
+  { mon: 'b_octopus', action: 'eb_regrow', cond: { every: [3, 2] }, why: 'DESIGN 4手ごと@3 gives one chance in a 6-round fight; X3 asks for a regrowth in every battle' },
+];
 function parseActions(s) {
   return s.split(' · ').map((t) => {
     const m = /^(攻撃|[a-z_]+?)(\d+(?:\.\d+)?)(?:\[(.+)\])?$/.exec(t.trim());
@@ -61,7 +67,7 @@ function parseActions(s) {
         else err('cannot parse cond ' + part);
       }
       a.cond = c;
-      if (c.every) a.w *= 100; // bosses.js SCHED: scheduled moves ("n手ごと") dominate on their turn
+      if (c.every && SCHEDULED.has(a.id)) a.w *= 100; // bosses.js SCHED: scheduled moves dominate on their turn
     }
     return a;
   }).filter(Boolean);
@@ -108,7 +114,9 @@ for (const c of bossRows) {
   const [ph, rs] = c[7].split(' / ');
   same(id + '.phys', d.phys || {}, parseMap(ph, KIND));
   same(id + '.statusRes', d.statusRes || {}, parseMap(rs, ST));
-  same(id + '.actions', d.actions, parseActions(c[8]));
+  const acts = parseActions(c[8]);
+  for (const dv of DEVIATIONS) if (dv.mon === id) { const a = acts.find((x) => x.id === dv.action); if (a) { Object.assign(a.cond, dv.cond); console.log(`  (known deviation) ${id} ${dv.action} ${JSON.stringify(dv.cond)}: ${dv.why}`); } }
+  same(id + '.actions', d.actions, acts);
   const flatP = (ps) => ps && ps.map((p) => Object.assign({}, p, { msg: p.msg.replace(/\n|　/g, '') }));
   same(id + '.phases', flatP(d.phases), flatP(parsePhases(c[9])));
   same(id + '.drops', d.drops || {}, parseDrops(c[10]));

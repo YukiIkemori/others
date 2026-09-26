@@ -524,7 +524,7 @@
       if (this.live && R.State && R.Game && R.State.seen) for (const id of new Set(this.mons.map((m) => m.id))) R.State.seen(id);
       if (this.o.surprise !== undefined) this.surprise = this.o.surprise === 'pre' ? 'pre' : null; // forced (no ambushes, §4.11.2)
       else if (!this.o.noSurprise && !this.boss && U.chance(this.preemptChance())) this.surprise = 'pre';
-      if (this.surprise === 'pre') yield this.m('魔物たちは、まだこちらに気づいていない。先手を取った！');
+      if (this.surprise === 'pre') yield this.m('魔物たちは、まだこちらに気づいていない。\n先手を取った！');
       for (const p of this.party) {
         const sb = p.mods.startBuffs;
         if (!p.alive || !sb) continue;

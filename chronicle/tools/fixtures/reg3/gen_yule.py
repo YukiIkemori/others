@@ -51,7 +51,7 @@ fill(3, 13, 48, 14, '.')      # main street
 fill(3, 25, 48, 26, '.')      # lower street
 fill(25, 13, 26, 41, '.')     # the road to the gate
 fill(19, 15, 32, 22, '.')     # the plaza
-fill(24, 40, 27, 41, '.')     # gate path
+fill(24, 38, 27, 41, '.')     # gate path
 g[40][23] = g[40][28] = '*'
 # ---------------------------------------------------------------- 宿屋 (inn)
 house(3, 3, 12, 9, [8], [
@@ -137,9 +137,11 @@ for y in range(35, 40):
     g[y][47] = 'F'
 g[35][43] = '*'   # the gate gap
 g[35][44] = '*'
+# ---------------------------------------------------------------- the woodshed (roofed, closed)
+fill(14, 17, 17, 19, 'R')
+fill(14, 20, 17, 20, 'B')
 # ---------------------------------------------------------------- plaza pieces
-g[18][25] = 'Y'   # 白竜の像
-g[16][21] = 'W'   # the frozen well
+# 白竜の像 (NPC obj:r3_dragon_statue at 25,18) · the frozen well (decor u at 21,16)
 # notice board spot (tier 1 patch) and trees by the gate
 # ---------------------------------------------------------------- decor
 # inn: wall face y4, furniture
@@ -208,12 +210,25 @@ for x, y in [(4, 15), (15, 15), (16, 16), (34, 16), (35, 17), (14, 27), (15, 27)
 for x, y in [(15, 18), (15, 19), (34, 20), (4, 37), (12, 37), (13, 37), (24, 34), (38, 30)]:
     d[y][x] = '%'
 d[36][10] = 'E'   # cart
-d[37][8] = '#'    # chopping stump
+d[38][7] = '#'    # chopping stump
 d[27][23] = ']'   # signpost toward the hall
 d[37][28] = ']'   # signpost by the gate
-d[24][30] = 'u'   # small well (drinking)
+d[16][21] = 'u'   # the frozen well
 d[38][24] = '3'
 d[38][27] = '3'
+# street lamps, laundry, crates, firs on the open snow
+for x, y in [(11, 15), (34, 12), (48, 12), (3, 12), (17, 24), (34, 24), (13, 27), (38, 27), (28, 34), (23, 34)]:
+    d[y][x] = '3'
+for x, y in [(15, 21), (16, 21)]:
+    d[y][x] = '%'
+d[20][14] = 'U'; d[21][14] = 'q'
+for x, y in [(35, 18), (35, 21)]:
+    d[y][x] = '('
+d[23][34] = 'U'
+d[12][16] = 'M'
+d[27][4] = 'E'
+for x, y in [(16, 5), (15, 8), (16, 9), (36, 6), (35, 9), (36, 10), (2, 20), (2, 21), (14, 33), (15, 34), (27, 30), (28, 31), (38, 29), (35, 38), (47, 27)]:
+    g[y][x] = 'T'
 
 rows = [''.join(r) for r in g]
 decor = [''.join(r) for r in d]

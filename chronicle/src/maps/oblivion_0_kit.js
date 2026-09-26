@@ -86,5 +86,31 @@
     }
     for (const w of f1.warps) if (w.to === 'archive_1') w.spawn = has ? K.ARCHIVE_SPAWN : 'entrance';
   }
+  K.hooks = { registerDen, archiveReturn };
   if (R.onData) { R.onData(registerDen); R.onData(archiveReturn); }
+
+  // ------------------------------------------------------------ theme areas (2F 継ぎはぎの森)
+  // R.Art.localTile returns null for a plain cell (no shading, no variant) and the field then draws
+  // 'tile:<map.theme>:<id>', i.e. white paper in the middle of the forest / sand / snow patches.
+  // Until the tiler or the field resolves that per cell (requested from art-local A16b / field A4),
+  // answer those cells with the art of the cell's own theme. Only maps with def.themeAreas are
+  // touched, and only when the tiler itself had nothing to say.
+  function patchAreas() {
+    const A = R.Art, G = R.Gfx;
+    if (!A || typeof A.localTile !== 'function' || A.localTile._obAreas || !A.themeAt) return;
+    const orig = A.localTile;
+    const wrapped = function (map, x, y) {
+      const g = orig.apply(this, arguments);
+      if (g || !map || !map.def || !map.def.themeAreas) return g;
+      const th = A.themeAt(map, x, y), base = A.themeOf ? A.themeOf(map.theme) : map.theme;
+      if (!th || th === base) return g;
+      const key = 'tile:' + th + ':' + map.tileAt(x, y);
+      return G && G.has(key) ? G.get(key) : g;
+    };
+    for (const k of Object.keys(orig)) wrapped[k] = orig[k];
+    wrapped._obAreas = true;
+    A.localTile = wrapped;
+  }
+  K.patchAreas = patchAreas;
+  if (R.onBoot) R.onBoot(patchAreas);
 })(window.RPG);

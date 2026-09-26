@@ -96,4 +96,88 @@
     return frames;
   }
   if (R.Gfx && !R.Gfx.has('tile:quicksand')) R.Gfx.def('tile:quicksand', quicksandFrames);
+
+  // ------------------------------------------------------------ the tomb's set pieces (NPC objects)
+  // obj:r2_guardian (16×32) 墓守の像: a robed sandstone guardian with a staff on a plinth whose carved
+  //   panel holds one letter of the king's name (the three statues of sand_tomb_1..3).
+  // obj:r2_coffin (16×16) a painted coffin lying on the floor (the tomb's burial niches).
+  function pixels(rows, pal, w, h) {
+    const cv = R.Gfx.makeCanvas(w, h), c = cv.getContext('2d');
+    rows.forEach((r, y) => {
+      if (r.length !== w) R.warn('region2 art: row ' + y + ' is ' + r.length + ' wide');
+      for (let x = 0; x < r.length; x++) {
+        const col = pal[r[x]];
+        if (col == null) continue;
+        c.fillStyle = '#' + col.toString(16).padStart(6, '0');
+        c.fillRect(x, y, 1, 1);
+      }
+    });
+    return cv;
+  }
+  const GUARD = [
+    '................',
+    '............kkk.',
+    '....kkkkk..kyyyk',
+    '...kdmllhk.kyhyk',
+    '...kdmlhhk..kyk.',
+    '...kdkhkhk..ksk.',
+    '...kdmhhlk..ksk.',
+    '....kdmlk...ksk.',
+    '...kkdmmkk..ksk.',
+    '..kdmlllhhk.ksk.',
+    '.kdmllllhhhkksk.',
+    '.kdmkmllhhkhhsk.',
+    '.kdmkmllhhkkhsk.',
+    '.kdmkmllhlk.ksk.',
+    '..kdkmllhlk.ksk.',
+    '..kdmmllhlk.ksk.',
+    '..kdmmllhlk.ksk.',
+    '..kdmmllhlk.ksk.',
+    '..kdmmllhlk.ksk.',
+    '..kddmllhlk.ksk.',
+    '..kddmmllhk.ksk.',
+    '..kkddmmlhkkksk.',
+    '...kkkkkkkk..k..',
+    '.kkkkkkkkkkkkkk.',
+    '.khhhhhhhhhhhhk.',
+    '.kllllllllllllk.',
+    '.kmkkkkkkkkkkdk.',
+    '.kmkwwwwwwwwkdk.',
+    '.kmkwwwwwwwwkdk.',
+    '.kmkkkkkkkkkkdk.',
+    '.kddddddddddddk.',
+    '.kkkkkkkkkkkkkk.',
+  ];
+  const GUARD_PAL = { k: 0x2e2010, d: 0x6c4a22, m: 0x9a7038, l: 0xc09a58, h: 0xdcc084, w: 0xf0e0b0, s: 0x8a6a2a, y: 0xe8c050 };
+  const COFFIN = [
+    '................',
+    '.....kkkkkk.....',
+    '....kbbbbbbk....',
+    '...kbBffffBbk...',
+    '...kbfekefbbk...',
+    '...kbffffffbk...',
+    '...kbbffffbbk...',
+    '...kgyyyyyygk...',
+    '...kgbgbgbggk...',
+    '...kgyyyyyygk...',
+    '...kgbgbgbggk...',
+    '...kgggggggdk...',
+    '...kgbbbbbbdk...',
+    '....kgggggdk....',
+    '.....kkkkkk.....',
+    '................',
+  ];
+  const COFFIN_PAL = { k: 0x2a1c0c, g: 0xc89a38, y: 0xecc864, b: 0x2a4a8a, B: 0x4a70b8, f: 0xd8a870, e: 0x3a2410, d: 0x7a5020 };
+  if (R.Gfx && !R.Gfx.has('obj:r2_guardian')) R.Gfx.def('obj:r2_guardian', () => [pixels(GUARD, GUARD_PAL, 16, 32)]);
+  if (R.Gfx && !R.Gfx.has('obj:r2_coffin')) R.Gfx.def('obj:r2_coffin', () => [pixels(COFFIN, COFFIN_PAL, 16, 16)]);
+
+  /** the coffin mark 'A' (a painted coffin NPC object on floor) for the tomb maps */
+  K.COFFIN_MARK = {
+    npc: { id: 'coffin', sprite: 'obj:r2_coffin', dir: 'down', fixed: true,
+      text: [
+        { cond: 'desert_boss', text: '古い棺だ。ふたに描かれた人が、\nどこか安らかな顔に見える。' },
+        { text: '古い棺だ。ふたに、王に仕えた\n人の姿が描かれている。' },
+      ] },
+    under: '.',
+  };
 })(window.RPG);

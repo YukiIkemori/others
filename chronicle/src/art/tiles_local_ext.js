@@ -123,7 +123,12 @@
   OBJ.fog_wall = (fl, ctx) => {
     ctx = ctx || {};
     const t = tk(), f = ctx.f || 0, b = fl.clone();
-    const F = [0xa8aebc, 0xc4c8d2, 0xdcdee6, 0xf0f0f4, 0xfcfcfe];
+    // on a pale floor (snow, marble, paper) the bank takes a cooler, deeper shading so
+    // it still reads as a barrier and not as more floor
+    let lum = 0;
+    for (let i = 0; i < 256; i++) { const c = fl.p[i]; lum += ((c >> 16) & 255) * 0.3 + ((c >> 8) & 255) * 0.59 + (c & 255) * 0.11; }
+    const pale = lum / 256 > 170;
+    const F = pale ? [0x6c7690, 0x8e98b0, 0xb4bccc, 0xe4e8f0, 0xfcfcfe] : [0xa8aebc, 0xc4c8d2, 0xdcdee6, 0xf0f0f4, 0xfcfcfe];
     // distance to an open side (a side without fog next to it): the bank thins out there
     const open = (x, y) => Math.min(ctx.l ? 99 : x + 0.5, ctx.r ? 99 : 15.5 - x, ctx.u ? 99 : y + 0.5, ctx.d ? 99 : 15.5 - y);
     const N = (x, y) => t.fnoise(x + f * 2, y, 8, 16, 731) * 0.7 + t.fnoise(x - f, y + f, 4, 16, 733) * 0.3;

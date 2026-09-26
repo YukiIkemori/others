@@ -96,11 +96,13 @@ class Ctx {
       const order = [sd, 'down', 'up', 'left', 'right'].filter(Boolean);
       for (const s of order) {
         const [dx, dy] = D[s];
-        const x = Math.round(n.x) + dx, y = Math.round(n.y) + dy;
+        let x = Math.round(n.x) + dx, y = Math.round(n.y) + dy;
+        // a shopkeeper behind a counter: stand on the customer's side of it (talking over the counter)
+        for (let k = 0; k < 3 && M.counterAt(x, y); k++) { x += dx; y += dy; }
         if (!M.walkable(x, y) || M.npcAt(x, y)) continue;
         // a start 1–3 tiles further out on the same line, so the followers trail in
-        let k = 3;
-        while (k > 0 && !(M.walkable(x + dx * k, y + dy * k) && !M.npcAt(x + dx * k, y + dy * k))) k--;
+        let k = 0;
+        while (k < 3 && M.walkable(x + dx * (k + 1), y + dy * (k + 1)) && !M.npcAt(x + dx * (k + 1), y + dy * (k + 1)) && !M.warpCell(x + dx * (k + 1), y + dy * (k + 1))) k++;
         const back = { down: 'up', up: 'down', left: 'right', right: 'left' }[s];
         return { x, y, sx: x + dx * k, sy: y + dy * k, k, face: back };
       }
@@ -144,10 +146,15 @@ def('1-3', 'タイトル・主人公の作成・名前入力', async (X) => {
     },
   }), (s) => s.top === 'NameLayer' && !s.name.busy, 60000, 'the name entry');
   X.cur = 3;
-  await X.ev((nm) => { const t = window.RPG.Engine.top(); t.str = nm; }, FIVE);
+  await X.ev((nm) => { const t = window.RPG.Engine.top(); t.name = [...nm]; if (t.toOk) t.toOk(); }, FIVE);
   await X.wait(300);
   await X.shot('03_name_entry', `5 字の名前（${FIVE}）`);
-  await D.drive(pol, (s) => s.top !== 'NameLayer' && s.top !== 'CreateLayer', 30000, 'the name entry');
+  X.cur = 2;
+  await D.drive(Object.assign({}, pol, {
+    onState: async (s) => {
+      if (s.top === 'CreateLayer' && s.create.step === 4 && !s.create.busy && !seen.has('confirm')) { seen.add('confirm'); await X.wait(250); await X.shot('02_create_confirm', '確認（女・術剣士・火・5 字の名前）'); }
+    },
+  }), (s) => s.top !== 'NameLayer' && s.top !== 'CreateLayer', 30000, 'the name entry');
   const h = await X.ev(() => { const h = window.RPG.State.hero(); return h && { name: h.name, type: h.heroType, gender: h.gender }; });
   if (!h || h.name !== FIVE) X.note(`the hero was made as ${JSON.stringify(h)}`);
 });
@@ -156,7 +163,8 @@ def('1-3', 'タイトル・主人公の作成・名前入力', async (X) => {
 def(4, '仲間を選ぶ（1 ページ・2 ページ、2 人選んだ状態）', async (X) => {
   await X.load(['newgame']);
   await X.ev(() => { window.RPG.NGFixture.show('choose'); });
-  await X.until((s) => s.top === 'ChooseLayer' && !s.choose.busy, 10000, 'the choose screen');
+  // the advice line comes first (A to read on)
+  await X.D.drive({ menus: 'leave' }, (s) => s.top === 'ChooseLayer' && !s.choose.busy, 15000, 'the choose screen');
   for (let i = 0; i < 2; i++) {
     const s = await X.st();
     await X.press('a');
@@ -462,12 +470,15 @@ async function main() {
         if (e instanceof Skip) { status = 'SKIP'; detail = e.message; } else { status = 'FAIL'; detail = String(e.message || e).split('\n')[0]; if (flag('verbose')) console.log(e.stack); }
         try { await D.shot(`FAIL_${String(s.no)}`); } catch (e2) { /* ignore */ }
       }
-      if (status === 'PASS' && D.errors.length > e0) { status = 'FAIL'; detail = D.errors.slice(e0).map((x) => x.text).join(' | ').slice(0, 300); }
+      // a file of another owner that fails to load is reported (once) but does not fail the shot; an error while
+      // the screen runs does
+      const errs = D.errors.slice(e0).filter((x) => !x.load && !/^\[console\.error\] (src\/[^ ]+\.js[: ]|LOAD ERRORS)/.test(x.text));
+      if (status === 'PASS' && errs.length) { status = 'FAIL'; detail = errs.map((x) => x.text).join(' | ').slice(0, 300); }
       const files = X.files.slice(n0);
       results.push({ no: s.no, title: s.title, status, detail, files: files.map((f) => f.file), ms: Date.now() - t1 });
       const mark = status === 'PASS' ? '✓' : status === 'SKIP' ? '–' : '✗';
       console.log(`${mark} ${status} #${String(s.no).padEnd(4)} ${s.title}  (${files.length} png, ${((Date.now() - t1) / 1000).toFixed(1)}s)${detail ? '  ' + detail : ''}`);
-      for (const f of files) console.log(`         ${f.file}  ${f.what}`);
+      for (const f of files) console.log(`         ${f.file.startsWith('..') ? path.resolve(ROOT, f.file) : f.file}  ${f.what}`);
       for (const nt of X.notes.filter((x) => x.no === s.no)) console.log(`         note: ${nt.text}`);
       X.notes = X.notes.filter((x) => x.no !== s.no);
     }

@@ -126,8 +126,7 @@
       ev.closeMessage();
       await ev.caption('♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ', { frames: 210 });
       ev.sfx('quill');
-      await ev.say('{hero}は、\n守り歌を年代記に書き記した。');
-      ev.closeMessage();
+      await ev.caption('{hero}は、\n守り歌を年代記に書き記した。');
       // the lamp burns again (lamp → lamp_lit)
       ev.setFlag('pro_boss');
       ev.refresh();
