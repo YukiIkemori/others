@@ -274,6 +274,7 @@ section('4 effects / quirks: counts and sizes (§8.3.3–§8.3.6)', () => {
   let supers = 0, supersNoQuirk = 0;
   for (const id of MINE) {
     const it = I(id), r = raw[id], c = cls(it), T = it.tier;
+    const qcol = it.grade === 'rare' ? 0 : 1;                                       // §8.3.6 column: rare (weak) / super (strong)
     const { eff, q, pct } = analyse(it, r);
     const m = it.mods || {};
     // counts
@@ -282,7 +283,8 @@ section('4 effects / quirks: counts and sizes (§8.3.3–§8.3.6)', () => {
     if (c === 1) {
       const max = (T === 9 || it.src === 'mdrop') ? 3 : 1;
       ok(eff.size >= 1 && eff.size <= max, `${id}: rare effects ${eff.size} (${[...eff]}), max ${max}`);
-      ok(q.size <= 1, `${id}: rare quirks ${[...q]}`);
+      // LEAD_DECISIONS D3 (BRIEF Part A「レア装備は性能が突き抜けているがクセもある」): exactly one weak quirk
+      ok(q.size === 1, `${id}: a rare has exactly one quirk (D3), has ${[...q]}`);
       ok(!!it.quirk === q.size > 0, `${id}: quirk flag ${!!it.quirk} vs quirks ${[...q]}`);
     }
     if (c === 2) {
@@ -294,7 +296,9 @@ section('4 effects / quirks: counts and sizes (§8.3.3–§8.3.6)', () => {
     }
     if (c >= 3) {
       ok(eff.size + Object.keys(pct).length >= 1 && eff.size <= 3, `${id}: relic / reward effects ${[...eff]}`);
-      ok(q.size <= (c === 4 ? 1 : 0), `${id}: relic / reward quirks ${[...q]}`);
+      // D3: a rare relic / story reward (grade 'rare') has exactly one weak quirk; a super relic 0–1
+      if (it.grade === 'rare') ok(q.size === 1, `${id}: rare relic / reward has exactly one quirk (D3), has ${[...q]}`);
+      else ok(q.size <= 1, `${id}: relic / reward quirks ${[...q]}`);
       const pv = Object.values(pct);
       if (c === 3) ok(pv.length <= 1 && pv.every((v) => v <= 10), `${id}: stat % ${JSON.stringify(pct)} (rare: one +10)`);
       else ok((pv.length <= 1 && pv.every((v) => v <= 20)) || (pv.length === 2 && pv.every((v) => v <= 15)), `${id}: stat % ${JSON.stringify(pct)} (super: two +15 or one +20)`);
@@ -310,13 +314,13 @@ section('4 effects / quirks: counts and sizes (§8.3.3–§8.3.6)', () => {
         if (c === 2) ok(n((x) => x < 0) <= 1 && n((x) => x <= 0) <= 2 && vals.length <= 4 && vals.every((x) => x >= -1), `${id}: elemResist ${JSON.stringify(v)} (super)`);
         if (c === 3) ok(vals.every((x) => x >= 0.5), `${id}: elemResist ${JSON.stringify(v)} (relic rare 0.5)`);
         if (c === 4) ok(vals.every((x) => x >= -1) && n((x) => x < 0.5) <= 1, `${id}: elemResist ${JSON.stringify(v)} (relic super)`);
-        for (const x of Object.values(v).filter((x) => x > 1)) ok(x <= QLIM.elemResist[c === 1 ? 0 : 1], `${id}: weakness ${x} too large`);
+        for (const x of Object.values(v).filter((x) => x > 1)) ok(x <= QLIM.elemResist[qcol], `${id}: weakness ${x} too large`);
         continue;
       }
       if (k === 'statusResist') {
         const good = Object.values(v).filter((x) => x > 0), bad = Object.values(v).filter((x) => x < 0);
         ok(good.length <= SRES[c][1] && good.every((x) => x <= SRES[c][0]), `${id}: statusResist ${JSON.stringify(v)}`);
-        for (const x of bad) ok(x >= QLIM.statusResist[c === 1 ? 0 : 1], `${id}: status weakness ${x} too large`);
+        for (const x of bad) ok(x >= QLIM.statusResist[qcol], `${id}: status weakness ${x} too large`);
         continue;
       }
       if (k === 'statusImmune') { ok(v.length <= LIM.statusImmune[c], `${id}: statusImmune ${v.length} > ${LIM.statusImmune[c]}`); continue; }
@@ -325,8 +329,8 @@ section('4 effects / quirks: counts and sizes (§8.3.3–§8.3.6)', () => {
       if (isQ) {
         const lim = QLIM[k];
         if (!ok(lim, `${id}: ${k}=${JSON.stringify(v)} is not a quirk of §8.3.6`)) continue;
-        let L = lim[c === 1 ? 0 : 1];
-        if (k === 'expPct' && T === 9) L = -100;                                        // post-game supers
+        let L = lim[qcol];
+        if (k === 'expPct' && T === 9 && qcol === 1) L = -100;                                        // post-game supers
         if (typeof L === 'number') ok(L < 0 ? v >= L : v <= L, `${id}: quirk ${k}=${v} beyond ${L}`);
         else ok(L === true, `${id}: quirk ${k} not allowed for this grade`);
         continue;
@@ -345,7 +349,7 @@ section('4 effects / quirks: counts and sizes (§8.3.3–§8.3.6)', () => {
     // statsAdd quirk: −1 unit (rare) / −1〜2 units (super) of this tier
     for (const [k, v] of Object.entries(r.statsAdd || {})) {
       const u1 = gearStat(T, 1, 'normal'), u2 = gearStat(T, 2, 'normal');
-      ok(c === 1 ? v === -u1 : (v === -u1 || v === -u2), `${id}: statsAdd ${k}=${v} (1u ${u1}, 2u ${u2})`);
+      ok(qcol === 0 ? v === -u1 : (v === -u1 || v === -u2), `${id}: statsAdd ${k}=${v} (1u ${u1}, 2u ${u2})`);
       // the desc says 「ただし〇が下がる」: the stat must really end below 0 (not a smaller plus on the unit's own stat)
       ok((it.stats || {})[k] < 0, `${id}: statsAdd ${k} lowers the item's own unit stat (stats ${JSON.stringify(it.stats)})`);
     }
@@ -386,14 +390,15 @@ const DESC_FORMS = [
   '物理攻撃の威力が上がる', '術の威力が上がる', '物理が強くなる', '術が強くなる', '回復の(?:術|道具)がよく効く',
   '(?:術の)?MPの消費が減る', '(?:技の)?WPの消費が減る', 'ただし(?:術の)?MPの消費が増える', 'ただし(?:技の)?WPの消費が増える', '術力が上がる',
   '(?:技|術|技と術)を閃きやすい', '閃きやすい', `${E_}の術を閃きやすい`, `${W_}の技を閃きやすい`, `(?:${E_}|${W_})の熟練度が伸びやすい`,
-  '(?:魔物が|レアの|超レアの)品を落としやすい', '(?:|レアを|超レアを)よく落とす', '品をよく落とす',
+  // A1.3 / STYLE_JA §8: the on-screen word is アイテム (the same sentences as R.Rules.autoDesc)
+  '魔物がアイテムを落としやすい', '(?:超)?レアアイテムを落としやすい', '(?:|レアを|超レアを)よく落とす', 'アイテムをよく落とす',
   '(?:手に入る)?お金が増える', '経験値が増える', '金色の魔物に出会いやすい', 'めずらしい魔物に出会いやすい',
   '魔物に(?:出会|会)いにくい', '魔物に出会いやすい', 'ただし魔物を呼ぶ', '盗みが成功しやすい', '逃げやすくなる', '先制しやすくなる',
   '攻撃が当たると、ついでに盗むことがある', 'ついでに盗む', 'すばやく動ける', 'すばやい', '攻撃をかわしやすい', 'かわしやすい',
   '倒れても一度だけ起き上がる', '攻撃を受けると反撃する', '反撃する', '毒の沼や熱い床で傷つかない', '会心が出やすい', 'よく当たる',
   '(?:攻撃力|守備力|術防)が上がる',
   'ただし(?:守備力|術防|最大HP)が下がる', 'ただし受けるダメージが増える', 'ただし受ける傷が増える', 'ただし(?:術|技)が使えない', 'ただし戦闘中にHPが減る',
-  'ただし動きが遅くなる', 'ただし経験値が減る', 'ただし守備と術防は0', `ただし${P_}が下がる`, `(?:${P_}|最大HP|守備力|術防)も下がる`,
+  'ただし動きが遅くなる', 'ただし経験値が減る', 'ただしお金が減る', 'ただしかわしにくい', 'ただし当たりにくい', 'ただし(?:技|術)?を?閃きにくい', 'ただし守備と術防は0', `ただし${P_}が下がる`, `(?:${P_}|最大HP|守備力|術防)も下がる`,
 ].map((s) => new RegExp(`^${s}$`));
 const QUIRK_TAIL = new RegExp(`^(?:ただし|${E_}にも|(?:${P_}|最大HP|守備力|術防)も)`);
 section('6 names ≤ 9 / unique / STYLE_JA §7 / jōyō; desc 2 × 20', () => {
@@ -427,6 +432,7 @@ section('6 names ≤ 9 / unique / STYLE_JA §7 / jōyō; desc 2 × 20', () => {
     ok(!/にならない|眠りにする|まひにする|沈黙にする|混乱にする|気絶にする|凍結にする|暗闇にする|やけどにする|　|…(?!…)|魔法|呪文|麻痺|アクセサリー/.test(d.replace(/……/g, '')), `${id}: desc style ${JSON.stringify(d)}`);
     ok(/。$/.test(d.replace(/\n/g, '')), `${id}: desc must end with 。`);
     if (it.quirk) ok(/ただし/.test(d), `${id}: a quirk item's desc names the quirk with 「ただし」`);
+    ok(!/品/.test(d), `${id}: on-screen text says アイテム, not 品 (STYLE_JA §8, A1.3): ${JSON.stringify(d)}`);
     // monster-chapter descs are written here (the tables of §8.4.4–§8.8 are copied and checked by conformance):
     // every sentence must be one of the §8.2.7 forms (long or short), effects first, then the 「ただし」 quirks
     if (MONSTER_CHAPTER.has(id)) {
