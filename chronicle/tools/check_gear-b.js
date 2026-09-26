@@ -38,7 +38,7 @@ const mine = Object.entries(DB.items).filter(([id]) => /^[ik]_/.test(id));
 const cons = mine.filter(([, it]) => it.type === 'consumable'), keys = mine.filter(([, it]) => it.type === 'key');
 console.log(`== gear-b のデータ（種 ${SEED}、仮の装備 ${Object.values(DB.items).filter((i) => i._stub).length} 品）`);
 console.log(`道具 ${cons.length}（店 ${cons.filter(([, i]) => i.src === 'shop').length}・宝箱/ボス ${cons.filter(([, i]) => i.src === 'drop').length}・レア魔物 ${cons.filter(([, i]) => i.src === 'relic').length}）、大事なもの ${keys.length}、店 ${Object.keys(DB.shops).length}、プール ${Object.keys(DB.pools).length}`);
-if (cons.length !== 58) err(`道具が ${cons.length}`);
+if (cons.length !== 56) err(`道具が ${cons.length}（56 のはず: SYSTEMS_REWORK §2.5 で気力の茶・気力の実を削除）`);
 if (keys.length !== 18) err(`大事なものが ${keys.length}`);
 if (Object.keys(DB.shops).length !== 34) err(`店が ${Object.keys(DB.shops).length}`);
 if (Object.keys(DB.pools).length !== 10) err(`プールが ${Object.keys(DB.pools).length}`);
@@ -120,7 +120,7 @@ for (const T of [0, 2, 4, 6, 8, 9]) {
 
 // ------------------------------------------------------------------ 5. ほかの担当のファイルからの参照
 console.log('\n== ほかの担当からの参照');
-const OLD = { i_herb: 'i_salve', i_herb2: 'i_potion', i_revive2: 'i_phoenix', i_eyedrop: 'i_clear', i_fruit_hp: 'i_seed_hp', i_fruit_mp: 'i_seed_mp', i_fruit_wp: 'i_seed_wp', p_seed: '（無し。§8.0 の 0.6）' };
+const OLD = { i_herb: 'i_salve', i_herb2: 'i_potion', i_revive2: 'i_phoenix', i_eyedrop: 'i_clear', i_fruit_hp: 'i_seed_hp', i_fruit_mp: 'i_seed_mp', i_fruit_wp: 'i_seed_mp', p_seed: '（無し。§8.0 の 0.6）' };
 const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]));
 const srcFiles = walk(path.join(ROOT, 'src')).filter((f) => f.endsWith('.js'));
 const MY = new Set(['items_use.js', 'items_key.js', 'shops.js', 'pools.js']);

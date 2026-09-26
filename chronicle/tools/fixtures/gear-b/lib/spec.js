@@ -57,6 +57,50 @@ function effectsOf(cell) {
 const yes = (c) => c.startsWith('○');
 const desc = (c) => c.replace(/<br>/g, '\n').replace(/／/g, '\n');
 
+// ---------------------------------------------------------------------------- SYSTEMS_REWORK (A18 §2.5, A19 §3.3)
+// The DESIGN tables and code blocks with the rework applied (a no-op once the lead folds it into DESIGN, §4.2-4).
+const ITEM_REMOVED = ['i_tonic', 'i_seed_wp'];
+const E1 = (target, effects, desc, extra) => Object.assign({ target, effects, desc }, extra || {});
+const ITEM_REWORK = {
+  i_lifedew: E1('ally', [{ type: 'heal', pct: 1 }, { type: 'healMp', pct: 1 }], '味方1人のHPとMPを\nすべて回復する。'),
+  i_jewel_carrot: E1('ally', [{ type: 'heal', pct: 1 }, { type: 'healMp', pct: 1 }], '味方1人のHPとMPを\nすべて回復する。'),
+  i_seed_mp: E1('ally', [{ type: 'grow', stat: 'mp', n: 3 }], '食べると最大MPが\n3増える。'),
+  i_moon_wool: E1('ally', [{ type: 'healMp', pct: 0.5 }], '味方1人のMPを\n最大値の50%回復する。'),
+  i_spring_key: E1('allies', [{ type: 'healMp', pct: 0.2 }], '味方全員のMPを\n最大値の20%回復する。'),
+  i_wisdom_page: E1('allies', [{ type: 'healMp', pct: 0.5 }], '味方全員のMPを\n最大値の50%回復する。'),
+  i_golden_ink: E1('allies', [{ type: 'healMp', pct: 0.7 }], '味方全員のMPを\n最大値の70%回復する。'),
+  i_dream_fruit: E1('ally', [{ type: 'grow', stat: 'hp', n: 20 }, { type: 'grow', stat: 'mp', n: 8 }], '食べると最大HPが20、\n最大MPが8増える。'),
+};
+const SHOP_REWORK = [
+  ["const ALLW = ['w_sword', 'w_greatsword', 'w_dagger', 'w_axe', 'w_spear', 'w_bow', 'w_club', 'w_staff', 'w_staff_prayer', 'w_katana', 'w_fist', 'w_whip'];",
+   "const ALLW = ['w_sword', 'w_greatsword', 'w_dagger', 'w_axe', 'w_axe_mace', 'w_spear', 'w_bow', 'w_staff', 'w_staff_prayer'];"],
+  ["w_club: 'w_club_wood', w_staff: 'w_staff_novice', w_katana: 'w_katana_uchi', w_fist: 'w_fist_leather', w_whip: 'w_whip_leather',",
+   "w_axe_mace: 'w_axe_cudgel', w_staff: 'w_staff_novice',"],
+  ["const WT = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'club', 'staff', 'katana', 'fist', 'whip'];",
+   "const WT = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'staff'];"],
+  ["'i_potion', 'i_ether', 'i_tonic', 'i_numb',", "'i_potion', 'i_ether', 'i_numb',"],
+  ["['w_bow', 'w_spear', 'w_dagger', 'w_staff', 'w_staff_prayer', 'w_whip']", "['w_bow', 'w_spear', 'w_dagger', 'w_staff', 'w_staff_prayer']"],
+  ["['w_sword', 'w_katana', 'w_dagger', 'w_whip', 'w_axe']", "['w_sword', 'w_dagger', 'w_axe', 'w_greatsword']"],
+  ["['w_axe', 'w_spear', 'w_club', 'w_greatsword', 'w_bow']", "['w_axe', 'w_spear', 'w_axe_mace', 'w_greatsword', 'w_bow']"],
+  ["['w_staff', 'w_staff_prayer', 'w_whip', 'w_dagger', 'w_bow', 'w_fist']", "['w_staff', 'w_staff_prayer', 'w_dagger', 'w_bow', 'w_axe_mace']"],
+  ["['w_sword', 'w_katana', 'w_spear', 'w_fist', 'w_bow', 'w_whip']", "['w_sword', 'w_spear', 'w_bow', 'w_dagger']"],
+  ["['w_sword', 'w_greatsword', 'w_axe', 'w_club', 'w_spear']", "['w_sword', 'w_greatsword', 'w_axe', 'w_axe_mace', 'w_spear']"],
+  ["['w_fist', 'w_katana', 'w_axe', 'w_greatsword', 'w_club', 'w_staff']", "['w_sword', 'w_axe', 'w_greatsword', 'w_axe_mace', 'w_staff']"],
+  ["['w_staff', 'w_staff_prayer', 'w_dagger', 'w_bow', 'w_whip']", "['w_staff', 'w_staff_prayer', 'w_dagger', 'w_bow', 'w_spear']"],
+];
+const POOL_REWORK = [
+  ["['i_ether', 3], ['i_tonic', 3], ['i_numb', 1]", "['i_ether', 3], ['i_numb', 1]"],
+  ["['i_seed_hp', 2], ['i_seed_mp', 1], ['i_seed_wp', 1]", "['i_seed_hp', 2], ['i_seed_mp', 2]"],
+];
+/** apply the rework to a DESIGN code block (each change must still be found: a DESIGN edit makes it a no-op, not a silent miss) */
+function rework(src, reps, where) {
+  for (const [a, b] of reps) {
+    if (src.includes(a)) src = src.split(a).join(b);
+    else if (!src.includes(b)) throw new Error(`SYSTEMS_REWORK patch for DESIGN ${where} not found: ${a.slice(0, 60)}`);
+  }
+  return src;
+}
+
 module.exports = function spec() {
   const md = fs.readFileSync(path.join(ROOT, 'DESIGN.md'), 'utf8');
   const style = fs.readFileSync(path.join(ROOT, 'STYLE_JA.md'), 'utf8');
@@ -69,7 +113,9 @@ module.exports = function spec() {
     id: unq(c[0]), name: c[1], price: +c[2], via: c[3], target: c[4] === '—' ? null : c[4],
     effects: effectsOf(c[5]), fx: c[6] === '—' ? null : c[6], battle: yes(c[7]), field: yes(c[8]), desc: desc(c[9]), table,
   });
-  S.consumables = [...t89.map((c) => row(c, '8.9')), ...t892.map((c) => row(c, '8.9.2'))];
+  S.consumables = [...t89.map((c) => row(c, '8.9')), ...t892.map((c) => row(c, '8.9.2'))]
+    .filter((x) => !ITEM_REMOVED.includes(x.id))
+    .map((x) => (ITEM_REWORK[x.id] ? Object.assign({}, x, ITEM_REWORK[x.id], { rework: true }) : x));
 
   // ------------------------------------------------------------------ 大事なもの
   const t810 = tables(sectionLines(md, '### 8.10 大事なもの', 3))[0];
@@ -98,8 +144,8 @@ module.exports = function spec() {
     const a = ls.findIndex((l) => l.startsWith('```js')), b = ls.findIndex((l, k) => k > a && l.startsWith('```'));
     return ls.slice(a + 1, b).join('\n');
   };
-  S.shopCode = code('#### 8.11.3');
-  S.poolCode = code('#### 8.12.5');
+  S.shopCode = rework(code('#### 8.11.3'), SHOP_REWORK, '§8.11.3');
+  S.poolCode = rework(code('#### 8.12.5'), POOL_REWORK, '§8.12.5');
   // p_supply の表と宝箱のお金（§8.12.2）
   const t8122 = tables(sectionLines(md, '#### 8.12.2', 4));
   S.poolTable = t8122[0].flatMap((c) => c[0].match(/p_[a-z_]+/g) || []);
@@ -112,6 +158,7 @@ module.exports = function spec() {
     });
     return { from: +r[1], to: r[2] ? +r[2] : +r[1], add };
   });
+  for (const r of S.supplyTable) r.add = r.add.filter((a) => a.name !== '気力の茶');   // SYSTEMS_REWORK §2.5: i_tonic is gone
   const g = sectionLines(md, '#### 8.12.2', 4).join('\n').match(/GOLD\[T\] = \[([\d, ]+)\]/);
   S.gold = g ? g[1].split(',').map(Number) : null;
 
@@ -127,8 +174,14 @@ module.exports = function spec() {
   const tw = tables(sectionLines(md, '#### 8.4.1', 4))[1];
   for (const c of tw) {
     const m = c[0].match(/`(w_[a-z_]+)_<T>`(?:（T0 = `([a-z_]+)`）)?/);
+    // SYSTEMS_REWORK §3.3: the club line is the axe's mace line (w_axe_mace, T0 w_axe_cudgel); katana / fist / whip lines are gone
+    if (['w_katana', 'w_fist', 'w_whip'].includes(m[1])) continue;
+    if (m[1] === 'w_club') { S.lines.push({ line: 'w_axe_mace', type: 'weapon', wtype: 'axe', units: unitsOf(c[2]), names: c.slice(3, 13), t0id: 'w_axe_cudgel' }); continue; }
     S.lines.push({ line: m[1], type: 'weapon', wtype: WT[c[1]], units: unitsOf(c[2]), names: c.slice(3, 13), t0id: m[2] || null });
   }
+  // SYSTEMS_REWORK §3.3 order of the weapon lines (ALLW): the mace line follows the axe
+  const WORDER = ['w_sword', 'w_greatsword', 'w_dagger', 'w_axe', 'w_axe_mace', 'w_spear', 'w_bow', 'w_staff', 'w_staff_prayer'];
+  S.lines.sort((a, b) => WORDER.indexOf(a.line) - WORDER.indexOf(b.line));
   const PART = { 体: 'body', 頭: 'head', 盾: 'shield', 手: 'hands', 足: 'feet' };
   const WEIGHT = { 重装: 'heavy', 軽装: 'light', 布: 'cloth' };
   const ta = tables(sectionLines(md, '#### 8.4.2', 4))[1];

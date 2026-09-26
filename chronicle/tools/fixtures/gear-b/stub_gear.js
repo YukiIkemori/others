@@ -15,7 +15,8 @@
   const TWO = { greatsword: 1, spear: 1, bow: 1 };
   const WDESC = { heavy: '重くて守りが固い。', light: '軽くて動きやすい。', cloth: '術から身を守る。' };
   const SN = { str: '腕力', vit: '体力', dex: '器用さ', agi: '素早さ', int: '知力', mnd: '精神' };
-  const add = (id, it) => { if (R.DB.items[id]) return; it._stub = true; R.DB.items[id] = it; };
+  const add = (id, it) => { if (R.DB.items[id] || (R.DB.remap && R.DB.remap.items && R.DB.remap.items[id])) return;   // a SYSTEMS_REWORK-removed id is not stubbed
+    it._stub = true; R.DB.items[id] = it; };
   LINES.forEach(([line, type, sub, units, names, t0], li) => {
     for (let T = 0; T <= 9; T++) {
       const id = (T === 0 && t0) || line + '_' + T;

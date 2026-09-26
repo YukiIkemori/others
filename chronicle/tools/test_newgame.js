@@ -133,7 +133,10 @@ process.on("exit", (c) => { if (!global.__done) console.log("[test ended early (
       const w = sum(a.w), e = sum(a.e);
       budgets[t] = budgets[t] || new Set();
       budgets[t].add(w + e);
-      ok(w >= 15 && w <= 19 && e >= 8 && e <= 12 && (w + e === 26 || w + e === 27), 'C3 ' + t + '/' + f.id + ' budget ' + w + '/' + e, { w, e });
+      // SYSTEMS_REWORK §3.5: the type's 7 weapon letters sum 10–13 before the favour, elements 8–12 (no total-27 rule)
+      const w0 = sum(R.DB.heroTypes[t].apt.w);
+      ok(w0 >= 10 && w0 <= 13 && w <= w0 + 4 && e >= 8 && e <= 12, 'C3 ' + t + '/' + f.id + ' budget ' + w0 + '→' + w + '/' + e, { w0, w, e });
+      ok(Object.keys(a.w).length === 7, 'C3b ' + t + ' has the 7 weapon letters', Object.keys(a.w));
       ok(a[f.kind === 'weapon' ? 'w' : 'e'][f.id] === 'S', 'C4 ' + t + '/' + f.id + ' becomes S');
       const lines = CC.favorLines(t, f);
       ok(lines.length >= 3 && lines.every((l) => R.Text.approxWidth(l.parts.map((p) => p[0]).join('')) <= 142 * 1.4), 'C5 ' + t + '/' + f.id + ' right window lines fit', lines.map((l) => l.parts.map((p) => p[0]).join('')));
@@ -145,12 +148,12 @@ process.on("exit", (c) => { if (!global.__done) console.log("[test ended early (
   eq(CC.previewApt('mage', { kind: 'element', id: 'earth' }).e.dark, 'A', 'C8 mage: earth↔dark');
   eq(CC.previewApt('spellblade', { kind: 'element', id: 'fire' }).e.wind, 'B', 'C9 spellblade has no pair element');
   eq([CC.heroRow('warrior', { kind: 'weapon', id: 'sword' }), CC.heroRow('mage', { kind: 'element', id: 'fire' }), CC.heroRow('ranger', { kind: 'weapon', id: 'bow' }),
-    CC.heroRow('ranger', { kind: 'weapon', id: 'dagger' }), CC.heroRow('wanderer', { kind: 'element', id: 'light' }), CC.heroRow('wanderer', { kind: 'weapon', id: 'whip' })],
+    CC.heroRow('ranger', { kind: 'weapon', id: 'dagger' }), CC.heroRow('wanderer', { kind: 'element', id: 'light' }), CC.heroRow('wanderer', { kind: 'weapon', id: 'staff' })],
   ['front', 'middle', 'middle', 'front', 'middle', 'middle'], 'C10 rows: warrior front, mage middle, auto = reach / element');
-  eq(CC.startActions('spellblade', { kind: 'weapon', id: 'katana' }), { techs: ['t_katana_draw'], spells: ['s_fire_1'] }, 'C11 spellblade weapon favour adds 火の矢');
+  eq(CC.startActions('spellblade', { kind: 'weapon', id: 'staff' }), { techs: ['t_staff_mind'], spells: ['s_fire_1'] }, 'C11 spellblade weapon favour adds 火の矢');
   eq(CC.startActions('spellblade', { kind: 'element', id: 'water' }), { techs: ['t_sword_stepcut'], spells: ['s_water_1'] }, 'C12 spellblade element favour adds 踏み込み斬り');
-  eq([CC.startWeapon('mage', { kind: 'element', id: 'dark' }), CC.startWeapon('wanderer', { kind: 'element', id: 'dark' }), CC.startWeapon('ranger', { kind: 'weapon', id: 'whip' })],
-    ['w_staff_novice', 'w_dagger_iron', 'w_whip_leather'], 'C13 starting weapon: default by type or the favoured weapon');
+  eq([CC.startWeapon('mage', { kind: 'element', id: 'dark' }), CC.startWeapon('wanderer', { kind: 'element', id: 'dark' }), CC.startWeapon('ranger', { kind: 'weapon', id: 'bow' })],
+    ['w_staff_novice', 'w_dagger_iron', 'w_bow_short'], 'C13 starting weapon: default by type or the favoured weapon');
   const ch = CC.changedKeys('mage', { kind: 'element', id: 'water' });
   ok(ch.has('e:water') && ch.has('e:light') && ch.size === 2, 'C14 changed letters = favour + pair', [...ch]);
   // LEAD_DECISIONS D8: the staff users start with 念じ打ち (t_staff_mind)
@@ -171,7 +174,7 @@ process.on("exit", (c) => { if (!global.__done) console.log("[test ended early (
     'b', // step 1 with cancel:false: nothing
     'right,a', // 女
     'down*3,a', // 術剣士
-    'down*5,a', // 武器 5 → 属性: 火 (the heading is skipped)
+    'down*4,a', // 武器 4 (剣・大剣・槍・杖, SYSTEMS_REWORK §3.5) → 属性: 火 (the heading is skipped)
     async () => { ok(topName() === 'NameLayer', 'C15 the name step opens R.NameEntry', topName()); },
     'up,right,right,a', // 決定 with the default name
     async () => { ok(topName() === 'CreateLayer', 'C16 back to the confirm step', topName()); },

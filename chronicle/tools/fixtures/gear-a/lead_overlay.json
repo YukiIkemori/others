@@ -1147,5 +1147,95 @@
   "ac_sr_gull_loot": "お金が増える。アイテムをよく落とす。\nただし風に弱くなる。",
   "ac_sr_cursed_lock": "超レアアイテムを落としやすい。\nただし素早さが下がる。最大HPも下がる。",
   "hn_sr_greedy_hand": "魔物がアイテムを落としやすい。\n盗みが成功しやすい。ただし守備が下がる。"
- }
+ },
+ "_rework": "SYSTEMS_REWORK.md (A18 §2.5, A19 §3.8), applied after d3: 'rework' patches each item's mods (null deletes a key) and sets its desc; 'removed' lists the ids the rework deletes (the save remaps them). A no-op once DESIGN §8 carries it (§4.2-4).",
+ "rework": {
+  "ac_hourglass_wp": {
+   "mods": {
+    "wpCostPct": null,
+    "techCostPct": -15
+   },
+   "desc": "技のMPの消費が減る。"
+  },
+  "ac_ouroboros_ring": {
+   "mods": {
+    "wpRegen": null,
+    "mpRegen": 4
+   },
+   "desc": "戦闘中、MPが少しずつ戻る。\nただし受けるダメージが増える。"
+  },
+  "ac_rl_peak": {
+   "mods": {
+    "wpRegen": null,
+    "mpRegen": 1
+   },
+   "desc": "体力が割合で上がる。MPが戻る。\nただし術のMPの消費が増える。"
+  },
+  "ac_rs_peak": {
+   "mods": {
+    "wpRegen": null,
+    "mpRegen": 2
+   },
+   "desc": "体力と腕力が上がる。MPが戻る。\nただしかわしにくい。"
+  },
+  "ac_tale_isles": {
+   "mods": {
+    "wpRegen": null,
+    "mpRegen": 1
+   },
+   "desc": "器用さが割合で上がる。MPが戻る。\nただし術のMPの消費が増える。"
+  },
+  "ac_rival_pen": {
+   "mods": {
+    "wpCostPct": null,
+    "techCostPct": -15
+   },
+   "desc": "術と技のMPの消費が減る。\nただし術防が下がる。"
+  },
+  "ac_sr_ouroboros": {
+   "mods": {
+    "wpRegen": null,
+    "mpRegen": 3
+   },
+   "desc": "閃きやすい。MPが戻る。\nただし経験値が入らない。"
+  },
+  "hn_r5_int": {
+   "mods": {
+    "wpCostPct": null,
+    "techCostPct": 25
+   },
+   "desc": "術のMPの消費が減る。\nただし技のMPの消費が増える。"
+  },
+  "sh_r9_int": {
+   "mods": {
+    "wpCostPct": null,
+    "techCostPct": 25
+   },
+   "desc": "術のMPの消費が減る。\nただし技のMPの消費が増える。"
+  },
+  "hn_sr_hundred": {
+   "mods": {
+    "wpCostPct": null,
+    "techCostPct": 50
+   },
+   "desc": "会心が出やすい。\nただし技のMPの消費が増える。"
+  },
+  "hn_sr_poisonfrog": {
+   "mods": {
+    "glimPct": {
+     "dagger": 20
+    }
+   },
+   "replaceKeys": [
+    "glimPct"
+   ],
+   "desc": "毒が効かない。短剣の技を閃きやすい。\nただし土に弱くなる。"
+  }
+ },
+ "removed": [
+  "ac_badge_club",
+  "ac_badge_katana",
+  "ac_badge_fist",
+  "ac_badge_whip"
+ ]
 }

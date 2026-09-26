@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// gear-b（A10b）の単体テスト: 道具 58・大事なもの 18・店 34・宝箱のプール 10（DESIGN.md §8.9〜§8.12、§8.14.2、§10.13.6、STYLE_JA）。
+// gear-b（A10b）の単体テスト: 道具 56（SYSTEMS_REWORK §2.5）・大事なもの 18・店 34・宝箱のプール 10（DESIGN.md §8.9〜§8.12、§8.14.2、§10.13.6、STYLE_JA）。
 //
 //   node tools/test_gear-b.js            失敗なら exit 1
 //   node tools/test_gear-b.js -v         詳しく
@@ -104,9 +104,9 @@ const FX_KINDS = new Set('slash pierce strike claw bite fire ice thunder wind ea
 const STATUSES = new Set('poison burn sleep paralyze freeze stun confuse silence blind regen veil counter nimble cover'.split(' '));
 const EL = ['fire', 'water', 'wind', 'earth', 'light', 'dark'];
 
-check('C1', '道具 58（§8.9 の 35 ＋ §8.9.2 の 23）の id がそろい、ほかに道具が無い', () => {
+check('C1', '道具 56（§8.9 の 35 ＋ §8.9.2 の 23、SYSTEMS_REWORK §2.5 で気力の茶・気力の実を削除）の id がそろい、ほかに道具が無い', () => {
   const want = SPEC_C.map((c) => c.id), errs = [];
-  if (want.length !== 58) errs.push(`DESIGN の表が ${want.length} 行（58 のはず）`);
+  if (want.length !== 56) errs.push(`DESIGN の表（改訂後）が ${want.length} 行（56 のはず）`);
   for (const id of want) if (!DB.items[id]) errs.push(`無い: ${id}`); else if (DB.items[id].type !== 'consumable') errs.push(`${id} の type が ${DB.items[id].type}`);
   for (const id of MY_C) if (!want.includes(id)) errs.push(`表に無い道具: ${id}`);
   for (const [id] of items(() => true)) if (id.startsWith('i_') && !want.includes(id)) errs.push(`i_ の id を表の外で使っている: ${id}`);
@@ -128,7 +128,7 @@ check('C2', '名前・値段・対象・効果・演出・戦闘/フィールド
   }
   return errs;
 });
-check('C3', 'grade と src（店 29 = normal/shop、6 = rare/drop、レア魔物の道具 23 = rare/relic）', () => {
+check('C3', 'grade と src（店 28 = normal/shop、5 = rare/drop、レア魔物の道具 23 = rare/relic）', () => {
   const errs = [], n = { shop: 0, drop: 0, relic: 0 };
   for (const c of SPEC_C) {
     const it = DB.items[c.id]; if (!it) continue;
@@ -136,7 +136,7 @@ check('C3', 'grade と src（店 29 = normal/shop、6 = rare/drop、レア魔物
     if (it.grade !== want[0] || it.src !== want[1]) errs.push(`${c.id} ${it.grade}/${it.src} ≠ ${want.join('/')}`);
     n[want[1]]++;
   }
-  if (n.shop !== 29 || n.drop !== 6 || n.relic !== 23) errs.push(`数 shop ${n.shop} drop ${n.drop} relic ${n.relic}（29/6/23 のはず）`);
+  if (n.shop !== 28 || n.drop !== 5 || n.relic !== 23) errs.push(`数 shop ${n.shop} drop ${n.drop} relic ${n.relic}（28/5/23 のはず）`);
   return errs;
 });
 check('C4', 'レア魔物の道具の exclusive = そのレア魔物、魔石の stone = 属性（ほかの道具は持たない）', () => {
@@ -404,10 +404,11 @@ check('S6', 'どの通常品（src:shop の装備 532・道具 29）も、どこ
   const sold = new Set();
   for (const s of Object.values(DB.shops)) for (const st of STATES) for (const i of shopItems(s, st)) sold.add(i);
   const want = items((it) => it.src === 'shop' && it.type !== 'key');
-  const errs = want.filter(([id]) => !sold.has(id)).map(([id]) => `どこにも売っていない: ${id}`);
+  // SYSTEMS_REWORK §3.2: 打ち刀 (w_sword_uchi) is a T0 normal that no shop step lists (シグレ・ヴィオラの初期装備)
+  const errs = want.filter(([id]) => !sold.has(id) && id !== 'w_sword_uchi').map(([id]) => `どこにも売っていない: ${id}`);
   const nEq = want.filter(([, it]) => it.type !== 'consumable').length, nC = want.filter(([, it]) => it.type === 'consumable').length;
   errs.push(`note: 通常品 ${want.length}（装備 ${nEq}・道具 ${nC}）をすべての店・ティアで確かめた`);
-  if (nEq !== 532) errs.push(`note: 装備の通常品が ${nEq}（本物と仮の合計。532 のはず）`);
+  if (nEq !== 503) errs.push(`note: 装備の通常品が ${nEq}（本物と仮の合計。503 のはず: 武器 91 + 防具 300 + アクセ 112）`);
   return errs;
 });
 check('S7', '武器屋・防具屋は今のティアの系列の品だけ（T3 から腕章・赤布・ブローチ）、クリア後のファロスとビブリアは T9', () => {
@@ -529,12 +530,13 @@ check('P4', 'プールに超レア・遺物・報酬・魔物のレア品・一�
   }
   return [...new Set(errs)];
 });
-check('P5', 'p_gear はその T の通常の装備 48（武器 12・防具 30・能力のアクセサリ 6）。p_weapon/p_armor/p_acc/p_boss_mid はその一部・同じ', () => {
+check('P5', 'p_gear はその T の通常の装備（武器 9 系列 ＋ T0 の打ち刀・防具 30・能力のアクセサリ 6、SYSTEMS_REWORK §3.3）。p_weapon/p_armor/p_acc/p_boss_mid はその一部・同じ', () => {
   const errs = [];
   for (let T = 0; T < 10; T++) {
     const g = DB.pools.p_gear.tiers[T].map((e) => e.item);
     const by = (t) => g.filter((i) => DB.items[i] && t.includes(DB.items[i].type)).length;
-    if (g.length !== 48 || by(['weapon']) !== 12 || by(['shield', 'head', 'body', 'hands', 'feet']) !== 30 || by(['acc']) !== 6) errs.push(`T${T}: ${g.length} 品（武器 ${by(['weapon'])}・防具 ${by(['shield', 'head', 'body', 'hands', 'feet'])}・アクセ ${by(['acc'])}）`);
+    const nw = S.lines.filter((l) => l.type === 'weapon').length + (T === 0 ? 1 : 0);
+    if (g.length !== nw + 36 || by(['weapon']) !== nw || by(['shield', 'head', 'body', 'hands', 'feet']) !== 30 || by(['acc']) !== 6) errs.push(`T${T}: ${g.length} 品（武器 ${by(['weapon'])}・防具 ${by(['shield', 'head', 'body', 'hands', 'feet'])}・アクセ ${by(['acc'])}）`);
     for (const i of g) { const it = DB.items[i]; if (it.tier !== T || it.grade !== 'normal' || !it.line) errs.push(`T${T}: ${i} tier ${it.tier}`); }
     if (DB.pools.p_gear.tiers[T].some((e) => e.w !== 1)) errs.push(`T${T}: 重みが 1 でない`);
     const lines = new Set(g.map((i) => DB.items[i].line)); if (lines.size !== g.length) errs.push(`T${T}: 同じ系列が 2 つ`);
@@ -544,7 +546,7 @@ check('P5', 'p_gear はその T の通常の装備 48（武器 12・防具 30・
   }
   return errs;
 });
-check('P6', 'p_rare・p_boss は帯 RB(T) の帯のレア品（src:drop の装備）だけ。p_rare は重み 2、T4 から道具 3 と実 3', () => {
+check('P6', 'p_rare・p_boss は帯 RB(T) の帯のレア品（src:drop の装備）だけ。p_rare は重み 2、T4 から道具 3 と実 2（気力の実は削除、A18）', () => {
   const errs = [], notes = [];
   for (let T = 0; T < 10; T++) {
     const band = items((it) => it.src === 'drop' && it.grade === 'rare' && it.type !== 'consumable' && it.tier === RB[T]).map(([id]) => id).sort();
@@ -554,7 +556,8 @@ check('P6', 'p_rare・p_boss は帯 RB(T) の帯のレア品（src:drop の装�
     if (eqs.some((e) => e.w !== 2)) errs.push(`T${T}: p_rare の装備の重みが 2 でない`);
     if (!eq(pb.map((e) => e.item).sort(), band) || pb.some((e) => e.w !== 1)) errs.push(`T${T}: p_boss が帯の品（重み 1）でない`);
     const cons = pr.filter((e) => DB.items[e.item].type === 'consumable').map((e) => e.item).sort();
-    const wantC = T >= 4 ? ['i_grace', 'i_lifedew', 'i_phoenix', 'i_seed_hp', 'i_seed_mp', 'i_seed_wp'] : [];
+    const wantC = T >= 4 ? ['i_grace', 'i_lifedew', 'i_phoenix', 'i_seed_hp', 'i_seed_mp'] : [];
+    if (T >= 4 && (pr.find((e) => e.item === 'i_seed_mp') || {}).w !== 2) errs.push(`T${T}: p_rare の魔力の実の重みが 2 でない（SYSTEMS_REWORK §2.5）`);
     if (!eq(cons, wantC)) errs.push(`T${T}: p_rare の道具 ${cons.join(' ')}`);
     if (T % 2 === 0) notes.push(`T${T}/${T + 1}→帯${RB[T]} ${band.length}`);
   }
@@ -709,12 +712,12 @@ check('O1', 'どの道具も手に入る（店・宝箱のプール・魔物の�
   if (!haveMons) errs.push('note: DB.monsters が空なので、魔物の枠の確かめを飛ばした');
   return errs;
 });
-check('O2', '実の数（本編）: ボスの bonus で 活力 9・魔力 6・気力 5（§9.12.8）。よみがえりの花は魔物の通常枠 7 種（§9.12.3）', () => {
+check('O2', '実の数（本編）: ボスの bonus で 活力 9・魔力 11（§9.12.8 の気力 5 は魔力に、A18）。よみがえりの花は魔物の通常枠 7 種（§9.12.3）', () => {
   const mons = DB.monsters || {};
   if (!Object.keys(mons).length) return ['note: DB.monsters が空'];
   const cnt = (id, slot) => Object.values(mons).filter((m) => m.drops && m.drops[slot] && m.drops[slot].item === id).length;
   const errs = [];
-  const want = { i_seed_hp: 9, i_seed_mp: 6, i_seed_wp: 5 };
+  const want = { i_seed_hp: 9, i_seed_mp: 11 };
   for (const [id, n] of Object.entries(want)) if (cnt(id, 'bonus') !== n) errs.push(`${id} bonus ${cnt(id, 'bonus')} ≠ ${n}`);
   if (cnt('i_phoenix', 'normal') !== 7) errs.push(`i_phoenix の通常枠 ${cnt('i_phoenix', 'normal')} ≠ 7`);
   return errs;

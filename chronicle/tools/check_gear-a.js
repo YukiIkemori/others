@@ -357,6 +357,16 @@ function expected() {
     if (!X[id]) throw new Error('lead_overlay wording: unknown id ' + id);
     if (X[id].desc !== undefined) X[id].desc = d;
   }
+  // SYSTEMS_REWORK (A18 §2.5 WP → MP / techCostPct, A19 §3.8 the 7 weapon types) on top of DESIGN + d3
+  for (const [id, r] of Object.entries(OV.rework || {})) {
+    const x = X[id];
+    if (!x) throw new Error('lead_overlay rework: unknown id ' + id);
+    x.mods = Object.assign({}, x.mods || {});
+    for (const k of r.replaceKeys || []) delete x.mods[k];
+    for (const [k, v] of Object.entries(r.mods || {})) { if (v === null) delete x.mods[k]; else x.mods[k] = v; }
+    if (r.desc !== undefined) x.desc = r.desc;
+  }
+  for (const id of OV.removed || []) delete X[id];
   return X;
 }
 

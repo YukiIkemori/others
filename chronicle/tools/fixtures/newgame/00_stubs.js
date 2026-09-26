@@ -8,7 +8,7 @@
   'use strict';
   const DB = R.DB;
   const SLOTS = ['weapon1', 'weapon2', 'shield', 'head', 'body', 'hands', 'feet', 'acc1', 'acc2'];
-  const W = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'club', 'staff', 'katana', 'fist', 'whip'];
+  const W = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'staff'];   // SYSTEMS_REWORK §3.1
   const E = ['fire', 'water', 'wind', 'earth', 'light', 'dark'];
   const F = (R.NGFixture = { stubbed: [] });
   const TWO = { greatsword: 1, spear: 1, bow: 1 };
@@ -44,11 +44,11 @@
     const equip = {};
     for (const s of SLOTS) equip[s] = c.equip[s] || null;
     const out = {
-      id: c.id, name: c.name, gender: c.gender, level: lv, exp: 0, bonus: { hp: 0, mp: 0, wp: 0 }, status: {}, equip, wprof, eprof,
+      id: c.id, name: c.name, gender: c.gender, level: lv, exp: 0, bonus: { hp: 0, mp: 0 }, status: {}, equip, wprof, eprof,
       techs: c.techs, spells: c.spells, row: c.row, mem: { cmd: 0, list: {}, item: 0, target: null }, joined: { tier: 0, frame: 0 }, counts: { battles: 0, kills: 0, glimmers: 0 },
     };
     if (c.heroType) { out.heroType = c.heroType; out.favor = c.favor; }
-    out.hp = F.maxOf(out, 'hp'); out.mp = F.maxOf(out, 'mp'); out.wp = F.maxOf(out, 'wp');
+    out.hp = F.maxOf(out, 'hp'); out.mp = F.maxOf(out, 'mp');
     return out;
   }
   F.maxOf = function (c, k) {
@@ -91,7 +91,7 @@
 
   // ------------------------------------------------------------ R.Party (§3.3.4) when rules has not landed it
   const all = () => R.Game.party.concat(R.Game.reserve);
-  const heal = (c) => { c.hp = F.maxOf(c, 'hp'); c.mp = F.maxOf(c, 'mp'); c.wp = F.maxOf(c, 'wp'); c.status = {}; };
+  const heal = (c) => { c.hp = F.maxOf(c, 'hp'); c.mp = F.maxOf(c, 'mp'); c.status = {}; };
   const stubParty = {
     MAX: 4,
     candidates: () => Object.keys(DB.companions),

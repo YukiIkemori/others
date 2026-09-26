@@ -46,7 +46,7 @@ const I = (id) => DB.items[id];
 const STATS = ['str', 'vit', 'dex', 'agi', 'int', 'mnd'];
 const ELEMENTS = ['fire', 'water', 'wind', 'earth', 'light', 'dark'];
 const STATUSES = ['poison', 'burn', 'sleep', 'paralyze', 'freeze', 'stun', 'confuse', 'silence', 'blind', 'death'];
-const WTYPES = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'club', 'staff', 'katana', 'fist', 'whip'];
+const WTYPES = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'staff'];   // SYSTEMS_REWORK §3.1 (A19)
 const WEIGHT_STATS = { heavy: ['str', 'vit'], light: ['dex', 'agi'], cloth: ['int', 'mnd'] };
 const U = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6];
 const GM = { normal: 1, rare: 2, super: 3 };
@@ -139,10 +139,10 @@ section('1 lines and ids (§8.1.1, §8.1.2)', () => {
   }
   const count = (f) => MINE.filter((id) => f(I(id))).length;
   const n = { armor: count((it) => it.type !== 'acc'), acc: count((it) => it.type === 'acc') };
-  ok(n.armor === 480 && n.acc === 265, `counts armor ${n.armor}/480, accessories ${n.acc}/265 (§8.1.3)`);
+  ok(n.armor === 480 && n.acc === 261, `counts armor ${n.armor}/480, accessories ${n.acc}/261 (§8.1.3 less the 4 badges of SYSTEMS_REWORK §3.8)`);
   const by = (type, src) => count((it) => (type === 'acc' ? it.type === 'acc' : it.type !== 'acc') && it.src === src);
   const EXPECT = [['armor', 'shop', 300], ['armor', 'drop', 52], ['armor', 'mdrop', 42], ['armor', 'super', 85], ['armor', 'reward', 1],
-    ['acc', 'shop', 112], ['acc', 'drop', 19], ['acc', 'mdrop', 40], ['acc', 'super', 41], ['acc', 'relic', 42], ['acc', 'reward', 11]];
+    ['acc', 'shop', 108], ['acc', 'drop', 19], ['acc', 'mdrop', 40], ['acc', 'super', 41], ['acc', 'relic', 42], ['acc', 'reward', 11]];
   for (const [t, s, e] of EXPECT) ok(by(t, s) === e, `${t} src '${s}': ${by(t, s)} ≠ ${e}`);
 });
 
@@ -231,10 +231,10 @@ const STAT_PCT = new Set(STATS.map((s) => s + 'Pct'));
 // §8.3.5 caps (absolute values) per class [normal, rare, super, relic-rare, relic-super]; null = not allowed
 const LIM = {
   crit: [null, 20, 20, 10, 20], hit: [null, 15, 15, 10, 20], atk: [null, 10, 20, null, null], def: [null, 10, 20, null, null], mdef: [null, 10, 20, null, null],
-  elemBoost: [10, 20, 30, 20, 30], hpPct: [null, 15, 20, 15, 20], mpPct: [null, 20, 25, 15, 20], wpPct: [null, 20, 25, 15, 20],
-  regen: [null, true, true, true, true], mpRegen: [null, 3, 3, 1, 2], wpRegen: [null, 3, 3, 1, 2],
+  elemBoost: [10, 20, 30, 20, 30], hpPct: [null, 15, 20, 15, 20], mpPct: [null, 20, 25, 15, 20],
+  regen: [null, true, true, true, true], mpRegen: [null, 4, 3, 1, 2],   // rare 4: 円環のかけら (SYSTEMS_REWORK §2.5: its MP 3 + WP 3 → MP 4)
   physPct: [10, 15, 25, 15, 25], magicPct: [10, 15, 25, 15, 25], healPct: [20, 35, 50, 35, 35], itemPct: [30, 50, 50, null, null],
-  mpCostPct: [15, 25, 35, 15, 35], wpCostPct: [15, 25, 35, 15, 35], mag: [null, 'T', '2T', null, null],
+  mpCostPct: [15, 25, 35, 15, 35], techCostPct: [15, 25, 35, 15, 35], mag: [null, 'T', '2T', null, null],
   glimPct: [10, 15, 20, 15, 20], profPct: [20, 35, 50, null, null],
   dropPct: [10, 20, 30, 20, 30], rarePct: [10, 20, 30, 20, 30], superPct: [null, 20, 30, 20, 30], goldPct: [10, 20, 30, 20, 30],
   expPct: [10, 15, 20, 15, null], encounterPct: [50, 50, 50, 50, null], rareEncPct: [null, 20, 30, 20, 30], goldenPct: [null, 20, 30, 20, 30],
@@ -247,8 +247,8 @@ const SRES = [[0.5, 1], [0.5, 3], [0.6, 3], [0.5, 3], [0.5, 3]];                
 // §8.3.6 quirk ranges [rare (weak), super (strong)] — the largest allowed harm
 const QLIM = { defPct: [-25, -50], mdefPct: [-25, -50], takenPct: [15, 30], hpPct: [-10, -30], spd: [-15, -30], eva: [-10, -20], hit: [-10, -20],
   elemResist: [1.25, 2], statusResist: [-0.25, -0.5], expPct: [-25, -50], goldPct: [-25, -50], encounterPct: [50, 50], mpCostPct: [25, 50],
-  wpCostPct: [25, 50], glimPct: [-50, -100], noSpell: [null, true], hpLoss: [null, 5], statsAdd: [1, 2] };
-const QUIRK_IF = { takenPct: (v) => v > 0, hpLoss: () => true, noSpell: () => true, mpCostPct: (v) => v > 0, wpCostPct: (v) => v > 0 };
+  techCostPct: [25, 50], glimPct: [-50, -100], noSpell: [null, true], hpLoss: [null, 5], statsAdd: [1, 2] };
+const QUIRK_IF = { takenPct: (v) => v > 0, hpLoss: () => true, noSpell: () => true, mpCostPct: (v) => v > 0, techCostPct: (v) => v > 0 };
 
 /** split an item into effect keys, quirk keys and stat-% keys */
 function analyse(it, r) {
@@ -447,9 +447,9 @@ section('6 names ≤ 9 / unique / STYLE_JA §7 / jōyō; desc 2 × 20', () => {
 });
 
 // ------------------------------------------------------------------ 7. mods keys
-const MOD_KEYS = new Set(('atk def mdef hit eva crit spd mag strPct vitPct dexPct agiPct intPct mndPct hpPct mpPct wpPct defPct mdefPct ' +
-  'physPct magicPct healPct itemPct takenPct mpCostPct wpCostPct elemBoost elemResist statusImmune statusResist profPct glimPct expPct ' +
-  'goldPct dropPct rarePct superPct rareEncPct goldenPct preemptPct escapePct stealPct autoSteal encounterPct regen mpRegen wpRegen ' +
+const MOD_KEYS = new Set(('atk def mdef hit eva crit spd mag strPct vitPct dexPct agiPct intPct mndPct hpPct mpPct defPct mdefPct ' +
+  'physPct magicPct healPct itemPct takenPct mpCostPct techCostPct elemBoost elemResist statusImmune statusResist profPct glimPct expPct ' +
+  'goldPct dropPct rarePct superPct rareEncPct goldenPct preemptPct escapePct stealPct autoSteal encounterPct regen mpRegen ' +
   'startBuffs noSpell hpLoss autoRevive autoCounter walkHeal noFloorDamage').split(' '));
 const ITEM_KEYS = new Set('name type grade tier desc price units line src exclusive unique quirk sort icon stats statsAdd mods weight def mdef eva'.split(' '));
 section('7 mods keys and sub-keys (§3.3.16); item fields (§8.2.1)', () => {
