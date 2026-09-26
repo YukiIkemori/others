@@ -875,7 +875,8 @@ function main() {
   //                      that stage (world lvOff 0 and dungeon lvOff 1 alternately), HP lost / rounds
   //   --fit <out.json>   also write a candidate overlay (the current one ⊕ s.hp / s.atk / s.mag per species) that moves
   //                      every species toward HP lost FIT_LOST and FIT_ROUNDS rounds; damped, so run it 2–3 times
-  //                      (--tuning <previous out.json>) and then check M1 with --tuning
+  //                      (--tuning <previous out.json>) and then check M1 with --tuning. Per lineage and stat the
+  //                      stages move one way (§9.13.1; --fit-free lifts that)
   if (flag('species') || opt('fit', null)) {
     const FIT = opt('fit', null);
     const L_T = Number(opt('fit-lost', 0.095)), R_T = Number(opt('fit-rounds', 2.8)), DAMP = Number(opt('fit-damp', 0.8));
@@ -922,13 +923,31 @@ function main() {
         const cur = Object.assign({}, DB.monsters[r.id].s || {});
         const sv = Object.assign({}, cur);
         sv.hp = r2(clamp((cur.hp != null ? cur.hp : 1) * fh, 0.5, 2.5));
-        sv.atk = r2(clamp((cur.atk != null ? cur.atk : 1) * fd, 0.5, 2.5));
-        sv.mag = r2(clamp((cur.mag != null ? cur.mag : 1) * fd, 0.5, 2.5));
+        sv.atk = r2(clamp((cur.atk != null ? cur.atk : 1) * fd, 0.3, 2.5));
+        sv.mag = r2(clamp((cur.mag != null ? cur.mag : 1) * fd, 0.3, 2.5));
         for (const k of Object.keys(sv)) if (sv[k] === 1) delete sv[k];
         const e = base.monsters[r.id] = base.monsters[r.id] || {};
         e.s = sv;
         const why = `sim_zones --fit (game engine, pure group ×${r.cnt} at T${r.T}): HP lost ${pct(r.lostN)} → ${pct(L_T)}, rounds ${r.roundsN.toFixed(2)} → ${R_T}`;
         e.why = e.desc ? why + ' ／ ' + String(e.why || '').split(' ／ ').filter((x) => x.startsWith('desc:')).join(' ／ ') : why;
+      }
+      // §9.13.1: a lineage's s moves one way for all its stages. Per lineage and stat, the direction (vs DESIGN) with the
+      // larger total log-change wins; stages that wanted the other way keep their DESIGN value for that stat.
+      if (!flag('fit-free')) {
+        const byL = {};
+        for (const r of rows) (byL[r.lid] = byL[r.lid] || []).push(r.id);
+        for (const ids of Object.values(byL)) {
+          for (const k of ['hp', 'atk', 'mag']) {
+            const lr = ids.map((id) => { const d = (Dd.mons[id].s || {})[k]; const e = base.monsters[id].s[k]; return Math.log((e != null ? e : 1) / (d != null ? d : 1)); });
+            const up = lr.filter((x) => x > 0).reduce((a, b) => a + b, 0), dn = -lr.filter((x) => x < 0).reduce((a, b) => a + b, 0);
+            ids.forEach((id, i) => {
+              if ((up >= dn && lr[i] < 0) || (dn > up && lr[i] > 0)) {
+                const d = (Dd.mons[id].s || {})[k];
+                if (d == null || d === 1) delete base.monsters[id].s[k]; else base.monsters[id].s[k] = d;
+              }
+            });
+          }
+        }
       }
       delete base.global;
       fs.writeFileSync(FIT, JSON.stringify(base, null, 2) + '\n');

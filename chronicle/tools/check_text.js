@@ -279,7 +279,7 @@ function main() {
   }
   const by = {};
   for (const f of list) { const k = f.rule + ':' + f.level[0]; by[k] = (by[k] || 0) + 1; }
-  console.log(`\ncheck_text: ${errs.length} error(s), ${warns.length} warning(s) in ${res.nStrings} Japanese strings — rules ${Object.entries(by).sort().map(([k, v]) => k + ' ' + v).join(', ') || 'none'}` +
+  console.log(`\ncheck_text: ${errs.length} error(s), ${warns.length} warning(s) in ${res.nStrings} Japanese strings — by rule: ${Object.entries(by).sort().map(([k, v]) => k + ' ' + v).join(', ') || 'none'}` +
     ` — lists: §7.1 ${res.lists.partial}, §7.2 ${res.lists.exact}, §7.3 ${res.lists.src}, §2 ${res.lists.allowedKanji} kanji, joyo ${res.lists.joyo} — ${Date.now() - t0} ms`);
   process.exitCode = errs.length ? 1 : 0;
 }

@@ -55,6 +55,8 @@ function party(key, build) {
   return { party: b.party.map((c) => JSON.parse(JSON.stringify(c))), inv: Object.assign({}, b.inv), notes: b.notes };
 }
 function standardParty(T, kind) { return party(`std:${T}:${kind || 'mob'}`, () => PM.standard(R, T, { kind })); }
+// §4.17.1: mobs at LZ(T)+1, but the final region (finale) at Lv 56; the post-game zones are not a §4.17.3 A2 region
+const zoneKind = (e) => (e.region === 'finale' ? 'final' : 'mob');
 function startAt(p, frac) {
   for (const c of p.party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = Math.round(st.mp * frac); c.wp = Math.round(st.wp * frac); c.status = {}; }
   return p;
@@ -74,7 +76,8 @@ function zoneTiers(e) {
 }
 function bossKind(tid) {
   const tr = DB.troops[tid];
-  const first = tr && tr.mons && tr.mons.map((m) => DB.monsters[m[0]]).find((m) => m && m.bossType);
+  // the troop's main boss: skip the minions (bossType 'add') and lineage refs ('@mummy')
+  const first = tr && tr.mons && tr.mons.map((m) => DB.monsters[m[0]]).find((m) => m && m.bossType && m.bossType !== 'add');
   if (first) return first.bossType;
   if (Object.values(DB.regions || {}).some((r) => r.bossTroop === tid)) return 'region';
   return 'mid';
@@ -105,9 +108,10 @@ function A1() {
 const zoneData = [];
 function A2() {
   const list = zoneList().filter(([, e]) => e.region !== 'prologue');
+  const pgData = [];
   if (!list.length) { res('A2', 'SKIP', '-', '', 'no encounter zones'); return; }
   for (const [z, e] of list) for (const T of zoneTiers(e)) {
-    const kind = 'mob';
+    const kind = zoneKind(e);
     const n = NBASE;
     const acc = { z, T, region: e.region, n: 0, win: 0, rounds: [], loss: [], net: [], down: 0, wipe: 0, mp: [], wp: [], casts: 0 };
     for (let i = 0; i < n; i++) {
@@ -123,10 +127,14 @@ function A2() {
       const ci = casterIndex(p); if (ci >= 0) acc.casts += r.casts[ci] || 0;
     }
     if (!acc.n) continue;
-    zoneData.push(acc);
+    (e.region === 'postgame' ? pgData : zoneData).push(acc);
     if (VERBOSE) log(`  ${z.padEnd(24)} T${T} n${acc.n} win ${f1(pct(acc.win, acc.n))}% rounds ${f2(mean(acc.rounds))} HP-${f1(mean(acc.loss))}% (p95 ${f1(q(acc.loss, 0.95))}) net-${f1(mean(acc.net))}% down ${f1(pct(acc.down, acc.n))}% MP ${f1(mean(acc.mp))}% WP ${f1(mean(acc.wp))}% casts ${f2(acc.casts / acc.n)}`);
   }
   if (!zoneData.length) { res('A2', 'SKIP', '-', '', 'no zone could be simulated'); return; }
+  if (pgData.length) {
+    const L = pgData.flatMap((a) => a.loss), W = pgData.reduce((s2, a) => s2 + a.win, 0), N = pgData.reduce((s2, a) => s2 + a.n, 0);
+    res('A2pg', 'INFO', `post-game mobs: win ${f1(pct(W, N))}% HP-loss ${f1(mean(L))}% (p95 ${f1(q(L, 0.95))}%) — ${pgData.map((a) => `${a.z} ${f1(mean(a.loss))}%`).join(' ')}`, 'not a §4.17.3 item', 'party Lv LZ(9)+1');
+  }
   const all = { n: 0, win: 0, down: 0, wipe: 0, rounds: [], loss: [], mp: [], wp: [], casts: 0 };
   for (const a of zoneData) { all.n += a.n; all.win += a.win; all.down += a.down; all.wipe += a.wipe; all.rounds.push(...a.rounds); all.loss.push(...a.loss); all.mp.push(...a.mp); all.wp.push(...a.wp); all.casts += a.casts; }
   const zoneMeans = zoneData.map((a) => ({ k: `${a.z}@T${a.T}`, m: mean(a.loss) }));
@@ -191,7 +199,7 @@ function A3b() {
   }
   if (!ends.length) { res('A3b', 'SKIP', '-', '', 'no caster / no chain finished'); return; }
   const m = mean(ends);
-  res('A3b', m >= 30 && q(ends, 0.1) >= 15 && !wipes ? 'PASS' : 'FAIL', `caster MP left ${f1(m)}% (p10 ${f1(q(ends, 0.1))}%), ${wipes} wipe(s) in ${chains} floors`, '≥ 30% of max MP after 8–12 fights, no rest', 'second half of each floor at lvOff 2');
+  res('A3b', m >= 30 && !wipes ? 'PASS' : 'FAIL', `caster MP left ${f1(m)}% (p10 ${f1(q(ends, 0.1))}%), ${wipes} wipe(s) in ${chains} floors`, '≥ 30% of max MP after 8–12 fights, no rest', 'second half of each floor at lvOff 2');
 }
 
 // ------------------------------------------------------------------------------------ bosses
@@ -301,8 +309,12 @@ function C() {
   // C1: final region mobs (A2 at tier 8 zones) and mid bosses at Lv 56
   const fin = zoneData.filter((a) => DB.encounters[a.z].region === 'finale');
   if (fin.length) {
-    const all = fin.flatMap((a) => a.loss), wins = fin.reduce((s, a) => s + a.win, 0), n = fin.reduce((s, a) => s + a.n, 0);
-    res('C1a', pct(wins, n) >= 99.5 && mean(all) >= 5 && mean(all) <= 15 ? 'PASS' : 'FAIL', `final mobs: win ${f1(pct(wins, n))}% HP-loss ${f1(mean(all))}%`, 'as A2', '');
+    // "A2 と同じ": the whole A2 row, applied to the final region's zones (party Lv 56, §4.17.1)
+    const all = fin.flatMap((a) => a.loss), rnds = fin.flatMap((a) => a.rounds), wins = fin.reduce((s, a) => s + a.win, 0), n = fin.reduce((s, a) => s + a.n, 0);
+    const downs = fin.reduce((s, a) => s + a.down, 0), wipes = fin.reduce((s, a) => s + a.wipe, 0);
+    const zm = fin.map((a) => ({ k: a.z, m: mean(a.loss) })), outZ = zm.filter((x) => x.m < 5 || x.m > 15);
+    const ok = pct(wins, n) >= 99.5 && mean(rnds) >= 2.5 && mean(rnds) <= 3.5 && mean(all) >= 8 && mean(all) <= 12 && !outZ.length && q(all, 0.95) <= 20 && pct(downs, n) <= 3 && pct(wipes, n) <= 0.1;
+    res('C1a', ok ? 'PASS' : 'FAIL', `final mobs (Lv 56): win ${f1(pct(wins, n))}% rounds ${f2(mean(rnds))} HP-loss ${f1(mean(all))}% (${zm.map((x) => `${x.k} ${f1(x.m)}`).join(' ')}) p95 ${f1(q(all, 0.95))}% downs ${f1(pct(downs, n))}%`, 'as A2 (loss 8–12, every zone 5–15, rounds 2.5–3.5 …)', `${n} fights`);
   }
   const fmid = bossTroops((t, tr) => tr.tier === 8 && !/nemrea/.test(t));
   if (fmid.length) {
@@ -312,7 +324,7 @@ function C() {
       const a = bossRun(p, tid, 8, Math.max(8, Math.round(NBASE / 2)));
       if (a) rows.push({ tid, win: pct(a.win, a.n), rounds: mean(a.rounds), deaths: mean(a.deaths) });
     }
-    if (rows.length) res('C1b', rows.every((r) => r.win >= 85 && r.deaths <= 1) ? 'PASS' : 'FAIL', rows.map((r) => `${r.tid.replace('tr_b_', '')} ${f1(r.win)}%/${f1(r.rounds)}r`).join(' '), 'win ≥ 85 · deaths ≤ 1.0 (Lv 56)', '');
+    if (rows.length) res('C1b', rows.every((r) => r.win >= 85 && r.deaths <= 1 && r.rounds >= 9 && r.rounds <= 12) ? 'PASS' : 'FAIL', rows.map((r) => `${r.tid.replace('tr_b_', '')} ${f1(r.win)}%/${f1(r.rounds)}r/${f2(r.deaths)}d`).join(' '), 'win ≥ 85 · rounds 9–12 (§4.14.3 最終ダンジョンの中ボス) · deaths ≤ 1.0 (Lv 56)', '');
   }
   // C2: last boss, two forms back to back (after-battle recovery in between)
   if (DB.troops.tr_b_nemrea1 && DB.troops.tr_b_nemrea2) {

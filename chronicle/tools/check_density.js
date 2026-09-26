@@ -19,6 +19,7 @@ const INTERIOR = new Set(['floor', 'wood', 'carpet']);
 const FURNITURE = new Set(['counter', 'table', 'bed', 'bookshelf', 'shelf', 'pot', 'barrel', 'crate', 'throne', 'pillar', 'altar', 'statue', 'sign', 'well', 'pedestal', 'grave']);
 const SOFT = new Set(['chair']);
 const WALLS = new Set(['wall', 'wall_torch', 'housewall', 'roof', 'void', 'rock', 'pillar']);
+const STREET = { minCells: 300, minDoors: 4 };
 const TARGET = { block: [0.15, 0.25], blockMax: 0.30, soft: [0.05, 0.15], wallDecor: [1 / 4, 1 / 3] };
 
 function analyseMap(R, P) {
@@ -30,7 +31,8 @@ function analyseMap(R, P) {
   const occupied = new Set();
   for (const o of [].concat(P.npcs, P.chests, P.events.filter((e) => e.trigger !== 'step'), P.signs)) occupied.add(o.x + ',' + o.y);
   const seen = new Uint8Array(W * H);
-  const rooms = [];
+  const rooms = [], streets = [];
+  rooms.streets = streets;
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
     if (seen[y * W + x] || !roomCell(x, y) || !INTERIOR.has(tile(x, y))) continue;
     const cells = [];
@@ -58,6 +60,11 @@ function analyseMap(R, P) {
       if (isDoor(nx, ny) || WALLS.has(t) || (!td.pass && !/water|bog|lava/.test(t) && !FURNITURE.has(t))) wallB++; else openB++;
     }
     if (openB > 0.2 * (wallB + openB)) continue;
+    // a walled town's street (a cavern town, a city inside its walls) is closed too, but it is the outdoor floor that
+    // the houses open onto — many building doors on its edge — not "1 部屋" of §11.2.7
+    const doorSet = new Set();
+    for (const [cx, cy] of cells) for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) if (isDoor(cx + dx, cy + dy) && !inside.has((cx + dx) + ',' + (cy + dy))) doorSet.add((cx + dx) + ',' + (cy + dy));
+    if (cells.length > STREET.minCells && doorSet.size >= STREET.minDoors) { streets.push({ size: cells.length, doors: doorSet.size }); continue; }
     rooms.push(measure(R, P, cells, { tile, isDoor, occupied }));
   }
   return rooms;
@@ -158,7 +165,7 @@ function run(opts) {
   const DB = R.DB;
   const findings = [], table = {};
   const own = (id) => { const f = prov && prov.maps && prov.maps[id]; return f ? V.ownerOfFile(f) : V.expectedMapOwner(id) || '?'; };
-  const pct = (x) => Math.round(100 * x) + '%';
+  const pct = (x) => (Math.round(1000 * x) / 10) + '%';
   for (const id of Object.keys(DB.maps || {})) {
     if (opts.map && id !== opts.map) continue;
     const d = DB.maps[id];
@@ -197,7 +204,8 @@ function main() {
     res.table[arg('map')].forEach((r, i) => console.log(`  ${String(i + 1).padStart(4)} ${String(r.size).padStart(5)} ${String(Math.round(100 * r.block)).padStart(5)}% ${String(Math.round(100 * r.soft)).padStart(4)}%  ${String(r.wallDecor).padStart(4)}/${String(r.face).padEnd(4)}        ${String(r.counters).padStart(4)}  ${r.aisle == null ? '  - ' : r.aisle ? '  ok' : '  NO'} ${String(r.cut).padStart(4)} ${String(r.empty3).padStart(7)}`));
   }
   const nMaps = Object.keys(res.table).length, nRooms = Object.values(res.table).reduce((s, r) => s + r.length, 0);
-  console.log(`\ncheck_density: ${list.length} warning(s) over ${nRooms} room(s) in ${nMaps} town/house map(s)`);
+  const nStreets = Object.values(res.table).reduce((s, r) => s + ((r.streets || []).length), 0);
+  console.log(`\ncheck_density: ${list.length} warning(s) over ${nRooms} room(s) in ${nMaps} town/house map(s) (${nStreets} walled street area(s) not counted as rooms)`);
   process.exitCode = argv.includes('--strict') && list.length ? 1 : 0;
 }
 

@@ -8,6 +8,7 @@
 //   node tools/sim_bosses.js --tune [--write] [--keep] [--boss id,id] [--hp-grid a,b] [--atk-grid a,b]   calibrate the per-boss `s`
 //   node tools/sim_bosses.js --sx "b_x:def=0.6,agi=0.8;b_y:hp=1"   try other `s` values (not written)
 //   node tools/sim_bosses.js --json out.json  write every number
+//   X2: --trios n (34) --per k (battles per boss and combo, 1 real) --per2 k (stage 2: the lowest/highest 10 % replayed, 3)
 //
 // Engines: 'real' = the Chronicle battle engine (R.Battle.Engine + R.BattleAI.partyCommands, the same
 // code R.Battle.simulate drains) with qa's party model (tools/lib/party_model.js); 'model' = the A12

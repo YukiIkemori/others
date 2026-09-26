@@ -1,5 +1,5 @@
 {
- "when": "2026-09-26T09:22:20.483Z",
+ "when": "2026-09-26T09:39:32.244Z",
  "html": "dist/index.html",
  "results": [
   {
@@ -29,16 +29,6 @@
    "ms": 3005
   },
   {
-   "no": 15,
-   "title": "酒場の入れ替え（控え 10 人）",
-   "status": "PASS",
-   "detail": "",
-   "files": [
-    "design/shots/15_tavern_swap.png"
-   ],
-   "ms": 1883
-  },
-  {
    "no": 5,
    "title": "ワールドマップ（森・山・街道・海岸、砂嵐、湿地の霧）",
    "status": "PASS",
@@ -49,7 +39,7 @@
     "design/shots/05_world_marsh_fog.png",
     "design/shots/05_world_sea_fog.png"
    ],
-   "ms": 6090
+   "ms": 6856
   },
   {
    "no": 6,
@@ -62,7 +52,7 @@
     "design/shots/06_interior_item_shop.png",
     "design/shots/06_town_kasim.png"
    ],
-   "ms": 6622
+   "ms": 7979
   },
   {
    "no": 7,
@@ -76,30 +66,7 @@
     "design/shots/07_dungeon_archive_1.png",
     "design/shots/07_dungeon_lighthouse_2.png"
    ],
-   "ms": 5824
-  },
-  {
-   "no": 18,
-   "title": "フィールドの広さ 3 つ（同じ町の同じ場所）",
-   "status": "PASS",
-   "detail": "",
-   "files": [
-    "design/shots/18_zoom_normal.png",
-    "design/shots/18_zoom_wide.png",
-    "design/shots/18_zoom_wider.png",
-    "design/shots/18_zoom_wider_dungeon.png"
-   ],
-   "ms": 4403
-  },
-  {
-   "no": 19,
-   "title": "隠し通路を見つけた瞬間",
-   "status": "PASS",
-   "detail": "",
-   "files": [
-    "design/shots/19_secret_found.png"
-   ],
-   "ms": 2310
+   "ms": 6840
   },
   {
    "no": 8,
@@ -188,17 +155,6 @@
    "ms": 1676
   },
   {
-   "no": 22,
-   "title": "戦闘: repeat",
-   "status": "PASS",
-   "detail": "",
-   "files": [
-    "design/shots/22_battle_repeat_on.png",
-    "design/shots/22_battle_repeat_cancel.png"
-   ],
-   "ms": 1006
-  },
-  {
    "no": 14,
    "title": "メニュー・装備・強さ・技の書・術の書・図鑑・年代記（T5）",
    "status": "PASS",
@@ -219,38 +175,14 @@
    "ms": 11739
   },
   {
-   "no": 20,
-   "title": "装備の候補の一覧（術師の頭）",
+   "no": 15,
+   "title": "酒場の入れ替え（控え 10 人）",
    "status": "PASS",
    "detail": "",
    "files": [
-    "design/shots/20_equip_candidates_head.png"
+    "design/shots/15_tavern_swap.png"
    ],
-   "ms": 3220
-  },
-  {
-   "no": 21,
-   "title": "Y の詳細ポップアップ 4 枚",
-   "status": "PASS",
-   "detail": "",
-   "files": [
-    "design/shots/21_detail_super_weapon.png",
-    "design/shots/21_detail_rare_armor.png",
-    "design/shots/21_detail_shop_acc.png",
-    "design/shots/21_detail_combo_spell.png"
-   ],
-   "ms": 7038
-  },
-  {
-   "no": 22,
-   "title": "ワープの一覧",
-   "status": "PASS",
-   "detail": "",
-   "files": [
-    "design/shots/22_warp_list.png",
-    "design/shots/22_warp_list_scrolled.png"
-   ],
-   "ms": 4693
+   "ms": 1883
   },
   {
    "no": 16,
@@ -286,6 +218,75 @@
     "design/shots/17_ending_12.png"
    ],
    "ms": 61190
+  },
+  {
+   "no": 18,
+   "title": "フィールドの広さ 3 つ（同じ町の同じ場所）",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/18_zoom_normal.png",
+    "design/shots/18_zoom_wide.png",
+    "design/shots/18_zoom_wider.png",
+    "design/shots/18_zoom_wider_dungeon.png"
+   ],
+   "ms": 5177
+  },
+  {
+   "no": 19,
+   "title": "隠し通路を見つけた瞬間",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/19_secret_found.png"
+   ],
+   "ms": 2423
+  },
+  {
+   "no": 20,
+   "title": "装備の候補の一覧（術師の頭）",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/20_equip_candidates_head.png",
+    "design/shots/20_equip_candidates_head_best.png"
+   ],
+   "ms": 7135
+  },
+  {
+   "no": 21,
+   "title": "Y の詳細ポップアップ 4 枚",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/21_detail_super_weapon.png",
+    "design/shots/21_detail_rare_armor.png",
+    "design/shots/21_detail_shop_acc.png",
+    "design/shots/21_detail_combo_spell.png"
+   ],
+   "ms": 7038
+  },
+  {
+   "no": 22,
+   "title": "戦闘: repeat",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/22_battle_repeat_on.png",
+    "design/shots/22_battle_repeat_cancel.png"
+   ],
+   "ms": 1006
+  },
+  {
+   "no": 22,
+   "title": "ワープの一覧",
+   "status": "PASS",
+   "detail": "",
+   "files": [
+    "design/shots/22_warp_list.png",
+    "design/shots/22_warp_list_scrolled.png"
+   ],
+   "ms": 4693
   }
  ],
  "pending": {

@@ -9,7 +9,7 @@
     // ---- merman 魚人（水生・m）: 南の海の魚人たち。見張り、もり兵、呪い師、騎士。
     merman_1: {
       name: '魚人の見張り', sprite: 'merman_1', lineage: 'merman', stage: 1, lv: 7, size: 'm', race: 'aquatic', affinity: 'water',
-      flags: [], s: { hp: 1.16, atk: 1.03, mag: 0.99 }, eva: 5,
+      flags: [], s: { hp: 1.41, atk: 0.97, mag: 0.92 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_thrust', w: 2 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_spear_coral', rate: 32 }, super: { item: 'ft_sr_fin_boots', rate: 256 } },
@@ -17,7 +17,7 @@
     },
     merman_2: {
       name: '魚人のもり兵', sprite: 'merman_2', lineage: 'merman', stage: 2, lv: 19, size: 'm', race: 'aquatic', affinity: 'water',
-      flags: [], s: { hp: 1.24, atk: 0.88, mag: 0.76 }, eva: 5,
+      flags: [], s: { hp: 1.86, atk: 0.56, mag: 0.5 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_thrust', w: 2 }, { id: 'e_tide', w: 1 }],
       drops: { normal: { item: 'i_stone_water', rate: 8 }, rare: { item: 'sh_tide_shield', rate: 32 }, super: { item: 'w_spear_sr_harpoon', rate: 256 } },
@@ -25,7 +25,7 @@
     },
     merman_3: {
       name: '魚人の呪い師', sprite: 'merman_3', lineage: 'merman', stage: 3, lv: 31, size: 'm', race: 'aquatic', affinity: 'water',
-      flags: [], s: { hp: 1.2, atk: 0.4, mag: 0.6, mdef: 1.2 }, eva: 5,
+      flags: [], s: { hp: 1.83, atk: 0.5, mag: 0.5, mdef: 1.2 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 1 }, { id: 'e_water_bolt', w: 2 }, { id: 'e_tide', w: 2 }, { id: 'e_heal_ally', w: 1, cond: { hpBelow: 0.6 } }],
       drops: { normal: { item: 'i_ether', rate: 8 }, rare: { item: 'ac_pearl_ear', rate: 32 }, super: { item: 'w_staff_sr_coralwand', rate: 256 } },
@@ -33,7 +33,7 @@
     },
     merman_4: {
       name: '魚人の騎士', sprite: 'merman_4', lineage: 'merman', stage: 4, lv: 43, size: 'm', race: 'aquatic', affinity: 'water',
-      flags: [], s: { hp: 1.73, atk: 0.64, def: 1.25, mag: 0.56 }, eva: 5,
+      flags: [], s: { hp: 2.17, atk: 0.56, def: 1.25, mag: 0.5 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_thrust', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_tide', w: 1 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_katana_tide', rate: 32 }, super: { item: 'w_sword_sr_merknight', rate: 256 } },
@@ -42,7 +42,7 @@
     // ---- kraken タコ（水生・l）: 洞窟と船底の大ダコ。墨、八本の腕、渦潮。
     kraken_1: {
       name: '墨吹きダコ', sprite: 'kraken_1', lineage: 'kraken', stage: 1, lv: 7, size: 'l', race: 'aquatic', affinity: 'water',
-      flags: [], s: { hp: 1.26, agi: 0.85, atk: 0.99, mag: 0.99 }, eva: 5,
+      flags: [], s: { hp: 0.93, agi: 0.85, atk: 1.18, mag: 1.18 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_ink', w: 2 }, { id: 'e_tentacles', w: 2 }],
       drops: { normal: { item: 'i_clear', rate: 8 }, rare: { item: 'w_spear_coral', rate: 32 }, super: { item: 'hd_sr_octopus_cap', rate: 256 } },
@@ -50,7 +50,7 @@
     },
     kraken_2: {
       name: '八本腕ダコ', sprite: 'kraken_2', lineage: 'kraken', stage: 2, lv: 25, size: 'l', race: 'aquatic', affinity: 'water',
-      flags: [], s: { hp: 1.46, atk: 0.71, agi: 0.85, mag: 0.65 }, eva: 5,
+      flags: [], s: { hp: 1.21, atk: 0.67, agi: 0.85, mag: 0.61 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_tentacles', w: 3 }, { id: 'e_bind', w: 2 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_fist_wormtooth', rate: 32 }, super: { item: 'w_whip_sr_eightarm', rate: 256 } },
@@ -58,7 +58,7 @@
     },
     kraken_3: {
       name: '渦潮ダコ', sprite: 'kraken_3', lineage: 'kraken', stage: 3, lv: 43, size: 'l', race: 'aquatic', affinity: 'water',
-      flags: [], s: { hp: 1.73, atk: 0.41, mag: 0.43, agi: 0.85 }, eva: 5,
+      flags: [], s: { hp: 1.7, atk: 0.57, mag: 0.59, agi: 0.85 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_tentacles', w: 2 }, { id: 'e_tide', w: 2 }, { id: 'e_ink', w: 1 }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_katana_tide', rate: 32 }, super: { item: 'bd_sr_whirlpool', rate: 256 } },
@@ -67,7 +67,7 @@
     // ---- skeleton 骸骨（不死・m）: 幽霊船の骸骨の船乗り。水夫・海賊・砲手・航海士・提督。
     skeleton_1: {
       name: '骸骨の水夫', sprite: 'skeleton_1', lineage: 'skeleton', stage: 1, lv: 7, size: 'm', race: 'undead',
-      flags: [], s: { atk: 1.29, mag: 1.23, hp: 1.1 }, eva: 5,
+      flags: [], s: { atk: 0.88, hp: 1.33, mag: 0.84 }, eva: 5,
       elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 4 }, { id: 'e_slash', w: 2 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_spear_coral', rate: 32 }, super: { item: 'w_sword_sr_cutlass', rate: 256 } },
@@ -75,7 +75,7 @@
     },
     skeleton_2: {
       name: '骸骨の海賊', sprite: 'skeleton_2', lineage: 'skeleton', stage: 2, lv: 19, size: 'm', race: 'undead',
-      flags: [], s: { atk: 0.98, agi: 1.05, hp: 1.18, mag: 0.9 }, rw: { gold: 1.5 }, eva: 5,
+      flags: [], s: { atk: 0.65, agi: 1.05, hp: 1.93, mag: 0.6 }, rw: { gold: 1.5 }, eva: 5,
       elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_double', w: 2 }, { id: 'e_slash', w: 1 }],
       drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'sh_tide_shield', rate: 32 }, super: { item: 'ac_sr_pirate_coin', rate: 256 } },
@@ -83,7 +83,7 @@
     },
     skeleton_3: {
       name: '骸骨の砲手', sprite: 'skeleton_3', lineage: 'skeleton', stage: 3, lv: 31, size: 'm', race: 'undead', affinity: 'fire',
-      flags: [], s: { hp: 1.32, atk: 0.89, mag: 0.81 }, eva: 5,
+      flags: [], s: { hp: 2.22, atk: 0.5, mag: 0.5 }, eva: 5,
       elem: { fire: 0.25, water: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_cannon', w: 3 }],
       drops: { normal: { item: 'i_firepot', rate: 8 }, rare: { item: 'ac_pearl_ear', rate: 32 }, super: { item: 'ac_sr_firebird', rate: 256 } },
@@ -91,7 +91,7 @@
     },
     skeleton_4: {
       name: '骸骨の航海士', sprite: 'skeleton_4', lineage: 'skeleton', stage: 4, lv: 43, size: 'm', race: 'undead',
-      flags: [], s: { hp: 1.47, atk: 0.79, mag: 0.79 }, eva: 5,
+      flags: [], s: { hp: 2.5, atk: 0.83, mag: 0.83 }, eva: 5,
       elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_slash', w: 2 }, { id: 'e_howl', w: 1, cond: { once: true } }, { id: 'e_curse', w: 1 }],
       drops: { normal: { item: 'i_revive', rate: 8 }, rare: { item: 'w_katana_tide', rate: 32 }, super: { item: 'ac_sr_ghost_compass', rate: 256 } },
@@ -99,7 +99,7 @@
     },
     skeleton_5: {
       name: '骸骨の提督', sprite: 'skeleton_5', lineage: 'skeleton', stage: 5, lv: 55, size: 'm', race: 'undead',
-      flags: [], s: { hp: 1.85, atk: 0.72, mag: 0.69 }, eva: 5,
+      flags: [], s: { hp: 2.19, atk: 0.52, mag: 0.5 }, eva: 5,
       elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_cannon', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_howl', w: 1, cond: { once: true } }, { id: 'e_slash', w: 2 }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_admiral_medal', rate: 32 }, super: { item: 'w_sword_sr_admiral', rate: 256 } },

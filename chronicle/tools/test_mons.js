@@ -161,7 +161,8 @@ group('monster fields (§9.1.1, §9.2.3, §9.3)', () => {
     ok(m.affinity == null || ELS.includes(m.affinity), id + ' affinity');
     ok(Array.isArray(m.flags) && m.flags.every((f) => ['flying', 'metal'].includes(f)), id + ' flags ⊂ flying/metal');
     ok(!('hue' in m) && !('sat' in m) && !('bri' in m) && !('pal' in m), id + ' has no hue/sat/bri/pal (§9.0 0.6)');
-    for (const [k, v] of Object.entries(m.s || {})) ok(CM.SKEYS.includes(k) && v >= 0.5 && v <= 2.5, id + ' s.' + k + '=' + v + ' in 0.5..2.5');
+    // s: 0.5–2.5 (atk / mag down to 0.3: swarms of small area casters, whose mag the size does not lower; §9.1.2)
+    for (const [k, v] of Object.entries(m.s || {})) { const lo = k === 'atk' || k === 'mag' ? 0.3 : 0.5; ok(CM.SKEYS.includes(k) && v >= lo && v <= 2.5, id + ' s.' + k + '=' + v + ' in ' + lo + '..2.5'); }
     for (const k of Object.keys(m.rw || {})) ok(['exp', 'gold'].includes(k), id + ' rw.' + k);
     const metal = m.flags.includes('metal');
     ok(metal === (m.hpFixed != null), id + ' hpFixed only on metal');

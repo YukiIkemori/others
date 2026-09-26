@@ -4,12 +4,12 @@
 //   Q2  tools/lib/maps.js: parseMap reads what R.FieldMap.compile reads (tiles, spawns, npcs, warps, secrets)
 //   Q3  tools/lib/party_model.js: PM.build (members, levels, EXPECT(T) actions, full HP, status {}), levelAt / profAt,
 //       withGame restores R.Game, the §8.13.1 sets of gear-a at T8, COMBOS / HERO_VARIANTS
-//   Q4  validate.js on tools/fixtures/qa/bad: each planted fault is reported (V1 V2 V3 V4 V5 V10 V14)
+//   Q4  validate.js on tools/fixtures/qa/bad: each planted fault is reported (V1 V2 V3 V4 V5 V10 V14 CH4 CH6 CH7)
 //   Q5  progress.js on tools/fixtures/qa/world: the BFS, warp conds, meta.calls, and the Part A4 secret-passage rule
 //   Q6  check_text.js: width, string extraction (comments skipped, ${…} dropped), spacing / ellipsis rules, STYLE_JA lists
 //   Q7  playthrough.js: the dry-run ev (unknown API calls reported, nested ev.call gives belong to the callee)
 //   Q8  shots.js / smoke.js: the shot list covers §11.12.2 #1–#22; --only parsing
-//   Q9  check_density.js: rooms are found on every town/house map
+//   Q9  check_density.js: every town/house map is measured, rooms are found on each, walled streets are not rooms
 //   node tools/test_qa.js [--verbose]
 'use strict';
 const path = require('path');
@@ -183,7 +183,7 @@ function rng(seed) { let s = seed >>> 0; return () => { s ^= s << 13; s >>>= 0; 
   section('Q4 validate.js on the planted faults (tools/fixtures/qa/bad)');
   {
     const V = require('./validate');
-    const { rep } = V.run({ with: [path.join(ROOT, 'tools', 'fixtures', 'qa', 'bad')], only: ['V1', 'V2', 'V3', 'V4', 'V5', 'V10', 'V14'] });
+    const { rep } = V.run({ with: [path.join(ROOT, 'tools', 'fixtures', 'qa', 'bad')], only: ['V1', 'V2', 'V3', 'V4', 'V5', 'V10', 'V14', 'CH4', 'CH6', 'CH7'] });
     const all = rep.items.filter((x) => /qa/.test(x.msg));
     const has = (level, check, re, name) => ok(all.some((x) => x.level === level && x.check === check && re.test(x.msg)), `${check} ${name}`);
     has('error', 'V5', /qa_bad_town: no 'outside'/, 'a town without outside');
@@ -200,6 +200,10 @@ function rng(seed) { let s = seed >>> 0; return () => { s ^= s << 13; s >>>= 0; 
     has('error', 'V3', /ac_qa_long/, 'a name over the length');
     has('error', 'V4', /qaNoSuchKey/, 'an unknown mods key');
     has('error', 'V10', /t_sword_qa: glim\.lv 12/, 'glim.lv outside 1–10');
+    has('error', 'CH6', /t_sword_qa_from: glim\.from 't_axe_qa_nope' is not a lower sword tech/, 'a tech that comes from another weapon type');
+    has('error', 'CH7', /s_fire_qa: must not have 'scale'/, "a spell with its own 'scale'");
+    has('error', 'CH7', /s_fire_qa: must not have 'element'/, "a spell with 'element' (elements[] only)");
+    has('error', 'CH4', /hd_qa_units: 3 stat unit\(s\) on a head/, 'a hat over the §4.3.3 unit budget');
     if (VERBOSE) for (const x of all) console.log(`     ${x.level} ${x.check} ${x.msg}`);
   }
 
@@ -289,10 +293,20 @@ function rng(seed) { let s = seed >>> 0; return () => { s ^= s << 13; s >>>= 0; 
   {
     const CD = require('./check_density');
     const r = CD.run({ R });
-    const rooms = (r && (r.rooms || r.nRooms)) || 0;
-    ok(r && (Array.isArray(r.findings) || Array.isArray(r.items) || typeof r === 'object'), 'run() returns a report');
-    if (VERBOSE) console.log('     density:', JSON.stringify(r).slice(0, 200));
-    void rooms;
+    ok(r && Array.isArray(r.findings) && r.table && typeof r.table === 'object', 'run() returns {findings, table}');
+    const towns = Object.keys(DB.maps).filter((id) => ['town', 'castle', 'village'].includes(DB.maps[id].type) || /_house/.test(id));
+    eq(Object.keys(r.table).sort(), towns.sort(), 'every town / castle / village / house map is measured (§11.2.7)');
+    const noRooms = towns.filter((id) => !(r.table[id] || []).length);
+    eq(noRooms, [], 'rooms are found on every town/house map');
+    const bad = [];
+    for (const [id, rooms] of Object.entries(r.table)) for (const x of rooms) if (!(x.block >= 0 && x.block <= 1 && x.soft >= 0 && x.soft <= 1 && x.size >= 6)) bad.push(id);
+    eq(bad, [], 'room ratios are within 0–1 and rooms have ≥ 6 cells');
+    // a walled town's street (many building doors on its edge) is not "1 部屋" — dovan's cavern street, if the map is there
+    if (r.table.dovan) {
+      ok((r.table.dovan.streets || []).length >= 1, 'dovan: the cavern street is recognised as a street');
+      ok(!r.table.dovan.some((x) => x.size > 300 && x.doors >= 4), 'dovan: no street is measured as a room');
+    }
+    if (VERBOSE) console.log('     density:', r.findings.length, 'warning(s)');
   }
 
   console.log(`\ntest_qa: ${pass} passed, ${fail} failed — ${((Date.now() - t0) / 1000).toFixed(1)} s`);

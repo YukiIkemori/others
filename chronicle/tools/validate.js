@@ -1487,6 +1487,11 @@ function run(opts) {
       const o = own('items', id), T = it.tier;
       if (!isNum(T) || T < 0 || T > 9) { E(V, o, `item ${id}: tier ${T} (0–9)`); continue; }
       if (it.units) {
+        // §4.3.3: the unit budget of the slot (rare ×2 / super ×3 are applied to the value, not to the units)
+        const SU = K.SLOT_UNITS || { weapon: 2, shield: 1, head: 1, body: 2, hands: 1, feet: 1, acc: 1 };
+        const us = [...String(it.units).matchAll(/([svdaim])(\d)/g)].reduce((a2, m) => a2 + +m[2], 0);
+        if (!/^([svdaim]\d)+$/.test(String(it.units))) E(V, o, `item ${id}: units '${it.units}' (letters s v d a i m + digits, §4.3.3)`);
+        else if (SU[it.type] != null && us !== SU[it.type]) E(V, o, `item ${id}: ${us} stat unit(s) on a ${it.type} (§4.3.3: ${SU[it.type]})`);
         if (!it.stats) { unfilled++; continue; }
         const exp = {};
         for (const m of String(it.units).matchAll(/([svdaim])(\d)/g)) exp[SK[m[1]]] = gearStat(U, T, +m[2], it.grade);
@@ -1538,6 +1543,13 @@ function run(opts) {
         if (typeof a.reach !== 'boolean') E(V, o, `tech ${id}: reach must be true/false`);
         if (C.REACH.includes(a.wtype) && a.reach !== true) E(V, o, `tech ${id}: ${a.wtype} techs are reach:true`);
         if (!C.TARGETS.includes(a.target)) E(V, o, `tech ${id}: target '${a.target}'`);
+        // §6.3 / §6.9.1-5: lv 1 comes from 'attack'; lv ≥ 2 from 1–2 lower techs of the same weapon type
+        const g = a.glim || {}, from = Array.isArray(g.from) ? g.from : [];
+        if (g.lv === 1) { if (from.join() !== 'attack') E(V, o, `tech ${id}: lv 1 glim.from must be ['attack'] (got [${from}])`); }
+        else if (isNum(g.lv)) {
+          if (from.length < 1 || from.length > 2) E(V, o, `tech ${id}: glim.from has ${from.length} id(s) (1–2 lower techs, §6.3)`);
+          for (const f of from) { const fa = actions[f]; if (!fa || !/^t_/.test(f) || fa.wtype !== a.wtype || !(fa.glim && fa.glim.lv < g.lv)) E(V, o, `tech ${id}: glim.from '${f}' is not a lower ${a.wtype} tech (§6.3)`); }
+        }
         checkEffects(a, o, `tech ${id}`, V);
       }
       for (const [id, h] of Object.entries(DB.heroTypes)) for (const k of ['weapon', 'element']) for (const t of (((h.onFavor || {})[k] || {}).techs || [])) if (!actions[t]) E(V, own('heroTypes', id), `heroType ${id}: onFavor tech ${t} missing`);
@@ -1590,6 +1602,7 @@ function run(opts) {
         if (a.magic !== true) E(V, o, `spell ${id}: magic must be true`);
         if (!C.TARGETS.includes(a.target)) E(V, o, `spell ${id}: target '${a.target}'`);
         if (a.target === 'random' && !(a.effects || []).some((e) => e.type === 'damage' && e.hits)) E(V, o, `spell ${id}: target random needs damage.hits`);
+        for (const k of ['scale', 'element', 'metalHit', 'escape']) if (has(a, k)) E(V, o, `spell ${id}: must not have '${k}' (§7.0 の 0.3・0.10・0.11; elements[] and power only)`);
         for (const e of a.effects || []) {
           for (const k of ['scale', 'element', 'metalHit']) if (has(e, k)) E(V, o, `spell ${id}: effect must not have '${k}' (§7.0)`);
           if (e.type === 'escape') E(V, o, `spell ${id}: escape on a spell (§7.0 の 0.10)`);

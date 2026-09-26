@@ -89,7 +89,24 @@ class Ctx {
     await this.ev(([m, s]) => window.RPG.debug.warp(m, s), [map, spawn]);
     await this.until((s) => s.map === map, 8000, 'warp to ' + map);
     await this.D.drive({ menus: 'leave' }, (s) => s.idle && s.map === map, 30000, 'onEnter of ' + map);
-    for (const d of walk || []) { await this.D.step(d); await this.D.drive({ menus: 'leave' }, (st) => st.idle, 30000, 'after a step on ' + map); }
+    // take walk.length real steps so every follower leaves the spawn tile (the 4-member caterpillar shows); a
+    // step that a wall or a lamp blocks is replaced by the first free direction (not back, not onto a warp)
+    const visited = new Set();
+    for (const want of walk || []) {
+      const d = await this.ev(([w, seen]) => {
+        const R = window.RPG, M = R.Field.map, p = R.debug.pos();
+        const D = { up: [0, -1], right: [1, 0], left: [-1, 0], down: [0, 1] };
+        for (const k of [w, 'up', 'right', 'left', 'down']) {
+          const x = Math.round(p.x) + D[k][0], y = Math.round(p.y) + D[k][1];
+          if (M.walkable(x, y) && !M.warpCell(x, y) && !M.npcAt(x, y) && !seen.includes(x + ',' + y)) return k;
+        }
+        return w;
+      }, [want, [...visited]]);
+      const p0 = await this.ev(() => window.RPG.debug.pos());
+      visited.add(Math.round(p0.x) + ',' + Math.round(p0.y));
+      await this.D.step(d);
+      await this.D.drive({ menus: 'leave' }, (st) => st.idle, 30000, 'after a step on ' + map);
+    }
     await this.D.idle(8000);
   }
   /** stand next to npc id on its `side` and face it, after walking in from 3 tiles away */
@@ -196,7 +213,7 @@ def(5, 'ワールドマップ（森・山・街道・海岸、砂嵐、湿地の
   await X.load();
   await X.game();
   const L = await X.ev(() => { const R = window.RPG, L = R.DB.locations.lute; return { map: (R.FieldMap.findWorld && R.FieldMap.findWorld(L.spawn)) || 'world', spawn: L.spawn }; });
-  await X.at(L.map, L.spawn, ['down', 'down']);
+  await X.at(L.map, L.spawn, ['down', 'down', 'down']);
   await X.wait(600);
   await X.shot('05_world_lute', '港町ファロスのまわり（森・山・街道・海岸）');
   // the weather is drawn over its own tiles: stand next to the middle of the sandstorm / marsh-fog / sea-fog cells
@@ -238,12 +255,12 @@ def(7, 'ダンジョン 4 つ（迷いの森・幽霊船・深き坑道・白の
   let n = 0;
   for (const [m, name, who] of list) {
     if (!(await X.hasMap(m))) { X.note(`${name} (${m}, ${who}) is not registered yet`); continue; }
-    await X.at(m, 'entrance', ['up', 'up']);
+    await X.at(m, 'entrance', ['up', 'up', 'up']);
     await X.shot('07_dungeon_' + m, name);
     n++;
   }
   // the prologue dungeon is always there (not in the list of 4; shown so the set has a dungeon today)
-  await X.at('lighthouse_2', 'entrance', ['up', 'up']);
+  await X.at('lighthouse_2', 'entrance', ['up', 'up', 'up']);
   await X.shot('07_dungeon_lighthouse_2', 'ファロス灯台 2 階（序章。表の 4 つの外）');
   if (!n) X.note('none of the 4 dungeons exists yet');
 });
@@ -258,7 +275,7 @@ def(18, 'フィールドの広さ 3 つ（同じ町の同じ場所）', async (X
   }
   await X.ev(() => window.RPG.debug.zoom('normal'));
   // the same spot in a dungeon floor (outside must be wall, not a black margin)
-  await X.at('lighthouse_2', 'entrance', ['up']);
+  await X.at('lighthouse_2', 'entrance', ['up', 'up', 'up']);
   await X.ev(() => window.RPG.debug.zoom('wider'));
   await X.wait(400);
   await X.shot('18_zoom_wider_dungeon', 'もっとひろい（ダンジョン）');
@@ -384,6 +401,11 @@ def(20, '装備の候補の一覧（術師の頭）', async (X) => {
   await X.press('a');
   await X.wait(500);
   await X.shot('20_equip_candidates_head', `${who.name}（術師）の頭の候補: 名前　攻±n　術±n　守±n、強い順`);
+  // Part A5/A6: the lower window shows the gain of a candidate, so the strongest (top) candidate is shot as well
+  const candIdx = () => X.ev(() => { const t = window.RPG.Engine.top(), cd = t && t.cand; if (!cd || !cd.list) return -1; const first = cd.rows.findIndex((r) => r && r.id); return cd.list.index - Math.max(0, first); });
+  for (let i = 0; i < 60; i++) { if ((await candIdx()) <= 0) break; await X.press('up'); await X.wait(50); }
+  await X.wait(300);
+  await X.shot('20_equip_candidates_head_best', `${who.name}（術師）: いちばん上の候補と下の窓の増減`);
   const top = await X.ev(() => { const t = window.RPG.Engine.top(); const r = t.cand && t.cand.rows; return r ? r.slice(0, 4).map((x) => x.id && window.RPG.DB.items[x.id] && window.RPG.DB.items[x.id].name) : null; });
   X.note('top head candidates: ' + JSON.stringify(top));
 });
