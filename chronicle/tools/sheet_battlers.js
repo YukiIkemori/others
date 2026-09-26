@@ -10,7 +10,7 @@
 //   poses     one look (--look, default hero_m_warrior, --wtype sword): every pose and frame
 //             at 3x, once plain and once with the anchors (head yellow, hand green, tip red,
 //             cast cyan, box magenta, feet white)
-//   weapons   the 11 weapon families on hero_m_warrior / hero_f_warrior (idle + the family's
+//   weapons   the 7 weapon families + the katana / club art shapes + fist (bare hands) on hero_m_warrior / hero_f_warrior (idle + the family's
 //             attack frames), and every weapon's 8 directions
 //   scene     backdrops grass and castle with 4 party members at the side-view positions
 //             (front 192, middle 216, feet y 100/116/132/148; one weak, one ko) at 3x
@@ -81,9 +81,10 @@ window.SHEET = (function () {
     return cv.toDataURL();
   }
   // a plausible weapon per look for the lineup (their starting weapon family)
-  const DEFW = { selma: 'sword', hagen: 'axe', dokka: 'club', basil: 'staff', bartolo: 'spear', viola: 'whip', shigure: 'katana',
-    rouga: 'fist', titta: 'dagger', brigitta: 'greatsword', sylvain: 'bow', zafira: 'dagger', ferno: 'bow', belladonna: 'whip',
-    boden: 'club', teo: 'staff', ilse: 'staff', morga: 'staff', marta: 'staff', noela: 'bow' };
+  // (SYSTEMS_REWORK §3.5 / §3.6: the battle shape of each one's starting weapon — katana / club are item art shapes)
+  const DEFW = { selma: 'sword', hagen: 'greatsword', dokka: 'axe', basil: 'club', bartolo: 'spear', viola: 'sword', shigure: 'katana',
+    rouga: 'club', titta: 'dagger', brigitta: 'spear', sylvain: 'bow', zafira: 'dagger', ferno: 'bow', belladonna: 'bow',
+    boden: 'axe', teo: 'staff', ilse: 'staff', morga: 'staff', marta: 'staff', noela: 'spear' };
   const HT = { warrior: 'sword', ranger: 'bow', mage: 'staff', spellblade: 'sword', wanderer: 'dagger' };
   function defW(id) { if (DEFW[id]) return DEFW[id]; const m = /hero_[mf]_(\w+)/.exec(id); return m ? HT[m[1]] : 'sword'; }
   function idle(ids) {
@@ -118,7 +119,7 @@ window.SHEET = (function () {
   }
   function weapons(looks) {
     const s = 2, fam = B.FAMILY, cw = 48 * s + 4, ch = 40 * s + 6;
-    const ws = Object.keys(fam);
+    const ws = Object.keys(fam).filter((w) => w !== 'whip');   // no item draws the whip shape since A19
     const [cv, c] = canvas(8 + 90 + looks.length * 5 * cw + 20, 8 + ws.length * ch + 11 * 60, '#404050');
     ws.forEach((w, r) => {
       const y = 6 + r * ch;

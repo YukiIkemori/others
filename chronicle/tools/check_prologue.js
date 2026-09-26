@@ -69,7 +69,8 @@ function testSpec() {
   for (const row of s107) {
     const id = (row.match(/^\| (P\d+)/) || [])[1];
     if (!id) continue;
-    for (const q of row.match(/「[^「」]*」/g) || []) {
+    for (const q0 of row.match(/「[^「」]*」/g) || []) {
+      const q = q0.replace('槍・弓・鞭の', '槍・弓・杖の');   // SYSTEMS_REWORK §3.7 (A19: the staff reaches, the whip is gone)
       quotes++;
       ok(S.includes(norm(q.slice(1, -1))), id + ' line in the scripts: ' + q.slice(0, 40));
     }
@@ -173,7 +174,7 @@ function testProbe() {
   const inv0 = () => ({ i_salve: 3 });
   const hero = (v, lv) => {
     const c = R.Rules.newChar({ id: 'hero', level: lv || 1, heroSpec: { name: 'ルカ', gender: 'f', type: v.heroType, favor: v.favor } });
-    const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; c.status = {};
+    const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.status = {};
     return c;
   };
   const known = (c) => (c.techs || []).length + (c.spells || []).length;
@@ -252,7 +253,7 @@ function testProbe() {
         PM.afterBattle(R, party, r.result);
       } else {
         // a wipe: the player is sent back to the last inn (full heal, keeps EXP gained before)
-        for (const c of party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; c.status = {}; }
+        for (const c of party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.status = {}; }
       }
       return r;
     };
@@ -272,12 +273,12 @@ function testProbe() {
         const joinLv = Math.max(1, Math.floor(party[0].level * ((R.Rules.K && R.Rules.K.JOIN_LEVEL) || 0.9)));
         for (const id of pick) {
           const c = R.Rules.newChar({ id, level: joinLv });
-          const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; c.status = {};
+          const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.status = {};
           party.push(c);
         }
         inv.i_salve = (inv.i_salve || 0) + 4; // 50 gold from the master + the first battles' gold → a few salves in Faros
       } else if (step[0] === 'rest') {
-        for (const c of party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; c.status = {}; }
+        for (const c of party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.status = {}; }
       } else if (step[0] === 'boss') {
         lvAtBoss.push(party[0].level);
         for (const c of party.slice(1)) compLv.push(c.level);
