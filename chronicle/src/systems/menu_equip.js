@@ -285,7 +285,7 @@
         G().window(4, 202, 146, 18);
         if (plan) {
           const segs = [];
-          for (const k of ['hp', 'mp', 'wp']) {
+          for (const k of ['hp', 'mp']) {
             const d = (plan.diff && plan.diff[k]) || 0;
             if (!d) continue;
             if (segs.length) segs.push({ text: '　' });

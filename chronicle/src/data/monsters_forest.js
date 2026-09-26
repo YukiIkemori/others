@@ -61,7 +61,7 @@
       flags: [], s: { hp: 2.06, atk: 1.57, mag: 1.74, agi: 0.6 }, eva: 5,
       elem: { fire: 1.5, water: 0.5, earth: 0.75 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_poison_spore', w: 3 }],
-      drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'w_staff_sprout', rate: 32 }, super: { item: 'w_club_sr_toadstool', rate: 256 } },
+      drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'w_staff_sprout', rate: 32 }, super: { item: 'w_axe_sr_toadstool', rate: 256 } },
       desc: '紫にまだらの毒キノコ。\n胞子を吸うと毒がまわる。',
     },
     mushroom_3: {
@@ -86,7 +86,7 @@
       flags: [], s: { hp: 1.12, atk: 1.24, mag: 1.19, agi: 0.8 }, eva: 5,
       elem: { fire: 1.5, water: 0.5, earth: 0.75 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 4 }, { id: 'e_bite', w: 2 }],
-      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_bow_leaf', rate: 32 }, super: { item: 'w_whip_sr_vine', rate: 256 } },
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_bow_leaf', rate: 32 }, super: { item: 'w_bow_sr_vine', rate: 256 } },
       desc: '道ばたの花のふりをして、\n通る者にかみつく。',
     },
     plant_2: {
@@ -160,7 +160,7 @@
       flags: [], s: { hp: 0.82, atk: 1.82, mag: 1.82, def: 1.2, agi: 0.7 }, eva: 5,
       elem: { fire: 1.5, water: 0.5, wind: 1.5, earth: 0.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 4 }, { id: 'e_root_bind', w: 2 }, { id: 'e_sweep', w: 1 }],
-      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'hd_mushroom_cap', rate: 32 }, super: { item: 'w_club_sr_wander', rate: 256 } },
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'hd_mushroom_cap', rate: 32 }, super: { item: 'w_axe_sr_wander', rate: 256 } },
       desc: '夜のうちに場所を変える木。\n森の道が変わるのはこのせい。',
     },
     treant_2: {

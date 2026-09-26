@@ -13,7 +13,8 @@
 (function (R) {
   'use strict';
   const T9 = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-  const ALLW = ['w_sword', 'w_greatsword', 'w_dagger', 'w_axe', 'w_spear', 'w_bow', 'w_club', 'w_staff', 'w_staff_prayer', 'w_katana', 'w_fist', 'w_whip'];
+  // 武器の 9 系列（A19 の 7 系統。斧は斧とメイス、杖は知力と精神の 2 系列。SYSTEMS_REWORK §3.3）
+  const ALLW = ['w_sword', 'w_greatsword', 'w_dagger', 'w_axe', 'w_axe_mace', 'w_spear', 'w_bow', 'w_staff', 'w_staff_prayer'];
   const ARMOR = {
     heavy: ['bd_mail', 'bd_plate', 'hd_helm', 'hd_band', 'sh_buckler', 'sh_tower', 'hn_gauntlet', 'hn_bracer', 'ft_greave', 'ft_shin'],
     light: ['bd_vest', 'bd_garb', 'hd_cap', 'hd_scarf', 'sh_shield', 'sh_round', 'hn_glove', 'hn_armlet', 'ft_boots', 'ft_shoes'],
@@ -22,12 +23,12 @@
   const CH = { str: 'ac_str', vit: 'ac_vit', dex: 'ac_dex', agi: 'ac_agi', int: 'ac_int', mnd: 'ac_mnd' };
   // T0 だけ 04 キャラ章の固定の id を使う系列（§8.1.2）
   const T0ID = { w_sword: 'w_sword_iron', w_greatsword: 'w_greatsword_iron', w_dagger: 'w_dagger_iron', w_axe: 'w_axe_hand', w_spear: 'w_spear_iron',
-    w_bow: 'w_bow_short', w_club: 'w_club_wood', w_staff: 'w_staff_novice', w_katana: 'w_katana_uchi', w_fist: 'w_fist_leather', w_whip: 'w_whip_leather',
+    w_bow: 'w_bow_short', w_axe_mace: 'w_axe_cudgel', w_staff: 'w_staff_novice',
     bd_mail: 'bd_iron_cuirass', hd_band: 'hd_iron_band', sh_buckler: 'sh_iron_buckler', bd_vest: 'bd_leather_vest',
     hd_cap: 'hd_leather_cap', sh_shield: 'sh_leather', bd_robe: 'bd_hemp_robe', hd_hood: 'hd_wool_hood', sh_book: 'sh_primer' };
   const at = (line, t) => (t === 0 && T0ID[line]) || `${line}_${t}`;
   const EL = ['fire', 'water', 'wind', 'earth', 'light', 'dark'];
-  const WT = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'club', 'staff', 'katana', 'fist', 'whip'];
+  const WT = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'staff'];   // 腕章 7 つ
   const STS = ['poison', 'blind', 'sleep', 'paralyze', 'silence', 'confuse', 'stun', 'freeze', 'burn', 'death'];
   const BADGES = WT.map((w) => `ac_badge_${w}`), GUARDS = EL.map((e) => `ac_guard_${e}`), SPIRITS = EL.map((e) => `ac_spirit_${e}`);
   const WARDS = STS.map((s) => `ac_ward_${s}`), STONES = EL.map((e) => `i_stone_${e}`);
@@ -35,7 +36,7 @@
   // 道具屋の共通の 4 段（§8.11.2。keepOld:true で積み上がる）
   const ITEM_TABLE = [
     { tier: 0, items: ['i_salve', 'i_revive', 'i_antidote', 'i_clear', 'i_waker', 'i_repel', 'i_smoke', 'i_firepot', ...STONES, 'ac_ward_poison', 'ac_ward_blind', 'ac_ward_sleep'] },
-    { tier: 1, items: ['i_potion', 'i_ether', 'i_tonic', 'i_numb', 'i_throat', 'i_lure', 'i_lens', 'ac_ward_paralyze', 'ac_ward_silence', 'ac_ward_confuse', 'ac_ward_stun', 'ac_quiet', 'ac_call', 'ac_flee', 'ac_watch', 'ac_pouch'] },
+    { tier: 1, items: ['i_potion', 'i_ether', 'i_numb', 'i_throat', 'i_lure', 'i_lens', 'ac_ward_paralyze', 'ac_ward_silence', 'ac_ward_confuse', 'ac_ward_stun', 'ac_quiet', 'ac_call', 'ac_flee', 'ac_watch', 'ac_pouch'] },
     { tier: 2, items: ['i_incense', 'i_thaw', 'i_bomb', 'i_horn', 'i_censer', 'ac_ward_freeze', 'ac_ward_burn', 'ac_ward_death', 'ac_float', 'ac_quickhand'] },
     { tier: 3, items: ['i_elixir', 'i_ether2', 'i_panacea'] },
   ];
@@ -68,31 +69,31 @@
     lute_weapon: W('ファロスの武器屋', ALLW, { extra: BADGES, post9: true }),
     lute_armor: A('ファロスの防具屋', ['heavy', 'light', 'cloth'], ['str', 'vit', 'dex', 'agi', 'int', 'mnd'], { post9: true }),
     fern_item: I('フェルンの道具屋'),
-    fern_weapon: W('フェルンの武器屋', ['w_bow', 'w_spear', 'w_dagger', 'w_staff', 'w_staff_prayer', 'w_whip']),
+    fern_weapon: W('フェルンの武器屋', ['w_bow', 'w_spear', 'w_dagger', 'w_staff', 'w_staff_prayer']),
     fern_armor: A('フェルンの防具屋', ['light', 'cloth'], ['dex', 'agi', 'int', 'mnd']),
     kasim_item: I('カシムの道具屋'),
-    kasim_weapon: W('カシムの武器屋', ['w_sword', 'w_katana', 'w_dagger', 'w_whip', 'w_axe']),
+    kasim_weapon: W('カシムの武器屋', ['w_sword', 'w_dagger', 'w_axe', 'w_greatsword']),
     kasim_armor: A('カシムの防具屋', ['light', 'heavy'], ['str', 'vit', 'dex', 'agi']),
     yule_item: I('ユールの道具屋'),
-    yule_weapon: W('ユールの武器屋', ['w_axe', 'w_spear', 'w_club', 'w_greatsword', 'w_bow']),
+    yule_weapon: W('ユールの武器屋', ['w_axe', 'w_spear', 'w_axe_mace', 'w_greatsword', 'w_bow']),
     yule_armor: A('ユールの防具屋', ['heavy', 'cloth'], ['str', 'vit', 'int', 'mnd']),
     loch_item: I('ロッホの道具屋'),
-    loch_weapon: W('ロッホの武器屋', ['w_staff', 'w_staff_prayer', 'w_whip', 'w_dagger', 'w_bow', 'w_fist']),
+    loch_weapon: W('ロッホの武器屋', ['w_staff', 'w_staff_prayer', 'w_dagger', 'w_bow', 'w_axe_mace']),
     loch_armor: A('ロッホの防具屋', ['cloth', 'light'], ['int', 'mnd', 'dex', 'agi']),
     coral_item: I('コーラルの道具屋'),
-    coral_weapon: W('コーラルの武器屋', ['w_sword', 'w_katana', 'w_spear', 'w_fist', 'w_bow', 'w_whip']),
+    coral_weapon: W('コーラルの武器屋', ['w_sword', 'w_spear', 'w_bow', 'w_dagger']),
     coral_armor: A('コーラルの防具屋', ['light', 'heavy'], ['str', 'vit', 'dex', 'agi']),
     nerei_item: I('ネレイの雑貨屋'),
     dovan_item: I('ドヴァンの道具屋'),
-    // ヘルガの鍛冶場: r_mine のクリア後は 12 系列すべて ＋ 腕章 11（§10.8.7）。後ろの段が勝つので、クリア後はこちらが出る
-    dovan_weapon: (() => { const s = W('ヘルガの鍛冶場', ['w_sword', 'w_greatsword', 'w_axe', 'w_club', 'w_spear']);
+    // ヘルガの鍛冶場: r_mine のクリア後は 9 系列すべて ＋ 腕章 7（§10.8.7・SYSTEMS_REWORK §3.3）。後ろの段が勝つので、クリア後はこちらが出る
+    dovan_weapon: (() => { const s = W('ヘルガの鍛冶場', ['w_sword', 'w_greatsword', 'w_axe', 'w_axe_mace', 'w_spear']);
       s.stock.push(...T9.map((t) => ({ tier: t, cond: { cleared: 'r_mine' }, items: [...ALLW.map((l) => at(l, t)), ...BADGES] }))); return s; })(),
     dovan_armor: A('ドヴァンの防具屋', ['heavy'], ['str', 'vit']),
     caldera_item: I('カルデラの道具屋'),
-    caldera_weapon: W('カルデラの武器屋', ['w_fist', 'w_katana', 'w_axe', 'w_greatsword', 'w_club', 'w_staff']),
+    caldera_weapon: W('カルデラの武器屋', ['w_sword', 'w_axe', 'w_greatsword', 'w_axe_mace', 'w_staff']),
     caldera_armor: A('カルデラの防具屋', ['heavy', 'light'], ['str', 'vit', 'dex', 'agi']),
     orbis_item: I('オルビスの道具屋'),
-    orbis_weapon: W('オルビスの武器屋', ['w_staff', 'w_staff_prayer', 'w_dagger', 'w_bow', 'w_whip']),
+    orbis_weapon: W('オルビスの武器屋', ['w_staff', 'w_staff_prayer', 'w_dagger', 'w_bow', 'w_spear']),
     orbis_armor: A('オルビスの防具屋', ['cloth', 'light'], ['int', 'mnd', 'dex', 'agi']),
     orbis_magic: { name: '学院の術具店', kind: 'magic', items: [...STONES, ...SPIRITS, 'ac_glim_tech', 'ac_glim_spell', 'ac_hourglass_mp', 'ac_hourglass_wp', 'ac_brooch', 'ac_sachet', 'ac_vial', 'i_lens'] },
     biblia_item: I('ビブリアの道具屋', [{ tier: 0, items: [...GUARDS, ...SPIRITS, 'ac_glim_tech', 'ac_glim_spell', 'ac_hourglass_mp', 'ac_hourglass_wp', 'ac_loupe', 'ac_clover', 'ac_purse', 'ac_sash', 'ac_vial', 'ac_sachet'] }]),
@@ -110,7 +111,7 @@
   Object.assign(R.DB.shops, SHOPS);
 
   // 道具屋（keepOld:true）の並び: 足し合わせた品が「道具 → アクセサリ」、その中は品の sort（道具の一覧と同じ順。
-  // 回復 → 生き返り → MP・WP → 治療 → 香 → 戦闘の道具 → 魔石）になるように段を並べ直す。
+  // 回復 → 生き返り → MP → 治療 → 香 → 戦闘の道具 → 魔石）になるように段を並べ直す。
   // どのティア・条件でも、出る品の集まりは変わらない（段を品ごとに分け、同じティア・条件の隣どうしをまとめ直すだけ）。
   R.onData(() => {
     const sortOf = (id) => { const it = R.DB.items[id]; return it && Number.isFinite(it.sort) ? it.sort : 1e9; };

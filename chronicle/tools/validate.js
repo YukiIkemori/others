@@ -34,17 +34,17 @@ const C = {};
 C.STATS = ['str', 'vit', 'dex', 'agi', 'int', 'mnd'];                                             // §3.1.1
 C.SLOTS = ['weapon1', 'weapon2', 'shield', 'head', 'body', 'hands', 'feet', 'acc1', 'acc2'];
 C.ITEM_TYPES = ['weapon', 'shield', 'head', 'body', 'hands', 'feet', 'acc', 'consumable', 'key'];
-C.WTYPES = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'club', 'staff', 'katana', 'fist', 'whip'];
+C.WTYPES = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'staff'];                   // SYSTEMS_REWORK §3.1 (A19)
 C.TWO_HANDED = ['greatsword', 'spear', 'bow'];
-C.REACH = ['spear', 'bow', 'whip'];
+C.REACH = ['spear', 'bow', 'staff'];
 C.ELEMENTS = ['fire', 'water', 'wind', 'earth', 'light', 'dark'];
 C.GRADES = ['normal', 'rare', 'super'];
 C.ROWS = ['front', 'middle'];
 C.BAD = ['poison', 'burn', 'sleep', 'paralyze', 'freeze', 'stun', 'confuse', 'silence', 'blind'];
 C.GOOD = ['regen', 'veil', 'counter', 'nimble', 'cover'];
 C.BUFFS = ['atk', 'def', 'mag', 'mdef', 'agi'];
-C.TARGETS = ['enemy', 'enemies', 'group', 'random', 'ally', 'allies', 'self', 'ally_dead', 'ally_any', 'party'];
-C.EFFECTS = ['damage', 'heal', 'healMp', 'healWp', 'revive', 'cure', 'status', 'buff', 'dispel', 'steal', 'scan', 'escape', 'grow',
+C.TARGETS = ['enemy', 'enemies', 'group', 'random', 'ally', 'allies', 'self', 'ally_dead', 'ally_any', 'party', 'ally_other'];
+C.EFFECTS = ['damage', 'heal', 'healMp', 'revive', 'cure', 'status', 'buff', 'dispel', 'steal', 'scan', 'escape', 'grow',
   'teleport', 'exit', 'encounter', 'cover', 'summon', 'special'];
 C.FORMULAS = ['phys', 'magic', 'breath', 'tier', 'fixed', 'percent'];
 C.MON_COND = ['hpBelow', 'hpAbove', 'every', 'once', 'round', 'alone', 'countBelow', 'allyDown'];            // §9.1.7
@@ -53,20 +53,20 @@ C.MON_FLAGS = ['boss', 'rare', 'metal', 'flying'];
 C.SIZES = ['s', 'm', 'l'];
 C.ELEM_VALUES = [2, 1.5, 1.25, 1, 0.75, 0.5, 0.25, 0, -1];                                          // §4.7.1
 C.KINDS = ['slash', 'blunt', 'pierce'];
-C.WEAPON_FIELDS = ['wtype', 'atk', 'mag', 'hit', 'crit', 'element', 'onHit', 'twoHanded', 'vs', 'drain', 'sealTech', 'metalHit'];
+C.WEAPON_FIELDS = ['wtype', 'atk', 'mag', 'hit', 'crit', 'element', 'onHit', 'twoHanded', 'vs', 'drain', 'sealTech', 'metalHit', 'mult', 'kind', 'art'];
 C.ITEM_FIELDS = ['name', 'type', 'grade', 'tier', 'desc', 'price', 'units', 'line', 'src', 'exclusive', 'unique', 'quirk', 'sort', 'icon',
   'stats', 'statsAdd', 'mods', 'weight', 'def', 'mdef', 'eva', 'use', 'stone', 'only', 'gender', ...['wtype', 'atk', 'mag', 'hit', 'crit', 'element',
-    'onHit', 'twoHanded', 'vs', 'drain', 'sealTech', 'metalHit']];
+    'onHit', 'twoHanded', 'vs', 'drain', 'sealTech', 'metalHit', 'mult', 'kind', 'art']];
 C.SRC = ['shop', 'drop', 'mdrop', 'super', 'relic', 'reward'];
 C.WEIGHTS = ['heavy', 'light', 'cloth'];
 // §3.3.16 mods keys → value type
 C.MODS = {
   atk: 'n', def: 'n', mdef: 'n', hit: 'n', eva: 'n', crit: 'n', spd: 'n', mag: 'n',
-  strPct: 'n', vitPct: 'n', dexPct: 'n', agiPct: 'n', intPct: 'n', mndPct: 'n', hpPct: 'n', mpPct: 'n', wpPct: 'n', defPct: 'n', mdefPct: 'n',
-  physPct: 'n', magicPct: 'n', healPct: 'n', itemPct: 'n', takenPct: 'n', mpCostPct: 'n', wpCostPct: 'n',
+  strPct: 'n', vitPct: 'n', dexPct: 'n', agiPct: 'n', intPct: 'n', mndPct: 'n', hpPct: 'n', mpPct: 'n', defPct: 'n', mdefPct: 'n',
+  physPct: 'n', magicPct: 'n', healPct: 'n', itemPct: 'n', takenPct: 'n', mpCostPct: 'n', techCostPct: 'n',
   elemBoost: 'emap', elemResist: 'emap', statusImmune: 'slist', statusResist: 'smap', profPct: 'pmap', glimPct: 'gmap', expPct: 'n',
   goldPct: 'n', dropPct: 'n', rarePct: 'n', superPct: 'n', rareEncPct: 'n', goldenPct: 'n', preemptPct: 'n', escapePct: 'n',
-  stealPct: 'n', autoSteal: 'n', encounterPct: 'n', regen: 'b', mpRegen: 'n', wpRegen: 'n', startBuffs: 'bmap', noSpell: 'b', hpLoss: 'n',
+  stealPct: 'n', autoSteal: 'n', encounterPct: 'n', regen: 'b', mpRegen: 'n', startBuffs: 'bmap', noSpell: 'b', hpLoss: 'n',
   autoRevive: 'n', autoCounter: 'n', walkHeal: 'n', noFloorDamage: 'b',
 };
 // §11.11.4 sound ids
@@ -80,18 +80,19 @@ C.SFX = ('cursor confirm confirm_soft cancel buzzer menu_open attack hit crit mi
 C.HERO_TYPES = ['warrior', 'ranger', 'mage', 'spellblade', 'wanderer'];
 C.COMPANIONS = ['selma', 'hagen', 'dokka', 'basil', 'bartolo', 'viola', 'shigure', 'rouga', 'titta', 'brigitta', 'sylvain', 'zafira', 'ferno',
   'belladonna', 'boden', 'teo', 'ilse', 'morga', 'marta', 'noela'];
-// §6.1.2
+// §6.1.2 → SYSTEMS_REWORK §3.4 (108 techs, A19)
 C.TECHS = {
-  sword: 'stepcut guard twin thrust wheel bulwark purify bladewind triple dawn crest', greatsword: 'overhead mow flat whirl desperate rend quake crush tempest skyfall rivers',
-  dagger: 'vital filch venom knives lull bees gap nape shadow dance nightfall', axe: 'cleave woodcut throw rage reckless whirl cliff twostroke storm earthsplit giant',
-  spear: 'upthrust butt skewer receive pierce cloud ripple phalanx soar surge starpierce', bow: 'rapid twin blind rain hush hawk pin volley gale starrain rainbow',
-  club: 'smash crumble wrist tremor bell strip shatter rumble diamond thunder upheaval', staff: 'mind soothe seal unward share wave clarity aegis drain oracle prayer',
-  katana: 'draw mine fold riposte haze dash steel void lifecut leaves first', fist: 'palm onetwo willow knee breath hail farstrike throw wolves eightfold empty',
-  whip: 'trip sweep bind disarm snatch serpent thorn sparks coil net twilight',
+  sword: 'stepcut guard draw twin mine thrust wheel haze bulwark purify void bladewind lifecut triple first dawn crest',
+  greatsword: 'overhead mow flat parry whirl desperate helmsplit rend shatter quake crush adamant tempest skyfall rivers',
+  dagger: 'vital filch venom numb knives pommel lull serpent bees hail gap nape shadow dance nightfall',
+  axe: 'cleave woodcut crumble throw rage tremor reckless bell whirl strip cliff twostroke storm earthsplit thunder giant',
+  spear: 'upthrust butt skewer disarm receive pierce cloud vault ripple whirl phalanx soar heavennet surge starpierce',
+  bow: 'rapid twin hobble blind rain hush venom hawk pin volley firerain gale dusk starrain rainbow',
+  staff: 'mind soothe seal weaken unward calm share wave bolt clarity aegis rumble drain oracle prayer',
 };
+C.TECH_COUNT = 108;
 C.TECH_IDS = Object.entries(C.TECHS).flatMap(([w, s]) => s.split(' ').map((n) => `t_${w}_${n}`));
-C.TECH_LV = [1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];                                                      // §6.9.1-2
-C.TECH_WP = { 1: [1, 2], 2: [2, 3], 3: [2, 4], 4: [3, 4], 5: [3, 5], 6: [4, 6], 7: [5, 7], 8: [6, 8], 9: [10, 11], 10: [12, 14] };   // §6.4.1
+C.TECH_MP = { 1: [2, 3], 2: [3, 5], 3: [3, 6], 4: [5, 6], 5: [5, 8], 6: [6, 9], 7: [8, 11], 8: [9, 12], 9: [15, 17], 10: [18, 21] };   // SYSTEMS_REWORK §2.2
 // §7.2.1
 C.PAIRS = [];
 for (let i = 0; i < 6; i++) for (let j = i + 1; j < 6; j++) C.PAIRS.push([C.ELEMENTS[i], C.ELEMENTS[j]]);
@@ -103,20 +104,21 @@ C.SPELL_IDS = [].concat(
   ...C.PAIRS.map(([a, b]) => [`s_${a}_${b}_a`, `s_${a}_${b}_b`]),
   C.TRIPLES.map((t) => 's_' + t.join('_')));
 // §7.1.3: cls → {lv, prof, mp:[min,max]}
-C.SPELL_CLS = { 1: { lv: 1, prof: 0, mp: [2, 3] }, 2: { lv: 2, prof: 2, mp: [3, 5] }, 3: { lv: 3, prof: 4, mp: [5, 7] }, 4: { lv: 5, prof: 6, mp: [7, 9] },
-  5: { lv: 7, prof: 8, mp: [11, 12] }, comboA: { lv: 4, prof: 5, mp: [7, 9] }, comboB: { lv: 6, prof: 7, mp: [10, 13] }, triple: { lv: 8, prof: 8, mp: [15, 20] } };
+// glim.prof = SYSTEMS_REWORK §1.4 (ranks 1–100)
+C.SPELL_CLS = { 1: { lv: 1, prof: 1, mp: [2, 3] }, 2: { lv: 2, prof: 4, mp: [3, 5] }, 3: { lv: 3, prof: 10, mp: [5, 7] }, 4: { lv: 5, prof: 19, mp: [7, 9] },
+  5: { lv: 7, prof: 32, mp: [11, 12] }, comboA: { lv: 4, prof: 14, mp: [7, 9] }, comboB: { lv: 6, prof: 25, mp: [10, 13] }, triple: { lv: 8, prof: 34, mp: [15, 20] } };
 // §8.9 · §8.10 · §8.11 · §8.12
 C.CONSUMABLES = ('i_antidote i_aurora_feather i_bloom_nectar i_bomb i_censer i_clear i_diamond_dust i_dream_fruit i_elixir i_ether2 i_ether i_firepot ' +
   'i_fox_icicle i_gem_quill i_ghost_tea i_glass_dust i_gold_bar i_gold_coins i_golden_acorn i_golden_ink i_grace i_horn i_incense i_jewel_carrot ' +
   'i_lens i_lifedew i_lotus_dew i_lure i_memory_bubble i_moon_wool i_numb i_panacea i_phoenix i_potion i_prism_shard i_repel i_revive i_salve ' +
-  'i_seed_hp i_seed_mp i_seed_wp i_smoke i_snail_bell i_spa_egg i_spring_key i_stardust i_stone_dark i_stone_earth i_stone_fire i_stone_light ' +
-  'i_stone_water i_stone_wind i_thaw i_throat i_tonic i_volcano_stone i_waker i_wisdom_page').split(' ');
+  'i_seed_hp i_seed_mp i_smoke i_snail_bell i_spa_egg i_spring_key i_stardust i_stone_dark i_stone_earth i_stone_fire i_stone_light ' +
+  'i_stone_water i_stone_wind i_thaw i_throat i_volcano_stone i_waker i_wisdom_page').split(' ');
 C.KEYS = ('k_chronicle k_quill k_bell k_lighthouse_key k_page_forest k_page_desert k_page_snow k_page_marsh k_page_isles k_page_mine k_page_ash ' +
   'k_page_star k_winter_flame k_marsh_key k_shanty k_oath_hammer k_star_chart k_rowell_note').split(' ');
 C.SHOPS = ['roa_item', 'lute_item', 'lute_weapon', 'lute_armor', ...['fern', 'kasim', 'yule', 'loch', 'coral', 'dovan', 'caldera', 'orbis', 'biblia']
   .flatMap((t) => [`${t}_item`, `${t}_weapon`, `${t}_armor`]), 'nerei_item', 'orbis_magic', 'coral_regnas'];
 C.POOLS = ['p_supply', 'p_gold', 'p_stone', 'p_gear', 'p_weapon', 'p_armor', 'p_acc', 'p_rare', 'p_boss', 'p_boss_mid'];
-C.ITEM_COUNTS = { weapon: 301, armor: 480, acc: 265, consumable: 58, key: 18 };                     // §8.1.3
+C.ITEM_COUNTS = { weapon: 260, armor: 480, acc: 261, consumable: 56, key: 18 };                     // §8.1.3 + SYSTEMS_REWORK §0.9/§2.5/§3.8
 // §10.13
 C.REGIONS = ['r_forest', 'r_desert', 'r_snow', 'r_marsh', 'r_isles', 'r_mine', 'r_ash', 'r_star'];
 C.RS = { r_forest: 'forest', r_desert: 'desert', r_snow: 'snow', r_marsh: 'marsh', r_isles: 'isles', r_mine: 'mine', r_ash: 'ash', r_star: 'star' };
@@ -178,10 +180,10 @@ C.FX_ALL = new Set([...C.FX_TECH, 'arrow', 'bite', 'bite2', 'breath', 'breath_fi
 const X = null;
 C.CAPS = {
   crit: [X, 20, 20, 10, 10], hit: [X, 15, 15, 20, 20], atk: [X, 10, 20, X, X], def: [X, 10, 20, X, X], mdef: [X, 10, 20, X, X],
-  elemBoost: [10, 20, 30, 20, 30], hpPct: [X, 15, 20, 15, 20], mpPct: [X, 20, 25, 15, 20], wpPct: [X, 20, 25, 15, 20],
+  elemBoost: [10, 20, 30, 20, 30], hpPct: [X, 15, 20, 15, 20], mpPct: [X, 20, 25, 15, 20],
   strPct: [X, X, X, 20, 20], vitPct: [X, X, X, 20, 20], dexPct: [X, X, X, 20, 20], agiPct: [X, X, X, 20, 20], intPct: [X, X, X, 20, 20], mndPct: [X, X, X, 20, 20],
-  mpRegen: [X, 3, 3, 1, 2], wpRegen: [X, 3, 3, 1, 2], physPct: [10, 15, 25, 15, 25], magicPct: [10, 15, 25, 15, 25], healPct: [20, 35, 50, 35, 35],
-  itemPct: [30, 50, 50, 30, 30], mpCostPct: [15, 25, 35, 15, 35], wpCostPct: [15, 25, 35, 15, 35], glimPct: [10, 15, 25, 15, 20], profPct: [20, 35, 50, X, X],
+  mpRegen: [X, 4, 3, 1, 2], physPct: [10, 15, 25, 15, 25], magicPct: [10, 15, 25, 15, 25], healPct: [20, 35, 50, 35, 35],
+  itemPct: [30, 50, 50, 30, 30], mpCostPct: [15, 25, 35, 15, 35], techCostPct: [15, 25, 35, 15, 35], glimPct: [10, 15, 25, 15, 20], profPct: [20, 35, 50, X, X],
   dropPct: [10, 20, 30, 20, 30], rarePct: [10, 20, 30, 20, 30], superPct: [X, 20, 30, 20, 30], goldPct: [10, 20, 30, 20, 30], expPct: [10, 15, 20, 15, 15],
   encounterPct: [50, 50, 50, 50, 50], rareEncPct: [X, 20, 30, 20, 30], goldenPct: [X, 20, 30, 20, 30], stealPct: [50, 50, 50, 50, 50], escapePct: [50, 50, 50, 50, 50],
   preemptPct: [5, 5, 10, 10, 10], autoSteal: [50, 75, 100, X, X], spd: [X, 20, 30, 15, 30], eva: [X, 10, 15, 15, 15], defPct: [X, X, 25, 15, 25], mdefPct: [X, X, 25, 15, 25],
@@ -189,8 +191,8 @@ C.CAPS = {
 };
 // §8.3.6 quirk caps (penalty direction): [rare, super]
 C.QUIRK = { defPct: [25, 50], mdefPct: [25, 50], takenPct: [15, 30], hpPct: [10, 30], spd: [15, 30], eva: [10, 20], hit: [10, 20], expPct: [25, 100], goldPct: [25, 100],
-  encounterPct: [50, 50], mpCostPct: [25, 50], wpCostPct: [25, 50], glimPct: [50, 100], hpLoss: [0, 5], mpPct: [10, 30], wpPct: [10, 30], atk: [10, 20], def: [10, 20], mdef: [10, 20], crit: [10, 20] };
-C.PENALTY_UP = new Set(['takenPct', 'mpCostPct', 'wpCostPct', 'hpLoss']);   // larger = worse
+  encounterPct: [50, 50], mpCostPct: [25, 50], techCostPct: [25, 50], glimPct: [50, 100], hpLoss: [0, 5], mpPct: [10, 30], atk: [10, 20], def: [10, 20], mdef: [10, 20], crit: [10, 20] };
+C.PENALTY_UP = new Set(['takenPct', 'mpCostPct', 'techCostPct', 'hpLoss']);   // larger = worse
 
 // =====================================================================================================
 // OWNERS (§13 · §13.1) — file → area
@@ -1246,8 +1248,9 @@ function run(opts) {
       if (!a.glim || !isNum(a.glim.lv) || a.glim.lv < 1 || a.glim.lv > 10) E(V, o, `tech ${id}: glim.lv ${a.glim && a.glim.lv} outside 1–10`);
       else {
         if (a.rank !== a.glim.lv) E(V, o, `tech ${id}: rank ${a.rank} ≠ glim.lv ${a.glim.lv}`);
-        const r = C.TECH_WP[a.glim.lv];
-        if (r && !(a.wp >= r[0] && a.wp <= r[1])) E(V, o, `tech ${id}: wp ${a.wp} outside ${r[0]}–${r[1]} for lv ${a.glim.lv} (§6.4.1)`);
+        const r = C.TECH_MP[a.glim.lv];
+        if (r && !(a.mp >= r[0] && a.mp <= r[1])) E(V, o, `tech ${id}: mp ${a.mp} outside ${r[0]}–${r[1]} for lv ${a.glim.lv} (SYSTEMS_REWORK §2.2)`);
+        if (has(a, 'wp')) E(V, o, `tech ${id}: has a 'wp' field (WP was removed, A18)`);
       }
     }
     for (const id of spells) {
@@ -1416,11 +1419,12 @@ function run(opts) {
         for (const w of C.WTYPES) if (!'SABCD'.includes((a.w || {})[w] || '?')) E(V, o, `companion ${id}: apt.w.${w} missing/invalid`);
         for (const e of C.ELEMENTS) if (!'SABCD'.includes((a.e || {})[e] || '?')) E(V, o, `companion ${id}: apt.e.${e} missing/invalid`);
         const sw = aptSum(a.w, C.WTYPES), se = aptSum(a.e, C.ELEMENTS);
-        if (!(sw >= 15 && sw <= 19)) E(V, o, `companion ${id}: weapon aptitude sum ${sw} (15–19)`);
+        // SYSTEMS_REWORK §3.5: 7 weapon letters sum 10–13, elements 8–12 (no total-27 rule); §2.3: growth hp+mp 4–6
+        if (!(sw >= 10 && sw <= 13)) E(V, o, `companion ${id}: weapon aptitude sum ${sw} (10–13)`);
         if (!(se >= 8 && se <= 12)) E(V, o, `companion ${id}: element aptitude sum ${se} (8–12)`);
-        if (sw + se !== 27) E(V, o, `companion ${id}: aptitude total ${sw + se} (27)`);
-        const gs = aptSum(c.growth, ['hp', 'mp', 'wp']);
-        if (gs !== 6) E(V, o, `companion ${id}: growth sum ${gs} (6)`);
+        const gs = aptSum(c.growth, ['hp', 'mp']);
+        if (!(gs >= 4 && gs <= 6)) E(V, o, `companion ${id}: growth hp+mp ${gs} (4–6)`);
+        if (has(c.growth, 'wp')) E(V, o, `companion ${id}: growth.wp (WP was removed, A18)`);
         const lw = Math.max(({ S: 4, A: 3, B: 2, C: 1, D: 0 })[(a.e || {}).light] || 0, ({ S: 4, A: 3, B: 2, C: 1, D: 0 })[(a.e || {}).water] || 0);
         if (lw < 1) E(V, o, `companion ${id}: light and water both below C`);
         if (lw >= 3) healers++;
@@ -1458,8 +1462,10 @@ function run(opts) {
       const sum = C.STATS.reduce((s, k) => s + (st[k] || 0), 0);
       if (Math.abs(sum - 200) > 10) E('CH4', o, `heroType ${id}: stats sum ${sum} (200 ± 10)`);
       for (const k of C.STATS) if (!(st[k] >= 10 && st[k] <= 60)) E('CH4', o, `heroType ${id}: ${k} ${st[k]} outside 10–60`);
-      const gs = aptSum(h.growth, ['hp', 'mp', 'wp']);
-      if (Math.abs(gs - 6) > 1) E('CH4', o, `heroType ${id}: growth sum ${gs} (6 ± 1)`);
+      const gs = aptSum(h.growth, ['hp', 'mp']);
+      if (!(gs >= 4 && gs <= 6)) E('CH4', o, `heroType ${id}: growth hp+mp ${gs} (4–6)`);
+      if (has(h.growth, 'wp')) E('CH4', o, `heroType ${id}: growth.wp (WP was removed, A18)`);
+      { const sw0 = aptSum((h.apt || {}).w, C.WTYPES); if (!(sw0 >= 10 && sw0 <= 13)) E(V, o, `hero ${id}: weapon aptitude ${sw0} before the favour (10–13)`); }
       const opts2 = [];
       const fo = h.favorOptions || {};
       if (h.favorKind === 'weapon' || h.favorKind === 'any') for (const w of fo.weapon || C.WTYPES) opts2.push({ kind: 'weapon', id: w });
@@ -1469,7 +1475,6 @@ function run(opts) {
         apt[f.kind === 'weapon' ? 'w' : 'e'][f.id] = 'S';
         if (h.pairElement && f.kind === 'element' && kit.pair && kit.pair[f.id]) apt.e[kit.pair[f.id]] = 'A';
         const sw = aptSum(apt.w, C.WTYPES), se = aptSum(apt.e, C.ELEMENTS);
-        if (!(sw >= 15 && sw <= 19)) E(V, o, `hero ${id} × ${f.kind}:${f.id}: weapon aptitude ${sw} (15–19)`);
         if (!(se >= 8 && se <= 12)) E(V, o, `hero ${id} × ${f.kind}:${f.id}: element aptitude ${se} (8–12)`);
       }
     }
@@ -1483,7 +1488,7 @@ function run(opts) {
     const WT = K.WTYPE || {};
     const SH = K.SLOT_SHARE || { shield: 0.20, head: 0.15, body: 0.40, hands: 0.10, feet: 0.15 };
     const WG = K.WEIGHT || { heavy: { def: 1, mdef: 0.2 }, light: { def: 0.65, mdef: 0.35 }, cloth: { def: 0.4, mdef: 0.6 } };
-    const MULT = { sword: 1, greatsword: 1.4, dagger: 0.75, axe: 1.15, spear: 1.25, bow: 1.1, club: 1.05, staff: 0.6, katana: 1.05, fist: 0.9, whip: 0.8 };
+    const MULT = { sword: 1, greatsword: 1.4, dagger: 0.75, axe: 1.15, spear: 1.25, bow: 1.1, staff: 0.6 };
     const SK = { s: 'str', v: 'vit', d: 'dex', a: 'agi', i: 'int', m: 'mnd' };
     let unfilled = 0;
     for (const [id, it] of Object.entries(items)) {
@@ -1503,7 +1508,7 @@ function run(opts) {
         for (const k of C.STATS) if ((exp[k] || 0) !== (it.stats[k] || 0)) { E(V, o, `item ${id}: stats.${k} ${it.stats[k] || 0} ≠ gearStat ${exp[k] || 0} (units ${it.units}, ${it.grade}, §4.3.2)`); break; }
       }
       if (it.type === 'weapon' && isNum(it.atk) && it.grade === 'normal' && it.src === 'shop') {
-        const want = Wt[T] * ((WT[it.wtype] && WT[it.wtype].mult) || MULT[it.wtype] || 1);
+        const want = Wt[T] * (isNum(it.mult) ? it.mult : ((WT[it.wtype] && WT[it.wtype].mult) || MULT[it.wtype] || 1));   // item mult override (SYSTEMS_REWORK §3.1)
         if (Math.abs(it.atk - want) > 0.1 * want + 0.5) E(V, o, `item ${id}: atk ${it.atk} vs W(${T})×${(want / Wt[T]).toFixed(2)} = ${want.toFixed(1)} (±10%)`);
       }
       if (SH[it.type] != null && isNum(it.def) && it.grade === 'normal' && it.src === 'shop' && WG[it.weight]) {
@@ -1537,9 +1542,10 @@ function run(opts) {
       const missing = C.TECH_IDS.filter((id) => !actions[id]), extra = techs.filter((id) => !C.TECH_IDS.includes(id));
       if (missing.length) E(V, 'A7', `${missing.length} tech id(s) of §6.1.2 missing: ${missing.slice(0, 10).join(' ')}${missing.length > 10 ? ' …' : ''}`);
       if (extra.length) E(V, 'A7', `tech id(s) not in §6.1.2: ${extra.slice(0, 10).join(' ')}`);
-      for (const w of C.WTYPES) {
+      for (const w of C.WTYPES) {   // SYSTEMS_REWORK §3.4: every type has lv 1–10, in list order
         const lv = C.TECHS[w].split(' ').map((n2) => actions[`t_${w}_${n2}`]).filter(Boolean).map((a) => a.glim && a.glim.lv);
-        if (lv.length === 11 && lv.join(',') !== C.TECH_LV.join(',')) E(V, 'A7', `${w}: glim.lv order ${lv.join(',')} (§6.9.1: ${C.TECH_LV.join(',')})`);
+        for (let l = 1; l <= 10; l++) if (!lv.includes(l)) E(V, 'A7', `${w}: no lv ${l} tech (SYSTEMS_REWORK §3.4)`);
+        if (lv.some((x, i) => i && x < lv[i - 1])) E(V, 'A7', `${w}: glim.lv not ascending in list order (${lv.join(',')})`);
       }
       for (const id of techs) {
         const a = actions[id], o = own('actions', id);
@@ -1549,7 +1555,7 @@ function run(opts) {
         if (!C.TARGETS.includes(a.target)) E(V, o, `tech ${id}: target '${a.target}'`);
         // §6.3 / §6.9.1-5: lv 1 comes from 'attack'; lv ≥ 2 from 1–2 lower techs of the same weapon type
         const g = a.glim || {}, from = Array.isArray(g.from) ? g.from : [];
-        if (g.lv === 1) { if (from.join() !== 'attack') E(V, o, `tech ${id}: lv 1 glim.from must be ['attack'] (got [${from}])`); }
+        if (g.lv === 1 || (g.lv === 2 && from.join() === 'attack')) { if (from.join() !== 'attack') E(V, o, `tech ${id}: lv 1 glim.from must be ['attack'] (got [${from}])`); }   // lv 2 from attack: t_sword_draw, t_axe_crumble (§3.4)
         else if (isNum(g.lv)) {
           if (from.length < 1 || from.length > 2) E(V, o, `tech ${id}: glim.from has ${from.length} id(s) (1–2 lower techs, §6.3)`);
           for (const f of from) { const fa = actions[f]; if (!fa || !/^t_/.test(f) || fa.wtype !== a.wtype || !(fa.glim && fa.glim.lv < g.lv)) E(V, o, `tech ${id}: glim.from '${f}' is not a lower ${a.wtype} tech (§6.3)`); }
@@ -1558,7 +1564,10 @@ function run(opts) {
       }
       for (const [id, h] of Object.entries(DB.heroTypes)) for (const k of ['weapon', 'element']) for (const t of (((h.onFavor || {})[k] || {}).techs || [])) if (!actions[t]) E(V, own('heroTypes', id), `heroType ${id}: onFavor tech ${t} missing`);
     }
-    if (!empty('weaponTypes')) { const wt = Object.keys(DB.weaponTypes); if (wt.join(' ') !== C.WTYPES.join(' ')) E(V, 'A7', `DB.weaponTypes ≠ the 11 types in order (${wt.join(' ')})`); for (const w of C.WTYPES) { const d = DB.weaponTypes[w]; if (d && !!d.twoHanded !== C.TWO_HANDED.includes(w)) E(V, 'A7', `weaponTypes.${w}.twoHanded ${d.twoHanded}`); } }
+    if (!empty('weaponTypes')) { const wt = Object.keys(DB.weaponTypes); if (wt.join(' ') !== C.WTYPES.join(' ')) E(V, 'A7', `DB.weaponTypes ≠ the 7 types in order (${wt.join(' ')})`); for (const w of C.WTYPES) { const d = DB.weaponTypes[w]; if (d && !!d.twoHanded !== C.TWO_HANDED.includes(w)) E(V, 'A7', `weaponTypes.${w}.twoHanded ${d.twoHanded}`); if (d && !!d.reach !== C.REACH.includes(w)) E(V, 'A7', `weaponTypes.${w}.reach ${d.reach} (SYSTEMS_REWORK §3.1)`); } }
+    // SYSTEMS_REWORK §2 (A18): no WP left in item / tech / spell text
+    for (const [id, it] of Object.entries(items)) if (/WP/.test(String(it.desc || '') + String(it.name || ''))) E(V, own('items', id), `item ${id}: 'WP' in name/desc (A18)`);
+    for (const [id, a] of Object.entries(actions)) if (/^[ts]_/.test(id) && /WP/.test(String(a.desc || '') + String(a.name || ''))) E(V, own('actions', id), `action ${id}: 'WP' in name/desc (A18)`);
   }
   function checkEffects(a, o, where, V) {
     for (const e of a.effects || []) {
@@ -1613,7 +1622,7 @@ function run(opts) {
           if (e.type === 'status' && !(C.BAD.includes(e.status) || C.GOOD.includes(e.status) || e.status === 'death' || DB.statuses[e.status])) E(V, o, `spell ${id}: status '${e.status}' not in DB.statuses`);
         }
         if (a.field === true) {
-          const fe = a.fieldEffects || (a.effects || []).filter((e) => ['heal', 'revive', 'healWp', 'cure'].includes(e.type));
+          const fe = a.fieldEffects || (a.effects || []).filter((e) => ['heal', 'revive', 'cure'].includes(e.type));
           if (!fe.length) E(V, o, `spell ${id}: field:true without a field-usable effect (§7.3.5)`);
         }
         if (a.fx != null) for (const f of [].concat(a.fx)) if (!C.FX_ALL.has(String(f).replace(/[123]$/, '')) && !C.FX_ALL.has(f)) W(V, o, `spell ${id}: fx '${f}' is not a known fx id`);
@@ -1675,7 +1684,7 @@ function run(opts) {
         if (!it.use) { if (!(it.price > 0)) E(V, o, `consumable ${id}: no use and no price (a treasure to sell needs a price)`); continue; }
         if (!C.TARGETS.includes(it.use.target)) E(V, o, `consumable ${id}: target '${it.use.target}'`);
         checkEffects({ kind: 'item', target: it.use.target, effects: it.use.effects }, o, `consumable ${id}`, V);
-        for (const e of it.use.effects || []) if (e.type === 'grow' && !['hp', 'mp', 'wp'].includes(e.stat)) E(V, o, `consumable ${id}: grow stat '${e.stat}' (hp|mp|wp)`);
+        for (const e of it.use.effects || []) if (e.type === 'grow' && !['hp', 'mp'].includes(e.stat)) E(V, o, `consumable ${id}: grow stat '${e.stat}' (hp|mp)`);
       } else if (it.type === 'key') {
         const o = own('items', id);
         if (it.price !== 0 && it.price != null) E(V, o, `key ${id}: price must be 0`);
@@ -1733,7 +1742,7 @@ function run(opts) {
       }
       if (extra.length) W(V, 'A12', `${extra.length} rare encounter zone(s) beyond the 23 of §9.7.3 and the §10.6.4 rooms: ${extra.map((z) => z + '→' + DB.rareEncounters[z].mon + ' (' + (provOf('rareEncounters', z) || '?') + ')').join(' ')}`);
     }
-    if (techs.length && techs.length !== 121) E(V, 'A7', `${techs.length} techs (121)`);
+    if (techs.length && techs.length !== C.TECH_COUNT) E(V, 'A7', `${techs.length} techs (${C.TECH_COUNT})`);
     if (spells.length && spells.length !== 77) E(V, 'A8', `${spells.length} spells (77)`);
     if (!empty('statuses')) for (const s of [...C.BAD, ...C.GOOD]) if (!DB.statuses[s]) E(V, 'A8', `DB.statuses.${s} missing`);
     if (!empty('elements')) for (const e of C.ELEMENTS) if (!DB.elements[e]) E(V, 'A8', `DB.elements.${e} missing`);

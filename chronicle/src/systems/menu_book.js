@@ -169,7 +169,7 @@
           return;
         }
         Kt.fitText(a.name, x + 10, y + 6, 160, { color: tech && lv >= 9 ? G().C.gold : '#ffffff' });
-        G().text((tech ? 'W ' + (a.wp || 0) : 'M ' + (a.mp || 0)), x + 238, y + 6, { align: 'right' });
+        G().text('M ' + (a.mp || 0), x + 238, y + 6, { align: 'right' }); // Part A18: techs cost MP too (the book is nobody's: the base cost)
         const tgt = (Menu.TARGET_NAMES && Menu.TARGET_NAMES[a.target]) || '―';
         const reach = !tech || !!a.reach;
         if (tech) {

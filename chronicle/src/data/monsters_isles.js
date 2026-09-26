@@ -36,7 +36,7 @@
       flags: [], s: { hp: 2.47, atk: 0.62, mag: 0.54, def: 1.25 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_thrust', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_tide', w: 1 }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_katana_tide', rate: 32 }, super: { item: 'w_sword_sr_merknight', rate: 256 } },
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_sword_tide', rate: 32 }, super: { item: 'w_sword_sr_merknight', rate: 256 } },
       desc: '海の王に仕える魚人の騎士。\nうろこの鎧は刃を通さない。',
     },
     // ---- kraken タコ（水生・l）: 洞窟と船底の大ダコ。墨、八本の腕、渦潮。
@@ -53,7 +53,7 @@
       flags: [], s: { hp: 1.13, atk: 0.9, mag: 0.82, agi: 0.85 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_tentacles', w: 3 }, { id: 'e_bind', w: 2 }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_fist_wormtooth', rate: 32 }, super: { item: 'w_whip_sr_eightarm', rate: 256 } },
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_dagger_wormtooth', rate: 32 }, super: { item: 'w_spear_sr_eightarm', rate: 256 } },
       desc: '八本の腕で同時に襲いかかる。\n捕まったら逃げられない。',
     },
     kraken_3: {
@@ -61,7 +61,7 @@
       flags: [], s: { hp: 1.78, atk: 0.67, mag: 0.7, agi: 0.85 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_tentacles', w: 2 }, { id: 'e_tide', w: 2 }, { id: 'e_ink', w: 1 }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_katana_tide', rate: 32 }, super: { item: 'bd_sr_whirlpool', rate: 256 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_sword_tide', rate: 32 }, super: { item: 'bd_sr_whirlpool', rate: 256 } },
       desc: '体のまわりに渦をまとう大ダコ。\n船ごと海に引きこむ。',
     },
     // ---- skeleton 骸骨（不死・m）: 幽霊船の骸骨の船乗り。水夫・海賊・砲手・航海士・提督。
@@ -94,7 +94,7 @@
       flags: [], s: { hp: 2.99, atk: 0.68, mag: 0.68 }, eva: 5,
       elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: { poison: 1, death: 1, sleep: 1, confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_slash', w: 2 }, { id: 'e_howl', w: 1, cond: { once: true } }, { id: 'e_curse', w: 1 }],
-      drops: { normal: { item: 'i_revive', rate: 8 }, rare: { item: 'w_katana_tide', rate: 32 }, super: { item: 'ac_sr_ghost_compass', rate: 256 } },
+      drops: { normal: { item: 'i_revive', rate: 8 }, rare: { item: 'w_sword_tide', rate: 32 }, super: { item: 'ac_sr_ghost_compass', rate: 256 } },
       desc: '死んでも航路を探す航海士。\n行き先はもう誰も知らない。',
     },
     skeleton_5: {

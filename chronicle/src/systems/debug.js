@@ -24,7 +24,7 @@
   function chars(charId) { return charId ? [charOf(charId)].filter(Boolean) : need().party; }
   function refresh() { if (R.Field && R.Field.map) R.Field.refresh(); }
   function fill(c) {
-    try { const s = R.Rules.stats(c); c.hp = s.hp; c.mp = s.mp; if (s.wp != null) c.wp = s.wp; } catch (e) { /* partial rules */ }
+    try { const s = R.Rules.stats(c); c.hp = s.hp; c.mp = s.mp; } catch (e) { /* partial rules */ }
     c.status = {};
   }
   function setLevel(c, n) {
@@ -205,7 +205,7 @@
     },
     gold(n) { need(); R.State.addGold(n); return R.Game.gold; },
     flag(name, v = true) { need(); R.State.setFlag(name, v); refresh(); return R.State.flag(name); },
-    /** set every active member (or one character) to level n, full HP/MP/WP */
+    /** set every active member (or one character) to level n, full HP/MP */
     level(n, charId) {
       need();
       for (const c of chars(charId)) setLevel(c, n);

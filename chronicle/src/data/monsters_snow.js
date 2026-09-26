@@ -12,7 +12,7 @@
       flags: [], s: { hp: 1.22, atk: 0.97, mag: 0.92, agi: 1.15 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_bite', w: 2 }, { id: 'e_howl', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'bd_wolf_pelt', rate: 32 }, super: { item: 'w_fist_sr_greywolf', rate: 256 } },
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'bd_wolf_pelt', rate: 32 }, super: { item: 'w_dagger_sr_greywolf', rate: 256 } },
       desc: '雪原を群れで走るオオカミ。\n遠吠えで仲間を奮い立たせる。',
     },
     wolf_2: {
@@ -36,7 +36,7 @@
       flags: [], s: { hp: 2.66, atk: 0.61, mag: 0.53, agi: 1.25 }, eva: 5,
       elem: { fire: 1.25, light: 1.5, dark: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_double', w: 2 }, { id: 'e_shadow_bite', w: 2 }, { id: 'e_howl', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_stone_dark', rate: 8 }, rare: { item: 'w_katana_moon', rate: 32 }, super: { item: 'w_katana_sr_matsuyoi', rate: 256 } },
+      drops: { normal: { item: 'i_stone_dark', rate: 8 }, rare: { item: 'w_sword_moon', rate: 32 }, super: { item: 'w_sword_sr_matsuyoi', rate: 256 } },
       desc: '月の出ている夜だけ現れる。\n影から影へと跳び回る。',
     },
     wolf_5: {
@@ -44,7 +44,7 @@
       flags: [], s: { hp: 2.09, atk: 0.41, mag: 0.35, agi: 1.2 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_frost_breath', w: 2 }, { id: 'e_frost_bite', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_howl', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_fist_wolfking', rate: 32 }, super: { item: 'ac_sr_beastheart', rate: 128 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_dagger_wolfking', rate: 32 }, super: { item: 'ac_sr_beastheart', rate: 128 } },
       desc: '氷の冠をいただくオオカミたちの王。\n一声で吹雪を呼ぶという。',
     },
     // ---- yeti 雪男（獣・l）: 雪山の大男。雪玉、氷の拳、雪崩。
@@ -53,7 +53,7 @@
       flags: [], s: { hp: 0.96, atk: 1.38, mag: 1.2, agi: 0.8 }, eva: 5,
       elem: { fire: 1.5, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_crush', w: 1 }, { id: 'e_snowball', w: 2 }, { id: 'e_headbutt', w: 1 }],
-      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'bd_wolf_pelt', rate: 32 }, super: { item: 'w_fist_sr_yeti', rate: 256 } },
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'bd_wolf_pelt', rate: 32 }, super: { item: 'w_axe_sr_yeti', rate: 256 } },
       desc: '雪山に住む毛むくじゃらの大男。\n大きな雪玉を投げてくる。',
     },
     yeti_2: {
@@ -78,7 +78,7 @@
       flags: [], s: { hp: 1.16, atk: 0.69, mag: 0.83, agi: 1.1 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5, light: 0.5, dark: 1.5 }, phys: {}, statusRes: { confuse: 0.5 },
       actions: [{ id: 'attack', w: 4 }, { id: 'e_frost', w: 2 }],
-      drops: { normal: { item: 'i_stone_water', rate: 8 }, rare: { item: 'ac_snow_crystal', rate: 32 }, super: { item: 'w_fist_sr_icicle_child', rate: 256 } },
+      drops: { normal: { item: 'i_stone_water', rate: 8 }, rare: { item: 'ac_snow_crystal', rate: 32 }, super: { item: 'w_dagger_sr_icicle', rate: 256 } },
       desc: '雪の日に生まれる小さな小鬼。\n冷たい息で遊び相手を探す。',
     },
     frostling_2: {
@@ -102,7 +102,7 @@
       flags: [], s: { hp: 2.5, atk: 0.47, mag: 0.45, agi: 1.05 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5, light: 0.5, dark: 1.5 }, phys: {}, statusRes: { confuse: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_frost_fist', w: 2 }, { id: 'e_frost', w: 2 }, { id: 'e_howl', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_katana_moon', rate: 32 }, super: { item: 'w_katana_sr_snowgeneral', rate: 256 } },
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_sword_moon', rate: 32 }, super: { item: 'w_sword_sr_snowgeneral', rate: 256 } },
       desc: '氷の兜をかぶった小鬼の\n大将。雪の子らを率いる。',
     },
     frostling_5: {
@@ -110,7 +110,7 @@
       flags: [], s: { hp: 2.76, atk: 0.38, mag: 0.42, agi: 1.05 }, eva: 5,
       elem: { fire: 1.25, water: -1, earth: 1.5, light: 0.5, dark: 1.5 }, phys: {}, statusRes: { confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_frost', w: 2 }, { id: 'e_icicle', w: 2 }, { id: 'e_freeze_gaze', w: 1 }, { id: 'e_haste', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_fist_wolfking', rate: 32 }, super: { item: 'ft_sr_cloud', rate: 128 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_dagger_wolfking', rate: 32 }, super: { item: 'ft_sr_cloud', rate: 128 } },
       desc: '冬そのものといわれる小鬼の王。\n来ると、春が遠のく。',
     },
     // ---- owl フクロウ（鳥・m・飛ぶ）: 雪の夜のフクロウ。眠りの歌、惑わしの目、そして術を使う賢者。
@@ -143,7 +143,7 @@
       flags: ['flying'], s: { hp: 3.36, atk: 0.39, mag: 0.5, mdef: 1.25, agi: 1.1 }, eva: 12,
       elem: { wind: 1.5, earth: 0.5, light: 0.25, dark: 1.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 1 }, { id: 'e_light_ray', w: 2 }, { id: 'e_gust', w: 2 }, { id: 'e_ward', w: 1, cond: { once: true } }, { id: 'e_heal_all', w: 1, cond: { hpBelow: 0.6 } }],
-      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'w_katana_moon', rate: 32 }, super: { item: 'ac_sr_owl', rate: 128 } },
+      drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'w_sword_moon', rate: 32 }, super: { item: 'ac_sr_owl', rate: 128 } },
       desc: '本を抱えたフクロウの学者。\n術を使いこなし仲間を守る。',
     },
     // ---- mammoth マンモス（獣・l）: 雪原の巨獣。突進と踏み鳴らし。鉄の牙、そして大王。

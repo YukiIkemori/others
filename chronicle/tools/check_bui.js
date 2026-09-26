@@ -57,16 +57,18 @@ const section = (h) => { const i = DESIGN.indexOf(h); if (i < 0) return ''; cons
   for (const k in legacy) if (JSON.stringify(B[k]) !== JSON.stringify(legacy[k])) err('K1', `legacy R.Battle.${k} changed: ${JSON.stringify(B[k])}`); else okk('K1', 'legacy ' + k);
   if (!B.BOX || B.BOX.x !== 8 || B.BOX.y !== 150 || B.BOX.w !== 240 || B.BOX.h !== 68) err('K1', 'legacy R.Battle.BOX changed');
   if (typeof B.enemyLayout !== 'function') err('K1', 'R.Battle.enemyLayout missing (§11.5.13)');
-  // §11.5.2 STATUS columns
-  const s2 = section('#### 11.5.2');
-  const col = (lab) => { const r = new RegExp("\\| " + lab + " \\| `'(?:H|M|W)'` を `\\(x\\+(\\d+), y\\)`、値を右寄せ `\\(x\\+(\\d+), y\\)`").exec(s2); return r ? [+r[1], +r[2]] : null; };
+  // §11.5.2 STATUS columns → SYSTEMS_REWORK §2.7 (A18): tag · name · H cur/max · M cur/max, no W column. The
+  // spec's SCOL is a guide ({tag:4, name:18, nameW:36, h:56, hp:100, m:104, mp:154}); the rule checked here is the
+  // shape: the letters sit left of their right-aligned values, '999/999' (35 px) and '250/250' never meet, the row ends
+  // inside the 158-px window (§11.5.2 keeps the old H/M/W table until the lead updates DESIGN, §4.2-4).
   const SC = B.STATUS_COLS || {};
-  for (const [lab, a, b] of [['HP', 'h', 'hp'], ['MP', 'm', 'mp'], ['WP', 'w', 'wp']]) {
-    const c = col(lab);
-    if (!c) err('K1', `§11.5.2 ${lab} row not read`);
-    else if (SC[a] !== c[0] || SC[b] !== c[1]) err('K1', `STATUS ${lab} columns ${SC[a]} / ${SC[b]}, §11.5.2 says ${c.join(' / ')}`);
-    else okk('K1', 'STATUS ' + lab);
-  }
+  const VALW = 35, LETW = 5;
+  if ('w' in SC || 'wp' in SC) err('K1', 'STATUS_COLS still has a W column (A18)'); else okk('K1', 'STATUS no W column');
+  const need = ['tag', 'name', 'nameW', 'h', 'hp', 'm', 'mp'];
+  if (!need.every((k) => typeof SC[k] === 'number')) err('K1', `STATUS_COLS lacks ${need.filter((k) => typeof SC[k] !== 'number').join(' ')}`);
+  else if (!(SC.name + SC.nameW <= SC.h && SC.h + LETW < SC.hp - VALW && SC.hp < SC.m && SC.m + LETW <= SC.mp - VALW && SC.mp <= 158 - 3))
+    err('K1', `STATUS_COLS ${JSON.stringify(SC)}: parts would touch ('999/999' / '250/250' = ${VALW} px)`);
+  else okk('K1', 'STATUS H/M columns');
   // §11.11.3 repeats the layout
   const s3 = section('#### 11.11.3');
   if (!/CMD\{4,152,88,68\}/.test(s3.replace(/\s+/g, ''))) warn('K1', '§11.11.3 does not list CMD {4,152,88,68}');
@@ -142,7 +144,7 @@ const section = (h) => { const i = DESIGN.indexOf(h); if (i < 0) return ''; cons
   const texts = {
     'めったに出会えない魔物が現れた！': STYLE, 'リピート　Bで解除': STYLE, 'リピート解除': STYLE, 'オート　Bで解除': STYLE, 'オート解除': STYLE,
     '前と同じ行動を、Bを押すまで続ける。': STYLE, 'くり返す行動がまだない。': STYLE,
-    'WPが足りない！': STYLE, 'MPが足りない！': STYLE, '術を封じられている！': STYLE, '後列からは届かない。': STYLE, '戦闘中は使えない。': STYLE, 'この戦いからは逃げられない！': STYLE,
+    'MPが足りない！': STYLE, '術を封じられている！': STYLE, '後列からは届かない。': STYLE, '戦闘中は使えない。': STYLE, 'この戦いからは逃げられない！': STYLE,
     '{hero}たちは全滅した……。': STYLE, '{hero}たちは力つきた……。': STYLE,
     '閃き！': STYLE, '奥義': STYLE, '極意': STYLE, '合成術': STYLE,
     'ほかでは手に入らない一品': DESIGN, '超レア': DESIGN, '敵全体にランダム': DESIGN, '味方全員': DESIGN, '敵全体': DESIGN,

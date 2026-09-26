@@ -33,14 +33,13 @@
       let st = null;
       try { st = R.Rules && R.Rules.stats ? R.Rules.stats(c) : null; } catch (e) { st = null; }
       const mx = c._max || {};
-      this.st = { hp: mx.hp || (st && st.hp) || c.hp || 1, mp: mx.mp != null ? mx.mp : (st && st.mp) || c.mp || 0, wp: mx.wp != null ? mx.wp : (st && st.wp) || c.wp || 0, mods: (st && st.mods) || {} };
+      this.st = { hp: mx.hp || (st && st.hp) || c.hp || 1, mp: mx.mp != null ? mx.mp : (st && st.mp) || c.mp || 0, mods: (st && st.mods) || {} };
       this.permRegen = !!this.st.mods.regen;
     }
     get name() { return this.c.name; }
     get hp() { return this.c.hp; } set hp(v) { this.c.hp = v; }
     get mp() { return this.c.mp; } set mp(v) { this.c.mp = v; }
-    get wp() { return this.c.wp; } set wp(v) { this.c.wp = v; }
-    get mhp() { return this.st.hp; } get mmp() { return this.st.mp; } get mwp() { return this.st.wp; }
+    get mhp() { return this.st.hp; } get mmp() { return this.st.mp; }
     get status() { return this.c.status; } set status(v) { this.c.status = v; }
     get mods() { return this.st.mods; }
     get boss() { return false; }
@@ -113,16 +112,18 @@
       const wt = DB.weaponTypes && DB.weaponTypes[it ? it.wtype : 'fist'];
       return this.effRow(u) === 'middle' && wt && wt.reach === false ? 'reach' : null;
     }
+    /** the MP an action costs (techs and spells, A18) — battle_scene's weaponMenu calls eng.mpCost when present */
+    mpCost(u, id) { return R.Rules && R.Rules.mpCost ? R.Rules.mpCost(u.c, id) : (DB.actions[id] || {}).mp || 0; }
     unusable(u, id, slot) {
       const a = DB.actions[id];
       if (!a) return 'none';
       if (a.kind === 'tech') {
         if (a.magic && u.status.silence) return 'silence';
         if (this.effRow(u) === 'middle' && !a.reach) return 'reach';
-        if (u.wp < (R.Rules && R.Rules.wpCost ? R.Rules.wpCost(u.c, id) : a.wp || 0)) return 'wp';
+        if (u.mp < this.mpCost(u, id)) return 'mp';
       } else if (a.kind === 'spell') {
         if (u.status.silence) return 'silence';
-        if (u.mp < (R.Rules && R.Rules.mpCost ? R.Rules.mpCost(u.c, id) : a.mp || 0)) return 'mp';
+        if (u.mp < this.mpCost(u, id)) return 'mp';
       }
       return null;
     }
@@ -190,8 +191,8 @@
       if (c.type === 'defend') { yield this.m(`${p.name}は守りを固めている。`); return; }
       const a = c.id ? DB.actions[c.id] || (DB.items[c.id] && DB.items[c.id].use) : null;
       if (c.type === 'item') { const it = DB.items[c.id]; if (this.inv[c.id]) this.inv[c.id]--; yield this.m(`${p.name}は${it ? it.name : c.id}を使った！`); }
-      else if (c.type === 'spell') { yield this.m(`${p.name}は${a ? a.name : c.id}を唱えた！`); if (a) p.mp = Math.max(0, p.mp - (a.mp || 0)); }
-      else if (c.type === 'tech') { yield this.m(`${p.name}の${a ? a.name : c.id}！`); if (a) p.wp = Math.max(0, p.wp - (a.wp || 0)); }
+      else if (c.type === 'spell') { yield this.m(`${p.name}は${a ? a.name : c.id}を唱えた！`); if (a) p.mp = Math.max(0, p.mp - this.mpCost(p, c.id)); }
+      else if (c.type === 'tech') { yield this.m(`${p.name}の${a ? a.name : c.id}！`); if (a) p.mp = Math.max(0, p.mp - this.mpCost(p, c.id)); }
       else yield this.m(`${p.name}の攻撃！`);
       let t = c.target && c.target.alive ? c.target : foes[0];
       if (!t || t.isParty) { if (t && t.isParty) { yield { t: 'fx', fx: (a && a.fx) || 'heal', user: p, targets: [t], ab: a, kind: 'ability' }; yield { t: 'heal', u: t, n: 10 }; } return; }
@@ -226,9 +227,9 @@
         const p = this.party[lu.idx];
         yield { t: 'clear' };
         yield { t: 'jingle', id: 'levelup' };
-        yield { t: 'levelup', c: p.c, u: p, level: lu.level, gains: lu.gains || { hp: 14, mp: 2, wp: 1 } };
+        yield { t: 'levelup', c: p.c, u: p, level: lu.level, gains: lu.gains || { hp: 14, mp: 2 } };
         yield this.m(`${p.name}はレベル${lu.level}に上がった！`);
-        yield this.m('最大HP+14　最大MP+2　最大WP+1');
+        yield this.m('最大HP+14　最大MP+2');
         yield { t: 'pause' };
       }
       for (const d of this.script.drops || []) {

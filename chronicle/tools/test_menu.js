@@ -115,10 +115,10 @@ section('T1 detail lines for every item');
 
 section('T2 every mods key and weapon field has a phrase');
 {
-  const MODKEYS = ['atk', 'def', 'mdef', 'hit', 'eva', 'crit', 'spd', 'mag', 'strPct', 'vitPct', 'dexPct', 'agiPct', 'intPct', 'mndPct', 'hpPct', 'mpPct', 'wpPct',
-    'defPct', 'mdefPct', 'physPct', 'magicPct', 'healPct', 'itemPct', 'takenPct', 'mpCostPct', 'wpCostPct', 'elemBoost', 'elemResist', 'statusImmune', 'statusResist',
+  const MODKEYS = ['atk', 'def', 'mdef', 'hit', 'eva', 'crit', 'spd', 'mag', 'strPct', 'vitPct', 'dexPct', 'agiPct', 'intPct', 'mndPct', 'hpPct', 'mpPct',
+    'defPct', 'mdefPct', 'physPct', 'magicPct', 'healPct', 'itemPct', 'takenPct', 'mpCostPct', 'techCostPct', 'elemBoost', 'elemResist', 'statusImmune', 'statusResist',
     'profPct', 'glimPct', 'expPct', 'goldPct', 'dropPct', 'rarePct', 'superPct', 'rareEncPct', 'goldenPct', 'preemptPct', 'escapePct', 'stealPct', 'autoSteal',
-    'encounterPct', 'regen', 'mpRegen', 'wpRegen', 'startBuffs', 'noSpell', 'hpLoss', 'autoRevive', 'autoCounter', 'walkHeal', 'noFloorDamage'];
+    'encounterPct', 'regen', 'mpRegen', 'startBuffs', 'noSpell', 'hpLoss', 'autoRevive', 'autoCounter', 'walkHeal', 'noFloorDamage'];
   const SAMPLE = {
     elemBoost: { fire: 25 }, elemResist: { water: 0.5, dark: 0, light: -1, earth: 1.5, wind: 0.7 }, statusImmune: ['sleep', 'poison'], statusResist: { paralyze: 0.5 },
     profPct: { sword: 20, fire: 20 }, glimPct: { tech: 10, spell: 10, bow: 15, water: 15 }, startBuffs: { atk: 1, def: -1 }, regen: true, noSpell: true, walkHeal: 2, noFloorDamage: true,
@@ -255,7 +255,7 @@ section('T4–T6 the equipment candidate list');
   const w2 = M.candidateRows(w, 'weapon2').find((r) => r.id === sw);
   ok(w2 && w2.diff.atk2 > 0, 'T6 weapon2 candidates show 攻 from atk2', w2 && w2.diff);
   // 付けると lists every other change (not the 3 of the row)
-  const oc = M.otherChanges({ atk1: 5, atk2: 0, mag: 3, def: 2, mdef: 4, hit: 1, eva: 0, crit: 0, str: 2, vit: 0, dex: -1, agi: 0, int: 0, mnd: 0, hp: 10, mp: 0, wp: 0 }, 'weapon1').map((p) => p.text);
+  const oc = M.otherChanges({ atk1: 5, atk2: 0, mag: 3, def: 2, mdef: 4, hit: 1, eva: 0, crit: 0, str: 2, vit: 0, dex: -1, agi: 0, int: 0, mnd: 0, hp: 10, mp: 0 }, 'weapon1').map((p) => p.text);
   ok(oc.join('　') === '術防+4　命中+1　腕力+2　器用さ-1　最大HP+10', 'T6 付けると excludes 攻・術・守 and keeps the order', oc);
   for (const k of ['hd_test_defonly', 'hd_test_a', 'hd_test_b']) delete DB.items[k];
 }
@@ -336,17 +336,17 @@ section('field effects, repeat targets, 満タン');
   ok(enc.lines[0] === '魔物の気配が遠のいた。', 'repel line (STYLE_JA §9)', enc.lines);
   const lure = M.applyFieldEffect(DB.items.i_lure.use, h, [], { item: true, id: 'i_lure' });
   ok(lure.lines[0] === '魔物の気配が近づいてきた……。', 'lure line', lure.lines);
-  // mp / wp items
-  h.mp = 0; h.wp = 0;
+  // mp items (A18: no WP)
+  h.mp = 0;
   M.applyFieldEffect(DB.items.i_ether.use, h, [h], { item: true });
-  M.applyFieldEffect(DB.items.i_tonic.use, h, [h], { item: true });
-  ok(h.mp === Math.ceil(st(h).mp * 0.3) && h.wp === Math.ceil(st(h).wp * 0.3), 'healMp / healWp by % of the maximum', [h.mp, h.wp]);
+  ok(h.mp === Math.ceil(st(h).mp * 0.3), 'healMp by % of the maximum', [h.mp]);
+  ok(!('wp' in h), 'no wp on the member');
   // spells: fieldEffects / effects filter
   const fe = M.fieldEffects(DB.actions.s_fire_dark_a || {});
   if (DB.actions.s_fire_dark_a) ok(fe.length === 1 && fe[0].type === 'encounter' && fe[0].pct === 100, '誘い火 uses its fieldEffects', fe);
-  if (DB.actions.s_light_1) ok(M.fieldEffects(DB.actions.s_light_1).every((e) => ['heal', 'revive', 'healWp', 'cure'].includes(e.type)), 'field spells keep only heal/revive/healWp/cure');
+  if (DB.actions.s_light_1) ok(M.fieldEffects(DB.actions.s_light_1).every((e) => ['heal', 'revive', 'cure'].includes(e.type)), 'field spells keep only heal/revive/cure');
   const fieldSpells = Object.keys(DB.actions).filter((id) => DB.actions[id].kind === 'spell' && DB.actions[id].field);
-  ok(fieldSpells.length === 15, 'there are 15 field spells (§7.8.3)', fieldSpells.length);
+  ok(fieldSpells.length === 14, 'there are 14 field spells (§7.8.3; 勇気の灯火 is battle-only since A18)', fieldSpells.length);
   ok(fieldSpells.every((id) => M.fieldEffects(DB.actions[id]).length > 0), 'every field spell does something outside battle');
   // spellBlock
   const healer = R.Game.party.find((c) => (c.spells || []).includes('s_light_1')) || m;
@@ -517,8 +517,10 @@ section('settings, save, shop, chronicle, books');
 {
   freshGame();
   const tb = M.bookEntries('tech');
-  ok(tb.length === 11 && tb.every((p) => p.ids.length === 11), '技の書: 11 types × 11 techs', tb.map((p) => p.ids.length));
-  ok(tb.reduce((a, p) => a + p.ids.length, 0) === 121, '技の書: 121 techs');
+  ok(JSON.stringify(tb.map((p) => p.ids.length)) === '[17,15,15,16,15,15,15]', '技の書: 7 types (SYSTEMS_REWORK §3.4)', tb.map((p) => p.ids.length));
+  ok(tb.reduce((a, p) => a + p.ids.length, 0) === 108, '技の書: 108 techs');
+  ok(M.kit.DIFF_KEYS.length === 16 && !M.kit.DIFF_KEYS.includes('wp'), 'DIFF_KEYS: 16 keys, no wp (A18)', M.kit.DIFF_KEYS);
+  ok(JSON.stringify(M.kit.wtypes()) === JSON.stringify(['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'staff']), 'the menus list the 7 weapon types (A19)', M.kit.wtypes());
   const sb = M.bookEntries('spell');
   ok(sb.map((p) => p.tab).join(' ') === '火 水 風 土 光 闇 合成 1/3 合成 2/3 合成 3/3 三属 1/2 三属 2/2', '術の書 tabs 火 水 風 土 光 闇 合成×3 三属×2', sb.map((p) => p.tab));
   ok(sb.reduce((a, p) => a + p.ids.length, 0) === 77, '術の書: 77 spells');
@@ -551,7 +553,7 @@ section('game over');
     for (let i = 0; i < 400 && !done; i++) { R.Engine.step(); await settle(); }
     ok(done && !err, 'GameOver.run resolves', err && String(err));
     ok(R.Game.gold === 500, 'gold halved (rounded down)', R.Game.gold);
-    ok(R.State.all().every((c) => c.hp === R.Rules.stats(c).hp && c.mp === R.Rules.stats(c).mp && c.wp === R.Rules.stats(c).wp), 'everyone (reserve too) back to full');
+    ok(R.State.all().every((c) => c.hp === R.Rules.stats(c).hp && c.mp === R.Rules.stats(c).mp), 'everyone (reserve too) back to full');
     ok(R.Game.encItem === null && (!R.Battle || R.Battle.autoCarry === false), 'encItem null, autoCarry false');
     ok(!R.Engine.layers.some((l) => l instanceof R.GameOver.Layer), 'the game over layer is gone');
     ok(R.Engine.fadeAlpha === 0 && R.Input.enabled === true && R.Engine.paused === false, 'no fade left, input on, not paused');

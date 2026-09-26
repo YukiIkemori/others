@@ -17,7 +17,7 @@
     // an 8-character tech (the longest name the list must show; the real 121 stop at 6)
     if (!DB.actions.bui_t_long) {
       DB.actions.bui_t_long = {
-        kind: 'tech', wtype: 'sword', name: '千年樹の祈り斬り', desc: '光る刃で敵1体を大きく斬る。', wp: 12, target: 'enemy', reach: false,
+        kind: 'tech', wtype: 'sword', name: '千年樹の祈り斬り', desc: '光る刃で敵1体を大きく斬る。', mp: 18, target: 'enemy', reach: false,
         effects: [{ type: 'damage', power: 3 }], fx: 'slash3', rank: 8, glim: { lv: 8, from: ['attack'] },
       };
     }
@@ -30,7 +30,7 @@
     c.level = level;
     let st = null;
     try { st = R.Rules.stats(c); } catch (e) { st = null; }
-    if (st) { c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; }
+    if (st) { c.hp = st.hp; c.mp = st.mp; }
     return c;
   }
   /** a fresh game with アルン + ブリギッタ + シルヴァン + マルタ (5-char names twice), mid-game levels */
@@ -55,15 +55,15 @@
     for (const id of sp) if (!mar.spells.includes(id)) mar.spells.push(id);
     hero.row = 'front'; bri.row = 'middle'; syl.row = 'middle'; mar.row = 'front';
     R.Game.inv = {};
-    const inv = { i_salve: 12, i_potion: 5, i_elixir: 2, i_revive: 3, i_ether: 4, i_tonic: 2, i_lifedew: 1, i_phoenix: 1, i_smoke: 2, i_firepot: 3, i_lens: 1 };
+    const inv = { i_salve: 12, i_potion: 5, i_elixir: 2, i_revive: 3, i_ether: 4, i_lifedew: 1, i_phoenix: 1, i_smoke: 2, i_firepot: 3, i_lens: 1 };
     for (const id in inv) if (DB.items[id]) R.Game.inv[id] = inv[id];
     return R.Game.party;
   }
   function fallbackGame() {
     const mk = (id, name, row, w1, w2) => ({
-      id, name, gender: 'f', level: 30, exp: 0, hp: 240, mp: 30, wp: 31, bonus: { hp: 0, mp: 0, wp: 0 }, status: {},
+      id, name, gender: 'f', level: 30, exp: 0, hp: 240, mp: 30, bonus: { hp: 0, mp: 0 }, status: {},
       equip: { weapon1: w1, weapon2: w2 || null, shield: null, head: null, body: null, hands: null, feet: null, acc1: null, acc2: null },
-      wprof: {}, eprof: {}, techs: [], spells: [], row, mem: { cmd: 0, list: {}, item: 0, target: null }, counts: {}, _max: { hp: 240, mp: 30, wp: 31 },
+      wprof: {}, eprof: {}, techs: [], spells: [], row, mem: { cmd: 0, list: {}, item: 0, target: null }, counts: {}, _max: { hp: 240, mp: 30 },
     });
     R.Game = R.Game || { party: [], reserve: [], inv: {}, flags: {}, vars: {}, book: { mon: {}, tech: {}, spell: {} }, records: {} };
     R.Game.party = [mk('hero', 'アルン', 'front'), mk('brigitta', 'ブリギッタ', 'middle'), mk('sylvain', 'シルヴァン', 'middle'), mk('marta', 'マルタ', 'front')];
@@ -164,10 +164,10 @@
   const P = () => BUI.P || (BUI.P = pick());
   const SC = (BUI.scenarios = {});
   const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf_2' }, { id: 'goblin_2' }];
-  /** the worst window row of §12.5: 5-char names, HP 999 / MP 150 / WP 99, two in the middle row, statuses, one down */
+  /** the worst window row of §12.5: 5-char names, HP 999 / MP 250, two in the middle row, statuses, one down */
   function worst(party) {
     const [h, b, s, m] = party;
-    h.hp = 999; h.mp = 150; h.wp = 99; h._max = { hp: 999, mp: 150, wp: 99 };
+    h.hp = 999; h.mp = 250; h._max = { hp: 999, mp: 250 };
     b.status = { poison: true, silence: true };
     s.hp = 0; s.status = {};
     m.hp = 18; m.status = { regen: true, veil: true, nimble: true, burn: true };
@@ -190,11 +190,11 @@
     void m;
   };
   SC.techs = async (a) => {
-    const S = BUI.open({ mons: std(), tweak: (p) => { p[0].wp = 7; } });
+    const S = BUI.open({ mons: std(), tweak: (p) => { p[0].mp = 7; } });
     const u = S.eng.party[0];
     S.acting = u;
     S.weaponMenu(u, R.Rules.commands(u.c)[0]); await a.step(4); a.shot('tech_list');
-    await a.keys('up,right'); await a.step(4); a.shot('tech_list_8char_wp_short');
+    await a.keys('up,right'); await a.step(4); a.shot('tech_list_8char_mp_short');
     a.zoom('zoom_tech_list', 2, 56, 174, 96, 2);
     await a.keys('left'); await a.step(4); a.shot('tech_list_w7_ok');
   };
@@ -390,7 +390,7 @@
   }
   SC.fx_new = async (a) => { await fxShots(a, ['arrow', 'arrow2', 'arrow3', 'lash', 'lash2', 'lash3', 'stance'], true, 'fx'); };
   SC.fx_levels = async (a) => { await fxShots(a, ['slash2', 'slash3', 'pierce3', 'strike3', 'claw3', 'bite2', 'holy2', 'dark3', 'magic3', 'explosion2', 'heal3'], true, 'fx'); };
-  SC.fx_status = async (a) => { await fxShots(a, ['burn', 'freeze', 'stun', 'veil', 'nimble', 'wp'], true, 'fx'); };
+  SC.fx_status = async (a) => { await fxShots(a, ['burn', 'freeze', 'stun', 'veil', 'nimble', 'mp'], true, 'fx'); };
   SC.fx_chain = async (a) => {
     // an fx array (合成術): the second effect plays at 60 % length after the first one's impact
     const S = BUI.open({ mons: std(), bg: 'forest' });
@@ -640,11 +640,11 @@
     a.zoom('zoom_party', 160, 60, 96, 92, 2);
   };
   SC.sv_lists = async (a) => {
-    const S = BUI.open({ mons: five(), tweak: (p) => { p[0].wp = 7; } });
+    const S = BUI.open({ mons: five(), tweak: (p) => { p[0].mp = 7; } });
     S.commandPhase();
     await a.step(2); await a.keys('a'); await a.step(4); // 戦う → the hero's menu (steps forward)
     await a.keys('a'); await a.step(8); a.shot('tech_list');
-    await a.keys('up'); await a.step(4); a.shot('tech_list_8char_wp_short');
+    await a.keys('up'); await a.step(4); a.shot('tech_list_8char_mp_short');
     await a.keys('down,down'); await a.step(2); await a.keys('a'); await a.step(4); a.shot('target_enemy');
     await a.keys('down'); await a.step(4); a.shot('target_enemy_row');
     await a.keys('b'); await a.step(4); a.shot('list_back');

@@ -85,7 +85,7 @@
       actions: A([['attack', 4], ['eb_page_storm', 2], ['eb_eat_words', 1, { every: [3, 2] }],
         ['eb_ink_spit', 1, { every: [4, 1] }], ['eb_devour', 1]]),
       phases: [{ hpBelow: 0.5, msg: 'ページ食らいの体がめくれあがった！', set: { actsPerTurn: 2 } }],
-      drops: MID('i_seed_wp'),
+      drops: MID('i_seed_mp'),
       desc: '灯台の守り歌を食べてしまった\n紙の化け物。文字が体に残る。',
     },
 
@@ -97,7 +97,7 @@
       actions: A([['attack', 3], ['eb_scale_sleep', 2, { every: [3, 0] }], ['eb_scale_poison', 2], ['eb_wing_gale', 2],
         ['eb_eye_spots', 1, { every: [4, 2] }], ['eb_moth_dive', 2]]),
       phases: [{ hpBelow: 0.5, msg: 'ダストウィングの羽から、\nりん粉が噴き出した！', set: { actsPerTurn: 2 } }],
-      drops: MID('i_seed_wp'),
+      drops: MID('i_seed_mp'),
       desc: '迷いの森の奥に巣くう大きなガ。\n眠りと毒のりん粉をまき散らす。',
     },
     b_rooteater: {
@@ -148,7 +148,7 @@
       elem: { fire: 1.25, water: 0.25, earth: 1.5 },
       actions: A([['attack', 3], ['eb_ice_hammer', 2], ['eb_avalanche_drop', 2], ['eb_frost_exhale', 1],
         ['eb_ice_wall', 1, { hpBelow: 0.6, once: true }]]),
-      drops: MID('i_seed_wp'),
+      drops: MID('i_seed_mp'),
       desc: '白竜の峰の中腹を守る氷の巨人。\n氷の壁を張って身を守る。',
     },
     b_whitedragon: {
@@ -225,7 +225,7 @@
         // every [3, 2] instead of the table's [4, 3]: a mid-boss fight is ~6 rounds, [4, 3] gave the octopus one
         // chance to regrow a leg; §9.13.2 X3 wants the regrowth in every fight (reported to the lead)
         ['eb_regrow', 2, { every: [3, 2], countBelow: 3 }], ['eb_whirl', 2]]),
-      drops: MID('i_seed_wp'),
+      drops: MID('i_seed_mp'),
       desc: '潮の洞窟の奥にひそむ大ダコ。\n切っても切っても足が生える。',
     },
     b_tentacle: {
@@ -277,7 +277,7 @@
       elem: { fire: 0.25, water: 1.5 },
       actions: A([['attack', 2], ['eb_twin_fang', 2], ['eb_flame_howl', 1, { every: [3, 1] }], ['eb_lava_breath', 2],
         ['eb_hound_fury', 1, { hpBelow: 0.5, once: true }]]),
-      drops: MID('i_seed_wp'),
+      drops: MID('i_seed_mp'),
       desc: '火口の壁画を守る二つ頭の犬。\n口から溶岩がしたたっている。',
     },
     b_lavabeast: {

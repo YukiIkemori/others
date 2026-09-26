@@ -56,8 +56,11 @@
   };
 
   const wtypes = () => {
-    const k = Object.keys(DB.weaponTypes || {});
+    // R.Rules.WTYPES (Part A19: the 7 types) wins; DB.weaponTypes gives the order
+    const rw = R.Rules && Array.isArray(R.Rules.WTYPES) && R.Rules.WTYPES.length ? R.Rules.WTYPES : null;
+    const k = rw ? rw.slice() : Object.keys(DB.weaponTypes || {});
     if (!k.length) return WTYPES_DEFAULT.slice();
+    if (k.some((w) => !DB.weaponTypes[w])) return k;
     return k.sort((a, b) => ((DB.weaponTypes[a].order ?? 99) - (DB.weaponTypes[b].order ?? 99)));
   };
   const elems = () => { const k = Object.keys(DB.elements || {}); return k.length ? k : ELEMS_DEFAULT.slice(); };
@@ -1282,20 +1285,18 @@
     K.fitText(c.name, x + 26, y + 6, 54, { color: col });
     G().text('Lv' + c.level, x + 110, y + 6, { align: 'right', color: col });
     G().text('HP', x + 26, y + 18, { color: col === '#ffffff' ? COL.sub : col });
-    // a fallen member reads 「戦闘不能」 in place of 0/最大 (a plate on the lower border would cover the W value)
+    // a fallen member reads 「戦闘不能」 in place of 0/最大 (a plate on the lower border would cover the MP value)
     G().text(c.hp <= 0 ? '戦闘不能' : c.hp + '/' + (st.hp || 0), x + 110, y + 18, { align: 'right', color: col });
-    // オーナー指示 A15: MP as 現在/最大 (999/999 fits x+43〜80)
+    // オーナー指示 A15: MP as 現在/最大, right-aligned under the HP (Part A18: no WP)
     G().text('MP', x + 26, y + 29, { color: COL.sub });
-    G().text(c.mp + '/' + (st.mp || 0), x + 80, y + 29, { align: 'right' });
-    G().text('W', x + 88, y + 29, { color: COL.sub });
-    G().text(String(c.wp || 0), x + 110, y + 29, { align: 'right' });
+    G().text(c.mp + '/' + (st.mp || 0), x + 110, y + 29, { align: 'right' });
     K.rowTag(x + 4, y + 36, effectiveRow(c));
   }
   Menu.drawMemberWindow = drawMemberWindow;
   /**
    * a compact party card (main menu, Part A11): (x, y, w≈176, h 34), 2 lines beside the sprite:
    *   [絵] 名前               HP 999/999
-   *        前 Lv34  WP 99   MP 150/150
+   *        前 Lv34         MP 250/250
    * (オーナー指示 A15: HP and MP as 現在/最大, their values right-aligned in one column)
    */
   function drawMemberCard(c, x, y, w, h) {
@@ -1310,8 +1311,6 @@
     const ly = y + 19;
     K.rowBadge(x + 26, ly - 1, effectiveRow(c));
     G().text('Lv' + c.level, x + 44, ly, { color: '#ffffff' });
-    G().text('WP', x + 72, ly, { color: COL.sub });
-    G().text(String(c.wp || 0), x + 100, ly, { align: 'right' });
     G().text('MP', R1 - 52, ly, { color: COL.sub });
     G().text(c.mp + '/' + (st.mp || 0), R1, ly, { align: 'right' });
   }

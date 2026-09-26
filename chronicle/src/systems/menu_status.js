@@ -209,21 +209,21 @@
         }
       }
       /**
-       * 能力 (オーナー指示 A17): the abilities as numbers (HP・MP・WP and 腕力〜精神 with the gear's share), the EXP to the
+       * 能力 (オーナー指示 A17): the abilities as numbers (HP・MP and 腕力〜精神 with the gear's share), the EXP to the
        * next level and what the member is good at (names only). No 「戦闘」 block — 攻撃力・守備力・命中… stay hidden.
        */
       pageAbility(c, st) {
         const base = R.Rules && R.Rules.baseStats ? R.Rules.baseStats(c) : {};
         G().window(4, 46, 122, 174, { title: '能力' });
-        const L = [['HP', c.hp + '/' + (st.hp || 0), Kt.condColor(c)], ['MP', c.mp + '/' + (st.mp || 0)], ['WP', (c.wp || 0) + '/' + (st.wp || 0)]];
+        const L = [['HP', c.hp + '/' + (st.hp || 0), Kt.condColor(c)], ['MP', c.mp + '/' + (st.mp || 0)]]; // Part A18: no WP
         L.forEach(([k, v, col], i) => {
           const y = 55 + i * 16;
           G().text(k, 14, y, { color: Kt.COL.sub });
           G().text(v, 116, y, { align: 'right', color: col || '#ffffff' });
         });
-        G().rect(12, 55 + 3 * 16 - 1, 106, 1, '#3a4470');
+        G().rect(12, 55 + L.length * 16 - 1, 106, 1, '#3a4470');
         Kt.STATS6.forEach((k, i) => {
-          const y = 55 + 3 * 16 + 5 + i * 18;
+          const y = 55 + L.length * 16 + 5 + i * 18;
           G().text(Kt.STAT_NAMES[k], 14, y, { color: Kt.COL.sub });
           G().text(String(st[k] || 0), 86, y, { align: 'right' });
           const add = (st[k] || 0) - (base[k] != null ? base[k] : st[k] || 0);
@@ -288,7 +288,7 @@
           else { Kt.drawElemIcons(a.elements || [], x, y + 2); ix = (a.elements || []).length * 9 + 1; }
           Kt.fitText(a.name, x + ix, y, 116 - ix - 30, {});
           const cc = kind === 'spell' && Kt.costColor ? Kt.costColor(c, id) : null; // Part A13b: MP cut by proficiency
-          G().text((kind === 'tech' ? 'W' : 'M') + Kt.cost(c, id), x + 112, y, { align: 'right', color: cc || Kt.COL.sub });
+          G().text('M' + Kt.cost(c, id), x + 112, y, { align: 'right', color: cc || Kt.COL.sub });
         });
       }
       /**
@@ -438,7 +438,7 @@
         G().wrap(lines.join('\n'), 82, 8).slice(0, 4).forEach((l, i) => G().text(l, 164, 50 + i * 14, { color: !frontAlive ? G().C.yellow : Kt.COL.gray, size: 8 }));
         G().text('Aで選ぶ', 164, 112, { color: Kt.COL.gray, size: 8 });
         G().window(4, 140, 248, 80);
-        ['前列：敵に狙われやすい。', '後列：受ける物理のダメージが減る。', '後列からは剣や斧などが届かない。', '槍・弓・鞭と術は、どこからでも届く。']
+        ['前列：敵に狙われやすい。', '後列：受ける物理のダメージが減る。', '後列からは剣や斧などが届かない。', '槍・弓・杖と術は、どこからでも届く。']
           .forEach((l, i) => Kt.fitText(l, 14, 147 + i * 16, 228, { color: i ? '#ffffff' : '#ffffff' }));
       }
     }

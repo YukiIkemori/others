@@ -20,7 +20,7 @@
       flags: [], s: { hp: 1.65, atk: 0.84, mag: 0.8, def: 1.2 }, eva: 5,
       elem: { wind: 1.5, earth: 0.25 }, phys: {}, statusRes: { poison: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_poison_sting', w: 3 }],
-      drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'w_whip_snakeskin', rate: 32 }, super: { item: 'w_fist_sr_scorpion', rate: 256 } },
+      drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'w_bow_snakeskin', rate: 32 }, super: { item: 'w_dagger_sr_scorptail', rate: 256 } },
       desc: '尾の先が緑に光るサソリ。\n猛毒で知られる。',
     },
     scorpion_3: {
@@ -36,7 +36,7 @@
       flags: [], s: { hp: 2.92, atk: 0.67, mag: 0.58, def: 1.2 }, eva: 5,
       elem: { wind: 1.5, earth: 0.25 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_death_sting', w: 2 }, { id: 'e_poison_sting', w: 2 }, { id: 'e_double', w: 1 }],
-      drops: { normal: { item: 'i_revive', rate: 8 }, rare: { item: 'w_katana_sand', rate: 32 }, super: { item: 'w_whip_sr_reaper', rate: 256 } },
+      drops: { normal: { item: 'i_revive', rate: 8 }, rare: { item: 'w_sword_sand', rate: 32 }, super: { item: 'w_dagger_sr_reaper', rate: 256 } },
       desc: '背にどくろの模様があるサソリ。\n一刺しで命を奪うこともある。',
     },
     scorpion_5: {
@@ -61,7 +61,7 @@
       flags: [], s: { hp: 1.6, atk: 0.91, mag: 0.87, agi: 1.1 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_scare', w: 2 }, { id: 'e_poison_bite', w: 2 }],
-      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_whip_snakeskin', rate: 32 }, super: { item: 'ac_sr_rattle_charm', rate: 256 } },
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_bow_snakeskin', rate: 32 }, super: { item: 'ac_sr_rattle_charm', rate: 256 } },
       desc: 'しっぽを鈴のように鳴らして\nおどかしてくる。',
     },
     snake_3: {
@@ -77,7 +77,7 @@
       flags: [], s: { hp: 3.52, atk: 0.67, mag: 0.58, agi: 0.95 }, eva: 5,
       elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_bind', w: 2 }, { id: 'e_poison_bite', w: 2 }, { id: 'e_swallow', w: 1 }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_katana_sand', rate: 32 }, super: { item: 'w_whip_sr_python', rate: 256 } },
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_sword_sand', rate: 32 }, super: { item: 'w_bow_sr_python', rate: 256 } },
       desc: '人ひとりのみこむ砂漠の主。\n角のようなうろこが目じるし。',
     },
     // ---- mummy ミイラ（不死・m）: 王墓を守る死者たち。兵、呪い、神官、将軍、そして王家の者。
@@ -151,7 +151,7 @@
       flags: [], s: { hp: 3.48, atk: 0.62, mag: 0.54, def: 1.2, agi: 0.85 }, eva: 5,
       elem: { fire: 1.25, water: 0.5, wind: 1.5, earth: 0.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_needles', w: 3 }, { id: 'e_focus', w: 1, cond: { once: true } }, { id: 'e_heavy', w: 1 }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_katana_sand', rate: 32 }, super: { item: 'w_club_sr_cactus_king', rate: 256 } },
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_sword_sand', rate: 32 }, super: { item: 'w_axe_sr_cactusking', rate: 256 } },
       desc: 'ひげのような針が自慢の大将。\n砂漠のサボテンを束ねる。',
     },
     // ---- sandworm ミミズ（虫・l）: 砂の下を泳ぐ巨大なミミズ。砂ぼこり、岩の体、大地の揺れ。
@@ -168,7 +168,7 @@
       flags: [], s: { hp: 1.13, atk: 0.96, mag: 0.96, def: 1.3, agi: 0.65 }, eva: 5,
       elem: { wind: 1.5, earth: 0.25 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_crush', w: 2 }, { id: 'e_quake', w: 2 }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_fist_wormtooth', rate: 32 }, super: { item: 'w_greatsword_sr_rockworm', rate: 256 } },
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_dagger_wormtooth', rate: 32 }, super: { item: 'w_greatsword_sr_rockworm', rate: 256 } },
       desc: '岩をまとったミミズ。\n地面を揺らして獲物を倒す。',
     },
     sandworm_3: {

@@ -73,8 +73,8 @@
     // → scorpion_5
     hn_sr_hundred: { name: '百発の手袋', type: 'hands', weight: 'light', grade: 'super', tier: 8, units: 'd1', src: 'super', exclusive: 'scorpion_5',
       quirk: true,
-      mods: { crit: 15, /* クセ */ wpCostPct: 50 },
-      desc: '会心が出やすい。\nただし技のWPの消費が増える。' },
+      mods: { crit: 15, /* クセ */ techCostPct: 50 },
+      desc: '会心が出やすい。\nただし技のMPの消費が増える。' },
     // → bee_5
     ft_sr_whirl: { name: '旋風のブーツ', type: 'feet', weight: 'light', grade: 'super', tier: 8, units: 'd1', src: 'super', exclusive: 'bee_5', quirk: true,
       mods: { spd: 30, preemptPct: 10, /* クセ */ encounterPct: 50 },

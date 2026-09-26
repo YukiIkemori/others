@@ -3,7 +3,7 @@
 //   RPG.menuFixture.enrich(o)   fill R.Game with a mid-game state (4 members, gear of every grade,
 //                               learned techs / spells, bestiary progress, pages, secrets…)
 //   await RPG.menuFixture.setup(o)   R.debug.quickStart + enrich (browser)
-//   RPG.menuFixture.worst()     the worst-case names / numbers (§12.5: 5-char names, HP 999, MP 150, WP 99)
+//   RPG.menuFixture.worst()     the worst-case names / numbers (§12.5: 5-char names, HP 999, MP 250)
 // Everything is picked deterministically from the real registries (no randomness).
 (function (R) {
   'use strict';
@@ -33,7 +33,7 @@
     for (const c of party.concat(g.reserve || [])) {
       if (R.Rules.setLevel) R.Rules.setLevel(c, lv); else c.level = lv;
       const st = R.Rules.stats(c);
-      c.hp = st.hp; c.mp = st.mp; c.wp = st.wp;
+      c.hp = st.hp; c.mp = st.mp;
     }
     // techs by each member's weapons, spells by their best elements
     for (const c of party) {
@@ -112,13 +112,13 @@
     return R.debug && R.debug.pos ? R.debug.pos() : true;
   }
 
-  /** worst-case display: 5-char names, HP 999, MP 150, WP 99 (§12.5) */
+  /** worst-case display: 5-char names, HP 999, MP 250 (§12.5) */
   function worst() {
     const g = R.Game;
     R.State.hero().name = 'アルンハルト'.slice(0, 5);
     for (const c of g.party) {
       c.level = 99;
-      c.hp = 999; c.mp = 150; c.wp = 99;
+      c.hp = 999; c.mp = 250;
     }
     return g.party.map((c) => c.name);
   }

@@ -1,7 +1,7 @@
 // 仲間 20 人（DB.companions）。担当 newgame（A6）。正は DESIGN.md §5.3.9（表は §5.3.1〜§5.3.6）。
 // この順番が酒場の並び順（R.Party.candidates()）。
 //   companions[id] = {name, gender, age, kin（種族）, title（肩書）, from（出身）, role, row, stats{6},
-//                     growth{hp,mp,wp}（S〜D）, apt{w,e}（S〜D。倍率は R.Rules.aptitude）, innate:{name, desc, mods},
+//                     growth{hp,mp}（S〜D）, apt{w,e}（S〜D。倍率は R.Rules.aptitude）, innate:{name, desc, mods},
 //                     startEquip, startTechs, startSpells, profile（3 行）, joinLine（2 行まで）, leaveLine, rejoinLine,
 //                     epilogue（2 行）}。絵のキーは party:<id>（sprite は書かない）。startProf は書かない（§5.0 の 0.6）。
 //   文の {hero} は主人公の名前（R.Text.fmt）。{name} は書かない（酒場の処理が c.name を使う）。
@@ -10,17 +10,17 @@
   const heavy = { body: 'bd_iron_cuirass', head: 'hd_iron_band' };
   const light = { body: 'bd_leather_vest', head: 'hd_leather_cap' };
   const cloth = { body: 'bd_hemp_robe', head: 'hd_wool_hood' };
-  // apt の文字列は 武器 [sword greatsword dagger axe spear bow club staff katana fist whip]・属性 [fire water wind earth light dark] の順
+  // apt の文字列は 武器 [sword greatsword dagger axe spear bow staff]・属性 [fire water wind earth light dark] の順
   const A = (w, e) => ({
-    w: { sword: w[0], greatsword: w[1], dagger: w[2], axe: w[3], spear: w[4], bow: w[5], club: w[6], staff: w[7], katana: w[8], fist: w[9], whip: w[10] },
+    w: { sword: w[0], greatsword: w[1], dagger: w[2], axe: w[3], spear: w[4], bow: w[5], staff: w[6] },
     e: { fire: e[0], water: e[1], wind: e[2], earth: e[3], light: e[4], dark: e[5] },
   });
   const ST = (s) => ({ str: s[0], vit: s[1], dex: s[2], agi: s[3], int: s[4], mnd: s[5] });
-  const GR = (g) => ({ hp: g[0], mp: g[1], wp: g[2] });
+  const GR = (g) => ({ hp: g[0], mp: g[1] });
   Object.assign(R.DB.companions, {
     selma: {
       name: 'セルマ', gender: 'f', age: 20, kin: '人間', title: '元衛兵', from: '北の城下町', role: 'guard', row: 'front',
-      stats: ST([50, 48, 32, 26, 14, 30]), growth: GR('ACB'), apt: A('SACBBDBDBCD', 'BBCBAD'),
+      stats: ST([50, 48, 32, 26, 14, 30]), growth: GR('AB'), apt: A('SACBBDD', 'BBCBAD'),
       innate: { name: '鍛えた守り', desc: 'まひと気絶にかかりにくい', mods: {statusResist: {paralyze: 0.5, stun: 0.5}} },
       startEquip: Object.assign({ weapon1: 'w_sword_iron', shield: 'sh_iron_buckler' }, heavy),
       startTechs: ['t_sword_stepcut'], startSpells: [],
@@ -31,7 +31,7 @@
     },
     hagen: {
       name: 'ハーゲン', gender: 'm', age: 38, kin: '人間', title: '傭兵', from: '西の荒れ野', role: 'guard', row: 'front',
-      stats: ST([50, 48, 32, 28, 16, 26]), growth: GR('SDB'), apt: A('BSCACCBDCBD', 'ACCBCB'),
+      stats: ST([50, 48, 32, 28, 16, 26]), growth: GR('SB'), apt: A('BSCACCD', 'ACCBCB'),
       innate: { name: '戦場かせぎ', desc: '戦闘で手に入るお金が増える', mods: {goldPct: 10} },
       startEquip: Object.assign({ weapon1: 'w_greatsword_iron', weapon2: 'w_axe_hand' }, heavy),
       startTechs: ['t_greatsword_overhead'], startSpells: [],
@@ -42,9 +42,9 @@
     },
     dokka: {
       name: 'ドッカ', gender: 'm', age: 52, kin: '山の民', title: '山の鍛冶屋', from: '山あいの里', role: 'guard', row: 'front',
-      stats: ST([50, 58, 34, 16, 18, 24]), growth: GR('SCC'), apt: A('BBDSBDACDBC', 'ACDACB'),
+      stats: ST([50, 58, 34, 16, 18, 24]), growth: GR('SC'), apt: A('BBDSBDC', 'ACDACB'),
       innate: { name: '山歩き', desc: '毒の沼や熱い床で傷を負わない', mods: {noFloorDamage: true} },
-      startEquip: Object.assign({ weapon1: 'w_axe_hand', weapon2: 'w_club_wood', shield: 'sh_iron_buckler' }, heavy),
+      startEquip: Object.assign({ weapon1: 'w_axe_hand', weapon2: 'w_axe_cudgel', shield: 'sh_iron_buckler' }, heavy),
       startTechs: ['t_axe_cleave'], startSpells: [],
       profile: '山あいの里から下りてきた山の民。\n背は低いが、斧の一撃は岩をも割る。\n鉄と火の話なら一晩中しゃべる。',
       joinLine: '地の底の鉄より、地の上の伝承か。\nよかろう、わしの斧を貸してやる。',
@@ -53,18 +53,18 @@
     },
     basil: {
       name: 'バジル', gender: 'm', age: 44, kin: '人間', title: '修道士', from: '丘の修道院', role: 'guard', row: 'front',
-      stats: ST([42, 44, 24, 22, 28, 40]), growth: GR('ABC'), apt: A('BBDBBDSBDAD', 'CBCBAC'),
+      stats: ST([42, 44, 24, 22, 28, 40]), growth: GR('AB'), apt: A('BBDSBDB', 'CBCBAC'),
       innate: { name: '祈りの守り', desc: '毒と沈黙にかかりにくい', mods: {statusResist: {poison: 0.5, silence: 0.5}} },
-      startEquip: Object.assign({ weapon1: 'w_club_wood', weapon2: 'w_fist_leather', shield: 'sh_iron_buckler' }, heavy),
-      startTechs: ['t_club_smash'], startSpells: ['s_light_1'],
-      profile: '丘の上の修道院から来た大男。\n祈りと棍棒で、仲間を守る。\n好物は、畑でとれたての豆のスープ。',
+      startEquip: Object.assign({ weapon1: 'w_axe_cudgel', shield: 'sh_iron_buckler' }, heavy),
+      startTechs: ['t_axe_crumble'], startSpells: ['s_light_1'],
+      profile: '丘の上の修道院から来た大男。\n祈りと槌で、仲間を守る。\n好物は、畑でとれたての豆のスープ。',
       joinLine: '人を助けよ、と神は教えておられる。\n及ばずながら、お供いたしましょう。',
       leaveLine: 'では、皆さまの無事を祈っております。', rejoinLine: 'お呼びとあらば、いつでも参ります。',
       epilogue: 'バジルは修道院に戻り、\n旅の話を子どもたちに語り聞かせた。',
     },
     bartolo: {
       name: 'バルトロ', gender: 'm', age: 63, kin: '人間', title: '老騎士', from: '南の古い城', role: 'guard', row: 'front',
-      stats: ST([40, 36, 36, 22, 26, 40]), growth: GR('ACB'), apt: A('BACBACBCCCD', 'BBCBAD'),
+      stats: ST([40, 36, 36, 22, 26, 40]), growth: GR('AB'), apt: A('BACBACC', 'BBCBAD'),
       innate: { name: '老兵の勘', desc: '先制しやすくなる', mods: {preemptPct: 5} },
       startEquip: Object.assign({ weapon1: 'w_spear_iron', weapon2: 'w_greatsword_iron' }, heavy),
       startTechs: ['t_spear_upthrust'], startSpells: [],
@@ -75,9 +75,9 @@
     },
     viola: {
       name: 'ヴィオラ', gender: 'f', age: 24, kin: '人間', title: '没落貴族', from: '湖畔の屋敷', role: 'hybrid', row: 'front',
-      stats: ST([52, 36, 30, 30, 34, 18]), growth: GR('BBB'), apt: A('SCCCBCCBADC', 'ACACCC'),
+      stats: ST([52, 36, 30, 30, 34, 18]), growth: GR('BB'), apt: A('SCCCBCB', 'ACACCC'),
       innate: { name: '強い意志', desc: '眠りと混乱にかかりにくい', mods: {statusResist: {sleep: 0.5, confuse: 0.5}} },
-      startEquip: Object.assign({ weapon1: 'w_sword_iron', weapon2: 'w_katana_uchi', shield: 'sh_iron_buckler' }, heavy),
+      startEquip: Object.assign({ weapon1: 'w_sword_iron', weapon2: 'w_sword_uchi', shield: 'sh_iron_buckler' }, heavy),
       startTechs: ['t_sword_stepcut'], startSpells: ['s_fire_1'],
       profile: '家は傾いたが、誇りは傾いていない。\n剣に炎と風をまとわせて戦う。\n身なりにだけはお金を惜しまない。',
       joinLine: '退屈な暮らしはもうたくさん。\n{hero}、わたしの剣を役立てて。',
@@ -86,10 +86,10 @@
     },
     shigure: {
       name: 'シグレ', gender: 'm', age: 31, kin: '人間', title: '刀使い', from: '海の向こうの東方', role: 'striker', row: 'front',
-      stats: ST([44, 32, 50, 42, 14, 18]), growth: GR('BDS'), apt: A('ACBDBCDCSBC', 'CABCBC'),
+      stats: ST([44, 32, 50, 42, 14, 18]), growth: GR('BS'), apt: A('SCBDBCC', 'CABCBC'),
       innate: { name: '心眼', desc: '暗闇が効かない', mods: {statusImmune: ['blind']} },
-      startEquip: Object.assign({ weapon1: 'w_katana_uchi' }, light),
-      startTechs: ['t_katana_draw'], startSpells: [],
+      startEquip: Object.assign({ weapon1: 'w_sword_uchi' }, light),
+      startTechs: ['t_sword_draw'], startSpells: [],
       profile: '海の向こうの東方から来た刀使い。\n口数は少なく、刀は速い。\n雨の日は、なぜか機嫌がいい。',
       joinLine: '刀の道に終わりはない。\nおぬしの旅で、それを確かめたい。',
       leaveLine: '承知した。しばし刀の手入れをする。', rejoinLine: '呼んだか。参ろう。',
@@ -97,10 +97,10 @@
     },
     rouga: {
       name: 'ロウガ', gender: 'm', age: 26, kin: '人間', title: '拳法家', from: '東方の山寺', role: 'striker', row: 'front',
-      stats: ST([56, 36, 26, 54, 12, 16]), growth: GR('ADA'), apt: A('CDCCBDABASC', 'ACBCCC'),
+      stats: ST([56, 36, 26, 54, 12, 16]), growth: GR('AA'), apt: A('ADCSBDB', 'ACBCCC'),
       innate: { name: '腕試し', desc: '魔物に出会いやすくなる', mods: {encounterPct: 25} },
-      startEquip: Object.assign({ weapon1: 'w_fist_leather', weapon2: 'w_club_wood' }, light),
-      startTechs: ['t_fist_palm'], startSpells: [],
+      startEquip: Object.assign({ weapon1: 'w_axe_cudgel' }, light),
+      startTechs: ['t_axe_cleave'], startSpells: [],
       profile: '東方の山寺で鍛えた拳法家。\n拳と棍で、どんな相手にもぶつかる。\n強いやつの話を聞くと目が輝く。',
       joinLine: '強い魔物がいる所へ行くんだろ？\nだったら、おれも連れてってくれ！',
       leaveLine: 'ちぇっ。ひとりで修行でもしてるか。', rejoinLine: '待ってました！　暴れさせてくれ！',
@@ -108,18 +108,18 @@
     },
     titta: {
       name: 'ティッタ', gender: 'f', age: 16, kin: '人間', title: '下町の子', from: '港町の下町', role: 'striker', row: 'front',
-      stats: ST([24, 28, 58, 54, 18, 18]), growth: GR('BCA'), apt: A('BDSDCBCCCBA', 'CBBCCA'),
+      stats: ST([24, 28, 58, 54, 18, 18]), growth: GR('BA'), apt: A('BDSCCBC', 'CBBCCA'),
       innate: { name: '盗み上手', desc: '攻撃が当たるとついでに盗む', mods: {stealPct: 50, autoSteal: 100} },
-      startEquip: Object.assign({ weapon1: 'w_dagger_iron', weapon2: 'w_whip_leather', shield: 'sh_leather' }, light),
+      startEquip: Object.assign({ weapon1: 'w_dagger_iron', shield: 'sh_leather' }, light),
       startTechs: ['t_dagger_vital'], startSpells: [],
-      profile: '港町の下町で育った、すばしこい子。\n短剣と鞭で、相手のすきを突く。\n財布には気をつけたほうがいい。',
+      profile: '港町の下町で育った、すばしこい子。\n短剣ひとつで、相手のすきを突く。\n財布には気をつけたほうがいい。',
       joinLine: 'あんたの旅、お宝のにおいがする！\nあたしも一口乗らせてよ。',
       leaveLine: 'はーい。つまみ食いでもして待ってる。', rejoinLine: 'やった！　出番だね！',
       epilogue: 'ティッタは盗みから足を洗い、\n港町いちばんの目利きになった。',
     },
     brigitta: {
       name: 'ブリギッタ', gender: 'f', age: 23, kin: '人間', title: '国境の兵', from: '東の国境の砦', role: 'ranged', row: 'middle',
-      stats: ST([42, 36, 46, 36, 16, 24]), growth: GR('BCA'), apt: A('BCBCSACDCDB', 'CABBBD'),
+      stats: ST([42, 36, 46, 36, 16, 24]), growth: GR('BA'), apt: A('BCBCSAD', 'CABBBD'),
       innate: { name: '逃げ上手', desc: '逃げやすくなる', mods: {escapePct: 25} },
       startEquip: Object.assign({ weapon1: 'w_spear_iron', weapon2: 'w_bow_short' }, light),
       startTechs: ['t_spear_upthrust'], startSpells: [],
@@ -130,7 +130,7 @@
     },
     sylvain: {
       name: 'シルヴァン', gender: 'm', age: 119, kin: '森の民', title: '森の狩人', from: '深い森の奥', role: 'ranged', row: 'middle',
-      stats: ST([26, 28, 50, 44, 28, 24]), growth: GR('CBA'), apt: A('CDBBBSDBCCB', 'DBABBC'),
+      stats: ST([26, 28, 50, 44, 28, 24]), growth: GR('CA'), apt: A('CDBBBSB', 'DBABBC'),
       innate: { name: '森の足どり', desc: '魔物に出会いにくくなる', mods: {encounterPct: -25} },
       startEquip: Object.assign({ weapon1: 'w_bow_short', weapon2: 'w_dagger_iron' }, light),
       startTechs: ['t_bow_rapid'], startSpells: [],
@@ -140,19 +140,19 @@
       epilogue: 'シルヴァンは森に帰り、\n{hero}たちの物語を百年語り継いだ。',
     },
     zafira: {
-      name: 'ザフィラ', gender: 'f', age: 22, kin: '人間', title: '踊り子', from: '旅の一座', role: 'ranged', row: 'middle',
-      stats: ST([22, 30, 56, 46, 26, 20]), growth: GR('CBA'), apt: A('BDBDCBCCCAS', 'BCADCA'),
+      name: 'ザフィラ', gender: 'f', age: 22, kin: '人間', title: '踊り子', from: '旅の一座', role: 'ranged', row: 'front',
+      stats: ST([22, 30, 56, 46, 26, 20]), growth: GR('CA'), apt: A('BDSCCBC', 'BCADCA'),
       innate: { name: '光りもの好き', desc: '金色の魔物に出会いやすい', mods: {goldenPct: 10} },
-      startEquip: Object.assign({ weapon1: 'w_whip_leather', weapon2: 'w_dagger_iron', shield: 'sh_leather' }, light),
-      startTechs: ['t_whip_trip'], startSpells: [],
-      profile: '旅の一座で舞ってきた踊り子。\n鞭さばきも舞のうち、と笑う。\n光る物を見ると、つい手が伸びる。',
+      startEquip: Object.assign({ weapon1: 'w_dagger_iron', shield: 'sh_leather' }, light),
+      startTechs: ['t_dagger_numb'], startSpells: [],
+      profile: '旅の一座で舞ってきた踊り子。\n短剣さばきも舞のうち、と笑う。\n光る物を見ると、つい手が伸びる。',
       joinLine: 'あら、あなたの旅って舞台みたい。\n主役の隣で、踊らせてもらうわ。',
       leaveLine: 'いいわ。楽屋で待ってる。', rejoinLine: '出番ね。幕を上げましょう！',
       epilogue: 'ザフィラは新しい一座を旗揚げした。\n演目は、もちろん{hero}たちの旅。',
     },
     ferno: {
       name: 'フェルノ', gender: 'm', age: 33, kin: '人間', title: '吟遊詩人', from: 'あちこち', role: 'hybrid', row: 'middle',
-      stats: ST([22, 28, 44, 36, 34, 36]), growth: GR('CAB'), apt: A('BDADBBCBCCB', 'CAACBC'),
+      stats: ST([22, 28, 44, 36, 34, 36]), growth: GR('CA'), apt: A('BDACBBB', 'CAACBC'),
       innate: { name: '伝説通', desc: '超レアのアイテムを落としやすい', mods: {superPct: 10} },
       startEquip: Object.assign({ weapon1: 'w_bow_short', weapon2: 'w_dagger_iron' }, light),
       startTechs: [], startSpells: ['s_wind_1'],
@@ -163,7 +163,7 @@
     },
     belladonna: {
       name: 'ベラドナ', gender: 'f', age: 36, kin: '人間', title: '薬売り', from: '街道の宿場', role: 'hybrid', row: 'middle',
-      stats: ST([22, 32, 50, 32, 38, 26]), growth: GR('BBB'), apt: A('BDACCACBDCB', 'CACACB'),
+      stats: ST([22, 32, 50, 32, 38, 26]), growth: GR('BB'), apt: A('BDACCAB', 'CACACB'),
       innate: { name: '毒の心得', desc: '毒が効かない', mods: {statusImmune: ['poison']} },
       startEquip: Object.assign({ weapon1: 'w_bow_short', weapon2: 'w_dagger_iron' }, light),
       startTechs: ['t_bow_rapid'], startSpells: ['s_earth_1'],
@@ -174,7 +174,7 @@
     },
     boden: {
       name: 'ボーデン', gender: 'm', age: 61, kin: '人間', title: '鉱山技師', from: '北の鉱山町', role: 'caster', row: 'front',
-      stats: ST([34, 40, 26, 12, 52, 36]), growth: GR('BAC'), apt: A('BBCABDBBDCD', 'BBDSBB'),
+      stats: ST([34, 40, 26, 12, 52, 36]), growth: GR('BA'), apt: A('BBCABDB', 'BBDSBB'),
       innate: { name: '目利き', desc: '魔物がアイテムを落としやすくなる', mods: {dropPct: 10} },
       startEquip: Object.assign({ weapon1: 'w_axe_hand', weapon2: 'w_staff_novice', shield: 'sh_iron_buckler' }, heavy),
       startTechs: ['t_axe_cleave'], startSpells: ['s_earth_1'],
@@ -185,9 +185,9 @@
     },
     teo: {
       name: 'テオ', gender: 'm', age: 15, kin: '人間', title: '見習い術師', from: '魔術学院', role: 'caster', row: 'middle',
-      stats: ST([14, 22, 30, 34, 58, 42]), growth: GR('CSC'), apt: A('BDBDCBCACCB', 'SCCACB'),
+      stats: ST([14, 22, 30, 34, 58, 42]), growth: GR('CS'), apt: A('BDBCCBA', 'SCCACB'),
       innate: { name: 'のみこみが早い', desc: '本人の経験値が増える', mods: {expPct: 10} },
-      startEquip: Object.assign({ weapon1: 'w_staff_novice', weapon2: 'w_whip_leather', shield: 'sh_primer' }, cloth),
+      startEquip: Object.assign({ weapon1: 'w_staff_novice', shield: 'sh_primer' }, cloth),
       startTechs: ['t_staff_mind'], startSpells: ['s_fire_1'],
       profile: '魔術学院を飛び出してきた少年。\n火の術の才能は、本物らしい。\n本人は天才だと言いはっている。',
       joinLine: '学院の本より、本物の伝承だよ！\nぼくの火の術、見せてあげる！',
@@ -196,9 +196,9 @@
     },
     ilse: {
       name: 'イルゼ', gender: 'f', age: 29, kin: '人間', title: '星読み', from: '天文台のある町', role: 'caster', row: 'middle',
-      stats: ST([12, 24, 32, 34, 58, 40]), growth: GR('CSC'), apt: A('BDBDBBCACDB', 'CBSCCA'),
+      stats: ST([12, 24, 32, 34, 58, 40]), growth: GR('CS'), apt: A('BDBCBBA', 'CBSCCA'),
       innate: { name: '星読み', desc: 'めずらしい魔物に出会いやすい', mods: {rareEncPct: 10} },
-      startEquip: Object.assign({ weapon1: 'w_staff_novice', weapon2: 'w_whip_leather', shield: 'sh_primer' }, cloth),
+      startEquip: Object.assign({ weapon1: 'w_staff_novice', shield: 'sh_primer' }, cloth),
       startTechs: ['t_staff_mind'], startSpells: ['s_wind_1'],
       profile: '星の動きから吉凶を読む天文学者。\n伝説の「星見の塔」にあこがれている。\n夜ふかしのせいで、朝に弱い。',
       joinLine: '星が告げているの。あなたと行けと。\n……たぶん、ね。',
@@ -207,9 +207,9 @@
     },
     morga: {
       name: 'モルガ', gender: 'f', age: 47, kin: '人間', title: '墓守', from: '霧の墓地', role: 'caster', row: 'middle',
-      stats: ST([18, 28, 34, 24, 54, 42]), growth: GR('CAB'), apt: A('CDBCCCBACDA', 'BBBBDS'),
+      stats: ST([18, 28, 34, 24, 54, 42]), growth: GR('CA'), apt: A('CDBBCBA', 'BBBBDS'),
       innate: { name: '死神と顔なじみ', desc: '即死が効かない', mods: {statusImmune: ['death']} },
-      startEquip: Object.assign({ weapon1: 'w_staff_novice', weapon2: 'w_whip_leather', shield: 'sh_primer' }, cloth),
+      startEquip: Object.assign({ weapon1: 'w_staff_novice', shield: 'sh_primer' }, cloth),
       startTechs: ['t_staff_mind'], startSpells: ['s_dark_1'],
       profile: '古い墓地を守る、まじない師。\n闇の術で、敵の力をじわじわ奪う。\n見た目ほど怖い人ではない……はず。',
       joinLine: '死者は語らないけれど、伝承は語る。\nふふ、付き合ってあげましょう。',
@@ -218,9 +218,9 @@
     },
     marta: {
       name: 'マルタ', gender: 'f', age: 34, kin: '人間', title: '町医者', from: '港町の診療所', role: 'healer', row: 'middle',
-      stats: ST([16, 28, 32, 26, 42, 56]), growth: GR('BSD'), apt: A('CDBDBBBADCB', 'CSBBAD'),
+      stats: ST([16, 28, 32, 26, 42, 56]), growth: GR('BS'), apt: A('CDBBBBA', 'CSBBAD'),
       innate: { name: '手当て上手', desc: '使う回復の道具がよく効く', mods: {itemPct: 25} },
-      startEquip: Object.assign({ weapon1: 'w_staff_novice', weapon2: 'w_whip_leather', shield: 'sh_primer' }, cloth),
+      startEquip: Object.assign({ weapon1: 'w_staff_novice', shield: 'sh_primer' }, cloth),
       startTechs: ['t_staff_mind'], startSpells: ['s_light_1', 's_water_1'],
       profile: '港町で診療所を開いていた町医者。\n水と光の術で、けがも病も治す。\n無茶をする患者には、とても厳しい。',
       joinLine: '旅にけが人はつきものよ。\n医者がいたほうが安心でしょ？',
@@ -229,7 +229,7 @@
     },
     noela: {
       name: 'ノエラ', gender: 'f', age: 18, kin: '人間', title: '見習い巫女', from: '泉の社', role: 'healer', row: 'middle',
-      stats: ST([30, 24, 38, 32, 26, 50]), growth: GR('CAB'), apt: A('BDBDABBBCDC', 'CBBASD'),
+      stats: ST([30, 24, 38, 32, 26, 50]), growth: GR('CA'), apt: A('BDBBABB', 'CBBASD'),
       innate: { name: 'お守り', desc: 'レアのアイテムを落としやすくなる', mods: {rarePct: 10} },
       startEquip: Object.assign({ weapon1: 'w_spear_iron', weapon2: 'w_staff_novice' }, cloth),
       startTechs: ['t_spear_upthrust'], startSpells: ['s_light_1'],

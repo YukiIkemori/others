@@ -1,4 +1,6 @@
-// Party battle sprites (Part A8, DESIGN §11.4.4.6) — the 11 weapon families.
+// Party battle sprites (Part A8, DESIGN §11.4.4.6) — the weapon shapes: the 7 families (A19)
+// plus the item-art shapes katana (a sword with art:'katana') and club (a mace-line
+// axe with art:'club'); whip is kept but no item uses it any more.
 // Each weapon is a few shapes in weapon-local pixels (origin = the grip, the tip
 // towards −y, +x = the cutting edge / the front). They are rasterised once into
 // letter grids for the two authored directions, U (straight up) and FU (forward-

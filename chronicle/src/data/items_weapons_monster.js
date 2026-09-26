@@ -15,10 +15,22 @@
   IDS.msuper = []; IDS.mrare = []; IDS.fixed = [];
 
   // ---------------------------------------------------------------- 系列の振り方・並び（§8.1.2・§8.6.2）
-  const WTYPES = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'club', 'staff', 'katana', 'fist', 'whip'];
-  const WTYPE_NAME = { sword: '剣', greatsword: '大剣', dagger: '短剣', axe: '斧', spear: '槍', bow: '弓', club: '棍棒', staff: '杖', katana: '刀', fist: '体術', whip: '鞭' };
-  const UNITS = { sword: 's2', greatsword: 's2', axe: 's2', dagger: 'd2', bow: 'd2', spear: 's1d1', katana: 's1d1', club: 's1v1', fist: 's1a1', whip: 'd1a1', staff: 'i2' };
-  const SERIES = { sword: 0, greatsword: 1, dagger: 2, axe: 3, spear: 4, bow: 5, club: 6, staff: 7, katana: 9, fist: 10, whip: 11 };   // 精神の杖は 8
+  const WTYPES = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'staff'];   // A19 の 7 系統（SYSTEMS_REWORK §3.1）
+  const WTYPE_NAME = { sword: '剣', greatsword: '大剣', dagger: '短剣', axe: '斧', spear: '槍', bow: '弓', staff: '杖' };
+  const UNITS = { sword: 's2', greatsword: 's2', axe: 's2', dagger: 'd2', bow: 'd2', spear: 's1d1', staff: 'i2' };
+  const SERIES = { sword: 0, greatsword: 1, dagger: 2, axe: 3, spear: 5, bow: 6, staff: 7 };   // items_weapons.js の系列の順（メイス 4、精神の杖 8）
+  // A19 で消えた 4 系統から移した品の上書き（SYSTEMS_REWORK §3.2。表の 8 列目の印）。units は旧の系統の振り方のまま。
+  //   katana … 旧 刀 → 剣（刀の絵、会心 +8）        club / fclub … 旧 棍棒・体術 → 斧のメイス（打撃、命中 +10）
+  //   claw … 旧 体術 → 短剣（爪、攻撃 ×0.85）         whip … 旧 鞭 → 弓・槍（攻撃 ×0.95）     whipd … 旧 鞭 → 短剣
+  const CLUB = (it) => Object.assign(it, { kind: 'blunt', art: 'club', icon: 'icon:club', mult: 1.05, hit: (it.hit || 0) + 10 });
+  const OV = {
+    katana: { units: 's1d1', series: 0, set: (it) => Object.assign(it, { art: 'katana', icon: 'icon:katana', mult: 1.05, crit: (it.crit || 0) + 8 }) },
+    club: { units: 's1v1', series: 4, set: CLUB },
+    fclub: { units: 's1a1', series: 4, set: CLUB },
+    claw: { units: 's1a1', set: (it) => Object.assign(it, { mult: 0.85 }) },
+    whip: { units: 'd1a1', set: (it) => Object.assign(it, { mult: 0.95 }) },
+    whipd: { units: 'd1a1', set: () => {} },
+  };
   const U = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6];   // §4.3.1（stat:-1u の 1 単位 = round(U(T))）
   // 系統 → 種族（§9.5.1 の「種族」の最初の語）と、種族の主 / 副の能力値（§8.6.2 の表）。杖の units だけに使う
   const LINEAGE_RACE = {
@@ -40,7 +52,7 @@
   const unitsFor = (wtype, monId) => (wtype === 'staff' && (RACE_STATS[raceOf(monId)] || [])[0] === 'mnd' ? 'm2' : UNITS[wtype]);
   // 系列の振り方から外した品（A10a.5）: 能力値を下げるクセと同じ能力値に単位があると、詳細に「素早さ+」と「ただし素早さが下がる」が
   // 並ぶ。単位を系列のもう 1 つの能力値に寄せる（§8.3.4 の「2 単位を系列の 1 つの能力値に寄せてよい」。gear-a の品と同じ直し方）
-  const UNITS_FIX = { w_fist_sr_crabclaw: 's2' };
+  const UNITS_FIX = { w_axe_sr_crabclaw: 's2' };
 
   // ---------------------------------------------------------------- §9.12.2 の略記を {key:value} の組に直す
   /** 'el:water boost:water20 crit+8' → [{element:'water'}, {elemBoost:{water:20}}, {crit:8}]（1 語 = 1 つ、順番どおり） */
@@ -123,13 +135,12 @@
       case 'mag': return P('術力が上がる。');
       case 'defPct': return v >= 0 ? P('守備力が上がる。') : P('守備力が下がる。', '守備が下がる。');
       case 'mdefPct': return v >= 0 ? P('術防が上がる。') : P('術防が下がる。');
-      case 'hpPct': case 'mpPct': case 'wpPct': {
-        const n = { hpPct: 'HP', mpPct: 'MP', wpPct: 'WP' }[k];
+      case 'hpPct': case 'mpPct': {
+        const n = { hpPct: 'HP', mpPct: 'MP' }[k];
         return v >= 0 ? P(`最大${n}が上がる。`) : P(`最大${n}が下がる。`);
       }
       case 'regen': return P('戦闘中、HPが少しずつ戻る。', 'HPが戻る。');
       case 'mpRegen': return P('戦闘中、MPが少しずつ戻る。', 'MPが戻る。');
-      case 'wpRegen': return P('戦闘中、WPが少しずつ戻る。', 'WPが戻る。');
       case 'startBuffs': {
         const n = Object.keys(v).map((s) => BUFF_NAME[s] || STAT_NAME[s] || s).join('と');
         return P(`戦闘の始めに${n}が上がる。`, `始めに${n}が上がる。`);
@@ -138,8 +149,9 @@
       case 'magicPct': return v >= 0 ? P('術の威力が上がる。', '術が強くなる。') : P('術の威力が下がる。', '術が弱くなる。');
       case 'healPct': return P('回復の術がよく効く。');
       case 'itemPct': return P('回復の道具がよく効く。');
-      case 'mpCostPct': return v < 0 ? P('術のMPの消費が減る。', 'MPの消費が減る。') : P('術のMPの消費が増える。', 'MPの消費が増える。');
-      case 'wpCostPct': return v < 0 ? P('技のWPの消費が減る。', 'WPの消費が減る。') : P('技のWPの消費が増える。', 'WPの消費が増える。');
+      // 技も術も MP を使う（A18）ので、短い形にも「術の」「技の」を残す
+      case 'mpCostPct': return v < 0 ? P('術のMPの消費が減る。', '術の消費MPが減る。') : P('術のMPの消費が増える。', '術の消費MPが増える。');
+      case 'techCostPct': return v < 0 ? P('技のMPの消費が減る。', '技の消費MPが減る。') : P('技のMPの消費が増える。', '技の消費MPが増える。');
       case 'takenPct': return P('受けるダメージが増える。', '受ける傷が増える。');
       case 'hpLoss': return P('戦闘中にHPが減る。', 'HPが減っていく。');
       case 'elemBoost': return P(`${list(Object.keys(v), EL_NAME)}の攻撃が強くなる。`, `${list(Object.keys(v), EL_NAME)}が強くなる。`);
@@ -237,14 +249,16 @@
   // ---------------------------------------------------------------- 品を作る（このファイルの品だけ）
   /** 1 本の武器を DB.items に置く。fx・q は {key:value} の組の配列（効果・クセ）。desc が無ければ describe で作る。 */
   function make(id, o) {
+    const ov = o.ov ? OV[o.ov] : null;
     const it = { name: o.name, type: 'weapon', grade: o.grade, tier: o.tier, wtype: o.wtype, units: o.units };
     for (const fx of o.fx || []) apply(it, fx);
     for (const q of o.q || []) apply(it, q);
     if (o.q && o.q.length) it.quirk = true;
+    if (ov) ov.set(it);   // 品の上書き（mult kind art icon hit crit）。desc は表の効果とクセだけから作る
     it.src = o.src;
     if (o.exclusive) it.exclusive = o.exclusive;
     it.desc = o.desc ? o.desc.replace(/／/g, '\n') : describe(o.fx, o.q);
-    it.sort = o.tier * 100 + (it.units === 'm2' ? 8 : SERIES[o.wtype]) + (o.grade === 'super' ? 70 : 50);   // §8.2.1
+    it.sort = o.tier * 100 + (it.units === 'm2' ? 8 : ov && ov.series !== undefined ? ov.series : SERIES[o.wtype]) + (o.grade === 'super' ? 70 : 50);   // §8.2.1
     if (DB.items[id]) R.loadErrors.push('weapons: 品の id が重なった ' + id);
     DB.items[id] = it;
     return it;
@@ -254,64 +268,64 @@
   // 超レア枠の分母は魔物のデータ（雑魚 1/256、鋼 1/128）。1 品 = ただ 1 種の魔物（exclusive）。
   const SUPER = [
     ['jelly_2', 'w_staff_sr_bubble', 'あぶくの杖', 'staff', 3, 'el:water boost:water20', 'res:earth1.5'],
-    ['jelly_3', 'w_whip_sr_venomjelly', '毒ゼリーの鞭', 'whip', 5, 'onHit:poison40', 'res:fire1.5'],
+    ['jelly_3', 'w_spear_sr_venomjelly', '毒ゼリーの槍', 'spear', 5, 'onHit:poison40', 'res:fire1.5', 'whip'],
     ['jelly_4', 'w_sword_sr_jellygeneral', 'ゼリー将軍の剣', 'sword', 7, 'buff:atk+1 sres:stun50', 'stat:agi-1u'],
     ['rat_1', 'w_dagger_sr_rattooth', 'ネズミの前歯', 'dagger', 1, 'crit+10 stealPct+25', 'stat:vit-1u'],
-    ['bat_2', 'w_katana_sr_crimson', '紅吸いの刀', 'katana', 3, 'crit+10 hpPct+5', 'res:light1.5'],
+    ['bat_2', 'w_sword_sr_crimson', '紅吸いの刀', 'sword', 3, 'crit+10 hpPct+5', 'res:light1.5', 'katana'],
     ['bat_4', 'w_bow_sr_nightwing', '夜翼の弓', 'bow', 7, 'el:dark onHit:blind25', 'res:light1.5'],
     ['paper_2', 'w_spear_sr_whiteline', '白線の槍', 'spear', 5, 'el:light crit+8', 'res:dark1.5'],
     ['paper_4', 'w_greatsword_sr_eraser', '白紙の大剣', 'greatsword', 8, 'onHit:silence30 physPct+10', 'hpPct-10'],
-    ['crab_1', 'w_fist_sr_crabclaw', 'カニばさみの籠手', 'fist', 1, 'crit+8 def+4', 'stat:agi-1u'],
+    ['crab_1', 'w_axe_sr_crabclaw', 'カニばさみの槌', 'axe', 1, 'crit+8 def+4', 'stat:agi-1u', 'fclub'],
     ['crab_3', 'w_bow_sr_foamshot', '泡しぶきの弓', 'bow', 5, 'el:water onHit:blind25', 'res:earth1.5'],
     ['seabird_2', 'w_spear_sr_stormbeak', '嵐のくちばし槍', 'spear', 3, 'el:wind boost:wind15', 'res:fire1.5'],
     ['bee_1', 'w_dagger_sr_stinger', '花バチの針', 'dagger', 1, 'crit+12 hit+5', 'res:fire1.5'],
     ['bee_2', 'w_spear_sr_venomneedle', '蜂針の槍', 'spear', 3, 'onHit:poison40', 'stat:vit-1u'],
     ['bee_4', 'w_bow_sr_thousand', '千本針の弓', 'bow', 7, 'crit+8 hit+10', 'stat:vit-1u'],
-    ['mushroom_2', 'w_club_sr_toadstool', 'まだらの棍棒', 'club', 3, 'onHit:poison35', 'res:fire1.5'],
+    ['mushroom_2', 'w_axe_sr_toadstool', 'まだらの棍棒', 'axe', 3, 'onHit:poison35', 'res:fire1.5', 'club'],
     ['mushroom_4', 'w_staff_sr_elder_cap', '長老ダケの杖', 'staff', 8, 'healPct+20 sres:poison50', 'stat:agi-1u'],
-    ['plant_1', 'w_whip_sr_vine', '花づるの鞭', 'whip', 1, 'onHit:paralyze15 hit+5', 'res:fire1.5'],
+    ['plant_1', 'w_bow_sr_vine', '花づるの弓', 'bow', 1, 'onHit:paralyze15 hit+5', 'res:fire1.5', 'whip'],
     ['plant_4', 'w_staff_sr_moonbloom', '月待ち花の杖', 'staff', 7, 'el:dark boost:dark20', 'res:light1.5'],
     ['fairy_2', 'w_staff_sr_petal', '花びらの杖', 'staff', 3, 'el:light healPct+15', 'res:dark1.5'],
-    ['treant_1', 'w_club_sr_wander', 'さまよい木の枝', 'club', 1, 'hpPct+10 sres:stun40', 'res:fire1.5'],
+    ['treant_1', 'w_axe_sr_wander', 'さまよい木の枝', 'axe', 1, 'hpPct+10 sres:stun40', 'res:fire1.5', 'club'],
     ['treant_4', 'w_staff_sr_elder_root', '古老の根杖', 'staff', 8, 'boost:earth25 mdef+8', 'stat:agi-1u'],
     ['scorpion_1', 'w_dagger_sr_redtail', '赤い尾の短剣', 'dagger', 1, 'onHit:poison35 crit+5', 'res:wind1.5'],
-    ['scorpion_2', 'w_fist_sr_scorpion', '毒尾の爪', 'fist', 3, 'onHit:poison35 crit+6', 'res:wind1.5'],
-    ['scorpion_4', 'w_whip_sr_reaper', '死神の尾鞭', 'whip', 7, 'onHit:death5 crit+6', 'hpPct-15'],
-    ['snake_4', 'w_whip_sr_python', '大蛇の皮鞭', 'whip', 8, 'onHit:paralyze20 physPct+8', 'res:wind1.5'],
+    ['scorpion_2', 'w_dagger_sr_scorptail', '毒尾の爪', 'dagger', 3, 'onHit:poison35 crit+6', 'res:wind1.5', 'claw'],
+    ['scorpion_4', 'w_dagger_sr_reaper', '死神の尾針', 'dagger', 7, 'onHit:death5 crit+6', 'hpPct-15', 'whipd'],
+    ['snake_4', 'w_bow_sr_python', '大蛇王の弓', 'bow', 8, 'onHit:paralyze20 physPct+8', 'res:wind1.5', 'whip'],
     ['mummy_3', 'w_staff_sr_ankh', '冥府の杖', 'staff', 5, 'boost:dark20 mpCostPct-15', 'res:light1.5'],
     ['mummy_4', 'w_sword_sr_tombgeneral', '王墓の将軍剣', 'sword', 7, 'crit+6 imm:death', 'res:light1.5'],
     ['cactus_2', 'w_bow_sr_needlecactus', '針サボテンの弓', 'bow', 3, 'crit+10 hit+5', 'stat:mnd-1u'],
-    ['cactus_4', 'w_club_sr_cactus_king', '大将の針棍棒', 'club', 8, 'crit+8 onHit:stun15', 'res:wind1.5'],
+    ['cactus_4', 'w_axe_sr_cactusking', '大将の針棍棒', 'axe', 8, 'crit+8 onHit:stun15', 'res:wind1.5', 'club'],
     ['sandworm_2', 'w_greatsword_sr_rockworm', '岩ミミズの骨剣', 'greatsword', 5, 'onHit:stun20', 'stat:agi-1u'],
     ['sandworm_3', 'w_greatsword_sr_duneworm', '大地ミミズの牙剣', 'greatsword', 8, 'boost:earth20 physPct+8', 'res:wind1.5'],
-    ['wolf_1', 'w_fist_sr_greywolf', '灰色オオカミの爪', 'fist', 1, 'preemptPct+8 crit+5', 'res:fire1.5'],
+    ['wolf_1', 'w_dagger_sr_greywolf', '灰色オオカミの爪', 'dagger', 1, 'preemptPct+8 crit+5', 'res:fire1.5', 'claw'],
     ['wolf_2', 'w_dagger_sr_frostfang', '霜牙の短剣', 'dagger', 3, 'el:water onHit:freeze15', 'res:earth1.5'],
-    ['yeti_1', 'w_fist_sr_yeti', '雪男の大こぶし', 'fist', 2, 'physPct+8 res:water0.5', 'res:fire1.5'],
+    ['yeti_1', 'w_axe_sr_yeti', '雪男の大槌', 'axe', 2, 'physPct+8 res:water0.5', 'res:fire1.5', 'fclub'],
     ['yeti_2', 'w_axe_sr_icefist', '氷拳の斧', 'axe', 5, 'el:water onHit:freeze15', 'res:fire1.5'],
-    ['frostling_1', 'w_fist_sr_icicle_child', 'こおり小僧の爪', 'fist', 1, 'el:water boost:water15', 'res:fire1.5'],
-    ['frostling_4', 'w_katana_sr_snowgeneral', '雪大将の刀', 'katana', 7, 'el:water onHit:freeze15', 'res:fire1.5'],
+    ['frostling_1', 'w_dagger_sr_icicle', 'こおり小僧の爪', 'dagger', 1, 'el:water boost:water15', 'res:fire1.5', 'claw'],
+    ['frostling_4', 'w_sword_sr_snowgeneral', '雪大将の刀', 'sword', 7, 'el:water onHit:freeze15', 'res:fire1.5', 'katana'],
     ['mammoth_2', 'w_spear_sr_irontusk', '鉄牙の大槍', 'spear', 5, 'physPct+10 onHit:stun15', 'stat:agi-1u'],
-    ['ghost_3', 'w_whip_sr_chain_curse', '呪い鎖の鞭', 'whip', 5, 'el:dark onHit:silence25', 'res:light1.5'],
+    ['ghost_3', 'w_spear_sr_chaincurse', '呪い鎖の鎌槍', 'spear', 5, 'el:dark onHit:silence25', 'res:light1.5', 'whip'],
     ['wisp_2', 'w_staff_sr_goblinfire', '化け火の杖', 'staff', 3, 'el:fire onHit:confuse15', 'res:water1.5'],
     ['wisp_4', 'w_bow_sr_yomi', '黄泉火の弓', 'bow', 8, 'el:dark onHit:burn20', 'res:light1.5'],
-    ['frog_3', 'w_club_sr_bullfrog', '大口ガエルの棍', 'club', 5, 'hpPct+10 onHit:stun15', 'stat:agi-1u'],
+    ['frog_3', 'w_axe_sr_bullfrog', '大口ガエルの棍', 'axe', 5, 'hpPct+10 onHit:stun15', 'stat:agi-1u', 'club'],
     ['doll_3', 'w_dagger_sr_hexpin', '呪いのまち針', 'dagger', 5, 'onHit:silence20 boost:dark15', 'res:light1.5'],
     ['lizardman_2', 'w_spear_sr_marsh', '沼のもり槍', 'spear', 3, 'el:water hit+8', 'res:earth1.5'],
     ['lizardman_3', 'w_staff_sr_swampcharm', '沼の呪術杖', 'staff', 5, 'boost:water20 healPct+10', 'res:earth1.5'],
     ['lizardman_4', 'w_axe_sr_chieftain', '族長の大斧', 'axe', 8, 'physPct+10 crit+6', 'res:earth1.5'],
-    ['spider_2', 'w_whip_sr_spidersilk', '毒糸の鞭', 'whip', 3, 'onHit:poison35 hit+8', 'res:fire1.5'],
+    ['spider_2', 'w_bow_sr_spidersilk', '毒糸の弓', 'bow', 3, 'onHit:poison35 hit+8', 'res:fire1.5', 'whip'],
     ['merman_2', 'w_spear_sr_harpoon', '魚人の大もり', 'spear', 3, 'el:water crit+8', 'res:earth1.5'],
     ['merman_3', 'w_staff_sr_coralwand', 'サンゴの杖', 'staff', 5, 'boost:water20 mpRegen+1', 'res:earth1.5'],
     ['merman_4', 'w_sword_sr_merknight', '魚人騎士の剣', 'sword', 8, 'el:water def+6', 'res:earth1.5'],
-    ['kraken_2', 'w_whip_sr_eightarm', '八本腕の鞭', 'whip', 5, 'onHit:paralyze20 hit+8', 'res:earth1.5'],
+    ['kraken_2', 'w_spear_sr_eightarm', '八本腕のもり', 'spear', 5, 'onHit:paralyze20 hit+8', 'res:earth1.5', 'whip'],
     ['skeleton_1', 'w_sword_sr_cutlass', '骸骨水夫のカトラス', 'sword', 1, 'crit+6 hit+5', 'res:light1.5'],
     ['skeleton_5', 'w_sword_sr_admiral', '提督の金剣', 'sword', 8, 'crit+10 buff:atk+1', 'res:light2'],
-    ['golem_2', 'w_club_sr_ironore', '鉄鉱の大槌', 'club', 5, 'onHit:stun20 physPct+8', 'stat:agi-1u'],
-    ['mole_2', 'w_fist_sr_ironclaw', '鉄のかぎ爪', 'fist', 3, 'crit+8 hit+5', 'res:wind1.5'],
+    ['golem_2', 'w_axe_sr_ironore', '鉄鉱の大槌', 'axe', 5, 'onHit:stun20 physPct+8', 'stat:agi-1u', 'club'],
+    ['mole_2', 'w_dagger_sr_ironclaw', '鉄のかぎ爪', 'dagger', 3, 'crit+8 hit+5', 'res:wind1.5', 'claw'],
     ['mole_4', 'w_axe_sr_mole_boss', '大親方のつるはし', 'axe', 8, 'crit+8 onHit:stun15', 'res:wind1.5'],
     ['beetle_3', 'w_spear_sr_sparkhorn', '火花角の槍', 'spear', 5, 'el:fire onHit:burn20', 'res:water1.5'],
     ['crystal_2', 'w_staff_sr_ruby', '紅水晶の杖', 'staff', 3, 'el:fire boost:fire20', 'res:water1.5'],
-    ['goblin_1', 'w_club_sr_goblin', '小鬼の棍棒', 'club', 1, 'crit+6 goldPct+20', 'stat:int-1u'],
+    ['goblin_1', 'w_axe_sr_goblinclub', '小鬼の棍棒', 'axe', 1, 'crit+6 goldPct+20', 'stat:int-1u', 'club'],
     ['goblin_2', 'w_axe_sr_goblin', '小鬼の手斧', 'axe', 3, 'crit+8 physPct+5', 'stat:mnd-1u'],
     ['goblin_4', 'w_sword_sr_goblincaptain', '小鬼の隊長の剣', 'sword', 7, 'buff:atk+1 sres:confuse50', 'stat:int-1u'],
     ['salamander_2', 'w_bow_sr_firebreath', '火吹きの弓', 'bow', 3, 'el:fire boost:fire15', 'res:water1.5'],
@@ -320,18 +334,18 @@
     ['imp_4', 'w_staff_sr_hellfire', '業火の杖', 'staff', 7, 'el:fire boost:fire25', 'res:water1.5 mpCostPct+15'],
     ['gargoyle_2', 'w_dagger_sr_obsidian', '黒曜の短剣', 'dagger', 3, 'crit+12', 'stat:vit-1u'],
     ['gargoyle_4', 'w_axe_sr_gargoyle', '石像鬼の大斧', 'axe', 8, 'onHit:paralyze15 physPct+8', 'stat:agi-1u'],
-    ['chimera_2', 'w_fist_sr_triple_fang', '三つ牙の爪', 'fist', 5, 'el:fire crit+8', 'res:water1.5'],
+    ['chimera_2', 'w_dagger_sr_triplefang', '三つ牙の爪', 'dagger', 5, 'el:fire crit+8', 'res:water1.5', 'claw'],
     ['eyeball_4', 'w_bow_sr_stargazer', '星見の弓', 'bow', 7, 'el:light hit+10', 'res:dark1.5'],
     ['darkmage_4', 'w_staff_sr_abyss', '深淵の杖', 'staff', 8, 'boost:dark25 mag+8', 'res:light1.5 hpPct-10'],
     ['automaton_2', 'w_bow_sr_clockwork', 'からくり弓', 'bow', 3, 'hit+15 crit+6', 'stat:agi-1u'],
-    ['automaton_4', 'w_katana_sr_clockwork', 'からくり大将の刀', 'katana', 8, 'crit+10 buff:agi+1', 'res:water1.5'],
+    ['automaton_4', 'w_sword_sr_clockwork', 'からくり大将の刀', 'sword', 8, 'crit+10 buff:agi+1', 'res:water1.5', 'katana'],
     ['armor_3', 'w_sword_sr_knightless', '主なき騎士剣', 'sword', 5, 'crit+8 def+6', 'res:water1.5'],
     ['wyvern_2', 'w_spear_sr_windcutter', '風切りの竜槍', 'spear', 5, 'el:wind crit+10', 'res:fire1.5'],
     ['void_1', 'w_sword_sr_void', '虚無の剣', 'sword', 9, 'el:dark crit+12 physPct+10', 'res:light2'],
     ['chaos_1', 'w_axe_sr_chaos', '混沌の大斧', 'axe', 9, 'crit+12 physPct+12', 'stat:dex-2u'],
-    ['quicksilver_2', 'w_whip_sr_quicksilver', '白銀の流れ鞭', 'whip', 8, 'hit+15 crit+10 metalHit', 'stat:str-1u'],
+    ['quicksilver_2', 'w_spear_sr_quicksilver', '白銀の流れ槍', 'spear', 8, 'hit+15 crit+10 metalHit', 'stat:str-1u', 'whip'],
     ['mirror_2', 'w_spear_sr_mirrorhorn', '鏡角の槍', 'spear', 8, 'crit+15 metalHit', 'res:dark1.5'],
-    ['platinum_2', 'w_katana_sr_platinum', '白金の太刀', 'katana', 9, 'crit+15 metalHit hit+10', 'res:dark1.5'],
+    ['platinum_2', 'w_sword_sr_platinum', '白金の太刀', 'sword', 9, 'crit+15 metalHit hit+10', 'res:dark1.5', 'katana'],
   ];
 
   // ---------------------------------------------------------------- 魔物のレア品 31（§9.12.5。[id, 名前, 系統, T(band), 特殊効果, クセ, 落とす魔物]）
@@ -341,42 +355,42 @@
     ['w_bow_leaf', '木の葉の弓', 'bow', 1, 'hit+8', 'res:fire1.25', ['bee_1', 'plant_1', 'fairy_1']],
     ['w_dagger_scorpion', 'サソリの小刀', 'dagger', 1, 'onHit:poison25', 'hpPct-10', ['scorpion_1', 'snake_1', 'sandworm_1']],
     ['w_spear_coral', 'サンゴの槍', 'spear', 1, 'el:water', 'res:earth1.25', ['merman_1', 'kraken_1', 'skeleton_1']],
-    ['w_club_ashen', '灰の棍棒', 'club', 1, 'onHit:stun15', 'spd-15', ['orc_1', 'chimera_1']],
+    ['w_axe_ashen', '灰の棍棒', 'axe', 1, 'onHit:stun15', 'spd-15', ['orc_1', 'chimera_1'], 'club'],
     ['w_dagger_bloodbat', '血吸いの短剣', 'dagger', 3, 'crit+8', 'res:light1.25', ['bat_2']],
     ['w_bow_gull', 'カモメの弓', 'bow', 3, 'el:wind', 'defPct-25', ['seabird_2']],
     ['w_staff_sprout', '芽吹きの杖', 'staff', 3, 'healPct+10', 'res:fire1.25', ['bee_2', 'mushroom_2', 'plant_2']],
-    ['w_whip_snakeskin', '大蛇の鞭', 'whip', 3, 'onHit:poison25', 'mdefPct-25', ['scorpion_2', 'snake_2']],
+    ['w_bow_snakeskin', '大蛇の弓', 'bow', 3, 'onHit:poison25', 'mdefPct-25', ['scorpion_2', 'snake_2'], 'whip'],
     ['w_dagger_frost', '霜の短剣', 'dagger', 3, 'el:water', 'res:fire1.25', ['wolf_2', 'frostling_2', 'owl_2']],
-    ['w_whip_mist', '霧の鞭', 'whip', 3, 'onHit:blind20', 'res:wind1.25', ['ghost_2', 'wisp_2', 'doll_2']],
+    ['w_spear_mist', '霧の槍', 'spear', 3, 'onHit:blind20', 'res:wind1.25', ['ghost_2', 'wisp_2', 'doll_2'], 'whip'],
     ['w_spear_reed', 'アシの槍', 'spear', 3, 'hit+8', 'defPct-25', ['frog_2', 'lizardman_2', 'spider_2']],
     ['w_axe_pick', '鉱夫のつるはし', 'axe', 3, 'crit+6', 'spd-15', ['mole_2', 'beetle_2', 'goblin_2']],
     ['w_axe_ember', '残り火の斧', 'axe', 3, 'el:fire', 'res:water1.25', ['salamander_2', 'imp_2', 'gargoyle_2']],
     ['w_bow_star', '星明かりの弓', 'bow', 3, 'hit+10', 'res:dark1.25', ['eyeball_2', 'darkmage_2', 'automaton_2']],
-    ['w_club_rat', '鉄歯の棍棒', 'club', 5, 'crit+6', 'mdefPct-25', ['rat_3']],
+    ['w_axe_rat', '鉄歯の棍棒', 'axe', 5, 'crit+6', 'mdefPct-25', ['rat_3'], 'club'],
     ['w_staff_tombpriest', '墓守の杖', 'staff', 5, 'boost:dark15', 'res:light1.25', ['mummy_3']],
-    ['w_fist_wormtooth', '大ミミズの牙爪', 'fist', 5, 'crit+6', 'eva-10', ['sandworm_2', 'kraken_2', 'golem_2']],
+    ['w_dagger_wormtooth', '大ミミズの牙爪', 'dagger', 5, 'crit+6', 'eva-10', ['sandworm_2', 'kraken_2', 'golem_2'], 'claw'],
     ['w_greatsword_beastfang', '大獣の牙剣', 'greatsword', 5, 'physPct+8', 'mdefPct-25', ['yeti_2', 'mammoth_2', 'orc_2']],
     ['w_greatsword_blank', '白紙の刃', 'greatsword', 7, 'onHit:silence20', 'mpCostPct+25', ['paper_4']],
     ['w_spear_hornet', '大バチの槍', 'spear', 7, 'onHit:poison30', 'hpPct-10', ['bee_4', 'plant_4', 'treant_4']],
-    ['w_katana_sand', '砂けむりの刀', 'katana', 7, 'el:earth', 'res:wind1.25', ['scorpion_4', 'snake_4', 'cactus_4']],
+    ['w_sword_sand', '砂けむりの刀', 'sword', 7, 'el:earth', 'res:wind1.25', ['scorpion_4', 'snake_4', 'cactus_4'], 'katana'],
     ['w_axe_dune', '大地の斧', 'axe', 7, 'el:earth', 'spd-15', ['sandworm_3']],
-    ['w_katana_moon', '月の刀', 'katana', 7, 'el:dark', 'res:light1.25', ['wolf_4', 'frostling_4', 'owl_4']],
-    ['w_fist_wolfking', 'オオカミ王の牙爪', 'fist', 7, 'crit+10', 'defPct-25', ['wolf_5', 'frostling_5']],
+    ['w_sword_moon', '月の刀', 'sword', 7, 'el:dark', 'res:light1.25', ['wolf_4', 'frostling_4', 'owl_4'], 'katana'],
+    ['w_dagger_wolfking', 'オオカミ王の牙爪', 'dagger', 7, 'crit+10', 'defPct-25', ['wolf_5', 'frostling_5'], 'claw'],
     ['w_sword_bellringer', '鐘つきの剣', 'sword', 7, 'onHit:stun15', 'encounterPct+50', ['ghost_4', 'wisp_4', 'frog_4']],
-    ['w_katana_tide', '潮の刀', 'katana', 7, 'el:water', 'res:earth1.25', ['merman_4', 'kraken_3', 'skeleton_4']],
-    ['w_club_forgehammer', '鍛冶場の大槌', 'club', 7, 'physPct+8', 'spd-15', ['mole_4', 'beetle_4', 'goblin_4']],
-    ['w_katana_ash', '灰かぶりの刀', 'katana', 7, 'el:fire', 'res:water1.25', ['salamander_4', 'imp_4', 'gargoyle_4']],
-    ['w_fist_brimstone', '硫黄の拳', 'fist', 7, 'el:fire', 'hpPct-10', ['orc_3', 'chimera_3']],
+    ['w_sword_tide', '潮の刀', 'sword', 7, 'el:water', 'res:earth1.25', ['merman_4', 'kraken_3', 'skeleton_4'], 'katana'],
+    ['w_axe_forgehammer', '鍛冶場の大槌', 'axe', 7, 'physPct+8', 'spd-15', ['mole_4', 'beetle_4', 'goblin_4'], 'club'],
+    ['w_sword_ash', '灰かぶりの刀', 'sword', 7, 'el:fire', 'res:water1.25', ['salamander_4', 'imp_4', 'gargoyle_4'], 'katana'],
+    ['w_axe_brimstone', '硫黄の槌', 'axe', 7, 'el:fire', 'hpPct-10', ['orc_3', 'chimera_3'], 'fclub'],
     ['w_sword_starblade', '星の剣', 'sword', 7, 'el:light', 'res:dark1.25', ['eyeball_4', 'darkmage_4', 'automaton_4']],
     ['w_greatsword_chaoshorn', '混沌の角剣', 'greatsword', 9, 'physPct+10', 'takenPct+15', ['chaos_1', 'chaos_2', 'demon_3']],
   ];
 
-  for (const [mon, id, name, wtype, tier, fx, q] of SUPER) {
-    make(id, { name, wtype, tier, grade: 'super', src: 'super', exclusive: mon, units: UNITS_FIX[id] || unitsFor(wtype, mon), fx: parse(fx, tier), q: parse(q, tier) });
+  for (const [mon, id, name, wtype, tier, fx, q, ov] of SUPER) {
+    make(id, { name, wtype, tier, grade: 'super', src: 'super', exclusive: mon, ov, units: UNITS_FIX[id] || (ov ? OV[ov].units : unitsFor(wtype, mon)), fx: parse(fx, tier), q: parse(q, tier) });
     IDS.msuper.push(id);
   }
-  for (const [id, name, wtype, tier, fx, q, mons] of RARE) {
-    make(id, { name, wtype, tier, grade: 'rare', src: 'mdrop', units: unitsFor(wtype, mons[0]), fx: parse(fx, tier), q: parse(q, tier) });
+  for (const [id, name, wtype, tier, fx, q, mons, ov] of RARE) {
+    make(id, { name, wtype, tier, grade: 'rare', src: 'mdrop', ov, units: ov ? OV[ov].units : unitsFor(wtype, mons[0]), fx: parse(fx, tier), q: parse(q, tier) });
     IDS.mrare.push(id);
   }
 
@@ -384,21 +398,21 @@
   make('w_staff_sr_goldquill', {
     name: '黄金の羽ペン杖', wtype: 'staff', tier: 8, grade: 'super', src: 'super', exclusive: 'rm_golden_quill', units: 'i2',
     fx: split({ mag: 15, glimPct: { spell: 20 }, mpCostPct: -15 }), q: split({ statsAdd: { str: -5 } }),
-    desc: '術力が上がる。術を閃きやすい。／MPの消費が減る。ただし腕力が下がる。',
+    desc: '術力が上がる。術を閃きやすい。／術のMPの消費が減る。ただし腕力が下がる。',
   });
-  make('w_katana_sr_dreamcut', {
-    name: '夢断ちの太刀', wtype: 'katana', tier: 9, grade: 'super', src: 'super', exclusive: 'rm_dream_tapir', units: 's1d1',
+  make('w_sword_sr_dreamcut', {
+    name: '夢断ちの太刀', wtype: 'sword', tier: 9, grade: 'super', src: 'super', exclusive: 'rm_dream_tapir', units: 's1d1', ov: 'katana',
     fx: split({ crit: 15, onHit: { status: 'sleep', chance: 0.2 }, physPct: 10 }), q: split({ hpPct: -15 }),
     desc: '会心が出やすい。眠らせることがある。／物理が強くなる。ただし最大HPが下がる。',
   });
-  IDS.fixed.push('w_staff_sr_goldquill', 'w_katana_sr_dreamcut');
+  IDS.fixed.push('w_staff_sr_goldquill', 'w_sword_sr_dreamcut');
 
   // 検査・ツール用（tools/test_weapons.js・check_weapons.js）。落とす魔物は品のデータには書かない（§9.12 の割り当ては魔物の側）
   Object.assign(WI, {
     MSUPER_DROPPER: Object.fromEntries(SUPER.map((r) => [r[1], r[0]])),
     MRARE_DROPPERS: Object.fromEntries(RARE.map((r) => [r[0], r[6]])),
     UNITS_FIX,
-    LINEAGE_RACE, RACE_STATS, parse, phrase, describe, width, descProblems,
+    OV_MONSTER: OV, LINEAGE_RACE, RACE_STATS, parse, phrase, describe, width, descProblems,
   });
 
   R.onData(() => {

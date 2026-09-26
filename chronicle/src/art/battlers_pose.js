@@ -15,7 +15,8 @@
   const A = (R.Art = R.Art || {});
   const BT = (A._Battlers = A._Battlers || {});
 
-  /** how each weapon family is held */
+  /** how each drawn shape is held: the 7 families, the item-art shapes katana / club
+   *  (A19: a sword / axe item with `art`), fist = unarmed; whip is unused since A19 */
   BT.STYLE = {
     sword: 'one', katana: 'one', axe: 'one', club: 'one', greatsword: 'two', spear: 'spear',
     dagger: 'dagger', bow: 'bow', staff: 'staff', fist: 'fist', whip: 'whip',

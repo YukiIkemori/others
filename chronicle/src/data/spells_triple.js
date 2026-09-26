@@ -3,7 +3,7 @@
 (function (R) {
   'use strict';
   const EL = ['fire', 'water', 'wind', 'earth', 'light', 'dark'];
-  const GLIM = { 1: [1, 0], 2: [2, 2], 3: [3, 4], 4: [5, 6], 5: [7, 8], A: [4, 5], B: [6, 7], T: [8, 8] };
+  const GLIM = { 1: [1, 1], 2: [2, 4], 3: [3, 10], 4: [5, 19], 5: [7, 32], A: [4, 14], B: [6, 25], T: [8, 34] };   // [glim.lv, glim.prof]（熟練度の段階 1〜100。SYSTEMS_REWORK §1.4）
   const PAIRS = []; for (let i = 0; i < 6; i++) for (let j = i + 1; j < 6; j++) PAIRS.push(EL[i] + '_' + EL[j]);
   const TRIPLES = []; for (let i = 0; i < 6; i++) for (let j = i + 1; j < 6; j++) for (let k = j + 1; k < 6; k++) TRIPLES.push([EL[i], EL[j], EL[k]].join('_'));
   const dmg = (power, o) => Object.assign({ type: 'damage', formula: 'magic', power }, o || {});
@@ -14,7 +14,6 @@
   const revive = (p) => ({ type: 'revive', pct: p });
   const cure = (s) => ({ type: 'cure', statuses: s });
   const dispel = (side) => ({ type: 'dispel', side });
-  const healWp = (p) => ({ type: 'healWp', pct: p });
   const enc = (p, steps, weakOnly) => (weakOnly ? { type: 'encounter', pct: p, steps, weakOnly: true } : { type: 'encounter', pct: p, steps });
   const onAllies = (e) => Object.assign({}, e, { on: 'allies' });
   // cls: '1'..'5' = 単属性の段、'A' / 'B' = 2属性、'T' = 3属性

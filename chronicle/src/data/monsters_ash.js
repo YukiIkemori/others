@@ -36,7 +36,7 @@
       flags: [], s: { hp: 2.86, atk: 0.4, mag: 0.38 }, eva: 5,
       elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_fire_breath', w: 2 }, { id: 'e_horn', w: 2 }, { id: 'e_focus', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_stone_fire', rate: 8 }, rare: { item: 'w_katana_ash', rate: 32 }, super: { item: 'w_spear_sr_flamehorn', rate: 256 } },
+      drops: { normal: { item: 'i_stone_fire', rate: 8 }, rare: { item: 'w_sword_ash', rate: 32 }, super: { item: 'w_spear_sr_flamehorn', rate: 256 } },
       desc: '燃える角を生やした火トカゲ。\n竜の血をひくといわれる。',
     },
     salamander_5: {
@@ -77,7 +77,7 @@
       flags: [], s: { hp: 3.9, atk: 0.26, mag: 0.33, agi: 1.2 }, eva: 5,
       elem: { fire: 0.25, water: 1.5, light: 1.5, dark: 0.5 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_fire_rain', w: 2 }, { id: 'e_fire_bolt', w: 2 }, { id: 'e_haste', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_katana_ash', rate: 32 }, super: { item: 'w_staff_sr_hellfire', rate: 256 } },
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_sword_ash', rate: 32 }, super: { item: 'w_staff_sr_hellfire', rate: 256 } },
       desc: '炎をまとう大角の悪魔。\n火の雨で荒野を焼く。',
     },
     imp_5: {
@@ -118,7 +118,7 @@
       flags: ['flying'], s: { hp: 2.04, atk: 0.86, mag: 0.75, def: 1.35 }, eva: 12,
       elem: { wind: 1.5, earth: 0.5, light: 1.5, dark: 0.5 }, phys: { slash: 0.75, blunt: 1.25, pierce: 0.75 }, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_gaze', w: 2 }, { id: 'e_dive', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_katana_ash', rate: 32 }, super: { item: 'w_axe_sr_gargoyle', rate: 256 } },
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_sword_ash', rate: 32 }, super: { item: 'w_axe_sr_gargoyle', rate: 256 } },
       desc: '大角の石像鬼の長。\nにらまれると体が石になる。',
     },
     // ---- orc 大鬼（人型・l）: 荒野をのし歩く大鬼。力まかせと鉄棒。
@@ -127,7 +127,7 @@
       flags: [], s: { hp: 1.15, atk: 1.93, mag: 1.61, def: 0.95, mdef: 0.85, agi: 0.8 }, rw: { gold: 1.3 }, eva: 5,
       elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_heavy', w: 2 }],
-      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_club_ashen', rate: 32 }, super: { item: 'w_greatsword_sr_frenzy', rate: 256 } },
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_axe_ashen', rate: 32 }, super: { item: 'w_greatsword_sr_frenzy', rate: 256 } },
       desc: '荒野をうろつく大きな鬼。\n丸太を軽々と振り回す。',
     },
     orc_2: {
@@ -143,7 +143,7 @@
       flags: [], s: { hp: 1.9, atk: 0.89, mag: 0.71, def: 1.05, agi: 0.8 }, eva: 5,
       elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_rampage', w: 2 }, { id: 'e_focus', w: 1, cond: { once: true } }, { id: 'e_sweep', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 2] } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_fist_brimstone', rate: 32 }, super: { item: 'hd_sr_oni', rate: 128 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_axe_brimstone', rate: 32 }, super: { item: 'hd_sr_oni', rate: 128 } },
       desc: '赤い肌の大鬼の頭目。\n怒ると誰にも止められない。',
     },
     // ---- chimera 三頭獣（獣・l）: シシ・ヤギ・ヘビの頭をもつ獣。火の息が強くなっていく。
@@ -152,7 +152,7 @@
       flags: [], s: { hp: 0.77, atk: 0.76, mag: 0.69 }, eva: 5,
       elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_bite', w: 2 }, { id: 'e_fire_breath', w: 1 }, { id: 'e_poison_bite', w: 1 }],
-      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_club_ashen', rate: 32 }, super: { item: 'hn_sr_chimera_paw', rate: 256 } },
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_axe_ashen', rate: 32 }, super: { item: 'hn_sr_chimera_paw', rate: 256 } },
       desc: 'シシとヤギとヘビが一つになった\n獣。三つの口で襲う。',
     },
     chimera_2: {
@@ -160,7 +160,7 @@
       flags: [], s: { hp: 1.01, atk: 0.56, mag: 0.53 }, eva: 5,
       elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_fire_breath', w: 2 }, { id: 'e_poison_bite', w: 1 }, { id: 'e_bite', w: 2 }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'sh_wyvern_scale', rate: 32 }, super: { item: 'w_fist_sr_triple_fang', rate: 256 } },
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'sh_wyvern_scale', rate: 32 }, super: { item: 'w_dagger_sr_triplefang', rate: 256 } },
       desc: '三つの頭がそれぞれに吠える。\nシシの頭は火を吐く。',
     },
     chimera_3: {
@@ -168,7 +168,7 @@
       flags: [], s: { hp: 2.05, atk: 0.34, mag: 0.33 }, eva: 5,
       elem: { fire: -1, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_inferno_breath', w: 2 }, { id: 'e_bite', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 0] } }],
-      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_fist_brimstone', rate: 32 }, super: { item: 'bd_sr_chimera_hide', rate: 256 } },
+      drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_axe_brimstone', rate: 32 }, super: { item: 'bd_sr_chimera_hide', rate: 256 } },
       desc: '燃えるたてがみの三頭獣。\n吐く業火は荒野を焦がす。',
     },
   });

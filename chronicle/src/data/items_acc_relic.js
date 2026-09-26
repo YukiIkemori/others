@@ -205,14 +205,14 @@
       desc: '体力が割合で上がる。最大HPが上がる。\nただし動きが遅くなる。' },
     // rm_acorn_prince（鍵 peak、レア枠 1/6）
     ac_rl_peak: { name: 'どんぐりの帽子飾り', type: 'acc', grade: 'rare', tier: 0, src: 'relic', exclusive: 'rm_acorn_prince', quirk: true,
-      mods: { vitPct: 10, wpRegen: 1, /* クセ */ mpCostPct: 25 },
+      mods: { vitPct: 10, mpRegen: 1, /* クセ */ mpCostPct: 25 },
       price: 1500,
-      desc: '体力が割合で上がる。WPが戻る。\nただしMPの消費が増える。' },
+      desc: '体力が割合で上がる。MPが戻る。\nただし術のMPの消費が増える。' },
     // rm_acorn_prince（鍵 peak、超レア枠 1/24）
     ac_rs_peak: { name: 'どんぐり王子の紋章', type: 'acc', grade: 'super', tier: 0, src: 'relic', exclusive: 'rm_acorn_prince', quirk: true,
-      mods: { vitPct: 15, strPct: 15, wpRegen: 2, /* クセ */ eva: -20 },
+      mods: { vitPct: 15, strPct: 15, mpRegen: 2, /* クセ */ eva: -20 },
       price: 3000,
-      desc: '体力と腕力が上がる。WPが戻る。\nただしかわしにくい。' },
+      desc: '体力と腕力が上がる。MPが戻る。\nただしかわしにくい。' },
     // rm_golden_quill（鍵 tale、レア枠 1/6）
     ac_rl_tale: { name: '黄金のペン先', type: 'acc', grade: 'rare', tier: 0, src: 'relic', exclusive: 'rm_golden_quill', quirk: true,
       mods: { mndPct: 10, glimPct: { spell: 15, /* クセ */ tech: -50 } },

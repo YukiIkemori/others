@@ -12,23 +12,26 @@
   const ids = ((WI.ids = WI.ids || {}).super = []);
   // 武器の項目（品に置く。§8.2.2）。ほかのキーは mods（§8.5・§8.6.5 の読み方）
   const FIELDS = ['element', 'onHit', 'vs', 'drain', 'crit', 'hit', 'twoHanded', 'sealTech', 'metalHit'];
-  const UNITS = { sword: 's2', greatsword: 's2', axe: 's2', dagger: 'd2', bow: 'd2', spear: 's1d1', katana: 's1d1', club: 's1v1', fist: 's1a1', whip: 'd1a1', staff: 'i2' };
-  const SERIES = { sword: 0, greatsword: 1, dagger: 2, axe: 3, spear: 4, bow: 5, club: 6, staff: 7, katana: 9, fist: 10, whip: 11 };   // §8.1.2（精神の杖は 8）
+  const UNITS = { sword: 's2', greatsword: 's2', axe: 's2', dagger: 'd2', bow: 'd2', spear: 's1d1', staff: 'i2' };
+  const SERIES = { sword: 0, greatsword: 1, dagger: 2, axe: 3, spear: 5, bow: 6, staff: 7 };   // items_weapons.js の系列の順（精神の杖は 8）
+  // A19 の上書き（SYSTEMS_REWORK §3.2）: 旧 刀 → 剣（刀の絵・会心 +8。units は旧のまま s1d1）
+  const KATANA = (it) => Object.assign(it, { art: 'katana', icon: 'icon:katana', mult: 1.05, crit: (it.crit || 0) + 8 });
   function put(it, fx) {
     for (const [k, v] of Object.entries(fx || {})) {
       if (FIELDS.includes(k)) it[k] = v;
       else { const m = (it.mods = it.mods || {}); m[k] = v && typeof v === 'object' && !Array.isArray(v) ? Object.assign(m[k] || {}, v) : v; }
     }
   }
-  const S = (id, name, wtype, tier, exclusive, fx, q, desc, units) => {
+  const S = (id, name, wtype, tier, exclusive, fx, q, desc, units, ov) => {
     const it = { name, type: 'weapon', grade: 'super', tier, wtype, units: units || UNITS[wtype] };
     put(it, fx);
     put(it, q);
     if (q) it.quirk = true;
+    if (ov) ov(it);
     it.src = 'super';
     it.exclusive = exclusive;
     it.desc = desc.replace(/／/g, '\n');
-    it.sort = tier * 100 + (it.units === 'm2' ? 8 : SERIES[wtype]) + 70;   // §8.2.1（超レア +70）
+    it.sort = tier * 100 + (it.units === 'm2' ? 8 : SERIES[wtype]) + 70;   // 刀の剣も剣の番号   // §8.2.1（超レア +70）
     if (DB.items[id]) R.loadErrors.push('weapons: 品の id が重なった ' + id);
     DB.items[id] = it;
     ids.push(id);
@@ -46,8 +49,9 @@
   // ---------------------------------------------------------------- 器用さの一式（T8）の武器
   S('w_dagger_sr_moonfang', '月牙の短剣', 'dagger', 8, 'bat_5', { crit: 20, onHit: { status: 'sleep', chance: 0.35 } }, { hpPct: -20 },
     '会心が出やすい。眠らせることがある。／ただし最大HPが下がる。');
-  S('w_whip_sr_silk', '銀糸の鞭', 'whip', 8, 'spider_4', { onHit: { status: 'paralyze', chance: 0.35 } }, { takenPct: 25 },
-    'まひさせることがある。／ただし受けるダメージが増える。', 'd2');   // 器用さ +30: 2 単位を器用さに寄せた（§8.3.4 の例「鞭 d2」）
+  // 旧 銀糸の鞭。短剣の片手のまま（items_armor.js の器用さの一式の S 列が盾と両立する。SYSTEMS_REWORK §3.2）
+  S('w_dagger_sr_silk', '銀糸の短剣', 'dagger', 8, 'spider_4', { onHit: { status: 'paralyze', chance: 0.35 } }, { takenPct: 25 },
+    'まひさせることがある。／ただし受けるダメージが増える。', 'd2');
 
   // ---------------------------------------------------------------- クセの強い名品
   // 技が使えない代わりに物理 +50（§8.3.5 の例外）
@@ -56,8 +60,8 @@
   // 鋼の魔物（白銀ゼリー）から出る、鋼を斬れる短剣
   S('w_dagger_sr_mirror', '鏡割りの短剣', 'dagger', 5, 'quicksilver_1', { metalHit: true }, { hit: -15 },
     '鋼の魔物にも傷を与える。／ただし当たりにくい。');
-  S('w_katana_sr_matsuyoi', '待宵丸', 'katana', 7, 'wolf_4', { autoCounter: 0.3 }, { spd: -30 },
-    '攻撃を受けると反撃する。／ただし動きが遅くなる。');
+  S('w_sword_sr_matsuyoi', '待宵丸', 'sword', 7, 'wolf_4', { autoCounter: 0.3 }, { spd: -30 },
+    '攻撃を受けると反撃する。／ただし動きが遅くなる。', 's1d1', KATANA);
 
   // ---------------------------------------------------------------- クリア後（T9）
   S('w_sword_sr_echo', '残影の魔剣', 'sword', 9, 'b_valzard_echo', { element: 'dark', drain: 0.2 }, { elemResist: { light: 1.5 } },

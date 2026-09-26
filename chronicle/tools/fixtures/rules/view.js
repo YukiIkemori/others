@@ -2,7 +2,7 @@
 //   node tools/build.js --with tools/fixtures/rules      → debug_rules.html
 //   node tools/shot.js --html debug_rules.html --eval "RPG.rulesView({page:'sheet', member:0})" --wait 300 --out x.png
 // Pages: 'sheet' (stats of one member), 'gear' (9 slots and an optimize plan), 'apt' (aptitude
-// letters and proficiency), 'growth' (max HP/MP/WP by level for the party, EXP per level).
+// letters and proficiency), 'growth' (max HP/MP by level for the party, EXP per level).
 // Everything shown is computed by R.Rules / R.State / R.Party at draw time.
 (function (R) {
   'use strict';
@@ -37,7 +37,7 @@
     const s = Ru.stats(c), base = Ru.baseStats(c);
     g.window(4, 46, 122, 128);
     let y = 52;
-    for (const k of ['hp', 'mp', 'wp']) {
+    for (const k of ['hp', 'mp']) {
       g.text(Ru.STAT_NAMES[k], 12, y, { color: '#c8c8d8' });
       g.text(c[k] + '/' + s[k], 118, y, { align: 'right' });
       y += 13;
@@ -159,8 +159,7 @@
     const party = R.Game.party;
     const cols = [C().orange, C().cyan, C().green, C().pink];
     plot(4, 4, 248, 112, 'hp', 1000, [250, 500, 750, 999], '最大HP　Lv1〜99（今の装備で）', party, cols);
-    plot(4, 118, 122, 80, 'mp', 150, [50, 100, 150], '最大MP', party, cols);
-    plot(130, 118, 122, 80, 'wp', 100, [50, 99], '最大WP', party, cols);
+    plot(4, 118, 248, 80, 'mp', 250, [50, 100, 150, 200, 250], '最大MP', party, cols);
     g.window(4, 200, 248, 20);
     party.forEach((c, i) => {
       g.rect(12 + i * 60, 207, 6, 6, cols[i]);

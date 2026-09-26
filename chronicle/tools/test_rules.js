@@ -62,8 +62,7 @@ test('K: constants of §4.18.1', () => {
   eq([0, 4, 8].map(K.D), [70, 190, 310], 'D');
   eq([0, 3, 8, 9].map(K.LZ), [6, 24, 54, 60], 'LZ');
   eq([6, 30].map(K.DK), [70, 190], 'DK');
-  eq(K.PROF_PTS, [0, 5, 15, 30, 55, 90, 135, 190, 260, 350, 460], 'PROF_PTS');
-  eq(K.PEXP, [15, 40, 70, 100, 135, 175, 220, 270, 330, 400], 'PEXP');
+  eq(K.PEXP, [25, 186, 311, 445, 585, 730, 880, 1034, 1191, 1352], 'PEXP (SYSTEMS_REWORK §1.3)');
   eq(K.GLIM.expect, [2, 4, 6, 8, 10, 12, 14, 16, 17, 19], 'EXPECT');
   eq(K.GLIM.base, { tech: 0.012, secret: 0.006, single: 0.015, comboA: 0.012, comboB: 0.010, triple: 0.008 }, 'GLIM.base');
   eq(K.INN, [10, 16, 24, 32, 42, 54, 66, 80, 96, 112], 'INN');
@@ -75,10 +74,16 @@ test('K: constants of §4.18.1', () => {
   eq(Ru.SLOTS, ['weapon1', 'weapon2', 'shield', 'head', 'body', 'hands', 'feet', 'acc1', 'acc2'], 'SLOTS');
   eq(Ru.STATS, ['str', 'vit', 'dex', 'agi', 'int', 'mnd'], 'STATS');
   const w = K.WTYPE;
-  eq([w.sword.mult, w.greatsword.mult, w.dagger.mult, w.axe.mult, w.spear.mult, w.bow.mult, w.club.mult, w.staff.mult, w.katana.mult, w.fist.mult, w.whip.mult],
-    [1.00, 1.40, 0.75, 1.15, 1.25, 1.10, 1.05, 0.60, 1.05, 0.90, 0.80], 'WTYPE mult');
+  eq(Ru.WTYPES, ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'staff'], 'WTYPES: the 7 types (A19)');
+  eq([w.sword.mult, w.greatsword.mult, w.dagger.mult, w.axe.mult, w.spear.mult, w.bow.mult, w.staff.mult, w.fist.mult],
+    [1.00, 1.40, 0.75, 1.15, 1.25, 1.10, 0.60, 0.90], 'WTYPE mult (+ fist for bare hands)');
   eq(Ru.WTYPES.filter((t) => w[t].twoHanded), ['greatsword', 'spear', 'bow'], 'two-handed types');
-  eq(Ru.WTYPES.filter((t) => w[t].reach), ['spear', 'bow', 'whip'], 'reach types');
+  eq(Ru.WTYPES.filter((t) => Ru.wtypeInfo ? Ru.wtypeInfo(t).reach : w[t].reach), ['spear', 'bow', 'staff'], 'reach types (staff reaches, A19)');
+  eq(Ru.UNARMED, 'fist', 'R.Rules.UNARMED'); ok(!Ru.WTYPES.includes('fist') && !(DB.weaponTypes || {}).fist, 'bare hands is not a weapon type');
+  eq(Ru.MAXES, ['hp', 'mp'], 'MAXES (WP removed, A18)');
+  ok(!('WP' in K) && !('wp' in K.GROW) && !('wp' in K.BONUS_CAP) && !('wpPct' in K.AFTER) && !('wpCost' in Ru), 'no WP constants / wpCost left');
+  eq(K.BONUS_CAP, { hp: 200, mp: 50 }, 'BONUS_CAP'); eq(K.AFTER, { mpPct: 0.12 }, 'AFTER'); eq(K.MP.cap, 250, 'MP cap 250');
+  eq(K.GROW.mp, { S: 1.30, A: 1.15, B: 1.00, C: 0.85, D: 0.70 }, 'GROW.mp (C / D raised)');
   eq(w.staff.magMult, 1.0, 'staff magMult');
   const c = K.curve(30);
   eq([Math.round(c.hp), Math.round(c.atk), Math.round(c.def), Math.round(c.agi), Math.round(c.exp), Math.round(c.gold)], [195, 69, 95, 42, 93, 80], 'monster curve L30 (§4.14.2; hp × (1 + 0.004·30) of K.MON_HP_PROF, Part A13)');
@@ -115,10 +120,12 @@ test('levels: need/expForLevel table (§4.2.3)', () => {
   for (let L = 2; L <= 99; L++) ok(Ru.expForLevel(L) > Ru.expForLevel(L - 1), 'monotone at ' + L);
 });
 
-test('levels: HPlv/MPlv/WPlv table (§4.2.2)', () => {
-  const T = { 1: [18, 8, 5], 5: [69, 16, 11], 6: [80, 18, 12], 12: [145, 28, 19], 18: [206, 37, 25], 24: [265, 45, 31], 30: [322, 54, 37],
-    36: [378, 61, 42], 42: [433, 69, 47], 48: [488, 77, 52], 54: [541, 84, 58], 60: [594, 91, 63], 70: [682, 103, 71], 99: [928, 136, 94] };
-  for (const L in T) eq(['hp', 'mp', 'wp'].map((k) => Math.round(Ru.lvCurve(k, +L))), T[L], 'curve L' + L);
+test('levels: HPlv/MPlv table (§4.2.2; WP removed, A18)', () => {
+  const T = { 1: [18, 8], 5: [69, 16], 6: [80, 18], 12: [145, 28], 18: [206, 37], 24: [265, 45], 30: [322, 54],
+    36: [378, 61], 42: [433, 69], 48: [488, 77], 54: [541, 84], 60: [594, 91], 70: [682, 103], 99: [928, 136] };
+  for (const L in T) eq(['hp', 'mp'].map((k) => Math.round(Ru.lvCurve(k, +L))), T[L], 'curve L' + L);
+  // SYSTEMS_REWORK §2.1: max MP at Lv30 B 54 · A 62 · S 70, Lv54 B 84 · S 109
+  eq([30, 54].map((L) => ['S', 'A', 'B'].map((g) => Math.round(Ru.lvCurve('mp', L) * K.GROW.mp[g]))), [[70, 62, 54], [109, 97, 84]], 'MP by growth letter (§2.1)');
   // growth diminishes: HP Lv2 +14.7, Lv54 +8.9
   near(Ru.lvCurve('hp', 2) - Ru.lvCurve('hp', 1), 14.7, 0.05, 'HP gain at Lv2');
   near(Ru.lvCurve('hp', 54) - Ru.lvCurve('hp', 53), 8.9, 0.1, 'HP gain at Lv54');
@@ -130,28 +137,27 @@ test('levels: falloff f(d) (§4.2.3)', () => {
   eq(Ru.falloff(0), 1, '0'); near(Ru.falloff(-5), 1.5, 1e-9, '-5'); near(Ru.falloff(-10), 2, 1e-9, '-10'); near(Ru.falloff(-40), 2, 1e-9, 'max 2');
 });
 
-test('companions: HP/MP/WP at Lv1/24/54 match §5.3.2', () => {
+test('companions: HP/MP at Lv1/24/54 (§5.3.2 with the growth letters of SYSTEMS_REWORK §2.3)', () => {
   if (!hasReal('companions', 20)) return;
   const T = {
-    selma: '20/6/5 308/36/31 631/67/58', hagen: '23/5/5 344/27/31 704/50/58', dokka: '24/6/4 361/36/25 738/67/46', basil: '20/8/4 302/45/25 618/84/46',
-    bartolo: '19/6/5 290/36/31 594/67/58', viola: '17/8/5 259/45/31 530/84/58', shigure: '17/5/7 254/27/40 520/50/75', rouga: '19/5/6 290/27/35 594/50/66',
-    titta: '16/6/6 249/36/35 509/67/66', brigitta: '17/6/6 259/36/35 530/67/66', sylvain: '15/8/6 224/45/35 458/84/66', zafira: '15/8/6 226/45/35 463/84/66',
-    ferno: '15/9/5 224/52/31 458/97/58', belladonna: '17/8/5 254/45/31 520/84/58', boden: '18/9/4 265/52/25 541/97/46', teo: '14/10/4 217/59/25 443/109/46',
-    ilse: '14/10/4 219/59/25 448/109/46', morga: '15/9/5 224/52/31 458/97/58', marta: '16/10/3 249/59/19 509/109/35', noela: '14/9/5 219/52/31 448/97/58',
+    selma: '20/8 308/45 631/84', hagen: '23/8 344/45 704/84', dokka: '24/7 361/39 738/71', basil: '20/8 302/45 618/84', bartolo: '19/8 290/45 594/84',
+    viola: '17/8 259/45 530/84', shigure: '17/10 254/59 520/109', rouga: '19/9 290/52 594/97', titta: '16/9 249/52 509/97', brigitta: '17/9 259/52 530/97',
+    sylvain: '15/9 224/52 458/97', zafira: '15/9 226/52 463/97', ferno: '15/9 224/52 458/97', belladonna: '17/8 254/45 520/84', boden: '18/9 265/52 541/97',
+    teo: '14/10 217/59 443/109', ilse: '14/10 219/59 448/109', morga: '15/9 224/52 458/97', marta: '16/10 249/59 509/109', noela: '14/9 219/52 448/97',
   };
   for (const id in T) {
-    const got = [1, 24, 54].map((L) => { const s = Ru.stats(bare(id, L)); return [s.hp, s.mp, s.wp].join('/'); }).join(' ');
+    const got = [1, 24, 54].map((L) => { const s = Ru.stats(bare(id, L)); return [s.hp, s.mp].join('/'); }).join(' ');
     eq(got, T[id], id);
+    ok(!('wp' in (DB.companions[id].growth || {})), id + ' growth has no wp');
   }
-  const H = { warrior: '20/6/5 305/36/31 624/67/58', ranger: '17/6/6 251/36/35 514/67/66', mage: '14/10/4 219/59/25 448/109/46',
-    spellblade: '17/8/5 259/45/31 530/84/58', wanderer: '17/8/5 257/45/31 525/84/58' };
+  const H = { warrior: '20/8 305/45 624/84', ranger: '17/9 251/52 514/97', mage: '14/10 219/59 448/109', spellblade: '17/8 259/45 530/84', wanderer: '17/8 257/45 525/84' };
   for (const t in H) {
     const opts = DB.heroTypes[t].favorOptions;
     const favor = opts.weapon ? { kind: 'weapon', id: opts.weapon[0] } : { kind: 'element', id: opts.element[0] };
     const got = [1, 24, 54].map((L) => {
       const c = Ru.newChar({ id: 'hero', heroSpec: { name: 'テスト', gender: 'm', type: t, favor } });
       c.equip = Ru.emptyEquip(); Ru.setLevel(c, L);
-      const s = Ru.stats(c); return [s.hp, s.mp, s.wp].join('/');
+      const s = Ru.stats(c); return [s.hp, s.mp].join('/');
     }).join(' ');
     eq(got, H[t], 'hero ' + t);
   }
@@ -160,10 +166,12 @@ test('companions: HP/MP/WP at Lv1/24/54 match §5.3.2', () => {
 test('stats: caps and bonuses (§4.2.2)', () => {
   const c = bare('fx_warrior', 99);
   c.equip.acc1 = 'fx_acc_a'; c.equip.acc2 = 'fx_acc_b';
-  c.bonus = { hp: 200, mp: 30, wp: 30 };
+  c.bonus = { hp: 200, mp: 50 };
   const s = Ru.stats(c);
-  ok(s.hp <= 999 && s.mp <= 150 && s.wp <= 99, 'caps 999/150/99 ' + [s.hp, s.mp, s.wp]);
-  eq([s.mp, s.wp], [150, 99], 'MP/WP reach their caps');
+  ok(s.hp <= 999 && s.mp <= 250 && !('wp' in s), 'caps 999/250, no WP ' + [s.hp, s.mp]);
+  c.level = 99; c.bonus.mp = 50; c.equip.acc1 = 'fx_acc_a'; c.equip.acc2 = 'fx_acc_a';
+  const s2 = Ru.stats(c);
+  ok(s2.mp <= 250, 'MP ≤ 250 at Lv99 with seeds + mpPct ' + s2.mp);
   const m = bare('fx_mage', 1), base = Ru.stats(m);
   m.bonus.hp = 12;
   eq(Ru.stats(m).hp, base.hp + 12, 'bonus.hp adds');
@@ -361,8 +369,8 @@ test('equip: slots, two-handed and the shield (§3.3.3 rules 1–6)', () => {
   ok(Ru.canEquip(m, 'fx_gender', 'head') && !Ru.canEquip(w, 'fx_gender', 'head'), 'gender');
   eq(Ru.equipIssue(w, 'fx_only', 'acc1'), 'テスト剣には装備できない。', 'only reason');
   // reach / isTwoHanded
-  eq([Ru.reach('fx_spear_5'), Ru.reach('fx_whip_5'), Ru.reach('fx_sword_5'), Ru.reach(null)], ['any', 'any', 'front', 'front'], 'reach');
-  eq([Ru.isTwoHanded('fx_bow_5'), Ru.isTwoHanded('fx_whip_5'), Ru.isTwoHanded('fx_herb')], [true, false, false], 'isTwoHanded');
+  eq([Ru.reach('fx_spear_5'), Ru.reach('fx_staff_5'), Ru.reach('fx_sword_5'), Ru.reach('fx_mace_5'), Ru.reach(null)], ['any', 'any', 'front', 'front', 'front'], 'reach (staff reaches, A19)');
+  eq([Ru.isTwoHanded('fx_bow_5'), Ru.isTwoHanded('fx_staff_5'), Ru.isTwoHanded('fx_mace_5'), Ru.isTwoHanded('fx_herb')], [true, false, false, false], 'isTwoHanded');
   // defaultSlot
   const d = Ru.newChar({ id: 'fx_warrior' });
   eq(Ru.defaultSlot(d, 'fx_axe_5'), 'weapon2', 'first empty weapon slot');
@@ -415,7 +423,7 @@ test('previewStats: equals stats after − before, touches nothing (§3.3.3)', (
 test('optimize: pure, keeps accessories/quirks/types, score never drops (§4.4.1, §4.17.3 J)', () => {
   const g = fresh(['brigitta', 'marta', 'sylvain']);
   const h = St.hero();
-  const add = ['fx_sword_3', 'fx_sword_5', 'fx_sword_n', 'fx_axe_5', 'fx_gs_5', 'fx_spear_5', 'fx_bow_5', 'fx_staff_5', 'fx_staff_n', 'fx_whip_5',
+  const add = ['fx_sword_3', 'fx_sword_5', 'fx_sword_n', 'fx_axe_5', 'fx_gs_5', 'fx_spear_5', 'fx_bow_5', 'fx_staff_5', 'fx_staff_n', 'fx_mace_5',
     'fx_body_h5', 'fx_body_c5', 'fx_head_h5', 'fx_head_c5', 'fx_sh_h5', 'fx_sh_c5', 'fx_hands_l5', 'fx_feet_l5', 'fx_i_body_n', 'fx_i_head_n', 'fx_i_sh_n',
     'fx_sword_q', 'fx_body_q', 'fx_sword_seal', 'fx_i_acc_s', 'fx_acc_a', 'fx_s_body_n', 'fx_s_head_n', 'fx_i_hands_n', 'fx_i_feet_n'];
   for (const id of add) St.addItem(id, 1);
@@ -548,7 +556,8 @@ test('mods: merging and personal caps (§3.3.16)', () => {
   eq(m.elemResist, { fire: 0, water: 0.75 }, 'elemResist min (a 1.5 weakness loses to 0.75)');
   eq(m.statusImmune, ['poison', 'sleep'], 'lists unique');
   eq(m.statusResist, { sleep: 0.75 }, 'maps add');
-  eq([m.mpCostPct, m.wpCostPct], [-50, -50], 'cost cap −50');
+  eq([m.mpCostPct, m.techCostPct], [-50, -50], 'cost cap −50 (mpCostPct and techCostPct each)');
+  ok(!('wpCostPct' in m) && !('wpRegen' in m), 'no WP mods');
   eq(m.encounterPct, -50, 'encounter clamp');
   eq(m.autoSteal, 100, 'autoSteal cap');
   eq(m.goldPct, 200, 'party keys are not capped per person');
@@ -606,8 +615,8 @@ test('commands, tech/spell lists, costs, rows (§3.3.3)', () => {
   const c = Ru.newChar({ id: 'fx_warrior' });
   g.party.push(c);
   c.equip = Ru.emptyEquip();
-  eq(Ru.commands(c).map((x) => [x.type, x.slot, x.wtype]), [['weapon', null, 'fist'], ['defend', undefined, undefined], ['item', undefined, undefined]], 'bare hands → 体術');
-  eq(Ru.commands(c)[0].name, '体術', 'name 体術');
+  eq(Ru.commands(c).map((x) => [x.type, x.slot, x.wtype]), [['weapon', null, 'fist'], ['defend', undefined, undefined], ['item', undefined, undefined]], 'bare hands → the unarmed command');
+  eq(Ru.commands(c)[0].name, '素手', 'name 素手 (SYSTEMS_REWORK §3.1)');
   c.equip.weapon2 = 'fx_bow_5';
   eq(Ru.commands(c).map((x) => x.slot), ['weapon2', undefined, undefined], 'one weapon only: no fist command');
   c.equip.weapon1 = 'fx_sword_seal';
@@ -633,14 +642,15 @@ test('commands, tech/spell lists, costs, rows (§3.3.3)', () => {
     c.spells = ['s_water_1', 's_fire_2', 's_fire_1'];
     eq(Ru.spellList(c), ['s_fire_1', 's_fire_2', 's_water_1'], 'real spell order (§7.2.2)');
   }
-  // costs: wp 5 × (1 − 0.35) → floor 3; mp 7 × 0.5 → 3; raise rounds up
-  eq([Ru.wpCost(c, 'fx_t_cost'), Ru.mpCost(c, 'fx_s_cost')], [5, 7], 'base costs');
+  // costs (SYSTEMS_REWORK §2.2): a tech = max(1, round(mp × (1 + techCostPct/100))), a spell keeps the old path (mpCostPct)
+  ok(typeof Ru.wpCost !== 'function', 'wpCost removed');
+  eq([Ru.mpCost(c, 'fx_t_cost'), Ru.mpCost(c, 'fx_s_cost')], [8, 7], 'base costs');
   c.equip.acc1 = 'fx_acc_a';
-  eq([Ru.wpCost(c, 'fx_t_cost'), Ru.mpCost(c, 'fx_s_cost')], [3, 4], '−35%');
+  eq([Ru.mpCost(c, 'fx_t_cost'), Ru.mpCost(c, 'fx_s_cost')], [5, 4], '−35% (tech round(5.2), spell floor)');
   c.equip.acc2 = 'fx_acc_b';
-  eq([Ru.wpCost(c, 'fx_t_cost'), Ru.mpCost(c, 'fx_s_cost')], [2, 3], '−50% cap');
+  eq([Ru.mpCost(c, 'fx_t_cost'), Ru.mpCost(c, 'fx_s_cost')], [4, 3], '−50% cap');
   c.equip.acc1 = 'fx_acc_cost_up'; c.equip.acc2 = null;
-  eq([Ru.wpCost(c, 'fx_t_cost'), Ru.mpCost(c, 'fx_s_cost')], [7, 9], '+25% rounds up');
+  eq([Ru.mpCost(c, 'fx_t_cost'), Ru.mpCost(c, 'fx_s_cost')], [10, 9], '+25%');
   eq(Ru.mpCost(c, 'nope'), 0, 'unknown action 0');
   // rows
   const h = St.hero();
@@ -667,12 +677,13 @@ test('newChar: hero rules for every type × favor (§5.2.4, §5.2.7)', () => {
         eq([c.name, c.gender, c.heroType, c.favor], ['ラーク', 'f', type, { kind, id }], tag + ' identity');
         eq(L[kind === 'weapon' ? 'w' : 'e'][id], 'S', tag + ' favor S');
         if (T.pairElement && kind === 'element') eq(L.e[pair[id]], 'A', tag + ' pair A');
-        const wsum = Ru.WTYPES.reduce((a, w) => a + S[L.w[w]], 0), esum = Ru.ELEMENTS.reduce((a, e) => a + S[L.e[e]], 0);
-        ok(wsum >= 15 && wsum <= 19 && esum >= 8 && esum <= 12 && wsum + esum >= 26 && wsum + esum <= 27, tag + ' aptitude budget ' + wsum + '/' + esum);
+        // SYSTEMS_REWORK §3.5: the type's 7 weapon letters sum 10–13 before the favour, elements 8–12 after it
+        const wsum0 = Ru.WTYPES.reduce((a, w) => a + S[T.apt.w[w]], 0), esum = Ru.ELEMENTS.reduce((a, e) => a + S[L.e[e]], 0);
+        ok(wsum0 >= 10 && wsum0 <= 13 && esum >= 8 && esum <= 12, tag + ' aptitude budget ' + wsum0 + '/' + esum);
         const prof = kind === 'weapon' ? c.wprof : c.eprof;
-        eq(prof[id], 15, tag + ' prof 15');
-        for (const w of Ru.WTYPES) eq(c.wprof[w], ({ S: 15, A: 5 })[L.w[w]] || 0, tag + ' wprof ' + w);
-        for (const e of Ru.ELEMENTS) eq(c.eprof[e], ({ S: 15, A: 5 })[L.e[e]] || 0, tag + ' eprof ' + e);
+        eq(prof[id], K.START_PROF.S, tag + ' prof 25');
+        for (const w of Ru.WTYPES) eq(c.wprof[w], K.START_PROF[L.w[w]] || 0, tag + ' wprof ' + w);
+        for (const e of Ru.ELEMENTS) eq(c.eprof[e], K.START_PROF[L.e[e]] || 0, tag + ' eprof ' + e);
         const w1 = kind === 'weapon' ? kit.weapon[id] : T.defaultWeapon;
         if (DB.items[w1]) eq(c.equip.weapon1, w1, tag + ' weapon1');
         if (Ru.isTwoHanded(c.equip.weapon1)) eq(c.equip.shield, null, tag + ' no shield with 2H');
@@ -683,7 +694,7 @@ test('newChar: hero rules for every type × favor (§5.2.4, §5.2.7)', () => {
         const row = T.row === 'auto' ? (Ru.reach(c.equip.weapon1) === 'any' || kind === 'element' ? 'middle' : 'front') : T.row;
         eq(c.row, row, tag + ' row');
         const s = Ru.stats(c);
-        eq([c.hp, c.mp, c.wp, c.level, c.exp], [s.hp, s.mp, s.wp, 1, 0], tag + ' full at Lv1');
+        eq([c.hp, c.mp, c.level, c.exp], [s.hp, s.mp, 1, 0], tag + ' full at Lv1'); ok(!('wp' in c), tag + ' no wp');
         eq(Ru.baseStats(c), T.stats, tag + ' base stats from the type');
         eq(Pa.spriteKey(c), 'party:hero_f_' + type, tag + ' sprite');
       }
@@ -704,7 +715,7 @@ test('newChar: companions (§5.3.5, §5.0 0.6)', () => {
     ok(!(c.equip.shield && Ru.hasTwoHanded(c)), id + ' no shield + 2H');
     eq(c.techs, D.startTechs.filter((t) => DB.actions[t]), id + ' techs');
     eq(c.spells, D.startSpells.filter((t) => DB.actions[t]), id + ' spells');
-    for (const w of Ru.WTYPES) eq(c.wprof[w], ({ S: 15, A: 5 })[D.apt.w[w]] || 0, id + ' wprof ' + w);
+    for (const w of Ru.WTYPES) eq(c.wprof[w], K.START_PROF[D.apt.w[w]] || 0, id + ' wprof ' + w);
     const A = Ru.aptitude(c), MUL = { S: 2, A: 1.5, B: 1, C: 0.6, D: 0.3 };
     for (const w of Ru.WTYPES) eq(A.w[w], MUL[D.apt.w[w]], id + ' apt ' + w);
     for (const e of Ru.ELEMENTS) eq(A.e[e], MUL[D.apt.e[e]], id + ' apt ' + e);
@@ -716,116 +727,189 @@ test('newChar: companions (§5.3.5, §5.0 0.6)', () => {
   eq(Ru.aptitude(Ru.newChar({ id: 'fx_mage' })).e, { fire: 2, water: 0.6, wind: 0.6, earth: 1.5, light: 0.6, dark: 1 }, 'aptitude multipliers');
 });
 
-test('proficiency power: Part A13 profPowerMul (spells by element rank, techs / attacks by the used weapon type)', () => {
+test('proficiency table: A17 ranks 1–100 (SYSTEMS_REWORK §1.2)', () => {
+  // the expanded table of §1.2, verbatim
+  const SPEC = ('1:0 2:11 3:25 4:40 5:56 6:73 7:91 8:109 9:128 10:147 11:166 12:186 13:206 14:227 15:248 16:269 17:290 18:311 19:333 20:355 ' +
+    '21:377 22:400 23:422 24:445 25:468 26:491 27:514 28:538 29:561 30:585 31:609 32:633 33:657 34:681 35:706 36:730 37:755 38:780 39:805 40:830 ' +
+    '41:855 42:880 43:905 44:931 45:956 46:982 47:1008 48:1034 49:1060 50:1086 51:1112 52:1138 53:1165 54:1191 55:1218 56:1245 57:1271 58:1298 59:1325 60:1352 ' +
+    '61:1379 62:1406 63:1434 64:1461 65:1488 66:1516 67:1543 68:1571 69:1599 70:1626 71:1654 72:1682 73:1710 74:1738 75:1766 76:1795 77:1823 78:1851 79:1880 80:1908 ' +
+    '81:1937 82:1965 83:1994 84:2023 85:2051 86:2080 87:2109 88:2138 89:2167 90:2196 91:2225 92:2255 93:2284 94:2313 95:2343 96:2372 97:2401 98:2431 99:2461 100:2490')
+    .split(' ').map((x) => x.split(':').map(Number));
+  eq(K.PROF_PTS.length, 101, 'PROF_PTS has 101 entries ([0] unused)');
+  eq(K.PROF_PTS[0], 0, 'PROF_PTS[0] = 0');
+  for (const [r, pts] of SPEC) eq(K.PROF_PTS[r], pts, 'PROF_PTS[' + r + ']');
+  eq(K.PROF_CAP, 2490, 'PROF_CAP = PROF_PTS[100]');
+  eq([Ru.profRank(0), Ru.profRank(10.99), Ru.profRank(11), Ru.profRank(146.9), Ru.profRank(147), Ru.profRank(2489.99), Ru.profRank(2490), Ru.profRank(99999)],
+    [1, 1, 2, 9, 10, 99, 100, 100], 'profRank: at least 1, 2490 → 100');
+  for (const [r, pts] of SPEC) { eq(Ru.profRank(pts), r, 'profRank(' + pts + ')'); if (r > 1) eq(Ru.profRank(pts - 0.01), r - 1, 'just below rank ' + r); }
+  eq(K.PROF_GAIN, { weapon: 1, techHigh: 2, techHighLv: 6, single12: 2, single35: 5, pair: 5, triple: 7, stone: 2 }, 'PROF_GAIN (§1.3)');
+  eq(K.CATCHUP, 2, 'CATCHUP');
+  eq(K.PROF_SOFT, { rank: [20, 28, 36, 44, 52, 60, 67, 74, 80, 90], mul: 0.3 }, 'PROF_SOFT');
+  eq(K.START_PROF, { S: 25, A: 11 }, 'START_PROF (rank 3 / 2)');
+  eq([Ru.profRank(25), Ru.profRank(11)], [3, 2], 'start ranks');
+  eq(K.JOIN_PROF, { S: 0.8, A: 0.7, B: 0.5, C: 0.3, D: 0.1 }, 'JOIN_PROF');
+  eq(K.PROF_TRACK, [180, 370, 555, 745, 935, 1125, 1315, 1505, 1675, 1850], 'PROF_TRACK');
+  eq(K.PEXP.map(Ru.profRank), [3, 12, 18, 24, 30, 36, 42, 48, 54, 60], 'PEXP = the points of ranks 3, 12, … 60');
+  eq(K.TECH_PROF, [0, 1, 3, 8, 14, 20, 26, 32, 40, 50, 60], 'TECH_PROF (§1.4)');
+  eq(K.PROF_MP, { freeRank: 14, freeStep: 1, halfRank: 32, halfStep: 2 }, 'PROF_MP (§1.4)');
+  if (DB.starterKit && DB.starterKit.prof) eq(DB.starterKit.prof, K.START_PROF, 'starterKit.prof = START_PROF');
+});
+
+test('proficiency power: A17 profPowerMul = 1 + 0.30 × ((r − 1)/99)^0.75', () => {
   fresh([]);
   const P = K.PROF_PTS;
-  eq(K.PROF_POWER, { perRank: 0.03, max: 0.30 }, 'K.PROF_POWER');
+  eq(K.PROF_POWER, { max: 0.30, exp: 0.75 }, 'K.PROF_POWER');
+  // §1.4 quick table
+  const QT = { 1: 0, 5: 2.7, 10: 5.0, 20: 8.7, 30: 11.9, 40: 14.9, 50: 17.7, 60: 20.3, 70: 22.9, 80: 25.3, 90: 27.7, 100: 30.0 };
+  for (const r in QT) near((Ru.profPowerOf(+r) - 1) * 100, QT[r], 0.05, 'power at rank ' + r);
   const c = Ru.newChar({ id: 'fx_warrior' });
   c.equip = Ru.emptyEquip();
   for (const w of Ru.WTYPES) c.wprof[w] = 0;
   for (const e of Ru.ELEMENTS) c.eprof[e] = 0;
   const A = DB.actions;
-  // spells: +3 % per rank of the element, ranks 0 / 5 / 10
-  near(Ru.profPowerMul(c, A.fx_s_step3), 1, 1e-9, 'rank 0 → ×1');
-  c.eprof.fire = P[5];
-  near(Ru.profPowerMul(c, A.fx_s_step3), 1.15, 1e-9, 'rank 5 → ×1.15');
-  near(Ru.profPowerMul(c, 'fx_s_step3'), 1.15, 1e-9, 'an action id works too');
-  eq(Ru.profPowerPct(c, A.fx_s_step3), 15, 'profPowerPct 15');
-  c.eprof.fire = 999;
-  near(Ru.profPowerMul(c, A.fx_s_step3), 1.30, 1e-9, 'rank 10 → ×1.30 (the max)');
+  near(Ru.profPowerMul(c, A.fx_s_step3), 1, 1e-9, 'rank 1 → ×1');
+  c.eprof.fire = P[10];
+  near(Ru.profPowerMul(c, A.fx_s_step3), Ru.profPowerOf(10), 1e-12, 'rank 10');
+  near(Ru.profPowerMul(c, 'fx_s_step3'), Ru.profPowerOf(10), 1e-12, 'an action id works too');
+  eq(Ru.profPowerPct(c, A.fx_s_step3), 5, 'profPowerPct 5');
+  c.eprof.fire = K.PROF_CAP;
+  near(Ru.profPowerMul(c, A.fx_s_step3), 1.30, 1e-9, 'rank 100 → ×1.30 (the max)');
   // combo / triple: the average rank of the elements
-  c.eprof.fire = P[6]; c.eprof.wind = P[2];
-  near(Ru.profPowerMul(c, A.fx_s_pair), 1 + 0.03 * 4, 1e-9, 'pair: ranks 6 and 2 → average 4 → ×1.12');
-  c.eprof.light = P[1];
-  near(Ru.profPowerMul(c, A.fx_s_triple), 1 + 0.03 * 3, 1e-9, 'triple: ranks 6, 2, 1 → average 3 → ×1.09');
+  c.eprof.fire = P[30]; c.eprof.wind = P[10];
+  near(Ru.profPowerMul(c, A.fx_s_pair), Ru.profPowerOf(20), 1e-12, 'pair: ranks 30 and 10 → average 20');
+  c.eprof.light = P[2];
+  near(Ru.profPowerMul(c, A.fx_s_triple), Ru.profPowerOf(14), 1e-12, 'triple: ranks 30, 10, 2 → average 14');
   // techs and plain attacks: the weapon type in the slot actually used
   c.equip.weapon1 = 'fx_sword_5'; c.equip.weapon2 = 'fx_axe_5';
-  c.wprof.sword = P[5]; c.wprof.axe = P[10];
-  near(Ru.profPowerMul(c, null, 'weapon1'), 1.15, 1e-9, 'attack with weapon1 (sword rank 5) → ×1.15');
-  near(Ru.profPowerMul(c, null, 'weapon2'), 1.30, 1e-9, 'attack with weapon2 uses its own type (axe rank 10) → ×1.30');
-  near(Ru.profPowerMul(c, 'attack'), 1.15, 1e-9, "'attack' with no slot → the default weapon (weapon1)");
-  near(Ru.profPowerMul(c, A.fx_t_cost, 'weapon1'), 1.15, 1e-9, 'tech from weapon1 → sword rank');
-  near(Ru.profPowerMul(c, A.fx_t_cost, 'weapon2'), 1.30, 1e-9, 'tech from weapon2 → axe rank');
-  c.equip.weapon1 = null; c.equip.weapon2 = null; c.wprof.fist = P[3];
-  near(Ru.profPowerMul(c, null, null), 1.09, 1e-9, 'bare hands → 体術 rank 3 → ×1.09');
-  // no bonus for items and non-actions
+  c.wprof.sword = P[20]; c.wprof.axe = P[60];
+  near(Ru.profPowerMul(c, null, 'weapon1'), Ru.profPowerOf(20), 1e-12, 'attack with weapon1 (sword rank 20)');
+  near(Ru.profPowerMul(c, null, 'weapon2'), Ru.profPowerOf(60), 1e-12, 'attack with weapon2 uses its own type (axe rank 60)');
+  near(Ru.profPowerMul(c, 'attack'), Ru.profPowerOf(20), 1e-12, "'attack' with no slot → the default weapon (weapon1)");
+  near(Ru.profPowerMul(c, A.fx_t_cost, 'weapon1'), Ru.profPowerOf(20), 1e-12, 'tech from weapon1 → sword rank');
+  near(Ru.profPowerMul(c, A.fx_t_cost, 'weapon2'), Ru.profPowerOf(60), 1e-12, 'tech from weapon2 → axe rank');
+  c.equip.weapon1 = null; c.equip.weapon2 = null;
+  near(Ru.profPowerMul(c, null, null), 1, 1e-9, 'bare hands (素手) → no proficiency bonus');
   near(Ru.profPowerMul(c, { kind: 'item' }), 1, 1e-9, 'an item → ×1');
   near(Ru.profPowerMul(null, A.fx_s_step3), 1, 1e-9, 'no character → ×1');
 });
 
-test('proficiency MP: Part A13b 1段目 MP 0 at element rank 5, 2段目 half at rank 8', () => {
+test('proficiency MP: A13b 1段目 MP 0 at element rank 14, 2段目 half at rank 32 (A17)', () => {
   fresh([]);
   const P = K.PROF_PTS;
-  eq(K.PROF_MP, { freeRank: 5, freeStep: 1, halfRank: 8, halfStep: 2 }, 'K.PROF_MP');
   const c = Ru.newChar({ id: 'fx_warrior' });
   c.equip = Ru.emptyEquip();
   for (const e of Ru.ELEMENTS) c.eprof[e] = 0;
   const A = DB.actions;
-  // the fixture's 1段目 fire spell (MP 7)
-  eq(Ru.mpCost(c, 'fx_s_cost'), 7, 'rank 0: full MP');
-  c.eprof.fire = P[4];
-  eq(Ru.mpCost(c, 'fx_s_cost'), 7, 'rank 4: full MP');
-  c.eprof.fire = P[5];
-  eq(Ru.mpCost(c, 'fx_s_cost'), 0, 'rank 5: 1段目 MP 0');
+  eq(Ru.mpCost(c, 'fx_s_cost'), 7, 'rank 1: full MP');
+  c.eprof.fire = P[13];
+  eq(Ru.mpCost(c, 'fx_s_cost'), 7, 'rank 13: full MP');
+  c.eprof.fire = P[14];
+  eq(Ru.mpCost(c, 'fx_s_cost'), 0, 'rank 14: 1段目 MP 0');
   eq(Ru.profMpKind(c, 'fx_s_cost'), 'free', "profMpKind 'free'");
   eq(Ru.mpCost(c, 'fx_s_step3'), 6, '3段目 unaffected');
   eq(Ru.profMpKind(c, 'fx_s_step3'), null, 'profMpKind null');
-  c.eprof.fire = 999; c.eprof.wind = 999; c.eprof.light = 999;
+  eq(Ru.profMpKind(c, 'fx_t_cost'), null, 'techs have no A13b discount');
+  c.eprof.fire = K.PROF_CAP; c.eprof.wind = K.PROF_CAP; c.eprof.light = K.PROF_CAP;
   eq(Ru.mpCost(c, 'fx_s_pair'), A.fx_s_pair.mp, 'pair spells unaffected');
   eq(Ru.mpCost(c, 'fx_s_triple'), A.fx_s_triple.mp, 'triple spells unaffected');
-  // a real 2段目 spell (if the data has one): half, rounded up, at rank 8
   const two = Object.keys(A).find((id) => A[id].kind === 'spell' && A[id].step === 2 && (A[id].elements || []).length === 1 && A[id].mp % 2 === 1);
   if (two) {
     const el = A[two].elements[0];
-    c.eprof[el] = P[7];
-    eq(Ru.mpCost(c, two), A[two].mp, '2段目 at rank 7: full');
-    c.eprof[el] = P[8];
-    eq(Ru.mpCost(c, two), Math.ceil(A[two].mp / 2), '2段目 at rank 8: half, rounded up');
+    c.eprof[el] = P[31];
+    eq(Ru.mpCost(c, two), A[two].mp, '2段目 at rank 31: full');
+    c.eprof[el] = P[32];
+    eq(Ru.mpCost(c, two), Math.ceil(A[two].mp / 2), '2段目 at rank 32: half, rounded up');
     eq(Ru.profMpKind(c, two), 'half', "profMpKind 'half'");
   } else ok(false, 'no odd-MP 2段目 spell in the data');
 });
 
-test('proficiency: train points, profPct, catch-up (§4.9.1)', () => {
+test('tech MP: A18 techs pay MP (round(old WP × 1.5)), techCostPct and its −50 cap', () => {
+  fresh([]);
+  const A = DB.actions;
+  const techs = Object.keys(A).filter((id) => A[id].kind === 'tech' && !id.startsWith('fx_'));
+  ok(techs.length === 108, '108 techs (' + techs.length + ')');
+  ok(techs.every((id) => !('wp' in A[id]) && A[id].mp > 0), 'every tech has mp and no wp');
+  // a few techs of §3.4 (old WP → MP): 1→2, 2→3, 3→5, 4→6, 5→8, 6→9, 7→11, 8→12, 10→15, 13→20, 14→21
+  const W = { t_sword_stepcut: 2, t_sword_guard: 3, t_sword_thrust: 5, t_sword_wheel: 6, t_sword_purify: 8, t_sword_void: 9, t_sword_bladewind: 11,
+    t_sword_triple: 12, t_sword_dawn: 15, t_sword_crest: 20, t_greatsword_rivers: 21, t_staff_share: 6, t_staff_prayer: 20 };
+  const c = Ru.newChar({ id: 'fx_warrior' });
+  c.equip = Ru.emptyEquip();
+  for (const id in W) if (A[id]) eq(Ru.mpCost(c, id), W[id], 'mp ' + id);
+  // techCostPct −15 / −60 (cap −50) / +50 on a 12-MP tech
+  const t12 = techs.find((id) => A[id].mp === 12);
+  const base = DB.items.fx_acc_cost_up.mods;
+  const set = (v) => { DB.items.fx_acc_cost_up.mods = { techCostPct: v }; c.equip.acc1 = 'fx_acc_cost_up'; };
+  eq(Ru.mpCost(c, t12), 12, 'a 12-MP tech: 12');
+  set(-15); eq(Ru.mpCost(c, t12), 10, 'techCostPct −15 → 10');
+  set(-60); eq(Ru.mpCost(c, t12), 6, 'techCostPct −60 → capped at −50 → 6');
+  set(50); eq(Ru.mpCost(c, t12), 18, 'techCostPct +50 → 18');
+  set(-15); eq(Ru.mpCost(c, 'fx_s_cost'), 7, 'techCostPct does not touch spells');
+  DB.items.fx_acc_cost_up.mods = { mpCostPct: -15 };
+  eq(Ru.mpCost(c, t12), 12, 'mpCostPct does not touch techs');
+  DB.items.fx_acc_cost_up.mods = base;
+  // the real techCostPct gear (§2.5)
+  if (DB.items.ac_hourglass_wp) eq(DB.items.ac_hourglass_wp.mods, { techCostPct: -15 }, 'ac_hourglass_wp → techCostPct −15');
+});
+
+test('proficiency: train points, profPct, catch-up, soft line (A17 §1.3)', () => {
   const g = fresh([]);
   const c = Ru.newChar({ id: 'fx_warrior' });
   g.party.push(c);
   c.wprof.sword = 0; c.equip.weapon1 = 'fx_sword_5';
-  // below PEXP(0)=15 the gain doubles
+  // below PEXP(0)=25 the gain doubles
   Ru.train(c, { kind: 'attack', slot: 'weapon1' });
   eq(c.wprof.sword, 2, 'attack +1 ×2 (catch-up)');
   Ru.train(c, { kind: 'tech', wtype: 'sword', actionId: 'fx_t_high' });
   eq(c.wprof.sword, 6, 'lv≥6 tech +2 ×2');
-  c.wprof.sword = 20;
+  c.wprof.sword = 30;
   Ru.train(c, { kind: 'attack', wtype: 'sword' });
-  eq(c.wprof.sword, 21, 'no catch-up at 20 ≥ PEXP(0)');
+  eq(c.wprof.sword, 31, 'no catch-up at 30 ≥ PEXP(0)');
   c.equip.acc1 = 'fx_acc_a';                      // profPct sword +40
   Ru.train(c, { kind: 'attack', wtype: 'sword' });
-  eq(c.wprof.sword, 22.4, 'profPct +40%');
+  eq(c.wprof.sword, 32.4, 'profPct +40%');
   c.equip.acc1 = null;
-  // spells: single 1–2段 +1, 3–5段 +2, pair +2 each, triple +3 each, stone +1
+  // the soft line: at or above PROF_SOFT.rank[T] the gain is ×0.3 (T0: rank 20 = 355 points)
+  c.wprof.sword = K.PROF_PTS[19];
+  Ru.train(c, { kind: 'attack', wtype: 'sword' });
+  eq(c.wprof.sword, K.PROF_PTS[19] + 1, 'rank 19 at T0: full gain');
+  c.wprof.sword = K.PROF_PTS[20];
+  Ru.train(c, { kind: 'attack', wtype: 'sword' });
+  eq(c.wprof.sword, K.PROF_PTS[20] + 0.3, 'rank 20 at T0: ×0.3');
+  c.equip.acc1 = 'fx_acc_a';
+  c.wprof.sword = K.PROF_PTS[20];
+  Ru.train(c, { kind: 'attack', wtype: 'sword' });
+  eq(c.wprof.sword, K.PROF_PTS[20] + 0.42, 'profPct is applied before the soft line (1 × 1.4 × 0.3)');
+  c.equip.acc1 = null;
+  c.wprof.sword = K.PROF_PTS[20];
+  Ru.train(c, { kind: 'attack', wtype: 'sword', tier: 1 });
+  eq(c.wprof.sword, K.PROF_PTS[20] + 1, 'the soft line moves with the tier (T1: rank 28)');
+  eq([0, 3, 9].map((T) => Ru.profSoft(T)), [20, 44, 90], 'profSoft(T)');
+  // spells (§1.3): single 1–2段 +2, 3–5段 +5, pair +5 each, triple +7 each, stone +2 (above the catch-up line, below the soft line)
   for (const e of Ru.ELEMENTS) c.eprof[e] = 100;
-  Ru.train(c, { kind: 'spell', actionId: 'fx_s_cost' }); eq(c.eprof.fire, 101, 'single step 1: +1');
-  Ru.train(c, { kind: 'spell', actionId: 'fx_s_step3' }); eq(c.eprof.fire, 103, 'single step 3: +2');
-  Ru.train(c, { kind: 'spell', actionId: 'fx_s_pair' }); eq([c.eprof.fire, c.eprof.wind], [105, 102], 'pair +2 each');
-  Ru.train(c, { kind: 'spell', actionId: 'fx_s_triple' }); eq([c.eprof.fire, c.eprof.wind, c.eprof.light], [108, 105, 103], 'triple +3 each');
-  Ru.train(c, { kind: 'spell', elements: ['earth'], stone: true }); eq(c.eprof.earth, 101, 'stone +1');
-  // bare hands train 体術
-  c.equip = Ru.emptyEquip(); c.wprof.fist = 50;
-  Ru.train(c, { kind: 'attack', slot: null });
-  eq(c.wprof.fist, 51, 'bare hands → fist');
-  // rank ups reported; ranks per PROF_PTS
-  c.wprof.axe = 4.5;
+  Ru.train(c, { kind: 'spell', actionId: 'fx_s_cost' }); eq(c.eprof.fire, 102, 'single step 1: +2');
+  Ru.train(c, { kind: 'spell', actionId: 'fx_s_step3' }); eq(c.eprof.fire, 107, 'single step 3: +5');
+  Ru.train(c, { kind: 'spell', actionId: 'fx_s_pair' }); eq([c.eprof.fire, c.eprof.wind], [112, 105], 'pair +5 each');
+  Ru.train(c, { kind: 'spell', actionId: 'fx_s_triple' }); eq([c.eprof.fire, c.eprof.wind, c.eprof.light], [119, 112, 107], 'triple +7 each');
+  Ru.train(c, { kind: 'spell', elements: ['earth'], stone: true }); eq(c.eprof.earth, 102, 'stone +2');
+  // bare hands (素手) train nothing
+  c.equip = Ru.emptyEquip();
+  const before = clone(c.wprof);
+  eq(Ru.train(c, { kind: 'attack', slot: null }), [], 'bare hands: no rank ups');
+  eq(c.wprof, before, 'bare hands train nothing');
+  ok(!('fist' in c.wprof), 'no fist proficiency');
+  // rank ups reported
+  c.wprof.axe = 10.5;
   const ups = Ru.train(c, { kind: 'attack', wtype: 'axe' });
-  eq(ups, [{ kind: 'w', id: 'axe', rank: 1 }], 'rank up reported');
-  eq([0, 4.9, 5, 14, 15, 459, 460, 999].map(Ru.profRank), [0, 0, 1, 1, 2, 9, 10, 10], 'profRank');
-  c.wprof.axe = 998.5;
+  eq(ups, [{ kind: 'w', id: 'axe', rank: 2 }], 'rank up reported');
+  c.wprof.axe = K.PROF_CAP - 0.1;
   Ru.train(c, { kind: 'attack', wtype: 'axe' });
-  eq(c.wprof.axe, 999, 'cap 999');
+  eq(c.wprof.axe, K.PROF_CAP, 'cap 2490');
   // PEXP follows R.Tier.effective()
   g.regionsCleared = ['r_forest', 'r_desert', 'r_snow']; g.tier = 3;
-  eq(Ru.pexp(), 100, 'PEXP(3)');
+  eq(Ru.pexp(), 445, 'PEXP(3)');
+  eq(Ru.profSoft(), 44, 'profSoft follows the tier');
   g.gameClear = true;
-  eq(Ru.pexp(), 400, 'PEXP(9) after the ending');
+  eq(Ru.pexp(), 1352, 'PEXP(9) after the ending');
 });
 
 test('recruit: first three vs later (catch-up), levels, reserve (§5.5.2)', () => {
@@ -838,13 +922,13 @@ test('recruit: first three vs later (catch-up), levels, reserve (§5.5.2)', () =
   R.on('recruit', (c) => seen.push(c.id));
   const a = Pa.recruit('selma');
   eq(a.level, 27, 'joinLevel floor(30 × 0.9)');
-  eq(a.wprof.sword, 15, 'first three: start prof only (S 15)');
+  eq(a.wprof.sword, K.START_PROF.S, 'first three: start prof only (S 25)');
   Pa.recruit('marta'); Pa.recruit('teo');
   const d = Pa.recruit('boden');
   eq(g.party.length, 4, 'party full'); eq(g.reserve.map((c) => c.id), ['boden'], 'the 4th goes to the reserve');
   const L = Ru.aptLetters(d), P = K.PEXP[4];
-  for (const w of Ru.WTYPES) eq(d.wprof[w], Math.max(({ S: 15, A: 5 })[L.w[w]] || 0, Math.round(P * K.JOIN_PROF[L.w[w]])), 'catch-up ' + w);
-  eq(d.eprof.earth, Math.round(135 * 0.8), 'S earth → 108');
+  for (const w of Ru.WTYPES) eq(d.wprof[w], Math.max(K.START_PROF[L.w[w]] || 0, Math.round(P * K.JOIN_PROF[L.w[w]])), 'catch-up ' + w);
+  eq(d.eprof.earth, Math.round(585 * 0.8), 'S earth → 468');
   ok(St.flag('joined_boden'), 'joined flag');
   eq(seen, ['selma', 'marta', 'teo', 'boden'], 'recruit events');
   eq(Pa.recruit('boden'), d, 'no duplicate');
@@ -852,7 +936,7 @@ test('recruit: first three vs later (catch-up), levels, reserve (§5.5.2)', () =
   const e = Pa.recruit('noela', { toParty: false });
   eq(g.reserve.map((c) => c.id), ['boden', 'noela'], 'reserve in join order');
   const s = Ru.stats(e);
-  eq([e.hp, e.mp, e.wp], [s.hp, s.mp, s.wp], 'full HP/MP/WP');
+  eq([e.hp, e.mp], [s.hp, s.mp], 'full HP/MP'); ok(!('wp' in e), 'no wp');
   eq(Pa.joinLevel(), 27, 'joinLevel()');
   eq(Pa.unrecruited().includes('selma'), false, 'unrecruited');
   eq(Pa.isRecruited('noela'), true, 'isRecruited');
@@ -937,7 +1021,7 @@ test('EXP: battleExp, award shares, gainExp (§4.2.3, §5.5.4)', () => {
   const gx = Ru.gainExp(c, Ru.expForLevel(5));
   eq([gx.levels, c.level, gx.level], [4, 5, 5], 'to Lv5');
   const after = Ru.stats(c);
-  eq(gx.gains, { hp: after.hp - before.hp, mp: after.mp - before.mp, wp: after.wp - before.wp }, 'gains = max diff');
+  eq(gx.gains, { hp: after.hp - before.hp, mp: after.mp - before.mp }, 'gains = max diff (no WP)');
   eq(c.hp, 5 + gx.gains.hp, 'current HP rises by the gain');
   eq(lv, [5], 'levelup emitted once');
   const outside = Ru.newChar({ id: 'fx_mage' }); let em = 0;
@@ -954,11 +1038,12 @@ test('afterBattle: win / escape / lose (§4.12.1)', () => {
   const a = Ru.newChar({ id: 'fx_warrior', level: 20 }), b = Ru.newChar({ id: 'fx_mage', level: 20 });
   g.party.push(a, b);
   const sa = Ru.stats(a), sb = Ru.stats(b);
-  a.hp = 3; a.mp = 0; a.wp = 0; a.status = { poison: 3 };
-  b.hp = 0; b.mp = 1; b.wp = 1; b.status = { sleep: 2 };
+  a.hp = 3; a.mp = 0; a.status = { poison: 3 };
+  b.hp = 0; b.mp = 1; b.status = { sleep: 2 };
   Pa.afterBattle('win');
-  eq([a.hp, a.mp, a.wp], [sa.hp, Math.ceil(sa.mp * 0.1), Math.ceil(sa.wp * 0.1)], 'win: full HP, +10% MP/WP (ceil)');
-  eq([b.hp, b.mp, b.wp], [0, 1, 1], 'fallen unchanged');
+  eq([a.hp, a.mp], [sa.hp, Math.ceil(sa.mp * 0.12)], 'win: full HP, +12% MP (ceil, A18)');
+  ok(!('wp' in a), 'no wp');
+  eq([b.hp, b.mp], [0, 1], 'fallen unchanged');
   eq([a.status, b.status], [{}, {}], 'statuses cleared');
   eq(a.counts.battles, 1, 'battle counted');
   a.hp = 1; a.mp = 0;
@@ -1055,12 +1140,12 @@ test('heal & wipe (§3.3.2, §4.12.2)', () => {
   if (!hasReal('companions', 20)) return;
   const g = fresh(['marta']);
   Pa.recruit('teo', { toParty: false });
-  for (const c of St.all()) { c.hp = 0; c.mp = 0; c.wp = 0; c.status = { poison: 1 }; }
+  for (const c of St.all()) { c.hp = 0; c.mp = 0; c.status = { poison: 1 }; }
   g.gold = 1235; g.encItem = { id: 'i_repel', pct: -100, steps: 50, weakOnly: true };
   if (R.Battle) R.Battle.autoCarry = true;
   St.wipeRecover();
   eq(g.gold, 617, 'gold halved, rounded down');
-  for (const c of St.all()) { const s = Ru.stats(c); eq([c.hp, c.mp, c.wp, c.status], [s.hp, s.mp, s.wp, {}], c.id + ' healed'); }
+  for (const c of St.all()) { const s = Ru.stats(c); eq([c.hp, c.mp, c.status], [s.hp, s.mp, {}], c.id + ' healed'); ok(!('wp' in c), c.id + ' no wp'); }
   eq(g.encItem, null, 'encItem cleared');
   if (R.Battle) eq(R.Battle.autoCarry, false, 'autoCarry off');
   for (const c of St.all()) c.hp = 1;
@@ -1202,6 +1287,67 @@ test('save: serialize / deserialize round trip (§3.2.5)', () => {
   eq(R.Game.party.length, 4, 'failed loads leave R.Game as it was');
 });
 
+test('save: the A17–A19 migration of an old save (SYSTEMS_REWORK §2.8, §3.9)', () => {
+  if (!hasReal('companions', 20) || !DB.remap) return;
+  fresh(['selma', 'marta']);
+  const d = St.serialize();
+  const g = d.game;
+  g.rev = 18;
+  // 1. inventory: renamed and removed ids, counts added and capped at 99
+  g.inv = { w_katana_uchi: 2, w_sword_uchi: 1, i_tonic: 3, i_ether: 98, i_seed_wp: 2, ac_badge_whip: 1, w_whip_leather: 1 };
+  const h = g.party[0];
+  // 2. equipment: a whip that became a two-handed bow pushes the shield into the bag
+  h.equip = Object.assign({}, h.equip, { weapon1: 'w_whip_sr_vine', weapon2: null, shield: 'sh_bubble', acc1: 'ac_badge_katana' });
+  // 3. techs: renamed, removed (→ replacement), duplicates removed; the per-type cursor is cleared
+  h.techs = ['t_katana_draw', 't_katana_fold', 't_sword_twin', 't_whip_trip'];
+  h.mem = Object.assign({}, h.mem || {}, { list: { katana: 3, sword: 1 } });
+  // 4. the tech book: keys renamed, the lists merged
+  g.book = g.book || {}; g.book.tech = { t_katana_fold: ['hero'], t_sword_twin: ['selma'], t_club_smash: ['selma'] };
+  // 5. proficiency: weapon points by max into the new types, elements × 2.5 (cap 2490)
+  h.wprof = { sword: 300, greatsword: 0, dagger: 60, axe: 50, spear: 0, bow: 0, club: 100, staff: 0, katana: 500, fist: 700, whip: 40 };
+  h.eprof = { fire: 260, water: 90, wind: 0, earth: 1200, light: 0, dark: 5 };
+  // 6. the hero's favour: a ranger who favoured fist → axe is not a ranger option → the first option
+  h.heroType = 'ranger'; h.favor = { kind: 'weapon', id: 'fist' };
+  // 7. WP → MP
+  h.mp = 4; h.wp = 6; h.bonus = { hp: 10, mp: 20, wp: 40 };
+  const sel = g.party[1];
+  sel.favor = undefined; sel.wp = 3; sel.mp = 1;
+  ok(St.deserialize(d), 'loads');
+  const G = R.Game, H = St.hero();
+  eq(G.rev, 19, '8. rev = 19');
+  eq([G.inv.w_sword_uchi, G.inv.i_ether, G.inv.i_seed_mp, G.inv.ac_badge_dagger, G.inv.w_dagger_iron],
+    [3, 99, 2, 1, 1], '1. inventory remapped, counts added, capped at 99');
+  ok(!G.inv.i_tonic && !G.inv.i_seed_wp && !G.inv.w_katana_uchi && !G.inv.ac_badge_whip, '1. old ids gone');
+  eq(H.equip.weapon1, 'w_bow_sr_vine', '2. whip → bow');
+  eq(H.equip.shield, null, '2. the shield leaves a two-handed bow');
+  ok((G.inv.sh_bubble || 0) >= 1, '2. … and goes into the bag');
+  eq(H.equip.acc1, 'ac_badge_sword', '2. badge remapped');
+  eq(H.techs.slice().sort(), ['t_bow_hobble', 't_sword_draw', 't_sword_twin'], '3. techs remapped without duplicates');
+  eq((H.mem || {}).list || {}, {}, '3. mem.list cleared');
+  eq(G.book.tech.t_sword_twin.slice().sort(), ['hero', 'selma'], '4. book lists merged');
+  eq(G.book.tech.t_greatsword_helmsplit, ['selma'], '4. book key renamed');
+  ok(!G.book.tech.t_katana_fold && !G.book.tech.t_club_smash, '4. old book keys gone');
+  eq([H.wprof.sword, H.wprof.axe, H.wprof.dagger], [500, 700, 60], '5. weapon points by max (sword ← katana, axe ← club/fist, dagger ← whip)');
+  eq(Object.keys(H.wprof), Ru.WTYPES, '5. only the 7 types remain');
+  eq([H.eprof.fire, H.eprof.water, H.eprof.earth, H.eprof.dark], [650, 225, 2490, 12.5], '5. element points × 2.5, cap 2490');
+  eq([Ru.profRank(H.eprof.fire), Ru.profRank(H.eprof.water)], [32, 13], '5. old rank 8 → 32, old rank 5 → 13 (§1.5)');
+  eq(H.favor, { kind: 'weapon', id: 'dagger' }, '6. favour fist → axe → not a ranger option → dagger');
+  const s = Ru.stats(H);
+  eq(H.mp, Math.min(s.mp, 4 + 9), '7. mp + round(1.5 × wp), clamped');
+  eq(H.bonus, { hp: 10, mp: 50 }, '7. bonus.mp = min(50, mp + wp)');
+  ok(!('wp' in H) && !('wp' in St.char('selma')), '7. wp deleted');
+  eq(St.char('selma').mp, Math.min(Ru.stats(St.char('selma')).mp, 1 + 5), '7. round(1.5 × 3) = 5 (half up)');
+  // already at 19: no second migration
+  const d2 = St.serialize();
+  d2.game.party[0].eprof.fire = 100;
+  d2.game.inv.i_tonic = 1;
+  ok(St.deserialize(d2), 'loads again');
+  eq(St.hero().eprof.fire, 100, 'rev 19: elements are not multiplied again');
+  ok(!R.Game.inv.i_ether || R.Game.inv.i_ether === 99, 'rev 19: unknown ids are only dropped, not remapped');
+  // a new game starts at rev 19
+  eq(St.template().rev, 19, 'template rev 19');
+});
+
 test('save: old-save safety (§3.2.5 steps 2–9)', () => {
   if (!hasReal('companions', 20)) return;
   fresh(['selma', 'marta']);
@@ -1240,7 +1386,7 @@ test('save: old-save safety (§3.2.5 steps 2–9)', () => {
   eq(H.equip.acc1, 'fx_i_acc_n', 'old acc slot → acc1');
   eq(H.equip.head, null, 'unknown equipment dropped');
   eq(H.equip.shield, 'fx_sh_h5', 'shield kept with a 1H weapon');
-  eq(Object.keys(H.wprof).length, 11, 'wprof filled');
+  eq(Object.keys(H.wprof), Ru.WTYPES, 'wprof filled (7 types)');
   eq(Object.keys(H.eprof), Ru.ELEMENTS, 'eprof fixed');
   eq(H.eprof.fire, 3, 'eprof value kept');
   eq(H.techs, ['fx_t_cost'], 'techs deduped, unknown dropped');
@@ -1248,7 +1394,7 @@ test('save: old-save safety (§3.2.5 steps 2–9)', () => {
   eq([H.hp, H.mp], [s.hp, 0], 'hp/mp clamped');
   eq(H.status, {}, 'status cleared');
   ok(!('job' in H) && !('jobs' in H), 'job keys removed');
-  eq([H.bonus, H.mem.cmd, H.counts.battles], [{ hp: 0, mp: 0, wp: 0 }, 0, 0], 'bonus/mem/counts filled');
+  eq([H.bonus, H.mem.cmd, H.counts.battles], [{ hp: 0, mp: 0 }, 0, 0], 'bonus/mem/counts filled');
   eq(St.all().map((c) => c.id), ['hero', 'selma', 'marta'], 'duplicates and unknown companions dropped');
   // the hero is forced into the party; over-full party trimmed
   const d2 = St.serialize();
@@ -1289,7 +1435,8 @@ test('grow: seeds with caps (§8.2.5)', () => {
   eq(h.hp, hp0 + 150, 'current follows');
   eq(Ru.grow(h, 'hp', 100), 50, 'to the cap 200');
   eq([Ru.grow(h, 'hp', 1), Ru.canGrow(h, 'hp')], [0, false], 'at cap');
-  eq(Ru.grow(h, 'mp', 40), 30, 'mp cap 30');
+  eq(Ru.grow(h, 'mp', 60), 50, 'mp cap 50 (A18)');
+  eq(Ru.grow(h, 'wp', 5), 0, 'wp does not grow (A18)');
   eq(Ru.grow(h, 'str', 5), 0, 'fixed stats never grow');
   void g;
 });
@@ -1306,15 +1453,16 @@ test('newGame: shape of R.Game (§3.2.1)', () => {
   eq(g.gold, DB.config.startGold || 0, 'gold');
   eq(St.START.map, g.pos.map, 'START getter');
   const c = g.party[0];
-  for (const k of ['id', 'name', 'gender', 'heroType', 'favor', 'level', 'exp', 'hp', 'mp', 'wp', 'bonus', 'status', 'equip', 'wprof', 'eprof', 'techs', 'spells', 'row', 'mem', 'joined', 'counts']) ok(k in c, 'char key ' + k);
+  for (const k of ['id', 'name', 'gender', 'heroType', 'favor', 'level', 'exp', 'hp', 'mp', 'bonus', 'status', 'equip', 'wprof', 'eprof', 'techs', 'spells', 'row', 'mem', 'joined', 'counts']) ok(k in c, 'char key ' + k);
   eq(Object.keys(c.equip), Ru.SLOTS, '9 slots');
-  eq(Object.keys(c.wprof), Ru.WTYPES, '11 wprof');
+  eq(Object.keys(c.wprof), Ru.WTYPES, '7 wprof');
+  ok(!('wp' in c), 'no wp key');
   eq(Object.keys(c.eprof), Ru.ELEMENTS, '6 eprof');
   if (hasReal('companions', 20)) {
     const g2 = St.newGame({ name: 'リーネ', gender: 'f', type: 'mage', favor: { kind: 'element', id: 'water' } }, { companions: ['brigitta', 'marta', 'sylvain'] });
     eq(g2.party.map((x) => x.id), ['hero', 'brigitta', 'marta', 'sylvain'], 'with companions');
     eq(St.hero().name, 'リーネ', 'hero spec');
-    eq(St.char('marta').wprof.staff, 5, 'first three without catch-up');
+    eq(St.char('marta').wprof.staff, K.START_PROF[Ru.aptLetters(St.char('marta')).w.staff] || 0, 'first three without catch-up');
   }
 });
 
@@ -1373,7 +1521,7 @@ test('invariants under random operations (§3.2.6)', () => {
     for (const x of St.all()) {
       if (x.equip.shield && Ru.hasTwoHanded(x)) { fail('shield with 2H at ' + i); break; }
       const s = Ru.stats(x);
-      if (x.hp > s.hp || x.mp > s.mp || x.wp > s.wp) { fail('over max at ' + i); break; }
+      if (x.hp > s.hp || x.mp > s.mp) { fail('over max at ' + i); break; }
     }
     if (g.tier !== g.regionsCleared.length) { fail('tier'); break; }
   }

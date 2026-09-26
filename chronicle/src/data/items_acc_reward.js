@@ -35,9 +35,9 @@
       desc: '素早さが割合で上がる。混乱が効かない。\nただし闇に弱くなる。' },
     // once: nerei_marina_reward
     ac_tale_isles: { name: '潮騒の耳飾り', type: 'acc', grade: 'rare', tier: 0, src: 'reward', unique: true, quirk: true,
-      mods: { dexPct: 10, wpRegen: 1, /* クセ */ mpCostPct: 25 },
+      mods: { dexPct: 10, mpRegen: 1, /* クセ */ mpCostPct: 25 },
       price: 0,
-      desc: '器用さが割合で上がる。WPが戻る。\nただしMPの消費が増える。' },
+      desc: '器用さが割合で上がる。MPが戻る。\nただし術のMPの消費が増える。' },
     // once: dovan_borg_reward
     ac_tale_mine: { name: '誓いの腕輪', type: 'acc', grade: 'rare', tier: 0, src: 'reward', unique: true, quirk: true,
       mods: { hpPct: 15, defPct: 15, /* クセ */ spd: -15 },
@@ -55,9 +55,9 @@
       desc: 'めずらしい魔物に出会いやすい。\nレアをよく落とす。ただしお金が減る。' },
     // once: st_rival_won1
     ac_rival_pen: { name: '記録院の銀筆', type: 'acc', grade: 'rare', tier: 0, src: 'reward', unique: true, quirk: true,
-      mods: { mpCostPct: -15, wpCostPct: -15, /* クセ */ mdefPct: -25 },
+      mods: { mpCostPct: -15, techCostPct: -15, /* クセ */ mdefPct: -25 },
       price: 0,
-      desc: '術のMPの消費が減る。技のWPの消費が減る。\nただし術防が下がる。' },
+      desc: '術と技のMPの消費が減る。\nただし術防が下がる。' },
     // once: roa_berna_gift
     ac_berna_charm: { name: '語り部の首飾り', type: 'acc', grade: 'rare', tier: 0, src: 'reward', unique: true, quirk: true,
       mods: { glimPct: { tech: 15, spell: 15 }, statusImmune: ['sleep', 'confuse'], /* クセ */ hpPct: -10 },

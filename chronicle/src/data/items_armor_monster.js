@@ -354,11 +354,11 @@
       quirk: true,
       mods: { elemBoost: { fire: 25 }, mag: 6, /* クセ */ elemResist: { water: 1.5 } },
       desc: '火の攻撃が強くなる。術力が上がる。\nただし水に弱くなる。' },
-    // frog_2（1/256）· imm:poison glim:whip20 ｜ Q: res:earth1.5
+    // frog_2（1/256）· imm:poison glim:dagger20 ｜ Q: res:earth1.5
     hn_sr_poisonfrog: { name: '毒ガエルの手袋', type: 'hands', weight: 'light', grade: 'super', tier: 3, units: 'd1', src: 'super', exclusive: 'frog_2',
       quirk: true,
-      mods: { statusImmune: ['poison'], glimPct: { whip: 20 }, /* クセ */ elemResist: { earth: 1.5 } },
-      desc: '毒が効かない。鞭の技を閃きやすい。\nただし土に弱くなる。' },
+      mods: { statusImmune: ['poison'], glimPct: { dagger: 20 }, /* クセ */ elemResist: { earth: 1.5 } },
+      desc: '毒が効かない。短剣の技を閃きやすい。\nただし土に弱くなる。' },
     // mimic_2（1/128）· dropPct+30 stealPct+50 ｜ Q: def-50%
     hn_sr_greedy_hand: { name: '欲ばりの手袋', type: 'hands', weight: 'cloth', grade: 'super', tier: 3, units: 'i1', src: 'super', exclusive: 'mimic_2',
       quirk: true,

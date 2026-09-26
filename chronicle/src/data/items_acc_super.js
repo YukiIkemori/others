@@ -58,8 +58,8 @@
     // ---------------------------------------------------------------- クリア後（T9）
     // → b_ouroboros
     ac_sr_ouroboros: { name: '円環の指輪', type: 'acc', grade: 'super', tier: 9, units: 'm1', src: 'super', exclusive: 'b_ouroboros', quirk: true,
-      mods: { glimPct: { tech: 25, spell: 25 }, mpRegen: 2, wpRegen: 2, /* クセ */ expPct: -100 },
-      desc: '閃きやすい。MPが戻る。WPが戻る。\nただし経験値が入らない。' },
+      mods: { glimPct: { tech: 25, spell: 25 }, mpRegen: 3, /* クセ */ expPct: -100 },
+      desc: '閃きやすい。MPが戻る。\nただし経験値が入らない。' },
   };
 
   // register now (ids must exist for other owners' load-time checks); numbers are filled in R.onData

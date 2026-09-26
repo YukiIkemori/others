@@ -11,8 +11,8 @@
     fx_mage: {
       name: 'テスト術', gender: 'f', row: 'middle', role: 'caster',
       stats: { str: 18, vit: 24, dex: 30, agi: 34, int: 52, mnd: 42 },
-      growth: { hp: 'C', mp: 'S', wp: 'C' },
-      apt: { w: { sword: 'B', greatsword: 'D', dagger: 'B', axe: 'D', spear: 'C', bow: 'B', club: 'C', staff: 'A', katana: 'C', fist: 'D', whip: 'B' },
+      growth: { hp: 'C', mp: 'S' },
+      apt: { w: { sword: 'B', greatsword: 'D', dagger: 'B', axe: 'D', spear: 'C', bow: 'B', staff: 'A' },
         e: { fire: 'S', water: 'C', wind: 'C', earth: 'A', light: 'C', dark: 'B' } },
       innate: { name: 'テスト', desc: 'テスト', mods: { expPct: 10 } },
       startEquip: { weapon1: 'fx_staff_z' }, startTechs: [], startSpells: ['fx_s_cost'],
@@ -20,8 +20,8 @@
     fx_warrior: {
       name: 'テスト剣', gender: 'm', row: 'front', role: 'guard',
       stats: { str: 50, vit: 44, dex: 30, agi: 28, int: 18, mnd: 30 },
-      growth: { hp: 'A', mp: 'C', wp: 'B' },
-      apt: { w: { sword: 'S', greatsword: 'A', dagger: 'C', axe: 'B', spear: 'B', bow: 'D', club: 'B', staff: 'D', katana: 'B', fist: 'C', whip: 'D' },
+      growth: { hp: 'A', mp: 'B' },
+      apt: { w: { sword: 'S', greatsword: 'A', dagger: 'C', axe: 'B', spear: 'B', bow: 'D', staff: 'D' },
         e: { fire: 'B', water: 'B', wind: 'C', earth: 'B', light: 'A', dark: 'D' } },
       innate: { name: 'テスト', desc: 'テスト', mods: { goldPct: 10, encounterPct: 25 } },
       startEquip: { weapon1: 'fx_sword_z' }, startTechs: ['fx_t_cost'], startSpells: [],
@@ -43,7 +43,7 @@
     fx_spear_1: { name: 'テスト槍1', type: 'weapon', wtype: 'spear', tier: 1, grade: 'normal', units: 's1d1' },
     fx_bow_5: { name: 'テスト弓5', type: 'weapon', wtype: 'bow', tier: 5, grade: 'normal', units: 'd2' },
     fx_gs_5: { name: 'テスト大剣5', type: 'weapon', wtype: 'greatsword', tier: 5, grade: 'normal', units: 's2' },
-    fx_whip_5: { name: 'テスト鞭5', type: 'weapon', wtype: 'whip', tier: 5, grade: 'normal', units: 'd1a1' },
+    fx_mace_5: { name: 'テスト槌5', type: 'weapon', wtype: 'axe', tier: 5, grade: 'normal', units: 's1v1', kind: 'blunt', art: 'club', mult: 1.05, hit: 10 },
     fx_staff_5: { name: 'テスト杖5', type: 'weapon', wtype: 'staff', tier: 5, grade: 'normal', units: 'i2' },
     fx_sword_seal: { name: 'テスト封剣', type: 'weapon', wtype: 'sword', tier: 8, grade: 'super', units: 's2', sealTech: true, quirk: true, mods: { physPct: 25 } },
     fx_sword_q: { name: 'テスト癖剣', type: 'weapon', wtype: 'sword', tier: 9, grade: 'super', units: 's2', quirk: true, mods: { defPct: -50 } },
@@ -87,16 +87,16 @@
     // accessories with mods (merging, caps)
     fx_acc_a: { name: '補A', type: 'acc', tier: 0, grade: 'rare', price: 100, mods: {
       expPct: 20, glimPct: { tech: 30, sword: 10 }, profPct: { sword: 40 }, elemResist: { fire: 0.5, water: 1.5 },
-      statusImmune: ['poison'], statusResist: { sleep: 0.5 }, mpCostPct: -35, wpCostPct: -35, encounterPct: -50, autoSteal: 75,
+      statusImmune: ['poison'], statusResist: { sleep: 0.5 }, mpCostPct: -35, techCostPct: -35, encounterPct: -50, autoSteal: 75,
       noFloorDamage: true, walkHeal: 2, goldPct: 100, dropPct: 100, preemptPct: 25, escapePct: 50, atk: 10, mag: 8, def: 5, mdef: 6, hit: 3, eva: 7, crit: 4, spd: 5,
-      intPct: 10, hpPct: 20, mpPct: 20, wpPct: 20, regen: true } },
+      intPct: 10, hpPct: 20, mpPct: 20, regen: true } },
     fx_acc_b: { name: '補B', type: 'acc', tier: 0, grade: 'rare', price: 100, mods: {
       expPct: 20, glimPct: { tech: 20 }, profPct: { sword: 20 }, elemResist: { fire: 0, water: 0.75 },
-      statusImmune: ['poison', 'sleep'], statusResist: { sleep: 0.25 }, mpCostPct: -35, wpCostPct: -35, encounterPct: -50, autoSteal: 50,
+      statusImmune: ['poison', 'sleep'], statusResist: { sleep: 0.25 }, mpCostPct: -35, techCostPct: -35, encounterPct: -50, autoSteal: 50,
       goldPct: 100, dropPct: 100, preemptPct: 25, escapePct: 50 } },
     fx_acc_nospell: { name: '補封', type: 'acc', tier: 0, grade: 'super', price: 100, quirk: true, mods: { noSpell: true, strPct: 20 } },
     fx_acc_lure: { name: '補呼', type: 'acc', tier: 0, grade: 'normal', price: 100, mods: { encounterPct: 50 } },
-    fx_acc_cost_up: { name: '補費', type: 'acc', tier: 0, grade: 'rare', price: 100, quirk: true, mods: { mpCostPct: 25, wpCostPct: 25 } },
+    fx_acc_cost_up: { name: '補費', type: 'acc', tier: 0, grade: 'rare', price: 100, quirk: true, mods: { mpCostPct: 25, techCostPct: 25 } },
     fx_acc_poor: { name: '補貧', type: 'acc', tier: 0, grade: 'super', price: 100, quirk: true, mods: { goldPct: -50, expPct: -50 } },
     fx_acc_luck: { name: '補運', type: 'acc', tier: 0, grade: 'rare', price: 100, mods: { rarePct: 20, superPct: 20 } },
     fx_only: { name: '専用', type: 'acc', tier: 0, grade: 'rare', price: 100, only: ['fx_mage'], units: 'i1' },
@@ -111,12 +111,12 @@
   Object.assign(DB.items, IT);
 
   Object.assign(DB.actions, {
-    fx_t_cost: { kind: 'tech', name: 'テスト技', wtype: 'sword', wp: 5, target: 'enemy', effects: [], glim: { lv: 1, from: ['attack'] }, order: 99990 },
-    fx_t_high: { kind: 'tech', name: 'テスト奥技', wtype: 'sword', wp: 9, target: 'enemy', effects: [], glim: { lv: 7, from: [] }, order: 99991 },
-    fx_s_cost: { kind: 'spell', name: 'テスト術', elements: ['fire'], mp: 7, magic: true, field: true, target: 'ally', effects: [], glim: { lv: 1, prof: 0 }, step: 1, order: 99990 },
-    fx_s_step3: { kind: 'spell', name: 'テスト術3', elements: ['fire'], mp: 6, magic: true, target: 'enemy', effects: [], glim: { lv: 3, prof: 4 }, step: 3, order: 99991 },
-    fx_s_pair: { kind: 'spell', name: 'テスト合成', elements: ['fire', 'wind'], mp: 8, magic: true, target: 'enemies', effects: [], glim: { lv: 4, prof: 5 }, order: 99992 },
-    fx_s_triple: { kind: 'spell', name: 'テスト三属', elements: ['fire', 'wind', 'light'], mp: 16, magic: true, target: 'enemies', effects: [], glim: { lv: 8, prof: 8 }, order: 99993 },
+    fx_t_cost: { kind: 'tech', name: 'テスト技', wtype: 'sword', mp: 8, target: 'enemy', effects: [], glim: { lv: 1, from: ['attack'] }, order: 99990 },
+    fx_t_high: { kind: 'tech', name: 'テスト奥技', wtype: 'sword', mp: 14, target: 'enemy', effects: [], glim: { lv: 7, from: [] }, order: 99991 },
+    fx_s_cost: { kind: 'spell', name: 'テスト術', elements: ['fire'], mp: 7, magic: true, field: true, target: 'ally', effects: [], glim: { lv: 1, prof: 1 }, step: 1, order: 99990 },
+    fx_s_step3: { kind: 'spell', name: 'テスト術3', elements: ['fire'], mp: 6, magic: true, target: 'enemy', effects: [], glim: { lv: 3, prof: 10 }, step: 3, order: 99991 },
+    fx_s_pair: { kind: 'spell', name: 'テスト合成', elements: ['fire', 'wind'], mp: 8, magic: true, target: 'enemies', effects: [], glim: { lv: 4, prof: 14 }, order: 99992 },
+    fx_s_triple: { kind: 'spell', name: 'テスト三属', elements: ['fire', 'wind', 'light'], mp: 16, magic: true, target: 'enemies', effects: [], glim: { lv: 8, prof: 34 }, order: 99993 },
   });
 
   Object.assign(DB.monsters, {

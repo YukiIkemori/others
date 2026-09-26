@@ -12,9 +12,9 @@
   const DB = R.DB;
 
   // ------------------------------------------------------------ shared kit (tavern.js also uses it)
-  const W = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'club', 'staff', 'katana', 'fist', 'whip'];
+  const W = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'staff'];
   const E = ['fire', 'water', 'wind', 'earth', 'light', 'dark'];
-  const WN = { sword: '剣', greatsword: '大剣', dagger: '短剣', axe: '斧', spear: '槍', bow: '弓', club: '棍棒', staff: '杖', katana: '刀', fist: '体術', whip: '鞭' };
+  const WN = { sword: '剣', greatsword: '大剣', dagger: '短剣', axe: '斧', spear: '槍', bow: '弓', staff: '杖' };
   const EN = { fire: '火', water: '水', wind: '風', earth: '土', light: '光', dark: '闇' };
   const EC = { fire: '#ff7038', water: '#48a8ff', wind: '#68dc88', earth: '#c89850', light: '#fff0a0', dark: '#a068e0' };
   const APT = { S: '#ffd24a', A: '#6ee07a', B: '#ffffff', C: '#a0a0a8', D: '#707080' };
@@ -22,23 +22,23 @@
   const STAT_NAMES = { str: '腕力', vit: '体力', dex: '器用さ', agi: '素早さ', int: '知力', mnd: '精神' };
   const ROLE_NAMES = { guard: '前衛・重', striker: '前衛・軽', ranged: '後列・武器', caster: '術・攻め', healer: '術・癒やし', hybrid: '武器と術' };
   const ROW_NAMES = { front: '前列', middle: '後列' };
-  const REACH_ANY = { spear: 1, bow: 1, whip: 1 };
+  const REACH_ANY = { spear: 1, bow: 1, staff: 1 };
   // names used until the item / action owners have registered theirs (DESIGN §5.1.2〜§5.1.4)
   const ITEM_NAMES = {
     w_sword_iron: '鉄の剣', w_greatsword_iron: '鉄の大剣', w_dagger_iron: '鉄の短剣', w_axe_hand: '手斧', w_spear_iron: '鉄の槍',
-    w_bow_short: '短弓', w_club_wood: '木の棍棒', w_staff_novice: '見習いの杖', w_katana_uchi: '打ち刀', w_fist_leather: '革の拳当て',
-    w_whip_leather: '革の鞭', bd_iron_cuirass: '鉄の胸当て', hd_iron_band: '鉄の額当て', sh_iron_buckler: '鉄の小盾',
+    w_bow_short: '短弓', w_axe_cudgel: '木の棍棒', w_staff_novice: '見習いの杖', w_sword_uchi: '打ち刀',
+    bd_iron_cuirass: '鉄の胸当て', hd_iron_band: '鉄の額当て', sh_iron_buckler: '鉄の小盾',
     bd_leather_vest: '革の胴着', hd_leather_cap: '革の帽子', sh_leather: '革の盾', bd_hemp_robe: '麻の法衣', hd_wool_hood: '毛織りの頭巾',
     sh_primer: '術の手引き',
   };
   const ACTION_NAMES = {
     t_sword_stepcut: '踏み込み斬り', t_greatsword_overhead: '大上段', t_dagger_vital: '急所ねらい', t_axe_cleave: 'たたき割り',
-    t_spear_upthrust: '突き上げ', t_bow_rapid: '速射', t_club_smash: '強打', t_staff_mind: '念じ打ち', t_katana_draw: '抜き打ち',
-    t_fist_palm: '掌打', t_whip_trip: '足からめ', s_fire_1: '火の矢', s_water_1: '水の刃', s_wind_1: '風切り', s_earth_1: '石つぶて',
+    t_spear_upthrust: '突き上げ', t_bow_rapid: '速射', t_staff_mind: '念じ打ち', t_sword_draw: '抜き打ち',
+    t_axe_crumble: '打ち崩し', t_dagger_numb: 'しびれ針', s_fire_1: '火の矢', s_water_1: '水の刃', s_wind_1: '風切り', s_earth_1: '石つぶて',
     s_light_1: 'ひだまり', s_dark_1: '影ばり',
   };
   // Crest icons that stand in until art-chars registers the new ones (DESIGN §11.3.6)
-  const ICON_ALT = { dagger: 'knife', greatsword: 'sword', club: 'rod', fist: 'claw', whip: 'rod' };
+  const ICON_ALT = { dagger: 'knife', greatsword: 'sword' };
 
   const kit = {
     W, E, APT, STATS, STAT_NAMES, ROLE_NAMES, ROW_NAMES,

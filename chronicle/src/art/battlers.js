@@ -9,11 +9,13 @@
 //
 //   R.Art.battler(who, opts) → BattlerSheet (cached in R.Gfx under battlerKey)
 //   R.Art.battlerKey(who, opts) → 'btl:<lookId>:<wtype>[:<grade>]'
-//   R.Art.battlerWtype(c, slot = 'weapon1') → wtype
+//   R.Art.battlerWtype(c, slot = 'weapon1') → drawn shape: the item's `art` if set, else its wtype
+//     ('fist' with no weapon). Shape keys: the 7 families + katana / club (item art) + fist
+//     (unarmed); whip is kept as a drawable shape but no item uses it any more (A19).
 //   R.Art.BATTLER = {W, H, FEET, POSES, FRAMES, HOLD, IMPACT, FAMILY, LOOK}
 // Files: battlers.js (this: API, sheet, ko, anchors), battlers_body.js (body,
 // outfits, head), battlers_draw.js (paint model), battlers_pose.js (skeletons),
-// battlers_weapons.js (the 11 weapons). Contact sheets: tools/sheet_battlers.js;
+// battlers_weapons.js (the weapon shapes). Contact sheets: tools/sheet_battlers.js;
 // tests: tools/test_battlers.js.
 (function (R) {
   'use strict';
@@ -72,7 +74,10 @@
     const other = slot === 'weapon2' ? 'weapon1' : 'weapon2';
     for (const s of [slot, other]) {
       const it = itemOf(c.equip[s]);
-      if (it && FAMILY[it.wtype]) return it.wtype;
+      if (!it) continue;
+      // A19: an item's `art` (e.g. 'katana' on a sword, 'club' on a mace-line axe) picks the drawn shape
+      if (it.art && FAMILY[it.art]) return it.art;
+      if (FAMILY[it.wtype]) return it.wtype;
     }
     return 'fist';
   };

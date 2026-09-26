@@ -19,7 +19,7 @@
   const pct = (v) => sgn(v) + '%';
   const TARGET_NAMES = {
     enemy: '敵1体', enemies: '敵全体', group: 'ひと群れ', random: '敵ランダム', ally: '味方1人', allies: '味方全員', self: '自分',
-    ally_dead: '倒れた1人', ally_any: '味方1人（倒れた人も）', party: '味方全員（倒れた人も）',
+    ally_dead: '倒れた1人', ally_any: '味方1人（倒れた人も）', ally_other: 'ほかの味方1人', party: '味方全員（倒れた人も）',
   };
   Menu.TARGET_NAMES = TARGET_NAMES;
   const FLAG_NAMES = { flying: '飛ぶ敵', metal: '鋼の魔物', boss: 'ボス', rare: 'めずらしい魔物' };
@@ -29,18 +29,18 @@
   // plain numeric keys: [name, % suffix, red when positive]
   const NUM_KEYS = {
     atk: ['攻撃力', 0], def: ['守備力', 0], mdef: ['術防', 0], hit: ['命中', 0], eva: ['回避', 0], crit: ['会心', 0], mag: ['術力', 0], spd: ['行動の速さ', 0],
-    hpPct: ['最大HP', 1], mpPct: ['最大MP', 1], wpPct: ['最大WP', 1], defPct: ['守備力', 1], mdefPct: ['術防', 1],
+    hpPct: ['最大HP', 1], mpPct: ['最大MP', 1], defPct: ['守備力', 1], mdefPct: ['術防', 1],
     physPct: ['物理の威力', 1], magicPct: ['術の威力', 1], healPct: ['回復の術', 1], itemPct: ['回復の道具', 1],
-    takenPct: ['受けるダメージ', 1, 1], mpCostPct: ['消費MP', 1, 1], wpCostPct: ['消費WP', 1, 1],
+    takenPct: ['受けるダメージ', 1, 1], mpCostPct: ['術の消費MP', 1, 1], techCostPct: ['技の消費MP', 1, 1],
     expPct: ['経験値', 1], goldPct: ['ゴールド', 1], dropPct: ['ドロップ率', 1], rarePct: ['レア率', 1], superPct: ['超レア率', 1],
     rareEncPct: ['めずらしい魔物', 1], goldenPct: ['金色の魔物', 1], preemptPct: ['先制', 1], escapePct: ['逃げやすさ', 1], stealPct: ['盗み', 1],
   };
   // §3.3.16 order (the popup lists special effects in this order)
   const MOD_ORDER = [
-    'atk', 'def', 'mdef', 'hit', 'eva', 'crit', 'spd', 'mag', 'strPct', 'vitPct', 'dexPct', 'agiPct', 'intPct', 'mndPct', 'hpPct', 'mpPct', 'wpPct',
-    'defPct', 'mdefPct', 'physPct', 'magicPct', 'healPct', 'itemPct', 'takenPct', 'mpCostPct', 'wpCostPct', 'elemBoost', 'elemResist',
+    'atk', 'def', 'mdef', 'hit', 'eva', 'crit', 'spd', 'mag', 'strPct', 'vitPct', 'dexPct', 'agiPct', 'intPct', 'mndPct', 'hpPct', 'mpPct',
+    'defPct', 'mdefPct', 'physPct', 'magicPct', 'healPct', 'itemPct', 'takenPct', 'mpCostPct', 'techCostPct', 'elemBoost', 'elemResist',
     'statusImmune', 'statusResist', 'profPct', 'glimPct', 'expPct', 'goldPct', 'dropPct', 'rarePct', 'superPct', 'rareEncPct', 'goldenPct',
-    'preemptPct', 'escapePct', 'stealPct', 'autoSteal', 'encounterPct', 'regen', 'mpRegen', 'wpRegen', 'startBuffs', 'noSpell', 'hpLoss',
+    'preemptPct', 'escapePct', 'stealPct', 'autoSteal', 'encounterPct', 'regen', 'mpRegen', 'startBuffs', 'noSpell', 'hpLoss',
     'autoRevive', 'autoCounter', 'walkHeal', 'noFloorDamage',
   ];
   Menu.MOD_KEYS = MOD_ORDER.slice();
@@ -100,7 +100,6 @@
       else if (k === 'encounterPct') out.push(P('魔物の出現' + pct(v), quirk && v > 0));
       else if (k === 'regen') out.push(P('手番ごとにHP回復'));
       else if (k === 'mpRegen') out.push(P('手番ごとにMP' + sgn(v)));
-      else if (k === 'wpRegen') out.push(P('手番ごとにWP' + sgn(v)));
       else if (k === 'startBuffs') for (const s of Object.keys(v)) out.push(P('戦闘の始めに' + (K().BUFF_NAMES[s] || K().STAT_NAMES[s] || s) + sgn(v[s]) + '段', v[s] < 0));
       else if (k === 'noSpell') out.push(P('術が使えない', 1));
       else if (k === 'hpLoss') out.push(P('手番ごとに最大HP-' + Math.abs(v) + '%', 1));
@@ -122,7 +121,6 @@
       switch (e.type) {
         case 'heal': out.push(P(e.pct >= 1 ? 'HPをすべて回復' : 'HPを' + Math.round((e.pct || 0) * 100) + '%回復')); break;
         case 'healMp': out.push(P(e.pct >= 1 ? 'MPをすべて回復' : 'MPを' + Math.round((e.pct || 0) * 100) + '%回復')); break;
-        case 'healWp': out.push(P(e.pct >= 1 ? 'WPをすべて回復' : 'WPを' + Math.round((e.pct || 0) * 100) + '%回復')); break;
         case 'revive': out.push(P('生き返らせる（HP' + Math.round((e.pct || 0) * 100) + '%）')); break;
         case 'cure': out.push(P(e.statuses === 'all' ? '悪い状態をすべて治す' : (e.statuses || []).map(K().statusName).join('・') + 'を治す')); break;
         case 'buff': out.push(P((K().BUFF_NAMES[e.stat] || e.stat) + sgn(e.stages) + '段')); break;
@@ -262,7 +260,7 @@
       if (segs.length) segs.push({ text: '　', color: WHITE });
       segs.push({ text: K().STAT_NAMES[k] + sgn(v), color: v > 0 ? GREEN : RED });
     }
-    for (const k of ['hp', 'mp', 'wp']) {
+    for (const k of ['hp', 'mp']) {
       const v = st[k];
       if (!v) continue;
       if (segs.length) segs.push({ text: '　', color: WHITE });
@@ -343,9 +341,9 @@
     const tech = a.kind === 'tech';
     const L = [];
     const c = member || null;
-    const costN = c ? K().cost(c, id) : tech ? a.wp || 0 : a.mp || 0;
+    const costN = c ? K().cost(c, id) : a.mp || 0; // Part A18: techs and spells both cost MP
     const cut = c && !tech && R.Rules && R.Rules.profMpKind ? R.Rules.profMpKind(c, id) : null;
-    L[0] = { text: a.name, color: WHITE, right: (tech ? 'W ' : 'M ') + costN, rightColor: cut ? G().C.cyan : WHITE, big: true };
+    L[0] = { text: a.name, color: WHITE, right: 'M ' + costN, rightColor: cut ? G().C.cyan : WHITE, big: true };
     if (tech) {
       const lv = (a.glim && a.glim.lv) || a.rank || 1;
       L[1] = { text: K().wtypeName(a.wtype) + 'の技　格' + lv + (lv === 9 ? '（奥義）' : lv >= 10 ? '（極意）' : ''), color: SUB };
@@ -700,17 +698,17 @@
         Kt.fitText(a.name, x + ix, y, w - ix - 40, { color: col });
         const cst = Kt.cost(this.c, row.id);
         const cc = row.spell && Kt.costColor ? Kt.costColor(this.c, row.id) : null; // Part A13b: MP cut by proficiency
-        G().text((row.spell ? 'M' : 'W') + cst, x + w - 6, y, { align: 'right', color: cc || col });
+        G().text('M' + cst, x + w - 6, y, { align: 'right', color: cc || col });
       }
       render() {
         const c = this.c, st = Kt.stats(c);
         G().window(4, 4, 248, 40);
         Kt.drawSpriteAt(c, 12, 12, { frame: Math.floor(R.Engine.frame / 20) });
         Kt.fitText(c.name, 34, 10, 60, { color: Kt.condColor(c) });
-        G().text('M', 110, 10, { color: Kt.COL.sub });
-        G().text(c.mp + '/' + (st.mp || 0), 166, 10, { align: 'right' });
-        G().text('W', 176, 10, { color: Kt.COL.sub });
-        G().text((c.wp || 0) + '/' + (st.wp || 0), 232, 10, { align: 'right' });
+        G().text('H', 110, 10, { color: Kt.COL.sub });
+        G().text(c.hp + '/' + (st.hp || 0), 166, 10, { align: 'right', color: Kt.condColor(c) });
+        G().text('M', 176, 10, { color: Kt.COL.sub });
+        G().text(c.mp + '/' + (st.mp || 0), 232, 10, { align: 'right' });
         G().text(c.hp <= 0 ? '戦闘不能' : '移動中に使える術だけ、白で出る。', 34, 24, { color: c.hp <= 0 ? G().C.dead : Kt.COL.gray, size: 8 });
         Kt.lrHint(244, 26);
         this.list.fitRows(8, 3).draw();

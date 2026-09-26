@@ -195,10 +195,10 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   S.winFx[0].glow = 40; await step(20);
   ok(S.winFx[0].glow === 20, 'W7 glimmer glow counts real frames', S.winFx[0].glow);
   R.Settings.battleSpeed = 1;
-  // every part of a row inside the 158-px window with the worst row (5-char names, 999 / 150 / 99; also a 6-kana
-  // name and HP 9999 — owner 2026-09-26: the numbers were cramped)
+  // every part of a row inside the 158-px window with the worst row (A18: tag · name · H cur/max · M cur/max; 5-char names,
+  // HP 999/999 and MP 250/250; also a 6-kana name — owner 2026-09-26: the numbers were cramped)
   for (const worst4 of [false, true]) {
-    S = BUI.open({ mons: std(), tweak: (p) => { p[0].hp = worst4 ? 9999 : 999; p[0].mp = 150; p[0].wp = 99; if (worst4) p[0].name = 'シャルロッテ'; } });
+    S = BUI.open({ mons: std(), tweak: (p) => { for (const q of p) q._max = { hp: 999, mp: 250 }; p[0].hp = 999; p[0].mp = 250; if (worst4) p[0].name = 'シャルロッテ'; } });
     const drawn = [], keep = {};
     for (const k of ['window', 'rect', 'text', 'fitText', 'draw', 'strokeRect']) keep[k] = R.Gfx[k];
     for (const k of ['window', 'rect', 'draw', 'strokeRect']) R.Gfx[k] = () => {};
@@ -207,17 +207,20 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     R.Gfx.fitText = (s, x, y, maxW) => { drawn.push({ s: String(s), x0: x, x1: x + Math.min(maxW, W(s)), y, fit: maxW }); };
     try { S.drawStatus(); } finally { Object.assign(R.Gfx, keep); }
     const X0 = LY.STATUS.x + 3, X1 = LY.STATUS.x + LY.STATUS.w - 3;
-    const tag = worst4 ? ' (6-kana name, HP 9999)' : ' (999 / 150 / 99)';
-    ok(drawn.length >= 4 * 8 && drawn.every((d) => d.x0 >= X0 && d.x1 <= X1), 'W8 every part of every row inside the STATUS window' + tag, drawn.filter((d) => d.x0 < X0 || d.x1 > X1));
+    const tag = worst4 ? ' (6-kana name, 999/999 · 250/250)' : ' (999/999 · 250/250)';
+    ok(drawn.length >= 4 * 6 && drawn.every((d) => d.x0 >= X0 && d.x1 <= X1), 'W8 every part of every row inside the STATUS window' + tag, drawn.filter((d) => d.x0 < X0 || d.x1 > X1));
     const row0 = drawn.filter((d) => d.y === 159).sort((a, b) => a.x0 - b.x0);
-    // (node's approxWidth makes a digit 5.25 px, the browser 5: HP 9999 only has to stay clear of the H)
-    ok(row0.every((d, i) => i === 0 || d.x0 >= row0[i - 1].x1 + (worst4 ? 0 : 1.5)), 'W9 no two parts of a row touch / overlap' + tag, row0.map((d) => [d.s, Math.round(d.x0), Math.round(d.x1)]));
-    // breathing room: a value ends ≥ 5 px before the next letter (H → M, M → W)
+    // (node's approxWidth makes a digit 5.25 px, the browser 5: '250/250' is 2 px narrower in the game)
+    ok(row0.every((d, i) => i === 0 || d.x0 >= row0[i - 1].x1 - (/\d\//.test(d.s) ? 0.25 * d.s.length : 0)), 'W9 no two parts of a row touch / overlap' + tag, row0.map((d) => [d.s, Math.round(d.x0), Math.round(d.x1)]));
+    // SYSTEMS_REWORK §2.7: [tag, name, 'H', 'cur/max', 'M', 'cur/max'], no W column
     const at = (s0) => row0.find((d) => d.s === s0);
-    const vals = row0.filter((d) => /^\d+$/.test(d.s));
-    ok(!worst4 || (at('M').x0 - vals[0].x1 >= 5 && at('W').x0 - vals[1].x1 >= 5), 'W9b 5 px or more between a value and the next letter', row0.map((d) => [d.s, Math.round(d.x0), Math.round(d.x1)]));
+    const vals = row0.filter((d) => /^\d+\/\d+$/.test(d.s));
+    eq(vals.map((d) => d.s), ['999/999', '250/250'], 'W9c the row shows HP cur/max and MP cur/max' + tag);
+    ok(!at('W') && !drawn.some((d) => d.s === 'W'), 'W9d no W column (A18)' + tag);
+    ok(at('H') && at('M') && at('M').x0 - vals[0].x1 >= 5, 'W9b HP value end → M ≥ 5 px', row0.map((d) => [d.s, Math.round(d.x0), Math.round(d.x1)]));
+    ok(Math.round(vals[0].x1) === LY.STATUS.x + B.STATUS_COLS.hp && Math.round(vals[1].x1) === LY.STATUS.x + B.STATUS_COLS.mp, 'W9e values right-aligned at STATUS_COLS.hp / .mp', [vals[0].x1, vals[1].x1]);
     eq([...new Set(drawn.map((d) => d.y))].sort((a, b) => a - b), [159, 173, 187, 201], 'W10 row text at y 159 173 187 201' + tag);
-    ok(drawn.filter((d) => d.fit === B.STATUS_COLS.nameW).length === 4 && B.STATUS_COLS.nameW >= 46, 'W11 names fitted into STATUS_COLS.nameW' + tag);
+    ok(drawn.filter((d) => d.fit === B.STATUS_COLS.nameW).length === 4 && B.STATUS_COLS.nameW >= 43, 'W11 names fitted into STATUS_COLS.nameW' + tag);
   }
   // the battle list's cost (W3) ends 6 px or more before the next column's ▶ in a multi-column list (owner 2026-09-26)
   {
@@ -274,22 +277,22 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   ok(L.items[0].label === '攻撃' && !L.items[0].right, 'C7 攻撃 first, no cost');
   ok(L.x === 4 && L.y === 64 && L.w === 168 && L.cols === 1 && L.rows === 5 && S.panel.under && S.panel.under.title === hero.c.name, 'C7b the tech list is LIST (1 column of 5) with the member menu kept in CMD');
   const techIds = R.Rules.techList(hero.c, 'sword', 'weapon1');
-  ok(L.items.length === techIds.length + 1 && L.items.slice(1).every((it, i) => it.right === 'W' + R.Rules.wpCost(hero.c, techIds[i])), 'C8 techs with W and the cost', L.items.slice(1, 3));
+  ok(L.items.length === techIds.length + 1 && L.items.slice(1).every((it, i) => it.right === 'M' + R.Rules.mpCost(hero.c, techIds[i])), 'C8 techs with M and the MP cost (A18)', L.items.slice(1, 3));
   ok(L.title === DB.weaponTypes.sword.name, 'C9 list title = the weapon type name', L.title);
   ok(/で攻撃する。$/.test(S.panel.help()), 'C10 help of 攻撃 names the weapon', S.panel.help());
   await press('down'); await step(1);
   ok(S.panel.help() === DB.actions[techIds[0]].desc, 'C11 help = the tech desc');
-  // WP short → gray + 「WPが足りない！」
-  hero.c.wp = 0;
+  // MP short → gray + 「MPが足りない！」
+  hero.c.mp = 0;
   await press('b'); await step(1); await press('a'); await step(2);
-  ok(S.panel.left.items.slice(1).every((it) => it.disabled), 'C12 WP 0 → every tech gray');
+  ok(S.panel.left.items.slice(1).every((it) => it.disabled), 'C12 MP 0 → every tech gray');
   ok(S.panel.left.index === 0, 'C13 a list reopens where it was last chosen (nothing chosen yet → top)', S.panel.left.index);
   await press('down'); await step(1);
-  ok(S.panel.help() === 'WPが足りない！', 'C14 help WPが足りない！', S.panel.help());
+  ok(S.panel.help() === 'MPが足りない！', 'C14 help MPが足りない！', S.panel.help());
   sfx.length = 0;
   await press('a'); await step(2);
   ok(sfx[sfx.length - 1] === 'buzzer' && S.panel.left.title === DB.weaponTypes.sword.name, 'C15 a gray tech buzzes and stays in the list', sfx);
-  hero.c.wp = 40;
+  hero.c.mp = 40;
   await press('b'); await step(1); await press('b'); await step(2);
   ok(S.panel.left.items[0] === '戦う', 'C16 B from the first member → the party menu');
   await press('a'); await step(2);
@@ -359,7 +362,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   const pick = (type) => S.pickTarget(S.eng.party[0], type);
   let pr = pick('ally'); await step(2); await press('left'); await step(1);
   ok(S.picking && S.picking.ally === S.eng.party[3], 'T1 ally cursor wraps over all four members (0 ← → 3)', S.picking && S.picking.ally && S.picking.ally.idx);
-  ok(/^マルタ　HP \d+\/\d+　MP \d+\/\d+　WP \d+\/\d+$/.test(S.panel.help()), 'T2 ally help: name HP MP WP', S.panel.help());
+  ok(/^マルタ　HP \d+\/\d+　MP \d+\/\d+$/.test(S.panel.help()), 'T2 ally help: name HP MP', S.panel.help());
   await press('a'); tgt = await pr;
   ok(tgt === S.eng.party[3], 'T3 the chosen ally is returned');
   S.eng.party[1].c.hp = 0;
@@ -707,12 +710,15 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
 
   // ================================================================ V — side-view choreography (§11.5.15–16)
   section('V choreography');
+  // a battle shape key: one of the 7 types, or an item art shape (katana / club, A19) — an item with that art
   const weaponOf = (wtype) => {
-    const ids = Object.keys(DB.items).filter((id) => DB.items[id].type === 'weapon' && DB.items[id].wtype === wtype);
+    const ART = ['katana', 'club'].includes(wtype);
+    const ids = Object.keys(DB.items).filter((id) => DB.items[id].type === 'weapon' && (ART ? DB.items[id].art === wtype : DB.items[id].wtype === wtype && !DB.items[id].art));
     return ids.find((id) => !DB.items[id].grade || DB.items[id].grade === 'normal') || ids[0] || null;
   };
   const FAM = (R.Art && R.Art.BATTLER && R.Art.BATTLER.FAMILY) || B.ui.BAT_FALLBACK.FAMILY;
-  eq(Object.keys(FAM).sort(), ['axe', 'bow', 'club', 'dagger', 'fist', 'greatsword', 'katana', 'spear', 'staff', 'sword', 'whip'], 'V1 FAMILY covers the 11 weapon types');
+  // SYSTEMS_REWORK §3.6: the 7 types + fist (bare hands) + the katana / club item art shapes; whip may stay (unused since A19)
+  eq(Object.keys(FAM).filter((k) => k !== 'whip').sort(), ['axe', 'bow', 'club', 'dagger', 'fist', 'greatsword', 'katana', 'spear', 'staff', 'sword'], 'V1 FAMILY covers the 7 types, fist and the katana / club art shapes');
   async function attackRound(wtype, o) {
     o = o || {};
     const S = BUI.open({ mons: std(), script: { monsIdle: true }, tweak: (p) => { const id = weaponOf(wtype); p[0].equip.weapon1 = id; p[0].equip.weapon2 = o.w2 ? weaponOf(o.w2) : null; p[0].row = 'front'; } });
@@ -735,7 +741,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     seen.done = done; seen.home = v.x === v.homeX && v.y === v.homeY && !v.away && !v.act;
     return { S, v, seen };
   }
-  for (const w of Object.keys(FAM)) {
+  for (const w of Object.keys(FAM).filter((k) => k !== 'whip')) {   // no item draws the whip shape since A19
     const fam = FAM[w];
     const { seen } = await attackRound(w);
     const melee = fam !== 'shoot';
@@ -891,7 +897,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   try {
     R.State.newGame({ name: 'アルン', gender: 'm', type: 'warrior', favor: { kind: 'weapon', id: 'sword' } });
     for (const id of ['brigitta', 'sylvain', 'marta']) R.Party.recruit(id);
-    for (const c of R.Game.party) { c.level = 20; const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; c.row = 'front'; }
+    for (const c of R.Game.party) { c.level = 20; const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.row = 'front'; }
     R.Engine.clear();
     B.autoCarry = false;
     let res = null;
@@ -940,7 +946,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   }
   const partyMenuOf = (s) => { const pl = s.panel && s.panel.left; return pl && pl.items[0] === '戦う' ? pl : null; };
   try {
-    for (const c of R.Game.party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; c.status = {}; }
+    for (const c of R.Game.party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.status = {}; }
     B.autoCarry = false;
     // 逃げる (the party menu's 4th command) ends the battle with 'escape'
     let r = await realRun({ mons: [['wolf_1', 2]], tier: 1, bg: 'grass', surprise: null }, async (s) => {
@@ -948,7 +954,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     });
     ok(r.res === 'escape' && B.last.result === 'escape', 'R6 逃げる on the real engine returns escape', r.res);
     // リピート then B: the round finishes, the party menu comes back on 戦う with repeat off; リピート can be chosen again
-    for (const c of R.Game.party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; c.status = {}; }
+    for (const c of R.Game.party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.status = {}; }
     let stage = 0, backAt = null, stoppedRound = null;
     r = await realRun({ mons: [['wolf_1', 3]], tier: 1, bg: 'grass', surprise: null }, async (s) => {
       const pm = partyMenuOf(s);
@@ -967,7 +973,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     ok(backAt && backAt.idx === 0 && !backAt.repeating && backAt.canRepeat && backAt.round === stoppedRound,
       'R8 B stops リピート after that round: the menu is back on 戦う and リピート stays available', { backAt, stoppedRound });
     // オート: chosen once it carries into the next plain battle, which then starts on its own
-    for (const c of R.Game.party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; c.status = {}; }
+    for (const c of R.Game.party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.status = {}; }
     let menus = 0;
     r = await realRun({ mons: [['wolf_1', 2]], tier: 1, bg: 'grass', surprise: null }, async (s) => {
       if (partyMenuOf(s)) { menus++; await press('down'); await press('down'); await press('a'); } else if (s.msg.key) await press('a');

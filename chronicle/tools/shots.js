@@ -355,9 +355,9 @@ def(14, 'メニュー・装備・強さ・技の書・術の書・図鑑・年�
   await menuGame(X);
   await openShow(X, 'main');
   await X.shot('14_menu_main', 'メインメニュー（T5）');
-  // §12.5: the worst names / numbers (5-character names, HP 999, MP 150, WP 99) in the same menu
+  // §12.5: the worst names / numbers (5-character names, HP 999, MP 250) in the same menu
   const worst = await X.ev(() => { const F = window.RPG.menuFixture; if (!F || !F.worst) return null; const r = F.worst(); window.RPG.Engine.layers.filter((l) => l.constructor.name !== 'FieldLayer').forEach((l) => window.RPG.Engine.remove(l)); return r; });
-  if (worst) { await openShow(X, 'main'); await X.shot('14_menu_main_worst', `§12.5 の最悪の組（${worst.join('・')}、HP 999・MP 150・WP 99）`); }
+  if (worst) { await openShow(X, 'main'); await X.shot('14_menu_main_worst', `§12.5 の最悪の組（${worst.join('・')}、HP 999・MP 250）`); }
   const screens = [['equipScreen', '14_menu_equip', '装備'], ['statusScreen', '14_menu_status', '強さ（熟練度）'], ['itemScreen', '14_menu_items', '持ち物'],
     ['chronicleScreen', '14_menu_chronicle', '年代記']];
   for (const [fn, name, what] of screens) {

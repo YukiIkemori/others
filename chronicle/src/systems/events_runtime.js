@@ -428,7 +428,7 @@
         const ok = R.Shop && R.Shop.inn ? await R.Shop.inn(p) : await fallbackInn(ev, p);
         return !!ok;
       },
-      /** 休息の灯 (§11.6.4): full HP/MP/WP and revive, white flash, the fixed line */
+      /** 休息の灯 (§11.6.4): full HP/MP and revive, white flash, the fixed line */
       async rest() {
         R.sfx('heal');
         R.Engine.flashScreen('#ffffff', 8);
@@ -499,7 +499,7 @@
             if (old.counts) c.counts = old.counts;
             if (old.joined) c.joined = old.joined;
           }
-          try { const s = R.Rules.stats(c); c.hp = s.hp; c.mp = s.mp; c.wp = s.wp; } catch (e) { /* keep */ }
+          try { const s = R.Rules.stats(c); c.hp = s.hp; c.mp = s.mp; } catch (e) { /* keep */ }
           const i = old ? g.party.indexOf(old) : -1;
           if (i >= 0) g.party[i] = c; else g.party.unshift(c);
           if (R.State.noteLearned) for (const a of (c.techs || []).concat(c.spells || [])) R.State.noteLearned('hero', a);

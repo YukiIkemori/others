@@ -247,7 +247,7 @@
       s: { hp: 3.6, atk: 1.1, mag: 1.4, def: 1.3, mdef: 1.4, agi: 1.4 },
       actions: A([['attack', 1], ['eb_dream_eat', 3], ['eb_sleep_mist', 2], ['eb_nightmare', 2],
         ['eb_tapir_nap', 1, { hpBelow: 0.5, once: true }]]),
-      drops: DROPS('i_dream_fruit', 'ac_rl_shadow', 'w_katana_sr_dreamcut', [2, 4, 12]),
+      drops: DROPS('i_dream_fruit', 'ac_rl_shadow', 'w_sword_sr_dreamcut', [2, 4, 12]),
       appear: '七色の夢の泡が、ふわりと浮かんだ……。',
       desc: '忘却の底で、忘れられた夢を\n食べて生きるという幻の獣。',
     }),

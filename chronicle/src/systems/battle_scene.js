@@ -39,9 +39,9 @@
   const PARTY = { front: 192, middle: 222, zig: [0, 10, 0, 10], step: 10, y: { 1: [126], 2: [112, 136], 3: [106, 124, 142], 4: [100, 116, 132, 148] } };
   const LAYOUT = { FIELD, MSG, MSG_BIG, HELP, LIST, CMD, STATUS, BANNER, CARD, EZ, PARTY };
   // STATUS columns (§11.5.2; x from the window's left): letters at h / m, 「現在/最大」 right-aligned at hp / mp
-  // (A18: WP is gone, so each row shows H cur/max and M cur/max. 「999/999」 and 「250/250」 are 35 px; H / M sit 2 px
+  // (A18: WP is gone, so each row shows H cur/max and M cur/max. 「999/999」 and 「250/250」 are 35 px; H / M sit 3 px
   // before their value's widest case, 5 px between the HP value and M, the name fitted in nameW with 3 px before H)
-  const SCOL = { tag: 4, name: 18, nameW: 45, h: 66, hp: 108, m: 113, mp: 154 };
+  const SCOL = { tag: 4, name: 18, nameW: 43, h: 64, hp: 107, m: 112, mp: 154 };
   // legacy (front view): kept with their old values for the tools that still read them (§11.5.1). Not used on screen.
   const WIN = { xs: [3, 66, 129, 192], y: 5, w: 61, h: 46 };
   const WIN_BOTTOM = 56;

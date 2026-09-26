@@ -1,4 +1,4 @@
-// items_acc.js — gear-a (A10a). Normal accessories: 60 ability + 52 support.
+// items_acc.js — gear-a (A10a). Normal accessories: 60 ability + 48 support.
 // Numbers (def mdef eva stats price) are filled by R.Rules.fillItem in R.onData (DESIGN §8.2.9); the data
 // only carries tier / grade / units / weight. Spec: DESIGN §8 (definitions) and §9.12 (monster → item).
 (function (R) {
@@ -19,7 +19,7 @@
   LINES.forEach(([line, units, names], li) => names.forEach((name, T) => {
     ITEMS[`${line}_${T}`] = { name, type: 'acc', grade: 'normal', tier: T, units, line, src: 'shop', sort: T * 100 + li };
   }));
-  // (2) Support accessories (52): no stats, mods only, the same at every tier. tier = the shop tier where the item
+  // (2) Support accessories (48): no stats, mods only, the same at every tier. tier = the shop tier where the item
   //     first appears (§8.11.2); price = round(PRICE(tier) × 1.2 / 10) × 10 (§8.3.8), written here. line = 'charm_<kind>'
   //     (the pools skip 'charm_' lines; shops list them by id).
   const SUPPORT = {
@@ -107,21 +107,9 @@
     ac_badge_bow: { name: '弓使いの腕章', type: 'acc', grade: 'normal', tier: 1, line: 'charm_badge', src: 'shop', price: 190,
       mods: { profPct: { bow: 20 } },
       desc: '弓の熟練度が伸びやすい。' },
-    ac_badge_club: { name: '棍棒使いの腕章', type: 'acc', grade: 'normal', tier: 1, line: 'charm_badge', src: 'shop', price: 190,
-      mods: { profPct: { club: 20 } },
-      desc: '棍棒の熟練度が伸びやすい。' },
     ac_badge_staff: { name: '杖使いの腕章', type: 'acc', grade: 'normal', tier: 1, line: 'charm_badge', src: 'shop', price: 190,
       mods: { profPct: { staff: 20 } },
       desc: '杖の熟練度が伸びやすい。' },
-    ac_badge_katana: { name: '刀使いの腕章', type: 'acc', grade: 'normal', tier: 1, line: 'charm_badge', src: 'shop', price: 190,
-      mods: { profPct: { katana: 20 } },
-      desc: '刀の熟練度が伸びやすい。' },
-    ac_badge_fist: { name: '体術家の腕章', type: 'acc', grade: 'normal', tier: 1, line: 'charm_badge', src: 'shop', price: 190,
-      mods: { profPct: { fist: 20 } },
-      desc: '体術の熟練度が伸びやすい。' },
-    ac_badge_whip: { name: '鞭使いの腕章', type: 'acc', grade: 'normal', tier: 1, line: 'charm_badge', src: 'shop', price: 190,
-      mods: { profPct: { whip: 20 } },
-      desc: '鞭の熟練度が伸びやすい。' },
     ac_glim_tech: { name: '閃きの羽根', type: 'acc', grade: 'normal', tier: 2, line: 'charm_glim', src: 'shop', price: 350,
       mods: { glimPct: { tech: 10 } },
       desc: '技を閃きやすい。' },
@@ -165,8 +153,8 @@
       mods: { mpCostPct: -15 },
       desc: '術のMPの消費が減る。' },
     ac_hourglass_wp: { name: '気力の砂時計', type: 'acc', grade: 'normal', tier: 2, line: 'charm_cost', src: 'shop', price: 350,
-      mods: { wpCostPct: -15 },
-      desc: '技のWPの消費が減る。' },
+      mods: { techCostPct: -15 },
+      desc: '技のMPの消費が減る。' },
     ac_sachet: { name: '癒やし手の香袋', type: 'acc', grade: 'normal', tier: 2, line: 'charm_heal', src: 'shop', price: 350,
       mods: { healPct: 20 },
       desc: '回復の術がよく効く。' },

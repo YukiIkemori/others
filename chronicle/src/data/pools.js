@@ -14,7 +14,7 @@
   const GOLD = [60, 130, 230, 360, 530, 720, 960, 1200, 1520, 2080];            // 1 つの宝箱のお金
   // p_supply（品・重み・個数。段が上がると前の段に足す）
   const S0 = [['i_salve', 6, 2], ['i_revive', 3], ['i_antidote', 2], ['i_clear', 1], ['i_waker', 2], ['i_repel', 1], ['i_firepot', 2], ['i_smoke', 1]];
-  const S1 = [...S0, ['i_potion', 4], ['i_ether', 3], ['i_tonic', 3], ['i_numb', 1], ['i_throat', 1], ['i_lure', 1], ['i_lens', 1]];
+  const S1 = [...S0, ['i_potion', 4], ['i_ether', 3], ['i_numb', 1], ['i_throat', 1], ['i_lure', 1], ['i_lens', 1]];
   const S2 = [...S1, ['i_incense', 2], ['i_thaw', 1], ['i_bomb', 2], ['i_horn', 1], ['i_censer', 1]];
   const S3 = [...S2, ['i_elixir', 2], ['i_ether2', 1], ['i_panacea', 1]];
   const S6 = [...S3, ['i_lifedew', 1]];
@@ -45,7 +45,7 @@
       p_weapon: P((T) => W1(normal(T, ['weapon']))),
       p_armor: P((T) => W1(normal(T, ARMOR_T))),
       p_acc: P((T) => W1(normal(T, ['acc']))),
-      p_rare: P((T) => [...W1(rare(T), 2), ...(T >= 4 ? E([['i_lifedew', 2], ['i_phoenix', 2], ['i_grace', 1], ['i_seed_hp', 2], ['i_seed_mp', 1], ['i_seed_wp', 1]]) : [])]),
+      p_rare: P((T) => [...W1(rare(T), 2), ...(T >= 4 ? E([['i_lifedew', 2], ['i_phoenix', 2], ['i_grace', 1], ['i_seed_hp', 2], ['i_seed_mp', 2]]) : [])]),
       p_boss: P((T) => W1(rare(T))),
       p_boss_mid: P((T) => W1(normal(T, EQ))),
     });

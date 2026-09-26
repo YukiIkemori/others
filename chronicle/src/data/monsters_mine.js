@@ -20,7 +20,7 @@
       flags: [], s: { hp: 0.9, atk: 1.31, mag: 1.19, def: 1.4, agi: 0.6 }, eva: 5,
       elem: { water: 1.5, wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_crush', w: 2 }, { id: 'e_stomp', w: 2 }, { id: 'e_rock', w: 1 }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_fist_wormtooth', rate: 32 }, super: { item: 'w_club_sr_ironore', rate: 256 } },
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_dagger_wormtooth', rate: 32 }, super: { item: 'w_axe_sr_ironore', rate: 256 } },
       desc: '鉄鉱石の体をもつ兵。\nさびた鉄が赤く浮いている。',
     },
     golem_3: {
@@ -45,7 +45,7 @@
       flags: [], s: { hp: 1.69, atk: 0.68, mag: 0.59, agi: 0.9 }, eva: 5,
       elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_claw', w: 2 }, { id: 'e_dust', w: 2 }],
-      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_axe_pick', rate: 32 }, super: { item: 'w_fist_sr_ironclaw', rate: 256 } },
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_axe_pick', rate: 32 }, super: { item: 'w_dagger_sr_ironclaw', rate: 256 } },
       desc: '鉄の爪をはめたモグラ。\n鉱夫の帽子を失敬している。',
     },
     mole_3: {
@@ -61,7 +61,7 @@
       flags: [], s: { hp: 2.43, atk: 0.53, mag: 0.46, def: 1.1, agi: 0.85 }, eva: 5,
       elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_quake', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_claw', w: 2 }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_club_forgehammer', rate: 32 }, super: { item: 'w_axe_sr_mole_boss', rate: 256 } },
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_axe_forgehammer', rate: 32 }, super: { item: 'w_axe_sr_mole_boss', rate: 256 } },
       desc: '白ひげのモグラの親方。\n地響きで坑道をゆさぶる。',
     },
     // ---- beetle カブト（虫・s）: 岩山の甲虫。石・鉄・火花・金剛と殻が硬くなる。
@@ -94,7 +94,7 @@
       flags: [], s: { hp: 3.39, atk: 0.74, mag: 0.74, def: 1.8, agi: 0.8 }, eva: 5,
       elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.25 }, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_horn', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_charge', w: 2 }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_club_forgehammer', rate: 32 }, super: { item: 'bd_sr_diamond_shell', rate: 256 } },
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_axe_forgehammer', rate: 32 }, super: { item: 'bd_sr_diamond_shell', rate: 256 } },
       desc: '金剛石のように光る甲虫。\nどんな刃もはね返す。',
     },
     // ---- crystal 水晶（魔造・s）: 坑道の奥で生まれる、浮かぶ水晶。色で属性が変わる。
@@ -136,7 +136,7 @@
       flags: [], s: { hp: 1.23, atk: 1.11, mag: 1.01 }, rw: { gold: 1.3 }, eva: 5,
       elem: {}, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_heavy', w: 1 }],
-      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'hn_mole_claw', rate: 32 }, super: { item: 'w_club_sr_goblin', rate: 256 } },
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'hn_mole_claw', rate: 32 }, super: { item: 'w_axe_sr_goblinclub', rate: 256 } },
       desc: '光り物が大好きな緑の小鬼。\n棍棒を振り回して襲う。',
     },
     goblin_2: {
@@ -160,7 +160,7 @@
       flags: [], s: { hp: 2.75, atk: 0.66, mag: 0.57, def: 1.1 }, rw: { gold: 1.3 }, eva: 5,
       elem: {}, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_howl', w: 2, cond: { once: true } }, { id: 'e_double', w: 1 }, { id: 'e_slash', w: 1 }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_club_forgehammer', rate: 32 }, super: { item: 'w_sword_sr_goblincaptain', rate: 256 } },
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_axe_forgehammer', rate: 32 }, super: { item: 'w_sword_sr_goblincaptain', rate: 256 } },
       desc: '角兜の小鬼の隊長。\n手下を奮い立たせて戦う。',
     },
     goblin_5: {

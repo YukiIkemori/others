@@ -28,7 +28,7 @@
       flags: [], s: { hp: 3.24, atk: 0.53, mag: 0.53 }, eva: 5,
       elem: { fire: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: { poison: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_poison_spit', w: 3 }, { id: 'e_split', w: 1, cond: { hpAbove: 0.5, countBelow: 6 } }],
-      drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'hn_jelly_glove', rate: 32 }, super: { item: 'w_whip_sr_venomjelly', rate: 256 } },
+      drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'hn_jelly_glove', rate: 32 }, super: { item: 'w_spear_sr_venomjelly', rate: 256 } },
       desc: '毒をためこんだ紫のゼリー。\n傷つくと二つに分かれる。',
     },
     jelly_4: {
@@ -69,7 +69,7 @@
       flags: [], s: { hp: 2.94, atk: 0.59, mag: 0.53, def: 1.25 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_gnaw', w: 3 }, { id: 'e_bite', w: 1 }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_club_rat', rate: 32 }, super: { item: 'hn_sr_iron_tooth', rate: 256 } },
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_axe_rat', rate: 32 }, super: { item: 'hn_sr_iron_tooth', rate: 256 } },
       desc: '鉄のように硬い歯のネズミ。\n鎧さえかじって穴をあける。',
     },
     rat_4: {
@@ -94,7 +94,7 @@
       flags: ['flying'], s: { hp: 2.69, atk: 0.67, mag: 0.67, agi: 1.35 }, eva: 15,
       elem: { fire: 1.25, wind: 1.5, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_drain_bite', w: 3 }],
-      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_dagger_bloodbat', rate: 32 }, super: { item: 'w_katana_sr_crimson', rate: 256 } },
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_dagger_bloodbat', rate: 32 }, super: { item: 'w_sword_sr_crimson', rate: 256 } },
       desc: '血を吸うと体が赤く染まる。\n傷口をねらってくる。',
     },
     bat_3: {
@@ -160,7 +160,7 @@
       flags: [], s: { hp: 0.97, atk: 1.79, mag: 1.79, def: 1.4, agi: 0.8 }, eva: 5,
       elem: { fire: 0.75, water: 0.5, earth: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 5 }, { id: 'e_pincer', w: 2 }],
-      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'sh_crab_shell', rate: 32 }, super: { item: 'w_fist_sr_crabclaw', rate: 256 } },
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'sh_crab_shell', rate: 32 }, super: { item: 'w_axe_sr_crabclaw', rate: 256 } },
       desc: '浜辺を横歩きする赤いカニ。\nはさみに気をつけて。',
     },
     crab_2: {
@@ -267,7 +267,7 @@
       flags: ['metal'], s: { agi: 2.5 }, hpFixed: 10, fleeRate: 0.5, eva: 30,
       elem: { fire: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_tide', w: 1 }, { id: 'e_water_bolt', w: 1 }],
-      drops: { normal: { item: 'i_ether2', rate: 4 }, rare: { item: 'ac_silver_orb', rate: 16 }, super: { item: 'w_whip_sr_quicksilver', rate: 128 } },
+      drops: { normal: { item: 'i_ether2', rate: 4 }, rare: { item: 'ac_silver_orb', rate: 16 }, super: { item: 'w_spear_sr_quicksilver', rate: 128 } },
       desc: '白銀ゼリーが集まった大玉。\n出会えたら運がいい。',
     },
     // ---- mirror 鏡カブト（虫・s・鋼・beetle の分岐）: 全身が鏡のようなカブト。光をはね返して逃げる。
@@ -301,7 +301,7 @@
       flags: ['metal'], s: { agi: 2.5 }, hpFixed: 12, fleeRate: 0.5, eva: 30,
       elem: { light: 1.5 }, phys: { slash: 0.5, blunt: 0.5, pierce: 0.5 }, statusRes: { poison: 1, death: 1, stun: 1 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_light_ray', w: 2 }, { id: 'e_holy_beam', w: 1 }, { id: 'e_flash', w: 1 }],
-      drops: { normal: { item: 'i_phoenix', rate: 4 }, rare: { item: 'ac_platinum_crown', rate: 16 }, super: { item: 'w_katana_sr_platinum', rate: 128 } },
+      drops: { normal: { item: 'i_phoenix', rate: 4 }, rare: { item: 'ac_platinum_crown', rate: 16 }, super: { item: 'w_sword_sr_platinum', rate: 128 } },
       desc: '冠をいただく白金の大きな灯。\n忘却の底の宝といわれる。',
     },
   });

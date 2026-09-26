@@ -20,7 +20,7 @@
       flags: [], s: { hp: 0.65, atk: 0.96, mag: 1.11, mdef: 1.2 }, eva: 5,
       elem: { light: 1.5 }, phys: { slash: 0.5, blunt: 0.5, pierce: 0.5 }, statusRes: { poison: 1, death: 1, stun: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_wail', w: 2 }, { id: 'e_water_bolt', w: 2 }],
-      drops: { normal: { item: 'i_ether', rate: 8 }, rare: { item: 'w_whip_mist', rate: 32 }, super: { item: 'bd_sr_mourning_veil', rate: 256 } },
+      drops: { normal: { item: 'i_ether', rate: 8 }, rare: { item: 'w_spear_mist', rate: 32 }, super: { item: 'bd_sr_mourning_veil', rate: 256 } },
       desc: 'すすり泣く声が霧に響く。\n聞いた者は眠りに落ちる。',
     },
     ghost_3: {
@@ -28,7 +28,7 @@
       flags: [], s: { hp: 1.07, atk: 0.83, mdef: 1.2 }, eva: 5,
       elem: { light: 1.5, dark: 0.25 }, phys: { slash: 0.5, blunt: 0.5, pierce: 0.5 }, statusRes: { poison: 1, death: 1, stun: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_curse', w: 2 }, { id: 'e_dark_bolt', w: 2 }, { id: 'e_mind_suck', w: 1 }],
-      drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'sh_bell_shield', rate: 32 }, super: { item: 'w_whip_sr_chain_curse', rate: 256 } },
+      drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'sh_bell_shield', rate: 32 }, super: { item: 'w_spear_sr_chaincurse', rate: 256 } },
       desc: '鎖を引きずる紫の霊。\n呪いの声で術を封じる。',
     },
     ghost_4: {
@@ -61,7 +61,7 @@
       flags: [], s: { hp: 0.92, atk: 0.4, mag: 0.48, agi: 1.2 }, eva: 5,
       elem: { fire: 0.25, water: 1.5, light: 1.5 }, phys: { slash: 0.5, blunt: 0.5, pierce: 0.5 }, statusRes: { poison: 1, death: 1, stun: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_fire_bolt', w: 2 }, { id: 'e_evil_eye', w: 2 }],
-      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_whip_mist', rate: 32 }, super: { item: 'w_staff_sr_goblinfire', rate: 256 } },
+      drops: { normal: { item: 'i_salve', rate: 8 }, rare: { item: 'w_spear_mist', rate: 32 }, super: { item: 'w_staff_sr_goblinfire', rate: 256 } },
       desc: '顔のある緑の火。にやりと\n笑って人を惑わせる。',
     },
     wisp_3: {
@@ -102,7 +102,7 @@
       flags: [], s: { hp: 2.4, atk: 0.75, mag: 0.66, agi: 0.85 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_swallow', w: 2 }, { id: 'e_tongue', w: 1 }, { id: 'e_heal_self', w: 1, cond: { hpBelow: 0.5 } }],
-      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'bd_bog_mail', rate: 32 }, super: { item: 'w_club_sr_bullfrog', rate: 256 } },
+      drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'bd_bog_mail', rate: 32 }, super: { item: 'w_axe_sr_bullfrog', rate: 256 } },
       desc: '何でものみこむ大きな口。\n人の子どもほどの大きさ。',
     },
     frog_4: {
@@ -127,7 +127,7 @@
       flags: [], s: { hp: 0.97, atk: 0.71, mag: 0.71, agi: 1.2 }, eva: 5,
       elem: { water: 1.25, wind: 0.75 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_dance', w: 2 }, { id: 'e_double', w: 2 }],
-      drops: { normal: { item: 'i_clear', rate: 8 }, rare: { item: 'w_whip_mist', rate: 32 }, super: { item: 'ft_sr_dance_shoes', rate: 256 } },
+      drops: { normal: { item: 'i_clear', rate: 8 }, rare: { item: 'w_spear_mist', rate: 32 }, super: { item: 'ft_sr_dance_shoes', rate: 256 } },
       desc: 'いつまでも踊り続ける人形。\n見ていると目が回ってくる。',
     },
     doll_3: {
@@ -193,7 +193,7 @@
       flags: [], s: { hp: 1.71, atk: 0.83, mag: 0.79, agi: 1.1 }, eva: 5,
       elem: { fire: 1.5 }, phys: {}, statusRes: { poison: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_poison_bite', w: 3 }, { id: 'e_web', w: 1 }],
-      drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'w_spear_reed', rate: 32 }, super: { item: 'w_whip_sr_spidersilk', rate: 256 } },
+      drops: { normal: { item: 'i_antidote', rate: 8 }, rare: { item: 'w_spear_reed', rate: 32 }, super: { item: 'w_bow_sr_spidersilk', rate: 256 } },
       desc: '背に緑の斑点がある毒グモ。\nかまれると毒がまわる。',
     },
     spider_3: {
@@ -209,7 +209,7 @@
       flags: [], s: { hp: 2.37, atk: 0.88, mag: 0.88, agi: 1.1 }, eva: 5,
       elem: { fire: 1.5 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_bind', w: 2 }, { id: 'e_poison_bite', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_web', w: 1 }],
-      drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'ac_soul_candle', rate: 32 }, super: { item: 'w_whip_sr_silk', rate: 128 } },
+      drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'ac_soul_candle', rate: 32 }, super: { item: 'w_dagger_sr_silk', rate: 128 } },
       desc: '金と黒のしまの大グモ。\n巣には宝物が引っかかっている。',
     },
   });

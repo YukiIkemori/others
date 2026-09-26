@@ -165,10 +165,10 @@
     ac_crest_fragment: { name: '紋章のかけら', type: 'acc', grade: 'rare', tier: 9, units: 'i1', src: 'mdrop', quirk: true,
       mods: { elemResist: { dark: 0.5 }, statusImmune: ['death'], elemBoost: { light: 20 }, /* クセ */ hpPct: -10 },
       desc: '闇に強い。即死が効かない。\n光が強くなる。ただし最大HPが下がる。' },
-    // b_ouroboros · wpRegen+3 mpRegen+3
+    // b_ouroboros · mpRegen+4（A18: 旧 wpRegen+3 mpRegen+3）
     ac_ouroboros_ring: { name: '円環のかけら', type: 'acc', grade: 'rare', tier: 9, units: 's1', src: 'mdrop', quirk: true,
-      mods: { wpRegen: 3, mpRegen: 3, /* クセ */ takenPct: 15 },
-      desc: '戦闘中、MPとWPが少しずつ戻る。\nただし受けるダメージが増える。' },
+      mods: { mpRegen: 4, /* クセ */ takenPct: 15 },
+      desc: '戦闘中、MPが少しずつ戻る。\nただし受けるダメージが増える。' },
     // ---------------------------------------------------------------- monster supers (28)
     // jelly_1（1/256）· hpPct+10 regen ｜ Q: stat:agi-1u
     ac_sr_jelly_heart: { name: 'ぷるぷるの心', type: 'acc', grade: 'super', tier: 1, units: 'v1', src: 'super', exclusive: 'jelly_1', quirk: true,
