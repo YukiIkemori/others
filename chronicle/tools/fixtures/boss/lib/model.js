@@ -63,16 +63,18 @@ module.exports = function makeModel(R, opts) {
   };
   const BOSS_RES = { death: 1, sleep: 0.75, paralyze: 0.75, freeze: 0.75, confuse: 0.75, stun: 0.5, silence: 0.5, blind: 0.5, poison: 0.25, burn: 0.25 };
   const EXPECT = [2, 4, 6, 8, 10, 12, 14, 16, 17, 19];
-  const PEXP = [15, 40, 70, 100, 135, 175, 220, 270, 330, 400];
-  const PROF_PTS = [0, 5, 15, 30, 55, 90, 135, 190, 260, 350, 460];
+  // A17 (SYSTEMS_REWORK §1.2, §4.3): the main weapon at PROF_TRACK[T]; rank r needs round(11·(r−1)^1.18); a tech of glim.lv L
+  // needs rank TECH_PROF[L]
+  const PROF_TRACK = [180, 370, 555, 745, 935, 1125, 1315, 1505, 1675, 1850];
+  const TECH_PROF = [0, 1, 3, 8, 14, 20, 26, 32, 40, 50, 60];
+  const PROF_PTS = [0].concat(Array.from({ length: 100 }, (_, i) => Math.round(11 * Math.pow(i, 1.18))));
   const profRank = (p) => { let r = 0; for (let i = 0; i < PROF_PTS.length; i++) if (p >= PROF_PTS[i]) r = i; return r; };
   const GLIM = { tech: 0.012, secret: 0.006, single: 0.015, comboA: 0.012, comboB: 0.010, triple: 0.008, cap: 0.35 };
   const APT = { S: 2, A: 1.5, B: 1, C: 0.6, D: 0.3 };
   const GROW_HP = { S: 1.25, A: 1.12, B: 1.0, C: 0.9, D: 0.8 };
-  const GROW_MW = { S: 1.3, A: 1.15, B: 1.0, C: 0.8, D: 0.6 };
+  const GROW_MW = { S: 1.3, A: 1.15, B: 1.0, C: 0.85, D: 0.7 };   // K.GROW.mp (A18)
   const HPlv = (L) => 17.5 + 14.7 * Math.pow(L - 1, 0.9);
   const MPlv = (L) => 8 + 2.6 * Math.pow(L - 1, 0.85);
-  const WPlv = (L) => 5 + 1.8 * Math.pow(L - 1, 0.85);
   const WT = {
     sword: { two: 0, reach: 0, kind: 'slash', mul: 1.0, hit: 0, crit: 2, s: ['str'] },
     greatsword: { two: 1, reach: 0, kind: 'slash', mul: 1.4, hit: -5, crit: 2, s: ['str'] },
@@ -80,11 +82,7 @@ module.exports = function makeModel(R, opts) {
     axe: { two: 0, reach: 0, kind: 'slash', mul: 1.15, hit: -10, crit: 4, s: ['str'] },
     spear: { two: 1, reach: 1, kind: 'pierce', mul: 1.25, hit: 0, crit: 2, s: ['str', 'dex'] },
     bow: { two: 1, reach: 1, kind: 'pierce', mul: 1.1, hit: 5, crit: 4, s: ['dex'] },
-    club: { two: 0, reach: 0, kind: 'blunt', mul: 1.05, hit: 0, crit: 2, s: ['str'] },
-    staff: { two: 0, reach: 0, kind: 'blunt', mul: 0.6, hit: 0, crit: 0, s: ['str', 'int'], magW: 1 },
-    katana: { two: 0, reach: 0, kind: 'slash', mul: 1.05, hit: 0, crit: 10, s: ['str', 'dex'] },
-    fist: { two: 0, reach: 0, kind: 'blunt', mul: 0.9, hit: 5, crit: 5, s: ['str', 'agi'] },
-    whip: { two: 0, reach: 1, kind: 'blunt', mul: 0.8, hit: 0, crit: 2, s: ['dex'] },
+    staff: { two: 0, reach: 1, kind: 'blunt', mul: 0.6, hit: 0, crit: 0, s: ['str', 'int'], magW: 1 },   // A19: reaches from the back row
   };
   const WEIGHT = { heavy: { def: 1, mdef: 0.2, eva: 8, st: ['str', 'vit'] }, light: { def: 0.65, mdef: 0.35, eva: 5, st: ['dex', 'agi'] }, cloth: { def: 0.4, mdef: 0.6, eva: 2, st: ['int', 'mnd'] } };
   const DUR = { sleep: [2, 4], paralyze: [1, 3], freeze: [1, 2], stun: [1, 1], confuse: [2, 4], silence: [3, 5], blind: [3, 5], burn: [3, 3], regen: [5, 5], veil: [3, 3], poison: [99, 99], counter: [1, 1], nimble: [3, 3], cover: [1, 1] };
@@ -226,14 +224,13 @@ module.exports = function makeModel(R, opts) {
     const mdef = Math.round(D * cover * Wg.mdef) + Math.floor(stats.mnd / 2);
     const VIT = (160 + stats.vit) / 200;
     const mhp = Math.min(999, Math.round(HPlv(L) * GROW_HP[growth.hp || 'B'] * VIT));
-    const mmp = Math.min(150, Math.round(MPlv(L) * GROW_MW[growth.mp || 'B']));
-    const mwp = Math.min(99, Math.round(WPlv(L) * GROW_MW[growth.wp || 'B']));
-    const pr = profRank(PEXP[clamp(T, 0, 9)]);
+    const mmp = Math.min(250, Math.round(MPlv(L) * GROW_MW[growth.mp || 'B']));
+    const pr = profRank(PROF_TRACK[clamp(T, 0, 9)]);
     // known techs & spells: EXPECT(T) (lowest glim.lv first; main weapon, favoured elements)
     const count = o.known != null ? o.known : EXPECT[clamp(T, 0, 9)];
     const aptEls = ELS.filter((e) => 'SAB'.includes(apt.e[e] || 'C')).sort((a, b) => 'SABCD'.indexOf(apt.e[a]) - 'SABCD'.indexOf(apt.e[b]));
     const rankCap = T + 3;
-    const techPool = techsOf(wtype).filter((id) => DB.actions[id].glim.lv <= Math.min(rankCap, pr + 1));
+    const techPool = techsOf(wtype).filter((id) => DB.actions[id].glim.lv <= rankCap && pr >= TECH_PROF[DB.actions[id].glim.lv]);
     const spellPool = spells().filter((id) => {
       const a = DB.actions[id];
       if (a.glim.lv > rankCap || (a.glim.prof || 0) > pr) return false;
@@ -252,7 +249,7 @@ module.exports = function makeModel(R, opts) {
     const extra = Math.max(0, count - known.size);        // techs of the 2nd weapon etc. (count for FK only)
     const c = {
       side: 'party', idx, spec, name, row, role, wtype, apt, stats, level: L,
-      mhp, hp: mhp, mmp, mp: mmp, mwp, wp: mwp, atk, mag, def, mdef,
+      mhp, hp: mhp, mmp, mp: mmp, atk, mag, def, mdef,
       hit: 90 + Math.floor(stats.dex / 4) + wt.hit, crit: Math.min(60, 2 + Math.floor(stats.dex / 16) + wt.crit),
       eva: Math.min(60, Math.floor(stats.agi / 5) + (wt.two ? 0 : Wg.eva)), spd: stats.agi,
       known, extra, prof: pr, alive: true, gone: false,
@@ -493,10 +490,9 @@ module.exports = function makeModel(R, opts) {
   B.useAction = function (user, id, chosen) {
     const act = id === 'attack' ? { target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1 }] } : DB.actions[id];
     if (!act) return;
-    if (this.log) this.say(`R${this.round} ${user.name}${user.side === 'mon' ? '' : '(' + user.hp + '/' + user.mhp + ' mp' + user.mp + ' wp' + user.wp + ')'} → ${id === 'attack' ? '攻撃' : act.name}${chosen ? ' @' + chosen.name : ''}`);
+    if (this.log) this.say(`R${this.round} ${user.name}${user.side === 'mon' ? '' : '(' + user.hp + '/' + user.mhp + ' mp' + user.mp + ')'} → ${id === 'attack' ? '攻撃' : act.name}${chosen ? ' @' + chosen.name : ''}`);
     if (id !== 'attack' && user.side === 'party') {
       if (act.mp) user.mp -= act.mp;
-      if (act.wp) user.wp -= act.wp;
     }
     const summon = act.effects.find((e) => e.type === 'summon');
     if (summon) { this.doSummon(user, summon, act); return; }
@@ -615,9 +611,8 @@ module.exports = function makeModel(R, opts) {
     const a = DB.actions[id];
     if (!a) return false;
     if (a.mp && c.mp < a.mp) return false;
-    if (a.wp && c.wp < a.wp) return false;
     if ((a.magic || a.kind === 'spell') && c.status.silence) return false;
-    if (a.kind === 'tech' && this.effRow(c) === 'middle' && !a.reach && !(WT[a.wtype] || {}).reach && a.wtype !== 'staff') return false;
+    if (a.kind === 'tech' && this.effRow(c) === 'middle' && !a.reach && !(WT[a.wtype] || {}).reach) return false;
     return true;
   };
   B.partyCommand = function (c, plan) {
@@ -694,7 +689,7 @@ module.exports = function makeModel(R, opts) {
       if (!a || !a.effects.some((e) => e.type === 'damage') || !this.usable(c, id)) continue;
       if (a.kind === 'spell' && keep && c.mp - (a.mp || 0) < keep) continue;
       const v = this.expectDmg(c, id, tgt) * (a.kind === 'spell' ? 1 : 1);
-      const cost = (a.mp || 0) / Math.max(1, c.mmp) + (a.wp || 0) / Math.max(1, c.mwp);
+      const cost = (a.mp || 0) / Math.max(1, c.mmp);
       if (v * (1 - 0.3 * cost) > best.v * 1.05) best = { id, v: v * (1 - 0.3 * cost) };
     }
     return { id: best.id, target: tgt };
@@ -810,9 +805,9 @@ module.exports = function makeModel(R, opts) {
   };
   B.useActionFree = function (u, id, target) {
     const a = DB.actions[id];
-    const mp = u.mp, wp = u.wp;
+    const mp = u.mp;
     this.useAction(u, id, target);
-    u.mp = mp; u.wp = wp;
+    u.mp = mp;
     if (a && a.kind === 'spell' && a.target === 'ally' && !target) return;
   };
   B.playRound = function () {

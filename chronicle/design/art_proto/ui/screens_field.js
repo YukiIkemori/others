@@ -38,3 +38,17 @@
     K.text('町の人（同じ骨組み・見た目データ）', 110, 500, { size: 11, c: T.c.text3 });
   };
 })(window);
+(function (G) {
+  const { T } = K;
+  const ctx = K.ctx;
+  const SCREENS = G.SCREENS;
+  G.fieldView = function (o, scene, vx, vy, vxT, vyT, popt) {
+    const tall = o.layout === 'tall';
+    const W = tall ? 540 : 960, H = tall ? 1169 : 540;
+    K.begin(W, H, tall ? 1.3 : 1);
+    const out = TOPDOWN.present(scene.c, tall ? vxT : vx, tall ? vyT : vy, W, H, popt);
+    K.device(); ctx.drawImage(out, 0, 0); K.logical();
+    return { W, H, tall, vx: tall ? vxT : vx, vy: tall ? vyT : vy };
+  };
+  SCREENS.town_raw = async function (o) { const s = TOPDOWN.town(); G.fieldView(o, s, 96, 176, 176, 0); };
+})(window);
