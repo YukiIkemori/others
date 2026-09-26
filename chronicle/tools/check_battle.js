@@ -375,7 +375,7 @@ part('C10 metal §4.10.5', () => {
 // ------------------------------------------------------------------ C11 after battle
 part('C11 after battle §4.12.1', () => {
   const party = partyAt(2);
-  party.forEach((c) => { c.mp = 0; c.wp = 0; });
+  party.forEach((c) => { c.mp = 0; });
   party[3].hp = 0;
   const r = B.resolveMonsters({ mons: [['@jelly', 1]], tier: 2 }, {});
   const e = new B.Engine({ party, mons: r.mons, tier: r.Tb, lv: r.Lb, noSurprise: true, after: true });
@@ -383,7 +383,7 @@ part('C11 after battle §4.12.1', () => {
   e.result = 'win';
   e.finish();
   ok(party[0].hp === e.party[0].mhp, 'win: the living get full HP');
-  ok(party[0].mp === Math.ceil(e.party[0].mmp * 0.1) && party[0].wp === Math.ceil(e.party[0].mwp * 0.1), 'win: MP / WP +10 % rounded up');
+  ok(party[0].mp === Math.ceil(e.party[0].mmp * 0.12) && !('wp' in party[0]), 'win: MP +12 % rounded up, no WP (SYSTEMS_REWORK §2.4)');
   ok(party[3].hp === 0, 'the fallen stay down');
   ok(party.every((c) => c.status && !Object.keys(c.status).length), 'statuses cleared');
 });
@@ -398,9 +398,9 @@ function partyAt(T) {
       if (id === 'hero') c = R.Rules.newChar('hero', { type: Object.keys(DB.heroTypes || {})[0], gender: 'm', name: 'テスト' });
       else c = R.Rules.newChar(id);
     } catch (e) { c = null; }
-    if (!c) c = { id, name: 'X' + i, level: 1, hp: 30, mp: 10, wp: 10, equip: {}, status: {}, techs: [], spells: [] };
+    if (!c) c = { id, name: 'X' + i, level: 1, hp: 30, mp: 10, equip: {}, status: {}, techs: [], spells: [] };
     try { R.Rules.gainExp(c, R.Rules.expForLevel ? R.Rules.expForLevel(lv) : 0); } catch (e) { c.level = lv; }
-    try { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; } catch (e) { /* keep */ }
+    try { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; } catch (e) { /* keep */ }
     c.row = i === 3 ? 'middle' : 'front';
     return c;
   };

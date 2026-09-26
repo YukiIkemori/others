@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Battle engine tests (node, no DOM) for A2: R.Mon (curves, tier scaling, golden, drops, heal), every damage formula,
-// statuses, buffs, rows and reach, techs / spells / WP / MP, counters and cover, supports (mods), monster AI conds,
+// statuses, buffs, rows and reach, techs / spells / MP, counters and cover, supports (mods), monster AI conds,
 // rounds, escape and preempt, rewards (EXP falloff, reserve 60 %, drops, pools), golden / rare / metal / summon /
 // boss phases, the glimmer hook, リピート R1–R6, live bookkeeping, the party AI (focus fire, thrift, glimmer aiming),
 // simulate(), and a run of every real action / monster / troop / zone in src/data.
@@ -1964,32 +1964,56 @@ guard('party AI', () => quiet(() => {
   ok(pc === 0, 'no percent spells on mobs');
   // the glimmer slot: in mob fights the attack uses a slot with open candidates
   ok(typeof AI.glimSlot === 'function' && typeof AI.candidatesOpen === 'function', 'glimmer aim helpers');
-  // D8 (§4.13.2-d): a middle-row staff (its 攻撃 cannot reach) hunts glimmers with its cheapest reach tech before weapon 2
+  // D8 (§4.13.2-d, SYSTEMS_REWORK §2.6): a middle-row weapon that cannot reach (a dagger — the staff reaches since A19)
+  // hunts glimmers with its cheapest reach tech (刃つぶて) before weapon 2's 攻撃
   const mkHunt = (o) => {
     const x = mk(Object.assign({ mons: ['tb_goblin', 'tb_goblin'] }, o || {}));
     for (const m of x.mons) { withD(m, { hp: 400 }); m.hp = m.mhp = 400; }
-    const mg = P(x, 2);
-    equip(mg, 'weapon2', 'tb_whip');
-    mg.wp = mg.mwp; mg.mp = 0;
+    const ar = P(x, 3);
+    ar.c.equip.weapon1 = 'tb_dagger'; ar.c.equip.weapon2 = 'tb_staff'; ar.c.techs = ['t_dagger_knives']; ar.c.spells = []; ar.c.wprof.dagger = R.Rules.K.PROF_PTS[30]; ar.refresh();
+    ar.mp = ar.mmp;
     return x;
   };
-  const h1 = mkHunt(), mg1 = P(h1, 2);
-  const open1 = AI.candidatesOpen(h1, mg1, { kind: 'tech', wtype: 'staff', rankB: h1.rankB, ef: h1.ef, tier: h1.glimTier, row: 'middle', silenced: false, used: 'tb_t_mind' });
-  ok(h1.effRow(mg1) === 'middle' && !h1.canReach(mg1, 'weapon1') && h1.canReach(mg1, 'weapon2'), 'D8 fixture: the staff cannot reach, the whip can');
-  const r1 = AI.glimReach(h1, mg1, AI.abilityOptions(h1, mg1));
-  ok(open1 && (r1 && r1.o.id === 'tb_t_mind' && r1.slot === 'weapon1'), `D8: glimReach → the staff slot's reach tech (${r1 && r1.o.id})`);
-  const hc = AI.partyCommands(h1, AI.AUTO_OPTS)[2];
-  ok(open1 && (hc && hc.type === 'tech' && hc.id === 'tb_t_mind' && hc.slot === 'weapon1'), `D8: the auto mage uses 念じ打ち, not the whip's 攻撃 (${hc && (hc.id || hc.type + ':' + hc.slot)})`);
-  const hc2 = AI.partyCommands(h1, AI.AUTO_OPTS)[2];
-  const hc3 = AI.partyCommands(h1, AI.AUTO_OPTS)[2];
-  ok(AI.GLIM_REACH.perBattle !== 2 || (hc2 && hc2.id === 'tb_t_mind' && hc3 && hc3.type === 'attack' && hc3.slot === 'weapon2'), `D8: at most ${AI.GLIM_REACH.perBattle} a fight, then the whip (${hc3 && (hc3.id || hc3.type + ':' + hc3.slot)})`);
-  const h2 = mkHunt(); P(h2, 2).wp = Math.floor(P(h2, 2).mwp * 0.4);
-  const hc4 = AI.partyCommands(h2, AI.AUTO_OPTS)[2];
-  ok(hc4 && hc4.type === 'attack' && hc4.slot === 'weapon2', `D8: WP below half → the whip's 攻撃 (${hc4 && (hc4.id || hc4.type)})`);
+  const h1 = mkHunt(), ar1 = P(h1, 3);
+  const open1 = AI.candidatesOpen(h1, ar1, { kind: 'tech', wtype: 'dagger', rankB: h1.rankB, ef: h1.ef, tier: h1.glimTier, row: 'middle', silenced: false, used: 't_dagger_knives' });
+  ok(h1.effRow(ar1) === 'middle' && !h1.canReach(ar1, 'weapon1') && h1.canReach(ar1, 'weapon2'), 'D8 fixture: the dagger cannot reach, the staff can');
+  const r1 = AI.glimReach(h1, ar1, AI.abilityOptions(h1, ar1));
+  ok(open1 && (r1 && r1.o.id === 't_dagger_knives' && r1.slot === 'weapon1'), `D8: glimReach → the dagger slot's reach tech (${r1 && r1.o.id})`);
+  const hc = AI.partyCommands(h1, AI.AUTO_OPTS)[3];
+  ok(open1 && (hc && hc.type === 'tech' && hc.id === 't_dagger_knives' && hc.slot === 'weapon1'), `D8: the auto archer uses the reach tech, not the staff's 攻撃 (${hc && (hc.id || hc.type + ':' + hc.slot)})`);
+  const hc2 = AI.partyCommands(h1, AI.AUTO_OPTS)[3];
+  const hc3 = AI.partyCommands(h1, AI.AUTO_OPTS)[3];
+  // (A18: after the hunt the member is an ordinary fighter again — with shared MP it may still pick the tech on its merits)
+  ok(AI.GLIM_REACH.perBattle !== 2 || (hc2 && hc2.id === 't_dagger_knives' && hc3 && AI.glimReach(h1, ar1, AI.abilityOptions(h1, ar1)) === null), `D8: at most ${AI.GLIM_REACH.perBattle} glimmer hunts a fight (${hc3 && (hc3.id || hc3.type + ':' + hc3.slot)})`);
+  const h2 = mkHunt(); P(h2, 3).mp = Math.floor(P(h2, 3).mmp * 0.4);
+  ok(AI.glimReach(h2, P(h2, 3), AI.abilityOptions(h2, P(h2, 3))) === null, 'D8: MP below half → no glimmer hunt');
   const h3 = mkHunt({ mons: ['tb_boss'] });
-  ok(AI.glimReach(h3, P(h3, 2), AI.abilityOptions(h3, P(h3, 2))) === null, 'D8: not in boss fights (WP is spent on the best action there)');
-  const h4 = mkHunt(); P(h4, 2).c.row = 'front'; P(h4, 2).refresh();
-  ok(AI.glimReach(h4, P(h4, 2), AI.abilityOptions(h4, P(h4, 2))) === null, 'D8: a front-row staff attacks normally');
+  ok(AI.glimReach(h3, P(h3, 3), AI.abilityOptions(h3, P(h3, 3))) === null, 'D8: not in boss fights (MP is spent on the best action there)');
+  const h4 = mkHunt(); P(h4, 3).c.row = 'front'; P(h4, 3).refresh();
+  ok(AI.glimReach(h4, P(h4, 3), AI.abilityOptions(h4, P(h4, 3))) === null, 'D8: a front-row dagger attacks normally');
+  // A18 §2.6: a 術師・回復役 (knows a heal / revive spell on allies) keeps max(30 % MP, 2 × the cheapest heal) in mob fights
+  ok(AI.HEAL_RESERVE.pct === 0.3 && AI.HEAL_RESERVE.heals === 2, 'HEAL_RESERVE {pct 0.3, heals 2}');
+  {
+    const hr = mk({ mons: ['tb_goblin', 'tb_goblin', 'tb_goblin'] });
+    for (const m of hr.mons) { withD(m, { hp: 400 }); m.hp = m.mhp = 400; }
+    const mg = P(hr, 2), ar = P(hr, 3);
+    const care = AI.careOf(hr, mg, AI.newPlan());
+    const cheapest = Math.min(...mg.c.spells.filter((id) => ['tb_s_heal', 'tb_s_healall', 'tb_s_revive'].includes(id)).map((id) => hr.mpCost(mg, id)));
+    ok(care.healer && care.healCost === cheapest && care.reserve === Math.max(mg.mmp * 0.3, 2 * cheapest), `careOf: the mage is a healer (${JSON.stringify(care)})`);
+    ok(!AI.careOf(hr, ar, AI.newPlan()).healer, 'careOf: an archer without heal spells is not');
+    mg.c.spells.push('tb_s_fireall');
+    const cost = hr.mpCost(mg, 'tb_s_fireall');
+    let spentLow = 0;
+    mg.mp = Math.ceil(care.reserve);   // any MP action would leave less than the reserve
+    void cost;
+    for (let i = 0; i < 20; i++) { const c = AI.partyCommands(hr, AI.AUTO_OPTS)[2]; if (c && c.type !== 'attack' && c.type !== 'defend' && DB.actions[c.id] && !DB.actions[c.id].effects.some((x) => ['heal', 'revive', 'cure'].includes(x.type)) && hr.mpCost(mg, c.id) > 0) spentLow++; }
+    ok(spentLow === 0, `mob fight: the healer keeps its heal reserve (${spentLow} damage casts below the line)`);
+    mg.mp = mg.mmp;
+    const full = AI.partyCommands(hr, AI.AUTO_OPTS)[2];
+    ok(full && full.type === 'spell', `… and casts again with MP to spare (${full && (full.id || full.type)})`);
+  }
+  // someone who knows spells (the mage) needs MP ≥ 60 % and a tech of ≤ 5 % of max MP (§2.6)
+  ok(AI.GLIM_REACH.mpMin === 0.5 && AI.GLIM_REACH.perBattle === 2 && AI.GLIM_REACH.casterMpMin === 0.6 && AI.GLIM_REACH.casterTechPct === 0.05, 'GLIM_REACH {mpMin 0.5, perBattle 2, caster 0.6 / 5 %}');
 }));
 
 // ================================================================ simulate
@@ -2002,7 +2026,8 @@ guard('simulate', () => {
   ok(JSON.stringify(party) === snap, 'the given party is untouched');
   const strip = (x) => JSON.stringify(Object.assign({}, x, { party: null, reserve: null, inv: null }));
   ok(a.result === 'win' && strip(a) === strip(b), 'deterministic with a seed');
-  ok(['rounds', 'partyHpPct', 'partyMpPct', 'partyWpPct', 'hpLossPct', 'deaths', 'damageDealt', 'damageTaken', 'mpUsed', 'wpUsed', 'itemsUsed', 'killed', 'exp', 'gold'].every((k) => typeof a[k] === 'number'), 'number fields');
+  ok(['rounds', 'partyHpPct', 'partyMpPct', 'hpLossPct', 'deaths', 'damageDealt', 'damageTaken', 'mpUsed', 'itemsUsed', 'killed', 'exp', 'gold'].every((k) => typeof a[k] === 'number'), 'number fields');
+  ok(!('partyWpPct' in a) && !('wpUsed' in a) && !('wpUsedBy' in a), 'no WP fields (A18)');
   ok(Array.isArray(a.mpUsedBy) && a.mpUsedBy.length === 4 && typeof a.casts === 'object' && Array.isArray(a.glimmers) && Array.isArray(a.profUps) && Array.isArray(a.drops) && Array.isArray(a.expEach), 'per-member fields');
   ok(a.killed === 3 && a.exp > 0 && a.Lb === 18 && a.Tb === 2, `sensible (${a.rounds} rounds, ${a.hpLossPct}% HP lost)`);
   const lose = B.simulate({ party: R.fxBattleParty(1), troop: 'tb_troop_boss', tier: 6, seed: 1 });
