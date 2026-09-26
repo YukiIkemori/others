@@ -1,0 +1,6100 @@
+{
+ "about": "NPC_REQUEST.md のシート → レイアウト → コマ（sprite_pipe 用）。NPC は 3 段: A 物語の主な人（歩き・演技12・顔6 の 3 枚）、B 名前のある人（歩き＋演技4 の 1 枚）、C 町の人の型と動物（二人の歩き、1 枚に 2 人）。コマの id と並びは design/sprite_pipe/tools/brief_spec.py（アルンのシート 1・2 の格子・3・9）に合わせ、マスの大きさ（cellDots）は arun_sheets/manifest.json の届いたシートに合わせた。heightDots はフィールドの身長（帽子・飾りを除く、art px＝ドット数、エンジンは拡大縮小しない）。measureH は帽子・荷物を含む立ちコマの見た目の高さ（身長の検査の目安）。",
+ "version": 1,
+ "date": "2026-09-26",
+ "source": "chronicle/design/art_ref/NPC_REQUEST.md",
+ "styleRefs": [
+  "arun_sheets/arun_sheet_01.png",
+  "arun_sheets/arun_sheet_03.png",
+  "hero_sheet_owner.png",
+  "arun_sheets/arun_sheet_09.png (face sheets only)"
+ ],
+ "rules": {
+  "background": "#FF00FF",
+  "pxPerDot": 8,
+  "pxPerDotAccepted": "3-8 (uniform within a sheet)",
+  "fieldFacing": "rows down/up/left/right; acting poses face down",
+  "faceFacing": "slightly right",
+  "battleFacing": "right (optional battle_single only)",
+  "colorsMax": {
+   "A": 50,
+   "B": 40,
+   "C": 40
+  },
+  "outline": "dark colored 1 dot, no pure black",
+  "noEffects": true,
+  "forbiddenHues": "285-330° saturated (magenta keying); Arun markers: red neck scarf, ash-brown messy hair, black coat+cream cloth+brown leather; companion head silhouettes (NPC_REQUEST §5.3)",
+  "mainRamp": "main garment painted in one hue ramp only (engine recolors that ramp for tier C variants)",
+  "saturation": "tier B/C one step less saturated than party; tier A same as companions",
+  "lantern": "drawn only where lantern:true (unlit object); engine adds the glow",
+  "spirits": "drawn opaque, no feet (hem tapers); engine adds translucency/bob/glow",
+  "filename": "A: npc_<id>_s1..s3.png; B: npc_<id>_s1.png; C: npc_grp_<group>.png; optional battle npc_<id>_btl.png; redraws _v2, _v3 (newest wins)"
+ },
+ "layouts": {
+  "walk": {
+   "kind": "field",
+   "cellDots": [
+    80,
+    64
+   ],
+   "grid": [
+    4,
+    3
+   ],
+   "imagePx": [
+    1920,
+    2048
+   ],
+   "ids": [
+    [
+     "walk_down_0",
+     "walk_down_1",
+     "walk_down_2"
+    ],
+    [
+     "walk_up_0",
+     "walk_up_1",
+     "walk_up_2"
+    ],
+    [
+     "walk_left_0",
+     "walk_left_1",
+     "walk_left_2"
+    ],
+    [
+     "walk_right_0",
+     "walk_right_1",
+     "walk_right_2"
+    ]
+   ],
+   "face": [
+    "down",
+    "up",
+    "left",
+    "right"
+   ],
+   "lantern": "per NPC (npc.lantern)",
+   "arunEquivalent": "arun_sheet_01.png / brief_spec SHEETS[1] (same ids; lantern only where npc.lantern is true)",
+   "briefSpecSheet": 1
+  },
+  "act12": {
+   "kind": "field",
+   "cellDots": [
+    96,
+    64
+   ],
+   "grid": [
+    3,
+    4
+   ],
+   "imagePx": [
+    3072,
+    1536
+   ],
+   "ids": [
+    [
+     "act_nod",
+     "act_surprise",
+     "act_think",
+     "act_bow"
+    ],
+    [
+     "act_kneel",
+     "act_sit",
+     "act_call",
+     "act_look"
+    ],
+    [
+     "act_lie",
+     "act_sig",
+     "act_resolve",
+     "act_sad"
+    ]
+   ],
+   "face": [
+    "down",
+    "down",
+    "down"
+   ],
+   "arunEquivalent": "arun_sheet_03.png / brief_spec SHEETS[3] with act_draw replaced by act_sig (the NPC signature pose)",
+   "briefSpecSheet": 3,
+   "stand": [
+    "act_nod",
+    "act_surprise",
+    "act_think",
+    "act_call",
+    "act_resolve",
+    "act_sig"
+   ],
+   "no_facing": [
+    "act_lie",
+    "act_look",
+    "act_bow",
+    "act_kneel",
+    "act_sit",
+    "act_sad"
+   ]
+  },
+  "face6": {
+   "kind": "face",
+   "cellDots": [
+    96,
+    96
+   ],
+   "grid": [
+    2,
+    3
+   ],
+   "imagePx": [
+    2304,
+    1536
+   ],
+   "ids": [
+    [
+     "face_neutral",
+     "face_smile",
+     "face_sad"
+    ],
+    [
+     "face_angry",
+     "face_surprise",
+     "face_closed"
+    ]
+   ],
+   "face": [
+    "right",
+    "right"
+   ],
+   "bustDots": 80,
+   "register": {
+    "face_smile": "face_neutral",
+    "face_sad": "face_neutral",
+    "face_angry": "face_neutral",
+    "face_surprise": "face_neutral",
+    "face_closed": "face_neutral"
+   },
+   "engineExpr": {
+    "neutral": "face_neutral",
+    "smile": "face_smile",
+    "sad": "face_sad",
+    "angry": "face_angry",
+    "surprise": "face_surprise",
+    "closed": "face_closed"
+   },
+   "arunEquivalent": "arun_sheet_09.png cell size (96x96, bust ~80), 2x3",
+   "briefSpecSheet": 9,
+   "note": "face_closed is new (eyes closed: prayer, memory, singing); engine EXPRS has no \"closed\" yet -> falls back to neutral until added"
+  },
+  "walk_act": {
+   "kind": "field",
+   "cellDots": [
+    80,
+    64
+   ],
+   "grid": [
+    4,
+    4
+   ],
+   "imagePx": [
+    2560,
+    2048
+   ],
+   "ids": [
+    [
+     "walk_down_0",
+     "walk_down_1",
+     "walk_down_2",
+     "act_nod"
+    ],
+    [
+     "walk_up_0",
+     "walk_up_1",
+     "walk_up_2",
+     "act_surprise"
+    ],
+    [
+     "walk_left_0",
+     "walk_left_1",
+     "walk_left_2",
+     "act_call"
+    ],
+    [
+     "walk_right_0",
+     "walk_right_1",
+     "walk_right_2",
+     "act_sig"
+    ]
+   ],
+   "face": [
+    "down",
+    "up",
+    "left",
+    "right"
+   ],
+   "colFace": {
+    "3": "down"
+   },
+   "arunEquivalent": "grid of arun_sheet_02.png (4x4, cell 80x64); cols 0-2 = SHEETS[1] walk ids, col 3 = down-facing acting poses",
+   "briefSpecSheet": [
+    1,
+    3
+   ],
+   "note": "column 3 faces down on every row (facing check per column, not per row)"
+  },
+  "walk_pair": {
+   "kind": "field",
+   "cellDots": [
+    80,
+    64
+   ],
+   "grid": [
+    4,
+    6
+   ],
+   "imagePx": [
+    3840,
+    2048
+   ],
+   "ids": [
+    [
+     "A:walk_down_0",
+     "A:walk_down_1",
+     "A:walk_down_2",
+     "B:walk_down_0",
+     "B:walk_down_1",
+     "B:walk_down_2"
+    ],
+    [
+     "A:walk_up_0",
+     "A:walk_up_1",
+     "A:walk_up_2",
+     "B:walk_up_0",
+     "B:walk_up_1",
+     "B:walk_up_2"
+    ],
+    [
+     "A:walk_left_0",
+     "A:walk_left_1",
+     "A:walk_left_2",
+     "B:walk_left_0",
+     "B:walk_left_1",
+     "B:walk_left_2"
+    ],
+    [
+     "A:walk_right_0",
+     "A:walk_right_1",
+     "A:walk_right_2",
+     "B:walk_right_0",
+     "B:walk_right_1",
+     "B:walk_right_2"
+    ]
+   ],
+   "face": [
+    "down",
+    "up",
+    "left",
+    "right"
+   ],
+   "split": {
+    "A": [
+     0,
+     1,
+     2
+    ],
+    "B": [
+     3,
+     4,
+     5
+    ]
+   },
+   "arunEquivalent": "two arun_sheet_01.png walk blocks side by side (no lantern unless the person has lantern:true)",
+   "briefSpecSheet": 1,
+   "note": "split columns 0-2 -> people[0].look, columns 3-5 -> people[1].look; each half is packed as a normal walk set"
+  },
+  "battle_single": {
+   "kind": "boss_human",
+   "imagePx": [
+    1024,
+    1536
+   ],
+   "pxPerDot": 8,
+   "heightDots": 68,
+   "facing": "right",
+   "arunEquivalent": "MONSTER_REQUEST.md sheet 56 layout (human-sized boss, one figure, right-facing)",
+   "optional": true
+  }
+ },
+ "tiers": {
+  "A": {
+   "desc": "story NPCs: unique design, walk + 12 acting + 6 faces",
+   "sheets": [
+    "walk",
+    "act12",
+    "face6"
+   ],
+   "face": true,
+   "count": 6
+  },
+  "B": {
+   "desc": "named side-quest / town-key NPCs: unique design, walk + 4 acting (1 sheet), no face",
+   "sheets": [
+    "walk_act"
+   ],
+   "face": false,
+   "count": 42
+  },
+  "C": {
+   "desc": "regional townsfolk archetypes and animals: walk only, two per sheet; palette variants 1-4 made by the engine (never drawn)",
+   "sheets": [
+    "walk_pair"
+   ],
+   "face": false,
+   "count": 40
+  }
+ },
+ "cultures": {
+  "prologue": {
+   "name": "半島（ロアの里・港町ファロス・宿場）",
+   "light": "魚油のランプと灯台",
+   "clothes": "厚い毛糸の上着、帆布の前掛け、油を引いた外套、つばのない丸い毛糸帽、女は三角の頭巾と大きな肩掛け、木靴",
+   "colors": "紺・灰青・からし色・灰緑（潮風で色あせた色）",
+   "head": "丸い毛糸帽・三角頭巾",
+   "avoid": "アルンの目印（黒い上着＋生成り＋茶色の革の胸当て、赤い首巻き）"
+  },
+  "forest": {
+   "name": "森（フェルン・迷いの森）",
+   "light": "樹脂の松明と光る苔",
+   "clothes": "すそを葉の形に切った上衣、木の皮を編んだ平たい帽子や籠、革ひもを巻いた脚絆、首に光る苔を入れた小瓶（光らせない）",
+   "colors": "苔色・若草・樹皮の灰茶・どんぐり色",
+   "head": "木の皮の平たい帽子・木の実の髪飾り",
+   "avoid": "シルヴァン（尖ったフード・深い苔の緑のマント）"
+  },
+  "yura": {
+   "name": "隠れ里ユラ（名を忘れた人々）",
+   "light": "小さな灯りと煙",
+   "clothes": "苔むした灰緑の麻の衣、顔の上半分に落ちる薄い布、首に何も書いていない木の札",
+   "colors": "灰緑・灰茶（色が抜けたような淡い色）",
+   "head": "顔にかかる薄い布",
+   "avoid": "モルガ（黒い喪のベール）"
+  },
+  "desert": {
+   "name": "砂漠（カシム・隊商）",
+   "light": "黒い泉の油の灯",
+   "clothes": "砂よけの長い外衣、頭布と顔布、藍染めの帯と縁取り、真鍮の小物、革のサンダル。肌は褐色が多い",
+   "colors": "砂色・白・藍・真鍮",
+   "head": "高く巻いた頭布・顔布",
+   "avoid": "ザフィラ（ターコイズの重ね着・金貨の額飾り・長いベール）"
+  },
+  "snow": {
+   "name": "雪原（ユール）",
+   "light": "獣脂の灯と大かまど",
+   "clothes": "毛皮の縁の厚い上着、フェルトの長靴、耳当ての付いた毛皮の帽子、藍と山吹の幾何学刺繍の帯（村の印）",
+   "colors": "松葉色・白い毛皮・山吹・藍・茜",
+   "head": "耳当ての毛皮の帽子・毛皮のフード",
+   "avoid": "ブリギッタ（丸い鉄帽）"
+  },
+  "marsh": {
+   "name": "湿原（ロッホ・ルー）",
+   "light": "沼の燐火と霧の灯籠",
+   "clothes": "油を引いた防水の外套、大きな丸いつばの雨よけ帽子、長靴、胸に鐘の形の小さな真鍮の飾り",
+   "colors": "灰緑・泥茶・霧の灰青",
+   "head": "大きな丸いつばの帽子・防水の頭巾",
+   "avoid": "モルガ（黒い喪の衣）・ベラドナ（頭巾と背負い箱）"
+  },
+  "isles": {
+   "name": "諸島（コーラル・ネレイ）",
+   "light": "魚油の灯と灯台網、夜光虫の海",
+   "clothes": "白と明るい青の縞の布、ゆったりした短いズボン、腰に巻いた布、裸足かサンダル、貝とサンゴの首飾り。潮焼けした褐色の肌",
+   "colors": "白・明るい青・紺・淡い珊瑚色",
+   "head": "頭に巻いた布・編んだ籠",
+   "avoid": "ザフィラのターコイズ"
+  },
+  "mine": {
+   "name": "鉱山（ドヴァン・ヴォルク）",
+   "light": "燐石（光る石）",
+   "clothes": "すすけた厚い作業着、平たいフェルト帽、首から燐石のかけらを入れた小さな籠（光らせない）、手ぬぐい",
+   "colors": "煤の灰・錆色・燐石の淡い緑の差し色",
+   "head": "平たいフェルト帽・手ぬぐい",
+   "avoid": "ボーデン（丸い革の兜・ゴーグル・黄土のつなぎ）、ドッカ（禿げ頭・編みひげ・長い鍛冶の前掛け）"
+  },
+  "ash": {
+   "name": "灰（カルデラ）",
+   "light": "残り火の炭と溶岩",
+   "clothes": "耐火の灰色の厚い麻と黒い革、銅の腕輪と帯、炎の形の橙の刺繍、編み込んだ髪。肌は褐色",
+   "colors": "耐火の灰・黒・銅・橙",
+   "head": "編み込んだ髪・剃った頭の炎の線",
+   "avoid": "ロウガ（サフランの道着・白い鉢巻）"
+  },
+  "star": {
+   "name": "星（オルビス・月見の牧場）",
+   "light": "灯りを嫌う、星灯（ほしび）だけ",
+   "clothes": "きちんとした仕立ての上着とチョッキ、ひだの付いた襟、小さな丸い帽子。学生は灰青の短いローブ",
+   "colors": "深い青緑・墨色・灰青・銀の差し色",
+   "head": "小さな丸い帽子・四角い学帽",
+   "avoid": "イルゼ（紺紫の星のローブ・お団子・丸眼鏡）、テオ（山吹のローブ・とんがり帽子）"
+  },
+  "finale": {
+   "name": "書の都ビブリア（終盤）",
+   "light": "白い町の淡い灯",
+   "clothes": "白と灰と淡い象牙の長い衣、袖の長い上着、インクのしみ。色が抜けかけたような淡い服",
+   "colors": "白・灰・淡い象牙（とても淡い色だけ）",
+   "head": "何もかぶらないか、白い頭巾",
+   "avoid": "記録院の書記（白いフードで顔が影）と同じにしない。顔を見せる"
+  },
+  "common": {
+   "name": "大陸をめぐる人（どの町にも出る）",
+   "light": "—",
+   "clothes": "旅の外套や、所属の分かる服（記録院の白、静夜会の灰、灯守組合の紺鼠）",
+   "colors": "人ごとに指定",
+   "head": "人ごとに指定",
+   "avoid": "フェルノ（広いつばの帽子＋大きな羽根＋たて琴）"
+  }
+ },
+ "regions": [
+  {
+   "id": "prologue",
+   "name": "序章",
+   "places": "ロアの里・港町ファロス（と、大陸をめぐる人）"
+  },
+  {
+   "id": "forest",
+   "name": "地方1 森",
+   "places": "森の村フェルン・迷いの森・千年樹・隠れ里ユラ"
+  },
+  {
+   "id": "desert",
+   "name": "地方2 砂漠",
+   "places": "オアシスの町カシム・隊商の野営地・王墓・宿場「砂の縁」"
+  },
+  {
+   "id": "snow",
+   "name": "地方3 雪原",
+   "places": "雪の村ユール・白竜の峰"
+  },
+  {
+   "id": "marsh",
+   "name": "地方4 湿原",
+   "places": "水辺の町ロッホ・霧の館・水上の隠れ里ルー"
+  },
+  {
+   "id": "isles",
+   "name": "地方5 諸島",
+   "places": "港町コーラル・岬の村ネレイ・幽霊船"
+  },
+  {
+   "id": "mine",
+   "name": "地方6 鉱山",
+   "places": "鉱山都市ドヴァン・鍛冶衆の隠れ村ヴォルク・山の隠者の庵"
+  },
+  {
+   "id": "ash",
+   "name": "地方7 灰",
+   "places": "炎の町カルデラ・闘技場・溶岩洞の湯の郷"
+  },
+  {
+   "id": "star",
+   "name": "地方8 星",
+   "places": "学術都市オルビス・消灯後の学院・月見の牧場"
+  },
+  {
+   "id": "finale",
+   "name": "終盤",
+   "places": "書の都ビブリア・白の大書庫"
+  }
+ ],
+ "pipelineNeeds": [
+  "npc_spec.py (like companion_spec.py): pick the layout from the file name: npc_<id>_s1 -> walk (tier A) or walk_act (tier B), _s2 -> act12, _s3 -> face6, npc_grp_<group> -> walk_pair, _btl -> battle_single (MONSTER_REQUEST human-boss path). Newest _vN wins.",
+  "Per-NPC height override from heightDots.field (36-54); size check uses measureH (hats, packs, crowns included). Do not rescale to 48.",
+  "New layout walk_act (4x4, cell 80x64): cols 0-2 = SHEETS[1] walk ids per row, col 3 = act_nod/act_surprise/act_call/act_sig, all facing down (facing check per column).",
+  "New layout walk_pair (4x6, cell 80x64): split cols 0-2 / 3-5 into two looks, pack each as a walk set; animals use the same split (no head/bust checks for kind=animal).",
+  "act12 = SHEETS[3] with act_draw -> act_sig. sprites.js ACT_OF needs: sad <- act_sad, raise_lantern <- act_sig for otto (lantern:true), a new engine pose \"sig\" (per-NPC signature) or map sig to the closest rig act; act_lie/act_look usable for scenes (Rowell T7 collapse, Lazaro ending).",
+  "New layout face6 (2x3, cell 96x96, bust ~80): face_neutral/smile/sad/angry/surprise map 1:1 to R.Contract.EXPRS; face_closed is extra (add \"closed\" to EXPRS or leave unused).",
+  "Faces: only tier A looks get face sprites. Tier B/C looks should get face:false (or have their rig placeholder faces removed) so the message box does not show a placeholder that no longer matches the drawn body (V2_PLAN §6.1 lists hanna/rita/gord/pim_mother/pim/yura_elder with faces: owner decision 1).",
+  "Recolor: tier C people get 4 palette sets (look ids <look>_1.._4) by shifting only the main garment ramp (mainHex) and cycling skin tones; tier A/B and animals are never recolored.",
+  "Drawn lanterns (otto, glen, npc_night_guard, npc_lampwarden pole lantern): detect the lantern pixels (brass frame) per frame for the glow anchor instead of overlaying R.Art.cast.lanternFrame.",
+  "Spirits (elm, hazal, melda, glen; fine fades by story): engine applies translucency, float bob and rim glow; sprites arrive opaque with tapered hems (no feet), walk frames are sway frames.",
+  "looks_npc.js: replace placeholder rigs with the drawn looks; rowell/lazaro field looks follow MONSTER_REQUEST sheets 56/62 (white coat), replacing the navy-robe+glasses placeholder. New look ids: every tier B look and every tier C <look> in this file (old npc_<type>_<n> types map to the prologue/forest/common archetypes: man->npc_pen_man, woman->npc_pen_woman, old_m->npc_pen_old_m, old_f->npc_pen_old_f, child->npc_pen_child, sailor->npc_pen_sailor, merchant->npc_traveler, woodcutter->npc_woodcutter, guard->npc_pen_guard, keeper->npc_pen_keeper, bard->npc_bard, yura_folk->npc_yura_woman).",
+  "CONTENT: pick regional archetypes by the town region (desert towns use npc_desert_*, etc.); waystations/hidden villages use the nearest culture (sand-edge -> prologue/desert, Volk -> mine, Lu -> marsh, hot-spring -> ash, moon pasture -> star shepherd)."
+ ],
+ "ownerDecisions": [
+  "Tier B faces: none by default; adding faces for the forest named NPCs (hanna, rita, gord, katri, pim, yura_elder) costs one face6 sheet each.",
+  "Battle sprites for zakuro (ash final) and rashid (hawk band leader) are missing from MONSTER_REQUEST: optional sheets 101-102 here, or reuse monster art.",
+  "Human enemies with no art in any brief: tournament rounds 1-4 (clan youths, beast tamer, caster sisters, armored man), hawk band archers, academy guards (noisy path). Reuse monster art or add battle_single sheets.",
+  "Tier C volume (74 people / 40 sheets): can be cut to the first two sheets per region with the engine recoloring a neighbouring region for children and jobs."
+ ],
+ "npcs": [
+  {
+   "id": "berna",
+   "look": "berna",
+   "tier": "A",
+   "name": "ベルナ",
+   "title": "語り部の師匠（ロアの里）",
+   "sex": "女",
+   "age": "70歳前後",
+   "region": "prologue",
+   "appears": "序章 P1（ベルナの家）・P10（ファロス）、T3・T6 のロアの寄り道、終盤のロア、エンディング（ロアの丘）",
+   "heightDots": {
+    "field": 44,
+    "face": 80
+   },
+   "headgearExtraDots": 4,
+   "measureH": {
+    "field": 48
+   },
+   "mainName": "深い松葉色",
+   "mainHue": 150,
+   "mainHex": "#466052",
+   "headShape": "深い森色の布をゆったり巻いた頭巾（端が右の肩へ垂れる）＋頬の横にこぼれる白髪",
+   "look_ja": "小柄で背の少し丸い老婆。深い森色の頭巾から白髪がこぼれ、目じりにやさしいしわ。足首までの語り部の長衣に、細い縞の織り帯。首に木の実を連ねた首飾りと、小さな真鍮の鈴。",
+   "sub": "淡い灰黄の肩掛け、焦げ茶の織り帯（淡い黄の細い縞）、木の実の首飾り、真鍮の鈴",
+   "carry": "歩きでは手に何も持たない",
+   "lantern": false,
+   "sigPose": "古い年代記の本を両手で開いて、読み聞かせる",
+   "avoid": "イルゼ（お団子＋簪＋丸眼鏡）と混ざらないよう、眼鏡とお団子は使わない。紫を使わない。",
+   "face": true,
+   "recolor": false,
+   "section": "NPC_REQUEST.md §4.1",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 1,
+     "file": "npc_berna_s1.png",
+     "layout": "walk",
+     "targetH": 44,
+     "required": true
+    },
+    {
+     "n": 2,
+     "no": 2,
+     "file": "npc_berna_s2.png",
+     "layout": "act12",
+     "targetH": 44,
+     "required": true
+    },
+    {
+     "n": 3,
+     "no": 3,
+     "file": "npc_berna_s3.png",
+     "layout": "face6",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "fine",
+   "look": "fine",
+   "tier": "A",
+   "name": "フィーネ",
+   "title": "灰色のマントの少女（最初の語り部）",
+   "sex": "女",
+   "age": "見た目15歳ほど",
+   "region": "prologue",
+   "appears": "序章 P9（灯台の灯室）、森（千年樹の入口）、雪原・湿原・諸島・灰の一場面、T1・T3・T6・T8（宿の前・広場）、終盤（ロア・大書庫）、エンディング、クリア後",
+   "heightDots": {
+    "field": 42,
+    "face": 80
+   },
+   "headgearExtraDots": 2,
+   "measureH": {
+    "field": 44
+   },
+   "mainName": "青みの灰",
+   "mainHue": 220,
+   "mainHex": "#6A6E78",
+   "headShape": "浅く丸いフード＋フードから胸まで垂れる、銀に近い淡い灰の長い髪",
+   "look_ja": "ほっそりした少女。くるぶしまでの灰色のマントに浅い丸いフード、淡い灰の長い髪、静かな大きな目。マントのすそは紙のページのように細かくぎざぎざ。首に小さな火打ち石のペンダント。布の靴。",
+   "sub": "淡い灰白の内着、火打ち石の黒灰、真鍮の留め金、フードの縁に読めない古い文字の細い刺繍（銀灰の点と線だけ）",
+   "carry": "何も持たない",
+   "lantern": false,
+   "sigPose": "片手を前に差し出し、手のひらを上に向けて「言葉を手渡す」しぐさ",
+   "avoid": "シルヴァン（後ろに長く垂れる尖ったフード・緑）とモルガ（黒いベール）に似せない。フードは浅く丸く、顔ははっきり見せる。透けは描かない（消えていく見せ方はゲーム側）。",
+   "face": true,
+   "recolor": false,
+   "section": "NPC_REQUEST.md §4.1",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 4,
+     "file": "npc_fine_s1.png",
+     "layout": "walk",
+     "targetH": 42,
+     "required": true
+    },
+    {
+     "n": 2,
+     "no": 5,
+     "file": "npc_fine_s2.png",
+     "layout": "act12",
+     "targetH": 42,
+     "required": true
+    },
+    {
+     "n": 3,
+     "no": 6,
+     "file": "npc_fine_s3.png",
+     "layout": "face6",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "otto",
+   "look": "otto",
+   "tier": "A",
+   "name": "オットー",
+   "title": "ファロスの灯台守",
+   "sex": "男",
+   "age": "70歳前後",
+   "region": "prologue",
+   "appears": "序章 P7（ファロスの港）・灯台、灯が戻ったあとのファロス",
+   "heightDots": {
+    "field": 45,
+    "face": 80
+   },
+   "headgearExtraDots": 2,
+   "measureH": {
+    "field": 47
+   },
+   "mainName": "紺",
+   "mainHue": 210,
+   "mainHex": "#2C4A66",
+   "headShape": "つばの短い平たい帽子＋白い短いあごひげ",
+   "look_ja": "肩幅の広い、がっしりした老人。短く刈った白髪に白いあごひげ、潮風で赤銅色になった肌。厚い紺の船乗りの外套（真鍮のボタン）、腰に大きな鉄の鍵束（灯台の鍵）。左手に小さな真鍮のランタン。",
+   "sub": "真鍮（ボタン・ランタン）、鉄の鍵束、灰の毛糸のズボン、黒い長靴",
+   "carry": "左手に小さな真鍮のランタン（中の火は光らせない、ふつうの物として塗る）",
+   "lantern": true,
+   "sigPose": "ランタンを頭の上まで高く掲げる",
+   "avoid": "バルトロ（古い兜と羽根・左右の口ひげ）に似せない。ひげはあごひげ。",
+   "face": true,
+   "recolor": false,
+   "section": "NPC_REQUEST.md §4.1",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 7,
+     "file": "npc_otto_s1.png",
+     "layout": "walk",
+     "targetH": 45,
+     "required": true
+    },
+    {
+     "n": 2,
+     "no": 8,
+     "file": "npc_otto_s2.png",
+     "layout": "act12",
+     "targetH": 45,
+     "required": true
+    },
+    {
+     "n": 3,
+     "no": 9,
+     "file": "npc_otto_s3.png",
+     "layout": "face6",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "rowell",
+   "look": "rowell",
+   "tier": "A",
+   "name": "ロウェル",
+   "title": "記録院の若い記録官",
+   "sex": "男",
+   "age": "20歳前後",
+   "region": "prologue",
+   "appears": "序章 P5（ファロスの記録院出張所）、T2・T4・T5・T7（町の出口・広場・宿の前）、終盤（ロア・ビブリア・大書庫）、エンディング",
+   "heightDots": {
+    "field": 50,
+    "face": 80
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "field": 50
+   },
+   "mainName": "青みの白",
+   "mainHue": 210,
+   "mainHex": "#E6EAF0",
+   "headShape": "後ろで短く束ねた黒髪の小さな尾＋白いコートの高い立ち襟",
+   "look_ja": "すらりとした若者で、鋭い目。黒髪を後ろで短く束ねる。ひざ下までの白い記録官のコート（金の縁取り、高い立ち襟）、黒い細身のズボンと長靴、腰に黒い手帳の革帯、胸に銀のペン。魔物の指示書のシート56（戦闘の絵）と同じ人物。",
+   "sub": "金（縁取り・ボタン）、黒（ズボン・長靴・手帳）、銀のペン",
+   "carry": "歩きでは手を空け、手帳は腰の革帯",
+   "lantern": false,
+   "sigPose": "銀のペンを細剣のように前へ構える（戦闘の絵と同じ構えを、手前向きで）",
+   "avoid": "マルタ（白い医者の上着＋白い三角頭巾）と混ざらないよう、頭には何もかぶらず、金の縁取りをはっきり描く。眼鏡はかけない。",
+   "face": true,
+   "recolor": false,
+   "section": "NPC_REQUEST.md §4.1",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 10,
+     "file": "npc_rowell_s1.png",
+     "layout": "walk",
+     "targetH": 50,
+     "required": true
+    },
+    {
+     "n": 2,
+     "no": 11,
+     "file": "npc_rowell_s2.png",
+     "layout": "act12",
+     "targetH": 50,
+     "required": true
+    },
+    {
+     "n": 3,
+     "no": 12,
+     "file": "npc_rowell_s3.png",
+     "layout": "face6",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "lazaro",
+   "look": "lazaro",
+   "tier": "A",
+   "name": "ラザロ",
+   "title": "記録院の長・大書記",
+   "sex": "男",
+   "age": "60歳前後",
+   "region": "finale",
+   "appears": "終盤（白の大書庫 5 階の対面・6 階）、エンディング（大書庫の入口でロウェルに肩を借りる、後日談）",
+   "heightDots": {
+    "field": 52,
+    "face": 80
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "field": 52
+   },
+   "mainName": "象牙がかった白",
+   "mainHue": 45,
+   "mainHex": "#ECE6D8",
+   "headShape": "後ろへなでつけた灰色の髪＋整えた灰色のあごひげ＋肩から垂れる長い肩衣",
+   "look_ja": "背の高い痩せた初老の男。静かで悲しげな目。床まで届く白い長衣に銀の刺繍、肩から灰青の長い肩衣。右手に銀の羽ペン、左の脇に白い本（白の書）。魔物の指示書のシート62（戦闘の絵）と同じ人物。",
+   "sub": "銀の刺繍、灰青の肩衣（#5A6A84）、白い本、銀の羽ペン",
+   "carry": "白い本を左の脇に、羽ペンを右手に（歩きでも持つ）",
+   "lantern": false,
+   "sigPose": "白い本を開いて胸の前に掲げ、羽ペンを添える",
+   "avoid": "本やペンを光らせない。ロウェルの金に対し、ラザロの飾りは銀だけ。",
+   "face": true,
+   "recolor": false,
+   "section": "NPC_REQUEST.md §4.1",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 93,
+     "file": "npc_lazaro_s1.png",
+     "layout": "walk",
+     "targetH": 52,
+     "required": true
+    },
+    {
+     "n": 2,
+     "no": 94,
+     "file": "npc_lazaro_s2.png",
+     "layout": "act12",
+     "targetH": 52,
+     "required": true
+    },
+    {
+     "n": 3,
+     "no": 95,
+     "file": "npc_lazaro_s3.png",
+     "layout": "face6",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "noa",
+   "look": "noa",
+   "tier": "A",
+   "name": "ノア",
+   "title": "ビブリアの宿のおかみ",
+   "sex": "女",
+   "age": "38歳前後",
+   "region": "finale",
+   "appears": "終盤（ビブリア到着・ラザロ戦のあと）、エンディング（ビブリアの朝に歌う）",
+   "heightDots": {
+    "field": 47,
+    "face": 80
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "field": 47
+   },
+   "mainName": "琥珀",
+   "mainHue": 35,
+   "mainHex": "#B0782E",
+   "headShape": "左の肩の前へ垂らした、ゆるい細い三つ編み＋髪にさした白い小花",
+   "look_ja": "背すじの伸びた、温かい顔のおかみ。栗色の長い髪をゆるい三つ編みにして左肩の前へ。白い町でただ一人、色のある服：深い琥珀色の上着と淡い灰黄の長い前掛け、袖をまくる。胸に小さな木の鳥のブローチ。",
+   "sub": "淡い灰黄の前掛け、焦げ茶の長靴、木の鳥のブローチ",
+   "carry": "何も持たない",
+   "lantern": false,
+   "sigPose": "両手を胸の前で軽く組み、目を閉じて歌う",
+   "avoid": "セルマ（太い一本の三つ編み＋鉄の額当て）に似せない。三つ編みは細くゆるく、額当てなし。",
+   "face": true,
+   "recolor": false,
+   "section": "NPC_REQUEST.md §4.1",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 96,
+     "file": "npc_noa_s1.png",
+     "layout": "walk",
+     "targetH": 47,
+     "required": true
+    },
+    {
+     "n": 2,
+     "no": 97,
+     "file": "npc_noa_s2.png",
+     "layout": "act12",
+     "targetH": 47,
+     "required": true
+    },
+    {
+     "n": 3,
+     "no": 98,
+     "file": "npc_noa_s3.png",
+     "layout": "face6",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "tadeo",
+   "look": "npc_tadeo",
+   "tier": "B",
+   "name": "タデオ",
+   "title": "灯守組合の油売り",
+   "sex": "男",
+   "age": "40代",
+   "region": "prologue",
+   "appears": "ファロス（序章）、宿場・各地方の町の夜市、エンディングのカード",
+   "heightDots": {
+    "field": 48
+   },
+   "headgearExtraDots": 2,
+   "measureH": {
+    "field": 50
+   },
+   "mainName": "煤けた紺鼠",
+   "mainHue": 225,
+   "mainHex": "#4A4E5C",
+   "headShape": "つばのない丸い毛織りの帽子＋太い口ひげ＋背中の小さな油樽",
+   "look_ja": "人のよさそうな丸顔の商人。背中に小さな油樽を背負い、腰に長い注ぎ口の油差しとひしゃく。煤けた紺鼠の組合の上着に、胸に炎の形の真鍮の組合章。",
+   "sub": "真鍮の組合章、橙の炎の縫い取り（小さく）、焦げ茶の油樽",
+   "carry": "腰に油差し（手は空ける）",
+   "lantern": false,
+   "sigPose": "油差しを片手で掲げ、もう片手の指で値段を示す",
+   "avoid": null,
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 13,
+     "file": "npc_tadeo_s1.png",
+     "layout": "walk_act",
+     "targetH": 48,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "yena",
+   "look": "npc_yena",
+   "tier": "B",
+   "name": "イェナ",
+   "title": "静夜会の説き手",
+   "sex": "女",
+   "age": "30代",
+   "region": "prologue",
+   "appears": "ファロスの桟橋（序章、遠くで説いている）、湿原（エマの家）、そのほか 3 地方の町",
+   "heightDots": {
+    "field": 47
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "field": 47
+   },
+   "mainName": "暖かい灰白",
+   "mainHue": 40,
+   "mainHex": "#C8C4BA",
+   "headShape": "肩に下ろしたフード＋長い黒髪を低い位置で一本にまとめる",
+   "look_ja": "穏やかにほほえむ、姿勢のよい女。灰白の無地の長衣、両手を袖の中で重ねる。胸に何も書いていない白い札を紐で下げる（名を差し出した印）。",
+   "sub": "淡い灰の帯、白い札、黒い髪",
+   "carry": "両手は袖の中",
+   "lantern": false,
+   "sigPose": "両手をそっと前へ差し伸べて、説く",
+   "avoid": "フィーネ（青みの灰のマントと丸いフード）と混ざらないよう、フードはかぶらず肩に下ろす。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 14,
+     "file": "npc_yena_s1.png",
+     "layout": "walk_act",
+     "targetH": 47,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "lotta",
+   "look": "npc_lotta",
+   "tier": "B",
+   "name": "ロッタ",
+   "title": "行商人（町の名物を運ぶ連作）",
+   "sex": "女",
+   "age": "30代",
+   "region": "desert",
+   "appears": "宿場「砂の縁」、そのあと各地方の町と宿場をめぐる",
+   "heightDots": {
+    "field": 45
+   },
+   "headgearExtraDots": 12,
+   "measureH": {
+    "field": 57
+   },
+   "mainName": "柿色",
+   "mainHue": 20,
+   "mainHex": "#A8582E",
+   "headShape": "頭より高く積み上げた背負い籠（塩の袋・毛皮・蓮の実の包み）",
+   "look_ja": "小柄できびきびした女行商人。栗色の短い髪を布でまとめ、頭より高く荷を積んだ背負い籠を背負う。柿色の旅装にたすき掛けの帳面袋。",
+   "sub": "灰茶の籠、生成りでない淡い灰黄の包み、焦げ茶の旅靴",
+   "carry": "手は空ける（荷は背中）",
+   "lantern": false,
+   "sigPose": "籠から包みを1つ出して、得意げに見せる",
+   "avoid": "ベラドナ（頭巾＋背負い箱と薬草の束）と混ざらないよう、箱でなく編んだ籠、頭巾でなく小さな布。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 38,
+     "file": "npc_lotta_s1.png",
+     "layout": "walk_act",
+     "targetH": 45,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "gord",
+   "look": "npc_gord",
+   "tier": "B",
+   "name": "ゴード",
+   "title": "樵頭（ピムの父）",
+   "sex": "男",
+   "age": "40代",
+   "region": "forest",
+   "appears": "フェルン（樵の詰所・自分の家）、森の解決後の広場",
+   "heightDots": {
+    "field": 50
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "field": 50
+   },
+   "mainName": "深い苔色",
+   "mainHue": 95,
+   "mainHex": "#4A5A32",
+   "headShape": "短い焦げ茶の髪と四角いあごひげ＋背中の大きな両手斧",
+   "look_ja": "太い腕と厚い胸の、たくましい樵頭。右足に布を巻いて少し引きずる（足をくじいている）。深い苔色の毛織りの上着、灰緑の腰巻き、背中に大きな両手斧。",
+   "sub": "灰緑の腰巻き、焦げ茶の革ひもの脚絆、鉄の斧頭",
+   "carry": "斧は背中（手は空ける）",
+   "lantern": false,
+   "sigPose": "斧を地面に立て、柄の上に両手を重ねて立つ",
+   "avoid": "ハーゲン（刈り上げ＋眼帯＋毛皮）・ドッカ（禿げ頭＋編みひげ）に似せない。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 23,
+     "file": "npc_gord_s1.png",
+     "layout": "walk_act",
+     "targetH": 50,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "katri",
+   "look": "npc_pim_mother",
+   "tier": "B",
+   "name": "カトリ",
+   "title": "ピムの母",
+   "sex": "女",
+   "age": "30代",
+   "region": "forest",
+   "appears": "フェルン（自分の家）、森の解決後",
+   "heightDots": {
+    "field": 46
+   },
+   "headgearExtraDots": 2,
+   "measureH": {
+    "field": 48
+   },
+   "mainName": "若草色",
+   "mainHue": 80,
+   "mainHex": "#7A8A48",
+   "headShape": "後ろでまとめた栗色の髪に小さな三角の頭布",
+   "look_ja": "ふっくらした優しい母親。若草色の上衣に淡い灰黄の前掛け。胸にピムとおそろいの、どんぐり形の小さなフェルト帽を大事そうに抱える。",
+   "sub": "淡い灰黄の前掛けと頭布、どんぐり色のフェルト帽",
+   "carry": "どんぐり帽を胸に抱く（歩きでも）",
+   "lantern": false,
+   "sigPose": "どんぐり帽を両手で前へ差し出す",
+   "avoid": null,
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 24,
+     "file": "npc_katri_s1.png",
+     "layout": "walk_act",
+     "targetH": 46,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "pim",
+   "look": "npc_pim",
+   "tier": "B",
+   "name": "ピム",
+   "title": "迷子の子（10歳）",
+   "sex": "男",
+   "age": "10歳",
+   "region": "forest",
+   "appears": "迷いの森（苔の語り石の前）・野営地、一行の後ろについてくる（連れて進む選択）、フェルン、エンディングのカード",
+   "heightDots": {
+    "field": 36
+   },
+   "headgearExtraDots": 3,
+   "measureH": {
+    "field": 39
+   },
+   "mainName": "若葉色",
+   "mainHue": 85,
+   "mainHex": "#8AAA3C",
+   "headShape": "どんぐり形の小さなフェルト帽＋帽子からはねた茶色の髪",
+   "look_ja": "頭の大きい、元気な小さい男の子。どんぐり形のフェルト帽、はねた茶色の髪、ひざに泥。若葉色の短い上着に焦げ茶の半ズボン、腰に小さな木の笛と木の実の袋。",
+   "sub": "どんぐり色の帽子、焦げ茶の半ズボン、生成りでない淡い灰黄のシャツ",
+   "carry": "手は空ける",
+   "lantern": false,
+   "sigPose": "しゃがんで両腕を広げ、後ろの何かをかばう（小鹿をかばう姿）",
+   "avoid": "ティッタ（大きすぎるハンチング帽）・テオ（とんがり帽子）に似せない。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 25,
+     "file": "npc_pim_s1.png",
+     "layout": "walk_act",
+     "targetH": 36,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "hans",
+   "look": "npc_hans",
+   "tier": "B",
+   "name": "ハンス",
+   "title": "樵（倒木の下で見つかる）",
+   "sex": "男",
+   "age": "30代",
+   "region": "forest",
+   "appears": "迷いの森（倒木の下・野営地）、フェルン",
+   "heightDots": {
+    "field": 50
+   },
+   "headgearExtraDots": 2,
+   "measureH": {
+    "field": 52
+   },
+   "mainName": "オリーブ",
+   "mainHue": 75,
+   "mainHex": "#5E6A3A",
+   "headShape": "丸い革の平たい帽子＋赤茶のあごひげ",
+   "look_ja": "大柄でおおらかな樵。丸い革の帽子に赤茶のあごひげ、オリーブ色の厚い上着、背中に片手斧。",
+   "sub": "焦げ茶の帽子とベルト、灰緑の脚絆",
+   "carry": "斧は背中",
+   "lantern": false,
+   "sigPose": "斧を肩に担いで、豪快に笑う",
+   "avoid": null,
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 26,
+     "file": "npc_hans_s1.png",
+     "layout": "walk_act",
+     "targetH": 50,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "ben",
+   "look": "npc_ben",
+   "tier": "B",
+   "name": "ベン",
+   "title": "樵（狼に囲まれていた）",
+   "sex": "男",
+   "age": "30代",
+   "region": "forest",
+   "appears": "迷いの森（狼に囲まれた広場・野営地）、フェルン",
+   "heightDots": {
+    "field": 48
+   },
+   "headgearExtraDots": 2,
+   "measureH": {
+    "field": 50
+   },
+   "mainName": "焦げた橙茶",
+   "mainHue": 28,
+   "mainHex": "#8A5C30",
+   "headShape": "つんつん立った麦わら色の髪＋短いあごひげ",
+   "look_ja": "せっかちで声の大きい樵。つんつんの麦わら色の髪、焦げた橙茶の上着、首から木の笛（仲間を呼ぶ笛）を紐で下げる。",
+   "sub": "深緑の腰巻き、木の笛、焦げ茶の長靴",
+   "carry": "笛は首から",
+   "lantern": false,
+   "sigPose": "笛を口にくわえて吹く",
+   "avoid": "ロウガ（逆立つ黒髪＋白い鉢巻）に似せない。髪は麦わら色で短く、鉢巻なし。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 27,
+     "file": "npc_ben_s1.png",
+     "layout": "walk_act",
+     "targetH": 48,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "roy",
+   "look": "npc_roy",
+   "tier": "B",
+   "name": "ロイ",
+   "title": "若い樵（木のうろに隠れていた）",
+   "sex": "男",
+   "age": "10代後半",
+   "region": "forest",
+   "appears": "迷いの森（木のうろ・野営地）、フェルン",
+   "heightDots": {
+    "field": 46
+   },
+   "headgearExtraDots": 1,
+   "measureH": {
+    "field": 47
+   },
+   "mainName": "深い青緑",
+   "mainHue": 160,
+   "mainHex": "#4A6A5A",
+   "headShape": "黒い短髪に、黄土色の細い鉢巻",
+   "look_ja": "ひょろりとした気の弱そうな若い樵。黒い短髪に黄土色の細い鉢巻、深い青緑の上着、腰に布で包んだ弁当箱。",
+   "sub": "黄土の鉢巻、焦げ茶のベルト、布包みの弁当箱",
+   "carry": "弁当箱は腰",
+   "lantern": false,
+   "sigPose": "頭をかいて照れる",
+   "avoid": "鉢巻を赤や白にしない（ロウガ・アルンの赤と混ざる）。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 28,
+     "file": "npc_roy_s1.png",
+     "layout": "walk_act",
+     "targetH": 46,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "rita",
+   "look": "npc_rita",
+   "tier": "B",
+   "name": "リタ",
+   "title": "木の上の家の歌い手",
+   "sex": "女",
+   "age": "20歳前後",
+   "region": "forest",
+   "appears": "フェルン（いちばん高い木の歌の家）、森の締めの広場の歌",
+   "heightDots": {
+    "field": 46
+   },
+   "headgearExtraDots": 1,
+   "measureH": {
+    "field": 47
+   },
+   "mainName": "深い水草色",
+   "mainHue": 190,
+   "mainHex": "#3C7482",
+   "headShape": "肩までのはちみつ色のボブ＋髪に葉の形の飾り",
+   "look_ja": "澄んだ目の細身の娘。はちみつ色のボブに葉の髪飾り、深い青緑のゆったりした上衣と、足首までの灰茶のスカート、肩に長い薄手のショール。",
+   "sub": "灰茶のスカート、淡い灰黄のショール、葉の髪飾り（緑）",
+   "carry": "手は空ける",
+   "lantern": false,
+   "sigPose": "胸に手を当て、顔を上げて歌う",
+   "avoid": "ザフィラ（鮮やかなターコイズ・金貨の額飾り・長いベール）より暗く、飾りは葉だけ。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 29,
+     "file": "npc_rita_s1.png",
+     "layout": "walk_act",
+     "targetH": 46,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "hanna",
+   "look": "npc_hanna",
+   "tier": "B",
+   "name": "ハンナ",
+   "title": "村の年寄り（ロアの出）",
+   "sex": "女",
+   "age": "70代",
+   "region": "forest",
+   "appears": "フェルン（広場のそば）",
+   "heightDots": {
+    "field": 43
+   },
+   "headgearExtraDots": 2,
+   "measureH": {
+    "field": 45
+   },
+   "mainName": "暖かい煉瓦色",
+   "mainHue": 15,
+   "mainHex": "#A05840",
+   "headShape": "白髪を包んだ生成りでない淡い灰黄のバンダナ＋木の杖",
+   "look_ja": "腰の少し曲がった、にこにこした老婆。バンダナで白髪を包み、暖かい煉瓦色の上着に、ロアの語り部の里の細い縞の織り帯（ベルナと同じ柄）。木の杖をつく。",
+   "sub": "淡い灰黄のバンダナ、焦げ茶の織り帯（淡い黄の細い縞）、木の杖",
+   "carry": "右手に木の杖",
+   "lantern": false,
+   "sigPose": "杖に両手を乗せて、懐かしそうに目を細める",
+   "avoid": null,
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 30,
+     "file": "npc_hanna_s1.png",
+     "layout": "walk_act",
+     "targetH": 43,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "yura_elder",
+   "look": "npc_yura_elder",
+   "tier": "B",
+   "name": "ユラの長老",
+   "title": "名を忘れた人々の長",
+   "sex": "女",
+   "age": "80代",
+   "region": "forest",
+   "appears": "隠れ里ユラ",
+   "heightDots": {
+    "field": 43
+   },
+   "headgearExtraDots": 3,
+   "measureH": {
+    "field": 46
+   },
+   "mainName": "灰緑",
+   "mainHue": 110,
+   "mainHex": "#5A6C4C",
+   "headShape": "頭と肩をおおう苔色のベール＋ベールから垂れる長い白髪",
+   "look_ja": "背の曲がった小さな老女。頭から肩まで苔色のベール、長い白髪、首から何も書いていない木の名札。灰緑の長い衣。",
+   "sub": "苔色のベール（#8A9A78）、木の名札、焦げ茶の杖",
+   "carry": "手に短い杖",
+   "lantern": false,
+   "sigPose": "ベールの端を持ち上げて、空を見上げる",
+   "avoid": "モルガ（黒い喪のベールで目を隠す）と混ざらないよう、ベールは明るい苔色で顔は見せる。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 31,
+     "file": "npc_yura_elder_s1.png",
+     "layout": "walk_act",
+     "targetH": 43,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "elm",
+   "look": "elm",
+   "tier": "B",
+   "name": "エルム",
+   "title": "森の主（霊）",
+   "sex": "男",
+   "age": "千年",
+   "region": "forest",
+   "appears": "千年樹 2 階（根食らいのあと）、解決後の千年樹",
+   "heightDots": {
+    "field": 54
+   },
+   "headgearExtraDots": 4,
+   "measureH": {
+    "field": 58
+   },
+   "mainName": "淡い青緑",
+   "mainHue": 195,
+   "mainHex": "#6A9AB0",
+   "headShape": "小枝を編んだ冠＋床まで流れる長い白い髪とひげ＋細長い尖った耳",
+   "look_ja": "背の高い老いた樹の精。長い白い髪とひげが木の根のように流れ、細長い尖った耳、小枝の冠。樹皮の模様の長い衣は淡い青緑で、すそは足元で細くすぼまり、足は見えない（浮いている）。",
+   "sub": "白い髪とひげ、樹皮の模様（灰青）、小枝の冠（焦げ茶と若葉）",
+   "carry": "何も持たない",
+   "lantern": false,
+   "sigPose": "両腕をゆっくり広げて、森に語りかける",
+   "avoid": "光らせない・透かさない（霊の見せ方はゲーム側）。シルヴァンのフードは使わない。",
+   "face": false,
+   "recolor": false,
+   "spirit": true,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 32,
+     "file": "npc_elm_s1.png",
+     "layout": "walk_act",
+     "targetH": 54,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "zaid",
+   "look": "npc_zaid",
+   "tier": "B",
+   "name": "ザイード",
+   "title": "隊商の長",
+   "sex": "男",
+   "age": "50代",
+   "region": "desert",
+   "appears": "カシム（隊商ギルド）、3 つの野営地（一行についてくる）",
+   "heightDots": {
+    "field": 49
+   },
+   "headgearExtraDots": 3,
+   "measureH": {
+    "field": 52
+   },
+   "mainName": "藍",
+   "mainHue": 222,
+   "mainHex": "#2E4470",
+   "headShape": "藍の頭布を高く巻き、顔布を首に下ろす＋短い灰色のあごひげ",
+   "look_ja": "日焼けした褐色の肌の、落ち着いた隊商の長。藍の頭布、砂色の長い外衣に藍の帯、腰に星を読む真鍮の小さな円盤。",
+   "sub": "砂色の外衣（#C8B48A）、真鍮の円盤、革のサンダル",
+   "carry": "手は空ける",
+   "lantern": false,
+   "sigPose": "片手を高く上げて、星を指さす",
+   "avoid": null,
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 39,
+     "file": "npc_zaid_s1.png",
+     "layout": "walk_act",
+     "targetH": 49,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "nadia",
+   "look": "npc_nadia",
+   "tier": "B",
+   "name": "ナディア",
+   "title": "カシムの踊り子（王の歌を歌う）",
+   "sex": "女",
+   "age": "20代",
+   "region": "desert",
+   "appears": "カシム（泉の広場）、砂漠の締めの場面",
+   "heightDots": {
+    "field": 47
+   },
+   "headgearExtraDots": 4,
+   "measureH": {
+    "field": 51
+   },
+   "mainName": "夕焼けの橙",
+   "mainHue": 22,
+   "mainHex": "#C0602A",
+   "headShape": "高い位置の一本結びの黒髪に、長い藍の布を編み込む",
+   "look_ja": "しなやかな褐色の肌の踊り子。黒髪を頭の高い所で一本に結び、藍の長い布を編み込んで背に垂らす。深い夕焼けの橙の短い胴着とすその広がるズボン、片方の足首にだけ小さな鈴。",
+   "sub": "藍の布と帯、真鍮の腕輪（左だけ）、片足の鈴",
+   "carry": "手は空ける",
+   "lantern": false,
+   "sigPose": "片手を頭上へ、片足を上げて踊りの形",
+   "avoid": "ザフィラ（ターコイズ・金貨の額飾り・長いベール・腰までの波打つ髪）に似せない。ベールと額飾りは使わない。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 40,
+     "file": "npc_nadia_s1.png",
+     "layout": "walk_act",
+     "targetH": 47,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "abul",
+   "look": "npc_abul",
+   "tier": "B",
+   "name": "アブル",
+   "title": "王墓の番の年寄り",
+   "sex": "男",
+   "age": "80代",
+   "region": "desert",
+   "appears": "カシム（王墓の番の家）、王墓のオアシス",
+   "heightDots": {
+    "field": 43
+   },
+   "headgearExtraDots": 2,
+   "measureH": {
+    "field": 45
+   },
+   "mainName": "砂色",
+   "mainHue": 40,
+   "mainHex": "#B8A078",
+   "headShape": "砂色の頭布＋胸まで届く長い白いひげ",
+   "look_ja": "背の曲がった痩せた老人。長い白いひげ、砂色の頭布と外衣、首から石の印章（砂王の印章）を紐で下げる。長い木の杖。",
+   "sub": "灰の帯、石の印章（灰緑）、木の杖",
+   "carry": "右手に長い杖",
+   "lantern": false,
+   "sigPose": "両ひざをついて、手のひらを上に向けて祈る（夕べの祈り）",
+   "avoid": null,
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 41,
+     "file": "npc_abul_s1.png",
+     "layout": "walk_act",
+     "targetH": 43,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "fara",
+   "look": "npc_fara",
+   "tier": "B",
+   "name": "ファラ",
+   "title": "泉の番人の娘",
+   "sex": "女",
+   "age": "14歳",
+   "region": "desert",
+   "appears": "カシム（枯れかけた泉のほとり）",
+   "heightDots": {
+    "field": 40
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "field": 40
+   },
+   "mainName": "泉の青",
+   "mainHue": 210,
+   "mainHex": "#3A6EA0",
+   "headShape": "黒髪の二つ結び（耳の下で丸く結ぶ）",
+   "look_ja": "大きな目の、利発な少女。黒髪の二つ結び、泉の青の短い上衣と砂色のスカート、素焼きの小さな水がめを腰に抱える。",
+   "sub": "砂色のスカート、素焼きの水がめ（赤茶でなく淡い土色）",
+   "carry": "水がめを片腕に抱える",
+   "lantern": false,
+   "sigPose": "水がめを傾けて、中をのぞき込む",
+   "avoid": "ザフィラのターコイズより青く、暗く。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 42,
+     "file": "npc_fara_s1.png",
+     "layout": "walk_act",
+     "targetH": 40,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "rashid",
+   "look": "npc_rashid",
+   "tier": "B",
+   "name": "ラシード",
+   "title": "砂の鷹団の頭（日輪同盟の脱走兵）",
+   "sex": "男",
+   "age": "40代",
+   "region": "desert",
+   "appears": "砂漠の野営地 1「岩の井戸」、砂の鷹団のアジト",
+   "heightDots": {
+    "field": 50
+   },
+   "headgearExtraDots": 4,
+   "measureH": {
+    "field": 54
+   },
+   "mainName": "焦げた黒茶",
+   "mainHue": 25,
+   "mainHex": "#3A3028",
+   "headShape": "黒い頭布に鷹の羽根を 1 本＋顔布で口元をおおう",
+   "look_ja": "痩せて背の高い、鋭い目の男。黒い頭布と顔布、古い軍の胸当て（金の日輪の紋が削られている）、背に曲刀、左腕に鷹を止まらせる厚い革の籠手。",
+   "sub": "色あせた金（削れた紋）、砂色の外衣のすそ、鷹の羽根（茶と白）",
+   "carry": "曲刀は背中、手は空ける",
+   "lantern": false,
+   "sigPose": "左腕を掲げ、右手の指で鷹笛を吹く",
+   "avoid": "ハーゲン（鉄の黒灰・眼帯・毛皮）に似せない。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 43,
+     "file": "npc_rashid_s1.png",
+     "layout": "walk_act",
+     "targetH": 50,
+     "required": true
+    },
+    {
+     "n": "btl",
+     "no": 102,
+     "file": "npc_rashid_btl.png",
+     "layout": "battle_single",
+     "targetH": 68,
+     "required": false
+    }
+   ]
+  },
+  {
+   "id": "hazal",
+   "look": "npc_hazal",
+   "tier": "B",
+   "name": "ハザル王",
+   "title": "名を取り戻した砂の王（霊）",
+   "sex": "男",
+   "age": "古の王",
+   "region": "desert",
+   "appears": "王墓の王の間（戦いのあと、または名を呼んだあと）",
+   "heightDots": {
+    "field": 52
+   },
+   "headgearExtraDots": 6,
+   "measureH": {
+    "field": 58
+   },
+   "mainName": "群青",
+   "mainHue": 230,
+   "mainHex": "#2E3E80",
+   "headShape": "欠けていない金の冠＋ゆるくほどけた砂色の包帯の端",
+   "look_ja": "名を取り戻した王の霊。包帯がほどけ、下から穏やかな顔の老王が現れた姿。欠けていない金の冠、群青と金の胸飾り、胸の楕円の札には王の名の 3 つの記号。腰から下は砂の渦になって細くすぼまる（足は見えない）。",
+   "sub": "金（冠・胸飾り・王笏）、砂色の包帯",
+   "carry": "王笏を胸に抱く",
+   "lantern": false,
+   "sigPose": "王笏を胸に抱き、目を閉じて頭を下げる",
+   "avoid": "魔物の指示書のシート18（名なき砂の王）ののっぺりした顔にしない。人の顔で描く。透かさない。",
+   "face": false,
+   "recolor": false,
+   "spirit": true,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 44,
+     "file": "npc_hazal_s1.png",
+     "layout": "walk_act",
+     "targetH": 52,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "jorn",
+   "look": "npc_jorn",
+   "tier": "B",
+   "name": "ヨルン",
+   "title": "ユールの村長",
+   "sex": "男",
+   "age": "50代",
+   "region": "snow",
+   "appears": "ユール（大かまどの集会所）、大火祭、遅れた祭の二日目",
+   "heightDots": {
+    "field": 48
+   },
+   "headgearExtraDots": 4,
+   "measureH": {
+    "field": 52
+   },
+   "mainName": "松葉色",
+   "mainHue": 160,
+   "mainHex": "#2F5A48",
+   "headShape": "耳当ての付いた毛皮の帽子＋短く四角い金茶のあごひげ",
+   "look_ja": "声の太い頼れる村長。耳当ての毛皮の帽子、毛皮の縁の厚い松葉色の上着に、藍と山吹の幾何学刺繍の帯。村長の印の、先に鉄の輪の付いた木の杖。",
+   "sub": "白い毛皮の縁、藍と山吹の刺繍の帯、木の杖",
+   "carry": "右手に村長の杖",
+   "lantern": false,
+   "sigPose": "杖で地面を突き、片手を広げて演説する",
+   "avoid": "ドッカ（二股の編みひげ）に似せない。ひげは短く四角い。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 50,
+     "file": "npc_jorn_s1.png",
+     "layout": "walk_act",
+     "targetH": 48,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "sonja",
+   "look": "npc_sonja",
+   "tier": "B",
+   "name": "ソーニャ",
+   "title": "火守りの娘",
+   "sex": "女",
+   "age": "16歳前後",
+   "region": "snow",
+   "appears": "ユール（火守りの家・祭の広間の夜数えの板）、エンディングのカード",
+   "heightDots": {
+    "field": 42
+   },
+   "headgearExtraDots": 3,
+   "measureH": {
+    "field": 45
+   },
+   "mainName": "茜の橙",
+   "mainHue": 25,
+   "mainHex": "#C8703A",
+   "headShape": "白い毛皮の縁のフード付きケープ＋二本の長い亜麻色の三つ編み",
+   "look_ja": "頬の赤い、まっすぐな目の娘。二本の長い亜麻色の三つ編み、白い毛皮の縁のケープ、暖かい茜の橙の厚い上着。腰に火打ち袋と、刻みを入れる小刀。",
+   "sub": "白い毛皮、焦げ茶の火打ち袋、灰の長靴",
+   "carry": "手は空ける",
+   "lantern": false,
+   "sigPose": "しゃがんで、小刀で板に刻みを入れる",
+   "avoid": "セルマ（プラチナの一本の三つ編み＋額当て）に似せない。三つ編みは二本。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 51,
+     "file": "npc_sonja_s1.png",
+     "layout": "walk_act",
+     "targetH": 42,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "hald",
+   "look": "npc_hald",
+   "tier": "B",
+   "name": "ハルド",
+   "title": "見張りの老人",
+   "sex": "男",
+   "age": "70代",
+   "region": "snow",
+   "appears": "ユール（北門の見張り台）",
+   "heightDots": {
+    "field": 44
+   },
+   "headgearExtraDots": 3,
+   "measureH": {
+    "field": 47
+   },
+   "mainName": "灰青",
+   "mainHue": 210,
+   "mainHex": "#5A6878",
+   "headShape": "毛皮のフード＋白い太い眉と、頬の古い凍傷のあと",
+   "look_ja": "背の少し曲がった、無口な老兵。厚い灰青の毛皮の外套とフード、背中に古い槍、左手の手袋は指が 3 本（2 本ぶんを縫い閉じてある）。",
+   "sub": "灰の毛皮、焦げ茶の革、古い鉄の槍先",
+   "carry": "槍は背中",
+   "lantern": false,
+   "sigPose": "片手を目の上にかざして、遠くを見張る",
+   "avoid": null,
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 52,
+     "file": "npc_hald_s1.png",
+     "layout": "walk_act",
+     "targetH": 44,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "emma",
+   "look": "npc_emma",
+   "tier": "B",
+   "name": "エマ",
+   "title": "子どもが消えた母",
+   "sex": "女",
+   "age": "30代",
+   "region": "marsh",
+   "appears": "ロッホ（宿・自分の家）、解決後",
+   "heightDots": {
+    "field": 46
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "field": 46
+   },
+   "mainName": "灰緑",
+   "mainHue": 120,
+   "mainHex": "#6A7A68",
+   "headShape": "ほつれた栗色の髪を低く結ぶ＋肩の霧よけの肩掛け",
+   "look_ja": "やつれた顔の母親。ほつれた栗色の髪、灰緑の霧よけの肩掛け、泥茶の長いスカート、手に子どもの小さな布人形を握る。",
+   "sub": "泥茶のスカート、布人形（淡い黄）",
+   "carry": "片手に布人形",
+   "lantern": false,
+   "sigPose": "両手で顔をおおって泣く",
+   "avoid": null,
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 56,
+     "file": "npc_emma_s1.png",
+     "layout": "walk_act",
+     "targetH": 46,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "tobias",
+   "look": "npc_tobias",
+   "tier": "B",
+   "name": "トビアス",
+   "title": "鐘つき",
+   "sex": "男",
+   "age": "40代",
+   "region": "marsh",
+   "appears": "ロッホ（鐘楼）、推理の証拠、解決後の鐘の調律",
+   "heightDots": {
+    "field": 48
+   },
+   "headgearExtraDots": 2,
+   "measureH": {
+    "field": 50
+   },
+   "mainName": "緑青",
+   "mainHue": 165,
+   "mainHex": "#4A8A78",
+   "headShape": "頭をすっぽり包む革の耳当て帽＋背の丸い大きな体",
+   "look_ja": "背の丸い大柄な鐘つき。革の耳当て帽、緑青色（古い銅の色）の厚い上着、首から大きな鉄の鐘の鍵、小脇に鐘楼の記録帳。",
+   "sub": "焦げ茶の革、鉄の鍵、灰の記録帳",
+   "carry": "記録帳を小脇に",
+   "lantern": false,
+   "sigPose": "両手で綱を引き下ろして、鐘をつくしぐさ",
+   "avoid": "ティッタのティールより青緑を淡く、頭は革の帽子。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 57,
+     "file": "npc_tobias_s1.png",
+     "layout": "walk_act",
+     "targetH": 48,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "beppo",
+   "look": "npc_beppo",
+   "tier": "B",
+   "name": "ベッポ",
+   "title": "人形師（容疑者の一人）",
+   "sex": "男",
+   "age": "50代",
+   "region": "marsh",
+   "appears": "ロッホ（人形師の店）、集会",
+   "heightDots": {
+    "field": 43
+   },
+   "headgearExtraDots": 2,
+   "measureH": {
+    "field": 45
+   },
+   "mainName": "からし色",
+   "mainHue": 45,
+   "mainHex": "#C8A040",
+   "headShape": "もじゃもじゃの黒髪に小さな丸い帽子＋大きな鼻",
+   "look_ja": "背の低い、丸いおどけた人形師。もじゃもじゃの黒髪に小さな帽子、からし色の継ぎはぎのチョッキ、肩に糸のついたあやつり人形。",
+   "sub": "継ぎはぎの布（くすんだ緑と茶）、あやつり人形（灰白の顔）",
+   "carry": "あやつり人形を片手に",
+   "lantern": false,
+   "sigPose": "あやつり人形を片手で踊らせる",
+   "avoid": null,
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 58,
+     "file": "npc_beppo_s1.png",
+     "layout": "walk_act",
+     "targetH": 43,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "klaus",
+   "look": "npc_klaus",
+   "tier": "B",
+   "name": "クラウス",
+   "title": "記録院ロッホ出張所の記録官",
+   "sex": "男",
+   "age": "30代",
+   "region": "marsh",
+   "appears": "ロッホ（記録院の出張所）、解決の場面（楽譜を書き直す）",
+   "heightDots": {
+    "field": 47
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "field": 47
+   },
+   "mainName": "記録院の白",
+   "mainHue": 210,
+   "mainHex": "#E0E4EA",
+   "headShape": "きっちり七三に分けた灰金の髪＋丸い眼鏡",
+   "look_ja": "まじめで気の弱そうな記録官。丸い眼鏡に、きっちり分けた灰金の髪。記録院の白い短い上着（縁取りなし、袖にインクのしみ）、腕に帳面と羽ペン。",
+   "sub": "灰の襟、黒いインクのしみ、帳面（焦げ茶）",
+   "carry": "帳面を片腕に",
+   "lantern": false,
+   "sigPose": "帳面を開いて首をひねる",
+   "avoid": "ロウェル（金の縁取り・長いコート・束ねた黒髪）に似せない。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 59,
+     "file": "npc_klaus_s1.png",
+     "layout": "walk_act",
+     "targetH": 47,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "melda",
+   "look": "npc_melda",
+   "tier": "B",
+   "name": "メルダ",
+   "title": "霧の館の魔女（霊）",
+   "sex": "女",
+   "age": "古い館の主",
+   "region": "marsh",
+   "appears": "霧の館（1 階・2 階）、鐘沈みの沼（霧食らいのあと）",
+   "heightDots": {
+    "field": 46
+   },
+   "headgearExtraDots": 5,
+   "measureH": {
+    "field": 51
+   },
+   "mainName": "霧の灰青",
+   "mainHue": 210,
+   "mainHex": "#7A8A9A",
+   "headShape": "高く結い上げた銀髪＋小さな鐘の髪飾り",
+   "look_ja": "背の高い、品のある老婦人の霊。高く結い上げた銀髪、霧の灰青の古い館のドレス（高い襟、長いすそ）、首に小さな鐘の首飾り。すそは足元で細くすぼまる（浮いている）。",
+   "sub": "銀、白いレースの襟、小さな真鍮の鐘",
+   "carry": "何も持たない",
+   "lantern": false,
+   "sigPose": "片手を胸に当て、目を閉じて鐘の歌を歌う",
+   "avoid": "モルガ（黒い喪のベール）・ベラドナ（頭巾と箱）に似せない。とんがり帽子の魔女にしない。透かさない。",
+   "face": false,
+   "recolor": false,
+   "spirit": true,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 60,
+     "file": "npc_melda_s1.png",
+     "layout": "walk_act",
+     "targetH": 46,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "loch_mayor",
+   "look": "npc_loch_mayor",
+   "tier": "B",
+   "name": "ロッホの町長",
+   "title": "町長",
+   "sex": "男",
+   "age": "50代",
+   "region": "marsh",
+   "appears": "ロッホ（集会所）、推理の報酬、町が謝る場面",
+   "heightDots": {
+    "field": 47
+   },
+   "headgearExtraDots": 4,
+   "measureH": {
+    "field": 51
+   },
+   "mainName": "泥茶",
+   "mainHue": 35,
+   "mainHex": "#6A5A3C",
+   "headShape": "大きな丸いつばの雨よけ帽子＋太った丸い体",
+   "look_ja": "太った、せかせかした町長。大きな丸いつばの雨よけ帽子、油を引いた泥茶の外套、首に町長の真鍮の鎖。",
+   "sub": "真鍮の鎖、灰緑の長靴",
+   "carry": "手は空ける",
+   "lantern": false,
+   "sigPose": "帽子を胸に取って、深く頭を下げる",
+   "avoid": null,
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 61,
+     "file": "npc_loch_mayor_s1.png",
+     "layout": "walk_act",
+     "targetH": 47,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "marina",
+   "look": "npc_marina",
+   "tier": "B",
+   "name": "マリナ",
+   "title": "待つ人（本物の朝を覚えている）",
+   "sex": "女",
+   "age": "80歳近く",
+   "region": "isles",
+   "appears": "ネレイ（マリナの家・夜の桟橋）、夜明けの桟橋、エンディングのカード",
+   "heightDots": {
+    "field": 42
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "field": 42
+   },
+   "mainName": "淡い海の水色",
+   "mainHue": 195,
+   "mainHex": "#8AB8C8",
+   "headShape": "海風に乱れた白髪を低い一本結びに＋肩の淡い水色のショール",
+   "look_ja": "背の曲がった小さな老婆。乱れた白髪を低く結び、淡い水色のショール、灰白の長い衣、貝の首飾り。古い本（墨の写し）を胸に抱く。",
+   "sub": "灰白の衣、貝の首飾り（白と淡い橙）、焦げ茶の古い本",
+   "carry": "古い本を胸に抱く",
+   "lantern": false,
+   "sigPose": "胸に手を当て、海の方を見て歌う",
+   "avoid": "ノエラ（睡蓮の髪飾り・巫女の袖）に似せない。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 65,
+     "file": "npc_marina_s1.png",
+     "layout": "walk_act",
+     "targetH": 42,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "glen",
+   "look": "npc_glen",
+   "tier": "B",
+   "name": "グレン",
+   "title": "帰らずの船長（霊）",
+   "sex": "男",
+   "age": "見た目40代",
+   "region": "isles",
+   "appears": "幽霊船の船長室（戦いの前）、夜明けの桟橋（マリナと）",
+   "heightDots": {
+    "field": 50
+   },
+   "headgearExtraDots": 5,
+   "measureH": {
+    "field": 55
+   },
+   "mainName": "青白い灰青",
+   "mainHue": 205,
+   "mainHex": "#7A96AA",
+   "headShape": "三角帽＋やつれた頬",
+   "look_ja": "やつれた男の亡霊。三角帽、破れた長い船長のコート、腰にカトラス、左手に船のランタン（中の火は色の塊だけで光らせない）。体は青白く、腰から下は霧になって細くすぼまる。魔物の指示書のシート37（戦闘の絵）と同じ人物。",
+   "sub": "色あせた紺のコート、くすんだ金のボタン、ランタンの真鍮",
+   "carry": "左手に船のランタン",
+   "lantern": true,
+   "sigPose": "三角帽を取って胸に当てる",
+   "avoid": "骸骨にしない。透かさない。ランタンの火の色は変えなくてよい（青と橙はゲームが塗り替える）。",
+   "face": false,
+   "recolor": false,
+   "spirit": true,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 66,
+     "file": "npc_glen_s1.png",
+     "layout": "walk_act",
+     "targetH": 50,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "drake",
+   "look": "npc_drake",
+   "tier": "B",
+   "name": "ドレイク",
+   "title": "造船所の親方",
+   "sex": "男",
+   "age": "50代",
+   "region": "isles",
+   "appears": "コーラル（造船所）、後家の壁",
+   "heightDots": {
+    "field": 51
+   },
+   "headgearExtraDots": 1,
+   "measureH": {
+    "field": 52
+   },
+   "mainName": "紺",
+   "mainHue": 220,
+   "mainHex": "#2C3E62",
+   "headShape": "禿げ頭にねじった布の鉢巻＋太い首",
+   "look_ja": "腕の太い大男の職人。禿げ頭にねじった紺の布、紺と白の縞のシャツ、腰に大工道具を下げた焦げ茶の前掛け。",
+   "sub": "白い縞、焦げ茶の前掛け、鉄の道具",
+   "carry": "手は空ける",
+   "lantern": false,
+   "sigPose": "腕を組んで、大きくうなずく",
+   "avoid": "ドッカ（禿げ頭＋編みひげ）に似せない。ひげなし、背は高い。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 67,
+     "file": "npc_drake_s1.png",
+     "layout": "walk_act",
+     "targetH": 51,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "merchant_captain",
+   "look": "npc_merchant_captain",
+   "tier": "B",
+   "name": "商船の船長",
+   "title": "座礁した商船の船長",
+   "sex": "男",
+   "age": "40代",
+   "region": "isles",
+   "appears": "座礁した商船、コーラル（あとで町に来る）",
+   "heightDots": {
+    "field": 48
+   },
+   "headgearExtraDots": 4,
+   "measureH": {
+    "field": 52
+   },
+   "mainName": "深緑",
+   "mainHue": 160,
+   "mainHex": "#2E5040",
+   "headShape": "羽根のない二角帽＋整えた口ひげ",
+   "look_ja": "身なりのよい、少し気取った船長。二角帽、整えた口ひげ、深緑の立派な上着に真鍮のボタン、脇に海図の筒。",
+   "sub": "真鍮のボタン、白い襟、焦げ茶の海図の筒",
+   "carry": "海図の筒を脇に",
+   "lantern": false,
+   "sigPose": "帽子のつばを直して、肩をすくめる",
+   "avoid": "グレン（三角帽）と混ざらないよう、帽子は横に長い二角帽。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 68,
+     "file": "npc_merchant_captain_s1.png",
+     "layout": "walk_act",
+     "targetH": 48,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "borg",
+   "look": "npc_borg",
+   "tier": "B",
+   "name": "ボルグ",
+   "title": "鉱山長（鉱夫組合）",
+   "sex": "男",
+   "age": "50代",
+   "region": "mine",
+   "appears": "ドヴァン（組合の事務所・昇降機の前・集会所）",
+   "heightDots": {
+    "field": 50
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "field": 50
+   },
+   "mainName": "紺鼠",
+   "mainHue": 225,
+   "mainHex": "#3A4050",
+   "headShape": "後ろへなでつけた黒い巻き毛＋太い眉（ひげなし）",
+   "look_ja": "太鼓腹の大男で、自信たっぷりの鉱山長。黒い巻き毛をなでつけ、上等な紺鼠の毛織りの上着に組合の紋、胸に金の懐中時計の鎖、脇に分厚い帳簿。",
+   "sub": "金の鎖、焦げ茶の帳簿、赤銅の組合の紋",
+   "carry": "帳簿を脇に",
+   "lantern": false,
+   "sigPose": "帳簿を手で叩いて、胸を張る",
+   "avoid": "ボーデン（丸い革の兜・ゴーグル・垂れた口ひげ・黄土のつなぎ）とドッカ（禿げ頭・編みひげ）に似せない。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 72,
+     "file": "npc_borg_s1.png",
+     "layout": "walk_act",
+     "targetH": 50,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "helga",
+   "look": "npc_helga",
+   "tier": "B",
+   "name": "ヘルガ",
+   "title": "鍛冶師（誓いの鍛冶衆）",
+   "sex": "女",
+   "age": "40代",
+   "region": "mine",
+   "appears": "ドヴァン（鍛冶場）、鍛冶衆の隠れ村ヴォルク",
+   "heightDots": {
+    "field": 48
+   },
+   "headgearExtraDots": 2,
+   "measureH": {
+    "field": 50
+   },
+   "mainName": "赤銅",
+   "mainHue": 22,
+   "mainHex": "#A0582E",
+   "headShape": "頭の上で短く結んだ赤銅色の髪＋額の汗止めの布",
+   "look_ja": "背の高いたくましい女鍛冶。赤銅色の髪を頭の上で短く結び、額に汗止めの布。赤銅色の袖なしの厚い上衣、前腕に火傷の痕、腰巻きの短い革の前掛け、肩に大きな金槌、手首に誓いの紋の鉄の腕輪。",
+   "sub": "煤けた灰、焦げ茶の革、鉄の腕輪",
+   "carry": "金槌は肩（片手で支える）",
+   "lantern": false,
+   "sigPose": "金槌を肩から下ろし、柄を地面について胸を張る",
+   "avoid": "ドッカ（すすけた長い鍛冶の前掛け）に似せない。前掛けは腰までの短いもの。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 73,
+     "file": "npc_helga_s1.png",
+     "layout": "walk_act",
+     "targetH": 48,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "pip",
+   "look": "npc_pip",
+   "tier": "B",
+   "name": "ピップ",
+   "title": "3 人目の鉱夫",
+   "sex": "男",
+   "age": "10代後半",
+   "region": "mine",
+   "appears": "深き坑道（救出）、ドヴァン",
+   "heightDots": {
+    "field": 45
+   },
+   "headgearExtraDots": 3,
+   "measureH": {
+    "field": 48
+   },
+   "mainName": "燐石の淡い緑",
+   "mainHue": 145,
+   "mainHex": "#7AA888",
+   "headShape": "大きすぎる平たいフェルトの鉱夫帽＋そばかす",
+   "look_ja": "小柄でそばかすの若い鉱夫。大きすぎる平たいフェルト帽、煤けた灰の作業着、胸に燐石のかけらの小さな籠、両手で小さな古い金槌（誓いのハンマー）を握る。",
+   "sub": "煤の灰、焦げ茶のベルト、古い金槌",
+   "carry": "小さな金槌を両手で",
+   "lantern": false,
+   "sigPose": "うつむいて、両手で頭を押さえる（名を忘れかけた）",
+   "avoid": "ボーデンの丸い兜・ゴーグルを使わない。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 74,
+     "file": "npc_pip_s1.png",
+     "layout": "walk_act",
+     "targetH": 45,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "hermit",
+   "look": "npc_hermit",
+   "tier": "B",
+   "name": "山の隠者",
+   "title": "山の隠者の庵の主（問答）",
+   "sex": "男",
+   "age": "80代",
+   "region": "mine",
+   "appears": "山の隠者の庵（寄り道）",
+   "heightDots": {
+    "field": 42
+   },
+   "headgearExtraDots": 2,
+   "measureH": {
+    "field": 44
+   },
+   "mainName": "苔の灰緑",
+   "mainHue": 90,
+   "mainHex": "#6A7050",
+   "headShape": "布の頭巾＋長い白いひげと、目にかかる長い白い眉",
+   "look_ja": "小柄な仙人のような老人。布の頭巾、長い白いひげと眉、苔の灰緑の蓑をはおり、首から古い写しを入れた細い木の筒を下げる。",
+   "sub": "灰茶の衣、木の筒、焦げ茶の杖",
+   "carry": "短い杖",
+   "lantern": false,
+   "sigPose": "指を一本立てて、問いを出す",
+   "avoid": "シグレの広い編み笠、バジルの大きな数珠を使わない。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 75,
+     "file": "npc_hermit_s1.png",
+     "layout": "walk_act",
+     "targetH": 42,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "dorga",
+   "look": "npc_dorga",
+   "tier": "B",
+   "name": "ドルガ",
+   "title": "カルデラの族長（元代理の闘士）",
+   "sex": "男",
+   "age": "60代",
+   "region": "ash",
+   "appears": "カルデラ（族長の家・闘技場・銘板の前）、エンディングのカード",
+   "heightDots": {
+    "field": 53
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "field": 53
+   },
+   "mainName": "耐火の灰",
+   "mainHue": 30,
+   "mainHex": "#6A625A",
+   "headShape": "剃った頭に橙の炎の模様の入れ墨＋太い白いあごひげ",
+   "look_ja": "大柄な老戦士。褐色の肌、剃った頭の炎の入れ墨、太い白いあごひげ、胸の古傷。肩に黒い毛皮、耐火の灰色の厚い麻の衣に幅広の銅の帯。",
+   "sub": "黒い毛皮、銅の帯と腕輪、橙の入れ墨",
+   "carry": "手は空ける",
+   "lantern": false,
+   "sigPose": "拳を胸に当てて、目を閉じる",
+   "avoid": "ハーゲン（眼帯・片肩の灰色の狼の毛皮）に似せない。毛皮は両肩に黒。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 79,
+     "file": "npc_dorga_s1.png",
+     "layout": "walk_act",
+     "targetH": 53,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "kaya",
+   "look": "npc_kaya",
+   "tier": "B",
+   "name": "カヤ",
+   "title": "火の巫女",
+   "sex": "女",
+   "age": "20代",
+   "region": "ash",
+   "appears": "カルデラ（火の神殿）、火口、火の鳥の背の乗り場",
+   "heightDots": {
+    "field": 45
+   },
+   "headgearExtraDots": 5,
+   "measureH": {
+    "field": 50
+   },
+   "mainName": "火の橙",
+   "mainHue": 25,
+   "mainHex": "#D8702A",
+   "headShape": "炎の形に高く結い上げた黒髪＋赤金の髪飾り",
+   "look_ja": "凛とした褐色の肌の巫女。炎の形に結い上げた黒髪、火の橙から深い赤への重ね衣、肩に火の鳥の羽の模様の肩掛け、裸足に銅の足輪。",
+   "sub": "深い赤のすそ（#8A2E22）、銅の足輪、金の髪飾り",
+   "carry": "手は空ける",
+   "lantern": false,
+   "sigPose": "両手を前へ差し伸べて、卵に語りかける",
+   "avoid": "ノエラ（白と淡い水色の巫女）に似せない。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 80,
+     "file": "npc_kaya_s1.png",
+     "layout": "walk_act",
+     "targetH": 45,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "zakuro",
+   "look": "npc_zakuro",
+   "tier": "B",
+   "name": "ザクロ",
+   "title": "記録院付きの闘士（雇われ）",
+   "sex": "男",
+   "age": "30代",
+   "region": "ash",
+   "appears": "カルデラ（闘技場・控え室）、決勝の相手",
+   "heightDots": {
+    "field": 52
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "field": 52
+   },
+   "mainName": "鉄の灰",
+   "mainHue": 215,
+   "mainHex": "#5A626C",
+   "headShape": "短い灰色の髪＋広い肩",
+   "look_ja": "背の高い、律儀で無口な拳の闘士。短い灰色の髪、使い込んだ鉄の胸当て、両腕に厚い鉄の籠手、記録院の白い腰帯と胸の白い名札。",
+   "sub": "記録院の白（腰帯・名札）、焦げ茶の革",
+   "carry": "武器は持たない（籠手で戦う）",
+   "lantern": false,
+   "sigPose": "胸の名札に手を当てて、きっちり一礼",
+   "avoid": "ハーゲン（大剣・眼帯・毛皮）に似せない。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 81,
+     "file": "npc_zakuro_s1.png",
+     "layout": "walk_act",
+     "targetH": 52,
+     "required": true
+    },
+    {
+     "n": "btl",
+     "no": 101,
+     "file": "npc_zakuro_btl.png",
+     "layout": "battle_single",
+     "targetH": 68,
+     "required": false
+    }
+   ]
+  },
+  {
+   "id": "octavia",
+   "look": "npc_octavia",
+   "tier": "B",
+   "name": "オクタヴィア",
+   "title": "星見の学院の学長",
+   "sex": "女",
+   "age": "50代",
+   "region": "star",
+   "appears": "オルビス（学院・学長室・講堂）",
+   "heightDots": {
+    "field": 47
+   },
+   "headgearExtraDots": 4,
+   "measureH": {
+    "field": 51
+   },
+   "mainName": "墨緑",
+   "mainHue": 160,
+   "mainHex": "#233C34",
+   "headShape": "銀髪をきっちり結い上げる＋四角い学長の帽子",
+   "look_ja": "背すじの伸びた厳しい顔の学長。銀髪をきっちり結い上げ、四角い学帽。墨に近い深緑の長衣に銀の星の飾り鎖、細い片眼鏡。",
+   "sub": "銀の鎖と片眼鏡、灰の襟",
+   "carry": "手は空ける",
+   "lantern": false,
+   "sigPose": "人差し指を唇に当てて「しっ」と合図する",
+   "avoid": "イルゼ（紺紫の星のローブ・お団子・丸眼鏡）に似せない。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 86,
+     "file": "npc_octavia_s1.png",
+     "layout": "walk_act",
+     "targetH": 47,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "luka",
+   "look": "npc_luka",
+   "tier": "B",
+   "name": "ルカ",
+   "title": "天文学者",
+   "sex": "男",
+   "age": "20代",
+   "region": "star",
+   "appears": "オルビス（天文台）、エンディングのカード",
+   "heightDots": {
+    "field": 46
+   },
+   "headgearExtraDots": 1,
+   "measureH": {
+    "field": 47
+   },
+   "mainName": "インクの灰",
+   "mainHue": 220,
+   "mainHex": "#6A7080",
+   "headShape": "ぼさぼさの茶色の髪（寝ぐせ）",
+   "look_ja": "痩せた、夢中になると周りが見えない若い学者。ぼさぼさの茶髪、インクで汚れた灰色の長い上着、片手に真鍮の小さな望遠鏡。",
+   "sub": "真鍮の望遠鏡、焦げ茶の長靴",
+   "carry": "片手に望遠鏡",
+   "lantern": false,
+   "sigPose": "望遠鏡をのぞいて空を見上げる",
+   "avoid": "首に布を巻かない（アルンのマフラーと混ざる）。",
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 87,
+     "file": "npc_luka_s1.png",
+     "layout": "walk_act",
+     "targetH": 46,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "naturalist",
+   "look": "npc_naturalist",
+   "tier": "B",
+   "name": "博物学者",
+   "title": "図鑑づくりの老学者（連作）",
+   "sex": "男",
+   "age": "60代",
+   "region": "star",
+   "appears": "オルビス（図書館）",
+   "heightDots": {
+    "field": 45
+   },
+   "headgearExtraDots": 1,
+   "measureH": {
+    "field": 46
+   },
+   "mainName": "苔色",
+   "mainHue": 90,
+   "mainHex": "#5A6A3C",
+   "headShape": "もじゃもじゃの白髪と白い口ひげ＋首から下げた大きな虫眼鏡",
+   "look_ja": "好奇心いっぱいの小柄な老学者。もじゃもじゃの白髪、首から大きな虫眼鏡、苔色のチョッキに灰の上着、脇に図鑑の束。",
+   "sub": "灰の上着、真鍮の虫眼鏡、焦げ茶の図鑑",
+   "carry": "図鑑を脇に",
+   "lantern": false,
+   "sigPose": "虫眼鏡で足もとをのぞき込む",
+   "avoid": null,
+   "face": false,
+   "recolor": false,
+   "spirit": false,
+   "section": "NPC_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "no": 88,
+     "file": "npc_naturalist_s1.png",
+     "layout": "walk_act",
+     "targetH": 45,
+     "required": true
+    }
+   ]
+  }
+ ],
+ "groups": [
+  {
+   "id": "pen_1",
+   "no": 15,
+   "file": "npc_grp_pen_1.png",
+   "layout": "walk_pair",
+   "culture": "prologue",
+   "region": "prologue",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_pen_man",
+     "name": "港の男",
+     "kind": "person",
+     "heightDots": {
+      "field": 48
+     },
+     "measureH": {
+      "field": 48
+     },
+     "mainName": "紺",
+     "mainHue": 215,
+     "mainHex": "#2F4260",
+     "look_ja": "ひげの剃り跡の濃い働き者。紺の毛糸の上着に灰緑の帆布の前掛け、つばのない丸い毛糸帽、木靴。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_pen_man_1",
+      "npc_pen_man_2",
+      "npc_pen_man_3",
+      "npc_pen_man_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_pen_woman",
+     "name": "港の女",
+     "kind": "person",
+     "heightDots": {
+      "field": 46
+     },
+     "measureH": {
+      "field": 46
+     },
+     "mainName": "灰青",
+     "mainHue": 205,
+     "mainHex": "#5A7088",
+     "look_ja": "きびきびしたおかみ。灰青の長い上衣に、亜麻色の三角頭巾と大きな肩掛け、腰に小さな魚籠。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_pen_woman_1",
+      "npc_pen_woman_2",
+      "npc_pen_woman_3",
+      "npc_pen_woman_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pen_2",
+   "no": 16,
+   "file": "npc_grp_pen_2.png",
+   "layout": "walk_pair",
+   "culture": "prologue",
+   "region": "prologue",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_pen_old_m",
+     "name": "港の老人",
+     "kind": "person",
+     "heightDots": {
+      "field": 45
+     },
+     "measureH": {
+      "field": 45
+     },
+     "mainName": "油色の黄土",
+     "mainHue": 48,
+     "mainHex": "#8A7A4A",
+     "look_ja": "白い短いあごひげの老人。油を引いた黄土の厚い外套に丸い毛糸帽、木の杖。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_pen_old_m_1",
+      "npc_pen_old_m_2",
+      "npc_pen_old_m_3",
+      "npc_pen_old_m_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_pen_old_f",
+     "name": "港の老婆",
+     "kind": "person",
+     "heightDots": {
+      "field": 43
+     },
+     "measureH": {
+      "field": 43
+     },
+     "mainName": "からし色",
+     "mainHue": 45,
+     "mainHex": "#A8883A",
+     "look_ja": "大きな毛糸の肩掛けにくるまった、背の丸い老婆。手に編み棒と毛糸玉。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_pen_old_f_1",
+      "npc_pen_old_f_2",
+      "npc_pen_old_f_3",
+      "npc_pen_old_f_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pen_3",
+   "no": 17,
+   "file": "npc_grp_pen_3.png",
+   "layout": "walk_pair",
+   "culture": "prologue",
+   "region": "prologue",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_pen_child",
+     "name": "港の子ども",
+     "kind": "person",
+     "heightDots": {
+      "field": 36
+     },
+     "measureH": {
+      "field": 36
+     },
+     "mainName": "からし色",
+     "mainHue": 48,
+     "mainHex": "#B89A3A",
+     "look_ja": "親のお下がりの大きすぎる毛糸帽、からし色のセーターの袖をまくり、半ズボンに木靴。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_pen_child_1",
+      "npc_pen_child_2",
+      "npc_pen_child_3",
+      "npc_pen_child_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_pen_sailor",
+     "name": "船乗り",
+     "kind": "person",
+     "heightDots": {
+      "field": 49
+     },
+     "measureH": {
+      "field": 49
+     },
+     "mainName": "紺と白の縞",
+     "mainHue": 220,
+     "mainHex": "#2C3A5A",
+     "look_ja": "日焼けした胸板の厚い船乗り。白と紺の縞のシャツ、頭に紺の布、腰に巻いたロープ。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_pen_sailor_1",
+      "npc_pen_sailor_2",
+      "npc_pen_sailor_3",
+      "npc_pen_sailor_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pen_4",
+   "no": 18,
+   "file": "npc_grp_pen_4.png",
+   "layout": "walk_pair",
+   "culture": "prologue",
+   "region": "prologue",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_pen_guard",
+     "name": "番兵",
+     "kind": "person",
+     "heightDots": {
+      "field": 49
+     },
+     "measureH": {
+      "field": 49
+     },
+     "mainName": "紺",
+     "mainHue": 215,
+     "mainHex": "#2C3E62",
+     "look_ja": "灰の鎖かたびらに紺の上っ張り（胸に灯台の紋）、丸い鉄の兜、短い槍を背中に。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_pen_guard_1",
+      "npc_pen_guard_2",
+      "npc_pen_guard_3",
+      "npc_pen_guard_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_pen_keeper",
+     "name": "店と宿の主人",
+     "kind": "person",
+     "heightDots": {
+      "field": 47
+     },
+     "measureH": {
+      "field": 47
+     },
+     "mainName": "灰緑",
+     "mainHue": 100,
+     "mainHex": "#6A7A5A",
+     "look_ja": "太めの愛想のよい主人。亜麻色のシャツに灰緑の厚い前掛け、袖まくり、耳に羽ペン。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_pen_keeper_1",
+      "npc_pen_keeper_2",
+      "npc_pen_keeper_3",
+      "npc_pen_keeper_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "common_1",
+   "no": 19,
+   "file": "npc_grp_common_1.png",
+   "layout": "walk_pair",
+   "culture": "common",
+   "region": "prologue",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_traveler",
+     "name": "旅の商人",
+     "kind": "person",
+     "heightDots": {
+      "field": 48
+     },
+     "measureH": {
+      "field": 48
+     },
+     "mainName": "灰茶",
+     "mainHue": 35,
+     "mainHex": "#7A6A54",
+     "look_ja": "つばの広い旅帽、厚い灰茶の旅の外套、背中に頭より少し低い大きな荷。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_traveler_1",
+      "npc_traveler_2",
+      "npc_traveler_3",
+      "npc_traveler_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_bard",
+     "name": "吟遊詩人",
+     "kind": "person",
+     "heightDots": {
+      "field": 47
+     },
+     "measureH": {
+      "field": 47
+     },
+     "mainName": "深い青",
+     "mainHue": 225,
+     "mainHex": "#3A4E8A",
+     "look_ja": "軽い身なりの吟遊詩人。小さな丸帽、深い青の短いケープ、腰に横笛と小太鼓。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_bard_1",
+      "npc_bard_2",
+      "npc_bard_3",
+      "npc_bard_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "common_2",
+   "no": 20,
+   "file": "npc_grp_common_2.png",
+   "layout": "walk_pair",
+   "culture": "common",
+   "region": "prologue",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_scribe",
+     "name": "記録院の書記",
+     "kind": "person",
+     "heightDots": {
+      "field": 47
+     },
+     "measureH": {
+      "field": 47
+     },
+     "mainName": "記録院の白",
+     "mainHue": 210,
+     "mainHex": "#E4E8EE",
+     "look_ja": "白い長衣と深いフード、顔はフードの影で目元が見えない。胸に抱えた白い本。魔物の指示書のシート50（白衣の書記）の歩く姿。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_scribe_1",
+      "npc_scribe_2",
+      "npc_scribe_3",
+      "npc_scribe_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_clerk",
+     "name": "記録院の役人",
+     "kind": "person",
+     "heightDots": {
+      "field": 48
+     },
+     "measureH": {
+      "field": 48
+     },
+     "mainName": "記録院の白と灰",
+     "mainHue": 210,
+     "mainHex": "#D8DCE2",
+     "look_ja": "出張所の役人。白い短い上着に灰の襟、フードなし、髪をきっちりなでつけ、脇に帳面。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_clerk_1",
+      "npc_clerk_2",
+      "npc_clerk_3",
+      "npc_clerk_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "common_3",
+   "no": 21,
+   "file": "npc_grp_common_3.png",
+   "layout": "walk_pair",
+   "culture": "common",
+   "region": "prologue",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_silent",
+     "name": "静夜会の信者",
+     "kind": "person",
+     "heightDots": {
+      "field": 46
+     },
+     "measureH": {
+      "field": 46
+     },
+     "mainName": "灰",
+     "mainHue": 30,
+     "mainHex": "#8A8680",
+     "look_ja": "灰色の無地の衣、目を伏せ、胸に何も書いていない白い札。両手は袖の中。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_silent_1",
+      "npc_silent_2",
+      "npc_silent_3",
+      "npc_silent_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_oil_carrier",
+     "name": "灯守組合の油運び",
+     "kind": "person",
+     "heightDots": {
+      "field": 49
+     },
+     "measureH": {
+      "field": 49
+     },
+     "mainName": "煤けた紺鼠",
+     "mainHue": 225,
+     "mainHex": "#4A4E5C",
+     "look_ja": "背中に大きな油樽、煤けた紺鼠の上着に真鍮の組合章、腰に油差し。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_oil_carrier_1",
+      "npc_oil_carrier_2",
+      "npc_oil_carrier_3",
+      "npc_oil_carrier_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "animal_1",
+   "no": 22,
+   "file": "npc_grp_animal_1.png",
+   "layout": "walk_pair",
+   "culture": "common",
+   "region": "prologue",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "ani_cat",
+     "name": "ねこ",
+     "kind": "animal",
+     "heightDots": {
+      "field": 14
+     },
+     "measureH": {
+      "field": 14
+     },
+     "mainName": "灰と白",
+     "mainHue": 0,
+     "mainHex": "#8A8A8A",
+     "look_ja": "灰と白のぶちの町の猫。しっぽを立てて歩く。",
+     "lantern": false,
+     "face": false,
+     "recolor": false,
+     "recolorSets": 1,
+     "variants": [
+      "ani_cat"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "ani_dog",
+     "name": "いぬ",
+     "kind": "animal",
+     "heightDots": {
+      "field": 22
+     },
+     "measureH": {
+      "field": 22
+     },
+     "mainName": "茶",
+     "mainHue": 30,
+     "mainHex": "#8A6040",
+     "look_ja": "耳の垂れた茶色の中型犬。首に古い革の首輪。",
+     "lantern": false,
+     "face": false,
+     "recolor": false,
+     "recolorSets": 1,
+     "variants": [
+      "ani_dog"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "forest_1",
+   "no": 33,
+   "file": "npc_grp_forest_1.png",
+   "layout": "walk_pair",
+   "culture": "forest",
+   "region": "forest",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_forest_man",
+     "name": "森の村の男",
+     "kind": "person",
+     "heightDots": {
+      "field": 48
+     },
+     "measureH": {
+      "field": 48
+     },
+     "mainName": "苔色",
+     "mainHue": 95,
+     "mainHex": "#4E6A36",
+     "look_ja": "木の皮の平たい帽子、苔色の上衣（すそは葉の形）、革ひもの脚絆。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_forest_man_1",
+      "npc_forest_man_2",
+      "npc_forest_man_3",
+      "npc_forest_man_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_forest_woman",
+     "name": "森の村の女",
+     "kind": "person",
+     "heightDots": {
+      "field": 46
+     },
+     "measureH": {
+      "field": 46
+     },
+     "mainName": "若草",
+     "mainHue": 85,
+     "mainHex": "#7A9A48",
+     "look_ja": "葉の形に切ったすその若草の上衣、髪に木の実の飾り、背に小さな編み籠。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_forest_woman_1",
+      "npc_forest_woman_2",
+      "npc_forest_woman_3",
+      "npc_forest_woman_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "forest_2",
+   "no": 34,
+   "file": "npc_grp_forest_2.png",
+   "layout": "walk_pair",
+   "culture": "forest",
+   "region": "forest",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_forest_old_m",
+     "name": "森の老人",
+     "kind": "person",
+     "heightDots": {
+      "field": 45
+     },
+     "measureH": {
+      "field": 45
+     },
+     "mainName": "樹皮の灰茶",
+     "mainHue": 30,
+     "mainHex": "#6A5A48",
+     "look_ja": "長い白ひげに小枝の杖、樹皮色のケープ。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_forest_old_m_1",
+      "npc_forest_old_m_2",
+      "npc_forest_old_m_3",
+      "npc_forest_old_m_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_forest_old_f",
+     "name": "森の老婆",
+     "kind": "person",
+     "heightDots": {
+      "field": 43
+     },
+     "measureH": {
+      "field": 43
+     },
+     "mainName": "灰緑",
+     "mainHue": 100,
+     "mainHex": "#6A7A5A",
+     "look_ja": "苔色の頭巾、腰に薬草の束、背を丸める。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_forest_old_f_1",
+      "npc_forest_old_f_2",
+      "npc_forest_old_f_3",
+      "npc_forest_old_f_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "forest_3",
+   "no": 35,
+   "file": "npc_grp_forest_3.png",
+   "layout": "walk_pair",
+   "culture": "forest",
+   "region": "forest",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_forest_child",
+     "name": "森の子ども",
+     "kind": "person",
+     "heightDots": {
+      "field": 36
+     },
+     "measureH": {
+      "field": 36
+     },
+     "mainName": "どんぐり色",
+     "mainHue": 35,
+     "mainHex": "#8A6A3C",
+     "look_ja": "どんぐり色の短い上衣、裸足、首に苔の小瓶。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_forest_child_1",
+      "npc_forest_child_2",
+      "npc_forest_child_3",
+      "npc_forest_child_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_woodcutter",
+     "name": "樵",
+     "kind": "person",
+     "heightDots": {
+      "field": 50
+     },
+     "measureH": {
+      "field": 50
+     },
+     "mainName": "深緑",
+     "mainHue": 120,
+     "mainHex": "#3C5A3A",
+     "look_ja": "太い腕の樵。灰緑の毛織りの袖なし胴着、頭に布、背中に斧。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_woodcutter_1",
+      "npc_woodcutter_2",
+      "npc_woodcutter_3",
+      "npc_woodcutter_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "yura_1",
+   "no": 36,
+   "file": "npc_grp_yura_1.png",
+   "layout": "walk_pair",
+   "culture": "yura",
+   "region": "forest",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_yura_man",
+     "name": "ユラの男",
+     "kind": "person",
+     "heightDots": {
+      "field": 47
+     },
+     "measureH": {
+      "field": 47
+     },
+     "mainName": "灰茶",
+     "mainHue": 40,
+     "mainHex": "#6A5E4C",
+     "look_ja": "灰茶の麻の衣、顔の上半分に落ちる薄い布、首に何も書いていない木の札。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_yura_man_1",
+      "npc_yura_man_2",
+      "npc_yura_man_3",
+      "npc_yura_man_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_yura_woman",
+     "name": "ユラの女",
+     "kind": "person",
+     "heightDots": {
+      "field": 45
+     },
+     "measureH": {
+      "field": 45
+     },
+     "mainName": "灰緑",
+     "mainHue": 110,
+     "mainHex": "#5A6C4C",
+     "look_ja": "灰緑の麻の長い衣、髪をおおう薄い布、首に何も書いていない木の札。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_yura_woman_1",
+      "npc_yura_woman_2",
+      "npc_yura_woman_3",
+      "npc_yura_woman_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "animal_2",
+   "no": 37,
+   "file": "npc_grp_animal_2.png",
+   "layout": "walk_pair",
+   "culture": "common",
+   "region": "forest",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "ani_hen",
+     "name": "にわとり",
+     "kind": "animal",
+     "heightDots": {
+      "field": 12
+     },
+     "measureH": {
+      "field": 12
+     },
+     "mainName": "白",
+     "mainHue": 40,
+     "mainHex": "#E0D8C8",
+     "look_ja": "白い体に小さな赤いとさかの鶏。",
+     "lantern": false,
+     "face": false,
+     "recolor": false,
+     "recolorSets": 1,
+     "variants": [
+      "ani_hen"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "ani_fawn",
+     "name": "花角の小鹿",
+     "kind": "animal",
+     "heightDots": {
+      "field": 30
+     },
+     "measureH": {
+      "field": 30
+     },
+     "mainName": "淡い茶",
+     "mainHue": 30,
+     "mainHex": "#B08A5A",
+     "look_ja": "若い小鹿。小さな角に白い小花が咲く。まだら模様の背。",
+     "lantern": false,
+     "face": false,
+     "recolor": false,
+     "recolorSets": 1,
+     "variants": [
+      "ani_fawn"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "desert_1",
+   "no": 45,
+   "file": "npc_grp_desert_1.png",
+   "layout": "walk_pair",
+   "culture": "desert",
+   "region": "desert",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_desert_man",
+     "name": "市場の男",
+     "kind": "person",
+     "heightDots": {
+      "field": 48
+     },
+     "measureH": {
+      "field": 48
+     },
+     "mainName": "砂色",
+     "mainHue": 40,
+     "mainHex": "#C8B48A",
+     "look_ja": "白い頭布と砂色の長い外衣、藍の帯、腰に小さな油壺。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_desert_man_1",
+      "npc_desert_man_2",
+      "npc_desert_man_3",
+      "npc_desert_man_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_desert_woman",
+     "name": "市場の女",
+     "kind": "person",
+     "heightDots": {
+      "field": 46
+     },
+     "measureH": {
+      "field": 46
+     },
+     "mainName": "藍",
+     "mainHue": 222,
+     "mainHex": "#2E4470",
+     "look_ja": "藍の長い頭布を肩まで、砂色の衣に真鍮の腕輪。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_desert_woman_1",
+      "npc_desert_woman_2",
+      "npc_desert_woman_3",
+      "npc_desert_woman_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "desert_2",
+   "no": 46,
+   "file": "npc_grp_desert_2.png",
+   "layout": "walk_pair",
+   "culture": "desert",
+   "region": "desert",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_desert_old_m",
+     "name": "砂漠の老人",
+     "kind": "person",
+     "heightDots": {
+      "field": 45
+     },
+     "measureH": {
+      "field": 45
+     },
+     "mainName": "焦げ茶",
+     "mainHue": 30,
+     "mainHex": "#6A5040",
+     "look_ja": "長い白ひげ、茶の外套、木の杖。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_desert_old_m_1",
+      "npc_desert_old_m_2",
+      "npc_desert_old_m_3",
+      "npc_desert_old_m_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_desert_old_f",
+     "name": "砂漠の老婆",
+     "kind": "person",
+     "heightDots": {
+      "field": 43
+     },
+     "measureH": {
+      "field": 43
+     },
+     "mainName": "黒灰",
+     "mainHue": 30,
+     "mainHex": "#3E3A36",
+     "look_ja": "黒い頭布で肩までおおい、背を丸めて小さな水がめを抱える。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_desert_old_f_1",
+      "npc_desert_old_f_2",
+      "npc_desert_old_f_3",
+      "npc_desert_old_f_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "desert_3",
+   "no": 47,
+   "file": "npc_grp_desert_3.png",
+   "layout": "walk_pair",
+   "culture": "desert",
+   "region": "desert",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_desert_child",
+     "name": "砂漠の子ども",
+     "kind": "person",
+     "heightDots": {
+      "field": 36
+     },
+     "measureH": {
+      "field": 36
+     },
+     "mainName": "砂色",
+     "mainHue": 40,
+     "mainHex": "#D0BC94",
+     "look_ja": "砂色の短い上衣、頭に小さな白い布、裸足。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_desert_child_1",
+      "npc_desert_child_2",
+      "npc_desert_child_3",
+      "npc_desert_child_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_caravan",
+     "name": "隊商の人",
+     "kind": "person",
+     "heightDots": {
+      "field": 49
+     },
+     "measureH": {
+      "field": 49
+     },
+     "mainName": "灰茶",
+     "mainHue": 35,
+     "mainHex": "#7A6A54",
+     "look_ja": "顔布で口をおおい、厚い灰茶の毛の外套、腰に水袋、ラクダの手綱を肩に掛ける。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_caravan_1",
+      "npc_caravan_2",
+      "npc_caravan_3",
+      "npc_caravan_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "desert_4",
+   "no": 48,
+   "file": "npc_grp_desert_4.png",
+   "layout": "walk_pair",
+   "culture": "desert",
+   "region": "desert",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_hawk",
+     "name": "砂の鷹団の団員",
+     "kind": "person",
+     "heightDots": {
+      "field": 49
+     },
+     "measureH": {
+      "field": 49
+     },
+     "mainName": "焦げた黒茶",
+     "mainHue": 25,
+     "mainHex": "#3A3028",
+     "look_ja": "黒と焦げ茶の布で頭と顔を包み、鷹の羽根を 1 本、腰に曲刀。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_hawk_1",
+      "npc_hawk_2",
+      "npc_hawk_3",
+      "npc_hawk_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_fortune",
+     "name": "占い師",
+     "kind": "person",
+     "heightDots": {
+      "field": 44
+     },
+     "measureH": {
+      "field": 44
+     },
+     "mainName": "深い藍",
+     "mainHue": 230,
+     "mainHex": "#26305A",
+     "look_ja": "腰の曲がった女。星の模様の藍の布で頭から肩までおおい、首に真鍮の星の飾り、手に砂を盛った皿。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_fortune_1",
+      "npc_fortune_2",
+      "npc_fortune_3",
+      "npc_fortune_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "animal_3",
+   "no": 49,
+   "file": "npc_grp_animal_3.png",
+   "layout": "walk_pair",
+   "culture": "common",
+   "region": "desert",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "ani_camel",
+     "name": "ラクダ",
+     "kind": "animal",
+     "heightDots": {
+      "field": 52
+     },
+     "measureH": {
+      "field": 52
+     },
+     "mainName": "砂色",
+     "mainHue": 35,
+     "mainHex": "#B89868",
+     "look_ja": "こぶが一つの荷運びのラクダ。背に藍の敷き布と荷。",
+     "lantern": false,
+     "face": false,
+     "recolor": false,
+     "recolorSets": 1,
+     "variants": [
+      "ani_camel"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "ani_sheep",
+     "name": "ひつじ",
+     "kind": "animal",
+     "heightDots": {
+      "field": 22
+     },
+     "measureH": {
+      "field": 22
+     },
+     "mainName": "白",
+     "mainHue": 45,
+     "mainHex": "#E4DED0",
+     "look_ja": "もこもこの白い羊。黒い顔と足。",
+     "lantern": false,
+     "face": false,
+     "recolor": false,
+     "recolorSets": 1,
+     "variants": [
+      "ani_sheep"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "snow_1",
+   "no": 53,
+   "file": "npc_grp_snow_1.png",
+   "layout": "walk_pair",
+   "culture": "snow",
+   "region": "snow",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_snow_man",
+     "name": "猟師の男",
+     "kind": "person",
+     "heightDots": {
+      "field": 49
+     },
+     "measureH": {
+      "field": 49
+     },
+     "mainName": "松葉色",
+     "mainHue": 160,
+     "mainHex": "#2F5A48",
+     "look_ja": "毛皮の帽子に厚い松葉色の上着、藍と山吹の刺繍の帯、背に槍。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_snow_man_1",
+      "npc_snow_man_2",
+      "npc_snow_man_3",
+      "npc_snow_man_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_snow_woman",
+     "name": "雪の村の女",
+     "kind": "person",
+     "heightDots": {
+      "field": 46
+     },
+     "measureH": {
+      "field": 46
+     },
+     "mainName": "山吹",
+     "mainHue": 42,
+     "mainHex": "#C89A3A",
+     "look_ja": "丸いフェルトの頭巾、刺繍の帯、厚いスカートにフェルトの長靴。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_snow_woman_1",
+      "npc_snow_woman_2",
+      "npc_snow_woman_3",
+      "npc_snow_woman_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "snow_2",
+   "no": 54,
+   "file": "npc_grp_snow_2.png",
+   "layout": "walk_pair",
+   "culture": "snow",
+   "region": "snow",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_snow_old_m",
+     "name": "雪の村の老人",
+     "kind": "person",
+     "heightDots": {
+      "field": 45
+     },
+     "measureH": {
+      "field": 45
+     },
+     "mainName": "灰茶",
+     "mainHue": 30,
+     "mainHex": "#6E6254",
+     "look_ja": "白いひげを短く四角に刈った老人、毛皮の外套、耳当ての帽子。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_snow_old_m_1",
+      "npc_snow_old_m_2",
+      "npc_snow_old_m_3",
+      "npc_snow_old_m_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_snow_old_f",
+     "name": "雪の村の老婆",
+     "kind": "person",
+     "heightDots": {
+      "field": 43
+     },
+     "measureH": {
+      "field": 43
+     },
+     "mainName": "茜",
+     "mainHue": 15,
+     "mainHex": "#9A4A38",
+     "look_ja": "大きな毛皮の肩掛けに顔の下まで埋まる、背の丸い老婆。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_snow_old_f_1",
+      "npc_snow_old_f_2",
+      "npc_snow_old_f_3",
+      "npc_snow_old_f_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "snow_3",
+   "no": 55,
+   "file": "npc_grp_snow_3.png",
+   "layout": "walk_pair",
+   "culture": "snow",
+   "region": "snow",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_snow_child",
+     "name": "雪の村の子ども",
+     "kind": "person",
+     "heightDots": {
+      "field": 36
+     },
+     "measureH": {
+      "field": 36
+     },
+     "mainName": "茜",
+     "mainHue": 20,
+     "mainHex": "#B85A36",
+     "look_ja": "まんまるに着ぶくれた子。耳当ての帽子、茜の上着、フェルトの長靴。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_snow_child_1",
+      "npc_snow_child_2",
+      "npc_snow_child_3",
+      "npc_snow_child_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_snow_watch",
+     "name": "見張りの若者",
+     "kind": "person",
+     "heightDots": {
+      "field": 49
+     },
+     "measureH": {
+      "field": 49
+     },
+     "mainName": "灰青",
+     "mainHue": 210,
+     "mainHex": "#5A6A80",
+     "look_ja": "白い毛皮のフード付き外套、背に槍、腰に角笛。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_snow_watch_1",
+      "npc_snow_watch_2",
+      "npc_snow_watch_3",
+      "npc_snow_watch_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "marsh_1",
+   "no": 62,
+   "file": "npc_grp_marsh_1.png",
+   "layout": "walk_pair",
+   "culture": "marsh",
+   "region": "marsh",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_marsh_man",
+     "name": "水辺の町の男",
+     "kind": "person",
+     "heightDots": {
+      "field": 48
+     },
+     "measureH": {
+      "field": 48
+     },
+     "mainName": "灰緑",
+     "mainHue": 110,
+     "mainHex": "#5A6A58",
+     "look_ja": "大きな丸いつばの帽子、油を引いた灰緑の外套、長靴。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_marsh_man_1",
+      "npc_marsh_man_2",
+      "npc_marsh_man_3",
+      "npc_marsh_man_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_marsh_woman",
+     "name": "水辺の町の女",
+     "kind": "person",
+     "heightDots": {
+      "field": 46
+     },
+     "measureH": {
+      "field": 46
+     },
+     "mainName": "泥茶",
+     "mainHue": 35,
+     "mainHex": "#6A5A44",
+     "look_ja": "頭から肩まで防水の頭巾付きケープ、泥茶の長いスカートをたくし上げて長靴。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_marsh_woman_1",
+      "npc_marsh_woman_2",
+      "npc_marsh_woman_3",
+      "npc_marsh_woman_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "marsh_2",
+   "no": 63,
+   "file": "npc_grp_marsh_2.png",
+   "layout": "walk_pair",
+   "culture": "marsh",
+   "region": "marsh",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_marsh_old_m",
+     "name": "水辺の老人",
+     "kind": "person",
+     "heightDots": {
+      "field": 45
+     },
+     "measureH": {
+      "field": 45
+     },
+     "mainName": "霧の灰青",
+     "mainHue": 210,
+     "mainHex": "#6A7A8A",
+     "look_ja": "丸いつばの帽子を目深に、霧の灰青の外套、長い釣り竿を背に。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_marsh_old_m_1",
+      "npc_marsh_old_m_2",
+      "npc_marsh_old_m_3",
+      "npc_marsh_old_m_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_marsh_old_f",
+     "name": "水辺の老婆",
+     "kind": "person",
+     "heightDots": {
+      "field": 43
+     },
+     "measureH": {
+      "field": 43
+     },
+     "mainName": "灰緑",
+     "mainHue": 120,
+     "mainHex": "#6A7A68",
+     "look_ja": "灰緑の頭巾、胸に鐘の形の真鍮の飾り、手に小さな籠（蓮の実）。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_marsh_old_f_1",
+      "npc_marsh_old_f_2",
+      "npc_marsh_old_f_3",
+      "npc_marsh_old_f_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "marsh_3",
+   "no": 64,
+   "file": "npc_grp_marsh_3.png",
+   "layout": "walk_pair",
+   "culture": "marsh",
+   "region": "marsh",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_marsh_child",
+     "name": "水辺の子ども",
+     "kind": "person",
+     "heightDots": {
+      "field": 36
+     },
+     "measureH": {
+      "field": 36
+     },
+     "mainName": "灰緑",
+     "mainHue": 110,
+     "mainHex": "#6A8060",
+     "look_ja": "親の大きな長靴をはいた子、灰緑の短い雨がっぱ。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_marsh_child_1",
+      "npc_marsh_child_2",
+      "npc_marsh_child_3",
+      "npc_marsh_child_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_lampwarden",
+     "name": "灯籠守",
+     "kind": "person",
+     "heightDots": {
+      "field": 48
+     },
+     "measureH": {
+      "field": 48
+     },
+     "mainName": "霧の灰青",
+     "mainHue": 210,
+     "mainHex": "#5A6A7A",
+     "look_ja": "背の高い細い男。霧の灰青の長い外套、長い竿の先に灯籠（光らせない）を肩に。",
+     "lantern": true,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_lampwarden_1",
+      "npc_lampwarden_2",
+      "npc_lampwarden_3",
+      "npc_lampwarden_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "isles_1",
+   "no": 69,
+   "file": "npc_grp_isles_1.png",
+   "layout": "walk_pair",
+   "culture": "isles",
+   "region": "isles",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_isles_man",
+     "name": "漁師",
+     "kind": "person",
+     "heightDots": {
+      "field": 48
+     },
+     "measureH": {
+      "field": 48
+     },
+     "mainName": "明るい青",
+     "mainHue": 205,
+     "mainHex": "#3A7AB0",
+     "look_ja": "白い半袖に明るい青の腰布、網を肩に、裸足。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_isles_man_1",
+      "npc_isles_man_2",
+      "npc_isles_man_3",
+      "npc_isles_man_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_isles_woman",
+     "name": "港の女",
+     "kind": "person",
+     "heightDots": {
+      "field": 46
+     },
+     "measureH": {
+      "field": 46
+     },
+     "mainName": "白と青",
+     "mainHue": 205,
+     "mainHex": "#E8ECEE",
+     "look_ja": "白い長い衣に青の縞の腰布、貝の首飾り、頭に平たい籠。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_isles_woman_1",
+      "npc_isles_woman_2",
+      "npc_isles_woman_3",
+      "npc_isles_woman_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "isles_2",
+   "no": 70,
+   "file": "npc_grp_isles_2.png",
+   "layout": "walk_pair",
+   "culture": "isles",
+   "region": "isles",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_isles_old_m",
+     "name": "諸島の老人",
+     "kind": "person",
+     "heightDots": {
+      "field": 45
+     },
+     "measureH": {
+      "field": 45
+     },
+     "mainName": "色あせた青",
+     "mainHue": 205,
+     "mainHex": "#6A8AA0",
+     "look_ja": "白いあごひげ、色あせた青のシャツ、頭に布、サンダル。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_isles_old_m_1",
+      "npc_isles_old_m_2",
+      "npc_isles_old_m_3",
+      "npc_isles_old_m_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_isles_old_f",
+     "name": "諸島の老婆",
+     "kind": "person",
+     "heightDots": {
+      "field": 43
+     },
+     "measureH": {
+      "field": 43
+     },
+     "mainName": "淡い珊瑚色",
+     "mainHue": 15,
+     "mainHex": "#D8A08A",
+     "look_ja": "淡い珊瑚色の肩掛け、白い衣、背を丸める。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_isles_old_f_1",
+      "npc_isles_old_f_2",
+      "npc_isles_old_f_3",
+      "npc_isles_old_f_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "isles_3",
+   "no": 71,
+   "file": "npc_grp_isles_3.png",
+   "layout": "walk_pair",
+   "culture": "isles",
+   "region": "isles",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_isles_child",
+     "name": "諸島の子ども",
+     "kind": "person",
+     "heightDots": {
+      "field": 36
+     },
+     "measureH": {
+      "field": 36
+     },
+     "mainName": "白",
+     "mainHue": 205,
+     "mainHex": "#E4E8EA",
+     "look_ja": "裸足、白い短い上衣、首に貝の紐。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_isles_child_1",
+      "npc_isles_child_2",
+      "npc_isles_child_3",
+      "npc_isles_child_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_isles_sailor",
+     "name": "水夫",
+     "kind": "person",
+     "heightDots": {
+      "field": 49
+     },
+     "measureH": {
+      "field": 49
+     },
+     "mainName": "紺",
+     "mainHue": 220,
+     "mainHex": "#2C3A5A",
+     "look_ja": "紺と白の縞のシャツ、頭に巻いた布、耳に金の輪。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_isles_sailor_1",
+      "npc_isles_sailor_2",
+      "npc_isles_sailor_3",
+      "npc_isles_sailor_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mine_1",
+   "no": 76,
+   "file": "npc_grp_mine_1.png",
+   "layout": "walk_pair",
+   "culture": "mine",
+   "region": "mine",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_miner",
+     "name": "鉱夫",
+     "kind": "person",
+     "heightDots": {
+      "field": 48
+     },
+     "measureH": {
+      "field": 48
+     },
+     "mainName": "煤の灰",
+     "mainHue": 225,
+     "mainHex": "#4E5058",
+     "look_ja": "平たいフェルト帽、煤けた灰の厚い上着、首に燐石の小籠、つるはしを背に。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_miner_1",
+      "npc_miner_2",
+      "npc_miner_3",
+      "npc_miner_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_mine_woman",
+     "name": "地下の町の女",
+     "kind": "person",
+     "heightDots": {
+      "field": 46
+     },
+     "measureH": {
+      "field": 46
+     },
+     "mainName": "錆色",
+     "mainHue": 18,
+     "mainHex": "#8A4E34",
+     "look_ja": "頭に手ぬぐい、錆色の厚い前掛け、首に燐石の小籠。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_mine_woman_1",
+      "npc_mine_woman_2",
+      "npc_mine_woman_3",
+      "npc_mine_woman_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mine_2",
+   "no": 77,
+   "file": "npc_grp_mine_2.png",
+   "layout": "walk_pair",
+   "culture": "mine",
+   "region": "mine",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_mine_old_m",
+     "name": "地下の町の老人",
+     "kind": "person",
+     "heightDots": {
+      "field": 45
+     },
+     "measureH": {
+      "field": 45
+     },
+     "mainName": "煤の灰",
+     "mainHue": 225,
+     "mainHex": "#5A5C64",
+     "look_ja": "元鉱夫の老人、平たいフェルト帽、煤の灰の上着、腰が曲がる。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_mine_old_m_1",
+      "npc_mine_old_m_2",
+      "npc_mine_old_m_3",
+      "npc_mine_old_m_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_mine_old_f",
+     "name": "地下の町の老婆",
+     "kind": "person",
+     "heightDots": {
+      "field": 43
+     },
+     "measureH": {
+      "field": 43
+     },
+     "mainName": "錆色",
+     "mainHue": 18,
+     "mainHex": "#7A4A36",
+     "look_ja": "錆色の肩掛け、頭に手ぬぐい、手に燐石の小籠。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_mine_old_f_1",
+      "npc_mine_old_f_2",
+      "npc_mine_old_f_3",
+      "npc_mine_old_f_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mine_3",
+   "no": 78,
+   "file": "npc_grp_mine_3.png",
+   "layout": "walk_pair",
+   "culture": "mine",
+   "region": "mine",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_mine_child",
+     "name": "地下の町の子ども",
+     "kind": "person",
+     "heightDots": {
+      "field": 36
+     },
+     "measureH": {
+      "field": 36
+     },
+     "mainName": "錆色",
+     "mainHue": 20,
+     "mainHex": "#9A5A3A",
+     "look_ja": "煤で汚れた顔、大きすぎるフェルト帽、錆色の上着。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_mine_child_1",
+      "npc_mine_child_2",
+      "npc_mine_child_3",
+      "npc_mine_child_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_smith",
+     "name": "鍛冶衆",
+     "kind": "person",
+     "heightDots": {
+      "field": 50
+     },
+     "measureH": {
+      "field": 50
+     },
+     "mainName": "煤の黒灰",
+     "mainHue": 20,
+     "mainHex": "#3E3A38",
+     "look_ja": "煤けた短い上衣に鉄の腕輪（誓いの紋）、肩に鎚、額に汗止めの布。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_smith_1",
+      "npc_smith_2",
+      "npc_smith_3",
+      "npc_smith_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ash_1",
+   "no": 82,
+   "file": "npc_grp_ash_1.png",
+   "layout": "walk_pair",
+   "culture": "ash",
+   "region": "ash",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_ash_man",
+     "name": "火口の町の男",
+     "kind": "person",
+     "heightDots": {
+      "field": 48
+     },
+     "measureH": {
+      "field": 48
+     },
+     "mainName": "耐火の灰",
+     "mainHue": 30,
+     "mainHex": "#6A625A",
+     "look_ja": "耐火の灰色の厚い麻の上衣に黒い革の帯、銅の腕輪、編み込んだ髪。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_ash_man_1",
+      "npc_ash_man_2",
+      "npc_ash_man_3",
+      "npc_ash_man_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_ash_woman",
+     "name": "火口の町の女",
+     "kind": "person",
+     "heightDots": {
+      "field": 46
+     },
+     "measureH": {
+      "field": 46
+     },
+     "mainName": "橙の刺繍と灰",
+     "mainHue": 25,
+     "mainHex": "#C8662A",
+     "look_ja": "橙の炎の刺繍の入った灰の長い衣、銅の髪留めで編み髪をまとめる。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_ash_woman_1",
+      "npc_ash_woman_2",
+      "npc_ash_woman_3",
+      "npc_ash_woman_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ash_2",
+   "no": 83,
+   "file": "npc_grp_ash_2.png",
+   "layout": "walk_pair",
+   "culture": "ash",
+   "region": "ash",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_ash_old_m",
+     "name": "火口の町の老人",
+     "kind": "person",
+     "heightDots": {
+      "field": 45
+     },
+     "measureH": {
+      "field": 45
+     },
+     "mainName": "黒",
+     "mainHue": 20,
+     "mainHex": "#3A3432",
+     "look_ja": "剃った頭に薄れた炎の入れ墨、白いあごひげ、黒い革の袖なしの上着。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_ash_old_m_1",
+      "npc_ash_old_m_2",
+      "npc_ash_old_m_3",
+      "npc_ash_old_m_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_ash_old_f",
+     "name": "火口の町の老婆",
+     "kind": "person",
+     "heightDots": {
+      "field": 43
+     },
+     "measureH": {
+      "field": 43
+     },
+     "mainName": "灰",
+     "mainHue": 30,
+     "mainHex": "#7A7068",
+     "look_ja": "灰の頭巾、銅の大きな首飾り、杖。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_ash_old_f_1",
+      "npc_ash_old_f_2",
+      "npc_ash_old_f_3",
+      "npc_ash_old_f_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ash_3",
+   "no": 84,
+   "file": "npc_grp_ash_3.png",
+   "layout": "walk_pair",
+   "culture": "ash",
+   "region": "ash",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_ash_child",
+     "name": "火口の町の子ども",
+     "kind": "person",
+     "heightDots": {
+      "field": 36
+     },
+     "measureH": {
+      "field": 36
+     },
+     "mainName": "橙",
+     "mainHue": 25,
+     "mainHex": "#D07A3A",
+     "look_ja": "編み込んだ短い髪、灰の短い上衣に橙の縁取り、裸足。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_ash_child_1",
+      "npc_ash_child_2",
+      "npc_ash_child_3",
+      "npc_ash_child_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_ash_fighter",
+     "name": "一族の闘士",
+     "kind": "person",
+     "heightDots": {
+      "field": 50
+     },
+     "measureH": {
+      "field": 50
+     },
+     "mainName": "黒と銅",
+     "mainHue": 20,
+     "mainHex": "#3E3230",
+     "look_ja": "上半身に黒い革の帯を交差、銅の籠手、剃った頭に橙の線。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_ash_fighter_1",
+      "npc_ash_fighter_2",
+      "npc_ash_fighter_3",
+      "npc_ash_fighter_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ash_4",
+   "no": 85,
+   "file": "npc_grp_ash_4.png",
+   "layout": "walk_pair",
+   "culture": "ash",
+   "region": "ash",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_ash_acolyte",
+     "name": "神殿の火守りの見習い",
+     "kind": "person",
+     "heightDots": {
+      "field": 44
+     },
+     "measureH": {
+      "field": 44
+     },
+     "mainName": "火の橙",
+     "mainHue": 25,
+     "mainHex": "#D8702A",
+     "look_ja": "橙の短い衣、頭に炎の形に結んだ布、手に小さな種火の壺（光らせない）。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_ash_acolyte_1",
+      "npc_ash_acolyte_2",
+      "npc_ash_acolyte_3",
+      "npc_ash_acolyte_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_ash_bookie",
+     "name": "賭けの胴元",
+     "kind": "person",
+     "heightDots": {
+      "field": 47
+     },
+     "measureH": {
+      "field": 47
+     },
+     "mainName": "山吹の縞",
+     "mainHue": 42,
+     "mainHex": "#C89A3A",
+     "look_ja": "太った男、派手な山吹の縞の帯、手に札の束、耳に銅の輪。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_ash_bookie_1",
+      "npc_ash_bookie_2",
+      "npc_ash_bookie_3",
+      "npc_ash_bookie_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "star_1",
+   "no": 89,
+   "file": "npc_grp_star_1.png",
+   "layout": "walk_pair",
+   "culture": "star",
+   "region": "star",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_star_man",
+     "name": "城壁の町の男",
+     "kind": "person",
+     "heightDots": {
+      "field": 48
+     },
+     "measureH": {
+      "field": 48
+     },
+     "mainName": "深い青緑",
+     "mainHue": 180,
+     "mainHex": "#2E5A5A",
+     "look_ja": "仕立てのよい深い青緑の上着とチョッキ、小さな丸い帽子。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_star_man_1",
+      "npc_star_man_2",
+      "npc_star_man_3",
+      "npc_star_man_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_star_woman",
+     "name": "城壁の町の女",
+     "kind": "person",
+     "heightDots": {
+      "field": 46
+     },
+     "measureH": {
+      "field": 46
+     },
+     "mainName": "灰青",
+     "mainHue": 210,
+     "mainHex": "#5A6A80",
+     "look_ja": "ひだの付いた白い襟、墨色の長いスカートと灰青の短い上着、小さな帽子。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_star_woman_1",
+      "npc_star_woman_2",
+      "npc_star_woman_3",
+      "npc_star_woman_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "star_2",
+   "no": 90,
+   "file": "npc_grp_star_2.png",
+   "layout": "walk_pair",
+   "culture": "star",
+   "region": "star",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_star_old_m",
+     "name": "老学者",
+     "kind": "person",
+     "heightDots": {
+      "field": 45
+     },
+     "measureH": {
+      "field": 45
+     },
+     "mainName": "墨色",
+     "mainHue": 220,
+     "mainHex": "#2E3238",
+     "look_ja": "長い灰色のひげ、四角い学帽、分厚い本を抱える、墨色の長衣。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_star_old_m_1",
+      "npc_star_old_m_2",
+      "npc_star_old_m_3",
+      "npc_star_old_m_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_star_old_f",
+     "name": "城壁の町の老婆",
+     "kind": "person",
+     "heightDots": {
+      "field": 43
+     },
+     "measureH": {
+      "field": 43
+     },
+     "mainName": "灰青",
+     "mainHue": 210,
+     "mainHex": "#6A7888",
+     "look_ja": "灰青のショール、細い鎖の片眼鏡、手提げかばん。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_star_old_f_1",
+      "npc_star_old_f_2",
+      "npc_star_old_f_3",
+      "npc_star_old_f_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "star_3",
+   "no": 91,
+   "file": "npc_grp_star_3.png",
+   "layout": "walk_pair",
+   "culture": "star",
+   "region": "star",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_star_child",
+     "name": "城壁の町の子ども",
+     "kind": "person",
+     "heightDots": {
+      "field": 36
+     },
+     "measureH": {
+      "field": 36
+     },
+     "mainName": "深い青緑",
+     "mainHue": 180,
+     "mainHex": "#3A6A6A",
+     "look_ja": "小さな丸い帽子、深い青緑の半ズボンとチョッキ、脇に石板。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_star_child_1",
+      "npc_star_child_2",
+      "npc_star_child_3",
+      "npc_star_child_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_student",
+     "name": "学生",
+     "kind": "person",
+     "heightDots": {
+      "field": 47
+     },
+     "measureH": {
+      "field": 47
+     },
+     "mainName": "灰青",
+     "mainHue": 215,
+     "mainHex": "#4E6078",
+     "look_ja": "灰青の短いローブ、四角い学帽、肩掛けかばん。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_student_1",
+      "npc_student_2",
+      "npc_student_3",
+      "npc_student_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "star_4",
+   "no": 92,
+   "file": "npc_grp_star_4.png",
+   "layout": "walk_pair",
+   "culture": "star",
+   "region": "star",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_night_guard",
+     "name": "夜番の守衛",
+     "kind": "person",
+     "heightDots": {
+      "field": 49
+     },
+     "measureH": {
+      "field": 49
+     },
+     "mainName": "紺鼠",
+     "mainHue": 225,
+     "mainHex": "#3A4050",
+     "look_ja": "紺鼠の制服と丸い鉄帽、腰に警棒、左手にランタン（光らせない）。",
+     "lantern": true,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_night_guard_1",
+      "npc_night_guard_2",
+      "npc_night_guard_3",
+      "npc_night_guard_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_shepherd",
+     "name": "羊飼い（月見の牧場）",
+     "kind": "person",
+     "heightDots": {
+      "field": 46
+     },
+     "measureH": {
+      "field": 46
+     },
+     "mainName": "淡い灰黄",
+     "mainHue": 45,
+     "mainHex": "#C8BC98",
+     "look_ja": "羊毛の生成りでない淡い灰黄のケープ、先の曲がった長い杖、頭に布。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_shepherd_1",
+      "npc_shepherd_2",
+      "npc_shepherd_3",
+      "npc_shepherd_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "biblia_1",
+   "no": 99,
+   "file": "npc_grp_biblia_1.png",
+   "layout": "walk_pair",
+   "culture": "finale",
+   "region": "finale",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_biblia_man",
+     "name": "白い町の男",
+     "kind": "person",
+     "heightDots": {
+      "field": 48
+     },
+     "measureH": {
+      "field": 48
+     },
+     "mainName": "淡い象牙",
+     "mainHue": 45,
+     "mainHex": "#E4DECE",
+     "look_ja": "淡い象牙の長い上着、袖にインクのしみ、色が抜けかけたような淡い灰の髪。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_biblia_man_1",
+      "npc_biblia_man_2",
+      "npc_biblia_man_3",
+      "npc_biblia_man_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_biblia_woman",
+     "name": "白い町の女",
+     "kind": "person",
+     "heightDots": {
+      "field": 46
+     },
+     "measureH": {
+      "field": 46
+     },
+     "mainName": "白と淡い灰",
+     "mainHue": 40,
+     "mainHex": "#D8D4CC",
+     "look_ja": "白い長い衣に淡い灰の肩掛け、白い頭巾。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_biblia_woman_1",
+      "npc_biblia_woman_2",
+      "npc_biblia_woman_3",
+      "npc_biblia_woman_4"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "biblia_2",
+   "no": 100,
+   "file": "npc_grp_biblia_2.png",
+   "layout": "walk_pair",
+   "culture": "finale",
+   "region": "finale",
+   "required": true,
+   "people": [
+    {
+     "slot": "A",
+     "look": "npc_biblia_old",
+     "name": "白い町の老人",
+     "kind": "person",
+     "heightDots": {
+      "field": 45
+     },
+     "measureH": {
+      "field": 45
+     },
+     "mainName": "白",
+     "mainHue": 40,
+     "mainHex": "#E0DCD2",
+     "look_ja": "白い長衣、杖、首に何も書いていない白い札。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_biblia_old_1",
+      "npc_biblia_old_2",
+      "npc_biblia_old_3",
+      "npc_biblia_old_4"
+     ]
+    },
+    {
+     "slot": "B",
+     "look": "npc_biblia_child",
+     "name": "白い町の子ども",
+     "kind": "person",
+     "heightDots": {
+      "field": 36
+     },
+     "measureH": {
+      "field": 36
+     },
+     "mainName": "淡い灰",
+     "mainHue": 40,
+     "mainHex": "#C8C4BC",
+     "look_ja": "淡い灰の短い上衣、手に白紙の本。",
+     "lantern": false,
+     "face": false,
+     "recolor": true,
+     "recolorSets": 4,
+     "variants": [
+      "npc_biblia_child_1",
+      "npc_biblia_child_2",
+      "npc_biblia_child_3",
+      "npc_biblia_child_4"
+     ]
+    }
+   ]
+  }
+ ],
+ "order": [
+  {
+   "no": 1,
+   "file": "npc_berna_s1.png",
+   "tier": "A",
+   "layout": "walk",
+   "id": "berna",
+   "region": "prologue",
+   "title": "ベルナ（berna）シート1 歩き"
+  },
+  {
+   "no": 2,
+   "file": "npc_berna_s2.png",
+   "tier": "A",
+   "layout": "act12",
+   "id": "berna",
+   "region": "prologue",
+   "title": "ベルナ（berna）シート2 演技12"
+  },
+  {
+   "no": 3,
+   "file": "npc_berna_s3.png",
+   "tier": "A",
+   "layout": "face6",
+   "id": "berna",
+   "region": "prologue",
+   "title": "ベルナ（berna）シート3 顔6"
+  },
+  {
+   "no": 4,
+   "file": "npc_fine_s1.png",
+   "tier": "A",
+   "layout": "walk",
+   "id": "fine",
+   "region": "prologue",
+   "title": "フィーネ（fine）シート1 歩き"
+  },
+  {
+   "no": 5,
+   "file": "npc_fine_s2.png",
+   "tier": "A",
+   "layout": "act12",
+   "id": "fine",
+   "region": "prologue",
+   "title": "フィーネ（fine）シート2 演技12"
+  },
+  {
+   "no": 6,
+   "file": "npc_fine_s3.png",
+   "tier": "A",
+   "layout": "face6",
+   "id": "fine",
+   "region": "prologue",
+   "title": "フィーネ（fine）シート3 顔6"
+  },
+  {
+   "no": 7,
+   "file": "npc_otto_s1.png",
+   "tier": "A",
+   "layout": "walk",
+   "id": "otto",
+   "region": "prologue",
+   "title": "オットー（otto）シート1 歩き"
+  },
+  {
+   "no": 8,
+   "file": "npc_otto_s2.png",
+   "tier": "A",
+   "layout": "act12",
+   "id": "otto",
+   "region": "prologue",
+   "title": "オットー（otto）シート2 演技12"
+  },
+  {
+   "no": 9,
+   "file": "npc_otto_s3.png",
+   "tier": "A",
+   "layout": "face6",
+   "id": "otto",
+   "region": "prologue",
+   "title": "オットー（otto）シート3 顔6"
+  },
+  {
+   "no": 10,
+   "file": "npc_rowell_s1.png",
+   "tier": "A",
+   "layout": "walk",
+   "id": "rowell",
+   "region": "prologue",
+   "title": "ロウェル（rowell）シート1 歩き"
+  },
+  {
+   "no": 11,
+   "file": "npc_rowell_s2.png",
+   "tier": "A",
+   "layout": "act12",
+   "id": "rowell",
+   "region": "prologue",
+   "title": "ロウェル（rowell）シート2 演技12"
+  },
+  {
+   "no": 12,
+   "file": "npc_rowell_s3.png",
+   "tier": "A",
+   "layout": "face6",
+   "id": "rowell",
+   "region": "prologue",
+   "title": "ロウェル（rowell）シート3 顔6"
+  },
+  {
+   "no": 13,
+   "file": "npc_tadeo_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "tadeo",
+   "region": "prologue",
+   "title": "タデオ（tadeo）"
+  },
+  {
+   "no": 14,
+   "file": "npc_yena_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "yena",
+   "region": "prologue",
+   "title": "イェナ（yena）"
+  },
+  {
+   "no": 15,
+   "file": "npc_grp_pen_1.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "pen_1",
+   "region": "prologue",
+   "title": "港の男 ／ 港の女"
+  },
+  {
+   "no": 16,
+   "file": "npc_grp_pen_2.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "pen_2",
+   "region": "prologue",
+   "title": "港の老人 ／ 港の老婆"
+  },
+  {
+   "no": 17,
+   "file": "npc_grp_pen_3.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "pen_3",
+   "region": "prologue",
+   "title": "港の子ども ／ 船乗り"
+  },
+  {
+   "no": 18,
+   "file": "npc_grp_pen_4.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "pen_4",
+   "region": "prologue",
+   "title": "番兵 ／ 店と宿の主人"
+  },
+  {
+   "no": 19,
+   "file": "npc_grp_common_1.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "common_1",
+   "region": "prologue",
+   "title": "旅の商人 ／ 吟遊詩人"
+  },
+  {
+   "no": 20,
+   "file": "npc_grp_common_2.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "common_2",
+   "region": "prologue",
+   "title": "記録院の書記 ／ 記録院の役人"
+  },
+  {
+   "no": 21,
+   "file": "npc_grp_common_3.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "common_3",
+   "region": "prologue",
+   "title": "静夜会の信者 ／ 灯守組合の油運び"
+  },
+  {
+   "no": 22,
+   "file": "npc_grp_animal_1.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "animal_1",
+   "region": "prologue",
+   "title": "ねこ ／ いぬ"
+  },
+  {
+   "no": 23,
+   "file": "npc_gord_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "gord",
+   "region": "forest",
+   "title": "ゴード（gord）"
+  },
+  {
+   "no": 24,
+   "file": "npc_katri_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "katri",
+   "region": "forest",
+   "title": "カトリ（katri）"
+  },
+  {
+   "no": 25,
+   "file": "npc_pim_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "pim",
+   "region": "forest",
+   "title": "ピム（pim）"
+  },
+  {
+   "no": 26,
+   "file": "npc_hans_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "hans",
+   "region": "forest",
+   "title": "ハンス（hans）"
+  },
+  {
+   "no": 27,
+   "file": "npc_ben_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "ben",
+   "region": "forest",
+   "title": "ベン（ben）"
+  },
+  {
+   "no": 28,
+   "file": "npc_roy_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "roy",
+   "region": "forest",
+   "title": "ロイ（roy）"
+  },
+  {
+   "no": 29,
+   "file": "npc_rita_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "rita",
+   "region": "forest",
+   "title": "リタ（rita）"
+  },
+  {
+   "no": 30,
+   "file": "npc_hanna_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "hanna",
+   "region": "forest",
+   "title": "ハンナ（hanna）"
+  },
+  {
+   "no": 31,
+   "file": "npc_yura_elder_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "yura_elder",
+   "region": "forest",
+   "title": "ユラの長老（yura_elder）"
+  },
+  {
+   "no": 32,
+   "file": "npc_elm_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "elm",
+   "region": "forest",
+   "title": "エルム（elm）"
+  },
+  {
+   "no": 33,
+   "file": "npc_grp_forest_1.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "forest_1",
+   "region": "forest",
+   "title": "森の村の男 ／ 森の村の女"
+  },
+  {
+   "no": 34,
+   "file": "npc_grp_forest_2.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "forest_2",
+   "region": "forest",
+   "title": "森の老人 ／ 森の老婆"
+  },
+  {
+   "no": 35,
+   "file": "npc_grp_forest_3.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "forest_3",
+   "region": "forest",
+   "title": "森の子ども ／ 樵"
+  },
+  {
+   "no": 36,
+   "file": "npc_grp_yura_1.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "yura_1",
+   "region": "forest",
+   "title": "ユラの男 ／ ユラの女"
+  },
+  {
+   "no": 37,
+   "file": "npc_grp_animal_2.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "animal_2",
+   "region": "forest",
+   "title": "にわとり ／ 花角の小鹿"
+  },
+  {
+   "no": 38,
+   "file": "npc_lotta_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "lotta",
+   "region": "desert",
+   "title": "ロッタ（lotta）"
+  },
+  {
+   "no": 39,
+   "file": "npc_zaid_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "zaid",
+   "region": "desert",
+   "title": "ザイード（zaid）"
+  },
+  {
+   "no": 40,
+   "file": "npc_nadia_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "nadia",
+   "region": "desert",
+   "title": "ナディア（nadia）"
+  },
+  {
+   "no": 41,
+   "file": "npc_abul_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "abul",
+   "region": "desert",
+   "title": "アブル（abul）"
+  },
+  {
+   "no": 42,
+   "file": "npc_fara_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "fara",
+   "region": "desert",
+   "title": "ファラ（fara）"
+  },
+  {
+   "no": 43,
+   "file": "npc_rashid_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "rashid",
+   "region": "desert",
+   "title": "ラシード（rashid）"
+  },
+  {
+   "no": 44,
+   "file": "npc_hazal_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "hazal",
+   "region": "desert",
+   "title": "ハザル王（hazal）"
+  },
+  {
+   "no": 45,
+   "file": "npc_grp_desert_1.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "desert_1",
+   "region": "desert",
+   "title": "市場の男 ／ 市場の女"
+  },
+  {
+   "no": 46,
+   "file": "npc_grp_desert_2.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "desert_2",
+   "region": "desert",
+   "title": "砂漠の老人 ／ 砂漠の老婆"
+  },
+  {
+   "no": 47,
+   "file": "npc_grp_desert_3.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "desert_3",
+   "region": "desert",
+   "title": "砂漠の子ども ／ 隊商の人"
+  },
+  {
+   "no": 48,
+   "file": "npc_grp_desert_4.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "desert_4",
+   "region": "desert",
+   "title": "砂の鷹団の団員 ／ 占い師"
+  },
+  {
+   "no": 49,
+   "file": "npc_grp_animal_3.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "animal_3",
+   "region": "desert",
+   "title": "ラクダ ／ ひつじ"
+  },
+  {
+   "no": 50,
+   "file": "npc_jorn_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "jorn",
+   "region": "snow",
+   "title": "ヨルン（jorn）"
+  },
+  {
+   "no": 51,
+   "file": "npc_sonja_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "sonja",
+   "region": "snow",
+   "title": "ソーニャ（sonja）"
+  },
+  {
+   "no": 52,
+   "file": "npc_hald_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "hald",
+   "region": "snow",
+   "title": "ハルド（hald）"
+  },
+  {
+   "no": 53,
+   "file": "npc_grp_snow_1.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "snow_1",
+   "region": "snow",
+   "title": "猟師の男 ／ 雪の村の女"
+  },
+  {
+   "no": 54,
+   "file": "npc_grp_snow_2.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "snow_2",
+   "region": "snow",
+   "title": "雪の村の老人 ／ 雪の村の老婆"
+  },
+  {
+   "no": 55,
+   "file": "npc_grp_snow_3.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "snow_3",
+   "region": "snow",
+   "title": "雪の村の子ども ／ 見張りの若者"
+  },
+  {
+   "no": 56,
+   "file": "npc_emma_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "emma",
+   "region": "marsh",
+   "title": "エマ（emma）"
+  },
+  {
+   "no": 57,
+   "file": "npc_tobias_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "tobias",
+   "region": "marsh",
+   "title": "トビアス（tobias）"
+  },
+  {
+   "no": 58,
+   "file": "npc_beppo_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "beppo",
+   "region": "marsh",
+   "title": "ベッポ（beppo）"
+  },
+  {
+   "no": 59,
+   "file": "npc_klaus_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "klaus",
+   "region": "marsh",
+   "title": "クラウス（klaus）"
+  },
+  {
+   "no": 60,
+   "file": "npc_melda_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "melda",
+   "region": "marsh",
+   "title": "メルダ（melda）"
+  },
+  {
+   "no": 61,
+   "file": "npc_loch_mayor_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "loch_mayor",
+   "region": "marsh",
+   "title": "ロッホの町長（loch_mayor）"
+  },
+  {
+   "no": 62,
+   "file": "npc_grp_marsh_1.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "marsh_1",
+   "region": "marsh",
+   "title": "水辺の町の男 ／ 水辺の町の女"
+  },
+  {
+   "no": 63,
+   "file": "npc_grp_marsh_2.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "marsh_2",
+   "region": "marsh",
+   "title": "水辺の老人 ／ 水辺の老婆"
+  },
+  {
+   "no": 64,
+   "file": "npc_grp_marsh_3.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "marsh_3",
+   "region": "marsh",
+   "title": "水辺の子ども ／ 灯籠守"
+  },
+  {
+   "no": 65,
+   "file": "npc_marina_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "marina",
+   "region": "isles",
+   "title": "マリナ（marina）"
+  },
+  {
+   "no": 66,
+   "file": "npc_glen_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "glen",
+   "region": "isles",
+   "title": "グレン（glen）"
+  },
+  {
+   "no": 67,
+   "file": "npc_drake_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "drake",
+   "region": "isles",
+   "title": "ドレイク（drake）"
+  },
+  {
+   "no": 68,
+   "file": "npc_merchant_captain_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "merchant_captain",
+   "region": "isles",
+   "title": "商船の船長（merchant_captain）"
+  },
+  {
+   "no": 69,
+   "file": "npc_grp_isles_1.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "isles_1",
+   "region": "isles",
+   "title": "漁師 ／ 港の女"
+  },
+  {
+   "no": 70,
+   "file": "npc_grp_isles_2.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "isles_2",
+   "region": "isles",
+   "title": "諸島の老人 ／ 諸島の老婆"
+  },
+  {
+   "no": 71,
+   "file": "npc_grp_isles_3.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "isles_3",
+   "region": "isles",
+   "title": "諸島の子ども ／ 水夫"
+  },
+  {
+   "no": 72,
+   "file": "npc_borg_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "borg",
+   "region": "mine",
+   "title": "ボルグ（borg）"
+  },
+  {
+   "no": 73,
+   "file": "npc_helga_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "helga",
+   "region": "mine",
+   "title": "ヘルガ（helga）"
+  },
+  {
+   "no": 74,
+   "file": "npc_pip_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "pip",
+   "region": "mine",
+   "title": "ピップ（pip）"
+  },
+  {
+   "no": 75,
+   "file": "npc_hermit_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "hermit",
+   "region": "mine",
+   "title": "山の隠者（hermit）"
+  },
+  {
+   "no": 76,
+   "file": "npc_grp_mine_1.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "mine_1",
+   "region": "mine",
+   "title": "鉱夫 ／ 地下の町の女"
+  },
+  {
+   "no": 77,
+   "file": "npc_grp_mine_2.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "mine_2",
+   "region": "mine",
+   "title": "地下の町の老人 ／ 地下の町の老婆"
+  },
+  {
+   "no": 78,
+   "file": "npc_grp_mine_3.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "mine_3",
+   "region": "mine",
+   "title": "地下の町の子ども ／ 鍛冶衆"
+  },
+  {
+   "no": 79,
+   "file": "npc_dorga_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "dorga",
+   "region": "ash",
+   "title": "ドルガ（dorga）"
+  },
+  {
+   "no": 80,
+   "file": "npc_kaya_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "kaya",
+   "region": "ash",
+   "title": "カヤ（kaya）"
+  },
+  {
+   "no": 81,
+   "file": "npc_zakuro_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "zakuro",
+   "region": "ash",
+   "title": "ザクロ（zakuro）"
+  },
+  {
+   "no": 82,
+   "file": "npc_grp_ash_1.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "ash_1",
+   "region": "ash",
+   "title": "火口の町の男 ／ 火口の町の女"
+  },
+  {
+   "no": 83,
+   "file": "npc_grp_ash_2.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "ash_2",
+   "region": "ash",
+   "title": "火口の町の老人 ／ 火口の町の老婆"
+  },
+  {
+   "no": 84,
+   "file": "npc_grp_ash_3.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "ash_3",
+   "region": "ash",
+   "title": "火口の町の子ども ／ 一族の闘士"
+  },
+  {
+   "no": 85,
+   "file": "npc_grp_ash_4.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "ash_4",
+   "region": "ash",
+   "title": "神殿の火守りの見習い ／ 賭けの胴元"
+  },
+  {
+   "no": 86,
+   "file": "npc_octavia_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "octavia",
+   "region": "star",
+   "title": "オクタヴィア（octavia）"
+  },
+  {
+   "no": 87,
+   "file": "npc_luka_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "luka",
+   "region": "star",
+   "title": "ルカ（luka）"
+  },
+  {
+   "no": 88,
+   "file": "npc_naturalist_s1.png",
+   "tier": "B",
+   "layout": "walk_act",
+   "id": "naturalist",
+   "region": "star",
+   "title": "博物学者（naturalist）"
+  },
+  {
+   "no": 89,
+   "file": "npc_grp_star_1.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "star_1",
+   "region": "star",
+   "title": "城壁の町の男 ／ 城壁の町の女"
+  },
+  {
+   "no": 90,
+   "file": "npc_grp_star_2.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "star_2",
+   "region": "star",
+   "title": "老学者 ／ 城壁の町の老婆"
+  },
+  {
+   "no": 91,
+   "file": "npc_grp_star_3.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "star_3",
+   "region": "star",
+   "title": "城壁の町の子ども ／ 学生"
+  },
+  {
+   "no": 92,
+   "file": "npc_grp_star_4.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "star_4",
+   "region": "star",
+   "title": "夜番の守衛 ／ 羊飼い（月見の牧場）"
+  },
+  {
+   "no": 93,
+   "file": "npc_lazaro_s1.png",
+   "tier": "A",
+   "layout": "walk",
+   "id": "lazaro",
+   "region": "finale",
+   "title": "ラザロ（lazaro）シート1 歩き"
+  },
+  {
+   "no": 94,
+   "file": "npc_lazaro_s2.png",
+   "tier": "A",
+   "layout": "act12",
+   "id": "lazaro",
+   "region": "finale",
+   "title": "ラザロ（lazaro）シート2 演技12"
+  },
+  {
+   "no": 95,
+   "file": "npc_lazaro_s3.png",
+   "tier": "A",
+   "layout": "face6",
+   "id": "lazaro",
+   "region": "finale",
+   "title": "ラザロ（lazaro）シート3 顔6"
+  },
+  {
+   "no": 96,
+   "file": "npc_noa_s1.png",
+   "tier": "A",
+   "layout": "walk",
+   "id": "noa",
+   "region": "finale",
+   "title": "ノア（noa）シート1 歩き"
+  },
+  {
+   "no": 97,
+   "file": "npc_noa_s2.png",
+   "tier": "A",
+   "layout": "act12",
+   "id": "noa",
+   "region": "finale",
+   "title": "ノア（noa）シート2 演技12"
+  },
+  {
+   "no": 98,
+   "file": "npc_noa_s3.png",
+   "tier": "A",
+   "layout": "face6",
+   "id": "noa",
+   "region": "finale",
+   "title": "ノア（noa）シート3 顔6"
+  },
+  {
+   "no": 99,
+   "file": "npc_grp_biblia_1.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "biblia_1",
+   "region": "finale",
+   "title": "白い町の男 ／ 白い町の女"
+  },
+  {
+   "no": 100,
+   "file": "npc_grp_biblia_2.png",
+   "tier": "C",
+   "layout": "walk_pair",
+   "id": "biblia_2",
+   "region": "finale",
+   "title": "白い町の老人 ／ 白い町の子ども"
+  },
+  {
+   "no": 101,
+   "file": "npc_zakuro_btl.png",
+   "tier": "optional",
+   "layout": "battle_single",
+   "id": "zakuro",
+   "region": "ash",
+   "title": "ザクロ（zakuro）戦闘の立ち絵"
+  },
+  {
+   "no": 102,
+   "file": "npc_rashid_btl.png",
+   "tier": "optional",
+   "layout": "battle_single",
+   "id": "rashid",
+   "region": "desert",
+   "title": "ラシード（rashid）戦闘の立ち絵"
+  }
+ ],
+ "totals": {
+  "sheets": 100,
+  "optionalSheets": 2,
+  "tierA": {
+   "npcs": 6,
+   "sheets": 18
+  },
+  "tierB": {
+   "npcs": 42,
+   "sheets": 42
+  },
+  "tierC": {
+   "sheets": 40,
+   "people": 74,
+   "animals": 6
+  },
+  "faces": 6,
+  "frames": 1812,
+  "distinctLayouts": 5,
+  "distinctLayoutsWithOptional": 6
+ }
+}
