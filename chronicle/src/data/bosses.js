@@ -39,12 +39,12 @@
   // rewrites the block between these two markers. Members of one troop share the troop's values) ----
   // @@S-BEGIN
   const S = {
-    b_pageeater: { hp: 1.35 },
+    b_pageeater: { hp: 1.7 },
     b_moth: { hp: 1.65 },
-    b_rooteater: { hp: 0.7, atk: 0.85, mag: 0.85 },
-    b_root: { hp: 0.7, atk: 0.85, mag: 0.85 },
+    b_rooteater: { hp: 0.92, atk: 0.85, mag: 0.85 },
+    b_root: { hp: 0.5, atk: 0.6, mag: 0.6 },
     b_sandworm: { hp: 1.1 },
-    b_sandking: { hp: 0.7, atk: 0.7, mag: 0.7 },
+    b_sandking: { hp: 0.8, atk: 0.7, mag: 0.7 },
     b_icegiant: { hp: 1.35 },
     b_whitedragon: { hp: 1.35, atk: 0.6, mag: 0.6 },
     b_doll_conductor: { hp: 0.9, atk: 0.85, mag: 0.85 },
@@ -64,14 +64,14 @@
     b_stareater: { hp: 1.1, atk: 0.6, mag: 0.6 },
     b_rowell1: { hp: 1.35 },
     b_rowell2: { hp: 1.35 },
-    b_bookgolem: { hp: 0.7 },
-    b_shade_sword: { hp: 0.9, atk: 0.5, mag: 0.5 },
-    b_shade_prayer: { hp: 0.9, atk: 0.5, mag: 0.5 },
-    b_shade_star: { hp: 0.9, atk: 0.5, mag: 0.5 },
+    b_bookgolem: { hp: 0.8, atk: 0.85, mag: 0.85 },
+    b_shade_sword: { hp: 0.9, atk: 0.6, mag: 0.6 },
+    b_shade_prayer: { hp: 0.9, atk: 0.6, mag: 0.6 },
+    b_shade_star: { hp: 0.9, atk: 0.6, mag: 0.6 },
     b_lazaro: { hp: 0.9 },
-    b_nemrea1: { hp: 0.55 },
-    b_valzard_echo: { hp: 0.7, atk: 0.7, mag: 0.7 },
-    b_ouroboros: { hp: 0.5, atk: 0.5, mag: 0.5 },
+    b_nemrea1: { hp: 0.55, atk: 0.9, mag: 0.9 },
+    b_valzard_echo: { hp: 0.9, atk: 0.7, mag: 0.7 },
+    b_ouroboros: { hp: 0.6, atk: 0.55, mag: 0.55 },
   };
   // @@S-END
 

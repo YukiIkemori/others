@@ -249,7 +249,22 @@
       }
       for (const n of this.npcs) n.present = !n.hidden && (n.forced || check(n.cond));
       for (const c of this.chests) c.present = check(c.cond);
+      this.weather = resolveWeather(this.def.weather);
     }
+  }
+  const WEATHER_KINDS = { snow: 1, blizzard: 1 };
+  /** the map's weather (def.weather): a kind string, or [{cond, kind}] where the first entry whose
+   *  cond passes wins (an entry without cond always passes). null: clear sky / unknown kind */
+  function resolveWeather(w) {
+    if (!w) return null;
+    if (typeof w === 'string') return WEATHER_KINDS[w] ? w : null;
+    if (!Array.isArray(w)) return null;
+    for (const e of w) {
+      if (!e) continue;
+      if (typeof e === 'string') return WEATHER_KINDS[e] ? e : null;
+      if (check(e.cond)) return WEATHER_KINDS[e.kind] ? e.kind : null;
+    }
+    return null;
   }
   const EMPTY = { pass: false };
 
@@ -503,7 +518,7 @@
   }
 
   R.FieldMap = {
-    FieldMap, compile, peek, spawnPos, findWorld, warn, pushable, DEFAULT_BGM, TOWN_TYPES,
+    FieldMap, compile, peek, resolveWeather, spawnPos, findWorld, warn, pushable, DEFAULT_BGM, TOWN_TYPES,
     isSecretTile, secretKey, secretCells, secretStats,
     /** total number of secret-passage cells in the game */
     secretTotal() { return secretStats().total; },

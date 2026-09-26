@@ -15,6 +15,8 @@
   const startPos = () => Object.assign({}, FALLBACK_START, cfg().start || {});
   const nonEmpty = (o) => !!o && Object.keys(o).length > 0;
 
+  /** placeName(): farther than this (cells) from every visited place, the save slot names the region */
+  const PLACE_NEAR = 12;
   const State = (R.State = {
     /** where a new game starts (DB.config.start) */
     get START() { return startPos(); },
@@ -378,6 +380,12 @@
         const loc = State.dungeonLocation(def);
         return (loc && DB.locations[loc].name) || '';
       }
+      // distance to the nearest visited location on this map; a wrapping world (a torus) measures
+      // each axis the short way round: min(|d|, size − |d|)
+      let fm = null;
+      try { fm = R.FieldMap && R.FieldMap.peek ? R.FieldMap.peek(g.pos.map) : null; } catch (e) { fm = null; }
+      const wrap = !!(fm && fm.wrap && fm.w && fm.h);
+      const axis = (d, n) => { d = Math.abs(d); if (!wrap) return d; d %= n; return Math.min(d, n - d); };
       let best = null, bd = Infinity;
       for (const id in DB.locations) {
         const l = DB.locations[id];
@@ -385,11 +393,15 @@
         let p = null;
         try { p = R.FieldMap && R.FieldMap.spawnPos(l.spawn, l.map); } catch (e) { p = null; }
         if (!p) continue;
-        const d = Math.abs(p.x - g.pos.x) + Math.abs(p.y - g.pos.y);
+        const d = axis(p.x - g.pos.x, fm ? fm.w : 0) + axis(p.y - g.pos.y, fm ? fm.h : 0);
         if (d < bd) { bd = d; best = l; }
       }
-      if (!best) return 'フィールド';
-      return bd <= 1 ? best.name : best.name + '付近';
+      if (best && bd <= PLACE_NEAR) return bd <= 1 ? best.name : best.name + '付近';
+      // far from every visited place: the region whose world encounter zone is the one underfoot
+      let zone = null;
+      try { zone = fm && fm.zoneAt ? fm.zoneAt(g.pos.x, g.pos.y) : null; } catch (e) { zone = null; }
+      if (zone) for (const rid in DB.regions) if (DB.regions[rid] && DB.regions[rid].zone === zone && DB.regions[rid].name) return DB.regions[rid].name;
+      return 'エルセリア';
     },
     /** save data (§3.2.5): {v, kind, summary, game} */
     serialize() {

@@ -255,22 +255,40 @@ function expected() {
   }
   for (const [z, o] of Object.entries(T.encounters || {})) {
     if (!encounters[z]) throw new Error('tuning: unknown zone ' + z);
-    for (const [k, v] of Object.entries(o)) { if (k === 'why') continue; encounters[z][k] = v; TUNED['zone.' + z + '.' + k] = o.why || '?'; }
+    // base: the zone's groups before sim_zones --retilt split them by tier band (kept in the overlay only)
+    for (const [k, v] of Object.entries(o)) { if (k === 'why' || k === 'base') continue; encounters[z][k] = v; TUNED['zone.' + z + '.' + k] = o.why || '?'; }
   }
-  // global balance curve (tuning.json global: {hp:[T0..T9], dmg:[T0..T9]}): every regular non-metal monster's s.hp ×hp[t]
-  // and s.atk / s.mag ×dmg[t], t = the middle of the tier range where its lineage stage is the one '@' picks (§9.1.4).
-  // Applied after the per-monster entries, so those stay relative to the lineage (§9.13.1: all stages move one way).
-  const G = T.global;
-  if (G && G.hp && G.dmg) {
-    for (const [id, m] of Object.entries(mons)) {
-      if ((m.flags || []).includes('metal') || m.hpFixed) continue;
-      const t = midTier(D, m, id);
-      const sv = Object.assign({}, m.s || {});
-      const mul = (k, f) => { const v = Math.round((sv[k] != null ? sv[k] : 1) * f * 100) / 100; if (v === 1) delete sv[k]; else sv[k] = v; };
-      mul('hp', G.hp[t]); mul('atk', G.dmg[t]); mul('mag', G.dmg[t]);
-      m.s = sv;
-      TUNED[id + '.s(global)'] = G.why || '?';
+  // Balance of the regular monsters (§9.13.1: "a lineage's s moves one way for all its stages, keeping each stage's
+  // character"), in two factors that keep every DESIGN ratio between stats (atk : mag) and between stages:
+  //   lineages.<id>: {hp, dmg}           the whole lineage: s.hp ×hp, s.atk and s.mag ×dmg
+  //   global: {hp:[T0..T9], dmg:[T0..T9]} the engine's monster curve against the party, per tier: every regular non-metal
+  //                                       monster ×hp[t] / ×dmg[t], t = the middle of the tier range where '@' picks its
+  //                                       stage (midTier). A work-around on the data side for the curve in R.Rules.K
+  //   monsters.<id>.trim: {hp, dmg}       a small per-stage trim (0.8–1.25, same factor for atk and mag) where one stage
+  //                                       of a lineage plays harder / softer than its neighbours on the engine (M2)
+  // s = DESIGN s (or a per-monster overlay s) × lineage × global × trim, rounded once to 0.01. Every stat keeps its DESIGN
+  // proportion (atk : mag, def, mdef, agi untouched), so each stage keeps its character.
+  const G = T.global && T.global.hp && T.global.dmg ? T.global : null;
+  const LF = T.lineages || {};
+  for (const lid of Object.keys(LF)) if (!D.lineages[lid]) throw new Error('tuning: unknown lineage ' + lid);
+  for (const [id, m] of Object.entries(mons)) {
+    if ((m.flags || []).includes('metal') || m.hpFixed) continue;
+    const lf = LF[m.lineage];
+    const tr = m.trim; // per-stage trim (monsters.<id>.trim: {hp, dmg} within 0.8–1.25; see below)
+    delete m.trim;
+    if (!lf && !G && !tr) continue;
+    const t = midTier(D, D.mons[id], id);
+    const fh = (lf && lf.hp != null ? lf.hp : 1) * (G ? G.hp[t] : 1) * (tr && tr.hp != null ? tr.hp : 1);
+    const fd = (lf && lf.dmg != null ? lf.dmg : 1) * (G ? G.dmg[t] : 1) * (tr && tr.dmg != null ? tr.dmg : 1);
+    const src = m.s || {};
+    const sv = {};
+    for (const k of SKEYS) {
+      const f = k === 'hp' ? fh : k === 'atk' || k === 'mag' ? fd : 1;
+      const v = Math.round((src[k] != null ? src[k] : 1) * f * 100) / 100;
+      if (v !== 1) sv[k] = v;
     }
+    m.s = sv;
+    TUNED[id + '.s'] = [lf && 'lineage ' + m.lineage + ': ' + lf.why, G && 'global T' + t + ': ' + G.why, tr && 'trim ×' + (tr.hp || 1) + '/×' + (tr.dmg || 1)].filter(Boolean).join(' ／ ');
   }
   const actions = JSON.parse(JSON.stringify(D.actions));
   for (const [id, o] of Object.entries(T.actions || {})) {

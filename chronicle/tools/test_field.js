@@ -1120,6 +1120,109 @@ const SECTIONS = [
     ok(R.Minimap.TERRAIN.road && R.Minimap.TERRAIN.marsh && R.Minimap.TERRAIN.fog && R.Minimap.ICON.loc_library, '§11.2.5 colours');
     eq(R.Minimap.TERRAIN.secret_rock, R.Minimap.TERRAIN.mountain, 'secret passages look like their rock on the map');
   }),
+  // pass 3: world battle backdrops (A16a.0), map weather (R3.0), save-slot place names (A18a.4),
+  // wipes from event battles (A5.0)
+  run('pass3', async () => {
+    // A16a.0: a road fights on the ground it lies on (R.Art.worldBbg), checked through real encounters
+    if (R.DB.maps.world && R.Art && R.Art.worldBbg) {
+      await newGame('world', 'roa');
+      const bgs = [];
+      const start0 = R.Battle.start;
+      R.Battle.start = (o) => { bgs.push(o.bg); return Promise.resolve('win'); };
+      const cells = [[26, 77, 'desert'], [83, 74, 'ashland'], [22, 19, 'snow']];
+      for (const [x, y, want] of cells) {
+        await R.Field.warp('world', { x, y, dir: 'down' }, { fade: false }); await settle();
+        eq(R.Field.map.tileAt(x, y), 'road', 'world ' + x + ',' + y + ' is a road');
+        eq(R.Field.battleBg(R.Field.map.zoneAt(x, y)), want, 'battleBg on the road at ' + x + ',' + y);
+        const p = R.Field.encounter(); await until(p, 200); await settle();
+        eq(bgs[bgs.length - 1], want, 'a random battle on the road at ' + x + ',' + y + ' uses the ' + want + ' backdrop');
+      }
+      R.Battle.start = start0;
+    }
+    // R3.0: the weather layer
+    const RW = R.FieldMap.resolveWeather;
+    R.State.newGame();
+    eq([RW('snow'), RW('blizzard'), RW('rain'), RW(null)], ['snow', 'blizzard', null, null], 'weather: a kind string');
+    const list = [{ cond: { notCleared: 'r_snow' }, kind: 'blizzard' }, { kind: 'snow' }];
+    eq(RW(list), 'blizzard', 'weather: the first entry whose cond passes wins');
+    R.Game.regionsCleared.push('r_snow');
+    eq(RW(list), 'snow', 'weather: an entry without cond always passes');
+    if (R.DB.maps.yule) {
+      await newGame('yule', 'entrance');
+      eq(R.Field.map.weather, 'blizzard', 'yule: a blizzard before r_snow is cleared');
+      const L = R.Field.layer, t0 = L.weatherT || 0;
+      await step(10);
+      eq((L.weatherT || 0) - t0, 10, 'weather clock runs on the field');
+      class Screen extends R.Layer {}
+      const menu = new Screen();
+      R.Engine.push(menu);
+      const t1 = L.weatherT; await step(10);
+      eq(L.weatherT, t1, 'weather pauses under a menu / battle');
+      R.Engine.remove(menu); await step(1);
+      const say = R.UI.say('……');
+      const t2 = L.weatherT; await step(5);
+      ok(L.weatherT > t2, 'weather keeps falling behind a message window');
+      await clearMsgs(); await until(say, 60);
+      R.Game.regionsCleared.push('r_snow');
+      R.Field.refresh();
+      eq(R.Field.map.weather, 'snow', 'yule: light snow once r_snow is cleared (refresh)');
+      R.Game.regionsCleared = [];
+      await R.Field.warp('fx_town', 'entrance', { fade: false }); await settle();
+      eq(R.Field.map.weather || null, null, 'a map without `weather` has none');
+    }
+    // A18a.4: save-slot place names on the (wrapping) world map
+    if (R.DB.maps.world && R.DB.locations.caldera) {
+      R.State.newGame();
+      const g = R.Game;
+      g.visited = { roa: true, lute: true, lighthouse: true };
+      const cal = R.FieldMap.spawnPos(R.DB.locations.caldera.spawn, 'world');
+      g.pos = { map: 'world', x: cal.x, y: cal.y, dir: 'down' };
+      const zone = R.FieldMap.peek('world').zoneAt(cal.x, cal.y);
+      const reg = Object.keys(R.DB.regions).find((r) => R.DB.regions[r].zone === zone);
+      const name = R.State.placeName();
+      ok(!/ファロス灯台/.test(name), 'at カルデラ with only prologue places visited: not 「ファロス灯台付近」 (got ' + name + ')');
+      eq(name, reg ? R.DB.regions[reg].name : 'エルセリア', 'far from every visited place: the region of the zone underfoot');
+      const lh = R.FieldMap.spawnPos(R.DB.locations.lighthouse.spawn, 'world');
+      g.pos = { map: 'world', x: lh.x + 5, y: lh.y + 4, dir: 'down' };
+      eq(R.State.placeName(), R.DB.locations.lighthouse.name + '付近', 'within 12 cells: 「〇〇付近」');
+      g.pos = { map: 'world', x: lh.x, y: lh.y + 1, dir: 'down' };
+      eq(R.State.placeName(), R.DB.locations.lighthouse.name, 'next to it: the place itself');
+      // the short way round the torus
+      const W = R.FieldMap.peek('world').w;
+      R.DB.locations.fx_edge = { name: '端の村', map: 'world', spawn: { x: 1, y: lh.y } };
+      g.visited = { fx_edge: true };
+      g.pos = { map: 'world', x: W - 3, y: lh.y, dir: 'down' };
+      eq(R.State.placeName(), '端の村付近', 'wrapping world: distance is measured across the seam');
+      delete R.DB.locations.fx_edge;
+      g.visited = {};
+      g.pos = { map: 'world', x: cal.x, y: cal.y, dir: 'down' };
+      const zz = R.FieldMap.peek('world').zoneAt(cal.x, cal.y);
+      const saved = zz && R.DB.regions[reg] ? R.DB.regions[reg].zone : null;
+      if (reg) R.DB.regions[reg].zone = 'zw_nowhere';
+      eq(R.State.placeName(), 'エルセリア', 'no region for the zone: エルセリア');
+      if (reg) R.DB.regions[reg].zone = saved;
+    }
+    // A5.0: a lost event battle never calls R.GameOver.run() itself; the field's wipe flow does
+    // (the brawler of fx_town: an event battle without canLose)
+    await newGame('fx_town', 'entrance');
+    await clearMsgs();
+    let direct = 0, requested = 0, fromWipe = 0;
+    const go0 = R.GameOver, req0 = R.Field.requestWipe;
+    R.GameOver = { run: async () => { direct++; if (requested) fromWipe++; R.State.wipeRecover(); await R.Field.respawn(); } };
+    R.Field.requestWipe = function () { requested++; return req0.apply(this, arguments); };
+    R.fxBattleResult = 'lose';
+    R.Field.setPlayerPos(12, 26, 'down');
+    await press('a'); await step(6); await press('a');
+    for (let i = 0; i < 900 && !(direct && !R.Field.wipePending && !R.Events.busy()); i++) {
+      await step(1);
+      if (topName() === 'MessageLayer' && i % 10 === 0) await press('a');
+    }
+    ok(requested >= 1, 'ev.battle lost: the field wipe was requested');
+    eq([direct, fromWipe], [1, 1], 'the game over ran exactly once, from the wipe flow');
+    await clearMsgs();
+    eq(R.Field.map.id, 'fx_town', 'woke up in the last town');
+    R.Field.requestWipe = req0; R.GameOver = go0; R.fxBattleResult = 'win';
+  }),
 ];
 
 (async function main() {

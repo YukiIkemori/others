@@ -101,14 +101,25 @@
   const TC = { cv: null, ctx: null, spare: null, uid: -1, ver: -1, z: 0, x0: 0, y0: 0, w: 0, h: 0, whole: false, anim: [], danim: [], drawn: new Map() };
   const artWarned = {};
 
-  function tileGfx(m, id) {
-    let g = m.gfx[id];
+  /** tile art of `id` in `theme` (default: the map's theme); cached on the map per theme */
+  function tileGfx(m, id, theme) {
+    if (theme === undefined || theme === m.theme) theme = m.theme;
+    const ck = theme === m.theme ? id : theme + '\u0001' + id;
+    let g = m.gfx[ck];
     if (g !== undefined) return g;
     const G = R.Gfx;
     if (id === 'void' && !G.has('tile:void')) g = null;
-    else if (m.theme && G.has('tile:' + m.theme + ':' + id)) g = G.get('tile:' + m.theme + ':' + id);
+    else if (theme && G.has('tile:' + theme + ':' + id)) g = G.get('tile:' + theme + ':' + id);
+    else if (theme !== m.theme) g = tileGfx(m, id);
     else g = G.get('tile:' + id);
-    return (m.gfx[id] = g);
+    return (m.gfx[ck] = g);
+  }
+  /** the theme of a cell for the plain tile fallback: R.Art.themeAt (def.themeAreas patches, e.g. the
+   *  patchwork forest of the Depths of Oblivion) or the map's own theme */
+  function cellTheme(m, x, y) {
+    const A = R.Art;
+    if (!A || typeof A.themeAt !== 'function') return m.theme;
+    try { return A.themeAt(m, x, y) || m.theme; } catch (e) { return m.theme; }
   }
   /** canvas | canvas[] | null for a cell */
   function cellGfx(m, x, y) {
@@ -129,7 +140,7 @@
       }
       if (w) return w;
     }
-    return tileGfx(m, m.tiles[i]);
+    return tileGfx(m, m.tiles[i], cellTheme(m, x, y));
   }
   /** decor canvas | frames | null at a cell (cached per cell) */
   function decorGfx(m, x, y) {
@@ -492,6 +503,73 @@
   }
   /** does the 1×1 box at (bx,by) overlap cell (cx,cy)? */
   const boxHits = (bx, by, cx, cy) => bx < cx + 1 - EPS && bx + 1 > cx + EPS && by < cy + 1 - EPS && by + 1 > cy + EPS;
+
+  // ------------------------------------------------------------ weather (map `weather` layer)
+  // def.weather → FieldMap.weather ('snow' | 'blizzard' | null; re-evaluated by refresh()).
+  // Drawn in map px over the tiles, sprites and over-decor, under every UI layer (menus, messages,
+  // the banner). The flakes are a pure function of the weather clock, which only runs while the
+  // field (or a message / event stage over it) is on screen: a battle or a menu freezes it.
+  const WEATHER = {
+    // n: flakes per 256×224 of view; vx/vy: px per frame; len: streak length (0 = a dot)
+    snow: { n: 70, vx: [-0.15, 0.15], vy: [0.35, 0.8], sway: 0.6, size: [1, 2], len: 0, alpha: [0.65, 1] },
+    blizzard: { n: 360, vx: [-2.8, -1.7], vy: [1.6, 3.0], sway: 0.35, size: [1, 2], len: 3, alpha: [0.55, 0.95], haze: 0.16 },
+  };
+  const WEATHER_PAUSE_OK = { MessageLayer: 1, ChoiceLayer: 1, NumberLayer: 1, StageLayer: 1 };
+  const hash01 = (i, k) => {
+    let h = (i * 374761393 + k * 668265263) | 0;
+    h = Math.imul(h ^ (h >>> 13), 1274126177);
+    return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+  };
+  const lerp = (r, t) => r[0] + (r[1] - r[0]) * t;
+  const pmod = (a, n) => ((a % n) + n) % n;
+  /** is the weather clock frozen (anything but the field, a message or an event stage on top)? */
+  function weatherPaused(lay) {
+    const Ls = R.Engine.layers, i = Ls.indexOf(lay);
+    if (i < 0) return true;
+    for (let j = i + 1; j < Ls.length; j++) {
+      const l = Ls[j];
+      if (l.closed) continue;
+      if (l.isStage || WEATHER_PAUSE_OK[l.constructor && l.constructor.name]) continue;
+      return true;
+    }
+    return false;
+  }
+  /** draw weather `kind` for camera `cam` (map px, the view is V.w×V.h) at weather time t */
+  function drawWeather(kind, cam, t) {
+    const W = WEATHER[kind];
+    if (!W) return;
+    const c = R.Gfx.ctx, vw = V.w, vh = V.h;
+    const pad = 24, fw = vw + pad * 2, fh = vh + pad * 2;
+    const n = Math.round((W.n * fw * fh) / (256 * 224));
+    const a0 = c.globalAlpha;
+    if (W.haze) {
+      // a drifting white veil: gusts brighten it now and then
+      const gust = 0.5 + 0.5 * Math.sin(t / 47) * Math.sin(t / 113 + 1.3);
+      c.globalAlpha = a0 * W.haze * (0.6 + 0.8 * gust);
+      c.fillStyle = '#e8eef8';
+      c.fillRect(0, 0, vw + 1, vh + 1);
+    }
+    c.fillStyle = '#ffffff';
+    // flakes are anchored loosely to the world (0.6 parallax) so walking moves through them
+    const ox = cam.x * 0.6, oy = cam.y * 0.6;
+    for (let i = 0; i < n; i++) {
+      const r1 = hash01(i, 1), r2 = hash01(i, 2), r3 = hash01(i, 3), r4 = hash01(i, 4), r5 = hash01(i, 5);
+      const vx = lerp(W.vx, r3), vy = lerp(W.vy, r4);
+      const sway = W.sway * Math.sin(t / (22 + r5 * 30) + r1 * 6.283) * 4;
+      const x = -pad + pmod(r1 * fw + vx * t + sway - ox, fw);
+      const y = -pad + pmod(r2 * fh + vy * t - oy, fh);
+      const sz = r5 < 0.25 ? W.size[1] : W.size[0];
+      c.globalAlpha = a0 * lerp(W.alpha, r2);
+      const px = Math.round(x), py = Math.round(y);
+      if (W.len) {
+        // a short diagonal streak along the motion (1 px steps), heads brighter than tails
+        const sx = vx / vy;
+        for (let k = 0; k <= W.len; k++) c.fillRect(Math.round(x - sx * k), py - k, 1, 1);
+        if (sz > 1) c.fillRect(px, py, 2, 2);
+      } else c.fillRect(px, py, sz, sz);
+    }
+    c.globalAlpha = a0;
+  }
 
   class FieldLayer extends R.Layer {
     constructor() {
@@ -1160,6 +1238,7 @@
       const g = R.Game;
       if (!g || !M) return;
       g.playFrames = (g.playFrames || 0) + 1;
+      if (M.weather && !weatherPaused(this)) this.weatherT = (this.weatherT || 0) + 1;
       if (this.P.length !== Math.max(1, Math.min(partyMax(), g.party.length))) { this.syncParty(); this.syncFollowers(); }
       const mv = this.mv;
       if (mv) {
@@ -1283,6 +1362,7 @@
       this.drawObjects(cam);
       this.drawSprites(cam);
       this.drawOver(cam);
+      if (M.weather) drawWeather(M.weather, cam, this.weatherT || 0);
       c.restore();
       // overlays in UI px
       if (this.banner) this.drawBanner();
@@ -1353,7 +1433,10 @@
           const n = s.npc;
           const spr = G.get(n.sprite);
           const animated = n.sprite.startsWith('mon:') || n.sprite.startsWith('obj:');
-          const img = animated ? (Array.isArray(spr) ? spr[af % spr.length] : sheetFrame(spr, 'down', af)) : sheetFrame(spr, n.dir, n.mv ? Math.floor(n.mv.t / 8) + n.seq + 1 : 0);
+          // '_fade' sprites (npc:fine_fade) drift through their 2 frames while standing, like obj: sprites
+          const drift = !animated && n.sprite.endsWith('_fade');
+          const img = animated ? (Array.isArray(spr) ? spr[af % spr.length] : sheetFrame(spr, 'down', af))
+            : sheetFrame(spr, n.dir, n.mv ? Math.floor(n.mv.t / 8) + n.seq + 1 : drift ? af : 0);
           if (img) {
             // battle-size monster art standing on the map is drawn at half size (bottom-aligned on its tile)
             const mon = n.sprite.startsWith('mon:') || n.sprite.startsWith('fieldmon:');
@@ -1852,7 +1935,9 @@
       const enc = zone && DB.encounters[zone];
       if (M.isWorld) {
         const p = L.cell;
-        return M.tile(p.x, p.y).bbg || (enc && enc.bg) || 'grass';
+        let bb = null;
+        try { bb = R.Art && R.Art.worldBbg ? R.Art.worldBbg(M, p.x, p.y) : null; } catch (e) { bb = null; }
+        return bb || M.tile(p.x, p.y).bbg || (enc && enc.bg) || 'grass';
       }
       if (M.bbg) return M.bbg;
       const th = M.theme && DB.themes[M.theme];

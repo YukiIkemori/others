@@ -411,7 +411,7 @@
       this.acting = null; // the member entering commands (steps forward, STATUS band)
       this.actor = null; // the unit whose action is playing
       this.picking = null; // {units:[...]} | {ally} | {allies:true}
-      this.winFx = eng.party.map(() => ({ shake: 0, flash: 0, glow: 0, raise: 0 })); // STATUS row effects
+      this.winFx = eng.party.map(() => ({ shake: 0, flash: 0, glow: 0 })); // STATUS row effects
       this.partyIdx = 0;
       this.glim = null; // glimmer {u, t0, H, name, title, color, w, bulb}
       this.glimUntil = 0; // the next action waits until this frame
@@ -853,7 +853,7 @@
         case 'escape': return s.onEscape(ev);
         case 'cover': {
           // かばう: the one who steps in walks in front of the one protected and guards (§11.5.10a)
-          R.sfx('jump');
+          R.sfx('parry'); // §11.10.5: かばう uses the parry sound
           const v = s.pv(ev.u), al = s.pv(ev.ally);
           if (v && al && v !== al) {
             v.away = true;
@@ -870,7 +870,8 @@
           // autoRevive ({kind:'revive'}) only flashes: the revive pillar and 「…は立ち上がった！」 follow
           if (ev.t === 'counter' || ev.kind !== 'revive') R.sfx('parry');
           const v = s.pv(ev.u);
-          if (v) { v.flash = { col: '#ffffff', a: 0.55, n: 6 }; if (s.winFx[ev.u.idx]) s.winFx[ev.u.idx].raise = 6; }
+          // (the front view's raised member window is gone: STATUS is one fixed window at y 152, nothing can rise into y 0)
+          if (v) v.flash = { col: '#ffffff', a: 0.55, n: 6 };
           else if (ev.u && s.vis.get(ev.u)) s.vis.get(ev.u).blink = 6;
           return s.frames(6);
         }
@@ -1631,7 +1632,6 @@
       for (const f of this.winFx) {
         if (f.shake > 0) f.shake = Math.max(0, f.shake - s);
         if (f.flash > 0) f.flash = Math.max(0, f.flash - s);
-        if (f.raise > 0) f.raise = Math.max(0, f.raise - s);
         if (f.glow > 0) f.glow--; // glimmer glow runs in real frames (not shortened by battle speed)
       }
       if (this.glim && F > this.glim.t0 + this.glim.H + 6) this.glim = null;

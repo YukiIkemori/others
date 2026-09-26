@@ -355,8 +355,12 @@
             for (const c of R.Game.party) if (c.hp <= 0) { c.hp = 1; c.status = {}; }
             return 'lose';
           }
+          // always through the field's wipe flow (§4.12.2): it runs once this event has unwound and
+          // holds the respawn map's onEnter back until the wake-up window is done. Never call
+          // R.GameOver.run() from here (the respawn's onEnter could close the wake-up window).
           if (f && f.requestWipe) f.requestWipe();
-          else if (R.GameOver && R.GameOver.run) await R.GameOver.run();
+          else if (f && f.gameOver) f.gameOver();
+          else R.warn('ev.battle: lost, but no field wipe flow (R.Field.requestWipe) to run');
           throw ABORT;
         }
         return res;

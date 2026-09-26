@@ -84,12 +84,12 @@
       // read = the say settled and its own window closed (A/B); a say that settles while the window
       // stays open was replaced by another say (UI.say settles a superseded say)
       R.UI.say(text, { noWait: false, keep: false, auto: 0 }).then(() => fin(!m || !!m.closed), () => fin(false));
-      m = R.UI._msg;
+      m = R.UI.msgOpen();
       const poll = () => {
         if (done) return;
         // a window its reader closed has settled its say (finish() clears resolveText before close());
         // one closed from outside (closeMessage) still holds it
-        if (!m || m.closed || !R.Engine.layers.includes(m)) { fin(!!(m && m.closed && !m.resolveText)); return; }
+        if (!m || m.closed || !R.Engine.layers.includes(m)) { fin(!!(m && m.closed && R.UI.msgSettled(m))); return; }
         R.Engine.wait(1).then(poll);
       };
       R.Engine.wait(1).then(poll);
@@ -103,7 +103,7 @@
   async function wakeUp(text) {
     if (await sayGuarded(text)) return;
     for (let f = 0; f < 3600 && eventsBusy(); f++) await R.Engine.wait(1);
-    if (R.UI && R.UI.closeMessage && R.UI._msg && !R.UI._msg.resolveText) R.UI.closeMessage();
+    if (R.UI && R.UI.closeMessage && R.UI.msgOpen() && R.UI.msgSettled()) R.UI.closeMessage();
     await sayGuarded(text);
   }
   GameOver._wakeUp = wakeUp;

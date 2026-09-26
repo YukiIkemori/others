@@ -178,6 +178,11 @@ const section = (h) => { const i = DESIGN.indexOf(h); if (i < 0) return ''; cons
   if (!jin.size || !sfx.size) err('K6', '§11.11.4 lists not read');
   for (const id of usedS) if (!sfx.has(id)) err('K6', `sfx '${id}' is not in §11.11.4`); else okk('K6', 'sfx ' + id);
   for (const id of usedJ) if (!jin.has(id)) err('K6', `jingle '${id}' is not in §11.11.4`); else okk('K6', 'jingle ' + id);
+  // §11.10.5: かばう (the 'cover' event) sounds 'parry', not 'jump'
+  const cov = /case 'cover': \{[\s\S]*?R\.sfx\('(\w+)'\)/.exec(SCENE);
+  if (!cov) err('K6', "the scene has no R.sfx in case 'cover'");
+  else if (cov[1] !== 'parry') err('K6', `cover sounds '${cov[1]}', §11.10.5 says 'parry'`);
+  else okk('K6', 'cover → parry');
   if (R.DB.sfx && Object.keys(R.DB.sfx).length) for (const id of usedS) if (!R.DB.sfx[id]) warn('K6', `sfx '${id}' has no DB.sfx entry yet (audio A17)`);
 }
 

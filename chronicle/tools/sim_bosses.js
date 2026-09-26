@@ -202,11 +202,13 @@ if (ONE && !arg('tune', false)) {
 // them) against the X1/X4 targets; --write stores them in src/data/bosses.js (the @@S block).
 if (arg('tune', false)) {
   const TARGET = { prologue: 5.5, mid: 6, region: 9.5, fmid: 10.5, rival: 6, last: 9.5 };
+  // species whose s was set by hand apart from the rest of the troop (the tuner leaves them as they are)
+  const OWN_S = { b_root: 'A22.1: weaker roots than the boss flatten the T0→T7 trend of tr_b_rooteater (13.5 → 6.2 rounds before)' };
   const bossIdsOf = (tr) => {
     const ids = new Set();
     for (const [ref] of DB.troops[tr].mons) if (DB.monsters[ref] && (DB.monsters[ref].flags || []).includes('boss')) ids.add(ref);
     for (const id of [...ids]) for (const a of DB.monsters[id].actions || []) for (const e of (ACT(a.id) && ACT(a.id).effects) || []) if (e.type === 'summon' && DB.monsters[e.mon] && (DB.monsters[e.mon].flags || []).includes('boss')) ids.add(e.mon);
-    return [...ids];
+    return [...ids].filter((id) => !OWN_S[id]);
   };
   const base = {};
   // start from s = 1 (the design values) unless --keep

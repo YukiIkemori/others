@@ -10,7 +10,7 @@
 //   node tools/sim_zones.js --json out.json      write all numbers (M1 includes every group's result)
 //   node tools/sim_zones.js --species [--fit out.json]   species danger; --fit writes a candidate overlay (see below)
 //   node tools/sim_zones.js --refit all.json --fit out.json   zone-context correction of s from a --json run
-//   node tools/sim_zones.js --retilt all.json --fit out.json  M2: re-weight each zone's T0/T1 groups from a --json run
+//   node tools/sim_zones.js --retilt all.json --fit out.json  M2: re-weight each zone's groups per stage band from a --json run
 //   node tools/sim_zones.js --tuning cand.json   run on DESIGN ⊕ a candidate overlay (in memory)
 //
 // Criteria (§9.13.1; party = §4.17.1 standard party, auto battle, mob fights start with MP/WP 60%, HP full):
@@ -711,35 +711,93 @@ function runZoneTier(zid, T, partyKind, n, useReal) {
   return { zid, T, agg, groups, sample };
 }
 
-/** §9.13.1: a lineage's s moves one way for all its stages. Per lineage and stat, the direction (vs DESIGN) with the larger
- *  total log-change wins; stages that wanted the other way keep their DESIGN value for that stat. pairs: [[lineage, monId]] */
-function projectLineages(base, Dd, pairs) {
-  const byL = {};
-  for (const [lid, id] of pairs) if (base.monsters[id] && base.monsters[id].s) (byL[lid] = byL[lid] || []).push(id);
-  for (const ids of Object.values(byL)) {
-    for (const k of ['hp', 'atk', 'mag']) {
-      const lr = ids.map((id) => { const d = (Dd.mons[id].s || {})[k]; const e = base.monsters[id].s[k]; return Math.log((e != null ? e : 1) / (d != null ? d : 1)); });
-      const up = lr.filter((x) => x > 0).reduce((a, b) => a + b, 0), dn = -lr.filter((x) => x < 0).reduce((a, b) => a + b, 0);
-      ids.forEach((id, i) => {
-        if ((up >= dn && lr[i] < 0) || (dn > up && lr[i] > 0)) {
-          const d = (Dd.mons[id].s || {})[k];
-          if (d == null || d === 1) delete base.monsters[id].s[k]; else base.monsters[id].s[k] = d;
-        }
-      });
+/** §9.13.1: "a lineage's s moves one way for all its stages (keeping each stage's character)". Species corrections are
+ *  never written per species: they are projected on the two factors of tuning.json (check_mons expected()):
+ *    lineages.<id>.{hp, dmg}   one factor per lineage (s.hp; s.atk and s.mag together, so atk : mag stays DESIGN's)
+ *    global.{hp, dmg}[t]       one factor per tier t = midTier of the stage (the engine's monster curve vs the party)
+ *  corr: {monId: {fh, fd, w}} = the multiplicative change each species wants from its current s, with a weight.
+ *  The wanted totals log(s_new / s_DESIGN) are split by weighted alternating least squares; lineage factors are
+ *  normalised to a weighted geometric mean of 1 (the level lives in global). */
+function projectStructured(base, corr, why) {
+  const Dd = CM.parseDesign();
+  const E = CM.expected();
+  const obs = [];
+  for (const [id, c] of Object.entries(corr)) {
+    const d = Dd.mons[id], m = E.mons[id];
+    if (!d || !d.lineage || (d.flags || []).includes('metal') || d.hpFixed) continue;
+    const lr = (k) => Math.log(((m.s || {})[k] != null ? m.s[k] : 1) / ((d.s || {})[k] != null ? d.s[k] : 1));
+    obs.push({ id, L: d.lineage, t: CM.midTier(Dd, d, id), w: Math.max(1e-6, c.w || 1),
+      hp: lr('hp') + Math.log(c.fh), dmg: (lr('atk') + lr('mag')) / 2 + Math.log(c.fd) });
+  }
+  // species without a measurement keep their current total (so their lineage / tier are still anchored)
+  for (const [id, d] of Object.entries(Dd.mons)) {
+    if (corr[id] || !d.lineage || (d.flags || []).includes('metal') || d.hpFixed) continue;
+    const m = E.mons[id];
+    const lr = (k) => Math.log(((m.s || {})[k] != null ? m.s[k] : 1) / ((d.s || {})[k] != null ? d.s[k] : 1));
+    obs.push({ id, L: d.lineage, t: CM.midTier(Dd, d, id), w: 0.25, hp: lr('hp'), dmg: (lr('atk') + lr('mag')) / 2 });
+  }
+  const r2 = (v) => Math.round(v * 100) / 100;
+  const res = { hp: null, dmg: null };
+  for (const k of ['hp', 'dmg']) {
+    const g = {}, l = {};
+    for (const o of obs) { g[o.t] = 0; l[o.L] = 0; }
+    for (let it = 0; it < 300; it++) {
+      const sg = {}, wg = {};
+      for (const o of obs) { sg[o.t] = (sg[o.t] || 0) + o.w * (o[k] - l[o.L]); wg[o.t] = (wg[o.t] || 0) + o.w; }
+      for (const t of Object.keys(sg)) g[t] = sg[t] / wg[t];
+      const sl = {}, wl = {};
+      for (const o of obs) { sl[o.L] = (sl[o.L] || 0) + o.w * (o[k] - g[o.t]); wl[o.L] = (wl[o.L] || 0) + o.w; }
+      for (const L of Object.keys(sl)) l[L] = sl[L] / wl[L];
+      const tw = Object.values(wl).reduce((a, b) => a + b, 0);
+      const mean = Object.keys(l).reduce((a, L) => a + wl[L] * l[L], 0) / tw;
+      for (const L of Object.keys(l)) l[L] -= mean;
+      for (const t of Object.keys(g)) g[t] += mean;
+    }
+    // every tier 0..9: tiers without a stage middle are interpolated in log space
+    const ks = Object.keys(g).map(Number).sort((x, y) => x - y);
+    const arr = [];
+    for (let t = 0; t < 10; t++) {
+      if (g[t] != null) { arr.push(r2(Math.exp(g[t]))); continue; }
+      const lo = ks.filter((x) => x < t).pop(), hi = ks.find((x) => x > t);
+      const v = lo == null ? g[hi] : hi == null ? g[lo] : g[lo] + (g[hi] - g[lo]) * (t - lo) / (hi - lo);
+      arr.push(r2(Math.exp(v)));
+    }
+    res[k] = { g: arr, l };
+  }
+  const prevG = base.global || {};
+  base.global = { why: prevG.why || 'sim_zones on the game engine: per-tier factor of every regular non-metal monster (the engine curve R.Rules.K vs the standard party)', hp: res.hp.g, dmg: res.dmg.g };
+  base.lineages = base.lineages || {};
+  for (const L of Object.keys(res.hp.l).sort()) {
+    base.lineages[L] = { hp: r2(Math.exp(res.hp.l[L])), dmg: r2(Math.exp(res.dmg.l[L])), why };
+  }
+  // per-species s entries are not used any more (text fixes stay); what a stage wants beyond its lineage and tier is a
+  // bounded trim (0.8–1.25), the same factor on atk and mag, so the stage keeps its DESIGN profile
+  base.monsters = base.monsters || {};
+  for (const o of Object.values(base.monsters)) { delete o.s; delete o.trim; }
+  if (!flag('no-trim')) {
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+    for (const o of obs) {
+      const th = r2(clamp(Math.exp(o.hp - Math.log(base.global.hp[o.t]) - Math.log(base.lineages[o.L].hp)), 0.8, 1.25));
+      const td = r2(clamp(Math.exp(o.dmg - Math.log(base.global.dmg[o.t]) - Math.log(base.lineages[o.L].dmg)), 0.8, 1.25));
+      if (Math.abs(th - 1) < 0.03 && Math.abs(td - 1) < 0.03) continue;
+      const e = base.monsters[o.id] = base.monsters[o.id] || {};
+      e.trim = { hp: th, dmg: td };
+      const txt = e.why ? String(e.why).split(' ／ ').filter((x) => x.startsWith('desc:')) : [];
+      e.why = ['trim: ' + why + ' — this stage against its lineage and tier'].concat(txt).join(' ／ ');
     }
   }
+  for (const [id, o] of Object.entries(base.monsters)) if (Object.keys(o).every((k) => k === 'why')) delete base.monsters[id];
 }
 
 /** --refit <sim_zones --json file> --fit <out.json>: zone-context correction of s (no battles are run). Every non-excluded
  *  group's result is compared with a target proportional to its strength (HP lost FIT_LOST × strength / 3.2, rounds
  *  FIT_ROUNDS × (strength / 3.2)^0.8); the log residual is shared among its species by strength share, and each species'
- *  s.atk / s.mag (and s.hp for rounds) moves against its weighted residual (damped), then the lineage rule applies. */
+ *  s.atk / s.mag (and s.hp for rounds) moves against its weighted residual (damped), then projectStructured() turns that into lineage / tier factors. */
 function refit(file, outFile) {
   const J = JSON.parse(fs.readFileSync(file, 'utf8'));
   const G = (J.M && J.M.M1 && J.M.M1.groups) || [];
   if (!G.length) throw new Error('refit: ' + file + ' has no M1 groups (run sim_zones with --json and M1)');
   const L_T = Number(opt('fit-lost', 0.092)), R_T = Number(opt('fit-rounds', 2.8)), DAMP = Number(opt('fit-damp', 0.7));
-  const Dd = CM.parseDesign();
   const acc = {};
   for (const g of G) {
     // T0/T1 of the 'dyn' zones belong to --retilt (party without area attacks, lvOff share of the level); counting them
@@ -756,95 +814,132 @@ function refit(file, outFile) {
     }
   }
   const base = CM.loadTuning();
-  base.monsters = base.monsters || {};
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-  const r2 = (v) => Math.round(v * 100) / 100;
-  const pairs = [];
-  let n = 0;
+  const corr = {};
   for (const [id, a] of Object.entries(acc)) {
     const m = DB.monsters[id];
     if (!m.lineage || (m.flags || []).includes('metal')) continue;
     const rl = a.rl / a.w, rr = a.rr / a.w;
     const fh = clamp(Math.exp(-DAMP * rr / 0.8), 0.8, 1.25);
     const fd = clamp(Math.exp(-DAMP * rl) / Math.pow(fh, 0.8), 0.7, 1.4);
-    const cur = Object.assign({}, m.s || {});
-    const sv = Object.assign({}, cur);
-    sv.hp = r2(clamp((cur.hp != null ? cur.hp : 1) * fh, 0.5, 2.5));
-    sv.atk = r2(clamp((cur.atk != null ? cur.atk : 1) * fd, 0.3, 2.5));
-    sv.mag = r2(clamp((cur.mag != null ? cur.mag : 1) * fd, 0.3, 2.5));
-    for (const k of Object.keys(sv)) if (sv[k] === 1) delete sv[k];
-    const e = base.monsters[id] = base.monsters[id] || {};
-    e.s = sv;
-    const why = `sim_zones --fit + --refit (game engine; zone groups: HP lost ×${Math.exp(rl).toFixed(2)}, rounds ×${Math.exp(rr).toFixed(2)} of the strength target)`;
-    e.why = e.desc ? why + ' ／ ' + String(e.why || '').split(' ／ ').filter((x) => x.startsWith('desc:')).join(' ／ ') : why;
-    pairs.push([m.lineage, id]);
-    n++;
+    corr[id] = { fh, fd, w: a.w };
   }
-  if (!flag('fit-free')) projectLineages(base, Dd, Object.values(DB.lineages).flatMap((L) => L.stages.map((st) => [DB.monsters[st.mon].lineage, st.mon])).filter(([, id]) => base.monsters[id] && base.monsters[id].s));
-  delete base.global;
+  const n = Object.keys(corr).length;
+  projectStructured(base, corr, 'sim_zones --refit on the game engine (zone groups vs a strength-proportional target), one factor per lineage (§9.13.1)');
   fs.writeFileSync(outFile, JSON.stringify(base, null, 2) + '\n');
   console.log(`[sim_zones] refit: ${n} species corrected from ${G.length} group results → ${outFile}`);
 }
 
-/** --retilt <sim_zones --json file> --fit <out.json>: M2 (order independence) at T0 and T1. There the standard party is
- *  still missing area attacks (swarms of small monsters last long) and a dungeon's lvOff +1 is a large share of the level
- *  (HP lost ×1.38 at T0–1, ×1.0 at T7), so a zone's first two tiers stray from its later ones. For each 'dyn' zone and
- *  T ∈ {0, 1}, the groups eligible at T get a tier-only copy (tierMin = tierMax = T) whose weight is w × (L_g)^λ, L_g the
- *  group's measured HP lost at T; λ is solved so the zone×tier mean equals the zone's T2–T7 mean, clipped so the average
- *  strength stays in the M5 range 3.0–3.4. The originals then start at T2. Weights ≥ 0.5; no battles are run. */
+/** --retilt <sim_zones --json file> --fit <out.json>: M2 (order independence) with group weights (§9.13.1: "a zone that
+ *  fails gets its group counts and weights fixed"). Lineage s moves as one (projectStructured), so what differs between
+ *  a zone's tiers is which stage '@' picks and how the party stands at that tier (no area attacks at T0, lvOff +1 a large
+ *  share of the level early, the party gaining ~12% per tier within a stage). For each 'dyn' zone and each stage band
+ *  B ∈ {T0, T1, T2–3, T4–5, T6–7} the groups eligible over all of B get a band-only copy whose weight is w × L_g^λ
+ *  (L_g = the group's measured HP lost over B); λ is solved so the band's mean equals the zone target (its untilted
+ *  T0–T7 mean, kept within 8.6–10.5%), shrunk until the band's average strength stays inside M5 (3.0–3.4). T8 keeps the
+ *  base weights. The untilted groups are kept in the overlay as `base` (not written to src/data), so --retilt can be run
+ *  again from a new --json run. Weights ≥ 0.5, rounded to 0.5; adjacent copies with equal weight are merged. No battles. */
+const BANDS = [[0, 0], [1, 1], [2, 3], [4, 5], [6, 7]];
+function untiltGroups(groups) {
+  // the first retilt (T0/T1 only) wrote copies with tierMax 0 / tierMin = tierMax = 1 and moved the original to tierMin 2
+  const key = (g) => JSON.stringify(g.mons);
+  const t0 = new Set(groups.filter((g) => g.tierMax === 0 && g.tierMin == null).map(key));
+  const t1 = new Set(groups.filter((g) => g.tierMin === 1 && g.tierMax === 1).map(key));
+  if (!t0.size && !t1.size) return groups.map((g) => Object.assign({}, g));
+  const out = [];
+  for (const g of groups) {
+    if ((g.tierMax === 0 && g.tierMin == null) || (g.tierMin === 1 && g.tierMax === 1)) continue;
+    const c = Object.assign({}, g);
+    if (c.tierMin === 2 && t0.has(key(g))) delete c.tierMin;
+    else if (c.tierMin === 2 && t1.has(key(g))) c.tierMin = 1;
+    out.push(c);
+  }
+  return out;
+}
 function retilt(file, outFile) {
   const J = JSON.parse(fs.readFileSync(file, 'utf8'));
   const G = (J.M && J.M.M1 && J.M.M1.groups) || [];
-  const rows = (J.M && J.M.M1 && J.M.M1.rows) || [];
   if (!G.length) throw new Error('retilt: ' + file + ' has no M1 groups');
   const base = CM.loadTuning();
   base.encounters = base.encounters || {};
-  const E = CM.expected();
+  const Dd = CM.parseDesign();
   const key = (ms) => JSON.stringify(ms.map(([id, a, b]) => [id, a, b]));
+  const r05 = (v) => Math.max(0.5, Math.round(2 * v) / 2);
   let n = 0;
-  for (const [zid, z] of Object.entries(E.encounters)) {
-    if (z.tier !== 'dyn') continue;
-    if (z.groups.some((g) => g.tierMax === 0 || g.tierMax === 1 && g.tierMin === 1)) { console.log('  retilt: ' + zid + ' already has tier-only groups, skipped'); continue; }
-    const later = rows.filter((r) => r.zone === zid && r.T >= 2 && r.T <= 7);
-    if (!later.length) continue;
-    const target = later.reduce((a, r) => a + r.lost, 0) / later.length;
-    const perT = {};
+  for (const [zid, zd] of Object.entries(Dd.encounters)) {
+    if (zd.tier !== 'dyn') continue;
+    if (!G.some((g) => g.zone === zid)) continue;
+    const prev = base.encounters[zid] || {};
+    const baseGroups = prev.base || untiltGroups(prev.groups || zd.groups);
+    const z = Object.assign({}, zd, { groups: baseGroups });
+    const meas = (T, ms) => G.find((g) => g.zone === zid && g.T === T && key(g.ms) === key(ms));
+    // untilted zone level: mean over T0..T7 of the base-weighted means
+    const lvl = [];
+    for (let T = 0; T <= 7; T++) {
+      const el = CM.eligibleGroups(DB, z, T).filter(({ g, ms }) => !g.solo && !CM.isMetalGroup(DB, ms) && meas(T, ms));
+      const w = el.reduce((a, x) => a + x.g.w, 0);
+      if (w) lvl.push(el.reduce((a, x) => a + x.g.w * meas(T, x.ms).lost, 0) / w);
+    }
+    if (!lvl.length) continue;
+    const target = Math.max(0.086, Math.min(0.105, lvl.reduce((a, b) => a + b, 0) / lvl.length));
+    const factor = new Map(); // group → [w per band]
     const notes = [];
-    for (const T of [0, 1]) {
-      const el = CM.eligibleGroups(DB, z, T);
-      const meas = new Map(G.filter((g) => g.zone === zid && g.T === T).map((g) => [key(g.ms), g]));
-      const items = el.map(({ g, ms }) => {
-        const m = meas.get(key(ms));
-        const fixed = !!g.solo || CM.isMetalGroup(DB, ms) || !m;
-        return { g, fixed, st: CM.groupStrength(DB, ms), L: m ? Math.max(0.01, m.lost) : null };
-      });
-      const act = items.filter((x) => !x.fixed);
-      const W = (lam) => act.map((x) => x.g.w * Math.pow(x.L, lam));
-      const avg = (lam, k) => { const w = W(lam); const t = w.reduce((a, b) => a + b, 0); return act.reduce((a, x, i) => a + w[i] * x[k], 0) / t; };
+    BANDS.forEach(([lo, hi], bi) => {
+      const items = [];
+      for (const g of baseGroups) {
+        const tiers = [];
+        for (let T = lo; T <= hi; T++) tiers.push(T);
+        const els = tiers.map((T) => CM.eligibleGroups(DB, z, T).find((e) => e.g === g));
+        if (els.some((e) => !e)) continue;
+        const ms = els.map((e) => e.ms);
+        const m = ms.map((x, i) => meas(tiers[i], x));
+        const fixed = !!g.solo || ms.some((x) => CM.isMetalGroup(DB, x)) || m.some((x) => !x);
+        if (fixed) continue;
+        items.push({ g, L: Math.max(0.01, m.reduce((a, x) => a + x.lost, 0) / m.length), st: ms.reduce((a, x) => a + CM.groupStrength(DB, x), 0) / ms.length });
+      }
+      if (items.length < 2) return;
+      // weights keep their band total (so fixed groups — metal, solo — keep their share): w × (L / L̄)^λ × norm
+      const w0 = items.reduce((a, x) => a + x.g.w, 0);
+      const Lbar = items.reduce((a, x) => a + x.g.w * x.L, 0) / w0;
+      const W = (lam) => { const r = items.map((x) => x.g.w * Math.pow(x.L / Lbar, lam)); const t = r.reduce((a, b) => a + b, 0); return r.map((v) => v * w0 / t); };
+      const avg = (lam, k) => { const w = W(lam); const t = w.reduce((a, b) => a + b, 0); return items.reduce((a, x, i) => a + w[i] * x[k], 0) / t; };
       const f = (lam) => avg(lam, 'L') - target;
-      let lo = -3, hi = 3;
-      if (f(lo) > 0) hi = lo; else if (f(hi) < 0) lo = hi; else for (let k = 0; k < 60; k++) { const m = (lo + hi) / 2; if (f(m) > 0) hi = m; else lo = m; }
-      let lam = (lo + hi) / 2;
-      // keep the M5 average strength (3.0–3.4) at this tier: shrink λ toward 0 until it holds
+      let a = -2.5, b = 2.5;
+      if (f(a) > 0) b = a; else if (f(b) < 0) a = b; else for (let k = 0; k < 60; k++) { const mid = (a + b) / 2; if (f(mid) > 0) b = mid; else a = mid; }
+      let lam = (a + b) / 2;
       for (let k = 0; k < 40 && (avg(lam, 'st') < 3.02 || avg(lam, 'st') > 3.38); k++) lam *= 0.9;
       const w = W(lam);
-      perT[T] = new Map(act.map((x, i) => [x.g, Math.max(0.5, Math.round(2 * w[i]) / 2)]));
-      notes.push(`T${T} HP lost ${pct(act.reduce((a, x) => a + x.g.w * x.L, 0) / act.reduce((a, x) => a + x.g.w, 0))} → ${pct(avg(lam, 'L'))} (strength ${avg(lam, 'st').toFixed(2)})`);
-    }
+      items.forEach((x, i) => { if (!factor.has(x.g)) factor.set(x.g, {}); factor.get(x.g)[bi] = r05(w[i]); });
+      notes.push(`T${lo}${hi > lo ? '–' + hi : ''} ${pct(avg(0, 'L'))} → ${pct(avg(lam, 'L'))} (strength ${avg(lam, 'st').toFixed(2)})`);
+    });
+    // split every base group into band segments (weights of its bands), merge equal neighbours
     const groups = [];
-    for (const g of z.groups) {
-      const in0 = perT[0].has(g), in1 = perT[1].has(g);
-      if (!in0 && !in1) { groups.push(g); continue; }
-      for (const T of [0, 1]) if (perT[T].has(g)) { const c = Object.assign({}, g, { w: perT[T].get(g), tierMin: T, tierMax: T }); if (T === 0) delete c.tierMin; groups.push(c); }
-      if (g.tierMax == null || g.tierMax >= 2) groups.push(Object.assign({}, g, { tierMin: Math.max(2, g.tierMin || 0) }));
+    for (const g of baseGroups) {
+      const gl = g.tierMin != null ? g.tierMin : 0, gh = g.tierMax != null ? g.tierMax : 9;
+      const segs = [];
+      const bw = factor.get(g) || {};
+      BANDS.concat([[8, 9]]).forEach(([lo, hi], bi) => {
+        const a = Math.max(lo, gl), b = Math.min(hi, gh);
+        if (a > b) return;
+        const w = bw[bi] != null ? bw[bi] : g.w;
+        const last = segs[segs.length - 1];
+        if (last && last.w === w && last.hi === a - 1) last.hi = b; else segs.push({ lo: a, hi: b, w });
+      });
+      for (const sg of segs) {
+        const out = { w: sg.w, mons: g.mons };
+        if (sg.lo > 0) out.tierMin = sg.lo;
+        if (sg.hi < 9) out.tierMax = sg.hi;
+        if (g.solo) out.solo = true;
+        groups.push(out);
+      }
     }
-    const why = `sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean ${pct(target)}: ` + notes.join('; ');
-    const prev = base.encounters[zid] && base.encounters[zid].why;
-    base.encounters[zid] = { groups, why: prev && !/retilt|tilt-t0/.test(prev) ? prev + ' ／ ' + why : why };
+    const oldWhy = String(prev.why || '').split(' ／ ').filter((x) => !/retilt|tilt-t0/.test(x)).join(' ／ ');
+    const why = `sim_zones --retilt (M2): per stage band, groups re-weighted by measured HP lost toward the zone's ${pct(target)}: ` + notes.join('; ');
+    base.encounters[zid] = { groups, base: baseGroups, why: oldWhy ? oldWhy + ' ／ ' + why : why };
     n++;
   }
   fs.writeFileSync(outFile, JSON.stringify(base, null, 2) + '\n');
-  console.log(`[sim_zones] retilt: ${n} zones re-weighted at T0/T1 → ${outFile}`);
+  console.log(`[sim_zones] retilt: ${n} zones re-weighted per stage band → ${outFile}`);
 }
 
 // ================================================================ main
@@ -1019,7 +1114,7 @@ function main() {
   //   --fit <out.json>   also write a candidate overlay (the current one ⊕ s.hp / s.atk / s.mag per species) that moves
   //                      every species toward HP lost FIT_LOST and FIT_ROUNDS rounds; damped, so run it 2–3 times
   //                      (--tuning <previous out.json>) and then check M1 with --tuning. Per lineage and stat the
-  //                      stages move one way (§9.13.1; --fit-free lifts that)
+  //                      species are projected on one factor per lineage and one per tier (projectStructured, §9.13.1)
   if (flag('species') || opt('fit', null)) {
     const FIT = opt('fit', null);
     const L_T = Number(opt('fit-lost', 0.095)), R_T = Number(opt('fit-rounds', 2.8)), DAMP = Number(opt('fit-damp', 0.8));
@@ -1057,25 +1152,14 @@ function main() {
     out.species = rows;
     if (FIT) {
       const base = CM.loadTuning();
-      base.monsters = base.monsters || {};
       const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-      const r2 = (v) => Math.round(v * 100) / 100;
+      const corr = {};
       for (const r of rows) {
         const fh = clamp(Math.pow(R_T / Math.max(0.5, r.roundsN), DAMP / 0.8), 0.75, 1.5);
         const fd = clamp(Math.pow(L_T / Math.max(0.005, r.lostN), DAMP) / Math.pow(fh, 0.8 * DAMP), 0.5, 2.0);
-        const cur = Object.assign({}, DB.monsters[r.id].s || {});
-        const sv = Object.assign({}, cur);
-        sv.hp = r2(clamp((cur.hp != null ? cur.hp : 1) * fh, 0.5, 2.5));
-        sv.atk = r2(clamp((cur.atk != null ? cur.atk : 1) * fd, 0.3, 2.5));
-        sv.mag = r2(clamp((cur.mag != null ? cur.mag : 1) * fd, 0.3, 2.5));
-        for (const k of Object.keys(sv)) if (sv[k] === 1) delete sv[k];
-        const e = base.monsters[r.id] = base.monsters[r.id] || {};
-        e.s = sv;
-        const why = `sim_zones --fit (game engine, pure group ×${r.cnt} at T${r.T}): HP lost ${pct(r.lostN)} → ${pct(L_T)}, rounds ${r.roundsN.toFixed(2)} → ${R_T}`;
-        e.why = e.desc ? why + ' ／ ' + String(e.why || '').split(' ／ ').filter((x) => x.startsWith('desc:')).join(' ／ ') : why;
+        corr[r.id] = { fh, fd, w: 1 };
       }
-      if (!flag('fit-free')) projectLineages(base, Dd, rows.map((r) => [r.lid, r.id]));
-      delete base.global;
+      projectStructured(base, corr, `sim_zones --fit on the game engine (pure groups worth 3.2 → HP lost ${pct(L_T)}, ${R_T} rounds), one factor per lineage (§9.13.1)`);
       fs.writeFileSync(FIT, JSON.stringify(base, null, 2) + '\n');
       console.log(`  candidate overlay → ${FIT}`);
     }

@@ -274,23 +274,32 @@
           const color = (typeof it === 'object' && it.color) || (dis ? G().C.gray : G().C.white);
           const right = typeof it === 'object' && it.right != null && it.right !== '' ? String(it.right) : null;
           // a long label never runs into its count / cost or the next column (squeezed instead)
-          const room = right ? this.colW - 16 - G().textWidth(right) : this.cols > 1 ? this.colW - 6 : 0;
+          // in a multi-column list the right text ends 6px short of the next column's cursor (x - 10)
+          const rEnd = this.cols > 1 ? this.colW - 16 : this.colW - 10;
+          const room = right ? rEnd - 6 - G().textWidth(right) : this.cols > 1 ? this.colW - 6 : 0;
           if (room > 0) G().fitText(label, x, y, room, { color });
           else G().text(label, x, y, { color });
-          if (right) G().text(right, x + this.colW - 10, y, { color, align: 'right' });
+          if (right) G().text(right, x + rEnd, y, { color, align: 'right' });
         }
         if (sel && (this.active || o.showInactiveCursor)) G().cursor(x - 10, y + 1, this.active);
       }
       // scroll arrows
       const totalRows = Math.ceil(this.items.length / this.cols);
-      if (this.top > 0) tri(this.x + this.w / 2, this.y + 3, -1);
+      if (this.top > 0) {
+        if (this.window && this.title) {
+          // the title plate sits on the top border: the ▲ goes beside it, never over the title
+          const tw = Math.ceil(G().textWidth(this.title)) + 8;
+          const ax = this.x + Math.floor((this.w - tw) / 2) + tw + 6;
+          if (ax + 3 < this.x + this.w - 6) tri(ax, this.y + 1, -1);
+        } else tri(this.x + this.w / 2, this.y + 3, -1);
+      }
       if (this.top + this.rows < totalRows) tri(this.x + this.w / 2, this.y + this.h - 5, 1);
     }
   }
   function tri(x, y, dir) {
     if (Math.floor(R.Engine.frame / 12) % 2) return;
     for (let i = 0; i < 3; i++) {
-      const yy = dir < 0 ? y + i : y + 2 - i;
+      const yy = dir < 0 ? y + 2 - i : y + i; // top mark ▲ (wide base at the bottom), bottom mark ▼
       G().rect(x - 2 + i, yy, 5 - i * 2, 1, '#fff');
     }
   }
@@ -380,6 +389,14 @@
       });
     },
     /** close a kept-open message window */
+    /** the live message window layer (null when none is open); a handle for msgSettled() */
+    msgOpen() { const m = UI._msg; return m && !m.closed ? m : null; },
+    /**
+     * true when the message window m (default: the current one) holds no unsettled say:
+     * a window its reader closed has settled (finish() clears it before close()); one closed from
+     * outside (closeMessage) still holds it
+     */
+    msgSettled(m) { const w = m === undefined ? UI._msg : m; return !w || !w.resolveText; },
     closeMessage() { if (UI._msg && !UI._msg.closed) UI._msg.close(); UI._msg = null; },
     /**
      * Choice window. Resolves to the chosen index, or -1 on cancel.

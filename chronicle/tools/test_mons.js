@@ -161,8 +161,9 @@ group('monster fields (§9.1.1, §9.2.3, §9.3)', () => {
     ok(m.affinity == null || ELS.includes(m.affinity), id + ' affinity');
     ok(Array.isArray(m.flags) && m.flags.every((f) => ['flying', 'metal'].includes(f)), id + ' flags ⊂ flying/metal');
     ok(!('hue' in m) && !('sat' in m) && !('bri' in m) && !('pal' in m), id + ' has no hue/sat/bri/pal (§9.0 0.6)');
-    // s: 0.5–2.5 (atk / mag down to 0.3: swarms of small area casters, whose mag the size does not lower; §9.1.2)
-    for (const [k, v] of Object.entries(m.s || {})) { const lo = k === 'atk' || k === 'mag' ? 0.3 : 0.5; ok(CM.SKEYS.includes(k) && v >= lo && v <= 2.5, id + ' s.' + k + '=' + v + ' in ' + lo + '..2.5'); }
+    // s: 0.3–3.2 for hp / atk / mag (DESIGN s × lineage factor × the per-tier global factor of tuning.json, which stands in
+    // for the engine curve: late stages carry up to ×1.8 HP and ×0.55 damage), 0.5–2.5 for def / mdef / agi (untuned)
+    for (const [k, v] of Object.entries(m.s || {})) { const [lo, hi] = ['hp', 'atk', 'mag'].includes(k) ? [0.3, 3.2] : [0.5, 2.5]; ok(CM.SKEYS.includes(k) && v >= lo && v <= hi, id + ' s.' + k + '=' + v + ' in ' + lo + '..' + hi); }
     for (const k of Object.keys(m.rw || {})) ok(['exp', 'gold'].includes(k), id + ' rw.' + k);
     const metal = m.flags.includes('metal');
     ok(metal === (m.hpFixed != null), id + ' hpFixed only on metal');
@@ -447,6 +448,32 @@ group('T8 build-set species encounter rate (§9.13.3 L6)', () => {
     const battles = ids.reduce((s, id) => s + 64 / Math.max(1e-6, best[id]), 0);
     ok(battles <= 900, 'L6 ' + k + ' set: expected ' + battles.toFixed(0) + ' battles ≤ 900');
     if (VERBOSE) console.log(`   L6 ${k} set: ${battles.toFixed(0)} battles`);
+  }
+});
+
+group('balance keeps each stage\'s character (§9.13.1: a lineage\'s s moves as one)', () => {
+  // src s = DESIGN s × lineage factor × per-tier factor × a bounded per-stage trim (tuning.json lineages / global /
+  // monsters.<id>.trim, 0.8–1.25): atk and mag always share one factor and def / mdef / agi stay DESIGN's, so every
+  // stage keeps its profile; within a lineage the stages differ only by the tier curve and the trim
+  const T = CM.loadTuning();
+  const G = T.global || null;
+  ok(!Object.values(T.monsters || {}).some((o) => o.s), 'no per-species s in tuning.json (only lineage / tier factors)');
+  for (const [lid, L] of Object.entries(DB.lineages)) {
+    for (const st of L.stages) {
+      const id = st.mon, d = D.mons[id], m = DB.monsters[id];
+      if ((d.flags || []).includes('metal') || d.hpFixed) { ok(JSON.stringify(m.s) === JSON.stringify(d.s), id + ' metal s untouched'); continue; }
+      const t = CM.midTier(D, d, id);
+      const lf = (T.lineages || {})[lid] || {};
+      const tr = ((T.monsters || {})[id] || {}).trim || {};
+      for (const k of ['hp', 'dmg']) if (tr[k] != null) ok(tr[k] >= 0.8 && tr[k] <= 1.25, id + ' trim.' + k + ' ' + tr[k] + ' within 0.8–1.25');
+      const fh = (lf.hp != null ? lf.hp : 1) * (G ? G.hp[t] : 1) * (tr.hp != null ? tr.hp : 1);
+      const fd = (lf.dmg != null ? lf.dmg : 1) * (G ? G.dmg[t] : 1) * (tr.dmg != null ? tr.dmg : 1);
+      for (const k of CM.SKEYS) {
+        const f = k === 'hp' ? fh : k === 'atk' || k === 'mag' ? fd : 1;
+        const want = ((d.s || {})[k] != null ? d.s[k] : 1) * f, got = (m.s || {})[k] != null ? m.s[k] : 1;
+        ok(Math.abs(got - want) <= 0.0051, id + ' s.' + k + ' ' + got + ' = DESIGN × lineage × tier ' + want.toFixed(3));
+      }
+    }
   }
 });
 

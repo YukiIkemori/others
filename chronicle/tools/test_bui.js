@@ -186,6 +186,12 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   for (const k in ICON_SPEC) eq([FX.icons[k][1]].concat(FX.icons[k][0]), ICON_SPEC[k], 'W6 icon grid §11.3.6 ' + k);
   // glow decays in real frames (40), not shortened by the battle speed
   R.Settings.battleSpeed = 2;
+  {
+    // A22.0: no status window name / title can rise into y 0 (the front view's raise is gone; STATUS and CMD sit at y 152)
+    const L = R.Battle.LAYOUT;
+    ok(S.winFx.every((f) => !('raise' in f)) && L.STATUS.y >= 8 && L.CMD.y >= 8 && L.BANNER.y - 3 >= 0,
+      'W6b no raised window: STATUS / CMD / title plates stay below y 0', { st: L.STATUS.y, cmd: L.CMD.y, fx: S.winFx[0] });
+  }
   S.winFx[0].glow = 40; await step(20);
   ok(S.winFx[0].glow === 20, 'W7 glimmer glow counts real frames', S.winFx[0].glow);
   R.Settings.battleSpeed = 1;
