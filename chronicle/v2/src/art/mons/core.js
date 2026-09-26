@@ -145,11 +145,12 @@
   BZ.mkCanvas = mkCanvas;
   /** 純粋な黒と黒に近すぎる画素を色つきの暗い色へ（STYLE_REFERENCE §9「純黒 0」）。不透明の画素の外形 bbox も返す */
   BZ.finish = function (c) {
+    const NB = hex(((R.Hd && R.Hd.STYLE) || {}).noBlack || '#070812');
     const x = c.getContext('2d'), id = x.getImageData(0, 0, c.width, c.height), d = id.data;
     let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1;
     for (let i = 0, p = 0; i < d.length; i += 4, p++) {
-      if (d[i + 3] < 8) { d[i + 3] = 0; continue; }
-      if (d[i] < 12 && d[i + 1] < 10 && d[i + 2] < 22) { d[i] = Math.max(d[i], 12); d[i + 1] = Math.max(d[i + 1], 9); d[i + 2] = Math.max(d[i + 2], 22); }
+      if (d[i + 3] < 8 || (d[i + 3] < 64 && d[i] < 3 && d[i + 1] < 3 && d[i + 2] < 3)) { d[i + 3] = 0; continue; }
+      if (d[i] < 7 && d[i + 1] < 8 && d[i + 2] < 18) { d[i] = Math.max(d[i], NB[0]); d[i + 1] = Math.max(d[i + 1], NB[1]); d[i + 2] = Math.max(d[i + 2], NB[2]); }
       const px = p % c.width, py = (p / c.width) | 0;
       if (px < x0) x0 = px; if (px > x1) x1 = px; if (py < y0) y0 = py; if (py > y1) y1 = py;
     }
@@ -164,8 +165,39 @@
    *      pal, variant, golden, parts:[[name, opts]], scale, frames:[{pose, st}], fps, meta}
    * 描く点 = 足元の中央（frame.ox, oy）。anchors は描く点からの相対の論理 px（コマごとの上書きは frame.anchors）。
    */
+  /** 部品の外形（モデル座標）: {x0, y0, x1, y1}。焼く前に大きさを決めるのに使う（画素は作らない） */
+  BZ.modelBox = function (B) {
+    let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+    for (const p of B.p) {
+      if (p.mod) continue;
+      let b;
+      if (p.t === 'e') { const r = Math.max(p.rx, p.ry); b = [p.x - r * (p.rot ? 1 : p.rx / r), p.y - (p.rot ? r : p.ry), p.x + (p.rot ? r : p.rx), p.y + (p.rot ? r : p.ry)]; }
+      else if (p.t === 'c') { const r = Math.max(p.r1, p.r2); b = [Math.min(p.x1, p.x2) - r, Math.min(p.y1, p.y2) - r, Math.max(p.x1, p.x2) + r, Math.max(p.y1, p.y2) + r]; }
+      else if (p.t === 'r') b = [p.x, p.y, p.x + p.w, p.y + p.h];
+      else if (p.t === 'p') { b = [1e9, 1e9, -1e9, -1e9]; for (const q of p.pts) { b[0] = Math.min(b[0], q[0]); b[1] = Math.min(b[1], q[1]); b[2] = Math.max(b[2], q[0]); b[3] = Math.max(b[3], q[1]); } }
+      else continue;
+      x0 = Math.min(x0, b[0]); y0 = Math.min(y0, b[1]); x1 = Math.max(x1, b[2]); y1 = Math.max(y1, b[3]);
+    }
+    return { x0, y0, x1, y1 };
+  };
+  /**
+   * 大きさを段に合わせる: 待機の 1 コマ目の外形の高さ（地に立つ物は足元から上、飛ぶ物は見た目の高さ）が px になる倍率。
+   * 縁の 1 画素ずつを引いておく
+   */
+  BZ.fitScale = function (o, px) {
+    const RZ = BZ.rz(), P = BZ.palette(o.pal, { variant: o.variant, golden: false });
+    const B = new RZ.Builder();
+    const st = Object.assign({ t: 0, stage: o.stage || 1 }, (o.frames[0] && o.frames[0].st) || {});
+    const pts = o.draw(B, P, st, RZ) || {};
+    pts.u = pts.u || 1;
+    for (const [name, po] of o.parts || []) { const fn = BZ.PARTS && BZ.PARTS[name]; if (fn) fn(B, pts, po || {}, { P, st, golden: false, RZ }); }
+    const b = BZ.modelBox(B);
+    const hm = o.fly ? (b.y1 - b.y0) : Math.max(1, -b.y0);
+    return Math.max(0.2, (px - 2) / hm);
+  };
   BZ.bakeSheet = function (o) {
     const RZ = BZ.rz(), S = BZ.style(), L = o.light || BZ.light();
+    if (o.px && !o.scale) o.scale = BZ.fitScale(o, o.px);
     const P = BZ.palette(o.pal, { variant: o.variant, golden: o.golden });
     const frames = [], poses = {};
     let box0 = null;
@@ -215,7 +247,7 @@
     if (!b) return null;
     opts = opts || {};
     const px = BZ.targetPx(b.tier || 'boss', 1, b.at != null ? b.at : 0.5);
-    return BZ.bakeSheet({ draw: b.draw, pal: b.pal, golden: !!opts.golden, scale: px / (b.vis || b.h), frames: b.frames || BZ.BOSS_FRAMES,
+    return BZ.bakeSheet({ draw: b.draw, pal: b.pal, golden: !!opts.golden, px, fly: !!b.fly, frames: b.frames || BZ.BOSS_FRAMES,
       fps: { idle: 2, tele: 5 }, meta: { kind: b.tier === 'add' ? 'mon' : 'boss', id, tier: b.tier || 'boss', fly: !!b.fly, targetPx: Math.round(px), focus: b.focus || 'eye' } });
   };
   /** ボスの登録（ファイルの読み込み順に依らない）。keys = 登録するキーの一覧 */

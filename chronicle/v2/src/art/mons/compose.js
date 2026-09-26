@@ -321,7 +321,7 @@
     const px = BZ.targetPx(s.B.tier, s.stage);
     return BZ.bakeSheet({
       draw: s.B.draw, pal: s.B.pal, variant: s.variant, golden: !!opts.golden, parts: s.parts, stage: s.stage,
-      scale: px / (s.B.vis || s.B.h),
+      px, fly: !!s.B.fly,
       frames: BZ.monFrames(s.B),
       meta: { kind: 'mon', id, base: s.base, stage: s.stage, tier: s.B.tier, fly: !!s.B.fly, golden: !!opts.golden, targetPx: Math.round(px) },
     });

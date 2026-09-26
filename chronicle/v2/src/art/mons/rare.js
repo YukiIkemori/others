@@ -204,7 +204,7 @@
     if (!b) return null;
     opts = opts || {};
     const px = BZ.targetPx(b.tier, 1, 0.62);
-    return BZ.bakeSheet({ draw: b.draw, pal: b.pal, golden: !!opts.golden, scale: px / (b.vis || b.h), frames: BZ.monFrames(b),
+    return BZ.bakeSheet({ draw: b.draw, pal: b.pal, golden: !!opts.golden, px, fly: !!b.fly, frames: BZ.monFrames(b),
       meta: { kind: 'mon', id, base: id, stage: 1, tier: b.tier, rare: true, golden: !!opts.golden, targetPx: Math.round(px) } });
   };
   for (const id of Object.keys(RARE)) (BZ._pending = BZ._pending || []).push(['hd:mon:' + id, (opts) => BZ.bakeRare(id, opts), { kind: 'mon', owner: 'BEAST', rare: true }]);

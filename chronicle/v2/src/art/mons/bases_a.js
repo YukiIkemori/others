@@ -82,6 +82,10 @@
       B.ell(...p(2, -9), 8, 6.5, P.fur, 1.01, { g: gb, rot: -0.15 });
       B.ell(...p(0, -4.5), 8, 3.2, P.belly, 1.02, { g: B.group(), bulge: 0.5 });
       B.fold(...p(-10, -13), ...p(3, -15), 1.2, gb, -1);
+      if (s2) {   // 毒牙ネズミ: 背の逆立った毛
+        for (let i = 0; i < 6; i++) { const bx = X - 11 + i * 3.2, by = Y - 14.5 + Math.abs(i - 2.5) * 0.5; B.strand([[bx, by + 2], [bx - 1.2, by - 2.2], [bx - 3.2, by - 3.4]], 1.3, 0.3, P.furDk, 1.08 + i * 0.001, { seg: 3 }); }
+        B.strand([[X - 10, Y - 5], [X - 14, Y - 9], [X - 13, Y - 13]], 1, 0.3, P.furDk, 0.95, { seg: 3 });
+      }
       // 手前の後ろ脚（もも）と足
       B.ell(...p(-7, -6.5), 5.2, 5, P.fur, 1.1, { g: B.group() });
       B.ell(X - 4 - atk * 2, -1, 3.6, 1.3, P.pink, 1.12);
@@ -130,7 +134,7 @@
     },
     draw(B, P, st) {
       const fl = st.hit ? 0.55 : st.atk ? 0.85 : (st.t < 0.25 || st.t >= 0.75 ? 0 : 1);   // 0 = 羽を上、1 = 下
-      const atk = st.atk || 0, hit = st.hit || 0;
+      const atk = st.atk || 0, hit = st.hit || 0, s2 = st.stage >= 2, eh = s2 ? 4 : 0;
       const X = atk * 6 - hit * 4, Y = -26 + fl * 2 + atk * 4 - hit * 1;
       const p = (x, y) => [X + x, Y + y];
       // 羽: 肩 → ひじ → 指先 3 本、後ろの縁は波形
@@ -147,7 +151,8 @@
         B.poly(pts, P.wing, z, { g, bevel: 2.5, ny: -0.1, nx: -sgn * 0.15 });
         B.cap(sh[0], sh[1], el[0], el[1], 1.3, 1.0, P.bone, z + 0.01);
         tips.forEach((tp) => B.cap(el[0], el[1], tp[0], tp[1], 0.7, 0.4, P.bone, z + 0.01));
-        B.poly([[el[0], el[1]], [el[0] + sgn * 1.5, el[1] - 2.5], [el[0] + sgn * 2.2, el[1] - 0.5]], P.bone, z + 0.02, { bevel: 0.5 });
+        B.poly([[el[0], el[1]], [el[0] + sgn * 1.5, el[1] - 2.5 - eh * 0.6], [el[0] + sgn * 2.2, el[1] - 0.5]], P.bone, z + 0.02, { bevel: 0.5 });
+        if (s2) tips.forEach((tp) => B.poly([[tp[0], tp[1]], [tp[0] + sgn * 2.8, tp[1] - 1.2], [tp[0] + sgn * 0.6, tp[1] + 1.2]], P.bone, z + 0.03, { bevel: 0.4 }));
       };
       wing(-1, 0.4);
       // 体
@@ -159,10 +164,11 @@
       B.cap(...p(1.5, 6), X + 1.5, Y + 9.8, 0.8, 0.6, P.bone, 0.9);
       // 頭と耳
       const hd = p(3.5 + atk * 1.5, -8 + hit * 1);
-      B.poly([[hd[0] - 4, hd[1] - 2], [hd[0] - 6, hd[1] - 12 + hit * 3], [hd[0] - 0.5, hd[1] - 4]], P.fur, 1.4, { bevel: 1.2 });
+      B.poly([[hd[0] - 4, hd[1] - 2], [hd[0] - 6 - eh * 0.4, hd[1] - 12 - eh + hit * 3], [hd[0] - 0.5, hd[1] - 4]], P.fur, 1.4, { bevel: 1.2 });
       B.ell(hd[0], hd[1], 5, 4.6, P.fur, 1.5, { g: B.group() });
       const ge = B.group();
-      B.poly([[hd[0] - 0.5, hd[1] - 3], [hd[0] + 2.5, hd[1] - 13 + hit * 3], [hd[0] + 4.5, hd[1] - 2.5]], P.fur, 1.6, { g: ge, bevel: 1.4 });
+      B.poly([[hd[0] - 0.5, hd[1] - 3], [hd[0] + 2.5 + eh * 0.3, hd[1] - 13 - eh + hit * 3], [hd[0] + 4.5, hd[1] - 2.5]], P.fur, 1.6, { g: ge, bevel: 1.4 });
+      if (s2) { B.strand([[hd[0] - 2, hd[1] - 4], [hd[0] - 5, hd[1] - 7], [hd[0] - 8, hd[1] - 6]], 1.2, 0.3, P.fur, 1.45); B.strand([[X - 3, Y + 4], [X - 6, Y + 7], [X - 8, Y + 11]], 1.4, 0.3, P.fur, 0.95); }
       B.poly([[hd[0] + 0.8, hd[1] - 3.5], [hd[0] + 2.5, hd[1] - 10.5 + hit * 3], [hd[0] + 3.4, hd[1] - 3.5]], P.inner, 1.61, { bevel: 0.8 });
       B.ell(hd[0] + 4, hd[1] + 1.2, 2.2, 1.8, P.fur, 1.62, { g: B.group() });
       const op = Math.max(atk, hit * 0.4);
@@ -293,14 +299,15 @@
       const p = (x, y) => [X + x, Y + y];
       const tilt = atk * 0.35 - hit * 0.25;
       const wing = (side, z) => {
-        const sh = p(side * 1.5 - 1, -4);
-        const el = p(-5 + side * 2, -12 - up * 6 + atk * 6);
-        const tp = p(-16 + side * 4 + atk * 4, -20 - up * 12 + atk * 14 + hit * 6);
+        const far = side < 0, u = far ? up * 0.7 : up;
+        const sh = p(side * 1.5 - 1 - (far ? 2 : 0), -4);
+        const el = p(-6 + (far ? -3 : 1), -12 - u * 6 + atk * 6 + (far ? 3 : 0));
+        const tp = p(-17 + (far ? -5 : 3) + atk * 4, -19 - u * 13 + atk * 14 + hit * 6 + (far ? 6 : 0));
         const g = B.group();
-        B.poly([sh, [el[0] + 4, el[1] - 1], [tp[0] + 2, tp[1]], tp, [tp[0] - 1, tp[1] + 5], [el[0] - 5, el[1] + 5], p(-8, -1)], P.grey, z, { g, bevel: 2.5, ny: -0.3 });
-        B.poly([[tp[0] + 2, tp[1]], tp, [tp[0] - 1, tp[1] + 5], [tp[0] + 2.5, tp[1] + 3.5]], P.tip, z + 0.01, { bevel: 1 });
-        for (let i = 0; i < 4; i++) B.cap(el[0] - 1 - i * 1.6, el[1] + 3 + i * 0.6, el[0] - 4 - i * 2.2, el[1] + 7 + i * 0.3, 1.0, 0.5, P.grey, z + 0.02, { shadeOff: -1 });
-        B.cap(sh[0], sh[1], el[0] + 3, el[1], 2.0, 1.4, P.white, z + 0.03, { g: B.group(), shadeOff: 1 });
+        B.poly([sh, [el[0] + 4, el[1] - 1.5], [tp[0] + 3, tp[1] - 0.5], tp, [tp[0] - 2, tp[1] + 4], [el[0] - 6, el[1] + 6], p(-9, -1)], P.grey, z, { g, bevel: 2.5, ny: -0.3 });
+        B.poly([[tp[0] + 3, tp[1] - 0.5], tp, [tp[0] - 2, tp[1] + 4], [tp[0] + 2, tp[1] + 3.5]], P.tip, z + 0.01, { bevel: 1 });
+        for (let i = 0; i < 5; i++) B.cap(el[0] - 1 - i * 1.8, el[1] + 3 + i * 0.8, el[0] - 4.5 - i * 2.4, el[1] + 7.5 + i * 0.6, 1.1, 0.5, P.grey, z + 0.02, { shadeOff: -1 });
+        B.cap(sh[0], sh[1], el[0] + 3, el[1], 2.2, 1.5, P.white, z + 0.03, { g: B.group(), shadeOff: 1 });
       };
       wing(-1, 0.4);
       // 足

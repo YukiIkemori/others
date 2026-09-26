@@ -33,6 +33,15 @@
     bx.drawImage(a, 0, 0, src.width, src.height);
     return b;
   };
+  /** 純粋な黒を出さない（半透明のふちの (0,0,0) も。R.Hd.STYLE.noBlack の色へ） */
+  K.noBlack = function (c) {
+    const NB = BZ.color.hex(((R.Hd && R.Hd.STYLE) || {}).noBlack || '#070812');
+    const x = c.getContext('2d'), id = x.getImageData(0, 0, c.width, c.height), d = id.data;
+    let n = 0;
+    for (let i = 0; i < d.length; i += 4) if (d[i + 3] && d[i] < 3 && d[i + 1] < 3 && d[i + 2] < 3) { if (d[i + 3] < 64) d[i + 3] = 0; else { d[i] = NB[0]; d[i + 1] = NB[1]; d[i + 2] = NB[2]; } n++; }
+    if (n) x.putImageData(id, 0, 0);
+    return n;
+  };
   K.glow = function (ctx, x, y, r, c, a, mode) {
     const g = ctx.createRadialGradient(x, y, 0, x, y, r);
     g.addColorStop(0, rgba(c, a)); g.addColorStop(0.25, rgba(c, a * 0.45)); g.addColorStop(1, rgba(c, 0));
@@ -300,6 +309,7 @@
     for (const name of ['back', 'ground', 'front', 'post']) {
       const c = layers[name];
       if (!c) continue;
+      K.noBlack(c);
       poses[name] = [frames.length];
       frames.push({ c, ox: 0, oy: 0 });
     }

@@ -37,8 +37,13 @@ function buildParty(R, o) {
   const T = o.tier || 0;
   let pm = null;
   try { pm = require('./lib/party_model'); } catch (e) { pm = null; }
-  if (pm && typeof pm.build === 'function' && !o.local) {
-    try { const p = pm.build(R, Object.assign({}, o)); if (p && p.length) return p; } catch (e) { /* 下の予備 */ }
+  if (pm && typeof pm.build === 'function' && !o.local && o.gear !== 'start') {
+    // RULES の模型（STATS_REWORK §8.4 の標準: 主人公 戦士・剣 ＋ 仲間、gl = glAt(T, kind)、そのティアの店の品、EXPECT(T) の技と術）
+    const r = pm.build(R, {
+      tier: T, kind: o.kind || 'party', gl: o.gl, members: ['hero'].concat(o.members || []), heroType: 'warrior', fav: 'sword', gear: 'shop',
+      rows: { hero: 'front', bartolo: 'front', marta: 'back', sylvain: 'back' },
+    });
+    if (r && r.party && r.party.length) { r.party.model = 'lib/party_model.js (RULES)'; return r.party; }
   }
   R.State.newGame({ hero: o.hero || { type: 'warrior', sex: 'm', name: 'アルン', fav: 'sword' }, seed: o.seed || 1 });
   for (const id of o.members || []) R.Party.join(id, { tier: T });
