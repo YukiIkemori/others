@@ -76,6 +76,7 @@
 
   // ---------- drawing ----------
   const dir = (a) => [Math.sin(a), Math.cos(a)];
+  let HEAD_SCALE = 1;
   function draw(B, L, p, opt) {
     opt = opt || {};
     const SK = L.skin || M.skin;
@@ -177,6 +178,7 @@
 
     // --- head ---
     const gh = grp('head'), ghair = grp('hairback');
+    const headFrom = out.length;
     C(neck, add(neck, rot([0.6, -3], headAng)), 1.8, 1.8, SK, 5.8, { g: grp('neck') });
     E(hc[0], hc[1], 11.2, 10.4, SK, 10, { g: gh, rot: headAng, bulge: 0.9 });
     // jaw/cheek softness toward the front
@@ -214,11 +216,27 @@
     }
     // ear
     if (L.ears === 'goblin') { Pl([H(-1, -1), H(-3, 5), H(-17, 1), H(-19, -3)], SK, 10.15, { g: grp('ear'), bevel: 2.2 }); F(H(-4, 1), H(-15, -1), 0.8, g.ear, -1.5); }
-    else if (L.ears === 'elf') { C(H(-2, 2.5), H(-8.5, -2.5), 1.8, 0.4, SK, 10.15, { g: grp('ear') }); }
-    else E(H(-1.8, 2.4)[0], H(-1.8, 2.4)[1], 1.8, 2.4, SK, 10.15, { g: grp('ear') });
+    else if (L.ears === 'elf') { C(H(-3, 2.6), H(-10.6, -0.8), 1.45, 0.3, SK, L.hood ? 11.05 : 10.28, { g: grp('ear') }); } // pokes out through the hair shell
+    else if (L.hairStyle === 'none' || L.ears === 'show') E(H(-1.2, 2.6)[0], H(-1.2, 2.6)[1], 1.2, 1.7, SK, 10.15, { g: grp('ear') });
+    // human ears are otherwise hidden under the side hair (owner: no big ears / shaved look)
 
     // hair
     hair(L, H, headAng, grp, E, C, S, Pl, F, p);
+    // head scale (style bible: ~2.7 heads). Shrinks every head/face/hair primitive toward the neck.
+    const hs = L.headScale ?? opt.headScale ?? HEAD_SCALE;
+    if (hs !== 1) {
+      const pv = add(neck, rot([0.4, -1.2], headAng));
+      const sp = (q) => [pv[0] + (q[0] - pv[0]) * hs, pv[1] + (q[1] - pv[1]) * hs];
+      for (let i = headFrom; i < out.length; i++) {
+        const s = out[i];
+        if (s[0] === 'e') { s[1] = sp(s[1]); s[2] *= hs; s[3] *= hs; }
+        else if (s[0] === 'c') { s[1] = sp(s[1]); s[2] = sp(s[2]); s[3] *= hs; s[4] *= hs; }
+        else if (s[0] === 'p') { s[1] = s[1].map(sp); if (s[4].bevel) s[4] = Object.assign({}, s[4], { bevel: s[4].bevel * hs }); }
+        else if (s[0] === 'r') { s[1] = sp(s[1]); s[2] *= hs; s[3] *= hs; }
+        else if (s[0] === 's') { s[1] = s[1].map(sp); s[2] *= hs; s[3] *= hs; }
+        else if (s[0] === 'f') { s[1] = sp(s[1]); s[2] = sp(s[2]); s[3] *= hs; }
+      }
+    }
 
     // --- near arm + weapon ---
     const hN = arm(1, p.aN, p.eN, 11);
@@ -255,6 +273,23 @@
     if (st !== 'none') E(H(0.5, -5.2)[0], H(0.5, -5.2)[1], 11.2, 6.8, hm, 10.3, { g: grp('haircap'), rot: ha - 0.12 });
     const z0 = 10.4;
     const s = (pts, w0, w1, z, sh) => S(pts.map((q) => H(q[0], q[1])), w0, w1, hm, z, { shadeOff: sh || 0 });
+    // HAIR SHELL (fix for "shaved sides / bald back"): an in-front-of-skull mass that covers the whole
+    // back half of the head, the temple, the ear and the nape, ending in a sideburn just behind the eye.
+    // Only the face (x > ~0.5 in head frame) stays skin. L.shell tweaks: {front, nape, burn}.
+    if (st !== 'none') {
+      const sh = L.shell || {}, fr = sh.front ?? 0.6, np = sh.nape ?? 9.4, bn = sh.burn ?? 5.2;
+      const gsh = grp('hairshell');
+      Pl([[3, -10.6], [fr - 0.4, -5], [fr, -0.5], [fr + 0.3, bn], [fr - 1.2, bn + 1.2], [-2.6, np - 1.6], [-6.5, np], [-10.2, np - 1.8], [-12.7, 2], [-12.6, -5], [-8.5, -10.6], [-2.5, -12.3]]
+        .map((q) => H(q[0], q[1])), hm, 10.25, { g: gsh, bevel: 3.2, nx: -0.15 });
+      // strand grooves so the mass reads as hair, not a helmet
+      F(H(-1, -9), H(-1.6, bn - 0.5), 0.55, gsh, -1.2);
+      F(H(-5, -10), H(-6.5, np - 1.5), 0.6, gsh, -1.2);
+      F(H(-9, -7.5), H(-10.5, np - 3.5), 0.55, gsh, -1);
+      // soft tufts breaking the nape / sideburn edge
+      s([[-3, np - 3], [-3.6, np], [-3.2, np + 1.6]], 1.8, 0.4, 10.26, -0.3);
+      s([[-7.5, np - 2.5], [-8.2, np + 0.6], [-8.8, np + 2]], 1.9, 0.4, 10.26, -0.4);
+      s([[fr - 0.4, bn - 3], [fr, bn], [fr - 0.2, bn + 1.8]], 1.5, 0.35, 10.27, -0.2);
+    }
     if (st === 'spiky') {
       // back spikes
       s([[-4, -7], [-13, -8], [-18, -3]], 3.4, 0.4, 9.5);
@@ -364,5 +399,5 @@
     }
   }
 
-  G.RIG = { LOOKS, POSES, pose, sample, lerpPose, draw, M, ease };
+  G.RIG = { setHeadScale: (v) => { HEAD_SCALE = v; }, LOOKS, POSES, pose, sample, lerpPose, draw, M, ease };
 })(window);

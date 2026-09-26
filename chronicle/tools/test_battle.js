@@ -395,75 +395,76 @@ guard('magic', () => {
 });
 
 // ================================================================ Part A13: proficiency raises power
-sec('proficiency power (A13)');
+sec('proficiency power (A13)');   // A17: ranks 1–100, ×(1 + 0.30 × ((r − 1)/99)^0.75)
 guard('proficiency power', () => {
   const e = mk({ mons: ['tb_goblin', 'tb_dummy'] });
   const hero = P(e, 0), mage = P(e, 2), gob = Mo(e, 0), dummy = Mo(e, 1);
   const PTS = R.Rules.K.PROF_PTS;
+  const PF = (r) => R.Rules.profPowerOf(r);
   const X = (u, t, a, o) => e.roll(u, t, a.effects[0], Object.assign({ act: a, kind: a.kind, expect: true }, o || {})).dmg;
   const fire = DB.actions.tb_s_fire, steam = DB.actions.tb_s_steam, heal = DB.actions.tb_s_heal;
   for (const k in mage.c.eprof) mage.c.eprof[k] = 0;
   for (const k in hero.c.wprof) hero.c.wprof[k] = 0;
   const f0 = X(mage, dummy, fire);
-  mage.c.eprof.fire = PTS[5];
-  near(X(mage, dummy, fire) / f0, 1.15, 1e-9, 'spell: element rank 5 → ×1.15');
-  mage.c.eprof.fire = PTS[10];
-  near(X(mage, dummy, fire) / f0, 1.30, 1e-9, 'spell: element rank 10 → ×1.30 (max)');
+  mage.c.eprof.fire = PTS[20];
+  near(X(mage, dummy, fire) / f0, PF(20), 1e-9, 'spell: element rank 20 → ×1.087');
+  mage.c.eprof.fire = PTS[100];
+  near(X(mage, dummy, fire) / f0, 1.30, 1e-9, 'spell: element rank 100 → ×1.30 (max)');
   mage.c.eprof.fire = 0;
-  near(X(mage, dummy, fire) / f0, 1, 1e-9, 'spell: rank 0 → ×1');
+  near(X(mage, dummy, fire) / f0, 1, 1e-9, 'spell: rank 1 → ×1');
   // combo: the average rank of its elements
   const s0 = X(mage, dummy, steam);
-  mage.c.eprof.fire = PTS[6]; mage.c.eprof.water = PTS[2];
-  near(X(mage, dummy, steam) / s0, 1.12, 1e-9, 'combo: ranks 6 and 2 → average 4 → ×1.12');
+  mage.c.eprof.fire = PTS[30]; mage.c.eprof.water = PTS[10];
+  near(X(mage, dummy, steam) / s0, PF(20), 1e-9, 'combo: ranks 30 and 10 → average 20');
   mage.c.eprof.fire = 0; mage.c.eprof.water = 0;
   // healing spells too (battle and the AI's estimate share R.Mon.healAmount)
   const h0 = e.expectHeal(mage, heal, hero);
-  mage.c.eprof.light = PTS[5];
-  near(e.expectHeal(mage, heal, hero) / h0, 1.15, 0.02, 'heal spell: light rank 5 → ×1.15 (rounded HP)');
+  mage.c.eprof.light = PTS[60];
+  near(e.expectHeal(mage, heal, hero) / h0, PF(60), 0.03, 'heal spell: light rank 60 → ×1.20 (rounded HP)');
   const n = R.Mon.healAmount(mage, hero, heal.effects[0], { action: heal });
-  ok(n === Math.round(h0 * 1.15) || Math.abs(n - h0 * 1.15) <= 1, 'healAmount with the action applies the bonus');
+  ok(n === Math.round(h0 * PF(60)) || Math.abs(n - h0 * PF(60)) <= 1, 'healAmount with the action applies the bonus');
   ok(R.Mon.healAmount(mage, hero, heal.effects[0], { item: true, action: heal }) === R.Mon.healAmount(mage, hero, heal.effects[0], { item: true }), 'items get no proficiency bonus');
   mage.c.eprof.light = 0;
   // plain attack and techs: the weapon type in the slot used; weapon2 uses its own type
   equip(hero, 'shield', null); equip(hero, 'weapon2', 'tb_dagger');
   const atk = (slot) => e.roll(hero, dummy, SURE(), { slot, attack: true, expect: true }).dmg;
   const a1 = atk('weapon1'), a2 = atk('weapon2'), ea2 = e.expectAttack(hero, dummy, 'weapon2');
-  hero.c.wprof.sword = PTS[5];
-  near(atk('weapon1') / a1, 1.15, 1e-9, 'attack with weapon1: sword rank 5 → ×1.15');
-  near(atk('weapon2') / a2, 1, 1e-9, 'attack with weapon2 (dagger rank 0) is not raised by the sword rank');
-  hero.c.wprof.dagger = PTS[10];
-  near(atk('weapon2') / a2, 1.30, 1e-9, 'attack with weapon2: its own type (dagger rank 10) → ×1.30');
+  hero.c.wprof.sword = PTS[20];
+  near(atk('weapon1') / a1, PF(20), 1e-9, 'attack with weapon1: sword rank 20');
+  near(atk('weapon2') / a2, 1, 1e-9, 'attack with weapon2 (dagger rank 1) is not raised by the sword rank');
+  hero.c.wprof.dagger = PTS[60];
+  near(atk('weapon2') / a2, PF(60), 1e-9, 'attack with weapon2: its own type (dagger rank 60)');
   const cut = DB.actions.tb_t_cut;
   const t0 = (slot) => { const sv = [hero.c.wprof.sword, hero.c.wprof.dagger]; hero.c.wprof.sword = 0; hero.c.wprof.dagger = 0; const d = X(hero, dummy, cut, { slot, W: hero.weapon(slot) }); hero.c.wprof.sword = sv[0]; hero.c.wprof.dagger = sv[1]; return d; };
-  near(X(hero, dummy, cut, { slot: 'weapon1', W: hero.weapon('weapon1') }) / t0('weapon1'), 1.15, 1e-9, 'tech from weapon1 → sword rank');
-  near(X(hero, dummy, cut, { slot: 'weapon2', W: hero.weapon('weapon2') }) / t0('weapon2'), 1.30, 1e-9, 'tech from weapon2 → dagger rank');
-  near(e.expectAttack(hero, dummy, 'weapon2') / ea2, 1.30, 1e-9, 'the AI estimate (expectAttack) sees the bonus');
+  near(X(hero, dummy, cut, { slot: 'weapon1', W: hero.weapon('weapon1') }) / t0('weapon1'), PF(20), 1e-9, 'tech from weapon1 → sword rank');
+  near(X(hero, dummy, cut, { slot: 'weapon2', W: hero.weapon('weapon2') }) / t0('weapon2'), PF(60), 1e-9, 'tech from weapon2 → dagger rank');
+  near(e.expectAttack(hero, dummy, 'weapon2') / ea2, PF(60), 1e-9, 'the AI estimate (expectAttack) sees the bonus');
   // monsters are unaffected
   ok(e.profMul(gob, { attack: true }) === 1 && e.profMul(gob, { act: fire, kind: 'spell' }) === 1, 'monsters: profMul 1');
   const m0 = e.roll(gob, hero, SURE(), { attack: true, expect: true }).dmg;
-  for (const k in hero.c.wprof) hero.c.wprof[k] = 999;
+  for (const k in hero.c.wprof) hero.c.wprof[k] = R.Rules.K.PROF_CAP;
   near(e.roll(gob, hero, SURE(), { attack: true, expect: true }).dmg, m0, 1e-9, "a monster's hit does not change with the target's proficiency");
   // items / 魔石 get nothing
   const pot = DB.items.tb_firepot;
-  mage.c.eprof.fire = 999;
+  mage.c.eprof.fire = R.Rules.K.PROF_CAP;
   near(e.roll(mage, gob, pot.use.effects[0], { act: pot.use, item: pot, kind: 'item', expect: true }).dmg, 0.8 * 21 * 1.5, 1e-6, 'tier-formula items: no proficiency bonus');
   mage.c.eprof.fire = 0;
-  // Part A13b: the engine's MP cost follows R.Rules.mpCost (1段目 free at rank 5)
+  // Part A13b: the engine's MP cost follows R.Rules.mpCost (1段目 free at rank 14, A17)
   if (DB.actions.s_fire_1) {
-    mage.c.eprof.fire = PTS[5];
-    ok(e.mpCost(mage, 's_fire_1') === 0 && !e.unusable(mage, 's_fire_1'), 'A13b: 1段目 fire spell costs MP 0 at fire rank 5');
+    mage.c.eprof.fire = PTS[14];
+    ok(e.mpCost(mage, 's_fire_1') === 0 && !e.unusable(mage, 's_fire_1'), 'A13b: 1段目 fire spell costs MP 0 at fire rank 14');
     mage.mp = 0;
     ok(!e.unusable(mage, 's_fire_1'), 'A13b: castable with MP 0');
     mage.c.eprof.fire = 0;
-    ok(e.unusable(mage, 's_fire_1') === 'mp', 'A13b: rank 0 needs MP again');
+    ok(e.unusable(mage, 's_fire_1') === 'mp', 'A13b: rank 1 needs MP again');
     // the auto AI (thrift, 雑魚戦) casts a free 1段目 spell instead of 攻撃 / 防御 when it hits
     const e2 = mk({ mons: ['tb_goblin', 'tb_goblin'] });
     const mg = P(e2, 2);
     if (!mg.c.spells.includes('s_fire_1')) mg.c.spells.push('s_fire_1');
     mg.mp = 0;
     const before = AI.partyCommands(e2, { thrift: true, items: false })[2];
-    ok(!(before && before.type === 'spell'), 'A13b: MP 0 at rank 0 → no spell');
-    mg.c.eprof.fire = PTS[5];
+    ok(!(before && before.type === 'spell'), 'A13b: MP 0 at rank 1 → no spell');
+    mg.c.eprof.fire = PTS[14];
     const cmd = AI.partyCommands(e2, { thrift: true, items: false })[2];
     ok(cmd && cmd.type === 'spell' && cmd.id === 's_fire_1', 'A13b: the free 1段目 spell is chosen in thrift mode', JSON.stringify(cmd && { type: cmd.type, id: cmd.id }));
   }
@@ -505,13 +506,12 @@ guard('heal', () => {
   mage.mp = 30;
   ev = use(e, mage, 'tb_s_healall', null);
   ok(count(ev, 'heal') === 1 && hero.hp > 5 && !said(ev, 'しかし効き目がなかった。'), 'allies: the full ones are skipped quietly');
-  // MP / WP
-  P(e, 3).mp = 0; P(e, 3).wp = 0;
-  e.inv.tb_ether = 1; e.inv.tb_tonic = 1;
+  // MP (A18: no WP)
+  P(e, 3).mp = 0;
+  e.inv.tb_ether = 1;
   ev = use(e, hero, 'tb_ether', P(e, 3), { item: true });
   ok(P(e, 3).mp === Math.ceil(P(e, 3).mmp * 0.3) && said(ev, 'シルヴァンのMPが'), 'healMp = ceil(max × pct)');
-  use(e, hero, 'tb_tonic', P(e, 3), { item: true });
-  ok(P(e, 3).wp === Math.ceil(P(e, 3).mwp * 0.3), 'healWp');
+  ok(!('wp' in P(e, 3)) && !('mwp' in P(e, 3)) && typeof e.wpCost !== 'function', 'no WP on units, no wpCost (A18)');
   // revive
   run(e.die(hero, null));
   ok(!hero.alive && hero.hp === 0 && e.stats.deaths === 1, 'down');
@@ -689,12 +689,12 @@ guard('turn statuses', () => {
   for (let r = 13; r < 17; r++) { e.round = r; run(e.endTurn(hero)); }
   ok(!hero.status.regen, 'regen ends after 5 turns');
   hero.status = {}; hero.turns = {};
-  // mods: permanent regen, mpRegen / wpRegen (quiet), hpLoss (never below 1)
+  // mods: permanent regen, mpRegen (quiet), hpLoss (never below 1)
   equip(hero, 'acc1', 'tb_regen');
-  hero.c.hp = 10; hero.mp = 0; hero.wp = 0;
+  hero.c.hp = 10; hero.mp = 0;
   e.round = 20;
   ev = run(e.endTurn(hero));
-  ok(hero.hp === 10 + Math.floor(hero.mhp / 20) && hero.mp === 2 && hero.wp === 1 && !said(ev, 'MPが'), 'regen:true /20, mpRegen 2, wpRegen 1 (quiet)');
+  ok(hero.hp === 10 + Math.floor(hero.mhp / 20) && hero.mp === 2 && !said(ev, 'MPが'), 'regen:true /20, mpRegen 2 (quiet; no wpRegen, A18)');
   equip(hero, 'acc1', 'tb_cursed');
   hero.c.hp = hero.mhp;
   e.round = 21;
@@ -753,12 +753,12 @@ guard('buffs', () => {
   const saveW = knight.c.equip.weapon1;
   equip(knight, 'weapon1', 'tb_whip');
   const SFd = U.clamp((128 + knight.stat('dex')) / 168, 0.6, 2);
-  const landT = () => (() => { gob.buffs.agi = 0; gob.status = {}; knight.wp = 99; const r = run(e.useAction(knight, 'tb_t_trip', DB.actions.tb_t_trip, gob, { slot: knight.slotFor('whip') === false ? undefined : knight.slotFor('whip'), free: true })); return gob.alive && r.some((x) => x.t === 'dmg' && x.u === gob && x.n > 0) ? (gob.buffs.agi < 0 ? 1 : 0) : null; })();
-  if (knight.slotFor('whip') !== false) {
+  const landT = () => (() => { gob.buffs.agi = 0; gob.status = {}; knight.mp = 99; const r = run(e.useAction(knight, 'tb_t_trip', DB.actions.tb_t_trip, gob, { slot: knight.slotFor('dagger') === false ? undefined : knight.slotFor('dagger'), free: true })); return gob.alive && r.some((x) => x.t === 'dmg' && x.u === gob && x.n > 0) ? (gob.buffs.agi < 0 ? 1 : 0) : null; })();
+  if (knight.slotFor('dagger') !== false) {
     let hitN = 0, got = 0;
     for (let i = 0; i < 2000; i++) { gob.hp = gob.mhp; const v = landT(); if (v != null) { hitN++; got += v; } }
     near(got / Math.max(1, hitN), Math.min(0.95, 1 * SFd), 0.035, 'tech debuff chance × SF(dex)');
-  } else ok(false, 'tb_whip gives a whip slot');
+  } else ok(false, 'tb_whip (a dagger since A19) gives a dagger slot');
   equip(knight, 'weapon1', saveW);
   near(land(boss, 'tb_s_break'), 0.5, 0.03, 'bosses: × 0.5');
   near(land(boss, 'tb_s_weaken'), 0.8 * SF * 0.5, 0.03, 'bosses: chance × SF × 0.5');
@@ -769,7 +769,7 @@ guard('buffs', () => {
   // dispel
   gob.buffs = { atk: 2, def: -1, mag: 0, mdef: 1, agi: 0 };
   gob.status.regen = true; gob.turns.regen = 3;
-  P(e, 2).wp = 99;
+  P(e, 2).mp = 99;
   ev = use(e, mage, 'tb_t_unward', gob, { slot: 'weapon1' });
   ok(gob.buffs.atk === 0 && gob.buffs.mdef === 0 && gob.buffs.def === -1 && !gob.status.regen && said(ev, 'テスト小鬼の強化の効果が消えた！'), "dispel 'good': ups and good statuses");
   ev = use(e, mage, 'tb_t_unward', gob, { slot: 'weapon1' });
@@ -822,7 +822,7 @@ guard('steal', () => {
   const a4 = P(e4, 3);
   a4.c.equip.weapon1 = 'tb_dagger'; a4.c.techs.push('tb_t_filch'); a4.refresh();
   a4.c.row = 'front';
-  a4.wp = 99;
+  a4.mp = 99;
   const ev4 = use(e4, a4, 'tb_t_filch', Mo(e4, 0), { slot: 'weapon1' });
   ok(said(ev4, 'シルヴァンのテストかすめ！'), 'steal tech');
   // full bag
@@ -887,12 +887,13 @@ sec('rows/reach/targeting');
 guard('rows', () => {
   const e = mk({ mons: ['tb_goblin'] });
   const [hero, lancer, mage, archer] = e.party;
-  ok(!e.slotReaches(hero, 'weapon1') && e.slotReaches(lancer, 'weapon1') && e.slotReaches(archer, 'weapon1') && !e.slotReaches(mage, 'weapon1'), 'reach: sword / staff front only; spear / bow any');
-  ok(e.attackIssue(mage, 'weapon1') === 'reach' && e.attackIssue(archer, 'weapon1') === null && e.attackIssue(hero, 'weapon1') === null, "attackIssue: 'reach' from the middle row");
+  ok(!e.slotReaches(hero, 'weapon1') && e.slotReaches(lancer, 'weapon1') && e.slotReaches(archer, 'weapon1') && e.slotReaches(mage, 'weapon1'), 'reach: sword front only; spear / bow / staff any (A19)');
+  ok(e.attackIssue(mage, 'weapon1') === null && e.attackIssue(archer, 'weapon1') === null && e.attackIssue(hero, 'weapon1') === null, 'attackIssue: the staff reaches from the middle row (A19)');
   ok(e.unusable(mage, 'tb_t_mind', 'weapon1') === null, 'a reach:true staff tech from the middle row');
   const a2 = P(e, 3);
   a2.c.equip.weapon1 = 'tb_dagger'; a2.c.equip.weapon2 = null; a2.c.techs.push('tb_t_vital'); a2.refresh();
   ok(e.unusable(a2, 'tb_t_vital', 'weapon1') === 'reach', "a reach:false tech from the middle row → 'reach'");
+  ok(e.attackIssue(a2, 'weapon1') === 'reach', "attackIssue: a dagger → 'reach' from the middle row");
   const ev = quiet(() => run(e.execute(a2, { type: 'attack', slot: 'weapon1', target: Mo(e, 0) })));
   ok(said(ev, 'シルヴァンは守りを固めている。') && a2.defending, 'an attack that cannot reach any more: guard instead');
   hero.c.hp = 0; lancer.c.hp = 0;
@@ -921,7 +922,7 @@ guard('rows', () => {
   for (const m of e3.mons) { withD(m, { hp: 999 }); m.hp = m.mhp = 999; }
   ok(e3.targets(P(e3, 0), DB.actions.tb_t_wheel, Mo(e3, 2)).map((m) => m.name).join() === 'テスト小鬼Ａ,テスト小鬼Ｂ', "'group' = the chosen species");
   ok(e3.targets(P(e3, 0), DB.actions.tb_t_wind, null).length === 5, "'enemies' = all");
-  P(e3, 3).wp = 99;
+  P(e3, 3).mp = 99;
   let evr = use(e3, P(e3, 3), 'tb_t_rain', null, { slot: 'weapon1' });
   ok(count(evr, 'fx') === 4 && count(evr, 'dmg') + count(evr, 'miss') === 4, "'random': 4 hits on random foes");
   Mo(e3, 0).hp = 0;
@@ -941,16 +942,16 @@ sec('techs/weapons');
 guard('techs', () => {
   const e = mk({ mons: ['tb_goblin', 'tb_goblin', 'tb_dummy'] });
   const hero = P(e, 0), gob = Mo(e, 0);
-  const wp0 = hero.wp;
+  const mp0 = hero.mp;
   let ev = use(e, hero, 'tb_t_cut', gob, { slot: 'weapon1' });
-  ok(said(ev, 'アルンのテスト斬り！') && hero.wp === wp0 - e.wpCost(hero, 'tb_t_cut') && e.stats.techs.hero === 1, '「〜の〈技〉！」, WP paid');
-  hero.wp = 0;
+  ok(said(ev, 'アルンのテスト斬り！') && hero.mp === mp0 - e.mpCost(hero, 'tb_t_cut') && e.mpCost(hero, 'tb_t_cut') === 2 && e.stats.techs.hero === 1, '「〜の〈技〉！」, MP paid (A18: techs pay MP)');
+  hero.mp = 0;
   ev = use(e, hero, 'tb_t_cut', gob, { slot: 'weapon1' });
-  ok(said(ev, 'しかしWPが足りない！') && e.unusable(hero, 'tb_t_cut', 'weapon1') === 'wp', 'not enough WP');
-  hero.wp = hero.mwp;
+  ok(said(ev, 'しかしMPが足りない！') && e.unusable(hero, 'tb_t_cut', 'weapon1') === 'mp', 'not enough MP');
+  hero.mp = hero.mmp;
   ok(e.unusable(hero, 'tb_t_up') === 'none' && e.unusable(hero, 'tb_t_up', 'weapon1') === 'none', 'a tech of a weapon type not equipped');
   equip(hero, 'acc1', 'tb_saver');
-  ok(e.wpCost(hero, 'tb_t_wheel') === Math.max(1, R.Rules.wpCost(hero.c, 'tb_t_wheel')) && e.wpCost(hero, 'tb_t_wheel') < DB.actions.tb_t_wheel.wp, 'wpCostPct −50 via R.Rules.wpCost');
+  ok(e.mpCost(hero, 'tb_t_wheel') === R.Rules.mpCost(hero.c, 'tb_t_wheel') && e.mpCost(hero, 'tb_t_wheel') === Math.round(DB.actions.tb_t_wheel.mp / 2), 'techCostPct −50 via R.Rules.mpCost');
   equip(hero, 'acc1', null);
   // two weapons: the tech uses the slot of its type
   equip(hero, 'weapon2', 'tb_dagger');
@@ -979,22 +980,22 @@ guard('techs', () => {
   const wx = mk({ mons: ['tb_dummy'] });
   const hx = P(wx, 0);
   hx.c.equip.weapon1 = 'tb_seal_axe'; hx.c.equip.shield = null; hx.refresh();
-  hx.wp = 99;
+  hx.mp = 99;
   const h0 = hx.hp;
   run(wx.useAction(hx, 'tb_t_reckless', DB.actions.tb_t_reckless, Mo(wx, 0), { slot: 'weapon1' }));
   ok(hx.hp === h0 - Math.floor(hx.mhp * 0.1), 'hpCost: floor(max HP × 0.1)');
-  hx.c.hp = 3; hx.wp = 99;
+  hx.c.hp = 3; hx.mp = 99;
   run(wx.useAction(hx, 'tb_t_reckless', DB.actions.tb_t_reckless, Mo(wx, 0), { slot: 'weapon1' }));
   ok(hx.hp === 1, 'hpCost never kills');
   // drain (tech) and weapon drain, silent at full HP
   const dz = mk({ mons: ['tb_dummy'] });
   const fz = P(dz, 0);
   fz.c.equip.weapon1 = 'tb_claw'; fz.c.equip.shield = null; fz.c.techs.push('tb_t_drainfist'); fz.refresh();
-  fz.wp = 99; fz.c.hp = 20;
+  fz.mp = 99; fz.c.hp = 20;
   ev = use(dz, fz, 'tb_t_drainfist', Mo(dz, 0), { slot: 'weapon1' });
   const got = ev.filter((x) => x.t === 'dmg' && x.u === Mo(dz, 0)).reduce((s, x) => s + x.n, 0);
   ok(got === 0 || fz.hp === Math.min(fz.mhp, 20 + Math.round(got * 0.5)), 'drain 0.5 of the damage dealt');
-  fz.c.hp = fz.mhp; fz.wp = 99;
+  fz.c.hp = fz.mhp; fz.mp = 99;
   ev = use(dz, fz, 'tb_t_drainfist', Mo(dz, 0), { slot: 'weapon1' });
   ok(count(ev, 'heal') === 0, 'drain at full HP: silent');
   fz.c.equip.weapon1 = 'tb_katana'; fz.refresh(); fz.c.hp = 20;
@@ -1006,7 +1007,7 @@ guard('techs', () => {
   for (let i = 0; i < 300; i++) {
     const x = mk({ mons: ['tb_goblin'] });
     const t = withD(Mo(x, 0), { eva: 200, hp: 9999 }); t.hp = t.mhp = 9999;
-    const u = P(x, 0); u.c.techs.push('tb_t_seal'); u.wp = 99;
+    const u = P(x, 0); u.c.techs.push('tb_t_seal'); u.mp = 99;
     const evs = run(x.useAction(u, 'tb_t_seal', DB.actions.tb_t_seal, t, { slot: 'weapon1' }));
     if (count(evs, 'miss') && !count(evs, 'dmg')) { if (t.status.silence) gated++; } else if (t.status.silence) landedSil++;
   }
@@ -1024,7 +1025,7 @@ guard('techs', () => {
   let most = 0, poisoned = 0;
   for (let i = 0; i < 200; i++) {
     const t = Mo(ox, 0); t.hp = t.mhp = 999; t.status = {}; t.turns = {};
-    ou.wp = 99;
+    ou.mp = 99;
     const evs = use(ox, ou, 'tb_t_flurry', t, { slot: 'weapon1' });
     const n = count(evs, 'status', (x) => x.s === 'poison' && x.on);
     most = Math.max(most, n);
@@ -1062,7 +1063,7 @@ guard('counter', () => {
   const e = mk({ mons: ['tb_goblin'] });
   const hero = P(e, 0), mage = P(e, 2), gob = withD(Mo(e, 0), { hit: 999, crit: 0, hp: 9999 });
   gob.hp = gob.mhp = 9999;
-  hero.wp = 99;
+  hero.mp = 99;
   let ev = use(e, hero, 'tb_t_guard', null, { slot: 'weapon1' });
   const st = hero.status.counter;
   ok(st && st.slot === 'weapon1' && st.power === 0.8 && st.parry === 0.35 && hero.turns.counter === 'next' && said(ev, 'アルンは反撃の構えをとった！'), 'counter stance with its slot, power, parry');
@@ -1102,7 +1103,7 @@ guard('counter', () => {
   ok(said(ev, 'ブリギッタの反撃！') && count(ev, 'react', (x) => x.kind === 'counter') === 1, 'autoCounter 1: counters every physical attack');
   equip(lancer, 'acc1', null);
   // cover
-  hero.wp = 99;
+  hero.mp = 99;
   ev = use(e, hero, 'tb_t_wall', null, { slot: 'weapon1' });
   ok(hero.status.cover && hero.status.cover.mul === 0.6 && hero.turns.cover === 'next' && said(ev, 'アルンは仲間の前に立ちはだかった！'), 'cover stance (mul 0.6)');
   mage.c.hp = mage.mhp; hero.c.hp = hero.mhp; gob.hp = gob.mhp;
@@ -1146,7 +1147,7 @@ guard('6.9.1-10', () => {
   gob.hp = gob.mhp = 9999;
   equip(hero, 'shield', null); equip(hero, 'weapon1', 'tb_dagger'); equip(hero, 'weapon2', 'tb_sword');
   ok(hero.weapon('weapon1').wtype === 'dagger' && hero.weapon('weapon2').wtype === 'sword', 'fixture: dagger in slot 1, sword in slot 2');
-  hero.wp = 99;
+  hero.mp = 99;
   use(e, hero, 'tb_t_guard', null, { slot: 'weapon2' });
   ok(hero.status.counter && hero.status.counter.slot === 'weapon2', 'the stance remembers its slot (weapon 2)');
   let cev = [];
@@ -1173,7 +1174,7 @@ guard('6.9.1-10', () => {
   equip(hero, 'weapon2', null); equip(hero, 'weapon1', 'tb_sword'); equip(hero, 'shield', 'tb_shield');
 
   // (4) かばう: the attack moves to the cover-er, its damage × mul (0.6), only for a single physical attack
-  hero.wp = 99;
+  hero.mp = 99;
   use(e, hero, 'tb_t_wall', null, { slot: 'weapon1' });
   mage.c.hp = mage.mhp; hero.c.hp = hero.mhp;
   const cvr = spyRoll(e, () => { ev = run(e.attack(gob, mage)); });
@@ -1193,7 +1194,7 @@ guard('6.9.1-10', () => {
   for (let i = 0; i < 200; i++) {
     const x = mk({ mons: ['tb_goblin'] });
     const t = withD(Mo(x, 0), { eva: i % 2 ? 0 : 200, hp: 9999 }); t.hp = t.mhp = 9999;
-    const u = P(x, 0); equip(u, 'shield', null); equip(u, 'weapon1', 'tb_whip'); u.c.techs.push('tb_t_trip'); u.wp = 99;
+    const u = P(x, 0); equip(u, 'shield', null); equip(u, 'weapon1', 'tb_whip'); u.c.techs.push('tb_t_trip'); u.mp = 99;
     const evs = quiet(() => use(x, u, 'tb_t_trip', t, { slot: 'weapon1' }));
     if (count(evs, 'dmg', (d) => d.u === t)) { hits++; if (t.buffs.agi === -1) hitBuff++; } else { misses++; if (t.buffs.agi !== 0) missBuff++; }
   }
@@ -1213,16 +1214,16 @@ guard('6.9.1-10', () => {
   dg.buffs = { atk: 1, def: 2, mag: -1, mdef: 0, agi: 1 };
   for (const s of ['regen', 'veil', 'counter', 'nimble', 'cover']) { dg.status[s] = s === 'counter' ? { slot: null, power: 1, parry: 0 } : s === 'cover' ? { mul: 1 } : true; dg.turns[s] = 3; }
   dg.status.poison = true; dg.turns.poison = 3;
-  dm.wp = 99;
+  dm.mp = 99;
   ev = use(dx, dm, 'tb_t_unward', dg, { slot: 'weapon1' });
   ok(dg.buffs.atk === 0 && dg.buffs.def === 0 && dg.buffs.agi === 0 && dg.buffs.mag === -1, "tech dispel 'good': ups cleared, downs kept");
   ok(['regen', 'veil', 'counter', 'nimble', 'cover'].every((s) => !dg.status[s]) && dg.status.poison, "tech dispel 'good': good statuses (incl. counter / cover) cleared, poison kept");
-  ok(dm.wp === 99 - dx.wpCost(dm, 'tb_t_unward') && said(ev, '強化の効果が消えた'), 'the dispel tech paid its WP and said so');
+  ok(dm.mp === 99 - dx.mpCost(dm, 'tb_t_unward') && said(ev, '強化の効果が消えた'), 'the dispel tech paid its MP and said so');
 
   // (8) healMp pct from a tech: ceil(max MP × pct), at least 1
   const hx = mk();
   const hm = P(hx, 2), hs = P(hx, 3);
-  hm.c.techs.push('tb_t_share'); hm.wp = 99; hs.mp = 0;
+  hm.c.techs.push('tb_t_share'); hm.mp = 99; hs.mp = 0;
   use(hx, hm, 'tb_t_share', hs, { slot: 'weapon1' });
   ok(hs.mmp > 0 && hs.mp === Math.max(1, Math.ceil(hs.mmp * 0.2)), `healMp pct 0.2 → ceil(max × 0.2) (${hs.mp}/${hs.mmp})`);
   hs.mp = hs.mmp - 1;
@@ -1240,7 +1241,7 @@ guard('6.9.1-10', () => {
   try {
     for (let i = 0; i < 60; i++) {
       const t = Mo(ox, 0); t.hp = t.mhp = 9999; t.status = {}; t.turns = {};
-      ou.wp = 99; pr = 0;
+      ou.mp = 99; pr = 0;
       const evs = quiet(() => use(ox, ou, 'tb_t_flurry', t, { slot: 'weapon1' }));
       if (count(evs, 'dmg', (d) => d.u === t)) anyHit++;
       maxRolls = Math.max(maxRolls, pr);
@@ -1251,13 +1252,13 @@ guard('6.9.1-10', () => {
   // (10) 'reach' and 'silence' make a tech unusable (and the AI does not offer it)
   const ux = mk({ mons: ['tb_goblin'] });
   const uh = P(ux, 0), um = P(ux, 2);
-  uh.c.row = 'middle'; uh.refresh(); uh.wp = 99;
+  uh.c.row = 'middle'; uh.refresh(); uh.mp = 99;
   ok(ux.effRow(uh) === 'middle' && ux.unusable(uh, 'tb_t_cut', 'weapon1') === 'reach', "a reach:false tech from the middle row → 'reach'");
   ok(!AI.abilityOptions(ux, uh).some((o) => o.id === 'tb_t_cut'), 'the AI does not offer it');
   const hp0 = Mo(ux, 0).hp;
   ev = quiet(() => use(ux, uh, 'tb_t_cut', Mo(ux, 0), { slot: 'weapon1' }));
-  ok(Mo(ux, 0).hp === hp0 && count(ev, 'dmg') === 0 && uh.wp === 99 && said(ev, '後列からは届かない'), 'used anyway: refused, no damage, no WP');
-  um.wp = 99; um.status.silence = true; um.turns.silence = 3;
+  ok(Mo(ux, 0).hp === hp0 && count(ev, 'dmg') === 0 && uh.mp === 99 && said(ev, '後列からは届かない'), 'used anyway: refused, no damage, no MP');
+  um.mp = 99; um.status.silence = true; um.turns.silence = 3;
   ok(ux.unusable(um, 'tb_t_mind', 'weapon1') === 'silence', "silenced: a staff (magic) tech → 'silence'");
   ok(!AI.abilityOptions(ux, um).some((o) => o.id === 'tb_t_mind'), 'the AI does not offer it while silenced');
   ok(ux.unusable(P(ux, 1), 'tb_t_up', 'weapon1') === null || ux.unusable(P(ux, 1), 'tb_t_up', 'weapon1') === undefined, 'a non-magic tech of a front-row fighter is usable');
@@ -1890,7 +1891,7 @@ guard('party AI', () => quiet(() => {
   ok(!AI.partyCommands(e2, Object.assign({}, AI.AUTO_OPTS, { items: false })).some((c) => c && c.type === 'item'), 'items: false');
   // boss: dispel a buffed boss, spend freely, keep one heal
   const e3 = mk({ mons: ['tb_boss'] });
-  P(e3, 2).wp = 99; P(e3, 2).c.techs.push('tb_t_unward');
+  P(e3, 2).mp = 99; P(e3, 2).c.techs.push('tb_t_unward');
   Mo(e3, 0).buffs.def = 2;
   const c3 = AI.partyCommands(e3, AI.AUTO_OPTS);
   ok(c3.some((c) => c && c.id === 'tb_t_unward' && c.target === Mo(e3, 0)), 'dispels a boss with 守備力 up');
@@ -1909,7 +1910,7 @@ guard('party AI', () => quiet(() => {
   // focus fire
   const e5 = mk({ mons: ['tb_goblin', 'tb_goblin', 'tb_goblin'] });
   for (const m of e5.mons) { withD(m, { hp: 500 }); m.hp = m.mhp = 500; }
-  for (const p of e5.party) { p.mp = 0; p.wp = 0; }
+  for (const p of e5.party) { p.mp = 0; }
   const c5 = AI.partyCommands(e5, AI.AUTO_OPTS);
   const tg = c5.filter((c) => c && c.type === 'attack').map((c) => c.target);
   ok(tg.length >= 2 && tg.every((t) => t === tg[0]), 'focus fire: every attack on one target');
@@ -2092,7 +2093,7 @@ guard('real content', () => {
       if (side === 'party') {
         u = P(e, 0);
         if (a.kind === 'tech') { const W = Object.keys(DB.items).find((k) => DB.items[k].type === 'weapon' && DB.items[k].wtype === a.wtype && !DB.items[k].sealTech); if (W) { u.c.equip.weapon1 = W; u.c.equip.shield = null; u.refresh(); } }
-        u.mp = 999; u.wp = 999;
+        u.mp = 999;
       } else u = Mo(e, 1);
       const foe = side === 'party' ? Mo(e, 0) : P(e, 0);
       const ally = side === 'party' ? P(e, 1) : Mo(e, 0);

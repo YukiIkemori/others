@@ -302,6 +302,25 @@
     diamond(360, 462, 9, 'rgba(250,236,190,0.95)', 'rgba(80,60,30,0.8)');
   }
 
+
+  // pose sheet in the round-2 look/style (crisp sprite px, magnified nearest-neighbour).
+  //   ?view=sheet2&z=4&who=arun,selma&poses=idle,slash&back=1 (back=1 also shows a back-facing flip row check)
+  function sheet2(opt) {
+    const Q = new URLSearchParams(location.search);
+    const names = Q.get('poses') ? Q.get('poses').split(',') : ['idle', 'step', 'windup', 'slash', 'cast', 'hurt', 'kneel', 'ko', 'victory'];
+    const who = Q.get('who') ? Q.get('who').split(',') : Object.keys(LOOKS2);
+    const z = +(Q.get('z') || 3), cw = +(Q.get('cw') || 44) * z, rh = +(Q.get('rh') || 56) * z, sc = +(Q.get('sc') || 1.12);
+    cv.width = Math.max(400, names.length * cw + 40); cv.height = who.length * rh + 40;
+    ctx.fillStyle = Q.get('bg') || '#7a7460'; ctx.fillRect(0, 0, cv.width, cv.height);
+    ctx.imageSmoothingEnabled = false;
+    who.forEach((k, row) => names.forEach((n, col) => {
+      const B = new RZ.Builder(); RIG.draw(B, LOOKS2[k], RIG.pose(n));
+      const r = RZ.render(B, Object.assign({}, STYLE, { flip: Q.get('flip') !== '0', scale: sc, light: LIGHT }));
+      const x = 20 + col * cw + cw / 2, y = 20 + row * rh + rh * 0.86;
+      ctx.drawImage(r.canvas, Math.round(x - r.ox * z), Math.round(y - r.oy * z), r.canvas.width * z, r.canvas.height * z);
+    }));
+  }
+  SCENES.sheet2 = sheet2;
   SCENES.battle2 = battle2;
   SCENES.LOOKS2 = LOOKS2;
   SCENES.STYLE2 = STYLE;

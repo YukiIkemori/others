@@ -9,8 +9,9 @@
   const mdmg = (power, o) => Object.assign({ type: 'damage', formula: 'magic', power }, o || {});
   const st = (status, chance, o) => Object.assign(chance == null ? { type: 'status', status } : { type: 'status', status, chance }, o || {});
   const buff = (stat, stages, chance) => (chance == null ? { type: 'buff', stat, stages } : { type: 'buff', stat, stages, chance });
+  // techs pay MP (A18): the third argument is the old WP; the MP is round(WP × 1.5) (SYSTEMS_REWORK §2.2)
   const tech = (wtype, name, wp, target, reach, effects, lv, o) => Object.assign({
-    kind: 'tech', wtype, name, desc: name + 'のテスト。', wp, target, reach, effects, fx: 'slash', rank: lv, glim: { lv, from: ['attack'] },
+    kind: 'tech', wtype, name, desc: name + 'のテスト。', mp: Math.round(wp * 1.5), target, reach, effects, fx: 'slash', rank: lv, glim: { lv, from: ['attack'] },
   }, o || {});
   const spell = (name, elements, lv, mp, target, effects, o) => Object.assign({
     kind: 'spell', magic: true, name, desc: name + 'のテスト。', elements, mp, target, effects, fx: 'magic', cls: elements.length === 1 ? 'single' : elements.length === 2 ? 'comboA' : 'triple',
@@ -22,21 +23,21 @@
   Object.assign(DB.heroTypes, {
     tb_warrior: {
       name: 'テスト戦士', desc: 'テスト', stats: { str: 50, vit: 44, dex: 30, agi: 28, int: 18, mnd: 30 },
-      growth: { hp: 'A', mp: 'C', wp: 'A' }, apt: { w: { sword: 'A', spear: 'B' }, e: { fire: 'B' } }, favorKind: 'weapon', row: 'front',
+      growth: { hp: 'A', mp: 'A' }, apt: { w: { sword: 'A', spear: 'B' }, e: { fire: 'B' } }, favorKind: 'weapon', row: 'front',
     },
   });
   Object.assign(DB.companions, {
     tb_lancer: {
       name: 'ブリギッタ', gender: 'f', role: 'テスト', row: 'front', stats: { str: 46, vit: 46, dex: 34, agi: 30, int: 16, mnd: 28 },
-      growth: { hp: 'A', mp: 'D', wp: 'A' }, apt: { w: { spear: 'A', sword: 'B' }, e: { earth: 'B' } }, innate: { name: 'テスト', desc: 'テスト', mods: {} },
+      growth: { hp: 'A', mp: 'A' }, apt: { w: { spear: 'A', sword: 'B' }, e: { earth: 'B' } }, innate: { name: 'テスト', desc: 'テスト', mods: {} },
     },
     tb_mage: {
       name: 'マルタ', gender: 'f', role: 'テスト', row: 'middle', stats: { str: 18, vit: 24, dex: 30, agi: 34, int: 52, mnd: 42 },
-      growth: { hp: 'C', mp: 'S', wp: 'C' }, apt: { w: { staff: 'A' }, e: { light: 'A', water: 'A', fire: 'B' } }, innate: { name: 'テスト', desc: 'テスト', mods: {} },
+      growth: { hp: 'C', mp: 'S' }, apt: { w: { staff: 'A' }, e: { light: 'A', water: 'A', fire: 'B' } }, innate: { name: 'テスト', desc: 'テスト', mods: {} },
     },
     tb_archer: {
       name: 'シルヴァン', gender: 'm', role: 'テスト', row: 'middle', stats: { str: 26, vit: 30, dex: 55, agi: 44, int: 20, mnd: 25 },
-      growth: { hp: 'B', mp: 'C', wp: 'B' }, apt: { w: { bow: 'A', dagger: 'B' }, e: { wind: 'B' } }, innate: { name: 'テスト', desc: 'テスト', mods: {} },
+      growth: { hp: 'B', mp: 'B' }, apt: { w: { bow: 'A', dagger: 'B' }, e: { wind: 'B' } }, innate: { name: 'テスト', desc: 'テスト', mods: {} },
     },
   });
 
@@ -53,12 +54,13 @@
     tb_staff: W('テストの杖', 'staff', 13, { mag: 21 }),
     tb_dagger: W('テストの短剣', 'dagger', 16),
     tb_venom_dagger: W('テスト毒の短剣', 'dagger', 16, { onHit: { status: 'poison', chance: 1 } }),
-    tb_club: W('テストの棍棒', 'club', 22),
-    tb_katana: W('テストの刀', 'katana', 22, { drain: 0.2, vs: { undead: 1.5 } }),
-    tb_whip: W('テストの鞭', 'whip', 17),
-    tb_metal_whip: W('テスト白銀の鞭', 'whip', 17, { metalHit: true, grade: 'super' }),
+    // A19: the club is an axe of the mace line, the katana a sword (item overrides), the whip and claw daggers
+    tb_club: W('テストの棍棒', 'axe', 22, { kind: 'blunt', art: 'club', mult: 1.05, hit: 10 }),
+    tb_katana: W('テストの刀', 'sword', 22, { drain: 0.2, vs: { undead: 1.5 }, art: 'katana', mult: 1.05, crit: 8 }),
+    tb_whip: W('テストの針', 'dagger', 17),
+    tb_metal_whip: W('テスト白銀の針', 'dagger', 17, { metalHit: true, grade: 'super' }),
     tb_seal_axe: W('テスト封じの斧', 'axe', 24, { sealTech: true, grade: 'super' }),
-    tb_claw: W('テストの爪', 'fist', 19),
+    tb_claw: W('テストの爪', 'dagger', 19, { mult: 0.85 }),
     tb_shield: A('テストの盾', 'shield', 26, 8, { eva: 8 }),
     tb_mail: A('テストの鎧', 'body', 52, 10),
     tb_robe: A('テストのローブ', 'body', 21, 31, { weight: 'cloth', stats: { int: 4 } }),
@@ -70,10 +72,10 @@
     tb_feather: ACC('テスト再起の羽', { autoRevive: 0.5 }),
     tb_glove: ACC('テスト早業', { autoSteal: 100 }),
     tb_lucky: ACC('テスト幸運', { dropPct: 150, rarePct: 150, superPct: 150, goldPct: 100, goldenPct: 100, rareEncPct: 100, preemptPct: 30, escapePct: 50, stealPct: 50 }),
-    tb_regen: ACC('テスト再生', { regen: true, mpRegen: 2, wpRegen: 1 }),
+    tb_regen: ACC('テスト再生', { regen: true, mpRegen: 2 }),
     tb_cursed: ACC('テスト呪い', { hpLoss: 5, takenPct: 25 }, { quirk: true }),
     tb_boost: ACC('テスト強化', { elemBoost: { fire: 50 }, physPct: 50, magicPct: 50, healPct: 50, itemPct: 100 }),
-    tb_saver: ACC('テスト節約', { mpCostPct: -50, wpCostPct: -50 }),
+    tb_saver: ACC('テスト節約', { mpCostPct: -50, techCostPct: -50 }),
     tb_haste: ACC('テスト先手', { startBuffs: { agi: 1, def: 1 } }),
     tb_nospell: ACC('テスト術封じ', { noSpell: true }, { quirk: true }),
     tb_exp: ACC('テスト経験', { expPct: 30 }),
@@ -83,7 +85,6 @@
     tb_herbs: USE('テスト香炉', 'allies', [{ type: 'heal', pct: 0.35 }]),
     tb_revive: USE('テスト気つけ', 'ally_dead', [{ type: 'revive', pct: 0.35 }], { use: { target: 'ally_dead', effects: [{ type: 'revive', pct: 0.35 }], fx: 'revive', battle: true, field: true } }),
     tb_ether: USE('テスト魔力', 'ally', [{ type: 'healMp', pct: 0.3 }]),
-    tb_tonic: USE('テスト気力', 'ally', [{ type: 'healWp', pct: 0.3 }]),
     tb_waker: USE('テスト目覚まし', 'ally', [{ type: 'cure', statuses: ['sleep', 'confuse', 'stun'] }]),
     tb_panacea: USE('テスト万病', 'ally', [{ type: 'cure', statuses: 'all' }]),
     tb_smoke: USE('テスト煙玉', 'self', [{ type: 'escape' }]),
@@ -128,14 +129,14 @@
     tb_t_soothe: tech('staff', 'テストいたわり', 1, 'ally', true, [{ type: 'heal', pct: 0.3 }], 1, { magic: true, fx: 'heal' }),
     tb_t_share: tech('staff', 'テスト魔力分け', 2, 'ally', true, [{ type: 'healMp', pct: 0.2 }], 4, { magic: true, noAuto: true, fx: 'mp' }),
     tb_t_unward: tech('staff', 'テスト守りほどき', 2, 'enemy', true, [{ type: 'dispel', side: 'good' }], 3, { magic: true, fx: 'dispel' }),
-    tb_t_smash: tech('club', 'テスト強打', 1, 'enemy', false, [dmg(1.3), st('stun', 1)], 1, { fx: 'strike' }),
-    tb_t_draw: tech('katana', 'テスト抜き打ち', 1, 'enemy', false, [dmg(1.2, { critBonus: 10 })], 1, { quick: true }),
-    tb_t_trip: tech('whip', 'テスト足からめ', 1, 'enemy', true, [dmg(1.25), buff('agi', -1, 1)], 1, { fx: 'lash' }),
-    tb_t_metal: tech('whip', 'テスト鋼打ち', 2, 'enemy', true, [dmg(1.0, { metalHit: true })], 2, { fx: 'lash' }),
+    tb_t_smash: tech('axe', 'テスト強打', 1, 'enemy', false, [dmg(1.3, { kind: 'blunt' }), st('stun', 1)], 1, { fx: 'strike' }),
+    tb_t_draw: tech('sword', 'テスト抜き打ち', 1, 'enemy', false, [dmg(1.2, { critBonus: 10 })], 1, { quick: true }),
+    tb_t_trip: tech('dagger', 'テスト足からめ', 1, 'enemy', true, [dmg(1.25), buff('agi', -1, 1)], 1, { fx: 'pierce' }),
+    tb_t_metal: tech('dagger', 'テスト鋼打ち', 2, 'enemy', true, [dmg(1.0, { metalHit: true })], 2, { fx: 'pierce' }),
     tb_t_reckless: tech('axe', 'テスト捨て身', 2, 'enemy', false, [dmg(2.5, { hpCost: 0.1, ignoreDef: 1 })], 3),
-    tb_t_palm: tech('fist', 'テスト掌打', 1, 'enemy', false, [dmg(1.5)], 1, { fx: 'strike' }),
-    tb_t_sure: tech('fist', 'テスト必中', 1, 'enemy', false, [dmg(1.0, { sure: true })], 2, { fx: 'strike' }),
-    tb_t_drainfist: tech('fist', 'テスト吸い拳', 2, 'enemy', false, [dmg(1.0, { drain: 0.5 })], 3, { fx: 'strike' }),
+    tb_t_palm: tech('dagger', 'テスト掌打', 1, 'enemy', false, [dmg(1.5)], 1, { fx: 'strike' }),
+    tb_t_sure: tech('dagger', 'テスト必中', 1, 'enemy', false, [dmg(1.0, { sure: true })], 2, { fx: 'strike' }),
+    tb_t_drainfist: tech('dagger', 'テスト吸い拳', 2, 'enemy', false, [dmg(1.0, { drain: 0.5 })], 3, { fx: 'strike' }),
   });
 
   // ------------------------------------------------------------------ spells
@@ -167,7 +168,7 @@
     tb_s_tri: spell('テスト三属', ['fire', 'water', 'dark'], 8, 18, 'enemy', [mdmg(4.2)], { fx: 'magic3' }),
     tb_s_gravity: spell('テスト重力', ['earth'], 4, 6, 'enemy', [{ type: 'damage', formula: 'percent', power: 0.25 }], { fx: 'gravity' }),
     tb_s_pierce: spell('テスト術防破り', ['dark'], 5, 8, 'enemy', [mdmg(2.0, { ignoreMdef: 1 })], { fx: 'dark3' }),
-    tb_s_wprest: spell('テスト気力回復', ['water'], 2, 3, 'allies', [{ type: 'healWp', pct: 0.3 }], { fx: 'mp' }),
+    tb_s_wprest: spell('テスト魔力回復', ['water'], 2, 3, 'allies', [{ type: 'healMp', pct: 0.3 }], { fx: 'mp' }),
     tb_s_party: spell('テスト全員', ['light'], 6, 10, 'party', [{ type: 'revive', pct: 0.25 }, { type: 'heal', pct: 0.2 }], { fx: 'revive' }),
     tb_s_melt: spell('テスト溶かし', ['fire'], 2, 3, 'enemy', [mdmg(0.2)], { fx: 'fire1' }),
     tb_s_raise: spell('テスト呼び戻し', ['light'], 6, 9, 'ally_dead', [{ type: 'revive', pct: 0.5 }], { fx: 'revive' }),
@@ -266,7 +267,7 @@
     const src = hero ? DB.heroTypes.tb_warrior : DB.companions[id];
     const c = {
       id, name: hero ? 'アルン' : src.name, gender: hero ? 'm' : src.gender, level: level || 10, exp: 0,
-      hp: 1, mp: 0, wp: 0, bonus: { hp: 0, mp: 0, wp: 0 }, status: {}, equip: Object.assign(EMPTY(), equip || {}),
+      hp: 1, mp: 0, bonus: { hp: 0, mp: 0 }, status: {}, equip: Object.assign(EMPTY(), equip || {}),
       wprof: {}, eprof: {}, techs: [], spells: [], row: row || src.row || 'front',
       mem: { cmd: 0, list: {}, item: 0, target: null }, joined: { tier: 0, frame: 0 }, counts: { battles: 0, kills: 0, glimmers: 0 },
     };
@@ -274,7 +275,7 @@
     if (R.Rules && R.Rules.expForLevel) c.exp = R.Rules.expForLevel(c.level);
     for (const a of learned || []) { const k = DB.actions[a] && DB.actions[a].kind === 'spell' ? 'spells' : 'techs'; c[k].push(a); }
     const st = R.Rules.stats(c);
-    c.hp = st.hp; c.mp = st.mp; c.wp = st.wp;
+    c.hp = st.hp; c.mp = st.mp;
     return c;
   };
   /** the standard 4: hero (sword + shield, front), lancer (spear, front), mage (staff, middle), archer (bow, middle) */
