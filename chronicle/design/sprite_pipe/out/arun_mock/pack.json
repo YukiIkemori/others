@@ -1,0 +1,202 @@
+{
+ "registration": {
+  "walk_down_1": {
+   "to": "walk_down_0",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.055
+  },
+  "walk_down_2": {
+   "to": "walk_down_0",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.055
+  },
+  "walk_up_1": {
+   "to": "walk_up_0",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.028
+  },
+  "walk_up_2": {
+   "to": "walk_up_0",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.028
+  },
+  "walk_left_1": {
+   "to": "walk_left_0",
+   "dx": -1,
+   "dy": 0,
+   "fit": 1.024
+  },
+  "walk_left_2": {
+   "to": "walk_left_0",
+   "dx": -1,
+   "dy": 0,
+   "fit": 1.024
+  },
+  "walk_right_1": {
+   "to": "walk_right_0",
+   "dx": -1,
+   "dy": 0,
+   "fit": 1.024
+  },
+  "walk_right_2": {
+   "to": "walk_right_0",
+   "dx": -1,
+   "dy": 0,
+   "fit": 1.024
+  },
+  "idle_b": {
+   "to": "idle_a",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.366
+  },
+  "face_serious": {
+   "to": "face_neutral",
+   "dx": 1,
+   "dy": 0,
+   "fit": 1.483
+  },
+  "face_smile": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.494
+  },
+  "face_laugh": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.494
+  },
+  "face_surprise": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.493
+  },
+  "face_sad": {
+   "to": "face_neutral",
+   "dx": -5,
+   "dy": 1,
+   "fit": 0.903
+  },
+  "face_angry": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.493
+  },
+  "face_tired": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.494
+  }
+ },
+ "attach": {
+  "bare_idle": {
+   "grip": [
+    8,
+    36
+   ],
+   "tip": [
+    -13,
+    36
+   ],
+   "angle": 179.2,
+   "length": 26,
+   "weapon_px": 107,
+   "fit": 1.439
+  },
+  "bare_cast": {
+   "grip": [
+    13,
+    14
+   ],
+   "tip": [
+    40,
+    2
+   ],
+   "angle": -25.2,
+   "length": 38,
+   "weapon_px": 516,
+   "fit": 0.782,
+   "unreliable": true
+  }
+ },
+ "weapons": {
+  "wpn_sword": {
+   "grip": [
+    26,
+    2
+   ],
+   "tip": [
+    0,
+    2
+   ],
+   "angle": 179.6,
+   "length": 29
+  },
+  "wpn_greatsword": {
+   "grip": [
+    33,
+    3
+   ],
+   "tip": [
+    0,
+    3
+   ],
+   "angle": 179.8,
+   "length": 36
+  },
+  "wpn_dagger": {
+   "grip": [
+    15,
+    2
+   ],
+   "tip": [
+    0,
+    2
+   ],
+   "angle": 178.7,
+   "length": 18
+  },
+  "wpn_bow": {
+   "grip": [
+    4,
+    14
+   ],
+   "tip": [
+    4,
+    27
+   ],
+   "angle": 90.9,
+   "length": 28
+  },
+  "wpn_staff": {
+   "grip": [
+    20,
+    2
+   ],
+   "tip": [
+    0,
+    2
+   ],
+   "angle": 180.0,
+   "length": 33
+  }
+ },
+ "sets": [
+  "field",
+  "battle",
+  "battle_bare",
+  "weapons",
+  "face"
+ ],
+ "colors": 52,
+ "face_colors": 46
+}
