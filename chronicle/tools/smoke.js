@@ -124,7 +124,7 @@ function HELPER() {
     if (document.getElementById('code-overlay')) f.push('④ code overlay open');
     for (const c of R.State.all()) {
       const st = R.Rules.stats(c);
-      if (c.hp !== st.hp || c.mp !== st.mp || c.wp !== st.wp) f.push(`⑤ ${c.id} HP ${c.hp}/${st.hp} MP ${c.mp}/${st.mp} WP ${c.wp}/${st.wp}`);
+      if (c.hp !== st.hp || c.mp !== st.mp) f.push(`⑤ ${c.id} HP ${c.hp}/${st.hp} MP ${c.mp}/${st.mp}`);
       if (c.status && Object.keys(c.status).length) f.push(`⑤ ${c.id} status ${Object.keys(c.status).join(',')}`);
     }
     if (o.gold != null && R.Game.gold !== o.gold) f.push(`⑤ gold ${R.Game.gold} (expected ${o.gold})`);

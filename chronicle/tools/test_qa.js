@@ -167,7 +167,7 @@ function rng(seed) { let s = seed >>> 0; return () => { s ^= s << 13; s >>>= 0; 
     const K = PM.K(R);
     const exp = K.GLIM.expect[3];
     ok(b.party.every((c) => (c.techs || []).length + (c.spells || []).length >= Math.min(exp, 2)), `build: learned actions ≈ EXPECT(3) = ${exp} (${b.party.map((c) => (c.techs || []).length + (c.spells || []).length).join('/')})`);
-    ok(b.party.every((c) => { const st = R.Rules.stats(c); return c.hp === st.hp && c.mp === st.mp && c.wp === st.wp && Object.keys(c.status || {}).length === 0; }), 'build: full HP/MP/WP, status {}');
+    ok(b.party.every((c) => { const st = R.Rules.stats(c); return c.hp === st.hp && c.mp === st.mp && Object.keys(c.status || {}).length === 0; }), 'build: full HP/MP, status {}');
     ok(b.party.every((c) => c.equip && c.equip.weapon1), 'build: everyone holds a weapon');
     if (R.GearA && R.GearA.BUILD_SETS) {
       const mage = PM.build(R, { tier: 8, members: ['hero'], heroType: 'mage', favor: { kind: 'element', id: 'fire' }, build: 'magic', weapons: ['staff', 'staff'], gear: 'super', learned: false }).party[0];

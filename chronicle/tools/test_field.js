@@ -853,7 +853,7 @@ const SECTIONS = [
             locks: L.locks === 0 && !R.Field.isBusy() && !R.Events.busy(), // ②
             fade: R.Engine.fadeAlpha === 0 && !R.Engine.paused, // ③
             input: R.Input.enabled !== false, // ④
-            healed: everyone.every((c) => { const s = R.Rules.stats(c); return c.hp === s.hp && c.mp === s.mp && (s.wp == null || c.wp === s.wp) && JSON.stringify(c.status || {}) === '{}'; }), // ⑤
+            healed: everyone.every((c) => { const s = R.Rules.stats(c); return c.hp === s.hp && c.mp === s.mp && JSON.stringify(c.status || {}) === '{}'; }), // ⑤
             gold: R.Game.gold === 50,
             carry: !(R.Battle && R.Battle.autoCarry) && R.Game.encItem === null, // ⑥
             noBattle: !R.Engine.layers.some((l) => l.repeating), // ⑥ no battle layer left

@@ -156,19 +156,125 @@
     const c = mk(r.canvas.width, r.canvas.height), x = c.getContext('2d');
     x.drawImage(r.canvas, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = col; x.fillRect(0, 0, c.width, c.height); return c;
   }
-  function castShadow(ctx, r, fx, fy, a) {
-    const sil = silhouette(r, 'rgb(34,20,26)'), P = 6;
+  // long soft shadow on the ground; shear > 0 → falls to the lower-left, < 0 → lower-right
+  function castShadow(ctx, r, fx, fy, a, shear) {
+    const sil = silhouette(r, 'rgb(12,10,24)'), P = 6;
     const bl = mk(sil.width + P * 2, sil.height + P * 2), bx = bl.getContext('2d');
     bx.filter = 'blur(1.6px)'; bx.drawImage(sil, P, P);
     ctx.save(); ctx.globalAlpha = a; ctx.imageSmoothingEnabled = true;
-    ctx.setTransform(K, 0, 1.25 * K, -0.34 * K, fx, fy);
+    ctx.setTransform(K, 0, (shear == null ? 1.25 : shear) * K, -0.34 * K, fx, fy);
     ctx.drawImage(bl, -r.ox - P, -r.oy - P); ctx.restore();
   }
+  // night light (BRIEF A25): warm key from the party's lantern, cold moon rim from behind
+  const NIGHT_FOE = { key: [0.62, -0.35, 0.7], rim: [-0.5, -0.7, -0.5], rimC: hex('#a8c8ff'), rimK: 1.1, mul: [1.0, 0.86, 0.7] };
+  const NIGHT_PARTY = { key: [-0.62, -0.35, 0.7], rim: [0.5, -0.7, -0.5], rimC: hex('#a8c8ff'), rimK: 1.1, mul: [1.0, 0.86, 0.7] };
+  G.NIGHT_LIGHT = NIGHT_PARTY;
   function spriteFor(a, t) {
     const B = new RZ.Builder();
-    if (a.foe) { MON.draw(a.id, B, t + (a.ph || 0), a.st || {}); return RZ.render(B, Object.assign({}, STYLE, { scale: a.sc * a.s, light: LIGHT, sat: 0.78 })); }
+    if (a.foe) { MON.draw(a.id, B, t + (a.ph || 0), a.st || {}); return RZ.render(B, Object.assign({}, STYLE, { scale: a.sc * a.s, light: NIGHT_FOE, sat: 0.78 })); }
     RIG.draw(B, LOOKS[a.id], a.pose || RIG.pose('idle', { br: t * 0.8 + (a.ph || 0) }));
-    return RZ.render(B, Object.assign({}, STYLE, { flip: true, scale: a.sc * a.s, light: LIGHT }));
+    return RZ.render(B, Object.assign({}, STYLE, { flip: true, scale: a.sc * a.s, light: NIGHT_PARTY }));
+  }
+  function lantern(x, y, s) {
+    const B = new RZ.Builder();
+    const iron = RIG.M.iron, glowM = mat({ keys: ['#ff9a30', '#ffe0a0', '#fffbe8'], n: 3, flat: true, glow: '#ffd070' });
+    B.poly([[-5, 0], [5, 0], [4, -2], [-4, -2]], iron, 0, { bevel: 0.8 });
+    B.poly([[-4, -2], [4, -2], [4, -13], [-4, -13]], glowM, 0.1, { bevel: 0.2 });
+    [-4, 4].forEach((dx) => B.cap(dx, -2, dx, -13, 0.7, 0.7, iron, 0.2));
+    B.poly([[-5.5, -13], [5.5, -13], [2.5, -17], [-2.5, -17]], iron, 0.3, { bevel: 1 });
+    B.cap(-2.5, -17, 0, -21, 0.5, 0.5, iron, 0.2); B.cap(2.5, -17, 0, -21, 0.5, 0.5, iron, 0.2);
+    return RZ.render(B, Object.assign({}, STYLE, { scale: s, light: NIGHT_PARTY }));
+  }
+  function tinted(c, col, a) {
+    const t = mk(c.width, c.height), x = t.getContext('2d'); x.drawImage(c, 0, 0);
+    x.globalCompositeOperation = 'multiply'; x.fillStyle = col; x.fillRect(0, 0, t.width, t.height);
+    x.globalCompositeOperation = 'destination-in'; x.drawImage(c, 0, 0);
+    if (a) { x.globalCompositeOperation = 'source-atop'; x.fillStyle = a; x.fillRect(0, 0, t.width, t.height); }
+    return t;
+  }
+  // night sky: gradient, stars, aurora curtains, moon + halo, moonlit clouds
+  function nightSky(ctx, W, H, o) {
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, '#05081a'); g.addColorStop(0.45, '#0c1636'); g.addColorStop(0.8, '#1c2a52'); g.addColorStop(1, '#30406a');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    const R = rng(o.seed || 5);
+    for (let i = 0; i < W * H / 1400; i++) {
+      const x = R() * W, y = Math.pow(R(), 1.3) * H, b = R();
+      const a = (0.25 + b * 0.75) * (1 - y / H * 0.8);
+      ctx.fillStyle = `rgba(${220 + b * 35},${225 + b * 30},255,${a})`;
+      const s = b > 0.96 ? 3 : b > 0.8 ? 2 : 1.2; ctx.fillRect(x, y, s, s);
+      if (b > 0.985) { ctx.fillStyle = `rgba(230,240,255,${a * 0.6})`; ctx.fillRect(x - 5, y + 1, 12, 1); ctx.fillRect(x + 1, y - 5, 1, 12); }
+    }
+    // aurora: soft vertical curtains along a wavy band
+    if (o.aurora !== false) {
+      const au = mk(W, H), ax = au.getContext('2d');
+      const band = (t) => H * (o.auroraY || 0.22) + Math.sin(t * 5.2 + 1.1) * H * 0.06 + Math.sin(t * 13) * H * 0.02;
+      for (let x = 0; x < W * (o.auroraW || 0.8); x += 3) {
+        const t = x / W, y0 = band(t), hgt = H * (0.16 + 0.1 * Math.sin(t * 9 + 2) ** 2);
+        const k = Math.pow(Math.sin(Math.PI * Math.min(1, t / (o.auroraW || 0.8))), 1.2) * (0.6 + 0.4 * Math.sin(t * 31) ** 2);
+        const gg = ax.createLinearGradient(0, y0 - hgt, 0, y0 + 10);
+        gg.addColorStop(0, 'rgba(120,90,220,0)'); gg.addColorStop(0.55, `rgba(80,220,190,${0.22 * k})`); gg.addColorStop(0.92, `rgba(150,255,210,${0.45 * k})`); gg.addColorStop(1, 'rgba(150,255,210,0)');
+        ax.fillStyle = gg; ax.fillRect(x, y0 - hgt, 3, hgt + 10);
+      }
+      ctx.save(); ctx.filter = 'blur(6px)'; ctx.globalCompositeOperation = 'screen'; ctx.drawImage(au, 0, 0); ctx.restore();
+    }
+    if (o.moon) {
+      const [mx, my, mr] = o.moon;
+      ENV.glow(ctx, mx, my, mr * 9, [150, 180, 255], 0.35); ENV.glow(ctx, mx, my, mr * 3, [210, 225, 255], 0.5);
+      ctx.save(); ctx.beginPath(); ctx.arc(mx, my, mr, 0, 7); const mg = ctx.createRadialGradient(mx - mr * 0.3, my - mr * 0.3, mr * 0.1, mx, my, mr);
+      mg.addColorStop(0, '#fbfcff'); mg.addColorStop(0.7, '#dfe6f6'); mg.addColorStop(1, '#b8c4e0'); ctx.fillStyle = mg; ctx.fill();
+      ctx.clip(); const RR = rng(9); ctx.fillStyle = 'rgba(150,160,190,0.35)';
+      for (let i = 0; i < 9; i++) { ctx.beginPath(); ctx.arc(mx + (RR() - 0.5) * mr * 1.4, my + (RR() - 0.5) * mr * 1.4, mr * (0.08 + RR() * 0.18), 0, 7); ctx.fill(); }
+      ctx.restore();
+    }
+    // moonlit clouds
+    { const R2 = rng(o.seed ? o.seed + 3 : 8); ctx.save(); ctx.filter = 'blur(10px)';
+      for (let i = 0; i < W / 110; i++) { const cx = R2() * W, cy = H * (0.25 + R2() * 0.55), rw = 80 + R2() * 160, rh = 10 + R2() * 18;
+        ctx.fillStyle = `rgba(40,52,90,${0.35 + R2() * 0.3})`; ctx.beginPath(); ctx.ellipse(cx, cy, rw, rh, 0, 0, 7); ctx.fill();
+        ctx.fillStyle = `rgba(170,190,240,${0.1 + R2() * 0.12})`; ctx.beginPath(); ctx.ellipse(cx, cy - rh * 0.6, rw * 0.8, rh * 0.45, 0, 0, 7); ctx.fill(); }
+      ctx.restore(); }
+  }
+  // multiply the lower part by a blue ambient and add warm light pools (lightmap); returns nothing
+  function lightmap(ctx, W, H, o) {
+    const lm = mk(W, H), lx = lm.getContext('2d');
+    const top = o.top || 0;
+    const g = lx.createLinearGradient(0, top - (o.feather || 80), 0, top + (o.feather || 80));
+    g.addColorStop(0, 'rgb(255,255,255)'); g.addColorStop(1, o.amb);
+    lx.fillStyle = g; lx.fillRect(0, 0, W, H);
+    lx.globalCompositeOperation = 'lighter';
+    for (const L of o.lights) {
+      const [x, y, r, c, k] = L, sy = L[5] || 1;
+      lx.save(); lx.translate(x, y); lx.scale(1, sy);
+      const rg = lx.createRadialGradient(0, 0, 0, 0, 0, r);
+      rg.addColorStop(0, `rgba(${c[0]},${c[1]},${c[2]},${k})`); rg.addColorStop(0.4, `rgba(${c[0]},${c[1]},${c[2]},${k * 0.55})`); rg.addColorStop(1, `rgba(${c[0]},${c[1]},${c[2]},0)`);
+      lx.fillStyle = rg; lx.fillRect(-r, -r, r * 2, r * 2); lx.restore();
+    }
+    ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.drawImage(lm, 0, 0); ctx.restore();
+  }
+  function fireflies(ctx, n, box, seed, cols) {
+    const R = rng(seed);
+    for (let i = 0; i < n; i++) {
+      const x = box[0] + R() * box[2], y = box[1] + R() * box[3], c = cols[Math.floor(R() * cols.length)], r = 2 + R() * 3;
+      ENV.glow(ctx, x, y, r * 5, c, 0.3 + R() * 0.35);
+      ctx.fillStyle = `rgba(${Math.min(255, c[0] + 60)},${Math.min(255, c[1] + 60)},${Math.min(255, c[2] + 60)},0.95)`; ctx.fillRect(x - 1, y - 1, 2.5, 2.5);
+    }
+  }
+  function glowShrooms(ctx, g, n, seed) {
+    const R = rng(seed);
+    for (let i = 0; i < n; i++) {
+      const y = g.GT + 40 + R() * (g.H - g.GT - 60), x = R() * g.W;
+      const z = yToZ(g, y), u = (x - g.cx) * z / g.UD * 12, v = z * 12;
+      if (1 - Math.hypot((u - g.clearU) / g.clearRx, (v - 16.8) / 3.6) > -0.25) continue;
+      const s = scaleAt(g, y) * 2;
+      const cyan = R() < 0.7;
+      const c = cyan ? [110, 240, 230] : [190, 150, 255];
+      for (let k = 0; k < 3; k++) {
+        const px = Math.round((x + (R() - 0.5) * 16 * s) / K) * K, py = Math.round((y + (R() - 0.5) * 5 * s) / K) * K;
+        ctx.fillStyle = 'rgba(40,50,60,0.9)'; ctx.fillRect(px, py - 3 * s, K, 3 * s);
+        ctx.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`; ctx.fillRect(px - K, py - 4 * s, K * 3, K * 1.5);
+        ENV.glow(ctx, px, py - 4 * s, 14 * s, c, 0.45);
+      }
+    }
   }
 
   // formation tables (device px on the given stage) — MODERN_UI.md §2.3
@@ -176,85 +282,87 @@
     wide: {
       party: { arun: [1150, 676], sylvan: [1336, 722], selma: [1232, 790], viola: [1452, 850] },
       foes: [{ id: 'goblin', name: '小鬼の斧兵', x: 330, y: 664, sc: 1.45, ph: 0.2 }, { id: 'wolf', name: '氷狼', x: 660, y: 760, sc: 1.75, ph: 0.5 }, { id: 'slime', name: 'スライム', x: 380, y: 880, sc: 1.45, ph: 0.1 }],
-      sun: [1700, 70], geo: { clearRx: 17, clearU: 0 },
+      lantern: [1010, 770], moon: [640, 150, 44], geo: { clearRx: 17, clearU: 0 },
     },
     tall: {
       party: { arun: [700, 800], sylvan: [872, 846], selma: [770, 930], viola: [930, 990] },
       foes: [{ id: 'goblin', name: '小鬼の斧兵', x: 150, y: 792, sc: 1.3, ph: 0.2 }, { id: 'wolf', name: '氷狼', x: 380, y: 880, sc: 1.5, ph: 0.5 }, { id: 'slime', name: 'スライム', x: 170, y: 1000, sc: 1.3, ph: 0.1 }],
-      sun: [960, 60], geo: { sy: 1.25, clearRx: 9, clearU: 0 },
+      lantern: [600, 900], moon: [300, 150, 40], geo: { sy: 1.25, clearRx: 9, clearU: 0 },
     },
   };
 
-  // render the whole stage (no UI) → {canvas, actors:[{id, foe, x, y, head, name}], g}
+  // render the whole stage (no UI) → {canvas, actors:[{id, foe, x, y, top …}], g}
   function stage(o) {
     o = Object.assign({ W: 1920, H: 1080, layout: 'wide', t: 0, mode: 'cmd', noFoes: false }, o);
     const F = FORM[o.layout], g = geo(o.W, o.H, F.geo);
     const S = statics(g, o.layout + o.W + 'x' + o.H);
+    if (!S.night) S.night = { far: tinted(S.far, '#3a4c86', 'rgba(60,80,140,0.25)'), left: tinted(S.left, '#28345e'), mid: tinted(S.mid, '#2c3864') };
     const c = mk(o.W, o.H), ctx = c.getContext('2d');
     const layer = (cc, blur, smooth) => { ctx.save(); ctx.imageSmoothingEnabled = !!smooth; if (blur) ctx.filter = `blur(${blur}px)`; ctx.drawImage(cc, 0, 0, cc.width * K, cc.height * K); ctx.restore(); };
-    const sun = F.sun;
-    const gr = ctx.createLinearGradient(0, 0, o.W, 420 * g.sy);
-    gr.addColorStop(0, '#6c8cb4'); gr.addColorStop(0.45, '#b4c4d0'); gr.addColorStop(0.8, '#f0e6d4'); gr.addColorStop(1, '#fff6e6');
-    ctx.fillStyle = gr; ctx.fillRect(0, 0, o.W, 470 * g.sy);
-    { const R = rng(3); ctx.save(); ctx.filter = 'blur(14px)';
-      for (let i = 0; i < 16 * o.W / 1024; i++) { ctx.fillStyle = `rgba(255,250,240,${0.18 + R() * 0.25})`; ctx.beginPath(); ctx.ellipse(R() * o.W * 0.72, (60 + R() * 200) * g.sy, 80 + R() * 120, 20 + R() * 30, 0, 0, 6.3); ctx.fill(); }
-      ctx.restore(); }
-    layer(S.far, 5); layer(S.left, 2.6); layer(S.mid, 2.0);
-    { const h = ctx.createLinearGradient(0, 330 * g.sy, 0, 470 * g.sy); h.addColorStop(0, 'rgba(250,236,212,0)'); h.addColorStop(0.55, 'rgba(250,236,212,0.55)'); h.addColorStop(1, 'rgba(250,236,212,0)'); ctx.fillStyle = h; ctx.fillRect(0, 330 * g.sy, o.W, 140 * g.sy); }
+    nightSky(ctx, o.W, 480 * g.sy, { moon: F.moon, auroraY: 0.3, auroraW: 0.75 });
+    layer(S.night.far, 4); layer(S.night.left, 2.4); layer(S.night.mid, 1.8);
+    { const h = ctx.createLinearGradient(0, 340 * g.sy, 0, 470 * g.sy); h.addColorStop(0, 'rgba(120,140,200,0)'); h.addColorStop(0.55, 'rgba(120,140,200,0.35)'); h.addColorStop(1, 'rgba(120,140,200,0)'); ctx.fillStyle = h; ctx.fillRect(0, 340 * g.sy, o.W, 130 * g.sy); }
     { const gc = mk(o.W, o.H), gx = gc.getContext('2d'); gx.imageSmoothingEnabled = false; gx.drawImage(S.ground, 0, 0, S.ground.width * K, S.ground.height * K);
       const m = gx.createLinearGradient(0, g.GT, 0, g.GT + 60 * g.sy); m.addColorStop(0, 'rgba(0,0,0,0)'); m.addColorStop(1, 'rgba(0,0,0,1)');
       gx.globalCompositeOperation = 'destination-in'; gx.fillStyle = m; gx.fillRect(0, 0, o.W, o.H); ctx.drawImage(gc, 0, 0); }
-    ENV.glow(ctx, sun[0], sun[1], 700 * g.sy, [255, 236, 200], 0.55);
-    ENV.glow(ctx, sun[0], sun[1], 200 * g.sy, [255, 250, 235], 0.8);
-    ENV.rays(ctx, sun[0], sun[1], [[2.05, 70, 900, 0.16], [2.3, 50, 900, 0.12], [1.85, 60, 800, 0.1], [2.55, 40, 800, 0.08]].map((r) => [r[0], r[1] * g.sy, r[2] * g.sy, r[3]]), [255, 236, 200]);
-    { const h = ctx.createLinearGradient(o.W, 0, o.W - 460 * g.sy, 460 * g.sy); h.addColorStop(0, 'rgba(255,240,215,0.36)'); h.addColorStop(0.5, 'rgba(255,240,215,0.08)'); h.addColorStop(1, 'rgba(255,240,215,0)');
-      ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.fillStyle = h; ctx.fillRect(0, 0, o.W, o.H); ctx.restore(); }
 
     const acts = [];
-    for (const id in F.party) acts.push({ id, foe: false, sc: 1.3, x: F.party[id][0], y: F.party[id][1], ph: Math.random() });
+    for (const id in F.party) acts.push({ id, foe: false, sc: 1.3, x: F.party[id][0], y: F.party[id][1], ph: 0.3 });
     if (!o.noFoes) F.foes.forEach((f) => acts.push(Object.assign({ foe: true }, f)));
     acts.forEach((a) => { a.s = scaleAt(g, a.y); });
     const byId = (id) => acts.find((a) => a.id === id);
     if (o.mode === 'victory') acts.forEach((a) => { if (!a.foe) a.pose = RIG.pose('victory', { br: 0.3 }); });
     if (o.mode === 'cmd') { const h = byId('arun'); h.pose = RIG.pose('ready', { br: 0.2 }); }
     if (o.mode === 'glimmer') {
-      const h = byId('arun'); h.pose = RIG.pose('slash', { br: 0.2, smear: 0.9 }); h.x += 60; h.y += 6;
+      const h = byId('arun'); h.pose = RIG.pose('slash', { br: 0.2, smear: 0.9 }); h.x -= 120; h.y += 6;
       const w = byId('wolf'); if (w) { w.st = { lunge: -0.9, bite: 0.8 }; w.flash = 0.55; }
       byId('viola').pose = RIG.pose('cast', { br: 0.4 });
     }
     acts.sort((a, b) => a.y - b.y);
     const rendered = acts.map((a) => [a, spriteFor(a, o.t)]);
+    const [lx, ly] = F.lantern;
     for (const [a, r] of rendered) {
-      castShadow(ctx, r, a.x, a.y, a.foe ? 0.55 : 0.5);
-      ENV.shadow(ctx, a.x, a.y, (a.foe ? 60 : 24) * a.s * (a.foe ? a.sc / 1.55 : 1), (a.foe ? 12 : 6.5) * a.s, 0.55, [30, 18, 20]);
+      // shadow away from the lantern; length grows with distance
+      const d = Math.min(1.6, Math.abs(a.x - lx) / 260 + 0.5);
+      castShadow(ctx, r, a.x, a.y, 0.6, (a.x < lx ? 1 : -1) * 1.1 * d);
+      ENV.shadow(ctx, a.x, a.y, (a.foe ? 60 : 24) * a.s * (a.foe ? a.sc / 1.55 : 1), (a.foe ? 12 : 6.5) * a.s, 0.6, [12, 10, 22]);
     }
+    const lr = lantern(lx, ly, 1.3 * scaleAt(g, ly));
+    ENV.shadow(ctx, lx, ly, 18, 5, 0.6, [12, 10, 22]);
+    ctx.imageSmoothingEnabled = false; ENV.blit(ctx, lr, lx, ly, K);
     for (const [a, r] of rendered) {
       ctx.imageSmoothingEnabled = false; ENV.blit(ctx, r, a.x, a.y, K);
       if (a.flash) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a.flash; ENV.blit(ctx, r, a.x, a.y, K); ctx.restore(); }
       a.top = a.y - r.oy * K; a.left = a.x - r.ox * K; a.w = r.canvas.width * K; a.h = r.canvas.height * K;
     }
+    // lightmap: moon-blue ambient on the ground and actors, the lantern's warm pool
+    const lights = [[lx, ly - 20, 820 * g.sy, [255, 205, 140], 0.95, 0.55], [lx, ly - 10, 260 * g.sy, [255, 230, 190], 0.5, 0.6]];
+    if (o.mode === 'glimmer') lights.push([byId('wolf').x + 60, byId('wolf').y - 90, 420, [255, 240, 210], 0.8, 0.8]);
+    lightmap(ctx, o.W, o.H, { top: g.GT - 20 * g.sy, feather: 60 * g.sy, amb: 'rgb(78,88,140)', lights });
+    ENV.glow(ctx, lx, ly - 18, 200 * g.sy, [255, 190, 110], 0.55); ENV.glow(ctx, lx, ly - 18, 40 * g.sy, [255, 240, 200], 0.9);
     if (o.mode === 'glimmer') {
       const h = byId('arun'), w = byId('wolf');
-      // blade smear + impact
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
       const x = h.x - 70, y = h.y - 120;
-      const gg = ctx.createLinearGradient(x - 160, y - 40, x + 40, y + 160); gg.addColorStop(0, 'rgba(160,220,255,0)'); gg.addColorStop(0.5, 'rgba(210,240,255,0.6)'); gg.addColorStop(1, 'rgba(255,255,255,0.85)');
+      const gg = ctx.createLinearGradient(x - 160, y - 40, x + 40, y + 160); gg.addColorStop(0, 'rgba(160,220,255,0)'); gg.addColorStop(0.5, 'rgba(190,230,255,0.6)'); gg.addColorStop(1, 'rgba(255,255,255,0.85)');
       ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(x, y + 40, 150, Math.PI * 0.58, Math.PI * 1.25); ctx.arc(x + 24, y + 48, 128, Math.PI * 1.23, Math.PI * 0.62, true); ctx.closePath(); ctx.fill(); ctx.restore();
       const ix = w.x + 70, iy = w.y - 90;
-      ENV.glow(ctx, ix, iy, 220, [255, 240, 210], 0.9);
-      { const R = rng(3); ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = 'rgba(255,248,225,0.85)'; ctx.lineWidth = 4;
+      ENV.glow(ctx, ix, iy, 220, [200, 230, 255], 0.9);
+      { const R = rng(3); ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = 'rgba(220,240,255,0.9)'; ctx.lineWidth = 4;
         for (let i = 0; i < 12; i++) { const a = R() * 6.28, r0 = 40, r1 = r0 + 40 + R() * 70; ctx.beginPath(); ctx.moveTo(ix + Math.cos(a) * r0, iy + Math.sin(a) * r0); ctx.lineTo(ix + Math.cos(a) * r1, iy + Math.sin(a) * r1); ctx.stroke(); }
+        // lightning crackle
+        ctx.strokeStyle = 'rgba(200,230,255,0.95)'; ctx.lineWidth = 3; ctx.beginPath(); let px = h.x - 60, py = h.y - 80; ctx.moveTo(px, py);
+        for (let i = 0; i < 9; i++) { px += (ix - (h.x - 60)) / 9; py += (iy - (h.y - 80)) / 9 + (R() - 0.5) * 50; ctx.lineTo(px, py); } ctx.stroke();
         ctx.restore(); }
-      // Viola's spell glow
-      const v = byId('viola'); ENV.glow(ctx, v.x - 40, v.y - 120, 90, [200, 170, 255], 0.6);
+      const v = byId('viola'); ENV.glow(ctx, v.x - 40, v.y - 120, 90, [180, 150, 255], 0.7);
     }
-    ENV.motes(ctx, Math.round(30 * o.W / 1024), [o.W * 0.28, 200 * g.sy, o.W * 0.6, 500 * g.sy], [255, 230, 190], 7);
-    layer(S.fg, 7, true);
-    ENV.post(ctx, { dofTop: [250 * g.sy, 420 * g.sy], dofBot: [(o.H - 126 * g.sy), o.H - 6], dofPx: 4.5, bloom: 0.55, thr: 0.7, vig: 0.55,
-      grade: { sh: [6, -4, 10], hi: [20, 8, -14], sat: 1.04, con: 1.16, lift: 0 } });
-    ENV.glow(ctx, o.W * 0.74, o.H + 4, 300 * g.sy, [255, 190, 130], 0.35);
+    glowShrooms(ctx, g, Math.round(26 * g.W / 1024), 21);
+    fireflies(ctx, Math.round(22 * o.W / 1024), [0, g.GT, o.W, o.H - g.GT - 80], 7, [[255, 200, 110], [140, 240, 220]]);
+    layer(tinted(S.fg, '#232b48'), 7, true);
+    ENV.post(ctx, { dofTop: [250 * g.sy, 400 * g.sy], dofBot: [(o.H - 126 * g.sy), o.H - 6], dofPx: 4, bloom: 0.7, thr: 0.55, vig: 0.7,
+      grade: { sh: [-4, 2, 16], hi: [18, 8, -12], sat: 1.06, con: 1.12, lift: 0 } });
     return { canvas: c, actors: acts, g };
   }
 
-  G.BATTLE_ART = { stage, LOOKS, NPC, LIGHT, STYLE, K };
+  G.BATTLE_ART = { stage, LOOKS, NPC, LIGHT, NIGHT_PARTY, STYLE, K, nightSky, lightmap, fireflies, tinted, castShadow, lantern };
 })(window);

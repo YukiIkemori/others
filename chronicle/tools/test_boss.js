@@ -118,7 +118,7 @@ for (const [tr, want] of [['tr_b_rooteater', 18], ['tr_b_dolls', 10], ['tr_b_oct
 // drops §9.12.8
 const MIDB = ['b_pageeater', 'b_moth', 'b_sandworm', 'b_icegiant', 'b_doll_conductor', 'b_octopus', 'b_rockeater', 'b_hellhound', 'b_orrery'];
 const REGB = ['b_rooteater', 'b_sandking', 'b_whitedragon', 'b_mistbeast', 'b_captain', 'b_ironwarden', 'b_lavabeast', 'b_stareater'];
-for (const id of MIDB) ok(DB.monsters[id].drops.normal && DB.monsters[id].drops.normal.pool === 'p_boss_mid' && /^i_seed_(wp|mp)$/.test(DB.monsters[id].drops.bonus.item), `${id} p_boss_mid + wp/mp seed`);
+for (const id of MIDB) ok(DB.monsters[id].drops.normal && DB.monsters[id].drops.normal.pool === 'p_boss_mid' && DB.monsters[id].drops.bonus.item === 'i_seed_mp', `${id} p_boss_mid + MP seed (i_seed_wp gone, SYSTEMS_REWORK A18)`);
 for (const id of REGB) ok(DB.monsters[id].drops.normal.pool === 'p_boss' && DB.monsters[id].drops.bonus.item === 'i_seed_hp', `${id} p_boss + i_seed_hp`);
 for (const id of ['b_rowell1', 'b_rowell2', 'b_nemrea1', 'b_nemrea2', 'b_root', 'b_doll_violin', 'b_doll_drum', 'b_doll_flute', 'b_mist_double', 'b_tentacle', 'b_shade_star']) ok(Object.keys(DB.monsters[id].drops).length === 0, `${id} drops nothing`);
 

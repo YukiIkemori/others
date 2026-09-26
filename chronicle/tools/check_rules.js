@@ -32,6 +32,31 @@ function section(title) {
 }
 const cells = (l) => l.split('|').slice(1, -1).map((c) => c.trim());
 const num = (s) => +String(s).replace(/−/g, '-').replace(/[^\d.\-]/g, '');
+// design/build/SYSTEMS_REWORK.md on top of DESIGN until the lead folds it in (phase 4): A18 (no WP, growth hp/mp §2.3),
+// A19 (7 weapon types §3.1, the letters of §3.5). Once DESIGN carries the new tables these overlays change nothing.
+const RW = (() => {
+  const md = fs.readFileSync(path.join(__dirname, '..', 'design', 'build', 'SYSTEMS_REWORK.md'), 'utf8').split('\n');
+  const HERO = { '主人公 warrior': 'warrior', '主人公 ranger': 'ranger', '主人公 mage': 'mage', '主人公 spellblade': 'spellblade', '主人公 wanderer': 'wanderer' };
+  const growth = {}, apt = {};
+  const i23 = md.findIndex((l) => l.startsWith('### 2.3')), i24 = md.findIndex((l) => l.startsWith('### 2.4'));
+  for (const l of md.slice(i23, i24)) {
+    if (!/^\| /.test(l) || /^\| id /.test(l) || /^\|---/.test(l)) continue;
+    const c = cells(l);
+    for (const [idc, nw] of [[c[0], c[2]], [c[4], c[6]]]) {
+      if (!idc || !nw) continue;
+      if (idc.includes(' / ')) {
+        const ids = idc.split(' / ').map((x) => x.trim()), vals = nw.split(' / ').map((x) => x.trim());
+        ids.forEach((x, k) => { growth[x] = (vals[k] || vals[0]).split(' '); });
+      } else growth[HERO[idc] || idc] = nw.split(' ');
+    }
+  }
+  const i35 = md.findIndex((l) => l.startsWith('### 3.5')), i36 = md.findIndex((l) => l.startsWith('### 3.6'));
+  for (const l of md.slice(i35, i36)) {
+    const m = l.match(/^\| ([a-z]+|主人公 [a-z]+) \| [SABCD ]+ \| \*\*([SABCD ]+)\*\*/);
+    if (m) apt[HERO[m[1]] || m[1]] = m[2].trim().split(' ');
+  }
+  return { growth, apt, removed: ['club', 'katana', 'whip'], reach: { staff: true } };
+})();
 
 // ---------------------------------------------------------- §4.2.2 curve table
 {
@@ -42,7 +67,7 @@ const num = (s) => +String(s).replace(/−/g, '-').replace(/[^\d.\-]/g, '');
     for (const off of [0, 5]) {
       if (!c[off] || isNaN(num(c[off]))) continue;
       const L = num(c[off]);
-      expect(['hp', 'mp', 'wp'].map((k) => Math.round(Ru.lvCurve(k, L))), [num(c[off + 1]), num(c[off + 2]), num(c[off + 3])], `§4.2.2 HPlv/MPlv/WPlv L${L}`);
+      expect(['hp', 'mp'].map((k) => Math.round(Ru.lvCurve(k, L))), [num(c[off + 1]), num(c[off + 2])], `§4.2.2 HPlv/MPlv L${L} (WP gone, SYSTEMS_REWORK A18)`);
       n++;
     }
   }
@@ -83,13 +108,15 @@ const num = (s) => +String(s).replace(/−/g, '-').replace(/[^\d.\-]/g, '');
     const c = cells(l);
     const w = c[0].split(' ')[0];
     const T = K.WTYPE[w];
+    if (RW.removed.includes(w)) { if (T) err(`§4.3.4 ${w} is gone (SYSTEMS_REWORK §3.1) but still in K.WTYPE`); continue; }
     if (!T) { err('§4.3.4 unknown type ' + w); continue; }
-    expect([T.twoHanded, T.reach, T.mult, T.hit, T.crit], [c[1] === '両手', c[2] === '○', num(c[4]), num(c[5]), num(c[6])], `§4.3.4 ${w}`);
+    expect([T.twoHanded, T.reach, T.mult, T.hit, T.crit], [c[1] === '両手', RW.reach[w] || c[2] === '○', num(c[4]), num(c[5]), num(c[6])], `§4.3.4 ${w}`);
     expect(T.stat, statOf[c[7]], `§4.3.4 ${w} stat`);
     expect(T.magMult, /1\.0/.test(c[8]) ? 1 : 0.5, `§4.3.4 ${w} mag`);
     expect(T.kind, { 斬: 'slash', 打: 'blunt', 突: 'pierce' }[c[3]], `§4.3.4 ${w} kind`);
   }
   if (rows.length !== 11) err('§4.3.4 rows ' + rows.length);
+  expect(Ru.WTYPES.length, 7, 'SYSTEMS_REWORK §3.1 7 types');
 }
 // ---------------------------------------------------------- §4.3.7 build ratios
 {
@@ -131,9 +158,12 @@ if (Object.keys(DB.companions).length) {
     const D = DB.companions[id];
     if (!D) { err('§5.3.2 companion missing in data: ' + id); continue; }
     expect(Ru.STATS.map((k) => D.stats[k]), c.slice(2, 8).map(num), `§5.3.2 ${id} stats`);
-    expect([D.growth.hp, D.growth.mp, D.growth.wp], [c[9], c[10], c[11]], `§5.3.2 ${id} growth`);
-    const at = (L) => { const x = Ru.newChar({ id, level: L }); x.equip = Ru.emptyEquip(); const s = Ru.stats(x); return `${s.hp} / ${s.mp} / ${s.wp}`; };
-    expect([at(1), at(24), at(54)], [c[12], c[13], c[14]], `§5.3.2 ${id} HP/MP/WP`);
+    const G = RW.growth[id] || [c[9], c[10]];
+    expect([D.growth.hp, D.growth.mp], G, `§5.3.2 ${id} growth (SYSTEMS_REWORK §2.3)`);
+    if ('wp' in D.growth) err(`§5.3.2 ${id} growth still has wp`);
+    // HP only where the hp letter kept its DESIGN value (MP follows the new letters and curve)
+    const at = (L) => { const x = Ru.newChar({ id, level: L }); x.equip = Ru.emptyEquip(); return String(Ru.stats(x).hp); };
+    if (G[0] === c[9]) expect([at(1), at(24), at(54)], [c[12], c[13], c[14]].map((v) => v.split(' / ')[0].trim()), `§5.3.2 ${id} HP`);
   }
   if (rows.length !== 20) err('§5.3.2 rows ' + rows.length);
 }
@@ -144,21 +174,21 @@ if (Object.keys(DB.companions).length) {
     const c = cells(l).map((x) => x.replace(/\*/g, ''));
     const id = c[0].replace(/`/g, '');
     const L = Ru.aptLetters(Ru.newChar({ id }));
-    expect(Ru.WTYPES.map((w) => L.w[w]), c.slice(2, 13), `§5.3.3 ${id} weapons`);
+    expect(Ru.WTYPES.map((w) => L.w[w]), RW.apt[id] || c.slice(2, 13), `§5.3.3 ${id} weapons (SYSTEMS_REWORK §3.5)`);
     expect(Ru.ELEMENTS.map((e) => L.e[e]), c.slice(14, 20), `§5.3.3 ${id} elements`);
   }
 }
 
 // ---------------------------------------------------------- data vs rules
-const MOD_KEYS = new Set(('atk def mdef hit eva crit spd mag strPct vitPct dexPct agiPct intPct mndPct hpPct mpPct wpPct defPct mdefPct ' +
-  'physPct magicPct healPct itemPct takenPct mpCostPct wpCostPct elemBoost elemResist statusImmune statusResist profPct glimPct expPct ' +
-  'goldPct dropPct rarePct superPct rareEncPct goldenPct preemptPct escapePct stealPct autoSteal encounterPct regen mpRegen wpRegen ' +
+const MOD_KEYS = new Set(('atk def mdef hit eva crit spd mag strPct vitPct dexPct agiPct intPct mndPct hpPct mpPct defPct mdefPct ' +
+  'physPct magicPct healPct itemPct takenPct mpCostPct techCostPct elemBoost elemResist statusImmune statusResist profPct glimPct expPct ' +
+  'goldPct dropPct rarePct superPct rareEncPct goldenPct preemptPct escapePct stealPct autoSteal encounterPct regen mpRegen ' +
   'startBuffs noSpell hpLoss autoRevive autoCounter walkHeal noFloorDamage').split(' '));
 const modsOk = (m, where) => { for (const k in m || {}) { checks++; if (!MOD_KEYS.has(k)) err(`${where}: mods key ${k} is not in §3.3.16`); } };
 for (const id in DB.heroTypes) {
   const T = DB.heroTypes[id];
   for (const k of Ru.STATS) if (!(T.stats && T.stats[k] >= 10 && T.stats[k] <= 60)) err(`heroType ${id}: stat ${k} out of 10..60`);
-  for (const k of ['hp', 'mp', 'wp']) if (!Ru.LETTERS.includes(T.growth && T.growth[k])) err(`heroType ${id}: growth ${k}`);
+  for (const k of ['hp', 'mp']) if (!Ru.LETTERS.includes(T.growth && T.growth[k])) err(`heroType ${id}: growth ${k}`);
   for (const w of Ru.WTYPES) if (!Ru.LETTERS.includes(T.apt && T.apt.w && T.apt.w[w])) err(`heroType ${id}: apt ${w}`);
   for (const e of Ru.ELEMENTS) if (!Ru.LETTERS.includes(T.apt && T.apt.e && T.apt.e[e])) err(`heroType ${id}: apt ${e}`);
   if (T.defaultWeapon && !DB.items[T.defaultWeapon]) warn(`heroType ${id}: defaultWeapon ${T.defaultWeapon} missing`);
@@ -207,7 +237,7 @@ for (const id in DB.items) {
   if (it.stats) for (const k in it.stats) if (!Ru.STATS.includes(k)) err(`item ${id}: stats key ${k}`);
   // numbers of normal gear follow the tier table exactly (§4.3.2–§4.3.3)
   if (it.grade === 'normal' && it.src === 'shop' && it.units) {
-    const ref = Ru.fillItem({ type: it.type, wtype: it.wtype, weight: it.weight, tier: it.tier, grade: 'normal', units: it.units });
+    const ref = Ru.fillItem({ type: it.type, wtype: it.wtype, mult: it.mult, weight: it.weight, tier: it.tier, grade: 'normal', units: it.units });
     for (const k of ['atk', 'mag', 'def', 'mdef', 'price']) if (ref[k] !== undefined && it[k] !== ref[k]) warn(`item ${id}: ${k} ${it[k]} differs from the tier table ${ref[k]}`);
   }
 }
