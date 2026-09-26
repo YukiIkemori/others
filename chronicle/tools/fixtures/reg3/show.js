@@ -13,7 +13,7 @@ for (let y = Y0; y <= Y1; y++) {
   let s = String(y).padStart(3) + ' ';
   for (let x = X0; x <= X1; x++) {
     const d = m.decor && m.decor[y][x];
-    s += occ[x + ',' + y] || (d && d !== '.' ? '\x1b[33m' + d + '\x1b[0m' : m.rows[y][x]);
+    s += occ[x + ',' + y] || (d && d !== '.' ? d : m.rows[y][x]);
   }
   console.log(s);
 }

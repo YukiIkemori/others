@@ -10,7 +10,7 @@
   const COMPS = ['brigitta', 'marta', 'sylvain'];
   const SC = {
     f1: { map: 'oblivion_1', at: { x: 12, y: 6, dir: 'down' }, flags: ['oblivion_1_arrival'] },
-    f2: { map: 'oblivion_2', at: { x: 27, y: 12, dir: 'down' }, flags: ['oblivion_2_arrival'] },
+    f2: { map: 'oblivion_2', at: { x: 30, y: 6, dir: 'down' }, flags: ['oblivion_2_arrival'] },
     f2sand: { map: 'oblivion_2', at: { x: 13, y: 30, dir: 'down' }, flags: ['oblivion_2_arrival'] },
     f2snow: { map: 'oblivion_2', at: { x: 41, y: 33, dir: 'down' }, flags: ['oblivion_2_arrival'] },
     f3: { map: 'oblivion_3', at: { x: 20, y: 14, dir: 'up' }, flags: ['oblivion_3_arrival'] },

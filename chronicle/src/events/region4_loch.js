@@ -54,6 +54,7 @@
     meta: { needs: [], gives: ['flag:marsh_start'] },
     run: async (ev) => {
       if (ev.flag('marsh_start')) return;
+      if (ev.cleared('r_marsh')) { ev.setFlag('marsh_start'); return; }   // came here first after the clear
       const emma = ev.npc('emma_gate'), man = ev.npc('angry_gate');
       const p = ev.player;
       // arriving by ferry or at the inn: the two come running up to the party

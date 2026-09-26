@@ -231,7 +231,7 @@
         { cond: C.key, text: '沼の鐘を鳴らせば、\n霧が晴れるの……？\nお願い、ニコを……。' },
         { cond: C.mid, text: '館の魔女が、子どもを\nさらったんじゃないの……？\nじゃあ、いったい誰が……。' },
         { text: 'ニコは、霧の出た朝に\n水路のそばで遊んでいたの。\n目を離したすきに……。' },
-      ], { cond: 'marsh_start', dir: 'down', push: true }),
+      ], { cond: { any: ['marsh_start', CLEAR] }, dir: 'down', push: true }),
       K.talk('nico_home', 'boy', 37, 28, [
         { cond: C.post, text: '鐘つきの練習をしてるんだ。\nゴーン、ゴーン！' },
         { text: 'お母さん、もう泣いてないよ。\nぼくが帰ってきたから！' },
