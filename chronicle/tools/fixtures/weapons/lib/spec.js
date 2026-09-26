@@ -479,6 +479,24 @@ const expectMult = (id, wtype) => (override(id).mult != null ? override(id).mult
 /** the type whose series rules (units, stats) the item still follows: the old one for a kept item (§3.2 "units stay") */
 const seriesType = (id, wtype) => (KEPT[id] ? oldType(KEPT[id]) : wtype);
 
+// §3.2's new names (the fist / whip items that were renamed; the katana / club items keep their names)
+const NEW_NAMES = (() => {
+  const out = {};
+  const txt = fs.readFileSync(path.join(ROOT, 'design', 'build', 'SYSTEMS_REWORK.md'), 'utf8');
+  const sec = txt.slice(txt.indexOf('### 3.2'), txt.indexOf('### 3.3'));
+  for (const l of sec.split('\n')) {
+    if (!/^\| w_/.test(l)) continue;
+    const c = l.split('|').slice(1, -1).map((x) => x.trim().replace(/\*\*/g, ''));
+    if (/[/〜]/.test(c[0]) || /[/〜]/.test(c[1]) || !c[2] || c[2] === '—' || /名前そのまま|（/.test(c[2])) continue;
+    out[c[1]] = c[2];
+  }
+  return out;
+})();
+/** DESIGN id → the id the item has now (null = merged into another item, it no longer exists) */
+const NOW = (id) => { const t = oldType(id); if (!GONE.includes(t)) return id; const to = REMAP[id]; return !to || merged(to) ? null : to; };
+/** a DESIGN table's mods key / value after A18 (WP keys become their MP counterparts) */
+const A18_KEY = { wpCostPct: 'techCostPct', wpRegen: 'mpRegen' };
+
 // §3.3 lines (9) and the extra T0 打ち刀
 const LINES = [
   ['w_sword', 'sword', 's2', 'w_sword_iron', 'w_sword'], ['w_greatsword', 'greatsword', 's2', 'w_greatsword_iron', 'w_greatsword'], ['w_dagger', 'dagger', 'd2', 'w_dagger_iron', 'w_dagger'],
@@ -519,7 +537,7 @@ const NORMAL_DESC_OK = { w_axe_mace: /^打撃で、硬い敵や骨の敵に強�
 
 module.exports = {
   ROOT, MY_FILES, W, U, PRICE, GRADE_MULT, PRICE_MULT, gearStat, WTYPES: NEW_WTYPES, OLD_WTYPES, TWO_HANDED, WEAPON_STATS, SERIES_UNITS,
-  REMAP, KEPT, OLD_OF, override, typeAdjust, expectMult, seriesType, TYPE_MULT, COUNT_32, BAND_PER_TIER, NORMAL_DESC_OK, sortSeries, OLD_HAND_TABLE,
+  REMAP, KEPT, OLD_OF, NEW_NAMES, NOW, A18_KEY, oldType, override, typeAdjust, expectMult, seriesType, TYPE_MULT, COUNT_32, BAND_PER_TIER, NORMAL_DESC_OK, sortSeries, OLD_HAND_TABLE,
   LINES, normalId, ATK_TABLE, NORMAL_NAMES, STARTERS, STARTERS_ARMOR, HAND_TABLE, HAND_EXCLUSIVE, COUNTS, COUNT_BY_WTYPE,
   LINEAGES, lineageOf, stageOf, srTier, band, RACE_STATS, monsterWeaponUnits,
   MOD_KEYS, WEAPON_FIELDS, ITEM_KEYS, NUMERIC_FILLED, ELEMENTS, STATUSES, RACES, VS_FLAGS, BUFF_STATS,
