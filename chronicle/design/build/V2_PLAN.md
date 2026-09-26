@@ -54,6 +54,14 @@
 | MODERN_UI §10 U1〜U8 | 未決 | U1 見本どおり（32 px、A33 ①）、U2 → §6、U3 顔の枠のある人は常に名前、U4 品の値の差は出す、U5 地方ごとに空が明るくなる（A33 ③）、U6 直前の戦闘から（A33 ⑤）、U7 → §3.11、U8 この方向で作る | A33 とリードの判断 |
 | WORLD_REDESIGN §8 の ⑥（泉から泉へ飛ぶ）・⑩（ボイスの追加） | 未回答 | 縦切りでは**入れない・足さない**。§7 でオーナーに聞く | — |
 | 仲間の色 | 見本の 4 人 | セルマ＝赤茶、ヴィオラ＝薄紫（A33 ④） | A33 |
+| WORLD_REDESIGN §4.11 の品の名前・id、§6.6 E23 の `stealOnly:{item, rate}` | 根食らい「千年樹の芽の杖」、データの項目 `stealOnly` | **STATS_REWORK §7 のデータの形と id が正**: 魔物の `drops.steal = {item, rate}`、品の id は `<枠>_st_<名>`（縦切りでは `ac_st_rooteater`「千年樹の若芽」・`ft_st_jewel_hare`「宝石ウサギの靴」）。率は 32（通常）・16（レア魔物・ボス）。WORLD の「盗んだときのティアで数値」は使わず、STATS_REWORK の固定のティアの値 | STATS_REWORK（実装の仕様）とリードの決定 5 |
+| WORLD_REDESIGN §1.3 の空の表（ティア 0〜1 は同じ「深い夜」） | 2 ティアごとに一段 | **ティアごとに一段**明るくする（`R.Sky.at(0..8)` の 9 段。0 と 1 は同じ「深い夜」の範囲の中で 1 の方が少し明るい） | A33 ③、MODERN_UI U5 |
+| MODERN_UI §4.2「光の輪 約 3 マス（E6 と同じ）」と WORLD E6「半径 4 マス」 | 2 つの値 | **暗がりの階で見える半径は 4 マス**（遊びの値、WORLD E6）。ふつうの階の光の輪の絵は 88 art px（約 2.75 マス、STYLE_REFERENCE R4）。燭台・泉の周りの明るさは 3 マス | WORLD E6・E11 |
+| MODERN_UI §5.4「会話のオート（Y）」、§5.1「オートセーブ」と、§8.8 の「オートの文字を出さない」 | 画面の言葉が食い違う | 戦闘の「オート」（A26）だけを禁じる。**会話の自動送りは「自動送り」と書く**（「オート」の字を使わない）。「オートセーブ」はそのまま使ってよい | A26 |
+| DESIGN §4.12.2「全滅は所持金半分で直前の町へ」と MODERN_UI §6.19「失う物なし」 | 決まっていない | **「直前の戦闘からやり直す」（既定）は失う物なし**。「最後に泊まった宿から」は所持金半分（Part A の規則をこちらに残す）。§2.5.3・§3.13。オーナーに確かめる（§7 の 8） | A33 ⑤、Part A |
+| WORLD_REDESIGN §5.4 フェルン「地面の層と樹上の層を 1 枚のマップで、はしごで行き来」 | 仕組みが無い | マップの **2 つの高さ（`lv` 0/1）** を FIELD に足す（§2.6.1 の `deck`・`ladder`）。フェルンだけで使う | WORLD §5.4 |
+| A11「メニューの表示：コンパクト／大きく」 | 設定の行 | MODERN_UI の窓が既定でコンパクトなので設定の行は作らない。大きくしたい人は「字の大きさ」で | A23・MODERN_UI §3.3 |
+| A4「一度見つけた隠し通路は以後見分けやすい表示」と A15「見つけるまで見分けがつかない」 | 両立の書き方が無い | 見つけるまでは周りの壁と同じ画素（`check_secrets` が画素で比べる）。見つけた後は床の素材で描き直し、壁の縁に細い印（`R.Game.secrets`） | A4・A15 |
 
 ---------------------------------------------------------------------------------------------------
 ## 1. 置き場所と、移すもの・新しく書くもの
@@ -91,7 +99,8 @@ chronicle/
 | `src/systems/glimmer.js` | `v2/src/systems/glimmer.js` | 移して直す | RULES | GF の式（§2.2）、技の候補は今の武器の系統だけ（§8.6）、熟練度 §5.2 |
 | `src/systems/party.js`・`tier.js` | 同名 | 移して直す | RULES（party）・EVENTS（tier） | 経験値 → `R.Growth.afterBattle`、途中加入の gl |
 | `src/systems/state.js` | `v2/src/systems/state.js` | 移して直す（形は新しく） | EVENTS | §2.6.3 の `R.Game` の形。`check(cond)` の書き方は今のまま＋新しい条件 |
-| `tools/lib/cond.js`・`tools/lib/maps.js` | `v2/tools/lib/` | 移して直す | EVENTS・QA | 新しいマップの形（§2.6.1） |
+| `tools/lib/cond.js` | `v2/tools/lib/cond.js` | 移して直す | EVENTS | 新しい条件（§2.5.10） |
+| `tools/lib/maps.js` | `v2/tools/lib/maps.js` | 移して直す | QA | 新しいマップの形（§2.6.1）。歩数・到達の計算は progress と sim_zones の区間が共有する |
 | `src/systems/mon.js`・`battle.js`・`battle_ai.js` | 同名 | 移して直す | BATTLE | STATS_REWORK §2（battle/mon の分）・§7.3 盗み・§8.2・§9.4・§10.2、ボスの予告（E18）、オートの AI は sim 専用として残す（A26） |
 | `src/data/elements.js`・`statuses.js`・`spells_*.js` | `v2/src/data/` | そのまま | RULES | 熟練度の境目（SYSTEMS_REWORK §1.4）、MP の値 |
 | `src/data/weapontypes.js`・`techs_*.js`（7 ファイル） | `weapontypes.js`・`techs_{sword,greatsword,dagger,bow,staff}.js` | 移して直す | RULES | STATS_REWORK §8.1・§8.5（99 技）。斧・槍のファイルは作らない |
