@@ -401,8 +401,12 @@ for (let r = 0; r < 400; r++) {
   m.c.techs = []; m.c.spells = [];
   R.Game = { tier: 4, gameClear: false };
   let n5 = null, n7 = null;
+  // 地方 T4 のどこで加わるかは一様（career と同じく 95 戦の 52 戦目の後に中ボス、95 戦目の後に地方ボス。ボス戦も 1 戦と数える）
+  const REG = 95, MID = REG * 0.55 | 0;
+  let pos = Math.floor(U.r() * REG), pend = 0;
   for (let i = 1; i <= 200 && n7 == null; i++) {
-    battle([m], zakoBattle(4, 4, 'r4', i));
+    if (pend) { battle([m], bossBattle(4, 4, 'r4', i)); pend--; }
+    else { battle([m], zakoBattle(4, 4, 'r4', i)); pos++; if (pos % REG === MID || pos % REG === 0) pend = 1; }
     const k = m.c.techs.length + m.c.spells.length;
     if (n5 == null && k >= 5) n5 = i;
     if (n7 == null && k >= 7) n7 = i;

@@ -142,11 +142,17 @@
         const img = sheetFrame(o.sprite, 'down', Math.floor(L.t / 30) % 2);
         if (img) {
           g.rect(20, 68, 40, 56, '#0c1026');
-          g.strokeRect ? g.strokeRect(20, 68, 40, 56, '#3a4270') : null;
+          g.strokeRect(20, 68, 40, 56, '#3a4270');
           g.draw(img, 24 + (32 - img.width * 2) / 2, 72 + (48 - img.height * 2), { w: img.width * 2, h: img.height * 2 });
         }
         g.text(o.name, 72, 72, { color: g.C.gold, shadow: '#000' });
-        o.lines.forEach((ln, i) => g.text(ln, 72, 92 + 14 * i, { color: '#ffffff', shadow: '#000' }));
+        // the lines beside the figure (§11.9); a line too wide for that column goes, centred, under it
+        const lines = o.lines.map((ln) => (R.Text && R.Text.fmt ? R.Text.fmt(ln) : ln));
+        const wide = lines.some((ln) => g.textWidth(ln) > R.W - 72 - 6);
+        lines.forEach((ln, i) => {
+          if (wide) g.text(ln, 128, 132 + 14 * i, { align: 'center', color: '#ffffff', shadow: '#000' });
+          else g.text(ln, 72, 92 + 14 * i, { color: '#ffffff', shadow: '#000' });
+        });
         c.globalAlpha = 1;
       },
     };
@@ -381,10 +387,6 @@
     R.State.healAll({ reserve: true });
     R.emit('objective', 'obj_s_postgame', null);
   }
-  E_RECORD: {
-    // (a label only so the section is easy to find)
-  }
-
   // ------------------------------------------------------------ the whole sequence
   async function play(ev) {
     R.UI.closeMessage();

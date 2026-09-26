@@ -31,7 +31,7 @@
     const s = SC[name];
     if (!s) return 'scenes: ' + Object.keys(SC).join(' ');
     o = o || {};
-    await R.debug.quickStart({ companions: COMPS, tier: 8, postgame: true, level: 64, gear: 'tier', map: s.map, spawn: 'from_prev', noEncounter: true });
+    await R.debug.quickStart({ companions: COMPS, tier: 8, postgame: true, level: 64, gear: 'tier', noEncounter: true });
     for (const f of s.flags || []) R.State.setFlag(f, true);
     if (o.zoom != null && R.Settings) R.Settings.fieldZoom = o.zoom;
     await R.debug.warp(s.map, s.at);
