@@ -17,7 +17,17 @@
       ctx.drawImage(r.canvas, x - r.ox * s, y - r.oy * s, r.canvas.width * s, r.canvas.height * s);
     }));
   }
-  G.SCENES = { sheet };
+  function mons() {
+    const z = +(Q.get('z') || 4);
+    cv.width = 1400; cv.height = 460; ctx.fillStyle = Q.get('bg') || '#6c7a70'; ctx.fillRect(0, 0, cv.width, cv.height);
+    ctx.imageSmoothingEnabled = false;
+    [['slime', 170], ['wolf', 620], ['goblin', 1150]].forEach(([n, x]) => {
+      const B = new RZ.Builder(); MON.draw(n, B, 0, {});
+      const r = RZ.render(B, {});
+      ctx.drawImage(r.canvas, x - r.ox * z, 420 - r.oy * z, r.canvas.width * z, r.canvas.height * z);
+    });
+  }
+  G.SCENES = { sheet, mons };
   const v = Q.get('view') || 'sheet';
   try { G.SCENES[v](+(Q.get('scale') || 1)); document.title = 'done'; } catch (e) { console.error(e.stack); document.title = 'err'; }
 })(window);

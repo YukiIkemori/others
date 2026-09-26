@@ -78,6 +78,7 @@
   const dir = (a) => [Math.sin(a), Math.cos(a)];
   function draw(B, L, p, opt) {
     opt = opt || {};
+    const SK = L.skin || M.skin;
     const br = Math.sin(p.br * PI * 2) * 0.5; // breathing -0.5..0.5
     // global transform (root offset + whole-body rotation for KO)
     const piv = [0, -9], cr = Math.cos(p.rot), sr = Math.sin(p.rot);
@@ -167,7 +168,7 @@
       C(el, wr, 2.0, 1.75, L.robe ? L.top : L.boots, z + 0.02, { g: gg });
       if (!L.robe) E(el[0], el[1], 2.3, 1.5, L.boots, z + 0.03, { g: gg, rot: a + e + PI / 2 });
       const hd = add(wr, [dir(a + e)[0] * 1.2, dir(a + e)[1] * 1.2]);
-      E(hd[0], hd[1], 2.1, 2.1, L.robe ? M.skin : L.boots, z + 0.05, { g: grp('hand' + side) });
+      E(hd[0], hd[1], 2.1, 2.1, L.robe ? SK : L.boots, z + 0.05, { g: grp('hand' + side) });
       if (L.armor && side > 0) E(sh[0] + 0.3, sh[1] + 0.3, 3.6, 3.1, L.metal, z + 0.1, { g: grp('pauld' + side), rot: lean });
       if (L.armor && side < 0) E(sh[0] + 0.3, sh[1] + 0.3, 3.2, 2.8, L.metal, z + 0.1, { g: grp('pauld' + side), rot: lean });
       return hd;
@@ -176,10 +177,10 @@
 
     // --- head ---
     const gh = grp('head'), ghair = grp('hairback');
-    C(neck, add(neck, rot([0.6, -3], headAng)), 1.8, 1.8, M.skin, 5.8, { g: grp('neck') });
-    E(hc[0], hc[1], 11.2, 10.4, M.skin, 10, { g: gh, rot: headAng, bulge: 0.9 });
+    C(neck, add(neck, rot([0.6, -3], headAng)), 1.8, 1.8, SK, 5.8, { g: grp('neck') });
+    E(hc[0], hc[1], 11.2, 10.4, SK, 10, { g: gh, rot: headAng, bulge: 0.9 });
     // jaw/cheek softness toward the front
-    E(H(4.5, 3.8)[0], H(4.5, 3.8)[1], 6.2, 5.4, M.skin, 10.01, { g: gh });
+    E(H(4.5, 3.8)[0], H(4.5, 3.8)[1], 6.2, 5.4, SK, 10.01, { g: gh });
     // face
     const blink = p.eyes;
     const eye = (ex, w, far) => {
@@ -191,18 +192,29 @@
       R(x, y + 3.6 - h * 0.45, w, h * 0.45, L.eye, 10.61, { shade: 2 });
       if (h > 2) R(x + w - 1.1, y + 3.6 - h + 0.2, 1, 1, M.white, 10.63);
     };
-    eye(1.4, 2.8, false); eye(7.8, 1.9, true);
-    // brows
-    R(H(1.4, -1.8 - p.sq * 0.4)[0], H(1.4, -1.8)[1] - p.sq * 0.5, 3.2, 0.9, L.hair, 10.64, { shade: 1, noAO: true });
-    R(H(7.2, -1.7)[0], H(7.2, -1.7)[1], 2.2, 0.9, L.hair, 10.64, { shade: 1 });
-    // mouth
-    if (p.mouth === 1) R(H(6.0, 6.2)[0], H(6.0, 6.2)[1], 1.8, 1.6, M.mouth, 10.6, { shade: 0 });
-    else if (p.mouth === 2) R(H(5.4, 6.2)[0], H(5.4, 6.2)[1], 2.6, 1.3, M.mouth, 10.6, { shade: 0 });
-    else R(H(5.8, 6.6)[0], H(5.8, 6.6)[1], 1.6, 0.7, M.mouth, 10.6, { shade: 0 });
-    R(H(1.2, 4.6)[0], H(1.2, 4.6)[1], 2.2, 0.9, M.blush, 10.59);
+    if (L.face === 'goblin') {
+      const ey = mat({ keys: ['#401800', '#c07000', '#ffd020', '#fff8b0'], n: 4, flat: true });
+      [[1.0, 3.0], [7.8, 2.0]].forEach(([ex, w]) => { const [x, y] = H(ex, 1.2); R(x, y + 0.6, w, 2.4, ey, 10.6, { shade: 2 }); R(x + w * 0.45, y + 0.6, 1, 2.4, M.lash, 10.61); });
+      C(H(-0.5, -0.6), H(4.5, 0.8), 0.8, 0.7, L.skinDk || SK, 10.64, { shadeOff: -3, g: grp('brow1') });
+      C(H(6.8, 0.5), H(10, -0.4), 0.7, 0.6, L.skinDk || SK, 10.64, { shadeOff: -3, g: grp('brow2') });
+      E(H(10.5, 4.2)[0], H(10.5, 4.2)[1], 3.4, 2.4, SK, 10.66, { g: grp('nose'), rot: headAng + 0.3 });
+      R(H(3.2, 6.6)[0], H(3.2, 6.6)[1], 6.4, 1.8, M.mouth, 10.6, { shade: 0 });
+      R(H(4.0, 5.8)[0], H(4.0, 5.8)[1], 1.2, 1.8, M.white, 10.62); R(H(7.6, 6.9)[0], H(7.6, 6.9)[1], 1.1, 1.6, M.white, 10.62);
+    } else {
+      eye(1.4, 2.8, false); eye(7.8, 1.9, true);
+      // brows
+      R(H(1.4, -1.8 - p.sq * 0.4)[0], H(1.4, -1.8)[1] - p.sq * 0.5, 3.2, 0.9, L.hair, 10.64, { shade: 1, noAO: true });
+      R(H(7.2, -1.7)[0], H(7.2, -1.7)[1], 2.2, 0.9, L.hair, 10.64, { shade: 1 });
+      // mouth
+      if (p.mouth === 1) R(H(6.0, 6.2)[0], H(6.0, 6.2)[1], 1.8, 1.6, M.mouth, 10.6, { shade: 0 });
+      else if (p.mouth === 2) R(H(5.4, 6.2)[0], H(5.4, 6.2)[1], 2.6, 1.3, M.mouth, 10.6, { shade: 0 });
+      else R(H(5.8, 6.6)[0], H(5.8, 6.6)[1], 1.6, 0.7, M.mouth, 10.6, { shade: 0 });
+      R(H(1.2, 4.6)[0], H(1.2, 4.6)[1], 2.2, 0.9, M.blush, 10.59);
+    }
     // ear
-    if (L.ears === 'elf') { C(H(-2, 2.5), H(-8.5, -2.5), 1.8, 0.4, M.skin, 10.15, { g: grp('ear') }); }
-    else E(H(-1.8, 2.4)[0], H(-1.8, 2.4)[1], 1.8, 2.4, M.skin, 10.15, { g: grp('ear') });
+    if (L.ears === 'goblin') { Pl([H(-1, -1), H(-3, 5), H(-17, 1), H(-19, -3)], SK, 10.15, { g: grp('ear'), bevel: 2.2 }); F(H(-4, 1), H(-15, -1), 0.8, g.ear, -1.5); }
+    else if (L.ears === 'elf') { C(H(-2, 2.5), H(-8.5, -2.5), 1.8, 0.4, SK, 10.15, { g: grp('ear') }); }
+    else E(H(-1.8, 2.4)[0], H(-1.8, 2.4)[1], 1.8, 2.4, SK, 10.15, { g: grp('ear') });
 
     // hair
     hair(L, H, headAng, grp, E, C, S, Pl, F, p);
@@ -226,7 +238,7 @@
       if (t === 'e') { const q = W(s[1]); B.ell(q[0], q[1], s[2], s[3], s[4], s[5], Object.assign({}, s[6], { rot: (s[6].rot || 0) + p.rot })); }
       else if (t === 'c') { const a = W(s[1]), b = W(s[2]); B.cap(a[0], a[1], b[0], b[1], s[3], s[4], s[5], s[6], s[7]); }
       else if (t === 'p') B.poly(s[1].map(W), s[2], s[3], s[4]);
-      else if (t === 'r') { const q = W(s[1]); if (p.rot && Math.abs(p.rot) > 0.5) B.rect(q[0], q[1] - s[3] / 2, s[3], s[2], s[4], s[5], s[6]); else B.rect(q[0], q[1], s[2], s[3], s[4], s[5], s[6]); }
+      else if (t === 'r') { if (p.rot) { const [x, y] = s[1], w = s[2], h = s[3]; B.poly([[x, y], [x + w, y], [x + w, y + h], [x, y + h]].map(W), s[4], s[5], Object.assign({ bevel: 0.01 }, s[6])); } else { const q = W(s[1]); B.rect(q[0], q[1], s[2], s[3], s[4], s[5], s[6]); } }
       else if (t === 's') B.strand(s[1].map(W), s[2], s[3], s[4], s[5], s[6]);
       else if (t === 'f') { const a = W(s[1]), b = W(s[2]); B.fold(a[0], a[1], b[0], b[1], s[3], s[4], s[5]); }
     }
@@ -234,11 +246,12 @@
   }
 
   function hair(L, H, ha, grp, E, C, S, Pl, F, p) {
+    const SK = L.skin || M.skin;
     const hm = L.hair, st = L.hairStyle;
     const hb = grp('hairmass');
     // back/top mass
-    E(H(-1.8, -2.8)[0], H(-1.8, -2.8)[1], 12.4, 10.2, hm, 9.6, { g: hb, rot: ha });
-    E(H(0.5, -5.2)[0], H(0.5, -5.2)[1], 11.2, 6.8, hm, 10.3, { g: grp('haircap'), rot: ha - 0.12 });
+    if (st !== 'none') E(H(-1.8, -2.8)[0], H(-1.8, -2.8)[1], 12.4, 10.2, hm, 9.6, { g: hb, rot: ha });
+    if (st !== 'none') E(H(0.5, -5.2)[0], H(0.5, -5.2)[1], 11.2, 6.8, hm, 10.3, { g: grp('haircap'), rot: ha - 0.12 });
     const z0 = 10.4;
     const s = (pts, w0, w1, z, sh) => S(pts.map((q) => H(q[0], q[1])), w0, w1, hm, z, { shadeOff: sh || 0 });
     if (st === 'spiky') {
@@ -284,6 +297,15 @@
       C(a, b, 0.7, 0.7, M.gold, z0 + 0.5, { g: grp('circlet') });
       const gem = H(6.5, -6.3); E(gem[0], gem[1], 1.3, 1.3, mat({ keys: ['#400c30', '#a0206a', '#ff5ab0', '#ffd0f0'], n: 5, spec: 1 }), z0 + 0.52, { g: grp('gem') });
     }
+    if (L.helm) {
+      const gm = grp('helm');
+      E(H(-0.8, -4.2)[0], H(-0.8, -4.2)[1], 12.6, 8.6, L.metal, 10.7, { g: gm, rot: ha });
+      C(H(-12.5, -0.6), H(12.2, -1.8), 1.5, 1.5, L.metal, 10.72, { g: grp('helmrim'), shadeOff: -0.5 });
+      for (let i = 0; i < 5; i++) { const q = H(-9 + i * 4.4, -1.3 - (i === 4 ? 0.5 : 0)); E(q[0], q[1], 0.7, 0.7, M.gold, 10.74, { g: grp('rivet' + i) }); }
+      C(H(9.5, -1.2), H(10.6, 3.8), 1.1, 0.8, L.metal, 10.73, { g: grp('nasal') });
+      S([H(-3, -11.5), H(-4, -16), H(-7, -19)], 1.8, 0.3, L.metal, 10.69);
+      F(H(-6, -10), H(6, -9), 0.8, gm, -1);
+    }
     if (L.hood) {
       const gh = grp('hood');
       Pl([H(-13, -3), H(-8, -13), H(2, -14), H(11, -9.5), H(12.5, -3), H(8, -8), H(-2, -9), H(-8, -4), H(-10, 6)], L.cape, z0 + 0.6, { g: gh, bevel: 3 });
@@ -302,6 +324,14 @@
       C(at(1.9, -3.6), at(1.9, 3.6), 0.95, 0.95, M.gold, 8.6, { g: g2 });
       Pl([at(2.3, -1.45), at(2.3, 1.45), at(17, 1.1), at(19.6, 0), at(17, -1.1)], M.steel, 8.55, { g: gb, bevel: 1.4 });
       F(at(3), at(17), 0.45, gb, 1.5);
+    } else if (L.weapon === 'axe') {
+      C(at(-6), at(16), 1.05, 1.0, M.wood, 8.5, { g: grp('haft') });
+      for (let i = 0; i < 3; i++) C(at(-3 + i * 1.6, -1.2), at(-3 + i * 1.6, 1.2), 0.6, 0.6, M.leatherDk, 8.51, { g: grp('wrap' + i) });
+      const gh = grp('axehead');
+      Pl([at(10, -1.2), at(15.5, -1.2), at(19, -8.5), at(12.5, -10.5), at(11, -6)], M.iron, 8.55, { g: gh, bevel: 1.8 });
+      C(at(19, -8.6), at(12.4, -10.6), 0.55, 0.55, M.steel, 8.56, { g: grp('edge') });
+      Pl([at(11, 1), at(15, 1), at(14, 4.5), at(12, 4.5)], M.iron, 8.55, { g: grp('back'), bevel: 1 });
+      E(at(16.6)[0], at(16.6)[1], 1.3, 1.3, M.iron, 8.57, { g: grp('cap') });
     } else if (L.weapon === 'spear') {
       const g = grp('shaft');
       C(at(-12), at(18), 0.85, 0.85, M.wood, 8.5, { g });

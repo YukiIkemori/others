@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>HD-2D Art Prototype</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @font-face { font-family: 'ZenMaru'; src: url('fonts/ZenMaru-Medium.subset.woff2') format('woff2'); font-weight: 500; }
+  @font-face { font-family: 'ZenMaru'; src: url('fonts/ZenMaru-Bold.subset.woff2') format('woff2'); font-weight: 700; }
+  html, body { margin: 0; background: #000; }
+  #screen { display: block; width: 1024px; height: 896px; }
+</style>
+</head>
+<body>
+<canvas id="screen" width="1024" height="896"></canvas>
+<script>
+// Round-2 prototype (BRIEF A16 追記): small 2.5–3-head sprites, lit layered environments. Same contract as the game:
+// logical 256×224, 4× backing store; the scene is drawn first, then a post-processing stack that the engine can do
+// with plain canvas 2D compositing (PLAN §1.4): light map (multiply), additive glows, bloom (blurred bright copy,
+// screen), depth-of-field bands (blurred copy through a gradient mask), cast shadows, god rays, dust, vignette,
+// colour grade. UI windows are drawn after the stack, sharp.
+//   proto2.html?scene=battle|town|world|dungeon|anim&style=hdpix|hdpaint[&fx=0][&clip=idle&t=0]
+'use strict';
+const Q = new URLSearchParams(location.search);
+const SCENE = Q.get('scene') || 'battle', STYLE = Q.get('style') || 'hdpix', FX = Q.get('fx') !== '0';
+const W = 256, H = 224, S4 = 4, Z = 3;
+const PIX = STYLE === 'hdpix';
+const cv = document.getElementById('screen'), ctx = cv.getContext('2d', { alpha: false });
+const off = (w = 1024, h = 896) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
+const rnd = (() => { let s = 12345; return () => ((s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff); })();
+
+// ------------------------------------------------------------------ assets (component index → name, see tools/art_proto_key_r2.sh)
+const MAN = {
+  hdpix: {
+    party: { hero: 0, brigitta: 1, sylvain: 2, marta: 3 }, mons: { jelly: 0, wolf: 1, goblin: 2 },
+    fg: { ferns: 0, root: 1, flowers: 2, branch: 3, rock: 4 },
+    town: { well: 0, house: 1, shop: 2, tree: 3, bench: 4, bush: 5, lamp: 6, crates: 7, fence: 8, pot: 9 },
+    world: { mountain: 0, forest: 1, town: 2, castle: 3, pines: 5, hill: 6, hill2: 7, windmill: 8, lighthouse: 9 },
+    dungeon: { wall: 0, shelf: 1, pillar: 2, stairs: 3, torch: 4, chest: 5, desk: 6, books: 7 },
+    field: { front: 0, back: 1, side: 2, oldman: 3, merchant: 4, girl: 5, guard: 7 },
+  },
+  hdpaint: {
+    party: { hero: 3, brigitta: 2, sylvain: 1, marta: 0 }, mons: { jelly: 0, wolf: 1, goblin: 2 },
+    fg: { root: 0, ferns: 1, branch: 2, flowers: 3, rock: 4 },
+    town: { shop: 0, house: 1, bush: 2, well: 3, tree: 4, lamp: 5, crates: 6, bench: 7, fence: 8, pot: 9 },
+    world: { mountain: 0, forest: 1, castle: 2, pines: 4, hill: 5, hill2: 5, town: 6, windmill: 7, lighthouse: 8 },
+    dungeon: { wall: 0, torch: 1, chest: 2, desk: 3, shelf: 4, pillar: 5, stairs: 8, books: 9 },
+    field: { front: 0, back: 0, side: 1, merchant: 2, oldman: 3, girl: 4, guard: 5 },
+    crop: { 'field.front': [0, 0, 0.5, 1], 'field.back': [0.5, 0, 1, 1] },
+  },
+};
+// on-screen heights (device px) — the same table the hdpix keying used (--hs), so both variants have equal sizes
+const DEV_H = {
+  'party.hero': 194, 'party.brigitta': 186, 'party.sylvain': 198, 'party.marta': 182,
+  'mons.jelly': 92, 'mons.wolf': 156, 'mons.goblin': 180,
+  'town.well': 96, 'town.house': 276, 'town.shop': 276, 'town.tree': 186, 'town.bench': 42, 'town.bush': 51, 'town.lamp': 108, 'town.crates': 60, 'town.fence': 51, 'town.pot': 36,
+  'world.mountain': 156, 'world.forest': 132, 'world.town': 108, 'world.castle': 156, 'world.pines': 114, 'world.hill': 66, 'world.hill2': 60, 'world.windmill': 102, 'world.lighthouse': 96,
+  'dungeon.wall': 120, 'dungeon.shelf': 132, 'dungeon.pillar': 90, 'dungeon.stairs': 102, 'dungeon.torch': 54, 'dungeon.chest': 54, 'dungeon.desk': 66, 'dungeon.books': 42,
+  'field.front': 96, 'field.back': 96, 'field.side': 96, 'field.oldman': 90, 'field.merchant': 93, 'field.girl': 84, 'field.guard': 96,
+};
+const M = MAN[STYLE];
+const A = {};
+const load = (src) => new Promise((res) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => { console.warn('missing ' + src); res(null); }; i.src = src; });
+async function loadAll() {
+  const jobs = [];
+  for (const sheet of ['party', 'mons', 'fg', 'town', 'world', 'dungeon', 'field']) for (const [n, i] of Object.entries(M[sheet])) jobs.push(load(`assets/${STYLE}/${sheet}_${i}.png`).then((im) => { A[sheet + '.' + n] = im; }));
+  for (let g = 0; g < 9; g++) jobs.push(load(`assets/${STYLE}/ground_${g}.png`).then((im) => { A['ground.' + g] = im; }));
+  jobs.push(load(`assets/${STYLE}/bbg.jpg`).then((im) => { A.bbg = im; }));
+  if (SCENE === 'anim') {
+    for (const n of ['idle', 'run', 'windup', 'strike', 'hurt', 'kneel', 'ko', 'victory']) jobs.push(load(`assets/${STYLE}/pose_${n}.png`).then((im) => { A['pose.' + n] = im; }));
+  }
+  await Promise.all(jobs);
+  await Promise.all([document.fonts.load('500 12px ZenMaru', 'あ亜'), document.fonts.load('700 12px ZenMaru', 'あ亜')]);
+}
+const G = { GRASS: 0, FLOWERS: 1, DIRT: 2, COBBLE: 3, SAND: 4, SEA: 5, STONE: 6, WOOD: 7, CARPET: 8 };
+
+// ------------------------------------------------------------------ sprite drawing (device px space helpers)
+/** draw a sprite with its feet at (x,y) in the CURRENT transform whose unit = `unit` device px. hdpix: 1 image px =
+ *  1 device px, smoothing off, snapped to the device grid; hdpaint: scaled to DEV_H with smoothing. */
+function spr(key, x, y, unit, o = {}) {
+  const img = A[key]; if (!img) return null;
+  const c = (M.crop && M.crop[key]) || [0, 0, 1, 1];
+  const sw = img.width * (c[2] - c[0]), sh = img.height * (c[3] - c[1]);
+  const devH = PIX ? sh : (o.devH || DEV_H[key] || sh);
+  const k = devH / sh / unit; // current units per image px
+  const w = sw * k, h = sh * k;
+  ctx.save();
+  ctx.imageSmoothingEnabled = !PIX; ctx.imageSmoothingQuality = 'high';
+  let X = x - w * (o.ax == null ? 0.5 : o.ax), Y = y - h * (o.ay == null ? 1 : o.ay);
+  if (PIX) { X = Math.round(X * unit) / unit; Y = Math.round(Y * unit) / unit; }
+  if (o.alpha != null) ctx.globalAlpha *= o.alpha;
+  if (o.filter) ctx.filter = o.filter;
+  if (o.flip) { ctx.translate(X + w, Y); ctx.scale(-1, 1); ctx.drawImage(img, img.width * c[0], img.height * c[1], sw, sh, 0, 0, w, h); }
+  else ctx.drawImage(img, img.width * c[0], img.height * c[1], sw, sh, X, Y, w, h);
+  ctx.restore();
+  return { w, h, x: X, y: Y };
+}
+const SIL = new Map();
+function silhouette(img) { // black copy for cast shadows
+  if (SIL.has(img)) return SIL.get(img);
+  const c = off(img.width, img.height), g = c.getContext('2d'); g.drawImage(img, 0, 0); g.globalCompositeOperation = 'source-in'; g.fillStyle = '#000'; g.fillRect(0, 0, c.width, c.height);
+  SIL.set(img, c); return c;
+}
+/** soft contact shadow + a flattened, skewed cast shadow away from the light (light from the upper left) */
+function castShadow(key, x, y, unit, o = {}) {
+  const img = A[key]; if (!img) return;
+  const c = (M.crop && M.crop[key]) || [0, 0, 1, 1];
+  const sw = img.width * (c[2] - c[0]), sh = img.height * (c[3] - c[1]);
+  const devH = PIX ? sh : (o.devH || DEV_H[key] || sh);
+  const k = devH / sh / unit, w = sw * k, h = sh * k;
+  const len = o.len == null ? 0.42 : o.len, skew = o.skew == null ? 0.9 : o.skew;
+  ctx.save();
+  ctx.globalAlpha *= o.alpha == null ? 0.32 : o.alpha;
+  ctx.filter = `blur(${(o.blur || 2.5)}px)`;
+  ctx.translate(x, y); ctx.transform(1, 0, -skew, -len, 0, 0); // flip up→down, flatten, lean to the right
+  ctx.drawImage(silhouette(img), img.width * c[0], img.height * c[1], sw, sh, -w / 2, -h, w, h);
+  ctx.restore();
+  contact(x, y, w * 0.38, o.cAlpha == null ? 0.45 : o.cAlpha);
+}
+function contact(x, y, rx, a) {
+  ctx.save(); const g = ctx.createRadialGradient(x, y, 0, x, y, rx); g.addColorStop(0, `rgba(12,10,8,${a})`); g.addColorStop(1, 'rgba(12,10,8,0)');
+  ctx.fillStyle = g; ctx.translate(x, y); ctx.scale(1, 0.3); ctx.translate(-x, -y); ctx.beginPath(); ctx.arc(x, y, rx, 0, 7); ctx.fill(); ctx.restore();
+}
+
+// ------------------------------------------------------------------ post-processing stack (device px)
+const PP = {
+  /** multiply the frame by a light map: ambient colour + additive light pools */
+  lightmap(ambient, lights) {
+    const L = off(), g = L.getContext('2d');
+    g.fillStyle = ambient; g.fillRect(0, 0, 1024, 896);
+    g.globalCompositeOperation = 'lighter';
+    for (const l of lights) {
+      const gr = g.createRadialGradient(l.x, l.y, 0, l.x, l.y, l.r);
+      gr.addColorStop(0, l.c); gr.addColorStop(l.core || 0.35, l.c2 || l.c); gr.addColorStop(1, 'rgba(0,0,0,0)');
+      g.fillStyle = gr; g.save(); if (l.sy) { g.translate(l.x, l.y); g.scale(1, l.sy); g.translate(-l.x, -l.y); } g.fillRect(l.x - l.r, l.y - l.r, l.r * 2, l.r * 2); g.restore();
+    }
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'multiply'; ctx.drawImage(L, 0, 0); ctx.restore();
+  },
+  /** additive glows (flames, lamps, magic) */
+  glow(list) {
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'lighter';
+    for (const l of list) { const gr = ctx.createRadialGradient(l.x, l.y, 0, l.x, l.y, l.r); gr.addColorStop(0, l.c); gr.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = gr; ctx.fillRect(l.x - l.r, l.y - l.r, l.r * 2, l.r * 2); }
+    ctx.restore();
+  },
+  /** bloom: bright-pass (contrast/brightness), blur at quarter resolution, screen back */
+  bloom(amount = 0.55, thr = 2.2, radius = 6) {
+    const s = off(256, 224), g = s.getContext('2d');
+    g.filter = `brightness(${1 / thr}) contrast(${thr * 1.6}) saturate(1.3)`; g.drawImage(cv, 0, 0, 256, 224);
+    const b = off(256, 224), gb = b.getContext('2d'); gb.filter = `blur(${radius}px)`; gb.drawImage(s, 0, 0);
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = amount; ctx.imageSmoothingEnabled = true; ctx.drawImage(b, 0, 0, 1024, 896); ctx.restore();
+  },
+  /** depth-of-field bands: a blurred copy shown through a vertical gradient (top/bottom out of focus) */
+  dof(top, bottom, px = 5, y0 = 0, y1 = 896) {
+    const b = off(), g = b.getContext('2d'); g.filter = `blur(${px}px)`; g.drawImage(cv, 0, 0);
+    const m = off(), gm = m.getContext('2d');
+    const gr = gm.createLinearGradient(0, y0, 0, y1);
+    gr.addColorStop(0, `rgba(0,0,0,${top})`); gr.addColorStop(0.28, 'rgba(0,0,0,0)'); gr.addColorStop(0.72, 'rgba(0,0,0,0)'); gr.addColorStop(1, `rgba(0,0,0,${bottom})`);
+    gm.fillStyle = gr; gm.fillRect(0, 0, 1024, 896);
+    g.filter = 'none'; g.globalCompositeOperation = 'destination-in'; g.drawImage(m, 0, 0);
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(b, 0, 0); ctx.restore();
+  },
+  /** god rays: long soft additive beams from the upper left */
+  rays(list, col = 'rgba(255,226,160,0.22)') {
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'screen';
+    for (const r of list) {
+      ctx.save(); ctx.translate(r.x, r.y); ctx.rotate(r.a || 0.5);
+      const gr = ctx.createLinearGradient(0, 0, 0, r.len); gr.addColorStop(0, r.c || col); gr.addColorStop(1, 'rgba(0,0,0,0)');
+      const gw = ctx.createLinearGradient(-r.w / 2, 0, r.w / 2, 0); gw.addColorStop(0, 'rgba(0,0,0,0)'); gw.addColorStop(0.5, 'rgba(255,255,255,1)'); gw.addColorStop(1, 'rgba(0,0,0,0)');
+      const t = off(Math.ceil(r.w), Math.ceil(r.len)), tg = t.getContext('2d');
+      tg.fillStyle = gr; tg.translate(r.w / 2, 0); tg.fillRect(-r.w / 2, 0, r.w, r.len); tg.globalCompositeOperation = 'destination-in'; tg.fillStyle = gw; tg.fillRect(-r.w / 2, 0, r.w, r.len);
+      ctx.filter = 'blur(6px)'; ctx.drawImage(t, -r.w / 2, 0); ctx.restore();
+    }
+    ctx.restore();
+  },
+  /** dappled sunlight on the ground: warm additive blobs and cool shade blobs */
+  dapple(x0, y0, x1, y1, n, warm = 'rgba(255,230,160,0.20)', shade = 'rgba(20,30,20,0.22)') {
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.filter = 'blur(10px)';
+    for (let i = 0; i < n; i++) {
+      const x = x0 + rnd() * (x1 - x0), y = y0 + rnd() * (y1 - y0), r = 14 + rnd() * 34;
+      ctx.globalCompositeOperation = i % 3 ? 'screen' : 'multiply'; ctx.fillStyle = i % 3 ? warm : shade;
+      ctx.beginPath(); ctx.ellipse(x, y, r, r * 0.4, 0, 0, 7); ctx.fill();
+    }
+    ctx.restore();
+  },
+  dust(x0, y0, x1, y1, n, col = 'rgba(255,240,200,0.8)') {
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < n; i++) { const x = x0 + rnd() * (x1 - x0), y = y0 + rnd() * (y1 - y0), r = 0.8 + rnd() * 2.2; ctx.globalAlpha = 0.25 + rnd() * 0.6; const g = ctx.createRadialGradient(x, y, 0, x, y, r * 2.5); g.addColorStop(0, col); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(x - r * 3, y - r * 3, r * 6, r * 6); }
+    ctx.restore();
+  },
+  grade(top, bottom, mode = 'soft-light', a = 1) {
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = mode; ctx.globalAlpha = a;
+    const g = ctx.createLinearGradient(0, 0, 0, 896); g.addColorStop(0, top); g.addColorStop(1, bottom); ctx.fillStyle = g; ctx.fillRect(0, 0, 1024, 896); ctx.restore();
+  },
+  vignette(a = 0.5, inner = 0.45) {
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
+    const g = ctx.createRadialGradient(512, 448, 896 * inner, 512, 448, 896 * 0.82); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, `rgba(0,0,0,${a})`);
+    ctx.fillStyle = g; ctx.fillRect(0, 0, 1024, 896); ctx.restore();
+  },
+};
+
+// ------------------------------------------------------------------ UI (logical px, sharp, after the stack)
+const UI = {
+  FONT: '"ZenMaru", sans-serif',
+  begin() { ctx.setTransform(S4, 0, 0, S4, 0, 0); ctx.imageSmoothingEnabled = true; ctx.filter = 'none'; ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1; },
+  rr(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); },
+  window(x, y, w, h, o = {}) {
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 12; ctx.shadowOffsetY = 1;
+    const g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, 'rgba(30,40,78,0.88)'); g.addColorStop(1, 'rgba(8,12,30,0.92)');
+    ctx.fillStyle = g; UI.rr(x, y, w, h, 3.5); ctx.fill(); ctx.restore();
+    ctx.save(); ctx.lineWidth = 0.8; ctx.strokeStyle = '#efe4c4'; UI.rr(x + 1.2, y + 1.2, w - 2.4, h - 2.4, 2.6); ctx.stroke();
+    ctx.lineWidth = 0.35; ctx.strokeStyle = 'rgba(214,176,96,0.9)'; UI.rr(x + 2.5, y + 2.5, w - 5, h - 5, 1.6); ctx.stroke();
+    const s = ctx.createLinearGradient(0, y, 0, y + Math.min(12, h / 2)); s.addColorStop(0, 'rgba(255,255,255,0.10)'); s.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = s; UI.rr(x + 1.6, y + 1.6, w - 3.2, Math.min(12, h / 2), 2); ctx.fill(); ctx.restore();
+    if (o.title) {
+      ctx.save(); ctx.font = `700 9px ${UI.FONT}`; const tw = ctx.measureText(o.title).width + 10, tx = x + 8;
+      const pg = ctx.createLinearGradient(0, y - 5, 0, y + 5); pg.addColorStop(0, '#3a2c14'); pg.addColorStop(1, '#1c160a');
+      ctx.fillStyle = pg; UI.rr(tx, y - 5, tw, 10, 2); ctx.fill(); ctx.lineWidth = 0.6; ctx.strokeStyle = '#d6b060'; ctx.stroke(); ctx.restore();
+      UI.text(o.title, tx + 5, y - 4.6, { size: 9, weight: 700, color: '#f7ecd0' });
+    }
+  },
+  text(s, x, y, o = {}) {
+    ctx.save(); ctx.font = `${o.weight || 500} ${o.size || 32 / 3}px ${UI.FONT}`; ctx.textAlign = o.align || 'left'; ctx.textBaseline = 'top';
+    if (o.maxW) { const w = ctx.measureText(s).width; if (w > o.maxW) { ctx.translate(x, y); ctx.scale(o.maxW / w, 1); x = 0; y = 0; } }
+    if (o.shadow !== false) { ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillText(s, x + 0.5, y + 0.6); }
+    ctx.fillStyle = o.color || '#fbf7ee'; ctx.fillText(s, x, y); ctx.restore();
+  },
+  width(s, size, weight = 500) { ctx.save(); ctx.font = `${weight} ${size}px ${UI.FONT}`; const w = ctx.measureText(s).width; ctx.restore(); return w; },
+  cursor(x, y) { ctx.save(); ctx.fillStyle = '#fff4d0'; ctx.shadowColor = 'rgba(255,220,140,0.9)'; ctx.shadowBlur = 8; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 5.5, y + 3.6); ctx.lineTo(x, y + 7.2); ctx.closePath(); ctx.fill(); ctx.restore(); },
+  /** "cur/max": current value large, "/max" small and dim, right edge at rx (BRIEF A18) */
+  curMax(cur, max, rx, y, low) {
+    const tail = '/' + max, tw = UI.width(tail, 7.5);
+    UI.text(tail, rx, y + 2.6, { size: 7.5, align: 'right', color: '#aab3cf' });
+    UI.text(String(cur), rx - tw - 0.3, y, { size: 10, align: 'right', color: low ? '#ffe45a' : undefined });
+  },
+  bar(x, y, w, r, c1, c2) {
+    ctx.save(); ctx.fillStyle = 'rgba(0,0,0,0.45)'; UI.rr(x, y, w, 1.6, 0.8); ctx.fill();
+    const g = ctx.createLinearGradient(x, 0, x + w, 0); g.addColorStop(0, c1); g.addColorStop(1, c2); ctx.fillStyle = g; UI.rr(x, y, Math.max(1.6, w * r), 1.6, 0.8); ctx.fill(); ctx.restore();
+  },
+  place(s) { const w = UI.width(s, 32 / 3) + 20; UI.window(6, 6, w, 19); UI.text(s, 16, 10); },
+};
+
+// ------------------------------------------------------------------ battle
+const PARTY = [ // R.Battle.LAYOUT.PARTY: front 192 / back 222, zig [0,10,0,10], feet y 100..148. Rows 前/後 (A18 era)
+  { id: 'hero', name: 'アルン', row: '前', x: 192, y: 100, hp: 417, hpM: 452, mp: 47, mpM: 60 },
+  { id: 'brigitta', name: 'ブリギッタ', row: '後', x: 232, y: 116, hp: 352, hpM: 380, mp: 38, mpM: 52 },
+  { id: 'sylvain', name: 'シルヴァン', row: '後', x: 222, y: 132, hp: 88, hpM: 341, mp: 59, mpM: 71 },
+  { id: 'marta', name: 'マルタ', row: '前', x: 202, y: 148, hp: 338, hpM: 338, mp: 126, mpM: 150 },
+];
+const ENEMIES = [{ id: 'goblin', x: 54, y: 106 }, { id: 'wolf', x: 118, y: 126 }, { id: 'jelly', x: 50, y: 146 }];
+
+function battleScene(anim) {
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  // far layer: the plate, the distant top out of focus (drawn blurred, then the sharp ground through a mask)
+  const F = 608; // FIELD h 152 logical
+  ctx.imageSmoothingEnabled = !PIX;
+  ctx.drawImage(A.bbg, 0, 0, 1024, F);
+  if (FX) {
+    PP.dof(0.95, 0, 4, 0, F * 1.9); // background trees soft
+    PP.rays([{ x: 330, y: -40, w: 90, len: 700, a: -0.42 }, { x: 520, y: -40, w: 60, len: 650, a: -0.42 }, { x: 700, y: -60, w: 110, len: 700, a: -0.42 }, { x: 150, y: -40, w: 50, len: 600, a: -0.42 }]);
+    PP.dapple(20, 360, 1000, 600, 46);
+  }
+  // actors (device px units) sorted by feet
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  const actors = [];
+  for (const e of ENEMIES) actors.push({ key: 'mons.' + e.id, x: e.x * 4, y: e.y * 4, e });
+  for (const p of PARTY) actors.push({ key: 'party.' + p.id, x: p.x * 4, y: p.y * 4, p });
+  actors.sort((a, b) => a.y - b.y);
+  for (const a of actors) {
+    if (a.p && a.p.id === 'hero' && anim) { drawHeroPose(anim, a); continue; }
+    castShadow(a.key, a.x, a.y - 2, 1, { len: 0.34, skew: 1.1, alpha: 0.3, blur: 3 });
+    const hitE = anim && anim.hitEnemy === (a.e && a.e.id) ? anim.hitAmt : 0;
+    spr(a.key, a.x + (hitE ? Math.sin(anim.t * 90) * 5 * hitE : 0), a.y, 1);
+    if (hitE) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = hitE * 0.7; spr(a.key, a.x, a.y, 1, { filter: 'brightness(0) invert(1)' }); ctx.restore(); }
+  }
+  if (FX) {
+    // rim light: a warm screen pass on the actors' upper-left edges is baked in the art; add a warm key light pool
+    PP.lightmap('rgb(214,214,226)', [{ x: 420, y: 330, r: 560, c: 'rgba(60,52,30,1)', sy: 0.6 }, { x: 800, y: 380, r: 300, c: 'rgba(40,36,24,1)', sy: 0.6 }]);
+    // foreground layer (close to the camera, out of focus)
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
+    spr('fg.ferns', 60, F + 40, 1, { filter: 'blur(3px) brightness(0.55)', devH: PIX ? undefined : 180 });
+    spr('fg.rock', 980, F + 30, 1, { filter: 'blur(3px) brightness(0.5)', devH: PIX ? undefined : 130 });
+    spr('fg.flowers', 870, F + 36, 1, { filter: 'blur(2.5px) brightness(0.6)', devH: PIX ? undefined : 120 });
+    spr('fg.branch', 1010, 150, 1, { filter: 'blur(4px) brightness(0.45)', ax: 1, ay: 1, devH: PIX ? undefined : 170 });
+    ctx.restore();
+    PP.dust(40, 60, 1000, 560, 70);
+    PP.bloom(0.45, 2.0, 5);
+    PP.grade('rgba(255,200,140,0.35)', 'rgba(40,70,120,0.25)');
+    PP.vignette(0.55, 0.42);
+  }
+}
+function battleUI(o = {}) {
+  UI.begin();
+  const g = ctx.createLinearGradient(0, 150, 0, 224); g.addColorStop(0, 'rgba(6,8,18,0)'); g.addColorStop(0.08, 'rgba(6,8,18,0.92)'); g.addColorStop(1, '#04050c');
+  ctx.fillStyle = g; ctx.fillRect(0, 148, W, 76);
+  UI.window(4, 154, 88, 66, { title: 'アルン' });
+  for (const [s, x, y, dim] of [['剣', 12, 166], ['防御', 52, 166], ['道具', 12, 182], ['術', 52, 182, 1]]) UI.text(s, x + 6, y, { color: dim ? '#8a8fa6' : undefined });
+  UI.cursor(10, 168);
+  // STATUS (94,152,158,68): 前/後 · name · HP cur/max · MP cur/max (A18: WP abolished)
+  UI.window(94, 154, 158, 66);
+  PARTY.forEach((p, i) => {
+    const y = 160 + i * 14.5;
+    if (i === 0) { ctx.save(); const hg = ctx.createLinearGradient(98, 0, 248, 0); hg.addColorStop(0, 'rgba(255,214,120,0.28)'); hg.addColorStop(1, 'rgba(255,214,120,0.02)'); ctx.fillStyle = hg; UI.rr(98, y - 1.5, 150, 13, 2); ctx.fill(); ctx.restore(); }
+    UI.text(p.row, 98, y, { color: p.row === '前' ? '#ffb45a' : '#7fdcff', weight: 700 });
+    UI.text(p.name, 110, y, { maxW: 46 });
+    UI.text('HP', 158, y + 2.4, { size: 7, color: '#b9c2e0', weight: 700 });
+    UI.curMax(p.hp, p.hpM, 204, y, p.hp / p.hpM < 0.3);
+    UI.bar(168, y + 10.6, 36, p.hp / p.hpM, '#6ee07a', '#b8f070');
+    UI.text('MP', 207, y + 2.4, { size: 7, color: '#b9c2e0', weight: 700 });
+    UI.curMax(p.mp, p.mpM, 248, y);
+    UI.bar(216, y + 10.6, 32, p.mp / p.mpM, '#4a9cff', '#8fd0ff');
+  });
+  if (o.help) { UI.window(4, 4, 248, 19); UI.text(o.help, 128, 8, { align: 'center' }); }
+}
+function battle() {
+  battleScene(null);
+  UI.begin();
+  const e = ENEMIES[0], top = e.y - (DEV_H['mons.goblin'] / 4) - 5;
+  ctx.save(); ctx.fillStyle = '#fff1c0'; ctx.shadowColor = '#ffd060'; ctx.shadowBlur = 10; ctx.beginPath(); ctx.moveTo(e.x - 3.5, top - 5); ctx.lineTo(e.x + 3.5, top - 5); ctx.lineTo(e.x, top); ctx.closePath(); ctx.fill(); ctx.restore();
+  battleUI({ help: '小鬼の斧兵Ａ' });
+}
+
+// ---- hero pose clip (generated key poses + engine tweening, PLAN §3)
+const ease = { out: (t) => 1 - (1 - t) ** 3, inout: (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2) };
+const seg = (t, a, b) => Math.max(0, Math.min(1, (t - a) / (b - a)));
+function heroClip(clip, t) {
+  const P = { pose: 'idle', dx: 0, dy: 0, sy: 1, flash: 0 };
+  if (clip === 'idle') { P.sy = 1 + 0.012 * Math.sin(t * Math.PI * 2 / 1.6); return P; }
+  if (clip === 'attack') {
+    const TGT = (ENEMIES[0].x + 34 - PARTY[0].x) * 4;
+    const go = ease.inout(seg(t, 0, 0.3)), back = ease.inout(seg(t, 1.0, 1.35));
+    P.dx = TGT * go * (1 - back); P.dy = -Math.sin(Math.PI * seg(t, 1.0, 1.35)) * 30;
+    P.pose = t < 0.3 ? 'run' : t < 0.52 ? 'windup' : t < 0.95 ? 'strike' : t < 1.0 ? 'idle' : 'run';
+    if (t >= 1.35) P.pose = 'idle';
+    P.trail = t > 0.52 && t < 0.8 ? 1 - seg(t, 0.56, 0.8) : 0;
+    if (t > 0.55 && t < 0.9) { P.hitEnemy = 'goblin'; P.hitAmt = 1 - seg(t, 0.55, 0.9); }
+    return P;
+  }
+  if (clip === 'hurt') { P.pose = t > 0.1 && t < 0.55 ? 'hurt' : 'idle'; P.dx = 22 * ease.out(seg(t, 0.1, 0.18)) * (1 - ease.inout(seg(t, 0.35, 0.6))); P.flash = t > 0.1 && t < 0.3 ? 1 - seg(t, 0.1, 0.3) : 0; P.num = t > 0.12 ? 1 - seg(t, 0.8, 1) : 0; return P; }
+  if (clip === 'kneel') { P.pose = 'kneel'; return P; }
+  if (clip === 'ko') { P.pose = 'ko'; return P; }
+  if (clip === 'victory') { P.pose = 'victory'; P.dy = -Math.abs(Math.sin(t * Math.PI * 2 / 0.8)) * 6; return P; }
+  return P;
+}
+function drawHeroPose(anim, a) {
+  const P = heroClip(anim.clip, anim.t);
+  const key = A['pose.' + P.pose] ? 'pose.' + P.pose : 'party.hero';
+  const x = a.x + P.dx, y = a.y + P.dy;
+  contact(a.x + P.dx, a.y - 2, 40, 0.45);
+  spr(key, x, y, 1, { devH: PIX ? undefined : A[key].height * (DEV_H['party.hero'] / A['pose.idle'].height) });
+  if (P.flash) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = P.flash * 0.75; spr(key, x, y, 1, { filter: 'brightness(0) invert(1)', devH: PIX ? undefined : A[key].height * (DEV_H['party.hero'] / A['pose.idle'].height) }); ctx.restore(); }
+  if (P.trail) {
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    const cx = x - 30, cy = y - 110, r = 90;
+    for (let i = 0; i < 6; i++) { ctx.globalAlpha = P.trail * (0.6 - i * 0.08); ctx.strokeStyle = i < 2 ? '#fff' : '#9fd8ff'; ctx.lineWidth = 13 - i * 1.8; ctx.lineCap = 'round'; ctx.beginPath(); ctx.arc(cx, cy, r - i * 5, Math.PI * 0.8, Math.PI * 1.5 - 0.08 * i); ctx.stroke(); }
+    ctx.restore();
+  }
+  anim.P = P;
+}
+function animScene() {
+  const clip = Q.get('clip') || 'idle', t = +(Q.get('t') || 0);
+  const P0 = heroClip(clip, t);
+  battleScene({ clip, t, hitEnemy: P0.hitEnemy, hitAmt: P0.hitAmt || 0 });
+  UI.begin();
+  if (P0.hitEnemy) { const e = ENEMIES[0]; UI.text('126', e.x, e.y - 52 - (1 - P0.hitAmt) * 6, { size: 13, weight: 700, align: 'center', color: `rgba(255,255,255,${Math.min(1, P0.hitAmt * 2)})` }); }
+  if (P0.num) UI.text('38', PARTY[0].x + 8, PARTY[0].y - 56, { size: 13, weight: 700, color: `rgba(255,255,255,${P0.num})` });
+  battleUI({ help: { attack: '斬る', hurt: '小鬼の斧兵Ａの こうげき！', kneel: 'アルンは ひざをついた', ko: 'アルンは たおれた', victory: '魔物の群れを やっつけた！' }[clip] });
+}
+
+// ------------------------------------------------------------------ field (map px, Z = 3 device px per map px: 'wide')
+const MW = 1024 / Z, MH = 896 / Z;
+function mapT() { ctx.setTransform(Z, 0, 0, Z, 0, 0); }
+function texFill(g, key, mapPx) { // pattern: hdpix = 1 image px per device px (crisp); hdpaint = scaled to mapPx
+  const img = A[key]; const p = g.createPattern(img, 'repeat');
+  p.setTransform(new DOMMatrix().scale(PIX ? 1 / Z : mapPx / img.width)); return p;
+}
+function groundLayer(key, mapPx, shapes, feather = 3) {
+  if (!A[key]) return;
+  const o = off(), g = o.getContext('2d'); g.imageSmoothingEnabled = !PIX; g.setTransform(Z, 0, 0, Z, 0, 0);
+  g.fillStyle = texFill(g, key, mapPx); g.fillRect(0, 0, MW, MH);
+  const m = off(), mc = m.getContext('2d'); mc.setTransform(Z, 0, 0, Z, 0, 0); mc.filter = `blur(${feather * Z}px)`; mc.fillStyle = '#fff';
+  for (const s of shapes) { mc.beginPath(); s(mc); mc.fill(); }
+  g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = 'destination-in'; g.drawImage(m, 0, 0);
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(o, 0, 0); ctx.restore();
+}
+const rect = (x, y, w, h, r = 6) => (c) => c.roundRect(x, y, w, h, r);
+/** y-sorted map objects: [key, x, y, {noShadow, person, shadow opts}] */
+function drawObjects(items, shadowOpts = {}) {
+  items.sort((a, b) => a[2] - b[2]);
+  mapT();
+  for (const [key, x, y, o = {}] of items) {
+    if (!o.noShadow) castShadow(key, x, y, Z, Object.assign({ len: 0.5, skew: 1.0, alpha: 0.35, blur: 3 }, shadowOpts, o.sh || {}));
+    spr(key, x, y, Z, o);
+  }
+}
+const toDev = (x, y) => ({ x: x * Z, y: y * Z });
+
+function town() {
+  mapT(); ctx.imageSmoothingEnabled = !PIX;
+  ctx.fillStyle = texFill(ctx, 'ground.' + G.GRASS, 90); ctx.fillRect(0, 0, MW, MH);
+  groundLayer('ground.' + G.COBBLE, 70, [rect(-10, 150, 360, 50, 10), rect(146, -10, 58, 320, 10), rect(112, 136, 132, 84, 26)], 2.5);
+  groundLayer('ground.' + G.FLOWERS, 90, [rect(250, 232, 100, 70, 24), rect(-10, 238, 76, 70, 24)], 5);
+  const items = [
+    ['town.house', 74, 140], ['town.shop', 272, 140], ['town.house', 62, 318], ['town.shop', 296, 318],
+    ['town.tree', 18, 150], ['town.tree', 330, 150], ['town.tree', 232, 60], ['town.tree', 118, 40],
+    ['town.well', 246, 186], ['town.lamp', 136, 150], ['town.lamp', 216, 150], ['town.lamp', 136, 214],
+    ['town.bush', 114, 142], ['town.bush', 236, 146], ['town.crates', 312, 172], ['town.bench', 104, 208], ['town.pot', 128, 146], ['town.pot', 226, 146],
+    ['town.fence', 262, 228], ['town.fence', 280, 228], ['town.fence', 22, 232],
+    ['field.front', 178, 196], ['field.merchant', 272, 198], ['field.girl', 110, 190], ['field.oldman', 190, 118], ['field.guard', 162, 58],
+  ].map((a) => [a[0], a[1], a[2], a[0].startsWith('field.') ? { sh: { len: 0.45 } } : {}]);
+  drawObjects(items, { skew: -1.4, len: 0.7, alpha: 0.38 }); // low evening sun from the right: long shadows to the left
+  if (FX) {
+    const lamps = [[136, 150 - 33], [216, 150 - 33], [136, 214 - 33]].map(([x, y]) => toDev(x, y));
+    const win = [[64, 110], [84, 110], [264, 96], [286, 96], [262, 126]].map(([x, y]) => toDev(x, y));
+    PP.lightmap('rgb(120,112,150)', [
+      ...lamps.map((p) => ({ x: p.x, y: p.y + 60, r: 170, c: 'rgba(255,170,90,1)', core: 0.25, c2: 'rgba(180,110,60,1)', sy: 0.75 })),
+      { x: 900, y: 120, r: 700, c: 'rgba(150,110,70,1)' }, // setting sun from the upper right
+    ]);
+    PP.glow([...lamps.map((p) => ({ x: p.x, y: p.y, r: 46, c: 'rgba(255,200,120,0.9)' })), ...win.map((p) => ({ x: p.x, y: p.y, r: 22, c: 'rgba(255,190,110,0.55)' }))]);
+    PP.rays([{ x: 1060, y: 40, w: 140, len: 900, a: 0.95, c: 'rgba(255,190,120,0.14)' }, { x: 1060, y: 260, w: 90, len: 800, a: 0.95, c: 'rgba(255,190,120,0.10)' }]);
+    PP.dust(0, 0, 1024, 896, 40, 'rgba(255,210,150,0.7)');
+    PP.bloom(0.5, 1.9, 6);
+    PP.dof(0.9, 0.9, 5);
+    PP.grade('rgba(255,170,110,0.45)', 'rgba(60,70,150,0.35)');
+    PP.vignette(0.55, 0.42);
+  }
+  UI.begin();
+  UI.place('港町ルート');
+  UI.window(8, 164, 240, 54);
+  UI.text('商人', 18, 170, { color: '#ffd67a', weight: 700 });
+  UI.text('いらっしゃい！　ルートの町へようこそ。', 18, 184);
+  UI.text('西の街道は、オオカミが出るから気をつけな。', 18, 198);
+}
+
+function world() {
+  mapT(); ctx.imageSmoothingEnabled = !PIX;
+  ctx.fillStyle = texFill(ctx, 'ground.' + G.SEA, 110); ctx.fillRect(0, 0, MW, MH);
+  const land = [(c) => { c.moveTo(40, -10); c.bezierCurveTo(10, 80, 60, 150, 30, 230); c.bezierCurveTo(10, 290, 120, 320, 220, 310); c.lineTo(360, 300); c.lineTo(360, -10); c.closePath(); }];
+  const sand = [(c) => { c.moveTo(30, -10); c.bezierCurveTo(0, 80, 50, 150, 20, 230); c.bezierCurveTo(0, 300, 120, 330, 220, 320); c.lineTo(360, 312); c.lineTo(360, -10); c.closePath(); }];
+  groundLayer('ground.' + G.SAND, 80, sand, 3);
+  groundLayer('ground.' + G.GRASS, 110, land, 2.5);
+  groundLayer('ground.' + G.FLOWERS, 110, [(c) => c.ellipse(240, 250, 50, 30, 0, 0, 7), (c) => c.ellipse(160, 40, 40, 20, 0, 0, 7)], 8);
+  groundLayer('ground.' + G.DIRT, 60, [(c) => { c.moveTo(120, 300); c.bezierCurveTo(140, 220, 200, 200, 190, 150); c.bezierCurveTo(180, 100, 240, 90, 262, 60); c.lineTo(272, 66); c.bezierCurveTo(252, 100, 196, 106, 204, 150); c.bezierCurveTo(212, 206, 152, 226, 134, 304); c.closePath(); }], 2);
+  const items = [];
+  for (const [x, y] of [[250, 44], [292, 60], [334, 80], [318, 34], [226, 26], [350, 116], [276, 96]]) items.push(['world.mountain', x, y]);
+  for (const [x, y] of [[92, 96], [70, 136], [118, 132], [64, 180], [110, 178], [88, 214], [140, 100], [52, 100], [136, 204]]) items.push(['world.forest', x, y]);
+  for (const [x, y] of [[110, 58], [68, 58], [150, 64], [84, 262], [120, 252], [60, 236]]) items.push(['world.pines', x, y]);
+  items.push(['world.hill', 300, 138], ['world.hill2', 330, 262], ['world.hill', 236, 124], ['world.town', 196, 150], ['world.castle', 272, 218], ['world.lighthouse', 36, 282], ['world.windmill', 236, 178], ['field.front', 172, 226]);
+  drawObjects(items.map((a) => [a[0], a[1], a[2], {}]), { skew: 0.9, len: 0.45, alpha: 0.3 });
+  if (FX) {
+    // cloud shadows drifting over the land, sea sparkle, strong tilt-shift (miniature look)
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'multiply'; ctx.filter = 'blur(40px)';
+    for (const [x, y, r] of [[160, 150, 150], [640, 540, 190], [900, 820, 130]]) { ctx.fillStyle = 'rgba(80,90,120,0.55)'; ctx.beginPath(); ctx.ellipse(x, y, r, r * 0.6, 0.3, 0, 7); ctx.fill(); }
+    ctx.restore();
+    PP.glow(Array.from({ length: 26 }, () => ({ x: rnd() * 90, y: rnd() * 896, r: 6 + rnd() * 8, c: 'rgba(255,255,230,0.5)' })));
+    PP.bloom(0.4, 2.1, 5);
+    PP.dof(1, 1, 7);
+    PP.grade('rgba(255,236,190,0.35)', 'rgba(90,120,170,0.25)');
+    PP.vignette(0.45, 0.45);
+  }
+  UI.begin(); UI.place('ヴェルダ地方');
+}
+
+function dungeon() {
+  mapT(); ctx.imageSmoothingEnabled = !PIX;
+  ctx.fillStyle = '#07080c'; ctx.fillRect(0, 0, MW, MH);
+  groundLayer('ground.' + G.STONE, 48, [rect(24, 74, 292, 240, 2), rect(140, -10, 64, 100, 0)], 0.6);
+  groundLayer('ground.' + G.CARPET, 60, [rect(152, 96, 40, 220, 2)], 0.6);
+  mapT();
+  // back wall: repeat the wall piece
+  const wall = A['dungeon.wall'];
+  const wallRow = (x0, x1, top) => {
+    const h = (PIX ? wall.height : DEV_H['dungeon.wall']) / Z, w = wall.width * (h / wall.height);
+    ctx.save(); ctx.imageSmoothingEnabled = !PIX; ctx.beginPath(); ctx.rect(x0, top - 2, x1 - x0, h + 4); ctx.clip();
+    for (let x = x0 - 8; x < x1; x += w - 6) ctx.drawImage(wall, Math.round(x * Z) / Z, top, w, h);
+    ctx.restore();
+    const g = ctx.createLinearGradient(0, top + h, 0, top + h + 12); g.addColorStop(0, 'rgba(0,0,0,0.6)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(x0, top + h, x1 - x0, 12);
+    return top + h;
+  };
+  const wb = wallRow(24, 140, 34); wallRow(204, 316, 34);
+  ctx.fillStyle = '#0c0d12';
+  for (const [x, y, w, h] of [[0, 0, 24, 320], [316, 0, 40, 320], [24, 0, 116, 34], [204, 0, 112, 34]]) ctx.fillRect(x, y, w, h);
+  const items = [
+    ['dungeon.shelf', 44, wb + 1, { noShadow: 1 }], ['dungeon.shelf', 90, wb + 1, { noShadow: 1 }], ['dungeon.shelf', 250, wb + 1, { noShadow: 1 }], ['dungeon.shelf', 296, wb + 1, { noShadow: 1 }],
+    ['dungeon.torch', 124, 62, { noShadow: 1 }], ['dungeon.torch', 220, 62, { noShadow: 1 }],
+    ['dungeon.pillar', 84, 170], ['dungeon.pillar', 260, 170], ['dungeon.pillar', 84, 262], ['dungeon.pillar', 260, 262],
+    ['dungeon.desk', 250, 214], ['dungeon.chest', 60, 206], ['dungeon.books', 110, 222, { noShadow: 1 }], ['dungeon.books', 232, 120, { noShadow: 1 }],
+    ['dungeon.stairs', 172, 316, { noShadow: 1 }],
+    ['field.back', 172, 200],
+  ];
+  drawObjects(items, { skew: 0, len: 0.5, alpha: 0.4 });
+  if (FX) {
+    const T1 = toDev(124, 50), T2 = toDev(220, 50), C = toDev(262, 190), HERO = toDev(172, 186);
+    PP.lightmap('rgb(34,38,62)', [
+      { x: T1.x, y: T1.y + 60, r: 330, c: 'rgba(255,160,80,1)', core: 0.2, c2: 'rgba(190,100,50,1)' },
+      { x: T2.x, y: T2.y + 60, r: 330, c: 'rgba(255,160,80,1)', core: 0.2, c2: 'rgba(190,100,50,1)' },
+      { x: C.x, y: C.y, r: 170, c: 'rgba(255,190,110,1)', core: 0.2, c2: 'rgba(150,100,60,1)' },
+      { x: HERO.x, y: HERO.y + 40, r: 260, c: 'rgba(120,130,170,1)', core: 0.3 },
+      { x: 520, y: 560, r: 220, c: 'rgba(90,120,170,1)', sy: 0.5 }, // moonlight pool under the ceiling crack
+    ]);
+    PP.rays([{ x: 560, y: -60, w: 120, len: 700, a: 0.12, c: 'rgba(150,190,255,0.28)' }]);
+    PP.glow([{ x: T1.x, y: T1.y, r: 70, c: 'rgba(255,190,110,0.95)' }, { x: T2.x, y: T2.y, r: 70, c: 'rgba(255,190,110,0.95)' }, { x: C.x, y: C.y - 20, r: 36, c: 'rgba(255,210,140,0.9)' }]);
+    PP.dust(420, 100, 700, 700, 60, 'rgba(200,220,255,0.8)');
+    PP.bloom(0.6, 1.8, 7);
+    PP.dof(0.7, 0.8, 4);
+    PP.vignette(0.7, 0.38);
+  }
+  UI.begin(); UI.place('古代の書庫　地下1階');
+}
+
+(async function main() {
+  await loadAll();
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 1024, 896);
+  ({ battle, town, world, dungeon, anim: animScene })[SCENE]();
+  window.READY = true;
+})();
+</script>
+</body>
+</html>
