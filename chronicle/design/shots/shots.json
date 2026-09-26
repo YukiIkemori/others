@@ -1,5 +1,5 @@
 {
- "when": "2026-09-26T09:39:32.244Z",
+ "when": "2026-09-26T13:42:43.877Z",
  "html": "dist/index.html",
  "results": [
   {
@@ -172,7 +172,7 @@
     "design/shots/14_menu_bestiary.png",
     "design/shots/14_menu_bestiary_detail.png"
    ],
-   "ms": 11739
+   "ms": 13362
   },
   {
    "no": 15,
@@ -251,7 +251,7 @@
     "design/shots/20_equip_candidates_head.png",
     "design/shots/20_equip_candidates_head_best.png"
    ],
-   "ms": 7135
+   "ms": 7465
   },
   {
    "no": 21,
@@ -275,7 +275,7 @@
     "design/shots/22_battle_repeat_on.png",
     "design/shots/22_battle_repeat_cancel.png"
    ],
-   "ms": 1006
+   "ms": 3873
   },
   {
    "no": 22,
@@ -286,7 +286,7 @@
     "design/shots/22_warp_list.png",
     "design/shots/22_warp_list_scrolled.png"
    ],
-   "ms": 4693
+   "ms": 6701
   }
  ],
  "pending": {

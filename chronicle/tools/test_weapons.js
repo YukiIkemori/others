@@ -156,15 +156,20 @@ function checkWeapons(R, label, full) {
     else ok(offWeight.length === 0 || it.quirk, `${it._id} off-type stats only with a quirk (${offWeight.join(' ')})`);
     if (it.src === 'mdrop' || (it.grade === 'super' && WI.MSUPER_DROPPER && WI.MSUPER_DROPPER[it._id])) {
       const mon = it.src === 'mdrop' ? (WI.MRARE_DROPPERS[it._id] || [])[0] : it.exclusive;
-      const want = S.monsterWeaponUnits(it.wtype, mon);
-      ok(it.units === want, `${it._id} §8.6.2 units ${want} from ${it.wtype}/${mon} (${it.units})`);
+      const want = S.UNITS_FIX[it._id] || S.monsterWeaponUnits(it.wtype, mon);
+      ok(it.units === want, `${it._id} §8.6.2 units ${want} from ${it.wtype}/${mon}${S.UNITS_FIX[it._id] ? ' (A10a.5 fix)' : ''} (${it.units})`);
     } else if (it.grade !== 'normal') {
       const want = it.wtype === 'staff' && /prayer/.test(it._id) ? 'm2' : S.SERIES_UNITS[it.wtype];
       // §8.3.4: 超レアの武器は 2 単位を系列の 1 つの能力値に寄せてよい（例 鞭 d2）
       const packed = it.grade === 'super' ? S.WEAPON_STATS[it.wtype].map((k) => ({ str: 's', vit: 'v', dex: 'd', agi: 'a', int: 'i', mnd: 'm' })[k] + '2') : [];
       ok(it.units === want || packed.includes(it.units), `${it._id} units follow the series (${want}${packed.length ? ' or ' + packed.join('/') : ''}) (${it.units})`);
     }
-    if (it.statsAdd) ok(Object.values(it.statsAdd).every((v) => v < 0) && it.quirk, `${it._id} statsAdd only negative and only on a quirk item`);
+    if (it.statsAdd) {
+      ok(Object.values(it.statsAdd).every((v) => v < 0) && it.quirk, `${it._id} statsAdd only negative and only on a quirk item`);
+      // A10a.5: a lowered stat has no unit, so the detail never shows 「素早さ+」 next to 「ただし素早さが下がる」
+      const onUnit = Object.keys(it.statsAdd).filter((k) => us.some(([u]) => u === k));
+      ok(onUnit.length === 0 && Object.keys(it.statsAdd).every((k) => (it.stats || {})[k] < 0), `${it._id} statsAdd ${Object.keys(it.statsAdd).join(' ')} not on a unit and the final stat is negative (${statStr(it.stats)})`);
+    }
   }
 
   // ---------------------------------------------------------------- 4. 特殊効果・クセ
@@ -181,7 +186,8 @@ function checkWeapons(R, label, full) {
     if (it.grade === 'rare') {
       const max = it.tier === 9 || it.src === 'mdrop' ? 3 : 1;
       ok(ne >= 1 && ne <= max, `${it._id} rare: 1–${max} effect key(s) (${ne}: ${Object.keys(effects).join(' ')})`);
-      ok(nq <= 1, `${it._id} rare: 0–1 quirk (${nq}: ${Object.keys(quirks).join(' ')})`);
+      ok(nq === 1, `${it._id} rare: exactly 1 weak quirk (D3) (${nq}: ${Object.keys(quirks).join(' ')})`);
+      ok(/ただし/.test(it.desc) && /ただし[^\n]*$/.test(it.desc) && it.desc.split('ただし').length === 2, `${it._id} rare: the desc ends with one 「ただし〜」 sentence (§8.2.7) ${J(it.desc)}`);
     } else {
       supers++; if (!nq) quirkless++;
       ok(ne >= 1 && ne <= 3, `${it._id} super: 1–3 effect keys (${ne}: ${Object.keys(effects).join(' ')})`);

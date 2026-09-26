@@ -153,6 +153,16 @@ process.on("exit", (c) => { if (!global.__done) console.log("[test ended early (
     ['w_staff_novice', 'w_dagger_iron', 'w_whip_leather'], 'C13 starting weapon: default by type or the favoured weapon');
   const ch = CC.changedKeys('mage', { kind: 'element', id: 'water' });
   ok(ch.has('e:water') && ch.has('e:light') && ch.size === 2, 'C14 changed letters = favour + pair', [...ch]);
+  // LEAD_DECISIONS D8: the staff users start with 念じ打ち (t_staff_mind)
+  eq(CC.startActions('mage', { kind: 'element', id: 'fire' }), { techs: ['t_staff_mind'], spells: ['s_fire_1'] }, 'C14b mage element favour adds 念じ打ち (D8)');
+  {
+    const mh = R.Rules.newChar({ id: 'hero', heroSpec: { name: 'テスト', gender: 'f', type: 'mage', favor: { kind: 'element', id: 'water' } } });
+    ok(mh.techs.includes('t_staff_mind') && mh.equip.weapon1 === 'w_staff_novice', 'C14c a new mage hero knows t_staff_mind with a staff (D8)', mh.techs);
+    for (const id of ['teo', 'ilse', 'morga', 'marta']) {
+      const c = R.Rules.newChar({ id });
+      ok(c.techs.includes('t_staff_mind') && c.equip.weapon1 === 'w_staff_novice', 'C14d ' + id + ' knows t_staff_mind at recruit (D8)', c.techs);
+    }
+  }
 
   // flow: 女 → 術剣士 → 属性 火 → name (おまかせ-default) → はい
   R.NGFixture.game();

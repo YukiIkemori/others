@@ -39,7 +39,7 @@
       favorKind: 'element', favorOptions: { element: ALLE },
       pairElement: true, defaultWeapon: 'w_staff_novice',
       startEquip: { body: 'bd_hemp_robe', head: 'hd_wool_hood', shield: 'sh_primer' },
-      onFavor: { weapon: none, element: none }, row: 'middle',
+      onFavor: { weapon: none, element: { techs: ['t_staff_mind'], spells: [] } }, row: 'middle',
     },
     spellblade: {
       name: '術剣士', desc: '武器と術の両方をこなす。\n得意な武器か属性を1つ選べる。',

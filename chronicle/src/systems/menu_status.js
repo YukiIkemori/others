@@ -416,12 +416,13 @@
         G().text(rows.filter((r) => r === 'middle').length + '人', 242, 28, { align: 'right' });
         const frontAlive = party.some((c) => c.hp > 0 && (c.row || 'front') !== 'middle');
         const lines = !rows.some((r) => r !== 'middle')
-          ? ['全員が中列だと、', '全員が前列として', '戦う。']
+          ? ['中列だけだと、', '全員が前列と', 'して戦う。']
           : !frontAlive || eff.some((r, i) => r !== rows[i])
-            ? ['前列が全員倒れて', 'いるので、中列が', '前に出て戦う。']
-            : ['前列が全員倒れる', 'と、中列が前に', '出て戦う。'];
-        // re-wrapped to the window (compact menus raise size 8 to the readable floor, Part A11)
-        G().wrap(lines.join(''), 82, 8).slice(0, 4).forEach((l, i) => G().text(l, 164, 50 + i * 14, { color: !frontAlive ? G().C.yellow : Kt.COL.gray, size: 8 }));
+            ? ['前列が全員', '倒れたので、', '中列が前に', '出て戦う。']
+            : ['前列が全員', '倒れると、', '中列が前に', '出て戦う。'];
+        // broken at phrase boundaries (compact menus raise size 8 to the readable floor, Part A11); wrap() only
+        // as a guard for a phrase wider than the window
+        G().wrap(lines.join('\n'), 82, 8).slice(0, 4).forEach((l, i) => G().text(l, 164, 50 + i * 14, { color: !frontAlive ? G().C.yellow : Kt.COL.gray, size: 8 }));
         G().text('Aで選ぶ', 164, 112, { color: Kt.COL.gray, size: 8 });
         G().window(4, 140, 248, 80);
         ['前列：敵に狙われやすい。', '中列：受ける物理のダメージが減る。', '中列からは剣や斧などが届かない。', '槍・弓・鞭と術は、どこからでも届く。']

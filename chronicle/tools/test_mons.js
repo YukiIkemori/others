@@ -161,9 +161,10 @@ group('monster fields (§9.1.1, §9.2.3, §9.3)', () => {
     ok(m.affinity == null || ELS.includes(m.affinity), id + ' affinity');
     ok(Array.isArray(m.flags) && m.flags.every((f) => ['flying', 'metal'].includes(f)), id + ' flags ⊂ flying/metal');
     ok(!('hue' in m) && !('sat' in m) && !('bri' in m) && !('pal' in m), id + ' has no hue/sat/bri/pal (§9.0 0.6)');
-    // s: 0.3–3.2 for hp / atk / mag (DESIGN s × lineage factor × the per-tier global factor of tuning.json, which stands in
-    // for the engine curve: late stages carry up to ×1.8 HP and ×0.55 damage), 0.5–2.5 for def / mdef / agi (untuned)
-    for (const [k, v] of Object.entries(m.s || {})) { const [lo, hi] = ['hp', 'atk', 'mag'].includes(k) ? [0.3, 3.2] : [0.5, 2.5]; ok(CM.SKEYS.includes(k) && v >= lo && v <= hi, id + ' s.' + k + '=' + v + ' in ' + lo + '..' + hi); }
+    // s: hp 0.4–5, atk / mag 0.2–3.5 (DESIGN s × lineage × the per-tier factor of tuning.json that stands in for the
+    // engine's monster curve: from T5 on ×1.8–2.2 HP and ×0.45–0.6 damage — see the request to rules), def / mdef / agi
+    // 0.5–2.5 (untuned, DESIGN's values)
+    for (const [k, v] of Object.entries(m.s || {})) { const [lo, hi] = k === 'hp' ? [0.4, 5] : k === 'atk' || k === 'mag' ? [0.2, 3.5] : [0.5, 2.5]; ok(CM.SKEYS.includes(k) && v >= lo && v <= hi, id + ' s.' + k + '=' + v + ' in ' + lo + '..' + hi); }
     for (const k of Object.keys(m.rw || {})) ok(['exp', 'gold'].includes(k), id + ' rw.' + k);
     const metal = m.flags.includes('metal');
     ok(metal === (m.hpFixed != null), id + ' hpFixed only on metal');

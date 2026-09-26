@@ -154,12 +154,13 @@
       const g = G(), C = g.C, kit = K();
       kit.backdrop();
       const title = this.mode === 'browse' ? '仲間を探す' : '仲間を' + this.count + '人選ぼう　' + this.chosen.length + '/' + this.count;
-      g.window(4, 2, 248, 60, { title });
+      // y 6: the title plate (drawn from y − 3) stays whole inside the screen's top edge
+      g.window(4, 6, 248, 60, { title });
       const walk = Math.floor(R.Engine.frame / 16) % 2;
       this.ids.forEach((id, i) => {
-        // 2 rows × 10 (§11.8.4: x = 11 + 24i; the rows sit 1px higher than the sketch so the second row's
-        // cursor frame and number plates stay inside the window's border line at y 59)
-        const x = 11 + 24 * (i % 10), y = 7 + 26 * Math.floor(i / 10);
+        // 2 rows × 10 (§11.8.4: x = 11 + 24i; the rows sit 1px higher than the sketch, relative to the window, so the
+        // second row's cursor frame and number plates stay inside the window's border line at y 63)
+        const x = 11 + 24 * (i % 10), y = 11 + 26 * Math.floor(i / 10);
         const dim = this.mode === 'start' && isRecruited(id) && !this.chosen.includes(id);
         kit.drawFigure(kit.defKey(id), x, y, { frame: i === this.cur ? walk : 0, dim });
         const n = this.chosen.indexOf(id);
@@ -171,8 +172,8 @@
         }
         if (i === this.cur && Math.floor(R.Engine.frame / 20) % 4 !== 3) g.strokeRect(x - 2, y - 1, 20, 26, C.white);
       });
-      if (!this.ids.length) g.text(LINES.none, 128, 26, { align: 'center', color: '#c8c8d8' });
-      g.window(4, 64, 248, 156, { title: (this.page + 1) + '/2' });
+      if (!this.ids.length) g.text(LINES.none, 128, 30, { align: 'center', color: '#c8c8d8' });
+      g.window(4, 68, 248, 154, { title: (this.page + 1) + '/2' });
       const id = this.id;
       if (id) (this.page ? drawPage2 : drawPage1)(id, walk);
       if (Math.floor(R.Engine.frame / 16) % 2 === 0) {

@@ -86,7 +86,7 @@ const HAND_TABLE = {
   w_staff_r1: [1, 8, 14, 'int:6', 780],
   w_katana_r1: [1, 15, 7, 'str:4,dex:4', 780],
   w_fist_r1: [1, 13, 7, 'str:4,agi:4', 780],
-  w_whip_r1: [1, 11, 7, 'dex:4,agi:4', 780],
+  w_whip_r1: [1, 11, 7, 'dex:4,agi:4,str:-2', 780],   // D3 のクセ stat:str-1u
   w_sword_r3: [3, 30, 15, 'str:10', 2160],
   w_greatsword_r3: [3, 42, 15, 'str:10', 2160],
   w_dagger_r3: [3, 23, 15, 'dex:10', 2160],
@@ -345,6 +345,8 @@ const TWO_QUIRKS_OK = { w_staff_sr_hellfire: 'res:water1.5 mpCostPct+15', w_staf
 // 表の値を §8.3.5 の上限に合わせて直した品（check_weapons.js が表との差として許す）
 const SPEC_DEVIATIONS = { w_dagger_r7: 'onHit chance 0.4 → 0.3（§8.3.5 のレアの上限 0.30）' };
 // 表の名前を STYLE_JA に合わせて直した品（STYLE_JA の冒頭「画面に出るすべての文と名前の正。食い違ったらこのガイドに合わせる」）
+// 系列の振り方（§8.6.2）から外した魔物の武器（A10a.5: クセで下げる能力値に単位を置かない）
+const UNITS_FIX = { w_fist_sr_crabclaw: 's2' };
 const NAME_DEVIATIONS = {
   w_spear_coral: ['さんごの槍', 'サンゴの槍', 'STYLE_JA §2「珊瑚 → サンゴ」'],
   w_staff_sr_coralwand: ['さんごの杖', 'サンゴの杖', 'STYLE_JA §2「珊瑚 → サンゴ」'],
@@ -437,6 +439,6 @@ module.exports = {
   LINES, normalId, ATK_TABLE, NORMAL_NAMES, STARTERS, STARTERS_ARMOR, HAND_TABLE, HAND_EXCLUSIVE, COUNTS, COUNT_BY_WTYPE,
   LINEAGES, lineageOf, stageOf, srTier, band, RACE_STATS, monsterWeaponUnits,
   MOD_KEYS, WEAPON_FIELDS, ITEM_KEYS, NUMERIC_FILLED, ELEMENTS, STATUSES, RACES, VS_FLAGS, BUFF_STATS,
-  classify, CAP, QCAP, TWO_QUIRKS_OK, SPEC_DEVIATIONS, NAME_DEVIATIONS, SETS_T8, SETS_N, BASE_8131, EXPECT_8131, RATIO_OK, power,
+  classify, CAP, QCAP, TWO_QUIRKS_OK, SPEC_DEVIATIONS, NAME_DEVIATIONS, UNITS_FIX, SETS_T8, SETS_N, BASE_8131, EXPECT_8131, RATIO_OK, power,
   width, styleLists, joyoSet, isKanji, loadIsolated, loadFull,
 };

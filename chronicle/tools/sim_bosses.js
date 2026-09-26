@@ -203,7 +203,7 @@ if (ONE && !arg('tune', false)) {
 if (arg('tune', false)) {
   const TARGET = { prologue: 5.5, mid: 6, region: 9.5, fmid: 10.5, rival: 6, last: 9.5 };
   // species whose s was set by hand apart from the rest of the troop (the tuner leaves them as they are)
-  const OWN_S = { b_root: 'A22.1: weaker roots than the boss flatten the T0→T7 trend of tr_b_rooteater (13.5 → 6.2 rounds before)' };
+  const OWN_S = { b_root: 'A22.1: the roots keep their HP (they must live to feed, X3) but hit softly (atk 0.5) — tuned by hand with the boss' };
   const bossIdsOf = (tr) => {
     const ids = new Set();
     for (const [ref] of DB.troops[tr].mons) if (DB.monsters[ref] && (DB.monsters[ref].flags || []).includes('boss')) ids.add(ref);

@@ -29,6 +29,13 @@ const MOD_KEYS = new Set(('atk def mdef hit eva crit spd mag strPct vitPct dexPc
 /** full-width width of a line ({hero} counts 5) */
 const fw = (s) => { let w = 0; for (const ch of String(s).replace(/\{hero\}/g, 'あいうえお')) w += ch.charCodeAt(0) < 0x2000 || (ch >= '｡' && ch <= 'ﾟ') ? 0.5 : 1; return w; };
 const C = DB.companions;
+const D8 = ['teo', 'ilse', 'morga', 'marta']; // LEAD_DECISIONS D8
+// §5.4.3 B5 fixes (A22.4, sim_balance B5 at seed 20260925): stats re-dealt with the total 200 kept, aptitudes re-dealt
+// with the weapon / element totals kept. Everyone else must still match the §5.3.2 / §5.3.3 tables exactly.
+const REDEAL = {
+  stats: ['hagen', 'dokka', 'basil', 'viola', 'rouga', 'titta', 'sylvain', 'zafira', 'belladonna', 'ilse', 'noela'],
+  apt: ['viola'],
+};
 const sumApt = (o) => Object.values(o).reduce((a, l) => a + PT[l], 0);
 
 // ------------------------------------------------------------ 1. ids and order
@@ -122,8 +129,10 @@ for (const id of IDS) {
     const el = (DB.actions[s] && DB.actions[s].elements && DB.actions[s].elements[0]) || s.split('_')[1];
     check(PT[C[id].apt.e[el]] >= 3, id + ' ' + s + ' is in an S/A element');
   }
-  const n = C[id].startTechs.length + C[id].startSpells.length;
-  check(n >= 1 && n <= 2, id + ' starts with 1〜2 techs/spells (' + n + ')');
+  // LEAD_DECISIONS D8: the staff users also start with 念じ打ち (t_staff_mind) on top of §5.3.5's 1〜2
+  const n = C[id].startTechs.filter((t) => !(D8.includes(id) && t === 't_staff_mind')).length + C[id].startSpells.length;
+  check(n >= 1 && n <= 2, id + ' starts with 1〜2 techs/spells besides D8 (' + n + ')');
+  if (D8.includes(id)) check(C[id].startTechs.includes('t_staff_mind'), id + ' starts with t_staff_mind (D8)');
 }
 for (const t of TYPES) {
   const T = DB.heroTypes[t];
@@ -191,25 +200,31 @@ for (const r of rowsOf(s531, s532)) {
 }
 for (const r of rowsOf(s532, s533)) {
   const id = r[0].replace(/`/g, ''), c = C[id];
-  check(ST.map((k) => c.stats[k]).join() === r.slice(2, 8).join() && [c.growth.hp, c.growth.mp, c.growth.wp].join() === [r[9], r[10], r[11]].join(), id + ' stats/growth = §5.3.2');
+  const sum = (a) => a.reduce((x, y) => x + +y, 0);
+  const same = ST.map((k) => c.stats[k]).join() === r.slice(2, 8).join();
+  // §5.4.3 B5 (A22.4): the listed companions were re-dealt for fairness (total 200 kept); the rest match the table
+  check((same || (REDEAL.stats.includes(id) && sum(ST.map((k) => c.stats[k])) === sum(r.slice(2, 8)))) && [c.growth.hp, c.growth.mp, c.growth.wp].join() === [r[9], r[10], r[11]].join(), id + ' stats/growth = §5.3.2' + (same ? '' : ' (re-dealt, §5.4.3)'));
 }
 for (const r of rowsOf(s533, s534)) {
   const id = r[0].replace(/`/g, ''), c = C[id];
   const tw = r.slice(2, 13).map((s) => s.replace(/\*/g, '')).join(''), te = r.slice(14, 20).map((s) => s.replace(/\*/g, '')).join('');
-  check(W.map((k) => c.apt.w[k]).join('') === tw && E.map((k) => c.apt.e[k]).join('') === te && String(sumApt(c.apt.w)) === r[13] && String(sumApt(c.apt.e)) === r[20], id + ' aptitudes = §5.3.3');
+  const sameA = W.map((k) => c.apt.w[k]).join('') === tw && E.map((k) => c.apt.e[k]).join('') === te;
+  check((sameA || REDEAL.apt.includes(id)) && String(sumApt(c.apt.w)) === r[13] && String(sumApt(c.apt.e)) === r[20], id + ' aptitudes = §5.3.3' + (sameA ? '' : ' (re-dealt, same totals, §5.4.3)'));
 }
 for (const r of rowsOf(s534, s535)) {
   const id = r[0].replace(/`/g, ''), c = C[id];
   const mods = r[4].replace(/`/g, '').replace(/\[([a-z]+)\]/g, '["$1"]').replace(/([a-zA-Z]+):/g, '"$1":');
   let m = null; try { m = JSON.parse(mods); } catch (e) { /* reported below */ }
-  check(c.innate.name === r[2] && c.innate.desc === r[3] && m && JSON.stringify(m) === JSON.stringify(c.innate.mods), id + ' innate = §5.3.4');
+  // BRIEF A1.3 / STYLE_JA §8: the on-screen word is 「アイテム」, not DESIGN §8.2.7's 「品」
+  check(!/品を落と/.test(c.innate.desc), id + ' innate desc says アイテム, not 品 (A1.3)');
+  check(c.innate.name === r[2] && c.innate.desc === r[3].replace(/品を/g, 'アイテムを') && m && JSON.stringify(m) === JSON.stringify(c.innate.mods), id + ' innate = §5.3.4');
 }
 for (const r of rowsOf(s535, s536)) {
   const id = r[0].replace(/`/g, ''), c = C[id];
   const ex = (s) => (s.match(/`([a-z0-9_]+)`/g) || []).map((x) => x.replace(/`/g, ''));
   const e = c.startEquip;
   check([e.weapon1, e.weapon2, e.shield, e.body, e.head].map((v) => v || '').join() === [ex(r[2])[0], ex(r[3])[0], ex(r[4])[0], ex(r[5])[0], ex(r[6])[0]].map((v) => v || '').join()
-    && ex(r[7]).join() === c.startTechs.join() && ex(r[8]).join() === c.startSpells.join(), id + ' gear/techs/spells = §5.3.5');
+    && ex(r[7]).concat(D8.includes(id) ? ['t_staff_mind'] : []).join() === c.startTechs.join() && ex(r[8]).join() === c.startSpells.join(), id + ' gear/techs/spells = §5.3.5');
 }
 {
   let cur = null;

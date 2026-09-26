@@ -290,7 +290,7 @@
           // the title plate sits on the top border: the ▲ goes beside it, never over the title
           const tw = Math.ceil(G().textWidth(this.title)) + 8;
           const ax = this.x + Math.floor((this.w - tw) / 2) + tw + 6;
-          if (ax + 3 < this.x + this.w - 6) tri(ax, this.y + 1, -1);
+          if (ax + 3 < this.x + this.w - 6) tri(ax, this.y + 3, -1);
         } else tri(this.x + this.w / 2, this.y + 3, -1);
       }
       if (this.top + this.rows < totalRows) tri(this.x + this.w / 2, this.y + this.h - 5, 1);

@@ -894,7 +894,7 @@
       // stays just before the place name (x 98 − 10) and the region name is drawn in the gutter at x 16
       // (squeezed to 70px so it never runs into the cursor).
       this.list = new R.UI.List({
-        x: 100, y: 4, w: 152, h: 198, rows: 13, lineH: 14, padX: -2, padY: 8, window: false, wrap: true, colW: 150,
+        x: 100, y: 10, w: 152, h: 198, rows: 13, lineH: 14, padX: -2, padY: 8, window: false, wrap: true, colW: 150,
         items: list.map((l) => ({ label: warpLabel(l), l })),
         drawItem: (row, x, y, w, i) => this.drawRow(row, x, y, i),
       });
@@ -913,7 +913,8 @@
     }
     render() {
       this.list.fitRows(13, 3); // content-sized (Part A11): only as tall as the visited places need
-      G().window(4, 4, 248, this.list.h, { title: 'どこへ行く？' });
+      // y 10: the title plate (y-3 and the glyphs above it) stays whole below the top of the compact frame
+      G().window(4, 10, 248, this.list.h, { title: 'どこへ行く？' });
       this.list.draw();
     }
   }

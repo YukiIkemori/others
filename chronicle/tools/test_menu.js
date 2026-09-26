@@ -489,6 +489,11 @@ section('settings, save, shop, chronicle, books');
   R.Game.flags.final_open = true; R.Game.flags.pg_clear = true;
   ok(M.chronicleEntries().some((x) => x.kind === 'finale') && M.chronicleEntries().some((x) => x.kind === 'side'), '終章・外伝 once final_open / pg_clear');
   ok(typeof M.secretCounts().total === 'number', 'secret counts');
+  // A4.1: an old save may name cells that are no longer secret passages; found never exceeds the total
+  R.Game.secrets = { 'no_such_map:1,1': true, 'roa:0,0': true, 'old:3,4': true };
+  const sc = M.secretCounts();
+  ok(sc.found <= sc.total && sc.found === (R.Field && R.Field.secretsFound ? Math.min(R.Field.secretsFound(), sc.total) : 0), 'secret counts: stale keys of an old save are not counted', sc);
+  R.Game.secrets = {};
 }
 {
   freshGame();
@@ -547,6 +552,14 @@ section('game over');
     for (let i = 0; i < 800 && !done; i++) { R.Engine.step(); await settle(); }
     ok(done && !err, 'GameOver.run ends when someone else closes its message window', err && String(err));
     ok(shown === 2, 'wake-up lines closed from outside are shown once more (the player must see them)', shown);
+    R.UI._msg = null;
+    // A5.1: the public message-window accessors GameOver uses
+    ok(R.UI.msgOpen() === null && R.UI.msgSettled() === true, 'msgOpen / msgSettled with no window');
+    const fakeM = { closed: false, resolveText: () => {} };
+    R.UI._msg = fakeM;
+    ok(R.UI.msgOpen() === fakeM && R.UI.msgSettled() === false, 'msgOpen / msgSettled with a window waiting for its reader');
+    fakeM.resolveText = null; fakeM.closed = true;
+    ok(R.UI.msgOpen() === null && R.UI.msgSettled(fakeM) === true, 'a window its reader closed has settled');
     R.UI._msg = null;
     // every race the bestiary prints has a Japanese name (図鑑 page 2)
     const races = [...new Set(Object.values(DB.monsters).map((m) => m.race).filter(Boolean))];

@@ -893,7 +893,9 @@ function retilt(file, outFile) {
         if (els.some((e) => !e)) continue;
         const ms = els.map((e) => e.ms);
         const m = ms.map((x, i) => meas(tiers[i], x));
-        const fixed = !!g.solo || ms.some((x) => CM.isMetalGroup(DB, x)) || m.some((x) => !x);
+        // metal / solo groups keep their share (§4.10.5 2.5–3%); groups with a T8-set species keep theirs for L6 (§9.13.3)
+        const fixed = !!g.solo || ms.some((x) => CM.isMetalGroup(DB, x)) || m.some((x) => !x) ||
+          ms.some((x) => x.some(([id]) => ((DB.monsters[id].drops || {}).super || {}).rate === 128));
         if (fixed) continue;
         items.push({ g, L: Math.max(0.01, m.reduce((a, x) => a + x.lost, 0) / m.length), st: ms.reduce((a, x) => a + CM.groupStrength(DB, x), 0) / ms.length });
       }

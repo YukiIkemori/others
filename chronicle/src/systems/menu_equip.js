@@ -208,14 +208,16 @@
           if (row.worn) G().text('E', 20, y, { color: G().C.cyan });
           const n = R.State.count(row.id);
           const label = Kt.itemLabel(row.id) + (!row.worn && n >= 2 ? '×' + n : '');
-          Kt.fitText(label, 28, y, 96, { color: Kt.itemColor(row.id) });
+          // 110px: a 10-character name with its ★ (★幽霊のティーカップ) draws unsqueezed
+          Kt.fitText(label, 28, y, 110, { color: Kt.itemColor(row.id) });
         }
         const atk = slot === 'weapon2' ? d.atk2 : d.atk1;
         const col = (v) => Kt.deltaColor(v);
-        // columns 攻 128–164, 術 168–204, 守 208–244 (4px inside the frame, §11.7.5 shifted to clear the border)
-        G().text('攻', 128, y, { color: Kt.COL.sub }); G().text(Kt.signed(atk), 164, y, { align: 'right', color: col(atk) });
-        G().text('術', 168, y, { color: Kt.COL.sub }); G().text(Kt.signed(d.mag), 204, y, { align: 'right', color: col(d.mag) });
-        G().text('守', 208, y, { color: Kt.COL.sub }); G().text(Kt.signed(d.def), 244, y, { align: 'right', color: col(d.def) });
+        // columns 攻 141–173, 術 177–208, 守 212–244 (4px inside the frame, §11.7.5 shifted to clear the border;
+        // label 11px + a 4-character delta 20px each)
+        G().text('攻', 141, y, { color: Kt.COL.sub }); G().text(Kt.signed(atk), 173, y, { align: 'right', color: col(atk) });
+        G().text('術', 177, y, { color: Kt.COL.sub }); G().text(Kt.signed(d.mag), 208, y, { align: 'right', color: col(d.mag) });
+        G().text('守', 212, y, { color: Kt.COL.sub }); G().text(Kt.signed(d.def), 244, y, { align: 'right', color: col(d.def) });
       }
       drawHeader() {
         const c = this.c;
@@ -225,7 +227,8 @@
         if (cd) {
           const row = cd.list.item;
           const text = row && row.id ? DB.items[row.id].desc || '' : '今の装備を外す。';
-          String(text).split('\n').slice(0, 2).forEach((l, i) => Kt.fitText(l, 34, 10 + i * 14, 210));
+          // x 31, 217px: a 22-character desc line (217px) ends at 248, inside the border at 249
+          String(text).split('\n').slice(0, 2).forEach((l, i) => Kt.fitText(l, 31, 10 + i * 14, 217));
           return;
         }
         if (this.mode === 'plan') {

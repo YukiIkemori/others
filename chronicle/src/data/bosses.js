@@ -41,8 +41,8 @@
   const S = {
     b_pageeater: { hp: 1.7 },
     b_moth: { hp: 1.65 },
-    b_rooteater: { hp: 0.92, atk: 0.85, mag: 0.85 },
-    b_root: { hp: 0.5, atk: 0.6, mag: 0.6 },
+    b_rooteater: { hp: 0.8, atk: 0.6, mag: 0.6 },
+    b_root: { hp: 1, atk: 0.5, mag: 0.5 },
     b_sandworm: { hp: 1.1 },
     b_sandking: { hp: 0.8, atk: 0.7, mag: 0.7 },
     b_icegiant: { hp: 1.35 },

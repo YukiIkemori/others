@@ -6,13 +6,20 @@
 //   §9.12.6 (counts per weapon type), §9.12.8 (boss super), and every `w_…` id DESIGN.md mentions.
 // Exit 1 on any difference that is not a documented deviation (fixtures/weapons/lib/spec.js SPEC_DEVIATIONS).
 //
-//   node tools/check_weapons.js [-v]
+// D3 (every rare carries exactly 1 weak quirk): until DESIGN.md §8.5 / §9.12.5 carry the quirks, a rare whose table row
+// has no quirk is accepted when its effects equal the row, it has exactly 1 §8.3.6 weak quirk and its desc is the table
+// text + 「ただし〜」. `--rows` prints those rows in the table form for the DESIGN.md update.
+//
+//   node tools/check_weapons.js [-v] [--rows]
 'use strict';
 const fs = require('fs');
 const path = require('path');
 const S = require('./fixtures/weapons/lib/spec');
 
 const VERBOSE = process.argv.includes('-v');
+const ROWS = process.argv.includes('--rows');
+const dev = { spec: [], name: [], d3: [], units: [] };   // deviations in effect (DESIGN.md not yet updated)
+const d3Rows = [];
 const MD = fs.readFileSync(path.join(S.ROOT, 'DESIGN.md'), 'utf8').split('\n');
 let pass = 0, fail = 0;
 const fails = [];
@@ -108,6 +115,7 @@ function tableName(id, name) {
   if (name === d[1]) { console.log(`  note ${id}: DESIGN.md already says ${d[1]}; NAME_DEVIATIONS can drop it`); return name; }
   ok(name === d[0], `${id}: the table name is ${d[0]} as recorded in NAME_DEVIATIONS (${name})`);
   console.log(`  note ${id}: name ${d[0]} → ${d[1]}（${d[2]}）`);
+  dev.name.push(id);
   return d[1];
 }
 
@@ -141,6 +149,33 @@ console.log('## §8.4.1 normal weapons');
   }
 }
 
+// ---------------------------------------------------------------- D3: 表にまだ無いレアのクセ
+/** 表のクセが「—」のレア: 効果は表のとおり・§8.3.6 の弱いクセがちょうど 1 つ・desc は表の文 ＋「ただし〜」 */
+function d3Pending(id, it, tableFx, tableDesc) {
+  const { quirks } = S.classify(it);
+  const qk = Object.keys(quirks);
+  // the item without its quirk keys (quirk and effect never share a key on a rare)
+  const eff = effectShape(it);
+  for (const k of qk) {
+    if (eff.mods && eff.mods[k] !== undefined) delete eff.mods[k];
+    else delete eff[k];
+  }
+  if (eff.mods && !Object.keys(eff.mods).length) delete eff.mods;
+  ok(same(eff, tableFx), `${id} D3: effects = table ${J(tableFx)} (${J(eff)})`);
+  ok(qk.length === 1 && S.QCAP.rare[qk[0]] && S.QCAP.rare[qk[0]](quirks[qk[0]], it), `${id} D3: exactly 1 §8.3.6 weak quirk (${J(quirks)})`);
+  if (tableDesc) {
+    const flat = it.desc.replace('\n', ''), base = tableDesc.replace(/／/g, '');
+    ok(flat.startsWith(base) && /^ただし[^。]+。$/.test(flat.slice(base.length)), `${id} D3: desc = table text + 「ただし〜」 (${J(it.desc)})`);
+  }
+  dev.d3.push(id);
+  return quirks;
+}
+/** §8.5 の書き方（`key:value`）でクセを書く */
+const fragOf = (q) => Object.entries(q).map(([k, v]) => '`' + k + ':' + (typeof v === 'object' ? JSON.stringify(v).replace(/"(\w+)":/g, '$1:') : v) + '`').join(' ');
+const shortOf = (q) => Object.entries(q).map(([k, v]) => k === 'elemResist' ? Object.entries(v).map(([e, x]) => `res:${e}${x}`).join(' ')
+  : k === 'statsAdd' ? Object.keys(v).map((x) => `stat:${x}-1u`).join(' ') : k === 'glimPct' ? Object.entries(v).map(([e, x]) => `glim:${e}${x}`).join(' ')
+  : k === 'twoHanded' ? 'twoHanded' : `${k}${v > 0 ? '+' : ''}${v}`).join(' ');
+
 // ---------------------------------------------------------------- §8.5 帯のレア・§8.6.5 手作りの超レア（同じ列の表）
 function checkHandRow(c, grade, src, exclusive) {
   const [idc, name, kind, T, am, ab, fxc, qc, price, desc] = c;
@@ -155,9 +190,22 @@ function checkHandRow(c, grade, src, exclusive) {
   ok(statsEq(it.stats, withAdd(statsFrom(ab), it.statsAdd)), `${id} stats ${ab} (${J(it.stats)})`);
   const fx = fxc === '—' ? {} : frag(fxc), q = qc === '—' ? {} : frag(qc);
   const want = mergeShape(toItemShape(fx), toItemShape(q));
-  const dev = S.SPEC_DEVIATIONS[id];
-  if (dev) { ok(!same(effectShape(it), want), `${id} documented deviation: ${dev}`); console.log(`  note ${id}: ${dev}`); }
-  else ok(same(effectShape(it), want), `${id} effects+quirks ${J(want)} (${J(effectShape(it))})`);
+  const sd = S.SPEC_DEVIATIONS[id];
+  if (grade === 'rare' && qc === '—' && it.quirk) {
+    // D3: the table has no quirk yet (the effect part still has to equal the table, with the §8.5 onHit fix of SPEC_DEVIATIONS)
+    const tfx = toItemShape(fx);
+    if (sd && tfx.onHit) tfx.onHit = it.onHit;
+    const qq = d3Pending(id, it, tfx, desc);
+    if (sd) { console.log(`  note ${id}: ${sd}`); dev.spec.push(id); }
+    const fxOut = sd && it.onHit ? fxc.replace(/chance:[\d.]+/, 'chance:' + it.onHit.chance) : fxc;   // the row as the data has it (§8.3.5 fix)
+    d3Rows.push(`| \`${id}\` | ${name} | ${kind} | ${T} | ${am} | ${ab} | ${fxOut} | ${fragOf(qq)} | ${price} | ${it.desc.replace('\n', '／')} |`);
+    return;
+  }
+  if (sd && !same(effectShape(it), want)) { ok(true, `${id} documented deviation: ${sd}`); console.log(`  note ${id}: ${sd}`); dev.spec.push(id); }
+  else {
+    if (sd) console.log(`  note ${id}: DESIGN.md already matches; SPEC_DEVIATIONS can drop it`);
+    ok(same(effectShape(it), want), `${id} effects+quirks ${J(want)} (${J(effectShape(it))})`);
+  }
   ok(!!it.quirk === (qc !== '—'), `${id} quirk flag ${qc !== '—'} (${it.quirk})`);
   ok(it.desc === desc.replace(/／/g, '\n'), `${id} desc = table text ${J(desc)} (${J(it.desc)})`);
 }
@@ -222,7 +270,11 @@ console.log('## §9.12.4 monster supers');
     const want = mergeShape(shorthand(fx, it.tier), shorthand(q, it.tier));
     ok(same(effectShape(it), want), `${id} = ${c[6]} (${J(effectShape(it))})`);
     ok(it.quirk === true, `${id} quirk:true`);
-    ok(it.units === S.monsterWeaponUnits(wtype, mon), `${id} units ${S.monsterWeaponUnits(wtype, mon)} by §8.6.2 (${it.units})`);
+    if (S.UNITS_FIX[id]) {
+      ok(it.units === S.UNITS_FIX[id] && it.units !== S.monsterWeaponUnits(wtype, mon), `${id} units ${S.UNITS_FIX[id]} (A10a.5: off the stat its quirk lowers; §8.6.2 gives ${S.monsterWeaponUnits(wtype, mon)}) (${it.units})`);
+      console.log(`  note ${id}: units ${S.monsterWeaponUnits(wtype, mon)} → ${S.UNITS_FIX[id]}（A10a.5）`);
+      dev.units.push(id);
+    } else ok(it.units === S.monsterWeaponUnits(wtype, mon), `${id} units ${S.monsterWeaponUnits(wtype, mon)} by §8.6.2 (${it.units})`);
     const price = Math.round(S.PRICE[it.tier] * 1.6 / 10) * 10 * 6;
     ok(it.price === price, `${id} price ${price} (${it.price})`);
     // desc: 効果・クセのどれも、長い形か短い形で書かれている
@@ -247,10 +299,23 @@ console.log('## §9.12.5 monster rares');
     const wtype = c[2].replace('武器・', ''), mons = [...c[5].matchAll(/`([a-z0-9_]+)`/g)].map((m) => m[1]);
     const nm = tableName(id, c[1]);
     ok(it.name === nm && it.wtype === wtype && it.tier === +c[3] && it.grade === 'rare' && it.src === 'mdrop', `${id} = ${nm} ${wtype} T${c[3]} rare/mdrop (${it.name})`);
-    ok(same(effectShape(it), shorthand(c[4], it.tier)), `${id} = ${c[4]} (${J(effectShape(it))})`);
+    const [rfx, rq] = c[4].split('｜').map((x) => x.replace(/^\s*Q:\s*/, '').trim());
+    if (!rq && it.quirk) {
+      const qq = d3Pending(id, it, shorthand(rfx, it.tier), '');
+      // desc: the effect sentences (long or short form) and the quirk, like §9.12.4
+      for (const k of rfx.split(/\s+/).concat(shortOf(qq).split(/\s+/))) {
+        const [key, val] = Object.entries(shorthand(k, it.tier)).flatMap(([kk, vv]) => (kk === 'mods' ? Object.entries(vv) : [[kk, vv]]))[0];
+        const p = WI.phrase({ [key]: val });
+        ok(it.desc.replace('\n', '').includes(p[0]) || it.desc.replace('\n', '').includes(p[1]), `${id} desc says「${p[0]}」for ${k} (${J(it.desc)})`);
+      }
+      d3Rows.push(`| \`${id}\` | ${c[1]} | ${c[2]} | ${c[3]} | ${rfx} ｜ Q: ${shortOf(qq)} | ${c[5]} |`);
+    } else {
+      ok(same(effectShape(it), mergeShape(shorthand(rfx, it.tier), rq ? shorthand(rq, it.tier) : {})), `${id} = ${c[4]} (${J(effectShape(it))})`);
+      ok(!!it.quirk === !!rq, `${id} quirk flag ${!!rq} (${it.quirk})`);
+    }
     ok(J(WI.MRARE_DROPPERS[id]) === J(mons), `${id} droppers ${mons.join(' ')} (${(WI.MRARE_DROPPERS[id] || []).join(' ')})`);
     ok(it.units === S.monsterWeaponUnits(wtype, mons[0]), `${id} units ${S.monsterWeaponUnits(wtype, mons[0])} (${it.units})`);
-    ok(!it.quirk && it.price === Math.round(S.PRICE[it.tier] * 1.6 / 10) * 10 * 3, `${id} no quirk, price ×3 (${it.price})`);
+    ok(it.price === Math.round(S.PRICE[it.tier] * 1.6 / 10) * 10 * 3, `${id} price ×3 (${it.price})`);
   }
 }
 console.log('## §9.12.6 counts, §9.12.8 boss super');
@@ -279,5 +344,8 @@ console.log('## every w_ id in DESIGN.md');
   ok(unchecked.length === 0, `every one of the 301 weapons was compared with a DESIGN.md row (${unchecked.join(' ')})`);
 }
 
-console.log(`\ncheck_weapons: ${pass} passed, ${fail} failed`);
+if (ROWS && d3Rows.length) console.log('\n## D3 rows for DESIGN.md (§8.5 then §9.12.5)\n' + d3Rows.join('\n'));
+const nDev = dev.spec.length + dev.name.length + dev.d3.length;
+console.log(`\ndeviations from DESIGN.md in effect: ${nDev} (SPEC_DEVIATIONS ${dev.spec.length}${dev.spec.length ? ' ' + dev.spec.join(' ') : ''}; NAME_DEVIATIONS ${dev.name.length}${dev.name.length ? ' ' + dev.name.join(' ') : ''}; D3 quirks not yet in the tables ${dev.d3.length}); A10a.5 units fixes ${dev.units.length}${dev.units.length ? ' ' + dev.units.join(' ') : ''}`);
+console.log(`check_weapons: ${pass} passed, ${fail} failed`);
 if (fail) { console.log('FAILURES:\n  ' + fails.slice(0, 40).join('\n  ')); process.exit(1); }
