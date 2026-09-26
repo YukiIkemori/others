@@ -224,6 +224,7 @@
       '@mini', 'letter', 'call', 'g', 'bgm', 'sfx', 'jingle'],
     fieldNpc: ['move', 'face', 'act', 'hide', 'show', 'setPos'],
     list: ['update', 'draw'],
+    layer: ['open', 'close', '#k'],   // 版 2: new R.UIK.Layer(o)
   };
   const SCREEN_IDS = ['title', 'charcreate', 'nameentry', 'partySelect', 'menu', 'items', 'skills', 'equip', 'status', 'order', 'bestiary',
     'chronicle', 'map', 'save', 'load', 'settings', 'shop', 'inn', 'tavern', 'passphrase', 'detail', 'tip', 'warp',

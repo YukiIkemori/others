@@ -220,6 +220,16 @@
      "text": "この物語は、まだ続く。",
      "note": "calm confident smile after victory"
     }
+   ],
+   "bigtech": [
+    {
+     "text": "これで決める！",
+     "note": "unleashing a big special technique, decisive and powerful, ringing"
+    },
+    {
+     "text": "全力で、いく！",
+     "note": "gathering all strength for a finishing move, determined, loud"
+    }
    ]
   }
  },
@@ -367,5 +377,198 @@
  },
  "readings": {
   "v_berna_roa_02": "おかえり。……よく、ここまで　かいたね。"
+ },
+ "battle": {
+  "_readme": [
+   "Battle voices of the 20 companions (BRIEF A36/A37): short battle-only lines, no story. Lines: design/voice/battle_lines.csv (id b_<char>_<kind>_<n>, kinds attack 1-3, bigtech 1-2, spell 1, hurt 1-2, ko 1, victory 1).",
+   "cast[<companion id>]: voice = prebuilt Japanese voice from GET /v1beta/voices (none reused from the story speakers or the hero), direction = the style note in Japanese (for people), profile/style = the English prompt text, pitch = post-process pitch factor (1 = none; tempo kept).",
+   "Generated with node tools/voice_tts.js --battle (Batch API). Playback rules: design/notes/audio.md 13.2."
+  ],
+  "shoutKinds": [
+   "attack",
+   "hurt"
+  ],
+  "cast": {
+   "selma": {
+    "name": "セルマ",
+    "voice": "ja-jp-training-6",
+    "type": "prebuilt",
+    "direction": "凛々しく、まっすぐに",
+    "profile": "Selma, a 20-year-old woman, former castle gate guard; upright, earnest, disciplined swordswoman.",
+    "style": "young female voice, clear and firm, upright and resolute; short sharp battle cries",
+    "pitch": 1
+   },
+   "hagen": {
+    "name": "ハーゲン",
+    "voice": "ja-jp-csagent-9",
+    "type": "prebuilt",
+    "direction": "低く太く、豪快に",
+    "profile": "Hagen, a 38-year-old male mercenary; gruff, battle-hardened, jokes about his pay.",
+    "style": "gruff low male voice, rough and hearty, veteran swagger",
+    "pitch": 1
+   },
+   "dokka": {
+    "name": "ドッカ",
+    "voice": "ja-jp-techagent-2",
+    "type": "prebuilt",
+    "direction": "野太く、職人気質で豪快に",
+    "profile": "Dokka, a 52-year-old stocky smith of the mountain folk; stubborn, loud, old-fashioned speech (わし, じゃ).",
+    "style": "thick, gravelly middle-aged male voice, hearty and stubborn, old-fashioned",
+    "pitch": 1
+   },
+   "basil": {
+    "name": "バジル",
+    "voice": "ja-jp-techagent-4",
+    "type": "prebuilt",
+    "direction": "穏やかで厚みのある声、丁寧に",
+    "profile": "Basil, a 44-year-old big gentle monk; polite, devout, strong.",
+    "style": "warm, deep, gentle male voice; polite even in battle, powerful when striking",
+    "pitch": 1
+   },
+   "bartolo": {
+    "name": "バルトロ",
+    "voice": "ja-jp-training-4",
+    "type": "prebuilt",
+    "direction": "老練に、しゃがれ気味で威厳",
+    "profile": "Bartolo, a 63-year-old veteran knight; proud, old-fashioned (じゃ), a bad back.",
+    "style": "old male voice, dignified and seasoned, slightly hoarse, spirited",
+    "pitch": 1
+   },
+   "viola": {
+    "name": "ヴィオラ",
+    "voice": "ja-jp-commercial-6",
+    "type": "prebuilt",
+    "direction": "上品に、気位高く",
+    "profile": "Viola, a 24-year-old fallen noblewoman who fights with a sword; proud, elegant, haughty, vain about clothes.",
+    "style": "refined young female voice, elegant and haughty, crisp",
+    "pitch": 1
+   },
+   "shigure": {
+    "name": "シグレ",
+    "voice": "ja-jp-tutor-2",
+    "type": "prebuilt",
+    "direction": "低く静かに、ぼそっと",
+    "profile": "Shigure, a 31-year-old katana swordsman from the far east; taciturn, cool, fast.",
+    "style": "low, quiet, cool male voice; terse, restrained, never shouting much",
+    "pitch": 1
+   },
+   "rouga": {
+    "name": "ロウガ",
+    "voice": "ja-jp-commercial-4",
+    "type": "prebuilt",
+    "direction": "熱く元気に",
+    "profile": "Rouga, a 26-year-old hot-blooded martial artist; loves strong opponents.",
+    "style": "energetic young male voice, hot-blooded and loud, kiai shouts",
+    "pitch": 1
+   },
+   "titta": {
+    "name": "ティッタ",
+    "voice": "ja-jp-assistant-7",
+    "type": "prebuilt",
+    "direction": "生意気に、すばしこく",
+    "profile": "Titta, a 16-year-old nimble street girl from a port town; cheeky, playful, likes loot.",
+    "style": "bright, youthful, cheeky teenage girl voice, quick and playful",
+    "pitch": 1
+   },
+   "brigitta": {
+    "name": "ブリギッタ",
+    "voice": "ja-jp-concierge-7",
+    "type": "prebuilt",
+    "direction": "落ち着いて頼もしく、きびきび",
+    "profile": "Brigitta, a 23-year-old border-fort soldier; reliable, calm and precise; secretly loves sweets.",
+    "style": "calm, steady young female voice, disciplined and reassuring",
+    "pitch": 1
+   },
+   "sylvain": {
+    "name": "シルヴァン",
+    "voice": "ja-jp-storyteller-12",
+    "type": "prebuilt",
+    "direction": "静かで澄んだ、浮世離れ",
+    "profile": "Sylvain, an ageless forest-folk archer over a hundred years old; serene, quiet, a little aloof.",
+    "style": "soft, clear, serene male voice, calm and unhurried, airy",
+    "pitch": 1
+   },
+   "zafira": {
+    "name": "ザフィラ",
+    "voice": "ja-jp-commercial-1",
+    "type": "prebuilt",
+    "direction": "艶っぽく、楽しげに",
+    "profile": "Zafira, a 22-year-old travelling dancer; playful, alluring, loves shiny things.",
+    "style": "velvety, playful young female voice, teasing and rhythmic",
+    "pitch": 1
+   },
+   "ferno": {
+    "name": "フェルノ",
+    "voice": "ja-jp-concierge-4",
+    "type": "prebuilt",
+    "direction": "芝居がかって朗々と",
+    "profile": "Ferno, a 33-year-old wandering bard; theatrical, light-hearted, lyrical.",
+    "style": "resonant, witty male voice, theatrical and melodic",
+    "pitch": 1
+   },
+   "belladonna": {
+    "name": "ベラドナ",
+    "voice": "ja-jp-advisor-2",
+    "type": "prebuilt",
+    "direction": "ハスキーに、したたかに余裕",
+    "profile": "Belladonna, a 36-year-old travelling herb and poison peddler; shrewd, sly, confident.",
+    "style": "low, husky, confident female voice, sly and amused",
+    "pitch": 1
+   },
+   "boden": {
+    "name": "ボーデン",
+    "voice": "ja-jp-podcaster-7",
+    "type": "prebuilt",
+    "direction": "年配で元気、自慢好き",
+    "profile": "Boden, a 61-year-old mining engineer; spry, boastful, old-fashioned (わし, じゃ).",
+    "style": "energetic old male voice, cheerful and boastful, a little raspy",
+    "pitch": 1
+   },
+   "teo": {
+    "name": "テオ",
+    "voice": "ja-jp-tutor-11",
+    "type": "prebuilt",
+    "direction": "少年らしく、得意げに",
+    "profile": "Teo, a 15-year-old boy, apprentice mage, runaway from the magic academy; cocky, calls himself a genius.",
+    "style": "high, bright boyish voice of a 15-year-old boy, cocky and excited",
+    "pitch": 1.06
+   },
+   "ilse": {
+    "name": "イルゼ",
+    "voice": "ja-jp-storyteller-1",
+    "type": "prebuilt",
+    "direction": "ふんわり夢見がち、少し眠たげ",
+    "profile": "Ilse, a 29-year-old stargazer; dreamy, gentle, a little sleepy.",
+    "style": "soft, airy, dreamy female voice, gentle and unhurried",
+    "pitch": 1
+   },
+   "morga": {
+    "name": "モルガ",
+    "voice": "ja-jp-techagent-9",
+    "type": "prebuilt",
+    "direction": "妖しく低く、含み笑い",
+    "profile": "Morga, a 47-year-old graveyard keeper and hex-caster; eerie, amused, not as scary as she looks.",
+    "style": "low, silky, eerie mature female voice with a hint of amusement",
+    "pitch": 1
+   },
+   "marta": {
+    "name": "マルタ",
+    "voice": "ja-jp-advisor-7",
+    "type": "prebuilt",
+    "direction": "きびきび頼もしく、少し厳しめ",
+    "profile": "Marta, a 34-year-old town doctor; brisk, strict with reckless patients, caring.",
+    "style": "clear, brisk, confident female voice, strict but warm",
+    "pitch": 1
+   },
+   "noela": {
+    "name": "ノエラ",
+    "voice": "ja-jp-commercial-3",
+    "type": "prebuilt",
+    "direction": "素直で一生懸命、少しあわてんぼう",
+    "profile": "Noela, an 18-year-old apprentice shrine maiden; earnest, polite, a bit clumsy.",
+    "style": "bright, sweet young female voice, earnest and a little flustered",
+    "pitch": 1
+   }
+  }
  }
 }

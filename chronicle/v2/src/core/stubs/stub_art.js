@@ -13,6 +13,30 @@
 
   // 素材と物の一覧（版 2: R.DB.materials・R.DB.props。TERRAIN の本物が同じ id を登録したら使われない）
   for (const id of Object.keys(FIXED)) R.Stubs.defineData('materials', id, { name: id, edge: 'soft', walk: id !== 'stub_tree' && id !== 'stub_water' });
+  // 最初の素材・物の id の一覧（P0 のレビュー、版 2）。CONTENT はこの id で書き始めてよい。TERRAIN は P1 の 1 日目に同じ id で本物を登録し、
+  // 足りない・名前を変えたい物は requests.jsonl で知らせる（名前を消すのは P2 の後）。walk:false は水・壁の類
+  const MATS = {
+    // 床・地面
+    grass: 1, moss_earth: 1, dirt: 1, road: 1, cobble: 1, sand: 1, plank: 1, deck: 1, bridge: 1, ladder: 1, stone_floor: 1, wood_floor: 1,
+    carpet: 1, cave_floor: 1, bark_floor: 1, root_floor: 1, flowers: 1, tall_grass: 1, pier: 1,
+    // 壁・崖・木（solid は legend の側で付ける）
+    rock: 0, cliff: 0, wall_stone: 0, wall_brick: 0, wall_wood: 0, wall_moss: 0, wall_bark: 0, wall_cave: 0, tree: 0, forest_dark: 0, bush: 0, roots: 0,
+    // 水
+    water: 0, sea: 0, deep_water: 0, shallow: 1,
+  };
+  for (const id of Object.keys(MATS)) R.Stubs.defineData('materials', id, { name: id, edge: /^wall_|cliff|rock/.test(id) ? 'hard' : 'soft', walk: !!MATS[id] });
+  const PROPS = {
+    barrel: { soft: false, solid: true }, crate: { solid: true }, sack: { soft: true }, bench: { soft: true }, chair: { soft: true }, table: { solid: true },
+    bed: { solid: true }, bookshelf: { solid: true }, counter: { solid: true }, stove: { solid: true, light: true }, lamp_post: { solid: true, light: true, glow: true },
+    lantern: { soft: true, light: true, glow: true }, fence: { solid: true }, flower_pot: { soft: true }, well: { solid: true }, signboard: { solid: true },
+    rock_small: { soft: true }, stump: { solid: true }, log: { solid: true }, mushroom_glow: { soft: true, glow: true }, firefly: { soft: true, glow: true },
+    rope_bridge: { overChars: true }, leaves_over: { overChars: true },
+    // 仕掛けの物（map.objects の type から FIELD が使う。絵は TERRAIN）
+    chest: { solid: true, frames: ['closed', 'open', 'rare_closed', 'rare_open'] }, spring: { solid: true, light: true, glow: true, footprint: [2, 2] },
+    brazier: { solid: true, frames: ['off', 'on'], light: true }, waylamp: { solid: true, frames: ['off', 'on'], light: true }, switch: { soft: true, frames: ['off', 'on'] },
+    songstone: { solid: true, glow: true }, footprint: { soft: true, glow: true }, beacon: { light: true, glow: true }, stairs_up: {}, stairs_down: {}, door: {},
+  };
+  for (const id of Object.keys(PROPS)) R.Stubs.defineData('props', id, PROPS[id]);
 
   R.Stubs.define('Terrain', {
     CHUNK: 8,

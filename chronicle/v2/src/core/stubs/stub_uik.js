@@ -80,8 +80,15 @@
       }
     }
   }
+  /** 開く／閉じる動きの入れ物（版 2 の最低限）。k = 0（閉）〜1（開）を Engine.time で進める。描く側が k で位置と透明度を決める */
   class Layer {
-    constructor(o) { Object.assign(this, { anchor: 'c' }, o); }
+    constructor(o) { Object.assign(this, { anchor: 'c', dim: 0.4, k: 0, isOpen: false }, o); this._anim = null; }
+    _run(to, ms) {
+      const from = this.k, t0 = R.Engine.time;
+      return R.until(() => { const t = Math.min(1, (R.Engine.time - t0) / (ms || 1)); this.k = from + (to - from) * t; return t >= 1; });
+    }
+    open() { this.isOpen = true; return this._run(1, T.ms.open); }
+    close() { this.isOpen = false; return this._run(0, T.ms.close); }
   }
 
   // ---------------------------------------------------------------- Message（会話）

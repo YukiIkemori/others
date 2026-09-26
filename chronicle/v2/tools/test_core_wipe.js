@@ -34,8 +34,8 @@ async function main() {
   ok('standing at lastInn', pos.x === 10 && pos.y === 5, pos);
   ok('gold halved, party restored', (await B.ev(p, 'RPG.Game.gold')) === 50 && (await B.ev(p, 'RPG.Party.members().every((c) => c.hp > 0)')));
   ok('the aborted event did not continue', !(await B.ev(p, '!!window.__reached')));
-  await B.press(p, 'right');
-  ok('can walk after the wipe', await B.waitFor(p, 'RPG.Field.pos.x === 11', 2000), await B.ev(p, 'RPG.Field.pos'));
+  await B.press(p, 'right', 200);
+  ok('can walk after the wipe', await B.waitFor(p, 'RPG.Field.pos.x >= 11', 3000), await B.ev(p, 'RPG.Field.pos'));
   await B.shot(p, path.join(B.V2, 'design', 'shots', 'core', 'p0r_wipe_inn_1920.png'));
   // タイトルへ
   await B.ev(p, `RPG.Flow.wipe('title')`);

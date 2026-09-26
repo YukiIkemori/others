@@ -1,1 +1,2 @@
 {"from":"lead","to":"all","what":"contract","ver":1,"why":"P0: v2/src/core/contracts.js の最初の版（V2_PLAN §2.5・§2.6）。P1 の間は足すだけ"}
+{"from":"lead","to":"all","what":"contract","ver":2,"why":"P0 のレビュー: 14 担当の質問を先に決めて足した（名前の変更・削除なし）。一覧は V2_PLAN §2.11、担当ごとの始め方は v2/README.md"}

@@ -35,7 +35,13 @@
       const d = defs[key];
       if (!d) return null;
       const k = ck(key, opts);
-      if (!cache.has(k)) { try { cache.set(k, d.factory(opts || {})); } catch (e) { console.error('[Hd stub]', key, e); cache.set(k, null); } }
+      if (!cache.has(k)) {
+        // factory が null を返したら「まだ焼けない」（原画の画像の読み込み待ちなど）。覚えずに次に呼ばれたときにまた試す（版 2）
+        let sh = null;
+        try { sh = d.factory(opts || {}); } catch (e) { console.error('[Hd stub]', key, e); }
+        if (!sh) return null;
+        cache.set(k, sh);
+      }
       return cache.get(k);
     },
     want() {},

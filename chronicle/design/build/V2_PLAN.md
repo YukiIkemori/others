@@ -167,8 +167,9 @@ chronicle/
 v2/
   README.md                      動かし方（ビルド・スクショ・テスト・フィクスチャ）
   assets/fonts/                  ZenMaru Medium/Bold（TTF）、Cinzel（woff2）、OFL の文
+  assets/sprites/<look>/         キャラの原画から作ったスプライトシート（CAST、§2.11）
   src/
-    core/     ns.js util.js bus.js engine.js fit.js gfx.js input.js save.js audio.js media.js     (CORE)
+    core/     ns.js util.js bus.js engine.js fit.js gfx.js input.js save.js audio.js media.js maputil.js contracts.js stubs/*   (CORE)
     render/   rz.js hd.js bake.js cache.js blur.js mood.js light.js post.js sky.js style.js     (RENDER)
     uik/      tokens.js text.js panel.js focus.js gauge.js icons.js list.js layer.js message.js prompts.js toast.js portrait_frame.js   (UIK)
     art/
@@ -205,7 +206,7 @@ v2/
     test_<担当>*.js                                                                              (各担当)
     sim_growth.js sim_glimmer.js sim_spells.js                                                   (RULES)
     sim_zones.js sim_bosses.js sim_loot.js                                                       (BATTLE)
-    lib/ load.js (CORE)  cond.js (EVENTS)  party_model.js (RULES)  maps.js (QA)
+    lib/ load.js testkit.js browser.js (CORE)  cond.js (EVENTS)  party_model.js (RULES)  maps.js (QA)
     qa/  validate.js progress.js playthrough.js shots_slice.js check_ui.js check_text.js check_voice.js voice_script.js
          check_leads.js check_chests.js check_secrets.js check_springs.js check_density.js check_world.js check_stubs.js
          slice_scope.js compare.js measure_night.js perf.js check_all.js   (QA)
@@ -641,6 +642,51 @@ CharState = { id, name, look, type?, gl, hp, mp, equip: {weapon1, shield, head, 
 
 - **測り方**: `node v2/tools/qa/perf.js` は Playwright の Chromium で dev.html を開き、CDP の `Emulation.setCPUThrottlingRate`（1 と 4）で決まった台本（町を 600 フレーム歩く・ワールドを走る・迷いの森の暗がり・効果の多い術の戦闘・メニューの開け閉め・マップの出入り 10 回）を流す。3 回の中央値を `v2/design/perf/<日付>.json` に残し、前の日より 20% 悪くなった項目を一覧に出す。ヘッドレスの数字は実機と違うので、**実機の確認はオーナーの端末で縦切りを見せるとき**（§7 の 9）。
 - **関門**: G1 でチャンク・人・魔物の焼く時間を各担当が報告（予算の 2 倍を超えたら P1 の中で作り直す）。P2 から毎日 `perf.js`。超えたら ART_REWORK §7.5 の順（効果の自動の下げ → 背景の層を 1 枚に → 影を半分の解像度 → コマ数を減らす）で削る。
+
+### 2.11 P0 のレビューで決めたこと（契約の版 2、2026-09-26、リード）
+
+14 担当の目で P0 の木（`contracts.js`・仮の実装）を読み、担当が聞きに来そうな所をすべて決めた。形は `v2/src/core/contracts.js`（`R.Contract.VERSION = 2`）、動く見本は仮の実装（`src/core/stubs/*`）、確かめは `tools/test_core_contract.js`・`test_core_wipe.js`。**版 1 の名前は 1 つも変えていない（足しただけ）**。担当ごとの「ここから始める」は `v2/README.md`。
+
+**全員**
+| 問い | 決定 |
+|---|---|
+| 仮の実装と本物が混ざるとどうなる | 仮は「本物に無い名前だけ」を埋める。仮の関数どうしは中の状態を共有するので、名前空間を全部本物にしたらそのファイルの先頭で `R.Stubs.claim('Field')` を呼ぶ（子の `Field.camera` なども仮で埋めなくなる）。1 担当が複数のファイルで同じ名前空間を作るときは `const F = (R.Field = R.Field || {})` の形（名前順に読まれるので `=` で上書きしない） |
+| 場面の id | `field`・`battle`・`message`・`caption`・`screen:<画面の id>`（`R.Contract.SCENE_IDS`）。不変条件・プレイ時間・テストがこの名前を読む |
+| uiScale は誰が掛ける | **位置と大きさを決める側**。`UIK.text/measure/fit/panel/card/focus/gauge/icon/stars/portraitFrame` に渡す座標・rect・文字の大きさは掛けた後の論理 px（`R.UIK.u(v)` = v × uiScale）。自分で並ぶ部品（`List` の rowH、`Message`、`toast`、`bubble`、`prompts`、`chip` の o.size）は掛ける前の値を受け取り中で掛ける。世界の中の文字（NPC の名前など）は掛けない |
+| 焼く仕事の予算（1 フレーム 3 ms）は誰が守る | `R.Hd.pump(3)` は **CORE が毎フレーム 1 回だけ** 呼ぶ。TERRAIN のチャンク・大きい絵の仕事は `R.Hd.schedule(job, prio)`（`K.bakeJob`）に積む。R.Hd の外で持つ焼いた絵（FIELD のチャンク、UIK のすりガラス）は `R.Hd.track(kind, id, bytes)` で量を届け、`stats()` に入る。キー → 予算の種類は `R.Hd.kindOf`（`HD_KINDS`） |
+| 共通のマップの読み方 | `R.MapUtil`（CORE の新しいファイル `core/maputil.js`）: `grid`（tilePatches を当てた行）・`cell`・`spawn`・`objectsAt`（泉 2×2・建物 w×h）・`zoneAt`・`darkAt`・`secretFound`・`invalidate`。FIELD・TERRAIN・QA（`tools/lib/maps.js`）は自前で読み直さない |
+| 隠し通路のセル | legend に `{mat:<壁>, solid:true, secret:true, floor:<床>}`。**通れる壁**（solid でも通れる）。入った瞬間に見つけ、`R.Game.secrets[map]` に `'x,y'` |
+| 画面の結果の形 | `R.Contract.SCREEN_RESULTS` の表（例: ハブは `{warp}`/`{escape}`/`{title}` を返し、閉じた後に FIELD が動く。宿の画面は `{stay}` だけ返し、お金・全快・lastInn・オートセーブは `ev.inn`） |
+| 名前の一覧 | 光の雰囲気 `MOODS`、地形のテーマ `THEMES`（`map.theme?`）、アイコン `ICONS`、絵のキーの形 `HD_KEYS`、素材と物の最初の id（`R.DB.materials`・`R.DB.props` の仮の登録。TERRAIN が 1 日目に同じ id で本物を置く） |
+| テストの道具 | node は `tools/lib/load.js`＋`tools/lib/testkit.js`（`ok/done`）、ブラウザは `tools/lib/browser.js`（手元の http・外への通信を止めて数える・不変条件・撮影）。見本は `test_core_contract.js`・`test_core_wipe.js` |
+
+**データの形（足した物。`R.Contract.check(kind, obj)` で確かめる）**: `hero`（主人公の作成の結果、`fav` = 得意）・`stats`（`R.Rules.stats` の名前）・`item`（`slot` で枠、武器は `wtype`。旧データの `type` は `port_items` が分ける）・`shop`・`skill`・`monster`（`size` は旧データのまま `'s'|'m'|'l'`、`sprite` が `hd:mon:<sprite>`）・`boss`・`troop`・`chestLoot`・`gain`・`fullHealResult`・`letter`・`tip`・`materialDef`・`propDef`・`bbgSheet`・`legendEntry`・`bakeJob`・`leadState`・`place`・`uikTokens`・`spriteMedia`・`wipeResult`。`map` に `theme?`、`npc` に `name?`・`title?`、トリガーの `on:'enter'` は範囲なし、`R.Game` に `uniques?`・`steps?`、戦闘の unit に `golden?`・`boss?`・`look?`。
+
+**足した関数**: `R.Hd.schedule/track/kindOf`・`R.UIK.u`・`R.UIK.Message.caption`・`UIK.Layer` の `open/close/k`・`UIK.List` の `cols`（←→ で列）・`onFocus`・`onDetail`（Y／長押し）・`R.Field.scene/locks`・`R.Events.isNew(map, npc)`（E19）・`R.State.gain/setHero/blankChar`・`R.Rules.chestLoot`・`R.Party.makeChar/restoreAll`・戦闘の `B.escape()`・`B.finish()`・`R.Flow.wipe(to)`・`R.MapUtil.*`・`R.Media.preload`・出来事 `'inn'`・画面 `'letter'`・データ `R.DB.letters/tips/materials/props`。
+
+**担当どうしの境目で決めたこと**
+| 所 | 決定 |
+|---|---|
+| 全快の 3 つ | `R.Party.restoreAll()` = ただで全快（宿・泉・無料の寝床・`ev.rest`・全滅の宿から。蘇生・状態も・控えも）。`R.Party.heal(all)` = 生きている人の HP/MP だけ（`ev.heal`）。`R.Party.fullHeal(o)` = **満タン（A2）**（術・道具を使う。`{dry:true}` で使う前の見込み）→ `K.fullHealResult` |
+| 人を作る所 | `R.Party.makeChar(id, {hero, tier, joinFrom})`（RULES）が初めの装備・熟練度・gl まで決める。`R.State.setHero` と `R.Party.join` はこれを呼ぶだけ |
+| 品を入れる所 | `R.State.gain(id, n)`（EVENTS）1 か所。`ev.item`・宝箱・店・戦闘の報酬が使う。`u_*` はその時のティアで `R.Rules.fillItem(item, {tier})` の値を `R.Game.uniques[id]` に写す。`R.Game.items` は袋の中の数（装備している物は数えない） |
+| 宝箱の中身 | `R.Rules.chestLoot(chest, tier, rng)`（RULES）→ `K.chestLoot`。乱数は `R.rng(seed + ':' + map + ':' + chestId)`。FIELD が開け、`R.State.gain` で入れる |
+| 戦闘の結果を書く所 | `B.finish()`（BATTLE）が 1 回だけ `R.Game` に写す（お金・品・図鑑・伸び `R.Growth.afterBattle`・熟練・HP/MP の持ち越し）。BSCENE は over の後に 1 回呼ぶ。`B.rewards()` は読むだけ。NEW の印は `R.Game.seenSkill`（BATTLE が options の `isNew` を付け、BSCENE が一覧を見せたら書く） |
+| 逃げる | ラウンドの初めの一行の命令 `'escape'` → `B.escape()` → 次の `B.round()` で判定 |
+| 全滅の宿・タイトル | BSCENE が場面を外す → （宿なら）`R.State.wipeRecover()` → `await R.Flow.wipe(to)`（CORE: イベントを abort・上の画面と会話を閉じる・`lastInn`→`lastTown`→`config.start` へ／タイトルへ）→ `{result:'abort', to}` で解決。FIELD と EVENTS は abort を受けても何もしない。`lastInn`・`lastTown` は `{map, x, y, dir}`（`K.place`） |
+| ボスの前のオートセーブ | `setup.boss` のとき BSCENE が場面を積む前に `R.Save.autosave('boss')`。セーブは戦闘の場面が積まれている間は拒む（CORE） |
+| 宿 | 画面（MENUS）は `{stay}` だけ。`ev.inn(price)`（EVENTS）がお金・暗転・`restoreAll`・`lastInn`・`autosave('inn')`・`R.emit('inn')`。E17 のティアの場面は EVENTS が `'inn'` と町の `'map:enter'` で `R.Tier.pending()` を見て `story_t<N>`（中身は CONTENT-P）を走らせる |
+| 手紙・キャプション | `ev.letter(id)` → `R.Screens.open('letter', {id})`（MENUS の画面、中身は `R.DB.letters[id]`＝CONTENT）。`ev.caption` → `R.UIK.Message.caption`（UIK） |
+| 話者の名前と顔 | 名前は `npc.name` → `R.DB.looks[look].name`。`face` を書かなければ、その look に顔（`R.Portrait.has`）があれば出す。`false` で出さない |
+| 新しい話（E19） | ハッシュは EVENTS だけが持つ（`R.Events.isNew(map, npc)`）。FIELD は吹き出しと「新しい話 ◯人」に使うだけ |
+| ワープの一覧 | FIELD が `location` の入口のマップ（`locations[id].map === map.id`、kind town/dungeon）に入ったとき `R.Game.warps[id] = true` |
+| 出現 | `R.Mon.encounter(zone, {tier, dark, steps, ward})`。`ward`（魔除けの香）の判断は BATTLE（弱い表だけ null）。出現しない所（泉 3 マス・灯籠 5 マス・町）は FIELD が呼ばない。乱数は `R.Game.seed` と `R.Game.steps` から |
+| 絵の描き方 | Sheet の `(ox, oy)` = 描く点（人と魔物は足元の中央）がコマの中のどこか。`anchors` は描く点からの相対（コマごとの上書き `frame.anchors`）。反転は描く点を軸に。金色は焼くときの opts `{golden}`（`draw` の tint ではない）。`factory` が null を返したら「まだ焼けない」（覚えずに次にまた試す） |
+| 戦闘背景 | `hd:bbg:<id>` は opts `{w, h}`（今の R.W・R.H）で焼き、`K.bbgSheet`（poses `back ground front? post?`、meta `{mood, lantern}`） |
+| 仕上げ | `R.Post.frame` は世界を描く場面（FIELD・BSCENE）が自分の draw の最後、HUD の前に呼ぶ。効果の自動の下げは RENDER が `'battle:start/end'` と `R.Engine.frameStats()` で測り、設定 `fx` は書き換えない（`quality()` が低い方を返す） |
+| チャンクの状態 | `bakeChunk(map, cx, cy, {tile, tier, state})` の `state = {grid: R.MapUtil.grid(map), chests, lit, lamps, secrets}`（`R.Game` の今の値）。座標はマップの論理 px |
+| キャラの絵（A34・A35） | 原画はオーナーが用意する。CAST の取り込み工程（`chronicle/design/sprite_pipe/`、python。CAST が持つ）の出力を **`v2/assets/sprites/<look>/<kind>.png`＋`.json`**（kind = field・battle・face、json = `{cell, anchor, poses, fps}`）に置く。ビルドが `RPG_MEDIA.sprites['<look>:<kind>']` にし（外に置く版は `dist/sprites/`、`--single` は埋め込み）、CAST は `R.onBoot` で `R.Media.preload('sprites')` を待ってから `hd:field/btl/face` を登録する。原画の無い人は仮の絵（骨組み）。アルンの設定資料は `hero_m_warrior` |
+| 設定の読み方 | 画面の言葉は MENUS、値は `R.Settings.CHOICES`。`uiSize` を変えると CORE が `R.fit` し直す |
 
 ---------------------------------------------------------------------------------------------------
 ## 3. 縦切りの範囲（序章＋ヴェルダの森、A31 ④）

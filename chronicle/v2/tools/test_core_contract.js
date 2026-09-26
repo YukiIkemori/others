@@ -17,6 +17,10 @@ ok('SCREEN_RESULTS covers every screen id', C.SCREEN_IDS.every((id) => C.SCREEN_
 ok('letter is a screen id', C.SCREEN_IDS.includes('letter'));
 ok('lists: MOODS/THEMES/ICONS/HD_KINDS', C.MOODS.includes('forest_night') && C.THEMES.length >= 7 && C.ICONS.includes('save') && C.HD_KINDS.bld === 'prop');
 ok('inn event name is registered', R.EVENTS.includes('inn'));
+ok('starter materials fit K.materialDef', Object.keys(R.DB.materials).length >= 30 && Object.values(R.DB.materials).every((d) => C.check('materialDef', d).ok));
+ok('starter props fit K.propDef', Object.keys(R.DB.props).length >= 30 && Object.values(R.DB.props).every((d) => C.check('propDef', d).ok));
+ok('UIK.Layer names', C.check('layer', new R.UIK.Layer({})).ok, C.check('layer', new R.UIK.Layer({})).errors);
+ok('UIK.List names', C.check('list', new R.UIK.List({ rows: [] })).ok);
 
 // ---------------------------------------------------------------- MapUtil
 R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'テスト' }, seed: 7 });
