@@ -68,7 +68,9 @@ part('C1 curve §4.14.2', () => {
 part('C2 boss HP §9.11.2', () => {
   // DESIGN's curve (§4.14.3). When R.Rules.K.hpBoss has moved on (the boss-balance pass, A12.5) the DESIGN numbers are
   // rescaled by K.hpBoss / DESIGN's curve — the engine is still checked cell by cell, and the stale table is one warning.
-  const designHb = (L) => M.curve(L).hp * (0.65 + 0.05 * U.clamp((L - 6) / 6, 0, 10));
+  // (the §4.14.3 worked examples use the plain hp(L) = 6 + 2.6L + 0.1L²; Part A13's K.MON_HP_PROF factor on top of it is
+  // part of the K.hpBoss / DESIGN scale below)
+  const designHb = (L) => (6 + 2.6 * L + 0.1 * L * L) * (0.65 + 0.05 * U.clamp((L - 6) / 6, 0, 10));
   const scale = (L) => M.hpBoss(L) / designHb(L);
   const moved = [9, 18, 33, 51, 58].some((L) => Math.abs(scale(L) - 1) > 1e-6);
   if (moved) warns.push(`K.hpBoss differs from DESIGN §4.14.3 (×${[9, 33, 58].map((L) => scale(L).toFixed(3)).join(' / ')} at Lb 9 / 33 / 58): the §4.14.3 / §9.11.2 HP tables need the new numbers (DESIGN owner)`);

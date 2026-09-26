@@ -100,7 +100,10 @@ log('\n## P1 1段の術（SP 1.3）で標準の魔物（Lb = LZ(T)+1）を倒す
 const p1 = [];
 for (let T = 0; T <= 9; T++) {
   const Lb = LZ(T) + 1, c = curve(Lb);
-  const d = magicDamage(magOf(T, 'N'), A('s_water_1'), { Lb, mdef: c.mdef });
+  // Part A13: the model caster's element proficiency is PEXP(T) (tools/lib/party_model.js) → × R.Rules.profPowerMul
+  const pr = R.Rules.profRank && K.PEXP && K.PROF_POWER ? R.Rules.profRank(K.PEXP[Math.min(T, K.PEXP.length - 1)]) : 0;
+  const pm = K.PROF_POWER ? 1 + Math.min(K.PROF_POWER.max, K.PROF_POWER.perRank * pr) : 1;
+  const d = magicDamage(magOf(T, 'N'), A('s_water_1'), { Lb, mdef: c.mdef }) * pm;
   p1.push(c.hp / d);
   log(`  T${T}: 術力 ${magOf(T, 'N')}・1 撃 ${f1(d)}・HP ${f1(c.hp)} → ${f2(c.hp / d)} 回   （Z ${f2(c.hp / magicDamage(magOf(T, 'Z'), A('s_water_1'), { Lb, mdef: c.mdef }))}・S ${f2(c.hp / magicDamage(magOf(T, 'S'), A('s_water_1'), { Lb, mdef: c.mdef }))}）`);
 }

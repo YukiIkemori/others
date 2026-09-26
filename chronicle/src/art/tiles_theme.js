@@ -686,27 +686,51 @@
   // Once found (R.Game.secrets) the crack is plain and a dotted outline of the
   // opening shows on the face (a 1px line of lit dots along the passage).
   /** paint the hint onto a wall Buf; mode 'face' | 'top'; found = already discovered */
+  // The hint is drawn relative to the pixels it lands on (not to the theme ramp), so it
+  // reads on every surface: a dark wall top (the pyramid labyrinth, the oblivion void)
+  // gets a crack with a lit lip, a light face a dark crack. Discolouration: a damp,
+  // mossy patch on stone (a dusty pale one on dark surfaces, frost on ice).
+  const lumOf = (t, v) => t.rr(v) * 0.3 + t.gg(v) * 0.59 + t.bb(v) * 0.11;
+  const SECRET_TINT = { iceblock: 0xe8f6ff, snowrock: 0xe8f0f8, void: 0x8a8aa6, canopy: 0x8a9a3a, reeds: 0x8a8a4a, bark: 0x5a7a2e };
   function secretHint(a, b, mode, found, x) {
-    const t = tk(), P = a.th.wl, dark = t.mul(P[0], 0.8), lit = P[Math.min(P.length - 1, 4)];
+    const t = tk(), P = a.th.wl, lit = P[Math.min(P.length - 1, 4)];
     const s = ((x || 0) * 7) & 15;
     const y0 = mode === 'top' ? 3 : 7;
-    // colour unevenness: a soft patch one step off
-    for (let y = y0; y < Math.min(16, y0 + 6); y++) for (let i = 4; i < 12; i++) {
-      const e = ((i - 7.5) / 4) ** 2 + ((y - y0 - 2.5) / 3) ** 2;
-      if (e < 1 && (i + y) % 2 === 0) b.set(i, y, t.mul(b.get(i, y), found ? 0.84 : 0.9));
+    let L = 0, n0 = 0;
+    for (let y = y0; y < Math.min(16, y0 + 8); y++) for (let i = 4; i < 12; i++) { const c = b.get(i, y); if (c !== t.NONE) { L += lumOf(t, c); n0++; } }
+    L = n0 ? L / n0 : 128;
+    const darkBase = L < 72;
+    const tint = a.th.secretTint || SECRET_TINT[a.th.wall] || (darkBase ? 0x8a8aa6 : 0x5e7a34);
+    // colour unevenness: a soft damp / dusty patch around the crack
+    for (let y = y0; y < Math.min(16, y0 + 7); y++) for (let i = 4; i < 12; i++) {
+      const e = ((i - 7.5) / 4) ** 2 + ((y - y0 - 3) / 3.4) ** 2;
+      if (e < 1 && (i + y) % 2 === 0) b.set(i, y, t.mix(b.get(i, y), tint, (found ? 0.4 : 0.3) * (1 - e * 0.5)));
     }
-    // the crack (short and thin until found)
+    // the crack (short until found): darker than what it splits, with a lit lip on its right
     const path = [[6, 0], [7, 1], [7, 2], [8, 3], [8, 4], [9, 5], [8, 6], [9, 7]];
-    const n = found ? path.length : 5;
+    const n = found ? path.length : 6;
     for (let k = 0; k < n; k++) {
       const [px, py] = path[k];
       const X = px + (s % 3) - 1, Y = y0 + py;
       if (Y > 15) break;
-      b.set(X, Y, dark);
-      if (found && Y + 1 < 16) b.set(X + 1, Y, t.mix(b.get(X + 1, Y), lit, 0.5));
+      const under = b.get(X, Y);
+      b.set(X, Y, darkBase ? t.mul(under, 0.42) : t.mul(under, 0.5));
+      if ((found || k % 2 === 0) && Y + 1 < 16) {
+        const r = b.get(X + 1, Y);
+        b.set(X + 1, Y, found ? t.mix(r, lit, 0.5) : t.shade(r, darkBase ? 0.2 : 0.14));
+      }
+    }
+    // a few specks of moss (or frost / dust) where the crack ends
+    if (!found) {
+      const fy = Math.min(15, y0 + n);
+      const fx = path[n - 1][0] + (s % 3) - 1;
+      for (const [dx, dy] of [[-1, 0], [1, -1], [0, 0]]) {
+        const X = fx + dx, Y = fy + dy;
+        if (Y < 16) b.set(X, Y, t.mix(b.get(X, Y), tint, 0.55));
+      }
     }
     if (found) {
-      b.set(10, y0 + 5, dark); b.set(11, y0 + 6, dark);
+      for (const [X, Y] of [[10, y0 + 5], [11, y0 + 6]]) if (Y < 16) b.set(X, Y, t.mul(b.get(X, Y), darkBase ? 0.35 : 0.5));
       // dotted outline of the opening (1px dots, every other pixel)
       const col = t.shade(lit, 0.35);
       if (mode === 'face') {
@@ -843,9 +867,61 @@
     oblivion: [0x101016, 0x545462, 0xe4e2dc, 0xffffff], demon: [0x3c0810, 0xa02030, 0xf07080, 0xffd0d8],
     tree: [0x1c4a3c, 0x3c9c84, 0xa8ece0, 0xffffff], manor: [0x2a1c34, 0x6c4c8c, 0xc8a8e8, 0xffffff],
   };
-  function lockDoor(a, capTop, x) {
+  function lockDoor(a, capTop, x, pair) {
     const top = capTop ? 4 : 2;
+    if (PLANK_LOCK[a.th.wall]) return plankLockDoor(a, capTop, x, pair);
     return lockOverlay(drawDoor(wallFace(a, capTop, x), 'door', top, a.th.door), top, a.theme);
+  }
+  // Wooden walls (the ghost ship's hull): full-width iron bars on a door that is as
+  // brown as the wall read as a banded chest, so these draw a tall plank door in a
+  // dark frame, strap hinges on the hinge side and a padlocked hasp on the latch side.
+  // pair: 'L' / 'R' for the left / right leaf of a double door (lock on the seam).
+  const PLANK_LOCK = { hull: 1 };
+  function plankLockDoor(a, capTop, x, pair) {
+    const t = tk(), top = capTop ? 2 : 1, b = wallFace(a, capTop, x);
+    const L = LEAF.wood, FR = 0x120c08;
+    const put = (i, y, c) => { if (i >= 0 && i < 16 && y >= 0 && y < 16) b.set(i, y, c); };
+    const x0 = pair === 'R' ? -1 : 2, x1 = pair === 'L' ? 16 : 13; // frame posts (outside the tile = none)
+    // dark doorway frame + lintel (the frame cuts through the rail, so the door is tall)
+    for (let y = top; y < 16; y++) { put(x0, y, FR); put(x0 - 1, y, t.mul(b.get(x0 - 1, y), 0.7)); put(x1, y, FR); put(x1 + 1, y, t.mul(b.get(x1 + 1, y), 0.8)); }
+    for (let i = Math.max(0, x0 - 1); i <= Math.min(15, x1 + 1); i++) { put(i, top, FR); put(i, top - 1, t.mul(b.get(i, top - 1), 0.7)); }
+    // the leaf: vertical planks, lit left edge, shadow under the lintel
+    const lx0 = x0 + 1, lx1 = x1 - 1;
+    for (let y = top + 1; y < 16; y++) for (let i = Math.max(0, lx0); i <= Math.min(15, lx1); i++) {
+      const k = (i - lx0) % 3;
+      let c = k === 2 ? L[1] : k === 0 ? L[3] : L[2];
+      if (y === top + 1) c = L[0];
+      else if (t.hash(i, y, 811) < 0.05) c = L[1];
+      b.set(i, y, c);
+    }
+    if (lx0 >= 0) for (let y = top + 2; y < 16; y++) b.set(lx0, y, L[4]);
+    // a round porthole in the upper leaf: the clearest "door" cue on a ship
+    const pc = pair === 'L' ? 9 : pair === 'R' ? 6 : 7.5, pcy = top + 4.5;
+    for (let y = top + 2; y <= top + 7; y++) for (let i = Math.floor(pc - 3); i <= Math.ceil(pc + 3); i++) {
+      const d = Math.hypot(i + 0.5 - (pc + 0.5), y + 0.5 - (pcy + 0.5));
+      if (d > 3.1) continue;
+      put(i, y, d > 2.2 ? (i + y < pc + pcy ? BRASS[3] : BRASS[1]) : d > 1.6 ? 0x0c1a1c : 0x1c3a40);
+    }
+    put(Math.round(pc) - 1, Math.round(pcy) - 1, 0x9ad0d0); put(Math.round(pc), Math.round(pcy) - 1, 0x4a8088);
+    // iron hinge pins on the frame side
+    const hingeLeft = pair !== 'R';
+    for (const hy of [top + 3, 13]) { const i = hingeLeft ? lx0 : lx1; put(i, hy, IRONB[3]); put(i, hy + 1, IRONB[1]); put(hingeLeft ? i + 1 : i - 1, hy, IRONB[2]); }
+    // latch side: iron hasp across the seam with a small brass padlock
+    const seam = pair === 'L' ? 16 : pair === 'R' ? 0 : null;
+    const hx = seam != null ? seam - 2 : lx1 - 3; // left x of the 4-wide lock
+    const py = top + 8;
+    for (let i = hx - 1; i <= hx + 4; i++) { put(i, py, IRONB[3]); put(i, py + 1, IRONB[1]); }
+    put(hx + 1, py + 2, IRONB[4]); put(hx + 2, py + 2, IRONB[2]);
+    for (let y = py + 3; y <= py + 5; y++) for (let i = hx; i <= hx + 3; i++) {
+      put(i, y, i === hx ? BRASS[4] : i === hx + 3 ? BRASS[1] : y === py + 3 ? BRASS[5] : y === py + 5 ? BRASS[1] : BRASS[3]);
+    }
+    put(hx + 1, py + 4, 0x100808); put(hx + 2, py + 4, 0x100808);
+    // the seam between the leaves of a double door
+    if (pair === 'L') for (let y = top + 1; y < 16; y++) if (y < py || y > py + 5) b.set(15, y, L[0]);
+    if (pair === 'R') for (let y = top + 1; y < 16; y++) if (y < py || y > py + 5) b.set(0, y, L[3]);
+    // threshold
+    for (let i = Math.max(0, lx0); i <= Math.min(15, lx1); i++) b.set(i, 15, t.mul(L[1], 0.6));
+    return b;
   }
   /** bars + padlock (or the theme's seal) over a door Buf whose opening starts at row top */
   function lockOverlay(b, top, theme) {
@@ -929,7 +1005,7 @@
     for (let i = 2; i < 15; i++) if ((i * 7) % 5 < 2) b.set(i, 15, t.mul(b.get(i, 15), 0.7));
     return b;
   }
-  A.lockDoorArt = (theme, capTop, x) => lockDoor(art(theme), capTop, x);
+  A.lockDoorArt = (theme, capTop, x, pair) => lockDoor(art(theme), capTop, x, pair);
   A.lockOverlay = (b, top, theme) => lockOverlay(b, top, theme);
   A.rockDoorArt = (theme, capTop, x) => rockDoor(art(theme), capTop, x);
 

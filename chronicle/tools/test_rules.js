@@ -81,12 +81,14 @@ test('K: constants of §4.18.1', () => {
   eq(Ru.WTYPES.filter((t) => w[t].reach), ['spear', 'bow', 'whip'], 'reach types');
   eq(w.staff.magMult, 1.0, 'staff magMult');
   const c = K.curve(30);
-  eq([Math.round(c.hp), Math.round(c.atk), Math.round(c.def), Math.round(c.agi), Math.round(c.exp), Math.round(c.gold)], [174, 69, 95, 42, 93, 80], 'monster curve L30 (§4.14.2)');
+  eq([Math.round(c.hp), Math.round(c.atk), Math.round(c.def), Math.round(c.agi), Math.round(c.exp), Math.round(c.gold)], [195, 69, 95, 42, 93, 80], 'monster curve L30 (§4.14.2; hp × (1 + 0.004·30) of K.MON_HP_PROF, Part A13)');
+  eq(K.MON_HP_PROF, { perLv: 0.004, max: 0.20 }, 'K.MON_HP_PROF (Part A13 retune)');
+  near(K.curve(60).hp / (6 + 2.6 * 60 + 0.1 * 3600), 1.20, 1e-9, 'MON_HP_PROF caps at +20 %');
   // A12.0 (2026-09-26): hpBoss = hp(L) × (0.65 + 0.025·(clamp(L, 18, 51) − 18)) (was 0.65 + 0.05·clamp((L−6)/6, 0, 10))
-  eq(Math.round(K.hpBoss(9) * 18), 439, 'region boss HP T0 (§4.14.3, A12.0)');
-  eq([Math.round(K.hpBoss(33) * 18), Math.round(K.hpBoss(51) * 18)], [3703, 10585], 'region boss HP T4 / T7 (A12.0)');
-  eq(Math.round(K.hpBoss(58) * 30), 21824, 'last boss 1 HP (A12.0: the tier term stops at L51)');
-  eq(K.hpBoss(68) / K.curve(68).hp, K.hpBoss(51) / K.curve(51).hp, 'the tier term is flat above L51');
+  eq(Math.round(K.hpBoss(9) * 18), 455, 'region boss HP T0 (§4.14.3, A12.0; × MON_HP_PROF, A13)');
+  eq([Math.round(K.hpBoss(33) * 18), Math.round(K.hpBoss(51) * 18)], [4192, 12703], 'region boss HP T4 / T7 (A12.0; × MON_HP_PROF, A13)');
+  eq(Math.round(K.hpBoss(58) * 30), 26189, 'last boss 1 HP (A12.0: the tier term stops at L51; × MON_HP_PROF, A13)');
+  near(K.hpBoss(68) / K.curve(68).hp, K.hpBoss(51) / K.curve(51).hp, 1e-12, 'the tier term is flat above L51');
   eq([K.BOSS.super.atk, K.BOSS.super.mag], [1.25, 1.25], 'super boss atk/mag ×1.25 (A12.1 b)');
 });
 

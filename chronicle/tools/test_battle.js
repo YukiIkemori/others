@@ -73,8 +73,8 @@ guard('R.Mon', () => {
   const M = R.Mon;
   const r = Math.round;
   const c6 = M.curve(6), c30 = M.curve(30);
-  ok([r(c6.hp), r(c6.atk), r(c6.def), r(c6.agi), r(c6.exp), r(c6.gold)].join() === '25,17,35,28,12,8', 'curve(6) = the §4.14.2 table');
-  ok([r(c30.hp), r(c30.atk), r(c30.def), r(c30.agi), r(c30.exp), r(c30.gold)].join() === '174,69,95,42,93,80', 'curve(30) = the §4.14.2 table');
+  ok([r(c6.hp), r(c6.atk), r(c6.def), r(c6.agi), r(c6.exp), r(c6.gold)].join() === '26,17,35,28,12,8', 'curve(6) = the §4.14.2 table (hp × MON_HP_PROF, Part A13)');
+  ok([r(c30.hp), r(c30.atk), r(c30.def), r(c30.agi), r(c30.exp), r(c30.gold)].join() === '195,69,95,42,93,80', 'curve(30) = the §4.14.2 table (hp × MON_HP_PROF, Part A13)');
   // the boss-balance pass (A12.5) moved the curve into R.Rules.K.hpBoss; R.Mon.hpBoss must follow it, else the §4.14.3 default
   const kHp = R.Rules && R.Rules.K && typeof R.Rules.K.hpBoss === 'function' ? R.Rules.K.hpBoss : null;
   if (kHp) near(M.hpBoss(18), kHp(18), 1e-9, 'hpBoss(L) follows R.Rules.K.hpBoss');

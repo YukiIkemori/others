@@ -294,7 +294,11 @@
       });
     }
     const cap = !wallish(up) && !HOUSE[up], px = facePos(theme, x);
-    if (id === 'lockdoor') return cached('ld|' + theme + '|' + cap + '|' + px, () => canvas(A.lockDoorArt(theme, cap, px)));
+    if (id === 'lockdoor') {
+      // double doors (two lockdoor cells side by side): left / right leaf, lock on the seam
+      const pair = r === 'lockdoor' && l !== 'lockdoor' ? 'L' : l === 'lockdoor' && r !== 'lockdoor' ? 'R' : '';
+      return cached('ld|' + theme + '|' + cap + '|' + px + '|' + pair, () => canvas(A.lockDoorArt(theme, cap, px, pair)));
+    }
     if (id === 'rock_door') return cached('rd|' + theme + '|' + cap + '|' + px, () => canvas(A.rockDoorArt(theme, cap, px)));
     return cached('wd|' + theme + '|' + id + '|' + cap + '|' + px, () => canvas(A.doorArt(theme, id, cap, null, px)));
   }

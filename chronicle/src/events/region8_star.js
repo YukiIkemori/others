@@ -249,31 +249,14 @@
       await ev.caption('その夜は、町の宿で眠った。');
       ev.heal();
       await ev.warp('orbis', 'inn', { fade: false });
-      if (has('story_after_clear')) await morning(ev);
+      // story_after_clear shows 「翌朝――」 on the dark screen and fades the morning in itself (D6);
+      // it plays nothing when this tier's scene has already run: never leave the screen dark
+      if (has('story_after_clear')) await ev.call('story_after_clear');
       else await ev.caption('翌朝――');
       if (R.Engine.fadeAlpha > 0) await ev.fadeIn(30);
       ev.bgm();
     },
   };
-
-  /** story_after_clear on the dark screen: its 「翌朝――」 caption shows on black, then the screen
-   *  comes back before the tier scene plays (the scene itself never fades in). A watcher fades in as
-   *  soon as the screen is dark with no caption stage on it; it does nothing when story fades in itself. */
-  async function morning(ev) {
-    const Eng = R.Engine;
-    let done = false;
-    const call = ev.call('story_after_clear').finally(() => { done = true; });
-    const watch = (async () => {
-      await ev.wait(2);
-      while (!done) {
-        const staged = (Eng.layers || []).some((l) => l && l.isStage);
-        if (!staged && Eng.fadeAlpha > 0 && !Eng._fade) { await ev.fadeIn(30); return; }
-        await ev.wait(1);
-      }
-    })();
-    await call;
-    await watch;
-  }
 
   // ------------------------------------------------------------ 観測台の大望遠鏡
   E.stargaze_4_telescope = {

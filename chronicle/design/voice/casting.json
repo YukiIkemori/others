@@ -237,7 +237,7 @@
   "v_berna_prologue_03": "Playful curiosity, fond affection, warm relaxed pace, tender medium volume.",
   "v_berna_prologue_04": "Guiding mentor, anticipatory warmth, gentle unhurried pace, welcoming volume.",
   "v_berna_roa_01": "Confused nostalgia, fading memory stirring, slow hesitant pace, soft wondering volume.",
-  "v_berna_roa_02": "Tearful pride, emotional homecoming, trembling warm pace, rich choked volume.",
+  "v_berna_roa_02": "Tearful pride, emotional homecoming, trembling warm pace, rich choked volume. Pronunciation: 書いた is read \"かいた\" (ka-i-ta, \"wrote\" — the hero wrote the chronicle); do NOT say \"かえった\" (returned).",
   "v_berna_roa_03": "Sage remembrance, guiding legacy, steady reverent pace, clear medium volume.",
   "v_berna_roa_04": "Loving blessing, passing the torch, tender slow pace, soft affectionate volume.",
   "v_elm_forest_01": "Awakening clarity, ancient remorse, measured slow pace, deep resonant volume.",
@@ -366,6 +366,6 @@
   "v_valzard_oblivion_03": "Faint reverence, defeat and memory, dying slow pace, fading raspy whisper."
  },
  "readings": {
-  "v_berna_roa_02": "おかえり。……よく、ここまでかいたね。"
+  "v_berna_roa_02": "おかえり。……よく、ここまで　かいたね。"
  }
 }
