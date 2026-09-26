@@ -39,6 +39,8 @@
   const NIGHT = '#0c1238', DAWN = '#ffb27a';
   /** a scene NPC present on this map (hidden ones included) */
   const npcOn = (ev, id) => !!(R.Field && R.Field.npc && R.Field.npc(id));
+  /** clear the pier for a scene: Marina's cottage figure and the angler step aside */
+  const clearPier = (ev) => { for (const id of ['marina', 'marina_song', 'marina_wait', 'marina_home', 'pier_fisher']) if (npcOn(ev, id)) ev.npc(id).hide(); };
 
   // ================================================================ 1 coral_intro (onEnter coral)
   E.coral_intro = {
@@ -141,6 +143,7 @@
       await ev.warp('nerei', 'pier', { fade: false, dir: 'right' });
       const night = tint(NIGHT, 0.5);
       try {
+        clearPier(ev);
         const m = ev.npc('marina_pier');
         m.show(); m.face('right');
         if (npcOn(ev, 'ghostship')) ev.npc('ghostship').hide();
@@ -340,6 +343,7 @@
       await ev.warp('nerei', 'pier', { fade: false, dir: 'right' });
       const dawn = tint(DAWN, 0.28);
       try {
+        clearPier(ev);
         const m = ev.npc('marina_pier'), gl = ev.npc('glen_pier');
         m.show(); gl.show();
         m.face('right'); gl.face('left');

@@ -56,7 +56,7 @@ for (const row of flowRows) {
   const cols = row.split('|');
   const flow = cols[4] || '';
   for (const m of flow.matchAll(/「([^」]+)」/g)) {
-    let q = m[1].replace(/\\n/g, '\n');
+    let q = m[1].replace(/\\n/g, '\n').replace(/♪ /g, '♪　'); // STYLE_JA §3: a full-width space after ♪ (DESIGN writes a half-width one)
     if (/^[a-z_]+$/.test(q)) continue;
     quoted.push(q);
   }

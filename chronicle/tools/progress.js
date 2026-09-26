@@ -290,7 +290,9 @@ function analyse(R, o) {
   out.unreached = unreached; out.chestsMissing = chestsMissing;
   const V = require('./validate');
   for (const m of unreached) E(V.expectedMapOwner(m) || 'A18a', `map ${m} is never reached`);
-  if (chestsMissing.length) W('A22', `${chestsMissing.length} chest(s) unreachable: ${chestsMissing.slice(0, 12).join(' ')}${chestsMissing.length > 12 ? ' …' : ''}`);
+  const chestBy = {};
+  for (const c of chestsMissing) { const o = V.expectedMapOwner(String(c).split(':')[0]) || 'A22'; (chestBy[o] = chestBy[o] || []).push(c); }
+  for (const [o, l] of Object.entries(chestBy)) W(o, `${l.length} chest(s) unreachable: ${l.slice(0, 12).join(' ')}${l.length > 12 ? ' …' : ''}`);
   if (!full.flags.has('game_clear')) E('A19', `game_clear is never reached (regions cleared: ${full.cleared.join(' ') || 'none'})`);
   const neverCleared = new Set(realRegions.filter((r) => !full.cleared.includes(r)));
   for (const r of neverCleared) E(REGION_OWNER[r] || 'A18a', `region ${r} is never cleared`);

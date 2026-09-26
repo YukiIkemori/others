@@ -101,14 +101,23 @@ const REGIONS = ['r_forest', 'r_desert', 'r_snow', 'r_marsh', 'r_isles', 'r_mine
 // floors (non-boss rooms count as one floor each) per dungeon zone (§10.6.2); the world zone gets 40 %
 const FLOORS = { z_r_forest_maze: 2, z_r_forest_tree: 2, z_r_desert_tomb: 3, z_r_snow_peak: 3, z_r_marsh_manor: 2, z_r_marsh_bog: 1,
   z_r_isles_cave: 1, z_r_isles_ship: 3, z_r_mine_mine: 3, z_r_ash_volcano: 3, z_r_star_tower: 4 };
+// §10.6.4 rare-monster rooms: a small room behind a secret wall that other owners register as a copy of a zone
+// with the rare rate ÷ 3 (z_r_marsh_teaparty, z_r_mine_den, …). Not in src/data/rare_encounters.js. A player
+// fights there about ROOM_BATTLES times per visit of the region, not a floor's share.
+const MY_RARE = (() => { const sb = { DB: { rareEncounters: {} } }; new Function('window', fs.readFileSync(path.join(__dirname, '..', 'src', 'data', 'rare_encounters.js'), 'utf8'))({ RPG: sb }); return sb.DB.rareEncounters; })();
+const isRoom = (z) => !!(DB.encounters[z] && DB.encounters[z].rareRoom) || (!!DB.rareEncounters[z] && !MY_RARE[z]);
+const ROOM_BATTLES = 2;
 function zoneShare(region) {
   const zones = Object.keys(DB.encounters).filter((z) => DB.encounters[z].region === region);
-  const world = zones.filter((z) => z.startsWith('zw_'));
-  const dung = zones.filter((z) => !z.startsWith('zw_'));
+  const rooms = zones.filter(isRoom);
+  const world = zones.filter((z) => z.startsWith('zw_') && !isRoom(z));
+  const dung = zones.filter((z) => !z.startsWith('zw_') && !isRoom(z));
   const fl = dung.map((z) => FLOORS[z] || 2), tot = fl.reduce((s, x) => s + x, 0);
+  const roomW = ROOM_BATTLES / 95, rest = 1 - roomW * rooms.length;
   const out = [];
-  for (const z of world) out.push({ z, w: 0.4 / world.length });
-  dung.forEach((z, i) => out.push({ z, w: 0.6 * fl[i] / tot }));
+  for (const z of world) out.push({ z, w: rest * 0.4 / world.length });
+  dung.forEach((z, i) => out.push({ z, w: rest * 0.6 * fl[i] / tot }));
+  for (const z of rooms) out.push({ z, w: roomW });
   return out;
 }
 function groupsAt(zone, T) {

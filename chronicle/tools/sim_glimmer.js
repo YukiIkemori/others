@@ -273,10 +273,12 @@ U.seed(SEED);
 
 const lv19 = (id) => DB.actions[id] && DB.actions[id].glim.lv <= 9;
 const cls = (id) => { const a = DB.actions[id]; return a.kind === 'tech' ? 'tech' : a.cls; };
+// §6.9.4: §4.9.5 の閃きの目標は技の lv 1〜9（110 個）で数える。lv 10（極意）は本編の目標の外なので数えない（secret に別に数える）。
 function countBy(snap, key) {
   const s = snap.find((x) => x.key === key);
-  const out = { total: s.techs.length + s.spells.length, techs: s.techs.length, spells: s.spells.length, byW: {}, single: 0, comboA: 0, comboB: 0, triple: 0 };
-  for (const id of s.techs) { const w = DB.actions[id].wtype; out.byW[w] = (out.byW[w] || 0) + 1; }
+  const techs = s.techs.filter(lv19);
+  const out = { total: techs.length + s.spells.length, techs: techs.length, spells: s.spells.length, secret: s.techs.length - techs.length, byW: {}, single: 0, comboA: 0, comboB: 0, triple: 0 };
+  for (const id of techs) { const w = DB.actions[id].wtype; out.byW[w] = (out.byW[w] || 0) + 1; }
   for (const id of s.spells) out[cls(id)]++;
   return out;
 }

@@ -177,7 +177,7 @@
     ev.sfx('quill');
     await ev.wait(30);
     ev.jingle('chapter');
-    await ev.caption('年代記に、外伝『円環の竜』が\n記された。', { frames: 220 });
+    await ev.caption('年代記に、外伝『円環の竜』が\n記された。', { frames: 220, highlight: '『円環の竜』' }); // gold title, as the chapter captions
     ev.sfx('page');
     R.Game.title = TITLE;
     ev.setFlag('pg_clear');

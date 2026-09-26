@@ -468,7 +468,23 @@ function mockEv(map, log) {
   ok(tall === 0, 'no page over 4 lines');
   ok(!strings.some((s) => /アルン/.test(s)), 'no hard-coded hero name');
 
-  // ------------------------------------------------------------------ 9. art keys used by the maps exist (or are registered here)
+  // ------------------------------------------------------------------ 9. decor sits where it belongs
+  section('decor');
+  for (const id of MAPS) {
+    const Pm = P[id];
+    let wallOnFloor = 0, floorOnWall = 0;
+    for (let y = 0; y < Pm.h; y++) for (let x = 0; x < Pm.w; x++) {
+      const d = Pm.decorDef(x, y);
+      if (!d) continue;
+      const t = DB.tiles[Pm.tileAt(x, y)] || {};
+      if (d.wall && t.pass) { wallOnFloor++; console.log('  wall decor on floor ' + id + ' ' + x + ',' + y + ' ' + Pm.decorAt(x, y)); }
+      if (!d.wall && !t.pass) { floorOnWall++; console.log('  floor decor on a wall ' + id + ' ' + x + ',' + y + ' ' + Pm.decorAt(x, y)); }
+    }
+    ok(!wallOnFloor, id + ': wall decor only on walls');
+    ok(!floorOnWall, id + ': floor decor only on walkable cells');
+  }
+
+  // ------------------------------------------------------------------ 10. art keys used by the maps exist (or are registered here)
   section('art');
   const keys = new Set();
   for (const id of MAPS) for (const o of P[id].npcs) keys.add(o.sprite);
