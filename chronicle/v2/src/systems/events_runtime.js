@@ -22,6 +22,7 @@
 //   chooseCompanions({count}) → ids（R.Party.join までここ）/ createHero() → K.hero（B で戻ったらもう一度開く）
 //   clearRegion(rid)            ページ → cleared・tier+1・pendingTier・章の数 → 地方の目印を外す → R.Tier.celebrate → 'region:clear'
 //   letter(id) → R.Screens.open('letter') / mini.sequence・mini.timing → R.Mini
+//   lore(id) → bool             読み物を書庫へ（旗 = id。呼ぶ側が先に旗を立てていても通知は出す）
 (function (R) {
   'use strict';
   if (R.Stubs && R.Stubs.claim) R.Stubs.claim('Events');
@@ -207,6 +208,17 @@
         if (!h) h = (R.DB.config && R.DB.config.defaultHero) || { type: 'warrior', sex: 'm', name: 'アルン' };
         R.State.setHero(h);
         return h;
+      },
+      /** 読み物（R.DB.lore の lo_*）を書庫へ: 旗 = id（CONTENT-P・F の今の形のまま）。右上に通知する（呼ぶ側が once を守る）。初めてなら true */
+      lore(id) {
+        guard();
+        const first = !G().flags[id];
+        if (first) { G().flags[id] = true; R.emit('flag', { id, v: true }); }
+        const d = R.DB.lore && R.DB.lore[id];
+        const txt = '書庫に書き写した' + (d && d.title ? '：' + d.title : '');
+        try { if (R.Field && R.Field.hud && R.Field.hud.toast && R.Engine.has('field')) R.Field.hud.toast(txt, { icon: 'book' }); else R.UIK.toast(txt, { icon: 'book', anchor: 'tr' }); } catch (e) { /* */ }
+        try { R.Audio.sfx('quill'); } catch (e) { /* */ }
+        return first;
       },
       lead(id) { guard(); return R.Leads.add(id); },
       leadDone(id) { guard(); return R.Leads.done(id); },

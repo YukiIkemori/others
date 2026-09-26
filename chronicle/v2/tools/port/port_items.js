@@ -358,6 +358,12 @@ for (const id of Object.keys(I)) {
   use: { target: 'party', effects: [{ type: 'light', r: 6, steps: 200 }], fx: 'fire', battle: false, field: true },
 };
 
+// ------------------------------------------------------------ v2 で足す報酬（V2_PLAN §3.4 q_fern_letters、CONTENT-F の依頼）
+(out['items_acc_reward.js'] = out['items_acc_reward.js'] || {}).ac_climb_shoes = {
+  name: '木登りの靴', grade: 'normal', tier: 1, src: 'reward', mods: { spd: 3, eva: 3 }, price: 0,
+  desc: '身軽に動ける。\nかわしやすい。', slot: 'acc', icon: 'ring', sort: 104,
+};
+
 // ------------------------------------------------------------ 盗み専用（§7.2。V2_PLAN §2.6.6: ボスの率は 16）
 const E6 = (v) => Object.fromEntries(ELEMENTS.map((e) => [e, v]));
 const ST = (slot, T, name, mods, abil, o) => Object.assign({ name, slot, grade: 'super', tier: T, src: 'steal', stealOnly: true }, o || {}, mods ? { mods } : {}, abil ? { abil } : {});

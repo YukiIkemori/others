@@ -142,6 +142,14 @@
     return n;
   }
   State.owned = function (id) { return owned(R.Game, id); };
+  /** 年代記に書いた「痛み」の数（STORY_BIBLE §12.1）: vars.pain_count と、choices の ch_*_write === 'pain' の多い方 */
+  State.painCount = function (G) {
+    G = G || R.Game;
+    if (!G) return 0;
+    const v = (G.vars && G.vars.pain_count) || 0;
+    const c = Object.keys(G.choices || {}).filter((k) => /^ch_.*_write$/.test(k) && G.choices[k] === 'pain').length;
+    return Math.max(v, c);
+  };
 
   State.gain = function (id, n) {
     const G = R.Game;

@@ -475,6 +475,57 @@
     },
     /** HP・MP を満たし、状態を消す（生き返る）。1 人だけ。一行は R.Party.restoreAll */
     fullRestore(c) { const st = Rules.stats(c); c.hp = st.maxHp; c.mp = st.maxMp; c.status = []; return c; },
+    /**
+     * フィールド（メニュー）で道具・術を使ったときの効き目（MENUS の依頼。式は戦闘と同じ = R.Mon.healAmount の決まり）。
+     * action は品か技・術の定義（a.use があればそれ）、caster は術を唱える人（道具は null）、targets は CharState の配列。
+     * MP の支払いと品の数は呼ぶ側（MENUS）。→ {changed, lines:[文]}
+     *   heal: 最大HP × pct × 回復の力（術: HEALF(精神) × (1 + healPct) × 熟練、道具: 1 + 使う人の itemPct）
+     *   healMp: ceil(最大MP × pct)、revive: 倒れた人を最大HP × pct（既定 0.25）で、cure: 状態を消す
+     *   encounter（魔除けの香 pct < 0）・light（松明）は R.Field.encounter.ward / R.Field.light があれば渡す
+     */
+    fieldUse(action, caster, targets, o) {
+      const a = action || {};
+      const use = a.use || a;
+      const lines = [];
+      let changed = false;
+      const cm = caster ? Rules.mods(caster) : null;
+      for (const c of targets || []) {
+        if (!c) continue;
+        const st = Rules.stats(c);
+        const hp0 = c.hp, mp0 = c.mp, dead = !(c.hp > 0);
+        const mul = caster
+          ? Rules.healF(caster) * (1 + ((cm.healPct || 0) / 100)) * (Rules.profPowerMul(caster, a) || 1)
+          : 1 + ((Rules.mods(c).itemPct || 0) / 100);
+        for (const e of use.effects || []) {
+          if (e.type === 'revive' && dead) { c.hp = Math.max(1, Math.floor(st.maxHp * (e.pct != null ? e.pct : 0.25))); c.status = []; }
+          else if (e.type === 'heal' && c.hp > 0) {
+            const n = e.pct != null ? st.maxHp * e.pct : e.power || 0;
+            if (n > 0) c.hp = Math.min(st.maxHp, c.hp + Math.max(1, Math.round(n * mul)));
+          } else if (e.type === 'healMp' && c.hp > 0) {
+            const n = e.pct != null ? Math.ceil(st.maxMp * e.pct) : e.power || 0;
+            if (n > 0) c.mp = Math.min(st.maxMp, (c.mp || 0) + n);
+          } else if (e.type === 'cure' && c.hp > 0 && Array.isArray(c.status) && c.status.length) {
+            const list = e.statuses === 'all' || !e.statuses ? null : e.statuses;
+            const before = c.status.length;
+            c.status = list ? c.status.filter((s) => !list.includes(s)) : [];
+            if (c.status.length !== before) { changed = true; lines.push(c.name + 'の状態が治った。'); }
+          }
+        }
+        if (c.hp !== hp0) { changed = true; lines.push(dead ? `${c.name}が起き上がった。` : `${c.name}のHPが ${c.hp - hp0} 回復した。`); }
+        if (c.mp !== mp0) { changed = true; lines.push(`${c.name}のMPが ${c.mp - mp0} 回復した。`); }
+      }
+      const F = R.Field;
+      for (const e of use.effects || []) {
+        if (e.type === 'encounter' && (e.pct || 0) < 0 && F && F.encounter && F.encounter.ward) {
+          F.encounter.ward(e.steps || 100); changed = true; lines.push('弱い魔物が寄ってこなくなった。');
+        } else if (e.type === 'encounter' && (e.pct || 0) > 0 && F && F.encounter && F.encounter.lure) {
+          F.encounter.lure(e.steps || 100, e.pct); changed = true; lines.push('魔物が寄ってくるようになった。');
+        } else if (e.type === 'light' && F && F.light) {
+          F.light(e.r || 6, e.steps || 200); changed = true; lines.push('あたりが明るくなった。');
+        }
+      }
+      return { changed, lines };
+    },
 
     // ------------------------------------------------------------ 熟練度（SYSTEMS_REWORK §1、STATS_REWORK §5）
     prof(c, kind, id) { const t = kind === 'e' ? c.eprof : c.wprof; return (t && t[id]) || 0; },

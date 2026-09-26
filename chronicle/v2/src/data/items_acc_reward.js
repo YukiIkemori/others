@@ -1,8 +1,20 @@
-// items_acc_reward.js — 語りの報酬 11（RULES。K.item。数値は R.Rules.fillItem が R.onData で埋める）
+// items_acc_reward.js — 語りの報酬 12（RULES。K.item。数値は R.Rules.fillItem が R.onData で埋める）
 // 生成: node v2/tools/port/*.js（今の木から移した結果。以後はこのファイルが正）
 (function (R) {
   'use strict';
   R.defs('items', {
+  ac_climb_shoes: {
+    name: '木登りの靴',
+    grade: 'normal',
+    tier: 1,
+    src: 'reward',
+    mods: { spd: 3, eva: 3 },
+    price: 0,
+    desc: '身軽に動ける。\nかわしやすい。',
+    slot: 'acc',
+    icon: 'ring',
+    sort: 104,
+  },
   ac_keeper_lantern: {
     name: '灯台守のランタン',
     grade: 'rare',
