@@ -15,7 +15,8 @@
   "prof": "auto",
   "flags": {
     "prologue_start": true,
-    "prologue_berna": true
+    "prologue_berna": true,
+    "prologue_pharos": true
   },
   "vars": {},
   "items": {},

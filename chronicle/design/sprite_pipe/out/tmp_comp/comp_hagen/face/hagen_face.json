@@ -1,0 +1,146 @@
+{
+ "character": "hagen",
+ "set": "face",
+ "image": "hagen_face.png",
+ "cell": [
+  72,
+  84
+ ],
+ "anchor": [
+  36,
+  81
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "face_neutral": {
+   "x": 0,
+   "y": 0,
+   "w": 72,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     36,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  "face_smile": {
+   "x": 72,
+   "y": 0,
+   "w": 72,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     35,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  "face_surprise": {
+   "x": 144,
+   "y": 0,
+   "w": 72,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     34,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  "face_pain": {
+   "x": 216,
+   "y": 0,
+   "w": 72,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     34,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#080708",
+  "#161113",
+  "#282223",
+  "#322a2b",
+  "#383332",
+  "#46393a",
+  "#443e3c",
+  "#574748",
+  "#564e4a",
+  "#635854",
+  "#67625e",
+  "#766061",
+  "#746862",
+  "#817771",
+  "#91817a",
+  "#968c84",
+  "#a2968e",
+  "#aea39c",
+  "#c2b7ae",
+  "#d2c4b9",
+  "#d8cec4",
+  "#ede5da",
+  "#f8eddf",
+  "#856d6c",
+  "#9b807e",
+  "#b69693",
+  "#c0a19c",
+  "#cab2a9",
+  "#f6e7d1"
+ ],
+ "facing": "slightly right",
+ "target_height": 80
+}

@@ -182,7 +182,7 @@
   R.onBoot(function () {
     if (!R.on) return;
     // 歩いている間に列で（§2.10: 4 人の戦闘の絵 → 魔物 → 背景）
-    R.on('map:enter', () => { for (const k of cast.battleKeys()) R.Hd.want(k, undefined, 2); });
+    R.on('map:enter', () => { for (const k of cast.battleKeys()) R.Hd.want(k, undefined, -1); });   // ほかの絵（チャンク・フィールドの人）の後
     R.on('battle:start', () => { repin(); });
   });
 })(window.RPG);

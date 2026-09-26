@@ -1,0 +1,27 @@
+{
+  "desc": "CAST: 仮の夜道に見本の 4 人（アルン・セルマ・シルヴァン・ヴィオラ）。戦闘の場面の元",
+  "hero": {
+    "type": "warrior",
+    "sex": "m",
+    "name": "アルン"
+  },
+  "party": [
+    "hero",
+    "selma",
+    "sylvain",
+    "viola"
+  ],
+  "reserve": [],
+  "tier": 0,
+  "gl": "auto",
+  "prof": "auto",
+  "flags": {},
+  "vars": {},
+  "items": {},
+  "gold": 120,
+  "leads": [],
+  "map": {
+    "id": "stub_road",
+    "spawn": "start"
+  }
+}

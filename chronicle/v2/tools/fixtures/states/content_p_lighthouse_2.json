@@ -21,7 +21,8 @@
     "prologue_berna": true,
     "prologue_party": true,
     "prologue_key": true,
-    "prologue_tutorial": true
+    "prologue_tutorial": true,
+    "prologue_pharos": true
   },
   "vars": {},
   "items": {

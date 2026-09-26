@@ -1,0 +1,37 @@
+{
+ "id": "hagen",
+ "name": "ハーゲン",
+ "look": "hagen",
+ "weaponType": "greatsword",
+ "weaponDrawn": "notched broad two-handed sword",
+ "heightDots": {
+  "battle": 68,
+  "field": 51,
+  "face": 80
+ },
+ "measureH": {
+  "battle": 68,
+  "field": 51
+ },
+ "row": "front",
+ "split4": true,
+ "sheets": {
+  "1": "comp_hagen_s1.png",
+  "2": "comp_hagen_s2.png",
+  "3": "comp_hagen_s3.png",
+  "4": "comp_hagen_s4.png",
+  "4b": "comp_hagen_s4b.png",
+  "5": "comp_hagen_s5.png"
+ },
+ "used": {
+  "weapons": "out/tmp_comp/arun_ref/weapons/arun_weapons.json",
+  "grip_from": "out/tmp_comp/arun_ref/battle_bare/arun_battle_bare.json"
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "surprise": "face_surprise",
+  "sad": "face_pain",
+  "angry": "face_neutral"
+ }
+}

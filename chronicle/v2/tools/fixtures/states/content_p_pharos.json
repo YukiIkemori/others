@@ -19,7 +19,8 @@
   "flags": {
     "prologue_start": true,
     "prologue_berna": true,
-    "prologue_party": true
+    "prologue_party": true,
+    "prologue_pharos": true
   },
   "vars": {},
   "items": {},

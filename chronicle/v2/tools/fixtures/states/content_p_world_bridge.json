@@ -23,7 +23,8 @@
     "prologue_key": true,
     "prologue_tutorial": true,
     "prologue_boss": true,
-    "prologue_done": true
+    "prologue_done": true,
+    "prologue_pharos": true
   },
   "vars": {},
   "items": {},

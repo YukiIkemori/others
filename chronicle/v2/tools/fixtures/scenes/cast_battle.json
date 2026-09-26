@@ -1,0 +1,8 @@
+{
+  "scene": "battle",
+  "desc": "CAST: 見本の 4 人（剣・剣・弓・杖）で戦闘。hd:btl の絵を戦場で見る",
+  "state": "cast_road",
+  "setup": {
+    "troop": "tr_stub"
+  }
+}

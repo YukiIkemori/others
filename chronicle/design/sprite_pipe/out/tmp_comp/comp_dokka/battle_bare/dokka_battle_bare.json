@@ -1,0 +1,305 @@
+{
+ "character": "dokka",
+ "set": "battle_bare",
+ "image": "dokka_battle_bare.png",
+ "cell": [
+  64,
+  58
+ ],
+ "anchor": [
+  32,
+  54
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "bare_idle": {
+   "x": 0,
+   "y": 0,
+   "w": 64,
+   "h": 58,
+   "anchor": [
+    32,
+    54
+   ],
+   "points": {
+    "head": [
+     31,
+     4
+    ],
+    "center": [
+     34,
+     31
+    ],
+    "front": [
+     14,
+     34
+    ],
+    "grip": [
+     24,
+     34
+    ],
+    "tip": [
+     7,
+     49
+    ]
+   }
+  },
+  "bare_windup": {
+   "x": 64,
+   "y": 0,
+   "w": 64,
+   "h": 58,
+   "anchor": [
+    32,
+    54
+   ],
+   "points": {
+    "head": [
+     26,
+     3
+    ],
+    "center": [
+     33,
+     28
+    ],
+    "front": [
+     11,
+     52
+    ],
+    "grip": [
+     49,
+     14
+    ],
+    "tip": [
+     66,
+     -11
+    ]
+   }
+  },
+  "bare_slash": {
+   "x": 128,
+   "y": 0,
+   "w": 64,
+   "h": 58,
+   "anchor": [
+    32,
+    54
+   ],
+   "points": {
+    "head": [
+     22,
+     3
+    ],
+    "center": [
+     29,
+     28
+    ],
+    "front": [
+     6,
+     33
+    ],
+    "grip": [
+     10,
+     33
+    ],
+    "tip": [
+     -15,
+     51
+    ]
+   }
+  },
+  "bare_thrust": {
+   "x": 192,
+   "y": 0,
+   "w": 64,
+   "h": 58,
+   "anchor": [
+    32,
+    54
+   ],
+   "points": {
+    "head": [
+     25,
+     3
+    ],
+    "center": [
+     30,
+     28
+    ],
+    "front": [
+     2,
+     21
+    ],
+    "grip": [
+     10,
+     23
+    ],
+    "tip": [
+     -19,
+     22
+    ]
+   }
+  },
+  "bare_cast": {
+   "x": 256,
+   "y": 0,
+   "w": 64,
+   "h": 58,
+   "anchor": [
+    32,
+    54
+   ],
+   "points": {
+    "head": [
+     31,
+     2
+    ],
+    "center": [
+     34,
+     28
+    ],
+    "front": [
+     8,
+     18
+    ],
+    "grip": [
+     45,
+     32
+    ],
+    "tip": [
+     52,
+     42
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#050b09",
+  "#101816",
+  "#1b2b24",
+  "#2d2b2b",
+  "#313330",
+  "#4d625e",
+  "#aaa192",
+  "#f8f9f7",
+  "#a11f2f",
+  "#ede2d0",
+  "#0e251f",
+  "#0d2815",
+  "#123221",
+  "#19332c",
+  "#1a4238",
+  "#164825",
+  "#225448",
+  "#1e573a",
+  "#165a28",
+  "#205e3c",
+  "#326456",
+  "#267360",
+  "#417a6b",
+  "#238440",
+  "#2b8171",
+  "#309281",
+  "#259b47",
+  "#339780",
+  "#549483",
+  "#2ca756",
+  "#68ad9c",
+  "#32be65",
+  "#3ec3aa",
+  "#30cc69",
+  "#45cd96",
+  "#35d17c",
+  "#61d6c0",
+  "#24655f",
+  "#3aa8a8",
+  "#67ccbd",
+  "#2fdbcf",
+  "#8ed2c5",
+  "#52def9",
+  "#64e6e6",
+  "#a5eae1"
+ ],
+ "facing": "left",
+ "attach": {
+  "bare_idle": {
+   "grip": [
+    10,
+    30
+   ],
+   "tip": [
+    -7,
+    45
+   ],
+   "angle": 137.9,
+   "length": 24,
+   "blade": 15.9,
+   "fit": 0.94,
+   "method": "blade"
+  },
+  "bare_cast": {
+   "grip": [
+    37,
+    30
+   ],
+   "tip": [
+    44,
+    40
+   ],
+   "angle": 55.8,
+   "length": 15,
+   "weapon_px": 52,
+   "fit": 0.936,
+   "method": "diff"
+  },
+  "bare_windup": {
+   "grip": [
+    38,
+    11
+   ],
+   "tip": [
+    55,
+    -14
+   ],
+   "angle": -55,
+   "length": 30,
+   "generic": true,
+   "method": "arun_scaled",
+   "why": "no_twin"
+  },
+  "bare_slash": {
+   "grip": [
+    4,
+    30
+   ],
+   "tip": [
+    -21,
+    48
+   ],
+   "angle": 145,
+   "length": 31,
+   "generic": true,
+   "method": "arun_scaled",
+   "why": "no_twin"
+  },
+  "bare_thrust": {
+   "grip": [
+    8,
+    20
+   ],
+   "tip": [
+    -21,
+    19
+   ],
+   "angle": -178.4,
+   "length": 29,
+   "generic": true,
+   "method": "arun_scaled",
+   "why": "no_twin"
+  }
+ },
+ "attach_note": "draw a weapon on a bare pose: rotate the weapon image (as drawn on sheet 7, tip to the left) about its grip by (attach.angle - 180) degrees and put its grip on points.grip. Angles in image coords (0 = +x, 90 = +y, 180 = pointing left); positive = clockwise on screen.",
+ "weapon": "greatsword",
+ "target_height": 52
+}

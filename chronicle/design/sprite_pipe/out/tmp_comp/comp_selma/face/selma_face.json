@@ -1,0 +1,154 @@
+{
+ "character": "selma",
+ "set": "face",
+ "image": "selma_face.png",
+ "cell": [
+  72,
+  84
+ ],
+ "anchor": [
+  36,
+  81
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "face_neutral": {
+   "x": 0,
+   "y": 0,
+   "w": 72,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     36,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  "face_smile": {
+   "x": 72,
+   "y": 0,
+   "w": 72,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     35,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  "face_surprise": {
+   "x": 144,
+   "y": 0,
+   "w": 72,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     34,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  "face_pain": {
+   "x": 216,
+   "y": 0,
+   "w": 72,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     34,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#060507",
+  "#140a0d",
+  "#181314",
+  "#281a1b",
+  "#362625",
+  "#32131d",
+  "#351d1d",
+  "#461d26",
+  "#432928",
+  "#56232d",
+  "#5b2f2e",
+  "#573731",
+  "#643a32",
+  "#76323b",
+  "#68463e",
+  "#85373f",
+  "#754639",
+  "#785247",
+  "#9b3e44",
+  "#825a4d",
+  "#905446",
+  "#b7484d",
+  "#c25452",
+  "#ca7162",
+  "#59423a",
+  "#68534b",
+  "#926758",
+  "#a37764",
+  "#ae8874",
+  "#b48772",
+  "#b19c8f",
+  "#c39881",
+  "#d49c82",
+  "#d8b098",
+  "#edcaaf",
+  "#f8c9a9",
+  "#f7e6cf"
+ ],
+ "facing": "slightly right",
+ "target_height": 80
+}

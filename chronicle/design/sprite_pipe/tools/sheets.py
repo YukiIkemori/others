@@ -818,7 +818,8 @@ def check_lantern(runs, rep, fix=True):
                 continue
             nums = '・'.join('%d番' % (sp[s]['row'] * spec['cols'] + sp[s]['col'] + 1) for s in bad)
             names = '、'.join(spec['ja'][sp[s]['row']][sp[s]['col']] for s in bad)
-            fixable = fix and d in ('down', 'up') and len(bad) < len(ids)
+            wrong_way = {i['slot'] for i in rep.items if i['sheet'] == n and i['code'] == 'facing'}
+            fixable = fix and d in ('down', 'up') and len(bad) < len(ids) and not (set(bad) & wrong_way)   # a wrong-facing frame is not fixed by a mirror
             rep.add(n, 'redo', 'lantern', 'シート%dの %s（%s）はランタンを右手に持っている（左手のはず）。歩くたびに持ち手が入れ替わって見える' % (n, nums, names)
                     + ('。仮に左右反転して使う' if fixable else ''), slot=bad[0],
                     ask='シート%dの%s（%s）でランタンが右手になっている。12コマすべて左手にランタンを持たせて（下向きでは画面の右側、上向きでは画面の左側）、同じ条件で描き直して' % (n, nums, names))
@@ -1000,7 +1001,7 @@ def main():
             states[CS.DESIGN], _, dpal = CS.design(comp, found[CS.DESIGN], rep, args, od, fc, process_sheet, review)
             if ref_pal is None and dpal is not None:
                 ref_pal = dpal
-        if not fc.empty:
+        if not fc.empty or CS.DESIGN not in found:     # refs came from s1, or the missing-s1 note already says it
             rep.items = [i for i in rep.items if i['code'] != 'no_refs']
     for n in ORDER:
         if n not in found or SHEETS[n]['kind'] == 'design':

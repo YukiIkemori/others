@@ -1,0 +1,15 @@
+{
+  "desc": "CAST: 樹上の村フェルン（町の人・名前のある人の仮の絵を見る）。見本の 4 人",
+  "hero": { "type": "warrior", "sex": "m", "name": "アルン", "fav": "sword" },
+  "party": ["hero", "selma", "sylvain", "viola"],
+  "reserve": [],
+  "tier": 1,
+  "gl": "auto",
+  "prof": "auto",
+  "flags": { "prologue_start": true, "prologue_berna": true, "prologue_party": true, "prologue_done": true },
+  "vars": {},
+  "items": {},
+  "gold": 200,
+  "leads": [],
+  "map": { "id": "fern", "spawn": "south" }
+}

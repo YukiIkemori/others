@@ -17,12 +17,17 @@
     run: async (ev) => {
       const E = X();
       if (ev.flag('prologue_start')) return;
-      await ev.fade('out', 0);
-      await ev.caption('……ねえ、聞こえる？', { ms: 2600 });
-      await ev.caption('これは、忘れられかけた物語。', { ms: 2600 });
-      await ev.caption('そして、それを語り直した、\nひとりの語り部の物語。', { ms: 3400 });
-      await ev.wait(300);
-      await ev.fade('in', 1200);
+      // 暗い幕（キャプションは幕の上。R.Engine.fade はキャプションより上に描かれるので使わない。TODO(UIK): caption の {dark:true}）
+      const curtain = { id: 'cp_curtain', opaque: false, a: 1, enter() {}, exit() {}, update() {}, draw(g) { g.globalAlpha = this.a; g.fillStyle = '#070812'; g.fillRect(0, 0, R.W, R.H); g.globalAlpha = 1; } };
+      R.Engine.push(curtain);
+      try {
+        await ev.caption('……ねえ、聞こえる？', { ms: 2600 });
+        await ev.caption('これは、忘れられかけた物語。', { ms: 2600 });
+        await ev.caption('そして、それを語り直した、\nひとりの語り部の物語。', { ms: 3400 });
+        await ev.wait(300);
+        const t0 = R.Engine.time;
+        if (R.Engine.running) await R.until(() => { curtain.a = Math.max(0, 1 - (R.Engine.time - t0) / 1200); return curtain.a <= 0; });
+      } finally { R.Engine.remove(curtain); }
       await ev.wait(400);
       await E.narr(ev, '窓の外は、まだ消灯の刻の\n闇のなかだった。');
       await ev.say('berna', 'おはよう。今日は大事な日だよ。', { voice: 'v_berna_prologue_01', face: 'berna:smile' });

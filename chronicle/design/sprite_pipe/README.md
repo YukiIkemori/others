@@ -197,6 +197,8 @@ python3 tools/refs.py selma out/comp_selma                              # 目で
 - **v2**: `to_v2.py` は顔の `face_pain` を `sad` にする（`angry` は無いので `neutral`）。`look` は `companion.json` の `look`（= id）。
 - **試験**: `python3 tools/mock_companions.py` が `out/mock_companions/<id>/` にアルンの絵を色替え・大きさ替えした仮のシートを作る
   （selma 64/48 剣・全 5 枚／hagen 68/51 大剣・s4 と s4b に分割・シート3の3番だけ右向き／dokka 52/39 大剣・s1 と s5 なし）。期待する結果は各フォルダの `truth.json`。
+  今の結果: selma 作り直し 0 件（剣の振り抜きの持ち手 1 件を目で確かめる）、hagen は入れた右向きの 1 件だけ作り直し、dokka はシート5がない 1 件と s1 なしの注意。
+  身長は描かれたまま（selma 63.8・hagen 68.4・dokka 50.9 ドット）。
 
 ## 8. 限界・気をつけること
 
