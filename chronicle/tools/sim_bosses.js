@@ -79,7 +79,8 @@ const troopTier = (tr, T) => (DB.troops[tr].scale === 'tier' ? T : DB.troops[tr]
 
 // ------------------------------------------------------------------ one battle
 const ACT = (id) => DB.actions[id];
-function newEv() { return { encore: 0, feed: 0, rewind: 0, summon: {}, phase: {}, glimmers: 0, ko: new Set() }; }
+function newEv() { return { encore: 0, feed: 0, rewind: 0, summon: {}, phase: {}, used: {}, glimmers: 0, ko: new Set() }; }
+const ACT_ID = new Map(Object.entries(DB.actions).filter(([k]) => /^eb_/.test(k)).map(([k, a]) => [a, k]));
 function realParty(o, tier) {
   const pmo = { level: o.level, gear: o.gear === 'strong' ? 'real' : (o.gear || 'shop'), kind: PMKIND[o.kind] };
   if (o.gear === 'strong') pmo.superSlots = 4;
@@ -101,6 +102,8 @@ function fightReal(tr, o) {
     if (e.t === 'phase' && e.u) { const i = ((e.u.d && e.u.d.phases) || []).findIndex((p) => p.msg === e.text); const k = e.u.id + '#' + Math.max(0, i); ev.phase[k] = (ev.phase[k] || 0) + 1; }
     else if (e.t === 'summon') for (const i of e.units || []) { const m = eng.mons[i]; if (m) ev.summon[m.id] = (ev.summon[m.id] || 0) + 1; }
     else if (e.t === 'fx' && e.kind === 'ability' && !e.again && e.ab) {
+      const aid = ACT_ID.get(e.ab);
+      if (aid) ev.used[aid] = (ev.used[aid] || 0) + 1;
       if (e.ab === ACT('eb_encore')) ev.encore++;
       else if (e.ab === ACT('eb_feed')) ev.feed++;
       else if (e.ab === ACT('eb_rewind')) ev.rewind++;
@@ -128,17 +131,19 @@ const fight = (tr, o) => (USE_REAL ? fightReal(tr, o) : fightModel(tr, o));
 
 function runCase(tr, tier, n, o) {
   o = o || {};
-  const acc = { win: 0, rounds: 0, roundsWin: 0, ko: 0, glim: 0, enc: 0, feed: 0, rewind: 0, summon: {}, phaseB: {} };
+  const acc = { win: 0, rounds: 0, roundsWin: 0, ko: 0, glim: 0, enc: 0, feed: 0, rewind: 0, summon: {}, phaseB: {}, used: {}, any: {} };
   for (let i = 0; i < n; i++) {
     const r = fight(tr, Object.assign({ tier, members: STANDARD, level: levelFor(tr, tier), known: knownFor(tr, tier) }, o));
     acc.win += r.win ? 1 : 0; acc.rounds += r.rounds; if (r.win) acc.roundsWin += r.rounds; acc.ko += r.ko;
     acc.glim += r.ev.glimmers > 0 ? 1 : 0; acc.enc += r.ev.encore; acc.feed += r.ev.feed; acc.rewind += r.ev.rewind;
     for (const k in r.ev.summon) acc.summon[k] = (acc.summon[k] || 0) + r.ev.summon[k];
     for (const k in r.ev.phase) acc.phaseB[k] = (acc.phaseB[k] || 0) + 1;
+    for (const k in r.ev.used || {}) { acc.used[k] = (acc.used[k] || 0) + r.ev.used[k]; acc.any[k] = (acc.any[k] || 0) + 1; }
+    for (const k in r.ev.summon) acc.any['summon:' + k] = (acc.any['summon:' + k] || 0) + 1;
   }
   const per = (m) => Object.fromEntries(Object.entries(m).map(([k, v]) => [k, v / n]));
   return { tr, tier, n, win: acc.win / n, rounds: acc.rounds / n, roundsWin: acc.win ? acc.roundsWin / acc.win : 0, ko: acc.ko / n, glim: acc.glim / n,
-    encore: acc.enc / n, feed: acc.feed / n, rewind: acc.rewind / n, summon: per(acc.summon), phase: per(acc.phaseB) };
+    encore: acc.enc / n, feed: acc.feed / n, rewind: acc.rewind / n, summon: per(acc.summon), phase: per(acc.phaseB), used: per(acc.used), any: per(acc.any) };
 }
 
 // ------------------------------------------------------------------ `s` changes at run time (tuner)
@@ -296,6 +301,24 @@ if (XS.includes(1)) {
     const avgKo = row.cells.reduce((s, c) => s + c.ko, 0) / row.cells.length;
     check('X1 ' + row.tr, minW >= 0.85 && avgR >= lo - 0.5 && avgR <= hi + 0.5 && avgKo <= 1.0,
       `win ≥85% at every tier: ${pc(minW)}; rounds ${lo}–${hi}: ${f1(avgR)}; KO ≤1.0: ${f1(avgKo)}`);
+  }
+  // §4.17.3-B4 (order independence) for the tier-scaled bosses: each tier's rounds within ±15% of that boss's
+  // mean over T0–T7. The per-boss `s` cannot change this trend (it is tier-independent); it follows the hpBoss
+  // slope (K.hpBoss, rules) against the party model's growth, so the check reports it for the lead.
+  const spread = [];
+  for (const row of rows) {
+    if (row.cells.length < 2) continue;
+    const m = row.cells.reduce((s, c) => s + c.rounds, 0) / row.cells.length;
+    const dev = row.cells.map((c) => (c.rounds - m) / m);
+    const worst = dev.reduce((a, b) => (Math.abs(b) > Math.abs(a) ? b : a), 0);
+    spread.push({ tr: row.tr, mean: m, worst, first: row.cells[0].rounds, last: row.cells[row.cells.length - 1].rounds });
+  }
+  if (spread.length) {
+    const bad = spread.filter((x) => Math.abs(x.worst) > 0.15);
+    const mk = (k) => { const l = spread.filter((x) => kindOf(x.tr) === k); return l.length ? `${k} T0 ${f1(l.reduce((s, x) => s + x.first, 0) / l.length)} → T7 ${f1(l.reduce((s, x) => s + x.last, 0) / l.length)} rounds` : ''; };
+    say('  rounds by tier: ' + [mk('mid'), mk('region')].filter(Boolean).join(', '));
+    out.X1spread = spread;
+    check('X1 tier spread (B4)', !bad.length, `rounds of every tier within ±15% of the boss's T0–T7 mean: ${bad.length ? bad.length + ' outside, worst ' + bad.sort((a, b) => Math.abs(b.worst) - Math.abs(a.worst)).slice(0, 4).map((x) => x.tr + ' ' + (x.worst > 0 ? '+' : '') + Math.round(x.worst * 100) + '%').join(' ') : 'all inside'}`);
   }
 }
 
