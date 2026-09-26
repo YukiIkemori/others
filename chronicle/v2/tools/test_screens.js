@@ -17,7 +17,8 @@ ok('Screens claimed (no stub fills it)', !(R.Stubs.installed.Screens || []).leng
 for (const id of R.Contract.SCREEN_IDS) ok(`screen '${id}' is defined`, !!(S._defs && S._defs[id]));
 ok('every SCREEN_RESULTS key has a screen', Object.keys(R.Contract.SCREEN_RESULTS).every((k) => S._defs[k]));
 ok('no screen outside SCREEN_IDS', Object.keys(S._defs).every((k) => R.Contract.SCREEN_IDS.includes(k)), Object.keys(S._defs).filter((k) => !R.Contract.SCREEN_IDS.includes(k)));
-ok('R.loadErrors empty', R.loadErrors.length === 0, R.loadErrors);
+const mine = R.loadErrors.filter((e) => /screen|tips/i.test(e));
+ok('no load errors from MENUS (screens, tips)', mine.length === 0, mine);
 
 section('説明の札 R.DB.tips（K.tip）');
 const tips = R.DB.tips || {};

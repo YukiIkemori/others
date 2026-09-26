@@ -45,7 +45,7 @@
       try { await ev.npc(o.npc || who).hide(); } catch (e) { /* */ }
       await ev.fade('in', 300);
     }
-    await ev.caption(`${F.PEOPLE[who].name}は、蛍だまりの野営地へ向かった。`, { ms: 2200 });
+    if (!o.quiet) await ev.caption(`${F.PEOPLE[who].name}は、蛍だまりの野営地へ向かった。`, { ms: 2200 });
     if (n >= 4) await ev.caption('探していた四人が、そろった。\nあとは、森の歌を取り戻すだけだ。', { ms: 2600 });
     if (['hans', 'ben', 'roy'].every((w) => ev.flag('forest_found_' + w))) ev.leadDone('l_forest_woodcutters');
     if (who === 'pim') ev.leadDone('l_forest_pim');

@@ -201,6 +201,7 @@
     st.rects.length = 0;
     // 石の輪（苔の輪と、節の流れの細い線）
     g.save();
+    if (st.phase === 'result') g.globalAlpha = 0;
     const ring = g.createRadialGradient(cx, cy, d * 0.3, cx, cy, d * 1.5);
     ring.addColorStop(0, rgba(st.th.tint, 0.10)); ring.addColorStop(0.7, rgba(st.th.tint, 0.04)); ring.addColorStop(1, rgba(st.th.tint, 0));
     g.fillStyle = ring; g.beginPath(); g.ellipse(cx, cy, d * 1.6, d * 1.25, 0, 0, Math.PI * 2); g.fill();
@@ -267,10 +268,10 @@
     if (st.phase === 'result') {
       const k = Math.min(1, dt / 420);
       g.save(); g.globalAlpha *= k;
-      g.fillStyle = 'rgba(8,10,18,0.55)'; R.UIK.rr(g, x + U(40), y + U(96), w - U(80), h - U(150), U(12)); g.fill();
+      g.fillStyle = 'rgba(8,10,18,0.55)'; R.UIK.rr(g, x + U(40), y + U(96), w - U(80), U(200), U(12)); g.fill();
       const halo = g.createRadialGradient(cx, y + U(178), 0, cx, y + U(178), U(120));
       halo.addColorStop(0, rgba(st.th.tint, 0.18)); halo.addColorStop(1, rgba(st.th.tint, 0));
-      g.fillStyle = halo; g.fillRect(x + U(40), y + U(96), w - U(80), h - U(150));
+      g.fillStyle = halo; g.fillRect(x + U(40), y + U(96), w - U(80), U(200));
       R.UIK.text(g, '歌あわせの ひょうか', cx, y + U(116), { size: U(13), weight: 700, color: C.text2, align: 'center', track: U(2) });
       const rc = st.rank === 'S' ? C.superRare : st.rank === 'A' ? C.goldHi : st.rank === 'B' ? C.rare : C.text2;
       R.UIK.text(g, st.rank, cx, y + U(142), { size: U(64), weight: 700, family: 'en', color: rc, align: 'center', shadow: 'rgba(236,180,90,0.35)', blur: 12 });
@@ -281,7 +282,7 @@
     }
     // ボタン
     const pr = st.phase === 'result' ? [{ btn: 'a', label: 'とじる' }] : [{ btn: 'up', label: '音を鳴らす' }, { btn: 'b', label: 'やめる' }];
-    if (st.phase !== 'result' || dt > 900) R.UIK.prompts(g, pr, { x: x + w - U(20), y: y + h - U(22), align: 'right' });
+    if (st.phase !== 'result' || dt > 600) R.UIK.prompts(g, pr, { x: x + w - U(20), y: y + h - U(22), align: 'right' });
     g.restore();
   }
 

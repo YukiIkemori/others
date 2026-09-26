@@ -124,6 +124,98 @@ def find_sheets(folder, rep):
     return out
 
 
+# ============================================================ manifest (the generator's own layout, when delivered)
+def load_manifest(folder):
+    """manifest.json next to the sheets: [{sheet, file, layout 'RxC', logical_cell [w, h], image_px [W, H], frames}]
+    -> {basename: entry}. Missing / unreadable -> {}."""
+    p = os.path.join(folder, 'manifest.json')
+    try:
+        js = json.load(open(p))
+    except Exception:
+        return {}
+    if isinstance(js, dict):
+        js = js.get('sheets', [])
+    out = {}
+    for e in js:
+        try:
+            r, c = [int(x) for x in str(e['layout']).lower().split('x')]
+            out[os.path.basename(e['file'])] = dict(e, rows=r, cols=c)
+        except Exception:
+            continue
+    return out
+
+
+def slice_manifest(fg, n, spec, ent, rep):
+    """Cells from the manifest: cell (r, c) = [c*cw, (c+1)*cw) x [r*ch, (r+1)*ch) in image px, cw = logical_cell * dot.
+    Every connected part goes to the cell holding its centre. -> (slots, extras, dot) or None when the manifest does
+    not fit the sheet (layout differs from the brief, or the image size does not match)."""
+    H, W = fg.shape
+    if (ent['rows'], ent['cols']) != (spec['rows'], spec['cols']):
+        rep.add(n, 'check', 'manifest_layout', 'manifest の並べ方（%s）が指示書（%d×%d）と違う。自動の切り分けを使う' % (ent['layout'], spec['rows'], spec['cols']))
+        return None
+    lw, lh = ent['logical_cell']
+    dot = W / float(ent['cols'] * lw)
+    if abs(H / float(ent['rows'] * lh) - dot) > 0.05 or (ent.get('image_px') and list(ent['image_px']) != [W, H]):
+        rep.add(n, 'check', 'manifest_size', 'manifest の大きさ（%s）が画像（%d×%d）と合わない。自動の切り分けを使う' % (ent.get('image_px'), W, H))
+        return None
+    cw, ch = lw * dot, lh * dot
+    lab, k = nd.label(fg, structure=np.ones((3, 3)))
+    if k == 0:
+        return {}, [], dot
+    objs = nd.find_objects(lab)
+    areas = nd.sum(fg, lab, range(1, k + 1))
+    slots, parts = {}, {}
+    for i, sl in enumerate(objs):
+        if areas[i] < (0.75 * dot) ** 2:        # below one art pixel: noise
+            continue
+        cy, cx = (sl[0].start + sl[0].stop) / 2.0, (sl[1].start + sl[1].stop) / 2.0
+        r, c = min(ent['rows'] - 1, int(cy // ch)), min(ent['cols'] - 1, int(cx // cw))
+        parts.setdefault((r, c), []).append(i)
+    extras = []
+    for (r, c), idx in parts.items():
+        main = max(idx, key=lambda i: areas[i])
+        m = np.zeros_like(fg)
+        mm = lab[objs[main]] == main + 1
+        m[objs[main]] |= mm
+        body = m.copy()
+        dist = nd.distance_transform_edt(~body)
+        for i in idx:
+            if i == main:
+                continue
+            sl = objs[i]
+            sub = lab[sl] == i + 1
+            near = dist[sl][sub].min()
+            # far & small = text / sparkle / stray mark; near = part of the pose (tuft, sword tip, marks: see drop_marks)
+            if near > 12 * dot and areas[i] < 0.08 * areas[main]:
+                extras.append(dict(box=[sl[1].start, sl[0].start, sl[1].stop, sl[0].stop], area=int(areas[i])))
+                continue
+            m[sl] |= sub
+        slots[(r, c)] = m
+    return slots, extras, dot
+
+
+def drop_marks(mask, dot, top_frac=0.45, max_frac=0.03):
+    """Emote marks baked into a pose (surprise lines, sweat drops, '!' strokes): small parts NOT touching the body,
+    in the upper part of the pose (around the head). -> (mask, n_removed, removed_px)"""
+    lab, k = nd.label(mask, structure=np.ones((3, 3)))
+    if k <= 1:
+        return mask, 0, 0
+    sizes = nd.sum(mask, lab, range(1, k + 1))
+    big = int(np.argmax(sizes)) + 1
+    ys = np.where(mask.any(1))[0]
+    t, b = ys.min(), ys.max()
+    lim = t + top_frac * (b - t + 1)
+    out, n, px = mask.copy(), 0, 0
+    for i, sl in enumerate(nd.find_objects(lab), 1):
+        if i == big or sizes[i - 1] > max_frac * sizes[big - 1]:
+            continue
+        if (sl[0].start + sl[0].stop) / 2.0 <= lim:
+            out[sl] &= lab[sl] != i
+            n += 1
+            px += int(sizes[i - 1])
+    return out, n, px
+
+
 # ============================================================ key
 def load_rgb(path):
     im = Image.open(path)
@@ -387,7 +479,15 @@ def process_sheet(n, path, rep, args):
     # first guess of the art pixel: the brief's 8 px, corrected by the sheet size
     tall = fg.any(1).sum()
     p_guess = max(2.0, min(10.0, tall / (spec['rows'] * spec['target_h'] * 1.35)))
-    slots, extras, _ = slice_sheet(fg, n, spec, p_guess, rep)
+    ms = None
+    ent = (args.manifest or {}).get(os.path.basename(path))
+    if ent:
+        ms = slice_manifest(fg, n, spec, ent, rep)
+    if ms is not None:
+        slots, extras, p_guess = ms
+        st['manifest'] = dict(layout=ent['layout'], logical_cell=ent['logical_cell'], dot=round(p_guess, 3))
+    else:
+        slots, extras, _ = slice_sheet(fg, n, spec, p_guess, rep)
     for e in extras:
         if e.get('extra_pose'):
             continue
@@ -429,7 +529,10 @@ def process_sheet(n, path, rep, args):
     hs = [P.bbox(m)[1] - P.bbox(m)[0] for m in upright.values()]
     h_src = float(np.median(hs))
     p_exp = h_src / spec['target_h']
-    p, clarity = sheet_period(slots, rgb, max(1.5, p_exp * 0.55), p_exp * 1.8)
+    if ms is not None:     # the manifest states the dot: image px / (cols * logical cell)
+        p, clarity = float(p_guess), 99.0
+    else:
+        p, clarity = sheet_period(slots, rgb, max(1.5, p_exp * 0.55), p_exp * 1.8)
     nat_h = h_src / p
     st.update(period=round(p, 3), clarity=round(clarity, 1), src_height=h_src, native_height_at_period=round(nat_h, 1))
     tol = args.size_tol
@@ -476,6 +579,10 @@ def process_sheet(n, path, rep, args):
                 mm = drop_effects(crgb, mm)
                 if b0 - mm.sum() > (3 * cell) ** 2:
                     rep.add(n, 'auto', 'effect', '%s の光・軌跡らしい物を消した。消えすぎていないか見る' % slot_name(n, r, c), slot=sid)
+        if spec['kind'] == 'field' or n == 8:
+            mm, nmk, pxk = drop_marks(mm, cell)
+            if nmk:
+                rep.add(n, 'auto', 'marks', '%s の感情マーク（驚きの線・汗など %d 個）を消した' % (slot_name(n, r, c), nmk), slot=sid)
         mm = P.largest_components(mm, min_frac=0.01, max_n=8)
         xs, ys, _ = P.fit_grid(crgb, mm, p_hint=cell)
         nat, blur = sample_cells(crgb, mm, cm, xs, ys)
@@ -525,73 +632,141 @@ def check_heights(n, spec, sprites, rep):
 
 
 def check_facing(runs, fc, rep):
-    """runs: {n: sprites}. Uses library refs + leave-one-out refs of the run."""
-    # collect run refs per expected direction
-    run_refs = {}
+    """Facing by several cues (tools/facing.py): head and upper-body likeness to known-facing references
+    (mirror test), the side the scarf tail streams to, and — for front / back rows — a down-vs-up projection of
+    the mirror-symmetric head. References: configs/refs/<char>/ (leave-one-out by id), plus, for a class the
+    library lacks, the run's own sprites of that class (majority)."""
+    from facing import Feat, mirror_score, group_of
+
+    def clip(v, a):
+        return max(-a, min(a, v))
+
+    feats, members = {}, {}
     for n, sp in runs.items():
-        spec = SHEETS[n]
+        spec, g = SHEETS[n], group_of(n)
         for sid, v in sp.items():
             d = spec['face'][v['row']]
             if d is None or sid in spec['no_facing']:
                 continue
             key = 'face_' + d if spec['kind'] == 'face' else d
-            run_refs.setdefault(key, []).append((n, sid, v['img']))
-    from facing import head
-    heads = {(n, sid): head(img, face=n == 9) for key, lst in run_refs.items() for (n, sid, img) in lst}
-    hm = {(n, sid): head(img[:, ::-1], face=n == 9) for key, lst in run_refs.items() for (n, sid, img) in lst}
-    def mscore(h0, h1, refs):
-        return float(np.mean([-np.abs(h0 - r).mean() + np.abs(h1 - r).mean() for r in refs])) if refs else None
-    # pass 1: library only -> sprites that look mirrored are not used as references for the others
-    suspect = set()
-    for key, lst in run_refs.items():
-        if key in ('left', 'right', 'face_left', 'face_right') and fc.lib.get(key):
-            for (n, sid, img) in lst:
-                if mscore(heads[(n, sid)], hm[(n, sid)], fc.lib[key]) < -0.3:
-                    suspect.add((n, sid))
+            feats[(n, sid)] = Feat(v['img'], g)
+            members.setdefault((g, key), []).append((n, sid))
+
+    def refs(g, key, n, sid):
+        lib = fc.refs(g, key, sid)
+        if lib:
+            return lib
+        out = [feats[m] for m in members.get((g, key), []) if m != (n, sid)]
+        if key in ('left', 'right', 'face_left', 'face_right'):
+            opp = {'left': 'right', 'right': 'left', 'face_left': 'face_right', 'face_right': 'face_left'}[key]
+            for m in members.get((g, opp), []):     # a mirrored member of the opposite class also shows the way
+                f = feats[m]
+                out.append(type(f).__new__(type(f)))
+                out[-1].h, out[-1].u = f.hm, f.um
+        return out
+
     ja = {'down': '下（手前）', 'up': '上（奥）', 'left': '左', 'right': '右'}
-    for key, lst in run_refs.items():
-        for (n, sid, img) in lst:
-            spec = SHEETS[n]
-            v = runs[n][sid]
-            others = [heads[(m, s)] for (m, s, _) in lst if (m, s) != (n, sid) and (m, s) not in suspect]
-            lib = fc.lib.get(key, [])
+    for (g, key), lst in members.items():
+        for (n, sid) in lst:
+            spec, v, f = SHEETS[n], runs[n][sid], feats[(n, sid)]
             num = v['row'] * spec['cols'] + v['col'] + 1
+            name = slot_name(n, v['row'], v['col'])
+            rs = refs(g, key, n, sid)
             if key in ('left', 'right', 'face_left', 'face_right'):
-                h0, h1 = heads[(n, sid)], hm[(n, sid)]
-                s_run, s_lib = mscore(h0, h1, others), mscore(h0, h1, lib)
-                parts = [x for x in (s_run, s_lib) if x is not None]
-                score = float(np.mean(parts)) if parts else 0.0
-                v['facing_score'] = round(score, 2)
                 want = key.replace('face_', '')
+                th = mirror_score(f.h, f.hm, [r.h for r in rs]) if rs else None
+                tu = mirror_score(f.u, f.um, [r.u for r in rs]) if rs else None
+                cues = {}
+                if th is not None:
+                    cues['head'] = clip(th / (1.0 if g != 'face' else 2.0), 1.5) * (0.6 if g == 'btl' else 1.0)
+                if tu is not None:
+                    cues['upper'] = clip(tu / 2.5, 2.0)
+                if f.scarf is not None and g != 'face':
+                    # the scarf tail streams behind: to the right when facing left
+                    cues['scarf'] = clip((f.scarf if want == 'left' else -f.scarf) / 0.25, 2.0)
+                z = float(sum(cues.values()))
+                neg = sum(1 for c in cues.values() if c < -0.2)
+                v['facing_score'] = round(z, 2)
+                v['facing_cues'] = {k: round(c, 2) for k, c in cues.items()}
                 other = {'left': '右', 'right': '左'}[want]
-                if score < -0.6:
-                    rep.add(n, 'redo', 'facing', '%s が%sを向いている（%s向きのはず）' % (slot_name(n, v['row'], v['col']), other, '左' if want == 'left' else '右'),
-                            slot=sid, score=score,
+                if z < -1.2 and neg >= 2:
+                    rep.add(n, 'redo', 'facing', '%s が%sを向いている（%s向きのはず。点数 %.1f）' % (name, other, '左' if want == 'left' else '右', z),
+                            slot=sid, score=z, cues=v['facing_cues'],
                             ask='シート%dの%d番（%s）が%sを向いている。%sにして、同じ条件で描き直して' % (
                                 n, num, spec['ja'][v['row']][v['col']], other,
                                 '全部左向き' if spec['kind'] == 'battle' else ('少し右向き' if spec['kind'] == 'face' else ja[want] + '向き')))
-                elif score < 0.15:
-                    rep.add(n, 'check', 'facing_unsure', '%s の向きがはっきりしない（点数 %.2f）' % (slot_name(n, v['row'], v['col']), score), slot=sid)
+                elif z < -0.5:
+                    rep.add(n, 'check', 'facing_unsure', '%s の向きがはっきりしない（点数 %.1f）' % (name, z), slot=sid, cues=v['facing_cues'])
             else:
-                # down / up rows: which class fits best, and does it fit that class as well as its real members?
-                sc, typ = {}, {}
-                for d in ('down', 'up', 'left', 'right'):
-                    rs = list(fc.lib.get(d, [])) + [heads[(m, s)] for (m, s, _) in run_refs.get(d, []) if (m, s) != (n, sid) and (m, s) not in suspect]
-                    if rs:
-                        sc[d] = float(np.mean([-np.abs(heads[(n, sid)] - r).mean() for r in rs]))
-                        typ[d] = float(np.median([np.mean([-np.abs(a - b).mean() for b in rs if b is not a]) for a in rs])) if len(rs) > 1 else sc[d]
-                v['facing_class'] = {k: round(x, 2) for k, x in sc.items()}
-                if sc and key in sc:
-                    best = max(sc, key=sc.get)
-                    if best != key and sc[best] - sc[key] > 0.8:
-                        fits = sc[best] >= typ[best] - 1.0
-                        if fits:
-                            rep.add(n, 'redo', 'facing', '%s が%sを向いて見える（%sのはず）' % (slot_name(n, v['row'], v['col']), ja[best], ja[key]),
-                                    slot=sid, ask='シート%dの%d番（%s）の向きが違う。%s向きにして、同じ条件で描き直して' % (
-                                        n, num, spec['ja'][v['row']][v['col']], ja[key]))
-                        else:
-                            rep.add(n, 'check', 'facing_unsure', '%s の向きが%sに見えない（%sに近い）。顔の向きを見る' % (
-                                slot_name(n, v['row'], v['col']), ja[key], ja[best]), slot=sid)
+                # front / back: project the mirror-symmetric head on the down-up axis of the references
+                D = [((r.h + r.hm) / 2).ravel() for r in refs(g, 'down', n, sid) if getattr(r, 'hm', None) is not None]
+                U = [((r.h + r.hm) / 2).ravel() for r in refs(g, 'up', n, sid) if getattr(r, 'hm', None) is not None]
+                if not D or not U:
+                    continue
+                md, mu = np.mean(D, 0), np.mean(U, 0)
+                w = md - mu
+                x = ((f.h + f.hm) / 2).ravel()
+                z = float((x - (md + mu) / 2) @ w / (w @ w) * 2)      # +1 at the down centre, -1 at the up centre
+                if key == 'up':
+                    z = -z
+                v['facing_score'] = round(z, 2)
+                if z < -0.7:
+                    rep.add(n, 'redo', 'facing', '%s が%sを向いて見える（%sのはず。点数 %.1f）' % (name, ja['up' if key == 'down' else 'down'], ja[key], z),
+                            slot=sid, score=z, ask='シート%dの%d番（%s）の向きが違う。%s向きにして、同じ条件で描き直して' % (
+                                n, num, spec['ja'][v['row']][v['col']], ja[key]))
+                elif z < -0.35:
+                    rep.add(n, 'check', 'facing_unsure', '%s の向きが%sに見えにくい（点数 %.1f）。顔の向きを見る' % (name, ja[key], z), slot=sid)
+
+
+LANTERN_SIDE = {'down': 1, 'up': -1, 'left': -1, 'right': 1}   # left hand: screen right facing down, in front in side views
+
+
+def check_lantern(runs, rep):
+    """Sheets 1 / 2: the lantern is in the LEFT hand in every frame. A frame with the lantern on the other side
+    (e.g. a step frame drawn mirrored) makes the lantern jump hands in the walk cycle.
+    Auto fix for front / back rows: the frame is mirrored (a front view mirrors cleanly; the stepping foot swaps,
+    so the two step frames swap places too)."""
+    from facing import side_cues
+    for n in (1, 2):
+        sp = runs.get(n)
+        if not sp:
+            continue
+        spec = SHEETS[n]
+        for r, d in enumerate(spec['face']):
+            ids = [i for i in spec['ids'][r] if i in sp]
+            bad, missing = [], []
+            for sid in ids:
+                _, lan = side_cues(sp[sid]['img'])
+                sp[sid]['lantern'] = lan
+                if lan is None:
+                    missing.append(sid)
+                elif lan * LANTERN_SIDE[d] < -0.15:
+                    bad.append(sid)
+            for sid in missing:
+                v = sp[sid]
+                rep.add(n, 'check', 'lantern_missing', '%s にランタンが見えない（左手に持つはず）' % slot_name(n, v['row'], v['col']), slot=sid)
+            if not bad:
+                continue
+            nums = '・'.join('%d番' % (sp[s]['row'] * spec['cols'] + sp[s]['col'] + 1) for s in bad)
+            names = '、'.join(spec['ja'][sp[s]['row']][sp[s]['col']] for s in bad)
+            fixable = d in ('down', 'up') and len(bad) < len(ids)
+            rep.add(n, 'redo', 'lantern', 'シート%dの %s（%s）はランタンを右手に持っている（左手のはず）。歩くたびに持ち手が入れ替わって見える' % (n, nums, names)
+                    + ('。仮に左右反転して使う' if fixable else ''), slot=bad[0],
+                    ask='シート%dの%s（%s）でランタンが右手になっている。12コマすべて左手にランタンを持たせて（下向きでは画面の右側、上向きでは画面の左側）、同じ条件で描き直して' % (n, nums, names))
+            for s in bad[1:]:
+                rep.add(n, 'redo', 'lantern_frame', '%s: ランタンが右手' % slot_name(n, sp[s]['row'], sp[s]['col']), slot=s)
+            if fixable:
+                mir = {s: np.ascontiguousarray(sp[s]['img'][:, ::-1]) for s in bad}
+                # stepping foot swaps in a mirror -> swap the two step frames when both were mirrored
+                steps = [s for s in ids[1:] if s in bad]
+                if n == 1 and len(steps) == 2:
+                    mir[steps[0]], mir[steps[1]] = mir[steps[1]], mir[steps[0]]
+                elif n == 2 and len(steps) >= 2:
+                    pass   # run frames: the stride order is kept (mirroring a landing frame keeps it a landing frame)
+                for s, im in mir.items():
+                    sp[s]['img'] = im
+                    sp[s]['fixed'] = sp[s].get('fixed', []) + ['mirrored_lantern']
+                rep.add(n, 'auto', 'lantern_mirror', 'シート%dの %s を左右反転して、ランタンを左手にした（仮。描き直しが届くまで）' % (n, nums))
 
 
 def check_palette(runs, ref_pal, rep):
@@ -711,7 +886,9 @@ def main():
     ap.add_argument('--only', default=None, help='comma list of sheet numbers')
     ap.add_argument('--repack', action='store_true',
                     help='skip stages 1-6: re-pack from <out>/native/*.png and report.json (after fixing natives by hand)')
+    ap.add_argument('--no-manifest', action='store_true', help='ignore <folder>/manifest.json (slice automatically)')
     args = ap.parse_args()
+    args.manifest = {} if args.no_manifest else load_manifest(args.folder)
     od = os.path.abspath(args.out or os.path.join(HERE, 'out', args.char))
     if args.repack:
         return repack(args, od)
@@ -724,7 +901,7 @@ def main():
         rep.items = [i for i in rep.items if i['sheet'] is None or i['sheet'] in keep]
     ref_dir = args.refs or os.path.join(HERE, 'configs', 'refs', args.char)
     fc = Facing(ref_dir)
-    if not fc.lib:
+    if fc.empty:
         rep.add(None, 'info', 'no_refs', '向きの見本（%s）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）' % os.path.relpath(ref_dir, HERE))
     ref_pal = None
     pj = os.path.join(ref_dir, 'palette.json')
@@ -743,6 +920,7 @@ def main():
         print('sheet%d  %-24s dot %.2f px  %s  %d poses  %.1fs' % (n, os.path.basename(found[n]), st.get('period', 0),
                                                               st.get('scale_note', ''), len(sp), time.time() - t0))
     check_facing(runs, fc, rep)
+    check_lantern(runs, rep)
     check_palette(runs, ref_pal, rep)
     check_breath(runs, rep)
     check_faces(runs, rep)

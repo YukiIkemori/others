@@ -65,7 +65,7 @@
    */
   K.room = function (w, h, o) {
     o = o || {};
-    const g = K.grid(w, h, o.floor || 'f');
+    const g = K.grid(w, h, 'f');
     K.rect(g, 0, 0, w, 2, 'W');
     K.vline(g, 0, 0, h - 1, 'W'); K.vline(g, w - 1, 0, h - 1, 'W');
     K.hline(g, 0, w - 1, h - 1, 'W');

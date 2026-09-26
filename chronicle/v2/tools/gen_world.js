@@ -238,8 +238,7 @@ const PL = {
   lighthouse: [106, 124],                         // 灯台の扉
   junction: [87, 63],                             // 北の野の分かれ道
   hutDoor: [68, 61],                              // 樵の休み小屋の戸口
-  fernS: [44, 81], fernN: [44, 71],               // フェルンの南の門・北の門
-  verda: [33, 107],                               // 迷いの森の入口
+  fernS: [44, 81],                                // フェルンの南の門（北の門は迷いの森へ。CONTENT-F）
   yura: [26, 59],                                 // ユラの入口
   windhill: [40, 54],                             // 風鳴りの丘
   acorn: [55, 104],                               // 森の南の広場（どんぐり王子）
@@ -259,15 +258,15 @@ road([[86, 71], [86, 63], [74, 63], [74, 66], [64, 66], [64, 70], [56, 70], [56,
 road([[88, 63], [111, 63], [115, 63]], { zone: 'road' });                                                   // 東の峠へ（縦切りでは崖崩れ）
 road([[68, 62], [68, 63]], { wd: 1, ch: 'd' });                                                              // 休み小屋の戸口
 // 森の小道
-road([[44, 83], [44, 86], [50, 86], [50, 95], [42, 95], [42, 101], [33, 101], [33, 106]], { wd: 1, ch: 'd', zone: 'road' });   // フェルン → 迷いの森
+road([[44, 83], [44, 86], [50, 86], [50, 95], [42, 95], [42, 101]], { wd: 1, ch: 'd', zone: 'road' });   // フェルンの南の門 → 南の街道（迷いの森の入口はフェルンの北の門の先、CONTENT-F）
 road([[50, 95], [55, 95], [55, 101]], { wd: 1, ch: 'd' });                                                   // どんぐりの広場へ
 road([[42, 101], [42, 112], [31, 112], [31, 121]], { wd: 2, zone: 'road' });                               // 南の街道（砂漠へ。峠で閉じる）
 road([[42, 112], [51, 112], [51, 114]], { wd: 1, ch: 'd' });                                                 // 双子の見張り塔（あとで）
-road([[44, 70], [44, 62], [40, 62], [40, 56], [38, 56], [38, 42]], { wd: 1, ch: 'd', zone: 'road' });      // 北の小道（風鳴りの丘・北の峠）
+road([[56, 70], [56, 64], [46, 64], [46, 62], [40, 62], [40, 56], [38, 56], [38, 42]], { wd: 1, ch: 'd', zone: 'road' });      // 北の小道（風鳴りの丘・北の峠）
 road([[40, 62], [34, 62], [34, 58], [27, 58], [27, 59]], { wd: 1, ch: 'd' });                              // ユラへの獣道
 for (const r of ROADS) clearAround(r.pts, r.wd, r.wd === 2 ? 1 : 1);
 // 広場・町の前
-clearing(87, 64, 3); clearing(87, 84, 3); clearing(44, 84, 3); clearing(44, 69, 3); clearing(33, 104, 3); clearing(55, 104, 4, '"');
+clearing(87, 64, 3); clearing(87, 84, 3); clearing(44, 84, 3); clearing(55, 104, 4, '"');
 clearing(40, 54, 3); clearing(27, 59, 3); clearing(68, 60, 3); clearing(78, 86, 2); clearing(100, 81, 2); clearing(99, 108, 2);
 clearing(106, 125, 2); clearing(52, 114, 2);
 // 道を塗り直す（広場で消えた所）
@@ -345,18 +344,11 @@ B('w_fern1', 39, 73, 4, 3, { roof: 'moss', mat: 'log', lamp: true }); B('w_fern2
 B('w_fern3', 41, 77, 3, 3, { roof: 'moss', mat: 'bark' }); B('w_fern4', 46, 77, 3, 3, { roof: 'moss', mat: 'log', lamp: true });
 P('tree_giant', 44, 75); P('lantern', 43, 80); P('lantern', 46, 80); P('lantern', 43, 72); P('lantern', 46, 71);
 exits.push({ x: PL.fernS[0], y: PL.fernS[1], w: 1, h: 1, to: { map: 'fern', spawn: 'gate_s' } });
-exits.push({ x: PL.fernN[0], y: PL.fernN[1], w: 1, h: 1, to: { map: 'fern', spawn: 'gate_n' } });
-set(PL.fernS[0], PL.fernS[1], 'd'); set(PL.fernN[0], PL.fernN[1], 'd');
-spawns.fern_s = { x: 44, y: 83, dir: 's' }; spawns.fern_n = { x: 44, y: 69, dir: 'n' };
+set(PL.fernS[0], PL.fernS[1], 'd');
+spawns.fern = { x: 44, y: 83, dir: 's' };
 S(46, 84, '森の村フェルン');
-// 迷いの森（入口。木のアーチ）
-exits.push({ x: PL.verda[0], y: PL.verda[1], w: 1, h: 1, to: { map: 'verda_1', spawn: 'entrance' } });
-set(PL.verda[0], PL.verda[1], 'd');
-for (const [x, y] of [[31, 107], [35, 107], [31, 108], [32, 108], [34, 108], [35, 108]]) set(x, y, 'F');
-set(33, 108, 'F');
-P('tree_giant', 32, 106); P('tree_giant', 34, 106);
-spawns.verda = { x: 33, y: 105, dir: 'n' };
-S(35, 104, '迷いの森\n森が道を変えるという。');
+// 迷いの森の入口はフェルンの北の門の先（CONTENT-F の fern → verda_1）。ワールドには森の奥を指す看板だけ
+S(40, 96, '迷いの森\n森の奥へは、フェルンの北の門から。');
 // ユラ（隠れ里。獣道の先の小さな灯り）
 B('w_yura1', 19, 56, 3, 3, { roof: 'moss', mat: 'log' }); B('w_yura2', 22, 58, 3, 3, { roof: 'moss', mat: 'bark', lamp: true });
 P('lantern', 25, 57); P('lantern', 25, 61);
@@ -420,8 +412,8 @@ lampsAlong([[86, 63], [74, 63], [74, 66], [64, 66], [64, 70], [56, 70], [56, 77]
 lampsAlong([[88, 63], [111, 63]], 11, 1);
 lampsAlong([[87, 79], [87, 91], [87, 98], [92, 98], [92, 105], [97, 105]], 11, 1);
 lampsAlong([[42, 101], [42, 112], [31, 112], [31, 117]], 11, 1);
-lampsAlong([[44, 70], [44, 62], [40, 62], [40, 56], [38, 56], [38, 47]], 10, 1);
-lampsAlong([[44, 83], [44, 86], [50, 86], [50, 95], [42, 95], [42, 101], [33, 101]], 12, -1);
+lampsAlong([[56, 70], [56, 64], [46, 64], [46, 62], [40, 62], [40, 56], [38, 56], [38, 47]], 10, 1);
+lampsAlong([[44, 83], [44, 86], [50, 86], [50, 95], [42, 95], [42, 101]], 12, -1);
 // P3 の消えた灯籠（ロアからファロスへの夜道。依頼 q_pharos_lamp でともす）
 LAMP('wl_pen_road', 89, 96, 'prologue_lamp_road', { event: 'world_pen_lamp' });
 // 【灯りを守る】森の街道の消えた灯籠 3 つ（q_forest_fireflies、CONTENT-F。lit は依頼の条件、調べると forest_waylamp）
