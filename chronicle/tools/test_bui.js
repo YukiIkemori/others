@@ -35,6 +35,8 @@ R.Gfx.ctx = {
   save() {}, restore() {}, translate() {}, scale() {}, beginPath() {}, rect() {}, clip() {}, fillRect() {}, fillText() {}, drawImage() {}, setTransform() {},
   createLinearGradient() { return { addColorStop() {} }; }, fillStyle: '#000', textAlign: 'left', textBaseline: 'top', imageSmoothingEnabled: false,
 };
+// offscreen canvases (tints, stand-in frames) are inert stubs
+R.Gfx.makeCanvas = (w, h) => ({ width: w, height: h, getContext: () => ({ drawImage() {}, fillRect() {}, translate() {}, rotate() {}, getImageData: () => ({ data: [] }), putImageData() {}, createImageData: (a, b) => ({ data: new Uint8ClampedArray(a * b * 4) }) }) });
 const realGet = R.Gfx.get.bind(R.Gfx);
 R.Gfx.get = (k) => {
   if (k.startsWith('mon:')) return sizes[k] || (sizes[k] = box(48, 48));
@@ -104,10 +106,14 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   pos = B.enemyLayout(nine);
   ok(nine.every((it, i) => { const f = pos.get(it).feet, d = [102, 122, 142][i % 3]; return f <= d && f >= d - 6; }), 'L12 eight 64s: three rows 102 / 122 / 142 (a crowded back row may stand ≤ 6 px further back)', nine.map((it) => pos.get(it).feet));
   const boss = { w: 128, h: 112 }, esc = boxes(48, 48, 2), bl = [esc[0], boss, esc[1]];
-  pos = B.enemyLayout(bl);
+  pos = B.enemyLayout([boss]);
   const pb = pos.get(boss);
   ok(pb.x === 24 && pb.y === 34 && pb.feet === 146, 'L13 a 128×112 boss: x 24–152, top 34, feet 146', pb);
-  ok(esc.every((e) => pos.get(e).feet === 114) && Math.max(...esc.map((e) => pos.get(e).x + 48)) === 172, 'L14 its escorts behind (feet 114), right-aligned to 172', esc.map((e) => pos.get(e)));
+  pos = B.enemyLayout(bl);
+  ok(visibleShare(pos, bl).every((v) => v >= 0.5) && Math.max(...esc.map((e) => pos.get(e).x + 48)) === 172, 'L14 boss + two escorts: right-aligned to 172, everyone ≥ 50 % visible (the boss steps left, the escorts come forward when needed)', { pos: bl.map((e) => pos.get(e)), vis: visibleShare(pos, bl) });
+  const small = { w: 96, h: 96 }, one1 = { w: 48, h: 48 };
+  pos = B.enemyLayout([small, one1]);
+  ok(pos.get(one1).feet === 114 && pos.get(one1).x + 48 === 172 && pos.get(small).feet === 146, 'L14b a 96 boss + one escort: the escort peeks out behind at its upper right (feet 114, right-aligned)', [pos.get(small), pos.get(one1)]);
   // the party (§11.5.14): feet by row and number of members
   let S = BUI.open({ mons: std() });
   const P = S.eng.party;
@@ -190,13 +196,14 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     const stack = []; let last = null, clip = null, bad = 0, seen = 0;
     ctx.save = () => stack.push(clip); ctx.restore = () => { clip = stack.pop() || null; };
     ctx.rect = (x, y, w, h) => { last = [x, y, w, h]; }; ctx.clip = () => { clip = last; };
+    R.BattleFX.FX.cast(S, { user: S.rectOf(S.eng.party[3]), ab: DB.actions.s_fire_1 || null });
     for (const id of ['slash3', 'fire3', 'breath_fire', 'smoke', 'arrow3', 'holy3', 'earth3']) {
       R.BattleFX.play(S, id, { user: S.rectOf(id === 'breath_fire' ? S.eng.mons[0] : S.eng.party[3]), targets: id === 'breath_fire' ? S.eng.party.map((p) => S.rectOf(p)) : [S.rectOf(S.eng.mons[0])], dir: id === 'breath_fire' ? 1 : -1 });
     }
     S.pop(S.eng.party[3], 999, 'white');
     for (const f of S.fxList) { const d = f.draw; f.draw = (g, t) => { seen++; if (!clip || clip[1] !== 0 || clip[3] !== 152) bad++; d(g, t); }; }
     try { for (let i = 0; i < 6; i++) { await step(3); S.draw(); } } finally { Object.assign(ctx, keep); }
-    ok(seen > 0 && bad === 0 && S.fxList.every((f) => f.layer === 'mid'), 'W12 every fx is drawn inside the FIELD clip (0, 0, 256, 152), all on the mid layer', { seen, bad });
+    ok(seen > 0 && bad === 0 && S.fxList.every((f) => f.layer === 'mid' || f.layer === 'under'), 'W12 every fx is drawn inside the FIELD clip (0, 0, 256, 152), on the battlefield layers (mid / under)', { seen, bad });
   }
 
   // ================================================================ C — command menus, cursor memory, help
@@ -590,6 +597,152 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   FX.play = op;
   ok(calls.length === 2 && calls[0][0] === 'water2' && calls[1][0] === 'fire2' && calls[0][1] === 1 && Math.abs(calls[1][1] - 1 / 0.6) < 1e-9, 'F9 an fx array plays in order, the second at 60 %', calls);
   ok(calls[1][2] - calls[0][2] >= 10, 'F10 the second starts after the first one\'s impact', calls.map((c) => c[2]));
+
+  // ================================================================ V — side-view choreography (§11.5.15–16)
+  section('V choreography');
+  const weaponOf = (wtype) => {
+    const ids = Object.keys(DB.items).filter((id) => DB.items[id].type === 'weapon' && DB.items[id].wtype === wtype);
+    return ids.find((id) => !DB.items[id].grade || DB.items[id].grade === 'normal') || ids[0] || null;
+  };
+  const FAM = (R.Art && R.Art.BATTLER && R.Art.BATTLER.FAMILY) || B.ui.BAT_FALLBACK.FAMILY;
+  eq(Object.keys(FAM).sort(), ['axe', 'bow', 'club', 'dagger', 'fist', 'greatsword', 'katana', 'spear', 'staff', 'sword', 'whip'], 'V1 FAMILY covers the 11 weapon types');
+  async function attackRound(wtype, o) {
+    o = o || {};
+    const S = BUI.open({ mons: std(), script: { monsIdle: true }, tweak: (p) => { const id = weaponOf(wtype); p[0].equip.weapon1 = id; p[0].equip.weapon2 = o.w2 ? weaponOf(o.w2) : null; p[0].row = 'front'; } });
+    const v = S.pvs[0];
+    const seen = { poses: new Set(), away: false, maxLeft: v.x, fxAtImpact: false, alt: null };
+    const cmds = []; cmds[0] = o.cmd ? o.cmd(S) : { type: 'attack', slot: o.slot || 'weapon1', target: S.eng.mons[1] };
+    S.roundCmds = cmds; S.inRound = true;
+    let done = false;
+    S.play(S.eng.playRound(cmds)).then(() => S.settle()).then(() => { done = true; });
+    const n0 = S.fxList.length;
+    for (let i = 0; i < 900 && !done; i++) {
+      await step(1);
+      const q = S.poseOf(v);
+      seen.poses.add(q.pose);
+      if (v.away) seen.away = true;
+      if (v.alt) seen.alt = v.alt;
+      seen.maxLeft = Math.min(seen.maxLeft, v.x);
+      if (S.fxList.length > n0 && !seen.fxPose) seen.fxPose = q.pose + ':' + q.fi;
+    }
+    seen.done = done; seen.home = v.x === v.homeX && v.y === v.homeY && !v.away && !v.act;
+    return { S, v, seen };
+  }
+  for (const w of Object.keys(FAM)) {
+    const fam = FAM[w];
+    const { seen } = await attackRound(w);
+    const melee = fam !== 'shoot';
+    const imp = fam === 'shoot' ? 2 : 1;
+    ok(seen.done && seen.home && seen.poses.has(fam) && seen.fxPose === fam + ':' + imp && seen.away === melee && (melee ? seen.maxLeft < 150 : seen.maxLeft >= 190),
+      `V2 ${w}: ${melee ? 'runs in, ' : 'in place, '}${fam} with the fx at frame ${imp}, back home`, seen);
+  }
+  // weapon2's slot: that weapon's sheet only for the action
+  {
+    const { seen } = await attackRound('sword', { w2: 'bow', slot: 'weapon2' });
+    ok(seen.alt === 'bow' && seen.poses.has('shoot') && !seen.away && seen.home, 'V3 an attack with weapon 2 (bow) shoots with the bow sheet, then weapon 1 again', seen);
+  }
+  // a spell: cast in place, the circle at frame 1, the spell at frame 2; an item: in place, frame 1
+  {
+    const fire = DB.actions.s_fire_1 ? 's_fire_1' : BUI.pick().spell;
+    const S = BUI.open({ mons: std(), script: { monsIdle: true } });
+    const v = S.pvs[3];
+    const cmds = []; cmds[3] = { type: 'spell', id: fire, target: S.eng.mons[0] };
+    S.roundCmds = cmds; S.inRound = true;
+    const calls = [];
+    const op = FX.play, oc = FX.FX.cast;
+    FX.play = (sc, id, ctx) => { calls.push(['play', id, S.poseOf(v).pose + ':' + S.poseOf(v).fi, ctx.dir, ctx.user && ctx.user.cast]); return op(sc, id, ctx); };
+    FX.FX.cast = (sc, ctx) => { calls.push(['cast', S.poseOf(v).pose + ':' + S.poseOf(v).fi, ctx.user.feet]); return oc(sc, ctx); };
+    let done = false, away = false;
+    S.play(S.eng.playRound(cmds)).then(() => S.settle()).then(() => { done = true; });
+    for (let i = 0; i < 600 && !done; i++) { await step(1); if (v.away) away = true; }
+    FX.play = op; FX.FX.cast = oc;
+    const c0 = calls.find((c) => c[0] === 'cast'), p0 = calls.find((c) => c[0] === 'play');
+    ok(done && !away && c0 && c0[1] === 'cast:1' && p0 && p0[2] === 'cast:2' && p0[3] === -1 && Array.isArray(p0[4]), 'V4 a spell: cast in place, the magic circle at frame 1, the spell (dir −1, from the cast point) at frame 2', calls);
+  }
+  {
+    const S = BUI.open({ mons: std(), script: { monsIdle: true }, tweak: (p) => { p[1].hp = 30; } });
+    const v = S.pvs[0];
+    const cmds = []; cmds[0] = { type: 'item', id: 'i_salve', target: S.eng.party[1] };
+    S.roundCmds = cmds; S.inRound = true;
+    const poses = [];
+    const op = FX.play;
+    FX.play = (sc, id, ctx) => { poses.push(S.poseOf(v).pose + ':' + S.poseOf(v).fi + ':' + ctx.dir); return op(sc, id, ctx); };
+    let done = false;
+    S.play(S.eng.playRound(cmds)).then(() => S.settle()).then(() => { done = true; });
+    await until(() => done, 600);
+    FX.play = op;
+    ok(done && poses[0] === 'item:1:0' && !v.away, 'V5 an item: in place, the fx at frame 1 of item, dir 0 on an ally', poses);
+  }
+  // a monster's attack: it hops toward the party (+x), the fx has dir +1, the target recoils and is pushed right
+  {
+    const S = BUI.open({ mons: [{ id: 'wolf_2' }], script: { monDamage: 21 } });
+    const v = S.pvs[0], mv = S.vis.get(S.eng.mons[0]);
+    const dirs = [];
+    const op = FX.play;
+    FX.play = (sc, id, ctx) => { dirs.push(ctx.dir); return op(sc, id, ctx); };
+    let done = false, lunged = false, hit = false, pushed = 0;
+    S.roundCmds = []; S.inRound = true;
+    S.play(S.eng.playRound([])).then(() => { done = true; });
+    for (let i = 0; i < 600 && !done; i++) { await step(1); if (mv.lunge > 0) lunged = true; if (S.poseOf(v).pose === 'hit') hit = true; pushed = Math.max(pushed, S.posOf(v)[0] - v.x); }
+    FX.play = op;
+    ok(done && lunged && dirs[0] === 1 && hit && pushed >= 2, 'V6 enemy attack: lunge, fx dir +1, the member recoils (hit) pushed to the right', { lunged, dirs, hit, pushed });
+    ok(S.pops.length === 0 || S.pops.every((p) => p.party ? p.y < S.rectOf(p.u).head[1] : true), 'V7 the number pops above the head');
+  }
+  // speed scaling (§11.5.16): the same attack gets shorter at はやい / さいそく and under オート
+  {
+    const frames = [];
+    for (const [spd, auto] of [[0, false], [1, false], [2, false], [0, true]]) {
+      R.Settings.battleSpeed = spd;
+      const S = BUI.open({ mons: std(), script: { monsIdle: true } });
+      S.auto = auto;
+      eq([S.dur(12, 'move'), S.dur(5, 'atk')], [[12, 5], [8, 4], [5, 2], [8, 4]][frames.length], 'V8 dur(): run 12 / wind-up 5 at speed ' + spd + (auto ? ' (auto)' : ''));
+      const v = S.pvs[0];
+      const cmds = []; cmds[0] = { type: 'attack', slot: 'weapon1', target: S.eng.mons[1] };
+      S.roundCmds = cmds; S.inRound = true;
+      let runN = 0, backN = 0;
+      let done = false;
+      S.play(S.eng.playRound(cmds)).then(() => S.settle()).then(() => { done = true; });
+      for (let i = 0; i < 900 && !done; i++) { await step(1); if (v.move && !v.move.arc) runN = v.move.n; if (v.move && v.move.arc) backN = v.move.n; }
+      frames.push([runN, backN]);
+    }
+    R.Settings.battleSpeed = 1;
+    eq(frames, [[12, 10], [8, 7], [5, 4], [8, 6]], 'V9 run-in / hop back frames: 12·10, はやい 8·7, さいそく 5·4, オート 8·6');
+  }
+  // victory: everyone standing raises the weapon; KO stays down. escape: the party runs off to the right
+  {
+    const S = BUI.open({ mons: std(), tweak: (p) => { p[2].hp = 0; p[1].hp = 5; } });
+    for (const m of S.eng.mons) m.hp = 0;
+    let vd = false; S.handle({ t: 'victory' }).then(() => { vd = true; }); await until(() => vd, 60);
+    eq(S.pvs.map((v) => S.poseOf(v).pose), ['victory', 'victory', 'ko', 'victory'], 'V10 victory poses (the weak one stands, the fallen stays down)');
+    const S2 = BUI.open({ mons: std(), tweak: (p) => { p[3].hp = 0; } });
+    const x0 = S2.pvs.map((v) => S2.posOf(v)[0]);
+    const pe = S2.handle({ t: 'escape', ok: true });
+    await step(12);
+    const x1 = S2.pvs.map((v) => S2.posOf(v)[0]);
+    let escDone = false; pe.then(() => { escDone = true; });
+    await until(() => escDone, 200);
+    ok(x1[0] > x0[0] + 20 && x1[3] === x0[3] && S2.poseOf(S2.pvs[0]).flip, 'V11 a successful escape: the living run off to the right (flipped walk), the fallen stays', { x0, x1 });
+  }
+  // the rest poses (§11.5.14)
+  {
+    const S = BUI.open({ mons: std(), tweak: (p) => { p[0].hp = 0; p[1].status = { sleep: true }; p[2].hp = 10; p[3].status = { freeze: true }; } });
+    eq(S.pvs.map((v) => { const q = S.poseOf(v); return q.pose + (q.fi != null ? ':' + q.fi : ''); }), ['ko:0', 'weak:0', 'weak', 'idle:0'], 'V12 rest poses: KO / sleep (weak frame 0) / HP ≤ 25 % (weak) / frozen (idle frame 0)');
+  }
+  // the whole battle draws frame by frame with the stand-in sprites (no R.Art.battler) — §11.5.17
+  {
+    const S = BUI.open({ mons: std(), script: { partyDamage: 30, monDamage: 5 } });
+    let errs = 0, frames = 0;
+    const loop = (async () => {
+      for (let r = 0; r < 6 && !S.eng.result; r++) {
+        const cmds = S.eng.party.map((p, i) => (p.alive ? [{ type: 'attack', slot: 'weapon1', target: null }, { type: 'defend' }, { type: 'spell', id: DB.actions.s_fire_1 ? 's_fire_1' : BUI.pick().spell, target: null }, { type: 'item', id: 'i_salve', target: p }][i] : null));
+        S.roundCmds = cmds; S.inRound = true;
+        await S.play(S.eng.playRound(cmds)); await S.settle(); S.inRound = false;
+      }
+    })();
+    let fin = false; loop.then(() => { fin = true; });
+    for (let i = 0; i < 4000 && !fin; i++) { await step(1); try { S.draw(); frames++; } catch (e) { errs++; if (errs < 3) console.log(e); } }
+    ok(fin && errs === 0 && frames > 50 && !R.Art.battler, 'V13 a whole battle draws with the stand-in sheets (no R.Art.battler)', { fin, errs, frames, result: S.eng.result });
+  }
 
   // ================================================================ S — R.Battle.start / prepare
   section('S start');

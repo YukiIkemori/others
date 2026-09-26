@@ -430,7 +430,7 @@
   const layerOf = () => 'mid'; // side view: every fx is on the battlefield (§11.5.12)
   const ease = (x) => 1 - (1 - x) * (1 - x);
   let RATE = 1; // playback rate of the effect being started (fx arrays: 2nd+ at 60 % length)
-  function inst(scene, life, layer, draw) { scene.addFx({ life, layer: 'mid', draw, t: 0, rate: RATE }); }
+  function inst(scene, life, layer, draw) { scene.addFx({ life, layer: layer === 'under' ? 'under' : 'mid', draw, t: 0, rate: RATE }); } // 'under': below the sprites (magic circles)
   /** the direction of an effect: −1 leftward (party → enemy), +1 rightward (enemy → party), 0 none */
   const dirOf = (c) => (c && (c.dir === 1 || c.dir === -1) ? c.dir : 0);
 
@@ -1273,34 +1273,56 @@
     const els = elementsOf(c.ab);
     const order = Object.keys((DB && DB.elements) || {});
     const el = order.find((e) => els.includes(e)) || els[0];
-    const col = (el && DB.elements && DB.elements[el] && DB.elements[el].color) || '#ffffff';
-    const lite = G().mix ? G().mix(col, '#ffffff', 0.55) : '#ffffff';
+    const col = (el && DB.elements && DB.elements[el] && DB.elements[el].color) || '#e8e8ff';
+    const lite = G().mix ? G().mix(col, '#ffffff', 0.6) : '#ffffff';
+    const deep = G().shade ? G().shade(col, -0.25) : col;
+    const glow = { fire: 'red', water: 'blue', wind: 'green', earth: 'orange', light: 'gold', dark: 'purple' }[el] || 'white';
     const feet = r.feet || [r.cx, r.bottom];
     const cp = r.cast || [r.cx - 8, r.cy];
-    inst(s, 18, 'mid', (g, t) => {
-      const fade = t > 12 ? Math.max(0, (18 - t) / 6) : Math.min(1, (t + 2) / 4);
+    const RX = 14, RY = 4;
+    inst(s, 20, 'under', (g, t) => {
+      const grow = Math.min(1, (t + 1) / 4), fade = t > 14 ? Math.max(0, (20 - t) / 6) : 1;
       if (fade <= 0) return;
       const cv = g.ctx, a0 = cv.globalAlpha;
       cv.globalAlpha = a0 * fade;
-      // the circle: 24×6 ellipse of dots turning (every 3rd step lit), a brighter inner ring
-      const N = 28;
+      const rx = RX * grow, ry = RY * grow;
+      g.draw(get('glow_' + glow), feet[0] - rx * 2, feet[1] - ry * 3, { w: rx * 4, h: ry * 6, alpha: 0.55 });
+      // the outer ring: solid in the element's colour, a bright arc turning round it
+      const N = 44;
       for (let i = 0; i < N; i++) {
-        const ang = (i / N) * Math.PI * 2 + t * 0.35;
-        if ((i + Math.floor(t)) % 3 === 0) continue;
-        g.rect(Math.round(feet[0] + Math.cos(ang) * 12), Math.round(feet[1] + Math.sin(ang) * 3), 1, 1, i % 2 ? col : lite);
+        const ang = (i / N) * Math.PI * 2;
+        const lit = ((i - Math.floor(t * 2.5)) % N + N) % N < 10;
+        g.rect(Math.round(feet[0] + Math.cos(ang) * rx), Math.round(feet[1] + Math.sin(ang) * ry), 1, 1, lit ? '#ffffff' : i % 2 ? col : deep);
       }
-      for (let i = 0; i < 12; i++) {
-        const ang = (i / 12) * Math.PI * 2 - t * 0.5;
-        g.rect(Math.round(feet[0] + Math.cos(ang) * 6), Math.round(feet[1] + Math.sin(ang) * 1.5), 1, 1, lite);
+      // the inner ring (counter-turning dashes) and four rune points
+      for (let i = 0; i < 20; i++) {
+        if ((i + Math.floor(t)) % 4 === 0) continue;
+        const ang = (i / 20) * Math.PI * 2 - t * 0.3;
+        g.rect(Math.round(feet[0] + Math.cos(ang) * rx * 0.6), Math.round(feet[1] + Math.sin(ang) * ry * 0.6), 1, 1, lite);
       }
-      // motes rising to the hand
+      for (let k = 0; k < 4; k++) {
+        const ang = (k / 4) * Math.PI * 2 + t * 0.12;
+        const x = Math.round(feet[0] + Math.cos(ang) * rx * 0.82), y = Math.round(feet[1] + Math.sin(ang) * ry * 0.82);
+        g.rect(x - 1, y, 3, 1, lite); g.rect(x, y - 1, 1, 3, lite); g.rect(x, y, 1, 1, '#ffffff');
+      }
+      // light rising from the ring
+      for (let k = 0; k < 5; k++) {
+        const ph = (t * 0.9 + k * 7) % 12;
+        const ang = k * 1.9 + 0.5;
+        const x = Math.round(feet[0] + Math.cos(ang) * rx * 0.9), y0 = feet[1] + Math.sin(ang) * ry * 0.9;
+        const h = 3 + Math.round(ph);
+        g.rect(x, Math.round(y0 - h - ph), 1, h, k % 2 ? lite : col);
+      }
+      cv.globalAlpha = a0;
+    });
+    inst(s, 20, 'mid', (g, t) => {
+      // motes gathering at the hand
       for (let i = 0; i < 6; i++) {
         const k = Math.min(1, t / 12), ang = (i / 6) * Math.PI * 2 + t * 0.2;
         const x = cp[0] + Math.cos(ang) * 14 * (1 - k), y = cp[1] + Math.sin(ang) * 10 * (1 - k) + (feet[1] - cp[1]) * (1 - k) * 0.5;
-        g.draw(get(i % 2 ? 'tw_white' : 'tw_gold'), x - 3, y - 3, { alpha: k < 1 ? 1 : 0.6 });
+        g.draw(get(i % 2 ? 'tw_white' : 'tw_' + (glow === 'white' ? 'gold' : glow)), x - 3, y - 3, { alpha: k < 1 ? 1 : 0.6 });
       }
       if (t >= 8 && t < 14) twinkle(g, cp[0], cp[1], t < 11 ? 2 : 1, lite);
-      cv.globalAlpha = a0;
     });
     return 10;
   };

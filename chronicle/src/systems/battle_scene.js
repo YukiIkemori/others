@@ -327,16 +327,34 @@
     const n = list.length;
     if (!n) return out;
     const width = (row) => row.reduce((s, it) => s + sz(it).w, 0) + GAP * Math.max(0, row.length - 1);
-    const rows = []; // back to front
+    let rows = []; // back to front
     const big = list.filter((it) => sz(it).h >= BIG_H);
     if (big.length) {
-      // big sprites in front (feet 146, centred), the rest behind them right-aligned — split in two when too wide
+      // big sprites in front (feet 146, centred), the rest behind them right-aligned — split in two when too wide.
+      // When that hides an escort (under half showing), the big row moves to the left edge; if one is still
+      // hidden, the escorts stand in front at the big one's right (feet 148) instead (§11.5.13)
       const rest = list.filter((it) => sz(it).h < BIG_H);
-      let backRows = rest.length ? [rest] : [];
-      if (rest.length && width(rest) > ROW_W) backRows = [rest.filter((_, i) => i % 2 === 0), rest.filter((_, i) => i % 2 === 1)];
-      const feetB = backRows.length === 2 ? [102, 122] : [114];
-      backRows.forEach((row, ri) => rows.push(rowShape(row, sz, feetB[ri], 0, true)));
-      rows.push(rowShape(big, sz, BIG_FEET, 0, false));
+      const layout = (left, front) => {
+        const out = [];
+        const bigRow = rowShape(big, sz, BIG_FEET, 0, false);
+        if (left) bigRow.x0 = bigRow.def = EZ.x0;
+        if (rest.length && front) { out.push(bigRow, rowShape(rest, sz, BIG_FEET + 2, 0, true)); return out; }
+        let backRows = rest.length ? [rest] : [];
+        if (rest.length && width(rest) > ROW_W) backRows = [rest.filter((_, i) => i % 2 === 0), rest.filter((_, i) => i % 2 === 1)];
+        const feetB = backRows.length === 2 ? [102, 122] : [114];
+        backRows.forEach((row, ri) => out.push(rowShape(row, sz, feetB[ri], 0, true)));
+        out.push(bigRow);
+        return out;
+      };
+      const worst = (rs) => Math.min(...visibility(rs, sz).values());
+      let best = null, bestV = -1;
+      for (const [left, front] of [[false, false], [true, false], [true, true]]) {
+        const rs = layout(left, front);
+        const v = rest.length ? worst(rs) : 1;
+        if (v > bestV + 0.001) { best = rs; bestV = v; }
+        if (v >= 0.5) break;
+      }
+      rows = best;
     } else {
       let rowsN = 1;
       if (!(width(list) <= ROW_W && n <= 3)) {
@@ -1628,6 +1646,7 @@
       c.save();
       c.beginPath(); c.rect(FIELD.x, FIELD.y, FIELD.w, FIELD.h); c.clip();
       this.drawBackdrop();
+      this.drawFx('under');
       this.drawUnits();
       this.drawFx('mid');
       this.drawFx('top');

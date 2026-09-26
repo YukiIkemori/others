@@ -1305,7 +1305,7 @@ try{
 //                      lists the ids currently served by a stand-in (push only)
 //   R.Audio.duck(db, frames) — dip the music bus briefly (glimmer ピコーン)
 //
-// Recorded media (BRIEF A9/A10, design/notes/audio.md §12): window.RPG_MEDIA (written by tools/build.js
+// Recorded media (BRIEF A9/A10, design/notes/audio.md §13): window.RPG_MEDIA (written by tools/build.js
 // from assets/bgm/ and assets/voice/) = {bgm:{id:{src,loopStart,loopEnd,gain,loop}}, voice:{id:{src}}}.
 //   playBGM/pushBGM/popBGM(id) play assets/bgm/<id>.* instead of the synth track when listed (decoded on
 //   first use, looped between loopStart/loopEnd s; decode failure → synth). Jingles stay synthesised.
@@ -13702,7 +13702,10 @@ try{
   BT.joints = joints;
 
   // ------------------------------------------------------------------ parts
-  const { Mask, mline, mpoly, mrect, mellipse, paint, dot, ik, rnd, mset } = BT;
+  // battlers_draw.js loads after this file: reach its helpers at call time
+  const Mask = () => BT.Mask(), mline = (...a) => BT.mline(...a), mpoly = (...a) => BT.mpoly(...a);
+  const mrect = (...a) => BT.mrect(...a), paint = (...a) => BT.paint(...a), dot = (...a) => BT.dot(...a);
+  const ik = (...a) => BT.ik(...a), rnd = (p) => BT.rnd(p), mset = (...a) => BT.mset(...a);
   function limb(a, b, t) { return mline(Mask(), a[0], a[1], b[0], b[1], t); }
 
   /** one leg: thigh, shin, boot. kneel: shin on the ground, toe behind */
@@ -13725,7 +13728,7 @@ try{
       const d = which === 'n' ? -1 : 1;
       mpoly(m, [[hip[0] - 2, hip[1] - 1], [hip[0] + 2, hip[1] - 1], [ank[0] + 3, Math.min(37, ank[1] + 1)], [ank[0] - 2 + (d < 0 ? -1 : 0), Math.min(37, ank[1] + 1)]]);
     }
-    paint(b, m, legT, { shift, cast: which === 'n', band: o.hakama ? (x) => (x & 1) === 0 : null });
+    paint(b, m, legT, { shift, cast: which === 'n', inner: which === 'n', band: o.hakama ? (x) => (x & 1) === 0 : null });
     // knee plate / wraps
     if (o.metal && !kneel) dot(b, knee[0] + 1, knee[1], M.main, 3);
     // boot
@@ -13755,12 +13758,18 @@ try{
     const el = rnd(ik(sh, hand, B.upper, B.fore, 1));
     const m = limb(sh, el, B.au);
     mline(m, el[0], el[1], hand[0], hand[1], o.wide ? Math.max(B.af, 2.5) : B.af);
-    paint(b, m, M[o.sleeve], { shift, cast: which === 'n' });
+    paint(b, m, M[o.sleeve], { shift, cast: which === 'n', inner: which === 'n' });
     if (o.wide) {
       // cuff of the wide sleeve (trim) one step before the hand
       const cx = r(el[0] + (hand[0] - el[0]) * 0.72), cy = r(el[1] + (hand[1] - el[1]) * 0.72);
       const cm = mline(Mask(), cx, cy, cx, cy, 2.5);
       paint(b, cm, M.trim, { shift });
+    }
+    if (o.pad && which === 'n') {
+      // shoulder pad over the top of the near arm (fighter: sub, armor: main plate with a trim rim)
+      const pm = BT.mellipse(Mask(), sh[0], sh[1] - 0.5, B.sw >= 11 ? 2.4 : 1.9, 1.6);
+      paint(b, pm, M[o.pad], { inner: true });
+      if (o.padTrim) for (let x = sh[0] - 2; x <= sh[0] + 2; x++) { const y = r(sh[1] + 1); if (pm[y * BT.W + x]) dot(b, x, y, M.trim, 2); }
     }
     if (!(o2 && o2.noHand)) handAt(b, fig, hand, shift, o2 && o2.fist);
     return el;
@@ -13925,6 +13934,13 @@ try{
         wclip = SOLE;
       }
       if (w.dir === 'D' && F.plant) wclip = SOLE;
+      if (wg && !F.plant) {
+        // keep the whole weapon on the canvas (1px margin for the outline): slide the hand
+        const top = whand[1] - wg.grip[1], left = whand[0] - wg.grip[0], right = left + wg.w - 1;
+        if (top < 1) whand[1] += 1 - top;
+        if (right > BT.W - 2) whand[0] -= right - (BT.W - 2);
+        if (left < 1) whand[0] += 1 - left;
+      }
       if (BT.TWO_HANDED[fig.wtype] && !F.free && wg && wg.grip2) {
         const gx = whand[0] - wg.grip[0], gy = whand[1] - wg.grip[1];
         J.hf = [wg.grip2[0] + gx, wg.grip2[1] + gy];
@@ -13940,6 +13956,8 @@ try{
         return res;
       }
       const res = BT.drawWeapon(b, fig.wtype, w.dir, whand, pal, { sparkle: fig.sparkle && F.sparkle });
+      // a resting bow's string belongs to the bow's own layer (a drawn string is added after the hands)
+      if (fig.wtype === 'bow' && res && F.string !== 'hn') BT.bowString(b, res.ends, null, pal);
       if (wclip != null) for (let y = wclip + 1; y < BT.H; y++) for (let x = 0; x < BT.W; x++) { const i = y * BT.W + x; if (!b.body[i]) { b.col[i] = null; b.tn[i] = null; } }
       return res;
     };
@@ -13961,10 +13979,9 @@ try{
     // gripping hands over the weapon
     if (w && w.hand !== 'f') handAt(b, fig, J.hn, 0);
     if (w && (w.hand === 'f' || (BT.TWO_HANDED[fig.wtype] && !F.free)) && J.hf) handAt(b, fig, J.hf, w.hand === 'f' ? 0 : -1);
-    if (fig.wtype === 'bow' && w && wres) {
-      if (F.string === 'hn') BT.bowString(b, wres.ends, J.hn, pal);
-      else BT.bowString(b, wres.ends, null, pal);
-      if (F.string === 'hn') handAt(b, fig, J.hn, 0);
+    if (fig.wtype === 'bow' && w && wres && F.string === 'hn') {
+      BT.bowString(b, wres.ends, J.hn, pal);
+      handAt(b, fig, J.hn, 0);
     }
     let arrowHead = null;
     if (F.arrow && fig.wtype === 'bow') arrowHead = BT.arrow(b, J.hn[0], J.hn[1], pal, 12);
@@ -13974,8 +13991,8 @@ try{
     let tip;
     if (arrowHead) tip = arrowHead;
     else if (fig.wtype === 'bow' && F.open) tip = [J.hf[0] + 3, J.hf[1]];
-    else if (wres && wres.tip) tip = wres.tip;
     else if (F.fist === 'f' && J.hf) tip = [J.hf[0] + 1, J.hf[1]];
+    else if (wres && wres.tip) tip = wres.tip;
     else tip = (w && w.hand === 'f' ? J.hf : J.hn) || J.hf;
     const pre = {
       head: headTop,
@@ -14099,36 +14116,47 @@ try{
    */
   function paint(b, m, tones, o) {
     o = o || {};
-    const at = (x, y) => inb(x, y) && m[y * W + x];
-    const px = [];
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-      if (!m[y * W + x]) continue;
+    const flat = o.flat, shift = o.shift || 0, rim = !!o.rim, sh2 = !!o.shade2, band = o.band;
+    const ms = (i, x) => (x >= 0 && x < W && i >= 0 && i < W * H ? m[i] : 0);
+    const idx = [], kk = [];
+    for (let i = 0; i < W * H; i++) {
+      if (!m[i]) continue;
+      const x = i % W, y = (i - x) / W;
       let k;
-      if (o.flat != null) k = o.flat;
+      if (flat != null) k = flat;
       else {
-        const oR = !at(x + 1, y), oU = !at(x, y - 1), oL = !at(x - 1, y), oD = !at(x, y + 1);
-        const lit = oR || (oU && !o.rim), dark = oL || oD || (o.shade2 && !at(x - 2, y));
+        const oR = !ms(i + 1, x + 1), oU = !ms(i - W, x), oL = !ms(i - 1, x - 1), oD = !ms(i + W, x);
+        const lit = oR || (oU && !rim), dark = oL || oD || (sh2 && !ms(i - 2, x - 2));
         k = 2;
         if (dark && !lit) k = 1;
         else if (lit && !dark) k = 3;
         else if (lit && dark) k = oL && oD ? 1 : 2;
         if (oL && oD && !oR) k = 0;
-        if (o.band && o.band(x, y)) k = Math.min(k, 1);
+        if (band && band(x, y)) k = Math.min(k, 1);
       }
-      k = Math.max(0, Math.min(3, k + (o.shift || 0)));
-      px.push([x, y, k]);
+      k += shift;
+      idx.push(i); kk.push(k < 0 ? 0 : k > 3 ? 3 : k);
+    }
+    if (o.inner) {
+      // a dark contour where the part lies over something already drawn (arm over chest…)
+      const all = o.inner === 'all';
+      for (let n = 0; n < idx.length; n++) {
+        const i = idx[n], x = i % W;
+        const t = (j, xx) => xx >= 0 && xx < W && j >= 0 && j < W * H && !m[j] && (b.tn[j] !== null || b.col[j] !== null);
+        if (t(i - 1, x - 1) || t(i + W, x) || t(i + 1, x + 1) || (all && t(i - W, x))) kk[n] = 0;
+      }
     }
     if (o.cast) {
-      for (const [x, y] of px) {
-        const sx = x - 1, sy = y + 1, j = sy * W + sx;
-        if (!inb(sx, sy) || at(sx, sy) || !b.tn[j]) continue;
-        b.ti[j] = Math.max(0, Math.min(b.ti[j], 1));
+      for (let n = 0; n < idx.length; n++) {
+        const i = idx[n], x = i % W, j = i + W - 1;
+        if (x < 1 || j >= W * H || m[j] || !b.tn[j]) continue;
+        if (b.ti[j] > 1) b.ti[j] = 1;
       }
     }
-    for (const [x, y, k] of px) {
-      const i = y * W + x;
-      b.tn[i] = tones; b.ti[i] = k; b.col[i] = null;
-      b.body[i] = o.body === false ? 0 : 1;
+    const bd = o.body === false ? 0 : 1;
+    for (let n = 0; n < idx.length; n++) {
+      const i = idx[n];
+      b.tn[i] = tones; b.ti[i] = kk[n]; b.col[i] = null; b.body[i] = bd;
     }
   }
   BT.paint = paint;
@@ -14163,14 +14191,17 @@ try{
     const src = new Array(W * H).fill(null);
     for (let i = 0; i < W * H; i++) src[i] = colorAt(b, i);
     const out = src.slice(), body = b.body.slice();
-    const at = (x, y) => inb(x, y) && src[y * W + x];
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
       const i = y * W + x;
       if (src[i]) continue;
-      const n = [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]].filter(([a, c]) => at(a, c));
-      if (!n.length) continue;
+      let any = 0, bod = 0;
+      if (x > 0 && src[i - 1]) { any = 1; bod |= b.body[i - 1]; }
+      if (x < W - 1 && src[i + 1]) { any = 1; bod |= b.body[i + 1]; }
+      if (y > 0 && src[i - W]) { any = 1; bod |= b.body[i - W]; }
+      if (y < H - 1 && src[i + W]) { any = 1; bod |= b.body[i + W]; }
+      if (!any) continue;
       out[i] = outlineCol;
-      body[i] = n.some(([a, c]) => b.body[c * W + a]) ? 1 : 0;
+      body[i] = bod ? 1 : 0;
     }
     // a colour pixel on the canvas edge becomes the outline (no room for it)
     for (let x = 0; x < W; x++) { if (out[x]) out[x] = outlineCol; if (out[(H - 1) * W + x] && !src[(H - 2) * W + x]) out[(H - 1) * W + x] = outlineCol; }
@@ -14243,8 +14274,8 @@ try{
     two: { hn: [23, 30], hf: null, w: W('FU') },
     spear: { hn: [21, 30], hf: null, w: W('FU') },
     dagger: { hn: [27, 29], hf: [27, 26], w: W('F') },
-    bow: { hn: [20, 31], hf: [30, 28], w: W('U', 'front', 'f') },
-    staff: { hn: [26, 29], hf: [24, 30], w: W('U') },
+    bow: { hn: [20, 31], hf: [32, 28], w: W('U', 'front', 'f') },
+    staff: { hn: [29, 29], hf: [24, 30], w: W('U') },
     fist: { hn: [25, 27], hf: [29, 25], w: null },
     whip: { hn: [21, 30], hf: [26, 30], w: W('U', 'front'), coil: true },
   };
@@ -14273,11 +14304,12 @@ try{
   }
   function thrust(st) {
     const two = st === 'two' || st === 'spear';
-    const dg = st === 'dagger' || st === 'fist';
+    const dg = st === 'dagger' || st === 'fist' || st === 'bow';
+    const lng = st === 'spear' || st === 'staff'; // long shafts: hold further back so the head stays on the canvas
     return [
-      fr({ n: [20, 22], h: [21, 29], fn: [18, 36], ff: [26, 36], hn: dg ? [21, 28] : [19, 29], hf: two ? null : [25, 25], w: W('F'), cape: 2 }),
-      fr({ n: [25, 22], h: [24, 29], fn: [18, 36], ff: [30, 36], hn: dg ? [31, 26] : [28, 27], hf: two ? null : [21, 28], w: W('F'), cape: 3 }),
-      fr({ n: [25, 23], h: [24, 30], fn: [18, 36], ff: [30, 36], hn: dg ? [30, 27] : [27, 28], hf: two ? null : [22, 29], w: W('F'), cape: 3 }),
+      fr({ n: [20, 22], h: [21, 29], fn: [18, 36], ff: [26, 36], hn: dg ? [21, 28] : lng ? [15, 29] : [19, 29], hf: two ? null : [25, 25], w: W(lng ? 'F' : 'F'), cape: 2 }),
+      fr({ n: [25, 22], h: [24, 29], fn: [18, 36], ff: [30, 36], hn: dg ? [33, 26] : lng ? [23, 27] : [28, 27], hf: two ? null : [21, 28], w: W('F'), cape: 3 }),
+      fr({ n: [25, 23], h: [24, 30], fn: [18, 36], ff: [30, 36], hn: dg ? [30, 27] : lng ? [22, 28] : [27, 28], hf: two ? null : [22, 29], w: W('F'), cape: 3 }),
     ];
   }
   function smash(st) {
@@ -14285,7 +14317,7 @@ try{
     return [
       fr({ n: [21, 22], h: [22, 29], fn: [19, 36], ff: [26, 36], hn: [21, 15], hf: two ? null : [24, 16], w: W('BU', 'back'), cape: 2 }),
       fr({ n: [25, 23], h: [24, 29], fn: [18, 36], ff: [30, 36], hn: [30, 24], hf: two ? null : [28, 25], w: W('FD'), cape: 3 }),
-      fr({ n: [26, 25], h: [24, 31], fn: [18, 36], ff: [30, 36], hn: [30, 30], hf: two ? null : [28, 30], w: W('F'), cape: 3 }),
+      fr({ n: [26, 25], h: [24, 31], fn: [18, 36], ff: [30, 36], hn: st === 'staff' ? [29, 27] : [30, 30], hf: two ? null : [28, 30], w: W(st === 'staff' ? 'FD' : 'F'), cape: 3 }),
     ];
   }
   function shoot(st) {
@@ -14328,10 +14360,10 @@ try{
   function lowHold(st) {
     if (st === 'bow') return { hn: [20, 29], w: W('U', 'back') };
     if (st === 'fist') return { hn: [21, 30], w: null };
-    if (st === 'two') return { hn: [20, 31], w: W('FD', 'back'), free: true };
+    if (st === 'two') return { hn: [20, 31], w: W('BD', 'back'), free: true };
     if (st === 'spear') return { hn: [20, 30], w: W('FU', 'back'), free: true };
     if (st === 'whip') return { hn: [20, 31], w: W('U', 'back'), coil: true };
-    return { hn: [20, 31], w: W('FD', 'back') };
+    return { hn: [20, 31], w: W('BD', 'back') };
   }
   function cast(st) {
     if (st === 'staff') {
@@ -14384,20 +14416,20 @@ try{
     return [fr(o)];
   }
   function weak(st) {
-    const body = { n: [25, 28], h: [21, 33], fn: [16, 37], ff: [27, 36], kneel: 'n', planted: true };
+    const body = { n: [24, 27], h: [21, 32], fn: [16, 37], ff: [28, 36], kneel: 'n', planted: true };
     let o;
-    if (st === 'bow' || st === 'staff') o = { hn: [28, 29], hf: [24, 33], w: W('U'), plant: true };
+    if (st === 'bow' || st === 'staff') o = { hn: [30, 29], hf: [26, 33], w: W('U'), plant: true };
     else if (st === 'fist') o = { hn: [29, 36], hf: [26, 33], w: null };
     else if (st === 'whip') o = { hn: [28, 31], hf: [26, 33], w: W('D'), coil: true };
-    else o = { hn: [28, 29], hf: st === 'two' || st === 'spear' ? null : [27, 31], w: W('D'), plant: true };
+    else o = { hn: [30, 29], hf: st === 'two' || st === 'spear' ? null : [28, 31], w: W('D'), plant: true };
     const f0 = fr(Object.assign({}, body, o));
-    const f1 = Object.assign({}, f0, { n: [25, 27] });
+    const f1 = Object.assign({}, f0, { n: [24, 26] });
     return [f0, f1];
   }
   function victory(st) {
-    const o = { hn: [22, 14], hf: [25, 30], w: W('U'), raise: true };
+    const o = { hn: [19, 13], hf: [25, 30], w: W('U'), raise: true };
     if (st === 'two' || st === 'spear') { o.hf = null; }
-    if (st === 'fist') { o.w = null; o.hn = [21, 14]; o.fist = 'n'; }
+    if (st === 'fist') { o.w = null; o.hn = [29, 17]; o.fist = 'n'; }
     if (st === 'whip') { o.coil = 'up'; }
     const f0 = fr(o);
     const f1 = Object.assign({}, f0, { n: [22, 21], h: [22, 28], hop: 1 });
@@ -14488,7 +14520,7 @@ try{
         // back spike
         { poly: [[-0.5, -9], [-3, -8], [-0.5, -6.5]], c: 'X' },
         // crescent blade on the front
-        { poly: [[0.5, -9], [3, -11.5], [5.8, -11.2], [5.8, -3], [3, -2.8], [0.5, -5]], c: (lx) => (lx < 1.8 ? 'X' : lx < 4.4 ? 'Y' : 'Z') },
+        { poly: [[0.5, -9.2], [2.6, -11], [4.8, -11.2], [4.2, -7.5], [4.8, -3.6], [2.6, -3.8], [0.5, -5.6]], c: (lx) => (lx < 1.6 ? 'X' : lx < 3.4 ? 'Y' : 'Z') },
         { y: [-12, -11], x: [-0.5, 0.5], c: 'M' },
       ],
     },
@@ -14720,6 +14752,258 @@ try{
 })(window.RPG);
 
 }catch(e){(window.RPG=window.RPG||{}).loadErrors=(window.RPG.loadErrors||[]);window.RPG.loadErrors.push("src/art/battlers_weapons.js"+': '+(e&&e.stack||e));console.error("src/art/battlers_weapons.js",e);}
+// ==== src/art/battlers.js
+try{
+// Party battle sprites for the side-view battle (Part A8, DESIGN §11.4.4. Owner SV-ART).
+// Every party look (the hero in 2 genders × 5 types and the 20 companions) gets a
+// 48×40, left-facing battle figure with 15 poses / 34 frames, generated from parts:
+//   body base (gender × build × height) + the FIELD head parts 1:1 (hair, face,
+//   hat, beard, overlays) + the outfit shape of the field body type + the field
+//   palette letters + the cape + the weapon of the equipped weapon family.
+// Nothing here touches R.Art.Chars (CA) at load time: chars*.js load after this
+// file, so CA is only read inside functions.
+//
+//   R.Art.battler(who, opts) → BattlerSheet (cached in R.Gfx under battlerKey)
+//   R.Art.battlerKey(who, opts) → 'btl:<lookId>:<wtype>[:<grade>]'
+//   R.Art.battlerWtype(c, slot = 'weapon1') → wtype
+//   R.Art.BATTLER = {W, H, FEET, POSES, FRAMES, HOLD, IMPACT, FAMILY, LOOK}
+// Files: battlers.js (this: API, sheet, ko, anchors), battlers_body.js (body,
+// outfits, head), battlers_draw.js (paint model), battlers_pose.js (skeletons),
+// battlers_weapons.js (the 11 weapons). Contact sheets: tools/sheet_battlers.js;
+// tests: tools/test_battlers.js.
+(function (R) {
+  'use strict';
+  const A = (R.Art = R.Art || {});
+  const BT = (A._Battlers = A._Battlers || {});
+
+  const POSES = ['idle', 'walk', 'slash', 'thrust', 'smash', 'shoot', 'punch', 'lash', 'cast', 'item', 'guard', 'hit', 'weak', 'ko', 'victory'];
+  const FRAMES = { idle: 2, walk: 2, slash: 3, thrust: 3, smash: 3, shoot: 3, punch: 3, lash: 3, cast: 3, item: 2, guard: 1, hit: 1, weak: 2, ko: 1, victory: 2 };
+  const HOLD = {
+    idle: [24, 24], walk: [4, 4], slash: [5, 3, 10], thrust: [5, 3, 10], smash: [6, 3, 10], shoot: [6, 4, 10], punch: [4, 3, 10],
+    lash: [5, 3, 10], cast: [6, 10, 8], item: [6, 10], guard: [60], hit: [12], weak: [30, 30], ko: [60], victory: [12, 12],
+  };
+  const LOOPS = { idle: 1, walk: 1, guard: 1, weak: 1, ko: 1, victory: 1 };
+  const IMPACT = { slash: 1, thrust: 1, smash: 1, shoot: 2, punch: 1, lash: 1, cast: 2, item: 1 };
+  const FAMILY = {
+    sword: 'slash', katana: 'slash', greatsword: 'slash', axe: 'smash', club: 'smash', staff: 'smash',
+    spear: 'thrust', dagger: 'thrust', bow: 'shoot', fist: 'punch', whip: 'lash',
+  };
+  // §11.4.4.5: gender · build · height; outfit = the field body type's shape, cape = style.cape
+  const LOOK = {
+    selma: { gender: 'f', build: 'normal', height: 0, outfit: 'armor', cape: null },
+    hagen: { gender: 'm', build: 'sturdy', height: 0, outfit: 'tunic', cape: 'mantle' },
+    dokka: { gender: 'm', build: 'sturdy', height: 'short', outfit: 'dwarf', cape: null },
+    basil: { gender: 'm', build: 'sturdy', height: 0, outfit: 'robe', cape: 'mantle' },
+    bartolo: { gender: 'm', build: 'normal', height: 0, outfit: 'armor', cape: 'long' },
+    viola: { gender: 'f', build: 'slim', height: 0, outfit: 'coat', cape: 'long' },
+    shigure: { gender: 'm', build: 'slim', height: 0, outfit: 'gi', cape: null },
+    rouga: { gender: 'm', build: 'sturdy', height: 0, outfit: 'gi', cape: null },
+    titta: { gender: 'f', build: 'slim', height: 'youth', outfit: 'light', cape: null },
+    brigitta: { gender: 'f', build: 'normal', height: 0, outfit: 'tunic', cape: null },
+    sylvain: { gender: 'm', build: 'slim', height: 0, outfit: 'light', cape: null },
+    zafira: { gender: 'f', build: 'slim', height: 0, outfit: 'light', cape: null },
+    ferno: { gender: 'm', build: 'slim', height: 0, outfit: 'light', cape: 'mantle' },
+    belladonna: { gender: 'f', build: 'normal', height: 0, outfit: 'coat', cape: null },
+    boden: { gender: 'm', build: 'sturdy', height: 0, outfit: 'coat', cape: null },
+    teo: { gender: 'm', build: 'slim', height: 'youth', outfit: 'robe', cape: null },
+    ilse: { gender: 'f', build: 'slim', height: 0, outfit: 'robe', cape: 'mantle' },
+    morga: { gender: 'f', build: 'normal', height: 0, outfit: 'robe', cape: null },
+    marta: { gender: 'f', build: 'normal', height: 0, outfit: 'coat', cape: null },
+    noela: { gender: 'f', build: 'slim', height: 0, outfit: 'hakama', cape: null },
+  };
+  const HERO = { warrior: ['tunic', null], ranger: ['light', null], mage: ['robe', null], spellblade: ['armor', 'long'], wanderer: ['coat', 'mantle'] };
+  for (const g of ['m', 'f']) for (const t in HERO) LOOK['hero_' + g + '_' + t] = { gender: g, build: 'normal', height: 0, outfit: HERO[t][0], cape: HERO[t][1] };
+
+  const BATTLER = (A.BATTLER = { W: 48, H: 40, FEET: [24, 39], POSES, FRAMES, HOLD, IMPACT, FAMILY, LOOK, LOOPS });
+  const WTYPES = Object.keys(FAMILY);
+
+  // ------------------------------------------------------------------ API
+  const DB = () => R.DB || {};
+  const lookOf = (who) => (typeof who === 'string' ? who : R.Party && R.Party.spriteId ? R.Party.spriteId(who) : 'hero_m_warrior');
+  function itemOf(id) { const it = id && DB().items ? DB().items[id] : null; return it || null; }
+
+  A.battlerWtype = function (c, slot) {
+    slot = slot || 'weapon1';
+    if (!c || typeof c === 'string' || !c.equip) return 'fist';
+    const other = slot === 'weapon2' ? 'weapon1' : 'weapon2';
+    for (const s of [slot, other]) {
+      const it = itemOf(c.equip[s]);
+      if (it && FAMILY[it.wtype]) return it.wtype;
+    }
+    return 'fist';
+  };
+  function gradeOf(who, opts) {
+    if (opts && opts.grade) return opts.grade;
+    if (!who || typeof who === 'string' || !who.equip) return 'normal';
+    const it = itemOf(who.equip.weapon1) || itemOf(who.equip.weapon2);
+    return (it && it.grade) || 'normal';
+  }
+  A.battlerKey = function (who, opts) {
+    opts = opts || {};
+    const wt = opts.wtype || A.battlerWtype(who);
+    const g = gradeOf(who, opts);
+    return 'btl:' + lookOf(who) + ':' + wt + (g && g !== 'normal' ? ':' + g : '');
+  };
+  A.battler = function (who, opts) {
+    opts = opts || {};
+    const look = lookOf(who);
+    const wtype = FAMILY[opts.wtype] ? opts.wtype : A.battlerWtype(who);
+    const grade = gradeOf(who, opts);
+    const key = A.battlerKey(who, { wtype, grade });
+    if (!R.Gfx.has(key)) R.Gfx.def(key, () => buildSafe(look, wtype, grade, key));
+    return R.Gfx.get(key);
+  };
+
+  // ------------------------------------------------------------------ sheet
+  function buildSafe(look, wtype, grade, key) {
+    try {
+      const s = buildSheet(look, wtype, grade);
+      s.key = key;
+      return s;
+    } catch (e) {
+      R.warn('battler: stand-in for', key, e && e.message);
+      const s = fallbackSheet(look, wtype);
+      s.key = key;
+      return s;
+    }
+  }
+
+  /** figure data shared by every frame of a sheet */
+  function makeFig(look, wtype, grade) {
+    const CA = A.Chars;
+    const who = CA && CA.parts && CA.parts.party ? CA.parts.party[look] : null;
+    const L = LOOK[look];
+    if (!who || !L) throw new Error('no party look ' + look);
+    const pal = CA.partyPalette(who);
+    const st = who.style || {};
+    const bodyName = st.variant || (who.gender === 'f' && st.bodyF) || st.body;
+    const outfit = BT.OUTFIT_OF[bodyName] || L.outfit || 'tunic';
+    return {
+      look, who, pal, wtype, grade, style: BT.STYLE[wtype] || 'fist',
+      B: BT.buildParams(L, who.gender || L.gender),
+      M: BT.materials(pal),
+      out: BT.OUT[outfit], outfit,
+      skirt: bodyName === 'fighterF' ? 'short' : bodyName === 'lightF' ? 'knee' : null,
+      cape: st.cape === 'long' || st.cape === 'mantle' ? st.cape : null,
+      head: BT.headLayer(who, pal),
+      wpal: BT.weaponPal(pal, grade),
+      sparkle: grade === 'super',
+    };
+  }
+  BT.makeFig = makeFig;
+
+  function buildSheet(look, wtype, grade) {
+    const fig = makeFig(look, wtype, grade);
+    const OUTL = A.Chars.OUTLINE;
+    const poses = {};
+    for (const p of POSES) {
+      const frames = BT.POSE_FN[p](fig.style).map((F, i) => {
+        const Fx = Object.assign({}, F, { sparkle: (p === 'idle' && i === 0) || p === 'victory' });
+        const res = p === 'ko' ? koFrame(fig, Fx) : BT.renderFrame(fig, Fx);
+        return toFrame(res, OUTL);
+      });
+      poses[p] = { frames, hold: HOLD[p].slice(0, frames.length), loop: !!LOOPS[p], impact: p in IMPACT ? IMPACT[p] : null };
+    }
+    return sheetOf(look, wtype, poses, false);
+  }
+  BT.buildSheet = buildSheet;
+
+  function sheetOf(look, wtype, poses, pending) {
+    return {
+      key: null, look, wtype, family: FAMILY[wtype] || 'punch', W: 48, H: 40, poses, pending,
+      frame(pose, t) {
+        const P = this.poses[pose] || this.poses.idle;
+        const n = P.frames.length;
+        if (n === 1) return P.frames[0];
+        const total = P.hold.reduce((a, b) => a + b, 0) || 1;
+        t = Math.max(0, Math.floor(t || 0));
+        if (P.loop) t %= total;
+        else if (t >= total) return P.frames[n - 1];
+        for (let i = 0; i < n; i++) { if (t < P.hold[i]) return P.frames[i]; t -= P.hold[i]; }
+        return P.frames[n - 1];
+      },
+    };
+  }
+
+  const RGB = {};
+  /** pixels + pre-flip anchors → Frame (left-facing) */
+  function toFrame(res, outline) {
+    const W = BT.W, H = BT.H;
+    const fin = BT.finish(res.b, outline);
+    const cv = R.Gfx.makeCanvas(W, H), cx = cv.getContext('2d');
+    const id = cx.createImageData(W, H), dd = id.data;
+    for (let i = 0; i < W * H; i++) {
+      const c = fin.px[i];
+      if (!c) continue;
+      let rgb = RGB[c];
+      if (!rgb) rgb = RGB[c] = R.Gfx.hexToRgb(c.slice(0, 7));
+      dd[i * 4] = rgb[0]; dd[i * 4 + 1] = rgb[1]; dd[i * 4 + 2] = rgb[2]; dd[i * 4 + 3] = 255;
+    }
+    cx.putImageData(id, 0, 0);
+    let x0 = W, y0 = H, x1 = -1, y1 = -1;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (fin.body[y * W + x] && fin.px[y * W + x]) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    const fl = (q) => [Math.max(0, Math.min(W - 1, W - 1 - Math.round(q[0]))), Math.max(0, Math.min(H - 1, Math.round(q[1])))];
+    const a = res.pre;
+    return {
+      img: cv, feet: [24, 39], head: fl(a.head), hit: fl(a.hit), hand: fl(a.hand), tip: fl(a.tip), cast: fl(a.cast),
+      box: { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 },
+    };
+  }
+
+  /** ko: the standing ko figure turned 90° counter-clockwise (head behind, feet in front), on its back */
+  function koFrame(fig, F) {
+    const W = BT.W, H = BT.H;
+    const res = BT.renderFrame(fig, F);
+    const b = res.b;
+    const pts = [];
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const i = y * W + x;
+      if (!BT.filled(b, i)) continue;
+      pts.push([y, W - 1 - x, BT.colorAt(b, i), b.body[i]]);
+    }
+    let x0 = 99, x1 = -99, y1 = -99;
+    for (const p of pts) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y1 = Math.max(y1, p[1]); }
+    const dx = Math.round(23.5 - (x0 + x1) / 2), dy = BT.SOLE - y1;
+    const rot = (q) => [q[1] + dx, W - 1 - q[0] + dy];
+    const b2 = BT.Buf();
+    // the dropped weapon lies on the ground beside the body (under it)
+    if (fig.wtype !== 'fist') {
+      const g = [Math.round(23.5 - 6), BT.SOLE - 1];
+      if (fig.wtype === 'whip') BT.whipCoil(b2, [g[0] + 12, BT.SOLE - 7], fig.wpal);
+      else BT.drawWeapon(b2, fig.wtype, fig.wtype === 'bow' ? 'F' : 'F', g, fig.wpal);
+      for (let i = (BT.SOLE + 1) * W; i < W * H; i++) { b2.col[i] = null; b2.tn[i] = null; }
+    }
+    for (const p of pts) {
+      const X = p[0] + dx, Y = p[1] + dy;
+      if (X < 0 || Y < 0 || X >= W || Y >= H) continue;
+      const i = Y * W + X;
+      b2.tn[i] = null; b2.col[i] = p[2]; b2.body[i] = p[3];
+    }
+    const a = res.pre;
+    const hd = rot(a.head);
+    const hand = rot(a.hand);
+    return { b: b2, pre: { head: [hd[0], Math.max(0, hd[1] - 4)], hit: rot(a.hit), hand, tip: hand, cast: [hand[0] + 4, hand[1]] } };
+  }
+
+  // ------------------------------------------------------------------ stand-in (§11.1.3)
+  /** every frame = the field 'party:<id>' left[0] placed on the feet point; pending: true */
+  function fallbackSheet(look, wtype) {
+    const PENDING = (A.PENDING = A.PENDING || []);
+    if (!PENDING.includes('btl:' + look)) PENDING.push('btl:' + look);
+    let src = null;
+    try { const sh = R.Gfx.has('party:' + look) ? R.Gfx.get('party:' + look) : null; src = sh && sh.left ? sh.left[0] : null; } catch (e) { src = null; }
+    const cv = R.Gfx.makeCanvas(48, 40);
+    if (src) cv.getContext('2d').drawImage(src, 16, 16);
+    const fr = { img: cv, feet: [24, 39], head: [24, 16], hit: [24, 28], hand: [20, 30], tip: [16, 30], cast: [14, 28], box: { x: 16, y: 16, w: 16, h: 24 } };
+    const poses = {};
+    for (const p of POSES) poses[p] = { frames: new Array(FRAMES[p]).fill(fr), hold: HOLD[p].slice(), loop: !!LOOPS[p], impact: p in IMPACT ? IMPACT[p] : null };
+    return sheetOf(look, wtype, poses, true);
+  }
+  BT.fallbackSheet = fallbackSheet;
+  BT.WTYPES = WTYPES;
+})(window.RPG);
+
+}catch(e){(window.RPG=window.RPG||{}).loadErrors=(window.RPG.loadErrors||[]);window.RPG.loadErrors.push("src/art/battlers.js"+': '+(e&&e.stack||e));console.error("src/art/battlers.js",e);}
 // ==== src/art/bosses_b.js
 try{
 // New boss battle sprites for Chronicle (DESIGN §9.11.6, owner art-boss A15a):
@@ -63882,7 +64166,7 @@ try{
   const layerOf = () => 'mid'; // side view: every fx is on the battlefield (§11.5.12)
   const ease = (x) => 1 - (1 - x) * (1 - x);
   let RATE = 1; // playback rate of the effect being started (fx arrays: 2nd+ at 60 % length)
-  function inst(scene, life, layer, draw) { scene.addFx({ life, layer: 'mid', draw, t: 0, rate: RATE }); }
+  function inst(scene, life, layer, draw) { scene.addFx({ life, layer: layer === 'under' ? 'under' : 'mid', draw, t: 0, rate: RATE }); } // 'under': below the sprites (magic circles)
   /** the direction of an effect: −1 leftward (party → enemy), +1 rightward (enemy → party), 0 none */
   const dirOf = (c) => (c && (c.dir === 1 || c.dir === -1) ? c.dir : 0);
 
@@ -64725,34 +65009,56 @@ try{
     const els = elementsOf(c.ab);
     const order = Object.keys((DB && DB.elements) || {});
     const el = order.find((e) => els.includes(e)) || els[0];
-    const col = (el && DB.elements && DB.elements[el] && DB.elements[el].color) || '#ffffff';
-    const lite = G().mix ? G().mix(col, '#ffffff', 0.55) : '#ffffff';
+    const col = (el && DB.elements && DB.elements[el] && DB.elements[el].color) || '#e8e8ff';
+    const lite = G().mix ? G().mix(col, '#ffffff', 0.6) : '#ffffff';
+    const deep = G().shade ? G().shade(col, -0.25) : col;
+    const glow = { fire: 'red', water: 'blue', wind: 'green', earth: 'orange', light: 'gold', dark: 'purple' }[el] || 'white';
     const feet = r.feet || [r.cx, r.bottom];
     const cp = r.cast || [r.cx - 8, r.cy];
-    inst(s, 18, 'mid', (g, t) => {
-      const fade = t > 12 ? Math.max(0, (18 - t) / 6) : Math.min(1, (t + 2) / 4);
+    const RX = 14, RY = 4;
+    inst(s, 20, 'under', (g, t) => {
+      const grow = Math.min(1, (t + 1) / 4), fade = t > 14 ? Math.max(0, (20 - t) / 6) : 1;
       if (fade <= 0) return;
       const cv = g.ctx, a0 = cv.globalAlpha;
       cv.globalAlpha = a0 * fade;
-      // the circle: 24×6 ellipse of dots turning (every 3rd step lit), a brighter inner ring
-      const N = 28;
+      const rx = RX * grow, ry = RY * grow;
+      g.draw(get('glow_' + glow), feet[0] - rx * 2, feet[1] - ry * 3, { w: rx * 4, h: ry * 6, alpha: 0.55 });
+      // the outer ring: solid in the element's colour, a bright arc turning round it
+      const N = 44;
       for (let i = 0; i < N; i++) {
-        const ang = (i / N) * Math.PI * 2 + t * 0.35;
-        if ((i + Math.floor(t)) % 3 === 0) continue;
-        g.rect(Math.round(feet[0] + Math.cos(ang) * 12), Math.round(feet[1] + Math.sin(ang) * 3), 1, 1, i % 2 ? col : lite);
+        const ang = (i / N) * Math.PI * 2;
+        const lit = ((i - Math.floor(t * 2.5)) % N + N) % N < 10;
+        g.rect(Math.round(feet[0] + Math.cos(ang) * rx), Math.round(feet[1] + Math.sin(ang) * ry), 1, 1, lit ? '#ffffff' : i % 2 ? col : deep);
       }
-      for (let i = 0; i < 12; i++) {
-        const ang = (i / 12) * Math.PI * 2 - t * 0.5;
-        g.rect(Math.round(feet[0] + Math.cos(ang) * 6), Math.round(feet[1] + Math.sin(ang) * 1.5), 1, 1, lite);
+      // the inner ring (counter-turning dashes) and four rune points
+      for (let i = 0; i < 20; i++) {
+        if ((i + Math.floor(t)) % 4 === 0) continue;
+        const ang = (i / 20) * Math.PI * 2 - t * 0.3;
+        g.rect(Math.round(feet[0] + Math.cos(ang) * rx * 0.6), Math.round(feet[1] + Math.sin(ang) * ry * 0.6), 1, 1, lite);
       }
-      // motes rising to the hand
+      for (let k = 0; k < 4; k++) {
+        const ang = (k / 4) * Math.PI * 2 + t * 0.12;
+        const x = Math.round(feet[0] + Math.cos(ang) * rx * 0.82), y = Math.round(feet[1] + Math.sin(ang) * ry * 0.82);
+        g.rect(x - 1, y, 3, 1, lite); g.rect(x, y - 1, 1, 3, lite); g.rect(x, y, 1, 1, '#ffffff');
+      }
+      // light rising from the ring
+      for (let k = 0; k < 5; k++) {
+        const ph = (t * 0.9 + k * 7) % 12;
+        const ang = k * 1.9 + 0.5;
+        const x = Math.round(feet[0] + Math.cos(ang) * rx * 0.9), y0 = feet[1] + Math.sin(ang) * ry * 0.9;
+        const h = 3 + Math.round(ph);
+        g.rect(x, Math.round(y0 - h - ph), 1, h, k % 2 ? lite : col);
+      }
+      cv.globalAlpha = a0;
+    });
+    inst(s, 20, 'mid', (g, t) => {
+      // motes gathering at the hand
       for (let i = 0; i < 6; i++) {
         const k = Math.min(1, t / 12), ang = (i / 6) * Math.PI * 2 + t * 0.2;
         const x = cp[0] + Math.cos(ang) * 14 * (1 - k), y = cp[1] + Math.sin(ang) * 10 * (1 - k) + (feet[1] - cp[1]) * (1 - k) * 0.5;
-        g.draw(get(i % 2 ? 'tw_white' : 'tw_gold'), x - 3, y - 3, { alpha: k < 1 ? 1 : 0.6 });
+        g.draw(get(i % 2 ? 'tw_white' : 'tw_' + (glow === 'white' ? 'gold' : glow)), x - 3, y - 3, { alpha: k < 1 ? 1 : 0.6 });
       }
       if (t >= 8 && t < 14) twinkle(g, cp[0], cp[1], t < 11 ? 2 : 1, lite);
-      cv.globalAlpha = a0;
     });
     return 10;
   };
@@ -65146,29 +65452,46 @@ try{
     if (Array.isArray(img)) img = img[0];
     return img;
   }
-  /** lay one row out: centred on cx (or right-aligned to EZ.x1), gaps ≤ 6, overlap ≤ half of the narrower sprite */
-  function placeRow(items, sz, feet, shift, right) {
+  /** one row: sprite offsets (gaps ≤ 6, overlap ≤ half of the narrower sprite) and its default left x */
+  function rowShape(items, sz, feet, shift, right) {
     const n = items.length;
-    if (!n) return [];
     const ws = items.map((it) => sz(it).w);
     const tot = ws.reduce((s, w) => s + w, 0);
     const span = EZ.x1 - EZ.x0;
     let gap = n > 1 ? Math.min(GAP, (ROW_W - tot) / (n - 1)) : 0;
     if (n > 1) {
-      // every sprite keeps at least half of its width visible (§11.5.13)
       const minW = Math.min(...ws);
       gap = Math.max(gap, -Math.floor(minW / 2));
       if (tot + gap * (n - 1) > span) gap = Math.max(-Math.floor(minW / 2), (span - tot) / (n - 1));
     }
-    const width = tot + gap * (n - 1);
-    let x = right ? EZ.x1 - width : EZ.cx + shift - width / 2;
-    x = Math.min(x, EZ.x1 - width);
-    x = Math.max(x, EZ.x0);
-    return items.map((it, i) => { const p = { it, x: Math.round(x), feet }; x += ws[i] + gap; return p; });
+    const width = tot + gap * Math.max(0, n - 1);
+    const offs = [];
+    let x = 0;
+    for (let i = 0; i < n; i++) { offs.push(Math.round(x)); x += ws[i] + gap; }
+    let x0 = right ? EZ.x1 - width : EZ.cx + shift - width / 2;
+    x0 = Math.max(EZ.x0, Math.min(x0, EZ.x1 - width));
+    return { items, feet, feetDef: feet, offs, width, x0: Math.round(x0), def: Math.round(x0) };
+  }
+  /** share of each sprite's box not covered by the ones drawn after it (feet order, then list order) */
+  function visibility(rows, sz, only) {
+    const boxes = [];
+    rows.forEach((r) => r.items.forEach((it, i) => { const z = sz(it); boxes.push({ it, row: r, x: r.x0 + r.offs[i], y: r.feet - z.h, w: z.w, h: z.h, feet: r.feet, k: boxes.length }); }));
+    const out = new Map();
+    for (const A of boxes) {
+      if (only && A.row !== only) continue;
+      const over = boxes.filter((Bx) => Bx !== A && (Bx.feet > A.feet || (Bx.feet === A.feet && Bx.k > A.k)) && Bx.x < A.x + A.w && Bx.x + Bx.w > A.x && Bx.y < A.y + A.h && Bx.y + Bx.h > A.y);
+      if (!over.length) { out.set(A.it, 1); continue; }
+      let n = 0, hid = 0;
+      for (let y = A.y + 1; y < A.y + A.h; y += 3) for (let x = A.x + 1; x < A.x + A.w; x += 3) { n++; if (over.some((Bx) => x >= Bx.x && x < Bx.x + Bx.w && y >= Bx.y && y < Bx.y + Bx.h)) hid++; }
+      out.set(A.it, n ? 1 - hid / n : 1);
+    }
+    return out;
   }
   /**
    * R.Battle.enemyLayout(list [, sizeOf]) → Map(item → {x, y, row, rows, feet}) (x y = the sprite's top left).
-   * list: monster units (their sprite decides the size) or plain {w, h, flying}. §11.5.13.
+   * list: monster units (their sprite decides the size) or plain {w, h, flying}. §11.5.13: rows and feet by the
+   * table; each row centred on x 88, the back rows 8 px further right; when a back row would hide under the one in
+   * front (less than 60 % of a sprite showing) it slides sideways to the nearest place that shows the most.
    */
   function enemyLayout(list, sizeOf) {
     const cache = new Map();
@@ -65189,28 +65512,60 @@ try{
     const n = list.length;
     if (!n) return out;
     const width = (row) => row.reduce((s, it) => s + sz(it).w, 0) + GAP * Math.max(0, row.length - 1);
-    const put = (placed, row, rows) => { for (const p of placed) out.set(p.it, { x: p.x, y: p.feet - sz(p.it).h, row, rows, feet: p.feet }); };
+    let rows = []; // back to front
     const big = list.filter((it) => sz(it).h >= BIG_H);
     if (big.length) {
-      // big sprites in front (feet 146, centred), the rest behind them right-aligned — split in two when too wide
+      // big sprites in front (feet 146, centred), the rest behind them right-aligned — split in two when too wide.
+      // When that hides an escort (under half showing), the big row moves to the left edge; if one is still
+      // hidden, the escorts stand in front at the big one's right (feet 148) instead (§11.5.13)
       const rest = list.filter((it) => sz(it).h < BIG_H);
-      let backRows = rest.length ? [rest] : [];
-      if (rest.length && width(rest) > ROW_W) backRows = [rest.filter((_, i) => i % 2 === 0), rest.filter((_, i) => i % 2 === 1)];
-      const rows = backRows.length + 1;
-      const feetB = backRows.length === 2 ? [102, 122] : [114];
-      backRows.forEach((row, ri) => put(placeRow(row, sz, feetB[ri], 0, true), ri, rows));
-      put(placeRow(big, sz, BIG_FEET, 0, false), rows - 1, rows);
-      return out;
+      const layout = (left, front) => {
+        const out = [];
+        const bigRow = rowShape(big, sz, BIG_FEET, 0, false);
+        if (left) bigRow.x0 = bigRow.def = EZ.x0;
+        if (rest.length && front) { out.push(bigRow, rowShape(rest, sz, BIG_FEET + 2, 0, true)); return out; }
+        let backRows = rest.length ? [rest] : [];
+        if (rest.length && width(rest) > ROW_W) backRows = [rest.filter((_, i) => i % 2 === 0), rest.filter((_, i) => i % 2 === 1)];
+        const feetB = backRows.length === 2 ? [102, 122] : [114];
+        backRows.forEach((row, ri) => out.push(rowShape(row, sz, feetB[ri], 0, true)));
+        out.push(bigRow);
+        return out;
+      };
+      const worst = (rs) => Math.min(...visibility(rs, sz).values());
+      let best = null, bestV = -1;
+      for (const [left, front] of [[false, false], [true, false], [true, true]]) {
+        const rs = layout(left, front);
+        const v = rest.length ? worst(rs) : 1;
+        if (v > bestV + 0.001) { best = rs; bestV = v; }
+        if (v >= 0.5) break;
+      }
+      rows = best;
+    } else {
+      let rowsN = 1;
+      if (!(width(list) <= ROW_W && n <= 3)) {
+        rowsN = 2;
+        const two = [list.filter((_, i) => i % 2 === 0), list.filter((_, i) => i % 2 === 1)];
+        if (two.some((r) => width(r) > ROW_W3)) rowsN = 3;
+      }
+      for (let r = 0; r < rowsN; r++) rows.push(rowShape(list.filter((_, i) => i % rowsN === r), sz, ROW_FEET[rowsN][r], (rowsN - 1 - r) * BACK_SHIFT, false));
     }
-    let rowsN = 1;
-    if (!(width(list) <= ROW_W && n <= 3)) {
-      rowsN = 2;
-      const two = [list.filter((_, i) => i % 2 === 0), list.filter((_, i) => i % 2 === 1)];
-      if (two.some((r) => width(r) > ROW_W3)) rowsN = 3;
+    // back rows slide sideways only when the row in front would hide them (front row first, then further back).
+    // Not behind a big sprite: its escorts peek out at its upper right as placed (§11.5.13)
+    for (let r = big.length ? -1 : rows.length - 2; r >= 0; r--) {
+      const row = rows[r];
+      const minVis = () => Math.min(...visibility(rows, sz, row).values());
+      if (minVis() >= 0.6) continue;
+      let best = row.def, bestScore = -Infinity;
+      for (let x0 = EZ.x0; x0 <= EZ.x1 - row.width; x0 += 2) {
+        row.x0 = x0;
+        const score = Math.min(0.6, minVis()) * 1000 - Math.abs(x0 - row.def);
+        if (score > bestScore) { bestScore = score; best = x0; }
+      }
+      row.x0 = best;
+      // still under half showing: the row stands up to 6 px further back (§11.5.13 allows ±6 px)
+      for (let up = 2; up <= 6 && minVis() < 0.5; up += 2) row.feet = row.feetDef - up;
     }
-    const rows = [];
-    for (let r = 0; r < rowsN; r++) rows.push(list.filter((_, i) => i % rowsN === r));
-    rows.forEach((row, ri) => put(placeRow(row, sz, ROW_FEET[rowsN][ri], (rowsN - 1 - ri) * BACK_SHIFT, false), ri, rowsN));
+    rows.forEach((row, ri) => row.items.forEach((it, i) => out.set(it, { x: row.x0 + row.offs[i], y: row.feet - sz(it).h, row: ri, rows: rows.length, feet: row.feet })));
     return out;
   }
 
@@ -66476,6 +66831,7 @@ try{
       c.save();
       c.beginPath(); c.rect(FIELD.x, FIELD.y, FIELD.w, FIELD.h); c.clip();
       this.drawBackdrop();
+      this.drawFx('under');
       this.drawUnits();
       this.drawFx('mid');
       this.drawFx('top');

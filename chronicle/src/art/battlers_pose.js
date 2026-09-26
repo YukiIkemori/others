@@ -40,8 +40,8 @@
     two: { hn: [23, 30], hf: null, w: W('FU') },
     spear: { hn: [21, 30], hf: null, w: W('FU') },
     dagger: { hn: [27, 29], hf: [27, 26], w: W('F') },
-    bow: { hn: [20, 31], hf: [30, 28], w: W('U', 'front', 'f') },
-    staff: { hn: [26, 29], hf: [24, 30], w: W('U') },
+    bow: { hn: [20, 31], hf: [32, 28], w: W('U', 'front', 'f') },
+    staff: { hn: [29, 29], hf: [24, 30], w: W('U') },
     fist: { hn: [25, 27], hf: [29, 25], w: null },
     whip: { hn: [21, 30], hf: [26, 30], w: W('U', 'front'), coil: true },
   };
@@ -70,11 +70,11 @@
   }
   function thrust(st) {
     const two = st === 'two' || st === 'spear';
-    const dg = st === 'dagger' || st === 'fist';
+    const dg = st === 'dagger' || st === 'fist' || st === 'bow';
     const lng = st === 'spear' || st === 'staff'; // long shafts: hold further back so the head stays on the canvas
     return [
       fr({ n: [20, 22], h: [21, 29], fn: [18, 36], ff: [26, 36], hn: dg ? [21, 28] : lng ? [15, 29] : [19, 29], hf: two ? null : [25, 25], w: W(lng ? 'F' : 'F'), cape: 2 }),
-      fr({ n: [25, 22], h: [24, 29], fn: [18, 36], ff: [30, 36], hn: dg ? [31, 26] : lng ? [23, 27] : [28, 27], hf: two ? null : [21, 28], w: W('F'), cape: 3 }),
+      fr({ n: [25, 22], h: [24, 29], fn: [18, 36], ff: [30, 36], hn: dg ? [33, 26] : lng ? [23, 27] : [28, 27], hf: two ? null : [21, 28], w: W('F'), cape: 3 }),
       fr({ n: [25, 23], h: [24, 30], fn: [18, 36], ff: [30, 36], hn: dg ? [30, 27] : lng ? [22, 28] : [27, 28], hf: two ? null : [22, 29], w: W('F'), cape: 3 }),
     ];
   }
@@ -195,7 +195,7 @@
   function victory(st) {
     const o = { hn: [19, 13], hf: [25, 30], w: W('U'), raise: true };
     if (st === 'two' || st === 'spear') { o.hf = null; }
-    if (st === 'fist') { o.w = null; o.hn = [21, 14]; o.fist = 'n'; }
+    if (st === 'fist') { o.w = null; o.hn = [29, 17]; o.fist = 'n'; }
     if (st === 'whip') { o.coil = 'up'; }
     const f0 = fr(o);
     const f1 = Object.assign({}, f0, { n: [22, 21], h: [22, 28], hop: 1 });

@@ -524,7 +524,7 @@
     let v = S.pv(S.eng.party[3]);
     let cmds = []; cmds[3] = { type: 'spell', id: fire, target: S.eng.mons[1] };
     round(S, cmds);
-    await a.until(() => v.act && v.act.pose === 'cast' && v.act.fi === 1, 400); await a.step(4); a.shot('cast_circle');
+    await a.until(() => v.act && v.act.pose === 'cast' && v.act.fi === 1, 400); await a.step(4); a.shot('cast_circle'); a.zoom('zoom_cast', 168, 104, 88, 48, 3);
     await a.until(() => v.act && v.act.fi === 2, 100); await a.step(4); a.shot('cast_fireball');
     await a.step(8); a.shot('cast_hit');
     const heal = DB.actions.s_light_1 ? 's_light_1' : P().spell;

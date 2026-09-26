@@ -347,6 +347,13 @@
         wclip = SOLE;
       }
       if (w.dir === 'D' && F.plant) wclip = SOLE;
+      if (wg && !F.plant) {
+        // keep the whole weapon on the canvas (1px margin for the outline): slide the hand
+        const top = whand[1] - wg.grip[1], left = whand[0] - wg.grip[0], right = left + wg.w - 1;
+        if (top < 1) whand[1] += 1 - top;
+        if (right > BT.W - 2) whand[0] -= right - (BT.W - 2);
+        if (left < 1) whand[0] += 1 - left;
+      }
       if (BT.TWO_HANDED[fig.wtype] && !F.free && wg && wg.grip2) {
         const gx = whand[0] - wg.grip[0], gy = whand[1] - wg.grip[1];
         J.hf = [wg.grip2[0] + gx, wg.grip2[1] + gy];
@@ -362,6 +369,8 @@
         return res;
       }
       const res = BT.drawWeapon(b, fig.wtype, w.dir, whand, pal, { sparkle: fig.sparkle && F.sparkle });
+      // a resting bow's string belongs to the bow's own layer (a drawn string is added after the hands)
+      if (fig.wtype === 'bow' && res && F.string !== 'hn') BT.bowString(b, res.ends, null, pal);
       if (wclip != null) for (let y = wclip + 1; y < BT.H; y++) for (let x = 0; x < BT.W; x++) { const i = y * BT.W + x; if (!b.body[i]) { b.col[i] = null; b.tn[i] = null; } }
       return res;
     };
@@ -383,10 +392,9 @@
     // gripping hands over the weapon
     if (w && w.hand !== 'f') handAt(b, fig, J.hn, 0);
     if (w && (w.hand === 'f' || (BT.TWO_HANDED[fig.wtype] && !F.free)) && J.hf) handAt(b, fig, J.hf, w.hand === 'f' ? 0 : -1);
-    if (fig.wtype === 'bow' && w && wres) {
-      if (F.string === 'hn') BT.bowString(b, wres.ends, J.hn, pal);
-      else BT.bowString(b, wres.ends, null, pal);
-      if (F.string === 'hn') handAt(b, fig, J.hn, 0);
+    if (fig.wtype === 'bow' && w && wres && F.string === 'hn') {
+      BT.bowString(b, wres.ends, J.hn, pal);
+      handAt(b, fig, J.hn, 0);
     }
     let arrowHead = null;
     if (F.arrow && fig.wtype === 'bow') arrowHead = BT.arrow(b, J.hn[0], J.hn[1], pal, 12);
@@ -396,8 +404,8 @@
     let tip;
     if (arrowHead) tip = arrowHead;
     else if (fig.wtype === 'bow' && F.open) tip = [J.hf[0] + 3, J.hf[1]];
-    else if (wres && wres.tip) tip = wres.tip;
     else if (F.fist === 'f' && J.hf) tip = [J.hf[0] + 1, J.hf[1]];
+    else if (wres && wres.tip) tip = wres.tip;
     else tip = (w && w.hand === 'f' ? J.hf : J.hn) || J.hf;
     const pre = {
       head: headTop,

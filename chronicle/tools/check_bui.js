@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// check_bui.js (bui A3) — the battle screen against the written spec. Reads DESIGN.md / STYLE_JA.md
+// check_bui.js (SV-SCENE, was bui A3) — the battle screen against the written spec. Reads DESIGN.md / STYLE_JA.md
 // themselves, so a spec edit that the code did not follow shows up here.
-//   K1 layout constants = the §11.5.1 block            K2 status icons = the §11.3.6 table (grid + colour)
+//   K1 R.Battle.LAYOUT = the §11.5.1 block (+ STATUS columns §11.5.2)           K2 status icons = the §11.3.6 table (grid + colour)
 //   K3 every fx id the spec names (§6.2.6, §9.14.2 ④, §11.5.12, §11.11.1) is an exact FX of battle_fx.js
 //   K4 every fx id the data writes (actions, items, weapon types, elements) resolves exactly (warning per owner)
 //   K5 the fixed battle texts of the scene appear verbatim in STYLE_JA §6 / §9 (and DESIGN §11.5)
@@ -29,29 +29,47 @@ const warn = (k, m) => { warnings++; console.log(`WARN  [${k}] ${m}`); };
 const okk = (k, m) => { checks++; if (VERBOSE) console.log(`ok    [${k}] ${m}`); };
 const section = (h) => { const i = DESIGN.indexOf(h); if (i < 0) return ''; const rest = DESIGN.slice(i + h.length); const j = rest.search(/\n#{2,4} /); return DESIGN.slice(i, i + h.length + (j < 0 ? rest.length : j)); };
 
-// ---------------------------------------------------------------- K1 layout
+// ---------------------------------------------------------------- K1 layout (Part A8 side view)
 {
   const s = section('#### 11.5.1');
-  const num = (re) => { const m = re.exec(s); return m ? m.slice(1).map(Number) : null; };
-  const win = /WIN\s*=\s*\{\s*xs:\s*\[(\d+),\s*(\d+),\s*(\d+),\s*(\d+)\],\s*y:\s*(\d+),\s*w:\s*(\d+),\s*h:\s*(\d+)\s*\}/.exec(s);
-  const want = {
-    WIN: win && { xs: win.slice(1, 5).map(Number), y: +win[5], w: +win[6], h: +win[7] },
-    WIN_BOTTOM: (num(/WIN_BOTTOM\s*=\s*(\d+)/) || [])[0],
-    HELP: (() => { const a = num(/HELP\s*=\s*\{\s*x:\s*(\d+),\s*y:\s*(\d+),\s*w:\s*(\d+),\s*h:\s*(\d+)/); return a && { x: a[0], y: a[1], w: a[2], h: a[3] }; })(),
-    BOX: (() => { const a = num(/BOX\s*=\s*\{\s*x:\s*(\d+),\s*y:\s*(\d+),\s*w:\s*(\d+),\s*h:\s*(\d+)/); return a && { x: a[0], y: a[1], w: a[2], h: a[3] }; })(),
-    GROUND: (num(/GROUND\s*=\s*(\d+)/) || [])[0],
-    BANNER: (() => { const a = num(/BANNER\s*=\s*\{\s*y:\s*(\d+),\s*h:\s*(\d+)/); return a && { y: a[0], h: a[1] }; })(),
-    CARD: (() => { const a = num(/CARD\s*=\s*\{\s*y:\s*(\d+)/); return a && { y: a[0] }; })(),
-  };
-  for (const k in want) {
-    if (want[k] == null) { err('K1', `§11.5.1 has no ${k}`); continue; }
-    let got = B[k];
-    if (k === 'BOX' && got) got = { x: got.x, y: got.y, w: got.w, h: got.h };
-    if (JSON.stringify(got) === JSON.stringify(want[k])) okk('K1', k); else err('K1', `R.Battle.${k} = ${JSON.stringify(got)}, §11.5.1 says ${JSON.stringify(want[k])}`);
+  const code = (/```\n([\s\S]*?)```/.exec(s) || ['', ''])[1];
+  // NAME = { … } (balanced braces, may span lines) → JSON
+  const want = {};
+  const re = /\b([A-Z_]+)\s*=\s*\{/g;
+  let m;
+  while ((m = re.exec(code))) {
+    let i = m.index + m[0].length - 1, depth = 0, j = i;
+    for (; j < code.length; j++) { if (code[j] === '{') depth++; else if (code[j] === '}' && --depth === 0) break; }
+    const body = code.slice(i, j + 1).replace(/\/\/[^\n]*/g, '').replace(/([{,]\s*)(\w+)\s*:/g, '$1"$2":');
+    try { want[m[1]] = JSON.parse(body); } catch (e) { err('K1', `§11.5.1 ${m[1]} unreadable: ${body.slice(0, 80)}`); }
   }
-  // §11.11.3 repeats them
+  const names = ['FIELD', 'MSG', 'MSG_BIG', 'HELP', 'LIST', 'CMD', 'STATUS', 'BANNER', 'CARD', 'EZ', 'PARTY'];
+  const norm = (o) => JSON.stringify(o, Object.keys(o || {}).sort().concat(Object.values(o || {}).flatMap((v) => (v && typeof v === 'object' && !Array.isArray(v) ? Object.keys(v) : []))));
+  if (!B.LAYOUT) err('K1', 'R.Battle.LAYOUT missing');
+  for (const k of names) {
+    if (!want[k]) { err('K1', `§11.5.1 has no ${k}`); continue; }
+    const got = B.LAYOUT && B.LAYOUT[k];
+    if (got && norm(got) === norm(want[k])) okk('K1', k); else err('K1', `R.Battle.LAYOUT.${k} = ${JSON.stringify(got)}, §11.5.1 says ${JSON.stringify(want[k])}`);
+  }
+  for (const k of ['HELP', 'BANNER', 'CARD']) if (B[k] !== (B.LAYOUT || {})[k]) err('K1', `R.Battle.${k} is not LAYOUT.${k}`); else okk('K1', 'R.Battle.' + k);
+  // legacy constants keep their old values (other owners' tools read them — §11.5.1)
+  const legacy = { WIN: { xs: [3, 66, 129, 192], y: 5, w: 61, h: 46 }, WIN_BOTTOM: 56, GROUND: 130 };
+  for (const k in legacy) if (JSON.stringify(B[k]) !== JSON.stringify(legacy[k])) err('K1', `legacy R.Battle.${k} changed: ${JSON.stringify(B[k])}`); else okk('K1', 'legacy ' + k);
+  if (!B.BOX || B.BOX.x !== 8 || B.BOX.y !== 150 || B.BOX.w !== 240 || B.BOX.h !== 68) err('K1', 'legacy R.Battle.BOX changed');
+  if (typeof B.enemyLayout !== 'function') err('K1', 'R.Battle.enemyLayout missing (§11.5.13)');
+  // §11.5.2 STATUS columns
+  const s2 = section('#### 11.5.2');
+  const col = (lab) => { const r = new RegExp("\\| " + lab + " \\| `'(?:H|M|W)'` を `\\(x\\+(\\d+), y\\)`、値を右寄せ `\\(x\\+(\\d+), y\\)`").exec(s2); return r ? [+r[1], +r[2]] : null; };
+  const SC = B.STATUS_COLS || {};
+  for (const [lab, a, b] of [['HP', 'h', 'hp'], ['MP', 'm', 'mp'], ['WP', 'w', 'wp']]) {
+    const c = col(lab);
+    if (!c) err('K1', `§11.5.2 ${lab} row not read`);
+    else if (SC[a] !== c[0] || SC[b] !== c[1]) err('K1', `STATUS ${lab} columns ${SC[a]} / ${SC[b]}, §11.5.2 says ${c.join(' / ')}`);
+    else okk('K1', 'STATUS ' + lab);
+  }
+  // §11.11.3 repeats the layout
   const s3 = section('#### 11.11.3');
-  if (!s3.replace(/\s+/g, '').includes('xs:[' + B.WIN.xs.join(',') + ']')) warn('K1', '§11.11.3 no longer lists WIN xs ' + B.WIN.xs.join(','));
+  if (!/CMD\{4,152,88,68\}/.test(s3.replace(/\s+/g, ''))) warn('K1', '§11.11.3 does not list CMD {4,152,88,68}');
   else okk('K1', '§11.11.3 agrees');
 }
 

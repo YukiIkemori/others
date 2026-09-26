@@ -106,48 +106,47 @@
    */
   function paint(b, m, tones, o) {
     o = o || {};
-    const at = (x, y) => inb(x, y) && m[y * W + x];
-    const px = [];
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-      if (!m[y * W + x]) continue;
+    const flat = o.flat, shift = o.shift || 0, rim = !!o.rim, sh2 = !!o.shade2, band = o.band;
+    const ms = (i, x) => (x >= 0 && x < W && i >= 0 && i < W * H ? m[i] : 0);
+    const idx = [], kk = [];
+    for (let i = 0; i < W * H; i++) {
+      if (!m[i]) continue;
+      const x = i % W, y = (i - x) / W;
       let k;
-      if (o.flat != null) k = o.flat;
+      if (flat != null) k = flat;
       else {
-        const oR = !at(x + 1, y), oU = !at(x, y - 1), oL = !at(x - 1, y), oD = !at(x, y + 1);
-        const lit = oR || (oU && !o.rim), dark = oL || oD || (o.shade2 && !at(x - 2, y));
+        const oR = !ms(i + 1, x + 1), oU = !ms(i - W, x), oL = !ms(i - 1, x - 1), oD = !ms(i + W, x);
+        const lit = oR || (oU && !rim), dark = oL || oD || (sh2 && !ms(i - 2, x - 2));
         k = 2;
         if (dark && !lit) k = 1;
         else if (lit && !dark) k = 3;
         else if (lit && dark) k = oL && oD ? 1 : 2;
         if (oL && oD && !oR) k = 0;
-        if (o.band && o.band(x, y)) k = Math.min(k, 1);
+        if (band && band(x, y)) k = Math.min(k, 1);
       }
-      k = Math.max(0, Math.min(3, k + (o.shift || 0)));
-      px.push([x, y, k]);
+      k += shift;
+      idx.push(i); kk.push(k < 0 ? 0 : k > 3 ? 3 : k);
     }
     if (o.inner) {
       // a dark contour where the part lies over something already drawn (arm over chest…)
-      for (const q of px) {
-        const [x, y] = q;
-        for (const [dx, dy] of [[-1, 0], [0, 1], [1, 0], [0, -1]]) {
-          const X = x + dx, Y = y + dy;
-          if (!inb(X, Y) || at(X, Y) || !filled(b, Y * W + X)) continue;
-          if (dy === -1 && o.inner !== 'all') continue;
-          q[2] = 0; break;
-        }
+      const all = o.inner === 'all';
+      for (let n = 0; n < idx.length; n++) {
+        const i = idx[n], x = i % W;
+        const t = (j, xx) => xx >= 0 && xx < W && j >= 0 && j < W * H && !m[j] && (b.tn[j] !== null || b.col[j] !== null);
+        if (t(i - 1, x - 1) || t(i + W, x) || t(i + 1, x + 1) || (all && t(i - W, x))) kk[n] = 0;
       }
     }
     if (o.cast) {
-      for (const [x, y] of px) {
-        const sx = x - 1, sy = y + 1, j = sy * W + sx;
-        if (!inb(sx, sy) || at(sx, sy) || !b.tn[j]) continue;
-        b.ti[j] = Math.max(0, Math.min(b.ti[j], 1));
+      for (let n = 0; n < idx.length; n++) {
+        const i = idx[n], x = i % W, j = i + W - 1;
+        if (x < 1 || j >= W * H || m[j] || !b.tn[j]) continue;
+        if (b.ti[j] > 1) b.ti[j] = 1;
       }
     }
-    for (const [x, y, k] of px) {
-      const i = y * W + x;
-      b.tn[i] = tones; b.ti[i] = k; b.col[i] = null;
-      b.body[i] = o.body === false ? 0 : 1;
+    const bd = o.body === false ? 0 : 1;
+    for (let n = 0; n < idx.length; n++) {
+      const i = idx[n];
+      b.tn[i] = tones; b.ti[i] = kk[n]; b.col[i] = null; b.body[i] = bd;
     }
   }
   BT.paint = paint;
@@ -182,14 +181,17 @@
     const src = new Array(W * H).fill(null);
     for (let i = 0; i < W * H; i++) src[i] = colorAt(b, i);
     const out = src.slice(), body = b.body.slice();
-    const at = (x, y) => inb(x, y) && src[y * W + x];
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
       const i = y * W + x;
       if (src[i]) continue;
-      const n = [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]].filter(([a, c]) => at(a, c));
-      if (!n.length) continue;
+      let any = 0, bod = 0;
+      if (x > 0 && src[i - 1]) { any = 1; bod |= b.body[i - 1]; }
+      if (x < W - 1 && src[i + 1]) { any = 1; bod |= b.body[i + 1]; }
+      if (y > 0 && src[i - W]) { any = 1; bod |= b.body[i - W]; }
+      if (y < H - 1 && src[i + W]) { any = 1; bod |= b.body[i + W]; }
+      if (!any) continue;
       out[i] = outlineCol;
-      body[i] = n.some(([a, c]) => b.body[c * W + a]) ? 1 : 0;
+      body[i] = bod ? 1 : 0;
     }
     // a colour pixel on the canvas edge becomes the outline (no room for it)
     for (let x = 0; x < W; x++) { if (out[x]) out[x] = outlineCol; if (out[(H - 1) * W + x] && !src[(H - 2) * W + x]) out[(H - 1) * W + x] = outlineCol; }

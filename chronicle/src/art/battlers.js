@@ -169,18 +169,27 @@
     };
   }
 
+  const RGB = {};
   /** pixels + pre-flip anchors → Frame (left-facing) */
   function toFrame(res, outline) {
     const W = BT.W, H = BT.H;
     const fin = BT.finish(res.b, outline);
-    const p = R.Gfx.pix(W, H);
-    for (let i = 0; i < W * H; i++) p.d[i] = fin.px[i];
+    const cv = R.Gfx.makeCanvas(W, H), cx = cv.getContext('2d');
+    const id = cx.createImageData(W, H), dd = id.data;
+    for (let i = 0; i < W * H; i++) {
+      const c = fin.px[i];
+      if (!c) continue;
+      let rgb = RGB[c];
+      if (!rgb) rgb = RGB[c] = R.Gfx.hexToRgb(c.slice(0, 7));
+      dd[i * 4] = rgb[0]; dd[i * 4 + 1] = rgb[1]; dd[i * 4 + 2] = rgb[2]; dd[i * 4 + 3] = 255;
+    }
+    cx.putImageData(id, 0, 0);
     let x0 = W, y0 = H, x1 = -1, y1 = -1;
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (fin.body[y * W + x] && fin.px[y * W + x]) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
     const fl = (q) => [Math.max(0, Math.min(W - 1, W - 1 - Math.round(q[0]))), Math.max(0, Math.min(H - 1, Math.round(q[1])))];
     const a = res.pre;
     return {
-      img: p.toCanvas(), feet: [24, 39], head: fl(a.head), hit: fl(a.hit), hand: fl(a.hand), tip: fl(a.tip), cast: fl(a.cast),
+      img: cv, feet: [24, 39], head: fl(a.head), hit: fl(a.hit), hand: fl(a.hand), tip: fl(a.tip), cast: fl(a.cast),
       box: { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 },
     };
   }

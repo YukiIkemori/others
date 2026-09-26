@@ -10,6 +10,7 @@
 //   node tools/sim_zones.js --json out.json      write all numbers (M1 includes every group's result)
 //   node tools/sim_zones.js --species [--fit out.json]   species danger; --fit writes a candidate overlay (see below)
 //   node tools/sim_zones.js --refit all.json --fit out.json   zone-context correction of s from a --json run
+//   node tools/sim_zones.js --retilt all.json --fit out.json  M2: re-weight each zone's T0/T1 groups from a --json run
 //   node tools/sim_zones.js --tuning cand.json   run on DESIGN ⊕ a candidate overlay (in memory)
 //
 // Criteria (§9.13.1; party = §4.17.1 standard party, auto battle, mob fights start with MP/WP 60%, HP full):
@@ -783,49 +784,71 @@ function refit(file, outFile) {
   console.log(`[sim_zones] refit: ${n} species corrected from ${G.length} group results → ${outFile}`);
 }
 
-/** --tilt-t0 <avg> --fit <out.json>: dungeon zones (lvOff ≥ 1) at T0. lvOff +1 is a much larger share of the level at T0
- *  (Lb 7 vs 6) than later (×1.38 HP lost at T0–1, ×1.0 at T7), so at T0 only the zone's groups are re-weighted toward
- *  the lighter ones (w × e^(λ·(strength − mean)), λ < 0) until the average strength is <avg> (M5 floor 3.0). The groups
- *  eligible at T0 get a tierMax:0 copy with the new weight; the originals start at T1. No battles are run. */
-function tiltT0(target, outFile) {
+/** --retilt <sim_zones --json file> --fit <out.json>: M2 (order independence) at T0 and T1. There the standard party is
+ *  still missing area attacks (swarms of small monsters last long) and a dungeon's lvOff +1 is a large share of the level
+ *  (HP lost ×1.38 at T0–1, ×1.0 at T7), so a zone's first two tiers stray from its later ones. For each 'dyn' zone and
+ *  T ∈ {0, 1}, the groups eligible at T get a tier-only copy (tierMin = tierMax = T) whose weight is w × (L_g)^λ, L_g the
+ *  group's measured HP lost at T; λ is solved so the zone×tier mean equals the zone's T2–T7 mean, clipped so the average
+ *  strength stays in the M5 range 3.0–3.4. The originals then start at T2. Weights ≥ 0.5; no battles are run. */
+function retilt(file, outFile) {
+  const J = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const G = (J.M && J.M.M1 && J.M.M1.groups) || [];
+  const rows = (J.M && J.M.M1 && J.M.M1.rows) || [];
+  if (!G.length) throw new Error('retilt: ' + file + ' has no M1 groups');
   const base = CM.loadTuning();
   base.encounters = base.encounters || {};
   const E = CM.expected();
+  const key = (ms) => JSON.stringify(ms.map(([id, a, b]) => [id, a, b]));
   let n = 0;
   for (const [zid, z] of Object.entries(E.encounters)) {
-    if (z.tier !== 'dyn' || !(z.lvOff >= 1)) continue;
-    const el = CM.eligibleGroups(DB, Object.assign({}, z), 0).filter(({ g, ms }) => !g.solo && !CM.isMetalGroup(DB, ms));
-    const st = el.map(({ ms }) => CM.groupStrength(DB, ms));
-    const W = el.map(({ g }) => g.w);
-    const mean = (lam) => { let a = 0, b = 0; el.forEach((_, i) => { const w = W[i] * Math.exp(lam * st[i]); a += w * st[i]; b += w; }); return a / b; };
-    if (mean(0) <= target) continue;
-    let lo = -5, hi = 0;
-    for (let k = 0; k < 60; k++) { const m = (lo + hi) / 2; if (mean(m) > target) hi = m; else lo = m; }
-    const lam = lo;
-    const s0 = el.reduce((a, _, i) => a + W[i] * st[i], 0) / W.reduce((a, b) => a + b, 0);
-    const neu = new Map(el.map(({ g }, i) => [g, Math.max(0.5, Math.round(2 * W[i] * Math.exp(lam * (st[i] - s0))) / 2)]));
+    if (z.tier !== 'dyn') continue;
+    if (z.groups.some((g) => g.tierMax === 0 || g.tierMax === 1 && g.tierMin === 1)) { console.log('  retilt: ' + zid + ' already has tier-only groups, skipped'); continue; }
+    const later = rows.filter((r) => r.zone === zid && r.T >= 2 && r.T <= 7);
+    if (!later.length) continue;
+    const target = later.reduce((a, r) => a + r.lost, 0) / later.length;
+    const perT = {};
+    const notes = [];
+    for (const T of [0, 1]) {
+      const el = CM.eligibleGroups(DB, z, T);
+      const meas = new Map(G.filter((g) => g.zone === zid && g.T === T).map((g) => [key(g.ms), g]));
+      const items = el.map(({ g, ms }) => {
+        const m = meas.get(key(ms));
+        const fixed = !!g.solo || CM.isMetalGroup(DB, ms) || !m;
+        return { g, fixed, st: CM.groupStrength(DB, ms), L: m ? Math.max(0.01, m.lost) : null };
+      });
+      const act = items.filter((x) => !x.fixed);
+      const W = (lam) => act.map((x) => x.g.w * Math.pow(x.L, lam));
+      const avg = (lam, k) => { const w = W(lam); const t = w.reduce((a, b) => a + b, 0); return act.reduce((a, x, i) => a + w[i] * x[k], 0) / t; };
+      const f = (lam) => avg(lam, 'L') - target;
+      let lo = -3, hi = 3;
+      if (f(lo) > 0) hi = lo; else if (f(hi) < 0) lo = hi; else for (let k = 0; k < 60; k++) { const m = (lo + hi) / 2; if (f(m) > 0) hi = m; else lo = m; }
+      let lam = (lo + hi) / 2;
+      // keep the M5 average strength (3.0–3.4) at this tier: shrink λ toward 0 until it holds
+      for (let k = 0; k < 40 && (avg(lam, 'st') < 3.02 || avg(lam, 'st') > 3.38); k++) lam *= 0.9;
+      const w = W(lam);
+      perT[T] = new Map(act.map((x, i) => [x.g, Math.max(0.5, Math.round(2 * w[i]) / 2)]));
+      notes.push(`T${T} HP lost ${pct(act.reduce((a, x) => a + x.g.w * x.L, 0) / act.reduce((a, x) => a + x.g.w, 0))} → ${pct(avg(lam, 'L'))} (strength ${avg(lam, 'st').toFixed(2)})`);
+    }
     const groups = [];
     for (const g of z.groups) {
-      if (neu.has(g)) {
-        const lowCopy = Object.assign({}, g, { w: neu.get(g), tierMax: 0 });
-        delete lowCopy.tierMin;
-        groups.push(lowCopy);
-        groups.push(Object.assign({}, g, { tierMin: Math.max(1, g.tierMin || 0) }));
-      } else groups.push(g);
+      const in0 = perT[0].has(g), in1 = perT[1].has(g);
+      if (!in0 && !in1) { groups.push(g); continue; }
+      for (const T of [0, 1]) if (perT[T].has(g)) { const c = Object.assign({}, g, { w: perT[T].get(g), tierMin: T, tierMax: T }); if (T === 0) delete c.tierMin; groups.push(c); }
+      if (g.tierMax == null || g.tierMax >= 2) groups.push(Object.assign({}, g, { tierMin: Math.max(2, g.tierMin || 0) }));
     }
-    const why = `sim_zones --tilt-t0 ${target}: lvOff ${z.lvOff} makes T0 ×1.38 harder than T1+ (M2 order independence); at T0 the groups are re-weighted to average strength ${target} (was ${s0.toFixed(2)})`;
+    const why = `sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean ${pct(target)}: ` + notes.join('; ');
     const prev = base.encounters[zid] && base.encounters[zid].why;
-    base.encounters[zid] = { groups, why: prev && !/tilt-t0/.test(prev) ? prev + ' ／ ' + why : why };
+    base.encounters[zid] = { groups, why: prev && !/retilt|tilt-t0/.test(prev) ? prev + ' ／ ' + why : why };
     n++;
   }
   fs.writeFileSync(outFile, JSON.stringify(base, null, 2) + '\n');
-  console.log(`[sim_zones] tilt-t0: ${n} dungeon zones re-weighted at T0 → ${outFile}`);
+  console.log(`[sim_zones] retilt: ${n} zones re-weighted at T0/T1 → ${outFile}`);
 }
 
 // ================================================================ main
 function pct(x, d = 1) { return (100 * x).toFixed(d) + '%'; }
 function main() {
-  if (opt('tilt-t0', null)) { tiltT0(Number(opt('tilt-t0')), opt('fit')); return; }
+  if (opt('retilt', null)) { retilt(opt('retilt'), opt('fit')); return; }
   if (opt('refit', null)) { refit(opt('refit'), opt('fit', null) || (() => { throw new Error('--refit needs --fit <out.json>'); })()); return; }
   const useReal = realEngineOk();
   const t0 = Date.now();
