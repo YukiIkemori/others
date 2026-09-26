@@ -280,7 +280,8 @@ class Driver {
       const k = await this.decide(s, pol);
       const g = brief(s) + '|' + k;
       if (g === sig) same++; else { sig = g; same = 0; }
-      if (same > 60 && k !== 'wait') throw new Error(`stuck (${what || 'drive'}): ${brief(s)} (pressing ${k})`);
+      // a stage (the chapter scene, captions) runs on timers and only skips waits on A: it may look the same for long
+      if (same > (s.top === 'StageLayer' ? 900 : 60) && k !== 'wait') throw new Error(`stuck (${what || 'drive'}): ${brief(s)} (pressing ${k})`);
       if (s.idle && !done(s)) { if (++idleN > (pol.idleLimit || 40)) throw new Error(`the field is idle but ${what || 'the goal'} was not reached: ${brief(s)}`); } else idleN = 0;
       if (k === 'wait') await this.wait(60);
       else if (k === 'close-message') { await this.ev(() => window.RPG.UI.closeMessage()); this.errors.push({ stage: this.stage, text: `[smoke] a message window was left open after the event (${s.msg && s.msg.text})` }); }
