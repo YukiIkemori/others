@@ -151,8 +151,12 @@ async function T3() {
   t('T3 loop line', l1.log.say.length === 1);
   const l3 = await run('oblivion_4_loop', { vars: { oblivion_4_loops: 2 } });
   t('T3 loop hint', l3.ev.vars.oblivion_4_loops === 3 && l3.log.say.length === 3);
-  // 円環竜オウロボラ
+  // 円環竜オウロボラ (the closing picture R.Postgame.bonusScene waits for a button: stubbed, recorded)
+  const PG = R.Postgame = R.Postgame || {};
+  const origBonus = PG.bonusScene, bonus = [];
+  PG.bonusScene = async (opts) => { bonus.push(opts || {}); };
   const o1 = await run('oblivion_5_ouroboros');
+  t('T3 dragon bonus scene', bonus.length === 1 && bonus[0].title === '大語り部' && o1.flags.pg_clear === true, JSON.stringify(bonus));
   t('T3 dragon battle', o1.log.battles.length === 1 && o1.log.battles[0].troop === 'tr_b_ouroboros' && o1.log.battles[0].opts.noEscape === true);
   t('T3 dragon voice', o1.log.say.includes('ここは、終わらない物語が\n沈む場所。') && o1.log.say.includes('その竜は物語の終わりを食べて、\n同じ話を永遠にくり返させるの。'));
   t('T3 dragon win', o1.flags.pg_ouroboros === true && o1.flags.pg_clear === true && o1.log.objective === 'obj_s_pg_clear');
@@ -167,6 +171,8 @@ async function T3() {
   t('T3 dragon rematch', o3.log.battles.length === 1 && o3.log.say.includes('もう一度挑みますか？') && o3.log.caption.length === 0);
   const o4 = await run('oblivion_5_ouroboros', { flags: { pg_ouroboros: true } });
   t('T3 dragon resume', o4.log.battles.length === 0 && o4.flags.pg_clear === true && o4.log.objective === 'obj_s_pg_clear');
+  t('T3 bonus scene once per clear', bonus.length === 2 && o2.ret === false, bonus.length);
+  PG.bonusScene = origBonus;
   // meta
   t('T3 meta echo', JSON.stringify(DB.events.oblivion_3_echo.meta.gives) === JSON.stringify(['flag:pg_echo']));
   t('T3 meta dragon', DB.events.oblivion_5_ouroboros.meta.gives.includes('flag:pg_clear'));

@@ -710,7 +710,7 @@
         const ix = row.spell ? Math.max(1, (a.elements || []).length) * 9 + 2 : 11;
         Kt.fitText(a.name, x + ix, y, w - ix - 40, { color: col });
         const cst = Kt.cost(this.c, row.id);
-        const cc = row.spell && row.ok && Kt.costColor ? Kt.costColor(this.c, row.id) : null; // Part A13b: MP cut by proficiency
+        const cc = row.spell && Kt.costColor ? Kt.costColor(this.c, row.id) : null; // Part A13b: MP cut by proficiency
         G().text((row.spell ? 'M' : 'W') + cst, x + w - 6, y, { align: 'right', color: cc || col });
       }
       render() {
