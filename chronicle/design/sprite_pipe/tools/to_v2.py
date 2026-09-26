@@ -30,7 +30,8 @@ V2_SPRITES = os.path.normpath(os.path.join(HERE, '..', '..', 'v2', 'assets', 'sp
 KINDS = {'battle': 'battle', 'field': 'field', 'face': 'face', 'battle_bare': 'bare', 'weapons': 'weapons'}
 # 設定資料の顔 → v2 の表情（README の対応: normal→neutral・smile→smile・serious→angry・big→surprise。sad は neutral）
 FACE_MAP = {'normal': 'neutral', 'smile': 'smile', 'serious': 'angry', 'big': 'surprise', 'neutral': 'neutral', 'sad': 'sad',
-            'angry': 'angry', 'surprise': 'surprise', 'laugh': 'laugh', 'tired': 'tired'}
+            'angry': 'angry', 'surprise': 'surprise', 'laugh': 'laugh', 'tired': 'tired',
+            'pain': 'sad'}   # 仲間のシート5「苦しい」（face_pain）→ sad。angry は無いので neutral（companion_sheets.json face4.engineExpr）
 
 
 def fps_of(anim):
@@ -65,13 +66,14 @@ def convert_set(src_json, kind, look, dst, source):
     out = {'character': d.get('character'), 'set': d.get('set'), 'look': look, 'source': source, 'cell': d['cell'], 'anchor': d['anchor'],
            'frames': frames, 'poses': poses, 'fps': fps, 'anims': d.get('anims') or {}, 'facing': d.get('facing'),
            'target_height': d.get('target_height')}
-    for k in ('attach', 'weapons', 'directions', 'walk_note', 'palette'):
+    for k in ('attach', 'weapons', 'directions', 'walk_note', 'palette', 'weapon_drawn', 'lantern_drawn', 'copied_from'):
         if k in d:
             out[k] = d[k]
     if kind == 'face':
         out['expr'] = expr_map([f['id'] for f in frames])
     if kind == 'battle' and 'bare' not in source:
-        out['weapon'] = 'sword'   # 設定資料・シート5/6 の武器あり版は剣を持って描かれている
+        # 描かれている武器の系統。アルン（設定資料・シート5/6）は剣、仲間は得意武器（pack の meta.weapon）
+        out['weapon'] = d.get('weapon') or 'sword'
     shutil.copyfile(img, os.path.join(dst, kind + '.png'))
     json.dump(out, open(os.path.join(dst, kind + '.json'), 'w'), ensure_ascii=False, indent=1)
     return len(frames)
@@ -140,10 +142,15 @@ def pack_faces(files, look, dst, source):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('src', help='sprite_pipe の出力のフォルダ（out/<char>）')
-    ap.add_argument('--look', required=True, help='v2 の look の id（アルンは hero_m_warrior）')
+    ap.add_argument('--look', default=None, help='v2 の look の id（アルンは hero_m_warrior。仲間は省略可: <src>/companion.json の look）')
     ap.add_argument('--dst', default=None, help=f'置き場（既定 {V2_SPRITES}/<look>）')
     o = ap.parse_args()
     src = os.path.abspath(o.src)
+    cj = os.path.join(src, 'companion.json')
+    if not o.look and os.path.exists(cj):
+        o.look = json.load(open(cj)).get('look')
+    if not o.look:
+        ap.error('--look が要る（仲間の出力なら companion.json から読む）')
     dst = os.path.abspath(o.dst or os.path.join(V2_SPRITES, o.look))
     os.makedirs(dst, exist_ok=True)
     rel = os.path.relpath(src, HERE)

@@ -28,6 +28,7 @@ node tools/preview.js arun_v1                         # UI の見本（戦闘・
 python3 tools/refs.py arun out/arun_v1
 ```
 
+- 仲間のシートは §7（`--companion <id>`）。
 - `--out` を省くと `out/<char>/` に書く。`out/arun/` には今は仮の絵が入っているので、本番のシートは別の名前（`out/arun_v1` など）に出して、
   良ければ差し替える。
 - 終了コードは「作り直しを頼む」があれば 1、無ければ 0。
@@ -158,7 +159,46 @@ python3 tools/mock_sheets.py --clean --dst work/mock_sheets_clean   # わざと�
 今の結果: わざとの間違いは全部「作り直しを頼む／目で確かめる」に出る。間違いなしのシートでは作り直し 0 件
 （シート3の 3 番は試験のために斜めの絵を反転して置いているので「目で確かめる」が 1 件出る）。
 
-## 7. 限界・気をつけること
+## 7. 仲間のシート（`design/art_ref/COMPANIONS_REQUEST.md`）
+
+仲間 20 人は 1 人 5 枚（`comp_<id>_s1.png` 〜 `s5.png`）。並べ方と身長は `design/art_ref/companion_sheets.json`。
+同じ `sheets.py` に `--companion <id>` を付けて通す（中身は `tools/companion_spec.py`）。検査・切り分け・パレット・位置合わせはアルンと同じ。
+
+```sh
+python3 tools/sheets.py ~/Downloads/selma --companion selma --check     # まず検査だけ → out/comp_selma/report.txt
+python3 tools/sheets.py ~/Downloads/selma --companion selma             # 全部 → out/comp_selma/
+python3 tools/to_v2.py out/comp_selma --dst /tmp/v2_selma               # v2 の形（look は companion.json から。--dst を省くと v2/assets/sprites/selma）
+python3 tools/refs.py selma out/comp_selma                              # 目で確かめて良ければ、向きと配色の見本 configs/refs/selma を作る
+```
+
+| ファイル | 並べ方 | 使い方 | 書き出す先 |
+|---|---|---|---|
+| s1 設定画 | 2×4（三面図 4 ＋ 待機・顔・配色） | **見本だけ。ゲームには入れない。** 正面→下・背面→上・側面→左（フィールド）、側面と待機→左（戦闘）、顔→少し右 の向きの見本と、配色の見本にする | `design/`、`refs/`、`review/sheet1.png` |
+| s2 歩き | 4×3（アルンのシート1と同じ id） | ランタンなし（ランタンの検査はしない） | `field` |
+| s3 戦闘の基本 | 2×5（シート5と同じ id） | 待機A/B の呼吸の検査 | `battle` |
+| s4 行動＋武器なし | 3×5（行1・2 = シート6、行3 = シート7 の行1） | `s4b` があれば s4 は 2×5・s4b は 1×5 として読む | `battle`、`battle_bare` |
+| s5 顔 | 1×4 `face_neutral face_smile face_surprise face_pain` | `face_pain`（苦しい）は新しい表情 | `face` |
+
+- **ファイル**: 名前の `s1`〜`s5`・`s4b` で決める。作り直し `comp_selma_s3_v2.png` は番号の大きい方（同じなら新しい方）を使う。
+  1 つのフォルダにほかの仲間のファイル（`comp_<別の id>_…`）があっても、そのファイルは使わない。
+- **身長**: 仲間ごとに `companion_sheets.json` の値で検査する（`measureH` = 帽子を含む見た目の高さで大きさを測り、書き出す JSON の `target_height` は
+  `heightDots` = 体の高さ）。背の低いドッカ（戦闘 52・フィールド 39）や高いハーゲン（68・51）は、描かれた高さのまま使い、64/48 に直さない。
+- **シートが無いとき**: s2〜s5 が無ければ「作り直しを頼む」に「仲間◯◯（id）のシート◯（…）を作って」と出て、あるシートだけで書き出す。
+  **s1 が無くても通る**（「目で確かめる」に出る）。そのときは向きの見本が無いので、向きの検査は同じ回の多数決だけになる（行ごと全部が逆だと気づけない）。
+  `configs/refs/<id>/` があればそれも使う。
+- **画像 AI に送る文**: 「仲間セルマ（selma）のシート3の2番（待機B）が右を向いている。全部左向きにして、同じ条件で描き直して」のように、仲間の名前と id が付く。
+  s4b の中の番号は「シート4bの 1〜5 番」。
+- **武器**: 仲間は武器だけの絵を描かない。`weapons` は `--arun`（既定 `out/arun_v1`）のアルンの武器 5 つをそのまま写す。
+  武器なしのポーズの持ち手: 剣の仲間は武器ありの同じポーズ（行1・2）から取る（アルンと同じ）。剣以外の仲間の 12〜14 番（振りかぶり・振り抜き・突き）は
+  「片手剣の握りの形」なので武器ありの絵が無い。アルンの同じポーズの持ち手と角度を、ポーズの大きさに合わせて写す（`attach.<id>.generic = true`）。
+  「目で確かめる」に出るので `review/weapons_tryon.png` を見て、ずれていれば `configs/overrides/<id>.json` で直す。
+- **書き出し**: `battle` の JSON の `weapon` はその人の得意武器（sword / greatsword / dagger / bow / staff）。エンジンは装備がそれと違うときだけ
+  武器なし版＋武器の絵を使う。`field` には `lantern_drawn: false`。`companion.json` に id・名前・身長・使ったファイル。
+- **v2**: `to_v2.py` は顔の `face_pain` を `sad` にする（`angry` は無いので `neutral`）。`look` は `companion.json` の `look`（= id）。
+- **試験**: `python3 tools/mock_companions.py` が `out/mock_companions/<id>/` にアルンの絵を色替え・大きさ替えした仮のシートを作る
+  （selma 64/48 剣・全 5 枚／hagen 68/51 大剣・s4 と s4b に分割・シート3の3番だけ右向き／dokka 52/39 大剣・s1 と s5 なし）。期待する結果は各フォルダの `truth.json`。
+
+## 8. 限界・気をつけること
 
 - 切り分けは「行ごとに並んでいる」前提。画像 AI が行と列を入れ替えた（4×3 を 3×4 で描いた）ときは「ポーズが多い／行の数が合わない」で気づくが、自動では並べ替えない。
 - 武器の持ち手は、武器ありと武器なしの絵が同じポーズ・同じ大きさで描かれているときだけ正しい（体が重ならなければ「あてにならない」と出る）。

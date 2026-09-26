@@ -137,7 +137,7 @@ def setup(cid, folder):
     sheets, order = build_specs(js, c, split4)
     who = '仲間%s（%s）' % (c['name'], c['id'])
     use_profile(sheets, order, dict(char=c['id'], name=c['name'], ask_prefix=who + 'の', title=who,
-                                    weapon=c['weaponType'], companion=c))
+                                    weapon=c['weaponType'], companion=c, scarf=False))
     c = dict(c, scan=(by, other, unknown), split4=split4, who=who)
     return c
 

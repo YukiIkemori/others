@@ -1,0 +1,23 @@
+{
+ "id": "hagen",
+ "heights": {
+  "battle": 68,
+  "field": 51,
+  "face": 80
+ },
+ "weapon": "greatsword",
+ "sheets": [
+  1,
+  2,
+  3,
+  4,
+  5
+ ],
+ "split4": true,
+ "mistakes": [
+  "s3_step_right"
+ ],
+ "expect": [
+  "redo facing: シート3の3番（一歩前に踏み出す）"
+ ]
+}

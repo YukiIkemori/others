@@ -19,7 +19,7 @@ from scipy import ndimage as nd
 
 import pixlib as P
 import build as B
-from brief_spec import SHEETS
+from brief_spec import SHEETS, rows_of, armed_map
 
 LYING = {'act_lie', 'ko', 'sleep'}
 
@@ -265,14 +265,15 @@ def pack(char, od, runs, rep, colors=52):
             spr[sid] = dict(v, sheet=n)
     if not spr:
         return
-    body = [v['img'] for v in spr.values() if v['sheet'] != 9]
-    faces = [v['img'] for v in spr.values() if v['sheet'] == 9]
+    isface = lambda n: SHEETS[n]['kind'] == 'face'      # faces get their own palette
+    body = [v['img'] for v in spr.values() if not isface(v['sheet'])]
+    faces = [v['img'] for v in spr.values() if isface(v['sheet'])]
     pal = P.build_palette(body, k=colors, merge_de=3.0) if body else None
     fpal = P.build_palette(faces, k=48, merge_de=3.0) if faces else None
     os.makedirs(os.path.join(od, 'sprites'), exist_ok=True)
     fin = {}
     for sid, v in spr.items():
-        fin[sid] = finish(v['img'], fpal if v['sheet'] == 9 else pal)
+        fin[sid] = finish(v['img'], fpal if isface(v['sheet']) else pal)
         Image.fromarray(fin[sid]).save(os.path.join(od, 'sprites', sid + '.png'))
     with open(os.path.join(od, 'palette.json'), 'w') as f:
         json.dump(dict(shared=['#%02x%02x%02x' % tuple(int(x) for x in c) for c in (pal if pal is not None else [])],
@@ -285,7 +286,7 @@ def pack(char, od, runs, rep, colors=52):
     # ---- anchors
     anc = {}
     for sid, im in fin.items():
-        if spr[sid]['sheet'] == 9:
+        if isface(spr[sid]['sheet']):
             anc[sid] = (im.shape[1] // 2, im.shape[0] - 1)
         elif sid.startswith('wpn_'):
             continue
@@ -294,10 +295,10 @@ def pack(char, od, runs, rep, colors=52):
             anc[sid] = (ax, ay + spr[sid].get('air', 0))
     regs = {}
     for n, sp in runs.items():
-        mode = 'all' if n == 9 else 'lower' if n == 5 else 'upper'
+        mode = SHEETS[n].get('register_mode', 'upper')
         for sid, base in SHEETS[n]['register'].items():
             if sid in fin and base in fin:
-                dx, dy, s = register(fin[sid], fin[base], mode=mode, face=n == 9)
+                dx, dy, s = register(fin[sid], fin[base], mode=mode, face=isface(n))
                 bax, bay = anc[base]
                 hb, hi = fin[base].shape[0], fin[sid].shape[0]
                 # base anchor measured from the bottom, carried over with the found offset
@@ -333,8 +334,10 @@ def pack(char, od, runs, rep, colors=52):
         if bw:
             handle_off = float(np.hypot(*(np.array(wpn['wpn_sword']['grip']) - bw['hilt'])))
     attach = {}
-    arm = SHEETS[7]['armed']
+    bare_n, arm = armed_map()        # Arun: sheet 7; a companion: its sheet 4 (or 4b)
     for bare, armed in arm.items():
+        if armed is None:            # generic sword grip with no armed twin (companions): tools/companion_spec.py
+            continue
         if bare in fin and armed in fin:
             at = attach_from_blade(fin[bare], fin[armed], handle_off)
             if at is None:              # blade hidden (sheathed / behind the body): the difference of the two
@@ -342,10 +345,10 @@ def pack(char, od, runs, rep, colors=52):
                 if at is not None:
                     at['method'] = 'diff'
             if at is None:
-                rep.add(7, 'check', 'attach', '%s と %s から武器の位置が取れない。手の位置を configs/overrides で入れる' % (bare, armed), slot=bare)
+                rep.add(bare_n, 'check', 'attach', '%s と %s から武器の位置が取れない。手の位置を configs/overrides で入れる' % (bare, armed), slot=bare)
                 continue
             if at['fit'] < 0.35:
-                rep.add(7, 'check', 'attach_fit', '%s と %s の体の形がかなり違う。武器の持ち手の位置を review/weapons_tryon.png で見る' % (bare, armed), slot=bare)
+                rep.add(bare_n, 'check', 'attach_fit', '%s と %s の体の形がかなり違う。武器の持ち手の位置を review/weapons_tryon.png で見る' % (bare, armed), slot=bare)
                 at['unreliable'] = True
             attach[bare] = at
             # the bare pose sits where the armed one does: same anchor offset
@@ -353,7 +356,7 @@ def pack(char, od, runs, rep, colors=52):
                 dx, dy, _ = register(fin[bare], fin[armed], mode='all')
                 anc[bare] = (anc[armed][0] - dx, fin[bare].shape[0] - (fin[armed].shape[0] - anc[armed][1]) - dy)
         elif bare in fin:
-            rep.add(7, 'check', 'attach', '%s の武器ありの絵（%s）が無いので、武器の位置が取れない' % (bare, armed), slot=bare)
+            rep.add(bare_n, 'check', 'attach', '%s の武器ありの絵（%s）が無いので、武器の位置が取れない' % (bare, armed), slot=bare)
     # ---- manual overrides: configs/overrides/<char>.json  {"anchors": {id: [x, y]}, "attach": {bare_id: {grip, angle}}}
     ov_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'configs', 'overrides', char + '.json')
     if os.path.exists(ov_path):
@@ -388,12 +391,15 @@ def pack(char, od, runs, rep, colors=52):
     def row(ids):
         return [(s, fin[s], anc[s], pts(s)) for s in ids if s in fin]
 
+    def rows_for(set_name):
+        return [x for x in (row(SHEETS[n]['ids'][r]) for n, r in rows_of(set_name, runs)) if x]
+
+    def body_h(set_name, default):
+        rs = rows_of(set_name, runs)
+        return SHEETS[rs[0][0]].get('body_h', default) if rs else default
+
     # ---- field
-    frows = []
-    for n in (1, 2, 3, 4):
-        if n in runs:
-            frows += [row(r) for r in SHEETS[n]['ids']]
-    frows = [r for r in frows if r]
+    frows = rows_for('field')
     written = {}
     if frows:
         an = {}
@@ -406,13 +412,9 @@ def pack(char, od, runs, rep, colors=52):
         for s in fin:
             if s.startswith('act_'):
                 an[s] = {'frames': [s], 'ms': [0]}
-        written['field'] = write_rows(od, char, 'field', frows, pal, dict(directions=['down', 'up', 'left', 'right'], target_height=48), an)
+        written['field'] = write_rows(od, char, 'field', frows, pal, dict(directions=['down', 'up', 'left', 'right'], target_height=body_h('field', 48)), an)
     # ---- battle
-    brows = []
-    for n in (5, 6, 8):
-        if n in runs:
-            brows += [row(r) for r in SHEETS[n]['ids']]
-    brows = [r for r in brows if r]
+    brows = rows_for('battle')
     if brows:
         an = {}
         if 'idle_a' in fin:
@@ -434,23 +436,21 @@ def pack(char, od, runs, rep, colors=52):
         for s in ('guard', 'hit', 'weak', 'ko', 'glimmer', 'item', 'evade', 'flee', 'sleep', 'confuse', 'cover', 'step'):
             if s in fin:
                 an[s] = {'frames': [s], 'ms': [0]}
-        written['battle'] = write_rows(od, char, 'battle', brows, pal, dict(facing='left', target_height=64), an)
-    if 7 in runs:
-        r1 = row(SHEETS[7]['ids'][0])
-        if r1:
-            written['battle_bare'] = write_rows(od, char, 'battle_bare', [r1], pal, dict(
-                facing='left', attach={k: v for k, v in attach.items()},
-                attach_note='draw a weapon on a bare pose: rotate the weapon image (as drawn on sheet 7, tip to the left) about its grip '
-                            'by (attach.angle - 180) degrees and put its grip on points.grip. Angles in image coords '
-                            '(0 = +x, 90 = +y, 180 = pointing left); positive = clockwise on screen.'), {})
-        r2 = [(s, fin[s], anc[s], pts(s)) for s in SHEETS[7]['ids'][1] if s in fin]
-        if r2:
-            written['weapons'] = write_rows(od, char, 'weapons', [r2], pal, dict(weapons=wpn), {})
-    if 9 in runs:
-        r = [row(x) for x in SHEETS[9]['ids']]
-        r = [x for x in r if x]
-        if r:
-            written['face'] = write_rows(od, char, 'face', r, fpal, dict(facing='slightly right', target_height=80), {})
+        written['battle'] = write_rows(od, char, 'battle', brows, pal, dict(facing='left', target_height=body_h('battle', 64)), an)
+    bare_rows = rows_for('battle_bare')
+    if bare_rows:
+        written['battle_bare'] = write_rows(od, char, 'battle_bare', bare_rows, pal, dict(
+            facing='left', attach={k: v for k, v in attach.items()},
+            attach_note='draw a weapon on a bare pose: rotate the weapon image (as drawn on sheet 7, tip to the left) about its grip '
+                        'by (attach.angle - 180) degrees and put its grip on points.grip. Angles in image coords '
+                        '(0 = +x, 90 = +y, 180 = pointing left); positive = clockwise on screen.'), {})
+    wrows = [[(s, fin[s], anc[s], pts(s)) for s in SHEETS[n]['ids'][r] if s in fin] for n, r in rows_of('weapons', runs)]
+    wrows = [x for x in wrows if x]
+    if wrows:
+        written['weapons'] = write_rows(od, char, 'weapons', wrows, pal, dict(weapons=wpn), {})
+    r = rows_for('face')
+    if r:
+        written['face'] = write_rows(od, char, 'face', r, fpal, dict(facing='slightly right', target_height=body_h('face', 80)), {})
     # ---- weapon try-on (review only): every weapon on every bare pose
     if attach and wpn:
         tryon(od, char, fin, attach, wpn, anc)

@@ -21,7 +21,7 @@
     outfit: { type: 'robe', main: '#2c3a54', sub: '#1c2436', trim: '#c8b070' }, mantle: { color: '#262c40', long: true }, extras: ['glasses'], silhouette: 'swept' };
   T.fine = { name: 'フィーネ', body: f('slim', 'youth'), skin: 'pale', eyes: '#6a7a8a', hair: { style: 'long', color: '#c8ccd4', ears: 'hidden' },
     outfit: { type: 'coat', main: '#6a6c74', sub: '#4a4c54', trim: '#a8aab0' }, mantle: { color: '#5c5e66', long: true }, headwear: { type: 'hood', color: '#5c5e66' }, silhouette: 'grey_hood' };
-  T.otto = { name: 'オットー', body: m('sturdy', 'old'), skin: 'tan', eyes: '#3a4a5a', hair: { style: 'bald', color: '#d0ccc4', ears: 'show' }, fringe: true,
+  T.otto = { name: 'オットー', body: m('sturdy', 'old'), skin: 'tan', eyes: '#3a4a5a', hair: { style: 'crop', color: '#d0ccc4', ears: 'hidden' },
     outfit: { type: 'coat', main: '#2c4a64', sub: '#e0d8c4', trim: '#c8a048' }, headwear: { type: 'cap', color: '#2a3a50' }, extras: ['beard'], beard: '#d8d4cc', silhouette: 'cap_beard' };
   T.elm = { name: 'エルム', body: m('slim', 'old'), skin: 'spirit', eyes: '#a8e0ff', hair: { style: 'long', color: '#c8e4f0', ears: 'elf' },
     outfit: { type: 'robe', main: '#6a9ab8', sub: '#4a7090', trim: '#d8f0ff' }, extras: ['beard'], beard: '#d8ecf4', spirit: true, silhouette: 'spirit' };
@@ -49,7 +49,7 @@
   const TYPES = {
     man: [m(), 'short', null, 'tunic', [['#6a5238', '#4a4034', '#a88c5c', '#4a3020'], ['#3c5a6c', '#4a4238', '#c0a060', '#2a2420'], ['#6a3c34', '#3c3a34', '#c8a860', '#8a5a30'], ['#4a6040', '#4a3a2c', '#b09050', '#5a4030']]],
     woman: [f(), 'bob', null, 'robe', [['#8a4a4a', '#e0d8c4', '#d8b060', '#5a3a24'], ['#4a5a7a', '#e0d8c4', '#c8a860', '#8a5a30'], ['#6a7a4a', '#e0d8c4', '#c89a5a', '#2a2420'], ['#7a5a8a', '#e0d8c4', '#d8c080', '#b07030']]],
-    old_m: [m('normal', 'old'), 'bald', null, 'coat', [['#5a4a3a', '#4a4034', '#a88c5c', '#c8c4bc'], ['#4a5a6a', '#3c3a34', '#a8a080', '#d8d4cc'], ['#6a5a3c', '#4a4238', '#b09050', '#a8a4a0'], ['#4a3c4c', '#3c3a34', '#a89070', '#e0dcd4']]],
+    old_m: [m('normal', 'old'), 'short', null, 'coat', [['#5a4a3a', '#4a4034', '#a88c5c', '#c8c4bc'], ['#4a5a6a', '#3c3a34', '#a8a080', '#d8d4cc'], ['#6a5a3c', '#4a4238', '#b09050', '#a8a4a0'], ['#4a3c4c', '#3c3a34', '#a89070', '#e0dcd4']]],
     old_f: [f('slim', 'old'), 'bun', null, 'robe', [['#6a4a54', '#d8d0bc', '#c8a870', '#c8c4bc'], ['#4a5a5a', '#d8d0bc', '#b8a070', '#d8d4cc'], ['#7a6040', '#d8d0bc', '#c8a060', '#a8a4a0'], ['#5a4a6a', '#d8d0bc', '#c8b080', '#e0dcd4']]],
     child: [m('slim', 'short'), 'wild', null, 'light', [['#8a6a3c', '#5a4630', '#d8c890', '#6a4228'], ['#3c6a8a', '#4a4034', '#e0d0a0', '#2a2420'], ['#8a3c3c', '#4a4034', '#e0d0a0', '#b07030'], ['#5a7a3c', '#4a4034', '#e0d0a0', '#8a5a30']]],
     sailor: [m('sturdy'), 'crop', 'bandana', 'tunic', [['#2c3a5a', '#d8d0c0', '#c8b890', '#3a2c20'], ['#e0dccc', '#2c3a5a', '#3c5a8a', '#6a4228'], ['#3a4a6a', '#6a5a4a', '#e0d8c0', '#2a2420'], ['#2c4a5a', '#d8d0c0', '#a83c3c', '#8a5a30']]],

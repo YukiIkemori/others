@@ -13,7 +13,7 @@
     dokka: { name: 'ドッカ', body: m('sturdy', 'short'), skin: 'tan', eyes: '#3a3024', hair: { style: 'crop', color: '#9a3c22', ears: 'show' },
       outfit: { type: 'dwarf', main: '#7a6a3a', sub: '#5a4a3a', trim: '#3a3430' }, headwear: 'goggles', extras: ['beard'], hue: 55, silhouette: 'goggles_beard' },
     basil: { name: 'バジル', body: m('sturdy'), skin: 'fair', eyes: '#4a4030', hair: { style: 'bald', color: '#5a4030', ears: 'show' },
-      outfit: { type: 'robe', main: '#8a8458', sub: '#6a6448', trim: '#c8b880' }, mantle: '#6a5a40', hue: 68, silhouette: 'bald' },
+      outfit: { type: 'robe', main: '#8a8458', sub: '#6a6448', trim: '#c8b880' }, mantle: '#6a5a40', headwear: { type: 'hood', color: '#6a5a40' }, hue: 68, silhouette: 'monk_cowl' },
     bartolo: { name: 'バルトロ', body: m('normal', 'old'), skin: 'fair', eyes: '#4a4a52', hair: { style: 'short', color: '#d8d4cc', ears: 'hidden' },
       outfit: { type: 'armor', main: '#7a2434', sub: '#4a4450', trim: '#c8a860' }, mantle: { color: '#6c1a2c', long: true }, headwear: { type: 'plume', color: '#a02c3a' }, extras: ['mustache'], hue: 350, silhouette: 'plume_helm' },
     viola: { name: 'ヴィオラ', body: f(), skin: 'pale', eyes: '#6a4a86', hair: { style: 'bob', color: '#5a4270', ears: 'hidden' },

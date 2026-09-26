@@ -1,0 +1,19 @@
+{
+ "id": "selma",
+ "heights": {
+  "battle": 64,
+  "field": 48,
+  "face": 80
+ },
+ "weapon": "sword",
+ "sheets": [
+  1,
+  2,
+  3,
+  4,
+  5
+ ],
+ "split4": false,
+ "mistakes": [],
+ "expect": []
+}

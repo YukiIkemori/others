@@ -139,7 +139,7 @@
       const gsf = grp('scarf');
       E(neck[0] + 0.4, neck[1] + 1.2, 4.8, 2.8, L.scarf, 6.1, { g: gsf, rot: lean });
       S([T(-2.5, -12.5), T(-7 - p.cape * 3, -9), T(-9 - p.cape * 5, -4)], 1.8, 0.9, L.scarf, 0.8, { g: gsf });
-    } else E(neck[0] + 0.4, neck[1] + 0.8, 4.2, 2.3, L.trim, 6, { g: grp('collar'), rot: lean });
+    } else E(neck[0] + 0.2, neck[1] + 0.6, 4.8, 3.0, L.trim, 6, { g: grp('collar'), rot: lean });
 
     // --- 奥の腕
     const arm = (side, a, e, z) => {
@@ -161,9 +161,9 @@
     // --- 頭
     const gh = grp('head');
     const headFrom = out.length;
-    C(neck, add(neck, rot([0.6, -3], headAng)), 1.8, 1.8, SK, 5.8, { g: grp('neck') });
+    C(add(neck, [0.9, 0]), add(neck, rot([1.4, -3], headAng)), 1.5, 1.5, SK, 5.8, { g: grp('neck') });
     E(hc[0], hc[1], 11.2, 10.4, SK, 10, { g: gh, rot: headAng, bulge: 0.9 });
-    E(H(4.5, 3.8)[0], H(4.5, 3.8)[1], 6.2, 5.4, SK, 10.01, { g: gh });
+    E(H(5, 3.8)[0], H(5, 3.8)[1], 5.4, 5.4, SK, 10.01, { g: gh });
     face(L, H, p, E, C, Rc, grp, MM, SK);
     const ctx = { L, H, ha: headAng, grp, E, C, S, Pl, F, R: Rc, p, M: MM, SK, z0: 10.4 };
     if (rig.hair) rig.hair.draw(ctx);

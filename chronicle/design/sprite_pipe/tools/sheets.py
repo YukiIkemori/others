@@ -37,7 +37,7 @@ from scipy import ndimage as nd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pixlib as P  # noqa: E402
-from brief_spec import SHEETS, ORDER, slot_name  # noqa: E402
+from brief_spec import SHEETS, ORDER, PROFILE, label, slot_name  # noqa: E402
 from facing import Facing  # noqa: E402
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -52,6 +52,10 @@ class Report:
         self.items = []
 
     def add(self, sheet, level, code, msg, slot=None, ask=None, **data):
+        # sheet numbers as the owner knows them ('4b'); a companion's redo lines name the companion
+        msg = relabel(msg)
+        if ask:
+            ask = PROFILE.get('ask_prefix', '') + relabel(ask)
         self.items.append(dict(sheet=sheet, level=level, code=code, msg=msg, slot=slot, ask=ask, data=data))
 
     def level_of(self, sheet, slot):
@@ -62,7 +66,7 @@ class Report:
         return 'ok'
 
     def text(self, found):
-        out = ['スプライトの検査結果（%s）' % time.strftime('%Y-%m-%d %H:%M'), '']
+        out = ['スプライトの検査結果（%s%s）' % (PROFILE['title'] + '、' if PROFILE.get('title') else '', time.strftime('%Y-%m-%d %H:%M')), '']
         for L in LEVELS:
             its = [i for i in self.items if i['level'] == L and not i['data'].get('hidden')]
             if not its:
@@ -71,7 +75,7 @@ class Report:
             for n in ORDER + [None]:
                 for i in its:
                     if i['sheet'] == n and not i['data'].get('hidden'):
-                        out.append('  - ' + ('シート%d: ' % n if n else '') + i['msg'])
+                        out.append('  - ' + ('シート%s: ' % label(n) if n else '') + i['msg'])
             out.append('')
         asks = [i['ask'] for i in self.items if i['level'] == 'redo' and i['ask']]
         if asks:
@@ -87,13 +91,18 @@ class Report:
             s = SHEETS[n]
             st = found.get(n)
             if not st:
-                out.append('  シート%d %s: %s' % (n, s['title'], 'なし（必須）' if s['required'] else 'なし（任意）'))
+                out.append('  シート%s %s: %s' % (label(n), s['title'], 'なし（必須）' if s['required'] else 'なし（任意）'))
                 continue
             lv = [i['level'] for i in self.items if i['sheet'] == n]
             tag = '要作り直し' if 'redo' in lv else '確認あり' if 'check' in lv else 'OK'
-            out.append('  シート%d %s: %s  %s  ドット %.2fpx → %s' % (n, s['title'], tag, os.path.basename(st['file']),
+            out.append('  シート%s %s: %s  %s  ドット %.2fpx → %s' % (label(n), s['title'], tag, os.path.basename(st['file']),
                                                               st.get('period', 0), st.get('scale_note', '')))
         return '\n'.join(out) + '\n'
+
+
+def relabel(s):
+    """'シート45' -> 'シート4b' (sheets whose key differs from the owner's name for them)"""
+    return re.sub(r'シート(\d+)', lambda m: 'シート' + label(int(m.group(1))), s) if s else s
 
 
 # ============================================================ find
@@ -499,6 +508,8 @@ def process_sheet(n, path, rep, args):
     for r in range(spec['rows']):
         for c in range(spec['cols']):
             sid = spec['ids'][r][c]
+            if sid is None:          # a slot the layout leaves empty (design sheet)
+                continue
             if (r, c) not in slots:
                 rep.add(n, 'redo', 'missing', '%s が見つからない' % slot_name(n, r, c), slot=sid,
                         ask='シート%dの%d番（%s）が無い。%d行×%d列の並べ方で、全部のポーズを同じ条件で描き直して' % (
@@ -562,6 +573,8 @@ def process_sheet(n, path, rep, args):
     sprites = {}
     for (r, c), m in sorted(slots.items()):
         sid = spec['ids'][r][c]
+        if sid is None:
+            continue
         y0, y1, x0, x1 = P.bbox(m)
         pad = int(np.ceil(cell * 2))
         y0, x0 = max(0, y0 - pad), max(0, x0 - pad)
@@ -737,7 +750,7 @@ def check_facing(runs, fc, rep):
                     cues['head'] = clip(th / (1.0 if g != 'face' else 2.0), 1.5) * (0.6 if g == 'btl' else 1.0)
                 if tu is not None:
                     cues['upper'] = clip(tu / 2.5, 2.0)
-                if f.scarf is not None and g != 'face':
+                if f.scarf is not None and g != 'face' and PROFILE.get('scarf', True):   # Arun's red scarf only
                     # the scarf tail streams behind: to the right when facing left
                     cues['scarf'] = clip((f.scarf if want == 'left' else -f.scarf) / 0.25, 2.0)
                 z = float(sum(cues.values()))
@@ -783,7 +796,7 @@ def check_lantern(runs, rep, fix=True):
     Auto fix for front / back rows: the frame is mirrored (a front view mirrors cleanly; the stepping foot swaps,
     so the two step frames swap places too)."""
     from facing import side_cues
-    for n in (1, 2):
+    for n in [k for k in sorted(runs) if SHEETS[k].get('lantern')]:
         sp = runs.get(n)
         if not sp:
             continue
@@ -815,9 +828,9 @@ def check_lantern(runs, rep, fix=True):
                 mir = {s: np.ascontiguousarray(sp[s]['img'][:, ::-1]) for s in bad}
                 # stepping foot swaps in a mirror -> swap the two step frames when both were mirrored
                 steps = [s for s in ids[1:] if s in bad]
-                if n == 1 and len(steps) == 2:
+                if spec['name'] == 'walk' and len(steps) == 2:
                     mir[steps[0]], mir[steps[1]] = mir[steps[1]], mir[steps[0]]
-                elif n == 2 and len(steps) >= 2:
+                elif spec['name'] == 'run' and len(steps) >= 2:
                     pass   # run frames: the stride order is kept (mirroring a landing frame keeps it a landing frame)
                 for s, im in mir.items():
                     sp[s]['img'] = im
@@ -843,8 +856,13 @@ def check_palette(runs, ref_pal, rep):
             rep.add(n, 'check', 'leak', '背景のマゼンタが絵の中に %d ドット残っている' % mag)
 
 
+def sheet_holding(runs, sid):
+    return next((n for n in ORDER if sid in runs.get(n, {})), None)
+
+
 def check_breath(runs, rep):
-    sp = runs.get(5, {})
+    nb = sheet_holding(runs, 'idle_a')
+    sp = runs.get(nb, {})
     if 'idle_a' in sp and 'idle_b' in sp:
         a, b = sp['idle_a']['img'], sp['idle_b']['img']
         H = max(a.shape[0], b.shape[0]); W = max(a.shape[1], b.shape[1])
@@ -859,13 +877,14 @@ def check_breath(runs, rep):
         frac = best[0] / max(1, (A[..., 3] > 0).sum())
         dh = abs(a.shape[0] - b.shape[0])
         if best[0] == 0 and dh == 0:
-            rep.add(5, 'check', 'breath_same', '待機AとBが同じ絵。呼吸に見えない（ゲームで 1 ドットの呼吸を足す）')
+            rep.add(nb, 'check', 'breath_same', '待機AとBが同じ絵。呼吸に見えない（ゲームで 1 ドットの呼吸を足す）')
         elif frac > 0.18 or dh > 4:   # the sword tip moving 2-3 dots alone changes ~10 % of the outline
-            rep.add(5, 'check', 'breath_big', '待機AとBの差が大きい（輪郭の %.0f%%、身長差 %d ドット）。交互に出すと跳ねて見えないか見る' % (100 * frac, dh))
+            rep.add(nb, 'check', 'breath_big', '待機AとBの差が大きい（輪郭の %.0f%%、身長差 %d ドット）。交互に出すと跳ねて見えないか見る' % (100 * frac, dh))
 
 
 def check_faces(runs, rep):
-    sp = runs.get(9, {})
+    nf = sheet_holding(runs, 'face_neutral')
+    sp = runs.get(nf, {})
     if 'face_neutral' not in sp:
         return
     base = sp['face_neutral']['img']
@@ -874,8 +893,8 @@ def check_faces(runs, rep):
             continue
         im = v['img']
         if abs(im.shape[0] - base.shape[0]) > 3 or abs(im.shape[1] - base.shape[1]) > 4:
-            rep.add(9, 'check', 'face_size', '%s の大きさが通常と違う（%d×%d / 通常 %d×%d）。重ねたときずれる' % (
-                slot_name(9, v['row'], v['col']), im.shape[1], im.shape[0], base.shape[1], base.shape[0]), slot=k)
+            rep.add(nf, 'check', 'face_size', '%s の大きさが通常と違う（%d×%d / 通常 %d×%d）。重ねたときずれる' % (
+                slot_name(nf, v['row'], v['col']), im.shape[1], im.shape[0], base.shape[1], base.shape[0]), slot=k)
 
 
 # ============================================================ review image
@@ -918,7 +937,7 @@ def review(n, path, st, sprites, rep, od):
     head_h = 40 + 24 * min(len(msgs), 14)
     out = Image.new('RGB', (cw * cols + 8 * (cols + 1), ch * rows + 8 * (rows + 1) + head_h), (36, 36, 44))
     d = ImageDraw.Draw(out)
-    d.text((10, 8), 'シート%d %s — %s  (ドット %.2f px, %s)' % (n, spec['title'], os.path.basename(path), st.get('period', 0), st.get('scale_note', '')),
+    d.text((10, 8), 'シート%s %s — %s  (ドット %.2f px, %s)' % (label(n), spec['title'], os.path.basename(path), st.get('period', 0), st.get('scale_note', '')),
            fill=(235, 235, 235), font=font)
     for i, m in enumerate(msgs[:14]):
         colr = {'redo': (240, 90, 90), 'check': (240, 200, 70), 'auto': (120, 190, 240), 'info': (170, 170, 170)}[m['level']]
@@ -926,14 +945,18 @@ def review(n, path, st, sprites, rep, od):
     for i, t in enumerate(tiles):
         out.paste(t, (8 + (i % cols) * (cw + 8), head_h + 8 + (i // cols) * (ch + 8)))
     os.makedirs(os.path.join(od, 'review'), exist_ok=True)
-    out.save(os.path.join(od, 'review', 'sheet%d.png' % n))
+    out.save(os.path.join(od, 'review', 'sheet%s.png' % label(n)))
 
 
 # ============================================================ main
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('folder')
-    ap.add_argument('--char', default='arun')
+    ap.add_argument('--char', default=None, help='character id used in file names (default arun; a companion: its id)')
+    ap.add_argument('--companion', default=None, metavar='ID',
+                    help='companion sheets comp_<id>_s1..s5 (COMPANIONS_REQUEST.md, tools/companion_spec.py)')
+    ap.add_argument('--arun', default=os.path.join(HERE, 'out', 'arun_v1'),
+                    help='companions: Arun\'s finished run (shared weapons, generic sword grips)')
     ap.add_argument('--out', default=None)
     ap.add_argument('--refs', default=None, help='known-facing reference sprites (default configs/refs/<char>)')
     ap.add_argument('--check', action='store_true', help='validate only (no palette / packing)')
@@ -946,12 +969,18 @@ def main():
     ap.add_argument('--no-manifest', action='store_true', help='ignore <folder>/manifest.json (slice automatically)')
     args = ap.parse_args()
     args.manifest = {} if args.no_manifest else load_manifest(args.folder)
-    od = os.path.abspath(args.out or os.path.join(HERE, 'out', args.char))
+    comp = None
+    if args.companion:
+        import companion_spec as CS
+        comp = CS.setup(args.companion.lower(), args.folder)
+        args.char = args.char or comp['id']
+    args.char = args.char or 'arun'
+    od = os.path.abspath(args.out or os.path.join(HERE, 'out', ('comp_' + args.char) if comp else args.char))
     if args.repack:
-        return repack(args, od)
+        return repack(args, od, comp)
     os.makedirs(os.path.join(od, 'native'), exist_ok=True)
     rep = Report()
-    found = find_sheets(args.folder, rep)
+    found = CS.find(comp, rep) if comp else find_sheets(args.folder, rep)
     if args.only:
         keep = {int(x) for x in args.only.split(',')}
         found = {k: v for k, v in found.items() if k in keep}
@@ -965,8 +994,16 @@ def main():
     if os.path.exists(pj):
         ref_pal = np.array([[int(h[i:i + 2], 16) for i in (1, 3, 5)] for h in json.load(open(pj))], np.uint8)
     runs, states = {}, {}
+    if comp:
+        comp['found'] = found
+        if CS.DESIGN in found:       # s1: reference only (facing refs + palette), never packed
+            states[CS.DESIGN], _, dpal = CS.design(comp, found[CS.DESIGN], rep, args, od, fc, process_sheet, review)
+            if ref_pal is None and dpal is not None:
+                ref_pal = dpal
+        if not fc.empty:
+            rep.items = [i for i in rep.items if i['code'] != 'no_refs']
     for n in ORDER:
-        if n not in found:
+        if n not in found or SHEETS[n]['kind'] == 'design':
             continue
         t0 = time.time()
         st, sp = process_sheet(n, found[n], rep, args)
@@ -976,6 +1013,8 @@ def main():
             Image.fromarray(v['img']).save(os.path.join(od, 'native', sid + '.png'))
         print('sheet%d  %-24s dot %.2f px  %s  %d poses  %.1fs' % (n, os.path.basename(found[n]), st.get('period', 0),
                                                               st.get('scale_note', ''), len(sp), time.time() - t0))
+    if comp:
+        CS.add_run_refs(fc, runs)
     check_facing(runs, fc, rep)
     check_lantern(runs, rep, fix=not args.no_autofix)
     check_scale(runs, rep, fix=not args.no_autofix)
@@ -999,18 +1038,20 @@ def main():
     with open(os.path.join(od, 'report.txt'), 'w') as f:
         f.write(txt)
     with open(os.path.join(od, 'report.json'), 'w') as f:
-        json.dump(dict(char=args.char, folder=os.path.abspath(args.folder), sheets={str(k): v for k, v in states.items()},
+        json.dump(dict(char=args.char, companion=comp['id'] if comp else None, folder=os.path.abspath(args.folder), sheets={str(k): v for k, v in states.items()},
                        items=rep.items), f, indent=1, ensure_ascii=False, default=lambda o: o.tolist() if hasattr(o, 'tolist') else str(o))
     print(txt)
     if not args.check:
         import pack
         pack.pack(args.char, od, runs, rep, colors=args.colors)
+        if comp:
+            CS.after_pack(comp, od, rep, args.arun)
         with open(os.path.join(od, 'report.txt'), 'w') as f:
             f.write(rep.text(states))
     return 1 if any(i['level'] == 'redo' for i in rep.items) else 0
 
 
-def repack(args, od):
+def repack(args, od, comp=None):
     import pack
     js = json.load(open(os.path.join(od, 'report.json')))
     rep = Report()
@@ -1019,6 +1060,8 @@ def repack(args, od):
     for n, st in js['sheets'].items():
         n = int(n)
         spec = SHEETS[n]
+        if spec['kind'] == 'design':
+            continue
         pos = {spec['ids'][r][c]: (r, c) for r in range(spec['rows']) for c in range(spec['cols'])}
         for sid, v in st.get('sprites', {}).items():
             p = os.path.join(od, 'native', sid + '.png')
@@ -1026,6 +1069,10 @@ def repack(args, od):
                 r, c = pos[sid]
                 runs.setdefault(n, {})[sid] = dict(img=np.asarray(Image.open(p).convert('RGBA')).copy(), row=r, col=c, air=v.get('air', 0))
     pack.pack(args.char, od, runs, rep, colors=args.colors)
+    if comp:
+        import companion_spec as CS
+        comp['found'] = {int(k): v['file'] for k, v in js['sheets'].items() if 'file' in v}
+        CS.after_pack(comp, od, rep, args.arun)
     with open(os.path.join(od, 'report.txt'), 'w') as f:
         f.write(rep.text({int(k): v for k, v in js['sheets'].items()}))
     return 0

@@ -50,7 +50,7 @@
       if (L.hairStyle !== 'bald' || back) {
         if (back) {
           B.ell(0, hy - 1.2, 10.2 * hs, 9.6 * hs, hair, 7, { bulge: 0.9 });
-          if (L.hairStyle === 'bald') B.ell(0, hy - 5.5 * hs, 7.4 * hs, 4.6 * hs, skin, 7.05, { bulge: 0.8 });
+          if (L.hairStyle === 'bald' && !L.headwear) B.ell(0, hy - 6.5 * hs, 5 * hs, 3 * hs, skin, 7.05, { bulge: 0.8 });
           if (L.hairStyle !== 'bald') hairBack(B, L, hy, hs);
         } else {
           B.ell(0, hy - 1.4, 10.4 * hs, 9.4 * hs, hair, 5.5, { bulge: 0.9 });
