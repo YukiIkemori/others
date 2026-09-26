@@ -579,18 +579,19 @@
   Menu.fieldEffects = fieldEffects;
   const MNDF = (mnd) => U.clamp((128 + (mnd || 0)) / 168, 0.75, 2.2);
   /** HP a heal effect restores in the field: R.Mon.healAmount (the battle formula, §3.3.6), else §4.6.4 */
-  function healAmount(user, target, eff, isItem) {
+  function healAmount(user, target, eff, isItem, def) {
     const hm = (R.Mon && R.Mon.healAmount) || (R.Battle && R.Battle.healAmount);
     if (typeof hm === 'function') {
       try {
-        const v = hm(user, target, eff, { item: isItem, field: true });
+        const v = hm(user, target, eff, { item: isItem, field: true, action: !isItem && def && def.kind ? def : null });
         if (typeof v === 'number' && isFinite(v)) return Math.max(0, Math.round(v));
       } catch (e) { /* fall back */ }
     }
     const max = stats(target).hp || 0;
     const um = user && has(Rl(), 'mods') ? Rl().mods(user) || {} : {};
     const k = isItem ? 1 + (um.itemPct || 0) / 100 : MNDF(user ? stats(user).mnd : 40) * (1 + (um.healPct || 0) / 100);
-    return Math.max(1, Math.round(max * (eff.pct || 0) * k));
+    const pm = !isItem && def && def.kind && user && has(Rl(), 'profPowerMul') ? Rl().profPowerMul(user, def) : 1;
+    return Math.max(1, Math.round(max * (eff.pct || 0) * k * pm));
   }
   Menu.healAmount = healAmount;
   const pctOf = (max, p) => (p > 0 ? Math.max(1, Math.ceil(max * p)) : 0);
@@ -644,7 +645,7 @@
           case 'heal': {
             if (c.hp <= 0 || c.hp >= st.hp) break;
             const before = c.hp;
-            c.hp = Math.min(st.hp, c.hp + healAmount(user, c, e, isItem));
+            c.hp = Math.min(st.hp, c.hp + healAmount(user, c, e, isItem, def));
             out.lines.push(c.name + 'のHPが' + (c.hp - before) + '回復した！');
             out.changed = true;
             break;
@@ -968,7 +969,7 @@
   }
   const expectHeal = (def, user, t, isItem, eff) => {
     let n = 0;
-    for (const e of eff || fieldEffects(def)) if (e.type === 'heal') n += healAmount(user, t, e, isItem);
+    for (const e of eff || fieldEffects(def)) if (e.type === 'heal') n += healAmount(user, t, e, isItem, def);
     return n;
   };
 

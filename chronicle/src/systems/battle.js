@@ -1176,6 +1176,7 @@
       }
       const els = this.elementsOf(att, eff, ctx, f, W);
       const E = this.elemFactor(att, tgt, els);
+      const profM = this.profMul(att, ctx);
       let d, zero = E.mult === 0;
       if (f === 'phys') {
         const A = ctx.atk != null ? ctx.atk : W ? W.atk || 0 : att.stat('atk');
@@ -1187,7 +1188,7 @@
         const rowM = tgt.isParty && this.effRow(tgt) === 'middle' ? K('ROW').middleTaken : 1;
         const stage = stageMult(att.buffs.atk) / stageMult(tgt.buffs.def);
         const pct = 1 + this.pct(att, 'physPct') / 100;
-        const base = A * P * kindM * E.mult * (1 + E.boost / 100) * vs * rowM * stage * pct * defendM * takenM * (ctx.coverMul || 1);
+        const base = A * P * kindM * E.mult * (1 + E.boost / 100) * vs * rowM * stage * pct * defendM * takenM * (ctx.coverMul || 1) * profM;
         const cm = K('CRIT').mult;
         if (x) d = base * ((1 - critP) * guardN + critP * cm) * hitP;
         else d = base * (crit ? cm : guardN) * rf(Kd.physRand[0], Kd.physRand[1]);
@@ -1196,7 +1197,7 @@
         const ig = U.clamp(eff.ignoreMdef || 0, 0, 1);
         const mdef = Math.max(0, tgt.stat('mdef')) * (1 - ig);
         d = att.stat('mag') * P * (this.dk / (this.dk + mdef)) * E.mult * (1 + E.boost / 100) *
-          (stageMult(att.buffs.mag) / stageMult(tgt.buffs.mdef)) * (1 + this.pct(att, 'magicPct') / 100) * defendM * takenM * rf(Kd.magRand[0], Kd.magRand[1]);
+          (stageMult(att.buffs.mag) / stageMult(tgt.buffs.mdef)) * (1 + this.pct(att, 'magicPct') / 100) * profM * defendM * takenM * rf(Kd.magRand[0], Kd.magRand[1]);
       } else if (f === 'breath') {
         d = att.stat('atk') * P * E.mult * defendM * takenM * rf(Kd.breathRand[0], Kd.breathRand[1]);
       } else if (f === 'tier') {
@@ -1208,6 +1209,16 @@
       return { dmg: d, crit, zero, el: E.el };
     }
 
+    /**
+     * Part A13: × R.Rules.profPowerMul for a party member's 攻撃 / 反撃 (ctx.attack), tech or spell — the used weapon's
+     * type or the spell's elements. Items, 魔石 and monsters: 1.
+     */
+    profMul(att, ctx) {
+      if (!att.isParty || !att.c || ctx.item || !(R.Rules && R.Rules.profPowerMul)) return 1;
+      if (ctx.attack) return R.Rules.profPowerMul(att.c, null, ctx.slot);
+      if (ctx.kind !== 'tech' && ctx.kind !== 'spell') return 1;
+      return R.Rules.profPowerMul(att.c, ctx.act, ctx.slot);
+    }
     /** apply a rolled hit to tgt; true when it connected (damage > 0, or MP lost) */
     *hit(att, tgt, r, info) {
       const kind = info.kind || 'phys';
@@ -1502,7 +1513,7 @@
         case 'damage': return yield* this.damageEffect(u, t, eff, ctx);
         case 'heal': {
           if (!t.alive) return;
-          const n = R.Mon && R.Mon.healAmount ? R.Mon.healAmount(u, t, eff, { item: !!ctx.item }) : Math.round(t.mhp * (eff.pct || 0));
+          const n = R.Mon && R.Mon.healAmount ? R.Mon.healAmount(u, t, eff, { item: !!ctx.item, action: u.isParty && !ctx.item && (ctx.kind === 'tech' || ctx.kind === 'spell') ? ctx.act : null, slot: ctx.slot }) : Math.round(t.mhp * (eff.pct || 0));
           return yield* this.restore(t, n, 'hp', ctx.multi ? 'multi' : undefined);
         }
         case 'healMp': case 'healWp': {
@@ -1842,7 +1853,7 @@
       let n = 0;
       for (const eff of act.effects || []) {
         if (eff.type !== 'heal') continue;
-        n += R.Mon && R.Mon.healAmount ? R.Mon.healAmount(u, t, eff, { item: !!item }) : t.mhp * (eff.pct || 0);
+        n += R.Mon && R.Mon.healAmount ? R.Mon.healAmount(u, t, eff, { item: !!item, action: u.isParty && !item && (act.kind === 'tech' || act.kind === 'spell') ? act : null }) : t.mhp * (eff.pct || 0);
       }
       return n;
     }

@@ -553,11 +553,13 @@
           hits.push([t, d]);
         }
         if (v <= 0) continue;
-        if (!eng.boss && plan.thrift && !mobGate(v, kills)) continue;
+        // Part A13b: a free (MP 0 / WP 0) skill needs no gate — a caster's 0-MP 1段目 spell beats 攻撃 whenever it hits harder
+        const free = !o.mp && !o.wp;
+        if (!eng.boss && plan.thrift && !free && !mobGate(v, kills)) continue;
         const pen = spend(u, o) * v0 * (eng.boss ? 0.4 : plan.thrift ? 2.5 : 1.2);
         const hpCost = o.ab.effects.reduce((mx, e) => Math.max(mx, e.hpCost || 0), 0) * u.mhp;
         const score = v - pen - hpCost * (u.hpRate() < 0.5 ? 2 : 0.5);
-        if (score > best.score * 1.1 || (best.cmd.type === 'defend' && score > 0)) best = { score, cmd: cmdOf(o, m), hits };
+        if (score > best.score * (free ? 1 : 1.1) || (best.cmd.type === 'defend' && score > 0)) best = { score, cmd: cmdOf(o, m), hits };
       }
     }
     for (const [t, d] of best.hits) plan.dmg.set(t, (plan.dmg.get(t) || 0) + d);

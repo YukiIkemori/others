@@ -10,7 +10,8 @@
 //   R.Mon.rollGolden(ids, mods)        → index of the monster that turns golden | -1
 //   R.Mon.dropChances(def, {golden, mods}) → {normal, rare, super} probabilities (§4.10.1)
 //   R.Mon.rollDrops(def, {golden, mods, tier}) → [{item, grade, n} | {gold, grade}] (normal → rare → super → bonus)
-//   R.Mon.healAmount(user, target, eff, {item, field}) → HP healed (§4.6.4; battle and menu share it)
+//   R.Mon.healAmount(user, target, eff, {item, field, action, slot}) → HP healed (§4.6.4; battle and menu share it;
+//                                        action/slot: × R.Rules.profPowerMul, Part A13)
 //   R.Mon.fillStats(def, id)           → fills the nominal stats of a monster (run once for every monster in R.onData)
 //   R.Mon.goldenName(def)              → name of the golden individual (§9.8)
 //   R.Mon.rank(def, Tb) / R.Mon.ef(def) → glimmer rank and enemy factor (§4.9.2)
@@ -420,6 +421,9 @@
     else if (user) {
       const mnd = user.isParty != null ? user.stat('mnd') : ust.mnd;
       n *= mndf(mnd) * (1 + (mods.healPct || 0) / 100);
+      // Part A13: the proficiency of the spell's elements / the tech's weapon type (opts.action = the action def or id)
+      const ch = user.isParty != null ? user.c : user;
+      if (opts.action && ch && R.Rules && R.Rules.profPowerMul) n *= R.Rules.profPowerMul(ch, opts.action, opts.slot);
     }
     return n > 0 ? Math.max(1, Math.round(n)) : 0;
   }
