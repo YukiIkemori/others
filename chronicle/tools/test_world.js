@@ -48,7 +48,12 @@ function evalSpec(code) {
 {
   const code = block('#### 10.13.11').replace(/chronicle: \{ \/\* §10\.4\.1 \*\/ \},/, '');
   const spec = evalSpec(code).config;
+  // A18b.1: the first objective is the prologue's own obj_p_roa (same text as §10.13.11's obj_w_roa,
+  // which stays registered as its alias); every other key is as written in §10.13.11
+  if (spec.startObjective === 'obj_w_roa') spec.startObjective = 'obj_p_roa';
   for (const k of Object.keys(spec)) eq(DB.config[k], spec[k], `§10.13.11 DB.config.${k}`);
+  eq(DB.objectives[DB.config.startObjective] && DB.objectives[DB.config.startObjective].text,
+    DB.objectives.obj_w_roa && DB.objectives.obj_w_roa.text, 'startObjective text = §10.13.8 obj_w_roa');
   for (const k of Object.keys(DB.config)) ok(k in spec || k === 'chronicle', `DB.config.${k} is not in §10.13.11`);
 }
 // §10.6.3 locations (values and order)
