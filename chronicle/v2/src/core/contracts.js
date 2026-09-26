@@ -288,9 +288,15 @@
     if (!API[name]) return { ok: false, errors: [`unknown api '${name}'`] };
     return checkNames(API[name], ns === undefined ? resolve(name) : ns, name === 'R' ? 'R' : 'R.' + name);
   }
-  function checkAll() {
+  // DOM が要る物（node の tools/lib/load.js では無くてよい）
+  const BROWSER_ONLY = ['R.Gfx.g'];
+  function checkAll(o) {
+    o = o || {};
+    const node = o.node != null ? o.node : typeof document === 'undefined';
     const errors = [];
-    for (const name of Object.keys(API)) errors.push(...checkApi(name).errors);
+    for (const name of Object.keys(API)) {
+      for (const e of checkApi(name).errors) if (!(node && BROWSER_ONLY.some((b) => e.indexOf(b + ':') === 0))) errors.push(e);
+    }
     return { ok: !errors.length, errors };
   }
 
@@ -303,6 +309,7 @@
     SCREEN_IDS,
     EXPRS,
     SCHEMAS: K,
+    BROWSER_ONLY,
     check,
     checkApi,
     checkAll,

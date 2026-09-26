@@ -1,0 +1,259 @@
+{
+ "character": "arun_mock",
+ "set": "face",
+ "image": "arun_mock_face.png",
+ "cell": [
+  91,
+  93
+ ],
+ "anchor": [
+  46,
+  89
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "face_neutral": {
+   "x": 0,
+   "y": 0,
+   "w": 91,
+   "h": 93,
+   "anchor": [
+    46,
+    89
+   ],
+   "points": {
+    "head": [
+     51,
+     10
+    ],
+    "center": [
+     46,
+     54
+    ],
+    "front": [
+     7,
+     72
+    ]
+   }
+  },
+  "face_serious": {
+   "x": 91,
+   "y": 0,
+   "w": 91,
+   "h": 93,
+   "anchor": [
+    46,
+    89
+   ],
+   "points": {
+    "head": [
+     51,
+     10
+    ],
+    "center": [
+     47,
+     53
+    ],
+    "front": [
+     8,
+     72
+    ]
+   }
+  },
+  "face_smile": {
+   "x": 182,
+   "y": 0,
+   "w": 91,
+   "h": 93,
+   "anchor": [
+    46,
+    89
+   ],
+   "points": {
+    "head": [
+     51,
+     10
+    ],
+    "center": [
+     46,
+     54
+    ],
+    "front": [
+     7,
+     72
+    ]
+   }
+  },
+  "face_laugh": {
+   "x": 273,
+   "y": 0,
+   "w": 91,
+   "h": 93,
+   "anchor": [
+    46,
+    89
+   ],
+   "points": {
+    "head": [
+     51,
+     10
+    ],
+    "center": [
+     46,
+     54
+    ],
+    "front": [
+     7,
+     72
+    ]
+   }
+  },
+  "face_surprise": {
+   "x": 0,
+   "y": 93,
+   "w": 91,
+   "h": 93,
+   "anchor": [
+    46,
+    89
+   ],
+   "points": {
+    "head": [
+     51,
+     10
+    ],
+    "center": [
+     46,
+     54
+    ],
+    "front": [
+     7,
+     72
+    ]
+   }
+  },
+  "face_sad": {
+   "x": 91,
+   "y": 93,
+   "w": 91,
+   "h": 93,
+   "anchor": [
+    46,
+    89
+   ],
+   "points": {
+    "head": [
+     52,
+     2
+    ],
+    "center": [
+     47,
+     50
+    ],
+    "front": [
+     2,
+     71
+    ]
+   }
+  },
+  "face_angry": {
+   "x": 182,
+   "y": 93,
+   "w": 91,
+   "h": 93,
+   "anchor": [
+    46,
+    89
+   ],
+   "points": {
+    "head": [
+     51,
+     10
+    ],
+    "center": [
+     46,
+     54
+    ],
+    "front": [
+     7,
+     72
+    ]
+   }
+  },
+  "face_tired": {
+   "x": 273,
+   "y": 93,
+   "w": 91,
+   "h": 93,
+   "anchor": [
+    46,
+    89
+   ],
+   "points": {
+    "head": [
+     51,
+     10
+    ],
+    "center": [
+     46,
+     54
+    ],
+    "front": [
+     7,
+     72
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#120f12",
+  "#131319",
+  "#251417",
+  "#1e191b",
+  "#271d1b",
+  "#30231f",
+  "#29272a",
+  "#45342d",
+  "#4a403e",
+  "#a2a19f",
+  "#3a1a1b",
+  "#4d1e1e",
+  "#622523",
+  "#752a26",
+  "#82322a",
+  "#82402e",
+  "#963b2f",
+  "#ab4a36",
+  "#c3573d",
+  "#523022",
+  "#584035",
+  "#6a4f3f",
+  "#724e3b",
+  "#804c2b",
+  "#805f4d",
+  "#a25332",
+  "#965d39",
+  "#906f59",
+  "#987056",
+  "#a76e43",
+  "#c16f46",
+  "#d16945",
+  "#a48067",
+  "#be804a",
+  "#b18e72",
+  "#db7e52",
+  "#d18559",
+  "#be9a7c",
+  "#d39573",
+  "#cdab8a",
+  "#eba77b",
+  "#efb47d",
+  "#e6c8a8",
+  "#f4c696",
+  "#f7dbb2",
+  "#f8e6cb"
+ ],
+ "facing": "slightly right",
+ "target_height": 80
+}

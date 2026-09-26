@@ -1,0 +1,1095 @@
+{
+ "made": "2026-09-26T21:05:50.182Z",
+ "note": "P0 の時点の元のハッシュ（V2_PLAN §1.1）。ported = CORE が P0 で写した物、pending = P1 で担当が移す物（このハッシュの元から移す）。node v2/tools/port/diff.js で変化を調べる。",
+ "files": [
+  {
+   "src": "src/core/audio.js",
+   "dst": "v2/src/core/audio.js",
+   "how": "as-is",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "2f124e60ae9e720219246adf8b510237b9263c45769e324c9148c2fb2d37b482",
+   "bytes": 75430
+  },
+  {
+   "src": "src/audio/jingles_chronicle.js",
+   "dst": "v2/src/audio/jingles_chronicle.js",
+   "how": "as-is",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "51e3df9383bc069adec5f78410c117d427365fa299119af84343e50501d8f4a0",
+   "bytes": 3553
+  },
+  {
+   "src": "src/audio/music.js",
+   "dst": "v2/src/audio/music.js",
+   "how": "as-is",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "e24fc7d1744909e7b56369fd0f0a7dcaa7c1b2702a1a743986ea1b2ce4ba15b1",
+   "bytes": 16336
+  },
+  {
+   "src": "src/audio/music_battle.js",
+   "dst": "v2/src/audio/music_battle.js",
+   "how": "as-is",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "a87253191a06f21be4925b8d6effcea0862b142b3f600919f6fc98b3092166eb",
+   "bytes": 12833
+  },
+  {
+   "src": "src/audio/music_chronicle.js",
+   "dst": "v2/src/audio/music_chronicle.js",
+   "how": "as-is",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "46fb1f86fe688f579d2c3e855a7cd3d32dafc73532f3c6514c8f8a8034d4a884",
+   "bytes": 12876
+  },
+  {
+   "src": "src/audio/music_chronicle_battle.js",
+   "dst": "v2/src/audio/music_chronicle_battle.js",
+   "how": "as-is",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "37d94ad670d6134b37766ebf9ea23df15b320a839b6787d56d487f889d5bb384",
+   "bytes": 16180
+  },
+  {
+   "src": "src/audio/music_dungeon.js",
+   "dst": "v2/src/audio/music_dungeon.js",
+   "how": "as-is",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "cb64ce0edce136685a67875b344a3c7ed0e000618023c6ff70b9a0e8ac20a7f3",
+   "bytes": 13790
+  },
+  {
+   "src": "src/audio/music_jingles.js",
+   "dst": "v2/src/audio/music_jingles.js",
+   "how": "as-is",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "6bd701f0b1fb3775b8914255b87c7b2be4605ec1704dba5d3290ee71337f1449",
+   "bytes": 7235
+  },
+  {
+   "src": "src/audio/sfx.js",
+   "dst": "v2/src/audio/sfx.js",
+   "how": "as-is",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "d6a351fdade57bf48074bdbfb0e2abfb7f1ad2caac99f262a461b92173c2bbcd",
+   "bytes": 13770
+  },
+  {
+   "src": "src/audio/sfx_chronicle.js",
+   "dst": "v2/src/audio/sfx_chronicle.js",
+   "how": "as-is",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "a0cbe4ccca408da3bdf5335ae277b50f09f93dd8cf6b3059b2e668977de7f2b4",
+   "bytes": 8656
+  },
+  {
+   "src": "src/core/input.js",
+   "dst": "v2/src/core/input.js",
+   "how": "port",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "4131ccc8a17de3a2578dc09c7e029072f191fdcdaf2adb459ae85d3da230a21d",
+   "bytes": 8261
+  },
+  {
+   "src": "src/core/save.js",
+   "dst": "v2/src/core/save.js",
+   "how": "port",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "8b64309be2817e2abc73509777e131dbc852dcbee7abdbb324d07618e9e3057f",
+   "bytes": 6381
+  },
+  {
+   "src": "src/core/ns.js",
+   "dst": "v2/src/core/ns.js",
+   "how": "ref",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "fa5810ad5ba2e126815e9db0e03590b1b94f04c92dba0808f2d5f36963d7e400",
+   "bytes": 5952
+  },
+  {
+   "src": "src/core/engine.js",
+   "dst": "v2/src/core/engine.js",
+   "how": "ref",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "ea42432295c4d5d6029c402c864c9df3db711ff366f9904fc85e3381ef90f75d",
+   "bytes": 8563
+  },
+  {
+   "src": "src/core/gfx.js",
+   "dst": "v2/src/core/gfx.js",
+   "how": "ref",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "2f9bf66d917fb920149442f6c267f9401da09c61f8013daee24986b618dbb8bc",
+   "bytes": 26134
+  },
+  {
+   "src": "src/main.js",
+   "dst": "v2/src/main.js",
+   "how": "ref",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "f46e8fb1ac5e7657e7add20dcea884a33c3b838466975364732352298700e76f",
+   "bytes": 3195
+  },
+  {
+   "src": "tools/build.js",
+   "dst": "v2/tools/build.js",
+   "how": "port",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "55b49774de8da97e7a60f95e3e81381837370342e53766db334f1a28bf5b1084",
+   "bytes": 14779
+  },
+  {
+   "src": "tools/lib/load.js",
+   "dst": "v2/tools/lib/load.js",
+   "how": "port",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "71817c94bb74d93b45e4faab92f7a9d24a1581b1011db3022dc77504bad366db",
+   "bytes": 2973
+  },
+  {
+   "src": "tools/shot.js",
+   "dst": "v2/tools/shot.js",
+   "how": "port",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "9dd43ab41731aad156e54ec45251a5530352342b9a39c7e9f31f4abd5ae61b91",
+   "bytes": 5058
+  },
+  {
+   "src": "design/art_proto/fonts/ZenMaruGothic-Medium.ttf",
+   "dst": "v2/assets/fonts/ZenMaruGothic-Medium.ttf",
+   "how": "copy",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "3cfdb98a13571ede17fcc769f5093a97c38b80a7b9b2ab754a26b4d822092b3b",
+   "bytes": 3810988
+  },
+  {
+   "src": "design/art_proto/fonts/ZenMaruGothic-Bold.ttf",
+   "dst": "v2/assets/fonts/ZenMaruGothic-Bold.ttf",
+   "how": "copy",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "fe24426b9c8b5523a0146a8235c8674eccf0493af354a53ec895c3596d9eb745",
+   "bytes": 3779008
+  },
+  {
+   "src": "design/art_proto/fonts/OFL_ZenMaruGothic.txt",
+   "dst": "v2/assets/fonts/OFL_ZenMaruGothic.txt",
+   "how": "copy",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "2a20cf7ce1909d8ee1e949095d340f7d7656705f7c810a2d6faf56800ad0cb3d",
+   "bytes": 4402
+  },
+  {
+   "src": "design/art_proto/ui/fonts/cinzel-latin-400-normal.woff2",
+   "dst": "v2/assets/fonts/cinzel-latin-400-normal.woff2",
+   "how": "copy",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "b873cdd90d6bd9ca4793c805b4175abfae00b3611ee8afccf63067133dcf1217",
+   "bytes": 14128
+  },
+  {
+   "src": "design/art_proto/ui/fonts/cinzel-latin-700-normal.woff2",
+   "dst": "v2/assets/fonts/cinzel-latin-700-normal.woff2",
+   "how": "copy",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "8efa224fe70fef188a39c095e218b81fd31061809f2752537e33a9ec7b9c2263",
+   "bytes": 15184
+  },
+  {
+   "src": "design/art_proto/ui/fonts/OFL_Cinzel.txt",
+   "dst": "v2/assets/fonts/OFL_Cinzel.txt",
+   "how": "copy",
+   "owner": "CORE",
+   "status": "ported",
+   "sha256": "f5a242cf68ad6ebd0603b3359a74c593ca080318a681035be5296ba2c6b04ae6",
+   "bytes": 4382
+  },
+  {
+   "src": "src/systems/rules.js",
+   "dst": "v2/src/systems/rules.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "705caf788299994931925e7129d5f45eb424b492b477a50b1411d0f9556a275f",
+   "bytes": 85237
+  },
+  {
+   "src": "src/systems/glimmer.js",
+   "dst": "v2/src/systems/glimmer.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "7894e88e744620f5da5f4d3a819e66e4b278237bca0a7d98f9f5512aab92f0f2",
+   "bytes": 19897
+  },
+  {
+   "src": "src/systems/party.js",
+   "dst": "v2/src/systems/party.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "a263f3c93bb240b70314884c4afc80a8e08a5a393df24e943c6c8957779cf418",
+   "bytes": 11042
+  },
+  {
+   "src": "src/systems/tier.js",
+   "dst": "v2/src/systems/tier.js",
+   "how": "port",
+   "owner": "EVENTS",
+   "status": "pending",
+   "sha256": "c2934f4a1584d658fff6e4169ff31f3c7985eab0f3cbbb1da92d01bc0c418dbc",
+   "bytes": 5305
+  },
+  {
+   "src": "src/systems/state.js",
+   "dst": "v2/src/systems/state.js",
+   "how": "port",
+   "owner": "EVENTS",
+   "status": "pending",
+   "sha256": "11c59961244e4d89bff2be1f405760518632a286d4642fa8d265a70d2f02b0f3",
+   "bytes": 32755
+  },
+  {
+   "src": "tools/lib/cond.js",
+   "dst": "v2/tools/lib/cond.js",
+   "how": "port",
+   "owner": "EVENTS",
+   "status": "pending",
+   "sha256": "08bec067b2f331934e75dc3885476d9851b7e81b899d6d19428ab74122b04451",
+   "bytes": 9005
+  },
+  {
+   "src": "tools/lib/maps.js",
+   "dst": "v2/tools/lib/maps.js",
+   "how": "port",
+   "owner": "QA",
+   "status": "pending",
+   "sha256": "f3994b14272b8e44339cc81146d22397ae7e521f9d053e16c2154cfeba41f380",
+   "bytes": 9493
+  },
+  {
+   "src": "tools/lib/party_model.js",
+   "dst": "v2/tools/lib/party_model.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "0d1582c0ad71ec2015c0f18f494eeee79dc4fcb15b7895afd6a6f8d5cebe334d",
+   "bytes": 40326
+  },
+  {
+   "src": "src/systems/mon.js",
+   "dst": "v2/src/systems/mon.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "3940c66d5bf75b1b78fcda62398887135f3fae4b210fb1cad01370f1084b1485",
+   "bytes": 24037
+  },
+  {
+   "src": "src/systems/battle.js",
+   "dst": "v2/src/systems/battle_core.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "28f5361ac300b2ca75c63ce45326a3ea848a94f2173b021233ec5e0749130050",
+   "bytes": 119749
+  },
+  {
+   "src": "src/systems/battle_ai.js",
+   "dst": "v2/src/systems/battle_ai.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "e22dcf8c5d73bb2ddaa175c3f2180d7dbb5e1e2be51429c38f9337a50d352b31",
+   "bytes": 36123
+  },
+  {
+   "src": "src/data/bosses.js",
+   "dst": "v2/src/data/bosses.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "9e90973f5a31850d61957a85d244d88a7f61876377068058a6db30cd2fb7c93c",
+   "bytes": 27788
+  },
+  {
+   "src": "src/data/bosses_actions.js",
+   "dst": "v2/src/data/bosses_actions.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "114405a171ab02b0e4ff92037bc8e69bf2368e7428274e9d42a39ead93a703f0",
+   "bytes": 42765
+  },
+  {
+   "src": "src/data/companions.js",
+   "dst": "v2/src/data/companions.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "37842cf2ae797da7193a62a0e70f70bf52f73207c764d6a3fc6743387e7679e9",
+   "bytes": 22236
+  },
+  {
+   "src": "src/data/config.js",
+   "dst": "v2/src/data/config.js",
+   "how": "port",
+   "owner": "EVENTS",
+   "status": "pending",
+   "sha256": "182d2a4b30c271e8c85a2b6f3c04a1a63f4face84d11b275c8841c1dcb75265d",
+   "bytes": 2272
+  },
+  {
+   "src": "src/data/elements.js",
+   "dst": "v2/src/data/elements.js",
+   "how": "as-is",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "60f7cbbea1563e88f341abf4a40dd0c461b26b159a8426d3623c6d6c85e2db2e",
+   "bytes": 1238
+  },
+  {
+   "src": "src/data/encounters.js",
+   "dst": "v2/src/data/encounters.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "2afe920e438101ace6d9ea02a86c0561dd30c1dfe941a9bff4db4dcc8dd0dad8",
+   "bytes": 66575
+  },
+  {
+   "src": "src/data/enemy_actions.js",
+   "dst": "v2/src/data/enemy_actions.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "c518d03ba7b3273e00aaec030fefc233335242ed4be887b1eeb8cec63a8bbe71",
+   "bytes": 28005
+  },
+  {
+   "src": "src/data/herotypes.js",
+   "dst": "v2/src/data/herotypes.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "0d99fc867f63fdd795278532fd0d638bba2749219427d7fcca45a0a420d10fc1",
+   "bytes": 6388
+  },
+  {
+   "src": "src/data/items_acc.js",
+   "dst": "v2/src/data/items_acc.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "abb5782361520862f0dacdc6554edb4bb284dffccca9763db88165299fca3ee4",
+   "bytes": 14214
+  },
+  {
+   "src": "src/data/items_acc_monster.js",
+   "dst": "v2/src/data/items_acc_monster.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "7eb502a2e264a7fe8b24825d44b3ce20627cbb12a4a8ffc18bf4201a46f3adca",
+   "bytes": 26704
+  },
+  {
+   "src": "src/data/items_acc_rare.js",
+   "dst": "v2/src/data/items_acc_rare.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "a0082a1aa24c5c4caf82b06e79acc4b5cb69544417c8e943cccd33668e9cbec4",
+   "bytes": 6525
+  },
+  {
+   "src": "src/data/items_acc_relic.js",
+   "dst": "v2/src/data/items_acc_relic.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "e9fe5f4a21c762b4546fe4e3f613fa1f8a72b942ae5abebcb1e93e30ea3ae8c4",
+   "bytes": 18219
+  },
+  {
+   "src": "src/data/items_acc_reward.js",
+   "dst": "v2/src/data/items_acc_reward.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "2d8f19a93e4ae88659b5663a9e692f7f2dd43924465e80caa352bc3c2ee32bec",
+   "bytes": 5195
+  },
+  {
+   "src": "src/data/items_acc_super.js",
+   "dst": "v2/src/data/items_acc_super.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "acd85551c8b67d55df43d953738c13c7ceed95690188eaa82b7a54c7f5db4c40",
+   "bytes": 5667
+  },
+  {
+   "src": "src/data/items_armor.js",
+   "dst": "v2/src/data/items_armor.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "cfeac091ee944720871537ac4111ae92e4d2c15ef2d895dee0ce5972e9365975",
+   "bytes": 15748
+  },
+  {
+   "src": "src/data/items_armor_monster.js",
+   "dst": "v2/src/data/items_armor_monster.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "4f71e7ac9d37523f36091b622dd74552842607c7ada7783e4248922613696920",
+   "bytes": 44604
+  },
+  {
+   "src": "src/data/items_armor_rare.js",
+   "dst": "v2/src/data/items_armor_rare.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "c5c2322eebb2162484753469ab2aa79ef1ebd5ccc26c93b0ae34fb02b903c33c",
+   "bytes": 16486
+  },
+  {
+   "src": "src/data/items_armor_super.js",
+   "dst": "v2/src/data/items_armor_super.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "d72240fd6d30bab3c289aa3aa3724b1368da14c4f1948b3ed09dfd5783b873a0",
+   "bytes": 8307
+  },
+  {
+   "src": "src/data/items_key.js",
+   "dst": "v2/src/data/items_key.js",
+   "how": "port",
+   "owner": "EVENTS",
+   "status": "pending",
+   "sha256": "8a5932c9d24a5fd8cf3a104414e2a3d8573a49e784ba7934e326483a1e9f973a",
+   "bytes": 4160
+  },
+  {
+   "src": "src/data/items_use.js",
+   "dst": "v2/src/data/items_use.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "765705a87aa1d5c36605cd2a514fea85291ef10bcfb1dd322ce511f63163e433",
+   "bytes": 14906
+  },
+  {
+   "src": "src/data/items_weapons.js",
+   "dst": "v2/src/data/items_weapons.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "05c686743e7c2fe8e1e8a264c8d7b7e2c3a015677456ba4674417aa1c49f181a",
+   "bytes": 9815
+  },
+  {
+   "src": "src/data/items_weapons_monster.js",
+   "dst": "v2/src/data/items_weapons_monster.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "934e8ff00249742dcc09692d86df95682af4b2f7163534317a87528ec36e287a",
+   "bytes": 36977
+  },
+  {
+   "src": "src/data/items_weapons_rare.js",
+   "dst": "v2/src/data/items_weapons_rare.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "c866d5a648499a1a72fb18fa87e9da63c70323e71ccd44b75e3e2eeae2f4a6ee",
+   "bytes": 12418
+  },
+  {
+   "src": "src/data/items_weapons_super.js",
+   "dst": "v2/src/data/items_weapons_super.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "491d58f3a780b3fdca46bd4ed12cc95913e1612c7abc9aa3e5e57dd44d1a0809",
+   "bytes": 5692
+  },
+  {
+   "src": "src/data/lineages.js",
+   "dst": "v2/src/data/lineages.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "85f545ac08dc56176e984426367831b1870763b32ca5b9238afe839d902adb41",
+   "bytes": 9318
+  },
+  {
+   "src": "src/data/locations.js",
+   "dst": "v2/src/data/locations.js",
+   "how": "port",
+   "owner": "CONTENT-P",
+   "status": "pending",
+   "sha256": "e664274614dee698edd271f0f72d6e519b4dbb7a951b9f666b6f12bbbfd0709c",
+   "bytes": 3861
+  },
+  {
+   "src": "src/data/monsters_ash.js",
+   "dst": "v2/src/data/monsters_ash.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "3dc6baf9de172de31bf2ef53536ad7df8148833eadc4af212d129caa575c0396",
+   "bytes": 14983
+  },
+  {
+   "src": "src/data/monsters_common.js",
+   "dst": "v2/src/data/monsters_common.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "4880e5a0a8a42be8da9331cd083f00625a4830fb8301a88c11ff0da2bb7628e6",
+   "bytes": 26284
+  },
+  {
+   "src": "src/data/monsters_desert.js",
+   "dst": "v2/src/data/monsters_desert.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "6e71987710c7eb2cb241a5e24a4ed6225f0c19d0df100484c4c7b6669ee6f002",
+   "bytes": 15619
+  },
+  {
+   "src": "src/data/monsters_finale.js",
+   "dst": "v2/src/data/monsters_finale.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "3921860a7f194c34fb80dcd8c8ad8d3564d87b1dce25544d3fc307c943499c0c",
+   "bytes": 7748
+  },
+  {
+   "src": "src/data/monsters_forest.js",
+   "dst": "v2/src/data/monsters_forest.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "8453ac3eae027d5b6e05403f405494d79b788edc0fe256efe91a10c75f53e90f",
+   "bytes": 16678
+  },
+  {
+   "src": "src/data/monsters_isles.js",
+   "dst": "v2/src/data/monsters_isles.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "54a66d613d6e8a1ac6864512e7ed8b4226460db1ce241d04358e63622464e9c8",
+   "bytes": 9155
+  },
+  {
+   "src": "src/data/monsters_marsh.js",
+   "dst": "v2/src/data/monsters_marsh.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "481f500816d6d300bfcbdb4078769ab1e3618e54e242969a6e2e27e80609f3f9",
+   "bytes": 18502
+  },
+  {
+   "src": "src/data/monsters_mine.js",
+   "dst": "v2/src/data/monsters_mine.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "cc2b302d311bce7cf25e20d6e86ee0115be40a3ee3c2b90d7d2aade988c469e8",
+   "bytes": 15003
+  },
+  {
+   "src": "src/data/monsters_postgame.js",
+   "dst": "v2/src/data/monsters_postgame.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "2b798745033686b066947545ebde5100d08d51c805b8dfe82ff12ebd4901f9c5",
+   "bytes": 5520
+  },
+  {
+   "src": "src/data/monsters_snow.js",
+   "dst": "v2/src/data/monsters_snow.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "fd02f5d58ac62a57e8f61c0eeb007917ff343ae540f4745ff773d8ccfa3b868b",
+   "bytes": 14998
+  },
+  {
+   "src": "src/data/monsters_star.js",
+   "dst": "v2/src/data/monsters_star.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "3078e457e8b3b4b01712b1c981feb86da96aa7cf39c10ceec9909f45ee53188d",
+   "bytes": 15731
+  },
+  {
+   "src": "src/data/pools.js",
+   "dst": "v2/src/data/pools.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "49ef8a3295b62cbcb118ec974c62a295fd857b19ef9d8bff2c75c2ee09085762",
+   "bytes": 4008
+  },
+  {
+   "src": "src/data/rare.js",
+   "dst": "v2/src/data/rare.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "c2dc40fae5213316dc9aee7bacd61e18397adb1728976ef317fc6058e3da0215",
+   "bytes": 17175
+  },
+  {
+   "src": "src/data/rare_encounters.js",
+   "dst": "v2/src/data/rare_encounters.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "528f56c3d18b0f4ff57bccf4f36cdc7b75b1de5f8acbab2a188f3ff26ee760d0",
+   "bytes": 1625
+  },
+  {
+   "src": "src/data/regions.js",
+   "dst": "v2/src/data/regions.js",
+   "how": "port",
+   "owner": "CONTENT-P",
+   "status": "pending",
+   "sha256": "922199eb14c6ffbdfbfcfa464c5b45c82e35346da469913486177dff785d1f52",
+   "bytes": 6697
+  },
+  {
+   "src": "src/data/shops.js",
+   "dst": "v2/src/data/shops.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "cfd089974588bac8d615f01f12009cc8a7cee397c7fee747ae9465fd8e301011",
+   "bytes": 12366
+  },
+  {
+   "src": "src/data/spells_pair.js",
+   "dst": "v2/src/data/spells_pair.js",
+   "how": "as-is",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "67164f489143f982bf95929fbe2ce9b9c2953aa83978e96ee8728b10dccca612",
+   "bytes": 8619
+  },
+  {
+   "src": "src/data/spells_single.js",
+   "dst": "v2/src/data/spells_single.js",
+   "how": "as-is",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "fa1d6b1361992c9b800f8dd267988902ee80fecf4759006af5d27dc4d4346aa6",
+   "bytes": 6988
+  },
+  {
+   "src": "src/data/spells_triple.js",
+   "dst": "v2/src/data/spells_triple.js",
+   "how": "as-is",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "81b8c478876da9ff790ec241ed05b4863e94369b38361b256a935578b9800cd0",
+   "bytes": 7134
+  },
+  {
+   "src": "src/data/statuses.js",
+   "dst": "v2/src/data/statuses.js",
+   "how": "as-is",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "4c59ca434a3876d1d42bb0f5d18c20fdc0431b471acaea0f800c69ecae219d36",
+   "bytes": 3694
+  },
+  {
+   "src": "src/data/techs_bow.js",
+   "dst": "v2/src/data/techs_bow.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "d095589b67ed75de8e3158f0560d53df034d782013b8a94010afd2544f32fcf3",
+   "bytes": 5249
+  },
+  {
+   "src": "src/data/techs_dagger.js",
+   "dst": "v2/src/data/techs_dagger.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "b110d6ab06c084e6ac984983876974ef2527e6fb19e53bf3353fd5eab9202b07",
+   "bytes": 5469
+  },
+  {
+   "src": "src/data/techs_greatsword.js",
+   "dst": "v2/src/data/techs_greatsword.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "0bd6a6c014130bf768e48c6a858f7e7b179f324a12ff11932b84b63babe81e80",
+   "bytes": 5634
+  },
+  {
+   "src": "src/data/techs_staff.js",
+   "dst": "v2/src/data/techs_staff.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "88c10c4c008bbb0283fe02e2d7813a059847ab6f0d6b172f68776b9820760ca2",
+   "bytes": 5600
+  },
+  {
+   "src": "src/data/techs_sword.js",
+   "dst": "v2/src/data/techs_sword.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "237a6ffac5b886a3f4fb232676fbcefa8f4c5baf1ca70a2139cff73bddbd8bd3",
+   "bytes": 5877
+  },
+  {
+   "src": "src/data/troops.js",
+   "dst": "v2/src/data/troops.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "e7ccf169d842fdcca516a39428a983f0e32b8c7e210f4bfd6bdcfd98dc3117fe",
+   "bytes": 4696
+  },
+  {
+   "src": "src/data/weapontypes.js",
+   "dst": "v2/src/data/weapontypes.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "585957e4c64bfe05270b547f090b7296e52f329f855837a7521e9beb4b7c6016",
+   "bytes": 2445
+  },
+  {
+   "src": "src/events/prologue_lighthouse.js",
+   "dst": null,
+   "how": "ref",
+   "owner": "CONTENT-P",
+   "status": "pending",
+   "sha256": "23d7c585accee8c98908ac54dce8bbbf747148190dff3251f48ce0a5374ccf06",
+   "bytes": 6732
+  },
+  {
+   "src": "src/events/prologue_lute.js",
+   "dst": null,
+   "how": "ref",
+   "owner": "CONTENT-P",
+   "status": "pending",
+   "sha256": "46981a80f27713b64e746a94c083d56ad78e83c9e65bf01ee1a862721bdffb76",
+   "bytes": 13491
+  },
+  {
+   "src": "src/events/prologue_roa.js",
+   "dst": null,
+   "how": "ref",
+   "owner": "CONTENT-P",
+   "status": "pending",
+   "sha256": "458cc855612fdd97487b08f412739ecffde956892b04413a51ac2bb291ad96e3",
+   "bytes": 7469
+  },
+  {
+   "src": "src/events/region1_forest.js",
+   "dst": null,
+   "how": "ref",
+   "owner": "CONTENT-F",
+   "status": "pending",
+   "sha256": "93d9d82e7c97bdb4739c6ce9a5eeaf305950dd8624c1bdf253064cbe82f873fa",
+   "bytes": 20240
+  },
+  {
+   "src": "src/events/story.js",
+   "dst": null,
+   "how": "ref",
+   "owner": "CONTENT-P",
+   "status": "pending",
+   "sha256": "ed2f2c14313d534dbd4bb749cee0b7bab342f48e3f79454222b6fa49f7ea6042",
+   "bytes": 19282
+  },
+  {
+   "src": "src/events/story_rumors.js",
+   "dst": null,
+   "how": "ref",
+   "owner": "CONTENT-P",
+   "status": "pending",
+   "sha256": "fb54c3bcb1ac31acd6531d2e2d486280e4a5b632aa5110a708a5a0d53ee50f19",
+   "bytes": 10430
+  },
+  {
+   "src": "design/voice/script.csv",
+   "dst": null,
+   "how": "ref",
+   "owner": "QA",
+   "status": "pending",
+   "sha256": "2cb5bda8b4593893135cff0d46cfb01599e64b2445c96f317b4c748e943a2b06",
+   "bytes": 27566
+  },
+  {
+   "src": "design/art_proto/code/raster.js",
+   "dst": "v2/src/render/rz.js",
+   "how": "port",
+   "owner": "RENDER",
+   "status": "pending",
+   "sha256": "4b5d211e57e385fa5f52c15634e8ace9bb6ab95c9cbbf3e978d18afc09eeea4e",
+   "bytes": 16690
+  },
+  {
+   "src": "design/art_proto/code/rig.js",
+   "dst": "v2/src/art/rig/rig.js",
+   "how": "port",
+   "owner": "CAST",
+   "status": "pending",
+   "sha256": "5f360bdec8f25f51d8242bea69b38db1b9ee139a6fbb355da4340e437b8b4ebb",
+   "bytes": 26869
+  },
+  {
+   "src": "design/art_proto/code/env.js",
+   "dst": "v2/src/art/bbg/",
+   "how": "port",
+   "owner": "BEAST",
+   "status": "pending",
+   "sha256": "232160b0189f60c17ed72f81188ccf1e768ef07d1ee2948881c27c86b3ff3d80",
+   "bytes": 12804
+  },
+  {
+   "src": "design/art_proto/code/scenes2.js",
+   "dst": "v2/src/art/bbg/",
+   "how": "port",
+   "owner": "BEAST",
+   "status": "pending",
+   "sha256": "07b8705c988c513db386e54aad649ba4ab195620f7a99a5ee391ca3e6a70dbd2",
+   "bytes": 23624
+  },
+  {
+   "src": "design/art_proto/ui/art_battle.js",
+   "dst": "v2/src/art/bbg/",
+   "how": "port",
+   "owner": "BEAST",
+   "status": "pending",
+   "sha256": "1251d268c387cbfa09efc3e060f899212a13242e2ddbd9c59905f070bc8e0b6c",
+   "bytes": 27706
+  },
+  {
+   "src": "design/art_proto/code/monsters.js",
+   "dst": "v2/src/art/mons/",
+   "how": "ref",
+   "owner": "BEAST",
+   "status": "pending",
+   "sha256": "d39e0ae5ca67d27580a28ba4ca707bc5423dba5edb0db7a1ad5051a6a734191d",
+   "bytes": 9979
+  },
+  {
+   "src": "design/art_proto/code/places.js",
+   "dst": "v2/src/art/terrain/",
+   "how": "port",
+   "owner": "TERRAIN",
+   "status": "pending",
+   "sha256": "12a21f71cc369e48e9bb969d653fc0a79bd2d2cbc589d0b067427fbca4fe03f6",
+   "bytes": 11917
+  },
+  {
+   "src": "design/art_proto/ui/art_town.js",
+   "dst": "v2/src/art/terrain/",
+   "how": "port",
+   "owner": "TERRAIN",
+   "status": "pending",
+   "sha256": "f7e9f32c4f289241a565a33627860f8bfb74616ca24caa90946f47aa9b0dc01c",
+   "bytes": 54758
+  },
+  {
+   "src": "design/art_proto/ui/art_world.js",
+   "dst": "v2/src/art/terrain/",
+   "how": "port",
+   "owner": "TERRAIN",
+   "status": "pending",
+   "sha256": "374e44a678ec2b3b535ed0be716980e4d4dbb451918344f2eab09f172bff74aa",
+   "bytes": 17955
+  },
+  {
+   "src": "design/art_proto/ui/art_chars.js",
+   "dst": "v2/src/art/cast/fieldchar.js",
+   "how": "port",
+   "owner": "CAST",
+   "status": "pending",
+   "sha256": "b4a6ac53f3a85a5a3238d59e501f0a59da5f13e7739475f323965aa4957a1fa3",
+   "bytes": 8485
+  },
+  {
+   "src": "design/art_proto/ui/kit.js",
+   "dst": "v2/src/uik/",
+   "how": "port",
+   "owner": "UIK",
+   "status": "pending",
+   "sha256": "0fa4037ac3d8f2071647dc7ae9f934f2bf3ffe142680c159a656311e512169bd",
+   "bytes": 25688
+  },
+  {
+   "src": "design/art_proto/ui/screens.js",
+   "dst": null,
+   "how": "ref",
+   "owner": "MENUS",
+   "status": "pending",
+   "sha256": "6c90db40e38828bac22a9223f657412085bc4de647aa9f1c0f7910df01e622eb",
+   "bytes": 15347
+  },
+  {
+   "src": "design/art_proto/ui/screens_field.js",
+   "dst": null,
+   "how": "ref",
+   "owner": "MENUS",
+   "status": "pending",
+   "sha256": "f49ba9c25df5465553e8626eef997a83cb314e114edee8c1adcbe1b05a69200e",
+   "bytes": 11426
+  },
+  {
+   "src": "design/art_proto/ui/screens_menu.js",
+   "dst": null,
+   "how": "ref",
+   "owner": "MENUS",
+   "status": "pending",
+   "sha256": "163895c26d813d471a36b03108d0da3a75948de74aa340d93707a8ff16ce642c",
+   "bytes": 26489
+  },
+  {
+   "src": "design/art_proto/ui/art_title.js",
+   "dst": null,
+   "how": "ref",
+   "owner": "MENUS",
+   "status": "pending",
+   "sha256": "d9ee5ea63b90ecdf6533d818a426a0ffbf2cbebaffdcf50dea7d682a0315bf90",
+   "bytes": 4319
+  },
+  {
+   "src": "tools/art_ui_measure.js",
+   "dst": "v2/tools/qa/measure_night.js",
+   "how": "as-is",
+   "owner": "QA",
+   "status": "pending",
+   "sha256": "adcfc51afb68d359571da44b67135c08a2964f23589f053c9ead02a8e5919542",
+   "bytes": 4043
+  },
+  {
+   "src": "tools/sim_growth.js",
+   "dst": "v2/tools/sim_growth.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "241cd71938b39ee0f355262b2835dfc80be60d2082bd8a113de0e92c3ffe862d",
+   "bytes": 12699
+  },
+  {
+   "src": "tools/sim_glimmer.js",
+   "dst": "v2/tools/sim_glimmer.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "fb55c62b40c71c876e09bab807d566b4ce647585b8f0bc174a1974a821c61d56",
+   "bytes": 46959
+  },
+  {
+   "src": "tools/sim_spells.js",
+   "dst": "v2/tools/sim_spells.js",
+   "how": "port",
+   "owner": "RULES",
+   "status": "pending",
+   "sha256": "855539f3d37f59d28c5e6b6d74a538b46caef9f0eb3f8ed4cee1cc29761d7fa1",
+   "bytes": 32587
+  },
+  {
+   "src": "tools/sim_zones.js",
+   "dst": "v2/tools/sim_zones.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "3f83ce8193c542584e8507f8d9eaee2e4302621bd6936246580d88d96fd0476d",
+   "bytes": 73474
+  },
+  {
+   "src": "tools/sim_bosses.js",
+   "dst": "v2/tools/sim_bosses.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "9b34ebb5bbc32799138c11dc8dc5eca1a2e241065ac1a9454aee01ef219e6104",
+   "bytes": 34997
+  },
+  {
+   "src": "tools/sim_loot.js",
+   "dst": "v2/tools/sim_loot.js",
+   "how": "port",
+   "owner": "BATTLE",
+   "status": "pending",
+   "sha256": "f5bdb6326fd6ebb9f79b31253d810fc8ebe2ab25862cdef3bd998e3b7c5f08b7",
+   "bytes": 17331
+  },
+  {
+   "src": "tools/validate.js",
+   "dst": "v2/tools/qa/validate.js",
+   "how": "port",
+   "owner": "QA",
+   "status": "pending",
+   "sha256": "e3ffac57ce58f1683f8998fa95b82499b2e33ffcf97d8faf9c57e2d15ef0ec02",
+   "bytes": 144553
+  },
+  {
+   "src": "tools/check_text.js",
+   "dst": "v2/tools/qa/check_text.js",
+   "how": "port",
+   "owner": "QA",
+   "status": "pending",
+   "sha256": "d873b883b194a4ea7d76631233775b8b64f5e274263b8ce03fe894004e01386c",
+   "bytes": 18310
+  },
+  {
+   "src": "tools/voice_script.js",
+   "dst": "v2/tools/qa/voice_script.js",
+   "how": "port",
+   "owner": "QA",
+   "status": "pending",
+   "sha256": "7782de90d98e96c709f92290c0679e80be5400560e2ac8cc73954b2829dd169c",
+   "bytes": 11792
+  }
+ ]
+}

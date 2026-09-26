@@ -187,8 +187,9 @@
       R.UIK.text(g, m.name || m.id, s.l + 20 * k, s.t + 22 * k, { size: 19 * k, weight: 700, shadow: true });
       const [dx, dy] = R.U.DIR[st.dir];
       const n = npcAt(st.x + dx, st.y + dy);
-      if (n && !locked()) R.UIK.bubble(g, (st.x + dx) * t - cx + t / 2, (st.y + dy) * t - cy - t * 0.5, [{ btn: 'a', label: '話す' }]);
-      if (!R.Input.touchVisible()) R.UIK.prompts(g, [{ btn: 'a', label: '調べる' }, { btn: 'y', label: 'メニュー' }, { btn: 'b', label: 'ダッシュ' }]);
+      const top = R.Engine.top() === scene;
+      if (n && !locked() && top) R.UIK.bubble(g, (st.x + dx) * t - cx + t / 2, (st.y + dy) * t - cy - t * 0.5, [{ btn: 'a', label: '話す' }]);
+      if (top && !R.Input.touchVisible()) R.UIK.prompts(g, [{ btn: 'a', label: '調べる' }, { btn: 'y', label: 'メニュー' }, { btn: 'b', label: 'ダッシュ' }]);
       R.Post.frame(g, {});
     },
   };

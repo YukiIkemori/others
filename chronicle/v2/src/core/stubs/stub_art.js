@@ -3,7 +3,9 @@
 (function (R) {
   'use strict';
   /** 素材の id → 仮の色（夜の色。純粋な黒は使わない） */
+  const FIXED = { stub_grass: '#2c3b4a', stub_road: '#5a5470', stub_tree: '#1a2233', stub_water: '#1d2d5c' };
   function matColor(mat, solid) {
+    if (FIXED[mat]) return FIXED[mat];
     const h = R.U.hash(mat || 'x');
     const hue = 200 + (h % 90), sat = 18 + (h >> 8) % 20, lit = solid ? 14 + (h >> 16) % 8 : 22 + (h >> 16) % 12;
     return `hsl(${hue},${sat}%,${lit}%)`;

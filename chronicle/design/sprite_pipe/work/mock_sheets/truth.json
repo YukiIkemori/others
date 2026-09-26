@@ -1,0 +1,21 @@
+{
+ "mistakes": [
+  "sheet1 row 4 faces left (should be right)",
+  "sheet1 has a text label and dark magenta floor shadows under row 1",
+  "sheet2 grey floor shadows under #1 and #10 (auto)",
+  "sheet3 pose 12 missing",
+  "sheet5 pose 3 (step) faces right",
+  "sheet6 pose 7 (cast A) is 22% too tall",
+  "sheet9 face 6 (sad) 12% larger",
+  "sheet4 and sheet8 not delivered (optional)"
+ ],
+ "attach": {
+  "bare_idle": {
+   "hand_body": [
+    12,
+    36
+   ],
+   "note": "weapon grip at body-local hand of the weapon-less sprite"
+  }
+ }
+}

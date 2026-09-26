@@ -96,16 +96,18 @@
         const gr = g.createLinearGradient(0, 0, 0, R.H);
         gr.addColorStop(0, '#141a38'); gr.addColorStop(0.44, '#2a2c52'); gr.addColorStop(0.45, '#1c2230'); gr.addColorStop(1, '#10141e');
         g.fillStyle = gr; g.fillRect(0, 0, R.W, R.H);
-        const dx = (R.W - 960) / 2;
+        // 16:9 の配置（960 幅）を今の幅に合わせる（縦持ちは縮めて中ほどに置く）
+        const sx = Math.min(1, R.W / 960), dx = R.W >= 960 ? (R.W - 960) / 2 : 0, dy = R.layout === 'tall' ? (R.H - 540) * 0.3 : 0;
+        const X = (x) => x * sx + dx, Y = (y) => y + dy;
         foes.forEach((f, i) => {
           if (!f.alive) return;
           const p = enemyPos(i);
-          R.Gfx.roundRect(p.x + dx - 24, p.y - 44, 48, 44, 10, '#6a5a9a', '#b8a8e8', 1.5);
-          R.UIK.text(g, f.name, p.x + dx, p.y + 6, { size: 12, align: 'center', color: R.UIK.T.color.text2 });
+          R.Gfx.roundRect(X(p.x) - 24, Y(p.y) - 44, 48, 44, 10, '#6a5a9a', '#b8a8e8', 1.5);
+          R.UIK.text(g, f.name, X(p.x), Y(p.y) + 6, { size: 12, align: 'center', color: R.UIK.T.color.text2 });
         });
         R.Party.members().forEach((c, i) => {
           const [x, y] = partyPos[i];
-          R.Gfx.roundRect(x + dx - 16, y - 62, 32, 62, 8, i === 0 ? '#b98f47' : '#4f6a8a', '#f6f0e3', 1);
+          R.Gfx.roundRect(X(x) - 16, Y(y) - 62, 32, 62, 8, i === 0 ? '#b98f47' : '#4f6a8a', '#f6f0e3', 1);
         });
         // パーティの一覧（右上）
         const k = R.uiScale;
@@ -121,7 +123,7 @@
         });
         // 1 行の文
         const w = Math.min(R.W - 32, 720 * k), h = 52 * k;
-        const x = (R.W - w) / 2, y = R.H - (R.safe.b || 0) - h - 20 * k;
+        const x = (R.W - w) / 2, y = R.H - (R.safe.b || 0) - h - 44 * k;
         R.UIK.panel(g, { x, y, w, h }, {});
         R.UIK.text(g, st.line, x + 20 * k, y + (h - 16 * k) / 2, { size: 16 * k });
         R.UIK.prompts(g, [{ btn: 'a', label: st.phase === 'intro' ? 'たたかう' : 'つぎへ' }]);

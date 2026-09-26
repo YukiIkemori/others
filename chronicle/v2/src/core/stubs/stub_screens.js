@@ -44,11 +44,11 @@
         const K = k(), s = R.safe;
         const w = (o.w || 300) * K, h = list.rows.length * 38 * K + 64 * K;
         const x = o.x != null ? o.x(w) : s.l + 24 * K, y = o.y != null ? o.y(h) : s.t + 24 * K;
-        R.UIK.panel(g, { x, y, w, h }, {});
+        R.UIK.panel(g, { x, y, w, h }, { dense: true });
         R.UIK.text(g, o.title || NAMES[id] || id, x + 20 * K, y + 16 * K, { size: T().size.h2 * K, weight: 700, color: T().color.gold });
         list.draw(g, { x: x + 8 * K, y: y + 52 * K, w: w - 16 * K, h: list.rows.length * 38 * K });
         if (o.side) o.side(g, list.index);
-        R.UIK.prompts(g, o.prompts || [{ btn: 'a', label: '決定' }, { btn: 'b', label: '戻る' }]);
+        if (R.Engine.top() === scene) R.UIK.prompts(g, o.prompts || [{ btn: 'a', label: '決定' }, { btn: 'b', label: '戻る' }]);
       },
     };
     return scene;
@@ -71,7 +71,7 @@
       const rows = [{ label: 'はじめから', value: 'new' }, { label: 'つづきから', value: 'continue', disabled: !cont }, { label: '設定', value: 'settings' }];
       return listScene('title', {
         rows, opaque: true, w: 260,
-        title: ' ',
+        title: ' ', prompts: [{ btn: 'a', label: '決定' }],
         x: (w) => (R.W - w) / 2, y: (h) => R.H * (R.layout === 'tall' ? 0.52 : 0.5),
         bg(g) {
           night(g);
@@ -104,7 +104,9 @@
         onCancel(sc) { R.Engine.remove(sc); },
         side(g) {
           const K = k(), mem = R.Party.members();
-          const w = 300 * K, x = R.W - R.safe.r - w - 24 * K, y0 = R.safe.t + 24 * K;
+          const tall = R.layout === 'tall';
+          const w = (tall ? 300 : 300) * K, x = tall ? R.safe.l + 24 * K : R.W - R.safe.r - w - 24 * K;
+          const y0 = tall ? R.safe.t + 24 * K + (cmds.length * 38 + 64) * K + 16 * K : R.safe.t + 24 * K;
           mem.forEach((c, i) => {
             const y = y0 + i * 76 * K, mh = R.Growth.baseMax(c, 'hp'), mm = R.Growth.baseMax(c, 'mp');
             R.UIK.card(g, { x, y, w, h: 68 * K }, {});

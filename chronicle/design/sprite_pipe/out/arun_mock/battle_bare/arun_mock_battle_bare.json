@@ -1,0 +1,238 @@
+{
+ "character": "arun_mock",
+ "set": "battle_bare",
+ "image": "arun_mock_battle_bare.png",
+ "cell": [
+  113,
+  73
+ ],
+ "anchor": [
+  68,
+  70
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "bare_idle": {
+   "x": 0,
+   "y": 0,
+   "w": 113,
+   "h": 73,
+   "anchor": [
+    68,
+    70
+   ],
+   "points": {
+    "head": [
+     70,
+     8
+    ],
+    "center": [
+     72,
+     42
+    ],
+    "front": [
+     49,
+     59
+    ],
+    "grip": [
+     57,
+     44
+    ],
+    "tip": [
+     36,
+     44
+    ]
+   }
+  },
+  "bare_windup": {
+   "x": 113,
+   "y": 0,
+   "w": 113,
+   "h": 73,
+   "anchor": [
+    68,
+    70
+   ],
+   "points": {
+    "head": [
+     56,
+     11
+    ],
+    "center": [
+     62,
+     43
+    ],
+    "front": [
+     29,
+     65
+    ]
+   }
+  },
+  "bare_slash": {
+   "x": 226,
+   "y": 0,
+   "w": 113,
+   "h": 73,
+   "anchor": [
+    68,
+    70
+   ],
+   "points": {
+    "head": [
+     56,
+     11
+    ],
+    "center": [
+     62,
+     43
+    ],
+    "front": [
+     29,
+     65
+    ]
+   }
+  },
+  "bare_thrust": {
+   "x": 339,
+   "y": 0,
+   "w": 113,
+   "h": 73,
+   "anchor": [
+    68,
+    70
+   ],
+   "points": {
+    "head": [
+     56,
+     11
+    ],
+    "center": [
+     60,
+     40
+    ],
+    "front": [
+     2,
+     28
+    ]
+   }
+  },
+  "bare_cast": {
+   "x": 452,
+   "y": 0,
+   "w": 113,
+   "h": 73,
+   "anchor": [
+    68,
+    70
+   ],
+   "points": {
+    "head": [
+     70,
+     2
+    ],
+    "center": [
+     72,
+     36
+    ],
+    "front": [
+     49,
+     53
+    ],
+    "grip": [
+     62,
+     16
+    ],
+    "tip": [
+     89,
+     4
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#100c0f",
+  "#18151b",
+  "#1e1617",
+  "#262228",
+  "#2c2120",
+  "#3b3537",
+  "#4f4849",
+  "#686060",
+  "#a4958b",
+  "#959ba9",
+  "#ccd0d8",
+  "#eae3d4",
+  "#2a1618",
+  "#321f1c",
+  "#3b1b1a",
+  "#572321",
+  "#46322c",
+  "#512f24",
+  "#772d26",
+  "#74392b",
+  "#943d2f",
+  "#ab4635",
+  "#b4543c",
+  "#bf593e",
+  "#633b2a",
+  "#594137",
+  "#794a2d",
+  "#6c5041",
+  "#774e39",
+  "#925037",
+  "#82604c",
+  "#8c5d3f",
+  "#7c6658",
+  "#9f613d",
+  "#99755c",
+  "#a5724b",
+  "#937f71",
+  "#c37646",
+  "#a8866b",
+  "#bd8755",
+  "#b78c68",
+  "#d09752",
+  "#ba9d82",
+  "#c39c7b",
+  "#cfa885",
+  "#dbab74",
+  "#cfb294",
+  "#ccbbac",
+  "#dfc5a6",
+  "#eccca1",
+  "#ecd9bd",
+  "#59c7db"
+ ],
+ "facing": "left",
+ "attach": {
+  "bare_idle": {
+   "grip": [
+    8,
+    36
+   ],
+   "tip": [
+    -13,
+    36
+   ],
+   "angle": 179.2,
+   "weapon_px": 107,
+   "fit": 1.439
+  },
+  "bare_cast": {
+   "grip": [
+    13,
+    14
+   ],
+   "tip": [
+    40,
+    2
+   ],
+   "angle": -25.2,
+   "weapon_px": 516,
+   "fit": 0.782,
+   "unreliable": true
+  }
+ },
+ "attach_note": "draw a weapon on a bare pose: rotate the weapon image about its grip by (attach.angle - weapon.angle) and put its grip on points.grip. Angles in image coords (0 = +x, 90 = +y, 180 = pointing left)."
+}

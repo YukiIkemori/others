@@ -1,0 +1,1704 @@
+{
+ "char": "arun_mock",
+ "folder": "/home/user/others/chronicle/design/sprite_pipe/work/mock_sheets",
+ "sheets": {
+  "1": {
+   "file": "work/mock_sheets/sheet1_walk.png",
+   "size": [
+    1352,
+    2272
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     251,
+     5,
+     250
+    ],
+    "bg_std": 4.3,
+    "dark_magenta_px": 17530
+   },
+   "extras": [
+    {
+     "box": [
+      271,
+      32,
+      383,
+      91
+     ],
+     "area": 2566
+    },
+    {
+     "box": [
+      185,
+      37,
+      214,
+      89
+     ],
+     "area": 566
+    },
+    {
+     "box": [
+      40,
+      40,
+      153,
+      85
+     ],
+     "area": 1017
+    },
+    {
+     "box": [
+      227,
+      40,
+      244,
+      86
+     ],
+     "area": 380
+    }
+   ],
+   "period": 7.973,
+   "clarity": 36.0,
+   "src_height": 395.5,
+   "native_height_at_period": 49.6,
+   "scale_note": "描かれた格子のまま（49.6 ドット）",
+   "cell": 7.973,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      33,
+      50
+     ],
+     "box": [
+      155,
+      146,
+      445,
+      584
+     ],
+     "air": 0,
+     "blur": 3.1,
+     "facing_class": {
+      "down": -2.59,
+      "up": -7.37,
+      "left": -9.44,
+      "right": -7.34
+     }
+    },
+    "walk_down_1": {
+     "size": [
+      33,
+      49
+     ],
+     "box": [
+      529,
+      158,
+      823,
+      584
+     ],
+     "air": 0,
+     "blur": 3.1,
+     "facing_class": {
+      "down": -2.92,
+      "up": -7.45,
+      "left": -9.36,
+      "right": -7.04
+     }
+    },
+    "walk_down_2": {
+     "size": [
+      33,
+      49
+     ],
+     "box": [
+      903,
+      159,
+      1202,
+      584
+     ],
+     "air": 0,
+     "blur": 3.1,
+     "facing_class": {
+      "down": -2.92,
+      "up": -7.45,
+      "left": -9.34,
+      "right": -7.04
+     }
+    },
+    "walk_up_0": {
+     "size": [
+      30,
+      50
+     ],
+     "box": [
+      163,
+      661,
+      438,
+      1096
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_class": {
+      "down": -6.86,
+      "up": -1.77,
+      "left": -6.66,
+      "right": -7.78
+     }
+    },
+    "walk_up_1": {
+     "size": [
+      30,
+      49
+     ],
+     "box": [
+      546,
+      667,
+      807,
+      1096
+     ],
+     "air": 0,
+     "blur": 3.1,
+     "facing_class": {
+      "down": -7.22,
+      "up": -1.28,
+      "left": -6.63,
+      "right": -7.97
+     }
+    },
+    "walk_up_2": {
+     "size": [
+      30,
+      49
+     ],
+     "box": [
+      914,
+      667,
+      1191,
+      1096
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_class": {
+      "down": -7.22,
+      "up": -1.28,
+      "left": -6.64,
+      "right": -7.96
+     }
+    },
+    "walk_left_0": {
+     "size": [
+      27,
+      50
+     ],
+     "box": [
+      175,
+      1172,
+      425,
+      1608
+     ],
+     "air": 0,
+     "blur": 3.1,
+     "facing_score": 2.08
+    },
+    "walk_left_1": {
+     "size": [
+      28,
+      49
+     ],
+     "box": [
+      548,
+      1188,
+      804,
+      1608
+     ],
+     "air": 0,
+     "blur": 3.1,
+     "facing_score": 1.87
+    },
+    "walk_left_2": {
+     "size": [
+      28,
+      49
+     ],
+     "box": [
+      925,
+      1180,
+      1180,
+      1608
+     ],
+     "air": 0,
+     "blur": 3.1,
+     "facing_score": 1.88
+    },
+    "walk_right_0": {
+     "size": [
+      27,
+      50
+     ],
+     "box": [
+      180,
+      1693,
+      421,
+      2120
+     ],
+     "air": 0,
+     "blur": 3.1,
+     "facing_score": -3.79
+    },
+    "walk_right_1": {
+     "size": [
+      28,
+      49
+     ],
+     "box": [
+      548,
+      1693,
+      805,
+      2120
+     ],
+     "air": 0,
+     "blur": 3.1,
+     "facing_score": -4.05
+    },
+    "walk_right_2": {
+     "size": [
+      28,
+      49
+     ],
+     "box": [
+      922,
+      1702,
+      1182,
+      2120
+     ],
+     "air": 0,
+     "blur": 3.1,
+     "facing_score": -4.06
+    }
+   }
+  },
+  "2": {
+   "file": "work/mock_sheets/sheet2_run.png",
+   "size": [
+    777,
+    1022
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     252,
+     6,
+     249
+    ],
+    "bg_std": 4.3,
+    "dark_magenta_px": 3352
+   },
+   "extras": [],
+   "period": 3.654,
+   "clarity": 12.9,
+   "src_height": 176.5,
+   "native_height_at_period": 48.3,
+   "scale_note": "描かれた格子のまま（48.3 ドット）",
+   "cell": 3.654,
+   "sprites": {
+    "run_down_0": {
+     "size": [
+      33,
+      50
+     ],
+     "box": [
+      67,
+      69,
+      203,
+      263
+     ],
+     "air": 0,
+     "blur": 3.5,
+     "facing_class": {
+      "down": -2.62,
+      "up": -7.23,
+      "left": -9.33,
+      "right": -7.25
+     }
+    },
+    "run_down_1": {
+     "size": [
+      33,
+      49
+     ],
+     "box": [
+      236,
+      73,
+      372,
+      263
+     ],
+     "air": 0,
+     "blur": 3.5,
+     "facing_class": {
+      "down": -2.86,
+      "up": -7.25,
+      "left": -9.2,
+      "right": -6.9
+     }
+    },
+    "run_down_2": {
+     "size": [
+      33,
+      49
+     ],
+     "box": [
+      407,
+      72,
+      540,
+      263
+     ],
+     "air": 0,
+     "blur": 3.5,
+     "facing_class": {
+      "down": -2.88,
+      "up": -7.29,
+      "left": -9.23,
+      "right": -6.92
+     }
+    },
+    "run_down_3": {
+     "size": [
+      33,
+      49
+     ],
+     "box": [
+      576,
+      72,
+      708,
+      263
+     ],
+     "air": 0,
+     "blur": 3.5,
+     "facing_class": {
+      "down": -2.83,
+      "up": -7.22,
+      "left": -9.18,
+      "right": -6.89
+     }
+    },
+    "run_up_0": {
+     "size": [
+      30,
+      50
+     ],
+     "box": [
+      74,
+      299,
+      197,
+      494
+     ],
+     "air": 0,
+     "blur": 3.2,
+     "facing_class": {
+      "down": -6.78,
+      "up": -1.82,
+      "left": -6.61,
+      "right": -7.71
+     }
+    },
+    "run_up_1": {
+     "size": [
+      30,
+      49
+     ],
+     "box": [
+      242,
+      300,
+      366,
+      494
+     ],
+     "air": 0,
+     "blur": 3.3,
+     "facing_class": {
+      "down": -7.14,
+      "up": -1.32,
+      "left": -6.56,
+      "right": -7.9
+     }
+    },
+    "run_up_2": {
+     "size": [
+      30,
+      49
+     ],
+     "box": [
+      412,
+      311,
+      535,
+      494
+     ],
+     "air": 0,
+     "blur": 3.3,
+     "facing_class": {
+      "down": -7.14,
+      "up": -1.31,
+      "left": -6.57,
+      "right": -7.92
+     }
+    },
+    "run_up_3": {
+     "size": [
+      30,
+      49
+     ],
+     "box": [
+      582,
+      308,
+      702,
+      494
+     ],
+     "air": 0,
+     "blur": 3.3,
+     "facing_class": {
+      "down": -7.13,
+      "up": -1.3,
+      "left": -6.54,
+      "right": -7.9
+     }
+    },
+    "run_left_0": {
+     "size": [
+      27,
+      50
+     ],
+     "box": [
+      78,
+      528,
+      193,
+      724
+     ],
+     "air": 0,
+     "blur": 3.5,
+     "facing_score": 2.03
+    },
+    "run_left_1": {
+     "size": [
+      28,
+      49
+     ],
+     "box": [
+      247,
+      529,
+      361,
+      724
+     ],
+     "air": 0,
+     "blur": 3.5,
+     "facing_score": 1.84
+    },
+    "run_left_2": {
+     "size": [
+      28,
+      49
+     ],
+     "box": [
+      416,
+      537,
+      531,
+      724
+     ],
+     "air": 0,
+     "blur": 3.5,
+     "facing_score": 1.85
+    },
+    "run_left_3": {
+     "size": [
+      28,
+      49
+     ],
+     "box": [
+      583,
+      526,
+      701,
+      724
+     ],
+     "air": 0,
+     "blur": 3.5,
+     "facing_score": 1.83
+    },
+    "run_right_0": {
+     "size": [
+      27,
+      50
+     ],
+     "box": [
+      80,
+      756,
+      191,
+      954
+     ],
+     "air": 0,
+     "blur": 3.4,
+     "facing_score": 3.48
+    },
+    "run_right_1": {
+     "size": [
+      28,
+      49
+     ],
+     "box": [
+      246,
+      759,
+      362,
+      954
+     ],
+     "air": 0,
+     "blur": 3.5,
+     "facing_score": 3.91
+    },
+    "run_right_2": {
+     "size": [
+      28,
+      49
+     ],
+     "box": [
+      416,
+      767,
+      531,
+      954
+     ],
+     "air": 0,
+     "blur": 3.5,
+     "facing_score": 3.91
+    },
+    "run_right_3": {
+     "size": [
+      28,
+      49
+     ],
+     "box": [
+      583,
+      764,
+      702,
+      954
+     ],
+     "air": 0,
+     "blur": 3.4,
+     "facing_score": 3.9
+    }
+   }
+  },
+  "3": {
+   "file": "work/mock_sheets/sheet3_act.png",
+   "size": [
+    1896,
+    1338
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     251,
+     6,
+     249
+    ],
+    "bg_std": 4.3,
+    "dark_magenta_px": 1517
+   },
+   "extras": [],
+   "period": 6.061,
+   "clarity": 23.2,
+   "src_height": 307.0,
+   "native_height_at_period": 50.7,
+   "scale_note": "描かれた格子のまま（50.7 ドット）",
+   "cell": 6.061,
+   "sprites": {
+    "act_nod": {
+     "size": [
+      33,
+      50
+     ],
+     "box": [
+      186,
+      118,
+      415,
+      445
+     ],
+     "air": 0,
+     "blur": 3.3,
+     "facing_class": {
+      "down": -2.57,
+      "up": -7.33,
+      "left": -9.42,
+      "right": -7.32
+     }
+    },
+    "act_surprise": {
+     "size": [
+      34,
+      51
+     ],
+     "box": [
+      615,
+      112,
+      849,
+      445
+     ],
+     "air": 0,
+     "blur": 3.2,
+     "facing_class": {
+      "down": -3.45,
+      "up": -6.84,
+      "left": -9.03,
+      "right": -7.64
+     }
+    },
+    "act_think": {
+     "size": [
+      34,
+      51
+     ],
+     "box": [
+      1052,
+      108,
+      1277,
+      445
+     ],
+     "air": 0,
+     "blur": 3.3,
+     "facing_class": {
+      "down": -7.41,
+      "up": -4.79,
+      "left": -7.91,
+      "right": -8.64
+     }
+    },
+    "act_bow": {
+     "size": [
+      33,
+      50
+     ],
+     "box": [
+      1488,
+      121,
+      1704,
+      445
+     ],
+     "air": 0,
+     "blur": 3.3
+    },
+    "act_kneel": {
+     "size": [
+      33,
+      50
+     ],
+     "box": [
+      186,
+      514,
+      415,
+      835
+     ],
+     "air": 0,
+     "blur": 3.3
+    },
+    "act_sit": {
+     "size": [
+      33,
+      50
+     ],
+     "box": [
+      618,
+      503,
+      846,
+      835
+     ],
+     "air": 0,
+     "blur": 3.3
+    },
+    "act_call": {
+     "size": [
+      34,
+      51
+     ],
+     "box": [
+      1052,
+      508,
+      1277,
+      835
+     ],
+     "air": 0,
+     "blur": 3.2,
+     "facing_class": {
+      "down": -3.45,
+      "up": -6.85,
+      "left": -9.03,
+      "right": -7.64
+     }
+    },
+    "act_look": {
+     "size": [
+      34,
+      51
+     ],
+     "box": [
+      1478,
+      499,
+      1714,
+      835
+     ],
+     "air": 0,
+     "blur": 3.2
+    },
+    "act_lie": {
+     "size": [
+      58,
+      27
+     ],
+     "box": [
+      116,
+      1037,
+      485,
+      1225
+     ],
+     "air": 0,
+     "blur": 3.2
+    },
+    "act_draw": {
+     "size": [
+      33,
+      50
+     ],
+     "box": [
+      623,
+      902,
+      842,
+      1225
+     ],
+     "air": 0,
+     "blur": 3.3,
+     "facing_class": {
+      "down": -2.58,
+      "up": -7.31,
+      "left": -9.42,
+      "right": -7.34
+     }
+    },
+    "act_resolve": {
+     "size": [
+      34,
+      51
+     ],
+     "box": [
+      1049,
+      885,
+      1280,
+      1225
+     ],
+     "air": 0,
+     "blur": 3.2,
+     "facing_class": {
+      "down": -3.45,
+      "up": -6.84,
+      "left": -9.02,
+      "right": -7.64
+     }
+    }
+   }
+  },
+  "5": {
+   "file": "work/mock_sheets/sheet5_battle.png",
+   "size": [
+    4504,
+    1744
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     251,
+     6,
+     249
+    ],
+    "bg_std": 4.3,
+    "dark_magenta_px": 1743
+   },
+   "extras": [],
+   "period": 8.03,
+   "clarity": 38.6,
+   "src_height": 503.0,
+   "native_height_at_period": 62.6,
+   "scale_note": "描かれた格子のまま（62.6 ドット）",
+   "cell": 8.03,
+   "sprites": {
+    "idle_a": {
+     "size": [
+      75,
+      63
+     ],
+     "box": [
+      216,
+      295,
+      865,
+      833
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 3.4
+    },
+    "idle_b": {
+     "size": [
+      75,
+      62
+     ],
+     "box": [
+      1074,
+      297,
+      1719,
+      833
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 3.41
+    },
+    "step": {
+     "size": [
+      93,
+      60
+     ],
+     "box": [
+      1857,
+      317,
+      2647,
+      833
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": -4.97
+    },
+    "guard": {
+     "size": [
+      52,
+      59
+     ],
+     "box": [
+      2883,
+      323,
+      3334,
+      833
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 1.96
+    },
+    "hit": {
+     "size": [
+      52,
+      59
+     ],
+     "box": [
+      3737,
+      330,
+      4192,
+      833
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 1.98
+    },
+    "weak": {
+     "size": [
+      52,
+      59
+     ],
+     "box": [
+      314,
+      1091,
+      766,
+      1593
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 1.96
+    },
+    "ko": {
+     "size": [
+      77,
+      36
+     ],
+     "box": [
+      1076,
+      1273,
+      1716,
+      1593
+     ],
+     "air": 0,
+     "blur": 3.0
+    },
+    "victory_a": {
+     "size": [
+      45,
+      80
+     ],
+     "box": [
+      2056,
+      914,
+      2448,
+      1593
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 1.54
+    },
+    "victory_b": {
+     "size": [
+      45,
+      81
+     ],
+     "box": [
+      2910,
+      908,
+      3306,
+      1593
+     ],
+     "air": 0,
+     "blur": 3.0
+    },
+    "glimmer": {
+     "size": [
+      62,
+      63
+     ],
+     "box": [
+      3697,
+      1051,
+      4231,
+      1593
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 3.41
+    }
+   }
+  },
+  "6": {
+   "file": "work/mock_sheets/sheet6_action.png",
+   "size": [
+    2815,
+    1050
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     252,
+     5,
+     250
+    ],
+    "bg_std": 4.3,
+    "dark_magenta_px": 31276
+   },
+   "extras": [],
+   "period": 5.058,
+   "clarity": 9.2,
+   "src_height": 320.0,
+   "native_height_at_period": 63.3,
+   "scale_note": "描かれた格子のまま（63.3 ドット）",
+   "cell": 5.058,
+   "sprites": {
+    "windup": {
+     "size": [
+      65,
+      60
+     ],
+     "box": [
+      164,
+      177,
+      511,
+      501
+     ],
+     "air": 0,
+     "blur": 4.1,
+     "facing_score": 2.79
+    },
+    "slash": {
+     "size": [
+      65,
+      60
+     ],
+     "box": [
+      699,
+      181,
+      1046,
+      501
+     ],
+     "air": 0,
+     "blur": 4.1,
+     "facing_score": 2.75
+    },
+    "thrust_ready": {
+     "size": [
+      92,
+      60
+     ],
+     "box": [
+      1167,
+      184,
+      1648,
+      501
+     ],
+     "air": 0,
+     "blur": 4.0,
+     "facing_score": 4.76
+    },
+    "thrust": {
+     "size": [
+      92,
+      60
+     ],
+     "box": [
+      1696,
+      174,
+      2188,
+      501
+     ],
+     "air": 0,
+     "blur": 4.0,
+     "facing_score": 4.77
+    },
+    "charge": {
+     "size": [
+      52,
+      59
+     ],
+     "box": [
+      2337,
+      184,
+      2617,
+      501
+     ],
+     "air": 0,
+     "blur": 3.9,
+     "facing_score": 1.92
+    },
+    "smash": {
+     "size": [
+      65,
+      60
+     ],
+     "box": [
+      163,
+      630,
+      511,
+      956
+     ],
+     "air": 0,
+     "blur": 4.1,
+     "facing_score": 2.76
+    },
+    "cast_a": {
+     "size": [
+      75,
+      77
+     ],
+     "box": [
+      672,
+      552,
+      1072,
+      956
+     ],
+     "air": 0,
+     "blur": 3.8,
+     "facing_score": 2.91
+    },
+    "cast_b": {
+     "size": [
+      62,
+      63
+     ],
+     "box": [
+      1243,
+      630,
+      1572,
+      956
+     ],
+     "air": 0,
+     "blur": 4.0,
+     "facing_score": 3.32
+    },
+    "item": {
+     "size": [
+      61,
+      63
+     ],
+     "box": [
+      1775,
+      614,
+      2110,
+      956
+     ],
+     "air": 0,
+     "blur": 4.0,
+     "facing_score": 3.32
+    },
+    "evade": {
+     "size": [
+      91,
+      60
+     ],
+     "box": [
+      2233,
+      636,
+      2721,
+      956
+     ],
+     "air": 0,
+     "blur": 4.1,
+     "facing_score": 4.78
+    }
+   }
+  },
+  "7": {
+   "file": "work/mock_sheets/sheet7_bare.png",
+   "size": [
+    4504,
+    1456
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     252,
+     6,
+     250
+    ],
+    "bg_std": 4.3,
+    "dark_magenta_px": 1127
+   },
+   "extras": [],
+   "period": 8.081,
+   "clarity": 11.1,
+   "src_height": 500.5,
+   "native_height_at_period": 61.9,
+   "scale_note": "描かれた格子のまま（61.9 ドット）",
+   "cell": 8.081,
+   "sprites": {
+    "bare_idle": {
+     "size": [
+      62,
+      63
+     ],
+     "box": [
+      277,
+      160,
+      803,
+      689
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 3.41
+    },
+    "bare_windup": {
+     "size": [
+      65,
+      60
+     ],
+     "box": [
+      1123,
+      164,
+      1669,
+      689
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 2.82
+    },
+    "bare_slash": {
+     "size": [
+      65,
+      60
+     ],
+     "box": [
+      1975,
+      177,
+      2529,
+      689
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 2.81
+    },
+    "bare_thrust": {
+     "size": [
+      93,
+      60
+     ],
+     "box": [
+      2720,
+      171,
+      3496,
+      689
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 4.77
+    },
+    "bare_cast": {
+     "size": [
+      62,
+      63
+     ],
+     "box": [
+      3695,
+      149,
+      4234,
+      689
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 3.4
+    },
+    "wpn_sword": {
+     "size": [
+      29,
+      5
+     ],
+     "box": [
+      400,
+      1221,
+      673,
+      1296
+     ],
+     "air": 0,
+     "blur": 2.9
+    },
+    "wpn_greatsword": {
+     "size": [
+      36,
+      7
+     ],
+     "box": [
+      1231,
+      1201,
+      1554,
+      1296
+     ],
+     "air": 0,
+     "blur": 2.7
+    },
+    "wpn_dagger": {
+     "size": [
+      18,
+      5
+     ],
+     "box": [
+      2160,
+      1225,
+      2337,
+      1297
+     ],
+     "air": 0,
+     "blur": 3.0
+    },
+    "wpn_bow": {
+     "size": [
+      8,
+      28
+     ],
+     "box": [
+      3063,
+      1046,
+      3162,
+      1305
+     ],
+     "air": 0,
+     "blur": 2.9
+    },
+    "wpn_staff": {
+     "size": [
+      33,
+      6
+     ],
+     "box": [
+      3811,
+      1219,
+      4117,
+      1305
+     ],
+     "air": 0,
+     "blur": 2.9
+    }
+   }
+  },
+  "9": {
+   "file": "work/mock_sheets/sheet9_face.png",
+   "size": [
+    1728,
+    944
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     251,
+     5,
+     250
+    ],
+    "bg_std": 4.3,
+    "dark_magenta_px": 932
+   },
+   "extras": [],
+   "period": 4.01,
+   "clarity": 7.8,
+   "src_height": 321.0,
+   "native_height_at_period": 80.0,
+   "scale_note": "描かれた格子のまま（80.0 ドット）",
+   "cell": 4.01,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      78,
+      80
+     ],
+     "box": [
+      97,
+      115,
+      420,
+      453
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 4.87
+    },
+    "face_serious": {
+     "size": [
+      77,
+      80
+     ],
+     "box": [
+      499,
+      112,
+      825,
+      453
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 4.86
+    },
+    "face_smile": {
+     "size": [
+      78,
+      80
+     ],
+     "box": [
+      901,
+      116,
+      1231,
+      453
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 4.85
+    },
+    "face_laugh": {
+     "size": [
+      78,
+      80
+     ],
+     "box": [
+      1302,
+      112,
+      1638,
+      453
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 4.87
+    },
+    "face_surprise": {
+     "size": [
+      78,
+      80
+     ],
+     "box": [
+      92,
+      535,
+      424,
+      869
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 4.85
+    },
+    "face_sad": {
+     "size": [
+      87,
+      89
+     ],
+     "box": [
+      478,
+      486,
+      847,
+      869
+     ],
+     "air": 0,
+     "blur": 2.9,
+     "facing_score": 4.23
+    },
+    "face_angry": {
+     "size": [
+      78,
+      80
+     ],
+     "box": [
+      902,
+      529,
+      1230,
+      869
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 4.87
+    },
+    "face_tired": {
+     "size": [
+      78,
+      80
+     ],
+     "box": [
+      1304,
+      538,
+      1636,
+      869
+     ],
+     "air": 0,
+     "blur": 3.0,
+     "facing_score": 4.85
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 4,
+   "level": "info",
+   "code": "missing_sheet",
+   "msg": "シート4（演技ポーズ（上・左向き））がない（任意なので無くてもよい）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 8,
+   "level": "info",
+   "code": "missing_sheet",
+   "msg": "シート8（戦闘の追加ポーズ）がない（任意なので無くてもよい）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "dark_key",
+   "msg": "暗いマゼンタ（床の影・光のにじみ）があった。背景として抜いた",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "extra",
+   "msg": "余計な物（文字・影・エフェクトなど、112×59 px）を消した",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "box": [
+     271,
+     32,
+     383,
+     91
+    ]
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "extra",
+   "msg": "余計な物（文字・影・エフェクトなど、29×52 px）を消した",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "box": [
+     185,
+     37,
+     214,
+     89
+    ]
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "extra",
+   "msg": "余計な物（文字・影・エフェクトなど、113×45 px）を消した",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "box": [
+     40,
+     40,
+     153,
+     85
+    ]
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "extra",
+   "msg": "余計な物（文字・影・エフェクトなど、17×46 px）を消した",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "box": [
+     227,
+     40,
+     244,
+     86
+    ]
+   }
+  },
+  {
+   "sheet": 2,
+   "level": "auto",
+   "code": "dark_key",
+   "msg": "暗いマゼンタ（床の影・光のにじみ）があった。背景として抜いた",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "info",
+   "code": "dot_size",
+   "msg": "1 ドットが画像上 3.65 px（指定は 8 px）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "redo",
+   "code": "missing",
+   "msg": "シート3 の 12 番（うつむく） が見つからない",
+   "slot": "act_sad",
+   "ask": "シート3の12番（うつむく）が無い。3行×4列の並べ方で、全部のポーズを同じ条件で描き直して",
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "info",
+   "code": "dot_size",
+   "msg": "1 ドットが画像上 6.06 px（指定は 8 px）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 6,
+   "level": "auto",
+   "code": "dark_key",
+   "msg": "暗いマゼンタ（床の影・光のにじみ）があった。背景として抜いた",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 6,
+   "level": "info",
+   "code": "dot_size",
+   "msg": "1 ドットが画像上 5.06 px（指定は 8 px）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 6,
+   "level": "redo",
+   "code": "height",
+   "msg": "シート6 の 7 番（詠唱A） の身長が 77 ドット（ほかは 63）",
+   "slot": "cast_a",
+   "ask": "シート6の7番（詠唱A）だけ大きさが違う。ほかのポーズと同じ身長にして、同じ条件で描き直して",
+   "data": {}
+  },
+  {
+   "sheet": 9,
+   "level": "info",
+   "code": "dot_size",
+   "msg": "1 ドットが画像上 4.01 px（指定は 8 px）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 9,
+   "level": "check",
+   "code": "height",
+   "msg": "シート9 の 6 番（悲しみ） の身長が 89 ドット（ほかは 80）",
+   "slot": "face_sad",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "check",
+   "code": "facing_unsure",
+   "msg": "シート3 の 3 番（首をかしげる） の向きが下（手前）に見えない（上（奥）に近い）。顔の向きを見る",
+   "slot": "act_think",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 5,
+   "level": "redo",
+   "code": "facing",
+   "msg": "シート5 の 3 番（一歩前に踏み出す） が右を向いている（左向きのはず）",
+   "slot": "step",
+   "ask": "シート5の3番（一歩前に踏み出す）が右を向いている。全部左向きにして、同じ条件で描き直して",
+   "data": {
+    "score": -4.970741545474969
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "facing",
+   "msg": "シート1 の 10 番（右向き・立ち） が左を向いている（右向きのはず）",
+   "slot": "walk_right_0",
+   "ask": "シート1の10番（右向き・立ち）が左を向いている。右向きにして、同じ条件で描き直して",
+   "data": {
+    "score": -3.7923634944179003
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "facing",
+   "msg": "シート1 の 11 番（右向き・前の足） が左を向いている（右向きのはず）",
+   "slot": "walk_right_1",
+   "ask": "シート1の11番（右向き・前の足）が左を向いている。右向きにして、同じ条件で描き直して",
+   "data": {
+    "score": -4.047815458845578
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "facing",
+   "msg": "シート1 の 12 番（右向き・後ろの足） が左を向いている（右向きのはず）",
+   "slot": "walk_right_2",
+   "ask": "シート1の12番（右向き・後ろの足）が左を向いている。右向きにして、同じ条件で描き直して",
+   "data": {
+    "score": -4.06167669237095
+   }
+  },
+  {
+   "sheet": 9,
+   "level": "check",
+   "code": "face_size",
+   "msg": "シート9 の 6 番（悲しみ） の大きさが通常と違う（87×89 / 通常 78×80）。重ねたときずれる",
+   "slot": "face_sad",
+   "ask": null,
+   "data": {}
+  }
+ ]
+}

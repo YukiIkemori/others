@@ -169,7 +169,7 @@
     },
     panel(g, rect, o) {
       o = o || {};
-      R.Gfx.roundRect(rect.x, rect.y, rect.w, rect.h, o.r != null ? o.r : T.radius, R.Settings.get('panel') === 'dense' ? T.color.panelDense : T.color.panel, T.color.edge, 1);
+      R.Gfx.roundRect(rect.x, rect.y, rect.w, rect.h, o.r != null ? o.r : T.radius, o.dense || R.Settings.get('panel') === 'dense' ? T.color.panelDense : T.color.panel, T.color.edge, 1);
     },
     fadePanel(g, rect, o) {
       const side = (o && o.side) || 'r';

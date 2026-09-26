@@ -28,7 +28,7 @@
   const held = {}, prev = {}, heldMs = {}, repAt = {}, repNow = {};
   const consumed = {};
   let stick = { x: 0, y: 0 }; // パッドのスティックとタッチのスティック（-1〜1）
-  let padStick = { x: 0, y: 0 }, touchStick = { x: 0, y: 0 };
+  let padStick = { x: 0, y: 0 }, touchStick = { x: 0, y: 0 }, testStick = { x: 0, y: 0 };
   let anyCbs = [];
   let layoutName = 'none';
   const ptr = { x: 0, y: 0, down: false, pressed: false, released: false, longPress: false, wheel: 0, type: 'mouse' };
@@ -114,11 +114,12 @@
     onAnyPress(cb) { anyCbs.push(cb); },
     /** テスト用: ボタンの状態を決める */
     _set(b, v) { src.test[b] = !!v; },
-    _stick(x, y) { padStick = { x, y }; },
+    _stick(x, y) { testStick = { x, y }; },
 
     update(dt) {
       pollPad();
       stick = Math.hypot(touchStick.x, touchStick.y) > Math.hypot(padStick.x, padStick.y) ? touchStick : padStick;
+      if (Math.hypot(testStick.x, testStick.y) > Math.hypot(stick.x, stick.y)) stick = testStick;
       for (const b of ALL) {
         prev[b] = held[b];
         held[b] = Input.enabled && !!(src.key[b] || src.pad[b] || src.touch[b] || src.test[b] || src.pulse[b]);
