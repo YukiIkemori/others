@@ -61,8 +61,8 @@
   const TW = {
     plaster: ramp(['#6a5a4c', '#a89684', '#d8c8b0', '#f0e4cc', '#fff6e4'], 7),
     timber: ramp(['#1c100a', '#36200f', '#54341c', '#74502e'], 5),
-    roofR: ramp(['#3a1410', '#6c2418', '#9c3a22', '#c85a32', '#e8845a'], 7),
-    roofS: ramp(['#141c2c', '#243248', '#3a4c68', '#58708c', '#8ca0b8'], 7),
+    roofR: ramp(['#4a1a12', '#7c2c1c', '#ac4428', '#d86a3c', '#f4a070'], 7),
+    roofS: ramp(['#1c2638', '#2e4058', '#465e7c', '#6a86a4', '#a4bcd4'], 7),
     stone: ramp(['#28262a', '#48454a', '#6c686a', '#94908a', '#bcb6aa'], 7),
     glassOn: ramp(['#a04a10', '#e08a28', '#ffc860', '#fff0b0'], 4),
   };
@@ -155,7 +155,7 @@
 
   function npcLook() {
     const L = Object.assign({}, G.RIG.LOOKS.selma);
-    L.name = '町の人'; L.hairStyle = 'bob'; L.weapon = null; L.armor = null; L.robe = true;
+    L.name = '町の人'; L.hairStyle = 'bob'; L.circlet = false; L.weapon = null; L.armor = null; L.robe = true;
     L.hair = mat({ keys: ['#140c08', '#3a2416', '#5a3a22', '#7c5634', '#a07a50', '#c8a47a'], n: 8, sheen: [-0.62, -0.28], tex: 1.1, tsx: 0.25, tsy: 1.6 });
     L.top = mat({ keys: ['#1a1c2c', '#2e3450', '#48527a', '#6a78a0', '#9aa8c8'], n: 7, tex: 0.5, tsx: 1.4, tsy: 0.3 });
     L.trim = mat({ keys: ['#5a5046', '#a09280', '#d8ccb4', '#f4ecd8'], n: 6 });
@@ -166,7 +166,7 @@
 
   function actor(L, pose, x, y, light, sc) {
     const B = new Builder(); G.RIG.draw(B, L, pose);
-    return render(B, { flip: pose.flip, scale: sc, light, wx: x, wy: y, wk: 1 / sc });
+    return render(B, { flip: pose.flip, scale: sc, light, wx: x, wy: y, wk: sc });
   }
 
   G.PLACES = { PX, cobbles, blocks, house, prop, npcLook, actor, TW, pick };

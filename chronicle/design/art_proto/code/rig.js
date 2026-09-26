@@ -221,8 +221,8 @@
     hair(L, H, headAng, grp, E, C, S, Pl, F, p);
 
     // --- near arm + weapon ---
-    const hN = arm(1, p.aN, p.eN, 8);
-    weapon(L, hN, p, E, C, Pl, F, R, grp, hF);
+    const hN = arm(1, p.aN, p.eN, 11);
+    weapon(L, hN, p, E, C, Pl, F, R, grp, hF, 3);
 
     // --- commit: global transform + auto ground ---
     const pts = [];
@@ -293,6 +293,7 @@
       s([[4, -9], [10, -6], [11, 0]], 2.6, 0.5, z0 + 0.35);
       s([[-2, -8], [-0.5, -3], [0, 1]], 2.6, 0.5, z0 + 0.32, -0.5);
       s([[-4, -5], [-5, 3], [-3.5, 8]], 2.8, 1.2, z0 + 0.25, -0.4);
+      if (L.circlet === false) return;
       // circlet
       const a = H(-10, -4), b = H(10.5, -5.2);
       C(a, b, 0.7, 0.7, M.gold, z0 + 0.5, { g: grp('circlet') });
@@ -315,44 +316,45 @@
   }
 
   const MG = mat({ keys: ['#4a2080', '#8a50e0', '#d0a0ff', '#ffffff'], n: 5, glow: '#c090ff', flat: true, noOutline: true });
-  function weapon(L, h, p, E, C, Pl, F, R, grp, hF) {
+  function weapon(L, h, p, E, C, Pl, F, R, grp, hF, zs) {
+    zs = zs || 0;
     const a = p.w; const d = [Math.sin(a), Math.cos(a)];
     const at = (t, o) => [h[0] + d[0] * t + d[1] * (o || 0), h[1] + d[1] * t - d[0] * (o || 0)];
     if (L.weapon === 'sword') {
       const g1 = grp('grip'), g2 = grp('guard'), gb = grp('blade');
-      C(at(-2.4), at(1.8), 0.9, 0.9, M.leatherDk, 8.5, { g: g1 });
-      E(at(-2.9)[0], at(-2.9)[1], 1.2, 1.2, M.gold, 8.51, { g: g1 });
-      C(at(1.9, -3.6), at(1.9, 3.6), 0.95, 0.95, M.gold, 8.6, { g: g2 });
-      Pl([at(2.3, -1.45), at(2.3, 1.45), at(17, 1.1), at(19.6, 0), at(17, -1.1)], M.steel, 8.55, { g: gb, bevel: 1.4 });
+      C(at(-2.4), at(1.8), 0.9, 0.9, M.leatherDk, 8.5 + zs, { g: g1 });
+      E(at(-2.9)[0], at(-2.9)[1], 1.2, 1.2, M.gold, 8.51 + zs, { g: g1 });
+      C(at(1.9, -3.6), at(1.9, 3.6), 0.95, 0.95, M.gold, 8.6 + zs, { g: g2 });
+      Pl([at(2.3, -1.45), at(2.3, 1.45), at(17, 1.1), at(19.6, 0), at(17, -1.1)], M.steel, 8.55 + zs, { g: gb, bevel: 1.4 });
       F(at(3), at(17), 0.45, gb, 1.5);
     } else if (L.weapon === 'axe') {
-      C(at(-6), at(16), 1.05, 1.0, M.wood, 8.5, { g: grp('haft') });
-      for (let i = 0; i < 3; i++) C(at(-3 + i * 1.6, -1.2), at(-3 + i * 1.6, 1.2), 0.6, 0.6, M.leatherDk, 8.51, { g: grp('wrap' + i) });
+      C(at(-6), at(16), 1.05, 1.0, M.wood, 8.5 + zs, { g: grp('haft') });
+      for (let i = 0; i < 3; i++) C(at(-3 + i * 1.6, -1.2), at(-3 + i * 1.6, 1.2), 0.6, 0.6, M.leatherDk, 8.51 + zs, { g: grp('wrap' + i) });
       const gh = grp('axehead');
-      Pl([at(10, -1.2), at(15.5, -1.2), at(19, -8.5), at(12.5, -10.5), at(11, -6)], M.iron, 8.55, { g: gh, bevel: 1.8 });
-      C(at(19, -8.6), at(12.4, -10.6), 0.55, 0.55, M.steel, 8.56, { g: grp('edge') });
-      Pl([at(11, 1), at(15, 1), at(14, 4.5), at(12, 4.5)], M.iron, 8.55, { g: grp('back'), bevel: 1 });
-      E(at(16.6)[0], at(16.6)[1], 1.3, 1.3, M.iron, 8.57, { g: grp('cap') });
+      Pl([at(10, -1.2), at(15.5, -1.2), at(19, -8.5), at(12.5, -10.5), at(11, -6)], M.iron, 8.55 + zs, { g: gh, bevel: 1.8 });
+      C(at(19, -8.6), at(12.4, -10.6), 0.55, 0.55, M.steel, 8.56 + zs, { g: grp('edge') });
+      Pl([at(11, 1), at(15, 1), at(14, 4.5), at(12, 4.5)], M.iron, 8.55 + zs, { g: grp('back'), bevel: 1 });
+      E(at(16.6)[0], at(16.6)[1], 1.3, 1.3, M.iron, 8.57 + zs, { g: grp('cap') });
     } else if (L.weapon === 'spear') {
       const g = grp('shaft');
-      C(at(-12), at(18), 0.85, 0.85, M.wood, 8.5, { g });
-      Pl([at(17.5, -1.8), at(17.5, 1.8), at(21.5, 1.3), at(27, 0), at(21.5, -1.3)], M.iron, 8.55, { g: grp('tip'), bevel: 1.4 });
-      C(at(16.5, -2.2), at(16.5, 2.2), 0.9, 0.9, M.gold, 8.56, { g: grp('ring') });
+      C(at(-12), at(18), 0.85, 0.85, M.wood, 8.5 + zs, { g });
+      Pl([at(17.5, -1.8), at(17.5, 1.8), at(21.5, 1.3), at(27, 0), at(21.5, -1.3)], M.iron, 8.55 + zs, { g: grp('tip'), bevel: 1.4 });
+      C(at(16.5, -2.2), at(16.5, 2.2), 0.9, 0.9, M.gold, 8.56 + zs, { g: grp('ring') });
     } else if (L.weapon === 'staff') {
       const g = grp('staff');
-      C(at(-9), at(15), 0.9, 0.8, M.wood, 8.5, { g });
+      C(at(-9), at(15), 0.9, 0.8, M.wood, 8.5 + zs, { g });
       const o = at(17.5);
-      C(at(14, -2), at(19, -2.6), 0.6, 0.4, M.gold, 8.52, { g: grp('claw1') });
-      C(at(14, 2), at(19, 2.6), 0.6, 0.4, M.gold, 8.52, { g: grp('claw2') });
-      E(o[0], o[1], 2.6, 2.6, mat({ keys: ['#1c0c40', '#4a2cb0', '#9a7cff', '#e8dcff'], n: 6, spec: 1, specPow: 6 }), 8.53, { g: grp('orb') });
+      C(at(14, -2), at(19, -2.6), 0.6, 0.4, M.gold, 8.52 + zs, { g: grp('claw1') });
+      C(at(14, 2), at(19, 2.6), 0.6, 0.4, M.gold, 8.52 + zs, { g: grp('claw2') });
+      E(o[0], o[1], 2.6, 2.6, mat({ keys: ['#1c0c40', '#4a2cb0', '#9a7cff', '#e8dcff'], n: 6, spec: 1, specPow: 6 }), 8.53 + zs, { g: grp('orb') });
     } else if (L.weapon === 'bow') {
       // bow held in the far (front-extended) hand: drawn with the near hand for simplicity
       const g = grp('bow'); const up = at(0, 0);
       const c1 = [up[0] + 1.5, up[1] - 12], c2 = [up[0] + 1.5, up[1] + 12];
-      C(c1, [up[0] + 5, up[1] - 5], 0.7, 1.0, M.wood, 8.5, { g });
-      C([up[0] + 5, up[1] - 5], [up[0] + 5.5, up[1] + 5], 1.0, 1.0, M.wood, 8.5, { g });
-      C([up[0] + 5.5, up[1] + 5], c2, 1.0, 0.7, M.wood, 8.5, { g });
-      C(c1, c2, 0.28, 0.28, mat({ keys: ['#c8c0a0', '#f0ecd8'], n: 2, flat: true, noOutline: true }), 8.4, { g: grp('string') });
+      C(c1, [up[0] + 5, up[1] - 5], 0.7, 1.0, M.wood, 8.5 + zs, { g });
+      C([up[0] + 5, up[1] - 5], [up[0] + 5.5, up[1] + 5], 1.0, 1.0, M.wood, 8.5 + zs, { g });
+      C([up[0] + 5.5, up[1] + 5], c2, 1.0, 0.7, M.wood, 8.5 + zs, { g });
+      C(c1, c2, 0.28, 0.28, mat({ keys: ['#c8c0a0', '#f0ecd8'], n: 2, flat: true, noOutline: true }), 8.4 + zs, { g: grp('string') });
       // quiver on back
       const q0 = [hF[0] - 6, hF[1] - 18];
     }
