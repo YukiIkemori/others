@@ -32,7 +32,7 @@
   const BANNER = { cx: 88, y: 44, h: 32 };
   const CARD = { x: 8, y: 76, w: 168 };
   const EZ = { x0: 4, x1: 172, cx: 88 };
-  const PARTY = { front: 192, middle: 216, zig: [0, 4, 0, 4], step: 10, y: { 1: [126], 2: [112, 136], 3: [106, 124, 142], 4: [100, 116, 132, 148] } };
+  const PARTY = { front: 192, middle: 222, zig: [0, 10, 0, 10], step: 10, y: { 1: [126], 2: [112, 136], 3: [106, 124, 142], 4: [100, 116, 132, 148] } };
   const LAYOUT = { FIELD, MSG, MSG_BIG, HELP, LIST, CMD, STATUS, BANNER, CARD, EZ, PARTY };
   // STATUS columns (§11.5.2; x from the window's left): letters at h / m / w, values right-aligned at hp / mp / wp
   const SCOL = { tag: 5, name: 20, nameW: 46, h: 70, hp: 96, m: 101, mp: 127, w: 132, wp: 152 };
@@ -474,7 +474,7 @@
     // ------------------------------------------------------------ party (§11.5.14)
     layoutParty() {
       this.pvs = this.eng.party.map((p, i) => ({
-        p, i, x: 0, y: 0, homeX: 0, homeY: 0, lift: 0, glide: null, move: null, act: null, tmp: null, flash: null,
+        p, i, x: 0, y: 0, homeX: 0, homeY: 0, lift: 0, koShown: !p.alive, deadAt: null, glide: null, move: null, act: null, tmp: null, flash: null,
         shake: 0, push: null, hop: null, nudge: null, away: false, flee: null, alt: null, sheets: {},
       }));
       this.pvMap = new Map(this.pvs.map((v) => [v.p, v]));
@@ -503,7 +503,17 @@
     /** the pose a member shows when not acting (§11.5.14) */
     restPose(v) {
       const p = v.p, st = p.status || {};
-      if (!p.alive) return { pose: 'ko', fi: 0 };
+      if (!p.alive) {
+        // a lethal hit leaves the member reeling (not yet lying) until the engine's 'die' event, which plays hit 6 → ko;
+        // lying down at the 'dmg' and standing up again for the 'die' flickered (review round 1). 90 frames at most.
+        const F = R.Engine.frame;
+        if (v.koShown) return { pose: 'ko', fi: 0 };
+        if (v.deadAt == null) v.deadAt = F;
+        if (F - v.deadAt < 90) return { pose: 'hit', fi: 0 };
+        v.koShown = true;
+        return { pose: 'ko', fi: 0 };
+      }
+      v.koShown = false; v.deadAt = null;
       if (this.victoryPose) return { pose: 'victory' };
       const cmd = this.inRound && this.roundCmds && this.roundCmds[p.idx];
       if (this.inRound && ((cmd && cmd.type === 'defend') || p.defending)) return { pose: 'guard', fi: 0 };
@@ -1039,7 +1049,7 @@
         R.sfx('death');
         if (this.winFx[u.idx]) this.winFx[u.idx].flash = 16;
         const v = this.pv(u);
-        if (v) { v.act = null; v.tmp = { pose: 'hit', fi: 0, until: R.Engine.frame + 6 }; } // hit 6 → ko
+        if (v) { v.act = null; v.tmp = { pose: 'hit', fi: 0, until: R.Engine.frame + 6 }; v.koShown = true; } // hit 6 → ko
         return this.frames(12);
       }
       const v = this.vis.get(u);
@@ -1990,8 +2000,10 @@
       g.window(x, y, CMD.w, CMD.h);
       const gr = this.enemyGroups();
       const lines = gr.length > 4 ? gr.slice(0, 3).concat([{ name: `ほか${gr.length - 3}組`, n: '', more: true }]) : gr;
+      // the オート／リピート badge sits on the top border and is one text line tall: the names start under it
+      const badge = this.auto || this.repeating;
       lines.forEach((l, i) => {
-        const ty = y + 7 + i * 14;
+        const ty = badge ? y + 11 + i * 13 : y + 7 + i * 14;
         const color = l.gold ? C.gold : l.metal ? METAL_COL : C.white;
         g.fitText(l.name, x + 8, ty, l.more ? 74 : 64, { color });
         if (!l.more) g.text(String(l.n), x + 82, ty, { align: 'right', color });

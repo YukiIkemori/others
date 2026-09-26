@@ -421,7 +421,7 @@
     for (let i = 0; i < 900 && !menu(); i++) await a.step(1);
     await a.press('down'); a.shot('real_repeat_help');
     await a.press('a'); await a.step(60); a.shot('real_repeating');
-    for (let i = 0; i < 3000 && !BUI.result; i++) {
+    for (let i = 0; i < 9000 && !BUI.result; i++) {
       await a.step(1);
       if (S.paged && S.msg.key && !a.rewardsShot) { a.rewardsShot = true; a.shot('real_rewards'); }
       if (menu()) { await a.press('down'); await a.press('a'); }
@@ -578,6 +578,10 @@
     S.handle({ t: 'victory' });
     await a.step(14); a.shot('victory');
     await a.step(12); a.shot('victory_b');
+    // the rewards typed over the victory poses (the moment of the before/after pair 「勝利」)
+    S.paged = true;
+    S.play(S.eng.rewards());
+    await a.step(80); a.shot('victory_rewards');
     if (typeof document === 'undefined') return;
     // the 30 looks in their victory pose (frame 0) on the grass backdrop
     R.Engine.render();

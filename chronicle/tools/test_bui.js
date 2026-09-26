@@ -67,7 +67,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   eq([LY.MSG, LY.MSG_BIG, LY.HELP], [{ x: 4, y: 4, w: 248, h: 34, lines: 2 }, { x: 4, y: 4, w: 248, h: 62, lines: 4 }, { x: 4, y: 4, w: 248, h: 19 }], 'L2 MSG / MSG_BIG / HELP');
   eq([LY.LIST, LY.CMD, LY.STATUS], [{ x: 4, y: 64, w: 168, rows: 5, lineH: 14, padY: 8 }, { x: 4, y: 152, w: 88, h: 68 }, { x: 94, y: 152, w: 158, h: 68 }], 'L3 LIST / CMD / STATUS');
   eq([LY.BANNER, LY.CARD, LY.EZ], [{ cx: 88, y: 44, h: 32 }, { x: 8, y: 76, w: 168 }, { x0: 4, x1: 172, cx: 88 }], 'L4 BANNER / CARD / EZ');
-  eq(LY.PARTY, { front: 192, middle: 216, zig: [0, 4, 0, 4], step: 10, y: { 1: [126], 2: [112, 136], 3: [106, 124, 142], 4: [100, 116, 132, 148] } }, 'L5 PARTY');
+  eq(LY.PARTY, { front: 192, middle: 222, zig: [0, 10, 0, 10], step: 10, y: { 1: [126], 2: [112, 136], 3: [106, 124, 142], 4: [100, 116, 132, 148] } }, 'L5 PARTY');
   ok(B.HELP === LY.HELP && B.BANNER === LY.BANNER && B.CARD === LY.CARD, 'L6 R.Battle.HELP / BANNER / CARD are the new values');
   eq([B.WIN, B.WIN_BOTTOM, [B.BOX.x, B.BOX.y, B.BOX.w, B.BOX.h], B.GROUND], [{ xs: [3, 66, 129, 192], y: 5, w: 61, h: 46 }, 56, [8, 150, 240, 68], 130], 'L7 legacy WIN / WIN_BOTTOM / BOX / GROUND keep their values');
   ok(LY.CMD.x + LY.CMD.w < LY.STATUS.x && LY.STATUS.x + LY.STATUS.w <= 256 - 4 && LY.CMD.y + LY.CMD.h <= 224 - 4, 'L8 CMD and STATUS side by side inside the screen');
@@ -118,13 +118,13 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   let S = BUI.open({ mons: std() });
   const P = S.eng.party;
   ok(P.length === 4 && S.pvs.length === 4 && S.winFx.length === 4, 'L15 four members on screen', P.length);
-  eq(S.pvs.map((v) => [v.homeX, v.homeY]), [[192, 100], [220, 116], [216, 132], [196, 148]], 'L16 feet: front 192 / middle 216 + zig 0 4 0 4, y 100 116 132 148');
+  eq(S.pvs.map((v) => [v.homeX, v.homeY]), [[192, 100], [232, 116], [222, 132], [202, 148]], 'L16 feet: front 192 / middle 222 + zig 0 10 0 10, y 100 116 132 148');
   for (const n of [1, 2, 3]) {
     const Sn = BUI.open({ mons: std(), size: n, tweak: (p) => { for (const c of p) c.row = 'front'; } });
     eq(Sn.pvs.map((v) => v.homeY), LY.PARTY.y[n], 'L17 ' + n + ' member(s): y ' + LY.PARTY.y[n].join(' '));
   }
   S = BUI.open({ mons: std(), tweak: (p) => { p[0].hp = 0; p[3].hp = 0; } });
-  eq(S.pvs.map((v) => v.homeX), [192, 196, 192, 196], 'L18 the front row down: the middle row counts as the front (x 192)');
+  eq(S.pvs.map((v) => v.homeX), [192, 202, 192, 202], 'L18 the front row down: the middle row counts as the front (x 192)');
   // rectOf a member = the sprite box + anchors (screen coordinates)
   S = BUI.open({ mons: std() });
   const r0 = S.rectOf(S.eng.party[0]);
@@ -140,7 +140,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   S.commandPhase();
   await step(2); await press('a'); await step(8);
   ok(S.acting === P[0] || S.acting === S.eng.party[0], 'L22 the first member is entering commands');
-  ok(S.pvs[0].x === 182 && S.pvs[1].x === 220, 'L23 the one entering commands stands 10 px forward', S.pvs.map((v) => v.x));
+  ok(S.pvs[0].x === 182 && S.pvs[1].x === 232, 'L23 the one entering commands stands 10 px forward', S.pvs.map((v) => v.x));
   await press('b'); await step(8);
   ok(S.pvs[0].x === 192, 'L24 back to the party menu: back in place', S.pvs[0].x);
 
@@ -707,6 +707,18 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     }
     R.Settings.battleSpeed = 1;
     eq(frames, [[12, 10], [8, 7], [5, 4], [8, 6]], 'V9 run-in / hop back frames: 12·10, はやい 8·7, さいそく 5·4, オート 8·6');
+  }
+  // a lethal hit: the member reels (hit) until the 'die' event, then lies down — never lies, stands up and falls again
+  {
+    const S = BUI.open({ mons: std() });
+    const u = S.eng.party[1], v = S.pv(u);
+    u.hp = 0;
+    const seen = [];
+    for (let i = 0; i < 20; i++) { await step(1); seen.push(S.poseOf(v).pose); }
+    let dd = false; S.handle({ t: 'die', u }).then(() => { dd = true; });
+    for (let i = 0; i < 30; i++) { await step(1); seen.push(S.poseOf(v).pose); }
+    const firstKo = seen.indexOf('ko');
+    ok(seen.slice(0, 20).every((p) => p === 'hit') && firstKo > 20 && seen.slice(firstKo).every((p) => p === 'ko') && dd, 'V9b a lethal hit: hit until the die event, then ko for good', seen.join(','));
   }
   // victory: everyone standing raises the weapon; KO stays down. escape: the party runs off to the right
   {

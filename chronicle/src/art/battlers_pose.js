@@ -40,7 +40,7 @@
     two: { hn: [23, 30], hf: null, w: W('FU') },
     spear: { hn: [21, 30], hf: null, w: W('FU') },
     dagger: { hn: [27, 29], hf: [27, 26], w: W('F') },
-    bow: { hn: [20, 31], hf: [32, 28], w: W('U', 'front', 'f') },
+    bow: { hn: [20, 31], hf: [34, 29], w: W('U', 'front', 'f') },
     staff: { hn: [29, 29], hf: [24, 30], w: W('U') },
     fist: { hn: [25, 27], hf: [29, 25], w: null },
     whip: { hn: [21, 30], hf: [26, 30], w: W('U', 'front'), coil: true },
@@ -141,7 +141,7 @@
     }
     if (st === 'fist') {
       return [
-        fr({ hn: [24, 19], hf: [26, 18], w: null, cape: 1 }),
+        fr({ hn: [17, 13], hf: [27, 12], w: null, cape: 1 }),
         fr({ hn: [27, 25], hf: [29, 24], w: null, cape: 0 }),
         fr({ n: [24, 22], h: [23, 29], ff: [29, 36], hn: [29, 25], hf: [32, 24], w: null, cape: 3 }),
       ];
@@ -184,7 +184,8 @@
   function weak(st) {
     const body = { n: [24, 27], h: [21, 32], fn: [16, 37], ff: [28, 36], kneel: 'n', planted: true };
     let o;
-    if (st === 'bow' || st === 'staff') o = { hn: [30, 29], hf: [26, 33], w: W('U'), plant: true };
+    if (st === 'bow') o = { hn: [33, 30], hf: [26, 33], w: W('U'), plant: true };
+    else if (st === 'staff') o = { hn: [30, 29], hf: [26, 33], w: W('U'), plant: true };
     else if (st === 'fist') o = { hn: [29, 36], hf: [26, 33], w: null };
     else if (st === 'whip') o = { hn: [28, 31], hf: [26, 33], w: W('D'), coil: true };
     else o = { hn: [30, 29], hf: st === 'two' || st === 'spear' ? null : [28, 31], w: W('D'), plant: true };
@@ -195,8 +196,9 @@
   function victory(st) {
     const o = { hn: [19, 13], hf: [25, 30], w: W('U'), raise: true };
     if (st === 'two' || st === 'spear') { o.hf = null; }
-    if (st === 'fist') { o.w = null; o.hn = [29, 17]; o.fist = 'n'; }
+    if (st === 'fist') { o.w = null; o.hn = [16, 12]; o.fist = 'n'; }
     if (st === 'whip') { o.coil = 'up'; }
+    if (st === 'bow') o.w = W('U', 'back'); // the head hides the string; the limbs show round it
     const f0 = fr(o);
     const f1 = Object.assign({}, f0, { n: [22, 21], h: [22, 28], hop: 1 });
     f1.hn = add(f0.hn, 0, -1); f1.hf = add(f0.hf, 0, -1);

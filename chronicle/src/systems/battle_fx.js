@@ -1,8 +1,8 @@
 // Battle effects: procedural spell/attack animations, damage digits, status
 // icons, monster dissolve frames. Every sprite is built once (R.Gfx.def 'bfx:*'
 // keys or a cache on the source canvas); per frame we only blit.
-// Owner: bui (A3). Spec: DESIGN §11.5.6 (digits), §11.3.6 (status icons),
-// §11.5.12 / §6.2.6 (fx ids), §7.3.4-7 (fx arrays — chained by the scene).
+// Owner: SV-SCENE (was bui A3). Spec: DESIGN §11.5.6 (digits), §11.3.6 (status icons),
+// §11.5.12 / §6.2.6 (fx ids and their directions, Part A8), §7.3.4-7 (fx arrays — chained by the scene).
 //
 // R.BattleFX.play(scene, fxId, ctx) starts an animation and returns the number
 // of frames until its impact. ctx: {user: rect|null, targets:[rect], ab, kind, rate, dir}

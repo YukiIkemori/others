@@ -32,7 +32,7 @@ const PAIRS = [
   ['ボス戦', 'boss__boss_tall_112.png', /^sv_boss__boss_\d+\.png$/],
   ['閃きの瞬間', 'glimmer__glimmer_f12.png', 'sv_glimmer__oogi_f12.png'],
   ['術の詠唱', 'fx_chain__fx_chain_8.png', 'sv_cast__cast_circle.png'],
-  ['勝利', 'levelup__rewards.png', 'sv_victory__victory.png'],
+  ['勝利', 'levelup__rewards.png', 'sv_victory__victory_rewards.png'],
   ['中列の配置', 'reach__reach_attack_gray.png', 'sv_middle__middle_three.png'],
   ['瀕死・戦闘不能', 'command__member_menu_hero.png', 'sv_weak_ko__weak_ko_sleep_freeze.png'],
 ];
