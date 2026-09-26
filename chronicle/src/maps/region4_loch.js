@@ -79,8 +79,8 @@
         { text: '水路の水が、年々にごって\nきおる。鐘が鳴らなく\nなってからじゃ。' },
       ], { dir: 'down', push: true }),
       K.talk('plaza_girl', 'girl', 31, 20, [
-        { cond: CLEAR, text: 'ニコたちが帰ってきたの！\nまた、いっしょに\n水路で舟あそびするんだ。' },
-        { text: 'お母さんがね、\n霧の出る日は、外に出ちゃ\nだめって言うの。' },
+        { cond: C.post, text: 'きのう、トビアスじいちゃんに\n鐘の歌を教わったの。\nもう、ぜんぶ歌えるよ！' },
+        { text: 'ニコたちが帰ってきたの！\nまた、いっしょに\n水路で舟あそびするんだ。' },
       ], { move: 'wander', push: true, cond: CLEAR }),
       // the children, back home after the clear (§10.8.5 NPC)
       K.talk('nico', 'boy', 38, 32, [
@@ -142,7 +142,10 @@
         { cond: C.mid, text: '館の魔女が、子どもを\nさらったんじゃないの……？\nじゃあ、いったい誰が……。' },
         { text: 'ニコは、霧の出た朝に\n水路のそばで遊んでいたの。\n目を離したすきに……。' },
       ], { cond: 'marsh_start', dir: 'down', push: true }),
-      K.talk('nico_home', 'boy', 37, 28, 'お母さん、もう泣いてないよ。\nぼくが帰ってきたから！', { cond: [CLEAR, { postgame: false }], dir: 'up', push: true }),
+      K.talk('nico_home', 'boy', 37, 28, [
+        { cond: C.post, text: '鐘つきの練習をしてるんだ。\nゴーン、ゴーン！' },
+        { text: 'お母さん、もう泣いてないよ。\nぼくが帰ってきたから！' },
+      ], { cond: CLEAR, dir: 'up', push: true }),
       K.talk('fisher_wife', 'woman', 12, 37, [
         { cond: CLEAR, text: '夫が、久しぶりに\n沼の向こうまで舟を出したの。\n霧が晴れたおかげよ。' },
         { text: '霧が出ると、うちの子を\n外に出さないようにしてるの。\nかわいそうだけど……。' },
@@ -191,9 +194,8 @@
         { text: '魔女メルダの像。\n泥が投げつけられて、\n顔がよごれている……。' },
       ]),
       K.sign(47, 35, '七つの鐘の碑\f「沼より霧のあふれし年、\n魔女メルダ、七つの鐘を鋳て\n沼に沈め、霧を封ず」'),
-      K.sign(44, 11, '鐘楼\n朝の鐘は、町の目覚め'),
       K.sign(48, 17, '伝承をお持ちの方は、\n記録院の出張所へ。\n大切に保管いたします。', C.t1),
-      K.sign(6, 16, '定期船乗り場\nファロス・コーラル行き'),
+      K.sign(7, 12, '定期船乗り場\nファロス・コーラル行き'),
     ],
     chests: [
       K.chest('loch_c1', 45, 9, 'p_supply'),

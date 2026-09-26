@@ -697,7 +697,7 @@
         }
       };
       if (v === 0) { pillar(3, 10, true); pillar(12, 6, true); wall(6, 11, 3); }
-      else if (v === 1) { pillar(7, 12, false); for (const [x, y] of [[2, 14], [3, 13], [13, 14], [14, 14], [12, 13]]) b.set(x, y, Gy[3]); b.shadeEllipse(14, 13.5, 2, 1.2, [Gy[1], Gy[2], Gy[3], Gy[4]]); }
+      else if (v === 1) { wall(1, 5, 3); pillar(7, 12, false); pillar(12, 5, true); b.shadeEllipse(15, 13.5, 1.6, 1.2, [Gy[1], Gy[2], Gy[3], Gy[4]]); }
       else if (v === 2) {
         pillar(2, 11, false); pillar(12, 11, false);
         for (let x = 2; x <= 14; x++) { const y = 3 - Math.round(Math.sin(((x - 2) / 12) * Math.PI) * 2); if (x < 11) { b.set(x, y, Gy[4]); b.set(x, y + 1, Gy[3]); b.set(x, y + 2, Gy[2]); } }

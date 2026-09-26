@@ -1,4 +1,4 @@
-// A2 browser fixture (debug_battle.html: node tools/build.js --with tools/fixtures/battle).
+// A2 browser fixture (debug_battle_live.html: node tools/build.js --with tools/fixtures/battle/battle_live).
 // Real engine + real scene + real data, for tools/shot.js checks of what the engine produces:
 //   RPG.battleShots.zone('zw_verda', {tier: 3, level: 25, golden: 'force'})   quick start, then a zone battle
 //   RPG.battleShots.metal({tier: 5})            a metal-only zone battle (the first zone group with a metal monster)

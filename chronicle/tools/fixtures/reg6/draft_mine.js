@@ -102,7 +102,7 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined') {
     g.carve(30, 22, 36, 25, '~');     // flooded floor
     g.carve(37, 22, 37, 25, '.');
     g.carve(33, 21, 35, 21, '.');
-    g.carve(31, 23, 35, 23, '=');     // planks across the water
+    g.carve(30, 23, 36, 23, '=');     // planks across the water
     g.carve(38, 23, 42, 24);          // miner 2 sits in the dry corner (east)
     // east: crossroads → the rest chamber (mid-floor 休息の灯) → the side tunnel (mid-boss) → Pip
     g.carve(38, 6, 46, 8);
@@ -124,12 +124,11 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined') {
     g.carve(20, 43, 21, 44);
     // centre: link the pump room east to the flooded drift (a loop)
     g.carve(16, 20, 28, 21);
-    // dead-end drift from the switchback with the secret passage to the rare-monster den
-    g.carve(24, 28, 26, 32);
-    g.carve(24, 28, 29, 29);
-    g.put(30, 28, '%'); g.put(31, 28, '%');          // cracked timber wall (secret passage, 2 cells)
-    g.carve(32, 29, 38, 33);                          // the den (rare monsters ×3)
-    g.carve(32, 28, 34, 28);
+    // dead-end drift from the switchback with the secret passage to the rare-monster den (§10.6.4)
+    g.carve(24, 29, 25, 31);
+    g.carve(24, 29, 28, 30);
+    g.put(29, 29, '%'); g.put(30, 29, '%');          // cracked timber wall (secret passage, 2 cells)
+    g.carve(31, 29, 37, 33);                          // the den (rare monsters ×3)
     // side niche with a chest off the crossroads
     g.carve(20, 9, 23, 13);
     g.carve(21, 8, 22, 8);
@@ -153,7 +152,7 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined') {
     g.dpts([[5, 4], [9, 8], [21, 12], [46, 12], [49, 42], [5, 19], [16, 34], [25, 30]], '@');
     g.dpts([[33, 9], [12, 19], [45, 5], [44, 42], [19, 32]], 'U');
     g.dpts([[35, 9], [6, 22], [40, 26], [11, 44]], 'q');
-    g.dpts([[24, 40], [26, 40], [22, 42], [49, 44], [35, 30], [36, 32], [33, 32]], ':');
+    g.dpts([[24, 40], [26, 40], [22, 42], [49, 44], [35, 30], [36, 32], [32, 32]], ':');
     return g;
   };
 

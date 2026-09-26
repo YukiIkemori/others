@@ -33,7 +33,7 @@ ok(TROOPS.filter((t) => /^tr_b_/.test(t)).length === 26, '26 boss troops');
 ok(!!DB.troops.tr_tutorial, 'tutorial troop');
 // my rows = src/data/rare_encounters.js; other owners may add §10.6.4 rare-monster rooms (a copy of one of my
 // zones with the rate ÷ 3, e.g. z_r_marsh_teaparty, z_postgame_oblivion_den) — checked apart
-const MYRARE = (() => { const sb = { DB: { rareEncounters: {} } }; new Function('R', fs.readFileSync(path.join(__dirname, '..', 'src', 'data', 'rare_encounters.js'), 'utf8'))(sb); return sb.DB.rareEncounters; })();
+const MYRARE = (() => { const sb = { DB: { rareEncounters: {} } }; new Function('window', fs.readFileSync(path.join(__dirname, '..', 'src', 'data', 'rare_encounters.js'), 'utf8'))({ RPG: sb }); return sb.DB.rareEncounters; })();
 ok(Object.keys(MYRARE).length === 23, '23 rare encounter rows');
 for (const [z, r] of Object.entries(DB.rareEncounters)) {
   if (MYRARE[z]) { ok(DB.rareEncounters[z].mon === MYRARE[z].mon, `${z} row not overwritten`); continue; }
