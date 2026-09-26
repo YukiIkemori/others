@@ -118,16 +118,40 @@
     const P = {}; for (const k in V.pal) P[k] = hex(V.pal[k]);
     return (V._rgb = P);
   }
+  // selective outline (V.selout): each outline pixel takes the darkest tone of the material it
+  // borders (most frequent 8-neighbour), a step lighter on the lit top-left, never black.
+  function matOf(V, ch) { for (const m in V.mats) if (V.mats[m].includes(ch)) return V.mats[m]; return null; }
+  function selCol(V, g, x, y) {
+    const P = palRGB(V), outl = V.outlineKeys || 'X', cnt = {};
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+      if (!dx && !dy) continue; const yy = y + dy, xx = x + dx;
+      if (yy < 0 || xx < 0 || yy >= g.h || xx >= g.w) continue;
+      const k = g.px[yy][xx]; if (k === '.' || outl.includes(k) || (V.emissive || '').includes(k)) continue;
+      const m = matOf(V, k); if (!m) continue; cnt[m] = (cnt[m] || 0) + (dx && dy ? 1 : 2);
+    }
+    let best = null, bn = 0; for (const m in cnt) if (cnt[m] > bn) { bn = cnt[m]; best = m; }
+    if (!best) return hex(V.selDefault || '#2a2030');
+    const op = (xx, yy) => xx >= 0 && yy >= 0 && xx < g.w && yy < g.h && g.px[yy][xx] !== '.';
+    const litEdge = !op(x - 1, y) || !op(x, y - 1); // outer edge toward the top-left key
+    const edge = !op(x - 1, y) || !op(x + 1, y) || !op(x, y - 1) || !op(x, y + 1);
+    const base = P[best[0]];
+    if (edge && litEdge && best.length > 3) return mix(P[best[0]], P[best[1]], 0.55);
+    return edge ? mul(base, [0.9, 0.88, 0.92]) : base;
+  }
   function paint(V, g) {
-    const P = palRGB(V);
-    return paintRGB(g, (x, y) => { const ch = g.px[y][x]; if (ch === '.') return null; const c = P[ch]; if (!c) { console.warn('no colour for', JSON.stringify(ch), V.id); return [255, 0, 255]; } return c; });
+    const P = palRGB(V), outl = V.outlineKeys || 'X';
+    return paintRGB(g, (x, y) => {
+      const ch = g.px[y][x]; if (ch === '.') return null;
+      if (V.selout && outl.includes(ch)) return selCol(V, g, x, y);
+      const c = P[ch]; if (!c) { console.warn('no colour for', JSON.stringify(ch), V.id); return [255, 0, 255]; } return c;
+    });
   }
 
   // ---------------------------------------------------------------- lamp-lit night version
   // lightSide: -1 = warm key from the left, +1 = from the right. Cool moon rim on the other side.
   // Discrete light levels keep clusters clean: 0 ambient, 1 lit half, 2 warm rim, -1 cool rim.
   function litColors(V, o) {
-    o = Object.assign({ amb: [0.40, 0.42, 0.66], ambAdd: [8, 6, 22], litK: 0.85, warmAdd: [24, 8, -12], rimC: [255, 196, 128], rimK: 0.45, moon: [0.72, 0.86, 1.15], moonK: 0.55, half: 0.62, olWarm: [120, 60, 30] }, V.lit || {}, o || {});
+    o = Object.assign({ amb: [0.40, 0.42, 0.66], ambAdd: [8, 6, 22], litK: 1.0, warmAdd: [10, 3, -6], rimC: [255, 196, 128], rimK: 0.45, moon: [0.72, 0.86, 1.15], moonK: 0.55, half: 0.62, olWarm: [120, 60, 30] }, V.lit || {}, o || {});
     return o;
   }
   // for a key, the next lighter key in its material ramp (or itself)
@@ -163,7 +187,7 @@
     };
     return paintRGB(g, (x, y) => {
       const ch = g.px[y][x]; if (ch === '.') return null;
-      const c = P[ch];
+      const c = V.selout && outl.includes(ch) ? selCol(V, g, x, y) : P[ch];
       if (emis.includes(ch)) return c;
       const l = lvl(x, y);
       if (noLit.includes(ch)) return l === 'o' ? amb(c) : mix(amb(c), c, 0.8);
