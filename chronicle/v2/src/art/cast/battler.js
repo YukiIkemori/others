@@ -61,6 +61,32 @@
     x.putImageData(im, 0, 0);
     return fr;
   };
+  /**
+   * コマの中の肌の色の一覧（hd_check_hair の meta.skin）。各色を L の素材の段のうち一番近い物で分け、肌に分けられた色だけ
+   */
+  cast.skinColors = function (frames, L) {
+    const MM = R.Art.rig.M();
+    const mats = [];
+    const add = (m, isSkin) => { if (m && m.r && !mats.some((q) => q.m === m)) mats.push({ m, isSkin }); };
+    add(L.skin, true);
+    for (const v of Object.values(L)) add(v, false);
+    for (const v of Object.values(MM)) add(v, false);
+    const seen = new Map(), out = [];
+    for (const fr of frames) {
+      const c = fr.c, d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+      for (let i = 0; i < d.length; i += 4) {
+        if (d[i + 3] < 128) continue;
+        const k = (d[i] << 16) | (d[i + 1] << 8) | d[i + 2];
+        if (seen.has(k)) continue;
+        let best = null, bd = 1e9;
+        for (const q of mats) for (const r of q.m.r) { const dd = Math.abs(r[0] - d[i]) + Math.abs(r[1] - d[i + 1]) + Math.abs(r[2] - d[i + 2]); if (dd < bd) { bd = dd; best = q; } }
+        const sk = !!(best && best.isSkin);
+        seen.set(k, sk);
+        if (sk) out.push('#' + k.toString(16).padStart(6, '0'));
+      }
+    }
+    return out;
+  };
   cast.maxColors = function (kind) { const C = (R.Hd.STYLE && R.Hd.STYLE.colors) || {}; return ((C[kind] || [0, kind === 'btl' ? 80 : 55])[1]) - 4; };
 
   // 骨組みの戦闘の高さ（原画の戦闘の高さ 64 に合わせる倍率。MODERN_UI §2.1 の「約 70」に近い）
@@ -105,7 +131,7 @@
       let w = 0, h = 0;
       for (const f of frames) { w = Math.max(w, f.c.width); h = Math.max(h, f.c.height); }
       return { frames, poses, fps: Object.assign({}, rig.BATTLE_FPS), anchors, w, h,
-        meta: { look, wtype, facing: 'left', source: 'rig', placeholder: true, skin: L.skinHex, headR: Math.round(pt.headR * sc) } };
+        meta: { look, wtype, facing: 'left', source: 'rig', placeholder: true, skin: cast.skinColors([frames[0]], L), headR: Math.round(pt.headR * sc) } };
     }, 'btl');
   }
   cast._rigBattle = rigBattle;

@@ -49,7 +49,8 @@
       B.ell(0, hy, 9.4 * hs, 8.8 * hs, skin, 6, { bulge: 0.9 });
       if (L.hairStyle !== 'bald' || back) {
         if (back) {
-          B.ell(0, hy - 1.2, 10.2 * hs, 9.6 * hs, L.hairStyle === 'bald' ? skin : hair, 7, { bulge: 0.9 });
+          B.ell(0, hy - 1.2, 10.2 * hs, 9.6 * hs, hair, 7, { bulge: 0.9 });
+          if (L.hairStyle === 'bald') B.ell(0, hy - 5.5 * hs, 7.4 * hs, 4.6 * hs, skin, 7.05, { bulge: 0.8 });
           if (L.hairStyle !== 'bald') hairBack(B, L, hy, hs);
         } else {
           B.ell(0, hy - 1.4, 10.4 * hs, 9.4 * hs, hair, 5.5, { bulge: 0.9 });
@@ -92,7 +93,7 @@
         B.ell(1.4, hy - 5.4 * hs, 8.8 * hs, 4.6 * hs, hair, 7.05, { bulge: 0.7 });
         B.cap(-0.6 * hs, hy - 4 * hs, -1.4 * hs, hy + 4 * hs, 2.6 * hs, 1.9 * hs, hair, 7.1);
         hairSide(B, L, hy, hs);
-      } else B.ell(-2 * hs, hy + 0.5, 1.4, 2, skin, 6.5, { bulge: 0.5 });
+      } else { B.ell(-3.6 * hs, hy + 1.5, 6.4 * hs, 6.2 * hs, hair, 7, { bulge: 0.9 }); B.ell(-1 * hs, hy + 0.8, 1.4, 2, skin, 7.05, { bulge: 0.5 }); }
       B.ell(5.6 * hs, hy + 1.6 * hs, 1.2, 1.75, L.eye || MM.lash, 7.5, { bulge: 0.2 });
       B.rect(5.4 * hs, hy + 0.4 * hs, 0.8, 0.8, MM.white, 7.6);
       if (!L.old) B.ell(6.4 * hs, hy + 4.2 * hs, 1.2, 0.7, MM.blush, 7.4, { bulge: 0.1 });

@@ -7,7 +7,7 @@
   const base = (name, animal, main, sub, hue) => ({ name, animal, body: { sex: 'm', build: 'slim', age: 'short' }, skin: 'fair', eyes: '#2a2a30',
     hair: { style: 'bald', color: main, ears: 'show' }, outfit: { type: 'light', main, sub, trim: sub }, extras: [], hue, silhouette: 'ani_' + animal, face: false });
   R.defs('looks', {
-    ani_cat: base('ねこ', 'cat', '#7a6a5c', '#d8ccbc', 28),
+    ani_cat: base('ねこ', 'cat', '#8a6448', '#e0d0b8', 24),
     ani_dog: base('いぬ', 'dog', '#8a6038', '#e0d0b0', 30),
     ani_hen: base('にわとり', 'hen', '#e8e0d4', '#c83a2c', 40),
     ani_fawn: base('子じか', 'fawn', '#a86a3c', '#f0e4d0', 25),
@@ -15,7 +15,7 @@
 
   // 形: [胴の半径 rx, ry, 胴の高さ, 頭の半径, 頭の前の位置, 脚の長さ, しっぽ]
   const SHAPE = {
-    cat: { rx: 6.5, ry: 3.6, by: 7, hr: 3.6, hx: 6, hy: 11, leg: 4, tail: [[-6, 7], [-10, 10], [-11, 15]], ears: 'point' },
+    cat: { rx: 7, ry: 4, by: 7.5, hr: 4.2, hx: 6.5, hy: 12, leg: 4, tail: [[-6, 7], [-10, 10], [-11, 15]], ears: 'point' },
     dog: { rx: 7.5, ry: 4.2, by: 8.5, hr: 4.2, hx: 7.5, hy: 13, leg: 5, tail: [[-7, 9], [-10, 12], [-11, 15]], ears: 'flop' },
     hen: { rx: 4.8, ry: 4.4, by: 6.5, hr: 2.8, hx: 3.6, hy: 12, leg: 3, tail: [[-4, 8], [-7, 12], [-6, 14]], comb: true },
     fawn: { rx: 7.5, ry: 4.0, by: 11, hr: 3.8, hx: 7.5, hy: 17, leg: 8, tail: [[-7, 12], [-8.5, 13], [-9, 14]], ears: 'long', spots: true },
@@ -68,7 +68,7 @@
     const lk = R.DB.looks[look];
     if (!lk || !SHAPE[lk.animal]) return null;
     const RZ = R.Hd.RZ, rig = R.Art.rig;
-    const sc = ((o && o.scale) || 1.15) * 1.35;   // 人の背（約 50）に対して猫・犬は膝より上くらい
+    const sc = ((o && o.scale) || 1.15) * 1.6;   // 人の背（約 50）に対して猫・犬は膝より上くらい
     const order = [], tasks = [];
     const DIR = { s: 'down', n: 'up', e: 'right' };
     for (const d of ['s', 'n', 'e']) for (let fr = 0; fr < 3; fr++) {
@@ -76,7 +76,7 @@
       tasks.push(() => {
         const B = new RZ.Builder();
         build(B, null, lk.animal, DIR[d], fr);
-        return cast.limitColors(RZ.frame(RZ.render(B, rig.renderOpts({ scale: sc, light: rig.light('field'), tones: 7 }))), cast.maxColors('field'));
+        return cast.limitColors(RZ.frame(RZ.render(B, rig.renderOpts({ scale: sc, light: rig.light('field'), tones: 9 }))), cast.maxColors('field'));
       });
     }
     return cast.job(tasks, (made) => {

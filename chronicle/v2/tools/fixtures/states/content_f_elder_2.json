@@ -1,0 +1,38 @@
+{
+ "hero": {
+  "type": "ranger",
+  "sex": "f",
+  "name": "リーネ"
+ },
+ "party": [
+  "hero",
+  "brigitta",
+  "selma",
+  "teo"
+ ],
+ "reserve": [],
+ "tier": 0,
+ "gl": "auto",
+ "prof": "auto",
+ "vars": {},
+ "items": {
+  "i_salve": 3,
+  "i_potion": 2
+ },
+ "gold": 500,
+ "leads": [],
+ "desc": "CONTENT-F: 千年樹 2 階（根の奥の祭壇）",
+ "flags": {
+  "prologue_done": true,
+  "forest_start": true,
+  "tr_yura_arrival": true,
+  "tr_verda_1_arrive": true,
+  "tr_verda_2_arrive": true,
+  "tr_hut_arrive": true,
+  "forest_fine": true
+ },
+ "map": {
+  "id": "elder_2",
+  "spawn": "altar"
+ }
+}

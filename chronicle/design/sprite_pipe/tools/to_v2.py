@@ -65,7 +65,7 @@ def convert_set(src_json, kind, look, dst, source):
     out = {'character': d.get('character'), 'set': d.get('set'), 'look': look, 'source': source, 'cell': d['cell'], 'anchor': d['anchor'],
            'frames': frames, 'poses': poses, 'fps': fps, 'anims': d.get('anims') or {}, 'facing': d.get('facing'),
            'target_height': d.get('target_height')}
-    for k in ('attach', 'weapons', 'directions', 'walk_note'):
+    for k in ('attach', 'weapons', 'directions', 'walk_note', 'palette'):
         if k in d:
             out[k] = d[k]
     if kind == 'face':

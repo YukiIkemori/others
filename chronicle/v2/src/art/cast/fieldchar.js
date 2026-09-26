@@ -68,7 +68,7 @@
     for (const f of frames) { w = Math.max(w, f.c.width); h = Math.max(h, f.c.height); }
     const headR = Math.round(9 * (o.L && o.L.headScale ? o.L.headScale / 0.88 : 1) * o.sc);
     return { frames, poses, fps, anchors, w, h,
-      meta: { look, source: o.source, placeholder: o.source !== 'sprite', skin: o.L ? o.L.skinHex : [], headR, lantern: lant, scale: o.sc } };
+      meta: { look, source: o.source, placeholder: o.source !== 'sprite', skin: o.L ? cast.skinColors([frames[idx.s0]], o.L) : [], headR, lantern: lant, scale: o.sc } };
   }
   cast._finishField = finishField;
 

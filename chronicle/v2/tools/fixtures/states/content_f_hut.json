@@ -1,0 +1,38 @@
+{
+ "hero": {
+  "type": "ranger",
+  "sex": "f",
+  "name": "リーネ"
+ },
+ "party": [
+  "hero",
+  "brigitta",
+  "selma",
+  "teo"
+ ],
+ "reserve": [],
+ "tier": 0,
+ "gl": "auto",
+ "prof": "auto",
+ "vars": {},
+ "items": {
+  "i_salve": 3,
+  "i_potion": 2
+ },
+ "gold": 500,
+ "leads": [],
+ "desc": "CONTENT-F: 樵の休み小屋",
+ "flags": {
+  "prologue_done": true,
+  "forest_start": true,
+  "tr_yura_arrival": true,
+  "tr_verda_1_arrive": true,
+  "tr_verda_2_arrive": true,
+  "tr_hut_arrive": true,
+  "forest_fine": true
+ },
+ "map": {
+  "id": "hut",
+  "spawn": "door"
+ }
+}

@@ -152,6 +152,8 @@
         rita: { x: 52, y: 10, dir: 's' },
         pim_home: { x: 18, y: 45, dir: 's' },
         house1: { x: 40, y: 44, dir: 's' },
+        deck: { x: 16, y: 13, dir: 'e', lv: 1 },
+        east: { x: 46, y: 46, dir: 'e' },
       },
       exits: [
         { x: 28, y: 55, w: 4, h: 1, to: { map: 'world', spawn: 'fern' } },

@@ -1017,7 +1017,7 @@ def main():
     # facing scores into the state
     for n, sp in runs.items():
         for sid, v in sp.items():
-            for k in ('facing_score', 'facing_class'):
+            for k in ('facing_score', 'facing_cues', 'scale', 'lantern', 'fixed'):
                 if k in v:
                     states[n]['sprites'][sid][k] = v[k]
     txt = rep.text(states)

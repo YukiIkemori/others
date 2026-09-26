@@ -12,7 +12,10 @@
     const { L, H, ha, grp, E, S, Pl, F, z0 } = c;
     const hm = L.hair, st = L.hairStyle || 'short';
     if (st === 'bald') {
-      if (L.fringe) { const s = (pts, w0, w1, z) => S(pts.map((q) => H(q[0], q[1])), w0, w1, hm, z, {}); s([[-12, -1], [-11, 5], [-7, 9]], 2.2, 1.2, 10.3); }
+      // 頭のてっぺんだけ禿げた形（横と後ろは髪の輪。後頭部の肌を見せない決まり、ART_REWORK §2.3-6）
+      const gr = grp('hairring');
+      Pl([[1, -2.5], [0.6, 5], [-2.6, 8], [-6.5, 9.4], [-10.2, 7.6], [-12.7, 2], [-12.4, -3.5], [-9, -4.5], [-4, -2.8]].map((q) => H(q[0], q[1])), hm, 10.25, { g: gr, bevel: 2.6, nx: -0.15 });
+      F(H(-5, -2), H(-6.5, 7.5), 0.5, gr, -1.2);
       return;
     }
     const s = (pts, w0, w1, z, sh) => S(pts.map((q) => H(q[0], q[1])), w0, w1, hm, z, { shadeOff: sh || 0 });
