@@ -119,10 +119,13 @@
     // its middle tier (dyn zones, a boss's '@lineage' adds) gets the factor of the battle. Bosses, rare and metal
     // monsters use the plain curve (R.Mon asks for 'mob' only for the others). `on` stays false until R.Mon passes the
     // kind (the switch-over also deletes tuning.json 'global' and regenerates the monsters, so nothing counts twice).
+    // Fitted by battle level (not per stage as 'global' is): a sandbox with R.Mon passing the kind and 'global' deleted,
+    // sim_balance --full --only A2 --n 20 (seed 20260925): rounds 2.54–2.85 and HP lost 8.4–9.9 % in every tier T0–T9
+    // (A2 2.70 rounds / 9.0 %, C1a 2.62 / 9.1 %); 'global' copied as is gave T4 2.38 rounds and T8 2.43 / 7.8 %.
     MOB_TIER: {
       on: false,
-      hp: [1.12, 1.12, 1.36, 1.65, 1.43, 1.81, 2.02, 2.25, 2.0, 1.96],
-      dmg: [1.25, 1.25, 0.97, 0.75, 0.76, 0.61, 0.6, 0.59, 0.56, 0.43],
+      hp: [1.12, 1.2, 1.45, 1.72, 1.72, 1.9, 2.14, 2.3, 2.35, 2.06],
+      dmg: [1.25, 1.25, 0.95, 0.75, 0.72, 0.61, 0.58, 0.58, 0.58, 0.45],
     },
     // §4.9.3–4.9.4 — glimmer (R.Glimmer reads these)
     GLIM: {

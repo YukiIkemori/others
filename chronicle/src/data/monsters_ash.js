@@ -115,7 +115,7 @@
     },
     gargoyle_4: {
       name: '石像鬼の長', sprite: 'gargoyle_4', lineage: 'gargoyle', stage: 4, lv: 43, size: 'm', race: 'demon',
-      flags: ['flying'], s: { hp: 1.94, atk: 0.81, mag: 0.7, def: 1.35 }, eva: 12,
+      flags: ['flying'], s: { hp: 2.04, atk: 0.86, mag: 0.75, def: 1.35 }, eva: 12,
       elem: { wind: 1.5, earth: 0.5, light: 1.5, dark: 0.5 }, phys: { slash: 0.75, blunt: 1.25, pierce: 0.75 }, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_gaze', w: 2 }, { id: 'e_dive', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_katana_ash', rate: 32 }, super: { item: 'w_axe_sr_gargoyle', rate: 256 } },
@@ -140,7 +140,7 @@
     },
     orc_3: {
       name: '大鬼の頭目', sprite: 'orc_3', lineage: 'orc', stage: 3, lv: 43, size: 'l', race: 'humanoid', affinity: 'fire',
-      flags: [], s: { hp: 1.81, atk: 0.83, mag: 0.66, def: 1.05, agi: 0.8 }, eva: 5,
+      flags: [], s: { hp: 1.9, atk: 0.89, mag: 0.71, def: 1.05, agi: 0.8 }, eva: 5,
       elem: { fire: 0.25, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_rampage', w: 2 }, { id: 'e_focus', w: 1, cond: { once: true } }, { id: 'e_sweep', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 2] } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_fist_brimstone', rate: 32 }, super: { item: 'hd_sr_oni', rate: 128 } },
@@ -165,7 +165,7 @@
     },
     chimera_3: {
       name: '業火の三頭獣', sprite: 'chimera_3', lineage: 'chimera', stage: 3, lv: 43, size: 'l', race: 'beast', affinity: 'fire',
-      flags: [], s: { hp: 1.96, atk: 0.32, mag: 0.31 }, eva: 5,
+      flags: [], s: { hp: 2.05, atk: 0.34, mag: 0.33 }, eva: 5,
       elem: { fire: -1, water: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_inferno_breath', w: 2 }, { id: 'e_bite', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 0] } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_fist_brimstone', rate: 32 }, super: { item: 'bd_sr_chimera_hide', rate: 256 } },

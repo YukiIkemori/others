@@ -33,7 +33,7 @@
     },
     merman_4: {
       name: '魚人の騎士', sprite: 'merman_4', lineage: 'merman', stage: 4, lv: 43, size: 'm', race: 'aquatic', affinity: 'water',
-      flags: [], s: { hp: 2.35, atk: 0.58, mag: 0.5, def: 1.25 }, eva: 5,
+      flags: [], s: { hp: 2.47, atk: 0.62, mag: 0.54, def: 1.25 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_thrust', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_tide', w: 1 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_katana_tide', rate: 32 }, super: { item: 'w_sword_sr_merknight', rate: 256 } },
@@ -58,7 +58,7 @@
     },
     kraken_3: {
       name: '渦潮ダコ', sprite: 'kraken_3', lineage: 'kraken', stage: 3, lv: 43, size: 'l', race: 'aquatic', affinity: 'water',
-      flags: [], s: { hp: 1.7, atk: 0.62, mag: 0.65, agi: 0.85 }, eva: 5,
+      flags: [], s: { hp: 1.78, atk: 0.67, mag: 0.7, agi: 0.85 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_tentacles', w: 2 }, { id: 'e_tide', w: 2 }, { id: 'e_ink', w: 1 }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_katana_tide', rate: 32 }, super: { item: 'bd_sr_whirlpool', rate: 256 } },

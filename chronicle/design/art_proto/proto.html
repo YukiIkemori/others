@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Hi-res Art Prototype</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @font-face { font-family: 'ZenMaru'; src: url('fonts/ZenMaru-Medium.subset.woff2') format('woff2'); font-weight: 500; }
+  @font-face { font-family: 'ZenMaru'; src: url('fonts/ZenMaru-Bold.subset.woff2') format('woff2'); font-weight: 700; }
+  html, body { margin: 0; background: #000; }
+  #screen { display: block; width: 1024px; height: 896px; }
+</style>
+</head>
+<body>
+<canvas id="screen" width="1024" height="896"></canvas>
+<script>
+// Hi-res rendering spike + mock screens (BRIEF Part A16; design/art_proto/PLAN.md §1).
+// Same contract as the game: LOGICAL 256×224 coordinates, a 4× backing store (1024×896), but images are drawn with
+// smoothing ON (hi-res art, pre-scaled to device px) and text uses an embedded smooth font (Zen Maru Gothic subset).
+//   proto.html?scene=battle|town|world|dungeon|anim&style=anime|chibi|storybook[&clip=idle|attack|hurt&t=0.5]
+'use strict';
+const Q = new URLSearchParams(location.search);
+const SCENE = Q.get('scene') || 'battle', STYLE = Q.get('style') || 'anime';
+const W = 256, H = 224, SCALE = 4;
+const cv = document.getElementById('screen'), ctx = cv.getContext('2d', { alpha: false });
+
+// ------------------------------------------------------------------ HD gfx (what R.Gfx would gain, PLAN §1.3)
+const HD = {
+  FONT: '"ZenMaru", "Hiragino Maru Gothic ProN", "Noto Sans JP", sans-serif',
+  reset() { ctx.setTransform(SCALE, 0, 0, SCALE, 0, 0); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; ctx.globalAlpha = 1; ctx.textBaseline = 'top'; },
+  /** draw an image so its bottom-centre (feet) sits at (x,y), `k` logical px per image px (or h: logical height) */
+  sprite(img, x, y, o = {}) {
+    if (!img) return;
+    const c = o.crop || [0, 0, 1, 1];
+    const sw = img.width * (c[2] - c[0]), sh = img.height * (c[3] - c[1]);
+    const k = o.h ? o.h / sh : (o.k || 1);
+    const w = sw * k, h = sh * k;
+    ctx.save();
+    ctx.translate(x, y);
+    if (o.rot) ctx.rotate(o.rot);
+    if (o.flip) ctx.scale(-1, 1);
+    if (o.sx || o.sy) ctx.scale(o.sx || 1, o.sy || 1);
+    if (o.alpha != null) ctx.globalAlpha *= o.alpha;
+    ctx.drawImage(img, img.width * c[0], img.height * c[1], sw, sh, -w * (o.ax == null ? 0.5 : o.ax), -h * (o.ay == null ? 1 : o.ay), w, h);
+    ctx.restore();
+    return { w, h };
+  },
+  shadow(x, y, rx, ry, a = 0.35) {
+    ctx.save(); const g = ctx.createRadialGradient(x, y, 0, x, y, rx);
+    g.addColorStop(0, `rgba(10,14,20,${a})`); g.addColorStop(1, 'rgba(10,14,20,0)');
+    ctx.fillStyle = g; ctx.translate(x, y); ctx.scale(1, ry / rx); ctx.translate(-x, -y);
+    ctx.beginPath(); ctx.arc(x, y, rx, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  },
+  rrect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); },
+  /** smooth window: ink gradient, soft drop shadow, cream double border (DESIGN §11.1.2 `ink`, redrawn vector) */
+  window(x, y, w, h, o = {}) {
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.45)'; ctx.shadowBlur = 3 * SCALE; ctx.shadowOffsetY = 0.75;
+    const g = ctx.createLinearGradient(0, y, 0, y + h);
+    g.addColorStop(0, 'rgba(34,48,92,0.94)'); g.addColorStop(0.5, 'rgba(22,32,62,0.94)'); g.addColorStop(1, 'rgba(10,15,36,0.95)');
+    ctx.fillStyle = g; HD.rrect(x, y, w, h, 3.5); ctx.fill();
+    ctx.restore();
+    ctx.save();
+    ctx.lineWidth = 0.9; ctx.strokeStyle = '#efe4c4'; HD.rrect(x + 1.2, y + 1.2, w - 2.4, h - 2.4, 2.6); ctx.stroke();
+    ctx.lineWidth = 0.35; ctx.strokeStyle = 'rgba(214,176,96,0.9)'; HD.rrect(x + 2.6, y + 2.6, w - 5.2, h - 5.2, 1.6); ctx.stroke();
+    // glassy top sheen
+    const s = ctx.createLinearGradient(0, y, 0, y + Math.min(14, h / 2));
+    s.addColorStop(0, 'rgba(255,255,255,0.10)'); s.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = s; HD.rrect(x + 1.6, y + 1.6, w - 3.2, Math.min(14, h / 2), 2.2); ctx.fill();
+    ctx.restore();
+    if (o.title) {
+      ctx.save(); ctx.font = `700 9px ${HD.FONT}`;
+      const tw = ctx.measureText(o.title).width + 10, tx = x + 8;
+      const pg = ctx.createLinearGradient(0, y - 5, 0, y + 5); pg.addColorStop(0, '#3a2c14'); pg.addColorStop(1, '#1c160a');
+      ctx.fillStyle = pg; HD.rrect(tx, y - 5, tw, 10, 2); ctx.fill();
+      ctx.lineWidth = 0.6; ctx.strokeStyle = '#d6b060'; ctx.stroke();
+      HD.text(o.title, tx + 5, y - 4.6, { size: 9, weight: 700, color: '#f7ecd0' });
+      ctx.restore();
+    }
+  },
+  text(s, x, y, o = {}) {
+    ctx.save();
+    ctx.font = `${o.weight || 500} ${o.size || 32 / 3}px ${HD.FONT}`;
+    ctx.textAlign = o.align || 'left'; ctx.textBaseline = 'top';
+    if (o.shadow !== false) { ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.fillText(s, x + 0.5, y + 0.6); }
+    ctx.fillStyle = o.color || '#fbf7ee'; ctx.fillText(s, x, y);
+    ctx.restore();
+  },
+  cursor(x, y) { // soft ▶
+    ctx.save(); ctx.fillStyle = '#fff4d0'; ctx.shadowColor = 'rgba(255,220,140,0.9)'; ctx.shadowBlur = 2 * SCALE;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 5.5, y + 3.6); ctx.lineTo(x, y + 7.2); ctx.closePath(); ctx.fill(); ctx.restore();
+  },
+  pattern(img, scale) { const p = ctx.createPattern(img, 'repeat'); p.setTransform(new DOMMatrix().scale(scale)); return p; },
+  vignette(a = 0.35) {
+    const g = ctx.createRadialGradient(W / 2, H / 2, H * 0.35, W / 2, H / 2, H * 0.85);
+    g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, `rgba(0,0,0,${a})`);
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  },
+};
+
+// ------------------------------------------------------------------ per-style manifests (component index → name)
+const MAN = {
+  anime: {
+    party: { hero: 3, brigitta: 2, sylvain: 1, marta: 0 }, mons: { jelly: 0, wolf: 1, goblin: 2 },
+    town: { house: 0, inn: 1, tree: 2, bush: 4, well: 5, lamp: 6, barrels: 7, fence: 8, planter: 9 },
+    world: { pines: 0, mountain: 1, forest: 2, castle: 3, hill: 4, town: 5, bridge: 6, lighthouse: 7 },
+    dungeon: { torch: 0, wall: 1, chest: 2, stairs: 3, pillar: 5, statue: 6 },
+    field: { front: 0, back: 1, side: 2, merchant: 3, oldman: 4, guard: 5, girl: 6 },
+    rig: 'rig_hero',
+  },
+  chibi: {
+    party: { hero: 3, brigitta: 2, sylvain: 1, marta: 0 }, mons: { jelly: 0, wolf: 1, goblin: 2 }, flip: { goblin: 1 },
+    town: { house: 0, tree: 1, inn: 2, barrels: 3, bush: 5, well: 6, fence: 7, planter: 8 },
+    world: { mountain: 0, forest: 1, town: 2, castle: 3, pines: 4, hill: 5, lighthouse: 6, bridge: 7 },
+    dungeon: { wall: 0, pillar: 1, torch: 2, chest: 3, statue: 4, stairs: 5 },
+    field: { merchant: 0, front: 1, back: 3, oldman: 4, side: 5, girl: 6, guard: 8 },
+    crop: { 'town.inn': [0.18, 0, 1, 0.8] },
+    wallTex: true, // the generated wall piece is isometric (does not tile on a 3/4 grid): draw the wall face from the stone texture
+  },
+  storybook: {
+    party: { hero: 0, sylvain: 1, brigitta: 2, marta: 3 }, mons: { jelly: 0, wolf: 1, goblin: 2 },
+    town: { house: 1, tree: 2, bush: 3, inn: 4, well: 5, lamp: 6, barrels: 7, fence: 8, planter: 9 },
+    world: { pines: 0, forest: 1, town: 2, hill: 3, castle: 4, mountain: 5, bridge: 6, lighthouse: 7 },
+    dungeon: { torch: 1, chest: 2, wall: 3, pillar: 5, statue: 6, stairs: 7 },
+    field: { front: 0, back: 0, side: 1, merchant: 2, oldman: 3, girl: 4, guard: 5 },
+    floorPx: 30,
+    crop: { 'town.house': [0, 0, 0.47, 1], 'field.front': [0, 0, 0.5, 1], 'field.back': [0.5, 0, 1, 1] },
+  },
+};
+const M = MAN[STYLE];
+const A = {}; // loaded images: A['party.hero'] …
+const load = (src) => new Promise((res) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => { console.warn('missing ' + src); res(null); }; i.src = src; });
+async function loadAll() {
+  const jobs = [];
+  for (const sheet of ['party', 'mons', 'town', 'world', 'dungeon', 'field']) for (const [name, idx] of Object.entries(M[sheet])) jobs.push(load(`assets/${STYLE}/${sheet}_${idx}.png`).then((i) => { A[sheet + '.' + name] = i; }));
+  for (let g = 0; g < 9; g++) jobs.push(load(`assets/${STYLE}/ground_${g}.png`).then((i) => { A['ground.' + g] = i; }));
+  jobs.push(load(`assets/${STYLE}/bbg.jpg`).then((i) => { A.bbg = i; }));
+  if (M.rig) {
+    jobs.push(load(`assets/${STYLE}/${M.rig}/body.png`).then((i) => { A['rig.body'] = i; }));
+    jobs.push(load(`assets/${STYLE}/${M.rig}/arm.png`).then((i) => { A['rig.arm'] = i; }));
+    jobs.push(fetch(`assets/${STYLE}/${M.rig}/rig.json`).then((r) => r.json()).then((j) => { A.rigj = j; }).catch(() => {}));
+  }
+  await Promise.all(jobs);
+  await Promise.all([document.fonts.load(`500 12px ZenMaru`, 'あ亜'), document.fonts.load(`700 12px ZenMaru`, 'あ亜')]);
+}
+const crop = (key) => (M.crop && M.crop[key]) || undefined;
+const G = { GRASS: 0, FLOWERS: 1, DIRT: 2, COBBLE: 3, SAND: 4, SEA: 5, DFLOOR: 6, WOOD: 7, SNOW: 8 };
+
+// ------------------------------------------------------------------ battle (DESIGN §11.5.1 layout, Part A8/A16)
+const PARTY = [ // x = PARTY.front/middle + zig, feet y (R.Battle.LAYOUT.PARTY)
+  { id: 'hero', name: 'アルン', row: '前', x: 192, y: 100, hp: 417, mp: 47, wp: 40 },
+  { id: 'brigitta', name: 'ブリギッタ', row: '中', x: 232, y: 116, hp: 352, mp: 47, wp: 46 },
+  { id: 'sylvain', name: 'シルヴァン', row: '中', x: 222, y: 132, hp: 301, mp: 59, wp: 46 },
+  { id: 'marta', name: 'マルタ', row: '前', x: 202, y: 148, hp: 338, mp: 76, wp: 24 },
+];
+const ENEMIES = [ // feet positions inside EZ (x 4..172), target heights in logical px
+  { id: 'goblin', name: '小鬼の斧兵', x: 52, y: 104, h: 44 },
+  { id: 'wolf', name: '霜牙オオカミ', x: 110, y: 126, h: 38 },
+  { id: 'jelly', name: 'ぷちゼリー', x: 50, y: 146, h: 22 },
+];
+const HERO_H = { anime: 48, chibi: 44, storybook: 48 }[STYLE];
+function partyK() { const r = A['party.hero']; return r ? HERO_H / r.height : 0.15; }
+
+function drawBattleField(anim) {
+  // backdrop: FIELD 0..152 (1024×608 device px image, cover)
+  if (A.bbg) ctx.drawImage(A.bbg, 0, 0, W, 152);
+  // light haze at the horizon + ground darkening toward the camera for depth
+  const g = ctx.createLinearGradient(0, 60, 0, 152); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(10,20,10,0.18)');
+  ctx.fillStyle = g; ctx.fillRect(0, 60, W, 92);
+  // enemies (sorted by feet y)
+  const ens = ENEMIES.slice().sort((a, b) => a.y - b.y);
+  for (const e of ens) {
+    const img = A['mons.' + e.id]; if (!img) continue;
+    const k = e.h / img.height, w = img.width * k;
+    HD.shadow(e.x, e.y - 0.5, w * 0.42, 3.2, 0.42);
+    const hit = anim && anim.hitEnemy === e.id ? anim.hitAmt : 0;
+    const bob = e.id === 'jelly' ? Math.sin((anim ? anim.t : 0) * 5) * 0.03 : 0;
+    HD.sprite(img, e.x + (hit ? Math.sin(anim.t * 90) * 1.5 * hit : 0), e.y, { k, flip: M.flip && M.flip[e.id], sx: 1 - bob * 0.5, sy: 1 + bob });
+    if (hit) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = hit * 0.6; HD.sprite(img, e.x, e.y, { k, flip: M.flip && M.flip[e.id] }); ctx.restore(); }
+  }
+  // party (sorted by feet y)
+  const k = partyK();
+  for (const p of PARTY) {
+    const img = A['party.' + p.id]; if (!img) continue;
+    if (p.id === 'hero' && anim) { drawHeroAnim(anim, p, k); continue; }
+    HD.shadow(p.x, p.y - 0.4, 9, 2.6, 0.4);
+    HD.sprite(img, p.x, p.y, { k });
+  }
+}
+function drawBattleUI(o = {}) {
+  // bottom band
+  const g = ctx.createLinearGradient(0, 152, 0, 224); g.addColorStop(0, '#0d1226'); g.addColorStop(1, '#05070f');
+  ctx.fillStyle = g; ctx.fillRect(0, 152, W, 72);
+  // CMD (4,152,88,68)
+  HD.window(4, 154, 88, 66, { title: 'アルン' });
+  const cmds = [['剣', 12, 166], ['防御', 52, 166], ['道具', 12, 182], ['術', 52, 182]];
+  for (const [s, x, y] of cmds) HD.text(s, x + 6, y, { color: s === '術' ? '#8a8fa6' : undefined });
+  HD.cursor(10, 168);
+  // STATUS (94,152,158,68)
+  HD.window(94, 154, 158, 66);
+  PARTY.forEach((p, i) => {
+    const y = 160 + i * 14.5;
+    if (i === 0) { ctx.save(); const hg = ctx.createLinearGradient(98, 0, 248, 0); hg.addColorStop(0, 'rgba(255,214,120,0.28)'); hg.addColorStop(1, 'rgba(255,214,120,0.02)'); ctx.fillStyle = hg; HD.rrect(98, y - 1.5, 150, 13, 2); ctx.fill(); ctx.restore(); }
+    HD.text(p.row, 98, y, { color: p.row === '前' ? '#ffb45a' : '#7fdcff', weight: 700 });
+    HD.text(p.name, 111, y, { size: p.name.length > 4 ? 9.4 : 32 / 3 });
+    const cols = [['H', 164, p.hp, 191], ['M', 196, p.mp, 219], ['W', 223, p.wp, 246]];
+    for (const [l, lx, v, vx] of cols) { HD.text(l, lx, y + 1.2, { size: 8, color: '#b9c2e0' }); HD.text(String(v), vx, y, { align: 'right' }); }
+  });
+  // top help: the target
+  if (o.help) {
+    HD.window(4, 4, 248, 19);
+    HD.text(o.help, 128, 8, { align: 'center' });
+  }
+}
+function battle() {
+  drawBattleField(null);
+  // target marker over the goblin
+  const e = ENEMIES[0];
+  ctx.save(); ctx.fillStyle = '#fff1c0'; ctx.shadowColor = '#ffd060'; ctx.shadowBlur = 3 * SCALE;
+  ctx.beginPath(); ctx.moveTo(e.x - 3.5, e.y - e.h - 6); ctx.lineTo(e.x + 3.5, e.y - e.h - 6); ctx.lineTo(e.x, e.y - e.h - 1.5); ctx.closePath(); ctx.fill(); ctx.restore();
+  // active member: soft light ring at the hero's feet
+  const p = PARTY[0];
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; HD.shadow(p.x, p.y - 0.5, 13, 3.4, 0); const rg = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 13);
+  rg.addColorStop(0, 'rgba(255,220,120,0.5)'); rg.addColorStop(1, 'rgba(255,220,120,0)'); ctx.fillStyle = rg; ctx.translate(p.x, p.y); ctx.scale(1, 0.26); ctx.beginPath(); ctx.arc(0, 0, 13, 0, 7); ctx.fill(); ctx.restore();
+  drawBattleUI({ help: '小鬼の斧兵Ａ' });
+}
+
+// ------------------------------------------------------------------ hero animation (cut-out rig, PLAN §3)
+const ease = { out: (t) => 1 - (1 - t) ** 3, inout: (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2), back: (t) => 1 + 2.7 * (t - 1) ** 3 + 1.7 * (t - 1) ** 2 };
+const seg = (t, a, b) => Math.max(0, Math.min(1, (t - a) / (b - a)));
+/** pose at time t (seconds) for a clip → {dx, dy, lean, arm (rad), sx, sy, trail, flash, hitEnemy} */
+function heroPose(clip, t) {
+  const P = { dx: 0, dy: 0, lean: 0, arm: 0, sx: 1, sy: 1, trail: 0, flash: 0, tint: 0 };
+  const breathe = Math.sin(t * Math.PI * 2 / 1.6);
+  if (clip === 'idle') { P.sy = 1 + 0.012 * breathe; P.sx = 1 - 0.006 * breathe; P.arm = 0.025 * breathe; P.lean = 0.01 * breathe; return P; }
+  if (clip === 'attack') {
+    const TARGET = ENEMIES[0].x + 30 - PARTY[0].x; // run to the front of the goblin
+    const run = ease.inout(seg(t, 0.0, 0.32)), back = ease.inout(seg(t, 1.05, 1.4));
+    P.dx = TARGET * run * (1 - back); P.dy = -Math.sin(Math.PI * seg(t, 1.05, 1.4)) * 8; // hop back
+    P.lean = -0.08 * Math.sin(Math.PI * seg(t, 0, 0.32));
+    // wind-up (arm back over the head), strike, recover
+    const wind = ease.out(seg(t, 0.3, 0.52)), strike = ease.back(seg(t, 0.58, 0.7)), rec = ease.inout(seg(t, 0.85, 1.1));
+    P.arm = (-2.55 * wind) + (2.55 + 0.75) * strike; P.arm *= 1 - rec;
+    P.lean += 0.10 * wind * (1 - strike) - 0.12 * strike * (1 - rec);
+    P.sy = 1 - 0.04 * strike * (1 - rec); P.sx = 1 + 0.03 * strike * (1 - rec);
+    P.trail = t > 0.58 && t < 0.86 ? 1 - seg(t, 0.62, 0.86) : 0; P.trailT = seg(t, 0.58, 0.7);
+    if (t > 0.66 && t < 0.95) { P.hitEnemy = 'goblin'; P.hitAmt = 1 - seg(t, 0.66, 0.95); }
+    return P;
+  }
+  if (clip === 'hurt') {
+    const hit = seg(t, 0.1, 0.18), rec = ease.inout(seg(t, 0.3, 0.75));
+    P.dx = 7 * ease.out(hit) * (1 - rec); P.lean = 0.2 * ease.out(hit) * (1 - rec); P.arm = 0.35 * hit * (1 - rec);
+    P.sy = 1 - 0.05 * hit * (1 - rec);
+    P.flash = t > 0.1 && t < 0.3 ? 1 - seg(t, 0.1, 0.3) : 0; P.shake = t > 0.1 && t < 0.35 ? (1 - seg(t, 0.1, 0.35)) : 0;
+    P.num = t > 0.12 ? { v: 38, a: 1 - seg(t, 0.75, 1.0), y: -Math.sin(Math.min(1, seg(t, 0.12, 0.4)) * Math.PI) * 6 } : null;
+    return P;
+  }
+  return P;
+}
+function drawHeroAnim(anim, p, k0) {
+  const P = heroPose(anim.clip, anim.t);
+  const R = A.rigj, body = A['rig.body'], arm = A['rig.arm'];
+  const k = HERO_H / A['party.hero'].height * (A['party.hero'].height / R.h) * (R.h / R.h); // same on-screen size as the static sprite
+  const kk = HERO_H / (R.h * 0.93); // rig image has 3.5% padding top/bottom vs the keyed sprite
+  const x = p.x + P.dx + (P.shake ? Math.sin(anim.t * 120) * 1.6 * P.shake : 0), y = p.y + P.dy;
+  HD.shadow(p.x + P.dx, p.y - 0.4, 9 * (1 + P.dy / 30), 2.6, 0.4);
+  const fx = R.feet[0], fy = R.feet[1];
+  const drawRig = (tintFlash) => {
+    ctx.save();
+    ctx.translate(x, y); ctx.rotate(P.lean); ctx.scale(P.sx * kk, P.sy * kk); ctx.translate(-fx, -fy);
+    ctx.drawImage(body, 0, 0);
+    ctx.translate(R.pivot[0], R.pivot[1]); ctx.rotate(P.arm); ctx.translate(-R.pivot[0], -R.pivot[1]);
+    ctx.drawImage(arm, 0, 0);
+    ctx.restore();
+  };
+  drawRig();
+  if (P.flash) { // hit flash: additive white-red copy
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = P.flash * 0.75; ctx.filter = 'sepia(1) saturate(6) hue-rotate(-40deg) brightness(1.3)'; drawRig(); ctx.restore();
+  }
+  if (P.trail) { // slash trail: a crescent arc in front of the hero, drawn as layered strokes
+    ctx.save();
+    const cx = x - 4, cy = y - 22, r = 21;
+    const a1 = -Math.PI * 0.65, a0 = a1 - Math.PI * 0.9 * (0.3 + 0.7 * P.trailT);
+    ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 6; i++) {
+      ctx.globalAlpha = P.trail * (0.55 - i * 0.08);
+      ctx.strokeStyle = i < 2 ? '#ffffff' : '#9fd8ff'; ctx.lineWidth = 3.2 - i * 0.45; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.arc(cx, cy, r - i * 1.2, Math.PI + a0 + 0.1 * i, Math.PI + a1); ctx.stroke();
+    }
+    ctx.restore();
+  }
+  if (P.num && P.num.a > 0) HD.text(String(P.num.v), p.x + 6, p.y - 50 + P.num.y, { size: 13, weight: 700, color: `rgba(255,255,255,${P.num.a})` });
+}
+function animScene() {
+  const clip = Q.get('clip') || 'idle', t = +(Q.get('t') || 0);
+  const P = heroPose(clip, t);
+  drawBattleField({ clip, t, hitEnemy: P.hitEnemy, hitAmt: P.hitAmt || 0 });
+  if (P.hitEnemy && P.hitAmt > 0) { const e = ENEMIES[0]; HD.text('126', e.x, e.y - e.h - 8 - (1 - P.hitAmt) * 6, { size: 13, weight: 700, align: 'center', color: `rgba(255,255,255,${Math.min(1, P.hitAmt * 2)})` }); }
+  drawBattleUI({ help: clip === 'attack' ? '斬る' : clip === 'hurt' ? '小鬼の斧兵Ａの こうげき！' : null });
+}
+
+// ------------------------------------------------------------------ field helpers (map px = 16 per tile, wide zoom = 3 device px per map px)
+const Z = 3; // device px per map px ('wide', field.js ZOOM_DIV 4/3)
+function withMap(fn) { ctx.save(); ctx.setTransform(Z, 0, 0, Z, 0, 0); fn(); ctx.restore(); }
+const MW = 1024 / Z, MH = 896 / Z; // ≈ 341 × 299 map px visible
+/** fill a path-set with a ground texture, feathered edges (offscreen mask + blur) */
+function groundLayer(img, texMapPx, shapes, feather = 4) {
+  if (!img) return;
+  const off = document.createElement('canvas'); off.width = 1024; off.height = 896;
+  const o = off.getContext('2d');
+  o.setTransform(Z, 0, 0, Z, 0, 0);
+  const pat = o.createPattern(img, 'repeat'); pat.setTransform(new DOMMatrix().scale(texMapPx / img.width));
+  o.fillStyle = pat; o.fillRect(0, 0, MW, MH);
+  const m = document.createElement('canvas'); m.width = 1024; m.height = 896;
+  const mc = m.getContext('2d'); mc.setTransform(Z, 0, 0, Z, 0, 0); mc.filter = `blur(${feather * Z}px)`; mc.fillStyle = '#fff';
+  for (const s of shapes) { mc.beginPath(); s(mc); mc.fill(); }
+  o.setTransform(1, 0, 0, 1, 0, 0); o.globalCompositeOperation = 'destination-in'; o.drawImage(m, 0, 0);
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(off, 0, 0); ctx.restore();
+}
+const rect = (x, y, w, h, r = 6) => (c) => { c.roundRect(x, y, w, h, r); };
+function fsprite(key, x, y, h, o = {}) { const img = A[key]; if (!img) return; HD.sprite(img, x, y, Object.assign({ h, crop: crop(key) }, o)); }
+function fshadow(x, y, rx, a = 0.35) { HD.shadow(x, y, rx, rx * 0.32, a); }
+function placeName(s) { HD.window(6, 6, 20 + s.length * 10.67, 19); HD.text(s, 16, 10); }
+
+function town() {
+  withMap(() => {
+    // grass base, cobbled streets with feathered borders
+    ctx.fillStyle = HD.pattern(A['ground.' + G.GRASS], 90 / A['ground.' + G.GRASS].width); ctx.fillRect(0, 0, MW, MH);
+  });
+  groundLayer(A['ground.' + G.COBBLE], 70, [rect(0, 150, 341, 52, 10), rect(150, 0, 56, 299, 10), rect(120, 140, 116, 80, 22)], 3);
+  groundLayer(A['ground.' + G.FLOWERS], 90, [rect(250, 230, 90, 70, 20), rect(0, 235, 70, 64, 20)], 5);
+  withMap(() => {
+    const items = [];
+    const put = (key, x, y, h, o = {}) => items.push({ key, x, y, h, o });
+    // buildings (feet = bottom of the front wall)
+    put('town.house', 72, 142, 92); put('town.inn', 270, 142, 92);
+    put('town.house', 70, 300, 92); put('town.inn', 285, 300, 88);
+    put('town.well', 246, 190, 32); put('town.lamp', 138, 150, 36); put('town.lamp', 218, 150, 36);
+    put('town.tree', 20, 150, 60); put('town.tree', 328, 160, 60); put('town.tree', 232, 64, 60); put('town.tree', 118, 40, 54);
+    put('town.bush', 116, 142, 17); put('town.bush', 98, 146, 14); put('town.bush', 236, 146, 15);
+    put('town.barrels', 312, 170, 17); put('town.barrels', 40, 172, 15); put('town.planter', 126, 212, 13); put('town.planter', 228, 212, 13);
+    put('town.fence', 262, 226, 17); put('town.fence', 294, 226, 17); put('town.fence', 22, 230, 17);
+    // people (field size: about 2 tiles tall)
+    put('field.front', 178, 196, 32, { person: 1 }); put('field.merchant', 272, 196, 31, { person: 1 });
+    put('field.girl', 112, 190, 28, { person: 1 }); put('field.oldman', 192, 118, 30, { person: 1 }); put('field.guard', 164, 54, 32, { person: 1 });
+    items.sort((a, b) => a.y - b.y);
+    for (const it of items) {
+      if (it.o.person) fshadow(it.x, it.y - 0.5, 6, 0.4); else if (/tree|well|lamp|barrels/.test(it.key)) fshadow(it.x, it.y - 1, it.h * 0.35, 0.35);
+      fsprite(it.key, it.x, it.y, it.h, it.o);
+    }
+  });
+  // lamp glow, warm afternoon grade
+  ctx.save(); ctx.globalCompositeOperation = 'soft-light'; const g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, 'rgba(255,220,160,0.35)'); g.addColorStop(1, 'rgba(60,80,140,0.25)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); ctx.restore();
+  placeName('港町ルート');
+  HD.window(8, 164, 240, 54);
+  HD.text('商人', 18, 170, { color: '#ffd67a', weight: 700 });
+  HD.text('いらっしゃい！　ルートの町へようこそ。', 18, 184);
+  HD.text('西の街道は、オオカミが出るから気をつけな。', 18, 198);
+}
+
+function world() {
+  withMap(() => {
+    ctx.fillStyle = HD.pattern(A['ground.' + G.SEA], 110 / A['ground.' + G.SEA].width); ctx.fillRect(0, 0, MW, MH);
+  });
+  // land mass with a sand rim (sand slightly larger, feathered)
+  const land = [(c) => { c.moveTo(40, -10); c.bezierCurveTo(10, 80, 60, 150, 30, 230); c.bezierCurveTo(10, 290, 120, 320, 220, 310); c.lineTo(360, 300); c.lineTo(360, -10); c.closePath(); }];
+  const sand = [(c) => { c.moveTo(30, -10); c.bezierCurveTo(0, 80, 50, 150, 20, 230); c.bezierCurveTo(0, 300, 120, 330, 220, 320); c.lineTo(360, 312); c.lineTo(360, -10); c.closePath(); }];
+  groundLayer(A['ground.' + G.SAND], 80, sand, 3);
+  groundLayer(A['ground.' + G.GRASS], 110, land, 2.5);
+  groundLayer(A['ground.' + G.DIRT], 60, [(c) => { c.moveTo(120, 300); c.bezierCurveTo(140, 220, 200, 200, 190, 150); c.bezierCurveTo(180, 100, 240, 90, 262, 60); c.lineTo(272, 66); c.bezierCurveTo(252, 100, 196, 106, 204, 150); c.bezierCurveTo(212, 206, 152, 226, 134, 304); c.closePath(); }], 2);
+  withMap(() => {
+    const items = [];
+    const put = (key, x, y, h, o = {}) => items.push({ key, x, y, h, o });
+    // mountains ridge (top right), forests (left), town & castle
+    for (const [x, y, h] of [[250, 44, 46], [292, 60, 56], [334, 80, 52], [318, 40, 44], [226, 30, 36], [350, 116, 44], [276, 96, 40]]) put('world.mountain', x, y, h);
+    put('world.hill', 300, 138, 22); put('world.hill', 330, 262, 20); put('world.hill', 236, 124, 18);
+    for (const [x, y, h] of [[92, 96, 44], [70, 136, 44], [118, 132, 42], [64, 180, 44], [110, 178, 42], [88, 214, 40], [140, 100, 38], [52, 100, 38], [136, 204, 36]]) put('world.forest', x, y, h);
+    for (const [x, y, h] of [[110, 58, 36], [68, 58, 34], [150, 64, 30], [84, 262, 36], [120, 252, 32], [60, 236, 30]]) put('world.pines', x, y, h);
+    put('world.town', 196, 150, 36); put('world.castle', 270, 216, 52); put('world.lighthouse', 38, 280, 32);
+    put('field.front', 172, 226, 30, { person: 1 });
+    items.sort((a, b) => a.y - b.y);
+    for (const it of items) { if (it.o.person) fshadow(it.x, it.y - 0.5, 6, 0.4); fsprite(it.key, it.x, it.y, it.h, it.o); }
+  });
+  // cloud shadows + atmosphere
+  ctx.save(); ctx.globalAlpha = 0.18; for (const [x, y, r] of [[60, 40, 40], [200, 170, 55]]) { const g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, '#0a1020'); g.addColorStop(1, 'rgba(10,16,32,0)'); ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2); } ctx.restore();
+  HD.vignette(0.25);
+  placeName('ヴェルダ地方');
+}
+
+function dungeon() {
+  // floor
+  withMap(() => { ctx.fillStyle = '#07080c'; ctx.fillRect(0, 0, MW, MH); });
+  groundLayer(A['ground.' + G.DFLOOR], M.floorPx || 46, [rect(30, 76, 280, 230, 2), rect(140, 0, 64, 100, 0)], 0.6);
+  withMap(() => {
+    const wall = A['dungeon.wall'];
+    // back wall (faces the camera): tile the wall image across y 36..84 on both sides of the corridor
+    const wallRow = (x0, x1, top, hgt) => {
+      if (M.wallTex) {
+        const tex = A['ground.' + G.DFLOOR];
+        ctx.save(); ctx.fillStyle = HD.pattern(tex, 30 / tex.width); ctx.fillRect(x0, top, x1 - x0, hgt);
+        const sh = ctx.createLinearGradient(0, top, 0, top + hgt); sh.addColorStop(0, 'rgba(255,240,220,0.25)'); sh.addColorStop(0.12, 'rgba(0,0,0,0.05)'); sh.addColorStop(1, 'rgba(0,0,0,0.45)');
+        ctx.fillStyle = sh; ctx.fillRect(x0, top, x1 - x0, hgt);
+        ctx.fillStyle = '#8a8c8e'; ctx.fillRect(x0, top - 3, x1 - x0, 4); ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.fillRect(x0, top + 1, x1 - x0, 1);
+        ctx.restore();
+        const g = ctx.createLinearGradient(0, top + hgt, 0, top + hgt + 10); g.addColorStop(0, 'rgba(0,0,0,0.55)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g; ctx.fillRect(x0, top + hgt, x1 - x0, 10);
+        return;
+      }
+      if (!wall) return;
+      const k = hgt / wall.height, w = wall.width * k;
+      ctx.save(); ctx.beginPath(); ctx.rect(x0, top - 4, x1 - x0, hgt + 8); ctx.clip();
+      for (let x = x0 - 6; x < x1; x += w - 2) ctx.drawImage(wall, x, top, w, hgt);
+      ctx.restore();
+      // ambient occlusion at the wall foot
+      const g = ctx.createLinearGradient(0, top + hgt, 0, top + hgt + 10); g.addColorStop(0, 'rgba(0,0,0,0.55)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g; ctx.fillRect(x0, top + hgt, x1 - x0, 10);
+    };
+    wallRow(30, 140, 42, 40); wallRow(204, 310, 42, 40);
+    // side wall tops (dark masses with a stone lip)
+    ctx.fillStyle = '#12141b';
+    for (const [x, y, w, h] of [[0, 0, 30, 310], [310, 0, 40, 310], [30, 0, 110, 42], [204, 0, 106, 42]]) ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = 'rgba(160,160,170,0.35)'; ctx.lineWidth = 1.2;
+    ctx.strokeRect(30, 42, 0.01, 260); ctx.strokeRect(310, 42, 0.01, 260);
+    ctx.beginPath(); ctx.moveTo(140, 0); ctx.lineTo(140, 42); ctx.moveTo(204, 0); ctx.lineTo(204, 42); ctx.stroke();
+    const items = [];
+    const put = (key, x, y, h, o = {}) => items.push({ key, x, y, h, o });
+    put('dungeon.pillar', 86, 150, 44); put('dungeon.pillar', 256, 150, 44); put('dungeon.pillar', 86, 250, 44); put('dungeon.pillar', 256, 250, 44);
+    put('dungeon.statue', 60, 84, 40); put('dungeon.statue', 282, 84, 40);
+    put('dungeon.chest', 226, 110, 18); put('dungeon.stairs', 172, 292, 34, { flat: 1 });
+    put('dungeon.torch', 120, 66, 18, { light: 1 }); put('dungeon.torch', 224, 66, 18, { light: 1 });
+    put('field.back', 172, 208, 31, { person: 1 });
+    items.sort((a, b) => (a.o.flat ? -1 : 0) - (b.o.flat ? -1 : 0) || a.y - b.y);
+    for (const it of items) { if (it.o.person) fshadow(it.x, it.y - 0.5, 6, 0.5); else if (!it.o.light && !it.o.flat) fshadow(it.x, it.y - 1, it.h * 0.3, 0.5); fsprite(it.key, it.x, it.y, it.h, it.o); }
+  });
+  // lighting: darkness everywhere, warm pools at the torches and around the hero
+  const off = document.createElement('canvas'); off.width = 1024; off.height = 896; const o = off.getContext('2d');
+  o.fillStyle = 'rgba(4,6,14,0.78)'; o.fillRect(0, 0, 1024, 896);
+  o.globalCompositeOperation = 'destination-out';
+  for (const [x, y, r] of [[120, 58, 70], [224, 58, 70], [172, 196, 95]]) { const g = o.createRadialGradient(x * Z, y * Z, 0, x * Z, y * Z, r * Z); g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(0.6, 'rgba(0,0,0,0.6)'); g.addColorStop(1, 'rgba(0,0,0,0)'); o.fillStyle = g; o.fillRect(0, 0, 1024, 896); }
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(off, 0, 0);
+  ctx.globalCompositeOperation = 'lighter';
+  for (const [x, y] of [[120, 58], [224, 58]]) { const g = ctx.createRadialGradient(x * Z, y * Z, 0, x * Z, y * Z, 60 * Z); g.addColorStop(0, 'rgba(255,150,60,0.35)'); g.addColorStop(1, 'rgba(255,120,40,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, 1024, 896); }
+  ctx.restore();
+  placeName('古代の書庫　地下1階');
+}
+
+(async function main() {
+  await loadAll();
+  HD.reset();
+  ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+  ({ battle, town, world, dungeon, anim: animScene })[SCENE]();
+  window.READY = true;
+})();
+</script>
+</body>
+</html>

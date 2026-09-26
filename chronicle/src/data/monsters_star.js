@@ -74,7 +74,7 @@
     },
     darkmage_4: {
       name: '闇の魔術師', sprite: 'darkmage_4', lineage: 'darkmage', stage: 4, lv: 43, size: 'm', race: 'humanoid', affinity: 'dark',
-      flags: [], s: { hp: 2.92, atk: 0.26, mag: 0.48, def: 0.85, mdef: 1.3 }, eva: 5,
+      flags: [], s: { hp: 3.07, atk: 0.27, mag: 0.51, def: 0.85, mdef: 1.3 }, eva: 5,
       elem: { light: 1.5, dark: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 1 }, { id: 'e_dark_bolt', w: 2 }, { id: 'e_dark_mist', w: 2 }, { id: 'e_gloom', w: 1 }, { id: 'e_mind_suck', w: 1 }],
       drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'w_sword_starblade', rate: 32 }, super: { item: 'w_staff_sr_abyss', rate: 256 } },
@@ -107,7 +107,7 @@
     },
     automaton_4: {
       name: 'からくり大将', sprite: 'automaton_4', lineage: 'automaton', stage: 4, lv: 43, size: 'm', race: 'construct', affinity: 'light',
-      flags: [], s: { hp: 1.81, atk: 0.77, mag: 0.67, def: 1.25 }, eva: 5,
+      flags: [], s: { hp: 1.9, atk: 0.82, mag: 0.71, def: 1.25 }, eva: 5,
       elem: { water: 1.5, wind: 0.75, light: 0.25, dark: 1.5 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_double', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_howl', w: 1, cond: { once: true } }, { id: 'e_zap', w: 1 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_sword_starblade', rate: 32 }, super: { item: 'w_katana_sr_clockwork', rate: 256 } },
@@ -140,7 +140,7 @@
     },
     armor_4: {
       name: '黒金の鎧', goldName: '金色の鎧', sprite: 'armor_4', lineage: 'armor', stage: 4, lv: 43, size: 'm', race: 'construct', affinity: 'dark',
-      flags: [], s: { hp: 1.75, atk: 0.72, mag: 0.6, def: 1.35 }, eva: 5,
+      flags: [], s: { hp: 1.84, atk: 0.78, mag: 0.65, def: 1.35 }, eva: 5,
       elem: { water: 1.25, wind: 0.75, light: 1.5, dark: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_dark_slash', w: 2 }, { id: 'e_slash', w: 1 }, { id: 'e_harden', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_revive', rate: 8 }, rare: { item: 'hd_blackgold_helm', rate: 32 }, super: { item: 'sh_sr_steadfast', rate: 128 } },
@@ -165,7 +165,7 @@
     },
     wyvern_3: {
       name: '嵐飛竜', sprite: 'wyvern_3', lineage: 'wyvern', stage: 3, lv: 43, size: 'l', race: 'dragon', affinity: 'wind',
-      flags: ['flying'], s: { hp: 2.67, atk: 0.45, mag: 0.43, agi: 1.15 }, eva: 12,
+      flags: ['flying'], s: { hp: 2.8, atk: 0.49, mag: 0.46, agi: 1.15 }, eva: 12,
       elem: { fire: 1.5, water: 0.75, wind: 0.25, earth: 0.5, light: 0.75, dark: 0.75 }, phys: { slash: 0.75, pierce: 1.25 }, statusRes: { death: 1, sleep: 0.5, confuse: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_storm_breath', w: 2 }, { id: 'e_dive', w: 2 }, { id: 'e_tail', w: 1 }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'hd_blackgold_helm', rate: 32 }, super: { item: 'ac_sr_eagle', rate: 128 } },

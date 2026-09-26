@@ -78,6 +78,10 @@ def cmd_sprites(o):
     a = load(o.inp)
     bg = bg_color(a)
     al = matte(a, bg)
+    if o.glow_kill and bg[0] > 150 and bg[2] > 150 and bg[1] < 110:
+        # glows baked over the key colour (lamps, torches, magic): pink = mix of light and magenta → fade them out
+        pink = (np.minimum(a[..., 0], a[..., 2]) - a[..., 1] - 30) / 110
+        al = al * (1 - np.clip(pink, 0, 1))
     f = unmix(a, bg, al)
     solid = al > 0.5
     grown = ndimage.binary_dilation(solid, iterations=o.join)
@@ -131,15 +135,50 @@ def resize_rgba(img, w, h):
     return Image.fromarray((out * 255 + 0.5).astype(np.uint8), 'RGBA')
 
 
-def seamless(t, frac=0.28):
+def _seam_cols(cost):
+    """min-cost top-to-bottom path through cost[h, w] (x moves at most 1 per row) → x per row"""
+    h, w = cost.shape
+    acc = cost.copy()
+    back = np.zeros((h, w), np.int8)
+    for y in range(1, h):
+        prev = acc[y - 1]
+        l = np.concatenate([[np.inf], prev[:-1]]); r = np.concatenate([prev[1:], [np.inf]])
+        stack = np.stack([l, prev, r])
+        k = stack.argmin(0)
+        acc[y] += stack[k, np.arange(w)]
+        back[y] = k - 1
+    xs = np.zeros(h, int); xs[-1] = int(acc[-1].argmin())
+    for y in range(h - 1, 0, -1):
+        xs[y - 1] = np.clip(xs[y] + back[y, xs[y]], 0, w - 1)
+    return xs
+
+
+def _pass_x(t, b0, b1, feather):
+    """make t tileable along x: near both edges take the half-rolled copy r, switching to t along min-error seams"""
+    n = t.shape[1]
+    r = np.roll(t, n // 2, 1)
+    diff = np.abs(t - r).sum(-1)
+    wL = np.zeros(t.shape[:2]); wR = np.zeros(t.shape[:2])
+    xl = _seam_cols(diff[:, b0:b1]) + b0
+    xr = _seam_cols(diff[:, n - b1:n - b0]) + n - b1
+    xs = np.arange(n)[None, :]
+    useR = 1 - np.clip((xs - xl[:, None] + feather) / (2 * feather), 0, 1)  # 1 left of the left seam
+    useR = np.maximum(useR, np.clip((xs - xr[:, None] + feather) / (2 * feather), 0, 1))  # 1 right of the right seam
+    return t * (1 - useR[..., None]) + r * useR[..., None]
+
+
+def seamless(t, flatten=True):
+    """tileable texture by quilting: the half-offset copy covers the borders and is cut in along minimum-error
+    seams (x pass, then y pass), so bricks and planks stay whole instead of ghosting; large-scale light
+    variation is flattened first so the repeat is not obvious"""
     n = t.shape[0]
-    r = np.roll(np.roll(t, n // 2, 0), n // 2, 1)
-    x = np.arange(n)
-    e = np.minimum(x, n - 1 - x) / (n * frac)
-    e = np.clip(e, 0, 1)
-    e = e * e * (3 - 2 * e)
-    w = np.minimum(e[:, None], e[None, :])[..., None]
-    return t * w + r * (1 - w)
+    if flatten:
+        low = np.dstack([ndimage.gaussian_filter(t[..., c], n / 6, mode='wrap') for c in range(3)])
+        t = t - low * 0.55 + low.reshape(-1, 3).mean(0) * 0.55
+    b0, b1, f = int(n * 0.06), int(n * 0.3), 2.5
+    t = _pass_x(t, b0, b1, f)
+    t = np.transpose(_pass_x(np.transpose(t, (1, 0, 2)), b0, b1, f), (1, 0, 2))
+    return t
 
 
 def cmd_grid(o):
@@ -192,7 +231,7 @@ def main():
     s.add_argument('--h', type=int, default=0); s.add_argument('--hs', default='')
     s.add_argument('--order', default='x'); s.add_argument('--bands', type=float, default=3)
     s.add_argument('--min-area', type=float, default=0.004); s.add_argument('--join', type=int, default=10)
-    s.add_argument('--flip', action='store_true'); s.add_argument('--scale', type=float, default=0)
+    s.add_argument('--flip', action='store_true'); s.add_argument('--scale', type=float, default=0); s.add_argument('--glow-kill', action='store_true')
     g = sp.add_parser('grid'); g.add_argument('inp'); g.add_argument('out')
     g.add_argument('--cols', type=int, default=3); g.add_argument('--rows', type=int, default=3)
     g.add_argument('--size', type=int, default=256); g.add_argument('--inset', type=float, default=0.06)

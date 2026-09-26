@@ -9,7 +9,7 @@
     // ---- scribe 白衣の書記（人型・m）: 記録院の書記たち。白の書の力で相手の力と記憶を書き写して消す。
     scribe_1: {
       name: '白衣の書記', goldName: '金衣の書記', sprite: 'scribe_1', lineage: 'scribe', stage: 1, lv: 55, size: 'm', race: 'humanoid', affinity: 'light',
-      flags: [], s: { hp: 2.67, atk: 1.58, mag: 1.89, mdef: 1.2 }, eva: 5,
+      flags: [], s: { hp: 2.8, atk: 1.69, mag: 2.03, mdef: 1.2 }, eva: 5,
       elem: { light: 0.25, dark: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_transcribe', w: 2 }, { id: 'e_ink', w: 2 }, { id: 'e_light_ray', w: 1 }],
       drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'hd_scribe_hood', rate: 32 }, super: { item: 'ac_sr_ink', rate: 128 } },
@@ -17,7 +17,7 @@
     },
     scribe_2: {
       name: '白衣の写本師', goldName: '金衣の写本師', sprite: 'scribe_2', lineage: 'scribe', stage: 2, lv: 55, size: 'm', race: 'humanoid', affinity: 'light',
-      flags: [], s: { hp: 2.59, atk: 2.46, mag: 3.08, mdef: 1.25 }, eva: 5,
+      flags: [], s: { hp: 2.71, atk: 2.64, mag: 3.3, mdef: 1.25 }, eva: 5,
       elem: { light: 0.25, dark: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 1 }, { id: 'e_transcribe', w: 2 }, { id: 'e_forget', w: 2 }, { id: 'e_heal_ally', w: 1, cond: { hpBelow: 0.6 } }, { id: 'e_ward', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'bd_scribe_coat', rate: 32 }, super: { item: 'hn_sr_words', rate: 128 } },
@@ -34,7 +34,7 @@
     // ---- book 魔書（魔造・s）: 大書庫の本が魔物になったもの。紙なので火に弱い。
     book_1: {
       name: 'かみつき本', sprite: 'book_1', lineage: 'book', stage: 1, lv: 55, size: 's', race: 'construct',
-      flags: [], s: { hp: 3.03, atk: 0.54, mag: 0.49, agi: 1.1 }, eva: 5,
+      flags: [], s: { hp: 3.18, atk: 0.58, mag: 0.53, agi: 1.1 }, eva: 5,
       elem: { fire: 1.5, water: 1.25, wind: 0.75 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_bite', w: 2 }, { id: 'e_paper_cut', w: 2 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'hd_scribe_hood', rate: 32 }, super: { item: 'sh_sr_blank', rate: 128 } },
@@ -42,7 +42,7 @@
     },
     book_2: {
       name: '呪いの書', sprite: 'book_2', lineage: 'book', stage: 2, lv: 55, size: 's', race: 'construct', affinity: 'dark',
-      flags: [], s: { hp: 2.13, atk: 0.71, mag: 0.92, mdef: 1.2 }, eva: 5,
+      flags: [], s: { hp: 2.23, atk: 0.76, mag: 0.98, mdef: 1.2 }, eva: 5,
       elem: { fire: 1.5, water: 1.25, wind: 0.75, light: 1.5, dark: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_curse', w: 2 }, { id: 'e_dark_bolt', w: 2 }, { id: 'e_gloom', w: 1 }],
       drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'bd_scribe_coat', rate: 32 }, super: { item: 'w_staff_sr_moon', rate: 128 } },
@@ -59,7 +59,7 @@
     // ---- demon 魔神（魔族・l）: 海の向こうの伝説に語られた魔王の軍勢の、忘れられた影。
     demon_1: {
       name: '忘れられた魔兵', sprite: 'demon_1', lineage: 'demon', stage: 1, lv: 55, size: 'l', race: 'demon', affinity: 'dark',
-      flags: [], s: { hp: 2.1, atk: 0.82, mag: 0.75 }, eva: 5,
+      flags: [], s: { hp: 2.21, atk: 0.88, mag: 0.81 }, eva: 5,
       elem: { light: 1.5, dark: 0.25 }, phys: {}, statusRes: { death: 0.8 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_dark_slash', w: 2 }, { id: 'e_fire_rain', w: 1 }, { id: 'e_howl', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_archive_key', rate: 32 }, super: { item: 'ac_sr_bloodoath', rate: 128 } },

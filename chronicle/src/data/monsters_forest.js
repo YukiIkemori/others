@@ -74,7 +74,7 @@
     },
     mushroom_4: {
       name: '長老ダケ', sprite: 'mushroom_4', lineage: 'mushroom', stage: 4, lv: 43, size: 's', race: 'plant', affinity: 'earth',
-      flags: [], s: { hp: 1.88, atk: 1.07, mag: 1.29, mdef: 1.2, agi: 0.6 }, eva: 5,
+      flags: [], s: { hp: 1.97, atk: 1.15, mag: 1.38, mdef: 1.2, agi: 0.6 }, eva: 5,
       elem: { fire: 1.5, water: 0.5, wind: 1.5, earth: 0.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_spore_storm', w: 2 }, { id: 'e_heal_all', w: 2, cond: { hpBelow: 0.7 } }, { id: 'e_confuse_spore', w: 1 }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'hd_fairy_circlet', rate: 32 }, super: { item: 'w_staff_sr_elder_cap', rate: 256 } },
@@ -148,7 +148,7 @@
     },
     fairy_4: {
       name: '妖精姫', sprite: 'fairy_4', lineage: 'fairy', stage: 4, lv: 43, size: 's', race: 'fairy', affinity: 'light',
-      flags: ['flying'], s: { hp: 2.08, atk: 0.43, mag: 0.56, mdef: 1.2, agi: 1.3 }, eva: 15,
+      flags: ['flying'], s: { hp: 2.18, atk: 0.46, mag: 0.6, mdef: 1.2, agi: 1.3 }, eva: 15,
       elem: { wind: 1.5, earth: 0.5, light: 0.25, dark: 1.5 }, phys: { pierce: 1.25 }, statusRes: { confuse: 0.5 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_heal_all', w: 2, cond: { hpBelow: 0.8 } }, { id: 'e_charm', w: 2 }, { id: 'e_light_ray', w: 2 }, { id: 'e_veil_ally', w: 1, cond: { every: [4, 0] } }],
       drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'hd_fairy_circlet', rate: 32 }, super: { item: 'ac_sr_fairy_tiara', rate: 256 } },
@@ -181,7 +181,7 @@
     },
     treant_4: {
       name: '古老の木', sprite: 'treant_4', lineage: 'treant', stage: 4, lv: 43, size: 'l', race: 'plant', affinity: 'earth',
-      flags: [], s: { hp: 1.72, atk: 0.86, mag: 0.99, def: 1.25, agi: 0.6 }, eva: 5,
+      flags: [], s: { hp: 1.8, atk: 0.92, mag: 1.06, def: 1.25, agi: 0.6 }, eva: 5,
       elem: { fire: 1.5, water: 0.5, wind: 1.5, earth: 0.25 }, phys: { slash: 1.25 }, statusRes: { sleep: 0.5, poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_quake', w: 2 }, { id: 'e_heal_all', w: 1, cond: { hpBelow: 0.6 } }, { id: 'e_root_bind', w: 2 }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'w_spear_hornet', rate: 32 }, super: { item: 'w_staff_sr_elder_root', rate: 256 } },

@@ -74,7 +74,7 @@
     },
     wisp_4: {
       name: '黄泉の火', sprite: 'wisp_4', lineage: 'wisp', stage: 4, lv: 43, size: 's', race: 'spirit', affinity: 'dark',
-      flags: [], s: { hp: 1.82, atk: 0.23, mag: 0.3, agi: 1.2 }, eva: 5,
+      flags: [], s: { hp: 1.91, atk: 0.24, mag: 0.32, agi: 1.2 }, eva: 5,
       elem: { light: 1.5, dark: 0.25 }, phys: { slash: 0.5, blunt: 0.5, pierce: 0.5 }, statusRes: { poison: 1, death: 1, stun: 1 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_dark_mist', w: 2 }, { id: 'e_life_suck', w: 2 }, { id: 'e_yomi_fire', w: 2 }],
       drops: { normal: { item: 'i_stone_dark', rate: 8 }, rare: { item: 'w_sword_bellringer', rate: 32 }, super: { item: 'w_bow_sr_yomi', rate: 256 } },
@@ -107,7 +107,7 @@
     },
     frog_4: {
       name: '鐘鳴りガエル', sprite: 'frog_4', lineage: 'frog', stage: 4, lv: 43, size: 'm', race: 'aquatic', affinity: 'water',
-      flags: [], s: { hp: 2.54, atk: 0.39, mag: 0.42, agi: 0.9 }, eva: 5,
+      flags: [], s: { hp: 2.67, atk: 0.41, mag: 0.45, agi: 0.9 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_bell_croak', w: 3 }, { id: 'e_tongue', w: 1 }],
       drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'w_sword_bellringer', rate: 32 }, super: { item: 'ac_sr_frog_bell', rate: 256 } },
@@ -140,7 +140,7 @@
     },
     doll_4: {
       name: '貴婦人人形', sprite: 'doll_4', lineage: 'doll', stage: 4, lv: 43, size: 'm', race: 'construct', affinity: 'light',
-      flags: [], s: { hp: 1.51, atk: 0.59, mag: 0.74, mdef: 1.2, agi: 1.05 }, eva: 5,
+      flags: [], s: { hp: 1.58, atk: 0.63, mag: 0.79, mdef: 1.2, agi: 1.05 }, eva: 5,
       elem: { water: 1.25, wind: 0.75, light: 0.25, dark: 1.5 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_haste', w: 1, cond: { once: true } }, { id: 'e_charm', w: 2 }, { id: 'e_dark_bolt', w: 1 }, { id: 'e_heal_ally', w: 1, cond: { hpBelow: 0.5 } }],
       drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'ac_soul_candle', rate: 32 }, super: { item: 'sh_sr_lady_parasol', rate: 256 } },
@@ -173,7 +173,7 @@
     },
     lizardman_4: {
       name: 'トカゲの族長', sprite: 'lizardman_4', lineage: 'lizardman', stage: 4, lv: 43, size: 'm', race: 'humanoid', affinity: 'water',
-      flags: [], s: { hp: 2.73, atk: 0.56, mag: 0.47, def: 1.1 }, eva: 5,
+      flags: [], s: { hp: 2.87, atk: 0.6, mag: 0.5, def: 1.1 }, eva: 5,
       elem: { water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_heavy', w: 2 }, { id: 'e_howl', w: 2, cond: { once: true } }, { id: 'e_tide', w: 1 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'ac_soul_candle', rate: 32 }, super: { item: 'w_axe_sr_chieftain', rate: 256 } },
@@ -206,7 +206,7 @@
     },
     spider_4: {
       name: '女郎グモ', sprite: 'spider_4', lineage: 'spider', stage: 4, lv: 43, size: 'm', race: 'insect',
-      flags: [], s: { hp: 2.26, atk: 0.82, mag: 0.82, agi: 1.1 }, eva: 5,
+      flags: [], s: { hp: 2.37, atk: 0.88, mag: 0.88, agi: 1.1 }, eva: 5,
       elem: { fire: 1.5 }, phys: {}, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_bind', w: 2 }, { id: 'e_poison_bite', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_web', w: 1 }],
       drops: { normal: { item: 'i_panacea', rate: 8 }, rare: { item: 'ac_soul_candle', rate: 32 }, super: { item: 'w_whip_sr_silk', rate: 128 } },

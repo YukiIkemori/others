@@ -66,7 +66,7 @@
     },
     yeti_3: {
       name: '大雪男', sprite: 'yeti_3', lineage: 'yeti', stage: 3, lv: 43, size: 'l', race: 'beast', affinity: 'water',
-      flags: [], s: { hp: 1.78, atk: 0.72, mag: 0.6, agi: 0.8 }, eva: 5,
+      flags: [], s: { hp: 1.87, atk: 0.77, mag: 0.64, agi: 0.8 }, eva: 5,
       elem: { fire: 1.5, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_crush', w: 2 }, { id: 'e_avalanche', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 1] } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'hd_yeti_fur', rate: 32 }, super: { item: 'hn_sr_mighty', rate: 128 } },
@@ -140,7 +140,7 @@
     },
     owl_4: {
       name: '賢者フクロウ', sprite: 'owl_4', lineage: 'owl', stage: 4, lv: 43, size: 'm', race: 'bird', affinity: 'light',
-      flags: ['flying'], s: { hp: 3.2, atk: 0.36, mag: 0.47, mdef: 1.25, agi: 1.1 }, eva: 12,
+      flags: ['flying'], s: { hp: 3.36, atk: 0.39, mag: 0.5, mdef: 1.25, agi: 1.1 }, eva: 12,
       elem: { wind: 1.5, earth: 0.5, light: 0.25, dark: 1.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 1 }, { id: 'e_light_ray', w: 2 }, { id: 'e_gust', w: 2 }, { id: 'e_ward', w: 1, cond: { once: true } }, { id: 'e_heal_all', w: 1, cond: { hpBelow: 0.6 } }],
       drops: { normal: { item: 'i_ether2', rate: 8 }, rare: { item: 'w_katana_moon', rate: 32 }, super: { item: 'ac_sr_owl', rate: 128 } },
@@ -165,7 +165,7 @@
     },
     mammoth_3: {
       name: '大王マンモス', sprite: 'mammoth_3', lineage: 'mammoth', stage: 3, lv: 43, size: 'l', race: 'beast', affinity: 'water',
-      flags: [], s: { hp: 1.51, atk: 0.85, mag: 0.71, def: 1.25, agi: 0.65 }, eva: 5,
+      flags: [], s: { hp: 1.58, atk: 0.91, mag: 0.76, def: 1.25, agi: 0.65 }, eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_charge', w: 2 }, { id: 'e_avalanche', w: 2 }, { id: 'e_roar', w: 1, cond: { every: [4, 2] } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'hd_yeti_fur', rate: 32 }, super: { item: 'ft_sr_quake', rate: 128 } },

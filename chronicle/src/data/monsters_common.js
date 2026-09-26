@@ -74,7 +74,7 @@
     },
     rat_4: {
       name: 'ネズミの頭領', sprite: 'rat_4', lineage: 'rat', stage: 4, lv: 43, size: 's', race: 'beast',
-      flags: [], s: { hp: 2.87, atk: 0.71, mag: 0.64 }, eva: 5,
+      flags: [], s: { hp: 3.01, atk: 0.76, mag: 0.69 }, eva: 5,
       elem: { fire: 1.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_call_lesser', w: 2, cond: { countBelow: 6 } }, { id: 'e_double', w: 2 }, { id: 'e_howl', w: 1 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'hd_rat_bandana', rate: 32 }, super: { item: 'ac_sr_rat_king_ring', rate: 256 } },
@@ -181,7 +181,7 @@
     },
     crab_4: {
       name: '城ガニ', sprite: 'crab_4', lineage: 'crab', stage: 4, lv: 43, size: 'm', race: 'aquatic', affinity: 'water',
-      flags: [], s: { hp: 2.35, atk: 0.89, mag: 0.89, def: 1.6, agi: 0.6 }, eva: 5,
+      flags: [], s: { hp: 2.47, atk: 0.95, mag: 0.95, def: 1.6, agi: 0.6 }, eva: 5,
       elem: { fire: 0.75, water: 0.25, earth: 1.5 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_pincer', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_crush', w: 2 }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'sh_castle_shell', rate: 32 }, super: { item: 'bd_sr_castle_carapace', rate: 256 } },
@@ -214,7 +214,7 @@
     },
     seabird_4: {
       name: '長老カモメ', sprite: 'seabird_4', lineage: 'seabird', stage: 4, lv: 43, size: 'm', race: 'bird', affinity: 'wind',
-      flags: ['flying'], s: { hp: 2.82, atk: 0.45, mag: 0.52, agi: 1.2 }, eva: 12,
+      flags: ['flying'], s: { hp: 2.96, atk: 0.48, mag: 0.55, agi: 1.2 }, eva: 12,
       elem: { fire: 1.5, wind: 0.25, earth: 0.5 }, phys: { pierce: 1.25 }, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_dive', w: 2 }, { id: 'e_gust', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'bd_gull_robe', rate: 32 }, super: { item: 'hd_sr_sea_wind', rate: 256 } },
@@ -247,7 +247,7 @@
     },
     mimic_4: {
       name: '奈落の宝箱', sprite: 'mimic_4', lineage: 'mimic', stage: 4, lv: 43, size: 's', race: 'construct', affinity: 'dark',
-      flags: [], s: { hp: 2.42, atk: 0.46, mag: 0.44, def: 1.25, agi: 0.9 }, rw: { gold: 3 }, eva: 5,
+      flags: [], s: { hp: 2.54, atk: 0.49, mag: 0.47, def: 1.25, agi: 0.9 }, rw: { gold: 3 }, eva: 5,
       elem: { water: 1.25, wind: 0.75, light: 1.5, dark: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_abyss_fang', w: 2 }, { id: 'e_dark_mist', w: 2 }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_abyss_key', rate: 16 }, super: { item: 'ac_sr_coin', rate: 128 } },

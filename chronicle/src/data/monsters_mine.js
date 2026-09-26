@@ -25,7 +25,7 @@
     },
     golem_3: {
       name: '宝玉兵', sprite: 'golem_3', lineage: 'golem', stage: 3, lv: 43, size: 'l', race: 'construct', affinity: 'earth',
-      flags: [], s: { hp: 1.43, atk: 1.21, mag: 1.26, def: 1.35, agi: 0.6 }, eva: 5,
+      flags: [], s: { hp: 1.5, atk: 1.29, mag: 1.35, def: 1.35, agi: 0.6 }, eva: 5,
       elem: { water: 1.25, wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_crush', w: 2 }, { id: 'e_gem_beam', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_elixir', rate: 8 }, rare: { item: 'ac_gem_core', rate: 32 }, super: { item: 'w_axe_sr_titan', rate: 128 } },
@@ -58,7 +58,7 @@
     },
     mole_4: {
       name: 'モグラ大親方', sprite: 'mole_4', lineage: 'mole', stage: 4, lv: 43, size: 'm', race: 'beast', affinity: 'earth',
-      flags: [], s: { hp: 2.32, atk: 0.49, mag: 0.43, def: 1.1, agi: 0.85 }, eva: 5,
+      flags: [], s: { hp: 2.43, atk: 0.53, mag: 0.46, def: 1.1, agi: 0.85 }, eva: 5,
       elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 2 }, { id: 'e_quake', w: 2 }, { id: 'e_call_lesser', w: 1, cond: { countBelow: 5 } }, { id: 'e_claw', w: 2 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_club_forgehammer', rate: 32 }, super: { item: 'w_axe_sr_mole_boss', rate: 256 } },
@@ -91,7 +91,7 @@
     },
     beetle_4: {
       name: '金剛カブト', goldName: '黄金カブト', sprite: 'beetle_4', lineage: 'beetle', stage: 4, lv: 43, size: 's', race: 'insect', affinity: 'earth',
-      flags: [], s: { hp: 3.23, atk: 0.69, mag: 0.69, def: 1.8, agi: 0.8 }, eva: 5,
+      flags: [], s: { hp: 3.39, atk: 0.74, mag: 0.74, def: 1.8, agi: 0.8 }, eva: 5,
       elem: { fire: 1.25, wind: 1.5, earth: 0.25 }, phys: { slash: 0.75, blunt: 1.25 }, statusRes: { poison: 0.5 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_horn', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_charge', w: 2 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_club_forgehammer', rate: 32 }, super: { item: 'bd_sr_diamond_shell', rate: 256 } },
@@ -124,7 +124,7 @@
     },
     crystal_4: {
       name: '紫水晶', goldName: '金の紫晶', sprite: 'crystal_4', lineage: 'crystal', stage: 4, lv: 43, size: 's', race: 'construct', affinity: 'dark',
-      flags: [], s: { hp: 2.55, atk: 0.5, mag: 0.66, def: 1.2, mdef: 1.2 }, eva: 5,
+      flags: [], s: { hp: 2.68, atk: 0.54, mag: 0.7, def: 1.2, mdef: 1.2 }, eva: 5,
       elem: { water: 1.25, wind: 0.75, light: 1.5, dark: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_dark_bolt', w: 2 }, { id: 'e_mind_suck', w: 2 }, { id: 'e_ward', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_stone_dark', rate: 8 }, rare: { item: 'ac_gem_core', rate: 32 }, super: { item: 'ac_sr_amethyst', rate: 256 } },
