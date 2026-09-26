@@ -502,7 +502,12 @@ async function main(argv, E) {
         if (!pv) continue;
         process.stdout.write(`[lyria] ${t.id}: take ${k + 1}/${takes} with ${pv.P.name}… `);
         const t0 = Date.now();
-        const g = await pv.P.generate(pv.cfg, t, P, { log });
+        let g = null;
+        for (let r = 0; r < 3 && !g; r++) {
+          // a take is sometimes refused at random ({"blockReason":"PROHIBITED_CONTENT"}) — ask again
+          try { g = await pv.P.generate(pv.cfg, t, P, { log }); } catch (e) { process.stdout.write(`(${redact(e.message || e).slice(0, 90)}) `); if (r === 2) console.log('gave up on this take'); }
+        }
+        if (!g) continue;
         const ext = /mpeg|mp3/.test(g.mimeType) ? 'mp3' : 'wav';
         const ff = ext === 'mp3' ? f : f.replace(/\.mp3$/, '.wav');
         fs.writeFileSync(ff, g.bytes);

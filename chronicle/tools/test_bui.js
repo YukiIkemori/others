@@ -440,7 +440,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   ok(jingles[0] === 'rare' && S.card && S.card.grade === 'rare' && !S.dim, 'D2 rare: jingle rare + the rare card');
   let paused = false;
   S.handle({ t: 'pause' }).then(() => { paused = true; });
-  await step(2); await press('a'); await step(2);
+  await step(2); await press('a'); await step(40); // taken at 0.6 s at the earliest (Part A12)
   ok(paused && !S.card, 'D3 the card goes when the pause is answered');
   let release;
   jingleHold = new Promise((r) => { release = r; });
@@ -452,17 +452,62 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   await step(2); await press('a'); await step(2);
   ok(!paused, 'D5 no key is taken while the super-rare fanfare plays');
   release(); jingleHold = null;
-  await step(2); await press('a'); await step(2);
+  await step(2); await press('a'); await step(40);
   ok(paused && !S.card && !S.dim, 'D6 after the fanfare a key closes it');
-  // stolen rare → the rare card during the round, gone at the next actor
+  // stolen rare → the steal popup (Part A12), the next actor waits for it
   S = BUI.open({ mons: std() });
-  sfx.length = 0;
+  sfx.length = 0; jingles.length = 0;
   await S.handle({ t: 'gain', item: pickC.rareItem, grade: 'rare', stolen: true });
-  ok(sfx.includes('steal') && S.card && S.card.grade === 'rare', 'D7 stolen rare: steal + the rare card');
-  await S.handle({ t: 'actor', u: S.eng.party[1] });
-  ok(!S.card, 'D8 the card of a steal closes at the next actor');
+  ok(sfx.includes('steal') && jingles.includes('rare') && S.stealPop && S.stealPop.grade === 'rare' && !S.card, 'D7 stolen rare: steal + rare jingle + the steal popup');
+  let acted = false;
+  S.handle({ t: 'actor', u: S.eng.party[1] }).then(() => { acted = true; });
+  await step(10);
+  ok(!acted && S.stealPopLeft() > 0, 'D8a the next actor waits for the popup');
+  await until(() => acted, 200);
+  ok(acted && !S.stealPop, 'D8 the popup closes before the next actor');
+  sfx.length = 0; jingles.length = 0;
   await S.handle({ t: 'gain', item: 'i_salve', grade: 'normal', stolen: true });
-  ok(!S.card, 'D9 a normal steal: no card');
+  ok(!S.card && !S.stealPop && sfx.includes('steal') && !jingles.length, 'D9 a normal steal: the steal sound only, no popup');
+
+  // Part A12 at the fastest settings: msgSpeed 3, battleSpeed 2, オート (and リピート)
+  const svSpd = [R.Settings.msgSpeed, R.Settings.battleSpeed];
+  R.Settings.msgSpeed = 3; R.Settings.battleSpeed = 2;
+  /** frames from the gain until the steal popup is gone and the next actor has started; hold = A held all along */
+  async function popRun(grade, item, o) {
+    const Sx = BUI.open({ mons: std() });
+    Sx.auto = !!o.auto; Sx.repeating = !!o.repeat;
+    const u = Sx.eng.party[2];
+    const evs = [{ t: 'actor', u }, { t: 'gain', item, grade, stolen: true, u, mon: 'wolf_2' }, { t: 'msg', text: `${u.name}は★${DB.items[item].name}を盗んだ！` }, { t: 'actor', u: Sx.eng.party[0] }];
+    let done = false, seen = 0, t0 = null, frames = 0;
+    (async () => { for (const e of evs) await Sx.handle(e); })().then(() => { done = true; });
+    if (o.hold) R.Input._set('a', true);
+    for (let i = 0; i < 400 && !done; i++) {
+      await step(1); frames++;
+      if (Sx.stealPop && t0 == null) t0 = Sx.stealPop.t0;
+      if (Sx.stealPopLeft() > 0) seen++;
+    }
+    if (o.hold) { R.Input._set('a', false); await step(1); }
+    return { done, seen, frames, grade: t0 != null };
+  }
+  let sp = await popRun('rare', pickC.rareItem, { auto: true });
+  ok(sp.done && sp.seen >= 84 && sp.seen <= 96, 'D10 rare steal popup ~1.5 s at msgSpeed 3 / battleSpeed 2 / オート', sp);
+  sp = await popRun('rare', pickC.rareItem, { auto: true, hold: true });
+  ok(sp.done && sp.seen >= 36 && sp.seen < 60, 'D11 A held cuts it, but never below 0.6 s', sp);
+  sp = await popRun('super', pickC.superItem, { repeat: true });
+  ok(sp.done && sp.seen >= 84 && sp.seen <= 96 && jingles.includes('superrare'), 'D12 a super steal (リピート): ~1.5 s, superrare fanfare', sp);
+  // rewards: a rare drop card takes no key before 0.6 s (a key pressed sooner is kept and taken at 0.6 s)
+  for (const grade of ['rare', 'super']) {
+    const Sd = BUI.open({ mons: std() });
+    Sd.paged = true;
+    const item = grade === 'rare' ? pickC.rareItem : pickC.superItem;
+    let over = false;
+    (async () => { await Sd.handle({ t: 'drop', mon: 'wolf_2', item, grade }); await Sd.handle({ t: 'msg', text: 'x' }); await Sd.handle({ t: 'pause' }); })().then(() => { over = true; });
+    const t0 = R.Engine.frame;
+    let shown = 0;
+    for (let i = 0; i < 400 && !over; i++) { await press('a'); shown = R.Engine.frame - t0; }
+    ok(over && shown >= 36 && (grade === 'super' || shown <= 44), `D13 ${grade} drop card mashed with A at the fastest settings: ≥ 0.6 s`, { shown, over });
+  }
+  [R.Settings.msgSpeed, R.Settings.battleSpeed] = svSpd;
 
   // ================================================================ E — entrances, phases, summons, level ups
   section('E entrances / events');

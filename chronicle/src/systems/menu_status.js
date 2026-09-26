@@ -303,12 +303,13 @@
         };
         Kt.wtypes().forEach((w, i) => drawRow(12, 54 + i * 14, Kt.wtypeName(w), apt.w && apt.w[w], rank('w', w)));
         Kt.elems().forEach((e, i) => drawRow(132, 54 + i * 14, Kt.elemName(e), apt.e && apt.e[e], rank('e', e)));
-        const ly = 54 + 7 * 14;
+        // the legend (pitch 14: the compact menus draw these notes at the full text size, Part A11)
+        const ly = 54 + 6 * 14 + 4;
         G().text('文字：閃きやすさ', 132, ly, { color: Kt.COL.sub, size: 8 });
-        ['S', 'A', 'B', 'C', 'D'].forEach((L, i) => G().text(L, 132 + i * 12, ly + 12, { color: Kt.APT_COLOR[L] }));
-        G().text('数と棒：熟練度', 132, ly + 28, { color: Kt.COL.sub, size: 8 });
-        G().text('使うほど伸びて、', 132, ly + 42, { color: Kt.COL.gray, size: 8 });
-        G().text('上の技・術を閃く。', 132, ly + 54, { color: Kt.COL.gray, size: 8 });
+        ['S', 'A', 'B', 'C', 'D'].forEach((L, i) => G().text(L, 132 + i * 12, ly + 14, { color: Kt.APT_COLOR[L] }));
+        G().text('数と棒：熟練度', 132, ly + 30, { color: Kt.COL.sub, size: 8 });
+        G().text('使うほど伸びて、', 132, ly + 44, { color: Kt.COL.gray, size: 8 });
+        G().text('上の技・術を閃く。', 132, ly + 58, { color: Kt.COL.gray, size: 8 });
       }
       pageResist(c, st) {
         G().window(4, 46, 248, 174, { title: '耐性' });

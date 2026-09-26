@@ -1140,7 +1140,7 @@
 
   // compact main menu (BRIEF A11, §11.7.1 Part A11 版), in the virtual screen of the 0.75 scale (341×298):
   // one slim command column on the left, 4 party cards and the gold window to its right, the objective strip below.
-  const CM = { x: 6, y: 6, w: 84, lineH: 12, card: { x: 92, w: 176, h: 34, pitch: 36 }, gold: { h: 60 }, obj: { h: 36 } };
+  const CM = { x: 6, y: 6, w: 84, lineH: 12, card: { x: 92, w: 176, h: 34, pitch: 36 }, gold: { h: 60 }, obj: { h: 40 } };
   CM.h = 12 + COMMANDS.length * CM.lineH - 2; // 202
   class MainMenu extends Screen {
     constructor() {

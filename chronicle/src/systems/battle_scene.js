@@ -31,6 +31,10 @@
   const STATUS = { x: 94, y: 152, w: 158, h: 68 };
   const BANNER = { cx: 88, y: 44, h: 32 };
   const CARD = { x: 8, y: 76, w: 168 };
+  // Part A12: the rare / super steal popup shows POP_LEN frames (~1.5 s) whatever the speeds; A cuts it, never below
+  // POP_MIN (0.6 s). A rare / super drop card of the rewards takes no key before CARD_MIN (0.6 s)
+  const POP_LEN = 90, POP_MIN = 36, CARD_MIN = 36;
+  const POP = { cx: 88, y: 44, h: 36, minW: 124 }; // under MSG, where the glimmer banner opens (never at once)
   const EZ = { x0: 4, x1: 172, cx: 88 };
   const PARTY = { front: 192, middle: 222, zig: [0, 10, 0, 10], step: 10, y: { 1: [126], 2: [112, 136], 3: [106, 124, 142], 4: [100, 116, 132, 148] } };
   const LAYOUT = { FIELD, MSG, MSG_BIG, HELP, LIST, CMD, STATUS, BANNER, CARD, EZ, PARTY };
@@ -412,6 +416,8 @@
       this.glim = null; // glimmer {u, t0, H, name, title, color, w, bulb}
       this.glimUntil = 0; // the next action waits until this frame
       this.card = null; // drop card {grade, item, t0, transient}
+      this.cardSkip = false; // a key pressed while a rare / super drop card was younger than CARD_MIN (Part A12)
+      this.stealPop = null; // rare / super steal popup {grade, item, t0, cut} (Part A12, §11.5.8)
       this.dim = 0; // super-rare: the field darkened
       this.locked = false; // super-rare jingle: key waits refuse input until it ends
       this.levelJingle = false;
@@ -723,6 +729,7 @@
           await this.settle();
           this.inRound = false;
           this.actor = null;
+          await this.waitStealPop();
           this.clearTransientCard();
         }
         result = eng.result;
@@ -739,7 +746,7 @@
         R.Engine.reportError(e);
         result = eng.result || (eng.party.some((p) => p.alive) ? 'escape' : 'lose');
       }
-      this.card = null; this.dim = 0; this.locked = false;
+      this.card = null; this.dim = 0; this.locked = false; this.stealPop = null;
       try { eng.finish(); } catch (e) { R.Engine.reportError(e); }
       await R.Engine.fadeOut(16);
       // ↓ used to page the rewards: wait for its release so it does not walk the party on the field
@@ -797,6 +804,7 @@
         case 'msg': return s.say(ev.text);
         case 'clear': s.clearMsg(); return;
         case 'actor': {
+          await s.waitStealPop(); // a rare steal's popup keeps its time before the next action (Part A12)
           s.clearMsg();
           s.lastFx = null;
           s.clearTransientCard();
@@ -903,6 +911,22 @@
       }
     }
     clearTransientCard() { if (this.card && this.card.transient) this.card = null; }
+    /** frames the steal popup still shows (Part A12): POP_LEN, or POP_MIN once A cut it */
+    stealPopLeft() {
+      const p = this.stealPop;
+      if (!p) return 0;
+      const t = R.Engine.frame - p.t0;
+      return Math.max(0, (p.cut ? POP_MIN : POP_LEN) - t);
+    }
+    async waitStealPop() {
+      for (let i = 0; i < POP_LEN + 2 && this.stealPopLeft() > 0; i++) await R.Engine.wait(1);
+      this.stealPop = null;
+    }
+    /** a rare / super drop card refuses keys until it has been up CARD_MIN frames (Part A12) */
+    cardYoung() {
+      const cd = this.card;
+      return !!cd && (cd.grade === 'rare' || cd.grade === 'super') && R.Engine.frame - cd.t0 < CARD_MIN;
+    }
     async waitGlimmer() {
       const F = R.Engine.frame;
       if (this.glimUntil > F) await R.Engine.wait(this.glimUntil - F);
@@ -1101,10 +1125,14 @@
       if (ev.stolen || ev.grade) this.log.stolen.push({ item: ev.item, grade });
       if (ev.stolen || ev.grade) {
         R.sfx('steal');
-        if (grade === 'rare') {
-          R.Engine.flashScreen('#fff4b0', 16);
-          R.jingle('rare');
-          this.card = { grade: 'rare', item: ev.item, t0: R.Engine.frame, transient: !this.paged };
+        if (grade === 'rare' || grade === 'super') {
+          // Part A12: a popup card that stays ~1.5 s whatever the message / battle speed, オート or リピート.
+          // It does not stop the flow (the 「…を盗んだ！」 line types under it); the next actor / the end of the
+          // round waits for it (waitStealPop). A held / pressed A cuts it, never before POP_MIN.
+          await this.waitStealPop();
+          R.Engine.flashScreen(grade === 'super' ? '#ffe0f4' : '#fff4b0', 12);
+          R.jingle(grade === 'super' ? 'superrare' : 'rare'); // not awaited (§11.10.6)
+          this.stealPop = { grade, item: ev.item, t0: R.Engine.frame, cut: false };
         }
         return;
       }
@@ -1537,10 +1565,18 @@
     update() {
       if (this.auto && !this.autoCancel && In().pressed('b')) { this.autoCancel = true; R.sfx('cancel'); }
       if (this.repeating && !this.repeatCancel && In().pressed('b')) { this.repeatCancel = true; R.sfx('cancel'); }
+      if (this.stealPop && In().down('a')) this.stealPop.cut = true; // A (pressed or held to fast-forward) cuts it
       const m = this.msg;
-      // a page waiting for a key (rewards, level-ups, drops, pause): A, B or ↓ — not while the super-rare fanfare plays
+      // a page waiting for a key (rewards, level-ups, drops, pause): A, B or ↓ — not while the super-rare fanfare plays.
+      // A rare / super drop card stays at least CARD_MIN frames: a key pressed sooner is kept and taken then (Part A12)
       const down = In().pressed('down');
-      if (m.resolve && m.key && m.ch >= m.need && !this.locked && (In().pressed('a') || In().pressed('b') || down)) {
+      const key = In().pressed('a') || In().pressed('b') || down;
+      if (m.resolve && m.key && m.ch >= m.need && !this.locked && this.cardYoung()) {
+        if (key) { this.cardSkip = true; if (down) this.downLatch = true; In().consume(); }
+        return;
+      }
+      if (m.resolve && m.key && m.ch >= m.need && !this.locked && (key || this.cardSkip)) {
+        this.cardSkip = false;
         R.sfx('confirm_soft');
         if (down) this.downLatch = true; // the held ↓ must not move a menu cursor / the party afterwards
         In().consume();
@@ -1670,6 +1706,7 @@
       this.drawList();
       this.drawBanner();
       this.drawCard();
+      this.drawStealPop();
       this.drawCmd();
       this.drawStatus();
       this.drawAuto();
@@ -1939,6 +1976,42 @@
           if (r > 0) R.BattleFX.twinkle(g, px, py, Math.min(3, r), '#ffffff', '#ffffff');
         });
       }
+    }
+    /**
+     * the steal popup (Part A12): a small card over the enemy side — 「★ レアを盗んだ！」 / 「★★ 超レアを盗んだ！」 on top
+     * (the mark in C.rare / C.super), the item's icon and name below; it pops open over 5 frames and folds over the last 6
+     */
+    drawStealPop() {
+      const p = this.stealPop;
+      const left = this.stealPopLeft();
+      if (!p || left <= 0) return;
+      const g = G(), C = g.C, t = R.Engine.frame - p.t0;
+      const sup = p.grade === 'super';
+      const col = sup ? C.super : C.rare;
+      const mark = sup ? '★★' : '★', label = sup ? '超レアを盗んだ！' : 'レアを盗んだ！';
+      const it = DB.items[p.item];
+      const name = it ? it.name : String(p.item);
+      const w = Math.min(EZ.x1 - EZ.x0 - 8, Math.max(POP.minW, Math.ceil(g.textWidth(name)) + 44, Math.ceil(g.textWidth(mark + ' ' + label)) + 24));
+      const x = Math.round(POP.cx - w / 2), y = POP.y, h = POP.h;
+      const k = Math.min(1, (t + 1) / 5, left / 6);
+      if (k < 1) {
+        const hh = Math.max(4, Math.round(h * k));
+        g.window(x, Math.round(y + (h - hh) / 2), w, hh);
+        return;
+      }
+      g.window(x, y, w, h);
+      const mw = Math.ceil(g.textWidth(mark + ' '));
+      const lx = Math.round(POP.cx - (mw + g.textWidth(label)) / 2);
+      g.text(mark, lx, y + 5, { color: col, shadow: '#000' });
+      g.text(label, lx + mw, y + 5, { color: C.white });
+      g.draw(g.get(iconKey(p.item)), x + 10, y + 19);
+      g.fitText(name, x + 28, y + 18, w - 28 - 8, { color: col });
+      // white (rare) / pink and white (super) crosses at the corners, blinking on a 20-frame cycle
+      [[x + 3, y - 4], [x + w - 2, y + 6], [x + w + 3, y + h - 6], [x + 2, y + h + 3]].forEach(([px, py], i) => {
+        const q = (t + i * 5) % 20;
+        const r = q < 10 ? 1 + Math.floor(q / 4) : Math.max(0, 3 - Math.floor((q - 10) / 3));
+        if (r > 0) R.BattleFX.twinkle(g, px, py, Math.min(3, r), sup && i % 2 ? C.super : '#ffffff', '#ffffff');
+      });
     }
     /** the top window: the help / target strip while commands are entered, else the message window (only with text) */
     drawTop() {

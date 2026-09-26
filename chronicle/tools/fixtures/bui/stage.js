@@ -281,6 +281,28 @@
     await a.step(40); a.shot('steal_rare');
     void p;
   };
+  // Part A12: a rare / super steal at the fastest settings (msgSpeed 3, battleSpeed 2, オート) — the popup stays ~1.5 s
+  SC.steal_popup = async (a) => {
+    const sv = { msg: R.Settings.msgSpeed, spd: R.Settings.battleSpeed };
+    R.Settings.msgSpeed = 3; R.Settings.battleSpeed = 2;
+    try {
+      const S = BUI.open({ mons: std() });
+      S.auto = true;
+      const u = S.eng.party[2];
+      const steal = (grade, item) => [{ t: 'actor', u }, { t: 'gain', item, grade, stolen: true, u, mon: 'wolf_2' }, { t: 'msg', text: `${u.name}は★${DB.items[item].name}を盗んだ！` }];
+      const evs = [...steal('rare', P().rareItem), ...steal('super', P().superItem), { t: 'actor', u: S.eng.party[0] }];
+      const p = (async () => { for (const e of evs) await S.handle(e); })();
+      await a.step(2); a.shot('steal_pop_open');
+      await a.step(18); a.shot('steal_pop_rare');
+      a.zoom('zoom_steal_pop_rare', 0, 34, 176, 56, 3);
+      await a.step(66); a.shot('steal_pop_rare_f86');
+      await a.until(() => S.stealPop && S.stealPop.grade === 'super', 60);
+      await a.step(24); a.shot('steal_pop_super');
+      a.zoom('zoom_steal_pop_super', 0, 34, 176, 56, 3);
+      await a.step(80); a.shot('steal_pop_closed');
+      void p;
+    } finally { R.Settings.msgSpeed = sv.msg; R.Settings.battleSpeed = sv.spd; }
+  };
   SC.golden = async (a) => {
     const S = BUI.open({ mons: [{ id: P().golden }, { id: P().golden, golden: true }, { id: P().golden }], flow: true });
     await a.step(80); a.shot('golden_intro');
