@@ -67,10 +67,12 @@
 
   // ------------------------------------------------------------ colour wash (night / dawn scenes)
   // A plain layer drawn over the field (and under the message windows and captions pushed after it).
-  // K.tint('#101840', 0.45) → {fade(alpha, frames), close()}. Always close() it (the scripts use try/finally).
-  K.tint = function (color, alpha) {
+  // K.tint('#101840', 0.45[, 'soft-light']) → {fade(alpha, frames), set(a), color(c), close()}. The optional
+  // blend mode is a canvas globalCompositeOperation ('soft-light' warms a dawn without greying the sea).
+  // Always close() it (the scripts use try/finally).
+  K.tint = function (color, alpha, mode) {
     const E = R.Engine;
-    if (!E || !R.Layer || typeof document === 'undefined') return { fade: async () => {}, close() {}, set() {} };
+    if (!E || !R.Layer || typeof document === 'undefined') return { fade: async () => {}, close() {}, set() {}, color() {} };
     const L = new R.Layer();
     L.opaque = false;
     L.a = 0; L.to = alpha == null ? 0.4 : alpha; L.step = 0; L.color = color || '#101840';
@@ -85,7 +87,9 @@
       if (this.a <= 0) return;
       const G = R.Gfx, c = G.ctx;
       c.globalAlpha = Math.min(1, this.a);
+      if (mode) c.globalCompositeOperation = mode;
       G.rect(0, 0, R.W, R.H, this.color);
+      c.globalCompositeOperation = 'source-over';
       c.globalAlpha = 1;
     };
     // sit directly above the field layer, so windows opened later stay on top

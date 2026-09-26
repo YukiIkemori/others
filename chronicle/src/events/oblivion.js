@@ -16,6 +16,8 @@
   const E = R.DB.events;
   const K = R.Oblivion || {};
   const BOSS = { noEscape: true };
+  // the floors are white paper: the default caption dim (0.6) leaves white text on light grey, so darken more
+  const CAP_DIM = 0.78;
 
   // ------------------------------------------------------------ arrivals (first visit of each floor)
   function arrival(id, title, pages) {
@@ -25,7 +27,7 @@
         if (ev.flag(id)) return;
         ev.setFlag(id); // a floor's caption is shown once, even if the party leaves at once
         await ev.wait(16);
-        await ev.caption(title, { frames: 170 });
+        await ev.caption(title, { frames: 170, dim: CAP_DIM });
         for (const p of pages) await ev.say(p);
       },
     };
@@ -177,7 +179,7 @@
     ev.sfx('quill');
     await ev.wait(30);
     ev.jingle('chapter');
-    await ev.caption('年代記に、外伝『円環の竜』が\n記された。', { frames: 220, highlight: '『円環の竜』' }); // gold title, as the chapter captions
+    await ev.caption('年代記に、外伝『円環の竜』が\n記された。', { frames: 220, dim: CAP_DIM, highlight: '『円環の竜』' }); // gold title, as the chapter captions
     ev.sfx('page');
     R.Game.title = TITLE;
     ev.setFlag('pg_clear');

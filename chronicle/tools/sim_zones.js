@@ -871,25 +871,61 @@ function main() {
     out.M.M4 = { pass: okm, win: r.agg.win, worst: r.agg.minWinAll };
   }
   // ---------------- per-species danger report (not a criterion: helps tune lineage s and group sizes)
-  if (flag('species')) {
-    console.log('\nspecies danger — a pure group worth 3.2 standard monsters at the stage\'s first tier (HP lost / rounds)');
+  //   --species          a pure group worth 3.2 standard monsters of every species at its representative tier
+  //                      (the middle of the tiers where '@' picks that stage), HP lost / rounds
+  //   --fit <out.json>   also write a candidate overlay (the current one ⊕ s.hp / s.atk / s.mag per species) that moves
+  //                      every species toward HP lost FIT_LOST and FIT_ROUNDS rounds; damped, so run it 2–3 times
+  //                      (--tuning <previous out.json>) and then check M1 with --tuning
+  if (flag('species') || opt('fit', null)) {
+    const FIT = opt('fit', null);
+    const L_T = Number(opt('fit-lost', 0.095)), R_T = Number(opt('fit-rounds', 2.8)), DAMP = Number(opt('fit-damp', 0.8));
+    const Dd = CM.parseDesign();
+    console.log(`\nspecies danger — a pure group worth 3.2 standard monsters at the stage's representative tier (HP lost / rounds)${FIT ? ` → fit to ${pct(L_T)} / ${R_T}` : ''}`);
     U.seed(SEED + 9);
     const rows = [];
     for (const [lid, L] of Object.entries(DB.lineages)) {
       for (const st of L.stages) {
         const m = DB.monsters[st.mon];
         if ((m.flags || []).includes('metal')) continue;
-        const T = Math.min(8, st.tier);
+        const T = CM.midTier(Dd, Dd.mons[st.mon] || m, st.mon);
         const cnt = Math.max(1, Math.min(8, Math.round(3.2 / CM.SIZE_W[m.size])));
         const z = { tier: T, lvOff: 0 };
         const rs = [];
         for (let i = 0; i < Math.max(20, N); i++) rs.push(fight(z, T, [[st.mon, cnt, cnt]], 'standard', useReal));
         const lost = rs.reduce((a, r) => a + r.lost, 0) / rs.length, rounds = rs.reduce((a, r) => a + r.rounds, 0) / rs.length;
-        rows.push({ id: st.mon, T, cnt, lost, rounds });
+        // a pure group of `cnt` is worth cnt × SIZE_W, not exactly 3.2: compare like with like
+        const w = cnt * CM.SIZE_W[m.size] / 3.2;
+        rows.push({ id: st.mon, lid, T, cnt, lost, rounds, lostN: lost / w, roundsN: rounds / Math.pow(w, 0.8) });
       }
     }
-    rows.sort((a, b) => b.lost - a.lost);
-    for (const r of rows) console.log(`  ${r.id.padEnd(14)} T${r.T} ×${r.cnt}  lost ${pct(r.lost)}  rounds ${r.rounds.toFixed(2)}`);
+    rows.sort((a, b) => b.lostN - a.lostN);
+    for (const r of rows) console.log(`  ${r.id.padEnd(14)} T${r.T} ×${r.cnt}  lost ${pct(r.lost)}  rounds ${r.rounds.toFixed(2)}  (per 3.2: ${pct(r.lostN)} / ${r.roundsN.toFixed(2)})`);
+    const q = (a, k) => { const s = a.map((r) => r[k]).sort((x, y) => x - y); return [s[Math.floor(s.length * 0.1)], s[Math.floor(s.length / 2)], s[Math.floor(s.length * 0.9)]]; };
+    console.log(`  spread (p10 / median / p90): lost ${q(rows, 'lostN').map((v) => pct(v)).join(' / ')}  rounds ${q(rows, 'roundsN').map((v) => v.toFixed(2)).join(' / ')}`);
+    out.species = rows;
+    if (FIT) {
+      const base = CM.loadTuning();
+      base.monsters = base.monsters || {};
+      const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+      const r2 = (v) => Math.round(v * 100) / 100;
+      for (const r of rows) {
+        const fh = clamp(Math.pow(R_T / Math.max(0.5, r.roundsN), DAMP / 0.8), 0.75, 1.5);
+        const fd = clamp(Math.pow(L_T / Math.max(0.005, r.lostN), DAMP) / Math.pow(fh, 0.8 * DAMP), 0.5, 2.0);
+        const cur = Object.assign({}, DB.monsters[r.id].s || {});
+        const sv = Object.assign({}, cur);
+        sv.hp = r2(clamp((cur.hp != null ? cur.hp : 1) * fh, 0.5, 2.5));
+        sv.atk = r2(clamp((cur.atk != null ? cur.atk : 1) * fd, 0.5, 2.5));
+        sv.mag = r2(clamp((cur.mag != null ? cur.mag : 1) * fd, 0.5, 2.5));
+        for (const k of Object.keys(sv)) if (sv[k] === 1) delete sv[k];
+        const e = base.monsters[r.id] = base.monsters[r.id] || {};
+        e.s = sv;
+        const why = `sim_zones --fit (game engine, pure group ×${r.cnt} at T${r.T}): HP lost ${pct(r.lostN)} → ${pct(L_T)}, rounds ${r.roundsN.toFixed(2)} → ${R_T}`;
+        e.why = e.desc ? why + ' ／ ' + String(e.why || '').split(' ／ ').filter((x) => x.startsWith('desc:')).join(' ／ ') : why;
+      }
+      delete base.global;
+      fs.writeFileSync(FIT, JSON.stringify(base, null, 2) + '\n');
+      console.log(`  candidate overlay → ${FIT}`);
+    }
   }
   const jf = opt('json', null);
   if (jf) fs.writeFileSync(jf, JSON.stringify(out, null, 1));

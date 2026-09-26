@@ -436,9 +436,12 @@ for (const L of ['S', 'A', 'B', 'C', 'D']) {
     }
     xs.push(k);
   }
-  stones[L] = { median: median(xs), mean: mean(xs) };
+  // 1 個あたりの確率は熟練度に左右されない（1段の術は熟練 0・格 1）ので、中央値は p から決まる（抽選の揺れを除いた値）
+  const c0 = H.makeChar({ id: '_sim_stone_' + L, techs: ['t_sword_stepcut'] });
+  const p0 = G.chance(c0, 's_light_1', { kind: 'spell', elements: ['light'], used: 'i_stone_light', stone: true, rankB: 1, ef: 1, tier: 0, row: 'front', silenced: false });
+  stones[L] = { median: median(xs), mean: mean(xs), p: p0, exact: Math.ceil(Math.log(0.5) / Math.log(1 - p0)) };
 }
-log('\n## 魔石で最初の術を閃くまでの個数（光・T0）: ' + Object.entries(stones).map(([L, v]) => `${L} 中央値 ${v.median}・平均 ${f1(v.mean)}`).join('  '));
+log('\n## 魔石で最初の術を閃くまでの個数（光・T0）: ' + Object.entries(stones).map(([L, v]) => `${L} 1 個 ${(v.p * 100).toFixed(1)}%・中央値 ${v.exact}（抽選 ${v.median}）・平均 ${f1(v.mean)}`).join('  '));
 
 // G. 本物の戦闘エンジン（R.Battle.simulate・オート）での確かめ（参考。エンジンがあるときだけ）
 //    PM.standard の標準のパーティ（その T の想定の数を覚えた状態）で、T のゾーンの雑魚戦 95 回を続けて戦い、閃きを数える。
@@ -524,7 +527,7 @@ crit('X1c', '術師型（1.5 回）のクリア後 50 戦の後の 3属性', f1(
   const si = mean(am15.cs.map((c) => c.single));
   crit('X1d', '術師型（1.5 回）が本編で閃く単属性の数', f1(si), si >= 9 && si <= 14, '9〜14', true);
 }
-crit('X2', '魔石で最初の術を閃くまで（B の人の中央値）', `${stones.B.median} 個（A 平均 ${f1(stones.A.mean)}）`, stones.B.median >= 4 && stones.B.median <= 5, '4〜5 個', true);
+crit('X2', '魔石で最初の術を閃くまで（B の人の中央値）', `${stones.B.exact} 個（1 個 ${(stones.B.p * 100).toFixed(1)}%・抽選 2000 回の中央値 ${stones.B.median}・A ${stones.A.exact}）`, stones.B.exact >= 4 && stones.B.exact <= 5, '4〜5 個', true);
 crit('X3', 'クリア後 50 戦の後、主な武器の極意を持つ人がいる', `${Math.round(mean(secretHit) * 100)}%（主な武器 3 人のうち 段階 9 以上 ${f1(rank9)}・極意 クリア時 ${f1(secretAtClear)} → 50 戦後 ${f1(secretPost)}）`, mean(secretHit) >= 0.6, '60% 以上（§6.9.4）');
 
 const failed = results.filter((r) => !r.ok && !r.guide);

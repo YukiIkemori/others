@@ -168,7 +168,27 @@ function testStatic() {
   const boss2 = v2.npcs.find((n) => n.id === 'boss'), boss3 = v3.npcs.find((n) => n.id === 'boss');
   ok(boss2 && boss2.cond === '!ash_mid' && boss2.sprite === 'mon:' + DB.monsters.b_hellhound.sprite, '2F visible boss 炎の番犬');
   ok(boss3 && boss3.cond === '!ash_boss' && boss3.sprite === 'mon:' + DB.monsters.b_lavabeast.sprite, '3F visible boss 溶岩の巨獣');
-  ok(v3.npcs.some((n) => n.id === 'fine' && n.sprite === 'npc:fine'), '3F Fine');
+  ok(v3.npcs.some((n) => n.id === 'fine' && n.sprite === 'npc:fine' && n.cond === '!ash_boss'), '3F Fine (cond !ash_boss, §10.8.0-5)');
+  // decor sits on the right ground (wall decor on walls, floor decor on floors; no ash on rock tops or roofs),
+  // and no NPC stands where a tall decor below it would be drawn over the figure
+  for (const id of MAPS) {
+    const d = DB.maps[id], L = Object.assign({}, DB.legends.decor, d.decorLegend || {});
+    const wallT = new Set(['wall', 'wall_torch', 'housewall', 'rock', 'secret_wall']);
+    const floorT = new Set(['floor', 'wood', 'carpet', 'dirt', 'lgrass']);
+    let bad = [];
+    d.decor.forEach((r, y) => { for (let x = 0; x < r.length; x++) {
+      if (r[x] === '.') continue;
+      const dd = DB.decor[L[r[x]]] || {}, t = DB.legends.local[d.rows[y][x]];
+      if (dd.wall ? !wallT.has(t) : !(floorT.has(t) || (L[r[x]] === 'hot_spring' && t === 'water'))) bad.push(x + ',' + y + ' ' + L[r[x]] + '/' + t);
+    } });
+    eq(bad, [], id + ' decor on matching ground');
+    bad = [];
+    for (const n of d.npcs || []) {
+      const below = d.decor[n.y + 1] && L[d.decor[n.y + 1][n.x]];
+      if (below && (DB.decor[below] || {}).tall) bad.push(n.id);
+    }
+    eq(bad, [], id + ' no NPC hidden by a tall decor');
+  }
   ok(v3.events.some((e) => e.id === 'ash_volcano_3_fine' && e.once === 'ash_fine'), '3F Fine step band once ash_fine');
   eq(v3.tilePatches, [{ cond: { var: 'ash_murals', gte: 3 }, x: 20, y: 19, ch: '.' }], '3F rock door tilePatch');
   eq(compile('ash_volcano_3').tileAt(20, 19), 'rock_door', '3F rock door is a closed tile');
@@ -365,6 +385,12 @@ async function testPlay() {
   await run('ash_volcano_3_fine', 'step', 'ash_fine');
   ok(g().flags.ash_fine, '#7 ash_fine');
   ok(!R.Field.npc('fine').present, '#7 Fine is gone');
+  // coming back before the boss: Fine stands there again (cond !ash_boss) and talking to her only closes
+  ok(await go(R.Field.warp('ash_volcano_3', 'from_prev')), '#7 re-enter the crater floor');
+  ok(R.Field.npc('fine').present, '#7 Fine is back on re-entry (cond !ash_boss)');
+  mark = sayLog.length; await run('ash_volcano_3_fine', 'talk');
+  ok(!said(/燃え尽きること/, mark) && sayLog.length > mark, '#7 a second talk says only the closing line');
+  ok(!R.Field.npc('fine').present, '#7 Fine is gone again');
   S.battleScript = ['win'];
   S.battles.length = 0;
   S.jingles.length = 0;

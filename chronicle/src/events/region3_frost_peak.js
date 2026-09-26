@@ -68,7 +68,7 @@
     meta: { needs: ['item:k_winter_flame'], gives: ['flag:snow_fine'], calls: ['story_fine_snow'] },
     run: async (ev) => {
       if (ev.flag('snow_fine') || ev.flag('snow_boss')) return;
-      if (has('story_fine_snow')) { await ev.call('story_fine_snow'); return; }
+      if (has('story_fine_snow')) { await ev.call('story_fine_snow'); ev.setFlag('snow_fine'); return; }
       const f = ev.npc('fine');
       await ev.wait(12);
       f.face('player');
@@ -83,6 +83,7 @@
       ev.sfx('magic');
       await ev.flash('#e8ecff', 10);
       f.hide();
+      ev.setFlag('snow_fine');
     },
   };
 

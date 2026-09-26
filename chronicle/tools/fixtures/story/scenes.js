@@ -25,9 +25,9 @@
   }
   const run = (id, ctx) => R.Events.run(id, Object.assign({ trigger: 'step', self: id }, ctx || {}));
   const SC = {
-    async after(t) {
+    async after(t, town) {
       t = +t || 1;
-      await setup({ tier: t, flags: ST(t - 1).concat(t === 8 ? ['st_t7'] : []), map: 'lute', at: 'inn' });
+      await setup({ tier: t, flags: ST(t - 1).concat(t === 8 ? ['st_t7'] : []), map: town || 'lute', at: 'inn' });
       R.Game.regionsCleared.length = t; R.Game.tier = t;
       run('story_after_clear');
     },

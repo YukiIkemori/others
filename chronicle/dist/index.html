@@ -49438,13 +49438,15 @@ try{
 //   歌の石 1 (verda_maze_1_stone) at the north edge of the central glade. 木こりダン waits in the
 //   narrows on the way north (verda_maze_1_dan; he blocks the one-cell gap until spoken to).
 //   The way up is at the top right (→ verda_maze_2 from_prev). p_rare in the dead end west of
-//   the stone's glade (§8.12.4: the floor before the boss floor).
+//   the stone's glade (§8.12.4: the floor before the boss floor). Two trails end in mist that moves the party
+//   elsewhere (verda_maze_twist: 「森が道を変える」; it stops once the region is cleared); so does the obvious
+//   way north from the east glade: the true way winds through the west glades.
 // verda_maze_2 (48×42) — 歌の石 2 (stone_a) in the first big glade; the moth's glade in the
 //   middle (休息の灯 in a nook on the way, the band verda_maze_2_boss at its mouth; ダストウィング
 //   blocks the one-cell way north until beaten); 歌の石 3 (stone_b) beyond it; the つるの壁 at the
 //   east end of that glade opens when forest_verses ≥ 3 (tilePatch). Behind it, the hollow in the
 //   great trunk of 千年樹 is the way into elder_tree_1 (entrance). The dead-end trail north of the
-//   west glade hides a secret passage (§10.6.4: p_gear + 語り部の書き付け).
+//   west glade hides a secret passage (§10.6.4: p_gear + 語り部の書き付け). Two more twisting trails.
 //
 // Contracts: spawns entrance (1F) · from_prev · from_next (2F: back from 千年樹), escape → world
 // verda_maze_1, location 'verda_maze', NPC ids dan (1F) · boss · rest (2F).
@@ -49462,25 +49464,25 @@ try{
     rows: [
       '#######################################..#######',
       '#######################################..#######',
-      '#######################################..#######',
-      '#####....#..###########################..#######',
-      '###.........###########################..#######',
+      '###################..##################..#######',
+      '#####....#..#######..##################..#######',
+      '###.........#######..##################..#######',
       '###...........#####..#....#############.########',
-      '###...........###.........#############..#######',
-      '####.........####...........###########..#######',
-      '#######..#####.......##...........##.........###',
-      '#######..#####...............................###',
+      '###............##.........#############..#######',
+      '####.........#.##...........###########..#######',
+      '#######..####........##...........##.........###',
+      '#######..####................................###',
       '#######..########...........######............##',
       '#######..##########.........######............##',
-      '#######..################..#######............##',
-      '####......###############..##########.......####',
-      '####......###############..##############..#####',
-      '###........####..########..##############..#####',
-      '###..............########..##############..#####',
-      '###..............########..##############..#####',
-      '####.....######..########..##############..#####',
-      '####..##############.Q......#############..#####',
-      '####..####...####.............###########..#####',
+      '#######..#########################............##',
+      '####......###########################.......####',
+      '####......######################################',
+      '###........####..################..#############',
+      '###..............################..#############',
+      '###..............################..######..#####',
+      '####.....######..################..######..#####',
+      '####..##############.Q......#####..######..#####',
+      '####..####...####.............###..######..#####',
       '####..####...####.....##...................#####',
       '####..####............##...................#####',
       '####..####....................###########..#####',
@@ -49504,7 +49506,7 @@ try{
     decor: [
       '................................................',
       '................................................',
-      '................................................',
+      '...................**...........................',
       '................................................',
       '.......f........................................',
       '.....l.....*....................................',
@@ -49517,9 +49519,9 @@ try{
       '......................................f.........',
       '................................................',
       '................................................',
-      '....h...*.......................................',
+      '....h...*........................**.............',
       '.....l..........................................',
-      '.........f......................................',
+      '.........f...............................**.....',
       '................................................',
       '................................................',
       '.........................................l......',
@@ -49566,6 +49568,10 @@ try{
     ],
     events: [
       K.exam('verda_maze_1_stone', 21, 19),
+      // the forest twists its paths (§10.8.2 事件): two trails end in mist that moves the party (until the clear)
+      ...K.band('verda_maze_twist', 19, 2, 20, 2, { cond: K.C.before, to: { x: 23, y: 35, dir: 'up', back: true } }),
+      ...K.band('verda_maze_twist', 33, 15, 34, 15, { cond: K.C.before, to: { x: 6, y: 32, dir: 'right' } }),
+      ...K.band('verda_maze_twist', 41, 17, 42, 17, { cond: K.C.before, to: { x: 24, y: 35, dir: 'up', back: true } }),
     ],
     signs: [
       K.sign(22, 32, '道しるべの矢が、くるくると\n回っている……。\nどちらへ行けばいいのだろう。'),
@@ -49606,16 +49612,16 @@ try{
       '#####.......########..##........######........##',
       '#####.......########..##..........####...##...##',
       '###...........######..............####...##...##',
-      '###......##.................##................##',
-      '###......##.................##................##',
+      '###......##...######........##................##',
+      '###......##...######........##................##',
       '###...........##########..........####........##',
       '###.........############..........######......##',
       '######......############.........#######....####',
-      '#######..##################......###############',
-      '#######..#######################################',
-      '#######..#######################################',
-      '#######..#######################################',
-      '#######..#######################################',
+      '#######..##..##############......#######..######',
+      '#######..##..###########################..######',
+      '#######..##..###########################..######',
+      '#######..##..###########################..######',
+      '#######..##..###########################..######',
       '#######..#######################################',
       '#######..#######################################',
       '#######..#######################################',
@@ -49659,7 +49665,7 @@ try{
       '................................................',
       '................................................',
       '........l.......................................',
-      '................................................',
+      '...........**...........................**......',
       '................................................',
       '................................................',
       '................................................',
@@ -49696,6 +49702,8 @@ try{
       K.exam('verda_maze_2_vine', 35, 2, { cond: { var: 'forest_verses', lt: 3 } }),
       K.exam('verda_maze_2_vine', 35, 3, { cond: { var: 'forest_verses', lt: 3 } }),
       ...K.band('verda_maze_2_boss', 24, 16, 25, 16, { once: 'verda_maze_2_boss', cond: '!forest_mid' }),
+      ...K.band('verda_maze_twist', 40, 38, 41, 38, { cond: K.C.before, to: { x: 8, y: 37, dir: 'up', back: true } }),
+      ...K.band('verda_maze_twist', 11, 38, 12, 38, { cond: K.C.before, to: { x: 43, y: 26, dir: 'down' } }),
     ],
     signs: [
       // 語り部の書き付け (§10.6.4): a leaf of an old storyteller's notes, pinned to a post
@@ -50392,7 +50400,7 @@ try{
       '..@...........................................',
       '...........................................@..',
       '..............................................',
-      '......................zoo........z............',
+      '......................zoo........z......z.....',
       '..............................................',
       '........z.....................................',
       '..............................................',
@@ -50564,8 +50572,8 @@ try{
       K.sign(20, 2, [{ cond: 'desert_boss', text: '王の祭壇だ。砂の上に、\n小さく名前が書かれている。\n――ハザル。' }, { text: '王の祭壇だ。何も\n置かれていない。' }]),
     ],
     events: [
-      ...K.band('sand_tomb_3_fine', 15, 16, 24, 16, { once: 'desert_fine', cond: '!desert_boss' }),
-      ...K.band('sand_tomb_3_boss', 11, 9, 28, 9, { cond: '!desert_boss' }),
+      ...K.band('sand_tomb_3_fine', 14, 16, 25, 16, { once: 'desert_fine', cond: '!desert_boss' }),
+      ...K.band('sand_tomb_3_boss', 10, 9, 29, 9, { cond: '!desert_boss' }),
       K.exam('sand_tomb_3_door', 19, 11, { cond: SHUT }),
       K.exam('sand_tomb_3_door', 20, 11, { cond: SHUT }),
     ],
@@ -50844,6 +50852,7 @@ try{
   // ------------------------------------------------------------ 3F (the summit; boss floor: no lvOff, §10.6.2-9)
   const f3 = Object.assign(base('白竜の峰　頂', 'snow'), {
     outside: 'r',
+    weather: [{ cond: { notCleared: 'r_snow' }, kind: 'blizzard' }, { kind: 'snow' }], // request to field A4 (see yule)
     // @rows frost_peak_3
     rows: [
       '########################################',
@@ -51009,6 +51018,8 @@ try{
     exit: { to: 'world', spawn: 'yule' },
     onEnter: 'yule_enter',
     decorLegend: { '|': 'forge', ':': 'cradle' },
+    // falling snow while the blizzard lasts (a request to field A4: a map `weather` layer; ignored until then)
+    weather: [{ cond: { notCleared: 'r_snow' }, kind: 'blizzard' }, { kind: 'snow' }],
     // @rows yule
     rows: [
       'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT',
@@ -52458,10 +52469,12 @@ try{
 
   // ------------------------------------------------------------ colour wash (night / dawn scenes)
   // A plain layer drawn over the field (and under the message windows and captions pushed after it).
-  // K.tint('#101840', 0.45) → {fade(alpha, frames), close()}. Always close() it (the scripts use try/finally).
-  K.tint = function (color, alpha) {
+  // K.tint('#101840', 0.45[, 'soft-light']) → {fade(alpha, frames), set(a), color(c), close()}. The optional
+  // blend mode is a canvas globalCompositeOperation ('soft-light' warms a dawn without greying the sea).
+  // Always close() it (the scripts use try/finally).
+  K.tint = function (color, alpha, mode) {
     const E = R.Engine;
-    if (!E || !R.Layer || typeof document === 'undefined') return { fade: async () => {}, close() {}, set() {} };
+    if (!E || !R.Layer || typeof document === 'undefined') return { fade: async () => {}, close() {}, set() {}, color() {} };
     const L = new R.Layer();
     L.opaque = false;
     L.a = 0; L.to = alpha == null ? 0.4 : alpha; L.step = 0; L.color = color || '#101840';
@@ -52476,7 +52489,9 @@ try{
       if (this.a <= 0) return;
       const G = R.Gfx, c = G.ctx;
       c.globalAlpha = Math.min(1, this.a);
+      if (mode) c.globalCompositeOperation = mode;
       G.rect(0, 0, R.W, R.H, this.color);
+      c.globalCompositeOperation = 'source-over';
       c.globalAlpha = 1;
     };
     // sit directly above the field layer, so windows opened later stay on top
@@ -53658,7 +53673,7 @@ try{
 //
 // Contracts for other areas: map ids dovan, deep_mine_1..3; flags mine_start mine_mid mine_fine
 // mine_boss mine_door (the 七の層の岩戸 opened); var mine_rescued (0–3); key item k_oath_hammer;
-// objectives obj_mine_1 obj_mine_2 (registered in src/events/region6_story.js); the extra encounter
+// objectives obj_mine_1 obj_mine_2 (registered in src/events/region6_town.js); the extra encounter
 // zone z_r_mine_den (the rare-monster den behind the secret passage on deep_mine_2).
 (function (R) {
   'use strict';
@@ -54727,7 +54742,7 @@ try{
       ], { dir: 'down', fixed: true }),
 
       // --- 広場と温泉
-      K.talk('statue_man', 'old_man', 31, 21, [
+      K.talk('statue_man', 'old_man', 32, 21, [
         { cond: C.clear, text: '石像の灰を、子どもらと\n払ってやったんじゃ。\nほれ、見違えたじゃろう。' },
         { text: 'この石像はな、百年前の\n祭りのあとに彫られたそうじゃ。\n火の鳥の姿を忘れんようにと。' },
       ], { dir: 'up', push: true }),
@@ -54871,7 +54886,7 @@ try{
       '#####################...######################',
     ],
     decor: [
-      '...........................,..................',
+      '..............................................',
       '........|.....................................',
       '..............................................',
       '.............,................................',
@@ -54894,7 +54909,7 @@ try{
       '........_.................._..................',
       '.................,............_...............',
       '...,..........................................',
-      '..............................................',
+      '...........................,..................',
       '......................_.......................',
       '...................................._.........',
       '..............................................',
@@ -54960,7 +54975,7 @@ try{
       '################################################',
     ],
     decor: [
-      '.................................._.............',
+      '................................................',
       '........................|.......................',
       '................................................',
       '................................................',
@@ -54985,7 +55000,7 @@ try{
       '.................._......_......................',
       '.........,......................................',
       '..........................................._....',
-      '................................................',
+      '.................................._.............',
       '................................................',
       '................................................',
       '.............._.................................',
@@ -55097,7 +55112,7 @@ try{
     tilePatches: [{ cond: K.C.murals3, x: 20, y: 19, ch: '.' }],
     npcs: [
       K.npc('rest', 'obj:lantern', 18, 16, { event: 'common_rest', fixed: true }),
-      K.npc('fine', 'fine', 21, 15, { event: 'ash_volcano_3_fine', cond: ['!ash_boss', '!ash_fine'], fixed: true }),
+      K.npc('fine', 'fine', 21, 15, { event: 'ash_volcano_3_fine', cond: '!ash_boss', fixed: true }),
       K.npc('egg', 'obj:r7_egg', 21, 2, { cond: '!ash_boss', fixed: true, text: '灰をかぶった、大きな卵だ。\nさわると、かすかに温かい……。' }),
       K.npc('egg_open', 'obj:r7_egg_open', 21, 2, { cond: 'ash_boss', fixed: true, text: '割れた卵のからだ。\nまだ、ほんのりと温かい。' }),
       K.npc('firebird', 'obj:r7_firebird', 21, 5, { cond: 'ash_boss', fixed: true, text: [{ cond: 'final_open', text: '火の鳥が、北の空を\nじっと見つめている。' }, { text: '火の鳥が、赤い翼を広げて\n山を見守っている。' }] }),
@@ -57114,6 +57129,8 @@ try{
   const E = R.DB.events;
   const K = R.Oblivion || {};
   const BOSS = { noEscape: true };
+  // the floors are white paper: the default caption dim (0.6) leaves white text on light grey, so darken more
+  const CAP_DIM = 0.78;
 
   // ------------------------------------------------------------ arrivals (first visit of each floor)
   function arrival(id, title, pages) {
@@ -57123,7 +57140,7 @@ try{
         if (ev.flag(id)) return;
         ev.setFlag(id); // a floor's caption is shown once, even if the party leaves at once
         await ev.wait(16);
-        await ev.caption(title, { frames: 170 });
+        await ev.caption(title, { frames: 170, dim: CAP_DIM });
         for (const p of pages) await ev.say(p);
       },
     };
@@ -57275,7 +57292,7 @@ try{
     ev.sfx('quill');
     await ev.wait(30);
     ev.jingle('chapter');
-    await ev.caption('年代記に、外伝『円環の竜』が\n記された。', { frames: 220, highlight: '『円環の竜』' }); // gold title, as the chapter captions
+    await ev.caption('年代記に、外伝『円環の竜』が\n記された。', { frames: 220, dim: CAP_DIM, highlight: '『円環の竜』' }); // gold title, as the chapter captions
     ev.sfx('page');
     R.Game.title = TITLE;
     ev.setFlag('pg_clear');
@@ -57884,6 +57901,7 @@ try{
 //   verda_maze_2_boss      #6 ダストウィング (tr_b_moth) → forest_mid
 //   verda_maze_2_stone_b   #7 歌の石 3; when the third verse is joined the vines untangle → obj_forest_3
 //   verda_maze_2_vine      the つるの壁 (examine while closed)
+//   verda_maze_twist       trails that end in mist move the party (「森が道を変える」), until the clear
 //   elder_tree_2_fine      #9 the girl in grey → the story's story_fine_forest (once forest_fine)
 //   elder_tree_2_boss      #9–#10 根食らい (tr_b_rooteater) → the song → エルム → ev.clearRegion('r_forest')
 //                          → a night at the inn in fern → story_after_clear (§10.8.0-3)
@@ -58069,6 +58087,26 @@ try{
       await ev.say(ev.var('forest_verses') > 0
         ? '千年樹の歌がそろえば、\nほどけるかもしれない……。'
         : 'つるの向こうに、とてつもなく\n大きな木の幹が見える。');
+    },
+  };
+
+  // ------------------------------------------------------------ the twisting paths of the maze (until the clear)
+  // A step event at the end of a trail; the destination is on the map's event object: {to:{x, y, dir, back}}.
+  E.verda_maze_twist = {
+    meta: { needs: [], gives: [] },
+    run: async (ev) => {
+      const m = R.Field && R.Field.map;
+      const c = ev.ctx || {};
+      const e = m && m.events.find((q) => q.id === 'verda_maze_twist' && q.x === c.x && q.y === c.y);
+      if (!e || !e.to || ev.cleared(REGION)) return;
+      await ev.say('キノコの輪を踏んだとたん、\n足元から白い霧が\nわき上がった……。');
+      ev.closeMessage();
+      ev.sfx('wind');
+      await ev.fadeOut(24);
+      ev.player.setPos(e.to.x, e.to.y, e.to.dir || 'down');
+      await ev.wait(12);
+      await ev.fadeIn(24);
+      await ev.say(e.to.back ? '気がつくと、元の道に\n戻されていた……。' : '気がつくと、見覚えのない\n場所に立っていた……。');
     },
   };
 
@@ -58623,7 +58661,7 @@ try{
     meta: { needs: ['item:k_winter_flame'], gives: ['flag:snow_fine'], calls: ['story_fine_snow'] },
     run: async (ev) => {
       if (ev.flag('snow_fine') || ev.flag('snow_boss')) return;
-      if (has('story_fine_snow')) { await ev.call('story_fine_snow'); return; }
+      if (has('story_fine_snow')) { await ev.call('story_fine_snow'); ev.setFlag('snow_fine'); return; }
       const f = ev.npc('fine');
       await ev.wait(12);
       f.face('player');
@@ -58638,6 +58676,7 @@ try{
       ev.sfx('magic');
       await ev.flash('#e8ecff', 10);
       f.hide();
+      ev.setFlag('snow_fine');
     },
   };
 
@@ -59313,8 +59352,8 @@ try{
   const pick = (ev, list) => { for (const e of list) if (e && ev.check(e.cond)) return e.text; return null; };
   const hasEvent = (id) => !!(R.DB.events[id]);
   /** a colour wash for the night / dawn scenes (closed in finally) */
-  const tint = (c, a) => (K && K.tint ? K.tint(c, a) : { fade: async () => {}, close() {}, set() {}, color() {} });
-  const NIGHT = '#0c1238', DAWN = '#ffb27a';
+  const tint = (c, a, m) => (K && K.tint ? K.tint(c, a, m) : { fade: async () => {}, close() {}, set() {}, color() {} });
+  const NIGHT = '#0c1238', DAWN = '#ff9448';
   /** a scene NPC present on this map (hidden ones included) */
   const npcOn = (ev, id) => !!(R.Field && R.Field.npc && R.Field.npc(id));
   /** clear the pier for a scene: Marina's cottage figure and the angler step aside */
@@ -59534,12 +59573,16 @@ try{
   E.ghost_ship_1_arrival = {
     meta: { needs: [], gives: [] },
     run: async (ev) => {
-      if (ev.flag('isles_deck')) return;
-      ev.setFlag('isles_deck');
       if (ev.cleared(RS)) {
+        // the first visit after the clear: the ship is only an old wreck now
+        if (ev.flag('isles_deck_after')) return;
+        ev.setFlag('isles_deck_after');
+        await ev.wait(16);
         await ev.say('船は静まり返っている。\n青白い灯は、もう\nどこにもともっていない。');
         return;
       }
+      if (ev.flag('isles_deck')) return;
+      ev.setFlag('isles_deck');
       await ev.wait(16);
       await ev.say('ぎしり、と甲板がきしんだ。\n破れた帆が、風もないのに\nゆれている……。');
       await ev.say('船のどこかから、\n途切れ途切れの舟歌が\n聞こえてくる。');
@@ -59619,7 +59662,7 @@ try{
       await ev.fadeOut(40);
       // dawn at the pier (§10.8.6 #8)
       await ev.warp('nerei', 'pier', { fade: false, dir: 'right' });
-      const dawn = tint(DAWN, 0.28);
+      const dawn = tint(DAWN, 0.55, 'soft-light');
       try {
         clearPier(ev);
         const m = ev.npc('marina_pier'), gl = ev.npc('glen_pier');
@@ -59636,7 +59679,7 @@ try{
         await ev.say('ただいま、マリナ。');
         ev.closeMessage();
         await ev.wait(40);
-        await dawn.fade(0.45, 60);
+        await dawn.fade(0.95, 60);
         ev.sfx('light');
         await ev.flash('#fff4e0', 20);
         gl.hide();
@@ -59646,7 +59689,7 @@ try{
         await ev.say('船長の姿は、朝日の中へ\n溶けるように消えていった。');
         await ev.say('あとには、岩場に乗り上げた\n古い船だけが残された。');
         ev.closeMessage();
-        await dawn.fade(0.12, 40);
+        await dawn.fade(0.3, 40);
         m.face('down');
         await ev.say('……ありがとう。\nあの人は、やっと帰ってきた。');
         ev.closeMessage();
@@ -59933,6 +59976,15 @@ try{
     run: async (ev) => {
       if (ev.flag('mine_start')) return;
       if (ev.map !== 'dovan') return;
+      // the party may reach the mine without passing through the town (the dungeon is on the world
+      // map): after the clear (the boss event warps here) Borg is simply in his office
+      if (ev.cleared('r_mine') || ev.flag('mine_boss')) {
+        ev.setFlag('mine_start');
+        ev.refresh();
+        return;
+      }
+      const n = ev.var('mine_rescued') | 0;
+      const hammer = ev.flag('deep_mine_2_pip') || ev.has('k_oath_hammer');
       const b = ev.npc('borg_gate');
       if (b.visible && (Math.abs(b.x - ev.player.x) + Math.abs(b.y - ev.player.y)) > 4) {
         const s = spotNearPlayer(ev);
@@ -59945,9 +59997,17 @@ try{
       b.face('player');
       await ev.say('鉱山長のボルグだ。\nよそ者に頼むのも情けねえが、\n話を聞いてくれ。');
       await ev.say('坑道の奥で、\n鉄の化け物が暴れてる。');
-      await ev.say('若いのが三人、\n閉じ込められたままだ。');
-      await ev.say('おれたちのつるはしじゃ、\nあの化け物には歯が立たねえ。');
-      await ev.say('深き坑道は、町の北東の山だ。\nどうか、あいつらを……頼む。');
+      if (n === 0) {
+        await ev.say('若いのが三人、\n閉じ込められたままだ。');
+        await ev.say('おれたちのつるはしじゃ、\nあの化け物には歯が立たねえ。');
+        await ev.say('深き坑道は、町の北東の山だ。\nどうか、あいつらを……頼む。');
+      } else {
+        // the party went to the mine first: the rescued ones already told him
+        await ev.say('若いのが三人、\n閉じ込められちまってな。');
+        await ev.say('……いや、待て。帰ってきた\n連中が言ってた旅の人ってのは、\nあんたのことか！');
+        if (n < 3) await ev.say('あと' + NUM[3 - n] + '人、坑道の奥に\n残ってる。\nどうか、頼む……。');
+        if (hammer) await ev.say('ピップのやつを助けたのも、\nあんたか。あいつのハンマーが\nあれば、七の層の岩戸が開く。');
+      }
       await ev.say('おれは鉱山事務所にいる。\n何かあったら、寄ってくれ。');
       ev.closeMessage();
       if (b.visible) {
@@ -59955,7 +60015,8 @@ try{
         b.hide();
       }
       ev.setFlag('mine_start');
-      ev.setObjective('obj_mine_1', { region: 'r_mine' });
+      // never step the objective back once Pip has handed over the hammer (obj_mine_2)
+      if (!hammer) ev.setObjective('obj_mine_1', { region: 'r_mine' });
       ev.refresh();
     },
   };
@@ -59984,8 +60045,10 @@ try{
       }
       const n = ev.var('mine_rescued') | 0;
       if (n >= 1) {
-        await ev.say('若いのを、' + NUM[Math.min(n, 3)] + '人も助けてくれた\nそうだな。礼を言う。');
+        await ev.say(n === 1 ? '若いのを一人、助けてくれた\nそうだな。礼を言う。' : '若いのを' + NUM[Math.min(n, 3)] + '人も、助けてくれた\nそうだな。礼を言う。');
         if (n < 3) await ev.say('あと' + NUM[3 - n] + '人だ。\nどうか、頼む……。');
+        // ロウェルの痕跡 (§10.8.7) stays reachable until the clear
+        await ev.say('記録院が、誓いの歌を\n写していった。\nそれからよ、うちの若いのが\n誰も歌わなくなったのは。');
         return;
       }
       await ev.say('坑道の奥に、若いのが三人。\n……全部、おれのせいだ。');
@@ -60031,7 +60094,7 @@ try{
         return;
       }
       await ev.say('昔はハンマーを振るうたびに、\n誓いの歌を歌ったもんさ。\n『七の層より下を掘るな』ってね。');
-      await ev.say('借金を返すために、\nボルグは七の層の下を\n掘らせたんだよ。');
+      await ev.say('借金を返すために、\nボルグは七の層の下を掘らせたんだよ。');
       await ev.say('あたしは止めたんだがね。\n……山には、山の約束が\nあるってのに。');
     },
   };
@@ -60285,20 +60348,25 @@ try{
   E.ash_volcano_3_fine = {
     meta: { needs: [], gives: ['flag:ash_fine'] },
     run: async (ev) => {
-      if (R.DB.events.story_fine_ash) await ev.call('story_fine_ash');
-      else {
-        // the story owner's script is not in this build: the region's line and the plain ending (§10.9.4)
-        const f = ev.npc('fine');
-        if (f.visible) f.face('player');
-        const who = ev.flag('st_t3') ? 'フィーネ' : '少女';
-        await ev.say(who + '「燃え尽きることと、\n忘れられることは、違うわ。」');
-        await ev.say(who + '「……気をつけて。」');
-        ev.closeMessage();
-        ev.sfx('magic');
-        await ev.flash('#e8ecff', 10);
-      }
+      if (ev.flag('ash_boss')) return;
+      if (R.DB.events.story_fine_ash) { await ev.call('story_fine_ash'); return; }
+      // Fallback while the story owner's script is missing from a build: §10.9.4 as written. Only one
+      // fixed character speaks, so no speaker name or brackets (STYLE_JA §5).
       const f = ev.npc('fine');
+      const again = ev.flag('ash_fine');
+      if (f.visible) f.face('player');
+      await ev.wait(12);
+      const t = Math.min(7, ev.tier());
+      const close = t >= 6 ? '……もう、あまり時間がないの。' : t >= 3 ? 'わたしのことは気にしないで。\n先へ進みなさい。' : '……気をつけて。';
+      if (!again) await ev.say('燃え尽きることと、\n忘れられることは、違うわ。');
+      await ev.say(close);
+      ev.closeMessage();
+      if (t >= 3 && !again) await ev.caption('フィーネの足元が、\n透けて見えた。');
+      ev.sfx('magic');
+      await ev.flash('#e8ecff', 10);
       if (f.visible) f.hide();
+      ev.setFlag('ash_fine');
+      await ev.wait(20);
     },
   };
 
@@ -60360,7 +60428,9 @@ try{
       ev.heal();
       await ev.warp('caldera', 'inn', { fade: false });
       if (R.DB.events.story_after_clear) await ev.call('story_after_clear');
-      else await ev.fadeIn(30);
+      // story_after_clear plays nothing when this tier's scene has already run: never leave the screen dark
+      if (R.Engine.fadeAlpha > 0) await ev.fadeIn(30);
+      ev.bgm();
     },
   };
 })(window.RPG);
@@ -77674,16 +77744,6 @@ try{
         g.rect(s.x, s.y, 1, 1, s.c);
         if (s.big && k > 0.7) { g.ctx.globalAlpha = (k - 0.7) * 2.5; g.rect(s.x - 1, s.y, 3, 1, s.c); g.rect(s.x, s.y - 1, 1, 3, s.c); g.ctx.globalAlpha = 1; }
       }
-      // the ring of stars (the sleeping dragon), turning very slowly
-      for (let i = 0; i < RING.n; i++) {
-        const a = (i / RING.n) * Math.PI * 2 + t * 0.0008;
-        const x = Math.round(RING.x + Math.cos(a) * RING.r), y = Math.round(RING.y + Math.sin(a) * RING.r * 0.9);
-        const k = 0.6 + 0.4 * Math.sin(t * 0.04 + i * 1.7);
-        g.ctx.globalAlpha = k;
-        g.rect(x, y, 1, 1, '#fff4d0');
-        if (i % 3 === 0) { g.ctx.globalAlpha = k * 0.6; g.rect(x - 1, y, 3, 1, '#ffe8a8'); g.rect(x, y - 1, 1, 3, '#ffe8a8'); }
-      }
-      g.ctx.globalAlpha = 1;
       if (this.shoot) {
         const sh = this.shoot;
         for (let i = 0; i < 8; i++) {
@@ -77695,6 +77755,16 @@ try{
         g.ctx.globalAlpha = 1;
       }
       g.draw(this.aurora.canvas, 0, 0);
+      // the ring of stars (the sleeping dragon), turning very slowly
+      for (let i = 0; i < RING.n; i++) {
+        const a = (i / RING.n) * Math.PI * 2 + t * 0.0008;
+        const x = Math.round(RING.x + Math.cos(a) * RING.r), y = Math.round(RING.y + Math.sin(a) * RING.r * 0.9);
+        const k = 0.6 + 0.4 * Math.sin(t * 0.04 + i * 1.7);
+        g.ctx.globalAlpha = k;
+        g.rect(x, y, 1, 1, '#fffbe8');
+        if (i % 2 === 0) { g.ctx.globalAlpha = k * 0.6; g.rect(x - 1, y, 3, 1, '#ffe8a8'); g.rect(x, y - 1, 1, 3, '#ffe8a8'); }
+      }
+      g.ctx.globalAlpha = 1;
       g.draw(this.sea, 0, 0);
       // the aurora and the town lights mirrored on the sea as shimmering streaks
       for (let y = HORIZON + 2; y < H; y += 2) {

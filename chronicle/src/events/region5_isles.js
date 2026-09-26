@@ -35,8 +35,8 @@
   const pick = (ev, list) => { for (const e of list) if (e && ev.check(e.cond)) return e.text; return null; };
   const hasEvent = (id) => !!(R.DB.events[id]);
   /** a colour wash for the night / dawn scenes (closed in finally) */
-  const tint = (c, a) => (K && K.tint ? K.tint(c, a) : { fade: async () => {}, close() {}, set() {}, color() {} });
-  const NIGHT = '#0c1238', DAWN = '#ffb27a';
+  const tint = (c, a, m) => (K && K.tint ? K.tint(c, a, m) : { fade: async () => {}, close() {}, set() {}, color() {} });
+  const NIGHT = '#0c1238', DAWN = '#ff9448';
   /** a scene NPC present on this map (hidden ones included) */
   const npcOn = (ev, id) => !!(R.Field && R.Field.npc && R.Field.npc(id));
   /** clear the pier for a scene: Marina's cottage figure and the angler step aside */
@@ -256,12 +256,16 @@
   E.ghost_ship_1_arrival = {
     meta: { needs: [], gives: [] },
     run: async (ev) => {
-      if (ev.flag('isles_deck')) return;
-      ev.setFlag('isles_deck');
       if (ev.cleared(RS)) {
+        // the first visit after the clear: the ship is only an old wreck now
+        if (ev.flag('isles_deck_after')) return;
+        ev.setFlag('isles_deck_after');
+        await ev.wait(16);
         await ev.say('船は静まり返っている。\n青白い灯は、もう\nどこにもともっていない。');
         return;
       }
+      if (ev.flag('isles_deck')) return;
+      ev.setFlag('isles_deck');
       await ev.wait(16);
       await ev.say('ぎしり、と甲板がきしんだ。\n破れた帆が、風もないのに\nゆれている……。');
       await ev.say('船のどこかから、\n途切れ途切れの舟歌が\n聞こえてくる。');
@@ -341,7 +345,7 @@
       await ev.fadeOut(40);
       // dawn at the pier (§10.8.6 #8)
       await ev.warp('nerei', 'pier', { fade: false, dir: 'right' });
-      const dawn = tint(DAWN, 0.28);
+      const dawn = tint(DAWN, 0.55, 'soft-light');
       try {
         clearPier(ev);
         const m = ev.npc('marina_pier'), gl = ev.npc('glen_pier');
@@ -358,7 +362,7 @@
         await ev.say('ただいま、マリナ。');
         ev.closeMessage();
         await ev.wait(40);
-        await dawn.fade(0.45, 60);
+        await dawn.fade(0.95, 60);
         ev.sfx('light');
         await ev.flash('#fff4e0', 20);
         gl.hide();
@@ -368,7 +372,7 @@
         await ev.say('船長の姿は、朝日の中へ\n溶けるように消えていった。');
         await ev.say('あとには、岩場に乗り上げた\n古い船だけが残された。');
         ev.closeMessage();
-        await dawn.fade(0.12, 40);
+        await dawn.fade(0.3, 40);
         m.face('down');
         await ev.say('……ありがとう。\nあの人は、やっと帰ってきた。');
         ev.closeMessage();

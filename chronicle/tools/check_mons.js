@@ -588,7 +588,7 @@ function writeData() {
   return written;
 }
 
-module.exports = { parseDesign, expected, derivedFrom, writeData, loadTuning, TUNING_FILE, srTier, band, evaRule, check, stable, norm, TUNED, GOLD_NAMES, RACE, ELEM, PHYS, STAT, SKEYS,
+module.exports = { parseDesign, expected, derivedFrom, midTier, writeData, loadTuning, TUNING_FILE, srTier, band, evaRule, check, stable, norm, TUNED, GOLD_NAMES, RACE, ELEM, PHYS, STAT, SKEYS,
   SIZE_W, SIZE_PX, resolveRef, zoneTiers, eligibleGroups, groupStrength, isMetalGroup, zoneStrength, perBattle };
 
 if (require.main === module) {

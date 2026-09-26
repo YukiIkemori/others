@@ -44,6 +44,15 @@
     run: async (ev) => {
       if (ev.flag('mine_start')) return;
       if (ev.map !== 'dovan') return;
+      // the party may reach the mine without passing through the town (the dungeon is on the world
+      // map): after the clear (the boss event warps here) Borg is simply in his office
+      if (ev.cleared('r_mine') || ev.flag('mine_boss')) {
+        ev.setFlag('mine_start');
+        ev.refresh();
+        return;
+      }
+      const n = ev.var('mine_rescued') | 0;
+      const hammer = ev.flag('deep_mine_2_pip') || ev.has('k_oath_hammer');
       const b = ev.npc('borg_gate');
       if (b.visible && (Math.abs(b.x - ev.player.x) + Math.abs(b.y - ev.player.y)) > 4) {
         const s = spotNearPlayer(ev);
@@ -56,9 +65,17 @@
       b.face('player');
       await ev.say('鉱山長のボルグだ。\nよそ者に頼むのも情けねえが、\n話を聞いてくれ。');
       await ev.say('坑道の奥で、\n鉄の化け物が暴れてる。');
-      await ev.say('若いのが三人、\n閉じ込められたままだ。');
-      await ev.say('おれたちのつるはしじゃ、\nあの化け物には歯が立たねえ。');
-      await ev.say('深き坑道は、町の北東の山だ。\nどうか、あいつらを……頼む。');
+      if (n === 0) {
+        await ev.say('若いのが三人、\n閉じ込められたままだ。');
+        await ev.say('おれたちのつるはしじゃ、\nあの化け物には歯が立たねえ。');
+        await ev.say('深き坑道は、町の北東の山だ。\nどうか、あいつらを……頼む。');
+      } else {
+        // the party went to the mine first: the rescued ones already told him
+        await ev.say('若いのが三人、\n閉じ込められちまってな。');
+        await ev.say('……いや、待て。帰ってきた\n連中が言ってた旅の人ってのは、\nあんたのことか！');
+        if (n < 3) await ev.say('あと' + NUM[3 - n] + '人、坑道の奥に\n残ってる。\nどうか、頼む……。');
+        if (hammer) await ev.say('ピップのやつを助けたのも、\nあんたか。あいつのハンマーが\nあれば、七の層の岩戸が開く。');
+      }
       await ev.say('おれは鉱山事務所にいる。\n何かあったら、寄ってくれ。');
       ev.closeMessage();
       if (b.visible) {
@@ -66,7 +83,8 @@
         b.hide();
       }
       ev.setFlag('mine_start');
-      ev.setObjective('obj_mine_1', { region: 'r_mine' });
+      // never step the objective back once Pip has handed over the hammer (obj_mine_2)
+      if (!hammer) ev.setObjective('obj_mine_1', { region: 'r_mine' });
       ev.refresh();
     },
   };
@@ -95,8 +113,10 @@
       }
       const n = ev.var('mine_rescued') | 0;
       if (n >= 1) {
-        await ev.say('若いのを、' + NUM[Math.min(n, 3)] + '人も助けてくれた\nそうだな。礼を言う。');
+        await ev.say(n === 1 ? '若いのを一人、助けてくれた\nそうだな。礼を言う。' : '若いのを' + NUM[Math.min(n, 3)] + '人も、助けてくれた\nそうだな。礼を言う。');
         if (n < 3) await ev.say('あと' + NUM[3 - n] + '人だ。\nどうか、頼む……。');
+        // ロウェルの痕跡 (§10.8.7) stays reachable until the clear
+        await ev.say('記録院が、誓いの歌を\n写していった。\nそれからよ、うちの若いのが\n誰も歌わなくなったのは。');
         return;
       }
       await ev.say('坑道の奥に、若いのが三人。\n……全部、おれのせいだ。');
@@ -142,7 +162,7 @@
         return;
       }
       await ev.say('昔はハンマーを振るうたびに、\n誓いの歌を歌ったもんさ。\n『七の層より下を掘るな』ってね。');
-      await ev.say('借金を返すために、\nボルグは七の層の下を\n掘らせたんだよ。');
+      await ev.say('借金を返すために、\nボルグは七の層の下を掘らせたんだよ。');
       await ev.say('あたしは止めたんだがね。\n……山には、山の約束が\nあるってのに。');
     },
   };

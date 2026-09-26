@@ -125,8 +125,8 @@
   // ------------------------------------------------------------ in-game scenes
   const SC = {
     town:      { map: 'caldera', at: 'entrance' },
-    inn:       { map: 'caldera', at: 'inn' },
-    plaza:     { map: 'caldera', at: { x: 24, y: 24, dir: 'up' } },
+    inn:       { map: 'caldera', at: 'inn', flags: ['ash_start'] },
+    plaza:     { map: 'caldera', at: { x: 24, y: 24, dir: 'up' }, flags: ['ash_start'] },
     temple:    { map: 'caldera', at: { x: 24, y: 10, dir: 'up' }, flags: ['ash_start'] },
     spring:    { map: 'caldera', at: { x: 40, y: 27, dir: 'right' }, flags: ['ash_start'] },
     after:     { map: 'caldera', at: 'inn', flags: ['ash_start', 'ash_mid', 'ash_fine', 'ash_boss'], clear: true },
@@ -145,10 +145,11 @@
     for (const f of s.flags || []) R.State.setFlag(f, true);
     for (const k in s.vars || {}) R.State.setVar(k, s.vars[k]);
     if (s.clear) R.debug.clearRegion('r_ash');
-    if (o.zoom != null && R.Settings) R.Settings.fieldZoom = typeof o.zoom === 'number' ? ['normal', 'wide', 'wider'][o.zoom] : o.zoom;
     await R.debug.warp(s.map, s.at);
     R.Field.noEncounter = true;
     R.Field.refresh();
+    // field view 'normal' | 'wide' | 'wider' (or 0 | 1 | 2); set after the warp so nothing resets it
+    if (o.zoom != null) R.debug.zoom(typeof o.zoom === 'number' ? ['normal', 'wide', 'wider'][o.zoom] : o.zoom);
     return R.debug.pos();
   };
 })(window.RPG);

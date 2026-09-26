@@ -263,6 +263,7 @@
   // ------------------------------------------------------------ 3F (the summit; boss floor: no lvOff, §10.6.2-9)
   const f3 = Object.assign(base('白竜の峰　頂', 'snow'), {
     outside: 'r',
+    weather: [{ cond: { notCleared: 'r_snow' }, kind: 'blizzard' }, { kind: 'snow' }], // request to field A4 (see yule)
     // @rows frost_peak_3
     rows: [
       '########################################',

@@ -37,6 +37,8 @@
     exit: { to: 'world', spawn: 'yule' },
     onEnter: 'yule_enter',
     decorLegend: { '|': 'forge', ':': 'cradle' },
+    // falling snow while the blizzard lasts (a request to field A4: a map `weather` layer; ignored until then)
+    weather: [{ cond: { notCleared: 'r_snow' }, kind: 'blizzard' }, { kind: 'snow' }],
     // @rows yule
     rows: [
       'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT',

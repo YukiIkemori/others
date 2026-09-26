@@ -94,7 +94,7 @@ function fakeEv(o) {
   const npcs = {};
   const ev = {
     log, flags, vars,
-    async say(t) { log.say.push(String(t)); }, async caption(t) { log.caption.push(String(t)); },
+    async say(t) { log.say.push(String(t)); }, async caption(t, o) { log.caption.push(String(t)); (log.capOpts = log.capOpts || []).push(o || {}); },
     async yesno(t) { log.say.push(String(t)); log.yes++; return o.yes !== false; },
     async ask() { return 0; }, closeMessage() {}, async wait() {}, async shake() {}, async flash() {}, async fadeOut() { log.faded++; }, async fadeIn() {},
     sfx() {}, bgm() {}, jingle(id) { log.jingles.push(id); return Promise.resolve(); },
@@ -163,6 +163,7 @@ async function T3() {
   const o2 = await run('oblivion_5_ouroboros', { result: 'lose' });
   t('T3 dragon lose', o2.ret === false && !o2.flags.pg_clear && !o2.flags.pg_ouroboros && R.Game.title === '');
   const o3 = await run('oblivion_5_ouroboros', { flags: { pg_clear: true, pg_ouroboros: true } });
+  t('T3 side-story caption: gold title, darker dim on the paper floor', o1.log.capOpts.some((o) => o.highlight === '『円環の竜』' && o.dim > 0.6));
   t('T3 dragon rematch', o3.log.battles.length === 1 && o3.log.say.includes('もう一度挑みますか？') && o3.log.caption.length === 0);
   const o4 = await run('oblivion_5_ouroboros', { flags: { pg_ouroboros: true } });
   t('T3 dragon resume', o4.log.battles.length === 0 && o4.flags.pg_clear === true && o4.log.objective === 'obj_s_pg_clear');

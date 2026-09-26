@@ -719,13 +719,16 @@ function run(opts) {
       const raw = [];
       for (const ch in d.marks || {}) if (d.marks[ch].chest) raw.push({ where: `mark '${ch}'`, id: d.marks[ch].chest.id, n: (d.rows || []).join('').split(ch).length - 1 });
       for (const c of d.chests || []) raw.push({ where: `chest @${c.x},${c.y}`, id: c.id, n: 1 });
+      const inMap = {};
       for (const r of raw) {
+        if (r.id && inMap[r.id]) E(V, o, `map ${id}: duplicate chest id ${r.id} (${inMap[r.id]} and ${r.where})`);
+        if (r.id) inMap[r.id] = r.where;
         if (!r.id) E(V, o, `map ${id}: ${r.where} has no explicit chest id (§3.1.4)`);
         else if (!new RegExp(`^${id}_c\\d+$`).test(r.id)) E(V, o, `map ${id}: chest id '${r.id}' must be ${id}_c<n>`);
         if (r.id && r.n > 1) E(V, o, `map ${id}: chest mark '${r.id}' is used ${r.n} times (auto-numbered ids break saves)`);
       }
       for (const c of P2.chests) {
-        if (seen[c.id]) E(V, o, `map ${id}: duplicate chest id ${c.id} (also on ${seen[c.id]})`);
+        if (seen[c.id] && seen[c.id] !== id) E(V, o, `map ${id}: duplicate chest id ${c.id} (also on ${seen[c.id]})`);
         seen[c.id] = id;
       }
     }
@@ -1680,7 +1683,21 @@ function run(opts) {
     if (nMob && nMob !== 211) E(V, 'A11', `${nMob} mobs registered (§9.0: 211)`);
     if (nRare && nRare !== 23) E(V, 'A12', `${nRare} rare monsters (23)`);
     if (nBoss && nBoss !== 34) W(V, 'A12', `${nBoss} boss monsters (34 bodies)`);
-    if (!empty('rareEncounters') && Object.keys(DB.rareEncounters).length !== 23) E(V, 'A12', `${Object.keys(DB.rareEncounters).length} rare encounter zones (23)`);
+    if (!empty('rareEncounters')) {
+      // §9.7.3: the 23 zones and their rare monster are fixed; a rare monster may also appear in an extra zone (warning)
+      const RARE_ZONES = { zw_prologue: 'rm_jewel_hare', zw_forest: 'rm_bloom_fawn', z_r_forest_maze: 'rm_glass_moth', z_r_forest_tree: 'rm_acorn_prince',
+        zw_desert: 'rm_diamond_lizard', z_r_desert_tomb: 'rm_gold_idol', zw_snow: 'rm_aurora_bird', z_r_snow_peak: 'rm_icetail_fox', zw_marsh: 'rm_lotus_sprite',
+        z_r_marsh_manor: 'rm_ghost_teapot', z_r_marsh_bog: 'rm_bell_snail', zw_isles: 'rm_star_whale', z_r_isles_ship: 'rm_treasure_crab', zw_mine: 'rm_gem_hedgehog',
+        z_r_mine_mine: 'rm_prisma', zw_ash: 'rm_spa_monkey', z_r_ash_volcano: 'rm_volcano_turtle', zw_star: 'rm_moon_sheep', z_r_star_tower: 'rm_clock_bird',
+        z_finale_archive_lo: 'rm_bookworm', z_finale_archive_hi: 'rm_golden_quill', z_postgame_oblivion_lo: 'rm_memory_fish', z_postgame_oblivion_hi: 'rm_dream_tapir' };
+      for (const [z, m] of Object.entries(RARE_ZONES)) {
+        const r = DB.rareEncounters[z];
+        if (!r) E(V, 'A12', `rareEncounters.${z} (§9.7.3: ${m}) is missing`);
+        else if (r.mon !== m) E(V, 'A12', `rareEncounters.${z}: ${r.mon} (§9.7.3: ${m})`);
+      }
+      const extra = Object.keys(DB.rareEncounters).filter((z) => !RARE_ZONES[z]);
+      if (extra.length) W(V, 'A12', `${extra.length} rare encounter zone(s) beyond the 23 of §9.7.3: ${extra.map((z) => z + '→' + DB.rareEncounters[z].mon).join(' ')}`);
+    }
     if (techs.length && techs.length !== 121) E(V, 'A7', `${techs.length} techs (121)`);
     if (spells.length && spells.length !== 77) E(V, 'A8', `${spells.length} spells (77)`);
     if (!empty('statuses')) for (const s of [...C.BAD, ...C.GOOD]) if (!DB.statuses[s]) E(V, 'A8', `DB.statuses.${s} missing`);

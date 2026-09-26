@@ -97,7 +97,7 @@ function fromGame(R) {
       return all().some((c) => c && c.equip && Object.values(c.equip).includes(id));
     },
     tier: () => (G().tier != null ? G().tier : (G().regionsCleared || []).length),   // R.Game.tier (0–8)
-    cleared: (r) => (G().regionsCleared || []).includes(r) || !!(G().flags || {})['cleared_' + r],
+    cleared: (r) => (G().regionsCleared || []).includes(r),                    // the game reads regionsCleared only
     member: (id) => (G().party || []).some((c) => c && c.id === id),
     recruited: (id) => all().some((c) => c && c.id === id),
     gender: () => { const h = all().find((c) => c && c.id === 'hero'); return h ? h.gender : null; },

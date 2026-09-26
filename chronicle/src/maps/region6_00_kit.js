@@ -13,7 +13,7 @@
 //
 // Contracts for other areas: map ids dovan, deep_mine_1..3; flags mine_start mine_mid mine_fine
 // mine_boss mine_door (the 七の層の岩戸 opened); var mine_rescued (0–3); key item k_oath_hammer;
-// objectives obj_mine_1 obj_mine_2 (registered in src/events/region6_story.js); the extra encounter
+// objectives obj_mine_1 obj_mine_2 (registered in src/events/region6_town.js); the extra encounter
 // zone z_r_mine_den (the rare-monster den behind the secret passage on deep_mine_2).
 (function (R) {
   'use strict';

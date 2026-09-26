@@ -363,6 +363,20 @@ function testReach() {
     ok(note && r3.adj(note.x, note.y) && !r3n.adj(note.x, note.y), 'verda_maze_2: 語り部の書き付け beyond the secret passage');
     measure('verda_maze_2: steps from_prev → 千年樹', r3.d(tree.x, tree.y));
   }
+  // the twisting trails: reachable, and they land on reachable floor
+  for (const id of ['verda_maze_1', 'verda_maze_2']) {
+    const m = compileIn({ flags: ['forest_start', 'forest_dan', 'forest_mid'], vars: { forest_verses: 3 } }, id);
+    const s0 = sp(m, id === 'verda_maze_1' ? 'entrance' : 'from_prev');
+    const r = reach(m, s0.x, s0.y);
+    const tw = m.events.filter((q) => q.id === 'verda_maze_twist');
+    eq(tw.length, id === 'verda_maze_1' ? 6 : 4, id + ': twisting trails (2 cells each)');
+    for (const t of tw) {
+      ok(r.has(t.x, t.y), id + ': twist cell ' + t.x + ',' + t.y + ' is reachable');
+      ok(t.to && m.walkable(t.to.x, t.to.y) && r.has(t.to.x, t.to.y), id + ': twist ' + t.x + ',' + t.y + ' lands on reachable floor');
+      ok(t.cond && t.cond.notCleared === 'r_forest', id + ': twist stops after the clear');
+      ok(!m.warps.some((w) => w.x === t.x && w.y === t.y), id + ': no warp under a twist cell');
+    }
+  }
   // elder_tree_1: spiral, secret shortcut
   {
     const m = compileIn({ vars: { forest_verses: 3 } }, 'elder_tree_1');
@@ -496,6 +510,13 @@ async function testPlay() {
   ok(captioned(/眠れ森の主、千の年輪に/, cmark), '#3 the verse as a caption');
   await exam('verda_maze_1_stone');
   eq(g().vars.forest_verses, 1, '#3 reading stone 1 again adds nothing');
+  // the forest twists its paths
+  R.Field.setPlayerPos(19, 3, 'up');
+  mark = sayLog.length;
+  R.Events.run('verda_maze_twist', { trigger: 'step', self: 'verda_maze_twist', x: 19, y: 2 });
+  ok(await settle(), 'twist ends');
+  eq([R.Field.pos().x, R.Field.pos().y], [23, 35], 'a twisting trail sends the party back to the forest edge');
+  ok(said(/白い霧/, mark) && said(/元の道に/, mark), 'the twist\'s lines');
   mark = sayLog.length;
   await talk('dan');
   ok(g().flags.forest_dan && !R.Field.npc('dan').present, '#4 Dan: forest_dan, he goes home');
@@ -578,6 +599,10 @@ async function testPlay() {
   mark = sayLog.length;
   await talk('elm');
   ok(said(/もう閉ざさぬ/, mark), 'エルム\'s after-clear line');
+  // the forest keeps still after the clear
+  ok(await go(R.Field.warp('verda_maze_1', { x: 19, y: 3, dir: 'up' })), 'back to the maze');
+  eq(R.Field.map.eventsAt(19, 2, 'step').length, 0, 'the twisting trails are gone after the clear');
+  ok(await go(R.Field.warp('elder_tree_2', 'altar')), 'to the altar again');
   // the boss band never runs again
   S.battles.length = 0;
   R.Events.run('elder_tree_2_boss', { trigger: 'step' }); await settle();

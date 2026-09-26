@@ -230,6 +230,10 @@ function checkSpacing(text, bad) {
     if ('！？♪'.includes(prev)) continue;                                           // use (1)
     const segL = t.slice(0, i).split(/[\n\f　]/).pop(), segR = t.slice(i + 1).split(/[\n\f　]/)[0];
     const uiLike = (x) => /[0-9０-９+＋\-−×\/％%A-Za-zＡ-Ｚ：:★◆Lv]/.test(x) || width(x) <= 6;
+    // two kana-only words around the space (「おお　ゆうしゃよ」): DQ-style spacing even without 。、 — UI lists carry kanji,
+    // numbers or labels
+    const kanaOnly = (x) => /^[ぁ-ゖァ-ヺー]+$/.test(x);
+    if (kanaOnly(segL) && kanaOnly(segR) && (segL.length >= 2 || segR.length >= 2) && /^[ぁ-ゖー]+$/.test(segL + segR)) { bad('DQ-style word spacing (full-width space between hiragana words)'); return; }
     const sentence = /[。、]/.test(t);
     if (!sentence && (uiLike(segL) || uiLike(segR))) continue;                    // use (2): UI item lists
     if (!sentence && width(segL) <= 10 && width(segR) <= 10) continue;

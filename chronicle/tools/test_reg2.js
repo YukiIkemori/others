@@ -275,6 +275,26 @@ async function main() {
   fresh({ vars: { desert_letters: 3 } });
   s3 = walk('sand_tomb_3', spawn('sand_tomb_3', 'from_prev'), null, true);
   ok(adj(s3, b3.x, b3.y), '3F: the door opens with 3 letters');
+  // the step bands in front of the bosses and フィーネ span the whole way (no side column walks past)
+  const gated = (m, from, evId, target) => {
+    const P = FM[m], band = new Set(P.events.filter((e) => e.id === evId && e.trigger === 'step').map((e) => e.x + ',' + e.y));
+    const seen = new Set([from.x + ',' + from.y]); const q = [from];
+    const full = walk(m, from, null, true);
+    while (q.length) {
+      const c = q.shift();
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const key = (c.x + dx) + ',' + (c.y + dy);
+        if (!full.has(key) || seen.has(key) || band.has(key)) continue;
+        seen.add(key); q.push({ x: c.x + dx, y: c.y + dy });
+      }
+    }
+    return band.size > 0 && !adj(seen, target.x, target.y);
+  };
+  fresh({ flags: ['desert_mid'], vars: { desert_letters: 3 } });
+  ok(gated('sand_tomb_3', spawn('sand_tomb_3', 'from_prev'), 'sand_tomb_3_boss', b3), '3F: the king cannot be reached without crossing the boss band');
+  ok(gated('sand_tomb_3', spawn('sand_tomb_3', 'from_prev'), 'sand_tomb_3_fine', npc('sand_tomb_3', 'fine')), '3F: フィーネ cannot be reached without crossing her step band');
+  fresh();
+  ok(gated('sand_tomb_2', spawn('sand_tomb_2', 'from_prev'), 'sand_tomb_2_boss', b2), '2F: the worm cannot be reached without crossing its step band');
   // every map fully reachable from its arrival spawn (with the gates open)
   fresh({ flags: ['desert_mid'], vars: { desert_letters: 3 } });
   for (const [m, sp] of [['sand_tomb_1', 'entrance'], ['sand_tomb_2', 'from_prev'], ['sand_tomb_3', 'from_prev'], ['kasim', 'entrance']]) {

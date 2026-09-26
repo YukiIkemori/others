@@ -578,6 +578,54 @@ async function testPlay() {
       ok(said(re, mark) && captioned(/足元が、\n透けて見えた/, cm), 'Fine tier ' + t + ' ending + caption');
     }
   }
+  // ---- the town skipped: the dungeon is on the world map, so the party may go there first
+  ok(await go(R.debug.quickStart({ map: 'lute', spawn: 'inn', tier: 0 })), 'quickStart (town skipped)');
+  ok(await go(R.Field.warp('deep_mine_1', 'entrance')), 'skip: straight to deep_mine_1');
+  await talk('miner1');
+  eq(g().regionObj && g().regionObj.r_mine, 'obj_mine_1', 'skip: the first rescue sets obj_mine_1');
+  mark = sayLog.length;
+  ok(await go(R.Field.warp('dovan', 'entrance')), 'skip: then Dovan');
+  ok(g().flags.mine_start && said(/旅の人ってのは/, mark) && !said(/閉じ込められたままだ/, mark), 'skip: Borg knows a miner came home (no "still trapped" line)');
+  ok(said(/あと二人/, mark), 'skip: Borg counts the two left');
+  // a lost mid-boss fight: the event does not complete, the rock eater stays
+  ok(await go(R.Field.warp('deep_mine_2', 'from_prev')), 'skip: to deep_mine_2');
+  await talk('miner2');
+  S.battles.length = 0;
+  S.battleScript = ['lose'];
+  R.Field.setPlayerPos(47, 33, 'down');
+  await runStep('deep_mine_2_boss', 47, 33);
+  eq(S.battles.length, 1, 'lose: one battle');
+  ok(!g().flags.mine_mid, 'lose: no mine_mid after a lost fight');
+  for (const c of R.Game.party) { try { c.hp = R.Rules.stats(c).hp; } catch (e) { c.hp = 1; } }
+  ok(await go(R.Field.warp('deep_mine_2', 'from_prev')), 'lose: back to deep_mine_2');
+  ok(R.Field.npc('boss').present, 'lose: the rock eater is still there');
+  S.battleScript = ['win'];
+  R.Field.setPlayerPos(47, 33, 'down');
+  await runStep('deep_mine_2_boss', 47, 33);
+  ok(g().flags.mine_mid, 'win: mine_mid');
+  R.Field.setPlayerPos(46, 42, 'down');
+  await talk('pip');
+  eq(g().regionObj.r_mine, 'obj_mine_2', 'skip: objective obj_mine_2');
+  // Dovan was visited, so a second arrival changes nothing; a fresh game that never saw the town
+  // but cleared the mine lands at the inn without Borg's plea
+  g().flags.mine_start = false;
+  mark = sayLog.length;
+  ok(await go(R.Field.warp('dovan', 'entrance')), 'skip: Dovan with the hammer');
+  eq(g().regionObj.r_mine, 'obj_mine_2', 'skip: the intro does not step the objective back to obj_mine_1');
+  ok(said(/ピップのやつを助けたのも/, mark), 'skip: Borg knows about the hammer');
+  g().flags.mine_start = false;
+  ok(await go(R.Field.warp('deep_mine_3', 'from_prev')), 'skip: to deep_mine_3');
+  R.Field.setPlayerPos(24, 19, 'left');
+  await runExam('deep_mine_3_door', 23, 19);
+  R.Field.setPlayerPos(16, 10, 'up');
+  S.battleScript = ['win'];
+  mark = sayLog.length;
+  await runStep('deep_mine_3_boss', 16, 10);
+  ok(g().flags.mine_boss && R.Field.map.id === 'dovan', 'skip: cleared, at the Dovan inn');
+  await settle();
+  ok(!said(/おい、そこの旅の人/, mark), 'skip: no plea from Borg after the clear');
+  ok(g().flags.mine_start && R.Field.npc('borg').present, 'skip: Borg is in his office after the clear');
+
   measure('play: frames simulated', frames);
   measure('play: lines shown', sayLog.length);
   const own = warnings.concat([]).filter((w) => /dovan|deep_mine|region6/.test(w) && !/story_/.test(w));

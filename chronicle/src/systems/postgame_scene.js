@@ -406,16 +406,6 @@
         g.rect(s.x, s.y, 1, 1, s.c);
         if (s.big && k > 0.7) { g.ctx.globalAlpha = (k - 0.7) * 2.5; g.rect(s.x - 1, s.y, 3, 1, s.c); g.rect(s.x, s.y - 1, 1, 3, s.c); g.ctx.globalAlpha = 1; }
       }
-      // the ring of stars (the sleeping dragon), turning very slowly
-      for (let i = 0; i < RING.n; i++) {
-        const a = (i / RING.n) * Math.PI * 2 + t * 0.0008;
-        const x = Math.round(RING.x + Math.cos(a) * RING.r), y = Math.round(RING.y + Math.sin(a) * RING.r * 0.9);
-        const k = 0.6 + 0.4 * Math.sin(t * 0.04 + i * 1.7);
-        g.ctx.globalAlpha = k;
-        g.rect(x, y, 1, 1, '#fff4d0');
-        if (i % 3 === 0) { g.ctx.globalAlpha = k * 0.6; g.rect(x - 1, y, 3, 1, '#ffe8a8'); g.rect(x, y - 1, 1, 3, '#ffe8a8'); }
-      }
-      g.ctx.globalAlpha = 1;
       if (this.shoot) {
         const sh = this.shoot;
         for (let i = 0; i < 8; i++) {
@@ -427,6 +417,16 @@
         g.ctx.globalAlpha = 1;
       }
       g.draw(this.aurora.canvas, 0, 0);
+      // the ring of stars (the sleeping dragon), turning very slowly
+      for (let i = 0; i < RING.n; i++) {
+        const a = (i / RING.n) * Math.PI * 2 + t * 0.0008;
+        const x = Math.round(RING.x + Math.cos(a) * RING.r), y = Math.round(RING.y + Math.sin(a) * RING.r * 0.9);
+        const k = 0.6 + 0.4 * Math.sin(t * 0.04 + i * 1.7);
+        g.ctx.globalAlpha = k;
+        g.rect(x, y, 1, 1, '#fffbe8');
+        if (i % 2 === 0) { g.ctx.globalAlpha = k * 0.6; g.rect(x - 1, y, 3, 1, '#ffe8a8'); g.rect(x, y - 1, 1, 3, '#ffe8a8'); }
+      }
+      g.ctx.globalAlpha = 1;
       g.draw(this.sea, 0, 0);
       // the aurora and the town lights mirrored on the sea as shimmering streaks
       for (let y = HORIZON + 2; y < H; y += 2) {
