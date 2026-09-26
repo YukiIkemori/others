@@ -376,7 +376,22 @@
   "v_valzard_oblivion_03": "Faint reverence, defeat and memory, dying slow pace, fading raspy whisper."
  },
  "readings": {
-  "v_berna_roa_02": "おかえり。……よく、ここまで　かいたね。"
+  "v_berna_roa_02": "おかえり。……よく、ここまで　かいたね。",
+  "b_shigure_victory_1": "……たわいない。",
+  "b_sylvain_attack_1": "いぬく。",
+  "b_morga_spell_1": "くらき影よ、おいで。",
+  "b_dokka_attack_3": "くだけい！",
+  "b_dokka_spell_1": "大地よ、こたえい！",
+  "b_shigure_bigtech_2": "ひとたちで、足りる。",
+  "b_ilse_victory_1": "きちと出たわね。……ふわぁ、眠い。",
+  "b_boden_bigtech_1": "よんじゅうねんの腕、見せてやる！",
+  "b_ferno_bigtech_1": "えいゆうたんの一節を、君に！",
+  "b_hagen_spell_1": "がらじゃねえがな！",
+  "b_basil_spell_1": "いつくしみの光を！",
+  "b_sylvain_ko_1": "森へ……かえる……のか……",
+  "b_belladonna_bigtech_1": "特製のいっぷく、お代は結構！",
+  "b_bartolo_bigtech_2": "ろうこつの意地、見せてくれよう！",
+  "b_sylvain_bigtech_1": "ひゃくねんの弓、受けてみよ。"
  },
  "battle": {
   "_readme": [

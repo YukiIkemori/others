@@ -463,7 +463,32 @@ async function lyriaTests() {
   ok(spk.every((k) => C.speakers[k] && C.speakers[k].voice && C.speakers[k].profile), 'casting.json casts every fixed speaker', spk.filter((k) => !C.speakers[k]));
   const all = VT.allLines(C);
   const hero = all.filter((l) => l.hero);
-  ok(hero.length === 24 && hero.every((l) => /^v_hero_[mf]_(attack|glimmer|spell|hurt|ko|victory)_\d$/.test(l.id)), 'hero battle voices: 12 per gender, v_hero_<g>_<kind>_<n>', hero.length);
+  ok(hero.length === 28 && hero.every((l) => /^v_hero_[mf]_(attack|glimmer|bigtech|spell|hurt|ko|victory)_\d$/.test(l.id)), 'hero battle voices: 14 per gender (incl. bigtech 1–2), v_hero_<g>_<kind>_<n>', hero.length);
+  // companion battle voices (BRIEF A37): design/voice/battle_lines.csv + casting.json battle.cast
+  const BV = require('./battle_voice');
+  const blines = BV.loadLines(), comp20 = BV.companions();
+  const bprob = BV.check(blines, C, comp20);
+  ok(bprob.length === 0, 'battle_lines.csv: 20 companions × (attack 2–3, bigtech 1–2, spell, hurt 1–2, ko, victory), short, distinct lines and voices', bprob.slice(0, 5));
+  const bat = all.filter((l) => l.battle);
+  ok(bat.length === blines.length && bat.every((l) => /^b_[a-z]+_(attack|bigtech|spell|hurt|ko|victory)_\d$/.test(l.id) && comp20[l.battle]), 'voice_tts lists every companion battle line as b_<char>_<kind>_<n>', bat.length);
+  const bs = bat.find((l) => l.id === 'b_selma_attack_1');
+  const rbs = VT.requestBody(C, bs);
+  ok(bs.shout && rbs.generationConfig.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName === C.battle.cast.selma.voice && /## TRANSCRIPT\nはっ！$/.test(rbs.contents[0].parts[0].text) && /short battle shout/.test(rbs.contents[0].parts[0].text), 'TTS request: a battle shout uses the companion\'s battle voice and asks for a short burst');
+  const vdir = path.join(ROOT, 'assets', 'voice');
+  const bfiles = fs.existsSync(vdir) ? fs.readdirSync(vdir).filter((f) => /^b_/.test(f)) : [];
+  const bids = new Set(blines.map((l) => l.id));
+  ok(bfiles.every((f) => bids.has(f.replace(/\.(ogg|m4a|mp3|wav)$/, ''))), 'every assets/voice/b_*.ogg belongs to a battle line (no strays)', bfiles.filter((f) => !bids.has(f.replace(/\.\w+$/, ''))));
+  if (bfiles.length) {
+    const GA = require('./lib/gemini_audio');
+    const long = [];
+    for (const l of bat.filter((x) => x.shout)) {
+      const f = path.join(vdir, l.id + '.ogg');
+      if (!fs.existsSync(f)) continue;
+      const d = GA.decode(f, { rate: 24000, channels: 1 });
+      if (d.channels[0].length / d.rate > 1.7) long.push(l.id);
+    }
+    ok(!long.length, `battle shouts (attack / hurt) are ≤ ~1.6 s (${bfiles.length} battle files present)`, long);
+  }
   const rb = VT.requestBody(C, all.find((l) => l.id === 'v_fine_t1_01'));
   ok(rb.generationConfig.responseModalities[0] === 'AUDIO' && rb.generationConfig.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName === C.speakers.fine.voice && /## TRANSCRIPT\n一つ目……。あと、七つね。$/.test(rb.contents[0].parts[0].text), 'TTS request: prebuilt voice, profile + notes + transcript');
   const rh = VT.requestBody(C, hero[0]);

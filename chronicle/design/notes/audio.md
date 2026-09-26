@@ -474,7 +474,7 @@ The synth stays the default. Recorded files only *override* it when they exist; 
   golem / automaton / ghosts). 140 story lines + 24 hero battle clips (`v_hero_<m|f>_<kind>_<n>`).
   Male hero = custom voice Signature Voice; female hero = prebuilt `ja-jp-assistant-4` (the custom Echo voice
   sounded male). ≤ 3 lines use generateContent (100 req/day per model); `--batch` sends them through the Batch API.
-- **Hero battle voice**: `R.Audio.battleVoice(kind[, gender])`, kinds `attack glimmer spell hurt ko victory`; picks a
+- **Hero battle voice**: `R.Audio.battleVoice(kind[, gender])`, kinds `attack glimmer bigtech spell hurt ko victory` (companions: §13.2); picks a
   random clip for `R.State.hero().gender`, never the same twice in a row, own voice volume, no BGM duck.
 - **BGM**: `node tools/lyria_bgm.js` → `assets/bgm/<id>.ogg` (Vorbis 96 kbps, −18 LUFS) + `<id>.json` whose
   `loopStart/loopEnd` come from an automatic loop search (spectral self-similarity + onset phase + a baked
@@ -483,3 +483,47 @@ The synth stays the default. Recorded files only *override* it when they exist; 
 - **Build**: everything is embedded by default (all 32 BGM + 164 voice ≈ 28.6 MB → dist/index.html ≈ 44 MB, under the
   60 MB limit). If it grows past that: `node tools/build.js --bgm external` (serve dist/ over http).
 - **Listening page**: `node tools/audio_preview.js` → `design/audio_preview.html` (players for every file, loop-seam button).
+
+### 13.2 Battle voices — companions + hero (BRIEF A36 / A37, 2026-09-26)
+
+Short battle-only lines; no companion story (A36). Overrides A20 ("the hero does not speak in battle").
+
+**Files** (all in `assets/voice/`, Ogg Vorbis mono 24 kHz, trimmed, −16 LUFS, limiter −3 dBFS; shouts ≤ ~1.5 s):
+
+| who | id | kinds (n) |
+|---|---|---|
+| companion `<char>` = `R.DB.companions` id (selma … noela) | `b_<char>_<kind>_<n>` | `attack` 1–3, `bigtech` 1–2, `spell` 1, `hurt` 1–2, `ko` 1, `victory` 1 (10 per companion, 200 total) |
+| hero, `g` = `m`/`f` (hero gender) | `v_hero_<g>_<kind>_<n>` | `attack` 1–3, `glimmer` 1–2, `bigtech` 1–2 (new), `spell` 1–2, `hurt` 1–2, `ko` 1, `victory` 1–2 |
+
+Script: `design/voice/battle_lines.csv` (id,char,kind,text,direction) → `design/voice/battle_lines.md`; casting:
+`design/voice/casting.json` `battle.cast[<char>]` (voice, direction, profile, style, pitch). Check / rebuild the md and
+the listening page `design/battle_voice_preview.html`: `node tools/battle_voice.js` (`--check` for CI; test_media
+`lyria` group checks it too). Generate: `node tools/voice_tts.js --battle` (missing files only; Batch API, 2 takes,
+listening check; `--char selma`, `--only <id> --force`). Treat the set as open-ended: a missing kind/clip = silence.
+
+**Playback rules (A37 — for the v2 battle scene owner)**
+
+1. **Lookup**: pick a random clip among `<prefix><kind>_<n>` present in `R.Media.table().voice`, never the same clip
+   twice in a row per (speaker, kind). Prefix: companion `b_<char>_`, hero `v_hero_<g>_`. The current
+   `R.Audio.battleVoice(kind, gender)` does this for the hero only; generalise it to take a speaker key
+   (e.g. `battleVoice(kind, who)` with `who` = `'m'|'f'` or a companion id → prefix) — no data change needed.
+2. **Which kind when**:
+   - normal attack → `attack`, with probability **≈ 1/3** per action (roll per action; skip for enemies).
+   - big technique (tech / weapon skill) → `bigtech`, **always**.
+   - glimmer (閃き, learning a new tech mid-action) → **always**; hero: `glimmer`; companions: `bigtech` (they have no
+     separate glimmer clips). One voice per action: if the glimmer fires, do not also play the tech's `bigtech`.
+   - spell → `spell`, always (it is short; if it feels too frequent, use 1/2).
+   - taking damage → `hurt`; throttle per speaker (the current hero code uses `HURT_VOICE_GAP` frames); a multi-hit
+     or party-wide attack plays at most one `hurt` (the first living victim).
+   - knocked out → `ko`, always (it replaces a pending `hurt` of the same unit).
+   - battle won → `victory` from **one** survivor only: random among living party members who have clips
+     (hero included). Play it after the victory jingle starts (≈ 0.3–0.5 s in) so it is not masked.
+3. **One voice at a time**: never two speakers at once — a new battle voice stops the previous one (the current
+   `bv` handle in audio.js already does this; keep a single handle for hero + companions). Battle voices do not stop
+   a story line (`playVoice`) and do not duck the BGM.
+4. **Fast-forward (倍速)**: only the short shouts — `attack` and `hurt`. Skip `bigtech`/`glimmer`/`spell`/`ko`/
+   `victory` while fast-forward is on (the message would be gone before the line ends).
+5. **Setting** 「戦闘ボイス」: `あり` (default) / `大技だけ` / `なし`. `大技だけ` = only `bigtech`, `glimmer` and
+   `victory`; `なし` = none. Volume = the voice volume (`vol.voice`); voice volume 0 = silent regardless.
+6. Never throws, never waits: a missing clip, locked AudioContext or headless run is a silent no-op; battle timing
+   never depends on clip length.
