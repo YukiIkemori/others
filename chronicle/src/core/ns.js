@@ -8,7 +8,7 @@
 
   R.VERSION = '0.1.0';
   R.TITLE = 'ルミナス・クロニクル';
-  R.SUBTITLE = '〜八つの伝承〜'; // final wording: DESIGN.md §10
+  R.SUBTITLE = '〜八つの灯火〜'; // final wording: DESIGN.md §10
   R.COPYRIGHT = '© Studio Metem';
   R.PARTY_MAX = 4;
   R.W = 256; // logical screen width (SFC)

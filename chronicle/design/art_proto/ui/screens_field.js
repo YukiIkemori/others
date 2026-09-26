@@ -52,3 +52,81 @@
   };
   SCREENS.town_raw = async function (o) { const s = TOPDOWN.town(); G.fieldView(o, s, 32, 70, 240, 0); };
 })(window);
+(function (G) {
+  const { T } = K;
+  const ctx = K.ctx;
+  const SCREENS = G.SCREENS;
+  const U = (v) => K.U(v);
+
+  // ---- field HUD pieces (MODERN_UI.md §5.2)
+  function placeCard(x, y, name, sub, icons) {
+    K.diamond(x + 10, y + 14, 9, 'rgba(236,201,124,0.18)', 'rgba(236,201,124,0.85)', 1);
+    K.diamond(x + 10, y + 14, 4, T.c.gold, null);
+    K.text(name, x + U(28), y + U(20), { size: 19, w: 700, shadow: 'rgba(0,0,0,0.9)', blur: 6 });
+    const w = K.measure(name, 19, 700);
+    K.hline(x + U(24), x + U(40) + w + U(60), y + U(28), 0.45, '236,201,124');
+    if (sub) K.text(sub, x + U(28), y + U(44), { size: 11.5, c: T.c.text2, shadow: 'rgba(0,0,0,0.9)', blur: 4 });
+    if (icons) icons.forEach((ic, i) => { K.icon(ic, x + U(28) + i * U(20), y + U(52), U(14), T.c.text2); });
+  }
+  function leadCard(x, y, w, title, where, dir) {
+    K.panel(x, y, w, U(54), { a: 0.55, r: 10, blur: 8 });
+    K.icon('quest', x + U(10), y + U(10), U(16), T.c.gold);
+    K.text('手がかり', x + U(32), y + U(22), { size: 10, w: 700, c: T.c.gold, track: 1 });
+    K.text(title, x + U(32), y + U(40), { size: 13.5, w: 700 });
+    if (where) K.text(where, x + w - U(12), y + U(22), { size: 10, c: T.c.text3, align: 'right' });
+    if (dir != null) { // compass needle toward the pinned place
+      const cx = x + w - U(22), cy = y + U(36);
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(dir); ctx.beginPath(); ctx.moveTo(0, -U(8)); ctx.lineTo(U(4), U(4)); ctx.lineTo(0, U(1.5)); ctx.lineTo(-U(4), U(4)); ctx.closePath(); ctx.fillStyle = T.c.gold; ctx.fill(); ctx.restore();
+    }
+  }
+  function bubble(x, y, label, btn) {
+    const w = K.measure(label, 12, 700) + U(38), h = U(24);
+    ctx.save(); K.rr(x - w / 2, y - h, w, h, h / 2); ctx.fillStyle = 'rgba(14,16,28,0.82)'; ctx.fill(); ctx.strokeStyle = 'rgba(236,201,124,0.6)'; ctx.lineWidth = 0.75; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x - U(5), y); ctx.lineTo(x, y + U(6)); ctx.lineTo(x + U(5), y); ctx.closePath(); ctx.fillStyle = 'rgba(14,16,28,0.82)'; ctx.fill(); ctx.restore();
+    K.glyph(btn || 'a', x - w / 2 + U(14), y - h / 2, { size: 11 });
+    K.text(label, x - w / 2 + U(28), y - h / 2 + U(4.5), { size: 12, w: 700 });
+  }
+  function toast(x, y, icon, label) {
+    const w = K.measure(label, 11.5, 500) + U(40);
+    K.panel(x, y, w, U(28), { a: 0.6, r: 14, frost: false });
+    // a small spinning-emblem look for autosave
+    ctx.save(); ctx.strokeStyle = T.c.gold; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(x + U(15), y + U(14), U(6), -0.3, 4.2); ctx.stroke(); ctx.restore();
+    K.diamond(x + U(15), y + U(14), U(2.5), T.c.gold);
+    K.text(label, x + U(28), y + U(18.5), { size: 11.5, c: T.c.text2 });
+  }
+  function touchControls(W, H) {
+    // virtual stick (bottom-left), A/B (bottom-right), menu (top-right)
+    const sx = 96, sy = H - 150;
+    ctx.save(); ctx.beginPath(); ctx.arc(sx, sy, 62, 0, 7); ctx.fillStyle = 'rgba(12,14,24,0.35)'; ctx.fill(); ctx.strokeStyle = 'rgba(240,228,200,0.35)'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.beginPath(); ctx.arc(sx + 10, sy - 6, 26, 0, 7); ctx.fillStyle = 'rgba(240,228,200,0.25)'; ctx.fill(); ctx.restore();
+    const bx = W - 80, by = H - 170;
+    [['A', bx, by + 20, 40], ['B', bx - 86, by + 70, 32]].forEach(([l, x, y, r]) => { ctx.save(); ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fillStyle = 'rgba(12,14,24,0.45)'; ctx.fill(); ctx.strokeStyle = 'rgba(240,228,200,0.45)'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore(); K.text(l, x, y + 8, { size: 18, w: 700, c: 'rgba(245,238,224,0.85)', align: 'center' }); });
+    K.text('話す', bx, by + 20 + 60, { size: 10.5, c: T.c.text2, align: 'center' });
+    K.text('走る', bx - 86, by + 70 + 50, { size: 10.5, c: T.c.text2, align: 'center' });
+  }
+  function menuButton(x, y) {
+    ctx.save(); ctx.beginPath(); ctx.arc(x, y, 26, 0, 7); ctx.fillStyle = 'rgba(12,14,24,0.55)'; ctx.fill(); ctx.strokeStyle = 'rgba(240,228,200,0.4)'; ctx.lineWidth = 1.2; ctx.stroke();
+    ctx.fillStyle = T.c.text; [-7, 0, 7].forEach((d) => ctx.fillRect(x - 11, y + d - 1.2, 22, 2.4)); ctx.restore();
+  }
+  G.FIELD_HUD = { placeCard, leadCard, bubble, toast, touchControls, menuButton };
+
+  SCREENS.town = async function (o) {
+    const s = TOPDOWN.town();
+    const v = G.fieldView(o, s, 32, 70, 240, 0);
+    const toL = (tx, ty) => [(tx * 32 - v.vx), (ty * 32 - v.vy)];
+    if (!v.tall) {
+      placeCard(20, 18, '港町ファロス', '潮風と灯台の町', ['inn', 'shop', 'bag', 'journal']);
+      leadCard(700, 18, 244, '森で人が消える', '西・フェルン', -Math.PI / 2);
+      const [gx, gy] = toL(13.15, 11.7); bubble(gx, gy - 52, '話す');
+      toast(20, 494, 'save', 'オートセーブしました');
+      K.prompts([['y', 'メニュー'], ['x', '地図'], ['b', '走る']], 944, 518, { size: 11 });
+    } else {
+      placeCard(16, 16, '港町ファロス', '潮風と灯台の町', ['inn', 'shop', 'bag', 'journal']);
+      leadCard(16, 110, 330, '森で人が消える', '西・フェルン', -Math.PI / 2);
+      menuButton(v.W - 40, 44);
+      const [gx, gy] = toL(13.15, 11.7); bubble(gx, gy - 60, '話す');
+      toast(16, v.H - 300, 'save', 'オートセーブしました');
+      touchControls(v.W, v.H);
+    }
+  };
+})(window);

@@ -156,7 +156,7 @@ function rng(seed) { let s = seed >>> 0; return () => { s ^= s << 13; s >>>= 0; 
   {
     eq([0, 3, 8].map((T) => PM.levelAt(T)), [7, 25, 55], 'levelAt(T) = LZ+1');
     eq([PM.levelAt(3, 'boss'), PM.levelAt(0, 'prologue'), PM.levelAt(8, 'last'), PM.levelAt(9, 'super')], [27, 5, 58, 64], 'levelAt kinds');
-    eq([PM.profAt(4, 'S'), PM.profAt(4, 'D')], [108, 14], 'profAt(T, apt) = PEXP(T) × apt');
+    eq([PM.profAt(4, 'S'), PM.profAt(4, 'D')], [468, 59], 'profAt(T, apt) = PEXP(T) × apt (A17: PEXP(4) = 585)');
     const before = R.Game;
     const r = PM.withGame(R, { tier: 4 }, (g) => g && g.tier);
     ok(R.Game === before, 'withGame restores R.Game');

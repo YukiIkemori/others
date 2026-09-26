@@ -24,7 +24,7 @@
   // ------------------------------------------------------------ the credits (§11.9)
   const CREDITS = [
     ['title', 'ルミナス・クロニクル'],
-    ['sub', '〜八つの伝承〜'],
+    ['sub', '〜八つの灯火〜'],
     ['gap', 3],
     ['head', '企画・制作'], ['name', 'Studio Metem'], ['gap', 1],
     ['head', 'シナリオ'], ['name', 'Studio Metem'], ['gap', 1],
@@ -229,7 +229,7 @@
         const lg = logo();
         g.draw(lg.cv, 128 - lg.w / 2, 80 - lg.pad, { w: lg.w, h: lg.h });
         rule(128, 103, 100);
-        g.text(R.SUBTITLE || '〜八つの伝承〜', 128, 108, { align: 'center', color: '#e0d8ff', shadow: '#1a1238' });
+        g.text(R.SUBTITLE || '〜八つの灯火〜', 128, 108, { align: 'center', color: '#e0d8ff', shadow: '#1a1238' });
         g.text(R.COPYRIGHT || '© Studio Metem', 128, 180, { align: 'center', color: '#c8c8e0', shadow: '#000' });
         c.globalAlpha = 1;
       },

@@ -1,9 +1,10 @@
-# STATS_REWORK — 能力値 0〜25・能力値装備・レアのクセ・熟練度の速さ・盗み専用の超レア・武器 5 系統と武器枠 1 つ（BRIEF A20・A22・A28・A29）の実装仕様
+# STATS_REWORK — 能力値 0〜25・能力値装備・レアのクセ・熟練度の速さ・盗み専用の超レア・武器 5 系統と武器枠 1 つ・レベルなしの成長（BRIEF A20・A22・A28・A29・A30）の実装仕様
 
-作成 2026-09-26（リード補佐）。対象: BRIEF Part A20（レアのデメリットは必須にしない）、Part A22（能力値 0〜25・能力値装備を減らす・熟練度をゆっくり）とその追記（1 点の重みを大きく: 1 点 ≒ 威力 4〜5%）、Part A28（盗み専用の超レア）、Part A29（武器 5 系統・武器枠 1 つ。A19 を上書き。A22 と一緒に行う）。
-**SYSTEMS_REWORK（A17・A18・A19）が入った後に行う**（§6.2）。SYSTEMS_REWORK の決まり（熟練度 1〜100、WP なし、7 系統、`mpCost`、`techCostPct` など）はすべて前提として使う。
+作成 2026-09-26（リード補佐）。対象: BRIEF Part A20（レアのデメリットは必須にしない）、Part A22（能力値 0〜25・能力値装備を減らす・熟練度をゆっくり）とその追記（1 点の重みを大きく: 1 点 ≒ 威力 4〜5%）、Part A28（盗み専用の超レア）、Part A29（武器 5 系統・武器枠 1 つ。A19 を上書き。A22 と一緒に行う）、Part A30（レベルと経験値の廃止・HP/MP は戦闘で伸びる・ドロップの枠を減らす・実の廃止）。
+**SYSTEMS_REWORK（A17・A18・A19）が入った後に行う**（§6.2）。SYSTEMS_REWORK の決まり（熟練度 1〜100、WP なし、`mpCost`、`techCostPct` など）はすべて前提として使う（7 系統は §8 で 5 系統・武器枠 1 つに作り直す）。
 A24（旧セーブとの互換は不要）により、セーブの移行処理は作らない（§6.3）。A26（オート戦闘の廃止）後も、sim はプレイヤーの代わりとして `battle_ai.js` のオートを使う（画面から消えるだけ）。
 
+節の番号: 「§4.17.2」のように 3 段のもの、「DESIGN」と書いたもの、§6.6 の一覧は DESIGN.md の節。ほかの「§1〜§11」はこの文書の節。
 数値の出どころ: 2026-09-26 の作業中のツリー（SYSTEMS_REWORK の途中）で `tools/lib/party_model.js` を動かし、標準のパーティ・T8 のビルドの能力値と攻撃力・術力を測った（§2.3）。品の一覧（付録 A）は `R.DB.items` をそのまま読み出して作った。
 
 ---------------------------------------------------------------------------------------------------
@@ -12,15 +13,17 @@ A24（旧セーブとの互換は不要）により、セーブの移行処理�
 | # | 決定 |
 |---|---|
 | 0.1 | 能力値（腕力・体力・器用さ・素早さ・知力・精神）は **0〜25**。普通 16・得意 20〜23・苦手 10 前後、**25 は 5 人だけ**（ハーゲン腕力・ドッカ体力・ティッタ器用さ・テオ知力・マルタ精神）。6 つの合計は全員 **95**。主人公の型は最高 23。 |
-| 0.2 | 能力値は **レベルで伸びない（固定）**。強さの伸びは HP/MP（曲線は今のまま）・武器の攻撃力と術力（新しい表 `K.WA`）・防具・熟練度が担う。 |
+| 0.2 | 能力値は **レベルで伸びない（固定）**。強さの伸びは HP/MP（戦闘で伸びる。§9）・武器の攻撃力と術力（新しい表 `K.WA`）・防具・熟練度が担う。 |
 | 0.3 | 能力値の効き目は 1 か所の形 **`abilMul(a, k) = max(0.5, 1 + k × (a − 16))`**。腕力→物理・知力→術はどちらも **k = 0.045（1 点 4.5%）**。16 と 21 で 22.5% 差、+1 の品で 4.5%。精神→回復 0.04、器用さ→技 0.01 ほか §2.2。 |
 | 0.4 | 攻撃力の土台は新しい武器の表 **`K.WA = [11, 22, 35, 52, 71, 96, 122, 156, 193, 246]`**（旧 `K.W` は道具・魔石の `tier` 式と値段にだけ残す）。標準の戦士（腕力 21・通常品一式）の攻撃力が §4.17.2 の表と同じになるように合わせた（§2.3）。 |
 | 0.5 | 素早さ・命中・会心・回避・状態異常の防ぎは、旧の式で「旧 34 ＝ 新 16」「旧 1 点 × 3.4 ＝ 新 1 点」になるよう直線で置き換える。魔物のデータ（`agi` `hit` `eva` `crit` `atk` `mag` `def` `mdef`）は **変えない**。素早さの比べ合い（行動順・逃走・盗み）は味方の `spd`（旧の尺度）で行う。 |
 | 0.6 | 能力値を上げる装備: 通常品は **0**。レアは T5 以上の武器・T7 以上の体とアクセに **+1**（T9 の武器は +2）、超レアは T0〜4 で +1、T5〜7 で +2 まで、**+3・+4 は T8・T9 の超レアの武器と体だけ**（§3.1 の表 `K.ABIL_GEAR`）。遺物・語りの報酬は +1（遺物の超レアは +2）。能力値の割合の効果（`strPct` など）は廃止。 |
 | 0.7 | 失った強さの埋め合わせ: レア・超レアの武器は攻撃力・術力 **×1.06 / ×1.12**、防具は守備・術防 **×1.10 / ×1.20**（`K.GRADE_ATK` `K.GRADE_DEF`）。通常の能力のアクセ 60 品は「攻撃力・術力・最大HP・命中と会心・素早さと回避・術防と回復」の効果の品に変える（§3.2）。固定値の `atk` `mag` の効果は `K.WA/K.W` の比でかけ直す（§3.3）。 |
-| 0.8 | A20: レア・超レア 502 品（今は全部クセ付き）のうち、**クセを残すのは 36 品だけ**（大きな見返りのある品。§4.1）。残りの 466 品はクセを消して **メリットだけ** にし、desc から「ただし〜」を消す。 |
+| 0.8 | A20: レア・超レア 502 品（今は全部クセ付き）のうち、**クセを残すのは 36 品だけ**（大きな見返りのある品。§4.1。A29 で w_axe_r7 が消えるので実際は 35 品）。残りの 466 品はクセを消して **メリットだけ** にし、desc から「ただし〜」を消す。 |
 | 0.9 | 熟練度: SYSTEMS_REWORK の見込みでは最初の地方のダンジョンで主な武器が 11〜13。A22 の「9/100 前後」に合わせ、**`PROF_SOFT.rank[0]` 20 → 8**、`PEXP[1]` 186 → 227、`PROF_TRACK` を下げる（§5）。 |
-| 0.11 | A29: 武器枠は **1 つ**（`weapon2` を廃止、装備枠 8）。系統は **剣（刀・細剣）・大剣（大斧・大槌・長柄を吸収、両手）・短剣・弓・杖** の 5 つ。後列から届くのは弓・杖と一部の技。技 108 → **99**（剣 20・大剣 22・短剣 19・弓 20・杖 18）。旧セーブの移行は作らない（A24）（§9）。 |
+| 0.11 | A29: 武器枠は **1 つ**（`weapon2` を廃止、装備枠 8）。系統は **剣（刀・細剣）・大剣（大斧・大槌・長柄を吸収、両手）・短剣・弓・杖** の 5 つ。後列から届くのは弓・杖と一部の技。技 108 → **99**（剣 20・大剣 22・短剣 19・弓 20・杖 18）。旧セーブの移行は作らない（A24）（§8）。 |
+| 0.12 | A30: **レベル・経験値を廃止**。各キャラは内部の成長の点 `c.gl`（画面に出さない）を持ち、HP/MP は勝った戦闘のあとに「敵の強さ − gl」で決まる確率で伸びる（弱い敵では伸びない、ティアごとの上限 `LZ(T)+6`）。成長は新しい `src/systems/growth.js` 1 か所（§9）。 |
+| 0.13 | A30: ドロップのレア枠は各系統の最後の段だけ（約 25%）、超レア枠は約 9%、盗み専用（A28）は残す。能力値・HP・MP を上げる実（`grow`）を廃止（§10）。 |
 | 0.10 | A28: 魔物のデータに **`drops.steal`** を足し、36 体（通常の魔物 14・レア魔物 10・ボス 12）に **盗みでしか手に入らない超レア 36 品**（新規ファイル `items_steal.js`、クセなし）を置く。盗みが成功したとき最初に判定、率は 1/32（通常）・1/16（レア魔物）・1/8（ボス。ボスは取れるまで何度でも）× (1 + stealPct/100)（§7）。 |
 
 ---------------------------------------------------------------------------------------------------
@@ -29,7 +32,7 @@ A24（旧セーブとの互換は不要）により、セーブの移行処理�
 ### 1.1 方針
 - 6 つの能力値は **0〜25**。キャラごとの固定値（`DB.companions[id].stats`・`DB.heroTypes[type].stats`）で、**レベルでは伸びない**（成長の伸びは 0。「わずかに伸びる」案は採らない: 装備の +1 の手応えが薄れ、稼ぎの効きが増えるため）。
 - 装備で上がった後の値の上限は **40**（`CAPS.stat` 999 → 40。実際の最大は 25 + 装備の合計 ≈ 35）。
-- HP・MP の伸びは今のまま（`K.HP` `K.MP` の曲線 × 成長の文字 × 体力の倍率 §2.2）。熟練度の伸びは SYSTEMS_REWORK と §5。
+- HP・MP は A30 によりレベルではなく戦闘で伸びる（§10。曲線 `K.HP` `K.MP` は成長の点 `gl` で読む × 成長の文字 × 体力の倍率 §2.2）。熟練度の伸びは SYSTEMS_REWORK と §5。
 - 能力値ごとの働き（§2.2 の式がすべて）:
 
 | 能力値 | 効くところ |
@@ -129,8 +132,8 @@ a = その能力値（装備込み、0〜40）。M(a, k) = `abilMul(a, k)`。
 |---|---|---|---|
 | 能力値（`finalStats`） | (基本 + 装備の stats) × (1 + XPct/100)、0〜999 | **基本 + 装備の stats、0〜40**（`XPct` は廃止。§3.1） | — |
 | 攻撃力 atk(枠) | round((W + m.atk) × (64 + S)/64) | **round((W + m.atk) × M(S, 0.045))**、W = 品の atk（`K.WA[T] × mult × GRADE_ATK`）、S = 系統の能力値の平均 | ×1 / 1.225 / 1.405 / 0.73 |
-| 術力 mag | round((Wm + m.mag) × (64 + 知力)/64) | **round((Wm + m.mag) × M(知力, 0.045))**、Wm = 武器 2 本の mag の大きい方（無ければ `K.UNARMED.mag`） | 同上 |
-| 最大HP | round(HPlv × GH × (160 + 体力)/200) × … | **round(HPlv × GH × M(体力, 0.025))** × (1 + hpPct/100) + bonus.hp | ×1 / 1.125 / 1.225 / 0.85 |
+| 術力 mag | round((Wm + m.mag) × (64 + 知力)/64) | **round((Wm + m.mag) × M(知力, 0.045))**、Wm = 武器の mag（A29 の前は 2 本の大きい方。無ければ `K.UNARMED.mag`） | 同上 |
+| 最大HP | round(HPlv(Lv) × GH × (160 + 体力)/200) × … | **round(HPbase × M(体力, 0.025))** × (1 + hpPct/100)（HPbase = HPlv(gl) × GH、§9.2。bonus.hp は廃止 §10.2） | ×1 / 1.125 / 1.225 / 0.85 |
 | 守備力 def | 防具の def + m.def | 変えない（防具の def は `GRADE_DEF` 込み） | — |
 | 術防 mdef | 防具の mdef + floor(精神/2) + m.mdef | **round((防具の mdef + m.mdef + 16) × M(精神, 0.03))** × (1 + mdefPct/100) | ×1 / 1.15 / 1.27 / 0.82 |
 | 命中 hit(枠) | 90 + floor(器用さ/4) + 系統 + 品 + m.hit | **round(98 + 1.0 × (器用さ − 16))** + 系統 + 品 + m.hit | 98 / 103 / 107 / 92 |
@@ -147,7 +150,7 @@ a = その能力値（装備込み、0〜40）。M(a, k) = `abilMul(a, k)`。
 | 状態異常の防ぎ | min(0.9, 精神/500 + statusResist) | **min(0.9, 0.005 × 精神 + statusResist)** | 8% / 10.5% / 12.5% / 5% |
 | 閃き GF | clamp((100 + S)/150, 0.7, 2.0) | **clamp(M(S, 0.04), 0.7, 1.8)**（glimmer.js 256 行） | ×1 / 1.2 / 1.36 / 0.76 |
 
-- 回復に効くのは **精神**（知力ではない）。A22 追記の「特に知力が術の威力・回復に」は、回復については精神が持ち味の仲間（マルタ・ノエラ・バジル）の役割を守るため精神のままにした（§8 の問い 1。`K.ABIL.healStat: 'mnd'` を置き、`'int'` か `'avg'` に 1 行で切り替えられるようにする）。
+- 回復に効くのは **精神**（知力ではない）。A22 追記の「特に知力が術の威力・回復に」は、回復については精神が持ち味の仲間（マルタ・ノエラ・バジル）の役割を守るため精神のままにした（§11 の問い 1。`K.ABIL.healStat: 'mnd'` を置き、`'int'` か `'avg'` に 1 行で切り替えられるようにする）。
 - 技の器用さの補正（0.01）は「器用さ→技」を腕力の武器の人にも少し効かせるためのもの。短剣・弓の人は攻撃力と二重に効くので小さくした。
 - 1 点の重みの確認（A22 追記）: 腕力・知力の 1 点 = 4.5%、+1 の品 = 4.5%、+4 の超レア = 18%、16 と 21 = 22.5%、16 と 25 = 40.5%。
 
@@ -234,7 +237,7 @@ ABIL_GEAR: {
 - 品のデータの `abil`（新しい任意の項目、`{str:1}` の形か `0`）は表より優先する。`statsAdd`（能力値を下げるクセ）はクセを残す品（§4.1）にだけ、新しい値で残す（旧 −X → 新 `−max(1, round(X / (T ≥ 7 ? 6 : 4)))`）。
 - `strPct` `vitPct` `dexPct` `agiPct` `intPct` `mndPct` の mods は **廃止**（遺物・報酬の 41 品が使っている。付録 A.10・A.11 で `abil` に置き換え）。rules.js の文・menu_items.js の効果の行からも消す。
 - 数（付録 A から）: レア 231 品（遺物・報酬を除く）のうち +1 が 76 品・+2 が 12 品・0 が 143 品。超レアは +1 86・+2 43・+3 23・+4 4 品（+3・+4 はすべて T8・T9 の超レア）。遺物・報酬 54 品は +1 29・+2 18・0 7。
-- ビルドの一式（`R.GearA.BUILD_SETS`）の合計: 知力 R7 +5、R9 +7、S（T8）+10。腕力・器用さの S も +10、腕力 R9 +7。
+- ビルドの一式（`R.GearA.BUILD_SETS`）の合計: 知力 R7 +5、R9 +7、S（T8）+10。腕力・器用さの S も +10、腕力 R9 +7。**A29（武器 1 本）の後は 2 本目の武器の分が消えて** 知力 R7 +4、R9 +5、S +7（腕力・器用さも同じ）。
 
 ### 3.2 通常の能力のアクセ 60 品（担当 GEAR、`items_acc.js` の LINES）
 能力値が 0 になると意味が無くなるので、系列ごとに効果の品にする（`units` は印として残す。名前は変えない）。値はティア T で:
@@ -300,8 +303,8 @@ ABIL_GEAR: {
   - items_weapons_rare.js（`B(id, 名前, 系統, T, 効果, クセ, 説明)`）: 6 つ目の引数を `null` に、説明から「／ただし〜」を消す。`it.quirk` は付かなくなる（コードは `if (q)` のまま）。
   - items_weapons_monster.js（表の `q`）: `q: null`（または項目を消す）。desc は `describe(effects, [])` が作り直す。
   - items_weapons_super.js（`S(…, 効果, クセ, 説明)`）: 7 つ目を `null`、説明の「／ただし〜」を消す。
-- **新しい desc**: 旧の desc の「ただし」より前をそのまま使う（付録 A の「新しい desc」の列。改行は §8.2.7 の詰め方: 1 行全角 20 字・2 行まで。短い形に詰めていた文は長い形に戻してよい）。遺物・報酬の「〇が割合で上がる」は「〇が上がる」に（付録 A の列は直した後の文）。
-- クセの無くなった品は `quirk` を持たない → 最強装備（§4.4.1）の候補になる。party_model の `real`（3 枠をレアにする選び方の「癖の重さを差し引く」所）は、クセの無い品を素直に選ぶように直す（担当 QA）。
+- **新しい desc**: 旧の desc の「ただし」より前をそのまま使う（付録 A の「新しい desc」の列。改行は DESIGN §8.2.7 の詰め方: 1 行全角 20 字・2 行まで。短い形に詰めていた文は長い形に戻してよい）。遺物・報酬の「〇が割合で上がる」は「〇が上がる」に（付録 A の列は直した後の文）。
+- クセの無くなった品は `quirk` を持たない → 最強装備（DESIGN §4.4.1）の候補になる。party_model の `real`（3 枠をレアにする選び方の「癖の重さを差し引く」所）は、クセの無い品を素直に選ぶように直す（担当 QA）。
 - validate: `quirk:true` の品は §4.1 の 36 品だけ（`C.QUIRK_KEEP`）、それ以外の品の desc に「ただし」が無い、`/* クセ */` の注釈の残りが無い（grep）。
 
 ---------------------------------------------------------------------------------------------------
@@ -336,7 +339,8 @@ PROF_TRACK: [135, 280, 455, 635, 825, 1015, 1205, 1395, 1565, 1740],    // 模�
 | T1 の終わり | 20〜21 | 12 | 24 | 14〜16 | 20 |
 | 本編クリア | 70〜72 | 48〜52 | 78〜82 | 44〜52 | 58〜70 |
 - 段階の境目（SYSTEMS_REWORK §1.4）は変えない。結果として: 技 lv3（段階 8）は T0 のうち、lv4（14）は T1 の初め。単属性 3 段（10）はよく唱える術師で T0 の終わり、ほかは T1。A13b の 1 段目の MP 0（14）は T1（SYSTEMS_REWORK P3 の「T1〜T2」のまま）。
-- 本編クリアの主な武器が 70〜72 と、SYSTEMS_REWORK P2 の下限 70 に近い。P2 の下限は **68** に下げる（A22 の「ゆっくり」を優先。上げたい時は `PEXP[1]` を 260 に）。
+- A29（武器 1 本）の後は、武器の行動がすべて 1 系統に入る（表の「弓だけ」の列が主な武器の見込みになる）。T0 の目安線 8 はどちらでも効くので、T0 のダンジョンの 9〜11 は変わらない。
+- 武器 2 本のままの見込みでは本編クリアの主な武器が 70〜72 と、SYSTEMS_REWORK P2 の下限 70 に近い。P2 の下限は **68** に下げる（A22 の「ゆっくり」を優先。上げたい時は `PEXP[1]` を 260 に）。
 
 ### 5.3 熟練度の sim の目標（SYSTEMS_REWORK §4.3 の P1・P2 を置き換える、担当 QA）
 | # | 項目 | 合格 |
@@ -344,35 +348,37 @@ PROF_TRACK: [135, 280, 455, 635, 825, 1015, 1205, 1395, 1565, 1740],    // 模�
 | P0（新） | T0 の地方のダンジョン（T0 の 45〜95 戦目の平均）の段階 | 主な武器 8〜11（中央値 9±1）、術師の主属性 0.75 回型 8〜10・1.5 回型 9〜12 |
 | P1 | 序章の終わりの主な武器 | 5〜8（灯台に入る時 3〜5） |
 | P1b（新） | T0 の終わり | 主な武器 ≤ 12、1 系統だけ（弓） ≤ 14 |
-| P2 | 本編クリア | 主な武器 **68**〜85、1 系統だけ ≤ 90、2 つ目 45〜60 |
+| P2 | 本編クリア | 主な武器 **68**〜88（A29 で武器 1 本になると、武器の行動はすべて 1 系統に入るので「弓だけ」の列 78〜84 に近づく）、1 系統だけ ≤ 90。2 つ目の武器の目標は消す（A29） |
 | P3・P4・G | 旧のまま（SYSTEMS_REWORK §4.3） | — |
 
 ---------------------------------------------------------------------------------------------------
 ## 6. 担当・順番・セーブ・確かめ方
 
-### 6.1 担当ファイル（重ならない）
+### 6.1 担当ファイル（重ならない。A22・A28・A29・A30 をまとめて 1 回で行う）
 | 担当 | ファイル（これ以外は触らない） | 仕事 |
 |---|---|---|
-| **RULES** | src/systems/rules.js・glimmer.js | §2.1・§2.2・§2.6 の rules/glimmer の分、`fillItem` の §3.1、`describe`/`autoDesc` の文（`XPct` を消す、通常の能力のアクセ）、§5.2 の K、§7.4 の `K.STEAL.only` |
-| **BATTLE** | src/systems/battle.js・mon.js | §2.2 の battle/mon の分（`resist` `sf` `stealChance` 技の器用さ、`healf`）、§7.3 の盗みの順番・イベント |
-| **NEWGAME** | src/data/companions.js・herotypes.js、src/systems/charcreate.js・tavern.js | §1.2 の値、§1.4 の棒の目盛り |
-| **UI** | src/systems/menu_status.js・menu_items.js・menu_book.js（と図鑑の画面のファイル） | §1.4、`XPct` の効果の行を消す、§7.5 の図鑑の「盗み」の枠 |
-| **GEAR** | src/data/items_acc.js・items_acc_monster.js・items_acc_rare.js・items_acc_relic.js・items_acc_reward.js・items_acc_super.js・items_armor.js・items_armor_monster.js・items_armor_rare.js・items_armor_super.js、**src/data/items_steal.js（新規）** | §3.1 の `abil`・`XPct` の置き換え、§3.2、§3.3-3（防具・アクセの分）、§4 の削除と desc、`G.localFill`、§7.2 の 36 品 |
-| **WEAPONS** | src/data/items_weapons.js・items_weapons_rare.js・items_weapons_monster.js・items_weapons_super.js、src/data/monsters_*.js（`drops.steal` だけ） | §3.3-3（武器の分）、§4 の削除と desc、`localFill` の `K.WA`・`GRADE_ATK`、§7.2 の `drops.steal` |
-| **QA** | tools/**、debug_*.html | §6.4・§6.5 |
+| **RULES** | src/systems/rules.js・glimmer.js・party.js・state.js、**src/systems/growth.js（新規）**、src/data/remap_a19.js（消す） | §2（rules/glimmer の分）、§3.1 の `fillItem`、§5.2 の K、§7.3 の `K.STEAL.only`、§8.1・§8.2（rules の分・`astat`）・§8.6 の閃き、§9 の成長のすべて（`c.gl`・`R.Growth`・加入・`growPct`・K の削除）、§10.2（`grow`・`bonus` の削除） |
+| **BATTLE** | src/systems/battle.js・battle_ai.js・battle_fx.js・battle_scene.js・mon.js | §2（battle/mon の分）、§7.3 盗み、§8.2（battle の分）・§8.6 の FAMILY・WEAPON_FX、§9.4（経験値・レベルアップの出来事 → `grow`、scan の Lv、魔物の exp）、§10.2（`grow` の効果） |
+| **NEWGAME** | src/data/companions.js・herotypes.js、src/systems/charcreate.js・tavern.js | §1.2、§1.4 の棒、§8.4、§9.4 の加入・特性の `growPct`、画面の Lv を消す |
+| **UI** | src/systems/menu.js・menu_status.js・menu_items.js・menu_book.js・menu_equip.js・menu_save.js・shop.js・field.js・events_runtime.js・debug.js（と図鑑の画面のファイル） | §1.4、`XPct` の行、§7.4 図鑑の「盗み」、§8.2（menu・equip・shop・debug の分）・§8.6、§9.4・§9.6（Lv・経験値を消す、魔除けの香、デバッグ）、§10.2（移動中の実の使用・`BONUS_CAP`） |
+| **TECHS** | src/data/weapontypes.js、techs_{sword,greatsword,dagger,bow,staff}.js、techs_axe.js・techs_spear.js（消す） | §8.1 の系統のデータ、§8.5 の 99 技 |
+| **GEAR** | src/data/items_acc*.js（6）・items_armor*.js（4）・items_use.js、**src/data/items_steal.js（新規）** | §3.1〜§3.3（防具・アクセ）、§4、§7.2 の品、§8.2 の `BUILD_SETS`、§9.4 の `growPct`、§10.1（防具・アクセの品の行き先）、§10.2 の実 |
+| **WEAPONS** | src/data/items_weapons*.js（4）、src/data/shops.js・pools.js・rare.js・bosses.js（drops だけ）・monsters_*.js（drops だけ） | §3.3（武器）、§4（武器）、§7.2 の `drops.steal`、§8.3、§9.4 の `growPct`（武器）、§10.1（枠の削り・品の行き先・`p_super`）、§10.2 の参照 |
+| **ART** | src/art/battlers.js・battlers_pose.js・battlers_weapons.js | §8.2（battlers の分）・§8.6 の形 |
+| **QA** | tools/**、debug_*.html | §6.4・§6.5・§8.7・§9.7・§7.6 |
 | **リード** | DESIGN.md、BRIEF | §6.6 |
 
-約束（並列で書くため）: `R.Rules.abilMul(a, k)`・`spdToAbil(agi)`・`K.ABIL`・`K.WA`・`K.GRADE_ATK`・`K.GRADE_DEF`・`K.ABIL_GEAR`・`K.ACC_W`・`K.STEAL.only` の名前、品の新しい項目 `abil`（`{str:1}` か `0`）、`src:'steal'`、魔物の `drops.steal = {item, rate}`、戦闘の出来事 `{t:'gain', item, grade:'super', stolen:true, stealOnly:true}`、図鑑のキー `'steal'`。
+約束（並列で書くため）: `R.Growth.*`（§9.1）、`c.gl`、mods `growPct`、戦闘の出来事 `{t:'grow', c, hp, mp}`、`WTYPES`（5）・`WEAPON_SLOTS`（`['weapon1']`）・`DIFF_KEYS`（15、`atk`）、品の `astat`、`R.Rules.abilMul(a, k)`・`spdToAbil(agi)`・`K.ABIL`・`K.WA`・`K.GRADE_ATK`・`K.GRADE_DEF`・`K.ABIL_GEAR`・`K.ACC_W`・`K.STEAL.only` の名前、品の新しい項目 `abil`（`{str:1}` か `0`）、`src:'steal'`、魔物の `drops.steal = {item, rate}`、戦闘の出来事 `{t:'gain', item, grade:'super', stolen:true, stealOnly:true}`、図鑑のキー `'steal'`。
 
 ### 6.2 順番
 1. **前提**: SYSTEMS_REWORK の第 3 段（sim の調整）が終わり、`node tools/validate.js` と全テストが通っていること。その sim の結果（A2・B1・C・D・G・P）を **基準** として保存する（`tools/fixtures/qa/baseline_systems.json`、担当 QA）。
-2. **第 1 段（並列）**: RULES・BATTLE・NEWGAME・UI・GEAR・WEAPONS。各自 `node tools/build.js` が通り、自分のファイルの `R.loadErrors` が無いこと。
+2. **第 1 段（並列）**: RULES・BATTLE・NEWGAME・UI・TECHS・GEAR・WEAPONS・ART（A22・A28・A29・A30 を一度に）。各自 `node tools/build.js` が通り、自分のファイルの `R.loadErrors` が無いこと。
 3. **第 2 段（QA）**: validate とテストを直す（§6.4）。壊れた所は各担当に戻す。
 4. **第 3 段（調整）**: §6.5 の sim。外れたら **`K.WA`（ティアごと）→ `K.ABIL` の傾き（atk・mag・heal）→ `GRADE_ATK/DEF` → 品の効果の値 → 最後に魔物（`K.BOSS` の hpMul など）** の順で直す。
 5. **第 4 段（リード）**: DESIGN.md（§6.6）。URL の再公開はオーナーの指示があるまでしない（A17）。
 
 ### 6.3 セーブ
-- 能力値は保存していない（`baseStats` がデータから毎回作る）。品の id は変えない（盗み専用の品は新しい id を足すだけ）。**移行処理は作らない**（A24: 旧セーブとの互換は不要）。`g.rev` も上げない。
+- **移行処理は作らない**（A24: 旧セーブとの互換は不要）。能力値は保存していない（データから毎回作る）。セーブの形は変わる: `c.level`・`c.exp`・`c.bonus` を消し `c.gl` を足す、`equip.weapon2` が無い、品・技の id が §8.3・§8.5 で変わる。`R.State` の読み込みは形の違う古いセーブを「読めないセーブ」として扱い、壊れないこと（担当 RULES）。
 - 図鑑（`g.book`）に `steal` のキーが無い古い記録は「？？？」として出る（読み込みで困らない形にする。担当 UI）。
 
 ### 6.4 テスト（担当 QA）
@@ -391,7 +397,7 @@ PROF_TRACK: [135, 280, 455, 635, 825, 1015, 1205, 1395, 1565, 1740],    // 模�
 | sim_balance | B2・B3 | 旧のまま |
 | sim_balance | **B5 仲間ごとの公平** | 勝率の差 ≤ 8 ポイント、ラウンドの比 ≤ 1.15（旧のまま）。25 を持つ 5 人の中の最高と、同じ役割の仲間の中央値の差を別に出す（参考: ≤ 5 ポイント） |
 | sim_bosses | C1・C2・C3 | 旧のまま（C3: レア・超レア 4 枠 ≥ 50%、通常品 ≤ 20%。能力値装備の差が縮むので最初に外れやすい。`GRADE_ATK/DEF` を 1.08/1.16・1.15/1.30 まで上げてよい → それでも外れたら `K.BOSS.super.hpMul`） |
-| sim_balance / sim_spells | **D1 知力ビルド（T8）**（置き換え） | 術力の比 **S/N 1.6〜1.9**（能力値・等級・固定値の効果込み。`magicPct` などの割合は含めない）、能力値だけの比 1.25〜1.45（参考）。旧の S/Z は無くす（Z = N になった） |
+| sim_balance / sim_spells | **D1 知力ビルド（T8）**（置き換え） | 術力の比 **S/N 1.5〜1.8**（武器 1 本・能力値・等級・固定値の効果込み。`magicPct` などの割合は含めない）、能力値だけの比 1.18〜1.35（参考）。旧の S/Z は無くす（Z = N になった） |
 | 〃 | **D2 腕力・器用さビルド（T8）** | D1 と同じ範囲 |
 | 〃 | D3 知力ビルドの脆さ | 旧のまま（≥ 1.35） |
 | 〃 | **D4 閃き** | S/N ≥ 1.3（GF と `glimPct`）。S/Z は無くす |
@@ -402,11 +408,11 @@ PROF_TRACK: [135, 280, 455, 635, 825, 1015, 1205, 1395, 1565, 1740],    // 模�
 | sim_spells | **P5 全滅の手応え** | S ≥ 90%・N ≤ 25%（旧 95%/20%。S/N が縮んだ分） |
 | sim_spells | **P10 状態の決まりやすさ** | §7.4.5 の表を新しい SF で作り直し、その ±10% |
 | sim_glimmer | P0・P1・P1b・P2（§5.3）、G | §5.3。G は旧のまま（GF の土台が 1.0 になったので、T3 以降の閃きの回数が 5〜15% 減る見込み。外れたら `K.GLIM.base` を上げる） |
-| sim_growth | E1・E2 | 旧のまま（体力の倍率が変わるので、HP の表を出し直す） |
+| sim_growth / sim_balance | E1〜E4 | §9.7（レベルなしの成長に置き換え） |
 | sim_loot | H1〜H3、**H4・H5（§7.6）** | §7.6 |
 
 ### 6.6 DESIGN.md に反映する所（リード）
-§4.2.1（能力値の範囲・合計・25 の 5 人）、§4.2.2（VIT の式）、§4.3（品の能力値の単位 U の廃止、`K.WA`・等級の倍率）、§4.4（導かれる値の式すべて）、§4.6.1〜4.6.5（攻撃力・術力・技の器用さ・回復・命中・会心）、§4.8.3（SF・防ぎ）、§4.9.4（GF）、§4.10.1（盗み・盗み専用）、§4.17.2・§4.17.3（表と D の目標）、§4.18.1（定数）、§5.2・§5.3.2（能力値の表）、§8.2〜§8.7（能力値の単位・クセの規則 D3 の撤回・通常の能力のアクセ・品の表）、§9.12（`drops.steal`）、§11 の図鑑（盗みの枠）、§12（検査）。BRIEF の Part A「通常品は+1、レアは+2、超レアは+3」・B5 の「レアリティ：通常(+1U)・レア(+2U)・超レア(+3U)」に「A22 で置き換え」の注記。
+§4.2.1（能力値の範囲・合計・25 の 5 人）、§4.2.2（VIT の式）、§4.3（品の能力値の単位 U の廃止、`K.WA`・等級の倍率）、§4.4（導かれる値の式すべて）、§4.6.1〜4.6.5（攻撃力・術力・技の器用さ・回復・命中・会心）、§4.8.3（SF・防ぎ）、§4.9.4（GF）、§4.10.1（盗み・盗み専用）、§4.17.2・§4.17.3（表と D の目標）、§4.18.1（定数）、§5.2・§5.3.2（能力値の表）、§8.2〜§8.7（能力値の単位・クセの規則 D3 の撤回・通常の能力のアクセ・品の表）、§9.12（`drops.steal`）、§11 の図鑑（盗みの枠）、§12（検査）。A29: §4.3.4（系統の表 5 つ）・§3.3.3 と §4.4・§4.4.1（武器枠 1 つ・optimize）・§5.2〜§5.3.3（得手不得手）・§6 の技の章（108 → 99）・§8 の武器の表と店。A30: §4.2.2・§4.2.3（レベルと経験値 → 成長の点 gl と `R.Growth`）・§4.10（ドロップの枠・`p_super`）・§8.2.5（実の廃止）・§11 の画面（Lv・経験値を消す）・§4.17.3 の E。BRIEF の Part A「通常品は+1、レアは+2、超レアは+3」・B5 の「レアリティ：通常(+1U)・レア(+2U)・超レア(+3U)」に「A22 で置き換え」の注記。
 
 ---------------------------------------------------------------------------------------------------
 ## 7. 盗み専用の超レア（A28）
@@ -418,7 +424,7 @@ PROF_TRACK: [135, 280, 455, 635, 825, 1015, 1205, 1395, 1565, 1740],    // 模�
 
 ### 7.2 データ（担当 WEAPONS＝魔物の `drops`、GEAR＝品）
 ```js
-// monsters_*.js の魔物の drops に 1 行足す（normal・rare・super は旧のまま）
+// monsters_*.js の魔物の drops に 1 行足す（normal・rare・super は §10.1 で減らした後の枠。steal はそれと別）
 drops: { normal: {…}, rare: {…}, super: {…}, steal: { item: 'ac_st_sandking', rate: 8 } },
 // src/data/items_steal.js（新規、GEAR）: 36 品。grade:'super'、src:'steal'、tier は下の表、units は能力値の印、
 // mods は下の表、desc は効果の文（「ただし」なし）。R.onData で R.Rules.fillItem（無ければ R.GearA.localFill / R.WeaponItems.finish）
@@ -449,13 +455,13 @@ drops: { normal: {…}, rare: {…}, super: {…}, steal: { item: 'ac_st_sandkin
 | rm_volcano_turtle 火山ガメ（レア） | sh_st_volcano_turtle | 火山ガメの大甲 | 盾 T3 | elemResist 火 0.5・土 0.75、def +8 | — |
 | rm_prisma プリズマ（レア） | w_staff_st_prisma | 虹のかけらの杖 | 杖 T3 | elemBoost 6 属性 +10 | 知 +1 |
 | rm_bookworm 本の虫（裏のレア） | sh_st_bookworm | 虫食いの魔導書 | 盾 T8 | glimPct spell +20、magicPct +10 | — |
-| rm_dream_tapir 夢食いバク（裏のレア） | ac_st_dream_tapir | 夢見のまくら | アクセ T9 | statusImmune 眠り・混乱、mpRegen 3 | 精 +2 |
+| rm_dream_tapir 夢食いバク（裏のレア） | ac_st_dream_tapir | 夢食いの角笛 | アクセ T9 | statusImmune 眠り・混乱、mpRegen 3 | 精 +2 |
 | seabird_3 ぬすみカモメ（T4） | ac_st_thief_gull | 盗人カモメの羽 | アクセ T4 | autoSteal 50、stealPct +25 | 素 +1 |
 | rat_4 ネズミの頭領（T6） | ac_st_rat_boss | 頭領の合い鍵 | アクセ T6 | stealPct +40、dropPct +15 | 器 +1 |
 | mimic_4 奈落の宝箱（T6） | ac_st_abyss_gem | 奈落の底の宝石 | アクセ T6 | rarePct +20、goldPct +20 | 体 +1 |
 | fairy_4 妖精姫（T6） | hd_st_fairy_queen | 妖精姫の髪飾り | 頭 T6 | healPct +15、statusResist 眠り・混乱 0.5 | — |
 | doll_4 貴婦人人形（T6） | ac_st_lady_fan | 貴婦人の扇 | アクセ T6 | eva +10、preemptPct +10 | 素 +1 |
-| lizardman_4 トカゲの族長（T6） | w_spear_st_chieftain | 族長の石槍 | 槍 T6 | element 土、onHit 毒 30% | 腕 +1・器 +1 |
+| lizardman_4 トカゲの族長（T6） | w_greatsword_st_stoneaxe | 族長の石斧 | 大剣 T6（`art:'axe'`） | element 土、onHit 毒 30% | 腕 +2 |
 | mummy_5 王家のミイラ（T8） | bd_st_royal_linen | 王家の聖布 | 体 T8（布） | regen、statusImmune 毒・沈黙 | 精 +2 |
 | wolf_5 氷牙のオオカミ王（T8） | w_dagger_st_wolfking | 氷牙の王爪 | 短剣 T8 | element 水、crit +10 | 器 +3 |
 | skeleton_5 骸骨の提督（T8） | ac_st_admiral | 提督の遠眼鏡 | アクセ T8 | rareEncPct +20、goldenPct +20 | 素 +1 |
@@ -497,14 +503,826 @@ STEAL: { …旧…, only: { cap: 0.5, autoMul: 0.5, golden: 2 } },   // rate は
 - **sim_loot H6（新・参考）**: ティッタ（stealPct +50）が毎戦 1 回盗むとき、通常の魔物の盗み専用を取るまでの戦闘数の中央値（目安 30〜60 戦）、ボスで 1 戦のうちに取れる率（目安 35〜55%）を出す。
 
 ---------------------------------------------------------------------------------------------------
-## 8. オーナーに確かめたいこと
+## 8. 武器 5 系統・武器枠 1 つ（A29。A19 を上書き、A22 と一緒に行う）
+
+### 8.1 系統の表（担当 RULES＝`K.WTYPE`、TECHS＝`weapontypes.js`）
+| id | 名前 | 手 | 後列から | 打撃の種類 | mult | 命中 | 会心 | 能力値 | magMult | 品の形（`art`） |
+|---|---|---|---|---|---|---|---|---|---|---|
+| sword | 剣 | 片手 | × | slash | 1.00 | 0 | 2 | str | 0.5 | 剣・刀（`katana`）・細剣（`rapier`、新。旧 槍の品） |
+| greatsword | 大剣 | **両手** | × | slash | 1.40 | −5 | 2 | str | 0.5 | 大剣・大斧（`axe`、旧 斧）・大槌（`club`、旧 メイス、kind blunt）・大銛や大鎌（旧 重い槍） |
+| dagger | 短剣 | 片手 | × | pierce | 0.75 | 8 | 10 | dex | 0.5 | 短剣・爪 |
+| bow | 弓 | 両手 | ○ | pierce | 1.10 | 5 | 4 | dex | 0.5 | 弓 |
+| staff | 杖 | 片手 | ○ | blunt | 0.60 | 0 | 0 | str・int | 1.0 | 杖・聖杖 |
+- 並び: sword 0, greatsword 1, dagger 2, bow 3, staff 4。`WTYPES`・`WTYPE_NAMES`・menu.js・charcreate.js・shops.js・validate の `C.WTYPES` を 5 つに。`C.REACH = ['bow','staff']`、`C.TWO_HANDED = ['greatsword','bow']`。素手 `fist` は旧のまま（内部キーだけ）。
+- 品の上書きに **`astat`**（攻撃力の能力値の配列）を足す（fillItem・weaponInfo、担当 RULES）: 細剣（旧 槍）は `astat: ['str','dex']`、`kind:'pierce'`、`hit:+5`。大槌は `kind:'blunt'`、`mult:1.35`、`hit:+5`。大斧は `mult:1.40`、`crit:+2`。
+- 打撃（blunt）の出どころ: 杖・大槌・打撃の技（`kind:'blunt'`）。斬撃・刺突は剣・大剣・短剣・弓。魔物の `phys` は変えない。
+- `desc`（weapontypes.js・herotypes.js の `favorDesc`、1 行 20 字）: 剣「片手持ち。盾と合わせて攻守に強い。」、大剣「両手持ち。大剣・大斧・大槌の重い一撃。」、短剣「器用さで戦う。会心が出やすい。」、弓「両手持ち。後列から確実に射る。」、杖「術の威力を高め、後列からも届く。」。
+
+### 8.2 武器枠 1 つ（担当は下の表のファイルの担当）
+装備枠は **`weapon1` 盾 頭 体 手 足 アクセ1 アクセ2 の 8 つ**。内部の id は `weapon1` のまま（直す所を減らす。表示名は「武器」）。`weapon2` は全部の所から消す。
+
+| ファイル | 変える所 |
+|---|---|
+| rules.js | `SLOTS`（8）、`WEAPON_SLOTS = ['weapon1']`、`SLOT_NAMES.weapon1 = '武器'`、`DIFF_KEYS`（`atk1` → `atk`、`atk2` を消す、15 キー）、`stats`（`s.w = {weapon1, fist}`、`atk2` なし）、`profPowerMul`・`slotsFor`・`hasTwoHanded`・`previewStats`・`optimize`（`forceNoW2`・もう片方の枠・「武器2を外して盾」の試し を消す）・`OPT_SLOTS`/`OPT_ORDER`・`statKey('atk2')`・`commandList`（武器のコマンドは 1 つ「攻撃」） |
+| battle.js | `weapon`・`defaultSlot`・`attackSlots`（1 つか素手）・`slotFor`（持っている武器の系統だけ）。**持っていない系統の技は使えない**（理由 `'noweapon'`「この技には〇〇が要る」。461〜467・661・767 行の「控えの枠で補う」を消す）、1754 行の「届かない時は他の枠」を消す（届かない攻撃はコマンドが選べない、旧の規則） |
+| battle_ai.js | `attackSlots` の繰り返しは 1 つだけになる（そのままでよいが、`slot` の比べ合いの分岐を消す） |
+| battle_scene.js | 163 行（もう片方の枠の絵）・1012 行（他の系統の技で持ち替える絵 `v.alt`）・1063 行を消す。技の一覧は持っている武器の系統の技だけ（覚えた他の系統の技は灰色で出すか出さない。§8.6） |
+| menu.js・menu_equip.js・tavern.js・debug.js・shop.js | 枠の一覧・名前・比べる値（`atk2` の列を消す）・店の `slotFor`（武器は `weapon1` だけ） |
+| art/battlers.js | 74 行（もう片方の枠）・87 行（`weapon2` の代わり）を消す |
+| companions.js | `startEquip.weapon2` を消す（hagen・dokka・bartolo・viola・brigitta・sylvain・ferno・belladonna・boden・noela）。斧・槍・メイスの初期の武器と技は §8.4 の表。両手の大剣を持つ人は盾を外す |
+| items_armor.js | `BUILD_SETS` を 8 枠に（2 本目の武器を消す） |
+| tools（QA） | party_model の `weapons: [w1, w2]` → 1 本、`UPGRADE_ORDER` から weapon2、sim の `atk2`、テストの枠の数 |
+
+### 8.3 品の対応（担当 WEAPONS。A24 によりセーブの対応表は作らない。データの参照だけ直す）
+| 旧 | 新 | 数 |
+|---|---|---|
+| 斧の通常品 w_axe_hand・w_axe_1〜9 | **消す**（大剣の通常品と重なる） | 10 |
+| メイスの通常品 w_axe_cudgel・w_axe_mace_1〜9 | **大剣の大槌の系列** `w_greatsword_club`・`w_greatsword_maul_1〜9`（名前「木の大棍棒」「〇〇の大槌」、`art:'club'`、`kind:'blunt'`、`mult:1.35`、`hit:+5`、units `s1v1`） | 10 |
+| 槍の通常品 w_spear_iron・w_spear_1〜9 | **消す** | 10 |
+| 斧の帯のレア w_axe_r1・r3・r5・r7・r9 | **消す**（大剣の帯のレアがある。w_axe_r7 のクセ「両手持ち」は無くなる） | 5 |
+| メイスの帯のレア w_axe_r1m・r3m・r5m・r7m・r9m | 大剣の大槌 `w_greatsword_r1m`…（名前・効果そのまま） | 5 |
+| 槍の帯のレア w_spear_r1・r3・r5・r7・r9 | **消す**（剣の帯のレアがある） | 5 |
+| 斧・メイスの魔物のレア・超レア（w_axe_ashen …、w_axe_sr_* 15） | 大剣 `w_greatsword_<旧の後ろ>`（斬撃は `art:'axe'`、打撃は `art:'club'`・`kind:'blunt'`）。名前はそのまま、「小鬼の手斧」→「小鬼の大斧」だけ直す | 22 |
+| 槍の魔物のレア・超レア（19） | 重い物 3 本は大剣、ほかは剣の細剣（下の表） | 19 |
+- 槍の品の行き先（id は `w_sword_…` / `w_greatsword_…` に付け替え、効果・クセ・能力値の印は旧のまま）:
+
+| 旧 id | 新 id | 新しい名前 |
+|---|---|---|
+| w_spear_sr_irontusk 鉄牙の大槍 | w_greatsword_sr_irontusk | 鉄牙の大剣 |
+| w_spear_sr_chaincurse 呪い鎖の鎌槍 | w_greatsword_sr_chaincurse | 呪い鎖の大鎌 |
+| w_spear_sr_harpoon 魚人の大もり | w_greatsword_sr_harpoon | 魚人の大銛 |
+| w_spear_sr_venomjelly 毒ゼリーの槍 | w_sword_sr_venomjelly | 毒ゼリーの細剣 |
+| w_spear_sr_whiteline 白線の槍 | w_sword_sr_whiteline | 白線の細剣 |
+| w_spear_sr_stormbeak 嵐のくちばし槍 | w_sword_sr_stormbeak | 嵐のくちばし剣 |
+| w_spear_sr_venomneedle 蜂針の槍 | w_sword_sr_venomneedle | 蜂針の細剣 |
+| w_spear_sr_marsh 沼のもり槍 | w_sword_sr_marsh | 沼の突き剣 |
+| w_spear_sr_eightarm 八本腕のもり | w_sword_sr_eightarm | 八本腕の細剣 |
+| w_spear_sr_sparkhorn 火花角の槍 | w_sword_sr_sparkhorn | 火花角の細剣 |
+| w_spear_sr_flamehorn 炎角の槍 | w_sword_sr_flamehorn | 炎角の細剣 |
+| w_spear_sr_soot_fork すす悪魔の三つまた | w_sword_sr_soot_fork | すす悪魔の刺し剣 |
+| w_spear_sr_windcutter 風切りの竜槍 | w_sword_sr_windcutter | 風切りの竜剣 |
+| w_spear_sr_quicksilver 白銀の流れ槍 | w_sword_sr_quicksilver | 白銀の流れ剣 |
+| w_spear_sr_mirrorhorn 鏡角の槍 | w_sword_sr_mirrorhorn | 鏡角の細剣 |
+| w_spear_coral サンゴの槍 | w_sword_coral | サンゴの細剣 |
+| w_spear_mist 霧の槍 | w_sword_mist | 霧の細剣 |
+| w_spear_reed アシの槍 | w_sword_reed | アシの細剣 |
+| w_spear_hornet 大バチの槍 | w_sword_hornet | 大バチの細剣 |
+- 参照を直す所: 魔物の `drops`（monsters_*.js）、`pools.js`・`shops.js`・`rare.js`、`BUILD_SETS`（w_axe_r7/r9 → w_greatsword_r7/r9、w_axe_sr_titan → w_greatsword_sr_titan）、companions の `startEquip`、付録 A と §4.1 の id（§4.1 の w_axe_r7 は消えるので残す品は 35 品、`C.QUIRK_KEEP` から外す）、§7.2 の族長の盗み専用の品は最初から大剣 `w_greatsword_st_stoneaxe`「族長の石斧」として作る（落とす方の「族長の大斧」と別の品）。
+- 店の段: 各ティアの武器は 剣・大剣・大槌・短剣・弓・杖・聖杖 の 7 本（旧 9 本）。
+- 結果の数（validate の目安）: 剣 約 60・大剣 約 55・短剣 35・弓 30・杖 46。`remap_a19.js` はセーブ専用なので A24 により消してよい（消すなら `state.js` の `g.rev < 19` の移行も消す。担当 RULES）。
+
+### 8.4 仲間・主人公の得手不得手（担当 NEWGAME）
+`A(w, e)` の武器の文字列は **5 文字** `[sword greatsword dagger bow staff]`。機械的な規則: 剣 = max(剣, 前列の人は 槍)、大剣 = max(大剣, 斧)、弓 = max(弓, 後列の人は 槍)、短剣・杖はそのまま（下の表は規則で作り、術師の大剣だけ手で D に直した）。
+
+| id | 旧 7（sw gs dg ax sp bw st） | **新 5（sw gs dg bw st）** | 合計 | 初期の武器（新） |
+|---|---|---|---|---|
+| selma | S A C B B D D | **S A C D D** | 8 | w_sword_iron・盾 |
+| hagen | B S C A C C D | **B S C C D** | 8 | w_greatsword_iron（2 本目を消す） |
+| dokka | B B D S B D C | **B S D D C** | 7 | **w_greatsword_iron**（2 本目・盾を外す）/ 技 **t_greatsword_overhead** |
+| basil | B B D S B D B | **B S D D B** | 8 | **w_greatsword_club**（盾を外す）/ **t_greatsword_crumble**, s_light_1 |
+| bartolo | B A C B A C C | **A A C C C** | 9 | **w_greatsword_iron**（槍を消す）/ **t_greatsword_overhead** |
+| viola | S C C C B C B | **S C C C B** | 9 | w_sword_iron・盾（2 本目の打ち刀を消す） |
+| shigure | S C B D B C C | **S C B C C** | 9 | w_sword_uchi |
+| rouga | A D C S B D B | **A S C D B** | 10 | **w_greatsword_club** / **t_greatsword_overhead** |
+| titta | B D S C C B C | **B D S B C** | 9 | 旧のまま |
+| brigitta | B C B C S A D | **B C B S D** | 9 | **w_bow_short**（槍を消す、row middle） / 技 **t_bow_rapid** |
+| sylvain | C D B B B S B | **C D B S B** | 9 | w_bow_short（2 本目の短剣を消す） |
+| zafira | B D S C C B C | **B D S B C** | 9 | 旧のまま |
+| ferno | B D A C B B B | **B D A B B** | 9 | w_bow_short（2 本目を消す） |
+| belladonna | B D A C C A B | **B D A A B** | 10 | w_bow_short（2 本目を消す） |
+| boden | B B C A B D B | **B A C D B** | 8 | **w_staff_novice**・盾（手斧を消す）/ **t_staff_mind** |
+| teo | B D B C C B A | **B C B B A** | 10 | 旧のまま |
+| ilse | B D B C B B A | **B D B B A** | 9 | 旧のまま |
+| morga | C D B B C B A | **C B B B A** | 10 | 旧のまま |
+| marta | C D B B B B A | **C B B B A** | 10 | 旧のまま |
+| noela | B D B B A B B | **B B B A B** | 11 | **w_staff_novice**（槍を消す。術の力を優先）/ **t_staff_mind** |
+| 主人公 warrior | B B C B B C D | **B B C C D**（＋得意 S） | 6 | 選べる: 剣・大剣 |
+| 主人公 ranger | B D B C B B C | **B C B B C** | 8 | 選べる: 短剣・弓 |
+| 主人公 mage | B D B B C B A | **B D B B A**（大剣を D に） | 9 | 属性 |
+| 主人公 spellblade | B C B C B C B | **B C B C B** | 8 | 選べる: 剣・大剣・杖（属性も） |
+| 主人公 wanderer | B C B C B B C | **B C B B C** | 8 | 選べる: 5 系統すべて（属性も） |
+- S か A の仲間: 剣 5・大剣 7・短剣 4・弓 4・杖 4（各 3 人以上を満たす）。validate: 武器 5 つの合計 **7〜11**（旧 10〜13）。
+- 仲間の表の「得意な武器」（酒場）は apt から出る（ブリギッタは弓、ロウガ・ドッカ・バジルは大剣）。バジルのプロフィール「祈りと槌で」はそのまま正しい。ブリギッタの肩書き「国境の兵」はそのまま。
+- `herotypes.js`: `favorOptions`（上の表）、`starterKit.weapon` / `tech` から axe・spear を消す、`favorDesc` を §8.1 に。`charcreate.js`: `W`・`WN` を 5 つ、`REACH_ANY = {bow, staff}`。
+- 標準のパーティ（§4.17.1、party_model `standard`）: 前列の 2 人目の「戦士型（槍）」ブリギッタは弓になり後列へ行くので、**2 人目の前列を bartolo（大剣 A・腕力 18）に替える**（主人公 戦士・剣 ＋ bartolo・marta・sylvain）。旧の槍のブリギッタ（腕力と器用さの平均 ≈ 新 19）と近い強さ。§6.2-1 の基準はこの組で取り直す。
+
+### 8.5 技の再配置（108 → 99、担当 TECHS）
+系統ごとの数: **剣 20・大剣 22・短剣 19・弓 20・杖 18**（各 18〜22、合計 99）。移す技は id を `t_<新しい系統>_<後ろ>` に付け替え、名前は下の表、`glim.lv`・`mp`・効果は旧のまま（ただし近接の系統に移る技は `reach` を外し、4.6.6 の ×0.85 の割引を戻す: `power / 0.85` を 0.05 に丸め。杖に移る物理の技は `formula:'magic'` にし、術の表 ×0.9 の値にする）。
+
+| 旧 id（名前 / lv） | 行き先 | 新 id | 新しい名前 |
+|---|---|---|---|
+| t_axe_crumble 打ち崩し / 2 | 大剣 | t_greatsword_crumble | 打ち崩し |
+| t_axe_throw 回し投げ / 2 | 大剣（後列から届く技のまま） | t_greatsword_throw | 回し投げ |
+| t_axe_rage 荒ぶる心 / 3 | 大剣 | t_greatsword_rage | 荒ぶる心 |
+| t_axe_bell 鐘打ち / 4 | 大剣 | t_greatsword_bell | 鐘打ち |
+| t_axe_strip はがし打ち / 5 | 大剣 | t_greatsword_strip | はがし打ち |
+| t_axe_cliff 断崖落とし / 6 | 大剣 | t_greatsword_cliff | 断崖落とし |
+| t_axe_thunder 神鳴り打ち / 9 | 大剣 | t_greatsword_thunder | 神鳴り打ち |
+| t_axe_tremor 地揺らし / 3 | 杖（magic） | t_staff_tremor | 地揺らしの杖 |
+| t_axe_storm 嵐投げ / 8 | 杖（magic） | t_staff_storm | 嵐の杖 |
+| t_spear_whirl 輪舞の槍 / 6 | 杖（magic） | t_staff_whirl | 輪舞の杖 |
+| t_spear_disarm 武器落とし / 2 | 剣 | t_sword_disarm | 武器落とし |
+| t_spear_pierce 徹し突き / 4 | 剣 | t_sword_pierce | 徹し突き |
+| t_spear_cloud 雲突き / 5 | 剣 | t_sword_cloud | 雲突き |
+| t_spear_butt 石突き / 1 | 短剣 | t_dagger_butt | 柄打ち |
+| t_spear_skewer 穂先払い / 2 | 短剣 | t_dagger_sweep | 薙ぎ払い |
+| t_spear_vault かち上げ / 5 | 短剣 | t_dagger_vault | かち上げ |
+| t_spear_surge 荒波の槍 / 9 | 短剣 | t_dagger_surge | 荒波の連撃 |
+| t_spear_receive 迎え槍 / 3 | 弓 | t_bow_receive | 迎え撃ち |
+| t_spear_ripple さざ波突き / 6 | 弓 | t_bow_ripple | さざ波射ち |
+| t_spear_phalanx 槍ぶすま / 7 | 弓 | t_bow_phalanx | 矢ぶすま |
+| t_spear_soar 天翔ける槍 / 8 | 弓 | t_bow_soar | 天翔ける矢 |
+| t_spear_heavennet 天網の槍 / 8 | 弓 | t_bow_heavennet | 天網の矢 |
+- **消す 9 技**: t_axe_cleave・t_axe_woodcut・t_axe_reckless・t_axe_whirl・t_axe_twostroke・t_axe_earthsplit・t_axe_giant（大剣の技と重なる）、t_spear_upthrust・t_spear_starpierce。`starterKit.tech` の axe・spear、仲間の初期の技（§8.4）、魔物の `glimmerable`（あれば）、技の本の並びを直す。
+- 系統の極意（lv10）はどの系統も 1 つ（剣 光紋剣・大剣 山河断ち・短剣 闇夜の刃・弓 虹の矢・杖 千年の祈り）。
+- techs_axe.js・techs_spear.js を消し、各系統のファイルに移す。validate: 系統ごと 18〜22、合計 95〜105、`TECH_MP` の範囲（SYSTEMS_REWORK §2.2）。
+
+### 8.6 画面・絵・閃き
+- 技の一覧（戦闘）: 持っている武器の系統の技だけを出す。覚えた他の系統の技は、メニューの技の画面では灰色で「〇〇が要る」と出す（戦闘には出さない）。
+- 閃き（glimmer.js、担当 RULES）: 技の候補は「今の武器の系統」だけ（旧の「2 本のどちらか」）。熟練度の点は使った武器の系統だけ（旧のまま）。
+- 絵（担当 ART、`battlers*.js`）: 形の対応 sword／katana／rapier → `'one'`（rapier は刃を細く）、greatsword → `'two'`、axe（大斧）→ **両手の斧の形（新 `'greataxe'`、無ければ `'two'`）**、club（大槌）→ **両手の槌（新 `'maul'`、無ければ `'two'`）**、spear の形は使わない。`battle_scene.js` の `FAMILY`: `{sword:'slash', greatsword:'slash', dagger:'thrust', bow:'shoot', staff:'smash', fist:'punch', katana:'slash', rapier:'thrust', axe:'smash', club:'smash'}`。`WEAPON_FX` も 5 系統＋形のキー。
+- 店の人ごとの ▲▼（A20）は武器 1 本の差で出す。
+
+### 8.7 確かめること（担当 QA）
+- validate: §8.1 の C 定数、品の系統が 5 つのどれか、`weapon2` の語が src に残らない（grep）、companions の `startEquip` に weapon2 が無い、両手武器と盾が一緒でない、技の数（§8.5）、仲間の文字の新しい規則（§8.4）。
+- テスト: test_rules（枠 8・DIFF_KEYS 15・optimize が 1 本で動く・両手で盾が外れる）、test_battle（持っていない系統の技が使えない・届かない攻撃が選べない）、test_techs・check_techs、test_weapons・check_weapons、test_newgame・check_newgame、test_menu、test_battlers・sheet_battlers（大斧・大槌・細剣の形を撮る）、test_bui。
+- sim: SYSTEMS_REWORK §4.3 の G（閃き）を 5 系統で測り直す: 戦士型のクリア時の技 20〜26 は「主な武器の lv1〜9 の技の 75% 以上」だけにする（2 つ目の武器の技の目標は消す。武器 1 本なので）。B2・B3・B5 の組は新しい文字で作り直す。
+
+---------------------------------------------------------------------------------------------------
+## 9. 成長（A30 確定: レベルと経験値を廃止。HP・MP は戦闘で伸びる）
+
+### 9.1 方針
+- **レベル・経験値は無い**。能力値は固定（§1）＋装備の＋だけ。強さの伸びは 装備（`K.WA`・防具・等級）・熟練度・閃いた技と術・**HP/MP の伸び**。陣形・連携・見切りなどは足さない（閃き・熟練度・前列と後列だけ）。
+- HP・MP は **勝った戦闘のあとに、確率で伸びる**。敵が味方より強いほど伸びやすく、弱い敵ではほとんど伸びない。伸びには **ティアごとの上限** があり、弱い敵を稼いでも上限の先には行かない。仲間ごとの成長の文字（`growth.hp` `growth.mp` の S〜D）は伸びの量にかかる。
+- 差し替えられるように、成長は **新しいファイル `src/systems/growth.js`（`R.Growth`、担当 RULES）1 か所** にまとめ、ほかのファイルは下の関数だけを呼ぶ:
+```
+R.Growth.init(c, {tier, joinFrom})       // 新しいキャラの成長の点（加入時）
+R.Growth.baseMax(c, 'hp'|'mp')           // 装備の前の最大HP/MP（rules の maxAt が呼ぶ）
+R.Growth.afterBattle(party, reserve, info) → [{c, hp:+n, mp:+n}]   // 勝った後（party.js が呼ぶ）
+R.Growth.equivLevel(c)                   // 内部の「相当レベル」gl（魔除けの香・sim・図鑑には出さない）
+R.Growth.cap(T)                          // ティア T の gl の上限
+```
+
+### 9.2 成長の点 `c.gl`（内部の相当レベル、保存する）
+- 各キャラは小数の **`c.gl`**（1.0〜99.0。画面には出さない）を持つ。`c.level`・`c.exp` は消す。
+- **装備の前の最大HP/MP**（`baseMax`）は旧の曲線をそのまま使う（標準のパーティの HP が今と同じになるように）:
+```
+HPbase(c) = round(HPlv(gl) × GH[growth.hp])       HPlv(L) = 17.5 + 14.7 × (L − 1)^0.90
+MPbase(c) = round(MPlv(gl) × GM[growth.mp])       MPlv(L) = 8 + 2.6 × (L − 1)^0.85
+最大HP = min(999, round(HPbase × abilMul(体力, 0.025)) × (1 + hpPct/100))      // bonus.hp は廃止（§10.2）
+最大MP = min(250, round(MPbase × (1 + mpPct/100)))
+```
+
+### 9.3 戦闘のあとの伸び（`afterBattle`）
+勝った戦闘ごとに、キャラごとに 1 回判定する:
+```
+E   = 敵の強さ = Lb + max(倒した魔物の補正)       // Lb = 戦闘レベル（旧のまま）。補正: ボス +4、レア魔物 +2、金色 +1、鋼 +6
+d   = E − gl                                     // 敵がどれだけ上か（相当レベル）
+p   = clamp(0.30 + 0.07 × d, 0, 0.90)             // 伸びる確率。d = −4.3 以下で 0（弱い敵では伸びない）
+      × (1 + growPct/100)                          // 品の効果（旧 expPct の置き換え、§9.4）
+      × (控え 0.6 / 倒れていた人 0.5 / ほか 1)
+Δgl = step(gl) × rf(0.8, 1.2) × (ボス 2 / 鋼 2 / ほか 1)   // 伸びた時の量
+step(L) = 1 / (0.30 × bpl(L)),  bpl(L) = 16 − 12 × e^(−L/12)       // 旧の「同じ強さの敵で 1 レベルに要る戦闘数」をそのまま使う
+gl  = min(cap(T), gl + Δgl)                       // cap(T) = LZ(T) + 6、T = R.Tier.effective()
+```
+- ボス戦のあとは確率 1（`p` の代わりに 1）で伸びる（地方ボスで一段強くなる手応え）。
+- 伸びた時の文（戦闘の結果）: 「{名前}の最大HPが{n}上がった！」「最大MPが{n}上がった！」（増えた最大値の分だけ今の値も増やす。戦闘不能の人の HP は増やさない。旧のレベルアップと同じ）。音は旧の `levelup` のジングルを 1 戦に 1 回。
+- 目安（同じ強さ d = 0 で）: 1 回の伸びが step(gl) 相当レベル（L6 で 0.38、L30 で 0.22）× 確率 0.30 → 1 相当レベルに bpl(gl) 戦 = 5〜16 戦（旧のレベルの上がり方と同じ速さ）。d = +3 なら 3〜9 戦、d = −3 なら 16〜53 戦、d ≤ −4.3 で伸びない。
+- 数値は `K.GROW = { p0: 0.30, slope: 0.07, pmax: 0.90, add: {boss: 4, rare: 2, golden: 1, metal: 6}, mul: {boss: 2, metal: 2}, reserve: 0.6, fallen: 0.5, join: 0.9, capOff: 6, bplMax: 16, bplAmp: 12, bplTau: 12 }`（旧の `K.EXP` の bpl の 3 つを移す）。
+
+### 9.4 レベルを使っていた所の置き換え
+| 旧 | 新 | 担当・ファイル |
+|---|---|---|
+| `c.level`・`c.exp`、`newChar({level})`、`expForLevel`・`need`・`bpl`・`mexp`・`gainExp`・`battleExp`・`falloff`・`MAX_LEVEL` | `c.gl`、`newChar({gl})`、`R.Growth.*`。`K.EXP`・`K.FALLOFF`・`K.RESERVE_RATE`・`K.JOIN_LEVEL`・`MAX_LEVEL`・`expCache` を削除 | RULES（rules.js・growth.js 新規・party.js・state.js） |
+| 戦闘後の経験値の配り方（party.js 157〜175 行、battle.js 1852〜1975 行） | `R.Growth.afterBattle`。battle.js は `levelup` の出来事を `{t:'grow', c, hp, mp}` に | RULES（party.js）・BATTLE（battle.js・battle_scene.js） |
+| 途中加入のレベル `JOIN_LEVEL 0.9 × 主人公のレベル`（party.js 32 行） | `gl = max(1, 出撃中の平均 gl × 0.9)`（`K.GROW.join 0.9`） | RULES |
+| 魔物の `exp`（`K.CURVE` の exp、`KIND`・`BOSS`・`RARE_MON`・`GOLDEN`・`METAL` の exp、`DRAGON_EXP`、`rw.exp`） | **削除**。お金（gold）は旧のまま。鋼の魔物の見返りは `K.GROW.add.metal`・`mul.metal`（大きく伸びる）とお金 ×10 | RULES（K）・BATTLE（mon.js の `setR('exp')`） |
+| 魔除けの香 `outgrown`（平均レベル ≥ Lb + 3、field.js 1121 行） | 平均 **gl** ≥ Lb + 3（式はそのまま、`c.level` を `R.Growth.equivLevel(c)` に） | UI（field.js） |
+| 魔物の盗み（金 = 魔物のレベル × 5） | 旧のまま（魔物にはレベルがある） | — |
+| 図鑑・調べる（scan）の「Lv」 | 出さない（scan は「名前　HP a/b」＋弱点）。`lvShow` は内部だけ | BATTLE（battle.js 1673 行）・UI |
+| 画面の Lv・経験値・次のレベル（menu.js 1286・1313 行、menu_status.js 195〜238 行、menu_equip.js 240 行、menu_save.js 33 行、tavern・charcreate） | 消す。強さ画面の上の行は「HP 現在/最大　MP 現在/最大」。セーブの窓は「第 N 章」（クリアした地方の数）とプレイ時間 | UI・NEWGAME |
+| 閃きの「敵の強さ」（`rankB` = Tb + 1 ＋ボスなど） | **旧のまま**（味方のレベルを使っていない） | — |
+| 報酬 | お金・ドロップ・熟練度・閃き・HP/MP の伸び。経験値の表示の行を消す | BATTLE・UI |
+| ティアの関門（店・宿・宝箱・EXPECT・PEXP・JOIN_PROF） | 旧のまま（ティアで決まり、レベルを使っていない） | — |
+| デバッグの `setLevel`（debug.js 32 行） | `setGrowth(c, gl)`（`gl = LZ(T) + 1` など） | UI（debug.js） |
+| events_runtime.js 498 行（入れ替えで level・exp を写す） | `gl` を写す | UI |
+| 品の `expPct`（経験値が増える・減る）・`ac_sr_ouroboros` の「経験値が入らない」 | **`growPct`**（HP・MP が伸びる確率。1 人 +30 まで、−100 まで）。文「HPとMPが伸びやすい」「伸びにくい」「伸びなくなる」（ouroboros は growPct −100） | RULES（MODCAP・describe）、GEAR・WEAPONS（品の mods を置き換え。付録 A の文の「経験値が増える」は「HPとMPが伸びやすい」と読み替える）、NEWGAME（teo の特性 `expPct 10` → `growPct 10`） |
+
+### 9.5 魔物の強さとティア（レベルなしで釣り合いをとる）
+- 魔物の側は旧のまま: 戦闘レベル `Lb = LZ(Tb) + lvOff`、曲線 `K.curve(Lb)`、ボスの `lvOff`。
+- 味方の強さの伸びは「ティアに沿った装備（`K.WA`）」＋「熟練度（ティアの目安線）」＋「gl（上限 `cap(T) = LZ(T) + 6`）」なので、どれもティアで頭打ちになる。普通に進めた gl は §9.3 の式で地方ボスのとき LZ(T) + 2〜+5 になる（旧の E1 と同じ位置）ので、sim の「標準のパーティのレベル」は **gl** に読み替えるだけで基準値（§4.17.2）が保てる。
+- party_model（QA）: `levelAt(tier, kind)` → **`glAt(tier, kind)`**（値は旧と同じ: 雑魚 LZ+1、中ボス LZ+2、地方ボス LZ+3、最終 56、ラスボス 58、裏 64、序章 5）。`build` は `c.gl` を入れる。
+
+### 9.6 画面（担当 UI・BATTLE）
+- どこにも Lv・経験値を出さない。戦闘の結果の窓: 「お金 +n」「〇〇を手に入れた」、伸びた人だけ「最大HP +n / 最大MP +n」、熟練度・閃き（旧のまま、数値は出さない A17）。
+- 強さ画面: 名前・肩書き・HP/MP・能力値 6 つ・装備（A17 のとおり戦闘の数値は出さない）。
+
+### 9.7 確かめること（担当 QA、`sim_growth.js`・`sim_balance.js` の E を置き換える）
+| # | 項目 | 合格 |
+|---|---|---|
+| E1 | 1 地方（95 戦＋ボス 2）の模型で、地方ボスの時の gl | LZ(T) + 2〜+5。控えとの差 ≤ 3（地方の終わりで測る） |
+| E1b | 稼ぎ: 1 地方で同じゾーンを 100 戦余分に | gl の増え ≤ +3（上限 `cap`） |
+| E1c（新） | 弱い敵: Lb ≤ gl − 5 のゾーンで 200 戦 | gl の増え 0 |
+| E2 | T2 以降、100 戦余分に稼いだ時の最大HP | +10% 以内 |
+| E3（新） | 伸びの頻度 | 同じ強さの雑魚戦で、1 人が伸びる率 25〜35%。地方ボスのあと 100% |
+| E4（新） | 途中加入 | 加入時の gl = 出撃中の平均の 0.9、加入後 30 戦で差 ≤ 2 |
+- test_rules / test_growth（新）: `baseMax` が旧の `maxAt(level)` と同じ値になる（同じ gl = level で）、`afterBattle` の確率と量（乱数を固定して）、上限、控え 0.6、倒れた人 0.5、ボス 1、`growPct`。
+- A2・B1・C の sim は gl で作ったパーティで回し、§6.2-1 の基準との差が §6.5 の範囲に入ること。
+
+---------------------------------------------------------------------------------------------------
+## 10. ドロップの枠と実（A30）
+
+### 10.1 ドロップの枠を減らす（担当 WEAPONS＝魔物の `drops`、GEAR・WEAPONS＝品）
+今は通常の魔物 205 体すべてが 通常・レア・超レア の 3 枠を持つ。A30 に合わせ:
+| 枠 | 持つ魔物 | 数（目安） |
+|---|---|---|
+| 通常（`normal`） | すべて（素材・消耗品・魔石・お金の袋） | 205 |
+| レア（`rare`） | **各系統の最後の段**（系統の無い魔物は持たない） | 約 51（25%） |
+| 超レア（`super`） | **5 段の系統の最後の段**（jelly・bat・bee・plant・scorpion・mummy・wolf・frostling・ghost・skeleton・goblin・salamander・imp・eyeball）と、裏の系統の最後（void_3・chaos_3・demon_3）、book_3・paper_4 | 約 19（9%） |
+| 盗み専用（`steal`） | §7 の 36 体（A28） | 36 |
+| ボス・レア魔物 | 旧のまま（ボスは `p_boss`、レア魔物の超レアは遺物） | — |
+- **枠を失う品の行き先**（数は目安。品を選ぶのは WEAPONS・GEAR、validate が数を確かめる）:
+  - 魔物のレア 113 品 → 残る枠 約 51 に入る分はそのまま（その系統の最後の段の品を優先）。残り約 62 品のうち、**約 30 品を宝箱の `p_rare`（そのティア）** に移し、残りは消す（効果が他の品と重なるもの・同じティアに同じ枠の品が 3 つ以上あるもの から先に）。
+  - 魔物の超レア 176 品 → 残る枠 約 19 に入る分はそのまま。**約 30 品をボスの `p_boss` とダンジョンの奥の宝箱（`p_super`、新しい表: ダンジョン 1 つに 1 箱、深い階・回復の泉の先）** に移す。§4.1 で残すクセの品・`BUILD_SETS` の S の品・T8〜T9 の品・鋼に通る品・起き上がる品は必ずどこかに残す。残りは消す（約 125 品）。
+  - H2（超レアは 1 種の魔物の超レア枠だけ）は「**魔物から落ちる超レアは 1 体だけ**」に読み替え、宝箱・ボスの表に入った品は対象外。
+- 付録 A の能力値・クセの決まりは、残る品にそのまま当てはめる（消す品は無視してよい）。
+- ドロップ率（`K.DROP`）は旧のまま（枠が減るので全体の出方は減る。A21 追記の「ドロップ＝レア・超レアで突き抜ける」は、数少ないレア持ちの魔物で保つ）。
+
+### 10.2 実の廃止
+- `i_seed_hp`（活力の実）・`i_seed_mp`（魔力の実）・`i_dream_fruit`（夢の果実）を **消す**（担当 GEAR、items_use.js）。効果の型 `grow` とその処理（battle.js 1704〜1720 行、menu.js の移動中の使用）、`R.Rules.grow`・`canGrow`・`K.BONUS_CAP`・`c.bonus`（最大HPの式の `+ bonus`）も消す（担当 RULES・BATTLE・UI）。menu.js 576 行の `BONUS_CAP` も。
+- 参照の置き換え: bosses.js の `MID('i_seed_mp')` → `MID('i_ether')`、`REGION('i_seed_hp')` → `REGION('i_elixir')`（無ければ最上位の回復の道具）。`pools.js`・`shops.js`・`rare.js` の実を消す。夢食いバクの通常枠の夢の果実 → `i_elixir`。
+- validate: 効果 `grow` を持つ品が無い、`bonus` の語が rules・state に無い。
+
+---------------------------------------------------------------------------------------------------
+## 11. オーナーに確かめたいこと
 1. **回復に効く能力値**: 追記の「知力が術の威力・回復に効く」に対し、回復は **精神** のまま（精神 1 点 4%）にした。知力にする（`healStat:'int'`）か、知力と精神の平均にするか。
 2. **25 の 5 人**（ハーゲン腕力・ドッカ体力・ティッタ器用さ・テオ知力・マルタ精神）でよいか。主人公の型は最高 23 にした。
 3. **クセを残す 36 品**（§4.1）の選び方でよいか（属性の吸収・無効 9 品と、稼ぎの 3 品を残した）。
 4. **熟練度**: 最初の地方のダンジョンで 9 前後にすると、本編クリアの主な武器は 70 前後（SYSTEMS_REWORK の見込み 74 より少し下）。これでよいか。
 5. **ボスの盗み専用**: 1 戦の中で「取れるまで何度でも」（1 回ごと 1/8）にした。A28 の「1 回だけ機会」にする場合は率を 1/3〜1/4 に上げる必要がある。
+6. **標準のパーティ**（A29）: 槍が無くなったので、前列の 2 人目をブリギッタ（弓になり後列）から **バルトロ（大剣）** に替えた。
+7. **成長の数値**（A30）: 同じ強さの雑魚で 1 人が伸びる率 約 30%、1 回の伸びは旧の約 1/3 レベル分、ボスのあとは必ず伸びる。伸びの手応え（回数を多く小さく、か、少なく大きく）の好み。
+8. **消える品**（A30）: 魔物のレア・超レアの枠を減らすと、約 60 品のレアと約 125 品の超レアが行き場を失う。宝箱・ボスに移す数（各約 30）と、消す数でよいか。
 
 ---------------------------------------------------------------------------------------------------
 ## 付録 A. レア・超レア 502 品の能力値とクセ（§3・§4）
-`R.DB.items` から作った（2026-09-26 の作業中のツリー）。列: 種 = 武・盾・頭・体・手・足・飾（アクセ）、等T = R（レア）/S（超レア）＋ティア、旧の能力 = 今の `stats`（と遺物・報酬の `XPct` は「％」）、新の能力 = §3.1 の規則の結果（`abil` で書く値）、旧のクセ = desc の「ただし」の後ろ、扱い = **残す**（§4.1）か 消す（→ の後が新しい desc。改行は §8.2.7 で詰める）。
+`R.DB.items` から作った（2026-09-26 の作業中のツリー）。列: 種 = 武・盾・頭・体・手・足・飾（アクセ）、等T = R（レア）/S（超レア）＋ティア、旧の能力 = 今の `stats`（と遺物・報酬の `XPct` は「％」）、新の能力 = §3.1 の規則の結果（`abil` で書く値）、旧のクセ = desc の「ただし」の後ろ、扱い = **残す**（§4.1）か 消す（→ の後が新しい desc。改行は DESIGN §8.2.7 で詰める）。
 固定値の `atk`・`mag` の効果は §3.3-3 の表、等級の倍率（§3.3-1）は `fillItem` がかける（この表には書かない）。
+A29 で id が変わる品（斧・メイス・槍の品）は §8.3 の規則で読み替える（能力値・クセの扱いはそのまま。w_axe_r1〜r9 と槍の帯のレアは消える）。A30 で消える品（§10.1）はこの表を無視してよい。
+
+### A.1 items_weapons_rare.js（47 品。残す 2）
+
+| id | 名前 | 種 | 等T | 旧の能力 | 新の能力 | 旧のクセ | 扱い／新しい desc |
+|---|---|---|---|---|---|---|---|
+| w_axe_r1 | 熊落としの斧 | 武 | R1 | 腕+6 | — | 当たりにくい。 | 消す → 獣に大きなダメージ。 |
+| w_axe_r1m | 墓守の棍棒 | 武 | R1 | 腕+4 体+4 | — | 闇に弱くなる。 | 消す → 不死の魔物に大きなダメージ。 |
+| w_bow_r1 | 朝露の弓 | 武 | R1 | 器+6 | — | 土に弱くなる。 | 消す → 水の属性で攻撃する。 |
+| w_dagger_r1 | 蜂の針 | 武 | R1 | 器+6 | — | 最大HPが下がる。 | 消す → 毒にすることがある。 |
+| w_greatsword_r1 | 木こりの大剣 | 武 | R1 | 腕+6 | — | 動きが遅くなる。 | 消す → 植物に大きなダメージ。 |
+| w_spear_r1 | 鳥追いの槍 | 武 | R1 | 腕+4 器+4 | — | 守備力が下がる。 | 消す → 飛ぶ敵に大きなダメージ。 |
+| w_staff_r1 | 灯火の杖 | 武 | R1 | 知+6 | — | 水に弱くなる。 | 消す → 火の攻撃が強くなる。 |
+| w_sword_r1 | 若葉の剣 | 武 | R1 | 腕+6 | — | 火に弱くなる。 | 消す → 風の属性で攻撃する。 |
+| w_axe_r3 | 荒くれの斧 | 武 | R3 | 腕+10 | — | 守備力が下がる。 | 消す → 会心が出やすい。 |
+| w_axe_r3m | 歯車砕きの槌 | 武 | R3 | 腕+6 体+6 | — | 動きが遅くなる。 | 消す → からくりに大きなダメージ。 |
+| w_bow_r3 | 静けさの弓 | 武 | R3 | 器+10 | — | 術のMPの消費が増える。 | 消す → 術を封じることがある。 |
+| w_dagger_r3 | 眠り羽の短剣 | 武 | R3 | 器+10 | — | 術防が下がる。 | 消す → 眠らせることがある。 |
+| w_greatsword_r3 | 旋風の大剣 | 武 | R3 | 腕+10 | — | 当たりにくい。 | 消す → 風の属性で攻撃する。 |
+| w_spear_r3 | 竜狩りの槍 | 武 | R3 | 腕+6 器+6 | — | 火に弱くなる。 | 消す → 竜に大きなダメージ。 |
+| w_staff_r3 | 月しずくの杖 | 武 | R3 | 知+10 | — | 最大HPが下がる。 | 消す → 戦闘中、MPが少しずつ戻る。 |
+| w_sword_r3 | 白銀の騎士剣 | 武 | R3 | 腕+10 | — | 闇に弱くなる。 | 消す → 光の属性で攻撃する。 |
+| w_axe_r5 | 雷鳴の斧 | 武 | R5 | 腕+14 | 腕+1 | 魔物を呼ぶ。 | 消す → 気絶させることがある。 |
+| w_axe_r5m | 聖鐘の槌 | 武 | R5 | 腕+8 体+8 | 腕+1 | 魔物を呼ぶ。 | 消す → 光の属性で攻撃する。 |
+| w_bow_r5 | 追い風の弓 | 武 | R5 | 器+14 | 器+1 | 火に弱くなる。 | 消す → 風の属性で攻撃する。 |
+| w_dagger_r5 | 影刺しの短剣 | 武 | R5 | 器+14 | 器+1 | 光に弱くなる。 | 消す → まひさせることがある。 |
+| w_greatsword_r5 | 氷河の大剣 | 武 | R5 | 腕+14 | 腕+1 | 動きが遅くなる。 | 消す → 凍らせることがある。 |
+| w_spear_r5 | 潮騒の槍 | 武 | R5 | 腕+8 器+8 | 腕+1 | 土に弱くなる。 | 消す → 水の属性で攻撃する。 |
+| w_staff_r5 | 星詠みの杖 | 武 | R5 | 知+14 | 知+1 | 守備力が下がる。 | 消す → 術を閃きやすい。 |
+| w_sword_r5 | 紅蓮の剣 | 武 | R5 | 腕+14 | 腕+1 | 水に弱くなる。 | 消す → 火の属性で攻撃する。 |
+| w_sword_r5k | 残照の刀 | 武 | R5 | 腕+8 器+8 | 腕+1 | 最大HPが下がる。 | **残す**（desc そのまま） |
+| w_axe_r7 | 巨岩割りの斧 | 武 | R7 | 腕+18 | 腕+1 | 両手持ちで盾は不可。 | **残す**（desc そのまま） |
+| w_axe_r7m | 岩震の槌 | 武 | R7 | 腕+10 体+10 | 腕+1 | 動きが遅くなる。 | 消す → 気絶させることがある。 |
+| w_bow_r7 | 弦月の弓 | 武 | R7 | 器+18 | 器+1 | 光に弱くなる。 | 消す → 眠らせることがある。 |
+| w_dagger_r7 | 黒蛇の牙 | 武 | R7 | 器+18 | 器+1 | 術防が下がる。 | 消す → 毒にすることがある。 |
+| w_greatsword_r7 | 地鳴りの大剣 | 武 | R7 | 腕+18 | 腕+1 | 風に弱くなる。 | 消す → 土の属性で攻撃する。 |
+| w_spear_r7 | 白光の槍 | 武 | R7 | 腕+10 器+10 | 腕+1 | 闇に弱くなる。 | 消す → 光の属性で攻撃する。 |
+| w_staff_prayer_r7 | 慈愛の聖杖 | 武 | R7 | 精+18 | 精+1 | 経験値が減る。 | 消す → 回復の術がよく効く。 |
+| w_staff_r7 | 大術師の杖 | 武 | R7 | 知+18 | 知+1 | 術のMPの消費が増える。 | 消す → 術の威力が上がる。 |
+| w_staff_r7b | 黒曜の杖 | 武 | R7 | 知+18 | 知+1 | 最大HPが下がる。 | 消す → 術力が上がる。 |
+| w_sword_r7 | 竜断ちの剣 | 武 | R7 | 腕+18 | 腕+1 | 受けるダメージが増える。 | 消す → 竜に大きなダメージ。 |
+| w_sword_r7k | しらさぎ丸 | 武 | R7 | 腕+10 器+10 | 腕+1 | 最大HPが下がる。 | 消す → 会心が出やすい。 |
+| w_axe_r9 | 天雷の斧 | 武 | R9 | 腕+24 | 腕+2 | 当たりにくい。 | 消す → 気絶させることがある。 |
+| w_axe_r9m | 審判の槌 | 武 | R9 | 腕+12 体+12 | 腕+1 体+1 | 技のMPの消費が増える。 | 消す → 魔族に大きなダメージ。 |
+| w_bow_r9 | 極光の弓 | 武 | R9 | 器+24 | 器+2 | 土に弱くなる。 | 消す → 水の属性で攻撃する。 |
+| w_dagger_r9 | 夜想の短剣 | 武 | R9 | 器+24 | 器+2 | 光に弱くなる。 | 消す → 眠らせることがある。 |
+| w_greatsword_r9 | 天裂きの大剣 | 武 | R9 | 腕+24 | 腕+2 | 動きが遅くなる。 | 消す → 会心が出やすい。 |
+| w_spear_r9 | 流星の槍 | 武 | R9 | 腕+12 器+12 | 腕+1 器+1 | 守備力が下がる。 | 消す → 風の属性で攻撃する。 |
+| w_staff_prayer_r9 | 天恵の聖杖 | 武 | R9 | 精+24 | 精+2 | 動きが遅くなる。 | 消す → 術のMPの消費が減る。 |
+| w_staff_r9 | 天球の杖 | 武 | R9 | 知+24 | 知+2 | 受けるダメージが増える。 | 消す → 術の威力が上がる。 |
+| w_staff_r9b | 極夜の杖 | 武 | R9 | 知+24 | 知+2 | 最大HPが下がる。 | 消す → 術力が上がる。 |
+| w_sword_r9 | 朝焼けの剣 | 武 | R9 | 腕+24 | 腕+2 | 闇に弱くなる。 | 消す → 光の属性で攻撃する。 |
+| w_sword_r9k | 夜叉丸 | 武 | R9 | 腕+12 器+12 | 腕+1 器+1 | 光に弱くなる。 | 消す → 闇の属性で攻撃する。 |
+
+### A.2 items_weapons_monster.js（112 品。残す 5）
+
+| id | 名前 | 種 | 等T | 旧の能力 | 新の能力 | 旧のクセ | 扱い／新しい desc |
+|---|---|---|---|---|---|---|---|
+| w_axe_ashen | 灰の棍棒 | 武 | R1 | 腕+4 体+4 | — | 動きが遅くなる。 | 消す → 気絶させることがある。 |
+| w_axe_sr_crabclaw | カニばさみの槌 | 武 | S1 | 腕+9 素-2 | 腕+1 | 素早さが下がる。 | 消す → 会心が出やすい。守備力が上がる。 |
+| w_axe_sr_goblinclub | 小鬼の棍棒 | 武 | S1 | 腕+6 体+6 知-2 | 腕+1 | 知力が下がる。 | 消す → 会心が出やすい。手に入るお金が増える。 |
+| w_axe_sr_wander | さまよい木の枝 | 武 | S1 | 腕+6 体+6 | 腕+1 | 火に弱くなる。 | 消す → 最大HPが上がる。気絶にかかりにくい。 |
+| w_bow_leaf | 木の葉の弓 | 武 | R1 | 器+6 | — | 火に弱くなる。 | 消す → よく当たる。 |
+| w_bow_sr_vine | 花づるの弓 | 武 | S1 | 器+6 素+6 | 器+1 | 火に弱くなる。 | 消す → まひさせることがある。よく当たる。 |
+| w_dagger_scorpion | サソリの小刀 | 武 | R1 | 器+6 | — | 最大HPが下がる。 | 消す → 毒にすることがある。 |
+| w_dagger_sr_greywolf | 灰色オオカミの爪 | 武 | S1 | 腕+6 素+6 | 腕+1 | 火に弱くなる。 | 消す → 先制しやすくなる。会心が出やすい。 |
+| w_dagger_sr_icicle | こおり小僧の爪 | 武 | S1 | 腕+6 素+6 | 腕+1 | 火に弱くなる。 | 消す → 水の属性で攻撃する。水の攻撃が強くなる。 |
+| w_dagger_sr_rattooth | ネズミの前歯 | 武 | S1 | 器+9 体-2 | 器+1 | 体力が下がる。 | 消す → 会心が出やすい。盗みが成功しやすい。 |
+| w_dagger_sr_redtail | 赤い尾の短剣 | 武 | S1 | 器+9 | 器+1 | 風に弱くなる。 | 消す → 毒にすることがある。会心が出やすい。 |
+| w_dagger_sr_stinger | 花バチの針 | 武 | S1 | 器+9 | 器+1 | 火に弱くなる。 | 消す → 会心が出やすい。よく当たる。 |
+| w_spear_coral | サンゴの槍 | 武 | R1 | 腕+4 器+4 | — | 土に弱くなる。 | 消す → 水の属性で攻撃する。 |
+| w_spear_sr_soot_fork | すす悪魔の三つまた | 武 | S1 | 腕+6 器+6 | 腕+1 | 光に弱くなる。 | 消す → 目をくらませることがある。会心が出やすい。 |
+| w_sword_sr_cutlass | 骸骨水夫のカトラス | 武 | S1 | 腕+9 | 腕+1 | 光に弱くなる。 | 消す → 会心が出やすい。よく当たる。 |
+| w_axe_sr_yeti | 雪男の大槌 | 武 | S2 | 腕+6 素+6 | 腕+1 | 火に弱くなる。 | 消す → 物理攻撃の威力が上がる。水に強い。 |
+| w_axe_ember | 残り火の斧 | 武 | R3 | 腕+10 | — | 水に弱くなる。 | 消す → 火の属性で攻撃する。 |
+| w_axe_pick | 鉱夫のつるはし | 武 | R3 | 腕+10 | — | 動きが遅くなる。 | 消す → 会心が出やすい。 |
+| w_axe_sr_goblin | 小鬼の手斧 | 武 | S3 | 腕+15 精-3 | 腕+1 | 精神が下がる。 | 消す → 会心が出やすい。物理攻撃の威力が上がる。 |
+| w_axe_sr_toadstool | まだらの棍棒 | 武 | S3 | 腕+9 体+9 | 腕+1 | 火に弱くなる。 | 消す → 毒にすることがある。 |
+| w_bow_gull | カモメの弓 | 武 | R3 | 器+10 | — | 守備力が下がる。 | 消す → 風の属性で攻撃する。 |
+| w_bow_snakeskin | 大蛇の弓 | 武 | R3 | 器+6 素+6 | — | 術防が下がる。 | 消す → 毒にすることがある。 |
+| w_bow_sr_clockwork | からくり弓 | 武 | S3 | 器+15 素-3 | 器+1 | 素早さが下がる。 | 消す → よく当たる。会心が出やすい。 |
+| w_bow_sr_firebreath | 火吹きの弓 | 武 | S3 | 器+15 | 器+1 | 水に弱くなる。 | 消す → 火の属性で攻撃する。火の攻撃が強くなる。 |
+| w_bow_sr_needlecactus | 針サボテンの弓 | 武 | S3 | 器+15 精-3 | 器+1 | 精神が下がる。 | 消す → 会心が出やすい。よく当たる。 |
+| w_bow_sr_spidersilk | 毒糸の弓 | 武 | S3 | 器+9 素+9 | 器+1 | 火に弱くなる。 | 消す → 毒にすることがある。よく当たる。 |
+| w_bow_star | 星明かりの弓 | 武 | R3 | 器+10 | — | 闇に弱くなる。 | 消す → よく当たる。 |
+| w_dagger_bloodbat | 血吸いの短剣 | 武 | R3 | 器+10 | — | 光に弱くなる。 | 消す → 会心が出やすい。 |
+| w_dagger_frost | 霜の短剣 | 武 | R3 | 器+10 | — | 火に弱くなる。 | 消す → 水の属性で攻撃する。 |
+| w_dagger_sr_frostfang | 霜牙の短剣 | 武 | S3 | 器+15 | 器+1 | 土に弱くなる。 | 消す → 水の属性で攻撃する。凍らせることがある。 |
+| w_dagger_sr_ironclaw | 鉄のかぎ爪 | 武 | S3 | 腕+9 素+9 | 腕+1 | 風に弱くなる。 | 消す → 会心が出やすい。よく当たる。 |
+| w_dagger_sr_obsidian | 黒曜の短剣 | 武 | S3 | 器+15 体-3 | 器+1 | 体力が下がる。 | 消す → 会心が出やすい。 |
+| w_dagger_sr_scorptail | 毒尾の爪 | 武 | S3 | 腕+9 素+9 | 腕+1 | 風に弱くなる。 | 消す → 毒にすることがある。会心が出やすい。 |
+| w_spear_mist | 霧の槍 | 武 | R3 | 器+6 素+6 | — | 風に弱くなる。 | 消す → 目をくらませることがある。 |
+| w_spear_reed | アシの槍 | 武 | R3 | 腕+6 器+6 | — | 守備力が下がる。 | 消す → よく当たる。 |
+| w_spear_sr_harpoon | 魚人の大もり | 武 | S3 | 腕+9 器+9 | 腕+1 | 土に弱くなる。 | 消す → 水の属性で攻撃する。会心が出やすい。 |
+| w_spear_sr_marsh | 沼のもり槍 | 武 | S3 | 腕+9 器+9 | 腕+1 | 土に弱くなる。 | 消す → 水の属性で攻撃する。よく当たる。 |
+| w_spear_sr_stormbeak | 嵐のくちばし槍 | 武 | S3 | 腕+9 器+9 | 腕+1 | 火に弱くなる。 | 消す → 風の属性で攻撃する。風の攻撃が強くなる。 |
+| w_spear_sr_venomneedle | 蜂針の槍 | 武 | S3 | 腕+9 器+9 体-3 | 腕+1 | 体力が下がる。 | 消す → 毒にすることがある。 |
+| w_staff_sprout | 芽吹きの杖 | 武 | R3 | 知+10 | — | 火に弱くなる。 | 消す → 回復の術がよく効く。 |
+| w_staff_sr_bubble | あぶくの杖 | 武 | S3 | 知+15 | 知+1 | 土に弱くなる。 | 消す → 水の属性で攻撃する。水の攻撃が強くなる。 |
+| w_staff_sr_goblinfire | 化け火の杖 | 武 | S3 | 精+15 | 精+1 | 水に弱くなる。 | 消す → 混乱させることがある。火の属性で攻撃する。 |
+| w_staff_sr_petal | 花びらの杖 | 武 | S3 | 知+15 | 知+1 | 闇に弱くなる。 | 消す → 光の属性で攻撃する。回復の術がよく効く。 |
+| w_staff_sr_ruby | 紅水晶の杖 | 武 | S3 | 知+15 | 知+1 | 水に弱くなる。 | 消す → 火の属性で攻撃する。火の攻撃が強くなる。 |
+| w_sword_sr_crimson | 紅吸いの刀 | 武 | S3 | 腕+9 器+9 | 腕+1 | 光に弱くなる。 | 消す → 会心が出やすい。最大HPが上がる。 |
+| w_axe_rat | 鉄歯の棍棒 | 武 | R5 | 腕+8 体+8 | 腕+1 | 術防が下がる。 | 消す → 会心が出やすい。 |
+| w_axe_sr_bullfrog | 大口ガエルの棍 | 武 | S5 | 腕+12 体+12 素-4 | 腕+1 体+1 | 素早さが下がる。 | 消す → 最大HPが上がる。気絶させることがある。 |
+| w_axe_sr_icefist | 氷拳の斧 | 武 | S5 | 腕+21 | 腕+2 | 火に弱くなる。 | 消す → 水の属性で攻撃する。凍らせることがある。 |
+| w_axe_sr_ironore | 鉄鉱の大槌 | 武 | S5 | 腕+12 体+12 素-4 | 腕+1 体+1 | 素早さが下がる。 | 消す → 気絶させることがある。物理が強くなる。 |
+| w_bow_sr_foamshot | 泡しぶきの弓 | 武 | S5 | 器+21 | 器+2 | 土に弱くなる。 | 消す → 目をくらませることがある。水の属性で攻撃する。 |
+| w_dagger_sr_hexpin | 呪いのまち針 | 武 | S5 | 器+21 | 器+2 | 光に弱くなる。 | 消す → 術を封じることがある。闇の攻撃が強くなる。 |
+| w_dagger_sr_triplefang | 三つ牙の爪 | 武 | S5 | 腕+12 素+12 | 腕+1 素+1 | 水に弱くなる。 | 消す → 火の属性で攻撃する。会心が出やすい。 |
+| w_dagger_wormtooth | 大ミミズの牙爪 | 武 | R5 | 腕+8 素+8 | 腕+1 | かわしにくい。 | 消す → 会心が出やすい。 |
+| w_greatsword_beastfang | 大獣の牙剣 | 武 | R5 | 腕+14 | 腕+1 | 術防が下がる。 | 消す → 物理攻撃の威力が上がる。 |
+| w_greatsword_sr_rockworm | 岩ミミズの骨剣 | 武 | S5 | 腕+21 素-4 | 腕+2 | 素早さが下がる。 | 消す → 気絶させることがある。 |
+| w_spear_sr_chaincurse | 呪い鎖の鎌槍 | 武 | S5 | 器+12 素+12 | 器+1 素+1 | 光に弱くなる。 | 消す → 術を封じることがある。闇の属性で攻撃する。 |
+| w_spear_sr_eightarm | 八本腕のもり | 武 | S5 | 器+12 素+12 | 器+1 素+1 | 土に弱くなる。 | 消す → まひさせることがある。よく当たる。 |
+| w_spear_sr_irontusk | 鉄牙の大槍 | 武 | S5 | 腕+12 器+12 素-4 | 腕+1 器+1 | 素早さが下がる。 | 消す → 物理が強くなる。気絶させることがある。 |
+| w_spear_sr_sparkhorn | 火花角の槍 | 武 | S5 | 腕+12 器+12 | 腕+1 器+1 | 水に弱くなる。 | 消す → やけどを負わせることがある。火の属性で攻撃する。 |
+| w_spear_sr_venomjelly | 毒ゼリーの槍 | 武 | S5 | 器+12 素+12 | 器+1 素+1 | 火に弱くなる。 | 消す → 毒にすることがある。 |
+| w_spear_sr_whiteline | 白線の槍 | 武 | S5 | 腕+12 器+12 | 腕+1 器+1 | 闇に弱くなる。 | 消す → 光の属性で攻撃する。会心が出やすい。 |
+| w_spear_sr_windcutter | 風切りの竜槍 | 武 | S5 | 腕+12 器+12 | 腕+1 器+1 | 火に弱くなる。 | 消す → 風の属性で攻撃する。会心が出やすい。 |
+| w_staff_sr_ankh | 冥府の杖 | 武 | S5 | 知+21 | 知+2 | 光に弱くなる。 | 消す → 闇の攻撃が強くなる。術のMPの消費が減る。 |
+| w_staff_sr_coralwand | サンゴの杖 | 武 | S5 | 知+21 | 知+2 | 土に弱くなる。 | 消す → 戦闘中、MPが少しずつ戻る。水の攻撃が強くなる。 |
+| w_staff_sr_swampcharm | 沼の呪術杖 | 武 | S5 | 知+21 | 知+2 | 土に弱くなる。 | 消す → 水の攻撃が強くなる。回復の術がよく効く。 |
+| w_staff_tombpriest | 墓守の杖 | 武 | R5 | 知+14 | 知+1 | 光に弱くなる。 | 消す → 闇の攻撃が強くなる。 |
+| w_sword_sr_knightless | 主なき騎士剣 | 武 | S5 | 腕+21 | 腕+2 | 水に弱くなる。 | 消す → 会心が出やすい。守備力が上がる。 |
+| w_axe_brimstone | 硫黄の槌 | 武 | R7 | 腕+10 素+10 | 腕+1 | 最大HPが下がる。 | 消す → 火の属性で攻撃する。 |
+| w_axe_dune | 大地の斧 | 武 | R7 | 腕+18 | 腕+1 | 動きが遅くなる。 | 消す → 土の属性で攻撃する。 |
+| w_axe_forgehammer | 鍛冶場の大槌 | 武 | R7 | 腕+10 体+10 | 腕+1 | 動きが遅くなる。 | 消す → 物理攻撃の威力が上がる。 |
+| w_bow_sr_nightwing | 夜翼の弓 | 武 | S7 | 器+27 | 器+2 | 光に弱くなる。 | 消す → 目をくらませることがある。闇の属性で攻撃する。 |
+| w_bow_sr_stargazer | 星見の弓 | 武 | S7 | 器+27 | 器+2 | 闇に弱くなる。 | 消す → 光の属性で攻撃する。よく当たる。 |
+| w_bow_sr_thousand | 千本針の弓 | 武 | S7 | 器+27 体-5 | 器+2 | 体力が下がる。 | 消す → 会心が出やすい。よく当たる。 |
+| w_dagger_sr_reaper | 死神の尾針 | 武 | S7 | 器+15 素+15 | 器+1 素+1 | 最大HPが下がる。 | 消す → 一撃で倒すことがある。会心が出やすい。 |
+| w_dagger_wolfking | オオカミ王の牙爪 | 武 | R7 | 腕+10 素+10 | 腕+1 | 守備力が下がる。 | 消す → 会心が出やすい。 |
+| w_greatsword_blank | 白紙の刃 | 武 | R7 | 腕+18 | 腕+1 | 術のMPの消費が増える。 | 消す → 術を封じることがある。 |
+| w_spear_hornet | 大バチの槍 | 武 | R7 | 腕+10 器+10 | 腕+1 | 最大HPが下がる。 | 消す → 毒にすることがある。 |
+| w_spear_sr_flamehorn | 炎角の槍 | 武 | S7 | 腕+15 器+15 | 腕+1 器+1 | 水に弱くなる。 | 消す → 火の属性で攻撃する。会心が出やすい。 |
+| w_staff_sr_hellfire | 業火の杖 | 武 | S7 | 知+27 | 知+2 | 水に弱くなる。術の消費MPが増える。 | 消す → 火の属性で攻撃する。火の攻撃が強くなる。 |
+| w_staff_sr_moonbloom | 月待ち花の杖 | 武 | S7 | 精+27 | 精+2 | 光に弱くなる。 | 消す → 闇の属性で攻撃する。闇の攻撃が強くなる。 |
+| w_sword_ash | 灰かぶりの刀 | 武 | R7 | 腕+10 器+10 | 腕+1 | 水に弱くなる。 | 消す → 火の属性で攻撃する。 |
+| w_sword_bellringer | 鐘つきの剣 | 武 | R7 | 腕+18 | 腕+1 | 魔物を呼ぶ。 | 消す → 気絶させることがある。 |
+| w_sword_moon | 月の刀 | 武 | R7 | 腕+10 器+10 | 腕+1 | 光に弱くなる。 | 消す → 闇の属性で攻撃する。 |
+| w_sword_sand | 砂けむりの刀 | 武 | R7 | 腕+10 器+10 | 腕+1 | 風に弱くなる。 | 消す → 土の属性で攻撃する。 |
+| w_sword_sr_goblincaptain | 小鬼の隊長の剣 | 武 | S7 | 腕+27 知-5 | 腕+2 | 知力が下がる。 | 消す → 戦闘の始めに攻撃が上がる。混乱にかかりにくい。 |
+| w_sword_sr_jellygeneral | ゼリー将軍の剣 | 武 | S7 | 腕+27 素-5 | 腕+2 | 素早さが下がる。 | 消す → 始めに攻撃が上がる。気絶にかかりにくい。 |
+| w_sword_sr_snowgeneral | 雪大将の刀 | 武 | S7 | 腕+15 器+15 | 腕+1 器+1 | 火に弱くなる。 | 消す → 水の属性で攻撃する。凍らせることがある。 |
+| w_sword_sr_tombgeneral | 王墓の将軍剣 | 武 | S7 | 腕+27 | 腕+2 | 光に弱くなる。 | 消す → 会心が出やすい。即死が効かない。 |
+| w_sword_starblade | 星の剣 | 武 | R7 | 腕+18 | 腕+1 | 闇に弱くなる。 | 消す → 光の属性で攻撃する。 |
+| w_sword_tide | 潮の刀 | 武 | R7 | 腕+10 器+10 | 腕+1 | 土に弱くなる。 | 消す → 水の属性で攻撃する。 |
+| w_axe_sr_cactusking | 大将の針棍棒 | 武 | S8 | 腕+15 体+15 | 腕+2 体+1 | 風に弱くなる。 | 消す → 会心が出やすい。気絶させることがある。 |
+| w_axe_sr_chieftain | 族長の大斧 | 武 | S8 | 腕+30 | 腕+3 | 土に弱くなる。 | 消す → 物理攻撃の威力が上がる。会心が出やすい。 |
+| w_axe_sr_gargoyle | 石像鬼の大斧 | 武 | S8 | 腕+30 素-5 | 腕+3 | 素早さが下がる。 | 消す → まひさせることがある。物理が強くなる。 |
+| w_axe_sr_mole_boss | 大親方のつるはし | 武 | S8 | 腕+30 | 腕+3 | 風に弱くなる。 | 消す → 会心が出やすい。気絶させることがある。 |
+| w_bow_sr_python | 大蛇王の弓 | 武 | S8 | 器+15 素+15 | 器+2 素+1 | 風に弱くなる。 | 消す → まひさせることがある。物理が強くなる。 |
+| w_bow_sr_yomi | 黄泉火の弓 | 武 | S8 | 器+30 | 器+3 | 光に弱くなる。 | 消す → やけどを負わせることがある。闇の属性で攻撃する。 |
+| w_greatsword_sr_duneworm | 大地ミミズの牙剣 | 武 | S8 | 腕+30 | 腕+3 | 風に弱くなる。 | 消す → 物理攻撃の威力が上がる。土の攻撃が強くなる。 |
+| w_greatsword_sr_eraser | 白紙の大剣 | 武 | S8 | 腕+30 | 腕+3 | 最大HPが下がる。 | 消す → 術を封じることがある。物理が強くなる。 |
+| w_spear_sr_mirrorhorn | 鏡角の槍 | 武 | S8 | 腕+15 器+15 | 腕+2 器+1 | 闇に弱くなる。 | **残す**（desc そのまま） |
+| w_spear_sr_quicksilver | 白銀の流れ槍 | 武 | S8 | 器+15 素+15 腕-5 | 器+2 素+1 腕-1 | 腕力が下がる。 | **残す**（desc そのまま） |
+| w_staff_sr_abyss | 深淵の杖 | 武 | S8 | 知+30 | 知+3 | 光に弱くなる。最大HPが下がる。 | **残す**（desc そのまま） |
+| w_staff_sr_elder_cap | 長老ダケの杖 | 武 | S8 | 精+30 素-5 | 精+3 | 素早さが下がる。 | 消す → 回復の術がよく効く。毒にかかりにくい。 |
+| w_staff_sr_elder_root | 古老の根杖 | 武 | S8 | 精+30 素-5 | 精+3 | 素早さが下がる。 | 消す → 土の攻撃が強くなる。術防が上がる。 |
+| w_staff_sr_goldquill | 黄金の羽ペン杖 | 武 | S8 | 知+30 腕-5 | 知+3 | 腕力が下がる。 | 消す → 術力が上がる。術を閃きやすい。術のMPの消費が減る。 |
+| w_sword_sr_admiral | 提督の金剣 | 武 | S8 | 腕+30 | 腕+3 | 光に弱くなる。 | 消す → 戦闘の始めに攻撃が上がる。会心が出やすい。 |
+| w_sword_sr_clockwork | からくり大将の刀 | 武 | S8 | 腕+15 器+15 | 腕+2 器+1 | 水に弱くなる。 | 消す → 戦闘の始めに素早さが上がる。会心が出やすい。 |
+| w_sword_sr_merknight | 魚人騎士の剣 | 武 | S8 | 腕+30 | 腕+3 | 土に弱くなる。 | 消す → 水の属性で攻撃する。守備力が上がる。 |
+| w_axe_sr_chaos | 混沌の大斧 | 武 | S9 | 腕+36 器-12 | 腕+4 器-2 | 器用さが下がる。 | **残す**（desc そのまま） |
+| w_greatsword_chaoshorn | 混沌の角剣 | 武 | R9 | 腕+24 | 腕+2 | 受けるダメージが増える。 | 消す → 物理攻撃の威力が上がる。 |
+| w_sword_sr_dreamcut | 夢断ちの太刀 | 武 | S9 | 腕+18 器+18 | 腕+2 器+2 | 最大HPが下がる。 | 消す → 会心が出やすい。眠らせることがある。物理が強くなる。 |
+| w_sword_sr_platinum | 白金の太刀 | 武 | S9 | 腕+18 器+18 | 腕+2 器+2 | 闇に弱くなる。 | **残す**（desc そのまま） |
+| w_sword_sr_void | 虚無の剣 | 武 | S9 | 腕+36 | 腕+4 | 光に弱くなる。 | 消す → 会心が出やすい。物理攻撃の威力が上がる。闇の属性で攻撃する。 |
+
+### A.3 items_weapons_super.js（10 品。残す 4）
+
+| id | 名前 | 種 | 等T | 旧の能力 | 新の能力 | 旧のクセ | 扱い／新しい desc |
+|---|---|---|---|---|---|---|---|
+| w_greatsword_sr_frenzy | 狂い咲きの大剣 | 武 | S2 | 腕+12 | 腕+1 | 技が使えない。 | **残す**（desc そのまま） |
+| w_dagger_sr_mirror | 鏡割りの短剣 | 武 | S5 | 器+21 | 器+2 | 当たりにくい。 | **残す**（desc そのまま） |
+| w_sword_sr_matsuyoi | 待宵丸 | 武 | S7 | 腕+15 器+15 | 腕+1 器+1 | 動きが遅くなる。 | **残す**（desc そのまま） |
+| w_axe_sr_titan | 巨神の斧 | 武 | S8 | 腕+30 | 腕+3 | 当たりにくい。 | 消す → 会心が出やすい。 |
+| w_dagger_sr_moonfang | 月牙の短剣 | 武 | S8 | 器+30 | 器+3 | 最大HPが下がる。 | 消す → 会心が出やすい。眠らせることがある。 |
+| w_dagger_sr_silk | 銀糸の短剣 | 武 | S8 | 器+30 | 器+3 | 受けるダメージが増える。 | 消す → まひさせることがある。 |
+| w_staff_sr_cosmos | 万象の杖 | 武 | S8 | 知+30 | 知+3 | 最大HPが下がる。 | 消す → 術力が上がる。 |
+| w_staff_sr_moon | 月読みの杖 | 武 | S8 | 知+30 | 知+3 | 動きが遅くなる。 | 消す → 術のMPの消費が減る。 |
+| w_sword_sr_hegemon | 覇道の剣 | 武 | S8 | 腕+30 | 腕+3 | 動きが遅くなる。 | 消す → 物理攻撃の威力が上がる。会心が出やすい。 |
+| w_sword_sr_echo | 残影の魔剣 | 武 | S9 | 腕+36 | 腕+4 | 光に弱い。 | **残す**（desc そのまま） |
+
+### A.4 items_armor_rare.js（53 品。残す 2）
+
+| id | 名前 | 種 | 等T | 旧の能力 | 新の能力 | 旧のクセ | 扱い／新しい desc |
+|---|---|---|---|---|---|---|---|
+| bd_r1_int | 見習い魔女の衣 | 体 | R1 | 知+6 | — | 守備力が下がる。 | 消す → 最大MPが上がる。 |
+| bd_r1_str | 野牛の鎧 | 体 | R1 | 腕+6 | — | 動きが遅くなる。 | 消す → 最大HPが上がる。 |
+| ft_r1_agi | 野うさぎの靴 | 足 | R1 | 素+4 | — | 魔物を呼ぶ。 | 消す → すばやく動ける。 |
+| hd_r1_dex | 鷹羽の帽子 | 頭 | R1 | 器+4 | — | 術防が下がる。 | 消す → よく当たる。 |
+| hn_r1_dex | くすね屋の手袋 | 手 | R1 | 器+4 | — | 守備力が下がる。 | 消す → 盗みが成功しやすい。 |
+| sh_r1_vit | 亀甲の大盾 | 盾 | R1 | 体+4 | — | 風に弱くなる。 | 消す → 土のダメージを減らす。 |
+| bd_r3_dex | 砂漠の旅装 | 体 | R3 | 器+10 | — | 水に弱くなる。 | 消す → 火のダメージを減らす。 |
+| bd_r3_mnd | 巡礼の白衣 | 体 | R3 | 精+10 | — | 守備力が下がる。 | 消す → 戦闘中、HPが少しずつ戻る。 |
+| bd_r3_vit | 砦の大鎧 | 体 | R3 | 体+10 | — | 動きが遅くなる。 | 消す → 気絶が効かない。 |
+| ft_r3_mnd | 癒やし手のサンダル | 足 | R3 | 精+6 | — | 最大HPが下がる。 | 消す → 回復の術がよく効く。 |
+| hd_r3_int | 星見の三角帽 | 頭 | R3 | 知+6 | — | 守備力が下がる。 | 消す → 術を閃きやすい。 |
+| hd_r3_str | 野牛の角兜 | 頭 | R3 | 腕+6 | — | 術防が下がる。 | 消す → 会心が出やすい。 |
+| hn_r3_str | 怪力の籠手 | 手 | R3 | 腕+6 | — | 当たりにくい。 | 消す → 物理攻撃の威力が上がる。 |
+| sh_r3_int | 霧の魔導書 | 盾 | R3 | 知+6 | — | 術防が下がる。 | 消す → 術の威力が上がる。 |
+| bd_r5_agi | 風読みの装束 | 体 | R5 | 素+14 | — | 魔物を呼ぶ。 | 消す → 戦闘の始めに素早さが上がる。 |
+| bd_r5_int | 氷の魔女の衣 | 体 | R5 | 知+14 | — | 火に弱くなる。 | 消す → 水の攻撃が強くなる。 |
+| bd_r5_str | 紅蓮の鎧 | 体 | R5 | 腕+14 | — | 水に弱くなる。 | **残す**（desc そのまま） |
+| ft_r5_vit | 岩人のすね当て | 足 | R5 | 体+8 | — | 動きが遅くなる。 | 消す → 最大HPが上がる。 |
+| hd_r5_dex | 鷲の目の帽子 | 頭 | R5 | 器+8 | — | 術防が下がる。 | 消す → 会心が出やすい。 |
+| hd_r5_vit | 竜顎の兜 | 頭 | R5 | 体+8 | — | 動きが遅くなる。 | 消す → 最大HPが上がる。 |
+| hn_r5_int | 術師の長手袋 | 手 | R5 | 知+8 | — | 技のMPの消費が増える。 | 消す → 術のMPの消費が減る。 |
+| hn_rival_bracer | ロウェルの手甲 | 手 | R5 | 器+8 | 器+1 | 術防が下がる。 | 消す → 会心が出やすい。 |
+| sh_r5_vit | 鏡の大盾 | 盾 | R5 | 体+8 | — | 風に弱くなる。 | 消す → 火・水のダメージを減らす。 |
+| bd_r7_dex | 夜鷹の胴着 | 体 | R7 | 器+18 | 器+1 | 術防が下がる。 | 消す → 攻撃をかわしやすい。 |
+| bd_r7_int | 夜空の法衣 | 体 | R7 | 知+18 | 知+1 | 守備力が下がる。 | 消す → 最大MPが上がる。 |
+| bd_r7_str | 剛勇の鎧 | 体 | R7 | 腕+18 | 腕+1 | 動きが遅くなる。 | 消す → 物理攻撃の威力が上がる。 |
+| ft_r7_dex | 狩人の長靴 | 足 | R7 | 器+10 | — | 魔物を呼ぶ。 | 消す → 先制しやすくなる。 |
+| ft_r7_int | 霧歩きの布靴 | 足 | R7 | 知+10 | — | 守備力が下がる。 | 消す → 沈黙が効かない。 |
+| ft_r7_str | 突進のグリーブ | 足 | R7 | 腕+10 | — | 魔物を呼ぶ。 | 消す → すばやく動ける。 |
+| hd_r7_dex | 狙撃手の帽子 | 頭 | R7 | 器+10 | — | 最大HPが下がる。 | 消す → よく当たる。 |
+| hd_r7_int | 魔女の三角帽 | 頭 | R7 | 知+10 | — | 光に弱くなる。 | 消す → 闇の攻撃が強くなる。 |
+| hd_r7_str | 獅子の兜 | 頭 | R7 | 腕+10 | — | 術防が下がる。 | 消す → 戦闘の始めに攻撃が上がる。 |
+| hn_r7_dex | 射手の手袋 | 手 | R7 | 器+10 | — | 術防が下がる。 | 消す → 会心が出やすい。 |
+| hn_r7_int | 詠唱の長手袋 | 手 | R7 | 知+10 | — | 最大HPが下がる。 | 消す → 戦闘中、MPが少しずつ戻る。 |
+| hn_r7_str | 剛力の籠手 | 手 | R7 | 腕+10 | — | 当たりにくい。 | 消す → 会心が出やすい。 |
+| sh_r7_dex | 旋風の盾 | 盾 | R7 | 器+10 | — | 土に弱くなる。 | **残す**（desc そのまま） |
+| sh_r7_int | 禁書の写し | 盾 | R7 | 知+10 | — | 混乱に弱い。 | 消す → 術の威力が上がる。 |
+| sh_r7_str | 戦旗の小盾 | 盾 | R7 | 腕+10 | — | 動きが遅くなる。 | 消す → 攻撃をかわしやすい。 |
+| bd_r9_dex | 天翔の胴着 | 体 | R9 | 器+24 | 器+1 | 術防が下がる。 | 消す → 攻撃をかわしやすい。 |
+| bd_r9_int | 星詠みの大法衣 | 体 | R9 | 知+24 | 知+1 | 守備力が下がる。 | 消す → 最大MPが上がる。 |
+| bd_r9_str | 覇王の鎧 | 体 | R9 | 腕+24 | 腕+1 | 動きが遅くなる。 | 消す → 物理攻撃の威力が上がる。 |
+| ft_r9_dex | 天駆けのブーツ | 足 | R9 | 器+12 | — | 魔物を呼ぶ。 | 消す → すばやく動ける。 |
+| ft_r9_int | 天歩きの布靴 | 足 | R9 | 知+12 | — | 守備力が下がる。 | 消す → 沈黙・混乱・眠りにかかりにくい。 |
+| ft_r9_str | 踏破のグリーブ | 足 | R9 | 腕+12 | — | 動きが遅くなる。 | 消す → 最大HPが上がる。 |
+| hd_r9_dex | 千里眼の帽子 | 頭 | R9 | 器+12 | — | 最大HPが下がる。 | 消す → よく当たる。 |
+| hd_r9_int | 大魔女の三角帽 | 頭 | R9 | 知+12 | — | 守備力が下がる。 | 消す → 術の威力が上がる。 |
+| hd_r9_str | 猛将の兜 | 頭 | R9 | 腕+12 | — | 術防が下がる。 | 消す → 戦闘の始めに攻撃が上がる。 |
+| hn_r9_dex | 神速の手袋 | 手 | R9 | 器+12 | — | 術防が下がる。 | 消す → 会心が出やすい。 |
+| hn_r9_int | 星紡ぎの長手袋 | 手 | R9 | 知+12 | — | 最大HPが下がる。 | 消す → 戦闘中、MPが少しずつ戻る。 |
+| hn_r9_str | 鬼神の籠手 | 手 | R9 | 腕+12 | — | 当たりにくい。 | 消す → 会心が出やすい。 |
+| sh_r9_dex | 月鏡の盾 | 盾 | R9 | 器+12 | — | 受けるダメージが増える。 | 消す → 光・闇のダメージを減らす。 |
+| sh_r9_int | 始原の魔導書 | 盾 | R9 | 知+12 | — | 技のMPの消費が増える。 | 消す → 術のMPの消費が減る。 |
+| sh_r9_str | 覇王の小盾 | 盾 | R9 | 腕+12 | — | 水に弱くなる。 | 消す → 火・闇のダメージを減らす。 |
+
+### A.5 items_armor_monster.js（108 品。残す 5）
+
+| id | 名前 | 種 | 等T | 旧の能力 | 新の能力 | 旧のクセ | 扱い／新しい desc |
+|---|---|---|---|---|---|---|---|
+| bd_marsh_coat | 沼の雨よけ | 体 | R1 | 器+6 | — | 術防が下がる。 | 消す → 毒にかかりにくい。 |
+| bd_sr_hollow_mail | がらんどうの胸甲 | 体 | S1 | 体+9 素-2 | 体+1 | 素早さが下がる。 | 消す → 守備力が上がる。混乱が効かない。 |
+| bd_wolf_pelt | オオカミの毛皮 | 体 | R1 | 素+6 | — | 火に弱くなる。 | 消す → 水のダメージを少し減らす。 |
+| bd_wrap_cloth | 砂よけの布 | 体 | R1 | 知+6 | — | 火に弱くなる。 | 消す → 暗闇にかかりにくい。 |
+| ft_rat_sandal | ネズミ革のサンダル | 足 | R1 | 素+4 | — | 最大HPが下がる。 | 消す → 攻撃をかわしやすい。 |
+| ft_sr_bat_wing | コウモリの羽靴 | 足 | S1 | 素+6 | — | 風に弱くなる。 | 消す → 攻撃をかわしやすい。逃げやすくなる。 |
+| ft_sr_fin_boots | 魚人のひれ靴 | 足 | S1 | 器+6 | — | 土に弱くなる。 | 消す → すばやく動ける。水のダメージを減らす。 |
+| ft_sr_frog_boots | カエルの水かき靴 | 足 | S1 | 器+6 | — | 土に弱くなる。 | 消す → 毒の沼や熱い床で傷つかない。攻撃をかわしやすい。 |
+| ft_sr_gull_boots | カモメの羽靴 | 足 | S1 | 素+6 | — | 風に弱くなる。 | 消す → すばやく動ける。先制しやすくなる。 |
+| ft_sr_prank_shoes | いたずら妖精の靴 | 足 | S1 | 知+6 体-2 | — | 体力が下がる。 | 消す → 先制しやすくなる。逃げやすくなる。 |
+| ft_sr_salamander | 火トカゲの靴 | 足 | S1 | 素+6 | — | 水に弱くなる。 | 消す → 火に強い。毒の沼や熱い床で傷つかない。 |
+| ft_sr_sandsnake | 砂ヘビの靴 | 足 | S1 | 素+6 | — | 火に弱くなる。 | 消す → 毒の沼や熱い床で傷つかない。すばやく動ける。 |
+| hd_ash_mask | 灰よけの面 | 頭 | R1 | 素+4 | — | 術防が下がる。 | 消す → 暗闇にかかりにくい。 |
+| hd_mist_hood | 霧の頭巾 | 頭 | R1 | 精+4 | — | 守備力が下がる。 | 消す → 混乱にかかりにくい。 |
+| hd_mushroom_cap | キノコの帽子 | 頭 | R1 | 精+4 | — | 火に弱くなる。 | 消す → 眠りにかかりにくい。 |
+| hd_sr_beetle_horn | カブトの角兜 | 頭 | S1 | 腕+6 | — | 火に弱くなる。 | 消す → 会心が出やすい。守備力が上がる。 |
+| hd_sr_gargoyle_face | 石像鬼の面 | 頭 | S1 | 腕+6 | — | 風に弱くなる。 | 消す → 守備力が上がる。まひにかかりにくい。 |
+| hd_sr_nap_cap | ひるねの帽子 | 頭 | S1 | 精+6 素-2 | — | 素早さが下がる。 | 消す → 眠りが効かない。最大HPが上がる。 |
+| hd_sr_owl_feather | 雪フクロウの羽飾り | 頭 | S1 | 素+6 | — | 風に弱くなる。 | 消す → よく当たる。先制しやすくなる。 |
+| hd_sr_porcelain_mask | 陶器の仮面 | 頭 | S1 | 器+6 | — | 土に弱くなる。 | 消す → 混乱にかかりにくい。術防が上がる。 |
+| hd_star_hood | 星見の頭巾 | 頭 | R1 | 知+4 | — | 守備力が下がる。 | 消す → 術を閃きやすい。 |
+| hn_mole_claw | モグラの爪 | 手 | R1 | 素+4 | — | 当たりにくい。 | 消す → 会心が出やすい。 |
+| hn_sr_digger | 穴掘りの手甲 | 手 | S1 | 素+6 | — | 風に弱くなる。 | 消す → 毒の沼や熱い床で傷つかない。攻撃力が上がる。 |
+| hn_sr_gear_gauntlet | 歯車の籠手 | 手 | S1 | 体+6 | — | 水に弱くなる。 | 消す → よく当たる。守備力が上がる。 |
+| hn_sr_silk_gloves | クモ糸の手袋 | 手 | S1 | 知+6 | — | 火に弱くなる。 | 消す → よく当たる。盗みが成功しやすい。 |
+| hn_sr_tomb_wrap | 墓守の手甲 | 手 | S1 | 器+6 | — | 火に弱くなる。 | 消す → まひにかかりにくい。守備力が上がる。 |
+| sh_crab_shell | カニの甲羅盾 | 盾 | R1 | 体+4 | — | 動きが遅くなる。 | 消す → 守備力が上がる。 |
+| sh_ore_shield | 鉱石の盾 | 盾 | R1 | 体+4 | — | かわしにくい。 | 消す → 気絶にかかりにくい。 |
+| sh_sr_cactus | サボテンの盾 | 盾 | S1 | 器+6 | — | 火に弱くなる。 | 消す → 守備力が上がる。攻撃をかわしやすい。 |
+| sh_sr_reed_shield | アシの盾 | 盾 | S1 | 器+6 | — | 土に弱くなる。 | 消す → 攻撃をかわしやすい。水に強い。 |
+| sh_star_buckler | 星の小盾 | 盾 | R1 | 器+4 | — | 守備力が下がる。 | 消す → 術防が上がる。 |
+| bd_sr_mammoth_fur | マンモスの毛皮 | 体 | S2 | 腕+12 素-2 | 腕+1 | 素早さが下がる。 | 消す → 最大HPが上がる。水のダメージを減らす。 |
+| bd_sr_sandworm_hide | 砂ミミズの革鎧 | 体 | S2 | 器+12 | 器+1 | 風に弱くなる。 | 消す → 最大HPが上がる。土のダメージを減らす。 |
+| hd_sr_octopus_cap | タコの頭巾 | 頭 | S2 | 精+6 | — | 土に弱くなる。 | 消す → 暗闇にかかりにくい。術防が上がる。 |
+| hd_sr_wyvern_crest | 若飛竜の兜 | 頭 | S2 | 腕+6 | — | 火に弱くなる。 | 消す → 風のダメージを減らす。すばやく動ける。 |
+| hn_sr_chimera_paw | まだら獣の籠手 | 手 | S2 | 素+6 | — | 火に弱くなる。 | 消す → 会心が出やすい。攻撃力が上がる。 |
+| sh_sr_rubble | 石くれの大盾 | 盾 | S2 | 体+6 素-2 | — | 素早さが下がる。 | 消す → 守備力が上がる。気絶にかかりにくい。 |
+| bd_crab_plate | 甲羅の胸当て | 体 | R3 | 体+10 | — | 火に弱くなる。 | 消す → 水のダメージを減らす。 |
+| bd_sr_flame_robe | 炎術師の法衣 | 体 | S3 | 知+15 | 知+1 | 水に弱くなる。 | 消す → 火の攻撃が強くなる。術力が上がる。 |
+| bd_sr_mourning_veil | 嘆きの喪服 | 体 | S3 | 精+15 | 精+1 | 光に弱くなる。 | 消す → 術防が上がる。眠りが効かない。 |
+| bd_sr_thorn_mail | いばらの鎧 | 体 | S3 | 器+15 | 器+1 | 火に弱くなる。 | 消す → 守備力が上がる。まひにかかりにくい。 |
+| ft_sr_dance_shoes | 踊り人形の靴 | 足 | S3 | 知+9 腕-3 | — | 腕力が下がる。 | 消す → すばやく動ける。攻撃をかわしやすい。 |
+| hd_sentry_helm | 番兵の兜 | 頭 | R3 | 体+6 | — | 動きが遅くなる。 | 消す → 気絶にかかりにくい。 |
+| hd_sr_cursed_wrap | 呪いの包帯 | 頭 | S3 | 知+9 | — | 光に弱くなる。 | 消す → 術力が上がる。闇の術を閃きやすい。 |
+| hd_sr_glare_band | にらみの鉢巻き | 頭 | S3 | 器+9 | — | 光に弱くなる。 | 消す → まひにかかりにくい。会心が出やすい。 |
+| hn_curse_wrap | 呪い布の手甲 | 手 | R3 | 知+6 | — | 光に弱くなる。 | 消す → 闇の術を閃きやすい。 |
+| hn_rat_claw | ネズミのかぎ爪 | 手 | R3 | 素+6 | — | 守備力が下がる。 | 消す → 盗みが成功しやすい。 |
+| hn_sr_greedy_hand | 欲ばりの手袋 | 手 | S3 | 知+9 | — | 守備が下がる。 | 消す → 魔物がアイテムを落としやすい。盗みが成功しやすい。 |
+| hn_sr_poisonfrog | 毒ガエルの手袋 | 手 | S3 | 器+9 | — | 土に弱くなる。 | 消す → 毒が効かない。短剣の技を閃きやすい。 |
+| sh_bubble | 泡の盾 | 盾 | R3 | 精+6 | — | 風に弱くなる。 | 消す → 水のダメージを減らす。 |
+| sh_sr_beetle_shell | 鉄カブトの殻盾 | 盾 | S3 | 腕+9 | — | 火に弱くなる。 | 消す → 守備力が上がる。土のダメージを減らす。 |
+| sh_sr_bramble | いばらの盾 | 盾 | S3 | 器+9 | — | 火に弱くなる。 | 消す → 守備力が上がる。攻撃をかわしやすい。 |
+| sh_sr_ironshell | 鉄甲の盾 | 盾 | S3 | 体+9 素-3 | — | 素早さが下がる。 | 消す → 守備力が上がる。気絶にかかりにくい。 |
+| sh_sr_sentinel | 番兵の大盾 | 盾 | S3 | 体+9 素-3 | — | 素早さが下がる。 | 消す → 守備力が上がる。気絶にかかりにくい。 |
+| sh_tide_shield | 潮の盾 | 盾 | R3 | 器+6 | — | 火に弱くなる。 | 消す → 水のダメージを減らす。 |
+| bd_ash_cloak | 灰のマント | 体 | R5 | 知+14 | — | 水に弱くなる。 | 消す → 火のダメージを減らす。 |
+| bd_blank_coat | 白紙のマント | 体 | R5 | 精+14 | — | 守備力が下がる。 | 消す → 沈黙にかかりにくい。 |
+| bd_bog_mail | 沼の鎖編み鎧 | 体 | R5 | 体+14 | — | 動きが遅くなる。 | 消す → まひにかかりにくい。 |
+| bd_knight_mail | 騎士の古鎧 | 体 | R5 | 体+14 | — | かわしにくい。 | 消す → 守備力が上がる。 |
+| bd_leaf_mail | 葉の鎧 | 体 | R5 | 器+14 | — | 風に弱くなる。 | 消す → 土のダメージを減らす。 |
+| bd_sr_ash_cloak_devil | 灰悪魔のマント | 体 | S5 | 知+21 | 知+1 | 光に弱くなる。 | 消す → 攻撃をかわしやすい。暗闇にかかりにくい。 |
+| bd_sr_blizzard_fur | 吹雪の毛皮 | 体 | S5 | 素+21 | 素+1 | 土に弱くなる。 | 消す → 水のダメージを減らす。攻撃をかわしやすい。 |
+| bd_sr_moss_bark | こけむした樹皮 | 体 | S5 | 体+21 素-4 | 体+1 | 素早さが下がる。火にも弱くなる。 | 消す → 戦闘中、HPが少しずつ戻る。土に強い。 |
+| bd_sr_shadow_silk | 影糸の衣 | 体 | S5 | 知+21 | 知+1 | 光・火に弱くなる。 | 消す → 攻撃をかわしやすい。闇の攻撃が強くなる。 |
+| bd_sr_steel_carapace | 鋼殻の鎧 | 体 | S5 | 腕+21 素-4 | 腕+1 | 素早さが下がる。 | 消す → 守備力が上がる。毒にかかりにくい。 |
+| ft_sr_wind_sandals | 風術師のサンダル | 足 | S5 | 知+12 | — | 火に弱くなる。 | 消す → すばやく動ける。風の攻撃が強くなる。 |
+| hd_foam_cap | 泡の帽子 | 頭 | R5 | 精+8 | — | 風に弱くなる。 | 消す → 水のダメージを減らす。 |
+| hd_sonic_band | 音波の鉢巻き | 頭 | R5 | 素+8 | — | 沈黙に弱い。 | 消す → 混乱にかかりにくい。 |
+| hd_sr_blizzard_hat | ふぶきの帽子 | 頭 | S5 | 知+12 | — | 火に弱くなる。 | **残す**（desc そのまま） |
+| hd_sr_echo_hood | 反響の頭巾 | 頭 | S5 | 知+12 | — | 術のMPの消費が増える。 | 消す → 混乱が効かない。眠りにかかりにくい。 |
+| hd_sr_gaze_circlet | にらみの額当て | 頭 | S5 | 素+12 | — | 火に弱くなる。 | 消す → まひにかかりにくい。よく当たる。 |
+| hd_sr_mist_veil | 霧の妖精のベール | 頭 | S5 | 知+12 | — | 土に弱くなる。 | 消す → 攻撃をかわしやすい。沈黙にかかりにくい。 |
+| hd_sr_sapphire | 青水晶の額飾り | 頭 | S5 | 知+12 | — | 土に弱くなる。 | 消す → 術力が上がる。水のダメージを減らす。 |
+| hd_sr_spiral_monocle | まどいの片眼鏡 | 頭 | S5 | 知+12 | — | 風に弱くなる。 | 消す → 混乱にかかりにくい。術を閃きやすい。 |
+| hd_thief_bandana | 盗人のバンダナ | 頭 | R5 | 素+8 | — | 術防が下がる。 | 消す → 盗みが成功しやすい。 |
+| hn_jelly_glove | ゼリーの手袋 | 手 | R5 | 精+8 | — | 守備力が下がる。 | 消す → 毒にかかりにくい。 |
+| hn_sr_iron_tooth | 鉄歯の手甲 | 手 | S5 | 腕+12 素-4 | — | 素早さが下がる。 | 消す → 攻撃力が上がる。守備力が上がる。 |
+| hn_sr_numb_gloves | しびれ針の手袋 | 手 | S5 | 器+12 | — | 火に弱くなる。 | 消す → よく当たる。まひにかかりにくい。 |
+| sh_bell_shield | 鐘の盾 | 盾 | R5 | 腕+8 | — | 混乱に弱い。 | 消す → 眠りにかかりにくい。 |
+| sh_scorpion_shell | サソリの甲羅盾 | 盾 | R5 | 腕+8 | — | 水に弱くなる。 | 消す → 毒にかかりにくい。 |
+| sh_sr_lava_gargoyle | 火炎石の盾 | 盾 | S5 | 腕+12 | — | 水に弱くなる。 | 消す → 火のダメージを減らす。守備力が上がる。 |
+| sh_wyvern_scale | 飛竜のうろこ盾 | 盾 | R5 | 腕+8 | — | 土に弱くなる。 | 消す → 風のダメージを減らす。 |
+| sh_sr_mirror_shell | 鏡の殻盾 | 盾 | S6 | 腕+12 素-4 | — | 素早さが下がる。 | 消す → 光・闇のダメージを減らす。術防が上がる。 |
+| bd_gull_robe | 潮風の薄衣 | 体 | R7 | 知+18 | 知+1 | 土に弱くなる。 | 消す → 風のダメージを減らす。 |
+| bd_night_cloak | 夜のマント | 体 | R7 | 知+18 | 知+1 | 光に弱くなる。 | 消す → 闇のダメージを減らす。 |
+| bd_scribe_coat | 記録院の白衣 | 体 | R7 | 知+18 | 知+1 | 守備力が下がる。 | 消す → 術防が上がる。 |
+| hd_blackgold_helm | 黒金の兜 | 頭 | R7 | 体+10 | — | かわしにくい。 | 消す → 気絶にかかりにくい。 |
+| hd_fairy_circlet | 妖精の冠 | 頭 | R7 | 精+10 | — | 守備力が下がる。 | 消す → 回復の術がよく効く。 |
+| hd_jelly_helm | ゼリーの兜 | 頭 | R7 | 体+10 | — | 術防が下がる。 | 消す → 最大HPが上がる。 |
+| hd_rat_bandana | 頭領のバンダナ | 頭 | R7 | 素+10 | — | 経験値が減る。 | 消す → 手に入るお金が増える。 |
+| hd_scribe_hood | 書記の頭巾 | 頭 | R7 | 知+10 | — | 守備力が下がる。 | 消す → 沈黙にかかりにくい。 |
+| hd_yeti_fur | 雪男の毛帽 | 頭 | R7 | 素+10 | — | 火に弱くなる。 | 消す → 水のダメージを減らす。 |
+| sh_blank_shield | 白紙の盾 | 盾 | R7 | 腕+10 | — | 動きが遅くなる。 | 消す → 沈黙にかかりにくい。 |
+| sh_castle_shell | 城ガニの盾 | 盾 | R7 | 体+10 | — | 動きが遅くなる。 | 消す → 守備力が上がる。 |
+| sh_sr_unwritten | 書かれざる盾 | 盾 | S7 | 腕+15 | — | 火に弱くなる。 | 消す → 闇のダメージを減らす。沈黙にかかりにくい。 |
+| bd_sr_castle_carapace | 城ガニの甲羅 | 体 | S8 | 体+30 素-10 | 体+2 | 素早さが下がる。 | 消す → 守備力が上がる。水のダメージを減らす。 |
+| bd_sr_chimera_hide | 業火の獣皮 | 体 | S8 | 素+30 | 素+2 | 水に弱くなる。 | **残す**（desc そのまま） |
+| bd_sr_diamond_shell | 金剛の甲殻 | 体 | S8 | 腕+30 素-10 | 腕+2 | 素早さが下がる。術防も下がる。 | 消す → 守備力が上がる。土のダメージを減らす。 |
+| bd_sr_thousand_petal | 千年花の衣 | 体 | S8 | 精+30 | 精+2 | 闇・火に弱くなる。 | 消す → HPが戻る。回復の術がよく効く。 |
+| bd_sr_whirlpool | 渦潮のマント | 体 | S8 | 精+30 | 精+2 | 土に弱くなる。 | **残す**（desc そのまま） |
+| hd_sr_sea_wind | 潮風の冠 | 頭 | S8 | 素+15 | — | 火に弱くなる。 | 消す → 風のダメージを減らす。攻撃をかわしやすい。 |
+| sh_sr_lady_parasol | 貴婦人の日傘 | 盾 | S8 | 知+15 | — | 闇に弱くなる。 | 消す → 光のダメージを減らす。術防が上がる。攻撃をかわしやすい。 |
+| bd_sr_chaos_hide | 混沌の獣皮 | 体 | S9 | 腕+36 素-12 | 腕+3 素-2 | 光に弱くなる。素早さも下がる。 | **残す**（desc そのまま） |
+| hd_sr_demon_general | 魔将の角兜 | 頭 | S9 | 腕+18 | 腕+1 | 光に弱くなる。 | 消す → 攻撃力が上がる。気絶が効かない。 |
+| hd_void_helm | 虚無の兜 | 頭 | R9 | 腕+12 | — | 光に弱くなる。 | 消す → 闇のダメージを減らす。即死にかかりにくい。 |
+| hn_sr_chaos_claw | 混沌の爪甲 | 手 | S9 | 腕+18 | 腕+1 | 光に弱くなる。 | 消す → 会心が出やすい。物理攻撃の威力が上がる。 |
+| sh_sr_memory_bowl | 記憶の金魚鉢 | 盾 | S9 | 精+18 | 精+1 | 守備力が下がる。 | 消す → 術力が上がる。沈黙・眠りが効かない。 |
+| sh_sr_void_aegis | 虚無の大盾 | 盾 | S9 | 腕+18 素-12 | 腕+1 素-2 | 素早さが下がる。 | **残す**（desc そのまま） |
+
+### A.6 items_armor_super.js（19 品。残す 6）
+
+| id | 名前 | 種 | 等T | 旧の能力 | 新の能力 | 旧のクセ | 扱い／新しい desc |
+|---|---|---|---|---|---|---|---|
+| bd_sr_salamander | 火とかげの法衣 | 体 | S5 | 知+21 | 知+1 | 水に弱くなる。 | **残す**（desc そのまま） |
+| hd_sr_berserk | 狂戦士の面 | 頭 | S5 | 腕+12 | — | 術が使えない。 | **残す**（desc そのまま） |
+| ft_sr_ghost | 亡霊の足音 | 足 | S7 | 素+15 | — | 即死に弱い。 | 消す → 攻撃をかわしやすい。魔物に出会いにくい。 |
+| bd_sr_dragonhide | 火竜の鎧 | 体 | S8 | 腕+30 | 腕+2 | 水に弱くなる。 | **残す**（desc そのまま） |
+| bd_sr_shadow | 影法師の装束 | 体 | S8 | 器+30 | 器+2 | 守備力が下がる。 | 消す → 攻撃をかわしやすい。 |
+| bd_sr_starry | 星空の衣 | 体 | S8 | 知+30 | 知+2 | 守備と術防は0。 | **残す**（desc そのまま） |
+| ft_sr_cloud | 雲上の布靴 | 足 | S8 | 知+15 | — | 受けるダメージが増える。 | 消す → すばやく動ける。 |
+| ft_sr_quake | 地響きのグリーブ | 足 | S8 | 腕+15 | — | かわしにくい。 | 消す → 最大HPが上がる。始めに守りが上がる。 |
+| ft_sr_whirl | 旋風のブーツ | 足 | S8 | 器+15 | — | 魔物に出会いやすい。 | 消す → すばやく動ける。先制しやすくなる。 |
+| hd_sr_dusk | 宵闇の冠 | 頭 | S8 | 知+15 | — | 光に弱くなる。 | 消す → 術を閃きやすい。 |
+| hd_sr_heaveneye | 天眼の帽子 | 頭 | S8 | 器+15 | — | 術防が下がる。 | 消す → よく当たる。会心が出やすい。 |
+| hd_sr_oni | 鬼角の兜 | 頭 | S8 | 腕+15 | — | 術が使えない。 | **残す**（desc そのまま） |
+| hn_sr_hundred | 百発の手袋 | 手 | S8 | 器+15 | — | 技のMPの消費が増える。 | 消す → 会心が出やすい。 |
+| hn_sr_mighty | 剛腕の籠手 | 手 | S8 | 腕+15 | — | 術防が下がる。 | 消す → 会心が出やすい。 |
+| hn_sr_words | 言の葉の長手袋 | 手 | S8 | 知+15 | — | 最大HPが下がる。 | 消す → 最大MPが上がる。 |
+| sh_sr_blank | 白紙の魔導書 | 盾 | S8 | 知+15 | — | 術防が下がる。 | 消す → 術の威力が上がる。 |
+| sh_sr_phantom | 幻影の盾 | 盾 | S8 | 器+15 | — | 最大HPが下がる。 | 消す → 攻撃をかわしやすい。 |
+| sh_sr_steadfast | 不動の小盾 | 盾 | S8 | 腕+15 | — | 動きが遅くなる。 | **残す**（desc そのまま） |
+| bd_sr_oblivion | 忘却のローブ | 体 | S9 | 知+36 | 知+3 | 最大HPが下がる。 | 消す → 眠り・混乱・沈黙が効かない。MPが戻る。 |
+
+### A.7 items_acc_rare.js（19 品。残す 0）
+
+| id | 名前 | 種 | 等T | 旧の能力 | 新の能力 | 旧のクセ | 扱い／新しい desc |
+|---|---|---|---|---|---|---|---|
+| ac_r1_int | 朝露の耳飾り | 飾 | R1 | 知+4 | — | 守備力が下がる。 | 消す → 戦闘中、MPが少しずつ戻る。 |
+| ac_r1_item | 蜂蜜の小瓶 | 飾 | R1 | 精+4 | — | 術防が下がる。 | 消す → 回復の道具がよく効く。 |
+| ac_r3_blind | 夜目の片眼鏡 | 飾 | R3 | 器+6 | — | 光に弱くなる。 | 消す → 暗闇が効かない。 |
+| ac_r3_drop | 目利きの首飾り | 飾 | R3 | 器+6 | — | お金が減る。 | 消す → 魔物がアイテムを落としやすい。 |
+| ac_r5_burn | やけど知らずの環 | 飾 | R5 | 体+8 | — | 水に弱くなる。 | 消す → やけどが効かない。 |
+| ac_r5_freeze | 凍え知らずの環 | 飾 | R5 | 精+8 | — | 火に弱くなる。 | 消す → 凍結が効かない。 |
+| ac_r5_gold | 旅芸人の鈴 | 飾 | R5 | 素+8 | — | 経験値が減る。 | 消す → 手に入るお金が増える。 |
+| ac_r5_int | 月長石のブローチ | 飾 | R5 | 知+8 | — | 最大HPが下がる。 | 消す → 術力が上がる。 |
+| ac_r5_para | しびれ知らずの環 | 飾 | R5 | 腕+8 | — | かわしにくい。 | 消す → まひが効かない。 |
+| ac_r5_poison | 蛇よけの腕輪 | 飾 | R5 | 体+8 | — | 術防が下がる。 | 消す → 毒が効かない。 |
+| ac_r7_confuse | 正気の守り石 | 飾 | R7 | 精+10 | 精+1 | 沈黙に弱い。 | 消す → 混乱が効かない。 |
+| ac_r7_dex | 鷹の目の指輪 | 飾 | R7 | 器+10 | 器+1 | 術を閃きにくい。 | 消す → 技を閃きやすい。 |
+| ac_r7_int | 知恵の紅玉 | 飾 | R7 | 知+10 | 知+1 | 守備力が下がる。 | 消す → 術力が上がる。 |
+| ac_r7_sleep | 覚醒の耳飾り | 飾 | R7 | 精+10 | 精+1 | 動きが遅くなる。 | 消す → 眠りが効かない。 |
+| ac_r7_str | 闘将の腕輪 | 飾 | R7 | 腕+10 | 腕+1 | 術防が下がる。 | 消す → 最大HPが上がる。 |
+| ac_r9_death | 命綱の首飾り | 飾 | R9 | 体+12 | 体+1 | 受けるダメージが増える。 | 消す → 即死が効かない。 |
+| ac_r9_dex | 星見の指輪 | 飾 | R9 | 器+12 | 器+1 | 術を閃きにくい。 | 消す → 技を閃きやすい。 |
+| ac_r9_int | 知恵の虹輪 | 飾 | R9 | 知+12 | 知+1 | 最大HPが下がる。 | 消す → 術力が上がる。 |
+| ac_r9_str | 英雄の腕輪 | 飾 | R9 | 腕+12 | 腕+1 | 術防が下がる。 | 消す → 物理攻撃の威力が上がる。 |
+
+### A.8 items_acc_monster.js（69 品。残す 2）
+
+| id | 名前 | 種 | 等T | 旧の能力 | 新の能力 | 旧のクセ | 扱い／新しい desc |
+|---|---|---|---|---|---|---|---|
+| ac_bat_fang | コウモリの牙飾り | 飾 | R1 | 腕+4 | — | 光に弱くなる。 | 消す → 逃げやすくなる。 |
+| ac_gull_feather | カモメの羽根飾り | 飾 | R1 | 素+4 | — | 魔物を呼ぶ。 | 消す → すばやく動ける。 |
+| ac_jelly_ring | ゼリーの指輪 | 飾 | R1 | 体+4 | — | 火に弱くなる。 | 消す → 最大HPが上がる。 |
+| ac_mimic_tongue | 宝箱の舌 | 飾 | R1 | 体+4 | — | 経験値が減る。 | 消す → 手に入るお金が増える。 |
+| ac_snow_crystal | 雪の結晶 | 飾 | R1 | 知+4 | — | 火に弱くなる。 | 消す → 凍結にかかりにくい。 |
+| ac_sr_ember_lamp | 鬼火のカンテラ | 飾 | S1 | 精+6 | 精+1 | 水に弱くなる。 | 消す → 火の攻撃が強くなる。火に強い。 |
+| ac_sr_jelly_heart | ぷるぷるの心 | 飾 | S1 | 体+6 素-2 | 体+1 | 素早さが下がる。 | 消す → 最大HPが上がる。HPが戻る。 |
+| ac_sr_lost_lantern | 迷い霊のランタン | 飾 | S1 | 精+6 | 精+1 | 光に弱くなる。 | 消す → 魔物に出会いにくい。混乱にかかりにくい。 |
+| ac_sr_peeping_eye | のぞき目玉の護符 | 飾 | S1 | 知+6 | 知+1 | 光に弱くなる。 | 消す → 先制しやすくなる。よく当たる。 |
+| ac_sr_quartz_shard | 水晶のかけら | 飾 | S1 | 体+6 | 体+1 | 闇に弱くなる。 | 消す → 光の攻撃が強くなる。術防が上がる。 |
+| ac_blank_page | 白紙の一枚 | 飾 | R3 | 精+6 | — | 混乱に弱い。 | 消す → 沈黙にかかりにくい。 |
+| ac_honey_charm | 蜂蜜のお守り | 飾 | R3 | 知+6 | — | 魔物を呼ぶ。 | 消す → 戦闘中、HPが少しずつ戻る。 |
+| ac_mimic_key | 宝箱の合い鍵 | 飾 | R3 | 体+6 | — | お金が減る。 | 消す → 魔物がアイテムを落としやすい。 |
+| ac_ruby_chip | 紅水晶のかけら | 飾 | R3 | 体+6 | — | 水に弱くなる。 | 消す → 火の攻撃が強くなる。 |
+| ac_sr_ember_horn | 火の粉の角笛 | 飾 | S3 | 知+9 | 知+1 | 水に弱くなる。 | 消す → 火の攻撃が強くなる。火の術を閃きやすい。 |
+| ac_sr_first_letter | 最初の一文字 | 飾 | S3 | 精+9 | 精+1 | 闇に弱くなる。 | 消す → 術を閃きやすい。火の熟練度が伸びやすい。 |
+| ac_sr_lullaby_quill | 子守歌の羽根 | 飾 | S3 | 器+9 素-3 | 器+1 | 素早さが下がる。 | 消す → 眠りが効かない。MPが戻る。 |
+| ac_sr_pirate_coin | 呪われた金貨 | 飾 | S3 | 知+9 | 知+1 | 最大HPが下がる。光にも弱くなる。 | 消す → 手に入るお金が増える。 |
+| ac_sr_plague_tail | 毒ネズミのしっぽ | 飾 | S3 | 腕+9 | 腕+1 | 火に弱くなる。 | 消す → 毒が効かない。短剣の技を閃きやすい。 |
+| ac_sr_rattle_charm | 鈴尾の根付け | 飾 | S3 | 素+9 腕-3 | 素+1 | 腕力が下がる。 | 消す → 魔物に出会いにくい。逃げやすくなる。 |
+| ac_astrolabe | 小さな天球儀 | 飾 | R5 | 知+8 | — | 技を閃きにくい。 | 消す → 術を閃きやすい。 |
+| ac_blizzard_charm | 吹雪のお守り | 飾 | R5 | 腕+8 | — | 火に弱くなる。 | 消す → 水のダメージを減らす。 |
+| ac_fairy_dust | 妖精の粉袋 | 飾 | R5 | 精+8 | — | 最大HPが下がる。 | 消す → 戦闘中、MPが少しずつ戻る。 |
+| ac_gem_eye | 宝石の目 | 飾 | R5 | 腕+8 | — | 受けるダメージが増える。 | 消す → よく当たる。 |
+| ac_mimic_chain | 呪い宝箱の鎖 | 飾 | R5 | 体+8 | — | お金が減る。 | 消す → レアアイテムを落としやすい。 |
+| ac_mirror_scale | 鏡のうろこ | 飾 | R5 | 器+8 | — | 闇に弱くなる。 | 消す → 光のダメージを減らす。 |
+| ac_pearl_ear | 真珠の耳飾り | 飾 | R5 | 体+8 | — | 守備力が下がる。 | 消す → 術防が上がる。 |
+| ac_sapphire_chip | 青水晶のかけら | 飾 | R5 | 体+8 | — | 火に弱くなる。 | 消す → 水の攻撃が強くなる。 |
+| ac_silver_drop | 白銀のひとしずく | 飾 | R5 | 体+8 | — | お金が減る。 | 消す → 経験値が増える。 |
+| ac_sr_blasting_cap | 発破の火打ち石 | 飾 | S5 | 腕+12 | 腕+1 | 火に弱くなる。 | 消す → 回復の道具がよく効く。火の攻撃が強くなる。 |
+| ac_sr_cursed_lock | 呪いの錠前 | 飾 | S5 | 体+12 素-4 | 体+1 素-1 | 素早さが下がる。最大HPも下がる。 | **残す**（desc そのまま） |
+| ac_sr_desert_rose | 砂漠のバラ | 飾 | S5 | 精+12 | 精+1 | 火に弱くなる。 | 消す → 戦闘中、HPが少しずつ戻る。眠りにかかりにくい。 |
+| ac_sr_dream_spore | 夢見の胞子 | 飾 | S5 | 精+12 | 精+1 | 術のMPの消費が増える。 | 消す → 混乱が効かない。術を閃きやすい。 |
+| ac_sr_gull_loot | カモメの宝袋 | 飾 | S5 | 素+12 | 素+1 | 風に弱くなる。 | 消す → お金が増える。アイテムをよく落とす。 |
+| ac_sr_mind_eye | 心眼の玉 | 飾 | S5 | 知+12 | 知+1 | 最大HPが下がる。 | 消す → 混乱が効かない。技を閃きやすい。 |
+| ac_sr_poison_bloom | 毒花のコサージュ | 飾 | S5 | 精+12 | 精+1 | 最大HPが下がる。 | 消す → 毒が効かない。闇の攻撃が強くなる。 |
+| ac_sr_powder_pouch | 火薬師の小袋 | 飾 | S5 | 器+12 | 器+1 | 最大HPが下がる。 | 消す → 回復の道具がよく効く。火が強くなる。 |
+| ac_sr_soul_bead | 人魂の玉 | 飾 | S5 | 精+12 | 精+1 | 最大HPが下がる。 | 消す → MPが戻る。闇の術を閃きやすい。 |
+| ac_sr_tesla_coil | 雷のぜんまい | 飾 | S5 | 体+12 | 体+1 | 水に弱くなる。 | 消す → 風の攻撃が強くなる。MPが戻る。 |
+| ac_abyss_key | 奈落の鍵 | 飾 | R7 | 体+10 | 体+1 | お金が減る。 | 消す → レアアイテムを落としやすい。 |
+| ac_admiral_medal | 提督の勲章 | 飾 | R7 | 知+10 | 知+1 | 術防が下がる。 | 消す → 戦闘の始めに攻撃が上がる。 |
+| ac_archive_key | 書庫の鍵 | 飾 | R7 | 器+10 | 器+1 | 技を閃きにくい。 | 消す → 術を閃きやすい。 |
+| ac_count_brooch | 夜公爵のブローチ | 飾 | R7 | 腕+10 | 腕+1 | 光に弱くなる。 | 消す → 戦闘中、HPが少しずつ戻る。 |
+| ac_gem_core | 宝玉の核 | 飾 | R7 | 体+10 | 体+1 | 動きが遅くなる。 | 消す → 術防が上がる。 |
+| ac_goblin_hoard | 小鬼の財宝袋 | 飾 | R7 | 器+10 | 器+1 | 経験値が減る。 | 消す → 手に入るお金が増える。 |
+| ac_heaven_feather | 天の羽根 | 飾 | R7 | 知+10 | 知+1 | 闇に弱くなる。 | 消す → 光のダメージを減らす。 |
+| ac_millennium_seed | 千年の種 | 飾 | R7 | 器+10 | 器+1 | 火に弱くなる。 | 消す → 最大HPが上がる。 |
+| ac_mirror_crest | 鏡の紋章 | 飾 | R7 | 器+10 | 器+1 | 守備力が下がる。 | 消す → 術防が上がる。 |
+| ac_phoenix_ash | 炎鳥の灰 | 飾 | R7 | 腕+10 | 腕+1 | 水に弱くなる。 | 消す → 火の攻撃が強くなる。 |
+| ac_platinum_flame | 白金の炎 | 飾 | R7 | 精+10 | 精+1 | 水に弱くなる。 | 消す → 経験値が増える。 |
+| ac_rainbow_drop | 七色の粒 | 飾 | R7 | 体+10 | 体+1 | 最大HPが下がる。 | 消す → 火・水・風・土のダメージを少し減らす。 |
+| ac_royal_ankh | 王家の護符 | 飾 | R7 | 器+10 | 器+1 | 受けるダメージが増える。 | 消す → 即死が効かない。 |
+| ac_scarab | 聖甲虫の護符 | 飾 | R7 | 知+10 | 知+1 | 動きが遅くなる。 | 消す → 即死が効かない。 |
+| ac_silver_orb | 白銀の玉 | 飾 | R7 | 体+10 | 体+1 | お金が減る。 | 消す → 経験値が増える。 |
+| ac_soul_candle | 魂のろうそく | 飾 | R7 | 体+10 | 体+1 | 風に弱くなる。 | 消す → 闇のダメージを減らす。 |
+| ac_sr_ghost_compass | 亡霊の羅針盤 | 飾 | S7 | 知+15 | 知+1 | 光に弱くなる。 | 消す → めずらしい魔物に出会いやすい。逃げやすくなる。 |
+| ac_underworld_bell | 冥界の鈴 | 飾 | R7 | 精+10 | 精+1 | 光に弱くなる。 | 消す → 闇のダメージを減らす。 |
+| ac_sr_amethyst | 紫水晶の耳飾り | 飾 | S8 | 体+15 | 体+1 | 光に弱くなる。 | 消す → 戦闘中、MPが少しずつ戻る。闇の攻撃が強くなる。 |
+| ac_sr_fairy_tiara | 妖精姫のティアラ | 飾 | S8 | 知+15 | 知+1 | 闇に弱くなる。 | 消す → 光の術を閃きやすい。MPが戻る。 |
+| ac_sr_frog_bell | 鐘鳴りの首鈴 | 飾 | S8 | 体+15 | 体+1 | 土に弱くなる。 | 消す → 気絶が効かない。眠りにかかりにくい。 |
+| ac_sr_platinum_heart | 白金の心 | 飾 | S8 | 精+15 | 精+1 | 最大HPが下がる。 | 消す → 経験値が増える。技と術を閃きやすい。 |
+| ac_sr_rat_king_ring | 頭領の指輪 | 飾 | S8 | 腕+15 | 腕+1 | 最大HPが下がる。 | 消す → お金が増える。盗みが成功しやすい。 |
+| ac_sr_scholar_monocle | 物知りの片眼鏡 | 飾 | S8 | 知+15 体-5 | 知+1 | 体力が下がる。 | 消す → 経験値が増える。術を閃きやすい。 |
+| ac_chaos_eye | 混沌の瞳 | 飾 | R9 | 腕+12 | 腕+1 | 光に弱くなる。 | 消す → 混乱にかかりにくい。闇の攻撃が強くなる。 |
+| ac_crest_fragment | 紋章のかけら | 飾 | R9 | 知+12 | 知+1 | 最大HPが下がる。 | 消す → 闇に強い。即死が効かない。光が強くなる。 |
+| ac_ouroboros_ring | 円環のかけら | 飾 | R9 | 腕+12 | 腕+1 | 受けるダメージが増える。 | 消す → 戦闘中、MPが少しずつ戻る。 |
+| ac_platinum_crown | 白金の灯冠 | 飾 | R9 | 精+12 | 精+1 | お金が減る。 | 消す → 経験値が増える。 |
+| ac_sr_demon_eye | 魔神の第三の眼 | 飾 | S9 | 知+18 | 知+2 | 光に弱くなる。最大HPも下がる。 | **残す**（desc そのまま） |
+| ac_void_shard | 虚無のかけら | 飾 | R9 | 精+12 | 精+1 | 光に弱くなる。 | 消す → 闇のダメージを減らす。 |
+
+### A.9 items_acc_super.js（12 品。残す 6）
+
+| id | 名前 | 種 | 等T | 旧の能力 | 新の能力 | 旧のクセ | 扱い／新しい desc |
+|---|---|---|---|---|---|---|---|
+| ac_sr_greedy | 欲張りの首飾り | 飾 | S1 | 素+6 | 素+1 | 最大HPが下がる。 | 消す → アイテムをよく落とす。レアをよく落とす。 |
+| ac_sr_scholar | 学者の眼鏡 | 飾 | S1 | 知+6 | 知+1 | 得るお金が減る。 | 消す → 経験値が増える。術を閃きやすい。 |
+| ac_sr_glass | 薄氷の指輪 | 飾 | S3 | 知+9 | 知+1 | 受ける傷が増える。 | **残す**（desc そのまま） |
+| ac_sr_firebird | 再起の羽根 | 飾 | S5 | 素+12 | 素+1 | 経験値が減る。 | **残す**（desc そのまま） |
+| ac_sr_beastheart | 獣王の心臓 | 飾 | S8 | 腕+15 | 腕+1 | 最大HPが下がる。 | **残す**（desc そのまま） |
+| ac_sr_bloodoath | 血の誓約 | 飾 | S8 | 腕+15 | 腕+1 | 戦闘中にHPが減る。 | **残す**（desc そのまま） |
+| ac_sr_coin | 福音の金貨 | 飾 | S8 | 精+15 | 精+1 | 受ける傷が増える。 | **残す**（desc そのまま） |
+| ac_sr_eagle | 大鷲の羽根 | 飾 | S8 | 器+15 | 器+1 | 得るお金が減る。 | 消す → 技を閃きやすい。 |
+| ac_sr_ink | 千夜の墨つぼ | 飾 | S8 | 知+15 | 知+1 | 土に弱くなる。 | 消す → 術の威力が上がる。 |
+| ac_sr_needle | 星の縫い針 | 飾 | S8 | 器+15 | 器+1 | 混乱に弱い。 | 消す → 会心が出やすい。よく当たる。 |
+| ac_sr_owl | ふくろうの瞳 | 飾 | S8 | 知+15 | 知+1 | 経験値が減る。 | 消す → 眠り・混乱・沈黙が効かない。 |
+| ac_sr_ouroboros | 円環の指輪 | 飾 | S9 | 精+18 | 精+2 | 経験値が入らない。 | **残す**（desc そのまま） |
+
+### A.10 items_acc_relic.js（42 品。残す 4）
+
+| id | 名前 | 種 | 等T | 旧の能力 | 新の能力 | 旧のクセ | 扱い／新しい desc |
+|---|---|---|---|---|---|---|---|
+| ac_rl_beast | 湯けむりの手ぬぐい | 飾 | R0 | 腕%+10 | 腕+1 | 術防が下がる。 | 消す → 腕力が上がる。物理が強くなる。 |
+| ac_rl_bell | 鐘の殻 | 飾 | R0 | 精%+10 | 精+1 | 眠りに弱い。 | 消す → 沈黙・混乱にかかりにくい。精神が上がる。 |
+| ac_rl_bird | 宝石ウサギのお守り | 飾 | R0 | 素%+10 | 素+1 | 最大HPが下がる。 | 消す → 素早さが上がる。逃げやすくなる。 |
+| ac_rl_bloom | 花角の髪飾り | 飾 | R0 | 精%+10 | 精+1 | 火に弱くなる。 | 消す → 精神が上がる。HPが戻る。 |
+| ac_rl_clover | 海賊の杯 | 飾 | R0 | 器%+10 | 器+1 | お金が減る。 | 消す → 器用さが上がる。レアをよく落とす。 |
+| ac_rl_dream | 月見の鈴 | 飾 | R0 | 精%+10 | 精+1 | 混乱に弱い。 | 消す → 精神が上がる。眠りが効かない。 |
+| ac_rl_ember | 火山ガメの甲羅片 | 飾 | R0 | 腕%+10 | 腕+1 | 水に弱くなる。 | 消す → 腕力が上がる。火の攻撃が強くなる。 |
+| ac_rl_frost | 氷尾の毛飾り | 飾 | R0 | 知%+10 | 知+1 | 火に弱くなる。 | 消す → 知力が上がる。凍結が効かない。 |
+| ac_rl_gold | 守護像のひすい | 飾 | R0 | — | — | 経験値が減る。 | 消す → お金が増える。金色の魔物に出会いやすい。 |
+| ac_rl_iron | 金剛トカゲのうろこ | 飾 | R0 | 体%+10 | 体+1 | 動きが遅くなる。 | 消す → 体力が上がる。気絶が効かない。 |
+| ac_rl_moon | オーロラの羽飾り | 飾 | R0 | 知%+10 | 知+1 | 守備力が下がる。 | 消す → 知力が上がる。MPが戻る。 |
+| ac_rl_peak | どんぐりの帽子飾り | 飾 | R0 | 体%+10 | 体+1 | 術のMPの消費が増える。 | 消す → 体力が上がる。MPが戻る。 |
+| ac_rl_prism | 虹晶の指輪 | 飾 | R0 | 知%+10 | 知+1 | 守備力が下がる。 | 消す → 知力が上がる。術の威力が上がる。 |
+| ac_rl_sage | 本の虫の眼鏡 | 飾 | R0 | 知%+10 | 知+1 | お金が減る。 | 消す → 知力が上がる。経験値が増える。 |
+| ac_rl_sea | 星の香玉 | 飾 | R0 | 体%+10 | 体+1 | 風に弱くなる。 | 消す → 体力が上がる。最大HPが上がる。 |
+| ac_rl_shadow | 夢見のまくら | 飾 | R0 | 素%+10 | 素+1 | 光に弱くなる。 | 消す → 素早さが上がる。魔物に出会いにくい。 |
+| ac_rl_spirit | 金魚のうろこ | 飾 | R0 | 精%+10 | 精+1 | 受けるダメージが増える。 | 消す → 精神が上がる。即死が効かない。 |
+| ac_rl_star | 歯車の羽根 | 飾 | R0 | 器%+10 | 器+1 | 術を閃きにくい。 | 消す → 器用さが上がる。技を閃きやすい。 |
+| ac_rl_sun | はすの花飾り | 飾 | R0 | 精%+10 | 精+1 | 闇に弱くなる。 | 消す → 精神が上がる。回復の術がよく効く。 |
+| ac_rl_tale | 黄金のペン先 | 飾 | R0 | 精%+10 | 精+1 | 技を閃きにくい。 | 消す → 精神が上がる。術を閃きやすい。 |
+| ac_rl_thorn | 宝石針のブローチ | 飾 | R0 | 腕%+10 | 腕+1 | 術防が下がる。 | 消す → 腕力が上がる。会心が出やすい。 |
+| ac_rl_tide | 幽霊のティーカップ | 飾 | R0 | 体%+10 | 体+1 | 火に弱くなる。 | 消す → 体力が上がる。水に強い。 |
+| ac_rl_wind | ガラスの羽 | 飾 | R0 | 素%+10 | 素+1 | 魔物を呼ぶ。 | 消す → 素早さが上がる。すばやく動ける。 |
+| ac_rs_beast | 猿の湯おけ | 飾 | S0 | 腕%+15 素%+15 | 腕+1 素+1 | 術防が下がる。 | 消す → 腕力と素早さが上がる。物理が強くなる。 |
+| ac_rs_bell | 七つ鐘の首飾り | 飾 | S0 | 体%+15 精%+15 | 精+1 体+1 | お金が減る。 | 消す → 精神と体力が上がる。始めに守りが上がる。 |
+| ac_rs_bird | うさぎの月長石 | 飾 | S0 | 器%+15 素%+15 | 素+1 器+1 | 風に弱くなる。 | 消す → 素早さと器用さが上がる。すばやく動ける。 |
+| ac_rs_bloom | 森の小さな冠 | 飾 | S0 | 精%+15 | 精+2 | 魔物を呼ぶ。 | 消す → 精神が上がる。最大HPが上がる。HPが戻る。 |
+| ac_rs_clover | 財宝の地図 | 飾 | S0 | — | — | 最大HPが下がる。 | **残す**（desc そのまま） |
+| ac_rs_dream | 三日月の角 | 飾 | S0 | 知%+15 精%+15 | 知+1 精+1 | 遅くなる。 | 消す → 知力と精神が上がる。眠り・混乱が効かない。 |
+| ac_rs_ember | 火山ガメの心石 | 飾 | S0 | 腕%+15 知%+15 | 腕+1 知+1 | 水に弱くなる。 | 消す → 腕力と知力が上がる。火の攻撃が強くなる。 |
+| ac_rs_frost | 氷ギツネの面 | 飾 | S0 | 素%+15 知%+15 | 知+1 素+1 | 火に弱くなる。 | 消す → 知力と素早さが上がる。水の攻撃が強くなる。 |
+| ac_rs_gold | 黄金の光輪 | 飾 | S0 | 腕%+15 | 腕+2 | 経験値が減る。 | 消す → 腕力が上がる。お金が増える。金色に出会いやすい。 |
+| ac_rs_iron | 金剛トカゲの心臓石 | 飾 | S0 | 腕%+15 体%+15 | 体+1 腕+1 | 動きが遅くなる。 | 消す → 体力と腕力が上がる。守備力が上がる。 |
+| ac_rs_moon | 極光の宝珠 | 飾 | S0 | 知%+15 精%+15 | 知+1 精+1 | 闇に弱い。 | 消す → 知力と精神が上がる。MPが戻る。 |
+| ac_rs_peak | どんぐり王子の紋章 | 飾 | S0 | 腕%+15 体%+15 | 体+1 腕+1 | かわしにくい。 | 消す → 体力と腕力が上がる。MPが戻る。 |
+| ac_rs_prism | 虹晶の心 | 飾 | S0 | 器%+15 知%+15 | 知+1 器+1 | 受ける傷が増える。 | **残す**（desc そのまま） |
+| ac_rs_sea | 空くじらの歌貝 | 飾 | S0 | 体%+20 | 体+2 | 動きが遅くなる。 | 消す → 体力が上がる。最大HPが上がる。 |
+| ac_rs_star | 止まらない歯車 | 飾 | S0 | 器%+15 知%+15 | 器+1 知+1 | お金が減る。 | 消す → 器用さと知力が上がる。閃きやすい。 |
+| ac_rs_sun | 泥中の真珠 | 飾 | S0 | 体%+15 精%+15 | 精+1 体+1 | 水に弱い。 | 消す → 精神と体力が上がる。HPが戻る。 |
+| ac_rs_thorn | 宝石ハリネズミの冠 | 飾 | S0 | 腕%+15 器%+15 | 腕+1 器+1 | HPが減っていく。 | **残す**（desc そのまま） |
+| ac_rs_tide | 茶器のふた | 飾 | S0 | 体%+15 精%+15 | 体+1 精+1 | 土に弱くなる。 | **残す**（desc そのまま） |
+| ac_rs_wind | ステンドの羽 | 飾 | S0 | 器%+15 素%+15 | 素+1 器+1 | 受ける傷が増える。 | 消す → 素早さと器用さが上がる。かわしやすい。 |
+
+### A.11 items_acc_reward.js（11 品。残す 0）
+
+| id | 名前 | 種 | 等T | 旧の能力 | 新の能力 | 旧のクセ | 扱い／新しい desc |
+|---|---|---|---|---|---|---|---|
+| ac_berna_charm | 語り部の首飾り | 飾 | R0 | — | — | 最大HPが下がる。 | 消す → 閃きやすい。眠り・混乱が効かない。 |
+| ac_otto_lantern | 灯台守のランタン | 飾 | R0 | — | — | 魔物を呼ぶ。 | 消す → 技と術を閃きやすい。 |
+| ac_rival_pen | 記録院の銀筆 | 飾 | R0 | — | — | 術防が下がる。 | 消す → 術と技のMPの消費が減る。 |
+| ac_tale_ash | 残り火の宝珠 | 飾 | R0 | 知%+10 | 知+1 | 水に弱くなる。 | 消す → 知力が上がる。火の攻撃が強くなる。 |
+| ac_tale_desert | 砂王の印章 | 飾 | R0 | 腕%+10 | 腕+1 | 経験値が減る。 | 消す → 腕力が上がる。お金が増える。 |
+| ac_tale_forest | 木霊の首飾り | 飾 | R0 | 精%+10 | 精+1 | 火に弱くなる。 | 消す → 精神が上がる。HPが戻る。 |
+| ac_tale_isles | 潮騒の耳飾り | 飾 | R0 | 器%+10 | 器+1 | 術のMPの消費が増える。 | 消す → 器用さが上がる。MPが戻る。 |
+| ac_tale_marsh | 朝の鐘の守り | 飾 | R0 | 素%+10 | 素+1 | 闇に弱くなる。 | 消す → 素早さが上がる。混乱が効かない。 |
+| ac_tale_mine | 誓いの腕輪 | 飾 | R0 | — | — | 動きが遅くなる。 | 消す → 最大HPが上がる。守備力が上がる。 |
+| ac_tale_snow | 冬至の火の守り | 飾 | R0 | 体%+10 | 体+1 | 術防が下がる。 | 消す → 凍結・やけどが効かない。体力が上がる。 |
+| ac_tale_star | 星読みの片眼鏡 | 飾 | R0 | — | — | お金が減る。 | 消す → めずらしい魔物に出会いやすい。レアをよく落とす。 |

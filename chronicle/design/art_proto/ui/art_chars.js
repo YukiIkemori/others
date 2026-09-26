@@ -129,11 +129,11 @@
   const cache = {};
   function sprite(L, dir, frame, o) {
     o = o || {};
-    const key = (L.name || 'x') + dir + frame + (o.lantern ? 'L' : '') + (o.scale || 1);
+    const key = (L.name || 'x') + dir + frame + (o.lantern ? 'L' : '') + (o.scale || 1.15);
     if (cache[key]) return cache[key];
     const B = new RZ.Builder();
     build(B, L, dir === 'left' ? 'right' : dir, frame, o);
-    const r = RZ.render(B, Object.assign({}, STYLE, { flip: dir === 'left', scale: o.scale || 1, light: FL }));
+    const r = RZ.render(B, Object.assign({}, STYLE, { flip: dir === 'left', scale: o.scale || 1.15, light: FL }));
     return (cache[key] = r);
   }
   G.FIELD_CHAR = { sprite, build, FL };

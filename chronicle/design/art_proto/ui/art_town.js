@@ -306,18 +306,23 @@
     bench(B) { B.poly([[-12, -5], [12, -5], [12, -8], [-12, -8]], M.crate, 0.1, { bevel: 1 }); [-9, 9].forEach((x) => B.cap(x, 0, x, -5, 0.8, 0.8, M.iron, 0)); B.poly([[-12, -9], [12, -9], [12, -13], [-12, -13]], M.crate, 0.05, { bevel: 1, ny: -0.5 }); },
     table(B) { B.ell(0, -9, 10, 5, M.crate, 0.1, { bulge: 0.4 }); B.cap(0, 0, 0, -9, 1.2, 1.2, M.wood, 0); B.ell(-4, -12, 2, 1.6, M.paper, 0.2); B.ell(4, -11, 1.1, 1.8, M.glowW, 0.2); return { light: [4, -12], small: true }; },
     rowboat(B) { B.poly([[-24, -2], [22, -2], [28, -9], [20, -14], [-22, -14], [-28, -8]], M.barrel, 0, { bevel: 4, ny: -0.3 }); B.poly([[-19, -5], [18, -5], [22, -9], [17, -12], [-18, -12], [-22, -8]], mat({ keys: ['#1a0e08', '#2e1c10', '#44301c'], n: 3 }), 0.1, { bevel: 2 }); [-8, 6].forEach((x) => B.rect(x, -13, 3, 9, M.crate, 0.2)); },
-    ship(B) { // small fishing ship, deck seen from above-front
-      B.poly([[-70, -4], [56, -4], [84, -18], [60, -34], [-66, -34], [-78, -20]], M.barrel, 0, { bevel: 6, ny: -0.2 });
-      B.poly([[-62, -10], [52, -10], [74, -19], [54, -30], [-60, -30], [-70, -20]], M.crate, 0.1, { bevel: 2, ny: -0.6 });
-      B.poly([[-44, -14], [-18, -14], [-18, -30], [-44, -30]], M.barrel, 0.2, { bevel: 2, ny: -0.2 });
-      B.poly([[-46, -30], [-16, -30], [-20, -36], [-42, -36]], M.stone, 0.25, { bevel: 1.5, ny: -0.8 });
-      B.cap(12, -20, 12, -118, 2.4, 1.8, M.wood, 0.3);
-      B.cap(-24, -80, 46, -80, 1.2, 1.2, M.wood, 0.31);
-      B.poly([[-22, -80], [44, -80], [40, -88], [-18, -88]], M.sail, 0.32, { bevel: 2, ny: -0.3 });
-      B.cap(12, -118, 70, -22, 0.35, 0.35, M.rope, 0.29); B.cap(12, -118, -60, -24, 0.35, 0.35, M.rope, 0.29);
-      B.poly([[9, -100], [15, -100], [15, -93], [9, -93]], M.glowW, 0.34, { bevel: 0.2 });
-      for (let i = 0; i < 3; i++) B.cap(-2 + i * 10, -14, -2 + i * 10, -24, 5, 5, M.barrel, 0.22 + i * 0.01);
-      return { light: [12, -96] };
+    ship(B) { // small fishing ship seen from above-front: hull side band, deck, cabin, mast with a furled sail
+      const hull = mat({ keys: ['#120a06', '#26160c', '#3e2616', '#583a22', '#724e30'], n: 6, tex: 1, tsx: 0.1, tsy: 1.4 });
+      const deck = mat({ keys: ['#2c1c10', '#4a321e', '#6a4c30', '#8a6a46', '#a88660'], n: 6, tex: 1.4, tsx: 0.08, tsy: 1.2 });
+      B.poly([[-66, 0], [50, 0], [78, -12], [58, -20], [-64, -20], [-74, -10]], hull, 0, { bevel: 5, ny: 0.5 });           // side band (front)
+      B.poly([[-66, -16], [52, -16], [80, -26], [56, -40], [-62, -40], [-74, -28]], deck, 0.1, { bevel: 3, ny: -0.8 });      // deck
+      B.poly([[-60, -20], [48, -20], [70, -27], [52, -36], [-56, -36], [-66, -28]], mat({ keys: ['#3a2616', '#5c3e26', '#7c5a3a', '#9a7852'], n: 5, tex: 2, tsx: 0.06, tsy: 1 }), 0.15, { bevel: 1.5, ny: -0.9 });
+      B.poly([[-48, -22], [-20, -22], [-20, -40], [-48, -40]], hull, 0.2, { bevel: 2, ny: 0.2 });                             // cabin
+      B.poly([[-50, -40], [-18, -40], [-22, -48], [-46, -48]], M.stone, 0.25, { bevel: 1.5, ny: -0.8 });
+      B.poly([[-40, -30], [-30, -30], [-30, -25], [-40, -25]], M.glowW, 0.26, { bevel: 0.2 });
+      B.cap(14, -28, 14, -98, 2.2, 1.6, M.wood, 0.3);
+      B.cap(-22, -76, 50, -80, 1.1, 1.1, M.wood, 0.31);
+      B.cap(-18, -78, 46, -82, 3.4, 2.6, M.sail, 0.32);                                                                     // furled sail
+      B.cap(14, -98, 72, -24, 0.35, 0.35, M.rope, 0.29); B.cap(14, -98, -60, -26, 0.35, 0.35, M.rope, 0.29);
+      B.poly([[11, -90], [17, -90], [17, -83], [11, -83]], M.glowW, 0.34, { bevel: 0.2 });
+      for (let i = 0; i < 3; i++) B.cap(-2 + i * 10, -26, -2 + i * 10, -33, 4.5, 4.5, M.barrel, 0.22 + i * 0.01);
+      B.poly([[26, -24], [40, -24], [40, -34], [26, -34]], M.crate, 0.22, { bevel: 1.2 });
+      return { light: [14, -86] };
     },
     net(B) { for (let i = 0; i < 6; i++) B.ell(-8 + i * 3, -2 - (i % 2), 4, 2, M.rope, 0.1 + i * 0.01, { bulge: 0.3 }); },
     well(B) {
@@ -393,7 +398,7 @@
     if (ty >= 16) {
       if ((tx === 6 || tx === 7) && ty <= 30) return '=';
       if ((tx === 22 || tx === 23) && ty <= 33) return '=';
-      if (tx >= 24 && tx <= 30 && ty >= 26 && ty <= 30) return '=';   // shed platform
+      if (tx >= 15 && tx <= 21 && ty >= 25 && ty <= 29) return '=';   // shed platform
       if (tx >= 11 && tx <= 13 && ty >= 32 && ty <= 34) return 'r';   // beacon rock
       return '~';
     }
@@ -407,7 +412,7 @@
     { name: 'tavern', tx: 9, ty: 0, tw: 10, th: 6, wall: 3, roof: 'terra', mat: 'stone', door: { x: 160, w: 18, open: true }, windows: [40, 96, 220, 276], win2: [40, 110, 200, 276], chimney: 60, sign: { x: 182, kind: 'mug' }, hip: true },
     { name: 'shop', tx: 20, ty: 1, tw: 6, th: 5, wall: 2, roof: 'slate', mat: 'plaster', door: { x: 132 }, windows: [36, 84], sign: { x: 150, kind: 'bag' }, awning: { x: 60, w: 80 }, shutters: 'g', hip: true },
     { name: 'house', tx: 27, ty: 0, tw: 6, th: 6, wall: 3, roof: 'terra', mat: 'plaster', door: { x: 50 }, windows: [110, 160], win2: [30, 110, 160], chimney: 150, shutters: 'b', flowers: true, beam: true, dormers: [90] },
-    { name: 'shed', tx: 25, ty: 26, tw: 5, th: 4, wall: 2, roof: 'slate', mat: 'plank', door: { x: 80, w: 20 }, windows: [34], sign: { x: 104, kind: 'anchor' } },
+    { name: 'shed', tx: 16, ty: 25, tw: 5, th: 4, wall: 2, roof: 'slate', mat: 'plank', door: { x: 80, w: 20 }, windows: [34], sign: { x: 104, kind: 'anchor' } },
   ];
   function plazaAt(x, y) {
     const cx = PLAZA[0] * TS, cy = PLAZA[1] * TS, dx = x + 0.5 - cx, dy = (y + 0.5 - cy) * 1.25, r = Math.hypot(dx, dy);
@@ -428,14 +433,14 @@
       const tx = Math.floor(x / TS), ty = Math.floor(y / TS), t = townTile(tx, ty), ts = townTile(Math.floor(jx / TS), Math.floor(jy / TS));
       let c;
       if (t === '~') c = waterAt(x, y);
-      else if (t === '=') c = plankAt(x, y, tx >= 24 && ty >= 26 ? true : false);
+      else if (t === '=') c = plankAt(x, y, tx >= 15 && tx <= 21 && ty >= 25 ? true : false);
       else if (t === 'r') c = pick(P.quay, 0.4 + (vnoise(x * 0.12, y * 0.12, 61) - 0.5) * 0.6);
       else if (t === 'p') c = plankAt(x, y, false);
       else if (t === 'a') c = mix(cobbleAt(x, y), [10, 10, 18], 0.55);
       else if (t === 'w' || t === 's') c = [30, 28, 30];
       else if (ts === ',' && t !== '_') c = grassAt(x, y);
       else if (t === '_') c = plazaAt(x, y);
-      else c = cobbleAt(x, y);
+      else c = cobbleAt(x, y, { flat: true });
       // puddles on the street reflect the sky a little
       if (t === '.' && vnoise(x * 0.03, y * 0.05, 71) > 0.78) c = mix(c, [40, 56, 84], 0.45);
       const q = (y * W + x) * 4; buf.d[q] = c[0]; buf.d[q + 1] = c[1]; buf.d[q + 2] = c[2]; buf.d[q + 3] = 255;
@@ -622,6 +627,8 @@
     place(list, 'chest', 24.3, 15.3);
     place(list, 'ship', 14.6, 18.9); place(list, 'rowboat', 3.4, 17.9); place(list, 'rowboat', 27.2, 18.2, { flip: true });
     place(list, 'beacon', 12.5, 33.4, { scale: 1.3 });
+    place(list, 'rowboat', 11.2, 24.6); place(list, 'rowboat', 9.6, 28.8, { flip: true }); place(list, 'barrel', 16.3, 29.5); place(list, 'crate', 20.6, 29.4); place(list, 'net', 18.4, 29.6); place(list, 'lamp', 21.4, 29.8);
+    person(list, BATTLE_ART.NPC.merchant, 'left', 0, 20.3, 27.9);
     person(list, LOOK.arun, 'left', 1, 14.45, 11.7, { lantern: true, ldx: -4 });
     person(list, LOOK.selma, 'left', 2, 15.45, 11.7);
     person(list, LOOK.sylvan, 'left', 0, 16.45, 11.7);
