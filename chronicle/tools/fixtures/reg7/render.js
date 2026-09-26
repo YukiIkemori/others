@@ -133,7 +133,7 @@
     v1:        { map: 'ash_volcano_1', at: 'entrance', flags: ['ash_start'] },
     v1top:     { map: 'ash_volcano_1', at: 'from_next', flags: ['ash_start'] },
     v2:        { map: 'ash_volcano_2', at: 'from_prev', flags: ['ash_start'] },
-    v2boss:    { map: 'ash_volcano_2', at: { x: 30, y: 12, dir: 'up' }, flags: ['ash_start'] },
+    v2boss:    { map: 'ash_volcano_2', at: { x: 24, y: 11, dir: 'up' }, flags: ['ash_start'] },
     v3:        { map: 'ash_volcano_3', at: 'from_prev', flags: ['ash_start', 'ash_mid'], vars: { ash_murals: 2 } },
     v3crater:  { map: 'ash_volcano_3', at: { x: 23, y: 16, dir: 'up' }, flags: ['ash_start', 'ash_mid'], vars: { ash_murals: 3 } },
   };
@@ -145,7 +145,7 @@
     for (const f of s.flags || []) R.State.setFlag(f, true);
     for (const k in s.vars || {}) R.State.setVar(k, s.vars[k]);
     if (s.clear) R.debug.clearRegion('r_ash');
-    if (o.zoom != null && R.Settings) R.Settings.fieldZoom = o.zoom;
+    if (o.zoom != null && R.Settings) R.Settings.fieldZoom = typeof o.zoom === 'number' ? ['normal', 'wide', 'wider'][o.zoom] : o.zoom;
     await R.debug.warp(s.map, s.at);
     R.Field.noEncounter = true;
     R.Field.refresh();

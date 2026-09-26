@@ -95,20 +95,25 @@
   E.ash_volcano_3_fine = {
     meta: { needs: [], gives: ['flag:ash_fine'] },
     run: async (ev) => {
-      if (R.DB.events.story_fine_ash) await ev.call('story_fine_ash');
-      else {
-        // the story owner's script is not in this build: the region's line and the plain ending (§10.9.4)
-        const f = ev.npc('fine');
-        if (f.visible) f.face('player');
-        const who = ev.flag('st_t3') ? 'フィーネ' : '少女';
-        await ev.say(who + '「燃え尽きることと、\n忘れられることは、違うわ。」');
-        await ev.say(who + '「……気をつけて。」');
-        ev.closeMessage();
-        ev.sfx('magic');
-        await ev.flash('#e8ecff', 10);
-      }
+      if (ev.flag('ash_boss')) return;
+      if (R.DB.events.story_fine_ash) { await ev.call('story_fine_ash'); return; }
+      // Fallback while the story owner's script is missing from a build: §10.9.4 as written. Only one
+      // fixed character speaks, so no speaker name or brackets (STYLE_JA §5).
       const f = ev.npc('fine');
+      const again = ev.flag('ash_fine');
+      if (f.visible) f.face('player');
+      await ev.wait(12);
+      const t = Math.min(7, ev.tier());
+      const close = t >= 6 ? '……もう、あまり時間がないの。' : t >= 3 ? 'わたしのことは気にしないで。\n先へ進みなさい。' : '……気をつけて。';
+      if (!again) await ev.say('燃え尽きることと、\n忘れられることは、違うわ。');
+      await ev.say(close);
+      ev.closeMessage();
+      if (t >= 3 && !again) await ev.caption('フィーネの足元が、\n透けて見えた。');
+      ev.sfx('magic');
+      await ev.flash('#e8ecff', 10);
       if (f.visible) f.hide();
+      ev.setFlag('ash_fine');
+      await ev.wait(20);
     },
   };
 
@@ -170,7 +175,9 @@
       ev.heal();
       await ev.warp('caldera', 'inn', { fade: false });
       if (R.DB.events.story_after_clear) await ev.call('story_after_clear');
-      else await ev.fadeIn(30);
+      // story_after_clear plays nothing when this tier's scene has already run: never leave the screen dark
+      if (R.Engine.fadeAlpha > 0) await ev.fadeIn(30);
+      ev.bgm();
     },
   };
 })(window.RPG);
