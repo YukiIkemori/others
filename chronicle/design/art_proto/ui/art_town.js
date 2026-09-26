@@ -45,7 +45,7 @@
   G.TD_PAL = P;
 
   function cobbleAt(x, y, o) {
-    o = o || {}; const cw = o.cw || 11, ch = o.ch || 8, rs = o.ramp || P.cobble;
+    o = o || {}; const cw = o.cw || 9, ch = o.ch || 7, rs = o.ramp || P.cobble;
     const j = Math.floor(y / ch);
     let d1 = 1e9, d2 = 1e9, sx = 0, sy = 0, id = 0;
     for (let dj = -1; dj <= 1; dj++) {
@@ -59,11 +59,14 @@
     }
     if (d2 - d1 < 0.9) return o.mortar || P.mortar;
     const nx = (x + 0.5 - sx) / (cw * 0.5), ny = (y + 0.5 - sy) / (ch * 0.5);
-    let l = 0.52 - nx * 0.16 - ny * 0.28 + (vnoise(x * 0.5, y * 0.5, 3) - 0.5) * 0.22 + (H3(id, 0, 5) - 0.5) * 0.3;
-    if (d2 - d1 < 1.8) l -= 0.16;
+    const fl = o.flat ? 0.35 : 1;
+    let l = 0.52 - (nx * 0.16 + ny * 0.28) * fl + (vnoise(x * 0.5, y * 0.5, 3) - 0.5) * 0.22 + (H3(id, 0, 5) - 0.5) * 0.3 * (o.flat ? 0.7 : 1);
+    if (d2 - d1 < 1.8) l -= o.flat ? 0.08 : 0.16;
+    if (o.flat && d2 - d1 < 2.6 && ny < 0) l += 0.06;
     return pick(rs, l);
   }
-  function flagAt(x, y) {
+  function flagAt(x, y) { return cobbleAt(x, y, { cw: 26, ch: 16, ramp: P.flag, mortar: P.flagMortar, flat: true }); }
+  function flagAtOld(x, y) {
     const rh = 14, row = Math.floor(y / rh), off = H3(row, 0, 9) * 20, bw = 22 + H3(row, 1, 9) * 8;
     const col = Math.floor((x + off) / bw), ex = (x + off) - col * bw, ey = y - row * rh;
     if (ex < 1 || ey < 1) return P.flagMortar;
@@ -191,18 +194,25 @@
       let side = 0;
       if (hip && y < ry1) { const t = (y - ry0) / (ridgeY - ry0); const inset = y < ridgeY ? hip * (1 - t) : 0; if (lx < -over + inset) return null; if (lx > b.tw * TS + over - inset) return null; if (y < ridgeY) { if (lx < -over + hip * 1.0 - (y - ry0) * (hip / (ridgeY - ry0)) * 0 && lx < inset + 10) side = -1; } }
       const back = y < ridgeY;
-      // shingles
-      const rh = 6, row = Math.floor((y - ry0) / rh), off = (row & 1) * 5, col = Math.floor((x + off) / 10), ey = (y - ry0) - row * rh, ex = (x + off) - col * 10;
-      let l = back ? 0.62 - (ridgeY - y) / (ridgeY - ry0) * 0.12 : 0.46 - (y - ridgeY) / (ry1 - ridgeY) * 0.14;
-      l += (H3(col, row, sid) - 0.5) * 0.22 + (vnoise(x * 0.2, y * 0.2, 13) - 0.5) * 0.12;
-      if (ey === rh - 1) l -= 0.3; else if (ey === 0) l += 0.08;
-      if (ex === 0 && ey < rh - 1) l -= 0.18;
-      l += (1 - (x - x0 + over) / (b.tw * TS + over * 2)) * 0.1; // moon from the left
-      if (Math.abs(y - ridgeY) < 2) l = y < ridgeY ? 0.82 : 0.68; // ridge cap
+      // shingles: clear rows, staggered tabs, moonlit back slope
+      const rh = 7, row = Math.floor((y - ry0) / rh), off = (row & 1) * 6, col = Math.floor((x + off) / 12), ey = (y - ry0) - row * rh, ex = (x + off) - col * 12;
+      let l = back ? 0.72 - (ridgeY - y) / (ridgeY - ry0) * 0.14 : 0.5 - (y - ridgeY) / (ry1 - ridgeY) * 0.16;
+      l += (H3(col, row, sid) - 0.5) * 0.2 + (vnoise(x * 0.2, y * 0.2, 13) - 0.5) * 0.1;
+      if (ey === rh - 1) l -= 0.34; else if (ey === rh - 2) l -= 0.1; else if (ey === 0) l += 0.12;
+      if (ex === 0 && ey < rh - 1) l -= 0.22;
+      l += (1 - (x - x0 + over) / (b.tw * TS + over * 2)) * 0.12; // moon from the left
+      if (Math.abs(y - ridgeY) < 2) l = y < ridgeY ? 0.95 : 0.78; // ridge cap
       if (y >= ry1) l = 0.12 - (y - ry1) * 0.03; // eave underside
       if (x < x0 - over + 2) l -= 0.15; if (x > x1 + over - 3) l -= 0.25; // fascia
       if (vnoise(x * 0.15, y * 0.3, sid + 3) > 0.8 && !back) return mix(pick(RR, l), [70, 90, 50], 0.35); // moss
       return pick(RR, l);
+    });
+    // dormers on the front slope (small gabled windows, lit)
+    (b.dormers || []).forEach((dx) => {
+      const cx = x0 + dx, top = ridgeY + 4, bot = ry1 - 4, w = 22;
+      buf.fill(cx - w / 2 - 2, top, cx + w / 2 + 2, bot, (x, y) => { const t = (y - top) / (bot - top), half = (w / 2 + 2) * Math.min(1, 0.35 + t * 1.3); if (Math.abs(x - cx) > half) return null; return pick(RR, 0.35 + (x < cx ? 0.2 : 0) + ((y - top) % 5 === 4 ? -0.2 : 0)); });
+      buf.fill(cx - 6, bot - 14, cx + 6, bot - 1, (x, y) => (x === cx - 6 || x === cx + 5 || y === bot - 14) ? pick(P.timber, 0.3) : x === cx ? pick(P.timber, 0.5) : pick(P.glass, 0.9 - (y - bot + 14) * 0.03));
+      emit.push({ kind: 'win', x: cx - 5, y: bot - 13, w: 10, h: 12 });
     });
     // hip end faces: redraw the triangles darker/lighter
     if (hip) {
@@ -224,7 +234,7 @@
     }
     const c = buf.done();
     // sign icons drawn with the vector set (small, crisp enough at art px)
-    return { canvas: c, ox: x0, oy: wy1, emit, x: b.tx * TS, y: (b.ty + b.th) * TS, b, W, H, ry0, x0 };
+    return { canvas: c, ox: x0, oy: wy1, emit, x: b.tx * TS, y: (b.ty + b.th) * TS, b, W, H, ry0, ry1, x0 };
   }
 
   // ------------------------------------------------------------------ props (rasterizer)
@@ -273,7 +283,7 @@
     beacon(B) { // the town's great lamp: stone column with a brazier (town centre)
       B.ell(0, -2, 15, 6, M.stone, 0, { bulge: 0.5 });
       B.poly([[-11, -2], [11, -2], [11, -8], [-11, -8]], M.stone, 0.05, { bevel: 2 });
-      B.cap(0, -8, 0, -40, 5.5, 4.5, M.stone, 0.1);
+      B.cap(0, -8, 0, -40, 5.5, 4.5, mat({ keys: ['#16141a', '#2a282e', '#44424a', '#626068', '#807c84'], n: 6, tex: 1.4, tsx: 0.5, tsy: 0.3 }), 0.1);
       B.ell(0, -42, 9, 3.5, M.iron, 0.2, { bulge: 0.4 }); B.poly([[-9, -42], [9, -42], [6, -48], [-6, -48]], M.iron, 0.25, { bevel: 1.5 });
       B.ell(0, -50, 5.5, 4.5, M.glowW, 0.3); B.ell(-1, -55, 3, 4, M.glowW, 0.35);
       return { light: [0, -50] };
@@ -294,7 +304,7 @@
       [[-8, -26, 7, 8], [1, -25, 8, 6], [-6, -17, 6, 4], [3, -18, 6, 5]].forEach(([x, y, w, h]) => B.rect(x, y, w, h, M.paper, 0.2));
     },
     bench(B) { B.poly([[-12, -5], [12, -5], [12, -8], [-12, -8]], M.crate, 0.1, { bevel: 1 }); [-9, 9].forEach((x) => B.cap(x, 0, x, -5, 0.8, 0.8, M.iron, 0)); B.poly([[-12, -9], [12, -9], [12, -13], [-12, -13]], M.crate, 0.05, { bevel: 1, ny: -0.5 }); },
-    table(B) { B.ell(0, -9, 10, 5, M.crate, 0.1, { bulge: 0.4 }); B.cap(0, 0, 0, -9, 1.2, 1.2, M.wood, 0); B.ell(-4, -12, 2, 1.6, M.paper, 0.2); B.ell(4, -11, 1.6, 2.4, M.glowW, 0.2); return { light: [4, -12], small: true }; },
+    table(B) { B.ell(0, -9, 10, 5, M.crate, 0.1, { bulge: 0.4 }); B.cap(0, 0, 0, -9, 1.2, 1.2, M.wood, 0); B.ell(-4, -12, 2, 1.6, M.paper, 0.2); B.ell(4, -11, 1.1, 1.8, M.glowW, 0.2); return { light: [4, -12], small: true }; },
     rowboat(B) { B.poly([[-24, -2], [22, -2], [28, -9], [20, -14], [-22, -14], [-28, -8]], M.barrel, 0, { bevel: 4, ny: -0.3 }); B.poly([[-19, -5], [18, -5], [22, -9], [17, -12], [-18, -12], [-22, -8]], mat({ keys: ['#1a0e08', '#2e1c10', '#44301c'], n: 3 }), 0.1, { bevel: 2 }); [-8, 6].forEach((x) => B.rect(x, -13, 3, 9, M.crate, 0.2)); },
     ship(B) { // small fishing ship, deck seen from above-front
       B.poly([[-70, -4], [56, -4], [84, -18], [60, -34], [-66, -34], [-78, -20]], M.barrel, 0, { bevel: 6, ny: -0.2 });
@@ -355,9 +365,10 @@
   }
 
   // compose a scene: ground (canvas), faces, sprites [{r, x, y, z?, shadow}], lights, emissive → canvas (art px)
-  function lightmap(ctx, W, H, amb, lights) {
+  function lightmap(ctx, W, H, amb, lights, moonMask) {
     const lm = mk(W, H), lx = lm.getContext('2d');
     lx.fillStyle = amb; lx.fillRect(0, 0, W, H);
+    if (moonMask) { const t = mk(W, H), tx = t.getContext('2d'); tx.drawImage(moonMask, 0, 0); tx.globalCompositeOperation = 'source-in'; tx.fillStyle = 'rgb(56,64,84)'; tx.fillRect(0, 0, W, H); lx.globalCompositeOperation = 'lighter'; lx.drawImage(t, 0, 0); lx.globalCompositeOperation = 'source-over'; }
     lx.globalCompositeOperation = 'lighter';
     for (const L of lights) {
       const { x, y, r, c, k } = L, sy = L.sy || 0.8;
@@ -419,7 +430,7 @@
       if (t === '~') c = waterAt(x, y);
       else if (t === '=') c = plankAt(x, y, tx >= 24 && ty >= 26 ? true : false);
       else if (t === 'r') c = pick(P.quay, 0.4 + (vnoise(x * 0.12, y * 0.12, 61) - 0.5) * 0.6);
-      else if (t === 'p') c = cobbleAt(x, y, { cw: 16, ch: 11, ramp: P.flag });
+      else if (t === 'p') c = plankAt(x, y, false);
       else if (t === 'a') c = mix(cobbleAt(x, y), [10, 10, 18], 0.55);
       else if (t === 'w' || t === 's') c = [30, 28, 30];
       else if (ts === ',' && t !== '_') c = grassAt(x, y);
@@ -488,6 +499,7 @@
       // ambient occlusion along the wall bases
       for (const bb of blds) { const b = bb.b, x = b.tx * TS - 2, y = (b.ty + b.th) * TS, w = b.tw * TS + 4; const g = ctx.createLinearGradient(0, y, 0, y + 9); g.addColorStop(0, 'rgba(0,0,8,0.55)'); g.addColorStop(1, 'rgba(0,0,8,0)'); ctx.fillStyle = g; ctx.fillRect(x, y, w, 9); }
     }
+    const moonMask = mk(ctx.canvas.width, ctx.canvas.height), mm = moonMask.getContext('2d');
     const items = list.map((it) => ({ y: it.y, it })).concat(blds.map((bb) => ({ y: bb.y, bb })));
     items.sort((a, b) => a.y - b.y);
     for (const { it } of items) if (it && it.kind !== 'flat') {
@@ -498,6 +510,7 @@
     for (const e of items) {
       if (e.bb) {
         const bb = e.bb; ctx.drawImage(bb.canvas, bb.x - bb.x0, bb.y - bb.oy);
+        mm.drawImage(bb.canvas, 0, 0, bb.W, bb.ry1 + 2, bb.x - bb.x0, bb.y - bb.oy, bb.W, bb.ry1 + 2);
         for (const m of bb.emit) {
           const ex = bb.x - bb.x0 + m.x, ey = bb.y - bb.oy + m.y;
           if (m.kind === 'win') { emits.push({ kind: 'win', x: ex, y: ey, w: m.w, h: m.h }); lights.push({ x: ex + m.w / 2, y: bb.y + 14, r: 34, c: [255, 190, 110], k: 0.55, sy: 0.55 }); lights.push({ x: ex + m.w / 2, y: ey + m.h / 2, r: 18, c: [255, 200, 130], k: 0.6 }); }
@@ -515,7 +528,7 @@
           const col = m.cyan ? [120, 230, 240] : [255, 188, 105];
           if (m.big) lights.push({ x: lx, y: it.y, r: 150, c: col, k: 1.0, sy: 0.65 });
           else if (m.small) lights.push({ x: lx, y: it.y, r: 40, c: col, k: 0.6, sy: 0.6 });
-          else lights.push({ x: lx, y: it.y - 4, r: it.kind === 'beacon' ? 230 : it.kind === 'ship' ? 70 : 105, c: col, k: it.kind === 'beacon' ? 1.1 : 0.9, sy: 0.62 });
+          else lights.push({ x: lx, y: it.y - 4, r: it.kind === 'beacon' ? 210 : it.kind === 'ship' ? 70 : 105, c: col, k: it.kind === 'beacon' ? 0.85 : 0.9, sy: 0.62 });
           lights.push({ x: lx, y: ly, r: 26, c: col, k: 0.7 });
           emits.push({ kind: 'point', x: lx, y: ly, cyan: m.cyan, big: it.kind === 'beacon' || m.big });
         }
@@ -523,7 +536,7 @@
         if (it.kind === 'chest' && !it.o.open) emits.push({ kind: 'sparkle', x: it.x + 7, y: it.y - 19 });
       }
     }
-    return { lights, emits };
+    return { lights, emits, moonMask };
   }
   function drawEmissive(ctx, emits, t) {
     for (const e of emits) {
@@ -537,7 +550,7 @@
       } else if (e.kind === 'lamp') { glowA(ctx, e.x, e.y, 16, [255, 200, 120], 0.8); ctx.fillStyle = '#fff2c8'; ctx.fillRect(e.x - 1, e.y - 1, 3, 3); }
       else if (e.kind === 'point') {
         const c = e.cyan ? [140, 240, 250] : [255, 196, 110];
-        glowA(ctx, e.x, e.y, e.big ? 60 : e.small ? 14 : 26, c, e.big ? 0.8 : 0.75); glowA(ctx, e.x, e.y, e.big ? 16 : 6, [255, 250, 230], 0.9);
+        glowA(ctx, e.x, e.y, e.big ? 54 : e.small ? 12 : 24, c, e.big ? 0.7 : 0.7); glowA(ctx, e.x, e.y, e.big ? 8 : 4, [255, 236, 190], 0.8);
       } else if (e.kind === 'sparkle') {
         glowA(ctx, e.x, e.y, 16, [255, 240, 180], 0.7);
         ctx.fillStyle = '#fffbe8'; ctx.fillRect(e.x - 5, e.y, 11, 1); ctx.fillRect(e.x, e.y - 5, 1, 11); ctx.fillRect(e.x - 1, e.y - 1, 3, 3);
@@ -603,11 +616,11 @@
     [[4, 15.8], [10, 15.8], [20, 15.8], [26, 15.8]].forEach(([x, y]) => place(list, 'bollard', x, y));
     place(list, 'stall', 21.2, 11.3); place(list, 'stall', 24.6, 11.3); place(list, 'board', 7.7, 7.4);
     place(list, 'bench', 6.2, 10.8); place(list, 'bench', 15.6, 9.2);
-    place(list, 'table', 12.3, 6.9); place(list, 'table', 16.6, 6.9); place(list, 'barrel', 19.2, 6.5); place(list, 'barrel', 8.6, 6.4);
+    place(list, 'barrel', 12.1, 6.7); place(list, 'crate', 17.2, 6.8); place(list, 'bush', 20.6, 6.6, { seed: 11 }); place(list, 'barrel', 19.2, 6.5); place(list, 'barrel', 8.6, 6.4);
     place(list, 'barrel', 2.4, 14.9); place(list, 'barrel', 3.0, 15.4); place(list, 'crate', 1.4, 15.3); place(list, 'net', 27.6, 15.3); place(list, 'crate', 28.8, 14.8);
     place(list, 'tree', 1.2, 10.6, { h: 64, seed: 9 }); place(list, 'tree', 30.2, 10.8, { h: 60, seed: 4 }); place(list, 'bush', 1.8, 12.8, { seed: 3 }); place(list, 'bush', 29.6, 12.9, { seed: 8 });
     place(list, 'chest', 24.3, 15.3);
-    place(list, 'ship', 14.2, 20.4); place(list, 'rowboat', 3.4, 21.6); place(list, 'rowboat', 26.6, 21.2, { flip: true });
+    place(list, 'ship', 14.6, 18.9); place(list, 'rowboat', 3.4, 17.9); place(list, 'rowboat', 27.2, 18.2, { flip: true });
     place(list, 'beacon', 12.5, 33.4, { scale: 1.3 });
     person(list, LOOK.arun, 'left', 1, 14.45, 11.7, { lantern: true, ldx: -4 });
     person(list, LOOK.selma, 'left', 2, 15.45, 11.7);
@@ -617,8 +630,8 @@
     person(list, NP.merchant, 'down', 0, 21.2, 10.6);
     person(list, NP.sailor, 'down', 0, 12.5, 15.2);
     person(list, NP.innkeeper, 'down', 0, 3.9, 6.9);
-    const { lights, emits } = composeScene(ctx, list, blds);
-    lightmap(ctx, W, H, 'rgb(76,90,146)', lights);
+    const { lights, emits, moonMask } = composeScene(ctx, list, blds);
+    lightmap(ctx, W, H, 'rgb(76,90,146)', lights, moonMask);
     const isWater = (x, y) => townTile(Math.floor(x / TS), Math.floor(y / TS)) === '~';
     moonWater(ctx, W, H, isWater, lights.filter((L) => L.r >= 100).map((L) => ({ x: L.x, y: L.y + 14 })), 5);
     drawEmissive(ctx, emits);
