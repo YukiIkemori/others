@@ -38,7 +38,7 @@
     // → mimic_1
     ac_sr_greedy: { name: '欲張りの首飾り', type: 'acc', grade: 'super', tier: 1, units: 'a1', src: 'super', exclusive: 'mimic_1', quirk: true,
       mods: { dropPct: 30, rarePct: 30, /* クセ */ hpPct: -30 },
-      desc: '品をよく落とす。レアをよく落とす。\nただし最大HPが下がる。' },
+      desc: 'アイテムをよく落とす。レアをよく落とす。\nただし最大HPが下がる。' },
     // → darkmage_1
     ac_sr_scholar: { name: '学者の眼鏡', type: 'acc', grade: 'super', tier: 1, units: 'i1', src: 'super', exclusive: 'darkmage_1', quirk: true,
       mods: { expPct: 20, glimPct: { spell: 20 }, /* クセ */ goldPct: -50 },

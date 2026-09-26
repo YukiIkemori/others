@@ -1,0 +1,27 @@
+{
+  "loopStart": 18.855,
+  "loopEnd": 58.295,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. A misty haunted manor, bell-sunken marsh and ghost ship: eerie, haunted and melancholic waltz, candle flames flickering, sad rather than violent. Tempo 72 BPM, 3/4 time, key of C minor. Instrumentation: harpsichord and clarinet, slightly broken-sounding music box, distant bell, low strings, soft ghostly pad. Form: music-box intro, waltz theme, darker middle, return. Duration: 75 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[B3]]\n[[D4]]",
+    "generated": "2026-09-26T14:07:18.028Z",
+    "rawSeconds": 75.5,
+    "takes": 2
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -5.4,
+    "gainDb": -6.9,
+    "peakLimited": false,
+    "loopScore": 0.667,
+    "seamCorr": 0.397,
+    "xfade": 0.6,
+    "medianDb": -23.4,
+    "longestSilence": 0.4,
+    "seamLevelDiffDb": 2.7,
+    "seamJump": 0.0127,
+    "maxStep": 0.0443
+  }
+}

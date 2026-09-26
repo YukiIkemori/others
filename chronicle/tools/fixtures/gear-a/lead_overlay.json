@@ -1,0 +1,1151 @@
+{
+ "_about": "Lead decisions not yet folded into DESIGN.md. check_gear-a applies them on top of the DESIGN tables. d3: LEAD_DECISIONS D3 (every rare ★ armor / accessory, relic rare and story reward has exactly one weak §8.3.6 quirk; mods added + new desc; desc null = monster-chapter item, desc checked for shape by test_gear). wording: BRIEF A1.3 / STYLE_JA §8 (on-screen 品 → アイテム). Print the DESIGN rows to change with: node tools/check_gear-a.js --overlay",
+ "d3": {
+  "bd_r1_str": {
+   "mods": {
+    "spd": -15
+   },
+   "desc": "最大HPが上がる。ただし動きが遅くなる。"
+  },
+  "hd_r1_dex": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "よく当たる。ただし術防が下がる。"
+  },
+  "sh_r1_vit": {
+   "mods": {
+    "elemResist": {
+     "wind": 1.25
+    }
+   },
+   "desc": "土のダメージを減らす。\nただし風に弱くなる。"
+  },
+  "hn_r1_dex": {
+   "mods": {
+    "defPct": -25
+   },
+   "desc": "盗みが成功しやすい。\nただし守備力が下がる。"
+  },
+  "ft_r1_agi": {
+   "mods": {
+    "encounterPct": 50
+   },
+   "desc": "すばやく動ける。ただし魔物を呼ぶ。"
+  },
+  "ac_r1_int": {
+   "mods": {
+    "defPct": -25
+   },
+   "desc": "戦闘中、MPが少しずつ戻る。\nただし守備力が下がる。"
+  },
+  "ac_r1_item": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "回復の道具がよく効く。\nただし術防が下がる。"
+  },
+  "bd_r3_vit": {
+   "mods": {
+    "spd": -15
+   },
+   "desc": "気絶が効かない。ただし動きが遅くなる。"
+  },
+  "bd_r3_dex": {
+   "mods": {
+    "elemResist": {
+     "water": 1.25
+    }
+   },
+   "desc": "火のダメージを減らす。\nただし水に弱くなる。"
+  },
+  "bd_r3_mnd": {
+   "mods": {
+    "defPct": -25
+   },
+   "desc": "戦闘中、HPが少しずつ戻る。\nただし守備力が下がる。"
+  },
+  "hd_r3_str": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "会心が出やすい。ただし術防が下がる。"
+  },
+  "hd_r3_int": {
+   "mods": {
+    "defPct": -25
+   },
+   "desc": "術を閃きやすい。ただし守備力が下がる。"
+  },
+  "ft_r3_mnd": {
+   "mods": {
+    "hpPct": -10
+   },
+   "desc": "回復の術がよく効く。\nただし最大HPが下がる。"
+  },
+  "ac_r3_drop": {
+   "mods": {
+    "goldPct": -25
+   },
+   "desc": "魔物がアイテムを落としやすい。\nただしお金が減る。"
+  },
+  "ac_r3_blind": {
+   "mods": {
+    "elemResist": {
+     "light": 1.25
+    }
+   },
+   "desc": "暗闇が効かない。ただし光に弱くなる。"
+  },
+  "bd_r5_int": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   },
+   "desc": "水の攻撃が強くなる。ただし火に弱くなる。"
+  },
+  "bd_r5_agi": {
+   "mods": {
+    "encounterPct": 50
+   },
+   "desc": "戦闘の始めに素早さが上がる。\nただし魔物を呼ぶ。"
+  },
+  "hd_r5_vit": {
+   "mods": {
+    "spd": -15
+   },
+   "desc": "最大HPが上がる。ただし動きが遅くなる。"
+  },
+  "hd_r5_dex": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "会心が出やすい。ただし術防が下がる。"
+  },
+  "sh_r5_vit": {
+   "mods": {
+    "elemResist": {
+     "wind": 1.25
+    }
+   },
+   "desc": "火・水のダメージを減らす。\nただし風に弱くなる。"
+  },
+  "hn_r5_int": {
+   "mods": {
+    "wpCostPct": 25
+   },
+   "desc": "術のMPの消費が減る。\nただしWPの消費が増える。"
+  },
+  "ac_r5_gold": {
+   "mods": {
+    "expPct": -25
+   },
+   "desc": "手に入るお金が増える。\nただし経験値が減る。"
+  },
+  "ac_r5_int": {
+   "mods": {
+    "hpPct": -10
+   },
+   "desc": "術力が上がる。ただし最大HPが下がる。"
+  },
+  "ac_r5_poison": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "毒が効かない。ただし術防が下がる。"
+  },
+  "ac_r5_para": {
+   "mods": {
+    "eva": -10
+   },
+   "desc": "まひが効かない。ただしかわしにくい。"
+  },
+  "ac_r5_freeze": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   },
+   "desc": "凍結が効かない。ただし火に弱くなる。"
+  },
+  "ac_r5_burn": {
+   "mods": {
+    "elemResist": {
+     "water": 1.25
+    }
+   },
+   "desc": "やけどが効かない。ただし水に弱くなる。"
+  },
+  "bd_r7_str": {
+   "mods": {
+    "spd": -15
+   },
+   "desc": "物理攻撃の威力が上がる。\nただし動きが遅くなる。"
+  },
+  "hd_r7_str": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "戦闘の始めに攻撃が上がる。\nただし術防が下がる。"
+  },
+  "sh_r7_str": {
+   "mods": {
+    "spd": -15
+   },
+   "desc": "攻撃をかわしやすい。\nただし動きが遅くなる。"
+  },
+  "hn_r7_str": {
+   "mods": {
+    "hit": -10
+   },
+   "desc": "会心が出やすい。ただし当たりにくい。"
+  },
+  "ft_r7_str": {
+   "mods": {
+    "encounterPct": 50
+   },
+   "desc": "すばやく動ける。ただし魔物を呼ぶ。"
+  },
+  "ac_r7_str": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "最大HPが上がる。ただし術防が下がる。"
+  },
+  "bd_r7_dex": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "攻撃をかわしやすい。ただし術防が下がる。"
+  },
+  "hd_r7_dex": {
+   "mods": {
+    "hpPct": -10
+   },
+   "desc": "よく当たる。ただし最大HPが下がる。"
+  },
+  "sh_r7_dex": {
+   "mods": {
+    "elemResist": {
+     "earth": 1.25
+    }
+   },
+   "desc": "風の攻撃を受けない。ただし土に弱くなる。"
+  },
+  "hn_r7_dex": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "会心が出やすい。ただし術防が下がる。"
+  },
+  "ft_r7_dex": {
+   "mods": {
+    "encounterPct": 50
+   },
+   "desc": "先制しやすくなる。ただし魔物を呼ぶ。"
+  },
+  "ac_r7_dex": {
+   "mods": {
+    "glimPct": {
+     "spell": -50
+    }
+   },
+   "desc": "技を閃きやすい。ただし術を閃きにくい。"
+  },
+  "bd_r7_int": {
+   "mods": {
+    "defPct": -25
+   },
+   "desc": "最大MPが上がる。ただし守備力が下がる。"
+  },
+  "hd_r7_int": {
+   "mods": {
+    "elemResist": {
+     "light": 1.25
+    }
+   },
+   "desc": "闇の攻撃が強くなる。ただし光に弱くなる。"
+  },
+  "hn_r7_int": {
+   "mods": {
+    "hpPct": -10
+   },
+   "desc": "戦闘中、MPが少しずつ戻る。\nただし最大HPが下がる。"
+  },
+  "ft_r7_int": {
+   "mods": {
+    "defPct": -25
+   },
+   "desc": "沈黙が効かない。ただし守備力が下がる。"
+  },
+  "ac_r7_int": {
+   "mods": {
+    "defPct": -25
+   },
+   "desc": "術力が上がる。ただし守備力が下がる。"
+  },
+  "ac_r7_sleep": {
+   "mods": {
+    "spd": -15
+   },
+   "desc": "眠りが効かない。ただし動きが遅くなる。"
+  },
+  "ac_r7_confuse": {
+   "mods": {
+    "statusResist": {
+     "silence": -0.25
+    }
+   },
+   "desc": "混乱が効かない。ただし沈黙に弱い。"
+  },
+  "bd_r9_str": {
+   "mods": {
+    "spd": -15
+   },
+   "desc": "物理攻撃の威力が上がる。\nただし動きが遅くなる。"
+  },
+  "hd_r9_str": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "戦闘の始めに攻撃が上がる。\nただし術防が下がる。"
+  },
+  "sh_r9_str": {
+   "mods": {
+    "elemResist": {
+     "water": 1.25
+    }
+   },
+   "desc": "火・闇のダメージを減らす。\nただし水に弱くなる。"
+  },
+  "hn_r9_str": {
+   "mods": {
+    "hit": -10
+   },
+   "desc": "会心が出やすい。ただし当たりにくい。"
+  },
+  "ft_r9_str": {
+   "mods": {
+    "spd": -15
+   },
+   "desc": "最大HPが上がる。ただし動きが遅くなる。"
+  },
+  "ac_r9_str": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "物理攻撃の威力が上がる。\nただし術防が下がる。"
+  },
+  "bd_r9_dex": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "攻撃をかわしやすい。ただし術防が下がる。"
+  },
+  "hd_r9_dex": {
+   "mods": {
+    "hpPct": -10
+   },
+   "desc": "よく当たる。ただし最大HPが下がる。"
+  },
+  "sh_r9_dex": {
+   "mods": {
+    "takenPct": 15
+   },
+   "desc": "光・闇のダメージを減らす。\nただし受けるダメージが増える。"
+  },
+  "hn_r9_dex": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "会心が出やすい。ただし術防が下がる。"
+  },
+  "ft_r9_dex": {
+   "mods": {
+    "encounterPct": 50
+   },
+   "desc": "すばやく動ける。ただし魔物を呼ぶ。"
+  },
+  "ac_r9_dex": {
+   "mods": {
+    "glimPct": {
+     "spell": -50
+    }
+   },
+   "desc": "技を閃きやすい。ただし術を閃きにくい。"
+  },
+  "bd_r9_int": {
+   "mods": {
+    "defPct": -25
+   },
+   "desc": "最大MPが上がる。ただし守備力が下がる。"
+  },
+  "hd_r9_int": {
+   "mods": {
+    "defPct": -25
+   },
+   "desc": "術の威力が上がる。ただし守備力が下がる。"
+  },
+  "sh_r9_int": {
+   "mods": {
+    "wpCostPct": 25
+   },
+   "desc": "術のMPの消費が減る。\nただしWPの消費が増える。"
+  },
+  "hn_r9_int": {
+   "mods": {
+    "hpPct": -10
+   },
+   "desc": "戦闘中、MPが少しずつ戻る。\nただし最大HPが下がる。"
+  },
+  "ft_r9_int": {
+   "mods": {
+    "defPct": -25
+   },
+   "desc": "沈黙・混乱・眠りにかかりにくい。\nただし守備力が下がる。"
+  },
+  "ac_r9_int": {
+   "mods": {
+    "hpPct": -10
+   },
+   "desc": "術力が上がる。ただし最大HPが下がる。"
+  },
+  "ac_r9_death": {
+   "mods": {
+    "takenPct": 15
+   },
+   "desc": "即死が効かない。\nただし受けるダメージが増える。"
+  },
+  "ac_rl_moon": {
+   "mods": {
+    "defPct": -25
+   },
+   "desc": "知力が割合で上がる。MPが戻る。\nただし守備力が下がる。"
+  },
+  "ac_rl_sun": {
+   "mods": {
+    "elemResist": {
+     "dark": 1.25
+    }
+   },
+   "desc": "精神が割合で上がる。回復の術がよく効く。\nただし闇に弱くなる。"
+  },
+  "ac_rl_star": {
+   "mods": {
+    "glimPct": {
+     "spell": -50
+    }
+   },
+   "desc": "器用さが割合で上がる。技を閃きやすい。\nただし術を閃きにくい。"
+  },
+  "ac_rl_wind": {
+   "mods": {
+    "encounterPct": 50
+   },
+   "desc": "素早さが割合で上がる。すばやく動ける。\nただし魔物を呼ぶ。"
+  },
+  "ac_rl_tide": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   },
+   "desc": "体力が割合で上がる。水に強い。\nただし火に弱くなる。"
+  },
+  "ac_rl_ember": {
+   "mods": {
+    "elemResist": {
+     "water": 1.25
+    }
+   },
+   "desc": "腕力が割合で上がる。火の攻撃が強くなる。\nただし水に弱くなる。"
+  },
+  "ac_rl_frost": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   },
+   "desc": "知力が割合で上がる。凍結が効かない。\nただし火に弱くなる。"
+  },
+  "ac_rl_bloom": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   },
+   "desc": "精神が割合で上がる。HPが戻る。\nただし火に弱くなる。"
+  },
+  "ac_rl_thorn": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "腕力が割合で上がる。会心が出やすい。\nただし術防が下がる。"
+  },
+  "ac_rl_shadow": {
+   "mods": {
+    "elemResist": {
+     "light": 1.25
+    }
+   },
+   "desc": "素早さが割合で上がる。\n魔物に出会いにくい。ただし光に弱くなる。"
+  },
+  "ac_rl_gold": {
+   "mods": {
+    "expPct": -25
+   },
+   "desc": "お金が増える。金色の魔物に出会いやすい。\nただし経験値が減る。"
+  },
+  "ac_rl_clover": {
+   "mods": {
+    "goldPct": -25
+   },
+   "desc": "器用さが割合で上がる。\nレアをよく落とす。ただしお金が減る。"
+  },
+  "ac_rl_sage": {
+   "mods": {
+    "goldPct": -25
+   },
+   "desc": "知力が割合で上がる。経験値が増える。\nただしお金が減る。"
+  },
+  "ac_rl_iron": {
+   "mods": {
+    "spd": -15
+   },
+   "desc": "体力が割合で上がる。気絶が効かない。\nただし動きが遅くなる。"
+  },
+  "ac_rl_spirit": {
+   "mods": {
+    "takenPct": 15
+   },
+   "desc": "精神が割合で上がる。即死が効かない。\nただし受けるダメージが増える。"
+  },
+  "ac_rl_beast": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "腕力が割合で上がる。物理が強くなる。\nただし術防が下がる。"
+  },
+  "ac_rl_bird": {
+   "mods": {
+    "hpPct": -10
+   },
+   "desc": "素早さが割合で上がる。逃げやすくなる。\nただし最大HPが下がる。"
+  },
+  "ac_rl_dream": {
+   "mods": {
+    "statusResist": {
+     "confuse": -0.25
+    }
+   },
+   "desc": "精神が割合で上がる。眠りが効かない。\nただし混乱に弱い。"
+  },
+  "ac_rl_bell": {
+   "mods": {
+    "statusResist": {
+     "sleep": -0.25
+    }
+   },
+   "desc": "沈黙・混乱にかかりにくい。\n精神が割合で上がる。ただし眠りに弱い。"
+  },
+  "ac_rl_prism": {
+   "mods": {
+    "defPct": -25
+   },
+   "desc": "知力が割合で上がる。術の威力が上がる。\nただし守備力が下がる。"
+  },
+  "ac_rl_sea": {
+   "mods": {
+    "elemResist": {
+     "wind": 1.25
+    }
+   },
+   "desc": "体力が割合で上がる。最大HPが上がる。\nただし風に弱くなる。"
+  },
+  "ac_rl_peak": {
+   "mods": {
+    "mpCostPct": 25
+   },
+   "desc": "体力が割合で上がる。WPが戻る。\nただしMPの消費が増える。"
+  },
+  "ac_rl_tale": {
+   "mods": {
+    "glimPct": {
+     "tech": -50
+    }
+   },
+   "desc": "精神が割合で上がる。術を閃きやすい。\nただし技を閃きにくい。"
+  },
+  "ac_otto_lantern": {
+   "mods": {
+    "encounterPct": 50
+   },
+   "desc": "技と術を閃きやすい。ただし魔物を呼ぶ。"
+  },
+  "ac_tale_forest": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   },
+   "desc": "精神が割合で上がる。HPが戻る。\nただし火に弱くなる。"
+  },
+  "ac_tale_desert": {
+   "mods": {
+    "expPct": -25
+   },
+   "desc": "腕力が割合で上がる。お金が増える。\nただし経験値が減る。"
+  },
+  "ac_tale_snow": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "凍結・やけどが効かない。\n体力が割合で上がる。ただし術防が下がる。"
+  },
+  "ac_tale_marsh": {
+   "mods": {
+    "elemResist": {
+     "dark": 1.25
+    }
+   },
+   "desc": "素早さが割合で上がる。混乱が効かない。\nただし闇に弱くなる。"
+  },
+  "ac_tale_isles": {
+   "mods": {
+    "mpCostPct": 25
+   },
+   "desc": "器用さが割合で上がる。WPが戻る。\nただしMPの消費が増える。"
+  },
+  "ac_tale_mine": {
+   "mods": {
+    "spd": -15
+   },
+   "desc": "最大HPが上がる。守備力が上がる。\nただし動きが遅くなる。"
+  },
+  "ac_tale_ash": {
+   "mods": {
+    "elemResist": {
+     "water": 1.25
+    }
+   },
+   "desc": "知力が割合で上がる。火の攻撃が強くなる。\nただし水に弱くなる。"
+  },
+  "ac_tale_star": {
+   "mods": {
+    "goldPct": -25
+   },
+   "desc": "めずらしい魔物に出会いやすい。\nレアをよく落とす。ただしお金が減る。"
+  },
+  "ac_rival_pen": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "術のMPの消費が減る。技のWPの消費が減る。\nただし術防が下がる。"
+  },
+  "hn_rival_bracer": {
+   "mods": {
+    "mdefPct": -25
+   },
+   "desc": "会心が出やすい。ただし術防が下がる。"
+  },
+  "ac_berna_charm": {
+   "mods": {
+    "hpPct": -10
+   },
+   "desc": "閃きやすい。眠り・混乱が効かない。\nただし最大HPが下がる。"
+  },
+  "ac_jelly_ring": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   }
+  },
+  "ft_rat_sandal": {
+   "mods": {
+    "hpPct": -10
+   }
+  },
+  "ac_bat_fang": {
+   "mods": {
+    "elemResist": {
+     "light": 1.25
+    }
+   }
+  },
+  "sh_crab_shell": {
+   "mods": {
+    "spd": -15
+   }
+  },
+  "ac_gull_feather": {
+   "mods": {
+    "encounterPct": 50
+   }
+  },
+  "hd_mushroom_cap": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   }
+  },
+  "bd_wrap_cloth": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   }
+  },
+  "bd_wolf_pelt": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   }
+  },
+  "ac_snow_crystal": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   }
+  },
+  "hd_mist_hood": {
+   "mods": {
+    "defPct": -25
+   }
+  },
+  "bd_marsh_coat": {
+   "mods": {
+    "mdefPct": -25
+   }
+  },
+  "sh_ore_shield": {
+   "mods": {
+    "eva": -10
+   }
+  },
+  "hn_mole_claw": {
+   "mods": {
+    "hit": -10
+   }
+  },
+  "hd_ash_mask": {
+   "mods": {
+    "mdefPct": -25
+   }
+  },
+  "hd_star_hood": {
+   "mods": {
+    "defPct": -25
+   }
+  },
+  "sh_star_buckler": {
+   "mods": {
+    "defPct": -25
+   }
+  },
+  "ac_mimic_tongue": {
+   "mods": {
+    "expPct": -25
+   }
+  },
+  "sh_bubble": {
+   "mods": {
+    "elemResist": {
+     "wind": 1.25
+    }
+   }
+  },
+  "hn_rat_claw": {
+   "mods": {
+    "defPct": -25
+   }
+  },
+  "ac_blank_page": {
+   "mods": {
+    "statusResist": {
+     "confuse": -0.25
+    }
+   }
+  },
+  "bd_crab_plate": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   }
+  },
+  "ac_honey_charm": {
+   "mods": {
+    "encounterPct": 50
+   }
+  },
+  "hn_curse_wrap": {
+   "mods": {
+    "elemResist": {
+     "light": 1.25
+    }
+   }
+  },
+  "sh_tide_shield": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   }
+  },
+  "ac_ruby_chip": {
+   "mods": {
+    "elemResist": {
+     "water": 1.25
+    }
+   }
+  },
+  "hd_sentry_helm": {
+   "mods": {
+    "spd": -15
+   }
+  },
+  "ac_mimic_key": {
+   "mods": {
+    "goldPct": -25
+   }
+  },
+  "hn_jelly_glove": {
+   "mods": {
+    "defPct": -25
+   }
+  },
+  "hd_sonic_band": {
+   "mods": {
+    "statusResist": {
+     "silence": -0.25
+    }
+   }
+  },
+  "bd_blank_coat": {
+   "mods": {
+    "defPct": -25
+   }
+  },
+  "hd_foam_cap": {
+   "mods": {
+    "elemResist": {
+     "wind": 1.25
+    }
+   }
+  },
+  "hd_thief_bandana": {
+   "mods": {
+    "mdefPct": -25
+   }
+  },
+  "bd_leaf_mail": {
+   "mods": {
+    "elemResist": {
+     "wind": 1.25
+    }
+   }
+  },
+  "ac_fairy_dust": {
+   "mods": {
+    "hpPct": -10
+   }
+  },
+  "sh_scorpion_shell": {
+   "mods": {
+    "elemResist": {
+     "water": 1.25
+    }
+   }
+  },
+  "ac_blizzard_charm": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   }
+  },
+  "sh_bell_shield": {
+   "mods": {
+    "statusResist": {
+     "confuse": -0.25
+    }
+   }
+  },
+  "bd_bog_mail": {
+   "mods": {
+    "spd": -15
+   }
+  },
+  "ac_pearl_ear": {
+   "mods": {
+    "defPct": -25
+   }
+  },
+  "ac_gem_eye": {
+   "mods": {
+    "takenPct": 15
+   }
+  },
+  "ac_sapphire_chip": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   }
+  },
+  "bd_ash_cloak": {
+   "mods": {
+    "elemResist": {
+     "water": 1.25
+    }
+   }
+  },
+  "sh_wyvern_scale": {
+   "mods": {
+    "elemResist": {
+     "earth": 1.25
+    }
+   }
+  },
+  "ac_astrolabe": {
+   "mods": {
+    "glimPct": {
+     "tech": -50
+    }
+   }
+  },
+  "bd_knight_mail": {
+   "mods": {
+    "eva": -10
+   }
+  },
+  "ac_mimic_chain": {
+   "mods": {
+    "goldPct": -25
+   }
+  },
+  "ac_silver_drop": {
+   "mods": {
+    "goldPct": -25
+   }
+  },
+  "ac_mirror_scale": {
+   "mods": {
+    "elemResist": {
+     "dark": 1.25
+    }
+   }
+  },
+  "hd_jelly_helm": {
+   "mods": {
+    "mdefPct": -25
+   }
+  },
+  "ac_rainbow_drop": {
+   "mods": {
+    "hpPct": -10
+   }
+  },
+  "hd_rat_bandana": {
+   "mods": {
+    "expPct": -25
+   }
+  },
+  "bd_night_cloak": {
+   "mods": {
+    "elemResist": {
+     "light": 1.25
+    }
+   }
+  },
+  "ac_count_brooch": {
+   "mods": {
+    "elemResist": {
+     "light": 1.25
+    }
+   }
+  },
+  "sh_blank_shield": {
+   "mods": {
+    "spd": -15
+   }
+  },
+  "sh_castle_shell": {
+   "mods": {
+    "spd": -15
+   }
+  },
+  "bd_gull_robe": {
+   "mods": {
+    "elemResist": {
+     "earth": 1.25
+    }
+   }
+  },
+  "ac_millennium_seed": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   }
+  },
+  "hd_fairy_circlet": {
+   "mods": {
+    "defPct": -25
+   }
+  },
+  "ac_royal_ankh": {
+   "mods": {
+    "takenPct": 15
+   }
+  },
+  "ac_scarab": {
+   "mods": {
+    "spd": -15
+   }
+  },
+  "hd_yeti_fur": {
+   "mods": {
+    "elemResist": {
+     "fire": 1.25
+    }
+   }
+  },
+  "ac_underworld_bell": {
+   "mods": {
+    "elemResist": {
+     "light": 1.25
+    }
+   }
+  },
+  "ac_soul_candle": {
+   "mods": {
+    "elemResist": {
+     "wind": 1.25
+    }
+   }
+  },
+  "ac_admiral_medal": {
+   "mods": {
+    "mdefPct": -25
+   }
+  },
+  "ac_gem_core": {
+   "mods": {
+    "spd": -15
+   }
+  },
+  "ac_goblin_hoard": {
+   "mods": {
+    "expPct": -25
+   }
+  },
+  "ac_phoenix_ash": {
+   "mods": {
+    "elemResist": {
+     "water": 1.25
+    }
+   }
+  },
+  "ac_heaven_feather": {
+   "mods": {
+    "elemResist": {
+     "dark": 1.25
+    }
+   }
+  },
+  "hd_blackgold_helm": {
+   "mods": {
+    "eva": -10
+   }
+  },
+  "hd_scribe_hood": {
+   "mods": {
+    "defPct": -25
+   }
+  },
+  "bd_scribe_coat": {
+   "mods": {
+    "defPct": -25
+   }
+  },
+  "ac_archive_key": {
+   "mods": {
+    "glimPct": {
+     "tech": -50
+    }
+   }
+  },
+  "ac_abyss_key": {
+   "mods": {
+    "goldPct": -25
+   }
+  },
+  "ac_silver_orb": {
+   "mods": {
+    "goldPct": -25
+   }
+  },
+  "ac_mirror_crest": {
+   "mods": {
+    "defPct": -25
+   }
+  },
+  "ac_platinum_flame": {
+   "mods": {
+    "elemResist": {
+     "water": 1.25
+    }
+   }
+  },
+  "ac_void_shard": {
+   "mods": {
+    "elemResist": {
+     "light": 1.25
+    }
+   }
+  },
+  "ac_platinum_crown": {
+   "mods": {
+    "goldPct": -25
+   }
+  },
+  "hd_void_helm": {
+   "mods": {
+    "elemResist": {
+     "light": 1.25
+    }
+   }
+  },
+  "ac_chaos_eye": {
+   "mods": {
+    "elemResist": {
+     "light": 1.25
+    }
+   }
+  },
+  "ac_crest_fragment": {
+   "mods": {
+    "hpPct": -10
+   }
+  },
+  "ac_ouroboros_ring": {
+   "mods": {
+    "takenPct": 15
+   }
+  }
+ },
+ "wording": {
+  "ac_loupe": "魔物がアイテムを落としやすい。",
+  "ac_clover": "レアアイテムを落としやすい。",
+  "ac_sr_greedy": "アイテムをよく落とす。レアをよく落とす。\nただし最大HPが下がる。",
+  "ac_sr_gull_loot": "お金が増える。アイテムをよく落とす。\nただし風に弱くなる。",
+  "ac_sr_cursed_lock": "超レアアイテムを落としやすい。\nただし素早さが下がる。最大HPも下がる。",
+  "hn_sr_greedy_hand": "魔物がアイテムを落としやすい。\n盗みが成功しやすい。ただし守備力が下がる。"
+ }
+}

@@ -126,6 +126,16 @@ function shorthand(fxStr, qStr, T, ctx) {
 // in the data; the expected table applies the same renames (reported to the lead to fix DESIGN §9.12.5).
 const STYLE_RENAMES = { hd_sentry_helm: ['番兵のかぶと', '番兵の兜'], hd_blackgold_helm: ['黒金のかぶと', '黒金の兜'] };
 
+// Lead decisions that are binding but not yet written into the DESIGN tables (tools/fixtures/gear-a/lead_overlay.json):
+//   d3      LEAD_DECISIONS D3 (BRIEF Part A「レア装備は…クセもある」): every rare ★ armor / accessory — band rares (§8.5),
+//           monster rares (§9.12.5), rare relics (§8.7.1) and story rewards (§8.8) — carries exactly one weak §8.3.6 quirk.
+//           Each row adds the quirk's mods (merged into the spec mods), sets quirk:true and gives the new desc
+//           (「効果の文 → ただし〜」; absent for monster-chapter rows, whose desc the spec does not fix).
+//   wording BRIEF A1.3 / A10a.1 and STYLE_JA §8: the on-screen word is 「アイテム」, not 「品」 (§8.2.7 wrote 品を落としやすい).
+// `node tools/check_gear-a.js --overlay` prints the rows to fold into DESIGN; once DESIGN has them the overlay is a no-op.
+const OVERLAY_FILE = path.join(__dirname, 'fixtures', 'gear-a', 'lead_overlay.json');
+function overlay() { return fs.existsSync(OVERLAY_FILE) ? JSON.parse(fs.readFileSync(OVERLAY_FILE, 'utf8')) : { d3: {}, wording: {} }; }
+
 // ------------------------------------------------------------------ the spec
 let cached = null;
 function spec() {
@@ -332,6 +342,21 @@ function expected() {
     if (m.weight) o.weight = m.weight;
     add(m.id, o);
   }
+  // lead overlay (D3 quirks, アイテム wording) on top of the DESIGN tables
+  const OV = overlay();
+  for (const [id, r] of Object.entries(OV.d3 || {})) {
+    const x = X[id];
+    if (!x) throw new Error('lead_overlay d3: unknown id ' + id);
+    if (x.grade !== 'rare') throw new Error('lead_overlay d3: ' + id + ' is not a rare');
+    x.mods = mergeInto(mergeInto({}, x.mods || {}), r.mods);
+    x.quirk = true;
+    if (r.desc !== undefined) x.desc = r.desc;
+    x.d3 = r.mods;
+  }
+  for (const [id, d] of Object.entries(OV.wording || {})) {
+    if (!X[id]) throw new Error('lead_overlay wording: unknown id ' + id);
+    if (X[id].desc !== undefined) X[id].desc = d;
+  }
   return X;
 }
 
@@ -362,11 +387,21 @@ function conformance(raw, filled) {
   return errs;
 }
 
-module.exports = { STYLE_RENAMES, spec, expected, conformance, shorthand, monsterUnits, srTier, band, gearStat, U, GM,
+module.exports = { STYLE_RENAMES, overlay, spec, expected, conformance, shorthand, monsterUnits, srTier, band, gearStat, U, GM,
   STAT_JA, STAT_UNIT, RACE_STATS, WEIGHT_STATS, mergeInto, canon };
 
 if (require.main === module) {
   if (process.argv.includes('--dump')) { console.log(JSON.stringify(spec(), null, 1)); process.exit(0); }
+  if (process.argv.includes('--overlay')) {
+    const OV = overlay(), S = spec();
+    const where = (id) => (S.band.some((x) => x.id === id) ? '§8.5' : S.relic.some((x) => x.id === id) ? '§8.7.1' : S.reward.some((x) => x.id === id) ? '§8.8'
+      : S.mRare.some((x) => x.id === id) ? '§9.12.5' : S.mSuper.some((x) => x.id === id) ? '§9.12.4' : S.support.some((x) => x.id === id) ? '§8.4.4' : '§8.6.5/§8.7.2');
+    console.log('D3 quirks to add to the DESIGN rows (クセ column / desc):');
+    for (const [id, r] of Object.entries(OV.d3)) console.log(`  ${where(id).padEnd(8)} ${id.padEnd(20)} ${canon(r.mods).padEnd(34)} ${r.desc ? JSON.stringify(r.desc) : '(desc not in the table)'}`);
+    console.log('品 → アイテム wording:');
+    for (const [id, d] of Object.entries(OV.wording)) console.log(`  ${where(id).padEnd(8)} ${id.padEnd(20)} ${JSON.stringify(d)}`);
+    process.exit(0);
+  }
   const load = require('./lib/load');
   const R0 = load({ quiet: true, dataHooks: false });
   const R = load({ quiet: true });
