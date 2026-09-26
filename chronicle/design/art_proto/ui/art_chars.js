@@ -72,7 +72,7 @@
         B.cap(0.5, Y(-12), dx * 0.7 + 0.5, Y(-3 - Math.abs(dx) * 0.15), 2.5, 2.3, pants, z);
         B.ell(dx * 0.8 + 1.8, -2 - (Math.abs(dx) > 1 && dx < 0 ? 0.8 : 0), 3.3, 2.0, boots, z + 0.1, { bulge: 0.8 });
       });
-      if (L.cape) B.poly([[-5.5, Y(-23)], [-1, Y(-23.5)], [-2.5, Y(-6)], [-9.5 - Math.abs(step), Y(-5.5)]], L.cape, 3.8, { bevel: 2 });
+      if (L.cape) B.poly([[-5.5, Y(-23)], [-1, Y(-23.5)], [-2.5, Y(-6)], [-9.5 - Math.abs(step), Y(-5.5)]], L.cape, 1.2, { bevel: 2 });
       // far arm
       B.cap(0.5, Y(-21), -step * 2.6 + 0.5, Y(-14), 2.1, 1.9, top, 1.5);
       B.ell(0, Y(-17.5), 5.4, 7.2, top, 3, { bulge: 0.85 });
@@ -83,7 +83,7 @@
       B.ell(step * 2.9 + 1.2, Y(-12.6), 1.9, 1.9, skin, 5.9);
       const hy = Y(-31.5);
       B.ell(1, hy, 8.8 * hs, 8.8 * hs, skin, 6, { bulge: 0.9 });
-      B.ell(-2.4 * hs, hy - 1.2, 8.2 * hs, 9.2 * hs, hair, 7, { bulge: 0.9 });
+      B.ell(-3.6 * hs, hy - 1.2, 7.4 * hs, 9.2 * hs, hair, 7, { bulge: 0.9 });
       B.ell(1.4, hy - 5.4 * hs, 8.8 * hs, 4.6 * hs, hair, 7.05, { bulge: 0.7 });
       B.cap(-0.6 * hs, hy - 4 * hs, -1.4 * hs, hy + 4 * hs, 2.6 * hs, 1.9 * hs, hair, 7.1); // sideburn over the ear
       hairSide(B, L, hy, hs);
@@ -95,10 +95,10 @@
   }
   function hairFront(B, L, hy, hs) {
     const H = L.hair;
-    if (L.hairStyle === 'spiky') for (let i = -2; i <= 2; i++) B.cap(i * 3.2 * hs, hy - 8 * hs, i * 4.6 * hs, hy - 12.5 * hs - (2 - Math.abs(i)) * 1.2, 2.2 * hs, 0.6, H, 7.2);
+    if (L.hairStyle === 'spiky') for (let i = -2; i <= 2; i++) B.cap(i * 3.4 * hs, hy - 7 * hs, i * 5.6 * hs + (i === 0 ? 1.5 : 0), hy - 10.5 * hs - (2 - Math.abs(i)) * 0.8, 2.6 * hs, 0.8, H, 7.2);
     if (L.hairStyle === 'braid') { B.cap(-8.5 * hs, hy + 2, -9.2 * hs, hy + 12, 2.2, 1.6, H, 7.2); B.ell(-9.2 * hs, hy + 13, 1.6, 1.4, L.trim || H, 7.3); }
     if (L.hairStyle === 'long') [-1, 1].forEach((s) => B.cap(s * 8.6 * hs, hy + 2, s * 9.4 * hs, hy + 13, 2.8, 2.2, H, 5.4));
-    if (L.hood) B.ell(0, hy - 3 * hs, 11.2 * hs, 8.6 * hs, L.cape || H, 7.6, { bulge: 0.8 }), B.ell(0, hy + 1.5 * hs, 8.4 * hs, 6.4 * hs, L.skin, 7.65, { bulge: 0.6 });
+    if (L.hood) B.ell(0, hy - 3 * hs, 11.2 * hs, 8.6 * hs, L.cape || H, 7.6, { bulge: 0.8 }), B.ell(0, hy + 1.5 * hs, 8.4 * hs, 6.4 * hs, L.skin, 7.45, { bulge: 0.6 });
     if (L.circlet) B.cap(-6 * hs, hy - 5.5 * hs, 6 * hs, hy - 5.5 * hs, 0.7, 0.7, G.RIG.M.gold, 7.3);
   }
   function hairBack(B, L, hy, hs) {
@@ -115,9 +115,9 @@
     if (L.hairStyle === 'braid') B.cap(-6, hy + 3, -7.5, hy + 15, 2.3, 1.6, H, 7.2);
     if (L.hairStyle === 'long') B.poly([[-9.5, hy - 2], [-2, hy - 2], [-3.5, hy + 13], [-10, hy + 12]], H, 5.3, { bevel: 2 });
     if (L.hairStyle === 'bob') B.ell(-3, hy + 3, 7, 5, H, 7.1, { bulge: 0.8 });
-    if (L.hood) B.ell(-1.5, hy - 1.5, 10.5 * hs, 10 * hs, L.cape || H, 7.6, { bulge: 0.8 }), B.ell(3.2, hy + 1, 6.5, 7, L.skin, 7.65, { bulge: 0.6 });
+    if (L.hood) B.ell(-1.5, hy - 1.5, 10.5 * hs, 10 * hs, L.cape || H, 7.6, { bulge: 0.8 }), B.ell(3.2, hy + 1, 6.5, 7, L.skin, 7.45, { bulge: 0.6 });
   }
-  const LANT = mat({ keys: ['#ff9a30', '#ffe0a0', '#fffbe8'], n: 3, flat: true, glow: '#ffd070' });
+  const LANT = mat({ keys: ['#b04808', '#f08a28', '#ffc868', '#fff0b8'], n: 4, flat: true, glow: '#ffd070' });
   function lantern(B, x, y, z) {
     const iron = G.RIG.M.iron;
     B.cap(x, y - 3.5, x, y - 1.5, 0.45, 0.45, iron, z);

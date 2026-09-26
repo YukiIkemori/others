@@ -28,10 +28,10 @@
   const CMD = { x: 8, y: 150, w: 128, h: 68, padX: 16, padY: 10, lineH: 16, cols: 2 };
   const GROUND = 130;
   const PARTY = [
-    { name: 'アルン', hp: 212, mhp: 240, mp: 18, wp: 24, row: 'front' },
-    { name: 'ブリギッタ', hp: 187, mhp: 200, mp: 6, wp: 31, row: 'front' },
-    { name: 'マルタ', hp: 41, mhp: 180, mp: 45, wp: 9, row: 'middle' },
-    { name: 'シルヴァン', hp: 160, mhp: 170, mp: 12, wp: 18, row: 'middle' },
+    { name: 'アルン', hp: 212, mhp: 240, mp: 18, row: 'front' },
+    { name: 'ブリギッタ', hp: 187, mhp: 200, mp: 6, row: 'front' },
+    { name: 'マルタ', hp: 41, mhp: 180, mp: 45, row: 'middle' },
+    { name: 'シルヴァン', hp: 160, mhp: 170, mp: 12, row: 'middle' },
   ];
   const COMMANDS = ['戦う', 'リピート', 'オート', '逃げる'];
   const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
@@ -73,7 +73,7 @@
     const nw = Math.min(52, Math.ceil(G.textWidth(p.name))), tw = nw + 8, tx = x + Math.floor((WIN.w - tw) / 2);
     G.rect(tx, y, tw, 5, theme.fill);
     G.fitText(p.name, tx + 4, y - 3, 52, { color: col });
-    [['H', p.hp, 6], ['M', p.mp, 17], ['W', p.wp, 28]].forEach(([k, v, dy]) => {
+    [['H', p.hp, 6], ['M', p.mp, 17]].forEach(([k, v, dy]) => {
       G.text(k, x + 6, y + dy, { color: col });
       G.text(String(v), x + 54, y + dy, { color: col, align: 'right' });
     });

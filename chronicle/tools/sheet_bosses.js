@@ -111,10 +111,10 @@ window.SHEET = (function () {
   // ------------------------------------------------ battle mock (DESIGN §11.5.1 / §11.4.2)
   const WIN = { xs: [3, 66, 129, 192], y: 5, w: 61, h: 46 }, WIN_BOTTOM = 56, GROUND = 130;
   const PARTY = [
-    { name: 'アルン', hp: 212, mp: 18, wp: 24, row: '前' },
-    { name: 'ブリギッタ', hp: 187, mp: 6, wp: 31, row: '前' },
-    { name: 'マルタ', hp: 141, mp: 45, wp: 9, row: '後' },
-    { name: 'シルヴァン', hp: 96, mp: 99, wp: 18, row: '後' },
+    { name: 'アルン', hp: 212, mp: 18, row: '前' },
+    { name: 'ブリギッタ', hp: 187, mp: 6, row: '前' },
+    { name: 'マルタ', hp: 141, mp: 45, row: '後' },
+    { name: 'シルヴァン', hp: 96, mp: 99, row: '後' },
   ];
   const sink = (h) => Math.max(0, Math.min(20, Math.round((h - 64) / 2.4)));
   function backdrop(bg) {
@@ -153,7 +153,7 @@ window.SHEET = (function () {
       const tw = Math.min(52, G.textWidth(m.name)) + 8, tx = wx + Math.floor((WIN.w - tw) / 2);
       G.rect(tx, wy, tw, 5, th.fill);
       G.fitText(m.name, tx + 4, wy - 3, 52);
-      [['H', m.hp], ['M', m.mp], ['W', m.wp]].forEach(([k, v], j) => {
+      [['H', m.hp], ['M', m.mp]].forEach(([k, v], j) => {   // no WP row (SYSTEMS_REWORK A18)
         G.text(k, wx + 6, wy + 6 + j * 11);
         G.text(String(v), wx + 54, wy + 6 + j * 11, { align: 'right' });
       });

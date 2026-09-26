@@ -60,22 +60,22 @@ function makeShim(R) {
   const K = {
     GLIM: JSON.parse(JSON.stringify(G.GLIM)),
     PROF_PTS: G.PROF_PTS.slice(),
-    PEXP: [15, 40, 70, 100, 135, 175, 220, 270, 330, 400],
-    PROF_CAP: 999,
+    PEXP: [25, 186, 311, 445, 585, 730, 880, 1034, 1191, 1352],   // A17
+    PROF_CAP: 2490,
     MODCAP: { party: 150, preempt: 30, exp: 30, expMin: -100, glim: 40, prof: 50, cost: -50, encounter: 50 },
     W: [8, 14, 21, 30, 40, 51, 64, 78, 94, 112],
     U: [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6],
     LZ: (T) => 6 + 6 * T, DK: (L) => 40 + 5 * L,
-    HP: { a: 17.5, b: 14.7, p: 0.9 }, MP: { a: 8, b: 2.6, p: 0.85, cap: 150 }, WP: { a: 5, b: 1.8, p: 0.85 },
-    GROW: { hp: { S: 1.25, A: 1.12, B: 1, C: 0.9, D: 0.8 }, mp: { S: 1.3, A: 1.15, B: 1, C: 0.8, D: 0.6 }, wp: { S: 1.3, A: 1.15, B: 1, C: 0.8, D: 0.6 } },
+    HP: { a: 17.5, b: 14.7, p: 0.9 }, MP: { a: 8, b: 2.6, p: 0.85, cap: 250 },
+    GROW: { hp: { S: 1.25, A: 1.12, B: 1, C: 0.9, D: 0.8 }, mp: { S: 1.3, A: 1.15, B: 1, C: 0.8, D: 0.6 } },
     STAGE: [0.63, 0.77, 1, 1.3, 1.6],
-    AFTER: { mpPct: 0.1, wpPct: 0.1 },
+    AFTER: { mpPct: 0.12 },
   };
   const def = (c) => (c.id === 'hero' || c.heroType) ? DB.heroTypes[c.heroType] : DB.companions[c.id];
   const Rules = {
     _shim: true, K,
     ELEMENTS: ['fire', 'water', 'wind', 'earth', 'light', 'dark'],
-    WTYPES: ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'club', 'staff', 'katana', 'fist', 'whip'],
+    WTYPES: ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'staff'],   // SYSTEMS_REWORK §3.1
     profRank(pts) { let r = 0; for (let i = 0; i < K.PROF_PTS.length; i++) if ((pts || 0) >= K.PROF_PTS[i]) r = i; return r; },
     aptitude(c) {
       const d = def(c) || {}, apt = K.GLIM.apt, w = {}, e = {};
@@ -100,7 +100,7 @@ function makeShim(R) {
       const d = def(c) || {}, g = (d.growth && d.growth[key]) || 'B', k = K[key.toUpperCase()];
       const base = k.a + k.b * Math.pow(Math.max(0, L - 1), k.p);
       const vit = key === 'hp' ? (160 + Rules.stat(c, 'vit')) / 200 : 1;
-      const cap = key === 'hp' ? 999 : key === 'mp' ? 150 : 99;
+      const cap = key === 'hp' ? 999 : 250;
       const m = Rules.mods(c);
       return Math.min(cap, Math.round(base * K.GROW[key][g] * vit) * (1 + (m[key + 'Pct'] || 0) / 100) + ((c.bonus && c.bonus[key]) || 0));
     },
@@ -110,7 +110,7 @@ function makeShim(R) {
       for (const k of ['str', 'vit', 'dex', 'agi', 'int', 'mnd']) s[k] = Rules.stat(c, k);
       const m = Rules.mods(c);
       s.mag = Math.round(((c._wm != null ? c._wm : 4) + (m.mag || 0)) * (64 + s.int) / 64);
-      s.hp = Rules.maxAt(c, 'hp', c.level || 1); s.mp = Rules.maxAt(c, 'mp', c.level || 1); s.wp = Rules.maxAt(c, 'wp', c.level || 1);
+      s.hp = Rules.maxAt(c, 'hp', c.level || 1); s.mp = Rules.maxAt(c, 'mp', c.level || 1);
       s.mods = m;
       return s;
     },
@@ -207,7 +207,7 @@ module.exports = function harness(opts) {
   R.Game = R.Game || null;
 
   const EL = ['fire', 'water', 'wind', 'earth', 'light', 'dark'];
-  const WT = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'club', 'staff', 'katana', 'fist', 'whip'];
+  const WT = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'staff'];   // SYSTEMS_REWORK §3.1
   const EQ = ['weapon1', 'weapon2', 'shield', 'head', 'body', 'hands', 'feet', 'acc1', 'acc2'];
 
   /** §3.2.2 の CharState を作る（装備は空。能力値の足し算は add、術力の元は wm、補正は mods）。startProf は §5.0 の 0.6 */
@@ -216,7 +216,7 @@ module.exports = function harness(opts) {
     if (!d) throw new Error('unknown char ' + (o.heroType || o.id));
     const c = {
       id: o.heroType ? 'hero' : o.id, name: o.name || (d && d.name) || o.id, gender: d.gender || 'm',
-      level: o.level || 1, exp: 0, hp: 1, mp: 1, wp: 1, bonus: { hp: 0, mp: 0, wp: 0 }, status: {},
+      level: o.level || 1, exp: 0, hp: 1, mp: 1, bonus: { hp: 0, mp: 0 }, status: {},
       equip: {}, wprof: {}, eprof: {}, techs: (o.techs || []).slice(), spells: (o.spells || []).slice(),
       row: o.row || d.row || 'front', mem: { cmd: 0, list: {}, item: 0, target: null }, joined: { tier: 0, frame: 0 },
       counts: { battles: 0, kills: 0, glimmers: 0 },
@@ -225,7 +225,7 @@ module.exports = function harness(opts) {
     for (const s of EQ) c.equip[s] = (o.equip && o.equip[s]) || null;
     const apt = R.Rules.aptitude(c);
     const letter = (v) => { const t = R.Glimmer.SPEC.GLIM.apt; for (const k in t) if (t[k] === v) return k; return 'C'; };
-    const prof = (R.DB.starterKit && R.DB.starterKit.prof) || { S: 15, A: 5 };
+    const prof = (R.DB.starterKit && R.DB.starterKit.prof) || { S: 25, A: 11 };
     for (const w of WT) c.wprof[w] = (o.wprof && o.wprof[w] != null) ? o.wprof[w] : (prof[letter(apt.w[w])] || 0);
     for (const e of EL) c.eprof[e] = (o.eprof && o.eprof[e] != null) ? o.eprof[e] : (prof[letter(apt.e[e])] || 0);
     if (o.add) c._add = o.add;
