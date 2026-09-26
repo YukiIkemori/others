@@ -39,7 +39,9 @@
   const PARTY = { front: 192, middle: 222, zig: [0, 10, 0, 10], step: 10, y: { 1: [126], 2: [112, 136], 3: [106, 124, 142], 4: [100, 116, 132, 148] } };
   const LAYOUT = { FIELD, MSG, MSG_BIG, HELP, LIST, CMD, STATUS, BANNER, CARD, EZ, PARTY };
   // STATUS columns (§11.5.2; x from the window's left): letters at h / m / w, values right-aligned at hp / mp / wp
-  const SCOL = { tag: 5, name: 20, nameW: 46, h: 70, hp: 96, m: 101, mp: 127, w: 132, wp: 152 };
+  // (owner 2026-09-26: the numbers were cramped — 6 px between a value and the next letter, room for HP 9999 and a
+  // 6-kana name squeezed into nameW)
+  const SCOL = { tag: 4, name: 19, nameW: 47, h: 70, hp: 97, m: 103, mp: 127, w: 133, wp: 153 };
   // legacy (front view): kept with their old values for the tools that still read them (§11.5.1). Not used on screen.
   const WIN = { xs: [3, 66, 129, 192], y: 5, w: 61, h: 46 };
   const WIN_BOTTOM = 56;
@@ -59,6 +61,7 @@
   const GLIM_MIN = 36; // the tech's own fx never starts earlier than this after the ピコーン (§11.0 0.5)
   const GLIM_HANDBACK = 14; // the glimmer handler returns here: the 「…を閃いた！」 line types under the open banner
   const RAY_COL = '#fff6c0';
+  const HURT_VOICE_GAP = 120; // the hero's 'hurt' shout at most every 2 s (real frames — multi-hits and DoT ticks, §11.10.8)
   // unusable(u, id, slot) → help line (§11.5.3 / STYLE_JA §9)
   const WHY = {
     wp: 'WPが足りない！', mp: 'MPが足りない！', silence: '術を封じられている！', reach: '中列からは届かない。',
@@ -797,6 +800,22 @@
       await this.waitKey();
     }
 
+    // ------------------------------------------------------------ the hero's battle voice (§11.10.8, owner 2026-09-26)
+    /** R.Audio.battleVoice(kind, gender) when `u` is the hero. A new clip replaces the previous one (audio.js), voice
+     *  volume 0 is silent there; headless / no R.Audio → no-op. 'hurt' is throttled to HURT_VOICE_GAP frames. */
+    heroVoice(u, kind) {
+      if (!u || !u.isParty || !u.c || u.c.id !== 'hero') return false;
+      const A = R.Audio;
+      if (!A || typeof A.battleVoice !== 'function') return false;
+      if (kind === 'hurt') {
+        const F = R.Engine.frame;
+        if (this.hurtVoiceAt != null && F - this.hurtVoiceAt < HURT_VOICE_GAP) return false;
+        this.hurtVoiceAt = F;
+      }
+      try { A.battleVoice(kind, u.c.gender === 'f' ? 'f' : 'm'); } catch (e) { /* never breaks a battle */ }
+      return true;
+    }
+
     // ------------------------------------------------------------ events (§11.5.15 — the choreography)
     async handle(ev) {
       const s = this;
@@ -808,6 +827,7 @@
           s.clearMsg();
           s.lastFx = null;
           s.clearTransientCard();
+          s.glimVoiced = false; // the glimmer shout covers only the action it belongs to
           const back = s.settle(); // the one who stepped in hops back before the next one acts
           if (back) await back;
           s.actor = ev.u || null;
@@ -899,6 +919,7 @@
           s.victoryPose = true; // everyone standing raises the weapon (§11.5.10)
           if (R.Audio && R.Audio.stopBGM) R.Audio.stopBGM(6);
           R.jingle('victory');
+          { const h = (s.eng.party || []).find((p) => p.c && p.c.id === 'hero'); if (h && h.alive) s.heroVoice(h, 'victory'); }
           return;
         }
         case 'jingle':
@@ -997,8 +1018,12 @@
       const rect = () => this.rectOf(u);
       const wait = (n) => R.Engine.wait(n);
       const holdOf = (pose, k, rate) => this.dur((poseHold(sh, pose)[k] || 6) * (rate || 1), 'atk');
+      // the hero's shout at the start of a swing / a cast — once per action (not on the repeated hits), and not
+      // over the glimmer shout of the tech / spell just glimmered (it would cut it off)
+      const voice = !ev.again && !this.glimVoiced;
       if (mode.kind === 'melee' || mode.kind === 'bow' || mode.kind === 'pose') {
         const fam = sh.poses[mode.family] ? mode.family : 'punch';
+        if (voice) this.heroVoice(u, 'attack');
         if (mode.kind === 'melee' && !ev.again) await this.runTo(v, foes);
         const imp = poseImpact(sh, fam), last = sh.poses[fam].frames.length - 1;
         for (let i = 0; i < list.length; i++) {
@@ -1014,6 +1039,7 @@
       }
       if (mode.kind === 'spell') {
         if (!ev.again && ev.kind !== 'counter') {
+          if (voice) this.heroVoice(u, 'spell');
           v.act = { pose: 'cast', fi: 0 };
           await wait(holdOf('cast', 0));
           v.act = { pose: 'cast', fi: 1 };
@@ -1061,6 +1087,7 @@
           }
           if (!ev.mp && !ev.wp) R.Engine.shake(dot ? 6 : 12, ev.crit ? 4 : 2);
           R.sfx(ev.kind === 'poison' ? 'poison' : ev.kind === 'burn' ? 'burn' : 'hurt');
+          if (u.alive && !ev.mp && !ev.wp) this.heroVoice(u, 'hurt'); // a lethal hit shouts 'ko' at the 'die' instead
         }
       } else {
         const v = this.vis.get(u);
@@ -1073,6 +1100,7 @@
       const u = ev.u;
       if (u.isParty) {
         R.sfx('death');
+        this.heroVoice(u, 'ko');
         if (this.winFx[u.idx]) this.winFx[u.idx].flash = 16;
         const v = this.pv(u);
         if (v) { v.act = null; v.tmp = { pose: 'hit', fi: 0, until: R.Engine.frame + 6 }; v.koShown = true; } // hit 6 → ko
@@ -1182,6 +1210,7 @@
       const u = ev.u;
       const ab = actionOf(ev.id) || {};
       R.sfx('glimmer');
+      if (this.heroVoice(u, 'glimmer')) this.glimVoiced = true;
       if (R.Audio && R.Audio.duck) { try { R.Audio.duck(-6, 18); } catch (e) { /* optional */ } }
       const H = Math.max(GLIM_MIN, Math.round(50 / this.spd));
       const F = R.Engine.frame;
@@ -2140,16 +2169,19 @@
    * §11.5.3), the cost right-aligned at the right edge
    */
   function drawListItem(it, x, y, w) {
-    const g = G(), colW = w + 4;
+    // called as the List's drawItem (`this` = the R.UI.List). In a list of more than one column the cost ends 6 px
+    // short of the next column's ▶ (drawn at its x − 10), as R.UI.List's own rows do (owner 2026-09-26)
+    const g = G(), colW = w + 4, multi = !!(this && this.cols > 1);
+    const rEnd = multi ? colW - 16 : colW - 6;
     const label = typeof it === 'object' ? it.label : it;
     const dis = typeof it === 'object' && it.disabled;
     const color = (typeof it === 'object' && it.color) || (dis ? g.C.gray : g.C.white);
     const right = typeof it === 'object' && it.right != null && it.right !== '' ? String(it.right) : null;
     if (right) {
       const rw = g.textWidth(right);
-      g.fitText(label, x, y, colW - 10 - rw, { color });
-      g.text(right, x + colW - 6, y, { color: (!dis && it.rightColor) || color, align: 'right' });
-    } else g.fitText(label, x, y, colW - 8, { color });
+      g.fitText(label, x, y, rEnd - 4 - rw, { color });
+      g.text(right, x + rEnd, y, { color: (!dis && it.rightColor) || color, align: 'right' });
+    } else g.fitText(label, x, y, multi ? colW - 16 : colW - 8, { color });
   }
   /** title plate on a window's top border in a given colour (Gfx.window only draws white titles) */
   function titlePlate(x, y, w, title, color, theme) {
@@ -2343,6 +2375,6 @@
     LAYOUT, STATUS_COLS: SCOL, enemyLayout: (list, sizeOf) => enemyLayout(list || [], sizeOf),
     HELP, BANNER, CARD,
     WIN, WIN_BOTTOM, BOX, GROUND, // legacy (front view): values unchanged for other owners' tools (§11.5.1)
-    ui: { itemLabel, itemColor, iconKey, bannerOf, helpLine, WHY, battlerSheet, fallbackSheet, wtypeOf, familyOf, BAT_FALLBACK },
+    ui: { itemLabel, itemColor, iconKey, bannerOf, helpLine, WHY, battlerSheet, fallbackSheet, wtypeOf, familyOf, BAT_FALLBACK, drawListItem },
   });
 })(window.RPG);

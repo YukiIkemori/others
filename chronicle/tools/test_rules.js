@@ -90,6 +90,21 @@ test('K: constants of §4.18.1', () => {
   eq(Math.round(K.hpBoss(58) * 30), 26189, 'last boss 1 HP (A12.0: the tier term stops at L51; × MON_HP_PROF, A13)');
   near(K.hpBoss(68) / K.curve(68).hp, K.hpBoss(51) / K.curve(51).hp, 1e-12, 'the tier term is flat above L51');
   eq([K.BOSS.super.atk, K.BOSS.super.mag], [1.25, 1.25], 'super boss atk/mag ×1.25 (A12.1 b)');
+  eq(K.BOSS.super.hpMul, 56, 'super boss hpMul 56 (C3 / X4 with the real rare / super gear, 2026-09-26)');
+  // A11 review: K.MOB_TIER, the regular monsters' per-tier factor, linear in the battle level (T = (L − 6) / 6)
+  const MT = K.MOB_TIER;
+  eq([MT.hp.length, MT.dmg.length], [10, 10], 'K.MOB_TIER hp / dmg per tier T0–T9');
+  near(K.mobTier(6).hp, MT.hp[0], 1e-12, 'mobTier at LZ(0) = T0');
+  near(K.mobTier(33).hp, (MT.hp[4] + MT.hp[5]) / 2, 1e-12, 'mobTier halfway between T4 and T5');
+  near(K.mobTier(1).dmg, MT.dmg[0], 1e-12, 'mobTier below L6 = T0'); near(K.mobTier(90).dmg, MT.dmg[9], 1e-12, 'mobTier above L60 = T9');
+  const on0 = MT.on;
+  MT.on = true;
+  near(K.curve(33, 'mob').hp / K.curve(33).hp, K.mobTier(33).hp, 1e-12, "curve(L, 'mob') hp × mobTier");
+  near(K.curve(33, 'mob').mag / K.curve(33).mag, K.mobTier(33).dmg, 1e-12, "curve(L, 'mob') atk / mag × mobTier dmg");
+  eq([K.curve(33, 'mob').def, K.curve(33, 'mob').exp], [K.curve(33).def, K.curve(33).exp], "curve(L, 'mob') keeps def / exp");
+  MT.on = false;
+  eq(K.curve(33, 'mob').hp, K.curve(33).hp, "MOB_TIER.on false: curve(L, 'mob') = curve(L)");
+  MT.on = on0;
 });
 
 test('levels: need/expForLevel table (§4.2.3)', () => {
@@ -118,11 +133,11 @@ test('levels: falloff f(d) (§4.2.3)', () => {
 test('companions: HP/MP/WP at Lv1/24/54 match §5.3.2', () => {
   if (!hasReal('companions', 20)) return;
   const T = {
-    selma: '20/6/5 308/36/31 631/67/58', hagen: '23/5/5 347/27/31 710/50/58', dokka: '24/6/4 361/36/25 738/67/46', basil: '20/8/4 305/45/25 624/84/46',
-    bartolo: '19/6/5 290/36/31 594/67/58', viola: '17/8/5 257/45/31 525/84/58', shigure: '17/5/7 254/27/40 520/50/75', rouga: '19/5/6 293/27/35 600/50/66',
-    titta: '16/6/6 243/36/35 498/67/66', brigitta: '17/6/6 259/36/35 530/67/66', sylvain: '15/8/6 221/45/35 453/84/66', zafira: '15/8/6 221/45/35 453/84/66',
-    ferno: '15/9/5 224/52/31 458/97/58', belladonna: '17/8/5 251/45/31 514/84/58', boden: '18/9/4 265/52/25 541/97/46', teo: '14/10/4 217/59/25 443/109/46',
-    ilse: '14/10/4 217/59/25 443/109/46', morga: '15/9/5 224/52/31 458/97/58', marta: '16/10/3 249/59/19 509/109/35', noela: '15/9/5 221/52/31 453/97/58',
+    selma: '20/6/5 308/36/31 631/67/58', hagen: '23/5/5 344/27/31 704/50/58', dokka: '24/6/4 361/36/25 738/67/46', basil: '20/8/4 302/45/25 618/84/46',
+    bartolo: '19/6/5 290/36/31 594/67/58', viola: '17/8/5 259/45/31 530/84/58', shigure: '17/5/7 254/27/40 520/50/75', rouga: '19/5/6 290/27/35 594/50/66',
+    titta: '16/6/6 249/36/35 509/67/66', brigitta: '17/6/6 259/36/35 530/67/66', sylvain: '15/8/6 224/45/35 458/84/66', zafira: '15/8/6 226/45/35 463/84/66',
+    ferno: '15/9/5 224/52/31 458/97/58', belladonna: '17/8/5 254/45/31 520/84/58', boden: '18/9/4 265/52/25 541/97/46', teo: '14/10/4 217/59/25 443/109/46',
+    ilse: '14/10/4 219/59/25 448/109/46', morga: '15/9/5 224/52/31 458/97/58', marta: '16/10/3 249/59/19 509/109/35', noela: '14/9/5 219/52/31 448/97/58',
   };
   for (const id in T) {
     const got = [1, 24, 54].map((L) => { const s = Ru.stats(bare(id, L)); return [s.hp, s.mp, s.wp].join('/'); }).join(' ');

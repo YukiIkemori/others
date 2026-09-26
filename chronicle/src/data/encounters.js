@@ -7,13 +7,14 @@
 (function (R) {
   'use strict';
   Object.assign(R.DB.encounters, {
-    zw_prologue: { region: 'prologue', tier: 0, lv: [1,3], bg: null, groups: [
+    // A11 tuning (tools/fixtures/mons/tuning.json): check_prologue C (the prologue campaign): the hero fights zw_prologue alone at Lv1–2, and three jelly_1 at Lb 3 wiped a lone ranger / spellblade / wanderer 35–95 % of the time (trash wipes 0.060 per prologue, target ≤ 0.05); the jelly pack is 2, not 2–3
+    zw_prologue: { region: 'prologue', tier: 0, lv: [1, 3], bg: null, groups: [
       { w: 10, mons: [['jelly_1', 1, 2]] },
       { w: 8, mons: [['rat_1', 1, 2]] },
       { w: 6, mons: [['seabird_1', 1, 1]] },
       { w: 6, mons: [['jelly_1', 1, 1], ['rat_1', 1, 1]] },
       { w: 5, mons: [['crab_1', 1, 1]] },
-      { w: 3, mons: [['jelly_1', 2, 3]] },
+      { w: 3, mons: [['jelly_1', 2, 2]] },
     ] },
     z_prologue_lighthouse: { region: 'prologue', tier: 0, lv: [3,5], bg: 'tower', groups: [
       { w: 9, mons: [['bat_1', 2, 3]] },

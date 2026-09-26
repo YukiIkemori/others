@@ -14199,6 +14199,76 @@
         }
       ],
       "why": "sim_zones --retilt (M2): per stage band, groups re-weighted by measured HP lost toward the zone's 9.3%: T0 8.9% → 9.3% (strength 3.29); T1 9.1% → 9.3% (strength 3.27); T2–3 8.5% → 9.3% (strength 3.21); T4–5 10.6% → 9.4% (strength 3.02); T6–7 8.8% → 8.9% (strength 3.18)"
+    },
+    "zw_prologue": {
+      "groups": [
+        {
+          "w": 10,
+          "mons": [
+            [
+              "jelly_1",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "rat_1",
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "seabird_1",
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "jelly_1",
+              1,
+              1
+            ],
+            [
+              "rat_1",
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "crab_1",
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "w": 3,
+          "mons": [
+            [
+              "jelly_1",
+              2,
+              2
+            ]
+          ]
+        }
+      ],
+      "why": "check_prologue C (the prologue campaign): the hero fights zw_prologue alone at Lv1–2, and three jelly_1 at Lb 3 wiped a lone ranger / spellblade / wanderer 35–95 % of the time (trash wipes 0.060 per prologue, target ≤ 0.05); the jelly pack is 2, not 2–3"
     }
   },
   "actions": {

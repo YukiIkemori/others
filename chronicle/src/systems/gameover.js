@@ -83,12 +83,12 @@
       const fin = (read) => { if (!done) { done = true; res(read); } };
       // read = the say settled and its own window closed (A/B); a say that settles while the window
       // stays open was replaced by another say (UI.say settles a superseded say)
-      R.UI.say(text, { noWait: false, keep: false, auto: 0 }).then(() => fin(!m || !!m.closed), () => fin(false));
+      R.UI.say(text, { noWait: false, keep: false, auto: 0 }).then(() => fin(!m || (!!m.closed && R.UI.msgSettled(m))), () => fin(false));
       m = R.UI.msgOpen();
       const poll = () => {
         if (done) return;
         // a window its reader closed has settled its say (finish() clears resolveText before close());
-        // one closed from outside (closeMessage) still holds it
+        // one closed from outside (closeMessage) released it unread (msgSettled → false)
         if (!m || m.closed || !R.Engine.layers.includes(m)) { fin(!!(m && m.closed && R.UI.msgSettled(m))); return; }
         R.Engine.wait(1).then(poll);
       };

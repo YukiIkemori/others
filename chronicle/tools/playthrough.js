@@ -3,7 +3,8 @@
 // Runs the events in the order progress.js finds them (new game → game_clear → pg_clear) with a stand-in `ev`
 // (every message / choice / screen resolves at once: ask → the first choice, yesno → true), against the real
 // R.State / R.Tier / R.Party. Battles go through R.Battle.simulate with the party of tools/lib/party_model.js at the
-// current tier and are always counted as won (the result is reported). Afterwards every other event is run once
+// current tier (post-game bosses: Lv64 with 'real' gear); the story goes on as if every battle was won, and a lost
+// battle is reported as a WARN. Afterwards every other event is run once
 // on its own (exceptions only).
 // Checks: no exception; every `meta.gives` token is really given; everything really given (items, region clears,
 // recruits, and flags that some condition reads) is declared in meta.gives; game_clear and pg_clear are reached.
@@ -152,9 +153,12 @@ function simulateFor(R, o, rep) {
   if (R.Battle && R.Battle.simulate && (troop || o.mons || o.zone)) {
     const members = (o.members || R.Game.party.map((c) => c.id)).filter((id) => id === 'hero' || DB.companions[id]);
     const hero = R.Game.party.find((c) => c.id === 'hero') || {};
-    const kind = troop && /^tr_b_/.test(o.troop) ? 'boss' : 'mob';
+    // the post-game bosses (T9) are fought by a well-geared party: Lv64 with 現実的な装備 (§4.17.1 'real', the C3 party
+    // without the 4 extra super slots); everything else by the tier's model party
+    const post = !!(troop && /^tr_b_/.test(o.troop) && tier >= 9);
+    const kind = post ? 'super' : troop && /^tr_b_/.test(o.troop) ? 'boss' : 'mob';
     let pm;
-    try { pm = PM.build(R, { tier: Math.min(9, tier), members, heroType: hero.heroType || 'warrior', favor: hero.favor, kind, level: tier === 0 && !o.members ? undefined : undefined }); } catch (e) { pm = null; }
+    try { pm = PM.build(R, { tier: Math.min(9, tier), members, heroType: hero.heroType || 'warrior', favor: hero.favor, kind, gear: post ? 'real' : 'shop' }); } catch (e) { pm = null; }
     try {
       const r = R.Battle.simulate(Object.assign({ party: pm ? pm.party : R.Game.party, inv: pm ? pm.inv : R.Game.inv, tier, seed: 7, maxRounds: 60, items: true }, o.troop ? { troop: o.troop } : {}, o.mons ? { mons: o.mons } : {}, o.zone ? { zone: o.zone } : {}));
       result = r && r.result; rounds = r ? r.rounds : 0;
@@ -234,6 +238,8 @@ async function playthrough(R, o) {
       E(a.owner, `${id}: meta.gives '${t}' but no run of the event gave it (${a.runs} run(s))`);
     }
   }
+  // a battle the model party loses is a balance problem (the dry run still goes on as if it had been won)
+  for (const b of out.battles) if (b.result !== 'win') W(/^tr_b_/.test(b.troop || '') ? 'A12' : 'A11', `battle ${b.troop}@T${b.tier} not won by the model party (${b.result}, ${b.rounds} rounds)`);
   const g = R.Game;
   out.gameClear = !!(g.flags && g.flags.game_clear); out.pgClear = !!(g.flags && g.flags.pg_clear);
   if (!o.events) {
@@ -305,7 +311,7 @@ async function main() {
   const out = await playthrough(R, { events: arg('events') ? arg('events').split(',') : null });
   if (argv.includes('--verbose')) for (const r of out.ran) console.log(`  ${r.id}${r.result === false ? ' (false)' : ''}${r.problems.length ? '  ✗ ' + r.problems.join('; ') : ''}`);
   const lost = out.battles.filter((b) => b.result !== 'win');
-  console.log(`battles: ${out.battles.length} simulated, ${lost.length} not won by the model party${lost.length ? ' (' + lost.slice(0, 8).map((b) => `${b.troop}@T${b.tier}:${b.result}`).join(' ') + ')' : ''} — all counted as won`);
+  console.log(`battles: ${out.battles.length} simulated, ${lost.length} not won by the model party${lost.length ? ' (' + lost.slice(0, 8).map((b) => `${b.troop}@T${b.tier}:${b.result}`).join(' ') + ')' : ''} — the story goes on as if won; each loss is a WARN below`);
   let errs = out.errors, warns = out.warns;
   if (owners) { errs = errs.filter((e) => owners.includes(e.owner)); warns = warns.filter((e) => owners.includes(e.owner)); }
   for (const w of warns) console.log(`WARN  [${w.owner}] ${w.msg}`);

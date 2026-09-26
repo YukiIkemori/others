@@ -195,9 +195,10 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   S.winFx[0].glow = 40; await step(20);
   ok(S.winFx[0].glow === 20, 'W7 glimmer glow counts real frames', S.winFx[0].glow);
   R.Settings.battleSpeed = 1;
-  // every part of a row inside the 158-px window with the worst row (5-char names, 999 / 150 / 99)
-  {
-    S = BUI.open({ mons: std(), tweak: (p) => { p[0].hp = 999; p[0].mp = 150; p[0].wp = 99; } });
+  // every part of a row inside the 158-px window with the worst row (5-char names, 999 / 150 / 99; also a 6-kana
+  // name and HP 9999 — owner 2026-09-26: the numbers were cramped)
+  for (const worst4 of [false, true]) {
+    S = BUI.open({ mons: std(), tweak: (p) => { p[0].hp = worst4 ? 9999 : 999; p[0].mp = 150; p[0].wp = 99; if (worst4) p[0].name = 'シャルロッテ'; } });
     const drawn = [], keep = {};
     for (const k of ['window', 'rect', 'text', 'fitText', 'draw', 'strokeRect']) keep[k] = R.Gfx[k];
     for (const k of ['window', 'rect', 'draw', 'strokeRect']) R.Gfx[k] = () => {};
@@ -206,11 +207,34 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     R.Gfx.fitText = (s, x, y, maxW) => { drawn.push({ s: String(s), x0: x, x1: x + Math.min(maxW, W(s)), y, fit: maxW }); };
     try { S.drawStatus(); } finally { Object.assign(R.Gfx, keep); }
     const X0 = LY.STATUS.x + 3, X1 = LY.STATUS.x + LY.STATUS.w - 3;
-    ok(drawn.length >= 4 * 8 && drawn.every((d) => d.x0 >= X0 && d.x1 <= X1), 'W8 every part of every row inside the STATUS window', drawn.filter((d) => d.x0 < X0 || d.x1 > X1));
+    const tag = worst4 ? ' (6-kana name, HP 9999)' : ' (999 / 150 / 99)';
+    ok(drawn.length >= 4 * 8 && drawn.every((d) => d.x0 >= X0 && d.x1 <= X1), 'W8 every part of every row inside the STATUS window' + tag, drawn.filter((d) => d.x0 < X0 || d.x1 > X1));
     const row0 = drawn.filter((d) => d.y === 159).sort((a, b) => a.x0 - b.x0);
-    ok(row0.every((d, i) => i === 0 || d.x0 >= row0[i - 1].x1 + 1.5), 'W9 no two parts of a row touch (999 / 150 / 99)', row0.map((d) => [d.s, Math.round(d.x0), Math.round(d.x1)]));
-    eq([...new Set(drawn.map((d) => d.y))].sort((a, b) => a - b), [159, 173, 187, 201], 'W10 row text at y 159 173 187 201');
-    ok(drawn.filter((d) => d.fit === 46).length === 4, 'W11 names fitted into 46 px');
+    // (node's approxWidth makes a digit 5.25 px, the browser 5: HP 9999 only has to stay clear of the H)
+    ok(row0.every((d, i) => i === 0 || d.x0 >= row0[i - 1].x1 + (worst4 ? 0 : 1.5)), 'W9 no two parts of a row touch / overlap' + tag, row0.map((d) => [d.s, Math.round(d.x0), Math.round(d.x1)]));
+    // breathing room: a value ends ≥ 5 px before the next letter (H → M, M → W)
+    const at = (s0) => row0.find((d) => d.s === s0);
+    const vals = row0.filter((d) => /^\d+$/.test(d.s));
+    ok(!worst4 || (at('M').x0 - vals[0].x1 >= 5 && at('W').x0 - vals[1].x1 >= 5), 'W9b 5 px or more between a value and the next letter', row0.map((d) => [d.s, Math.round(d.x0), Math.round(d.x1)]));
+    eq([...new Set(drawn.map((d) => d.y))].sort((a, b) => a - b), [159, 173, 187, 201], 'W10 row text at y 159 173 187 201' + tag);
+    ok(drawn.filter((d) => d.fit === B.STATUS_COLS.nameW).length === 4 && B.STATUS_COLS.nameW >= 46, 'W11 names fitted into STATUS_COLS.nameW' + tag);
+  }
+  // the battle list's cost (W3) ends 6 px or more before the next column's ▶ in a multi-column list (owner 2026-09-26)
+  {
+    const texts = [], keep = { text: R.Gfx.text, fitText: R.Gfx.fitText };
+    R.Gfx.text = (s0, x, y, o) => texts.push({ s: String(s0), x, al: o && o.align });
+    R.Gfx.fitText = () => {};
+    const drawItem = B.ui && B.ui.drawListItem;
+    try {
+      if (drawItem) {
+        const colW = 70;
+        drawItem.call({ cols: 2 }, { label: '刺し貫き', right: 'W3' }, 20, 64, colW - 4);
+        drawItem.call({ cols: 1 }, { label: '刺し貫き', right: 'W3' }, 20, 78, 146 - 4);
+      }
+    } finally { Object.assign(R.Gfx, keep); }
+    const two = texts[0], one = texts[1];
+    ok(drawItem && two && two.al === 'right' && (20 + 70 - 10) - two.x >= 6 && one && one.x === 20 + 146 - 6,
+      'W13 a list cost ends ≥ 6 px before the next column\'s ▶ (x − 10); one column keeps colW − 6', texts);
   }
   // fx and numbers are clipped to the battlefield (y < 152): every fx draw happens inside the FIELD clip
   {
@@ -953,6 +977,67 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     B.autoCarry = false;
   } catch (e) {
     ok(false, 'R real engine (flee / repeat / auto) threw', String(e && e.stack || e).split('\n').slice(0, 3).join(' | '));
+  }
+
+  // ================================================================ H — the hero's battle voice (§11.10.8)
+  section('H hero voice');
+  try {
+    const S = BUI.open({ mons: std(), script: { monsIdle: true } });
+    const heroU = S.eng.party.find((p) => p.c && p.c.id === 'hero'), other = S.eng.party.find((p) => p.c && p.c.id !== 'hero');
+    const mon = S.eng.mons[0];
+    const A0 = R.Audio, heard = [];
+    ok(!A0 || A0.battleVoice('attack') === null, 'H0 R.Audio.battleVoice is a silent no-op in node (never initialised)');
+    R.Audio = Object.assign(Object.create(A0 || null), { battleVoice: (kind, g) => { heard.push(kind + ':' + g); return null; } });
+    const run = async (ev) => { let done = false; S.handle(ev).then(() => { done = true; }, () => { done = true; }); await until(() => done, 900); return done; };
+    const take = () => heard.splice(0);
+    const tech = heroU.c.techs.find((id) => DB.actions[id] && DB.actions[id].kind === 'tech' && id !== 'bui_t_long') || 'bui_t_long';
+    const spell = Object.keys(DB.actions).find((id) => DB.actions[id].kind === 'spell');
+    S.roundCmds = []; S.inRound = true;
+    await run({ t: 'actor', u: heroU });
+    await run({ t: 'fx', user: heroU, targets: [mon], kind: 'attack' });
+    await run({ t: 'fx', user: heroU, targets: [mon], kind: 'attack', again: true });
+    eq(take(), ['attack:m'], 'H1 a weapon attack: one attack shout (none on the repeated swing)');
+    await run({ t: 'actor', u: heroU });
+    await run({ t: 'fx', user: heroU, targets: [mon], kind: 'ability', ab: DB.actions[tech], fx: DB.actions[tech].fx });
+    eq(take(), ['attack:m'], 'H2 a tech swing shouts attack');
+    await run({ t: 'actor', u: heroU });
+    await run({ t: 'fx', user: heroU, targets: [mon], kind: 'ability', ab: DB.actions[spell], fx: DB.actions[spell].fx });
+    eq(take(), ['spell:m'], 'H3 a spell shouts at the cast start');
+    await run({ t: 'actor', u: other });
+    await run({ t: 'fx', user: other, targets: [mon], kind: 'attack' });
+    await run({ t: 'dmg', u: other, n: 20 });
+    eq(take(), [], 'H4 the companions stay silent');
+    await run({ t: 'actor', u: heroU });
+    await run({ t: 'glimmer', u: heroU, id: tech, kind: 'tech' });
+    await run({ t: 'fx', user: heroU, targets: [mon], kind: 'ability', ab: DB.actions[tech], fx: DB.actions[tech].fx });
+    eq(take(), ['glimmer:m'], 'H5 a glimmer shouts glimmer, and its tech does not cut it with an attack shout');
+    await run({ t: 'actor', u: heroU });
+    await run({ t: 'fx', user: heroU, targets: [mon], kind: 'attack' });
+    eq(take(), ['attack:m'], 'H6 the next action shouts again');
+    S.hurtVoiceAt = null;
+    await run({ t: 'dmg', u: heroU, n: 12 });
+    await run({ t: 'dmg', u: heroU, n: 12 });
+    await run({ t: 'miss', u: heroU });
+    await run({ t: 'dmg', u: heroU, n: 0 });
+    await run({ t: 'dmg', u: heroU, n: 5, mp: true });
+    eq(take(), ['hurt:m'], 'H7 hurt once for two quick hits; none for a miss, 0 damage or MP damage');
+    await step(121);
+    await run({ t: 'dmg', u: heroU, n: 12 });
+    eq(take(), ['hurt:m'], 'H8 hurt again after 2 s');
+    await step(121);
+    heroU.hp = 0;
+    await run({ t: 'dmg', u: heroU, n: 999 });
+    await run({ t: 'die', u: heroU });
+    eq(take(), ['ko:m'], 'H9 a lethal hit: ko (no hurt)');
+    await run({ t: 'victory' });
+    eq(take(), [], 'H10 no victory shout when the hero is down');
+    S.victoryPose = false;
+    heroU.hp = 50; heroU.c.gender = 'f';
+    await run({ t: 'victory' });
+    eq(take(), ['victory:f'], 'H11 victory shout when the hero stands; the voice follows the hero\'s gender');
+    R.Audio = A0;
+  } catch (e) {
+    ok(false, 'H hero voice threw', String(e && e.stack || e).split('\n').slice(0, 3).join(' | '));
   }
 
   // ---------------------------------------------------------------- summary

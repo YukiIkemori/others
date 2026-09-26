@@ -62,7 +62,10 @@
     },
     /** remove every layer (e.g. on game over / return to title) */
     clear() {
-      for (const l of Engine.layers.slice().reverse()) { l.closed = true; Engine.remove(l); }
+      // `clearing`: layers removed here belong to a game that is being thrown away (title / new game /
+      // load); their onRemove must not wake code of that game (a message window keeps its say() pending)
+      Engine.clearing = true;
+      try { for (const l of Engine.layers.slice().reverse()) { l.closed = true; Engine.remove(l); } } finally { Engine.clearing = false; }
     },
     /** resolve after n frames of game time */
     wait(frames) {

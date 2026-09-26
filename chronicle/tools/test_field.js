@@ -930,6 +930,70 @@ const SECTIONS = [
     R.fxBattleResult = 'win';
   }),
 
+  // Crest 8609ae4 (「全滅のあと固まる」): a message window closed from outside releases its say(), and the
+  // wake-up lines never leave the field locked — also when R.GameOver.run() is called outside the field's
+  // wipe flow (from inside a running event) and the respawn town's onEnter talks.
+  run('freeze', async () => {
+    await newGame('fx_town', 'entrance'); await clearMsgs();
+    // ① UI level: closeMessage() settles the pending say; the window counts as not read
+    let released = false;
+    R.UI.say('外から閉じられる窓').then(() => { released = true; });
+    await step(3);
+    let m = R.UI.msgOpen();
+    ok(m && !R.UI.msgSettled(m), 'a window waiting for its reader is not settled');
+    R.UI.closeMessage(); await step(1);
+    ok(released, 'closeMessage() releases the say() it cut off');
+    ok(m.closed && R.UI.msgSettled(m) === false && R.UI.msgOpen() === null, 'closed from outside: not read (msgSettled false), no window left');
+    // read by the player: settled
+    let read = false;
+    R.UI.say('読まれる窓').then(() => { read = true; });
+    await step(3); m = R.UI.msgOpen();
+    await press('a');
+    ok(read && m.closed && R.UI.msgSettled(m) === true, 'closed by its reader: settled');
+    // ② event level: an event waiting on ev.say whose window someone else closes ends, the field is free
+    await clearMsgs();
+    let after = false;
+    R.Events.run(async (ev) => { await ev.say('待っている行'); after = true; });
+    await step(5);
+    ok(R.Events.busy() && topName() === 'MessageLayer', 'the event is waiting on its line');
+    R.UI.closeMessage(); await step(3);
+    ok(after && !R.Events.busy() && R.Engine.top() === R.Field.layer, 'window closed from outside: the event goes on and ends, the field is free');
+    // a new game / the title (Engine.clear + Events.reset) never wakes the old game's event
+    let stale = false;
+    R.Events.run(async (ev) => { await ev.say('古い行'); stale = true; });
+    await step(5);
+    R.Engine.clear(); R.Events.reset(); await step(3);
+    ok(!stale, 'Engine.clear() leaves the old game’s say pending (its code never runs on)');
+    // ③ R.GameOver.run() awaited from inside an event (the Crest freeze), with the town's onEnter talking
+    for (const where of ['event', 'field']) {
+      await newGame('fx_town', 'entrance'); await clearMsgs();
+      R.State.setFlag('fx_town_seen', false);
+      R.Game.gold = 40;
+      const enter0 = R.fxEnter;
+      let done = false, woke = 0;
+      const go = where === 'event' ? R.Events.run(async () => { await R.GameOver.run(); }) : R.GameOver.run();
+      go.then(() => { done = true; }, () => { done = true; });
+      let frames = 0;
+      for (; frames < 3000; frames++) {
+        await step(1);
+        const top = topName();
+        if (top === 'GameOverLayer' && frames % 20 === 0) { R.Input._set('a', true); await step(2); R.Input._set('a', false); }
+        if (top === 'MessageLayer' && /目を覚ました/.test(msgText()) && frames % 10 === 0) woke++;
+        if (top === 'MessageLayer' && frames % 10 === 0) { R.Input._set('a', true); await step(2); R.Input._set('a', false); }
+        if (done && !R.Events.busy() && R.Engine.top() === R.Field.layer && !R.Field.isBusy()) break;
+      }
+      ok(done, where + ': R.GameOver.run() resolves (' + frames + ' frames)');
+      ok(woke > 0, where + ': the wake-up lines were shown');
+      ok(!R.Events.busy() && R.Engine.top() === R.Field.layer && R.Field.layer.locks === 0, where + ': the field is free afterwards (no freeze)');
+      ok(R.fxEnter - enter0 >= 1 && R.State.flag('fx_town_seen'), where + ': the town onEnter ran');
+      const x0 = pos().x;
+      R.Field.setPlayerPos(19, 20, 'right');
+      await walk('R');
+      eq(pos().x, 20, where + ': the party walks afterwards');
+      void x0;
+    }
+  }),
+
   run('events', async () => {
     await newGame('fx_town', 'entrance'); await clearMsgs();
     // serialisation, nesting
@@ -988,7 +1052,10 @@ const SECTIONS = [
     eq(R.Field.layer.P.length, 4, 'the caterpillar keeps 4 after a swap');
     // chooseCompanions on a hero-only game
     R.State.newGame();
-    await R.Field.warp('fx_town', 'inn', { fade: false }); await settle();
+    // (the new game's flags are clear: the town's onEnter says its line again — read it, or the next
+    // R.Events.run from here would run inline inside that event)
+    await R.Field.warp('fx_town', 'inn', { fade: false }); await settle(); await clearMsgs();
+    ok(!R.Events.busy() && !R.Events.current, 'no event left running before chooseCompanions');
     eq(R.Field.layer.P.length, 1, 'a hero alone is a caterpillar of 1');
     R.fxJingles.length = 0;
     const rc = R.Events.run((ev) => ev.chooseCompanions({ count: 3 }));

@@ -113,6 +113,17 @@
     // Part A13 retune: monster HP x (1 + min(max, perLv x L)) - the enemy side of the proficiency bonus (the party's
     // weapon / element rank grows with the tier: about +6 % at T0 to +24 % at T7). Folded into K.curve's hp (§4.14.2).
     MON_HP_PROF: { perLv: 0.004, max: 0.20 },
+    // A11 review (2026-09-26): the regular monsters' side of the curve against the party, per battle tier (index T = (L−6)/6,
+    // linear between tiers): K.curve(L, 'mob') multiplies hp by hp[T] and atk / mag by dmg[T]. Was tuning.json 'global'
+    // (per monster, at the middle tier of its stage); in the curve it follows the battle level, so a stage met away from
+    // its middle tier (dyn zones, a boss's '@lineage' adds) gets the factor of the battle. Bosses, rare and metal
+    // monsters use the plain curve (R.Mon asks for 'mob' only for the others). `on` stays false until R.Mon passes the
+    // kind (the switch-over also deletes tuning.json 'global' and regenerates the monsters, so nothing counts twice).
+    MOB_TIER: {
+      on: false,
+      hp: [1.12, 1.12, 1.36, 1.65, 1.43, 1.81, 2.02, 2.25, 2.0, 1.96],
+      dmg: [1.25, 1.25, 0.97, 0.75, 0.76, 0.61, 0.6, 0.59, 0.56, 0.43],
+    },
     // §4.9.3–4.9.4 — glimmer (R.Glimmer reads these)
     GLIM: {
       base: { tech: 0.012, secret: 0.006, single: 0.015, comboA: 0.012, comboB: 0.010, triple: 0.008 },
@@ -178,19 +189,28 @@
       last2: { lvOff: 4, hpMul: 17, atk: 0.68, mag: 0.68, def: 0.65, agi: 0.65, acts: 3, exp: 40, gold: 15 },
       echo: { lvOff: 4, hpMul: 30, atk: 1.7, mag: 1.7, def: 1.25, agi: 1.3, acts: 2, exp: 30, gold: 15 },
       // A12.1 (b): atk/mag 1.8 → 1.25 so that b_ouroboros' own s stays inside §4.14.2's 0.5–2.0 (it sat at the 0.5 floor)
-      super: { lvOff: 8, hpMul: 45, atk: 1.25, mag: 1.25, def: 1.3, agi: 1.4, acts: 3, exp: 40, gold: 15 },
+      // hpMul 45 → 56 (2026-09-26): with the party model's 'real' gear really wearing rare / super items (all have a quirk),
+      // C3 read 96 % strong / 45–54 % normal at 45; 56 gives X4 85 % (22.2 rounds) strong / 13 % normal (seed 20260925)
+      super: { lvOff: 8, hpMul: 56, atk: 1.25, mag: 1.25, def: 1.3, agi: 1.4, acts: 3, exp: 40, gold: 15 },
       add: { hpMul: null, acts: 1, exp: 2, gold: 2 },   // お供: hpShare, the other multipliers are the main boss's
     },
     MAX_ITEM: 99,
     MAX_GOLD: 9999999,
   };
-  /** monster stat curve at level L (§4.14.2). R.Mon.curve returns this */
-  K.curve = function (L) {
+  /** K.MOB_TIER at level L: {hp, dmg} (linear between the tiers, T = (L − 6) / 6 clamped to 0–9) */
+  K.mobTier = function (L) {
+    const M = K.MOB_TIER, n = M.hp.length - 1;
+    const t = Math.max(0, Math.min(n, (L - 6) / 6)), i = Math.min(n - 1, Math.floor(t)), f = t - i;
+    return { hp: M.hp[i] + (M.hp[i + 1] - M.hp[i]) * f, dmg: M.dmg[i] + (M.dmg[i + 1] - M.dmg[i]) * f };
+  };
+  /** monster stat curve at level L (§4.14.2). R.Mon.curve returns this; kind 'mob' = a regular monster (× K.mobTier) */
+  K.curve = function (L, kind) {
     const C = K.CURVE;
-    const atk = C.atk[0] + C.atk[1] * Math.pow(Math.max(0, L - 1), C.atk[2]);
+    const mt = kind === 'mob' && K.MOB_TIER.on ? K.mobTier(L) : null;
+    const atk = (C.atk[0] + C.atk[1] * Math.pow(Math.max(0, L - 1), C.atk[2])) * (mt ? mt.dmg : 1);
     const d = C.def[0] + C.def[1] * L;
     return {
-      hp: (C.hp[0] + C.hp[1] * L + C.hp[2] * L * L) * (1 + Math.min(K.MON_HP_PROF.max, K.MON_HP_PROF.perLv * Math.max(0, L))),
+      hp: (C.hp[0] + C.hp[1] * L + C.hp[2] * L * L) * (1 + Math.min(K.MON_HP_PROF.max, K.MON_HP_PROF.perLv * Math.max(0, L))) * (mt ? mt.hp : 1),
       atk, mag: C.magMul * atk, def: d, mdef: d,
       agi: C.agi[0] + C.agi[1] * L,
       exp: K.EXP.a + K.EXP.b * L + K.EXP.c * L * L,

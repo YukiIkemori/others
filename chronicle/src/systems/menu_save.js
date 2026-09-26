@@ -16,17 +16,20 @@
     const t = m.tier != null ? m.tier : 0;
     return t > 0 ? '年代記　第' + t + '章' : '年代記　序章';
   }
+  // the ▶ of the selected 記録 sits inside its window at (x + SLOT_CURSOR_DX, y + 7), 5 px before 「記録N」 at x + 20
+  // (owner 2026-09-26: it used to hang on the window's left border at x 0)
+  const SLOT_CURSOR_DX = 10;
   /** one 記録 window (§11.7.14). s: {summary} | null */
   function drawSlot(i, s, x, y, w, h, opts) {
     const o = opts || {};
     const C = G().C;
     G().window(x, y, w, h);
     const dim = !!o.dim;
-    G().text('記録' + (i + 1), x + 8, y + 6, { color: dim ? K().COL.gray : C.yellow });
+    G().text('記録' + (i + 1), x + 20, y + 6, { color: dim ? K().COL.gray : C.yellow });
     if (!s) { G().text('――　空き　――', x + w / 2, y + 24, { align: 'center', color: K().COL.gray }); return; }
     const m = s.summary || {};
     const hero = m.hero || (m.names && m.names[0] ? String(m.names[0]).replace(/\s*Lv\d+$/, '') : '');
-    K().fitText(hero, x + 48, y + 6, 64, { color: dim ? K().COL.gray : '#ffffff' });
+    K().fitText(hero, x + 54, y + 6, 58, { color: dim ? K().COL.gray : '#ffffff' });
     G().text('Lv' + (m.level || 1), x + 116, y + 6, { color: dim ? K().COL.gray : '#ffffff' });
     G().text(m.time || '', x + w - 8, y + 6, { align: 'right', color: dim ? K().COL.gray : '#ffffff' });
     (m.sprites || []).slice(0, 4).forEach((key, k) => {
@@ -44,6 +47,7 @@
     if (m.gold != null) G().text(m.gold + 'ゴールド', x + w - 8, y + 36, { align: 'right', color: dim ? K().COL.gray : '#ffffff' });
   }
   Menu.drawSlot = drawSlot;
+  Menu.SLOT_CURSOR_DX = SLOT_CURSOR_DX;
 
   // ------------------------------------------------------------ DOM code overlay
   /**
@@ -229,13 +233,13 @@
         for (let i = 0; i < 3; i++) {
           const y = 4 + 58 * i;
           drawSlot(i, this.slots ? this.slots[i] : null, 4, y, 248, 56);
-          if (this.index === i) G().cursor(0, y + 7, !this.busy);
+          if (this.index === i) G().cursor(4 + SLOT_CURSOR_DX, y + 7, !this.busy);
         }
         if (!this.slots) G().text('読み込んでいます。', 128, 30, { align: 'center', color: Kt.COL.gray });
         if (!this.o.noCode) {
           G().window(4, 178, 248, 20);
-          G().text('冒険の合言葉を見る', 20, 182, { color: G().C.cyan });
-          if (this.index === 3) G().cursor(8, 183, !this.busy);
+          G().text('冒険の合言葉を見る', 24, 182, { color: G().C.cyan });
+          if (this.index === 3) G().cursor(4 + SLOT_CURSOR_DX, 183, !this.busy);
         }
         G().window(4, 200, 248, 20);
         G().text(this.index === 3 ? '今の冒険を、文字の合言葉にして写す。' : 'どの記録に書き記しますか？', 14, 204, { color: Kt.COL.sub, size: 8 });

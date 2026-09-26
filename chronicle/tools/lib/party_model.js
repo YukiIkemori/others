@@ -203,6 +203,16 @@ function itemIndex(R) {
   return R.__pmIndex;
 }
 
+/** score cost of an item's drawbacks (mods that hurt in battle); null = unusable in a fight (noSpell, hpLoss) */
+function quirkCost(it) {
+  const m = it.mods || {};
+  if (m.noSpell || m.hpLoss) return null;
+  const neg = (k) => (typeof m[k] === 'number' && m[k] < 0 ? -m[k] : 0), pos = (k) => (typeof m[k] === 'number' && m[k] > 0 ? m[k] : 0);
+  let c = 3 * neg('hpPct') + 2 * neg('defPct') + 2 * neg('mdefPct') + 3 * neg('spd') + 3 * neg('eva') + 3 * neg('hit') + 4 * pos('takenPct') + pos('mpCostPct') + pos('wpCostPct');
+  for (const v of Object.values(m.elemResist || {})) if (typeof v === 'number' && v > 1) c += 15 * (v - 1) / 0.5;
+  return c;
+}
+
 /** pick the best item for a slot. want = {grade:'normal'|'rare'|'super', tier, stat, wtype?, weight?} */
 function pickItem(R, slotType, want, used) {
   const idx = itemIndex(R);
@@ -225,13 +235,16 @@ function pickItem(R, slotType, want, used) {
     else if (want.grade === 'rare') { const band = RB[clamp(T, 0, 9)]; if (t > band) continue; tierScore = t === band ? 0 : -(band - t) * 50; }
     else { if (t > T) continue; tierScore = -(T - t) * 30; }
     if (used && used[it.id] && (used[it.id] >= (it.grade === 'normal' ? 99 : 1))) continue;
+    if (want.exclude && it.grade && it.grade !== 'normal' && want.exclude.includes(it.id)) continue;   // one of each rare / super
     const st = itemStats(R, it);
     let s = statScore(st, want.stat) * 10 + tierScore;
     if (slotType === 'weapon') s += (want.stat === 'int' ? (it.mag || 0) : (it.atk || 0)) * 0.5;
     else s += ((it.def || 0) + (it.mdef || 0)) * 0.1;
     if (want.weight && it.weight === want.weight) s += 3;
-    if (it.quirk && want.noQuirk) continue;                                                    // realistic upgrades avoid quirk items
-    if (it.quirk && want.grade !== 'super') s -= 25;
+    // realistic upgrades (want.noQuirk): every rare / super item has a quirk (§8.2.1), so a player weighs its drawback
+    // instead of refusing it — skip the ones that cripple a battle (noSpell, hpLoss) and score the rest by quirkCost
+    if (it.quirk && want.noQuirk) { const qc = quirkCost(it); if (qc == null) continue; s -= qc; }
+    else if (it.quirk && want.grade !== 'super') s -= 25;
     if (it.twoHanded && slotType === 'weapon' && want.wtype && !TWO_HANDED[want.wtype]) s -= 40;   // quirk: one-handed type made two-handed
     if (s > bestScore) { bestScore = s; best = it; }
   }
@@ -331,7 +344,7 @@ function equipMember(R, c, o, notes) {
   const choose = (slot, grade, noQuirk) => {
     const type = SLOT_TYPE[slot];
     const stat = statFor(slot);
-    const want = { grade, tier: T, stat, weight: weightFor(stat), noQuirk: !!noQuirk };
+    const want = { grade, tier: T, stat, weight: weightFor(stat), noQuirk: !!noQuirk, exclude: SLOTS.filter((x) => x !== slot).map((x) => plan[x]).filter(Boolean) };
     if (type === 'weapon') {
       const wt = slot === 'weapon1' ? w1 : w2;
       if (!wt) return null;
@@ -350,12 +363,42 @@ function equipMember(R, c, o, notes) {
   for (const slot of SLOTS) plan[slot] = choose(slot, base);
   // upgrades on top ('real' = 3 rare slots, plus explicit rareSlots / superSlots)
   let rareN = (o.gear === 'real' ? 3 : 0) + (o.rareSlots || 0), superN = o.superSlots || 0;
+  // an upgrade is kept only when the member is better off with it (every rare / super item has a drawback, §8.2.1):
+  // the battle value of R.Rules.stats with the whole plan on (offence of the build × effective HP × speed)
+  const twoH0 = (id) => { const it = id && R.DB.items[id]; return !!(it && (it.twoHanded || TWO_HANDED[it.wtype])); };
+  const valueOf = (pl) => {
+    if (!(R.Rules && R.Rules.stats)) return 0;
+    const keep = c.equip;
+    c.equip = Object.assign({}, keep, pl);
+    if (twoH0(c.equip.weapon1) || twoH0(c.equip.weapon2)) c.equip.shield = null;
+    let st = null;
+    try { st = R.Rules.stats(c); } catch (e) { st = null; }
+    c.equip = keep;
+    if (!st) return 0;
+    const md = st.mods || {};
+    const phys = (st.atk || 0) * (1 + (md.physPct || 0) / 100) * (1 + Math.min(60, st.crit || 0) / 200);
+    const mag = (st.mag || 0) * (1 + (md.magicPct || 0) / 100);
+    const D = (R.DB.companions || {})[c.id] || {};
+    const off = build === 'magic' ? (D.role === 'healer' ? mag + 0.5 * (st.mnd || 0) : mag) : build === 'balanced' ? (phys + mag) / 2 : phys;
+    const ehp = (st.hp || 1) * (1 + (st.def || 0) / 250) * Math.sqrt(1 + (st.mdef || 0) / 250) / Math.max(0.5, 1 + (md.takenPct || 0) / 100);
+    return Math.pow(Math.max(1, off), 0.6) * Math.pow(ehp, 0.4) * (1 + Math.max(-100, st.spd || 0) / 400);
+  };
+  let vNow = valueOf(plan);
+  const tryUp = (slot, grade) => {
+    const id = choose(slot, grade, true);
+    if (!id || R.DB.items[id].grade !== grade || id === plan[slot]) return false;
+    const pl = Object.assign({}, plan, { [slot]: id });
+    const v = valueOf(pl);
+    if (v <= vNow * 1.005) return false;
+    plan[slot] = id; vNow = v;
+    return true;
+  };
   for (const slot of UPGRADE_ORDER) {
     if (!plan[slot] && SLOT_TYPE[slot] === 'weapon') continue;
     const cur = plan[slot] && R.DB.items[plan[slot]];
     const g = cur ? cur.grade || 'normal' : 'normal';
-    if (superN > 0 && g !== 'super') { const id = choose(slot, 'super', true); if (id && R.DB.items[id].grade === 'super') { plan[slot] = id; superN--; continue; } }
-    if (rareN > 0 && g === 'normal') { const id = choose(slot, 'rare', true); if (id && R.DB.items[id].grade === 'rare') { plan[slot] = id; rareN--; } }
+    if (superN > 0 && g !== 'super' && tryUp(slot, 'super')) { superN--; continue; }
+    if (rareN > 0 && g === 'normal' && tryUp(slot, 'rare')) rareN--;
   }
   // T8 builds: the fixed §8.13.1 sets of gear-a (R.GearA.BUILD_SETS.{int,str,dex}.{N,R7,R9,S} in R.GearA.BUILD_SLOTS order)
   // replace the picked items for 'none' / 'shop' (N), 'rare' (R9, or R7 with rareBand 7) and 'super' (S), when the

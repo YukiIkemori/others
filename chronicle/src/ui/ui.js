@@ -109,7 +109,21 @@
       this.voiceH = null;
       if (h) { try { R.Audio.stopVoice(h); } catch (e) { console.error(e); } }
     }
-    onRemove() { this.stopVoice(); }
+    /**
+     * closed from outside (closeMessage, an event ending, a warp, Engine.clear) while a say was still
+     * waiting: release whoever awaits it, or that caller (an event, a wake-up line) waits for ever
+     * (Crest 8609ae4). `outside` marks the say as not read by the player (UI.msgSettled → false).
+     * Not on R.Engine.clear() (title / new game / load): the old game's code must never run on.
+     */
+    onRemove() {
+      this.stopVoice();
+      if (UI._msg === this) UI._msg = null;
+      const r = this.resolveText;
+      if (!r || R.Engine.clearing) return;
+      this.resolveText = null;
+      this.outside = true;
+      try { r(); } catch (e) { console.error(e); }
+    }
     pageLen() { return this.pages[this.page].join('').length; }
     speed() {
       const s = this.opts.speed != null ? this.opts.speed : R.Settings.msgSpeed;
@@ -394,9 +408,9 @@
     /**
      * true when the message window m (default: the current one) holds no unsettled say:
      * a window its reader closed has settled (finish() clears it before close()); one closed from
-     * outside (closeMessage) still holds it
+     * outside (closeMessage) has released its say() but was not read (`outside`) → false
      */
-    msgSettled(m) { const w = m === undefined ? UI._msg : m; return !w || !w.resolveText; },
+    msgSettled(m) { const w = m === undefined ? UI._msg : m; return !w || (!w.resolveText && !w.outside); },
     closeMessage() { if (UI._msg && !UI._msg.closed) UI._msg.close(); UI._msg = null; },
     /**
      * Choice window. Resolves to the chosen index, or -1 on cancel.

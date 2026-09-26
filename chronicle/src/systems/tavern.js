@@ -111,10 +111,33 @@
       this.cur = (this.cur + dx + this.ids.length) % this.ids.length;
       R.sfx('cursor');
     }
+    /**
+     * オーナー指示 A15: the grid is 10 columns wide — ←→ step within the row (wrapping round the row), ↑↓ step to the
+     * same column of the row above / below (wrapping top ↔ bottom; a short last row clamps to its last figure)
+     */
+    moveGrid(d) {
+      const n = this.ids.length;
+      if (!n) return;
+      const COLS = 10, rows = Math.ceil(n / COLS);
+      let r = Math.floor(this.cur / COLS), c = this.cur % COLS;
+      const rowLen = (rr) => Math.min(COLS, n - rr * COLS);
+      if (d === 'left' || d === 'right') {
+        const len = rowLen(r);
+        c = (c + (d === 'left' ? -1 : 1) + len) % len;
+      } else {
+        if (rows < 2) return;
+        r = (r + (d === 'up' ? -1 : 1) + rows) % rows;
+        c = Math.min(c, rowLen(r) - 1);
+      }
+      const next = r * COLS + c;
+      if (next === this.cur) return;
+      this.cur = next;
+      R.sfx('cursor');
+    }
     update() {
       if (this.busy || this.closed) return;
       const d = In().dirRepeat();
-      if (d === 'up' || d === 'down' || d === 'left' || d === 'right') this.move(d === 'up' || d === 'left' ? -1 : 1);
+      if (d === 'up' || d === 'down' || d === 'left' || d === 'right') this.moveGrid(d);
       if (In().repeat('l')) this.move(-1);
       if (In().repeat('r')) this.move(1);
       if (In().pressed('b')) {
