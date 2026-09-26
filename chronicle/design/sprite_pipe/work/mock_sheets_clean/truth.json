@@ -1,0 +1,14 @@
+{
+ "mistakes": [
+  "sheet4 and sheet8 not delivered (optional)"
+ ],
+ "attach": {
+  "bare_idle": {
+   "hand_body": [
+    12,
+    36
+   ],
+   "note": "weapon grip at body-local hand of the weapon-less sprite"
+  }
+ }
+}

@@ -45,10 +45,15 @@
     }
     get visible() { return Math.max(1, Math.floor((this.rect ? this.rect.h : 300) / (this.rowH * u()))); }
     update() {
-      const I = R.Input, n = this.rows.length;
+      const I = R.Input, n = this.rows.length, c = Math.max(1, this.cols | 0);
       if (!n) { if (I.pressed('b') && this.onCancel) this.onCancel(); return; }
-      if (I.repeat('down')) this.index = (this.index + 1) % n;
-      if (I.repeat('up')) this.index = (this.index + n - 1) % n;
+      // 行は左から右、上から下の順（cols > 1 のとき ←→ で列、↑↓ で段）
+      if (I.repeat('down')) this.index = (this.index + c) % n;
+      if (I.repeat('up')) this.index = (this.index + n - c) % n;
+      if (c > 1 && I.repeat('right')) this.index = (this.index + 1) % n;
+      if (c > 1 && I.repeat('left')) this.index = (this.index + n - 1) % n;
+      if (this.onFocus && this.index !== this._last) { this._last = this.index; this.onFocus(this.rows[this.index], this.index); }
+      if (this.onDetail && (I.pressed('y') || I.pointer.longPress)) { this.onDetail(this.rows[this.index], this.index); return; }
       const p = I.pointer;
       if (this.rect && (p.pressed || p.wheel)) {
         const r = this.rect, rh = this.rowH * u();
@@ -217,7 +222,9 @@
       g.fillRect(rect.x, rect.y, rect.w * k, rect.h);
     },
     icon(g, name, x, y, size, color) { R.Gfx.roundRect(x, y, size, size, size / 4, null, color || T.color.text2, 1.5); },
-    stars(g, grade, x, y) { R.UIK.text(g, grade === 'super' ? '★★' : grade === 'rare' ? '★' : '', x, y, { size: T.size.label, color: grade === 'super' ? T.color.superRare : T.color.rare }); },
+    stars(g, grade, x, y, size) { R.UIK.text(g, grade === 'super' ? '★★' : grade === 'rare' ? '★' : '', x, y, { size: size || T.size.label * u(), color: grade === 'super' ? T.color.superRare : T.color.rare }); },
+    /** 版 2: v × R.uiScale（位置と大きさを計算する呼ぶ側の道具） */
+    u(v) { return v * u(); },
     snapshot() { return null; },
     List,
     Layer,
@@ -257,5 +264,11 @@
     },
     busy() { return !!cur; },
     close() { if (cur) cur.scene.finish(undefined); },
+    /** 版 2: キャプション（地の文を画面の中ほどに。顔も名前もなし）。o.ms があればその時間で自動で閉じる。仮: 会話の窓で出す */
+    caption(text, o) {
+      const p = R.UIK.Message.say({ text, face: false });
+      if (o && o.ms) R.wait(o.ms).then(() => { if (cur) cur.scene.finish(undefined); });
+      return p;
+    },
   });
 })(window.RPG);
