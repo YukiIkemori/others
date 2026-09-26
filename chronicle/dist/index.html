@@ -3094,9 +3094,10 @@ try{
 // hpMul), others = curve(lv) × the bossType multipliers × `s`). `lv` is the troop's Lb:
 // tier-scaled troops write LZ(0) + lvOff and are stretched to the battle's Lb.
 // `s` holds the per-boss personality, set with tools/sim_bosses.js on the real engine. DESIGN
-// §9.11.2 asks for ±20 %; the calibrated values go further (mid bosses hp ×1.35–1.65, region
-// and last bosses atk ×0.5–0.85) because the bossType table is off for the current engine and
-// party model. They stay inside the species range 0.5–2.0 (§4.14.2); reported to the lead.
+// §9.11.2 asks for ±20 %; the calibrated values go further (hp ×0.5–1.65, region, finale and
+// post-game bosses atk/mag ×0.5–0.85, the last form of ネムレア all ×0.5) because the bossType
+// table is off for the current engine and party model. They stay inside the species range
+// 0.5–2.0 (§4.14.2); reported to the lead (円環竜 would need atk/mag ≈ 0.35 for §4.17.3-C3).
 // `addOf` names the leader of an 'add' (お供) so the add can take its multipliers.
 // Element / strike / status values are final (§9.0 0.5); status resistances list only
 // the boss's own additions (battle takes max with the boss defaults of §4.8.3).

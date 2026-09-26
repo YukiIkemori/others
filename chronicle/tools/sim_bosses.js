@@ -278,6 +278,7 @@ if (arg('tune', false)) {
 
 // ------------------------------------------------------------------ X1 (§4.17.3-B1, C1)
 if (XS.includes(1)) {
+  s0 = (SEED + 1 * 7919) >>> 0;   // each check has its own random stream (same numbers whichever checks run)
   say('\nX1  mid / region bosses, standard party (auto), T0–T7; prologue, rivals and finale mid bosses at their fixed tier');
   say('  cells: win% / rounds');
   const rows = [];
@@ -324,6 +325,7 @@ if (XS.includes(1)) {
 
 // ------------------------------------------------------------------ X2 (§4.17.3-B2/B3)
 if (XS.includes(2)) {
+  s0 = (SEED + 2 * 7919) >>> 0;   // each check has its own random stream (same numbers whichever checks run)
   say('\nX2  any three companions: 6 hero variants × companion trios, every mid/region boss');
   const HEROES = (PM && PM.HERO_VARIANTS) || [
     { heroType: 'warrior', favor: { kind: 'weapon', id: 'sword' } }, { heroType: 'warrior', favor: { kind: 'weapon', id: 'axe' } },
@@ -384,6 +386,7 @@ if (XS.includes(2)) {
 
 // ------------------------------------------------------------------ X3 gimmicks
 if (XS.includes(3)) {
+  s0 = (SEED + 3 * 7919) >>> 0;   // each check has its own random stream (same numbers whichever checks run)
   say('\nX3  gimmicks fire at least once per battle (average over T0/T2/T4/T6/T7; fixed-tier bosses at their tier)');
   // [troop, key, uses per battle, share of battles with at least one, label]
   const G = [
@@ -391,9 +394,9 @@ if (XS.includes(3)) {
     ['tr_b_rooteater', 'feed', (r) => r.feed, (r) => r.any.eb_feed || 0, '根の触手の養分'],
     ['tr_b_mistbeast', 'double', (r) => r.summon.b_mist_double || 0, (r) => r.any['summon:b_mist_double'] || 0, '霧の分身'],
     ['tr_b_octopus', 'regrow', (r) => r.summon.b_tentacle || 0, (r) => r.any['summon:b_tentacle'] || 0, '足の生え直し'],
-    ['tr_b_ironwarden', 'phase75', (r) => r.phase['b_ironwarden#0'] || 0, (r) => r.phase['b_ironwarden#0'] || 0, '鉄の番人 HP75%'],
-    ['tr_b_ironwarden', 'phase30', (r) => r.phase['b_ironwarden#1'] || 0, (r) => r.phase['b_ironwarden#1'] || 0, '鉄の番人 HP30%'],
-    ['tr_b_lavabeast', 'phase', (r) => r.phase['b_lavabeast#0'] || 0, (r) => r.phase['b_lavabeast#0'] || 0, '溶岩の巨獣 冷える'],
+    ['tr_b_ironwarden', 'phase75', null, (r) => r.phase['b_ironwarden#0'] || 0, '鉄の番人 HP75%'],
+    ['tr_b_ironwarden', 'phase30', null, (r) => r.phase['b_ironwarden#1'] || 0, '鉄の番人 HP30%'],
+    ['tr_b_lavabeast', 'phase', null, (r) => r.phase['b_lavabeast#0'] || 0, '溶岩の巨獣 冷える'],
     ['tr_b_ouroboros', 'rewind', (r) => r.rewind, (r) => r.any.eb_rewind || 0, '円環竜の巻き戻し'],
   ];
   out.X3 = [];
@@ -403,10 +406,11 @@ if (XS.includes(3)) {
   for (const [tr, key, get, share, label] of G) {
     const tiers = DB.troops[tr].scale === 'tier' ? [0, 2, 4, 6, 7] : [DB.troops[tr].tier];
     const cs = tiers.map((T) => cache[tr + T] || (cache[tr + T] = runCase(tr, T, Math.max(20, Math.round(N / 2)), tr === 'tr_b_ouroboros' ? { gear: 'strong', level: 64 } : {})));
-    const v = cs.reduce((s, c) => s + get(c), 0) / cs.length;
     const sh = cs.reduce((s, c) => s + share(c), 0) / cs.length;
-    out.X3.push({ tr, key, label, perBattle: v, share: sh });
-    check('X3 ' + key, v >= 1 && sh >= 0.8, `${label}: ${v.toFixed(2)} per battle (≥1), in ${pc(sh)} of battles (≥80%)`);
+    // a phase happens at most once (a battle lost before the line, or one blow from above the line to 0, has none)
+    const v = get ? cs.reduce((s, c) => s + get(c), 0) / cs.length : null;
+    out.X3.push({ tr, key, label, perBattle: v == null ? sh : v, share: sh });
+    check('X3 ' + key, (v == null || v >= 1) && sh >= 0.8, `${label}: ` + (v == null ? '' : `${v.toFixed(2)} per battle (≥1), `) + `in ${pc(sh)} of battles (≥80%)`);
   }
   // for information: how often each "n手ごと" move of §9.11.4 is used (the SCHEDULED ones of bosses.js carry
   // weight ×100 on their turn; the others keep the table weight and compete with the rest by weight, §9.1.7)
@@ -432,6 +436,7 @@ if (XS.includes(3)) {
 
 // ------------------------------------------------------------------ X4 last boss and postgame (§4.17.3-C2/C3)
 if (XS.includes(4)) {
+  s0 = (SEED + 4 * 7919) >>> 0;   // each check has its own random stream (same numbers whichever checks run)
   say('\nX4  last boss (2 forms in a row, full heal between), postgame bosses');
   let w = 0, rounds = 0;
   const n = Math.max(30, N);
@@ -445,8 +450,9 @@ if (XS.includes(4)) {
   out.X4 = { last: { win: w / n, rounds: rounds / n } };
   check('X4 last boss', w / n >= 0.75 && rounds / n >= 15.5 && rounds / n <= 22.5, `standard party win ≥75%: ${pc(w / n)}; rounds 16–22: ${f1(rounds / n)}`);
   for (const tr of ['tr_b_valzard_echo', 'tr_b_ouroboros']) {
-    const strong = runCase(tr, 9, Math.max(30, N), { gear: 'strong', level: 64 });
-    const plain = runCase(tr, 9, Math.max(30, N), { gear: 'shop', level: 64 });
+    // 80 battles each: at 40 the win rate still moves by ±8 points between seeds (50 % vs 28 % seen)
+    const strong = runCase(tr, 9, Math.max(80, N), { gear: 'strong', level: 64 });
+    const plain = runCase(tr, 9, Math.max(80, N), { gear: 'shop', level: 64 });
     out.X4[tr] = { strong, plain };
     if (tr === 'tr_b_ouroboros') {
       check('X4 ouroboros', strong.win >= 0.5 && plain.win <= 0.2, `strong gear (Lv64, real + 4 super slots) ≥50%: ${pc(strong.win)}; normal set ≤20%: ${pc(plain.win)}`);
@@ -457,6 +463,7 @@ if (XS.includes(4)) {
 
 // ------------------------------------------------------------------ X5 glimmer in boss fights (§4.9.5)
 if (XS.includes(5)) {
+  s0 = (SEED + 5 * 7919) >>> 0;   // each check has its own random stream (same numbers whichever checks run)
   say('\nX5  someone glimmers in a boss battle (T1+) ≥50%');
   const cells = [];
   for (const tr of [...MID, ...REGION]) for (const T of [1, 3, 5, 7]) cells.push(runCase(tr, T, Math.max(10, Math.round(N / 3))));

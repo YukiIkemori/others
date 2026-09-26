@@ -14,7 +14,8 @@
 // fight, caster casts · A3b one dungeon floor · B1 bosses · B2 any three · B3 no best three · B4 order independence ·
 // B5 per-companion fairness (§5.4.3) · C1 final region · C2 last boss (2 forms) · C3 superboss · D1 int build ·
 // D2 str/dex builds · D3 cloth fragility · D4 int and glimmer · E1 growth · E2 max HP from grinding · I weakness
-// spread (§4.7.3) · J optimize (§4.4.1) · K repel (§4.11.1).
+// spread (§4.7.3) · J optimize (§4.4.1) · K repel (§4.11.1) · G glimmer (A8's sim_glimmer, --full / --only G) ·
+// H1 H3 drops (A12's sim_loot) · H2 super-rare items in exactly one monster (structural).
 'use strict';
 const PM = require('./lib/party_model');
 
@@ -529,22 +530,66 @@ async function Kcheck() {
   res('K', a && b && a.battles >= 1 && b.battles === 0 ? 'PASS' : 'FAIL', `100 steps with 魔除けの香: party at Lb → ${a && a.battles} fight(s), at Lb+3 → ${b && b.battles}`, 'normal at Lb · 0 at ≥ Lb+3', `Lb ${a && a.Lb}`);
 }
 
+// ------------------------------------------------------------------------------------ G · H (the owners' simulators)
+// §4.17.3 G (閃き) is measured by A8's tools/sim_glimmer.js and H1–H3 (drops, golden, rare monsters) by A12's
+// tools/sim_loot.js; their JSON is read back here so the §4.17 table is complete in one report. H2 (every super-rare
+// item in exactly one monster's super slot) is structural and checked here directly as well.
+function childJson(file, args, timeoutS) {
+  const fs = require('fs'), os = require('os'), path = require('path'), cp = require('child_process');
+  const f = path.join(__dirname, file);
+  if (!fs.existsSync(f)) return { missing: true };
+  const out = path.join(os.tmpdir(), `sim_balance_${process.pid}_${file.replace(/\W/g, '')}.json`);
+  const r = cp.spawnSync(process.execPath, [f].concat(args, ['--json', out]), { encoding: 'utf8', timeout: timeoutS * 1000, maxBuffer: 32 << 20 });
+  let j = null;
+  try { j = JSON.parse(fs.readFileSync(out, 'utf8')); } catch (e) { j = null; }
+  try { fs.unlinkSync(out); } catch (e) { /* ignore */ }
+  return { j, code: r.status, timedOut: !!(r.error && r.error.code === 'ETIMEDOUT'), tail: String(r.stdout || '').trim().split('\n').slice(-1)[0] };
+}
+function G() {
+  // slow (≈3 min): the default pass runs it only with --full or --only G
+  if (!FULL && !(ONLY && ONLY.includes('G'))) { res('G', 'SKIP', '-', '§4.9.5', 'run with --full or --only G (tools/sim_glimmer.js, A8, ≈3 min)'); return; }
+  const r = childJson('sim_glimmer.js', ['-q', '--no-engine', '--seed', String(SEED % 1000)], 900);
+  if (r.missing) { res('G', 'SKIP', '-', '§4.9.5', 'tools/sim_glimmer.js (A8) missing'); return; }
+  if (!r.j || !Array.isArray(r.j.results)) { res('G', 'SKIP', '-', '§4.9.5', `sim_glimmer gave no JSON (${r.timedOut ? 'timeout' : 'exit ' + r.code}): ${r.tail}`); return; }
+  const hard = r.j.results.filter((x) => !x.guide), bad = hard.filter((x) => !x.ok);
+  res('G', bad.length ? 'FAIL' : 'PASS', `${hard.length - bad.length}/${hard.length} of §4.9.5${bad.length ? ': ' + bad.map((x) => `${x.id} ${x.value}`).join('; ') : ''}`, '§4.9.5 table (A8 sim_glimmer)', hard.slice(0, 4).map((x) => `${x.id} ${x.value}`).join(' · '));
+}
+function H() {
+  // H2 (structural): each super-rare item sits in exactly one monster's super slot
+  const holders = {};
+  for (const [id, m] of Object.entries(DB.monsters || {})) { const sp = m && m.drops && m.drops.super; const it = sp && (sp.item || sp.id); if (it) (holders[it] = holders[it] || []).push(id); }
+  const supers = Object.keys(DB.items).filter((id) => DB.items[id].grade === 'super' && (DB.items[id].src === 'super' || DB.items[id].src == null));
+  const none = supers.filter((id) => !holders[id]), many = supers.filter((id) => (holders[id] || []).length > 1);
+  res('H2', supers.length && !none.length && !many.length ? 'PASS' : supers.length ? 'FAIL' : 'SKIP', `${supers.length} super-rare items: ${none.length} in no monster, ${many.length} in several`, 'each in exactly one super slot', [...none.slice(0, 3), ...many.slice(0, 3)].join(' '));
+  if (QUICK && !(ONLY && ONLY.includes('H'))) { res('H1', 'SKIP', '-', '', 'quick pass (tools/sim_loot.js, A12)'); return; }
+  const r = childJson('sim_loot.js', [], 600);
+  if (r.missing) { res('H1', 'SKIP', '-', '', 'tools/sim_loot.js (A12) missing'); return; }
+  if (!r.j || !Array.isArray(r.j.checks)) { res('H1', 'SKIP', '-', '', `sim_loot gave no JSON (${r.timedOut ? 'timeout' : 'exit ' + r.code}): ${r.tail}`); return; }
+  const pick = (re) => r.j.checks.filter((c) => re.test(c.id));
+  const row = (id, list, target) => { if (!list.length) { res(id, 'SKIP', '-', target, 'no matching sim_loot check'); return; } const bad = list.filter((c) => !c.ok); res(id, bad.length ? 'FAIL' : 'PASS', list.map((c) => `${c.id}: ${c.text}`).join(' · ').slice(0, 260), target, `A12 sim_loot (${r.j.engine || '?'})`); };
+  row('H1', pick(/^L1/), '±10% of the formula; caps 0.75/0.5/0.125, mods ≤ +150');
+  row('H3', pick(/^L2/), 'golden 2–3 · rare monsters 0.8–1.5 per region');
+  const others = r.j.checks.filter((c) => !/^L[12]/.test(c.id) && !c.ok);
+  if (others.length) res('L*', 'INFO', others.map((c) => `${c.id}: ${c.text}`).join(' · ').slice(0, 260), '§9.13.3 (A12)', 'reported by sim_loot, not a §4.17 item');
+}
+
 // ------------------------------------------------------------------------------------ main
 (async () => {
   const t0 = Date.now();
   log(`sim_balance — seed ${SEED}, n ${NBASE}${FULL ? ' (full)' : QUICK ? ' (quick)' : ''}; engine ${engineOk ? 'ok' : 'INCOMPLETE'}`);
-  const steps = [['A1', A1], ['A2', A2], ['A3b', A3b], ['B1', B1], ['B2', B2], ['C', C], ['D', D], ['E', E], ['I', I], ['J', J], ['K', Kcheck]];
+  const steps = [['A1', A1], ['A2', A2], ['A3b', A3b], ['B1', B1], ['B2', B2], ['C', C], ['D', D], ['E', E], ['G', G], ['H', H], ['I', I], ['J', J], ['K', Kcheck]];
   for (const [k, fn] of steps) {
-    if (ONLY && !ONLY.some((o) => o === k || (k === 'A2' && ['A3', 'B4', 'C1'].includes(o)) || (k === 'B2' && ['B3', 'B5'].includes(o)) || (k === 'C' && /^C/.test(o)) || (k === 'D' && /^D/.test(o)) || (k === 'E' && /^E/.test(o)))) continue;
+    if (ONLY && !ONLY.some((o) => o === k || (k === 'H' && /^H/.test(o)) || (k === 'A2' && ['A3', 'B4', 'C1'].includes(o)) || (k === 'B2' && ['B3', 'B5'].includes(o)) || (k === 'C' && /^C/.test(o)) || (k === 'D' && /^D/.test(o)) || (k === 'E' && /^E/.test(o)))) continue;
     const t1 = Date.now();
-    if (!engineOk && k !== 'I') { res(k, 'SKIP', '-', '', 'engine incomplete (R.Battle.simulate / R.Rules)'); continue; }
+    if (!engineOk && !['I', 'G', 'H'].includes(k)) { res(k, 'SKIP', '-', '', 'engine incomplete (R.Battle.simulate / R.Rules)'); continue; }
     try { await fn(); } catch (e) { res(k, 'SKIP', '-', '', 'threw: ' + (e && e.message)); }
     if (VERBOSE) log(`  (${k} ${Date.now() - t1} ms)`);
   }
   log('\n item  status  measured  |  target  |  note');
   for (const r of results) log(` ${r.id.padEnd(5)} ${r.status.padEnd(5)}  ${r.measured}  |  ${r.target}${r.note ? '  |  ' + r.note : ''}`);
   const fails = results.filter((r) => r.status === 'FAIL'), skips = results.filter((r) => r.status === 'SKIP');
-  log(`\nsim_balance: ${results.length - fails.length - skips.length} pass, ${fails.length} fail, ${skips.length} skip — seed ${SEED} — ${Math.round((Date.now() - t0) / 1000)} s`);
+  const infos = results.filter((r) => r.status === 'INFO');
+  log(`\nsim_balance: ${results.length - fails.length - skips.length - infos.length} pass, ${fails.length} fail, ${skips.length} skip — seed ${SEED} — ${Math.round((Date.now() - t0) / 1000)} s`);
   const json = arg('json', null);
   if (json) require('fs').writeFileSync(json, JSON.stringify({ seed: SEED, n: NBASE, results }, null, 1));
   process.exitCode = fails.length ? 1 : 0;

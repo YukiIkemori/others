@@ -89,7 +89,7 @@ class Ctx {
     await this.ev(([m, s]) => window.RPG.debug.warp(m, s), [map, spawn]);
     await this.until((s) => s.map === map, 8000, 'warp to ' + map);
     await this.D.drive({ menus: 'leave' }, (s) => s.idle && s.map === map, 30000, 'onEnter of ' + map);
-    for (const d of walk || []) await this.D.step(d);
+    for (const d of walk || []) { await this.D.step(d); await this.D.drive({ menus: 'leave' }, (st) => st.idle, 30000, 'after a step on ' + map); }
     await this.D.idle(8000);
   }
   /** stand next to npc id on its `side` and face it, after walking in from 3 tiles away */
@@ -195,13 +195,28 @@ def(15, '酒場の入れ替え（控え 10 人）', async (X) => {
 def(5, 'ワールドマップ（森・山・街道・海岸、砂嵐、湿地の霧）', async (X) => {
   await X.load();
   await X.game();
-  const worldOf = (loc) => X.ev((l) => { const R = window.RPG, L = R.DB.locations[l]; if (!L) return null; const w = R.FieldMap.findWorld ? R.FieldMap.findWorld(L.spawn) : 'world'; return { map: w || 'world', spawn: L.spawn }; }, loc);
-  for (const [loc, name, what] of [['lute', '05_world_lute', '港町ファロスのまわり（森・山・街道・海岸）'], ['kasim', '05_world_desert', '砂漠（砂嵐）'], ['loch', '05_world_marsh', '湿地（霧）']]) {
-    const w = await worldOf(loc);
-    if (!w) { X.note(`no location ${loc}`); continue; }
-    await X.at(w.map, w.spawn, ['down', 'down']);
-    await X.wait(600);
-    await X.shot(name, what);
+  const L = await X.ev(() => { const R = window.RPG, L = R.DB.locations.lute; return { map: (R.FieldMap.findWorld && R.FieldMap.findWorld(L.spawn)) || 'world', spawn: L.spawn }; });
+  await X.at(L.map, L.spawn, ['down', 'down']);
+  await X.wait(600);
+  await X.shot('05_world_lute', '港町ファロスのまわり（森・山・街道・海岸）');
+  // the weather is drawn over its own tiles: stand next to the middle of the sandstorm / marsh-fog / sea-fog cells
+  for (const [tile, name, what] of [['sandstorm', '05_world_sandstorm', '砂漠の砂嵐'], ['marsh_fog', '05_world_marsh_fog', '湿地の霧'], ['fog', '05_world_sea_fog', '内海の霧（ビブリア島）']]) {
+    const at = await X.ev((tid) => {
+      const R = window.RPG, M = R.Field.map, cells = [];
+      for (let y = 0; y < M.h; y++) for (let x = 0; x < M.w; x++) if (M.tileAt(x, y) === tid) cells.push([x, y]);
+      if (!cells.length) return null;
+      const cx = cells.reduce((a, c) => a + c[0], 0) / cells.length, cy = cells.reduce((a, c) => a + c[1], 0) / cells.length;
+      cells.sort((p, q) => Math.hypot(p[0] - cx, p[1] - cy) - Math.hypot(q[0] - cx, q[1] - cy));
+      for (const [x0, y0] of cells.slice(0, 40)) for (let r = 0; r <= 6; r++) for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) {
+        const x = x0 + dx, y = y0 + dy;
+        if (M.walkable(x, y) && !M.warpCell(x, y)) return { x: M.wx(x), y: M.wy(y), n: cells.length };
+      }
+      return null;
+    }, tile);
+    if (!at) { X.note(`no '${tile}' cell on the world map`); continue; }
+    await X.ev(([x, y]) => window.RPG.debug.here(x, y, 'down'), [at.x, at.y]);
+    await X.wait(900);
+    await X.shot(name, `${what}（${tile} ${at.n} マス）`);
   }
 });
 def(6, '町 2 つ（ファロス・カシム）と屋内（酒場・道具屋）、4 人の隊列', async (X) => {
@@ -326,6 +341,9 @@ def(14, 'メニュー・装備・強さ・技の書・術の書・図鑑・年�
   await menuGame(X);
   await openShow(X, 'main');
   await X.shot('14_menu_main', 'メインメニュー（T5）');
+  // §12.5: the worst names / numbers (5-character names, HP 999, MP 150, WP 99) in the same menu
+  const worst = await X.ev(() => { const F = window.RPG.menuFixture; if (!F || !F.worst) return null; const r = F.worst(); window.RPG.Engine.layers.filter((l) => l.constructor.name !== 'FieldLayer').forEach((l) => window.RPG.Engine.remove(l)); return r; });
+  if (worst) { await openShow(X, 'main'); await X.shot('14_menu_main_worst', `§12.5 の最悪の組（${worst.join('・')}、HP 999・MP 150・WP 99）`); }
   const screens = [['equipScreen', '14_menu_equip', '装備'], ['statusScreen', '14_menu_status', '強さ（熟練度）'], ['itemScreen', '14_menu_items', '持ち物'],
     ['chronicleScreen', '14_menu_chronicle', '年代記']];
   for (const [fn, name, what] of screens) {
@@ -482,6 +500,7 @@ async function main() {
       const errs = D.errors.slice(e0).filter((x) => !x.load && !/^\[console\.error\] (src\/[^ ]+\.js[: ]|LOAD ERRORS)/.test(x.text));
       if (status === 'PASS' && errs.length) { status = 'FAIL'; detail = errs.map((x) => x.text).join(' | ').slice(0, 300); }
       const files = X.files.slice(n0);
+      if (status === 'PASS') { try { fs.unlinkSync(path.join(out, `FAIL_${String(s.no)}.png`)); } catch (e) { /* none */ } }
       results.push({ no: s.no, title: s.title, status, detail, files: files.map((f) => f.file), ms: Date.now() - t1 });
       const mark = status === 'PASS' ? '✓' : status === 'SKIP' ? '–' : '✗';
       console.log(`${mark} ${status} #${String(s.no).padEnd(4)} ${s.title}  (${files.length} png, ${((Date.now() - t1) / 1000).toFixed(1)}s)${detail ? '  ' + detail : ''}`);
@@ -503,7 +522,19 @@ async function main() {
   if (pending) console.log(`\nstand-ins: R.Art.PENDING ${pending.art.length}${pending.art.length ? ' (' + pending.art.slice(0, 12).join(' ') + (pending.art.length > 12 ? ' …' : '') + ')' : ''} · R.Audio.PENDING ${pending.audio.length}${pending.audio.length ? ' (' + pending.audio.slice(0, 12).join(' ') + ')' : ''}`);
   console.log(`shots: ${n('PASS')} pass, ${n('FAIL')} fail, ${n('SKIP')} skip — ${files} PNG(s) in ${path.relative(ROOT, out) || out} — ${D.errors.length} console error(s) — ${((Date.now() - t0) / 1000).toFixed(0)} s`);
   console.log('Look at every PNG (§12.5) before calling the set done.');
-  fs.writeFileSync(path.join(out, 'shots.json'), JSON.stringify({ when: new Date().toISOString(), html: path.relative(ROOT, html), results, pending, errors: D.errors }, null, 1));
+  // a partial run (--only) replaces its own entries in shots.json and keeps the others
+  let all = results;
+  const jf = path.join(out, 'shots.json');
+  if (opt('only', null)) {
+    try {
+      const old = JSON.parse(fs.readFileSync(jf, 'utf8')).results || [];
+      const key = (r) => `${r.no}|${r.title}`;
+      const mine = new Set(results.map(key));
+      all = old.filter((r) => !mine.has(key(r))).concat(results);
+      all.sort((a, b) => (parseInt(a.no, 10) || 0) - (parseInt(b.no, 10) || 0));
+    } catch (e) { all = results; }
+  }
+  fs.writeFileSync(jf, JSON.stringify({ when: new Date().toISOString(), html: path.relative(ROOT, html), results: all, pending, errors: D.errors }, null, 1));
   if (n('FAIL')) process.exitCode = 1;
 }
 
