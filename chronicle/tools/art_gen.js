@@ -3,7 +3,7 @@
 // (e.g. `set -a; . /tmp/claude-0/secrets/google.env; set +a`). The key is never written anywhere.
 //
 //   node tools/art_gen.js [--style anime,chibi,storybook] [--jobs party,mons,...] [--model gemini-3-pro-image]
-//                         [--force] [--dry] [--conc 3] [--tag v2] [--refs bbg] [--prompt-extra '...']
+//                         [--force] [--dry] [--conc 3] [--tag v2] [--refs bbg] [--prompt-extra '...'] [--set r2]
 //
 // Writes design/art_proto/raw/<style>/<job>[.<tag>].png. Jobs that need the party image as a style reference run
 // after it. Every call is logged to design/art_proto/api_log.jsonl (tools/lib/gemini_image.js).
@@ -60,6 +60,51 @@ function jobs(S) {
   ];
 }
 
+/** round 2 job table (BRIEF A16 追記): the environment plate (bbg) and the party sheet have no reference; everything
+ *  that contains no person uses the plate as its style reference (a person in a reference leaks into the sheet). */
+function jobs2(S) {
+  const L = S.look, B = S.body;
+  const NOPEOPLE = 'Do not draw any person or creature.';
+  return [
+    {
+      id: 'party', aspect: '16:9', size: '2K', refs: [],
+      prompt: `${L}\n\nBattle sprites for a side-view JRPG (the party stands on the right of the battle screen and faces the enemies on the LEFT). Four party members in one row, evenly spaced, each full body, three-quarter side view FACING LEFT (toward the left edge of the image), relaxed battle-ready idle stance, same scale, feet on one baseline, ${B}:\n1) ${PARTY.hero}.\n2) ${PARTY.brigitta}.\n3) ${PARTY.sylvain}.\n4) ${PARTY.marta}.\nAll four clearly face left.\n\n${CHROMA.magenta}`,
+    },
+    {
+      id: 'bbg', aspect: '16:9', size: '2K', refs: [],
+      prompt: `${L}\n${NOPEOPLE}\n\nA side-view JRPG battle background: a forest clearing in the late afternoon. Low camera looking slightly down at a wide, flat, open mossy clearing with a dirt patch that fills the lower 55% of the image (room for two groups of fighters left and right). Behind: layers of tall old trees fading into blue-green haze, warm god rays and dappled sunlight falling through the canopy onto the ground, glowing dust in the air, ferns and roots only at the far left and right edges. Strong sense of depth. No characters, no text, no UI.`,
+    },
+    {
+      id: 'fg', aspect: '16:9', size: '2K', refs: ['bbg'],
+      prompt: `${L}\n${MATCH} ${NOPEOPLE}\n\nForeground framing elements for the bottom edge of a side-view battle screen, drawn close to the camera and a little larger: a wide clump of ferns and tall grass, a mossy root with small mushrooms, a flowering bush, a leafy branch hanging from above, a mossy rock. Each separate and whole.\n\n${CHROMA.magenta}`,
+    },
+    {
+      id: 'mons', aspect: '16:9', size: '2K', refs: ['bbg'],
+      prompt: `${L}\n${MATCH} Only use the reference for the art style; do not copy its content.\n\nEnemy battle sprites for a side-view JRPG: the enemies stand on the LEFT of the battle screen and face RIGHT toward the heroes. Three monsters in one row, each whole, in side / three-quarter view FACING RIGHT (heads, eyes and weapons toward the right edge of the image), menacing but charming, detailed:\n1) ${MONS.jelly} (smallest).\n2) ${MONS.wolf}.\n3) ${MONS.goblin} (stocky, about the height of a small child).\nAll three clearly face right.\n\n${CHROMA.magenta}`,
+    },
+    {
+      id: 'ground', aspect: '1:1', size: '2K', refs: ['bbg'],
+      prompt: `${L}\n${MATCH} ${NOPEOPLE}\n\nA texture sheet for a top-down 3/4 JRPG map: a 3×3 grid of nine square, seamless, tileable ground textures seen from straight above, evenly lit (no cast shadows, no vignette), no objects, cells touching edge to edge in exact thirds. Row 1: lush grass with tiny clover; grass with small wildflowers; packed earth path with pebbles. Row 2: warm town cobblestones; sand; deep clear sea water. Row 3: ancient library stone-slab floor; polished wooden floorboards; dark carpet with a faded gold pattern. Fine detail, each cell covers about 4×4 steps of a small walking character.`,
+    },
+    {
+      id: 'town', aspect: '16:9', size: '2K', refs: ['bbg'],
+      prompt: `${L}\n${MATCH} ${NOPEOPLE}\n\nTown map objects for a top-down JRPG in classic 3/4 overhead view (we see the roof from above and the front wall facing the viewer, NOT isometric, NOT diagonal: all front walls are parallel to the image bottom). A sprite sheet of separate objects: a tall half-timbered house with a steep red tiled roof, dormer window, flower boxes and a wooden door; a narrow stone shop with a slate roof, an awning and a hanging sign; a large leafy tree; a small round bush; a stone well with a wooden roof; an iron street lamp (lamp unlit, no glow); a stack of crates and barrels; a wooden bench; a short fence; a flower pot. Each whole and upright.\n\n${CHROMA.magenta}`,
+    },
+    {
+      id: 'world', aspect: '16:9', size: '2K', refs: ['bbg'],
+      prompt: `${L}\n${MATCH} ${NOPEOPLE}\n\nWorld map objects for a top-down JRPG overworld seen from a high 3/4 angle, like pieces of a miniature diorama (front faces parallel to the image bottom, NOT isometric): a dense clump of broadleaf forest (many overlapping round crowns); a clump of dark pines; a rocky mountain with a snowy peak; a smaller grassy hill; a small walled town with red roofs and a chimney; a stone castle with blue spires; a windmill; a lighthouse. Each separate and whole.\n\n${CHROMA.magenta}`,
+    },
+    {
+      id: 'dungeon', aspect: '16:9', size: '2K', refs: ['bbg'],
+      prompt: `${L}\n${MATCH} ${NOPEOPLE}\n\nDungeon pieces for a top-down JRPG in 3/4 overhead view (front faces parallel to the image bottom, NOT isometric) for an ancient underground archive: a long straight segment of carved stone wall seen from the front with its top ledge (a wide horizontal piece); a tall wooden bookshelf full of old books and scrolls, seen from the front; a stone pillar; a wall torch (flame, no glow halo); an ornate treasure chest; a reading desk with an open book and a candle (no glow halo); a stone staircase going down; a pile of fallen books. Each separate and whole.\n\n${CHROMA.magenta}`,
+    },
+    {
+      id: 'field', aspect: '16:9', size: '2K', refs: ['party'],
+      prompt: `${L}\n${MATCH} Keep the hero identical to the reference (same face, hair, quill, costume colors).\n\nField walking sprites for a top-down 3/4 JRPG map (characters seen slightly from above), full body, the same small proportions (about 2.5 heads tall). One row of seven figures at the same scale: the hero from the reference seen from the FRONT (facing the viewer), from the BACK, and from the LEFT SIDE mid-step; then four townspeople seen from the front: a plump merchant with an apron, an old man with a cane and a white beard, a young woman in a green dress with a basket, a town guard with a spear.\n\n${CHROMA.magenta}`,
+    },
+  ];
+}
+
 async function main() {
   const styles = (arg('--style', 'anime,chibi,storybook')).split(',');
   const want = arg('--jobs', null);
@@ -70,7 +115,7 @@ async function main() {
   for (const s of styles) {
     const S = STYLES[s];
     if (!S) throw new Error('unknown style ' + s);
-    for (const j of jobs(S)) if (!want || want.split(',').includes(j.id)) queue.push({ s, j });
+    for (const j of (arg('--set', 'r1') === 'r2' ? jobs2(S) : jobs(S))) if (!want || want.split(',').includes(j.id)) queue.push({ s, j });
   }
   const file = (s, id, t) => path.join(RAW, s, id + (t ? '.' + t : '') + '.png');
   const findRef = (s, id) => {
@@ -102,4 +147,4 @@ async function main() {
   console.log(`API calls logged so far: ${c.calls}`, JSON.stringify(c.byModel));
 }
 if (require.main === module) main().catch((e) => { console.error(GI.redact(e.stack || e)); process.exit(1); });
-module.exports = { jobs };
+module.exports = { jobs, jobs2 };

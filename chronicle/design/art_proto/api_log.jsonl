@@ -29,3 +29,7 @@
 {"t":"2026-09-26T16:35:59.776Z","model":"gemini-3-pro-image","purpose":"anime/pose_poses","refs":1,"ok":false,"ms":265,"err":"HTTP 402: {\n  \"error\": {\n    \"code\": 402,\n    \"message\": \"Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage y"}
 {"t":"2026-09-26T16:35:59.779Z","model":"gemini-3-pro-image","purpose":"anime/pose_parts","refs":1,"ok":false,"ms":147,"err":"HTTP 402: {\n  \"error\": {\n    \"code\": 402,\n    \"message\": \"Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage y"}
 {"t":"2026-09-26T16:36:08.494Z","model":"gemini-3.1-flash-image","purpose":"anime/pose_poses","refs":1,"ok":false,"ms":286,"err":"HTTP 402: {\n  \"error\": {\n    \"code\": 402,\n    \"message\": \"Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage y"}
+{"t":"2026-09-26T17:04:39.899Z","model":"gemini-3-pro-image","purpose":"hdpaint/bbg","refs":0,"ok":true,"ms":21668}
+{"t":"2026-09-26T17:04:40.126Z","model":"gemini-3-pro-image","purpose":"hdpix/party","refs":0,"ok":true,"ms":21967}
+{"t":"2026-09-26T17:04:40.623Z","model":"gemini-3-pro-image","purpose":"hdpaint/party","refs":0,"ok":true,"ms":22392}
+{"t":"2026-09-26T17:04:41.258Z","model":"gemini-3-pro-image","purpose":"hdpix/bbg","refs":0,"ok":true,"ms":23028}

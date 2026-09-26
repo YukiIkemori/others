@@ -24,6 +24,24 @@ const STYLES = {
   },
 };
 
+// ---- round 2 (BRIEF A16 追記): small 2.5–3-head characters, very detailed sprites, lit layered environments.
+// No commercial title is named anywhere: the look is described by its traits only.
+const R2_BODY = 'small-statured characters about 2.5 to 3 heads tall (large head, compact body, short legs, NOT realistic proportions and NOT super-deformed), with highly detailed costumes: layered cloth, stitching, buckles, metal highlights';
+const R2_WORLD = 'the look of a modern "HD-2D" style fantasy JRPG: detailed sprites placed in atmospheric diorama-like environments with depth, warm light, soft shadows, dappled sunlight and a slightly miniature feeling';
+STYLES.hdpix = {
+  id: 'hdpix',
+  name: 'V1 精細ドット（HD-2D 風）',
+  look: `Exquisite high-resolution PIXEL ART for ${R2_WORLD}. Crisp, clean, deliberate pixels on a visible pixel grid (every pixel about the same size, no blur, no smeared anti-aliasing), a rich palette with many subtle color ramps, careful pixel clusters, hue-shifted shading, bright warm rim light along the lit edges and a thin dark outline only where needed. Top-tier modern pixel artist quality, far more detailed than 16-bit sprites. Not a painting, not 3D render, not vector.`,
+  body: R2_BODY,
+  pixel: true,
+};
+STYLES.hdpaint = {
+  id: 'hdpaint',
+  name: 'V2 滑らか手描き（HD-2D 風）',
+  look: `Exquisite high-resolution hand-painted 2D sprite art for ${R2_WORLD}. Smooth painterly rendering with soft gradients and crisp clean silhouettes, fine detail, rich but harmonious colors, warm key light from the upper left, bright rim light on the edges, subtle ambient occlusion. Premium console quality. Not pixel art, not 3D render, not flat vector.`,
+  body: R2_BODY,
+};
+
 /** background rule for cut-out sprites: a flat key color the keyer removes (tools/art_key.py) */
 const CHROMA = {
   magenta: 'The background must be one perfectly flat solid pure magenta color (#FF00FF) filling the whole image edge to edge: no gradient, no vignette, no floor, no ground line, no cast shadow, no reflections, no frame, no text, no labels, no watermark. Nothing in the subjects uses magenta or pink. Every subject is complete (never cropped by the image edge) and separated from the others by wide empty magenta gaps.',

@@ -229,6 +229,11 @@ async function events() {
   // 酒場
   { const { ev, log } = stubEv({ npc: { id: 'tavern' } }); await E.common_tavern.run(ev); eq(log, [['tavern', { recruit: true }]], 'common_tavern → ev.tavern({recruit:true})'); }
   { const { ev, log } = stubEv({ npc: { id: 'tavern', recruit: false } }); await E.common_tavern.run(ev); eq(log, [['tavern', { recruit: false }]], 'common_tavern recruit:false'); }
+  // オーナー指示 A17: the party service only in the first town (lute); elsewhere the master only talks
+  { const { ev, log } = stubEv({ npc: { id: 'tavern', greet: 'ようこそ。' }, map: 'coral' }); await E.common_tavern.run(ev);
+    ok(log.length === 2 && log[0][0] === 'say' && log[0][1] === 'ようこそ。' && /ファロス/.test(log[1][1]) && !log.some((l) => l[0] === 'tavern'), 'A17 common_tavern outside lute: greet + pointer to ファロス, no service', log); }
+  { const { ev, log } = stubEv({ npc: { id: 'tavern' }, map: 'kasim' }); await E.common_tavern.run(ev);
+    ok(!log.some((l) => l[0] === 'tavern') && log.length === 2, 'A17 common_tavern outside lute without greet: the standard lines only', log); }
   // 店
   {
     const shopId = Object.keys(DB.shops || {})[0];
