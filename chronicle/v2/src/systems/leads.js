@@ -155,8 +155,11 @@
     if (cur) {
       const age = now - cur.t0;
       // Y で目印（フィールドが一番上でイベントが無い間だけ）
-      if (!cur.pinned && age > 150 && calm() && R.Input.pressed('y')) {
+      const P = R.Input.pointer;
+      const tap = P && P.pressed && R.UIK.hit(cardRect(), P.x, P.y);
+      if (!cur.pinned && age > 150 && calm() && (R.Input.pressed('y') || tap)) {
         R.Input.consume('y');
+        if (tap && R.Input.consume) R.Input.consume();
         if (Leads.pin(cur.id)) { cur.pinned = true; cur.t0 = Math.min(cur.t0, now - SHOW_MS + 1400); try { R.Audio.sfx('confirm'); } catch (e) { /* */ } }
       }
       if (age > SHOW_MS) cur = null;

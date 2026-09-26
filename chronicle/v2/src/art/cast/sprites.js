@@ -12,6 +12,13 @@
   const SP = (cast.sprites = cast.sprites || {});
 
   const mk = (w, h) => R.Hd.RZ.canvas(w, h);
+  // 起動のときに原画を読み終えてから（§2.11）。読めなかった look は仮の絵に戻る
+  R.onBoot(async function () {
+    if (!R.Media || !R.Media.preload || typeof Image === 'undefined') return;
+    SP.loaded = await R.Media.preload('sprites');
+    // 読む前に焼こうとして null（後でまた）になった物を忘れる
+    for (const look of SP.looks()) for (const p of ['hd:btl:' + look + ':', 'hd:field:' + look, 'hd:face:' + look]) for (const k of R.Hd.keys(p)) if (R.Hd.forget) R.Hd.forget(k);
+  });
   SP.has = function (look, kind) { return !!(R.Media && R.Media.has && R.Media.has('sprites', look + ':' + kind)); };
   /** 原画の画像の状態 */
   SP.state = function (look, kind) {
