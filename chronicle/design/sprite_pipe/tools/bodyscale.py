@@ -36,31 +36,54 @@ def head_crop(im, frac=0.36):
     return im[t:r1, cols.min():cols.max() + 1]
 
 
-def match(im, ref, scales=SCALES, top=0.6):
-    """-> (scale, rms error, (y, x), mirrored) of the best placement of ref (resized by scale) inside im."""
+def _variants(R0, s, rot, mir):
+    Rm = R0[:, ::-1] if mir else R0
+    R = np.stack([zoom(Rm[..., i], s, order=1) for i in range(4)], -1)
+    if rot:
+        from scipy.ndimage import rotate
+        R = np.stack([rotate(R[..., i], rot, reshape=True, order=1) for i in range(4)], -1)
+    return R
+
+
+def _best(F, F2, R):
+    h, w = R.shape[:2]
+    if h > F.shape[0] or w > F.shape[1] or h < 3 or w < 3:
+        return None
+    box = fftconvolve(F2, np.ones((h, w)), mode='valid')
+    corr = sum(fftconvolve(F[..., i], R[::-1, ::-1, i], mode='valid') for i in range(4))
+    ssd = box - 2 * corr + (R ** 2).sum()
+    k = np.unravel_index(np.argmin(ssd), ssd.shape)
+    # rms over the template's own opaque area (a rotated template has empty corners)
+    area = max(1.0, (R[..., 3] > 30).sum())
+    return float(np.sqrt(max(ssd[k], 0) / area)), (int(k[0]), int(k[1]))
+
+
+def match(im, ref, top=0.6):
+    """-> (scale, rms error, (y, x), mirrored, rotation) of the best placement of ref (resized, rotated, mirrored)
+    inside the upper part of im. Coarse search (scale step 0.05, rotation +-24 deg in 12 deg steps), then a fine
+    one around the best (0.0125, 6 deg). Heads tilt in action poses; without rotation a tilted head reads small."""
     F = _feat(im)
     H = F.shape[0]
     F = F[:max(8, int(H * top) + ref.shape[0])]
     F2 = (F ** 2).sum(-1)
     R0 = _feat(ref)
-    best = (1e18, 1.0, (0, 0), False)
-    for mir in (False, True):
-        Rm = R0[:, ::-1] if mir else R0
-        for s in scales:
-            R = np.stack([zoom(Rm[..., i], s, order=1) for i in range(4)], -1)
-            h, w = R.shape[:2]
-            if h > F.shape[0] or w > F.shape[1] or h < 3 or w < 3:
-                continue
-            box = fftconvolve(F2, np.ones((h, w)), mode='valid')
-            corr = sum(fftconvolve(F[..., i], R[::-1, ::-1, i], mode='valid') for i in range(4))
-            ssd = box - 2 * corr + (R ** 2).sum()
-            k = np.unravel_index(np.argmin(ssd), ssd.shape)
-            e = float(np.sqrt(max(ssd[k], 0) / (h * w)))
-            # normalise so small and large templates compare fairly; tiny bias to scale 1 on ties
-            e *= 1 + 0.02 * abs(np.log(s))
-            if e < best[0]:
-                best = (e, float(s), (int(k[0]), int(k[1])), mir)
-    return best[1], best[0], best[2], best[3]
+    best = (1e18, 1.0, (0, 0), False, 0)
+
+    def run(scales, rots, mirs):
+        nonlocal best
+        for mir in mirs:
+            for rot in rots:
+                for s in scales:
+                    r = _best(F, F2, _variants(R0, s, rot, mir))
+                    if r is None:
+                        continue
+                    e = r[0] * (1 + 0.02 * abs(np.log(s)) + 0.002 * abs(rot))
+                    if e < best[0]:
+                        best = (e, float(s), r[1], mir, rot)
+    run(np.arange(0.55, 1.451, 0.05), (-24, -12, 0, 12, 24), (False, True))
+    s0, rot0, mir0 = best[1], best[4], best[3]
+    run(np.arange(s0 - 0.05, s0 + 0.051, 0.0125), (rot0 - 6, rot0, rot0 + 6), (mir0,))
+    return best[1], best[0], best[2], best[3], best[4]
 
 
 def scale_of(im, refs):

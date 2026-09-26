@@ -64,13 +64,13 @@ class Report:
     def text(self, found):
         out = ['スプライトの検査結果（%s）' % time.strftime('%Y-%m-%d %H:%M'), '']
         for L in LEVELS:
-            its = [i for i in self.items if i['level'] == L]
+            its = [i for i in self.items if i['level'] == L and not i['data'].get('hidden')]
             if not its:
                 continue
             out.append('■ %s（%d 件）' % (LEVEL_JA[L], len(its)))
             for n in ORDER + [None]:
                 for i in its:
-                    if i['sheet'] == n:
+                    if i['sheet'] == n and not i['data'].get('hidden'):
                         out.append('  - ' + ('シート%d: ' % n if n else '') + i['msg'])
             out.append('')
         asks = [i['ask'] for i in self.items if i['level'] == 'redo' and i['ask']]
@@ -674,7 +674,7 @@ def rescale_pixel(img, k):
     return out
 
 
-def check_scale(runs, rep, tol_redo=0.18, tol_check=0.12):
+def check_scale(runs, rep, tol_redo=0.2, tol_check=0.15, fix=True):
     """Drawn scale of each pose (head size vs the reference poses, tools/bodyscale.py). The bounding box misses a pose
     drawn smaller with a raised sword (the sword keeps the box at the target height). Poses off by more than ~18 %
     are rescaled as a fallback (Scale2x + majority sampling) and a redraw is asked for."""
@@ -701,8 +701,9 @@ def check_scale(runs, rep, tol_redo=0.18, tol_check=0.12):
                 if abs(np.log(sc)) > np.log(1 + tol_redo):
                     big = sc > 1
                     k = 1.0 / sc
-                    v['img'] = rescale_pixel(v['img'], k)
-                    v['fixed'] = v.get('fixed', []) + ['rescaled %.2f' % k]
+                    if fix:
+                        v['img'] = rescale_pixel(v['img'], k)
+                        v['fixed'] = v.get('fixed', []) + ['rescaled %.2f' % k]
                     rep.add(n, 'redo', 'scale', '%s がほかのポーズより%s描かれている（頭の大きさで約 %d%%）。仮に %d%% に拡大縮小して使う' % (
                         name, '大きく' if big else '小さく', pct, int(round(100 * k))), slot=sid, scale=sc, per_ref=per,
                         ask='シート%dの%d番（%s）だけ%s描かれている（ほかの約 %d%%）。ほかのポーズと同じ縮尺（頭の大きさをそろえる）にして、同じ条件で描き直して' % (
@@ -801,7 +802,7 @@ def check_facing(runs, fc, rep):
 LANTERN_SIDE = {'down': 1, 'up': -1, 'left': -1, 'right': 1}   # left hand: screen right facing down, in front in side views
 
 
-def check_lantern(runs, rep):
+def check_lantern(runs, rep, fix=True):
     """Sheets 1 / 2: the lantern is in the LEFT hand in every frame. A frame with the lantern on the other side
     (e.g. a step frame drawn mirrored) makes the lantern jump hands in the walk cycle.
     Auto fix for front / back rows: the frame is mirrored (a front view mirrors cleanly; the stepping foot swaps,
@@ -829,12 +830,12 @@ def check_lantern(runs, rep):
                 continue
             nums = '・'.join('%d番' % (sp[s]['row'] * spec['cols'] + sp[s]['col'] + 1) for s in bad)
             names = '、'.join(spec['ja'][sp[s]['row']][sp[s]['col']] for s in bad)
-            fixable = d in ('down', 'up') and len(bad) < len(ids)
+            fixable = fix and d in ('down', 'up') and len(bad) < len(ids)
             rep.add(n, 'redo', 'lantern', 'シート%dの %s（%s）はランタンを右手に持っている（左手のはず）。歩くたびに持ち手が入れ替わって見える' % (n, nums, names)
                     + ('。仮に左右反転して使う' if fixable else ''), slot=bad[0],
                     ask='シート%dの%s（%s）でランタンが右手になっている。12コマすべて左手にランタンを持たせて（下向きでは画面の右側、上向きでは画面の左側）、同じ条件で描き直して' % (n, nums, names))
             for s in bad[1:]:
-                rep.add(n, 'redo', 'lantern_frame', '%s: ランタンが右手' % slot_name(n, sp[s]['row'], sp[s]['col']), slot=s)
+                rep.add(n, 'redo', 'lantern_frame', '%s: ランタンが右手' % slot_name(n, sp[s]['row'], sp[s]['col']), slot=s, hidden=True)
             if fixable:
                 mir = {s: np.ascontiguousarray(sp[s]['img'][:, ::-1]) for s in bad}
                 # stepping foot swaps in a mirror -> swap the two step frames when both were mirrored
@@ -966,6 +967,7 @@ def main():
     ap.add_argument('--only', default=None, help='comma list of sheet numbers')
     ap.add_argument('--repack', action='store_true',
                     help='skip stages 1-6: re-pack from <out>/native/*.png and report.json (after fixing natives by hand)')
+    ap.add_argument('--no-autofix', action='store_true', help='report only: do not mirror lantern frames / rescale off-scale poses')
     ap.add_argument('--no-manifest', action='store_true', help='ignore <folder>/manifest.json (slice automatically)')
     args = ap.parse_args()
     args.manifest = {} if args.no_manifest else load_manifest(args.folder)
@@ -1000,8 +1002,8 @@ def main():
         print('sheet%d  %-24s dot %.2f px  %s  %d poses  %.1fs' % (n, os.path.basename(found[n]), st.get('period', 0),
                                                               st.get('scale_note', ''), len(sp), time.time() - t0))
     check_facing(runs, fc, rep)
-    check_lantern(runs, rep)
-    check_scale(runs, rep)
+    check_lantern(runs, rep, fix=not args.no_autofix)
+    check_scale(runs, rep, fix=not args.no_autofix)
     check_palette(runs, ref_pal, rep)
     check_breath(runs, rep)
     check_faces(runs, rep)

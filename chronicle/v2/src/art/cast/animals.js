@@ -25,8 +25,8 @@
     const { mat } = R.Hd.RZ, rig = R.Art.rig, MM = rig.M();
     const S = SHAPE[kind];
     const lk = R.DB.looks['ani_' + kind];
-    const fur = mat({ keys: rig.shades(lk.outfit.main, 5), n: 6, wrap: 0.35, tex: 0.8, tsx: 0.4, tsy: 1.2 });
-    const belly = mat({ keys: rig.shades(lk.outfit.sub, 5), n: 5, wrap: 0.35 });
+    const fur = mat({ keys: rig.shades(lk.outfit.main, 6), n: 9, wrap: 0.35, tex: 1.4, tsx: 0.4, tsy: 1.2 });
+    const belly = mat({ keys: rig.shades(lk.outfit.sub, 5), n: 7, wrap: 0.35, tex: 0.8 });
     const eye = MM.lash;
     const step = fr === 0 ? 0 : fr === 1 ? 1 : -1;
     const Y = (y) => -y;
@@ -76,7 +76,7 @@
       tasks.push(() => {
         const B = new RZ.Builder();
         build(B, null, lk.animal, DIR[d], fr);
-        return RZ.frame(RZ.render(B, rig.renderOpts({ scale: sc, light: rig.light('field') })));
+        return cast.limitColors(RZ.frame(RZ.render(B, rig.renderOpts({ scale: sc, light: rig.light('field'), tones: 7 }))), cast.maxColors('field'));
       });
     }
     return cast.job(tasks, (made) => {

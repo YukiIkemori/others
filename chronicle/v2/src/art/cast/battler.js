@@ -30,6 +30,39 @@
     return job;
   };
 
+  /**
+   * 1 コマの色数を max までに減らす（R.Hd.STYLE.colors。仮の絵の 2.5D の陰は段が多くなるので、よく使う色を残して近い色へ寄せる）。
+   * 同じコマなら同じ結果（決まった順）。frame.c を書き換える
+   */
+  cast.limitColors = function (fr, max) {
+    const c = fr.c, w = c.width, h = c.height, x = c.getContext('2d'), im = x.getImageData(0, 0, w, h), d = im.data;
+    const count = new Map();
+    for (let i = 0; i < d.length; i += 4) { if (d[i + 3] < 128) continue; const k = (d[i] << 16) | (d[i + 1] << 8) | d[i + 2]; count.set(k, (count.get(k) || 0) + 1); }
+    if (count.size <= max) return fr;
+    // よく使う色から。ただし近すぎる色（差 < 10）は同じ色として数える
+    const cols = Array.from(count.entries()).sort((a, b) => b[1] - a[1] || a[0] - b[0]);
+    const pal = [];
+    const rgb = (k) => [(k >> 16) & 255, (k >> 8) & 255, k & 255];
+    const dist = (a, b) => { const dr = a[0] - b[0], dg = a[1] - b[1], db = a[2] - b[2]; return dr * dr * 0.3 + dg * dg * 0.59 + db * db * 0.11; };
+    for (const [k] of cols) {
+      const q = rgb(k);
+      if (pal.length >= max) break;
+      if (pal.every((p) => dist(p, q) > 60)) pal.push(q);
+    }
+    for (const [k] of cols) { if (pal.length >= max) break; const q = rgb(k); if (!pal.some((p) => p[0] === q[0] && p[1] === q[1] && p[2] === q[2])) pal.push(q); }
+    const memo = new Map();
+    for (let i = 0; i < d.length; i += 4) {
+      if (d[i + 3] < 128) continue;
+      const k = (d[i] << 16) | (d[i + 1] << 8) | d[i + 2];
+      let m = memo.get(k);
+      if (!m) { const q = rgb(k); let best = pal[0], bd = 1e9; for (const p of pal) { const dd = dist(p, q); if (dd < bd) { bd = dd; best = p; } } m = best; memo.set(k, m); }
+      d[i] = m[0]; d[i + 1] = m[1]; d[i + 2] = m[2];
+    }
+    x.putImageData(im, 0, 0);
+    return fr;
+  };
+  cast.maxColors = function (kind) { const C = (R.Hd.STYLE && R.Hd.STYLE.colors) || {}; return ((C[kind] || [0, kind === 'btl' ? 80 : 55])[1]) - 4; };
+
   // 骨組みの戦闘の高さ（原画の戦闘の高さ 64 に合わせる倍率。MODERN_UI §2.1 の「約 70」に近い）
   const BTL_SCALE = 1.2;
   cast.BTL_SCALE = BTL_SCALE;
@@ -59,7 +92,7 @@
       const B = new RZ.Builder();
       const pt = rig.draw(B, L, p);
       const r = RZ.render(B, rig.renderOpts({ flip: true, scale: sc, light: rig.light('btl') }));
-      const f = RZ.frame(r);
+      const f = cast.limitColors(RZ.frame(r), cast.maxColors('btl'));
       const rel = (q) => [Math.round(-q[0] * sc), Math.round(q[1] * sc)];
       f.anchors = { head: rel(pt.head), hand: rel(pt.hand) };
       if (i === 0) pts0 = { pt, rel };

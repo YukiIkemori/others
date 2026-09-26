@@ -32,7 +32,7 @@
         const B = new RZ.Builder();
         const pt = rig.field.build(B, L, DIR[d], fr, { lantern });
         const r = RZ.render(B, rig.renderOpts({ scale: sc, light: rig.light('field') }));
-        const f = RZ.frame(r);
+        const f = cast.limitColors(RZ.frame(r), cast.maxColors('field'));
         const rel = (q) => (q ? [Math.round(q[0] * sc), Math.round(q[1] * sc)] : null);
         f.anchors = { head: rel(pt.head) };
         if (pt.lantern) f.anchors.lantern = rel(pt.lantern);

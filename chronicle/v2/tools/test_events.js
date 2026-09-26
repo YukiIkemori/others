@@ -71,9 +71,10 @@ R.defs('events', {
   ev_sub: { async run(ev, ctx) { ran.push('sub:' + ctx.who); return 42; } },
   ev_clear: { async run(ev) { ran.push('clear:start'); await ev.clearRegion('r_forest'); ran.push('clear:end'); await ev.warp('ev_town', 'a'); await ev.wait(50); } },
   ev_inn: { async run(ev) { await ev.inn(30); } },
-  story_t1: { async run(ev, ctx) { ran.push('t1:' + ctx.reason); } },
   ev_trig: { async run() { ran.push('trig'); } },
 });
+// story_t1 は CONTENT-P の本物があっても試しの物に差し替える（中身ではなく、いつ走るかを確かめる）
+R.DB.events.story_t1 = { async run(ev, ctx) { ran.push('t1:' + ctx.reason); } };
 
 (async function main() {
   // ================================================================ 契約

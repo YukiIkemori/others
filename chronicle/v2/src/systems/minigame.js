@@ -171,7 +171,7 @@
     g.fillStyle = vg; g.fillRect(0, 0, R.W, R.H);
     g.restore();
     const w = Math.min(R.W - U(32), U(tall ? 420 : 560));
-    const h = Math.min(R.H - U(40), U(tall ? 560 : 440));
+    const h = Math.min(R.H - U(40), U(tall ? 520 : 440));
     const x = Math.round((R.W - w) / 2), y = Math.round((R.H - h) / 2 + (1 - e) * U(8));
     g.save();
     g.globalAlpha = e;

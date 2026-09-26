@@ -1,0 +1,882 @@
+{
+ "character": "arun",
+ "set": "battle",
+ "image": "arun_battle.png",
+ "cell": [
+  130,
+  94
+ ],
+ "anchor": [
+  68,
+  91
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "idle_a": {
+   "x": 0,
+   "y": 0,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     67,
+     28
+    ],
+    "center": [
+     68,
+     62
+    ],
+    "front": [
+     34,
+     84
+    ]
+   }
+  },
+  "idle_b": {
+   "x": 130,
+   "y": 0,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     66,
+     28
+    ],
+    "center": [
+     68,
+     62
+    ],
+    "front": [
+     36,
+     85
+    ]
+   }
+  },
+  "step": {
+   "x": 260,
+   "y": 0,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     56,
+     28
+    ],
+    "center": [
+     63,
+     61
+    ],
+    "front": [
+     24,
+     82
+    ]
+   }
+  },
+  "guard": {
+   "x": 390,
+   "y": 0,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     66,
+     28
+    ],
+    "center": [
+     68,
+     60
+    ],
+    "front": [
+     22,
+     52
+    ]
+   }
+  },
+  "hit": {
+   "x": 520,
+   "y": 0,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     50,
+     28
+    ],
+    "center": [
+     61,
+     60
+    ],
+    "front": [
+     26,
+     87
+    ]
+   }
+  },
+  "weak": {
+   "x": 0,
+   "y": 94,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     48,
+     28
+    ],
+    "center": [
+     58,
+     63
+    ],
+    "front": [
+     24,
+     50
+    ]
+   }
+  },
+  "ko": {
+   "x": 130,
+   "y": 94,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     83,
+     56
+    ],
+    "center": [
+     69,
+     76
+    ],
+    "front": [
+     20,
+     82
+    ]
+   }
+  },
+  "victory_a": {
+   "x": 260,
+   "y": 94,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     50,
+     10
+    ],
+    "center": [
+     68,
+     57
+    ],
+    "front": [
+     46,
+     31
+    ]
+   }
+  },
+  "victory_b": {
+   "x": 390,
+   "y": 94,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     68,
+     28
+    ],
+    "center": [
+     69,
+     62
+    ],
+    "front": [
+     36,
+     82
+    ]
+   }
+  },
+  "glimmer": {
+   "x": 520,
+   "y": 94,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     69,
+     28
+    ],
+    "center": [
+     69,
+     62
+    ],
+    "front": [
+     34,
+     80
+    ]
+   }
+  },
+  "windup": {
+   "x": 0,
+   "y": 188,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     87,
+     28
+    ],
+    "center": [
+     67,
+     61
+    ],
+    "front": [
+     43,
+     43
+    ]
+   }
+  },
+  "slash": {
+   "x": 130,
+   "y": 188,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     84,
+     28
+    ],
+    "center": [
+     92,
+     61
+    ],
+    "front": [
+     53,
+     89
+    ]
+   }
+  },
+  "thrust_ready": {
+   "x": 260,
+   "y": 188,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     61,
+     28
+    ],
+    "center": [
+     65,
+     60
+    ],
+    "front": [
+     21,
+     52
+    ]
+   }
+  },
+  "thrust": {
+   "x": 390,
+   "y": 188,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     53,
+     29
+    ],
+    "center": [
+     59,
+     60
+    ],
+    "front": [
+     2,
+     52
+    ]
+   }
+  },
+  "charge": {
+   "x": 520,
+   "y": 188,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     55,
+     39
+    ],
+    "center": [
+     66,
+     66
+    ],
+    "front": [
+     36,
+     51
+    ]
+   }
+  },
+  "smash": {
+   "x": 0,
+   "y": 282,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     49,
+     2
+    ],
+    "center": [
+     47,
+     47
+    ],
+    "front": [
+     17,
+     29
+    ]
+   }
+  },
+  "cast_a": {
+   "x": 130,
+   "y": 282,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     67,
+     28
+    ],
+    "center": [
+     70,
+     60
+    ],
+    "front": [
+     35,
+     51
+    ]
+   }
+  },
+  "cast_b": {
+   "x": 260,
+   "y": 282,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     48,
+     14
+    ],
+    "center": [
+     72,
+     54
+    ],
+    "front": [
+     40,
+     22
+    ]
+   }
+  },
+  "item": {
+   "x": 390,
+   "y": 282,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     71,
+     28
+    ],
+    "center": [
+     70,
+     59
+    ],
+    "front": [
+     43,
+     40
+    ]
+   }
+  },
+  "evade": {
+   "x": 520,
+   "y": 282,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     64,
+     28
+    ],
+    "center": [
+     71,
+     56
+    ],
+    "front": [
+     40,
+     68
+    ]
+   }
+  },
+  "flee": {
+   "x": 0,
+   "y": 376,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     85,
+     28
+    ],
+    "center": [
+     75,
+     58
+    ],
+    "front": [
+     44,
+     49
+    ]
+   }
+  },
+  "sleep": {
+   "x": 130,
+   "y": 376,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     60,
+     28
+    ],
+    "center": [
+     66,
+     61
+    ],
+    "front": [
+     45,
+     40
+    ]
+   }
+  },
+  "confuse": {
+   "x": 260,
+   "y": 376,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     71,
+     28
+    ],
+    "center": [
+     73,
+     60
+    ],
+    "front": [
+     45,
+     55
+    ]
+   }
+  },
+  "cover": {
+   "x": 390,
+   "y": 376,
+   "w": 130,
+   "h": 94,
+   "anchor": [
+    68,
+    91
+   ],
+   "points": {
+    "head": [
+     58,
+     28
+    ],
+    "center": [
+     67,
+     59
+    ],
+    "front": [
+     26,
+     51
+    ]
+   }
+  }
+ },
+ "anims": {
+  "idle": {
+   "frames": [
+    "idle_a",
+    "idle_b"
+   ],
+   "ms": [
+    520,
+    520
+   ],
+   "loop": true
+  },
+  "attack_sword": {
+   "keys": [
+    {
+     "frame": "step",
+     "ms": 140,
+     "dx": -24,
+     "ease": "out"
+    },
+    {
+     "frame": "windup",
+     "ms": 110,
+     "dx": -24,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "slash",
+     "ms": 220,
+     "dx": -24,
+     "hit": true,
+     "fx_at": "front"
+    },
+    {
+     "frame": "idle_a",
+     "ms": 200,
+     "dx": 0,
+     "ease": "in_out"
+    }
+   ]
+  },
+  "attack_thrust": {
+   "keys": [
+    {
+     "frame": "step",
+     "ms": 140,
+     "dx": -24,
+     "ease": "out"
+    },
+    {
+     "frame": "thrust_ready",
+     "ms": 110,
+     "dx": -24,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "thrust",
+     "ms": 220,
+     "dx": -24,
+     "hit": true,
+     "fx_at": "front"
+    },
+    {
+     "frame": "idle_a",
+     "ms": 200,
+     "dx": 0,
+     "ease": "in_out"
+    }
+   ]
+  },
+  "attack_smash": {
+   "keys": [
+    {
+     "frame": "step",
+     "ms": 140,
+     "dx": -24,
+     "ease": "out"
+    },
+    {
+     "frame": "charge",
+     "ms": 110,
+     "dx": -24,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "smash",
+     "ms": 220,
+     "dx": -24,
+     "hit": true,
+     "fx_at": "front"
+    },
+    {
+     "frame": "idle_a",
+     "ms": 200,
+     "dx": 0,
+     "ease": "in_out"
+    }
+   ]
+  },
+  "cast": {
+   "keys": [
+    {
+     "frame": "cast_a",
+     "ms": 110,
+     "dx": 0,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "cast_b",
+     "ms": 220,
+     "dx": 0,
+     "hit": false,
+     "fx_at": "front"
+    }
+   ]
+  },
+  "victory": {
+   "keys": [
+    {
+     "frame": "victory_a",
+     "ms": 110,
+     "dx": 0,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "victory_b",
+     "ms": 220,
+     "dx": 0,
+     "hit": false,
+     "fx_at": "front"
+    }
+   ]
+  },
+  "guard": {
+   "frames": [
+    "guard"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "hit": {
+   "frames": [
+    "hit"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "weak": {
+   "frames": [
+    "weak"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "ko": {
+   "frames": [
+    "ko"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "glimmer": {
+   "frames": [
+    "glimmer"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "item": {
+   "frames": [
+    "item"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "evade": {
+   "frames": [
+    "evade"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "flee": {
+   "frames": [
+    "flee"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "sleep": {
+   "frames": [
+    "sleep"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "confuse": {
+   "frames": [
+    "confuse"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "cover": {
+   "frames": [
+    "cover"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "step": {
+   "frames": [
+    "step"
+   ],
+   "ms": [
+    0
+   ]
+  }
+ },
+ "palette": [
+  "#0a0605",
+  "#1a1512",
+  "#271913",
+  "#31241e",
+  "#282725",
+  "#393938",
+  "#64594f",
+  "#78746c",
+  "#ada293",
+  "#b3c8cd",
+  "#fdfcf9",
+  "#2e1514",
+  "#491417",
+  "#5c271e",
+  "#741b24",
+  "#882527",
+  "#a22a2d",
+  "#c43934",
+  "#ce3631",
+  "#d64c36",
+  "#372419",
+  "#452a18",
+  "#483326",
+  "#553823",
+  "#684327",
+  "#644835",
+  "#6a4c24",
+  "#6b4d31",
+  "#774927",
+  "#785843",
+  "#945d31",
+  "#87634a",
+  "#976230",
+  "#966e51",
+  "#cd6c45",
+  "#a98a35",
+  "#b08969",
+  "#af8c64",
+  "#c88a3c",
+  "#bc9475",
+  "#d29e68",
+  "#da9c62",
+  "#caa585",
+  "#ea9d34",
+  "#d7b393",
+  "#eac069",
+  "#f1d1aa",
+  "#f2e5d2",
+  "#f7d961",
+  "#fde350",
+  "#205ca3"
+ ],
+ "facing": "left",
+ "target_height": 64
+}

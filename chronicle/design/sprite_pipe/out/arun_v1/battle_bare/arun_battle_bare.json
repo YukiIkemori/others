@@ -1,0 +1,309 @@
+{
+ "character": "arun",
+ "set": "battle_bare",
+ "image": "arun_battle_bare.png",
+ "cell": [
+  81,
+  75
+ ],
+ "anchor": [
+  42,
+  66
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "bare_idle": {
+   "x": 0,
+   "y": 0,
+   "w": 81,
+   "h": 75,
+   "anchor": [
+    42,
+    66
+   ],
+   "points": {
+    "head": [
+     40,
+     4
+    ],
+    "center": [
+     43,
+     37
+    ],
+    "front": [
+     19,
+     41
+    ],
+    "grip": [
+     28,
+     44
+    ],
+    "tip": [
+     8,
+     62
+    ]
+   }
+  },
+  "bare_windup": {
+   "x": 81,
+   "y": 0,
+   "w": 81,
+   "h": 75,
+   "anchor": [
+    42,
+    66
+   ],
+   "points": {
+    "head": [
+     34,
+     9
+    ],
+    "center": [
+     42,
+     40
+    ],
+    "front": [
+     16,
+     69
+    ],
+    "grip": [
+     29,
+     23
+    ],
+    "tip": [
+     54,
+     58
+    ]
+   }
+  },
+  "bare_slash": {
+   "x": 162,
+   "y": 0,
+   "w": 81,
+   "h": 75,
+   "anchor": [
+    42,
+    66
+   ],
+   "points": {
+    "head": [
+     35,
+     2
+    ],
+    "center": [
+     44,
+     33
+    ],
+    "front": [
+     16,
+     39
+    ],
+    "grip": [
+     55,
+     19
+    ],
+    "tip": [
+     76,
+     71
+    ]
+   }
+  },
+  "bare_thrust": {
+   "x": 243,
+   "y": 0,
+   "w": 81,
+   "h": 75,
+   "anchor": [
+    42,
+    66
+   ],
+   "points": {
+    "head": [
+     31,
+     3
+    ],
+    "center": [
+     37,
+     34
+    ],
+    "front": [
+     2,
+     25
+    ],
+    "grip": [
+     25,
+     25
+    ],
+    "tip": [
+     -24,
+     29
+    ]
+   }
+  },
+  "bare_cast": {
+   "x": 324,
+   "y": 0,
+   "w": 81,
+   "h": 75,
+   "anchor": [
+    42,
+    66
+   ],
+   "points": {
+    "head": [
+     41,
+     2
+    ],
+    "center": [
+     44,
+     34
+    ],
+    "front": [
+     12,
+     22
+    ],
+    "grip": [
+     57,
+     36
+    ],
+    "tip": [
+     66,
+     52
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#0a0605",
+  "#1a1512",
+  "#271913",
+  "#31241e",
+  "#282725",
+  "#393938",
+  "#64594f",
+  "#78746c",
+  "#ada293",
+  "#b3c8cd",
+  "#fdfcf9",
+  "#2e1514",
+  "#491417",
+  "#5c271e",
+  "#741b24",
+  "#882527",
+  "#a22a2d",
+  "#c43934",
+  "#ce3631",
+  "#d64c36",
+  "#372419",
+  "#452a18",
+  "#483326",
+  "#553823",
+  "#684327",
+  "#644835",
+  "#6a4c24",
+  "#6b4d31",
+  "#774927",
+  "#785843",
+  "#945d31",
+  "#87634a",
+  "#976230",
+  "#966e51",
+  "#cd6c45",
+  "#a98a35",
+  "#b08969",
+  "#af8c64",
+  "#c88a3c",
+  "#bc9475",
+  "#d29e68",
+  "#da9c62",
+  "#caa585",
+  "#ea9d34",
+  "#d7b393",
+  "#eac069",
+  "#f1d1aa",
+  "#f2e5d2",
+  "#f7d961",
+  "#fde350",
+  "#205ca3"
+ ],
+ "facing": "left",
+ "attach": {
+  "bare_idle": {
+   "grip": [
+    9,
+    40
+   ],
+   "tip": [
+    -11,
+    58
+   ],
+   "angle": 138.6,
+   "length": 33,
+   "weapon_px": 162,
+   "fit": 0.901,
+   "unreliable": true
+  },
+  "bare_windup": {
+   "grip": [
+    13,
+    14
+   ],
+   "tip": [
+    38,
+    49
+   ],
+   "angle": 54.1,
+   "length": 51,
+   "weapon_px": 547,
+   "fit": 0.679,
+   "unreliable": true
+  },
+  "bare_slash": {
+   "grip": [
+    39,
+    17
+   ],
+   "tip": [
+    60,
+    69
+   ],
+   "angle": 68.3,
+   "length": 72,
+   "weapon_px": 1949,
+   "fit": 0.216,
+   "unreliable": true
+  },
+  "bare_thrust": {
+   "grip": [
+    23,
+    22
+   ],
+   "tip": [
+    -26,
+    26
+   ],
+   "angle": 175.8,
+   "length": 59,
+   "weapon_px": 376,
+   "fit": 0.857,
+   "unreliable": true
+  },
+  "bare_cast": {
+   "grip": [
+    45,
+    34
+   ],
+   "tip": [
+    54,
+    50
+   ],
+   "angle": 61.5,
+   "length": 22,
+   "weapon_px": 96,
+   "fit": 0.908,
+   "unreliable": true
+  }
+ },
+ "attach_note": "draw a weapon on a bare pose: rotate the weapon image (as drawn on sheet 7, tip to the left) about its grip by (attach.angle - 180) degrees and put its grip on points.grip. Angles in image coords (0 = +x, 90 = +y, 180 = pointing left); positive = clockwise on screen."
+}
