@@ -174,8 +174,8 @@ async function run() {
     section('原画（アルン = hero_m_warrior、設定資料から）');
     const a = res.sheets;
     ok('戦闘・フィールド・顔が画像から', a['btl:hero_m_warrior:sword'].source === 'sprite' && a['field:hero_m_warrior'].source === 'sprite' && a['face:hero_m_warrior'].source === 'sprite');
-    ok('設定資料は剣だけ描かれている: 剣以外は描かれた剣のまま（meta.weaponMismatch）', a['btl:hero_m_warrior:sword'].meta.weaponMismatch === false && a['btl:hero_m_warrior:bow'].meta.weaponMismatch === true);
-    ok('先頭のランタン: 4 方向に芯の位置（原画）', res.lantern.anchor && res.lantern.dirs.length === 4, res.lantern);
+    ok('シートの形（bare＋weapons）: 5 系統とも武器を持ち手に付けて焼く', ['sword', 'greatsword', 'dagger', 'bow', 'staff'].every((w) => a['btl:hero_m_warrior:' + w].meta.weaponDrawn === w && !a['btl:hero_m_warrior:' + w].meta.weaponMismatch), ['sword', 'bow', 'staff'].map((w) => a['btl:hero_m_warrior:' + w].meta));
+    ok('先頭のランタン: 描かれたランタンの芯の位置（原画、3 方向以上。右向きは体の奥で隠れてよい）', res.lantern.anchor && res.lantern.dirs.length >= 3, res.lantern);
     ok('先頭のランタン: 4 方向に芯の位置（仮の絵）', res.lanternRig.anchor && res.lanternRig.dirs.length === 4, res.lanternRig);
     for (const [l, hs] of Object.entries(res.scales)) ok(`${l}: 広さの設定の倍率で高さが変わる（ひろい < ふつう < ちかい）`, hs[0] < hs[1] && hs[1] < hs[2], hs);
 

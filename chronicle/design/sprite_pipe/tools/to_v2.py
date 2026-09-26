@@ -71,6 +71,8 @@ def convert_set(src_json, kind, look, dst, source):
             out[k] = d[k]
     if kind == 'face':
         out['expr'] = expr_map([f['id'] for f in frames])
+    if kind == 'field' and 'directions' in d and any(f['id'].startswith('run_') for f in frames):
+        out['lanternDrawn'] = ['walk', 'run']   # シートの形（シート1・2）は歩き・走りでランタンを左手に持って描かれている
     if kind == 'battle' and 'bare' not in source:
         # 描かれている武器の系統。アルン（設定資料・シート5/6）は剣、仲間は得意武器（pack の meta.weapon）
         out['weapon'] = d.get('weapon') or 'sword'

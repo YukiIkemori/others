@@ -1,113 +1,298 @@
 {
- "look": "hero_m_warrior",
+ "character": "arun",
  "set": "face",
- "source": "out/arun/portrait",
+ "look": "hero_m_warrior",
+ "source": "out/arun_v1/face",
  "cell": [
-  41,
-  41
+  72,
+  84
  ],
  "anchor": [
-  20,
-  40
+  36,
+  81
  ],
  "frames": [
   {
-   "id": "face_normal",
+   "id": "face_neutral",
    "x": 0,
    "y": 0,
-   "w": 41,
-   "h": 41,
+   "w": 72,
+   "h": 84,
    "anchor": [
-    20,
-    40
+    36,
+    81
    ],
    "points": {
-    "bbox": [
-     8,
-     14,
-     24,
-     27
-    ]
-   }
-  },
-  {
-   "id": "face_smile",
-   "x": 41,
-   "y": 0,
-   "w": 41,
-   "h": 41,
-   "anchor": [
-    20,
-    40
-   ],
-   "points": {
-    "bbox": [
-     8,
-     13,
-     25,
-     28
+    "head": [
+     36,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     74
     ]
    }
   },
   {
    "id": "face_serious",
-   "x": 82,
+   "x": 72,
    "y": 0,
-   "w": 41,
-   "h": 41,
+   "w": 72,
+   "h": 84,
    "anchor": [
-    20,
-    40
+    36,
+    81
    ],
    "points": {
-    "bbox": [
-     8,
-     14,
-     24,
-     27
+    "head": [
+     35,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     74
     ]
    }
   },
   {
-   "id": "face_big",
-   "x": 123,
+   "id": "face_smile",
+   "x": 144,
    "y": 0,
-   "w": 41,
-   "h": 41,
+   "w": 72,
+   "h": 84,
    "anchor": [
-    20,
-    40
+    36,
+    81
    ],
    "points": {
-    "bbox": [
-     1,
-     1,
-     39,
-     40
+    "head": [
+     35,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  {
+   "id": "face_laugh",
+   "x": 216,
+   "y": 0,
+   "w": 72,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     35,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  {
+   "id": "face_surprise",
+   "x": 0,
+   "y": 84,
+   "w": 72,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     34,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  {
+   "id": "face_sad",
+   "x": 72,
+   "y": 84,
+   "w": 72,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     34,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  {
+   "id": "face_angry",
+   "x": 144,
+   "y": 84,
+   "w": 72,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     34,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  {
+   "id": "face_tired",
+   "x": 216,
+   "y": 84,
+   "w": 72,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     34,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     74
     ]
    }
   }
  ],
  "poses": {
-  "face_normal": [
+  "face_neutral": [
    0
   ],
-  "face_smile": [
+  "face_serious": [
    1
   ],
-  "face_serious": [
+  "face_smile": [
    2
   ],
-  "face_big": [
+  "face_laugh": [
    3
+  ],
+  "face_surprise": [
+   4
+  ],
+  "face_sad": [
+   5
+  ],
+  "face_angry": [
+   6
+  ],
+  "face_tired": [
+   7
   ]
  },
  "fps": {},
+ "anims": {},
+ "facing": "slightly right",
+ "target_height": 80,
+ "palette": [
+  "#070406",
+  "#15090b",
+  "#181415",
+  "#281716",
+  "#282322",
+  "#382723",
+  "#280a11",
+  "#370d15",
+  "#351b17",
+  "#471418",
+  "#58171b",
+  "#472b23",
+  "#5d2a23",
+  "#782223",
+  "#872624",
+  "#9d3128",
+  "#b8392d",
+  "#c23d30",
+  "#c64e37",
+  "#4a3228",
+  "#583628",
+  "#663a26",
+  "#5b4333",
+  "#684534",
+  "#77452b",
+  "#685445",
+  "#79523c",
+  "#855c42",
+  "#945535",
+  "#95694b",
+  "#a57856",
+  "#cd6d48",
+  "#b08a67",
+  "#b68964",
+  "#b19d89",
+  "#c59a73",
+  "#d79e6f",
+  "#dab38a",
+  "#f0cea3",
+  "#facd97",
+  "#f9ead3"
+ ],
  "expr": {
-  "smile": 1,
   "neutral": 0,
-  "angry": 2,
-  "surprise": 3,
-  "sad": 0
+  "smile": 2,
+  "surprise": 4,
+  "sad": 5,
+  "angry": 6,
+  "laugh": 3,
+  "tired": 7
  }
 }

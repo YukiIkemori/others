@@ -212,7 +212,17 @@
   // ------------------------------------------------------------------ フィールド
   const DIRS = { s: 'down', n: 'up', w: 'left', e: 'right' };
   // シートの形の演技の名前 → §2.5.7 の演技
-  const ACT_OF = { nod: 'act_nod', surprise: 'act_surprise', think: 'act_think', bow: 'act_bow', kneel: 'act_kneel', sit: 'act_sit', point: 'act_call', raise_lantern: 'act_resolve' };
+  const ACT_OF = { nod: 'act_nod', surprise: 'act_surprise', think: 'act_think', bow: 'act_bow', kneel: 'act_kneel', sit: 'act_sit', point: 'act_call', sad: 'act_sad' };
+  /** 描かれたランタンの芯（明るい暖色の画素の中心）→ [x, y]（コマの中）| null */
+  function findLantern(fr) {
+    const c = fr.c, w = c.width, h = c.height, d = c.getContext('2d').getImageData(0, 0, w, h).data;
+    let sx = 0, sy = 0, n = 0;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const q = (y * w + x) * 4;
+      if (d[q + 3] > 127 && d[q] > 215 && d[q + 1] > 150 && d[q + 2] < 150 && d[q] - d[q + 2] > 90) { sx += x; sy += y; n++; }
+    }
+    return n >= 2 ? [Math.round(sx / n), Math.round(sy / n)] : null;
+  }
   SP.field = function (look, o) {
     o = o || {};
     if (!SP.has(look, 'field')) return undefined;
@@ -225,8 +235,10 @@
     for (const [id, fr] of Object.entries(F.by)) by[id] = scaleFrame(fr, k);
     const frames_ = [], poses = {}, fps = {};
     const put = (fr) => { frames_.push({ c: fr.c, ox: fr.ox, oy: fr.oy }); return frames_.length - 1; };
-    const lant = o.lantern ? R.Art.cast.lanternFrame(k) : null;
+    const drawn = F.meta.lanternDrawn || null;   // シートの形: 歩き・走りにランタンが描かれている
+    const lant = o.lantern && !drawn ? R.Art.cast.lanternFrame(k) : null;
     const anchorsL = {};
+    if (drawn) for (const [d, name] of Object.entries(DIRS)) { const f0 = by[`walk_${name}_0`]; const p = f0 && findLantern(f0); if (p) anchorsL[d] = [p[0] - f0.ox, p[1] - f0.oy]; }
     for (const [d, name] of Object.entries(DIRS)) {
       const f0 = by[`walk_${name}_0`], f1 = by[`walk_${name}_1`], f2 = by[`walk_${name}_2`];
       if (!f0) continue;
@@ -239,10 +251,12 @@
     // 演技（南向き）: シートにあればそれ、無ければ立ちのコマのつなぎ
     const s0 = by.walk_down_0;
     if (s0) {
-      const g = R.Art.rig.geo(s0);
+      // 足りない演技はつなぎで: 元のコマはランタンの無い演技の立ち（シート3 のうなずき）、ランタンを掲げるは歩きの立ち
+      const base = (name) => (name === 'raise_lantern' || !by.act_nod ? s0 : by.act_nod);
       for (const name of Object.keys(R.Art.rig.ACTING)) {
         const src = ACT_OF[name] && by[ACT_OF[name]];
-        const list = src ? [src] : R.Art.rig.act(s0, name, g);
+        const b0 = base(name);
+        const list = src ? [src] : R.Art.rig.act(b0, name, R.Art.rig.geo(b0));
         poses[name] = list.map((fr) => put(lant && name === 'raise_lantern' ? withLantern(fr, lant, 'down', anchorsL, 's', -6) : fr));
         fps[name] = R.Art.rig.ACTING_FPS[name] || 4;
       }
@@ -260,7 +274,7 @@
       const ha = src && headAnchor(src, headR);
       if (ha && !frames_[i].anchors) frames_[i].anchors = { head: ha };
     }
-    return { frames: frames_, poses, fps, anchors, w, h, meta: { look, source: 'sprite', skinCheck: 'skip: shared palette', headR, lantern: anchorsL, scale: o.scale || 1.15 } };
+    return { frames: frames_, poses, fps, anchors, w, h, meta: { look, source: 'sprite', skinCheck: 'skip: shared palette', headR, lantern: anchorsL, lanternDrawn: !!drawn, scale: o.scale || 1.15 } };
   };
   /** 手にランタン（原画にランタンが無いうちは焼いた小物を手の位置に重ねる）。手 = 腰の少し上の高さの、体の一番外の列 */
   function withLantern(fr, lant, dir, anchorsL, d, lift) {
