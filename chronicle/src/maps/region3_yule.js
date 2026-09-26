@@ -245,9 +245,9 @@
         { text: '雪かきが追いつかない。\n村の入口が埋まっちまう。' },
       ], { dir: 'left', push: true }),
       // --- the story scene slots (§10.8.0-7): shown only during story_after_clear
-      npc('st_rival', 'rowell', 8, 14, { dir: 'up', cond: 'st_show_rival', fixed: true }),
-      npc('st_fine', 'fine', 10, 14, { dir: 'up', cond: 'st_show_fine', fixed: true }),
-      npc('st_extra', 'scribe', 6, 14, { dir: 'up', cond: 'st_show_extra', fixed: true }),
+      npc('st_rival', 'rowell', 8, 14, { dir: 'up', cond: 'st_show_rival', fixed: true, text: '……。' }),
+      npc('st_fine', 'fine', 10, 14, { dir: 'up', cond: 'st_show_fine', fixed: true, text: '……。' }),
+      npc('st_extra', 'scribe', 6, 14, { dir: 'up', cond: 'st_show_extra', fixed: true, text: '……。' }),
     ],
     signs: [
       sign(23, 27, 'この先、北は集会所。\n南へ行けば、村の出口。'),

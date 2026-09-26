@@ -99,7 +99,7 @@ section('map keys');
     ok(!!DB.encounters.z_r_snow_peak, 'zone z_r_snow_peak exists');
   }
   ok(DB.maps.frost_peak_1.theme === 'ice' && DB.maps.frost_peak_2.theme === 'ice' && DB.maps.frost_peak_3.theme === 'snow', 'themes ice · ice · snow (§10.6.2)');
-  ok(DB.maps.frost_peak_1.bbg === 'ice' && DB.maps.frost_peak_2.bbg === 'ice' && DB.maps.frost_peak_3.bbg === 'snow', 'battle backdrops ice · ice · snow');
+  ok(DB.maps.frost_peak_1.bbg === 'ice' && DB.maps.frost_peak_2.bbg === 'ice' && DB.maps.frost_peak_3.bbg === 'peak', 'battle backdrops ice · ice · peak (§11.2.12, falls back to snow)');
   ok(DB.maps.frost_peak_1.outside === '#' && DB.maps.frost_peak_2.outside === '#' && DB.maps.frost_peak_3.outside === 'r', 'outside # · # · r (§10.6.2-10)');
   ok(DB.maps.frost_peak_1.lvOff == null && DB.maps.frost_peak_2.lvOff === 2 && DB.maps.frost_peak_3.lvOff == null, 'lvOff: 1F none, 2F 2, boss floor none (§10.6.2-9)');
   for (const id of MAPS) {
@@ -323,6 +323,11 @@ section('ice walls and the way up');
   const drag = F3.npcs.find((o) => o.id === 'boss');
   ok(drag && drag.sprite === 'mon:boss_whitedragon' && drag.cond === '!snow_boss', '3F: the visible dragon (mon:boss_whitedragon, !snow_boss)');
   ok(F3.npcs.some((o) => o.id === 'neve' && o.cond === 'snow_boss'), '3F: the calm dragon after the clear');
+  ok(fine && fine.cond === '!snow_boss' && fine.event === 'frost_peak_3_fine', "3F: NPC fine is exactly cond '!snow_boss' (§10.8.0-5), talking runs the scene");
+  // 1F: the fire's flare fires on every way in (the band closes the mouth's neck)
+  const melt = F1.events.filter((e) => e.id === 'frost_peak_1_melt');
+  const rMelt = reach(F1, F1.spawns.entrance, yes, { stopAt: ['frost_peak_1_melt'] });
+  ok(melt.length >= 1 && !rMelt.has('22,20') && !rMelt.has('39,3'), '1F: the melt band cannot be walked round');
   for (const c of F3.chests) ok(adj(reach(F3, F3.spawns.from_prev, S3), c.x, c.y), '3F: chest ' + c.id + ' reachable');
 }
 

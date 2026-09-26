@@ -165,10 +165,13 @@
   E.stargaze_4_fine = {
     meta: { needs: [], gives: ['flag:star_fine'], calls: ['story_fine_star'] },
     run: async (ev) => {
-      if (ev.flag('star_fine') || ev.flag('star_boss')) return;
+      if (ev.flag('star_boss')) return;
       if (has('story_fine_star')) {
+        // the step band (once star_fine) and talking to her afterwards both go to story's script;
+        // it plays the short version when star_fine is already set (§10.9.4)
         await ev.call('story_fine_star');
       } else {
+        if (ev.flag('star_fine')) return;
         // the region's line and the tier ending of §10.9.4 (used until story's script is in)
         const f = ev.npc('fine');
         f.face('player');
@@ -230,14 +233,31 @@
       await ev.caption('その夜は、町の宿で眠った。');
       ev.heal();
       await ev.warp('orbis', 'inn', { fade: false });
-      if (has('story_after_clear')) {
-        await ev.call('story_after_clear');
-      } else {
-        await ev.caption('翌朝――');
-      }
-      await ev.fadeIn(30);
+      if (has('story_after_clear')) await morning(ev);
+      else await ev.caption('翌朝――');
+      if (R.Engine.fadeAlpha > 0) await ev.fadeIn(30);
+      ev.bgm();
     },
   };
+
+  /** story_after_clear on the dark screen: its 「翌朝――」 caption shows on black, then the screen
+   *  comes back before the tier scene plays (the scene itself never fades in). A watcher fades in as
+   *  soon as the screen is dark with no caption stage on it; it does nothing when story fades in itself. */
+  async function morning(ev) {
+    const Eng = R.Engine;
+    let done = false;
+    const call = ev.call('story_after_clear').finally(() => { done = true; });
+    const watch = (async () => {
+      await ev.wait(2);
+      while (!done) {
+        const staged = (Eng.layers || []).some((l) => l && l.isStage);
+        if (!staged && Eng.fadeAlpha > 0 && !Eng._fade) { await ev.fadeIn(30); return; }
+        await ev.wait(1);
+      }
+    })();
+    await call;
+    await watch;
+  }
 
   // ------------------------------------------------------------ 観測台の大望遠鏡
   E.stargaze_4_telescope = {

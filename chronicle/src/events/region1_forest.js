@@ -11,7 +11,7 @@
 //   verda_maze_2_boss      #6 ダストウィング (tr_b_moth) → forest_mid
 //   verda_maze_2_stone_b   #7 歌の石 3; when the third verse is joined the vines untangle → obj_forest_3
 //   verda_maze_2_vine      the つるの壁 (examine while closed)
-//   verda_maze_twist       trails that end in mist move the party (「森が道を変える」), until the clear
+//   verda_maze_1_twist / verda_maze_2_twist   trails that end in mist move the party (「森が道を変える」), until the clear
 //   elder_tree_2_fine      #9 the girl in grey → the story's story_fine_forest (once forest_fine)
 //   elder_tree_2_boss      #9–#10 根食らい (tr_b_rooteater) → the song → エルム → ev.clearRegion('r_forest')
 //                          → a night at the inn in fern → story_after_clear (§10.8.0-3)
@@ -202,12 +202,12 @@
 
   // ------------------------------------------------------------ the twisting paths of the maze (until the clear)
   // A step event at the end of a trail; the destination is on the map's event object: {to:{x, y, dir, back}}.
-  E.verda_maze_twist = {
+  const TWIST = {
     meta: { needs: [], gives: [] },
     run: async (ev) => {
       const m = R.Field && R.Field.map;
       const c = ev.ctx || {};
-      const e = m && m.events.find((q) => q.id === 'verda_maze_twist' && q.x === c.x && q.y === c.y);
+      const e = m && m.events.find((q) => /^verda_maze_\d_twist$/.test(q.id) && q.x === c.x && q.y === c.y);
       if (!e || !e.to || ev.cleared(REGION)) return;
       await ev.say('キノコの輪を踏んだとたん、\n足元から白い霧が\nわき上がった……。');
       ev.closeMessage();
@@ -219,6 +219,9 @@
       await ev.say(e.to.back ? '気がつくと、元の道に\n戻されていた……。' : '気がつくと、見覚えのない\n場所に立っていた……。');
     },
   };
+
+  E.verda_maze_1_twist = TWIST;
+  E.verda_maze_2_twist = TWIST;
 
   // ------------------------------------------------------------ 木こりダン
   E.verda_maze_1_dan = {

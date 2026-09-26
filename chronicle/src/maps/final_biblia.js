@@ -25,6 +25,8 @@
   K.fill(g, 1, 2, 46, 40, '#');
   K.fill(g, 2, 3, 44, 34, '.');
   K.put(g, 23, 2, '..');
+  // the alleys beside the two great halls are part of the wall
+  K.fill(g, 2, 4, 1, 10, '#'); K.fill(g, 45, 4, 1, 10, '#');
   // gardens: grass along the walls
   K.fill(g, 2, 15, 1, 12, ',');
   K.fill(g, 45, 15, 1, 12, ',');
@@ -33,16 +35,16 @@
   K.fill(g, 10, 7, 3, 7, '+'); // the carpet from the door to the desk
   K.put(g, 4, 6, ['kkkkk', 'k']);
   K.put(g, 15, 6, ['kkkkk', '    k']);
-  K.put(g, 5, 10, 'tt');
-  K.put(g, 16, 10, 'tt');
+  K.put(g, 5, 10, 'tt'); K.put(g, 8, 10, 'tt');
+  K.put(g, 13, 10, 'tt'); K.put(g, 16, 10, 'tt');
   // the great library
   K.house(g, 27, 4, 18, 10, { floor: '_', doors: [9] });
-  K.put(g, 28, 6, 'kkkkkk');
-  K.put(g, 38, 6, 'kkkkkk');
+  K.put(g, 28, 6, 'kkkkk');
+  K.put(g, 39, 6, 'kkkkk');
   K.put(g, 29, 8, 'kkkk');
   K.put(g, 39, 8, 'kkkk');
-  K.put(g, 29, 10, 'kkkk');
-  K.put(g, 39, 10, 'kkkk');
+  K.put(g, 29, 10, 'kkk');
+  K.put(g, 40, 10, 'kkk');
   K.put(g, 35, 8, 'C');
   // the plaza
   K.fill(g, 17, 17, 14, 9, ',');
@@ -83,12 +85,12 @@
   K.put(g, 36, 37, ['|', '|']);
   K.put(g, 10, 37, ['|']);
   // trees and flowers in the streets
-  K.put(g, 2, 3, 'T'); K.put(g, 45, 3, 'T'); K.put(g, 2, 13, 'T'); K.put(g, 45, 13, 'T');
+  K.put(g, 2, 3, 'T'); K.put(g, 45, 3, 'T');
   K.put(g, 17, 17, 'T'); K.put(g, 30, 17, 'T'); K.put(g, 17, 25, 'T'); K.put(g, 30, 25, 'T');
   K.put(g, 2, 36, 'T'); K.put(g, 45, 36, 'T');
   K.put(g, 27, 36, 'ff'); K.put(g, 13, 36, 'ff');
   // sign posts (the signs below stand on them)
-  K.put(g, 21, 3, 'm'); K.put(g, 13, 15, 'm'); K.put(g, 40, 14, 'm'); K.put(g, 8, 3, 'm');
+  K.put(g, 21, 5, 'm'); K.put(g, 13, 15, 'm'); K.put(g, 40, 14, 'm'); K.put(g, 8, 3, 'm');
 
   // ------------------------------------------------------------ decor
   // wall faces: windows, scroll racks, the portrait of ラザロ, the library's arch windows, signs by the doors
@@ -102,9 +104,9 @@
   K.deco(g, 38, 29, '..w..A..');
   // 記録院 本院: the great desk, lecterns, piles of books, chairs
   K.deco(g, 10, 8, '.D.');
-  K.put(g, 5, 9, 'hh');
+  K.put(g, 5, 9, 'hh'); K.put(g, 8, 9, 'hh'); K.put(g, 13, 9, 'hh');
   K.put(g, 16, 9, 'hh');
-  K.put(g, 5, 11, 'hh');
+  K.put(g, 5, 11, 'hh'); K.put(g, 8, 11, 'hh'); K.put(g, 13, 11, 'hh');
   K.put(g, 16, 11, 'hh');
   K.deco(g, 7, 12, '>');
   K.deco(g, 15, 12, '>');
@@ -113,10 +115,11 @@
   K.deco(g, 8, 8, '=');
   K.deco(g, 14, 10, '=');
   // the library: globe, lectern, reading chairs, piles
-  K.deco(g, 28, 12, 'I');
+  K.deco(g, 28, 7, '&');
+  K.deco(g, 40, 7, '&');
   K.deco(g, 43, 12, 'Q');
-  K.deco(g, 34, 11, '>');
-  K.deco(g, 36, 11, '{');
+  K.deco(g, 33, 12, '>');
+  K.deco(g, 38, 12, '{');
   K.put(g, 30, 12, 'hh');
   K.put(g, 40, 12, 'hh');
   // the inn: rug, chairs, plant
@@ -130,8 +133,13 @@
   K.put(g, 35, 23, 'h h');
   K.put(g, 40, 23, 'h h');
   K.deco(g, 43, 19, 'Z');
+  K.deco(g, 34, 24, 'N'); K.deco(g, 43, 24, 'o'); K.deco(g, 38, 19, 'o');
   // shops
   K.deco(g, 4, 30, 'q');
+  K.deco(g, 6, 32, 'rr');
+  K.deco(g, 17, 32, 'rr'); K.deco(g, 22, 32, 'RR');
+  K.deco(g, 41, 32, '&'); K.deco(g, 40, 33, 'r');
+  K.deco(g, 35, 30, 'A');
   K.deco(g, 10, 33, 'v');
   K.deco(g, 25, 30, 'U');
   K.deco(g, 20, 33, 'Z');
@@ -158,6 +166,8 @@
   K.deco(g, 27, 17, '3');
   K.deco(g, 20, 25, '3');
   K.deco(g, 27, 25, '3');
+  K.deco(g, 8, 7, '{'); K.deco(g, 14, 7, '{'); K.deco(g, 17, 8, '=');
+  K.deco(g, 35, 11, 'rr'); K.deco(g, 35, 12, 'rr'); K.deco(g, 31, 9, '='); K.deco(g, 41, 9, '='); K.deco(g, 30, 11, '='); K.deco(g, 42, 11, '='); K.deco(g, 33, 10, '&'); K.deco(g, 38, 10, '&'); K.deco(g, 11, 10, '=');
   K.deco(g, 13, 16, '=');
   K.deco(g, 31, 22, '=');
   K.deco(g, 25, 27, '=');
@@ -260,7 +270,7 @@
       K.talk('cat', 'cat', 27, 32, 'ニャーオ。\n猫は、何も忘れていない\nような顔をしている。', { move: 'wander', push: true }),
     ],
     signs: [
-      K.sign(21, 3, '書の都ビブリア\n記録院の本院のある町'),
+      K.sign(21, 5, '書の都ビブリア\n記録院の本院のある町'),
       K.sign(13, 15, '記録院　本院'),
       K.sign(40, 14, 'ビブリア大図書館'),
       K.sign(8, 3, '北東の丘の上に、\n白の大書庫がある。'),

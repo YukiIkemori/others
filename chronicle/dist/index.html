@@ -46792,6 +46792,8 @@ try{
   K.fill(g, 1, 2, 46, 40, '#');
   K.fill(g, 2, 3, 44, 34, '.');
   K.put(g, 23, 2, '..');
+  // the alleys beside the two great halls are part of the wall
+  K.fill(g, 2, 4, 1, 10, '#'); K.fill(g, 45, 4, 1, 10, '#');
   // gardens: grass along the walls
   K.fill(g, 2, 15, 1, 12, ',');
   K.fill(g, 45, 15, 1, 12, ',');
@@ -46800,16 +46802,16 @@ try{
   K.fill(g, 10, 7, 3, 7, '+'); // the carpet from the door to the desk
   K.put(g, 4, 6, ['kkkkk', 'k']);
   K.put(g, 15, 6, ['kkkkk', '    k']);
-  K.put(g, 5, 10, 'tt');
-  K.put(g, 16, 10, 'tt');
+  K.put(g, 5, 10, 'tt'); K.put(g, 8, 10, 'tt');
+  K.put(g, 13, 10, 'tt'); K.put(g, 16, 10, 'tt');
   // the great library
   K.house(g, 27, 4, 18, 10, { floor: '_', doors: [9] });
-  K.put(g, 28, 6, 'kkkkkk');
-  K.put(g, 38, 6, 'kkkkkk');
+  K.put(g, 28, 6, 'kkkkk');
+  K.put(g, 39, 6, 'kkkkk');
   K.put(g, 29, 8, 'kkkk');
   K.put(g, 39, 8, 'kkkk');
-  K.put(g, 29, 10, 'kkkk');
-  K.put(g, 39, 10, 'kkkk');
+  K.put(g, 29, 10, 'kkk');
+  K.put(g, 40, 10, 'kkk');
   K.put(g, 35, 8, 'C');
   // the plaza
   K.fill(g, 17, 17, 14, 9, ',');
@@ -46850,12 +46852,12 @@ try{
   K.put(g, 36, 37, ['|', '|']);
   K.put(g, 10, 37, ['|']);
   // trees and flowers in the streets
-  K.put(g, 2, 3, 'T'); K.put(g, 45, 3, 'T'); K.put(g, 2, 13, 'T'); K.put(g, 45, 13, 'T');
+  K.put(g, 2, 3, 'T'); K.put(g, 45, 3, 'T');
   K.put(g, 17, 17, 'T'); K.put(g, 30, 17, 'T'); K.put(g, 17, 25, 'T'); K.put(g, 30, 25, 'T');
   K.put(g, 2, 36, 'T'); K.put(g, 45, 36, 'T');
   K.put(g, 27, 36, 'ff'); K.put(g, 13, 36, 'ff');
   // sign posts (the signs below stand on them)
-  K.put(g, 21, 3, 'm'); K.put(g, 13, 15, 'm'); K.put(g, 40, 14, 'm'); K.put(g, 8, 3, 'm');
+  K.put(g, 21, 5, 'm'); K.put(g, 13, 15, 'm'); K.put(g, 40, 14, 'm'); K.put(g, 8, 3, 'm');
 
   // ------------------------------------------------------------ decor
   // wall faces: windows, scroll racks, the portrait of ラザロ, the library's arch windows, signs by the doors
@@ -46869,9 +46871,9 @@ try{
   K.deco(g, 38, 29, '..w..A..');
   // 記録院 本院: the great desk, lecterns, piles of books, chairs
   K.deco(g, 10, 8, '.D.');
-  K.put(g, 5, 9, 'hh');
+  K.put(g, 5, 9, 'hh'); K.put(g, 8, 9, 'hh'); K.put(g, 13, 9, 'hh');
   K.put(g, 16, 9, 'hh');
-  K.put(g, 5, 11, 'hh');
+  K.put(g, 5, 11, 'hh'); K.put(g, 8, 11, 'hh'); K.put(g, 13, 11, 'hh');
   K.put(g, 16, 11, 'hh');
   K.deco(g, 7, 12, '>');
   K.deco(g, 15, 12, '>');
@@ -46880,10 +46882,11 @@ try{
   K.deco(g, 8, 8, '=');
   K.deco(g, 14, 10, '=');
   // the library: globe, lectern, reading chairs, piles
-  K.deco(g, 28, 12, 'I');
+  K.deco(g, 28, 7, '&');
+  K.deco(g, 40, 7, '&');
   K.deco(g, 43, 12, 'Q');
-  K.deco(g, 34, 11, '>');
-  K.deco(g, 36, 11, '{');
+  K.deco(g, 33, 12, '>');
+  K.deco(g, 38, 12, '{');
   K.put(g, 30, 12, 'hh');
   K.put(g, 40, 12, 'hh');
   // the inn: rug, chairs, plant
@@ -46897,8 +46900,13 @@ try{
   K.put(g, 35, 23, 'h h');
   K.put(g, 40, 23, 'h h');
   K.deco(g, 43, 19, 'Z');
+  K.deco(g, 34, 24, 'N'); K.deco(g, 43, 24, 'o'); K.deco(g, 38, 19, 'o');
   // shops
   K.deco(g, 4, 30, 'q');
+  K.deco(g, 6, 32, 'rr');
+  K.deco(g, 17, 32, 'rr'); K.deco(g, 22, 32, 'RR');
+  K.deco(g, 41, 32, '&'); K.deco(g, 40, 33, 'r');
+  K.deco(g, 35, 30, 'A');
   K.deco(g, 10, 33, 'v');
   K.deco(g, 25, 30, 'U');
   K.deco(g, 20, 33, 'Z');
@@ -46925,6 +46933,8 @@ try{
   K.deco(g, 27, 17, '3');
   K.deco(g, 20, 25, '3');
   K.deco(g, 27, 25, '3');
+  K.deco(g, 8, 7, '{'); K.deco(g, 14, 7, '{'); K.deco(g, 17, 8, '=');
+  K.deco(g, 35, 11, 'rr'); K.deco(g, 35, 12, 'rr'); K.deco(g, 31, 9, '='); K.deco(g, 41, 9, '='); K.deco(g, 30, 11, '='); K.deco(g, 42, 11, '='); K.deco(g, 33, 10, '&'); K.deco(g, 38, 10, '&'); K.deco(g, 11, 10, '=');
   K.deco(g, 13, 16, '=');
   K.deco(g, 31, 22, '=');
   K.deco(g, 25, 27, '=');
@@ -47027,7 +47037,7 @@ try{
       K.talk('cat', 'cat', 27, 32, 'ニャーオ。\n猫は、何も忘れていない\nような顔をしている。', { move: 'wander', push: true }),
     ],
     signs: [
-      K.sign(21, 3, '書の都ビブリア\n記録院の本院のある町'),
+      K.sign(21, 5, '書の都ビブリア\n記録院の本院のある町'),
       K.sign(13, 15, '記録院　本院'),
       K.sign(40, 14, 'ビブリア大図書館'),
       K.sign(8, 3, '北東の丘の上に、\n白の大書庫がある。'),
@@ -48967,19 +48977,19 @@ try{
     ],
     decor: [
       '............................................',
-      '............................................',
+      '...........~........~........~........~.....',
       '............................................',
       '............l...............................',
       '..............................*.............',
       '............................................',
       '............................................',
-      '............................................',
+      '..............~........~........~...........',
       '............................................',
       '....*.........*.............................',
       '........................l..............l....',
       '............................................',
       '...........................*................',
-      '..........l.................................',
+      '..........l......~..........................',
       '.................................*..........',
       '...................*....l...................',
       '............................................',
@@ -48988,18 +48998,18 @@ try{
       '...............*............................',
       '............................l...........*...',
       '.......................*....................',
-      '...l..............................l.........',
+      '...l....~.........................l.........',
       '...................l....*...................',
       '............................................',
       '............................................',
       '.........*..................................',
-      '............................................',
+      '..................~........~................',
       '.......................................l....',
       '................l...........*...............',
       '............................................',
       '............................................',
       '............................................',
-      '............................................',
+      '............~........~........~.............',
       '................l................*..........',
       '..........l..........*.....l................',
       '............................................',
@@ -49072,31 +49082,31 @@ try{
     ],
     decor: [
       '............................................',
+      '....................~.......................',
       '............................................',
       '............................................',
-      '............................................',
-      '...................*.....l..................',
+      '........~..........*.....l.........~........',
       '..............................l.............',
       '............l...............................',
       '............................................',
       '...................................*........',
       '........*...................................',
       '............................................',
-      '............................................',
+      '...............................~........~...',
       '.....................................l......',
       '..................................*.........',
       '............................................',
       '.....*................................*.....',
-      '..........................l.................',
+      '..............~...........l.................',
       '......*..l..................................',
-      '....................*.......................',
+      '....................*...............~.......',
       '............................................',
       '............................................',
       '......................l.....................',
       '.....................................*......',
-      '............................................',
+      '...................~........~...............',
       '.....*......................................',
-      '................l...........l...............',
+      '................l...........l...~...........',
       '............................................',
       '............................................',
       '......l.....*...................*...........',
@@ -49151,10 +49161,10 @@ try{
 // Layout (54×44): a clearing inside a log palisade; the only gate is in the south (exit → world
 // spawn `fern`). A stream comes in from the north and bends east; two rope bridges and a third
 // one over the bend link the west bank (the village proper) with the east bank.
-//   west, north row : 宿屋「木漏れ日亭」 · 酒場「切り株亭」, the plaza with the well below them
+//   west, north row : 宿屋「木漏れ日亭」 · 酒場「切り株亭」, the plaza with the well below them, the herb garden
 //   west, middle row: 道具屋 · 武器と防具の店 · the vegetable garden
 //   west, south row : ダンの家 · 木こり小屋 · the woodshed, the gate
-//   east bank       : the song stone (千年樹の歌の碑) · 長老ハンナの家 · the grove
+//   east bank       : the song stone (千年樹の歌の碑) · 長老ハンナの家 · the grove · the sheep pen
 //   south-east      : リタの家 on a wooden deck among great trunks (the tree-house)
 //
 // Contracts (§10.8.0-7/8, §10.6.1, §10.9.5, §10.13.10):
@@ -49191,14 +49201,14 @@ try{
       'TT#,:::::::::::::::::::::::::::::~~~,,BBBBBBBBBBTTT#TT',
       'TT#,:::::::::::::::::::::::::::::~~~,,Bk_k___bbB,TT#TT',
       'TT#,,,,,,,,,,,::::::::::::::::,,,~~~,,B______bbBTTT#TT',
-      'TT#,,,,,,,,,,T::::::::::::::::,,,~~~,,B____t___B,,,#TT',
-      'TT#,,,,,,,,,,,::::::::W:::::::,,,~~~,,B________B,,,#TT',
-      'TT#,,,,,,,,,,,::::::::::::::::,,,~~~,,BBBBDBBBBB,,,#TT',
-      'TT#T,,,,,,,,,,:::::::::::::::::::~~~,,,,,,:,,,,,,,,#TT',
-      'TT#T,,,,,,,,T,,,,,,,,,,,,,::,::::~~~,,,,,,:,,,,,,,,#TT',
-      'TT#,BBBBBBBB,,BBBBBBBBBBBB::,,,::===:::::::::,,,,,,#TT',
-      'TT#,BBBBBBBB,,BBBBBBBBBBBB:TFFFFF~~~,,,,,,,,:,,,TTT#TT',
-      'TT#,B_____uB,,B__________B::F,,,F~~~TTT,,,,,:,,,,TT#TT',
+      'TT#,FFFFFFFF,T::::::::::::::::,,,~~~,,B____t___B,,,#TT',
+      'TT#,F,,,,,,F,,::::::::W:::::::,,,~~~,,B________B,,,#TT',
+      'TT#,F,,,,,,F,,::::::::::::::::,,,~~~,,BBBBDBBBBB,,,#TT',
+      'TT#TFFF,FFFF,,:::::::::::::::::::~~~,,,,,,:,,,,,,,,#TT',
+      'TT#T,,,,,,,,T,,,,,,,,,,,,,::,::::~~~,,,,,,:,,,FFFFF#TT',
+      'TT#,BBBBBBBB,,BBBBBBBBBBBB::,,,::===:::::::::,F,,,F#TT',
+      'TT#,BBBBBBBB,,BBBBBBBBBBBB:TFFFFF~~~,,,,,,,,:,F,,,F#TT',
+      'TT#,B_____uB,,B__________B::F,,,F~~~TTT,,,,,:,FF,FF#TT',
       'TT#,Bccc___BT,Bccc____cccB::F,,,F~~~TT,,,,,,:,,,,,,#TT',
       'TT#,B______B,,B__________B::FF,FF~~~,,,,,,,,:,,,,,,#TT',
       'TT#TB______B,TB__________B::,,,,,~~~~~~~~~~~|~~~~~~~~~',
@@ -49227,40 +49237,40 @@ try{
       '......................................................',
       '......................................................',
       '........................................11.11.........',
-      '.....w.$.k..w.$....HH...w...p...........1...1.........',
+      '.....w.$.k..w.$....HH...w...p.........f.1...1.........',
       '..............y...........00..........................',
       '..........................00.........*................',
       '......&&................n....n.................*......',
-      '......&&....n.n......n................................',
+      '......&&....n.n......n.......................e.f......',
       '..............Z....N.........Z........................',
       '......................................................',
-      '............7..........j...............$.w..w.$.......',
+      '...h........7..........j...............$.w..w.$.......',
       '......................................................',
       '..............1........e....1...............n.........',
       '........................................&&....!.......',
-      '...............3.............................Z........',
-      '.................................................*....',
+      '.....f1f.f1....3.............................Z........',
+      '.....1f1.1f......................................*....',
       '..............1......e......1................h........',
-      '.....h...h.....h....f.................h...............',
-      '......................................................',
-      '.....$.w.$.....x..w..w..m.............................',
+      '.....h...h.....h....f...............3.h...............',
+      '...............................................s.M....',
+      '.....$.w.$.....x..w..w..m.......................s.....',
       '...................XY........1M1......................',
       '.............................111......................',
-      '.......&..q.......&&..................................',
+      '.......&..q.......&&.....3............................',
       '.......&..........&&..O...............................',
       '......................................................',
       '.........4.......5...6................................',
       '......................................................',
-      '...*...................%.............~................',
+      '...*..................f%.............~................',
       '.............#..........#.............Z.w..$..w...~...',
-      '.....w..$..w...x..w..w.$......................?.......',
+      '.....w..$..w...x..w..w.$.e....................?.......',
       '...........K...F...........................n.....Z....',
       '.........n.......LLLL......#..........1..&&...........',
       '......&&...?.....nn.n............E......w.w...w$U.....',
       '.................................................f....',
-      '......................................M.........e.....',
-      '............(...........%...............Z..f.(....~...',
-      '.....................................~.f.......1......',
+      '............................3.........M.........e.....',
+      '............(...........%......#........Z..f.(....~...',
+      '....h........f................%...h..~.f.......1......',
       '......................................................',
       '............................].........................',
       '......................................................',
@@ -49304,7 +49314,7 @@ try{
         { text: '森の中は、道が勝手に\n動くんだって。\n……こわいよね。' },
       ], { move: 'wander', push: true }),
       K.talk('dog', 'dog', 21, 18, 'ワン！　ワンワン！', { move: 'wander', push: true }),
-      K.talk('herbalist', 'old_man', 31, 16, [
+      K.talk('herbalist', 'old_man', 8, 17, [
         { cond: C.post, text: '光るキノコの薬で、\n村の年寄りも元気じゃ。\nわしも、まだまだ現役よ。' },
         { cond: C.clear, text: '千年樹の根元に生える\n光るキノコは、よい薬に\nなるんじゃ。\f森の主さまの、\nおすそ分けじゃな。' },
         { text: '森のキノコは、よい薬になる。\nじゃが、今は森の奥へ\n入れんでな……。' },
@@ -49395,6 +49405,8 @@ try{
       // --- the east bank: the song stone, 長老ハンナ
       K.npc('hanna', 'old_woman', 44, 15, { event: 'fern_hanna', cond: HANNA_HOME, dir: 'down', fixed: true }),
       K.talk('hanna_cat', 'cat', 46, 16, 'ニャア。', { move: 'wander', push: true }),
+      K.talk('sheep_a', 'sheep', 48, 21, 'メエエ……。', { move: 'wander', push: true }),
+      K.talk('sheep_b', 'sheep', 49, 20, 'メエ。', { move: 'wander', push: true }),
       K.talk('stone_keeper', 'elder', 44, 7, [
         { cond: C.post, text: '夏至の祭りの夜には、\n村じゅうで歌うのじゃ。\n千年樹まで届くようにな。' },
         { cond: C.clear, text: 'この碑の文字を、\n彫り直しておるのじゃ。\n二度と忘れぬようにな。' },
@@ -49439,7 +49451,7 @@ try{
 //   narrows on the way north (verda_maze_1_dan; he blocks the one-cell gap until spoken to).
 //   The way up is at the top right (→ verda_maze_2 from_prev). p_rare in the dead end west of
 //   the stone's glade (§8.12.4: the floor before the boss floor). Two trails end in mist that moves the party
-//   elsewhere (verda_maze_twist: 「森が道を変える」; it stops once the region is cleared); so does the obvious
+//   elsewhere (verda_maze_1_twist: 「森が道を変える」; it stops once the region is cleared); so does the obvious
 //   way north from the east glade: the true way winds through the west glades.
 // verda_maze_2 (48×42) — 歌の石 2 (stone_a) in the first big glade; the moth's glade in the
 //   middle (休息の灯 in a nook on the way, the band verda_maze_2_boss at its mouth; ダストウィング
@@ -49569,9 +49581,9 @@ try{
     events: [
       K.exam('verda_maze_1_stone', 21, 19),
       // the forest twists its paths (§10.8.2 事件): two trails end in mist that moves the party (until the clear)
-      ...K.band('verda_maze_twist', 19, 2, 20, 2, { cond: K.C.before, to: { x: 23, y: 35, dir: 'up', back: true } }),
-      ...K.band('verda_maze_twist', 33, 15, 34, 15, { cond: K.C.before, to: { x: 6, y: 32, dir: 'right' } }),
-      ...K.band('verda_maze_twist', 41, 17, 42, 17, { cond: K.C.before, to: { x: 24, y: 35, dir: 'up', back: true } }),
+      ...K.band('verda_maze_1_twist', 19, 2, 20, 2, { cond: K.C.before, to: { x: 23, y: 35, dir: 'up', back: true } }),
+      ...K.band('verda_maze_1_twist', 33, 15, 34, 15, { cond: K.C.before, to: { x: 6, y: 32, dir: 'right' } }),
+      ...K.band('verda_maze_1_twist', 41, 17, 42, 17, { cond: K.C.before, to: { x: 24, y: 35, dir: 'up', back: true } }),
     ],
     signs: [
       K.sign(22, 32, '道しるべの矢が、くるくると\n回っている……。\nどちらへ行けばいいのだろう。'),
@@ -49702,8 +49714,8 @@ try{
       K.exam('verda_maze_2_vine', 35, 2, { cond: { var: 'forest_verses', lt: 3 } }),
       K.exam('verda_maze_2_vine', 35, 3, { cond: { var: 'forest_verses', lt: 3 } }),
       ...K.band('verda_maze_2_boss', 24, 16, 25, 16, { once: 'verda_maze_2_boss', cond: '!forest_mid' }),
-      ...K.band('verda_maze_twist', 40, 38, 41, 38, { cond: K.C.before, to: { x: 8, y: 37, dir: 'up', back: true } }),
-      ...K.band('verda_maze_twist', 11, 38, 12, 38, { cond: K.C.before, to: { x: 43, y: 26, dir: 'down' } }),
+      ...K.band('verda_maze_2_twist', 40, 38, 41, 38, { cond: K.C.before, to: { x: 8, y: 37, dir: 'up', back: true } }),
+      ...K.band('verda_maze_2_twist', 11, 38, 12, 38, { cond: K.C.before, to: { x: 43, y: 26, dir: 'down' } }),
     ],
     signs: [
       // 語り部の書き付け (§10.6.4): a leaf of an old storyteller's notes, pinned to a post
@@ -50726,7 +50738,7 @@ try{
     ],
     events: [
       ...[[22, 20], [23, 20], [22, 21], [23, 21]].map(([x, y]) => exam('frost_peak_1_ice', x, y, { cond: { notItem: 'k_winter_flame' } })),
-      ...band('frost_peak_1_melt', 21, 29, 24, 29, { once: 'frost_peak_1_melt', cond: FLAME }),
+      ...band('frost_peak_1_melt', 22, 32, 23, 32, { once: 'frost_peak_1_melt', cond: FLAME }), // the mouth's neck: no way round
     ],
     npcs: [
       npc('idol', 'obj:r3_dragon_idol', 23, 14, { fixed: true,
@@ -50852,6 +50864,7 @@ try{
   // ------------------------------------------------------------ 3F (the summit; boss floor: no lvOff, §10.6.2-9)
   const f3 = Object.assign(base('白竜の峰　頂', 'snow'), {
     outside: 'r',
+    bbg: 'peak', // §11.2.12: the summit's own backdrop (above the clouds; falls back to `snow`)
     weather: [{ cond: { notCleared: 'r_snow' }, kind: 'blizzard' }, { kind: 'snow' }], // request to field A4 (see yule)
     // @rows frost_peak_3
     rows: [
@@ -50939,7 +50952,7 @@ try{
     ],
     npcs: [
       npc('rest', 'obj:lantern', 26, 14, { event: 'common_rest', fixed: true }),
-      npc('fine', 'fine', 23, 12, { event: 'frost_peak_3_fine', dir: 'down', cond: ['!snow_boss', '!snow_fine'], fixed: true }),
+      npc('fine', 'fine', 23, 12, { event: 'frost_peak_3_fine', dir: 'down', cond: '!snow_boss', fixed: true }), // §10.8.0-5
       npc('boss', 'mon:boss_whitedragon', 23, 3, { event: 'frost_peak_3_boss', cond: '!snow_boss', fixed: true }),
       npc('neve', 'mon:boss_whitedragon', 23, 3, { event: 'frost_peak_3_neve', cond: 'snow_boss', fixed: true }),
     ],
@@ -51226,9 +51239,9 @@ try{
         { text: '雪かきが追いつかない。\n村の入口が埋まっちまう。' },
       ], { dir: 'left', push: true }),
       // --- the story scene slots (§10.8.0-7): shown only during story_after_clear
-      npc('st_rival', 'rowell', 8, 14, { dir: 'up', cond: 'st_show_rival', fixed: true }),
-      npc('st_fine', 'fine', 10, 14, { dir: 'up', cond: 'st_show_fine', fixed: true }),
-      npc('st_extra', 'scribe', 6, 14, { dir: 'up', cond: 'st_show_extra', fixed: true }),
+      npc('st_rival', 'rowell', 8, 14, { dir: 'up', cond: 'st_show_rival', fixed: true, text: '……。' }),
+      npc('st_fine', 'fine', 10, 14, { dir: 'up', cond: 'st_show_fine', fixed: true, text: '……。' }),
+      npc('st_extra', 'scribe', 6, 14, { dir: 'up', cond: 'st_show_extra', fixed: true, text: '……。' }),
     ],
     signs: [
       sign(23, 27, 'この先、北は集会所。\n南へ行けば、村の出口。'),
@@ -55423,7 +55436,7 @@ try{
     ],
     decor: [
       '........................................................',
-      '........................................................',
+      '..........B.......B.........B........B.......B..........',
       '........................................................',
       '........................................................',
       '.....w...i...w.....H.H.H.i.w..H.....[..w.p.c.w..[.......',
@@ -55437,32 +55450,32 @@ try{
       '...31.......71.1........j....1.13...........]......1....',
       '........................................................',
       '........................................................',
-      '.....3..........3....3..........3...........3.......3...',
+      '.....3..1...1...3....3..h..h....3.....1..h..3...1...3...',
       '........................................................',
-      '.....}.}.w.w.}.}.....1.3....3.1.....[.w.[.W.[.w.[.......',
+      '.....}.}.w.w.}.}...:.1.3....3.1.:...[.w.[.W.[.w.[.......',
       '.....................................{......{....{......',
-      '..........RR........e..........e.......{.RRRRR.I........',
+      '..........RR........e..f...f...e.......{.RRRRR.I........',
       '...h......RR............JJJ..............RR|RR......h...',
       '..........RR.{.....1....JJJ.....1.....D..RRRRR..........',
       '..........RR............JJJ.........I.........DI:.......',
-      '..........RR........e..........e........................',
+      '..........RR........e..f...f...e........................',
       '..........RR>{..Z.......................&D..{...........',
       '..........RR.........1.3....3.1.........................',
       '........................................................',
-      '.....1......]...1..................1........].....1.....',
+      '.....1.f....].h.1.....f......f.....1..h.....]...f.1.....',
       '........................................................',
-      '...3................3............3..................3...',
+      '...3..Uq..E...99.q..3............3..99.U....u...E...3...',
       '........................................................',
       '......$.w.$....x.w...x.w..e..e..}.w.}....}}.....p.w.....',
       '..............X.......Y...........Q.............y.......',
-      '...h..............................................V.h...',
-      '..........Z.......................................I.....',
+      '...h....................2....2....................V.h...',
+      '..........Z.............2....2....................I.....',
       '.................&&.......1..1.I..&&....{&..............',
       '........&......n.....n..................&...............',
-      '................................................&.......',
+      '........................h....h..................&.......',
       '........................................................',
       '......4.........5...6.............<.....]...............',
-      '...3......3...........3........3......3......3......3...',
+      '...3....f.3..h....f...3........3...f..3..h...3...f..3...',
       '........................................................',
       '........................................................',
       '........................................................',
@@ -56063,7 +56076,7 @@ try{
     ],
     npcs: [
       K.npc('rest', 'obj:lantern', 13, 20, { event: 'common_rest', fixed: true }),
-      K.npc('fine', 'fine', 16, 21, { dir: 'down', event: 'stargaze_4_fine', cond: ['!star_fine', '!star_boss'], fixed: true }),
+      K.npc('fine', 'fine', 16, 21, { dir: 'down', event: 'stargaze_4_fine', cond: '!star_boss', fixed: true }),
       K.npc('boss', 'mon:boss_stareater', 16, 8, { event: 'stargaze_4_boss', cond: '!star_boss', fixed: true }),
       ...SKY.map(([x, y], i) => K.talk('star_' + (i + 1), 'obj:sparkle', x, y, '夜空に、星がまたたいている。', { cond: 'star_boss', fixed: true })),
     ],
@@ -57901,7 +57914,7 @@ try{
 //   verda_maze_2_boss      #6 ダストウィング (tr_b_moth) → forest_mid
 //   verda_maze_2_stone_b   #7 歌の石 3; when the third verse is joined the vines untangle → obj_forest_3
 //   verda_maze_2_vine      the つるの壁 (examine while closed)
-//   verda_maze_twist       trails that end in mist move the party (「森が道を変える」), until the clear
+//   verda_maze_1_twist / verda_maze_2_twist   trails that end in mist move the party (「森が道を変える」), until the clear
 //   elder_tree_2_fine      #9 the girl in grey → the story's story_fine_forest (once forest_fine)
 //   elder_tree_2_boss      #9–#10 根食らい (tr_b_rooteater) → the song → エルム → ev.clearRegion('r_forest')
 //                          → a night at the inn in fern → story_after_clear (§10.8.0-3)
@@ -58092,12 +58105,12 @@ try{
 
   // ------------------------------------------------------------ the twisting paths of the maze (until the clear)
   // A step event at the end of a trail; the destination is on the map's event object: {to:{x, y, dir, back}}.
-  E.verda_maze_twist = {
+  const TWIST = {
     meta: { needs: [], gives: [] },
     run: async (ev) => {
       const m = R.Field && R.Field.map;
       const c = ev.ctx || {};
-      const e = m && m.events.find((q) => q.id === 'verda_maze_twist' && q.x === c.x && q.y === c.y);
+      const e = m && m.events.find((q) => /^verda_maze_\d_twist$/.test(q.id) && q.x === c.x && q.y === c.y);
       if (!e || !e.to || ev.cleared(REGION)) return;
       await ev.say('キノコの輪を踏んだとたん、\n足元から白い霧が\nわき上がった……。');
       ev.closeMessage();
@@ -58109,6 +58122,9 @@ try{
       await ev.say(e.to.back ? '気がつくと、元の道に\n戻されていた……。' : '気がつくと、見覚えのない\n場所に立っていた……。');
     },
   };
+
+  E.verda_maze_1_twist = TWIST;
+  E.verda_maze_2_twist = TWIST;
 
   // ------------------------------------------------------------ 木こりダン
   E.verda_maze_1_dan = {
@@ -58655,24 +58671,26 @@ try{
   };
 
   // ------------------------------------------------------------ #6 フィーネ（台本は story_fine_snow。story 担当）
-  // The script is story's (§10.9.4). While it is missing, the same scene is told here from the
-  // table (the region line, then the tier's closing line and staging) so the game stays whole.
+  // Both the step band (once snow_fine) and the NPC `fine` (cond '!snow_boss', §10.8.0-5) run this.
+  // The script is story's (§10.9.4; it also handles a second talk, when she is met again on the
+  // floor). While it is missing, the same scene is told here from the table so the game stays whole.
   E.frost_peak_3_fine = {
     meta: { needs: ['item:k_winter_flame'], gives: ['flag:snow_fine'], calls: ['story_fine_snow'] },
     run: async (ev) => {
-      if (ev.flag('snow_fine') || ev.flag('snow_boss')) return;
+      if (ev.flag('snow_boss')) return;
       if (has('story_fine_snow')) { await ev.call('story_fine_snow'); ev.setFlag('snow_fine'); return; }
+      const again = ev.flag('snow_fine');
       const f = ev.npc('fine');
       await ev.wait(12);
       f.face('player');
       await ev.wait(16);
-      await ev.say('凍っているのは、竜の体じゃない。\n心のほうよ。');
-      const t = ev.tier();
+      const t = Math.min(7, ev.tier());
+      if (!again) await ev.say('凍っているのは、竜の体じゃない。\n心のほうよ。');
       if (t >= 6) await ev.say('……もう、あまり時間がないの。');
       else if (t >= 3) await ev.say('わたしのことは気にしないで。\n先へ進みなさい。');
       else await ev.say('……気をつけて。');
       ev.closeMessage();
-      if (t >= 3) await ev.caption('フィーネの足元が、\n透けて見えた。');
+      if (t >= 3 && !again) await ev.caption('フィーネの足元が、\n透けて見えた。');
       ev.sfx('magic');
       await ev.flash('#e8ecff', 10);
       f.hide();
@@ -60605,10 +60623,13 @@ try{
   E.stargaze_4_fine = {
     meta: { needs: [], gives: ['flag:star_fine'], calls: ['story_fine_star'] },
     run: async (ev) => {
-      if (ev.flag('star_fine') || ev.flag('star_boss')) return;
+      if (ev.flag('star_boss')) return;
       if (has('story_fine_star')) {
+        // the step band (once star_fine) and talking to her afterwards both go to story's script;
+        // it plays the short version when star_fine is already set (§10.9.4)
         await ev.call('story_fine_star');
       } else {
+        if (ev.flag('star_fine')) return;
         // the region's line and the tier ending of §10.9.4 (used until story's script is in)
         const f = ev.npc('fine');
         f.face('player');
@@ -60670,14 +60691,31 @@ try{
       await ev.caption('その夜は、町の宿で眠った。');
       ev.heal();
       await ev.warp('orbis', 'inn', { fade: false });
-      if (has('story_after_clear')) {
-        await ev.call('story_after_clear');
-      } else {
-        await ev.caption('翌朝――');
-      }
-      await ev.fadeIn(30);
+      if (has('story_after_clear')) await morning(ev);
+      else await ev.caption('翌朝――');
+      if (R.Engine.fadeAlpha > 0) await ev.fadeIn(30);
+      ev.bgm();
     },
   };
+
+  /** story_after_clear on the dark screen: its 「翌朝――」 caption shows on black, then the screen
+   *  comes back before the tier scene plays (the scene itself never fades in). A watcher fades in as
+   *  soon as the screen is dark with no caption stage on it; it does nothing when story fades in itself. */
+  async function morning(ev) {
+    const Eng = R.Engine;
+    let done = false;
+    const call = ev.call('story_after_clear').finally(() => { done = true; });
+    const watch = (async () => {
+      await ev.wait(2);
+      while (!done) {
+        const staged = (Eng.layers || []).some((l) => l && l.isStage);
+        if (!staged && Eng.fadeAlpha > 0 && !Eng._fade) { await ev.fadeIn(30); return; }
+        await ev.wait(1);
+      }
+    })();
+    await call;
+    await watch;
+  }
 
   // ------------------------------------------------------------ 観測台の大望遠鏡
   E.stargaze_4_telescope = {
@@ -61187,8 +61225,12 @@ try{
         await elder.walk('L');
         ev.player.face('right');
       }
-      await ev.say('ベルナさんは、ひと月ほど前から\nあの調子でな……。\nおまえのことだけは、最後まで\n覚えておったんじゃが。');
-      await ev.say('今は、自分の家で\n休んでおるよ。……顔を\n見せてやっておくれ。');
+      // the village elder explains (in roa; in the master's house she is alone, and the elder says it
+      // later from his own house: A18b's `elder` has the same line under st_berna_forgot)
+      if (inRoa) {
+        await ev.say('ベルナさんは、ひと月ほど前から\nあの調子でな……。\nおまえのことだけは、最後まで\n覚えておったんじゃが。');
+        await ev.say('今は、自分の家で\n休んでおるよ。……顔を\n見せてやっておくれ。');
+      }
       ev.setFlag('st_berna_forgot');
       if (R.Game.objective === 'obj_s_t6_home') ev.setObjective('obj_regions');
       if (inRoa) {

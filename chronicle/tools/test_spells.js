@@ -267,6 +267,12 @@ section('技の候補（§4.9.3・§6.4.4）');
   const w9 = H.makeChar({ id: 'selma', wprof: { sword: PTS(9) } });
   ok(G.candidates(w9, Object.assign({}, ctx, { rankB: 10 })).some((x) => x.id === lv10), '極意（格 10）は rankB 10・熟練 9 で候補');
   ok(!G.candidates(w9, Object.assign({}, ctx, { rankB: 9 })).some((x) => x.id === lv10), '… rankB 9 では候補でない');
+  {
+    // §4.9.3: 技の BASE 0.012、lv 10 は secret 0.006（MARGIN は rankB − 格 なので、同じ余裕で比べる）
+    const lv9 = sw.find((id) => S(id).glim.lv === 9);
+    const p10 = G.chance(w9, lv10, Object.assign({}, ctx, { rankB: 10 })), p9 = G.chance(w9, lv9, Object.assign({}, ctx, { rankB: 9 }));
+    near(p10 / p9, 0.5, 1e-9, '極意の BASE は奥義の半分（secret 0.006 ÷ tech 0.012）');
+  }
   const w8 = H.makeChar({ id: 'selma', wprof: { sword: PTS(8) } });
   ok(!G.candidates(w8, Object.assign({}, ctx, { rankB: 10 })).some((x) => x.id === lv10), '… 熟練 8 では候補でない');
   ok(G.candidates(w, Object.assign({}, ctx, { wtype: undefined })).length === 0, 'wtype が無ければ候補なし');

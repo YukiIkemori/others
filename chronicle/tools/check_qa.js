@@ -45,7 +45,7 @@ function run(tool) {
   const timedOut = !!(r.error && r.error.code === 'ETIMEDOUT');
   let line = '';
   if (tool.sum) { const m = out.match(tool.sum); line = m ? m[0].trim() : ''; }
-  if (!line) line = out.trim().split('\n').filter((l) => l.trim()).slice(-1)[0] || '';
+  if (!line) line = out.trim().split('\n').filter((l) => l.trim()).slice(-1)[0] || (r.status === 0 ? 'ok' : '');
   // per-owner error counts: "ERROR [V1][R3] …" (validate) or "ERROR [R3] …" (the others)
   const owners = {};
   if (tool.owners) for (const m of out.matchAll(/^ERROR\s+(?:\[[^\]]+\])?\[([A-Za-z0-9-]+)\]/gm)) owners[m[1]] = (owners[m[1]] || 0) + 1;

@@ -62,24 +62,26 @@
   };
 
   // ------------------------------------------------------------ #6 フィーネ（台本は story_fine_snow。story 担当）
-  // The script is story's (§10.9.4). While it is missing, the same scene is told here from the
-  // table (the region line, then the tier's closing line and staging) so the game stays whole.
+  // Both the step band (once snow_fine) and the NPC `fine` (cond '!snow_boss', §10.8.0-5) run this.
+  // The script is story's (§10.9.4; it also handles a second talk, when she is met again on the
+  // floor). While it is missing, the same scene is told here from the table so the game stays whole.
   E.frost_peak_3_fine = {
     meta: { needs: ['item:k_winter_flame'], gives: ['flag:snow_fine'], calls: ['story_fine_snow'] },
     run: async (ev) => {
-      if (ev.flag('snow_fine') || ev.flag('snow_boss')) return;
+      if (ev.flag('snow_boss')) return;
       if (has('story_fine_snow')) { await ev.call('story_fine_snow'); ev.setFlag('snow_fine'); return; }
+      const again = ev.flag('snow_fine');
       const f = ev.npc('fine');
       await ev.wait(12);
       f.face('player');
       await ev.wait(16);
-      await ev.say('凍っているのは、竜の体じゃない。\n心のほうよ。');
-      const t = ev.tier();
+      const t = Math.min(7, ev.tier());
+      if (!again) await ev.say('凍っているのは、竜の体じゃない。\n心のほうよ。');
       if (t >= 6) await ev.say('……もう、あまり時間がないの。');
       else if (t >= 3) await ev.say('わたしのことは気にしないで。\n先へ進みなさい。');
       else await ev.say('……気をつけて。');
       ev.closeMessage();
-      if (t >= 3) await ev.caption('フィーネの足元が、\n透けて見えた。');
+      if (t >= 3 && !again) await ev.caption('フィーネの足元が、\n透けて見えた。');
       ev.sfx('magic');
       await ev.flash('#e8ecff', 10);
       f.hide();

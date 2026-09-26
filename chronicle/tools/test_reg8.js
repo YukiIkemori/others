@@ -457,7 +457,8 @@ async function testPlay() {
     return false;
   }
   const sayLog = [];
-  { const say0 = R.UI.say; R.UI.say = function (t, o) { sayLog.push(R.Text.fmt(Array.isArray(t) ? t.join('\f') : t)); return say0.call(this, t, o); }; }
+  const darkSay = []; // lines said while the screen is faded out (a scene nobody can see)
+  { const say0 = R.UI.say; R.UI.say = function (t, o) { const s = R.Text.fmt(Array.isArray(t) ? t.join('\f') : t); sayLog.push(s); const E = R.Engine; if (E.fadeAlpha > 0.5 && !(E._fade && E._fade.to === 0)) darkSay.push(s); return say0.call(this, t, o); }; }
   const said = (re, from) => sayLog.slice(from || 0).some((t) => re.test(t));
   const capLog = [];
   { const push0 = R.Engine.push; R.Engine.push = function (L) {
@@ -541,10 +542,18 @@ async function testPlay() {
   ok(g().flags.star_fine, '#7 star_fine');
   ok(said(/名前を呼ばれない星は、/, mark) || !!DB.events.story_fine_star, '#7 the region line of Fine (§10.9.4)');
   ok(!R.Field.npc('fine').present, '#7 Fine is gone');
+  // §10.8.0-5: she stands there (cond '!star_boss') when the party comes back; talking gives the short version
+  ok(await go(R.Field.warp('stargaze_3', 'from_next')), 'down to stargaze_3');
+  ok(await go(R.Field.warp('stargaze_4', 'from_prev')), 'up to stargaze_4 again');
+  ok(R.Field.npc('fine').present, '#7 Fine is back by the lantern before the boss (cond !star_boss)');
+  mark = sayLog.length; await talk('fine');
+  ok(g().flags.star_fine && sayLog.length > mark, '#7 talking to Fine again plays a line');
+  ok(!sayLog.slice(mark).some((t) => /名前を呼ばれない星は、/.test(t)), '#7 the second talk is the short version');
+  ok(await go(R.Field.warp('stargaze_4', 'from_prev')), 'stargaze_4 reloaded');
   S.battleScript.push('escape');
   await band('stargaze_4_boss', 16, 13);
   ok(!g().flags.star_boss && R.Field.npc('boss').present, '#7 escaped: the star eater stays');
-  mark = sayLog.length; const cap0 = capLog.length;
+  mark = sayLog.length; const cap0 = capLog.length; const dark0 = darkSay.length;
   const nb2 = S.battles.length;
   R.Events.run('stargaze_4_boss', { trigger: 'step', x: 16, y: 13 });
   ok(await settle(8000), '#8 the boss scene ends');
@@ -559,6 +568,7 @@ async function testPlay() {
   const ip = R.Field.map.spawns.inn, pos = R.Field.pos();
   ok(pos.x === ip.x && pos.y === ip.y, '#8 at the inn spawn (' + pos.x + ',' + pos.y + ')');
   ok(R.Engine.fadeAlpha === 0, '#8 the screen is visible again');
+  ok(darkSay.length === dark0, '#8 no line of the boss scene or the morning scene is said on a black screen: ' + darkSay.slice(dark0, dark0 + 2).join(' | '));
   ok(g().party.every((c) => c.hp > 0), '#8 healed');
   if (DB.events.story_after_clear) ok(g().flags['st_t' + g().tier], '#8 story_after_clear ran (st_t' + g().tier + ')');
   else ok(captioned(/翌朝――/), '#8 the next morning (fallback caption)');

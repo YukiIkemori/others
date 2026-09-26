@@ -7,7 +7,7 @@
 //   narrows on the way north (verda_maze_1_dan; he blocks the one-cell gap until spoken to).
 //   The way up is at the top right (→ verda_maze_2 from_prev). p_rare in the dead end west of
 //   the stone's glade (§8.12.4: the floor before the boss floor). Two trails end in mist that moves the party
-//   elsewhere (verda_maze_twist: 「森が道を変える」; it stops once the region is cleared); so does the obvious
+//   elsewhere (verda_maze_1_twist: 「森が道を変える」; it stops once the region is cleared); so does the obvious
 //   way north from the east glade: the true way winds through the west glades.
 // verda_maze_2 (48×42) — 歌の石 2 (stone_a) in the first big glade; the moth's glade in the
 //   middle (休息の灯 in a nook on the way, the band verda_maze_2_boss at its mouth; ダストウィング
@@ -137,9 +137,9 @@
     events: [
       K.exam('verda_maze_1_stone', 21, 19),
       // the forest twists its paths (§10.8.2 事件): two trails end in mist that moves the party (until the clear)
-      ...K.band('verda_maze_twist', 19, 2, 20, 2, { cond: K.C.before, to: { x: 23, y: 35, dir: 'up', back: true } }),
-      ...K.band('verda_maze_twist', 33, 15, 34, 15, { cond: K.C.before, to: { x: 6, y: 32, dir: 'right' } }),
-      ...K.band('verda_maze_twist', 41, 17, 42, 17, { cond: K.C.before, to: { x: 24, y: 35, dir: 'up', back: true } }),
+      ...K.band('verda_maze_1_twist', 19, 2, 20, 2, { cond: K.C.before, to: { x: 23, y: 35, dir: 'up', back: true } }),
+      ...K.band('verda_maze_1_twist', 33, 15, 34, 15, { cond: K.C.before, to: { x: 6, y: 32, dir: 'right' } }),
+      ...K.band('verda_maze_1_twist', 41, 17, 42, 17, { cond: K.C.before, to: { x: 24, y: 35, dir: 'up', back: true } }),
     ],
     signs: [
       K.sign(22, 32, '道しるべの矢が、くるくると\n回っている……。\nどちらへ行けばいいのだろう。'),
@@ -270,8 +270,8 @@
       K.exam('verda_maze_2_vine', 35, 2, { cond: { var: 'forest_verses', lt: 3 } }),
       K.exam('verda_maze_2_vine', 35, 3, { cond: { var: 'forest_verses', lt: 3 } }),
       ...K.band('verda_maze_2_boss', 24, 16, 25, 16, { once: 'verda_maze_2_boss', cond: '!forest_mid' }),
-      ...K.band('verda_maze_twist', 40, 38, 41, 38, { cond: K.C.before, to: { x: 8, y: 37, dir: 'up', back: true } }),
-      ...K.band('verda_maze_twist', 11, 38, 12, 38, { cond: K.C.before, to: { x: 43, y: 26, dir: 'down' } }),
+      ...K.band('verda_maze_2_twist', 40, 38, 41, 38, { cond: K.C.before, to: { x: 8, y: 37, dir: 'up', back: true } }),
+      ...K.band('verda_maze_2_twist', 11, 38, 12, 38, { cond: K.C.before, to: { x: 43, y: 26, dir: 'down' } }),
     ],
     signs: [
       // 語り部の書き付け (§10.6.4): a leaf of an old storyteller's notes, pinned to a post

@@ -293,8 +293,12 @@
         await elder.walk('L');
         ev.player.face('right');
       }
-      await ev.say('ベルナさんは、ひと月ほど前から\nあの調子でな……。\nおまえのことだけは、最後まで\n覚えておったんじゃが。');
-      await ev.say('今は、自分の家で\n休んでおるよ。……顔を\n見せてやっておくれ。');
+      // the village elder explains (in roa; in the master's house she is alone, and the elder says it
+      // later from his own house: A18b's `elder` has the same line under st_berna_forgot)
+      if (inRoa) {
+        await ev.say('ベルナさんは、ひと月ほど前から\nあの調子でな……。\nおまえのことだけは、最後まで\n覚えておったんじゃが。');
+        await ev.say('今は、自分の家で\n休んでおるよ。……顔を\n見せてやっておくれ。');
+      }
       ev.setFlag('st_berna_forgot');
       if (R.Game.objective === 'obj_s_t6_home') ev.setObjective('obj_regions');
       if (inRoa) {

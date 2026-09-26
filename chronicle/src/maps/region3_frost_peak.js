@@ -137,7 +137,7 @@
     ],
     events: [
       ...[[22, 20], [23, 20], [22, 21], [23, 21]].map(([x, y]) => exam('frost_peak_1_ice', x, y, { cond: { notItem: 'k_winter_flame' } })),
-      ...band('frost_peak_1_melt', 21, 29, 24, 29, { once: 'frost_peak_1_melt', cond: FLAME }),
+      ...band('frost_peak_1_melt', 22, 32, 23, 32, { once: 'frost_peak_1_melt', cond: FLAME }), // the mouth's neck: no way round
     ],
     npcs: [
       npc('idol', 'obj:r3_dragon_idol', 23, 14, { fixed: true,
@@ -263,6 +263,7 @@
   // ------------------------------------------------------------ 3F (the summit; boss floor: no lvOff, §10.6.2-9)
   const f3 = Object.assign(base('白竜の峰　頂', 'snow'), {
     outside: 'r',
+    bbg: 'peak', // §11.2.12: the summit's own backdrop (above the clouds; falls back to `snow`)
     weather: [{ cond: { notCleared: 'r_snow' }, kind: 'blizzard' }, { kind: 'snow' }], // request to field A4 (see yule)
     // @rows frost_peak_3
     rows: [
@@ -350,7 +351,7 @@
     ],
     npcs: [
       npc('rest', 'obj:lantern', 26, 14, { event: 'common_rest', fixed: true }),
-      npc('fine', 'fine', 23, 12, { event: 'frost_peak_3_fine', dir: 'down', cond: ['!snow_boss', '!snow_fine'], fixed: true }),
+      npc('fine', 'fine', 23, 12, { event: 'frost_peak_3_fine', dir: 'down', cond: '!snow_boss', fixed: true }), // §10.8.0-5
       npc('boss', 'mon:boss_whitedragon', 23, 3, { event: 'frost_peak_3_boss', cond: '!snow_boss', fixed: true }),
       npc('neve', 'mon:boss_whitedragon', 23, 3, { event: 'frost_peak_3_neve', cond: 'snow_boss', fixed: true }),
     ],

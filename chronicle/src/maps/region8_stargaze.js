@@ -413,7 +413,7 @@
     ],
     npcs: [
       K.npc('rest', 'obj:lantern', 13, 20, { event: 'common_rest', fixed: true }),
-      K.npc('fine', 'fine', 16, 21, { dir: 'down', event: 'stargaze_4_fine', cond: ['!star_fine', '!star_boss'], fixed: true }),
+      K.npc('fine', 'fine', 16, 21, { dir: 'down', event: 'stargaze_4_fine', cond: '!star_boss', fixed: true }),
       K.npc('boss', 'mon:boss_stareater', 16, 8, { event: 'stargaze_4_boss', cond: '!star_boss', fixed: true }),
       ...SKY.map(([x, y], i) => K.talk('star_' + (i + 1), 'obj:sparkle', x, y, '夜空に、星がまたたいている。', { cond: 'star_boss', fixed: true })),
     ],

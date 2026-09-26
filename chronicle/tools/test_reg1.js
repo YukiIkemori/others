@@ -263,7 +263,7 @@ function testStatic() {
   }
   // events, meta, objectives
   const EVENTS = ['fern_enter', 'fern_intro', 'fern_rita', 'fern_hanna', 'fern_hanna_reward', 'verda_maze_1_stone', 'verda_maze_1_dan',
-    'verda_maze_2_stone_a', 'verda_maze_2_boss', 'verda_maze_2_stone_b', 'verda_maze_2_vine', 'elder_tree_2_fine', 'elder_tree_2_boss',
+    'verda_maze_2_stone_a', 'verda_maze_2_boss', 'verda_maze_2_stone_b', 'verda_maze_2_vine', 'verda_maze_1_twist', 'verda_maze_2_twist', 'elder_tree_2_fine', 'elder_tree_2_boss',
     'elder_tree_2_elm', 'elder_tree_2_altar'];
   for (const id of EVENTS) {
     const e = DB.events[id];
@@ -368,7 +368,7 @@ function testReach() {
     const m = compileIn({ flags: ['forest_start', 'forest_dan', 'forest_mid'], vars: { forest_verses: 3 } }, id);
     const s0 = sp(m, id === 'verda_maze_1' ? 'entrance' : 'from_prev');
     const r = reach(m, s0.x, s0.y);
-    const tw = m.events.filter((q) => q.id === 'verda_maze_twist');
+    const tw = m.events.filter((q) => q.id === id + '_twist');
     eq(tw.length, id === 'verda_maze_1' ? 6 : 4, id + ': twisting trails (2 cells each)');
     for (const t of tw) {
       ok(r.has(t.x, t.y), id + ': twist cell ' + t.x + ',' + t.y + ' is reachable');
@@ -513,7 +513,7 @@ async function testPlay() {
   // the forest twists its paths
   R.Field.setPlayerPos(19, 3, 'up');
   mark = sayLog.length;
-  R.Events.run('verda_maze_twist', { trigger: 'step', self: 'verda_maze_twist', x: 19, y: 2 });
+  R.Events.run('verda_maze_1_twist', { trigger: 'step', self: 'verda_maze_1_twist', x: 19, y: 2 });
   ok(await settle(), 'twist ends');
   eq([R.Field.pos().x, R.Field.pos().y], [23, 35], 'a twisting trail sends the party back to the forest edge');
   ok(said(/白い霧/, mark) && said(/元の道に/, mark), 'the twist\'s lines');
