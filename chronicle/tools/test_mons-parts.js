@@ -116,11 +116,12 @@ for (const id in SPEC_MOBS) {
   ok((m[3] || null) === (s[3] || null), id + ': filter ' + (s[3] || '-'));
   if (COLOUR_FIX[id]) { ok(same(m[1], COLOUR_FIX[id]), id + ': colour correction as documented'); devHue++; }
   else ok(same(m[1], s[1]), id + ': hsb as §9.4.6');
-  const extra = ADDED_PARTS[id] || [];
+  // DESIGN 第 3 版 (§9.4.6) already lists the A14a additions in the table: only the ones it still lacks are extra
+  const extra = (ADDED_PARTS[id] || []).filter((pid) => !s[2].some((p) => p[0] === pid));
   const want = s[2].concat(extra.map((pid) => m[2].find((p) => p[0] === pid)).filter(Boolean));
   ok(same(m[2].slice(0, s[2].length), s[2]), id + ': the §9.4.6 parts, in order, with their options');
   ok(m[2].length === s[2].length + extra.length && same(m[2].map((p) => p[0]), want.map((p) => p[0])), id + ': ' + (extra.length ? 'documented additions ' + extra.join(' ') : 'no extra parts'));
-  if (extra.length) devParts++;
+  if (ADDED_PARTS[id] && ADDED_PARTS[id].every((pid) => m[2].some((p) => p[0] === pid))) devParts++;
   for (const k of Object.keys(m[1])) ok(['hue', 'sat', 'bri'].includes(k), id + ': hsb key ' + k);
   if (m[1].sat != null) ok(m[1].sat >= 0 && m[1].sat <= 1.5, id + ': sat in 0..1.5');
   if (m[1].bri != null) ok(m[1].bri >= 0.4 && m[1].bri <= 1.35, id + ': bri in 0.4..1.35');
