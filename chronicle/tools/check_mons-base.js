@@ -18,13 +18,14 @@
 //   C7 value structure: interior luminance spread p5..p95 ≥ 0.40 for the base; every lineage
 //      recolour keeps ≥ 65 % of it (after its own bri scaling) and ≥ 0.20 absolute, so the
 //      forms read by value, not by hue
+//   (recolours come from DESIGN.md and from the live R.Art.MON_COMPOSE, whichever has more)
 //   C8 the outline survives every lineage recolour and the golden tint (C5 with luminance
 //      < 0.13: a desaturated, brightened #120c16 is ~0.10 and still reads as outline)
 //   C9 new bases: anchor points sit on the sprite (eyes, body, mouth on opaque pixels; hand, hand2,
 //      neck, back, brow, tail within 2 px of one; head within 2 px of the silhouette top in its
 //      column, feet within 1 px of the bottom)
-//   C10 build time ≤ 150 ms per base (typical 2–15 ms; the limit only catches runaway factories
-//       on a busy shared machine)
+//   C10 build time ≤ 150 ms per base, fastest of up to 3 builds (typical 2–15 ms; the limit only
+//       catches runaway factories on a busy shared machine)
 //   C11 Crest bases unchanged: canvas hash equals tools/fixtures/mons-base/hashes.json
 //       (--update-hashes rewrites it after a deliberate touch-up)
 'use strict';
@@ -66,6 +67,14 @@ window.CHECK = function (ids, variants) {
   const R = window.RPG, G = R.Gfx, A = R.Art;
   const sizes = Object.assign({}, A.monstersA.sizes, A.monstersB.sizes, A.monstersC.sizes);
   const AN = A.monstersC.anchors;
+  // the live compose tables (A14a/A15 may retune a stage's colour after DESIGN) add their recolours
+  variants = Object.assign({}, variants);
+  for (const id in (A.MON_COMPOSE || {})) {
+    const r = A.MON_COMPOSE[id];
+    if (!Array.isArray(r) || !sizes[r[0]] || !r[1] || !Object.keys(r[1]).length) continue;
+    const list = variants[r[0]] = (variants[r[0]] || []).slice();
+    if (!list.some((v) => JSON.stringify(v) === JSON.stringify(r[1]))) list.push(r[1]);
+  }
   const lum = (r, g, b) => (0.299 * r + 0.587 * g + 0.114 * b) / 255;
   function measure(img, darkBelow) {
     darkBelow = darkBelow || 0.09;
@@ -104,9 +113,14 @@ window.CHECK = function (ids, variants) {
     return { w, h, bbox: [x0, y0, x1, y1], bottom, semi, colours: cols.size, outline: dark / Math.max(1, edge), value: q(0.95) - q(0.05), hash: hash.toString(16), at, top: (x) => { for (let y = 0; y < h; y++) if (at(x, y)) return y; return -1; } };
   }
   return ids.map((id) => {
-    const t0 = performance.now();
+    let t0 = performance.now();
     const img = G.get('mon:' + id);
-    const ms = performance.now() - t0;
+    let ms = performance.now() - t0;
+    // the machine is shared: a slow first build is timed again (factory only, up to 2 more
+    // times) and the fastest run counts, so only a factory that is slow every time fails
+    for (let k = 0; k < 2 && ms > 150 && G._defs['mon:' + id]; k++) {
+      t0 = performance.now(); G._defs['mon:' + id](); ms = Math.min(ms, performance.now() - t0);
+    }
     const m = measure(img);
     // recolours: the outline must stay near-black (a desaturated, brightened #120c16 lands
     // around luminance 0.10, still an outline); value is compared to the base's

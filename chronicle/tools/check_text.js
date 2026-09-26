@@ -55,6 +55,8 @@ function readStyle() {
 const EXTRA_PARTIAL = ['キング'];                 // DESIGN §9.14 (STYLE_JA §7.1 only lists キングスライム)
 const EXTRA_SRC = ['スライム', 'メタル'];          // DESIGN §12.4
 const SRC_EXCEPTIONS = ['魔法都市アルカナ', '魔法学院', '魔法の天才'];
+// names DESIGN fixes verbatim although rule 9 would warn (魔力 = MP here, as in item names). §6.0 0.6 / §6.8: t_staff_share
+const SPEC_FIXED_NAMES = ['魔力分け'];
 const STATUS_WORDS = ['眠り', 'まひ', '凍結', '気絶', '混乱', '沈黙', '暗闇', 'やけど'];
 const JP = /[぀-ヿ㐀-鿿豈-﫿ｦ-ﾟ]/;
 const KANJI = /[㐀-䶿一-鿿豈-﫿]/;
@@ -194,7 +196,7 @@ function run(opts) {
       if (nm) add('error', 'T8', owner, `${where} '${nm[0]}' (write 「${nm[1]}が効かない。」): ${clip(text)}`);
       // 9. 魔力 / 魔法
       if (/魔法/.test(text) && !SRC_EXCEPTIONS.some((e) => text.includes(e))) add('warn', 'T9', owner, `${where} '魔法' (the game says 術): ${clip(text)}`);
-      if (/魔力/.test(text) && !/^src\/data\/items_/.test(rel)) add('warn', 'T9', owner, `${where} '魔力' outside item names: ${clip(text)}`);
+      if (/魔力/.test(text) && !/^src\/data\/items_/.test(rel) && !SPEC_FIXED_NAMES.includes(text.trim())) add('warn', 'T9', owner, `${where} '魔力' outside item names: ${clip(text)}`);
       // 10. spelling variants
       for (const v of variants) {
         if (risky.has(v)) continue;

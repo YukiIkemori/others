@@ -707,7 +707,9 @@ function main() {
   const useReal = realEngineOk();
   const t0 = Date.now();
   console.log(`[sim_zones] engine: ${useReal ? 'GAME ENGINE (R.Battle.simulate + party_model)' : 'MODEL (DESIGN §4 re-implementation; the game engine is not complete yet)'}; seed ${SEED}; ${N} battles per group`);
-  const zones = Object.keys(DB.encounters).filter((z) => !ZONE || z === ZONE);
+  // zones other owners derive from ours (same groups; e.g. OB's rare-monster den) are not simulated twice
+  const D0 = CM.expected();
+  const zones = Object.keys(DB.encounters).filter((z) => (!ZONE || z === ZONE) && (D0.encounters[z] || !CM.derivedFrom(DB, D0, z)));
   const out = { engine: useReal ? 'game' : 'model', seed: SEED, n: N, M: {} };
   let failures = 0;
   const FAIL = (m, msg) => { failures++; console.log(`  ✗ ${m} ${msg}`); };

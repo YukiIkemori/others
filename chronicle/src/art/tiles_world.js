@@ -391,9 +391,6 @@
     // sea fog: puffs drifting east 4 px per image (4 images loop in 16 px)
     const FOG_BLOBS = [[3, 4, 6.5, 4.6], [11.5, 2.5, 5.5, 4], [8, 10.5, 7, 4.6], [14.5, 12.5, 5, 3.6], [1.5, 13.5, 4.2, 3]];
     PER.fog = [0, 1, 2, 3].map((F) => blobs(FOG_BLOBS, 4 * F));
-    // marsh mist: long thin wisps, 2 images 8 px apart
-    const MIST_BLOBS = [[4, 3, 11, 2.4], [12.5, 8.5, 12, 2.1], [0, 13.5, 10, 2]];
-    PER.mist = [0, 1].map((F) => blobs(MIST_BLOBS, 8 * F));
     // sandstorm: slanted streaks (1 px down every 3 px) blowing east, 4 px per image
     const STREAKS = [[1, 2, 7], [9, 7, 6], [4, 11, 8], [12, 14, 5]];
     PER.sand = [0, 1, 2, 3].map((F) => {
@@ -839,7 +836,7 @@
         // dead trees inside a marsh fog carry the fog too (the patch only turns marsh cells into marsh_fog)
         let fogNear = false;
         for (const [dx, dy] of DIRS4) if (at(dx, dy) === 'marsh_fog') fogNear = true;
-        return 'D' + ((((x + 3 * y) % 3) + 3) % 3) + (fogNear ? 'e' : '');
+        return 'D' + ((((x + 3 * y) % 3) + 3) % 3) + (fogNear ? 'e' + mistOf(x, y) : '');
       }
       case 'hills': return 'H' + k + '.' + ((((x + y) % 2) + 2) % 2);
       case 'mountain': case 'secret_rock': {
@@ -876,7 +873,7 @@
         return 'g' + d;
       }
       case 'sandstorm': return 'Z';
-      case 'marsh_fog': return 'E';
+      case 'marsh_fog': return 'E' + mistOf(x, y);
       default: return id && id.startsWith('loc_') ? 'L' + id + '.' + roadLinks(m, x, y) : '';
     }
   }
@@ -1051,7 +1048,7 @@
     const fld = field(c9);
     const rocky9 = d9.map((d) => d && (d[0] === 'M' || d[0] === 'C'));
     // weather weights
-    const zMask = d9.map((d) => d === 'Z'), eMask = d9.map((d) => (d === 'E' ? 1 : d && d[0] === 'D' && d[2] === 'e' ? 0.85 : 0));
+    const zMask = d9.map((d) => d === 'Z'), eMask = d9.map((d) => (d && d[0] === 'E' ? 1 : d && d[0] === 'D' && d[2] === 'e' ? 0.85 : 0));
     const sandW = zMask.some(Boolean) ? effWeight(zMask) : null;
     // sea fog density: weighted mean over the water cells around (open sea counts 0, fog 0.62/0.88/1 by depth)
     let fogD = null;
@@ -1067,6 +1064,7 @@
       }
     }
     const mfogW = eMask.some(Boolean) ? effWeight(eMask) : null;
+    const mist = mfogW ? mistField(d9) : null;
     // rivers: own pieces and the neighbours' pieces reaching into this cell
     const rpieces = [];
     for (let j = 0; j < 3; j++) for (let i = 0; i < 3; i++) {
@@ -1199,7 +1197,7 @@
         b.blit(sp.s.buf, x0, y0);
       }
       // ---- weather
-      if (hasFog || sandW || mfogW) weather(b, fld, fogD, sandW, mfogW, fogF, sandF, mF);
+      if (hasFog || sandW || mfogW) weather(b, fld, fogD, sandW, mfogW, fogF, sandF, mF, mist);
       out.push(b.toCanvas());
     }
     return nf === 1 ? out[0] : out;
@@ -1260,9 +1258,46 @@
     // deep in the bank the puffs merge (small amplitude); towards open sea they break apart
     return dens * 0.86 + (blob[ly * 16 + lx] - 0.45) * 0.62 * Math.max(0.3, 1.45 - dens);
   }
+  // Marsh mist: every fog cell owns 2 long thin wisps (layout mistOf(x, y), carried in
+  // its descriptor, so it is part of the cache key); a wisp may reach up to 6 px into
+  // the next cell, and each cell draws its own wisps plus the neighbours' reaching in,
+  // so the bank reads as loose drifting streaks with no cell grid. [cx, cy, rx, ry]
+  const MIST_V = [
+    [[8, 4, 10, 2.2], [3, 11.5, 7, 2]],
+    [[11, 7, 9, 2.4], [2.5, 14, 6.5, 1.8]],
+    [[5, 2.5, 8, 1.9], [12, 10.5, 10, 2.5]],
+    [[9, 13, 11, 2.3], [1.5, 6, 6, 2]],
+    [[4, 8, 9.5, 2.4], [13.5, 2, 5.5, 1.7]],
+    [[12, 12.5, 8, 2.1], [6, 5, 7.5, 2.2]],
+  ];
+  const mistOf = (x, y) => ((((x * 5 + y * 2 + ((x >> 1) ^ (y >> 2)) * 3) % 6) + 6) % 6);
+  /** mist density (0..1) over the centre cell for both images; image 1 drifts 2 px east */
+  function mistField(d9) {
+    return [-1, 1].map((dx) => {
+      const a = new Float32Array(256);
+      for (let j = 0; j < 9; j++) {
+        const d = d9[j];
+        if (!d) continue;
+        const c = d[0] === 'E' ? d[1] : d[0] === 'D' && d[2] === 'e' ? d[3] : null;
+        if (c == null) continue;
+        const ox = ((j % 3) - 1) * 16, oy = (((j / 3) | 0) - 1) * 16;
+        for (const [cx, cy, rx, ry] of MIST_V[+c]) {
+          const x0 = Math.max(0, Math.floor(ox + cx + dx - rx)), x1 = Math.min(15, Math.ceil(ox + cx + dx + rx));
+          const y0 = Math.max(0, Math.floor(oy + cy - ry)), y1 = Math.min(15, Math.ceil(oy + cy + ry));
+          for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
+            const u = (x + 0.5 - ox - cx - dx) / rx, w = (y + 0.5 - oy - cy) / ry;
+            // thicker in the middle, tapering to thin tails
+            const v = 1 - u * u - w * w * (1 + 1.5 * u * u);
+            if (v > a[y * 16 + x]) a[y * 16 + x] = v;
+          }
+        }
+      }
+      return a;
+    });
+  }
   /** sea fog, sandstorm and marsh fog over the finished cell */
-  function weather(b, fld, fogD, sandW, mfogW, fogF, sandF, mF) {
-    const t = T, FG = WP.fog, blob = PER.fog[fogF], mist = PER.mist[mF];
+  function weather(b, fld, fogD, sandW, mfogW, fogF, sandF, mF, mistF) {
+    const t = T, FG = WP.fog, blob = PER.fog[fogF], mist = mistF && mistF[mF];
     for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
       const ex = x + MG, ey = y + MG, i = ey * EW + ex, p = y * 16 + x;
       // sea fog: soft white banks, lit on top, grey on the underside; thin puffs towards open sea
@@ -1272,7 +1307,15 @@
         if (a > 0.74) {
           const below = fogAmt(fld, fogD, ex, ey + 2, blob), above = fogAmt(fld, fogD, ex, ey - 1, blob);
           col = below < 0.52 ? FG[0] : below < 0.68 ? FG[1] : above < 0.68 ? FG[3] : FG[2];
-          if (col === FG[2]) { const bl = blob[y * 16 + x]; if (bl > 0.82 && bz < 0.5) col = FG[3]; else if (bl < 0.12 && bz < 0.25) col = FG[1]; }
+          if (col === FG[2]) {
+            // puffs inside the bank: lit crowns, grey undersides where a puff ends above a thinner patch
+            const bl = blob[y * 16 + x], bd = blob[((y + 2) & 15) * 16 + x], bu = blob[((y + 15) & 15) * 16 + x];
+            if (bl > 0.5 && bd < bl - 0.34) col = bz < 0.75 ? FG[1] : FG[0];
+            else if (bl > 0.45 && bd < bl - 0.22) col = bz < 0.5 ? FG[1] : FG[2];
+            else if (bl > 0.82 && bz < 0.5) col = FG[3];
+            else if (bl > 0.6 && bu < bl - 0.3) col = FG[3];
+            else if (bl < 0.12 && bz < 0.25) col = FG[1];
+          }
         } else if (a > 0.62) col = bz < 0.7 ? FG[1] : t.mix(b.p[p], FG[0], 0.6);
         else if (a > 0.5) col = bz < 0.5 ? FG[0] : t.mix(b.p[p], FG[0], 0.35);
         else if (a > 0.4) col = bz < 0.25 ? FG[0] : -1;
@@ -1286,8 +1329,9 @@
         if (st && bz < w * 1.4) b.p[p] = st === 2 ? 0xf2e8d0 : t.mix(b.p[p], 0xece0c0, 0.55);
       }
       // marsh fog: pale wisps, checker-dithered (half transparent)
-      if (mfogW && mfogW[i] > 0) {
-        const a = mfogW[i] * mist[p] * 1.25;
+      if (mist && mfogW[i] > 0) {
+        const a = mfogW[i] * mist[p] * 1.25, bz = t.bayer(x, y);
+        if (bz < 0.125 * mfogW[i]) b.p[p] = t.mix(b.p[p], FG[1], 0.3); // thin veil over the whole bank
         if (a > 0.34 && ((x + y + mF) & 1) === 0) b.p[p] = t.mix(b.p[p], a > 0.7 ? FG[2] : FG[1], a > 0.6 ? 0.6 : 0.42);
         else if (a > 0.7) b.p[p] = t.mix(b.p[p], FG[0], 0.28);
       }

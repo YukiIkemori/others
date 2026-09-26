@@ -102,6 +102,7 @@
     constructor(dim) {
       super();
       this.opaque = false;
+      this.isStage = true; // the field hides its map-name banner under a stage
       this.dim = 0; this.dimFrom = 0; this.dimTo = 0; this.dimT = 0; this.dimDur = 1;
       this.base = dim == null ? 0.6 : dim;
       this.fadeTaken = 0;

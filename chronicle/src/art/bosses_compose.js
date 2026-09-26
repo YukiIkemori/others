@@ -86,7 +86,8 @@
     const e = BOSSES[id];
     if (!R.Art.compose) return standIn(id);
     let cv;
-    try { cv = R.Art.compose(...e); } catch (err) { R.warn('MON_COMPOSE_BOSSES: compose failed', id, String(err && err.message || err)); return standIn(id); }
+    // id: a stable seed, as art-mons passes for its rows
+    try { cv = R.Art.compose(e[0], e[1], e[2], e[3] || null, id); } catch (err) { R.warn('MON_COMPOSE_BOSSES: compose failed', id, String(err && err.message || err)); return standIn(id); }
     if (Array.isArray(cv)) cv = cv[0];
     if (!cv || !cv.width) { R.warn('MON_COMPOSE_BOSSES: compose returned nothing', id); return standIn(id); }
     return cv;

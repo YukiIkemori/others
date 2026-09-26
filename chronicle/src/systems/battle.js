@@ -1699,19 +1699,28 @@
     }
     *grow(t, eff) {
       if (!t.isParty || !t.alive) return;
-      const CAP = { hp: 200, mp: 30, wp: 30 };
       const k = eff.stat;
-      if (!CAP[k]) return;
+      if (k !== 'hp' && k !== 'mp' && k !== 'wp') return;
       const c = t.c;
-      c.bonus = c.bonus || { hp: 0, mp: 0, wp: 0 };
-      const room = CAP[k] - (c.bonus[k] || 0);
-      if (room <= 0) { yield this.m('これ以上は効かない。'); return; }
       const before = { hp: t.mhp, mp: t.mmp, wp: t.mwp };
-      c.bonus[k] = (c.bonus[k] || 0) + Math.min(room, eff.n || 1);
+      const cur = { hp: t.hp, mp: t.mp, wp: t.wp };
+      let added = 0;
+      if (R.Rules && R.Rules.grow) {
+        // R.Rules.grow owns the cap (K.BONUS_CAP) and raises the current value with the max (§8.2.5)
+        try { added = R.Rules.grow(c, k, eff.n || 1) || 0; } catch (e) { R.warn('battle: R.Rules.grow failed', e && e.message); added = 0; }
+      } else {
+        const CAP = { hp: 200, mp: 30, wp: 30 };
+        c.bonus = c.bonus || { hp: 0, mp: 0, wp: 0 };
+        added = Math.max(0, Math.min(eff.n || 1, CAP[k] - (c.bonus[k] || 0)));
+        c.bonus[k] = (c.bonus[k] || 0) + added;
+      }
+      if (added <= 0) { yield this.m('これ以上は効かない。'); return; }
       t.refresh();
-      if (t.mhp > before.hp) t.hp += t.mhp - before.hp;
-      if (t.mmp > before.mp) t.mp += t.mmp - before.mp;
-      if (t.mwp > before.wp) t.wp += t.mwp - before.wp;
+      for (const x of ['hp', 'mp', 'wp']) {
+        const max = x === 'hp' ? t.mhp : x === 'mp' ? t.mmp : t.mwp;
+        const up = Math.max(0, max - before[x]);
+        t[x] = Math.min(max, Math.max(t[x], cur[x] + up));
+      }
       const gain = (k === 'hp' ? t.mhp : k === 'mp' ? t.mmp : t.mwp) - before[k];
       yield { t: 'buff', u: t, stat: k, d: 1, grow: true };
       yield this.m(`${t.name}の${NAMES.stat[k]}が${gain}増えた！`);

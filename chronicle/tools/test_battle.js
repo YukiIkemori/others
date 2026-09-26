@@ -99,10 +99,12 @@ guard('R.Mon', () => {
   ok(minion._master === 'region' && minion.atk === r(c9.atk * BR.atk) && minion.hp === r(M.hpBoss(9) * 2), 'お供 take the master boss row (troop), their own hpShare');
   // def: tier scaling, cache, golden
   const d13 = M.def('tb_rat_1', { Lb: 13 }), base = DB.monsters.tb_rat_1, c13 = M.curve(13);
-  ok(d13.lv === 13 && d13.hp === Math.max(1, r(base.hp * c13.hp / c7.hp)) && d13.atk === r(base.atk * c13.atk / c7.atk) && d13.exp === r(base.exp * c13.exp / c7.exp), 'def(Lb): every stat × curve(Lb)/curve(lv)');
+  const nom = (d, k) => (d._raw && d._raw[k] != null ? d._raw[k] : d[k]); // unrounded nominal value (no double rounding)
+  ok(d13.lv === 13 && d13.hp === Math.max(1, r(nom(base, 'hp') * c13.hp / c7.hp)) && d13.atk === r(nom(base, 'atk') * c13.atk / c7.atk) && d13.exp === r(nom(base, 'exp') * c13.exp / c7.exp), 'def(Lb): every stat × curve(Lb)/curve(lv)');
+  ok(Math.abs(nom(base, 'hp') - base.hp) <= 0.5 && Math.abs(d13.hp - base.hp * c13.hp / c7.hp) <= Math.max(1, c13.hp / c7.hp), 'def scales from the unrounded nominal value (stays within one rounding step)');
   ok(M.def('tb_rat_1', { Lb: 13 }) === d13 && DB.monsters.tb_rat_1.lv === 7, 'def is cached and never changes DB');
   ok(M.def('tb_rat_1', { tier: 1, lvOff: 1 }).lv === 13, 'def({tier, lvOff}) → Lb = LZ(T) + lvOff');
-  ok(M.def('tb_boss', { Lb: 12 }).hp === r(boss.hp * M.hpBoss(12) / M.hpBoss(9)), 'boss HP scales by the hpBoss curve');
+  ok(M.def('tb_boss', { Lb: 12 }).hp === r(M.hpBoss(12) * 12), 'boss HP scales by the hpBoss curve (hpBoss(Lb) × hpShare, no double rounding)');
   ok(M.def('tb_metal', { Lb: 40 }).hp === 8, 'metal HP never scales');
   const g = M.def('tb_goblin', { golden: true }), gob = DB.monsters.tb_goblin;
   ok(g.golden && g.hp === gob.hp * 2 && g.atk === r(gob.atk * 1.2) && g.exp === gob.exp * 3 && g.gold === gob.gold * 5 && g.lvShow === gob.lv + 2 && g.flags.includes('golden'),
@@ -1762,6 +1764,47 @@ guard('simulate', () => {
   ok(U.rng === saved, 'rng restored');
   const after = B.simulate({ party, mons: [['tb_goblin', 2]], seed: 8, tier: 2, after: true });
   ok(after.result !== 'win' || after.party.every((c) => c.hp === 0 || c.hp === R.Rules.stats(c).hp), 'after: recovery applied to the clones');
+});
+
+// ================================================================ requests from other areas (A1 / A10b / A7)
+sec('requests');
+guard('requests', () => {
+  // §3.3.8 / §4.10.3: the rare swap is 1/rate × (1 + rareEncPct/100) × L, L = 2 while 誘い寄せ (encItem.pct > 0)
+  const G0 = R.Game;
+  const rate = (encItem, n) => {
+    R.Game = Object.assign({}, G0 || {}, { encItem });
+    let hit = 0;
+    try { for (let i = 0; i < n; i++) { const r = B.resolveMonsters({ zone: 'tb_zone', tier: 2 }, { mods: {} }); if (r && r.rare) hit++; } } finally { R.Game = G0; }
+    return hit / n;
+  };
+  near(rate(null, 24000), 1 / 80, 0.004, 'rare swap 1/80');
+  near(rate({ id: 'x', pct: 100, steps: 50 }, 24000), 2 / 80, 0.005, 'rare swap ×2 while a lure is active');
+  near(rate({ id: 'x', pct: -100, steps: 50, weakOnly: true }, 24000), 1 / 80, 0.004, 'a repel does not change the rare swap');
+  // A10b: auto never uses relic items or 魔石, and grow goes through R.Rules.grow (its cap)
+  const e = mk({ mons: [['tb_goblin', 2]] });
+  e.inv.tb_stone_fire = 3;
+  const relic = Object.keys(DB.items).find((id) => DB.items[id].src === 'relic' && DB.items[id].use && DB.items[id].use.battle);
+  if (relic) e.inv[relic] = 3;
+  P(e, 0).c.hp = 1; P(e, 1).c.hp = 1;
+  const cmds = AI.partyCommands(e, AI.AUTO_OPTS);
+  ok(!cmds.some((c) => c && c.type === 'item' && (c.id === 'tb_stone_fire' || c.id === relic)), 'auto: no 魔石, no relic items');
+  const hero = P(e, 0);
+  hero.c.bonus = { hp: 195, mp: 0, wp: 0 };
+  hero.refresh();
+  e.inv.tb_seed = 2;
+  const mh = hero.mhp;
+  let ev = use(e, hero, 'tb_seed', hero, { item: true });
+  ok(hero.c.bonus.hp === 200 && hero.mhp === mh + 5 && said(ev, '最大HPが5増えた'), 'grow: capped at +200 through R.Rules.grow');
+  ev = use(e, hero, 'tb_seed', hero, { item: true });
+  ok(hero.c.bonus.hp === 200 && said(ev, 'これ以上は効かない。'), 'grow at the cap: no effect');
+  // §9.11.2: boss HP = hpBoss(Lb) × share × s.hp at any tier, with no double rounding
+  for (const T of [0, 3, 7]) {
+    const r = B.resolveMonsters({ troop: 'tb_troop_boss', tier: T }, {});
+    if (!r) continue;
+    const eng = new B.Engine({ party: [], mons: r.mons, tier: r.Tb, lv: r.Lb, noSurprise: true });
+    const b = eng.mons.find((m) => m.boss && m.id === 'tb_boss');
+    if (b) ok(Math.abs(b.hp - R.Mon.hpBoss(r.Lb) * (DB.monsters.tb_boss.hpShare || 12) * ((DB.monsters.tb_boss.s && DB.monsters.tb_boss.s.hp) || 1)) <= 1, `boss HP at T${T} = hpBoss(Lb) × share`);
+  }
 });
 
 // ================================================================ real content (src/data)

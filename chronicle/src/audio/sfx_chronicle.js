@@ -52,16 +52,16 @@
     S.noise({ t: 0.08, a: 0.05, d: 0.15, r: 0.25, vol: 0.08, hp: 7000 });
     S.tone({ w: 'triangle', f: 130, f2: 90, sd: 0.1, d: 0.02, r: 0.08, vol: 0.15 });
     S.wet(0.4);
-    S.gain(1.5);
+    S.gain(1.95);
   };
 
   // burn (やけど status, fire composites) — a short flare of flame and a handful of crackles
   X.burn = (S) => {
     S.noise({ a: 0.02, d: 0.1, r: 0.2, vol: 0.45, lp: 800, lp2: 3400, fd: 0.14, rate: 0.7 });
     S.tone({ w: 'sawtooth', f: 90, f2: 200, sd: 0.15, d: 0.1, r: 0.12, vol: 0.12, lp: 900 });
-    [0.08, 0.13, 0.17, 0.24, 0.29, 0.36, 0.42].forEach((t, i) => S.noise({ t, d: 0.003, r: 0.015 + (i % 3) * 0.005, vol: 0.22 - i * 0.015, hp: 2500 + (i % 2) * 1500 }));
+    [0.08, 0.13, 0.17, 0.24, 0.29, 0.36, 0.42].forEach((t, i) => S.noise({ t, d: 0.003, r: 0.015 + (i % 3) * 0.005, vol: 0.12 - i * 0.008, hp: 2500 + (i % 2) * 1500 }));
     S.wet(0.2);
-    S.gain(1.05);
+    S.gain(0.9);
   };
 
   // quill — a pen scratching across paper three times, then a small bell

@@ -87,7 +87,7 @@
   lazy('berna', () => ({
     capeBack: use(P.cape.mantle.back, {}), cape: P.cape.mantle, body: P.body.robe,
     head: head('old'), hair: P.hairBun, over: [P.over.braidSide, P.over.caneOut],
-  }), () => ({ main: '#c8b890', sub: '#6a5a44', trim: '#8a3c2c', hair: HAIR().white, skin: SKIN().A, leather: '#7a5230' }));
+  }), () => ({ main: '#c8b890', sub: '#6a5a44', trim: '#8a3c2c', hair: HAIR().white, skin: SKIN().A, leather: '#b08048' }));
 
   // rowell: the Record Hall's white coat with the collar up, black hair tied back, black notebook
   lazy('rowell', () => ({
@@ -116,8 +116,10 @@
           const buf = src.map((c, i) => {
             const x = i % 16, y = Math.floor(i / 16);
             if (!c || y < 18) return c;
+            // opaque pixels only (§11.4.2): the fade is a pure checker, thinner on the last 3 rows
             if ((x + y + ph) % 2 === 0) return null;
-            return y >= 21 ? c + 'a0' : c;
+            if (y >= 21 && (x + ph) % 4 >= 2) return null;
+            return c;
           });
           out[d].push(CA.toCanvas(buf));
         }

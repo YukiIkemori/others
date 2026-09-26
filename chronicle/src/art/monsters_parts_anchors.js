@@ -104,7 +104,7 @@
   };
   // the 14 bases of monsters_c.js: only the keys that differ from R.Art.monstersC.anchors (merged at compose time)
   Object.assign(T, {
-    mammoth: { tuskTips: [[9, 42], [54, 42]], at: { armor_plates: [31, 19, 0.22, 0.1] } },
+    mammoth: { tuskTips: [[9, 42], [54, 42]], at: { armor_plates: [31, 19, 0.18, 0.15] } },
     beetle: { at: { horns: [15, 5] } },
     frog: { at: { spots: [23, 24, 0.36, 0.18] } },
     mole: { clawAt: [[8, 22], [39, 22]], clawDir: -90 },

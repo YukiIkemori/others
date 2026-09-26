@@ -303,28 +303,47 @@
       }
     }, { outline: 0x4a6a8c, drop: [1, 1, 0.26] });
   }
-  /** a crack in the ground glowing from below (walkable, 2 frames) */
+  /** a crack in the ground glowing from below (walkable, 2 frames): a charred
+   *  fissure, 2 px of scorched earth either side, a deep red core that brightens to
+   *  orange at the widest points and a couple of white-hot pinpoints; the earth
+   *  round it is lit red. Frame 1 is the brighter pulse. */
   function ember(f) {
     const { Img, P, glow } = K();
     const img = new Img(16, 16), O = new Img(16, 16);
-    const path = [[1, 9], [3, 8], [5, 8], [6, 7], [8, 7], [9, 8], [11, 8], [12, 9], [14, 8]];
-    const br = [[6, 7], [6, 5], [5, 3]], br2 = [[11, 8], [11, 10], [12, 12]];
-    const draw = (pts, core) => {
+    const FIRE = P.FIRE;
+    const main = [[0, 10], [2, 9], [4, 9], [5, 8], [7, 8], [8, 7], [10, 7], [11, 8], [13, 8], [15, 7]];
+    const br = [[7, 8], [6, 6], [6, 4], [5, 3]], br2 = [[11, 8], [11, 10], [12, 12]], br3 = [[3, 9], [2, 11]];
+    const cells = (pts) => {
+      const out = [];
       for (let i = 0; i + 1 < pts.length; i++) {
         const [x0, y0] = pts[i], [x1, y1] = pts[i + 1];
         const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0), 1);
-        for (let k = 0; k <= n; k++) {
-          const x = Math.round(x0 + ((x1 - x0) * k) / n), y = Math.round(y0 + ((y1 - y0) * k) / n);
-          img.put(x, y - 1, 0x1a0c08, 0.9); img.put(x, y + 1, 0x1a0c08, 0.7);
-          img.put(x, y, core ? (f ? P.FIRE[4] : P.FIRE[5]) : (f ? P.FIRE[3] : P.FIRE[4]), 1);
-        }
+        for (let k = i ? 1 : 0; k <= n; k++) out.push([Math.round(x0 + ((x1 - x0) * k) / n), Math.round(y0 + ((y1 - y0) * k) / n)]);
       }
+      return out;
     };
-    draw(path, true); draw(br, false); draw(br2, false);
-    glow(O, 8, 8, f ? 6 : 7, f ? 0.14 : 0.18, 0xff6020);
+    const all = [[main, 2], [br, 1], [br2, 1], [br3, 0]];
+    // glow on the earth first (under everything)
+    glow(O, 8, 8, f ? 7 : 6, f ? 0.22 : 0.15, 0xc83010);
     img.over(O);
-    // a spark rising
-    img.put(f ? 9 : 7, f ? 3 : 5, P.FIRE[5], 0.9);
+    // scorched rim
+    for (const [pts, w] of all) for (const [x, y] of cells(pts)) {
+      img.put(x, y - 1, 0x241410, 0.85); img.put(x, y + 1, 0x241410, 0.7);
+      if (w === 2) { img.put(x, y + 2, 0x3a2418, 0.35); img.put(x - 1, y, 0x241410, 0.4); }
+    }
+    // the fissure: dark walls and a glowing thread
+    for (const [pts, w] of all) {
+      const c = cells(pts);
+      c.forEach(([x, y], i) => {
+        const hot = w === 2 && (i === 6 || i === 7 || i === 11);
+        const col = hot ? (f ? FIRE[5] : FIRE[4]) : w === 2 ? (f ? FIRE[3] : FIRE[2]) : w === 1 ? (f ? FIRE[2] : FIRE[1]) : (f ? FIRE[1] : FIRE[0]);
+        img.put(x, y, col, 1);
+        if (w === 2 && i % 3 === 1) img.put(x, y + 1, f ? FIRE[1] : FIRE[0], 0.9);
+      });
+    }
+    // a spark rising from the widest point
+    img.put(f ? 9 : 8, f ? 3 : 5, f ? FIRE[4] : FIRE[3], 0.9);
+    if (f) img.put(10, 1, FIRE[3], 0.6);
     return img;
   }
   /** a heap of grey ash with live sparks (walkable) */

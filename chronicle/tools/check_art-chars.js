@@ -2,7 +2,7 @@
 // Pixel checks for art-chars (A13) in headless Chromium: builds every party / NPC
 // sheet, object, icon and face and checks the §11.3.1 contract:
 //   - sheets are {down,up,left,right} × 2 frames of 16x24, left = mirrored right
-//   - opaque pixels only (except the ghostly types and the fading girl)
+//   - opaque pixels only (every sheet, the ghostly types too: their fades are checker dithers, §11.4.2)
 //   - feet on the bottom: lowest opaque row is 23 (the outline under row-22 feet)
 //   - the side view's frame 0 is the standing pose (feet together; frame 1 is the stride)
 //   - the silhouette outline is the 1px ink colour, and no figure touches the frame edge
@@ -65,9 +65,9 @@ window.CHECK = function (minDiff) {
           colors.add(hex(p, i));
           const tr = (xx, yy) => xx >= 0 && yy >= 0 && xx < 16 && yy < 24 && !p[(yy * 16 + xx) * 4 + 3];
           if ((tr(x - 1, y) || tr(x + 1, y) || tr(x, y - 1) || tr(x, y + 1)) && hex(p, i) !== OUTL && a === 255) badOutline++;
-          if ((x === 0 || x === 15 || y === 0) && hex(p, i) !== OUTL) edge++;
+          if ((x === 0 || x === 15 || y === 0) && hex(p, i) !== OUTL && !(opts.outline || []).includes(hex(p, i))) edge++;
         }
-        if (!opts.ghostly && semi) F(key + ' ' + d + f + ': ' + semi + ' semi-transparent pixels');
+        if (semi) F(key + ' ' + d + f + ': ' + semi + ' semi-transparent pixels');
         if (!opts.ghostly && low !== 23) F(key + ' ' + d + f + ': lowest row ' + low + ' (feet must end on row 22 + outline)');
         if (!opts.ghostly && badOutline) F(key + ' ' + d + f + ': ' + badOutline + ' silhouette pixels not in the outline colour');
         if (edge) { edgeHits++; edgeOf[key] = (edgeOf[key] || []).concat(d + f + ':' + edge); }
@@ -98,7 +98,7 @@ window.CHECK = function (minDiff) {
     downs[name] = px(sh.down[0]);
   }
   for (const id of CA.PARTY_IDS) sheetCheck('party:' + id, id, { party: true });
-  for (const t of CA.NPC_TYPES) sheetCheck('npc:' + t, 'npc:' + t, { ghostly: GHOSTLY.has(t), still: t === 'fine_fade', animal: ANIMAL.has(t) || t === 'spirit' });
+  for (const t of CA.NPC_TYPES) sheetCheck('npc:' + t, 'npc:' + t, { ghostly: GHOSTLY.has(t), still: t === 'fine_fade', animal: ANIMAL.has(t) || t === 'spirit', outline: t === 'spirit' ? ['#58b8f0', '#80d8ff'] : null });
   res.stats.sheets = nSheets; res.stats.buildMs = Math.round(tBuild); res.stats.maxColors = maxColors; res.stats.avgColors = Math.round(sumColors / nSheets);
   res.stats.edgeFrames = edgeHits;
   for (const k in edgeOf) (/^party:/.test(k) ? F : W)(k + ': colour pixels on the frame edge, outline cut off (' + edgeOf[k].join(' ') + ')');

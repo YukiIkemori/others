@@ -155,6 +155,53 @@ window.CHECK = function () {
     }
   }
   res.n.themesWithOwnArt = own;
+  // ---------------------------------------------------------- outside trees & tree species
+  // The field draws cells beyond the edge with 'tile:<theme>:<outside>'; a wood's
+  // border must continue the trees inside the map (a tree in the middle of a wood).
+  const WOOD = ['TTTTT', 'TTTTT', 'TTTTT', 'TTTTT', 'TTTTT'];
+  let outTrees = 0;
+  const treeOf = {};
+  for (const th of Object.keys(TH)) {
+    const key = 'tile:' + th + ':tree';
+    if (!G.has(key)) { fail('no outside tree ' + key); continue; }
+    const cv = frames(G.get(key))[0];
+    if (!cv || cv.width !== 16 || cv.height !== 16) { fail(key + ' is not 16x16'); continue; }
+    R.DB.maps.__wood = { name: 'w', type: TH[th].town ? 'town' : 'dungeon', legend: 'local', theme: th, outside: 'T', rows: WOOD, spawns: { e: { x: 2, y: 2 } } };
+    const inner = frames(A.localTile(R.FieldMap.compile('__wood'), 2, 2))[0];
+    if (diff(cv, inner) > 0) fail(key + ' differs from a tree inside a wood (' + (diff(cv, inner) * 100).toFixed(0) + '% px)');
+    treeOf[th] = cv;
+    outTrees++;
+  }
+  for (const th of ['town_snow', 'town_ash', 'town_sand']) if (treeOf[th] && diff(treeOf[th], G.get('tile:tree')) < 0.2) fail(th + ' outside tree looks like the plain lawn tree');
+  if (treeOf.town_snow && treeOf.snow && diff(treeOf.town_snow, treeOf.snow) > 0.6) fail('the snow village and the snow peak grow different firs');
+  // canal bank beside a wood: the theme's natural ground, never a lawn lip in snow / sand / ash
+  const POND = ['TTTTT', 'T~~~T', 'T~~~T', 'T~~~T', 'TTTTT'];
+  const greenLip = (cv) => { const p = px(cv); let n = 0; for (let i = 0; i < p.length; i += 4) if (p[i + 1] > p[i] + 18 && p[i + 1] > p[i + 2] + 18) n++; return n; };
+  let banks = 0;
+  for (const th of ['town_snow', 'town_sand', 'town_ash']) {
+    R.DB.maps.__pond = { name: 'p', type: 'town', legend: 'local', theme: th, outside: 'T', rows: POND, spawns: { e: { x: 2, y: 2 } } };
+    const pm = R.FieldMap.compile('__pond');
+    for (const [x, y] of [[1, 1], [3, 1], [1, 3], [3, 3], [2, 1], [1, 2]]) {
+      const cv = frames(A.localTile(pm, x, y))[0];
+      const g = cv ? greenLip(cv) : 0;
+      banks++;
+      if (g > 6) fail(th + ' pond bank at ' + x + ',' + y + ' has a green lawn lip (' + g + ' px)');
+    }
+  }
+  // the ember is a glowing red crack: a hot core in both frames, no pale-straw sticks
+  let emberHot = 99, emberPale = 0;
+  if (G.has('decor:ember')) for (const cv of frames(G.get('decor:ember'))) {
+    const p = px(cv); let hot = 0, pale = 0;
+    for (let i = 0; i < p.length; i += 4) {
+      if (p[i + 3] < 128) continue;
+      if (p[i] > 170 && p[i + 1] < 150 && p[i + 2] < 90) hot++;
+      if (p[i] > 200 && p[i + 1] > 190 && p[i + 2] > 120) pale++;
+    }
+    emberHot = Math.min(emberHot, hot); emberPale = Math.max(emberPale, pale);
+  }
+  if (emberHot < 10) fail('decor:ember has only ' + emberHot + ' red-hot px');
+  if (emberPale > 6) fail('decor:ember has ' + emberPale + ' pale px (reads as sticks)');
+  res.n.outside = outTrees + ' themed outside trees, ' + banks + ' bank cells, ember ' + emberHot + ' hot / ' + emberPale + ' pale px';
   res.ms = Math.round(performance.now() - t0);
   res.warned = Object.keys(G._warned || {});
   return res;
@@ -182,6 +229,7 @@ async function main() {
     console.log('built: ' + res.n.tiles + ' tile keys, ' + res.n.decor + ' decor pieces, ' + res.n.contextCells + ' context cells in ' + res.ms + ' ms');
     console.log('max colours in a tile: ' + res.n.maxTileColours + ';  largest decor: ' + res.n.decorMax);
     console.log('secret hint: ' + res.n.secretHint + ';  themes with their own art: ' + res.n.themesWithOwnArt);
+    console.log('outside: ' + res.n.outside);
     if (res.warned.length) console.log('placeholder warnings: ' + res.warned.join(' '));
     for (const f of res.fails) console.log('  FAIL ' + f);
     const bad = res.fails.length + res.warned.filter((k) => /^(tile|decor):/.test(k)).length + mine.length;

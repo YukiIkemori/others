@@ -242,7 +242,15 @@ ${CTX.script()}
     const ids = IDS || BASES;
     const J = JSON.stringify;
     if (ONLY.includes('sheet')) {
-      const rows = ids.map((id) => [id, (USED[id] || []).concat([GOLD])]);
+      // the recolours of DESIGN §9.4.6 plus any the live R.Art.MON_COMPOSE (A14a) retuned
+      const live = await run(`(() => { const o = {}, C = (RPG.Art && RPG.Art.MON_COMPOSE) || {};
+        for (const id in C) { const r = C[id]; if (Array.isArray(r) && r[1] && Object.keys(r[1]).length) (o[r[0]] = o[r[0]] || []).push(r[1]); }
+        return o; })()`);
+      const rows = ids.map((id) => {
+        const list = (USED[id] || []).slice();
+        for (const v of live[id] || []) if (!list.some((u) => J(u) === J(v))) list.push(v);
+        return [id, list.concat([GOLD])];
+      });
       for (let i = 0, k = 0; i < rows.length; i += 7, k++) save('sheet' + (rows.length > 7 ? '_' + k : ''), await run(`SHEET.sheet(${J(rows.slice(i, i + 7))}, ${SCALE})`));
     }
     if (ONLY.includes('hue')) {

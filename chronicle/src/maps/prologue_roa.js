@@ -10,7 +10,7 @@
 // roa_house (20×14, theme `house`): study + bedroom. Spawns `bed` (the new game starts here,
 // DB.config.start) and `entrance`; the door leads back to roa `berna_house`.
 //
-// Contracts: spawns entrance (inside the gate, facing up) · berna_house · stone (in front of the
+// Contracts: spawns entrance (inside the gate, facing up) · berna_house (= inn, §10.13.3) · stone (in front of the
 // story stone, facing up: the ending E7 and story scenes) · NPC slots st_fine / st_rival two tiles
 // above `entrance` (§10.10.1, conds st_show_fine / st_show_rival) · NPC `elder` (里の長老, used by
 // story_home_t6) · NPC `berna` in roa_house (event roa_berna) · folk_a / folk_b (roa_a / roa_b).
@@ -105,6 +105,7 @@
     spawns: {
       entrance: { x: 30, y: 32, dir: 'up' },
       berna_house: { x: 22, y: 10, dir: 'down' },
+      inn: { x: 22, y: 10, dir: 'down' }, // §10.13.3 「inn（全町）」: roa's inn is the master's house (free, §10.6.1)
       stone: { x: 22, y: 17, dir: 'up' },
     },
     warps: [

@@ -1262,7 +1262,10 @@ function run(opts) {
     const V = 'V11';
     const battleFiles = /^src\/systems\/(battle|battle_ai|battle_scene|battle_fx|mon|glimmer)\.js$|^src\/data\/statuses\.js$/;
     for (const { rel, owner, code } of srcTexts) {
-      if (/repelSteps|repelBlocks/.test(code)) E(V, owner, `${rel}: R.Game.repelSteps / repelBlocks is still read or written (use R.Game.encItem, §0.16)`);
+      // a property read/write of the old counter; `delete x.repelSteps` (the one-way save migration of §3.2.5-7) is allowed
+      const reRep = /(\bdelete\s+)?[\w$\])]\s*(?:\.\s*(repel(?:Steps|Blocks))\b|\[\s*['"](repel(?:Steps|Blocks))['"]\s*\])/g;
+      let mr;
+      while ((mr = reRep.exec(code))) if (!mr[1]) { E(V, owner, `${rel}: R.Game.${mr[2] || mr[3]} is still read or written (use R.Game.encItem, §0.16)`); break; }
       if (battleFiles.test(rel)) continue;
       const re = /\bstatus\s*(?:\.\s*(poison|burn|sleep|paralyze|freeze|stun|confuse|silence|blind)|\[\s*'(poison|burn|sleep|paralyze|freeze|stun|confuse|silence|blind)'\s*\])\s*=(?!=)\s*([^;\n]*)/g;
       let mm;
@@ -1634,9 +1637,15 @@ function run(opts) {
     for (const i in (DB.config || {}).startItems || {}) source.add(i);
     for (const r of Object.values(DB.regions)) if (r.fragment) source.add(r.fragment);
     const sourcesReady = !empty('pools') && !empty('shops') && !empty('monsters') && !empty('events');
-    if (sourcesReady) for (const [id, it] of Object.entries(items)) if (!/^pmz__/.test(id) && !source.has(id)) E(V, own('items', id), `item ${id}: no way to obtain it (shop · pool · monster · event)`);
+    // a key item / story reward that nobody gives is the giver's error (the event that must ev.give it), not the item owner's
+    // (DESIGN §10.13.6 手に入る所, §8.8 / §10.13.9 rewards)
+    const GIVER = { k_winter_flame: 'R3', k_marsh_key: 'R4', k_shanty: 'R5', k_oath_hammer: 'R6', k_star_chart: 'R8', k_rowell_note: 'A19',
+      ac_tale_forest: 'R1', ac_tale_desert: 'R2', ac_tale_snow: 'R3', ac_tale_marsh: 'R4', ac_tale_isles: 'R5', ac_tale_mine: 'R6', ac_tale_ash: 'R7', ac_tale_star: 'R8',
+      ac_rival_pen: 'A19', hn_rival_bracer: 'A19', ac_berna_charm: 'A19', ac_otto_lantern: 'A18b' };
+    const giver = (id) => GIVER[id] || own('items', id);
+    if (sourcesReady) for (const [id, it] of Object.entries(items)) if (!/^pmz__/.test(id) && !source.has(id)) E(V, giver(id), `item ${id}: no way to obtain it (shop · pool · monster · event)`);
     // rewards (§8.14.2-7)
-    for (const [id, it] of Object.entries(items)) if (it.src === 'reward' && sourcesReady && !Object.values(DB.events).some((ev) => ((ev.meta || {}).gives || []).includes('item:' + id))) E(V, own('items', id), `reward ${id}: no event meta.gives item:${id}`);
+    for (const [id, it] of Object.entries(items)) if (it.src === 'reward' && sourcesReady && !Object.values(DB.events).some((ev) => ((ev.meta || {}).gives || []).includes('item:' + id))) E(V, giver(id), `reward ${id}: no event meta.gives item:${id}`);
     // consumables / keys ids
     if (!empty('items')) {
       for (const i of C.CONSUMABLES) if (!items[i]) E(V, 'A10b', `consumable '${i}' (§8.9) is not registered`);

@@ -37,7 +37,7 @@
       elem: { fire: 1.25 }, phys: { slash: 1.25, blunt: 0.5 }, statusRes: {},
       actions: [{ id: 'attack', w: 4 }, { id: 'e_howl', w: 2, cond: { every: [3, 0] } }, { id: 'e_crush', w: 2 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'hd_jelly_helm', rate: 32 }, super: { item: 'w_sword_sr_jellygeneral', rate: 256 } },
-      desc: 'かぶとをかぶった赤いゼリー。\nゼリーの群れを率いる。',
+      desc: '兜をかぶった赤いゼリー。\nゼリーの群れを率いる。',
     },
     jelly_5: {
       name: '虹ゼリー', goldName: '金色ゼリー', sprite: 'jelly_5', lineage: 'jelly', stage: 5, lv: 55, size: 's', race: 'slime',

@@ -120,8 +120,8 @@
     sc.ell(15.5, 25.3, 6.8, 3.2, { m: headM, g: 'head', z: 10, rz: 3 });
     // the great horn: thick at the root on the head, rising and bending toward
     // the viewer (so it narrows fast), forked at the tip
-    sc.tube([[15.5, 26.6, 1.9, 13], [15.5, 22.4, 2, 15], [15.5, 17.4, 1.7, 17], [15.5, 13.8, 1.3, 18]], { m: horn, g: 'horn' });
-    T.sym(W, (X) => sc.tube([[15.5, 13.8, 1.3, 18], [X(13.9), 11.4, 1, 18], [X(12.8), 9.2, 0.55, 18]], { m: horn, g: 'horn' }));
+    sc.tube([[15.5, 26.6, 1.9, 13], [15.5, 22.4, 2, 15], [15.5, 18.6, 1.7, 17], [15.5, 16, 1.3, 18]], { m: horn, g: 'horn' });
+    T.sym(W, (X) => sc.tube([[15.5, 16, 1.3, 18], [X(13.9), 13.8, 1, 18], [X(13), 12, 0.55, 18]], { m: horn, g: 'horn' }));
     // mandible stubs under the head
     T.sym(W, (X) => sc.tube([[X(13), 27.4, 0.9, 11], [X(13.8), 28.8, 0.45, 11]], { m: horn, g: 'mand' + X(0) }));
     // gloss bands, dimples, the rim of the shield
@@ -131,6 +131,12 @@
       for (const [x, y] of [[12.6, 12.4], [11.8, 15], [12.2, 17.6]]) sc.mark(X(x), y, -1);
     });
     sc.carve([[9.2, 18.6], [21.8, 18.6]], 1);
+    // the horn's lit left flank and shaded right flank (so the dark horn reads on the shell)
+    for (let y = 12; y < 27; y++) for (let x = 11; x < 21; x++) {
+      if (!sc.isG(x, y, 'horn')) continue;
+      if (!sc.isG(x - 1, y, 'horn')) sc.mark(x, y, 2);
+      else if (!sc.isG(x + 1, y, 'horn')) sc.mark(x, y, -1);
+    }
     const body = sc.render();
     // legs, drawn crisp (2 px: lit upper edge, dark lower edge): hind legs
     // behind the shell, middle and fore legs in front of it
@@ -151,8 +157,8 @@
     // claw tips
     T.sym(W, (X) => { p.set(X(1), 25, LEG[2]); p.set(X(4), 30, LEG[1]); p.set(X(9), 30, LEG[1]); });
     // the seam between the wing cases, above the forked horn tip
-    for (let y = 4; y <= 9; y++) over(p, 15, y, INK);
-    for (let y = 4; y <= 8; y++) over(p, 16, y, shell.r[4]);
+    for (let y = 3; y <= 13; y++) over(p, 15, y, INK);
+    for (let y = 3; y <= 11; y++) over(p, 16, y, y < 6 ? shell.r[3] : shell.r[4]);
     // small black eyes with a glint, set in the corners of the head
     T.stampM(p, 10, 24, ['kk', 'kw'], { k: INK, w: '#f0e0c0' });
     T.sym(W, (X) => { over(p, X(9), 24, headM.r[3]); over(p, X(9), 25, headM.r[2]); over(p, X(10), 26, headM.r[1]); over(p, X(11), 26, headM.r[1]); });

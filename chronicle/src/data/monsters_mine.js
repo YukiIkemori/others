@@ -128,7 +128,7 @@
       elem: { water: 1.25, wind: 0.75, light: 1.5, dark: 0.25 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 1 }, { id: 'e_dark_bolt', w: 2 }, { id: 'e_mind_suck', w: 2 }, { id: 'e_ward', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_stone_dark', rate: 8 }, rare: { item: 'ac_gem_core', rate: 32 }, super: { item: 'ac_sr_amethyst', rate: 256 } },
-      desc: '闇を吸いこんだ紫の水晶。\n近くの者の魔力を奪う。',
+      desc: '闇を吸いこんだ紫の水晶。\n近くの者のMPを奪う。',
     },
     // ---- goblin 小鬼（人型・m）: 山の坑道にすむ小鬼の一族。斧兵、火薬師、隊長、王。
     goblin_1: {
@@ -161,7 +161,7 @@
       elem: {}, phys: {}, statusRes: {},
       actions: [{ id: 'attack', w: 3 }, { id: 'e_howl', w: 2, cond: { once: true } }, { id: 'e_double', w: 1 }, { id: 'e_slash', w: 1 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_club_forgehammer', rate: 32 }, super: { item: 'w_sword_sr_goblincaptain', rate: 256 } },
-      desc: '角かぶとの小鬼の隊長。\n手下を奮い立たせて戦う。',
+      desc: '角兜の小鬼の隊長。\n手下を奮い立たせて戦う。',
     },
     goblin_5: {
       name: '小鬼の王', sprite: 'goblin_5', lineage: 'goblin', stage: 5, lv: 55, size: 'm', race: 'humanoid',

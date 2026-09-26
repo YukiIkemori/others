@@ -341,16 +341,36 @@
       return;
     }
     if (st === 'rivet') {
-      // one riveted iron plate over the chest, rows of rivets, a seam down the middle
-      const m = T.mask(p.w, p.h);
-      for (const [x, y] of reg.pts) m.set(x, y, 1);
-      p.blit(T.shade(m, rmp, { depth: 2, global: 0.45 }), 0, 0);
-      for (const [x, y] of reg.pts) {
-        const edge = !reg.has(x, y - 1) || !reg.has(x - 1, y);
-        if (edge) p.set(x, y, rmp[3]);
-        if ((y - Math.round(a[1] - reg.ry)) % Math.round(1.5 + 1.2 * k) === 1 && (x + y) % Math.round(2 + k) === 0) { p.set(x, y, rmp[4]); if (reg.has(x + 1, y + 1)) p.set(x + 1, y + 1, rmp[0]); }
+      // a riveted iron breastplate: rounded-rectangle plate (superellipse) over the chest, dark rim, lit
+      // top-left bevel, cylindrical shading across, a horizontal seam, rivets along the border and the seam
+      const rx = reg.rx * 0.82, ry = reg.ry * 0.95;
+      const inR = (x, y) => { const dx = (x - a[0]) / rx, dy = (y - a[1]) / ry; return dx * dx * dx * dx + dy * dy * dy * dy <= 1 && reg.has(x, y); };
+      const pts = reg.pts.filter(([x, y]) => inR(x, y));
+      if (!pts.length) return;
+      const x0 = Math.floor(a[0] - rx), x1 = Math.ceil(a[0] + rx);
+      const seamY = Math.round(a[1] + ry * 0.1);
+      const step = Math.round(2 + k);
+      for (const [x, y] of pts) {
+        const t = (x - x0) / Math.max(1, x1 - x0);
+        const rim = !inR(x - 1, y) || !inR(x + 1, y) || !inR(x, y - 1) || !inR(x, y + 1);
+        const base = T.clamp(T.cyl(t, 5), 1, 3);
+        let c;
+        if (rim) c = rmp[0];
+        else if (!inR(x, y - 2) || !inR(x - 2, y)) c = rmp[Math.min(4, base + 1)];
+        else if (!inR(x, y + 2) || !inR(x + 2, y)) c = rmp[Math.max(1, base - 1)];
+        else if (y === seamY) c = rmp[0];
+        else if (y === seamY + 1) c = rmp[Math.min(4, base + 1)];
+        else c = rmp[base];
+        p.set(x, y, c);
       }
-      for (let y = Math.floor(a[1] - reg.ry); y <= a[1] + reg.ry; y++) if (reg.has(a[0], y)) p.set(a[0], y, rmp[0]);
+      // rivets: bright head + dark shadow to the lower right, 1 px inside the rim and along the seam
+      const riv = (x, y) => { if (!inR(x, y) || !inR(x + 1, y + 1)) return; p.set(x, y, rmp[4]); p.set(x + 1, y + 1, rmp[0]); };
+      for (const [x, y] of pts) {
+        const inner = inR(x - 1, y) && inR(x + 1, y) && inR(x, y - 1) && inR(x, y + 1);
+        const nearRim = inner && (!inR(x - 2, y) || !inR(x + 2, y) || !inR(x, y - 2) || !inR(x, y + 2));
+        if (nearRim && (x + y) % step === 0 && (y < a[1] - ry + 3 || Math.abs(x - a[0]) > rx - 3)) riv(x, y);
+      }
+      for (let x = x0 + 3; x <= x1 - 3; x += step + 1) riv(x, seamY - 2);
       return;
     }
     // lamellar plates: rows of overlapping plates over the chest, staggered seams, a dark rim around the

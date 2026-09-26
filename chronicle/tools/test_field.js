@@ -661,7 +661,7 @@ const SECTIONS = [
     eq(L.grace, R.Field.ENC_GRACE, 'grace after it');
     // an event battle gives the same 6-step grace
     L.grace = 0;
-    await R.Events.run((ev) => ev.battle('fx_golem')); await settle(200);
+    await until(R.Events.run((ev) => ev.battle('fx_golem'))); await settle(200);
     eq(L.grace, R.Field.ENC_GRACE, 'grace after an event battle');
     R.Field.noEncounter = true;
     // lvOff of the map is passed to the battle (fx_dungeon_2 lvOff 2)

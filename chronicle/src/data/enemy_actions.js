@@ -66,7 +66,7 @@
     e_ash_cloud: {name: '灰かぶせ', kind: 'enemy', target: 'enemies', effects: [{type: 'status', status: 'blind', chance: 0.3}], fx: 'smoke', msg: '{user}は熱い灰をまき散らした！'},
     e_gaze: {name: 'にらみ', kind: 'enemy', target: 'enemy', effects: [{type: 'status', status: 'paralyze', chance: 0.35}], fx: 'paralyze', msg: '{user}はぎろりとにらみつけた！'},
     e_evil_eye: {name: 'ゆらめく瞳', kind: 'enemy', target: 'enemies', effects: [{type: 'status', status: 'confuse', chance: 0.2}], fx: 'confuse', msg: '{user}の目が妖しく光った！'},
-    e_charm: {name: '魅了のまなざし', kind: 'enemy', target: 'enemy', effects: [{type: 'status', status: 'confuse', chance: 0.4}], fx: 'confuse', msg: '{user}はうっとりするまなざしを向けた！'},
+    e_charm: {name: '魅了のまなざし', kind: 'enemy', target: 'enemy', effects: [{type: 'status', status: 'confuse', chance: 0.4}], fx: 'confuse', msg: '{user}は妖しいまなざしを向けた！'}, // A11: STYLE_JA §1 (check_text T6): a message line ≤ 20 wide with {user} = 5
     e_lullaby: {name: '子守歌', kind: 'enemy', target: 'enemies', effects: [{type: 'status', status: 'sleep', chance: 0.25}], fx: 'song', msg: '{user}は眠りを誘う歌を歌った！'},
     e_dance: {name: '惑わしの踊り', kind: 'enemy', target: 'enemies', effects: [{type: 'status', status: 'confuse', chance: 0.2}], fx: 'song', msg: '{user}はくるくると踊りだした！'},
     e_curse: {name: '呪いの声', kind: 'enemy', target: 'enemy', effects: [{type: 'status', status: 'silence', chance: 0.45}], fx: 'silence', msg: '{user}は呪いの声をあげた！', aim: 'middle'},
@@ -75,17 +75,17 @@
     e_scare: {name: 'おどかし', kind: 'enemy', target: 'enemies', effects: [{type: 'buff', stat: 'atk', stages: -1, chance: 0.5}], fx: 'debuff', msg: '{user}は恐ろしい声でおどかした！'},
     e_wail: {name: '嘆きの声', kind: 'enemy', target: 'enemies', effects: [{type: 'status', status: 'sleep', chance: 0.2}], fx: 'song', msg: '{user}はすすり泣くような声をあげた！'},
     e_gloom: {name: '絶望の影', kind: 'enemy', target: 'enemies', effects: [{type: 'buff', stat: 'atk', stages: -1, chance: 0.5}, {type: 'buff', stat: 'mag', stages: -1, chance: 0.5}], fx: 'dark', msg: '{user}は絶望の影を広げた！'},
-    e_roar: {name: '雄たけび', kind: 'enemy', target: 'enemies', effects: [{type: 'status', status: 'stun', chance: 0.15}], fx: 'debuff', msg: '{user}は大地を揺るがす雄たけびをあげた！'},
+    e_roar: {name: '雄たけび', kind: 'enemy', target: 'enemies', effects: [{type: 'status', status: 'stun', chance: 0.15}], fx: 'debuff', msg: '{user}の大地を揺るがす雄たけび！'}, // A11: STYLE_JA §1 (check_text T6): a message line ≤ 20 wide with {user} = 5
     e_sonic: {name: '耳鳴りの波', kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'magic', power: 0.4}, {type: 'status', status: 'confuse', chance: 0.15}], fx: 'magic', msg: '{user}は耳をつんざく音を出した！'},
     e_freeze_gaze: {name: '凍てつく眼', kind: 'enemy', target: 'enemy', effects: [{type: 'status', status: 'freeze', chance: 0.35}], fx: 'ice', msg: '{user}の眼が青白く光った！'},
-    e_prank: {name: 'いたずら', kind: 'enemy', target: 'enemy', effects: [{type: 'buff', stat: 'agi', stages: -1, chance: 0.6}, {type: 'buff', stat: 'def', stages: -1, chance: 0.3}], fx: 'debuff', msg: '{user}はくすくす笑っていたずらをした！'},
+    e_prank: {name: 'いたずら', kind: 'enemy', target: 'enemy', effects: [{type: 'buff', stat: 'agi', stages: -1, chance: 0.6}, {type: 'buff', stat: 'def', stages: -1, chance: 0.3}], fx: 'debuff', msg: '{user}はくすくす笑っていたずらした！'}, // A11: STYLE_JA §1 (check_text T6): a message line ≤ 20 wide with {user} = 5
     e_forget: {name: '忘れさせる手', kind: 'enemy', target: 'enemy', effects: [{type: 'damage', formula: 'magic', power: 0.8, mp: true}, {type: 'status', status: 'silence', chance: 0.2}], fx: 'mp', msg: '{user}の白い手が記憶をなでた！'},
     e_transcribe: {name: '書き写し', kind: 'enemy', target: 'enemy', effects: [{type: 'dispel', side: 'good'}, {type: 'status', status: 'silence', chance: 0.3}], fx: 'dispel', msg: '{user}は相手の力を書き写して消した！'},
     e_erase_all: {name: '白紙の波', kind: 'enemy', target: 'enemies', effects: [{type: 'dispel', side: 'good'}, {type: 'status', status: 'silence', chance: 0.15}], fx: 'dispel', msg: '{user}から白い波が広がった！'},
     e_blank_breath: {name: '白い息', kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'breath', power: 0.55}, {type: 'status', status: 'silence', chance: 0.2}], fx: 'breath', msg: '{user}は何もかも白くする息を吐いた！'},
     e_bell_croak: {name: '鐘の鳴き声', kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'magic', power: 0.5, element: 'earth'}, {type: 'status', status: 'stun', chance: 0.15}], fx: 'song', msg: '{user}はゴーンと鐘のように鳴いた！'},
     e_hex: {name: '呪いのくぎ', kind: 'enemy', target: 'enemy', effects: [{type: 'damage', formula: 'magic', power: 1.2, element: 'dark'}, {type: 'buff', stat: 'def', stages: -1, chance: 0.5}], fx: 'dark', msg: '{user}は呪いのくぎを打ちこんだ！'},
-    e_dispel: {name: '打ち消しの波', kind: 'enemy', target: 'enemies', effects: [{type: 'dispel', side: 'good'}], fx: 'dispel', msg: '{user}はすべての守りを打ち消す波を放った！'},
+    e_dispel: {name: '打ち消しの波', kind: 'enemy', target: 'enemies', effects: [{type: 'dispel', side: 'good'}], fx: 'dispel', msg: '{user}は守りを打ち消す波を放った！'}, // A11: STYLE_JA §1 (check_text T6): a message line ≤ 20 wide with {user} = 5
     e_fire_bolt: {name: '火の玉', kind: 'enemy', target: 'enemy', effects: [{type: 'damage', formula: 'magic', power: 1.3, element: 'fire'}], fx: 'fire', msg: '{user}は火の玉を放った！'},
     e_fire_rain: {name: '火の雨', kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'magic', power: 0.75, element: 'fire'}], fx: 'fire2', msg: '{user}は火の雨を降らせた！'},
     e_lava_spit: {name: '溶岩吐き', kind: 'enemy', target: 'enemy', effects: [{type: 'damage', formula: 'magic', power: 1.3, element: 'fire'}, {type: 'status', status: 'burn', chance: 0.25}], fx: 'fire2', msg: '{user}は煮えたぎる溶岩を吐いた！'},
@@ -104,7 +104,7 @@
     e_dark_bolt: {name: '闇の玉', kind: 'enemy', target: 'enemy', effects: [{type: 'damage', formula: 'magic', power: 1.3, element: 'dark'}], fx: 'dark', msg: '{user}は闇の玉を放った！'},
     e_dark_mist: {name: '闇の霧', kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'magic', power: 0.75, element: 'dark'}], fx: 'dark2', msg: '{user}は闇の霧を広げた！'},
     e_life_suck: {name: '命吸い', kind: 'enemy', target: 'enemy', effects: [{type: 'damage', formula: 'magic', power: 1.1, element: 'dark', drain: 0.5}], fx: 'drain', msg: '{user}は命を吸い取ろうとした！'},
-    e_mind_suck: {name: '魔力吸い', kind: 'enemy', target: 'enemy', effects: [{type: 'damage', formula: 'magic', power: 0.8, mp: true, drain: 1}], fx: 'mp', msg: '{user}は魔力を吸い取ろうとした！', aim: 'middle'},
+    e_mind_suck: {name: 'MP吸い', kind: 'enemy', target: 'enemy', effects: [{type: 'damage', formula: 'magic', power: 0.8, mp: true, drain: 1}], fx: 'mp', msg: '{user}はMPを吸い取ろうとした！', aim: 'middle'}, // A11: STYLE_JA §7.4 (check_text T9): 魔力 only in item names → MP
     e_prism_ray: {name: '七色の光', kind: 'enemy', target: 'enemy', effects: [{type: 'damage', formula: 'magic', power: 1.4}], fx: 'magic2', msg: '{user}は七色の光を放った！', elements: ['fire', 'water', 'wind', 'earth', 'light', 'dark']},
     e_gem_beam: {name: '宝玉の光線', kind: 'enemy', target: 'enemy', effects: [{type: 'damage', formula: 'magic', power: 1.5}], fx: 'magic2', msg: '{user}の宝玉が光線を放った！', elements: ['fire', 'water', 'light']},
     e_void_wave: {name: '虚無の波', kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'magic', power: 0.85, element: 'dark'}], fx: 'dark3', msg: '{user}は虚無の波を放った！'},

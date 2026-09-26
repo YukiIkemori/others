@@ -110,7 +110,11 @@ group('counts (§9.0 0.1, §9.6, §10.13.4)', () => {
   ok(regular.length === 211, 'regular monsters 211, got ' + regular.length);
   const eActs = Object.keys(DB.actions).filter((k) => k.startsWith('e_'));
   ok(eActs.length === 124, 'e_ actions 124, got ' + eActs.length);
-  ok(ZONES.every((z) => DB.encounters[z]) && Object.keys(DB.encounters).length === 26, 'zones = §10.13.4 (26)');
+  const DX = CM.expected();
+  const extra = Object.keys(DB.encounters).filter((z) => !ZONES.includes(z));
+  ok(ZONES.length === 26 && ZONES.every((z) => DB.encounters[z]), 'zones = §10.13.4 (26)');
+  // other owners may derive zones from ours (same groups; OB's z_postgame_oblivion_den) — nothing else
+  for (const z of extra) ok(CM.derivedFrom(DB, DX, z), `extra zone ${z} is a copy of a §9.7.3 zone`);
   ok(regular.filter(isMetal).length === 6, 'metal species 6');
   ok(regular.filter((id) => DB.monsters[id].flags.includes('flying')).length === 30, 'flying regulars 30 (§9.14.2)');
 });

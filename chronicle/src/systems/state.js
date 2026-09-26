@@ -453,6 +453,14 @@
         for (const id in g.book.tech) if (!DB.actions[id]) delete g.book.tech[id];
         for (const id in g.book.spell) if (!DB.actions[id]) delete g.book.spell[id];
       }
+      // who learned it: a list of char ids (a damaged entry becomes an empty list, then goes)
+      for (const k of ['tech', 'spell']) {
+        for (const id in g.book[k]) {
+          const v = g.book[k][id];
+          const list = Array.isArray(v) ? Array.from(new Set(v.filter((x) => typeof x === 'string'))) : [];
+          if (list.length) g.book[k][id] = list; else delete g.book[k][id];
+        }
+      }
       // characters
       const seenIds = new Set();
       const fix = (list) => (Array.isArray(list) ? list : []).filter((c) => {

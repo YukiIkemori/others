@@ -1238,7 +1238,9 @@
         const nw = Math.min(52, Math.ceil(g.textWidth(p.name)));
         const tw = nw + 8, tx = x + Math.floor((WIN.w - tw) / 2);
         g.rect(tx, y, tw, 5, th.fill);
-        g.fitText(p.name, tx + 4, y - 3, 52, { color: col });
+        // name at y − 3 (§11.5.2); a raised window (y 2) would push the kana's top row off the screen, so the
+        // name never goes above the screen's first row (it rises 2 px instead of 3 there)
+        g.fitText(p.name, tx + 4, Math.max(0, y - 3), 52, { color: col });
         g.text('H', x + 6, y + 6, { color: col });
         g.text(String(p.hp), x + 54, y + 6, { color: col, align: 'right' });
         g.text('M', x + 6, y + 17, { color: col });

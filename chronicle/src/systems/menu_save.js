@@ -14,7 +14,7 @@
   function slotChapter(m) {
     if (m.clear) return 'クリア';
     const t = m.tier != null ? m.tier : 0;
-    return t > 0 ? '年代記 第' + t + '章' : '年代記 序章';
+    return t > 0 ? '年代記　第' + t + '章' : '年代記　序章';
   }
   /** one 記録 window (§11.7.14). s: {summary} | null */
   function drawSlot(i, s, x, y, w, h, opts) {
@@ -229,14 +229,14 @@
           drawSlot(i, this.slots ? this.slots[i] : null, 4, y, 248, 56);
           if (this.index === i) G().cursor(0, y + 7, !this.busy);
         }
-        if (!this.slots) G().text('読み込んでいる……', 128, 30, { align: 'center', color: Kt.COL.gray });
+        if (!this.slots) G().text('読み込んでいます。', 128, 30, { align: 'center', color: Kt.COL.gray });
         if (!this.o.noCode) {
           G().window(4, 178, 248, 20);
           G().text('冒険の合言葉を見る', 20, 182, { color: G().C.cyan });
           if (this.index === 3) G().cursor(8, 183, !this.busy);
         }
         G().window(4, 200, 248, 20);
-        G().text(this.index === 3 ? '今の冒険を、文字の合言葉にして写しておく。' : 'どの記録に書き記しますか？', 14, 204, { color: Kt.COL.sub, size: 8 });
+        G().text(this.index === 3 ? '今の冒険を、文字の合言葉にして写す。' : 'どの記録に書き記しますか？', 14, 204, { color: Kt.COL.sub, size: 8 });
       }
     }
 

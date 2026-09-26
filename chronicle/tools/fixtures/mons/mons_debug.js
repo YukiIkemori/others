@@ -18,6 +18,10 @@
     return z.groups.filter((g) => !(g.tierMin != null && T < g.tierMin) && !(g.tierMax != null && T > g.tierMax) &&
       g.mons.every(([r]) => resolve(r, T)));
   }
+  // §11 region table: the world backdrop of each region (zones with bg:null use the field's terrain in play)
+  const WORLD_BG = { prologue: 'grass', r_forest: 'forest', r_desert: 'desert', r_snow: 'snow', r_marsh: 'swamp', r_isles: 'beach',
+    r_mine: 'hills', r_ash: 'ashland', r_star: 'grass', finale: 'grass', postgame: 'oblivion' };
+  function bgOf(z) { return z.bg || WORLD_BG[z.region] || 'grass'; }
   function width(s) { let w = 0; for (const ch of s) w += ch.charCodeAt(0) < 0x100 ? 0.5 : 1; return w; }
   function goldenName(m) { return m.goldName || (width(m.name) <= 5 ? '金色の' + m.name : '金の' + m.name); }
   R.monsDebug = {
@@ -34,9 +38,9 @@
       const g = eligible(z, T)[i];
       if (!g) return 'no group ' + i;
       const mons = g.mons.map(([r, a, b]) => [resolve(r, T), o.max === false ? a : b]);
-      const spec = { mons, tier: z.tier === 'dyn' ? T : z.tier, lvOff: z.lvOff || 0, bg: z.bg || 'grass', noRare: true, noGolden: !o.golden };
-      if (o.golden) spec.golden = [0];
-      R.Battle.start(spec);
+      // the engine rolls golden individuals only in zone battles → search a seed whose zone battle leads with this species
+      if (o.golden) return this.goldenZone(zone, T, mons[0][0]);
+      R.Battle.start({ mons, tier: z.tier === 'dyn' ? T : z.tier, lvOff: z.lvOff || 0, bg: bgOf(z), noRare: true, noGolden: true });
       return JSON.stringify(mons);
     },
     /** zone battle whose first monster is `want`, made golden (golden:'force'); seeds are searched so it is reproducible */

@@ -1,5 +1,5 @@
 {
-  "_doc": "A11 balance overlay on the DESIGN.md §9 tables (found with tools/sim_zones.js). check_mons.js --write applies it; check_mons.js verifies src/data == DESIGN ⊕ this file. monsters.<id>.<field> replaces that field; encounters.<zone>.groups replaces the zone's groups. Every entry carries a why.",
+  "_doc": "A11 balance overlay on the DESIGN.md §9 tables (found with tools/sim_zones.js). check_mons.js --write applies it; check_mons.js verifies src/data == DESIGN ⊕ this file. monsters.<id>.<field> replaces that field; encounters.<zone>.groups replaces the zone's groups; actions.<id>.<name|msg> replaces that text (STYLE_JA fixes). Every entry carries a why.",
   "monsters": {
     "jelly_1": {
       "s": {
@@ -210,7 +210,8 @@
         "mag": 0.8,
         "agi": 1.05
       },
-      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 15.0% → 11.2% (damage ×0.72 on s.atk/s.mag; lineage moved down only)"
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 15.0% → 11.2% (damage ×0.72 on s.atk/s.mag; lineage moved down only) ／ desc: STYLE_JA §3/§7.4 (check_text T9/T10): かぶと → 兜",
+      "desc": "氷の兜をかぶった小鬼の\n大将。雪の子らを率いる。"
     },
     "yeti_3": {
       "s": {
@@ -282,7 +283,8 @@
         "agi": 1.2,
         "atk": 0.77
       },
-      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 13.9% → 9.3% (damage ×0.77 on s.atk/s.mag; lineage moved down only)"
+      "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 13.9% → 9.3% (damage ×0.77 on s.atk/s.mag; lineage moved down only) ／ desc: STYLE_JA §3/§7.4 (check_text T9/T10): 魔力 → MP (魔力 only in item names)",
+      "desc": "青白くゆれる魂の火。\nMPを吸い取っていく。"
     },
     "lizardman_4": {
       "s": {
@@ -634,6 +636,22 @@
         "agi": 0.9
       },
       "why": "sim_zones species danger (pure group worth 3.2 standard monsters, standard party): 30.8% → 12.3% (damage ×0.32 on s.atk/s.mag; lineage moved down only)"
+    },
+    "jelly_4": {
+      "desc": "兜をかぶった赤いゼリー。\nゼリーの群れを率いる。",
+      "why": "desc: STYLE_JA §3/§7.4 (check_text T9/T10): かぶと → 兜"
+    },
+    "crystal_4": {
+      "desc": "闇を吸いこんだ紫の水晶。\n近くの者のMPを奪う。",
+      "why": "desc: STYLE_JA §3/§7.4 (check_text T9/T10): 魔力 → MP (魔力 only in item names)"
+    },
+    "goblin_4": {
+      "desc": "角兜の小鬼の隊長。\n手下を奮い立たせて戦う。",
+      "why": "desc: STYLE_JA §3/§7.4 (check_text T9/T10): かぶと → 兜"
+    },
+    "automaton_4": {
+      "desc": "兜を飾ったからくりの大将。\n塔の兵を指揮する。",
+      "why": "desc: STYLE_JA §3/§7.4 (check_text T9/T10): かぶと → 兜"
     }
   },
   "encounters": {
@@ -2317,6 +2335,29 @@
         }
       ],
       "why": "M5: a lone 混沌の祖獣 (strength 1.8) was below the 2.2 group minimum → with one 虚無の騎士 (2.8)."
+    }
+  },
+  "actions": {
+    "e_charm": {
+      "msg": "{user}は妖しいまなざしを向けた！",
+      "why": "STYLE_JA §1 (check_text T6): a message line ≤ 20 wide with {user} = 5"
+    },
+    "e_roar": {
+      "msg": "{user}の大地を揺るがす雄たけび！",
+      "why": "STYLE_JA §1 (check_text T6): a message line ≤ 20 wide with {user} = 5"
+    },
+    "e_prank": {
+      "msg": "{user}はくすくす笑っていたずらした！",
+      "why": "STYLE_JA §1 (check_text T6): a message line ≤ 20 wide with {user} = 5"
+    },
+    "e_dispel": {
+      "msg": "{user}は守りを打ち消す波を放った！",
+      "why": "STYLE_JA §1 (check_text T6): a message line ≤ 20 wide with {user} = 5"
+    },
+    "e_mind_suck": {
+      "name": "MP吸い",
+      "msg": "{user}はMPを吸い取ろうとした！",
+      "why": "STYLE_JA §7.4 (check_text T9): 魔力 only in item names → MP"
     }
   }
 }

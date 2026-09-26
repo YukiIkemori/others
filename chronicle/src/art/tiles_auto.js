@@ -67,8 +67,26 @@
     if (id === 'flowers') return 'lgrass';
     return id;
   }
+  // Natural ground of a theme: what a tree in the middle of a wood stands on, and
+  // what the map's `outside` trees are drawn over. Towns: the lawn, except the
+  // snow village (snow), the oasis town (sand) and the ash town (bare earth).
+  const NAT_GROUND = { town_snow: 'snowfloor', town_sand: 'sand', town_ash: 'dirt' };
+  function natGround(theme) {
+    if (NAT_GROUND[theme]) return NAT_GROUND[theme];
+    const d = theme && R.DB.themes && R.DB.themes[theme];
+    if (!theme || theme === 'generic' || (d && d.town) || (A.isTownTheme && A.isTownTheme(theme))) return 'lgrass';
+    return 'floor';
+  }
+  // tree species by theme: firs in the snow, scorched trees in the ash lands
+  const FIR_THEMES = { town_snow: 1, snow: 1, ice: 1 };
+  const ASH_THEMES = { town_ash: 1, volcano: 1 };
+  function treeStyle(theme, gname) {
+    if (gname === 'snowfloor' || gname === 'snow' || FIR_THEMES[theme]) return 'snow';
+    if (ASH_THEMES[theme]) return 'ash';
+    return '';
+  }
   /** the ground an object stands on: weighted vote of the neighbours */
-  function underGround(m, x, y) {
+  function underGround(m, x, y, fallback) {
     const score = {};
     const vote = (dx, dy, w) => {
       let id = m.tileAt(x + dx, y + dy);
@@ -80,7 +98,7 @@
     vote(-1, 1, 0.5); vote(1, 1, 0.5); vote(-1, -1, 0.25); vote(1, -1, 0.25);
     let best = null, bs = 0;
     for (const k in score) if (score[k] > bs) { bs = score[k]; best = k; }
-    return best || (m.theme ? 'floor' : 'wood');
+    return best || fallback || (m.theme ? 'floor' : 'wood');
   }
 
   // ------------------------------------------------------------ shading
@@ -335,17 +353,19 @@
 
   // ------------------------------------------------------------ objects
   function objectTile(m, x, y, id, theme) {
-    const g = underGround(m, x, y);
+    const g = underGround(m, x, y, id === 'tree' ? natGround(theme) : null);
     const gname = groundName(g, theme);
+    const style = id === 'tree' ? treeStyle(theme, gname) : '';
     let ctx = '';
     if (JOIN[id]) {
       const s = (dx, dy) => (m.tileAt(x + dx, y + dy) === id ? '1' : '0');
       ctx = s(-1, 0) + s(1, 0) + s(0, -1) + s(0, 1);
     }
-    const key = 'o|' + id + '|' + gname + '|' + ctx;
+    const key = 'o|' + id + '|' + gname + '|' + ctx + '|' + style;
     return cached(key, () => {
       const c = ctx ? { l: ctx[0] === '1', r: ctx[1] === '1', u: ctx[2] === '1', d: ctx[3] === '1' } : {};
-      if (gname === 'snowfloor' || gname === 'snow') c.snow = true;
+      if (gname === 'snowfloor' || gname === 'snow' || style === 'snow') c.snow = true;
+      else if (style === 'ash') c.ash = true;
       const nf = ANIM_OBJ[id] || 1;
       const fl = A.floorBuf(gname);
       if (nf > 1) return tk().frames(nf, (f) => A.objectArt(id, fl, Object.assign({ f }, c)));
@@ -379,4 +399,41 @@
     return null;
   };
   A.localTileCacheSize = () => CACHE.size;
+  A.natGround = natGround;
+  A.treeStyle = treeStyle;
+
+  // ------------------------------------------------------------ outside cells
+  // The field draws cells beyond a map's edge with 'tile:<theme>:<outside>' when that
+  // key exists, else the plain 'tile:<outside>' (field.js tileGfx). Walls, rocks and
+  // other themed tiles already have themed keys and plain grounds / water are the
+  // same in every theme; trees are not: register the art of a tree deep inside a
+  // wood, drawn by this tiler, so the border continues what is inside the map:
+  // snowy firs round the snow village, scorched trees round the ash town, trees on
+  // sand in the oasis town and on the forest floor in the forest dungeons.
+  const OUTSIDE_IDS = ['tree'];
+  function solidMap(id, theme) {
+    return {
+      id: '~outside', theme, def: {}, w: 64, h: 64, isWorld: false,
+      tileAt: () => id, decorAt: () => null, inBounds: () => true,
+    };
+  }
+  /** art of a cell of tile `id` surrounded by the same tile, in `theme` (canvas | frames) */
+  A.outsideTile = function (theme, id) {
+    let g = null;
+    try { g = A.localTile(solidMap(id, theme), 32, 32); } catch (e) { g = null; }
+    return g || R.Gfx.get('tile:' + id);
+  };
+  function registerOutside() {
+    const G = R.Gfx;
+    if (!G || !R.DB.themes) return;
+    for (const theme of Object.keys(R.DB.themes)) {
+      for (const id of OUTSIDE_IDS) {
+        const key = 'tile:' + theme + ':' + id;
+        if (G.has(key) || !(id in R.DB.tiles)) continue;
+        G.def(key, () => A.outsideTile(A.themeOf ? A.themeOf(theme) : theme, id));
+      }
+    }
+  }
+  registerOutside();
+  if (R.onBoot) R.onBoot(registerOutside);
 })(window.RPG);

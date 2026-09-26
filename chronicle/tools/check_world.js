@@ -187,6 +187,31 @@ function checkWorld(R) {
     return -1;
   }
 
+  /** the least encounter load between two cells: the sum of the entered tiles' `enc` (8-way
+   *  walking as above). The forest road is a shortcut in this sense: forest (enc 1.3) → road (0.5). */
+  function encLoad(t, a, b) {
+    const cost = (x, y) => { const d = DB.tiles[t[wy(y)][wx(x)]] || {}; return Math.round((d.enc != null ? d.enc : 1) * 10); };
+    const open = (x, y) => passOf(t[wy(y)][wx(x)]) && !chestAt[wy(y) * W + wx(x)];
+    const dist = new Int32Array(W * H).fill(-1), buckets = [[wy(a[1]) * W + wx(a[0])]];
+    const kb = wy(b[1]) * W + wx(b[0]);
+    for (let c = 0; c < buckets.length; c++) {
+      for (const k of buckets[c] || []) {
+        if (dist[k] >= 0) continue;
+        dist[k] = c;
+        if (k === kb) return c / 10;
+        const x = k % W, y = (k / W) | 0;
+        for (const [dx, dy] of N8) {
+          const nx = wx(x + dx), ny = wy(y + dy), nk = ny * W + nx;
+          if (dist[nk] >= 0 || !open(nx, ny)) continue;
+          if (dx && dy && !(open(x + dx, y) && open(x, y + dy))) continue;
+          const nc = c + cost(nx, ny);
+          (buckets[nc] = buckets[nc] || []).push(nk);
+        }
+      }
+    }
+    return -1;
+  }
+
   // ---------------------------------------------------------- spawns / icons / warps
   const spawns = def.spawns || {};
   const warps = def.warps || [];
@@ -379,6 +404,10 @@ function checkWorld(R) {
     const b = steps(tilesFor(makeState({ flags: ['prologue_done'], cleared: ['r_forest'] })), f, at('fern'));
     stats.forkToFern = [a, b];
     if (!(a > 0 && b > 0 && b <= a)) E(`the forest road breaks the way to フェルン (${a} → ${b})`);
+    const la = encLoad(T.prologue_done, f, at('fern'));
+    const lb = encLoad(tilesFor(makeState({ flags: ['prologue_done'], cleared: ['r_forest'] })), f, at('fern'));
+    stats.forkToFernLoad = [la, lb];
+    if (!(la > 0 && lb > 0 && lb <= la * 0.8)) E(`the forest road is no shortcut to フェルン (encounter load ${la} → ${lb}; want at most 80%)`);
   }
 
   // ---------------------------------------------------------- events (§10.5.6)
@@ -541,7 +570,8 @@ if (require.main === module) {
   const verbose = process.argv.includes('--verbose');
   const st = res.stats;
   console.log(`  icons ${st.icons}, zone rects ${st.zoneRects}, peninsula ${st.peninsulaCells} cells, ロア→ファロス ${st.roaToLute} steps, ` +
-    `ドヴァン→オルビス ${st.dovanToOrbis && st.dovanToOrbis.join('→')} steps, 分かれ道→フェルン ${st.forkToFern && st.forkToFern.join('→')} steps`);
+    `ドヴァン→オルビス ${st.dovanToOrbis && st.dovanToOrbis.join('→')} steps, 分かれ道→フェルン ${st.forkToFern && st.forkToFern.join('→')} steps ` +
+    `(encounter load ${st.forkToFernLoad && st.forkToFernLoad.join('→')})`);
   console.log(`  fog ${st.fogCells && st.fogCells.join('/')} cells, secret tiles ${st.secretCells}, deep mountain cells ${st.deepMountainCells}, unreachable walkable ${st.unreachableWalkable}`);
   for (const k of ['world_c1', 'world_c2', 'world_c3']) if (st[k]) console.log(`  ${k}: ${st[k]}`);
   console.log('  zone cells: ' + Object.keys(st.zoneCells || {}).sort().map((k) => `${k} ${st.zoneCells[k]}`).join(', '));

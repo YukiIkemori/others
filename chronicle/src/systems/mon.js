@@ -160,17 +160,20 @@
     const sm = (k) => (s[k] != null ? s[k] : 1);
     const set = (k, v) => { if (def[k] == null) def[k] = v; };
     const r = (v, min) => Math.max(min == null ? 0 : min, Math.round(v));
+    // unrounded nominal values: R.Mon.def scales from these, so a small nominal level does not amplify rounding
+    const raw = {};
+    const setR = (k, v, min) => { if (def[k] == null) { def[k] = r(v, min); raw[k] = Math.max(min == null ? 0 : min, v); } };
     if (!def.flags) def.flags = [];
     if (has(def, 'boss')) {
       const b = bossRow(def, id);
-      set('hp', r(hpBoss(lv) * (def.hpShare != null ? def.hpShare : b.hpMul != null ? b.hpMul : 1) * sm('hp'), 1));
-      set('atk', r(c.atk * b.atk * sm('atk')));
-      set('mag', r(c.mag * b.mag * sm('mag')));
-      set('def', r(c.def * b.def * sm('def')));
-      set('mdef', r(c.mdef * (b.mdef != null ? b.mdef : b.def) * sm('mdef')));
-      set('agi', r(c.agi * b.agi * sm('agi'), 1));
-      set('exp', r(c.exp * b.exp * (rw.exp != null ? rw.exp : 1)));
-      set('gold', r(c.gold * b.gold * (rw.gold != null ? rw.gold : 1)));
+      setR('hp', hpBoss(lv) * (def.hpShare != null ? def.hpShare : b.hpMul != null ? b.hpMul : 1) * sm('hp'), 1);
+      setR('atk', c.atk * b.atk * sm('atk'));
+      setR('mag', c.mag * b.mag * sm('mag'));
+      setR('def', c.def * b.def * sm('def'));
+      setR('mdef', c.mdef * (b.mdef != null ? b.mdef : b.def) * sm('mdef'));
+      setR('agi', c.agi * b.agi * sm('agi'), 1);
+      setR('exp', c.exp * b.exp * (rw.exp != null ? rw.exp : 1));
+      setR('gold', c.gold * b.gold * (rw.gold != null ? rw.gold : 1));
       set('actsPerTurn', b.acts || 1);
     } else {
       const SZ = K('SIZE');
@@ -183,14 +186,14 @@
       // 鋼 (§4.10.5): HP fixed (6–12, never the curve), 素早さ ×2.5 unless the data says otherwise
       const metalHp = () => def.hpFixed || Math.round(((MT.hp && MT.hp[0]) || 6) / 2 + ((MT.hp && MT.hp[1]) || 12) / 2);
       if (metal && s.agi == null && MT.agi) def.s = Object.assign({}, s, { agi: MT.agi });
-      set('hp', metal ? metalHp() : r(c.hp * Z.hp * sm('hp'), 1));
-      set('atk', r(c.atk * Z.atk * sm('atk') * mob.atk));
-      set('mag', r(c.mag * sm('mag') * mob.mag));
-      set('def', r(c.def * Z.def * sm('def')));
-      set('mdef', r(c.mdef * sm('mdef')));
-      set('agi', r(c.agi * (metal && s.agi == null && MT.agi ? MT.agi : sm('agi')), 1));
-      set('exp', r(c.exp * Z.rw * (rw.exp != null ? rw.exp : 1) * kind.exp * (def.race === 'dragon' ? 1.2 : 1)));
-      set('gold', r(c.gold * Z.rw * (rw.gold != null ? rw.gold : 1) * kind.gold));
+      if (metal) set('hp', metalHp()); else setR('hp', c.hp * Z.hp * sm('hp'), 1);
+      setR('atk', c.atk * Z.atk * sm('atk') * mob.atk);
+      setR('mag', c.mag * sm('mag') * mob.mag);
+      setR('def', c.def * Z.def * sm('def'));
+      setR('mdef', c.mdef * sm('mdef'));
+      setR('agi', c.agi * (metal && s.agi == null && MT.agi ? MT.agi : sm('agi')), 1);
+      setR('exp', c.exp * Z.rw * (rw.exp != null ? rw.exp : 1) * kind.exp * (def.race === 'dragon' ? 1.2 : 1));
+      setR('gold', c.gold * Z.rw * (rw.gold != null ? rw.gold : 1) * kind.gold);
       if (metal) set('fleeRate', K('METAL').flee);
       if (rare) { set('fleeRate', K('RARE_MON').flee); set('fleeFrom', K('RARE_MON').fleeFrom); }
     }
@@ -198,6 +201,7 @@
     set('hit', 95);
     set('crit', has(def, 'boss') ? 3 : 2);
     def._lv = lv;
+    Object.defineProperty(def, '_raw', { value: raw, enumerable: false, configurable: true, writable: true });
     def._filled = true;
     return def;
   }
@@ -246,10 +250,12 @@
     d.flags = (base.flags || []).slice();
     if (Lb !== L0) {
       const c0 = curve(L0), c1 = curve(Lb);
-      for (const k of SCALE_KEYS) if (typeof base[k] === 'number') d[k] = Math.max(k === 'agi' ? 1 : 0, Math.round(base[k] * c1[k] / c0[k]));
+      const raw = base._raw || {};
+      const v0 = (k) => (raw[k] != null ? raw[k] : base[k]);
+      for (const k of SCALE_KEYS) if (typeof base[k] === 'number') d[k] = Math.max(k === 'agi' ? 1 : 0, Math.round(v0(k) * c1[k] / c0[k]));
       if (has(base, 'metal')) d.hp = base.hp;
-      else if (has(base, 'boss')) d.hp = Math.max(1, Math.round(base.hp * hpBoss(Lb) / hpBoss(L0)));
-      else d.hp = Math.max(1, Math.round(base.hp * c1.hp / c0.hp));
+      else if (has(base, 'boss')) d.hp = Math.max(1, Math.round(v0('hp') * hpBoss(Lb) / hpBoss(L0)));
+      else d.hp = Math.max(1, Math.round(v0('hp') * c1.hp / c0.hp));
     }
     d.lv = Lb;
     d.lvShow = Lb;

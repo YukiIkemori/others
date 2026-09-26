@@ -41,6 +41,24 @@ const B = A.MON_COMPOSE_BOSSES || {};
   if (!eq(want.slice().sort(), got.slice().sort())) fail('T1', 'ids differ: want ' + want.join(',') + ' got ' + got.join(','));
   else ok('T1', '14 ids');
   if (got.length !== 14) fail('T1', 'MON_COMPOSE_BOSSES has ' + got.length + ' rows, want 14');
+  // the fixture must still be the table in DESIGN.md (catches a spec edit, e.g. the lead adopting the fixes)
+  const DESIGN = fs.readFileSync(path.join(ROOT, 'DESIGN.md'), 'utf8');
+  const m = DESIGN.match(/const BOSSES = \(R\.Art\.MON_COMPOSE_BOSSES = \{/);
+  if (!m) fail('T1', 'DESIGN.md: §9.11.6 compose block not found');
+  else {
+    const blk = DESIGN.slice(m.index, DESIGN.indexOf('\n});', m.index) + 4);
+    let doc = null;
+    try { doc = new Function('return ' + blk.replace(/^const \w+ = \(R\.Art\.\w+ = /, '(').replace(/\}\);\s*$/, '})'))(); } catch (e) { fail('T1', 'DESIGN.md block does not evaluate: ' + e.message); }
+    if (doc) {
+      for (const id of new Set(Object.keys(doc).concat(want))) {
+        if (eq(doc[id], SPEC.TABLE[id])) continue;
+        // a spec that now carries the documented fix is fine too
+        if (SPEC.FIXES[id] && doc[id] && eq(doc[id][1], SPEC.FIXES[id])) continue;
+        fail('T1', 'fixture row ' + id + ' differs from DESIGN.md: ' + JSON.stringify(doc[id]));
+      }
+      ok('T1', 'fixture = DESIGN.md §9.11.6 (' + Object.keys(doc).length + ' rows)');
+    }
+  }
   for (const id of want) {
     const row = B[id];
     if (!row) continue;

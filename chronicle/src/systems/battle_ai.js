@@ -167,7 +167,7 @@
   const spend = (u, o) => (o.wp ? o.wp / Math.max(1, u.mwp) : 0) + (o.mp ? o.mp / Math.max(1, u.mmp) : 0);
   /** the pool an option draws from is below 30 % (雑魚戦では使わない, §4.13.2) */
   const lowPool = (u, o) => (o.wp && u.wp < u.mwp * 0.3) || (o.mp && u.mp < u.mmp * 0.3);
-  const rareItem = (it) => !!(it && (it.grade === 'rare' || it.grade === 'super' || it.rare));
+  const rareItem = (it) => !!(it && (it.grade === 'rare' || it.grade === 'super' || it.rare || it.src === 'relic'));
   /**
    * consumables the AI may use for u. mode true: any but rare / 魔石 (simulator); 'auto' (in-game オート): revive items when
    * nobody alive can cast a revive, healing items when u has no healing action, cure items when nobody can cure it

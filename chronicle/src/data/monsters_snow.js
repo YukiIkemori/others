@@ -103,7 +103,7 @@
       elem: { fire: 1.25, water: 0.25, earth: 1.5, light: 0.5, dark: 1.5 }, phys: {}, statusRes: { confuse: 0.5 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_frost_fist', w: 2 }, { id: 'e_frost', w: 2 }, { id: 'e_howl', w: 1, cond: { once: true } }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_katana_moon', rate: 32 }, super: { item: 'w_katana_sr_snowgeneral', rate: 256 } },
-      desc: '氷のかぶとをかぶった小鬼の\n大将。雪の子らを率いる。',
+      desc: '氷の兜をかぶった小鬼の\n大将。雪の子らを率いる。',
     },
     frostling_5: {
       name: '冬将軍', sprite: 'frostling_5', lineage: 'frostling', stage: 5, lv: 55, size: 'm', race: 'fairy', affinity: 'water',

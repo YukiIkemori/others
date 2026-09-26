@@ -1198,6 +1198,8 @@
       // a message (e.g. the opening speech) takes over: the map-name banner must not cover the speaker
       const msg = R.UI && R.UI._msg;
       if (this.banner && msg && !msg.closed && msg.resolveText && R.Engine.layers.includes(msg)) this.banner = null;
+      // … and so does a caption / chapter scene (the darkened stage would show the banner through it)
+      if (this.banner && R.Engine.layers.some((l) => l.isStage)) this.banner = null;
     }
     /** is the party walking (for the walk frames; idle members stand on frame 0, RS1 style) */
     moving() { return !!(this.mv || this.walking); }
@@ -1885,7 +1887,18 @@
     // ---- secret passages (DESIGN §3.3.10-11)
     isSecretFound(mapId, x, y) { return !!(R.Game && R.Game.secrets && R.Game.secrets[R.FieldMap.secretKey(mapId, x, y)]); },
     /** found secret-passage cells (the chronicle screen shows 「隠し通路　n/総数」) */
-    secretsFound() { return R.Game && R.Game.secrets ? Object.keys(R.Game.secrets).length : 0; },
+    secretsFound() {
+      const found = (R.Game && R.Game.secrets) || {};
+      let n = 0;
+      // only cells that are still secret passages (a save from an older build may name cells of a
+      // map that has since been redrawn): the count never exceeds secretTotal()
+      for (const k in found) {
+        const m = /^(.*):(-?\d+),(-?\d+)$/.exec(k);
+        const fm = m && R.FieldMap.peek(m[1]);
+        if (fm && fm.inMap(+m[2], +m[3]) && R.FieldMap.isSecretTile(fm.base[+m[3] * fm.w + +m[2]])) n++;
+      }
+      return n;
+    },
     secretTotal() { return R.FieldMap.secretTotal(); },
 
     // ---- scripting hooks (events_runtime / debug)

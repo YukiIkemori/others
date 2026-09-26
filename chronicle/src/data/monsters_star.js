@@ -111,7 +111,7 @@
       elem: { water: 1.5, wind: 0.75, light: 0.25, dark: 1.5 }, phys: { slash: 0.75, blunt: 1.5, pierce: 0.75 }, statusRes: { poison: 1, sleep: 1, confuse: 1, death: 1 },
       actions: [{ id: 'attack', w: 3 }, { id: 'e_double', w: 2 }, { id: 'e_harden', w: 1, cond: { once: true } }, { id: 'e_howl', w: 1, cond: { once: true } }, { id: 'e_zap', w: 1 }],
       drops: { normal: { item: 'i_potion', rate: 8 }, rare: { item: 'w_sword_starblade', rate: 32 }, super: { item: 'w_katana_sr_clockwork', rate: 256 } },
-      desc: 'かぶとを飾ったからくりの大将。\n塔の兵を指揮する。',
+      desc: '兜を飾ったからくりの大将。\n塔の兵を指揮する。',
     },
     // ---- armor 鎧（魔造・m）: 中身のない鎧。番兵、騎士、そして闇の黒金。
     armor_1: {

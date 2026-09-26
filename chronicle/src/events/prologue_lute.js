@@ -26,7 +26,7 @@
         await ev.wait(12);
         g.face('player');
         await ev.say('おや、旅の人かい。\nこんなときに、よく来たね。');
-        await ev.say('灯台の火が消えて、\nもう三晩になるんだ。');
+        await ev.say('灯台の火が消えて三晩になる。\n港のみんなも、すっかり\n参っちまってるよ。');
         await ev.say('夜になると、暗い海から\n魔物が上がってくる。\n領主さまが跳ね橋を\n上げさせたんだよ。');
         await ev.say('定期船も止まったままさ。\n……まったく、どうなるやら。');
         g.face('down');
@@ -157,7 +157,7 @@
       ev.sfx('quill');
       await ev.wait(20);
       await Promise.all([
-        ev.caption('年代記に、序章\n『灯台守の歌』が記された。', { highlight: '『灯台守の歌』', frames: 180 }),
+        ev.caption('年代記に序章\n『灯台守の歌』が記された。', { highlight: '『灯台守の歌』', frames: 180 }),
         ev.jingle('chapter'),
       ]);
       await ev.say('この大陸には八つの大きな伝承がある。\nその全部が、いま白紙になりかけている。');

@@ -243,7 +243,12 @@ function expected() {
     if (!encounters[z]) throw new Error('tuning: unknown zone ' + z);
     for (const [k, v] of Object.entries(o)) { if (k === 'why') continue; encounters[z][k] = v; TUNED['zone.' + z + '.' + k] = o.why || '?'; }
   }
-  return Object.assign({}, D, { mons, encounters, tuning: T });
+  const actions = JSON.parse(JSON.stringify(D.actions));
+  for (const [id, o] of Object.entries(T.actions || {})) {
+    if (!actions[id]) throw new Error('tuning: unknown action ' + id);
+    for (const [k, v] of Object.entries(o)) { if (k === 'why') continue; actions[id][k] = v; TUNED[id + '.' + k] = o.why || '?'; }
+  }
+  return Object.assign({}, D, { mons, encounters, actions, tuning: T });
 }
 
 // ---------------------------------------------------------------- rules shared with tests / sims
@@ -335,6 +340,15 @@ function norm(o) { // drop empty maps/nulls so {} and missing compare equal
   return o;
 }
 
+/** a zone another owner derives from a DESIGN zone (same groups, e.g. OB's z_postgame_oblivion_den = copy of
+ *  z_postgame_oblivion_hi with a denser rare monster) → the DESIGN zone id, else null */
+function derivedFrom(DB, D, z) {
+  const e = DB.encounters[z];
+  if (!e || D.encounters[z]) return null;
+  const g = stable(norm(e.groups));
+  return Object.keys(D.encounters).find((k) => stable(norm(D.encounters[k].groups)) === g) || null;
+}
+
 function check(R) {
   const D = expected();
   const errs = [];
@@ -375,7 +389,7 @@ function check(R) {
     if (!got) { err('zone.' + z, 'missing'); continue; }
     if (stable(norm(got)) !== stable(norm(e))) err('zone.' + z, 'zone differs');
   }
-  for (const z of Object.keys(DB.encounters)) if (!D.encounters[z]) err('zone.' + z, 'not in DESIGN');
+  for (const z of Object.keys(DB.encounters)) if (!D.encounters[z] && !derivedFrom(DB, D, z)) err('zone.' + z, 'not in DESIGN');
   return errs;
 }
 
@@ -492,7 +506,21 @@ function writeData() {
   }
   // enemy_actions.js (verbatim §9.6.2)
   {
-    const body = blockAfter(/^#### 9\.6\.2 /).map((l) => '  ' + l);
+    const TA = D.tuning.actions || {};
+    const body = blockAfter(/^#### 9\.6\.2 /).map((l) => {
+      // text overlay (tuning.json actions.<id>.<field>: STYLE_JA fixes of name / msg); every action is one line
+      const m = /^\s*(e_[a-z0-9_]+):/.exec(l);
+      const o = m && TA[m[1]];
+      if (!o) return '  ' + l;
+      let t = l;
+      for (const [k, v] of Object.entries(o)) {
+        if (k === 'why') continue;
+        const re = new RegExp('(\\b' + k + ": ')([^']*)(')");
+        if (!re.test(t)) throw new Error('tuning: ' + m[1] + '.' + k + ' not found in the §9.6.2 line');
+        t = t.replace(re, (_, a, __, c) => a + v + c);
+      }
+      return '  ' + t + ' // A11: ' + o.why;
+    });
     const out = [
       '// ルミナス・クロニクル — 雑魚の行動 e_ 124（ボス・レア魔物の eb_ は boss の bosses_actions.js）',
       '// 担当 A11 mons。正は DESIGN.md §9.6（そのまま写した）。効果の読み方は §9.1.6、条件 cond は §9.1.7（battle_ai）。',
@@ -531,7 +559,7 @@ function writeData() {
   return written;
 }
 
-module.exports = { parseDesign, expected, writeData, loadTuning, TUNING_FILE, srTier, band, evaRule, check, stable, norm, TUNED, GOLD_NAMES, RACE, ELEM, PHYS, STAT, SKEYS,
+module.exports = { parseDesign, expected, derivedFrom, writeData, loadTuning, TUNING_FILE, srTier, band, evaRule, check, stable, norm, TUNED, GOLD_NAMES, RACE, ELEM, PHYS, STAT, SKEYS,
   SIZE_W, SIZE_PX, resolveRef, zoneTiers, eligibleGroups, groupStrength, isMetalGroup, zoneStrength, perBattle };
 
 if (require.main === module) {

@@ -323,11 +323,18 @@ class Driver {
       if (b.party) {
         if (pol.wipe) { await this.ev(() => { for (const u of window.__qa.lastScene.eng.party) u.hp = 0; }); return 'a'; }
         if (pol.killMons) await this.ev(() => { for (const u of window.__qa.lastScene.eng.mons) if (u.hp > 1) u.hp = 1; });
-        const mode = pol.battle || 'auto';
-        if (mode === 'auto' && !pol.killMons) return b.index !== 2 ? (b.index === 0 ? 'down' : b.index === 1 ? 'left' : 'up') : 'a';
+        // オート (index 2) wins a battle whatever the members carry; 戦う (index 0) + 防御 each is the manual round
+        const mode = pol.killMons ? 'auto' : pol.battle || 'auto';
+        if (mode === 'auto') return b.index !== 2 ? (b.index === 0 ? 'down' : b.index === 1 ? 'left' : 'up') : 'a';
         return b.index !== 0 ? (b.index === 1 ? 'left' : 'up') : 'a';
       }
-      return 'a';
+      // a member's command window (2 columns): move to 防御 and take it; any sub-list (weapon techs, spells,
+      // items, a target) is left with B — a manual round is "everyone defends", which is valid in every row
+      const items = b.items || [], di = items.indexOf('防御');
+      if (di < 0) return 'b';
+      if (b.index === di) return 'a';
+      const r0 = Math.floor(b.index / 2), r1 = Math.floor(di / 2);
+      return r0 !== r1 ? (r0 < r1 ? 'down' : 'up') : b.index < di ? 'right' : 'left';
     }
     if (t === 'StageLayer') return 'a';
     if (t === 'FieldLayer') return 'wait';
@@ -507,7 +514,7 @@ async function slice(D, S, o) {
       if (s.top === 'NameLayer' && !seen.has('name')) { seen.add('name'); await D.wait(150); await D.shot('04_name_entry'); }
     };
     await D.drive(Object.assign({}, pol, { onState: snap }), (s) => s.top !== 'CreateLayer' && s.top !== 'NameLayer', 60000, 'the hero creation');
-    const h = await D.ev(() => { const h = window.RPG.State.hero(); return h && { name: h.name, gender: h.gender, type: h.type, favor: h.favor, level: h.level }; });
+    const h = await D.ev(() => { const h = window.RPG.State.hero(); return h && { name: h.name, gender: h.gender, type: h.heroType || h.type, favor: h.favor, level: h.level }; });
     if (!h || !h.name) throw new Error('no hero after the creation');
     if (h.type !== 'spellblade' || h.gender !== 'f') throw new Error('hero made as ' + JSON.stringify(h));
     return `hero ${h.name} (${h.gender}/${h.type}/${h.favor && h.favor.id})`;
@@ -824,7 +831,7 @@ async function repeatCase(D, c) {
   await start();
   const b0 = await D.until((s) => s.top === 'BattleScene' && s.battle.party, 20000, 'the party command');
   await D.ev(() => { for (const u of window.__qa.lastScene.eng.mons) { u.hp = 60000; } });
-  // round 1: 戦う + everyone attacks
+  // round 1: 戦う + everyone defends
   await D.drive({ battle: 'fight', menus: 'leave' }, (s) => s.top === 'BattleScene' && !s.battle.input, 20000, 'round 1 commands');
   const s2 = await D.until((s) => s.top === 'BattleScene' && s.battle.party, 30000, 'the party command of round 2');
   if (!s2.battle.canRepeat) throw new Error('リピート is not enabled after round 1');

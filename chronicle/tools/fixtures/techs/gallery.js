@@ -3,7 +3,7 @@
 // techs — with the battle screen's own geometry (DESIGN §11.5.3; R.Battle.HELP / BOX):
 //   * the help strip (240×19 window, desc drawn with fitText in 220px) for all 11 techs,
 //   * the tech list window (R.UI.List 240×68, 2 columns × 3 rows, lineH 16, padY 10,
-//     「攻撃」 first, W + cost on the right; names squeezed into 77px) as its two pages,
+//     「攻撃」 first, W + cost on the right; names squeezed to fit before the cost; drawn like battle_scene.js drawListItem) as its two pages,
 //   * the same list from the middle row (reach:false techs and a non-reaching 攻撃 grey).
 // A desc wider than 220px (it would be squeezed) gets a red bar at the strip's right end.
 //
@@ -19,7 +19,7 @@
   }
 
   /** logical height of one sheet */
-  const SHEET_H = 44 + 11 * 19 + 10 + 3 * 72 + 6;
+  const SHEET_H = 44 + 11 * 19 + 10 + 3 * 80 + 6;
 
   function drawSheet(w, y0) {
     const G = R.Gfx, WT = R.DB.weaponTypes[w];
@@ -50,13 +50,23 @@
     const items = (mid) => [{ label: '攻撃', disabled: mid && !WT.reach }].concat(list.map((t) => ({
       label: t.name, right: 'W' + t.wp, disabled: mid && !t.reach,
     })));
+    // same item drawing as battle_scene.js drawListItem (not exported): cost right-aligned
+    // 13px short of the column end, so the next column's cursor does not touch it
+    const drawItem = (it, x, yy, w) => {
+      const colW = w + 4, color = it.disabled ? G.C.gray : G.C.white;
+      const right = it.right != null && it.right !== '' ? String(it.right) : null;
+      if (right) {
+        G.fitText(it.label, x, yy, colW - 16 - G.textWidth(right), { color });
+        G.text(right, x + colW - 13, yy, { color, align: 'right' });
+      } else G.fitText(it.label, x, yy, colW - 8, { color });
+    };
     const page = (its, top, yy, title, cursor) => {
-      const L = new R.UI.List({ x: 8, y: yy, w: 240, h: 68, cols: 2, rows: 3, lineH: 16, padY: 10, title, items: its, index: cursor, active: false });
+      const L = new R.UI.List({ x: 8, y: yy, w: 240, h: 68, cols: 2, rows: 3, lineH: 16, padY: 10, title, items: its, index: cursor, active: false, drawItem });
       L.top = top;
       L.draw({ showInactiveCursor: true });
     };
-    page(items(false), 0, y, WT.name, 1); y += 72;
-    page(items(false), 3, y, WT.name, 7); y += 72;
+    page(items(false), 0, y, WT.name, 1); y += 80;
+    page(items(false), 3, y, WT.name, 7); y += 80;
     // middle row: page with the most reach:false techs greyed, cursor on the first usable tech
     const mid = items(true);
     const firstOk = Math.max(0, mid.findIndex((it) => !it.disabled));
@@ -95,7 +105,7 @@
     return report;
   };
 
-  /** widths of every tech name/desc with the real font: names in the 77px column, descs in 220px */
+  /** widths of every tech name/desc with the real font: names in the battle list column (109px − 16 − cost), descs in 220px */
   R.techsWidths = function () {
     const G = R.Gfx, out = { over: [], minSqueeze: 1, maxDesc: 0 };
     for (const id of Object.keys(R.DB.actions)) {

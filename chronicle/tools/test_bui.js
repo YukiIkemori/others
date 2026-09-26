@@ -116,6 +116,17 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   S.winFx[0].glow = 40; await step(20);
   ok(S.winFx[0].glow === 20, 'W7 glimmer glow counts real frames', S.winFx[0].glow);
   R.Settings.battleSpeed = 1;
+  // name tags at y − 3; the raised (acting) window's name stays on screen (y ≥ 0)
+  {
+    const names = {}, keep = {};
+    for (const k of ['window', 'rect', 'text', 'fitText', 'draw', 'strokeRect']) keep[k] = R.Gfx[k];
+    for (const k of ['window', 'rect', 'text', 'draw', 'strokeRect']) R.Gfx[k] = () => {};
+    R.Gfx.fitText = (s, x, y) => { names[s] = y; };
+    S.acting = h0;
+    try { S.drawWindows(); } finally { Object.assign(R.Gfx, keep); S.acting = null; }
+    ok(names[b0.name] === B.WIN.y - 3 && names[m0.name] === B.WIN.y - 3, 'W8 names sit on the top border at y − 3', names);
+    ok(names[h0.name] === 0, 'W9 the raised window keeps its name inside the screen', names[h0.name]);
+  }
 
   // ================================================================ C — command menus, cursor memory, help
   section('C commands');
@@ -563,6 +574,57 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     real = res;
   } catch (e) {
     ok(false, 'R real engine threw', String(e && e.stack || e).split('\n').slice(0, 3).join(' | '));
+  }
+
+  // real engine: 逃げる, リピート stopped with B, オート carried to the next battle
+  async function realRun(o, driver) {
+    R.Engine.clear();
+    let res = null;
+    B.start(o).then((r) => { res = r; }, (e) => { res = 'threw ' + e; });
+    await step(2);
+    const scene = B.current;
+    for (let i = 0; i < 8000 && !res; i++) { await step(1); await driver(scene); }
+    return { res, scene };
+  }
+  const partyMenuOf = (s) => { const pl = s.panel && s.panel.left; return pl && pl.items[0] === '戦う' ? pl : null; };
+  try {
+    for (const c of R.Game.party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; c.status = {}; }
+    B.autoCarry = false;
+    // 逃げる (the party menu's 4th command) ends the battle with 'escape'
+    let r = await realRun({ mons: [['wolf_1', 2]], tier: 1, bg: 'grass', surprise: null }, async (s) => {
+      if (partyMenuOf(s)) { await press('down'); await press('right'); await press('a'); } else if (s.msg.key) await press('a');
+    });
+    ok(r.res === 'escape' && B.last.result === 'escape', 'R6 逃げる on the real engine returns escape', r.res);
+    // リピート then B: the round finishes, the party menu comes back on 戦う with repeat off; リピート can be chosen again
+    for (const c of R.Game.party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; c.status = {}; }
+    let stage = 0, backAt = null, stoppedRound = null;
+    r = await realRun({ mons: [['wolf_1', 3]], tier: 1, bg: 'grass', surprise: null }, async (s) => {
+      const pm = partyMenuOf(s);
+      if (pm) {
+        if (stage === 0) { stage = 1; await press('a'); return; } // 戦う (round 1 by hand)
+        if (stage === 2) backAt = { idx: pm.index, repeating: s.repeating, round: s.eng.round, canRepeat: !pm.isDisabled(1) };
+        if (stage === 1 || stage === 2) { stage++; await press('right'); await press('a'); } // リピート (again after the stop)
+        return;
+      }
+      const pl = s.panel && s.panel.left;
+      if (pl && pl.title && stage === 1) { if (pl.items[0].label !== '攻撃') { await press('a'); await step(2); } await press('a'); await step(2); await press('a'); await step(3); return; }
+      if (stage === 2 && s.repeating && !s.repeatCancel && s.eng.round >= 2) { stoppedRound = s.eng.round; await press('b'); return; }
+      if (s.msg.key) await press('a');
+    });
+    ok(r.res === 'win', 'R7 the repeat battle is won', r.res);
+    ok(backAt && backAt.idx === 0 && !backAt.repeating && backAt.canRepeat && backAt.round === stoppedRound,
+      'R8 B stops リピート after that round: the menu is back on 戦う and リピート stays available', { backAt, stoppedRound });
+    // オート: chosen once it carries into the next plain battle, which then starts on its own
+    for (const c of R.Game.party) { const st = R.Rules.stats(c); c.hp = st.hp; c.mp = st.mp; c.wp = st.wp; c.status = {}; }
+    let menus = 0;
+    r = await realRun({ mons: [['wolf_1', 2]], tier: 1, bg: 'grass', surprise: null }, async (s) => {
+      if (partyMenuOf(s)) { menus++; await press('down'); await press('a'); } else if (s.msg.key) await press('a');
+    });
+    ok(r.res === 'win' && menus === 1 && B.autoCarry === true, 'R9 オート runs the battle to the end and sets autoCarry', { res: r.res, menus, carry: B.autoCarry });
+    ok(B.prepare({ zone: Object.keys(DB.encounters)[0] }).autoStart !== undefined, 'R10 prepare reports autoStart');
+    B.autoCarry = false;
+  } catch (e) {
+    ok(false, 'R real engine (flee / repeat / auto) threw', String(e && e.stack || e).split('\n').slice(0, 3).join(' | '));
   }
 
   // ---------------------------------------------------------------- summary

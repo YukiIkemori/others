@@ -24,6 +24,9 @@
 //   'rare'  = R: every slot from the rare band RB(T) that has the build stat (fallback: normal)
 //   'super' = S: super-rare items with the build stat (tier ≤ T, highest first; the §8.6.5 T8 sets), fallback rare → normal
 //   rareSlots / superSlots (numbers) upgrade that many slots on top of the chosen gear (C3: gear 'real' + superSlots 4)
+//   At T 8 the §8.13.1 sets of gear-a are used as is (R.GearA.BUILD_SETS int/str/dex: N for none/shop, R9 — or R7 with
+//   rareBand 7 — for rare, S for super) when the member's build stat has one and its weapon type matches the set's
+//   (buildSets: true forces the set whatever the weapon, false turns it off).
 // Every member gets EXPECT(T) techs/spells (§4.17.1, §6.10: the main weapon's and favoured elements' actions
 // in glim.lv order), proficiencies at profAt (equipped weapon types and the spells' elements at least PEXP(T)),
 // full HP/MP/WP, status {}. Works on partial data: missing registries are reported in `notes`, never thrown.
@@ -299,6 +302,20 @@ function strippedId(R, id) {
   return sid;
 }
 
+function applyBuildSet(R, plan, T, o, stat, w1) {
+  const G = R.GearA;
+  if (o.buildSets === false || (T !== 8 && o.buildSets !== true) || !G || !G.BUILD_SETS || !G.BUILD_SETS[stat]) return null;
+  const col = { none: 'N', shop: 'N', rare: o.rareBand === 7 ? 'R7' : 'R9', super: 'S' }[o.gear];
+  const set = col && G.BUILD_SETS[stat][col];
+  if (!Array.isArray(set)) return null;
+  const slots = G.BUILD_SLOTS || SLOTS;
+  const it0 = R.DB.items[set[0]];
+  if (!it0 || (w1 && it0.wtype !== w1 && o.buildSets !== true)) return null;
+  let n = 0;
+  slots.forEach((slot, i) => { if (set[i] && R.DB.items[set[i]]) { plan[slot] = set[i]; n++; } });
+  return n ? `${stat}.${col} (${n}/${slots.length})` : null;
+}
+
 function equipMember(R, c, o, notes) {
   const T = clamp(o.tier | 0, 0, 9);
   const build = o.buildOf(c);
@@ -340,6 +357,11 @@ function equipMember(R, c, o, notes) {
     if (superN > 0 && g !== 'super') { const id = choose(slot, 'super', true); if (id && R.DB.items[id].grade === 'super') { plan[slot] = id; superN--; continue; } }
     if (rareN > 0 && g === 'normal') { const id = choose(slot, 'rare', true); if (id && R.DB.items[id].grade === 'rare') { plan[slot] = id; rareN--; } }
   }
+  // T8 builds: the fixed §8.13.1 sets of gear-a (R.GearA.BUILD_SETS.{int,str,dex}.{N,R7,R9,S} in R.GearA.BUILD_SLOTS order)
+  // replace the picked items for 'none' / 'shop' (N), 'rare' (R9, or R7 with rareBand 7) and 'super' (S), when the
+  // member's build stat has a set and the set's main weapon is of the member's weapon type (o.buildSets false: off)
+  const setUsed = applyBuildSet(R, plan, T, o, statFor('weapon1'), w1);
+  if (setUsed) notes.push(`${c.id}: §8.13.1 set ${setUsed}`);
   // two-handed weapons exclude the shield (§3.3.3 規則 2)
   const twoH = (id) => { const it = id && R.DB.items[id]; return !!(it && (it.twoHanded || TWO_HANDED[it.wtype])); };
   if (twoH(plan.weapon1) || twoH(plan.weapon2)) plan.shield = null;
@@ -470,7 +492,7 @@ function build(R, o) {
   };
   const buildOf = (c) => (typeof o.build === 'string' ? o.build : (o.build && o.build[c.id]) || naturalBuild(R, c));
   const weaponsOf = o.weapons ? (c) => (Array.isArray(o.weapons) ? o.weapons : o.weapons[c.id]) : null;
-  const ctx = { tier: T, gear: o.gear || 'shop', buildOf, weaponsOf, rareSlots: o.rareSlots, superSlots: o.superSlots, used: o.shareItems === false ? null : {} };
+  const ctx = { tier: T, gear: o.gear || 'shop', buildOf, weaponsOf, rareSlots: o.rareSlots, superSlots: o.superSlots, buildSets: o.buildSets, rareBand: o.rareBand, used: o.shareItems === false ? null : {} };
   const party = [];
   for (const id of members) {
     const c = newChar(R, id === 'hero' ? { id: 'hero', heroSpec } : { id, level: L }, notes);

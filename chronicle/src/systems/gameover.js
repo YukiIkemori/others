@@ -71,6 +71,22 @@
   GameOver.Layer = GameOverLayer;
 
   let running = null; // the live GameOverLayer
+  /** R.UI.say that also resolves when someone else closes the window (an onEnter event of the
+   *  respawn map when run() is called outside Field's wipe flow) — run() must never hang (§4.12.2) */
+  function sayGuarded(text) {
+    return new Promise((res) => {
+      let done = false;
+      const fin = () => { if (!done) { done = true; res(); } };
+      R.UI.say(text, { noWait: false, keep: false, auto: 0 }).then(fin, fin);
+      const m = R.UI._msg;
+      const poll = () => {
+        if (done) return;
+        if (!m || m.closed || !R.Engine.layers.includes(m)) { fin(); return; }
+        R.Engine.wait(1).then(poll);
+      };
+      R.Engine.wait(1).then(poll);
+    });
+  }
   /** the whole wipe sequence; resolves once the party wakes up at the respawn point */
   GameOver.run = async function () {
     if (running && R.Engine.layers.includes(running)) return;
@@ -107,7 +123,7 @@
       if (R.Engine.fadeAlpha > 0) await R.Engine.fadeIn(20);
       let text = '{hero}たちは目を覚ました。';
       if (goldBefore > 0) text += '\n所持金が半分になった。';
-      await R.UI.say(text, { noWait: false, keep: false, auto: 0 });
+      await sayGuarded(text);
     } finally {
       R.Engine.remove(L);
       if (R.UI && R.UI.closeMessage) R.UI.closeMessage();

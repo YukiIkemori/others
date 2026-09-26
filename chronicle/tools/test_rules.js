@@ -271,6 +271,11 @@ test('gear: autoDesc fits 2 lines × 20 for every item', () => {
   eq(Ru.autoDesc({ type: 'acc', grade: 'rare', mods: { elemResist: { fire: 0.5, water: 0.5 } } }), '火・水のダメージを減らす。', 'grouped resist');
   eq(Ru.autoDesc({ type: 'acc', grade: 'rare', mods: { statusImmune: ['sleep', 'confuse', 'silence'] } }), '眠り・混乱・沈黙が効かない。', 'immune list');
   eq(Ru.autoDesc(DB.items.fx_acc_luck), 'レアと超レアのアイテムを落としやすい。', 'rarePct + superPct in one sentence');
+  // quirks: a lowered def written on a quirk armor, and several 「〜が下がる」 merged into one sentence (§8.2.7, §8.3.6)
+  const low = Ru.autoDesc({ type: 'body', weight: 'heavy', tier: 5, grade: 'super', quirk: true, def: 20, mdef: 18, mods: { elemResist: { earth: 0.5 }, agiPct: -20 } });
+  ok(/ただし守備力と素早さが下がる。/.test(low), 'merged quirk sentence: ' + low);
+  ok(!/ただし.*ただし/.test(low), 'one ただし only: ' + low);
+  eq(Ru.autoDesc({ type: 'acc', grade: 'rare', mods: { takenPct: -10 } }), '受けるダメージを減らす。', 'takenPct < 0');
 });
 
 test('equip: slots, two-handed and the shield (§3.3.3 rules 1–6)', () => {
@@ -813,6 +818,15 @@ test('EXP: battleExp, award shares, gainExp (§4.2.3, §5.5.4)', () => {
   eq(Ru.battleExp(a, killed), 100 + Math.round(50 * 1.2), 'Σ round(exp × f(d))');
   eq(Ru.battleExp(b, killed), Math.round((100 + 60) * 1.1), 'expPct +10 (innate)');
   eq(Ru.battleExp(a, [{ exp: 1, lv: 1 }], 0.6), 1, 'at least 1');
+  // the §3.3.3 form battleExp(c, [monDef]): a monster def carries its 守備力 in `def` (a number)
+  const md = { id: 'm_x', lv: 12, exp: 50, def: 30, hp: 99 };
+  eq(Ru.battleExp(a, [md]), Math.round(50 * 1.2), 'a bare monster def (def = 守備力) counts');
+  eq(Ru.battleExp(a, [{ def: md, golden: false }]), Math.round(50 * 1.2), '{def, golden} wrapper');
+  if (R.Mon && R.Mon.def) {
+    const mid = Object.keys(DB.monsters).find((id) => { const m = DB.monsters[id]; return m && !(m.flags || []).includes('boss'); });
+    const d = mid && R.Mon.def(mid, { Lb: 10 });
+    if (d && d.exp) eq(Ru.battleExp(a, [d]), Ru.battleExp(a, [{ def: d }]), 'R.Mon.def output directly = wrapped');
+  }
   b.hp = 0;
   const res = Pa.award({ killed });
   const by = {}; for (const e of res) by[e.c.id] = e;

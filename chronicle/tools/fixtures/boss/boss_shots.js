@@ -10,12 +10,12 @@
   'use strict';
   const S = (R.bossShots = {});
   const eng = () => (R.Battle && R.Battle.current && R.Battle.current.eng) || null;
-  S.start = function (troop, o) {
+  S.start = async function (troop, o) {
     o = o || {};
-    if (R.debug && R.debug.quickStart) R.debug.quickStart({ tier: o.tier != null ? o.tier : 0 });
-    if (o.level && R.debug.level) R.debug.level(o.level);
+    await R.debug.quickStart({ tier: o.tier != null ? o.tier : 0, level: o.level || 1, gear: 'tier', companions: o.companions, noEncounter: true });
     if (R.debug.heal) R.debug.heal();
-    return R.debug.battle(troop);
+    R.debug.battle(troop);
+    return troop;
   };
   S.near = function (frac, id) {
     const e = eng();
@@ -39,11 +39,12 @@
     for (const m of e.mons) if (m.alive && m.id === id) { m.hp = 1; n++; }
     return n;
   };
-  S.rare = function (mon, o) {
+  S.rare = async function (mon, o) {
     o = o || {};
-    if (R.debug && R.debug.quickStart) R.debug.quickStart({ tier: o.tier || 0 });
+    await R.debug.quickStart({ tier: o.tier || 0, level: o.level || 1, gear: 'tier', noEncounter: true });
     const zone = Object.keys(R.DB.rareEncounters).find((z) => R.DB.rareEncounters[z].mon === mon);
-    return R.Events.run((ev) => ev.battle({ zone, rare: 'force' }), { self: 'debug' });
+    R.Events.run((ev) => ev.battle({ zone, rare: 'force' }), { self: 'debug' });
+    return zone;
   };
   S.state = function () {
     const e = eng();

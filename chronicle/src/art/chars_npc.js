@@ -1341,10 +1341,10 @@
         for (let f = 0; f < 2; f++) {
           const p = G.pix(16, 24);
           p.grid(1, 5 + (f ? -1 : 0), GHOST[dir], pal);
-          // soft transparency so tiles show through a little
-          p.each((x, y, c) => c + 'e0');
-          // shadow on the ground
-          for (let x = 5; x <= 10; x++) p.set(x, 22, '#00000040');
+          // opaque pixels only (§11.4.2): the sheet's ragged hem is thinned with a checker
+          // instead of alpha, and the ground shadow is a dotted line
+          p.each((x, y, c) => (y >= 17 + (f ? -1 : 0) && c === pal.V && (x + y + f) % 2 === 0 ? null : c));
+          for (let x = 5; x <= 10; x++) if ((x + f) % 2 === 0) p.set(x, 22, '#283060');
           out[dir].push(p.toCanvas());
         }
       }
@@ -1362,18 +1362,20 @@
     for (const dir of ['down', 'up', 'right']) {
       for (let f = 0; f < 2; f++) {
         const buf = CA.figure(spec, pal, dir, f);
-        // glowing outline instead of the dark one, fading skirt, halo on frame 1
+        // glowing outline instead of the dark one; opaque pixels only (§11.4.2): the skirt
+        // fades out with a checker (phase swaps between the frames) and the halo is a
+        // dotted ring of light that sparkles in alternate pixels on the two frames
         for (let i = 0; i < buf.length; i++) {
+          const x = i % 16, y = Math.floor(i / 16);
           if (buf[i] === CA.OUTLINE) buf[i] = f ? '#80d8ff' : '#58b8f0';
-          else if (buf[i] && Math.floor(i / 16) >= 20) buf[i] = buf[i] + '90';
-          else if (buf[i]) buf[i] = buf[i] + 'e8';
+          if (buf[i] && (y >= 22 - f || (y >= 20 - f && (x + y + f) % 2 === 0))) buf[i] = null;
         }
-        const glow = f ? '#c8f0ff50' : '#a0e0ff38';
+        const glow = f ? '#e0f8ff' : '#a0e0ff';
         const src = buf.slice();
-        for (let y = 0; y < 24; y++) for (let x = 0; x < 16; x++) {
-          if (src[y * 16 + x]) continue;
-          const n = (xx, yy) => xx >= 0 && yy >= 0 && xx < 16 && yy < 24 && src[yy * 16 + xx];
-          if (n(x - 1, y) || n(x + 1, y) || n(x, y - 1) || n(x, y + 1)) buf[y * 16 + x] = glow;
+        for (let y = 1; y < 23; y++) for (let x = 1; x < 15; x++) {
+          if (src[y * 16 + x] || (x + y + f) % 2) continue;
+          const n = (xx, yy) => src[yy * 16 + xx];
+          if (y < 20 && (n(x - 1, y) || n(x + 1, y) || n(x, y - 1) || n(x, y + 1))) buf[y * 16 + x] = glow;
         }
         out[dir].push(CA.toCanvas(buf));
       }

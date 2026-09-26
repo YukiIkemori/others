@@ -341,6 +341,8 @@
       }
       return out;
     },
+    /** one aptitude letter: kind 'w' (weapon type) or 'e' (element) */
+    aptLetter(c, kind, id) { const L = Rules.aptLetters(c)[kind === 'e' ? 'e' : 'w']; return L[id] || 'C'; },
     /** aptitude multipliers for glimmer odds (§4.9.4): S 2.0 A 1.5 B 1.0 C 0.6 D 0.3 */
     aptitude(c) {
       const L = Rules.aptLetters(c), A = K.GLIM.apt;
@@ -471,7 +473,7 @@
       if (!d) return k;
       return Object.assign({}, k, {
         twoHanded: d.twoHanded != null ? !!d.twoHanded : k.twoHanded,
-        reach: d.reach != null ? !!d.reach : k.reach,
+        reach: d.reach != null ? d.reach === true || d.reach === 'any' : k.reach,
         kind: d.kind || k.kind,
       });
     },
@@ -1120,8 +1122,11 @@
   }
   function monExp(k) {
     if (!k) return null;
-    if (typeof k.exp === 'number' && typeof k.lv === 'number' && !k.def) return { exp: k.exp, lv: k.lv };
-    let d = k.def || null;
+    // a monster def itself (§3.3.3 battleExp(c, [monDef])): its `def` is the 守備力 number, not a wrapper
+    if (typeof k.exp === 'number' && (typeof k.lv === 'number' || typeof k.lvBase === 'number') && (!k.def || typeof k.def !== 'object')) {
+      return { exp: k.exp, lv: typeof k.lv === 'number' ? k.lv : k.lvBase };
+    }
+    let d = k.def && typeof k.def === 'object' ? k.def : null;
     if (!d && k.id) {
       try { d = R.Mon && R.Mon.def ? R.Mon.def(k.id, { tier: k.tier, golden: k.golden }) : null; } catch (e) { d = null; }
       if (!d) d = DB.monsters[k.id] || null;
@@ -1187,7 +1192,16 @@
       if (it.sealTech) B('ただし技が使えない。');
       if (it.twoHanded && !Rules.wtypeInfo(it.wtype).twoHanded) B('ただし両手持ちで盾は不可。', 'ただし両手持ち。');
     }
-    if (it.quirk && K.SLOT_SHARE[it.type] !== undefined && it.def === 0 && it.mdef === 0) B('ただし守備力と術防は0。', 'ただし守りは0。');
+    if (it.quirk && K.SLOT_SHARE[it.type] !== undefined) {
+      // a quirk written as a lowered def / mdef (§8.3.6): compare with the §4.3.3 value of its tier and weight
+      if (it.def === 0 && it.mdef === 0) B('ただし守備力と術防は0。', 'ただし守りは0。');
+      else {
+        const T = U.clamp(it.tier | 0, 0, K.W.length - 1), wt = K.WEIGHT[it.weight] || K.WEIGHT.light, sh = K.SLOT_SHARE[it.type];
+        const low = (v, full) => typeof v === 'number' && full >= 4 && v < full * 0.75;
+        if (low(it.def, Math.round(sh * K.D(T) * wt.def)) && !(m.defPct < 0) && !(m.def > 0)) B('ただし守備力が下がる。', 'ただし守備が下がる。');
+        if (low(it.mdef, Math.round(sh * K.D(T) * wt.mdef)) && !(m.mdefPct < 0) && !(m.mdef > 0)) B('ただし術防が下がる。');
+      }
+    }
     // resistances, grouped by value
     if (m.elemResist) {
       const by = {};
@@ -1287,9 +1301,23 @@
     if (m.walkHeal > 0) G('歩くとHPが少しずつ戻る。', '歩くとHPが戻る。');
     if (m.defPct < 0) B('ただし守備力が下がる。', 'ただし守備が下がる。');
     if (m.mdefPct < 0) B('ただし術防が下がる。');
+    if (m.takenPct < 0) G('受けるダメージを減らす。', '傷が減る。');
     if (m.takenPct > 0) B('ただし受けるダメージが増える。', 'ただし傷が増える。');
     if (m.noSpell) B('ただし術が使えない。');
     if (m.hpLoss > 0) B('ただし戦闘中にHPが減る。', 'ただしHPが減る。');
+    // several 「ただし〇が下がる。」 become one sentence (「ただし素早さと術防が下がる。」)
+    const downs = [];
+    const rest = bad.filter((p) => {
+      const mt = /^ただし(.+)が下がる。$/.exec(p[0]);
+      if (!mt || /と/.test(mt[1])) return true;
+      downs.push(mt[1]);
+      return false;
+    });
+    if (downs.length >= 2) {
+      const n = downs.length === 2 ? downs.join('と') : joinDot(downs);
+      rest.push(['ただし' + n + 'が下がる。']);
+      return { good, bad: rest };
+    }
     return { good, bad };
   }
   /**

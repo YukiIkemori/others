@@ -484,9 +484,11 @@
     for (const [x, y] of [[3, 14], [4, 14], [26, 15], [27, 15]]) on(p, x, y, B);
     on(p, 9, 15, WHITE); on(p, 10, 15, WHITE); on(p, 9, 16, POR[4]);
     // two round glowing eyes peeping out of the dark gap
-    const EYE = ['.yy.', 'yWky', '.yy.'];
-    stamp(p, 10, 9, EYE, { y: '#c8d8ff', W: '#ffffff', k: '#1a1030' });
-    stamp(p, 17, 9, EYE, { y: '#c8d8ff', W: '#ffffff', k: '#1a1030' });
+    // (warm ghost-light, 3x2 each, filling the two rows of the gap so they read at 1x)
+    const EYE = ['yWy', 'oko'];
+    const EP = { y: '#ffe890', W: '#ffffff', o: '#f0b040', k: '#1a1030' };
+    stamp(p, 11, 9, EYE, EP);
+    stamp(p, 17, 9, EYE, EP);
     // the knob: a sapphire in a gold setting; blue rims on the cups
     jewel(p, 15.4, 2.6, 1.4, 1.4, SAPH, { bezel: GOLD });
     for (const [cx, cy] of CUPS) {
@@ -1168,17 +1170,25 @@
     return finish(p, (q) => {
       // a ribbon of glowing golden ink looping away from the nib in four letters
       const INKL = { a: '#ffe070', b: '#fff8d0', w: WHITE };
-      stamp(q, 9, 26, ['.ab.', 'a..a', 'a.bw', '.aa.', '...a'], INKL);
-      stamp(q, 14, 25, ['b...', 'a...', 'aaw.', 'a..a', 'a..b'], INKL);
-      stamp(q, 19, 23, ['.ww.', 'a..a', '..a.', '.a..', 'aaab'], INKL);
-      stamp(q, 24, 21, ['a..a', 'a..a', '.bw.', 'a..a', 'a..a'], INKL);
-      for (const [x, y] of [[6, 29], [7, 30], [8, 30], [13, 30], [18, 28], [23, 26], [28, 25]]) q.set(x, y, INKL.a);
+      // three glowing letters rising up the right-hand side like a ribbon, joined to the nib by
+      // a golden stroke that runs under the lower wing (post coordinates: finish() moves this
+      // layer with the sprite, 1 left and 3 down, so the stroke lands on the last row)
+      stamp(q, 20, 23, ['..a.', '.a.a', '.aa.', 'a...', '.aab'], INKL);
+      stamp(q, 24, 18, ['.ab.', 'a..a', '.aw.', 'a..a', '.aa.'], INKL);
+      stamp(q, 28, 13, ['.aaw', 'a...', '.ab.', '...a', 'baa.'], INKL);
+      for (const [x, y, c] of [[8, 28, 'a'], [9, 28, 'b'], [10, 28, 'a'], [11, 28, 'a'], [12, 28, 'b'], [13, 28, 'a'], [14, 28, 'a'], [17, 28, 'a'], [19, 28, 'a']]) q.set(x, y, INKL[c]);
+      // a warm amber drop shadow under the letters (down-right, only on empty pixels) so the
+      // pale ink still reads on the light backdrops (library floor, snow, clouds)
+      const INKC = new Set([INKL.a, INKL.b, INKL.w]);
+      const ink = [];
+      for (let y = 12; y < H; y++) for (let x = 5; x < W; x++) if (INKC.has(q.get(x, y))) ink.push([x, y]);
+      for (const [x, y] of ink) if (q.get(x + 1, y + 1) == null) q.set(x + 1, y + 1, '#a86a10');
       // a soft golden glow of loose motes round the feather
       for (const [x, y] of [[20, 4], [26, 10], [15, 11], [29, 6], [18, 16], [24, 16], [12, 16], [31, 3]]) q.set(x, y, (x + y) % 2 ? '#fff4c0' : '#ffe890');
       sparkle(q, 23, 12, 'star', 'y');
       sparkle(q, 3, 5, 'small', 'y');
       sparkle(q, 16, 3, 'dot');
-      sparkle(q, 30, 20, 'dot');
+      sparkle(q, 30, 22, 'dot');
     });
   };
 

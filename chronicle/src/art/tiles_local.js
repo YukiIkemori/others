@@ -468,10 +468,38 @@
       L.set(7, 0, SN[2]); L.set(8, 0, SN[1]);
     }, { outline: 0x0a1c14, sx: 2, sy: 1 });
   }
+  // scorched tree of the ash lands (town_ash, volcano): a gnarled dark trunk with bare
+  // forked limbs and a thin, dusky crown powdered grey with ash
+  function ashTree(fl) {
+    const t = tk();
+    const TR = [0x1a120e, 0x2c201a, 0x42322a, 0x5a4638];
+    const F = [0x1e2018, 0x2e3224, 0x3e4430, 0x535a40, 0x6a7052];
+    const ASH = [0x8a8a84, 0xb4b2aa];
+    return t.stamp(fl, (L) => {
+      // trunk, leaning a little, with a root flare
+      L.rect(7, 10, 2, 6, TR[2]); L.vline(7, 10, 15, TR[3]); L.vline(8, 11, 15, TR[1]);
+      L.set(6, 15, TR[1]); L.set(9, 15, TR[1]); L.set(10, 15, TR[0]);
+      // forked limbs (bare ends poke out of the crown)
+      for (const [x, y] of [[6, 9], [5, 8], [4, 7], [3, 5], [9, 9], [10, 8], [11, 7], [12, 6], [12, 4], [7, 8], [8, 7], [8, 6]]) L.set(x, y, TR[2]);
+      for (const [x, y] of [[2, 4], [13, 3], [3, 6], [13, 5]]) L.set(x, y, TR[1]);
+      // a broad, ragged crown in clumps (small gaps show the limbs)
+      L.shadeEllipse(8, 7.5, 5.4, 2.6, F, { dither: 0.8, amb: 0.25 });
+      L.shadeEllipse(4.2, 5, 3.6, 2.8, F, { dither: 0.8, amb: 0.35 });
+      L.shadeEllipse(11.4, 4.4, 3.6, 2.9, F, { dither: 0.8, amb: 0.35 });
+      L.shadeEllipse(7.6, 2.8, 3, 2.3, F, { dither: 0.8, amb: 0.45 });
+      // gaps where the bare limbs show through
+      for (const [x, y] of [[6, 6], [5, 8], [10, 7], [11, 8], [8, 5]]) L.set(x, y, TR[2]);
+      L.set(9, 9, TR[1]); L.set(6, 9, TR[1]);
+      // ash settled on the upper leaves
+      for (const [x, y, k] of [[3, 3, 1], [4, 3, 0], [6, 1, 1], [7, 1, 1], [8, 1, 0], [10, 2, 1], [11, 2, 1], [12, 2, 0], [2, 5, 0], [13, 4, 0], [5, 6, 0], [9, 6, 0]]) L.set(x, y, ASH[k]);
+    }, { outline: 0x100c0a, sx: 2, sy: 1 });
+  }
+  A.ashTreeArt = ashTree;
   OBJ.tree = (fl, ctx) => {
     const t = tk(), F = t.PAL.leaf, tr = t.PAL.trunk;
     ctx = ctx || {};
     if (ctx.snow) return snowFir(fl);
+    if (ctx.ash) return ashTree(fl);
     return t.stamp(fl, (L) => {
       L.rect(7, 11, 3, 5, tr[1]); L.vline(7, 11, 15, tr[2]); L.set(9, 15, tr[0]);
       const ramp = [F[0], F[1], F[2], F[3], F[4]];
@@ -957,7 +985,12 @@
   function bankStyle(id, theme) {
     const q = kindOf(id, theme);
     if (q === 'water' || id === 'void') return '';
-    if (q === 'grass' || id === 'tree') return 'e';
+    if (id === 'tree') {
+      // the bank under a wood is the theme's natural ground (snow, sand, bare earth, lawn)
+      const g = A.natGround ? A.natGround(theme) : 'lgrass';
+      return g === 'sand' ? 's' : g === 'snowfloor' ? 'n' : g === 'dirt' ? 'd' : 'e';
+    }
+    if (q === 'grass') return 'e';
     if (q === 'sand') return 's';
     if (q === 'snow') return 'n';
     if (q === 'dirt') return 'd';

@@ -66,8 +66,9 @@
   // ------------------------------------------------------------ gold window
   class GoldLayer extends R.Layer {
     draw() {
-      G().window(172, 4, 80, 24, { title: 'ゴールド' });
-      G().text(String(R.Game.gold), 244, 10, { align: 'right' });
+      G().window(172, 4, 80, 24);
+      G().text('G', 180, 10, { color: '#c8c8d8' });
+      R.Menu.kit.fitText(String(R.Game.gold), 244, 10, 56, { align: 'right' });
     }
   }
 
@@ -355,7 +356,7 @@
       await R.Engine.wait(30);
       if (R.Field && R.Field.setRespawnHere) R.Field.setRespawnHere();
       await R.Engine.fadeIn(40);
-      await say('おはようございます。いってらっしゃいませ。');
+      await say('おはようございます。\nいってらっしゃいませ。');
       return true;
     } finally {
       R.UI.closeMessage();

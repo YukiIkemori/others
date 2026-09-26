@@ -70,7 +70,7 @@
       elem: { light: 1.5, dark: 0.25 }, phys: { slash: 0.5, blunt: 0.5, pierce: 0.5 }, statusRes: { poison: 1, death: 1, stun: 1 },
       actions: [{ id: 'attack', w: 2 }, { id: 'e_mind_suck', w: 2 }, { id: 'e_dark_bolt', w: 2 }],
       drops: { normal: { item: 'i_ether', rate: 8 }, rare: { item: 'sh_bell_shield', rate: 32 }, super: { item: 'ac_sr_soul_bead', rate: 256 } },
-      desc: '青白くゆれる魂の火。\n魔力を吸い取っていく。',
+      desc: '青白くゆれる魂の火。\nMPを吸い取っていく。',
     },
     wisp_4: {
       name: '黄泉の火', sprite: 'wisp_4', lineage: 'wisp', stage: 4, lv: 43, size: 's', race: 'spirit', affinity: 'dark',

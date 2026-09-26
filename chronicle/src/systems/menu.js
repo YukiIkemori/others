@@ -41,7 +41,7 @@
   };
   const RACE_NAMES = {
     beast: '獣', construct: '魔造', insect: '虫', humanoid: '人型', spirit: '霊体', plant: '植物', demon: '魔族', aquatic: '水生',
-    undead: '不死', fairy: '妖精', bird: '鳥', ooze: '軟体', dragon: '竜', human: '人',
+    undead: '不死', fairy: '妖精', bird: '鳥', slime: '軟体', ooze: '軟体', dragon: '竜', human: '人',
   };
   const ROLE_NAMES = { guard: '前衛・重', striker: '前衛・軽', ranged: '中列・武器', caster: '術・攻め', healer: '術・癒やし', hybrid: '武器と術' };
   const APT_COLOR = { S: '#ffd24a', A: '#6ee07a', B: '#ffffff', C: '#a0a0a8', D: '#707080' };

@@ -31,21 +31,26 @@ function check(cond, S) {
   if (Array.isArray(cond)) return cond.every((c) => check(c, S));
   if (typeof cond !== 'object') return !!cond;
   const c = cond;
-  if (c.flag != null && !S.flag(c.flag)) return false;
-  if (c.notFlag != null && S.flag(c.notFlag)) return false;
-  if (c.item != null && !S.item(c.item)) return false;
-  if (c.notItem != null && S.item(c.notItem)) return false;
+  // same truthiness tests as R.State.check (src/systems/state.js): an empty id means "no test"
+  if (c.flag && !S.flag(c.flag)) return false;
+  if (c.notFlag && S.flag(c.notFlag)) return false;
+  if (c.item && !S.item(c.item)) return false;
+  if (c.notItem && S.item(c.notItem)) return false;
   if (c.all && !c.all.every((x) => check(x, S))) return false;
   if (c.any && !c.any.some((x) => check(x, S))) return false;
   if (c.tier != null && !(S.tier() >= c.tier)) return false;
   if (c.tierBelow != null && !(S.tier() < c.tierBelow)) return false;
-  if (c.cleared != null && !S.cleared(c.cleared)) return false;
-  if (c.notCleared != null && S.cleared(c.notCleared)) return false;
-  if (c.member != null && !S.member(c.member)) return false;
-  if (c.recruited != null && !S.recruited(c.recruited)) return false;
-  if (c.hero != null && S.gender() !== c.hero) return false;
-  if (c.heroType != null && S.heroType() !== c.heroType) return false;
-  if (c.var != null) {
+  if (c.cleared && !S.cleared(c.cleared)) return false;
+  if (c.notCleared && S.cleared(c.notCleared)) return false;
+  if (c.member && !S.member(c.member)) return false;
+  if (c.recruited && !S.recruited(c.recruited)) return false;
+  if (c.hero || c.heroType) {                         // false while there is no hero (game rule)
+    const g = S.gender(), t = S.heroType();
+    if (g == null && t == null) return false;
+    if (c.hero && g !== c.hero) return false;
+    if (c.heroType && t !== c.heroType) return false;
+  }
+  if (c.var) {
     const v = +S.getVar(c.var) || 0;
     if (c.gte != null && !(v >= c.gte)) return false;
     if (c.lt != null && !(v < c.lt)) return false;
@@ -91,14 +96,14 @@ function fromGame(R) {
       if ((G().inv || {})[id] > 0) return true;
       return all().some((c) => c && c.equip && Object.values(c.equip).includes(id));
     },
-    tier: () => (G().regionsCleared ? G().regionsCleared.length : G().tier || 0),
+    tier: () => (G().tier != null ? G().tier : (G().regionsCleared || []).length),   // R.Game.tier (0–8)
     cleared: (r) => (G().regionsCleared || []).includes(r) || !!(G().flags || {})['cleared_' + r],
     member: (id) => (G().party || []).some((c) => c && c.id === id),
     recruited: (id) => all().some((c) => c && c.id === id),
-    gender: () => { const h = (G().party || []).concat(G().reserve || []).find((c) => c && c.id === 'hero'); return h ? h.gender : 'm'; },
+    gender: () => { const h = all().find((c) => c && c.id === 'hero'); return h ? h.gender : null; },
     heroType: () => { const h = all().find((c) => c && c.id === 'hero'); return h ? h.heroType : null; },
     getVar: (n) => (St.getVar ? St.getVar(n) : (G().vars || {})[n]) || 0,
-    postgame: () => !!G().gameClear || !!(G().flags || {}).game_clear,
+    postgame: () => !!G().gameClear,
   };
 }
 

@@ -454,12 +454,18 @@
   const STEEL = ['#303848', '#6a7890', '#b0c0d8', '#f0f8ff'];
   function chromeBase(p, seed) {
     const w = p.w, h = p.h, ring = ringOf(p), nl = lumRange(p, ring);
+    // gamma chosen from the base's mean brightness, so a dark base (beetle) still reads as polished
+    // steel and a light one (jelly) keeps its dark lower half: the mean lands near STEEL's middle
+    let sum = 0, cnt = 0;
+    for (let i = 0; i < p.d.length; i++) { const c = p.d[i]; if (c == null || ring[i] || lum(c) < 0.1) continue; sum += nl(lum(c)); cnt++; }
+    const mean = cnt ? clamp(sum / cnt, 0.05, 0.95) : 0.5;
+    const g = clamp(Math.log(0.56) / Math.log(mean), 0.45, 1.45);
     for (let i = 0; i < p.d.length; i++) {
       const c = p.d[i];
       if (c == null || ring[i]) continue;
       const l = lum(c);
-      if (l < 0.1) { p.d[i] = '#1c2230'; continue; }
-      p.d[i] = lumTo(STEEL, nl(l), 1.45);
+      if (l < 0.1) { p.d[i] = l < 0.06 ? '#1c2230' : STEEL[0]; continue; }
+      p.d[i] = lumTo(STEEL, nl(l), g);
     }
     // one diagonal white band (2 px), top-right to lower-left across the upper body
     const bb = bboxOf(p);

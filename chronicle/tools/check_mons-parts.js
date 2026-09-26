@@ -12,7 +12,7 @@
 //   C8 parts       every stage ≥ 2 on its lineage's base adds at least T part pixels (s 12 / m 20 / l 30) or a filter
 //   C9 colours     the recoloured body matches the colour its name / bestiary text states (mean hue or
 //                  one of its 3 strongest 30° bins: a flower may be blue on a magenta stem)
-//   C10 time       compose time per sprite (budget: max ≤ 100 ms, total ≤ 4 s; the machine is shared, so noisy)
+//   C10 time       compose time per sprite (budget: max ≤ 100 ms, total ≤ 4 s; slow ones re-timed best of 3)
 //
 //   node tools/check_mons-parts.js [--json FILE] [--verbose]
 'use strict';

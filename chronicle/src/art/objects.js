@@ -108,7 +108,7 @@
       const c = open.get(x, y);
       if (c === RARE_PAL.A || c === RARE_PAL.a) open.set(x, y, G().mix(c, '#e0a830', y === 5 ? 0.45 : 0.25));
     }
-    for (const [x, y, c] of [[6, 1, '#fff4c0c0'], [9, 0, '#fff4c090'], [8, 2, '#ffffffe0'], [4, 2, '#ffd86080'], [11, 1, '#ffd860a0']]) if (!open.get(x, y)) open.set(x, y, c);
+    for (const [x, y, c] of [[6, 1, '#fff4c0'], [9, 0, '#ffe890'], [8, 2, '#ffffff'], [4, 2, '#e0a830'], [11, 1, '#ffd860']]) if (!open.get(x, y)) open.set(x, y, c);
     return [shut.toCanvas(), open.toCanvas()];
   });
 

@@ -318,6 +318,9 @@ const LAYERS = {
     L('magma', union(cap([[82, 99], [83.5, 101], [86, 103.5]], 0.95), cap([[79, 99.5], [75, 100]], 0.8), ell(86, 103.8, 1.6, 1.1)),
       { amp: 0.25, seed: 76, on: ['ash', 'wasteland', 'hills', 'deadforest', 'mountain'] }),
     L('wasteland', ell(80, 101, 5, 2.5), { amp: 1, seed: 77, on: ['ash'] }),
+    // the fields round カルデラ are grey ash (not bare waste), so the r_ash thaw (§10.5.6) greens
+    // a whole ragged disc instead of a few scattered cells
+    L('ash', ell(70, 89.5, 6.4, 5.8), { amp: 1.1, seed: 70, on: ['wasteland', 'deadforest'] }),
   ],
   penin: [
     L('plain', ALL, { amp: 0, seed: 81, on: ['grass'], dens: [5, 0.72] }),
@@ -366,7 +369,7 @@ const BRIDGES = [
 const LAKES = [
   { shape: ell(29, 13.5, 2.2, 1.4), amp: 0.4 },   // a frozen lake north of Yule
   { shape: ell(30, 84.5, 1.5, 1), amp: 0.2 },     // the oasis of カシム
-  { shape: ell(65.5, 86.5, 1.9, 1.4), amp: 0.2 }, // the hot spring pool north-west of カルデラ
+  { shape: ell(65.5, 86.5, 2.9, 2.1), amp: 0.3 }, // the hot spring pool north-west of カルデラ
   { shape: ell(106, 60, 1.8, 1.2), amp: 0.4 },    // a mere in the marsh
   { shape: ell(104.5, 26.5, 1.8, 1.1), amp: 0.3 }, // a tarn on the Orbis highland
   // harbours: every port town has open water beside its icon
