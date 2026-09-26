@@ -60,14 +60,14 @@
     b_ironwarden: { hp: 0.65, atk: 0.5, mag: 0.5 },
     b_hellhound: { hp: 1.25, atk: 0.7, mag: 0.7 },
     b_lavabeast: { hp: 0.9, atk: 0.6, mag: 0.6 },
-    b_orrery: { hp: 0.9 },
+    b_orrery: { hp: 0.85 },
     b_stareater: { hp: 1.1, atk: 0.6, mag: 0.6 },
     b_rowell1: { hp: 1.35 },
     b_rowell2: { hp: 1.35 },
     b_bookgolem: { hp: 0.8, atk: 0.85, mag: 0.85 },
-    b_shade_sword: { hp: 1, atk: 0.6, mag: 0.6 },
-    b_shade_prayer: { hp: 1, atk: 0.6, mag: 0.6 },
-    b_shade_star: { hp: 1, atk: 0.6, mag: 0.6 },
+    b_shade_sword: { hp: 0.95, atk: 0.6, mag: 0.6 },
+    b_shade_prayer: { hp: 0.95, atk: 0.6, mag: 0.6 },
+    b_shade_star: { hp: 0.95, atk: 0.6, mag: 0.6 },
     b_lazaro: { hp: 0.9 },
     b_nemrea1: { hp: 0.55, atk: 0.9, mag: 0.9 },
     b_valzard_echo: { hp: 0.9, atk: 0.7, mag: 0.7 },
@@ -122,7 +122,7 @@
 
     // ------------------------------------------------------------ 地方2 ザハラ砂漠
     b_sandworm: {
-      name: '砂もぐり', sprite: 'b_sandworm', bossType: 'mid', lv: 9, actsPerTurn: 1,
+      name: '砂もぐり', sprite: 'b_sandworm', bossType: 'mid', lv: 8, actsPerTurn: 1,
       race: 'beast', affinity: 'earth', flags: ['boss'], eva: 5,
       elem: { fire: 1.25, wind: 1.5, earth: 0.25 },
       actions: A([['attack', 2], ['eb_sink', 2, { every: [3, 0] }], ['eb_sand_strike', 3, { every: [3, 1] }],
@@ -165,7 +165,7 @@
 
     // ------------------------------------------------------------ 地方4 グレイモア湿原
     b_doll_conductor: {
-      name: '指揮者人形', sprite: 'b_doll_conductor', bossType: 'mid', lv: 9, hpShare: 4, actsPerTurn: 1,
+      name: '指揮者人形', sprite: 'b_doll_conductor', bossType: 'mid', lv: 8, hpShare: 4, actsPerTurn: 1,
       race: 'construct', flags: ['boss'], eva: 5,
       elem: { water: 1.25, wind: 0.75 }, phys: CONSTRUCT_PHYS, statusRes: CONSTRUCT_RES,
       actions: A([['attack', 2], ['eb_baton', 2], ['eb_encore', 3, { every: [3, 2], allyDown: true }],
@@ -174,7 +174,7 @@
       desc: '霧の館で演奏を続ける人形の長。\n倒れた楽士をよみがえらせる。',
     },
     b_doll_violin: {
-      name: '弦ひき人形', sprite: 'b_doll_violin', bossType: 'add', addOf: 'b_doll_conductor', lv: 9, hpShare: 2, actsPerTurn: 1,
+      name: '弦ひき人形', sprite: 'b_doll_violin', bossType: 'add', addOf: 'b_doll_conductor', lv: 8, hpShare: 2, actsPerTurn: 1,
       race: 'construct', flags: ['boss'], eva: 5,
       elem: { water: 1.25, wind: 0.75 }, phys: CONSTRUCT_PHYS, statusRes: CONSTRUCT_RES,
       actions: A([['attack', 2], ['eb_sad_tune', 2], ['eb_bow_slash', 2]]),
@@ -182,7 +182,7 @@
       desc: '悲しい調べをかなでる人形。\n弓は刃のように鋭い。',
     },
     b_doll_drum: {
-      name: '太鼓人形', sprite: 'b_doll_drum', bossType: 'add', addOf: 'b_doll_conductor', lv: 9, hpShare: 2, actsPerTurn: 1,
+      name: '太鼓人形', sprite: 'b_doll_drum', bossType: 'add', addOf: 'b_doll_conductor', lv: 8, hpShare: 2, actsPerTurn: 1,
       race: 'construct', flags: ['boss'], eva: 5,
       elem: { water: 1.25, wind: 0.75 }, phys: CONSTRUCT_PHYS, statusRes: CONSTRUCT_RES,
       actions: A([['attack', 2], ['eb_drum_roll', 3]]),
@@ -190,7 +190,7 @@
       desc: '太鼓を打ち鳴らす兵隊の人形。\n響く音で相手をすくませる。',
     },
     b_doll_flute: {
-      name: '笛人形', sprite: 'b_doll_flute', bossType: 'add', addOf: 'b_doll_conductor', lv: 9, hpShare: 2, actsPerTurn: 1,
+      name: '笛人形', sprite: 'b_doll_flute', bossType: 'add', addOf: 'b_doll_conductor', lv: 8, hpShare: 2, actsPerTurn: 1,
       race: 'construct', flags: ['boss'], eva: 5,
       elem: { water: 1.25, wind: 0.75 }, phys: CONSTRUCT_PHYS, statusRes: CONSTRUCT_RES,
       actions: A([['attack', 1], ['eb_flute_lullaby', 2], ['eb_shrill', 2]]),
@@ -257,7 +257,7 @@
       desc: '深き坑道の岩をかみ砕く大虫。\n食べるほど体が固くなる。',
     },
     b_ironwarden: {
-      name: '鉄の番人', sprite: 'b_ironwarden', bossType: 'region', lv: 12, actsPerTurn: 1,
+      name: '鉄の番人', sprite: 'b_ironwarden', bossType: 'region', lv: 13, actsPerTurn: 1,
       race: 'construct', flags: ['boss'], eva: 5,
       elem: { water: 1.5, wind: 0.75 }, phys: CONSTRUCT_PHYS, statusRes: CONSTRUCT_RES,
       actions: A([['attack', 2], ['eb_iron_fist', 2], ['eb_anvil_drop', 2], ['eb_forge_breath', 2],
@@ -296,7 +296,7 @@
 
     // ------------------------------------------------------------ 地方8 オルビス高原
     b_orrery: {
-      name: '天球の番人', sprite: 'boss_star_guardian', bossType: 'mid', lv: 11, actsPerTurn: 1,
+      name: '天球の番人', sprite: 'boss_star_guardian', bossType: 'mid', lv: 12, actsPerTurn: 1,
       race: 'construct', affinity: 'light', flags: ['boss'], eva: 5,
       elem: { water: 1.25, wind: 0.75, light: 0.25, dark: 1.5 }, phys: CONSTRUCT_PHYS, statusRes: CONSTRUCT_RES,
       actions: A([['attack', 1], ['eb_sun_orb', 3, { every: [3, 0] }], ['eb_moon_orb', 3, { every: [3, 1] }],

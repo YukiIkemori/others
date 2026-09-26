@@ -9077,12 +9077,12 @@ hp = round(hpBoss(lv) × (hpShare ?? hpMul))        hpBoss は§4.14.3
   | `b_sandking` | region | atk/mag 0.7・hp 0.95 | 同上 |
   | `b_mistbeast` `b_ironwarden` | region | atk/mag **0.5**（下限。hp 0.7 / 0.65） | 同上。これ以上は下げられないので、残りは行動の重みで直す |
   | `b_root` `b_mist_double` | add | atk/mag **0.5**（下限） | お供の手数 |
-  | `b_shade_sword` `b_shade_prayer` `b_shade_star` | fmid | atk/mag 0.6・hp 1.0（2026-09-26: 0.9 では C1b 8.7 ラウンド。9〜12 に入れる） | 3 体が同時に動く |
+  | `b_shade_sword` `b_shade_prayer` `b_shade_star` | fmid | atk/mag 0.6・hp 0.95（2026-09-26: 0.9 では C1b 8.7 ラウンド、1.0 では X1 13.3 ラウンド。9〜12 に入れる） | 3 体が同時に動く |
   | `b_valzard_echo` | echo | atk/mag 0.7・hp 0.9 | |
   | `b_nemrea1` | last1 | hp 0.55・atk/mag 0.9 | hpBoss の新しい曲線（L58 で ×1.475）の分 |
   | `b_ouroboros` | super | hp 0.6・atk/mag 0.55 | `K.BOSS.super` を ×1.25 にしたあとの値 |
   - 下限 0.5 に張り付いているもの（`b_mistbeast` `b_ironwarden` `b_root` `b_mist_double`）は、これ以上の調整を `K.BOSS` か行動の側で行う（boss・battle の担当）。
-  - **編成ごとの lvOff**（2026-09-26。§4.17.3 B1・B4b）: `s` はどのティアでも同じ倍率なので、ティアによるラウンド数のずれ（T0 だけ長い・短い）は直せない。Lb が 1 違うと T0（Lb 8〜9）では HP・能力が 10〜15% 動くが、T7（Lb 50 前後）では 2〜3% しか動かないので、ずれの向きに合わせて編成の lvOff を動かし、`s.hp` で平均を戻した: T0 で長すぎた地方ボス `tr_b_rooteater` +2・`tr_b_sandking` +1・`tr_b_whitedragon` +1、T0 で短すぎた `tr_b_ironwarden` +6・中ボス `tr_b_orrery` +5・`tr_b_sandworm` `tr_b_icegiant` `tr_b_dolls` `tr_b_hellhound` +3。`sim_balance --only B1 --n 100`（seed 20260925）で、この 9 編成のティアごとのずれが ±24% → ±16% 以内（多くは ±10%）になった。表の ±20% を外れた `s` はこの節の表のとおり。
+  - **編成ごとの lvOff**（2026-09-26。§4.17.3 B1・B4b）: `s` はどのティアでも同じ倍率なので、ティアによるラウンド数のずれ（T0 だけ長い・短い）は直せない。Lb が 1 違うと T0（Lb 8〜9）では HP・能力が 10〜15% 動くが、T7（Lb 50 前後）では 2〜3% しか動かないので、ずれの向きに合わせて編成の lvOff を動かし、`s.hp` で平均を戻した: T0 で長すぎた地方ボス `tr_b_rooteater` +2・`tr_b_sandking` +1・`tr_b_whitedragon` +1、T0〜T1 で短すぎた `tr_b_ironwarden` +7・中ボス `tr_b_orrery` +6・`tr_b_icegiant` `tr_b_hellhound` +3。`sim_balance --only B1 --n 100`（seed 20260925）で、この 7 編成のティアごとのずれが ±24% → ±16% 以内（多くは ±10%）になった（`sim_bosses` X1 の T0〜T7 では外れ 7 → 5 編成。残る `tr_b_whitedragon` の T3 だけ短い −20% は s でも lvOff でも動かない）。表の ±20% を外れた `s` はこの節の表のとおり。
 - HP の例（§4.14.3 の検算と同じ値になる）:
 
 | 編成 | HP（ティア / Lb） |
@@ -9090,19 +9090,19 @@ hp = round(hpBoss(lv) × (hpShare ?? hpMul))        hpBoss は§4.14.3
 | `tr_b_pageeater` | T0(Lb8): pageeater 245 |
 | `tr_b_moth` | T0(Lb8): moth 223<br>T3(Lb26): moth 1325<br>T7(Lb50): moth 6716 |
 | `tr_b_rooteater` | T0(Lb8): root 33 / rooteater 334<br>T3(Lb26): root 199 / rooteater 1988<br>T7(Lb50): root 1007 / rooteater 10075 |
-| `tr_b_sandworm` | T0(Lb9): sandworm 253<br>T3(Lb27): sandworm 1446<br>T7(Lb51): sandworm 7057 |
+| `tr_b_sandworm` | T0(Lb8): sandworm 223<br>T3(Lb26): sandworm 1325<br>T7(Lb50): sandworm 6716 |
 | `tr_b_sandking` | T0(Lb7): sandking 311<br>T3(Lb25): sandking 1938<br>T7(Lb49): sandking 10185 |
 | `tr_b_icegiant` | T0(Lb9): icegiant 253<br>T3(Lb27): icegiant 1446<br>T7(Lb51): icegiant 7057 |
 | `tr_b_whitedragon` | T0(Lb7): whitedragon 350<br>T3(Lb25): whitedragon 2181<br>T7(Lb49): whitedragon 11458 |
-| `tr_b_dolls` | T0(Lb9): doll_violin 51 / doll_conductor 101 / doll_drum 51 / doll_flute 51<br>T3(Lb27): doll_violin 289 / doll_conductor 578 / doll_drum 289 / doll_flute 289<br>T7(Lb51): doll_violin 1411 / doll_conductor 2823 / doll_drum 1411 / doll_flute 1411 |
+| `tr_b_dolls` | T0(Lb8): doll_violin 45 / doll_conductor 89 / doll_drum 45 / doll_flute 45<br>T3(Lb26): doll_violin 265 / doll_conductor 530 / doll_drum 265 / doll_flute 265<br>T7(Lb50): doll_violin 1343 / doll_conductor 2687 / doll_drum 1343 / doll_flute 1343 |
 | `tr_b_mistbeast` | T0(Lb9): mistbeast 455<br>T3(Lb27): mistbeast 2602<br>T7(Lb51): mistbeast 12703 |
 | `tr_b_octopus` | T0(Lb8): tentacle 33 / octopus 156<br>T3(Lb26): tentacle 199 / octopus 928<br>T7(Lb50): tentacle 1007 / octopus 4701 |
 | `tr_b_captain` | T0(Lb9): captain 404<br>T3(Lb27): captain 2313<br>T7(Lb51): captain 11291 |
 | `tr_b_rockeater` | T0(Lb8): rockeater 223<br>T3(Lb26): rockeater 1325<br>T7(Lb50): rockeater 6716 |
-| `tr_b_ironwarden` | T0(Lb12): ironwarden 633<br>T3(Lb30): ironwarden 3332<br>T7(Lb54): ironwarden 13955 |
+| `tr_b_ironwarden` | T0(Lb13): ironwarden 698<br>T3(Lb31): ironwarden 3604<br>T7(Lb55): ironwarden 14385 |
 | `tr_b_hellhound` | T0(Lb9): hellhound 253<br>T3(Lb27): hellhound 1446<br>T7(Lb51): hellhound 7057 |
 | `tr_b_lavabeast` | T0(Lb9): lavabeast 455<br>T3(Lb27): lavabeast 2602<br>T7(Lb51): lavabeast 12703 |
-| `tr_b_orrery` | T0(Lb11): orrery 317<br>T3(Lb29): orrery 1708<br>T7(Lb53): orrery 7517 |
+| `tr_b_orrery` | T0(Lb12): orrery 351<br>T3(Lb30): orrery 1851<br>T7(Lb54): orrery 7753 |
 | `tr_b_stareater` | T0(Lb9): stareater 455<br>T3(Lb27): stareater 2602<br>T7(Lb51): stareater 12703 |
 | `tr_b_rowell1` | T2(Lb20): rowell1 741 |
 | `tr_b_rowell2` | T5(Lb38): rowell2 3301 |
@@ -9188,19 +9188,19 @@ hp = round(hpBoss(lv) × (hpShare ?? hpMul))        hpBoss は§4.14.3
 | `tr_b_pageeater` | `b_pageeater` | 0 固定 | lv 8 | `tower` | `boss` |
 | `tr_b_moth` | `b_moth` | `scale:'tier'`（0〜7） | +2 | `forest` | `boss` |
 | `tr_b_rooteater` | `b_root` `b_rooteater` `b_root` | `scale:'tier'`（0〜7） | +2 | `tree` | `boss2` |
-| `tr_b_sandworm` | `b_sandworm` | `scale:'tier'`（0〜7） | +3 | `pyramid` | `boss` |
+| `tr_b_sandworm` | `b_sandworm` | `scale:'tier'`（0〜7） | +2 | `pyramid` | `boss` |
 | `tr_b_sandking` | `@mummy` `b_sandking` `@mummy` | `scale:'tier'`（0〜7） | +1 | `pyramid` | `boss2` |
 | `tr_b_icegiant` | `b_icegiant` | `scale:'tier'`（0〜7） | +3 | `ice` | `boss` |
 | `tr_b_whitedragon` | `b_whitedragon` | `scale:'tier'`（0〜7） | +1 | `snow` | `boss2` |
-| `tr_b_dolls` | `b_doll_violin` `b_doll_conductor` `b_doll_drum` `b_doll_flute` | `scale:'tier'`（0〜7） | +3 | `manor` | `boss` |
+| `tr_b_dolls` | `b_doll_violin` `b_doll_conductor` `b_doll_drum` `b_doll_flute` | `scale:'tier'`（0〜7） | +2 | `manor` | `boss` |
 | `tr_b_mistbeast` | `b_mistbeast` | `scale:'tier'`（0〜7） | +3 | `swamp` | `boss2` |
 | `tr_b_octopus` | `b_tentacle` `b_octopus` `b_tentacle` | `scale:'tier'`（0〜7） | +2 | `watercave` | `boss` |
 | `tr_b_captain` | `@skeleton` `b_captain` `@skeleton` | `scale:'tier'`（0〜7） | +3 | `ship` | `boss2` |
 | `tr_b_rockeater` | `b_rockeater` | `scale:'tier'`（0〜7） | +2 | `mine` | `boss` |
-| `tr_b_ironwarden` | `b_ironwarden` | `scale:'tier'`（0〜7） | +6 | `mine` | `boss2` |
+| `tr_b_ironwarden` | `b_ironwarden` | `scale:'tier'`（0〜7） | +7 | `mine` | `boss2` |
 | `tr_b_hellhound` | `b_hellhound` | `scale:'tier'`（0〜7） | +3 | `volcano` | `boss` |
 | `tr_b_lavabeast` | `b_lavabeast` | `scale:'tier'`（0〜7） | +3 | `volcano` | `boss2` |
-| `tr_b_orrery` | `b_orrery` | `scale:'tier'`（0〜7） | +5 | `tower` | `boss` |
+| `tr_b_orrery` | `b_orrery` | `scale:'tier'`（0〜7） | +6 | `tower` | `boss` |
 | `tr_b_stareater` | `b_stareater` | `scale:'tier'`（0〜7） | +3 | `tower` | `boss2` |
 | `tr_b_rowell1` | `b_rowell1` | 2 固定 | +2 | （その場） | `rival` |
 | `tr_b_rowell2` | `b_rowell2` | 5 固定 | +2 | （その場） | `rival` |

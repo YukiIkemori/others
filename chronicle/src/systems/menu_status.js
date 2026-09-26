@@ -302,7 +302,7 @@
           const pts = ((kind === 'w' ? c.wprof : c.eprof) || {})[id] || 0;
           return R.Rules && R.Rules.profRank ? R.Rules.profRank(pts) : 0;
         };
-        const maxRank = (R.Rules && R.Rules.K && R.Rules.K.PROF_MAX) || 10;
+        const maxRank = Math.max(1, ((R.Rules && R.Rules.K && R.Rules.K.PROF_PTS) || []).length - 1) || 10; // follows the table (a rescale needs no change here)
         const drawRow = (x, y, name, r, col) => {
           Kt.fitText(name, x, y, 26, { color: col || '#ffffff' });
           G().text(String(r), x + 44, y, { align: 'right' });

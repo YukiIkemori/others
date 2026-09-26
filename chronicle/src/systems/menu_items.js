@@ -403,19 +403,8 @@
     const knowers = (book[id] || []).map((cid) => K().charById(cid)).filter(Boolean).map((ch) => ch.name);
     L[5] = knowers.length ? { text: '覚えている：' + knowers.join('　') } : { text: 'まだ誰も覚えていない。', color: GRAY };
     L[6] = { text: String(a.desc || '').split('\n')[0] };
-    // Part A13: the member's proficiency bonus on damage / healing (and A13b's MP cut), on a row of its own under 威力
-    if (c && R.Rules && R.Rules.profPowerPct) {
-      const segs = [];
-      if (dmg || effs.some((e) => e.type === 'heal')) {
-        const pct = R.Rules.profPowerPct(c, a);
-        const src = tech ? K().wtypeName(a.wtype) : (a.elements || []).length > 1 ? '平均' : K().elemName((a.elements || [])[0]);
-        segs.push({ text: '熟練の補正 ', color: SUB }, { text: '+' + pct + '%', color: pct > 0 ? G().C.orange : GRAY }, { text: '（' + src + '）', color: SUB });
-      }
-      if (cut) segs.push({ text: (segs.length ? '　' : '') + (cut === 'free' ? '熟練でMP0' : '熟練でMP半分'), color: G().C.cyan });
-      if (segs.length) {
-        L.splice(4, 0, { text: segs.map((q) => q.text).join(''), segs });
-      }
-    }
+    // オーナー指示 A17: no 「熟練の補正 +◯%」 / 「熟練でMP0」 row — the proficiency effects work unseen; only the MP
+    // cost itself (row 0, cyan when proficiency cut it) tells of them
     return L;
   }
 

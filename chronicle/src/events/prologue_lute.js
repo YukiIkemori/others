@@ -217,7 +217,8 @@
       const n = ev.ctx.npc || {};
       const d = R.DB.companions && R.DB.companions[n.who];
       if (!d) { await ev.say('……。'); return; }
-      await ev.say(d.name + '（' + d.title + '）\n' + d.profile);
+      // オーナー指示 A17: the profile paragraph is not shown anywhere — the patron gives only a name and a title
+      await ev.say(d.title + 'の' + d.name + 'が、\nひとりで杯を傾けている。');
       await ev.say(ev.flag('pro_party_chosen') ? '酒場のマスターに話せば、\n仲間にできそうだ。' : '腕の立ちそうな旅人だ。\n酒場のマスターに\n話してみよう。');
     },
   };
