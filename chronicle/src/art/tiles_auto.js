@@ -270,7 +270,7 @@
     }
     return cached('wf|' + theme + '|' + cap + '|' + px, () => canvas(A.wallFace(theme, cap, px)));
   }
-  /** a secret passage: exactly the wall it is set in (face or top), plus the faint hint */
+  /** a secret passage: exactly the wall it is set in (face or top); the found marks only once found (A15) */
   function secretTile(m, x, y, theme) {
     const up = m.tileAt(x, y - 1), down = m.tileAt(x, y + 1);
     const l = m.tileAt(x - 1, y), r = m.tileAt(x + 1, y);

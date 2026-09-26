@@ -9,7 +9,7 @@
 //   middle floor, §10.6.2-5), the worm's sand hall with 砂もぐり (mid-boss tr_b_sandworm). Its only way
 //   south is a corridor of 流砂 (closed tile `quicksand`, tilePatch while !desert_mid) that stops when
 //   the worm falls. Beyond: 墓守の像 2 (『ザ』, west) and the stairs down (east). East of the lantern
-//   room, a plain dead end hides a cracked wall (secret passage, §10.6.4) and an alcove with p_rare.
+//   room, a plain dead end hides a secret wall (no crack: オーナー指示 A15; secret passage, §10.6.4) and an alcove with p_rare.
 // sand_tomb_3 (40×34, the boss floor: no lvOff) — the landing, the central hall, 墓守の像 3 (『ル』,
 //   west), a side crypt (east), the antechamber with the 休息の灯 and フィーネ (story_fine_desert), the
 //   岩戸 of the king's hall (closed until desert_letters = 3) and 名なき砂の王 (tr_b_sandking).
@@ -191,7 +191,7 @@
       '..@...........................................',
       '...........................................@..',
       '..............................................',
-      '......................zoo........z......z.....',
+      '......................zoo........z............', // オーナー指示 A15: no crack on the secret wall (40,5)
       '..............................................',
       '........z.....................................',
       '..............................................',

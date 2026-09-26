@@ -40,13 +40,13 @@
   // @@S-BEGIN
   const S = {
     b_pageeater: { hp: 1.7 },
-    b_moth: { hp: 1.65 },
-    b_rooteater: { hp: 0.8, atk: 0.6, mag: 0.6 },
+    b_moth: { hp: 1.7 },
+    b_rooteater: { hp: 0.9, atk: 0.6, mag: 0.6 },
     b_root: { hp: 1, atk: 0.5, mag: 0.5 },
     b_sandworm: { hp: 1.1 },
-    b_sandking: { hp: 0.8, atk: 0.7, mag: 0.7 },
-    b_icegiant: { hp: 1.35 },
-    b_whitedragon: { hp: 1.35, atk: 0.6, mag: 0.6 },
+    b_sandking: { hp: 0.95, atk: 0.7, mag: 0.7 },
+    b_icegiant: { hp: 1.25 },
+    b_whitedragon: { hp: 1.6, atk: 0.6, mag: 0.6 },
     b_doll_conductor: { hp: 0.9, atk: 0.85, mag: 0.85 },
     b_doll_violin: { hp: 0.9, atk: 0.85, mag: 0.85 },
     b_doll_drum: { hp: 0.9, atk: 0.85, mag: 0.85 },
@@ -57,17 +57,17 @@
     b_tentacle: { hp: 1.1 },
     b_captain: { hp: 1.1, atk: 0.6, mag: 0.6 },
     b_rockeater: { hp: 1.35 },
-    b_ironwarden: { hp: 0.9, atk: 0.5, mag: 0.5 },
-    b_hellhound: { hp: 1.35, atk: 0.7, mag: 0.7 },
+    b_ironwarden: { hp: 0.65, atk: 0.5, mag: 0.5 },
+    b_hellhound: { hp: 1.25, atk: 0.7, mag: 0.7 },
     b_lavabeast: { hp: 0.9, atk: 0.6, mag: 0.6 },
-    b_orrery: { hp: 1.1 },
+    b_orrery: { hp: 0.9 },
     b_stareater: { hp: 1.1, atk: 0.6, mag: 0.6 },
     b_rowell1: { hp: 1.35 },
     b_rowell2: { hp: 1.35 },
     b_bookgolem: { hp: 0.8, atk: 0.85, mag: 0.85 },
-    b_shade_sword: { hp: 0.9, atk: 0.6, mag: 0.6 },
-    b_shade_prayer: { hp: 0.9, atk: 0.6, mag: 0.6 },
-    b_shade_star: { hp: 0.9, atk: 0.6, mag: 0.6 },
+    b_shade_sword: { hp: 1, atk: 0.6, mag: 0.6 },
+    b_shade_prayer: { hp: 1, atk: 0.6, mag: 0.6 },
+    b_shade_star: { hp: 1, atk: 0.6, mag: 0.6 },
     b_lazaro: { hp: 0.9 },
     b_nemrea1: { hp: 0.55, atk: 0.9, mag: 0.9 },
     b_valzard_echo: { hp: 0.9, atk: 0.7, mag: 0.7 },
@@ -101,7 +101,7 @@
       desc: '迷いの森の奥に巣くう大きなガ。\n眠りと毒のりん粉をまき散らす。',
     },
     b_rooteater: {
-      name: '根食らい', sprite: 'boss_rooteater', bossType: 'region', lv: 9, hpShare: 15, actsPerTurn: 2,
+      name: '根食らい', sprite: 'boss_rooteater', bossType: 'region', lv: 8, hpShare: 15, actsPerTurn: 2,
       race: 'insect', affinity: 'earth', flags: ['boss'], eva: 5,
       elem: { fire: 1.5, wind: 1.5, earth: 0.25 }, statusRes: { poison: 0.5 },
       actions: A([['attack', 3], ['eb_root_drain', 2], ['eb_rot_breath', 2, { every: [3, 1] }],
@@ -111,7 +111,7 @@
       desc: '忘却から生まれ、千年樹の根を\nかじる白い虫。中は空っぽだ。',
     },
     b_root: {
-      name: '根の触手', sprite: 'boss_root', bossType: 'add', addOf: 'b_rooteater', lv: 9, hpShare: 1.5, actsPerTurn: 1,
+      name: '根の触手', sprite: 'boss_root', bossType: 'add', addOf: 'b_rooteater', lv: 8, hpShare: 1.5, actsPerTurn: 1,
       race: 'plant', flags: ['boss'], eva: 5,
       elem: { fire: 1.5, water: 0.5, wind: 1.5, earth: 0.25 }, phys: { slash: 1.25 },
       statusRes: { sleep: 0.5, poison: 0.5 },
@@ -122,7 +122,7 @@
 
     // ------------------------------------------------------------ 地方2 ザハラ砂漠
     b_sandworm: {
-      name: '砂もぐり', sprite: 'b_sandworm', bossType: 'mid', lv: 8, actsPerTurn: 1,
+      name: '砂もぐり', sprite: 'b_sandworm', bossType: 'mid', lv: 9, actsPerTurn: 1,
       race: 'beast', affinity: 'earth', flags: ['boss'], eva: 5,
       elem: { fire: 1.25, wind: 1.5, earth: 0.25 },
       actions: A([['attack', 2], ['eb_sink', 2, { every: [3, 0] }], ['eb_sand_strike', 3, { every: [3, 1] }],
@@ -131,7 +131,7 @@
       desc: '王墓の流砂にひそむ大ミミズ。\n砂にもぐると、足もとから襲う。',
     },
     b_sandking: {
-      name: '名なき砂の王', sprite: 'b_sandking', bossType: 'region', lv: 9, hpShare: 16, actsPerTurn: 2,
+      name: '名なき砂の王', sprite: 'b_sandking', bossType: 'region', lv: 7, hpShare: 16, actsPerTurn: 2,
       race: 'undead', flags: ['boss'], eva: 5,
       elem: { fire: 1.5, light: 2, dark: -1 }, phys: { blunt: 1.25 }, statusRes: UNDEAD_RES,
       actions: A([['attack', 2], ['eb_steal_name', 2], ['eb_king_sand', 2],
@@ -143,7 +143,7 @@
 
     // ------------------------------------------------------------ 地方3 ノルデン雪原
     b_icegiant: {
-      name: '氷壁の巨人', sprite: 'boss_frost_giant', bossType: 'mid', lv: 8, actsPerTurn: 1,
+      name: '氷壁の巨人', sprite: 'boss_frost_giant', bossType: 'mid', lv: 9, actsPerTurn: 1,
       race: 'humanoid', affinity: 'water', flags: ['boss'], eva: 5,
       elem: { fire: 1.25, water: 0.25, earth: 1.5 },
       actions: A([['attack', 3], ['eb_ice_hammer', 2], ['eb_avalanche_drop', 2], ['eb_frost_exhale', 1],
@@ -152,7 +152,7 @@
       desc: '白竜の峰の中腹を守る氷の巨人。\n氷の壁を張って身を守る。',
     },
     b_whitedragon: {
-      name: '白竜ネーヴェ', sprite: 'boss_whitedragon', bossType: 'region', lv: 9, actsPerTurn: 2,
+      name: '白竜ネーヴェ', sprite: 'boss_whitedragon', bossType: 'region', lv: 7, actsPerTurn: 2,
       race: 'dragon', affinity: 'water', flags: ['boss', 'flying'], eva: 10,
       elem: { fire: 1.25, water: -1, wind: 1.5, earth: 1.5, light: 0.75, dark: 0.75 },
       phys: { slash: 0.75, pierce: 1.25 }, statusRes: { death: 1, sleep: 0.5, confuse: 0.5 },
@@ -165,7 +165,7 @@
 
     // ------------------------------------------------------------ 地方4 グレイモア湿原
     b_doll_conductor: {
-      name: '指揮者人形', sprite: 'b_doll_conductor', bossType: 'mid', lv: 8, hpShare: 4, actsPerTurn: 1,
+      name: '指揮者人形', sprite: 'b_doll_conductor', bossType: 'mid', lv: 9, hpShare: 4, actsPerTurn: 1,
       race: 'construct', flags: ['boss'], eva: 5,
       elem: { water: 1.25, wind: 0.75 }, phys: CONSTRUCT_PHYS, statusRes: CONSTRUCT_RES,
       actions: A([['attack', 2], ['eb_baton', 2], ['eb_encore', 3, { every: [3, 2], allyDown: true }],
@@ -174,7 +174,7 @@
       desc: '霧の館で演奏を続ける人形の長。\n倒れた楽士をよみがえらせる。',
     },
     b_doll_violin: {
-      name: '弦ひき人形', sprite: 'b_doll_violin', bossType: 'add', addOf: 'b_doll_conductor', lv: 8, hpShare: 2, actsPerTurn: 1,
+      name: '弦ひき人形', sprite: 'b_doll_violin', bossType: 'add', addOf: 'b_doll_conductor', lv: 9, hpShare: 2, actsPerTurn: 1,
       race: 'construct', flags: ['boss'], eva: 5,
       elem: { water: 1.25, wind: 0.75 }, phys: CONSTRUCT_PHYS, statusRes: CONSTRUCT_RES,
       actions: A([['attack', 2], ['eb_sad_tune', 2], ['eb_bow_slash', 2]]),
@@ -182,7 +182,7 @@
       desc: '悲しい調べをかなでる人形。\n弓は刃のように鋭い。',
     },
     b_doll_drum: {
-      name: '太鼓人形', sprite: 'b_doll_drum', bossType: 'add', addOf: 'b_doll_conductor', lv: 8, hpShare: 2, actsPerTurn: 1,
+      name: '太鼓人形', sprite: 'b_doll_drum', bossType: 'add', addOf: 'b_doll_conductor', lv: 9, hpShare: 2, actsPerTurn: 1,
       race: 'construct', flags: ['boss'], eva: 5,
       elem: { water: 1.25, wind: 0.75 }, phys: CONSTRUCT_PHYS, statusRes: CONSTRUCT_RES,
       actions: A([['attack', 2], ['eb_drum_roll', 3]]),
@@ -190,7 +190,7 @@
       desc: '太鼓を打ち鳴らす兵隊の人形。\n響く音で相手をすくませる。',
     },
     b_doll_flute: {
-      name: '笛人形', sprite: 'b_doll_flute', bossType: 'add', addOf: 'b_doll_conductor', lv: 8, hpShare: 2, actsPerTurn: 1,
+      name: '笛人形', sprite: 'b_doll_flute', bossType: 'add', addOf: 'b_doll_conductor', lv: 9, hpShare: 2, actsPerTurn: 1,
       race: 'construct', flags: ['boss'], eva: 5,
       elem: { water: 1.25, wind: 0.75 }, phys: CONSTRUCT_PHYS, statusRes: CONSTRUCT_RES,
       actions: A([['attack', 1], ['eb_flute_lullaby', 2], ['eb_shrill', 2]]),
@@ -257,7 +257,7 @@
       desc: '深き坑道の岩をかみ砕く大虫。\n食べるほど体が固くなる。',
     },
     b_ironwarden: {
-      name: '鉄の番人', sprite: 'b_ironwarden', bossType: 'region', lv: 9, actsPerTurn: 1,
+      name: '鉄の番人', sprite: 'b_ironwarden', bossType: 'region', lv: 12, actsPerTurn: 1,
       race: 'construct', flags: ['boss'], eva: 5,
       elem: { water: 1.5, wind: 0.75 }, phys: CONSTRUCT_PHYS, statusRes: CONSTRUCT_RES,
       actions: A([['attack', 2], ['eb_iron_fist', 2], ['eb_anvil_drop', 2], ['eb_forge_breath', 2],
@@ -272,7 +272,7 @@
 
     // ------------------------------------------------------------ 地方7 灰の荒野
     b_hellhound: {
-      name: '炎の番犬', sprite: 'boss_hellhound', bossType: 'mid', lv: 8, actsPerTurn: 2,
+      name: '炎の番犬', sprite: 'boss_hellhound', bossType: 'mid', lv: 9, actsPerTurn: 2,
       race: 'beast', affinity: 'fire', flags: ['boss'], eva: 5,
       elem: { fire: 0.25, water: 1.5 },
       actions: A([['attack', 2], ['eb_twin_fang', 2], ['eb_flame_howl', 1, { every: [3, 1] }], ['eb_lava_breath', 2],
@@ -296,7 +296,7 @@
 
     // ------------------------------------------------------------ 地方8 オルビス高原
     b_orrery: {
-      name: '天球の番人', sprite: 'boss_star_guardian', bossType: 'mid', lv: 8, actsPerTurn: 1,
+      name: '天球の番人', sprite: 'boss_star_guardian', bossType: 'mid', lv: 11, actsPerTurn: 1,
       race: 'construct', affinity: 'light', flags: ['boss'], eva: 5,
       elem: { water: 1.25, wind: 0.75, light: 0.25, dark: 1.5 }, phys: CONSTRUCT_PHYS, statusRes: CONSTRUCT_RES,
       actions: A([['attack', 1], ['eb_sun_orb', 3, { every: [3, 0] }], ['eb_moon_orb', 3, { every: [3, 1] }],

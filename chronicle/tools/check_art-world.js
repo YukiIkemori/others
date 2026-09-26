@@ -14,8 +14,8 @@
 //  C4 calm stage (§11.2.13): in every backdrop the strip y 112–140 (x 20–236) is
 //     calmer than the rest of the picture below the status windows
 //  C5 people stand out (§11.2.2): party/NPC sprites are ≥ 1.4× as colourful as the ground
-//  C6 hidden passages: an unfound secret_forest / secret_rock differs from its
-//     neighbourhood look by only a few pixels, a found one clearly more
+//  C6 hidden passages (オーナー指示 A15): an unfound secret_forest / secret_rock is pixel-identical
+//     to its neighbourhood look; a found one clearly differs
 //  C7 performance: rendering the whole world map cold, ms per distinct cell and cache size
 'use strict';
 const fs = require('fs');
@@ -352,8 +352,8 @@ ${sources().map((f) => `<script src="file://${f}"></script>`).join('\n')}
     // C6
     const sc = await run('CHECK.secretCheck()');
     for (const id in sc) {
-      ok(sc[id].hiddenDiff >= 1 && sc[id].hiddenDiff <= 16, 'C6 ' + id + ' hidden: ' + sc[id].hiddenDiff + ' px clearly differ from the plain look (1–16: "よく見ると分かる")');
-      ok(sc[id].foundDiff >= sc[id].hiddenDiff + 6, 'C6 ' + id + ' found: clearer (' + sc[id].foundDiff + ' px)');
+      ok(sc[id].hiddenDiff === 0, 'C6 ' + id + ' hidden: ' + sc[id].hiddenDiff + ' px differ from the plain look (0: オーナー指示 A15, indistinguishable until found)');
+      ok(sc[id].foundDiff >= 6, 'C6 ' + id + ' found: visible (' + sc[id].foundDiff + ' px)');
     }
     for (const e of errors) { ok(false, 'page error: ' + e.split('\n')[0]); }
   } finally {

@@ -981,7 +981,7 @@ R.Battle.last = { result, rounds, zone, troop, killed:[{id, golden}], exp, gold,
 9. お金の単位の語「ゴールド」を1か所の定数にする。
 10. **ダメージ床**（§10.6.2 の溶岩・毒の沼）: タイルの `damage`（固定値）を **`damagePct`**（最大HP の割合）に替える: 溶岩 `lava` 4、毒の床 `poison` 2、毒の沼 `swamp` 2（art-tiles が tiles.js を直す）。新しいマスに入ったとき、生きている人それぞれ `max(1, round(最大HP × damagePct / 100))` を失うが、**HP は 1 より下がらない**（床で倒れない）。`noFloorDamage`（個性・装備）の人は受けない。赤いフラッシュと `step_damage` は今のまま。
 11. **隠し通路**（Part A4。批評 66）:
-    - タイル（art-tiles A16 が tiles.js と絵を作る）: ローカル `secret_wall`（凡例の文字 `%`）、ワールド `secret_forest`（`%`）・`secret_rock`（`&`）。`pass:true`。絵はそのテーマの壁（森・岩）と同じ絵に 1〜2px のひび・苔・色むらを足したもの。**見つけた後の絵** `found` は、ひびを少しはっきりさせ、床に 1px の点線を足したもの（`R.Game.secrets` に記録があるマスだけ）。`R.MARK_CHARS_LOCAL` から `%` を、`R.MARK_CHARS_WORLD` から `%` `&` を外す。
+    - タイル（art-tiles A16 が tiles.js と絵を作る）: ローカル `secret_wall`（凡例の文字 `%`）、ワールド `secret_forest`（`%`）・`secret_rock`（`&`）。`pass:true`。**オーナー指示 A15: 見つけるまでの絵は、まわりの壁（ワールドは岩山）と 1px も違わない**（ひび・苔・色むら・飾りの `crack` も置かない）。**見つけた後の絵** `found` は、ひび・色むらと床に 1px の点線を足したもの（`R.Game.secrets` に記録があるマスだけ）。ワールドの森は歩けるので、`secret_forest` は通路を隠せない（A15 でワールドの 3 か所はすべて `secret_rock` にした。`world_c1`（ロアの里の北）は森から岩山を抜けた先）。`R.MARK_CHARS_LOCAL` から `%` を、`R.MARK_CHARS_WORLD` から `%` `&` を外す。
     - 動き（field A4）: そのマスに**初めて入ったとき**（マスに入ったときの出来事）、`R.sfx('secret')`（無ければ `door`）、`R.UI.notice('隠し通路を見つけた！', 60)`、`R.Game.secrets[`${map}:${x},${y}`] = true`。2 回目からは何も出さない。出現・毒の数え方はふつうの床と同じ。
     - 置き方の決まりと数は§10.6.2・§10.6.4（隠し通路の先は見える宝箱・休息の灯・語り部の書き付け・レア魔物の小部屋だけ。物語に要る物は置かない）。progress.js の検査は QA の章（§12.2）。
     - 年代記の画面（menu）に「隠し通路　n/総数」（総数は全マップの `secret_*` のマスの数。担当 menu）。
@@ -1050,7 +1050,7 @@ R.Battle.last = { result, rounds, zone, troop, killed:[{id, golden}], exp, gold,
 | `R.NameEntry.run({initial, max = 5, spriteKey, title})` | newgame | 五十音表（ひらがな・カタカナ・英数字）と DOM キーボード。1〜5文字。漢字は使えない。名前の文字列を返す（キャンセルなら null）。`check(name)`、`normalize(s)`、`VALID` |
 | `R.Tavern.chooseStart({count = 3})` | newgame | 20人の候補から選ぶ画面（絵・プロフィール・得手不得手・加入の台詞）。id の配列を返す |
 | `R.Tavern.open({recruit = true})` | newgame | 出撃と控えの入れ替え、未加入の候補の加入、並び・隊列。`R.Party` の API だけで状態を変える |
-| `R.Menu.open()` | menu | フィールドのメニュー（**Y**）。コマンドは§11.7.1 が正: **道具 / 技・術 / 満タン / 装備 / 強さ / 並びと隊列 / 技の書 / 術の書 / 図鑑 / 年代記 / 地図 / ワープ / 脱出 / 仲間 / セーブ / 設定**。**ワープ**（`prologue_done` から、ダンジョンの外で。`R.Field.teleport`）と**脱出**（`prologue_done` から、`map.escape` のある階で。`R.Field.exitDungeon`）は術・道具に依らないコマンド（Part A2）。仲間は `R.Party.canSwapHere()` のときだけ → `R.Tavern.open({recruit:false})` |
+| `R.Menu.open()` | menu | フィールドのメニュー（**Y**）。コマンドは§11.7.1 が正: **道具 / 技・術 / 満タン / 装備 / 並びと隊列 / 図鑑 / 年代記 / 地図 / ワープ / 脱出 / 仲間 / セーブ / 設定**（オーナー指示 A15: 強さは仲間のカードから、技の書・術の書は外した）。**ワープ**（`prologue_done` から、ダンジョンの外で。`R.Field.teleport`）と**脱出**（`prologue_done` から、`map.escape` のある階で。`R.Field.exitDungeon`）は術・道具に依らないコマンド（Part A2）。仲間は `R.Party.canSwapHere()` のときだけ → `R.Tavern.open({recruit:false})` |
 | `R.Menu.*Screen` | menu | `itemScreen`、`spellScreen`、`equipScreen(o)`（候補の一覧に 攻・術・守 の増減の 3 列と、下の窓にほかの能力値の増減。強い順。Part A5・A6。§11.7.5）、`statusScreen(o)`、`orderScreen`（並びと隊列）、`skillBookScreen`（技の書と術の書）、`bookScreen`（図鑑。通常・レア・超レアの3枠。ドロップでも盗みでも★。詳しい画面の 1 ページ目に落とす物と盗める物。§11.7.9）、`itemDetail(id, {member})`・`actionDetail(id, {member})`・`detailLines(id, {member})`（Y の詳細。§11.7.18）、`chronicleScreen`（年代記。章・断片・地方ごとの目的）、`saveScreen`/`saveMenu`、`settings`、`pickMember(o)`、`applyFieldEffect(def, user, targets)`、`useItem(id)`、`kit` |
 | `R.Menu.codeOverlay(o)` | menu（menu_save.js:33。newgame の title.js も呼ぶ） | **冒険の合言葉の DOM の窓**。`o = {mode:'export'|'import', code?}` → `Promise<string|null>`（import は入力された文字列、export と取り消しは null）。キャンバスの上に重ね、閉じるまでゲームの入力を止める。node では null を返す。接頭辞の検査は呼ぶ側（`R.Save.importCode`） |
 | `R.Shop.open(shopId)` / `R.Shop.inn(price)` | menu | 品ぞろえは `R.Tier.shopItems`。出撃中の4人それぞれについて、装備できるかと能力の増減を見せる。宿屋は出撃と控えの全員を全快・復活させる |
@@ -2003,6 +2003,12 @@ gold(L) = 2 + 0.5L + 0.07L²
 | l 大 | 2.0 | 1.15 | 1.1 | 1.8 |
 - データの書き方（§9.0 の 0.4・§9.1.2 に合わせた。0.24）: 魔物データは種の倍率 `s` と名目のレベル `lv` を持ち、**`R.Mon.fillStats` が `R.onData` で名目の絶対値（`hp atk def mag mdef agi exp gold`）を作る**（上の式と K.MOB）。
   戦闘では `R.Mon.def(id, {tier})` が **能力値 × 曲線(Lb)/曲線(lv)**（項目ごと）で伸縮する。雑魚もボスも同じ（§4.0 の 0.8）。鋼の HP は伸縮しない。色違いはデータの `hue/sat/bri` ではなく `MON_COMPOSE`（§9.4）。
+- **通常の雑魚のティアの補正 `K.MOB_TIER`**（A11 の見直しの依頼、2026-09-26）: 標準のパーティに対して、通常の雑魚は T0〜1 で HP ×1.12・与えるダメージ ×1.25、T3 から HP を増やしダメージを減らす
+  （HP ×1.12 / 1.12 / 1.36 / 1.65 / 1.43 / 1.81 / 2.02 / 2.25 / 2.0 / 1.96、atk・mag ×1.25 / 1.25 / 0.97 / 0.75 / 0.76 / 0.61 / 0.6 / 0.59 / 0.56 / 0.43、T0〜T9）。
+  今はこの値を `tools/fixtures/mons/tuning.json` の `global` が、魔物ごとに「その段が出るティアの真ん中」で `s` に掛けている。
+  エンジンの曲線に移すため、`K.curve(L, 'mob')` がこの表を**戦闘のレベル**（T = (L−6)/6、ティアの間は直線）で掛ける形を rules に用意した（`K.mobTier(L)`）。
+  `R.Mon` が通常の雑魚（ボス・レア魔物・鋼でないもの）に `'mob'` を渡すようになったら、`K.MOB_TIER.on = true` にし、tuning.json の `global` を消して `check_mons.js --write` をする（3 つを同時に。二重に掛からないように `on` は false で置いてある）。
+  切り替えたときの表は戦闘のレベルで引くので、段の真ん中で引いていた今の値から T4・T8 の HP を上げる必要がある（同じ表のまま切り替えた試算で A2 の T4 のラウンド数 2.68 → 2.37）。
 - 1戦の組み合わせの目安: 標準の魔物（m、倍率1）に直して 2.5〜4.5 体分（平均 3.3）。小なら 4〜6 体、大は 1〜2 体。最大 8 体。
 - 行動の強さの目安: 特技の物理 P 1.3〜1.8（単体）、全体 0.6〜0.8。術 SP 1.0〜1.6（単体）、0.6〜0.9（全体）。ブレス SP 0.5〜0.8（全体）。
 
@@ -9059,40 +9065,41 @@ hp = round(hpBoss(lv) × (hpShare ?? hpMul))        hpBoss は§4.14.3
   | ボス | bossType | `s` | 理由 |
   |---|---|---|---|
   | `b_pageeater` | prologue | hp 1.7 | 序章の主人公＋3 人で 5〜7 ラウンド |
-  | `b_moth` | mid | hp 1.65 | 中ボスが 3 ラウンドで倒れた |
-  | `b_icegiant` `b_rockeater` | mid | hp 1.35 | 同上 |
-  | `b_hellhound` | mid | hp 1.35・atk/mag 0.7 | 同上。全体の火で崩れやすい |
+  | `b_moth` | mid | hp 1.7 | 中ボスが 3 ラウンドで倒れた |
+  | `b_icegiant` `b_rockeater` | mid | hp 1.25 / 1.35 | 同上 |
+  | `b_hellhound` | mid | hp 1.25・atk/mag 0.7 | 同上。全体の火で崩れやすい |
   | `b_rowell1` `b_rowell2` | rival | hp 1.35 | 負けてよい戦闘だが、勝てる目の長さ |
-  | `b_whitedragon` | region | hp 1.35・atk/mag 0.6 | 硬く長く、一撃は軽く |
+  | `b_whitedragon` | region | hp 1.6・atk/mag 0.6 | 硬く長く、一撃は軽く |
   | `b_rooteater` `b_lavabeast` `b_stareater` `b_captain` | region | atk/mag 0.6（hp 0.8〜1.1） | 行動 2 回の全体攻撃が重すぎた |
-  | `b_sandking` | region | atk/mag 0.7・hp 0.8 | 同上 |
-  | `b_mistbeast` `b_ironwarden` | region | atk/mag **0.5**（下限。hp 0.7 / 0.9） | 同上。これ以上は下げられないので、残りは行動の重みで直す |
+  | `b_sandking` | region | atk/mag 0.7・hp 0.95 | 同上 |
+  | `b_mistbeast` `b_ironwarden` | region | atk/mag **0.5**（下限。hp 0.7 / 0.65） | 同上。これ以上は下げられないので、残りは行動の重みで直す |
   | `b_root` `b_mist_double` | add | atk/mag **0.5**（下限） | お供の手数 |
-  | `b_shade_sword` `b_shade_prayer` `b_shade_star` | fmid | atk/mag 0.6・hp 0.9 | 3 体が同時に動く |
+  | `b_shade_sword` `b_shade_prayer` `b_shade_star` | fmid | atk/mag 0.6・hp 1.0（2026-09-26: 0.9 では C1b 8.7 ラウンド。9〜12 に入れる） | 3 体が同時に動く |
   | `b_valzard_echo` | echo | atk/mag 0.7・hp 0.9 | |
   | `b_nemrea1` | last1 | hp 0.55・atk/mag 0.9 | hpBoss の新しい曲線（L58 で ×1.475）の分 |
   | `b_ouroboros` | super | hp 0.6・atk/mag 0.55 | `K.BOSS.super` を ×1.25 にしたあとの値 |
   - 下限 0.5 に張り付いているもの（`b_mistbeast` `b_ironwarden` `b_root` `b_mist_double`）は、これ以上の調整を `K.BOSS` か行動の側で行う（boss・battle の担当）。
+  - **編成ごとの lvOff**（2026-09-26。§4.17.3 B1・B4b）: `s` はどのティアでも同じ倍率なので、ティアによるラウンド数のずれ（T0 だけ長い・短い）は直せない。Lb が 1 違うと T0（Lb 8〜9）では HP・能力が 10〜15% 動くが、T7（Lb 50 前後）では 2〜3% しか動かないので、ずれの向きに合わせて編成の lvOff を動かし、`s.hp` で平均を戻した: T0 で長すぎた地方ボス `tr_b_rooteater` +2・`tr_b_sandking` +1・`tr_b_whitedragon` +1、T0 で短すぎた `tr_b_ironwarden` +6・中ボス `tr_b_orrery` +5・`tr_b_sandworm` `tr_b_icegiant` `tr_b_dolls` `tr_b_hellhound` +3。`sim_balance --only B1 --n 100`（seed 20260925）で、この 9 編成のティアごとのずれが ±24% → ±16% 以内（多くは ±10%）になった。表の ±20% を外れた `s` はこの節の表のとおり。
 - HP の例（§4.14.3 の検算と同じ値になる）:
 
 | 編成 | HP（ティア / Lb） |
 |---|---|
 | `tr_b_pageeater` | T0(Lb8): pageeater 245 |
 | `tr_b_moth` | T0(Lb8): moth 223<br>T3(Lb26): moth 1325<br>T7(Lb50): moth 6716 |
-| `tr_b_rooteater` | T0(Lb9): root 38 / rooteater 379<br>T3(Lb27): root 217 / rooteater 2168<br>T7(Lb51): root 1059 / rooteater 10585 |
-| `tr_b_sandworm` | T0(Lb8): sandworm 223<br>T3(Lb26): sandworm 1325<br>T7(Lb50): sandworm 6716 |
-| `tr_b_sandking` | T0(Lb9): sandking 404<br>T3(Lb27): sandking 2313<br>T7(Lb51): sandking 11291 |
-| `tr_b_icegiant` | T0(Lb8): icegiant 223<br>T3(Lb26): icegiant 1325<br>T7(Lb50): icegiant 6716 |
-| `tr_b_whitedragon` | T0(Lb9): whitedragon 455<br>T3(Lb27): whitedragon 2602<br>T7(Lb51): whitedragon 12703 |
-| `tr_b_dolls` | T0(Lb8): doll_violin 45 / doll_conductor 89 / doll_drum 45 / doll_flute 45<br>T3(Lb26): doll_violin 265 / doll_conductor 530 / doll_drum 265 / doll_flute 265<br>T7(Lb50): doll_violin 1343 / doll_conductor 2687 / doll_drum 1343 / doll_flute 1343 |
+| `tr_b_rooteater` | T0(Lb8): root 33 / rooteater 334<br>T3(Lb26): root 199 / rooteater 1988<br>T7(Lb50): root 1007 / rooteater 10075 |
+| `tr_b_sandworm` | T0(Lb9): sandworm 253<br>T3(Lb27): sandworm 1446<br>T7(Lb51): sandworm 7057 |
+| `tr_b_sandking` | T0(Lb7): sandking 311<br>T3(Lb25): sandking 1938<br>T7(Lb49): sandking 10185 |
+| `tr_b_icegiant` | T0(Lb9): icegiant 253<br>T3(Lb27): icegiant 1446<br>T7(Lb51): icegiant 7057 |
+| `tr_b_whitedragon` | T0(Lb7): whitedragon 350<br>T3(Lb25): whitedragon 2181<br>T7(Lb49): whitedragon 11458 |
+| `tr_b_dolls` | T0(Lb9): doll_violin 51 / doll_conductor 101 / doll_drum 51 / doll_flute 51<br>T3(Lb27): doll_violin 289 / doll_conductor 578 / doll_drum 289 / doll_flute 289<br>T7(Lb51): doll_violin 1411 / doll_conductor 2823 / doll_drum 1411 / doll_flute 1411 |
 | `tr_b_mistbeast` | T0(Lb9): mistbeast 455<br>T3(Lb27): mistbeast 2602<br>T7(Lb51): mistbeast 12703 |
 | `tr_b_octopus` | T0(Lb8): tentacle 33 / octopus 156<br>T3(Lb26): tentacle 199 / octopus 928<br>T7(Lb50): tentacle 1007 / octopus 4701 |
 | `tr_b_captain` | T0(Lb9): captain 404<br>T3(Lb27): captain 2313<br>T7(Lb51): captain 11291 |
 | `tr_b_rockeater` | T0(Lb8): rockeater 223<br>T3(Lb26): rockeater 1325<br>T7(Lb50): rockeater 6716 |
-| `tr_b_ironwarden` | T0(Lb9): ironwarden 455<br>T3(Lb27): ironwarden 2602<br>T7(Lb51): ironwarden 12703 |
-| `tr_b_hellhound` | T0(Lb8): hellhound 223<br>T3(Lb26): hellhound 1325<br>T7(Lb50): hellhound 6716 |
+| `tr_b_ironwarden` | T0(Lb12): ironwarden 633<br>T3(Lb30): ironwarden 3332<br>T7(Lb54): ironwarden 13955 |
+| `tr_b_hellhound` | T0(Lb9): hellhound 253<br>T3(Lb27): hellhound 1446<br>T7(Lb51): hellhound 7057 |
 | `tr_b_lavabeast` | T0(Lb9): lavabeast 455<br>T3(Lb27): lavabeast 2602<br>T7(Lb51): lavabeast 12703 |
-| `tr_b_orrery` | T0(Lb8): orrery 223<br>T3(Lb26): orrery 1325<br>T7(Lb50): orrery 6716 |
+| `tr_b_orrery` | T0(Lb11): orrery 317<br>T3(Lb29): orrery 1708<br>T7(Lb53): orrery 7517 |
 | `tr_b_stareater` | T0(Lb9): stareater 455<br>T3(Lb27): stareater 2602<br>T7(Lb51): stareater 12703 |
 | `tr_b_rowell1` | T2(Lb20): rowell1 741 |
 | `tr_b_rowell2` | T5(Lb38): rowell2 3301 |
@@ -9177,20 +9184,20 @@ hp = round(hpBoss(lv) × (hpShare ?? hpMul))        hpBoss は§4.14.3
 |---|---|---|---|---|---|
 | `tr_b_pageeater` | `b_pageeater` | 0 固定 | lv 8 | `tower` | `boss` |
 | `tr_b_moth` | `b_moth` | `scale:'tier'`（0〜7） | +2 | `forest` | `boss` |
-| `tr_b_rooteater` | `b_root` `b_rooteater` `b_root` | `scale:'tier'`（0〜7） | +3 | `tree` | `boss2` |
-| `tr_b_sandworm` | `b_sandworm` | `scale:'tier'`（0〜7） | +2 | `pyramid` | `boss` |
-| `tr_b_sandking` | `@mummy` `b_sandking` `@mummy` | `scale:'tier'`（0〜7） | +3 | `pyramid` | `boss2` |
-| `tr_b_icegiant` | `b_icegiant` | `scale:'tier'`（0〜7） | +2 | `ice` | `boss` |
-| `tr_b_whitedragon` | `b_whitedragon` | `scale:'tier'`（0〜7） | +3 | `snow` | `boss2` |
-| `tr_b_dolls` | `b_doll_violin` `b_doll_conductor` `b_doll_drum` `b_doll_flute` | `scale:'tier'`（0〜7） | +2 | `manor` | `boss` |
+| `tr_b_rooteater` | `b_root` `b_rooteater` `b_root` | `scale:'tier'`（0〜7） | +2 | `tree` | `boss2` |
+| `tr_b_sandworm` | `b_sandworm` | `scale:'tier'`（0〜7） | +3 | `pyramid` | `boss` |
+| `tr_b_sandking` | `@mummy` `b_sandking` `@mummy` | `scale:'tier'`（0〜7） | +1 | `pyramid` | `boss2` |
+| `tr_b_icegiant` | `b_icegiant` | `scale:'tier'`（0〜7） | +3 | `ice` | `boss` |
+| `tr_b_whitedragon` | `b_whitedragon` | `scale:'tier'`（0〜7） | +1 | `snow` | `boss2` |
+| `tr_b_dolls` | `b_doll_violin` `b_doll_conductor` `b_doll_drum` `b_doll_flute` | `scale:'tier'`（0〜7） | +3 | `manor` | `boss` |
 | `tr_b_mistbeast` | `b_mistbeast` | `scale:'tier'`（0〜7） | +3 | `swamp` | `boss2` |
 | `tr_b_octopus` | `b_tentacle` `b_octopus` `b_tentacle` | `scale:'tier'`（0〜7） | +2 | `watercave` | `boss` |
 | `tr_b_captain` | `@skeleton` `b_captain` `@skeleton` | `scale:'tier'`（0〜7） | +3 | `ship` | `boss2` |
 | `tr_b_rockeater` | `b_rockeater` | `scale:'tier'`（0〜7） | +2 | `mine` | `boss` |
-| `tr_b_ironwarden` | `b_ironwarden` | `scale:'tier'`（0〜7） | +3 | `mine` | `boss2` |
-| `tr_b_hellhound` | `b_hellhound` | `scale:'tier'`（0〜7） | +2 | `volcano` | `boss` |
+| `tr_b_ironwarden` | `b_ironwarden` | `scale:'tier'`（0〜7） | +6 | `mine` | `boss2` |
+| `tr_b_hellhound` | `b_hellhound` | `scale:'tier'`（0〜7） | +3 | `volcano` | `boss` |
 | `tr_b_lavabeast` | `b_lavabeast` | `scale:'tier'`（0〜7） | +3 | `volcano` | `boss2` |
-| `tr_b_orrery` | `b_orrery` | `scale:'tier'`（0〜7） | +2 | `tower` | `boss` |
+| `tr_b_orrery` | `b_orrery` | `scale:'tier'`（0〜7） | +5 | `tower` | `boss` |
 | `tr_b_stareater` | `b_stareater` | `scale:'tier'`（0〜7） | +3 | `tower` | `boss2` |
 | `tr_b_rowell1` | `b_rowell1` | 2 固定 | +2 | （その場） | `rival` |
 | `tr_b_rowell2` | `b_rowell2` | 5 固定 | +2 | （その場） | `rival` |
@@ -10467,7 +10474,7 @@ Object.assign(R.DB.locations, {
 
 #### 10.6.4 隠し通路（Part A4。規則。批評 66）
 - タイルと動きは§3.3.10-11（ローカル `%` = `secret_wall`、ワールド `%` = `secret_forest`・`&` = `secret_rock`。押して入るだけで通れる。初めて入ったとき「隠し通路を見つけた！」）。
-- 置き方: 「なんでもない行き止まり」か、不自然に空いた壁の先。隠し通路は 1〜3 マスの長さ。入口の壁は、ひび・苔でよく見ると分かる。
+- 置き方: 「なんでもない行き止まり」か、不自然に空いた壁の先。隠し通路は 1〜3 マスの長さ。**入口の壁はまわりの壁と見分けがつかない**（オーナー指示 A15。ひび・苔の目印は出さない。通れない地形の中に置く: 歩ける森の中に置くと最初から見えてしまう）。
 - **先に置いてよいもの**（どれも見える物だけ）: 見える宝箱（`p_rare` `p_gear` `p_supply` `p_gold`。そのダンジョンの `p_rare` を隠し通路の先に置いてよいのは、全ダンジョンの半分まで）・休息の灯・語り部の書き付け（伝承のかけらの `sign`）・レア魔物の出やすい小部屋（その部屋だけのゾーンで、レア魔物の率 ×3）・近道。
 - **置いてはいけないもの**: 物語に要る物（大事なもの・フラグの立つイベント・必須のワープ）。`progress.js` が検査する（§12.2）。
 - **数**（41 フロアのうち 15 フロア＝ 37%。ワールドに 3 か所）:
@@ -10498,7 +10505,7 @@ Object.assign(R.DB.locations, {
 | P5 | ファロスの記録院出張所（任意） | `lute_rowell` | ロウェル：「……語り部の見習いか。灯台の伝承なら、\nきのう記録院が写し取った。」「伝承は記録院が責任をもって保管する。\n語り部の出る幕じゃない。」 | `pro_met_rowell` | |
 | P6 | 酒場「語らいの灯亭」 | `lute_tavern_start`（酒場のマスター。`!pro_party_chosen` の間は `common_tavern` の代わりにこれを出す） | 「語り部さんかい。灯台へ行くなら、\n守り手がいるね。」「今夜ここにいるのは、\n腕の立つ連中ばかりだよ。」→ `ev.chooseCompanions({count:3})` →「灯台守のオットーじいさんが、\n港で途方に暮れてたよ。」 | `pro_party_chosen` | `obj_p_keeper` |
 | P7 | ファロスの港 | `lute_otto`（灯台守オットー） | 仲間を選ぶ前：「ひとりで灯台へ？　とんでもない。\n酒場で仲間を見つけておいで。」選んだあと：「灯台の守り歌が、\nどうしても思い出せんのじゃ。」「あの歌がなけりゃ、火はつかん。……頼む。」→ `k_lighthouse_key` を渡す。→ **戦いの心得（チュートリアルの 3 行）**：「仲間は前列と後列に並ぶんじゃ。\n後列は狙われにくいが、槍・弓・鞭の\nほかは、前まで届かんぞ。」「武器は2つまで持てる。戦うときは、\nどちらの武器で行くかを選ぶんじゃ。」「戦いに慣れたら『オート』に任せてもよい。\nBを押せば、いつでも自分で指示できる。」 | `pro_key` | `obj_p_lighthouse` |
-| P8 | 灯台1〜2階 | `lighthouse_1_tutorial`（1階の入口から 3 マス奥の step イベント、once） | 1階：倉庫。入ってすぐ、オットーが入口まで付いてきて（NPC `otto_door`、cond `'!pro_tutorial'`）「中から、ネズミの鳴き声が……\n気をつけるんじゃ！」→「ネズミ2匹なら、{hero}ひとりで\n十分じゃろう。仲間は後ろで見ておれ。」→ **チュートリアルの戦闘** `ev.battle({troop:'tr_tutorial', members:['hero'], glimmerForce:'hero', canLose:true, noEscape:true, noRare:true, noGolden:true})`（§9.11.7・§4.9.6 と一字一句同じ。野ネズミ 2 匹・ティア 0。仲間は出ない。主人公の最初の行動で必ず閃く）。負けたら「……危なかったのう。\nひと息ついて、もう一度じゃ。」→ `ev.heal()` → 同じ戦闘をやり直す（勝つまでくり返す。`once` は勝ってから立つ）→「今のは……『閃き』じゃな。戦いの中で、\nふいに新しい技を思いつくことがある。」「閃いた技は、年代記の技の書に\n書き残される。メニューの『技の書』で\n見られるぞ。」→ オットーは港へ戻る（`otto_door` を消す）。そのあと宝箱（回復の道具）。入口の扉は `k_lighthouse_key` を持っていれば開く（§10.8.0-6 の閉じた道）。2階：らせん階段。休息の灯。隠し通路（§10.6.4）。 | `pro_tutorial` | |
+| P8 | 灯台1〜2階 | `lighthouse_1_tutorial`（1階の入口から 3 マス奥の step イベント、once） | 1階：倉庫。入ってすぐ、オットーが入口まで付いてきて（NPC `otto_door`、cond `'!pro_tutorial'`）「中から、ネズミの鳴き声が……\n気をつけるんじゃ！」→「ネズミ2匹なら、{hero}ひとりで\n十分じゃろう。仲間は後ろで見ておれ。」→ **チュートリアルの戦闘** `ev.battle({troop:'tr_tutorial', members:['hero'], glimmerForce:'hero', canLose:true, noEscape:true, noRare:true, noGolden:true})`（§9.11.7・§4.9.6 と一字一句同じ。野ネズミ 2 匹・ティア 0。仲間は出ない。主人公の最初の行動で必ず閃く）。負けたら「……危なかったのう。\nひと息ついて、もう一度じゃ。」→ `ev.heal()` → 同じ戦闘をやり直す（勝つまでくり返す。`once` は勝ってから立つ）→「今のは……『閃き』じゃな。戦いの中で、\nふいに新しい技を思いつくことがある。」「閃いた技は、もう忘れん。\nメニューの『技・術』で\n見られるぞ。」（術なら「閃いた術は、…」。オーナー指示 A15: 技の書はメニューに無い）→ オットーは港へ戻る（`otto_door` を消す）。そのあと宝箱（回復の道具）。入口の扉は `k_lighthouse_key` を持っていれば開く（§10.8.0-6 の閉じた道）。2階：らせん階段。休息の灯。隠し通路（§10.6.4）。 | `pro_tutorial` | |
 | P9 | 灯台3階（灯室） | `lighthouse_3_fine`、`lighthouse_3_boss` | フィーネ（初登場・名乗らない）：「言葉を失った灯は、言葉で取り戻すの。」「……あなたなら、できるわ。」→ 消える。ボス `tr_b_pageeater`（ページ食らい）。勝つと、ページ食らいの体から白い紙片が舞い、歌の言葉に戻る。`ev.caption`：「♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ」→「{hero}は、\n守り歌を年代記に書き記した。」→ 灯がともる（白く光る演出）→ 暗転して `ev.warp('lute','inn')`。 | `pro_boss` | |
 | P10 | ファロス（朝。onEnter） | `lute_departure` | 町の人が喜ぶ。跳ね橋が下りた知らせ。宿の前にベルナ：「夜通し歩いてきたよ。……よくやったね、\n{hero}。」`k_chronicle`・`k_quill`・`k_bell` を渡す。`ev.caption`「年代記に序章『灯台守の歌』が記された。」＋ジングル `chapter`。「この大陸には八つの大きな伝承がある。\nその全部が、いま白紙になりかけている。」「全部を語り直して、\n年代記を書き上げなさい。それが、\nあなたの修業の仕上げだよ。」→ 8地方のうわさを1行ずつ（`DB.regions[*].hint`）。酒場のマスター：「ここに残った連中も、\nいつでも仲間にできるよ。\nどこの町の酒場でもね。」 | `prologue_done` | `obj_regions` |
 
@@ -11233,7 +11240,7 @@ R.DB.config = Object.assign(R.DB.config || {}, {
 | 0.8 | **魔物・ボス・レア魔物の絵は §9.4・§9.10.3・§9.11.6 が正**（`mon:<魔物id>` を組み立て表で登録、`hue/sat/bri` はデータに書かない、金色は `tint`）。この章は**描き方（置き方・光らせ方・キラキラ）と確かめ方**だけを決める（§11.4）。 | 魔物章が絵の表まで作ったので、二重に決めない。 |
 | 0.9 | （**Part A8 で廃止 → 0.24。置き方は §11.5.13**）大きいボスの沈め方を `feet = GROUND + clamp(round((h − 64) / 2.4), 0, 20)` にする（クレストは `min(14, (h−64)/3)`）。 | 高さ 112 のボスで、ステータス窓に隠れる上の行が 23 行 → 17 行になり、§9.11.6 の「上の 18 行ほど」に収まる。 |
 | 0.10 | **顔の絵（`face:`）は作らない**（P3）。顔が要る所（仲間選び・作成・強さ・酒場）は、フィールドの人物の絵（`party:`）を 2 倍（32×48）で描く。 | Part A「顔アイコンは最低限」。§3.1.2 の「無ければ `party:` を 2 倍」の既定のまま。 |
-| 0.11 | フィールドのメニューは **16 コマンド**（2 列 × 8 行）: 道具 技・術 / 満タン 装備 / 強さ 並びと隊列 / 技の書 術の書 / 図鑑 年代記 / 地図 ワープ / 脱出 仲間 / セーブ 設定。**ワープと脱出はメニューのコマンド**（大事なもの `k_quill` `k_bell` からも同じことができる）。 | Part A2「ワープとダンジョン脱出は…誰でも使えるフィールドコマンド」。ワールド章の羽ペンと鈴は、同じ働きの物語の道具として残す。 |
+| 0.11 | フィールドのメニューは **13 コマンド**（オーナー指示 A15 で 16 から 強さ・技の書・術の書 を外した。§11.7.1）: 道具 技・術 / 満タン 装備 / 並びと隊列 図鑑 / 年代記 地図 / ワープ 脱出 / 仲間 セーブ / 設定。**ワープと脱出はメニューのコマンド**（大事なもの `k_quill` `k_bell` からも同じことができる）。 | Part A2「ワープとダンジョン脱出は…誰でも使えるフィールドコマンド」。ワールド章の羽ペンと鈴は、同じ働きの物語の道具として残す。 |
 | 0.12 | 使えないコマンドは**消さずに灰色**にする（仲間・脱出・ワープ・地図・年代記）。 | 場所によってコマンドの位置が動くと、指が覚えられない。 |
 | 0.13 | 飾り（decor）の文字の足りない分は、**マップごとの `decorLegend`**（その地図だけの文字の割り当て）で足す（field への依頼）。全体の凡例には新しい飾り 28 個の文字を割り当てる（§11.2.10）。 | 凡例に空いている文字は 32 しかない。町ごとの特別な飾り（天幕・小舟・望遠鏡…）まで全体に割り当てると足りない。 |
 | 0.14 | （Part A8: 戦闘の状態の印は窓ではなく**絵の背中側**に出す。§11.5.14）戦闘の窓の状態の印は **8×8 の絵**（`bfx:icon_<状態>`）、メニューの状態の表示は **`DB.statuses[s].icon` の1字**（毒・焼・眠…）。 | 61px の窓に全角の字は大きすぎる。メニューは字の方が分かりやすい。 |
@@ -12216,39 +12223,41 @@ PARTY   = { front: 192, middle: 222, zig: [0, 10, 0, 10], step: 10,
 - 人の小さな行（選ぶ窓 `pickMember`・並びと隊列）: 高さ 30、絵 16×24、名前 `fitText` 54、`H 612/640`、`M` `W` の値、右に隊列の札（前・中）。4 人で高さ `14 + 4×30 = 134`。
 - 状態の表示（メニュー）: 戦闘不能だけ（名前を `C.dead`、`戦闘不能` の字）。戦闘の外に残る状態は無い（§4.8.1）。
 
-#### 11.7.1 メインメニュー（Y で開く。**Part A11 版**: コンパクトの配置）
+#### 11.7.1 メインメニュー（Y で開く。**Part A11 版**: コンパクトの配置。**オーナー指示 A15**: 「強さ」「技の書」「術の書」を外し、仲間のカードから強さを開く。HP・MP は 現在/最大）
 コンパクト（倍率 0.75。座標は 341×298 の仮想画面の単位。`menu.js` の `CM`）:
 ```
-  6 ┌コマンド (6,6,84,202)┐ ┌(92,6,176,34)──────────────────────────────┐
-    │▶道具               │ │[絵] アルン                   H  423/423 │
-    │  技・術             │ │     前 Lv34        M  47     W       40 │
+  6 ┌コマンド (6,6,84,192)┐ ┌(92,6,176,34)──────────────────────────────┐
+    │▶道具               │ │[絵] アルン                  HP 417/452 │
+    │  技・術             │ │     前 Lv34  WP 40         MP  47/60  │
     │  満タン             │ └──────────────────────────────────────────┘
     │  装備               │   (92,42) (92,78) (92,114) に同じ形で 2〜4 人目（ピッチ 36）
-    │  強さ               │
-    │  並びと隊列         │ ┌(92,148,176,60)──────────────────────────┐
-    │  技の書  …          │ │ ゴールド                         12345 │
-    │  （16 行。lineH 12）│ │ 時間                             32:05 │
+    │  並びと隊列         │
+    │  図鑑  …            │ ┌(92,150,176,48)──────────────────────────┐
+    │  （13 行。lineH 14）│ │ ゴールド                         12345 │
+    │                     │ │ 時間                             32:05 │
     │  設定               │ │ 年代記                           第5章 │
-208 └────────────────────┘ └────────────────────────────────────────┘
-212 ┌次の目的 (6,212,262,40)────────────────────────────────────────────┐
+198 └────────────────────┘ └────────────────────────────────────────┘
+202 ┌次の目的 (6,202,262,40)────────────────────────────────────────────┐
     │ 各地の伝承を語り直そう。（2 行）                                   │
-248 └────────────────────────────────────────────────────────────────────┘
+242 └────────────────────────────────────────────────────────────────────┘
 ```
-- 画面に対して 201×189 px。右 1/5 と下 1/6 のフィールドが見える。
-- コマンド: 1 列 `List {x:6, y:6, w:84, h:202, cols:1, rows:16, lineH:12, padX:16, padY:6}`。←→ は何もしない。
-- 仲間のカード `drawMemberCard(c, x, y, 176, 34)`: 絵 `(x+6, y+5)`、名前 `fitText(x+27, y+6, 66)`（状態の色）、`H` と `現在/最大`（右端 `x+w−10`。戦闘不能は `戦闘不能`）。2 行目 `y+19`: 隊列の札 `rowBadge(x+26)`、`Lv`、`M` と値、`W` と値（値の右端は H と同じ）。
-- 所持金の窓 `drawGold(92,148,176,60)`（3 行、ピッチ 14）、次の目的 `drawObjective(6,212,262,40)`（題の札と本文が重ならないよう 1 行目は y+9）。
-- **大きく**（倍率 1）は下の図（これまでの配置）のまま:
+- 画面に対して 201×182 px。右 1/5 と下 1/5 のフィールドが見える。
+- コマンド: 1 列 `List {x:6, y:6, w:84, h:192, cols:1, rows:13, lineH:14, padX:16, padY:6}`。**→ で右の仲間のカードへ**（オーナー指示 A15）。
+- **仲間のカードを選ぶ（オーナー指示 A15。「強さ」コマンドの代わり）**: コマンドで → を押すと、カーソルが仲間のカードに移る（大きくは右の列から →）。選んでいるカードは内側に黄色の枠（点滅）。↑↓ で人を選び（折り返す）、A でその人の**強さ**の画面（`R.Menu.statusScreen({member})`。←→・L/R で人を替えられ、閉じるとカードのカーソルは最後に見た人）。← か B でコマンドへ戻る（メニューは閉じない）。タッチのパッド・ゲームパッドも同じボタン。
+- **技の書・術の書はメニューに出さない**（オーナー指示 A15「楽しみにしたい」。覚えていない技・術の一覧はどこにも出さない。データと `R.Menu.skillBookScreen` は残す）。
+- 仲間のカード `drawMemberCard(c, x, y, 176, 34)`: 絵 `(x+6, y+5)`、名前 `fitText(x+27, y+6, 66)`（状態の色）、`HP` `(x+w−62)` と `現在/最大`（右端 `x+w−10`。戦闘不能は `戦闘不能` で `HP` の字は出さない）。2 行目 `y+19`: 隊列の札 `rowBadge(x+26)`、`Lv` `(x+44)`、`WP` `(x+72)` と値（右端 `x+100`）、`MP` `(x+w−62)` と `現在/最大`（右端は HP と同じ。オーナー指示 A15）。
+- 所持金の窓 `drawGold(92,150,176,48)`（3 行、ピッチ 12）、次の目的 `drawObjective(6,202,262,40)`（題の札と本文が重ならないよう 1 行目は y+9）。
+- **大きく**（倍率 1）は下の図:
 ```
   4 ┌コマンド (4,4,128,126)──────┐ ┌アルン Lv34 (134,4,118,43)──────┐
     │▶道具      技・術           │ │[絵] アルン            Lv34 │
-    │  満タン    装備             │ │     H           612/640 │
-    │  強さ      並びと隊列         │ │     M  28   W        55 │
-    │  技の書    術の書           │ └前──────────────────────────┘
-    │  図鑑      年代記           │   (134,48) (134,92) (134,136) に同じ形で 2〜4 人目
-    │  地図      ワープ           │
-    │  脱出      仲間             │
-    │  セーブ    設定             │
+    │  満タン    装備             │ │     HP          612/640 │
+    │  並びと隊列 図鑑            │ │     MP  28/60   W     55 │
+    │  年代記    地図             │ └前──────────────────────────┘
+    │  ワープ    脱出             │   (134,48) (134,92) (134,136) に同じ形で 2〜4 人目
+    │  仲間      セーブ           │
+    │  設定                       │
+    │                             │
 130 └────────────────────────────┘
 134 ┌ゴールド (4,134,128,46)─────┐
     │ゴールド            123456 │
@@ -12260,7 +12269,7 @@ PARTY   = { front: 192, middle: 222, zig: [0, 10, 0, 10], step: 10,
     │ 旅の仲間を探そう。                                                 │
 220 └────────────────────────────────────────────────────────────────────┘
 ```
-- コマンド（大きく）: `List {x:4, y:4, w:128, cols:2, rows:8, lineH:14, padY:8}`、並び（行ごとに左 → 右）: `道具 技・術 / 満タン 装備 / 強さ 並びと隊列 / 技の書 術の書 / 図鑑 年代記 / 地図 ワープ / 脱出 仲間 / セーブ 設定`。
+- コマンド（大きく）: `List {x:4, y:4, w:128, cols:2, rows:8, lineH:14, padY:8}`、並び（行ごとに左 → 右）: `道具 技・術 / 満タン 装備 / 並びと隊列 図鑑 / 年代記 地図 / ワープ 脱出 / 仲間 セーブ / 設定`。右の列（と最後の「設定」）で → を押すと仲間の窓へ（上のカードと同じ動き）。
 - 灰色にする条件（§11.0 の 0.12）:
   | コマンド | 使えるとき |
   |---|---|
@@ -12272,7 +12281,7 @@ PARTY   = { front: 192, middle: 222, zig: [0, 10, 0, 10], step: 10,
   | 仲間 | `R.Party.canSwapHere()` |
   | ほか | いつでも |
 - 所持金の窓: `(4,134,128,46)`。3 行（`y+6` `y+18` `y+30`、ピッチ 12）: `ゴールド` と数、`時間` と `h:mm`、`年代記` と `第N章`（N = ティア。0 のあいだは `序章`、`game_clear` のあとは `終章`）。称号（`R.Game.title`、例「大語り部」）があれば窓の `title` に出す。
-- 仲間の窓: 4 つ、`(134, 4 + 44i, 118, 43)`。絵 `(x+6, y+10)`（下向き・コマ 0）、名前 `fitText(x+26, y+6, 54)`、`Lv` を右寄せ `(x+110, y+6)`、`H` `(x+26, y+18)` と `現在/最大` を右寄せ `(x+110, y+18)`、`M` `(x+26, y+29)` と値を右寄せ `(x+58, y+29)`、`W` `(x+66, y+29)` と値を右寄せ `(x+110, y+29)`、下の縁の左に隊列の札（§11.5.2 と同じ形、`(x+4, y+36)`）。出撃が 4 人未満なら、空いた窓は描かない。
+- 仲間の窓: 4 つ、`(134, 4 + 44i, 118, 43)`。絵 `(x+6, y+10)`（下向き・コマ 0）、名前 `fitText(x+26, y+6, 54)`、`Lv` を右寄せ `(x+110, y+6)`、`HP` `(x+26, y+18)` と `現在/最大` を右寄せ `(x+110, y+18)`、`MP` `(x+26, y+29)` と `現在/最大` を右寄せ `(x+80, y+29)`（オーナー指示 A15）、`W` `(x+88, y+29)` と値を右寄せ `(x+110, y+29)`、下の縁の左に隊列の札（§11.5.2 と同じ形、`(x+4, y+36)`）。出撃が 4 人未満なら、空いた窓は描かない。
 - 次の目的: `(4,184,248,36)`、`title:'次の目的'`、2 行 `(x+10, y+7)` `(x+10, y+21)`。出す目的（§10.13.8 の依頼）: **いるマップの `region` がクリア前の地方で、`R.Game.regionObj[region]` があればそれ、無ければ `R.Game.objective`**。`{left}` は `8 − ティア`、`{cleared}` はティア。
 
 #### 11.7.2 道具
@@ -12348,7 +12357,7 @@ PARTY   = { front: 192, middle: 222, zig: [0, 10, 0, 10], step: 10,
 - 下の 1 行 `(4,202,146,18)`（枠の一覧のあいだ）: 武器1か武器2が両手持ちなら「両手持ち：盾は使えない」（黄）、ほかは空。最強装備の確認のときは、最大 HP/MP/WP が変わるなら「最大HP+20　最大MP-5」（`plan.diff` の `hp mp wp`）。
 - 最強装備: 選ぶと小さな窓 `物理重視` `術重視` `バランス` → `const plan = R.Rules.optimize(c, 'phys'|'magic'|'balance')`（§4.4.1。**計算だけで、まだ何も変えない**。アクセ1・アクセ2 は変えない。クセの品とほかの仲間の品は使わない）。`plan.changes` が空なら「今の装備がいちばんだ。」。空でなければ、枠の窓の変わる行を緑で光らせ、比べる窓の「付けた後」の列に `plan.diff` を足した値を出して「この装備にしますか？」→ はい: `R.Rules.applyLoadout(c, plan)`（`.ok` が偽なら `R.sfx('buzzer')` と「これ以上は持てない。」）、いいえ: 何もしない。
 
-#### 11.7.6 強さ（人ごと。↑↓ か A でページ、L/R で人）
+#### 11.7.6 強さ（人ごと。↑↓ か A でページ、L/R で人。**オーナー指示 A15: メインメニューの仲間のカードを選んで開く**。§11.7.1）
 - 見出し `(4,4,248,40)`: 絵、名前、`Lv`、隊列の札、2 行目に主人公「タイプ・得意分野」／仲間「肩書・役割」、右に `ページ n/N`。
 - ページ（配列で持つ。人によってページ数が変わってよい）:
   | ページ | 中身と配置 |
@@ -12364,7 +12373,7 @@ PARTY   = { front: 192, middle: 222, zig: [0, 10, 0, 10], step: 10,
 - 人の選ぶ窓 `(4,4,150,134)`（§11.7.0 の行）。右の窓 `(156,4,96,134)`: 「前列 2人」「後列 2人」と、前列が全員倒れたときの注意。下の説明 `(4,140,248,80)` に 4 行: 「前列：敵に狙われやすい。」「後列：受ける物理のダメージが減る。」「後列からは剣や斧などが届かない。」「槍・弓・鞭と術は、どこからでも届く。」。
 - A で人を選ぶと小さな窓 `並びを入れ替える` `隊列を変える`。隊列を変えると `R.sfx('swap')` と札が変わる（`R.Party.setRow`）。並びは 2 人目を選んで入れ替える（`R.Party.setOrder`）。
 
-#### 11.7.8 技の書・術の書（全員の記録。人ごとではない）
+#### 11.7.8 技の書・術の書（全員の記録。人ごとではない。**オーナー指示 A15: メニューから外した**。覚えていない技・術を見せない。画面のコードとデータは残すが、どこからも開かない）
 ```
   4 ┌(4,4,248,24)  技の書　37/121          ◀ 剣 ▶ ┐
  30 ┌(4,30,248,100) 2 列 × 6 行 ─────────────────────┐
@@ -12779,8 +12788,8 @@ MP が軽くなっていれば続けて水色で「熟練でMP0」か「熟練�
 | 種類 | id |
 |---|---|
 | ワールドのタイル（11）と印（5） | `road marsh ash fog sandstorm marsh_fog jungle deadforest river cliff ruins`、`loc_forest loc_manor loc_library loc_port loc_mine` |
-| 局所のタイル（10） | `lockdoor vine_wall ice_wall fog_wall rock_door story_stone story_stone_blank bog mud`、**隠し通路 `secret_wall`**（テーマごとの壁の絵＋ひび。見つけた後の絵も。§3.3.10-11） |
-| ワールドの隠し通路（2） | `secret_forest`（森の絵＋切れ目）・`secret_rock`（岩山の絵＋ひび） |
+| 局所のタイル（10） | `lockdoor vine_wall ice_wall fog_wall rock_door story_stone story_stone_blank bog mud`、**隠し通路 `secret_wall`**（見つけるまではテーマごとの壁の絵そのもの（オーナー指示 A15）。見つけた後の絵はひび＋点線。§3.3.10-11） |
+| ワールドの隠し通路（2） | `secret_forest`（見つけるまでは森の絵そのもの）・`secret_rock`（見つけるまでは岩山の絵そのもの。オーナー指示 A15。どちらも見つけた後だけ切れ目・ひび） |
 | テーマ（19） | ダンジョン `forest tree snow manor swamp ship mine library oblivion`、町 `town_roa town_forest town_sand town_snow town_marsh town_isle town_mine town_ash town_star town_white` |
 | 飾り・全体の凡例（28） | `sign_tavern bar_shelf kegs stage loom spinwheel herbs_hang firewood rug_round sign_magic lectern book_pile scroll_rack map_wall signpost laundry palm snowpile rails minecart mast paper_drift mushrooms stump cobweb ivy icicles ember` |
 | 飾り・地図ごとの凡例（17） | `cradle washtub telescope astrolabe boat net_rack tent cannon helm_wheel rope_coil piano doll_shelf broken_chair ash_pile forge ore_pile hot_spring` |

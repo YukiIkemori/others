@@ -428,7 +428,7 @@ for (let T = 1; T <= 7; T++) {
     const aoe = batk * 0.7 * dk / (dk + (x.st.def || 0)) * (x.c.row === 'middle' ? 0.7 : 1);
     const heal = x.st.hp * 0.30 * MNDF * (1 + healPct);
     sumHeal += heal; sumAoe += aoe;
-    if (heal / aoe < minRatio) { minRatio = heal / aoe; worst = `${x.c.name}（${x.c.row === 'middle' ? '中列' : '前列'}・全体攻撃で ${pc(aoe / x.st.hp)}）`; }
+    if (heal / aoe < minRatio) { minRatio = heal / aoe; worst = `${x.c.name}（${x.c.row === 'middle' ? '後列' : '前列'}・全体攻撃で ${pc(aoe / x.st.hp)}）`; }
   }
   const ratio = sumHeal / sumAoe;
   // 何ラウンド MP がもつか（ボス 2 回行動: 単体 60%・全体 40%。倒れる前に回復する。MP 満タンから）

@@ -35,7 +35,7 @@
   const WTYPE_NAMES = { sword: '剣', greatsword: '大剣', dagger: '短剣', axe: '斧', spear: '槍', bow: '弓', club: '棍棒', staff: '杖', katana: '刀', fist: '体術', whip: '鞭' };
   const ELEMENT_NAMES = { fire: '火', water: '水', wind: '風', earth: '土', light: '光', dark: '闇' };
   const GRADE_NAMES = { normal: '通常', rare: 'レア', super: '超レア' };
-  const ROW_NAMES = { front: '前列', middle: '中列' };
+  const ROW_NAMES = { front: '前列', middle: '後列' };
   const WEIGHT_NAMES = { heavy: '重装', light: '軽装', cloth: '布' };
   // the 17 keys of a previewStats / optimize diff (§3.3.3), in the equip screen's order (§11.7.5)
   const DIFF_KEYS = ['atk1', 'atk2', 'mag', 'def', 'mdef', 'hit', 'eva', 'crit', 'str', 'vit', 'dex', 'agi', 'int', 'mnd', 'hp', 'mp', 'wp'];

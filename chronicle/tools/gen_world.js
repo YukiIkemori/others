@@ -462,7 +462,7 @@ const iconOf = (map) => ICONS.find((i) => i.map === map);
 // 1–2 tile secret tile that looks like the forest / the rock face. The chest is a tier chest
 // (no chestTier: the current tier). `entry` is the ordinary cell in front of the passage.
 const SECRETS = [
-  { id: 'world_c1', pool: 'p_gear', tile: 'secret_forest', region: 'penin',   // ロアの里の北の森
+  { id: 'world_c1', pool: 'p_gear', tile: 'secret_rock', region: 'penin',     // ロアの里の北の森の奥の岩山（オーナー指示 A15: 森は歩けるので secret_forest では隠れない）
     pocket: [[37, 47], [38, 47]], chest: [37, 47], path: [[38, 48]], entry: [38, 49], wall: 'mountain' },
   { id: 'world_c2', pool: 'p_gold', tile: 'secret_rock', region: 'desert',    // ザハラ砂漠の岩山
     pocket: [[33, 93], [34, 93]], chest: [34, 93], path: [[33, 94], [33, 95]], entry: [33, 96], wall: 'mountain' },

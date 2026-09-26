@@ -823,10 +823,11 @@
         const e = (same(at(0, -1)) ? 0 : 1) | (same(at(0, 1)) ? 0 : 2) | (same(at(-1, 0)) ? 0 : 4) | (same(at(1, 0)) ? 0 : 8);
         let inner = e === 0 && same(at(-1, -1)) && same(at(1, -1)) && same(at(-1, 1)) && same(at(1, 1)) ? 1 : 0;
         let s = '';
-        if (id === 'secret_forest') {
+        // オーナー指示 A15: an undiscovered secret_forest is drawn exactly like the forest around it (no hint)
+        if (id === 'secret_forest' && secretFound(m, x, y)) {
           const open = (q) => q && !forestLike(q) && !mountainLike(q) && q !== 'sea' && !(R.DB.tiles[q] && R.DB.tiles[q].pass === false);
           const ax = open(at(-1, 0)) || open(at(1, 0)) || at(-1, 0) === 'secret_forest' || at(1, 0) === 'secret_forest' ? 'h' : 'v';
-          s = 's' + (secretFound(m, x, y) ? 2 : 1) + ax;
+          s = 's2' + ax;
           inner = 0;
         }
         return (id === 'jungle' ? 'J' : 'F') + p4 + '.' + e + '.' + inner + s;
@@ -847,7 +848,7 @@
         const snow = k === SNOW ? 2 : n === 8 && mountainLike(at(0, -2)) && mountainLike(at(0, 2)) ? 2 : n === 8 && four ? 1 : 0;
         const depth = !mountainLike(at(0, 1)) ? 0 : !mountainLike(at(0, 2)) ? 1 : 2;
         const foot = depth === 0 && !isWater(clsOf(at(0, 1))) ? 1 : 0;
-        const sec = id === 'secret_rock' ? (secretFound(m, x, y) ? 2 : 1) : 0;
+        const sec = id === 'secret_rock' && secretFound(m, x, y) ? 2 : 0; // オーナー指示 A15: no hint until found
         return 'M' + k + '.' + depth + '.' + snow + '.' + ((((x + 2 * y) % 3) + 3) % 3) + '.' + foot + '.' + sec;
       }
       case 'cliff': {

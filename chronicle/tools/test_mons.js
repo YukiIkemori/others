@@ -161,10 +161,16 @@ group('monster fields (§9.1.1, §9.2.3, §9.3)', () => {
     ok(m.affinity == null || ELS.includes(m.affinity), id + ' affinity');
     ok(Array.isArray(m.flags) && m.flags.every((f) => ['flying', 'metal'].includes(f)), id + ' flags ⊂ flying/metal');
     ok(!('hue' in m) && !('sat' in m) && !('bri' in m) && !('pal' in m), id + ' has no hue/sat/bri/pal (§9.0 0.6)');
-    // s: hp 0.4–5, atk / mag 0.2–3.5 (DESIGN s × lineage × the per-tier factor of tuning.json that stands in for the
-    // engine's monster curve: from T5 on ×1.8–2.2 HP and ×0.45–0.6 damage — see the request to rules), def / mdef / agi
-    // 0.5–2.5 (untuned, DESIGN's values)
-    for (const [k, v] of Object.entries(m.s || {})) { const [lo, hi] = k === 'hp' ? [0.4, 5] : k === 'atk' || k === 'mag' ? [0.2, 3.5] : [0.5, 2.5]; ok(CM.SKEYS.includes(k) && v >= lo && v <= hi, id + ' s.' + k + '=' + v + ' in ' + lo + '..' + hi); }
+    // s: hp 0.4–5, atk / mag 0.2–3.5 (DESIGN s × lineage × the per-tier factor: tuning.json 'global' today, or the
+    // engine's K.MOB_TIER once K.MOB_TIER.on — then s is checked with that factor at the stage's middle tier, so the
+    // range means the same either way: from T5 on ×1.8–2.2 HP and ×0.45–0.6 damage), def / mdef / agi 0.5–2.5 (DESIGN's)
+    const KM = R.Rules && R.Rules.K, onMT = !!(KM && KM.MOB_TIER && KM.MOB_TIER.on && KM.mobTier) && !(m.flags || []).includes('metal');
+    const mt = onMT ? KM.mobTier(6 + 6 * CM.midTier(D, D.mons[id] || m, id)) : null;
+    for (const [k, v0] of Object.entries(m.s || {})) {
+      const v = Math.round(v0 * (mt ? (k === 'hp' ? mt.hp : k === 'atk' || k === 'mag' ? mt.dmg : 1) : 1) * 100) / 100;
+      const [lo, hi] = k === 'hp' ? [0.4, 5] : k === 'atk' || k === 'mag' ? [0.2, 3.5] : [0.5, 2.5];
+      ok(CM.SKEYS.includes(k) && v >= lo && v <= hi, id + ' s.' + k + '=' + v + (mt ? ' (× K.MOB_TIER)' : '') + ' in ' + lo + '..' + hi);
+    }
     for (const k of Object.keys(m.rw || {})) ok(['exp', 'gold'].includes(k), id + ' rw.' + k);
     const metal = m.flags.includes('metal');
     ok(metal === (m.hpFixed != null), id + ' hpFixed only on metal');

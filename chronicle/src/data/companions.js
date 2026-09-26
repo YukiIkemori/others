@@ -123,7 +123,7 @@
       innate: { name: '逃げ上手', desc: '逃げやすくなる', mods: {escapePct: 25} },
       startEquip: Object.assign({ weapon1: 'w_spear_iron', weapon2: 'w_bow_short' }, light),
       startTechs: ['t_spear_upthrust'], startSpells: [],
-      profile: '国境の砦で五年、槍を構えてきた。\n中列から槍と弓で確実に仕留める。\n実は大の甘い物好き。',
+      profile: '国境の砦で五年、槍を構えてきた。\n後列から槍と弓で確実に仕留める。\n実は大の甘い物好き。',
       joinLine: '砦の外に何があるのか、知りたいの。\n背中は任せて。わたしが守る。',
       leaveLine: '了解。いつでも呼んで。', rejoinLine: '配置につくわ。背中は任せて。',
       epilogue: 'ブリギッタは国境の砦に戻り、\n若い兵に旅の話をせがまれている。',

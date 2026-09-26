@@ -315,7 +315,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   // middle row with a front-only weapon: 攻撃 gray + 中列からは届かない。
   S = BUI.open({ mons: std(), tweak: (p) => { p[0].row = 'middle'; } });
   S.weaponMenu(S.eng.party[0], R.Rules.commands(S.eng.party[0].c)[0]); await step(2);
-  ok(S.panel.left.items[0].disabled && S.panel.help() === '中列からは届かない。', 'C23 攻撃 out of reach is gray with the reason', S.panel.help());
+  ok(S.panel.left.items[0].disabled && S.panel.help() === '後列からは届かない。', 'C23 攻撃 out of reach is gray with the reason', S.panel.help());
   // spells: M + cost, silence
   S = BUI.open({ mons: std() });
   const mar = S.eng.party[3];

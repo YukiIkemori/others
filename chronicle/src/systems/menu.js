@@ -481,7 +481,7 @@
   K.cycle = (i, d, n) => (n ? (i + (d < 0 ? n - 1 : 1)) % n : 0);
 
   // ------------------------------------------------------------ party picker (§11.7.0)
-  // Row: height 30, sprite 16×24, name fitText 54, 「H 612/640」, 「M 28 W 55」, the row badge on the right.
+  // Row: height 30, sprite 16×24, name fitText 54, 「H 612/640」, 「M 28/60 W 55」, the row badge on the right.
   const ROW_H = 30;
   function drawMemberRow(c, x, y, w, o) {
     const ok = o.ok !== false;
@@ -491,9 +491,10 @@
     K.fitText(c.name, x + 30, y + 2, 52, { color: col });
     G().text('H', x + 88, y + 2, { color: ok ? COL.sub : COL.gray });
     G().text(c.hp + '/' + (st.hp || 0), x + w - 8, y + 2, { align: 'right', color: col });
+    // オーナー指示 A15: MP as 現在/最大
     G().text('M', x + 30, y + 15, { color: ok ? COL.sub : COL.gray });
-    G().text(String(c.mp), x + 64, y + 15, { align: 'right', color: ok ? '#ffffff' : COL.gray });
-    G().text('W', x + 70, y + 15, { color: ok ? COL.sub : COL.gray });
+    G().text(c.mp + '/' + (st.mp || 0), x + 80, y + 15, { align: 'right', color: ok ? '#ffffff' : COL.gray });
+    G().text('W', x + 86, y + 15, { color: ok ? COL.sub : COL.gray });
     G().text(String(c.wp || 0), x + 104, y + 15, { align: 'right', color: ok ? '#ffffff' : COL.gray });
     if (c.hp <= 0) K.fitText('戦闘不能', x + w - 8, y + 15, w - 114, { align: 'right', color: G().C.dead, size: 8 });
     else K.rowBadge(x + w - 24, y + 15, effectiveRow(c));
@@ -1112,12 +1113,13 @@
   }
 
   // ------------------------------------------------------------ main menu (§11.7.1)
+  // オーナー指示 A15: no 強さ command (the party cards on the right open the 強さ screen: → from the
+  // commands, ↑↓ pick a member, A opens it) and no 技の書 / 術の書 (unlearned techs / spells stay a surprise)
   const COMMANDS = [
     { id: 'items', label: '道具' }, { id: 'arts', label: '技・術' },
     { id: 'fullheal', label: '満タン' }, { id: 'equip', label: '装備' },
-    { id: 'status', label: '強さ' }, { id: 'order', label: '並びと隊列' },
-    { id: 'techbook', label: '技の書' }, { id: 'spellbook', label: '術の書' },
-    { id: 'book', label: '図鑑' }, { id: 'chronicle', label: '年代記' },
+    { id: 'order', label: '並びと隊列' }, { id: 'book', label: '図鑑' },
+    { id: 'chronicle', label: '年代記' },
     { id: 'map', label: '地図' }, { id: 'warp', label: 'ワープ' },
     { id: 'escape', label: '脱出' }, { id: 'party', label: '仲間' },
     { id: 'save', label: 'セーブ' }, { id: 'settings', label: '設定' },
@@ -1144,14 +1146,25 @@
 
   // compact main menu (BRIEF A11, §11.7.1 Part A11 版), in the virtual screen of the 0.75 scale (341×298):
   // one slim command column on the left, 4 party cards and the gold window to its right, the objective strip below.
-  const CM = { x: 6, y: 6, w: 84, lineH: 12, card: { x: 92, w: 176, h: 34, pitch: 36 }, gold: { h: 60 }, obj: { h: 40 } };
-  CM.h = 12 + COMMANDS.length * CM.lineH - 2; // 202
+  // オーナー指示 A15: 13 commands at pitch 14 (192 tall) = the 4 cards (144) + the gold window (48) beside them
+  const CM = { x: 6, y: 6, w: 84, lineH: 14, card: { x: 92, w: 176, h: 34, pitch: 36 }, obj: { h: 40 } };
+  CM.h = 12 + COMMANDS.length * CM.lineH - 2; // 192
+  CM.gold = { h: CM.h - 4 * CM.card.pitch }; // 48
   class MainMenu extends Screen {
     constructor() {
       super();
       this.items = COMMANDS.map((c) => ({ label: c.label, disabled: !commandOk(c.id) }));
       this.build(lastCmd);
+      this.focus = 'cmd'; // 'cmd' | 'party' (オーナー指示 A15: the party cards are selectable)
+      this.pm = 0;
     }
+    /** → on the right edge of the command list moves into the party cards */
+    atRightEdge() {
+      if (!this.large) return true;
+      const i = this.list.index;
+      return i % 2 === 1 || i === this.items.length - 1;
+    }
+    partyCount() { return Math.min(4, R.Game.party.length); }
     /** the command list for the current size (設定「メニューの表示」 may change while the menu is open) */
     build(index) {
       this.large = K.large();
@@ -1165,6 +1178,26 @@
       this.list.items.forEach((it, i) => { it.disabled = !commandOk(COMMANDS[i].id); });
     }
     input() {
+      const d = In().dirRepeat();
+      if (this.focus === 'party') {
+        const n = this.partyCount();
+        if (d === 'up' || d === 'down') {
+          if (n > 1) { this.pm = K.cycle(this.pm, d === 'up' ? -1 : 1, n); R.sfx('cursor'); }
+        } else if (d === 'left' || In().pressed('b')) {
+          this.focus = 'cmd'; this.list.active = true;
+          R.sfx(d === 'left' ? 'cursor' : 'cancel');
+        } else if (In().pressed('a') && n) {
+          R.sfx('confirm');
+          this.flow(() => this.openStatus());
+        }
+        return;
+      }
+      if (d === 'right' && this.atRightEdge() && this.partyCount()) {
+        this.focus = 'party'; this.list.active = false;
+        this.pm = U.clamp(K.lastMember || 0, 0, this.partyCount() - 1);
+        R.sfx('cursor');
+        return;
+      }
       const r = this.list.update();
       if (r === 'cancel') this.close();
       else if (r === 'select') {
@@ -1173,12 +1206,20 @@
         this.flow(() => this.run(cmd));
       }
     }
+    /** the 強さ screen of the selected party card (オーナー指示 A15) */
+    async openStatus() {
+      if (typeof Menu.statusScreen !== 'function') { R.sfx('buzzer'); return; }
+      K.lastMember = this.pm;
+      this.hidden = true;
+      try { await Menu.statusScreen({ member: this.pm, fromMenu: true }); } finally { this.hidden = false; }
+      // the 強さ screen can step to another member (←→ / L R): the card cursor follows
+      this.pm = U.clamp(K.lastMember != null ? K.lastMember : this.pm, 0, Math.max(0, this.partyCount() - 1));
+      if (!this.closed) this.refresh();
+    }
     async run(cmd) {
       const screens = {
-        items: Menu.itemScreen, arts: Menu.spellScreen, equip: Menu.equipScreen, status: Menu.statusScreen,
+        items: Menu.itemScreen, arts: Menu.spellScreen, equip: Menu.equipScreen,
         order: Menu.orderScreen, book: Menu.bookScreen, chronicle: Menu.chronicleScreen, save: Menu.saveScreen, settings: Menu.settings,
-        techbook: Menu.skillBookScreen && (() => Menu.skillBookScreen({ kind: 'tech' })),
-        spellbook: Menu.skillBookScreen && (() => Menu.skillBookScreen({ kind: 'spell' })),
       };
       try {
         if (cmd === 'fullheal') { await Menu.fullHeal(); return; }
@@ -1202,16 +1243,24 @@
         if (res === 'exit' || Menu._after) this.close('exit');
       } finally { if (!this.closed) this.refresh(); }
     }
+    /** the selected party card: a blinking frame just inside its border */
+    drawCardFocus(x, y, w, h) {
+      if (this.focus !== 'party') return;
+      const on = this.busy || Math.floor(R.Engine.frame / 20) % 4 !== 3;
+      if (on) G().strokeRect(x + 2, y + 2, w - 4, h - 4, G().C.yellow);
+    }
     render() {
-      this.list.draw();
+      this.list.draw({ showInactiveCursor: true });
       if (this.large) {
         drawGold(4, 134, 128);
         drawParty(134, 4);
+        if (this.focus === 'party') this.drawCardFocus(134, 4 + 44 * this.pm, 118, 43);
         drawObjective(4, 184, 248);
         return;
       }
       const cd = CM.card;
       R.Game.party.slice(0, 4).forEach((c, i) => drawMemberCard(c, cd.x, CM.y + cd.pitch * i, cd.w, cd.h));
+      if (this.focus === 'party') this.drawCardFocus(cd.x, CM.y + cd.pitch * this.pm, cd.w, cd.h);
       const gy = CM.y + CM.h - CM.gold.h;
       drawGold(cd.x, gy, cd.w, CM.gold.h);
       drawObjective(CM.x, CM.y + CM.h + 4, cd.x + cd.w - CM.x, CM.obj.h);
@@ -1249,20 +1298,22 @@
     K.drawSpriteAt(c, x + 6, y + 10, { frame: 0 });
     K.fitText(c.name, x + 26, y + 6, 54, { color: col });
     G().text('Lv' + c.level, x + 110, y + 6, { align: 'right', color: col });
-    G().text('H', x + 26, y + 18, { color: col === '#ffffff' ? COL.sub : col });
+    G().text('HP', x + 26, y + 18, { color: col === '#ffffff' ? COL.sub : col });
     // a fallen member reads 「戦闘不能」 in place of 0/最大 (a plate on the lower border would cover the W value)
     G().text(c.hp <= 0 ? '戦闘不能' : c.hp + '/' + (st.hp || 0), x + 110, y + 18, { align: 'right', color: col });
-    G().text('M', x + 26, y + 29, { color: COL.sub });
-    G().text(String(c.mp), x + 58, y + 29, { align: 'right' });
-    G().text('W', x + 66, y + 29, { color: COL.sub });
+    // オーナー指示 A15: MP as 現在/最大 (999/999 fits x+43〜80)
+    G().text('MP', x + 26, y + 29, { color: COL.sub });
+    G().text(c.mp + '/' + (st.mp || 0), x + 80, y + 29, { align: 'right' });
+    G().text('W', x + 88, y + 29, { color: COL.sub });
     G().text(String(c.wp || 0), x + 110, y + 29, { align: 'right' });
     K.rowTag(x + 4, y + 36, effectiveRow(c));
   }
   Menu.drawMemberWindow = drawMemberWindow;
   /**
    * a compact party card (main menu, Part A11): (x, y, w≈176, h 34), 2 lines beside the sprite:
-   *   [絵] 名前                H 999/999
-   *        前 Lv34   M 150    W  99
+   *   [絵] 名前               HP 999/999
+   *        前 Lv34  WP 99   MP 150/150
+   * (オーナー指示 A15: HP and MP as 現在/最大, their values right-aligned in one column)
    */
   function drawMemberCard(c, x, y, w, h) {
     G().window(x, y, w, h);
@@ -1271,15 +1322,15 @@
     const R1 = x + w - 10; // right edge of the values
     K.drawSpriteAt(c, x + 6, y + Math.round((h - 24) / 2), { frame: 0, alpha: c.hp <= 0 ? 0.55 : 1 });
     K.fitText(c.name, x + 27, y + 6, 66, { color: col });
-    G().text('H', R1 - 46, y + 6, { color: col === '#ffffff' ? COL.sub : col });
+    if (c.hp > 0) G().text('HP', R1 - 52, y + 6, { color: col === '#ffffff' ? COL.sub : col }); // 「戦闘不能」 needs the room
     G().text(c.hp <= 0 ? '戦闘不能' : c.hp + '/' + (st.hp || 0), R1, y + 6, { align: 'right', color: col });
     const ly = y + 19;
     K.rowBadge(x + 26, ly - 1, effectiveRow(c));
     G().text('Lv' + c.level, x + 44, ly, { color: '#ffffff' });
-    G().text('M', R1 - 86, ly, { color: COL.sub });
-    G().text(String(c.mp), R1 - 58, ly, { align: 'right' });
-    G().text('W', R1 - 46, ly, { color: COL.sub });
-    G().text(String(c.wp || 0), R1, ly, { align: 'right' });
+    G().text('WP', x + 72, ly, { color: COL.sub });
+    G().text(String(c.wp || 0), x + 100, ly, { align: 'right' });
+    G().text('MP', R1 - 52, ly, { color: COL.sub });
+    G().text(c.mp + '/' + (st.mp || 0), R1, ly, { align: 'right' });
   }
   Menu.drawMemberCard = drawMemberCard;
   function drawParty(x, y) {

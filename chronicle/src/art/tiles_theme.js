@@ -681,10 +681,9 @@
   A.wallTop = (theme, edges) => wallTop(art(theme), edges || {});
 
   // ------------------------------------------------------------ secret passages
-  // A secret wall is the theme wall itself plus a hint you notice only when you
-  // look for it: a fine crack and a slightly off-colour patch (DESIGN §3.3.10-11).
-  // Once found (R.Game.secrets) the crack is plain and a dotted outline of the
-  // opening shows on the face (a 1px line of lit dots along the passage).
+  // A secret wall is the theme wall itself, pixel for pixel, until it is found (オーナー指示 A15;
+  // DESIGN §3.3.10-11). Once found (R.Game.secrets) a crack, a damp patch and a dotted outline of
+  // the opening show on the face (a 1px line of lit dots along the passage).
   /** paint the hint onto a wall Buf; mode 'face' | 'top'; found = already discovered */
   // The hint is drawn relative to the pixels it lands on (not to the theme ramp), so it
   // reads on every surface: a dark wall top (the pyramid labyrinth, the oblivion void)
@@ -693,6 +692,8 @@
   const lumOf = (t, v) => t.rr(v) * 0.3 + t.gg(v) * 0.59 + t.bb(v) * 0.11;
   const SECRET_TINT = { iceblock: 0xe8f6ff, snowrock: 0xe8f0f8, void: 0x8a8aa6, canopy: 0x8a9a3a, reeds: 0x8a8a4a, bark: 0x5a7a2e };
   function secretHint(a, b, mode, found, x) {
+    // オーナー指示 A15: until it is found a secret wall is the plain wall, pixel for pixel (no crack, no patch)
+    if (!found) return b;
     const t = tk(), P = a.th.wl, lit = P[Math.min(P.length - 1, 4)];
     const s = ((x || 0) * 7) & 15;
     const y0 = mode === 'top' ? 3 : 7;

@@ -47,7 +47,7 @@ const LOC_ORDER = 'roa lute lighthouse fern verda_maze kasim sand_tomb yule fros
 const REGION_ORDER = ['prologue', 'r_forest', 'r_desert', 'r_snow', 'r_marsh', 'r_isles', 'r_mine', 'r_ash', 'r_star', 'finale'];
 const TOWNS = ['roa', 'lute', 'fern', 'kasim', 'yule', 'loch', 'coral', 'nerei', 'dovan', 'caldera', 'orbis', 'biblia'];
 // §10.6.4 — the world's hidden passages
-const SECRETS = { world_c1: { pool: 'p_gear', tile: 'secret_forest' }, world_c2: { pool: 'p_gold', tile: 'secret_rock' }, world_c3: { pool: 'p_rare', tile: 'secret_rock' } };
+const SECRETS = { world_c1: { pool: 'p_gear', tile: 'secret_rock' }, world_c2: { pool: 'p_gold', tile: 'secret_rock' }, world_c3: { pool: 'p_rare', tile: 'secret_rock' } };
 const N4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 const N8 = N4.concat([[1, 1], [-1, 1], [1, -1], [-1, -1]]);
 const DIRV = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };

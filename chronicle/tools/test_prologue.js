@@ -554,7 +554,7 @@ async function testPlay() {
   eq(S.battles.length, 2, 'P8 the lost tutorial is fought again');
   const tut = S.battles[0] || {};
   eq([tut.troop, tut.members, tut.glimmerForce, tut.canLose, tut.noEscape, tut.noRare, tut.noGolden], ['tr_tutorial', ['hero'], 'hero', true, true, true, true], 'P8 ev.battle options word for word (§10.7)');
-  ok(said(/危なかったのう/, mark) && said(/新しい技/, mark) && said(/『技の書』/, mark), 'P8 the retry line and the 閃き lesson (技)');
+  ok(said(/危なかったのう/, mark) && said(/新しい技/, mark) && said(/『技・術』/, mark), 'P8 the retry line and the 閃き lesson (技)');
   ok(!R.Field.npc('otto_door').present, 'P8 the keeper goes back to the harbour');
   // ---- P9
   ok(await go(R.Field.warp('lighthouse_3', 'from_prev')), 'to lighthouse_3');
@@ -637,7 +637,7 @@ async function testPlay() {
   S.battleScript = ['win']; S.glimmer = 'spell';
   mark = sayLog.length;
   await runStep('lighthouse_1_tutorial', 18, 21);
-  ok(said(/新しい術/, mark) && said(/『術の書』/, mark), 'P8 a spell glimmer gets the 術 lesson');
+  ok(said(/新しい術/, mark) && said(/『技・術』/, mark), 'P8 a spell glimmer gets the 術 lesson');
   measure('play: frames simulated', frames);
   measure('play: lines shown', sayLog.length);
   const own = warnings.filter((w) => /prologue|roa|lute|lighthouse/.test(w) && !/story_rumor|story_home_t6|story_final_roa/.test(w));

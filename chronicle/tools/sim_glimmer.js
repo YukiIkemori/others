@@ -17,7 +17,7 @@
 //   行動: 武器は枠の配分（主な武器 62%・2 つ目 30%・残りは防御など）、雑魚は 25%・ボスは 60% を覚えた技で（残りは「攻撃」）。
 //   術師（§4.9.5 の型 G4b）: 杖だけ・念じ打ち（starterKit.tech.staff）で始める。武器の行動は 92%（戦士と同じ。残りは防御・道具）。
 //   術師: 雑魚戦で 1 戦に casts 回（§4.13.2-d: 候補の開いている属性の一番安い術）、ボス戦は行動の 65% を術（一番格の高い術）。
-//   術師の 2・3 つ目の属性は、魔石（§4.9.6。1 戦に 1 個）で最初の術を閃くまで始める。中列では届かない武器の「攻撃」はしない。
+//   術師の 2・3 つ目の属性は、魔石（§4.9.6。1 戦に 1 個）で最初の術を閃くまで始める。後列では届かない武器の「攻撃」はしない。
 // 判定（PASS/FAIL、exit 1）は §4.9.5 の表と §6.9.4 の極意。§7.12.2 の追加の項目（X1・X2）と参考の型（G4c・G4d）は目安（warn）。
 // エンジンがあれば、モデルの通しの「地方 T の直前」の状態の標準のパーティで、T の雑魚 95 戦を R.Battle.simulate（オート）で戦い、
 // モデルの同じ 95 戦の閃きの数と比べる（参考。判定には使わない）。
@@ -84,7 +84,7 @@ const PROFILES = {
   recruit: { weapons: [W('weapon1', 'greatsword', 0.65), W('weapon2', 'axe', 0.35)], row: 'front' },   // 候補の開いている人は「攻撃」（§4.13.2-d）
 };
 const TECH_USE = { zako: 0.25, boss: 0.6 };
-// §4.13.2-d（D8）: 中列で「攻撃」の届かない武器（杖）は、候補が開いていれば、その系統の一番安い届く技（念じ打ち）で閃きをねらう。
+// §4.13.2-d（D8）: 後列で「攻撃」の届かない武器（杖）は、候補が開いていれば、その系統の一番安い届く技（念じ打ち）で閃きをねらう。
 // 雑魚戦だけ、1 戦に R.BattleAI.GLIM_REACH.perBattle 回まで（エンジンの battle_ai.js の glimReach と同じ）
 const REACH_HUNT = (R.BattleAI && R.BattleAI.GLIM_REACH && R.BattleAI.GLIM_REACH.perBattle) || 2;
 
@@ -136,7 +136,7 @@ function weaponAction(m, boss, b) {
     if (canAttack) return { kind: 'attack', wtype: x.w, slot: x.slot, used: 'attack', actionId: 'attack' };
     return null;
   };
-  // 中列で届かない武器は、技を使うときだけ使う。そうでなければ届く武器の「攻撃」に替える（§4.13.2 の「届かなければ武器2」）
+  // 後列で届かない武器は、技を使うときだけ使う。そうでなければ届く武器の「攻撃」に替える（§4.13.2 の「届かなければ武器2」）
   // 届かない武器の技の候補が開いていれば（D8）、武器2 の「攻撃」より先にその技（reachHunt）
   return tryWeapon(pick, useTech) || p.weapons.map((x) => tryWeapon(x, false)).find(Boolean) || p.weapons.map((x) => tryWeapon(x, true)).find(Boolean) || null;
 }
@@ -385,7 +385,7 @@ const aw = archSummary(arch, 'warrior', '戦士型（剣 A・斧 B）');
 const amSpec = archSummary(archSpec, 'mage', '術師型 杖・念じ打ち（0.75 回）');
 const am = archSummary(arch, 'mage', compStaffTechs.length ? '仲間の術師 杖＋鞭・startTechs' : '仲間の術師 杖＋鞭・杖の技なし');
 const am2 = archSummary(archFix, 'mage', '杖＋鞭・念じ打ちあり');
-const am15 = archSummary(arch, 'mage15', '術師型 中列（1.5 回）');
+const am15 = archSummary(arch, 'mage15', '術師型 後列（1.5 回）');
 function firstTier(recs, key, pred) {
   return recs.map((r) => { const m = r.party.find((x) => x.key === key); const e = m.learnedAt.find((x) => pred(x.id) && x.phase !== 'post'); return e ? e.T : 99; });
 }
@@ -541,7 +541,7 @@ function mageCrit(id, s, label, guide) {
   const ok = t >= 24 && t <= 32 && si >= 9 && si <= 14 && a >= 1 && a <= 3 && b >= 0 && b <= 3 && tr <= 1 && st >= 4 && st <= 10;
   crit(id, label, `計 ${f1(t)}（単 ${f1(si)}・A ${f1(a)}・B ${f1(b)}・三 ${f1(tr)}・杖 ${f1(st)}・ほかの技 ${f1(mean(s.cs.map((c) => c.techs)) - st)}）`, ok, '計 24〜32、単 9〜14、A 1〜3、B 0〜3、三 0〜1、杖 4〜10', guide);
 }
-mageCrit('G4b', amSpec, '術師型（杖・中列・0.75 回・念じ打ちで始める）のクリア時の数');
+mageCrit('G4b', amSpec, '術師型（杖・後列・0.75 回・念じ打ちで始める）のクリア時の数');
 mageCrit('G4c', am, `参考: いまの仲間の術師（杖＋鞭・${compStaffTechs.length ? '杖の技 ' + compStaffTechs.join('・') + ' で始める' : '杖の技なしで始める'}）`, true);
 mageCrit('G4d', am2, '参考: 杖＋鞭で念じ打ちを持って始める', true);
 crit('G5', '得手不得手の差（1 系統、T4 の終わり）A ÷ D', `${f2(one.A / one.D)}（A ${f1(one.A)}・D ${f1(one.D)}）`, one.A >= 1.2 * one.D, '1.2 以上');

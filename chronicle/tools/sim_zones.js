@@ -662,7 +662,7 @@ function fightReal(z, T, ms, monIds, partyKind) {
   const mhp = b.party.reduce((s, c) => s + ((R.Rules.stats(c) || {}).hp || c.hp), 0);
   const taken = res.damageTaken != null ? Math.min(1, res.damageTaken / mhp) : res.hpLostPct / 100;
   return { win: res.result === 'win', rounds: res.rounds, lost: (res.hpLostPct != null ? res.hpLostPct : 100 * taken) / 100, taken: (res.netLossPct || 0) / 100, fell: !!res.anyDown, wipe: res.result === 'lose',
-    casts: (res.casts || []).reduce((x, y) => x + y, 0), mpUsed: (res.mpUsedPct || 0) / 100 };
+    casts: (res.casts || []).reduce((x, y) => x + y, 0), mpUsed: (res.mpUsedPct || 0) / 100, wpUsed: (res.wpUsedPct || 0) / 100 };
 }
 function stats(arr) {
   const n = arr.length || 1;

@@ -64,7 +64,7 @@
   const HURT_VOICE_GAP = 120; // the hero's 'hurt' shout at most every 2 s (real frames — multi-hits and DoT ticks, §11.10.8)
   // unusable(u, id, slot) → help line (§11.5.3 / STYLE_JA §9)
   const WHY = {
-    wp: 'WPが足りない！', mp: 'MPが足りない！', silence: '術を封じられている！', reach: '中列からは届かない。',
+    wp: 'WPが足りない！', mp: 'MPが足りない！', silence: '術を封じられている！', reach: '後列からは届かない。',
     field: '戦闘中は使えない。', noescape: 'この戦いからは逃げられない！',
   };
   const HELP_REPEAT = '前と同じ行動を、Bを押すまで続ける。';
@@ -2141,7 +2141,7 @@
         const col = red ? C.red : p.hp <= 0 ? C.dead : p.hp < p.mhp * 0.25 ? C.yellow : C.white;
         const mid = this.rowOf(p) === 'middle';
         g.rect(x + SCOL.tag, y + 1, 12, 11, fill2);
-        g.text(mid ? '中' : '前', x + SCOL.tag + 1, y, { color: mid ? C.cyan : C.orange });
+        g.text(mid ? '後' : '前', x + SCOL.tag + 1, y, { color: mid ? C.cyan : C.orange });
         g.fitText(p.name, x + SCOL.name, y, SCOL.nameW, { color: col });
         g.text('H', x + SCOL.h, y, { color: col });
         g.text(String(p.hp), x + SCOL.hp, y, { color: col, align: 'right' });

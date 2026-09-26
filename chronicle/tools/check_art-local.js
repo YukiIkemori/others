@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Browser check for art-local (A16b): builds EVERY local tile, themed tile, decor
 // piece and context tile in headless Chromium and verifies sizes, frame counts,
-// no placeholder / exception, the secret-passage hint (subtle until found), that
+// no placeholder / exception, the secret passage (the plain wall until found, オーナー指示 A15), that
 // every Chronicle theme has its own art (not its fallback's), that town themes
 // have their own houses and roofs, and the colour budget. Prints measured numbers.
 //   node tools/check_art-local.js [-v]      exit 1 on any failure
@@ -133,26 +133,25 @@ window.CHECK = function () {
   }
   delete R.DB.maps.__chk;
   res.n.contextCells = ctx;
-  // ---------------------------------------------------------- secret passages: subtle until found
-  let minHint = 1, maxHint = 0, minFound = 1, minPeak = 255;
+  // ---------------------------------------------------------- secret passages: invisible until found (オーナー指示 A15)
+  let maxHint = 0, minFound = 1, minPeak = 255;
   for (const th of Object.keys(TH)) {
     const wall = A.wallFace(th, true, 0).toCanvas();
     const hid = A.secretWallArt(th, { capTop: true, x: 0, found: false }).toCanvas();
     const fnd = A.secretWallArt(th, { capTop: true, x: 0, found: true }).toCanvas();
     const h = diff(wall, hid), f = diff(wall, fnd);
-    minHint = Math.min(minHint, h); maxHint = Math.max(maxHint, h); minFound = Math.min(minFound, f);
-    if (h <= 0) fail('secret wall of ' + th + ' has no hint at all');
-    if (h > 0.16) fail('secret wall of ' + th + ' is too obvious (' + (h * 100).toFixed(1) + '% of pixels differ)');
-    if (f <= h) fail('found secret of ' + th + ' does not stand out more than the hidden one');
+    maxHint = Math.max(maxHint, h); minFound = Math.min(minFound, f);
+    if (h > 0) fail('secret wall of ' + th + ' differs from its wall before it is found (' + (h * 100).toFixed(1) + '% of pixels)');
     const top0 = A.wallTop(th, { n: true }).toCanvas(), top1 = A.secretWallArt(th, { top: true, edges: { n: true } }).toCanvas();
-    if (diff(top0, top1) > 0.16) fail('secret wall top of ' + th + ' too obvious');
-    // findable (BRIEF A4 ひび・色むら・苔): the crack must stand out on the face and on the dark tops
-    const pf = peak(wall, hid), pt = peak(top0, top1);
+    if (diff(top0, top1) > 0) fail('secret wall top of ' + th + ' differs from its wall top before it is found');
+    // once found the passage shows (crack, patch, dotted outline)
+    const top2 = A.secretWallArt(th, { top: true, edges: { n: true }, found: true }).toCanvas();
+    const pf = peak(wall, fnd), pt = peak(top0, top2);
     minPeak = Math.min(minPeak, pf, pt);
-    if (pf < 20) fail('secret wall of ' + th + ': hint too faint on the face (peak Δ' + pf.toFixed(0) + ')');
-    if (pt < 14) fail('secret wall top of ' + th + ': hint too faint (peak Δ' + pt.toFixed(0) + ')');
+    if (f <= 0 || pf < 20) fail('found secret of ' + th + ' does not show (peak Δ' + pf.toFixed(0) + ')');
+    if (pt < 14) fail('found secret top of ' + th + ' does not show (peak Δ' + pt.toFixed(0) + ')');
   }
-  res.n.secretHint = (minHint * 100).toFixed(1) + '–' + (maxHint * 100).toFixed(1) + '% px (found ≥ ' + (minFound * 100).toFixed(1) + '%), peak Δ ≥ ' + minPeak.toFixed(0);
+  res.n.secretHint = 'hidden ' + (maxHint * 100).toFixed(1) + '% px (must be 0), found ≥ ' + (minFound * 100).toFixed(1) + '%, peak Δ ≥ ' + minPeak.toFixed(0);
   // ---------------------------------------------------------- each Chronicle theme has its own art
   let own = 0;
   for (const th of Object.keys(TH)) {

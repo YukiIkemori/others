@@ -402,7 +402,7 @@ section('warp list and the main menu');
   ok(list.every((l, i) => i === 0 || locOrder.indexOf(list[i - 1].id) < locOrder.indexOf(l.id)), 'warp list keeps the DB.locations order (region → town → dungeon)');
   ok(M.warpLabel({ name: '迷いの森', kind: 'dungeon' }) === '迷いの森の入口' && M.warpLabel({ name: '港町ファロス', kind: 'town' }) === '港町ファロス', 'dungeon rows read 〈名前〉の入口');
   ok(M.warpGroupName('prologue') === 'ファロス半島' && M.warpGroupName('r_forest') === DB.regions.r_forest.name && M.warpGroupName('finale') === 'ビブリア島', 'group names from DB.config.warpGroups / DB.regions');
-  ok(M.COMMANDS.length === 16 && M.COMMANDS.map((c) => c.label).join(' ') === '道具 技・術 満タン 装備 強さ 並びと隊列 技の書 術の書 図鑑 年代記 地図 ワープ 脱出 仲間 セーブ 設定', 'the 16 commands in §11.7.1 order');
+  ok(M.COMMANDS.length === 13 && M.COMMANDS.map((c) => c.label).join(' ') === '道具 技・術 満タン 装備 並びと隊列 図鑑 年代記 地図 ワープ 脱出 仲間 セーブ 設定', 'the 13 commands in §11.7.1 order (A15: no 強さ / 技の書 / 術の書)');
   // conditions
   const saveField = { canTeleport: R.Field.canTeleport, canExit: R.Field.canExit };
   R.Game.flags.prologue_done = false;
@@ -583,6 +583,43 @@ section('game over');
     ok(!raw.length, 'every monster race (' + races.length + ') has a display name', raw);
     R.UI.say = realSay;
     R.Field = oldField;
+    // オーナー指示 A15: the party cards open the 強さ screen (→ from the commands, ↑↓, A; ← / B back)
+    {
+      freshGame();
+      R.Engine.clear();
+      const press = async (b) => { R.Input._set(b, true); R.Engine.step(); await settle(); R.Input._set(b, false); R.Engine.step(); R.Engine.step(); await settle(); };
+      const realStatus = M.statusScreen;
+      const opened = [];
+      M.statusScreen = (o) => { opened.push(o); M.kit.lastMember = 2; return Promise.resolve(); };
+      for (const size of ['compact', 'large']) {
+        R.Settings.menuSize = size;
+        const MM = new M.MainMenu();
+        R.Engine.push(MM);
+        R.Engine.step(); await settle();
+        ok(MM.focus === 'cmd', 'A15 ' + size + ': the menu opens on the commands');
+        if (size === 'large') { MM.list.index = 0; await press('right'); ok(MM.focus === 'cmd' && MM.list.index === 1, 'A15 large: → from the left column moves to the right column first', [MM.focus, MM.list.index]); }
+        await press('right');
+        ok(MM.focus === 'party' && !MM.list.active, 'A15 ' + size + ': → moves into the party cards', MM.focus);
+        MM.pm = 0;
+        await press('down');
+        ok(MM.pm === 1, 'A15 ' + size + ': ↓ picks the next member', MM.pm);
+        await press('up'); await press('up');
+        ok(MM.pm === R.Game.party.length - 1, 'A15 ' + size + ': ↑ wraps to the last member', MM.pm);
+        MM.pm = 1;
+        opened.length = 0;
+        await press('a');
+        for (let i = 0; i < 10; i++) { R.Engine.step(); await settle(); }
+        ok(opened.length === 1 && opened[0].member === 1, 'A15 ' + size + ': A on a card opens 強さ for that member', opened);
+        ok(MM.pm === 2 && !MM.closed && MM.focus === 'party', 'A15 ' + size + ': back from 強さ the card cursor follows the member shown last', [MM.pm, MM.focus]);
+        await press('b');
+        ok(MM.focus === 'cmd' && MM.list.active && !MM.closed, 'A15 ' + size + ': B returns to the commands (the menu stays open)');
+        await press('right'); await press('left');
+        ok(MM.focus === 'cmd', 'A15 ' + size + ': ← returns to the commands');
+        R.Engine.clear();
+      }
+      R.Settings.menuSize = 'compact';
+      M.statusScreen = realStatus;
+    }
     finish();
   })();
 }

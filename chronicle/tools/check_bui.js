@@ -142,7 +142,7 @@ const section = (h) => { const i = DESIGN.indexOf(h); if (i < 0) return ''; cons
   const texts = {
     'めったに出会えない魔物が現れた！': STYLE, 'リピート　Bで解除': STYLE, 'リピート解除': STYLE, 'オート　Bで解除': STYLE, 'オート解除': STYLE,
     '前と同じ行動を、Bを押すまで続ける。': STYLE, 'くり返す行動がまだない。': STYLE,
-    'WPが足りない！': STYLE, 'MPが足りない！': STYLE, '術を封じられている！': STYLE, '中列からは届かない。': STYLE, '戦闘中は使えない。': STYLE, 'この戦いからは逃げられない！': STYLE,
+    'WPが足りない！': STYLE, 'MPが足りない！': STYLE, '術を封じられている！': STYLE, '後列からは届かない。': STYLE, '戦闘中は使えない。': STYLE, 'この戦いからは逃げられない！': STYLE,
     '{hero}たちは全滅した……。': STYLE, '{hero}たちは力つきた……。': STYLE,
     '閃き！': STYLE, '奥義': STYLE, '極意': STYLE, '合成術': STYLE,
     'ほかでは手に入らない一品': DESIGN, '超レア': DESIGN, '敵全体にランダム': DESIGN, '味方全員': DESIGN, '敵全体': DESIGN,
