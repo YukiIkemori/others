@@ -145,15 +145,15 @@
     "f0Hz": 139
    },
    "f": {
-    "voice": "voice_4i7w55bqctzy",
-    "name": "Echo",
-    "type": "custom",
-    "f0Hz": 140
+    "voice": "ja-jp-assistant-4",
+    "name": "ja-jp-assistant-4 (prebuilt, female, 22, Tokyo)",
+    "type": "prebuilt",
+    "f0Hz": 243
    }
   },
   "profile": {
    "m": "The hero, a young apprentice storyteller (male) who never speaks in the story; only battle cries.",
-   "f": "The hero, a young apprentice storyteller (female) who never speaks in the story; only battle cries."
+   "f": "The hero, a young woman of about 18, an apprentice storyteller (female voice); brave but warm, bright and clear. She never speaks in the story; only battle cries."
   },
   "style": "young, bright, determined hero; short energetic battle voice",
   "shoutKinds": [

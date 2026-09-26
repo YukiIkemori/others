@@ -97,7 +97,9 @@ function A1() {
     const A = st.w.weapon1.atk, dk = DK(L);
     const hit = Math.max(20, Math.min(100, (st.w.weapon1.hit != null ? st.w.weapon1.hit : st.hit || 95) - 5)) / 100;
     const crit = Math.min(60, st.w.weapon1.crit != null ? st.w.weapon1.crit : st.crit || 2) / 100;
-    const per = hit * ((1 - crit) * A * dk / (dk + cv.def) + crit * 1.5 * A);
+    // Part A13: the attack carries the proficiency bonus of weapon 1's type (R.Rules.profPowerMul)
+    const pm = R.Rules && R.Rules.profPowerMul ? R.Rules.profPowerMul(hero, null, 'weapon1') : 1;
+    const per = hit * ((1 - crit) * A * dk / (dk + cv.def) + crit * 1.5 * A) * pm;
     rows.push({ T, A, per, hp: cv.hp, hits: cv.hp / per });
   }
   const bad = rows.filter((r) => r.hits < 2.3 || r.hits > 3.0);

@@ -13,8 +13,8 @@
 // stargaze_3 (42×36) — the hall of the orrery: from the stairs a corridor runs west and up the
 //   west side into a round hall; 天球の番人 (tr_b_orrery, flag
 //   star_mid) blocks the only passage north; beyond it the star-chart door (closed tile `E`,
-//   opens with k_star_chart) and the stairs to the roof. A dead end in the west corridor has a
-//   secret passage (§10.6.4 reg-b row: 語り部の書き付け + p_supply).
+//   opens when k_star_chart is held up to it: flag star_door) and the stairs to the roof.
+//   A dead end in the west corridor has a secret passage (§10.6.4 reg-b row: 語り部の書き付け + p_supply).
 // stargaze_4 (34×30) — the roof observatory: the stairwell head with the 休息の灯 and Fine
 //   (story_fine_star, flag star_fine), then the round roof where 星食らい (tr_b_stareater) is
 //   eating the nameless stars in front of the great telescope. After star_boss the sky sparkles.
@@ -317,8 +317,8 @@
       K.warp(22, 34, 'stargaze_2', 'from_next'),
       K.warp(21, 2, 'stargaze_4', 'from_prev'),
     ],
-    // #6 the star-chart door (§10.8.0-6): opens once the party holds 星図
-    tilePatches: [{ cond: { item: 'k_star_chart' }, x: 21, y: 6, ch: 'D' }],
+    // #6 the star-chart door (§10.8.0-6): opens when 星図 is held up to it (stargaze_3_door → star_door)
+    tilePatches: [{ cond: { item: 'k_star_chart', flag: 'star_door' }, x: 21, y: 6, ch: 'D' }],
     npcs: [
       K.npc('boss', 'mon:boss_star_guardian', 21, 9, { event: 'stargaze_3_boss', cond: '!star_mid', fixed: true }),
     ],
@@ -332,7 +332,7 @@
     ],
     events: [
       ...K.band('stargaze_3_boss', 14, 10, 27, 10, { cond: '!star_mid' }),
-      K.exam('stargaze_3_door', 21, 6, { cond: { notItem: 'k_star_chart' } }),
+      K.exam('stargaze_3_door', 21, 6, { cond: '!star_door' }),
     ],
   });
 

@@ -399,7 +399,7 @@
     ],
     npcs: [
       K.npc('rest', 'obj:lantern', 18, 18, { event: 'common_rest', fixed: true }),
-      K.npc('fine', 'fine', 18, 20, { cond: ['!mine_boss', '!mine_fine'], dir: 'right', fixed: true, event: 'deep_mine_3_fine' }),
+      K.npc('fine', 'fine', 18, 20, { cond: '!mine_boss', dir: 'right', fixed: true, event: 'deep_mine_3_fine' }),
       K.npc('boss', 'mon:b_ironwarden', 16, 6, { event: 'deep_mine_3_boss', cond: '!mine_boss', dir: 'down', fixed: true }),
     ],
     chests: [

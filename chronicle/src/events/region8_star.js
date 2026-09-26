@@ -7,7 +7,9 @@
 //   orbis_octavia_reward   the one-off reward (ac_tale_star 星読みの片眼鏡, §8 reward table)
 //   orbis_library_chart    #3 the 書見台 at the back of the library → k_star_chart, star_chart, obj_star_2
 //   orbis_telescope        the observatory telescope (after the clear: the island in the inner sea)
-//   stargaze_3_door        #6 the star-chart door (examine while it is closed)
+//   stargaze_3_door        #6 the star-chart door (examine while it is closed): without 星図 the
+//                          reason; with it the chart is held up to the door → star_door, it opens
+//                          (unlock + flash, §11.10.5; the tilePatch needs {item, flag:'star_door'})
 //   stargaze_3_boss        #5 天球の番人 tr_b_orrery → star_mid
 //   stargaze_4_fine        #7 Fine before the roof (story_fine_star) → star_fine
 //   stargaze_4_boss        #7–#8 星食らい tr_b_stareater → star_boss, the stars come back,
@@ -134,9 +136,23 @@
 
   // ------------------------------------------------------------ #6 観測台への扉（星図の扉）
   E.stargaze_3_door = {
-    meta: { needs: [], gives: [] },
+    meta: { needs: ['item:k_star_chart'], gives: ['flag:star_door'] },
     run: async (ev) => {
-      await ev.say('扉に星座の形のくぼみがある。\n星図があれば……。');
+      if (ev.flag('star_door')) return;
+      if (!ev.has('k_star_chart')) {
+        await ev.say('扉に星座の形のくぼみがある。\n星図があれば……。');
+        return false;
+      }
+      await ev.say('扉に星座の形のくぼみがある。');
+      await ev.say('{hero}は、星図を広げて\n扉に掲げた。');
+      ev.closeMessage();
+      ev.sfx('light');
+      await ev.wait(16);
+      ev.setFlag('star_door');
+      ev.refresh();
+      ev.sfx('unlock');
+      await ev.flash('#e8f0ff', 6);
+      await ev.say('くぼみの星座が淡く光り、\n扉が静かに開いた……！');
     },
   };
 

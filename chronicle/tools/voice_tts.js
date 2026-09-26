@@ -7,7 +7,8 @@
 //   node tools/voice_tts.js --force          regenerate files that exist        --dry-run   print prompts only
 //   node tools/voice_tts.js --reprocess      redo trim / effects / loudness from the cached raw WAVs (no API)
 //   options: --lufs <n> (default -16)  --raw <dir> (default $TMPDIR/voice_raw)  --report <file.json>
-//            --direct (one generateContent call per take; --tries <n>, default 4) — default for ≤ 3 lines;
+//            --direct (one generateContent call per take; --tries <n>, default 4) — default for ≤ 3 lines
+//            (--batch forces the Batch API for them, e.g. when the 100 req/day generateContent quota is used up);
 //            otherwise the Batch API: --takes <n> per line and round (default 2), --rounds <n> (default 3)
 //
 // Casting, voice ids, per-speaker profile/style, per-line direction and the hero's battle lines live in
@@ -253,7 +254,7 @@ async function main(argv, E) {
       const m = fs.existsSync(rawFile + '.json') ? JSON.parse(fs.readFileSync(rawFile + '.json', 'utf8')) : {};
       finish(l, sp, fs.readFileSync(rawFile), { heard: m.heard || '', sim: m.similarity || 0, note: m.note || '', good: m.matched !== false, why: '' });
     }
-  } else if (argv.includes('--direct') || todo.length <= 3) {
+  } else if (argv.includes('--direct') || (todo.length <= 3 && !argv.includes('--batch'))) {
     // one request per take (generateContent; 10 / min and 100 / day per model)
     for (const l of todo) {
       const sp = speakerOf(C, l);

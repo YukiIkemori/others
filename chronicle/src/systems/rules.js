@@ -110,6 +110,9 @@
     // Part A13b (2026-09-26): element rank 5 → that element's 1段目 single spells cost MP 0; rank 8 → its 2段目 single
     // spells cost half (rounded up, at least 1). Combo / triple spells are not affected.
     PROF_MP: { freeRank: 5, freeStep: 1, halfRank: 8, halfStep: 2 },
+    // Part A13 retune: monster HP x (1 + min(max, perLv x L)) - the enemy side of the proficiency bonus (the party's
+    // weapon / element rank grows with the tier: about +6 % at T0 to +24 % at T7). Folded into K.curve's hp (§4.14.2).
+    MON_HP_PROF: { perLv: 0.004, max: 0.20 },
     // §4.9.3–4.9.4 — glimmer (R.Glimmer reads these)
     GLIM: {
       base: { tech: 0.012, secret: 0.006, single: 0.015, comboA: 0.012, comboB: 0.010, triple: 0.008 },
@@ -187,7 +190,7 @@
     const atk = C.atk[0] + C.atk[1] * Math.pow(Math.max(0, L - 1), C.atk[2]);
     const d = C.def[0] + C.def[1] * L;
     return {
-      hp: C.hp[0] + C.hp[1] * L + C.hp[2] * L * L,
+      hp: (C.hp[0] + C.hp[1] * L + C.hp[2] * L * L) * (1 + Math.min(K.MON_HP_PROF.max, K.MON_HP_PROF.perLv * Math.max(0, L))),
       atk, mag: C.magMul * atk, def: d, mdef: d,
       agi: C.agi[0] + C.agi[1] * L,
       exp: K.EXP.a + K.EXP.b * L + K.EXP.c * L * L,

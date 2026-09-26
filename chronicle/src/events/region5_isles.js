@@ -256,7 +256,7 @@
 
   // ================================================================ ghost ship: the first step on the deck
   E.ghost_ship_1_arrival = {
-    meta: { needs: [], gives: [] },
+    meta: { needs: [], gives: ['flag:isles_deck'] },
     run: async (ev) => {
       if (ev.cleared(RS)) {
         // the first visit after the clear: the ship is only an old wreck now
@@ -290,7 +290,8 @@
       else await fineFallback(ev);
       ev.setFlag('isles_fine');
       ev.refresh();
-      ev.sfx('door');
+      ev.sfx('unlock');
+      await ev.flash('#e8ecff', 6);
       await ev.say('船長室の扉が、ひとりでに\n音もなく開いた……。');
     },
   };

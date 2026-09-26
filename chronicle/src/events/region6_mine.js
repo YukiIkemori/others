@@ -7,6 +7,7 @@
 //                      (flag mine_door; the tilePatch needs {item:'k_oath_hammer', flag:'mine_door'})
 //   deep_mine_3_fine   #8 Fine before the warden's hall: story_fine_mine (story, A19); the same
 //                      lines of §10.9.4 play here while that script is not registered
+//                      (she stands there again until the boss; a re-talk plays only the closing line)
 //   deep_mine_3_boss   #8–9 鉄の番人 (tr_b_ironwarden) → the oath is sung → ev.clearRegion('r_mine')
 //                      → a night at the inn in Dovan → story_after_clear (§10.8.0-3)
 (function (R) {
@@ -119,29 +120,30 @@
       await ev.flash('#fff4d0', 10);
       await ev.say('柄に彫られた誓いの言葉が、\nかすかに光った。');
       ev.closeMessage();
-      ev.sfx('unlock');
-      await ev.shake(30, 2);
       ev.setFlag('mine_door');
       ev.refresh();
+      ev.sfx('unlock');
+      await ev.flash('#fff4d0', 6);
+      await ev.shake(30, 2);
       await ev.say('低い音を立てて、\n岩戸が転がっていく……！');
     },
   };
 
   // ------------------------------------------------------------ #8 フィーネ（§10.9.4）
   const FINE_LINE = '誓いは、破られても消えない。\n忘れられたときに、消えるの。';
-  async function fineFallback(ev) {
+  async function fineFallback(ev, again) {
     const f = ev.npc('fine');
     await ev.wait(12);
     f.face('player');
     await ev.wait(16);
-    await ev.say(FINE_LINE);
+    if (!again) await ev.say(FINE_LINE);
     const t = ev.tier();
     if (t <= 2) {
       await ev.say('……気をつけて。');
     } else {
       await ev.say(t >= 6 ? '……もう、あまり時間がないの。' : 'わたしのことは気にしないで。\n先へ進みなさい。');
       ev.closeMessage();
-      await ev.caption('フィーネの足元が、\n透けて見えた。');
+      if (!again) await ev.caption('フィーネの足元が、\n透けて見えた。');
     }
     ev.closeMessage();
     ev.sfx('magic');
@@ -149,9 +151,18 @@
     f.hide();
   }
   E.deep_mine_3_fine = {
-    meta: { needs: [], gives: ['flag:mine_fine'] },
+    meta: { needs: [], gives: ['flag:mine_fine'], calls: ['story_fine_mine'] },
     run: async (ev) => {
-      if (ev.flag('mine_fine') || ev.flag('mine_boss')) return;
+      if (ev.flag('mine_boss')) return;
+      if (ev.flag('mine_fine')) {
+        // talked to again (she stands before the hall again after the player left the floor): the
+        // story owner's script takes its 'again' path (closing line only) and she fades. The band
+        // (once: mine_fine) never replays the full scene.
+        if (R.DB.events.story_fine_mine) await ev.call('story_fine_mine');
+        else await fineFallback(ev, true);
+        if (ev.npc('fine').visible) ev.npc('fine').hide();
+        return;
+      }
       if (R.DB.events.story_fine_mine) await ev.call('story_fine_mine');
       else await fineFallback(ev);
       if (ev.npc('fine').visible) ev.npc('fine').hide();

@@ -50,6 +50,7 @@
         ev.closeMessage();
         ev.refresh();
         ev.sfx('unlock');
+        await ev.flash('#ffb060', 6);
         await ev.shake(24, 2);
         await ev.say(n === 3 ? '岩戸の方から、重い岩の\n動く音が響いた！' : 'どこか上の方で、\n重い岩の動く音がした……。');
         advance(ev, 3);

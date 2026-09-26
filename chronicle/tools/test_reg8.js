@@ -260,9 +260,10 @@ function testStatic() {
   // the chart door (§10.8.0-6)
   const d3 = DB.maps.stargaze_3;
   const tp = (d3.tilePatches || []).find((p) => p.x === 21 && p.y === 6);
-  ok(tp && tp.ch === 'D' && JSON.stringify(tp.cond) === JSON.stringify({ item: 'k_star_chart' }), 'stargaze_3: the door opens with {item:k_star_chart}');
+  ok(tp && tp.ch === 'D' && JSON.stringify(tp.cond) === JSON.stringify({ item: 'k_star_chart', flag: 'star_door' }), 'stargaze_3: the door opens with {item:k_star_chart, flag:star_door}');
   withState({}, () => eq(R.FieldMap.compile('stargaze_3').tileAt(21, 6), 'lockdoor', 'stargaze_3: the door is a closed tile without the chart'));
-  withState({ items: ['k_star_chart'] }, () => eq(R.FieldMap.compile('stargaze_3').tileAt(21, 6), 'door', 'stargaze_3: the door opens with the chart'));
+  withState({ items: ['k_star_chart'] }, () => eq(R.FieldMap.compile('stargaze_3').tileAt(21, 6), 'lockdoor', 'stargaze_3: the chart alone does not open the door (it is held up to it)'));
+  withState({ flags: ['star_door'], items: ['k_star_chart'] }, () => eq(R.FieldMap.compile('stargaze_3').tileAt(21, 6), 'door', 'stargaze_3: the door opens with the chart held up (star_door)'));
   ok(floors.stargaze_3.events.some((e) => e.id === 'stargaze_3_door' && e.trigger === 'examine' && e.x === 21 && e.y === 6), 'stargaze_3: examine event on the closed door');
   // bosses, Fine (§10.8.0-5, §10.6.2-6)
   const b3 = floors.stargaze_3.npcs.find((n) => n.id === 'boss'), b4 = floors.stargaze_4.npcs.find((n) => n.id === 'boss');
@@ -390,7 +391,11 @@ function testReach() {
   });
   at3({ flags: ['star_mid'], items: ['k_star_chart'] }, (m, p) => {
     const s = reach(m, p.x, p.y);
-    ok(s.has('21,2'), 'stargaze_3: orrery beaten + chart → the stairs to the roof');
+    ok(!s.has('21,2') && touch(m, s, 21, 6), 'stargaze_3: orrery beaten + chart → the door can be examined (not yet open)');
+  });
+  at3({ flags: ['star_mid', 'star_door'], items: ['k_star_chart'] }, (m, p) => {
+    const s = reach(m, p.x, p.y);
+    ok(s.has('21,2'), 'stargaze_3: orrery beaten + chart held up → the stairs to the roof');
     const s2 = reach(m, p.x, p.y, { noSecret: true });
     ok(s2.has('21,2'), 'stargaze_3: the roof never needs the secret passage');
   });
@@ -523,7 +528,7 @@ async function testPlay() {
   ok(R.Field.canExit && R.Field.canExit(), 'escape works in the tower');
   // #5 the orrery: an escape is a retry, a win sets star_mid
   ok(await go(R.Field.warp('stargaze_3', 'from_prev')), 'to stargaze_3');
-  eq(R.Field.map.tileAt(21, 6), 'door', '#6 the chart opens the star-chart door');
+  eq(R.Field.map.tileAt(21, 6), 'lockdoor', '#6 the star-chart door is closed until the chart is held up to it');
   S.battleScript.push('escape');
   await band('stargaze_3_boss', 21, 10);
   ok(!g().flags.star_mid && R.Field.npc('boss').present, '#5 escaped: the orrery stays (retry)');
@@ -532,9 +537,12 @@ async function testPlay() {
   eq(S.battles[nb] && S.battles[nb].troop, 'tr_b_orrery', '#5 tr_b_orrery');
   ok(g().flags.star_mid, '#5 star_mid');
   ok(!R.Field.npc('boss').present, '#5 the orrery is gone');
-  // the door text without the chart (a fresh state check)
-  mark = sayLog.length; await exam('stargaze_3_door', 21, 6);
-  ok(said(/扉に星座の形のくぼみがある。/, mark), '#6 the door text (§10.8.9)');
+  // #6 the chart is held up to the door: it opens (unlock + flash, §11.10.5)
+  mark = sayLog.length; const sfx0 = S.sfx.length; await exam('stargaze_3_door', 21, 6);
+  ok(said(/扉に星座の形のくぼみがある。/, mark) && said(/星図を広げて/, mark), '#6 the door text + the chart held up (§10.8.9)');
+  ok(g().flags.star_door, '#6 star_door');
+  ok(S.sfx.slice(sfx0).includes('unlock'), '#6 the unlock sound as the door opens');
+  eq(R.Field.map.tileAt(21, 6), 'door', '#6 the star-chart door is open');
   // #7 Fine and the star eater
   ok(await go(R.Field.warp('stargaze_4', 'from_prev')), 'to stargaze_4');
   ok(R.Field.npc('fine').present, '#7 Fine waits by the lantern');
@@ -613,7 +621,7 @@ function testTime() {
   section = 'time';
   console.log('[time]');
   const legs = [];
-  const leg = (map, from, to, st) => withState(st || { flags: ['star_start', 'star_mid', 'star_chart'], items: ['k_star_chart'] }, () => {
+  const leg = (map, from, to, st) => withState(st || { flags: ['star_start', 'star_mid', 'star_chart', 'star_door'], items: ['k_star_chart'] }, () => {
     const m = R.FieldMap.compile(map);
     const a = typeof from === 'string' ? m.spawns[from] : from, b = typeof to === 'string' ? m.spawns[to] : to;
     const d = bfsDist(m, a.x, a.y, b.x, b.y);

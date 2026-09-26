@@ -236,7 +236,7 @@ function testStatic() {
   const boss2 = m2.npcs.find((n) => n.id === 'boss'), boss3 = m3.npcs.find((n) => n.id === 'boss'), fine = m3.npcs.find((n) => n.id === 'fine');
   eq([boss2.sprite, boss2.cond, boss2.fixed], ['mon:b_rockeater', '!mine_mid', true], 'mid boss NPC (§10.6.2-6)');
   eq([boss3.sprite, boss3.cond, boss3.fixed], ['mon:b_ironwarden', '!mine_boss', true], 'boss NPC');
-  eq([fine.sprite, fine.cond], ['npc:fine', ['!mine_boss', '!mine_fine']], 'Fine NPC (§10.8.0-5)');
+  eq([fine.sprite, fine.cond], ['npc:fine', '!mine_boss'], 'Fine NPC (§10.8.0-5: she stands there again until the boss)');
   ok(m3.events.filter((e) => e.id === 'deep_mine_3_fine').every((e) => e.once === 'mine_fine' && e.trigger === 'step'), 'Fine step band once mine_fine');
   ok(m3.events.filter((e) => e.id === 'deep_mine_3_boss').length >= 3, 'boss step band');
   ok(m2.events.filter((e) => e.id === 'deep_mine_2_boss').length >= 3, 'mid-boss step band');
@@ -528,6 +528,21 @@ async function testPlay() {
   ok(await settle(), '#8 Fine ends');
   ok(g().flags.mine_fine && !R.Field.npc('fine').present, '#8 mine_fine, Fine is gone');
   if (!DB.events.story_fine_mine) ok(said(/忘れられたときに、消えるの/, mark) && said(/気をつけて/, mark), '#8 Fine\'s line + the tier 0–2 ending (fallback while story_fine_mine is missing)');
+  // §10.8.0-5: leave and come back before the boss: Fine stands there again; the band stays quiet
+  // (once mine_fine) and talking to her plays only the closing line
+  ok(await go(R.Field.warp('deep_mine_3', 'from_prev')), 'deep_mine_3 re-entered');
+  ok(R.Field.npc('fine').present, '#8 Fine is back before the hall (cond !mine_boss)');
+  mark = sayLog.length;
+  R.Field.setPlayerPos(21, 19, 'left');
+  R.Events.run('deep_mine_3_fine', { trigger: 'step', once: 'mine_fine', x: 21, y: 19 });
+  ok(await settle(), '#8 the band step ends');
+  ok(R.Field.npc('fine').present && sayLog.length === mark, '#8 the band is quiet on the way back (once mine_fine)');
+  ok(!said(/忘れられたときに、消えるの/, mark), '#8 the band does not replay the full scene');
+  mark = sayLog.length;
+  R.Field.setPlayerPos(19, 20, 'left');
+  await talk('fine');
+  ok(sayLog.length > mark && !said(/忘れられたときに、消えるの/, mark), '#8 the second talk is the closing line only');
+  ok(!R.Field.npc('fine').present, '#8 Fine fades again');
   S.battles.length = 0;
   S.battleScript = ['win'];
   mark = sayLog.length;
