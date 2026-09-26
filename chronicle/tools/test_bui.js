@@ -129,9 +129,15 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   S = BUI.open({ mons: std() });
   const r0 = S.rectOf(S.eng.party[0]);
   ok(r0.side === 'party' && r0.bottom === 100 && r0.feet[0] === 192 && r0.x < 192 && r0.x + r0.w > 192 && r0.y < 100 && r0.head[1] < r0.cy && Array.isArray(r0.cast) && Array.isArray(r0.tip), 'L19 rectOf(member): sprite box, feet, head, cast, tip', r0);
-  S.pop(P[2], 12, 'white'); S.pop(P[2], 5, 'green');
-  const r2 = S.rectOf(P[2]);
-  eq([S.pops[0].x, S.pops[0].y, S.pops[1].y], [r2.head[0], Math.max(42, r2.head[1] - 12), Math.max(42, r2.head[1] - 12) - 9], 'L20 member numbers above the head, 9 px up per stacked number');
+  const Q = S.eng.party; // this scene's members (P above belongs to the previous scene)
+  S.pop(Q[2], 12, 'white'); S.pop(Q[2], 5, 'green');
+  const r2 = S.rectOf(Q[2]);
+  eq([S.pops[0].x, S.pops[0].y, S.pops[1].y], [r2.cx, Math.max(42, r2.cy - 8), Math.max(42, r2.cy - 8) - 9], 'L20 member numbers on the member\'s own chest (hit anchor − 8), 9 px up per stacked number');
+  {
+    // the number must not land on the member drawn one row higher (rows are 16 px apart)
+    const r1 = S.rectOf(Q[1]);
+    ok(r2.side === 'party' && S.pv(Q[2]) && S.pops[0].y > r1.cy && S.pops[0].y + 7 > r2.head[1], 'L20b a member\'s number sits below the upper member\'s chest', { y: S.pops[0].y, upperCy: r1.cy, head: r2.head[1] });
+  }
   const rm = S.rectOf(S.eng.mons[0]);
   S.pop(S.eng.mons[0], 3, 'white');
   eq([S.pops[2].x, S.pops[2].y], [rm.cx, Math.max(42, rm.y + rm.h * 0.4)], 'L21 monster numbers at 40 % of the sprite');
@@ -586,6 +592,21 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
   for (const e in DB.elements) addFx(DB.elements[e].fx);
   const inexact = [...used].filter((id) => { const b = id.toLowerCase().replace(/\d+$/, ''); return !FX.FX[b] && !b.startsWith('breath'); });
   ok(inexact.length === 0, 'F8 every data fx id is an exact FX (' + used.size + ' ids)', inexact);
+  {
+    // a member who stepped in: the thrust starts at the weapon's tip, never behind the member's back (§11.5.12)
+    const got = [];
+    const fake = { addFx: (f) => got.push(f) };
+    const tgt = { x: 100, y: 90, w: 32, h: 32, cx: 116, cy: 108, side: 'mon' };
+    FX.FX.pierce(fake, { user: { x: 134, cx: 146, tip: [128, 108], side: 'party' }, targets: [tgt], dir: -1 }, 1);
+    let maxX = -1;
+    const spy = { rect: (x) => { maxX = Math.max(maxX, x); }, draw: () => {} };
+    for (const f of got) for (let t = 0; t < 12; t++) f.draw(spy, t);
+    ok(got.length && maxX > 116 && maxX <= 128 + 2, 'F9 a stepped-in thrust starts at the tip (nothing drawn past it), not 34–60 px back', { maxX });
+    got.length = 0; maxX = -1;
+    FX.FX.pierce(fake, { user: null, targets: [tgt], dir: -1 }, 1);
+    for (const f of got) for (let t = 0; t < 12; t++) f.draw(spy, t);
+    ok(maxX >= 116 + 34, 'F9b without a user tip the thrust still comes from 34 px away', { maxX });
+  }
   // fx arrays: each fx in turn, the 2nd+ at 60 % length
   S = BUI.open({ mons: std() });
   const calls = [];
@@ -686,7 +707,7 @@ const std = () => [{ id: 'wolf_2' }, { id: 'wolf_2', golden: true }, { id: 'wolf
     for (let i = 0; i < 600 && !done; i++) { await step(1); if (mv.lunge > 0) lunged = true; if (S.poseOf(v).pose === 'hit') hit = true; pushed = Math.max(pushed, S.posOf(v)[0] - v.x); }
     FX.play = op;
     ok(done && lunged && dirs[0] === 1 && hit && pushed >= 2, 'V6 enemy attack: lunge, fx dir +1, the member recoils (hit) pushed to the right', { lunged, dirs, hit, pushed });
-    ok(S.pops.length === 0 || S.pops.every((p) => p.party ? p.y < S.rectOf(p.u).head[1] : true), 'V7 the number pops above the head');
+    ok(S.pops.length === 0 || S.pops.every((p) => { if (!p.party) return true; const r = S.rectOf(p.u); return p.y + 7 > r.y && p.y < r.bottom; }), 'V7 the number pops on the member\'s own body');
   }
   // speed scaling (§11.5.16): the same attack gets shorter at はやい / さいそく and under オート
   {
