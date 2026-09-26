@@ -54,8 +54,9 @@ const run = (p, id) => p.evaluate((id) => { window.__evDone = false; RPG.Events.
       let P = await openAt(S, ST.pharos, { phone });
       await run(P.page, 'ev_rumor');
       await B.waitFor(P.page, 'RPG.UIK.Message.busy()', 4000);
+      await B.pressUntil(P.page, 'a', '!!RPG.Game.leads.l_ev_forest_missing', 10);
       await P.page.waitForTimeout(400);
-      ok('the lead card waits while the talk is open' + tag, await P.page.evaluate('RPG.Leads._current() === null && !!RPG.Game.leads.l_ev_forest_missing'));
+      ok('the lead card waits while the talk is open' + tag, await P.page.evaluate('RPG.Leads._current() === null && RPG.UIK.Message.busy()'));
       await B.pressUntil(P.page, 'a', '!RPG.Events.busy()', 20);
       await B.waitFor(P.page, 'RPG.Leads._current() !== null', 3000);
       await P.page.waitForTimeout(500);

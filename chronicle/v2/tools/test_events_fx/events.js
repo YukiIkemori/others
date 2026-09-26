@@ -18,6 +18,7 @@
     async run(ev) {
       await ev.say(null, '噂好きの女「西の森の村で、樵が三人帰ってこないんだって。\nそれを探しに、子どもまで森に入ったとか。」', { face: false });
       ev.lead('l_ev_forest_missing');
+      await ev.say(null, '噂好きの女「北の雪の村は、大火祭の支度で大忙しさ。\nただ、今年は冬至の火が細いって。」', { face: false });
       ev.lead('l_ev_snow_fire');
     },
     meta: { needs: [], gives: ['l_ev_forest_missing'], calls: [] },
