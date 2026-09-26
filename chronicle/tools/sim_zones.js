@@ -10,6 +10,7 @@
 //   node tools/sim_zones.js --json out.json      write all numbers (M1 includes every group's result)
 //   node tools/sim_zones.js --species [--fit out.json]   species danger; --fit writes a candidate overlay (see below)
 //   node tools/sim_zones.js --refit all.json --fit out.json   zone-context correction of s from a --json run
+//        (both write lineage factors + a per-tier factor + bounded per-stage trims, never free per-species s: §9.13.1)
 //   node tools/sim_zones.js --retilt all.json --fit out.json  M2: re-weight each zone's groups per stage band from a --json run
 //   node tools/sim_zones.js --tuning cand.json   run on DESIGN ⊕ a candidate overlay (in memory)
 //
