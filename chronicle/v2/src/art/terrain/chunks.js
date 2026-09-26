@@ -184,6 +184,7 @@
     this.steps = 0;
     this.maxStep = 0;
     this.i = 0;
+    this.prof = {};    // 仕事の順ごとの時間（G1 の報告・perf 用）
   }
   const PHASES = ['prep', 'mats', 'sprites', 'ground', 'rise', 'macro', 'put', 'deck', 'shadow', 'draw', 'light', 'emissive', 'finish'];
   Job.prototype.step = function (ms) {
@@ -191,7 +192,9 @@
     const t0 = U().now(), deadline = t0 + (ms == null ? 3 : ms);
     try {
       while (!this.done) {
-        const fin = this['_' + PHASES[this.phase]](deadline);
+        const ph = PHASES[this.phase], p0 = U().now();
+        const fin = this['_' + ph](deadline);
+        this.prof[ph] = (this.prof[ph] || 0) + U().now() - p0;
         if (fin) { this.phase++; this.i = 0; if (this.phase >= PHASES.length) { this.done = true; break; } }
         if (U().now() >= deadline) break;
       }

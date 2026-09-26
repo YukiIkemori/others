@@ -40,7 +40,6 @@
     c = Hd.RZ.canvas(w, h);
     const x = c.getContext('2d');
     const liftA = Math.min(0.2, (lift[0] + lift[1] + lift[2]) / 3 / 120);
-    const liftC = liftA > 0 ? lift.map((v) => Math.min(255, Math.round(v / liftA))) : [0, 0, 0];
     const dark = [8, 6, 22];
     const stop = (a, col) => {
       const A = 1 - (1 - a) * b;
@@ -48,14 +47,15 @@
       const C = col.map((v) => Math.max(0, Math.min(255, Math.round(v * a * b / A))));
       return `rgba(${C[0]},${C[1]},${C[2]},${A.toFixed(4)})`;
     };
-    const mixc = (p, q, t) => p.map((v, i) => Math.round(v + (q[i] - v) * t));
     const cx = w / 2, cy = h / 2, rad = Math.hypot(w, h) / 2;
     const gr = x.createRadialGradient(cx, cy, Math.min(w, h) * 0.28, cx, cy, rad);
     const steps = 8;
     for (let i = 0; i <= steps; i++) {
       const t = i / steps, e = t * t * (3 - 2 * t);             // なめらかに
       const a = liftA + (vig - liftA) * e;
-      gr.addColorStop(t, stop(Math.max(0, a), mixc(liftC, dark, Math.min(1, e * 1.4))));
+      // 足す色 = どこでも同じ持ち上げ（lift）＋ 周辺の藍（a − liftA の分）
+      const col = a > 0 ? [0, 1, 2].map((k) => (lift[k] + dark[k] * (a - liftA)) / a) : [0, 0, 0];
+      gr.addColorStop(t, stop(Math.max(0, a), col));
     }
     x.fillStyle = gr;
     x.fillRect(0, 0, w, h);

@@ -282,7 +282,7 @@ function labInstall() {
       for (const w of L.windows) { g.fillStyle = '#ffd488'; g.fillRect(w.x, w.y, w.w, w.h); g.fillStyle = '#fff0c8'; g.fillRect(w.x + 2, w.y + 2, w.w / 2 - 3, w.h / 2 - 3); g.fillStyle = '#5a3c26'; g.fillRect(w.x + w.w / 2 - 1, w.y, 2, w.h); g.fillRect(w.x, w.y + w.h / 2 - 1, w.w, 2); }
       for (const w of L.windows) R.Light.glow(g, w.x + w.w / 2, w.y + w.h / 2, { core: 0.1, halo: 20, color: Hd.STYLE.light.windowColor, k: 0.6 }, t);
       for (const d of L.doors) if (d.open) { g.fillStyle = '#ffeec8'; g.fillRect(d.x, d.y, d.w, d.h); R.Light.glow(g, d.x + d.w / 2, d.y + d.h / 2, { core: 0.1, halo: 30, color: '#ffd9a0', k: 0.8 }, t); }
-      L.lamps.slice(0, LAB.lights).forEach((l, i) => R.Light.glow(g, l.x, l.fire ? l.y - 15 : l.y - 44, { core: l.fire ? 5 : i === 2 ? 8 : 6, halo: l.fire ? 26 : undefined, color: l.fire ? Hd.STYLE.light.fireColor : Hd.STYLE.light.lampColor }, t));
+      L.lamps.slice(0, LAB.lights).forEach((l, i) => R.Light.glow(g, l.x, l.fire ? l.y - 15 : l.y - 44, { core: l.fire ? 5 : i === 2 ? 9 : 7, halo: l.fire ? 26 : undefined, color: l.fire ? Hd.STYLE.light.fireColor : Hd.STYLE.light.lampColor }, t));
       // 先頭の人のランタンの光の輪
       const lead = L.party[0];
       if (LAB.ring) { R.Light.ring(g, lead.x, lead.y - 4, Hd.STYLE.light.ringR, t); R.Light.glow(g, lead.x + 6, lead.y - 12, { core: 3, halo: 12, color: '#ffc070' }, t); }

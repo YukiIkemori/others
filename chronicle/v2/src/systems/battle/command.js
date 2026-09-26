@@ -156,8 +156,8 @@
   function tallList(g, w, st, title) {
     const k = R.uiScale || 1, Kt = K(), L = st.L, t = R.Engine.time;
     const rows = w.o.rows, pad = 12 * k;
-    const top = L.cmdY, rowH = 40 * k;
-    const maxRows = Math.max(3, Math.floor((L.chipsY - top - 90 * k) / rowH));
+    const top = L.cmdY - 8 * k, rowH = 34 * k;
+    const maxRows = Math.max(2, Math.floor((L.chipsY - top - 100 * k) / rowH));
     const vis = Math.min(rows.length, maxRows);
     if (w.sel < w.top) w.top = w.sel;
     if (w.sel >= w.top + vis) w.top = w.sel - vis + 1;

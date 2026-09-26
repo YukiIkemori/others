@@ -13,6 +13,7 @@
 (function (R) {
   'use strict';
   const DB = R.DB;
+  R.Stubs && R.Stubs.claim && R.Stubs.claim('Mon');
   const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
 
   // ---------------------------------------------------------------- 乱数（V2_PLAN §2.1: R.rng から）

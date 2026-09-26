@@ -258,9 +258,9 @@
       else { g.fillStyle = '#141a38'; g.fillRect(0, 0, R.W, R.H); }
     }
     if (L.tall) {
-      const gr = g.createLinearGradient(0, L.stageH - 110, 0, L.stageH);
+      const gr = g.createLinearGradient(0, L.stageH - 70, 0, L.stageH);
       gr.addColorStop(0, 'rgba(12,12,20,0)'); gr.addColorStop(1, 'rgba(12,12,20,1)');
-      g.fillStyle = gr; g.fillRect(0, L.stageH - 110, R.W, 110);
+      g.fillStyle = gr; g.fillRect(0, L.stageH - 70, R.W, 70);
       g.fillStyle = '#0c0c14'; g.fillRect(0, L.stageH - 1, R.W, R.H - L.stageH + 1);
     }
     _.actors.lanternPool(g, { lantern, tall: L.tall }, t);

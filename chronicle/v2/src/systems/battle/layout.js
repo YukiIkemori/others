@@ -29,12 +29,12 @@
     const tall = R.layout === 'tall';
     const k = R.uiScale || 1;
     if (tall) {
-      const stageH = Math.min(Math.round(R.H * 0.55), 660);
+      const stageH = Math.min(Math.round(R.H * 0.52), 640);
       const oy = Math.round((stageH - 600) * 0.6);
       const cardsY = stageH - 20 * k;
       return {
         tall, ox: Math.round((R.W - 540) / 2), oy, stageH, cardsY,
-        cmdY: cardsY + 2 * (64 + 8) * k + 26 * k, chipsY: R.H - (R.safe.b || 0) - 110 * k,
+        cmdY: cardsY + 2 * (64 + 8) * k + 26 * k, chipsY: R.H - (R.safe.b || 0) - 52 * k,
         T: TALL, lantern: [TALL.lantern[0] + (R.W - 540) / 2, TALL.lantern[1] + oy], horizon: TALL.horizon + oy,
       };
     }

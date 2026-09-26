@@ -25,94 +25,94 @@
  ],
  "measure": {
   "lightmap_10": {
-   "lum": 0.189,
-   "p5": 0.055,
-   "p95": 0.428,
+   "lum": 0.181,
+   "p5": 0.057,
+   "p95": 0.411,
    "bright": 0.007,
    "darkHue": 256,
-   "darkSat": 0.533,
-   "corner": 0.356
+   "darkSat": 0.601,
+   "corner": 0.379
   },
   "mood_town_night": {
-   "lum": 0.188,
-   "p5": 0.055,
-   "p95": 0.426,
-   "bright": 0.008,
+   "lum": 0.18,
+   "p5": 0.057,
+   "p95": 0.411,
+   "bright": 0.007,
    "darkHue": 256,
-   "darkSat": 0.533,
-   "corner": 0.356
+   "darkSat": 0.601,
+   "corner": 0.381
   },
   "mood_forest_night": {
-   "lum": 0.206,
+   "lum": 0.197,
    "p5": 0.071,
-   "p95": 0.44,
-   "bright": 0.008,
-   "darkHue": 226,
-   "darkSat": 0.528,
-   "corner": 0.408
+   "p95": 0.421,
+   "bright": 0.007,
+   "darkHue": 230,
+   "darkSat": 0.565,
+   "corner": 0.43
   },
   "mood_cave": {
-   "lum": 0.231,
+   "lum": 0.219,
    "p5": 0.068,
-   "p95": 0.5,
-   "bright": 0.008,
-   "darkHue": 247,
-   "darkSat": 0.506,
-   "corner": 0.336
-  },
-  "mood_night": {
-   "lum": 0.22,
-   "p5": 0.077,
-   "p95": 0.449,
-   "bright": 0.008,
-   "darkHue": 245,
-   "darkSat": 0.517,
-   "corner": 0.439
-  },
-  "mood_interior": {
-   "lum": 0.231,
-   "p5": 0.078,
-   "p95": 0.454,
-   "bright": 0.008,
-   "darkHue": 269,
-   "darkSat": 0.376,
-   "corner": 0.471
-  },
-  "mood_dark": {
-   "lum": 0.146,
-   "p5": 0.043,
-   "p95": 0.397,
+   "p95": 0.481,
    "bright": 0.007,
    "darkHue": 249,
-   "darkSat": 0.571,
-   "corner": 0.361
+   "darkSat": 0.56,
+   "corner": 0.35
+  },
+  "mood_night": {
+   "lum": 0.209,
+   "p5": 0.076,
+   "p95": 0.429,
+   "bright": 0.007,
+   "darkHue": 246,
+   "darkSat": 0.553,
+   "corner": 0.472
+  },
+  "mood_interior": {
+   "lum": 0.22,
+   "p5": 0.077,
+   "p95": 0.435,
+   "bright": 0.007,
+   "darkHue": 265,
+   "darkSat": 0.383,
+   "corner": 0.488
+  },
+  "mood_dark": {
+   "lum": 0.14,
+   "p5": 0.049,
+   "p95": 0.38,
+   "bright": 0.006,
+   "darkHue": 249,
+   "darkSat": 0.642,
+   "corner": 0.422
   },
   "mood_tree": {
-   "lum": 0.224,
+   "lum": 0.214,
    "p5": 0.079,
-   "p95": 0.457,
-   "bright": 0.008,
-   "darkHue": 213,
-   "darkSat": 0.488,
-   "corner": 0.421
+   "p95": 0.437,
+   "bright": 0.007,
+   "darkHue": 220,
+   "darkSat": 0.515,
+   "corner": 0.443
   },
   "mood_tower": {
-   "lum": 0.205,
+   "lum": 0.195,
    "p5": 0.07,
-   "p95": 0.437,
-   "bright": 0.008,
-   "darkHue": 246,
-   "darkSat": 0.496,
-   "corner": 0.399
+   "p95": 0.417,
+   "bright": 0.006,
+   "darkHue": 248,
+   "darkSat": 0.544,
+   "corner": 0.426
   },
   "mood_coast": {
-   "lum": 0.223,
-   "p5": 0.078,
-   "p95": 0.454,
-   "bright": 0.008,
-   "darkHue": 234,
-   "darkSat": 0.542,
-   "corner": 0.443
+   "lum": 0.212,
+   "p5": 0.077,
+   "p95": 0.434,
+   "bright": 0.007,
+   "darkHue": 236,
+   "darkSat": 0.572,
+   "corner": 0.47
   },
   "post_off": {
    "lum": 0.207,
@@ -121,25 +121,25 @@
    "bright": 0.01,
    "darkHue": 241,
    "darkSat": 0.597,
-   "corner": 0.668
+   "corner": 0.667
   },
   "post_on": {
-   "lum": 0.189,
-   "p5": 0.055,
-   "p95": 0.427,
-   "bright": 0.008,
+   "lum": 0.18,
+   "p5": 0.057,
+   "p95": 0.411,
+   "bright": 0.007,
    "darkHue": 256,
-   "darkSat": 0.533,
-   "corner": 0.351
+   "darkSat": 0.601,
+   "corner": 0.383
   },
   "fx_low": {
-   "lum": 0.178,
-   "p5": 0.049,
-   "p95": 0.393,
-   "bright": 0.006,
-   "darkHue": 257,
-   "darkSat": 0.551,
-   "corner": 0.351
+   "lum": 0.17,
+   "p5": 0.053,
+   "p95": 0.378,
+   "bright": 0.005,
+   "darkHue": 256,
+   "darkSat": 0.617,
+   "corner": 0.377
   },
   "fx_off": {
    "lum": 0.199,
@@ -151,49 +151,49 @@
    "corner": 0.818
   },
   "bright_085": {
-   "lum": 0.162,
+   "lum": 0.153,
    "p5": 0.049,
-   "p95": 0.363,
+   "p95": 0.35,
    "bright": 0.003,
-   "darkHue": 257,
-   "darkSat": 0.525,
-   "corner": 0.364
+   "darkHue": 255,
+   "darkSat": 0.597,
+   "corner": 0.379
   },
   "bright_125": {
-   "lum": 0.236,
-   "p5": 0.07,
-   "p95": 0.535,
-   "bright": 0.014,
+   "lum": 0.225,
+   "p5": 0.071,
+   "p95": 0.514,
+   "bright": 0.012,
    "darkHue": 256,
-   "darkSat": 0.532,
-   "corner": 0.355
+   "darkSat": 0.6,
+   "corner": 0.384
   },
   "tier_0": {
-   "lum": 0.188,
-   "p5": 0.055,
-   "p95": 0.426,
-   "bright": 0.008,
+   "lum": 0.18,
+   "p5": 0.057,
+   "p95": 0.411,
+   "bright": 0.007,
    "darkHue": 256,
-   "darkSat": 0.533,
-   "corner": 0.357
+   "darkSat": 0.601,
+   "corner": 0.379
   },
   "tier_4": {
-   "lum": 0.22,
-   "p5": 0.069,
-   "p95": 0.453,
-   "bright": 0.008,
-   "darkHue": 252,
-   "darkSat": 0.529,
-   "corner": 0.42
+   "lum": 0.21,
+   "p5": 0.068,
+   "p95": 0.436,
+   "bright": 0.007,
+   "darkHue": 253,
+   "darkSat": 0.573,
+   "corner": 0.436
   },
   "tier_8": {
-   "lum": 0.263,
-   "p5": 0.089,
-   "p95": 0.498,
-   "bright": 0.01,
-   "darkHue": 250,
-   "darkSat": 0.525,
-   "corner": 0.495
+   "lum": 0.25,
+   "p5": 0.087,
+   "p95": 0.48,
+   "bright": 0.008,
+   "darkHue": 251,
+   "darkSat": 0.548,
+   "corner": 0.51
   }
  }
 }

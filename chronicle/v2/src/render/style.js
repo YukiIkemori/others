@@ -34,7 +34,7 @@
       poolSquash: 0.62,   // 地面の光だまりの縦の潰れ（0.55〜0.7）
       poolWhite: 0.35,    // 光だまりの色を白へ寄せる割合（灯りの橙のままだと地面が茶色くなる）
       lanternColor: '#ffd49a',   // ランタンの輪の中の光（橙 30°）
-      coreR: 6, haloMul: 3,          // 芯の半径（art px）と、にじみ = 芯 × 3
+      coreR: 7, haloMul: 3.2,        // 芯の半径（art px、5〜9）と、にじみ = 芯 × 約 3
       ringR: 88, ringDarkTiles: 4,   // ランタンの光の輪（art px）。暗がりの階は 4 マス
       lampR: 110,         // 街灯の光だまりの半径
       fireMul: 1.3,       // 篝火は街灯の 1.3 倍

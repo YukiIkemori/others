@@ -279,7 +279,7 @@
     const x2 = x + Math.min(360, R.W * 0.4) * k;
     K.hline(g, x + 30 * k, x2, y + 13 * k + 14 * k, 0.55);
     K.text(g, K.fit(h.name, x2 - x - 40 * k, { size: 17 * k, weight: 700 }), x + 38 * k, y + 2 * k, { size: 17 * k, weight: 700, raw: true, shadow: true, color: h.color || COL.text });
-    if (h.sub) K.text(g, K.fit(h.sub, R.W - x - 330 * k, { size: 12 * k }), x + 38 * k, y + 32 * k, { size: 12 * k, color: COL.text2, raw: true, shadow: true });
+    if (h.sub) K.text(g, K.fit(h.sub, st.L.tall ? R.W - x - 50 * k : R.W - x - 330 * k, { size: 12 * k }), x + 38 * k, y + 32 * k, { size: 12 * k, color: COL.text2, raw: true, shadow: true });
     g.restore();
   };
 

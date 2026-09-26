@@ -31,7 +31,7 @@
     // 街道・ワールド・戦闘の夜（月の青紫）
     night: m({ ambient: 'rgb(116,104,196)', grade: { sh: [10, -4, 20], hi: [16, 6, -10], lift: 4, sat: 1.02, con: 1.06 }, vignette: 0.55, bloom: 0.55 }),
     // 夜の町（灯りの島。見本 town.png の rgb(92,90,160)）
-    town_night: m({ ambient: 'rgb(106,88,170)', grade: { sh: [16, -4, 18], hi: [16, 6, -10], lift: 1, sat: 1.05, con: 1.08 }, vignette: 0.66, bloom: 0.6, thr: 0.62 }),
+    town_night: m({ ambient: 'rgb(106,88,170)', grade: { sh: [14, -4, 16], hi: [16, 6, -10], lift: 0, sat: 1.05, con: 1.08 }, vignette: 0.66, bloom: 0.6, thr: 0.62 }),
     // 家・宿・酒場の中（暖炉とランプの暖色、窓の外は青）
     interior: m({ ambient: 'rgb(150,116,122)', lightDir: [0.2, -1], shadow: 'rgba(34,14,24,0.4)', grade: { sh: [12, 0, 14], hi: [18, 8, -8], lift: 4, sat: 1.0, con: 1.05 }, vignette: 0.5, bloom: 0.45, thr: 0.64, rz: RZ_WARM, target: Object.assign({}, NIGHT_TARGET, { lum: [0.16, 0.28], darkHue: [260, 340] }) }),
     // 夜の森（蛍と苔の緑、月は木々で細る）
