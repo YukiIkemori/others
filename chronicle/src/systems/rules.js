@@ -163,7 +163,10 @@
       rival: { lvOff: 2, hpMul: 10, atk: 1.3, mag: 1.3, def: 1.1, agi: 1.1, acts: 1, exp: 10, gold: 15 },
       fmid: { lvOff: 2, hpMul: 20, atk: 1.5, mag: 1.5, def: 1.2, agi: 1.2, acts: 2, exp: 20, gold: 15 },
       last1: { lvOff: 4, hpMul: 30, atk: 1.6, mag: 1.6, def: 1.25, agi: 1.3, acts: 2, exp: 40, gold: 15 },
-      last2: { lvOff: 4, hpMul: 36, atk: 1.6, mag: 1.6, def: 1.25, agi: 1.3, acts: 3, exp: 40, gold: 15 },
+      // A2.2 (2026-09-26): the ×36 / ×1.6 / ×1.25 / ×1.3 row needed b_nemrea2's s at the 0.5 floor on every stat and still
+      // lost (C2 48–56 % with the A12.0 hpBoss); these are the values the Lv58 standard party can beat (C2 ≈ 84 %,
+      // 17.8 rounds, sim_balance seed 20260925 --n 200), so b_nemrea2 needs no s at all (§9.11.2's ±20 %)
+      last2: { lvOff: 4, hpMul: 17, atk: 0.68, mag: 0.68, def: 0.65, agi: 0.65, acts: 3, exp: 40, gold: 15 },
       echo: { lvOff: 4, hpMul: 30, atk: 1.7, mag: 1.7, def: 1.25, agi: 1.3, acts: 2, exp: 30, gold: 15 },
       // A12.1 (b): atk/mag 1.8 → 1.25 so that b_ouroboros' own s stays inside §4.14.2's 0.5–2.0 (it sat at the 0.5 floor)
       super: { lvOff: 8, hpMul: 45, atk: 1.25, mag: 1.25, def: 1.3, agi: 1.4, acts: 3, exp: 40, gold: 15 },

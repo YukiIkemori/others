@@ -80,7 +80,7 @@ const troopTier = (tr, T) => (DB.troops[tr].scale === 'tier' ? T : DB.troops[tr]
 
 // ------------------------------------------------------------------ one battle
 const ACT = (id) => DB.actions[id];
-function newEv() { return { encore: 0, feed: 0, rewind: 0, summon: {}, phase: {}, used: {}, glimmers: 0, ko: new Set() }; }
+function newEv() { return { encore: 0, feed: 0, rewind: 0, summon: {}, phase: {}, used: {}, glimmers: 0, ko: new Set(), dmg: {} }; }
 const ACT_ID = new Map(Object.entries(DB.actions).filter(([k]) => /^eb_/.test(k)).map(([k, a]) => [a, k]));
 function realParty(o, tier) {
   const pmo = { level: o.level, gear: o.gear === 'strong' ? 'real' : (o.gear || 'shop'), kind: PMKIND[o.kind] };
@@ -110,6 +110,8 @@ function fightReal(tr, o) {
       else if (e.ab === ACT('eb_rewind')) ev.rewind++;
     } else if (e.t === 'glimmer') ev.glimmers++;
     else if (e.t === 'die' && e.u && e.u.side === 'party') ev.ko.add(e.u.idx);
+    // damage dealt to the monsters by kind (phys / magic / breath / tier / …): which defence the tier trend runs on
+    if (e.t === 'dmg' && e.u && e.u.side === 'mon' && !e.mp && e.n > 0) ev.dmg[e.kind || '?'] = (ev.dmg[e.kind || '?'] || 0) + e.n;
   };
   B.drain(eng.begin(), sink);
   const ai = Object.assign({}, R.BattleAI.AUTO_OPTS || { thrift: true, items: 'auto' }, { items: true });
@@ -132,7 +134,7 @@ const fight = (tr, o) => (USE_REAL ? fightReal(tr, o) : fightModel(tr, o));
 
 function runCase(tr, tier, n, o) {
   o = o || {};
-  const acc = { win: 0, rounds: 0, roundsWin: 0, ko: 0, glim: 0, enc: 0, feed: 0, rewind: 0, summon: {}, phaseB: {}, used: {}, any: {} };
+  const acc = { win: 0, rounds: 0, roundsWin: 0, ko: 0, glim: 0, enc: 0, feed: 0, rewind: 0, summon: {}, phaseB: {}, used: {}, any: {}, dmg: {} };
   for (let i = 0; i < n; i++) {
     const r = fight(tr, Object.assign({ tier, members: STANDARD, level: levelFor(tr, tier), known: knownFor(tr, tier) }, o));
     acc.win += r.win ? 1 : 0; acc.rounds += r.rounds; if (r.win) acc.roundsWin += r.rounds; acc.ko += r.ko;
@@ -141,10 +143,12 @@ function runCase(tr, tier, n, o) {
     for (const k in r.ev.phase) acc.phaseB[k] = (acc.phaseB[k] || 0) + 1;
     for (const k in r.ev.used || {}) { acc.used[k] = (acc.used[k] || 0) + r.ev.used[k]; acc.any[k] = (acc.any[k] || 0) + 1; }
     for (const k in r.ev.summon) acc.any['summon:' + k] = (acc.any['summon:' + k] || 0) + 1;
+    for (const k in r.ev.dmg || {}) acc.dmg[k] = (acc.dmg[k] || 0) + r.ev.dmg[k];
   }
   const per = (m) => Object.fromEntries(Object.entries(m).map(([k, v]) => [k, v / n]));
   return { tr, tier, n, win: acc.win / n, rounds: acc.rounds / n, roundsWin: acc.win ? acc.roundsWin / acc.win : 0, ko: acc.ko / n, glim: acc.glim / n,
-    encore: acc.enc / n, feed: acc.feed / n, rewind: acc.rewind / n, summon: per(acc.summon), phase: per(acc.phaseB), used: per(acc.used), any: per(acc.any) };
+    encore: acc.enc / n, feed: acc.feed / n, rewind: acc.rewind / n, summon: per(acc.summon), phase: per(acc.phaseB), used: per(acc.used), any: per(acc.any),
+    dmgShare: (() => { const t = Object.values(acc.dmg).reduce((a, b) => a + b, 0) || 1; return Object.fromEntries(Object.entries(acc.dmg).map(([k, v]) => [k, Math.round((v / t) * 100) / 100])); })() };
 }
 
 // ------------------------------------------------------------------ `s` changes at run time (tuner)

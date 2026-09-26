@@ -69,8 +69,7 @@
     b_shade_prayer: { hp: 0.9, atk: 0.5, mag: 0.5 },
     b_shade_star: { hp: 0.9, atk: 0.5, mag: 0.5 },
     b_lazaro: { hp: 0.9 },
-    b_nemrea1: { hp: 0.5 },
-    b_nemrea2: { hp: 0.5, atk: 0.5, mag: 0.5, def: 0.5, mdef: 0.5, agi: 0.5 },
+    b_nemrea1: { hp: 0.55 },
     b_valzard_echo: { hp: 0.7, atk: 0.7, mag: 0.7 },
     b_ouroboros: { hp: 0.5, atk: 0.5, mag: 0.5 },
   };
