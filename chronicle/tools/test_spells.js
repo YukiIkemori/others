@@ -51,7 +51,8 @@ for (const p of PAIRS) {
 }
 for (const t of TRIPLES) ok(!!DB.actions['s_' + t], `3属性 ${t}`);
 
-const GLIM = { single: { 1: [1, 0], 2: [2, 2], 3: [3, 4], 4: [5, 6], 5: [7, 8] }, comboA: [4, 5], comboB: [6, 7], triple: [8, 8] };
+// glim.prof in the ranks 1–100 of SYSTEMS_REWORK §1.4 (A17)
+const GLIM = { single: { 1: [1, 1], 2: [2, 4], 3: [3, 10], 4: [5, 19], 5: [7, 32] }, comboA: [4, 14], comboB: [6, 25], triple: [8, 34] };
 const MP = { 1: [2, 3], 2: [3, 5], 3: [5, 7], 4: [7, 9], 5: [11, 12], comboA: [7, 9], comboB: [10, 13], triple: [15, 20] };
 const BIG4 = ['s_fire_water_wind', 's_fire_wind_earth', 's_fire_light_dark', 's_earth_light_dark'];
 const orders = new Set();
@@ -137,7 +138,7 @@ for (const id of spells) {
 }
 for (const t in TARGETS) ok((tcount[t] || 0) === TARGETS[t], `対象 ${t} の数 ${TARGETS[t]}（${tcount[t] || 0}）`);
 const fieldIds = spells.filter((id) => S(id).field).sort();
-ok(fieldIds.length === 15, `フィールドで使える術 15（${fieldIds.length}）`);
+ok(fieldIds.length === 14, `フィールドで使える術 14（${fieldIds.length}; 勇気の灯火は戦闘だけ、SYSTEMS_REWORK §2.5）`);
 ok(S('s_fire_dark_a').fieldEffects[0].pct === 100 && !S('s_fire_dark_a').fieldEffects[0].weakOnly, '誘い火: 誘い寄せ（+100・100歩）');
 ok(S('s_wind_dark_a').fieldEffects[0].pct === -100 && S('s_wind_dark_a').fieldEffects[0].weakOnly === true, '影隠れ: 弱い魔物だけ（−100・100歩）');
 ok(S('s_wind_1').quick === true && S('s_fire_wind_a').quick === true && spells.filter((id) => S(id).quick).length === 2, '先制は 風切り・野を焼く風 の 2 つ');
@@ -190,13 +191,17 @@ ok(aTech && G.classOf(DB.actions[aTech]) === 'tech', 'classOf 技');
 ok(G.classOf(null) === null, 'classOf(null)');
 
 const K = (R.Rules.K && R.Rules.K.GLIM) || G.SPEC.GLIM;
-const PTS = (rank) => R.Glimmer.SPEC.PROF_PTS[rank];
+const PTS = (rank) => ((R.Rules.K && R.Rules.K.PROF_PTS) || R.Glimmer.SPEC.PROF_PTS)[rank];
+// A17: the old ranks 1–10 of these examples in the new ranks 1–100 (SYSTEMS_REWORK §1.4): elements E(old) = the glim.prof
+// line of that old rank (4 → just below combo A), weapons T(old) = TECH_PROF[old + 1] (the lv an old rank opened)
+const E = (r) => ({ 1: 1, 4: 13, 5: 14, 6: 19, 7: 25, 8: 34 })[r];
+const T = (r) => ({ 1: 3, 3: 14, 5: 26, 8: 50, 9: 60 })[r];
 const base = { rankB: 9, ef: 1, tier: 8, row: 'front', silenced: false };
 const mage = (o) => H.makeChar(Object.assign({ id: 'teo', level: 50 }, o || {}));
 
 section('術の候補（§7.1.4・§7.12.3 の例）');
 {
-  const c = mage({ eprof: { fire: PTS(5), wind: PTS(5), water: 0, earth: 0, light: 0, dark: 0 }, spells: ['s_fire_1'] });
+  const c = mage({ eprof: { fire: PTS(E(5)), wind: PTS(E(5)), water: 0, earth: 0, light: 0, dark: 0 }, spells: ['s_fire_1'] });
   const ids = G.candidates(c, Object.assign({}, base, { kind: 'spell', elements: ['fire'], used: 's_fire_1', rankB: 6 })).map((x) => x.id);
   ok(ids.includes('s_fire_wind_a'), '火5・風5 で火の術 → s_fire_wind_a が候補');
   ok(!ids.includes('s_fire_wind_b'), '… s_fire_wind_b は候補でない（熟練 7 が要る）');
@@ -207,11 +212,11 @@ section('術の候補（§7.1.4・§7.12.3 の例）');
   ok(idsW.includes('s_fire_wind_a'), '… 風の術を使っても s_fire_wind_a は候補（どちらの属性でも）');
   const idsLow = G.candidates(c, Object.assign({}, base, { kind: 'spell', elements: ['fire'], used: 's_fire_1', rankB: 3 })).map((x) => x.id);
   ok(!idsLow.includes('s_fire_wind_a') && idsLow.includes('s_fire_3'), 'rankB 3 では合成A（格4）は候補でなく、3段（格3）は候補');
-  const c2 = mage({ eprof: { fire: PTS(5), wind: PTS(4) } });
+  const c2 = mage({ eprof: { fire: PTS(E(5)), wind: PTS(E(4)) } });
   ok(!G.candidates(c2, Object.assign({}, base, { kind: 'spell', elements: ['fire'], rankB: 6 })).some((x) => x.id === 's_fire_wind_a'), '風の熟練 4 なら s_fire_wind_a は候補でない（すべての属性）');
 }
 {
-  const all8 = { fire: PTS(8), water: PTS(8), wind: PTS(8), earth: PTS(8), light: PTS(8), dark: PTS(8) };
+  const all8 = { fire: PTS(E(8)), water: PTS(E(8)), wind: PTS(E(8)), earth: PTS(E(8)), light: PTS(E(8)), dark: PTS(E(8)) };
   const c = mage({ eprof: all8, spells: ['s_fire_wind_a'] });
   const ctx = Object.assign({}, base, { kind: 'spell', elements: ['fire'], rankB: 8 });
   ok(!G.candidates(c, ctx).some((x) => x.id === 's_fire_wind_earth'), '3属性: 組の合成術が 1 組だけなら候補でない');
@@ -222,21 +227,21 @@ section('術の候補（§7.1.4・§7.12.3 の例）');
   c.spells.push('s_fire_earth_a', 's_fire_earth_b');
   ok(G.pairsKnown(c, ['earth', 'fire', 'wind']) === 3, 'pairsKnown は同じ組の A・B を 1 つに数え、並びに依らない');
   ok(!G.candidates(c, Object.assign({}, ctx, { rankB: 7 })).some((x) => x.id === 's_fire_wind_earth'), '3属性は rankB 7 では候補でない');
-  const c3 = mage({ eprof: Object.assign({}, all8, { earth: PTS(7) }), spells: ['s_fire_wind_a', 's_wind_earth_b'] });
+  const c3 = mage({ eprof: Object.assign({}, all8, { earth: PTS(E(7)) }), spells: ['s_fire_wind_a', 's_wind_earth_b'] });
   ok(!G.candidates(c3, ctx).some((x) => x.id === 's_fire_wind_earth'), '3属性: 土の熟練 7 なら候補でない');
   ok(G.candidates(c, Object.assign({}, ctx, { silenced: true })).length === 0, '沈黙なら術の候補は無い（§6.4.4-2）');
   const cNo = mage({ eprof: all8, mods: { noSpell: true } });
   ok(H.info.rules === 'real' || G.candidates(cNo, ctx).length === 0, 'noSpell の人は術を閃かない（§8.3.7）');
 }
 {
-  const c = mage({ eprof: { fire: PTS(8) } });
+  const c = mage({ eprof: { fire: PTS(E(8)) } });
   const cs = G.candidates(c, Object.assign({}, base, { kind: 'spell', elements: ['fire'], rankB: 8 }));
   const lvMin = Math.min(...cs.map((x) => S(x.id).glim.lv));
   ok(cs.every((x) => x.w === (S(x.id).glim.lv === lvMin ? 2 : 1)), '術の重み: 格の一番小さいものが 2、ほかは 1');
   ok(cs.every((x) => x.p > 0 && x.p <= K.cap), '候補の p は 0〜cap');
 }
 {
-  const c = mage({ eprof: { light: PTS(6) }, spells: ['s_light_1'] });
+  const c = mage({ eprof: { light: PTS(E(6)) }, spells: ['s_light_1'] });
   const ids = G.candidates(c, Object.assign({}, base, { kind: 'spell', elements: ['light'], rankB: 5 })).map((x) => x.id);
   ok(ids.includes('s_light_4'), '蘇生の術 s_light_4 は倒れた味方がいなくても候補になる（対象が無いときの扱いは battle。§7.0 の 0.12）');
 }
@@ -244,11 +249,11 @@ section('術の候補（§7.1.4・§7.12.3 の例）');
 section('技の候補（§4.9.3・§6.4.4）');
 {
   const sw = Object.keys(DB.actions).filter((k) => DB.actions[k].kind === 'tech' && DB.actions[k].wtype === 'sword');
-  ok(sw.length === 11, `剣の技 11（${sw.length}）`);
-  const w = H.makeChar({ id: 'selma', level: 30, wprof: { sword: PTS(3) } });
+  ok(sw.length === 17, `剣の技 17（${sw.length}; SYSTEMS_REWORK §3.4）`);
+  const w = H.makeChar({ id: 'selma', level: 30, wprof: { sword: PTS(T(3)) } });
   const ctx = Object.assign({}, base, { kind: 'tech', wtype: 'sword', used: 'attack', rankB: 5 });
   const cs = G.candidates(w, ctx);
-  ok(cs.length > 0 && cs.every((x) => S(x.id).glim.lv <= 4), '熟練の段階 3 → 格 4 まで（lv − 1 ≤ 段階）');
+  ok(cs.length > 0 && cs.every((x) => S(x.id).glim.lv <= 4), '熟練の段階 14 → 格 4 まで（TECH_PROF、A17）');
   ok(cs.every((x) => S(x.id).wtype === 'sword'), '同じ系統だけ');
   ok(G.candidates(w, Object.assign({}, ctx, { rankB: 2 })).every((x) => S(x.id).glim.lv <= 2), 'rankB 2 → 格 2 まで');
   const lvMin = Math.min(...cs.map((x) => S(x.id).glim.lv));
@@ -259,13 +264,13 @@ section('技の候補（§4.9.3・§6.4.4）');
   }
   const midCs = G.candidates(w, Object.assign({}, ctx, { row: 'middle' }));
   ok(midCs.every((x) => S(x.id).reach === true), '後列では reach:false の技を外す（§6.4.4-1）');
-  const st = H.makeChar({ id: 'teo', level: 30, wprof: { staff: PTS(9) } });
+  const st = H.makeChar({ id: 'teo', level: 30, wprof: { staff: PTS(T(9)) } });
   const stc = Object.assign({}, base, { kind: 'tech', wtype: 'staff', used: 'attack', rankB: 10 });
   ok(G.candidates(st, stc).length > 0 && G.candidates(st, Object.assign({}, stc, { silenced: true })).every((x) => !S(x.id).magic), '沈黙なら magic:true の技（杖）を外す');
   ok(G.candidates(w, Object.assign({}, ctx, { sealTech: true })).length === 0, 'sealTech の枠は技を閃かない');
   const lv10 = sw.find((id) => S(id).glim.lv === 10);
-  const w9 = H.makeChar({ id: 'selma', wprof: { sword: PTS(9) } });
-  ok(G.candidates(w9, Object.assign({}, ctx, { rankB: 10 })).some((x) => x.id === lv10), '極意（格 10）は rankB 10・熟練 9 で候補');
+  const w9 = H.makeChar({ id: 'selma', wprof: { sword: PTS(T(9)) } });
+  ok(G.candidates(w9, Object.assign({}, ctx, { rankB: 10 })).some((x) => x.id === lv10), '極意（格 10）は rankB 10・熟練 60 で候補');
   ok(!G.candidates(w9, Object.assign({}, ctx, { rankB: 9 })).some((x) => x.id === lv10), '… rankB 9 では候補でない');
   {
     // §4.9.3: 技の BASE 0.012、lv 10 は secret 0.006（MARGIN は rankB − 格 なので、同じ余裕で比べる）
@@ -273,11 +278,11 @@ section('技の候補（§4.9.3・§6.4.4）');
     const p10 = G.chance(w9, lv10, Object.assign({}, ctx, { rankB: 10 })), p9 = G.chance(w9, lv9, Object.assign({}, ctx, { rankB: 9 }));
     near(p10 / p9, 0.5, 1e-9, '極意の BASE は奥義の半分（secret 0.006 ÷ tech 0.012）');
   }
-  const w8 = H.makeChar({ id: 'selma', wprof: { sword: PTS(8) } });
-  ok(!G.candidates(w8, Object.assign({}, ctx, { rankB: 10 })).some((x) => x.id === lv10), '… 熟練 8 では候補でない');
+  const w8 = H.makeChar({ id: 'selma', wprof: { sword: PTS(T(8)) } });
+  ok(!G.candidates(w8, Object.assign({}, ctx, { rankB: 10 })).some((x) => x.id === lv10), '… 熟練 50 では候補でない');
   ok(G.candidates(w, Object.assign({}, ctx, { wtype: undefined })).length === 0, 'wtype が無ければ候補なし');
   const usedTech = sw.find((id) => S(id).glim.lv === 2);
-  const withFrom = G.candidates(Object.assign(H.makeChar({ id: 'selma', wprof: { sword: PTS(5) } }), {}), Object.assign({}, ctx, { rankB: 6, used: usedTech }));
+  const withFrom = G.candidates(Object.assign(H.makeChar({ id: 'selma', wprof: { sword: PTS(T(5)) } }), {}), Object.assign({}, ctx, { rankB: 6, used: usedTech }));
   const child = withFrom.find((x) => S(x.id).glim.from.includes(usedTech));
   ok(!child || child.w % K.wFrom === 0, 'used が from にある技は重み ×3');
 }
@@ -362,7 +367,7 @@ section('魔石の入口（§4.9.4）');
   ok(cs.length === 1 && cs[0].id === 's_light_1', '術 0 の人が光の魔石 → 候補は ひだまり');
   const pStone = G.chance(c, 's_light_1', ctx), pNo = G.chance(c, 's_light_1', Object.assign({}, ctx, { stone: false }));
   near(Math.min(K.cap, pNo * 10), pStone, 1e-12, '×10（上限はそのまま）');
-  const c2 = H.makeChar({ id: 'selma', spells: ['s_earth_light_a'], eprof: { light: PTS(4) } });
+  const c2 = H.makeChar({ id: 'selma', spells: ['s_earth_light_a'], eprof: { light: PTS(E(4)) } });
   const p2 = G.chance(c2, 's_light_2', Object.assign({}, ctx, { rankB: 3 })), p2n = G.chance(c2, 's_light_2', Object.assign({}, ctx, { rankB: 3, stone: false }));
   near(p2, p2n, 1e-12, '光を含む術を覚えていれば ×10 しない');
 }
@@ -370,7 +375,7 @@ section('魔石の入口（§4.9.4）');
 section('roll・glimmerForce（§3.3.7）');
 {
   const seq = (vals) => { let i = 0; return () => vals[i++ % vals.length]; };
-  const w = H.makeChar({ id: 'selma', wprof: { sword: PTS(1) } });
+  const w = H.makeChar({ id: 'selma', wprof: { sword: PTS(T(1)) } });
   const ctx = { kind: 'tech', wtype: 'sword', used: 'attack', rankB: 2, ef: 1, tier: 0, row: 'front', silenced: false };
   ok(G.roll(w, Object.assign({}, ctx, { rng: seq([0, 0.999]) })) === null, '当たらなければ null');
   const r1 = G.roll(w, Object.assign({}, ctx, { rng: seq([0, 0]) }));
@@ -384,7 +389,11 @@ section('roll・glimmerForce（§3.3.7）');
   ok(rd && rd.id === staffLow, `force で防御: 武器1の系統の一番低い覚えていない技（${rd && rd.id}）`);
   const hn = H.makeChar({ heroType: 'warrior', favor: { kind: 'weapon', id: 'sword' } });
   const rn = G.roll(hn, { kind: 'item', rankB: 1, ef: 1, tier: 0, force: true });
-  ok(rn && rn.kind === 'tech', `force で道具（武器なし → 体術か武器1）: ${rn && rn.id}`);
+  const hasW = !!(hn.equip && hn.equip.weapon1);
+  ok(hasW ? rn && rn.kind === 'tech' : rn === null, `force で道具（武器1の技。素手は技が無いので閃かない、A19）: ${rn && rn.id}`);
+  const hw = H.makeChar({ heroType: 'warrior', favor: { kind: 'weapon', id: 'sword' }, equip: { weapon1: 'w_sword_iron' } });
+  const rw = G.roll(hw, { kind: 'item', rankB: 1, ef: 1, tier: 0, force: true });
+  ok(rw && rw.kind === 'tech' && S(rw.id).wtype === 'sword', `force で道具（剣を持つ → 剣の技）: ${rw && rw.id}`);
   const rs = G.roll(hero, { kind: 'spell', elements: ['fire'], rankB: 1, ef: 1, tier: 0, force: true, fallbackWtype: 'staff' });
   ok(rs && rs.id === staffLow, '術の候補が無い（1段を覚えている・rank 1）ときも force は武器1の技');
   const hs = H.makeChar({ heroType: 'mage', favor: { kind: 'element', id: 'fire' }, spells: [] });
@@ -466,8 +475,8 @@ if (R.Battle && typeof R.Battle.Engine === 'function' && /Glimmer/.test(String(R
   // 1. 蘇生の術を閃いたが倒れた味方がいない → 覚えて、元の行動（ひだまり）を消費ありで行う（§7.0 の 0.12）
   {
     const c = H.makeChar({ heroType: 'mage', favor: { kind: 'element', id: 'light' }, spells: ['s_light_1', 's_light_2', 's_light_3'], level: 30 });
-    c.eprof = { fire: 0, water: 0, wind: 0, earth: 0, light: PTS(6), dark: 0 };
-    const s = R.Rules.stats(c); c.hp = Math.round(s.hp * 0.5); c.mp = s.mp; c.wp = s.wp;
+    c.eprof = { fire: 0, water: 0, wind: 0, earth: 0, light: PTS(E(6)), dark: 0 };
+    const s = R.Rules.stats(c); c.hp = Math.round(s.hp * 0.5); c.mp = s.mp;
     const r = run(c, ['jelly_2'], (u) => [{ type: 'spell', id: 's_light_1', target: u }]);
     ok(r.glim.length === 1 && r.glim[0].id === 's_light_4', `エンジン: 候補が蘇生だけ → s_light_4 を閃く（${r.glim.map((g) => g.id)}）`);
     ok(c.spells.includes('s_light_4'), 'エンジン: 閃いた術を覚える');
@@ -478,8 +487,8 @@ if (R.Battle && typeof R.Battle.Engine === 'function' && /Glimmer/.test(String(R
   // 2. 合成術を閃く → 行動を置き換え、MP を使わない（§4.9.2-5）
   {
     const c = H.makeChar({ heroType: 'mage', favor: { kind: 'element', id: 'water' }, spells: ['s_water_1', 's_water_2', 's_water_3', 's_wind_1', 's_wind_2', 's_wind_3'], level: 30 });
-    c.eprof = { fire: 0, water: PTS(5), wind: PTS(5), earth: 0, light: 0, dark: 0 };
-    const s = R.Rules.stats(c); c.hp = s.hp; c.mp = s.mp; c.wp = s.wp;
+    c.eprof = { fire: 0, water: PTS(E(5)), wind: PTS(E(5)), earth: 0, light: 0, dark: 0 };
+    const s = R.Rules.stats(c); c.hp = s.hp; c.mp = s.mp;
     const r = run(c, ['jelly_2', 'jelly_2'], (u, eng) => [{ type: 'spell', id: 's_water_1', target: eng.mons[0] }]);
     ok(r.glim.length === 1 && r.glim[0].id === 's_water_wind_a' && r.glim[0].kind === 'spell', `エンジン: 水の術で 吹雪 を閃く（${r.glim.map((g) => g.id)}）`);
     ok(r.msgs.some((m) => m.includes('吹雪を唱えた')), 'エンジン: 閃いた術で行動を置き換える');
@@ -488,7 +497,7 @@ if (R.Battle && typeof R.Battle.Engine === 'function' && /Glimmer/.test(String(R
   // 3. glimmerForce で防御 → 武器1の系統の一番低い覚えていない技（§3.3.7）
   {
     const c = H.makeChar({ heroType: 'warrior', favor: { kind: 'weapon', id: 'sword' }, techs: [], level: 10, equip: { weapon1: 'w_sword_iron' } });
-    const s = R.Rules.stats(c); c.hp = s.hp; c.mp = s.mp; c.wp = s.wp;
+    const s = R.Rules.stats(c); c.hp = s.hp; c.mp = s.mp;
     const r = run(c, ['rat_1'], () => [{ type: 'defend' }], { tier: 0, lv: 2, glimTier: 0 });
     ok(r.glim.length === 1 && DB.actions[r.glim[0].id].wtype === 'sword' && DB.actions[r.glim[0].id].glim.lv === 1, `エンジン: 防御でも glimmerForce で剣の格 1 を閃く（${r.glim.map((g) => g.id)}）`);
   }

@@ -9,6 +9,8 @@ const fs = require('fs');
 const path = require('path');
 const R = require('./lib/load')({ quiet: true });
 const DB = R.DB;
+/** SYSTEMS_REWORK (A18 §2.5, A19 §3.2): DESIGN's drop ids through the save remap (i_seed_wp → i_seed_mp, w_katana_* → w_sword_*) */
+const a19 = (dr) => { const o = JSON.parse(JSON.stringify(dr || {})); const M = (DB.remap && DB.remap.items) || {}; for (const k in o) if (o[k] && o[k].item && M[o[k].item]) o[k].item = M[o[k].item]; return o; };
 const DESIGN = fs.readFileSync(path.join(__dirname, '..', 'DESIGN.md'), 'utf8');
 const lines = DESIGN.split('\n');
 
@@ -119,7 +121,7 @@ for (const c of bossRows) {
   same(id + '.actions', d.actions, acts);
   const flatP = (ps) => ps && ps.map((p) => Object.assign({}, p, { msg: p.msg.replace(/\n|　/g, '') }));
   same(id + '.phases', flatP(d.phases), flatP(parsePhases(c[9])));
-  same(id + '.drops', d.drops || {}, parseDrops(c[10]));
+  same(id + '.drops', d.drops || {}, a19(parseDrops(c[10])));
   const share = /HP の取り分 ([\d.]+)/.exec(c[2]);
   if (share) same(id + '.hpShare', d.hpShare, +share[1]);
   if (/行動1回/.test(c[2])) same(id + '.actsPerTurn', d.actsPerTurn, 1);
@@ -219,7 +221,7 @@ for (const c of rareRows) {
   same(id + '.s', d.s, s);
   same(id + '.actsPerTurn', d.actsPerTurn || 1, acts2 === '行動2回' ? 2 : 1);
   same(id + '.actions', d.actions, parseActions(c[8]));
-  same(id + '.drops', d.drops, parseDrops(c[9]));
+  same(id + '.drops', d.drops, a19(parseDrops(c[9])));
   same(id + '.desc', d.desc, c[10].replace('<br>', '\n'));
   same(id + '.fleeRate', d.fleeRate, 0.25);
 }
@@ -258,7 +260,7 @@ console.log('§9.12.7 / §9.12.8 drops');
 for (const c of sectionLines('#### 9.12.7').filter((l) => /^\| `rm_/.test(l)).map(cells)) {
   const id = tick(c[0]), d = DB.monsters[id];
   const n = /`(\w+)` 1\/(\d+)/.exec(c[3]), r = /`(\w+)` .* 1\/(\d+)/.exec(c[4]), s = /`(\w+)`.* 1\/(\d+)$/.exec(c[5]);
-  same(id + ' drops (§9.12.7)', d.drops, { normal: { item: n[1], rate: +n[2] }, rare: { item: r[1], rate: +r[2] }, super: { item: s[1], rate: +s[2] } });
+  same(id + ' drops (§9.12.7)', d.drops, a19({ normal: { item: n[1], rate: +n[2] }, rare: { item: r[1], rate: +r[2] }, super: { item: s[1], rate: +s[2] } }));
 }
 {
   const seeds = {};

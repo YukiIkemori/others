@@ -21,6 +21,12 @@ const spells = Object.keys(DB.actions).filter((k) => k.startsWith('s_'));
 const A = (id) => DB.actions[id];
 const width = (s) => { let w = 0; for (const ch of String(s)) w += /[\x20-\x7e｡-ﾟ]/.test(ch) ? 0.5 : 1; return w; };
 
+// SYSTEMS_REWORK（A17 §1.4 の glim.prof、A18 §2.5 の勇気の灯火）を DESIGN §7 の表とコードに重ねる（DESIGN が直れば何もしない）
+const clsOf = (id) => (/_[ab]$/.test(id) ? (id.endsWith('_a') ? 'comboA' : 'comboB') : /^s_[a-z]+_\d$/.test(id) ? 'single' + id.slice(-1) : 'triple');
+const PROF_A17 = { single1: 1, single2: 4, single3: 10, single4: 19, single5: 32, comboA: 14, comboB: 25, triple: 34 };
+const REWORK = { s_fire_light_b: { desc: '全員の攻撃力を上げ、再生の状態にする。', field: false,
+  effects: [{ type: 'buff', stat: 'atk', stages: 1 }, { type: 'status', status: 'regen' }] } };
+
 // ---------------------------------------------------------------- 1. §7.6 の表 ⇔ データ
 const section = (from, to) => { const a = DESIGN.findIndex((l) => l.startsWith(from)); const b = DESIGN.findIndex((l, i) => i > a && l.startsWith(to)); return DESIGN.slice(a, b < 0 ? DESIGN.length : b); };
 const rows = section('#### 7.6.1', '#### 7.6.4').filter((l) => /^\| `s_/.test(l)).map((l) => l.split('|').slice(1, -1).map((x) => x.trim()));
@@ -33,14 +39,15 @@ for (const r of rows) {
   const a = A(id);
   if (!a) { err(`${id}: 表にあるがデータに無い`); continue; }
   if (a.name !== name) err(`${id}: 名前 ${a.name} ≠ 表 ${name}`);
-  if (a.desc !== desc) err(`${id}: desc「${a.desc}」≠ 表「${desc}」`);
+  const rw = REWORK[id] || {};
+  if (a.desc !== (rw.desc || desc)) err(`${id}: desc「${a.desc}」≠ 表「${rw.desc || desc}」`);
   if (a.mp !== +mp) err(`${id}: MP ${a.mp} ≠ 表 ${mp}`);
   if (a.target !== TGT[tgt]) err(`${id}: 対象 ${a.target} ≠ 表 ${tgt}`);
   const wantEls = els.split('＋').map((x) => EJ[x]);
   if (JSON.stringify(wantEls) !== JSON.stringify(a.elements)) err(`${id}: 属性 ${a.elements} ≠ 表 ${els}`);
   const [lv, prof] = glim.split('/').map((x) => +x.trim());
-  if (a.glim.lv !== lv || a.glim.prof !== prof) err(`${id}: glim ${a.glim.lv}/${a.glim.prof} ≠ 表 ${glim}`);
-  if ((field !== '—') !== !!a.field) err(`${id}: 外（field）${!!a.field} ≠ 表 ${field}`);
+  if (a.glim.lv !== lv || a.glim.prof !== PROF_A17[clsOf(id)]) err(`${id}: glim ${a.glim.lv}/${a.glim.prof} ≠ 表 ${lv} / ${PROF_A17[clsOf(id)]}（段階 ${prof} → A17）`);
+  if ((rw.field != null ? rw.field : field !== '—') !== !!a.field) err(`${id}: 外（field）${!!a.field} ≠ 表 ${field}`);
   // 効果の文の中の数（SP・%）がデータにあるか
   for (const m of effects.matchAll(/SP([0-9.]+)(?:×(\d+)回)?/g)) {
     const sp = +m[1], hits = m[2] ? +m[2] : undefined;
@@ -62,7 +69,7 @@ for (const r of rows) {
   }
   if (/［味方全員］/.test(effects) && !a.effects.some((e) => e.on === 'allies')) err(`${id}: 表の［味方全員］（on:'allies'）がデータに無い`);
   if (/先制/.test(effects) !== !!a.quick) err(`${id}: 先制（quick）が表と違う`);
-  if (/WP回復(\d+)%/.test(effects)) { const d = +effects.match(/WP回復(\d+)%/)[1] / 100; if (!a.effects.some((e) => e.type === 'healWp' && Math.abs(e.pct - d) < 1e-9)) err(`${id}: 表の WP回復 がデータに無い`); }
+  if (/WP回復(\d+)%/.test(effects) && !REWORK[id]) { const d = +effects.match(/WP回復(\d+)%/)[1] / 100; if (!a.effects.some((e) => e.type === 'healWp' && Math.abs(e.pct - d) < 1e-9)) err(`${id}: 表の WP回復 がデータに無い`); }
   if (/吸収(\d+)%/.test(effects)) { const d = +effects.match(/吸収(\d+)%/)[1] / 100; if (!a.effects.some((e) => e.drain === d)) err(`${id}: 表の吸収 ${d} がデータに無い`); }
   if (/術防(\d+)%無視/.test(effects)) { const d = +effects.match(/術防(\d+)%無視/)[1] / 100; if (!a.effects.some((e) => e.ignoreMdef === d)) err(`${id}: 表の術防無視がデータに無い`); }
 }
@@ -92,11 +99,14 @@ function countEff(key) {
     return e.type === 'status' && e.status === k;
   })).length;
 }
-for (const [key, n] of t782) { const got = countEff(key); if (got != null && got !== +n) err(`§7.8.2 ${key}: 表 ${n} ≠ データ ${got}`); }
+// A18 (§2.5): 勇気の灯火 lost its WP heal and gained 再生
+const T782_A18 = { healWp: -1, regen: +1 };
+for (const [key, n] of t782) { const got = countEff(key); const k = (key.match(/`[+-]?([a-zA-Z_]+)`/) || [])[1]; const want = +n + (T782_A18[k] || 0); if (got != null && got !== want) err(`§7.8.2 ${key}: 表 ${n}（A18 で ${want}）≠ データ ${got}`); }
 // §7.8.3: フィールドの術 15
 const t783 = (section('#### 7.8.3', '#### 7.8.4').join(' ').match(/`s_[a-z_0-9]+`/g) || []).map((x) => x.replace(/`/g, ''));
 const fieldIds = spells.filter((id) => A(id).field);
-if (t783.length !== 15 || JSON.stringify(t783.slice().sort()) !== JSON.stringify(fieldIds.slice().sort())) err(`§7.8.3 のフィールドの術と field:true が違う（表 ${t783.length}・データ ${fieldIds.length}）`);
+const t783a = t783.filter((id) => !(REWORK[id] && REWORK[id].field === false));   // A18: 勇気の灯火 is battle-only
+if (t783.length !== 15 || JSON.stringify(t783a.slice().sort()) !== JSON.stringify(fieldIds.slice().sort())) err(`§7.8.3 のフィールドの術と field:true が違う（表 ${t783a.length}・データ ${fieldIds.length}）`);
 // §7.9: 属性と状態は CODE の写しそのもの
 {
   const blocks = H.designBlocks('#### 7.9.1', '### 7.10');
@@ -112,6 +122,11 @@ if (t783.length !== 15 || JSON.stringify(t783.slice().sort()) !== JSON.stringify
   const b = H.designBlocks('### 7.7', '### 7.8').slice(1);
   for (const body of b) new Function('R', code0.replace('    // ↓ CODE 1 / CODE 2 / CODE 3 の中身', body).replace('})(window.RPG);', '})(R);'))(tmp);
   const want = Object.keys(tmp.DB.actions);
+  for (const id of want) {
+    const t = tmp.DB.actions[id];
+    t.glim.prof = PROF_A17[clsOf(id)];
+    if (REWORK[id]) { Object.assign(t, { desc: REWORK[id].desc, effects: REWORK[id].effects, fx: A(id) && A(id).fx }); delete t.field; }
+  }
   if (want.length !== 77) err(`§7.7 のコードの術が 77 でない（${want.length}）`);
   for (const id of want) if (JSON.stringify(tmp.DB.actions[id]) !== JSON.stringify(A(id))) err(`${id}: §7.7 のコードと違う`);
 }
