@@ -31,6 +31,6 @@
   "leads": [],
   "map": {
     "id": "world",
-    "spawn": "fern_s"
+    "spawn": "fern"
   }
 }
