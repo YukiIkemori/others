@@ -7,10 +7,14 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..', '..', '..');
 
-// §6.1.1 — official order.
-const WTYPES = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'club', 'staff', 'katana', 'fist', 'whip'];
+// SYSTEMS_REWORK.md (A17 / A18 / A19) is normative over DESIGN.md §6 until the lead folds it back in (§4.2-4):
+// the 7 weapon types (§3.1), the 108 techs with their lv / from / MP (§3.4, parsed from the spec's tables below).
+const REWORK = path.join(ROOT, 'design', 'build', 'SYSTEMS_REWORK.md');
 
-// §6.8.1 / §3.1.1 / §4.3.4 — registry values per weapon type.
+// §3.1 — official order (the old katana / club / fist / whip are gone; bare hands is not a type).
+const WTYPES = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'staff'];
+
+// §3.1 / weapontypes.js — registry values per weapon type (the staff reaches from the back row since A19).
 const WT_EXPECT = {
   sword:      { name: '剣',   twoHanded: false, reach: false, kind: 'slash',  fx: 'slash' },
   greatsword: { name: '大剣', twoHanded: true,  reach: false, kind: 'slash',  fx: 'slash2' },
@@ -18,61 +22,64 @@ const WT_EXPECT = {
   axe:        { name: '斧',   twoHanded: false, reach: false, kind: 'slash',  fx: 'slash2' },
   spear:      { name: '槍',   twoHanded: true,  reach: true,  kind: 'pierce', fx: 'pierce' },
   bow:        { name: '弓',   twoHanded: true,  reach: true,  kind: 'pierce', fx: 'arrow' },
-  club:       { name: '棍棒', twoHanded: false, reach: false, kind: 'blunt',  fx: 'strike' },
-  staff:      { name: '杖',   twoHanded: false, reach: false, kind: 'blunt',  fx: 'strike' },
-  katana:     { name: '刀',   twoHanded: false, reach: false, kind: 'slash',  fx: 'slash' },
-  fist:       { name: '体術', twoHanded: false, reach: false, kind: 'blunt',  fx: 'strike' },
-  whip:       { name: '鞭',   twoHanded: false, reach: true,  kind: 'blunt',  fx: 'lash' },
+  staff:      { name: '杖',   twoHanded: false, reach: true,  kind: 'blunt',  fx: 'strike' },
 };
 
-// §6.1.2 — the 121 ids, per weapon type in lv order.
-const IDS = {
-  sword: 'stepcut guard twin thrust wheel bulwark purify bladewind triple dawn crest',
-  greatsword: 'overhead mow flat whirl desperate rend quake crush tempest skyfall rivers',
-  dagger: 'vital filch venom knives lull bees gap nape shadow dance nightfall',
-  axe: 'cleave woodcut throw rage reckless whirl cliff twostroke storm earthsplit giant',
-  spear: 'upthrust butt skewer receive pierce cloud ripple phalanx soar surge starpierce',
-  bow: 'rapid twin blind rain hush hawk pin volley gale starrain rainbow',
-  club: 'smash crumble wrist tremor bell strip shatter rumble diamond thunder upheaval',
-  staff: 'mind soothe seal unward share wave clarity aegis drain oracle prayer',
-  katana: 'draw mine fold riposte haze dash steel void lifecut leaves first',
-  fist: 'palm onetwo willow knee breath hail farstrike throw wolves eightfold empty',
-  whip: 'trip sweep bind disarm snatch serpent thorn sparks coil net twilight',
-};
-for (const w of WTYPES) IDS[w] = IDS[w].split(' ').map((s) => `t_${w}_${s}`);
+// Names the TECHS owner changed from the §3.4 text (STYLE_JA §7 bans 兜割り / 大車輪; しびれ針 is an enemy action) —
+// the lead confirms them in the phase-2 report.
+const RENAMED = { t_greatsword_helmsplit: '兜断ち', t_spear_whirl: '輪舞の槍', t_dagger_numb: 'しびれ刺し' };
+
+/** §3.4 tables → [{id, from0 (old id or 同じ), name, lv, from:[ids], mp, blunt}] in table order */
+function reworkTechs() {
+  const txt = fs.readFileSync(REWORK, 'utf8');
+  const i = txt.indexOf('### 3.4'), j = txt.indexOf('\n### 3.5', i);
+  const out = [];
+  for (const line of txt.slice(i, j).split('\n')) {
+    if (!/^\| t_/.test(line)) continue;
+    const c = line.split('|').slice(1, -1).map((x) => x.trim());
+    const id = c[0].replace(/[★\s]/g, '');
+    const w = id.split('_')[1];
+    const from = c[4].split(/,\s*/).map((f) => (f === 'attack' ? 'attack' : `t_${w}_${f}`));
+    out.push({ id, old: c[1] === '同じ' ? id : c[1], name: RENAMED[id] || c[2], lv: +c[3], from, mp: +c[5], blunt: /★/.test(c[0]) });
+  }
+  return out;
+}
+const SPEC_TECHS = reworkTechs();
+const SPEC_BY_ID = Object.fromEntries(SPEC_TECHS.map((t) => [t.id, t]));
+const IDS = {};
+for (const w of WTYPES) IDS[w] = SPEC_TECHS.filter((t) => t.id.startsWith(`t_${w}_`)).map((t) => t.id);
 const ALL_IDS = WTYPES.flatMap((w) => IDS[w]);
+// §3.4 counts per type
+const COUNTS = { sword: 17, greatsword: 15, dagger: 15, axe: 16, spear: 15, bow: 15, staff: 15 };
+// the lv sequence of each type = its §3.4 table
+const LV_SEQ = Object.fromEntries(WTYPES.map((w) => [w, IDS[w].map((id) => SPEC_BY_ID[id].lv)]));
 
-// §6.0 0.2 — glim.lv sequence of every weapon type.
-const LV_SEQ = [1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+// §2.2 — the MP range per lv (index = lv), validate's C.TECH_MP
+const MP_RANGE = [null, [2, 3], [3, 5], [3, 6], [5, 6], [5, 8], [6, 9], [8, 11], [9, 12], [15, 17], [18, 21]];
 
-// §6.4.1 — WP range per lv (index = lv).
-const WP_RANGE = [null, [1, 2], [2, 3], [2, 4], [3, 4], [3, 5], [4, 6], [5, 7], [6, 8], [10, 11], [12, 14]];
-
-// §6.1.3 — starter techs (id, fixed name).
+// §3.4 — starter techs (id, fixed name).
 const STARTERS = {
   sword: ['t_sword_stepcut', '踏み込み斬り'], greatsword: ['t_greatsword_overhead', '大上段'],
   dagger: ['t_dagger_vital', '急所ねらい'], axe: ['t_axe_cleave', 'たたき割り'],
-  spear: ['t_spear_upthrust', '突き上げ'], bow: ['t_bow_rapid', '速射'], club: ['t_club_smash', '強打'],
-  staff: ['t_staff_mind', '念じ打ち'], katana: ['t_katana_draw', '抜き打ち'], fist: ['t_fist_palm', '掌打'],
-  whip: ['t_whip_trip', '足からめ'],
+  spear: ['t_spear_upthrust', '突き上げ'], bow: ['t_bow_rapid', '速射'], staff: ['t_staff_mind', '念じ打ち'],
 };
 
-// §6.3.4 — techs usable from the middle row, for the weapon types that do not reach.
+// §3.4 — techs usable from the middle row, for the weapon types that do not reach ("元の reach のまま": 虚空斬り came
+// reach:true from the katana; whip → dagger techs are reach:false)
 const REACH_TRUE = {
-  sword: ['t_sword_bladewind'], greatsword: ['t_greatsword_quake'], dagger: ['t_dagger_knives'],
-  axe: ['t_axe_throw', 't_axe_rage', 't_axe_storm'], club: [], katana: ['t_katana_void'],
-  fist: ['t_fist_breath', 't_fist_farstrike'],
-  // spear / bow / whip / staff: all 11
+  sword: ['t_sword_void', 't_sword_bladewind'], greatsword: ['t_greatsword_quake'], dagger: ['t_dagger_knives'],
+  axe: ['t_axe_throw', 't_axe_rage', 't_axe_storm'],
+  // spear / bow / staff: all
 };
 
-// §6.0 0.13 — noAuto techs.
-const NO_AUTO = ['t_dagger_filch', 't_whip_snatch', 't_staff_share'];
+// §6.0 0.13 — noAuto techs (the whip's かすめ取り-like snatch is gone, A19).
+const NO_AUTO = ['t_dagger_filch', 't_staff_share'];
 
 // §6.2.1 — top-level fields of a tech.
-const TOP_REQUIRED = ['kind', 'wtype', 'name', 'desc', 'wp', 'target', 'reach', 'effects', 'fx', 'rank', 'glim'];
+const TOP_REQUIRED = ['kind', 'wtype', 'name', 'desc', 'mp', 'target', 'reach', 'effects', 'fx', 'rank', 'glim'];   // A18: mp, not wp
 const TOP_OPTIONAL = ['quick', 'magic', 'noAuto'];
-const TOP_FORBIDDEN = ['mp', 'field', 'msg', 'element', 'elements'];
-const TARGETS = ['enemy', 'enemies', 'group', 'random', 'ally', 'allies', 'self'];
+const TOP_FORBIDDEN = ['wp', 'field', 'msg', 'element', 'elements'];
+const TARGETS = ['enemy', 'enemies', 'group', 'random', 'ally', 'allies', 'self', 'ally_other'];
 const ENEMY_SIDE = ['enemy', 'enemies', 'group', 'random'];
 const MULTI = ['enemies', 'group', 'random'];
 
@@ -109,7 +116,7 @@ const G_PHYS = [1.5, 1.7, 1.9, 2.1, 2.25, 2.4, 2.6, 2.8, 3.0, 3.2];
 const G_MAG_ONE = [1.17, 1.44, 1.8, 2.03, 2.25, 2.52, 2.79, 3.06, 3.33, 3.6];
 const G_MAG_ALL = [null, 0.9, 0.99, 1.13, 1.26, 1.4, 1.53, 1.67, 1.8, 1.94];
 // §6.5 — standard crit rate of the weapon type (base 3% + §4.3.4 type bonus).
-const C0 = { katana: 0.13, dagger: 0.13, axe: 0.07, bow: 0.07, fist: 0.08 };
+const C0 = { dagger: 0.13, axe: 0.07, bow: 0.07 };
 const c0 = (w) => C0[w] != null ? C0[w] : 0.05;
 // §6.5 — pass band of the ratio.
 const RATIO_BAND = (lv) => lv >= 9 ? [0.85, 1.15] : [0.85, 1.12];
@@ -247,7 +254,7 @@ function loadIsolated() {
 }
 
 module.exports = {
-  ROOT, WTYPES, WT_EXPECT, IDS, ALL_IDS, LV_SEQ, WP_RANGE, STARTERS, REACH_TRUE, NO_AUTO,
+  ROOT, REWORK, WTYPES, WT_EXPECT, IDS, ALL_IDS, LV_SEQ, MP_RANGE, STARTERS, REACH_TRUE, NO_AUTO, SPEC_TECHS, SPEC_BY_ID, COUNTS, RENAMED,
   TOP_REQUIRED, TOP_OPTIONAL, TOP_FORBIDDEN, TARGETS, ENEMY_SIDE, MULTI, EFFECT_FIELDS,
   BAD_STATUSES, INCAP, BUFF_STATS, ELEMENTS, KINDS, RACES, FLAGS, FX,
   G_PHYS, G_MAG_ONE, G_MAG_ALL, C0, c0, RATIO_BAND,
