@@ -25,11 +25,11 @@
   // §4.9 / §4.18.1 の値の写し。R.Rules.K に同じ項目があればそちらを使う（並列の作業中に rules が未完成でも動くように）。
   const SPEC = {
     GLIM: {
-      base: { tech: 0.012, secret: 0.006, single: 0.015, comboA: 0.012, comboB: 0.010, triple: 0.008 },
+      base: { tech: 0.0095, secret: 0.00475, single: 0.015, comboA: 0.012, comboB: 0.010, triple: 0.008 },
       techLv: [1, 10], spellLv: [1, 8], cap: 0.35,
       apt: { S: 2, A: 1.5, B: 1, C: 0.6, D: 0.3 },
       expect: [2, 4, 6, 8, 10, 12, 14, 16, 17, 19],
-      fkSlope: 0.4, fkFree: 2, fkMax: 4, stoneEntry: 10,
+      fkSlope: 0.6, fkFree: 2, fkMax: 6, stoneEntry: 10,
       ef: { normal: 1, golden: 1.5, rare: 2, boss: 2.5 },
       margin: 0.1, marginMax: 5, wFrom: 3, wLowest: 2,
       gf: { base: 100, div: 150, min: 0.7, max: 2 },            // GF = clamp((base + 能力値)/div, min, max)（§4.9.4）
@@ -39,7 +39,8 @@
       //   tier0 … ティア 0 の雑魚戦（ボス戦でない）の技の判定で、覚えている数が tier0Known 以下の人は ×1.7。
       //            序章 約 35 戦で 4 回以上（§4.9.5。A18b.0）。覚えるほど外れ、術・魔石には掛けないので、G5・X2 と §4.9.6 の ×10 は変えない
       //   bossLate … ボス戦（EF ≥ ef.boss）の判定 ×min(2, 1 + 0.4 × max(0, T − 4))。T5〜T7 のボス戦でも誰かが閃く 50% 以上（§9.13.2 X5。A12.5）
-      tier0: 1.7, tier0Known: 3, bossLate: { from: 4, slope: 0.4, max: 2 },
+      //   SYSTEMS_REWORK phase 3: base.tech 0.012 → 0.0095 なので tier0 は 1.7 → 2.15（序章の T0 の技の判定の確率は旧と同じ）
+      tier0: 2.15, tier0Known: 3, bossLate: { from: 4, slope: 0.4, max: 2 },
     },
     // A17 (SYSTEMS_REWORK §1.2, §1.4): ranks 1–100, and the weapon rank a tech of glim.lv L needs (index = lv)
     PROF_PTS: [0].concat(Array.from({ length: 100 }, (_, i) => Math.round(11 * Math.pow(i, 1.18)))),

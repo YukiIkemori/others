@@ -122,7 +122,8 @@
     PROF_MP: { freeRank: 14, freeStep: 1, halfRank: 32, halfStep: 2 },
     // Part A13 retune: monster HP x (1 + min(max, perLv x L)) - the enemy side of the proficiency bonus (the party's
     // weapon / element rank grows with the tier: about +6 % at T0 to +24 % at T7). Folded into K.curve's hp (§4.14.2).
-    MON_HP_PROF: { perLv: 0.004, max: 0.20 },
+    // SYSTEMS_REWORK §1.4 / phase 3: the allies' proficiency bonus on PROF_TRACK is +5.6 % (T0) → +22.7 % (T8), lower than the old ranks 1–10
+    MON_HP_PROF: { perLv: 0.0035, max: 0.18 },
     // A11 review (2026-09-26): the regular monsters' side of the curve against the party, per battle tier (index T = (L−6)/6,
     // linear between tiers): K.curve(L, 'mob') multiplies hp by hp[T] and atk / mag by dmg[T]. Was tuning.json 'global'
     // (per monster, at the middle tier of its stage); in the curve it follows the battle level, so a stage met away from
@@ -138,12 +139,13 @@
       dmg: [1.25, 1.25, 0.95, 0.75, 0.72, 0.61, 0.58, 0.58, 0.58, 0.45],
     },
     // §4.9.3–4.9.4 — glimmer (R.Glimmer reads these)
+    // SYSTEMS_REWORK phase 3 (§4.3 G4a/G7, 7 types = more techs per type): base.tech 0.012 → 0.0095 (secret half), fkSlope 0.4 → 0.6, fkMax 4 → 6
     GLIM: {
-      base: { tech: 0.012, secret: 0.006, single: 0.015, comboA: 0.012, comboB: 0.010, triple: 0.008 },
+      base: { tech: 0.0095, secret: 0.00475, single: 0.015, comboA: 0.012, comboB: 0.010, triple: 0.008 },
       techLv: [1, 10], spellLv: [1, 8], cap: 0.35,
       apt: { S: 2, A: 1.5, B: 1, C: 0.6, D: 0.3 },
       expect: [2, 4, 6, 8, 10, 12, 14, 16, 17, 19],
-      fkSlope: 0.4, fkFree: 2, fkMax: 4, stoneEntry: 10,
+      fkSlope: 0.6, fkFree: 2, fkMax: 6, stoneEntry: 10,
       ef: { normal: 1, golden: 1.5, rare: 2, boss: 2.5 },
       rank: { boss: 2, rare: 2, golden: 1, metal: 1 }, rankBase: 1, secretLv: 10,
       margin: 0.1, marginMax: 5, wFrom: 3, wLowest: 2,

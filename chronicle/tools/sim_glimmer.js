@@ -552,9 +552,12 @@ const rankAt = (recs, snapName, key, w) => recs.map((r) => { const x = r.snap[sn
 const erankMax = (x) => Math.max(1, ...Object.values(x.eprof || {}).map(rk));
 const eAt = (recs, snapName, key) => recs.map((r) => erankMax(r.snap[snapName].find((y) => y.key === key)));
 const SNAPS = ['lighthouse', 'prologue', 'r0', 'r3', 'r7', 'clear', 'post'];
-const MAIN3 = [['hero', 'sword'], ['brigitta', 'spear'], ['sylvain', 'bow']], SEC3 = [['hero', 'axe'], ['brigitta', 'bow'], ['sylvain', 'dagger']];
-const mainAt = (s) => mean(MAIN3.map(([k, w]) => mean(rankAt(stdRecs, s, k, w))));
-const secAt = (s) => mean(SEC3.map(([k, w]) => mean(rankAt(stdRecs, s, k, w))));
+// 主な武器（62%）・2 つ目（30%）: 主人公（剣・斧）・ブリギッタ（槍・弓）・戦士型（剣・斧）。シルヴァンは中列で 2 つ目の短剣が
+// 届かないので、弓がほぼ 92%（「1 系統だけ」の側）になる。平均には入れず、人ごとの行に出す。
+const MAIN3 = [[stdRecs, 'hero', 'sword'], [stdRecs, 'brigitta', 'spear'], [arch, 'warrior', 'sword']];
+const SEC3 = [[stdRecs, 'hero', 'axe'], [stdRecs, 'brigitta', 'bow'], [arch, 'warrior', 'axe']];
+const mainAt = (s) => mean(MAIN3.map(([recs, k, w]) => mean(rankAt(recs, s, k, w))));
+const secAt = (s) => mean(SEC3.map(([recs, k, w]) => mean(rankAt(recs, s, k, w))));
 const oneAt = (s) => mean(rankAt(oneRecs, s, 'one', 'sword'));
 const m075At = (s) => mean(eAt(archSpec, s, 'mage')), m15At = (s) => mean(eAt(arch, s, 'mage15'));
 log('\n## 熟練度の段階（平均）');

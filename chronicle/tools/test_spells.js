@@ -273,10 +273,11 @@ section('技の候補（§4.9.3・§6.4.4）');
   ok(G.candidates(w9, Object.assign({}, ctx, { rankB: 10 })).some((x) => x.id === lv10), '極意（格 10）は rankB 10・熟練 60 で候補');
   ok(!G.candidates(w9, Object.assign({}, ctx, { rankB: 9 })).some((x) => x.id === lv10), '… rankB 9 では候補でない');
   {
-    // §4.9.3: 技の BASE 0.012、lv 10 は secret 0.006（MARGIN は rankB − 格 なので、同じ余裕で比べる）
+    // §4.9.3: 技の BASE（phase 3 で 0.0095）、lv 10 は secret その半分（MARGIN は rankB − 格 なので、同じ余裕で比べる）
     const lv9 = sw.find((id) => S(id).glim.lv === 9);
     const p10 = G.chance(w9, lv10, Object.assign({}, ctx, { rankB: 10 })), p9 = G.chance(w9, lv9, Object.assign({}, ctx, { rankB: 9 }));
-    near(p10 / p9, 0.5, 1e-9, '極意の BASE は奥義の半分（secret 0.006 ÷ tech 0.012）');
+    near(p10 / p9, K.base.secret / K.base.tech, 1e-9, `極意の BASE は奥義の半分（secret ${K.base.secret} ÷ tech ${K.base.tech}）`);
+    near(K.base.secret / K.base.tech, 0.5, 1e-9, 'secret = tech ÷ 2');
   }
   const w8 = H.makeChar({ id: 'selma', wprof: { sword: PTS(T(8)) } });
   ok(!G.candidates(w8, Object.assign({}, ctx, { rankB: 10 })).some((x) => x.id === lv10), '… 熟練 50 では候補でない');
@@ -294,9 +295,10 @@ section('確率の式（§4.9.4 の検算の例）');
   const dex = R.Rules.stats(hero).dex;
   const lv1 = Object.keys(DB.actions).find((k) => DB.actions[k].wtype === 'sword' && DB.actions[k].glim.lv === 1);
   const p1 = G.chance(hero, lv1, { kind: 'tech', wtype: 'sword', rankB: 3, ef: 2.5, tier: 0 });
-  const want1 = 0.012 * 2 * U(((100 + dex) / 150), 0.7, 2) * 1 * 2.5 * 1.2;
+  const BT = K.base.tech, SC = BT / 0.012;   // §4.9.4 の例は BASE 0.012 で書かれている。SYSTEMS_REWORK phase 3 の BASE に比例させる
+  const want1 = BT * 2 * U(((100 + dex) / 150), 0.7, 2) * 1 * 2.5 * 1.2;
   near(p1, want1, 1e-9, `例1 の p（器用さ ${dex}）`);
-  if (dex === 30) near(p1, 0.0624, 0.001, '例1 = 約 0.063');
+  if (dex === 30) near(p1, 0.0624 * SC, 0.001, `例1 = 約 ${(0.0624 * SC).toFixed(3)}`);
   // 例2: T4 の普通の戦闘、A の主な武器、器用さ 49、覚えている数 10 → 1.8%（B 1.2%・C 0.7%・D 0.36%、ボス A 5.4%）
   const lv5 = Object.keys(DB.actions).find((k) => DB.actions[k].wtype === 'sword' && DB.actions[k].glim.lv === 5);
   const mk = (letter) => {
@@ -309,13 +311,13 @@ section('確率の式（§4.9.4 の検算の例）');
   };
   function sw10(n) { return Object.keys(DB.actions).filter((k) => DB.actions[k].kind === 'tech' && DB.actions[k].wtype !== 'sword').slice(0, n); }
   const ctx2 = { kind: 'tech', wtype: 'sword', rankB: 5, ef: 1, tier: 4 };
-  const want = { A: 0.018, B: 0.012, C: 0.007, D: 0.0036 };
+  const want = { A: 0.018 * SC, B: 0.012 * SC, C: 0.007 * SC, D: 0.0036 * SC };
   for (const L of ['A', 'B', 'C', 'D']) {
     const c = mk(L);
-    near(G.chance(c, lv5, ctx2), 0.012 * { A: 1.5, B: 1, C: 0.6, D: 0.3 }[L] * (149 / 150), 1e-9, `例2 の p（${L}）`);
-    near(G.chance(c, lv5, ctx2), want[L], want[L] * 0.05, `例2 ≒ ${want[L] * 100}%（${L}）`);
+    near(G.chance(c, lv5, ctx2), BT * { A: 1.5, B: 1, C: 0.6, D: 0.3 }[L] * (149 / 150), 1e-9, `例2 の p（${L}）`);
+    near(G.chance(c, lv5, ctx2), want[L], want[L] * 0.05, `例2 ≒ ${(want[L] * 100).toFixed(2)}%（${L}）`);
   }
-  near(G.chance(mk('A'), lv5, Object.assign({}, ctx2, { rankB: 7, ef: 2.5 })), 0.054, 0.001, '例2 のボス戦（A）≒ 5.4%');
+  near(G.chance(mk('A'), lv5, Object.assign({}, ctx2, { rankB: 7, ef: 2.5 })), 0.054 * SC, 0.001, `例2 のボス戦（A）≒ ${(5.4 * SC).toFixed(1)}%`);
   // 例3（術、T8、A の属性、候補の lv = rankB、覚えている数は EXPECT − 2 以上）: 知力 52 → 2.3%、112 → 3.2%、232 → 4.5%
   const mid = H.defineSimChar('_sim_mage_a', 'teo', { stats: { str: 18, vit: 24, dex: 30, agi: 34, int: 52, mnd: 42 } });
   R.DB.companions[mid].apt = JSON.parse(JSON.stringify(R.DB.companions.teo.apt));
@@ -336,9 +338,10 @@ section('確率の式（§4.9.4 の検算の例）');
   const c0 = H.makeChar({ id: 'selma' });
   const pFK = G.chance(c0, lv5, ctx2);
   const c10 = H.makeChar({ id: 'selma' }); c10.techs = sw10(10);
-  near(pFK / G.chance(c10, lv5, ctx2), 4, 1e-9, 'FK: T4 で 0 個の人は 4 倍（上限）');
+  near(pFK / G.chance(c10, lv5, ctx2), Math.min(K.fkMax, 1 + K.fkSlope * (10 - 0 - 2)), 1e-9, `FK: T4 で 0 個の人は ${Math.min(K.fkMax, 1 + K.fkSlope * 8)} 倍（上限 ${K.fkMax}）`);
+  { const cx = H.makeChar({ id: 'selma' }); R.Game = R.Game || {}; const T9 = Object.assign({}, ctx2, { tier: 9 }); near(G.chance(cx, lv5, T9) / G.chance(c10, lv5, T9), Math.min(K.fkMax, 1 + K.fkSlope * (19 - 0 - 2)) / Math.max(1, Math.min(K.fkMax, 1 + K.fkSlope * (19 - 10 - 2))), 1e-9, 'FK の上限 fkMax'); }
   const c7 = H.makeChar({ id: 'selma' }); c7.techs = sw10(7);
-  near(G.chance(c7, lv5, ctx2) / G.chance(c10, lv5, ctx2), 1 + 0.4 * (10 - 7 - 2), 1e-9, 'FK = 1 + 0.4 × (EXPECT − 覚えている数 − 2)');
+  near(G.chance(c7, lv5, ctx2) / G.chance(c10, lv5, ctx2), 1 + K.fkSlope * (10 - 7 - 2), 1e-9, `FK = 1 + ${K.fkSlope} × (EXPECT − 覚えている数 − 2)`);
   const c9 = H.makeChar({ id: 'selma' }); c9.techs = sw10(9);
   near(G.chance(c9, lv5, ctx2), G.chance(c10, lv5, ctx2), 1e-12, 'FK: 遅れ 2 以内は 1');
   near(G.chance(c10, lv5, Object.assign({}, ctx2, { rankB: 8 })) / G.chance(c10, lv5, ctx2), 1.3, 1e-9, 'MARGIN: rankB − 格 = 3 → ×1.3');

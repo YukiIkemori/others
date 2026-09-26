@@ -71,7 +71,7 @@
     b_lazaro: { hp: 0.9 },
     b_nemrea1: { hp: 0.55, atk: 0.9, mag: 0.9 },
     b_valzard_echo: { hp: 0.9, atk: 0.7, mag: 0.7 },
-    b_ouroboros: { hp: 0.6, atk: 0.55, mag: 0.55 },
+    b_ouroboros: { hp: 0.6, atk: 0.64, mag: 0.64 },   // SYSTEMS_REWORK phase 3 (C3: the normal set won 25–45 %): atk/mag 0.55 → 0.64
   };
   // @@S-END
 

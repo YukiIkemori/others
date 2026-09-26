@@ -69,7 +69,7 @@ module.exports = function makeModel(R, opts) {
   const TECH_PROF = [0, 1, 3, 8, 14, 20, 26, 32, 40, 50, 60];
   const PROF_PTS = [0].concat(Array.from({ length: 100 }, (_, i) => Math.round(11 * Math.pow(i, 1.18))));
   const profRank = (p) => { let r = 0; for (let i = 0; i < PROF_PTS.length; i++) if (p >= PROF_PTS[i]) r = i; return r; };
-  const GLIM = { tech: 0.012, secret: 0.006, single: 0.015, comboA: 0.012, comboB: 0.010, triple: 0.008, cap: 0.35 };
+  const GLIM = { tech: 0.0095, secret: 0.00475, single: 0.015, comboA: 0.012, comboB: 0.010, triple: 0.008, cap: 0.35 };
   const APT = { S: 2, A: 1.5, B: 1, C: 0.6, D: 0.3 };
   const GROW_HP = { S: 1.25, A: 1.12, B: 1.0, C: 0.9, D: 0.8 };
   const GROW_MW = { S: 1.3, A: 1.15, B: 1.0, C: 0.85, D: 0.7 };   // K.GROW.mp (A18)
@@ -740,7 +740,7 @@ module.exports = function makeModel(R, opts) {
     if (!cand.length) return null;
     const pick = weighted(cand);
     const lv = DB.actions[pick.id].glim.lv;
-    const fk = clamp(1 + 0.4 * (EXPECT[clamp(this.tier, 0, 9)] - c.known.size - c.extra - 2), 1, 4);
+    const fk = clamp(1 + 0.6 * (EXPECT[clamp(this.tier, 0, 9)] - c.known.size - c.extra - 2), 1, 6);
     const margin = 1 + 0.1 * Math.min(5, this.rankB - lv);
     const p = Math.min(GLIM.cap, pick.base * pick.apt * pick.gf * fk * this.ef * margin * (1 + c.glimPct / 100));
     if (rng() >= p) return null;

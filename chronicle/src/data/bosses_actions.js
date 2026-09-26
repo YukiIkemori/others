@@ -172,12 +172,14 @@
     eb_shade_frost: {name: '氷の嵐', kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'magic', power: 0.75, element: 'water'}, {type: 'status', status: 'freeze', chance: 0.1}], fx: 'ice2', msg: '{user}は氷の嵐を呼んだ！'},
     eb_shade_fire: {name: '炎の嵐', kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'magic', power: 0.75, element: 'fire'}], fx: 'fire2', msg: '{user}は炎の嵐を呼んだ！'},
     eb_white_book: {name: '白の書', kind: 'enemy', target: 'enemy', effects: [{type: 'status', status: 'silence', chance: 0.5}, {type: 'dispel', side: 'good'}], fx: 'dispel', msg: '{user}は白の書を開いた！', aim: 'middle'},
-    eb_erase_memory: {name: '記憶を消す', kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'magic', power: 0.6, mp: true}], fx: 'mp', msg: '{user}の筆が、記憶を消していく……！'},
+    // SYSTEMS_REWORK phase 3 (A18: techs pay MP now): the party-wide MP damage 0.6 → 0.1, so a hit costs the party about
+    // what it cost when only the casters' MP was hit (warriors' WP was untouched). sim_bosses X1 lazaro / X4 last boss.
+    eb_erase_memory: {name: '記憶を消す', kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'magic', power: 0.1, mp: true}], fx: 'mp', msg: '{user}の筆が、記憶を消していく……！'},
     eb_silver_quill: {name: '銀の筆', kind: 'enemy', target: 'enemy', effects: [{type: 'damage', formula: 'magic', power: 1.4, element: 'light'}], fx: 'holy2', msg: '{user}は銀の筆で光の文字を書いた！'},
     eb_page_shield: {name: 'ページの盾', kind: 'enemy', target: 'self', effects: [{type: 'buff', stat: 'mdef', stages: 2}, {type: 'buff', stat: 'def', stages: 1}], fx: 'buff', msg: '{user}のまわりに白いページが舞った！'},
     eb_call_scribes: {name: '書記を呼ぶ', kind: 'enemy', target: 'self', effects: [{type: 'summon', mon: 'scribe_1', n: 1, max: 3}], fx: 'magic', msg: '{user}の呼び声に、\n書記たちが駆けつけた！'},
     eb_whiteout: {name: '白紙に還す', kind: 'enemy', target: 'enemies', effects: [{type: 'dispel', side: 'good'}, {type: 'damage', formula: 'magic', power: 0.7}], fx: 'dispel', msg: '{user}はすべてを白紙に還そうとした！'},
-    eb_oblivion_wave: {name: '忘却の波', kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'magic', power: 0.6, mp: true}, {type: 'status', status: 'silence', chance: 0.2}], fx: 'mp', msg: '忘却の波が押し寄せた！'},
+    eb_oblivion_wave: {name: '忘却の波', kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'magic', power: 0.1, mp: true}, {type: 'status', status: 'silence', chance: 0.2}], fx: 'mp', msg: '忘却の波が押し寄せた！'},
     eb_paper_hand: {name: '紙の手', kind: 'enemy', target: 'enemy', effects: [{type: 'damage', formula: 'phys', power: 1.6}], fx: 'strike2', msg: '巨大な紙の手が振り下ろされた！'},
     eb_erase_name: {name: '名を消す', kind: 'enemy', target: 'enemy', effects: [{type: 'status', status: 'silence', chance: 0.6}, {type: 'buff', stat: 'atk', stages: -1, chance: 0.6}], fx: 'dispel', msg: '{user}は名を消そうとした！'},
     eb_blank_storm: {name: '白い嵐', kind: 'enemy', target: 'random', effects: [{type: 'damage', formula: 'phys', power: 0.55, hits: 4, kind: 'slash'}], fx: 'slash2', msg: '白い紙片の嵐が吹き荒れた！'},

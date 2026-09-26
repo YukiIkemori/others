@@ -175,7 +175,7 @@ function A2() {
 function A3b() {
   const dz = zoneList().filter(([z, e]) => /^z_/.test(z) && e.region !== 'prologue');
   if (!dz.length) { res('A3b', 'SKIP', '-', '', 'no dungeon zones'); return; }
-  const ends = [], lows = [];
+  const ends = [], lows = [], wEnds = [];   // SYSTEMS_REWORK §4.3 A3b: the warriors' MP (techs pay MP since A18) ≥ 20 % too
   let wipes = 0, chains = 0;
   const chainsPer = FULL ? 20 : QUICK ? 3 : 6;
   for (const [z, e] of dz) for (const T of zoneTiers(e).filter((t, i, a) => i === 0 || i === a.length - 1 || !QUICK)) {
@@ -197,11 +197,13 @@ function A3b() {
       if (!ok) continue;
       const c = p.party[ci], st = statsSafe(c);
       if (st && st.mp) { ends.push(100 * c.mp / st.mp); }
+      const ws = p.party.filter((x, i) => i !== ci && !(x.spells || []).length).map((x) => { const s2 = statsSafe(x); return s2 && s2.mp ? 100 * x.mp / s2.mp : null; }).filter((x) => x != null);
+      if (ws.length) wEnds.push(mean(ws));
     }
   }
   if (!ends.length) { res('A3b', 'SKIP', '-', '', 'no caster / no chain finished'); return; }
-  const m = mean(ends);
-  res('A3b', m >= 30 && !wipes ? 'PASS' : 'FAIL', `caster MP left ${f1(m)}% (p10 ${f1(q(ends, 0.1))}%), ${wipes} wipe(s) in ${chains} floors`, '≥ 30% of max MP after 8–12 fights, no rest', 'second half of each floor at lvOff 2');
+  const m = mean(ends), wm = wEnds.length ? mean(wEnds) : NaN;
+  res('A3b', m >= 30 && !(wm < 20) && !wipes ? 'PASS' : 'FAIL', `caster MP left ${f1(m)}% (p10 ${f1(q(ends, 0.1))}%), warriors ${f1(wm)}% (p10 ${wEnds.length ? f1(q(wEnds, 0.1)) : '-'}%), ${wipes} wipe(s) in ${chains} floors`, 'caster ≥ 30% · warriors ≥ 20% of max MP after 8–12 fights, no rest', 'second half of each floor at lvOff 2');
 }
 
 // ------------------------------------------------------------------------------------ bosses
@@ -400,7 +402,9 @@ function D() {
   if (R.Glimmer && R.Glimmer.chance) {
     const sp = Object.keys(DB.actions).find((id) => /^s_fire_4$/.test(id)) || Object.keys(DB.actions).find((id) => /^s_fire_[2-5]$/.test(id));
     const ctx = { kind: 'spell', elements: ['fire'], used: 's_fire_1', rankB: 9, ef: 1, tier: 8, row: 'middle', silenced: false };
-    const p = [int.z, int.nn, int.s].map((c) => { c.spells = ['s_fire_1']; c.techs = []; c.eprof.fire = 999; try { return R.Glimmer.chance(c, sp, ctx); } catch (e) { return NaN; } });
+    // a T8 caster knows about as many as the glimmer curve expects (FK = 1, as sim_glimmer G6): D4 measures int, not the catch-up
+    const known = ['s_fire_1'].concat(Object.keys(DB.actions).filter((k) => /^s_/.test(k) && !/fire/.test(k)).slice(0, 16));
+    const p = [int.z, int.nn, int.s].map((c) => { c.spells = known.slice(); c.techs = []; c.eprof.fire = (R.Rules.K.PROF_CAP || 999); try { return R.Glimmer.chance(c, sp, ctx); } catch (e) { return NaN; } });
     const sz = p[2] / p[0], sn = p[2] / p[1];
     res('D4', sz >= 1.8 && sn >= 1.35 ? 'PASS' : 'FAIL', `p(${sp}) Z ${f2(100 * p[0])}% N ${f2(100 * p[1])}% S ${f2(100 * p[2])}%: S/Z ${f2(sz)} S/N ${f2(sn)}`, 'S/Z ≥ 1.8 · S/N ≥ 1.35', 'R.Glimmer.chance, T8 rankB 9');
   } else res('D4', 'SKIP', '-', '', 'R.Glimmer.chance missing');

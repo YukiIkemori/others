@@ -248,12 +248,36 @@
     return cmdOf(o, dead[0]);
   }
 
+  /**
+   * 雑魚戦: can u end the fight with its own action this round (expected damage ≥ what is left of every foe)?
+   * A18 (SYSTEMS_REWORK phase 3): with techs and spells on one MP pool, a small heal (いたわり) that restores about one
+   * round of the foes' damage only stalls; finishing the last foe is the better move while nobody is about to fall.
+   */
+  function canFinish(eng, u, acts, plan) {
+    const foes = eng.living('mon');
+    if (!foes.length || eng.boss) return false;
+    const left = (m) => Math.max(0, m.hp - (plan.dmg.get(m) || 0));
+    if (foes.length === 1) {
+      const m = foes[0], l = left(m);
+      if (!l) return true;
+      const ba = bestAttack(eng, u, m);
+      if (ba.reach && ba.d >= l) return true;
+      return acts.some((o) => !o.item && dmgOf(o.ab) && FOE_TARGETS[o.ab.target] && dmgOf(o.ab).formula !== 'percent' &&
+        eng.expectDamage(u, o.ab, m, { slot: o.slot }) >= l);
+    }
+    return acts.some((o) => !o.item && dmgOf(o.ab) && o.ab.target === 'enemies' && dmgOf(o.ab).formula !== 'percent' &&
+      foes.every((m) => eng.expectDamage(u, o.ab, m, { slot: o.slot }) >= left(m)));
+  }
   function tryHeal(eng, u, acts, plan) {
     const mates = eng.living('party');
     const after = (p) => (p.hp + (plan.heal.get(p) || 0)) / p.mhp;
     const limit = eng.boss ? 0.55 : 0.4;
     const hurt = mates.filter((p) => after(p) < limit).sort((a, b) => after(a) - after(b));
     if (!hurt.length) return null;
+    if (!eng.boss) {   // finish the fight instead of healing when nobody hurt falls to one round of the foes' expected hits
+      const incoming = eng.living('mon').reduce((s, m) => s + threat(eng, m), 0) / Math.max(1, mates.length);
+      if (hurt.every((p) => p.hp + (plan.heal.get(p) || 0) > incoming) && canFinish(eng, u, acts, plan)) return null;
+    }
     const many = mates.filter((p) => after(p) < 0.65).length >= 2;
     let best = null, bestScore = 0, bestTargets = null;
     for (const o of acts) {

@@ -64,7 +64,8 @@ test('K: constants of §4.18.1', () => {
   eq([6, 30].map(K.DK), [70, 190], 'DK');
   eq(K.PEXP, [25, 186, 311, 445, 585, 730, 880, 1034, 1191, 1352], 'PEXP (SYSTEMS_REWORK §1.3)');
   eq(K.GLIM.expect, [2, 4, 6, 8, 10, 12, 14, 16, 17, 19], 'EXPECT');
-  eq(K.GLIM.base, { tech: 0.012, secret: 0.006, single: 0.015, comboA: 0.012, comboB: 0.010, triple: 0.008 }, 'GLIM.base');
+  eq([K.GLIM.fkSlope, K.GLIM.fkFree, K.GLIM.fkMax], [0.6, 2, 6], 'FK (SYSTEMS_REWORK phase 3)');
+  eq(K.GLIM.base, { tech: 0.0095, secret: 0.00475, single: 0.015, comboA: 0.012, comboB: 0.010, triple: 0.008 }, 'GLIM.base');
   eq(K.INN, [10, 16, 24, 32, 42, 54, 66, 80, 96, 112], 'INN');
   eq(K.STAGE, [0.63, 0.77, 1, 1.3, 1.6], 'STAGE');
   eq(K.MOB, { atk: 0.6, mag: 0.6 }, 'MOB');
@@ -86,13 +87,13 @@ test('K: constants of §4.18.1', () => {
   eq(K.GROW.mp, { S: 1.30, A: 1.15, B: 1.00, C: 0.85, D: 0.70 }, 'GROW.mp (C / D raised)');
   eq(w.staff.magMult, 1.0, 'staff magMult');
   const c = K.curve(30);
-  eq([Math.round(c.hp), Math.round(c.atk), Math.round(c.def), Math.round(c.agi), Math.round(c.exp), Math.round(c.gold)], [195, 69, 95, 42, 93, 80], 'monster curve L30 (§4.14.2; hp × (1 + 0.004·30) of K.MON_HP_PROF, Part A13)');
-  eq(K.MON_HP_PROF, { perLv: 0.004, max: 0.20 }, 'K.MON_HP_PROF (Part A13 retune)');
-  near(K.curve(60).hp / (6 + 2.6 * 60 + 0.1 * 3600), 1.20, 1e-9, 'MON_HP_PROF caps at +20 %');
+  eq([Math.round(c.hp), Math.round(c.atk), Math.round(c.def), Math.round(c.agi), Math.round(c.exp), Math.round(c.gold)], [192, 69, 95, 42, 93, 80], 'monster curve L30 (§4.14.2; hp × (1 + 0.0035·30) of K.MON_HP_PROF, Part A13 / SYSTEMS_REWORK phase 3)');
+  eq(K.MON_HP_PROF, { perLv: 0.0035, max: 0.18 }, 'K.MON_HP_PROF (SYSTEMS_REWORK phase 3 retune; was 0.004 / 0.20)');
+  near(K.curve(60).hp / (6 + 2.6 * 60 + 0.1 * 3600), 1.18, 1e-9, 'MON_HP_PROF caps at +18 %');
   // A12.0 (2026-09-26): hpBoss = hp(L) × (0.65 + 0.025·(clamp(L, 18, 51) − 18)) (was 0.65 + 0.05·clamp((L−6)/6, 0, 10))
-  eq(Math.round(K.hpBoss(9) * 18), 455, 'region boss HP T0 (§4.14.3, A12.0; × MON_HP_PROF, A13)');
-  eq([Math.round(K.hpBoss(33) * 18), Math.round(K.hpBoss(51) * 18)], [4192, 12703], 'region boss HP T4 / T7 (A12.0; × MON_HP_PROF, A13)');
-  eq(Math.round(K.hpBoss(58) * 30), 26189, 'last boss 1 HP (A12.0: the tier term stops at L51; × MON_HP_PROF, A13)');
+  eq(Math.round(K.hpBoss(9) * 18), 453, 'region boss HP T0 (§4.14.3, A12.0; × MON_HP_PROF, A13)');
+  eq([Math.round(K.hpBoss(33) * 18), Math.round(K.hpBoss(51) * 18)], [4131, 12475], 'region boss HP T4 / T7 (A12.0; × MON_HP_PROF, A13)');
+  eq(Math.round(K.hpBoss(58) * 30), 25752, 'last boss 1 HP (A12.0: the tier term stops at L51; × MON_HP_PROF, A13)');
   near(K.hpBoss(68) / K.curve(68).hp, K.hpBoss(51) / K.curve(51).hp, 1e-12, 'the tier term is flat above L51');
   eq([K.BOSS.super.atk, K.BOSS.super.mag], [1.25, 1.25], 'super boss atk/mag ×1.25 (A12.1 b)');
   eq(K.BOSS.super.hpMul, 56, 'super boss hpMul 56 (C3 / X4 with the real rare / super gear, 2026-09-26)');
