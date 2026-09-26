@@ -133,5 +133,48 @@
 (function (G) {
   const SCREENS = G.SCREENS;
   SCREENS.dungeon_raw = async function (o) { const s = TOPDOWN.dungeon(); G.fieldView(o, s, 0, 40, 60, 0, { thr: 0.55 }); };
-  SCREENS.field_raw = async function (o) { const s = TOPDOWN.world(); G.fieldView(o, s, 64, 64, 256, 0, { thr: 0.58 }); };
+  SCREENS.field_raw = async function (o) { const s = TOPDOWN.world(); G.fieldView(o, s, 64, 16, 256, 0, { thr: 0.58 }); };
+})(window);
+(function (G) {
+  const { T } = K; const ctx = K.ctx; const SCREENS = G.SCREENS; const H = G.FIELD_HUD;
+  function minimap(x, y, w, h, grid, tileFn, cols, party, marks) {
+    K.panel(x, y, w, h, { a: 0.55, r: 10, blur: 6 });
+    const rows = grid.length, cw = (w - 16) / cols, ch = (h - 16) / rows, s = Math.min(cw, ch);
+    const ox = x + (w - s * cols) / 2, oy = y + (h - s * rows) / 2;
+    for (let ty = 0; ty < rows; ty++) for (let tx = 0; tx < cols; tx++) {
+      const t = tileFn(tx, ty); if (t === '#') continue;
+      const seen = ty < 22;
+      ctx.fillStyle = t === '~' ? (seen ? 'rgba(90,170,190,0.55)' : 'rgba(90,170,190,0.12)') : (seen ? 'rgba(236,226,200,0.42)' : 'rgba(236,226,200,0.08)');
+      ctx.fillRect(ox + tx * s, oy + ty * s, s + 0.2, s + 0.2);
+    }
+    (marks || []).forEach(([tx, ty, c, ic]) => { K.diamond(ox + tx * s + s / 2, oy + ty * s + s / 2, 3.2, c, 'rgba(0,0,0,0.6)', 0.5); });
+    const [px, py] = party; ctx.save(); ctx.translate(ox + px * s, oy + py * s); ctx.rotate(-Math.PI / 2); ctx.beginPath(); ctx.moveTo(0, -5); ctx.lineTo(3.5, 3.5); ctx.lineTo(0, 1.5); ctx.lineTo(-3.5, 3.5); ctx.closePath(); ctx.fillStyle = T.c.goldHi; ctx.fill(); ctx.restore();
+  }
+  SCREENS.dungeon = async function (o) {
+    const s = TOPDOWN.dungeon();
+    const v = G.fieldView(o, s, 0, 40, 60, 0, { thr: 0.55 });
+    const toL = (tx, ty) => [(tx * 32 - v.vx), (ty * 32 - v.vy)];
+    const DUNROWS = 33;
+    if (!v.tall) {
+      H.placeCard(20, 18, '潮鳴りの洞窟', '地下1階　・　潮が引いている');
+      H.leadCard(700, 18, 244, '帰らずの船長', '諸島・ネレイ岬', Math.PI * 0.75);
+      minimap(806, 82, 138, 150, new Array(DUNROWS), (x, y) => TOPDOWN.dunTile(x, y), 30, [12.1, 8.6], [[9.5, 8.5, '#8fe8f0'], [23.5, 6.5, T.c.gold], [24.5, 13.5, '#f0e2c0']]);
+      K.text('泉', 806, 246, { size: 10, c: '#8fe8f0' }); K.text('宝箱', 832, 246, { size: 10, c: T.c.gold }); K.text('階段', 868, 246, { size: 10, c: T.c.text2 });
+      const [sx, sy] = toL(9.5, 8.9); H.bubble(sx, sy - 58, '泉で休む');
+      K.prompts([['y', 'メニュー'], ['x', '地図'], ['minus', '地図を隠す']], 944, 518, { size: 11 });
+    }
+  };
+  SCREENS.field = async function (o) {
+    const s = TOPDOWN.world();
+    const v = G.fieldView(o, s, 64, 16, 256, 0, { thr: 0.58 });
+    if (!v.tall) {
+      H.placeCard(20, 18, 'ファロス街道', '西の森へ続く道');
+      H.leadCard(700, 18, 244, '森で人が消える', '西・フェルン', -Math.PI / 2);
+      // landmark labels in the world (discovered places), small and thin
+      const lab = (tx, ty, t, c) => { const x = tx * 32 - v.vx, y = ty * 32 - v.vy; K.diamond(x, y, 3, c || T.c.gold); K.text(t, x + 8, y + 4, { size: 11, w: 700, c: T.c.text, shadow: 'rgba(0,0,0,0.95)', blur: 5 }); };
+      lab(27.5, 5.8, 'ミルの村'); lab(29.5, 12.2, 'ファロス灯台'); lab(8.4, 13.4, '見張りの塔跡', '#8fe8f0');
+      H.toast(20, 494, 'save', '街道に出た　・　オートセーブ');
+      K.prompts([['y', 'メニュー'], ['x', '地図'], ['b', '走る']], 944, 518, { size: 11 });
+    }
+  };
 })(window);

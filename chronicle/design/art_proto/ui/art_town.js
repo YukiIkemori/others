@@ -338,14 +338,15 @@
       return { light: [0, -24], cyan: true, big: true };
     },
     tower(B) { // ruined watchtower (a side dungeon), cyan light in the doorway
-      const st = mat({ keys: ['#1a1a20', '#2e2e36', '#48464e', '#646068', '#848088'], n: 6, tex: 2.2, tsx: 0.35, tsy: 0.6 });
-      B.ell(0, -2, 26, 10, st, 0, { bulge: 0.4 });
-      B.cap(0, -6, 0, -70, 20, 18, st, 0.1);
-      B.poly([[-18, -70], [-6, -80], [4, -72], [12, -84], [18, -70]], st, 0.15, { bevel: 3 });
-      B.poly([[-6, -6], [6, -6], [6, -24], [0, -30], [-6, -24]], M.glowC, 0.2, { bevel: 0.5 });
-      [[-12, -44], [10, -52]].forEach(([x, y]) => B.poly([[x - 2, y], [x + 2, y], [x + 2, y - 7], [x - 2, y - 7]], M.glowC, 0.2, { bevel: 0.3 }));
-      for (let i = 0; i < 5; i++) B.ell(-22 + i * 11, -3 - (i % 2) * 2, 5, 3, st, 0.3 + i * 0.01, { bulge: 0.8 });
-      return { light: [0, -18], cyan: true, big: true };
+      const st = mat({ keys: ['#16161c', '#28282f', '#403e46', '#5a5660', '#76727a'], n: 6, tex: 2.2, tsx: 0.35, tsy: 0.6 });
+      B.poly([[-24, 0], [24, 0], [24, -8], [-24, -8]], st, 0, { bevel: 2, ny: 0.3 });
+      B.poly([[-18, -6], [18, -6], [18, -58], [10, -64], [4, -56], [-4, -70], [-12, -60], [-18, -62]], st, 0.1, { bevel: 3, nx: -0.15 });
+      B.poly([[-18, -58], [18, -58], [18, -62], [-18, -62]], st, 0.12, { bevel: 1, ny: -0.8 });
+      B.poly([[-6, -6], [6, -6], [6, -22], [0, -28], [-6, -22]], M.glowC, 0.2, { bevel: 0.5 });
+      [[-10, -40], [9, -46]].forEach(([x, y]) => B.poly([[x - 2, y], [x + 2, y], [x + 2, y - 7], [x - 2, y - 7]], M.glowC, 0.2, { bevel: 0.3 }));
+      for (let i = 0; i < 6; i++) B.ell(-26 + i * 10, -2 - (i % 2) * 2, 5, 3, st, 0.3 + i * 0.01, { bulge: 0.8 });
+      B.ell(14, -30, 6, 10, ENV.EM.leaf, 0.25, { bulge: 0.8 }); B.ell(-15, -18, 5, 8, ENV.EM.leaf, 0.25, { bulge: 0.8 });
+      return { light: [0, -16], cyan: true, big: true };
     },
     lighthouse(B) { // the prologue lighthouse on its rock (world landmark)
       const wall = mat({ keys: ['#3a3834', '#5c5850', '#86806e', '#b0a88e', '#d4ccb0'], n: 6, tex: 1, tsx: 0.3, tsy: 1.4 });

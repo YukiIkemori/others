@@ -197,7 +197,7 @@
       else if (soft === 'r') { const n = vnoise(x * 0.3, y * 0.3, 8); c = pick(Q.road, 0.5 + (n - 0.5) * 0.4); if (H3(x >> 1, y >> 1, 3) > 0.985) c = [150, 140, 120]; }
       else if (soft === 'v') c = TD.cobbleAt(x, y, { flat: true });
       else if (soft === 'h') c = pick(Q.grassDk, 0.45 + (vnoise(x * 0.06, y * 0.06, 21) - 0.5) * 0.4 + (vnoise(x * 0.9, y * 0.35, 22) - 0.5) * 0.3);
-      else { c = TD.grassAt(x, y); if (soft === 'f') c = mix(c, [6, 14, 8], 0.4); }
+      else { c = TD.grassAt(x, y); c = mix(c, [c[1] * 0.7, c[1] * 0.78, c[1] * 0.9], 0.45); if (soft === 'f') c = mix(c, [6, 14, 8], 0.4); }
       // shore foam
       if (soft === '~' && wT(Math.floor(x / TS), Math.floor((y - 6) / TS)) !== '~' && vnoise(x * 0.2, y * 0.2, 9) > 0.4) c = mix(c, [140, 170, 190], 0.4);
       const q = (y * W + x) * 4; buf.d[q] = c[0]; buf.d[q + 1] = c[1]; buf.d[q + 2] = c[2]; buf.d[q + 3] = 255;
@@ -240,7 +240,7 @@
     TD.person(list, L.selma, 'right', 2, 15.6, 9.75); TD.person(list, L.sylvan, 'right', 0, 14.6, 9.75); TD.person(list, L.viola, 'right', 1, 13.6, 9.75);
     const { lights, emits, moonMask } = TD.composeScene(ctx, list, blds);
     lights.push({ x: 6.8 * TS, y: 3.9 * TS, r: 90, c: [255, 170, 90], k: 0.8 });
-    TD.lightmap(ctx, W, H, 'rgb(74,88,146)', lights, moonMask);
+    TD.lightmap(ctx, W, H, 'rgb(66,80,142)', lights, moonMask);
     // sea: moon glitter band + lighthouse beam
     const isW = (x, y) => wT(Math.floor(x / TS), Math.floor(y / TS)) === '~';
     TD.moonWater(ctx, W, H, isW, [], 11);
@@ -248,7 +248,7 @@
     TD.drawEmissive(ctx, emits);
     { const lx = 30.5 * TS, ly = 16.1 * TS - 78; ctx.save(); ctx.globalCompositeOperation = 'lighter';
       const beam = (a, len, w, k) => { const g = ctx.createLinearGradient(lx, ly, lx + Math.cos(a) * len, ly + Math.sin(a) * len); g.addColorStop(0, `rgba(255,236,190,${k})`); g.addColorStop(1, 'rgba(255,236,190,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + Math.cos(a - w) * len, ly + Math.sin(a - w) * len); ctx.lineTo(lx + Math.cos(a + w) * len, ly + Math.sin(a + w) * len); ctx.closePath(); ctx.fill(); };
-      beam(Math.PI * 1.08, 700, 0.07, 0.35); beam(Math.PI * 1.08, 500, 0.03, 0.35); ctx.restore(); ENV.glow(ctx, lx, ly, 40, [255, 230, 170], 0.9); }
+      ctx.filter = 'blur(3px)'; beam(Math.PI * 0.94, 760, 0.075, 0.28); beam(Math.PI * 0.94, 520, 0.03, 0.22); ctx.restore(); ENV.glow(ctx, lx, ly, 40, [255, 230, 170], 0.9); }
     // glow mushrooms in the forest, fireflies over the meadow
     { const R = rng(6); for (let i = 0; i < 260; i++) { const x = R() * W, y = R() * H, t = wT(Math.floor(x / TS), Math.floor(y / TS)); if (t !== 'f' && t !== 'h') continue; const cy = R() < 0.7; ENV.glow(ctx, x, y, 7, cy ? [110, 240, 230] : [190, 150, 255], 0.55); ctx.fillStyle = cy ? '#aef8f0' : '#dcc8ff'; ctx.fillRect(Math.floor(x), Math.floor(y), 2, 1); } }
     TD.fireflies(ctx, W, H, 60, 3);

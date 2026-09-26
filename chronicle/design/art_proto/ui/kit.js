@@ -290,8 +290,10 @@
     glow(x + w * 0.62, y + h * 0.2, w * 0.9, [255, 220, 170], 0.18);
     ctx.imageSmoothingEnabled = false;
     // head top near the frame top: bust origin = feet; place feet far below
-    const hx = x + w / 2 + (o.dx || 0), top = y + h * 0.08 + o.dy;
-    ctx.drawImage(r.canvas, Math.round((hx - r.canvas.width / 2) * S) / S, top, r.canvas.width, r.canvas.height);
+    // put the head (≈42 model units above the feet) at 55% of the frame height
+    const hcx = x + w / 2 + (o.dx || 0), hcy = y + h * (o.at || 0.56) + o.dy;
+    const left = hcx - (r.ox + 2 * o.scale * (o.flip ? -1 : 1)), top = hcy - (r.oy - 35 * o.scale);
+    ctx.drawImage(r.canvas, Math.round(left * S) / S, Math.round(top * S) / S, r.canvas.width, r.canvas.height);
     ctx.restore();
     if (o.ring) { ctx.save(); rr(x, y, w, h, o.r == null ? T.radius.m : o.r); ctx.strokeStyle = o.ringC || 'rgba(240,228,200,0.28)'; ctx.lineWidth = 1; ctx.stroke(); ctx.restore(); }
   }

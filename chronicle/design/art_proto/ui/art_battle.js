@@ -315,7 +315,7 @@
     if (o.mode === 'cmd') { const h = byId('arun'); h.pose = RIG.pose('ready', { br: 0.2 }); }
     if (o.mode === 'glimmer') {
       const h = byId('arun'); h.pose = RIG.pose('slash', { br: 0.2, smear: 0.9 }); h.x -= 120; h.y += 6;
-      const w = byId('wolf'); if (w) { w.st = { lunge: -0.9, bite: 0.8 }; w.flash = 0.55; }
+      const w = byId('wolf'); if (w) { w.st = { lunge: -0.9, bite: 0.8 }; w.flash = 0.25; }
       byId('viola').pose = RIG.pose('cast', { br: 0.4 });
     }
     acts.sort((a, b) => a.y - b.y);
@@ -337,7 +337,7 @@
     }
     // lightmap: moon-blue ambient on the ground and actors, the lantern's warm pool
     const lights = [[lx, ly - 20, 820 * g.sy, [255, 205, 140], 0.95, 0.55], [lx, ly - 10, 260 * g.sy, [255, 230, 190], 0.5, 0.6]];
-    if (o.mode === 'glimmer') lights.push([byId('wolf').x + 60, byId('wolf').y - 90, 420, [255, 240, 210], 0.8, 0.8]);
+    if (o.mode === 'glimmer') lights.push([byId('wolf').x + 60, byId('wolf').y - 90, 300, [200, 225, 255], 0.45, 0.8]);
     lightmap(ctx, o.W, o.H, { top: g.GT - 20 * g.sy, feather: 60 * g.sy, amb: 'rgb(78,88,140)', lights });
     ENV.glow(ctx, lx, ly - 18, 200 * g.sy, [255, 190, 110], 0.55); ENV.glow(ctx, lx, ly - 18, 40 * g.sy, [255, 240, 200], 0.9);
     if (o.mode === 'glimmer') {
@@ -347,7 +347,7 @@
       const gg = ctx.createLinearGradient(x - 160, y - 40, x + 40, y + 160); gg.addColorStop(0, 'rgba(160,220,255,0)'); gg.addColorStop(0.5, 'rgba(190,230,255,0.6)'); gg.addColorStop(1, 'rgba(255,255,255,0.85)');
       ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(x, y + 40, 150, Math.PI * 0.58, Math.PI * 1.25); ctx.arc(x + 24, y + 48, 128, Math.PI * 1.23, Math.PI * 0.62, true); ctx.closePath(); ctx.fill(); ctx.restore();
       const ix = w.x + 70, iy = w.y - 90;
-      ENV.glow(ctx, ix, iy, 220, [200, 230, 255], 0.9);
+      ENV.glow(ctx, ix, iy, 160, [200, 230, 255], 0.55);
       { const R = rng(3); ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = 'rgba(220,240,255,0.9)'; ctx.lineWidth = 4;
         for (let i = 0; i < 12; i++) { const a = R() * 6.28, r0 = 40, r1 = r0 + 40 + R() * 70; ctx.beginPath(); ctx.moveTo(ix + Math.cos(a) * r0, iy + Math.sin(a) * r0); ctx.lineTo(ix + Math.cos(a) * r1, iy + Math.sin(a) * r1); ctx.stroke(); }
         // lightning crackle

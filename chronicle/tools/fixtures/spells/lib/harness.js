@@ -40,7 +40,7 @@ function ensureData(R, info) {
   const DB = R.DB;
   const techCount = () => Object.keys(DB.actions).filter((k) => DB.actions[k] && DB.actions[k].kind === 'tech').length;
   if (!Object.keys(DB.weaponTypes).length) { evalBlocks(R, designBlocks('#### 6.8.1', '#### 6.8.2')); info.specData.push('weaponTypes(§6.8.1)'); }
-  if (techCount() < 121) {
+  if (techCount() < 108) {   // A19: 108 techs (SYSTEMS_REWORK §3.4)
     const have = techCount();
     const before = new Set(Object.keys(DB.actions));
     const tmp = { DB: { actions: {} } };

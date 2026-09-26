@@ -77,6 +77,7 @@
       const dis = it.disabled;
       if (it.icon) K.icon(it.icon, x + U(14), ry + rowH / 2 - U(7.5), U(15), dis ? T.c.disabled : i === sel ? T.c.goldHi : T.c.text2);
       K.text(it.label, x + U(it.icon ? 36 : 16), ry + rowH / 2 + U(5), { size: 14, w: i === sel ? 700 : 500, c: dis ? T.c.disabled : i === sel ? '#fff8e6' : T.c.text });
+      if (it.isNew) K.chip('NEW', x + U(36) + K.measure(it.label, 14, i === sel ? 700 : 500) + U(6), ry + rowH / 2 - U(7), { size: 8, c: '#241a08', bg: T.c.gold, line: 'rgba(255,240,200,0.6)', pad: 4 });
       if (it.right) K.text(it.right, x + U(o.w) - U(12), ry + rowH / 2 + U(4.5), { size: 11.5, w: 700, c: it.free ? T.c.teal : dis ? T.c.disabled : T.c.text2, align: 'right' });
     });
     return h;
@@ -96,13 +97,13 @@
       partyPanel(716, 12, 232, { active: 0 });
       turnHead(16, 14, 'アルンの番', '武器の技を選ぶ。');
       const h = A.arun;
-      cmdPanel(h.left - 128, h.top - 24, [{ label: '剣', icon: 'sword' }, { label: '術', icon: 'arts' }, { label: '防御', icon: 'shield' }, { label: '道具', icon: 'bag' }], 0, { title: 'アルン' });
+      cmdPanel(h.left - 150, h.top - 128, [{ label: '剣', icon: 'sword' }, { label: '術', icon: 'arts' }, { label: '防御', icon: 'shield' }, { label: '道具', icon: 'bag' }], 0, { title: 'アルン' });
       enemyTags(A);
-      K.chip('×2', 16, 500, { icon: 'ff', size: 10.5 }); K.chip('オート', 66, 500, { icon: 'auto', size: 10.5, c: T.c.text3 });
-      K.prompts([['a', '決定'], ['b', 'ひとつ戻る'], ['y', 'オート'], ['r', '速さ']], 944, 510, { size: 11.5 });
+      K.chip('×2', 16, 500, { icon: 'ff', size: 10.5 });
+      K.prompts([['a', '決定'], ['b', 'ひとつ戻る'], ['x', '詳しく'], ['r', '速さ']], 944, 510, { size: 11.5 });
     } else {
       const U = K.U;
-      turnHead(12, 12, 'アルンの番', '武器の技を選ぶ。');
+      turnHead(12, 28, 'アルンの番', '武器の技を選ぶ。');
       enemyTags(A);
       // party: 2×2 cards under the stage
       PARTY.forEach((p, i) => {
@@ -130,7 +131,7 @@
       });
       K.panel(16, 948, 508, 52, { a: 0.6, r: 12, frost: false });
       K.text('剣の技と通常の攻撃。敵をひとり選ぶ。', 32, 980, { size: 13, c: T.c.text2 });
-      K.chip('×2', 16, 1020, { icon: 'ff', size: 11 }); K.chip('オート', 90, 1020, { icon: 'auto', size: 11, c: T.c.text3 }); K.chip('逃げる', 190, 1020, { icon: 'exit', size: 11, c: T.c.text3 });
+      K.chip('×2', 16, 1020, { icon: 'ff', size: 11 }); K.chip('リピート', 90, 1020, { icon: 'auto', size: 11, c: T.c.text3 }); K.chip('逃げる', 206, 1020, { icon: 'exit', size: 11, c: T.c.text3 });
       K.text('タップで決定　・　長押しで説明', 270, 1130, { size: 11, c: T.c.text3, align: 'center' });
     }
   };
@@ -141,16 +142,17 @@
     K.fadePanel(600, 0, 360, 200, 'right', 0.62);
     partyPanel(716, 12, 232, { active: 0 });
     const h = A.arun;
-    const items = [{ label: '攻撃', right: '' }, { label: '二段斬り', right: 'M 4' }, { label: '稲妻突き', right: 'M 6' }, { label: '疾風剣', right: 'M 0', free: true }, { label: '流し斬り', right: 'M 12', disabled: true }];
-    const ph = cmdPanel(h.left - 178, h.top - 60, items, 2, { w: 172, title: 'アルン ›  剣' });
+    const items = [{ label: '攻撃', right: '' }, { label: '二段斬り', right: 'M 4' }, { label: '稲妻突き', right: 'M 6' }, { label: '疾風剣', right: 'M 0', free: true, isNew: true }, { label: '流し斬り', right: 'M 12', disabled: true }];
+    const LX = h.left - 200, LY = h.top - 228;
+    const ph = cmdPanel(LX, LY, items, 2, { w: 172, title: 'アルン ›  剣' });
     // description / tooltip under the list (no effect numbers, A17)
-    K.panel(h.left - 178, h.top - 60 + ph + 6, 172, 46, { a: 0.6, r: 8, blur: 6 });
-    K.text('雷をまとった鋭い突き。', h.left - 166, h.top - 60 + ph + 25, { size: 11.5, c: T.c.text2 });
-    K.text('ひとりに', h.left - 166, h.top - 60 + ph + 42, { size: 10.5, c: T.c.text3 });
+    K.panel(LX + 180, LY + 60, 190, 50, { a: 0.6, r: 8, blur: 6 });
+    K.text('雷をまとった鋭い突き。', LX + 192, LY + 80, { size: 11.5, c: T.c.text2 });
+    K.text('ひとりに　・　ねらい：氷狼', LX + 192, LY + 98, { size: 10.5, c: T.c.text3 });
     // target: the wolf, with a marker and a name card
     const w = A.wolf;
     K.glow(w.x, w.top + 4, 26, [255, 230, 170], 0.5); K.diamond(w.x + 10, w.top - 8, 6, T.c.goldHi, 'rgba(80,60,30,0.9)', 1);
-    turnHead(16, 14, '氷狼', 'ねらう相手を選ぶ');
+    turnHead(16, 14, 'アルンの番', '剣の技を選ぶ（ねらいは前回の相手を覚えている）');
     enemyTags(A);
     K.prompts([['a', '決定'], ['b', 'ひとつ戻る'], ['x', '詳しく'], ['dpad', '相手を変える']], 944, 510, { size: 11.5 });
   };
@@ -210,7 +212,7 @@
     const grow = [{ lv: 19, hp: 12, mp: 3 }, { lv: 0, hp: 0, mp: 0 }, { lv: 18, hp: 9, mp: 4 }, { lv: 0, hp: 0, mp: 0 }];
     PARTY.forEach((p, i) => {
       const y = 330 + i * 40;
-      K.portrait(BATTLE_ART.LOOKS[p.id], 48, y, 32, 32, { scale: 1.9, dy: -4, r: 16 });
+      K.portrait(BATTLE_ART.LOOKS[p.id], 48, y, 32, 32, { scale: 1.9, dy: 0, r: 16 });
       K.text(p.name, 90, y + 14, { size: 13.5, w: 700 });
       const gr = grow[i];
       if (gr.lv) { K.chip('レベルアップ', 90, y + 18, { size: 9, c: '#241a08', bg: T.c.gold, line: 'rgba(255,240,200,0.6)', pad: 5 }); K.text('Lv ' + gr.lv, 180, y + 29, { size: 11, w: 700, c: T.c.gold }); }
