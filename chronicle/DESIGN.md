@@ -159,6 +159,21 @@
 
 ---
 
+### 0.8 統合で入れたリード決定（`design/build/LEAD_DECISIONS.md` の D1〜D12。この版で各節に書き込んだ。**normative**）
+| # | 決定 | 書き込んだ所 |
+|---|---|---|
+| D1 | 黒蛇の牙 `w_dagger_r7` の毒は 0.3（レアの上限） | §8.5 |
+| D2 | クセは 0〜1。**魔物の超レアだけ 0〜2** | §8.3.4・§8.14.1-4・§4.3.2 |
+| D3 | **レア（★）は必ず軽いクセを 1 つ**（帯のレア・魔物のレア・レアの遺物・物語の報酬） | §4.3.2・§8.3.3・§8.5・§8.7.1・§8.8・§9.12.5 |
+| D4 | 武器の `metalHit` は、その武器で出す技にも効く（術には効かない） | §4.10.5・§8.2.2・§8.3.7・§9.9・§9.12.2 |
+| D5 | 珊瑚は「サンゴ」 | §9.12.4・§9.12.5 |
+| D6 | `story_after_clear` は必ず明るい画面で始めて終わる | §10.9.2 |
+| D7 | 控えは加入順 | §3.3.4・§5.5.4 |
+| D9 | 詳細ポップアップのレア度は「超レア★★」、名前の印は ★ のまま | §8.2.8・§11.7.18・STYLE_JA §8 |
+| D10 | 話者名は 2 人以上が話す場面だけ | §10.9.2・§10.9.4・STYLE_JA §5 |
+| D12 | ダンジョンのフィーネは全地方 cond `'!<rs>_boss'`、戻ると結びの一言だけ | §10.8.0-5 |
+- D8（杖使いの開始の技）・D11（外伝の締めの場面）・D13（術の 6 系統）はデータとコードの決定なので、この文書は変えない。
+
 ## 1. 技術と約束
 
 この章は、約20人の実装担当が話し合わずに並列で作業するための**共通の約束**を決める。
@@ -1769,7 +1784,7 @@ glimPct … mods の glimPct の、その系統・属性の値＋ 'tech' か 'sp
   ティア 4 の普通の戦闘、A の主な武器、器用さ 49、覚えている数 10 → 1行動 1.8%（1戦 2.1 回で約 27 戦に1つ）。同じ条件で B 1.2%、C 0.7%、D 0.36%。ボス戦なら A で 5.4%。
 - 例（術、T8、A の属性、候補の lv = rankB、1戦にその属性を 0.75 回唱える）: 知力 52（Z）2.3% → 58 戦に1つ、知力 112（N）3.2% → 42 戦、知力 232（S）4.5% → 30 戦。
 - 追いつき: ティア 4 で技も術も 0 の仲間は FK = 4（上限）。覚えるほど下がり、EXPECT − 2 で 1 になる。
-  検算: その仲間（武器2系統 B）は中央値 28 戦で 5 個、48 戦で 7 個（EXPECT − 3）に届く。
+  検算: その仲間（武器2系統 B）は中央値 28 戦で 5 個、48 戦で 7 個（EXPECT − 3）に届く（A8.2: **その地方の中ボス・地方ボスとも戦う**前提。ボス戦は rank +2・EF 2.5 なので効きが大きい。雑魚だけで数えると 32 戦・52 戦）。
   ふつうに出撃している人（遅れ 2 以内）には効かないので、得手不得手の差は残る。
 - **魔石の入口の補正**: その属性の術を1つも覚えていない人が魔石を使ったときは、p を ×10 する（上限 0.35 はそのまま）。4〜5 個で最初の術を閃く。
 
@@ -1781,7 +1796,7 @@ glimPct … mods の glimPct の、その系統・属性の値＋ 'tech' か 'sp
 | 本編クリア時の、1人が覚えている技・術の数 | 戦士型（武器2系統）**17〜22**: 主な武器（A/B、行動の6割以上）10〜11 / 11、2つ目の武器（B〜C、3割）**6〜10**。術師型（A/A/B の3属性、オートで 1 戦 0.75 回以上唱える）**24〜32**: 単属性 9〜14、合成A 1〜3、合成B 0〜3、3属性 0〜1、杖の技 4〜10 |
 | 得手不得手の差 | 1系統だけを使う人の、T4 の終わりの技の数: A ≥ D の 1.2 倍（追いつきの補正があるので差は中盤で縮む） |
 | 知力の差（術の閃き） | 1回の判定の確率 S/Z ≥ 1.8、S/N ≥ 1.35（T8） |
-| 入れ替えた仲間の追いつき | T4 で技も術も 0 の仲間: 中央値 30 戦以内で 5 個、50 戦以内で 7 個 |
+| 入れ替えた仲間の追いつき | T4 で技も術も 0 の仲間: 中央値 30 戦以内で 5 個、50 戦以内で 7 個（地方の流れのとおり中ボス・ボスを含めて数える。雑魚だけなら 35 戦・55 戦を目安にする。§4.9.4） |
 | 技の書・術の書 | 最初の3人だけで本編クリア: 技 35〜50%、術 20〜45%（術師型の人数で変わる）。入れ替えとクリア後の要素で 100% にできる |
 - 上の値は、この章の式で作ったモデル（1地方 95 戦＋ボス2、4人、1戦3回の行動、ボス戦9回）と、批評のモンテカルロ（候補の数が上限になる。主な武器は本編の終わりに 10〜11 / 11、術師 25〜32）で検算した（0.21）。
 
@@ -2096,7 +2111,7 @@ hpBoss(L) = hp(L) × (0.65 + 0.025 × (clamp(L, 18, 51) − 18))   // A12.0（�
 | D2 | 腕力ビルド・器用さビルド（T8） | D1 と同じ範囲 |
 | D3 | 知力ビルドの脆さ | 布一式の術師が同じ敵から受ける物理（前列どうし）が、重装の戦士の 1.35 倍以上 |
 | D4 | 知力ビルドの閃き | 1回の判定の確率 S/Z ≥ 1.8、S/N ≥ 1.35 |
-| E1 | 成長（1地方 95 戦＋ボス 2 のモデル） | 地方ボスでのレベルが LZ(T)+2〜+5、控えの遅れ ≤ 3、1地方で 100 戦余分に稼いでも +3 以内 |
+| E1 | 成長（1地方 95 戦＋ボス 2 のモデル） | 地方ボスでのレベルが LZ(T)+2〜+5、控えの遅れ ≤ 3（A1.0: **地方の終わり**＝地方ボスを倒した直後の、出撃中の平均レベルと控えの平均レベルの差で測る。地方の途中では測らない）、1地方で 100 戦余分に稼いでも +3 以内 |
 | E2 | 最大HP の稼ぎの効き | T2 以降の地方で 100 戦余分に稼いでも、最大HP の増えが +10% 以内 |
 | G | 閃き | §4.9.5 の表のすべて |
 | H1 | ドロップ | 10 万体の抽選で、確率が式の ±10% に入る。上限（0.75 / 0.5 / 0.125、補正の合計 +150）を超えない |
@@ -2334,7 +2349,7 @@ hpBoss:(L) => hp(L) × (0.65 + 0.05 × clamp((L−6)/6, 0, 10))
 - 画面の文なので「蘇生」は使わず「生き返り」と書く（STYLE_JA §2・§7.3。light の行）。
 
 #### 5.2.6 名前入力（`R.NameEntry.run`、§3.3.12・メニューの覚え書き §14）
-- 五十音表（ひらがな／カタカナ／英数字）と DOM キーボード。**1〜5 文字**。全角も半角も 1 文字と数える（幅は 5 文字 × 10.67px 以内に収まる）。漢字・空白・記号は使えない（`VALID = /^[ぁ-ゖァ-ヺーA-Za-z0-9]+$/`、`normalize` = NFKC＋空白を取る）。
+- 五十音表（ひらがな／カタカナ／英数字）と DOM キーボード。**1〜5 文字**（BRIEF の「4〜5文字」は上限として読む。1〜3 字の名前も入れられる）。全角も半角も 1 文字と数える（幅は 5 文字 × 10.67px 以内に収まる）。漢字・空白・記号は使えない（`VALID = /^[ぁ-ゖァ-ヺーA-Za-z0-9]+$/`、`normalize` = NFKC＋空白を取る）。
 - 下のコマンドは 2 行 × 4 列: `ひらがな カタカナ 英数字 おまかせ` / `1字消す キーボード 決定 （空き）`。
 - 初期値は性別ごとの `DB.starterKit.heroNames[gender][0]`。「おまかせ」を押すたびに、その性別の候補を順に入れ替える（8 つで一巡）。
   - 男: `アルン ラーク ハルト カミル ニール ベイル ロイス オルト`
@@ -3222,13 +3237,13 @@ newChar({id:companionId, level?}):
 - 得意分野の段: 右の窓に、選んだときの得手不得手（武器 11 と属性 6 の文字）を、変わる所を光らせて出す。
 
 #### 5.6.2 仲間を選ぶ・探す（`R.Tavern.chooseStart` / 「仲間を探す」）
-- 上の窓（y 0〜58）: 候補の絵を 2 段 × 10 人（x = 8 + 24i、y = 6 と 30）。カーソルの人は足踏み、選んだ人の上に 1〜3 の数字。加入済みの人は暗く（「仲間を探す」のときは出さない）。
-- 下の窓（y 68〜222）は **1 ページ**（**オーナー指示: 特性は画面に出さない**。未加入の候補には、名前・肩書と身の上・得意な武器と属性・能力値だけを見せる）: 「セルマ」＋成長「HP A　MP C　WP B」、「女　20歳　元衛兵」「前衛・重　前列」、「得意：剣S　大剣A　光A」（S の系統・属性、続けて A）、プロフィール 3 行、能力値 6 つ（3 列 × 2 行）。個性・得手不得手の表（S〜D の 17 字）・出身・初期装備・始めの技と術は出さない（←→ のページ送りは無くした。←→ も ↑↓ と同じく 1 人ずつ動く）
+- 上の窓 `(4,6,248,60)`: 候補の絵を 2 段 × 10 人（x = 11 + 24i、y = 11 と 37。§11.8.4）。カーソルの人は足踏み、選んだ人の上に 1〜3 の数字。加入済みの人は暗く（「仲間を探す」のときは出さない）。
+- 下の窓 `(4,68,248,154)` は **1 ページ**（**オーナー指示: 特性は画面に出さない**。未加入の候補には、名前・肩書と身の上・得意な武器と属性・能力値だけを見せる）: 「セルマ」（大きさ 16、`(52,72)`）＋成長「HP A　MP C　WP B」、「女　20歳　元衛兵」（y 92）「前衛・重　前列」（y 106）、「得意：剣S　大剣A　光A」（S の系統・属性、続けて A）、プロフィール 3 行、能力値 6 つ（3 列 × 2 行）。個性・得手不得手の表（S〜D の 17 字）・出身・初期装備・始めの技と術は出さない（←→ のページ送りは無くした。←→ も ↑↓ と同じく 1 人ずつ動く）
 - chooseStart: A で選ぶ／外す。3 人そろったら「この3人と旅立ちますか？」はい／いいえ。B は最後に選んだ人を外す（誰も選んでいなければ何もしない。キャンセルはできない）。
   決定後、1 人ずつ「{name}が仲間に加わった！」＋joinLine（ジングル `recruit` は最初の 1 回だけ）。
 
 #### 5.6.3 入れ替え（`R.Tavern.open` の「入れ替える」）
-- 左の窓: 出撃（主人公を含む 4 行。名前・Lv・隊列）。右の窓: 控え（加入順。名前・Lv。7 行ずつ、↑↓ で送る）。下の窓: カーソルの人の肩書・役割・隊列、プロフィールの 1 行目（主人公はタイプの説明）、得手不得手（加入済みなので表を出す）。個性は出さない（オーナー指示: 特性は画面に出さない）。
+- 左の窓: 出撃（主人公を含む 4 行。名前・Lv・隊列）。右の窓: 控え（加入順。§5.5.4。名前・Lv。**8 行ずつ**、↑↓ で送る）。下の窓: カーソルの人の肩書・役割・隊列、プロフィールの 1 行目（主人公はタイプの説明）、得手不得手（加入済みなので表を出す）。個性は出さない（オーナー指示: 特性は画面に出さない）。
 
 ### 5.7 validate に入れる検査（担当 qa。この章のデータについて）
 
@@ -7072,7 +7087,7 @@ R.Rules.fillItem = function (it) {
 | 0.5 | 属性の倍率 `elem`・打撃の倍率 `phys`・状態の耐性 `statusRes` は**最終の値をデータに書く**（§9.5 の表の値）。種族の既定・親和・飛ぶことからの作り方は §9.3 に書き、新しい種を足すときだけ使う。 | 実行時に組み立てると、実装ごとに優先順位が食い違う。表の値が正、作り方は検算用。 |
 | 0.6 | **絵は全種 `mon:<魔物id>` として art-mons が登録する**。中身は組み立て表 `R.Art.MON_COMPOSE`（元絵・色替え・パーツ・フィルター。§9.4.6）。**魔物データは `hue/sat/bri` を持たない**（§3.1.2 の「色違いは魔物データの hue/sat/bri」を変更）。 | パーツは固有の色で描くので、実行時に全体の色相を回すとパーツの色まで変わる。見た目の決まりを1つの表に集めると、絵とデータが別々に進められる。 |
 | 0.7 | 「虚ろの使い」（§10.1.2）は**既存の元絵に紙のフィルター `paper` をかけた系統**（`paper`）。小鬼 → 獣 → 騎士 → 竜 と、段ごとに元絵が変わる。ティア2から全地方に出る。 | 新しい元絵を作らずに「白く紙のように欠けた魔物」が作れ、どの地方にもなじむ。 |
-| 0.8 | **新しい元絵は 14**（小 5・中 7・大 2。§9.4.2）。パーツ 66 種・フィルター 6 種で段を描き分ける（§9.4.4・§9.4.5）。 | ブリーフの 12〜16。既存 36 と合わせて 50 の元絵。 |
+| 0.8 | **新しい元絵は 14**（小 4・中 8・大 2。§9.4.2 の表の大きさ 32 / 48 / 64 の数）。パーツ 66 種・フィルター 6 種で段を描き分ける（§9.4.4・§9.4.5）。 | ブリーフの 12〜16。既存 36 と合わせて 50 の元絵。 |
 | 0.9 | **金色の個体は全種に自動で存在する**（鋼・レア魔物・ボス・呼ばれた魔物を除く）。データは作らず、`R.Mon.def(id, {golden:true})` が作る（§9.8）。 | §4.10.2 のとおり。定義の数を増やさない。 |
 | 0.10 | **鋼の魔物は 3 系統 × 2 段 = 6 種**。名前は「白銀の」「鏡の」「白金の」（§9.9）。鋼にも通る武器（`metalHit:true` の超レア武器 3 本）を用意する。 | §4.10.5。「メタル」「はぐれ」は使わない。 |
 | 0.11 | **レア魔物 23 種**（既存の絵 6 ＋ 新しい絵 17）。**1つのゾーンに1種**（26 ゾーンのうち 23）。裏ダンジョンの `rm_dream_tapir`（夢食いバク）は**超レアモンスター**（1/200、行動2回、ドロップ率が高い）。 | ブリーフ「22以上、5既存＋17新」。地方ごとに 2〜3 種いる。 |
@@ -7332,7 +7347,7 @@ troops[id] = { mons: [[monId | '@系統', n], …],   // 左から並べる順
 | `mammoth` | 64 | 正面を向いた長い毛のマンモス。大きく反り返った白い牙2本、下に垂らして先を丸めた鼻、小さな目、盛り上がった頭頂、肩から下へ長く垂れる毛、柱のような足。 | 毛 #8a5a30→#c09060、牙 #f0e8d8、目 #201810 |
 - 登録: `R.Gfx.def('mon:<id>', factory)` と `R.Art.monstersC = {ids, sizes}`（クレストの A・B と同じ形）。
 
-#### 9.4.3 組み立て `R.Art.compose`（担当 art-mons `src/art/monsters_parts.js`）
+#### 9.4.3 組み立て `R.Art.compose`（担当 art-mons A14a。`compose` とパーツは `src/art/monsters_parts*.js`、雑魚の組み立て表は `src/art/monsters_compose.js`）
 ```js
 R.Art.compose(base, hsb, parts, filter) → canvas        // 例: R.Art.compose('wolf', {hue:20, sat:0.6, bri:1.15}, [['frost', {c:'#e8fcff'}]], null)
 R.Art.MON_ANCHORS[base] = { head, brow, eyes:[[x,y],…], mouth, neck, back, body, hand, hand2, tail, feet }   // 元絵の座標（ピクセル）
@@ -7347,7 +7362,7 @@ R.Art.MON_COMPOSE[spriteId] = [base, hsb, parts, filter?]   // §9.4.6（雑魚�
 5. **キャンバスの大きさは元絵と同じ**（32/48/64）。はみ出す部分は切る。冠・角は頭の上の余白に収まる大きさで描く（小の元絵なら 6〜8px、中 8〜12px、大 12〜16px）。
 - アンカーは 50 の元絵（既存 36 ＋ 新 14）のすべてに付ける（`boss_*` `rare_*` には不要）。無いアンカーは `body` を使う。手の無い元絵（ゼリー・目玉など）の武器は、体の横に浮かせて描く。
 - 金色の個体は、組み立て後の絵に `R.Gfx.variant(key, {tint:'#ffd24a'})`（§3.1.2）。キャッシュのキーは `mon:<id>` ＋ 金色かどうか。
-- 確認用: `tools/sheet_monsters_parts.js`（A14）が、`MON_COMPOSE` の全 id を名前つきの一覧表（1枚に 48 体）にして PNG で出す。**描いたら必ず見て確かめる**。
+- 確認用: `tools/sheet_monsters_compose.js`（A14a）が、`MON_COMPOSE` の全 id を名前つきの一覧表（1枚に 48 体）にして PNG で出す。**描いたら必ず見て確かめる**。
 
 #### 9.4.4 パーツ（66。`R.Art.PARTS[id] = (pix, anchor, opts) => void`）
 `opts` の共通: `c`（主の色）、`c2`（二番目の色）、`gem`（宝石の色）、`size`（`'s' 'm' 'l'`。既定は元絵の大きさ）、`style`（形の種類）、`len`（角の長さ `s m l`）。
@@ -7419,15 +7434,16 @@ R.Art.MON_COMPOSE[spriteId] = [base, hsb, parts, filter?]   // §9.4.6（雑魚�
 
 #### 9.4.6 組み立て表 `R.Art.MON_COMPOSE`（normative。**雑魚 211**。ボスの組み立て 14 は §9.11.6 の表。第 2 版で分けた）
 - **登録の形（A14・A15 とも同じ。第 2 版で決めた）**: 自分の表を `R.Art.MON_COMPOSE_MOBS`（A14）/ `R.Art.MON_COMPOSE_BOSSES`（A15）に置き、下のコードの形（`R.Art.MON_COMPOSE = R.Art.MON_COMPOSE || {}` に 1 件ずつ入れる。`Object.assign(R.Art.MON_COMPOSE = R.Art.MON_COMPOSE || {}, 自分の表)` と同じ意味で、重なりだけ warn する）で**足し込む**（`R.Art.MON_COMPOSE = {…}` と代入しない。代入すると読み込み順で相手の分が消える。ES2020 までなので `||=` は使わない）。`R.Gfx.def('mon:' + id, …)` も自分の表の id だけを登録する（factory の中で `R.Art.compose` を呼ぶので、読み込み順に頼らない）。
-- **id の重なりはエラー**: `MON_COMPOSE_MOBS` と `MON_COMPOSE_BOSSES` の両方にある id を validate が失敗にする（V8）。足し込むとき、すでにある id を見つけたら `R.warn('MON_COMPOSE: duplicate', id)` を出して上書きしない。
+- **id の重なりはエラー**: `MON_COMPOSE_MOBS` と `MON_COMPOSE_BOSSES` の両方にある id を validate が失敗にする（V8）。
+- **A14a の直し（第 3 版で表に入れた）**: 下の表は `src/art/monsters_compose.js` と同じ。① 前の段の色替えだけだった 7 つの段に、図鑑の文に合うパーツを 1〜2 つ足した: `beetle_2`（装甲板）・`crystal_2`（火の粉）・`crystal_3`（霜）・`crystal_4`（オーラ・紋様）・`frog_3`（角・斑点）・`darkmage_2`（火の粉）・`darkmage_3`（風の渦）。② 元絵の実際の色に当てると名前や図鑑の文と合わない色になった 15 の色相を直した: `crystal_2..4` `frog_2` `bat_2` `jelly_4` `darkmage_2` `ghost_3` `plant_3` `wisp_4` `gargoyle_3` `crab_3` `snake_1` `snake_4` `spider_4`（例: 紅水晶が緑、「赤いゼリー」のゼリー将軍が緑になっていた）。§9.5.2 の「絵」の欄も同じ値。足し込むとき、すでにある id を見つけたら `R.warn('MON_COMPOSE: duplicate', id)` を出して上書きしない。
 ```js
-// src/art/monsters_parts.js（担当 A14）— 雑魚 211 の組み立て表（§9.4.3 の形）
+// src/art/monsters_compose.js（担当 A14a）— 雑魚 211 の組み立て表（§9.4.3 の形）
 const MOBS = (R.Art.MON_COMPOSE_MOBS = {
   // jelly ゼリー
   jelly_1: ['jelly', {}, []],
   jelly_2: ['jelly', { hue: 170 }, [['bubbles', { c: '#c8f0ff' }]]],
   jelly_3: ['jelly', { hue: 110, sat: 1.1, bri: 0.85 }, [['drips', { c: '#a060e0' }], ['skull_mark', { c: '#f0e0ff' }]]],
-  jelly_4: ['jelly', { hue: -40, sat: 1.1 }, [['helm', { c: '#9aa0b0', style: 'horned' }], ['sword', { c: '#d8dce8' }]]],
+  jelly_4: ['jelly', { hue: -150, sat: 1.1 }, [['helm', { c: '#9aa0b0', style: 'horned' }], ['sword', { c: '#d8dce8' }]]],
   jelly_5: ['jelly', {}, [['tiara', { c: '#ffe070', gem: '#ff60c0' }]], 'prism'],
   // rat ネズミ
   rat_1: ['rat', {}, []],
@@ -7436,7 +7452,7 @@ const MOBS = (R.Art.MON_COMPOSE_MOBS = {
   rat_4: ['rat', { hue: -20, bri: 0.8 }, [['eyepatch'], ['bandana', { c: '#c03030' }], ['sword', { c: '#c0c4d0', size: 's' }]]],
   // bat コウモリ
   bat_1: ['bat', {}, []],
-  bat_2: ['bat', { hue: 330, sat: 1.2 }, [['eyes_glow', { c: '#ff4040' }]]],
+  bat_2: ['bat', { hue: 55, sat: 1.2 }, [['eyes_glow', { c: '#ff4040' }]]],
   bat_3: ['bat', { hue: 260 }, [['aura', { c: '#c090ff' }]]],
   bat_4: ['bat', { sat: 0.5, bri: 0.55 }, [['eyes_glow', { c: '#ff3050' }], ['aura', { c: '#502070' }]]],
   bat_5: ['bat', { hue: 330, sat: 1.1, bri: 0.7 }, [['crown', { c: '#e0c050', gem: '#c02040' }], ['cape', { c: '#301020', c2: '#c02030' }]]],
@@ -7448,7 +7464,7 @@ const MOBS = (R.Art.MON_COMPOSE_MOBS = {
   // crab カニ
   crab_1: ['crab', {}, []],
   crab_2: ['crab', { hue: 200, sat: 0.35 }, [['armor_plates', { c: '#7c8898' }]]],
-  crab_3: ['crab', { hue: 160 }, [['bubbles', { c: '#e0ffff' }]]],
+  crab_3: ['crab', { hue: 190 }, [['bubbles', { c: '#e0ffff' }]]],
   crab_4: ['crab', { hue: 30, sat: 0.6, bri: 1.1 }, [['shell_tower', { c: '#d8c8a0' }]]],
   // seabird カモメ
   seabird_1: ['seabird', {}, []],
@@ -7469,7 +7485,7 @@ const MOBS = (R.Art.MON_COMPOSE_MOBS = {
   // plant 人食い花
   plant_1: ['plant', {}, []],
   plant_2: ['plant', { hue: -20, sat: 0.9, bri: 0.85 }, [['thorns', { c: '#2a5020' }]]],
-  plant_3: ['plant', { hue: 200, sat: 1.1 }, [['smoke', { c: '#b080e0' }]]],
+  plant_3: ['plant', { hue: -60, sat: 1.1 }, [['smoke', { c: '#b080e0' }]]],
   plant_4: ['plant', { hue: 230, sat: 0.9, bri: 0.65 }, [['aura', { c: '#8090ff' }]]],
   plant_5: ['plant', { hue: 40, sat: 0.6, bri: 1.2 }, [['halo', { c: '#fff4b0' }], ['flower', { c: '#ffffff' }]]],
   // fairy 妖精
@@ -7489,10 +7505,10 @@ const MOBS = (R.Art.MON_COMPOSE_MOBS = {
   scorpion_4: ['scorpion', { hue: 260, sat: 0.6, bri: 0.6 }, [['skull_mark', { c: '#e0e0e0' }], ['eyes_glow', { c: '#ff2040' }]]],
   scorpion_5: ['scorpion', { hue: 30, sat: 0.8, bri: 0.8 }, [['crown', { c: '#f0c030', gem: '#40c0ff' }], ['armor_plates', { c: '#c09030' }]]],
   // snake ヘビ
-  snake_1: ['snake', { hue: 35, sat: 0.7, bri: 1.1 }, []],
+  snake_1: ['snake', { hue: -70, sat: 0.7, bri: 1.1 }, []],
   snake_2: ['snake', { hue: 20, sat: 0.8, bri: 0.85 }, [['rattle', { c: '#e0c080' }]]],
   snake_3: ['snake', { hue: 60, sat: 1.1 }, [['eyes_glow', { c: '#ff3030' }], ['hood', { c: '#5a8030', style: 'cobra' }]]],
-  snake_4: ['snake', { hue: 30, sat: 0.9, bri: 0.9 }, [['horns', { c: '#d8c090', len: 's' }], ['armor_plates', { c: '#a88040' }]]],
+  snake_4: ['snake', { hue: -75, sat: 1, bri: 0.8 }, [['horns', { c: '#d8c090', len: 's' }], ['armor_plates', { c: '#a88040' }]]],
   // mummy ミイラ
   mummy_1: ['mummy', {}, []],
   mummy_2: ['mummy', { hue: 250, sat: 0.4, bri: 0.9 }, [['eyes_glow', { c: '#b040ff' }]]],
@@ -7536,18 +7552,18 @@ const MOBS = (R.Art.MON_COMPOSE_MOBS = {
   // ghost 霊
   ghost_1: ['ghost', {}, []],
   ghost_2: ['ghost', { hue: 20, sat: 1.2 }, [['drips', { c: '#a0d0ff', style: 'tears' }]]],
-  ghost_3: ['ghost', { hue: 120, sat: 0.8, bri: 0.8 }, [['eyes_glow', { c: '#ff3050' }], ['chain', { c: '#6a6480' }]]],
+  ghost_3: ['ghost', { hue: 50, sat: 0.8, bri: 0.8 }, [['eyes_glow', { c: '#ff3050' }], ['chain', { c: '#6a6480' }]]],
   ghost_4: ['ghost', { hue: 330, sat: 1.2, bri: 0.7 }, [['chain', { c: '#503040' }], ['aura', { c: '#801030' }]]],
   ghost_5: ['ghost', { hue: 250, sat: 1.2, bri: 0.6 }, [['crown', { c: '#b0a0e0', gem: '#ff4080' }], ['cape', { c: '#201030', c2: '#8040c0' }], ['aura', { c: '#6030a0' }]]],
   // wisp 鬼火
   wisp_1: ['wisp', { hue: -170, sat: 1.2 }, []],
   wisp_2: ['wisp', { hue: -100, sat: 1.2 }, [['eyes_glow', { c: '#ffffff', style: 'face' }]]],
   wisp_3: ['wisp', { sat: 0.4, bri: 1.2 }, [['aura', { c: '#c0e0ff' }]]],
-  wisp_4: ['wisp', { hue: 80, sat: 1.2, bri: 0.7 }, [['aura', { c: '#502080' }], ['skull_mark', { c: '#d0c0ff' }]]],
+  wisp_4: ['wisp', { hue: 15, sat: 1.2, bri: 0.55 }, [['aura', { c: '#502080' }], ['skull_mark', { c: '#d0c0ff' }]]],
   // frog カエル
   frog_1: ['frog', {}, []],
-  frog_2: ['frog', { hue: 180, sat: 1.3 }, [['spots', { c: '#ffd020' }]]],
-  frog_3: ['frog', { hue: 40, sat: 0.8, bri: 0.9 }, []],
+  frog_2: ['frog', { hue: 125, sat: 1.3 }, [['spots', { c: '#ffd020' }]]],
+  frog_3: ['frog', { hue: 40, sat: 0.8, bri: 0.9 }, [['horns', { c: '#a88848', len: 's' }], ['spots', { c: '#503818' }]]],
   frog_4: ['frog', { hue: 20, sat: 0.7, bri: 0.95 }, [['bell', { c: '#c89040' }]]],
   // doll 人形
   doll_1: ['doll', {}, []],
@@ -7563,7 +7579,7 @@ const MOBS = (R.Art.MON_COMPOSE_MOBS = {
   spider_1: ['spider', {}, []],
   spider_2: ['spider', { hue: 250, sat: 1.1 }, [['spots', { c: '#80ff40' }]]],
   spider_3: ['spider', { sat: 0.3, bri: 0.4 }, [['eyes_glow', { c: '#ff2020', style: 'many' }]]],
-  spider_4: ['spider', { hue: 40, sat: 1.3, bri: 0.9 }, [['eyes_glow', { c: '#ffd040', style: 'many' }], ['spots', { c: '#ffd040', style: 'stripes' }]]],
+  spider_4: ['spider', { hue: 15, sat: 1.3, bri: 0.9 }, [['eyes_glow', { c: '#ffd040', style: 'many' }], ['spots', { c: '#ffd040', style: 'stripes' }]]],
   // merman 魚人
   merman_1: ['merman', {}, []],
   merman_2: ['merman', { hue: -30 }, [['helm', { c: '#708090', style: 'fin' }]]],
@@ -7590,14 +7606,14 @@ const MOBS = (R.Art.MON_COMPOSE_MOBS = {
   mole_4: ['mole', { hue: 20, sat: 0.7, bri: 0.85 }, [['hat', { c: '#f0c040', style: 'miner' }], ['beard', { c: '#e0e0e0' }], ['pick', { c: '#c0c8d0' }]]],
   // beetle カブト
   beetle_1: ['beetle', {}, []],
-  beetle_2: ['beetle', { sat: 0.2, bri: 0.7 }, []],
+  beetle_2: ['beetle', { sat: 0.2, bri: 0.7 }, [['armor_plates', { c: '#8a90a0', style: 'rivet' }]]],
   beetle_3: ['beetle', { hue: -40, sat: 1.2 }, [['sparks', { c: '#ffb040' }]]],
   beetle_4: ['beetle', { sat: 0.3, bri: 1.3 }, [['crystals', { c: '#e0f8ff' }]]],
   // crystal 水晶
   crystal_1: ['crystal', {}, []],
-  crystal_2: ['crystal', { hue: -60, sat: 1.4 }, []],
-  crystal_3: ['crystal', { hue: 180, sat: 1.3 }, []],
-  crystal_4: ['crystal', { hue: 250, sat: 1.3, bri: 0.85 }, []],
+  crystal_2: ['crystal', { hue: 150, sat: 1.4 }, [['embers', { c: '#ffb040' }]]],
+  crystal_3: ['crystal', { hue: 20, sat: 1.3 }, [['frost', { c: '#e8fcff' }]]],
+  crystal_4: ['crystal', { hue: 80, sat: 1.3, bri: 0.85 }, [['aura', { c: '#7040c0' }], ['runes', { c: '#e0a0ff' }]]],
   // goblin 小鬼
   goblin_1: ['goblin', {}, []],
   goblin_2: ['goblin', { hue: 20 }, [['axe', { c: '#b8c0c8' }], ['helm', { c: '#807060', style: 'cap' }]]],
@@ -7619,7 +7635,7 @@ const MOBS = (R.Art.MON_COMPOSE_MOBS = {
   // gargoyle 石像鬼
   gargoyle_1: ['gargoyle', {}, []],
   gargoyle_2: ['gargoyle', { sat: 0.3, bri: 0.45 }, [['eyes_glow', { c: '#ff3020' }]]],
-  gargoyle_3: ['gargoyle', { hue: -150, sat: 1.3 }, [['embers', { c: '#ff6020' }]]],
+  gargoyle_3: ['gargoyle', { hue: 115, sat: 1.3 }, [['embers', { c: '#ff6020' }]]],
   gargoyle_4: ['gargoyle', { sat: 0.5, bri: 0.85 }, [['horns', { c: '#606070', len: 'l' }], ['crown', { c: '#a0a0b0' }]]],
   // orc 大鬼
   orc_1: ['orc', { hue: 20, sat: 0.8 }, []],
@@ -7637,8 +7653,8 @@ const MOBS = (R.Art.MON_COMPOSE_MOBS = {
   eyeball_5: ['eyeball', { hue: 180, sat: 0.6, bri: 1.25 }, [['crown', { c: '#ffe070', gem: '#80c0ff' }], ['wings_feather', { c: '#ffffff', size: 'm' }], ['aura', { c: '#fff0b0' }]]],
   // darkmage 魔術師
   darkmage_1: ['darkmage', { hue: 20, sat: 0.8 }, []],
-  darkmage_2: ['darkmage', { hue: 140, sat: 1.2 }, []],
-  darkmage_3: ['darkmage', { hue: -150, sat: 1.1 }, []],
+  darkmage_2: ['darkmage', { hue: 60, sat: 1.2 }, [['embers', { c: '#ffa040' }]]],
+  darkmage_3: ['darkmage', { hue: -150, sat: 1.1 }, [['storm', { c: '#c8f0d8' }]]],
   darkmage_4: ['darkmage', { hue: 30, sat: 1.1, bri: 0.6 }, [['aura', { c: '#502080' }], ['staff', { c: '#302030', gem: '#c040ff' }]]],
   // automaton からくり
   automaton_1: ['automaton', {}, []],
@@ -7779,7 +7795,7 @@ for (const id in MOBS) {
 | `jelly_1` | ぷちゼリー | T0 / 7 | jelly | 火1.25 | 斬1.25 打.5 | — | hp1.1 atk.9 agi.8 | 攻撃6 · e_tackle2 | i_salve 1/8<br>ac_jelly_ring 1/32<br>ac_sr_jelly_heart 1/256 | ぷるぷる震える小さなゼリー。<br>道ばたで群れをつくる。 |
 | `jelly_2` | あわゼリー | T2 / 19 | jelly 色相+170 ＋泡 | 火1.25 水.25 土1.5（親和水） | 斬1.25 打.5 | — | hp1.05 mag1.1 agi.9 | 攻撃4 · e_water_bolt2 · e_bubbles2 | i_stone_water 1/8<br>sh_bubble 1/32<br>w_staff_sr_bubble 1/256 | 体の中で泡がはじけるゼリー。<br>泡を吐いて目をくらます。 |
 | `jelly_3` | 毒ゼリー | T4 / 31 | jelly 色相+110 彩1.1 明.85 ＋したたり・髑髏の印 | 火1.25 | 斬1.25 打.5 | 毒1 | hp1.1 | 攻撃3 · e_poison_spit3 · e_split1[HP>50%,数<6] | i_antidote 1/8<br>hn_jelly_glove 1/32<br>w_whip_sr_venomjelly 1/256 | 毒をためこんだ紫のゼリー。<br>傷つくと二つに分かれる。 |
-| `jelly_4` | ゼリー将軍 | T6 / 43 | jelly 色相-40 彩1.1 ＋かぶと(horned)・剣 | 火1.25 | 斬1.25 打.5 | — | hp1.3 atk1.1 def1.1 | 攻撃4 · e_howl2[3手ごと@0] · e_crush2 | i_potion 1/8<br>hd_jelly_helm 1/32<br>w_sword_sr_jellygeneral 1/256 | かぶとをかぶった赤いゼリー。<br>ゼリーの群れを率いる。 |
+| `jelly_4` | ゼリー将軍 | T6 / 43 | jelly 色相-150 彩1.1 ＋かぶと(horned)・剣 | 火1.25 | 斬1.25 打.5 | — | hp1.3 atk1.1 def1.1 | 攻撃4 · e_howl2[3手ごと@0] · e_crush2 | i_potion 1/8<br>hd_jelly_helm 1/32<br>w_sword_sr_jellygeneral 1/256 | かぶとをかぶった赤いゼリー。<br>ゼリーの群れを率いる。 |
 | `jelly_5` | 虹ゼリー | T8 / 55 | jelly ＋小冠 〔虹〕 | 火.75 水.75 風.75 土.75 光.75 闇.75 | 斬1.25 打.5 | — | hp1.2 mag1.2 mdef1.2 | 攻撃2 · e_prism_ray3 · e_split1[HP>50%,数<6] | i_elixir 1/8<br>ac_rainbow_drop 1/32<br>sh_sr_phantom 1/128 | 七色に光るまぼろしのゼリー。<br>どの属性もはね返しがち。 |
 
 ##### `rat` ネズミ（獣・s）
@@ -7798,7 +7814,7 @@ for (const id in MOBS) {
 | id | 名前 | 段T / lv | 絵 | 属性の倍率 | 打撃 | 状態の耐性 | 能力 s | 行動（重み・条件） | 通常 / レア / 超レア | 図鑑の説明 |
 |---|---|---|---|---|---|---|---|---|---|---|
 | `bat_1` | 小コウモリ | T0 / 7 | bat | 火1.25 風1.5 土.5 | 突1.25 | — | hp.85 agi1.4・飛 | 攻撃5 · e_bite1 | i_clear 1/8<br>ac_bat_fang 1/32<br>ft_sr_bat_wing 1/256 | 暗がりから飛び出す小さな<br>コウモリ。すばしこい。 |
-| `bat_2` | 血吸いコウモリ | T2 / 19 | bat 色相+330 彩1.2 ＋光る目 | 火1.25 風1.5 土.5 | 突1.25 | — | hp.9 agi1.35・飛 | 攻撃3 · e_drain_bite3 | i_salve 1/8<br>w_dagger_bloodbat 1/32<br>w_katana_sr_crimson 1/256 | 血を吸うと体が赤く染まる。<br>傷口をねらってくる。 |
+| `bat_2` | 血吸いコウモリ | T2 / 19 | bat 色相+55 彩1.2 ＋光る目 | 火1.25 風1.5 土.5 | 突1.25 | — | hp.9 agi1.35・飛 | 攻撃3 · e_drain_bite3 | i_salve 1/8<br>w_dagger_bloodbat 1/32<br>w_katana_sr_crimson 1/256 | 血を吸うと体が赤く染まる。<br>傷口をねらってくる。 |
 | `bat_3` | 音波コウモリ | T4 / 31 | bat 色相+260 ＋オーラ | 火1.25 風1.5 土.5 | 突1.25 | — | hp.9 mag1.1 agi1.3・飛 | 攻撃3 · e_sonic3 | i_clear 1/8<br>hd_sonic_band 1/32<br>hd_sr_echo_hood 1/256 | 耳をつんざく音を出して、<br>相手の頭を惑わせる。 |
 | `bat_4` | 闇コウモリ | T6 / 43 | bat 彩.5 明.55 ＋光る目・オーラ | 火1.25 風1.5 土.5 光1.5 闇.25（親和闇） | 突1.25 | — | hp.95 mag1.15 agi1.35・飛 | 攻撃3 · e_dark_bolt2 · e_drain_bite2 | i_stone_dark 1/8<br>bd_night_cloak 1/32<br>w_bow_sr_nightwing 1/256 | 夜そのもののような黒い翼。<br>闇の玉を吐き出す。 |
 | `bat_5` | コウモリ公 | T8 / 55 | bat 色相+330 彩1.1 明.7 ＋冠・マント | 火1.25 風1.5 土.5 光1.5 闇.25（親和闇） | 突1.25 | — | hp1.3 mag1.2 agi1.25・飛 | 攻撃2 · e_life_suck3 · e_call_lesser1[数<5] · e_dark_mist2 | i_ether2 1/8<br>ac_count_brooch 1/32<br>w_dagger_sr_moonfang 1/128 | 夜の城に住むというコウモリの<br>貴族。命を吸って生きる。 |
@@ -7820,7 +7836,7 @@ for (const id in MOBS) {
 |---|---|---|---|---|---|---|---|---|---|---|
 | `crab_1` | 浜ガニ | T0 / 7 | crab | 火.75 水.5 土1.25 | — | — | hp.95 def1.4 agi.8 | 攻撃5 · e_pincer2 | i_salve 1/8<br>sh_crab_shell 1/32<br>w_fist_sr_crabclaw 1/256 | 浜辺を横歩きする赤いカニ。<br>はさみに気をつけて。 |
 | `crab_2` | 鉄甲ガニ | T2 / 19 | crab 色相+200 彩.35 ＋装甲板 | 火.75 水.25 土1.5（親和水） | — | — | def1.7 mdef.8 agi.7 | 攻撃3 · e_pincer2 · e_harden2[1回] | i_stone_water 1/8<br>bd_crab_plate 1/32<br>sh_sr_ironshell 1/256 | 鉄のような甲羅のカニ。<br>身を固めると刃が通らない。 |
-| `crab_3` | 泡吹きガニ | T4 / 31 | crab 色相+160 ＋泡 | 火.75 水.25 土1.5（親和水） | — | — | mag1.1 def1.4 | 攻撃3 · e_bubbles2 · e_water_bolt2 | i_ether 1/8<br>hd_foam_cap 1/32<br>w_bow_sr_foamshot 1/256 | 青いカニ。泡で目をくらませ、<br>水の弾を撃ってくる。 |
+| `crab_3` | 泡吹きガニ | T4 / 31 | crab 色相+190 ＋泡 | 火.75 水.25 土1.5（親和水） | — | — | mag1.1 def1.4 | 攻撃3 · e_bubbles2 · e_water_bolt2 | i_ether 1/8<br>hd_foam_cap 1/32<br>w_bow_sr_foamshot 1/256 | 青いカニ。泡で目をくらませ、<br>水の弾を撃ってくる。 |
 | `crab_4` | 城ガニ | T6 / 43 | crab 色相+30 彩.6 明1.1 ＋背中の城 | 火.75 水.25 土1.5（親和水） | — | — | hp1.4 def1.6 agi.6 | 攻撃3 · e_pincer2 · e_harden1[1回] · e_crush2 | i_elixir 1/8<br>sh_castle_shell 1/32<br>bd_sr_castle_carapace 1/256 | 背中に小さな城を背負った<br>大ガニ。まるで動く砦。 |
 
 ##### `seabird` カモメ（鳥・m・飛ぶ）
@@ -7861,7 +7877,7 @@ for (const id in MOBS) {
 |---|---|---|---|---|---|---|---|---|---|---|
 | `plant_1` | かみつき花 | T0 / 7 | plant | 火1.5 水.5 土.75 | 斬1.25 | 眠.5 毒.5 | hp1.1 atk1.05 agi.8 | 攻撃4 · e_bite2 | i_salve 1/8<br>w_bow_leaf 1/32<br>w_whip_sr_vine 1/256 | 道ばたの花のふりをして、<br>通る者にかみつく。 |
 | `plant_2` | いばら花 | T2 / 19 | plant 色相-20 彩.9 明.85 ＋いばら | 火1.5 水.5 土.75 | 斬1.25 | 眠.5 毒.5 | hp1.1 atk1.1 agi.8 | 攻撃3 · e_thorn_vine2 · e_bind2 | i_antidote 1/8<br>w_staff_sprout 1/32<br>bd_sr_thorn_mail 1/256 | とげだらけのつるをのばし、<br>絡めとって動けなくする。 |
-| `plant_3` | 毒吹き花 | T4 / 31 | plant 色相+200 彩1.1 ＋煙 | 火1.5 水.5 土.75 | 斬1.25 | 眠.5 毒.5 | hp1.1 mag1.1 agi.8 | 攻撃2 · e_poison_breath3 · e_bite2 | i_panacea 1/8<br>bd_leaf_mail 1/32<br>ac_sr_poison_bloom 1/256 | 紫の花びらから毒の息を吐く。<br>風下に立ってはいけない。 |
+| `plant_3` | 毒吹き花 | T4 / 31 | plant 色相-60 彩1.1 ＋煙 | 火1.5 水.5 土.75 | 斬1.25 | 眠.5 毒.5 | hp1.1 mag1.1 agi.8 | 攻撃2 · e_poison_breath3 · e_bite2 | i_panacea 1/8<br>bd_leaf_mail 1/32<br>ac_sr_poison_bloom 1/256 | 紫の花びらから毒の息を吐く。<br>風下に立ってはいけない。 |
 | `plant_4` | 夜咲き花 | T6 / 43 | plant 色相+230 彩.9 明.65 ＋オーラ | 火1.5 水.5 土.75 光1.5 闇.25（親和闇） | 斬1.25 | 眠.5 毒.5 | hp1.15 mag1.15 agi.85 | 攻撃2 · e_sleep_pollen2 · e_life_suck2 · e_bite1 | i_stone_dark 1/8<br>w_spear_hornet 1/32<br>w_staff_sr_moonbloom 1/256 | 月の夜にだけ開く青い花。<br>眠らせて命を吸う。 |
 | `plant_5` | 千年花 | T8 / 55 | plant 色相+40 彩.6 明1.2 ＋光輪・花 | 火1.5 水.5 土.75 光.25 闇1.5（親和光） | 斬1.25 | 眠.5 毒.5 | hp1.3 mag1.2 mdef1.2 agi.8 | 攻撃2 · e_heal_all2[HP<80%] · e_flash2 · e_spore_storm1 · e_regen_self1[1回] | i_elixir 1/8<br>ac_millennium_seed 1/32<br>bd_sr_thousand_petal 1/256 | 千年咲き続ける白い花。<br>光を放って仲間を癒やす。 |
 
@@ -7901,10 +7917,10 @@ for (const id in MOBS) {
 
 | id | 名前 | 段T / lv | 絵 | 属性の倍率 | 打撃 | 状態の耐性 | 能力 s | 行動（重み・条件） | 通常 / レア / 超レア | 図鑑の説明 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `snake_1` | 砂ヘビ | T0 / 7 | snake 色相+35 彩.7 明1.1 | 火1.25 | — | — | atk1.05 agi1.05 | 攻撃4 · e_poison_bite2 | i_antidote 1/8<br>w_dagger_scorpion 1/32<br>ft_sr_sandsnake 1/256 | 砂と同じ色のヘビ。<br>足もとに気をつけて。 |
+| `snake_1` | 砂ヘビ | T0 / 7 | snake 色相-70 彩.7 明1.1 | 火1.25 | — | — | atk1.05 agi1.05 | 攻撃4 · e_poison_bite2 | i_antidote 1/8<br>w_dagger_scorpion 1/32<br>ft_sr_sandsnake 1/256 | 砂と同じ色のヘビ。<br>足もとに気をつけて。 |
 | `snake_2` | 鈴尾ヘビ | T2 / 19 | snake 色相+20 彩.8 明.85 ＋鈴の尾 | 火1.25 | — | — | atk1.05 agi1.1 | 攻撃3 · e_scare2 · e_poison_bite2 | i_salve 1/8<br>w_whip_snakeskin 1/32<br>ac_sr_rattle_charm 1/256 | しっぽを鈴のように鳴らして<br>おどかしてくる。 |
 | `snake_3` | にらみヘビ | T4 / 31 | snake 色相+60 彩1.1 ＋光る目・頭巾(cobra) | 火1.25 | — | — | hp1.05 mag1.1 agi1.05 | 攻撃3 · e_gaze2 · e_bind2 | i_panacea 1/8<br>sh_scorpion_shell 1/32<br>hd_sr_gaze_circlet 1/256 | 赤い目でにらまれると、<br>体が石のように固まる。 |
-| `snake_4` | 砂の大蛇 | T6 / 43 | snake 色相+30 彩.9 明.9 ＋角・装甲板 | 火1.25 風1.5 土.25（親和土） | — | — | hp1.35 atk1.15 agi.95 | 攻撃2 · e_bind2 · e_poison_bite2 · e_swallow1 | i_potion 1/8<br>w_katana_sand 1/32<br>w_whip_sr_python 1/256 | 人ひとりのみこむ砂漠の主。<br>角のようなうろこが目じるし。 |
+| `snake_4` | 砂の大蛇 | T6 / 43 | snake 色相-75 彩1 明.8 ＋角・装甲板 | 火1.25 風1.5 土.25（親和土） | — | — | hp1.35 atk1.15 agi.95 | 攻撃2 · e_bind2 · e_poison_bite2 · e_swallow1 | i_potion 1/8<br>w_katana_sand 1/32<br>w_whip_sr_python 1/256 | 人ひとりのみこむ砂漠の主。<br>角のようなうろこが目じるし。 |
 
 ##### `mummy` ミイラ（不死・m）
 王墓を守る死者たち。兵、呪い、神官、将軍、そして王家の者。
@@ -7993,7 +8009,7 @@ for (const id in MOBS) {
 |---|---|---|---|---|---|---|---|---|---|---|
 | `ghost_1` | 迷い霊 | T0 / 7 | ghost | 光1.5 | 斬.5 打.5 突.5 | 毒1 死1 気1 | hp.95 mag1.1 mdef1.2 | 攻撃4 · e_scare1 · e_water_bolt2 | i_salve 1/8<br>hd_mist_hood 1/32<br>ac_sr_lost_lantern 1/256 | 霧の中で道に迷ったままの霊。<br>冷たい水を浴びせてくる。 |
 | `ghost_2` | 泣き霊 | T2 / 19 | ghost 色相+20 彩1.2 ＋したたり(tears) | 光1.5 | 斬.5 打.5 突.5 | 毒1 死1 気1 | hp.95 mag1.15 mdef1.2 | 攻撃2 · e_wail2 · e_water_bolt2 | i_ether 1/8<br>w_whip_mist 1/32<br>bd_sr_mourning_veil 1/256 | すすり泣く声が霧に響く。<br>聞いた者は眠りに落ちる。 |
-| `ghost_3` | 呪い霊 | T4 / 31 | ghost 色相+120 彩.8 明.8 ＋光る目・鎖 | 光1.5 闇.25（親和闇） | 斬.5 打.5 突.5 | 毒1 死1 気1 | mag1.2 mdef1.2 | 攻撃2 · e_curse2 · e_dark_bolt2 · e_mind_suck1 | i_panacea 1/8<br>sh_bell_shield 1/32<br>w_whip_sr_chain_curse 1/256 | 鎖を引きずる紫の霊。<br>呪いの声で術を封じる。 |
+| `ghost_3` | 呪い霊 | T4 / 31 | ghost 色相+50 彩.8 明.8 ＋光る目・鎖 | 光1.5 闇.25（親和闇） | 斬.5 打.5 突.5 | 毒1 死1 気1 | mag1.2 mdef1.2 | 攻撃2 · e_curse2 · e_dark_bolt2 · e_mind_suck1 | i_panacea 1/8<br>sh_bell_shield 1/32<br>w_whip_sr_chain_curse 1/256 | 鎖を引きずる紫の霊。<br>呪いの声で術を封じる。 |
 | `ghost_4` | 恨み霊 | T6 / 43 | ghost 色相+330 彩1.2 明.7 ＋鎖・オーラ | 光1.5 闇.25（親和闇） | 斬.5 打.5 突.5 | 毒1 死1 気1 | hp1.05 mag1.25 mdef1.2 | 攻撃2 · e_death_word1 · e_dark_mist2 · e_life_suck2 | i_revive 1/8<br>w_sword_bellringer 1/32<br>ft_sr_ghost 1/256 | 深い恨みを抱いて消えない霊。<br>死の言葉をささやく。 |
 | `ghost_5` | 冥界の霊王 | T8 / 55 | ghost 色相+250 彩1.2 明.6 ＋冠・マント・オーラ | 光1.5 闇.25（親和闇） | 斬.5 打.5 突.5 | 毒1 死1 気1 | hp1.3 mag1.3 mdef1.25 | 攻撃1 · e_death_word1 · e_dark_mist2 · e_life_suck2 · e_call_lesser1[数<5] · e_curse1 | i_elixir 1/8<br>ac_underworld_bell 1/32<br>bd_sr_starry 1/128 | 冥界から霊を率いて現れる王。<br>命あるものを妬んでいる。 |
 
@@ -8005,7 +8021,7 @@ for (const id in MOBS) {
 | `wisp_1` | 鬼火 | T0 / 7 | wisp 色相-170 彩1.2 | 火.25 水1.5 光1.5（親和火） | 斬.5 打.5 突.5 | 毒1 死1 気1 | hp.85 mag1.2 agi1.2 | 攻撃3 · e_fire_bolt3 | i_stone_fire 1/8<br>hd_mist_hood 1/32<br>ac_sr_ember_lamp 1/256 | 夜の沼にぽっと灯る火の玉。<br>近づく者を火の玉で焼く。 |
 | `wisp_2` | 化け火 | T2 / 19 | wisp 色相-100 彩1.2 ＋光る目(face) | 火.25 水1.5 光1.5（親和火） | 斬.5 打.5 突.5 | 毒1 死1 気1 | hp.85 mag1.2 agi1.2 | 攻撃2 · e_fire_bolt2 · e_evil_eye2 | i_salve 1/8<br>w_whip_mist 1/32<br>w_staff_sr_goblinfire 1/256 | 顔のある緑の火。にやりと<br>笑って人を惑わせる。 |
 | `wisp_3` | 人魂 | T4 / 31 | wisp 彩.4 明1.2 ＋オーラ | 光1.5 闇.25（親和闇） | 斬.5 打.5 突.5 | 毒1 死1 気1 | hp.9 mag1.2 agi1.2 | 攻撃2 · e_mind_suck2 · e_dark_bolt2 | i_ether 1/8<br>sh_bell_shield 1/32<br>ac_sr_soul_bead 1/256 | 青白くゆれる魂の火。<br>魔力を吸い取っていく。 |
-| `wisp_4` | 黄泉の火 | T6 / 43 | wisp 色相+80 彩1.2 明.7 ＋オーラ・髑髏の印 | 光1.5 闇.25（親和闇） | 斬.5 打.5 突.5 | 毒1 死1 気1 | hp.95 mag1.3 agi1.2 | 攻撃1 · e_dark_mist2 · e_life_suck2 · e_yomi_fire2 | i_stone_dark 1/8<br>w_sword_bellringer 1/32<br>w_bow_sr_yomi 1/256 | 黄泉の国から燃え移った火。<br>青黒い炎は消えにくい。 |
+| `wisp_4` | 黄泉の火 | T6 / 43 | wisp 色相+15 彩1.2 明.55 ＋オーラ・髑髏の印 | 光1.5 闇.25（親和闇） | 斬.5 打.5 突.5 | 毒1 死1 気1 | hp.95 mag1.3 agi1.2 | 攻撃1 · e_dark_mist2 · e_life_suck2 · e_yomi_fire2 | i_stone_dark 1/8<br>w_sword_bellringer 1/32<br>w_bow_sr_yomi 1/256 | 黄泉の国から燃え移った火。<br>青黒い炎は消えにくい。 |
 
 ##### `frog` カエル（水生・m）
 沼のカエル。舌、毒、丸のみ、そして鐘のように鳴く大ガエル。
@@ -8013,8 +8029,8 @@ for (const id in MOBS) {
 | id | 名前 | 段T / lv | 絵 | 属性の倍率 | 打撃 | 状態の耐性 | 能力 s | 行動（重み・条件） | 通常 / レア / 超レア | 図鑑の説明 |
 |---|---|---|---|---|---|---|---|---|---|---|
 | `frog_1` | 沼ガエル | T0 / 7 | frog | 火.75 水.25 土1.5（親和水） | 突1.25 | — | hp1.1 | 攻撃4 · e_tongue2 | i_salve 1/8<br>bd_marsh_coat 1/32<br>ft_sr_frog_boots 1/256 | 湿原のどこにでもいるカエル。<br>長い舌でぴしゃりと打つ。 |
-| `frog_2` | 毒ガエル | T2 / 19 | frog 色相+180 彩1.3 ＋斑点 | 火.75 水.25 土1.5（親和水） | 突1.25 | 毒1 | hp1.05 atk1.05 agi1.05 | 攻撃3 · e_poison_spit3 | i_antidote 1/8<br>w_spear_reed 1/32<br>hn_sr_poisonfrog 1/256 | 青と黄色のあざやかなカエル。<br>その色は毒のしるし。 |
-| `frog_3` | 大口ガエル | T4 / 31 | frog 色相+40 彩.8 明.9 | 火.75 水.25 土1.5（親和水） | 突1.25 | — | hp1.3 atk1.15 agi.85 | 攻撃3 · e_swallow2 · e_tongue1 · e_heal_self1[HP<50%] | i_potion 1/8<br>bd_bog_mail 1/32<br>w_club_sr_bullfrog 1/256 | 何でものみこむ大きな口。<br>人の子どもほどの大きさ。 |
+| `frog_2` | 毒ガエル | T2 / 19 | frog 色相+125 彩1.3 ＋斑点 | 火.75 水.25 土1.5（親和水） | 突1.25 | 毒1 | hp1.05 atk1.05 agi1.05 | 攻撃3 · e_poison_spit3 | i_antidote 1/8<br>w_spear_reed 1/32<br>hn_sr_poisonfrog 1/256 | 青と黄色のあざやかなカエル。<br>その色は毒のしるし。 |
+| `frog_3` | 大口ガエル | T4 / 31 | frog 色相+40 彩.8 明.9 ＋角・斑点 | 火.75 水.25 土1.5（親和水） | 突1.25 | — | hp1.3 atk1.15 agi.85 | 攻撃3 · e_swallow2 · e_tongue1 · e_heal_self1[HP<50%] | i_potion 1/8<br>bd_bog_mail 1/32<br>w_club_sr_bullfrog 1/256 | 何でものみこむ大きな口。<br>人の子どもほどの大きさ。 |
 | `frog_4` | 鐘鳴りガエル | T6 / 43 | frog 色相+20 彩.7 明.95 ＋鐘 | 火.75 水.25 土1.5（親和水） | 突1.25 | — | hp1.3 mag1.1 agi.9 | 攻撃2 · e_bell_croak3 · e_tongue1 | i_panacea 1/8<br>w_sword_bellringer 1/32<br>ac_sr_frog_bell 1/256 | 首に鐘をさげた大ガエル。<br>鳴き声が鐘のように響く。 |
 
 ##### `doll` 人形（魔造・m）
@@ -8045,7 +8061,7 @@ for (const id in MOBS) {
 | `spider_1` | 糸吐きグモ | T0 / 7 | spider | 火1.5 | — | 毒.5 | agi1.1 | 攻撃3 · e_web2 · e_bite1 | i_antidote 1/8<br>bd_marsh_coat 1/32<br>hn_sr_silk_gloves 1/256 | 天井から糸を吐きかける。<br>絡まると手足が重くなる。 |
 | `spider_2` | 毒グモ | T2 / 19 | spider 色相+250 彩1.1 ＋斑点 | 火1.5 | — | 毒1 | atk1.05 agi1.1 | 攻撃3 · e_poison_bite3 · e_web1 | i_antidote 1/8<br>w_spear_reed 1/32<br>w_whip_sr_spidersilk 1/256 | 背に緑の斑点がある毒グモ。<br>かまれると毒がまわる。 |
 | `spider_3` | 影グモ | T4 / 31 | spider 彩.3 明.4 ＋光る目(many) | 火1.5 光1.5 闇.25（親和闇） | — | 毒.5 | atk1.1 agi1.2 | 攻撃2 · e_shadow_bite2 · e_web1 · e_ink1 | i_stone_dark 1/8<br>bd_bog_mail 1/32<br>bd_sr_shadow_silk 1/256 | 影にまぎれる黒いクモ。<br>赤い目だけが闇に光る。 |
-| `spider_4` | 女郎グモ | T6 / 43 | spider 色相+40 彩1.3 明.9 ＋光る目(many)・斑点(stripes) | 火1.5 | — | 毒.5 | hp1.25 atk1.1 mag1.1 agi1.1 | 攻撃2 · e_bind2 · e_poison_bite2 · e_call_lesser1[数<5] · e_web1 | i_panacea 1/8<br>ac_soul_candle 1/32<br>w_whip_sr_silk 1/128 | 金と黒のしまの大グモ。<br>巣には宝物が引っかかっている。 |
+| `spider_4` | 女郎グモ | T6 / 43 | spider 色相+15 彩1.3 明.9 ＋光る目(many)・斑点(stripes) | 火1.5 | — | 毒.5 | hp1.25 atk1.1 mag1.1 agi1.1 | 攻撃2 · e_bind2 · e_poison_bite2 · e_call_lesser1[数<5] · e_web1 | i_panacea 1/8<br>ac_soul_candle 1/32<br>w_whip_sr_silk 1/128 | 金と黒のしまの大グモ。<br>巣には宝物が引っかかっている。 |
 
 ##### `merman` 魚人（水生・m）
 南の海の魚人たち。見張り、もり兵、呪い師、騎士。
@@ -8102,7 +8118,7 @@ for (const id in MOBS) {
 | id | 名前 | 段T / lv | 絵 | 属性の倍率 | 打撃 | 状態の耐性 | 能力 s | 行動（重み・条件） | 通常 / レア / 超レア | 図鑑の説明 |
 |---|---|---|---|---|---|---|---|---|---|---|
 | `beetle_1` | 石カブト | T0 / 7 | beetle | 火1.25 風1.5 土.25（親和土） | 斬.75 打1.25 | 毒.5 | def1.4 agi.8 | 攻撃4 · e_horn2 | i_stone_earth 1/8<br>sh_ore_shield 1/32<br>hd_sr_beetle_horn 1/256 | 石のような殻の甲虫。<br>大きな角で突き上げる。 |
-| `beetle_2` | 鉄カブト | T2 / 19 | beetle 彩.2 明.7 | 火1.25 風1.5 土.25（親和土） | 斬.75 打1.25 | 毒.5 | def1.6 agi.8 | 攻撃3 · e_horn2 · e_harden1[1回] | i_salve 1/8<br>w_axe_pick 1/32<br>sh_sr_beetle_shell 1/256 | 鉄の殻をもつ甲虫。<br>鉱石を食べて殻を育てる。 |
+| `beetle_2` | 鉄カブト | T2 / 19 | beetle 彩.2 明.7 ＋装甲板 | 火1.25 風1.5 土.25（親和土） | 斬.75 打1.25 | 毒.5 | def1.6 agi.8 | 攻撃3 · e_horn2 · e_harden1[1回] | i_salve 1/8<br>w_axe_pick 1/32<br>sh_sr_beetle_shell 1/256 | 鉄の殻をもつ甲虫。<br>鉱石を食べて殻を育てる。 |
 | `beetle_3` | 火花カブト | T4 / 31 | beetle 色相-40 彩1.2 ＋火花 | 火.25 水1.5（親和火） | 斬.75 打1.25 | 毒.5 | mag1.15 def1.4 agi.85 | 攻撃2 · e_horn2 · e_fire_bolt2 | i_stone_fire 1/8<br>ac_gem_eye 1/32<br>w_spear_sr_sparkhorn 1/256 | 殻をこすって火花を散らす。<br>坑道の火事の元になる。 |
 | `beetle_4` | 金剛カブト | T6 / 43 | beetle 彩.3 明1.3 ＋結晶 | 火1.25 風1.5 土.25（親和土） | 斬.75 打1.25 | 毒.5 | hp1.1 def1.8 agi.8 | 攻撃2 · e_horn2 · e_harden1[1回] · e_charge2 | i_potion 1/8<br>w_club_forgehammer 1/32<br>bd_sr_diamond_shell 1/256 | 金剛石のように光る甲虫。<br>どんな刃もはね返す。 |
 
@@ -8112,9 +8128,9 @@ for (const id in MOBS) {
 | id | 名前 | 段T / lv | 絵 | 属性の倍率 | 打撃 | 状態の耐性 | 能力 s | 行動（重み・条件） | 通常 / レア / 超レア | 図鑑の説明 |
 |---|---|---|---|---|---|---|---|---|---|---|
 | `crystal_1` | 水晶くず | T0 / 7 | crystal | 水1.25 風.75 光.25 闇1.5（親和光） | 斬.75 打1.5 突.75 | 毒1 眠1 混1 死1 | hp.9 mag1.2 def1.2 | 攻撃3 · e_light_ray2 | i_stone_light 1/8<br>sh_ore_shield 1/32<br>ac_sr_quartz_shard 1/256 | 坑道の奥に浮かぶ透明な水晶。<br>光を集めて撃ってくる。 |
-| `crystal_2` | 紅水晶 | T2 / 19 | crystal 色相-60 彩1.4 | 火.25 水1.5 風.75（親和火） | 斬.75 打1.5 突.75 | 毒1 眠1 混1 死1 | hp.9 mag1.25 def1.2 | 攻撃2 · e_fire_bolt3 | i_stone_fire 1/8<br>ac_ruby_chip 1/32<br>w_staff_sr_ruby 1/256 | 炎を閉じこめた赤い水晶。<br>中で火がゆれている。 |
-| `crystal_3` | 青水晶 | T4 / 31 | crystal 色相+180 彩1.3 | 水.25 風.75 土1.5（親和水） | 斬.75 打1.5 突.75 | 毒1 眠1 混1 死1 | hp.95 mag1.25 def1.2 | 攻撃2 · e_water_bolt2 · e_frost1 | i_stone_water 1/8<br>ac_sapphire_chip 1/32<br>hd_sr_sapphire 1/256 | 冷たい水を閉じこめた水晶。<br>さわると指が凍える。 |
-| `crystal_4` | 紫水晶 | T6 / 43 | crystal 色相+250 彩1.3 明.85 | 水1.25 風.75 光1.5 闇.25（親和闇） | 斬.75 打1.5 突.75 | 毒1 眠1 混1 死1 | mag1.3 def1.2 mdef1.2 | 攻撃1 · e_dark_bolt2 · e_mind_suck2 · e_ward1[1回] | i_stone_dark 1/8<br>ac_gem_core 1/32<br>ac_sr_amethyst 1/256 | 闇を吸いこんだ紫の水晶。<br>近くの者の魔力を奪う。 |
+| `crystal_2` | 紅水晶 | T2 / 19 | crystal 色相+150 彩1.4 ＋火の粉 | 火.25 水1.5 風.75（親和火） | 斬.75 打1.5 突.75 | 毒1 眠1 混1 死1 | hp.9 mag1.25 def1.2 | 攻撃2 · e_fire_bolt3 | i_stone_fire 1/8<br>ac_ruby_chip 1/32<br>w_staff_sr_ruby 1/256 | 炎を閉じこめた赤い水晶。<br>中で火がゆれている。 |
+| `crystal_3` | 青水晶 | T4 / 31 | crystal 色相+20 彩1.3 ＋霜 | 水.25 風.75 土1.5（親和水） | 斬.75 打1.5 突.75 | 毒1 眠1 混1 死1 | hp.95 mag1.25 def1.2 | 攻撃2 · e_water_bolt2 · e_frost1 | i_stone_water 1/8<br>ac_sapphire_chip 1/32<br>hd_sr_sapphire 1/256 | 冷たい水を閉じこめた水晶。<br>さわると指が凍える。 |
+| `crystal_4` | 紫水晶 | T6 / 43 | crystal 色相+80 彩1.3 明.85 ＋オーラ・紋様 | 水1.25 風.75 光1.5 闇.25（親和闇） | 斬.75 打1.5 突.75 | 毒1 眠1 混1 死1 | mag1.3 def1.2 mdef1.2 | 攻撃1 · e_dark_bolt2 · e_mind_suck2 · e_ward1[1回] | i_stone_dark 1/8<br>ac_gem_core 1/32<br>ac_sr_amethyst 1/256 | 闇を吸いこんだ紫の水晶。<br>近くの者の魔力を奪う。 |
 
 ##### `goblin` 小鬼（人型・m）
 山の坑道にすむ小鬼の一族。斧兵、火薬師、隊長、王。
@@ -8156,7 +8172,7 @@ for (const id in MOBS) {
 |---|---|---|---|---|---|---|---|---|---|---|
 | `gargoyle_1` | 石像鬼 | T0 / 7 | gargoyle | 風1.5 土.5 光1.5 闇.5 | 斬.75 打1.25 突.75 | 死.8 | hp1.05 def1.3 agi.95・飛 | 攻撃4 · e_claw2 · e_harden1[1回] | i_salve 1/8<br>hd_ash_mask 1/32<br>hd_sr_gargoyle_face 1/256 | 屋根の飾りのふりをした石の鬼。<br>近づくと羽を広げる。 |
 | `gargoyle_2` | 黒曜の石像鬼 | T2 / 19 | gargoyle 彩.3 明.45 ＋光る目 | 風1.5 土.5 光1.5 闇.5 | 斬.75 打1.25 突.75 | 死.8 | hp1.05 atk1.1 def1.35・飛 | 攻撃3 · e_dive2 · e_claw1 | i_salve 1/8<br>w_axe_ember 1/32<br>w_dagger_sr_obsidian 1/256 | 黒曜石でできた石像鬼。<br>刃のような翼で切り裂く。 |
-| `gargoyle_3` | 火炎の石像鬼 | T4 / 31 | gargoyle 色相-150 彩1.3 ＋火の粉 | 火.25 水1.5 風1.5 土.5 光1.5 闇.5（親和火） | 斬.75 打1.25 突.75 | 死.8 | hp1.1 atk1.1 mag1.1 def1.3・飛 | 攻撃2 · e_fire_breath2 · e_claw2 | i_stone_fire 1/8<br>bd_ash_cloak 1/32<br>sh_sr_lava_gargoyle 1/256 | 溶岩で焼き固められた石像鬼。<br>体の割れ目が赤く光る。 |
+| `gargoyle_3` | 火炎の石像鬼 | T4 / 31 | gargoyle 色相+115 彩1.3 ＋火の粉 | 火.25 水1.5 風1.5 土.5 光1.5 闇.5（親和火） | 斬.75 打1.25 突.75 | 死.8 | hp1.1 atk1.1 mag1.1 def1.3・飛 | 攻撃2 · e_fire_breath2 · e_claw2 | i_stone_fire 1/8<br>bd_ash_cloak 1/32<br>sh_sr_lava_gargoyle 1/256 | 溶岩で焼き固められた石像鬼。<br>体の割れ目が赤く光る。 |
 | `gargoyle_4` | 石像鬼の長 | T6 / 43 | gargoyle 彩.5 明.85 ＋角・冠 | 風1.5 土.5 光1.5 闇.5 | 斬.75 打1.25 突.75 | 死.8 | hp1.25 atk1.15 def1.35・飛 | 攻撃2 · e_gaze2 · e_dive2 · e_harden1[1回] | i_potion 1/8<br>w_katana_ash 1/32<br>w_axe_sr_gargoyle 1/256 | 大角の石像鬼の長。<br>にらまれると体が石になる。 |
 
 ##### `orc` 大鬼（人型・l）
@@ -8194,8 +8210,8 @@ for (const id in MOBS) {
 | id | 名前 | 段T / lv | 絵 | 属性の倍率 | 打撃 | 状態の耐性 | 能力 s | 行動（重み・条件） | 通常 / レア / 超レア | 図鑑の説明 |
 |---|---|---|---|---|---|---|---|---|---|---|
 | `darkmage_1` | 見習い魔術師 | T0 / 7 | darkmage 色相+20 彩.8 | — | — | — | hp.9 atk.75 mag1.3 def.85 mdef1.3 | 攻撃2 · e_fire_bolt2 · e_water_bolt2 | i_ether 1/8<br>hd_star_hood 1/32<br>ac_sr_scholar 1/256 | 塔で術を学ぶ見習い。<br>火と水の術を覚えたばかり。 |
-| `darkmage_2` | 炎の魔術師 | T2 / 19 | darkmage 色相+140 彩1.2 | 火.25 水1.5（親和火） | — | — | hp.9 atk.75 mag1.35 def.85 mdef1.3 | 攻撃1 · e_fire_bolt2 · e_fire_rain2 · e_ward1[1回] | i_stone_fire 1/8<br>w_bow_star 1/32<br>bd_sr_flame_robe 1/256 | 赤い法衣の魔術師。<br>火の雨で何でも焼きはらう。 |
-| `darkmage_3` | 風の魔術師 | T4 / 31 | darkmage 色相-150 彩1.1 | 火1.5 風.25（親和風） | — | — | hp.9 atk.75 mag1.35 def.85 mdef1.3 agi1.15 | 攻撃1 · e_wind_blade2 · e_gust2 · e_hush1 · e_haste1[1回] | i_stone_wind 1/8<br>ac_astrolabe 1/32<br>ft_sr_wind_sandals 1/256 | 緑の法衣の魔術師。<br>風の刃と沈黙の霧を使う。 |
+| `darkmage_2` | 炎の魔術師 | T2 / 19 | darkmage 色相+60 彩1.2 ＋火の粉 | 火.25 水1.5（親和火） | — | — | hp.9 atk.75 mag1.35 def.85 mdef1.3 | 攻撃1 · e_fire_bolt2 · e_fire_rain2 · e_ward1[1回] | i_stone_fire 1/8<br>w_bow_star 1/32<br>bd_sr_flame_robe 1/256 | 赤い法衣の魔術師。<br>火の雨で何でも焼きはらう。 |
+| `darkmage_3` | 風の魔術師 | T4 / 31 | darkmage 色相-150 彩1.1 ＋風の渦 | 火1.5 風.25（親和風） | — | — | hp.9 atk.75 mag1.35 def.85 mdef1.3 agi1.15 | 攻撃1 · e_wind_blade2 · e_gust2 · e_hush1 · e_haste1[1回] | i_stone_wind 1/8<br>ac_astrolabe 1/32<br>ft_sr_wind_sandals 1/256 | 緑の法衣の魔術師。<br>風の刃と沈黙の霧を使う。 |
 | `darkmage_4` | 闇の魔術師 | T6 / 43 | darkmage 色相+30 彩1.1 明.6 ＋オーラ・杖 | 光1.5 闇.25（親和闇） | — | — | hp.95 atk.75 mag1.4 def.85 mdef1.3 | 攻撃1 · e_dark_bolt2 · e_dark_mist2 · e_gloom1 · e_mind_suck1 | i_ether2 1/8<br>w_sword_starblade 1/32<br>w_staff_sr_abyss 1/256 | 禁じられた闇の術を学んだ者。<br>塔の奥で人を待ち伏せる。 |
 
 ##### `automaton` からくり（魔造・m）
@@ -9383,7 +9399,7 @@ Object.assign(R.DB.actions, {
 
 #### 9.11.6 ボスの新しい絵（16 ＋ お供 2。A15 が `src/art/bosses_b.js` に描く）
 既存のボスの絵（クレスト）を使うもの: `boss_frost_giant`（氷壁の巨人）・`boss_flame_lord`（溶岩の巨獣）・`boss_star_guardian`（天球の番人）はそのまま。`boss_serpent`（砂もぐり）・`boss_general_b`（名なき砂の王）・`boss_bandit`（亡霊船長）・`boss_general_a`（鉄の番人）・`boss_demon_king`（魔王の残影）は §9.4.6 の色替え・フィルター。
-ボスの絵の大きさは括弧のとおり（§3.1.2: 〜128×112）。**顔は上から 20px より下**に置く（クレストと同じ注意。Part A8 のサイドビューでは上に重なるのは文の窓だけで、高さ 112 のボスで隠れるのは最大 4 行。§11.4.3）。
+ボスの絵の大きさは括弧のとおり（§3.1.2: 〜128×112）。**高さ 96px 以上のボスは、顔を上から 20px より下**に置く（96px 未満の絵は頭の上の余白が無いので当てはめない。`tools/test_art-boss.js` T4 も高さ 96 以上だけを見る。クレストと同じ注意。Part A8 のサイドビューでは上に重なるのは文の窓だけで、高さ 112 のボスで隠れるのは最大 4 行。§11.4.3）。
 - `boss_pageeater`（ページ食らい）: 80×64（新）。紙を何枚も重ねてできた巨大な白い紙魚（しみ）。平たい体に細い足が左右に8本ずつ、頭の先は丸いやつめうなぎのような口で、墨色の小さな歯が輪になって並ぶ。体の表面に消えかけた文字の列がうっすら残り、まわりに破れた紙片が5〜6枚舞う。色: 紙 #f4f0e4→#c8c0b0（影は青灰）、文字 #9090a0、口の中 #302030、歯 #202028。
 - `boss_moth`（ダストウィング）: 96×80（新）。灰茶色の巨大なガが羽を大きく広げる。前の羽に黄色と黒のふちの大きな目玉模様が一対。胸はふさふさの毛、触角は羽根のように広い櫛形。羽のふちからりん粉が粉雪のように落ちる（明るい点を散らす）。色: 羽 #8a7860→#c8b898、目玉 #f0c040/#201810、毛 #d8c8a8、りん粉 #f0e8d0。
 - `boss_rooteater`（根食らい）: 96×80（新）。千年樹の根にからみつく、白くぶよぶよした巨大な虫。体の節は紙のように白く一部が破れて中が空っぽ。頭には根のようにのびた曲がったあごが何本もあり、病んだ黄緑の樹液の筋が体を走る。背景側に太い根が2本。色: 体 #e8e4d8→#a8a498、樹液 #b0d040、あご #604830、根 #6a4a30。
@@ -9414,8 +9430,8 @@ Object.assign(R.DB.actions, {
 ```js
 // src/art/bosses_compose.js（担当 A15）
 const BOSSES = (R.Art.MON_COMPOSE_BOSSES = {
-  b_sandworm: ['boss_serpent', { hue: 25, sat: 0.7, bri: 1.05 }, []],
-  b_sandking: ['boss_general_b', { hue: 60, sat: 0.6, bri: 1.1 }, []],
+  b_sandworm: ['boss_serpent', { hue: -150, sat: 0.7, bri: 1.05 }, []],     // 青緑 → 黄土（25 では青くなった。A15a）
+  b_sandking: ['boss_general_b', { hue: 125, sat: 0.6, bri: 1.1 }, []],      // 紫 → 砂色と金（60 では赤くなった。A15a）
   b_doll_conductor: ['doll', { sat: 0.4, bri: 0.9 }, [['hat', { c: '#202020', style: 'tophat' }], ['cape', { c: '#202020', c2: '#c02030', style: 'tailcoat' }], ['baton', { c: '#f0f0f0' }]]],
   b_doll_violin: ['doll', { hue: 330, sat: 0.8 }, [['violin', { c: '#a05020' }], ['ribbon', { c: '#c02040' }]]],
   b_doll_drum: ['doll', { hue: 200, sat: 0.8 }, [['drum', { c: '#c03030' }], ['hat', { c: '#2040a0', style: 'shako' }]]],
@@ -9992,7 +10008,7 @@ for (const id in BOSSES) {
 |---|---|
 | mons A11 | `src/data/lineages.js`、`src/data/monsters_{common,forest,desert,snow,marsh,isles,mine,ash,star,finale,postgame}.js`、`src/data/enemy_actions.js`、`src/data/encounters.js`、`tools/sim_zones.js` |
 | boss A12 | `src/data/bosses.js`（ボス 34 体）、`src/data/bosses_actions.js`（`eb_` 191）、`src/data/troops.js`（26）、`src/data/rare.js`（レア魔物 23）、`src/data/rare_encounters.js`、`tools/sim_bosses.js`、`tools/sim_loot.js` |
-| art-mons A14 | `src/art/monsters_c.js`（新しい元絵 14）、`src/art/monsters_parts.js`（`R.Art.compose` `MON_ANCHORS` `PARTS` `FILTERS` と雑魚の組み立て表 `MON_COMPOSE_MOBS` 211。§9.4.6 の形で `MON_COMPOSE` に足し込む）、`tools/sheet_monsters_parts.js` |
+| art-mons A14 | `src/art/monsters_c.js`（新しい元絵 14）、`src/art/monsters_parts*.js`（`R.Art.compose` `MON_ANCHORS` `PARTS` `FILTERS`）、`src/art/monsters_compose.js`（雑魚の組み立て表 `MON_COMPOSE_MOBS` 211。§9.4.6 の形で `MON_COMPOSE` に足し込む）、`tools/sheet_monsters_compose.js` |
 | art-boss A15 | `src/art/bosses_b.js`（新しいボス 16 ＋ お供 2）、`src/art/bosses_compose.js`（ボスの組み立て表 `MON_COMPOSE_BOSSES` 14。§9.11.6 の表。`MON_COMPOSE` に足し込み、`R.Art.compose` で登録）、`src/art/rare_monsters_b.js`（新しいレア魔物 17）、`tools/sheet_bosses.js` `tools/sheet_rare.js` の更新 |
 - A15 の組み立ては A14 の `R.Art.compose` を**実行時に**呼ぶ（factory の中で呼ぶので、読み込み順には頼らない。§1.2）。A14 が未完成のあいだは、元絵をそのまま返す仮の関数で自分の絵を確かめる。
 
@@ -10383,7 +10399,7 @@ world 担当は下の座標に置く（地形の都合で±3マスまでずら�
 | verda_maze | 迷いの森 | r_forest | `verda_maze_1..2` | `forest`（新） | `forest` | `forest`（新） | `z_r_forest_maze` | ワールド |
 | elder_tree | 千年樹 | r_forest | `elder_tree_1..2` | `tree`（新） | `tree`（新） | `forest`（新） | `z_r_forest_tree` | 迷いの森2階の奥 |
 | sand_tomb | 砂の王墓 | r_desert | `sand_tomb_1..3` | `pyramid` | `pyramid` | `pyramid` | `z_r_desert_tomb` | ワールド |
-| frost_peak | 白竜の峰 | r_snow | `frost_peak_1..3` | `ice`（3階は屋外の頂上：`snow`（新）） | `ice`（3階は `snow`） | `ice` | `z_r_snow_peak` | ワールド |
+| frost_peak | 白竜の峰 | r_snow | `frost_peak_1..3` | `ice`（3階は屋外の頂上：`snow`（新）） | `ice`（3階は `peak`。R3。§11.2.13） | `ice` | `z_r_snow_peak` | ワールド |
 | mist_manor | 霧の館 | r_marsh | `mist_manor_1..2` | `manor`（新） | `manor`（新） | `ghost`（新） | `z_r_marsh_manor` | ワールド |
 | bell_marsh | 鐘沈みの沼 | r_marsh | `bell_marsh_1` | `swamp`（新。屋外の沼） | `swamp` | `ghost`（新） | `z_r_marsh_bog` | ワールド |
 | tide_cave | 潮鳴りの洞窟 | r_isles | `tide_cave_1` | `water` | `watercave` | `cave` | `z_r_isles_cave` | ワールド |
@@ -10391,7 +10407,7 @@ world 担当は下の座標に置く（地形の都合で±3マスまでずら�
 | deep_mine | 深き坑道 | r_mine | `deep_mine_1..3` | `mine`（新） | `mine`（新） | `cave` | `z_r_mine_mine` | ワールド |
 | ash_volcano | 灰の火山 | r_ash | `ash_volcano_1..3` | `volcano` | `volcano` | `volcano` | `z_r_ash_volcano` | ワールド |
 | stargaze | 星読みの塔 | r_star | `stargaze_1..4` | `tower` | `tower` | `tower` | `z_r_star_tower` | ワールド |
-| archive | 白の大書庫 | finale | `archive_1..6` | `library`（新） | `library`（新） | `lastdungeon` | 1〜3階 `z_finale_archive_lo`、4〜6階 `z_finale_archive_hi` | ワールド |
+| archive | 白の大書庫 | finale | `archive_1..6` | `library`（新。6 階は `oblivion`） | `library`（新） | `lastdungeon` | 1〜3階 `z_finale_archive_lo`、4〜6階 `z_finale_archive_hi` | ワールド |
 | oblivion | 忘却の底 | postgame | `oblivion_1..5` | `oblivion`（新） | `oblivion`（新） | `postgame` | 1〜2階 `z_postgame_oblivion_lo`、3〜5階 `z_postgame_oblivion_hi` | 大書庫1階の下り階段（クリア後） |
 
 **ダンジョンの約束（全地方共通・必須）**
@@ -10403,8 +10419,8 @@ world 担当は下の座標に置く（地形の都合で±3マスまでずら�
 6. ボスは見えるボス（NPC `boss`、絵 `mon:<ボスの絵>`、cond `'!<ボスのフラグ>'`）＋手前の step イベントの帯で始める（クレストの型）。負けたら全滅（`canLose` なし）。逃げられない。
 7. ボスを倒したら、クリアの流れ（§10.8.0-4）。中ボスは倒すとフラグを立てて道が開く。
 8. 宝箱の id は `<マップid>_c<n>`。中身は**プール（`pool`）だけ**（固定の中身の宝箱は作らない。§8.12.1）。**進行に必要な物は宝箱に入れない**（イベントで渡す）。
-9. **戦闘レベルと宝箱のティア**: ダンジョンの **2 階以降は `lvOff:2`**（1 階は書かない＝ゾーンの値）、**ボスの階は `lvOff` を書かない**（ボスの編成が自分の lvOff を持つ）。忘却の底 `oblivion_1..5` は `chestTier:9`、白の大書庫 `archive_1..6` は `chestTier:8`（§8.12.1。批評 25）。
-10. **`outside` を必ず書く**（§3.3.10。validate が失敗にする）: 屋内のダンジョンはテーマの壁 `'#'`、外のダンジョンは森 `'T'`（迷いの森・千年樹）・岩 `'r'`（白竜の峰の頂上）・水 `'~'`（鐘沈みの沼・潮鳴りの洞窟）。
+9. **戦闘レベルと宝箱のティア**: ダンジョンの **2 階以降は `lvOff:2`**（1 階は書かない＝ゾーンの値）、**地方ボス（最後の階）の階は `lvOff` を書かない**（ボスの編成が自分の lvOff を持つ）。**中ボスのいる途中の階は 2 階以降なら `lvOff:2`**（ふつうの出現もあるため。例 `stargaze_3` 天球の番人の階。R8）。忘却の底 `oblivion_1..5` は `chestTier:9`、白の大書庫 `archive_1..6` は `chestTier:8`（§8.12.1。批評 25）。
+10. **`outside` を必ず書く**（§3.3.10。validate が失敗にする）: 屋内のダンジョンはテーマの壁 `'#'`、外のダンジョンは森 `'T'`（迷いの森・千年樹）・岩 `'r'`（白竜の峰の頂上）・水 `'~'`（潮鳴りの洞窟）・**沼 `'w'`（`bog`。鐘沈みの沼。R4。まわりは見える沼の水面にする）**。町も同じ（例 ガルドの鉱山町 `dovan` は岩 `'r'`。R6）。
 11. **ダメージ床**（§3.3.10-10。最大HP の割合で減り、床では倒れない）: `ash_volcano_2` に溶岩 `'L'` を約 12 マス、`ash_volcano_3` に約 16 マス、`bell_marsh_1` の沼のふちに毒の床 `'x'` を約 14 マス。どれも道の脇に置き、**踏まずに進める道を必ず残す**（ドッカの個性「山歩き」と `ac_float` が生きるように。批評 28）。
 
 12. **`location` を必ず書く**（全部の階。§10.6.3 の対応表のとおり。例 `sand_tomb_2: { …, location:'sand_tomb' }`）。入った階の `location` がワープの一覧のダンジョンの入口になる（Part A6）。
@@ -10455,10 +10471,11 @@ Object.assign(R.DB.locations, {
 |---|---|---|
 | prologue（A18b） | `lighthouse_2` | 宝箱 `p_supply`・`p_gold` |
 | world（A18a） | ワールド 3 か所: ロアの里の北の森（`secret_forest`）、ザハラ砂漠の岩山（`secret_rock`）、ガルド山地の山すそ（`secret_rock`） | 宝箱 `p_gear`・`p_gold`・`p_rare`（ワールドの宝箱は `chestTier` を書かない＝今のティア） |
-| R1・R2・R3・R4 | `verda_maze_2`・`elder_tree_1`（R1）、`sand_tomb_2`（R2）、`frost_peak_2`（R3）、`mist_manor_1`（R4） | 順に: `p_gear`＋語り部の書き付け、近道＋`p_supply`、`p_rare`（その階の行き止まり）、休息の灯とは別の小部屋に `p_gold`、レア魔物の小部屋 |
-| R5・R6・R7・R8 | `tide_cave_1`・`ghost_ship_2`（R5）、`deep_mine_2`（R6）、`ash_volcano_2`（R7）、`stargaze_3`（R8） | 順に: `p_supply`、`p_rare`、レア魔物の小部屋、`p_gear`＋`p_gold`、語り部の書き付け＋`p_supply` |
+| reg-a（A20） | `verda_maze_2`、`elder_tree_1`、`sand_tomb_2`、`frost_peak_2`、`mist_manor_1` | 順に: `p_gear`＋語り部の書き付け、近道＋`p_supply`、`p_rare`（その階の行き止まり）、休息の灯とは別の小部屋に `p_gold`、レア魔物の小部屋 |
+| reg-b（A21） | `tide_cave_1`、`ghost_ship_2`、`deep_mine_2`、`ash_volcano_2`、`stargaze_3` | 順に: `p_supply`、`p_rare`、レア魔物の小部屋、`p_gear`＋`p_gold`、語り部の書き付け＋`p_supply` |
 | story（A19） | `archive_2`、`archive_4` | `p_rare`、語り部の書き付け＋`p_supply` |
 | OB（裏ダンジョン） | `oblivion_2`、`oblivion_4` | `p_rare`、レア魔物の小部屋 |
+- 担当の読み替え（§13.1）: 「reg-a（A20）」「reg-b（A21）」の行は地方ごとの担当が受け持つ: `verda_maze_2`・`elder_tree_1` は R1、`sand_tomb_2` は R2、`frost_peak_2` は R3、`mist_manor_1` は R4、`tide_cave_1`・`ghost_ship_2` は R5、`deep_mine_2` は R6、`ash_volcano_2` は R7、`stargaze_3` は R8。`lighthouse_2` は序章の担当 A18b、`oblivion_*` は OB。
 - **レア魔物の小部屋の作り方**（R4 の `mist_manor_1` の形。ほかの地方も同じ）: その部屋だけのゾーン `z_<地方>_<名前>` を作る。中身は階のゾーン（元）の `DB.encounters` の**写し**に `rareRoom:'<元のゾーン>'` を足したもの（組・ティア・`lvOff` は元と同じ）。`DB.rareEncounters` も元の写しで、`rate` だけ **`⌈元の rate / 3⌉`**（分母を 3 分の 1 ＝出やすさ ×3。最低 1）。`R.onData` で作る（元のゾーンのデータは A11・A12 のファイルなので書き換えない）。部屋の床はマップの `zones` でそのゾーンにする。§9.1.4。
 - validate はダンジョンごとの数を出し、上の表と違えば警告する。年代記の画面に「隠し通路　n/総数」（§3.3.10-11）。
 
@@ -10478,7 +10495,7 @@ Object.assign(R.DB.locations, {
 | P6 | 酒場「語らいの灯亭」 | `lute_tavern_start`（酒場のマスター。`!pro_party_chosen` の間は `common_tavern` の代わりにこれを出す） | 「語り部さんかい。灯台へ行くなら、\n守り手がいるね。」「今夜ここにいるのは、\n腕の立つ連中ばかりだよ。」→ `ev.chooseCompanions({count:3})` →「灯台守のオットーじいさんが、\n港で途方に暮れてたよ。」 | `pro_party_chosen` | `obj_p_keeper` |
 | P7 | ファロスの港 | `lute_otto`（灯台守オットー） | 仲間を選ぶ前：「ひとりで灯台へ？　とんでもない。\n酒場で仲間を見つけておいで。」選んだあと：「灯台の守り歌が、\nどうしても思い出せんのじゃ。」「あの歌がなけりゃ、火はつかん。……頼む。」→ `k_lighthouse_key` を渡す。→ **戦いの心得（チュートリアルの 3 行）**：「仲間は前列と中列に並ぶんじゃ。\n中列は狙われにくいが、槍・弓・鞭の\nほかは、前まで届かんぞ。」「武器は2つまで持てる。戦うときは、\nどちらの武器で行くかを選ぶんじゃ。」「戦いに慣れたら『オート』に任せてもよい。\nBを押せば、いつでも自分で指示できる。」 | `pro_key` | `obj_p_lighthouse` |
 | P8 | 灯台1〜2階 | `lighthouse_1_tutorial`（1階の入口から 3 マス奥の step イベント、once） | 1階：倉庫。入ってすぐ、オットーが入口まで付いてきて（NPC `otto_door`、cond `'!pro_tutorial'`）「中から、ネズミの鳴き声が……\n気をつけるんじゃ！」→「ネズミ2匹なら、{hero}ひとりで\n十分じゃろう。仲間は後ろで見ておれ。」→ **チュートリアルの戦闘** `ev.battle({troop:'tr_tutorial', members:['hero'], glimmerForce:'hero', canLose:true, noEscape:true, noRare:true, noGolden:true})`（§9.11.7・§4.9.6 と一字一句同じ。野ネズミ 2 匹・ティア 0。仲間は出ない。主人公の最初の行動で必ず閃く）。負けたら「……危なかったのう。\nひと息ついて、もう一度じゃ。」→ `ev.heal()` → 同じ戦闘をやり直す（勝つまでくり返す。`once` は勝ってから立つ）→「今のは……『閃き』じゃな。戦いの中で、\nふいに新しい技を思いつくことがある。」「閃いた技は、年代記の技の書に\n書き残される。メニューの『技の書』で\n見られるぞ。」→ オットーは港へ戻る（`otto_door` を消す）。そのあと宝箱（回復の道具）。入口の扉は `k_lighthouse_key` を持っていれば開く（§10.8.0-6 の閉じた道）。2階：らせん階段。休息の灯。隠し通路（§10.6.4）。 | `pro_tutorial` | |
-| P9 | 灯台3階（灯室） | `lighthouse_3_fine`、`lighthouse_3_boss` | フィーネ（初登場・名乗らない）：「言葉を失った灯は、言葉で取り戻すの。」「……あなたなら、できるわ。」→ 消える。ボス `tr_b_pageeater`（ページ食らい）。勝つと、ページ食らいの体から白い紙片が舞い、歌の言葉に戻る。`ev.caption`：「♪ 海の果てまで、灯よ届け\n帰る舟に、道を照らせ」→「{hero}は、\n守り歌を年代記に書き記した。」→ 灯がともる（白く光る演出）→ 暗転して `ev.warp('lute','inn')`。 | `pro_boss` | |
+| P9 | 灯台3階（灯室） | `lighthouse_3_fine`、`lighthouse_3_boss` | フィーネ（初登場・名乗らない）：「言葉を失った灯は、言葉で取り戻すの。」「……あなたなら、できるわ。」→ 消える。ボス `tr_b_pageeater`（ページ食らい）。勝つと、ページ食らいの体から白い紙片が舞い、歌の言葉に戻る。`ev.caption`：「♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ」→「{hero}は、\n守り歌を年代記に書き記した。」→ 灯がともる（白く光る演出）→ 暗転して `ev.warp('lute','inn')`。 | `pro_boss` | |
 | P10 | ファロス（朝。onEnter） | `lute_departure` | 町の人が喜ぶ。跳ね橋が下りた知らせ。宿の前にベルナ：「夜通し歩いてきたよ。……よくやったね、\n{hero}。」`k_chronicle`・`k_quill`・`k_bell` を渡す。`ev.caption`「年代記に序章『灯台守の歌』が記された。」＋ジングル `chapter`。「この大陸には八つの大きな伝承がある。\nその全部が、いま白紙になりかけている。」「全部を語り直して、\n年代記を書き上げなさい。それが、\nあなたの修業の仕上げだよ。」→ 8地方のうわさを1行ずつ（`DB.regions[*].hint`）。酒場のマスター：「ここに残った連中も、\nいつでも仲間にできるよ。\nどこの町の酒場でもね。」 | `prologue_done` | `obj_regions` |
 
 - 灯台守オットーは `pro_boss` のあと、灯台の報酬の一品物を渡す（`lute_otto_reward`、once。品は装備の章が決める）。
@@ -10540,14 +10557,17 @@ Object.assign(R.DB.locations, {
 |---|---|---|---|---|---|
 | 1 | `fern`（onEnter、1回） | `fern_intro` | 長老ハンナ：「森の奥へ入った木こりたちが、\n三日も戻らないの。」「森が道を変えてしまうのよ。\n千年樹の歌を忘れてから……。」 | `forest_start` | `obj_forest_1` |
 | 2 | `fern` | `fern_rita` | 歌い手リタ：「歌は最初の一節しか思い出せないの。」「森の道しるべの石に、歌が刻まれてるって、\nおばあちゃんが言ってた。」 | | `obj_forest_2` |
-| 3 | `verda_maze_1` | `verda_maze_1_stone`（調べる） | 歌の石1：キャプション「♪ 眠れ森の主、千の年輪に」 | `forest_verses` +1 | |
+| 3 | `verda_maze_1` | `verda_maze_1_stone`（調べる） | 歌の石1：キャプション「♪　眠れ森の主、千の年輪に」 | `forest_verses` +1 | |
 | 4 | `verda_maze_1` | `verda_maze_1_dan` | 木こりダンを見つける：「奥に、でっかい羽虫がいて進めねえんだ。」→ 村へ帰る（以後フェルンにいる） | `forest_dan` | |
-| 5 | `verda_maze_2` | `verda_maze_2_stone_a` | 歌の石2：「♪ 約束の歌を、葉ずれに乗せて」 | `forest_verses` +1 | |
+| 5 | `verda_maze_2` | `verda_maze_2_stone_a` | 歌の石2：「♪　約束の歌を、葉ずれに乗せて」 | `forest_verses` +1 | |
 | 6 | `verda_maze_2` | `verda_maze_2_boss` | 中ボス `tr_b_moth`（ダストウィング）。倒すと奥の道が通れる | `forest_mid` | |
-| 7 | `verda_maze_2` | `verda_maze_2_stone_b` | 歌の石3：「♪ 火の夜を忘れず、緑を守れ」。3つそろうと「三つの石の歌がつながった。\n千年樹へ続く道の、\nつるがほどけていく……。」 | `forest_verses` =3 → つるの壁が消える（tilePatch） | `obj_forest_3` |
+| 7 | `verda_maze_2` | `verda_maze_2_stone_b` | 歌の石3：「♪　火の夜を忘れず、緑を守れ」。3つそろうと「三つの石の歌がつながった。\n千年樹へ続く道の、\nつるがほどけていく……。」 | `forest_verses` =3 → つるの壁が消える（tilePatch） | `obj_forest_3` |
 | 8 | `verda_maze_2` → `elder_tree_1` | — | ほどけたつるの先のワープで `elder_tree_1` の `entrance` へ | | |
 | 9 | `elder_tree_2` | `story_fine_forest`、`elder_tree_2_boss` | フィーネの場面。ボス `tr_b_rooteater`（根食らい） | `forest_fine`、`forest_boss` | |
 | 10 | `elder_tree_2`（勝利後） | `elder_tree_2_boss` の続き | 「{hero}は、三つの石の歌を\nつないで語った。」→ 根が光り、森の主エルム（`npc:spirit`）が現れる：「……思い出した。わたしは、\nこの森を守ると誓ったのだった。」「語り部よ、礼を言う。」→ `ev.clearRegion('r_forest')` → §10.8.0-3 | `cleared_r_forest`（自動） | |
+
+- **道が変わる森**（事件の「道は日ごとに形を変え」。R1）：`verda_maze_1` に 3 か所、`verda_maze_2` に 2 か所、行き止まりの小道の先にキノコの輪（step イベント `verda_maze_1_twist` `verda_maze_2_twist`、cond はクリア前）。踏むと「キノコの輪を踏んだとたん、\n足元から白い霧が\nわき上がった……。」→ 暗転して別の場所へ移され、「気がつくと、元の道に\n戻されていた……。」か「気がつくと、見覚えのない\n場所に立っていた……。」。行き先はイベントの `to:{x, y, dir, back}`。クリアしたら起きない。
+- **フィーネの代わり**（R1）：`elder_tree_2_fine`（step の帯と NPC `fine` の両方が呼ぶ）は `story_fine_forest` を `ev.call` する。物語のファイルが読めなかったときだけ、§10.9.4 の文（地方の 1 文とティアの結び）をそのまま言う代わりの台本を使う（§10.8.0-5 の再会の形も同じ）。
 
 目的の文：`obj_forest_1`「迷いの森の奥にある、\n千年樹を目指そう。」　`obj_forest_2`「迷いの森で、歌の刻まれた\n石を三つ探そう。」　`obj_forest_3`「千年樹の中へ入り、\n根の奥を目指そう。」
 
@@ -10577,7 +10597,7 @@ Object.assign(R.DB.locations, {
 | 2 | `kasim` | `kasim_abul` | 墓守アブル：「王墓の王が目覚めたのじゃ。\n名を忘れられて……。」「王の名は、\n墓守の像の台座に一文字ずつ刻まれておる。」 | | |
 | 3 | `kasim` | `kasim_nadia` | 踊り子ナディア：「夕べの祈りで、王さまの\n名前を呼んでいたはずなのに、\nその名前だけが白く抜けてるの。」 | | |
 | 4 | `sand_tomb_1` | `sand_tomb_1_statue` | 像1：「像の台座に、文字がひとつ刻まれている。\n『ハ』……。」 | `desert_letters` +1 | `obj_desert_2`（最初の像で） |
-| 5 | `sand_tomb_2` | `sand_tomb_2_boss` | 中ボス `tr_b_sandworm`（砂もぐり）。倒すと流砂が止まり、奥の像へ行ける | `desert_mid` | |
+| 5 | `sand_tomb_2` | `sand_tomb_2_boss` | 中ボス `tr_b_sandworm`（砂もぐり）。倒すと流砂（閉じたタイル `quicksand`。§11.2.9）が止まり、奥の像へ行ける | `desert_mid` | |
 | 6 | `sand_tomb_2` | `sand_tomb_2_statue` | 像2：『ザ』 | `desert_letters` +1 | |
 | 7 | `sand_tomb_3` | `sand_tomb_3_statue` | 像3：『ル』。3つそろうと「三つの文字が、\nひとつの名になった。\n――ハザル。」→ 王の間の扉が開く（tilePatch） | `desert_letters` =3 | `obj_desert_3` |
 | 8 | `sand_tomb_3` | `story_fine_desert`、`sand_tomb_3_boss` | フィーネの場面。ボス `tr_b_sandking`（名なき砂の王） | `desert_fine`、`desert_boss` | |
@@ -10676,10 +10696,10 @@ Object.assign(R.DB.locations, {
 | 2 | `nerei` | `nerei_marina`（1回目） | マリナ：「あれは、グレンの船だよ。六十年前、\n嵐の海へ出て、帰らなかった人……。」「あの人の舟歌を、\nわたしまで忘れてしまった。」「若いころ、二人で歌を刻んだ貝がらを、\n潮鳴りの洞窟に隠したの。」 | `isles_marina` | `obj_isles_2` |
 | 3 | `tide_cave_1` | `tide_cave_1_boss` | 中ボス `tr_b_octopus`（深みの大ダコ）。奥の岩棚への道をふさいでいる | `isles_mid` | |
 | 4 | `tide_cave_1` | `tide_cave_1_shell`（**光る貝がら**を調べる。岩棚の上に `obj:sparkle` を置く。cond `isles_mid`。批評 31） | `k_shanty` を手に入れる | | `obj_isles_3` |
-| 5 | `nerei` | `nerei_marina`（`k_shanty` を持っている） | マリナ：「……ああ、この歌だよ。」「今夜、桟橋で歌ってみる。\nあの人に届くかもしれない。」→ 暗転「その夜――」→ 桟橋でマリナが歌う（キャプション「♪ 霧の海でも、迷いはしない\n岬の灯が、おれを呼ぶから」）→「幽霊船が、桟橋に横づけされた……！」→ `ev.warp('ghost_ship_1','entrance')` | `isles_ship` | `obj_isles_4` |
+| 5 | `nerei` | `nerei_marina`（`k_shanty` を持っている） | マリナ：「……ああ、この歌だよ。」「今夜、桟橋で歌ってみる。\nあの人に届くかもしれない。」→ 暗転「その夜――」→ 桟橋でマリナが歌う（キャプション「♪　霧の海でも、迷いはしない\n岬の灯が、おれを呼ぶから」）→「幽霊船が、桟橋に横づけされた……！」→ `ev.warp('ghost_ship_1','entrance')` | `isles_ship` | `obj_isles_4` |
 | 6 | `nerei` の桟橋 | `nerei_pier`（step。cond `'isles_ship'`） | ボスの前：「幽霊船に乗り込みますか？」、クリア後：「岬の岩場に、あの船が\n静かに横たわっている。\n乗り込みますか？」→ はい：`ev.warp('ghost_ship_1','entrance')`（一度出たあとにもう一度乗るため。クリア後も宝箱を取りに行ける。ボスはいない） | | |
 | 7 | `ghost_ship_3` | `story_fine_isles`、`ghost_ship_3_boss` | フィーネの場面。ボス `tr_b_captain`（亡霊船長グレン） | `isles_fine`、`isles_boss` | |
-| 8 | 勝利後 | 同上の続き | 「{hero}は、マリナの舟歌を\n船長に語り聞かせた。」→ グレン：「……マリナ。そうだ、\nおれは帰ると約束したんだ。」→ `ev.warp('nerei','pier')`（夜明け）→ マリナ：「おかえりなさい、グレン。」グレン：「ただいま、マリナ。」→ 幽霊船が朝日の中へ消える →`ev.clearRegion('r_isles')` → `ev.warp('coral','inn')`（§10.8.0-3） | | |
+| 8 | 勝利後 | 同上の続き | 「{hero}は、マリナの舟歌を\n船長に語り聞かせた。」→ グレン：「……マリナ。そうだ、\nおれは帰ると約束したんだ。」→ `ev.warp('nerei','pier')`（夜明け。字幕でなく文「夜明けの桟橋に、\nひとつの影が降り立った。」で見せる。夜明けは、よあけと読む。黎明・暁の字は使わない。STYLE_JA §2・§7.1）→ マリナ：「おかえりなさい、グレン。」グレン：「ただいま、マリナ。」→ 幽霊船が朝日の中へ消える →`ev.clearRegion('r_isles')` → `ev.warp('coral','inn')`（§10.8.0-3） | | |
 
 目的の文：`obj_isles_1`「島の東の岬の村ネレイで、\n幽霊船の話を聞こう。」　`obj_isles_2`「潮鳴りの洞窟の奥の岩棚で、\n光る貝がらを探そう。」　`obj_isles_3`「ネレイのマリナに、\n貝がらを届けよう。」　`obj_isles_4`「幽霊船の船長室を\n目指そう。」
 
@@ -10694,7 +10714,7 @@ Object.assign(R.DB.locations, {
 | 章の題 | 鍛冶神の誓い |
 | 章の要約 | 鍛冶神は山に火と鉄を\n与え、七の層より下を\n掘るなと誓わせた。\n誓いの歌が忘れられ、\n鉱夫たちは鉄の番人の\n眠りを破った。\n語り部が誓いを唱えると、\n番人はふたたび眠った。 |
 | hint | 北のガルド山地の鉱山で、\n鉱夫たちが閉じ込められた。 |
-| 町 | `dovan` 鉱山都市ドヴァン（岩山を掘った町。鍛冶場の煙突、トロッコの線路） |
+| 町 | `dovan` 鉱山都市ドヴァン（岩山を掘った町。鍛冶場の煙突、トロッコの線路。`outside:'r'`＝まわりは岩山。R6） |
 | ダンジョン | `deep_mine_1..3` 深き坑道（下へ。3階が「七の層」） |
 | BGM | 町 `town`、ダンジョン `cave` |
 | 戦闘背景 | ワールド `hills`、坑道 `mine`（新。無ければ `cave`） |
@@ -10712,13 +10732,13 @@ Object.assign(R.DB.locations, {
 | 4 | `deep_mine_2` | `deep_mine_2_miner` | 鉱夫2を助ける | `mine_rescued` +1 | |
 | 5 | `deep_mine_2` | `deep_mine_2_boss` | 中ボス `tr_b_rockeater`（岩食らい）。奥の横穴をふさいでいる | `mine_mid` | |
 | 6 | `deep_mine_2` | `deep_mine_2_pip`（cond `mine_mid`） | 若い鉱夫ピップ：「じいちゃんの形見のハンマーだ。柄に、\n誓いの言葉が彫ってある。」「七の層の扉は、これで開くって聞いた。」→ `k_oath_hammer` | `mine_rescued` +1 | `obj_mine_2` |
-| 7 | `deep_mine_3` | 七の層の扉（閉じたタイル。`{item:'k_oath_hammer'}` で開く） | | | |
+| 7 | `deep_mine_3` | 七の層の扉（閉じたタイル。tilePatch の cond は **`{item:'k_oath_hammer', flag:'mine_door'}`**＝ハンマーを持って扉を調べ、打ち鳴らした（`deep_mine_3_door` で `mine_door` を立てる）あとで開く。ハンマーを持っているだけでは開かない。R6） | | `mine_door` | |
 | 8 | `deep_mine_3` | `story_fine_mine`、`deep_mine_3_boss` | フィーネの場面。ボス `tr_b_ironwarden`（鉄の番人） | `mine_fine`、`mine_boss` | |
 | 9 | 勝利後 | 同上の続き | 「{hero}は誓いのハンマーを打ち鳴らし、\n鍛冶神の誓いを唱えた。」→ 番人：「……誓いは、まだ生きていたか。ならば、\nわれは眠ろう。」→ `ev.clearRegion('r_mine')` | | |
 
 目的の文：`obj_mine_1`「深き坑道に閉じ込められた\n鉱夫たちを助けよう。」　`obj_mine_2`「誓いのハンマーを持って、\n七の層の扉を開けよう。」
 
-- **NPC**：鉱山長ボルグ（`borg`、`npc:dwarf`）、鍛冶師ヘルガ（`helga`、`npc:dwarf`）、若い鉱夫ピップ（`pip`、`npc:boy`）、鉱夫（`miner_a` `miner_b`、`npc:man`。助けたあとドヴァンに出る。cond はそれぞれのイベントの once フラグ）。
+- **NPC**：鉱山長ボルグ（`borg`、`npc:dwarf`）、鍛冶師ヘルガ（`helga`、`npc:dwarf`）、若い鉱夫ピップ（`pip`、`npc:boy`）、鉱夫（`miner_a` `miner_b`、`npc:miner`（鉱夫の専用の絵。ヘルメットとつるはし。R6）。助けたあとドヴァンに出る。cond はそれぞれのイベントの once フラグ。坑道の中で助けを待つ鉱夫も `npc:miner`）。
 - **ロウェルの痕跡**（ボルグ、クリア前）：「記録院が、誓いの歌を\n写していった。\nそれからよ、うちの若いのが\n誰も歌わなくなったのは。」
 - **クリア後**：ボルグが「もう七の層の下は掘らねえ」と誓い直す。ヘルガの鍛冶場の品ぞろえが増える（`dovan_weapon` の追加の段。装備の章）。ボルグが報酬の一品物を渡す（`dovan_borg_reward`）。ワールドにドヴァンの抜け道（§10.5.6）。
 
@@ -10751,7 +10771,7 @@ Object.assign(R.DB.locations, {
 
 目的の文：`obj_ash_1`「灰の火山の火口に眠る、\n火の鳥の卵を目指そう。」　`obj_ash_2`「灰の火山の壁画から、\n火の鳥の物語を読み取ろう。」　`obj_ash_3`「火口へ向かい、\n卵に物語を語り聞かせよう。」
 
-- **NPC**：族長ドルガ（`dorga`、`npc:elder`）、火の巫女カヤ（`kaya`、`npc:girl`）、灰かぶりの子ども（`ashkid`、`npc:boy`）。
+- **NPC**：族長ドルガ（`dorga`、`npc:elder`）、火の巫女カヤ（`kaya`、`npc:priestess`。巫女の専用の絵。R7）、灰かぶりの子ども（`ashkid`、`npc:boy`）。
 - **ロウェルの痕跡**（カヤ、クリア前）：「記録院の人に、火の鳥の\n物語を語ったの。\nそれから、声に出そうと\nしても出てこなくて……。」
 - **クリア後**：灰がやみ、空が青くなる。カルデラの温泉が使える（`caldera_spring`、調べると無料で全快。cond `{cleared:'r_ash'}`）。カヤが報酬の一品物を渡す（`caldera_kaya_reward`）。ワールドの灰の地が草原に戻る（§10.5.6）。
 
@@ -10914,7 +10934,7 @@ Object.assign(R.DB.locations, {
 - 立つフラグ：`final_arrived`。目的：`obj_s_final_archive`。
 - ビブリアの施設：宿屋・酒場・道具屋・武器屋・防具屋（最後の町。品ぞろえはティア8の最上段）。NPC：宿のおかみノア（`noa`、`npc:woman`）。町の人の台詞は `final_arrived` の間は白紙（「……。」や言いかけ）、`game_clear` のあと普通に戻る。
 
-#### 10.10.3 白の大書庫 `archive_1..6`（上へ登る。theme `library`、BGM `lastdungeon`）
+#### 10.10.3 白の大書庫 `archive_1..6`（上へ登る。theme `library`（**6 階の虚ろの間だけ `oblivion`**。A19）、BGM `lastdungeon`）
 | 階 | マップ | 中身 | 仕掛け・ボス | フラグ |
 |---|---|---|---|---|
 | 1階 | `archive_1` 閲覧の間 | 書架の迷路。白衣の書記たちが魔物として出る（モンスター章の系統） | クリア後：下り階段が現れる（§10.12） | |
@@ -10922,7 +10942,7 @@ Object.assign(R.DB.locations, {
 | 3階 | `archive_3` 記憶の回廊 | 8つのくぼみに、各地方の伝承の「こだま」（sign。章の題と、その地方の伝承の1文）。休息の灯 | 封印の扉（閉じたタイル。`{item:'k_rowell_note'}` で開く）。扉の前で `archive_3_rowell`：ロウェル「ここは、おれが引き受ける。\n行け、語り部！」 | `final_rowell` |
 | 4階 | `archive_4` 伝説の間 | 東の大陸の伝説の絵が並ぶ回廊 | 虚ろの王の声「海の向こうの、名を忘れられた\n勇者たちよ……。」→ 中ボス `tr_b_heroshades`（伝説の三つの影：剣の勇者の影・祈りの勇者の影・杖の勇者の影）。勝つとフィーネの声「三百年前、東の大陸で魔王を\n討った勇者たちの影……。\n名は忘れられても、物語は\n残っていたのね。」 | `final_shades` |
 | 5階 | `archive_5` 院長の書斎 | 手前に休息の灯。書斎にミラの肖像画 | `archive_5_lazaro`：ラザロの場面 → `tr_b_lazaro` | `final_lazaro` |
-| 6階 | `archive_6` 虚ろの間 | 祭壇に始まりの年代記。白い紙片が渦を巻く | `archive_6_boss`：ラスボス（§10.10.4） | `final_nemrea1` → エンディング |
+| 6階 | `archive_6` 虚ろの間 | 祭壇に始まりの年代記。白い紙片が渦を巻く。**theme `oblivion`**（書架の白が尽きて、虚ろの王の白い闇に入ったことを床と壁で見せる。戦闘背景は `library` のまま） | `archive_6_boss`：ラスボス（§10.10.4） | `final_nemrea1` → エンディング |
 
 **ラザロの場面（`archive_5_lazaro`）**
 ラザロ「よく来ましたね、語り部。」「二十年前、伝承戦争で\n娘のミラを失いました。\nどちらの伝承が正しいか……\nそんなことのために。」「忘れてしまえば、争いも\n悲しみも、初めから\n無かったことになる。」「それが救いなのですよ。\n……それでも、あなたは\n書くのですね。」「ならば、その筆を折らせて\nいただきましょう。」→ `ev.battle('tr_b_lazaro')`
@@ -11432,6 +11452,7 @@ P1 では**既存の種類（kind）に新しい色の段**だけで行を作る
 | `story_stone_blank` | `U` | 白紙の語り石 | × | | 同じ石碑で、文字がすべて白く消えている | P1 | `statue` |
 | `bog` | `w` | 深い沼 | × | anim 4 | にごった緑灰の水（`marshwater`）、ときどき泡 | P1 | `water` |
 | `mud` | `z` | ぬかるみ | ○ | | 茶灰の泥に足あとと水たまり（ダメージなし） | P1 | `dirt` |
+- **流砂 `quicksand`**（R2。凡例の文字なし）: 通れない閉じたタイル（`pass:false, closed:true, anim:2`。黄土の砂が渦を巻いて沈む 2 コマ）。地図の行には砂の床を書き、`tilePatches:[{cond:'!desert_mid', x, y, w, h, tile:'quicksand'}]` で中ボスが生きているあいだだけ流砂にする（`sand_tomb_2`）。定義と絵は `src/maps/region2_00_kit.js`（art-local のタイルの絵に同じ id があればそちらを使う）。上に examine イベント `sand_tomb_2_quicksand` を重ねる。
 - 開いたあとのタイル（tilePatch の `ch`）は、扉は `D`、壁は床 `.`。開くときは地方担当が `ev.sfx('unlock')` を鳴らす（§11.10.5）。
 - 閉じたタイルの上には examine イベントを重ねる（§10.8.0-6）。
 
@@ -11468,7 +11489,7 @@ P1 では**既存の種類（kind）に新しい色の段**だけで行を作る
 | `icicles` | `^` | つらら | wall | ユール・雪山 | 軒のつらら | P2 |
 | `ember` | `_` | 火の粉の割れ目 | pass・anim 2 | カルデラ・灰の火山 | 地面の割れ目の赤い光 | P2 |
 
-**マップごとの凡例 `decorLegend`**（field への依頼。マップの定義に `decorLegend:{'|':'tent', …}` と書くと、その地図だけ全体の凡例に上書きで足される。上の予備 3 文字と、全体の凡例の文字のどれを使ってもよい）。この飾りは id と絵を全体に登録し、文字だけを地図ごとに決める:
+**マップごとの凡例 `decorLegend`**（field への依頼。マップの定義に `decorLegend:{'|':'tent', …}` と書くと、その地図だけ全体の凡例に足される。**使う文字は、全体の凡例（`R.DB.legends.decor`）でまだ使われていない文字だけ**（上の予備 3 文字 `| : ,` など）。全体の凡例にある文字を上書きしない（R4。上書きすると、同じ文字が地図によって別の飾りになり、ほかの担当の飾りや validate・密度の数えと食い違う）。validate は全体の凡例と重なる `decorLegend` の文字を失敗にする）。この飾りは id と絵を全体に登録し、文字だけを地図ごとに決める:
 | id | 名前 | 性質 | 使う所 | P |
 |---|---|---|---|---|
 | `cradle` | ゆりかご | | 家 | P2 |
@@ -11497,19 +11518,19 @@ P1 では**既存の種類（kind）に新しい色の段**だけで行を作る
 | 序章 | `grass plain forest road beach` | ロア `town_roa`、ファロス `town` | 灯台 `tower` → `tower` | `grass` | 灯室の大きな灯（`obj:lantern` を 2 倍の大きさで描いた台座。台本の演出） |
 | ヴェルダの森 | `forest grass road` | `town_forest` | 迷いの森 `forest` → `forest`、千年樹 `tree` → `tree` | `forest` | 千年樹の根の祭壇、光るキノコ |
 | ザハラ砂漠 | `desert sandstorm plain road` | `town_sand` | 砂の王墓 `pyramid` → `pyramid` | `desert` | 砂嵐（クリア前）、オアシスの池とやしの木 |
-| ノルデン雪原 | `snow snowforest mountain` | `town_snow` | 白竜の峰 `ice` → `ice`、3 階 `snow` → `snow` | `snow` | 氷の壁、冬至の火（`stove` の赤い火を強く） |
+| ノルデン雪原 | `snow snowforest mountain` | `town_snow` | 白竜の峰 `ice` → `ice`、3 階 `snow` → `peak` | `snow` | 氷の壁、冬至の火（`stove` の赤い火を強く） |
 | グレイモア湿原 | `marsh marsh_fog forest road` | `town_marsh` | 霧の館 `manor` → `manor`、鐘沈みの沼 `swamp` → `swamp` | `swamp` | 霧の壁、人形の棚、沼に沈んだ鐘（`bog` の上の飾り `helm_wheel` の代わりに鐘の絵を P2 で） |
 | マレア諸島 | `grass beach forest reef`（`jungle` を使ってよい） | `town_isle` | 潮鳴りの洞窟 `water` → `watercave`、幽霊船 `ship` → `ship` | `grass`（P2 `beach`） | 帆柱と舵輪、青白い灯 |
 | ガルド山地 | `hills mountain road` | `town_mine` | 深き坑道 `mine` → `mine` | `hills` | 線路とトロッコ、七の層の岩戸 |
 | 灰の荒野 | `ash wasteland magma mountain` | `town_ash` | 灰の火山 `volcano` → `volcano` | `wasteland`（P2 `ashland`） | 火の鳥の壁画（`painting` を赤い色替えで） |
 | オルビス高原 | `plain hills road` | `town_star` | 星読みの塔 `tower` → `tower` | `grass` | 望遠鏡、星図の扉 |
-| 終盤 | ビブリア島 `grass`、まわりの `fog` | ビブリア `town_white` | 白の大書庫 `library` → `library` | `grass` | 虚ろの間の祭壇（`altar` と `paper_drift`） |
+| 終盤 | ビブリア島 `grass`、まわりの `fog` | ビブリア `town_white` | 白の大書庫 `library` → `library`（6 階の虚ろの間だけ `oblivion` → `library`） | `grass` | 虚ろの間の祭壇（`altar` と `paper_drift`） |
 | 裏 | — | — | 忘却の底 `oblivion` → `oblivion` | — | 継ぎはぎの森（2 階は `forest` の床・壁のタイルを、地図の中で `oblivion` と区画ごとに混ぜる） |
 
 #### 11.2.12 物（`obj:<name>`。担当 art-chars A13 `src/art/objects.js`）
 | key | 形 | 大きさ・コマ | P | 代わり |
 |---|---|---|---|---|
-| `obj:chest` | 木と鉄の帯の宝箱（今のまま、色を少し落とす） | 16×16 [閉, 開] | 再利用 | — |
+| `obj:chest` | 木と鉄の帯の宝箱（A13 が木の宝箱として描き直した。ティアに依らず全部この絵） | 16×16 [閉, 開] | 再利用 | — |
 | `obj:chest_rare` | 紺の箱に金の縁と金具、ふたの中央に赤い宝石。開くと中が金色に光る | 16×16 [閉, 開] | P1 | `obj:chest`（`CHEST_PAL` の色替え） |
 | `obj:sparkle` | キラキラ（今のまま） | 16×16 ×4 | 再利用 | — |
 | `obj:shadow` | 足もとの影（今のまま） | 14×5 | 再利用 | — |
@@ -11575,14 +11596,15 @@ P1 では**既存の種類（kind）に新しい色の段**だけで行を作る
 | key | 人 | 形 | P | 代わり |
 |---|---|---|---|---|
 | `npc:bard` | 吟遊詩人 | `light` の体に羽根つきの帽子 `beret`、背に竪琴 | P2 | `npc:man` |
-| `npc:farmer` | 農夫 | `vest`、麦わら帽 `wide`、手にくわ | P2 | `npc:man` |
-| `npc:miner` | 鉱夫 | `dwarf` でない人間の体 `vest`、ランプの帽子 `goggles` の代わりに `cap`、すすけた顔 | P2 | `npc:dwarf` |
-| `npc:noble` | 貴族・領主 | `coat` に長いマント、`tophat` か羽根の帽子 | P2 | `npc:minister` |
+| `npc:farmer` | 農夫 | `vest`、麦わら帽（A13 の部品 `hat.straw`。`wide` の代わり）、手にくわ | P2 | `npc:man` |
+| `npc:miner` | 鉱夫 | `dwarf` でない人間の体 `vest`、ランプの帽子（A13 の部品 `hat.lampcap`）、すすけた顔、つるはし | P2 | `npc:dwarf` |
+| `npc:noble` | 貴族・領主 | `coat` に長いマント、シルクハット（A13 の部品 `hat.tophatPlain`。濃い布に金の帯） | P2 | `npc:minister` |
 | `npc:fisher` | 漁師 | `sailor` の体に網の束 | P2 | `npc:sailor` |
 | `npc:teller` | ロアの語り部たち | `robe` と `hood`、手に本（主人公の師匠筋。色は茶と生成り） | P2 | `npc:sage` |
 | `npc:nomad` | 砂漠の旅人 | `robe` に `turban`、口もとの布 | P2 | `npc:merchant` |
 | `npc:priestess` | 巫女（カルデラ・泉の社） | 白い上衣と緋の袴（ノエラと同じ色の組、髪は別） | P2 | `npc:nun` |
 | `npc:sheep` `npc:chicken` | 羊・にわとり | `animal` の作り方（猫・犬と同じ） | P3 | `npc:dog` |
+- 新しい型の帽子は A13 が `src/art/chars_town.js` に部品として足した（`CA.parts.hat.straw` `lampcap` `tophatPlain`）。上の表の部品名はこの 3 つに読み替える（A13）。
 - NPC は、話しかけられると振り向く（今のしくみ）。`move:'wander'` の NPC だけが歩く。
 
 #### 11.3.5 顔
@@ -11625,7 +11647,7 @@ P1 では**既存の種類（kind）に新しい色の段**だけで行を作る
 ### 11.4 魔物・ボス・レア魔物の絵（受け渡しの形。**§9.4・§9.10.3・§9.11.6 が正**）
 
 #### 11.4.1 魔物章で決まっていること（まとめ。変えない）
-- **全種 `mon:<魔物id>`**（雑魚 211・レア魔物 23・ボス 34）。雑魚は art-mons（A14）が `src/art/monsters_parts.js` の組み立て表（`MON_COMPOSE_MOBS` を `R.Art.MON_COMPOSE[spriteId] = [base, hsb, parts, filter?]` に足し込む。§9.4.6）から登録、新しい元絵 14 は `src/art/monsters_c.js`。ボス・レア魔物は art-boss（A15）が `bosses_b.js` `bosses_compose.js` `rare_monsters_b.js`。
+- **全種 `mon:<魔物id>`**（雑魚 211・レア魔物 23・ボス 34）。雑魚は art-mons（A14a）が `src/art/monsters_compose.js` の組み立て表（`MON_COMPOSE_MOBS` を `R.Art.MON_COMPOSE[spriteId] = [base, hsb, parts, filter?]` に足し込む。§9.4.6）から登録、新しい元絵 14 は `src/art/monsters_c.js`。ボス・レア魔物は art-boss（A15）が `bosses_b.js` `bosses_compose.js` `rare_monsters_b.js`。
 - 魔物データは `hue/sat/bri` を持たない（色は組み立て表の中）。bui は `R.Gfx.get('mon:' + d.sprite)` をそのまま描く（`d.sprite` が無ければ `mon:<id>`）。
 - 組み立て: `R.Art.compose(base, hsb, parts, filter)`、アンカー `R.Art.MON_ANCHORS`、パーツ 66（`R.Art.PARTS`）、フィルター 6（`paper shade chrome mirror platinum prism`）。キャンバスの大きさは元絵と同じ。
 - **金色の個体** = 組み立て後の絵に `R.Gfx.variant(key, {tint:'#ffd24a'})`（エンジン章 C4）。
@@ -11634,10 +11656,10 @@ P1 では**既存の種類（kind）に新しい色の段**だけで行を作る
 #### 11.4.2 この章が足す約束（描き方）
 | 項目 | 約束 |
 |---|---|
-| 画素 | 不透明な画素だけ（半透明は使わない）。「透ける」表現は市松の点描（`shade` フィルター・`fine_fade`・霧）。輪郭はほぼ黒（`#120c16` など）で、明るさ 0.09 未満の色は色替え・`tint` で変わらない（今の `hsvShift` と `goldify` の決まり） |
+| 画素 | 不透明な画素だけ（半透明は使わない）。「透ける」表現は市松の点描（`shade` フィルター・`fine_fade`・霧）。輪郭はほぼ黒（`#120c16` など）。**色替え（`hsvShift`）は彩度 0.12 以下の画素（輪郭の黒・灰・白）の色相と彩度を変えない**（`bri` の明るさの倍率だけはかかる）。**金色の `tint`（`tintKeepLuma`）は明るさ（luma）28/255（約 0.11）未満の画素を変えない**。だから輪郭は色替えでも金色でも黒のまま |
 | 足もと | 最下段の 1 行上が接地。フィールドの見えるボス（NPC の `sprite:'mon:<id>'`）も同じ絵をそのまま描く（色替えしない） |
 | 沈め方（戦闘） | （**Part A8 で廃止**）置き方は §11.5.13（大きな絵は手前の段・足もと y 146） |
-| 隠れる行 | （**Part A8**）上に重なるのは文の窓だけ（§11.4.3）。**顔・目は上から 20px より下**（§9.11.6 のまま） |
+| 隠れる行 | （**Part A8**）上に重なるのは文の窓だけ（§11.4.3）。**高さ 96px 以上のボスは、顔・目を上から 20px より下**（§9.11.6） |
 | 飛ぶ魔物 | 旗 `flying` は上下に ±2px（周期 18 フレーム × 2π）で揺れる（今のまま） |
 | 横の並び | （**Part A8 で置き換え**）§11.5.13（敵は x 4〜172 に 1〜3 段） |
 | 光らせ方 | 攻撃が当たった: 白 90% を 2 フレームおきに 12 フレーム。行動する: 白 55% を 3 フレームおきに 10 フレーム。狙っている: 白 18〜36% の脈動（今のまま） |
@@ -11648,7 +11670,7 @@ P1 では**既存の種類（kind）に新しい色の段**だけで行を作る
 | 呼ばれた魔物 `{t:'summon', units}` | 全体を並べ直し（§11.5.13）、新しい魔物は**左の端**から 12 フレームで今の位置まで滑り込み、同時に透明から現れる（`appear`） |
 | 倒れる | 雑魚: 白 6 フレーム → 崩れて消える（2 フレーム/コマ）。ボス: 白・赤・通常の点滅と小さな爆発 70 フレーム → 崩れる → 白い画面の光（今のまま） |
 - 図鑑（menu）: 絵は `mon:<id>`。金色は図鑑では描かない（元の種の欄に「金色を倒した数」を出す）。枠に入らない大きさは半分ずつ縮める（今のまま）。
-- 確かめ方: A14 は `tools/sheet_monsters_parts.js`（§9.4.3）、A15 は `sheet_bosses.js` `sheet_rare.js`。**文脈図（戦闘背景＋窓）は Part A8 のサイドビュー（`R.Battle.LAYOUT`・`R.Battle.enemyLayout`。§11.5.1・§11.5.13）で描く**（§11.13 の依頼）。
+- 確かめ方: A14a は `tools/sheet_monsters_compose.js`（§9.4.3）、A15 は `sheet_bosses.js` `sheet_rare.js`。**文脈図（戦闘背景＋窓）は Part A8 のサイドビュー（`R.Battle.LAYOUT`・`R.Battle.enemyLayout`。§11.5.1・§11.5.13）で描く**（§11.13 の依頼）。
 
 #### 11.4.3 サイドビューでの魔物の絵（**Part A8 版**）
 - 魔物・ボス・レア魔物の絵は**正面向きのまま**使う（描き直さない・左右反転もしない。ブリーフ Part A8「敵の絵は既存の正面向きのままでよい」）。大きなボスは縮めずにそのまま大きく描く。
@@ -12000,7 +12022,7 @@ PARTY   = { front: 192, middle: 222, zig: [0, 10, 0, 10], step: 10,
 #### 11.5.10a 装備の特別な効果の表示（§8.3.7）
 - `autoRevive`（倒れても一度だけ起き上がる）: その人に `revive` の演出（光の柱。絵の四角に）、`ko` から `weak`（HP ≤ 25%）か `idle` へ。文「{name}は立ち上がった！」。
 - `autoCounter`・反撃の構えの反撃: `R.sfx('parry')`、その人の絵を白 55% で 6 フレーム光らせ、反撃の `fx` はふつうの攻撃と同じ動き（§11.5.15。近接なら走り込む）。
-- かばう（`cover`）: `R.sfx('jump')`、かばう人が守られる人の前（足もと x − 14、同じ y）へ `walk` で 8 フレームで出て `guard`。攻撃を受けたら `hit`。かばう人の次の `actor`、またはラウンドの終わりで元の位置へ戻る。
+- かばう（`cover`）: 前へ出るとき `R.sfx('jump')`、**攻撃を受け止めたとき `R.sfx('parry')`**（§11.10.5 の `parry`「反撃の構えで受け流した・かばう」と同じ）。かばう人が守られる人の前（足もと x − 14、同じ y）へ `walk` で 8 フレームで出て `guard`。攻撃を受けたら `hit`。かばう人の次の `actor`、またはラウンドの終わりで元の位置へ戻る。
 
 #### 11.5.11 オート・リピートの表示
 - オート中は **CMD の窓の上の縁の札**に「オート　Bで解除」（白。`fitText` 幅 80）、B を押したら同じ所に黄色 `C.yellow` の「オート解除」（止まるまで）。リピート中も同じ所に「リピート　Bで解除」／「リピート解除」（§11.5.3a）。文は STYLE_JA §9。
@@ -12562,8 +12584,8 @@ MP が軽くなっていれば続けて水色で「熟練でMP0」か「熟練�
 #### 11.8.3 名前入力（`R.NameEntry.run({initial, max:5, spriteKey, title})`）
 - 見出し `(4,2,248,54)`: 絵を 2 倍 `(12,5)`、題「名前を入れてください」`(52,8)`、名前の欄 5 つ `(52 + 14k, 26)`（1 字ずつ、下に 10px の線、今の位置に点滅する `▼`）、右下に `あと n 字`。
 - 文字の表 `(4,58,248,126)`: クレストの 10 列 × 9 行のまま（ひらがな・カタカナ・英数字の 3 ページ）。
-- 下のコマンド `(4,186,248,36)`: 2 行 × 4 列（`x = 16 + 60c`、`y = 192 + 14r`）: `ひらがな カタカナ 英数字 おまかせ` / `1字消す キーボード 決定`（4 つ目は空き）。`おまかせ` は §5.2.6 の 8 つを順に入れる。
-- 1〜5 字。5 字になったらカーソルを `決定` へ。B は 1 字消す、空のときは前の段へ。キーボード（DOM の入力欄）はクレストのまま。
+- 下のコマンド `(4,186,248,36)`: 2 行 × 4 列（**x = 20・80・146・200**（`▶` は文字の 10px 左。前の列の文字と 4px 以上あける）、`y = 192 + 14r`）: `ひらがな カタカナ 英数字 おまかせ` / `1字消す キーボード 決定`（4 つ目は空き）。`おまかせ` は §5.2.6 の 8 つを順に入れる。
+- 1〜5 字（BRIEF「4〜5文字」は上限の意味。§5.2.6）。5 字になったらカーソルを `決定` へ。B は 1 字消す、空のときは前の段へ。キーボード（DOM の入力欄）はクレストのまま。
 
 #### 11.8.4 仲間を選ぶ（`R.Tavern.chooseStart({count:3})`。**オーナー指示: 特性は画面に出さない**（2026-09）で 1 ページにした）
 ```
@@ -12640,21 +12662,21 @@ MP が軽くなっていれば続けて水色で「熟練でMP0」か「熟練�
 ### 11.10 音（担当 audio A17。`src/core/audio.js`、`src/audio/*.js`、`tools/render_audio.js`）
 
 #### 11.10.1 方針
-- クレストの音の仕組み（MML・和音の進行・楽器・残響・効果音の部品）とクレストの曲・効果音を**そのまま使い**、この作品に必要な曲と音だけ足す。BGM の作り込みは完成品を見てから（Part A）。**P1 の曲は「場面に合っていて、ループがきれいで、`lint` が通る」ことを最低の条件**にする（1 曲 16〜32 小節、40〜90 秒のループ、A/B の対比）。
-- 新しい曲は新しいファイルに書く: `src/audio/music_chronicle.js`（BGM）、`src/audio/jingles_chronicle.js`（ジングル）、`src/audio/sfx_chronicle.js`（効果音）。**クレストの曲を作り直すときは、その曲の元のファイルの中で書き直す**（同じ id を別のファイルに書くと、後から読まれた方が黙って上書きする）。
+- クレストの音の仕組み（MML・和音の進行・楽器・残響・効果音の部品）とクレストの曲・効果音を**そのまま使い**、この作品に必要な曲と音だけ足す。BGM の作り込みは完成品を見てから（Part A）。**P1 の曲は「場面に合っていて、ループがきれいで、`lint` が通る」ことを最低の条件**にする（1 曲 16〜32 小節、40〜90 秒のループ、A/B の対比）。**例外（認めた）**: `tavern` はループ 37.2 秒（6/8・♩116 の 24 小節。酒場の画面は短い滞在なので 40 秒に足さない）。
+- 新しい曲は新しいファイルに書く: `src/audio/music_chronicle.js`（BGM。町・ダンジョン・物語の曲）、`src/audio/music_chronicle_battle.js`（新しい戦闘の BGM: `rival` `tension` `boss2` `rarebattle` `superboss` `hollowking`。`lastboss` `valzard` はクレストの `music_battle.js` の中）、`src/audio/jingles_chronicle.js`（ジングル）、`src/audio/sfx_chronicle.js`（効果音）。**クレストの曲を作り直すときは、その曲の元のファイルの中で書き直す**（同じ id を別のファイルに書くと、後から読まれた方が黙って上書きする）。
 - 未作曲の id は「代わり」を指して登録する（§11.1.3）。作曲できたら差し替え、`R.Audio.PENDING` から外す。
 - id の一覧は 3 か所（§11.11、`tools/render_audio.js` の `BGM JINGLES SFX`、qa の `validate.js`）で同じにする。`jobup` は一覧から外す（定義は素材として残してよいが、呼ぶ所は無い）。
 - **他社の曲のメロディを写さない**（Part A）。クレストのメインテーマ（`THEME`）はスタジオの持ち物なので引用してよい。
 
 #### 11.10.2 メインテーマ「語り部の主題」（新しい 4 小節の動機。タイトル・エンディング・ラスボス・ロアの里で使う）
 - 注文: ホ短調（Em）→ ト長調（G）へ明るくなる、3/4 拍子、♩= 92 前後。最初の 1 小節に「ページをめくる」ような上りのアルペジオ（ハープ）、動機はフルートかオーボエの歌う旋律で、**4 小節目で長 6 度の跳躍**を 1 回入れる（覚えやすさ）。
-- 動機は `music_chronicle.js` の `defs.TELLER`（MML の文字列）に 1 か所だけ書き、曲ごとに移調・拍子・楽器を変えて使う（クレストの `THEME` と同じやり方）。
+- 動機は `music_chronicle.js` の **`R.Audio.MOTIFS.TELLER`**（`TELLER` `TELLER_ANS` `TELLER_B` と 4/4 版。MML の文字列。曲の中からは `$TELLER` などのマクロで呼ぶ）に 1 か所だけ書き、曲ごとに移調・拍子・楽器を変えて使う（クレストの `THEME` と同じやり方。使う曲: `title` `ending` `lastboss` `home` `overworld`（B の部分）、ジングル `chapter` の最初の 4 音）。
 - クレストのテーマとの関係: エンディングの E7（三人の勇者の話）と `legend`（P2）でだけ、クレストの `THEME.TA` をオルゴールで 4 小節引用する。
 
 #### 11.10.3 BGM の一覧（normative）
 | id | 状態 | P | 使う所 | 曲の注文（調・拍子・♩・楽器・長さ） | 代わり |
 |---|---|---|---|---|---|
-| `title` | **作り直す** | P1 | タイトル | 語り部の主題。Em→G・3/4・92。ハープの前奏 4 小節 → フルートの主題 8 → バイオリンの B 8 → 全体の主題 8。70〜90 秒 | （今のクレストの曲） |
+| `title` | **作り直す** | P1 | タイトル | 語り部の主題。Em→G・3/4・92。ハープの前奏 4 小節 → フルートの主題 8 → バイオリンの B 8 → 全体の主題 8 → **結びの 8 小節**（ループの前に静かに閉じる）。この結びで 70 秒に届く（70〜90 秒） | （今のクレストの曲） |
 | `ending` | **作り直す** | P1 | エンディング・クレジット | 語り部の主題の再現。静かに始まり（オルゴール・ハープ）、中ほどで明るく大きく（全体）、最後は広く閉じる。テンポの変化あり。90 秒以上（ループしてよい） | （今のクレストの曲） |
 | `lastboss` | **作り直す** | P1 | ネムレア（`tr_b_nemrea2`） | 語り部の主題を短調・4/4・♩160 で。オルガンと合唱の前奏 → 弦の刻み → ループの後半で主題が長調で高らかに鳴る（「名を与えた」反撃の気分）。60 秒ループ | （今のクレストの曲） |
 | `valzard` | **移す** | P2 | 魔王の残影（ボス章が `bgm:'valzard'` にしたとき） | **今のクレストの `lastboss` の定義をそのまま**この id に移す（作り直す前に写す） | `boss2` |
@@ -12667,7 +12689,7 @@ MP が軽くなっていれば続けて水色で「熟練でMP0」か「熟練�
 | `sorrow` | 新 | P1 | ビブリア（`final_arrived` 〜 `game_clear`）・悲しい場面 | Am・4/4・♩66。オーボエと弦、ハープの分散和音。55 秒 | `shrine` |
 | `boss2` | 新 | P1 | 地方ボス・終盤の中ボス・虚ろの王・魔王の残影（§9.11.4） | Fm・4/4・♩148。`boss` より重く: 金管の和音、低音の半音の動き、ティンパニ。60 秒ループ | `boss` |
 | `rarebattle` | 新 | P1 | 金色の個体・レア魔物・鋼の魔物の戦闘 | E・4/4・♩172。グロッケンとパルスの明るい旋律、ぴょんぴょん跳ねる低音、少しおどけた感じ（「逃がすな！」）。40 秒 | `battle` |
-| `superboss` | 新 | P1 | 円環竜オウロボラ | E♭m・4/4・♩168。5 つの部分の長い曲（前奏・主部・静かな中間・高まり・ループ）。オルガン・合唱・金管。70 秒以上 | `lastboss` |
+| `superboss` | 新 | P1 | 円環竜オウロボラ | E♭m・4/4・♩168。5 つの部分の長い曲（前奏・主部・静かな中間・高まり・ループ）。オルガン・合唱・金管。**前奏を含めて** 70 秒以上（ループする部分だけなら 70 秒より短くてよい） | `lastboss` |
 | `postgame` | 新 | P1 | 忘却の底 | F#m・4/4・♩84。うつろなパッド、逆回しのような音の立ち上がり、遠い鐘。55 秒 | `lastdungeon` |
 | `forest` | 新 | P1 | 迷いの森・千年樹 | Dm・4/4・♩92。フルートとハープ、やわらかい打楽器、木の実のようなマリンバの粒。神秘的に | `cave` |
 | `ghost` | 新 | P1 | 霧の館・鐘沈みの沼・幽霊船 | Cm・3/4・♩72。チェンバロとクラリネット、オルゴールの壊れたような音、遠い鐘 | `dungeon` |
