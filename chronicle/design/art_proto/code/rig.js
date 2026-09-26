@@ -60,7 +60,7 @@
     follow: { lean: 0.3, aN: 0.5, eN: 0.35, w: 0.6, aF: -0.5, eF: 0.4, lN: 0.75, kN: -0.8, lF: -0.5, kF: -0.15, cape: 0.8, sq: 0.3 },
     cast: { lean: -0.06, tilt: -0.1, aN: 2.3, eN: 0.35, w: 2.8, aF: 1.6, eF: 0.4, lN: 0.2, kN: -0.15, lF: -0.2, kF: -0.1, cape: 0.6, glow: 1, eyes: 0.5 },
     hurt: { x: -3, lean: -0.35, tilt: -0.25, aN: -0.3, eN: 0.6, w: 2.8, aF: -0.9, eF: 0.3, lN: 0.35, kN: -0.3, lF: -0.5, kF: -0.3, cape: -0.6, eyes: 0, sq: 1, mouth: 1 },
-    kneel: { y: 0, lean: 0.3, tilt: 0.3, aN: 0.25, eN: 0.35, w: 3.14, aF: 0.3, eF: 0.8, lN: 1.5, kN: -1.5, lF: -0.3, kF: -2.0, cape: -0.2, eyes: 0.5, sq: 0.6 },
+    kneel: { y: 0, lean: 0.35, tilt: 0.3, aN: 0.1, eN: 0.25, w: 3.0, aF: 0.5, eF: 0.9, lN: 1.45, kN: -1.45, lF: -0.15, kF: -1.35, cape: -0.2, eyes: 0.5, sq: 0.6 },
     ko: { rot: -1.5, lean: -0.1, tilt: -0.1, aN: 0.3, eN: 0.2, w: 0.6, aF: -0.5, eF: 0.1, lN: 0.1, kN: -0.1, lF: -0.1, kF: -0.3, cape: -0.4, eyes: 0 },
     victory: { lean: -0.05, tilt: -0.15, aN: 2.9, eN: 0.2, w: 3.1, aF: -0.35, eF: 1.6, lN: 0.15, kN: -0.05, lF: -0.18, kF: -0.05, cape: 0.5, mouth: 2 },
   };
@@ -100,14 +100,14 @@
     const headAng = lean * 0.5 + p.tilt;
     const hc = add(neck, rot([1.2, -10.2], headAng));
     const H = (x, y) => add(hc, rot([x, y], headAng));
-    const g = {}; const grp = (k) => (g[k] = g[k] || B.group());
+    const knees = []; const g = {}; const grp = (k) => (g[k] = g[k] || B.group());
 
     // --- legs (far leg behind body, near in front) ---
     const leg = (side, a, k, z) => {
       const hp = T(side * -1.6, 0.5);
       const kn = add(hp, [dir(a)[0] * legL, dir(a)[1] * legL]);
       const an = add(kn, [dir(a + k)[0] * legL, dir(a + k)[1] * legL]);
-      const gp = grp('leg' + side), gb = grp('boot' + side);
+      const gp = grp('leg' + side), gb = grp('boot' + side); knees.push(kn);
       C(hp, kn, thighR, 2.1, L.pants, z, { g: gp });
       C(kn, an, 2.25, 2.0, L.boots, z + 0.05, { g: gb });
       E(kn[0] + 0.3, kn[1] + 0.8, 2.6, 1.4, L.boots, z + 0.06, { g: gb, rot: a + k }); // boot cuff
@@ -159,7 +159,7 @@
 
     // --- far arm ---
     const arm = (side, a, e, z, hand) => {
-      const sh = T(side > 0 ? 1.2 : -2.6, -11.6);
+      const sh = T(side > 0 ? -2.0 : 2.6, -11.8);
       const el = add(sh, [dir(a)[0] * 5.6, dir(a)[1] * 5.6]);
       const wr = add(el, [dir(a + e)[0] * 5.0, dir(a + e)[1] * 5.0]);
       const ga = grp('arm' + side), gg = grp('glove' + side);
@@ -185,13 +185,13 @@
     const eye = (ex, w, far) => {
       const [x, y] = H(ex, 0.4);
       if (blink < 0.25) { R(x - 0.2, y + 2.2, w + 0.6, 1, M.lash, 10.6); return; }
-      const h = 3.6 * Math.min(1, blink + 0.2) - p.sq * 1.4;
+      const h = 4.6 * Math.min(1, blink + 0.2) - p.sq * 1.8;
       R(x - 0.4, y + 3.6 - h - 0.9, w + (far ? 0.4 : 1.0), 1.1, M.lash, 10.62);
       R(x, y + 3.6 - h, w, h, L.eye, 10.6, { shade: 1 });
       R(x, y + 3.6 - h * 0.45, w, h * 0.45, L.eye, 10.61, { shade: 2 });
       if (h > 2) R(x + w - 1.1, y + 3.6 - h + 0.2, 1, 1, M.white, 10.63);
     };
-    eye(2.0, 2.2, false); eye(7.6, 1.6, true);
+    eye(1.4, 2.8, false); eye(7.8, 1.9, true);
     // brows
     R(H(1.4, -1.8 - p.sq * 0.4)[0], H(1.4, -1.8)[1] - p.sq * 0.5, 3.2, 0.9, L.hair, 10.64, { shade: 1, noAO: true });
     R(H(7.2, -1.7)[0], H(7.2, -1.7)[1], 2.2, 0.9, L.hair, 10.64, { shade: 1 });
@@ -217,7 +217,7 @@
     let maxY = -1e9;
     const recordY = (q) => { const t = tf(q); if (t[1] > maxY) maxY = t[1]; };
     // ground contact from feet only
-    [aF, aN].forEach((a) => { recordY([a[0], a[1] + 2]); recordY([a[0] + 4, a[1] + 2]); });
+    [aF, aN].forEach((a) => { recordY([a[0], a[1] + 2]); recordY([a[0] + 4, a[1] + 2]); }); knees.forEach((k) => recordY([k[0], k[1] + 2.4]));
     if (p.rot) out.forEach((s) => { if (s[0] === 'c' || s[0] === 'e') recordY(s[1]); });
     const dy = p.air ? 0 : -maxY + (p.rot ? -1.2 : 0);
     const W = (q) => { const t = tf(q); return [t[0], t[1] + dy]; };
