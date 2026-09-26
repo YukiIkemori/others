@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Self-check for area A9 (weapons): the 301 weapons against DESIGN.md §8.14.1 (1–8) and the rules of
-// §4.3 / §8.1–§8.7 / §9.12 they come from. Exit 1 on any failure.
+// Self-check for area A9 (weapons): the 260 weapons of SYSTEMS_REWORK §3.2 (A19: 7 types; the DESIGN §8 tables translated
+// with the save remap, spec.js) against DESIGN.md §8.14.1 (1–8) and the rules of §4.3 / §8.1–§8.7 / §9.12. Exit 1 on any failure.
 //
 //   node tools/test_weapons.js             isolated load (core + weapontypes.js + the 4 weapon files, numbers by the
 //                                          local §8.2.9 fill), then the full game load (numbers by R.Rules.fillItem)
@@ -73,7 +73,15 @@ function checkWeapons(R, label, full) {
   // ---------------------------------------------------------------- 1. 系列・id・数
   head(`${label}: 1 series, ids, counts (§8.1)`);
   for (const [g, n] of Object.entries(S.COUNTS)) if (g !== 'total') ok(WI.ids[g].length === n, `${g}: ${n} weapons (${WI.ids[g].length})`);
-  ok(ids.length === S.COUNTS.total && new Set(ids).size === ids.length, `301 distinct weapon ids (${ids.length}, distinct ${new Set(ids).size})`);
+  ok(ids.length === S.COUNTS.total && new Set(ids).size === ids.length, `260 distinct weapon ids (${ids.length}, distinct ${new Set(ids).size})`);
+  for (const w of S.WTYPES) {
+    const of = (f) => items.filter((it) => it.wtype === w && f(it)).length;
+    const got = [of((it) => it.grade === 'normal'), of((it) => it.src === 'drop'), of((it) => it.src === 'mdrop'), of((it) => it.grade === 'super')];
+    ok(J(got) === J(S.COUNT_32[w]), `§3.2 ${w}: normal / band / mdrop / super = ${J(S.COUNT_32[w])} (${J(got)})`);
+  }
+  ok(items.every((it) => S.WTYPES.includes(it.wtype)), 'every weapon is one of the 7 types (A19)');
+  const uchi = DB.items.w_sword_uchi;
+  ok(uchi && uchi.grade === 'normal' && uchi.tier === 0 && uchi.line === 'w_sword_uchi' && uchi.src === 'shop' && uchi.units === 's1d1', 'w_sword_uchi 打ち刀: T0 normal, its own line, s1d1 (§3.2)');
   ok(ids.every((id) => DB.items[id] && DB.items[id].type === 'weapon'), 'every id is in DB.items with type weapon');
   for (const L of S.LINES) {
     for (let T = 0; T <= 9; T++) {
@@ -82,6 +90,7 @@ function checkWeapons(R, label, full) {
       ok(it.name === S.NORMAL_NAMES[L.line][T], `${id} name ${S.NORMAL_NAMES[L.line][T]} (${it.name})`);
       ok(it.grade === 'normal' && it.tier === T && it.wtype === L.wtype && it.units === L.units && it.line === L.line && it.src === 'shop',
         `${id} grade/tier/wtype/units/line/src = normal/${T}/${L.wtype}/${L.units}/${L.line}/shop`);
+      if (L.line === 'w_axe_mace') ok(it.kind === 'blunt' && it.art === 'club' && it.mult === 1.05 && it.hit === 10, `${id}: the mace line is blunt, art club, mult 1.05, hit +10 (§3.2)`);
     }
   }
   for (const [id, name] of Object.entries(S.STARTERS)) ok(DB.items[id] && DB.items[id].name === name && DB.items[id].tier === 0, `§5.1.4 starter ${id} = ${name}, T0`);
@@ -89,24 +98,20 @@ function checkWeapons(R, label, full) {
   const idRule = (it) => {
     const id = it._id, w = it.wtype;
     if (it.grade === 'normal') return true;
-    if (it.src === 'drop') return new RegExp(`^w_${w}_r[13579]$`).test(id) || ['w_staff_r7b', 'w_staff_r9b', 'w_staff_prayer_r7', 'w_staff_prayer_r9'].includes(id);
+    if (it.src === 'drop') return new RegExp(`^w_${w}_r[13579][km]?$`).test(id) || ['w_staff_r7b', 'w_staff_r9b', 'w_staff_prayer_r7', 'w_staff_prayer_r9'].includes(id);
     if (it.src === 'mdrop') return new RegExp(`^w_${w}_[a-z]+$`).test(id) && !/_r\d/.test(id) && !/_sr_/.test(id);
     return new RegExp(`^w_${w}_sr_[a-z_]+$`).test(id);
   };
   for (const it of items) ok(idRule(it), `${it._id} follows the §8.1.1 id form for ${it.grade}/${it.src}`);
   for (const T of [1, 3, 5, 7, 9]) {
     for (const w of S.WTYPES) ok(byId[`w_${w}_r${T}`] && byId[`w_${w}_r${T}`].tier === T && byId[`w_${w}_r${T}`].wtype === w, `band T${T} has a ${w} (w_${w}_r${T})`);
+    ok(byId[`w_axe_r${T}m`] && byId[`w_axe_r${T}m`].art === 'club', `band T${T} has a mace (w_axe_r${T}m, §3.2)`);
+    if (T >= 5) ok(byId[`w_sword_r${T}k`] && byId[`w_sword_r${T}k`].art === 'katana', `band T${T} has a katana sword (w_sword_r${T}k, §3.2)`);
     const n = items.filter((it) => it.src === 'drop' && it.tier === T).length;
-    ok(n === (T >= 7 ? 13 : 11), `band T${T} has ${T >= 7 ? 13 : 11} weapons (${n})`);
-  }
-  for (const w of S.WTYPES) {
-    const [nr, ns] = S.COUNT_BY_WTYPE[w];
-    const r = items.filter((it) => it.src === 'mdrop' && it.wtype === w).length;
-    const s = items.filter((it) => it.grade === 'super' && it.wtype === w && it.exclusive && !/^(b_|rm_)/.test(it.exclusive)).length;
-    ok(r === nr && s === ns, `§9.12.6 ${w}: monster rare ${nr} (${r}), 雑魚 super ${ns} (${s})`);
+    ok(n === S.BAND_PER_TIER[T], `band T${T} has ${S.BAND_PER_TIER[T]} weapons (${n})`);
   }
   for (const it of items) {
-    ok(it.sort === it.tier * 100 + ({ sword: 0, greatsword: 1, dagger: 2, axe: 3, spear: 4, bow: 5, club: 6, staff: it.units === 'm2' ? 8 : 7, katana: 9, fist: 10, whip: 11 })[it.wtype] + ({ normal: 0, rare: 50, super: 70 })[it.grade],
+    ok(it.sort === it.tier * 100 + S.sortSeries(it) + ({ normal: 0, rare: 50, super: 70 })[it.grade],
       `${it._id} sort = tier×100 + series + grade offset (${it.sort})`);
     const srcOk = { normal: ['shop'], rare: ['drop', 'mdrop'], super: ['super'] }[it.grade];
     ok(srcOk && srcOk.includes(it.src), `${it._id} grade ${it.grade} has src ${it.src}`);
@@ -122,14 +127,18 @@ function checkWeapons(R, label, full) {
     if (!r0) { ok(false, `${id} raw snapshot exists`); continue; }
     const bad = S.NUMERIC_FILLED.filter((k) => r0[k] !== undefined);
     ok(bad.length === 0, `${id}: the data file does not write ${bad.join(' ') || 'atk mag def mdef eva stats price'}`);
-    ok(r0.grade === 'normal' ? r0.desc === undefined : typeof r0.desc === 'string', `${id}: desc ${r0.grade === 'normal' ? 'left to fillItem/autoDesc' : 'written in the data'}`);
+    ok(r0.grade === 'normal' && !(r0.line === 'w_axe_mace') ? r0.desc === undefined : typeof r0.desc === 'string', `${id}: desc ${r0.grade === 'normal' && r0.line !== 'w_axe_mace' ? 'left to fillItem/autoDesc' : 'written in the data'}`);
   }
   for (const it of items) {
-    const e = S.ATK_TABLE[it.tier][it.wtype];
+    // atk = round(W × mult) with the §3.2 item mult (katana / mace 1.05, claws 0.85, whips on bows / spears 0.95); mag by type
+    const e = { atk: Math.round(S.W[it.tier] * S.expectMult(it._id, it.wtype)), mag: S.ATK_TABLE[it.tier][it.wtype === 'staff' ? 'staff' : 'sword'].mag };
     ok(it.atk === e.atk && it.mag === e.mag, `${it._id} atk/mag ${e.atk}/${e.mag} (${it.atk}/${it.mag})`);
+    const ov = S.override(it._id);
+    if (S.KEPT[it._id]) ok(['mult', 'kind', 'art'].every((k) => ov[k] === undefined || it[k] === ov[k]), `${it._id} (was ${S.KEPT[it._id]}): §3.2 overrides ${J(ov)}`);
     const price = Math.round(S.PRICE[it.tier] * 1.6 / 10) * 10 * S.PRICE_MULT[it.grade];
     ok(it.price === price, `${it._id} price ${price} (${it.price})`);
     if (it.grade === 'normal') ok(it.price === S.ATK_TABLE[it.tier].price, `${it._id} price = §8.4.1 column ${S.ATK_TABLE[it.tier].price}`);
+    if (it.grade === 'normal' && S.NORMAL_DESC_OK[it.line]) { ok(S.NORMAL_DESC_OK[it.line].test(it.desc), `${it._id} desc (written for the ${it.line} line) ${J(it.desc)}`); continue; }
     ok(sameStats(it.stats, expectStats(it)), `${it._id} stats ${statStr(expectStats(it))} (${statStr(it.stats)})`);
     if (it.grade === 'normal') {
       const wt = (DB.weaponTypes || {})[it.wtype] || {};
@@ -144,24 +153,25 @@ function checkWeapons(R, label, full) {
     ok(it.tier === T && it.atk === atk && it.mag === mag && it.price === price && sameStats(it.stats, parseStatStr(st)),
       `${id} = table T${T} ${atk}/${mag} ${st} ${price} (T${it.tier} ${it.atk}/${it.mag} ${statStr(it.stats)} ${it.price})`);
   }
-  ok(Object.keys(S.HAND_TABLE).length === 71, `the spec table covers 59 + 10 + 2 = 71 hand-made weapons (${Object.keys(S.HAND_TABLE).length})`);
+  ok(Object.keys(S.HAND_TABLE).length === 59, `the spec table covers 47 + 10 + 2 = 59 hand-made weapons (the 71 of DESIGN less the 12 merged) (${Object.keys(S.HAND_TABLE).length})`);
 
   // ---------------------------------------------------------------- 3. units
   head(`${label}: 3 units (§4.3.3, §8.3.2, §8.6.2)`);
   for (const it of items) {
     const us = unitsOf(it.units);
     ok(us.reduce((a, [, n]) => a + n, 0) === 2 && us.length >= 1, `${it._id} units total 2 (${it.units})`);
-    const offWeight = us.filter(([k]) => !S.WEAPON_STATS[it.wtype].includes(k)).map(([k]) => k);
-    if (it.grade === 'normal') ok(offWeight.length === 0, `${it._id} normal units only in ${S.WEAPON_STATS[it.wtype].join('/')} (${it.units})`);
+    const st = S.seriesType(it._id, it.wtype);   // a kept katana / club / fist / whip item keeps its old series (§3.2)
+    const offWeight = us.filter(([k]) => !S.WEAPON_STATS[st].includes(k)).map(([k]) => k);
+    if (it.grade === 'normal') ok(offWeight.length === 0, `${it._id} normal units only in ${S.WEAPON_STATS[st].join('/')} (${it.units})`);
     else ok(offWeight.length === 0 || it.quirk, `${it._id} off-type stats only with a quirk (${offWeight.join(' ')})`);
     if (it.src === 'mdrop' || (it.grade === 'super' && WI.MSUPER_DROPPER && WI.MSUPER_DROPPER[it._id])) {
       const mon = it.src === 'mdrop' ? (WI.MRARE_DROPPERS[it._id] || [])[0] : it.exclusive;
-      const want = S.UNITS_FIX[it._id] || S.monsterWeaponUnits(it.wtype, mon);
-      ok(it.units === want, `${it._id} §8.6.2 units ${want} from ${it.wtype}/${mon}${S.UNITS_FIX[it._id] ? ' (A10a.5 fix)' : ''} (${it.units})`);
+      const want = S.UNITS_FIX[it._id] || S.monsterWeaponUnits(st, mon);
+      ok(it.units === want, `${it._id} §8.6.2 units ${want} from ${st}/${mon}${S.UNITS_FIX[it._id] ? ' (A10a.5 fix)' : ''} (${it.units})`);
     } else if (it.grade !== 'normal') {
-      const want = it.wtype === 'staff' && /prayer/.test(it._id) ? 'm2' : S.SERIES_UNITS[it.wtype];
+      const want = it.wtype === 'staff' && /prayer/.test(it._id) ? 'm2' : S.SERIES_UNITS[st];
       // §8.3.4: 超レアの武器は 2 単位を系列の 1 つの能力値に寄せてよい（例 鞭 d2）
-      const packed = it.grade === 'super' ? S.WEAPON_STATS[it.wtype].map((k) => ({ str: 's', vit: 'v', dex: 'd', agi: 'a', int: 'i', mnd: 'm' })[k] + '2') : [];
+      const packed = it.grade === 'super' ? S.WEAPON_STATS[st].map((k) => ({ str: 's', vit: 'v', dex: 'd', agi: 'a', int: 'i', mnd: 'm' })[k] + '2') : [];
       ok(it.units === want || packed.includes(it.units), `${it._id} units follow the series (${want}${packed.length ? ' or ' + packed.join('/') : ''}) (${it.units})`);
     }
     if (it.statsAdd) {
@@ -179,7 +189,8 @@ function checkWeapons(R, label, full) {
     const { effects, quirks } = S.classify(it);
     const ne = Object.keys(effects).filter((k) => !(k === 'twoHanded')).length, nq = Object.keys(quirks).length;
     if (it.grade === 'normal') {
-      const extra = S.WEAPON_FIELDS.filter((k) => it[k] !== undefined && !(k === 'twoHanded' && S.TWO_HANDED.includes(it.wtype)));
+      const adj = S.typeAdjust(it);   // the mace line's hit +10 / 打ち刀's crit +8 are the type change, not effects (§3.2)
+      const extra = S.WEAPON_FIELDS.filter((k) => it[k] !== undefined && !(k === 'twoHanded' && S.TWO_HANDED.includes(it.wtype)) && !((k === 'hit' || k === 'crit') && it[k] === adj[k]));
       ok(extra.length === 0 && !it.mods && !it.statsAdd && !it.quirk, `${it._id} normal: no special effect nor quirk ${extra.join(' ')}`);
       continue;
     }
@@ -316,7 +327,7 @@ function crossArea(R, mine) {
   console.log(`  info R.Rules.fillItem ${R.Rules && typeof R.Rules.fillItem === 'function' ? 'present (numbers above came from it)' : 'absent (local fill used)'}; R.Rules.autoDesc ${R.Rules && typeof R.Rules.autoDesc === 'function' ? 'present' : 'absent'}`);
   // ほかの担当が武器を作っていない
   const stray = Object.entries(DB.items).filter(([id, it]) => it && it.type === 'weapon' && !mine.byId[id]).map(([id]) => id);
-  ok(stray.length === 0, `no weapon in DB.items outside the 301 (${stray.join(' ')})`);
+  ok(stray.length === 0, `no weapon in DB.items outside the 260 (${stray.join(' ')})`);
   // 名前の重なり（品どうしは失敗、魔物・行動とは WARN）
   const myNames = new Map(mine.items.map((it) => [it.name, it._id]));
   for (const [id, it] of Object.entries(DB.items)) if (it && !mine.byId[id] && myNames.has(it.name)) ok(false, `item name ${it.name} of ${id} clashes with ${myNames.get(it.name)}`);
@@ -382,12 +393,12 @@ function crossArea(R, mine) {
   if (pools.p_rare && pools.p_rare.tiers) {
     const inRare = new Set(pools.p_rare.tiers.flat().map((e) => e.item));
     const missing = mine.items.filter((it) => it.src === 'drop' && !inRare.has(it._id)).map((it) => it._id);
-    if (missing.length) note(`p_rare lacks band rares ${missing.join(' ')}`); else console.log('  info p_rare has all 59 band-rare weapons');
+    if (missing.length) note(`p_rare lacks band rares ${missing.join(' ')}`); else console.log('  info p_rare has all 47 band-rare weapons');
   }
 }
 
 // =====================================================================================================
-/** §1.2-2・§8.1.4: 武器は 4 ファイル。どの順で読んでも同じ 301 本になる（読み込み時にほかのファイルのコードを使わない） */
+/** §1.2-2・§8.1.4: 武器は 4 ファイル。どの順で読んでも同じ 260 本になる（読み込み時にほかのファイルのコードを使わない） */
 function loadOrder(RI) {
   head('isolated: files and load order (§1.2-2, §8.1.4)');
   const fs = require('fs'), path = require('path');
@@ -399,7 +410,7 @@ function loadOrder(RI) {
     const RO = S.loadIsolated({ order });
     const errs = (RO._isolatedErrors || []).filter((e) => /items_weapons|weapons:/.test(e));
     ok(errs.length === 0, `load order ${order}: no load errors ${errs.join('; ')}`);
-    ok(RO.WeaponItems && RO.WeaponItems.all().length === 301 && snap(RO) === base, `load order ${order}: the same 301 weapons as the localeCompare order`);
+    ok(RO.WeaponItems && RO.WeaponItems.all().length === 260 && snap(RO) === base, `load order ${order}: the same 260 weapons as the localeCompare order`);
   }
 }
 

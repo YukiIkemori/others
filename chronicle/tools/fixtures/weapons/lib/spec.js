@@ -515,7 +515,7 @@ const COUNT_32 = { sword: [11, 8, 6, 16], greatsword: [10, 5, 3, 4], dagger: [10
 const BAND_PER_TIER = { 1: 8, 3: 8, 5: 9, 7: 11, 9: 11 };
 // normal weapons whose desc is written out (not weapontypes desc + stat line): the mace line (its hit +10 would read
 // 「よく当たる」, WEAPONS phase 1) and 打ち刀 (its crit +8 reads 「会心が出やすい」)
-const NORMAL_DESC_OK = { w_axe_mace: /^打撃で、硬い敵や骨の敵に強い。\n腕力と体力が上がる。$/, w_sword_uchi: /^腕力と器用さが上がる。\n会心が出やすい。$/ };
+const NORMAL_DESC_OK = { w_axe_mace: /^打撃で、硬い敵や骨の敵に強い。\n腕力と体力が上がる。$/, w_sword_uchi: /^(腕力と器用さが上がる。\n会心が出やすい。|片手持ち。盾と合わせて攻守に強い。\n腕力と器用さが上がる。)$/ };   // (the second: the isolated local fill, which has no crit line)
 
 module.exports = {
   ROOT, MY_FILES, W, U, PRICE, GRADE_MULT, PRICE_MULT, gearStat, WTYPES: NEW_WTYPES, OLD_WTYPES, TWO_HANDED, WEAPON_STATS, SERIES_UNITS,
