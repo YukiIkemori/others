@@ -1509,7 +1509,7 @@ guard('rewards', () => {
   ok(count(ev5, 'jingle', (x) => x.id === 'levelup') === 1 && count(ev5, 'levelup') === 4, 'one levelup jingle for the whole party');
   const lu = ev5.find((x) => x.t === 'levelup');
   ok(said(ev5, `アルンはレベル${P(e5, 0).c.level}に上がった！`) && lu.c === P(e5, 0).c && lu.level === P(e5, 0).c.level && lu.gains.hp > 0, 'level line + event');
-  ok(texts(ev5).some((t) => /^最大HP\+\d+(　最大MP\+\d+)?(　最大WP\+\d+)?$/.test(t)), 'gains line 「最大HP+x　最大MP+y　最大WP+z」');
+  ok(texts(ev5).some((t) => /^最大HP\+\d+(　最大MP\+\d+)?$/.test(t)) && !texts(ev5).some((t) => /WP/.test(t)), 'gains line 「最大HP+x　最大MP+y」 (no WP, A18)');
   ok(ev5.findIndex((x) => x.t === 'jingle') < ev5.findIndex((x) => x.t === 'levelup'), 'the jingle before the first level line');
   ok(P(e5, 0).mhp > R.Rules.stats(R.fxBattleChar('hero', 1, { weapon1: 'tb_sword', shield: 'tb_shield', body: 'tb_mail', head: 'tb_helm' })).hp, 'units refreshed after the level up');
   // boss drops: certain pool + bonus, order, items to the bag
@@ -1558,11 +1558,11 @@ guard('rewards', () => {
   // after-battle recovery
   const e9 = mk({ mons: ['tb_goblin'], after: true });
   const [h9, l9] = e9.party;
-  h9.c.hp = 5; h9.mp = 0; h9.wp = 0; run(e9.die(l9, null));
+  h9.c.hp = 5; h9.mp = 0; run(e9.die(l9, null));
   run(e9.die(Mo(e9, 0), h9));
   e9.checkEnd();
   e9.finish();
-  ok(h9.hp === h9.mhp && h9.mp === Math.ceil(h9.mmp * 0.1) && h9.wp === Math.ceil(h9.mwp * 0.1) && l9.hp === 0, 'win: HP full, MP/WP +10 % (rounded up); the fallen stay down');
+  ok(h9.hp === h9.mhp && h9.mp === Math.ceil(h9.mmp * 0.12) && l9.hp === 0, 'win: HP full, MP +12 % (rounded up, K.AFTER.mpPct); the fallen stay down');
   const e10 = mk({ mons: ['tb_goblin'], after: true });
   P(e10, 0).c.hp = 5; P(e10, 0).mp = 0; e10.result = 'escape';
   e10.finish();
@@ -1652,13 +1652,13 @@ guard('glimmer', () => {
   const e = mk({ mons: ['tb_goblin', 'tb_goblin'] });
   const hero = P(e, 0), gob = Mo(e, 0);
   withD(gob, { hp: 9999 }); gob.hp = gob.mhp = 9999;
-  const wp0 = hero.wp;
+  const hmp0 = hero.mp;
   let ev = withGlimmer((c, ctx) => { seen = ctx; return c.id === 'hero' ? { id: 'tb_t_twin', kind: 'tech' } : null; }, () => run(e.execute(hero, { type: 'attack', slot: 'weapon1', target: gob })));
   ok(seen && seen.kind === 'tech' && seen.wtype === 'sword' && seen.used === 'attack' && seen.rankB === e.rankB && seen.ef === e.ef && seen.tier === 2 && seen.row === 'front' && seen.silenced === false && seen.force === false && seen.fallbackWtype === 'sword', 'ctx for R.Glimmer.roll (§4.9.2)');
   const gi = ev.findIndex((x) => x.t === 'glimmer');
   ok(gi >= 0 && ev[gi].id === 'tb_t_twin' && ev[gi].kind === 'tech' && texts(ev.slice(gi))[0] === 'アルンはテスト二連を閃いた！', 'glimmer event, then 「〜は〈技名〉を閃いた！」');
   ok(hero.c.techs.includes('tb_t_twin') && e.glimmers.length === 1 && e.glimmers[0].char === 'hero', 'learned (a clone only in simulations)');
-  ok(said(ev, 'アルンのテスト二連！') && !said(ev, 'アルンの攻撃！') && hero.wp === wp0 && ev.some((x) => x.t === 'dmg' && x.u === gob), 'replaces the attack at no WP, same target');
+  ok(said(ev, 'アルンのテスト二連！') && !said(ev, 'アルンの攻撃！') && hero.mp === hmp0 && ev.some((x) => x.t === 'dmg' && x.u === gob), 'replaces the attack at no MP, same target');
   // spells: replaced for free; nothing to act on → learned, the original goes ahead
   const mage = P(e, 2);
   const mp0 = mage.mp;
@@ -1676,7 +1676,9 @@ guard('glimmer', () => {
   let rolls = 0;
   const count1 = () => { rolls++; return null; };
   withGlimmer(count1, () => {
-    run(e.execute(mage, { type: 'attack', slot: 'weapon1', target: gob })); // staff from the middle: cannot reach → no roll
+    const ar = P(e, 3); equip(ar, 'weapon1', 'tb_dagger');   // a dagger from the middle: cannot reach → no roll (the staff reaches since A19)
+    run(e.execute(ar, { type: 'attack', slot: 'weapon1', target: gob }));
+    equip(ar, 'weapon1', 'tb_bow');
     run(e.execute(hero, { type: 'defend' }));
     e.inv.tb_salve = 1; run(e.execute(hero, { type: 'item', id: 'tb_salve', target: hero }));
   });
@@ -1722,7 +1724,7 @@ guard('repeat', () => {
   run(e.begin());
   const [hero, lancer, mage, archer] = e.party;
   for (const m of e.mons) { withD(m, { hp: 500 }); m.hp = m.mhp = 500; }
-  mage.mp = mage.mmp; hero.wp = hero.mwp;
+  mage.mp = mage.mmp; hero.mp = hero.mmp;
   hero.c.hp = Math.floor(hero.mhp / 2);
   const prev = [];
   prev[0] = { type: 'tech', id: 'tb_t_cut', slot: 'weapon1', target: Mo(e, 0) };
@@ -1746,18 +1748,18 @@ guard('repeat', () => {
   r = e.repeatCommands(prev);
   ok(r[2].target === lancer, 'a repeated heal goes to the most hurt ally');
   lancer.c.hp = lancer.mhp;
-  // R3: WP / MP / silence / reach → 攻撃 (防御 when nothing reaches)
-  hero.wp = 0;
+  // R3: MP / silence / reach → 攻撃 (防御 when nothing reaches)
+  hero.mp = 0;
   r = e.repeatCommands(prev);
-  ok(r[0].type === 'attack' && r[0].slot === 'weapon1', 'R3: no WP → 攻撃');
-  hero.wp = hero.mwp;
+  ok(r[0].type === 'attack' && r[0].slot === 'weapon1', 'R3: no MP for the tech → 攻撃');
+  hero.mp = hero.mmp;
   mage.mp = 0;
   r = e.repeatCommands(prev);
-  ok(r[2].type === 'defend', 'R3: no MP → 攻撃, and the staff cannot reach from the middle → 防御');
+  ok(r[2].type === 'attack', 'R3: no MP → 攻撃 (the staff reaches from the middle, A19)');
   mage.mp = mage.mmp;
   mage.status.silence = true;
   r = e.repeatCommands([undefined, undefined, { type: 'spell', id: 'tb_s_heal', target: hero }, { type: 'tech', id: 'tb_t_rapid', slot: 'weapon1', target: Mo(e, 1) }]);
-  ok(r[2].type === 'defend' && r[3].type === 'tech', 'R3: silence');
+  ok(r[2].type === 'attack' && r[3].type === 'tech', 'R3: silence → 攻撃 (the staff reaches)');
   delete mage.status.silence;
   archer.c.equip.weapon1 = 'tb_dagger'; archer.c.techs.push('tb_t_vital'); archer.refresh();
   r = e.repeatCommands([undefined, undefined, undefined, { type: 'tech', id: 'tb_t_vital', slot: 'weapon1', target: Mo(e, 1) }]);
@@ -1779,10 +1781,14 @@ guard('repeat', () => {
   ok(!r.flee && r.filter(Boolean).every((c) => c.type === 'attack' || c.type === 'defend'), 'R5: 逃げる is never repeated');
   // R6: no previous command → 攻撃 (defend when nothing reaches)
   r = e.repeatCommands([undefined, undefined, undefined, undefined]);
-  ok(r[0].type === 'attack' && r[3].type === 'attack' && r[2].type === 'defend', 'R6: did not act → 攻撃 (the staff in the middle → 防御)');
+  ok(r[0].type === 'attack' && r[3].type === 'attack' && r[2].type === 'attack', 'R6: did not act → 攻撃 (the staff reaches from the middle, A19)');
+  equip(mage, 'weapon1', 'tb_dagger');
+  r = e.repeatCommands([undefined, undefined, undefined, undefined]);
+  ok(r[2].type === 'defend', 'R6: a dagger in the middle → 防御');
   // repeated attack whose slot cannot reach any more → 防御
   r = e.repeatCommands([undefined, undefined, { type: 'attack', slot: 'weapon1', target: Mo(e, 1) }]);
   ok(r[2].type === 'defend', 'a repeated 攻撃 that cannot reach → 防御');
+  equip(mage, 'weapon1', 'tb_staff');
   // revive: nobody down → 攻撃; ally_any keeps the old target
   r = e.repeatCommands([undefined, undefined, { type: 'spell', id: 'tb_s_revive', target: hero }]);
   ok(r[2].type === 'defend' || r[2].type === 'attack', 'nothing to revive → 攻撃 (防御 here)');

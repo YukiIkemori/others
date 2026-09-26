@@ -37,6 +37,9 @@
       trim: brass, belt: cl(['#1e1622', '#342638', '#4c3a52', '#66526c']), boots: leatherDk, metal: brass,
       eye: mat({ keys: ['#181020', '#382a48', '#66527c', '#a894b8'], n: 4, flat: true }) }),
   };
+  // head scale for the round-2 cast (style bible ~2.7 heads; ?head= overrides for comparison)
+  const HS = +(new URLSearchParams(location.search).get('head') || 0.88);
+  for (const k in LOOKS2) LOOKS2[k].headScale = HS;
   const STYLE = { tones: 5, sat: 0.9, olMix: 0.82, tint: [6, -2, 10, 10, 4, -8] };
   const LIGHT = { key: [0.2, -0.62, 0.76], rim: [0.9, -0.3, -0.4], rimC: hex('#ffd8a0'), rimK: 1.25, mul: [0.94, 0.88, 0.84] };
 

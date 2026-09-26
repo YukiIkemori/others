@@ -35,6 +35,9 @@ async function withPage(b, q, fn) {
     ['sheet', 'view=sheet&z=6&cw=280&rh=400&who=arun&poses=idle,slash,cast,hurt,victory&bg=%23586a60', 'sheet_hero_zoom.png'],
     ['sheet', 'view=sheet&scale=4&z=3&cw=150&rh=200&who=arun,viola', 'sheet_smooth_variant.png'],
     ['mons', 'view=mons', 'sheet_monsters.png'],
+    ['sheet2', 'view=sheet2&z=4&cw=48&rh=62', 'sheet2_party_poses.png'],
+    ['sheet2', 'view=sheet2&z=10&cw=46&rh=60&who=arun,selma,sylvan,viola&poses=idle,hurt', 'sheet2_heads_zoom.png'],
+    ['sheet2', 'view=sheet2&z=4&cw=48&rh=62&poses=idle,victory&head=1', 'sheet2_headscale1_compare.png'],
   ];
   for (const [k, q, f] of shots) {
     if (!want(k)) continue;
