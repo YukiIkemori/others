@@ -545,14 +545,14 @@
         if (tab === 'use') {
           const u = it.use || {};
           const usable = !!(u.field && (u.effects || []).length);
-          const i = await R.UI.choose([{ label: '使う', disabled: !usable }, { label: '捨てる', disabled: !!it.unique }], { x: 164, y: cy, w: 84, initial: usable ? 0 : 1 });
+          const i = await Kt.choose([{ label: '使う', disabled: !usable }, { label: '捨てる', disabled: !!it.unique }], { x: 164, y: cy, w: 84, initial: usable ? 0 : 1 });
           if (i < 0) return;
           if (i === 0) {
             const res = await Menu.useItem(e.id);
             if (res === 'exit') { this.close('exit'); return; }
           } else await this.discard(e);
         } else {
-          const i = await R.UI.choose(['装備する', { label: '捨てる', disabled: !!it.unique }], { x: 164, y: cy, w: 84 });
+          const i = await Kt.choose(['装備する', { label: '捨てる', disabled: !!it.unique }], { x: 164, y: cy, w: 84 });
           if (i < 0) return;
           if (i === 0) await this.equip(e);
           else await this.discard(e);
@@ -571,7 +571,7 @@
         let slot = slots.filter((s) => Kt.canEquip(c, id, s))[0];
         const choices = slots.filter((s) => Kt.canEquip(c, id, s));
         if (choices.length > 1) {
-          const j = await R.UI.choose(choices.map((s) => ({ label: Kt.slotName(s), right: c.equip[s] ? Kt.itemName(c.equip[s]) : '―' })),
+          const j = await Kt.choose(choices.map((s) => ({ label: Kt.slotName(s), right: c.equip[s] ? Kt.itemName(c.equip[s]) : '―' })),
             { x: 76, y: 60, w: 172, title: 'どこに付ける？', initial: Math.max(0, choices.findIndex((s) => !c.equip[s])) });
           if (j < 0) return;
           slot = choices[j];
@@ -587,7 +587,7 @@
         if (it.unique) { R.sfx('buzzer'); await Kt.msg('これは捨てられない。'); return; }
         let n = 1;
         if (e.count > 1) {
-          n = await R.UI.number({ min: 1, max: e.count, initial: 1, label: '捨てる数', x: 128, y: 100, w: 120 });
+          n = await Kt.number({ min: 1, max: e.count, initial: 1, label: '捨てる数', x: 128, y: 100, w: 120 });
           if (n < 0) return;
         }
         if (!(await Kt.yesno(it.name + 'を' + (n > 1 ? n + '個' : '') + '捨てますか？'))) return;

@@ -428,6 +428,23 @@
     async msg(text) { await K.say(text); },
     async yesno(text) { const r = await R.UI.yesno(text); R.UI.closeMessage(); return r; },
     wrap(str, w, size) { return G().wrap(str, w, size); },
+    // ---------------------------------------------------------- UI scale (BRIEF Part A11, DESIGN §11.7.0)
+    /** the menu UI scale: 0.75 (設定「メニューの表示：コンパクト」, default) or 1 (大きく) */
+    S() { return R.Settings && R.Settings.menuSize === 'large' ? 1 : 0.75; },
+    large() { return K.S() === 1; },
+    /**
+     * The menu frame: every sub-screen is laid out in the 256×224 frame of the old layouts; compact mode draws
+     * that frame at 0.75 (192×168 px) with its corner at (FRAME_X, FRAME_Y), so the field stays visible to the
+     * right and below. → {scale, ox, oy} (R.UI.inFrame / choose / number options)
+     */
+    frame() { return K.large() ? { scale: 1, ox: 0, oy: 0 } : { scale: K.S(), ox: K.FRAME_X, oy: K.FRAME_Y }; },
+    FRAME_X: 2, FRAME_Y: 2,
+    /** draw fn() in the menu frame (layers that are not a Screen: shop, tavern) */
+    inFrame(fn) { return R.UI.inFrame(K.frame(), fn); },
+    /** R.UI.choose inside the menu frame (x / y / w in frame units) */
+    choose(items, o) { return R.UI.choose(items, Object.assign({}, K.frame(), o || {})); },
+    /** R.UI.number inside the menu frame */
+    number(o) { return R.UI.number(Object.assign({}, K.frame(), o || {})); },
     /** frames-based blink */
     blink(period) { return Math.floor(R.Engine.frame / (period || 16)) % 2 === 0; },
   };
@@ -451,7 +468,9 @@
         R.Input.consume();
       });
     }
-    draw() { if (!this.hidden) this.render(); }
+    /** where this screen draws: the menu frame (the main menu overrides it with its own compact layout) */
+    frameOpts() { return K.frame(); }
+    draw() { if (!this.hidden) R.UI.inFrame(this.frameOpts(), () => this.render()); }
     render() {}
   }
   K.Screen = Screen;
@@ -1118,16 +1137,28 @@
   Menu.commandOk = commandOk;
   let lastCmd = 0;
 
+  // compact main menu (BRIEF A11, §11.7.1 Part A11 版), in the virtual screen of the 0.75 scale (341×298):
+  // one slim command column on the left, 4 party cards and the gold window to its right, the objective strip below.
+  const CM = { x: 6, y: 6, w: 84, lineH: 12, card: { x: 92, w: 164, h: 34, pitch: 36 }, gold: { h: 60 }, obj: { h: 36 } };
+  CM.h = 12 + COMMANDS.length * CM.lineH - 2; // 202
   class MainMenu extends Screen {
     constructor() {
       super();
-      this.list = new R.UI.List({
-        x: 4, y: 4, w: 128, cols: 2, rows: 8, lineH: 14, padX: 16, padY: 8, colW: 55, index: lastCmd,
-        items: COMMANDS.map((c) => ({ label: c.label, disabled: !commandOk(c.id) })),
-        onChange: (i) => { lastCmd = i; },
-      });
+      this.items = COMMANDS.map((c) => ({ label: c.label, disabled: !commandOk(c.id) }));
+      this.build(lastCmd);
     }
-    refresh() { this.list.items.forEach((it, i) => { it.disabled = !commandOk(COMMANDS[i].id); }); }
+    /** the command list for the current size (設定「メニューの表示」 may change while the menu is open) */
+    build(index) {
+      this.large = K.large();
+      this.list = this.large
+        ? new R.UI.List({ x: 4, y: 4, w: 128, cols: 2, rows: 8, lineH: 14, padX: 16, padY: 8, colW: 55, index, items: this.items, onChange: (i) => { lastCmd = i; } })
+        : new R.UI.List({ x: CM.x, y: CM.y, w: CM.w, h: CM.h, cols: 1, rows: COMMANDS.length, lineH: CM.lineH, padX: 16, padY: 6, index, items: this.items, onChange: (i) => { lastCmd = i; } });
+    }
+    frameOpts() { return this.large ? { scale: 1 } : { scale: K.S() }; }
+    refresh() {
+      if (this.large !== K.large()) this.build(this.list.index);
+      this.list.items.forEach((it, i) => { it.disabled = !commandOk(COMMANDS[i].id); });
+    }
     input() {
       const r = this.list.update();
       if (r === 'cancel') this.close();
@@ -1168,9 +1199,17 @@
     }
     render() {
       this.list.draw();
-      drawGold(4, 134, 128);
-      drawParty(134, 4);
-      drawObjective(4, 184, 248);
+      if (this.large) {
+        drawGold(4, 134, 128);
+        drawParty(134, 4);
+        drawObjective(4, 184, 248);
+        return;
+      }
+      const cd = CM.card;
+      R.Game.party.slice(0, 4).forEach((c, i) => drawMemberCard(c, cd.x, CM.y + cd.pitch * i, cd.w, cd.h));
+      const gy = CM.y + CM.h - CM.gold.h;
+      drawGold(cd.x, gy, cd.w, CM.gold.h);
+      drawObjective(CM.x, CM.y + CM.h + 4, cd.x + cd.w - CM.x, CM.obj.h);
     }
   }
   Menu.MainMenu = MainMenu;
@@ -1184,12 +1223,16 @@
   }
   Menu.chapterLabel = chapterLabel;
 
-  function drawGold(x, y, w) {
+  function drawGold(x, y, w, h) {
     const title = R.Game.title;
-    G().window(x, y, w, 46, title ? { title } : undefined);
-    K.labelNum('ゴールド', R.Game.gold, x + 10, y + 6, w - 20);
-    K.labelNum('時間', U.playTime(R.Game.playFrames || 0), x + 10, y + 18, w - 20);
-    K.labelNum('年代記', chapterLabel(), x + 10, y + 30, w - 20);
+    h = h || 46;
+    G().window(x, y, w, h, title ? { title } : undefined);
+    // 3 rows, centred in the window (pitch 12 in the 46 window, 14 in taller ones)
+    const pitch = h >= 56 ? 14 : 12, top = y + Math.round((h - pitch * 2 - 11) / 2);
+    const pad = h >= 56 ? 12 : 10;
+    K.labelNum('ゴールド', R.Game.gold, x + pad, top, w - pad * 2);
+    K.labelNum('時間', U.playTime(R.Game.playFrames || 0), x + pad, top + pitch, w - pad * 2);
+    K.labelNum('年代記', chapterLabel(), x + pad, top + pitch * 2, w - pad * 2);
   }
   Menu.drawGold = drawGold;
 
@@ -1211,6 +1254,29 @@
     K.rowTag(x + 4, y + 36, effectiveRow(c));
   }
   Menu.drawMemberWindow = drawMemberWindow;
+  /**
+   * a compact party card (main menu, Part A11): (x, y, w≈164, h 34), 2 lines beside the sprite:
+   *   [絵] 名前                H 999/999
+   *        前 Lv34   M 150    W  99
+   */
+  function drawMemberCard(c, x, y, w, h) {
+    G().window(x, y, w, h);
+    const col = K.condColor(c);
+    const st = stats(c);
+    const R1 = x + w - 10; // right edge of the values
+    K.drawSpriteAt(c, x + 6, y + Math.round((h - 24) / 2), { frame: 0, alpha: c.hp <= 0 ? 0.55 : 1 });
+    K.fitText(c.name, x + 27, y + 6, 66, { color: col });
+    G().text('H', R1 - 46, y + 6, { color: col === '#ffffff' ? COL.sub : col });
+    G().text(c.hp <= 0 ? '戦闘不能' : c.hp + '/' + (st.hp || 0), R1, y + 6, { align: 'right', color: col });
+    const ly = y + 19;
+    K.rowBadge(x + 26, ly - 1, effectiveRow(c));
+    G().text('Lv' + c.level, x + 44, ly, { color: '#ffffff' });
+    G().text('M', R1 - 82, ly, { color: COL.sub });
+    G().text(String(c.mp), R1 - 54, ly, { align: 'right' });
+    G().text('W', R1 - 46, ly, { color: COL.sub });
+    G().text(String(c.wp || 0), R1, ly, { align: 'right' });
+  }
+  Menu.drawMemberCard = drawMemberCard;
   function drawParty(x, y) {
     R.Game.party.slice(0, 4).forEach((c, i) => drawMemberWindow(c, x, y + 44 * i));
   }
@@ -1233,13 +1299,16 @@
     return String(o.text).replace(/\{left\}/g, String(Math.max(0, 8 - t))).replace(/\{cleared\}/g, String(t));
   }
   Menu.objectiveText = objectiveText;
-  function drawObjective(x, y, w) {
+  function drawObjective(x, y, w, h) {
     const t = objectiveText(objectiveId());
-    G().window(x, y, w, 36, { title: '次の目的' });
+    h = h || 36;
+    G().window(x, y, w, h, { title: '次の目的' });
     if (!t) return;
     let lines = String(t).split('\n');
-    if (lines.length === 1) lines = G().wrap(t, w - 20);
-    lines.slice(0, 2).forEach((l, i) => K.fitText(l, x + 10, y + 7 + i * 14, w - 20));
+    const pad = h > 36 ? 12 : 10;
+    if (lines.length === 1) lines = G().wrap(t, w - pad * 2);
+    const top = y + Math.round((h - 36) / 2);
+    lines.slice(0, 2).forEach((l, i) => K.fitText(l, x + pad, top + 7 + i * 14, w - pad * 2));
   }
   Menu.drawObjective = drawObjective;
 

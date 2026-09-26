@@ -460,9 +460,14 @@
   FX.pierce = (s, c, L) => {
     const n = L >= 3 ? 5 : L >= 2 ? 3 : 1;
     const dir = dirOf(c); // the thrust travels from the user's side toward the target (−1: right → left)
+    // a member who stepped in holds the weapon against the target: the thrust starts at its tip, not 34 px back
+    // (which would be behind the member's own back — §11.5.12)
+    const tip = c.user && c.user.tip;
     for (const r of c.targets) {
       for (let k = 0; k < n; k++) {
         const d = k * 3, oy = k ? U.rf(-8, 8) : 0, ox = k ? U.rf(-6, 6) : 0, slope = U.ri(-4, 4);
+        const reach = dir && tip ? U.clamp(Math.round(dir * (r.cx + ox - tip[0])), 8, 34) : 34;
+        const tail = Math.min(26, reach + 6);
         inst(s, 16 + d, layerOf(r), (g, t) => {
           const a = t - d;
           if (a < 0) return;
@@ -470,8 +475,8 @@
           if (a < 9) {
             if (dir) {
               // a thrust from the user's side, level (±4 slope): the head leads toward the target (§11.5.12)
-              const hx = r.cx + ox - dir * (34 - 34 * q), hy = r.cy + oy - slope * (1 - q);
-              for (let i = 0; i < 26; i++) g.rect(Math.round(hx - dir * i), Math.round(hy - (slope * i) / 26) - 1, 2, i < 6 ? 3 : 2, i < 6 ? '#ffffff' : i < 14 ? '#c8dcff' : '#7aa0e8');
+              const hx = r.cx + ox - dir * reach * (1 - q), hy = r.cy + oy - slope * (1 - q);
+              for (let i = 0; i < tail; i++) g.rect(Math.round(hx - dir * i), Math.round(hy - (slope * i) / 26) - 1, 2, i < 6 ? 3 : 2, i < 6 ? '#ffffff' : i < 14 ? '#c8dcff' : '#7aa0e8');
             } else {
               const x0 = r.cx + ox - 34 + 34 * q, y0 = r.cy + oy + 34 - 34 * q;
               for (let i = 0; i < 26; i++) g.rect(x0 - i, y0 + i - 1, 3, i < 6 ? 3 : 2, i < 6 ? '#ffffff' : i < 14 ? '#c8dcff' : '#7aa0e8');

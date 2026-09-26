@@ -384,7 +384,7 @@
         R.sfx('confirm');
         this.flow(async () => {
           const y = Math.min(8 + this.index * 30 + 20, 120);
-          const i = await R.UI.choose(['並びを入れ替える', '隊列を変える'], { x: 104, y, w: 128, cancel: true });
+          const i = await Kt.choose(['並びを入れ替える', '隊列を変える'], { x: 104, y, w: 128, cancel: true });
           if (i === 0) { this.first = this.index; return; }
           if (i === 1) {
             const c = this.party[this.index];

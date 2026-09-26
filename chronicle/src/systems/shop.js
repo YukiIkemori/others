@@ -18,7 +18,7 @@
   Shop.sellPrice = sellPrice;
   // explicit flags: a reused message window would otherwise inherit noWait from the last prompt
   const say = (t, o) => R.UI.say(t, Object.assign({ noWait: false, keep: false, auto: 0 }, o));
-  const ask = async (t, items, o) => { await say(t, { noWait: true }); return R.UI.choose(items, o || {}); };
+  const ask = async (t, items, o) => { await say(t, { noWait: true }); return K().choose(items, o || {}); };
   const yesno = (t) => R.UI.yesno(t);
 
   /** the goods of a shop: R.Tier.shopItems (tier stock, §8.11.1), else its fixed items */
@@ -225,7 +225,7 @@
     if (room <= 0) { await say('それ以上は持てないようですね。'); return; }
     const max = Math.max(1, Math.min(room, Math.floor(R.Game.gold / Math.max(1, it.price || 1))));
     await say(it.name + 'ですね。\nいくつお求めですか？', { noWait: true });
-    const n = await R.UI.number({ min: 1, max, initial: 1, price: it.price, label: it.name.length > 6 ? '個数' : it.name, w: 132 });
+    const n = await K().number({ min: 1, max, initial: 1, price: it.price, label: it.name.length > 6 ? '個数' : it.name, w: 132 });
     if (n < 1) return;
     const total = (it.price || 0) * n;
     if (!R.State.takeGold(total)) { R.sfx('buzzer'); await say('お金が足りないようですね。'); return; }
@@ -259,7 +259,7 @@
     const slots = Kt.slotsFor(id).filter((s) => Kt.canEquip(c, id, s));
     if (slots.length > 1 && slots.every((s) => c.equip[s])) {
       R.UI.closeMessage();
-      const j = await R.UI.choose(slots.map((s) => ({ label: Kt.slotName(s), right: Kt.itemName(c.equip[s]) })), { x: 76, y: 60, w: 172, title: 'どこに付ける？', initial: Math.max(0, slots.indexOf(slot)) });
+      const j = await Kt.choose(slots.map((s) => ({ label: Kt.slotName(s), right: Kt.itemName(c.equip[s]) })), { x: 76, y: 60, w: 172, title: 'どこに付ける？', initial: Math.max(0, slots.indexOf(slot)) });
       if (j < 0) return;
       slot = slots[j];
     }
@@ -297,7 +297,7 @@
       let n = 1;
       if (have > 1) {
         await say(it.name + 'ですね。\nいくつお売りになりますか？', { noWait: true });
-        n = await R.UI.number({ min: 1, max: have, initial: 1, price: p, label: it.name.length > 6 ? '個数' : it.name, w: 132 });
+        n = await K().number({ min: 1, max: have, initial: 1, price: p, label: it.name.length > 6 ? '個数' : it.name, w: 132 });
         if (n < 1) continue;
       }
       if (!(await yesno(it.name + (n > 1 ? 'を' + n + '個' : '') + 'なら\n' + p * n + 'ゴールドで買い取りましょう。\nよろしいですか？'))) continue;

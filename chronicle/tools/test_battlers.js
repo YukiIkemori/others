@@ -143,5 +143,38 @@ const bad = A.battler('nobody_here', { wtype: 'sword' });
 ok(bad.pending === true && bad.poses.idle.frames.length === 2, 'unknown look → pending stand-in');
 A.PENDING = (A.PENDING || []).filter((k) => k !== 'btl:nobody_here');
 
+section('10. nothing crosses the face (the poses the scene plays)');
+// The face = the skin pixels of the stamped field head. An arm, hand or weapon drawn over more than
+// 2 of them reads as "covering the face" (round-2 review). Bow shoot 1/2 draws the string to the cheek on purpose.
+{
+  const BT = A._Battlers, [nx, ny] = BT.HEAD_NECK;
+  let face = null, hits = [];
+  BT._probe = (b, fig, F, stage, J) => {
+    if (stage === 'head') {
+      const skin = new Set(['s', 'd', 't'].map((k) => fig.pal[k]).filter(Boolean));
+      const ox = J.n[0] - nx, oy = J.n[1] - ny;
+      face = [];
+      for (let y = 0; y < 24; y++) for (let x = 0; x < 16; x++) {
+        const c = fig.head.buf[y * 16 + x], X = ox + x, Y = oy + y;
+        if (c && skin.has(c) && X >= 0 && Y >= 0 && X < BT.W && Y < BT.H) face.push([Y * BT.W + X, BT.colorAt(b, Y * BT.W + X)]);
+      }
+    } else if (face) hits.push(face.filter(([i, c]) => BT.colorAt(b, i) !== c).length);
+  };
+  const worst = [];
+  for (const id of IDS) for (const w of WT) {
+    const fig = BT.makeFig(id, w, 'normal');
+    for (const p of ['idle', 'walk', B.FAMILY[w], 'cast', 'item', 'guard', 'hit', 'weak', 'victory']) {
+      BT.POSE_FN[p](fig.style).forEach((F, i) => {
+        if (w === 'bow' && p === 'shoot' && i > 0) return;
+        hits = []; face = null;
+        BT.renderFrame(fig, F);
+        if ((hits[0] || 0) > 2) worst.push(`${id}:${w}:${p}${i}=${hits[0]}`);
+      });
+    }
+  }
+  BT._probe = null;
+  ok(worst.length === 0, `face clear in every played frame (${worst.length}: ${worst.slice(0, 8).join(' ')})`);
+}
+
 console.log(`\n${pass} passed, ${fail} failed`);
 if (fail) { console.log(fails.slice(0, 20).join('\n')); process.exit(1); }

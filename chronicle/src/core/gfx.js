@@ -47,6 +47,33 @@
       c.textBaseline = 'top';
     },
 
+    // ------------------------------------------------------ UI scale (BRIEF Part A11: compact menus)
+    // pushScale(s) multiplies the current transform by s, so a layer can lay itself out in a "virtual"
+    // screen of R.W/s × R.H/s units. At s = 0.75 on the 4× canvas one unit is exactly 3 device px:
+    // integer coordinates stay pixel-crisp and the default text (32/3 units) renders at 32 device px,
+    // twice the DotGothic16 grid. Always pair with popScale() (try/finally). The engine resets the
+    // transform between layers anyway (engine.js), so a throw cannot leak a scale into the next layer.
+    uiScale: 1,
+    _scaleStack: [],
+    pushScale(s) {
+      const c = Gfx.ctx;
+      Gfx._scaleStack.push(Gfx.uiScale);
+      if (c) { c.save(); c.scale(s, s); }
+      Gfx.uiScale *= s;
+      return s;
+    },
+    popScale() {
+      if (!Gfx._scaleStack.length) return;
+      Gfx.uiScale = Gfx._scaleStack.pop();
+      if (Gfx.ctx) Gfx.ctx.restore();
+    },
+    /** run fn() drawn at scale s (s 1 → plain call) */
+    scaled(s, fn) {
+      if (!s || s === 1) return fn();
+      Gfx.pushScale(s);
+      try { return fn(); } finally { Gfx.popScale(); }
+    },
+
     // ------------------------------------------------------ primitives
     clear(color = '#000') { const c = Gfx.ctx; c.fillStyle = color; c.fillRect(0, 0, R.W, R.H); },
     rect(x, y, w, h, color) { const c = Gfx.ctx; c.fillStyle = color; c.fillRect(x, y, w, h); },

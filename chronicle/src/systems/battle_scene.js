@@ -647,12 +647,13 @@
     // ------------------------------------------------------------ helpers
     frames(n) { return R.Engine.wait(Math.max(1, Math.ceil(n / this.spd))); }
     ask(fn) { return new Promise((res) => { this.input = fn; this.inputRes = res; }); }
-    /** a number above a unit (§11.5.6): monsters at 40 % of the sprite, members above the head */
+    /** a number over a unit (§11.5.6): monsters at 40 % of the sprite; members on their own chest (the hit anchor
+     *  − 8) — above the head it would sit on the member drawn one row higher (rows are 16 px apart) */
     pop(u, n, color) {
       const r = this.rectOf(u);
       const same = this.pops.filter((p) => p.u === u && p.t < 20).length;
-      const x = u.isParty ? r.head[0] : r.cx;
-      const y = (u.isParty ? Math.max(42, r.head[1] - 12) : Math.max(42, r.y + r.h * 0.4)) - same * 9;
+      const x = u.isParty ? r.cx : r.cx;
+      const y = (u.isParty ? Math.max(42, r.cy - 8) : Math.max(42, r.y + r.h * 0.4)) - same * 9;
       this.pops.push({ u, x, y, str: n == null ? 'MISS' : String(n), color, t: 0, party: !!u.isParty });
     }
 

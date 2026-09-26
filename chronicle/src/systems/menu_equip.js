@@ -186,7 +186,7 @@
       async optimize() {
         const c = this.c;
         if (!R.Rules || typeof R.Rules.optimize !== 'function') { R.sfx('buzzer'); return; }
-        const i = await R.UI.choose(MODES.map((m) => m[1]), { x: 60, y: 128, w: 96, title: '最強装備', initial: Kt.lastOptMode || 0 });
+        const i = await Kt.choose(MODES.map((m) => m[1]), { x: 60, y: 128, w: 96, title: '最強装備', initial: Kt.lastOptMode || 0 });
         if (i < 0) return;
         Kt.lastOptMode = i;
         const plan = R.Rules.optimize(c, MODES[i][0]);
@@ -194,7 +194,7 @@
         this.plan = Object.assign({ label: MODES[i][1] }, plan);
         this.mode = 'plan';
         try {
-          const ok = await R.UI.choose(['はい', 'いいえ'], { x: 196, y: 3, w: 56, cancel: true });
+          const ok = await Kt.choose(['はい', 'いいえ'], { x: 196, y: 3, w: 56, cancel: true });
           if (ok !== 0) return;
           const r = R.Rules.applyLoadout(c, plan) || {};
           if (!r.ok) { R.sfx('buzzer'); await Kt.msg('これ以上は持てない。'); return; }

@@ -343,7 +343,9 @@
         // stand the weapon on the ground
         const below = wg.h - 1 - wg.grip[1];
         whand[1] = SOLE - below;
-        if (w.dir === 'D') whand[1] = Math.min(whand[1], J.n[1] + 4);
+        // a long blade or shaft pointing down: the hand stays at the shoulder line (never up at the
+        // face) and the point sinks into the ground (clipped at the sole below)
+        if (w.dir === 'D') whand[1] = Math.max(whand[1], J.n[1] + 2);
         wclip = SOLE;
       }
       if (w.dir === 'D' && F.plant) wclip = SOLE;
@@ -386,8 +388,13 @@
     fig.flutter = F.cape || 0;
     lower(b, fig, J, kN, kF);
     if (F.pouch || F.vial) pouch(b, fig, J);
+    // a wind-up (armBack): the near arm goes up BEHIND the head so it never crosses the face;
+    // the gripping hand is still drawn on top after the weapon (below)
+    if (F.armBack) arm(b, fig, J, 'n', 0, { noHand: true });
     const headTop = stampHead(b, fig, J);
-    arm(b, fig, J, 'n', 0, { noHand: !!(w && w.hand !== 'f'), fist: F.fist === 'n' });
+    if (BT._probe) BT._probe(b, fig, F, 'head', J); // test hook (tools/test_battlers.js §10: nothing crosses the face)
+    if (F.armBack && !(w && w.hand !== 'f')) handAt(b, fig, J.hn, 0, F.fist === 'n');
+    if (!F.armBack) arm(b, fig, J, 'n', 0, { noHand: !!(w && w.hand !== 'f'), fist: F.fist === 'n' });
     if (w && w.layer !== 'back') wres = drawW();
     // gripping hands over the weapon
     if (w && w.hand !== 'f') handAt(b, fig, J.hn, 0);
@@ -399,6 +406,7 @@
     let arrowHead = null;
     if (F.arrow && fig.wtype === 'bow') arrowHead = BT.arrow(b, J.hn[0], J.hn[1], pal, 12);
     if (F.vial) vial(b, fig, J.hf);
+    if (BT._probe) BT._probe(b, fig, F, 'end');
     // ------------------------------------------------ anchors (pre-flip)
     const castHand = F.castHand === 'n' ? J.hn : J.hf || J.hn;
     let tip;

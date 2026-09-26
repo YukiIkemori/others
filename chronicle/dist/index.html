@@ -421,6 +421,33 @@ try{
       c.textBaseline = 'top';
     },
 
+    // ------------------------------------------------------ UI scale (BRIEF Part A11: compact menus)
+    // pushScale(s) multiplies the current transform by s, so a layer can lay itself out in a "virtual"
+    // screen of R.W/s × R.H/s units. At s = 0.75 on the 4× canvas one unit is exactly 3 device px:
+    // integer coordinates stay pixel-crisp and the default text (32/3 units) renders at 32 device px,
+    // twice the DotGothic16 grid. Always pair with popScale() (try/finally). The engine resets the
+    // transform between layers anyway (engine.js), so a throw cannot leak a scale into the next layer.
+    uiScale: 1,
+    _scaleStack: [],
+    pushScale(s) {
+      const c = Gfx.ctx;
+      Gfx._scaleStack.push(Gfx.uiScale);
+      if (c) { c.save(); c.scale(s, s); }
+      Gfx.uiScale *= s;
+      return s;
+    },
+    popScale() {
+      if (!Gfx._scaleStack.length) return;
+      Gfx.uiScale = Gfx._scaleStack.pop();
+      if (Gfx.ctx) Gfx.ctx.restore();
+    },
+    /** run fn() drawn at scale s (s 1 → plain call) */
+    scaled(s, fn) {
+      if (!s || s === 1) return fn();
+      Gfx.pushScale(s);
+      try { return fn(); } finally { Gfx.popScale(); }
+    },
+
     // ------------------------------------------------------ primitives
     clear(color = '#000') { const c = Gfx.ctx; c.fillStyle = color; c.fillRect(0, 0, R.W, R.H); },
     rect(x, y, w, h, color) { const c = Gfx.ctx; c.fillStyle = color; c.fillRect(x, y, w, h); },
@@ -1152,11 +1179,12 @@ try{
     alwaysDash: false, // dash = hold B (or Shift) while moving; this makes running the default
     fieldZoom: 'wide', // field view: 'normal' (16×14 tiles) | 'wide' (≈21×19) | 'wider' (32×28); see field.js VIEW
     windowColor: 'ink', // ink | black | blue | green | red
+    menuSize: 'compact', // field menus / shops: 'compact' (UI scale 0.75, BRIEF A11) | 'large' (scale 1, the old size)
     touchPad: 'auto', // auto | on | off
     cursorMemory: true, // battle command cursor remembers last choice
     padConfirm: 'right', // gamepad confirm button: 'right' (○/Nintendo A) or 'bottom' (×/Xbox A)
     autoKeep: true, // auto battle carries over to the next random encounter
-    settingsVer: 4, // bumped when a default changes for existing players (see migrateSettings)
+    settingsVer: 5, // bumped when a default changes for existing players (see migrateSettings)
   };
   /** bring settings stored by an older version up to date (in place) */
   function migrateSettings(s) {
@@ -1166,6 +1194,8 @@ try{
     if (v < 3 && (!s.windowColor || s.windowColor === 'black')) s.windowColor = 'ink';
     // v4: voice lines (ボイスの音量) — older settings have no value yet
     if (v < 4 && !(typeof s.voiceVolume === 'number' && s.voiceVolume >= 0 && s.voiceVolume <= 1)) s.voiceVolume = DEFAULT_SETTINGS.voiceVolume;
+    // v5: compact menus (BRIEF Part A11) — the new default for everyone
+    if (v < 5 && s.menuSize !== 'compact' && s.menuSize !== 'large') s.menuSize = DEFAULT_SETTINGS.menuSize;
     s.settingsVer = DEFAULT_SETTINGS.settingsVer;
     return v < DEFAULT_SETTINGS.settingsVer;
   }
@@ -3014,8 +3044,11 @@ try{
       const cols = o.cols || 1;
       const rows = o.rows || Math.min(Math.ceil(items.length / cols), 8);
       const h = 16 + rows * 14 - 2;
-      const x = o.x != null ? o.x : R.W - 8 - w * 1;
-      const y = o.y != null ? o.y : MSG.y - h - 2;
+      // o.scale (menus, BRIEF A11): the window is laid out in a virtual screen of R.W/scale units
+      this.o = o;
+      const s = o.scale || 1;
+      const x = o.x != null ? o.x : Math.floor((R.W - 8 - (o.ox || 0)) / s) - w * 1;
+      const y = o.y != null ? o.y : Math.floor((MSG.y - 2 - (o.oy || 0)) / s) - h;
       this.list = new List({ x, y, w: w * (cols > 1 && !o.w ? cols : 1), items, cols, rows, cancel: o.cancel !== false, index: o.initial || 0, title: o.title, onChange: o.onChange });
     }
     update() {
@@ -3023,7 +3056,7 @@ try{
       if (r === 'select') this.close(this.list.index);
       else if (r === 'cancel') this.close(-1);
     }
-    draw() { this.list.draw(); }
+    draw() { UI.inFrame(this.o, () => this.list.draw()); }
   }
 
   class NumberLayer extends R.Layer {
@@ -3042,9 +3075,11 @@ try{
       if (In().pressed('a')) { sfx('confirm'); this.close(this.v); }
       else if (In().pressed('b')) { sfx('cancel'); this.close(-1); }
     }
-    draw() {
+    draw() { UI.inFrame(this.o, () => this.drawBox()); }
+    drawBox() {
       const o = this.o, w = o.w || 120, h = o.price != null ? 42 : 28;
-      const x = o.x != null ? o.x : R.W - 8 - w, y = o.y != null ? o.y : MSG.y - h - 2;
+      const s = o.scale || 1;
+      const x = o.x != null ? o.x : Math.floor((R.W - 8 - (o.ox || 0)) / s) - w, y = o.y != null ? o.y : Math.floor((MSG.y - 2 - (o.oy || 0)) / s) - h;
       G().window(x, y, w, h);
       G().text(o.label || '個数', x + 10, y + 8);
       G().text('× ' + this.v, x + w - 10, y + 8, { align: 'right' });
@@ -3054,6 +3089,14 @@ try{
 
   const UI = (R.UI = {
     MSG,
+    /** draw fn() inside a menu frame: o.ox/o.oy (logical px) then o.scale (BRIEF A11 compact menus) */
+    inFrame(o, fn) {
+      const s = (o && o.scale) || 1, ox = (o && o.ox) || 0, oy = (o && o.oy) || 0;
+      if (s === 1 && !ox && !oy) return fn();
+      const c = G().ctx;
+      c.save();
+      try { c.translate(ox, oy); return G().scaled(s, fn); } finally { c.restore(); }
+    },
     List,
     MessageLayer,
     _msg: null,
@@ -3082,8 +3125,9 @@ try{
     closeMessage() { if (UI._msg && !UI._msg.closed) UI._msg.close(); UI._msg = null; },
     /**
      * Choice window. Resolves to the chosen index, or -1 on cancel.
-     * opts: {x,y,w,cols,rows,title,initial,cancel:true,onChange}
-     * Default position: right side, directly above the message window.
+     * opts: {x,y,w,cols,rows,title,initial,cancel:true,onChange,scale,ox,oy}
+     * Default position: right side, directly above the message window. scale (menus, BRIEF A11):
+     * the window is drawn at that UI scale and x/y/w are in its virtual units (R.W/scale wide).
      */
     choose(items, opts) { return R.Engine.run(new ChoiceLayer(items, opts || {})); },
     /** say(text) + はい/いいえ. Resolves true for はい. Leaves the message window open. */
@@ -3092,7 +3136,7 @@ try{
       const r = await UI.choose(['はい', 'いいえ'], { cancel: true });
       return r === 0;
     },
-    /** numeric input. opts: {min,max,initial,label,price,x,y,w}. Resolves value or -1 */
+    /** numeric input. opts: {min,max,initial,label,price,x,y,w,scale}. Resolves value or -1 */
     number(opts) { return R.Engine.run(new NumberLayer(opts)); },
     /** short auto-closing notice (e.g. 'セーブしました') */
     notice(text, frames = 70) { return UI.say(text, { auto: frames, speed: 3 }); },
@@ -13930,7 +13974,9 @@ try{
         // stand the weapon on the ground
         const below = wg.h - 1 - wg.grip[1];
         whand[1] = SOLE - below;
-        if (w.dir === 'D') whand[1] = Math.min(whand[1], J.n[1] + 4);
+        // a long blade or shaft pointing down: the hand stays at the shoulder line (never up at the
+        // face) and the point sinks into the ground (clipped at the sole below)
+        if (w.dir === 'D') whand[1] = Math.max(whand[1], J.n[1] + 2);
         wclip = SOLE;
       }
       if (w.dir === 'D' && F.plant) wclip = SOLE;
@@ -13973,8 +14019,13 @@ try{
     fig.flutter = F.cape || 0;
     lower(b, fig, J, kN, kF);
     if (F.pouch || F.vial) pouch(b, fig, J);
+    // a wind-up (armBack): the near arm goes up BEHIND the head so it never crosses the face;
+    // the gripping hand is still drawn on top after the weapon (below)
+    if (F.armBack) arm(b, fig, J, 'n', 0, { noHand: true });
     const headTop = stampHead(b, fig, J);
-    arm(b, fig, J, 'n', 0, { noHand: !!(w && w.hand !== 'f'), fist: F.fist === 'n' });
+    if (BT._probe) BT._probe(b, fig, F, 'head', J); // test hook (tools/test_battlers.js §10: nothing crosses the face)
+    if (F.armBack && !(w && w.hand !== 'f')) handAt(b, fig, J.hn, 0, F.fist === 'n');
+    if (!F.armBack) arm(b, fig, J, 'n', 0, { noHand: !!(w && w.hand !== 'f'), fist: F.fist === 'n' });
     if (w && w.layer !== 'back') wres = drawW();
     // gripping hands over the weapon
     if (w && w.hand !== 'f') handAt(b, fig, J.hn, 0);
@@ -13986,6 +14037,7 @@ try{
     let arrowHead = null;
     if (F.arrow && fig.wtype === 'bow') arrowHead = BT.arrow(b, J.hn[0], J.hn[1], pal, 12);
     if (F.vial) vial(b, fig, J.hf);
+    if (BT._probe) BT._probe(b, fig, F, 'end');
     // ------------------------------------------------ anchors (pre-flip)
     const castHand = F.castHand === 'n' ? J.hn : J.hf || J.hn;
     let tip;
@@ -14275,7 +14327,7 @@ try{
     spear: { hn: [21, 30], hf: null, w: W('FU') },
     dagger: { hn: [27, 29], hf: [27, 26], w: W('F') },
     bow: { hn: [20, 31], hf: [34, 29], w: W('U', 'front', 'f') },
-    staff: { hn: [29, 29], hf: [24, 30], w: W('U') },
+    staff: { hn: [31, 29], hf: [24, 30], w: W('U') },
     fist: { hn: [25, 27], hf: [29, 25], w: null },
     whip: { hn: [21, 30], hf: [26, 30], w: W('U', 'front'), coil: true },
   };
@@ -14297,7 +14349,7 @@ try{
   function slash(st) {
     const two = st === 'two' || st === 'spear';
     return [
-      fr({ n: [20, 22], h: [21, 29], fn: [18, 36], ff: [27, 36], hn: two ? [19, 19] : [17, 20], hf: two ? null : [26, 27], w: W('BU', 'back'), cape: 2 }),
+      fr({ n: [20, 22], h: [21, 29], fn: [18, 36], ff: [27, 36], hn: two ? [16, 17] : [15, 18], hf: two ? null : [26, 27], w: W('BU', 'back'), armBack: true, cape: 2 }),
       fr({ n: [26, 23], h: [24, 29], fn: [18, 36], ff: [31, 36], hn: [31, 26], hf: two ? null : [20, 28], w: W('FD'), cape: 3 }),
       fr({ n: [26, 25], h: [24, 31], fn: [17, 36], ff: [31, 36], hn: [29, 30], hf: two ? null : [21, 30], w: W('FD'), cape: 3 }),
     ];
@@ -14315,7 +14367,7 @@ try{
   function smash(st) {
     const two = st === 'two' || st === 'spear';
     return [
-      fr({ n: [21, 22], h: [22, 29], fn: [19, 36], ff: [26, 36], hn: [21, 15], hf: two ? null : [24, 16], w: W('BU', 'back'), cape: 2 }),
+      fr({ n: [21, 22], h: [22, 29], fn: [19, 36], ff: [26, 36], hn: [17, 13], hf: two ? null : [24, 16], w: W('BU', 'back'), armBack: true, cape: 2 }),
       fr({ n: [25, 23], h: [24, 29], fn: [18, 36], ff: [30, 36], hn: [30, 24], hf: two ? null : [28, 25], w: W('FD'), cape: 3 }),
       fr({ n: [26, 25], h: [24, 31], fn: [18, 36], ff: [30, 36], hn: st === 'staff' ? [29, 27] : [30, 30], hf: two ? null : [28, 30], w: W(st === 'staff' ? 'FD' : 'F'), cape: 3 }),
     ];
@@ -14332,9 +14384,9 @@ try{
     }
     const body = { n: [22, 22], h: [22, 29], fn: [18, 36], ff: [27, 36] };
     return [
-      fr(Object.assign({}, body, { hf: [30, 26], hn: [27, 26], w: W('U', 'front', 'f'), string: 'hn', arrow: true })),
-      fr(Object.assign({}, body, { n: [21, 22], hf: [30, 26], hn: [19, 25], w: W('U', 'front', 'f'), string: 'hn', arrow: true })),
-      fr(Object.assign({}, body, { n: [21, 22], hf: [30, 26], hn: [17, 24], w: W('U', 'front', 'f'), open: true })),
+      fr(Object.assign({}, body, { hf: [32, 26], hn: [28, 26], w: W('U', 'front', 'f'), string: 'hn', arrow: true })),
+      fr(Object.assign({}, body, { n: [21, 22], hf: [32, 26], hn: [19, 25], w: W('U', 'front', 'f'), string: 'hn', arrow: true })),
+      fr(Object.assign({}, body, { n: [21, 22], hf: [32, 26], hn: [17, 24], w: W('U', 'front', 'f'), open: true })),
     ];
   }
   function punch(st) {
@@ -14349,7 +14401,7 @@ try{
     const wh = st === 'whip';
     const two = st === 'two' || st === 'spear';
     return [
-      fr({ n: [20, 22], h: [21, 29], fn: [18, 36], ff: [26, 36], hn: [18, 18], hf: two ? null : [26, 27], w: wh ? W('U', 'back') : W('BU', 'back'), coil: wh, cape: 2 }),
+      fr({ n: [20, 22], h: [21, 29], fn: [18, 36], ff: [26, 36], hn: [16, 17], hf: two ? null : [26, 27], w: wh ? W('U', 'back') : W('BU', 'back'), coil: wh, armBack: true, cape: 2 }),
       fr({ n: [25, 23], h: [24, 29], fn: [18, 36], ff: [30, 36], hn: [29, 25], hf: two ? null : [21, 28], w: W(wh ? 'F' : 'F'), lash: wh ? 'up' : null, cape: 3 }),
       fr({ n: [25, 24], h: [24, 30], fn: [18, 36], ff: [30, 36], hn: [28, 29], hf: two ? null : [22, 30], w: W(wh ? 'F' : 'FD'), lash: wh ? 'down' : null, cape: 3 }),
     ];
@@ -14368,21 +14420,21 @@ try{
   function cast(st) {
     if (st === 'staff') {
       return [
-        fr({ hn: [23, 16], hf: [25, 17], w: W('U'), cape: 1 }),
+        fr({ hn: [31, 21], hf: [32, 19], w: W('U'), cape: 1 }),
         fr({ hn: [27, 24], hf: [29, 23], w: W('FU'), castHand: 'n', cape: 0 }),
         fr({ n: [24, 22], h: [23, 29], ff: [29, 36], hn: [30, 24], hf: [32, 23], w: W('FU'), castHand: 'n', cape: 3 }),
       ];
     }
     if (st === 'fist') {
       return [
-        fr({ hn: [17, 13], hf: [27, 12], w: null, cape: 1 }),
+        fr({ hn: [18, 7], hf: [26, 8], w: null, armBack: true, cape: 1 }), // both fists up over the head
         fr({ hn: [27, 25], hf: [29, 24], w: null, cape: 0 }),
         fr({ n: [24, 22], h: [23, 29], ff: [29, 36], hn: [29, 25], hf: [32, 24], w: null, cape: 3 }),
       ];
     }
     const low = lowHold(st);
     return [
-      fr(Object.assign({}, low, { hf: [26, 18], cape: 1 })),
+      fr(Object.assign({}, low, { hf: [27, 12], cape: 1 })),
       fr(Object.assign({}, low, { hf: [30, 24], cape: 0 })),
       fr(Object.assign({}, low, { n: [24, 22], h: [23, 29], ff: [29, 36], hf: [33, 24], cape: 3 })),
     ];
@@ -14390,18 +14442,18 @@ try{
   function item() {
     return [
       fr({ hn: [19, 31], hf: [26, 30], w: null, pouch: true }),
-      fr({ hn: [21, 30], hf: [30, 21], w: null, vial: true }),
+      fr({ hn: [21, 30], hf: [32, 22], w: null, vial: true }),
     ];
   }
   function guard(st) {
     const body = { n: [22, 24], h: [22, 31], fn: [18, 36], ff: [27, 36] };
     const G = {
-      one: { hn: [26, 28], hf: [27, 29], w: W('U') },
-      two: { hn: [25, 30], hf: null, w: W('U') },
-      spear: { hn: [25, 31], hf: null, w: W('U') },
-      dagger: { hn: [26, 27], hf: [27, 29], w: W('U') },
-      bow: { hn: [25, 29], hf: [29, 28], w: W('U', 'front', 'f') },
-      staff: { hn: [26, 29], hf: [27, 27], w: W('U') },
+      one: { hn: [26, 27], hf: [27, 28], w: W('F') },
+      two: { hn: [25, 28], hf: null, w: W('F') },
+      spear: { hn: [22, 28], hf: null, w: W('F') },
+      dagger: { hn: [27, 27], hf: [27, 29], w: W('F') },
+      bow: { hn: [28, 29], hf: [32, 28], w: W('U', 'front', 'f') },
+      staff: { hn: [24, 28], hf: [28, 28], w: W('F') },
       fist: { hn: [27, 26], hf: [28, 25], w: null, cross: true },
       whip: { hn: [26, 28], hf: [27, 29], w: W('U'), coil: true },
     };
@@ -14409,7 +14461,7 @@ try{
   }
   function hit(st) {
     const o = { n: [19, 24], h: [21, 29], fn: [18, 36], ff: [25, 36], hn: [16, 28], hf: [22, 29], w: W('BD'), cape: 2 };
-    if (st === 'bow') { o.hn = [17, 29]; o.hf = [23, 29]; o.w = W('U', 'front', 'f'); }
+    if (st === 'bow') { o.hn = [17, 29]; o.hf = [22, 30]; o.w = W('BD', 'back', 'f'); }
     if (st === 'fist') o.w = null;
     if (st === 'whip') { o.w = W('BD'); o.coil = true; }
     if (st === 'two' || st === 'spear') o.free = true;
@@ -14419,18 +14471,19 @@ try{
     const body = { n: [24, 27], h: [21, 32], fn: [16, 37], ff: [28, 36], kneel: 'n', planted: true };
     let o;
     if (st === 'bow') o = { hn: [33, 30], hf: [26, 33], w: W('U'), plant: true };
-    else if (st === 'staff') o = { hn: [30, 29], hf: [26, 33], w: W('U'), plant: true };
+    else if (st === 'staff') o = { hn: [33, 30], hf: [26, 33], w: W('U'), plant: true };
+    else if (st === 'spear') o = { hn: [33, 30], hf: [28, 31], w: W('U'), plant: true, free: true }; // butt on the ground, head up
     else if (st === 'fist') o = { hn: [29, 36], hf: [26, 33], w: null };
     else if (st === 'whip') o = { hn: [28, 31], hf: [26, 33], w: W('D'), coil: true };
-    else o = { hn: [30, 29], hf: st === 'two' || st === 'spear' ? null : [28, 31], w: W('D'), plant: true };
+    else o = { hn: [33, 29], hf: [28, 31], w: W('D'), plant: true, free: true }; // one hand on the planted hilt: the other rests on the knee
     const f0 = fr(Object.assign({}, body, o));
     const f1 = Object.assign({}, f0, { n: [24, 26] });
     return [f0, f1];
   }
   function victory(st) {
-    const o = { hn: [19, 13], hf: [25, 30], w: W('U'), raise: true };
-    if (st === 'two' || st === 'spear') { o.hf = null; }
-    if (st === 'fist') { o.w = null; o.hn = [16, 12]; o.fist = 'n'; }
+    const o = { hn: [19, 13], hf: [25, 30], w: W('U', 'back'), raise: true, armBack: true };
+    if (st === 'two' || st === 'spear') { o.hf = null; o.free = true; }
+    if (st === 'fist') { o.w = null; o.hn = [17, 5]; o.fist = 'n'; } // the fist high over the head: the forearm shows above the hair
     if (st === 'whip') { o.coil = 'up'; }
     if (st === 'bow') o.w = W('U', 'back'); // the head hides the string; the limbs show round it
     const f0 = fr(o);
@@ -64198,9 +64251,14 @@ try{
   FX.pierce = (s, c, L) => {
     const n = L >= 3 ? 5 : L >= 2 ? 3 : 1;
     const dir = dirOf(c); // the thrust travels from the user's side toward the target (−1: right → left)
+    // a member who stepped in holds the weapon against the target: the thrust starts at its tip, not 34 px back
+    // (which would be behind the member's own back — §11.5.12)
+    const tip = c.user && c.user.tip;
     for (const r of c.targets) {
       for (let k = 0; k < n; k++) {
         const d = k * 3, oy = k ? U.rf(-8, 8) : 0, ox = k ? U.rf(-6, 6) : 0, slope = U.ri(-4, 4);
+        const reach = dir && tip ? U.clamp(Math.round(dir * (r.cx + ox - tip[0])), 8, 34) : 34;
+        const tail = Math.min(26, reach + 6);
         inst(s, 16 + d, layerOf(r), (g, t) => {
           const a = t - d;
           if (a < 0) return;
@@ -64208,8 +64266,8 @@ try{
           if (a < 9) {
             if (dir) {
               // a thrust from the user's side, level (±4 slope): the head leads toward the target (§11.5.12)
-              const hx = r.cx + ox - dir * (34 - 34 * q), hy = r.cy + oy - slope * (1 - q);
-              for (let i = 0; i < 26; i++) g.rect(Math.round(hx - dir * i), Math.round(hy - (slope * i) / 26) - 1, 2, i < 6 ? 3 : 2, i < 6 ? '#ffffff' : i < 14 ? '#c8dcff' : '#7aa0e8');
+              const hx = r.cx + ox - dir * reach * (1 - q), hy = r.cy + oy - slope * (1 - q);
+              for (let i = 0; i < tail; i++) g.rect(Math.round(hx - dir * i), Math.round(hy - (slope * i) / 26) - 1, 2, i < 6 ? 3 : 2, i < 6 ? '#ffffff' : i < 14 ? '#c8dcff' : '#7aa0e8');
             } else {
               const x0 = r.cx + ox - 34 + 34 * q, y0 = r.cy + oy + 34 - 34 * q;
               for (let i = 0; i < 26; i++) g.rect(x0 - i, y0 + i - 1, 3, i < 6 ? 3 : 2, i < 6 ? '#ffffff' : i < 14 ? '#c8dcff' : '#7aa0e8');
@@ -65834,12 +65892,13 @@ try{
     // ------------------------------------------------------------ helpers
     frames(n) { return R.Engine.wait(Math.max(1, Math.ceil(n / this.spd))); }
     ask(fn) { return new Promise((res) => { this.input = fn; this.inputRes = res; }); }
-    /** a number above a unit (§11.5.6): monsters at 40 % of the sprite, members above the head */
+    /** a number over a unit (§11.5.6): monsters at 40 % of the sprite; members on their own chest (the hit anchor
+     *  − 8) — above the head it would sit on the member drawn one row higher (rows are 16 px apart) */
     pop(u, n, color) {
       const r = this.rectOf(u);
       const same = this.pops.filter((p) => p.u === u && p.t < 20).length;
-      const x = u.isParty ? r.head[0] : r.cx;
-      const y = (u.isParty ? Math.max(42, r.head[1] - 12) : Math.max(42, r.y + r.h * 0.4)) - same * 9;
+      const x = u.isParty ? r.cx : r.cx;
+      const y = (u.isParty ? Math.max(42, r.cy - 8) : Math.max(42, r.y + r.h * 0.4)) - same * 9;
       this.pops.push({ u, x, y, str: n == null ? 'MISS' : String(n), color, t: 0, party: !!u.isParty });
     }
 
@@ -75459,7 +75518,7 @@ try{
       async optimize() {
         const c = this.c;
         if (!R.Rules || typeof R.Rules.optimize !== 'function') { R.sfx('buzzer'); return; }
-        const i = await R.UI.choose(MODES.map((m) => m[1]), { x: 60, y: 128, w: 96, title: '最強装備', initial: Kt.lastOptMode || 0 });
+        const i = await Kt.choose(MODES.map((m) => m[1]), { x: 60, y: 128, w: 96, title: '最強装備', initial: Kt.lastOptMode || 0 });
         if (i < 0) return;
         Kt.lastOptMode = i;
         const plan = R.Rules.optimize(c, MODES[i][0]);
@@ -75467,7 +75526,7 @@ try{
         this.plan = Object.assign({ label: MODES[i][1] }, plan);
         this.mode = 'plan';
         try {
-          const ok = await R.UI.choose(['はい', 'いいえ'], { x: 196, y: 3, w: 56, cancel: true });
+          const ok = await Kt.choose(['はい', 'いいえ'], { x: 196, y: 3, w: 56, cancel: true });
           if (ok !== 0) return;
           const r = R.Rules.applyLoadout(c, plan) || {};
           if (!r.ok) { R.sfx('buzzer'); await Kt.msg('これ以上は持てない。'); return; }
@@ -76142,14 +76201,14 @@ try{
         if (tab === 'use') {
           const u = it.use || {};
           const usable = !!(u.field && (u.effects || []).length);
-          const i = await R.UI.choose([{ label: '使う', disabled: !usable }, { label: '捨てる', disabled: !!it.unique }], { x: 164, y: cy, w: 84, initial: usable ? 0 : 1 });
+          const i = await Kt.choose([{ label: '使う', disabled: !usable }, { label: '捨てる', disabled: !!it.unique }], { x: 164, y: cy, w: 84, initial: usable ? 0 : 1 });
           if (i < 0) return;
           if (i === 0) {
             const res = await Menu.useItem(e.id);
             if (res === 'exit') { this.close('exit'); return; }
           } else await this.discard(e);
         } else {
-          const i = await R.UI.choose(['装備する', { label: '捨てる', disabled: !!it.unique }], { x: 164, y: cy, w: 84 });
+          const i = await Kt.choose(['装備する', { label: '捨てる', disabled: !!it.unique }], { x: 164, y: cy, w: 84 });
           if (i < 0) return;
           if (i === 0) await this.equip(e);
           else await this.discard(e);
@@ -76168,7 +76227,7 @@ try{
         let slot = slots.filter((s) => Kt.canEquip(c, id, s))[0];
         const choices = slots.filter((s) => Kt.canEquip(c, id, s));
         if (choices.length > 1) {
-          const j = await R.UI.choose(choices.map((s) => ({ label: Kt.slotName(s), right: c.equip[s] ? Kt.itemName(c.equip[s]) : '―' })),
+          const j = await Kt.choose(choices.map((s) => ({ label: Kt.slotName(s), right: c.equip[s] ? Kt.itemName(c.equip[s]) : '―' })),
             { x: 76, y: 60, w: 172, title: 'どこに付ける？', initial: Math.max(0, choices.findIndex((s) => !c.equip[s])) });
           if (j < 0) return;
           slot = choices[j];
@@ -76184,7 +76243,7 @@ try{
         if (it.unique) { R.sfx('buzzer'); await Kt.msg('これは捨てられない。'); return; }
         let n = 1;
         if (e.count > 1) {
-          n = await R.UI.number({ min: 1, max: e.count, initial: 1, label: '捨てる数', x: 128, y: 100, w: 120 });
+          n = await Kt.number({ min: 1, max: e.count, initial: 1, label: '捨てる数', x: 128, y: 100, w: 120 });
           if (n < 0) return;
         }
         if (!(await Kt.yesno(it.name + 'を' + (n > 1 ? n + '個' : '') + '捨てますか？'))) return;
@@ -77036,7 +77095,7 @@ try{
         R.sfx('confirm');
         this.flow(async () => {
           const y = Math.min(8 + this.index * 30 + 20, 120);
-          const i = await R.UI.choose(['並びを入れ替える', '隊列を変える'], { x: 104, y, w: 128, cancel: true });
+          const i = await Kt.choose(['並びを入れ替える', '隊列を変える'], { x: 104, y, w: 128, cancel: true });
           if (i === 0) { this.first = this.index; return; }
           if (i === 1) {
             const c = this.party[this.index];
@@ -77699,6 +77758,23 @@ try{
     async msg(text) { await K.say(text); },
     async yesno(text) { const r = await R.UI.yesno(text); R.UI.closeMessage(); return r; },
     wrap(str, w, size) { return G().wrap(str, w, size); },
+    // ---------------------------------------------------------- UI scale (BRIEF Part A11, DESIGN §11.7.0)
+    /** the menu UI scale: 0.75 (設定「メニューの表示：コンパクト」, default) or 1 (大きく) */
+    S() { return R.Settings && R.Settings.menuSize === 'large' ? 1 : 0.75; },
+    large() { return K.S() === 1; },
+    /**
+     * The menu frame: every sub-screen is laid out in the 256×224 frame of the old layouts; compact mode draws
+     * that frame at 0.75 (192×168 px) with its corner at (FRAME_X, FRAME_Y), so the field stays visible to the
+     * right and below. → {scale, ox, oy} (R.UI.inFrame / choose / number options)
+     */
+    frame() { return K.large() ? { scale: 1, ox: 0, oy: 0 } : { scale: K.S(), ox: K.FRAME_X, oy: K.FRAME_Y }; },
+    FRAME_X: 2, FRAME_Y: 2,
+    /** draw fn() in the menu frame (layers that are not a Screen: shop, tavern) */
+    inFrame(fn) { return R.UI.inFrame(K.frame(), fn); },
+    /** R.UI.choose inside the menu frame (x / y / w in frame units) */
+    choose(items, o) { return R.UI.choose(items, Object.assign({}, K.frame(), o || {})); },
+    /** R.UI.number inside the menu frame */
+    number(o) { return R.UI.number(Object.assign({}, K.frame(), o || {})); },
     /** frames-based blink */
     blink(period) { return Math.floor(R.Engine.frame / (period || 16)) % 2 === 0; },
   };
@@ -77722,7 +77798,9 @@ try{
         R.Input.consume();
       });
     }
-    draw() { if (!this.hidden) this.render(); }
+    /** where this screen draws: the menu frame (the main menu overrides it with its own compact layout) */
+    frameOpts() { return K.frame(); }
+    draw() { if (!this.hidden) R.UI.inFrame(this.frameOpts(), () => this.render()); }
     render() {}
   }
   K.Screen = Screen;
@@ -78389,16 +78467,28 @@ try{
   Menu.commandOk = commandOk;
   let lastCmd = 0;
 
+  // compact main menu (BRIEF A11, §11.7.1 Part A11 版), in the virtual screen of the 0.75 scale (341×298):
+  // one slim command column on the left, 4 party cards and the gold window to its right, the objective strip below.
+  const CM = { x: 6, y: 6, w: 84, lineH: 12, card: { x: 92, w: 164, h: 34, pitch: 36 }, gold: { h: 60 }, obj: { h: 36 } };
+  CM.h = 12 + COMMANDS.length * CM.lineH - 2; // 202
   class MainMenu extends Screen {
     constructor() {
       super();
-      this.list = new R.UI.List({
-        x: 4, y: 4, w: 128, cols: 2, rows: 8, lineH: 14, padX: 16, padY: 8, colW: 55, index: lastCmd,
-        items: COMMANDS.map((c) => ({ label: c.label, disabled: !commandOk(c.id) })),
-        onChange: (i) => { lastCmd = i; },
-      });
+      this.items = COMMANDS.map((c) => ({ label: c.label, disabled: !commandOk(c.id) }));
+      this.build(lastCmd);
     }
-    refresh() { this.list.items.forEach((it, i) => { it.disabled = !commandOk(COMMANDS[i].id); }); }
+    /** the command list for the current size (設定「メニューの表示」 may change while the menu is open) */
+    build(index) {
+      this.large = K.large();
+      this.list = this.large
+        ? new R.UI.List({ x: 4, y: 4, w: 128, cols: 2, rows: 8, lineH: 14, padX: 16, padY: 8, colW: 55, index, items: this.items, onChange: (i) => { lastCmd = i; } })
+        : new R.UI.List({ x: CM.x, y: CM.y, w: CM.w, h: CM.h, cols: 1, rows: COMMANDS.length, lineH: CM.lineH, padX: 16, padY: 6, index, items: this.items, onChange: (i) => { lastCmd = i; } });
+    }
+    frameOpts() { return this.large ? { scale: 1 } : { scale: K.S() }; }
+    refresh() {
+      if (this.large !== K.large()) this.build(this.list.index);
+      this.list.items.forEach((it, i) => { it.disabled = !commandOk(COMMANDS[i].id); });
+    }
     input() {
       const r = this.list.update();
       if (r === 'cancel') this.close();
@@ -78439,9 +78529,17 @@ try{
     }
     render() {
       this.list.draw();
-      drawGold(4, 134, 128);
-      drawParty(134, 4);
-      drawObjective(4, 184, 248);
+      if (this.large) {
+        drawGold(4, 134, 128);
+        drawParty(134, 4);
+        drawObjective(4, 184, 248);
+        return;
+      }
+      const cd = CM.card;
+      R.Game.party.slice(0, 4).forEach((c, i) => drawMemberCard(c, cd.x, CM.y + cd.pitch * i, cd.w, cd.h));
+      const gy = CM.y + CM.h - CM.gold.h;
+      drawGold(cd.x, gy, cd.w, CM.gold.h);
+      drawObjective(CM.x, CM.y + CM.h + 4, cd.x + cd.w - CM.x, CM.obj.h);
     }
   }
   Menu.MainMenu = MainMenu;
@@ -78455,12 +78553,16 @@ try{
   }
   Menu.chapterLabel = chapterLabel;
 
-  function drawGold(x, y, w) {
+  function drawGold(x, y, w, h) {
     const title = R.Game.title;
-    G().window(x, y, w, 46, title ? { title } : undefined);
-    K.labelNum('ゴールド', R.Game.gold, x + 10, y + 6, w - 20);
-    K.labelNum('時間', U.playTime(R.Game.playFrames || 0), x + 10, y + 18, w - 20);
-    K.labelNum('年代記', chapterLabel(), x + 10, y + 30, w - 20);
+    h = h || 46;
+    G().window(x, y, w, h, title ? { title } : undefined);
+    // 3 rows, centred in the window (pitch 12 in the 46 window, 14 in taller ones)
+    const pitch = h >= 56 ? 14 : 12, top = y + Math.round((h - pitch * 2 - 11) / 2);
+    const pad = h >= 56 ? 12 : 10;
+    K.labelNum('ゴールド', R.Game.gold, x + pad, top, w - pad * 2);
+    K.labelNum('時間', U.playTime(R.Game.playFrames || 0), x + pad, top + pitch, w - pad * 2);
+    K.labelNum('年代記', chapterLabel(), x + pad, top + pitch * 2, w - pad * 2);
   }
   Menu.drawGold = drawGold;
 
@@ -78482,6 +78584,29 @@ try{
     K.rowTag(x + 4, y + 36, effectiveRow(c));
   }
   Menu.drawMemberWindow = drawMemberWindow;
+  /**
+   * a compact party card (main menu, Part A11): (x, y, w≈164, h 34), 2 lines beside the sprite:
+   *   [絵] 名前                H 999/999
+   *        前 Lv34   M 150    W  99
+   */
+  function drawMemberCard(c, x, y, w, h) {
+    G().window(x, y, w, h);
+    const col = K.condColor(c);
+    const st = stats(c);
+    const R1 = x + w - 10; // right edge of the values
+    K.drawSpriteAt(c, x + 6, y + Math.round((h - 24) / 2), { frame: 0, alpha: c.hp <= 0 ? 0.55 : 1 });
+    K.fitText(c.name, x + 27, y + 6, 66, { color: col });
+    G().text('H', R1 - 46, y + 6, { color: col === '#ffffff' ? COL.sub : col });
+    G().text(c.hp <= 0 ? '戦闘不能' : c.hp + '/' + (st.hp || 0), R1, y + 6, { align: 'right', color: col });
+    const ly = y + 19;
+    K.rowBadge(x + 26, ly - 1, effectiveRow(c));
+    G().text('Lv' + c.level, x + 44, ly, { color: '#ffffff' });
+    G().text('M', R1 - 82, ly, { color: COL.sub });
+    G().text(String(c.mp), R1 - 54, ly, { align: 'right' });
+    G().text('W', R1 - 46, ly, { color: COL.sub });
+    G().text(String(c.wp || 0), R1, ly, { align: 'right' });
+  }
+  Menu.drawMemberCard = drawMemberCard;
   function drawParty(x, y) {
     R.Game.party.slice(0, 4).forEach((c, i) => drawMemberWindow(c, x, y + 44 * i));
   }
@@ -78504,13 +78629,16 @@ try{
     return String(o.text).replace(/\{left\}/g, String(Math.max(0, 8 - t))).replace(/\{cleared\}/g, String(t));
   }
   Menu.objectiveText = objectiveText;
-  function drawObjective(x, y, w) {
+  function drawObjective(x, y, w, h) {
     const t = objectiveText(objectiveId());
-    G().window(x, y, w, 36, { title: '次の目的' });
+    h = h || 36;
+    G().window(x, y, w, h, { title: '次の目的' });
     if (!t) return;
     let lines = String(t).split('\n');
-    if (lines.length === 1) lines = G().wrap(t, w - 20);
-    lines.slice(0, 2).forEach((l, i) => K.fitText(l, x + 10, y + 7 + i * 14, w - 20));
+    const pad = h > 36 ? 12 : 10;
+    if (lines.length === 1) lines = G().wrap(t, w - pad * 2);
+    const top = y + Math.round((h - 36) / 2);
+    lines.slice(0, 2).forEach((l, i) => K.fitText(l, x + pad, top + 7 + i * 14, w - pad * 2));
   }
   Menu.drawObjective = drawObjective;
 
@@ -81791,7 +81919,7 @@ try{
   Shop.sellPrice = sellPrice;
   // explicit flags: a reused message window would otherwise inherit noWait from the last prompt
   const say = (t, o) => R.UI.say(t, Object.assign({ noWait: false, keep: false, auto: 0 }, o));
-  const ask = async (t, items, o) => { await say(t, { noWait: true }); return R.UI.choose(items, o || {}); };
+  const ask = async (t, items, o) => { await say(t, { noWait: true }); return K().choose(items, o || {}); };
   const yesno = (t) => R.UI.yesno(t);
 
   /** the goods of a shop: R.Tier.shopItems (tier stock, §8.11.1), else its fixed items */
@@ -81998,7 +82126,7 @@ try{
     if (room <= 0) { await say('それ以上は持てないようですね。'); return; }
     const max = Math.max(1, Math.min(room, Math.floor(R.Game.gold / Math.max(1, it.price || 1))));
     await say(it.name + 'ですね。\nいくつお求めですか？', { noWait: true });
-    const n = await R.UI.number({ min: 1, max, initial: 1, price: it.price, label: it.name.length > 6 ? '個数' : it.name, w: 132 });
+    const n = await K().number({ min: 1, max, initial: 1, price: it.price, label: it.name.length > 6 ? '個数' : it.name, w: 132 });
     if (n < 1) return;
     const total = (it.price || 0) * n;
     if (!R.State.takeGold(total)) { R.sfx('buzzer'); await say('お金が足りないようですね。'); return; }
@@ -82032,7 +82160,7 @@ try{
     const slots = Kt.slotsFor(id).filter((s) => Kt.canEquip(c, id, s));
     if (slots.length > 1 && slots.every((s) => c.equip[s])) {
       R.UI.closeMessage();
-      const j = await R.UI.choose(slots.map((s) => ({ label: Kt.slotName(s), right: Kt.itemName(c.equip[s]) })), { x: 76, y: 60, w: 172, title: 'どこに付ける？', initial: Math.max(0, slots.indexOf(slot)) });
+      const j = await Kt.choose(slots.map((s) => ({ label: Kt.slotName(s), right: Kt.itemName(c.equip[s]) })), { x: 76, y: 60, w: 172, title: 'どこに付ける？', initial: Math.max(0, slots.indexOf(slot)) });
       if (j < 0) return;
       slot = slots[j];
     }
@@ -82070,7 +82198,7 @@ try{
       let n = 1;
       if (have > 1) {
         await say(it.name + 'ですね。\nいくつお売りになりますか？', { noWait: true });
-        n = await R.UI.number({ min: 1, max: have, initial: 1, price: p, label: it.name.length > 6 ? '個数' : it.name, w: 132 });
+        n = await K().number({ min: 1, max: have, initial: 1, price: p, label: it.name.length > 6 ? '個数' : it.name, w: 132 });
         if (n < 1) continue;
       }
       if (!(await yesno(it.name + (n > 1 ? 'を' + n + '個' : '') + 'なら\n' + p * n + 'ゴールドで買い取りましょう。\nよろしいですか？'))) continue;
@@ -83015,7 +83143,7 @@ try{
         : [{ label: '入れ替える' }, { label: '加える', color: party().length >= maxParty() ? G().C.gray : null }];
       const y = inParty ? 12 + 28 * this.ai : 12 + 14 * (this.ri - this.rtop);
       const x = inParty ? 116 : 20;
-      const i = await R.UI.choose(items, { x, y: Math.min(y, 160), w: 112 });
+      const i = await (R.Menu && R.Menu.kit ? R.Menu.kit.choose : R.UI.choose)(items, { x, y: Math.min(y, 160), w: 112 });
       if (i < 0) return;
       if (i === 0) { this.pick = { side: this.side, id: c.id }; return; }
       if (inParty && i === 1) {

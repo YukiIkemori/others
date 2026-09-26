@@ -41,7 +41,7 @@
     spear: { hn: [21, 30], hf: null, w: W('FU') },
     dagger: { hn: [27, 29], hf: [27, 26], w: W('F') },
     bow: { hn: [20, 31], hf: [34, 29], w: W('U', 'front', 'f') },
-    staff: { hn: [29, 29], hf: [24, 30], w: W('U') },
+    staff: { hn: [31, 29], hf: [24, 30], w: W('U') },
     fist: { hn: [25, 27], hf: [29, 25], w: null },
     whip: { hn: [21, 30], hf: [26, 30], w: W('U', 'front'), coil: true },
   };
@@ -63,7 +63,7 @@
   function slash(st) {
     const two = st === 'two' || st === 'spear';
     return [
-      fr({ n: [20, 22], h: [21, 29], fn: [18, 36], ff: [27, 36], hn: two ? [19, 19] : [17, 20], hf: two ? null : [26, 27], w: W('BU', 'back'), cape: 2 }),
+      fr({ n: [20, 22], h: [21, 29], fn: [18, 36], ff: [27, 36], hn: two ? [16, 17] : [15, 18], hf: two ? null : [26, 27], w: W('BU', 'back'), armBack: true, cape: 2 }),
       fr({ n: [26, 23], h: [24, 29], fn: [18, 36], ff: [31, 36], hn: [31, 26], hf: two ? null : [20, 28], w: W('FD'), cape: 3 }),
       fr({ n: [26, 25], h: [24, 31], fn: [17, 36], ff: [31, 36], hn: [29, 30], hf: two ? null : [21, 30], w: W('FD'), cape: 3 }),
     ];
@@ -81,7 +81,7 @@
   function smash(st) {
     const two = st === 'two' || st === 'spear';
     return [
-      fr({ n: [21, 22], h: [22, 29], fn: [19, 36], ff: [26, 36], hn: [21, 15], hf: two ? null : [24, 16], w: W('BU', 'back'), cape: 2 }),
+      fr({ n: [21, 22], h: [22, 29], fn: [19, 36], ff: [26, 36], hn: [17, 13], hf: two ? null : [24, 16], w: W('BU', 'back'), armBack: true, cape: 2 }),
       fr({ n: [25, 23], h: [24, 29], fn: [18, 36], ff: [30, 36], hn: [30, 24], hf: two ? null : [28, 25], w: W('FD'), cape: 3 }),
       fr({ n: [26, 25], h: [24, 31], fn: [18, 36], ff: [30, 36], hn: st === 'staff' ? [29, 27] : [30, 30], hf: two ? null : [28, 30], w: W(st === 'staff' ? 'FD' : 'F'), cape: 3 }),
     ];
@@ -98,9 +98,9 @@
     }
     const body = { n: [22, 22], h: [22, 29], fn: [18, 36], ff: [27, 36] };
     return [
-      fr(Object.assign({}, body, { hf: [30, 26], hn: [27, 26], w: W('U', 'front', 'f'), string: 'hn', arrow: true })),
-      fr(Object.assign({}, body, { n: [21, 22], hf: [30, 26], hn: [19, 25], w: W('U', 'front', 'f'), string: 'hn', arrow: true })),
-      fr(Object.assign({}, body, { n: [21, 22], hf: [30, 26], hn: [17, 24], w: W('U', 'front', 'f'), open: true })),
+      fr(Object.assign({}, body, { hf: [32, 26], hn: [28, 26], w: W('U', 'front', 'f'), string: 'hn', arrow: true })),
+      fr(Object.assign({}, body, { n: [21, 22], hf: [32, 26], hn: [19, 25], w: W('U', 'front', 'f'), string: 'hn', arrow: true })),
+      fr(Object.assign({}, body, { n: [21, 22], hf: [32, 26], hn: [17, 24], w: W('U', 'front', 'f'), open: true })),
     ];
   }
   function punch(st) {
@@ -115,7 +115,7 @@
     const wh = st === 'whip';
     const two = st === 'two' || st === 'spear';
     return [
-      fr({ n: [20, 22], h: [21, 29], fn: [18, 36], ff: [26, 36], hn: [18, 18], hf: two ? null : [26, 27], w: wh ? W('U', 'back') : W('BU', 'back'), coil: wh, cape: 2 }),
+      fr({ n: [20, 22], h: [21, 29], fn: [18, 36], ff: [26, 36], hn: [16, 17], hf: two ? null : [26, 27], w: wh ? W('U', 'back') : W('BU', 'back'), coil: wh, armBack: true, cape: 2 }),
       fr({ n: [25, 23], h: [24, 29], fn: [18, 36], ff: [30, 36], hn: [29, 25], hf: two ? null : [21, 28], w: W(wh ? 'F' : 'F'), lash: wh ? 'up' : null, cape: 3 }),
       fr({ n: [25, 24], h: [24, 30], fn: [18, 36], ff: [30, 36], hn: [28, 29], hf: two ? null : [22, 30], w: W(wh ? 'F' : 'FD'), lash: wh ? 'down' : null, cape: 3 }),
     ];
@@ -134,21 +134,21 @@
   function cast(st) {
     if (st === 'staff') {
       return [
-        fr({ hn: [23, 16], hf: [25, 17], w: W('U'), cape: 1 }),
+        fr({ hn: [31, 21], hf: [32, 19], w: W('U'), cape: 1 }),
         fr({ hn: [27, 24], hf: [29, 23], w: W('FU'), castHand: 'n', cape: 0 }),
         fr({ n: [24, 22], h: [23, 29], ff: [29, 36], hn: [30, 24], hf: [32, 23], w: W('FU'), castHand: 'n', cape: 3 }),
       ];
     }
     if (st === 'fist') {
       return [
-        fr({ hn: [17, 13], hf: [27, 12], w: null, cape: 1 }),
+        fr({ hn: [18, 7], hf: [26, 8], w: null, armBack: true, cape: 1 }), // both fists up over the head
         fr({ hn: [27, 25], hf: [29, 24], w: null, cape: 0 }),
         fr({ n: [24, 22], h: [23, 29], ff: [29, 36], hn: [29, 25], hf: [32, 24], w: null, cape: 3 }),
       ];
     }
     const low = lowHold(st);
     return [
-      fr(Object.assign({}, low, { hf: [26, 18], cape: 1 })),
+      fr(Object.assign({}, low, { hf: [27, 12], cape: 1 })),
       fr(Object.assign({}, low, { hf: [30, 24], cape: 0 })),
       fr(Object.assign({}, low, { n: [24, 22], h: [23, 29], ff: [29, 36], hf: [33, 24], cape: 3 })),
     ];
@@ -156,18 +156,18 @@
   function item() {
     return [
       fr({ hn: [19, 31], hf: [26, 30], w: null, pouch: true }),
-      fr({ hn: [21, 30], hf: [30, 21], w: null, vial: true }),
+      fr({ hn: [21, 30], hf: [32, 22], w: null, vial: true }),
     ];
   }
   function guard(st) {
     const body = { n: [22, 24], h: [22, 31], fn: [18, 36], ff: [27, 36] };
     const G = {
-      one: { hn: [26, 28], hf: [27, 29], w: W('U') },
-      two: { hn: [25, 30], hf: null, w: W('U') },
-      spear: { hn: [25, 31], hf: null, w: W('U') },
-      dagger: { hn: [26, 27], hf: [27, 29], w: W('U') },
-      bow: { hn: [25, 29], hf: [29, 28], w: W('U', 'front', 'f') },
-      staff: { hn: [26, 29], hf: [27, 27], w: W('U') },
+      one: { hn: [26, 27], hf: [27, 28], w: W('F') },
+      two: { hn: [25, 28], hf: null, w: W('F') },
+      spear: { hn: [22, 28], hf: null, w: W('F') },
+      dagger: { hn: [27, 27], hf: [27, 29], w: W('F') },
+      bow: { hn: [28, 29], hf: [32, 28], w: W('U', 'front', 'f') },
+      staff: { hn: [24, 28], hf: [28, 28], w: W('F') },
       fist: { hn: [27, 26], hf: [28, 25], w: null, cross: true },
       whip: { hn: [26, 28], hf: [27, 29], w: W('U'), coil: true },
     };
@@ -175,7 +175,7 @@
   }
   function hit(st) {
     const o = { n: [19, 24], h: [21, 29], fn: [18, 36], ff: [25, 36], hn: [16, 28], hf: [22, 29], w: W('BD'), cape: 2 };
-    if (st === 'bow') { o.hn = [17, 29]; o.hf = [23, 29]; o.w = W('U', 'front', 'f'); }
+    if (st === 'bow') { o.hn = [17, 29]; o.hf = [22, 30]; o.w = W('BD', 'back', 'f'); }
     if (st === 'fist') o.w = null;
     if (st === 'whip') { o.w = W('BD'); o.coil = true; }
     if (st === 'two' || st === 'spear') o.free = true;
@@ -185,18 +185,19 @@
     const body = { n: [24, 27], h: [21, 32], fn: [16, 37], ff: [28, 36], kneel: 'n', planted: true };
     let o;
     if (st === 'bow') o = { hn: [33, 30], hf: [26, 33], w: W('U'), plant: true };
-    else if (st === 'staff') o = { hn: [30, 29], hf: [26, 33], w: W('U'), plant: true };
+    else if (st === 'staff') o = { hn: [33, 30], hf: [26, 33], w: W('U'), plant: true };
+    else if (st === 'spear') o = { hn: [33, 30], hf: [28, 31], w: W('U'), plant: true, free: true }; // butt on the ground, head up
     else if (st === 'fist') o = { hn: [29, 36], hf: [26, 33], w: null };
     else if (st === 'whip') o = { hn: [28, 31], hf: [26, 33], w: W('D'), coil: true };
-    else o = { hn: [30, 29], hf: st === 'two' || st === 'spear' ? null : [28, 31], w: W('D'), plant: true };
+    else o = { hn: [33, 29], hf: [28, 31], w: W('D'), plant: true, free: true }; // one hand on the planted hilt: the other rests on the knee
     const f0 = fr(Object.assign({}, body, o));
     const f1 = Object.assign({}, f0, { n: [24, 26] });
     return [f0, f1];
   }
   function victory(st) {
-    const o = { hn: [19, 13], hf: [25, 30], w: W('U'), raise: true };
-    if (st === 'two' || st === 'spear') { o.hf = null; }
-    if (st === 'fist') { o.w = null; o.hn = [16, 12]; o.fist = 'n'; }
+    const o = { hn: [19, 13], hf: [25, 30], w: W('U', 'back'), raise: true, armBack: true };
+    if (st === 'two' || st === 'spear') { o.hf = null; o.free = true; }
+    if (st === 'fist') { o.w = null; o.hn = [17, 5]; o.fist = 'n'; } // the fist high over the head: the forearm shows above the hair
     if (st === 'whip') { o.coil = 'up'; }
     if (st === 'bow') o.w = W('U', 'back'); // the head hides the string; the limbs show round it
     const f0 = fr(o);

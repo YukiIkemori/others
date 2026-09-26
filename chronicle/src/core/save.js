@@ -20,11 +20,12 @@
     alwaysDash: false, // dash = hold B (or Shift) while moving; this makes running the default
     fieldZoom: 'wide', // field view: 'normal' (16×14 tiles) | 'wide' (≈21×19) | 'wider' (32×28); see field.js VIEW
     windowColor: 'ink', // ink | black | blue | green | red
+    menuSize: 'compact', // field menus / shops: 'compact' (UI scale 0.75, BRIEF A11) | 'large' (scale 1, the old size)
     touchPad: 'auto', // auto | on | off
     cursorMemory: true, // battle command cursor remembers last choice
     padConfirm: 'right', // gamepad confirm button: 'right' (○/Nintendo A) or 'bottom' (×/Xbox A)
     autoKeep: true, // auto battle carries over to the next random encounter
-    settingsVer: 4, // bumped when a default changes for existing players (see migrateSettings)
+    settingsVer: 5, // bumped when a default changes for existing players (see migrateSettings)
   };
   /** bring settings stored by an older version up to date (in place) */
   function migrateSettings(s) {
@@ -34,6 +35,8 @@
     if (v < 3 && (!s.windowColor || s.windowColor === 'black')) s.windowColor = 'ink';
     // v4: voice lines (ボイスの音量) — older settings have no value yet
     if (v < 4 && !(typeof s.voiceVolume === 'number' && s.voiceVolume >= 0 && s.voiceVolume <= 1)) s.voiceVolume = DEFAULT_SETTINGS.voiceVolume;
+    // v5: compact menus (BRIEF Part A11) — the new default for everyone
+    if (v < 5 && s.menuSize !== 'compact' && s.menuSize !== 'large') s.menuSize = DEFAULT_SETTINGS.menuSize;
     s.settingsVer = DEFAULT_SETTINGS.settingsVer;
     return v < DEFAULT_SETTINGS.settingsVer;
   }

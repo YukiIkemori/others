@@ -297,7 +297,7 @@
         : [{ label: '入れ替える' }, { label: '加える', color: party().length >= maxParty() ? G().C.gray : null }];
       const y = inParty ? 12 + 28 * this.ai : 12 + 14 * (this.ri - this.rtop);
       const x = inParty ? 116 : 20;
-      const i = await R.UI.choose(items, { x, y: Math.min(y, 160), w: 112 });
+      const i = await (R.Menu && R.Menu.kit ? R.Menu.kit.choose : R.UI.choose)(items, { x, y: Math.min(y, 160), w: 112 });
       if (i < 0) return;
       if (i === 0) { this.pick = { side: this.side, id: c.id }; return; }
       if (inParty && i === 1) {

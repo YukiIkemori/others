@@ -292,8 +292,11 @@
       const cols = o.cols || 1;
       const rows = o.rows || Math.min(Math.ceil(items.length / cols), 8);
       const h = 16 + rows * 14 - 2;
-      const x = o.x != null ? o.x : R.W - 8 - w * 1;
-      const y = o.y != null ? o.y : MSG.y - h - 2;
+      // o.scale (menus, BRIEF A11): the window is laid out in a virtual screen of R.W/scale units
+      this.o = o;
+      const s = o.scale || 1;
+      const x = o.x != null ? o.x : Math.floor((R.W - 8 - (o.ox || 0)) / s) - w * 1;
+      const y = o.y != null ? o.y : Math.floor((MSG.y - 2 - (o.oy || 0)) / s) - h;
       this.list = new List({ x, y, w: w * (cols > 1 && !o.w ? cols : 1), items, cols, rows, cancel: o.cancel !== false, index: o.initial || 0, title: o.title, onChange: o.onChange });
     }
     update() {
@@ -301,7 +304,7 @@
       if (r === 'select') this.close(this.list.index);
       else if (r === 'cancel') this.close(-1);
     }
-    draw() { this.list.draw(); }
+    draw() { UI.inFrame(this.o, () => this.list.draw()); }
   }
 
   class NumberLayer extends R.Layer {
@@ -320,9 +323,11 @@
       if (In().pressed('a')) { sfx('confirm'); this.close(this.v); }
       else if (In().pressed('b')) { sfx('cancel'); this.close(-1); }
     }
-    draw() {
+    draw() { UI.inFrame(this.o, () => this.drawBox()); }
+    drawBox() {
       const o = this.o, w = o.w || 120, h = o.price != null ? 42 : 28;
-      const x = o.x != null ? o.x : R.W - 8 - w, y = o.y != null ? o.y : MSG.y - h - 2;
+      const s = o.scale || 1;
+      const x = o.x != null ? o.x : Math.floor((R.W - 8 - (o.ox || 0)) / s) - w, y = o.y != null ? o.y : Math.floor((MSG.y - 2 - (o.oy || 0)) / s) - h;
       G().window(x, y, w, h);
       G().text(o.label || '個数', x + 10, y + 8);
       G().text('× ' + this.v, x + w - 10, y + 8, { align: 'right' });
@@ -332,6 +337,14 @@
 
   const UI = (R.UI = {
     MSG,
+    /** draw fn() inside a menu frame: o.ox/o.oy (logical px) then o.scale (BRIEF A11 compact menus) */
+    inFrame(o, fn) {
+      const s = (o && o.scale) || 1, ox = (o && o.ox) || 0, oy = (o && o.oy) || 0;
+      if (s === 1 && !ox && !oy) return fn();
+      const c = G().ctx;
+      c.save();
+      try { c.translate(ox, oy); return G().scaled(s, fn); } finally { c.restore(); }
+    },
     List,
     MessageLayer,
     _msg: null,
@@ -360,8 +373,9 @@
     closeMessage() { if (UI._msg && !UI._msg.closed) UI._msg.close(); UI._msg = null; },
     /**
      * Choice window. Resolves to the chosen index, or -1 on cancel.
-     * opts: {x,y,w,cols,rows,title,initial,cancel:true,onChange}
-     * Default position: right side, directly above the message window.
+     * opts: {x,y,w,cols,rows,title,initial,cancel:true,onChange,scale,ox,oy}
+     * Default position: right side, directly above the message window. scale (menus, BRIEF A11):
+     * the window is drawn at that UI scale and x/y/w are in its virtual units (R.W/scale wide).
      */
     choose(items, opts) { return R.Engine.run(new ChoiceLayer(items, opts || {})); },
     /** say(text) + はい/いいえ. Resolves true for はい. Leaves the message window open. */
@@ -370,7 +384,7 @@
       const r = await UI.choose(['はい', 'いいえ'], { cancel: true });
       return r === 0;
     },
-    /** numeric input. opts: {min,max,initial,label,price,x,y,w}. Resolves value or -1 */
+    /** numeric input. opts: {min,max,initial,label,price,x,y,w,scale}. Resolves value or -1 */
     number(opts) { return R.Engine.run(new NumberLayer(opts)); },
     /** short auto-closing notice (e.g. 'セーブしました') */
     notice(text, frames = 70) { return UI.say(text, { auto: frames, speed: 3 }); },
