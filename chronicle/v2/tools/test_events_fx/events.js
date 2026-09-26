@@ -12,7 +12,7 @@
     title: '雪の村の大火祭', text: '北の雪の村は、大火祭の支度で大忙し。', region: 'r_snow', kind: 'rumor', from: 'ファロスの酒場', dir: 'n', slice: 'locked',
   });
   R.DB.regions.r_forest = R.DB.regions.r_forest || { name: 'ヴェルダの森', chapter: { title: '千年樹の歌' }, page: 'k_page_forest' };
-  if (!R.DB.regions.r_forest.beacon) R.DB.regions.r_forest.beacon = { map: 'field_fern', x: 20, y: 7 };
+  if (!R.DB.regions.r_forest.beaconAt) R.DB.regions.r_forest.beaconAt = { map: 'field_fern', x: 20, y: 7 };
 
   def('events', 'ev_rumor', {
     async run(ev) {

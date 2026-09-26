@@ -83,7 +83,7 @@ const EVENTS = [
           ctx.map = RPG.Field.pos.map;
           window.__cp_ev = RPG.Events.run(id, ctx);
         }, [id, ctx, set || {}, unset || []]);
-        const opened = await B.waitFor(P.page, "RPG.UIK.Message.busy() || ['caption','message'].includes((RPG.Engine.top()||{}).id) || String((RPG.Engine.top()||{}).id).indexOf('screen:')===0", 8000).then(() => true, () => false);
+        const opened = await B.waitFor(P.page, "RPG.UIK.Message.busy() || ['caption','message'].includes((RPG.Engine.top()||{}).id) || String((RPG.Engine.top()||{}).id).indexOf('screen:')===0", 8000); 
         await P.page.waitForTimeout(1500);
         await B.shot(P.page, path.join(OUT, `ev_${id}.png`));
         ok(`${id}: 会話の窓が開く・エラーなし`, opened && P.errors.length === 0, P.errors.slice(0, 3));

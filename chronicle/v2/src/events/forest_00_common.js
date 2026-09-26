@@ -45,7 +45,7 @@
       try { await ev.npc(o.npc || who).hide(); } catch (e) { /* */ }
       await ev.fade('in', 300);
     }
-    if (!o.quiet) await ev.caption(`${F.PEOPLE[who].name}は、蛍だまりの野営地へ向かった。`, { ms: 2200 });
+    if (!o.quiet) await ev.caption(`${F.PEOPLE[who].name}は、\n蛍だまりの野営地へ向かった。`, { ms: 2200 });
     if (n >= 4) await ev.caption('探していた四人が、そろった。\nあとは、森の歌を取り戻すだけだ。', { ms: 2600 });
     if (['hans', 'ben', 'roy'].every((w) => ev.flag('forest_found_' + w))) ev.leadDone('l_forest_woodcutters');
     if (who === 'pim') ev.leadDone('l_forest_pim');
@@ -58,7 +58,7 @@
     if (typeof ev.lore === 'function') { await ev.lore(id); return true; }
     const d = R.DB.lore && R.DB.lore[id];
     try { ev.sfx('quill'); } catch (e) { /* */ }
-    await ev.caption(`書庫に書き写した：${d ? d.title : id}`, { ms: 1800 });
+    await ev.caption(`書庫に書き写した。\n「${d ? d.title : id}」`, { ms: 1800 });
     return true;
   };
 

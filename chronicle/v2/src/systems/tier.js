@@ -14,7 +14,7 @@
 //   story_t<N> がまだ無いときは pending のまま（R.warn を 1 回）。
 //
 // R.DB.regions[rid]（CONTENT-P）から読む物: name・chapter.title（章題。無ければ name）・page（ページの品。無ければ k_page_<rs>）・
-//   beacon {map, x, y}（光の柱の場所。無ければ今のマップの {type:'prop', id:'beacon'} の物、それも無ければ一行の先頭の上）
+//   beaconAt {map, x, y}（光の柱の場所。beacon が {map, x, y} の物でもよい。無ければ今のマップの {type:'prop', id:'beacon'} の物、それも無ければ一行の先頭の上）
 (function (R) {
   'use strict';
   if (R.Stubs && R.Stubs.claim) R.Stubs.claim('Tier');
@@ -93,7 +93,7 @@
     return {
       name: reg.name || rs,
       title: (reg.chapter && reg.chapter.title) || reg.chapterTitle || reg.name || rs,
-      pageId, pageName: page ? page.name : null, beacon: reg.beacon || null,
+      pageId, pageName: page ? page.name : null, beacon: reg.beaconAt || (reg.beacon && typeof reg.beacon === 'object' ? reg.beacon : null),
     };
   }
   Tier.regionInfo = regionInfo;
@@ -242,5 +242,4 @@
     if (hasField && R.Field.camera && R.Field.camera.follow) { try { await R.Field.camera.follow({ ms: 600 }); } catch (e) { /* */ } }
     return true;
   };
-  Tier._stageState = null;
 })(window.RPG);

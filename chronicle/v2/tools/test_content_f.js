@@ -301,7 +301,7 @@ async function run(id, script, ctx) {
   try { await e.run(ev, ev.ctx); } catch (err) { ok(`event ${id} が止まらない`, false, String(err && err.stack || err)); }
 }
 async function route(name, o) {
-  state(R, {});
+  state(R, { items: { i_salve: 3 } });
   R.Game.tier = 0;
   const S = { choose: [], battles: [], warps: [], shops: [], letters: [] };
   const ask = (...a) => S.choose.push(...a);

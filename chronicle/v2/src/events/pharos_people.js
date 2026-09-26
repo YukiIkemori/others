@@ -170,8 +170,9 @@
     meta: { needs: [], gives: [] },
     run: async (ev) => {
       const E = X();
-      await E.say(ev, 'innkeeper', 'いらっしゃい。\nひと晩 10 ゴールドだよ。');
-      const ok = await ev.inn(10);
+      const price = R.Tier && R.Tier.innPrice ? R.Tier.innPrice() : 10;
+      await E.say(ev, 'innkeeper', 'いらっしゃい。\nひと晩 ' + price + ' ゴールドだよ。');
+      const ok = await ev.inn(price);
       await E.say(ev, 'innkeeper', ok ? 'よく眠れたかい？\n……よい灯りを。' : 'またどうぞ。');
     },
   };

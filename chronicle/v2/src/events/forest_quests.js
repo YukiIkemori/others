@@ -92,7 +92,7 @@
     ev.setFlag(key);
     const n = ev.addVar('forest_herbs', 1);
     ev.sfx('item');
-    await ev.caption(`薬草「${HERBS[k]}」を摘んだ。（${n}/5）`, { ms: 1800 });
+    await ev.caption(`薬草「${HERBS[k]}」を摘んだ。\n（${n}/5）`, { ms: 1800 });
   };
 
   // ---------------------------------------------------------------- 歌あわせ（リタの弟子。R.Mini.sequence、3 段）

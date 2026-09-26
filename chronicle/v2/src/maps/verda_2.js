@@ -40,8 +40,8 @@
     K.path(g, [[29, 10], [29, 0]], 'r', 2);                       // H5 → 千年樹（つるの壁）
     K.rect(g, 27, 4, 6, 3, 'v');                                  //   つるの壁
     // 小鹿の獣道（手当てしたあと開く）: 辻から奥の広場へまっすぐ
-    const fawnRows = ['ee', 'ee', 'ee', 'ee', 'ee', 'ee', 'ee', 'ee'];
-    K.rect(g, 31, 20, 2, 8, 'b');
+    const fawnRows = ['ee', 'ee', 'ee', 'ee', 'ee', 'ee', 'ee', 'ee', 'ee', 'ee', 'ee'];
+    K.rect(g, 31, 19, 2, 11, 'b', 'F,"');
     // 隠し通路（東の広場の北東の森）→ レアの箱の小部屋
     K.put(g, 53, 33, 'S'); K.put(g, 54, 33, 'S'); K.put(g, 55, 33, 'S');
     K.rect(g, 55, 30, 3, 3, '.');
@@ -79,11 +79,11 @@
     O.push(K.chest('verda_2_c4', 33, 17, { pool: 'p_T' }));         // 暗がりの中（きらめきは膜の上）
     O.push(K.chest('verda_2_c5', 53, 14, { gold: 140 }));
     O.push(K.chest('verda_2_c6', 16, 6, { pool: 'p_T' }));
-    O.push(K.chest('verda_2_c7', 7, 18, { item: 'i_antidote', n: 2 }));
+    O.push(K.chest('verda_2_c7', 9, 20, { item: 'i_antidote', n: 2 }));
     // ピムの足あと: 入口 → 遠回りの道 → 西の広場
     O.push({ type: 'trail', id: 'verda_2_pim', path: [[29, 49], [28, 47], [26, 46], [23, 47], [20, 46], [17, 47], [15, 45], [14, 43], [13, 41], [12, 39], [10, 37]], cond: { item: 'k_pim_hat' } });
-    O.push(K.sign(31, 22, 'この先、森の奥。\n――ひとりで入るべからず　樵組'));
-    O.push(K.prop('lantern', 27, 41), K.prop('lantern', 33, 30));
+    O.push(K.sign(27, 29, 'この先、森の奥。\n――ひとりで入るべからず　樵組'));
+    O.push(K.prop('lantern', 27, 41));
 
     const keep = new Set();
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if ('ree'.includes(K.at(g, x, y))) keep.add(x + ',' + y);
@@ -126,7 +126,7 @@
       ],
       tilePatches: [
         { cond: { var: 'forest_verses', gte: 3 }, rect: [27, 4, 6, 3], rows: ['eeeeee', 'eeeeee', 'eeeeee'] },
-        { cond: { choice: 'ch_forest_fawn', is: 'heal' }, rect: [31, 20, 2, 8], rows: fawnRows },
+        { cond: { choice: 'ch_forest_fawn', is: 'heal' }, rect: [31, 19, 2, 11], rows: fawnRows },
       ],
       oneway: [{ x: 40, y: 15, dir: 'w' }, { x: 40, y: 16, dir: 'w' }],
       zones: [{ rect: null, zone: 'z_verda' }],
