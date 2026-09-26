@@ -170,7 +170,7 @@ def key_sheet(rgb, n, rep):
     fringe = nd.binary_dilation(bg, iterations=1) & (ex > 22)
     cmask = fg & ~fringe
     # dark magenta = drawn floor shadow / glow on the key colour
-    dark = mag & (np.maximum(rgb[..., 0], rgb[..., 2]) < 200)
+    dark = mag & (np.maximum(rgb[..., 0], rgb[..., 2]) < 200) & ~nd.binary_dilation(fg, iterations=3)
     info['dark_magenta_px'] = int(dark.sum())
     if dark.sum() > 0.002 * dark.size:
         rep.add(n, 'auto', 'dark_key', '暗いマゼンタ（床の影・光のにじみ）があった。背景として抜いた')

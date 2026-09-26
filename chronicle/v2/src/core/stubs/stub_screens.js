@@ -6,7 +6,7 @@
     title: 'タイトル', charcreate: '主人公の作成', nameentry: '名前の入力', partySelect: '仲間選び', menu: 'メニュー', items: '道具',
     skills: '技・術', equip: '装備', status: '強さ', order: '並びと隊列', bestiary: '図鑑', chronicle: '年代記・手がかり', map: '地図',
     save: 'セーブ', load: 'ロード', settings: '設定', shop: '店', inn: '宿', tavern: '酒場', passphrase: '冒険の合言葉',
-    detail: '詳しく', tip: '説明', warp: 'ワープ',
+    detail: '詳しく', tip: '説明', warp: 'ワープ', letter: '手紙',
   };
   const T = () => R.UIK.T;
   const k = () => R.uiScale || 1;
@@ -91,10 +91,30 @@
     charcreate() {
       return listScene('charcreate', {
         opaque: true, bg: night, w: 360,
-        rows: [{ label: '旅の剣士（男）アルン', value: { type: 'warrior', sex: 'm', name: 'アルン' } }, { label: '射手（女）ミラ', value: { type: 'ranger', sex: 'f', name: 'ミラ' } }],
+        rows: [{ label: '旅の剣士（男）アルン', value: { type: 'warrior', sex: 'm', name: 'アルン', fav: 'sword' } }, { label: '射手（女）ミラ', value: { type: 'ranger', sex: 'f', name: 'ミラ', fav: 'bow' } }],
         title: '主人公の作成（仮）',
         onSelect(row, i, sc) { R.Engine.remove(sc, row.value); },
+        onCancel(sc) { R.Engine.remove(sc, null); },
       });
+    },
+    // 仲間選び（仮）: 決め打ちの 3 人を返す（加入は ev.chooseCompanions が R.Party.join で行う）
+    partySelect(p) {
+      const ids = Object.keys(R.DB.companions);
+      const pick = (ids.length ? ids : ['selma', 'viola', 'marta']).slice(0, (p && p.count) || 3);
+      return listScene('partySelect', { rows: [{ label: 'この 3 人で（仮）: ' + pick.join('・'), value: pick }], w: 420, onSelect(row, i, sc) { R.Engine.remove(sc, row.value); } });
+    },
+    inn(p) {
+      return listScene('inn', {
+        title: `宿（${(p && p.price) || 0} G）`, w: 300,
+        rows: [{ label: '泊まる', value: true }, { label: 'やめる', value: false }],
+        onSelect(row, i, sc) { R.Engine.remove(sc, { stay: row.value }); },
+        onCancel(sc) { R.Engine.remove(sc, { stay: false }); },
+      });
+    },
+    letter(p) {
+      const L = R.DB.letters[p && p.id] || { title: '手紙', text: '（手紙: ' + (p && p.id) + '）' };
+      const text = Array.isArray(L.text) ? L.text.join('\n') : L.text;
+      return listScene('letter', { title: L.title || '手紙', w: 480, rows: text.split('\n').map((l) => ({ label: l })), onSelect(row, i, sc) { R.Engine.remove(sc); }, onCancel(sc) { R.Engine.remove(sc); } });
     },
     menu() {
       const cmds = ['items', 'skills', 'equip', 'order', 'bestiary', 'chronicle', 'map', 'save', 'settings'];

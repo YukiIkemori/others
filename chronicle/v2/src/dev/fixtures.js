@@ -29,7 +29,7 @@
       c.gl = fx.gl === 'auto' || fx.gl == null ? R.Growth.glAt(G.tier, 'party') : (fx.gl[id] != null ? fx.gl[id] : c.gl);
       if (fx.prof === 'auto') { const p = R.Rules.profAt(G.tier, 'party'); c.wprof = c.wprof || {}; for (const w of (R.Rules.K.WTYPES || [])) c.wprof[w] = p; }
     }
-    R.Party.fullHeal();
+    R.Party.restoreAll();
     Object.assign(G.flags, fx.flags || {});
     Object.assign(G.vars, fx.vars || {});
     Object.assign(G.items, fx.items || {});

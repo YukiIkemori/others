@@ -7,7 +7,9 @@
     'flag', 'var', 'item:gain', 'lead:add', 'lead:pin', 'lead:done', 'tier', 'region:clear', 'glimmer', 'grow',
     'save', 'autosave',
     // CORE が足した物（契約の版 1）: 起動の終わり、エラー
-    'booted', 'error'];
+    'booted', 'error',
+    // 版 2: 宿に泊まった（EVENTS。E17 のティアの場面の合図）
+    'inn'];
   R.on = function (name, fn) { (L[name] = L[name] || []).push(fn); return fn; };
   R.off = function (name, fn) {
     const l = L[name]; if (!l) return;

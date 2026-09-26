@@ -14,10 +14,8 @@
   const tile = () => TILE[R.Settings.get('fieldZoom')] || 32;
   const locked = () => Object.keys(st.locks).length > 0;
 
-  function cell(map, x, y) {
-    if (!map || x < 0 || y < 0 || x >= map.w || y >= map.h) return null;
-    return map.legend[[...map.rows[y]][x]] || null;
-  }
+  // マスの読み方は R.MapUtil（CORE、版 2）を使う（tilePatches・隠し通路・範囲を本物の FIELD・TERRAIN・QA と同じに）
+  function cell(map, x, y) { return R.MapUtil.cell(map, x, y); }
   function npcAt(x, y) {
     const m = st.map;
     if (!m) return null;
@@ -29,14 +27,15 @@
     return null;
   }
   function solidObj(x, y) {
-    for (const o of (st.map && st.map.objects) || []) {
-      if ((o.type === 'sign' || o.type === 'chest' || o.type === 'examine') && o.x === x && o.y === y) return o;
+    for (const o of R.MapUtil.objectsAt(st.map, x, y)) {
+      if (o.type === 'sign' || o.type === 'chest' || o.type === 'examine' || o.type === 'spring' || o.type === 'brazier') return o;
     }
     return null;
   }
   function passable(map, x, y, fromDir, lv) {
     const c = cell(map, x, y);
-    if (!c || c.solid || c.walk === false) return false;
+    if (!c || c.walk === false) return false;
+    if (c.solid && !c.secret) return false; // secret = 通れる壁（§2.11）
     return true;
   }
   function free(x, y) { return passable(st.map, x, y) && !npcAt(x, y) && !solidObj(x, y); }
@@ -63,8 +62,20 @@
   async function arrive() {
     const m = st.map;
     st.steps++;
+    R.Game.steps = (R.Game.steps || 0) + 1;
     R.Game.pos = { map: m.id, x: st.x, y: st.y, dir: st.dir };
     R.emit('step', { map: m.id, x: st.x, y: st.y });
+    const c = cell(m, st.x, st.y);
+    if (c && c.secret && !R.MapUtil.secretFound(m.id, st.x, st.y)) {
+      const S = (R.Game.secrets[m.id] = R.Game.secrets[m.id] || []);
+      S.push(st.x + ',' + st.y);
+      R.Terrain.dirty(m, st.x, st.y);
+      R.UIK.toast('隠し通路を見つけた！', { anchor: 'tr', icon: 'secret' });
+      R.emit('secret:found', { map: m.id, x: st.x, y: st.y });
+    }
+    for (const o of R.MapUtil.objectsAt(m, st.x, st.y)) {
+      if ((o.type === 'stairs' || o.type === 'door') && o.to) { await R.Field.enter(o.to.map, o.to.spawn); return; }
+    }
     for (const e of m.exits || []) {
       if (st.x >= e.x && st.x < e.x + e.w && st.y >= e.y && st.y < e.y + e.h && (!e.cond || R.State.check(e.cond))) {
         await R.Field.enter(e.to.map, e.to.spawn);
@@ -84,16 +95,12 @@
     for (const z of m.zones || []) {
       const r = z.rect;
       if (r && !(st.x >= r[0] && st.x < r[0] + r[2] && st.y >= r[1] && st.y < r[1] + r[3])) continue;
-      const setup = R.Mon.encounter(z.zone, { tier: R.Tier.get(), dark: false, steps: st.steps });
+      const setup = R.Mon.encounter(z.zone, { tier: R.Tier.get(), dark: R.MapUtil.darkAt(m, st.x, st.y), steps: st.steps, ward: st.ward > 0 });
       if (setup) {
         R.emit('encounter', { zone: z.zone });
         R.Field.lock('battle');
-        const res = await R.Battle.start(setup);
+        await R.Battle.start(setup); // 'abort'（全滅して宿・タイトル）の片付けは BSCENE が R.Flow.wipe で済ませている
         R.Field.unlock('battle');
-        if (res && res.result === 'abort') {
-          if (res.to === 'title' && R.Flow) R.Flow.title();
-          else if (R.Game.lastInn) R.Field.enter(R.Game.lastInn.map, R.Game.lastInn.spawn);
-        }
       }
       break;
     }
@@ -124,6 +131,18 @@
     const o = solidObj(tx, ty) || solidObj(st.x, st.y);
     if (o && o.type === 'sign') { R.Events.makeEv ? R.Events.makeEv({}).say(null, o.text) : R.UIK.Message.say({ text: o.text }); return; }
     if (o && o.type === 'examine' && o.event) R.Events.run(o.event, { map: st.map.id, x: o.x, y: o.y });
+    if (o && o.type === 'chest') openChest(o);
+    if (o && o.type === 'spring') { R.Party.restoreAll(); (R.Game.springs[st.map.id] = R.Game.springs[st.map.id] || []).includes(o.id) || R.Game.springs[st.map.id].push(o.id); R.UIK.toast('泉の水で 元気になった', { anchor: 'tr', icon: 'spring' }); R.emit('spring:use', { map: st.map.id, id: o.id }); }
+  }
+  function openChest(o) {
+    const G = R.Game, list = (G.chests[st.map.id] = G.chests[st.map.id] || []);
+    if (list.includes(o.id)) return;
+    list.push(o.id);
+    const loot = R.Rules.chestLoot(o, R.Tier.get(), R.rng(G.seed + ':' + st.map.id + ':' + o.id));
+    if (loot.gold) { G.gold += loot.gold; R.UIK.toast(`${loot.gold} G を 手に入れた`, { anchor: 'tr', icon: 'coin' }); }
+    else { const r = R.State.gain(loot.item, loot.n); R.UIK.toast(`${r.name} を 手に入れた`, { anchor: 'tr', icon: 'chest' }); }
+    R.Terrain.dirty(st.map, o.x, o.y);
+    R.emit('chest:open', { map: st.map.id, id: o.id });
   }
 
   const scene = {
@@ -137,7 +156,17 @@
       if (st.mv && R.Engine.time - st.mv.t0 >= st.mv.ms) { st.mv = null; arrive(); }
       if (st.mv || locked() || R.Engine.fade.a > 0.01) return;
       const I = R.Input;
-      if (I.pressed('y') || I.pressed('start')) { R.Field.lock('menu'); R.Screens.open('menu').then(() => { R.Field.unlock('menu'); R.Input.touchLayout('field'); }); return; }
+      if (I.pressed('y') || I.pressed('start')) {
+        R.Field.lock('menu');
+        // ハブの結果（§2.11 SCREEN_RESULTS.menu）: 閉じた後にワープ・脱出・タイトル
+        R.Screens.open('menu').then((r) => {
+          R.Field.unlock('menu'); R.Input.touchLayout('field');
+          if (r && r.warp) R.Field.warp(r.warp);
+          else if (r && r.escape) R.Field.escape();
+          else if (r && r.title) R.Flow.title();
+        });
+        return;
+      }
       if (I.pressed('a')) { actA(); return; }
       const d = I.dir8();
       if (d.dx || d.dy) tryMove(d.dx, d.dy, R.Settings.get('alwaysDash') ? !I.down('b') && !I.down('dash') : I.down('b') || I.down('dash'));
@@ -149,10 +178,12 @@
       R.Gfx.clear(R.Terrain.matColor ? R.Terrain.matColor(m.outside || 'outside', true) : '#101428');
       const x0 = Math.max(0, Math.floor(cx / t)), y0 = Math.max(0, Math.floor(cy / t));
       const x1 = Math.min(m.w - 1, Math.ceil((cx + R.W) / t)), y1 = Math.min(m.h - 1, Math.ceil((cy + R.H) / t));
+      const grid = R.MapUtil.grid(m);
       for (let y = y0; y <= y1; y++) {
-        const row = [...m.rows[y]];
+        const row = [...grid[y]];
         for (let x = x0; x <= x1; x++) {
-          const c = m.legend[row[x]] || {};
+          let c = m.legend[row[x]] || {};
+          if (c.secret && R.MapUtil.secretFound(m.id, x, y)) c = { mat: c.floor || 'stub_road' };   // 見つけた隠し通路は床で描く
           g.fillStyle = R.Terrain.matColor ? R.Terrain.matColor(c.mat, c.solid) : '#223';
           g.fillRect(x * t - cx, y * t - cy, t, t);
           if (c.solid) { g.strokeStyle = 'rgba(240,228,200,0.08)'; g.strokeRect(x * t - cx + 0.5, y * t - cy + 0.5, t - 1, t - 1); }
@@ -160,6 +191,9 @@
       }
       for (const o of m.objects || []) {
         if (o.type === 'sign') R.Gfx.roundRect(o.x * t - cx + 6, o.y * t - cy + 8, t - 12, t - 14, 3, '#7a5a38', '#c8a070', 1);
+        else if (o.type === 'chest') { const open = (R.Game.chests[m.id] || []).includes(o.id); R.Gfx.roundRect(o.x * t - cx + 5, o.y * t - cy + 9, t - 10, t - 14, 3, open ? '#4a3a2a' : '#a8743a', '#e8c070', 1); }
+        else if (o.type === 'spring') R.Gfx.roundRect(o.x * t - cx + 4, o.y * t - cy + 4, t * 2 - 8, t * 2 - 8, t / 2, '#2a5a8a', '#9fd8f0', 1.5);
+        else if (o.type === 'stairs' || o.type === 'door') R.Gfx.roundRect(o.x * t - cx + 4, o.y * t - cy + 4, t - 8, t - 8, 3, '#303048', '#c8b890', 1);
       }
       // 人（y の順）
       const people = [];
@@ -180,7 +214,6 @@
         R.Gfx.roundRect(sx + t * 0.2, sy - t * 0.45, t * 0.6, t * 1.3, 6, p.color, 'rgba(246,240,227,0.7)', 1);
         if (p.label) R.UIK.text(g, p.label, sx + t / 2, sy - t * 0.45 - 16, { size: 11, align: 'center', color: R.UIK.T.color.text2, shadow: true });
       }
-      if (st.lead === undefined) st.lead = null;
       // HUD: 場所の名前と操作の表示
       const k = R.uiScale, s = R.safe;
       R.UIK.fadePanel(g, { x: s.l, y: s.t + 14 * k, w: 320 * k, h: 40 * k }, { side: 'l' });
@@ -205,19 +238,29 @@
       if (onStack && fade) await R.Engine.fadeTo(1, fade / 2);
       if (st.map) R.emit('map:leave', { map: st.map.id });
       const from = st.map ? st.map.id : null;
-      let sp = typeof spawn === 'string' ? map.spawns[spawn] : spawn;
-      if (!sp) sp = map.spawns[Object.keys(map.spawns)[0]] || { x: 1, y: 1 };
+      const sp = R.MapUtil.spawn(map, spawn);
       st.map = map; st.x = sp.x; st.y = sp.y; st.dir = sp.dir || 's'; st.mv = null; st.trail = []; st.npcPos = {}; st.npcHidden = {}; st.cam = null;
       const G = R.Game;
       G.pos = { map: map.id, x: st.x, y: st.y, dir: st.dir };
       G.visited[map.id] = true;
-      if (map.kind === 'town') G.lastTown = { map: map.id, spawn: typeof spawn === 'string' ? spawn : Object.keys(map.spawns)[0] };
+      if (map.kind === 'town') G.lastTown = { map: map.id, x: st.x, y: st.y, dir: st.dir };   // K.place（版 2）
+      const loc = map.location && R.DB.locations[map.location];
+      if (loc && (loc.kind === 'town' || loc.kind === 'dungeon') && loc.map === map.id) G.warps[map.location] = true;   // ワープの一覧に載る（入口のマップに入ったとき）
       if (!onStack) { R.Engine.push(scene); if (fade) { R.Engine.fade.a = 1; } }
       R.Input.touchLayout('field');
       if (map.bgm) R.Audio.bgm(map.bgm, { fade: 600 });
       R.emit('map:enter', { map: map.id, from });
       if (fade) await R.Engine.fadeTo(0, fade / 2);
       if (!o.noAutosave) R.Save.autosave('map');
+      // on:'enter' のトリガー（onEnter のイベント。once なら 1 回だけ）
+      for (const tr of map.triggers || []) {
+        if (tr.on !== 'enter' || (tr.cond && !R.State.check(tr.cond))) continue;
+        const k = 'tr_' + map.id + '_' + tr.id;
+        if (tr.once && G.flags[k]) continue;
+        if (tr.once) G.flags[k] = true;
+        await R.Events.run(tr.event, { map: map.id, x: st.x, y: st.y, trigger: tr.id });
+        break;
+      }
     },
     get pos() { return { map: st.map ? st.map.id : '', x: st.x, y: st.y, dir: st.dir }; },
     lock(reason) { st.locks[reason || 'x'] = (st.locks[reason || 'x'] || 0) + 1; },
@@ -260,6 +303,6 @@
       return out;
     },
     warp(locId) { const l = R.DB.locations[locId]; return l ? R.Field.enter(l.map, l.spawn) : Promise.resolve(); },
-    escape() { const t = R.Game.lastTown; return t ? R.Field.enter(t.map, t.spawn) : Promise.resolve(); },
+    escape() { const t = R.Game.lastTown; return t ? R.Field.enter(t.map, { x: t.x, y: t.y, dir: t.dir }) : Promise.resolve(); },
   });
 })(window.RPG);

@@ -73,12 +73,12 @@
 
   R.Stubs.define('State', {
     newGame,
-    /** 主人公を作る（ev.createHero と新しいゲームの両方から） hero = {type, sex, name} */
+    /** 主人公を作る（ev.createHero と新しいゲームの両方から） hero = K.hero {type, sex, name, fav?}。中身は R.Party.makeChar（RULES） */
     setHero(h) {
       const G = R.Game;
-      const c = blankChar('hero', { name: h.name || 'アルン', look: `hero_${h.sex || 'm'}_${h.type || 'warrior'}`, type: h.type || 'warrior' });
+      const c = R.Party.makeChar('hero', { hero: h, tier: G.tier || 0 });
+      if (h.fav) c.fav = h.fav;
       G.chars.hero = c;
-      if (R.Growth && R.Growth.init) R.Growth.init(c, { tier: G.tier || 0 });
       if (!G.party.includes('hero')) G.party.unshift('hero');
       if (!G.joined.includes('hero')) G.joined.push('hero');
       return c;
@@ -93,10 +93,24 @@
     wipeRecover() {
       const G = R.Game;
       G.gold = Math.floor((G.gold || 0) / 2);
-      if (R.Party && R.Party.fullHeal) R.Party.fullHeal();
+      R.Party.restoreAll();
       return G.lastInn;
     },
     check,
+    /** 版 2: 品を入れる（ev.item・宝箱・店・戦闘の報酬が使う 1 か所）。u_* は R.Rules.fillItem で今のティアの値を R.Game.uniques に写す。→ K.gain */
+    gain(id, n) {
+      const G = R.Game;
+      n = n == null ? 1 : n;
+      G.items[id] = (G.items[id] || 0) + n;
+      const it = R.DB.items[id];
+      if (/^u_/.test(id) && it && !(G.uniques && G.uniques[id])) {
+        G.uniques = G.uniques || {};
+        const filled = R.Rules.fillItem(Object.assign({}, it), { tier: G.tier || 0 }) || {};
+        G.uniques[id] = Object.assign({ tier: G.tier || 0 }, filled.stats || {});
+      }
+      R.emit('item:gain', { id, n });
+      return { item: id, n, grade: (it && it.grade) || 'normal', name: (it && it.name) || id };
+    },
   });
 
   // ---------------------------------------------------------------- 実行
@@ -105,29 +119,34 @@
     const G = () => R.Game;
     const token = aborted;
     const guard = () => { if (token !== aborted) throw Object.assign(new Error('event aborted'), { aborted: true }); };
-    const nameOf = (who) => {
-      if (!who) return null;
+    // 話者: who = NPC id（今のマップの）か look か null。名前は npc.name → looks[look].name の順（版 2）。
+    // 顔は o.face（'look' / 'look:expr' / false）。o.face を書かなければ、その人の look に顔があれば（R.Portrait.has）出す
+    const speaker = (who) => {
+      if (!who) return { name: null, look: null };
       const map = R.DB.maps[(R.Field.pos || {}).map];
       const npc = map && (map.npcs || []).find((n) => n.id === who);
       const look = (npc && npc.look) || who;
       const L = R.DB.looks[look];
-      return (L && L.name) || (npc && npc.name) || null;
+      return { name: (npc && npc.name) || (L && L.name) || null, look, title: npc && npc.title };
     };
     const ev = {
       async say(who, text, o) {
         guard(); o = o || {};
-        const r = await R.UIK.Message.say({ name: o.name || nameOf(who) || undefined, title: o.title, face: o.face != null ? o.face : false, text, voice: o.voice });
+        const sp = speaker(who);
+        let face = o.face;
+        if (face == null) face = sp.look && R.Portrait.has(sp.look, 'neutral') ? sp.look : false;
+        const r = await R.UIK.Message.say({ name: o.name || sp.name || undefined, title: o.title || sp.title, face, text, voice: o.voice });
         guard(); return r;
       },
       async choose(labels, o) { guard(); const r = await R.UIK.Message.say({ text: (o && o.text) || '', choices: labels, cancel: o && o.cancel }); guard(); return r; },
-      caption(text, o) { return ev.say(null, text, o); },
+      async caption(text, o) { guard(); await R.UIK.Message.caption(text, o || {}); guard(); },
       async fade(dir, ms) { await R.Engine.fadeTo(dir === 'out' ? 1 : 0, ms == null ? 260 : ms); },
       wait(ms) { return R.wait(ms); },
       flag(id) { return !!G().flags[id]; },
       setFlag(id, v) { G().flags[id] = v === undefined ? true : v; R.emit('flag', { id, v: G().flags[id] }); },
       var(name) { return G().vars[name] || 0; },
       addVar(name, n) { G().vars[name] = (G().vars[name] || 0) + (n == null ? 1 : n); R.emit('var', { name, v: G().vars[name] }); return G().vars[name]; },
-      item(id, n) { G().items[id] = (G().items[id] || 0) + (n == null ? 1 : n); R.emit('item:gain', { id, n: n == null ? 1 : n }); },
+      item(id, n) { return R.State.gain(id, n); },
       take(id, n) { G().items[id] = Math.max(0, (G().items[id] || 0) - (n == null ? 1 : n)); },
       gold(n) { G().gold = Math.max(0, (G().gold || 0) + n); return G().gold; },
       has(id) { return (G().items[id] || 0) > 0; },
@@ -135,13 +154,31 @@
         guard();
         if (typeof setup === 'string') setup = { troop: setup };
         const r = await R.Battle.start(Object.assign({}, setup, opts || {}));
-        if (r && r.result === 'abort') { R.Events.abort(); guard(); }
+        // 'abort'（全滅して宿・タイトル）: R.Flow.wipe がもう R.Events.abort() を呼んでいるので、ここの guard で止まる
+        if (r && r.result === 'abort') { if (token === aborted) R.Events.abort(); guard(); }
         return r ? r.result : 'win';
       },
       warp(map, spawn) { return R.Field.enter(map, spawn); },
       heal() { R.Party.heal(true); },
-      rest() { R.Party.fullHeal(); },
-      async inn(price) { return R.Screens.open('inn', { price }); },
+      rest() { R.Party.restoreAll(); },
+      /** 宿（版 2）: 画面（MENUS）は {stay} を返すだけ。お金・暗転・全快・lastInn・オートセーブ・ティアの場面はここ */
+      async inn(price) {
+        guard();
+        const r = await R.Screens.open('inn', { price });
+        guard();
+        if (!r || !r.stay || (G().gold || 0) < price) return false;
+        G().gold -= price;
+        await R.Engine.fadeTo(1, 400);
+        R.Audio.jingle && R.Audio.jingle('inn');
+        R.Party.restoreAll();
+        const p = R.Field.pos;
+        G().lastInn = { map: p.map, x: p.x, y: p.y, dir: p.dir };
+        await R.wait(600);
+        await R.Engine.fadeTo(0, 400);
+        R.Save.autosave('inn');
+        R.emit('inn', { map: p.map });
+        return true;
+      },
       async shop(id) { return R.Screens.open('shop', { id }); },
       async tavern(o) { return R.Screens.open('tavern', o || {}); },
       async chooseCompanions(o) { return R.Screens.open('partySelect', o || { count: 3 }); },
@@ -159,7 +196,7 @@
       guest(look) { R.Field.setGuest(look ? { id: look, look } : null); },
       camera(x, y, ms) { return R.Field.camera.focus(x, y, { ms }); },
       mini: { sequence: (o) => R.Mini.sequence(o), timing: (o) => R.Mini.timing(o) },
-      letter(id) { return ev.say(null, '（手紙）' + id); },
+      async letter(id) { guard(); await R.Screens.open('letter', { id }); guard(); },
       call(id, args) { const e = R.DB.events[id]; return e ? e.run(ev, Object.assign({}, ctx, args || {})) : undefined; },
       g(male, female) { const h = G().chars.hero; return h && /_f_/.test(h.look) ? female : male; },
       bgm(id) { R.Audio.bgm(id); },
@@ -169,7 +206,21 @@
     return ev;
   }
 
+  function lineHash(line) { return R.U.hash(JSON.stringify(line && line.text)).toString(36); }
+  function currentLine(npc) {
+    if (typeof npc.talk === 'string') return { text: npc.talk };
+    let line = null;
+    for (const l of (npc.talk && npc.talk.lines) || []) if (!l.cond || R.State.check(l.cond)) line = l;
+    return line;
+  }
+
   R.Stubs.define('Events', {
+    /** 版 2: 「新しい話」の印（E19）。npc.key があり、今の台詞のハッシュが R.Game.heard[key] と違えば true（FIELD の吹き出し・HUD の人数） */
+    isNew(map, npc) {
+      if (!npc || !npc.key || !R.Game) return false;
+      const line = currentLine(npc);
+      return !!line && R.Game.heard[npc.key] !== lineHash(line);
+    },
     async run(id, ctx) {
       const e = R.DB.events[id];
       if (!e) { R.warn('no event ' + id); return undefined; }
@@ -200,12 +251,15 @@
     },
     async talk(map, npc) {
       R.emit('talk', { npc: npc.id });
-      if (typeof npc.talk === 'string') return R.Events.run(npc.talk, { map: map.id, npc: npc.id, x: npc.x, y: npc.y });
+      if (typeof npc.talk === 'string') {
+        if (npc.key) R.Game.heard[npc.key] = lineHash(currentLine(npc));
+        return R.Events.run(npc.talk, { map: map.id, npc: npc.id, x: npc.x, y: npc.y });
+      }
       const lines = (npc.talk && npc.talk.lines) || [];
       let line = null;
       for (const l of lines) if (!l.cond || R.State.check(l.cond)) line = l;
       if (!line) return undefined;
-      if (npc.key) R.Game.heard[npc.key] = R.U.hash(JSON.stringify(line.text)).toString(36);
+      if (npc.key) R.Game.heard[npc.key] = lineHash(line);
       R.Field.lock('talk');
       try {
         return await makeEv({ map: map.id, npc: npc.id }).say(npc.id, line.text, { face: line.face, voice: line.voice });
@@ -215,7 +269,7 @@
   });
 
   R.Stubs.define('Leads', {
-    add(id) { const L = R.Game.leads; if (!L[id]) { L[id] = { got: Date.now(), pin: false, seen: false }; R.emit('lead:add', { id }); } },
+    add(id) { const L = R.Game.leads; if (!L[id]) { L[id] = { got: Math.floor(R.Game.playMs || 0), pin: false, seen: false }; R.emit('lead:add', { id }); } },
     pin(id) { for (const k of Object.keys(R.Game.leads)) R.Game.leads[k].pin = k === id; R.emit('lead:pin', { id }); },
     unpin() { for (const k of Object.keys(R.Game.leads)) R.Game.leads[k].pin = false; },
     list() {

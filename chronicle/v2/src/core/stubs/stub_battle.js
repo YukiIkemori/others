@@ -28,12 +28,13 @@
       const G = R.Game;
       const units = [];
       for (const c of R.Party.members()) {
-        units.push({ uid: 'p_' + c.id, side: 'party', id: c.id, name: c.name, hp: c.hp, mp: c.mp, maxHp: R.Growth.baseMax(c, 'hp'), maxMp: R.Growth.baseMax(c, 'mp'), row: c.row || 'front', status: [], sprite: c.look, size: 'M', alive: c.hp > 0, wtype: null });
+        units.push({ uid: 'p_' + c.id, side: 'party', id: c.id, name: c.name, hp: c.hp, mp: c.mp, maxHp: R.Growth.baseMax(c, 'hp'), maxMp: R.Growth.baseMax(c, 'mp'), row: c.row || 'front', status: [], sprite: c.look, look: c.look, size: 'm', alive: c.hp > 0, wtype: (R.Rules.stats(c).wtype) || null });
       }
       enemyList(setup).forEach((id, i) => {
-        units.push({ uid: 'e_' + i, side: 'enemy', id, name: monName(id), hp: 10, mp: 0, maxHp: 10, maxMp: 0, row: 'front', status: [], sprite: id, size: 'S', alive: true, wtype: null });
+        const m = R.DB.monsters[id] || {};
+        units.push({ uid: 'e_' + i, side: 'enemy', id, name: monName(id), hp: 10, mp: 0, maxHp: 10, maxMp: 0, row: 'front', status: [], sprite: m.sprite || id, size: m.size || 's', alive: true, wtype: null, golden: false, boss: false });
       });
-      let over = null, repeatOn = false;
+      let over = null, repeatOn = false, finished = null;
       const B = {
         setup, units,
         get over() { return over; },
@@ -54,6 +55,17 @@
           return ev;
         },
         rewards() { return { gold: 12, drops: [], grow: [], prof: [], glimmers: [] }; },
+        /** 版 2: 一行で逃げる（partyOptions の 'escape'）。次の round() で判定。仮: 必ず逃げられる */
+        escape() { over = 'escape'; },
+        /** 版 2: 戦闘の結果を R.Game に 1 回だけ写す（勝ち: お金・品・図鑑・伸び・熟練。どの結果でも HP/MP の持ち越し）。→ rewards（勝ち以外は null）。
+         *  BSCENE が over になった後に 1 回呼ぶ。2 回目からは同じ値を返すだけ */
+        finish() {
+          if (finished) return finished.r;
+          const r = over === 'win' ? B.rewards() : null;
+          if (r && G) G.gold += r.gold;
+          finished = { r };
+          return r;
+        },
       };
       return B;
     },
@@ -87,8 +99,7 @@
           st.phase = 'won';
           st.events = evs;
         } else if (st.phase === 'won') {
-          const rw = B.rewards();
-          R.Game.gold += rw.gold;
+          const rw = B.finish();
           done({ result: 'win', rewards: rw });
         }
       },
@@ -136,18 +147,22 @@
     start(setup) {
       setup = setup || {};
       return new Promise((resolve) => {
+        if (setup.boss) R.Save.autosave('boss'); // ボスの直前（§3.13）。戦闘の場面を積む前に
         R.Save.checkpoint('battle', { setup, seed: R.Game.seed });
         R.emit('battle:start', { setup });
         R.Audio.pushBgm(setup.bgm || (setup.boss ? 'boss' : 'battle'));
         const prevLayout = R.Input.layoutName;
         let fin = false;
-        const done = (res) => {
+        // 終わり方の順番（本物の BSCENE も同じにする）: 場面を外す → BGM → 出来事 → 勝ちはオートセーブ
+        // → 全滅の「宿から」「タイトルへ」は R.State.wipeRecover()（宿のときだけ）と await R.Flow.wipe(to) → Promise を解決
+        const done = async (res) => {
           if (fin) return; fin = true;
           R.Engine.remove(scene, res);
           R.Audio.popBgm();
           R.Input.touchLayout(prevLayout);
           R.emit('battle:end', res);
           if (res.result === 'win') R.Save.autosave('battle');
+          if (res.result === 'abort') { if (res.to === 'inn') R.State.wipeRecover(); await R.Flow.wipe(res.to); }
           resolve(res);
         };
         const scene = battleScene(setup, done);

@@ -11,6 +11,9 @@
     return `hsl(${hue},${sat}%,${lit}%)`;
   }
 
+  // 素材と物の一覧（版 2: R.DB.materials・R.DB.props。TERRAIN の本物が同じ id を登録したら使われない）
+  for (const id of Object.keys(FIXED)) R.Stubs.defineData('materials', id, { name: id, edge: 'soft', walk: id !== 'stub_tree' && id !== 'stub_water' });
+
   R.Stubs.define('Terrain', {
     CHUNK: 8,
     matColor,

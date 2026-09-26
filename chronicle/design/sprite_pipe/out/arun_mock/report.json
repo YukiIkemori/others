@@ -16,7 +16,7 @@
      250
     ],
     "bg_std": 4.3,
-    "dark_magenta_px": 17530
+    "dark_magenta_px": 13915
    },
    "extras": [
     {
@@ -77,10 +77,10 @@
      "air": 0,
      "blur": 3.1,
      "facing_class": {
-      "down": -2.59,
+      "down": -2.61,
       "up": -7.37,
       "left": -9.44,
-      "right": -7.34
+      "right": -7.35
      }
     },
     "walk_down_1": {
@@ -97,10 +97,10 @@
      "air": 0,
      "blur": 3.1,
      "facing_class": {
-      "down": -2.92,
+      "down": -2.93,
       "up": -7.45,
-      "left": -9.36,
-      "right": -7.04
+      "left": -9.35,
+      "right": -7.03
      }
     },
     "walk_down_2": {
@@ -117,7 +117,7 @@
      "air": 0,
      "blur": 3.1,
      "facing_class": {
-      "down": -2.92,
+      "down": -2.93,
       "up": -7.45,
       "left": -9.34,
       "right": -7.04
@@ -138,9 +138,9 @@
      "blur": 3.0,
      "facing_class": {
       "down": -6.86,
-      "up": -1.77,
+      "up": -1.81,
       "left": -6.66,
-      "right": -7.78
+      "right": -7.76
      }
     },
     "walk_up_1": {
@@ -158,9 +158,9 @@
      "blur": 3.1,
      "facing_class": {
       "down": -7.22,
-      "up": -1.28,
+      "up": -1.3,
       "left": -6.63,
-      "right": -7.97
+      "right": -7.95
      }
     },
     "walk_up_2": {
@@ -177,10 +177,10 @@
      "air": 0,
      "blur": 3.0,
      "facing_class": {
-      "down": -7.22,
-      "up": -1.28,
+      "down": -7.23,
+      "up": -1.3,
       "left": -6.64,
-      "right": -7.96
+      "right": -7.94
      }
     },
     "walk_left_0": {
@@ -196,7 +196,7 @@
      ],
      "air": 0,
      "blur": 3.1,
-     "facing_score": 2.08
+     "facing_score": 2.06
     },
     "walk_left_1": {
      "size": [
@@ -241,7 +241,7 @@
      ],
      "air": 0,
      "blur": 3.1,
-     "facing_score": -3.79
+     "facing_score": -3.77
     },
     "walk_right_1": {
      "size": [
@@ -289,7 +289,7 @@
      249
     ],
     "bg_std": 4.3,
-    "dark_magenta_px": 3352
+    "dark_magenta_px": 764
    },
    "extras": [],
    "period": 3.654,
@@ -313,10 +313,10 @@
      "air": 0,
      "blur": 3.5,
      "facing_class": {
-      "down": -2.62,
+      "down": -2.64,
       "up": -7.23,
       "left": -9.33,
-      "right": -7.25
+      "right": -7.26
      }
     },
     "run_down_1": {
@@ -336,7 +336,7 @@
       "down": -2.86,
       "up": -7.25,
       "left": -9.2,
-      "right": -6.9
+      "right": -6.89
      }
     },
     "run_down_2": {
@@ -353,10 +353,10 @@
      "air": 0,
      "blur": 3.5,
      "facing_class": {
-      "down": -2.88,
+      "down": -2.89,
       "up": -7.29,
       "left": -9.23,
-      "right": -6.92
+      "right": -6.91
      }
     },
     "run_down_3": {
@@ -373,10 +373,10 @@
      "air": 0,
      "blur": 3.5,
      "facing_class": {
-      "down": -2.83,
-      "up": -7.22,
+      "down": -2.84,
+      "up": -7.23,
       "left": -9.18,
-      "right": -6.89
+      "right": -6.88
      }
     },
     "run_up_0": {
@@ -394,9 +394,9 @@
      "blur": 3.2,
      "facing_class": {
       "down": -6.78,
-      "up": -1.82,
+      "up": -1.85,
       "left": -6.61,
-      "right": -7.71
+      "right": -7.7
      }
     },
     "run_up_1": {
@@ -413,10 +413,10 @@
      "air": 0,
      "blur": 3.3,
      "facing_class": {
-      "down": -7.14,
-      "up": -1.32,
+      "down": -7.15,
+      "up": -1.33,
       "left": -6.56,
-      "right": -7.9
+      "right": -7.89
      }
     },
     "run_up_2": {
@@ -434,9 +434,9 @@
      "blur": 3.3,
      "facing_class": {
       "down": -7.14,
-      "up": -1.31,
-      "left": -6.57,
-      "right": -7.92
+      "up": -1.32,
+      "left": -6.56,
+      "right": -7.9
      }
     },
     "run_up_3": {
@@ -454,9 +454,9 @@
      "blur": 3.3,
      "facing_class": {
       "down": -7.13,
-      "up": -1.3,
+      "up": -1.32,
       "left": -6.54,
-      "right": -7.9
+      "right": -7.88
      }
     },
     "run_left_0": {
@@ -472,7 +472,7 @@
      ],
      "air": 0,
      "blur": 3.5,
-     "facing_score": 2.03
+     "facing_score": 2.02
     },
     "run_left_1": {
      "size": [
@@ -532,7 +532,7 @@
      ],
      "air": 0,
      "blur": 3.4,
-     "facing_score": 3.48
+     "facing_score": 3.47
     },
     "run_right_1": {
      "size": [
@@ -562,7 +562,7 @@
      ],
      "air": 0,
      "blur": 3.5,
-     "facing_score": 3.91
+     "facing_score": 3.92
     },
     "run_right_3": {
      "size": [
@@ -595,7 +595,7 @@
      249
     ],
     "bg_std": 4.3,
-    "dark_magenta_px": 1517
+    "dark_magenta_px": 0
    },
    "extras": [],
    "period": 6.061,
@@ -619,9 +619,9 @@
      "air": 0,
      "blur": 3.3,
      "facing_class": {
-      "down": -2.57,
+      "down": -2.6,
       "up": -7.33,
-      "left": -9.42,
+      "left": -9.41,
       "right": -7.32
      }
     },
@@ -639,10 +639,10 @@
      "air": 0,
      "blur": 3.2,
      "facing_class": {
-      "down": -3.45,
+      "down": -3.46,
       "up": -6.84,
       "left": -9.03,
-      "right": -7.64
+      "right": -7.62
      }
     },
     "act_think": {
@@ -659,10 +659,10 @@
      "air": 0,
      "blur": 3.3,
      "facing_class": {
-      "down": -7.41,
-      "up": -4.79,
+      "down": -7.42,
+      "up": -4.8,
       "left": -7.91,
-      "right": -8.64
+      "right": -8.63
      }
     },
     "act_bow": {
@@ -721,10 +721,10 @@
      "air": 0,
      "blur": 3.2,
      "facing_class": {
-      "down": -3.45,
+      "down": -3.46,
       "up": -6.85,
       "left": -9.03,
-      "right": -7.64
+      "right": -7.62
      }
     },
     "act_look": {
@@ -769,9 +769,9 @@
      "air": 0,
      "blur": 3.3,
      "facing_class": {
-      "down": -2.58,
-      "up": -7.31,
-      "left": -9.42,
+      "down": -2.61,
+      "up": -7.32,
+      "left": -9.41,
       "right": -7.34
      }
     },
@@ -792,7 +792,7 @@
       "down": -3.45,
       "up": -6.84,
       "left": -9.02,
-      "right": -7.64
+      "right": -7.63
      }
     }
    }
@@ -811,7 +811,7 @@
      249
     ],
     "bg_std": 4.3,
-    "dark_magenta_px": 1743
+    "dark_magenta_px": 0
    },
    "extras": [],
    "period": 8.03,
@@ -834,7 +834,7 @@
      ],
      "air": 0,
      "blur": 3.0,
-     "facing_score": 3.4
+     "facing_score": 3.36
     },
     "idle_b": {
      "size": [
@@ -849,7 +849,7 @@
      ],
      "air": 0,
      "blur": 3.0,
-     "facing_score": 3.41
+     "facing_score": 3.36
     },
     "step": {
      "size": [
@@ -864,7 +864,7 @@
      ],
      "air": 0,
      "blur": 3.0,
-     "facing_score": -4.97
+     "facing_score": -4.95
     },
     "guard": {
      "size": [
@@ -879,7 +879,7 @@
      ],
      "air": 0,
      "blur": 3.0,
-     "facing_score": 1.96
+     "facing_score": 1.91
     },
     "hit": {
      "size": [
@@ -894,7 +894,7 @@
      ],
      "air": 0,
      "blur": 3.0,
-     "facing_score": 1.98
+     "facing_score": 1.93
     },
     "weak": {
      "size": [
@@ -909,7 +909,7 @@
      ],
      "air": 0,
      "blur": 3.0,
-     "facing_score": 1.96
+     "facing_score": 1.91
     },
     "ko": {
      "size": [
@@ -938,7 +938,7 @@
      ],
      "air": 0,
      "blur": 3.0,
-     "facing_score": 1.54
+     "facing_score": 1.53
     },
     "victory_b": {
      "size": [
@@ -967,7 +967,7 @@
      ],
      "air": 0,
      "blur": 3.0,
-     "facing_score": 3.41
+     "facing_score": 3.36
     }
    }
   },
@@ -985,7 +985,7 @@
      250
     ],
     "bg_std": 4.3,
-    "dark_magenta_px": 31276
+    "dark_magenta_px": 0
    },
    "extras": [],
    "period": 5.058,
@@ -1008,7 +1008,7 @@
      ],
      "air": 0,
      "blur": 4.1,
-     "facing_score": 2.79
+     "facing_score": 2.76
     },
     "slash": {
      "size": [
@@ -1023,7 +1023,7 @@
      ],
      "air": 0,
      "blur": 4.1,
-     "facing_score": 2.75
+     "facing_score": 2.73
     },
     "thrust_ready": {
      "size": [
@@ -1038,7 +1038,7 @@
      ],
      "air": 0,
      "blur": 4.0,
-     "facing_score": 4.76
+     "facing_score": 4.75
     },
     "thrust": {
      "size": [
@@ -1053,7 +1053,7 @@
      ],
      "air": 0,
      "blur": 4.0,
-     "facing_score": 4.77
+     "facing_score": 4.76
     },
     "charge": {
      "size": [
@@ -1068,7 +1068,7 @@
      ],
      "air": 0,
      "blur": 3.9,
-     "facing_score": 1.92
+     "facing_score": 1.89
     },
     "smash": {
      "size": [
@@ -1083,7 +1083,7 @@
      ],
      "air": 0,
      "blur": 4.1,
-     "facing_score": 2.76
+     "facing_score": 2.74
     },
     "cast_a": {
      "size": [
@@ -1098,7 +1098,7 @@
      ],
      "air": 0,
      "blur": 3.8,
-     "facing_score": 2.91
+     "facing_score": 2.9
     },
     "cast_b": {
      "size": [
@@ -1113,7 +1113,7 @@
      ],
      "air": 0,
      "blur": 4.0,
-     "facing_score": 3.32
+     "facing_score": 3.3
     },
     "item": {
      "size": [
@@ -1128,7 +1128,7 @@
      ],
      "air": 0,
      "blur": 4.0,
-     "facing_score": 3.32
+     "facing_score": 3.29
     },
     "evade": {
      "size": [
@@ -1143,7 +1143,7 @@
      ],
      "air": 0,
      "blur": 4.1,
-     "facing_score": 4.78
+     "facing_score": 4.77
     }
    }
   },
@@ -1161,7 +1161,7 @@
      250
     ],
     "bg_std": 4.3,
-    "dark_magenta_px": 1127
+    "dark_magenta_px": 0
    },
    "extras": [],
    "period": 8.081,
@@ -1184,7 +1184,7 @@
      ],
      "air": 0,
      "blur": 3.0,
-     "facing_score": 3.41
+     "facing_score": 3.37
     },
     "bare_windup": {
      "size": [
@@ -1199,7 +1199,7 @@
      ],
      "air": 0,
      "blur": 3.0,
-     "facing_score": 2.82
+     "facing_score": 2.78
     },
     "bare_slash": {
      "size": [
@@ -1214,7 +1214,7 @@
      ],
      "air": 0,
      "blur": 3.0,
-     "facing_score": 2.81
+     "facing_score": 2.77
     },
     "bare_thrust": {
      "size": [
@@ -1229,7 +1229,7 @@
      ],
      "air": 0,
      "blur": 3.0,
-     "facing_score": 4.77
+     "facing_score": 4.75
     },
     "bare_cast": {
      "size": [
@@ -1244,7 +1244,7 @@
      ],
      "air": 0,
      "blur": 3.0,
-     "facing_score": 3.4
+     "facing_score": 3.36
     },
     "wpn_sword": {
      "size": [
@@ -1332,7 +1332,7 @@
      250
     ],
     "bg_std": 4.3,
-    "dark_magenta_px": 932
+    "dark_magenta_px": 0
    },
    "extras": [],
    "period": 4.01,
@@ -1559,15 +1559,6 @@
   },
   {
    "sheet": 2,
-   "level": "auto",
-   "code": "dark_key",
-   "msg": "暗いマゼンタ（床の影・光のにじみ）があった。背景として抜いた",
-   "slot": null,
-   "ask": null,
-   "data": {}
-  },
-  {
-   "sheet": 2,
    "level": "info",
    "code": "dot_size",
    "msg": "1 ドットが画像上 3.65 px（指定は 8 px）",
@@ -1589,15 +1580,6 @@
    "level": "info",
    "code": "dot_size",
    "msg": "1 ドットが画像上 6.06 px（指定は 8 px）",
-   "slot": null,
-   "ask": null,
-   "data": {}
-  },
-  {
-   "sheet": 6,
-   "level": "auto",
-   "code": "dark_key",
-   "msg": "暗いマゼンタ（床の影・光のにじみ）があった。背景として抜いた",
    "slot": null,
    "ask": null,
    "data": {}
@@ -1655,7 +1637,7 @@
    "slot": "step",
    "ask": "シート5の3番（一歩前に踏み出す）が右を向いている。全部左向きにして、同じ条件で描き直して",
    "data": {
-    "score": -4.970741545474969
+    "score": -4.9482506810347395
    }
   },
   {
@@ -1666,7 +1648,7 @@
    "slot": "walk_right_0",
    "ask": "シート1の10番（右向き・立ち）が左を向いている。右向きにして、同じ条件で描き直して",
    "data": {
-    "score": -3.7923634944179003
+    "score": -3.7741042855350964
    }
   },
   {
@@ -1677,7 +1659,7 @@
    "slot": "walk_right_1",
    "ask": "シート1の11番（右向き・前の足）が左を向いている。右向きにして、同じ条件で描き直して",
    "data": {
-    "score": -4.047815458845578
+    "score": -4.048037293700171
    }
   },
   {
@@ -1688,7 +1670,7 @@
    "slot": "walk_right_2",
    "ask": "シート1の12番（右向き・後ろの足）が左を向いている。右向きにして、同じ条件で描き直して",
    "data": {
-    "score": -4.06167669237095
+    "score": -4.058732377598199
    }
   },
   {
