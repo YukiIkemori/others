@@ -156,7 +156,7 @@ async function run() {
         'ani_cat', 'ani_dog', 'ani_hen', 'ani_fawn'];
       await save('field_npc.png', { mode: 'field', w: 1900, h: 780, k: 1, cols: 6, looks: npcs });
       await save('lantern.png', { mode: 'walk', w: 1900, h: 760, k: 2, lantern: true, looks: ['hero_m_warrior', 'selma', 'viola'], poses: ['walk_s', 'walk_e', 'walk_n', 'walk_w'] });
-      await save('acting.png', { mode: 'walk', w: 1900, h: 560, k: 2, looks: ['hero_m_warrior', 'npc_gord'], poses: ['nod', 'shake', 'surprise', 'laugh', 'sad', 'bow', 'kneel', 'sit', 'think', 'point', 'raise_lantern'] });
+      await save('acting.png', { mode: 'walk', w: 2700, h: 560, k: 2, looks: ['hero_m_warrior', 'npc_gord'], poses: ['nod', 'shake', 'surprise', 'laugh', 'sad', 'bow', 'kneel', 'sit', 'think', 'point', 'raise_lantern'] });
     }
     if (!only || only === 'battle') {
       for (const wt of ['sword', 'greatsword', 'dagger', 'bow', 'staff']) await save(`battle_${wt}.png`, { mode: 'battle', w: 1920, h: 440, k: 1, looks: LINE, poses: POSES, wtype: wt });

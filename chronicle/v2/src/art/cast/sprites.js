@@ -291,7 +291,8 @@
     if (st !== 'ready') return undefined;
     const F = frames(look, 'face'), m = F.meta;
     const list = (m.frames || []).map((f) => F.by[f.id]);
-    const frames_ = list.map((fr) => ({ c: fr.c, ox: fr.ox, oy: fr.oy }));
+    // 顔ごとに透明な縁を切る（小さな顔も枠いっぱいに拡大できるように）
+    const frames_ = list.map((fr) => { const t = trim(fr); return { c: t.c, ox: t.ox, oy: t.oy }; });
     const poses = {}, E = m.expr || {};
     for (const e of (R.Contract && R.Contract.EXPRS) || ['neutral', 'smile', 'sad', 'angry', 'surprise']) poses[e] = [E[e] != null ? E[e] : E.neutral != null ? E.neutral : 0];
     let w = 0, h = 0;

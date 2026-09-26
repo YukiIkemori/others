@@ -27,10 +27,10 @@
       const B = new RZ.Builder();
       const pt = rig.draw(B, L, p, { noWeapon: true });
       const r = RZ.render(B, rig.renderOpts({ scale: sc, light: rig.light('face') }));
-      // 胸から上を切る（頭の中心から上 19・下 17、左右 ±18 のモデル単位）
+      // 胸から上を切る（顔が真ん中に来るよう頭の中心より少し前。32 × 32 のモデル単位）
       const hx = r.ox + pt.head[0] * sc, hy = r.oy + pt.head[1] * sc;
-      const W = Math.round(36 * sc), Hh = Math.round(36 * sc);
-      const x0 = Math.round(hx - 18 * sc), y0 = Math.round(hy - 19 * sc);
+      const W = Math.round(32 * sc), Hh = Math.round(32 * sc);
+      const x0 = Math.round(hx - 13 * sc), y0 = Math.round(hy - 16 * sc);
       const c = RZ.canvas(W, Hh), x = c.getContext('2d');
       x.drawImage(r.canvas, -x0, -y0);
       return { c, ox: W >> 1, oy: Hh - 1 };

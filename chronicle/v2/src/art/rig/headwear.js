@@ -56,7 +56,7 @@
       }
       case 'feather': {
         E(H(-1.5, -9.5)[0], H(-1.5, -9.5)[1], 11.5, 5.4, m, z0 + 0.55, { g: grp('cap'), rot: ha - 0.15 });
-        S([H(-7, -11), H(-13, -18), H(-20, -17)], 1.6, 0.3, L.featherM || L.trim, z0 + 0.56, {});
+        const q = H(-12, -13); E(q[0], q[1], 6.5, 1.8, L.featherM || L.trim, z0 + 0.56, { g: grp('feather'), rot: ha - 0.45, bulge: 0.5 });
         break;
       }
       case 'wide': case 'straw': {

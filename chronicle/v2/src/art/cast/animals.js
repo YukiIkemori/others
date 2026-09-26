@@ -68,7 +68,7 @@
     const lk = R.DB.looks[look];
     if (!lk || !SHAPE[lk.animal]) return null;
     const RZ = R.Hd.RZ, rig = R.Art.rig;
-    const sc = (o && o.scale) || 1.15;
+    const sc = ((o && o.scale) || 1.15) * 1.35;   // 人の背（約 50）に対して猫・犬は膝より上くらい
     const order = [], tasks = [];
     const DIR = { s: 'down', n: 'up', e: 'right' };
     for (const d of ['s', 'n', 'e']) for (let fr = 0; fr < 3; fr++) {

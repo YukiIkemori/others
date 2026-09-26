@@ -35,7 +35,7 @@
       }
       B.ell(0, U(-17.5), 6.8 * bw, 7.2, top, 3, { bulge: 0.85 });
       if (robe) B.poly([[-6.5 * bw, U(-15)], [6.5 * bw, U(-15)], [8 * bw, Y(-4)], [-8 * bw, Y(-4)]], L.skirtM || top, 3.05, { bevel: 2 });
-      if (L.armor === 'plate') B.ell(0, U(-18.5), 6.2 * bw, 5.6, L.metal, 3.1, { bulge: 0.7 });
+      if (L.armor === 'plate' && !back) B.ell(0, U(-18.5), 6.2 * bw, 5.6, L.metal, 3.1, { bulge: 0.7 });
       B.rect(-6.2 * bw, U(-13.2), 12.4 * bw, 2.2, belt, 3.2);
       if (!back) B.ell(0, U(-23), 3.8, 1.5, L.scarf || trim, 3.3, { bulge: 0.4 });
       if (L.scarf && back) B.ell(0, U(-23.5), 4.6, 2, L.scarf, 5.6, { bulge: 0.4 });
@@ -159,13 +159,13 @@
       else B.ell(sx * 0.3, hy - 7.5 * hs, 8.4 * hs, 4.6 * hs, m, 7.45, { bulge: 0.7 });
     } else if (t === 'beret' || t === 'cap' || t === 'feather') {
       B.ell(sx * -1, hy - 7.2 * hs, 9.8 * hs, 4.4 * hs, m, 7.4, { bulge: 0.7 });
-      if (t === 'feather') B.cap(sx * -3 - 3, hy - 9 * hs, sx * -9 - 7, hy - 14 * hs, 1.3, 0.4, L.trim, 7.45);
+      if (t === 'feather') B.ell(sx * -4 - 5, hy - 10 * hs, 4.2, 1.3, L.trim, 7.45, { rot: -0.5, bulge: 0.4 });
     } else if (t === 'circlet') {
       B.cap(-8 * hs, hy - 4.6 * hs, 8 * hs, hy - 4.6 * hs, 0.7, 0.7, MM.gold, 7.3);
     } else if (t === 'headband' || t === 'bandana') {
       B.cap(-9 * hs, hy - 4.6 * hs, 9 * hs, hy - 4.6 * hs, 1.2, 1.2, m, 7.3);
       if (t === 'bandana') B.ell(0, hy - 7 * hs, 9.2 * hs, 4 * hs, m, 7.28, { bulge: 0.6 });
-    } else if (t === 'goggles') {
+    } else if (t === 'goggles' && face !== 'back') {
       [-1, 1].forEach((s) => B.ell(s * 3.6 * hs + sx * 3, hy - 5.4 * hs, 2.2, 1.8, MM.glass, 7.35, { bulge: 0.4 }));
     }
   }
