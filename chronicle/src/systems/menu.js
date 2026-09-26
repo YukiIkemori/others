@@ -21,16 +21,17 @@
   const SLOT_TYPE = { weapon1: 'weapon', weapon2: 'weapon', shield: 'shield', head: 'head', body: 'body', hands: 'hands', feet: 'feet', acc1: 'acc', acc2: 'acc' };
   const GEAR_TYPES = ['weapon', 'shield', 'head', 'body', 'hands', 'feet', 'acc'];
   const TYPE_NAMES = { weapon: '武器', shield: '盾', head: '頭', body: '体', hands: '手', feet: '足', acc: 'アクセサリ', consumable: '道具', key: '大事なもの' };
-  // the 17 keys of R.Rules.previewStats (§3.3.3) in display order, with their short names (§11.7.5)
-  const DIFF_KEYS = ['atk1', 'atk2', 'mag', 'def', 'mdef', 'hit', 'eva', 'crit', 'str', 'vit', 'dex', 'agi', 'int', 'mnd', 'hp', 'mp', 'wp'];
+  // the 16 keys of R.Rules.previewStats (§3.3.3) in display order, with their short names (§11.7.5)
+  const DIFF_KEYS = ['atk1', 'atk2', 'mag', 'def', 'mdef', 'hit', 'eva', 'crit', 'str', 'vit', 'dex', 'agi', 'int', 'mnd', 'hp', 'mp'];
   const STAT_NAMES = {
     atk1: '攻撃1', atk2: '攻撃2', mag: '術力', def: '守備', mdef: '術防', hit: '命中', eva: '回避', crit: '会心', spd: '行動の速さ',
-    str: '腕力', vit: '体力', dex: '器用さ', agi: '素早さ', int: '知力', mnd: '精神', hp: '最大HP', mp: '最大MP', wp: '最大WP',
+    str: '腕力', vit: '体力', dex: '器用さ', agi: '素早さ', int: '知力', mnd: '精神', hp: '最大HP', mp: '最大MP',
   };
   // strengthening / weakening targets (§3.1.1) in their long form
   const BUFF_NAMES = { atk: '攻撃力', def: '守備力', mag: '術力', mdef: '術防', agi: '素早さ' };
-  const WTYPES_DEFAULT = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'club', 'staff', 'katana', 'fist', 'whip'];
-  const WTYPE_NAMES = { sword: '剣', greatsword: '大剣', dagger: '短剣', axe: '斧', spear: '槍', bow: '弓', club: '棍棒', staff: '杖', katana: '刀', fist: '体術', whip: '鞭' };
+  // the 7 weapon types (Part A19); 素手 (internal 'fist') is not a type and has no name here
+  const WTYPES_DEFAULT = ['sword', 'greatsword', 'dagger', 'axe', 'spear', 'bow', 'staff'];
+  const WTYPE_NAMES = { sword: '剣', greatsword: '大剣', dagger: '短剣', axe: '斧', spear: '槍', bow: '弓', staff: '杖' };
   const TWO_HANDED_DEFAULT = { greatsword: 1, spear: 1, bow: 1 };
   const ELEMS_DEFAULT = ['fire', 'water', 'wind', 'earth', 'light', 'dark'];
   const ELEM_NAMES = { fire: '火', water: '水', wind: '風', earth: '土', light: '光', dark: '闇' };
@@ -111,7 +112,7 @@
     if (r && typeof r === 'object') return { ok: !!r.ok, removed: r.removed || [], reason: r.reason };
     return { ok: !!r, removed: [] };
   }
-  const stats = (c) => (has(Rl(), 'stats') ? Rl().stats(c) : { hp: c.hp || 1, mp: c.mp || 0, wp: c.wp || 0 });
+  const stats = (c) => (has(Rl(), 'stats') ? Rl().stats(c) : { hp: c.hp || 1, mp: c.mp || 0 });
   /** attack of a weapon slot from a stats() result (weapon1 falls back to the bare hands) */
   function atkOf(st, slot) {
     if (!st) return 0;
@@ -125,7 +126,7 @@
     }
     return slot === 'weapon1' ? st.atk || 0 : 0;
   }
-  /** the 17 derived values of a stats() result, keyed like previewStats' Diff */
+  /** the 16 derived values of a stats() result, keyed like previewStats' Diff */
   function statVector(st) {
     const out = {};
     for (const k of DIFF_KEYS) out[k] = k === 'atk1' ? atkOf(st, 'weapon1') : k === 'atk2' ? atkOf(st, 'weapon2') : st[k] || 0;
@@ -149,10 +150,10 @@
     for (const k of DIFF_KEYS) out[k] = b[k] - a[k];
     return out;
   }
-  const cost = (c, id, kind) => {
+  /** MP a tech or a spell costs this character (Part A18: techs and spells share MP; R.Rules.mpCost) */
+  const cost = (c, id) => {
     const a = DB.actions[id];
     if (!a) return 0;
-    if (kind === 'wp' || a.kind === 'tech') return has(Rl(), 'wpCost') ? Rl().wpCost(c, id) : a.wp || 0;
     return has(Rl(), 'mpCost') ? Rl().mpCost(c, id) : a.mp || 0;
   };
   /** Part A13b: the colour of a spell's MP when proficiency cut it (0 / half), else null */
@@ -258,7 +259,7 @@
     return 'icon:acc';
   };
   const ICON_FALLBACK = {
-    'icon:dagger': 'icon:knife', 'icon:greatsword': 'icon:sword', 'icon:club': 'icon:rod', 'icon:fist': 'icon:claw', 'icon:whip': 'icon:rod',
+    'icon:dagger': 'icon:knife', 'icon:greatsword': 'icon:sword', 'icon:club': 'icon:rod', 'icon:katana': 'icon:sword',
     'icon:head': 'icon:helm', 'icon:body': 'icon:light', 'icon:hands': 'icon:acc', 'icon:feet': 'icon:acc',
   };
 
@@ -481,7 +482,7 @@
   K.cycle = (i, d, n) => (n ? (i + (d < 0 ? n - 1 : 1)) % n : 0);
 
   // ------------------------------------------------------------ party picker (§11.7.0)
-  // Row: height 30, sprite 16×24, name fitText 54, 「H 612/640」, 「M 28/60 W 55」, the row badge on the right.
+  // Row: height 30, sprite 16×24, name fitText 54, 「H 612/640」, 「M 28/60」, the row badge on the right.
   const ROW_H = 30;
   function drawMemberRow(c, x, y, w, o) {
     const ok = o.ok !== false;
@@ -493,9 +494,7 @@
     G().text(c.hp + '/' + (st.hp || 0), x + w - 8, y + 2, { align: 'right', color: col });
     // オーナー指示 A15: MP as 現在/最大
     G().text('M', x + 30, y + 15, { color: ok ? COL.sub : COL.gray });
-    G().text(c.mp + '/' + (st.mp || 0), x + 80, y + 15, { align: 'right', color: ok ? '#ffffff' : COL.gray });
-    G().text('W', x + 86, y + 15, { color: ok ? COL.sub : COL.gray });
-    G().text(String(c.wp || 0), x + 104, y + 15, { align: 'right', color: ok ? '#ffffff' : COL.gray });
+    G().text(c.mp + '/' + (st.mp || 0), x + 100, y + 15, { align: 'right', color: ok ? '#ffffff' : COL.gray });
     if (c.hp <= 0) K.fitText('戦闘不能', x + w - 8, y + 15, w - 114, { align: 'right', color: G().C.dead, size: 8 });
     else K.rowBadge(x + w - 24, y + 15, effectiveRow(c));
   }
@@ -570,14 +569,14 @@
   // ------------------------------------------------------------ field effects (§7.3.5, §8.9)
   const effectsOf = (def) => (def && def.effects) || [];
   const hasType = (effects, t) => (effects || []).some((e) => e.type === t);
-  const FIELD_TYPES = { heal: 1, revive: 1, healWp: 1, cure: 1, healMp: 1, grow: 1, encounter: 1, teleport: 1, exit: 1 };
-  const BONUS_CAP = { hp: 200, mp: 30, wp: 30 };
+  const FIELD_TYPES = { heal: 1, revive: 1, cure: 1, healMp: 1, grow: 1, encounter: 1, teleport: 1, exit: 1 };
+  const BONUS_CAP = { hp: 200, mp: 50 };
   const bonusCap = (k) => ((Rl().K && Rl().K.BONUS_CAP) || BONUS_CAP)[k] ?? BONUS_CAP[k];
-  /** what a spell does outside battle: fieldEffects, or the heal/revive/healWp/cure of its effects (§7.3.5) */
+  /** what a spell does outside battle: fieldEffects, or the heal/revive/cure of its effects (§7.3.5) */
   function fieldEffects(a) {
     if (!a) return [];
     if (Array.isArray(a.fieldEffects)) return a.fieldEffects;
-    return (a.effects || []).filter((e) => e.type === 'heal' || e.type === 'revive' || e.type === 'healWp' || e.type === 'cure');
+    return (a.effects || []).filter((e) => e.type === 'heal' || e.type === 'revive' || e.type === 'cure');
   }
   Menu.fieldEffects = fieldEffects;
   const MNDF = (mnd) => U.clamp((128 + (mnd || 0)) / 168, 0.75, 2.2);
@@ -606,7 +605,6 @@
       switch (e.type) {
         case 'heal': if (c.hp > 0 && c.hp < st.hp) return true; break;
         case 'healMp': if (c.hp > 0 && c.mp < st.mp) return true; break;
-        case 'healWp': if (c.hp > 0 && (c.wp || 0) < st.wp) return true; break;
         case 'revive': if (c.hp <= 0) return true; break;
         case 'cure': {
           const s = c.status || {};
@@ -623,7 +621,7 @@
 
   /**
    * Apply the field effects of `def` ({effects|fieldEffects, target}) used by `user` on `targets`.
-   * Handles heal / healMp / healWp / revive / cure / grow / encounter directly; teleport / exit are
+   * Handles heal / healMp / revive / cure / grow / encounter directly; teleport / exit are
    * reported back (they need the menu closed). o: {item:bool, id, name}
    * → {lines:[text], changed:bool, teleport?:true, exit?:true}
    */
@@ -662,15 +660,6 @@
             out.changed = true;
             break;
           }
-          case 'healWp': {
-            if (c.hp <= 0 || (c.wp || 0) >= st.wp) break;
-            const before = c.wp || 0;
-            c.wp = Math.min(st.wp, before + pctOf(st.wp, e.pct != null ? e.pct : 0));
-            if (c.wp === before) break;
-            out.lines.push(c.name + 'のWPが' + (c.wp - before) + '回復した！');
-            out.changed = true;
-            break;
-          }
           case 'revive': {
             if (c.hp > 0) break;
             c.hp = Math.max(1, Math.floor((st.hp || 1) * (e.pct != null ? e.pct : 0.35)));
@@ -693,7 +682,7 @@
           case 'grow': {
             if (c.hp <= 0) break;
             const key = e.stat;
-            const b = c.bonus || (c.bonus = { hp: 0, mp: 0, wp: 0 });
+            const b = c.bonus || (c.bonus = { hp: 0, mp: 0 });
             const room = bonusCap(key) - (b[key] || 0);
             if (room <= 0) { out.lines.push(c.name + 'には、これ以上は効かない。'); break; }
             const s0 = stats(c)[key] || 0;
@@ -702,7 +691,6 @@
             const gain = Math.max(0, s1 - s0);
             if (key === 'hp') c.hp = Math.min(s1, c.hp + gain);
             else if (key === 'mp') c.mp = Math.min(s1, c.mp + gain);
-            else if (key === 'wp') c.wp = Math.min(s1, (c.wp || 0) + gain);
             out.lines.push(c.name + 'の' + STAT_NAMES[key] + 'が' + (gain || Math.min(room, e.n || 1)) + '増えた！');
             out.changed = true;
             break;
@@ -959,7 +947,7 @@
   const healSpell = (a) => {
     if (!a || !a.field || !HEAL_TARGETS[a.target]) return false;
     const e = fieldEffects(a);
-    return e.some((x) => x.type === 'heal') && e.every((x) => x.type === 'heal' || x.type === 'cure' || x.type === 'healWp');
+    return e.some((x) => x.type === 'heal') && e.every((x) => x.type === 'heal' || x.type === 'cure');
   };
   const reviveSpell = (a) => !!(a && a.field && (a.target === 'ally_dead' || a.target === 'ally_any' || a.target === 'party') && fieldEffects(a).some((x) => x.type === 'revive'));
   /** cheap single-target items for 満タン: not rare, not for everyone (Part A2) */
