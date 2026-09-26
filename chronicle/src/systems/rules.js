@@ -107,6 +107,9 @@
     // Part A13 (2026-09-26): proficiency raises power — +perRank per rank (0–10) of the spell's element(s) (average for
     // combos / triples) or of the used weapon's type (techs, plain attacks), at most +max. Damage and healing only.
     PROF_POWER: { perRank: 0.03, max: 0.30 },
+    // Part A13b (2026-09-26): element rank 5 → that element's 1段目 single spells cost MP 0; rank 8 → its 2段目 single
+    // spells cost half (rounded up, at least 1). Combo / triple spells are not affected.
+    PROF_MP: { freeRank: 5, freeStep: 1, halfRank: 8, halfStep: 2 },
     // §4.9.3–4.9.4 — glimmer (R.Glimmer reads these)
     GLIM: {
       base: { tech: 0.012, secret: 0.006, single: 0.015, comboA: 0.012, comboB: 0.010, triple: 0.008 },
@@ -1035,6 +1038,13 @@
     /** WP cost after wpCostPct (min 1; cuts round down, raises round up) */
     wpCost(c, actionId) { return costOf(c, actionId, 'wp'); },
     mpCost(c, actionId) { return costOf(c, actionId, 'mp'); },
+    /** Part A13b — 'free' | 'half' | null: the proficiency discount on this spell's MP for c */
+    profMpKind(c, actionId) {
+      const a = typeof actionId === 'string' ? DB.actions[actionId] : actionId;
+      if (!a || !a.mp) return null;
+      const b = profMpBase(c, a);
+      return b === a.mp ? null : b === 0 ? 'free' : 'half';
+    },
     /** the row c acts from: a middle-row member counts as front when no living front-row member remains (§4.5.3) */
     effectiveRow(c, party) {
       const row = rowOf(c);
@@ -1187,11 +1197,23 @@
     const lv = (a.glim && a.glim.lv) || a.rank || 1;
     return lv <= 1 ? 1 : lv === 2 ? 2 : lv <= 4 ? 3 : lv <= 6 ? 4 : 5;
   }
+  /** Part A13b — the MP of a single-element spell after the proficiency discount: 0 (free), half, or a.mp */
+  function profMpBase(c, a) {
+    if (!a || a.kind !== 'spell' || !a.mp || !c) return a ? a.mp || 0 : 0;
+    const els = a.elements || [];
+    if (els.length !== 1) return a.mp;
+    const P = K.PROF_MP, r = Rules.rankOf(c, 'e', els[0]), step = Number(a.step) || 0;
+    if (step === P.freeStep && r >= P.freeRank) return 0;
+    if (step === P.halfStep && r >= P.halfRank) return Math.max(1, Math.ceil(a.mp / 2));
+    return a.mp;
+  }
   function costOf(c, actionId, key) {
     const a = DB.actions[actionId];
     if (!a || !a[key]) return 0;
+    const b = key === 'mp' ? profMpBase(c, a) : a[key];
+    if (!b) return 0;
     const pct = Rules.mods(c)[key + 'CostPct'] || 0;
-    const v = a[key] * (100 + pct) / 100;
+    const v = b * (100 + pct) / 100;
     return Math.max(1, pct < 0 ? Math.floor(v + 1e-9) : Math.ceil(v - 1e-9));
   }
   let actIdx = null, actIdxN = -1;
