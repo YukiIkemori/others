@@ -404,6 +404,38 @@
     }
     return undefined;
   }
+  const GLIM_REACH = { wpMin: 0.5, perBattle: 2 };
+  /**
+   * (d) 閃きねらい for a slot whose 攻撃 cannot reach (中列の杖): the cheapest known reach:true damage tech of that slot's
+   * weapon type (念じ打ち, WP 1), while that type still has glimmer candidates from the middle row — tried before the
+   * 攻撃 of weapon 2 (§4.13.2-d, 「届かなければ武器2」). 雑魚戦 only, WP ≥ 50 %, at most GLIM_REACH.perBattle a fight
+   * (the rest of the WP budget stays for the §4.17.3 A3 ≤ 12 % line). → {o, slot} | null
+   */
+  function glimReach(eng, u, acts) {
+    if (eng.boss || !u.mwp || u.wp < u.mwp * GLIM_REACH.wpMin) return null;
+    const mem = (eng.aiMem = eng.aiMem || {});
+    const key = u.c.id || u.key;
+    if (mem[key] && (mem[key].reach || 0) >= GLIM_REACH.perBattle) return null;
+    for (const slot of u.attackSlots()) {
+      const W = u.weapon(slot);
+      if (!W || wItem(W).sealTech || eng.canReach(u, slot)) continue;
+      const opts = acts.filter((o) => {
+        if (o.type !== 'tech' || o.slot !== slot || !o.ab.reach || !FOE_TARGETS[o.ab.target]) return false;
+        const de = dmgOf(o.ab);
+        return de && de.formula !== 'percent' && !lowPool(u, o);
+      });
+      if (!opts.length) continue;
+      opts.sort((a, b) => a.wp - b.wp || ((a.ab.glim && a.ab.glim.lv) || a.ab.rank || 0) - ((b.ab.glim && b.ab.glim.lv) || b.ab.rank || 0));
+      if (!candidatesOpen(eng, u, glimCtx(eng, u, 'tech', { wtype: W.wtype, used: opts[0].id }))) continue;
+      return { o: opts[0], slot };
+    }
+    return null;
+  }
+  function noteReach(eng, u) {
+    const mem = (eng.aiMem = eng.aiMem || {});
+    const key = u.c.id || u.key;
+    mem[key] = Object.assign(mem[key] || {}, { reach: ((mem[key] && mem[key].reach) || 0) + 1 });
+  }
   /**
    * (d) 閃きねらい: once per battle, a member with ≥ 50 % MP casts the cheapest useful spell of an element whose
    * glimmer candidates are open; when no element is open (early tiers: nothing within reach yet), the cheapest useful
@@ -473,12 +505,17 @@
     const single = (d, m) => (m === focus ? value(d, m) : d >= left(m) && left(m) > 0 ? value(d, m) * 0.9 : -1);
     // the plain attack on the focus target (the 雑魚戦 prefers the slot whose techs can still be glimmered)
     let ba = bestAttack(eng, u, focus);
-    if (!eng.boss && ba.reach) {
+    // a slot that cannot reach but has a reach tech with open candidates goes first (中列の杖 → 念じ打ち, not the 鞭)
+    const gr = eng.boss ? null : glimReach(eng, u, acts);
+    let grCmd = null, grD = 0;
+    if (gr) { grD = eng.expectDamage(u, gr.o.ab, focus, { slot: gr.slot }); if (grD > 0) grCmd = cmdOf(gr.o, focus); }
+    if (!grCmd && !eng.boss && ba.reach) {
       const gs = glimSlot(eng, u);
       if (gs !== undefined && gs !== ba.slot) { const d = eng.expectAttack(u, focus, gs); if (d > 0) ba = { slot: gs, d, reach: true }; }
     }
-    let best = ba.reach ? { score: value(ba.d, focus), cmd: { type: 'attack', slot: ba.slot, target: focus }, hits: [[focus, ba.d]] }
-      : { score: 0, cmd: { type: 'defend' }, hits: [] };
+    let best = grCmd ? { score: value(grD, focus), cmd: grCmd, hits: [[focus, grD]], glimReach: true }
+      : ba.reach ? { score: value(ba.d, focus), cmd: { type: 'attack', slot: ba.slot, target: focus }, hits: [[focus, ba.d]] }
+        : { score: 0, cmd: { type: 'defend' }, hits: [] };
     const v0 = Math.max(1, best.score);
     const totalLeft = pool.reduce((s, m) => s + left(m), 0);
     const perRound = Math.max(1, plan.perRound || v0);
@@ -524,7 +561,8 @@
       }
     }
     for (const [t, d] of best.hits) plan.dmg.set(t, (plan.dmg.get(t) || 0) + d);
-    if (best.cmd.type !== 'attack' && best.cmd.type !== 'defend') plan.skillsUsed = (plan.skillsUsed || 0) + 1;
+    if (best.glimReach) noteReach(eng, u);
+    else if (best.cmd.type !== 'attack' && best.cmd.type !== 'defend') plan.skillsUsed = (plan.skillsUsed || 0) + 1;
     return best.cmd;
   }
 
@@ -576,6 +614,6 @@
   R.BattleAI = {
     AUTO_OPTS, monster, monCommand, condOk, monUsable, pickPartyTarget,
     partyCommands, partyAction, abilityOptions, itemOptions, newPlan, assess, threat,
-    focusOrder, focusTarget, assignTarget, bestAttack, glimCast, glimSlot, candidatesOpen, FOCUS_COVER,
+    focusOrder, focusTarget, assignTarget, bestAttack, glimCast, glimSlot, glimReach, candidatesOpen, FOCUS_COVER, GLIM_REACH,
   };
 })(window.RPG);

@@ -1,0 +1,27 @@
+{
+  "loopStart": 18.065,
+  "loopEnd": 58.065,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. A sacred shrine or temple: calm, reverent and luminous, candlelight and incense, time standing still. Tempo 60 BPM, 4/4 time, key of A major. Instrumentation: soft wordless choir pad (no words), pipe organ, tubular bells, harp, warm strings, no drums. Form: slow chorale, gentle harp interlude, chorale again. Duration: 70 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[A2]]",
+    "generated": "2026-09-26T12:15:58.379Z",
+    "rawSeconds": 73.1,
+    "takes": 2
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -4.7,
+    "gainDb": -6.1,
+    "peakLimited": false,
+    "loopScore": 0.804,
+    "seamCorr": 0.37,
+    "xfade": 0.6,
+    "medianDb": -22.4,
+    "longestSilence": 0.1,
+    "seamLevelDiffDb": 2.5,
+    "seamJump": 0.0057,
+    "maxStep": 0.0321
+  }
+}

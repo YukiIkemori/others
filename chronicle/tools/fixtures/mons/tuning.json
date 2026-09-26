@@ -1,112 +1,112 @@
 {
-  "_doc": "A11 balance overlay on the DESIGN.md §9 tables. check_mons.js --write applies it; check_mons.js verifies src/data == DESIGN ⊕ this file. monsters.<id>.s: fitted on the game engine with sim_zones.js --fit (damped passes; every species' pure group worth 3.2 standard monsters, over the tiers where '@' picks it, lvOff 0/1 → HP lost 9.2%, 2.8 rounds; per lineage and stat all stages move one way, §9.13.1); monsters.<id>.desc and actions.<id>.<name|msg>: STYLE_JA fixes; encounters.<zone>.groups replaces the zone's groups. Every entry carries a why.",
+  "_doc": "A11 balance overlay on the DESIGN.md §9 tables, found with tools/sim_zones.js on the game engine. check_mons.js --write applies it; check_mons.js verifies src/data == DESIGN ⊕ this file. monsters.<id>.s: sim_zones --fit (every species' pure group worth 3.2 standard monsters over the tiers where '@' picks it, lvOff 0/1 → HP lost 9.2%, 2.8 rounds) then --refit (zone groups vs a strength-proportional target); per lineage and stat all stages move one way (§9.13.1). encounters.<zone>.groups: --retilt re-weights each 'dyn' zone's T0/T1 groups (tier-only copies) toward its T2–T7 HP lost (M2), plus earlier hand fixes. monsters.<id>.desc and actions.<id>.<name|msg>: STYLE_JA fixes. Every entry carries a why.",
   "monsters": {
     "frostling_4": {
-      "why": "sim_zones --fit (game engine, pure group ×3 at T7): HP lost 8.9% → 9.2%, rounds 2.74 → 2.8 ／ desc: STYLE_JA §3/§7.4 (check_text T9/T10): かぶと → 兜",
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.98, rounds ×0.98 of the strength target) ／ desc: STYLE_JA §3/§7.4 (check_text T9/T10): かぶと → 兜",
       "desc": "氷の兜をかぶった小鬼の\n大将。雪の子らを率いる。",
       "s": {
-        "hp": 2.22,
-        "atk": 0.48,
-        "mag": 0.48,
+        "hp": 2.44,
+        "atk": 0.46,
+        "mag": 0.46,
         "agi": 1.05
       }
     },
     "wisp_3": {
-      "why": "sim_zones --fit (game engine, pure group ×5 at T5): HP lost 9.0% → 9.2%, rounds 2.79 → 2.8 ／ desc: STYLE_JA §3/§7.4 (check_text T9/T10): 魔力 → MP (魔力 only in item names)",
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.02, rounds ×1.03 of the strength target) ／ desc: STYLE_JA §3/§7.4 (check_text T9/T10): 魔力 → MP (魔力 only in item names)",
       "desc": "青白くゆれる魂の火。\nMPを吸い取っていく。",
       "s": {
-        "hp": 1.95,
-        "mag": 0.61,
+        "hp": 1.55,
+        "mag": 0.7,
         "agi": 1.2,
-        "atk": 0.55
+        "atk": 0.63
       }
     },
     "jelly_4": {
       "desc": "兜をかぶった赤いゼリー。\nゼリーの群れを率いる。",
-      "why": "sim_zones --fit (game engine, pure group ×5 at T7): HP lost 6.5% → 9.2%, rounds 1.77 → 2.8 ／ desc: STYLE_JA §3/§7.4 (check_text T9/T10): かぶと → 兜",
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.77, rounds ×0.72 of the strength target) ／ desc: STYLE_JA §3/§7.4 (check_text T9/T10): かぶと → 兜",
       "s": {
         "hp": 2.5,
-        "atk": 0.7,
+        "atk": 0.66,
         "def": 1.1,
-        "mag": 0.67
+        "mag": 0.63
       }
     },
     "crystal_4": {
       "desc": "闇を吸いこんだ紫の水晶。\n近くの者のMPを奪う。",
-      "why": "sim_zones --fit (game engine, pure group ×5 at T8): HP lost 8.8% → 9.2%, rounds 2.73 → 2.8 ／ desc: STYLE_JA §3/§7.4 (check_text T9/T10): 魔力 → MP (魔力 only in item names)",
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.98, rounds ×1.00 of the strength target) ／ desc: STYLE_JA §3/§7.4 (check_text T9/T10): 魔力 → MP (魔力 only in item names)",
       "s": {
-        "mag": 0.78,
+        "mag": 0.81,
         "def": 1.2,
         "mdef": 1.2,
-        "hp": 2.5,
-        "atk": 0.59
+        "hp": 2.41,
+        "atk": 0.62
       }
     },
     "goblin_4": {
       "desc": "角兜の小鬼の隊長。\n手下を奮い立たせて戦う。",
-      "why": "sim_zones --fit (game engine, pure group ×3 at T7): HP lost 8.6% → 9.2%, rounds 2.67 → 2.8 ／ desc: STYLE_JA §3/§7.4 (check_text T9/T10): かぶと → 兜",
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.95, rounds ×0.94 of the strength target) ／ desc: STYLE_JA §3/§7.4 (check_text T9/T10): かぶと → 兜",
       "s": {
         "hp": 2.5,
-        "atk": 0.68,
+        "atk": 0.72,
         "def": 1.1,
-        "mag": 0.59
+        "mag": 0.63
       }
     },
     "automaton_4": {
       "desc": "兜を飾ったからくりの大将。\n塔の兵を指揮する。",
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 9.0% → 9.2%, rounds 2.81 → 2.8 ／ desc: STYLE_JA §3/§7.4 (check_text T9/T10): かぶと → 兜",
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.01 of the strength target) ／ desc: STYLE_JA §3/§7.4 (check_text T9/T10): かぶと → 兜",
       "s": {
-        "hp": 1.41,
+        "hp": 1.49,
         "def": 1.25,
-        "mag": 0.77,
-        "atk": 0.9
+        "mag": 0.73,
+        "atk": 0.84
       }
     },
     "wisp_4": {
       "s": {
-        "hp": 2.5,
+        "hp": 1.9,
         "mag": 0.3,
         "agi": 1.2,
         "atk": 0.3
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T8): HP lost 20.0% → 9.2%, rounds 2.42 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.70, rounds ×1.09 of the strength target)"
     },
     "bat_3": {
       "s": {
-        "hp": 1.66,
+        "hp": 1.61,
         "mag": 0.3,
         "agi": 1.3,
         "atk": 0.3
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T5): HP lost 12.1% → 9.2%, rounds 2.76 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.38, rounds ×1.07 of the strength target)"
     },
     "frostling_3": {
       "s": {
-        "hp": 1.63,
-        "mag": 0.32,
+        "hp": 1.61,
+        "mag": 0.3,
         "agi": 1.15,
-        "atk": 0.32
+        "atk": 0.3
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 9.0% → 9.2%, rounds 2.74 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.02, rounds ×1.00 of the strength target)"
     },
     "chaos_3": {
       "s": {
-        "hp": 2.15,
-        "atk": 0.48,
-        "mag": 0.48,
+        "hp": 1.55,
+        "atk": 0.54,
+        "mag": 0.54,
         "agi": 0.9
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T9): HP lost 10.1% → 9.2%, rounds 2.91 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.31, rounds ×1.17 of the strength target)"
     },
     "eyeball_4": {
       "s": {
-        "mag": 0.38,
+        "mag": 0.43,
         "mdef": 1.2,
         "agi": 1.1,
-        "hp": 2.02,
-        "atk": 0.38
+        "hp": 1.95,
+        "atk": 0.43
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T7): HP lost 9.4% → 9.2%, rounds 2.79 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.98, rounds ×1.01 of the strength target)"
     },
     "mimic_4": {
       "s": {
@@ -120,99 +120,99 @@
     },
     "ghost_5": {
       "s": {
-        "hp": 1.17,
-        "mag": 0.61,
+        "hp": 1.16,
+        "mag": 0.58,
         "mdef": 1.25,
-        "atk": 0.5
+        "atk": 0.48
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T9): HP lost 8.1% → 9.2%, rounds 2.49 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.03, rounds ×1.00 of the strength target)"
     },
     "eyeball_5": {
       "s": {
         "hp": 2.5,
-        "mag": 0.32,
+        "mag": 0.31,
         "mdef": 1.25,
         "agi": 1.05,
-        "atk": 0.32
+        "atk": 0.31
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T9): HP lost 6.7% → 9.2%, rounds 2.02 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.79, rounds ×0.77 of the strength target)"
     },
     "void_2": {
       "s": {
-        "hp": 2.25,
-        "atk": 0.41,
-        "mag": 0.41
-      },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T9): HP lost 8.7% → 9.2%, rounds 2.70 → 2.8"
-    },
-    "chimera_3": {
-      "s": {
-        "hp": 1.76,
+        "hp": 2.5,
         "atk": 0.3,
         "mag": 0.3
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T8): HP lost 9.1% → 9.2%, rounds 2.76 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.05, rounds ×0.95 of the strength target)"
     },
-    "imp_3": {
+    "chimera_3": {
       "s": {
-        "hp": 2.33,
-        "mag": 0.39,
-        "agi": 1.2,
-        "atk": 0.39
-      },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T5): HP lost 9.3% → 9.2%, rounds 2.92 → 2.8"
-    },
-    "gargoyle_3": {
-      "s": {
-        "hp": 1.64,
-        "atk": 0.41,
-        "mag": 0.41,
-        "def": 1.3
-      },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 9.5% → 9.2%, rounds 2.74 → 2.8"
-    },
-    "imp_4": {
-      "s": {
-        "mag": 0.39,
-        "agi": 1.2,
-        "hp": 2.5,
-        "atk": 0.39
-      },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T7): HP lost 6.6% → 9.2%, rounds 1.83 → 2.8"
-    },
-    "crystal_3": {
-      "s": {
-        "hp": 2.08,
-        "mag": 0.31,
-        "def": 1.2,
-        "atk": 0.31
-      },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T5): HP lost 9.5% → 9.2%, rounds 2.95 → 2.8"
-    },
-    "chimera_2": {
-      "s": {
-        "hp": 1.3,
-        "atk": 0.51,
-        "mag": 0.51
-      },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T4): HP lost 8.8% → 9.2%, rounds 2.79 → 2.8"
-    },
-    "chaos_2": {
-      "s": {
-        "hp": 2.08,
-        "atk": 0.47,
-        "mag": 0.47,
-        "agi": 0.9
-      },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T9): HP lost 8.4% → 9.2%, rounds 2.91 → 2.8"
-    },
-    "demon_3": {
-      "s": {
-        "hp": 1.79,
+        "hp": 1.86,
         "atk": 0.31,
         "mag": 0.31
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T9): HP lost 9.3% → 9.2%, rounds 3.00 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.97, rounds ×1.01 of the strength target)"
+    },
+    "imp_3": {
+      "s": {
+        "hp": 2.01,
+        "mag": 0.41,
+        "agi": 1.2,
+        "atk": 0.41
+      },
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.03, rounds ×1.04 of the strength target)"
+    },
+    "gargoyle_3": {
+      "s": {
+        "hp": 1.53,
+        "atk": 0.31,
+        "mag": 0.31,
+        "def": 1.3
+      },
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.08, rounds ×1.00 of the strength target)"
+    },
+    "imp_4": {
+      "s": {
+        "mag": 0.35,
+        "agi": 1.2,
+        "hp": 2.5,
+        "atk": 0.35
+      },
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.79, rounds ×0.75 of the strength target)"
+    },
+    "crystal_3": {
+      "s": {
+        "hp": 1.81,
+        "mag": 0.35,
+        "def": 1.2,
+        "atk": 0.35
+      },
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.96, rounds ×0.99 of the strength target)"
+    },
+    "chimera_2": {
+      "s": {
+        "hp": 1.2,
+        "atk": 0.53,
+        "mag": 0.53
+      },
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.11, rounds ×1.15 of the strength target)"
+    },
+    "chaos_2": {
+      "s": {
+        "hp": 1.7,
+        "atk": 0.4,
+        "mag": 0.4,
+        "agi": 0.9
+      },
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.18, rounds ×1.09 of the strength target)"
+    },
+    "demon_3": {
+      "s": {
+        "hp": 1.62,
+        "atk": 0.47,
+        "mag": 0.47
+      },
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.94, rounds ×1.05 of the strength target)"
     },
     "mole_4": {
       "s": {
@@ -222,15 +222,15 @@
         "agi": 0.85,
         "mag": 0.49
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 9.3% → 9.2%, rounds 3.12 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.03, rounds ×1.00 of the strength target)"
     },
     "void_3": {
       "s": {
-        "hp": 2.16,
-        "atk": 0.48,
-        "mag": 0.48
+        "hp": 1.59,
+        "atk": 0.47,
+        "mag": 0.47
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T9): HP lost 9.0% → 9.2%, rounds 2.77 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.10, rounds ×1.10 of the strength target)"
     },
     "salamander_5": {
       "s": {
@@ -238,61 +238,61 @@
         "atk": 0.3,
         "mag": 0.3
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T9): HP lost 10.4% → 9.2%, rounds 2.67 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.28, rounds ×0.93 of the strength target)"
     },
     "wisp_2": {
       "s": {
-        "hp": 0.94,
-        "mag": 0.4,
+        "hp": 0.87,
+        "mag": 0.46,
         "agi": 1.2,
-        "atk": 0.4
+        "atk": 0.46
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T3): HP lost 8.8% → 9.2%, rounds 2.76 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.96, rounds ×1.00 of the strength target)"
     },
     "void_1": {
       "s": {
-        "hp": 2.33,
-        "atk": 0.49,
-        "mag": 0.49
+        "hp": 2.2,
+        "atk": 0.47,
+        "mag": 0.47
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T9): HP lost 8.8% → 9.2%, rounds 2.63 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.05, rounds ×1.02 of the strength target)"
     },
     "merman_3": {
       "s": {
-        "hp": 1.83,
-        "atk": 0.45,
-        "mag": 0.45,
+        "hp": 1.78,
+        "atk": 0.41,
+        "mag": 0.41,
         "mdef": 1.2
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 8.4% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.02, rounds ×1.02 of the strength target)"
     },
     "bat_5": {
       "s": {
         "hp": 2.5,
-        "mag": 0.39,
+        "mag": 0.4,
         "agi": 1.25,
-        "atk": 0.39
+        "atk": 0.4
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T9): HP lost 6.5% → 9.2%, rounds 1.71 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.79, rounds ×0.68 of the strength target)"
     },
     "fairy_4": {
       "s": {
-        "mag": 0.3,
+        "mag": 0.35,
         "mdef": 1.2,
         "agi": 1.3,
-        "hp": 2.02,
-        "atk": 0.3
+        "hp": 2.28,
+        "atk": 0.35
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T8): HP lost 9.9% → 9.2%, rounds 2.82 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.87, rounds ×0.93 of the strength target)"
     },
     "frog_4": {
       "s": {
-        "hp": 2.29,
-        "mag": 0.48,
+        "hp": 2.19,
+        "mag": 0.43,
         "agi": 0.9,
-        "atk": 0.48
+        "atk": 0.43
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 8.5% → 9.2%, rounds 2.70 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.04, rounds ×1.01 of the strength target)"
     },
     "jelly_5": {
       "s": {
@@ -301,440 +301,440 @@
         "mdef": 1.2,
         "atk": 0.44
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T9): HP lost 7.2% → 9.2%, rounds 2.08 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.84, rounds ×0.83 of the strength target)"
     },
     "wolf_5": {
       "s": {
-        "hp": 1.49,
+        "hp": 1.56,
         "atk": 0.55,
         "agi": 1.2,
         "mag": 0.55
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T9): HP lost 9.1% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.01 of the strength target)"
     },
     "imp_2": {
       "s": {
-        "hp": 2.5,
-        "mag": 0.42,
+        "hp": 2.49,
+        "mag": 0.41,
         "agi": 1.2,
-        "atk": 0.42
+        "atk": 0.41
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T3): HP lost 8.5% → 9.2%, rounds 2.61 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.00, rounds ×1.00 of the strength target)"
     },
     "ghost_4": {
       "s": {
         "hp": 1.05,
-        "mag": 0.58,
+        "mag": 0.51,
         "mdef": 1.2,
-        "atk": 0.58
+        "atk": 0.51
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T7): HP lost 7.8% → 9.2%, rounds 2.32 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.87, rounds ×0.89 of the strength target)"
     },
     "bee_4": {
       "s": {
         "hp": 2.5,
-        "atk": 0.61,
+        "atk": 0.63,
         "agi": 1.35,
-        "mag": 0.61
+        "mag": 0.63
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T7): HP lost 6.5% → 9.2%, rounds 1.27 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.80, rounds ×0.60 of the strength target)"
     },
     "frostling_5": {
-      "s": {
-        "hp": 2.44,
-        "atk": 0.52,
-        "mag": 0.52,
-        "agi": 1.05
-      },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T9): HP lost 8.9% → 9.2%, rounds 2.81 → 2.8"
-    },
-    "owl_3": {
-      "s": {
-        "hp": 2.04,
-        "mag": 0.49,
-        "agi": 1.2,
-        "atk": 0.49
-      },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 8.3% → 9.2%, rounds 2.67 → 2.8"
-    },
-    "wolf_3": {
-      "s": {
-        "hp": 1.88,
-        "atk": 0.39,
-        "mag": 0.39,
-        "agi": 1.15
-      },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 8.5% → 9.2%, rounds 2.56 → 2.8"
-    },
-    "wyvern_3": {
-      "s": {
-        "hp": 2.5,
-        "atk": 0.46,
-        "mag": 0.46,
-        "agi": 1.15
-      },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T8): HP lost 8.2% → 9.2%, rounds 2.52 → 2.8"
-    },
-    "darkmage_4": {
       "s": {
         "hp": 2.5,
         "atk": 0.51,
         "mag": 0.51,
+        "agi": 1.05
+      },
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.00 of the strength target)"
+    },
+    "owl_3": {
+      "s": {
+        "hp": 2.01,
+        "mag": 0.36,
+        "agi": 1.2,
+        "atk": 0.36
+      },
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.09, rounds ×1.00 of the strength target)"
+    },
+    "wolf_3": {
+      "s": {
+        "hp": 1.77,
+        "atk": 0.38,
+        "mag": 0.38,
+        "agi": 1.15
+      },
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.00 of the strength target)"
+    },
+    "wyvern_3": {
+      "s": {
+        "hp": 2.5,
+        "atk": 0.51,
+        "mag": 0.51,
+        "agi": 1.15
+      },
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.97, rounds ×0.96 of the strength target)"
+    },
+    "darkmage_4": {
+      "s": {
+        "hp": 2.5,
+        "atk": 0.48,
+        "mag": 0.48,
         "def": 0.85,
         "mdef": 1.3
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 8.5% → 9.2%, rounds 2.67 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.95, rounds ×0.96 of the strength target)"
     },
     "wisp_1": {
       "s": {
-        "hp": 0.9,
-        "mag": 0.59,
+        "hp": 0.86,
+        "mag": 0.64,
         "agi": 1.2,
-        "atk": 0.56
+        "atk": 0.61
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T1): HP lost 9.6% → 9.2%, rounds 2.70 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.02, rounds ×0.99 of the strength target)"
     },
     "salamander_4": {
       "s": {
         "hp": 2.5,
-        "atk": 0.34,
-        "mag": 0.34
+        "atk": 0.37,
+        "mag": 0.37
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T7): HP lost 8.4% → 9.2%, rounds 2.56 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.90, rounds ×0.92 of the strength target)"
     },
     "plant_3": {
       "s": {
-        "hp": 2.29,
-        "mag": 0.32,
+        "hp": 2.36,
+        "mag": 0.3,
         "agi": 0.8,
-        "atk": 0.32
+        "atk": 0.3
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 9.1% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.13, rounds ×1.02 of the strength target)"
     },
     "yeti_2": {
       "s": {
-        "hp": 1.15,
-        "atk": 0.8,
+        "hp": 1.11,
+        "atk": 0.88,
         "def": 1.1,
         "agi": 0.8,
-        "mag": 0.65
+        "mag": 0.71
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T4): HP lost 9.3% → 9.2%, rounds 2.73 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.94, rounds ×0.97 of the strength target)"
     },
     "seabird_2": {
       "s": {
-        "hp": 2.16,
-        "mag": 0.4,
+        "hp": 2.32,
+        "mag": 0.44,
         "agi": 1.3,
-        "atk": 0.4
+        "atk": 0.44
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 9.9% → 9.2%, rounds 3.02 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.99, rounds ×1.00 of the strength target)"
     },
     "goblin_3": {
       "s": {
-        "hp": 1.78,
-        "atk": 0.44,
+        "hp": 2.04,
+        "atk": 0.42,
         "agi": 1.05,
-        "mag": 0.44
+        "mag": 0.42
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 8.7% → 9.2%, rounds 2.95 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×0.98 of the strength target)"
     },
     "chaos_1": {
       "s": {
-        "hp": 2.23,
-        "atk": 0.48,
+        "hp": 2.09,
+        "atk": 0.54,
         "agi": 0.9,
-        "mag": 0.48
+        "mag": 0.54
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T9): HP lost 9.3% → 9.2%, rounds 2.76 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.97, rounds ×1.01 of the strength target)"
     },
     "fairy_3": {
       "s": {
         "hp": 0.85,
-        "mag": 0.85,
+        "mag": 0.92,
         "agi": 1.3,
-        "atk": 0.71
+        "atk": 0.77
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T5): HP lost 9.9% → 9.2%, rounds 3.10 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.07, rounds ×1.06 of the strength target)"
     },
     "kraken_2": {
       "s": {
-        "hp": 1.21,
-        "atk": 0.76,
+        "hp": 1.15,
+        "atk": 0.92,
         "agi": 0.85,
-        "mag": 0.7
+        "mag": 0.85
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T4): HP lost 8.8% → 9.2%, rounds 2.79 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.05 of the strength target)"
     },
     "eyeball_3": {
       "s": {
-        "hp": 1.28,
-        "mag": 0.31,
+        "hp": 1.27,
+        "mag": 0.3,
         "agi": 1.1,
-        "atk": 0.31
+        "atk": 0.3
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T5): HP lost 10.0% → 9.2%, rounds 2.85 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.09, rounds ×1.00 of the strength target)"
     },
     "owl_4": {
       "s": {
-        "hp": 2.4,
-        "mag": 0.47,
+        "hp": 2.5,
+        "mag": 0.45,
         "mdef": 1.25,
         "agi": 1.1,
-        "atk": 0.47
+        "atk": 0.45
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 9.8% → 9.2%, rounds 2.91 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.94, rounds ×0.91 of the strength target)"
     },
     "fairy_2": {
       "s": {
-        "hp": 2.3,
-        "mag": 0.71,
+        "hp": 1.62,
+        "mag": 0.69,
         "mdef": 1.1,
         "agi": 1.3,
-        "atk": 0.59
+        "atk": 0.58
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T3): HP lost 9.5% → 9.2%, rounds 3.04 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.10, rounds ×1.12 of the strength target)"
     },
     "sandworm_3": {
       "s": {
-        "hp": 2.2,
-        "atk": 0.76,
+        "hp": 2.01,
+        "atk": 0.74,
         "def": 1.2,
         "agi": 0.65,
-        "mag": 0.65
+        "mag": 0.64
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T8): HP lost 8.7% → 9.2%, rounds 2.61 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.05, rounds ×1.05 of the strength target)"
     },
     "orc_3": {
       "s": {
         "hp": 1.79,
-        "atk": 0.78,
+        "atk": 0.8,
         "def": 1.05,
         "agi": 0.8,
-        "mag": 0.61
+        "mag": 0.62
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T8): HP lost 8.9% → 9.2%, rounds 2.91 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.99, rounds ×1.00 of the strength target)"
     },
     "chimera_1": {
       "s": {
         "hp": 1.15,
-        "atk": 0.89,
-        "mag": 0.81
+        "atk": 0.94,
+        "mag": 0.86
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T1): HP lost 9.1% → 9.2%, rounds 2.79 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.02, rounds ×1.07 of the strength target)"
     },
     "skeleton_3": {
       "s": {
-        "hp": 2.14,
-        "atk": 0.4,
-        "mag": 0.4
+        "hp": 2.22,
+        "atk": 0.35,
+        "mag": 0.35
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 10.5% → 9.2%, rounds 3.23 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.02, rounds ×0.99 of the strength target)"
     },
     "darkmage_3": {
       "s": {
-        "hp": 2.44,
-        "atk": 0.48,
-        "mag": 0.48,
+        "hp": 2.28,
+        "atk": 0.44,
+        "mag": 0.44,
         "def": 0.85,
         "mdef": 1.3,
         "agi": 1.15
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 8.4% → 9.2%, rounds 2.53 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.03, rounds ×1.01 of the strength target)"
     },
     "plant_5": {
       "s": {
-        "hp": 1.3,
-        "mag": 0.76,
+        "hp": 1.4,
+        "mag": 0.84,
         "mdef": 1.2,
         "agi": 0.8,
-        "atk": 0.64
+        "atk": 0.7
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T9): HP lost 8.9% → 9.2%, rounds 2.84 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.96, rounds ×0.96 of the strength target)"
     },
     "paper_4": {
       "s": {
         "hp": 2.5,
-        "atk": 0.54,
-        "mag": 0.54
+        "atk": 0.58,
+        "mag": 0.58
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T9): HP lost 8.5% → 9.2%, rounds 2.58 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.95, rounds ×0.95 of the strength target)"
     },
     "kraken_3": {
       "s": {
-        "hp": 1.67,
-        "atk": 0.59,
-        "mag": 0.62,
+        "hp": 1.25,
+        "atk": 0.67,
+        "mag": 0.7,
         "agi": 0.85
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T8): HP lost 8.7% → 9.2%, rounds 2.88 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.99, rounds ×1.01 of the strength target)"
     },
     "mummy_5": {
       "s": {
-        "hp": 2.19,
+        "hp": 2.5,
         "mag": 1.25,
         "mdef": 1.2,
         "agi": 0.85
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T9): HP lost 20.7% → 9.2%, rounds 2.88 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.83, rounds ×0.99 of the strength target)"
     },
     "treant_2": {
       "s": {
-        "hp": 1.16,
+        "hp": 1.05,
         "def": 1.2,
         "agi": 0.7,
-        "atk": 1.1
+        "atk": 1.12,
+        "mag": 1.02
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T3): HP lost 10.2% → 9.2%, rounds 2.88 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.00, rounds ×1.00 of the strength target)"
     },
     "orc_2": {
       "s": {
-        "hp": 1.36,
-        "atk": 0.88,
+        "hp": 1.29,
+        "atk": 1.07,
         "mdef": 0.85,
         "agi": 0.8,
-        "mag": 0.69
+        "mag": 0.83
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T4): HP lost 8.2% → 9.2%, rounds 2.58 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.91, rounds ×0.98 of the strength target)"
     },
     "skeleton_5": {
       "s": {
-        "hp": 2.16,
-        "atk": 0.61,
-        "mag": 0.58
+        "hp": 2.28,
+        "atk": 0.57,
+        "mag": 0.54
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T9): HP lost 8.9% → 9.2%, rounds 2.74 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.03, rounds ×0.99 of the strength target)"
     },
     "mammoth_3": {
       "s": {
         "hp": 1.45,
-        "atk": 0.89,
+        "atk": 0.78,
         "def": 1.25,
         "agi": 0.65,
-        "mag": 0.74
+        "mag": 0.65
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T8): HP lost 8.9% → 9.2%, rounds 2.76 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.98, rounds ×0.96 of the strength target)"
     },
     "mammoth_2": {
       "s": {
-        "hp": 1.11,
-        "atk": 1.07,
+        "hp": 0.97,
+        "atk": 1.15,
         "def": 1.3,
-        "agi": 0.65,
-        "mag": 0.95
+        "agi": 0.65
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T4): HP lost 9.4% → 9.2%, rounds 2.82 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.94, rounds ×1.02 of the strength target)"
     },
     "crystal_2": {
       "s": {
-        "hp": 2.16,
+        "hp": 1.64,
         "mag": 0.51,
         "def": 1.2,
         "atk": 0.51
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T3): HP lost 8.7% → 9.2%, rounds 2.70 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.08, rounds ×1.06 of the strength target)"
     },
     "wolf_4": {
       "s": {
-        "atk": 0.64,
+        "atk": 0.66,
         "agi": 1.25,
         "hp": 2.5,
-        "mag": 0.56
+        "mag": 0.57
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T7): HP lost 8.9% → 9.2%, rounds 2.77 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.93, rounds ×0.94 of the strength target)"
     },
     "bat_4": {
       "s": {
         "hp": 2.5,
-        "mag": 0.67,
+        "mag": 0.66,
         "agi": 1.35,
         "atk": 0.59
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T7): HP lost 6.5% → 9.2%, rounds 1.83 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.78, rounds ×0.74 of the strength target)"
     },
     "seabird_4": {
       "s": {
-        "hp": 2.33,
-        "mag": 0.56,
+        "hp": 2.24,
+        "mag": 0.5,
         "agi": 1.2,
-        "atk": 0.54
+        "atk": 0.49
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 8.4% → 9.2%, rounds 2.53 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.02, rounds ×1.00 of the strength target)"
     },
     "darkmage_2": {
       "s": {
-        "hp": 1.66,
-        "atk": 0.48,
-        "mag": 0.48,
+        "hp": 1.81,
+        "atk": 0.53,
+        "mag": 0.53,
         "def": 0.85,
         "mdef": 1.3
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 11.7% → 9.2%, rounds 3.33 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.95, rounds ×0.98 of the strength target)"
     },
     "yeti_3": {
       "s": {
         "hp": 1.35,
-        "atk": 0.69,
+        "atk": 0.72,
         "agi": 0.8,
-        "mag": 0.56
+        "mag": 0.58
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T8): HP lost 7.8% → 9.2%, rounds 2.34 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.94, rounds ×0.95 of the strength target)"
     },
     "frostling_2": {
       "s": {
-        "hp": 1.82,
-        "mag": 0.72,
+        "hp": 1.75,
+        "mag": 0.65,
         "agi": 1.1,
-        "atk": 0.59
+        "atk": 0.55
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 8.2% → 9.2%, rounds 2.63 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.99, rounds ×0.98 of the strength target)"
     },
     "golem_2": {
       "s": {
-        "atk": 1.19,
+        "atk": 1.35,
         "def": 1.4,
         "agi": 0.6,
-        "hp": 1.02,
-        "mag": 1.09
+        "hp": 0.92,
+        "mag": 1.24
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T4): HP lost 7.8% → 9.2%, rounds 2.61 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.99, rounds ×1.02 of the strength target)"
     },
     "scorpion_5": {
       "s": {
         "hp": 2.5,
-        "atk": 0.64,
+        "atk": 0.68,
         "def": 1.4,
         "agi": 0.9,
-        "mag": 0.57
+        "mag": 0.61
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T9): HP lost 8.6% → 9.2%, rounds 2.63 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.97, rounds ×0.99 of the strength target)"
     },
     "mole_3": {
       "s": {
-        "hp": 2.13,
-        "atk": 0.44,
+        "hp": 2.03,
+        "atk": 0.46,
         "agi": 0.95,
-        "mag": 0.44
+        "mag": 0.46
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 10.4% → 9.2%, rounds 2.91 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×0.98 of the strength target)"
     },
     "rat_3": {
       "s": {
-        "atk": 0.6,
+        "atk": 0.62,
         "def": 1.25,
         "hp": 2.5,
-        "mag": 0.55
+        "mag": 0.57
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T5): HP lost 7.1% → 9.2%, rounds 2.05 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.92, rounds ×0.92 of the strength target)"
     },
     "rat_2": {
       "s": {
-        "hp": 1.94,
-        "atk": 0.57,
+        "hp": 1.78,
+        "atk": 0.62,
         "agi": 1.2,
-        "mag": 0.57
+        "mag": 0.62
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T3): HP lost 8.4% → 9.2%, rounds 2.70 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.00, rounds ×1.02 of the strength target)"
     },
     "mimic_3": {
       "s": {
@@ -748,65 +748,65 @@
     },
     "bee_2": {
       "s": {
-        "hp": 2.5,
-        "atk": 0.38,
+        "hp": 2.3,
+        "atk": 0.44,
         "agi": 1.35,
-        "mag": 0.38
+        "mag": 0.44
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T3): HP lost 8.4% → 9.2%, rounds 2.54 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.94, rounds ×1.00 of the strength target)"
     },
     "merman_4": {
       "s": {
-        "hp": 2.16,
-        "atk": 0.63,
+        "hp": 2.1,
+        "atk": 0.64,
         "def": 1.25,
-        "mag": 0.56
+        "mag": 0.57
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 8.7% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.00 of the strength target)"
     },
     "armor_3": {
       "s": {
         "hp": 1.25,
-        "atk": 0.84,
+        "atk": 0.77,
         "def": 1.35,
-        "mag": 0.74
+        "mag": 0.68
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 7.9% → 9.2%, rounds 2.39 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.93, rounds ×0.93 of the strength target)"
     },
     "mammoth_1": {
       "s": {
         "atk": 1.1,
         "def": 1.2,
         "agi": 0.7,
-        "hp": 0.97
+        "hp": 0.93
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T1): HP lost 8.7% → 9.2%, rounds 2.79 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.76, rounds ×0.97 of the strength target)"
     },
     "armor_4": {
       "s": {
         "hp": 1.3,
-        "atk": 0.81,
+        "atk": 0.79,
         "def": 1.35,
-        "mag": 0.67
+        "mag": 0.65
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 8.4% → 9.2%, rounds 2.56 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.89, rounds ×0.91 of the strength target)"
     },
     "wyvern_1": {
       "s": {
-        "hp": 1.14,
-        "atk": 0.84,
-        "agi": 1.1,
-        "mag": 0.78
+        "hp": 1.35,
+        "atk": 1.1,
+        "agi": 1.1
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T1): HP lost 9.0% → 9.2%, rounds 2.82 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.92, rounds ×0.95 of the strength target)"
     },
     "ghost_2": {
       "s": {
         "hp": 0.64,
-        "mag": 1.15,
-        "mdef": 1.2
+        "mag": 1.14,
+        "mdef": 1.2,
+        "atk": 0.99
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 9.0% → 9.2%, rounds 2.95 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.00, rounds ×0.99 of the strength target)"
     },
     "lizardman_4": {
       "s": {
@@ -815,81 +815,80 @@
         "def": 1.1,
         "mag": 0.55
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 8.8% → 9.2%, rounds 2.70 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.99, rounds ×0.99 of the strength target)"
     },
     "salamander_2": {
       "s": {
-        "atk": 0.42,
-        "mag": 0.42,
-        "hp": 1.74
+        "atk": 0.4,
+        "mag": 0.4,
+        "hp": 1.78
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 9.1% → 9.2%, rounds 3.02 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.00 of the strength target)"
     },
     "sandworm_2": {
       "s": {
         "hp": 1.25,
         "def": 1.3,
         "agi": 0.65,
-        "atk": 0.96,
-        "mag": 0.96
+        "atk": 0.86,
+        "mag": 0.86
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T4): HP lost 9.3% → 9.2%, rounds 2.91 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.12, rounds ×1.10 of the strength target)"
     },
     "skeleton_2": {
       "s": {
-        "atk": 0.78,
+        "atk": 0.73,
         "agi": 1.05,
-        "hp": 1.76,
-        "mag": 0.73
+        "hp": 1.62,
+        "mag": 0.68
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 8.6% → 9.2%, rounds 2.88 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.03, rounds ×1.02 of the strength target)"
     },
     "bee_3": {
       "s": {
-        "hp": 2.5,
+        "hp": 2.35,
         "agi": 1.35,
-        "atk": 0.67,
-        "mag": 0.67
+        "atk": 0.7,
+        "mag": 0.7
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T5): HP lost 9.0% → 9.2%, rounds 2.76 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.02, rounds ×1.02 of the strength target)"
     },
     "beetle_3": {
       "s": {
-        "mag": 0.48,
+        "mag": 0.54,
         "def": 1.4,
         "agi": 0.85,
-        "hp": 2.5,
-        "atk": 0.48
+        "hp": 2.3,
+        "atk": 0.54
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T5): HP lost 8.1% → 9.2%, rounds 2.42 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.03, rounds ×1.02 of the strength target)"
     },
     "cactus_4": {
       "s": {
         "hp": 2.5,
-        "atk": 0.72,
+        "atk": 0.66,
         "def": 1.2,
         "agi": 0.85,
-        "mag": 0.62
+        "mag": 0.56
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 8.1% → 9.2%, rounds 2.46 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.85, rounds ×0.84 of the strength target)"
     },
     "goblin_5": {
       "s": {
-        "hp": 1.5,
-        "atk": 0.88,
+        "hp": 1.44,
+        "atk": 0.89,
         "def": 1.1,
-        "mag": 0.75
+        "mag": 0.76
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T9): HP lost 8.5% → 9.2%, rounds 2.63 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.02, rounds ×1.04 of the strength target)"
     },
     "ghost_1": {
       "s": {
-        "hp": 0.68,
-        "mag": 1.08,
-        "mdef": 1.2,
-        "atk": 0.99
+        "hp": 0.61,
+        "mag": 1.1,
+        "mdef": 1.2
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 8.9% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.00, rounds ×1.01 of the strength target)"
     },
     "mimic_2": {
       "s": {
@@ -904,19 +903,19 @@
     "doll_2": {
       "s": {
         "agi": 1.2,
-        "atk": 0.75,
-        "mag": 0.75
+        "atk": 0.69,
+        "mag": 0.69
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 10.7% → 9.2%, rounds 3.16 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.02, rounds ×1.01 of the strength target)"
     },
     "jelly_2": {
       "s": {
-        "hp": 2.35,
-        "mag": 0.88,
+        "hp": 2.17,
+        "mag": 1.01,
         "agi": 0.9,
-        "atk": 0.82
+        "atk": 0.94
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T3): HP lost 8.5% → 9.2%, rounds 2.73 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.04 of the strength target)"
     },
     "jelly_3": {
       "s": {
@@ -924,7 +923,7 @@
         "atk": 0.6,
         "mag": 0.6
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T5): HP lost 7.6% → 9.2%, rounds 2.33 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.90, rounds ×0.89 of the strength target)"
     },
     "mimic_1": {
       "s": {
@@ -940,99 +939,100 @@
       "s": {
         "def": 1.35,
         "agi": 0.8,
-        "hp": 1.07
+        "hp": 0.99
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 6.1% → 9.2%, rounds 2.67 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.88, rounds ×1.06 of the strength target)"
     },
     "book_1": {
       "s": {
         "hp": 2.5,
-        "atk": 0.49,
+        "atk": 0.6,
         "agi": 1.1,
-        "mag": 0.49
+        "mag": 0.6
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T8): HP lost 8.4% → 9.2%, rounds 2.54 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.95, rounds ×0.97 of the strength target)"
     },
     "wyvern_2": {
       "s": {
         "hp": 2.5,
-        "atk": 0.62,
+        "atk": 0.69,
         "agi": 1.15,
-        "mag": 0.56
+        "mag": 0.62
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T4): HP lost 8.8% → 9.2%, rounds 2.73 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.99, rounds ×0.98 of the strength target)"
     },
     "demon_2": {
       "s": {
-        "hp": 2.07,
-        "atk": 0.84,
+        "hp": 1.92,
+        "atk": 1.01,
         "def": 1.15,
-        "mag": 0.67
+        "mag": 0.8
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T9): HP lost 9.4% → 9.2%, rounds 2.76 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.97, rounds ×1.01 of the strength target)"
     },
     "automaton_3": {
       "s": {
-        "mag": 0.77,
+        "mag": 0.71,
         "def": 1.1,
         "mdef": 1.2,
-        "hp": 1.48,
-        "atk": 0.62
+        "hp": 1.45,
+        "atk": 0.57
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 7.7% → 9.2%, rounds 2.56 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.00, rounds ×1.00 of the strength target)"
     },
     "imp_5": {
       "s": {
         "hp": 2.5,
-        "mag": 0.93,
+        "mag": 0.98,
         "mdef": 1.25,
         "agi": 1.15,
-        "atk": 0.71
+        "atk": 0.74
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T9): HP lost 7.1% → 9.2%, rounds 2.08 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.82, rounds ×0.82 of the strength target)"
     },
     "merman_2": {
       "s": {
-        "hp": 1.8,
-        "atk": 0.65,
-        "mag": 0.58
+        "hp": 1.71,
+        "atk": 0.62,
+        "mag": 0.55
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 8.3% → 9.2%, rounds 2.70 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.00 of the strength target)"
     },
     "mummy_3": {
       "s": {
         "atk": 0.8,
         "mag": 1.3,
         "mdef": 1.3,
-        "hp": 1.59
+        "hp": 1.77
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 10.2% → 9.2%, rounds 2.95 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.14, rounds ×0.98 of the strength target)"
     },
     "bee_5": {
       "s": {
         "hp": 2.5,
-        "atk": 0.43,
-        "mag": 0.43,
+        "atk": 0.66,
+        "mag": 0.66,
         "agi": 1.2
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T9): HP lost 8.7% → 9.2%, rounds 2.64 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.69, rounds ×0.74 of the strength target)"
     },
     "plant_4": {
       "s": {
-        "hp": 1.26,
-        "mag": 1.13,
-        "agi": 0.85
+        "hp": 1.34,
+        "mag": 1.04,
+        "agi": 0.85,
+        "atk": 0.92
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T7): HP lost 9.0% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.99, rounds ×0.98 of the strength target)"
     },
     "mushroom_4": {
       "s": {
-        "hp": 2.07,
+        "hp": 1.73,
         "mag": 1.2,
         "mdef": 1.2,
         "agi": 0.6
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T8): HP lost 10.9% → 9.2%, rounds 2.76 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.07, rounds ×1.04 of the strength target)"
     },
     "bat_2": {
       "s": {
@@ -1041,26 +1041,26 @@
         "atk": 0.7,
         "mag": 0.7
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T3): HP lost 8.4% → 9.2%, rounds 2.51 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.96, rounds ×0.96 of the strength target)"
     },
     "bee_1": {
       "s": {
-        "hp": 1.27,
+        "hp": 1.23,
         "agi": 1.35,
-        "atk": 0.66,
-        "mag": 0.66
+        "atk": 0.77,
+        "mag": 0.77
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T1): HP lost 9.2% → 9.2%, rounds 2.85 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.93, rounds ×0.99 of the strength target)"
     },
     "cactus_2": {
       "s": {
-        "hp": 1.88,
-        "atk": 0.63,
+        "hp": 1.86,
+        "atk": 0.67,
         "def": 1.1,
         "agi": 0.85,
-        "mag": 0.61
+        "mag": 0.65
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 8.3% → 9.2%, rounds 2.67 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.00, rounds ×1.01 of the strength target)"
     },
     "sandworm_1": {
       "s": {
@@ -1068,42 +1068,43 @@
         "hp": 1.2,
         "atk": 1.05
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T1): HP lost 9.9% → 9.2%, rounds 3.25 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.10, rounds ×1.15 of the strength target)"
     },
     "mushroom_3": {
       "s": {
-        "hp": 1.76,
+        "hp": 1.61,
         "agi": 0.7,
-        "mag": 1.14,
-        "atk": 1.03
+        "mag": 1.23,
+        "atk": 1.11
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T5): HP lost 9.4% → 9.2%, rounds 2.76 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.00, rounds ×1.01 of the strength target)"
     },
     "treant_1": {
       "s": {
         "def": 1.2,
         "agi": 0.7,
-        "atk": 1.5,
-        "mag": 1.5
+        "atk": 1.63,
+        "mag": 1.63,
+        "hp": 0.88
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T1): HP lost 8.6% → 9.2%, rounds 2.88 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.02, rounds ×1.03 of the strength target)"
     },
     "lizardman_3": {
       "s": {
-        "hp": 1.77,
-        "atk": 0.57,
-        "mag": 0.92,
+        "hp": 1.69,
+        "atk": 0.71,
+        "mag": 1.15,
         "mdef": 1.2
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 9.9% → 9.2%, rounds 2.88 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.97, rounds ×1.00 of the strength target)"
     },
     "mole_1": {
       "s": {
-        "hp": 1.28,
+        "hp": 1.2,
         "atk": 1.05,
         "agi": 0.9
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 8.4% → 9.2%, rounds 2.77 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.04, rounds ×1.07 of the strength target)"
     },
     "yeti_1": {
       "s": {
@@ -1111,43 +1112,43 @@
         "atk": 1.15,
         "agi": 0.8
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T1): HP lost 8.5% → 9.2%, rounds 2.79 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.72, rounds ×0.97 of the strength target)"
     },
     "scorpion_4": {
       "s": {
         "hp": 2.5,
-        "atk": 0.7,
+        "atk": 0.66,
         "def": 1.2,
-        "mag": 0.61
+        "mag": 0.57
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T7): HP lost 8.1% → 9.2%, rounds 2.49 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.90, rounds ×0.90 of the strength target)"
     },
     "demon_1": {
       "s": {
-        "hp": 2.1,
-        "atk": 0.81,
-        "mag": 0.73
+        "hp": 2.02,
+        "atk": 0.88,
+        "mag": 0.8
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T8): HP lost 9.6% → 9.2%, rounds 2.91 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.02, rounds ×1.06 of the strength target)"
     },
     "treant_3": {
       "s": {
-        "hp": 1.25,
+        "hp": 1.13,
         "def": 1.25,
         "mdef": 1.1,
         "agi": 0.65,
-        "atk": 1.08,
-        "mag": 1.08
+        "atk": 1.32,
+        "mag": 1.32
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T5): HP lost 9.0% → 9.2%, rounds 2.79 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.03, rounds ×1.04 of the strength target)"
     },
     "automaton_1": {
       "s": {
-        "hp": 1.07,
         "def": 1.2,
-        "agi": 0.95
+        "agi": 0.95,
+        "hp": 1.05
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 8.5% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.05, rounds ×1.06 of the strength target)"
     },
     "beetle_4": {
       "s": {
@@ -1157,217 +1158,218 @@
         "atk": 0.7,
         "mag": 0.7
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T8): HP lost 7.3% → 9.2%, rounds 2.17 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.92, rounds ×0.92 of the strength target)"
     },
     "gargoyle_2": {
       "s": {
-        "hp": 1.28,
+        "hp": 1.18,
         "def": 1.35,
-        "mag": 0.88,
-        "atk": 0.94
+        "mag": 0.73,
+        "atk": 0.77
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 9.0% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.00, rounds ×0.98 of the strength target)"
     },
     "snake_4": {
       "s": {
         "hp": 2.5,
-        "atk": 0.83,
+        "atk": 0.68,
         "agi": 0.95,
-        "mag": 0.71
+        "mag": 0.59
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 7.0% → 9.2%, rounds 2.07 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.94, rounds ×0.90 of the strength target)"
     },
     "kraken_1": {
       "s": {
-        "hp": 1.15,
+        "hp": 0.96,
         "agi": 0.85
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T1): HP lost 8.4% → 9.2%, rounds 3.40 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.95, rounds ×1.23 of the strength target)"
     },
     "crystal_1": {
       "s": {
-        "hp": 1.24,
-        "mag": 0.77,
+        "mag": 0.79,
         "def": 1.2,
-        "atk": 0.66
+        "atk": 0.68,
+        "hp": 0.93
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T1): HP lost 8.2% → 9.2%, rounds 2.70 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.09, rounds ×1.08 of the strength target)"
     },
     "mummy_4": {
       "s": {
-        "hp": 2.42,
+        "hp": 2.5,
         "atk": 1.2,
         "def": 1.15,
         "agi": 0.85
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T7): HP lost 11.2% → 9.2%, rounds 2.77 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.15, rounds ×0.93 of the strength target)"
     },
     "mole_2": {
       "s": {
-        "hp": 1.58,
-        "atk": 0.72,
+        "hp": 1.6,
+        "atk": 0.75,
         "agi": 0.9,
-        "mag": 0.63
+        "mag": 0.66
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 9.0% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.00, rounds ×0.99 of the strength target)"
     },
     "imp_1": {
       "s": {
-        "hp": 1.36,
-        "atk": 0.69,
+        "hp": 1.38,
+        "atk": 0.73,
         "agi": 1.2,
-        "mag": 0.66
+        "mag": 0.7
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T1): HP lost 8.8% → 9.2%, rounds 2.76 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.02 of the strength target)"
     },
     "armor_2": {
       "s": {
-        "hp": 0.93,
+        "hp": 0.96,
         "def": 1.4,
         "agi": 0.8
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 8.2% → 9.2%, rounds 3.26 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.94, rounds ×1.06 of the strength target)"
     },
     "plant_2": {
       "s": {
-        "hp": 1.91,
-        "atk": 1.09,
+        "hp": 1.8,
         "agi": 0.8,
-        "mag": 0.98
+        "mag": 0.88,
+        "atk": 0.98
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 7.6% → 9.2%, rounds 2.67 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.00, rounds ×1.00 of the strength target)"
     },
     "book_3": {
       "s": {
-        "hp": 2.5,
-        "mag": 0.78,
+        "hp": 2.44,
+        "mag": 0.99,
         "mdef": 1.3,
-        "atk": 0.59
+        "atk": 0.74
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T9): HP lost 8.1% → 9.2%, rounds 2.45 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.98, rounds ×1.03 of the strength target)"
     },
     "lizardman_2": {
       "s": {
-        "hp": 1.74,
-        "atk": 0.82,
-        "mag": 0.73
+        "hp": 1.75,
+        "atk": 0.77,
+        "mag": 0.69
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 8.9% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.00, rounds ×1.00 of the strength target)"
     },
     "rat_4": {
       "s": {
-        "hp": 1.75,
-        "atk": 0.76,
-        "mag": 0.69
+        "hp": 1.61,
+        "atk": 0.8,
+        "mag": 0.73
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T8): HP lost 9.0% → 9.2%, rounds 2.82 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.02, rounds ×1.03 of the strength target)"
     },
     "crab_3": {
       "s": {
         "def": 1.4,
-        "hp": 1.28,
-        "mag": 1.12,
-        "atk": 1.02
+        "hp": 1.44,
+        "mag": 1.1
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 9.1% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.04, rounds ×0.98 of the strength target)"
     },
     "wolf_2": {
       "s": {
-        "atk": 0.81,
+        "atk": 0.78,
         "agi": 1.15,
-        "hp": 1.61,
-        "mag": 0.74
+        "hp": 1.68,
+        "mag": 0.71
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 9.7% → 9.2%, rounds 2.98 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.02 of the strength target)"
     },
     "automaton_2": {
       "s": {
         "def": 1.15,
-        "hp": 1.32,
-        "atk": 0.95,
-        "mag": 0.95
+        "hp": 1.27,
+        "atk": 0.84,
+        "mag": 0.84
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 8.0% → 9.2%, rounds 2.67 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.07, rounds ×1.03 of the strength target)"
     },
     "frog_3": {
       "s": {
-        "hp": 2.22,
+        "hp": 2.2,
         "atk": 0.87,
         "agi": 0.85,
         "mag": 0.75
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 8.4% → 9.2%, rounds 2.49 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.00 of the strength target)"
     },
     "frostling_1": {
       "s": {
-        "hp": 1.04,
-        "mag": 0.64,
+        "hp": 1.11,
+        "mag": 0.62,
         "agi": 1.1,
-        "atk": 0.59
+        "atk": 0.57
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 9.3% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.02, rounds ×0.99 of the strength target)"
     },
     "salamander_3": {
       "s": {
-        "hp": 1.87,
-        "atk": 0.85,
+        "hp": 1.69,
+        "atk": 0.72,
         "def": 1.15,
-        "mag": 0.73
+        "mag": 0.62
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 7.0% → 9.2%, rounds 2.35 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.00 of the strength target)"
     },
     "spider_4": {
       "s": {
-        "hp": 1.56,
+        "hp": 1.83,
         "agi": 1.1,
-        "atk": 1.1,
-        "mag": 1.1
+        "atk": 1.03,
+        "mag": 1.03
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 8.7% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.02, rounds ×0.95 of the strength target)"
     },
     "gargoyle_1": {
       "s": {
         "hp": 1.05,
         "def": 1.3,
-        "agi": 0.95
+        "agi": 0.95,
+        "atk": 0.98,
+        "mag": 0.98
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 8.7% → 9.2%, rounds 3.09 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.17, rounds ×1.22 of the strength target)"
     },
     "doll_3": {
       "s": {
-        "hp": 1.49,
-        "mag": 1.17,
+        "hp": 1.55,
+        "mag": 1.11,
         "mdef": 1.1,
-        "atk": 0.99
+        "atk": 0.94
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 9.5% → 9.2%, rounds 2.91 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.03, rounds ×0.98 of the strength target)"
     },
     "plant_1": {
       "s": {
-        "hp": 1.34,
+        "hp": 1.25,
         "atk": 1.05,
         "agi": 0.8
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 7.6% → 9.2%, rounds 2.84 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.84, rounds ×1.01 of the strength target)"
     },
     "wolf_1": {
       "s": {
-        "atk": 0.98,
+        "atk": 0.99,
         "agi": 1.15,
-        "hp": 1.23,
-        "mag": 0.93
+        "hp": 1.28,
+        "mag": 0.94
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 9.5% → 9.2%, rounds 2.88 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.97, rounds ×0.98 of the strength target)"
     },
     "golem_1": {
       "s": {
-        "hp": 0.8,
-        "atk": 1.91,
+        "hp": 0.87,
+        "atk": 2.44,
         "def": 1.3,
         "agi": 0.65,
-        "mag": 1.83
+        "mag": 2.37
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T1): HP lost 9.0% → 9.2%, rounds 2.79 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.03, rounds ×1.00 of the strength target)"
     },
     "treant_4": {
       "s": {
@@ -1376,48 +1378,48 @@
         "def": 1.25,
         "agi": 0.6
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T8): HP lost 8.1% → 9.2%, rounds 2.37 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.94, rounds ×0.91 of the strength target)"
     },
     "golem_3": {
       "s": {
-        "hp": 1.4,
-        "atk": 1.18,
-        "mag": 1.23,
+        "hp": 1.39,
+        "atk": 1.22,
+        "mag": 1.27,
         "def": 1.35,
         "agi": 0.6
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T8): HP lost 8.4% → 9.2%, rounds 2.52 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.01 of the strength target)"
     },
     "seabird_3": {
       "s": {
         "hp": 2.5,
-        "atk": 0.8,
+        "atk": 0.72,
         "agi": 1.35,
-        "mag": 0.77
+        "mag": 0.7
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 8.7% → 9.2%, rounds 2.67 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.97, rounds ×0.96 of the strength target)"
     },
     "rat_1": {
       "s": {
-        "hp": 1.54,
+        "hp": 1.31,
         "agi": 1.2,
-        "atk": 0.74,
-        "mag": 0.74
+        "atk": 0.78,
+        "mag": 0.78
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T1): HP lost 8.5% → 9.2%, rounds 2.79 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.90, rounds ×0.98 of the strength target)"
     },
     "lizardman_1": {
       "s": {
-        "hp": 1.05,
-        "mag": 0.94
+        "hp": 1.12,
+        "atk": 1.05
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 9.0% → 9.2%, rounds 2.84 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.97, rounds ×0.99 of the strength target)"
     },
     "doll_1": {
       "s": {
         "def": 1.1
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 7.7% → 9.2%, rounds 2.84 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.02, rounds ×1.06 of the strength target)"
     },
     "orc_1": {
       "s": {
@@ -1427,270 +1429,271 @@
         "mdef": 0.85,
         "agi": 0.8
       },
-      "why": "sim_zones --fit (game engine, pure group ×2 at T1): HP lost 7.9% → 9.2%, rounds 2.85 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.71, rounds ×1.02 of the strength target)"
     },
     "snake_1": {
       "s": {
-        "atk": 0.91,
+        "atk": 0.93,
         "agi": 1.05,
-        "hp": 1.31,
-        "mag": 0.88
+        "hp": 1.35,
+        "mag": 0.9
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 8.8% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.93, rounds ×0.98 of the strength target)"
     },
     "book_2": {
       "s": {
-        "mag": 0.92,
+        "mag": 1.16,
         "mdef": 1.2,
-        "hp": 2.41,
-        "atk": 0.72
+        "hp": 1.69,
+        "atk": 0.91
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T8): HP lost 9.2% → 9.2%, rounds 2.76 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.11, rounds ×1.14 of the strength target)"
     },
     "cactus_3": {
       "s": {
-        "hp": 1.51,
+        "hp": 1.35,
         "agi": 0.85,
         "mag": 1.1
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 8.0% → 9.2%, rounds 2.49 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.91, rounds ×0.98 of the strength target)"
     },
     "goblin_2": {
       "s": {
-        "hp": 1.78,
-        "atk": 0.78,
-        "mag": 0.69
+        "hp": 1.77,
+        "atk": 0.82,
+        "mag": 0.73
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 10.5% → 9.2%, rounds 2.91 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.00, rounds ×1.03 of the strength target)"
     },
     "merman_1": {
       "s": {
-        "hp": 1.26,
-        "atk": 1.05,
-        "mag": 0.98
+        "hp": 1.19,
+        "atk": 0.96,
+        "mag": 0.89
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 9.0% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.06, rounds ×1.01 of the strength target)"
     },
     "ghost_3": {
       "s": {
         "mag": 1.2,
         "mdef": 1.2
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 7.4% → 9.2%, rounds 2.60 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.98, rounds ×1.00 of the strength target)"
     },
     "bat_1": {
       "s": {
-        "hp": 1.47,
+        "hp": 1.42,
         "agi": 1.4,
-        "atk": 0.79,
-        "mag": 0.79
+        "atk": 0.71,
+        "mag": 0.71
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T1): HP lost 8.9% → 9.2%, rounds 2.79 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.07, rounds ×1.03 of the strength target)"
     },
     "goblin_1": {
       "s": {
-        "atk": 1.1,
-        "hp": 1.26
+        "atk": 1.06,
+        "hp": 1.28,
+        "mag": 0.96
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 8.0% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.08, rounds ×1.02 of the strength target)"
     },
     "crab_4": {
       "s": {
-        "hp": 1.99,
+        "hp": 2,
         "def": 1.6,
         "agi": 0.6
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 10.3% → 9.2%, rounds 2.84 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.05, rounds ×1.00 of the strength target)"
     },
     "skeleton_1": {
       "s": {
-        "atk": 0.99,
-        "hp": 1.31,
-        "mag": 0.95
+        "atk": 1.05,
+        "hp": 1.15
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 9.1% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.84, rounds ×0.99 of the strength target)"
     },
     "frog_2": {
       "s": {
-        "hp": 2.27,
-        "atk": 0.79,
+        "hp": 2.03,
+        "atk": 0.71,
         "agi": 1.05,
-        "mag": 0.75
+        "mag": 0.67
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 9.0% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.04, rounds ×1.02 of the strength target)"
     },
     "doll_4": {
       "s": {
-        "hp": 1.57,
-        "mag": 1.17,
+        "hp": 1.41,
+        "mag": 0.95,
         "mdef": 1.2,
         "agi": 1.05,
-        "atk": 0.93
+        "atk": 0.74
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 9.5% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.05, rounds ×1.00 of the strength target)"
     },
     "salamander_1": {
       "s": {
         "agi": 1.05,
-        "hp": 1.38,
-        "mag": 0.99,
+        "hp": 1.39,
         "atk": 1.05
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 8.2% → 9.2%, rounds 2.63 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.99, rounds ×1.02 of the strength target)"
     },
     "spider_2": {
       "s": {
-        "atk": 0.83,
+        "atk": 0.84,
         "agi": 1.1,
-        "hp": 1.74,
-        "mag": 0.78
+        "hp": 1.7,
+        "mag": 0.79
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 9.5% → 9.2%, rounds 2.91 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.00 of the strength target)"
     },
     "beetle_2": {
       "s": {
         "def": 1.6,
         "agi": 0.8,
-        "hp": 2.2,
-        "atk": 0.82,
-        "mag": 0.82
+        "hp": 1.66,
+        "atk": 0.96,
+        "mag": 0.96
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T3): HP lost 8.9% → 9.2%, rounds 2.79 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.10, rounds ×1.10 of the strength target)"
     },
     "scorpion_2": {
       "s": {
-        "atk": 0.88,
+        "atk": 0.86,
         "def": 1.2,
-        "hp": 1.77,
-        "mag": 0.86
+        "hp": 1.65,
+        "mag": 0.84
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 7.7% → 9.2%, rounds 2.60 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.00 of the strength target)"
     },
     "paper_2": {
       "s": {
         "agi": 1.1,
-        "hp": 2.45,
+        "hp": 1.9,
         "atk": 1.05
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 8.1% → 9.2%, rounds 2.63 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.82, rounds ×1.01 of the strength target)"
     },
     "gargoyle_4": {
       "s": {
-        "hp": 1.69,
+        "hp": 1.61,
         "atk": 1.15,
         "def": 1.35
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 7.7% → 9.2%, rounds 2.84 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.99, rounds ×1.00 of the strength target)"
     },
     "skeleton_4": {
       "s": {
         "hp": 2.5,
-        "atk": 0.9,
-        "mag": 0.9
+        "atk": 0.87,
+        "mag": 0.87
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T7): HP lost 8.6% → 9.2%, rounds 2.60 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.92, rounds ×0.92 of the strength target)"
     },
     "spider_3": {
       "s": {
-        "atk": 1.01,
+        "atk": 1.1,
         "agi": 1.2,
-        "hp": 1.85,
-        "mag": 0.92
+        "hp": 1.74
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 8.9% → 9.2%, rounds 2.67 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.95, rounds ×0.98 of the strength target)"
     },
     "paper_3": {
       "s": {
-        "hp": 2.5,
-        "atk": 0.92,
+        "hp": 2.21,
+        "atk": 1.1,
         "def": 1.2,
-        "agi": 0.85,
-        "mag": 0.82
+        "agi": 0.85
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T7): HP lost 8.7% → 9.2%, rounds 2.67 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.96, rounds ×1.05 of the strength target)"
     },
     "scorpion_3": {
       "s": {
-        "hp": 1.67,
+        "hp": 1.63,
         "def": 1.5,
-        "agi": 0.85
+        "agi": 0.85,
+        "atk": 0.93,
+        "mag": 0.93
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 7.1% → 9.2%, rounds 2.39 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.97, rounds ×0.97 of the strength target)"
     },
     "cactus_1": {
       "s": {
-        "hp": 1.14,
+        "hp": 1.17,
         "def": 1.1,
         "agi": 0.85
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 8.8% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.88, rounds ×1.01 of the strength target)"
     },
     "seabird_1": {
       "s": {
-        "hp": 1.42,
+        "hp": 1.45,
         "agi": 1.3,
-        "atk": 0.97,
-        "mag": 0.97
+        "atk": 0.91,
+        "mag": 0.91
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 9.7% → 9.2%, rounds 2.95 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.03, rounds ×1.01 of the strength target)"
     },
     "scorpion_1": {
       "s": {
         "def": 1.2,
-        "hp": 1.18
+        "hp": 1.14,
+        "atk": 0.9,
+        "mag": 0.9
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 8.8% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.09, rounds ×1.04 of the strength target)"
     },
     "paper_1": {
       "s": {
-        "hp": 2.5,
+        "hp": 1.98,
         "agi": 1.1,
         "mag": 1.1
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T3): HP lost 8.2% → 9.2%, rounds 2.54 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.94, rounds ×1.09 of the strength target)"
     },
     "spider_1": {
       "s": {
         "agi": 1.1,
-        "hp": 1.29
+        "hp": 1.24
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 6.2% → 9.2%, rounds 2.77 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.81, rounds ×0.99 of the strength target)"
     },
     "fairy_1": {
       "s": {
-        "hp": 1.54,
-        "mag": 0.95,
+        "hp": 1.24,
         "agi": 1.4,
-        "atk": 0.88
+        "atk": 0.93,
+        "mag": 1.01
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T1): HP lost 9.5% → 9.2%, rounds 2.85 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.04, rounds ×1.05 of the strength target)"
     },
     "scribe_3": {
       "s": {
-        "hp": 1.61,
-        "mag": 1.88,
+        "hp": 1.34,
+        "mag": 2.13,
         "mdef": 1.3,
-        "atk": 1.46
+        "atk": 1.66
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T9): HP lost 6.9% → 9.2%, rounds 2.49 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.13, rounds ×1.23 of the strength target)"
     },
     "darkmage_1": {
       "s": {
-        "hp": 1.25,
+        "hp": 1.3,
         "atk": 0.58,
-        "mag": 0.98,
+        "mag": 0.97,
         "def": 0.85,
         "mdef": 1.3
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 8.8% → 9.2%, rounds 2.88 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.96, rounds ×0.98 of the strength target)"
     },
     "snake_3": {
       "s": {
-        "hp": 1.87,
+        "hp": 1.85,
         "mag": 1.1,
         "agi": 1.05
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T5): HP lost 6.8% → 9.2%, rounds 2.63 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.92, rounds ×1.02 of the strength target)"
     },
     "eyeball_1": {
       "s": {
@@ -1698,25 +1701,24 @@
         "mag": 1.1,
         "agi": 1.1
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T1): HP lost 8.3% → 9.2%, rounds 2.79 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.86, rounds ×1.00 of the strength target)"
     },
     "snake_2": {
       "s": {
-        "atk": 1.01,
+        "atk": 1.05,
         "agi": 1.1,
-        "hp": 1.72,
-        "mag": 0.95
+        "hp": 1.67
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 9.0% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.97, rounds ×1.00 of the strength target)"
     },
     "owl_1": {
       "s": {
-        "hp": 1.53,
+        "hp": 1.5,
         "agi": 1.2,
         "atk": 0.96,
         "mag": 0.96
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 8.3% → 9.2%, rounds 2.67 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.98, rounds ×0.98 of the strength target)"
     },
     "owl_2": {
       "s": {
@@ -1724,117 +1726,140 @@
         "mag": 1.1,
         "agi": 1.15
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 4.1% → 9.2%, rounds 3.26 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.57, rounds ×1.06 of the strength target)"
     },
     "eyeball_2": {
       "s": {
-        "hp": 1.66,
+        "hp": 1.73,
         "mag": 1.15,
         "agi": 1.1
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T3): HP lost 3.7% → 9.2%, rounds 2.79 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.61, rounds ×1.00 of the strength target)"
     },
     "crab_2": {
       "s": {
         "def": 1.7,
         "mdef": 0.8,
         "agi": 0.7,
-        "hp": 1.38,
-        "atk": 1.47,
-        "mag": 1.47
+        "hp": 1.32,
+        "atk": 1.45,
+        "mag": 1.45
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 8.2% → 9.2%, rounds 2.77 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.01, rounds ×1.00 of the strength target)"
     },
     "frog_1": {
       "s": {
-        "hp": 1.42
+        "hp": 1.43
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 8.4% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.96, rounds ×0.99 of the strength target)"
     },
     "beetle_1": {
       "s": {
         "def": 1.4,
         "agi": 0.8,
-        "hp": 1.15
+        "hp": 1.14
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T1): HP lost 7.6% → 9.2%, rounds 2.67 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.85, rounds ×1.01 of the strength target)"
     },
     "scribe_1": {
       "s": {
-        "mag": 2.01,
+        "mag": 1.84,
         "mdef": 1.2,
-        "hp": 1.57,
-        "atk": 1.69
+        "hp": 1.87,
+        "atk": 1.55
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 8.6% → 9.2%, rounds 2.67 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.97, rounds ×0.92 of the strength target)"
     },
     "mushroom_2": {
       "s": {
-        "hp": 2.5,
-        "atk": 1.23,
+        "hp": 2.4,
+        "atk": 1.5,
         "agi": 0.6,
-        "mag": 1.4
+        "mag": 1.71
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T3): HP lost 8.4% → 9.2%, rounds 2.70 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.90, rounds ×1.00 of the strength target)"
     },
     "jelly_1": {
       "s": {
-        "hp": 1.38,
+        "hp": 1.37,
         "atk": 0.9,
         "agi": 0.8
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T1): HP lost 7.9% → 9.2%, rounds 2.92 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.68, rounds ×1.03 of the strength target)"
     },
     "mushroom_1": {
       "s": {
         "hp": 1.3,
-        "atk": 1.98,
+        "atk": 2.26,
         "agi": 0.6,
-        "mag": 2.21
+        "mag": 2.5
       },
-      "why": "sim_zones --fit (game engine, pure group ×5 at T1): HP lost 9.6% → 9.2%, rounds 3.13 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.12, rounds ×1.15 of the strength target)"
     },
     "crab_1": {
       "s": {
         "hp": 1.06,
         "def": 1.4,
         "agi": 0.8,
-        "atk": 1.12,
-        "mag": 1.12
+        "atk": 1.24,
+        "mag": 1.24
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 9.4% → 9.2%, rounds 2.91 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.99, rounds ×1.00 of the strength target)"
     },
     "mummy_1": {
       "s": {
-        "hp": 1.25,
+        "hp": 1.15,
         "agi": 0.8,
-        "atk": 2.5,
-        "mag": 2.5
+        "atk": 2.14,
+        "mag": 2.14
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T1): HP lost 8.9% → 9.2%, rounds 2.88 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×1.07, rounds ×1.05 of the strength target)"
     },
     "mummy_2": {
       "s": {
-        "hp": 1.74,
-        "mag": 2.35,
+        "hp": 1.54,
+        "mag": 2.5,
         "agi": 0.8,
-        "atk": 2.35
+        "atk": 2.5
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T3): HP lost 10.1% → 9.2%, rounds 2.88 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.94, rounds ×1.02 of the strength target)"
     },
     "scribe_2": {
       "s": {
-        "hp": 1.6,
+        "hp": 2.16,
         "mag": 2.5,
         "mdef": 1.25,
         "atk": 2.5
       },
-      "why": "sim_zones --fit (game engine, pure group ×3 at T8): HP lost 3.6% → 9.2%, rounds 2.81 → 2.8"
+      "why": "sim_zones --fit + --refit (game engine; zone groups: HP lost ×0.70, rounds ×0.98 of the strength target)"
     }
   },
   "encounters": {
     "zw_snow": {
       "groups": [
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@wolf",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@wolf",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
         {
           "w": 9,
           "mons": [
@@ -1843,7 +1868,31 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@frostling",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@frostling",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 8,
@@ -1853,7 +1902,31 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@owl",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@owl",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 7,
@@ -1863,7 +1936,41 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@yeti",
+              1,
+              1
+            ],
+            [
+              "@wolf",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@yeti",
+              1,
+              1
+            ],
+            [
+              "@wolf",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -1878,7 +1985,41 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@mammoth",
+              1,
+              1
+            ],
+            [
+              "@owl",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@mammoth",
+              1,
+              1
+            ],
+            [
+              "@owl",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -1893,7 +2034,41 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@wolf",
+              1,
+              3
+            ],
+            [
+              "@frostling",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@wolf",
+              1,
+              3
+            ],
+            [
+              "@frostling",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -1908,7 +2083,31 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@yeti",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@yeti",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 5,
@@ -1918,7 +2117,8 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
         },
         {
           "w": 30,
@@ -2003,10 +2203,33 @@
           "tierMax": 7
         }
       ],
-      "why": "§9.13.3 L6: the §8.6.5 T8-set species must be met ≥0.65 per battle in some zone; at T6–7 (after the lineage reaches its last stage) this zone gets a herd group of it (大王マンモス ×2 w30, 賢者フクロウ 3–4 w12; +1 白銀ゼリー weight so metal stays 2.5%)."
+      "why": "§9.13.3 L6: the §8.6.5 T8-set species must be met ≥0.65 per battle in some zone; at T6–7 (after the lineage reaches its last stage) this zone gets a herd group of it (大王マンモス ×2 w30, 賢者フクロウ 3–4 w12; +1 白銀ゼリー weight so metal stays 2.5%). ／ sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 8.2%: T0 HP lost 7.3% → 8.2% (strength 3.15); T1 HP lost 7.6% → 8.2% (strength 3.17)"
     },
     "z_r_snow_peak": {
       "groups": [
+        {
+          "w": 42,
+          "mons": [
+            [
+              "@frostling",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 105,
+          "mons": [
+            [
+              "@frostling",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
         {
           "w": 9,
           "mons": [
@@ -2015,7 +2238,31 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 37.5,
+          "mons": [
+            [
+              "@wolf",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 83,
+          "mons": [
+            [
+              "@wolf",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 8,
@@ -2025,7 +2272,31 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 32,
+          "mons": [
+            [
+              "@bat",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 85,
+          "mons": [
+            [
+              "@bat",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 7,
@@ -2035,7 +2306,41 @@
               4,
               5
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 28,
+          "mons": [
+            [
+              "@yeti",
+              1,
+              1
+            ],
+            [
+              "@frostling",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 58.5,
+          "mons": [
+            [
+              "@yeti",
+              1,
+              1
+            ],
+            [
+              "@frostling",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 7,
@@ -2050,7 +2355,41 @@
               1,
               3
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 20,
+          "mons": [
+            [
+              "@owl",
+              2,
+              3
+            ],
+            [
+              "@wolf",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 32.5,
+          "mons": [
+            [
+              "@owl",
+              2,
+              3
+            ],
+            [
+              "@wolf",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -2065,7 +2404,31 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 35.5,
+          "mons": [
+            [
+              "@yeti",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 87,
+          "mons": [
+            [
+              "@yeti",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 5,
@@ -2075,7 +2438,8 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
         },
         {
           "w": 15,
@@ -2136,10 +2500,33 @@
           "tierMin": 5
         }
       ],
-      "why": "§9.13.3 L6: the §8.6.5 T8-set species must be met ≥0.65 per battle in some zone; at T6–7 (after the lineage reaches its last stage) this zone gets a herd group of it (大雪男 ×2 w15)."
+      "why": "§9.13.3 L6: the §8.6.5 T8-set species must be met ≥0.65 per battle in some zone; at T6–7 (after the lineage reaches its last stage) this zone gets a herd group of it (大雪男 ×2 w15). ／ sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 9.6%: T0 HP lost 10.2% → 9.6% (strength 3.19); T1 HP lost 10.7% → 9.6% (strength 3.15)"
     },
     "zw_mine": {
       "groups": [
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@goblin",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1,
+          "mons": [
+            [
+              "@goblin",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
         {
           "w": 9,
           "mons": [
@@ -2148,7 +2535,31 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@mole",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@mole",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 8,
@@ -2158,7 +2569,31 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@beetle",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@beetle",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 7,
@@ -2168,7 +2603,41 @@
               4,
               5
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@golem",
+              1,
+              1
+            ],
+            [
+              "@goblin",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1,
+          "mons": [
+            [
+              "@golem",
+              1,
+              1
+            ],
+            [
+              "@goblin",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -2183,7 +2652,31 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@rat",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@rat",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -2193,7 +2686,41 @@
               4,
               5
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@mole",
+              1,
+              3
+            ],
+            [
+              "@beetle",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1,
+          "mons": [
+            [
+              "@mole",
+              1,
+              3
+            ],
+            [
+              "@beetle",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -2208,7 +2735,31 @@
               1,
               3
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@golem",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@golem",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 5,
@@ -2218,7 +2769,8 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
         },
         {
           "w": 17,
@@ -2279,10 +2831,33 @@
           "tierMin": 2
         }
       ],
-      "why": "§9.13.3 L6: the §8.6.5 T8-set species must be met ≥0.65 per battle in some zone; at T6–7 (after the lineage reaches its last stage) this zone gets a herd group of it (宝玉兵 ×2 w17)."
+      "why": "§9.13.3 L6: the §8.6.5 T8-set species must be met ≥0.65 per battle in some zone; at T6–7 (after the lineage reaches its last stage) this zone gets a herd group of it (宝玉兵 ×2 w17). ／ sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 8.1%: T0 HP lost 6.5% → 7.3% (strength 3.18); T1 HP lost 7.3% → 8.1% (strength 3.14)"
     },
     "zw_ash": {
       "groups": [
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@salamander",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "@salamander",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
         {
           "w": 9,
           "mons": [
@@ -2291,7 +2866,31 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@imp",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 4,
+          "mons": [
+            [
+              "@imp",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 8,
@@ -2301,7 +2900,41 @@
               4,
               5
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@orc",
+              1,
+              1
+            ],
+            [
+              "@imp",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 3.5,
+          "mons": [
+            [
+              "@orc",
+              1,
+              1
+            ],
+            [
+              "@imp",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 7,
@@ -2316,7 +2949,41 @@
               1,
               3
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@chimera",
+              1,
+              1
+            ],
+            [
+              "@salamander",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 4,
+          "mons": [
+            [
+              "@chimera",
+              1,
+              1
+            ],
+            [
+              "@salamander",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 7,
@@ -2331,7 +2998,31 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@orc",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 2.5,
+          "mons": [
+            [
+              "@orc",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -2341,7 +3032,41 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@salamander",
+              1,
+              3
+            ],
+            [
+              "@imp",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 3.5,
+          "mons": [
+            [
+              "@salamander",
+              1,
+              3
+            ],
+            [
+              "@imp",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -2356,7 +3081,8 @@
               1,
               3
             ]
-          ]
+          ],
+          "tierMin": 2
         },
         {
           "w": 14,
@@ -2417,10 +3143,33 @@
           "tierMin": 2
         }
       ],
-      "why": "§9.13.3 L6: the §8.6.5 T8-set species must be met ≥0.65 per battle in some zone; at T6–7 (after the lineage reaches its last stage) this zone gets a herd group of it (大鬼の頭目 ×2 w14)."
+      "why": "§9.13.3 L6: the §8.6.5 T8-set species must be met ≥0.65 per battle in some zone; at T6–7 (after the lineage reaches its last stage) this zone gets a herd group of it (大鬼の頭目 ×2 w14). ／ sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 8.5%: T0 HP lost 7.6% → 8.5% (strength 3.19); T1 HP lost 8.3% → 8.5% (strength 3.14)"
     },
     "zw_star": {
       "groups": [
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@eyeball",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1,
+          "mons": [
+            [
+              "@eyeball",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
         {
           "w": 9,
           "mons": [
@@ -2429,7 +3178,31 @@
               4,
               5
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@darkmage",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1,
+          "mons": [
+            [
+              "@darkmage",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 8,
@@ -2439,7 +3212,31 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@automaton",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@automaton",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 8,
@@ -2449,7 +3246,41 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@wyvern",
+              1,
+              1
+            ],
+            [
+              "@eyeball",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1,
+          "mons": [
+            [
+              "@wyvern",
+              1,
+              1
+            ],
+            [
+              "@eyeball",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -2464,7 +3295,31 @@
               1,
               3
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@wyvern",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1,
+          "mons": [
+            [
+              "@wyvern",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -2474,7 +3329,41 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@darkmage",
+              1,
+              3
+            ],
+            [
+              "@automaton",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@darkmage",
+              1,
+              3
+            ],
+            [
+              "@automaton",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -2489,7 +3378,8 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
         },
         {
           "w": 14,
@@ -2550,10 +3440,33 @@
           "tierMin": 2
         }
       ],
-      "why": "§9.13.3 L6: the §8.6.5 T8-set species must be met ≥0.65 per battle in some zone; at T6–7 (after the lineage reaches its last stage) this zone gets a herd group of it (嵐飛竜 ×2 w14)."
+      "why": "§9.13.3 L6: the §8.6.5 T8-set species must be met ≥0.65 per battle in some zone; at T6–7 (after the lineage reaches its last stage) this zone gets a herd group of it (嵐飛竜 ×2 w14). ／ sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 8.1%: T0 HP lost 7.0% → 7.7% (strength 3.18); T1 HP lost 7.8% → 8.1% (strength 3.11)"
     },
     "z_r_forest_maze": {
       "groups": [
+        {
+          "w": 1088.5,
+          "mons": [
+            [
+              "@bee",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@bee",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
         {
           "w": 8,
           "mons": [
@@ -2562,7 +3475,31 @@
               4,
               5
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 1662.5,
+          "mons": [
+            [
+              "@plant",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@plant",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 8,
@@ -2572,7 +3509,31 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 3541,
+          "mons": [
+            [
+              "@spider",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@spider",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 9,
@@ -2582,7 +3543,41 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 901,
+          "mons": [
+            [
+              "@fairy",
+              2,
+              4
+            ],
+            [
+              "@bee",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@fairy",
+              2,
+              4
+            ],
+            [
+              "@bee",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 7,
@@ -2597,7 +3592,41 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 886,
+          "mons": [
+            [
+              "@treant",
+              1,
+              1
+            ],
+            [
+              "@plant",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@treant",
+              1,
+              1
+            ],
+            [
+              "@plant",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -2612,7 +3641,41 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 763.5,
+          "mons": [
+            [
+              "@spider",
+              1,
+              3
+            ],
+            [
+              "@bee",
+              2,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@spider",
+              1,
+              3
+            ],
+            [
+              "@bee",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -2627,7 +3690,31 @@
               2,
               3
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 1272,
+          "mons": [
+            [
+              "@treant",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@treant",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 5,
@@ -2637,7 +3724,8 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
         },
         {
           "w": 6,
@@ -2686,10 +3774,33 @@
           "tierMin": 5
         }
       ],
-      "why": "§9.13.3 L6: 女郎グモ (spider_4, T8 set) 0.61 → 0.69 per battle: spider 2–4 weight 7 → 9."
+      "why": "§9.13.3 L6: 女郎グモ (spider_4, T8 set) 0.61 → 0.69 per battle: spider 2–4 weight 7 → 9. ／ sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 8.6%: T0 HP lost 9.4% → 8.6% (strength 3.07); T1 HP lost 8.2% → 8.6% (strength 3.19)"
     },
     "zw_marsh": {
       "groups": [
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@frog",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@frog",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
         {
           "w": 9,
           "mons": [
@@ -2698,7 +3809,31 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@lizardman",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@lizardman",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 8,
@@ -2708,7 +3843,31 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@jelly",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@jelly",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 7,
@@ -2718,7 +3877,31 @@
               4,
               5
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@wisp",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@wisp",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 1,
+          "tierMin": 1
         },
         {
           "w": 7,
@@ -2729,7 +3912,8 @@
               5
             ]
           ],
-          "tierMax": 5
+          "tierMax": 5,
+          "tierMin": 2
         },
         {
           "w": 7,
@@ -2748,6 +3932,39 @@
           "tierMin": 6
         },
         {
+          "w": 0.5,
+          "mons": [
+            [
+              "@frog",
+              1,
+              3
+            ],
+            [
+              "@lizardman",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@frog",
+              1,
+              3
+            ],
+            [
+              "@lizardman",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
           "w": 6,
           "mons": [
             [
@@ -2760,7 +3977,41 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@ghost",
+              2,
+              3
+            ],
+            [
+              "@wisp",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@ghost",
+              2,
+              3
+            ],
+            [
+              "@wisp",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -2775,7 +4026,8 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
         },
         {
           "w": 6,
@@ -2824,10 +4076,33 @@
           "tierMin": 2
         }
       ],
-      "why": "M1: packs of 4–5 黄泉の火 (wisp_4, AoE magic 4/7 of its actions) took 16–20% of the party HP per battle; from T6 the pack is 2–3 wisps with 1–2 lizardmen."
+      "why": "M1: packs of 4–5 黄泉の火 (wisp_4, AoE magic 4/7 of its actions) took 16–20% of the party HP per battle; from T6 the pack is 2–3 wisps with 1–2 lizardmen. ／ sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 8.7%: T0 HP lost 7.6% → 8.7% (strength 3.29); T1 HP lost 7.8% → 8.7% (strength 3.26)"
     },
     "z_r_marsh_bog": {
       "groups": [
+        {
+          "w": 9446,
+          "mons": [
+            [
+              "@frog",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1,
+          "mons": [
+            [
+              "@frog",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
         {
           "w": 9,
           "mons": [
@@ -2836,7 +4111,31 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 5792,
+          "mons": [
+            [
+              "@wisp",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1,
+          "mons": [
+            [
+              "@wisp",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 1,
+          "tierMin": 1
         },
         {
           "w": 8,
@@ -2847,7 +4146,8 @@
               5
             ]
           ],
-          "tierMax": 5
+          "tierMax": 5,
+          "tierMin": 2
         },
         {
           "w": 8,
@@ -2866,6 +4166,29 @@
           "tierMin": 6
         },
         {
+          "w": 8356.5,
+          "mons": [
+            [
+              "@lizardman",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@lizardman",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
           "w": 7,
           "mons": [
             [
@@ -2873,7 +4196,31 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 1935.5,
+          "mons": [
+            [
+              "@mushroom",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@mushroom",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 7,
@@ -2883,7 +4230,41 @@
               4,
               5
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 3443.5,
+          "mons": [
+            [
+              "@ghost",
+              1,
+              3
+            ],
+            [
+              "@frog",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1,
+          "mons": [
+            [
+              "@ghost",
+              1,
+              3
+            ],
+            [
+              "@frog",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -2898,7 +4279,41 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 4282,
+          "mons": [
+            [
+              "@jelly",
+              2,
+              4
+            ],
+            [
+              "@wisp",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@jelly",
+              2,
+              4
+            ],
+            [
+              "@wisp",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 6,
@@ -2913,7 +4328,8 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
         },
         {
           "w": 6,
@@ -2962,10 +4378,33 @@
           "tierMin": 5
         }
       ],
-      "why": "M1: packs of 4–5 黄泉の火 (wisp_4) — from T6 the pack is 2–3 wisps with 1–2 frogs."
+      "why": "M1: packs of 4–5 黄泉の火 (wisp_4) — from T6 the pack is 2–3 wisps with 1–2 frogs. ／ sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 9.5%: T0 HP lost 11.4% → 10.7% (strength 3.11); T1 HP lost 8.9% → 9.5% (strength 3.18)"
     },
     "z_r_marsh_manor": {
       "groups": [
+        {
+          "w": 116,
+          "mons": [
+            [
+              "@ghost",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@ghost",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
         {
           "w": 9,
           "mons": [
@@ -2974,7 +4413,31 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 111,
+          "mons": [
+            [
+              "@doll",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@doll",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 8,
@@ -2984,7 +4447,31 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 127.5,
+          "mons": [
+            [
+              "@spider",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@spider",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 7,
@@ -2994,7 +4481,31 @@
               2,
               4
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 66.5,
+          "mons": [
+            [
+              "@wisp",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@wisp",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 1,
+          "tierMin": 1
         },
         {
           "w": 7,
@@ -3005,7 +4516,8 @@
               5
             ]
           ],
-          "tierMax": 5
+          "tierMax": 5,
+          "tierMin": 2
         },
         {
           "w": 7,
@@ -3024,6 +4536,39 @@
           "tierMin": 6
         },
         {
+          "w": 50.5,
+          "mons": [
+            [
+              "@doll",
+              1,
+              3
+            ],
+            [
+              "@ghost",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@doll",
+              1,
+              3
+            ],
+            [
+              "@ghost",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
           "w": 6,
           "mons": [
             [
@@ -3036,7 +4581,41 @@
               1,
               2
             ]
-          ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 46.5,
+          "mons": [
+            [
+              "@spider",
+              1,
+              3
+            ],
+            [
+              "@wisp",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@spider",
+              1,
+              3
+            ],
+            [
+              "@wisp",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
         },
         {
           "w": 5,
@@ -3051,7 +4630,8 @@
               1,
               3
             ]
-          ]
+          ],
+          "tierMin": 2
         },
         {
           "w": 2,
@@ -3111,7 +4691,7 @@
           "tierMin": 5
         }
       ],
-      "why": "M5: average strength was 2.96–2.99 (< 3.0) → ghost 2–3 → 2–4; L6: 冥界の霊王 (ghost_5) 0.61 → 0.70 per battle; M1: from T6 the wisp pack is 2–3 黄泉の火 with 1–2 dolls."
+      "why": "M5: average strength was 2.96–2.99 (< 3.0) → ghost 2–3 → 2–4; L6: 冥界の霊王 (ghost_5) 0.61 → 0.70 per battle; M1: from T6 the wisp pack is 2–3 黄泉の火 with 1–2 dolls. ／ sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 9.3%: T0 HP lost 9.9% → 9.3% (strength 3.10); T1 HP lost 8.2% → 9.3% (strength 3.24)"
     },
     "z_finale_archive_lo": {
       "groups": [
@@ -3513,6 +5093,3047 @@
         }
       ],
       "why": "M5: a lone 混沌の祖獣 (strength 1.8) was below the 2.2 group minimum → with one 虚無の騎士 (2.8)."
+    },
+    "zw_forest": {
+      "groups": [
+        {
+          "w": 17.5,
+          "mons": [
+            [
+              "@bee",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@bee",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@bee",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 13.5,
+          "mons": [
+            [
+              "@mushroom",
+              2,
+              4
+            ],
+            [
+              "@bee",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@mushroom",
+              2,
+              4
+            ],
+            [
+              "@bee",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@mushroom",
+              2,
+              4
+            ],
+            [
+              "@bee",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 15.5,
+          "mons": [
+            [
+              "@plant",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@plant",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@plant",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 13,
+          "mons": [
+            [
+              "@fairy",
+              2,
+              4
+            ],
+            [
+              "@mushroom",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@fairy",
+              2,
+              4
+            ],
+            [
+              "@mushroom",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@fairy",
+              2,
+              4
+            ],
+            [
+              "@mushroom",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 12.5,
+          "mons": [
+            [
+              "@jelly",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@jelly",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@jelly",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 11.5,
+          "mons": [
+            [
+              "@plant",
+              1,
+              3
+            ],
+            [
+              "@fairy",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@plant",
+              1,
+              3
+            ],
+            [
+              "@fairy",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@plant",
+              1,
+              3
+            ],
+            [
+              "@fairy",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "@treant",
+              1,
+              1
+            ],
+            [
+              "@bee",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@quicksilver",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        }
+      ],
+      "why": "sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 8.4%: T0 HP lost 8.6% → 8.4% (strength 3.21); T1 HP lost 7.0% → 8.2% (strength 3.32)"
+    },
+    "z_r_forest_tree": {
+      "groups": [
+        {
+          "w": 121,
+          "mons": [
+            [
+              "@treant",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@treant",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@treant",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 44.5,
+          "mons": [
+            [
+              "@mushroom",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@mushroom",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@mushroom",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 80.5,
+          "mons": [
+            [
+              "@plant",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@plant",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@plant",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 61,
+          "mons": [
+            [
+              "@fairy",
+              2,
+              3
+            ],
+            [
+              "@mushroom",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@fairy",
+              2,
+              3
+            ],
+            [
+              "@mushroom",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@fairy",
+              2,
+              3
+            ],
+            [
+              "@mushroom",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 60,
+          "mons": [
+            [
+              "@treant",
+              1,
+              1
+            ],
+            [
+              "@fairy",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@treant",
+              1,
+              1
+            ],
+            [
+              "@fairy",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@treant",
+              1,
+              1
+            ],
+            [
+              "@fairy",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 49,
+          "mons": [
+            [
+              "@plant",
+              1,
+              3
+            ],
+            [
+              "@mushroom",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@plant",
+              1,
+              3
+            ],
+            [
+              "@mushroom",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@plant",
+              1,
+              3
+            ],
+            [
+              "@mushroom",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@mirror",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 5
+        }
+      ],
+      "why": "sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 9.3%: T0 HP lost 12.3% → 11.1% (strength 3.03); T1 HP lost 7.6% → 8.8% (strength 3.14)"
+    },
+    "zw_desert": {
+      "groups": [
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@scorpion",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "@scorpion",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@scorpion",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@snake",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 4.5,
+          "mons": [
+            [
+              "@snake",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@snake",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@cactus",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 4.5,
+          "mons": [
+            [
+              "@cactus",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@cactus",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@scorpion",
+              1,
+              3
+            ],
+            [
+              "@snake",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 4.5,
+          "mons": [
+            [
+              "@scorpion",
+              1,
+              3
+            ],
+            [
+              "@snake",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@scorpion",
+              1,
+              3
+            ],
+            [
+              "@snake",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@rat",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 3.5,
+          "mons": [
+            [
+              "@rat",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@rat",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 4,
+          "mons": [
+            [
+              "@sandworm",
+              1,
+              1
+            ],
+            [
+              "@scorpion",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@sandworm",
+              1,
+              1
+            ],
+            [
+              "@scorpion",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@cactus",
+              1,
+              3
+            ],
+            [
+              "@rat",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 3,
+          "mons": [
+            [
+              "@cactus",
+              1,
+              3
+            ],
+            [
+              "@rat",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "@cactus",
+              1,
+              3
+            ],
+            [
+              "@rat",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@quicksilver",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        }
+      ],
+      "why": "sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 8.3%: T0 HP lost 7.8% → 8.3% (strength 3.22); T1 HP lost 8.1% → 8.3% (strength 3.18)"
+    },
+    "z_r_desert_tomb": {
+      "groups": [
+        {
+          "w": 8641,
+          "mons": [
+            [
+              "@mummy",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 32.5,
+          "mons": [
+            [
+              "@mummy",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@mummy",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 5414,
+          "mons": [
+            [
+              "@scorpion",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 22.5,
+          "mons": [
+            [
+              "@scorpion",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@scorpion",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 7887.5,
+          "mons": [
+            [
+              "@bat",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 21,
+          "mons": [
+            [
+              "@bat",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@bat",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 5677,
+          "mons": [
+            [
+              "@mummy",
+              1,
+              3
+            ],
+            [
+              "@bat",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 17.5,
+          "mons": [
+            [
+              "@mummy",
+              1,
+              3
+            ],
+            [
+              "@bat",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@mummy",
+              1,
+              3
+            ],
+            [
+              "@bat",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 1073.5,
+          "mons": [
+            [
+              "@snake",
+              2,
+              3
+            ],
+            [
+              "@scorpion",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 13.5,
+          "mons": [
+            [
+              "@snake",
+              2,
+              3
+            ],
+            [
+              "@scorpion",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@snake",
+              2,
+              3
+            ],
+            [
+              "@scorpion",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 6310.5,
+          "mons": [
+            [
+              "@sandworm",
+              1,
+              1
+            ],
+            [
+              "@mummy",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 13.5,
+          "mons": [
+            [
+              "@sandworm",
+              1,
+              1
+            ],
+            [
+              "@mummy",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "@sandworm",
+              1,
+              1
+            ],
+            [
+              "@mummy",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 2,
+          "mons": [
+            [
+              "@mimic",
+              1,
+              1
+            ]
+          ],
+          "solo": true
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@mirror",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 5
+        }
+      ],
+      "why": "sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 9.8%: T0 HP lost 11.4% → 10.4% (strength 3.18); T1 HP lost 10.3% → 9.8% (strength 3.23)"
+    },
+    "zw_isles": {
+      "groups": [
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@seabird",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@seabird",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@seabird",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@crab",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@crab",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@crab",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@merman",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@merman",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@merman",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@jelly",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@jelly",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@jelly",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@crab",
+              1,
+              3
+            ],
+            [
+              "@seabird",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1,
+          "mons": [
+            [
+              "@crab",
+              1,
+              3
+            ],
+            [
+              "@seabird",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@crab",
+              1,
+              3
+            ],
+            [
+              "@seabird",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@merman",
+              1,
+              3
+            ],
+            [
+              "@jelly",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@merman",
+              1,
+              3
+            ],
+            [
+              "@jelly",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@merman",
+              1,
+              3
+            ],
+            [
+              "@jelly",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@quicksilver",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        }
+      ],
+      "why": "sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 8.6%: T0 HP lost 7.6% → 8.4% (strength 3.20); T1 HP lost 7.9% → 8.6% (strength 3.19)"
+    },
+    "z_r_isles_cave": {
+      "groups": [
+        {
+          "w": 159.5,
+          "mons": [
+            [
+              "@crab",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1475.5,
+          "mons": [
+            [
+              "@crab",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@crab",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 96.5,
+          "mons": [
+            [
+              "@merman",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1806,
+          "mons": [
+            [
+              "@merman",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@merman",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 97.5,
+          "mons": [
+            [
+              "@bat",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1433,
+          "mons": [
+            [
+              "@bat",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@bat",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 98.5,
+          "mons": [
+            [
+              "@kraken",
+              1,
+              1
+            ],
+            [
+              "@crab",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 774.5,
+          "mons": [
+            [
+              "@kraken",
+              1,
+              1
+            ],
+            [
+              "@crab",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@kraken",
+              1,
+              1
+            ],
+            [
+              "@crab",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 172.5,
+          "mons": [
+            [
+              "@kraken",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 1826,
+          "mons": [
+            [
+              "@kraken",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@kraken",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 62.5,
+          "mons": [
+            [
+              "@merman",
+              1,
+              3
+            ],
+            [
+              "@bat",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 674,
+          "mons": [
+            [
+              "@merman",
+              1,
+              3
+            ],
+            [
+              "@bat",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@merman",
+              1,
+              3
+            ],
+            [
+              "@bat",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@mirror",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 5
+        }
+      ],
+      "why": "sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 9.2%: T0 HP lost 10.4% → 9.6% (strength 3.03); T1 HP lost 9.8% → 9.3% (strength 3.02)"
+    },
+    "z_r_isles_ship": {
+      "groups": [
+        {
+          "w": 23879.5,
+          "mons": [
+            [
+              "@skeleton",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@skeleton",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@skeleton",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 6021.5,
+          "mons": [
+            [
+              "@merman",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@merman",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@merman",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 5072.5,
+          "mons": [
+            [
+              "@rat",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@rat",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@rat",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 6848,
+          "mons": [
+            [
+              "@seabird",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@seabird",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@seabird",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 8607.5,
+          "mons": [
+            [
+              "@kraken",
+              1,
+              1
+            ],
+            [
+              "@skeleton",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@kraken",
+              1,
+              1
+            ],
+            [
+              "@skeleton",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@kraken",
+              1,
+              1
+            ],
+            [
+              "@skeleton",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 2872,
+          "mons": [
+            [
+              "@skeleton",
+              1,
+              3
+            ],
+            [
+              "@rat",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 0.5,
+          "mons": [
+            [
+              "@skeleton",
+              1,
+              3
+            ],
+            [
+              "@rat",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@skeleton",
+              1,
+              3
+            ],
+            [
+              "@rat",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 2,
+          "mons": [
+            [
+              "@mimic",
+              1,
+              1
+            ]
+          ],
+          "solo": true
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@mirror",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 5
+        }
+      ],
+      "why": "sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 8.9%: T0 HP lost 10.0% → 9.0% (strength 3.08); T1 HP lost 8.5% → 8.9% (strength 3.16)"
+    },
+    "z_r_mine_mine": {
+      "groups": [
+        {
+          "w": 6805,
+          "mons": [
+            [
+              "@goblin",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 302.5,
+          "mons": [
+            [
+              "@goblin",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@goblin",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 8976.5,
+          "mons": [
+            [
+              "@mole",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 273.5,
+          "mons": [
+            [
+              "@mole",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@mole",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 6681,
+          "mons": [
+            [
+              "@crystal",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 231.5,
+          "mons": [
+            [
+              "@crystal",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@crystal",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 5950,
+          "mons": [
+            [
+              "@bat",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 259,
+          "mons": [
+            [
+              "@bat",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@bat",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 4925.5,
+          "mons": [
+            [
+              "@beetle",
+              2,
+              4
+            ],
+            [
+              "@crystal",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 232,
+          "mons": [
+            [
+              "@beetle",
+              2,
+              4
+            ],
+            [
+              "@crystal",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@beetle",
+              2,
+              4
+            ],
+            [
+              "@crystal",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 13740.5,
+          "mons": [
+            [
+              "@golem",
+              1,
+              1
+            ],
+            [
+              "@mole",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 104.5,
+          "mons": [
+            [
+              "@golem",
+              1,
+              1
+            ],
+            [
+              "@mole",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@golem",
+              1,
+              1
+            ],
+            [
+              "@mole",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 1230,
+          "mons": [
+            [
+              "@goblin",
+              1,
+              3
+            ],
+            [
+              "@rat",
+              2,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 86,
+          "mons": [
+            [
+              "@goblin",
+              1,
+              3
+            ],
+            [
+              "@rat",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 5,
+          "mons": [
+            [
+              "@goblin",
+              1,
+              3
+            ],
+            [
+              "@rat",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@mirror",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 5
+        }
+      ],
+      "why": "sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 9.5%: T0 HP lost 10.6% → 9.7% (strength 3.16); T1 HP lost 10.1% → 9.5% (strength 3.14)"
+    },
+    "z_r_ash_volcano": {
+      "groups": [
+        {
+          "w": 14552,
+          "mons": [
+            [
+              "@salamander",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 8718,
+          "mons": [
+            [
+              "@salamander",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@salamander",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 7174,
+          "mons": [
+            [
+              "@gargoyle",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 11901,
+          "mons": [
+            [
+              "@gargoyle",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@gargoyle",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 3304,
+          "mons": [
+            [
+              "@imp",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 10064.5,
+          "mons": [
+            [
+              "@imp",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@imp",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 6944.5,
+          "mons": [
+            [
+              "@bat",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 11108.5,
+          "mons": [
+            [
+              "@bat",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@bat",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 11617,
+          "mons": [
+            [
+              "@chimera",
+              1,
+              1
+            ],
+            [
+              "@imp",
+              1,
+              3
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 6704.5,
+          "mons": [
+            [
+              "@chimera",
+              1,
+              1
+            ],
+            [
+              "@imp",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@chimera",
+              1,
+              1
+            ],
+            [
+              "@imp",
+              1,
+              3
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 3907.5,
+          "mons": [
+            [
+              "@gargoyle",
+              1,
+              3
+            ],
+            [
+              "@salamander",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 3167.5,
+          "mons": [
+            [
+              "@gargoyle",
+              1,
+              3
+            ],
+            [
+              "@salamander",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@gargoyle",
+              1,
+              3
+            ],
+            [
+              "@salamander",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@mirror",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 5
+        }
+      ],
+      "why": "sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 9.0%: T0 HP lost 10.2% → 9.4% (strength 3.12); T1 HP lost 9.7% → 9.3% (strength 3.12)"
+    },
+    "z_r_star_tower": {
+      "groups": [
+        {
+          "w": 8489,
+          "mons": [
+            [
+              "@automaton",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 163,
+          "mons": [
+            [
+              "@automaton",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 9,
+          "mons": [
+            [
+              "@automaton",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 16836.5,
+          "mons": [
+            [
+              "@armor",
+              2,
+              4
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 232,
+          "mons": [
+            [
+              "@armor",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 8,
+          "mons": [
+            [
+              "@armor",
+              2,
+              4
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 8518,
+          "mons": [
+            [
+              "@eyeball",
+              4,
+              5
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 138.5,
+          "mons": [
+            [
+              "@eyeball",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@eyeball",
+              4,
+              5
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 2849.5,
+          "mons": [
+            [
+              "@darkmage",
+              2,
+              3
+            ],
+            [
+              "@eyeball",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 77,
+          "mons": [
+            [
+              "@darkmage",
+              2,
+              3
+            ],
+            [
+              "@eyeball",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 7,
+          "mons": [
+            [
+              "@darkmage",
+              2,
+              3
+            ],
+            [
+              "@eyeball",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 2268,
+          "mons": [
+            [
+              "@gargoyle",
+              2,
+              3
+            ],
+            [
+              "@crystal",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 74,
+          "mons": [
+            [
+              "@gargoyle",
+              2,
+              3
+            ],
+            [
+              "@crystal",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@gargoyle",
+              2,
+              3
+            ],
+            [
+              "@crystal",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 5109.5,
+          "mons": [
+            [
+              "@armor",
+              1,
+              3
+            ],
+            [
+              "@darkmage",
+              1,
+              2
+            ]
+          ],
+          "tierMax": 0
+        },
+        {
+          "w": 102,
+          "mons": [
+            [
+              "@armor",
+              1,
+              3
+            ],
+            [
+              "@darkmage",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 1,
+          "tierMax": 1
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@armor",
+              1,
+              3
+            ],
+            [
+              "@darkmage",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 2
+        },
+        {
+          "w": 2,
+          "mons": [
+            [
+              "@mimic",
+              1,
+              1
+            ]
+          ],
+          "solo": true
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              3,
+              4
+            ]
+          ],
+          "tierMin": 2,
+          "tierMax": 3
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              2,
+              3
+            ]
+          ],
+          "tierMin": 4,
+          "tierMax": 7
+        },
+        {
+          "w": 6,
+          "mons": [
+            [
+              "@paper",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 8
+        },
+        {
+          "w": 1.5,
+          "mons": [
+            [
+              "@mirror",
+              1,
+              2
+            ]
+          ],
+          "tierMin": 5
+        }
+      ],
+      "why": "sim_zones --retilt (M2): T0/T1 groups re-weighted by measured HP lost toward the zone's T2–T7 mean 9.4%: T0 HP lost 10.7% → 9.6% (strength 3.15); T1 HP lost 10.2% → 9.4% (strength 3.20)"
     }
   },
   "actions": {

@@ -310,13 +310,18 @@ function features(x, rate) {
   const N = 2048, H = 512, B = 40, frames = Math.max(0, Math.floor((n - N) / H) + 1);
   const win = new Float32Array(N); for (let i = 0; i < N; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / N);
   const edges = []; for (let b = 0; b <= B; b++) edges.push(Math.round((50 * Math.pow(10000 / 50, b / B)) / sr * N));
-  const F = [], db = [];
+  const F = [], db = [], flux = [];
   const re = new Float64Array(N), im = new Float64Array(N);
+  let prevMag = null;
   for (let f = 0; f < frames; f++) {
     let e = 0;
     for (let i = 0; i < N; i++) { const v = y[f * H + i]; re[i] = v * win[i]; im[i] = 0; e += v * v; }
     db.push(10 * Math.log10(e / N + 1e-12));
     fft(re, im);
+    const mag = new Float32Array(N / 2);
+    let fl = 0;
+    for (let k = 0; k < N / 2; k++) { mag[k] = Math.log1p(Math.hypot(re[k], im[k]) * 10); if (prevMag) fl += Math.max(0, mag[k] - prevMag[k]); }
+    flux.push(fl); prevMag = mag;
     const v = new Float32Array(B);
     for (let b = 0; b < B; b++) {
       let s = 0; const lo = edges[b], hi = Math.max(edges[b + 1], lo + 1);
@@ -332,13 +337,13 @@ function features(x, rate) {
     for (const v of F) v[b] = (v[b] - m) / s;
   }
   for (const v of F) { let s = 0; for (let b = 0; b < B; b++) s += v[b] * v[b]; s = Math.sqrt(s) || 1; for (let b = 0; b < B; b++) v[b] /= s; }
-  return { feat: F, hop: H / sr, db };
+  return { feat: F, hop: H / sr, db, flux };
 }
 /** best loop (seconds) of a piece: {loopStart, loopEnd, score, bodyEnd}. o: {minLoop, back, fwd} */
 function findLoop(chans, rate, o) {
   o = o || {};
   const x = GA.mono(chans), dur = x.length / rate;
-  const { feat, hop, db } = features(x, rate);
+  const { feat, hop, db, flux } = features(x, rate);
   const nF = feat.length, back = Math.round((o.back || 2) / hop), fwd = Math.round((o.fwd || 3) / hop);
   // the "body": frames before the final fade / ending (3 s smoothed level ≥ median − 9 dB)
   const sm = Math.round(3 / hop), lvl = db.map((_, i) => { let s = 0, c = 0; for (let k = Math.max(0, i - sm); k <= Math.min(nF - 1, i + sm); k++) { s += db[k]; c++; } return s / c; });
@@ -381,7 +386,22 @@ function findLoop(chans, rate, o) {
   }
   return refine(best);
   function refine(best) {
-  // sample alignment: shift e by ±12 ms to best match the waveform around s
+  // beat phase: shift e by up to ±8 frames (±190 ms) so the onsets of the 6 s before e line up with
+  // the 6 s before s (the crossfade blends exactly these), then align the waveform to the sample
+  const Wb = Math.min(Math.round(6 / hop), best.s);
+  // (flux with its local mean removed; only moved when clearly better than no shift)
+  const on = flux.map((v, i) => { let m = 0, c = 0; for (let k = Math.max(0, i - 8); k <= Math.min(flux.length - 1, i + 8); k++) { m += flux[k]; c++; } return Math.max(0, v - m / c); });
+  const corrAt = (k) => {
+    const e = best.e + k;
+    if (e - Wb < 0 || e >= on.length) return -Infinity;
+    let v = 0, a = 0, b = 0; for (let i = 1; i <= Wb; i++) { const p = on[best.s - i], q = on[e - i]; v += p * q; a += p * p; b += q * q; }
+    return v / (Math.sqrt(a * b) || 1);
+  };
+  let bestK = 0, bestV = corrAt(0);
+  const c0 = bestV;
+  for (let k = -8; k <= 8; k++) { const v = corrAt(k); if (v > bestV) { bestV = v; bestK = k; } }
+  if (!(bestV > c0 + 0.1 && bestV > 0.3)) bestK = 0;
+  best = Object.assign({}, best, { e: best.e + bestK, onsetCorr: Math.max(bestV, c0) });
   const S = Math.round(best.s * hop * rate), E0 = Math.round(best.e * hop * rate);
   const N = Math.round(0.03 * rate), R = Math.round(0.012 * rate);
   let bestD = 0, bestC = -Infinity;

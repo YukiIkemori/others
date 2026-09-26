@@ -1,0 +1,27 @@
+{
+  "loopStart": 21.153,
+  "loopEnd": 60.929,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. A white-dragon peak in an endless blizzard: crystalline, cold, fragile beauty, glittering snow and silence. Tempo 84 BPM, 3/4 time, key of F♯ minor. Instrumentation: celesta and glockenspiel melody, harp, sleigh-free soft bells, triangle, thin high strings, soft wind pad. Form: glassy intro, waltz melody, fragile middle, return. Duration: 70 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]",
+    "generated": "2026-09-26T12:20:05.502Z",
+    "rawSeconds": 70.5,
+    "takes": 2
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -6.6,
+    "gainDb": -7.8,
+    "peakLimited": false,
+    "loopScore": 0.617,
+    "seamCorr": 0.405,
+    "xfade": 0.6,
+    "medianDb": -26.3,
+    "longestSilence": 1.5,
+    "seamLevelDiffDb": 1.7,
+    "seamJump": 0.0141,
+    "maxStep": 0.0264
+  }
+}

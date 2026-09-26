@@ -1377,6 +1377,8 @@
       if (!item && !o.free) {
         if (u.isParty && kind === 'tech') {
           if (a.magic && u.status.silence) { yield* refuse(this, 'しかし術を封じられている！'); return res; }
+          // §6.4.4-1: a reach:false tech cannot be used from the middle row (the row may have changed since the command)
+          if (!a.reach && this.effRow(u) === 'middle') { yield* refuse(this, 'しかし中列からは届かない！'); return res; }
           const cost = this.wpCost(u, id);
           if (u.wp < cost) { yield* refuse(this, 'しかしWPが足りない！'); return res; }
           u.wp -= cost; this.stats.wpUsed += cost;

@@ -742,7 +742,9 @@ function refit(file, outFile) {
   const Dd = CM.parseDesign();
   const acc = {};
   for (const g of G) {
-    if (g.excluded || /prologue/.test(g.zone)) continue;
+    // T0/T1 of the 'dyn' zones belong to --retilt (party without area attacks, lvOff share of the level); counting them
+    // here would pull the stage-1 species against the re-weighting
+    if (g.excluded || /prologue/.test(g.zone) || (g.T <= 1 && DB.encounters[g.zone] && DB.encounters[g.zone].tier === 'dyn')) continue;
     const parts = g.ms.map(([id, a, b]) => [id, CM.SIZE_W[DB.monsters[id].size] * (a + b) / 2]);
     const st = parts.reduce((x, [, v]) => x + v, 0);
     const rl = Math.log(Math.max(0.003, g.lost) / (L_T * st / 3.2));

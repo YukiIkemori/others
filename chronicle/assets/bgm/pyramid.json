@@ -1,0 +1,27 @@
+{
+  "loopStart": 22.059,
+  "loopEnd": 60.459,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. An ancient royal tomb in the desert: dry wind, sand hissing on stone, mysterious and exotic, curse and grandeur. Tempo 96 BPM, 4/4 time, key of A minor. Instrumentation: oboe or ney-like reed melody with augmented seconds (phrygian dominant), oud, low drone, darbuka and frame drum, finger cymbals. Form: drone and hand drums intro, reed melody, oud interlude, melody returns. Duration: 75 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[B3]]",
+    "generated": "2026-09-26T12:19:21.503Z",
+    "rawSeconds": 75.5,
+    "takes": 2
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -3.4,
+    "gainDb": -6.3,
+    "peakLimited": false,
+    "loopScore": 0.756,
+    "seamCorr": 0.62,
+    "xfade": 0.6,
+    "medianDb": -21.5,
+    "longestSilence": 0.8,
+    "seamLevelDiffDb": 0,
+    "seamJump": 0.0149,
+    "maxStep": 0.0568
+  }
+}

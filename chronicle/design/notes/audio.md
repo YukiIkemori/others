@@ -454,3 +454,30 @@ The synth stays the default. Recorded files only *override* it when they exist; 
 - **Voice script**: `node tools/voice_script.js` → `design/voice/script.csv|md` (140 lines, 18 fixed characters; the
   hero and the 20 companions never speak; lines with `{hero}` are not voiced). `--check` for CI.
 - **Tests**: `node tools/test_media.js` (fake AudioContext + a real Chromium decode of `tools/fixtures/media/`).
+
+### 13.1 Generated media (2026-09-26, Gemini API)
+
+- **API shapes (verified)** — base `https://generativelanguage.googleapis.com/v1beta`, header `x-goog-api-key`
+  (never a `?key=` URL). HTTP code in `tools/lib/gemini_audio.js` only.
+  - TTS `models/gemini-3.8-flash-tts:generateContent`, `generationConfig {responseModalities:['AUDIO'], speechConfig:
+    {voiceConfig:{prebuiltVoiceConfig:{voiceName:'ja-jp-…'}}}}`; a custom (replicated) voice from `GET /voices` goes in
+    `voiceConfig:{voice:'voice_…'}`. → `inlineData audio/wav` (PCM16 mono 24 kHz). `systemInstruction` is refused.
+    Prompt = `# AUDIO PROFILE / ## SCENE / ## DIRECTOR'S NOTES / ## TRANSCRIPT` (a bare "Say sadly: …" prefix is
+    sometimes read aloud). Quota: 10 req/min and **100 req/day** per model → the tool uses the **Batch API**
+    (`:batchGenerateContent` inline requests → poll `GET batches/…`, 2–5 min), and a listening check
+    (`gemini-3.8-flash` hears each take and compares it with the line).
+  - Lyria `models/lyria-3.5:generateContent` `{contents:[{parts:[{text}]}]}` → a text part (section map) + `inlineData
+    audio/mpeg` (MP3 44.1 kHz stereo 192 kbps). Length follows "Duration: N seconds." in the prompt. Random refusals
+    (`blockReason: PROHIBITED_CONTENT`) are retried.
+- **Voices**: `node tools/voice_tts.js` (casting, profiles, per-line directions, hero lines: `design/voice/casting.json`)
+  → `assets/voice/<id>.ogg` (Vorbis mono 24 kHz, trimmed, −16 LUFS, peak ≤ −1 dBFS; effects for giant / king /
+  golem / automaton / ghosts). 140 story lines + 24 hero battle clips (`v_hero_<m|f>_<kind>_<n>`).
+- **Hero battle voice**: `R.Audio.battleVoice(kind[, gender])`, kinds `attack glimmer spell hurt ko victory`; picks a
+  random clip for `R.State.hero().gender`, never the same twice in a row, own voice volume, no BGM duck.
+- **BGM**: `node tools/lyria_bgm.js` → `assets/bgm/<id>.ogg` (Vorbis 96 kbps, −18 LUFS) + `<id>.json` whose
+  `loopStart/loopEnd` come from an automatic loop search (spectral self-similarity + onset phase + a baked
+  crossfade at the seam; `analysis` records the score). Reference vibes: `cave` + `dungeon` = urban-noir funk
+  groove, `village` + `home` = warm canyon-village acoustic theme.
+- **Build**: everything is embedded by default (24 BGM + 164 voice ≈ 23 MB → dist/index.html ≈ 37 MB; with all 32
+  BGM ≈ 44 MB, under the 60 MB limit). If it grows past that: `node tools/build.js --bgm external` (serve dist/ over http).
+- **Listening page**: `node tools/audio_preview.js` → `design/audio_preview.html` (players for every file, loop-seam button).

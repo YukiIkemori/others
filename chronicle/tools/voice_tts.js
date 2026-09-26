@@ -81,7 +81,8 @@ function buildPrompt(C, line) {
     line.direction ? `This line: ${line.direction}` : '',
     'Language: natural, native Tokyo-standard Japanese, performed by a professional anime/game voice actor. Pauses at "……" and "――". Do not read these notes aloud; say only the transcript.',
   ].filter(Boolean).join('\n');
-  return `# AUDIO PROFILE: ${sp.profile}\n## SCENE: ${line.scene === 'battle' ? 'In the middle of a fantasy RPG battle.' : 'A story scene of a Japanese fantasy RPG.'}\n## DIRECTOR'S NOTES\n${notes}\n## TRANSCRIPT\n${spoken(line.text)}`;
+  const said = (C.readings || {})[line.id] || spoken(line.text); // kana reading for words the model misreads
+  return `# AUDIO PROFILE: ${sp.profile}\n## SCENE: ${line.scene === 'battle' ? 'In the middle of a fantasy RPG battle.' : 'A story scene of a Japanese fantasy RPG.'}\n## DIRECTOR'S NOTES\n${notes}\n## TRANSCRIPT\n${said}`;
 }
 function requestBody(C, line) {
   const sp = speakerOf(C, line);
@@ -279,7 +280,12 @@ async function main(argv, E) {
       console.log(`[voice] round ${r + 1}: ${open.length} line(s) × ${takes} take(s) via the Batch API`);
       const reqs = [];
       for (const l of open) for (let k = 0; k < takes; k++) reqs.push({ key: `${l.id}#${r}.${k}`, request: requestBody(C, l) });
-      const res = await GA.batchGenerate(TTS_MODEL, reqs, { name: 'lc-voice-r' + (r + 1), log: (x) => console.log('  ' + x) });
+      let res;
+      try { res = await GA.batchGenerate(TTS_MODEL, reqs, { name: 'lc-voice-r' + (r + 1), log: (x) => console.log('  ' + x) }); } catch (e) {
+        // out of quota / credits: stop asking, keep the best takes so far (below)
+        console.log(`[voice] round ${r + 1} failed: ${GA.redact(e.message || e).slice(0, 200)}`);
+        break;
+      }
       const next = [];
       for (const l of open) {
         const sp = speakerOf(C, l);
@@ -294,7 +300,10 @@ async function main(argv, E) {
             if (!b || ev.q > b.ev.q) best.set(l.id, { w: p.audio[0].bytes, ev });
             if (ev.good) break;
             console.log(`  ${l.id}: take ${k + 1} rejected (${ev.why})`);
-          } catch (e) { console.log(`  ${l.id}: take ${k + 1} check failed: ${GA.redact(e.message || e).slice(0, 160)}`); }
+          } catch (e) {
+            console.log(`  ${l.id}: take ${k + 1} check failed: ${GA.redact(e.message || e).slice(0, 160)}`);
+            if (!best.get(l.id)) best.set(l.id, { w: p.audio[0].bytes, ev: { good: false, q: -1, heard: '', sim: 0, note: 'not checked', why: 'not checked' } });
+          }
         }
         const b = best.get(l.id);
         if (b && b.ev.good) finish(l, sp, b.w, b.ev); else next.push(l);

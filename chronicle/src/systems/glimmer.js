@@ -35,6 +35,10 @@
       gf: { base: 100, div: 150, min: 0.7, max: 2 },            // GF = clamp((base + 能力値)/div, min, max)（§4.9.4）
       rank: { boss: 2, rare: 2, golden: 1, metal: 1 },           // rank = Tb + rankBase + 旗の分 + 魔物の rankAdd（§4.9.2）
       rankBase: 1, secretLv: 10,
+      // 規則の §4.9.4 の式に足す 2 つの補正（DESIGN §4.9.4 の例 1・例 2 の値は変えない）:
+      //   tier0 … ティア 0 の雑魚戦（ボス戦でない）の判定 ×1.7。序章 約 35 戦で 4 回以上（§4.9.5。A18b.0）
+      //   bossLate … ボス戦（EF ≥ ef.boss）の判定 ×min(2, 1 + 0.4 × max(0, T − 4))。T5〜T7 のボス戦でも誰かが閃く 50% 以上（§9.13.2 X5。A12.5）
+      tier0: 1.7, bossLate: { from: 4, slope: 0.4, max: 2 },
     },
     PROF_PTS: [0, 5, 15, 30, 55, 90, 135, 190, 260, 350, 460],
     MODCAP: { glim: 40, glimMin: -100 },
@@ -48,7 +52,7 @@
     }
     kref = k; gref = k && k.GLIM;
     const g = Object.assign({}, SPEC.GLIM, (k && k.GLIM) || {});
-    for (const key of ['base', 'apt', 'ef', 'gf', 'rank']) g[key] = Object.assign({}, SPEC.GLIM[key], (k && k.GLIM && k.GLIM[key]) || {});
+    for (const key of ['base', 'apt', 'ef', 'gf', 'rank', 'bossLate']) g[key] = Object.assign({}, SPEC.GLIM[key], (k && k.GLIM && k.GLIM[key]) || {});
     kcache = {
       GLIM: g,
       PROF_PTS: (k && k.PROF_PTS) || SPEC.PROF_PTS,
@@ -249,7 +253,9 @@
     const FK = U.clamp(1 + G.fkSlope * (G.expect[T] - known(c) - G.fkFree), 1, G.fkMax);
     const EF = ctx.ef || 1;
     const MARGIN = 1 + G.margin * U.clamp((ctx.rankB || 0) - a.glim.lv, 0, G.marginMax);
-    let p = base * aptM * GF * FK * EF * MARGIN * Math.max(0, 1 + gp / 100);
+    const boss = EF >= G.ef.boss, BL = G.bossLate || {};
+    const T0 = (!boss && T === 0 && G.tier0 ? G.tier0 : 1) * (boss && BL.slope ? Math.min(BL.max || Infinity, 1 + BL.slope * Math.max(0, T - (BL.from || 0))) : 1);
+    let p = base * aptM * GF * FK * EF * MARGIN * T0 * Math.max(0, 1 + gp / 100);
     if (ctx.stone && a.kind === 'spell' && ctx.elements && ctx.elements[0] && !knowsElement(c, ctx.elements[0])) p *= G.stoneEntry;
     return Math.min(G.cap, p);
   }

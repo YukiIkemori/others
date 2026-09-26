@@ -165,7 +165,8 @@
       last1: { lvOff: 4, hpMul: 30, atk: 1.6, mag: 1.6, def: 1.25, agi: 1.3, acts: 2, exp: 40, gold: 15 },
       last2: { lvOff: 4, hpMul: 36, atk: 1.6, mag: 1.6, def: 1.25, agi: 1.3, acts: 3, exp: 40, gold: 15 },
       echo: { lvOff: 4, hpMul: 30, atk: 1.7, mag: 1.7, def: 1.25, agi: 1.3, acts: 2, exp: 30, gold: 15 },
-      super: { lvOff: 8, hpMul: 45, atk: 1.8, mag: 1.8, def: 1.3, agi: 1.4, acts: 3, exp: 40, gold: 15 },
+      // A12.1 (b): atk/mag 1.8 → 1.25 so that b_ouroboros' own s stays inside §4.14.2's 0.5–2.0 (it sat at the 0.5 floor)
+      super: { lvOff: 8, hpMul: 45, atk: 1.25, mag: 1.25, def: 1.3, agi: 1.4, acts: 3, exp: 40, gold: 15 },
       add: { hpMul: null, acts: 1, exp: 2, gold: 2 },   // お供: hpShare, the other multipliers are the main boss's
     },
     MAX_ITEM: 99,
@@ -185,7 +186,12 @@
     };
   };
   /** boss HP curve (§4.14.3) */
-  K.hpBoss = (L) => K.curve(L).hp * (0.65 + 0.05 * U.clamp((L - 6) / 6, 0, 10));
+  // A12.0 (2026-09-26): was 0.65 + 0.05·clamp((L−6)/6, 0, 10) — too flat against the party's growth (region bosses
+  // ran 11.7 rounds at T0 and 7.0 at T7, §4.17.3-B4). The lead's 0.48 + 0.125·clamp((L−6)/6, 0, 10) overshot at T0 and
+  // left a hump at T2 (the T0–T2 party grows about as fast as the curve), so the tier term starts at L18 (T2), rises
+  // 0.15 per 6 levels and stops at L51 (T7's region boss): T0–T1 −4 %, L51 ×1.44; the fixed-tier bosses (L56–68, their
+  // own s) get ×1.38 / ×1.36 / ×1.28 at L56 / 58 / 68 (sim_bosses X1, 2026-09-26).
+  K.hpBoss = (L) => K.curve(L).hp * (0.65 + 0.025 * (U.clamp(L, 18, 51) - 18));
 
   // mods whose values are lists / maps rather than plain numbers (§3.3.16)
   const LIST_MODS = { statusImmune: 1 };

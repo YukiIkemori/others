@@ -22,6 +22,7 @@ const DESIGN = fs.readFileSync(path.join(ROOT, 'DESIGN.md'), 'utf8');
 const lines = DESIGN.split('\n');
 
 let errors = 0, checked = 0;
+const warns = [];
 const err = (m) => { errors++; if (errors <= 60) console.log('  ✗ ' + m); };
 const ok = (c, m) => { checked++; if (!c) err(m); };
 const near = (a, b, tol, m) => ok(Math.abs(a - b) <= tol, `${m}: got ${a}, want ${b} ±${tol}`);
@@ -65,8 +66,14 @@ part('C1 curve §4.14.2', () => {
 
 // ------------------------------------------------------------------ C2 boss HP
 part('C2 boss HP §9.11.2', () => {
+  // DESIGN's curve (§4.14.3). When R.Rules.K.hpBoss has moved on (the boss-balance pass, A12.5) the DESIGN numbers are
+  // rescaled by K.hpBoss / DESIGN's curve — the engine is still checked cell by cell, and the stale table is one warning.
+  const designHb = (L) => M.curve(L).hp * (0.65 + 0.05 * U.clamp((L - 6) / 6, 0, 10));
+  const scale = (L) => M.hpBoss(L) / designHb(L);
+  const moved = [9, 18, 33, 51, 58].some((L) => Math.abs(scale(L) - 1) > 1e-6);
+  if (moved) warns.push(`K.hpBoss differs from DESIGN §4.14.3 (×${[9, 33, 58].map((L) => scale(L).toFixed(3)).join(' / ')} at Lb 9 / 33 / 58): the §4.14.3 / §9.11.2 HP tables need the new numbers (DESIGN owner)`);
   // §4.14.3 worked examples
-  const hb = (L, mul) => Math.round(M.hpBoss(L) * mul);
+  const hb = (L, mul) => Math.round(designHb(L) * mul);
   ok(hb(9, 18) === 456 && hb(33, 18) === 3161 && hb(51, 18) === 7356, `region boss HP 456 / 3161 / 7356 (got ${hb(9, 18)} / ${hb(33, 18)} / ${hb(51, 18)})`);
   ok(hb(9, 10) === 253 || hb(8, 10) === 221, 'mid boss T0');
   ok(hb(58, 30) === 16029 && hb(58, 36) === 19235 && hb(68, 45) === 33389, `last / super boss HP 16029 / 19235 / 33389 (got ${hb(58, 30)} / ${hb(58, 36)} / ${hb(68, 45)})`);
@@ -91,9 +98,9 @@ part('C2 boss HP §9.11.2', () => {
         const u = e.mons.find((x) => x.id === 'b_' + short || x.id === short || x.id.endsWith('_' + short));
         if (!u) { err(`${troop} T${T}: no unit for ${short}`); continue; }
         const shp = (DB.monsters[u.id].s && DB.monsters[u.id].s.hp) || 1; // A12's per-boss 個性 (s ±20 %, tuned by sim_bosses)
-        const exp = want * shp;
+        const exp = want * shp * scale(Lb);
         cellsN++;
-        ok(Math.abs(u.hp - exp) <= Math.max(2, exp * 0.004), `${troop} T${T} ${u.id}: HP ${u.hp}, DESIGN ${want} × s.hp ${shp} = ${Math.round(exp)}`);
+        ok(Math.abs(u.hp - exp) <= Math.max(2, exp * 0.004), `${troop} T${T} ${u.id}: HP ${u.hp}, DESIGN ${want} × s.hp ${shp}${moved ? ' × K.hpBoss/DESIGN ' + scale(Lb).toFixed(3) : ''} = ${Math.round(exp)}`);
       }
     }
   }
@@ -390,5 +397,6 @@ function partyAt(T) {
 
 console.log('check_battle:');
 for (const k in counts) console.log(`  ${k.padEnd(28)} ${String(counts[k][0]).padStart(6)} checks  ${counts[k][1] ? counts[k][1] + ' FAILED' : 'ok'}`);
-console.log(`check_battle: ${checked} checks, ${errors} error(s)`);
+for (const w of warns) console.log('  warn: ' + w);
+console.log(`check_battle: ${checked} checks, ${errors} error(s), ${warns.length} warning(s)`);
 process.exit(errors ? 1 : 0);

@@ -161,6 +161,8 @@ for (const c of troopRows) {
   // §11.0 0.17 / §11.13: the P2 tunes and backdrops replace these once they exist (troops.js onData)
   const P2 = { tr_b_nemrea1: { bgm: 'hollowking', bg: 'hollow' }, tr_b_nemrea2: { bg: 'hollow' }, tr_b_valzard_echo: { bgm: 'valzard' }, tr_b_ouroboros: { bg: 'ring' } }[id] || {};
   if (P2.bg && t.bg === P2.bg) c[4] = '`' + P2.bg + '`';
+  // R3.1: the dragon fights on the summit (frost_peak_3 bbg 'peak', §11.2.12; `peak` falls back to `snow`)
+  if (id === 'tr_b_whitedragon' && t.bg === 'peak' && tick(c[4]) === 'snow') c[4] = '`peak`';
   if (P2.bgm && t.bgm === P2.bgm) c[5] = '`' + P2.bgm + '`';
   same(id + '.bgm', t.bgm, tick(c[5]));
   same(id + '.bg', t.bg || null, tick(c[4]) || null);

@@ -20,7 +20,7 @@
     tr_b_sandworm: boss([['b_sandworm', 1]], { scale: 'tier', lvOff: 2, bg: 'pyramid', bgm: 'boss' }),
     tr_b_sandking: boss([['@mummy', 1], ['b_sandking', 1], ['@mummy', 1]], { scale: 'tier', lvOff: 3, bg: 'pyramid', bgm: 'boss2' }),
     tr_b_icegiant: boss([['b_icegiant', 1]], { scale: 'tier', lvOff: 2, bg: 'ice', bgm: 'boss' }),
-    tr_b_whitedragon: boss([['b_whitedragon', 1]], { scale: 'tier', lvOff: 3, bg: 'snow', bgm: 'boss2' }),
+    tr_b_whitedragon: boss([['b_whitedragon', 1]], { scale: 'tier', lvOff: 3, bg: 'peak', bgm: 'boss2' }),
     tr_b_dolls: boss([['b_doll_violin', 1], ['b_doll_conductor', 1], ['b_doll_drum', 1], ['b_doll_flute', 1]],
       { scale: 'tier', lvOff: 2, bg: 'manor', bgm: 'boss' }),
     tr_b_mistbeast: boss([['b_mistbeast', 1]], { scale: 'tier', lvOff: 3, bg: 'swamp', bgm: 'boss2' }),

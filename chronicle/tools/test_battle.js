@@ -75,7 +75,10 @@ guard('R.Mon', () => {
   const c6 = M.curve(6), c30 = M.curve(30);
   ok([r(c6.hp), r(c6.atk), r(c6.def), r(c6.agi), r(c6.exp), r(c6.gold)].join() === '25,17,35,28,12,8', 'curve(6) = the §4.14.2 table');
   ok([r(c30.hp), r(c30.atk), r(c30.def), r(c30.agi), r(c30.exp), r(c30.gold)].join() === '174,69,95,42,93,80', 'curve(30) = the §4.14.2 table');
-  near(M.hpBoss(18), M.curve(18).hp * (0.65 + 0.05 * 2), 1e-9, 'hpBoss(L) = hp(L) × (0.65 + 0.05 clamp((L−6)/6, 0, 10))');
+  // the boss-balance pass (A12.5) moved the curve into R.Rules.K.hpBoss; R.Mon.hpBoss must follow it, else the §4.14.3 default
+  const kHp = R.Rules && R.Rules.K && typeof R.Rules.K.hpBoss === 'function' ? R.Rules.K.hpBoss : null;
+  if (kHp) near(M.hpBoss(18), kHp(18), 1e-9, 'hpBoss(L) follows R.Rules.K.hpBoss');
+  else near(M.hpBoss(18), M.curve(18).hp * (0.65 + 0.05 * 2), 1e-9, 'hpBoss(L) = hp(L) × (0.65 + 0.05 clamp((L−6)/6, 0, 10))');
   // fillStats: mob (size s, MOB 0.6), rare (no MOB, ×5 rewards), metal (fixed HP, ×30 EXP), boss (region row), お供 (master's row)
   const c7 = M.curve(7);
   const rat = M.fillStats({ lv: 7, size: 's', s: { hp: 0.9, agi: 1.2 }, flags: [] });
@@ -1052,6 +1055,139 @@ guard('counter', () => {
   ok(!l2.alive && !said(ev, '立ち上がった'), 'autoRevive: once per battle');
 });
 
+// ================================================================ §6.9.1-10 (techs' battle unit tests, A7.3)
+sec('§6.9.1-10');
+/** record every e.roll made while fn runs → [{att, tgt, ctx}] */
+function spyRoll(e, fn) {
+  const calls = [], orig = e.roll;
+  e.roll = function (att, tgt, eff, ctx) { calls.push({ att, tgt, eff, ctx: ctx || {} }); return orig.apply(this, arguments); };
+  try { fn(); } finally { e.roll = orig; }
+  return calls;
+}
+guard('6.9.1-10', () => {
+  // (1) 反撃の構え: the counter strikes with the weapon of the slot the stance was taken with
+  const e = mk({ mons: ['tb_goblin'] });
+  const hero = P(e, 0), mage = P(e, 2), gob = withD(Mo(e, 0), { hit: 999, crit: 0, hp: 9999 });
+  gob.hp = gob.mhp = 9999;
+  equip(hero, 'shield', null); equip(hero, 'weapon1', 'tb_dagger'); equip(hero, 'weapon2', 'tb_sword');
+  ok(hero.weapon('weapon1').wtype === 'dagger' && hero.weapon('weapon2').wtype === 'sword', 'fixture: dagger in slot 1, sword in slot 2');
+  hero.wp = 99;
+  use(e, hero, 'tb_t_guard', null, { slot: 'weapon2' });
+  ok(hero.status.counter && hero.status.counter.slot === 'weapon2', 'the stance remembers its slot (weapon 2)');
+  let cev = [];
+  const croll = spyRoll(e, () => { hero.c.hp = hero.mhp; cev = run(e.attack(gob, hero)).concat(run(e.flushReactions())); });
+  const cc = croll.filter((x) => x.att === hero && x.ctx.attack);
+  ok(cc.length === 1 && cc[0].ctx.slot === 'weapon2' && cc[0].ctx.W && cc[0].ctx.W.wtype === 'sword', `the counter uses the stance slot's weapon (${cc.map((x) => x.ctx.W && x.ctx.W.wtype).join()})`);
+  ok(cc.length === 1 && cc[0].eff.power === 0.8, 'the counter uses the stance power (0.8)');
+  ok(count(cev, 'fx', (x) => x.kind === 'counter' && x.fx === e.weaponFx(hero, 'weapon2')) === 1, "the counter's effect is weapon 2's");
+  // (2) once per enemy action (a 2-hit action is one action), again on the next action
+  gob.hp = gob.mhp; hero.c.hp = hero.mhp;
+  let ev = use(e, gob, 'tb_e_double', hero).concat(run(e.flushReactions()));
+  ok(count(ev, 'react', (x) => x.kind === 'counter' && x.u === hero) === 1, `a 2-hit enemy action: exactly one counter (${count(ev, 'react')})`);
+  hero.c.hp = hero.mhp;
+  ev = use(e, gob, 'tb_e_bite', hero).concat(run(e.flushReactions()));
+  ok(count(ev, 'react', (x) => x.kind === 'counter' && x.u === hero) === 1, 'the next enemy action: one counter again');
+  // (3) never against all-target actions or spells
+  hero.c.hp = hero.mhp;
+  ev = use(e, gob, 'tb_e_sweep', null).concat(run(e.flushReactions()));
+  ok(count(ev, 'react') === 0, 'no counter on an all-party physical action');
+  hero.c.hp = hero.mhp;
+  ev = use(e, gob, 'tb_e_bolt', hero).concat(run(e.flushReactions()));
+  ok(count(ev, 'react') === 0 && !said(ev, '受け流した'), 'no counter / parry on a spell');
+  delete hero.status.counter; delete hero.turns.counter;
+  equip(hero, 'weapon2', null); equip(hero, 'weapon1', 'tb_sword'); equip(hero, 'shield', 'tb_shield');
+
+  // (4) かばう: the attack moves to the cover-er, its damage × mul (0.6), only for a single physical attack
+  hero.wp = 99;
+  use(e, hero, 'tb_t_wall', null, { slot: 'weapon1' });
+  mage.c.hp = mage.mhp; hero.c.hp = hero.mhp;
+  const cvr = spyRoll(e, () => { ev = run(e.attack(gob, mage)); });
+  const cr = cvr.filter((x) => x.att === gob);
+  ok(cr.length === 1 && cr[0].tgt === hero && cr[0].ctx.coverMul === 0.6, `covered: the roll is on the cover-er with coverMul 0.6 (${cr[0] && cr[0].ctx.coverMul})`);
+  const ncv = spyRoll(e, () => { run(e.attack(gob, hero)); });
+  ok(ncv.filter((x) => x.att === gob).every((x) => x.ctx.coverMul === 1), 'not covered: coverMul 1');
+  const r06 = mean(() => e.roll(gob, hero, SURE(), { coverMul: 0.6 }).dmg, 3000) / mean(() => e.roll(gob, hero, SURE(), { coverMul: 1 }).dmg, 3000);
+  near(r06, 0.6, 0.02, 'coverMul scales the damage');
+  hero.c.hp = hero.mhp; mage.c.hp = mage.mhp;
+  ev = use(e, gob, 'tb_e_sweep', null);
+  ok(!said(ev, 'かばった'), 'an all-party action is not covered');
+  delete hero.status.cover; delete hero.turns.cover;
+
+  // (5) a tech's riders (status / 弱体) only when its damage lands
+  let missBuff = 0, hitBuff = 0, hits = 0, misses = 0;
+  for (let i = 0; i < 200; i++) {
+    const x = mk({ mons: ['tb_goblin'] });
+    const t = withD(Mo(x, 0), { eva: i % 2 ? 0 : 200, hp: 9999 }); t.hp = t.mhp = 9999;
+    const u = P(x, 0); equip(u, 'shield', null); equip(u, 'weapon1', 'tb_whip'); u.c.techs.push('tb_t_trip'); u.wp = 99;
+    const evs = quiet(() => use(x, u, 'tb_t_trip', t, { slot: 'weapon1' }));
+    if (count(evs, 'dmg', (d) => d.u === t)) { hits++; if (t.buffs.agi === -1) hitBuff++; } else { misses++; if (t.buffs.agi !== 0) missBuff++; }
+  }
+  ok(misses > 20 && missBuff === 0, `a missed tech carries no 弱体 (${missBuff}/${misses})`);
+  ok(hits > 20 && hitBuff >= hits * 0.9, `a landed tech carries its 弱体 (${hitBuff}/${hits})`);
+
+  // (6) vs keyed by status ids (× only while the target has that status)
+  const vx = mk({ mons: ['tb_goblin', 'tb_goblin'] });
+  const vh = P(vx, 0), g1 = Mo(vx, 0), g2 = Mo(vx, 1);
+  g1.status.poison = true; g1.turns.poison = 9;
+  near(meanRoll(vx, vh, g1, SURE({ vs: { poison: 2 } }), { slot: 'weapon1' }) / meanRoll(vx, vh, g1, SURE(), { slot: 'weapon1' }), 2, 0.05, 'vs {poison: 2} on a poisoned foe × 2');
+  near(meanRoll(vx, vh, g2, SURE({ vs: { poison: 2 } }), { slot: 'weapon1' }) / meanRoll(vx, vh, g2, SURE(), { slot: 'weapon1' }), 1, 0.04, 'vs {poison: 2} on a healthy foe × 1');
+
+  // (7) dispel side:'good' from a tech: ups and every good status (regen, veil, counter, nimble, cover) go; downs and bad statuses stay
+  const dx = mk({ mons: ['tb_goblin'] });
+  const dg = Mo(dx, 0), dm = P(dx, 2);
+  dg.buffs = { atk: 1, def: 2, mag: -1, mdef: 0, agi: 1 };
+  for (const s of ['regen', 'veil', 'counter', 'nimble', 'cover']) { dg.status[s] = s === 'counter' ? { slot: null, power: 1, parry: 0 } : s === 'cover' ? { mul: 1 } : true; dg.turns[s] = 3; }
+  dg.status.poison = true; dg.turns.poison = 3;
+  dm.wp = 99;
+  ev = use(dx, dm, 'tb_t_unward', dg, { slot: 'weapon1' });
+  ok(dg.buffs.atk === 0 && dg.buffs.def === 0 && dg.buffs.agi === 0 && dg.buffs.mag === -1, "tech dispel 'good': ups cleared, downs kept");
+  ok(['regen', 'veil', 'counter', 'nimble', 'cover'].every((s) => !dg.status[s]) && dg.status.poison, "tech dispel 'good': good statuses (incl. counter / cover) cleared, poison kept");
+  ok(dm.wp === 99 - dx.wpCost(dm, 'tb_t_unward') && said(ev, '強化の効果が消えた'), 'the dispel tech paid its WP and said so');
+
+  // (8) healMp pct from a tech: ceil(max MP × pct), at least 1
+  const hx = mk();
+  const hm = P(hx, 2), hs = P(hx, 3);
+  hm.c.techs.push('tb_t_share'); hm.wp = 99; hs.mp = 0;
+  use(hx, hm, 'tb_t_share', hs, { slot: 'weapon1' });
+  ok(hs.mmp > 0 && hs.mp === Math.max(1, Math.ceil(hs.mmp * 0.2)), `healMp pct 0.2 → ceil(max × 0.2) (${hs.mp}/${hs.mmp})`);
+  hs.mp = hs.mmp - 1;
+  use(hx, hm, 'tb_t_share', hs, { slot: 'weapon1' });
+  ok(hs.mp === hs.mmp, 'healMp stops at max MP');
+
+  // (9) the weapon's onHit is rolled once per tech per target, even for 3 hits
+  const ox = mk({ mons: ['tb_goblin'] });
+  const ou = P(ox, 3);
+  ou.c.equip.weapon1 = 'tb_venom_dagger'; ou.c.row = 'front'; ou.c.techs.push('tb_t_flurry'); ou.refresh();
+  let maxRolls = 0, anyHit = 0;
+  const inf0 = ox.inflict;
+  let pr = 0;
+  ox.inflict = function (u, t, s) { if (s === 'poison' && u === ou) pr++; return inf0.apply(this, arguments); };
+  try {
+    for (let i = 0; i < 60; i++) {
+      const t = Mo(ox, 0); t.hp = t.mhp = 9999; t.status = {}; t.turns = {};
+      ou.wp = 99; pr = 0;
+      const evs = quiet(() => use(ox, ou, 'tb_t_flurry', t, { slot: 'weapon1' }));
+      if (count(evs, 'dmg', (d) => d.u === t)) anyHit++;
+      maxRolls = Math.max(maxRolls, pr);
+    }
+  } finally { ox.inflict = inf0; }
+  ok(anyHit > 30 && maxRolls === 1, `onHit rolled at most once per tech (max ${maxRolls} over ${anyHit} landed)`);
+
+  // (10) 'reach' and 'silence' make a tech unusable (and the AI does not offer it)
+  const ux = mk({ mons: ['tb_goblin'] });
+  const uh = P(ux, 0), um = P(ux, 2);
+  uh.c.row = 'middle'; uh.refresh(); uh.wp = 99;
+  ok(ux.effRow(uh) === 'middle' && ux.unusable(uh, 'tb_t_cut', 'weapon1') === 'reach', "a reach:false tech from the middle row → 'reach'");
+  ok(!AI.abilityOptions(ux, uh).some((o) => o.id === 'tb_t_cut'), 'the AI does not offer it');
+  const hp0 = Mo(ux, 0).hp;
+  ev = quiet(() => use(ux, uh, 'tb_t_cut', Mo(ux, 0), { slot: 'weapon1' }));
+  ok(Mo(ux, 0).hp === hp0 && count(ev, 'dmg') === 0 && uh.wp === 99 && said(ev, '中列からは届かない'), 'used anyway: refused, no damage, no WP');
+  um.wp = 99; um.status.silence = true; um.turns.silence = 3;
+  ok(ux.unusable(um, 'tb_t_mind', 'weapon1') === 'silence', "silenced: a staff (magic) tech → 'silence'");
+  ok(!AI.abilityOptions(ux, um).some((o) => o.id === 'tb_t_mind'), 'the AI does not offer it while silenced');
+  ok(ux.unusable(P(ux, 1), 'tb_t_up', 'weapon1') === null || ux.unusable(P(ux, 1), 'tb_t_up', 'weapon1') === undefined, 'a non-magic tech of a front-row fighter is usable');
+});
+
 // ================================================================ monsters & rounds
 sec('monster AI');
 guard('monster AI', () => {
@@ -1685,9 +1821,16 @@ guard('party AI', () => quiet(() => {
   ok(c3.some((c) => c && c.id === 'tb_t_unward' && c.target === Mo(e3, 0)), 'dispels a boss with 守備力 up');
   // thrift in a trivial fight
   const e4 = mk({ party: R.fxBattleParty(30), mons: ['tb_goblin', 'tb_goblin'] });
-  let spent = 0;
-  for (let i = 0; i < 20; i++) spent += AI.partyCommands(e4, AI.AUTO_OPTS).filter((c) => c && c.type === 'tech').length;
+  let spent = 0, hunt = 0;
+  for (let i = 0; i < 20; i++) {
+    for (const c of AI.partyCommands(e4, AI.AUTO_OPTS)) {
+      if (!c || c.type !== 'tech') continue;
+      // (d) 閃きねらい: the middle-row staff's reach tech (its 攻撃 cannot reach) is the one allowed exception (§4.13.2)
+      if (c.id === 'tb_t_mind' && e4.effRow(P(e4, 2)) === 'middle') hunt++; else spent++;
+    }
+  }
   ok(spent === 0, `thrift: no WP on a trivial group (${spent})`);
+  ok(hunt <= AI.GLIM_REACH.perBattle, `thrift: the reach tech of (d) at most ${AI.GLIM_REACH.perBattle} a fight (${hunt})`);
   // focus fire
   const e5 = mk({ mons: ['tb_goblin', 'tb_goblin', 'tb_goblin'] });
   for (const m of e5.mons) { withD(m, { hp: 500 }); m.hp = m.mhp = 500; }
@@ -1739,6 +1882,32 @@ guard('party AI', () => quiet(() => {
   ok(pc === 0, 'no percent spells on mobs');
   // the glimmer slot: in mob fights the attack uses a slot with open candidates
   ok(typeof AI.glimSlot === 'function' && typeof AI.candidatesOpen === 'function', 'glimmer aim helpers');
+  // D8 (§4.13.2-d): a middle-row staff (its 攻撃 cannot reach) hunts glimmers with its cheapest reach tech before weapon 2
+  const mkHunt = (o) => {
+    const x = mk(Object.assign({ mons: ['tb_goblin', 'tb_goblin'] }, o || {}));
+    for (const m of x.mons) { withD(m, { hp: 400 }); m.hp = m.mhp = 400; }
+    const mg = P(x, 2);
+    equip(mg, 'weapon2', 'tb_whip');
+    mg.wp = mg.mwp; mg.mp = 0;
+    return x;
+  };
+  const h1 = mkHunt(), mg1 = P(h1, 2);
+  const open1 = AI.candidatesOpen(h1, mg1, { kind: 'tech', wtype: 'staff', rankB: h1.rankB, ef: h1.ef, tier: h1.glimTier, row: 'middle', silenced: false, used: 'tb_t_mind' });
+  ok(h1.effRow(mg1) === 'middle' && !h1.canReach(mg1, 'weapon1') && h1.canReach(mg1, 'weapon2'), 'D8 fixture: the staff cannot reach, the whip can');
+  const r1 = AI.glimReach(h1, mg1, AI.abilityOptions(h1, mg1));
+  ok(open1 && (r1 && r1.o.id === 'tb_t_mind' && r1.slot === 'weapon1'), `D8: glimReach → the staff slot's reach tech (${r1 && r1.o.id})`);
+  const hc = AI.partyCommands(h1, AI.AUTO_OPTS)[2];
+  ok(open1 && (hc && hc.type === 'tech' && hc.id === 'tb_t_mind' && hc.slot === 'weapon1'), `D8: the auto mage uses 念じ打ち, not the whip's 攻撃 (${hc && (hc.id || hc.type + ':' + hc.slot)})`);
+  const hc2 = AI.partyCommands(h1, AI.AUTO_OPTS)[2];
+  const hc3 = AI.partyCommands(h1, AI.AUTO_OPTS)[2];
+  ok(AI.GLIM_REACH.perBattle !== 2 || (hc2 && hc2.id === 'tb_t_mind' && hc3 && hc3.type === 'attack' && hc3.slot === 'weapon2'), `D8: at most ${AI.GLIM_REACH.perBattle} a fight, then the whip (${hc3 && (hc3.id || hc3.type + ':' + hc3.slot)})`);
+  const h2 = mkHunt(); P(h2, 2).wp = Math.floor(P(h2, 2).mwp * 0.4);
+  const hc4 = AI.partyCommands(h2, AI.AUTO_OPTS)[2];
+  ok(hc4 && hc4.type === 'attack' && hc4.slot === 'weapon2', `D8: WP below half → the whip's 攻撃 (${hc4 && (hc4.id || hc4.type)})`);
+  const h3 = mkHunt({ mons: ['tb_boss'] });
+  ok(AI.glimReach(h3, P(h3, 2), AI.abilityOptions(h3, P(h3, 2))) === null, 'D8: not in boss fights (WP is spent on the best action there)');
+  const h4 = mkHunt(); P(h4, 2).c.row = 'front'; P(h4, 2).refresh();
+  ok(AI.glimReach(h4, P(h4, 2), AI.abilityOptions(h4, P(h4, 2))) === null, 'D8: a front-row staff attacks normally');
 }));
 
 // ================================================================ simulate

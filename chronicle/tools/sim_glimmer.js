@@ -2,7 +2,7 @@
 // 閃きの頻度のシミュレーター（担当 A8。DESIGN §4.9.5・§7.12.2・§6.9.4・§12.3 の G）。
 //
 //   node tools/sim_glimmer.js [--runs 24] [--seed 1] [--rules auto|shim|real] [--json out.json] [-q]
-//                             [--acts 3] [--boss-acts 9] [--k fkSlope=0.6,fkMax=6] [--no-engine] [--catchup-only]
+//                             [--acts 3] [--boss-acts 9] [--k fkSlope=0.6,fkMax=6] [--no-engine] [--catchup-only] [--staff-start]
 //     --acts / --boss-acts  1 戦の 1 人の行動の数（感度を見る用）  --k  K.GLIM をこの sandbox の中だけで変えて比べる
 //     --no-engine           本物の戦闘エンジン（R.Battle.simulate）での確かめ（参考の節）を飛ばす
 //
@@ -51,6 +51,8 @@ const f1 = (x) => (Math.round(x * 10) / 10).toFixed(1), f2 = (x) => x.toFixed(2)
 const TECHS = {};
 for (const id in DB.actions) { const a = DB.actions[id]; if (a.kind === 'tech') (TECHS[a.wtype] = TECHS[a.wtype] || []).push(id); }
 const K = R.Rules.K;
+// --staff-start: newgame 側の変更（術師の仲間の startTechs に念じ打ち）がまだ入っていないとき、この sandbox の中だけで先に入れて見る
+if (args.includes('--staff-start')) for (const id of ['teo', 'ilse', 'morga', 'marta']) { const d = DB.companions[id]; if (d && !(d.startTechs || []).includes('t_staff_mind')) d.startTechs = (d.startTechs || []).concat('t_staff_mind'); }
 const PEXP = K.PEXP || [15, 40, 70, 100, 135, 175, 220, 270, 330, 400];
 
 // ---------------------------------------------------------------- 人の作り方
@@ -82,6 +84,9 @@ const PROFILES = {
   recruit: { weapons: [W('weapon1', 'greatsword', 0.65), W('weapon2', 'axe', 0.35)], row: 'front' },   // 候補の開いている人は「攻撃」（§4.13.2-d）
 };
 const TECH_USE = { zako: 0.25, boss: 0.6 };
+// §4.13.2-d（D8）: 中列で「攻撃」の届かない武器（杖）は、候補が開いていれば、その系統の一番安い届く技（念じ打ち）で閃きをねらう。
+// 雑魚戦だけ、1 戦に R.BattleAI.GLIM_REACH.perBattle 回まで（エンジンの battle_ai.js の glimReach と同じ）
+const REACH_HUNT = (R.BattleAI && R.BattleAI.GLIM_REACH && R.BattleAI.GLIM_REACH.perBattle) || 2;
 
 function member(key, charSpec, prof, over) {
   const c = H.makeChar(charSpec);
@@ -93,9 +98,27 @@ function member(key, charSpec, prof, over) {
 // ---------------------------------------------------------------- 行動のモデル
 function usableTech(c, id, row) { const a = DB.actions[id]; return a && (row !== 'middle' || a.reach); }
 function knownTechs(c, w, row) { return (c.techs || []).filter((id) => DB.actions[id] && DB.actions[id].wtype === w && usableTech(c, id, row)); }
-function weaponAction(m, boss) {
+function reachHunt(m, b, x) {
+  const { c, p } = m;
+  if (b.boss || p.row !== 'middle' || (b.hunts || 0) >= REACH_HUNT) return null;
+  const kts = knownTechs(c, x.w, 'middle').filter((id) => { const a = DB.actions[id]; return FOE_T[a.target] && a.effects.some((e) => e.type === 'damage' && e.formula !== 'percent'); });
+  if (!kts.length) return null;
+  kts.sort((a, z) => (DB.actions[a].wp || 0) - (DB.actions[z].wp || 0) || DB.actions[a].glim.lv - DB.actions[z].glim.lv);
+  if (!G.candidates(c, { kind: 'tech', wtype: x.w, used: kts[0], rankB: b.rankB, ef: b.ef, tier: b.T, row: 'middle', silenced: false }).length) return null;
+  b.hunts = (b.hunts || 0) + 1;
+  return { kind: 'tech', wtype: x.w, slot: x.slot, used: kts[0], actionId: kts[0] };
+}
+const FOE_T = { enemy: 1, enemies: 1, group: 1, random: 1 };
+function weaponAction(m, boss, b) {
   const { c, p } = m;
   const reachOf = (w) => !!(DB.weaponTypes[w] && DB.weaponTypes[w].reach);
+  if (b && !boss) {   // D8: the AI tries the reach tech of a slot that cannot reach before anything else (up to REACH_HUNT a fight)
+    for (const x of p.weapons) {
+      if (p.row !== 'middle' || reachOf(x.w)) continue;
+      const h = reachHunt(m, b, x);
+      if (h) return h;
+    }
+  }
   const tot = p.weapons.reduce((s, x) => s + x.share, 0);
   let r = U.r() * Math.max(1, tot), pick = null;
   for (const x of p.weapons) { r -= x.share; if (r < 0) { pick = x; break; } }
@@ -114,6 +137,7 @@ function weaponAction(m, boss) {
     return null;
   };
   // 中列で届かない武器は、技を使うときだけ使う。そうでなければ届く武器の「攻撃」に替える（§4.13.2 の「届かなければ武器2」）
+  // 届かない武器の技の候補が開いていれば（D8）、武器2 の「攻撃」より先にその技（reachHunt）
   return tryWeapon(pick, useTech) || p.weapons.map((x) => tryWeapon(x, false)).find(Boolean) || p.weapons.map((x) => tryWeapon(x, true)).find(Boolean) || null;
 }
 function spellsWith(c, e) { return (c.spells || []).filter((id) => DB.actions[id] && DB.actions[id].elements.includes(e)); }
@@ -148,6 +172,7 @@ function planBattle(m, b) {
   const acts = [];
   const { p } = m;
   let casts = 0;
+  const hb = { boss: b.boss, rankB: b.rankB, ef: b.ef, T: b.T, hunts: 0 };
   if (p.elements) {
     if (b.boss) { for (let i = 0; i < n; i++) if (U.r() < p.bossSpell) casts++; }
     else casts = Math.floor(p.casts) + (U.r() < p.casts - Math.floor(p.casts) ? 1 : 0);
@@ -156,7 +181,7 @@ function planBattle(m, b) {
     let a = null;
     if (i === 0 && !b.boss) a = stoneAction(m);
     if (!a && i < casts + (acts.length && acts[0] && acts[0].stone ? 1 : 0)) a = spellAction(m, b, b.boss);
-    if (!a) a = weaponAction(m, b.boss);
+    if (!a) a = weaponAction(m, b.boss, hb);
     acts.push(a);
   }
   return acts;
@@ -257,7 +282,7 @@ function standardParty() {
 }
 function archetypeParty(o) {
   o = o || {};
-  const mageTechs = o.staffStart ? ['t_staff_mind'] : [];
+  const mageTechs = o.staffStart ? ['t_staff_mind'] : (o.mageTechs || []);
   return [
     member('hero', { heroType: 'warrior', favor: { kind: 'weapon', id: 'sword' }, techs: ['t_sword_stepcut'] }, 'hero'),
     member('warrior', { id: '_sim_warrior', techs: ['t_sword_stepcut'] }, 'warrior'),
@@ -342,7 +367,10 @@ function archRuns(o, only) {
   }
   return recs;
 }
-const arch = archRuns({});                                               // 仲間の術師のいまの形（杖＋鞭、杖の技なし。§5.0 の 0.9）と 1.5 回の術師
+// G4c は、いまの仲間の術師（テオ・イルゼ・モルガ・マルタ）の startTechs のうち杖の技を持って始める（newgame 側で念じ打ちが入れば反映される）
+const COMP_STAFF = ['teo', 'ilse', 'morga', 'marta'].map((id) => ((DB.companions[id] && DB.companions[id].startTechs) || []).filter((t) => DB.actions[t] && DB.actions[t].wtype === 'staff'));
+const compStaffTechs = COMP_STAFF.every((l) => l.length) ? COMP_STAFF[0] : [];
+const arch = archRuns({ mageTechs: compStaffTechs });                                               // 仲間の術師のいまの形（杖＋鞭、杖の技なし。§5.0 の 0.9）と 1.5 回の術師
 const archSpec = archRuns({ staffStart: true, staffOnly: true }, ['mage']); // §4.9.5 の型: 杖で戦う術師（念じ打ち = starterKit.tech.staff から）
 const archFix = archRuns({ staffStart: true }, ['mage']);                 // 杖＋鞭で念じ打ちを持って始める
 function archSummary(recs, key, label) {
@@ -355,7 +383,7 @@ function archSummary(recs, key, label) {
 log('\n## §4.9.5 の型（クリア時）');
 const aw = archSummary(arch, 'warrior', '戦士型（剣 A・斧 B）');
 const amSpec = archSummary(archSpec, 'mage', '術師型 杖・念じ打ち（0.75 回）');
-const am = archSummary(arch, 'mage', '仲間の術師 杖＋鞭・杖の技なし');
+const am = archSummary(arch, 'mage', compStaffTechs.length ? '仲間の術師 杖＋鞭・startTechs' : '仲間の術師 杖＋鞭・杖の技なし');
 const am2 = archSummary(archFix, 'mage', '杖＋鞭・念じ打ちあり');
 const am15 = archSummary(arch, 'mage15', '術師型 中列（1.5 回）');
 function firstTier(recs, key, pred) {
@@ -514,7 +542,7 @@ function mageCrit(id, s, label, guide) {
   crit(id, label, `計 ${f1(t)}（単 ${f1(si)}・A ${f1(a)}・B ${f1(b)}・三 ${f1(tr)}・杖 ${f1(st)}・ほかの技 ${f1(mean(s.cs.map((c) => c.techs)) - st)}）`, ok, '計 24〜32、単 9〜14、A 1〜3、B 0〜3、三 0〜1、杖 4〜10', guide);
 }
 mageCrit('G4b', amSpec, '術師型（杖・中列・0.75 回・念じ打ちで始める）のクリア時の数');
-mageCrit('G4c', am, '参考: いまの仲間の術師（杖＋鞭・杖の技なしで始める）', true);
+mageCrit('G4c', am, `参考: いまの仲間の術師（杖＋鞭・${compStaffTechs.length ? '杖の技 ' + compStaffTechs.join('・') + ' で始める' : '杖の技なしで始める'}）`, true);
 mageCrit('G4d', am2, '参考: 杖＋鞭で念じ打ちを持って始める', true);
 crit('G5', '得手不得手の差（1 系統、T4 の終わり）A ÷ D', `${f2(one.A / one.D)}（A ${f1(one.A)}・D ${f1(one.D)}）`, one.A >= 1.2 * one.D, '1.2 以上');
 crit('G6', '知力の差（1 回の判定）S/Z・S/N', `${f2(pInt[2] / pInt[0])}・${f2(pInt[2] / pInt[1])}`, pInt[2] / pInt[0] >= 1.8 && pInt[2] / pInt[1] >= 1.35, 'S/Z 1.8 以上・S/N 1.35 以上');

@@ -4,7 +4,8 @@
   "voice: a prebuilt voice id from GET /v1beta/voices (type prebuilt → speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName) or a custom replicated voice (type custom → speechConfig.voiceConfig.voice).",
   "profile/style go into the prompt (English); lines[<id>] is the per-line acting direction; fx is a post effect of tools/voice_tts.js (FX table: pitch / echo).",
   "hero: the silent protagonist only has short battle voices, one set per gender (R.State.hero().gender m/f): v_hero_<g>_<kind>_<n>, played by R.Audio.battleVoice(kind).",
-  "Custom voice assignment: both custom voices were sampled and their median F0 estimated (YIN): Signature Voice ≈ 139 Hz, Echo ≈ 140 Hz — too close to tell, so by the lead's rule Signature Voice = male hero, Echo = female hero. NOTE: both read as adult male voices."
+  "Custom voice assignment: both custom voices were sampled and their median F0 estimated (YIN): Signature Voice ≈ 139 Hz, Echo ≈ 140 Hz — too close to tell, so by the lead's rule Signature Voice = male hero, Echo = female hero. NOTE: both read as adult male voices.",
+  "readings[<id>]: what the TTS is asked to say instead of the script text, for words it misreads (the check still compares with the script)."
  ],
  "model": "gemini-3.8-flash-tts",
  "speakers": {
@@ -363,5 +364,8 @@
   "v_valzard_oblivion_01": "Stunned realization, ancient dread awakening, slow raspy pace, hollow rumbling volume.",
   "v_valzard_oblivion_02": "Weary anguish, lingering terror of centuries, dragging heavy pace, low gravelly volume.",
   "v_valzard_oblivion_03": "Faint reverence, defeat and memory, dying slow pace, fading raspy whisper."
+ },
+ "readings": {
+  "v_berna_roa_02": "おかえり。……よく、ここまでかいたね。"
  }
 }
