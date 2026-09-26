@@ -94,7 +94,7 @@
     // ---------------------------------------------------------------- 人
     const N = [
       K.npc('pim', 'npc_pim', 10, 36, { name: 'ピム', dir: 'e', talk: 'verda_pim', cond: '!forest_found_pim', pushable: false, reward: 'side' }),
-      K.npc('fawn', 'ani_fawn', 9, 37, { name: '花角の小鹿', dir: 'e', talk: 'verda_fawn_choice', cond: ['forest_found_pim', '!forest_fawn_done'], pushable: false }),
+      K.npc('fawn', 'ani_fawn', 9, 37, { name: '花角の小鹿', dir: 'e', talk: 'verda_fawn_choice', cond: '!forest_fawn_done', pushable: false }),
       K.npc('hans', 'npc_hans', 52, 46, { name: 'ハンス', dir: 'n', talk: 'verda_hans', cond: '!forest_found_hans', pushable: false }),
       K.npc('roy', 'npc_roy', 51, 13, { name: 'ロイ', dir: 's', talk: 'verda_hollow', cond: ['forest_roy_out', '!forest_found_roy'], pushable: false }),
     ];

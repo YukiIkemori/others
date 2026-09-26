@@ -31,7 +31,7 @@
   E('elder_rings', async (ev) => {
     await ev.say(null, ['太い根の、古い切り口だ。\n年輪が、びっしりと並んでいる。', '……外側の二十本だけが、\n糸のように細い。', '日の当たらなかった年は、\n輪が太らないという。']);
     await F().lore(ev, 'lo_time_forest');
-  }, { meta: { needs: [], gives: ['flag:lore_lo_time_forest'] } });
+  }, { meta: { needs: [], gives: ['flag:lo_time_forest'] } });
 
   // ピムを連れてきたとき: 根食らいの手前（控えの間）で野営地へ帰る
   E('elder_pim_home', async (ev) => {

@@ -135,10 +135,11 @@ const run = (p, id) => p.evaluate((id) => { window.__evDone = false; RPG.Events.
       const inv3 = await B.invariants(P.page);
       ok('invariants after the clear' + tag, inv3.ok, inv3);
       // E17: 次の町に入る → story_t1
+      await P.page.evaluate(`(() => { const o = RPG.Events.run; RPG.Events.run = function (id, c) { if (id === 'story_t1') window.__evT1 = c && c.reason; return o.apply(this, arguments); }; })()`);
       await P.page.evaluate("RPG.Field.enter('field_pharos', 'plaza')");
       await B.waitFor(P.page, 'window.__evT1 !== undefined', 8000);
       ok('E17: entering a town runs story_t1 once' + tag, await P.page.evaluate("window.__evT1 === 'enter' && RPG.Game.pendingTier === null"));
-      await B.pressUntil(P.page, 'a', '!RPG.Events.busy()', 10);
+      await B.pressUntil(P.page, 'a', '!RPG.Events.busy() && RPG.Engine.top().id === "field"', 60);
       await P.page.waitForTimeout(500);
       const inv4 = await B.invariants(P.page);
       ok('invariants after story_t1' + tag, inv4.ok, inv4);

@@ -15,7 +15,7 @@
     rect(g, 0, 0, 52, 1, 'T');
     rect(g, 2, 3, 41, 27, 'c');                // 上の町（石畳）
     vline(g, 0, 3, 29, 'Q'); vline(g, 1, 3, 29, 'Q');   // 西の町壁
-    rect(g, 0, 14, 2, 3, '.');                 // 西の門
+    rect(g, 0, 18, 2, 2, '.');                 // 西の門
     rect(g, 19, 13, 16, 12, 's');              // 噴水の広場（敷石）
     hline(g, 0, 43, 30, 'Q');                  // 南の擁壁
     vline(g, 43, 3, 30, 'Q');                  // 東の擁壁
@@ -66,8 +66,8 @@
       ...PS('barrel', [[11, 8], [23, 8], [23, 7]]), P('crate', 31, 8), P('crate', 24, 8), P('sack', 37, 9),
       ...PS('flower_pot', [[2, 9], [10, 9], [37, 8]]), P('bench', 33, 11), P('table', 20, 10), P('chair', 19, 10), P('chair', 21, 10),
       // 中の列と南の通り
-      ...PS('lamp_post', [[2, 18], [18, 18], [35, 18], [2, 26], [18, 26], [35, 27]]),
-      P('barrel', 10, 17), P('barrel', 18, 12), P('crate', 18, 13), P('planter', 9, 19), P('planter', 17, 19),
+      ...PS('lamp_post', [[2, 21], [18, 18], [35, 18], [2, 26], [18, 26], [35, 27]]),
+      P('barrel', 10, 17), P('barrel', 18, 12), P('crate', 18, 13), P('planter', 9, 19),
       ...PS('bench', [[6, 27], [25, 27]]), P('table', 14, 27), P('chair', 13, 27), P('chair', 15, 27),
       P('barrel', 34, 28), P('barrel', 35, 28), P('crate', 33, 28), P('sack', 41, 27), P('hay', 42, 26),
       P('flower_pot', 9, 28), P('flower_pot', 27, 28), P('stump', 42, 19), P('rock_small', 2, 24),
@@ -85,7 +85,7 @@
       P('lamp_post', 2, 12),
 
       // ---------------------------------------------------------------- 調べる物・看板・宝箱
-      K.sign(4, 13, '港町ファロス\n西へ出れば、半島の街道。'),
+      K.sign(2, 16, '港町ファロス\n西へ出れば、半島の街道。'),
       K.sign(47, 22, '造船所\n小舟の修理、承ります。'),
       K.sign(25, 44, '定期船の桟橋\n「しばらく欠航いたします。」'),
       K.exam(23, 22, 'pharos_oilboard'),       // 油の相場の札（STORY_BIBLE §10.2 lo_pharos_oilboard）
@@ -98,7 +98,7 @@
     // ---------------------------------------------------------------- 人
     const npcs = [
       { id: 'otto', look: 'otto', name: 'オットー', title: '灯台守', x: 24, y: 34, dir: 's', move: 'still', pushable: false, talk: 'pharos_otto', reward: 'item', key: 'pharos_otto' },
-      { id: 'gateguard', look: 'npc_guard_1', name: '門番', x: 3, y: 16, dir: 'e', move: 'still', pushable: false, talk: 'pharos_gateguard', reward: 'news', key: 'pharos_gateguard' },
+      { id: 'gateguard', look: 'npc_guard_1', name: '門番', x: 2, y: 20, dir: 'e', move: 'still', pushable: false, talk: 'pharos_gateguard', reward: 'news', key: 'pharos_gateguard' },
       { id: 'well_child', look: 'npc_child_2', x: 27, y: 20, dir: 's', move: { route: [[27, 20], [25, 20], [25, 21], [27, 21]], wait: 1400 }, talk: 'pharos_well_child', reward: 'side', key: 'pharos_well_child' },
       { id: 'tadeo', look: 'npc_tadeo', name: 'タデオ', title: '灯守組合の油売り', x: 23, y: 23, dir: 'n', move: 'still', talk: 'pharos_tadeo', reward: 'side', key: 'pharos_tadeo' },
       { id: 'fishwife', look: 'npc_woman_3', x: 14, y: 33, dir: 's', move: 'still', talk: 'pharos_fishwife', reward: 'item', key: 'pharos_fishwife' },
@@ -120,11 +120,11 @@
       name: '港町ファロス', name_ruby: 'みなとまちふぁろす', kind: 'town', region: 'prologue', location: 'pharos', theme: 'harbor',
       legend, rows: g, outside: 'sea', objects, npcs,
       spawns: {
-        gate_w: { x: 2, y: 15, dir: 'e' }, harbor: { x: 24, y: 32, dir: 's' }, warp: { x: 26, y: 21, dir: 's' }, inn_front: { x: 6, y: 10, dir: 's' },
+        gate_w: { x: 2, y: 18, dir: 'e' }, harbor: { x: 24, y: 32, dir: 's' }, warp: { x: 26, y: 21, dir: 's' }, inn_front: { x: 6, y: 10, dir: 's' },
         inn_door: { x: 6, y: 9, dir: 's' }, tavern_door: { x: 17, y: 9, dir: 's' }, shop_door: { x: 27, y: 9, dir: 's' },
         record_door: { x: 6, y: 18, dir: 's' }, smith_door: { x: 14, y: 18, dir: 's' }, shipyard_door: { x: 47, y: 22, dir: 's' },
       },
-      exits: [{ x: 0, y: 14, w: 1, h: 3, to: { map: 'world', spawn: 'pharos' } }],
+      exits: [{ x: 0, y: 18, w: 1, h: 2, to: { map: 'world', spawn: 'pharos' } }],
       triggers: [{ id: 'arrival', on: 'enter', event: 'pharos_arrival' }],
       light: { ambient: '#5c5aa0', k: 0.45, mood: 'town_night' }, bgm: 'town',
       meta: { sub: '潮風と灯台の町', chestsInfo: true },

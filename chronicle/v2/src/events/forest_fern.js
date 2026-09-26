@@ -42,8 +42,9 @@
   E('fern_gord', async (ev) => {
     const f = F();
     // ファロスからの届け物（q_pharos_delivery、依頼の中身は CONTENT-P）
-    if (ev.flag('q_pharos_delivery_got') && !ev.flag('q_pharos_delivery_done')) {
+    if (ev.has('k_ship_parcel') && !ev.flag('q_pharos_delivery_done')) {
       await ev.say('gord', ['造船所の見習いからの届け物？\n……ああ、頼んでおいた\n斧の柄の木型だ。', 'わざわざ森まで、すまねえ。\nほら、駄賃だ。とっといてくれ。']);
+      ev.take('k_ship_parcel', 1);
       ev.gold(150);
       ev.setFlag('q_pharos_delivery_done');
       ev.leadDone('q_pharos_delivery');
@@ -67,7 +68,7 @@
     const n = f.count(ev);
     if (n > 0) await ev.say('gord', `野営地で ${n} 人が待ってるって？\n……森の中で、よく無事で。\n残りも、頼む。`);
     else await ev.say('gord', ['ハンスは斧、ベンは呼び笛、\nロイは弁当箱だ。', '坊主のことは、女房のカトリに\n聞いてくれ。']);
-  }, { meta: { needs: [], gives: ['lead:l_forest_woodcutters', 'flag:forest_gord_talked'] } });
+  }, { meta: { needs: [], gives: ['lead:l_forest_woodcutters', 'flag:forest_gord_talked', 'flag:q_pharos_delivery_done'] } });
 
   // ---------------------------------------------------------------- F2 ピムの母カトリ（帽子の片方 k_pim_hat → l_forest_pim）
   E('fern_pim_mother', async (ev) => {
@@ -195,7 +196,7 @@
     await ev.say(null, ['切り株が、どこまでも並んでいる。\nどれも、同じ高さで切られている。']);
     if (ev.choiceOf('ch_forest_write') === 'pain') await ev.say(null, '切り株のあいだに、\n小さな苗が植わっている。');
     await R.ContentF.forest.lore(ev, 'lo_war_forest');
-  }, { meta: { needs: [], gives: ['flag:lore_lo_war_forest'] } });
+  }, { meta: { needs: [], gives: ['flag:lo_war_forest'] } });
 
   E('fern_peddler', async (ev) => {
     await ev.say('peddler', cleared(ev) ? '森の道が、元に戻ったそうだ。\nやっと荷を運べるよ。' : 'いらっしゃい。森の道が\n閉じちまって、品が\nあまってるんだ。');

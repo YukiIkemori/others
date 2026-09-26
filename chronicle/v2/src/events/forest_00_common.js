@@ -1,7 +1,7 @@
 // CONTENT-F: 森（ヴェルダの森・フェルン）の共通のデータと小道具。V2_PLAN §3.3〜§3.5・STORY_BIBLE §7.1・§10
 //   R.DB.leads   森の手がかり（地方 5・依頼 7・寄り道の噂 2）。本筋の l_main_recorder_forest は CONTENT-P（leads_main.js）
 //   R.DB.letters ピムの最初の詩・くべられなかった手紙（1 通目）
-//   R.DB.lore    読み物（STORY_BIBLE §10.2 の森の 5 点。契約の外の新しい表。手がかり帳の「書庫」は EVENTS・MENUS に依頼済み）
+//   R.DB.lore    読み物（STORY_BIBLE §10.2 の森の 5 点。{title, text, region, must}。調べると旗 = id。CONTENT-P の序章と同じ形）
 //   R.DB.chronicle.r_forest  年代記の章「千年樹の歌」の文（選択で変わる。E14）
 //   R.ContentF.forest: VERSES・PEOPLE・rescue()・lore()・give()・found()・last() …（イベントのファイルが使う）
 // 旗・変数（§2.4 の決まり）: forest_* ／ 選択 ch_forest_pim（send|take）・ch_forest_fawn（heal|leave）・ch_forest_write（pain|oath）
@@ -51,14 +51,14 @@
     if (who === 'pim') ev.leadDone('l_forest_pim');
   };
 
-  /** 読み物（R.DB.lore）を書庫へ。EVENTS に ev.lore が無い間は旗 lore_<id> と通知で代える */
+  /** 読み物（R.DB.lore）を書庫へ（CONTENT-P の序章と同じ形: 旗 = id）。EVENTS に ev.lore が来たらそちらを使う */
   F.lore = async function (ev, id) {
-    if (ev.flag('lore_' + id)) return false;
-    ev.setFlag('lore_' + id);
+    if (ev.flag(id)) return false;
+    ev.setFlag(id);
     if (typeof ev.lore === 'function') { await ev.lore(id); return true; }
     const d = R.DB.lore && R.DB.lore[id];
     try { ev.sfx('quill'); } catch (e) { /* */ }
-    await ev.caption(`手がかり帳の書庫に「${d ? d.name : id}」を書き留めた。`, { ms: 1800 });
+    await ev.caption(`書庫に書き写した：${d ? d.title : id}`, { ms: 1800 });
     return true;
   };
 
@@ -77,7 +77,7 @@
   lead('l_forest_pim', { kind: 'region', title: 'ピムを探して', text: 'ゴードの息子ピムが、父を探して\nひとりで迷いの森へ入った。\n帽子の片方を持つと、足あとが光る。', from: 'カトリ（ピムの母）', place: 'verda', done: 'forest_found_pim' });
   lead('l_forest_woodcutters', { kind: 'region', title: '樵の三人', text: 'ハンス・ベン・ロイ。斧、笛、\n弁当箱。落ちた持ち物が、\n行き先を教えてくれるかもしれない。', from: 'ゴード', place: 'verda', done: ['forest_found_hans', 'forest_found_ben', 'forest_found_roy'] });
   lead('l_forest_song', { kind: 'region', title: '森の歌の石', text: '迷いの森に、千年樹の歌を\n分けて刻んだ石が三つあるという。\n歌がそろえば、森は迷わせない。', from: 'リタ', place: 'verda', done: { var: 'forest_verses', gte: 3 } });
-  lead('l_forest_hut', { kind: 'region', title: '途切れた樵の日誌', text: '休み小屋の日誌に、記録院の男が\n「森の奥の空き小屋」へ入った、\nと書いてあった。', from: '樵の休み小屋', place: 'verda', done: 'lore_lo_lz_1', hideWhen: 'cleared_r_forest' });
+  lead('l_forest_hut', { kind: 'region', title: '途切れた樵の日誌', text: '休み小屋の日誌に、記録院の男が\n「森の奥の空き小屋」へ入った、\nと書いてあった。', from: '樵の休み小屋', place: 'verda', done: 'lo_lz_1', hideWhen: 'cleared_r_forest' });
   // 依頼（side。id は依頼と同じ q_*）
   lead('q_fern_letters', { kind: 'side', title: '樹上の手紙配り', text: '手紙番のニナから、樹上の家\n五軒への手紙を預かった。\nつり橋を渡って届けよう。', from: 'フェルンの手紙番', place: 'fern', done: 'forest_letters_done' });
   lead('q_fern_herbs', { kind: 'side', title: '薬草五種', text: '薬草園のばあさまが、迷いの森の\n広場ごとに生える薬草を\n一種ずつ欲しがっている。', from: '薬草園のばあさま', place: 'verda', done: 'forest_herbs_done' });
@@ -102,15 +102,20 @@
 
   // ---------------------------------------------------------------- 読み物（STORY_BIBLE §10.2 の 9〜12・35）
   const lore = (id, o) => R.def('lore', id, Object.assign({ region: 'r_forest' }, o));
-  lore('lo_ev_forest', { name: '記録官の帳面', kind: 'main', must: true, text: '「歌の石の歌を写した。\n写したあと、村の子が歌えなくなった。\n報告すべきか」' });
-  lore('lo_time_forest', { name: '伸びない年輪', kind: 'main', must: true, text: '千年樹の根の切り口。\n外側の二十本の年輪だけが、\n糸のように細い。日が当たらなかった年の輪だ。' });
-  lore('lo_war_forest', { name: '伐り跡の原', kind: 'region', must: false, text: '村はずれの切り株の原。\n二十年前、戦の烽火のために、\n森の東半分が伐られたという。' });
-  lore('lo_forest_moss_stone', { name: '苔の語り石', kind: 'region', must: false, text: 'ロアの語り石と同じ形の石。\n苔の下の文字は、\nどうしても読めない。' });
-  lore('lo_lz_1', { name: 'くべられなかった手紙', kind: 'main', must: false, order: 1, letter: 'letter_lz_1', text: '記録官の鞄の底にあった手紙。\n差出人の名はない。' });
+  lore('lo_ev_forest', { title: '記録官の帳面', kind: 'main', must: true, text: '「歌の石の歌を写した。\n写したあと、村の子が歌えなくなった。\n報告すべきか」' });
+  lore('lo_time_forest', { title: '伸びない年輪', kind: 'main', must: true, text: '千年樹の根の切り口。\n外側の二十本の年輪だけが、\n糸のように細い。日が当たらなかった年の輪だ。' });
+  lore('lo_war_forest', { title: '伐り跡の原', kind: 'region', must: false, text: '村はずれの切り株の原。\n二十年前、戦の烽火のために、\n森の東半分が伐られたという。' });
+  lore('lo_forest_moss_stone', { title: '苔の語り石', kind: 'region', must: false, text: 'ロアの語り石と同じ形の石。\n苔の下の文字は、\nどうしても読めない。' });
+  lore('lo_lz_1', { title: 'くべられなかった手紙', kind: 'main', must: false, order: 1, letter: 'letter_lz_1', text: '記録官の鞄の底にあった手紙。\n差出人の名はない。' });
 
   // ---------------------------------------------------------------- 年代記の章（E14。選択で文が変わる）
+  //   MENUS は R.DB.chronicle[summaryKey].text を読む（requests.jsonl の MENUS → lead）。text は parts の cond の合う文をつないだもの
   R.def('chronicle', 'r_forest', {
     title: '千年樹の歌',
+    get text() {
+      const ok = (c) => c == null || (R.Game && R.State && R.State.check ? R.State.check(c) : false);
+      return this.parts.filter((p) => ok(p.cond)).map((p) => p.text).join('\n');
+    },
     parts: [
       { text: '森が歌を忘れ、道を変えた年のこと。\n語り部の見習いは、迷いの森で\n四人を探した。' },
       { cond: { choice: 'ch_forest_pim', is: 'send' }, text: '幼い子を家へ帰し、ひとり森の奥へ進んだ。' },

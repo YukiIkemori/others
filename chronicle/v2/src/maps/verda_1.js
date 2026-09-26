@@ -61,7 +61,6 @@
     const O = [];
     O.push(K.spring('verda_1_s1', 26, 27));                         // 蛍だまりの泉（1 階の中ほど）
     O.push({ type: 'brazier', id: 'verda_1_camp', x: 31, y: 30, on: true });   // 野営地の焚き火
-    O.push(K.exam(31, 29, 'verda_camp_fire'));
     O.push(K.prop('tent', 34, 27), K.prop('log', 29, 31), K.prop('log', 33, 31), K.prop('sack', 35, 28), K.prop('crate', 35, 30));
     O.push(K.prop('lantern', 28, 26), K.prop('lantern', 34, 32));
     O.push(K.prop('beacon', 30, 23, { cond: 'cleared_r_forest' }));   // 梢の歌の灯（解決のあと。大灯火の光の柱）
@@ -100,10 +99,10 @@
     // ---------------------------------------------------------------- 人（救い出した人は野営地で待つ。STORY_BIBLE §7.1 の 1）
     const N = [
       K.npc('ben', 'npc_ben', 48, 24, { name: 'ベン', dir: 'w', talk: 'verda_ben', cond: '!forest_found_ben', pushable: false, reward: 'side' }),
-      K.npc('camp_hans', 'npc_hans', 28, 30, { name: 'ハンス', dir: 'e', talk: 'verda_camp_talk', cond: ['forest_found_hans', '!cleared_r_forest'], reward: 'news' }),
-      K.npc('camp_ben', 'npc_ben', 29, 32, { name: 'ベン', dir: 'n', talk: 'verda_camp_talk', cond: ['forest_found_ben', '!cleared_r_forest'], reward: 'news' }),
-      K.npc('camp_roy', 'npc_roy', 34, 31, { name: 'ロイ', dir: 'w', talk: 'verda_camp_talk', cond: ['forest_found_roy', '!cleared_r_forest'], reward: 'news' }),
-      K.npc('camp_pim', 'npc_pim', 32, 29, { name: 'ピム', dir: 's', talk: 'verda_camp_talk', cond: ['forest_found_pim', { choice: 'ch_forest_pim', is: 'send' }, '!cleared_r_forest'], reward: 'news' }),
+      K.npc('camp_hans', 'npc_hans', 28, 30, { name: 'ハンス', dir: 'e', talk: 'verda_camp_talk', cond: ['forest_found_hans', '!forest_finale_done'], reward: 'news' }),
+      K.npc('camp_ben', 'npc_ben', 29, 32, { name: 'ベン', dir: 'n', talk: 'verda_camp_talk', cond: ['forest_found_ben', '!forest_finale_done'], reward: 'news' }),
+      K.npc('camp_roy', 'npc_roy', 34, 31, { name: 'ロイ', dir: 'w', talk: 'verda_camp_talk', cond: ['forest_found_roy', '!forest_finale_done'], reward: 'news' }),
+      K.npc('camp_pim', 'npc_pim', 32, 29, { name: 'ピム', dir: 's', talk: 'verda_camp_talk', cond: ['forest_found_pim', '!forest_pim_guest', '!forest_finale_done'], reward: 'news' }),
       K.npc('fawn_after', 'ani_fawn', 47, 41, { name: '花角の小鹿', dir: 'w', talk: 'verda_fawn_after', cond: ['cleared_r_forest', { choice: 'ch_forest_fawn', is: 'heal' }], reward: 'hint' }),
     ];
 

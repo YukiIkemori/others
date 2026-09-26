@@ -221,15 +221,15 @@
   E('verda_moss_stone', async (ev) => {
     await ev.say(null, ['苔に埋もれた、古い語り石だ。\nロアの里の語り石と、\nそっくりの形をしている。', '苔の下に文字が見えるが、\nどうしても読めない。']);
     await F().lore(ev, 'lo_forest_moss_stone');
-  }, { meta: { needs: [], gives: ['flag:lore_lo_forest_moss_stone'] } });
+  }, { meta: { needs: [], gives: ['flag:lo_forest_moss_stone'] } });
 
   E('verda_empty_hut', async (ev) => {
-    if (ev.flag('lore_lo_lz_1')) { await ev.say(null, '戸の壊れた空き小屋だ。\nもう、何も残っていない。'); return; }
+    if (ev.flag('lo_lz_1')) { await ev.say(null, '戸の壊れた空き小屋だ。\nもう、何も残っていない。'); return; }
     await ev.say(null, ['戸の壊れた、空き小屋だ。\n中に、革の鞄が一つ\n置き忘れられている。', '記録院の印の入った鞄だ。\n底に、封をしたままの\n手紙が一通……。']);
     await ev.letter('letter_lz_1');
     await F().lore(ev, 'lo_lz_1');
     ev.leadDone('l_forest_hut');
-  }, { meta: { needs: [], gives: ['flag:lore_lo_lz_1'] } });
+  }, { meta: { needs: [], gives: ['flag:lo_lz_1'] } });
 
   E('verda_herb', async (ev, ctx) => R.ContentF.forest.herb(ev, ctx));
   E('verda_acorn', async (ev) => R.ContentF.forest.acorn(ev));

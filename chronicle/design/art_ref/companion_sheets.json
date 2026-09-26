@@ -1,0 +1,1677 @@
+{
+ "about": "COMPANIONS_REQUEST.md のシート → レイアウト → コマ（sprite_pipe 用）。仲間 20 人 × 5 枚 = 100 枚。コマの id と並びは design/sprite_pipe/tools/brief_spec.py（アルンのシート1・5・6・7・9）に合わせ、マスの大きさ（cellDots）は arun_sheets/manifest.json の届いたシートに合わせた。targetH / heightDots は帽子・飾りを除く身長（art px＝ドット数、エンジンは拡大縮小しない）。measureH は帽子を含む立ちコマの見た目の高さ（パイプラインの身長検査に使う目安）。",
+ "version": 1,
+ "date": "2026-09-26",
+ "source": "chronicle/design/art_ref/COMPANIONS_REQUEST.md",
+ "styleRefs": [
+  "arun_sheets/arun_sheet_05.png",
+  "hero_sheet_owner.png"
+ ],
+ "rules": {
+  "background": "#FF00FF",
+  "pxPerDot": 8,
+  "pxPerDotAccepted": "3-8 (uniform within a sheet)",
+  "battleFacing": "left",
+  "faceFacing": "slightly right",
+  "colorsMax": 50,
+  "outline": "dark colored 1 dot, no pure black",
+  "noEffects": true,
+  "forbiddenHues": "285-330° saturated (magenta keying); Arun markers: red neck scarf, ash-brown messy hair, black coat+cream cloth+brown leather",
+  "fieldLantern": "none drawn; engine overlays when a companion leads",
+  "weapons": "shared: Arun sheet 7 row 2 (wpn_sword … wpn_staff); each companion draws only their own favored weapon in s3/s4",
+  "filename": "comp_<id>_s<N>.png; redraws comp_<id>_s<N>_v2.png …"
+ },
+ "layouts": {
+  "design": {
+   "note": "row1: 4 turnaround (front, 3/4, side-left, back) at battleH; row2: battle idle_a (left) at battleH, face neutral bust ~80, palette swatches 4x2 of 6x6 dots. Reference only: not packed into the game; the pipeline may cut row1/row2 to build configs/refs/<id> (facing references).",
+   "cellDots": [
+    112,
+    96
+   ],
+   "grid": [
+    2,
+    4
+   ],
+   "ids": [
+    [
+     "ref_front",
+     "ref_34",
+     "ref_side_left",
+     "ref_back"
+    ],
+    [
+     "ref_idle_left",
+     "ref_face",
+     "ref_palette",
+     null
+    ]
+   ],
+   "face": [
+    null,
+    null
+   ],
+   "kind": "design",
+   "arunEquivalent": "hero_sheet_owner.png (turnaround + battle + face + palette sections)",
+   "imagePx": [
+    3584,
+    1536
+   ]
+  },
+  "walk": {
+   "kind": "field",
+   "cellDots": [
+    80,
+    64
+   ],
+   "ids": [
+    [
+     "walk_down_0",
+     "walk_down_1",
+     "walk_down_2"
+    ],
+    [
+     "walk_up_0",
+     "walk_up_1",
+     "walk_up_2"
+    ],
+    [
+     "walk_left_0",
+     "walk_left_1",
+     "walk_left_2"
+    ],
+    [
+     "walk_right_0",
+     "walk_right_1",
+     "walk_right_2"
+    ]
+   ],
+   "face": [
+    "down",
+    "up",
+    "left",
+    "right"
+   ],
+   "lantern": false,
+   "arunEquivalent": "arun_sheet_01.png / brief_spec SHEETS[1] (same ids, same layout, but NO lantern; hands empty, weapon stowed)",
+   "briefSpecSheet": 1,
+   "note": "engine overlays the lantern (R.Art.cast.sprites withLantern) when a companion leads",
+   "grid": [
+    4,
+    3
+   ],
+   "imagePx": [
+    1920,
+    2048
+   ]
+  },
+  "battle_base": {
+   "kind": "battle",
+   "cellDots": [
+    104,
+    96
+   ],
+   "ids": [
+    [
+     "idle_a",
+     "idle_b",
+     "step",
+     "guard",
+     "hit"
+    ],
+    [
+     "weak",
+     "ko",
+     "victory_a",
+     "victory_b",
+     "glimmer"
+    ]
+   ],
+   "face": [
+    "left",
+    "left"
+   ],
+   "arunEquivalent": "arun_sheet_05.png / brief_spec SHEETS[5]",
+   "briefSpecSheet": 5,
+   "weaponVariantPoses": [
+    "guard",
+    "weak",
+    "victory_a"
+   ],
+   "grid": [
+    2,
+    5
+   ],
+   "imagePx": [
+    4160,
+    1536
+   ]
+  },
+  "battle_action_bare": {
+   "kind": "battle",
+   "cellDots": [
+    112,
+    80
+   ],
+   "ids": [
+    [
+     "windup",
+     "slash",
+     "thrust_ready",
+     "thrust",
+     "charge"
+    ],
+    [
+     "smash",
+     "cast_a",
+     "cast_b",
+     "item",
+     "evade"
+    ],
+    [
+     "bare_idle",
+     "bare_windup",
+     "bare_slash",
+     "bare_thrust",
+     "bare_cast"
+    ]
+   ],
+   "face": [
+    "left",
+    "left",
+    "left"
+   ],
+   "rowSets": [
+    "battle",
+    "battle",
+    "battle_bare"
+   ],
+   "arunEquivalent": "rows 1-2 = arun_sheet_06.png / brief_spec SHEETS[6]; row 3 = arun_sheet_07.png row 1 / SHEETS[7] row 1 (no weapon row: weapons are shared from Arun sheet 7 row 2)",
+   "briefSpecSheet": [
+    6,
+    7
+   ],
+   "weaponVariantPoses": [
+    "windup",
+    "slash",
+    "thrust_ready",
+    "thrust",
+    "charge",
+    "smash",
+    "evade"
+   ],
+   "armed": {
+    "sword": {
+     "bare_idle": "idle_a",
+     "bare_windup": "windup",
+     "bare_slash": "slash",
+     "bare_thrust": "thrust",
+     "bare_cast": "cast_a"
+    },
+    "other": {
+     "bare_idle": "idle_a",
+     "bare_cast": "cast_a",
+     "bare_windup": null,
+     "bare_slash": null,
+     "bare_thrust": null
+    }
+   },
+   "armedNote": "for non-sword companions bare_windup/slash/thrust are generic one-handed-sword grips (Arun sheet 7 row 1 shapes), not copies of their own action poses; register them by body only",
+   "fallback": "if the model cannot hold 15 poses: rows 1-2 as comp_<id>_s4.png (2x5, cell 104x80) and row 3 as comp_<id>_s4b.png (1x5, cell 112x80)",
+   "grid": [
+    3,
+    5
+   ],
+   "imagePx": [
+    4480,
+    1920
+   ]
+  },
+  "face4": {
+   "kind": "face",
+   "cellDots": [
+    96,
+    96
+   ],
+   "ids": [
+    [
+     "face_neutral",
+     "face_smile",
+     "face_surprise",
+     "face_pain"
+    ]
+   ],
+   "face": [
+    "right"
+   ],
+   "arunEquivalent": "arun_sheet_09.png cell size, 1 row of 4 (Arun has 8 expressions)",
+   "briefSpecSheet": 9,
+   "register": {
+    "face_smile": "face_neutral",
+    "face_surprise": "face_neutral",
+    "face_pain": "face_neutral"
+   },
+   "engineExpr": {
+    "neutral": "face_neutral",
+    "smile": "face_smile",
+    "surprise": "face_surprise",
+    "sad": "face_pain",
+    "angry": "face_neutral"
+   },
+   "note": "face_pain (苦しい) is new; engine EXPRS neutral/smile/sad/angry/surprise -> map sad to face_pain, angry falls back to neutral",
+   "grid": [
+    1,
+    4
+   ],
+   "imagePx": [
+    3072,
+    768
+   ]
+  }
+ },
+ "poseByWeapon": {
+  "sword": "same as Arun sheets 5/6",
+  "greatsword": {
+   "guard": "blade/axe head/maul head/staff held upright in front as a shield",
+   "weak": "kneel, weapon planted",
+   "victory_a": "weapon on shoulder or raised one-handed",
+   "windup": "two-handed, lifted behind head",
+   "slash": "two-handed full downswing, tip near feet",
+   "thrust_ready": "two-handed, horizontal at hip",
+   "thrust": "two-handed forward thrust",
+   "charge": "weapon dragged low behind, deep crouch",
+   "smash": "airborne two-handed downswing",
+   "evade": "heavy backstep"
+  },
+  "dagger": {
+   "guard": "arms crossed, curled low",
+   "weak": "kneel + one hand on ground",
+   "victory_a": "twirl dagger, reverse-grip pose",
+   "windup": "reverse grip, arm drawn back, low",
+   "slash": "fast horizontal slash across body",
+   "thrust_ready": "sink, dagger at hip",
+   "thrust": "long low lunge stab",
+   "charge": "dagger before face, deep crouch",
+   "smash": "leaping downward stab",
+   "evade": "light back-flip hop"
+  },
+  "bow": {
+   "guard": "bow held diagonally in front",
+   "weak": "kneel, bow as a crutch",
+   "victory_a": "bow raised overhead",
+   "windup": "draw arrow from quiver, nock",
+   "slash": "bash near enemy with bow limb",
+   "thrust_ready": "full draw aiming left (engine shoot = thrust_ready -> thrust)",
+   "thrust": "just released, string hand open behind (no arrow drawn)",
+   "charge": "kneel, big upward draw",
+   "smash": "airborne, drawing downward",
+   "evade": "backstep"
+  },
+  "staff": {
+   "guard": "staff held horizontally overhead with both hands",
+   "weak": "kneel, clinging to staff",
+   "victory_a": "staff raised high",
+   "windup": "staff swung up overhead",
+   "slash": "staff swung fully down",
+   "thrust_ready": "two-handed at hip, tip forward",
+   "thrust": "tip thrust forward",
+   "charge": "staff upright in front, both hands, sinking",
+   "smash": "airborne overhead downswing",
+   "evade": "backstep"
+  }
+ },
+ "pipelineNeeds": [
+  "sheets.py picks the sheet number from the file name (s3 -> Arun sheet 3). Companion files need the map s2->1, s3->5, s4->6 (rows 1-2) + 7 (row 3 = bare only, no weapon row), s5->9 (face4 layout); s1 is reference only.",
+  "brief_spec target_h is fixed (48/64/80). Companions need a per-character override from heightDots (e.g. dokka 52/39, teo 56/42, hagen 68/51); otherwise the pipeline would rescale them to 64/48.",
+  "New layouts: battle_action_bare (3x5, rows 1-2 = SHEETS[6] ids, row 3 = SHEETS[7] row 1 ids) and face4 (1x4 with face_pain).",
+  "Walk sheet has no lantern and no run/act sheets; the engine tweens acting poses from walk_down_0.",
+  "meta.weapon of the packed battle set = weaponType (so the engine uses bare+weapons only when the equipped type differs); weapons set copied from Arun.",
+  "No facing references exist for companions: build configs/refs/<id> from the approved s1 turnaround (tools/refs.py) before checking s2-s5."
+ ],
+ "companions": [
+  {
+   "id": "selma",
+   "name": "セルマ",
+   "look": "selma",
+   "gender": "f",
+   "age": 20,
+   "kin": "人間",
+   "title": "元衛兵",
+   "row": "front",
+   "weaponType": "sword",
+   "weaponDrawn": "straight arming sword + small round iron buckler",
+   "heightDots": {
+    "battle": 64,
+    "field": 48,
+    "face": 80
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "battle": 64,
+    "field": 48
+   },
+   "mainHue": 12,
+   "mainHex": "#944D3B",
+   "value": "mid",
+   "headShape": "single thick braid + iron brow band",
+   "signature": "faded gate crest on rust tabard",
+   "section": "COMPANIONS_REQUEST.md §4.1",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_selma_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_selma_s2.png",
+     "layout": "walk",
+     "targetH": 48,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_selma_s3.png",
+     "layout": "battle_base",
+     "targetH": 64,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_selma_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 64,
+     "required": true,
+     "altFiles": [
+      "comp_selma_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_selma_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "hagen",
+   "name": "ハーゲン",
+   "look": "hagen",
+   "gender": "m",
+   "age": 38,
+   "kin": "人間",
+   "title": "傭兵",
+   "row": "front",
+   "weaponType": "greatsword",
+   "weaponDrawn": "notched broad two-handed sword",
+   "heightDots": {
+    "battle": 68,
+    "field": 51,
+    "face": 80
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "battle": 68,
+    "field": 51
+   },
+   "mainHue": "neutral iron grey (accent khaki 62°)",
+   "mainHex": "#59544F",
+   "value": "dark",
+   "headShape": "cropped black hair + left eye patch + grey wolf fur on left shoulder",
+   "signature": "coin pouches",
+   "section": "COMPANIONS_REQUEST.md §4.2",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_hagen_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_hagen_s2.png",
+     "layout": "walk",
+     "targetH": 51,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_hagen_s3.png",
+     "layout": "battle_base",
+     "targetH": 68,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_hagen_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 68,
+     "required": true,
+     "altFiles": [
+      "comp_hagen_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_hagen_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "dokka",
+   "name": "ドッカ",
+   "look": "dokka",
+   "gender": "m",
+   "age": 52,
+   "kin": "山の民",
+   "title": "山の鍛冶屋",
+   "row": "front",
+   "weaponType": "greatsword",
+   "weaponDrawn": "two-handed double-bit axe (greatsword class)",
+   "heightDots": {
+    "battle": 52,
+    "field": 39,
+    "face": 80
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "battle": 52,
+    "field": 39
+   },
+   "mainHue": 145,
+   "mainHex": "#295C3E",
+   "value": "very dark",
+   "headShape": "bald head + forked braided beard with iron rings",
+   "signature": "soot leather smith apron, hammer & tongs",
+   "section": "COMPANIONS_REQUEST.md §4.3",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_dokka_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_dokka_s2.png",
+     "layout": "walk",
+     "targetH": 39,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_dokka_s3.png",
+     "layout": "battle_base",
+     "targetH": 52,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_dokka_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 52,
+     "required": true,
+     "altFiles": [
+      "comp_dokka_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_dokka_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "basil",
+   "name": "バジル",
+   "look": "basil",
+   "gender": "m",
+   "age": 44,
+   "kin": "人間",
+   "title": "修道士",
+   "row": "front",
+   "weaponType": "greatsword",
+   "weaponDrawn": "iron-headed two-handed maul (greatsword class)",
+   "heightDots": {
+    "battle": 68,
+    "field": 51,
+    "face": 80
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "battle": 68,
+    "field": 51
+   },
+   "mainHue": 122,
+   "mainHex": "#779E78",
+   "value": "light, low sat",
+   "headShape": "tonsure + folded hood bulk at nape",
+   "signature": "large wooden prayer beads",
+   "section": "COMPANIONS_REQUEST.md §4.4",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_basil_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_basil_s2.png",
+     "layout": "walk",
+     "targetH": 51,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_basil_s3.png",
+     "layout": "battle_base",
+     "targetH": 68,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_basil_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 68,
+     "required": true,
+     "altFiles": [
+      "comp_basil_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_basil_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "bartolo",
+   "name": "バルトロ",
+   "look": "bartolo",
+   "gender": "m",
+   "age": 63,
+   "kin": "人間",
+   "title": "老騎士",
+   "row": "front",
+   "weaponType": "greatsword",
+   "weaponDrawn": "old two-handed longsword",
+   "heightDots": {
+    "battle": 62,
+    "field": 46,
+    "face": 80
+   },
+   "headgearExtraDots": 8,
+   "measureH": {
+    "battle": 70,
+    "field": 52
+   },
+   "mainHue": "neutral polished steel (accent faded navy 215°)",
+   "mainHex": "#C5CAD1",
+   "value": "light",
+   "headShape": "old helm visor up + one long faded-blue plume + long white moustache",
+   "signature": "dented old plate, torn blue tabard",
+   "section": "COMPANIONS_REQUEST.md §4.5",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_bartolo_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_bartolo_s2.png",
+     "layout": "walk",
+     "targetH": 46,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_bartolo_s3.png",
+     "layout": "battle_base",
+     "targetH": 62,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_bartolo_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 62,
+     "required": true,
+     "altFiles": [
+      "comp_bartolo_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_bartolo_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "viola",
+   "name": "ヴィオラ",
+   "look": "viola",
+   "gender": "f",
+   "age": 24,
+   "kin": "人間",
+   "title": "没落貴族",
+   "row": "front",
+   "weaponType": "sword",
+   "weaponDrawn": "slim guarded sword (rapier-like) + small buckler",
+   "heightDots": {
+    "battle": 64,
+    "field": 48,
+    "face": 80
+   },
+   "headgearExtraDots": 4,
+   "measureH": {
+    "battle": 68,
+    "field": 51
+   },
+   "mainHue": 272,
+   "mainHex": "#A681C7",
+   "value": "light",
+   "headShape": "blunt bob (near-black navy) + small tilted feathered hat",
+   "signature": "lace collar, black neck ribbon",
+   "section": "COMPANIONS_REQUEST.md §4.6",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_viola_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_viola_s2.png",
+     "layout": "walk",
+     "targetH": 48,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_viola_s3.png",
+     "layout": "battle_base",
+     "targetH": 64,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_viola_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 64,
+     "required": true,
+     "altFiles": [
+      "comp_viola_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_viola_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "shigure",
+   "name": "シグレ",
+   "look": "shigure",
+   "gender": "m",
+   "age": 31,
+   "kin": "人間",
+   "title": "刀使い",
+   "row": "front",
+   "weaponType": "sword",
+   "weaponDrawn": "curved katana, black scabbard",
+   "heightDots": {
+    "battle": 66,
+    "field": 50,
+    "face": 80
+   },
+   "headgearExtraDots": 6,
+   "measureH": {
+    "battle": 72,
+    "field": 54
+   },
+   "mainHue": 230,
+   "mainHex": "#2C3461",
+   "value": "dark",
+   "headShape": "wide shallow woven conical hat + low long black tail",
+   "signature": "knee-length haori",
+   "section": "COMPANIONS_REQUEST.md §4.7",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_shigure_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_shigure_s2.png",
+     "layout": "walk",
+     "targetH": 50,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_shigure_s3.png",
+     "layout": "battle_base",
+     "targetH": 66,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_shigure_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 66,
+     "required": true,
+     "altFiles": [
+      "comp_shigure_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_shigure_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "rouga",
+   "name": "ロウガ",
+   "look": "rouga",
+   "gender": "m",
+   "age": 26,
+   "kin": "人間",
+   "title": "拳法家",
+   "row": "front",
+   "weaponType": "greatsword",
+   "weaponDrawn": "heavy long iron-ringed quarterstaff (greatsword class)",
+   "heightDots": {
+    "battle": 64,
+    "field": 48,
+    "face": 80
+   },
+   "headgearExtraDots": 4,
+   "measureH": {
+    "battle": 68,
+    "field": 51
+   },
+   "mainHue": 28,
+   "mainHex": "#E6842E",
+   "value": "bright, vivid",
+   "headShape": "upright spiky black hair + white headband with two long tails",
+   "signature": "wrapped forearms",
+   "section": "COMPANIONS_REQUEST.md §4.8",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_rouga_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_rouga_s2.png",
+     "layout": "walk",
+     "targetH": 48,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_rouga_s3.png",
+     "layout": "battle_base",
+     "targetH": 64,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_rouga_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 64,
+     "required": true,
+     "altFiles": [
+      "comp_rouga_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_rouga_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "titta",
+   "name": "ティッタ",
+   "look": "titta",
+   "gender": "f",
+   "age": 16,
+   "kin": "人間",
+   "title": "下町の子",
+   "row": "front",
+   "weaponType": "dagger",
+   "weaponDrawn": "short dagger (reverse grip)",
+   "heightDots": {
+    "battle": 56,
+    "field": 42,
+    "face": 80
+   },
+   "headgearExtraDots": 4,
+   "measureH": {
+    "battle": 60,
+    "field": 45
+   },
+   "mainHue": 165,
+   "mainHex": "#3B947E",
+   "value": "mid",
+   "headShape": "oversized flat cap + short straw-blond hair",
+   "signature": "bandage on nose, striped socks",
+   "section": "COMPANIONS_REQUEST.md §4.9",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_titta_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_titta_s2.png",
+     "layout": "walk",
+     "targetH": 42,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_titta_s3.png",
+     "layout": "battle_base",
+     "targetH": 56,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_titta_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 56,
+     "required": true,
+     "altFiles": [
+      "comp_titta_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_titta_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "brigitta",
+   "name": "ブリギッタ",
+   "look": "brigitta",
+   "gender": "f",
+   "age": 23,
+   "kin": "人間",
+   "title": "国境の兵",
+   "row": "back",
+   "weaponType": "bow",
+   "weaponDrawn": "straight sturdy military longbow",
+   "heightDots": {
+    "battle": 64,
+    "field": 48,
+    "face": 80
+   },
+   "headgearExtraDots": 3,
+   "measureH": {
+    "battle": 67,
+    "field": 50
+   },
+   "mainHue": 212,
+   "mainHex": "#4D6B8C",
+   "value": "mid",
+   "headShape": "round narrow-brim iron helmet + long single braid",
+   "signature": "small sweets pouch with yellow cord",
+   "section": "COMPANIONS_REQUEST.md §4.10",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_brigitta_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_brigitta_s2.png",
+     "layout": "walk",
+     "targetH": 48,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_brigitta_s3.png",
+     "layout": "battle_base",
+     "targetH": 64,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_brigitta_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 64,
+     "required": true,
+     "altFiles": [
+      "comp_brigitta_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_brigitta_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "sylvain",
+   "name": "シルヴァン",
+   "look": "sylvain",
+   "gender": "m",
+   "age": 119,
+   "kin": "森の民",
+   "title": "森の狩人",
+   "row": "back",
+   "weaponType": "bow",
+   "weaponDrawn": "organic curved branch longbow with leaf details",
+   "heightDots": {
+    "battle": 68,
+    "field": 51,
+    "face": 80
+   },
+   "headgearExtraDots": 6,
+   "measureH": {
+    "battle": 74,
+    "field": 55
+   },
+   "mainHue": 100,
+   "mainHex": "#497334",
+   "value": "dark",
+   "headShape": "long pointed hood trailing back + long pointed ears + pale green-silver hair",
+   "signature": "leaf-cut cloak hem, back quiver",
+   "section": "COMPANIONS_REQUEST.md §4.11",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_sylvain_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_sylvain_s2.png",
+     "layout": "walk",
+     "targetH": 51,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_sylvain_s3.png",
+     "layout": "battle_base",
+     "targetH": 68,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_sylvain_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 68,
+     "required": true,
+     "altFiles": [
+      "comp_sylvain_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_sylvain_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "zafira",
+   "name": "ザフィラ",
+   "look": "zafira",
+   "gender": "f",
+   "age": 22,
+   "kin": "人間",
+   "title": "踊り子",
+   "row": "front",
+   "weaponType": "dagger",
+   "weaponDrawn": "crescent curved dagger, gold hilt",
+   "heightDots": {
+    "battle": 64,
+    "field": 48,
+    "face": 80
+   },
+   "headgearExtraDots": 0,
+   "measureH": {
+    "battle": 64,
+    "field": 48
+   },
+   "mainHue": 180,
+   "mainHex": "#30BFBF",
+   "value": "bright, vivid",
+   "headShape": "gold coin circlet + long veil to knees + waist-long wavy black hair",
+   "signature": "gold bangles and coin belt",
+   "section": "COMPANIONS_REQUEST.md §4.12",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_zafira_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_zafira_s2.png",
+     "layout": "walk",
+     "targetH": 48,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_zafira_s3.png",
+     "layout": "battle_base",
+     "targetH": 64,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_zafira_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 64,
+     "required": true,
+     "altFiles": [
+      "comp_zafira_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_zafira_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "ferno",
+   "name": "フェルノ",
+   "look": "ferno",
+   "gender": "m",
+   "age": 33,
+   "kin": "人間",
+   "title": "吟遊詩人",
+   "row": "back",
+   "weaponType": "bow",
+   "weaponDrawn": "short light bow with ribbon",
+   "heightDots": {
+    "battle": 64,
+    "field": 48,
+    "face": 80
+   },
+   "headgearExtraDots": 14,
+   "measureH": {
+    "battle": 78,
+    "field": 58
+   },
+   "mainHue": 350,
+   "mainHex": "#732C37",
+   "value": "dark",
+   "headShape": "wide soft-brim hat + one huge white plume + shoulder-length dark-gold curls",
+   "signature": "lyre on back",
+   "section": "COMPANIONS_REQUEST.md §4.13",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_ferno_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_ferno_s2.png",
+     "layout": "walk",
+     "targetH": 48,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_ferno_s3.png",
+     "layout": "battle_base",
+     "targetH": 64,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_ferno_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 64,
+     "required": true,
+     "altFiles": [
+      "comp_ferno_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_ferno_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "belladonna",
+   "name": "ベラドナ",
+   "look": "belladonna",
+   "gender": "f",
+   "age": 36,
+   "kin": "人間",
+   "title": "薬売り",
+   "row": "back",
+   "weaponType": "bow",
+   "weaponDrawn": "small hunting bow",
+   "heightDots": {
+    "battle": 62,
+    "field": 46,
+    "face": 80
+   },
+   "headgearExtraDots": 10,
+   "measureH": {
+    "battle": 72,
+    "field": 54
+   },
+   "mainHue": 80,
+   "mainHex": "#7D9E3C",
+   "value": "mid",
+   "headShape": "wrapped head cloth + tall back box with dried herb bundles",
+   "signature": "vial bandolier (blue/amber/green, unlit)",
+   "section": "COMPANIONS_REQUEST.md §4.14",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_belladonna_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_belladonna_s2.png",
+     "layout": "walk",
+     "targetH": 46,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_belladonna_s3.png",
+     "layout": "battle_base",
+     "targetH": 62,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_belladonna_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 62,
+     "required": true,
+     "altFiles": [
+      "comp_belladonna_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_belladonna_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "boden",
+   "name": "ボーデン",
+   "look": "boden",
+   "gender": "m",
+   "age": 61,
+   "kin": "人間",
+   "title": "鉱山技師",
+   "row": "front",
+   "weaponType": "staff",
+   "weaponDrawn": "heavy rod with raw ore chunk in iron claws",
+   "heightDots": {
+    "battle": 58,
+    "field": 44,
+    "face": 80
+   },
+   "headgearExtraDots": 5,
+   "measureH": {
+    "battle": 63,
+    "field": 48
+   },
+   "mainHue": 44,
+   "mainHex": "#8C722A",
+   "value": "dark",
+   "headShape": "round leather miner helmet with (unlit) lamp + goggles + drooping grey moustache",
+   "signature": "tool belt",
+   "section": "COMPANIONS_REQUEST.md §4.15",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_boden_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_boden_s2.png",
+     "layout": "walk",
+     "targetH": 44,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_boden_s3.png",
+     "layout": "battle_base",
+     "targetH": 58,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_boden_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 58,
+     "required": true,
+     "altFiles": [
+      "comp_boden_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_boden_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "teo",
+   "name": "テオ",
+   "look": "teo",
+   "gender": "m",
+   "age": 15,
+   "kin": "人間",
+   "title": "見習い術師",
+   "row": "back",
+   "weaponType": "staff",
+   "weaponDrawn": "academy staff taller than him, small red gem + brass ring",
+   "heightDots": {
+    "battle": 56,
+    "field": 42,
+    "face": 80
+   },
+   "headgearExtraDots": 12,
+   "measureH": {
+    "battle": 68,
+    "field": 51
+   },
+   "mainHue": 54,
+   "mainHex": "#EBD82F",
+   "value": "very bright",
+   "headShape": "oversized pointed hat bent backwards + messy black hair",
+   "signature": "book on shoulder strap",
+   "section": "COMPANIONS_REQUEST.md §4.16",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_teo_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_teo_s2.png",
+     "layout": "walk",
+     "targetH": 42,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_teo_s3.png",
+     "layout": "battle_base",
+     "targetH": 56,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_teo_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 56,
+     "required": true,
+     "altFiles": [
+      "comp_teo_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_teo_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "ilse",
+   "name": "イルゼ",
+   "look": "ilse",
+   "gender": "f",
+   "age": 29,
+   "kin": "人間",
+   "title": "星読み",
+   "row": "back",
+   "weaponType": "staff",
+   "weaponDrawn": "staff topped with small brass armillary sphere",
+   "heightDots": {
+    "battle": 62,
+    "field": 46,
+    "face": 80
+   },
+   "headgearExtraDots": 4,
+   "measureH": {
+    "battle": 66,
+    "field": 49
+   },
+   "mainHue": 248,
+   "mainHex": "#2F2859",
+   "value": "very dark",
+   "headShape": "big loose bun + two star-tipped hairpins + round glasses",
+   "signature": "silver star embroidery, star-chart tube",
+   "section": "COMPANIONS_REQUEST.md §4.17",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_ilse_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_ilse_s2.png",
+     "layout": "walk",
+     "targetH": 46,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_ilse_s3.png",
+     "layout": "battle_base",
+     "targetH": 62,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_ilse_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 62,
+     "required": true,
+     "altFiles": [
+      "comp_ilse_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_ilse_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "morga",
+   "name": "モルガ",
+   "look": "morga",
+   "gender": "f",
+   "age": 47,
+   "kin": "人間",
+   "title": "墓守",
+   "row": "back",
+   "weaponType": "staff",
+   "weaponDrawn": "twisted black crook staff with bell and bird-bone charm",
+   "heightDots": {
+    "battle": 60,
+    "field": 45,
+    "face": 80
+   },
+   "headgearExtraDots": 2,
+   "measureH": {
+    "battle": 62,
+    "field": 47
+   },
+   "mainHue": "neutral black with blue-green cast (170°) + bone",
+   "mainHex": "#232928",
+   "value": "very dark",
+   "headShape": "mourning hood with veil over upper face + waist-long grey-white hair",
+   "signature": "crow-feather collar, bone necklace",
+   "section": "COMPANIONS_REQUEST.md §4.18",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_morga_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_morga_s2.png",
+     "layout": "walk",
+     "targetH": 45,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_morga_s3.png",
+     "layout": "battle_base",
+     "targetH": 60,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_morga_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 60,
+     "required": true,
+     "altFiles": [
+      "comp_morga_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_morga_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "marta",
+   "name": "マルタ",
+   "look": "marta",
+   "gender": "f",
+   "age": 34,
+   "kin": "人間",
+   "title": "町医者",
+   "row": "back",
+   "weaponType": "staff",
+   "weaponDrawn": "plain white-wood staff, pale blue stone, wrapped bandage",
+   "heightDots": {
+    "battle": 62,
+    "field": 46,
+    "face": 80
+   },
+   "headgearExtraDots": 3,
+   "measureH": {
+    "battle": 65,
+    "field": 48
+   },
+   "mainHue": "neutral blue-white (accent blue-grey 200°)",
+   "mainHex": "#E6EEF2",
+   "value": "very light",
+   "headShape": "tight bun under white triangular kerchief with two knot tails",
+   "signature": "leather doctor bag on hip",
+   "section": "COMPANIONS_REQUEST.md §4.19",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_marta_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_marta_s2.png",
+     "layout": "walk",
+     "targetH": 46,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_marta_s3.png",
+     "layout": "battle_base",
+     "targetH": 62,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_marta_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 62,
+     "required": true,
+     "altFiles": [
+      "comp_marta_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_marta_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  },
+  {
+   "id": "noela",
+   "name": "ノエラ",
+   "look": "noela",
+   "gender": "f",
+   "age": 18,
+   "kin": "人間",
+   "title": "見習い巫女",
+   "row": "back",
+   "weaponType": "staff",
+   "weaponDrawn": "staff with water-drop ring and small bells",
+   "heightDots": {
+    "battle": 60,
+    "field": 45,
+    "face": 80
+   },
+   "headgearExtraDots": 2,
+   "measureH": {
+    "battle": 62,
+    "field": 47
+   },
+   "mainHue": 196,
+   "mainHex": "#98D5EB",
+   "value": "very light",
+   "headShape": "waist-long straight black hair, blunt bangs & side locks + white water-lily ornaments both sides",
+   "signature": "small blue charm pouch",
+   "section": "COMPANIONS_REQUEST.md §4.20",
+   "sheets": [
+    {
+     "n": 1,
+     "file": "comp_noela_s1.png",
+     "layout": "design",
+     "required": true
+    },
+    {
+     "n": 2,
+     "file": "comp_noela_s2.png",
+     "layout": "walk",
+     "targetH": 45,
+     "required": true
+    },
+    {
+     "n": 3,
+     "file": "comp_noela_s3.png",
+     "layout": "battle_base",
+     "targetH": 60,
+     "required": true
+    },
+    {
+     "n": 4,
+     "file": "comp_noela_s4.png",
+     "layout": "battle_action_bare",
+     "targetH": 60,
+     "required": true,
+     "altFiles": [
+      "comp_noela_s4b.png"
+     ]
+    },
+    {
+     "n": 5,
+     "file": "comp_noela_s5.png",
+     "layout": "face4",
+     "targetH": 80,
+     "required": true
+    }
+   ]
+  }
+ ],
+ "totals": {
+  "companions": 20,
+  "sheetsPerCompanion": 5,
+  "sheets": 100
+ }
+}
