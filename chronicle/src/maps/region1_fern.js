@@ -227,16 +227,15 @@
         { cond: 'forest_dan', text: '父ちゃん、帰ってきた！\nでも、またすぐ森へ\n行っちゃうんだって。' },
         { text: '父ちゃん、いつ帰ってくるの？\nぼく、いい子にして\n待ってるのに。' },
       ], { move: 'wander', push: true }),
+      // 木こりダン: home from the maze once forest_dan (§10.8.2 NPC); with his family for good after the clear
       K.talk('dan', 'man', 10, 35, [
         { cond: C.post, text: 'また森で迷ったら、\nあんたの年代記を\n読み返すとするよ。' },
-        { text: '仲間の木こりたちも、\nみんな帰ってきた！\n{hero}、本当にありがとうな。\f森の中で、歌が聞こえたんだ。\nそしたら、帰り道が\nふっと見えてな。' },
-      ], { dir: 'left', cond: C.clear, push: true }),
-
-      // --- the woodcutters' lodge
-      K.talk('dan_lodge', 'man', 18, 34, [
+        { cond: C.clear, text: '仲間の木こりたちも、\nみんな帰ってきた！\n{hero}、本当にありがとうな。\f森の中で、歌が聞こえたんだ。\nそしたら、帰り道が\nふっと見えてな。\fこれからは、女房と坊主の\nそばにいてやるさ。\n……森の主さまに誓ってな。' },
         { cond: 'forest_mid', text: 'あの羽虫を倒したって？\nたいしたもんだ！\f奥の道は、つるで\nふさがれてるんだろう？\n歌の石が、関わってるのかもな。' },
         { text: '助かったぜ、{hero}。\nあの羽虫がいる限り、\n仲間を探しに行けねえ。\f迷いの森の奥のほうだ。\n気をつけてな。' },
-      ], { dir: 'down', cond: ['forest_dan', C.before], push: true }),
+      ], { dir: 'left', cond: 'forest_dan', push: true }),
+
+      // --- the woodcutters' lodge
       K.talk('foreman', 'dwarf', 20, 32, [
         { cond: C.clear, text: '若い連中も、みんな\n無事に帰ってきた。\nあんたのおかげだ。' },
         { text: '親方のおれがこのざまだ。\n足をくじいて、森へ\n探しに行けねえ。' },

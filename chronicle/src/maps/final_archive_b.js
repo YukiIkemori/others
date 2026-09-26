@@ -186,10 +186,9 @@
     K.deco(g, 11, 21, '=');
     K.deco(g, 19, 22, '=');
 
-    // the king's hall is where the library dissolves into the white of oblivion: theme `oblivion`
-    // (paper floor, ink-black walls; falls back to `demon`), battle backdrop still `library`
+    // theme `library` like every floor of the archive (§10.10.3, §11.2.11): the white paper drifts over the floor
+    // (decor `=`) around the altar; `oblivion` is kept for 忘却の底 below (§10.12)
     R.DB.maps.archive_6 = K.check('archive_6', base('白の大書庫　虚ろの間', K.ZONE_HI, {
-      theme: 'oblivion',
       rows: K.rows(g), decor: K.decor(g),
       spawns: {
         from_prev: { x: 15, y: 23, dir: 'up' },

@@ -383,7 +383,12 @@ async function run(id, o) {
   for (const s of ['ルミナス・クロニクル', '〜八つの伝承〜', 'Studio Metem', 'DotGothic16', '© Studio Metem', '三人の勇者を名付けてくれたあなたへ']) ok(cr.includes(s), 'credits: ' + s);
   ok(R.Postgame && typeof R.Postgame.bonusScene === 'function' && R.Postgame.PAGES.length >= 4, 'R.Postgame.bonusScene');
   for (const p of R.Postgame.PAGES) lintPage(p, 'postgame page');
-  for (const [k, s] of [['E', 'ending.js']]) void k, void s;
+  // E6: ロウェル's words word for word (§10.11), ラザロ beside ミラ's portrait
+  eq(R.Ending.AFTER.rowell.join('').replace(/[「」]/g, ''), 'おれは、自分の足で伝承を集めてみる。書くためじゃなく、覚えて、語るために。', 'E6 ロウェル');
+  ok(/ミラの肖像画/.test(R.Ending.AFTER.lazaro.join('')) && /書き写/.test(R.Ending.AFTER.lazaro.join('')), 'E6 ラザロ');
+  for (const ln of R.Ending.AFTER.rowell.concat(R.Ending.AFTER.lazaro)) ok(ln.length <= 15, 'E6 card line fits beside the figure: ' + ln);
+  // §10.10.3 / §11.2.11: every floor of the archive is theme library, BGM lastdungeon
+  for (let n = 1; n <= 6; n++) { const d = DB.maps['archive_' + n]; eq(d.theme, 'library', 'archive_' + n + ' theme'); eq(d.bgm, 'lastdungeon', 'archive_' + n + ' bgm'); }
 
   console.log(`test_story: ${passes} passed, ${fails} failed`);
   process.exit(fails ? 1 : 0);

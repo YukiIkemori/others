@@ -167,7 +167,7 @@
     await ev.say('{hero}は、歌の一節を\n年代記に書き留めた。');
     if (n >= 3) {
       ev.closeMessage();
-      ev.sfx('magic');
+      ev.sfx('unlock'); // a closed way opens (§13 reg: ev.sfx('unlock') + ev.flash)
       await ev.flash('#e0ffd8', 14);
       await ev.say('三つの石の歌がつながった。\n千年樹へ続く道の、\nつるがほどけていく……。');
       ev.setObjective('obj_forest_3', RO);
@@ -265,24 +265,26 @@
   };
 
   // ------------------------------------------------------------ the girl in grey (§10.9.4, the story's script)
+  // The step band (once forest_fine) and the NPC `fine` both run this. The story's script handles a
+  // second talk itself (the closing line only), so it is called every time while it exists.
   E.elder_tree_2_fine = {
     meta: { needs: [], gives: ['flag:forest_fine'], calls: ['story_fine_forest'] },
     run: async (ev) => {
-      if (ev.flag('forest_fine')) return;
+      if (ev.flag('forest_boss')) return;
       if (E.story_fine_forest) { await ev.call('story_fine_forest'); ev.setFlag('forest_fine'); return; }
-      // stand-in until the story's script is in (the §10.9.4 lines)
+      // fallback only if the story's file failed to load: the §10.9.4 lines as written there
       const f = ev.npc('fine');
       if (!f.visible) return;
+      const again = ev.flag('forest_fine');
       await ev.wait(12);
       f.face('player');
-      await ev.say('この根の奥に、伝承の核があるわ。\n……根を食べているものがいる。');
+      if (!again) await ev.say('この根の奥に、伝承の核があるわ。\n……根を食べているものがいる。');
       const t = ev.tier();
-      const fade = t >= 3;
       if (t >= 6) await ev.say('……もう、あまり時間がないの。');
       else if (t >= 3) await ev.say('わたしのことは気にしないで。\n先へ進みなさい。');
       else await ev.say('……気をつけて。');
       ev.closeMessage();
-      if (fade) await ev.caption('フィーネの足元が、\n透けて見えた。', { frames: 120 });
+      if (t >= 3 && !again) await ev.caption('フィーネの足元が、\n透けて見えた。');
       ev.sfx('magic');
       await ev.flash('#e8ecff', 10);
       f.hide();
@@ -321,14 +323,14 @@
       if (down && ev.player.x >= 21 && ev.player.x <= 23) await ev.player.walk('D'.repeat(down));
       ev.player.face('down');
       await ev.wait(20);
-      await ev.say('千年樹の根が、かすかに\nふるえている……。');
-      await ev.say('{hero}は、三つの石の歌を\nつないで語った。');
+      await ev.say('千年樹の根が、かすかに\nふるえている……。', TOP);
+      await ev.say('{hero}は、三つの石の歌を\nつないで語った。', TOP);
       ev.closeMessage();
       ev.sfx('quill');
       await ev.caption(SONG, { frames: 260 });
       ev.sfx('light');
       await ev.flash('#e8ffd8', 16);
-      await ev.say('根が、やわらかな緑色に\n光りはじめた。');
+      await ev.say('根が、やわらかな緑色に\n光りはじめた。', TOP);
       ev.closeMessage();
       ev.sfx('magic');
       await ev.flash('#ffffff', 12);

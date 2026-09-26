@@ -16,26 +16,27 @@
   const E = R.DB.events;
   const K = R.Reg4 = R.Reg4 || {};
   const DOLLS = ['boss', 'doll_violin', 'doll_drum', 'doll_flute'];
+  const KAZU = ['', '一', '二', '三'];
 
   // ------------------------------------------------------------ closed passages (§10.8.0-6)
   E.mist_manor_1_fog = {
     meta: { needs: [], gives: [] },
     run: async (ev) => {
-      await ev.say('濃い霧が、通路を\nふさいでいる。\f霧は、まるで生きている\nように、こちらを\n押し返してくる……。');
+      await ev.say('濃い霧が、通路をふさいでいる。\n押しても、押し返されてしまう……。');
     },
   };
   E.mist_manor_2_fog = {
     meta: { needs: [], gives: [] },
     run: async (ev) => {
-      await ev.say('扉の前に、濃い霧が\n渦を巻いている。\f奥から、かすかに\n人の気配がする……。');
+      await ev.say('扉の前で、濃い霧が渦を巻いている。\n奥から、人の気配がする……。');
     },
   };
   E.bell_marsh_1_fog = {
     meta: { needs: [], gives: [] },
     run: async (ev) => {
-      await ev.say('濃い霧が、壁のように\n立ちこめている。\n先へは進めない……。');
+      await ev.say('濃い霧が、壁のように立ちこめている。\n先へは進めない……。');
       const n = ev.var('marsh_bells') || 0;
-      if (ev.has('k_marsh_key')) await ev.say(n ? '霧が、鐘の音をいやがる\nように震えている。\n残る鐘は、あと' + (3 - n) + 'つ……。' : '鐘の音があれば、\nこの霧を払えるかもしれない。');
+      if (ev.has('k_marsh_key')) await ev.say(n ? '霧が、鐘の音をいやがる\nように震えている。\n残る鐘は、あと' + KAZU[3 - n] + 'つ……。' : '鐘の音があれば、\nこの霧を払えるかもしれない。');
     },
   };
 
@@ -125,7 +126,7 @@
         await ev.say('三つの鐘が鳴りわたると、\n霧が一か所に集まっていく……！');
         ev.setObjective('obj_marsh_3', { region: 'r_marsh' });
       } else {
-        await ev.say('鐘の音が、沼の霧を\nかすかに震わせた。\n残る鐘は、あと' + (3 - n) + 'つ……。');
+        await ev.say('鐘の音が、沼の霧を\nかすかに震わせた。\n残る鐘は、あと' + KAZU[3 - n] + 'つ……。');
       }
     },
   });
@@ -134,29 +135,36 @@
   E.bell_marsh_1_bell_c = bellEvent('c');
 
   // ------------------------------------------------------------ #6 フィーネ (§10.8.0-5, story_fine_marsh)
+  // The step band (once marsh_fine) and a talk to the NPC `fine` (cond '!marsh_boss', §10.8.0-5) both
+  // come here. The scene is the story's story_fine_marsh (it says the shorter "again" line when
+  // marsh_fine is already up); until it exists, the region's own line and the tier's ending (§10.9.4)
+  // are said here — one speaker, so no name and no brackets (STYLE_JA §5).
   E.bell_marsh_1_fine = {
     meta: { needs: [], gives: ['flag:marsh_fine'], calls: ['story_fine_marsh'] },
     run: async (ev) => {
-      if (ev.flag('marsh_fine') || ev.flag('marsh_boss')) return;
+      if (ev.flag('marsh_boss')) return;
       if (R.DB.events.story_fine_marsh) {
         await ev.call('story_fine_marsh');
-      } else {
-        // the story owner's scene is missing: the region's own line (§10.9.4) and the tier's ending
-        const f = ev.npc('fine');
-        f.face('player');
-        const girl = ev.flag('st_t3') ? 'フィーネ' : '少女';
-        await ev.say(girl + '「霧は形を持たないから、\n誰の姿にでもなれるの。」');
-        const t = ev.tier();
-        if (t >= 6) await ev.say(girl + '「……もう、あまり時間が\nないの。」');
-        else if (t >= 3) await ev.say(girl + '「わたしのことは気にしないで。\n先へ進みなさい。」');
-        else await ev.say(girl + '「……気をつけて。」');
-        ev.closeMessage();
-        if (t >= 3) await ev.caption('フィーネの足元が、\n透けて見えた。');
-        ev.sfx('magic');
-        await ev.flash('#e8ecff', 8);
-        f.hide();
+        ev.setFlag('marsh_fine');
+        return;
       }
+      const again = ev.flag('marsh_fine');
+      const f = ev.npc('fine');
+      await ev.wait(12);
+      f.face('player');
+      await ev.wait(16);
+      const t = ev.tier();
+      if (!again) await ev.say('霧は形を持たないから、\n誰の姿にでもなれるの。');
+      if (t >= 6) await ev.say('……もう、あまり時間がないの。');
+      else if (t >= 3) await ev.say('わたしのことは気にしないで。\n先へ進みなさい。');
+      else await ev.say('……気をつけて。');
+      ev.closeMessage();
+      if (t >= 3 && !again) await ev.caption('フィーネの足元が、\n透けて見えた。');
+      ev.sfx('magic');
+      await ev.flash('#e8ecff', 10);
+      f.hide();
       ev.setFlag('marsh_fine');
+      await ev.wait(20);
     },
   };
 
@@ -209,7 +217,12 @@
       await ev.caption('その夜は、町の宿で眠った。');
       ev.heal();
       await ev.warp('loch', 'inn', { fade: false });
-      await ev.call('story_after_clear');
+      // morning at the inn: show the town before the story's scene (it does not fade in by itself —
+      // its caption 「翌朝――」 hands the black back), then never leave the screen dark
+      await ev.fadeIn(30);
+      if (R.DB.events.story_after_clear) await ev.call('story_after_clear');
+      if (R.Engine && R.Engine.fadeAlpha > 0) await ev.fadeIn(30);
+      ev.bgm();
     },
   };
 })(window.RPG);

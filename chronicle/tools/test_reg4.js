@@ -300,7 +300,7 @@ function mockEv(o) {
     log, map: o.map || 'loch', ctx: {},
     say: async (t) => { log.push(['say', Array.isArray(t) ? t.join('\f') : t]); },
     ask: async () => 0, yesno: async () => true, caption: async (t) => { log.push(['caption', t]); },
-    closeMessage() {}, wait: async () => {}, fadeOut: async () => {}, fadeIn: async () => {}, shake: async () => {}, flash: async () => {},
+    closeMessage() {}, wait: async () => {}, fadeOut: async () => {}, fadeIn: async () => { log.push(['fadeIn']); }, shake: async () => {}, flash: async () => {},
     sfx(id) { log.push(['sfx', id]); }, bgm() {}, jingle: async () => {},
     flag: (n) => R.State.flag(n), setFlag: (n, v = true) => R.State.setFlag(n, v), check: (c) => R.State.check(c),
     var: (n) => R.State.getVar(n), setVar: (n, v) => R.State.setVar(n, v),
@@ -370,6 +370,25 @@ const has = (log, kind, a) => log.some((l) => l[0] === kind && (a == null || l[1
   // #6 Fine
   r = await runEv('bell_marsh_1_fine');
   ok(R.State.flag('marsh_fine'), 'E', 'bell_marsh_1_fine → marsh_fine');
+  ok(!DB.events.story_fine_marsh || has(r.log, 'call', 'story_fine_marsh'), 'E', 'bell_marsh_1_fine hands the scene to story_fine_marsh when it exists');
+  {
+    const fn = byId('bell_marsh_1', 'fine');
+    ok(fn && fn.cond === '!marsh_boss' && fn.sprite === 'npc:fine' && fn.event === 'bell_marsh_1_fine', 'N', 'bog fine: npc:fine, cond !marsh_boss (§10.8.0-5), talk → bell_marsh_1_fine');
+    // the fallback (no story script): one speaker → no name and no brackets (STYLE_JA §5); tier endings (§10.9.4)
+    const keep = DB.events.story_fine_marsh;
+    delete DB.events.story_fine_marsh;
+    try {
+      for (const [t, end] of [[0, '……気をつけて。'], [3, 'わたしのことは気にしないで。\n先へ進みなさい。'], [6, '……もう、あまり時間がないの。']]) {
+        R.State.setFlag('marsh_fine', false);
+        const gt = R.Game.tier; R.Game.tier = t;
+        const rr = await runEv('bell_marsh_1_fine');
+        R.Game.tier = gt;
+        const says = rr.log.filter((l) => l[0] === 'say').map((l) => l[1]);
+        ok(says[0] === '霧は形を持たないから、\n誰の姿にでもなれるの。' && says[1] === end && !says.some((x) => /「/.test(x)) && has(rr.log, 'hide', 'fine') &&
+          (t >= 3) === has(rr.log, 'caption', 'フィーネの足元が、\n透けて見えた。'), 'E', 'fallback Fine scene at tier ' + t + ' (§10.9.4, no speaker name)');
+      }
+    } finally { if (keep) DB.events.story_fine_marsh = keep; R.State.setFlag('marsh_fine', true); }
+  }
   // #6–7 the boss
   r = await runEv('bell_marsh_1_boss', { battle: 'escape' });
   ok(r.res === false && !R.State.flag('marsh_boss'), 'E', 'boss: escape → no marsh_boss');
@@ -379,6 +398,10 @@ const has = (log, kind, a) => log.some((l) => l[0] === kind && (a == null || l[1
   ok(R.State.flag('marsh_boss') && has(r.log, 'battle', 'tr_b_mistbeast'), 'E', 'boss: win → marsh_boss');
   ok(iClear > 0 && iHeal > iClear && iWarp > iClear && iAfter > iWarp, 'E', 'boss: clearRegion → heal → warp loch inn → story_after_clear (§10.8.0-3)');
   ok(r.log.some((l) => l[0] === 'warp' && l[1] === 'loch' && l[2] === 'inn'), 'E', 'boss: the night at the inn of Loch');
+  {
+    const iFade = order.indexOf('fadeIn:', iWarp);
+    ok(iFade > iWarp && iFade < iAfter, 'E', 'boss: the screen fades in at the inn before story_after_clear (never a black morning)');
+  }
   ok(r.log.some((l) => l[0] === 'caption' && l[1] === 'その夜は、町の宿で眠った。'), 'E', 'boss: 「その夜は、町の宿で眠った。」');
   ok(['child_nico', 'child_lina', 'child_bram', 'melda'].every((c) => has(r.log, 'show', c)), 'E', 'boss: the children and Melda appear');
   ok(r.log.some((l) => l[0] === 'say' && l[1] === 'ありがとう、語り部さん。これでまた、\n町の朝に鐘が鳴るわ。'), 'E', 'boss: Melda\'s line word for word');
@@ -398,6 +421,7 @@ const has = (log, kind, a) => log.some((l) => l[0] === kind && (a == null || l[1
   ok(DB.events.mist_manor_2_melda.meta.gives.includes('item:k_marsh_key') && DB.events.bell_marsh_1_bell_a.meta.needs.includes('item:k_marsh_key'), 'E', 'key meta');
 
   // ------------------------------------------------------------------ O objectives, text
+  ok(MAPS.every((id) => npcs(id).every((n) => n.text !== '……。')), 'O', 'a line of only 「……」 has no period (STYLE_JA §3)');
   for (const [id, t] of [['obj_marsh_1', '東の霧の館に住むという\n魔女を訪ねよう。'], ['obj_marsh_2', '鐘の鍵を持って、\n鐘沈みの沼へ向かおう。'], ['obj_marsh_3', '霧が集まった沼の中心へ\n向かおう。']]) ok(DB.objectives[id] && DB.objectives[id].text === t, 'O', id + ' text (§10.8.5)');
   const width = (s) => { let w = 0; for (const ch of s.replace(/\{hero\}/g, '＿＿＿＿＿')) w += /[\x20-\x7e]/.test(ch) ? 0.5 : 1; return w; };
   const texts = [];

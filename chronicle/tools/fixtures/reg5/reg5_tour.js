@@ -52,7 +52,7 @@
         return R.debug.event('nerei_marina_song');
       }
       if (which === 'dawn') {
-        await R.Reg5Tour.go('ghost_ship_3', { x: 7, y: 15, dir: 'left' }, 'fine');
+        await R.Reg5Tour.go('ghost_ship_3', { x: 7, y: 12, dir: 'up' }, 'fine');
         R.Battle.start = async () => 'win';
         return R.debug.event('ghost_ship_3_boss');
       }

@@ -433,8 +433,11 @@ function storyPlan() {
     spot: l.at && l.at.event ? { x: l.at.event.x, y: l.at.event.y, trigger: l.at.event.trigger || 'step' } : null,
     onEnter: /^onEnter /.test(l.why || ''),
   });
-  const log = s.log.map(plain).filter((l) => l.map && l.gives.some((g) => !/^warp:/.test(g)) && !/^common_/.test(l.event));
-  const R0 = { regions: Object.keys(R.DB.regions || {}), order: (R.DB.config && R.DB.config.regionOrder) || null, locations: R.DB.locations || {} };
+  // an event run by ev.call ('called by …') happens inside its caller: it is not a step of its own
+  const log = s.log.map(plain).filter((l) => l.map && l.gives.some((g) => !/^warp:/.test(g)) && !/^common_/.test(l.event) && !/^called by /.test(l.why || ''));
+  const mapRegion = {};
+  for (const [id, d] of Object.entries(R.DB.maps || {})) mapRegion[id] = d.region || null;
+  const R0 = { regions: Object.keys(R.DB.regions || {}), order: (R.DB.config && R.DB.config.regionOrder) || null, locations: R.DB.locations || {}, mapRegion };
   return { log, meta: R0 };
 }
 
@@ -626,9 +629,20 @@ async function slice(D, S, o) {
   // ---- one region (when its content has landed)
   await S.run('slice.region', async (c) => {
     if (!storyOk) c.skip('the prologue did not finish');
-    const iReg = after.findIndex((l) => l.gives.some((g) => /^region:/.test(g)));
-    if (iReg < 0) c.skip(`no region can be cleared yet (progress: regions ${plan.meta.regions.length}, no region:<id> give reachable after the prologue)`);
-    const part = after.slice(0, iReg + 1);
+    // one region (§12.6-3 「地方 1 つ」): the one whose clear needs the fewest steps; only that region's steps are played
+    // (any-order rule: a region's keys are inside the region)
+    const regionOfStep = (l) => plan.meta.mapRegion[l.map] || null;
+    let best = null;
+    for (let i = 0; i < after.length; i++) {
+      const g = after[i].gives.find((x) => /^region:/.test(x));
+      if (!g) continue;
+      const rid = g.slice(7);
+      const steps = after.slice(0, i + 1).filter((l, k) => k === i || regionOfStep(l) === rid);
+      if (!best || steps.length < best.steps.length) best = { rid, steps };
+    }
+    if (!best) c.skip(`no region can be cleared yet (progress: regions ${plan.meta.regions.length}, no region:<id> give reachable after the prologue)`);
+    c.note(`region ${best.rid}: ${best.steps.length} step(s)`);
+    const part = best.steps;
     for (const e of part) {
       const how = await runPlanEntry(D, e, c, pol);
       if (how === 'already') continue;

@@ -4,6 +4,7 @@
 //                        lanterns (2 frames, the lights flicker), mist at the waterline. 80×64, bow left.
 //   obj:r5_ghost_wreck   the same hull after the clear, lying on the rocks: no lights, sails in rags,
 //                        listing a little. 80×64.
+//   obj:r5_beacon        岬の灯, the old stone beacon on the Nerei cape (16×32, 2 frames: the flame).
 //   obj:r5_regnas_ship   the Regnas merchant ship at Coral after the clear: obj:ship with red-gold sails.
 // The field draws obj: sprites bottom-aligned on their tile (the waterline sits on that tile's row).
 (function (R) {
@@ -128,7 +129,43 @@
     }
     return p.toCanvas();
   }
+  /** 岬の灯: the old stone beacon on the Nerei cape Marina lights every night. 16×32, 2 frames (the flame). */
+  function beacon(f) {
+    const p = new G.Pix(16, 32);
+    const ST = ['#3a3834', '#56524a', '#747064', '#928c7e', '#b0a898'];
+    // tapering stone column (y 13..31), lit from the left
+    for (let y = 13; y <= 31; y++) {
+      const half = 3 + Math.floor((y - 13) / 6);
+      for (let x = 8 - half; x <= 7 + half; x++) {
+        const edge = x === 8 - half ? 3 : x === 7 + half ? 1 : x >= 7 + half - 1 ? 1 : 2;
+        const course = (y - 13) % 4 === 3;
+        const joint = !course && ((Math.floor((y - 13) / 4) & 1) ? x === 6 : x === 9);
+        p.set(x, y, course || joint ? ST[0 + (edge === 3 ? 1 : 0)] : ST[edge + (hash(x, y, 11) > 0.8 ? 1 : 0)]);
+      }
+    }
+    // moss at the foot, a plinth
+    for (let x = 1; x <= 14; x++) { p.set(x, 31, ST[1]); if (hash(x, 30, 12) < 0.5) p.set(x, 30, '#4e6a3a'); }
+    // the lantern cage (y 4..12): cap, posts, glass with the flame
+    p.poly([[4, 4], [8, 1], [11, 4]], '#2c2a30');
+    p.hline(3, 12, 4, '#44404a');
+    p.hline(4, 11, 12, '#44404a'); p.hline(3, 12, 13, '#2c2a30');
+    p.rect(5, 5, 6, 7, f ? '#ffcf6a' : '#ffbe52');
+    p.rect(6, 6, 4, 5, f ? '#fff2b8' : '#ffe08a');
+    p.set(7, 7, '#ffffff'); p.set(8, 8, f ? '#ffffff' : '#fff6d0');
+    p.vline(4, 5, 11, '#2c2a30'); p.vline(11, 5, 11, '#2c2a30'); p.vline(7, 5, 11, '#6a5e4a');
+    p.outline(INK);
+    // warm halo around the glass (translucent, outside the outline)
+    for (let y = 1; y <= 16; y++) for (let x = 0; x < 16; x++) {
+      if (p.get(x, y)) continue;
+      const d = (x - 7.5) * (x - 7.5) + (y - 8) * (y - 8) * 1.3;
+      if (d < 30) p.set(x, y, f ? '#ffd27a70' : '#ffc85a58');
+      else if (d < 52 && ((x + y + f) & 1)) p.set(x, y, '#ffc86a30');
+    }
+    return p.toCanvas();
+  }
+
   const two = (f0, f1) => ({ down: [f0, f1], up: [f0, f1], left: [f0, f1], right: [f0, f1] });
+  G.def('obj:r5_beacon', () => two(beacon(0), beacon(1)));
   G.def('obj:r5_ghost_ship', () => two(ghost(0), ghost(1)));
   G.def('obj:r5_ghost_wreck', () => { const w = wreck(); return two(w, w); });
   // the Regnas merchant ship: the ferry's hull with red-gold sails (a hue shift of obj:ship)

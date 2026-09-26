@@ -36,6 +36,11 @@
     ['name', 'そして、ルミナス・クレストの'], ['name', '三人の勇者を名付けてくれたあなたへ'], ['gap', 4],
     ['name', R.COPYRIGHT || '© Studio Metem'],
   ];
+  // E6 その後 (§10.11): ロウェル's own words, ラザロ told
+  const AFTER = {
+    rowell: ['「おれは、自分の足で', '伝承を集めてみる。', '書くためじゃなく、', '覚えて、語るために。」'],
+    lazaro: ['小さな部屋で、ミラの肖像画の', 'そばに座り、古い本を', '手で書き写している。'],
+  };
   const LH = { title: 26, sub: 18, head: 16, name: 16, small: 14 };
 
   // ------------------------------------------------------------ small drawing helpers
@@ -413,9 +418,9 @@
         L.scene = card({ sprite: spriteOf(c), name: c.name, lines: text.split('\n').slice(0, 3) });
         await L.wait(150);
       }
-      L.scene = card({ sprite: 'npc:rowell', name: 'ロウェル', lines: ['記録院をやめ、見習いの', '語り部として旅に出た。', '「覚えて、語るために」'] });
+      L.scene = card({ sprite: 'npc:rowell', name: 'ロウェル', lines: AFTER.rowell });
       await L.wait(150);
-      L.scene = card({ sprite: 'npc:lazaro', name: 'ラザロ', lines: ['小さな部屋で、ミラの肖像画の', 'そばに座り、古い本を', '手で書き写している。'] });
+      L.scene = card({ sprite: 'npc:lazaro', name: 'ラザロ', lines: AFTER.lazaro });
       await L.wait(170);
       R.Engine.remove(L);
     } catch (e) { R.Engine.remove(L); throw e; }
@@ -465,6 +470,7 @@
 
   R.Ending = {
     CREDITS,
+    AFTER,
     EndingLayer,
     record,
     /** the scenes one by one (screenshots / tests): voidHall archiveGate bibliaMorning roaTale someDaysLater */

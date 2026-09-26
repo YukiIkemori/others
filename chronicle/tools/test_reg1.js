@@ -96,6 +96,52 @@ function reach(m, sx, sy, o) {
 const sp = (m, name) => m.spawns[name];
 function compileIn(o, id) { return withState(o, () => { const { m } = compileQuiet(id); m.refresh(); return m; }); }
 
+// ============================================================ route
+// The main route is short on purpose (the maze twists and dead ends make it long to find); what fills
+// the §10.14 budget (dungeon 60–80 min) is exploring. This measures a greedy sweep per floor: from the
+// way in, the nearest unvisited chest / examine spot each time, then the way on (4-way steps, an upper
+// bound of the 8-way walk). Random battles ≈ steps / encRate (22, §4.11.1).
+function testRoute() {
+  section = 'route';
+  console.log('[route]');
+  const st = { flags: ['forest_start', 'forest_dan', 'forest_mid', 'forest_fine'], vars: { forest_verses: 3 } };
+  const FLOORS = {
+    verda_maze_1: ['entrance', (m) => m.warps.filter((w) => w.to === 'verda_maze_2')],
+    verda_maze_2: ['from_prev', (m) => m.warps.filter((w) => w.to === 'elder_tree_1')],
+    elder_tree_1: ['entrance', (m) => m.warps.filter((w) => w.to === 'elder_tree_2')],
+    elder_tree_2: ['from_prev', (m) => m.events.filter((e) => e.id === 'elder_tree_2_boss')],
+  };
+  let total = 0;
+  for (const id in FLOORS) {
+    const m = compileIn(st, id);
+    const s = sp(m, FLOORS[id][0]);
+    const targets = m.chests.map((c) => [c.x, c.y]).concat(m.events.filter((e) => e.trigger === 'examine').map((e) => [e.x, e.y]));
+    let cur = [s.x, s.y], len = 0, lost = 0;
+    const pending = targets.slice();
+    while (pending.length) {
+      const r = reach(m, cur[0], cur[1]);
+      let bi = -1, bv = Infinity;
+      pending.forEach((t, i) => { const v = r.dAdj(t[0], t[1]); if (v < bv) { bv = v; bi = i; } });
+      if (bv === Infinity) { lost = pending.length; break; }
+      len += bv;
+      const t = pending.splice(bi, 1)[0];
+      // stand on the reached neighbour
+      const nb = [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([dx, dy]) => [t[0] + dx, t[1] + dy]).find(([x, y]) => r.d(x, y) === bv);
+      cur = nb || t;
+    }
+    const r = reach(m, cur[0], cur[1]);
+    const outs = FLOORS[id][1](m);
+    const out = Math.min(...outs.map((w) => (r.has(w.x, w.y) ? r.d(w.x, w.y) : r.dAdj(w.x, w.y))));
+    ok(lost === 0 && out < Infinity, id + ': every chest and examine spot, then the way on, can be walked in one sweep');
+    len += out;
+    total += len;
+    measure(id + ': sweep (all chests + spots → way on), steps / battles', len + ' / ~' + Math.round(len / 22));
+    ok(len >= 120, id + ': a full sweep is at least 120 steps (' + len + ')');
+  }
+  measure('dungeon sweep total, steps / battles', total + ' / ~' + Math.round(total / 22));
+  ok(total >= 700, 'the four floors take at least 700 steps to sweep (' + total + ')');
+}
+
 // ============================================================ static
 function testStatic() {
   section = 'static';
@@ -183,7 +229,8 @@ function testStatic() {
     ok(byId('hanna') && byId('hanna').sprite === 'npc:old_woman' && byId('hanna').event === 'fern_hanna', 'hanna (npc:old_woman)');
     ok(byId('rita') && byId('rita').sprite === 'npc:girl' && byId('rita').event === 'fern_rita', 'rita (npc:girl)');
     ok(byId('dan') && byId('dan').sprite === 'npc:man', 'dan (npc:man)');
-    ok(byId('dan_lodge') && JSON.stringify(byId('dan_lodge').cond).includes('forest_dan'), 'dan appears in fern once forest_dan (§10.8.2 NPC)');
+    ok(byId('dan') && byId('dan').cond === 'forest_dan', 'dan appears in fern once forest_dan (§10.8.2 NPC: cond \'forest_dan\')');
+    ok(!m.npcs.some((n) => n.id !== 'dan' && /^dan_?l/.test(n.id)), 'one Dan in fern (no stand-in id)');
     // every NPC says fixed or push (§10.13.10)
     for (const n of m.npcs) ok(n.fixed || n.push, 'fern npc ' + n.id + ' has fixed or push');
     // town people: before / after the clear on every talking NPC with a tier list (§10.8.0-9)
@@ -222,6 +269,18 @@ function testStatic() {
     }
   }
   eq(rare, { verda_maze: 1, elder_tree: 1 }, 'one p_rare per dungeon (§8.12.4)');
+  // the mix of the other chests (§8.12.4: supply 5 : gear 2 : gold 2 : stone 1), over the region's four floors
+  {
+    const mix = {};
+    let n = 0;
+    for (const id of MAPS) if (id !== 'fern') for (const c of compileQuiet(id).m.chests) if (c.pool !== 'p_rare') { const k = /^p_(weapon|armor|acc)$/.test(c.pool) ? 'p_gear' : c.pool; mix[k] = (mix[k] || 0) + 1; n++; }
+    const share = (k) => (mix[k] || 0) / n;
+    measure('dungeon chest mix', Object.keys(mix).map((k) => k.replace('p_', '') + ' ' + mix[k]).join(' · '));
+    ok(Math.abs(share('p_supply') - 0.5) <= 0.1, 'chest mix: p_supply about half (' + mix.p_supply + '/' + n + ')');
+    ok(Math.abs(share('p_gear') - 0.2) <= 0.1, 'chest mix: p_gear about 2 in 10');
+    ok(Math.abs(share('p_gold') - 0.2) <= 0.1, 'chest mix: p_gold about 2 in 10');
+    ok(Math.abs(share('p_stone') - 0.1) <= 0.07, 'chest mix: p_stone about 1 in 10');
+  }
   // secret passages (§10.6.4): verda_maze_2 and elder_tree_1, 1–3 cells each, nowhere else
   const secretCount = (id) => { const { m } = compileQuiet(id); let n = 0; for (let y = 0; y < m.h; y++) for (let x = 0; x < m.w; x++) if (m.isSecret(x, y)) n++; return n; };
   for (const id of MAPS) {
@@ -296,7 +355,7 @@ function testReach() {
     const m = compileIn({ flags: ['forest_start', 'forest_dan'] }, 'fern');
     const e = sp(m, 'entrance');
     const r = reach(m, e.x, e.y);
-    for (const id of ['inn', 'tavern', 'shop_item', 'shop_weapon', 'shop_armor', 'hanna', 'rita', 'dan_lodge', 'foreman', 'dan_wife', 'bard']) {
+    for (const id of ['inn', 'tavern', 'shop_item', 'shop_weapon', 'shop_armor', 'hanna', 'rita', 'dan', 'foreman', 'dan_wife', 'bard']) {
       const n = m.npcs.find((q) => q.id === id);
       ok(n && (r.adj(n.x, n.y) || r.across(n.x, n.y)), 'fern: ' + id + ' can be talked to');
     }
@@ -622,6 +681,7 @@ async function testPlay() {
   if (on('static')) testStatic();
   if (on('reach')) testReach();
   if (on('text')) testText();
+  if (on('route')) testRoute();
   if (on('play')) {
     try { await testPlay(); } catch (e) { ok(false, 'play threw: ' + (e && e.stack || e)); }
   }

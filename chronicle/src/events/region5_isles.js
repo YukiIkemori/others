@@ -37,6 +37,8 @@
   /** a colour wash for the night / dawn scenes (closed in finally) */
   const tint = (c, a, m) => (K && K.tint ? K.tint(c, a, m) : { fade: async () => {}, close() {}, set() {}, color() {} });
   const NIGHT = '#0c1238', DAWN = '#ff9448';
+  /** the pier scenes put the message window at the top, so the ship below the pier stays in view */
+  const TOP = { pos: 'top' };
   /** a scene NPC present on this map (hidden ones included) */
   const npcOn = (ev, id) => !!(R.Field && R.Field.npc && R.Field.npc(id));
   /** clear the pier for a scene: Marina's cottage figure and the angler step aside */
@@ -150,13 +152,13 @@
         ev.bgm('ghost');
         await ev.fadeIn(40);
         await ev.wait(30);
-        await ev.say('マリナは、桟橋の先に立ち、\n霧の海へ向かって歌いはじめた。');
+        await ev.say('マリナは、桟橋の先に立ち、\n霧の海へ向かって歌いはじめた。', TOP);
         ev.closeMessage();
         ev.sfx('bell');
         await ev.caption('♪　霧の海でも、迷いはしない\n岬の灯が、おれを呼ぶから', { frames: 240 });
         await ev.wait(20);
         await night.fade(0.62, 40);
-        await ev.say('霧の向こうに、青白い灯が\nひとつ、またひとつと\nともりはじめた……。');
+        await ev.say('霧の向こうに、青白い灯が\nひとつ、またひとつと\nともりはじめた……。', TOP);
         ev.closeMessage();
         ev.sfx('ship');
         await ev.shake(24, 1);
@@ -164,10 +166,10 @@
         ev.refresh();
         if (npcOn(ev, 'ghostship')) ev.npc('ghostship').show();
         await ev.flash('#b8d8ff', 16);
-        await ev.say('幽霊船が、桟橋に横づけされた……！');
+        await ev.say('幽霊船が、桟橋に横づけされた……！', TOP);
         m.face('left');
-        await ev.say('あの人の船だ……。');
-        await ev.say('{hero}、どうか、あの人に\nこの歌を届けておくれ。\nわたしは、ここで待っているよ。\n六十年、待ったんだもの。');
+        await ev.say('あの人の船だ……。', TOP);
+        await ev.say('{hero}、どうか、あの人に\nこの歌を届けておくれ。\nわたしは、ここで待っているよ。\n六十年、待ったんだもの。', TOP);
         ev.closeMessage();
         obj(ev, 'obj_isles_4');
         await ev.fadeOut(30);
@@ -274,9 +276,16 @@
 
   // ================================================================ 7 the girl in grey (step, once isles_fine)
   E.ghost_ship_3_fine = {
-    meta: { needs: [], gives: ['flag:isles_fine'] },
+    meta: { needs: [], gives: ['flag:isles_fine'], calls: ['story_fine_isles'] },
     run: async (ev) => {
-      if (ev.flag('isles_fine') || ev.flag('isles_boss')) return;
+      if (ev.flag('isles_boss')) return;
+      if (ev.flag('isles_fine')) {
+        // talked to again (she stands in the vestibule again after the player left the floor):
+        // the story owner's script plays only the closing line and she fades; the door stays open
+        if (hasEvent('story_fine_isles')) await ev.call('story_fine_isles');
+        else await fineFallback(ev, true);
+        return;
+      }
       if (hasEvent('story_fine_isles')) await ev.call('story_fine_isles');
       else await fineFallback(ev);
       ev.setFlag('isles_fine');
@@ -286,16 +295,16 @@
     },
   };
   /** the scene of §10.9.4 when the story owner's story_fine_isles is not loaded */
-  async function fineFallback(ev) {
+  async function fineFallback(ev, again) {
     const t = ev.tier();
     const f = npcOn(ev, 'fine') ? ev.npc('fine') : null;
     if (f) f.face('player');
     await ev.wait(16);
-    await ev.say('待っている人がいる限り、\n物語は終わらない。');
+    if (!again) await ev.say('待っている人がいる限り、\n物語は終わらない。');
     const end = t >= 6 ? '……もう、あまり時間がないの。' : t >= 3 ? 'わたしのことは気にしないで。\n先へ進みなさい。' : '……気をつけて。';
     await ev.say(end);
     ev.closeMessage();
-    if (t >= 3) await ev.caption('フィーネの足元が、\n透けて見えた。', { frames: 150 });
+    if (t >= 3 && !again) await ev.caption('フィーネの足元が、\n透けて見えた。', { frames: 150 });
     ev.sfx('magic');
     await ev.flash('#e8ecff', 10);
     if (f) f.hide();
@@ -354,12 +363,12 @@
         ev.bgm('sorrow');
         await ev.fadeIn(50);
         await ev.wait(40);
-        await ev.say('夜明けの桟橋に、\nひとつの影が降り立った。');
+        await ev.say('夜明けの桟橋に、\nひとつの影が降り立った。', TOP);
         ev.closeMessage();
         await ev.wait(20);
-        await ev.say('おかえりなさい、グレン。');
+        await ev.say('おかえりなさい、グレン。', TOP);
         await ev.wait(10);
-        await ev.say('ただいま、マリナ。');
+        await ev.say('ただいま、マリナ。', TOP);
         ev.closeMessage();
         await ev.wait(40);
         await dawn.fade(0.95, 60);
@@ -369,12 +378,12 @@
         if (npcOn(ev, 'ghostship')) ev.npc('ghostship').hide();
         if (npcOn(ev, 'wreck')) ev.npc('wreck').show();
         await ev.flash('#fff4e0', 12);
-        await ev.say('船長の姿は、朝日の中へ\n溶けるように消えていった。');
-        await ev.say('あとには、岩場に乗り上げた\n古い船だけが残された。');
+        await ev.say('船長の姿は、朝日の中へ\n溶けるように消えていった。', TOP);
+        await ev.say('あとには、岩場に乗り上げた\n古い船だけが残された。', TOP);
         ev.closeMessage();
         await dawn.fade(0.3, 40);
         m.face('down');
-        await ev.say('……ありがとう。\nあの人は、やっと帰ってきた。');
+        await ev.say('……ありがとう。\nあの人は、やっと帰ってきた。', TOP);
         ev.closeMessage();
         await ev.wait(20);
         await ev.clearRegion(RS);

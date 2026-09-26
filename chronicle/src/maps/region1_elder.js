@@ -128,7 +128,7 @@
       K.chest('elder_tree_1_c2', 9, 23, 'p_rare'),     // the end of the middle gallery (§8.12.4)
       K.chest('elder_tree_1_c3', 27, 12, 'p_supply'),
       K.chest('elder_tree_1_c4', 6, 15, 'p_supply'),   // beyond the secret passage
-      K.chest('elder_tree_1_c5', 2, 31, 'p_stone'),
+      K.chest('elder_tree_1_c5', 2, 31, 'p_gear'),
     ],
     signs: [],
     events: [],
@@ -223,7 +223,7 @@
     ],
     npcs: [
       K.npc('rest', 'obj:lantern', 18, 16, { event: 'common_rest', fixed: true }),
-      K.npc('fine', 'fine', 24, 16, { event: 'elder_tree_2_fine', dir: 'down', cond: '!forest_boss', fixed: true }),
+      K.npc('fine', 'fine', 20, 16, { event: 'elder_tree_2_fine', dir: 'down', cond: '!forest_boss', fixed: true }),
       K.npc('boss', 'mon:boss_rooteater', 22, 27, { event: 'elder_tree_2_boss', cond: '!forest_boss', fixed: true }),
       K.npc('elm', 'spirit', 22, 29, { event: 'elder_tree_2_elm', cond: 'forest_boss', dir: 'down', fixed: true }),
     ],
@@ -231,7 +231,7 @@
       K.chest('elder_tree_2_c1', 3, 16, 'p_supply'),
       K.chest('elder_tree_2_c2', 40, 13, 'p_gold'),
       K.chest('elder_tree_2_c3', 4, 31, 'p_supply'),
-      K.chest('elder_tree_2_c4', 37, 26, 'p_stone'),
+      K.chest('elder_tree_2_c4', 37, 26, 'p_supply'),
     ],
     events: [
       // the girl in grey by the lantern (§10.8.0-5): once forest_fine
