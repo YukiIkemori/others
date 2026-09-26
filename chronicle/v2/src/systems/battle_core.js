@@ -1285,7 +1285,7 @@
       }
       // v2（狼の群れ頭）: 頭が倒れると群れが逃げる
       if (u.d.leader) {
-        const rest = this.mons.filter((m) => m.alive && m !== u && !m.boss);
+        const rest = this.mons.filter((m) => m.alive && m !== u && (!m.boss || m.d.bossType === 'add'));
         if (rest.length) {
           yield this.m(u.d.leader.msg || '残った群れは、散り散りに逃げていった！');
           for (const m of rest) { m.gone = true; yield { t: 'flee', u: m }; }
@@ -1469,7 +1469,7 @@
       return res;
     }
     *applyEffects(u, t, effects, ctx, res) {
-      let gate = false;
+      let gate = false, hit = false;   // hit: ダメージの後の状態・弱体は外れても黙る（「〜のダメージ！しかし効き目がなかった。」にしない）
       for (const eff of effects) {
         if (this.result === 'escape') return;
         if (!t.alive && eff.type !== 'revive') break;
@@ -1478,7 +1478,8 @@
           const r = yield* this.damageEffect(u, t, eff, ctx);
           if (r.landed) res.landed = true;
           if (ctx.kind === 'tech' ? !r.landed : r.phys && r.tried && !r.landed && r.missed) gate = true;
-        } else yield* this.effect(u, t, eff, ctx);
+          hit = true;
+        } else yield* this.effect(u, t, eff, hit && !ctx.quietExtra ? Object.assign({}, ctx, { quietExtra: true }) : ctx);
       }
     }
     *damageEffect(u, t, eff, ctx) {
@@ -1535,7 +1536,7 @@
         }
         case 'status': {
           const data = eff.status === 'counter' ? { power: eff.power != null ? eff.power : 1, parry: eff.parry || 0, critBonus: eff.critBonus || 0 } : undefined;
-          return yield* this.inflict(u, t, eff.status, eff.chance, { sf: ctx.sf, multi: ctx.multi, data });
+          return yield* this.inflict(u, t, eff.status, eff.chance, { sf: ctx.sf, multi: ctx.multi, data, quiet: !!ctx.quietExtra });
         }
         case 'regen': return yield* this.inflict(u, t, 'regen', null, { multi: ctx.multi });
         case 'cover': {
@@ -1582,7 +1583,8 @@
       if (!t.alive || !BUFF_STATS.includes(eff.stat)) return;
       const st = eff.stages || 1;
       const name = NAMES.buff[eff.stat];
-      const fail = () => this.m(ctx && ctx.multi ? `${t.name}には効き目がなかった。` : 'しかし効き目がなかった。');
+      const quiet = !!(ctx && ctx.quietExtra);
+      const fail = () => (quiet ? { t: 'noop' } : this.m(ctx && ctx.multi ? `${t.name}には効き目がなかった。` : 'しかし効き目がなかった。'));
       if (st < 0 && u.side !== t.side) {
         if (t.metal || t.status.veil) { yield fail(); return; }
         const KS = K('STATUS');

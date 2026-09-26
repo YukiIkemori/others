@@ -66,11 +66,11 @@ section('データ（K.monster・K.boss・K.troop、出現表、盗み専用）'
   for (const z of zones) for (const T of [0, 1]) for (const g of R.Mon.zoneGroups(z, T)) for (const [ref] of g.mons) used.add(R.Mon.resolve(ref, T));
   const allowed = new Set(SLICE.flatMap((l) => [l + '_1', l + '_2']));
   ok('slice zones use only the 11 bases × stage 1–2', [...used].every((id) => allowed.has(id)), [...used].filter((id) => !allowed.has(id)));
-  ok('every slice sprite appears in some slice zone or troop', [...allowed].every((id) => used.has(id) || id === 'wolf_1'), [...allowed].filter((id) => !used.has(id)));
+  ok('every slice sprite appears in some slice zone or troop', [...allowed].every((id) => used.has(id)), [...allowed].filter((id) => !used.has(id)));
   ok('slice sprites match the BEAST keys', [...allowed].every((id) => DB.monsters[id].sprite === id));
   const rareIds = ['rm_jewel_hare', 'rm_bloom_fawn', 'rm_acorn_prince'];
   ok('slice rare monsters + sprites', rareIds.map((id) => DB.monsters[id] && DB.monsters[id].sprite).join() === 'rare_hare,rare_fawn,rare_acorn');
-  ok('slice bosses + sprites', ['b_pageeater:boss_pageeater', 'b_moth:boss_moth', 'b_rooteater:boss_rooteater', 'b_wolflord:boss_wolflord', 'b_root:b_root']
+  ok('slice bosses + sprites', ['b_pageeater:boss_pageeater', 'b_moth:boss_moth', 'b_rooteater:boss_rooteater', 'b_wolflord:boss_wolflord', 'b_root:b_root', 'b_packwolf:wolf_1']
     .every((s) => { const [id, sp] = s.split(':'); return DB.monsters[id] && DB.monsters[id].sprite === sp; }));
   ok('slice troops exist (§3.6)', ['tr_tutorial', 'tr_b_pageeater', 'tr_a21_forest_wolves', 'tr_b_moth', 'tr_b_rooteater'].every((t) => DB.troops[t]));
   ok('slice troops use the 5 backdrops', ['tr_tutorial', 'tr_b_pageeater', 'tr_a21_forest_wolves', 'tr_b_moth', 'tr_b_rooteater'].every((t) => ['coast', 'tower', 'forest', 'tree', 'cave'].includes(DB.troops[t].bg)));
@@ -357,15 +357,17 @@ section('予告の予約（E18）・考えどころ（§3.6）');
   ok('root killed without fire → roots still come', !eng3.flags.roots_burned && root2.alive);
   ok('b_root art key is hd:mon (unit.boss false in B)', (() => { const B = R.BattleCore.create({ troop: 'tr_b_rooteater', seed: 'r' }); const r = B.units.find((u) => u.id === 'b_root'); return r && r.boss === false && r.sprite === 'b_root'; })());
   // 狼の群れ頭: 頭を倒すと群れが逃げる → 勝ち
-  eng = engine({ mons: ['wolf_1', 'b_wolflord', 'wolf_1'], lv: 9 });
+  eng = engine({ mons: ['b_packwolf', 'b_wolflord', 'b_packwolf'], lv: 9 });
   evs = drainAll(eng.hit(eng.party[0], eng.mons[1], { dmg: 99999 }, { kind: 'phys' }));
-  ok('leader down → the pack flees', eng.mons.filter((m) => m.id === 'wolf_1').every((m) => m.gone) && evs.filter((e) => e.t === 'flee').length === 2);
+  ok('leader down → the pack flees', eng.mons.filter((m) => m.id === 'b_packwolf').every((m) => m.gone) && evs.filter((e) => e.t === 'flee').length === 2);
   ok('… and the battle is won', eng.checkEnd() === 'win');
   // 遠吠えの予告 → 狼が増える
-  eng = engine({ mons: ['wolf_1', 'b_wolflord', 'wolf_1'], lv: 9 });
+  eng = engine({ mons: ['b_packwolf', 'b_wolflord', 'b_packwolf'], lv: 9 });
   drainAll(eng.useAction(eng.mons[1], 'eb_lord_breath', BC.ACT('eb_lord_breath'), null, {}));
+  ok('breath reserves the howl', eng.mons[1].reserved && eng.mons[1].reserved.id === 'eb_pack_howl');
   drainAll(eng.useAction(eng.mons[1], 'eb_pack_howl', BC.ACT('eb_pack_howl'), eng.mons[1], {}));
-  ok('howl summons a wolf', eng.mons.length === 4 && eng.mons[3].summoned && /^wolf_/.test(eng.mons[3].id));
+  ok('howl summons two pack wolves', eng.mons.length === 5 && eng.mons.slice(3).every((m) => m.summoned && m.id === 'b_packwolf'));
+  ok('pack wolves draw as hd:mon:wolf_1 (unit.boss false)', (() => { const B = R.BattleCore.create({ troop: 'tr_a21_forest_wolves', seed: 'w' }); return B.units.filter((u) => u.id === 'b_packwolf').every((u) => !u.boss && u.sprite === 'wolf_1') && B.units.find((u) => u.id === 'b_wolflord').boss; })());
   // 眠らせると予約が消える
   eng = engine({ mons: ['b_moth'], lv: 9 });
   drainAll(eng.useAction(eng.mons[0], 'eb_wing_glow', BC.ACT('eb_wing_glow'), null, {}));

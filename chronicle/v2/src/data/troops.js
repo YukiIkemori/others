@@ -63,7 +63,7 @@
   });
   // @@V2-BEGIN 縦切りの編成（V2_PLAN §3.6、BATTLE）。狼の群れ頭（救出の戦い、WORLD_REDESIGN §4.10）
   Object.assign(R.DB.troops, {
-    tr_a21_forest_wolves: boss([['@wolf', 1], ['b_wolflord', 1], ['@wolf', 1]], { scale: 'tier', lvOff: 1, bg: 'forest', bgm: 'boss' }),
+    tr_a21_forest_wolves: boss([['b_packwolf', 1], ['b_wolflord', 1], ['b_packwolf', 1]], { scale: 'tier', lvOff: 1, bg: 'forest', bgm: 'boss' }),
   });
   // @@V2-END
 })(window.RPG);

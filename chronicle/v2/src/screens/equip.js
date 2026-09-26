@@ -181,7 +181,7 @@
       }
       // 詳しい所と比べ
       const focusId = this.mode === 'cand' ? (this.clist.current() || {}).value : c.equip[s];
-      const dp = tall ? { x: b.x, y: sp.y + sp.h + u(12), w: b.w, h: u(250) } : { x: cp.x + cp.w + u(16), y: b.y, w: rightX0 - (cp.x + cp.w + u(16)), h: cp.h };
+      const dp = tall ? { x: b.x, y: sp.y + sp.h + u(12), w: b.w, h: this.mode === 'cand' ? u(250) : u(170) } : { x: cp.x + cp.w + u(16), y: b.y, w: rightX0 - (cp.x + cp.w + u(16)), h: cp.h };
       R.UIK.panel(g, dp, { frost: true });
       const it = S.item(focusId);
       let y = dp.y + u(18);
@@ -195,6 +195,16 @@
       else { R.UIK.text(g, 'なし', dp.x + u(22), y, { size: u(21), weight: 700, color: C.disabled }); y += u(62); }
       R.UIK.rule(g, dp.x + u(22), dp.x + dp.w - u(22), y, 0.14);
       y += u(12);
+      if (this.mode !== 'cand' && it) {
+        const ms = S.itemDiff(c, s, focusId).filter((r) => r.after);
+        ms.slice(0, 4).forEach((r, i) => {
+          const xx = dp.x + u(22) + (i % 2) * ((dp.w - u(44)) / 2), yy = y + Math.floor(i / 2) * u(28);
+          R.UIK.text(g, r.name, xx, yy, { size: u(14), color: C.text2 });
+          R.UIK.text(g, String(r.after), xx + (dp.w - u(44)) / 2 - u(24), yy - u(1), { size: u(16), weight: 700, color: C.text, align: 'right' });
+        });
+        y += Math.ceil(Math.min(4, ms.length) / 2) * u(28) + u(4);
+        R.UIK.rule(g, dp.x + u(22), dp.x + dp.w - u(22), y, 0.14); y += u(12);
+      }
       if (this.mode === 'cand') {
         S.label(g, 'いまの装備と比べる', dp.x + u(22), y); y += u(28);
         const rows = S.itemDiff(c, s, focusId || null).slice(0, tall ? 4 : 5);
@@ -221,7 +231,7 @@
         S.label(g, 'ほかの仲間が付けると', op.x + u(20), op.y + u(14));
         const others = S.party().filter((x) => x !== c);
         const cols = tall ? 1 : Math.max(1, others.length);
-        const ow = (op.w - u(40)) / cols, oh = tall ? Math.min(u(46), (op.h - u(44)) / Math.max(1, others.length)) : op.h - u(50);
+        const ow = (op.w - u(40)) / cols, oh = tall ? Math.max(u(44), (op.h - u(50)) / Math.max(1, others.length)) : op.h - u(50);
         others.forEach((o, i) => {
           const x = op.x + u(20) + (tall ? 0 : i * ow), yy = op.y + u(42) + (tall ? i * oh : 0);
           const can = focusId && R.Rules.canEquip(o, focusId, R.Rules.defaultSlot(o, focusId));

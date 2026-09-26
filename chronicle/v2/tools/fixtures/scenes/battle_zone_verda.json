@@ -1,0 +1,6 @@
+{
+  "scene": "battle",
+  "desc": "BATTLE: 迷いの森の出現表（R.Mon.encounter が決める組・金色・レア。暗がりの闇の強まりつき）",
+  "state": "battle_forest",
+  "setup": { "zone": "z_verda", "dark": true, "seed": "shot-verda" }
+}

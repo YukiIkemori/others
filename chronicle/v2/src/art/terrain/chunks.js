@@ -169,6 +169,14 @@
     return plan;
   }
 
+  // ------------------------------------------------------------------ 使い回す入れ物（ごみ集めで止まらないように。§2.10「ごみ集め」）
+  const pool = { px: {}, img: {}, cv: {} };
+  function takePx(n) { const l = pool.px[n] || (pool.px[n] = []); const a = l.pop() || new Uint32Array(n); a.fill(0); return a; }
+  function givePx(a) { if (!a) return; const l = pool.px[a.length] || (pool.px[a.length] = []); if (l.length < 3) l.push(a); }
+  function imgOf(g, S) { return pool.img[S] || (pool.img[S] = g.createImageData(S, S)); }
+  /** 一時の canvas（同じ仕事の中だけで使う。name ごとに 1 枚） */
+  function scratch(name, S) { const k = name + S; let c = pool.cv[k]; if (!c) { c = pool.cv[k] = U().canvas(S, S); } else c.getContext('2d').clearRect(0, 0, S, S); return c; }
+
   // ------------------------------------------------------------------ 仕事
   function Job(map, cx, cy, o) {
     o = o || {};
@@ -188,9 +196,9 @@
     this.profMax = {}; // 1 回の呼び出しの最長
   }
   // 一度に済ませる仕事の平均の時間（ms。走らせながら覚える）。step の残りに収まらなければ先に戻る
-  const AVG = {}, ATOMIC = { prep: 1, rise: 1, deck: 1, light: 1, emissive: 1, finish: 1, putB: 1, putA: 1 };
+  const AVG = {}, ATOMIC = { prep: 1, rise: 1, deck: 1, light: 1, emissive: 1, finish: 1 };
   T._phaseAvg = AVG;
-  const PHASES = ['prep', 'mats', 'sprites', 'ground', 'rise', 'putA', 'putB', 'deck', 'shadow', 'draw', 'light', 'emissive', 'finish'];
+  const PHASES = ['prep', 'mats', 'sprites', 'ground', 'rise', 'put', 'deck', 'shadow', 'draw', 'light', 'emissive', 'finish'];
   Job.prototype.step = function (ms) {
     if (this.done) return true;
     const t0 = U().now(), deadline = t0 + (ms == null ? 3 : ms);
@@ -271,9 +279,9 @@
         }
       }
     }
-    // 地面の飾り（歩ける地面の上だけ。建物・物のマスは避ける）
+    // 地面の飾り（歩ける地面の上だけ。建物・物のマスは避ける）。はみ出す分があるので周り 1 マスも見る（チャンクの境でつながる）
     const dec = th.decor || {};
-    for (let y = c0y; y < c0y + CHUNK; y++) for (let x = c0x; x < c0x + CHUNK; x++) {
+    for (let y = c0y - 1; y < c0y + CHUNK + 1; y++) for (let x = c0x - 1; x < c0x + CHUNK + 1; x++) {
       const c = C(x, y);
       if (!c.walk || c.water || c.hard || c.raised || c.tall || plan.occ.has(x + ',' + y) || x < 0 || y < 0 || x >= map.w || y >= map.h) continue;
       if (c.mat === 'road' || c.mat === 'sand') continue;
@@ -314,7 +322,7 @@
 
   Job.prototype._ground = function (deadline) {
     const t = this.tile, S = this.size;
-    if (!this.px) this.px = new Uint32Array(S * S);
+    if (!this.px) this.px = takePx(S * S);
     const c0x = this.cells[0] - 1, c0y = this.cells[1] - 1, n = CHUNK + 1;
     while (this.i < n) {
       const dy = c0y + this.i;
@@ -359,21 +367,20 @@
   };
 
   // base に置く（putImageData を上と下の 2 回に分ける: 1 回の仕事を短く）
-  Job.prototype._putA = function () {
-    const S = this.size, c = U().canvas(S, S);
-    if (!c) throw new Error('no canvas');
-    const g = c.getContext('2d');
-    const img = g.createImageData(S, S);
-    new Uint32Array(img.data.buffer).set(this.px);
-    g.putImageData(img, 0, 0, 0, 0, S, S >> 1);
-    this.base = c; this.bg = g; this.img = img;
-    this.px = null;
-    return true;
-  };
-  Job.prototype._putB = function () {
+  // base に置く（putImageData を 4 つの帯に分ける: 1 回の仕事を短く。間に別の仕事が入れ物を使ってもよいように毎回写し直す）
+  const BANDS = 4;
+  Job.prototype._put = function (deadline) {
     const S = this.size;
-    this.bg.putImageData(this.img, 0, 0, 0, S >> 1, S, S - (S >> 1));
-    this.img = null;
+    if (!this.base) { const c = U().canvas(S, S); if (!c) throw new Error('no canvas'); this.base = c; this.bg = c.getContext('2d'); }
+    const img = imgOf(this.bg, S), h = S / BANDS;
+    while (this.i < BANDS) {
+      new Uint32Array(img.data.buffer).set(this.px);
+      this.bg.putImageData(img, 0, 0, 0, this.i * h, S, h);
+      this.i++;
+      if (U().now() > deadline) break;
+    }
+    if (this.i < BANDS) return false;
+    givePx(this.px); this.px = null;
     this._macro2();
     return true;
   };
@@ -389,7 +396,7 @@
     let any = false;
     for (let y = y0 - 1; y < y1 + 1 && !any; y++) for (let x = x0 - 1; x < x1 + 1; x++) if (C(x, y).deck) { any = true; break; }
     if (!any) return true;
-    const S = this.size, buf = new Uint32Array(S * S), sh = T._sheet('deck', t), SS = sh.S, bg = this.bg;
+    const S = this.size, buf = takePx(S * S), sh = T._sheet('deck', t), SS = sh.S, bg = this.bg;
     for (let y = y0 - 1; y < y1 + 1; y++) for (let x = x0; x < x1; x++) {
       const c = C(x, y);
       if (!c.deck) continue;
@@ -418,9 +425,10 @@
         for (const px of [px0 + 4 * s, px0 + t - 7 * s]) { bg.fillStyle = '#3a2616'; bg.fillRect(Math.round(px), py0 + t + faceH, Math.round(3 * s), Math.round(14 * s)); bg.fillStyle = '#5c3e26'; bg.fillRect(Math.round(px), py0 + t + faceH, Math.round(s), Math.round(14 * s)); }
       }
     }
-    const g = overCtx(this), tmp = U().canvas(S, S), tg = tmp.getContext('2d'), img = tg.createImageData(S, S);
+    const g = overCtx(this), tmp = scratch('deck', S), tg = tmp.getContext('2d'), img = imgOf(tg, S);
     new Uint32Array(img.data.buffer).set(buf); tg.putImageData(img, 0, 0);
     g.drawImage(tmp, 0, 0);
+    givePx(buf);
     return true;
   };
 
@@ -489,6 +497,7 @@
     const map = this.map, t = this.tile, s = this.s, X0 = this.X0, Y0 = this.Y0, S = this.size;
     const env = { tile: t, st: this.st, bld: (o) => { try { return R.Hd.now(T.building(o), { tile: t }); } catch (e) { return null; } } };
     const all = lightsCached(map, env, this.plan);
+    this.allLights = all.lights;
     const lights = all.lights.slice(), glows = [];
     // 洞窟の水は淡く光る（MODERN_UI §4.1-3 の光る苔・結晶と同じ青緑）
     const [x0, y0, x1, y1] = this.cells;
@@ -509,14 +518,17 @@
     this.emissive = all.emissive.filter((e) => e.x + (e.w || 4) > X0 && e.x < X0 + S && e.y + (e.h || 4) > Y0 && e.y < Y0 + S);
     // 光の地図（RENDER）を base と over に掛ける
     const o = { ambient: this.amb.ambient, k: this.amb.k, mood: this.amb.mood, lights, moon: all.moon };
-    const rect = [X0, Y0, S, S];
+    const rect = [X0, Y0, S, S], bg = this.bg;
     let lm = null;
-    if (R.Light && R.Light.map) lm = R.Light.map(rect, o);
-    else lm = fallbackMap(rect, o);
-    const bg = this.bg;
-    bg.save(); bg.globalCompositeOperation = 'multiply'; bg.imageSmoothingEnabled = true; bg.drawImage(lm, 0, 0, lm.width, lm.height, 0, 0, S, S); bg.restore();
-    if (this.over) {
-      const og = this.og, keep = U().canvas(S, S), kg = keep.getContext('2d');
+    if (R.Light && R.Light.compose) {
+      // RENDER の光の地図（使い回しの 1 枚）を base に掛け、同じ絵を over にも掛ける
+      bg.save(); bg.setTransform(1, 0, 0, 1, -X0, -Y0); lm = R.Light.compose(bg, rect, o); bg.restore();
+    } else {
+      lm = fallbackMap(rect, o);
+      bg.save(); bg.globalCompositeOperation = 'multiply'; bg.imageSmoothingEnabled = true; bg.drawImage(lm, 0, 0, lm.width, lm.height, 0, 0, S, S); bg.restore();
+    }
+    if (this.over && lm) {
+      const og = this.og, keep = scratch('keep', S), kg = keep.getContext('2d');
       kg.drawImage(this.over, 0, 0);
       og.save(); og.globalCompositeOperation = 'multiply'; og.imageSmoothingEnabled = true; og.drawImage(lm, 0, 0, lm.width, lm.height, 0, 0, S, S);
       og.globalCompositeOperation = 'destination-in'; og.drawImage(keep, 0, 0); og.restore();
@@ -549,12 +561,13 @@
   Job.prototype._emissive = function () {
     const g = this.bg, X0 = this.X0, Y0 = this.Y0, S = this.size, t = this.tile, C = this.C;
     T._drawEmissive(g, this.emissive, X0, Y0, this.s);
-    let water = false;
     const [x0, y0, x1, y1] = this.cells;
-    for (let y = y0; y < y1 && !water; y++) for (let x = x0; x < x1; x++) if (C(x, y).water) { water = true; break; }
+    let water = false;
+    for (let y = y0 - 1; y <= y1 && !water; y++) for (let x = x0 - 1; x <= x1; x++) if (C(x, y).water) { water = true; break; }
     if (water) {
-      const lights = this.chunkLights.concat(lightsCached(this.map, { tile: t }, this.plan).lights.filter((L) => L.r >= 60 && Math.abs(L.x - (X0 + S / 2)) < S && L.y < Y0 + S && L.y > Y0 - 90));
-      T._waterGlints(g, X0, Y0, S, (wx, wy) => C(Math.floor(wx / t), Math.floor(wy / t)).water, lights, this.map.id + ':' + this.cx + ':' + this.cy);
+      const lights = (this.allLights || []).filter((L) => L.r >= 60 && L.x > X0 - 24 && L.x < X0 + S + 24 && L.y < Y0 + S && L.y > Y0 - 90);
+      const cells = (fn) => { for (let y = y0 - 1; y <= y1; y++) for (let x = x0 - 1; x <= x1; x++) if (C(x, y).water) fn(x, y); };
+      T._waterGlints(g, X0, Y0, S, (wx, wy) => C(Math.floor(wx / t), Math.floor(wy / t)).water, lights, t, cells);
     }
     return true;
   };
@@ -567,7 +580,7 @@
       x: X0, y: Y0, size: S, map: this.map.id, cx: this.cx, cy: this.cy, tile: this.tile,
       bytes: S * S * 4 * (this.over ? 2 : 1),
     };
-    this.draw = null; this.C = null; this.bg = null; this.og = null;
+    this.draw = null; this.C = null; this.bg = null; this.og = null; this.allLights = null;
     return true;
   };
 
@@ -634,7 +647,16 @@
           if (w.mat) { if (!T._sheet(w.mat, tile, deadline).done) break; }
           else if (w.face) T._faceSheet(w.face, tile, w.rise);
           else if (w.thr) T._thrTable(w.thr, tile);
-          else if (w.key && R.Hd.has(w.key) && !R.Hd.ready(w.key, w.opts)) { try { R.Hd.now(w.key, w.opts); } catch (e) { console.error('[Terrain] prewarm', w.key, e); } }
+          else if (w.key && R.Hd.has(w.key)) {
+            try {
+              const sh = R.Hd.now(w.key, w.opts);
+              // 落ち影の絵も先に（建物 = ずらした形、木・街灯 = 伸ばした形）
+              if (sh && sh.frames && sh.frames[0]) {
+                if (/^hd:bld:/.test(w.key)) T._shadowOf(sh.frames[0], 'block', s);
+                else if (/:(tree|pine|tree_giant|lamp_post)$/.test(w.key)) T._shadowOf(sh.frames[0], 'tall', s);
+              }
+            } catch (e) { console.error('[Terrain] prewarm', w.key, e); }
+          }
           job.i++;
           if (U().now() > deadline) break;
         }

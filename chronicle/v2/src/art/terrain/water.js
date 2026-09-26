@@ -53,29 +53,35 @@
     }
   };
 
-  /** 光の地図の後: 月の照り返しと灯りの縦の揺れ（ctx はチャンクの base、isWater(wx, wy) は世界の px） */
-  T._waterGlints = function (ctx, X0, Y0, size, isWater, lights, seed) {
-    const U = T._u, rng = R.rng('glint:' + seed);
+  /**
+   * 光の地図の後: 月の照り返しと灯りの縦の揺れ（ctx はチャンクの base）。
+   * 照り返しの位置は水のマスごとの種（世界の座標）で決めるので、どのチャンクで焼いても同じ所に同じ線が出る（境でつながる）。
+   * cells(fn) = チャンクと周り 1 マスの水のマスを fn(x, y) に渡す、lights = 近くの大きな灯り（世界の座標で選ぶ）
+   */
+  T._waterGlints = function (ctx, X0, Y0, size, isWater, lights, tile, cells) {
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
-    const n = Math.round((size * size) / 300);
-    for (let i = 0; i < n; i++) {
-      const x = Math.floor(rng.next() * size), y = Math.floor(rng.next() * size);
-      if (!isWater(X0 + x, Y0 + y)) continue;
-      ctx.fillStyle = `rgba(150,180,230,${(0.06 + rng.next() * 0.14).toFixed(3)})`;
-      ctx.fillRect(x, y, 3 + Math.floor(rng.next() * 6), 1);
-    }
+    const per = Math.max(1, Math.round((tile * tile) / 300));
+    cells((cx, cy) => {
+      const rng = R.rng('glint:' + cx + ',' + cy);
+      for (let i = 0; i < per; i++) {
+        const wx = cx * tile + Math.floor(rng.next() * tile), wy = cy * tile + Math.floor(rng.next() * tile), w = 3 + Math.floor(rng.next() * 6), a = 0.06 + rng.next() * 0.14;
+        const x = wx - X0, y = wy - Y0;
+        if (y < 0 || y >= size || x + w <= 0 || x >= size) continue;
+        ctx.fillStyle = `rgba(150,180,230,${a.toFixed(3)})`;
+        ctx.fillRect(x, y, w, 1);
+      }
+    });
     // 灯りの照り返し（岸の灯り・船の灯り）: 光の下の水に縦に並ぶ暖色の短い線
     for (const L of lights) {
-      if (L.r < 60) continue;
       const lr = R.rng('refl:' + Math.round(L.x) + ':' + Math.round(L.y));
       for (let i = 0; i < 28; i++) {
         const wy = L.y + 6 + Math.pow(lr.next(), 0.8) * 76, wx = L.x + (lr.next() - 0.5) * (8 + (wy - L.y) * 0.2);
-        const w = 2 + Math.floor(lr.next() * 5), a = 0.5 * (1 - (wy - L.y) / 84);
+        const w = 2 + Math.floor(lr.next() * 5), a = 0.5 * (1 - (wy - L.y) / 84), g = (170 + lr.next() * 40) | 0, b = (90 + lr.next() * 40) | 0;
         if (a <= 0 || !isWater(Math.floor(wx), Math.floor(wy))) continue;
         const lx = Math.floor(wx - X0), ly = Math.floor(wy - Y0);
-        if (lx < -8 || ly < 0 || lx >= size || ly >= size) continue;
-        ctx.fillStyle = `rgba(255,${(170 + lr.next() * 40) | 0},${(90 + lr.next() * 40) | 0},${a.toFixed(3)})`;
+        if (lx + w <= 0 || ly < 0 || lx >= size || ly >= size) continue;
+        ctx.fillStyle = `rgba(255,${g},${b},${a.toFixed(3)})`;
         ctx.fillRect(lx, ly, w, 1);
       }
     }

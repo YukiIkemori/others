@@ -27,9 +27,9 @@
     const fs = r.h - u(12);
     R.UIK.portraitFrame(g, { x: r.x + u(6), y: r.y + u(6), w: fs, h: fs }, info.look, { dim: o.dim });
     const x = r.x + fs + u(14), w = r.x + r.w - x - u(6);
-    R.UIK.text(g, info.name, x, r.y + u(9), { size: u(15), weight: 700, color: o.dim ? C.disabled : o.focused ? C.goldHi : C.text, maxW: w });
+    R.UIK.text(g, info.name, x, r.y + u(9), { size: u(15), weight: 700, color: o.dim ? C.disabled : o.focused ? C.goldHi : C.text, maxW: o.chip ? w - u(58) : w });
     R.UIK.text(g, info.title, x, r.y + u(31), { size: u(12), color: o.dim ? C.disabled : C.text2, maxW: w });
-    if (o.chip) R.UIK.chip(g, r.x + r.w - u(6) - R.UIK.measure(o.chip, { size: u(10), weight: 700 }) - u(16), r.y + r.h - u(22), o.chip, { kind: o.chipKind || 'teal', size: 10 });
+    if (o.chip) R.UIK.chip(g, r.x + r.w - u(6) - R.UIK.measure(o.chip, { size: u(10), weight: 700 }) - u(14), r.y + u(6), o.chip, { kind: o.chipKind || 'teal', size: 10 });
   };
   /** 詳しい札（顔・名前・肩書き・得意・能力値） */
   S.companionDetail = function (g, info, p) {

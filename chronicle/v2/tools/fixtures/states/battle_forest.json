@@ -1,0 +1,15 @@
+{
+  "desc": "BATTLE: 森の標準の一行（主人公 戦士・剣 ＋ バルトロ 大剣・マルタ 杖・シルヴァン 弓、STATS_REWORK §8.4）。ティア 0、gl と熟練は標準（auto）。回復と状態の品・火炎つぼ",
+  "hero": { "type": "warrior", "sex": "m", "name": "アルン", "fav": "sword" },
+  "party": ["hero", "bartolo", "marta", "sylvain"],
+  "reserve": [],
+  "tier": 0,
+  "gl": "auto",
+  "prof": "auto",
+  "flags": {},
+  "vars": {},
+  "items": { "i_salve": 6, "i_revive": 2, "i_waker": 4, "i_antidote": 3, "i_clear": 2, "i_firepot": 3 },
+  "gold": 300,
+  "leads": [],
+  "map": { "id": "stub_road", "spawn": "start" }
+}

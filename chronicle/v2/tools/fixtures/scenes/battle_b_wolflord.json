@@ -1,0 +1,6 @@
+{
+  "scene": "battle",
+  "desc": "BATTLE: 本物の R.BattleCore で tr_a21_forest_wolves（考えどころと予告、V2_PLAN §3.6）。森の標準の一行",
+  "state": "battle_forest",
+  "setup": { "troop": "tr_a21_forest_wolves", "boss": true, "seed": "shot-wolflord" }
+}

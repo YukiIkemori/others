@@ -1,0 +1,32 @@
+{
+  "desc": "CONTENT-P: ファロスの屋内 pharos_tavern",
+  "hero": {
+    "type": "warrior",
+    "sex": "m",
+    "name": "アルン",
+    "fav": "sword"
+  },
+  "party": [
+    "hero",
+    "selma",
+    "viola",
+    "marta"
+  ],
+  "reserve": [],
+  "tier": 0,
+  "gl": "auto",
+  "prof": "auto",
+  "flags": {
+    "prologue_start": true,
+    "prologue_berna": true,
+    "prologue_party": true
+  },
+  "vars": {},
+  "items": {},
+  "gold": 200,
+  "leads": [],
+  "map": {
+    "id": "pharos_tavern",
+    "spawn": "door"
+  }
+}

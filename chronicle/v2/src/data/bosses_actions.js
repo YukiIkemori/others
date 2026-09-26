@@ -209,7 +209,7 @@
     // ページ食らい（序章）: 紙をため込む → 次の手番に全体の紙吹雪 → 防御で半分（教える戦いなので罰は軽く）
     eb_page_gather: {name: '紙を吸いこむ', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は体を大きくふくらませた！',
       telegraph: {text: 'ページ食らいが 紙を吸いこんでいる……', pose: 'tele', tint: '#e8dcb8', next: 'eb_confetti', guard: 'defend'}},
-    eb_confetti: {name: '紙吹雪', kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'phys', power: 1.8, kind: 'slash', sure: true}], fx: 'slash2', msg: '{user}の体から、ため込んだ紙片が一気に吹き出した！'},
+    eb_confetti: {name: '紙吹雪', kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'phys', power: 3.6, kind: 'slash', sure: true}], fx: 'slash2', msg: '{user}の体から、ため込んだ紙片が一気に吹き出した！'},
     // ダストウィング（森の中ボス）: 羽が光る → 次の手番に全員へ眠りのりん粉。風の術・技で打つと吹き飛ぶ（予約が消える）
     eb_wing_glow: {name: '羽の光', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は羽を大きく広げた！',
       telegraph: {text: 'ダストウィングの羽が 青白く光りはじめた……', pose: 'tele', tint: '#b8e0ff', next: 'eb_sleep_dust', guard: 'element:wind',
@@ -222,7 +222,7 @@
     // 狼の群れ頭（救出の戦い）: 大きく息を吸う → 次の手番に遠吠えで狼が 1 匹増える。頭を倒すと群れが逃げる
     eb_lord_breath: {name: '息を吸う', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は天を仰いだ。',
       telegraph: {text: '群れ頭が 大きく息を吸いこんだ……', pose: 'tele', tint: '#c8d0e8', next: 'eb_pack_howl', guard: 'focus'}},
-    eb_pack_howl: {name: '群れの遠吠え', kind: 'enemy', target: 'self', effects: [{type: 'summon', mon: '@wolf', n: 2, max: 6}], fx: 'song', msg: '{user}の遠吠えが、森にこだました！'},
+    eb_pack_howl: {name: '群れの遠吠え', kind: 'enemy', target: 'self', effects: [{type: 'summon', mon: 'b_packwolf', n: 2, max: 6}], fx: 'song', msg: '{user}の遠吠えが、森にこだました！'},
     eb_lord_bite: {name: '頭の牙', kind: 'enemy', target: 'enemy', effects: [{type: 'damage', formula: 'phys', power: 1.35}], fx: 'bite2', msg: '{user}は低くうなって飛びかかった！'},
   });
   // @@V2-END

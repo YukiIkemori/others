@@ -10,9 +10,9 @@
   const spec = {
     tier: 'boss', at: 0.45, h: 100, vis: 93, fly: true,
     pal: {
-      wing: { keys: ['#241a3a', '#463a5c', '#6e6078', '#978a94', '#bcb0ac', '#ddd4c6'], n: 7, wrap: 0.5, amb: 0.22, tex: 1.6, tsx: 0.4, tsy: 0.4 },
-      wingDk: { keys: ['#1a1230', '#2e2446', '#4a3c5c', '#6a5a70', '#8a7a86'], n: 6, wrap: 0.45, amb: 0.2, tex: 1.4, tsx: 0.4, tsy: 0.4 },
-      band: { keys: ['#2a1a2a', '#5a3a44', '#8a6050', '#b8905c', '#dcc088'], n: 6, wrap: 0.45 },
+      wing: { keys: ['#1e1630', '#3a2c4a', '#5a4c68', '#7e7088', '#a496a8', '#c8bcc4'], n: 7, wrap: 0.5, amb: 0.22, tex: 1.6, tsx: 0.4, tsy: 0.4 },
+      wingDk: { keys: ['#160f28', '#281e3c', '#3e3252', '#584a6a', '#766884'], n: 6, wrap: 0.45, amb: 0.2, tex: 1.4, tsx: 0.4, tsy: 0.4 },
+      band: { keys: ['#2a1426', '#4e2638', '#7a4048', '#a8664e', '#d0946a'], n: 6, wrap: 0.45 },
       fuzz: { keys: ['#2a2036', '#4c4052', '#7a6c70', '#a89a8e', '#d4c8b4', '#f0e8d6'], n: 7, wrap: 0.45, amb: 0.22, tex: 2.6, tsx: 1.2, tsy: 1.2 },
       body: { keys: ['#1e1628', '#3a2e40', '#5c4c58', '#827070', '#a8968a'], n: 6, wrap: 0.35, amb: 0.16, tex: 1.2, tsx: 0.6, tsy: 1.4 },
       spot: { keys: ['#2a0c3a', '#6a1c6a', '#b04098', '#e878c0'], n: 5, wrap: 0.5, fixed: true },
@@ -33,9 +33,9 @@
       const FORE = [[0, 0], [7, -16], [7, -32], [0, -44], [-12, -48], [-24, -42], [-30, -30], [-28, -16], [-20, -6], [-9, -1]];
       const HIND = [[0, 0], [-6, -12], [-18, -18], [-30, -15], [-36, -6], [-32, 4], [-20, 8], [-8, 5]];
       const wing = (side, fore, z, m) => {
-        const root = fore ? p(-1 - (side < 0 ? 5 : 0), -6 - (side < 0 ? 2 : 0)) : p(-5 - (side < 0 ? 4 : 0), 0);
-        const ky = fore ? up : 0.75 + up * 0.25, kx = side < 0 ? 0.85 : 1;
-        const rot = (fore ? 0 : 0.1) + (side < 0 ? -0.12 : 0);
+        const root = fore ? p(-1 - (side < 0 ? 9 : 0), -6 - (side < 0 ? 3 : 0)) : p(-5 - (side < 0 ? 8 : 0), 0);
+        const ky = fore ? up : 0.75 + up * 0.25, kx = side < 0 ? 0.9 : 1;
+        const rot = (fore ? 0 : 0.1) + (side < 0 ? -0.38 : 0);
         const T = (q) => { const x = q[0] * kx, y = q[1] * ky; return [root[0] + x * C(rot) - y * S(rot), root[1] + x * S(rot) + y * C(rot)]; };
         const pts = (fore ? FORE : HIND).map(T);
         const g = B.group();
@@ -43,6 +43,10 @@
         const tip = fore ? pts[4] : pts[4], out = fore ? pts[6] : pts[5];
         // 翅脈
         (fore ? [3, 5, 7] : [3, 5]).forEach((k) => B.fold(root[0], root[1], pts[k][0], pts[k][1], 0.8, g, -1.2));
+        // 暗い帯（ぎざぎざ）と明るい付け根
+        const zz = fore ? [[4, -30], [-2, -34], [-8, -28], [-14, -32], [-20, -24], [-26, -26]] : [[-10, -10], [-16, -6], [-22, -10], [-28, -4]];
+        for (let k = 0; k < zz.length - 1; k++) { const a = T(zz[k]), b2 = T(zz[k + 1]); B.fold(a[0], a[1], b2[0], b2[1], 1.3, g, -2); }
+        { const a = T([0, 0]), b2 = T(fore ? [-8, -12] : [-10, -2]); B.fold(a[0], a[1], b2[0], b2[1], 4, g, 1); }
         // 外縁の帯
         const edge = fore ? [3, 4, 5, 6, 7] : [3, 4, 5];
         edge.forEach((k, j) => { const q = pts[k], r = pts[k - 1]; B.ell((q[0] + r[0]) / 2, (q[1] + r[1]) / 2, 3.2, 2, P.band, z + 0.01, { noAO: true, rot: Math.atan2(q[1] - r[1], q[0] - r[0]) }); });

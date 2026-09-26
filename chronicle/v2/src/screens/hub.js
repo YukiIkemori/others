@@ -172,7 +172,7 @@
       R.UIK.text(g, `${R.UIK.num(G.gold || 0)} G   ・   ${R.U.playTime(G.playMs || 0)}`, b.x + b.w - u(4), y + u(1), { size: u(14), color: C.text2, align: 'right' });
       y += u(34);
       const mem = S.party();
-      const gap = u(10), cw = (b.w - gap) / 2, ch = u(118);
+      const gap = u(10), cw = (b.w - gap) / 2, ch = u(146);
       this.cards = [];
       mem.forEach((c, i) => {
         const r = { x: b.x + (i % 2) * (cw + gap), y: y + Math.floor(i / 2) * (ch + gap), w: cw, h: ch };
@@ -218,7 +218,7 @@
     const tw = R.UIK.tag(g, c.row, x, r.y + pad + u(2), u(11));
     R.UIK.text(g, c.name, x + tw + u(6), r.y + pad, { size: u(15), weight: 700, color: dead ? C.disabled : focused ? C.goldHi : C.text, maxW: r.x + r.w - x - tw - u(12) });
     R.UIK.text(g, S.title(c), x, r.y + pad + u(26), { size: u(12), color: C.text2, maxW: r.x + r.w - x - pad });
-    S.hpmp(g, c, r.x + pad, r.y + pad + fs + u(6), r.w - pad * 2, { size: 13.5, stack: false });
+    S.hpmp(g, c, r.x + pad, r.y + pad + fs + u(4), r.w - pad * 2, { size: 13.5, stack: true });
   };
 
   /** 今いる所の名前 */

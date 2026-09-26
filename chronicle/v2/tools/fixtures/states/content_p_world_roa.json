@@ -1,0 +1,28 @@
+{
+  "desc": "CONTENT-P: ワールド、ロアの門の外（序章の夜道）",
+  "hero": {
+    "type": "warrior",
+    "sex": "m",
+    "name": "アルン",
+    "fav": "sword"
+  },
+  "party": [
+    "hero"
+  ],
+  "reserve": [],
+  "tier": 0,
+  "gl": "auto",
+  "prof": "auto",
+  "flags": {
+    "prologue_start": true,
+    "prologue_berna": true
+  },
+  "vars": {},
+  "items": {},
+  "gold": 200,
+  "leads": [],
+  "map": {
+    "id": "world",
+    "spawn": "roa"
+  }
+}

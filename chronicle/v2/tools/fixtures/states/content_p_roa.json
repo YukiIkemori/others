@@ -1,0 +1,28 @@
+{
+  "desc": "CONTENT-P: ロアの里の広場（序章、師匠にあいさつした後。主人公ひとり）",
+  "hero": {
+    "type": "warrior",
+    "sex": "m",
+    "name": "アルン",
+    "fav": "sword"
+  },
+  "party": [
+    "hero"
+  ],
+  "reserve": [],
+  "tier": 0,
+  "gl": "auto",
+  "prof": "auto",
+  "flags": {
+    "prologue_start": true,
+    "prologue_berna": true
+  },
+  "vars": {},
+  "items": {},
+  "gold": 200,
+  "leads": [],
+  "map": {
+    "id": "roa",
+    "spawn": "warp"
+  }
+}

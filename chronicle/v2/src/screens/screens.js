@@ -51,7 +51,7 @@
         R.Input.touchLayout(def.touch || 'menu');
         v.layer.open();
       },
-      exit() {},
+      exit() { if (v.exit) { try { v.exit(); } catch (e) { console.error(e); } } },
       update(dt) {
         if (v.closing) return;
         if (v.modal) { S._modalUpdate(v); return; }
@@ -194,6 +194,8 @@
     if (c.fav) { const k = (Rl.WTYPES || []).includes(c.fav) ? 'w' : 'e'; if (!out[k].includes(c.fav)) out[k].unshift(c.fav); }
     return out;
   };
+  /** 属性・系統のアイコン（無い名前は近い物で） */
+  S.elemIcon = (e) => (R.UIK.hasIcon(e) ? e : ({ water: 'ice' })[e] || 'arts');
   S.wname = (w) => (R.DB.weaponTypes && R.DB.weaponTypes[w] && R.DB.weaponTypes[w].name) || (R.Rules.WTYPE_NAMES || {})[w] || w;
   S.ename = (e) => (R.DB.elements && R.DB.elements[e] && (R.Rules.ELEMENT_NAMES || {})[e]) || (R.Rules.ELEMENT_NAMES || {})[e] || e;
 

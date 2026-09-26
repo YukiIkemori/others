@@ -107,7 +107,7 @@ const MAPS = {};
   MAPS.forest_dungeon = base('tt_forest', '迷いの森（見本）', 'dungeon', 'forest_dungeon', g, {
     ',': { mat: 'grass' }, '"': { mat: 'tall_grass' }, 'F': { mat: 'forest_dark', solid: true }, 'R': { mat: 'roots', solid: true }, 'T': { mat: 'tree', solid: true },
   }, {
-    outside: 'forest_dark', light: { ambient: '#4c5890', k: 0.5, mood: 'forest_night' },
+    outside: 'forest_dark', light: { ambient: '#4c5890', k: 0.55, mood: 'forest_night' },
     objects: [
       { type: 'spring', id: 'v_s1', x: 17, y: 10 }, { type: 'chest', id: 'v_c1', x: 4, y: 16, item: 'i_potion' }, { type: 'chest', id: 'v_c2', x: 29, y: 12, pool: 'p_rare' },
       { type: 'brazier', id: 'v_b1', x: 13, y: 5 }, { type: 'brazier', id: 'v_b2', x: 22, y: 17, on: true }, { type: 'waylamp', id: 'v_w1', x: 3, y: 9, lit: null },
@@ -128,7 +128,7 @@ const MAPS = {};
   MAPS.tree_inside = base('tt_tree', '千年樹の中（見本）', 'dungeon', 'tree_inside', g, {
     '.': { mat: 'bark_floor' }, 'r': { mat: 'root_floor' }, 'B': { mat: 'wall_bark', solid: true, rise: 1 }, 'R': { mat: 'roots', solid: true }, '~': { mat: 'water', walk: false },
   }, {
-    outside: 'wall_bark', light: { ambient: '#5a6c8a', k: 0.55, mood: 'tree' },
+    outside: 'wall_bark', light: { ambient: '#5a6c8a', k: 0.66, mood: 'tree' },
     objects: [
       ...[[5, 7], [11, 14], [21, 10], [29, 8], [18, 18], [14, 7]].map(([x, y], i) => ({ type: 'prop', id: 'mushroom_glow', x, y, variant: i })),
       { type: 'prop', id: 'crystal', x: 26, y: 12 }, { type: 'chest', id: 't_c1', x: 9, y: 6, item: 'i_potion' }, { type: 'stairs', id: 't_up', x: 22, y: 18, look: 'up' },
@@ -164,7 +164,7 @@ const MAPS = {};
   MAPS.cave = base('tt_cave', '洞窟（見本）', 'dungeon', 'cave', g, {
     '.': { mat: 'cave_floor' }, '#': { mat: 'wall_cave', solid: true, rise: 1 }, '~': { mat: 'water', walk: false },
   }, {
-    outside: 'wall_cave', light: { ambient: '#7a6abc', k: 0.6, mood: 'cave' },
+    outside: 'wall_cave', light: { ambient: '#7a6abc', k: 0.63, mood: 'cave' },
     objects: [
       { type: 'spring', id: 'c_s', x: 7, y: 8 }, { type: 'chest', id: 'c_c1', x: 28, y: 9, item: 'i_potion' }, { type: 'chest', id: 'c_c2', x: 4, y: 12, item: 'i_potion' },
       ...[[13, 6], [29, 13], [19, 18]].map(([x, y], i) => ({ type: 'prop', id: 'crystal', x, y, variant: i })),

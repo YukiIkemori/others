@@ -1,0 +1,27 @@
+{
+  "desc": "CONTENT-P: ロアの里の東の門（序章の最初。門番が立つ）",
+  "hero": {
+    "type": "warrior",
+    "sex": "m",
+    "name": "アルン",
+    "fav": "sword"
+  },
+  "party": [
+    "hero"
+  ],
+  "reserve": [],
+  "tier": 0,
+  "gl": "auto",
+  "prof": "auto",
+  "flags": {
+    "prologue_start": true
+  },
+  "vars": {},
+  "items": {},
+  "gold": 200,
+  "leads": [],
+  "map": {
+    "id": "roa",
+    "spawn": "gate"
+  }
+}

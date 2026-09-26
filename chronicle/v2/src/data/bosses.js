@@ -448,15 +448,18 @@
   {
     const P = LIST.b_pageeater, M = LIST.b_moth, RE = LIST.b_rooteater, RT = LIST.b_root;
     // 数値（s）は tools/sim_bosses.js の 3 本立てで合わせた（2026-09-26、標準の一行・そのティアの店の品）
-    P.s = { hp: 1.1, atk: 1 };
-    M.s = { hp: 1.2, atk: 1 };
-    RE.s = { hp: 0.9, atk: 0.6, mag: 0.6 };
+    // 予告の行動は重み 200（その手番なら必ず。§9.11.3 の SCHED と同じ考え）
+    P.s = { hp: 1.3, atk: 0.7 };
+    M.s = { hp: 1.35, atk: 1.55, mag: 1.55 };
+    RE.s = { hp: 1.1, atk: 0.6, mag: 0.6 };
     // ページ食らい: 紙吹雪（ランダム 3 回）を「紙を吸いこむ → 紙吹雪（全体）」の予告に置き換え
-    P.actions = A([['attack', 4], ['eb_page_gather', 2, { every: [3, 1] }], ['eb_eat_words', 1, { every: [4, 3] }], ['eb_ink_spit', 1, { every: [4, 1] }], ['eb_devour', 1]]);
+    P.actions = A([['attack', 4], ['eb_page_gather', 200, { every: [3, 0] }], ['eb_eat_words', 1, { every: [4, 3] }], ['eb_ink_spit', 1, { every: [4, 1] }], ['eb_devour', 1]]);
+    // 教える戦い: 半分を切っても手数は増やさない（攻撃力が 1 段上がるだけ）
+    P.phases = [{ hpBelow: 0.5, msg: 'ページ食らいの体がめくれあがった！', set: { buffs: { atk: 1 } } }];
     // ダストウィング: 眠りのりん粉を「羽の光 → 眠りのりん粉（全体、強い）」の予告に
-    M.actions = A([['attack', 3], ['eb_wing_glow', 2, { every: [3, 1] }], ['eb_scale_poison', 2], ['eb_wing_gale', 2], ['eb_eye_spots', 1, { every: [4, 2] }], ['eb_moth_dive', 2]]);
+    M.actions = A([['attack', 3], ['eb_wing_glow', 200, { every: [3, 0] }], ['eb_scale_poison', 2], ['eb_wing_gale', 2], ['eb_eye_spots', 1, { every: [4, 2] }], ['eb_moth_dive', 2]]);
     // 根食らい: 根もぐり → 前列へ突き上げ。根を呼ぶのは根を火で焼くまで（戦闘の旗 roots_burned）
-    RE.actions = A([['attack', 3], ['eb_root_drain', 2], ['eb_root_sink', 2, { every: [4, 1] }], ['eb_rot_breath', 2, { every: [3, 2] }],
+    RE.actions = A([['attack', 3], ['eb_root_drain', 2], ['eb_root_sink', 200, { every: [4, 1] }], ['eb_rot_breath', 2, { every: [3, 2] }],
       ['eb_call_roots', 1, { every: [4, 3], countBelow: 3, noFlag: 'roots_burned' }], ['eb_body_slam', 2]]);
     // 根の子分の絵は hd:mon:b_root（BEAST）。火で倒されると、根食らいはもう根を呼べない
     RT.sprite = 'b_root';
@@ -467,14 +470,26 @@
       name: '狼の群れ頭', sprite: 'boss_wolflord', bossType: 'mid', lv: 8, actsPerTurn: 1, size: 'l',
       race: 'beast', flags: ['boss'], eva: 10,
       elem: { fire: 1.25, earth: 0.75 }, phys: {}, statusRes: { sleep: 0.25 },
-      actions: A([['attack', 3], ['eb_lord_bite', 2], ['eb_lord_breath', 2, { every: [2, 0], countBelow: 6 }]]),
+      actions: A([['attack', 3], ['eb_lord_bite', 2], ['eb_lord_breath', 200, { every: [2, 0], countBelow: 6 }]]),
       s: { hp: 1.6 },
       leader: { msg: '頭を失った狼たちは、散り散りに逃げていった！' },
       drops: MID('i_ether'),
       desc: '森の狼たちを率いる大きな灰色狼。\n遠吠えひとつで仲間を呼ぶ。',
     };
-    if (!R.DB.monsters.b_wolflord) R.DB.monsters.b_wolflord = LIST.b_wolflord;
-    if (!R.DB.bosses.b_wolflord) R.DB.bosses.b_wolflord = LIST.b_wolflord;
+    // 群れの狼（群れ頭のお供。絵は狼の土台 hd:mon:wolf_1。遠吠えで増える。頭が倒れると逃げる）
+    LIST.b_packwolf = {
+      name: '群れの狼', sprite: 'wolf_1', artKind: 'mon', bossType: 'add', addOf: 'b_wolflord', lv: 8, hpShare: 3.5, actsPerTurn: 1, size: 's',
+      race: 'beast', flags: ['boss'], eva: 10,
+      elem: { fire: 1.25, earth: 0.75 }, phys: {}, statusRes: {},
+      actions: A([['attack', 3], ['e_bite', 1]]),
+      s: { atk: 0.5, mag: 0.5 },
+      drops: {},
+      desc: '群れ頭に従う灰色の狼。\n頭がいなくなると散っていく。',
+    };
+    for (const id of ['b_wolflord', 'b_packwolf']) {
+      if (!R.DB.monsters[id]) R.DB.monsters[id] = LIST[id];
+      if (!R.DB.bosses[id]) R.DB.bosses[id] = LIST[id];
+    }
   }
   // @@V2-END
 })(window.RPG);

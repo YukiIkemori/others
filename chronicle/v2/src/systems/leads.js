@@ -1,0 +1,219 @@
+// EVENTS — 手がかり帳 R.Leads（V2_PLAN §2.5.14・§3.5・§3.14 の E1、WORLD_REDESIGN §3.1・§3.2、MODERN_UI §5.8・§6.2）
+//
+//   R.Leads.add(id, {silent}) → bool     聞いた（あれば何もしない）。R.Game.leads[id] = K.leadState {got: playMs, pin, seen}。'lead:add'
+//   R.Leads.pin(id) / unpin()            目印は 1 つだけ。'lead:pin'（FIELD の右上の札・地図の印）
+//   R.Leads.done(id)                     解決（目印も外す）。'lead:done'
+//   R.Leads.list({all}) → K.leadGroup[]  地方ごと（本筋 → 世界のうわさ → 地方の順）。hideWhen が真の物は外す（all で入れる）
+//   R.Leads.pinned() → id | null
+//   足した物: state(id) → 'new'|'open'|'done'|null / isDone(id) / seen(id)（MENUS が詳しい文を開いたとき）/
+//             clearRegionPins(rid)（ev.clearRegion が呼ぶ）/ unseen() → 数 / regionName(rid)
+//
+// 通知（MODERN_UI §6.2 の右上の札の形）: 新しく聞いたら右上に「新しい手がかり」の札（題名と聞いた所）を 4.5 秒。
+//   フィールドが一番上でイベントが走っていない間に出す（会話の中で聞いたら、会話が終わってから）。
+//   札が出ている間は Y で「目印を付ける」（WORLD_REDESIGN §3.1 の 4。帳を開き直さなくてよい）。Y を押したらメニューは開かない。
+//   初めての手がかりのあとは説明の札（R.Screens.tip('leads')、MENUS）を 1 回。フィールドが無い間（フィクスチャ・タイトル）は出さない。
+(function (R) {
+  'use strict';
+  if (R.Stubs && R.Stubs.claim) R.Stubs.claim('Leads');
+  const Leads = (R.Leads = R.Leads || {});
+  const KIND_ORDER = { main: 0, rumor: 1, map: 2, region: 3, side: 4 };
+  const SHOW_MS = 4500;
+  const PROMPT = [{ btn: 'y', label: '目印を付ける' }];
+
+  const G = () => R.Game;
+  const def = (id) => (R.DB.leads && R.DB.leads[id]) || null;
+
+  Leads.isDone = function (id) {
+    const g = G();
+    if (!g) return false;
+    return R.State.leadDoneIn ? R.State.leadDoneIn(g, id) : !!(g.leads[id] && g.leads[id].done);
+  };
+  Leads.state = function (id) {
+    const l = G() && G().leads[id];
+    if (!l) return null;
+    if (Leads.isDone(id)) return 'done';
+    return l.seen ? 'open' : 'new';
+  };
+
+  Leads.add = function (id, o) {
+    const g = G();
+    if (!g || !id) return false;
+    if (g.leads[id]) return false;
+    if (!def(id)) R.warn('R.Leads.add: unknown lead ' + id);
+    g.leads[id] = { got: Math.floor(g.playMs || 0), pin: false, seen: false };
+    R.emit('lead:add', { id });
+    if (!(o && o.silent)) notify(id);
+    return true;
+  };
+  Leads.pin = function (id) {
+    const g = G();
+    if (!g || !g.leads[id]) return false;
+    for (const k of Object.keys(g.leads)) g.leads[k].pin = k === id;
+    R.emit('lead:pin', { id });
+    return true;
+  };
+  Leads.unpin = function () {
+    const g = G();
+    if (!g) return;
+    let any = false;
+    for (const k of Object.keys(g.leads)) { if (g.leads[k].pin) any = true; g.leads[k].pin = false; }
+    if (any) R.emit('lead:pin', { id: null });
+  };
+  Leads.done = function (id) {
+    const g = G();
+    if (!g) return false;
+    if (!g.leads[id]) g.leads[id] = { got: Math.floor(g.playMs || 0), pin: false, seen: true };
+    const l = g.leads[id];
+    if (l.done) return false;
+    const wasPinned = l.pin;
+    l.done = true; l.pin = false;
+    R.emit('lead:done', { id });
+    if (wasPinned) R.emit('lead:pin', { id: null });
+    return true;
+  };
+  Leads.seen = function (id) { const l = G() && G().leads[id]; if (l && !l.seen) { l.seen = true; return true; } return false; };
+  Leads.pinned = function () {
+    const g = G();
+    if (!g) return null;
+    for (const k of Object.keys(g.leads)) if (g.leads[k].pin && !Leads.isDone(k)) return k;
+    return null;
+  };
+  Leads.unseen = function () { const g = G(); if (!g) return 0; return Object.keys(g.leads).filter((k) => !g.leads[k].seen && !Leads.isDone(k)).length; };
+
+  /** 地方の見出しの名前（行ったことのない地方は方角で。MENUS が使う） */
+  Leads.regionName = function (rid) {
+    if (!rid || rid === '-' || rid === 'world') return '世界のうわさ';
+    if (rid === 'main') return '本筋';
+    const r = R.DB.regions && R.DB.regions[rid];
+    return (r && r.name) || rid;
+  };
+
+  Leads.list = function (o) {
+    const g = G();
+    if (!g) return [];
+    const all = o && o.all;
+    const by = {};
+    const order = [];
+    const ids = Object.keys(g.leads).sort((a, b) => (g.leads[a].got || 0) - (g.leads[b].got || 0));
+    for (const id of ids) {
+      const d = def(id) || {};
+      if (!all && d.hideWhen != null && R.State.check(d.hideWhen)) continue;
+      const region = d.kind === 'main' ? 'main' : d.region || 'world';
+      if (!by[region]) { by[region] = { region, items: [] }; order.push(region); }
+      const st = Leads.isDone(id) ? 'done' : g.leads[id].seen ? 'open' : 'new';
+      by[region].items.push({ id, state: st, pinned: !!g.leads[id].pin && st !== 'done' });
+    }
+    const rank = (r) => (r === 'main' ? 0 : r === 'world' ? 1 : 2);
+    order.sort((a, b) => rank(a) - rank(b));
+    for (const r of order) {
+      by[r].items.sort((a, b) => (a.state === 'done') - (b.state === 'done') || (KIND_ORDER[(def(a.id) || {}).kind] || 0) - (KIND_ORDER[(def(b.id) || {}).kind] || 0));
+    }
+    return order.map((r) => by[r]);
+  };
+
+  /** 地方を解決したら、その地方の手がかりに付けた目印を外す（WORLD_REDESIGN §3.1 の 4） */
+  Leads.clearRegionPins = function (rid) {
+    const g = G();
+    if (!g) return;
+    for (const id of Object.keys(g.leads)) {
+      const d = def(id);
+      if (d && d.region === rid && g.leads[id].pin) { g.leads[id].pin = false; R.emit('lead:pin', { id: null }); }
+    }
+  };
+
+  // ================================================================ 通知の札
+  const queue = [];      // [{id, t0}]
+  let cur = null;        // {id, t0, pinned}
+  let tipDue = false;
+  let installed = false;
+
+  function fieldTop() {
+    const top = R.Engine && R.Engine.top && R.Engine.top();
+    return !!top && top.id === 'field';
+  }
+  function calm() { return fieldTop() && !(R.Events && R.Events.busy && R.Events.busy()) && R.Engine.fade.a < 0.01; }
+
+  function notify(id) {
+    if (!R.Engine || !R.Engine.has || !R.Engine.has('field')) return;   // フィクスチャ・タイトルの間は出さない
+    if (!queue.some((q) => q.id === id)) queue.push({ id });
+    try { R.Audio.sfx('lead'); } catch (e) { /* */ }
+    if (!(G().flags && G().flags.tip_leads)) tipDue = true;
+    install();
+  }
+
+  function install() {
+    if (installed) return;
+    installed = true;
+    R.Engine.addTick(tick);
+    R.Engine.overlay('leads', draw, 45);
+  }
+
+  function tick() {
+    if (!R.Game) { queue.length = 0; cur = null; tipDue = false; return; }
+    const now = R.Engine.time;
+    if (!cur && queue.length && calm()) { cur = queue.shift(); cur.t0 = now; }
+    if (cur) {
+      const age = now - cur.t0;
+      // Y で目印（フィールドが一番上でイベントが無い間だけ）
+      if (!cur.pinned && age > 150 && calm() && R.Input.pressed('y')) {
+        R.Input.consume('y');
+        if (Leads.pin(cur.id)) { cur.pinned = true; cur.t0 = Math.min(cur.t0, now - SHOW_MS + 1400); try { R.Audio.sfx('confirm'); } catch (e) { /* */ } }
+      }
+      if (age > SHOW_MS) cur = null;
+      else if (!R.Engine.has('field')) cur = null;
+    }
+    if (!cur && !queue.length && tipDue && calm()) {
+      tipDue = false;
+      if (R.Screens && R.Screens.tip) { try { R.Screens.tip('leads'); } catch (e) { R.warn('tip leads', e && e.message); } }
+    }
+  }
+
+  /** 札の矩形（テスト用）: 右上。FIELD の目印の札があればその下 */
+  function cardRect() {
+    const U = R.UIK.u, s = R.safe, tall = R.layout === 'tall';
+    const w = tall ? Math.min(R.W - s.l - s.r - U(32), U(330)) : U(284);
+    const h = U(88);
+    let x = tall ? s.l + U(16) : R.W - s.r - U(16) - w;
+    if (!tall && R.Input.touchVisible && R.Input.touchVisible()) {
+      const sp = R.Input.touchSpots && R.Input.touchSpots().y;
+      if (sp) x = Math.min(x, sp.x - sp.r - U(12) - w);
+    }
+    let y = s.t + U(18);
+    if (tall) y = s.t + U(118);
+    const pinned = Leads.pinned();
+    if (pinned && cur && pinned !== cur.id) y += U(62);
+    if (R.Field && R.Field._s && R.Field._s.hud && R.Field._s.hud.showMini && !tall) y += U(158);
+    return { x, y, w, h };
+  }
+  Leads._cardRect = cardRect;
+  Leads._current = function () { return cur ? { id: cur.id, pinned: !!cur.pinned } : null; };
+
+  function draw(g) {
+    if (!cur || !R.Game || !fieldTop()) return;
+    const d = def(cur.id) || { title: cur.id };
+    const age = R.Engine.time - cur.t0;
+    const T = R.UIK.T, C = T.color, U = R.UIK.u;
+    const kin = Math.min(1, age / 220), kout = Math.min(1, (SHOW_MS - age) / 320);
+    const a = Math.max(0, Math.min(kin, kout));
+    if (a <= 0) return;
+    const r = cardRect();
+    const dx = (1 - R.UIK.ease(kin)) * U(18);
+    g.save();
+    g.globalAlpha = a;
+    const x = Math.round(r.x + dx), y = r.y, w = r.w, h = r.h;
+    R.UIK.panel(g, { x, y, w, h }, { r: U(12), a: 0.86 });
+    // 左の琥珀の細い帯
+    g.fillStyle = 'rgba(236,201,124,0.85)';
+    g.fillRect(x + U(1), y + U(12), U(2), h - U(24));
+    R.UIK.icon(g, 'journal', x + U(16), y + U(13), U(16), C.gold);
+    R.UIK.text(g, cur.pinned ? '目印を付けた' : '新しい手がかり', x + U(38), y + U(14), { size: U(11.5), weight: 700, color: C.gold, track: U(1.5) });
+    const from = d.from ? String(d.from) : '';
+    if (from) R.UIK.text(g, from, x + w - U(16), y + U(15), { size: U(11), color: C.text3, align: 'right', maxW: w * 0.42 });
+    R.UIK.text(g, d.title || cur.id, x + U(16), y + U(36), { size: U(16.5), weight: 700, color: C.text, maxW: w - U(32) });
+    if (cur.pinned) {
+      R.UIK.icon(g, 'pin', x + U(16), y + h - U(24), U(13), C.gold);
+      R.UIK.text(g, '右上の札と地図に印が出る', x + U(34), y + h - U(24), { size: U(11.5), color: C.text2 });
+    } else R.UIK.prompts(g, PROMPT, { x: x + w - U(14), y: y + h - U(17), align: 'right' }, { size: 11.5 });
+    g.restore();
+  }
+})(window.RPG);

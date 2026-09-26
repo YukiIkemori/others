@@ -49,16 +49,16 @@
           for (const e of sh.meta.emit) {
             const ex = bx + e.x, ey = by + e.y;
             if (e.kind === 'win') {
-              L(ex + e.w / 2, by + 12 * s, 36, S.windowColor, 0.6, 'window', 'window', o.id);
+              L(ex + e.w / 2, by + 12 * s, 40, S.windowColor, 0.8, 'window', 'window', o.id);
               L(ex + e.w / 2, ey + e.h / 2, 18, S.windowColor, 0.5, 'point', 'window', o.id);
               out.emissive.push({ kind: 'win', x: ex, y: ey, w: e.w, h: e.h });
               G(ex + e.w / 2, ey + e.h / 2, { r: 22 * s, core: 2 * s, halo: 22 * s, color: S.windowColor, k: 0.32, type: 'window' });
             } else if (e.kind === 'door') {
-              L(ex + e.w / 2, by + 18 * s, 62, S.windowColor, 1, 'wide', 'door', o.id);
+              L(ex + e.w / 2, by + 18 * s, 66, S.windowColor, 1.3, 'wide', 'door', o.id);
               out.emissive.push({ kind: 'door', x: ex, y: ey, w: e.w, h: e.h });
               G(ex + e.w / 2, ey + e.h / 2, { r: 30 * s, core: 3 * s, halo: 30 * s, color: S.windowColor, k: 0.5, type: 'door' });
             } else if (e.kind === 'lamp') {
-              L(ex, by + 10 * s, 64, S.lampColor, 0.85, 'pool', 'lamp', o.id);
+              L(ex, by + 10 * s, 70, S.lampColor, 1.1, 'pool', 'lamp', o.id);
               L(ex, ey, 22, S.lampColor, 0.8, 'point', 'lamp', o.id);
               out.emissive.push({ kind: 'lamp', x: ex, y: ey });
               G(ex, ey, { r: 20 * s, core: 3 * s, halo: 20 * s, color: S.lampColor, k: 0.9, type: 'lamp' });
@@ -67,17 +67,17 @@
           break;
         }
         case 'chest':
-          if (!stt.open) { L(fx, fy - 6 * s, 34, S.windowColor, 0.55, 'pool', 'chest', o.id); G(fx + 7 * s, fy - 19 * s, { r: 16 * s, core: 2 * s, halo: 16 * s, color: '#fff0c0', k: 0.7, type: 'sparkle' }); }
+          if (!stt.open) { L(fx, fy - 6 * s, 36, S.windowColor, 0.7, 'pool', 'chest', o.id); G(fx + 7 * s, fy - 19 * s, { r: 16 * s, core: 2 * s, halo: 16 * s, color: '#fff0c0', k: 0.7, type: 'sparkle' }); }
           break;
         case 'spring':
-          L(fx, fy - 4 * s, 150, S.crystalColor, 1, 'pool', 'spring', o.id);
+          L(fx, fy - 4 * s, 150, S.crystalColor, 1.25, 'pool', 'spring', o.id);
           G(fx, fy - 24 * s, { r: 40 * s, core: 6 * s, halo: 40 * s, color: '#a0f0ff', k: 0.8, type: 'spring' });
           break;
         case 'brazier':
-          if (stt.on) { L(fx, fy - 4 * s, S.lampR * S.fireMul, S.fireColor, 1.05, 'pool', 'fire', o.id); G(fx, fy - 22 * s, { r: 24 * s, core: 5 * s, halo: 24 * s, color: S.fireColor, k: 1, type: 'fire' }); }
+          if (stt.on) { L(fx, fy - 4 * s, S.lampR * S.fireMul, S.fireColor, 1.3, 'pool', 'fire', o.id); G(fx, fy - 22 * s, { r: 24 * s, core: 5 * s, halo: 24 * s, color: S.fireColor, k: 1, type: 'fire' }); }
           break;
         case 'waylamp':
-          if (stt.on) { L(fx, fy - 4 * s, S.lampR, S.lampColor, 1, 'pool', 'lamp', o.id); G(fx, fy - 31 * s, { r: 20 * s, core: 4 * s, halo: 20 * s, color: S.lampColor, k: 1, type: 'lamp' }); }
+          if (stt.on) { L(fx, fy - 4 * s, S.lampR, S.lampColor, 1.2, 'pool', 'lamp', o.id); G(fx, fy - 31 * s, { r: 20 * s, core: 4 * s, halo: 20 * s, color: S.lampColor, k: 1, type: 'lamp' }); }
           break;
         case 'switch':
           if (stt.on) G(fx, fy - 5 * s, { r: 12 * s, core: 2 * s, halo: 12 * s, color: S.crystalColor, k: 0.6, type: 'switch' });
@@ -95,7 +95,7 @@
           const a = anchorOf(o.id, s);
           const lx = fx + a[0], ly = fy + a[1];
           const color = /crystal|mushroom|songstone/.test(o.id) ? S.crystalColor : spec.color;
-          L(lx, fy - 4 * s, spec.r, color, spec.k, 'pool', spec.kind, o.id + '@' + o.x + ',' + o.y);
+          L(lx, fy - 4 * s, spec.r, color, spec.k * 1.2, 'pool', spec.kind, o.id + '@' + o.x + ',' + o.y);
           if (/lamp|lantern|beacon|torch|crystal|stove/.test(o.id)) L(lx, ly, 24, color, 0.7, 'point', spec.kind, o.id);
           const soft = /crystal|mushroom|songstone/.test(o.id);
           G(lx, ly, { r: (o.id === 'beacon' ? 60 : soft ? 18 : 22) * s, core: (o.id === 'beacon' ? 9 : soft ? 1.5 : 3) * s, halo: (o.id === 'beacon' ? 60 : soft ? 18 : 22) * s, color, k: soft ? 0.55 : 0.9, type: spec.kind });

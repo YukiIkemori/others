@@ -97,7 +97,7 @@
         const sz = u(15), a = row.a || {};
         const ic = row.kind === 'tech' ? a.wtype : (a.elements && a.elements[0]) || 'arts';
         const wrong = row.kind === 'tech' && a.wtype !== wt;
-        R.UIK.icon(gg, R.UIK.hasIcon(ic) ? ic : 'arts', rect.x + u(14), rect.y + (rect.h - sz) / 2, sz, wrong ? C.disabled : f ? C.gold : C.text2);
+        R.UIK.icon(gg, S.elemIcon(ic), rect.x + u(14), rect.y + (rect.h - sz) / 2, sz, wrong ? C.disabled : f ? C.gold : C.text2);
         const col = wrong ? C.disabled : f ? C.goldHi : C.text;
         const nw = R.UIK.text(gg, row.label, rect.x + u(40), rect.y + (rect.h - sz) / 2 - u(1), { size: sz, weight: f ? 700 : 500, color: col, maxW: rect.w - u(130) });
         if (S.isNew(c, row.value)) { R.UIK.chip(gg, rect.x + u(46) + nw, rect.y + (rect.h - R.UIK.chipH(9.5)) / 2, 'NEW', { kind: 'new', size: 9.5 }); this.seen[row.value] = true; }

@@ -112,7 +112,8 @@ async function main() {
 
   section('戦闘ボイス（ファイルのある主人公の声）');
   ok('hero glimmer clip is picked from the media list (v_hero_m_glimmer_n)', await B.ev(p, "(() => { const id = RPG.Battle._.voice.play({id:'hero', uid:'p0', look:'hero_m_warrior'}, 'glimmer', {force:true}); return /^v_hero_m_glimmer_\\d+$/.test(id); })()"));
-  ok('missing companion clips are a silent no-op', await B.ev(p, "RPG.Battle._.voice.play({id:'selma', uid:'p1'}, 'bigtech') === null"));
+  ok('missing companion clips are a silent no-op', await B.ev(p, "RPG.Battle._.voice.play({id:'nobody_x', uid:'p1'}, 'bigtech') === null"));
+  ok('companion clips b_<id>_<kind>_<n> are used when present', await B.ev(p, "(() => { const ids = Object.keys(RPG.Media.table().voice).filter((k) => /^b_[a-z]+_bigtech_\\d+$/.test(k)); if (!ids.length) return true; const who = ids[0].split('_')[1]; const id = RPG.Battle._.voice.play({id: who, uid:'p1'}, 'bigtech'); return id && id.startsWith('b_' + who + '_bigtech_'); })()"));
 
   section('本物（か仮）の BattleCore で');
   await B.ev(p, start({ troop: 'tr_stub' }));

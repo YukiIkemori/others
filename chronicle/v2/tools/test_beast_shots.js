@@ -60,7 +60,8 @@ function pageLib() {
     document.body.style.cssText = 'margin:0;background:#000;overflow:hidden';
     const v = mk(c.width * k, c.height * k), x = v.getContext('2d');
     x.imageSmoothingEnabled = false; x.drawImage(c, 0, 0, v.width, v.height);
-    v.style.cssText = 'display:block;image-rendering:pixelated';
+    const cw = Math.min(v.width / (window.devicePixelRatio || 1), window.innerWidth);
+    v.style.cssText = `display:block;image-rendering:pixelated;width:${cw}px;height:${cw * v.height / v.width}px`;
     document.body.appendChild(v);
     return [v.width, v.height];
   }

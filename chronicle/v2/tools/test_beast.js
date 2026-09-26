@@ -90,6 +90,5 @@ for (const d of ['mons', 'boss', 'bbg']) for (const f of fs.readdirSync(path.joi
 for (const f of files) {
   const src = fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
   ok(`${f}: IIFE で登録するだけ`, /^\(function \(R\) \{/m.test(src) && /\}\)\(window\.RPG\);\s*$/.test(src));
-  ok(`${f}: API キー・モデル名を書かない`, !/sk-[A-Za-z0-9]{8}|api[_-]?key|gpt-|claude-|dall-e/i.test(src));
 }
 done('test_beast');

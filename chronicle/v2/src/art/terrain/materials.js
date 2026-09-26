@@ -75,17 +75,17 @@
     water: ramp(['#08121e', '#0e1e2e', '#15293c', '#1e384c', '#2c4c60', '#446a7c'], 8),
     deep: ramp(['#060e18', '#0a1624', '#0f2032', '#152a40', '#1e3a52'], 7),
     shallow: ramp(['#10262c', '#1a3a40', '#285056', '#3a686a', '#56847e'], 7),
-    cave: ramp(['#1a1c22', '#2a2c34', '#3c3e48', '#50525c', '#666872'], 8),
-    bark: ramp(['#241610', '#3a2618', '#523822', '#6c4c30', '#86623e'], 8),
+    cave: ramp(['#1e2028', '#30323c', '#444652', '#5a5c68', '#727480'], 8),
+    bark: ramp(['#302016', '#4a3622', '#664a30', '#846442', '#a07c52'], 8),
     root: ramp(['#1e160e', '#322416', '#4a3620', '#62482c', '#7a5c38'], 7),
     carpet: ramp(['#3a0e12', '#5a1a1e', '#7c2a2a', '#9c3e36', '#b85848'], 7),
-    canopy: ramp(['#0a140c', '#122016', '#1a3020', '#24422a', '#325634', '#44683c'], 8),
+    canopy: ramp(['#0c1810', '#16281a', '#203a26', '#2c4e30', '#3c643a', '#507a44'], 8),
     rockTop: ramp(['#0e0e16', '#16161f', '#1e1e28', '#282833', '#34343f'], 6),
     stoneTop: ramp(['#16141a', '#221e24', '#2e2a30', '#3c373c', '#4a444a'], 6),
     woodTop: ramp(['#1a120e', '#261a12', '#34241a', '#443022'], 5),
     mossTop: ramp(['#10160e', '#182214', '#22301c', '#2e4024'], 5),
-    barkTop: ramp(['#180f0a', '#241810', '#322218', '#402c1e'], 5),
-    caveTop: ramp(['#0c0b14', '#14121e', '#1c1a28', '#262232', '#302b3c'], 6),
+    barkTop: ramp(['#1e140e', '#2c1e14', '#3c2a1c', '#4c3624'], 5),
+    caveTop: ramp(['#100e1a', '#191624', '#221e30', '#2c273c', '#363048'], 6),
   };
   T._PAL = PAL;
   const MORTAR = [26, 24, 24], FLAG_MORTAR = [30, 27, 25];
@@ -169,12 +169,14 @@
     };
   }
   function carpetGen() {
+    // 織りの目（細かい市松）＋ 16 u ごとの帯に菱形の模様（金糸）
     return function (u, v) {
       const b = ((Math.floor(u) + Math.floor(v)) & 1) ? 0.04 : -0.04;
-      let l = 0.5 + b + (pn(u, v, 16, 61) - 0.5) * 0.2;
-      const band = ((v % 32) + 32) % 32;
-      if (band < 2 || (band > 14 && band < 17)) return pick(PAL.carpet, l + 0.25);
-      if ((((u + v) % 16) + 16) % 16 < 1.2 && band > 4 && band < 12) return [200, 160, 90];
+      const l = 0.5 + b + (pn(u, v, 16, 61) - 0.5) * 0.2;
+      const band = ((v % 32) + 32) % 32, cx = ((u % 16) + 16) % 16;
+      if (band < 2 || (band >= 14 && band < 16)) return pick(PAL.carpet, l + 0.28);
+      const d = Math.abs(cx - 8) + Math.abs(band - 8);
+      if (band >= 3 && band < 13 && d < 3.5) return d < 1.6 ? [206, 168, 96] : pick(PAL.carpet, l + 0.18);
       return pick(PAL.carpet, l);
     };
   }
