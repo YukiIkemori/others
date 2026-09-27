@@ -1,6 +1,7 @@
 // 武器の系統 5 つ（R.DB.weaponTypes。RULES）。STATS_REWORK §8.1（A29: 剣・大剣・短剣・弓・杖、武器枠 1 つ）。
 // 数値（mult・命中・会心・能力値・magMult）は R.Rules.K.WTYPE が正。ここは名前・並び・演出・1 行の説明（20 字以内）。
 // 素手は内部キー fist（R.Rules.UNARMED）で、ここには入れない。
+// 技の derive:[{to, uses, chance}]（techs_*.js）: その技を uses 回以上使うと、使った行動の後に to を編み出すことがある（R.Glimmer.deriveRoll・K.DERIVE）。
 // 大剣の系統は大剣・大斧（art 'axe'）・大槌（art 'club'、kind 'blunt'）・大銛や大鎌を含む。剣の系統は剣・刀（'katana'）・細剣（'rapier'）。
 (function (R) {
   'use strict';

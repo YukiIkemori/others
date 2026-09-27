@@ -30,7 +30,8 @@
       K.path(g, [[15, 18], [12, 18]], ',', 2);
       K.soften(g, 'H', '.,n', ['#', 'H'], 0.3, 'ic1');
       // 氷に閉じこめられた宝箱（北の回廊の奥）
-      K.rect(g, 16, 5, 3, 3, 'H'); K.put(g, 17, 6, '.'); K.put(g, 17, 7, 'I');
+      // （氷の床は歩けるマス。ふさぐのは cond のある氷の結晶の物 = とけると消える。check_reach が「後で開く所」として数えられる）
+      K.rect(g, 16, 5, 3, 3, 'H'); K.put(g, 17, 6, '.'); K.put(g, 17, 7, '.');
       const O = [];
       O.push(K.prop('rock_small', 21, 18), K.prop('rock_small', 22, 19));   // 小石（泉は置かない。WORLD §6.2）
       O.push(K.stairs(6, 17, { map: 'icicle_2', spawn: 'up' }, { id: 'icicle_1_down', look: 'down' }));
@@ -46,7 +47,6 @@
         spawns: { entrance: { x: 41, y: 17, dir: 'w' }, up: { x: 8, y: 18, dir: 'e' } },
         exits: [{ x: 43, y: 16, w: 1, h: 3, to: { map: 'world', spawn: 'icicle' } }],
         triggers: [{ id: 'arrive', on: 'enter', event: 'icicle_arrive', once: true }],
-        tilePatches: [{ cond: 'snow_icicle_box_1', rect: [17, 7, 1, 1], rows: ['.'] }],
         zones: [{ rect: null, zone: 'z_snow_icicle' }],
         light: { ambient: '#4c5c98', k: 0.6, poolK: 0.6, spillR: 0.8, mood: 'cave' },
         dark: false, bgm: 'cave', bbg: 'snow',

@@ -96,12 +96,19 @@ section('4. 筋（閉包）');
 {
   const P = require('./qa/progress');
   P.init(R);
+  // 砂漠は縦切り（DB.config.slice）の外。ワールドの閉じ（guard_south）を外した形で閉包を回す（本物の config は変えない: この R の中だけ）
+  const slice0 = D.config.slice;
+  D.config.slice = false;
+  R.MapUtil.invalidate();
   for (const hawk of ['fight', 'water', 'pay']) for (const route of ['short', 'long']) {
     const r = P.closure({ variant: { ch_forest_pim: 'send', ch_forest_fawn: 'heal', ch_forest_write: 'pain', ch_desert_hawk: hawk, ch_desert_route: route, ch_desert_write: 'pain' } });
     ok(`鷹団=${hawk} 道=${route}: clearRegion('r_desert')`, !!(r.flags.cleared_r_desert && r.flags.desert_finale_done && r.flags.desert_reward_given), { king: !!r.flags.desert_king, cleared: !!r.flags.cleared_r_desert });
   }
   const r = P.closure({ variant: { ch_forest_pim: 'send', ch_forest_fawn: 'heal', ch_forest_write: 'pain', ch_desert_hawk: 'water', ch_desert_route: 'long' }, restricted: true });
   ok('隠し通路・寄り道・依頼なしでも着く', !!r.flags.cleared_r_desert);
+  D.config.slice = slice0;
+  R.MapUtil.invalidate();
+  ok('縦切りのあいだ（slice）は砂漠へ行けない（guard_south が閉じたまま）', (() => { const q = P.closure({ variant: {} }); return !q.visited.has('kasim') && !q.visited.has('sandedge'); })());
 }
 {
   // 解決: ページ・ティア +1・pendingTier（R.Events._clearRegion をそのまま、演出は止める）

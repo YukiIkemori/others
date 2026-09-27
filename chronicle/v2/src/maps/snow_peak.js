@@ -40,10 +40,10 @@
       // 雪の岩のあいだの細い所（立ち上がり 1 の土手）
       K.soften(g, 'H', '.,', ['#', 'H'], 0.35, 'pk1');
       for (const [x, y] of [[20, 38], [36, 42], [22, 27], [33, 22], [9, 25], [48, 22], [35, 10], [44, 8], [14, 8]]) if (K.at(g, x, y) === '.') K.put(g, x, y, 'T');
-      // 氷の壁（とけるまで固い氷）
-      K.rect(g, 27, 32, 3, 2, 'I');
-      K.rect(g, 43, 15, 3, 2, 'I');
-      K.rect(g, 12, 15, 3, 2, 'I');
+      // 氷の壁: 床は雪の道。ふさぐのは cond のある氷の結晶（とけると消える。check_reach が「後で開く所」として数えられる）
+      K.rect(g, 27, 32, 3, 2, ',');
+      K.rect(g, 43, 15, 3, 2, ',');
+      K.rect(g, 12, 15, 3, 2, ',');
       // 隠し通路（入口の台地の西のくぼみ → 小部屋）
       K.put(g, 5, 39, 'S'); K.put(g, 4, 39, 'S');
       K.rect(g, 1, 37, 3, 4, '.');
@@ -55,7 +55,7 @@
       // 氷の壁（とけると消える）と、火種をかざす所
       const WALLS = [[1, 27, 32, 3, 28, 34], [2, 43, 15, 3, 44, 17], [3, 12, 15, 3, 13, 17]];
       for (const [n, x, y, w, ex, ey] of WALLS) {
-        for (let i = 0; i < w; i++) O.push(K.prop('ice_crystal', x + i, y + 1, { cond: '!snow_ice_' + n, variant: i }));
+        for (let j = 0; j < 2; j++) for (let i = 0; i < w; i++) O.push(K.prop('ice_crystal', x + i, y + j, { cond: '!snow_ice_' + n, variant: (i + j) % 3 }));
         O.push(K.exam(ex, ey, 'peak_icewall', { wall: n }));
       }
       // 宝箱（見える所。隠し通路の先にレア）
@@ -91,11 +91,6 @@
         triggers: [
           { id: 'arrive', on: 'enter', event: 'peak_arrive', once: true },
           { id: 'giant', x: 38, y: 5, w: 7, h: 2, on: 'step', event: 'peak_giant', cond: '!snow_giant' },
-        ],
-        tilePatches: [
-          { cond: 'snow_ice_1', rect: [27, 32, 3, 2], rows: [',,,', ',,,'] },
-          { cond: 'snow_ice_2', rect: [43, 15, 3, 2], rows: [',,,', ',,,'] },
-          { cond: 'snow_ice_3', rect: [12, 15, 3, 2], rows: [',,,', ',,,'] },
         ],
         oneway: [{ x: 47, y: 30, dir: 's' }, { x: 48, y: 30, dir: 's' }],
         zones: [{ rect: [0, 0, 58, 44], zone: 'z_snow_peak' }],

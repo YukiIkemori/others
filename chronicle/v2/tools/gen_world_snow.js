@@ -67,6 +67,12 @@ module.exports = function snow(A) {
   exits.push({ x: 49, y: 21, w: 1, h: 1, to: { map: 'yule', spawn: 'gate_n' } });
   spawns.yule_w = { x: 42, y: 27, dir: 'w' }; spawns.yule_e = { x: 56, y: 27, dir: 'e' }; spawns.yule_n = { x: 49, y: 19, dir: 'n' }; spawns.yule = spawns.yule_w;
   set(44, 27, 'P'); set(54, 27, 'P'); set(49, 21, 'P');
+  // 家のあいだは雪の吹きだまり（歩けない）。ワールドの小さなユールの中を歩いて、別の門へ入ってしまわない（入るのは 3 つの門だけ）
+  for (let y = 21; y <= 28; y++) for (let x = 44; x <= 54; x++) {
+    if ((x === 44 && y === 27) || (x === 54 && y === 27) || (x === 49 && y === 21)) continue;
+    if (objects.some((o) => o.type === 'building' && /^w_yule/.test(o.id) && x >= o.x && x < o.x + o.w && y >= o.y && y < o.y + o.h)) continue;
+    set(x, y, 'M');
+  }
   S(41, 25, '雪の村ユール\n雪のトンネルの村。');
   // 峠の宿（#14、x 81〜86、y 27〜31）
   rect(80, 27, 8, 6, 'n');

@@ -122,4 +122,15 @@ ok('a scene fixture for every screen', R.Contract.SCREEN_IDS.every((id) => scene
 const stc = R.Contract.check('fixtureState', JSON.parse(fs.readFileSync(path.join(FX, 'states', 'menus_party.json'), 'utf8')));
 ok('menus_party is K.fixtureState', stc.ok, stc.errors);
 
+section('技・術: 派生で覚えた技は「〇〇から派生」（design/BACKLOG「派生技の閃き」）');
+{
+  // 持ち主「特定の技を何度も使ってると派生技を編み出す」: 編み出した技は、どの技から来たかを説明の行に出す
+  const c = { id: 'hero', techs: ['t_sword_stepcut', 't_sword_twin', 't_sword_draw'], derived: { t_sword_twin: 't_sword_stepcut' } };
+  ok('derivedFromName: a derived tech → the source tech name', S.derivedFromName(c, 't_sword_twin') === '踏み込み斬り');
+  ok('derivedFromName: a tech learned another way → null', S.derivedFromName(c, 't_sword_draw') === null && S.derivedFromName({ id: 'x', techs: [] }, 't_sword_twin') === null);
+  const src = fs.readFileSync(path.join(SRC, 'skills.js'), 'utf8'), det = fs.readFileSync(path.join(SRC, 'detail.js'), 'utf8');
+  ok('skills.js shows 「から派生」 on the detail chips and passes the char to the detail screen', /'から派生'/.test(src) && /S\.detail\(\{ kind: row\.kind, id: row\.value, c: this\.char\(\) \}\)/.test(src));
+  ok('detail.js adds 「〇〇から派生」 to the sub line of a derived tech', /'から派生'/.test(det) && /derivedFromName/.test(det));
+}
+
 done('test_screens');
