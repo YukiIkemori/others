@@ -1,3 +1,39 @@
 20:04:00 ilse attack attempt 1: generating 3264x2096 (pitch 8, quality high)
 20:04:06 ilse cast attempt 1: generating 3264x1968 (pitch 8, quality high)
 20:04:15 ilse victory attempt 1: generating 3264x1568 (pitch 8, quality high)
+20:05:25 calibrated pitch 7.97 / 8.00 px (requested 8), offset 1.2, 2.2
+20:05:25 drawn pitch of the key cells 8.00
+20:05:26   frame 2 size: guide 0.500 idle 0.500 idle/corr 0.500 pitch 1.000 -> 1.000
+20:05:28   frame 3 size: guide 0.662 idle 0.938 idle/corr 1.230 pitch 1.000 -> 1.000
+20:05:29   frame 5 size: guide 0.988 idle 0.887 idle/corr 1.164 pitch 1.000 -> 1.000
+20:05:30   frame 6 size: guide 0.988 idle 0.887 idle/corr 1.164 pitch 1.000 -> 1.000
+20:05:30 calibrated pitch 7.99 / 8.02 px (requested 8), offset 0.7, -3.4
+20:05:31   victory frame 1 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [84.0, 64.0], "height": 68, "rescaled": null, "copy": null, "shift": [0, 0], "err": 0.0}
+20:05:31   victory frame 2 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [85.5, 58.0], "height": 78, "rescaled": null, "copy": 0.4, "shift": [0, 0], "err": 55.5}
+20:05:31   victory frame 3 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [81.7, 67.2], "height": 83, "rescaled": null, "copy": 0.09, "shift": [4, 0], "err": 42.2}
+20:05:31   victory frame 4 keep  {"ok": false, "why": "head scale 0.762", "head_scale": 0.762, "head": [84.0, 60.1], "height": 84, "rescaled": null, "copy": null, "shift": [0, 0], "err": 48.6}
+20:05:31   victory frame 5 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [83.6, 60.6], "height": 84, "rescaled": null, "copy": 0.36, "shift": [0, 0], "err": 42.8}
+20:05:31   victory frame 6 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [83.6, 62.6], "height": 84, "rescaled": null, "copy": 0.41, "shift": [0, 0], "err": 42.1}
+20:05:31 drawn pitch of the key cells 8.00
+20:05:33   frame 2 size: guide 1.000 idle 1.000 idle/corr 1.000 pitch 1.000 -> 1.000
+20:05:34   frame 4 size: guide 0.938 idle 0.963 idle/corr 1.027 pitch 1.000 -> 1.000
+20:05:36   frame 5 size: guide 0.975 idle 0.963 idle/corr 1.027 pitch 1.000 -> 1.000
+20:05:36 calibrated pitch 7.97 / 8.01 px (requested 8), offset 2.1, 0.0
+20:05:37 drawn pitch of the key cells 8.00
+20:05:37   frame 7 size: guide 0.938 idle 0.975 idle/corr 1.040 pitch 1.000 -> 1.000
+20:05:38   frame 2 size: guide 0.500 idle 0.500 idle/corr 0.500 pitch 1.000 -> 1.000
+20:05:39   frame 8 size: guide 1.000 idle 1.000 idle/corr 1.000 pitch 1.000 -> 1.000
+20:05:40   attack frame 1 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [84.0, 53.0], "height": 68, "rescaled": null, "copy": null, "shift": [0, 0], "err": 0.0}
+20:05:40   attack frame 2 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [84.0, 54.0], "height": 67, "rescaled": null, "copy": 0.36, "shift": [0, 0], "err": 30.2}
+20:05:40   attack frame 3 keep  {"ok": false, "why": "head scale 0.937", "head_scale": 0.937, "head": [83.7, 54.2], "height": 67, "rescaled": null, "copy": null, "shift": [0, 0], "err": 56.3}
+20:05:40   attack frame 4 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [82.2, 54.5], "height": 71, "rescaled": null, "copy": 0.09, "shift": [2, 1], "err": 59.8}
+20:05:40   attack frame 5 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [84.2, 60.5], "height": 60, "rescaled": null, "copy": 0.04, "shift": [0, 4], "err": 40.6}
+20:05:40   attack frame 6 keep  {"ok": false, "why": "head scale 0.937", "head_scale": 0.937, "head": [83.7, 47.2], "height": 73, "rescaled": null, "copy": null, "shift": [0, 0], "err": 38.8}
+20:05:40   attack frame 7 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [82.5, 53.7], "height": 67, "rescaled": null, "copy": 0.12, "shift": [12, 1], "err": 38.4}
+20:05:40   attack frame 8 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [84.0, 53.0], "height": 69, "rescaled": null, "copy": 0.47, "shift": [0, 0], "err": 21.7}
+20:05:40   attack frame 9 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [84.0, 53.0], "height": 68, "rescaled": null, "copy": null, "shift": [0, 0], "err": 0.0}
+20:05:40   frame 3 size: guide 1.000 idle 0.963 idle/corr 1.027 pitch 1.000 -> 1.000
+20:05:42   frame 5 size: guide 1.088 idle 0.963 idle/corr 1.027 pitch 1.000 -> 1.000
+20:05:43   frame 6 size: guide 1.000 idle 0.963 idle/corr 1.027 pitch 1.000 -> 1.000
+20:05:45   frame 8 size: guide 1.025 idle 0.963 idle/corr 1.027 pitch 1.000 -> 1.000
+20:05:46   frame 9 size: guide 1.000 idle 1.000 idle/corr 1.000 pitch 1.000 -> 1.000
