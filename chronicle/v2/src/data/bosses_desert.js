@@ -46,8 +46,8 @@
       race: 'humanoid', flags: ['boss'], eva: 10,
       // 弓兵に守られている間の倍率（desert_guard_down で elemBase・physBase＝ふだんの値に戻す）
       elem: ALL(0.2), phys: { slash: 0.2, blunt: 0.2, pierce: 0.2 }, elemBase: {}, physBase: {}, guarded: true, statusRes: { sleep: 0.5 },
-      actions: A([['attack', 3], ['eb_hawk_cut', 2], ['eb_hawk_dust', SCHED, { every: [3, 1] }], ['eb_hawk_rally', SCHED, { flag: 'hawk_guard_down', once: true }]]),
-      s: { hp: 1.15 },
+      actions: A([['attack', 3], ['eb_hawk_cut', 2], ['eb_hawk_dust', SCHED, { every: [3, 0] }], ['eb_hawk_rally', SCHED, { flag: 'hawk_guard_down', once: true }]]),
+      s: { hp: 0.85 },
       drops: MID('i_ether'),
       desc: '砂の鷹団の頭。もとは日輪同盟の兵。\n手下の弓に守られて戦う。',
     },
@@ -109,7 +109,7 @@
     eb_hawk_cut: { name: '鷹の爪', kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.5, kind: 'slash' }], fx: 'slash2', msg: '{user}は曲刀を低く走らせた！' },
     eb_hawk_dust: { name: '砂を巻き上げる', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は足で砂をすくい上げた！',
       telegraph: { text: 'ラシードが砂を巻き上げている……。', pose: 'tele', tint: '#e8cf98', next: 'eb_hawk_storm', guard: 'defend', lethal: true } },
-    eb_hawk_storm: { name: '砂けむりの舞', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.95, guardPct: 0.12, kind: 'slash' }, { type: 'status', status: 'blind', chance: 0.3 }], fx: 'slash2', msg: '砂けむりの中から、曲刀が四方へ走った！' },
+    eb_hawk_storm: { name: '砂けむりの舞', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.9, guardPct: 0.12, kind: 'slash' }, { type: 'status', status: 'blind', chance: 0.3 }], fx: 'slash2', msg: '砂けむりの中から、曲刀が四方へ走った！' },
     eb_hawk_rally: { name: 'ひとり立つ', kind: 'enemy', target: 'self', effects: [{ type: 'buff', stat: 'atk', stages: 1 }], fx: 'buff', msg: '{user}は曲刀を構え直した。「……最後は、おれ一人か」' },
     eb_hawk_volley: { name: '一斉射ち', kind: 'enemy', target: 'random', effects: [{ type: 'damage', formula: 'phys', power: 0.6, hits: 2, kind: 'pierce' }], fx: 'arrow', msg: '{user}は続けざまに矢を放った！' },
     // 砂もぐり
