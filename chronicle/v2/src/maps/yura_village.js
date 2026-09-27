@@ -50,20 +50,20 @@
     O.push(B('yura_hut_h4', 3, 20, 4, 4, { door: { x: 5, y: 23, to: { map: 'yura_home4', spawn: 'door' } } }));
     O.push(B('yura_mill', 17, 2, 7, 6, { windows: 2, small: false }));   // 粉ひき小屋と大水車（東の x 22-24）。戸は描かない（入らない）
     // 粉ひきの庭・屋台・広場
-    O.push(K.prop('sack', 17, 8), K.prop('sack', 18, 8), K.prop('crate', 16, 6), K.prop('barrel', 16, 5), K.prop('log_moss', 11, 8));
+    O.push(K.prop('sack', 17, 8), K.prop('sack', 18, 8), K.prop('crate', 16, 6), K.prop('barrel', 16, 5));
     O.push(K.prop('stall', 11, 20), K.prop('crate', 10, 20), K.prop('sack', 12, 20));
-    O.push(K.prop('bench', 17, 21), K.prop('bench', 12, 16), K.prop('flower_pot', 11, 6), K.prop('flower_pot', 8, 18), K.prop('planter', 19, 24));
-    O.push(K.prop('stump', 2, 13), K.prop('rock', 27, 21), K.prop('rock_small', 3, 10), K.prop('rock_small', 18, 14));
+    O.push(K.prop('bench', 17, 21), K.prop('bench', 12, 16), K.prop('flower_pot', 11, 6), K.prop('planter', 19, 24));
+    O.push(K.prop('stump', 2, 13), K.prop('rock', 27, 21));
     // 灯り: 置き灯籠（当たりなし）を水辺・小道の脇に。街灯は立てない
     for (const [x, y] of [[10, 10], [17, 10], [8, 13], [17, 13], [13, 17], [16, 17], [13, 22], [16, 22], [19, 20], [7, 19], [23, 25], [18, 7], [8, 7]]) O.push(K.prop('lantern', x, y));
-    for (const [x, y] of [[11, 4], [16, 3], [2, 10], [26, 14], [2, 15], [9, 22], [25, 24], [18, 25], [11, 2]]) O.push(K.prop('mushroom_glow', x, y, { variant: (x + y) % 4 }));
-    for (const [x, y] of [[4, 10], [6, 10], [20, 10], [4, 13], [12, 13], [19, 13], [26, 13], [21, 14]]) O.push(K.prop('reeds', x, y, { variant: (x + y) % 4 }));
+    for (const [x, y] of [[11, 4], [16, 3], [2, 10], [9, 22], [25, 24], [18, 25]]) O.push(K.prop('mushroom_glow', x, y, { variant: (x + y) % 4 }));
+    for (const [x, y] of [[4, 10], [20, 10], [19, 13]]) O.push(K.prop('reeds', x, y, { variant: (x + y) % 4 }));
     // 小山のてっぺん: 名の無い墓石
     O.push(K.prop('grave', 5, 5), K.prop('grave', 6, 5), K.prop('grave', 7, 5));
     O.push(K.prop('songstone', 20, 13, { variant: 3 }), K.exam(20, 14, 'yura_stone'));   // 水車池のほとりの、名を削った石
     O.push(K.chest('yura_c1', 2, 19, { pool: 'p_T' }));
     O.push(K.sign(13, 25, '――ここはユラ。\n名を置いてきた者の里。'));
-    K.scatter(g, O, 'firefly', 6, [2, 13, 26, 13], ',', 'yff', { gap: 4 });
+    K.scatter(g, O, 'firefly', 4, [2, 13, 26, 13], ',', 'yff', { gap: 4 });
 
     const N = [
       K.npc('yura_elder', 'npc_yura_elder', 15, 8, { name: '長老', title: '――名を忘れた長', dir: 's', talk: 'yura_elder', reward: 'side' }),
