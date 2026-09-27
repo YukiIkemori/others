@@ -189,6 +189,12 @@ def main():
     if not done:
         print('nothing converted (no battle/field/face sets found)', file=sys.stderr)
         sys.exit(1)
+    # 戦闘の多いコマ（attack8_<系統>・cast8・victory8、tools/battle_frames.py）: 書き出しで battle.json を作り直したら付け直す
+    b8 = os.path.join(HERE, '..', 'art_ref', 'gen', 'battle8', o.look, 'state.json')
+    if o.dst is None and any(x.startswith('battle:') for x in done) and os.path.exists(b8):
+        import subprocess
+        subprocess.run([sys.executable, os.path.join(HERE, 'tools', 'battle_frames.py'), 'apply', o.look], check=False)
+        done.append('battle: + battle8 frames')
     print(f'{o.look} → {dst}\n  ' + '\n  '.join(done))
 
 
