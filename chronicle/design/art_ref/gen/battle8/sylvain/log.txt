@@ -1,0 +1,21 @@
+19:32:02 sylvain attack attempt 1: generating 3552x2240 (pitch 8, quality high)
+19:32:09 sylvain cast attempt 1: generating 3456x2192 (pitch 8, quality high)
+19:32:09 sylvain victory attempt 1: generating 3456x1728 (pitch 8, quality high)
+19:33:30 calibrated pitch 7.78 / 7.36 px (requested 8), offset 26.4, 35.1
+19:33:30 drawn pitch of the key cells 8.00
+19:33:32   frame 2 size: guide 0.975 idle 0.975 idle/corr 0.975 pitch 1.000 -> 1.000
+19:33:34   frame 3 size: guide 0.988 idle 0.938 idle/corr 0.974 pitch 1.000 -> 1.000
+19:33:35   frame 5 size: guide 0.963 idle 0.938 idle/corr 0.974 pitch 1.000 -> 1.000
+19:33:37   frame 6 size: guide 0.938 idle 0.938 idle/corr 0.974 pitch 1.000 -> 1.000
+19:33:38   victory frame 1 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [91.5, 69.0], "height": 74, "rescaled": null, "copy": null, "shift": [0, 0], "err": 0.0}
+19:33:38   victory frame 2 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [93.0, 66.7], "height": 76, "rescaled": null, "copy": 0.12, "shift": [0, 3], "err": 19.7}
+19:33:38   victory frame 3 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [91.2, 67.2], "height": 95, "rescaled": null, "copy": 0.24, "shift": [0, 3], "err": 28.2}
+19:33:38   victory frame 4 keep  {"ok": false, "why": "head scale 0.962", "head_scale": 0.962, "head": [91.7, 67.5], "height": 94, "rescaled": null, "copy": null, "shift": [0, 0], "err": 26.4}
+19:33:38   victory frame 5 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [91.2, 67.2], "height": 95, "rescaled": null, "copy": 0.22, "shift": [0, 1], "err": 26.8}
+19:33:38   victory frame 6 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [92.2, 69.2], "height": 91, "rescaled": null, "copy": 0.29, "shift": [0, 1], "err": 26.7}
+19:33:43 calibrated pitch 8.01 / 8.01 px (requested 8), offset -9.8, 0.8
+19:33:44 drawn pitch of the key cells 8.00
+19:33:46   frame 2 size: guide 0.963 idle 0.963 idle/corr 0.962 pitch 1.000 -> 1.000
+19:33:47 calibrated pitch 7.98 / 8.01 px (requested 8), offset 2.2, 1.2
+19:33:48 drawn pitch of the key cells 8.00
+19:33:48   frame 4 size: guide 1.000 idle 0.913 idle/corr 0.973 pitch 1.000 -> 1.000
