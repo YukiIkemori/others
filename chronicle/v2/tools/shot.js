@@ -93,8 +93,10 @@ async function run(o) {
     errors.push('[network] blocked outside request ' + u); console.log('[network] blocked ' + u); return route.abort();
   });
   await page.goto(url);
-  try { await page.waitForFunction('window.RPG && window.RPG.Engine && window.RPG.Engine.running', null, { timeout: 15000 }); }
-  catch (e) { errors.push('[boot] the engine did not start in 15 s'); }
+  // 起動は原画（env・sprites・魔物）の読み込みを待つ。重い負荷（並びの check_all）では 15 秒を越えるので既定 60 秒（V2_OPEN_TIMEOUT で変えられる）
+  const bootMs = +process.env.V2_OPEN_TIMEOUT || 60000;
+  try { await page.waitForFunction('window.RPG && window.RPG.Engine && window.RPG.Engine.running', null, { timeout: bootMs }); }
+  catch (e) { const s = `[boot] the engine did not start in ${bootMs / 1000} s`; console.log(s); errors.push(s); }
   await page.waitForTimeout(600);
 
   const shot = async (file) => {

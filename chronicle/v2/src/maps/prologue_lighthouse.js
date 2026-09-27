@@ -126,7 +126,7 @@
         P('bookshelf', 20, 5), P('bookshelf', 21, 5), P('table', 18, 21), P('rock_small', 5, 20), P('net', 3, 8),
         // 物置の中（見つけるまで描かない）と、つき当たりの崩れた石・すきま風
         P('crate', 23, 24), P('barrel', 19, 24), P('sack', 19, 27),
-        P('rock_small', 17, 24), K.exam(17, 25, 'secret_hint', { text: '石でふさいだ古い戸口だ。\n目地が崩れて、すきま風が\n抜けてくる……。' }),
+        P('rock_small', 17, 24), K.exam(17, 25, 'field_secret_hint', { text: '石でふさいだ古い戸口だ。\n目地が崩れて、すきま風が\n抜けてくる……。' }),
       ];
       K.def('lighthouse_2', Object.assign({}, BASE, {
         name: 'ファロス灯台', legend: LEG, rows: g, outside: 'wall_stone', objects,

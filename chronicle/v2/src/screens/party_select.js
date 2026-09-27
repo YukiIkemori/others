@@ -31,9 +31,11 @@
     R.UIK.portraitFrame(g, { x: r.x + u(4), y: r.y + u(4), w: pw, h: ph }, info.look, { dim: o.dim, fit: 'bust', r: u(6) });
     const x = r.x + u(4) + pw + u(10), w = r.x + r.w - x - u(6);
     const ny = r.y + r.h / 2 - u(19);
+    // 札の印（出撃中・1 人目）は右下。名前は幅いっぱい、肩書きは印の左まで（重ならない）
+    const chipW = o.chip ? R.UIK.measure(o.chip, { size: u(10), weight: 700 }) + u(14) : 0;
     R.UIK.text(g, info.name, x, ny, { size: u(15), weight: 700, color: o.dim ? C.disabled : o.focused ? C.goldHi : C.text, maxW: w });
-    R.UIK.text(g, info.title, x, ny + u(22), { size: u(12), color: o.dim ? C.disabled : C.text2, maxW: w });
-    if (o.chip) R.UIK.chip(g, r.x + r.w - u(6) - R.UIK.measure(o.chip, { size: u(10), weight: 700 }) - u(14), r.y + u(5), o.chip, { kind: o.chipKind || 'teal', size: 10 });
+    R.UIK.text(g, info.title, x, ny + u(22), { size: u(12), color: o.dim ? C.disabled : C.text2, maxW: o.chip ? Math.max(u(20), w - chipW - u(6)) : w });
+    if (o.chip) R.UIK.chip(g, r.x + r.w - u(6) - chipW, r.y + r.h - u(5) - R.UIK.chipH(10), o.chip, { kind: o.chipKind || 'teal', size: 10 });
   };
   /** 詳しい札（胸から上の大きな顔・名前・肩書き・年と出身・紹介の 2〜3 行・得意な武器と属性・能力値）。
    *  オーナーの指示（仲間選び、2026-09-27）: 選ぶときは誰なのかが分かるように紹介文を出す。特性（A14）・S〜D の文字（A17）・役割は出さない */

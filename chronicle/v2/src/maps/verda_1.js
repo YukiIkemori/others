@@ -82,7 +82,7 @@
     O.push(K.chest('verda_1_c1', 7, 33, { pool: 'p_T' }));
     O.push(K.chest('verda_1_c2', 52, 46, { item: 'i_salve', n: 3 }));
     O.push(K.chest('verda_1_c3', 1, 44, { pool: 'p_T' }));                           // 隠し通路の先（秘密のうろ）
-    O.push(K.prop('roots', 3, 46), K.exam(2, 46, 'secret_hint', { text: '足もとの根のすきまから、\nひんやりした風が\n吹き上がってくる……。' }));
+    O.push(K.prop('roots', 3, 46), K.exam(2, 46, 'field_secret_hint', { text: '足もとの根のすきまから、\nひんやりした風が\n吹き上がってくる……。' }));
     O.push(K.chest('verda_1_c8', 2, 49, { pool: 'p_super', rare: true }));           // 入れ子の隠し通路の先の本当の宝（超レア）
     O.push(K.chest('verda_1_c4', 26, 9, { pool: 'p_T' }));
     O.push(K.chest('verda_1_c5', 8, 13, { item: 'i_waker', n: 2 }));

@@ -63,7 +63,7 @@
         K.chest('desert_tomb_1_c3', 52, 36, { pool: 'p_T' }), K.chest('desert_tomb_1_c4', 42, 8, { gold: 150 }),
         K.chest('desert_tomb_1_c5', 22, 31, { pool: 'p_T' }), K.chest('desert_tomb_1_c6', 38, 7, { pool: 'p_T' }));
       // 隠し部屋の北の壁: 二つのつぼのあいだの 1 枚だけ石の色がちがう。その奥の納め所に超レアの箱
-      O.push(K.prop('tomb_urn', 19, 27), K.prop('tomb_urn', 21, 27), K.exam(20, 27, 'secret_hint', { text: '二つのつぼのあいだの壁。\nこの一枚だけ、石の色が\nほかと少しちがう……。' }));
+      O.push(K.prop('tomb_urn', 19, 27), K.prop('tomb_urn', 21, 27), K.exam(20, 27, 'field_secret_hint', { text: '二つのつぼのあいだの壁。\nこの一枚だけ、石の色が\nほかと少しちがう……。' }));
       O.push(K.chest('desert_tomb_1_c7', 20, 24, { pool: 'p_super', rare: true }));
       O.push(K.sign(26, 33, '――名を捨てし王の墓\n王を呼ぶ者は、墓守の像の\n足もとを見よ。'));
       deco(O, [['tomb_urn', 21, 35], ['tomb_urn', 35, 35], ['tomb_urn', 3, 24], ['tomb_urn', 53, 24], ['broken_pillar', 24, 44], ['bones', 34, 44],
