@@ -527,3 +527,18 @@ listening check; `--char selma`, `--only <id> --force`). Treat the set as open-e
    `victory`; `なし` = none. Volume = the voice volume (`vol.voice`); voice volume 0 = silent regardless.
 6. Never throws, never waits: a missing clip, locked AudioContext or headless run is a silent no-op; battle timing
    never depends on clip length.
+
+### 13.3 v2 slice audio upgrade (2026-09-27)
+
+- **Story voices (tier-A NPCs) + town barks**: `design/voice/story_v2_lines.csv` (id,speaker,kind,file,event,key,text,direction;
+  kind `story` / `optional` / `bark`) → `node tools/story_voice.js` checks that every text is still in the v2 event file and writes
+  `design/voice/story_v2_lines.md`, `v2/design/voice_story_map.json` (voice id → file / event / key / line) and the listening page
+  `design/story_audio_preview.html` (voices + new / regenerated BGM with A/B against `design/bgm/prev/` and a loop-seam button).
+  Generate: `node tools/voice_tts.js --story2` (same pipeline: Batch API, 2 takes, listening check, −16 LUFS, Ogg mono 24 kHz).
+  48 lines: Otto 15, Berna 15, Fine 2 (+3 optional opening captions), Rowell 3, Elm 2, barks 8. The hero stays silent in story;
+  Lazaro is not voiced before floor 5 (STORY_BIBLE §5.1); Noa is not in the slice. New speakers are in `casting.json` `speakers`
+  (`bark: true` = a 1–2 s greeting played when a talk opens).
+- **BGM**: `design/bgm/prompts_v2.json` (`node tools/lyria_bgm.js --prompts design/bgm/prompts_v2.json --only <id> --force --takes 2 --listen`;
+  `--min-loop <s>` or an entry's `min_loop` forces a longer loop). Regenerated in place: forest, town, tower, tavern, tension, home
+  (previous files in `design/bgm/prev/`). New: lostwood, eldertree, dawn, omen (one-shot, json `loop:false`), fine_theme.
+  Where they play and the build change they need: `v2/design/bgm_changes.md`.

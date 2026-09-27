@@ -131,7 +131,7 @@
           R.UIK.text(g, this.label(c), r.x + r.w / 2, r.y + (r.h - u(20)) / 2 - u(1), { size: u(20), weight: f ? 700 : 500, color: f ? C.goldHi : C.text, align: 'center' });
         }
       });
-      S.prompts(g, [{ btn: 'a', label: '入れる' }, { btn: 'b', label: '1 字消す' }, { btn: 'x', label: 'かな／カナ' }]);
+      S.prompts(g, [{ btn: 'a', label: '入れる' }, { btn: 'b', label: this.value.length ? '1 字消す・戻る' : '戻る' }, { btn: 'x', label: 'かな／カナ' }]);
     },
   });
 })(window.RPG);

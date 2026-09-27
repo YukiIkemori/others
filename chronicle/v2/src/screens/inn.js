@@ -30,7 +30,7 @@
       R.UIK.text(g, `所持金 ${R.UIK.num(S.gold())} G`, x + w - u(22), y + u(24), { size: u(13), color: C.text2, align: 'right' });
       R.UIK.text(g, `一晩 ${this.price} G。ゆっくり休んでいくかい？`, x + u(22), y + u(56), { size: u(15), color: C.text, maxW: w - u(44) });
       this.list.draw(g, { x: x + u(12), y: y + u(90), w: w - u(24), h: this.list.rows.length * this.list.rowPx() });
-      S.prompts(g, [{ btn: 'a', label: '決定' }, { btn: 'b', label: 'やめる' }]);
+      S.prompts(g, [{ btn: 'a', label: '決定' }, { btn: 'b', label: '戻る' }]);
     },
   });
 })(window.RPG);

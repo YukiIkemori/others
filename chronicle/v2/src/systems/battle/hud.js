@@ -8,7 +8,7 @@
 
   // ---------------------------------------------------------------- kit（UIK が無い・途中のときの代わり）
   const COL = {
-    text: '#f6f0e3', text2: '#d2c9b6', text3: '#9a917f', disabled: '#6c675f', gold: '#ecc97c', goldHi: '#fff1c8', goldLo: '#b98f47',
+    text: '#f6f0e3', text2: '#d2c9b6', text3: '#ada493', disabled: '#948d80', gold: '#ecc97c', goldHi: '#fff1c8', goldLo: '#b98f47',
     teal: '#8fd6d8', hp: ['#5f9e5a', '#a9dc8e'], hpMid: ['#b98f47', '#ecc97c'], hpLow: ['#b8453a', '#f08a6c'], mp: ['#3d6aa6', '#92bdf0'],
     rare: '#86c8ff', superRare: '#ffb65e', front: '#f2c28a', back: '#a9d2f2', up: '#8ee08a', down: '#f47e6c',
   };
@@ -180,7 +180,7 @@
       const c = back ? COL.back : COL.front;
       g.save();
       g.beginPath(); g.roundRect ? g.roundRect(x, y, s, s, 3) : g.rect(x, y, s, s);
-      g.fillStyle = back ? 'rgba(80,120,160,0.35)' : 'rgba(160,110,60,0.35)'; g.fill();
+      g.fillStyle = back ? 'rgba(30,50,80,0.8)' : 'rgba(70,44,20,0.8)'; g.fill();
       g.strokeStyle = c; g.lineWidth = 1; g.stroke();
       g.restore();
       K.text(g, back ? '後' : '前', x + s / 2, y + s * 0.12, { size: s * 0.72, weight: 700, color: c, align: 'center', raw: true });
@@ -255,7 +255,7 @@
       const vy = L.tall ? r.y + 34 * k : r.y + 19 * k;
       const numSize = (L.tall ? 15 : 16.5) * k;
       const block = (bx, lab, cur, max, kind, ghost) => {
-        K.text(g, lab, bx, vy + numSize - 10 * k, { size: 9.5 * k, weight: 700, color: COL.text3, raw: true, shadow: true });
+        K.text(g, lab, bx, vy + numSize - 10 * k, { size: 9.5 * k, weight: 700, color: COL.text2, raw: true, shadow: true });
         K.frac(g, cur, max, bx + bw - 2 * k, vy, numSize, kind === 'hp' && low ? COL.hpLow[1] : kind === 'hp' && !v.alive ? COL.disabled : COL.text);
         K.gauge(g, { x: bx, y: vy + numSize + 3 * k, w: bw - 2 * k, h: L.tall ? 3 : 1.5 }, cur, max, kind, { ghost });
       };
@@ -296,6 +296,8 @@
       g.save(); g.globalAlpha = alpha;
       K.hline(g, a.x - 44, a.x + 44, y, 0.5);
       const hot = st.hot && st.hot[a.uid];
+      // 名前の下に薄い暗い札（明るい魔物・背景の上でも読めるように。コントラスト 4.5）
+      { const ns = Math.max(11 * k, R.minFont || 0), nw = K.measure(a.name, { size: ns, weight: hot ? 700 : 500 }) + 10 * k; g.save(); g.fillStyle = 'rgba(8,10,20,0.62)'; g.beginPath(); if (g.roundRect) g.roundRect(a.x - nw / 2, y + 2, nw, ns + 5 * k, 4 * k); else g.rect(a.x - nw / 2, y + 2, nw, ns + 5 * k); g.fill(); g.restore(); }
       K.text(g, a.name, a.x, y + 4, { size: 11 * k, align: 'center', color: hot ? COL.goldHi : '#f2ede2', weight: hot ? 700 : 500, raw: true, shadow: true });
       g.restore();
     }

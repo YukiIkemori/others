@@ -13,7 +13,7 @@
   // ---------------------------------------------------------------- トークン（名前は K.uikTokens。値は UIK が決める）
   const T = {
     color: {
-      text: '#f6f0e3', text2: '#d2c9b6', text3: '#9a917f', disabled: '#6c675f',
+      text: '#f6f0e3', text2: '#d2c9b6', text3: '#ada493', disabled: '#948d80',
       panel: 'rgba(14,16,26,0.74)', panelDense: 'rgba(12,13,22,0.92)', edge: 'rgba(240,228,200,0.14)', edge2: 'rgba(240,228,200,0.30)',
       gold: '#ecc97c', goldHi: '#fff1c8', goldLo: '#b98f47', teal: '#8fd6d8',
       hp: ['#5f9e5a', '#a9dc8e'], hpLow: ['#c0852a', '#f4c86c'], hpCrit: ['#a8402f', '#f07a60'],

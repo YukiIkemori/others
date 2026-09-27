@@ -158,7 +158,7 @@
       const dp = tall ? { x: b.x, y: lp.y + lp.h + u(12), w: b.w, h: b.y + b.h - (lp.y + lp.h + u(12)) } : { x: lp.x + lp.w + u(18), y: gp.y + gp.h + u(14), w: b.x + b.w - (lp.x + lp.w + u(18)), h: b.y + b.h - (gp.y + gp.h + u(14)) };
       R.UIK.panel(g, dp, { frost: true });
       const row = this.list.current();
-      if (!row) { S.prompts(g, [{ btn: 'b', label: '店を出る' }]); return; }
+      if (!row) { S.prompts(g, [{ btn: 'b', label: '戻る' }]); return; }
       const id = row.value, it = S.item(id);
       const px = dp.x + u(22), pw = dp.w - u(44);
       let y = dp.y + u(18);
@@ -205,7 +205,7 @@
       }
       const unit = this.tab === 0 ? this.price(id) : R.Rules.sellPrice(id);
       R.UIK.text(g, (this.tab === 0 ? '合計 ' : '受け取り ') + R.UIK.num(unit * this.qty) + ' G', px + pw, qy - u(1), { size: u(18), weight: 700, color: this.tab === 0 && unit * this.qty > S.gold() ? C.down : C.gold, align: 'right' });
-      S.prompts(g, [{ btn: 'a', label: this.tab === 0 ? '買う' : '売る' }, { btn: 'b', label: '店を出る' }, { btn: 'x', label: '詳しく' }, { btn: 'r', label: this.tab === 0 ? '売る' : '買う' }]);
+      S.prompts(g, [{ btn: 'a', label: this.tab === 0 ? '買う' : '売る' }, { btn: 'b', label: '戻る' }, { btn: 'x', label: '詳しく' }, { btn: 'r', label: this.tab === 0 ? '売る' : '買う' }]);
     },
   });
 })(window.RPG);

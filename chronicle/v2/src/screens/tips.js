@@ -58,7 +58,7 @@
       let cy = y + u(92);
       for (const l of lines) { R.UIK.text(g, l, x + u(28), cy, { size: u(15), color: C.text }); cy += u(27); }
       R.UIK.text(g, 'あとで「設定 › 遊び方」から読み直せる', x + u(26), y + h - u(30), { size: u(11.5), color: C.text3 });
-      R.UIK.prompts(g, [{ btn: 'a', label: 'とじる' }], { x: x + w - u(22), y: y + h - u(24), align: 'right' });
+      R.UIK.prompts(g, [{ btn: 'a', label: '閉じる' }], { x: x + w - u(22), y: y + h - u(24), align: 'right' });
     },
   });
 
@@ -99,6 +99,7 @@
       // 送りの菱形
       const t = (R.Engine.time % 1200) / 1200;
       R.UIK.diamond(g, x + w - u(40), y + h - u(34) + Math.sin(t * Math.PI * 2) * u(1.5), u(5), '#a8672a');
+      R.UIK.prompts(g, [{ btn: 'a', label: '閉じる' }], { x: x + w - u(58), y: y + h - u(34), align: 'right' }, { color: ink2, shadow: false });
     },
   });
 })(window.RPG);

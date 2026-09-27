@@ -100,7 +100,7 @@
         S.faceCircle(g, c.look, r.x + u(24), r.y + r.h / 2, u(20), { dim: this.mode === 'swap' && c.id === 'hero' });
         if (!tall) R.UIK.text(g, c.name, r.x + u(52), r.y + r.h / 2 - u(9), { size: u(14), weight: 700, color: c.id === 'hero' && this.mode === 'swap' ? C.disabled : f ? C.goldHi : C.text, maxW: r.w - u(56) });
       });
-      S.prompts(g, this.mode === 'swap' ? [{ btn: 'a', label: '交代' }, { btn: 'b', label: 'やめる' }] : [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '出る' }]);
+      S.prompts(g, this.mode === 'swap' ? [{ btn: 'a', label: '交代' }, { btn: 'b', label: '戻る' }] : [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '戻る' }]);
     },
   });
 })(window.RPG);

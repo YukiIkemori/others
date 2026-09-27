@@ -61,7 +61,7 @@
         cy += Math.ceil(stats.length / 2) * u(28) + u(4);
       }
       for (const l of dl) { R.UIK.text(g, l, x + u(24), cy, { size: u(15), color: C.text }); cy += u(26); }
-      R.UIK.prompts(g, [{ btn: 'b', label: 'とじる' }], { x: x + w - u(20), y: y + h - u(22), align: 'right' });
+      R.UIK.prompts(g, [{ btn: 'b', label: '閉じる' }], { x: x + w - u(20), y: y + h - u(22), align: 'right' });
     },
   });
 })(window.RPG);

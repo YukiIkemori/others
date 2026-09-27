@@ -69,7 +69,8 @@
       if (w == null) c.drawImage(img, Math.round(x), Math.round(y));
       else c.drawImage(img, Math.round(x), Math.round(y), Math.round(w), Math.round(h));
     },
-    font(size, weight, family) { return `${weight || 500} ${size}px ${family === 'en' ? FONT.en : FONT.jp}`; },
+    // 字の大きさは R.minFont（R.fit: 12 CSS px になる論理 px）より小さくしない（スマホ縦で caption・micro・キーの字が 9〜11 CSS px だった。QA check_ui）
+    font(size, weight, family) { const s = R.minFont && size < R.minFont ? R.minFont : size; return `${weight || 500} ${s}px ${family === 'en' ? FONT.en : FONT.jp}`; },
     /** 素の文字。o = {size=15, weight=500, color, align, baseline='top', family:'jp'|'en'} */
     text(s, x, y, o) {
       o = o || {};

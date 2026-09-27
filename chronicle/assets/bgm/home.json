@@ -3,7 +3,6 @@
   "loopEnd": 78.827,
   "source": {
     "provider": "gemini",
-    "model": "lyria-3.5",
     "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. The storytellers' home village and the mentor's house: warm, homely and spiritual, lamplight in a quiet valley under a night sky, the wisdom of generations of storytellers. A gentle, nostalgic fingerpicked acoustic guitar waltz, with a soft ocarina or pan flute softly singing the storyteller's main theme, light hand percussion, and a warm bed of strings. Tender, earthy, safe. Tempo 76 BPM, 3/4 time, key of G major. Instrumentation: fingerpicked acoustic guitar, ocarina and soft pan flute, music box sparkle, gentle hand drum, warm cello and strings. Form: guitar intro, ocarina theme, strings join, a second melody on pan flute, ocarina theme again, quiet return. Duration: 110 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
     "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[B4]]\n[[E5]]",
     "generated": "2026-09-27T04:54:00.658Z",

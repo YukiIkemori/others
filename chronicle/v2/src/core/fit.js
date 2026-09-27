@@ -47,7 +47,9 @@
       t: Math.max(0, (s.t - top) / scale), b: Math.max(0, (s.b - top) / scale),
     };
     for (const k in safe) safe[k] = Math.round(safe[k] * 10) / 10;
-    return { W, H, SCALE, layout, uiScale: ui, safe, css: { w: cw, h: ch, left, top }, displayScale: scale * dpr / SCALE, cssScale: scale };
+    // 版 3 の後（QA check_ui、MODERN_UI の 12 CSS px・44 CSS px）: どの字もこれより小さく描かない（R.Gfx.font が丸める）・押せる行の最小（論理 px）
+    const minFont = Math.round((12.2 / scale) * 100) / 100, minTouch = Math.round((44.5 / scale) * 100) / 100;
+    return { W, H, SCALE, layout, uiScale: ui, safe, css: { w: cw, h: ch, left, top }, displayScale: scale * dpr / SCALE, cssScale: scale, minFont, minTouch };
   };
 
   let lastKey = '';
@@ -65,7 +67,7 @@
     const coarse = !!(window.matchMedia && matchMedia('(pointer: coarse)').matches);
     const uiSize = (R.Settings && R.Settings.get) ? +R.Settings.get('uiSize') || 1 : 1;
     const f = R.fitCalc({ cssW: window.innerWidth, cssH: window.innerHeight, dpr: window.devicePixelRatio || 1, safe, uiSize, coarse });
-    const key = [f.W, f.H, f.SCALE, f.layout, f.uiScale, f.safe.l, f.safe.t, f.safe.r, f.safe.b].join(',');
+    const key = [f.W, f.H, f.SCALE, f.layout, f.uiScale, f.minFont, f.safe.l, f.safe.t, f.safe.r, f.safe.b].join(',');
     cv.style.width = f.css.w + 'px';
     cv.style.height = f.css.h + 'px';
     cv.style.left = f.css.left + 'px';
@@ -73,7 +75,7 @@
     R.fitInfo = f;
     if (key === lastKey && !force) return f;
     lastKey = key;
-    R.W = f.W; R.H = f.H; R.SCALE = f.SCALE; R.layout = f.layout; R.uiScale = f.uiScale; R.safe = f.safe;
+    R.W = f.W; R.H = f.H; R.SCALE = f.SCALE; R.layout = f.layout; R.uiScale = f.uiScale; R.safe = f.safe; R.minFont = f.minFont; R.minTouch = f.minTouch;
     if (cv.width !== f.W * f.SCALE || cv.height !== f.H * f.SCALE) { cv.width = f.W * f.SCALE; cv.height = f.H * f.SCALE; }
     if (R.Gfx.reset) R.Gfx.reset();
     R.emit('layout', f);

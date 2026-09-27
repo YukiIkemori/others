@@ -35,7 +35,7 @@
       this._px = null; this._py = null;
     }
     // ---------------------------------------------------------------- 大きさ
-    rowPx() { return this.rowH * (R.uiScale || 1) * (this.tall && R.layout === 'tall' ? 1.2 : 1); }
+    rowPx() { return Math.max(this.rowH * (R.uiScale || 1) * (this.tall && R.layout === 'tall' ? 1.2 : 1), R.layout === 'tall' && R.minTouch ? R.minTouch : 0); }   // 縦持ちは 44 CSS px 以上（押せる大きさ）
     get lines() { return Math.ceil(this.rows.length / this.cols); }
     get visible() { return Math.max(1, Math.floor(((this.rect ? this.rect.h : 300) + 0.5) / this.rowPx())); }
     maxTop() { return Math.max(0, this.lines - this.visible); }

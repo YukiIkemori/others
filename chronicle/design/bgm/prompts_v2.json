@@ -106,7 +106,8 @@
    "length_sec": 95,
    "loop": "loop after a short intro",
    "desc": "The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. A tense story scene: suspense and urgency, someone must be saved, a clock is ticking, a clear driving beat. Build in waves so it does not feel like one repeated bar.",
-   "form": "ostinato intro; section A with horn line; section B where the harmony moves to E-flat and the piano takes over; a peak with timpani; back to the ostinato"
+   "form": "ostinato intro; section A with horn line; section B where the harmony moves to E-flat and the piano takes over; a peak with timpani; back to the ostinato",
+   "min_loop": 50
   },
   {
    "id": "dawn",

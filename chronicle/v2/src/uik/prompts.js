@@ -10,6 +10,8 @@
   const INK = '#1c1a18', CAP = 'rgba(245,238,224,0.94)';
   const ARROW = { up: 'M0 -3.5L3.5 2H-3.5z', down: 'M0 3.5L3.5 -2H-3.5z', left: 'M-3.5 0L2 -3.5V3.5z', right: 'M3.5 0L-2 -3.5V3.5z' };
 
+  // 印の中の字（× 0.8〜0.92）も 12 CSS px 以上に: 印の大きさの下限（R.minFont は R.fit、スマホ縦だけ効く）
+  const minG = (sz) => Math.max(sz, (R.minFont || 0) / 0.8);
   function info(btn, o) {
     if (o && o.kind) return { kind: o.kind, label: o.label || String(btn).toUpperCase() };
     try { if (R.Input && R.Input.prompt) return R.Input.prompt(btn); } catch (e) { /* */ }
@@ -26,7 +28,7 @@
 
   UIK.glyph = function (g, btn, cx, cy, o) {
     o = o || {};
-    const size = o.size || UIK.u(12);
+    const size = o.size || minG(UIK.u(12));
     const pr = info(btn, o);
     const r = size / 2 + size * 0.14;
     const w = glyphW(btn, size, pr);
@@ -56,7 +58,7 @@
   function norm(list) { return (list || []).map((p) => (Array.isArray(p) ? { btn: p[0], label: p[1] } : p)).filter((p) => p && p.btn); }
   /** 行の幅（掛けた後） */
   UIK.promptsWidth = function (list, o) {
-    const size = (o && o.size) || UIK.u(12), gap = UIK.u(18);
+    const size = (o && o.size) || minG(UIK.u(12)), gap = UIK.u(18);
     const items = norm(list);
     let w = 0;
     for (const p of items) w += glyphW(p.btn, size, info(p.btn)) + UIK.u(6) + UIK.measure(p.label, { size });
@@ -66,7 +68,7 @@
   UIK.prompts = function (g, list, anchor, o) {
     o = o || {};
     const items = norm(list);
-    const size = UIK.u(o.size || 12), gap = UIK.u(18), m = UIK.margin();
+    const size = minG(UIK.u(o.size || 12)), gap = UIK.u(18), m = UIK.margin();
     const s = R.safe || { l: 0, t: 0, r: 0, b: 0 };
     const total = UIK.promptsWidth(items, { size });
     let x, y, align;
@@ -93,7 +95,7 @@
   UIK.bubble = function (g, x, y, list) {
     const items = norm(list);
     if (!items.length) return;
-    const size = UIK.u(11), padX = UIK.u(8), gap = UIK.u(10);
+    const size = minG(UIK.u(11)), padX = UIK.u(8), gap = UIK.u(10);
     let w = padX * 2 + gap * (items.length - 1);
     for (const p of items) w += glyphW(p.btn, size, info(p.btn)) + UIK.u(5) + UIK.measure(p.label, { size, weight: 700 });
     const h = size + UIK.u(10), tail = UIK.u(5);

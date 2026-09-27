@@ -450,7 +450,7 @@
     }
     if (lines.length) cy += u(10);
     if (m.kind === 'ask') m.list.draw(g, { x: x + u(12), y: cy, w: w - u(24), h: listH });
-    else R.UIK.prompts(g, [{ btn: 'a', label: 'とじる' }], { x: x + w - u(20), y: y + h - u(22), align: 'right' });
+    else R.UIK.prompts(g, [{ btn: 'a', label: '閉じる' }], { x: x + w - u(20), y: y + h - u(22), align: 'right' });
     g.restore();
   };
 

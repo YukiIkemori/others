@@ -98,6 +98,7 @@
       const I = R.Input, n = S.party().length;
       if (this.busy) return;
       if (I.pressed('x')) { this.fullHeal(); return; }
+      if (this.closeRect && S.clicked(this.closeRect)) { R.UIK.sfx('cancel'); this.close(undefined); return; }
       // 人の札をポインタで
       for (let i = 0; i < this.cards.length; i++) if (S.clicked(this.cards[i])) { this.focus = 'card'; this.ci = i; R.UIK.sfx('confirm'); this.status(i); return; }
       if (this.focus === 'card') {
@@ -115,6 +116,7 @@
       if (S.tall()) this.drawTall(g); else this.drawWide(g);
     },
     drawWide(g) {
+      this.closeRect = null;
       const b = S.box(), C = T().color;
       const lw = Math.min(u(230), b.w * 0.24);
       const lx = b.x + u(8);
@@ -169,7 +171,12 @@
       const b = S.box(), C = T().color, G = R.Game || {};
       let y = b.y + u(4);
       S.heading(g, 'メニュー', b.x + u(4), y, 0);
-      R.UIK.text(g, `${R.UIK.num(G.gold || 0)} G   ・   ${R.U.playTime(G.playMs || 0)}`, b.x + b.w - u(4), y + u(1), { size: u(14), color: C.text2, align: 'right' });
+      // 右上に「閉じる」（縦持ちはボタン表示の行が無いので、押せる札で。44 CSS px 以上）
+      const cs = u(14), cwid = R.UIK.measure('閉じる', { size: cs, weight: 700 }) + u(26), chh = Math.max(u(30), R.minTouch || 0);
+      this.closeRect = { x: b.x + b.w - cwid, y: y + u(10) - chh / 2, w: cwid, h: chh };
+      R.UIK.card(g, this.closeRect, { frost: true });
+      R.UIK.text(g, '閉じる', this.closeRect.x + cwid / 2, this.closeRect.y + (chh - cs) / 2, { size: cs, weight: 700, color: C.text, align: 'center' });
+      R.UIK.text(g, `${R.UIK.num(G.gold || 0)} G   ・   ${R.U.playTime(G.playMs || 0)}`, this.closeRect.x - u(12), y + u(1), { size: u(14), color: C.text2, align: 'right' });
       y += u(34);
       const mem = S.party();
       const gap = u(10), cw = (b.w - gap) / 2, ch = u(146);

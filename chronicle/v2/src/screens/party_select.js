@@ -114,7 +114,7 @@
       };
       this.list.draw(g, gr);
       if (cur) S.companionDetail(g, this.info[cur], dp);
-      S.prompts(g, [{ btn: 'a', label: this.picks.includes(cur) ? '外す' : '選ぶ' }, { btn: 'b', label: '1 人戻す' }]);
+      S.prompts(g, [{ btn: 'a', label: this.picks.includes(cur) ? '外す' : '選ぶ' }, { btn: 'b', label: 'ひとつ戻る' }]);
     },
   });
 })(window.RPG);

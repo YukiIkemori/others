@@ -48,6 +48,8 @@
         if (I.repeat(back)) { w.sel = (w.sel + n - 1) % n; sfx('cursor'); }
         if (w.sel !== last) { last = w.sel; if (o.onFocus) o.onFocus(w.sel, w); }
         const p = I.pointer;
+        // 縦持ちの札の「戻る」（タップ）
+        if (p && p.pressed && w.backRect && o.cancel !== false && p.x >= w.backRect.x && p.x <= w.backRect.x + w.backRect.w && p.y >= w.backRect.y && p.y <= w.backRect.y + w.backRect.h) { sfx('cancel'); done('back'); return; }
         if (p && (p.pressed || p.longPress)) {
           for (let i = 0; i < w.rects.length; i++) {
             const r = w.rects[i];
@@ -136,6 +138,15 @@
     const pad = 12 * k, gap = 8 * k, y = L.cmdY + 20 * k, h = 88 * k;
     const cw = (R.W - pad * 2 - gap * (n - 1)) / Math.max(1, n);
     if (who) Kt.text(g, who, pad + 4 * k, L.cmdY, { size: 13 * k, weight: 700, color: Kt.COL.gold, raw: true });
+    // 右上に「戻る」（ひとつ前の人へ。縦持ちはボタン表示を出さないので、ここで見せる）
+    w.backRect = null;
+    if (who && w.o.cancel !== false) {
+      const bs = Math.max(13 * k, R.minFont || 0), bw = Kt.measure('戻る', { size: bs, weight: 700 }) + 28 * k, bh = Math.max(bs + 14 * k, R.minTouch || 0);
+      const br = { x: R.W - pad - bw, y: L.cmdY + 10 * k - bh, w: bw, h: bh };
+      Kt.box(g, br, { a: 0.6, r: 10 * k, edge: 'rgba(240,228,200,0.3)' });
+      Kt.text(g, '戻る', br.x + br.w / 2, br.y + (bh - bs) / 2, { size: bs, weight: 700, align: 'center', color: Kt.COL.text, raw: true });
+      w.backRect = br;
+    }
     w.rects = [];
     rows.forEach((row, i) => {
       const r = { x: pad + i * (cw + gap), y, w: cw, h, i };

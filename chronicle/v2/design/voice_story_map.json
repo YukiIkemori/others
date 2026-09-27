@@ -1,0 +1,492 @@
+{
+ "_readme": [
+  "Voice id → where it plays in the v2 slice (written by chronicle/tools/story_voice.js; do not edit by hand).",
+  "story / optional: add `voice: '<id>'` to the options of the ev.say / E.say that shows `text` (file, event, key; `line` = where the text was on 2026-09-27).",
+  "  For a say with a list of pages, pass `voice: [id1, id2]` (one id per page). For a line inside a list such as P2 in prologue_roa.js, pass the id of that entry to its E.say.",
+  "  optional = the design says \"no voice\" there (opening captions: ev.caption has no voice option yet — it needs `{voice}` support in UIK caption, or R.Audio.playVoice(id) before the caption; windhill: STORY_BIBLE says no voice).",
+  "bark: a 1–2 s greeting played when the player opens the talk: R.Audio.playVoice(id) at the start of the talk event (or a `bark` field on the map NPC read by the field talk code). Suggested: only the first talk per visit to a map, never over a voiced line.",
+  "Text rule: the voiced text must stay exactly as it is; if the polish pass changes one of these texts, drop the voice from that say (node chronicle/tools/story_voice.js --check lists them)."
+ ],
+ "lines": {
+  "v_otto_pharos_01": {
+   "speaker": "otto",
+   "kind": "story",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_otto",
+   "key": "first meeting (before party) say 1",
+   "line": 106,
+   "text": "わしは灯台守のオットー。\n灯台の火が消えてしまって、\nゆうべは眠れんかった。",
+   "audio": "assets/voice/v_otto_pharos_01.ogg"
+  },
+  "v_otto_pharos_02": {
+   "speaker": "otto",
+   "kind": "story",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_otto",
+   "key": "first meeting (before party) say 2",
+   "line": 107,
+   "text": "……なに、灯台へ行くと？\nひとりで？ とんでもない。\n酒場「潮風亭」で仲間を見つけておいで。",
+   "audio": "assets/voice/v_otto_pharos_02.ogg"
+  },
+  "v_otto_pharos_03": {
+   "speaker": "otto",
+   "kind": "story",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_otto",
+   "key": "with party say 1",
+   "line": 111,
+   "text": "おお、仲間を連れてきたか。\nそれなら話は別じゃ。",
+   "audio": "assets/voice/v_otto_pharos_03.ogg"
+  },
+  "v_otto_pharos_04": {
+   "speaker": "otto",
+   "kind": "story",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_otto",
+   "key": "with party say 2",
+   "line": 112,
+   "text": "灯台の守り歌が、\nどうしても思い出せんのじゃ。\nあの歌がなけりゃ、火はつかん。",
+   "audio": "assets/voice/v_otto_pharos_04.ogg"
+  },
+  "v_otto_pharos_05": {
+   "speaker": "otto",
+   "kind": "story",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_otto",
+   "key": "with party say 3",
+   "line": 113,
+   "text": "……頼む。\nこれが灯台の鍵じゃ。",
+   "audio": "assets/voice/v_otto_pharos_05.ogg"
+  },
+  "v_otto_pharos_06": {
+   "speaker": "otto",
+   "kind": "story",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_otto",
+   "key": "after the key say 1",
+   "line": 116,
+   "text": "灯台は、町を出て南の\n岬の先じゃ。行く前に、\n戦いの心得を教えておこう。",
+   "audio": "assets/voice/v_otto_pharos_06.ogg"
+  },
+  "v_otto_tower_01": {
+   "speaker": "otto",
+   "kind": "story",
+   "file": "v2/src/events/prologue_lighthouse.js",
+   "event": "lighthouse_1_tutorial",
+   "key": "say 1",
+   "line": 29,
+   "text": "中から、ネズミの鳴き声が……\n気をつけるんじゃ！",
+   "audio": "assets/voice/v_otto_tower_01.ogg"
+  },
+  "v_otto_tower_02": {
+   "speaker": "otto",
+   "kind": "story",
+   "file": "v2/src/events/prologue_lighthouse.js",
+   "event": "lighthouse_1_tutorial",
+   "key": "after a lost tutorial battle",
+   "line": 37,
+   "text": "……危なかったのう。\nひと息ついて、もう一度じゃ。",
+   "audio": "assets/voice/v_otto_tower_02.ogg"
+  },
+  "v_otto_tower_03": {
+   "speaker": "otto",
+   "kind": "story",
+   "file": "v2/src/events/prologue_lighthouse.js",
+   "event": "lighthouse_1_tutorial",
+   "key": "glimmer explained (technique; spell=false)",
+   "line": 41,
+   "text": "今のは……『閃き』じゃな。\n戦いの中で、ふいに\n新しい技を思いつくことがある。",
+   "audio": "assets/voice/v_otto_tower_03.ogg"
+  },
+  "v_otto_tower_04": {
+   "speaker": "otto",
+   "kind": "story",
+   "file": "v2/src/events/prologue_lighthouse.js",
+   "event": "lighthouse_1_tutorial",
+   "key": "glimmer explained (spell; spell=true)",
+   "line": 41,
+   "text": "今のは……『閃き』じゃな。\n戦いの中で、ふいに\n新しい術を思いつくことがある。",
+   "audio": "assets/voice/v_otto_tower_04.ogg"
+  },
+  "v_otto_tower_05": {
+   "speaker": "otto",
+   "kind": "story",
+   "file": "v2/src/events/prologue_lighthouse.js",
+   "event": "lighthouse_1_tutorial",
+   "key": "last say before leaving",
+   "line": 43,
+   "text": "わしは港へ戻っておる。\n上の灯室を、頼んだぞ。",
+   "audio": "assets/voice/v_otto_tower_05.ogg"
+  },
+  "v_otto_reward_01": {
+   "speaker": "otto",
+   "kind": "story",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_otto_reward",
+   "key": "first time say 2 (the song)",
+   "line": 132,
+   "text": "♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ……。",
+   "audio": "assets/voice/v_otto_reward_01.ogg"
+  },
+  "v_otto_reward_02": {
+   "speaker": "otto",
+   "kind": "story",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_otto_reward",
+   "key": "first time say 3",
+   "line": 133,
+   "text": "これは、わしが若いころから\n使ってきたランタンじゃ。\n持っていっておくれ。",
+   "audio": "assets/voice/v_otto_reward_02.ogg"
+  },
+  "v_otto_reward_03": {
+   "speaker": "otto",
+   "kind": "story",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_otto_reward",
+   "key": "first time say 4",
+   "line": 136,
+   "text": "若いころ、灯台には\n『朝番』というのがあってな。\n火が戻ったら、また立てるつもりじゃ。",
+   "audio": "assets/voice/v_otto_reward_03.ogg"
+  },
+  "v_otto_reward_04": {
+   "speaker": "otto",
+   "kind": "story",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_otto_reward",
+   "key": "first time say 5",
+   "line": 137,
+   "text": "……はて。何を見張る番\nじゃったかのう。\nどうしても思い出せん。",
+   "audio": "assets/voice/v_otto_reward_04.ogg"
+  },
+  "v_berna_p2_01": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_berna",
+   "key": "P2[0]",
+   "line": 49,
+   "text": "そうそう、大事な話があるんだ。",
+   "audio": "assets/voice/v_berna_p2_01.ogg"
+  },
+  "v_berna_p2_02": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_berna",
+   "key": "P2[1]",
+   "line": 50,
+   "text": "近ごろ、あちこちで\n伝承が消えていくんだよ。",
+   "audio": "assets/voice/v_berna_p2_02.ogg"
+  },
+  "v_berna_p2_03": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_berna",
+   "key": "P2[2]",
+   "line": 51,
+   "text": "歌の続きが出てこない。\n祭りの由来が分からない。\nそんな話ばかりさ。",
+   "audio": "assets/voice/v_berna_p2_03.ogg"
+  },
+  "v_berna_p2_04": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_berna",
+   "key": "P2[3]",
+   "line": 52,
+   "text": "わたしたち語り部は、それを\n『白紙』と呼んでいる。",
+   "audio": "assets/voice/v_berna_p2_04.ogg"
+  },
+  "v_berna_p2_05": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_berna",
+   "key": "P2[4]",
+   "line": 53,
+   "text": "里の語り石の文字も、\n半分が白く抜けてしまった。",
+   "audio": "assets/voice/v_berna_p2_05.ogg"
+  },
+  "v_berna_p2_06": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_berna",
+   "key": "P2[5]",
+   "line": 54,
+   "text": "それにね、港町ファロスの\n灯台の火が、細りはじめて三晩。\nきのう、とうとう消えたそうだ。",
+   "audio": "assets/voice/v_berna_p2_06.ogg"
+  },
+  "v_berna_p2_07": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_berna",
+   "key": "P2[6]",
+   "line": 55,
+   "text": "あの灯台には、守り歌という\n古い伝承があってね。\nそれも、白紙になりかけている。",
+   "audio": "assets/voice/v_berna_p2_07.ogg"
+  },
+  "v_berna_p2_08": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_berna",
+   "key": "P2[8]",
+   "line": 57,
+   "text": "ただし、ひとりで行っちゃ\nだめだよ。ファロスの酒場\n「潮風亭」で、仲間を探しなさい。",
+   "audio": "assets/voice/v_berna_p2_08.ogg"
+  },
+  "v_berna_p2_09": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_berna",
+   "key": "P2[9]",
+   "line": 58,
+   "text": "それから、これを持って\nお行き。",
+   "audio": "assets/voice/v_berna_p2_09.ogg"
+  },
+  "v_berna_seat_01": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_seat",
+   "key": "say (berna_desk)",
+   "line": 120,
+   "text": "昔からの習わしさ。\n誰の席かは……忘れちまったよ。",
+   "audio": "assets/voice/v_berna_seat_01.ogg"
+  },
+  "v_berna_depart_01": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_departure",
+   "key": "say after the chapter caption (rumours)",
+   "line": 174,
+   "text": "うわさは酒場に集まるものさ。\nまずは港の酒場で\n聞いてごらん。",
+   "audio": "assets/voice/v_berna_depart_01.ogg"
+  },
+  "v_berna_depart_02": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_departure",
+   "key": "farewell (the first forgetting)",
+   "line": 180,
+   "text": "わたしは里へ帰るよ。\n……いってらっしゃい、",
+   "audio": "assets/voice/v_berna_depart_02.ogg"
+  },
+  "v_berna_home_01": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_berna",
+   "key": "after prologue pick (default)",
+   "line": 79,
+   "text": "おかえり。年代記は、\nちゃんと書いているかい？",
+   "audio": "assets/voice/v_berna_home_01.ogg"
+  },
+  "v_berna_home_02": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_berna",
+   "key": "after prologue pick cleared_r_forest",
+   "line": 78,
+   "text": "森の灯が戻ったそうだね。\n語り石の文字が、ほんの少し\n読めるようになった気がするよ。",
+   "audio": "assets/voice/v_berna_home_02.ogg"
+  },
+  "v_berna_home_03": {
+   "speaker": "berna",
+   "kind": "story",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_berna",
+   "key": "stay morning (E.stay o.morning)",
+   "line": 82,
+   "text": "よく眠れたかい？\n……さあ、いってらっしゃい。",
+   "audio": "assets/voice/v_berna_home_03.ogg"
+  },
+  "v_fine_forest_02": {
+   "speaker": "fine",
+   "kind": "story",
+   "file": "v2/src/events/forest_elder.js",
+   "event": "elder_fine",
+   "key": "say 2 (after v_fine_forest_01)",
+   "line": 17,
+   "text": "……気をつけて。",
+   "audio": "assets/voice/v_fine_forest_02.ogg"
+  },
+  "v_fine_windhill_01": {
+   "speaker": "fine",
+   "kind": "story",
+   "file": "v2/src/events/optional_windhill.js",
+   "event": "windhill_notes",
+   "key": "say (grey-cloaked girl)",
+   "line": 18,
+   "text": "……風も、歌を覚えているのね。",
+   "audio": "assets/voice/v_fine_windhill_01.ogg"
+  },
+  "v_fine_opening_01": {
+   "speaker": "fine",
+   "kind": "optional",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_house_intro",
+   "key": "caption 1 (ev.caption: no voice option yet)",
+   "line": 24,
+   "text": "……ねえ、聞こえる？",
+   "audio": "assets/voice/v_fine_opening_01.ogg"
+  },
+  "v_fine_opening_02": {
+   "speaker": "fine",
+   "kind": "optional",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_house_intro",
+   "key": "caption 2",
+   "line": 25,
+   "text": "これは、忘れられかけた物語。",
+   "audio": "assets/voice/v_fine_opening_02.ogg"
+  },
+  "v_fine_opening_03": {
+   "speaker": "fine",
+   "kind": "optional",
+   "file": "v2/src/events/prologue_roa.js",
+   "event": "roa_house_intro",
+   "key": "caption 3",
+   "line": 26,
+   "text": "そして、それを語り直した、\nひとりの語り部の物語。",
+   "audio": "assets/voice/v_fine_opening_03.ogg"
+  },
+  "v_rowell_pharos_01": {
+   "speaker": "rowell",
+   "kind": "story",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_rowell",
+   "key": "repeat talk pick prologue_done",
+   "line": 42,
+   "text": "灯台に火が戻っただと？\n……写し取ったはずの歌が、\nどうして。",
+   "audio": "assets/voice/v_rowell_pharos_01.ogg"
+  },
+  "v_rowell_pharos_02": {
+   "speaker": "rowell",
+   "kind": "story",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_rowell",
+   "key": "repeat talk pick prologue_key",
+   "line": 43,
+   "text": "灯台守から鍵を借りたそうだな。\n……火をともせるものなら、\nともしてみるがいい。",
+   "audio": "assets/voice/v_rowell_pharos_02.ogg"
+  },
+  "v_rowell_pharos_03": {
+   "speaker": "rowell",
+   "kind": "story",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_rowell",
+   "key": "repeat talk pick default",
+   "line": 44,
+   "text": "まだいたのか。\n写し取った伝承は、本院で\n大切に保管される。",
+   "audio": "assets/voice/v_rowell_pharos_03.ogg"
+  },
+  "v_elm_forest_07": {
+   "speaker": "elm",
+   "kind": "story",
+   "file": "v2/src/events/forest_elder.js",
+   "event": "elder_elm",
+   "key": "say array page 1",
+   "line": 151,
+   "text": "森の道は、もう閉ざさぬ。\n夏至の歌も、村の者たちが\nまた歌ってくれるだろう。",
+   "audio": "assets/voice/v_elm_forest_07.ogg"
+  },
+  "v_elm_forest_08": {
+   "speaker": "elm",
+   "kind": "story",
+   "file": "v2/src/events/forest_elder.js",
+   "event": "elder_elm",
+   "key": "say array page 2",
+   "line": 151,
+   "text": "ただ、迷いの森の魔物は、\nわたしにも鎮められぬ。\n腕を磨くには、よいだろう。",
+   "audio": "assets/voice/v_elm_forest_08.ogg"
+  },
+  "v_tadeo_greet_01": {
+   "speaker": "tadeo",
+   "kind": "bark",
+   "file": "v2/src/events/pharos_people.js",
+   "event": "pharos_tadeo",
+   "key": "bark: when the talk opens",
+   "line": null,
+   "text": "よい灯りを。",
+   "audio": "assets/voice/v_tadeo_greet_01.ogg"
+  },
+  "v_fishwife_greet_01": {
+   "speaker": "fishwife",
+   "kind": "bark",
+   "file": "v2/src/events/pharos_people.js",
+   "event": "pharos_fishwife",
+   "key": "bark: when the talk opens",
+   "line": null,
+   "text": "よい灯りを。",
+   "audio": "assets/voice/v_fishwife_greet_01.ogg"
+  },
+  "v_gateguard_greet_01": {
+   "speaker": "gateguard",
+   "kind": "bark",
+   "file": "v2/src/events/pharos_people.js",
+   "event": "pharos_gateguard",
+   "key": "bark: when the talk opens",
+   "line": null,
+   "text": "よい灯りを、旅の方。",
+   "audio": "assets/voice/v_gateguard_greet_01.ogg"
+  },
+  "v_master_greet_01": {
+   "speaker": "master",
+   "kind": "bark",
+   "file": "v2/src/events/pharos_story.js",
+   "event": "pharos_tavern_master",
+   "key": "bark: when the talk opens",
+   "line": null,
+   "text": "いらっしゃい。",
+   "audio": "assets/voice/v_master_greet_01.ogg"
+  },
+  "v_gord_greet_01": {
+   "speaker": "gord",
+   "kind": "bark",
+   "file": "v2/src/events/forest_fern.js",
+   "event": "gord (fern)",
+   "key": "bark: when the talk opens",
+   "line": null,
+   "text": "おう、あんたか。",
+   "audio": "assets/voice/v_gord_greet_01.ogg"
+  },
+  "v_hanna_greet_01": {
+   "speaker": "hanna",
+   "kind": "bark",
+   "file": "v2/src/events/forest_fern.js",
+   "event": "hanna (fern)",
+   "key": "bark: when the talk opens",
+   "line": null,
+   "text": "おや、旅の方。",
+   "audio": "assets/voice/v_hanna_greet_01.ogg"
+  },
+  "v_rita_greet_01": {
+   "speaker": "rita",
+   "kind": "bark",
+   "file": "v2/src/events/forest_fern.js",
+   "event": "rita (fern)",
+   "key": "bark: when the talk opens",
+   "line": null,
+   "text": "あ、語り部さん。",
+   "audio": "assets/voice/v_rita_greet_01.ogg"
+  },
+  "v_pim_greet_01": {
+   "speaker": "pim",
+   "kind": "bark",
+   "file": "v2/src/events/forest_fern.js",
+   "event": "pim_after (fern)",
+   "key": "bark: when the talk opens (after the rescue)",
+   "line": null,
+   "text": "あっ、語り部さん！",
+   "audio": "assets/voice/v_pim_greet_01.ogg"
+  }
+ }
+}

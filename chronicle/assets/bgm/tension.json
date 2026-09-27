@@ -1,31 +1,30 @@
 {
-  "loopStart": 3.692,
-  "loopEnd": 48.472,
+  "loopStart": 28.677,
+  "loopEnd": 85.446,
   "source": {
     "provider": "gemini",
-    "model": "lyria-3.5",
     "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. A tense story scene: suspense and urgency, someone must be saved, a clock is ticking, a clear driving beat. Build in waves so it does not feel like one repeated bar. Tempo 132 BPM, 4/4 time, key of G minor. Instrumentation: sixteenth-note string ostinato, repeating low bass, long horn notes, clear drum beat, piano pulses, timpani swells. Form: ostinato intro; section A with horn line; section B where the harmony moves to E-flat and the piano takes over; a peak with timpani; back to the ostinato. Duration: 95 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
     "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]",
-    "generated": "2026-09-27T04:53:05.798Z",
-    "rawSeconds": 97,
+    "generated": "2026-09-27T04:53:22.102Z",
+    "rawSeconds": 95.6,
     "takes": 2
   },
   "analysis": {
     "loudnessLUFS": -18,
-    "truePeakDb": -4.9,
-    "gainDb": -5,
+    "truePeakDb": -5.3,
+    "gainDb": -6.1,
     "peakLimited": false,
-    "loopScore": 0.512,
+    "loopScore": 0.302,
     "seamListen": {
-      "seam_smooth": 9.5,
+      "seam_smooth": 10,
       "problem": "none"
     },
-    "seamCorr": 0.175,
+    "seamCorr": 0.449,
     "xfade": 0.6,
-    "medianDb": -21.7,
+    "medianDb": -22,
     "longestSilence": 0,
-    "seamLevelDiffDb": 0.6,
-    "seamJump": 0.0003,
-    "maxStep": 0.0095
+    "seamLevelDiffDb": 0.2,
+    "seamJump": 0.0028,
+    "maxStep": 0.0135
   }
 }

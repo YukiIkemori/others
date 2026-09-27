@@ -7,6 +7,8 @@
 //   node tools/voice_tts.js --battle         only battle voices (companions b_<char>_<kind>_<n> from
 //                                            design/voice/battle_lines.csv + the hero)   --no-battle  skip the companions'
 //                                            --char selma,hagen   only these companions' battle lines
+//   node tools/voice_tts.js --story2         only the v2 slice story lines + town barks (design/voice/story_v2_lines.csv,
+//                                            tools/story_voice.js)
 //   node tools/voice_tts.js --force          regenerate files that exist        --dry-run   print prompts only
 //   node tools/voice_tts.js --reprocess      redo trim / effects / loudness from the cached raw WAVs (no API)
 //   options: --lufs <n> (default -16)  --raw <dir> (default $TMPDIR/voice_raw)  --report <file.json>
