@@ -24,6 +24,10 @@
 //   clearRegion(rid)            ページ → cleared・tier+1・pendingTier・章の数 → 地方の目印を外す → R.Tier.celebrate → 'region:clear'
 //   letter(id) → R.Screens.open('letter') / mini.sequence・mini.timing → R.Mini
 //   lore(id) → bool             読み物を書庫へ（旗 = id。呼ぶ側が先に旗を立てていても通知は出す）
+//   partyShow(id | ids | 'all', {near:'hero'|npcId, at:[x,y], dir, ms, wait, stay}) / partyHide(id | ids | 'all', {ms, wait})
+//        フィールドは主人公だけ（FIELD trail.js、オーナーの決まり 2026-09-27）。仲間を主人公の横に短いフェードで出す／消す。
+//        出した人は ev.npc(id) で動かせる。say(who) の who が一行の仲間（主人公以外）で、地図にその NPC がいなければ自動で出す
+//        （o.show === false で出さない）。chooseCompanions で加わった人も出す。イベント（run・talk）が終わると stay の人を除いて消える
 (function (R) {
   'use strict';
   if (R.Stubs && R.Stubs.claim) R.Stubs.claim('Events');
@@ -102,6 +106,24 @@
     try { (it && it.slot === 'key' ? R.Audio.jingle('keyitem') : R.Audio.sfx('item')); } catch (e) { /* */ }
   }
 
+  // ---------------------------------------------------------------- 仲間を出す（主人公だけのフィールド）
+  function fieldOn() {
+    try { return !!(R.Field && R.Field.partyShow && R.Field._s && R.Field._s.map && R.Engine.has && R.Engine.has('field')); } catch (e) { return false; }
+  }
+  /** say の話し手が一行の仲間なら、主人公の横に出す（地図にその NPC がいれば出さない） */
+  function autoShow(who) {
+    if (!who || !fieldOn() || !R.Field._isMember || !R.Field._isMember(who)) return;
+    const S = R.Field._s;
+    const ex = S.npcById && S.npcById[who];
+    if (ex && (!ex.party || !ex.leaving)) return;
+    try { R.Field.partyShow(who, { near: 'hero' }); } catch (e) { R.warn('partyShow', e && e.message); }
+  }
+  /** イベントが終わった: 出した仲間を消す（stay は残す）。abort なら一度に */
+  function autoHide(now) {
+    try { if (R.Field && R.Field.partyHide && R.Field._s && R.Field._s.map) R.Field.partyHide('all', now ? { ms: 0 } : { auto: true }); } catch (e) { /* */ }
+  }
+  Events._autoShow = autoShow;
+
   // ---------------------------------------------------------------- ev
   function makeEv(ctx) {
     ctx = ctx || {};
@@ -111,6 +133,7 @@
       ctx,
       async say(who, text, o) {
         guard(); o = o || {};
+        if (o.show !== false) autoShow(who);
         const sp = speaker(who);
         const face = faceOf(sp, o.face);
         const name = o.name || sp.name || undefined;
@@ -200,6 +223,8 @@
           if (G().joined.includes(id)) continue;
           try { R.Party.join(id); out.push(id); } catch (e) { R.warn('join ' + id, e && e.message); }
         }
+        // 加わった人を主人公の横に出す（フィールドは主人公だけ。イベントが終わると消える）
+        if (out.length && fieldOn()) { try { R.Field.partyShow(out, { near: 'hero' }); } catch (e) { R.warn('partyShow', e && e.message); } }
         return out;
       },
       async createHero() {
@@ -227,6 +252,8 @@
       choiceOf(key) { return G().choices[key]; },
       async clearRegion(rid) { guard(); const r = await clearRegion(rid); guard(); return r; },
       npc(id) { return R.Field.npc(id); },
+      async partyShow(id, o) { guard(); if (!fieldOn()) return []; const r = await R.Field.partyShow(id, o || {}); guard(); return r; },
+      async partyHide(id, o) { guard(); if (!fieldOn()) return []; const r = await R.Field.partyHide(id, o || {}); guard(); return r; },
       guest(look) { guard(); R.Field.setGuest(look ? { id: look, look } : null); },
       async camera(x, y, ms) { guard(); if (x == null) await R.Field.camera.follow({ ms }); else await R.Field.camera.focus(x, y, { ms }); guard(); },
       mini: {
@@ -312,7 +339,7 @@
       if (cur && cur.run === run) {
         busy = false;
         cur = null;
-        if (token === aborted) { try { R.Field.unlock('event'); } catch (err) { /* */ } }
+        if (token === aborted) { try { R.Field.unlock('event'); } catch (err) { /* */ } autoHide(false); }
         if (token === aborted && R.Engine.fade.a > 0.01 && !(R.Engine.fade.anim)) R.Engine.fadeTo(0, 200);
         if (ctx._battled && R.Field.encounter && R.Field.encounter.suppress) { try { R.Field.encounter.suppress(6); } catch (err) { /* */ } }
       }
@@ -346,6 +373,7 @@
     cur = null;
     void wasBusy;
     try { const L = R.Field.locks ? R.Field.locks() : {}; for (const k of ['event', 'talk']) for (let i = 0; i < (L[k] || 0); i++) R.Field.unlock(k); } catch (e) { /* */ }
+    autoHide(true);
     R.Engine.fadeTo(0, 0);
   };
 
@@ -392,7 +420,7 @@
       if (!(err && err.aborted)) console.error('[talk ' + npc.id + ']', err);
       return undefined;
     } finally {
-      if (cur && cur.run === run) { busy = false; cur = null; if (token === aborted) { try { R.Field.unlock('talk'); } catch (e) { /* */ } } }
+      if (cur && cur.run === run) { busy = false; cur = null; if (token === aborted) { try { R.Field.unlock('talk'); } catch (e) { /* */ } autoHide(false); } }
       if (!busy) drain();
     }
   };

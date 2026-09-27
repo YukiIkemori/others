@@ -3,6 +3,9 @@
 //   チャンクの over（屋根の張り出し・足場・木の葉）→ lv 1 の人（足場の上）→ 発光の描き直し（芯＋にじみ、30 個まで）→ 暗がりの膜（E6）→
 //   宝箱と泉のきらめき（膜の上、WORLD §6.3）→ 新しい話の印 → 光の明滅 → R.Post.frame → HUD。
 //   人の絵は hd:field:<look>（opts {scale, lantern}）。登録が無い間は dev だけ仮の人形（index.html では影だけ）。
+//   歩きの絵: ダッシュは run_*（無ければ walk_*）、止まれば idle_*（2 コマ以上あれば）か stand_*。コマの数と fps はシートから（cast/sprites.js が json を読む）。
+//   歩き・走りのコマは歩いた道のりで進める（1 マスあたり fps × 1 マスの時間 ÷ 1000 コマ、json の stride があれば 1 巡りのマス数）: 速さが変わっても足が滑らない。
+//   走り出しとダッシュ中の向き変えで足もとに小さな土ぼこり（F._dust、環境光とランタンの色）。
 //   物の絵は TERRAIN のチャンクの props（R.Hd.get(p.key, p.opts) の poses[p.frame]、fps があれば時間で回す、p.cond が真の間だけ）。
 //   仮の地面（fb）の間は、ここで宝箱・泉・しょく台・灯籠・建物などを簡単な形で描く。
 //   光の輪は R.Light.ring(g, x, y, r, t, {mood})（環境光を渡すと輪の色が合う）。
@@ -14,6 +17,11 @@
   const vis = { px: 0, py: 0 };
   const WALK = { s: 'walk_s', n: 'walk_n', e: 'walk_e', w: 'walk_w' };
   const STAND = { s: 'stand_s', n: 'stand_n', e: 'stand_e', w: 'stand_w' };
+  const RUN = { s: 'run_s', n: 'run_n', e: 'run_e', w: 'run_w' };
+  const IDLE = { s: 'idle_s', n: 'idle_n', e: 'idle_e', w: 'idle_w' };
+  // 昔の速さ（json に fps の無い 3 コマの歩き・4 コマの走り・仮の絵）: 1 コマ 130 ms、ダッシュ 85 ms
+  const LEG_WALK_FPS = 1000 / 130, LEG_RUN_FPS = 1000 / 85;
+  const NPC_STEP_MS = 320;   // npc.js の STEP_MS（NPC の歩の足の運びの基準）
   const pool = [];
   let used = 0;
   const OPTS = {};
@@ -65,6 +73,14 @@
       try { if (R.Hd.now(key, o)) n++; } catch (e) { console.error('[field] warm people', e); }
     }
     return n;
+  };
+
+  /** 1 人の絵をすぐ焼く（イベントで出る仲間: 仮の人形が一瞬見えないように）→ bool */
+  F._warmLook = function (look, lantern) {
+    if (!look || !R.Hd || !R.Hd.now) return false;
+    const key = 'hd:field:' + look, o = charOpts(!!lantern);
+    if (!R.Hd.has(key) || (R.Hd.ready && R.Hd.ready(key, o))) return true;
+    try { if (R.Hd._s && R.Hd._s.failed) R.Hd._s.failed.delete(R.Hd._ck(key, o)); return !!R.Hd.now(key, o); } catch (e) { return false; }
   };
 
   // ---------------------------------------------------------------- 光の出どころ（止まった灯り）
@@ -137,6 +153,8 @@
       RING.mood = (S.amb && S.amb.mood) || (m.light && m.light.mood) || 'night';
       R.Light.ring(g, lx, ly, F.dark.on() ? F.dark.partyR() * t : 88 * (t / 32), R.Engine.time, RING);
     }
+    // 走りの土ぼこり（地面の上・人の下）
+    if (S.dust && S.dust.length) drawDust(g, t, cx, cy);
     // F4: 立っている物と人
     used = 0;
     collect(t, real);
@@ -235,20 +253,24 @@
     if (e.kind === 'lead') {
       F._vis(vis);
       const G = R.Game, c = G && G.chars[G.party[0]];
-      drawChar(g, c ? c.look : 'hero', Math.round((vis.px + 0.5) * t - cx), Math.round((vis.py + 1) * t - cy - t * 0.1), S.dir, !!S.mv, S.mv && S.mv.dash, true, null);
+      const dash = !!(S.mv && S.mv.dash);
+      drawChar(g, c ? c.look : 'hero', Math.round((vis.px + 0.5) * t - cx), Math.round((vis.py + 1) * t - cy - t * 0.1), S.dir, !!S.mv, dash, true, null, F._gaitDist(), dash ? F.DASH_MS : F.WALK_MS, 1);
       return;
     }
     if (e.kind === 'fol') {
       const a = e.ref, k = S.mv ? Math.min(1, (tm - S.mv.t0) / S.mv.ms) : 1;
       F._folVis(a, k, vis);
-      drawChar(g, a.look, Math.round((vis.px + 0.5) * t - cx), Math.round((vis.py + 1) * t - cy - t * 0.1), a.dir, a.moving && !!S.mv, S.mv && S.mv.dash, false, null);
+      const dash = !!(S.mv && S.mv.dash);
+      drawChar(g, a.look, Math.round((vis.px + 0.5) * t - cx), Math.round((vis.py + 1) * t - cy - t * 0.1), a.dir, a.moving && !!S.mv, dash, false, null, F._gaitDist(), dash ? F.DASH_MS : F.WALK_MS, 1);
       return;
     }
     if (e.kind === 'npc') {
       const n = e.ref;
-      let px = n.x, py = n.y;
-      if (n.mv) { const k = Math.min(1, (tm - n.mv.t0) / n.mv.ms); px = n.mv.fx + (n.mv.tx - n.mv.fx) * k; py = n.mv.fy + (n.mv.ty - n.mv.fy) * k; }
-      drawChar(g, n.look, Math.round((px + 0.5) * t - cx), Math.round((py + 1) * t - cy - t * 0.1), n.dir, !!n.mv, false, false, n.pose && n.pose.name);
+      let px = n.x, py = n.y, k = 0;
+      if (n.mv) { k = Math.min(1, (tm - n.mv.t0) / n.mv.ms); px = n.mv.fx + (n.mv.tx - n.mv.fx) * k; py = n.mv.fy + (n.mv.ty - n.mv.fy) * k; }
+      const al = n.fade && F._npcAlpha ? F._npcAlpha(n) : 1;
+      if (al <= 0.01) return;
+      drawChar(g, n.look, Math.round((px + 0.5) * t - cx), Math.round((py + 1) * t - cy - t * 0.1), n.dir, !!n.mv, false, false, n.pose && n.pose.name, (n.odo || 0) + k, NPC_STEP_MS, al);
       return;
     }
     if (e.kind === 'prop') {
@@ -272,8 +294,14 @@
   }
 
   // ---------------------------------------------------------------- 人
-  function drawChar(g, look, x, y, dir, moving, dash, lantern, pose) {
+  /**
+   * 人を 1 人描く。dist = 歩いた道のり（マス。歩き・走りのコマを道のりで進める。null なら時間で）、
+   * gaitMs = その人の 1 マスの基準の時間（fps から 1 マスあたりのコマ数を出す）、alpha = 濃さ（イベントで出る仲間のフェード）
+   */
+  function drawChar(g, look, x, y, dir, moving, dash, lantern, pose, dist, gaitMs, alpha) {
     const t = cam.t, u = t / 32;
+    const fade = alpha != null && alpha < 1;
+    if (fade) { g.save(); g.globalAlpha = Math.max(0, alpha); }
     // 足もとの柔らかい影
     g.fillStyle = 'rgba(8,8,24,0.38)';
     g.beginPath(); g.ellipse(x + 2 * u, y, 9 * u, 3.2 * u, 0, 0, Math.PI * 2); g.fill();
@@ -281,19 +309,34 @@
     if (R.Hd.has(key)) {
       const sh = R.Hd.get(key, charOpts(lantern));
       if (sh) {
-        let P = null;
-        if (pose && sh.poses[pose]) P = sh.poses[pose];
-        else if (moving && sh.poses[WALK[dir]]) P = sh.poses[WALK[dir]];
-        else P = sh.poses[STAND[dir]] || sh.poses.stand_s || [0];
-        const fi = P.length > 1 ? P[Math.floor(R.Engine.time / (dash ? 85 : 130)) % P.length] : P[0];
-        const fr = sh.frames[fi] || sh.frames[0];
+        const fr = sh.frames[pickFrame(sh, dir, moving, dash, pose, dist, gaitMs)] || sh.frames[0];
         R.Hd.draw(g, fr, x, y, { flip: dir === 'w' && !sh.poses.stand_w });
+        if (fade) g.restore();
         return;
       }
     }
-    if (!R.Dev) return;   // 絵の登録が無い間: dev だけ仮の人形（§2.5.5）
-    doll(g, look, x, y, dir, moving, lantern, u);
+    if (R.Dev) doll(g, look, x, y, dir, moving, lantern, u);   // 絵の登録が無い間: dev だけ仮の人形（§2.5.5）
+    if (fade) g.restore();
   }
+  /** シートのどのコマか。歩き・走りは道のり、待ち・演技は時間 */
+  function pickFrame(sh, dir, moving, dash, pose, dist, gaitMs) {
+    const Ps = sh.poses;
+    let name = null;
+    if (pose && Ps[pose]) name = pose;
+    else if (moving) name = dash && Ps[RUN[dir]] ? RUN[dir] : Ps[WALK[dir]] ? WALK[dir] : null;
+    else if (Ps[IDLE[dir]] && Ps[IDLE[dir]].length > 1) name = IDLE[dir];
+    const P = name ? Ps[name] : Ps[STAND[dir]] || Ps.stand_s || [0];
+    if (P.length < 2) return P[0];
+    const gait = !!name && (name === WALK[dir] || name === RUN[dir]);
+    const fps = (sh.fps && (gait || name === IDLE[dir]) && sh.fps[name]) || (dash && gait ? LEG_RUN_FPS : LEG_WALK_FPS);
+    if (gait && dist != null) {
+      const st = sh.stride && sh.stride[name];
+      const perTile = st ? P.length / st : (fps * (gaitMs || F.WALK_MS)) / 1000;
+      return P[(Math.floor(dist * perTile + 1) % P.length + P.length) % P.length];   // +1: 歩き出しの最初のコマは足を出したところ
+    }
+    return P[Math.floor((R.Engine.time * fps) / 1000) % P.length];
+  }
+  F._pickFrame = pickFrame;
   /** 仮の人形（dev だけ）: 頭・体・足。先頭はランタンを持つ */
   function doll(g, look, x, y, dir, moving, lantern, u) {
     const h = R.U.hash(look || 'x'), hue = h % 360;
@@ -321,6 +364,52 @@
       g.fillStyle = '#6a4a2a'; g.fillRect(lxx - 2 * u, lyy - 3 * u, 4 * u, 6 * u);
       g.fillStyle = '#ffe6a8'; g.fillRect(lxx - 1.2 * u, lyy - 2 * u, 2.4 * u, 3.6 * u);
     }
+  }
+
+  // ---------------------------------------------------------------- 走りの土ぼこり
+  // 走り出し・ダッシュ中の向き変えで先頭の足もとに 3〜5 粒（move.js が呼ぶ）。軽い: 最大 24 粒、各 0.46〜0.68 秒。
+  // 色は地面の色（淡い土）× マップの環境光（夜は青く沈む）に、足もとを照らす先頭のランタンの暖色を半分ほど混ぜる。
+  // 暗がりの膜（E6）の下に描くので、暗い所ではそのまま沈む。効果 off・動きを減らす設定では出さない
+  const DUST_MAX = 24;
+  const dustCol = {};
+  function dustRGB() {
+    const mood = (S.amb && S.amb.mood) || (S.map && S.map.light && S.map.light.mood) || 'night';
+    if (dustCol[mood]) return dustCol[mood];
+    let amb = [116, 104, 196];
+    try { const md = R.Hd.mood(mood); if (md && md.ambient && R.Hd._rgb) amb = R.Hd._rgb(md.ambient); } catch (e) { /* 既定 */ }
+    const base = [206, 190, 164], warm = [255, 214, 160];
+    const out = base.map((v, i) => Math.round(Math.min(255, v * (Math.min(1, (amb[i] / 255) * 1.6) * 0.5 + (warm[i] / 255) * 0.5))));
+    return (dustCol[mood] = out.join(','));
+  }
+  /** 土ぼこりを出す。(x, y) = マス（足もと）、(dx, dy) = 走る向き（粒は後ろへ散る） */
+  F._dust = function (x, y, dx, dy, n) {
+    if (R.Settings.get('reduceMotion') || (R.Hd.quality && R.Hd.quality() === 'off')) return;
+    const L = (S.dust = S.dust || []);
+    const now = R.Engine.time;
+    const len = Math.hypot(dx, dy) || 1, bx = -dx / len, by = -dy / len;
+    const seed = (S.phase || 0) * 7 + (x * 31 + y * 17);
+    for (let i = 0; i < (n || 4); i++) {
+      if (L.length >= DUST_MAX) L.shift();
+      const h = R.U.hash(String(seed + i * 131)) % 1000 / 1000, h2 = R.U.hash(String(seed + i * 71 + 9)) % 1000 / 1000;
+      const sp = 0.9 + h * 0.9, sd = (h2 - 0.5) * 1.6;
+      L.push({ x: x + 0.5 + bx * 0.3 + (h2 - 0.5) * 0.35, y: y + 0.88 + by * 0.2, vx: (bx - by * sd) * sp * 1.3, vy: (by + bx * sd) * sp * 0.6 - 0.35, t0: now, life: 460 + h * 220, r: 3 + h2 * 2.2 });
+    }
+  };
+  function drawDust(g, t, cx, cy) {
+    const L = S.dust, now = R.Engine.time, u = t / 32;
+    const col = dustRGB();
+    let w = 0;
+    for (let i = 0; i < L.length; i++) {
+      const p = L[i], a = (now - p.t0) / p.life;
+      if (a >= 1 || a < 0) continue;
+      L[w++] = p;
+      const s = (now - p.t0) / 1000, ease = 1 - a * 0.5;
+      const x = (p.x + p.vx * s * ease) * t - cx, y = (p.y + p.vy * s * ease) * t - cy;
+      const r = p.r * u * (1 + a * 1.4);
+      g.fillStyle = `rgba(${col},${(0.58 * (1 - a) * (1 - a * 0.5)).toFixed(3)})`;
+      g.beginPath(); g.ellipse(x, y, r, r * 0.7, 0, 0, Math.PI * 2); g.fill();
+    }
+    L.length = w;
   }
 
   // ---------------------------------------------------------------- 物（仮の地面の間の簡単な形）

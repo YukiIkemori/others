@@ -2,6 +2,9 @@
 // 動けなければ入れ替わる・しばらくして戻る。pushable:false は動かない。歩き回る NPC は逃げ場を 2 マス未満にしない
 // （周りの通れるマスが 3 つ以上ある所にしか入らない）。話すときは一行の方を向く。
 //   R.Field.npc(id) → {move(path, {speed}), face(dir), act(pose), hide(), show(), setPos(x, y)}（どれも Promise）
+//   仲間をイベントで出す（フィールドは主人公だけ、trail.js）: R.Field.partyShow(id | ids | 'all', {near, at, dir, ms, wait, stay}) /
+//   partyHide(id | ids | 'all', {ms, wait}) / partyShown() → ids。出した人は一時の NPC（id = 仲間の id）なので ev.npc(id) で動かせる。
+//   イベントが終わると（stay で出した人を除き）R.Events が partyHide('all') を呼ぶ。マップに入り直すと消える
 (function (R) {
   'use strict';
   const F = (R.Field = R.Field || {});
@@ -27,6 +30,7 @@
     }));
     S.npcById = {};
     for (const n of S.npcs) S.npcById[n.id] = n;
+    S.partyShown = [];
     F._npcVis();
   };
   F._npcVis = function () {
@@ -76,13 +80,14 @@
   F._tickNpcs = function () {
     const list = S.npcs;
     if (!list) return;
+    F._tickPartyFade();
     const now = R.Engine.time;
     const top = R.Engine.top() === F.scene;
     const calm = top && !F._locked() && !R.Events.busy();
     for (let i = 0; i < list.length; i++) {
       const n = list[i];
       if (n.mv && now - n.mv.t0 >= n.mv.ms) {
-        n.x = n.mv.tx; n.y = n.mv.ty; n.mv = null;
+        n.x = n.mv.tx; n.y = n.mv.ty; n.mv = null; n.odo = (n.odo || 0) + 1;
         if (n.waiters.length) { const w = n.waiters.splice(0); for (const r of w) r(); }
       }
       if (n.pose && now >= n.pose.until) n.pose = null;
@@ -177,5 +182,130 @@
       async show() { n.hidden = false; F._npcVis(); },
       async setPos(x, y) { n.mv = null; n.x = x; n.y = y; n.home = { x, y, dir: n.dir }; },
     };
+  };
+
+  // ---------------------------------------------------------------- 仲間をイベントで出す（主人公だけのフィールド）
+  const FADE_MS = 220;
+  // 仲間の立つ所の順（[後ろへ, 横へ]）: 真後ろ → 横 → 斜め後ろ → 2 つ後ろ → 2 つ横 → 斜め前 → 前
+  const AROUND = [[1, 0], [0, -1], [0, 1], [1, -1], [1, 1], [2, 0], [0, -2], [0, 2], [-1, -1], [-1, 1], [-1, 0], [2, -1], [2, 1]];
+  function partyIds(id) {
+    const G = R.Game;
+    if (!G) return [];
+    if (id === 'all' || id == null) return (G.party || []).slice(1);
+    return [].concat(id).filter(Boolean);
+  }
+  /** 一行の人（party・reserve）で、主人公でない */
+  F._isMember = function (id) {
+    const G = R.Game;
+    if (!G || !id || !G.chars || !G.chars[id] || id === G.party[0] || id === G.hero) return false;
+    return (G.party || []).includes(id) || (G.reserve || []).includes(id);
+  };
+  /** (cx, cy) の近くで仲間が立てるマス。後ろ（向きの反対）→ 横 → 斜め後ろ → 前の順 */
+  function spotNear(cx, cy, lv, dir) {
+    const m = S.map;
+    const back = { s: [0, -1], n: [0, 1], e: [-1, 0], w: [1, 0] }[dir] || [0, -1];
+    const side = [-back[1], back[0]];
+    for (const [k, j] of AROUND) {
+      const x = cx + back[0] * k + side[0] * j, y = cy + back[1] * k + side[1] * j;
+      if (x === S.x && y === S.y) continue;
+      if (!F._walkable(m, x, y, null, lv) || F._npcAt(x, y, lv)) continue;
+      if (F._warpAt && F._warpAt(m, x, y, lv)) continue;
+      if ((S.fol || []).some((a) => a.x === x && a.y === y && a.lv === lv)) continue;
+      return { x, y };
+    }
+    return { x: cx + back[0], y: cy + back[1] };
+  }
+  function fadeOf(n, to, ms) {
+    const now = R.Engine.time;
+    n.fade = { t0: now, ms: Math.max(1, ms), from: F._npcAlpha(n), to };
+  }
+  /** 描く濃さ（0〜1）。フェードが終われば消す */
+  F._npcAlpha = function (n) {
+    const f = n.fade;
+    if (!f) return 1;
+    const k = Math.max(0, Math.min(1, (R.Engine.time - f.t0) / f.ms));
+    return f.from + (f.to - f.from) * k;
+  };
+  F.partyShow = function (id, o) {
+    o = o || {};
+    const ids = partyIds(id);
+    if (!S.map || !R.Game || !ids.length) return Promise.resolve([]);
+    const shown = [];
+    const ms = o.ms == null ? FADE_MS : o.ms;
+    for (const pid of ids) {
+      const G = R.Game, c = G.chars && G.chars[pid];
+      if (!c || pid === G.party[0]) continue;
+      const ex = S.npcById && S.npcById[pid];
+      if (ex && !ex.party) { if (ex.hidden) { ex.hidden = false; F._npcVis(); } shown.push(pid); continue; }   // 地図の NPC がその人
+      if (ex && ex.party) {   // もう出ている（消えかけなら戻す）
+        if (ex.leaving) { ex.leaving = false; fadeOf(ex, 1, ms); }
+        if (o.stay) ex.stay = true;
+        shown.push(pid);
+        continue;
+      }
+      let x, y, lv = S.lv || 0;
+      if (Array.isArray(o.at)) { x = o.at[0]; y = o.at[1]; }
+      else {
+        const near = o.near && o.near !== 'hero' ? S.npcById && S.npcById[o.near] : null;
+        const p = near ? spotNear(near.x, near.y, near.lv || 0, near.dir) : spotNear(S.x, S.y, lv, S.dir);
+        if (near) lv = near.lv || 0;
+        x = p.x; y = p.y;
+      }
+      const dir = o.dir || R.U.dirOf(S.x - x, S.y - y, S.dir);
+      const def = { id: pid, look: c.look, x, y, lv, dir, move: 'still', pushable: false, party: true };
+      const n = {
+        def, id: pid, look: c.look, x, y, lv, dir, home: { x, y, dir }, party: true, stay: !!o.stay, leaving: false,
+        mv: null, vis: true, hidden: false, script: 0, talking: false, nextAt: R.Engine.time + 1e9, returnAt: 0,
+        route: 0, stuck: 0, pose: null, rng: R.rng(S.map.id + ':party:' + pid), isNew: false, waiters: [],
+      };
+      if (F._warmLook) F._warmLook(c.look);   // 絵を先に焼く（まだなら仮の人形が一瞬見える）
+      fadeOf(n, 1, ms);
+      n.fade.from = 0;
+      S.npcs.push(n);
+      S.npcById[pid] = n;
+      (S.partyShown = S.partyShown || []).push(pid);
+      shown.push(pid);
+    }
+    if (!o.wait || !shown.length) return Promise.resolve(shown);
+    return R.wait(ms).then(() => shown);
+  };
+  F.partyHide = function (id, o) {
+    o = o || {};
+    const ids = id === 'all' || id == null ? (S.partyShown || []).slice() : [].concat(id);
+    const ms = o.ms == null ? FADE_MS : o.ms;
+    const gone = [];
+    for (const pid of ids) {
+      const n = S.npcById && S.npcById[pid];
+      if (!n || !n.party || (o.auto && n.stay)) continue;
+      n.leaving = true;
+      n.stay = false;
+      const done = () => {
+        if (!n.leaving || !S.npcs) return;
+        const i = S.npcs.indexOf(n);
+        if (i >= 0) S.npcs.splice(i, 1);
+        if (S.npcById && S.npcById[pid] === n) delete S.npcById[pid];
+        S.partyShown = (S.partyShown || []).filter((q) => q !== pid);
+        if (n.waiters.length) { const w = n.waiters.splice(0); for (const r of w) r(); }
+      };
+      if (ms <= 0) done();
+      else { fadeOf(n, 0, ms); n.fadeDone = done; }
+      gone.push(pid);
+    }
+    if (!o.wait || !gone.length || ms <= 0) return Promise.resolve(gone);
+    return R.wait(ms).then(() => gone);
+  };
+  F.partyShown = function () { return (S.partyShown || []).slice(); };
+  /** 毎フレーム: 消える途中の仲間を片付ける（_tickNpcs から） */
+  F._tickPartyFade = function () {
+    const list = S.npcs;
+    if (!list) return;
+    for (let i = list.length - 1; i >= 0; i--) {
+      const n = list[i];
+      if (!n.fade) continue;
+      if (R.Engine.time - n.fade.t0 < n.fade.ms) continue;
+      const f = n.fade;
+      n.fade = null;
+      if (f.to <= 0 && n.fadeDone) { const d = n.fadeDone; n.fadeDone = null; d(); }
+    }
   };
 })(window.RPG);

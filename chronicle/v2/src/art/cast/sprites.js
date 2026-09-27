@@ -378,18 +378,42 @@
     const drawn = F.meta.lanternDrawn || null;   // シートの形: 歩き・走りにランタンが描かれている
     const lant = o.lantern && !drawn ? R.Art.cast.lanternFrame(k) : null;
     const anchorsL = {};
-    if (drawn) for (const [d, name] of Object.entries(DIRS)) { const f0 = by[`walk_${name}_0`]; const p = f0 && findLantern(f0); if (p) anchorsL[d] = [p[0] - f0.ox, p[1] - f0.oy]; }
+    // 歩き・走り・待ちのコマの並びと速さは json から（データの道。art の書き出しがコマの数を決める）:
+    //   meta.anims の {frames: [id…], ms: [..] | fps, stride?, mirror?}。歩きは walk8_<dir>（無ければ walk_<dir>）、走りは run8_<dir>
+    //   （無ければ run_<dir>）、立ちは stand_<dir>、待ちは idle_<dir>（あれば）。anims に無ければ walk_down_0,1,2… を順に。
+    //   right の 8 コマが無く left にあれば left を反転（right は left の鏡。art の決まり 2026-09-27）。
+    //   昔の 3 コマの歩き（walk_*_0〜2）は [0, 1, 0, 2]、速さは FIELD の昔の値のまま（fps を置かない = 変えない）。
+    //   8 コマの並び・fps を書いた物・待ちは json の速さ（ms の平均）。体の上下・走りの浮きは絵に焼いてあるので FIELD は足さない
+    const mby = {};
+    const frameOf = (id, mir) => (mir ? mby[id] || (mby[id] = R.Art.cast.mirror(by[id])) : by[id]);
+    const first = {};
+    const G = {};
     for (const [d, name] of Object.entries(DIRS)) {
-      const f0 = by[`walk_${name}_0`], f1 = by[`walk_${name}_1`], f2 = by[`walk_${name}_2`];
-      if (!f0) continue;
+      G[d] = { walk: gait(F, by, 'walk', name), run: gait(F, by, 'run', name), stand: gait(F, by, 'stand', name), idle: gait(F, by, 'idle', name) };
+      const W = G[d].walk;
+      first[d] = W.ids.length ? frameOf(W.ids[0], W.mirror) : null;
+    }
+    if (drawn) for (const d of Object.keys(DIRS)) { const f0 = first[d]; const p = f0 && findLantern(f0); if (p) anchorsL[d] = [p[0] - f0.ox, p[1] - f0.oy]; }
+    const stride = {};
+    for (const [d, name] of Object.entries(DIRS)) {
+      if (!first[d]) continue;
+      const memo = {};
       const wrap = (fr) => (lant ? withLantern(fr, lant, name, anchorsL, d) : fr);
-      const i0 = put(wrap(f0)), i1 = f1 ? put(wrap(f1)) : i0, i2 = f2 ? put(wrap(f2)) : i0;
-      poses['stand_' + d] = [i0];
-      poses['walk_' + d] = [i0, i1, i0, i2];
-      if (by[`run_${name}_0`]) poses['run_' + d] = [0, 1, 2, 3].filter((i) => by[`run_${name}_${i}`]).map((i) => put(wrap(by[`run_${name}_${i}`])));
+      const idxOf = (mir) => (id) => { const k2 = (mir ? 'M:' : '') + id; return memo[k2] != null ? memo[k2] : (memo[k2] = put(wrap(frameOf(id, mir)))); };
+      const { walk: W, run: Rn, stand: St, idle: Id } = G[d];
+      poses['stand_' + d] = St.ids.length ? [idxOf(St.mirror)(St.ids[0])] : [idxOf(W.mirror)(W.ids[0])];
+      poses['walk_' + d] = W.ids.map(idxOf(W.mirror));
+      if (W.fps) fps['walk_' + d] = W.fps;
+      if (W.stride) stride['walk_' + d] = W.stride;
+      if (Rn.ids.length) {
+        poses['run_' + d] = Rn.ids.map(idxOf(Rn.mirror));
+        if (Rn.fps) fps['run_' + d] = Rn.fps;
+        if (Rn.stride) stride['run_' + d] = Rn.stride;
+      }
+      if (Id.ids.length) { poses['idle_' + d] = Id.ids.map(idxOf(Id.mirror)); fps['idle_' + d] = Id.fps || 4; }
     }
     // 演技（南向き）: シートにあればそれ、無ければ立ちのコマのつなぎ
-    const s0 = by.walk_down_0;
+    const s0 = first.s;
     if (s0) {
       // 足りない演技はつなぎで: 元のコマはランタンの無い演技の立ち（シート3 のうなずき）、ランタンを掲げるは歩きの立ち
       const base = (name) => (name === 'raise_lantern' || !by.act_nod ? s0 : by.act_nod);
@@ -411,13 +435,54 @@
     // 頭の中心はコマごと（向きで少し違う）
     const haMemo = new Map();
     for (const [pose, list] of Object.entries(poses)) for (const i of list) {
-      const src = by[`walk_${DIRS[pose.slice(-1)] || 'down'}_0`];
+      const src = first[pose.slice(-2, -1) === '_' ? pose.slice(-1) : 's'] || first.s;
       if (src && !haMemo.has(src)) haMemo.set(src, headAnchor(src, headR));
       const ha = src && haMemo.get(src);
       if (ha && !frames_[i].anchors) frames_[i].anchors = { head: ha };
     }
-    return { frames: frames_, poses, fps, anchors, w, h, meta: { look, source: 'sprite', skinCheck: 'skip: shared palette', headR, lantern: anchorsL, lanternDrawn: !!drawn, scale: o.scale || 1.15 } };
+    return { frames: frames_, poses, fps, stride, anchors, w, h, meta: { look, source: 'sprite', skinCheck: 'skip: shared palette', headR, lantern: anchorsL, lanternDrawn: !!drawn, scale: o.scale || 1.15 } };
   };
+  // 昔の並びのコマの数（これ以下で fps を書いていなければ FIELD の昔の速さ）
+  const LEGACY_N = { walk: 3, run: 4, stand: 1 };
+  // 並びの名前の候補（先が新しい書き出し）
+  const GAIT_KEYS = { walk: ['walk8', 'walk'], run: ['run8', 'run'], stand: ['stand'], idle: ['idle'] };
+  const OPP_SIDE = { right: 'left', left: 'right' };
+  /** 歩き・走り・立ち・待ちの 1 向きの並び → {ids, fps, stride, mirror}（ids は by にあるコマの名前。mirror = 反転して使う） */
+  function gait(F, by, kind, name) {
+    const m = F.meta || {};
+    const A = m.anims || {};
+    const allF = m.frames || [];
+    const idsOf = (a) => (a && Array.isArray(a.frames) ? a.frames.map((q) => (typeof q === 'number' ? allF[q] && allF[q].id : q)).filter((q) => q && by[q]) : []);
+    let a = null, ids = [], mirror = false, fresh = false;
+    const keys = GAIT_KEYS[kind] || [kind];
+    for (const pre of keys) {
+      const cand = A[pre + '_' + name];
+      const got = idsOf(cand);
+      if (got.length) { a = cand; ids = got; fresh = pre !== kind; mirror = !!(cand.mirror || cand.flip); break; }
+      // right は left の鏡（新しい並びだけ。昔の並びは右のコマがある）
+      const o = OPP_SIDE[name] && pre !== kind ? A[pre + '_' + OPP_SIDE[name]] : null;
+      const og = idsOf(o);
+      if (og.length) { a = o; ids = og; fresh = true; mirror = !(o.mirror || o.flip); break; }
+    }
+    const key = kind + '_' + name;
+    if (!ids.length) {
+      for (let i = 0; i < 64 && by[key + '_' + i]; i++) ids.push(key + '_' + i);
+      if (kind === 'walk' && ids.length === 3) ids = [ids[0], ids[1], ids[0], ids[2]];   // 昔の 3 コマ
+    }
+    if (kind === 'stand' && !ids.length && by[key]) ids = [key];
+    const uniq = new Set(ids).size;
+    let fps = 0;
+    if (a && typeof a.fps === 'number' && a.fps > 0) fps = a.fps;
+    else if (fresh || uniq > (LEGACY_N[kind] || 0) || kind === 'idle') {
+      const ms = a && Array.isArray(a.ms) ? a.ms.filter((v) => v > 0) : [];
+      if (ms.length) fps = 1000 / (ms.reduce((x, y) => x + y, 0) / ms.length);
+      else if (m.fps && typeof m.fps['anim_' + key] === 'number') fps = m.fps['anim_' + key];
+      else if (m.fps && typeof m.fps[key] === 'number') fps = m.fps[key];
+    }
+    const stride = a && typeof a.stride === 'number' && a.stride > 0 ? a.stride : 0;
+    return { ids, fps: fps ? Math.round(fps * 100) / 100 : 0, stride, mirror };
+  }
+  SP._gait = gait;
   /** 手にランタン（原画にランタンが無いうちは焼いた小物を手の位置に重ねる）。手 = 腰の少し上の高さの、体の一番外の列 */
   function withLantern(fr, lant, dir, anchorsL, d, lift) {
     const g = R.Art.rig.geo(fr);

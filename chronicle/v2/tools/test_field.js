@@ -91,7 +91,52 @@ async function main() {
   await step('up');
   ok('blocked by the outer wall: stays', same(at(), p0), at());
 
-  section('隊列のなぞり');
+  section('主人公だけのフィールド（オーナーの決まり 2026-09-27）');
+  ok('fieldParty is off by default', R.Settings.get('fieldParty') === false && !R.Field.partyTrail());
+  await enter('field_lab', 2, 10, 'e');
+  for (let i = 0; i < 4; i++) await step('right');
+  ok('4-member party, no followers drawn or tracked', R.Game.party.length >= 4 && R.Field.trail().length === 0, { party: R.Game.party, trail: R.Field.trail() });
+  R.Field.setGuest({ id: 'pim', look: 'npc_pim' });
+  ok('a guest still follows (the only one in the line)', R.Field.trail().length === 1 && R.Field.trail()[0].guest);
+  await step('right');
+  ok('guest steps onto the leader\'s last tile', same([R.Field.trail()[0].x, R.Field.trail()[0].y], [6, 10]), R.Field.trail());
+  R.Field.setGuest(null);
+  ok('guest leaves → empty line', R.Field.trail().length === 0);
+
+  section('仲間をイベントで出す（partyShow / partyHide）');
+  await enter('field_lab', 4, 10, 'e');
+  const mem = R.Game.party[1];
+  const shown = await R.Field.partyShow(mem, { near: 'hero' });
+  const pn = S.npcById[mem];
+  ok('partyShow puts the member next to the hero (a temporary NPC)', shown.length === 1 && pn && pn.party && Math.max(Math.abs(pn.x - 4), Math.abs(pn.y - 10)) <= 2 && !(pn.x === 4 && pn.y === 10), pn && [pn.x, pn.y]);
+  ok('… behind the hero when free (facing east → west tile)', pn && same([pn.x, pn.y], [3, 10]), pn && [pn.x, pn.y]);
+  ok('… faces the hero and fades in', pn && pn.dir === 'e' && R.Field._npcAlpha(pn) < 1);
+  await settle(300);
+  ok('… fully visible after the fade', R.Field._npcAlpha(pn) === 1 && R.Field.partyShown().includes(mem));
+  ok('ev.npc(member) moves the shown member', typeof R.Field.npc(mem).move === 'function' && S.npcById[mem] === pn);
+  R.Field.partyHide(mem);
+  await settle(400);
+  ok('partyHide fades out and removes the member', !S.npcById[mem] && !S.npcs.includes(pn) && R.Field.partyShown().length === 0);
+  // イベントの中で say(仲間) → 自動で出て、終わると消える
+  R.DB.events.__party_say = { run: async (ev) => { await ev.wait(50); R._partySeen = !!S.npcById[mem]; } };
+  const sayOrig = R.UIK.Message.say;
+  R.UIK.Message.say = async () => 0;
+  R.DB.events.__party_say.run = async (ev) => { await ev.say(mem, 'hi'); R._partySeen = !!(S.npcById[mem] && S.npcById[mem].party); };
+  await drive(R.Events.run('__party_say', {}), 600);
+  ok('ev.say(member) auto-shows the member during the event', R._partySeen === true);
+  await settle(400);
+  ok('… and hides them when the event ends', !S.npcById[mem]);
+  R.DB.events.__party_stay = { run: async (ev) => { await ev.partyShow('all', { stay: true }); } };
+  await drive(R.Events.run('__party_stay', {}), 600);
+  await settle(400);
+  ok('ev.partyShow("all", {stay}) keeps them after the event', R.Game.party.slice(1).every((id) => S.npcById[id] && S.npcById[id].party), R.Field.partyShown());
+  await R.Field.partyHide('all', { ms: 0 });
+  ok('partyHide("all", {ms:0}) clears at once', R.Field.partyShown().length === 0 && R.Game.party.slice(1).every((id) => !S.npcById[id]));
+  R.UIK.Message.say = sayOrig;
+  delete R.DB.events.__party_say; delete R.DB.events.__party_stay;
+
+  section('隊列のなぞり（設定 fieldParty = 後ろに並ぶ）');
+  R.Settings.set('fieldParty', true);
   await enter('field_lab', 2, 10, 'e');
   for (let i = 0; i < 4; i++) await step('right');
   const tr = R.Field.trail();
@@ -103,6 +148,8 @@ async function main() {
   ok('guest follows', same([R.Field.trail()[3].x, R.Field.trail()[3].y], [4, 10]) || same([R.Field.trail()[3].x, R.Field.trail()[3].y], [3, 10]), R.Field.trail());
   R.Field.setGuest(null);
   ok('guest leaves', R.Field.trail().length === 3 && R.Game.guest === null);
+  R.Settings.set('fieldParty', false);
+  ok('turning the setting off empties the line on the next draw', (R.Field._trailCheck(), R.Field.trail().length === 0));
 
   section('タイル進入で 1 回・歩数');
   await enter('field_lab', 2, 10, 'e');
@@ -153,6 +200,7 @@ async function main() {
   ok('lv 0 walks under the deck', same(at(), [15, 4]) && S.lv === 0, { at: at(), lv: S.lv });
   await step('up'); await step('up');
   ok('… across it (still lv 0)', same(at(), [15, 2]) && S.lv === 0, { at: at(), lv: S.lv });
+  R.Settings.set('fieldParty', true);
   await enter('field_lab', 12, 3, 'e');
   await step('right');
   ok('onto the ladder (lv stays 0)', same(at(), [13, 3]) && S.lv === 0, { at: at(), lv: S.lv });
@@ -165,6 +213,7 @@ async function main() {
   ok('cannot step off the deck edge at lv 1', same(at(), [16, 4]) && S.lv === 1, { at: at(), lv: S.lv });
   const trl = R.Field.trail();
   ok('followers trace the height (lv 1 on the deck)', trl[0].lv === 1 && same([trl[0].x, trl[0].y], [16, 3]), trl);
+  R.Settings.set('fieldParty', false);
   await step('up'); await step('left'); await step('left'); await step('left');
   ok('back to the ladder at lv 1', same(at(), [13, 3]) && S.lv === 1, { at: at(), lv: S.lv });
   await step('left');

@@ -1,15 +1,25 @@
-// FIELD — 隊列のなぞり（V2_PLAN §2.5.9、E8）。先頭の歩いたマスを 2 人目以降が 1 歩遅れでなぞる（高さ lv も）。
-// ついてくる人（R.Field.setGuest、ピム）は隊列の最後。戦闘には出ない。
-//   S.fol = [{id, look, x, y, lv, dir, fx, fy, moving}]（先頭を除く。最後が guest）
+// FIELD — 隊列のなぞり（V2_PLAN §2.5.9、E8）。先頭の歩いたマスを後ろの人が 1 歩遅れでなぞる（高さ lv も）。
+// オーナーの決まり（2026-09-27）: フィールドに出るのは主人公だけ。仲間（R.Game.party の 2 人目以降）は 4 人の一行でも並ばない。
+//   設定 fieldParty（既定 false）を true にしたときだけ昔どおり仲間が並ぶ（R.Field.partyTrail()）。
+//   イベントで仲間が話す・動くときは npc.js の R.Field.partyShow / partyHide（ev.partyShow）で主人公の横に出す。
+// ついてくる人（R.Field.setGuest、ピム・ザイード・ラクダ…。仲間ではない）は今も後ろにつく（by:'guest' の仕掛けに要る）。戦闘には出ない。
+//   S.fol = [{id, look, x, y, lv, dir, fx, fy, moving}]（先頭を除く。最後が guest。既定では guest だけか空）
 (function (R) {
   'use strict';
   const F = (R.Field = R.Field || {});
   const S = (F._s = F._s || {});
 
+  /** 仲間を後ろに並べるか（設定 fieldParty。既定は主人公だけ） */
+  F.partyTrail = function () { try { return !!(R.Settings && R.Settings.get('fieldParty')); } catch (e) { return false; } };
+  /** 並べる仲間の id（先頭を除く）。既定では空 */
+  function members() {
+    const G = R.Game;
+    return F.partyTrail() && G && G.party ? G.party.slice(1).filter((id) => G.chars && G.chars[id]) : [];
+  }
   function wanted() {
     const G = R.Game;
     const out = [];
-    if (G && G.party) for (let i = 1; i < G.party.length; i++) { const c = G.chars[G.party[i]]; if (c) out.push({ id: c.id, look: c.look }); }
+    for (const id of members()) { const c = G.chars[id]; out.push({ id: c.id, look: c.look }); }
     if (S.guest) out.push({ id: S.guest.id, look: S.guest.look, guest: true });
     return out;
   }
@@ -33,19 +43,13 @@
     S.folSig = sig();
   };
   function sig() {
-    const G = R.Game;
     let s = S.guest ? S.guest.look : '';
-    if (G && G.party) for (let i = 1; i < G.party.length; i++) s += '|' + G.party[i];
+    for (const id of members()) s += '|' + id;
     return s;
   }
-  /** 仲間の顔ぶれが変わったか（入れ替え・加入）を安く調べる */
+  /** 並ぶ顔ぶれが変わったか（入れ替え・加入・ついてくる人・設定 fieldParty）を安く調べる */
   F._trailCheck = function () {
-    const G = R.Game;
-    const n = (G && G.party ? Math.max(0, G.party.length - 1) : 0) + (S.guest ? 1 : 0);
-    const f = S.fol || [];
-    let same = f.length === n;
-    for (let i = 0; same && G && i < G.party.length - 1; i++) if (f[i].id !== G.party[i + 1]) same = false;
-    if (!same) F._resetTrail(true);
+    if (S.folSig !== sig()) F._resetTrail(true);
   };
 
   /** 先頭が動く前に呼ぶ: 先頭の今の位置を 1 人目へ、1 人目を 2 人目へ… */

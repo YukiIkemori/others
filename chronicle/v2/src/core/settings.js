@@ -9,6 +9,7 @@
     alwaysDash: false,
     cursorMemory: true,
     fieldZoom: 'normal',
+    fieldParty: false,   // フィールドで仲間を後ろに並べる（既定は主人公だけ。オーナーの決まり 2026-09-27、FIELD trail.js）
     fieldMap: 'mini',   // ダンジョンの地図: 小地図／大きな地図／出さない（フィールドの X で順に。FIELD hud.js）
     wipe: 'retry',
     uiSize: 1,
@@ -35,6 +36,7 @@
     alwaysDash: [false, true],
     cursorMemory: [true, false],
     fieldZoom: ['near', 'normal', 'far'],
+    fieldParty: [false, true],
     fieldMap: ['mini', 'big', 'off'],
     wipe: ['retry', 'inn'],
     uiSize: [1, 1.15, 1.3],

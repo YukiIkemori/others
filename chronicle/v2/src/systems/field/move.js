@@ -107,14 +107,33 @@
     const nlv = F._lvAfter(S.map, S.x, S.y, nx, ny, S.lv);
     const now = R.Engine.time;
     // 連続歩行: 前の歩が終わった時刻から数える（1 フレームの遅れで止まって見えない）
-    const t0 = now - S.lastEnd < 60 ? S.lastEnd : now;
-    const ms = (dash ? F.DASH_MS : F.WALK_MS) * (go[0] && go[1] ? 1.41 : 1);
+    const chained = now - S.lastEnd < 60;
+    const t0 = chained ? S.lastEnd : now;
+    const diag = !!(go[0] && go[1]);
+    const ms = (dash ? F.DASH_MS : F.WALK_MS) * (diag ? 1.41 : 1);
+    // 歩きのコマは道のりで進める（layers.js）: 止まった所から歩き出したら数え直す
+    if (!chained) S.gait0 = S.odo || 0;
+    // 走り出し・ダッシュ中の向き変え: 足もとに土ぼこり
+    const prev = S.lastGo;
+    if (dash && F._dust) {
+      if (!chained || !S.lastDash) F._dust(S.x, S.y, go[0], go[1], 5);
+      else if (prev && (prev[0] !== go[0] || prev[1] !== go[1])) F._dust(S.x, S.y, go[0], go[1], 3);
+    }
+    S.lastDash = !!dash; S.lastGo = go;
     F._trailPush(S.x, S.y, S.lv, S.dir);
-    S.mv = { fx: S.x, fy: S.y, tx: nx, ty: ny, t0, ms, dx: go[0], dy: go[1], dash: !!dash };
+    S.mv = { fx: S.x, fy: S.y, tx: nx, ty: ny, t0, ms, dx: go[0], dy: go[1], dash: !!dash, len: diag ? Math.SQRT2 : 1 };
     S.x = nx; S.y = ny; S.lv = nlv;
     F._trailStart(S.mv);
     S.phase = (S.phase + 1) & 1023;
     return true;
+  };
+
+  /** 先頭が歩き出してからの道のり（マス、今の歩の途中まで）。歩き・走りのコマを進める（layers.js） */
+  F._gaitDist = function () {
+    const m = S.mv;
+    let d = (S.odo || 0) - (S.gait0 || 0);
+    if (m) d += (m.len || 1) * Math.max(0, Math.min(1, (R.Engine.time - m.t0) / m.ms));
+    return d;
   };
 
   /** 毎フレーム（tick。場面が上に積まれていても進む）: 歩き終わったら入った瞬間の判定 */
@@ -123,6 +142,7 @@
     if (!m) return;
     if (R.Engine.time - m.t0 < m.ms) return;
     S.lastEnd = m.t0 + m.ms;
+    S.odo = (S.odo || 0) + (m.len || 1);
     S.mv = null;
     F._trailEnd();
     const p = F._arrive();
