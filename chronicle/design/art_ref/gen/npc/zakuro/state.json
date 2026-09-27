@@ -15,6 +15,13 @@
      "kind": "full",
      "extra": "- PROPORTIONS WRONG: the head is too small / the figure too slender. Use exactly the hero's proportions from the template: about 2.7 heads tall, big head (a third of the body height), short sturdy body, low centre of gravity. (ザクロ（npc_zakuro）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さ 79%・頭の幅 77%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して)",
      "t": "2026-09-27T01:31:12"
+    },
+    {
+     "raw": "raw/s1_a3.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "- PROPORTIONS WRONG: the head is too small / the figure too slender. Use exactly the hero's proportions from the template: about 2.7 heads tall, big head (a third of the body height), short sturdy body, low centre of gravity. (ザクロ（npc_zakuro）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さ 79%・頭の幅 74%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して)",
+     "t": "2026-09-27T01:33:27"
     }
    ],
    "frames": {
@@ -23,7 +30,7 @@
      "column": 1,
      "logical_bbox": [
       33,
-      52
+      51
      ],
      "air": 0
     },
@@ -31,8 +38,8 @@
      "row": 1,
      "column": 2,
      "logical_bbox": [
-      36,
-      52
+      34,
+      51
      ],
      "air": 0
     },
@@ -40,7 +47,7 @@
      "row": 1,
      "column": 3,
      "logical_bbox": [
-      34,
+      35,
       51
      ],
      "air": 0
@@ -49,26 +56,8 @@
      "row": 1,
      "column": 4,
      "logical_bbox": [
-      34,
+      35,
       51
-     ],
-     "air": 0
-    },
-    "walk_up_0": {
-     "row": 2,
-     "column": 1,
-     "logical_bbox": [
-      31,
-      52
-     ],
-     "air": 0
-    },
-    "walk_up_2": {
-     "row": 2,
-     "column": 3,
-     "logical_bbox": [
-      33,
-      53
      ],
      "air": 0
     },
@@ -76,8 +65,17 @@
      "row": 2,
      "column": 4,
      "logical_bbox": [
-      37,
-      52
+      36,
+      55
+     ],
+     "air": 0
+    },
+    "walk_up_0": {
+     "row": 2,
+     "column": 1,
+     "logical_bbox": [
+      34,
+      51
      ],
      "air": 0
     },
@@ -90,12 +88,21 @@
      ],
      "air": 0
     },
+    "walk_up_2": {
+     "row": 2,
+     "column": 3,
+     "logical_bbox": [
+      34,
+      51
+     ],
+     "air": 0
+    },
     "act_call": {
      "row": 3,
      "column": 4,
      "logical_bbox": [
-      36,
-      54
+      37,
+      55
      ],
      "air": 0
     },
@@ -103,8 +110,8 @@
      "row": 3,
      "column": 1,
      "logical_bbox": [
-      20,
-      52
+      27,
+      53
      ],
      "air": 0
     },
@@ -112,7 +119,7 @@
      "row": 3,
      "column": 2,
      "logical_bbox": [
-      29,
+      32,
       53
      ],
      "air": 0
@@ -121,8 +128,8 @@
      "row": 3,
      "column": 3,
      "logical_bbox": [
-      30,
-      52
+      33,
+      53
      ],
      "air": 0
     },
@@ -130,7 +137,7 @@
      "row": 4,
      "column": 1,
      "logical_bbox": [
-      19,
+      27,
       52
      ],
      "air": 0
@@ -139,8 +146,8 @@
      "row": 4,
      "column": 2,
      "logical_bbox": [
-      33,
-      51
+      34,
+      52
      ],
      "air": 0
     },
@@ -148,8 +155,8 @@
      "row": 4,
      "column": 3,
      "logical_bbox": [
-      29,
-      51
+      34,
+      52
      ],
      "air": 0
     },
@@ -158,14 +165,14 @@
      "column": 4,
      "logical_bbox": [
       31,
-      50
+      53
      ],
      "air": 0
     }
    },
    "notes": [],
-   "pitch": 5.904,
-   "from_raw": "raw/s1_a2.png",
+   "pitch": 5.654,
+   "from_raw": "raw/s1_a3.png",
    "redo_left": [
     {
      "code": "proportion",

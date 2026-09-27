@@ -1,0 +1,88 @@
+{
+ "id": "star_shop_m",
+ "kind": "building",
+ "theme": "star",
+ "footprint": [
+  6,
+  5
+ ],
+ "wall": 2,
+ "files": {
+  "24": "star_shop_m@24.png",
+  "32": "star_shop_m@32.png",
+  "40": "star_shop_m@40.png"
+ },
+ "emitFiles": {
+  "24": "star_shop_m_emit@24.png",
+  "32": "star_shop_m_emit@32.png",
+  "40": "star_shop_m_emit@40.png"
+ },
+ "size": {
+  "24": [
+   156,
+   144
+  ],
+  "32": [
+   208,
+   192
+  ],
+  "40": [
+   260,
+   240
+  ]
+ },
+ "anchor32": [
+  8,
+  192
+ ],
+ "door32": {
+  "x": 112.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 93,
+   "y": -81,
+   "w": 6,
+   "h": 5
+  },
+  {
+   "kind": "win",
+   "x": 37,
+   "y": -36,
+   "w": 9,
+   "h": 13
+  },
+  {
+   "kind": "win",
+   "x": 146,
+   "y": -36,
+   "w": 8,
+   "h": 13
+  }
+ ],
+ "roof32": [
+  -6,
+  -164,
+  198,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/star/star_shop_m.png",
+ "def_": {
+  "id": "star_shop_m",
+  "x": 0,
+  "y": 0,
+  "w": 6,
+  "h": 5,
+  "wall": 2,
+  "door": {
+   "x": 3,
+   "y": 4
+  },
+  "windows": 2
+ }
+}
