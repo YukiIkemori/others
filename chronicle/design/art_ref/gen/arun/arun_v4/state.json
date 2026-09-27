@@ -1,0 +1,111 @@
+{
+ "sheets": {
+  "9": {
+   "attempts": [
+    {
+     "raw": "raw/s9_a1.png",
+     "quality": "medium",
+     "t": "2026-09-27T12:00:47"
+    }
+   ],
+   "usage": [
+    {
+     "image_gen": {
+      "input_tokens": 6193,
+      "input_tokens_details": {
+       "image_tokens": 5811,
+       "text_tokens": 382
+      },
+      "output_tokens": 1935,
+      "output_tokens_details": {
+       "image_tokens": 1935,
+       "text_tokens": 0
+      },
+      "total_tokens": 8128
+     },
+     "web_search": {
+      "num_requests": 0
+     }
+    }
+   ],
+   "frames": {
+    "face_neutral": {
+     "row": 1,
+     "column": 1,
+     "logical_bbox": [
+      67,
+      80
+     ],
+     "air": 0
+    },
+    "face_serious": {
+     "row": 1,
+     "column": 2,
+     "logical_bbox": [
+      68,
+      80
+     ],
+     "air": 0
+    },
+    "face_smile": {
+     "row": 1,
+     "column": 3,
+     "logical_bbox": [
+      67,
+      80
+     ],
+     "air": 0
+    },
+    "face_laugh": {
+     "row": 1,
+     "column": 4,
+     "logical_bbox": [
+      67,
+      80
+     ],
+     "air": 0
+    },
+    "face_surprise": {
+     "row": 2,
+     "column": 1,
+     "logical_bbox": [
+      67,
+      80
+     ],
+     "air": 0
+    },
+    "face_sad": {
+     "row": 2,
+     "column": 2,
+     "logical_bbox": [
+      68,
+      80
+     ],
+     "air": 0
+    },
+    "face_angry": {
+     "row": 2,
+     "column": 3,
+     "logical_bbox": [
+      67,
+      80
+     ],
+     "air": 0
+    },
+    "face_tired": {
+     "row": 2,
+     "column": 4,
+     "logical_bbox": [
+      67,
+      80
+     ],
+     "air": 0
+    }
+   },
+   "notes": [],
+   "pitch": 8.562,
+   "from_raw": "raw/s9_a1.png",
+   "restyled": true
+  }
+ }
+}

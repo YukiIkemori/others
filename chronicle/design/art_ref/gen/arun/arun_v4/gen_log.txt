@@ -1,0 +1,4 @@
+12:00:01 sheet 9 attempt 1: restyle edit arun_sheet_09.png (3072x1536, quality medium, 4 refs)
+12:00:48   pitch in raw image: 8.56 px per art pixel (upright median 685 px / 80)
+12:00:48 sheet 9 -> art_ref/gen/arun/arun_v4/arun_sheet_09.png
+12:01:01 sheet 1 attempt 1: restyle edit arun_sheet_01.png (1920x2048, quality medium, 4 refs)

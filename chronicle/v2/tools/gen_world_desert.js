@@ -41,7 +41,6 @@ module.exports = function desert(A) {
     if (dn > 0.56) c = 'u';                                 // 砂丘の筋
     if (cl < 0.3 && y > 128) c = 'k';                       // 枯れ川の粘土
     if (y < 132 && fbm(x, y, 5, 321) > 0.62) c = 'm';       // 北の岩の荒れ地
-    if (r > 0.994) c = 'm';
     set(x, y, c);
   }
   // 浜（海に接する砂）
@@ -107,11 +106,11 @@ module.exports = function desert(A) {
   for (let i = objects.length - 1; i >= 0; i--) { const o = objects[i]; if (o.type === 'prop' && inBox(o.x, o.y) && o.y >= 122) objects.splice(i, 1); }
   const solidAt = (x, y) => objects.some((o) => o.x === x && o.y === y);
   // カシム（泉を囲む市場の町。ワールドには外壁の家と門の灯り）
-  B('w_kasim1', 48, 134, 4, 3, { roof: 'flat', mat: 'plaster', art: 'desert_house_s', lamp: true });
-  B('w_kasim2', 53, 134, 4, 3, { roof: 'flat', mat: 'plaster', lamp: true });
-  B('w_kasim3', 48, 140, 4, 3, { roof: 'flat', mat: 'plaster', lamp: true });
-  B('w_kasim4', 53, 140, 4, 3, { roof: 'flat', mat: 'plaster', chimney: false });
-  P('desert_palm', 51, 137); P('desert_palm', 55, 138, { variant: 1 }); P('copper_brazier', 47, 137); P('copper_brazier', 47, 141); P('copper_brazier', 57, 137); P('copper_brazier', 57, 141);
+  B('w_kasim1', 47, 133, 5, 4, { roof: 'flat', mat: 'plaster', art: 'desert_house_s', lamp: true });
+  B('w_kasim2', 53, 133, 5, 4, { roof: 'flat', mat: 'plaster', art: 'desert_house_s', lamp: true });
+  B('w_kasim3', 47, 140, 5, 4, { roof: 'flat', mat: 'plaster', art: 'desert_house_s', lamp: true });
+  B('w_kasim4', 53, 140, 5, 4, { roof: 'flat', mat: 'plaster', art: 'desert_house_s', lamp: true });
+  P('desert_palm', 52, 136); P('desert_palm', 52, 141, { variant: 1 }); P('copper_brazier', 46, 136); P('copper_brazier', 46, 141); P('copper_brazier', 58, 136); P('copper_brazier', 58, 141);
   exits.push({ x: 46, y: 138, w: 1, h: 2, to: { map: 'kasim', spawn: 'gate_w' } });
   exits.push({ x: 58, y: 138, w: 1, h: 2, to: { map: 'kasim', spawn: 'gate_e' } });
   spawns.kasim = { x: 44, y: 139, dir: 'w' };

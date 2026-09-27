@@ -30,7 +30,7 @@
     // 白竜ネーヴェ
     eb_dragon_inhale: { name: '深く息を吸う', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は首を高くもたげた。',
       telegraph: { text: 'ネーヴェが、深く息を吸いこんでいる……。', pose: 'tele', tint: '#dff0ff', next: 'eb_dragon_whiteout', guard: 'defend' } },
-    eb_dragon_whiteout: { name: '白の大吹雪', kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'breath', power: 1.9, element: 'water', sure: true }, { type: 'status', status: 'freeze', chance: 0.2 }], fx: 'breath_ice', msg: '{user}の口から、あたり一面を白く塗りつぶす\n大吹雪が吹き出した！' },
+    eb_dragon_whiteout: { name: '白の大吹雪', kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'breath', power: 2.0, element: 'water', sure: true }, { type: 'status', status: 'freeze', chance: 0.2 }], fx: 'breath_ice', msg: '{user}の口から、あたり一面を白く塗りつぶす\n大吹雪が吹き出した！' },
     eb_dragon_remember: { name: '昔話の一節', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}の動きが、ふと止まった。\n……祭で語られた昔話の一節が、\n胸の氷の奥で響いたようだ。' },
     // 氷の船団長
     eb_admiral_order: { name: '号令', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}はサーベルを高く掲げた！',

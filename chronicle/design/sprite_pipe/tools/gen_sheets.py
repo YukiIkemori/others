@@ -1341,8 +1341,8 @@ def cmd_arun_alt(a):
     """Arun's field sheets without the lantern (the engine draws the lantern itself when he leads the party):
     edits of the delivered (redo-fixed) sheets 1 / 2 -> gen/arun/arun_nolantern/arun_sheet_0<N>b.png + a pipeline pass"""
     specs = arun_specs()
-    job = Job('arun', 'arun_nolantern', {n: dict(specs[n], file='arun_sheet_%02db.png' % n) for n in (1, 2)})
-    src_dir = os.path.join(GEN, 'arun', 'arun')
+    job = Job('arun', a.job, {n: dict(specs[n], file='arun_sheet_%02db.png' % n) for n in (1, 2)})
+    src_dir = os.path.join(GEN, 'arun', a.src)
     for n in a.sheets:
         spec = job.specs[n]
         out = os.path.join(job.dir, spec['file'])
@@ -1390,6 +1390,146 @@ def cmd_arun_alt(a):
     outp = os.path.join(PIPE, 'out', a.out)
     run_pipeline([job.dir, '--char', 'arun', '--only', ','.join(str(n) for n in sorted(job.specs)), '--out', outp], job.log)
     job.log('pipeline output: %s (field set = walk_* / run_* without the lantern)' % os.path.relpath(outp, PIPE))
+
+
+RESTYLE_EN = {
+    1: ('field WALK sheet: 4 rows (1 = facing the viewer, 2 = back view, 3 = facing LEFT, 4 = facing RIGHT) x 3 frames (stand, one foot '
+        'forward, the other foot forward). He carries a small brass LANTERN in his LEFT hand in every frame, exactly where image 1 has it; '
+        'the sword stays sheathed at the hip'),
+    2: ('field RUN sheet: 4 rows (1 = facing the viewer, 2 = back view, 3 = facing LEFT, 4 = facing RIGHT) x 4 frames (right foot lands, '
+        'both feet off the ground, left foot lands, both feet off the ground). He carries a small brass LANTERN in his LEFT hand in every '
+        'frame, exactly where image 1 has it; the sword stays sheathed at the hip'),
+    3: ('field ACTING sheet, every figure facing the viewer: row 1 nodding, surprised, head tilted thinking, bowing; row 2 kneeling on one '
+        'knee, sitting on the ground, raising a hand and calling out, looking around to the side; row 3 lying on the ground, drawing the '
+        'sword ready, hand on chest (resolve), head down (dejected). No lantern in this sheet'),
+    4: ('field ACTING sheet: row 1 = back view (nodding, surprised, raising a hand, sword drawn ready), row 2 = facing LEFT (nodding, '
+        'surprised, raising a hand, sword drawn ready). No lantern in this sheet'),
+    9: ('FACE sheet: 2 rows x 4 chest-up bust portraits turned slightly to the RIGHT (three-quarter view, face on the image-right half of '
+        'the head). Expressions in reading order: neutral, serious, smile, laughing (eyes closed, mouth open), surprised, sad, angry '
+        '(gritted teeth), tired (one eye half shut, a sweat drop). Hair, scarf, clothes, angle, size and position identical in all eight; '
+        'only the expression changes'),
+}
+RESTYLE_COMP = {'face': ['selma', 'sylvain', 'viola'], 'field': ['selma', 'sylvain']}
+
+
+def restyle_refs(n):
+    """-> [(image, description)] after image 1: the companions' sheets (style), his new battle sheet (identity), the concept"""
+    out = []
+    face = n == 9
+    sheet = 's5' if face else 's2'
+    ims = [load_rgb(os.path.join(GEN, 'companion', c, 'comp_%s_%s.png' % (c, sheet))) for c in RESTYLE_COMP['face' if face else 'field']]
+    if face:     # stack the 1x4 face sheets
+        W = max(i.size[0] for i in ims)
+        cv = Image.new('RGB', (W, sum(i.size[1] for i in ims)), MAGENTA)
+        y = 0
+        for i in ims:
+            cv.paste(i, (0, y))
+            y += i.size[1]
+    else:        # walk sheets side by side
+        cv = Image.new('RGB', (sum(i.size[0] for i in ims), max(i.size[1] for i in ims)), MAGENTA)
+        x = 0
+        for i in ims:
+            cv.paste(i, (x, 0))
+            x += i.size[0]
+    if max(cv.size) > 2048:
+        k = 2048.0 / max(cv.size)
+        cv = cv.resize((int(cv.size[0] * k), int(cv.size[1] * k)), Image.NEAREST)
+    out.append((cv, 'STYLE REFERENCE: the finished %s of three/two COMPANIONS of the same game (other characters). This is the rendering '
+                    'standard the hero must now match: the same pixel size, the same clean readable clusters, the same large clear eyes and '
+                    'face drawing, the same smooth hue-shifted colour ramps, the same outline treatment, the same level of detail (not noisier, not '
+                    'busier, not darker). Copy ONLY the rendering style — never their hair, faces, clothes or colours.'
+                    % ('face-portrait sheets' if face else 'field walk sheets')))
+    b5 = load_rgb(os.path.join(GEN, 'arun', 'arun_v3', 'arun_sheet_05.png'))
+    out.append((b5.resize((b5.size[0] // 2, b5.size[1] // 2), Image.NEAREST),
+                'IDENTITY: the hero\'s NEW, approved battle sprites (already redrawn in the companions\' style). This is exactly how he looks '
+                'now: ash-brown messy spiky hair, red scarf with tails, dark brown leather coat/armour over a cream tabard, brown belt, dark '
+                'trousers, brown boots. Match his colours, costume and rendering to these.'))
+    out.append((load_rgb(HERO_REF), 'The owner\'s CONCEPT SHEET of the hero (design authority for his look: hair, face, scarf, outfit). '
+                                    'Do not copy its text or layout.'))
+    return out
+
+
+def cmd_arun_restyle(a):
+    """Redraw Arun's face / field sheets in the companions' rendering (edits of the current sheets: layout, poses, facing and size
+    stay; the rendering is repainted) -> gen/arun/<job>/ (all nine sheets; the ones not listed are copied from --src) + a pipeline pass"""
+    specs = arun_specs()
+    job = Job('arun', a.job, specs)
+    src_dir = os.path.join(GEN, 'arun', a.src)
+    for n, s in specs.items():
+        dst = os.path.join(job.dir, s['file'])
+        if not os.path.exists(dst):
+            shutil.copy(os.path.join(src_dir, s['file']), dst)
+    if not os.path.exists(os.path.join(job.dir, 'manifest.json')):
+        shutil.copy(os.path.join(src_dir, 'manifest.json'), os.path.join(job.dir, 'manifest.json'))
+    for n in a.sheets:
+        spec = specs[n]
+        st = job.st(n)
+        if st.get('restyled') and not a.force:
+            job.log('sheet %d already restyled (resume: skipped; --force to redraw)' % n)
+            continue
+        src = load_rgb(os.path.join(src_dir, spec['file']))
+        W, H = src.size
+        refs = restyle_refs(n)
+        imgs = [src] + [r[0] for r in refs]
+        desc = ['Image 1 = THE SHEET TO EDIT (the hero, current version, drawn in an older, cruder style).']
+        desc += ['Image %d = %s' % (i + 2, r[1]) for i, r in enumerate(refs)]
+        lines = [style_block(), '',
+                 'TASK: EDIT image 1, a pixel-art sprite sheet of the hero Arun (a young travelling swordsman): %s. Every art pixel is '
+                 'exactly 8x8 image px. Output the same %dx%d canvas, flat #FF00FF background.' % (RESTYLE_EN[n], W, H),
+                 '', 'ATTACHED IMAGES:'] + desc + [
+                 '',
+                 'REPAINT EVERY FIGURE COMPLETELY in the rendering style of image 2, so the hero looks like he belongs to the same set as those '
+                 'companions and as his new battle sprites (image 3). Clean, readable pixel clusters; a clear face with large readable eyes; '
+                 'hair as a few chunky locks with light/mid/dark bands and a glossy highlight (not many thin noisy strands); cloth in big 2-3 '
+                 'shade planes; the same brightness and contrast as the companions (not darker, not muddier, no speckle noise).',
+                 'KEEP EXACTLY, figure by figure: the cell position, the pose, the facing, the feet line, the pixel size and the figure size '
+                 '(%s). Proportions like his battle sprites and the companions: about 2.7 heads tall, big head as wide as the shoulders, '
+                 'chunky limbs, big boots.' % ('each bust about 80 art px tall, same framing as image 1' if n == 9 else
+                                               'body 48 art px tall head to feet in every upright pose'),
+                 'KEEP HIS DESIGN: ash-brown messy spiky hair, warm brown eyes, red scarf, dark brown leather coat with shoulder guards over a cream '
+                 'tabard, brown belt with buckle, dark trousers, brown boots, sword with a plain hilt at the hip. No new accessories.',
+                 ]
+        if n in (1, 2):
+            lines.append('LANTERN: a small brass lantern with a warm glowing flame held in his LEFT hand in every frame (on the image-right side '
+                         'in the row facing the viewer, image-left in the back-view row, in front of him in the side rows) — exactly where image 1 '
+                         'has it. The other hand is empty and swings with the step.')
+        if n == 9:
+            lines.append('Frame the busts like the companions\' portraits in image 2: head and shoulders, the face large and clear, eyes about the '
+                         'size of theirs, the bust cut straight at the bottom. Every bust turned slightly to the RIGHT.')
+        lines.append('No text, no labels, no grid lines, no effects, no floor shadow.')
+        if a.extra:
+            lines += ['', 'EXTRA INSTRUCTIONS FOR THIS ATTEMPT:\n' + a.extra]
+        prompt = '\n'.join(lines)
+        k = len(st['attempts']) + 1
+        base = os.path.join(job.raw, 's%d_a%d' % (n, k))
+        open(base + '_prompt.txt', 'w', encoding='utf-8').write(prompt)
+        if not os.path.exists(base + '.png'):
+            job.log('sheet %d attempt %d: restyle edit %s (%dx%d, quality %s, %d refs)' % (n, k, spec['file'], W, H, a.quality, len(imgs)))
+            png, info = gen_api.generate(prompt, imgs, size='%dx%d' % (W, H), quality=a.quality, background='opaque',
+                                         tag='arun_restyle_s%d_a%d' % (n, k))
+            open(base + '.png', 'wb').write(png)
+            st.setdefault('usage', []).append(info.get('tool_usage'))
+        st['attempts'].append(dict(raw=os.path.relpath(base + '.png', job.dir), quality=a.quality, t=time.strftime('%Y-%m-%dT%H:%M:%S')))
+        job.save()
+        raw = load_rgb(base + '.png')
+        if raw.size != (W, H):
+            raw = raw.resize((W, H), Image.LANCZOS)
+        img, frames, notes, s = normalize_full(raw, spec, job.log)
+        img.save(os.path.join(job.dir, spec['file']), optimize=True)
+        st.update(frames=frames, notes=notes, pitch=round(s, 3), from_raw=os.path.relpath(base + '.png', job.dir), restyled=True)
+        job.save()
+        mp = os.path.join(job.dir, 'manifest.json')      # same cells; refresh this sheet's frame boxes
+        man = json.load(open(mp))
+        for e in man:
+            if e['sheet'] == n:
+                e['frames'] = [dict(id=k, row=v['row'], column=v['column'], logical_bbox=v['logical_bbox'])
+                               for k, v in sorted(frames.items(), key=lambda kv: (kv[1]['row'], kv[1]['column']))]
+        json.dump(man, open(mp, 'w'), ensure_ascii=False, indent=1)
+        for m in notes:
+            job.log('  note: ' + m)
+        job.log('sheet %d -> %s' % (n, os.path.relpath(os.path.join(job.dir, spec['file']), DESIGN)))
+    if a.out:
+        run_pipeline([job.dir, '--char', 'arun', '--out', os.path.join(PIPE, 'out', a.out)], job.log)
 
 
 def cmd_companion(a):
@@ -1482,6 +1622,16 @@ def main():
     s.add_argument('--quality', default='medium', choices=['low', 'medium', 'high'])
     s.add_argument('--force', action='store_true')
     s.add_argument('--out', default='arun_v2_nolantern')
+    s.add_argument('--src', default='arun', help='gen/arun/<src>: the lantern sheets to edit')
+    s.add_argument('--job', default='arun_nolantern', help='gen/arun/<job>: where the 01b / 02b sheets go')
+    s = sub.add_parser('arun-restyle', help="Arun's sheets redrawn in the companions' rendering (faces 9, field 1-4)")
+    s.add_argument('--sheets', type=lambda t: [int(x) for x in t.split(',')], default=[9, 1, 2])
+    s.add_argument('--quality', default='medium', choices=['low', 'medium', 'high'])
+    s.add_argument('--force', action='store_true')
+    s.add_argument('--src', default='arun_v3', help='gen/arun/<src>: the sheets to edit (and to copy for the others)')
+    s.add_argument('--job', default='arun_v4', help='gen/arun/<job>: where the sheets go')
+    s.add_argument('--out', default='', help='out/<out>: run the pipeline at the end')
+    s.add_argument('--extra', default='')
     s = sub.add_parser('prompt')
     s.add_argument('kind', choices=['companion'])
     s.add_argument('id')
@@ -1497,7 +1647,7 @@ def main():
     npc_cmds = npc_gen.add_parsers(sub)
     a = ap.parse_args()
     try:
-        dict({'arun-fix': cmd_arun_fix, 'arun-alt': cmd_arun_alt, 'companion': cmd_companion, 'prompt': cmd_prompt, 'normalize': cmd_normalize},
+        dict({'arun-fix': cmd_arun_fix, 'arun-alt': cmd_arun_alt, 'arun-restyle': cmd_arun_restyle, 'companion': cmd_companion, 'prompt': cmd_prompt, 'normalize': cmd_normalize},
              **npc_cmds)[a.cmd](a)
     except gen_api.GenError as e:
         print('STOP: %s' % e)

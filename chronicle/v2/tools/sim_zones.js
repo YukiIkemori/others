@@ -33,6 +33,13 @@ const ZONES = {
   z_desert_hawks: { tier: 1, kind: 'party', members: STD },
   z_desert_rocks: { tier: 1, kind: 'party', members: STD },
   z_desert_temple: { tier: 2, kind: 'mid', members: STD },
+  // 雪原（encounters_snow.js）。好きな順なので 2 番目の地方として T1 で見る。流氷原も T1（雪原を最初に解いたとき）
+  zw_snow: { tier: 1, kind: 'party', members: STD },
+  zw_snow_road: { tier: 1, kind: 'party', members: STD },
+  z_snow_woods: { tier: 1, kind: 'party', members: STD },
+  z_snow_peak: { tier: 1, kind: 'mid', members: STD },
+  z_snow_icicle: { tier: 1, kind: 'mid', members: STD },   // 寄り道の強めのダンジョン（峰の後に来る前提）
+  z_snow_floe: { tier: 1, kind: 'party', members: STD },
 };
 const TARGET = { win: 99.5, roundsLo: 2.5, roundsHi: 3.5, hpLo: 8, hpHi: 12, hpZoneLo: 5, hpZoneHi: 15, p95: 20, down: 3, wipe: 0.1 };
 
