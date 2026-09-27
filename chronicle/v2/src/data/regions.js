@@ -1,7 +1,7 @@
 // CONTENT-P: 地方（R.DB.regions。V2_PLAN §2.4 の id、§3.1、WORLD_REDESIGN §1.3・§4、STORY_BIBLE §7）
 //   {name, short, n, chapter:{title, summary}, page, town, dungeons, bossTroop, zone, beacon, slice?:'locked'}
 //   name = 地方の名前（手がかり帳の見出し・地図）、short = フラグの <rs>、chapter = 年代記の章（summary は選択の前の基本の文。
-//   森の選択で変わる文は CONTENT-F が書く）、page = 地方の解決で渡すページの大事な物（EVENTS の ev.clearRegion）、beacon = 大灯火の名前。
+//   森の選択で変わる文は CONTENT-F が書く）、page = 地方の解決で渡すページの大事な物（EVENTS の ev.clearRegion）、beacon = 大灯火の名前、beaconAt = 光の柱の場所 {map, x, y}（R.Tier.celebrate が読む）。
 //   'prologue' は序章（ファロス半島）。章は「灯台守の歌」、ページも古層も持たない（STORY_BIBLE §9.1）。
 (function (R) {
   'use strict';
@@ -9,12 +9,12 @@
     prologue: {
       name: 'ファロス半島', short: 'prologue', n: 0,
       chapter: { title: '灯台守の歌', summary: '言葉を失った灯台に、\n語り部の見習いが\n守り歌を取り戻した。\n夜の世界で最初の灯りが、\n海を照らした。' },
-      town: 'pharos', dungeons: ['lighthouse'], bossTroop: 'tr_b_pageeater', zone: 'zw_peninsula', beacon: 'ファロス灯台',
+      town: 'pharos', dungeons: ['lighthouse'], bossTroop: 'tr_b_pageeater', zone: 'zw_peninsula', beacon: 'ファロス灯台', beaconAt: { map: 'world', x: 106, y: 120 },
     },
     r_forest: {
       name: 'ヴェルダの森', short: 'forest', n: 1,
       chapter: { title: '千年樹の歌', summary: '歌を忘れた森は\n人を迷わせた。\n語り部が歌をつなぐと、\n森の主は目を覚まし、\n梢に歌の灯がともった。' },
-      page: 'k_page_forest', town: 'fern', dungeons: ['verda', 'elder'], bossTroop: 'tr_b_rooteater', zone: 'zw_forest', beacon: '千年樹の歌の灯',
+      page: 'k_page_forest', town: 'fern', dungeons: ['verda', 'elder'], bossTroop: 'tr_b_rooteater', zone: 'zw_forest', beacon: '千年樹の歌の灯', beaconAt: { map: 'world', x: 24, y: 82 },
     },
     r_desert: { name: 'ザハラ砂漠', short: 'desert', n: 2, chapter: { title: '名を売った王', summary: '' }, page: 'k_page_desert', town: 'kasim', beacon: '日輪の火', slice: 'locked' },
     r_snow: { name: 'ノルデン雪原', short: 'snow', n: 3, chapter: { title: '白竜と冬至の火', summary: '' }, page: 'k_page_snow', town: 'yule', beacon: '冬至の火', slice: 'locked' },
