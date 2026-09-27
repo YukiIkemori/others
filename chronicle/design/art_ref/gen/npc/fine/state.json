@@ -319,7 +319,8 @@
    },
    "notes": [],
    "pitch": 5.963,
-   "from_raw": "raw/s3_a1.png"
+   "from_raw": "raw/s3_a1.png",
+   "redo_left": []
   }
  }
 }

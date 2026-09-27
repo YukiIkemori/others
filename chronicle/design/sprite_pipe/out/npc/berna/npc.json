@@ -1,0 +1,50 @@
+{
+ "id": "berna",
+ "look": "berna",
+ "name": "ベルナ",
+ "tier": "A",
+ "kind": "person",
+ "region": "prologue",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 44,
+  "face": 80
+ },
+ "measureH": {
+  "field": 48
+ },
+ "headgearExtraDots": 4,
+ "mainHex": "#466052",
+ "mainHue": 150,
+ "mainName": "深い松葉色",
+ "lantern": false,
+ "recolor": false,
+ "face": true,
+ "sheets": {
+  "1": "npc_berna_s1.png",
+  "2": "npc_berna_s2.png",
+  "3": "npc_berna_s3.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.28409090909090906,
+   "head_w": 0.4431818181818182,
+   "shoulder": 0.44886363636363635,
+   "neck_clear": 0.8972222222222221
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

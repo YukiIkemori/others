@@ -1,0 +1,12 @@
+00:48:42 sheet 1 attempt 1: edit of the Arun template 1440x1536 (pitch 6, quality medium, 2 refs)
+00:49:44   pitch in raw image: 6.00 px per art pixel (upright median 300 px / 50)
+00:49:45 sheet 1 -> art_ref/gen/npc/rowell/npc_rowell_s1.png (12 poses)
+00:49:45 pipeline: sheets.py ../art_ref/gen/npc/rowell --npc rowell --out out/npc/rowell --check
+00:49:58   |   「ロウェル（rowell）のシート1の人物の頭がアルンより大きすぎる（頭の高さが約 130%）。アルンの歩きと同じ頭の大きさにして、同じ条件で描き直して」
+00:49:58   | 
+00:49:58   | ■ シートの状態
+00:49:58   |   シート1 歩き: 要作り直し  npc_rowell_s1.png  ドット 8.00px → 描かれた格子のまま（50.0 ドット）
+00:49:58   |   シート2 演技12（下向き）: なし（必須）
+00:49:58   |   シート3 顔6: なし（必須）
+00:49:58 sheet 1: 4 redo lines: シート1 の 4 番（上向き・立ち） がほかのポーズより小さく描かれている（頭の大きさで約 71%）。仮に 140% に拡大縮小して使う / シート1 の 5 番（上向き・右足前） がほかのポーズより小さく描かれている（頭の大きさで約 83%）。仮に 120% に拡大縮小して使う / シート1 の 6 番（上向き・左足前） がほかのポーズより小さく描かれている（頭の大きさで約 78%）。仮に 128% に拡大縮小して使う / 頭の高さがアルンより大きい（130%）
+00:49:58 sheet 1 attempt 2: edit of the Arun template 1440x1536 (pitch 6, quality medium, 2 refs) + notes

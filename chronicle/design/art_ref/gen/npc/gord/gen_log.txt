@@ -1,0 +1,11 @@
+00:44:22 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+00:45:21   pitch in raw image: 6.08 px per art pixel (upright median 304 px / 50)
+00:45:22 sheet 1 -> art_ref/gen/npc/gord/npc_gord_s1.png (16 poses)
+00:45:22 pipeline: sheets.py ../art_ref/gen/npc/gord --npc gord --out out/npc/npc_gord --check
+00:46:33   | 
+00:46:33   | ■ 画像 AI にそのまま送れる文
+00:46:33   |   「ゴード（npc_gord）のシート1の8番（驚く）だけ小さく描かれている（頭の大きさがほかのポーズの約 69%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+00:46:33   | 
+00:46:33   | ■ シートの状態
+00:46:33   |   シート1 歩き＋演技4: 要作り直し  npc_gord_s1.png  ドット 8.00px → 描かれた格子のまま（50.0 ドット）
+00:46:33 sheet 1: 0 redo lines

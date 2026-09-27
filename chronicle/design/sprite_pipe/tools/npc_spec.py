@@ -37,7 +37,8 @@ ARUN = {k: copy.deepcopy(v) for k, v in SHEETS.items()}    # Arun's layouts, tak
 
 # Arun's walk proportions (median of the 12 frames of arun_sheet_01; see measure()).
 ARUN_PROP = dict(neck=0.292, head_w=0.427, shoulder=0.396)
-PROP_TOL = 0.08          # owner: within 8 % of Arun's ratios
+PROP_TOL = 0.08          # owner: within 8 % of Arun's ratios (the heads-tall ratio)
+WIDTH_TOL = 0.20         # head width: hair volume / headgear change it at the same head size
 
 WALK_JA = ARUN[1]['ja']
 ACT4_JA = ['うなずく', '驚く', '手を挙げて呼びかける', 'その人のしぐさ']
@@ -224,7 +225,7 @@ def check_proportions(npc, runs, rep, tol=PROP_TOL):
     for n, sp in runs.items():
         vals = []
         for sid, v in sp.items():
-            if sid.startswith('walk_') and sid.endswith('_0'):
+            if sid.startswith('walk_'):          # all 12 walk frames (the median is steadier than the 4 stand frames)
                 r = measure(v['img'], bh, extra)
                 if r:
                     vals.append(r)
@@ -232,18 +233,23 @@ def check_proportions(npc, runs, rep, tol=PROP_TOL):
             continue
         med = {k: float(np.nanmedian([x[k] for x in vals])) for k in ('neck', 'head_w', 'shoulder', 'neck_clear')}
         SHEETS[n]['prop'] = med
-        rep.add(n, 'info', 'proportion', '頭身の比（歩きの立ち4コマの中央値、体 %d ドットあたり）: 首 %.2f（アルン %.2f）・頭の幅 %.2f（%.2f）・肩 %.2f（%.2f）' % (
+        rep.add(n, 'info', 'proportion', '頭身の比（歩き12コマの中央値、体 %d ドットあたり）: 首 %.2f（アルン %.2f）・頭の幅 %.2f（%.2f）・肩 %.2f（%.2f）' % (
             bh, med['neck'], ARUN_PROP['neck'], med['head_w'], ARUN_PROP['head_w'], med['shoulder'], ARUN_PROP['shoulder']), **med)
-        checks = [('head_w', '頭の幅')]
+        # head height (neck row) = the heads-tall ratio: +-tol. Head width depends on hair volume (Arun's hair is bushy; a
+        # cap or slicked hair is narrower at the same head size): only a large shortfall (WIDTH_TOL) is a redo.
+        checks = [('head_w', '頭の幅', WIDTH_TOL)]
         if med['neck_clear'] < 0.9:          # a visible neck / chin line (hoods and long hair hide it)
-            checks.append(('neck', '頭の高さ'))
-        for k, ja in checks:
+            checks.append(('neck', '頭の高さ', tol))
+        for k, ja, tl in checks:
             q = med[k] / ARUN_PROP[k]
-            if q < 1 - tol:
+            if k == 'head_w' and 1 - WIDTH_TOL <= q < 1 - tol:
+                rep.add(n, 'check', 'proportion_width', '頭の幅がアルンの %.0f%%（髪の量・帽子の形でも変わる）。並べて見る' % (100 * q), ratio=q, metric=k)
+                continue
+            if q < 1 - tl:
                 rep.add(n, 'redo', 'proportion', '%sがアルンより小さい（%.0f%%）。頭が小さく、頭身が高すぎる' % (ja, 100 * q), slot='walk_down_0',
                         ratio=q, metric=k,
                         ask='シート%dの人物の頭がアルンより小さく、頭身が高すぎる（%sが約 %.0f%%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して' % (n, ja, 100 * q))
-            elif q > 1 + tol:
+            elif q > 1 + tl:
                 lvl = 'check' if extra > 0 else 'redo'
                 rep.add(n, lvl, 'proportion', '%sがアルンより大きい（%.0f%%）' % (ja, 100 * q), slot='walk_down_0' if lvl == 'redo' else None,
                         ratio=q, metric=k,

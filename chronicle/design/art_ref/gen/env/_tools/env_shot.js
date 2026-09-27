@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Real-engine screenshots with the generated environment assets injected at runtime (v2/src untouched).
-//   node env_shot.js <out.png> <map> <spawnName|x,y> [--theme harbor] [--before] [--phone] [--time ms] [--party] [--hideui]
+//   node env_shot.js <out.png> <map> <spawnName|x,y> [--noenv (code-drawn fallback)] [--inject (runtime injection instead of the wired dist)] [--phone] [--wait ms]
 'use strict';
 const path = require('path'), fs = require('fs');
 const B = require('/home/user/others/chronicle/v2/tools/lib/browser');
@@ -8,7 +8,7 @@ const ENV = '/home/user/others/chronicle/v2/assets/env';
 const a = process.argv.slice(2);
 const opt = (k, d) => { const i = a.indexOf(k); return i >= 0 ? a[i + 1] : d; };
 const [out, mapId, spawnArg] = a;
-const before = a.includes('--before'), phone = a.includes('--phone');
+const before = !a.includes('--inject'), phone = a.includes('--phone'), noenv = a.includes('--noenv');
 
 function manifest() {
   const m = { base: '/__env/', mat: {}, face: {}, props: {}, bld: {}, matIds: [], faceIds: [], propIds: [], bldIds: [] };
@@ -50,6 +50,7 @@ function manifest() {
     const r = await p.evaluate(async ([man, th]) => { try { return await window.__envInstall(man, { theme: th, tiles: [32] }); } catch (e) { return String(e.stack || e); } }, [manifest(), theme]);
     console.log('install', theme, JSON.stringify(r));
   }
+  if (noenv) await B.ev(p, `(() => { const T = RPG.Terrain; T.Env.ready = false; T._envReset(); T._faceReset(); for (const k of RPG.Hd.keys('hd:prop:').concat(RPG.Hd.keys('hd:bld:'))) RPG.Hd.forget(k); return 0; })()`);
   let sp = spawnArg;
   if (/^\d+,\d+/.test(spawnArg)) { const [x, y, d] = spawnArg.split(','); sp = { x: +x, y: +y, dir: d || 's' }; }
   await p.evaluate(async ([id, sp]) => { RPG.Field.chunks.reset(); await RPG.Field.enter(id, sp, { fade: 0, noAutosave: true }); }, [mapId, sp]);

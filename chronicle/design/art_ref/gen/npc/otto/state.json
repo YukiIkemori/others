@@ -8,6 +8,20 @@
      "kind": "full",
      "extra": "",
      "t": "2026-09-27T00:41:00"
+    },
+    {
+     "raw": "raw/s1_a2.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "- (オットー（otto）のシート1の2番・3番（下向き・右足前、下向き・左足前）でランタンが右手になっている。12コマすべて左手にランタンを持たせて（下向きでは画面の右側、上向きでは画面の左側）、同じ条件で描き直して)\n- (シート1 の 3 番（下向き・左足前）: ランタンが右手)\n- PROPORTIONS WRONG: the head is too small / the figure too slender. Use exactly the hero's proportions from the template: about 2.7 heads tall, big head (a third of the body height), short sturdy body, low centre of gravity. (オットー（otto）のシート1の人物の頭がアルンより小さく",
+     "t": "2026-09-27T00:44:26"
+    },
+    {
+     "raw": "raw/s1_a3.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "- PROPORTIONS WRONG: the head is too small / the figure too slender. Use exactly the hero's proportions from the template: about 2.7 heads tall, big head (a third of the body height), short sturdy body, low centre of gravity. (オットー（otto）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さが約 72%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して)",
+     "t": "2026-09-27T00:48:00"
     }
    ],
    "frames": {
@@ -15,8 +29,8 @@
      "row": 1,
      "column": 1,
      "logical_bbox": [
-      31,
-      47
+      29,
+      48
      ],
      "air": 0
     },
@@ -24,7 +38,7 @@
      "row": 1,
      "column": 2,
      "logical_bbox": [
-      32,
+      30,
       47
      ],
      "air": 0
@@ -33,7 +47,7 @@
      "row": 1,
      "column": 3,
      "logical_bbox": [
-      32,
+      30,
       47
      ],
      "air": 0
@@ -42,7 +56,7 @@
      "row": 2,
      "column": 1,
      "logical_bbox": [
-      31,
+      29,
       47
      ],
      "air": 0
@@ -51,7 +65,7 @@
      "row": 2,
      "column": 2,
      "logical_bbox": [
-      31,
+      30,
       47
      ],
      "air": 0
@@ -70,7 +84,7 @@
      "column": 1,
      "logical_bbox": [
       21,
-      43
+      46
      ],
      "air": 0
     },
@@ -79,7 +93,7 @@
      "column": 2,
      "logical_bbox": [
       27,
-      43
+      45
      ],
      "air": 0
     },
@@ -88,7 +102,7 @@
      "column": 3,
      "logical_bbox": [
       28,
-      43
+      45
      ],
      "air": 0
     },
@@ -97,7 +111,7 @@
      "column": 1,
      "logical_bbox": [
       21,
-      43
+      46
      ],
      "air": 0
     },
@@ -105,8 +119,8 @@
      "row": 4,
      "column": 2,
      "logical_bbox": [
-      27,
-      43
+      29,
+      46
      ],
      "air": 0
     },
@@ -114,30 +128,20 @@
      "row": 4,
      "column": 3,
      "logical_bbox": [
-      27,
-      43
+      29,
+      46
      ],
      "air": 0
     }
    },
    "notes": [],
-   "pitch": 5.894,
-   "from_raw": "raw/s1_a1.png",
+   "pitch": 5.702,
+   "from_raw": "raw/s1_a3.png",
    "redo_left": [
     {
      "code": "lantern",
-     "slot": "walk_down_1",
-     "msg": "シート1の 2番・3番（下向き・右足前、下向き・左足前）はランタンを右手に持っている（左手のはず）。歩くたびに持ち手が入れ替わって見える。仮に左右反転して使う"
-    },
-    {
-     "code": "lantern_frame",
-     "slot": "walk_down_2",
-     "msg": "シート1 の 3 番（下向き・左足前）: ランタンが右手"
-    },
-    {
-     "code": "proportion",
-     "slot": "walk_down_0",
-     "msg": "頭の幅がアルンより小さい（83%）。頭が小さく、頭身が高すぎる"
+     "slot": "walk_up_2",
+     "msg": "シート1の 6番（上向き・左足前）はランタンを右手に持っている（左手のはず）。歩くたびに持ち手が入れ替わって見える。仮に左右反転して使う"
     }
    ]
   }

@@ -26,6 +26,16 @@ MATS = [
  ('common/wall_bark', 'common', 'wall_bark', (38, 9), 0.9), ('common/wall_stone', 'common', 'wall_stone', (44, 10), 0.8), ('common/wall_moss', 'common', 'wall_moss', (38, 9), 0.85),
  ('common/wall_wood', 'common', 'wall_wood', (36, 8), 0.85),
 ]
+RM = {'desert': [('dune_sand', 112, 22), ('cracked_clay', 92, 22), ('sandstone_floor', 104, 24), ('wall_sandstone', 50, 12)],
+      'snow': [('snow', 176, 20), ('snow_path', 132, 22), ('ice', 118, 22), ('wall_snow', 70, 16)],
+      'marsh': [('mud', 58, 16), ('marsh_water', 40, 12), ('peat_grass', 60, 16), ('wall_marsh', 40, 10)],
+      'isles': [('white_paving', 150, 22), ('coral_sand', 140, 20), ('tide_rock', 60, 18), ('glow_sea', 40, 16)],
+      'mine': [('mine_floor', 60, 16), ('scaffold', 72, 24), ('ore_rock', 36, 12), ('iron_grate', 56, 20)],
+      'ash': [('ash', 88, 18), ('basalt_floor', 56, 18), ('lava', 150, 40), ('obsidian', 36, 14)],
+      'star': [('marble_floor', 140, 22), ('star_mosaic', 70, 22), ('garden_hedge_top', 52, 14), ('wall_marble', 60, 12)]}
+for th, lst in RM.items():
+    for mid, m, sd in lst: MATS.append(('%s/%s' % (th, mid), th, mid, (m, sd), 0.9))
+RF = {'desert': ('sandstone', 96), 'snow': ('snow_cliff', 110), 'marsh': ('mud_bank', 52), 'isles': ('white_wall', 150), 'mine': ('mine_wall', 52), 'ash': ('basalt', 48), 'star': ('marble', 130)}
 DERIVED = [  # new id, from id, transform
  ('pier', 'plank', 'rot'), ('bridge', 'plank', 'rot+'), ('deck', 'plank', '+'), ('ladder', 'plank', '-'), ('deep_water', 'sea', 'dark'), ('cliff', 'grass', 'cliff'), ('wall_brick', 'wall_stone', 'brick'),
 ]
@@ -63,6 +73,11 @@ def do_faces():
         p = G + 'mat/common/face_%s.png' % st
         if not os.path.exists(p): print('missing', p); continue
         print(face(p, 'common', st, mean=m, std=s, sat=0.85)['id'])
+    for th, (st, m) in RF.items():
+        if flt and flt not in st and flt not in th: continue
+        p = G + 'mat/%s/face_%s.png' % (th, st)
+        if not os.path.exists(p): print('missing', p); continue
+        print(face(p, th, st, mean=m, std=22, sat=0.9)['id'])
 
 PROPS = {
  'harbor_a': ('harbor', [['barrel', 26], ['crate', 24], ['sack', 19], ['bench', ('w', 32)], ['lamp_post', 62, {'light32': [0, -52]}], ['well', 52], ['stall', ('w', 46)], ['board', 38],
@@ -80,6 +95,18 @@ PROPS = {
               ['log_moss', ('w', 40)], ['dec_tuft', ('w', 12)], ['dec_tuft_v1', ('w', 12)], ['dec_flowers', ('w', 12)], ['dec_pebbles', ('w', 13)], ['dec_leaves', ('w', 14)], ['dec_mush', ('w', 12)], ['reeds', ('w', 16)]]),
  'ship': ('harbor', [['ship', ('w', 160), {'light32': [-60, -70]}]]),
 }
+RP = {
+ 'desert': ['desert_palm_v0', 'desert_palm_v1', 'cactus', 'desert_stall', 'clay_jars', 'carpet_rack', 'obelisk', 'broken_pillar', 'tomb_urn', 'bones', 'thorn_bush', 'dry_well', 'copper_brazier', 'cart_barrels', 'sand_mound'],
+ 'snow': ['snow_fir_v0', 'snow_fir_v1', 'snow_rock', 'firewood', 'sled', 'frozen_well', 'snow_bank', 'ice_crystal', 'stove_pipe', 'ice_hole', 'snow_fence', 'snow_barrel', 'snow_lamp', 'hay_sled', 'snow_sign'],
+ 'marsh': ['willow', 'swamp_tree', 'reeds_tall', 'lily_pads', 'stilt_posts', 'bell_frame', 'grave_moss', 'wisp_lamp', 'rotten_stump', 'board_steps', 'mangrove_roots', 'fish_trap', 'mud_boat', 'crooked_sign', 'pale_mushrooms'],
+ 'isles': ['coco_palm', 'palm_small', 'coral', 'anchor', 'buoys', 'net_frame', 'white_pot', 'blue_bench', 'shells', 'fish_barrel', 'rope_bollard', 'lamp_pillar', 'driftwood', 'palm_umbrella', 'map_sign'],
+ 'mine': ['mine_cart_ore', 'mine_cart', 'rail', 'ore_blue', 'ore_copper', 'timber_frame', 'anvil', 'forge', 'tool_rack', 'hook_lamp', 'tool_crate', 'oath_stone', 'bellows', 'coal_barrel', 'lift_cage'],
+ 'ash': ['charred_tree', 'charred_stump', 'steam_vent', 'obsidian_shards', 'lava_rock', 'hot_spring', 'iron_brazier', 'arena_banner', 'phoenix_statue', 'volcanic_rocks', 'sulphur', 'rope_post', 'ash_weapon_rack', 'water_urn', 'ash_bush'],
+ 'star': ['telescope', 'orrery', 'lectern', 'scholar_statue', 'star_lamp', 'marble_bench', 'fountain', 'topiary', 'book_stack', 'globe', 'book_cart', 'star_dial', 'star_banner', 'blue_flowers', 'iron_gate'],
+}
+TALL = ('palm', 'fir', 'willow', 'tree', 'obelisk', 'pillar', 'statue', 'lamp', 'banner', 'telescope', 'orrery', 'gate', 'frame', 'cage', 'topiary', 'fountain', 'forge')
+for th, ids in RP.items():
+    PROPS['%s_a' % th] = (th, [[i, 66 if any(k in i for k in ('palm', 'fir', 'willow', 'tree')) else 44 if any(k in i for k in TALL) else 24] for i in ids])
 PAIRS = {  # multi-frame props assembled from single cut frames: id -> (frame names, parts)
  'dungeon_a': ('common', [['chest', 'closed'], ['chest', 'open'], ['chest', 'rare_closed'], ['chest', 'rare_open'], ['brazier', 'off'], ['brazier', 'on'],
                           ['waylamp', 'off'], ['waylamp', 'on'], ['torch', 'off'], ['torch', 'on'], ['switch', 'off'], ['switch', 'on']]),
@@ -131,6 +158,11 @@ def cut_pairs(raw, th, spec):
 
 def do_bld():
     defs = json.load(open(os.path.join(os.path.dirname(__file__), 'bld_defs.json')))
+    for th in RP:
+        for bid, w, h, wall_n in [('house_s', 5, 4, 2), ('shop_m', 6, 5, 2), ('hall_l', 8, 6, 3)]:
+            d = dict(id='%s_%s' % (th, bid), x=0, y=0, w=w, h=h, wall=wall_n, door=dict(x=w // 2, y=h - 1), windows=2 if w < 8 else 3)
+            g = guides.layout(d)
+            defs[d['id']] = dict(d=d, theme=th, W=g['W'], H=g['H'], img=[(g['W'] * 7 + 15) // 16 * 16, (g['H'] * 7 + 15) // 16 * 16])
     for bid, e in defs.items():
         if flt and flt not in bid: continue
         p = G + 'bld/%s/%s.png' % (e['theme'], bid)

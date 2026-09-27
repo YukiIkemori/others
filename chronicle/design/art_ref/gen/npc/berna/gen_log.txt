@@ -32,3 +32,11 @@
 00:42:03   |   シート2 演技12（下向き）: OK  npc_berna_s2.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
 00:42:03   |   シート3 顔6: OK  npc_berna_s3.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
 00:42:03 sheet 3: 0 redo lines
+00:44:28 pipeline: sheets.py ../art_ref/gen/npc/berna --npc berna --out out/npc/berna
+00:45:40   | ■ シートの状態
+00:45:40   |   シート1 歩き: OK  npc_berna_s1.png  ドット 8.00px → 描かれた格子のまま（47.5 ドット）
+00:45:40   |   シート2 演技12（下向き）: OK  npc_berna_s2.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+00:45:40   |   シート3 顔6: OK  npc_berna_s3.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+00:45:40   | 
+00:45:40   | packed field 268x371, face 231x168 | palette 52 + face 48
+00:45:41 to_v2 berna: berna → /home/user/others/chronicle/v2/assets/sprites/berna |   field: 24 frames |   face: 6 frames

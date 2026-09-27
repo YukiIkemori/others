@@ -8,6 +8,28 @@
      "kind": "full",
      "extra": "",
      "t": "2026-09-27T00:41:25"
+    },
+    {
+     "kind": "edit",
+     "slots": [
+      "act_call",
+      "act_sig",
+      "walk_down_1",
+      "walk_down_2"
+     ],
+     "images": 3,
+     "t": "2026-09-27T00:43:17"
+    },
+    {
+     "kind": "edit",
+     "slots": [
+      "act_call",
+      "act_sig",
+      "walk_down_1",
+      "walk_down_2"
+     ],
+     "images": 3,
+     "t": "2026-09-27T00:45:30"
     }
    ],
    "frames": {
@@ -159,26 +181,321 @@
    "notes": [],
    "pitch": 5.872,
    "from_raw": "raw/s1_a1.png",
-   "redo_left": [
+   "redo_left": [],
+   "cell": [
+    80,
+    72
+   ],
+   "takes": [
     {
-     "code": "scale",
-     "slot": "walk_down_1",
-     "msg": "シート1 の 2 番（下向き・右足前） がほかのポーズより小さく描かれている（頭の大きさで約 78%）。仮に 128% に拡大縮小して使う"
+     "file": "raw/s1_take1.png",
+     "score": 4,
+     "frames": {
+      "walk_down_0": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        25,
+        48
+       ],
+       "air": 0
+      },
+      "walk_down_1": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        25,
+        48
+       ],
+       "air": 0
+      },
+      "walk_down_2": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        25,
+        48
+       ],
+       "air": 0
+      },
+      "act_nod": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        22,
+        47
+       ],
+       "air": 0
+      },
+      "act_surprise": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        34,
+        47
+       ],
+       "air": 0
+      },
+      "walk_up_0": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        25,
+        47
+       ],
+       "air": 0
+      },
+      "walk_up_2": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        28,
+        47
+       ],
+       "air": 0
+      },
+      "walk_up_1": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        27,
+        46
+       ],
+       "air": 0
+      },
+      "act_call": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        27,
+        47
+       ],
+       "air": 0
+      },
+      "walk_left_0": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        22,
+        46
+       ],
+       "air": 0
+      },
+      "walk_left_1": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        27,
+        46
+       ],
+       "air": 0
+      },
+      "walk_left_2": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        28,
+        46
+       ],
+       "air": 0
+      },
+      "walk_right_0": {
+       "row": 4,
+       "column": 1,
+       "logical_bbox": [
+        22,
+        47
+       ],
+       "air": 0
+      },
+      "walk_right_1": {
+       "row": 4,
+       "column": 2,
+       "logical_bbox": [
+        27,
+        46
+       ],
+       "air": 0
+      },
+      "walk_right_2": {
+       "row": 4,
+       "column": 3,
+       "logical_bbox": [
+        28,
+        46
+       ],
+       "air": 0
+      },
+      "act_sig": {
+       "row": 4,
+       "column": 4,
+       "logical_bbox": [
+        33,
+        47
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s1_a1.png",
+     "cell": [
+      80,
+      72
+     ]
     },
     {
-     "code": "scale",
-     "slot": "walk_down_2",
-     "msg": "シート1 の 3 番（下向き・左足前） がほかのポーズより小さく描かれている（頭の大きさで約 78%）。仮に 128% に拡大縮小して使う"
-    },
-    {
-     "code": "scale",
-     "slot": "act_call",
-     "msg": "シート1 の 12 番（手を挙げて呼びかける） がほかのポーズより小さく描かれている（頭の大きさで約 71%）。仮に 140% に拡大縮小して使う"
-    },
-    {
-     "code": "scale",
-     "slot": "act_sig",
-     "msg": "シート1 の 16 番（その人のしぐさ） がほかのポーズより小さく描かれている（頭の大きさで約 78%）。仮に 128% に拡大縮小して使う"
+     "file": "raw/s1_take2.png",
+     "score": 0,
+     "frames": {
+      "walk_down_0": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        25,
+        48
+       ],
+       "air": 0
+      },
+      "walk_down_1": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        25,
+        48
+       ],
+       "air": 0
+      },
+      "walk_down_2": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        25,
+        48
+       ],
+       "air": 0
+      },
+      "act_nod": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        22,
+        47
+       ],
+       "air": 0
+      },
+      "act_surprise": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        34,
+        47
+       ],
+       "air": 0
+      },
+      "walk_up_0": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        25,
+        47
+       ],
+       "air": 0
+      },
+      "walk_up_2": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        28,
+        47
+       ],
+       "air": 0
+      },
+      "walk_up_1": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        27,
+        46
+       ],
+       "air": 0
+      },
+      "act_call": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        27,
+        47
+       ],
+       "air": 0
+      },
+      "walk_left_0": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        22,
+        46
+       ],
+       "air": 0
+      },
+      "walk_left_1": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        27,
+        46
+       ],
+       "air": 0
+      },
+      "walk_left_2": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        28,
+        46
+       ],
+       "air": 0
+      },
+      "walk_right_0": {
+       "row": 4,
+       "column": 1,
+       "logical_bbox": [
+        22,
+        47
+       ],
+       "air": 0
+      },
+      "walk_right_1": {
+       "row": 4,
+       "column": 2,
+       "logical_bbox": [
+        27,
+        46
+       ],
+       "air": 0
+      },
+      "walk_right_2": {
+       "row": 4,
+       "column": 3,
+       "logical_bbox": [
+        28,
+        46
+       ],
+       "air": 0
+      },
+      "act_sig": {
+       "row": 4,
+       "column": 4,
+       "logical_bbox": [
+        33,
+        47
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s1_a1.png",
+     "cell": [
+      80,
+      72
+     ]
     }
    ]
   }

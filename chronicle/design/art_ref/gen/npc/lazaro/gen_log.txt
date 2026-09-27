@@ -21,3 +21,45 @@
 00:42:03   |   シート3 顔6: なし（必須）
 00:42:03 sheet 1: 1 redo lines: 頭の幅がアルンより小さい（86%）。頭が小さく、頭身が高すぎる
 00:42:03 sheet 1 attempt 3: edit of the Arun template 1440x1536 (pitch 6, quality medium, 2 refs) + notes
+00:43:14   pitch in raw image: 5.96 px per art pixel (upright median 310 px / 52)
+00:43:15 sheet 1 -> art_ref/gen/npc/lazaro/npc_lazaro_s1.png (12 poses)
+00:43:15 pipeline: sheets.py ../art_ref/gen/npc/lazaro --npc lazaro --out out/npc/lazaro --check
+00:43:30   |   「ラザロ（lazaro）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さが約 82%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して」
+00:43:30   | 
+00:43:30   | ■ シートの状態
+00:43:30   |   シート1 歩き: 要作り直し  npc_lazaro_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+00:43:30   |   シート2 演技12（下向き）: なし（必須）
+00:43:30   |   シート3 顔6: なし（必須）
+00:43:30 sheet 1: 2 redo lines: 頭の幅がアルンより小さい（77%）。頭が小さく、頭身が高すぎる / 頭の高さがアルンより小さい（82%）。頭が小さく、頭身が高すぎる
+00:43:55   pitch in raw image: 5.90 px per art pixel (upright median 307 px / 52)
+00:43:55 sheet 1 -> art_ref/gen/npc/lazaro/npc_lazaro_s1.png (12 poses)
+00:43:55 pipeline: sheets.py ../art_ref/gen/npc/lazaro --npc lazaro --out out/npc/lazaro --check
+00:44:09   |   「ラザロ（lazaro）のシート3（顔6）を作って」
+00:44:09   | 
+00:44:09   | ■ シートの状態
+00:44:09   |   シート1 歩き: 確認あり  npc_lazaro_s1.png  ドット 8.00px → 描かれた格子のまま（51.5 ドット）
+00:44:09   |   シート2 演技12（下向き）: なし（必須）
+00:44:09   |   シート3 顔6: なし（必須）
+00:44:19 sheet 1 approved by eye
+00:44:20 sheet 2 attempt 1: edit of the Arun template 2304x1152 (pitch 6, quality medium, 3 refs)
+00:45:20   pitch in raw image: 5.98 px per art pixel (upright median 311 px / 52)
+00:45:20 sheet 2 -> art_ref/gen/npc/lazaro/npc_lazaro_s2.png (12 poses)
+00:45:20 pipeline: sheets.py ../art_ref/gen/npc/lazaro --npc lazaro --out out/npc/lazaro --check
+00:46:07   |   「ラザロ（lazaro）のシート3（顔6）を作って」
+00:46:07   | 
+00:46:07   | ■ シートの状態
+00:46:07   |   シート1 歩き: 確認あり  npc_lazaro_s1.png  ドット 8.00px → 描かれた格子のまま（51.5 ドット）
+00:46:07   |   シート2 演技12（下向き）: OK  npc_lazaro_s2.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+00:46:07   |   シート3 顔6: なし（必須）
+00:46:07 sheet 2: 0 redo lines
+00:46:07 sheet 3 attempt 1: edit of the Arun template 1728x1152 (pitch 6, quality medium, 3 refs)
+00:47:09   pitch in raw image: 5.60 px per art pixel (upright median 448 px / 80)
+00:47:09 sheet 3 -> art_ref/gen/npc/lazaro/npc_lazaro_s3.png (6 poses)
+00:47:09 pipeline: sheets.py ../art_ref/gen/npc/lazaro --npc lazaro --out out/npc/lazaro --check
+00:48:10   |   - 向きの見本（configs/refs/lazaro）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+00:48:10   | 
+00:48:10   | ■ シートの状態
+00:48:10   |   シート1 歩き: 確認あり  npc_lazaro_s1.png  ドット 8.00px → 描かれた格子のまま（51.5 ドット）
+00:48:10   |   シート2 演技12（下向き）: OK  npc_lazaro_s2.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+00:48:10   |   シート3 顔6: OK  npc_lazaro_s3.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+00:48:10 sheet 3: 0 redo lines

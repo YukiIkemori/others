@@ -4,55 +4,55 @@
    "to": "walk_down_0",
    "dx": -1,
    "dy": 0,
-   "fit": 1.055
+   "fit": 1.037
   },
   "walk_down_2": {
    "to": "walk_down_0",
    "dx": -1,
    "dy": 0,
-   "fit": 1.035
+   "fit": 1.034
   },
   "walk_up_1": {
    "to": "walk_up_0",
    "dx": -1,
    "dy": 0,
-   "fit": 1.041
+   "fit": 1.024
   },
   "walk_up_2": {
    "to": "walk_up_0",
    "dx": -1,
    "dy": 0,
-   "fit": 1.035
+   "fit": 1.018
   },
   "walk_left_1": {
    "to": "walk_left_0",
    "dx": -3,
    "dy": 0,
-   "fit": 1.0
+   "fit": 0.985
   },
   "walk_left_2": {
    "to": "walk_left_0",
    "dx": -2,
    "dy": 0,
-   "fit": 0.996
+   "fit": 0.973
   },
   "walk_right_1": {
    "to": "walk_right_0",
    "dx": -2,
    "dy": 0,
-   "fit": 1.117
+   "fit": 1.105
   },
   "walk_right_2": {
    "to": "walk_right_0",
    "dx": 0,
    "dy": 0,
-   "fit": 1.068
+   "fit": 1.062
   },
   "idle_b": {
    "to": "idle_a",
    "dx": 0,
    "dy": 0,
-   "fit": 1.101
+   "fit": 1.15
   },
   "face_smile": {
    "to": "face_neutral",
@@ -76,17 +76,17 @@
  "attach": {
   "bare_idle": {
    "grip": [
-    9,
-    39
+    10,
+    38
    ],
    "tip": [
-    -13,
-    59
+    -12,
+    58
    ],
-   "angle": 138.1,
-   "length": 30,
-   "blade": 22.3,
-   "fit": 0.935,
+   "angle": 137.4,
+   "length": 31,
+   "blade": 22.9,
+   "fit": 0.897,
    "method": "blade"
   },
   "bare_windup": {
@@ -101,22 +101,22 @@
    "angle": -18.8,
    "length": 29,
    "blade": 20.9,
-   "fit": 0.774,
+   "fit": 0.768,
    "method": "blade"
   },
   "bare_slash": {
    "grip": [
     39,
-    38
+    37
    ],
    "tip": [
     10,
-    59
+    58
    ],
    "angle": 144.3,
    "length": 37,
    "blade": 29.0,
-   "fit": 0.162,
+   "fit": 0.16,
    "method": "blade",
    "unreliable": true
   },
@@ -132,22 +132,22 @@
    "angle": -179.8,
    "length": 33,
    "blade": 25.0,
-   "fit": 0.911,
+   "fit": 0.906,
    "method": "blade"
   },
   "bare_cast": {
    "grip": [
-    28,
-    51
+    27,
+    36
    ],
    "tip": [
-    42,
-    61
+    20,
+    47
    ],
-   "angle": 33.3,
-   "length": 20,
-   "weapon_px": 46,
-   "fit": 1.002,
+   "angle": 124.4,
+   "length": 17,
+   "weapon_px": 53,
+   "fit": 0.988,
    "method": "diff"
   }
  },

@@ -469,18 +469,157 @@
      "scale": 1.072
     }
    }
+  },
+  "3": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/fine/npc_fine_s3.png",
+   "size": [
+    2304,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x3",
+    "logical_cell": [
+     96,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 640.0,
+   "native_height_at_period": 80.0,
+   "scale_note": "描かれた格子のまま（80.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      69,
+      80
+     ],
+     "box": [
+      88,
+      48,
+      672,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_smile": {
+     "size": [
+      69,
+      80
+     ],
+     "box": [
+      856,
+      48,
+      1440,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_sad": {
+     "size": [
+      69,
+      80
+     ],
+     "box": [
+      1624,
+      48,
+      2208,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_angry": {
+     "size": [
+      69,
+      80
+     ],
+     "box": [
+      88,
+      816,
+      672,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_surprise": {
+     "size": [
+      69,
+      80
+     ],
+     "box": [
+      856,
+      816,
+      1440,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_closed": {
+     "size": [
+      69,
+      80
+     ],
+     "box": [
+      1624,
+      816,
+      2208,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    }
+   }
   }
  },
  "items": [
-  {
-   "sheet": 3,
-   "level": "redo",
-   "code": "missing_sheet",
-   "msg": "シート3（顔6, npc_fine_s3.png）がない",
-   "slot": null,
-   "ask": "フィーネ（fine）のシート3（顔6）を作って",
-   "data": {}
-  },
   {
    "sheet": null,
    "level": "info",

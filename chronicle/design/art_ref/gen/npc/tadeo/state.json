@@ -8,6 +8,13 @@
      "kind": "full",
      "extra": "",
      "t": "2026-09-27T00:41:23"
+    },
+    {
+     "raw": "raw/s1_a2.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "- A pose has the wrong size: every pose keeps the same body scale (same head size) as the others. (タデオ（npc_tadeo）のシート1の2番（下向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 75%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して)\n- A pose has the wrong size: every pose keeps the same body scale (same head size) as the others. (タデオ（npc_tadeo）のシート1の3番（下向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 75%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して)\n- A pose has the wrong",
+     "t": "2026-09-27T00:43:23"
     }
    ],
    "frames": {
@@ -15,8 +22,8 @@
      "row": 1,
      "column": 1,
      "logical_bbox": [
-      30,
-      51
+      32,
+      50
      ],
      "air": 0
     },
@@ -33,7 +40,7 @@
      "row": 1,
      "column": 3,
      "logical_bbox": [
-      31,
+      33,
       51
      ],
      "air": 0
@@ -42,7 +49,16 @@
      "row": 1,
      "column": 4,
      "logical_bbox": [
-      30,
+      32,
+      50
+     ],
+     "air": 0
+    },
+    "act_surprise": {
+     "row": 2,
+     "column": 4,
+     "logical_bbox": [
+      34,
       51
      ],
      "air": 0
@@ -51,7 +67,7 @@
      "row": 2,
      "column": 1,
      "logical_bbox": [
-      28,
+      31,
       50
      ],
      "air": 0
@@ -61,7 +77,7 @@
      "column": 2,
      "logical_bbox": [
       32,
-      50
+      49
      ],
      "air": 0
     },
@@ -74,20 +90,11 @@
      ],
      "air": 0
     },
-    "act_surprise": {
-     "row": 2,
-     "column": 4,
-     "logical_bbox": [
-      35,
-      50
-     ],
-     "air": 0
-    },
     "act_call": {
      "row": 3,
      "column": 4,
      "logical_bbox": [
-      30,
+      31,
       51
      ],
      "air": 0
@@ -96,7 +103,7 @@
      "row": 3,
      "column": 1,
      "logical_bbox": [
-      26,
+      28,
       49
      ],
      "air": 0
@@ -105,7 +112,7 @@
      "row": 3,
      "column": 2,
      "logical_bbox": [
-      32,
+      31,
       49
      ],
      "air": 0
@@ -114,7 +121,7 @@
      "row": 3,
      "column": 3,
      "logical_bbox": [
-      33,
+      31,
       49
      ],
      "air": 0
@@ -123,26 +130,8 @@
      "row": 4,
      "column": 1,
      "logical_bbox": [
-      26,
+      28,
       49
-     ],
-     "air": 0
-    },
-    "walk_right_1": {
-     "row": 4,
-     "column": 2,
-     "logical_bbox": [
-      34,
-      50
-     ],
-     "air": 0
-    },
-    "walk_right_2": {
-     "row": 4,
-     "column": 3,
-     "logical_bbox": [
-      34,
-      50
      ],
      "air": 0
     },
@@ -150,35 +139,189 @@
      "row": 4,
      "column": 4,
      "logical_bbox": [
-      42,
-      50
+      46,
+      51
+     ],
+     "air": 0
+    },
+    "walk_right_1": {
+     "row": 4,
+     "column": 2,
+     "logical_bbox": [
+      31,
+      49
+     ],
+     "air": 0
+    },
+    "walk_right_2": {
+     "row": 4,
+     "column": 3,
+     "logical_bbox": [
+      31,
+      49
      ],
      "air": 0
     }
    },
    "notes": [],
-   "pitch": 6.04,
-   "from_raw": "raw/s1_a1.png",
-   "redo_left": [
+   "pitch": 5.88,
+   "from_raw": "raw/s1_a2.png",
+   "redo_left": [],
+   "takes": [
     {
-     "code": "scale",
-     "slot": "walk_down_1",
-     "msg": "シート1 の 2 番（下向き・右足前） がほかのポーズより小さく描かれている（頭の大きさで約 75%）。仮に 133% に拡大縮小して使う"
-    },
-    {
-     "code": "scale",
-     "slot": "walk_down_2",
-     "msg": "シート1 の 3 番（下向き・左足前） がほかのポーズより小さく描かれている（頭の大きさで約 75%）。仮に 133% に拡大縮小して使う"
-    },
-    {
-     "code": "scale",
-     "slot": "act_sig",
-     "msg": "シート1 の 16 番（その人のしぐさ） がほかのポーズより小さく描かれている（頭の大きさで約 75%）。仮に 133% に拡大縮小して使う"
-    },
-    {
-     "code": "proportion",
-     "slot": "walk_down_0",
-     "msg": "頭の幅がアルンより小さい（88%）。頭が小さく、頭身が高すぎる"
+     "file": "raw/s1_take1.png",
+     "score": 0,
+     "frames": {
+      "walk_down_0": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        32,
+        50
+       ],
+       "air": 0
+      },
+      "walk_down_1": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        32,
+        51
+       ],
+       "air": 0
+      },
+      "walk_down_2": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        33,
+        51
+       ],
+       "air": 0
+      },
+      "act_nod": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        32,
+        50
+       ],
+       "air": 0
+      },
+      "act_surprise": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        34,
+        51
+       ],
+       "air": 0
+      },
+      "walk_up_0": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        31,
+        50
+       ],
+       "air": 0
+      },
+      "walk_up_1": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        32,
+        49
+       ],
+       "air": 0
+      },
+      "walk_up_2": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        32,
+        50
+       ],
+       "air": 0
+      },
+      "act_call": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        31,
+        51
+       ],
+       "air": 0
+      },
+      "walk_left_0": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        28,
+        49
+       ],
+       "air": 0
+      },
+      "walk_left_1": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        31,
+        49
+       ],
+       "air": 0
+      },
+      "walk_left_2": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        31,
+        49
+       ],
+       "air": 0
+      },
+      "walk_right_0": {
+       "row": 4,
+       "column": 1,
+       "logical_bbox": [
+        28,
+        49
+       ],
+       "air": 0
+      },
+      "act_sig": {
+       "row": 4,
+       "column": 4,
+       "logical_bbox": [
+        46,
+        51
+       ],
+       "air": 0
+      },
+      "walk_right_1": {
+       "row": 4,
+       "column": 2,
+       "logical_bbox": [
+        31,
+        49
+       ],
+       "air": 0
+      },
+      "walk_right_2": {
+       "row": 4,
+       "column": 3,
+       "logical_bbox": [
+        31,
+        49
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s1_a2.png",
+     "cell": [
+      80,
+      64
+     ]
     }
    ]
   }

@@ -5,11 +5,11 @@
   "layout": "4x4",
   "logical_cell": [
    80,
-   64
+   72
   ],
   "image_px": [
    2560,
-   2048
+   2304
   ],
   "frames": [
    {

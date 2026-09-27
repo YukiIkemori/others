@@ -1,0 +1,223 @@
+{
+ "character": "fine",
+ "set": "face",
+ "image": "fine_face.png",
+ "cell": [
+  73,
+  84
+ ],
+ "anchor": [
+  36,
+  81
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "face_neutral": {
+   "x": 0,
+   "y": 0,
+   "w": 73,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     35,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     79
+    ]
+   }
+  },
+  "face_smile": {
+   "x": 73,
+   "y": 0,
+   "w": 73,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     35,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     79
+    ]
+   }
+  },
+  "face_sad": {
+   "x": 146,
+   "y": 0,
+   "w": 73,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     35,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     79
+    ]
+   }
+  },
+  "face_angry": {
+   "x": 0,
+   "y": 84,
+   "w": 73,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     35,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     79
+    ]
+   }
+  },
+  "face_surprise": {
+   "x": 73,
+   "y": 84,
+   "w": 73,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     35,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     79
+    ]
+   }
+  },
+  "face_closed": {
+   "x": 146,
+   "y": 84,
+   "w": 73,
+   "h": 84,
+   "anchor": [
+    36,
+    81
+   ],
+   "points": {
+    "head": [
+     35,
+     2
+    ],
+    "center": [
+     36,
+     46
+    ],
+    "front": [
+     2,
+     79
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#242325",
+  "#28222f",
+  "#2b2d33",
+  "#40332c",
+  "#363942",
+  "#3e3b3c",
+  "#414550",
+  "#544a42",
+  "#4d4d4f",
+  "#4c515e",
+  "#5e5855",
+  "#595e6d",
+  "#6f6761",
+  "#646a7a",
+  "#737989",
+  "#7d7e84",
+  "#8a7c71",
+  "#938f8f",
+  "#ac9f94",
+  "#f5eadc",
+  "#5c3f30",
+  "#794f38",
+  "#68594c",
+  "#7e5f48",
+  "#786555",
+  "#936344",
+  "#7f7163",
+  "#926f56",
+  "#a86c49",
+  "#8c7763",
+  "#a88261",
+  "#9d866f",
+  "#b6835c",
+  "#9d8e7e",
+  "#c7855a",
+  "#ac957c",
+  "#c89c76",
+  "#bba48a",
+  "#db9d6e",
+  "#c0af9f",
+  "#cab397",
+  "#e8b486",
+  "#d4bfa4",
+  "#dfcbb0",
+  "#f2c69a",
+  "#e8d7bc",
+  "#fcd8ad",
+  "#352d3f"
+ ],
+ "facing": "slightly right",
+ "target_height": 80,
+ "npc": {
+  "tier": "A",
+  "lantern": false,
+  "spirit": false,
+  "recolor": false,
+  "mainHex": "#6A6E78",
+  "recolorSets": null,
+  "variants": null,
+  "kind": "person"
+ }
+}

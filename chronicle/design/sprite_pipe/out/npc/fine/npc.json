@@ -1,0 +1,50 @@
+{
+ "id": "fine",
+ "look": "fine",
+ "name": "フィーネ",
+ "tier": "A",
+ "kind": "person",
+ "region": "prologue",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 42,
+  "face": 80
+ },
+ "measureH": {
+  "field": 44
+ },
+ "headgearExtraDots": 2,
+ "mainHex": "#6A6E78",
+ "mainHue": 220,
+ "mainName": "青みの灰",
+ "lantern": false,
+ "recolor": false,
+ "face": true,
+ "sheets": {
+  "1": "npc_fine_s1.png",
+  "2": "npc_fine_s2.png",
+  "3": "npc_fine_s3.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.27380952380952384,
+   "head_w": 0.42857142857142855,
+   "shoulder": 0.375,
+   "neck_clear": 0.75
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

@@ -58,7 +58,7 @@
               G(ex + e.w / 2, ey + e.h / 2, { r: 22 * s, core: 2 * s, halo: 22 * s, color: S.windowColor, k: 0.32, type: 'window' });
             } else if (e.kind === 'door') {
               L(ex + e.w / 2, by + 18 * s, 66, S.windowColor, 1.3, 'wide', 'door', o.id);
-              out.emissive.push({ kind: 'door', x: ex, y: ey, w: e.w, h: e.h });
+              if (!layer) out.emissive.push({ kind: 'door', x: ex, y: ey, w: e.w, h: e.h });
               G(ex + e.w / 2, ey + e.h / 2, { r: 30 * s, core: 3 * s, halo: 30 * s, color: S.windowColor, k: 0.5, type: 'door' });
             } else if (e.kind === 'lamp') {
               L(ex, by + 10 * s, 70, S.lampColor, 1.1, 'pool', 'lamp', o.id);

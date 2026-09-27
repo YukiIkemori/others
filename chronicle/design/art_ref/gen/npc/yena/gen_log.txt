@@ -10,3 +10,27 @@
 00:42:30   |   シート1 歩き＋演技4: 要作り直し  npc_yena_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
 00:42:30 sheet 1: 4 redo lines: シート1 の 2 番（下向き・右足前） がほかのポーズより小さく描かれている（頭の大きさで約 78%）。仮に 128% に拡大縮小して使う / シート1 の 3 番（下向き・左足前） がほかのポーズより小さく描かれている（頭の大きさで約 78%）。仮に 128% に拡大縮小して使う / シート1 の 12 番（手を挙げて呼びかける） がほかのポーズより小さく描かれている（頭の大きさで約 71%）。仮に 140% に拡大縮小して使う / シート1 の 16 番（その人のしぐさ） がほかのポーズより小さく描かれている（頭の大きさで約 78%）。仮に 128% に拡大縮小して使う
 00:42:30 sheet 1 fix2: edit walk_down_1,walk_down_2,act_call,act_sig (window rows 1-4 cols 1-4, 2560x2048, pitch 8, quality medium)
+00:43:16   calibrated pitch 7.96 px (requested 8; 12 reference poses)
+00:43:16   cells grown by 8 art px on top (now 80x72) so the pose fits
+00:43:17   pasted: walk_down_1 31x56, walk_down_2 31x56, act_call 37x65, act_sig 41x62
+00:43:17 pipeline: sheets.py ../art_ref/gen/npc/yena --npc yena --out out/npc/npc_yena --check
+00:43:49 sheet 1: npc_yena_s1.png exists (resume)
+00:43:49 pipeline: sheets.py ../art_ref/gen/npc/yena --npc yena --out out/npc/npc_yena --check
+00:44:29   |   「イェナ（npc_yena）のシート1の16番（その人のしぐさ）だけ大きさが違う。ほかのポーズと同じ身長にして、同じ条件で描き直して」
+00:44:29   |   「イェナ（npc_yena）のシート1の3番（下向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 78%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+00:44:29   |   「イェナ（npc_yena）のシート1の12番（手を挙げて呼びかける）だけ小さく描かれている（頭の大きさがほかのポーズの約 78%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+00:44:29   | 
+00:44:29   | ■ シートの状態
+00:44:29   |   シート1 歩き＋演技4: 要作り直し  npc_yena_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+00:44:29 sheet 1: 4 redo lines: シート1 の 2 番（下向き・右足前） の身長が 56 ドット（ほかは 47） / シート1 の 3 番（下向き・左足前） の身長が 56 ドット（ほかは 47） / シート1 の 12 番（手を挙げて呼びかける） の身長が 65 ドット（ほかは 47） / シート1 の 16 番（その人のしぐさ） の身長が 62 ドット（ほかは 47）
+00:44:30 sheet 1 fix3: edit walk_down_1,walk_down_2,act_call,act_sig (window rows 1-4 cols 1-4, 2560x2304, pitch 8, quality medium)
+00:45:25   calibrated pitch 7.91 px (requested 8; 12 reference poses)
+00:45:30   pasted: walk_down_1 28x49, walk_down_2 27x48, act_call 25x50, act_sig 30x47
+00:45:30 pipeline: sheets.py ../art_ref/gen/npc/yena --npc yena --out out/npc/npc_yena --check
+00:46:44   |   「イェナ（npc_yena）のシート1の3番（下向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 68%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+00:46:44   |   「イェナ（npc_yena）のシート1の4番（うなずく）だけ小さく描かれている（頭の大きさがほかのポーズの約 81%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+00:46:44   |   「イェナ（npc_yena）のシート1の8番（驚く）だけ小さく描かれている（頭の大きさがほかのポーズの約 81%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+00:46:44   | 
+00:46:44   | ■ シートの状態
+00:46:44   |   シート1 歩き＋演技4: 要作り直し  npc_yena_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+00:46:44 sheet 1: 0 redo lines

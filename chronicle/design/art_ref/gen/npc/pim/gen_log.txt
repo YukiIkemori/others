@@ -1,0 +1,11 @@
+00:46:33 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+00:47:34   pitch in raw image: 6.62 px per art pixel (upright median 258 px / 39)
+00:47:34 sheet 1 -> art_ref/gen/npc/pim/npc_pim_s1.png (16 poses)
+00:47:34 pipeline: sheets.py ../art_ref/gen/npc/pim --npc pim --out out/npc/npc_pim --check
+00:48:31   | ■ メモ（2 件）
+00:48:31   |   - シート1: 頭身の比（歩きの立ち4コマの中央値、体 36 ドットあたり）: 首 0.42（アルン 0.29）・頭の幅 0.53（0.43）・肩 0.35（0.40）
+00:48:31   |   - 向きの見本（configs/refs/npc_pim）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+00:48:31   | 
+00:48:31   | ■ シートの状態
+00:48:31   |   シート1 歩き＋演技4: 確認あり  npc_pim_s1.png  ドット 8.00px → 描かれた格子のまま（40.0 ドット）
+00:48:31 sheet 1: 0 redo lines

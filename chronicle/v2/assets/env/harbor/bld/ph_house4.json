@@ -1,0 +1,76 @@
+{
+ "id": "ph_house4",
+ "kind": "building",
+ "theme": "harbor",
+ "footprint": [
+  6,
+  5
+ ],
+ "wall": 2,
+ "files": {
+  "24": "ph_house4@24.png",
+  "32": "ph_house4@32.png",
+  "40": "ph_house4@40.png"
+ },
+ "emitFiles": {
+  "24": "ph_house4_emit@24.png",
+  "32": "ph_house4_emit@32.png",
+  "40": "ph_house4_emit@40.png"
+ },
+ "size": {
+  "24": [
+   156,
+   144
+  ],
+  "32": [
+   208,
+   192
+  ],
+  "40": [
+   260,
+   240
+  ]
+ },
+ "anchor32": [
+  8,
+  192
+ ],
+ "door32": null,
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 48,
+   "y": -45,
+   "w": 9,
+   "h": 12
+  },
+  {
+   "kind": "win",
+   "x": 135,
+   "y": -45,
+   "w": 9,
+   "h": 11
+  }
+ ],
+ "roof32": [
+  -6,
+  -164,
+  198,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/harbor/ph_house4.png",
+ "def_": {
+  "type": "building",
+  "id": "ph_house4",
+  "x": 3,
+  "y": 20,
+  "w": 6,
+  "h": 5,
+  "wall": 2,
+  "roof": "slate",
+  "mat": "plaster",
+  "windows": 2,
+  "shutters": "g"
+ }
+}

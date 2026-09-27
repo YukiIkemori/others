@@ -26,6 +26,7 @@ import copy
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import time
@@ -44,6 +45,10 @@ FONT = os.path.join(G.DESIGN, 'art_proto', 'fonts', 'ZenMaruGothic-Medium.ttf')
 # acting poses whose head reads ~125-130 % in the head-scale check on Arun's own sheet 3 as well (crouched head):
 # not a drawing problem, never redrawn for 'scale' below this bound
 SCALE_FALSE = {'act_kneel': 1.42, 'act_sit': 1.42}
+# upright poses: the pipeline's head-template scale check reads caps, hoods and beards as a smaller head (tadeo: every
+# pose 50-51 art px tall, three flagged at 75 %). Their size is covered by the bbox height check, so 'scale' is not redrawn
+UPRIGHT_SCALE_SKIP = {'walk_%s_%d' % (d, i) for d in ('down', 'up', 'left', 'right') for i in range(3)} | {
+    'act_nod', 'act_surprise', 'act_think', 'act_call', 'act_resolve', 'act_sig'}
 
 G.POSE_EN.update({
     'act_sig': "the person's SIGNATURE GESTURE (see the brief)",
@@ -466,6 +471,8 @@ def redo_lines(u, job, reports, sheets):
             sc = (it.get('data') or {}).get('scale')
             if it['code'] == 'scale' and it['slot'] in SCALE_FALSE and sc and sc < SCALE_FALSE[it['slot']]:
                 continue
+            if it['code'] == 'scale' and it['slot'] in UPRIGHT_SCALE_SKIP:
+                continue      # upright pose: its size is checked by the bbox height ('height'); the head match misreads hats / beards
             if u['tier'] == 'C' and it.get('slot'):
                 it['slot'] = '%s:%s' % ('AB'[h], it['slot'])
             out.setdefault(n, []).append(it)
@@ -545,11 +552,55 @@ def run_unit(uid, sheets=None, quality='medium', force=False, redo=None, max_ima
             st['redo_left'] = [dict(code=i['code'], slot=i.get('slot'), msg=i.get('msg')) for i in items]
             job.save()
             job.log('sheet %d: %d redo lines%s' % (n, len(items), (': ' + ' / '.join(i['msg'] for i in items))[:600] if items else ''))
+            keep_candidate(job, n, items)
             if not items or images_of(job, n) >= min(max_images, MAX_IMAGES_PER_SHEET):
                 break
             if fix(u, job, n, quality, items) is None:
                 break
+        if items and restore_best(job, n):
+            reps = pipe(u, job, check=True)
+            items = redo_lines(u, job, reps, [n]).get(n, [])
+            job.st(n)['redo_left'] = [dict(code=i['code'], slot=i.get('slot'), msg=i.get('msg')) for i in items]
+            job.save()
+            job.log('sheet %d (best take restored): %d redo lines' % (n, len(items)))
     return job
+
+
+def score(items):
+    return sum(3 if i.get('code') == 'proportion' else 1 for i in items)
+
+
+def keep_candidate(job, n, items):
+    """every checked take of a sheet is kept (raw/s<n>_take<k>.png) with its score, so a later attempt that came out
+    worse never replaces a better one"""
+    st = job.st(n)
+    c = st.setdefault('takes', [])
+    src = os.path.join(job.dir, job.specs[n]['file'])
+    dst = os.path.join(job.raw, 's%d_take%d.png' % (n, len(c) + 1))
+    shutil.copy(src, dst)
+    c.append(dict(file=os.path.relpath(dst, job.dir), score=score(items), frames=st.get('frames'), from_raw=st.get('from_raw'),
+                  cell=list(job.specs[n]['cell'])))
+    job.save()
+
+
+def restore_best(job, n):
+    st = job.st(n)
+    c = st.get('takes') or []
+    if len(c) < 2:
+        return False
+    best = min(range(len(c)), key=lambda k: (c[k]['score'], -k))
+    if best == len(c) - 1:
+        return False
+    t = c[best]
+    shutil.copy(os.path.join(job.dir, t['file']), os.path.join(job.dir, job.specs[n]['file']))
+    st.update(frames=t['frames'], from_raw=t['from_raw'], restored_take=best + 1)
+    if t.get('cell'):
+        job.specs[n]['cell'] = list(t['cell'])
+        st['cell'] = list(t['cell'])
+    job.save()
+    job.write_manifest()
+    job.log('sheet %d: take %d (score %d) is better than the last take (score %d): restored' % (n, best + 1, t['score'], c[-1]['score']))
+    return True
 
 
 # ------------------------------------------------------------------------------------------ export / review images

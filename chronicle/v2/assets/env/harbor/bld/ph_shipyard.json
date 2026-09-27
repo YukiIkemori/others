@@ -1,0 +1,132 @@
+{
+ "id": "ph_shipyard",
+ "kind": "building",
+ "theme": "harbor",
+ "footprint": [
+  6,
+  6
+ ],
+ "wall": 3,
+ "files": {
+  "24": "ph_shipyard@24.png",
+  "32": "ph_shipyard@32.png",
+  "40": "ph_shipyard@40.png"
+ },
+ "emitFiles": {
+  "24": "ph_shipyard_emit@24.png",
+  "32": "ph_shipyard_emit@32.png",
+  "40": "ph_shipyard_emit@40.png"
+ },
+ "size": {
+  "24": [
+   156,
+   168
+  ],
+  "32": [
+   208,
+   224
+  ],
+  "40": [
+   260,
+   280
+  ]
+ },
+ "anchor32": [
+  8,
+  224
+ ],
+ "door32": {
+  "x": 80.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 51,
+   "y": -77,
+   "w": 11,
+   "h": 13
+  },
+  {
+   "kind": "win",
+   "x": 130,
+   "y": -77,
+   "w": 11,
+   "h": 13
+  },
+  {
+   "kind": "win",
+   "x": 119,
+   "y": -38,
+   "w": 11,
+   "h": 13
+  },
+  {
+   "kind": "win",
+   "x": 7,
+   "y": -23,
+   "w": 14,
+   "h": 9
+  },
+  {
+   "kind": "win",
+   "x": 53,
+   "y": -23,
+   "w": 13,
+   "h": 9
+  },
+  {
+   "kind": "win",
+   "x": 95,
+   "y": -23,
+   "w": 14,
+   "h": 5
+  },
+  {
+   "kind": "win",
+   "x": 116,
+   "y": -23,
+   "w": 24,
+   "h": 11
+  },
+  {
+   "kind": "win",
+   "x": 151,
+   "y": -23,
+   "w": 16,
+   "h": 5
+  }
+ ],
+ "roof32": [
+  -6,
+  -196,
+  198,
+  -90
+ ],
+ "wallTop32": -96,
+ "src": "design/art_ref/gen/env/bld/harbor/ph_shipyard.png",
+ "def_": {
+  "type": "building",
+  "id": "ph_shipyard",
+  "x": 45,
+  "y": 16,
+  "w": 6,
+  "h": 6,
+  "wall": 3,
+  "roof": "shingle",
+  "mat": "plank",
+  "windows": 1,
+  "sign": "guild",
+  "lamp": true,
+  "door": {
+   "x": 47,
+   "y": 21,
+   "to": {
+    "map": "pharos_shipyard",
+    "spawn": "door"
+   }
+  }
+ }
+}

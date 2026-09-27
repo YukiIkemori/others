@@ -5,7 +5,7 @@ about 2.6-2.8 heads tall with a big head, whatever the overall height).
 Measured on the alpha of one frame (thin things sticking up, e.g. a raised blade, are cut off first):
   H       body height (first row with a run >= 4 px wide -> bottom)
   head_h  crown -> neck (the narrowest row between 22% and 48% of H, from the top)
-  head_w  widest row of the head band (crown -> neck)
+  head_w  widest row of the top 36% (head band; checked at 1.5x tol since hair volume varies)
   mass    opaque area / H^2 (bulk)
   heads   H / head_h
 Ratios compared with the hero's same frame: head_h/H, head_w/H, mass; outside +-tol -> FAIL.
@@ -54,7 +54,8 @@ def measure(rgba, min_run=4):
     # neck: narrowest "core" row (the longest run, so an arm or blade beside the neck does not count)
     core = [runs_max(a[top + i]) for i in range(H)]
     neck = min(range(lo, hi + 1), key=lambda i: (core[i], i))
-    head_w = max(core[:neck + 1])
+    band = int(round(0.36 * H))                      # the hero's head is ~36% of his height
+    head_w = max(widths[:band])
     mass = a[top:bot + 1].sum() / float(H * H)
     return dict(H=int(H), head_h=int(neck), head_w=int(head_w), mass=round(float(mass), 3),
                 heads=round(H / max(1, neck), 2), r_head_h=round(neck / H, 3), r_head_w=round(head_w / H, 3))
@@ -62,9 +63,9 @@ def measure(rgba, min_run=4):
 
 def compare(m, r, tol):
     bad = []
-    for k in ('r_head_h', 'r_head_w', 'mass'):
+    for k, tk in (('r_head_w', 1.5), ('mass', 1.0)):   # head_h (neck search) is shown only: braids / armour hide the neck
         d = m[k] / r[k] - 1
-        if abs(d) > tol:
+        if abs(d) > tol * tk:
             bad.append('%s %.3f vs hero %.3f (%+.0f%%)' % (k, m[k], r[k], 100 * d))
     return bad
 

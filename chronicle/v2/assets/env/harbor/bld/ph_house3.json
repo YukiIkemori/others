@@ -1,0 +1,76 @@
+{
+ "id": "ph_house3",
+ "kind": "building",
+ "theme": "harbor",
+ "footprint": [
+  6,
+  5
+ ],
+ "wall": 2,
+ "files": {
+  "24": "ph_house3@24.png",
+  "32": "ph_house3@32.png",
+  "40": "ph_house3@40.png"
+ },
+ "emitFiles": {
+  "24": "ph_house3_emit@24.png",
+  "32": "ph_house3_emit@32.png",
+  "40": "ph_house3_emit@40.png"
+ },
+ "size": {
+  "24": [
+   156,
+   144
+  ],
+  "32": [
+   208,
+   192
+  ],
+  "40": [
+   260,
+   240
+  ]
+ },
+ "anchor32": [
+  8,
+  192
+ ],
+ "door32": null,
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 48,
+   "y": -39,
+   "w": 11,
+   "h": 13
+  },
+  {
+   "kind": "win",
+   "x": 131,
+   "y": -39,
+   "w": 10,
+   "h": 11
+  }
+ ],
+ "roof32": [
+  -6,
+  -164,
+  198,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/harbor/ph_house3.png",
+ "def_": {
+  "type": "building",
+  "id": "ph_house3",
+  "x": 36,
+  "y": 13,
+  "w": 6,
+  "h": 5,
+  "wall": 2,
+  "roof": "terra",
+  "mat": "plaster",
+  "windows": 2,
+  "flowers": true
+ }
+}

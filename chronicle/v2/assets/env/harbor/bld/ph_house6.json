@@ -1,0 +1,75 @@
+{
+ "id": "ph_house6",
+ "kind": "building",
+ "theme": "harbor",
+ "footprint": [
+  6,
+  5
+ ],
+ "wall": 2,
+ "files": {
+  "24": "ph_house6@24.png",
+  "32": "ph_house6@32.png",
+  "40": "ph_house6@40.png"
+ },
+ "emitFiles": {
+  "24": "ph_house6_emit@24.png",
+  "32": "ph_house6_emit@32.png",
+  "40": "ph_house6_emit@40.png"
+ },
+ "size": {
+  "24": [
+   156,
+   144
+  ],
+  "32": [
+   208,
+   192
+  ],
+  "40": [
+   260,
+   240
+  ]
+ },
+ "anchor32": [
+  8,
+  192
+ ],
+ "door32": null,
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 49,
+   "y": -41,
+   "w": 11,
+   "h": 11
+  },
+  {
+   "kind": "win",
+   "x": 131,
+   "y": -41,
+   "w": 11,
+   "h": 12
+  }
+ ],
+ "roof32": [
+  -6,
+  -164,
+  198,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/harbor/ph_house6.png",
+ "def_": {
+  "type": "building",
+  "id": "ph_house6",
+  "x": 36,
+  "y": 20,
+  "w": 6,
+  "h": 5,
+  "wall": 2,
+  "roof": "slate",
+  "mat": "brick",
+  "windows": 2
+ }
+}

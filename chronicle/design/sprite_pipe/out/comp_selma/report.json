@@ -5,7 +5,7 @@
  "folder": "/home/user/others/chronicle/design/art_ref/gen/companion/selma",
  "sheets": {
   "1": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/selma/comp_selma_s1.png",
+   "file": "../art_ref/gen/companion/selma/comp_selma_s1.png",
    "size": [
     3584,
     1536
@@ -137,7 +137,7 @@
    }
   },
   "2": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/selma/comp_selma_s2.png",
+   "file": "../art_ref/gen/companion/selma/comp_selma_s2.png",
    "size": [
     1920,
     2048
@@ -384,7 +384,7 @@
    }
   },
   "3": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/selma/comp_selma_s3.png",
+   "file": "../art_ref/gen/companion/selma/comp_selma_s3.png",
    "size": [
     4160,
     1536
@@ -410,98 +410,59 @@
    "extras": [],
    "period": 8.0,
    "clarity": 99.0,
-   "src_height": 512.0,
-   "native_height_at_period": 64.0,
-   "scale_note": "描かれた格子のまま（64.0 ドット）",
+   "src_height": 508.0,
+   "native_height_at_period": 63.5,
+   "scale_note": "描かれた格子のまま（63.5 ドット）",
    "cell": 8.0,
    "sprites": {
     "idle_a": {
      "size": [
-      55,
-      64
+      59,
+      65
      ],
      "box": [
-      176,
-      176,
-      648,
+      160,
+      168,
+      664,
       720
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.46,
+     "facing_score": 1.57,
      "facing_cues": {
-      "head": 0.73,
-      "upper": 0.73
+      "head": 0.9,
+      "upper": 0.67
      }
     },
     "idle_b": {
      "size": [
-      54,
-      62
+      59,
+      64
      ],
      "box": [
-      1016,
-      192,
-      1480,
+      992,
+      176,
+      1496,
       720
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.68,
+     "facing_score": 1.61,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.78
+      "upper": 0.71
      },
-     "scale": 1.026
+     "scale": 1.038
     },
     "step": {
      "size": [
-      66,
-      64
-     ],
-     "box": [
-      1800,
-      176,
-      2360,
-      720
-     ],
-     "air": 0,
-     "blur": 0.0,
-     "facing_score": 1.52,
-     "facing_cues": {
-      "head": 0.9,
-      "upper": 0.62
-     }
-    },
-    "guard": {
-     "size": [
-      73,
-      64
-     ],
-     "box": [
-      2600,
-      176,
-      3216,
-      720
-     ],
-     "air": 0,
-     "blur": 0.0,
-     "facing_score": 1.28,
-     "facing_cues": {
-      "head": 0.9,
-      "upper": 0.38
-     },
-     "scale": 1.026
-    },
-    "hit": {
-     "size": [
-      63,
+      70,
       63
      ],
      "box": [
-      3472,
+      1784,
       184,
-      4008,
+      2376,
       720
      ],
      "air": 0,
@@ -510,38 +471,77 @@
      "facing_cues": {
       "head": 0.9,
       "upper": 0.52
+     }
+    },
+    "guard": {
+     "size": [
+      74,
+      64
+     ],
+     "box": [
+      2600,
+      176,
+      3224,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.64,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.26
      },
-     "scale": 0.981
+     "scale": 1.038
+    },
+    "hit": {
+     "size": [
+      66,
+      63
+     ],
+     "box": [
+      3464,
+      184,
+      4024,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.07,
+     "facing_cues": {
+      "head": 0.49,
+      "upper": 0.58
+     },
+     "scale": 0.949
     },
     "weak": {
      "size": [
-      57,
-      50
+      58,
+      53
      ],
      "box": [
       168,
-      1056,
-      656,
+      1032,
+      664,
       1488
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.24,
+     "facing_score": 0.99,
      "facing_cues": {
-      "head": 0.16,
-      "upper": 0.08
+      "head": 0.87,
+      "upper": 0.13
      },
      "scale": 1.051
     },
     "ko": {
      "size": [
-      94,
-      31
+      92,
+      34
      ],
      "box": [
-      856,
-      1208,
-      1640,
+      864,
+      1184,
+      1632,
       1488
      ],
      "air": 0,
@@ -549,63 +549,63 @@
     },
     "victory_a": {
      "size": [
-      43,
-      79
+      48,
+      80
      ],
      "box": [
-      1888,
-      824,
-      2264,
+      1872,
+      816,
+      2288,
       1488
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.92,
+     "facing_score": 1.32,
      "facing_cues": {
-      "head": 0.45,
-      "upper": 0.47
+      "head": 0.89,
+      "upper": 0.43
      },
-     "scale": 1.013
+     "scale": 0.962
     },
     "victory_b": {
      "size": [
-      37,
-      65
+      58,
+      62
      ],
      "box": [
-      2744,
-      936,
-      3072,
+      2664,
+      960,
+      3160,
       1488
      ],
      "air": 0,
      "blur": 0.0,
-     "scale": 1.0
+     "scale": 0.981
     },
     "glimmer": {
      "size": [
-      53,
-      65
+      61,
+      62
      ],
      "box": [
-      3512,
-      936,
-      3968,
+      3480,
+      960,
+      4000,
       1488
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.44,
+     "facing_score": 0.44,
      "facing_cues": {
-      "head": 0.9,
-      "upper": 0.54
+      "head": 0.22,
+      "upper": 0.22
      },
-     "scale": 1.0
+     "scale": 0.949
     }
    }
   },
   "4": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/selma/comp_selma_s4.png",
+   "file": "../art_ref/gen/companion/selma/comp_selma_s4.png",
    "size": [
     4480,
     1920
@@ -649,10 +649,10 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": -0.53,
+     "facing_score": -0.51,
      "facing_cues": {
-      "head": -0.5,
-      "upper": -0.03
+      "head": -0.52,
+      "upper": 0.01
      },
      "scale": 1.0
     },
@@ -669,12 +669,12 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.71,
+     "facing_score": 1.66,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.81
+      "upper": 0.76
      },
-     "scale": 1.026
+     "scale": 1.013
     },
     "thrust_ready": {
      "size": [
@@ -689,10 +689,10 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.94,
+     "facing_score": 0.84,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.04
+      "upper": -0.06
      }
     },
     "thrust": {
@@ -708,12 +708,12 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.86,
+     "facing_score": 0.81,
      "facing_cues": {
       "head": 0.9,
-      "upper": -0.04
+      "upper": -0.09
      },
-     "scale": 1.0
+     "scale": 0.981
     },
     "charge": {
      "size": [
@@ -728,12 +728,12 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.27,
+     "facing_score": 1.35,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.37
+      "upper": 0.45
      },
-     "scale": 0.974
+     "scale": 1.0
     },
     "smash": {
      "size": [
@@ -748,10 +748,10 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.14,
+     "facing_score": 1.15,
      "facing_cues": {
-      "head": 0.9,
-      "upper": 0.24
+      "head": 0.88,
+      "upper": 0.27
      },
      "scale": 1.0
     },
@@ -768,10 +768,10 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.78,
+     "facing_score": 0.68,
      "facing_cues": {
       "head": 0.9,
-      "upper": -0.12
+      "upper": -0.22
      },
      "scale": 1.013
     },
@@ -788,10 +788,10 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.24,
+     "facing_score": 0.06,
      "facing_cues": {
-      "head": -0.05,
-      "upper": 0.3
+      "head": -0.13,
+      "upper": 0.19
      },
      "scale": 1.0
     },
@@ -808,10 +808,10 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.28,
+     "facing_score": 1.19,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.38
+      "upper": 0.29
      },
      "scale": 1.0
     },
@@ -828,12 +828,12 @@
      ],
      "air": 1,
      "blur": 0.0,
-     "facing_score": 1.25,
+     "facing_score": 1.3,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.35
+      "upper": 0.4
      },
-     "scale": 1.0
+     "scale": 0.981
     },
     "bare_idle": {
      "size": [
@@ -848,10 +848,10 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.39,
+     "facing_score": 1.28,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.49
+      "upper": 0.38
      }
     },
     "bare_windup": {
@@ -867,12 +867,12 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.71,
+     "facing_score": 1.6,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.81
+      "upper": 0.7
      },
-     "scale": 1.026
+     "scale": 1.013
     },
     "bare_slash": {
      "size": [
@@ -887,10 +887,10 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.54,
+     "facing_score": 1.52,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.64
+      "upper": 0.62
      },
      "scale": 1.0
     },
@@ -907,12 +907,12 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.25,
+     "facing_score": 1.14,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.35
+      "upper": 0.24
      },
-     "scale": 1.026
+     "scale": 1.013
     },
     "bare_cast": {
      "size": [
@@ -927,17 +927,17 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.09,
+     "facing_score": 0.96,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.19
+      "upper": 0.06
      },
      "scale": 1.0
     }
    }
   },
   "5": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/selma/comp_selma_s5.png",
+   "file": "../art_ref/gen/companion/selma/comp_selma_s5.png",
    "size": [
     3072,
     768
@@ -1102,8 +1102,8 @@
    "ask": null,
    "data": {
     "cues": {
-     "head": -0.5,
-     "upper": -0.03
+     "head": -0.52,
+     "upper": 0.01
     }
    }
   }

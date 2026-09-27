@@ -1,0 +1,387 @@
+{
+ "char": "rowell",
+ "companion": null,
+ "npc": "rowell",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/rowell",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/rowell/npc_rowell_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 400.0,
+   "native_height_at_period": 50.0,
+   "scale_note": "描かれた格子のまま（50.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      28,
+      52
+     ],
+     "box": [
+      192,
+      48,
+      448,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.91
+    },
+    "walk_down_1": {
+     "size": [
+      29,
+      52
+     ],
+     "box": [
+      824,
+      48,
+      1088,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.86,
+     "scale": 0.883
+    },
+    "walk_down_2": {
+     "size": [
+      29,
+      51
+     ],
+     "box": [
+      1464,
+      56,
+      1728,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.7,
+     "scale": 1.0
+    },
+    "walk_up_0": {
+     "size": [
+      30,
+      50
+     ],
+     "box": [
+      184,
+      576,
+      456,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.32,
+     "scale": 0.714,
+     "fixed": [
+      "rescaled 1.40"
+     ]
+    },
+    "walk_up_1": {
+     "size": [
+      29,
+      50
+     ],
+     "box": [
+      824,
+      576,
+      1088,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.1,
+     "scale": 0.831,
+     "fixed": [
+      "rescaled 1.20"
+     ]
+    },
+    "walk_up_2": {
+     "size": [
+      29,
+      50
+     ],
+     "box": [
+      1464,
+      576,
+      1728,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.06,
+     "scale": 0.779,
+     "fixed": [
+      "rescaled 1.28"
+     ]
+    },
+    "walk_left_0": {
+     "size": [
+      25,
+      50
+     ],
+     "box": [
+      200,
+      1088,
+      432,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      31,
+      50
+     ],
+     "box": [
+      816,
+      1088,
+      1096,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    },
+    "walk_left_2": {
+     "size": [
+      29,
+      49
+     ],
+     "box": [
+      1464,
+      1096,
+      1728,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    },
+    "walk_right_0": {
+     "size": [
+      25,
+      50
+     ],
+     "box": [
+      200,
+      1600,
+      432,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      31,
+      50
+     ],
+     "box": [
+      816,
+      1600,
+      1096,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    },
+    "walk_right_2": {
+     "size": [
+      31,
+      50
+     ],
+     "box": [
+      1456,
+      1600,
+      1736,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 2,
+   "level": "redo",
+   "code": "missing_sheet",
+   "msg": "シート2（演技12（下向き）, npc_rowell_s2.png）がない",
+   "slot": null,
+   "ask": "ロウェル（rowell）のシート2（演技12（下向き））を作って",
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "redo",
+   "code": "missing_sheet",
+   "msg": "シート3（顔6, npc_rowell_s3.png）がない",
+   "slot": null,
+   "ask": "ロウェル（rowell）のシート3（顔6）を作って",
+   "data": {}
+  },
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/rowell）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 2 番（下向き・右足前） の縮尺が少し違う（頭の大きさで約 88%）。並べて見て気になるなら描き直し",
+   "slot": "walk_down_1",
+   "ask": null,
+   "data": {
+    "scale": 0.8831168831168833,
+    "per_ref": [
+     1.0000000000000004,
+     0.8000000000000003,
+     0.8500000000000003
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 4 番（上向き・立ち） がほかのポーズより小さく描かれている（頭の大きさで約 71%）。仮に 140% に拡大縮小して使う",
+   "slot": "walk_up_0",
+   "ask": "ロウェル（rowell）のシート1の4番（上向き・立ち）だけ小さく描かれている（頭の大きさがほかのポーズの約 71%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.7142857142857142,
+    "per_ref": [
+     0.9625000000000001,
+     0.6874999999999998,
+     0.6875
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 5 番（上向き・右足前） がほかのポーズより小さく描かれている（頭の大きさで約 83%）。仮に 120% に拡大縮小して使う",
+   "slot": "walk_up_1",
+   "ask": "ロウェル（rowell）のシート1の5番（上向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 83%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.8311688311688313,
+    "per_ref": [
+     0.9625000000000001,
+     0.8000000000000003,
+     0.8000000000000003
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 6 番（上向き・左足前） がほかのポーズより小さく描かれている（頭の大きさで約 78%）。仮に 128% に拡大縮小して使う",
+   "slot": "walk_up_2",
+   "ask": "ロウェル（rowell）のシート1の6番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 78%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.7792207792207789,
+    "per_ref": [
+     0.7499999999999998,
+     0.7499999999999998,
+     0.7499999999999998
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 50 ドットあたり）: 首 0.38（アルン 0.29）・頭の幅 0.42（0.43）・肩 0.39（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.38,
+    "head_w": 0.42,
+    "shoulder": 0.385,
+    "neck_clear": 0.71
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "proportion",
+   "msg": "頭の高さがアルンより大きい（130%）",
+   "slot": "walk_down_0",
+   "ask": "ロウェル（rowell）のシート1の人物の頭がアルンより大きすぎる（頭の高さが約 130%）。アルンの歩きと同じ頭の大きさにして、同じ条件で描き直して",
+   "data": {
+    "ratio": 1.3013698630136987,
+    "metric": "neck"
+   }
+  }
+ ]
+}

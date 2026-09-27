@@ -31,98 +31,92 @@
    "extras": [],
    "period": 8.0,
    "clarity": 99.0,
-   "src_height": 360.0,
-   "native_height_at_period": 45.0,
-   "scale_note": "描かれた格子のまま（45.0 ドット）",
+   "src_height": 372.0,
+   "native_height_at_period": 46.5,
+   "scale_note": "描かれた格子のまま（46.5 ドット）",
    "cell": 8.0,
    "sprites": {
     "walk_down_0": {
      "size": [
-      31,
-      47
+      29,
+      48
      ],
      "box": [
-      176,
-      88,
-      456,
+      184,
+      80,
+      448,
       496
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.83,
-     "lantern": null
+     "facing_score": 0.77,
+     "lantern": 0.12698412698412692
     },
     "walk_down_1": {
      "size": [
-      32,
+      30,
       47
      ],
      "box": [
-      816,
+      824,
       88,
-      1104,
+      1096,
       496
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.01,
-     "scale": 1.0,
-     "lantern": -0.38235294117647056,
-     "fixed": [
-      "mirrored_lantern"
-     ]
+     "facing_score": 1.0,
+     "scale": 1.078,
+     "lantern": 0.005555555555555536
     },
     "walk_down_2": {
      "size": [
-      32,
+      30,
       47
      ],
      "box": [
-      1456,
+      1464,
       88,
-      1744,
+      1736,
       496
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.04,
-     "scale": 1.0,
-     "lantern": -0.38235294117647056,
-     "fixed": [
-      "mirrored_lantern"
-     ]
+     "facing_score": 0.6,
+     "scale": 1.078,
+     "lantern": -0.07894736842105263
     },
     "walk_up_0": {
      "size": [
-      31,
+      29,
       47
      ],
      "box": [
-      176,
+      184,
       600,
-      456,
+      448,
       1008
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.88,
+     "facing_score": 0.87,
      "scale": 1.0,
      "lantern": null
     },
     "walk_up_1": {
      "size": [
-      31,
+      30,
       47
      ],
      "box": [
-      816,
+      824,
       600,
       1096,
       1008
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.07,
+     "facing_score": 0.88,
      "scale": 1.0,
      "lantern": null
     },
@@ -139,38 +133,41 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.89,
+     "facing_score": 1.07,
      "scale": 1.0,
-     "lantern": null
+     "lantern": 0.631578947368421,
+     "fixed": [
+      "mirrored_lantern"
+     ]
     },
     "walk_left_0": {
      "size": [
       21,
-      43
+      46
      ],
      "box": [
       216,
-      1144,
+      1120,
       416,
       1520
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 3.5,
+     "facing_score": 3.23,
      "facing_cues": {
       "head": 1.5,
-      "upper": 2.0
+      "upper": 1.73
      },
-     "lantern": 0.0625
+     "lantern": -0.05263157894736842
     },
     "walk_left_1": {
      "size": [
       27,
-      43
+      45
      ],
      "box": [
       832,
-      1144,
+      1128,
       1080,
       1520
      ],
@@ -181,17 +178,17 @@
       "head": 1.5,
       "upper": 2.0
      },
-     "scale": 0.928,
-     "lantern": null
+     "scale": 1.0,
+     "lantern": -0.3684210526315789
     },
     "walk_left_2": {
      "size": [
       28,
-      43
+      45
      ],
      "box": [
       1472,
-      1144,
+      1128,
       1728,
       1520
      ],
@@ -202,38 +199,38 @@
       "head": 1.5,
       "upper": 2.0
      },
-     "scale": 0.964,
-     "lantern": null
+     "scale": 1.0,
+     "lantern": -0.44135802469135804
     },
     "walk_right_0": {
      "size": [
       21,
-      43
+      46
      ],
      "box": [
       216,
-      1656,
+      1632,
       416,
       2032
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 3.5,
+     "facing_score": 3.35,
      "facing_cues": {
       "head": 1.5,
-      "upper": 2.0
+      "upper": 1.85
      },
-     "lantern": null
+     "lantern": 0.06315789473684207
     },
     "walk_right_1": {
      "size": [
-      27,
-      43
+      29,
+      46
      ],
      "box": [
-      832,
-      1656,
-      1080,
+      824,
+      1632,
+      1088,
       2032
      ],
      "air": 0,
@@ -243,18 +240,18 @@
       "head": 1.5,
       "upper": 2.0
      },
-     "scale": 0.928,
-     "lantern": null
+     "scale": 1.039,
+     "lantern": 0.40740740740740733
     },
     "walk_right_2": {
      "size": [
-      27,
-      43
+      29,
+      46
      ],
      "box": [
-      1472,
-      1656,
-      1720,
+      1464,
+      1632,
+      1728,
       2032
      ],
      "air": 0,
@@ -264,8 +261,8 @@
       "head": 1.5,
       "upper": 2.0
      },
-     "scale": 0.928,
-     "lantern": null
+     "scale": 1.039,
+     "lantern": 0.339712918660287
     }
    }
   }
@@ -302,44 +299,6 @@
    "sheet": 1,
    "level": "check",
    "code": "lantern_missing",
-   "msg": "シート1 の 1 番（下向き・立ち） にランタンが見えない（左手に持つはず）",
-   "slot": "walk_down_0",
-   "ask": null,
-   "data": {}
-  },
-  {
-   "sheet": 1,
-   "level": "redo",
-   "code": "lantern",
-   "msg": "シート1の 2番・3番（下向き・右足前、下向き・左足前）はランタンを右手に持っている（左手のはず）。歩くたびに持ち手が入れ替わって見える。仮に左右反転して使う",
-   "slot": "walk_down_1",
-   "ask": "オットー（otto）のシート1の2番・3番（下向き・右足前、下向き・左足前）でランタンが右手になっている。12コマすべて左手にランタンを持たせて（下向きでは画面の右側、上向きでは画面の左側）、同じ条件で描き直して",
-   "data": {}
-  },
-  {
-   "sheet": 1,
-   "level": "redo",
-   "code": "lantern_frame",
-   "msg": "シート1 の 3 番（下向き・左足前）: ランタンが右手",
-   "slot": "walk_down_2",
-   "ask": null,
-   "data": {
-    "hidden": true
-   }
-  },
-  {
-   "sheet": 1,
-   "level": "auto",
-   "code": "lantern_mirror",
-   "msg": "シート1の 2番・3番 を左右反転して、ランタンを左手にした（仮。描き直しが届くまで）",
-   "slot": null,
-   "ask": null,
-   "data": {}
-  },
-  {
-   "sheet": 1,
-   "level": "check",
-   "code": "lantern_missing",
    "msg": "シート1 の 4 番（上向き・立ち） にランタンが見えない（左手に持つはず）",
    "slot": "walk_up_0",
    "ask": null,
@@ -356,55 +315,19 @@
   },
   {
    "sheet": 1,
-   "level": "check",
-   "code": "lantern_missing",
-   "msg": "シート1 の 6 番（上向き・左足前） にランタンが見えない（左手に持つはず）",
+   "level": "redo",
+   "code": "lantern",
+   "msg": "シート1の 6番（上向き・左足前）はランタンを右手に持っている（左手のはず）。歩くたびに持ち手が入れ替わって見える。仮に左右反転して使う",
    "slot": "walk_up_2",
-   "ask": null,
+   "ask": "オットー（otto）のシート1の6番（上向き・左足前）でランタンが右手になっている。12コマすべて左手にランタンを持たせて（下向きでは画面の右側、上向きでは画面の左側）、同じ条件で描き直して",
    "data": {}
   },
   {
    "sheet": 1,
-   "level": "check",
-   "code": "lantern_missing",
-   "msg": "シート1 の 8 番（左向き・前の足） にランタンが見えない（左手に持つはず）",
-   "slot": "walk_left_1",
-   "ask": null,
-   "data": {}
-  },
-  {
-   "sheet": 1,
-   "level": "check",
-   "code": "lantern_missing",
-   "msg": "シート1 の 9 番（左向き・後ろの足） にランタンが見えない（左手に持つはず）",
-   "slot": "walk_left_2",
-   "ask": null,
-   "data": {}
-  },
-  {
-   "sheet": 1,
-   "level": "check",
-   "code": "lantern_missing",
-   "msg": "シート1 の 10 番（右向き・立ち） にランタンが見えない（左手に持つはず）",
-   "slot": "walk_right_0",
-   "ask": null,
-   "data": {}
-  },
-  {
-   "sheet": 1,
-   "level": "check",
-   "code": "lantern_missing",
-   "msg": "シート1 の 11 番（右向き・前の足） にランタンが見えない（左手に持つはず）",
-   "slot": "walk_right_1",
-   "ask": null,
-   "data": {}
-  },
-  {
-   "sheet": 1,
-   "level": "check",
-   "code": "lantern_missing",
-   "msg": "シート1 の 12 番（右向き・後ろの足） にランタンが見えない（左手に持つはず）",
-   "slot": "walk_right_2",
+   "level": "auto",
+   "code": "lantern_mirror",
+   "msg": "シート1の 6番 を左右反転して、ランタンを左手にした（仮。描き直しが届くまで）",
+   "slot": null,
    "ask": null,
    "data": {}
   },
@@ -412,26 +335,14 @@
    "sheet": 1,
    "level": "info",
    "code": "proportion",
-   "msg": "頭身の比（歩きの立ち4コマの中央値、体 45 ドットあたり）: 首 0.21（アルン 0.29）・頭の幅 0.36（0.43）・肩 0.38（0.40）",
+   "msg": "頭身の比（歩き12コマの中央値、体 45 ドットあたり）: 首 0.30（アルン 0.29）・頭の幅 0.44（0.43）・肩 0.43（0.40）",
    "slot": null,
    "ask": null,
    "data": {
-    "neck": 0.2111111111111111,
-    "head_w": 0.35555555555555557,
-    "shoulder": 0.37777777777777777,
-    "neck_clear": 0.9375
-   }
-  },
-  {
-   "sheet": 1,
-   "level": "redo",
-   "code": "proportion",
-   "msg": "頭の幅がアルンより小さい（83%）。頭が小さく、頭身が高すぎる",
-   "slot": "walk_down_0",
-   "ask": "オットー（otto）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の幅が約 83%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して",
-   "data": {
-    "ratio": 0.8326827998959146,
-    "metric": "head_w"
+    "neck": 0.3,
+    "head_w": 0.4444444444444444,
+    "shoulder": 0.4277777777777778,
+    "neck_clear": 0.75
    }
   }
  ]

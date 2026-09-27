@@ -265,7 +265,10 @@
     const ax = Math.round(((j.anchor32 && j.anchor32[0]) || 8) * k), ay = H;
     const sc = (e) => ({ kind: e.kind, x: e.x * k, y: e.y * k, w: e.w != null ? e.w * k : undefined, h: e.h != null ? e.h * k : undefined });
     const door = j.door32 ? { x: j.door32.x * k, y: 0 } : null;
-    const meta = { tile, footprint: j.footprint || [d.w || 3, d.h || 3], door, emit: (j.emit32 || []).map(sc), roof: (j.roof32 || [0, -H, W, -H / 2]).map((v) => v * k),
+    const emit = (j.emit32 || []).map(sc);
+    // 店・宿（看板のある建物）の扉の前に暖かい光だまり（扉の絵は描いたまま。props_light.js は emitLayer のある建物の扉を描き直さない）
+    if (door && d.sign && j.door32) emit.push({ kind: 'door', x: (j.door32.x - j.door32.w / 2) * k, y: -j.door32.h * k, w: j.door32.w * k, h: j.door32.h * k });
+    const meta = { tile, footprint: j.footprint || [d.w || 3, d.h || 3], door, emit, roof: (j.roof32 || [0, -H, W, -H / 2]).map((v) => v * k),
       wallTop: (j.wallTop32 || 0) * k, emitLayer, envAnchor: [ax, ay], env: eb.id };
     return { frames: [{ c, ox: ax, oy: ay }], poses: { default: [0] }, anchors: { feet: [0, 0], door: door ? [door.x, 0] : null }, w: W, h: H, meta };
   }
