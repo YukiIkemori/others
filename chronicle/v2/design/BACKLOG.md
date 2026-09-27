@@ -15,3 +15,9 @@ Items the owner asked for "later" — not part of the current demo-polish pass.
 ## Halted for now
 - Desert and snow regions (development paused; the demo comes first).
 - Per-region voices.
+
+## Town design rule (owner, 2026-09-27)
+- Only Roa is an orthodox village. Every other town gets a distinctive, unusual concept — no rows of square "tofu" houses; odd shapes and non-brick/wood materials welcome.
+- Break the grid: irregular placement/orientation/spacing, winding paths, organic shapes.
+- One strange large building may hold several shops (each with its own door).
+- Yura (riverside mill village) is accepted for now; later passes can break it up further.
