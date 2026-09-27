@@ -55,7 +55,9 @@ function pageCheck() {
     out.portrait[l] = { drew: r, px: n, has: R.Portrait.has(l) };
   }
   // 表情の違い（仮の顔の 5 コマが同じ画素でない）
-  const fs = R.Hd.now('hd:face:selma');
+  // 仮の顔（骨組み）の look で。selma は原画の顔（表情の対応で同じコマを使う表情がある）になったので、顔の原画の無い名前のある町の人で見る
+  const fl = ['npc_hanna', 'npc_rita', 'npc_gord'].find((l) => R.Hd.has('hd:face:' + l) && !(R.Art.cast.sprites.has(l, 'face'))) || 'selma';
+  const fs = R.Hd.now('hd:face:' + fl);
   const hs = fs.frames.map((f) => { const d = f.c.getContext('2d').getImageData(0, 0, f.c.width, f.c.height).data; let h = 2166136261; for (let i = 0; i < d.length; i++) h = Math.imul(h ^ d[i], 16777619); return h >>> 0; });
   out.faceDistinct = new Set(hs).size;
   // 同じキーで同じ画素

@@ -547,7 +547,7 @@
     this.glows = glows;
     this.emissive = all.emissive.filter((e) => e.x + (e.w || 4) > X0 && e.x < X0 + S && e.y + (e.h || 4) > Y0 && e.y < Y0 + S);
     // 光の地図（RENDER）を base と over に掛ける。明るさは map.light.k（ART_REWORK §1.4 の「明るさ」）のまま渡す（R.Light が効きに直す）
-    const o = { ambient: this.amb.ambient, bright: this.amb.bright, mood: this.amb.mood, lights, moon: all.moon, res: 0.5, poolK: (map.light && map.light.poolK) || undefined };   // map.light.poolK = その地図だけ光だまりを強く
+    const o = { ambient: this.amb.ambient, bright: this.amb.bright, mood: this.amb.mood, lights, moon: all.moon, res: 0.5, poolK: (map.light && map.light.poolK) || undefined, spillR: (map.light && map.light.spillR) || undefined };   // map.light.poolK = その地図だけ光だまりを強く
     const rect = [X0, Y0, S, S], bg = this.bg;
     // over の形の写し（帯に分けると仕事どうしが交互に進むので、使い回しの scratch ではなくこの仕事の物）
     if (this.over) { const keep = U().canvas(S, S); keep.getContext('2d').drawImage(this.over, 0, 0); this._keep = keep; }

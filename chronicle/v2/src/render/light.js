@@ -185,7 +185,7 @@
     ctx.imageSmoothingEnabled = true;
     ctx.drawImage(lm, 0, 0, w, h, rect[0], rect[1], rect[2], rect[3]);
     // ③ 光だまりの中心は下地より明るく（掛け算だけでは下地の色を超えない。加算で少し。STYLE_REFERENCE §5.3 の +40〜60%）
-    const spill = o.spill != null ? o.spill : st().spill != null ? st().spill : 0.16;
+    const spill = (o.spill != null ? o.spill : st().spill != null ? st().spill : 0.16) * (Hd.mood(o.mood || 'night').spillK != null ? Hd.mood(o.mood || 'night').spillK : 1);
     if (spill > 0 && o.lights && o.lights.length) {
       const mood = Hd.mood(o.mood || 'night'), poolMul = (mood.poolMul || 1) * (st().poolR || 1), sq = st().poolSquash || 0.62;
       ctx.globalCompositeOperation = 'lighter';
@@ -194,7 +194,7 @@
       ctx.beginPath(); ctx.rect(rx, ry, rw, rh); ctx.clip();
       for (const li of o.lights) {
         if (li.kind === 'window') continue;
-        const r = (li.r || 60) * poolMul * 0.55 * (mood.spillR || 1);
+        const r = (li.r || 60) * poolMul * 0.55 * (o.spillR || mood.spillR || 1);
         if (li.x + r < rx || li.x - r > rx + rw || li.y + r < ry || li.y - r > ry + rh) continue;
         const sy = li.kind === 'point' ? 1 : li.kind === 'wide' ? 0.45 : sq, sx = li.kind === 'wide' ? 1.5 : 1;
         ctx.globalAlpha = Math.min(1, spill * (li.k != null ? li.k : 0.85) * (o.poolK || mood.poolK || 1));

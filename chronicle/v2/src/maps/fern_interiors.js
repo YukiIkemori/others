@@ -67,7 +67,7 @@
         K.npc('rita', 'npc_rita', 6, 6, { name: 'リタ', title: '歌い手', dir: 's', talk: 'fern_rita', reward: 'lead' }),
         K.npc('rita_pupil', 'npc_child_3', 9, 7, { name: 'リタの弟子', dir: 'w', talk: 'fern_song_game', reward: 'side' }),
       ],
-      light: { ambient: '#8a7ca8' },
+      light: { ambient: '#80729c' },   // 夜の環境光の倍率を上げた分（RENDER ambientGain）だけ下げた。宝箱が床に溶けないように（check_chests）
     });
 
     // ---------------------------------------------------------------- 捜索隊の詰所 14×10

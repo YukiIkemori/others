@@ -1,209 +1,296 @@
 {
- "date": "2026-09-27T04:19:59.790Z",
- "browser": false,
+ "date": "2026-09-27T05:45:12.519Z",
+ "browser": true,
  "full": false,
  "results": [
   {
    "name": "build",
    "code": 0,
-   "ms": 723,
-   "summary": "[build] media (external): 17 BGM (slice), 368 voice, 0 portraits, 239 sprite sheets, 1233 env images, 79.1 MB  [627 ms]"
+   "ms": 626,
+   "summary": "[build] media (external): 17 BGM (slice), 416 voice, 0 portraits, 239 sprite sheets, 1233 env images, 83.6 MB  [545 ms]"
   },
   {
    "name": "test_core",
-   "code": 0,
-   "ms": 1232,
-   "summary": "77/77 passed"
+   "code": 1,
+   "ms": 525,
+   "summary": "76/77 passed  (1 FAILED)",
+   "tail": "pass  battle object names\npass  units shape\npass  battle runs to an end with valid events\npass  rewards shape\npass  ev names (§2.5.10)\npass  fixtures: 1 state + 2 scenes, valid\npass  core first 6 in order\npass  main.js last, dev before it\npass  index order has no dev files\nFAIL  no API keys / model identifiers in v2 sources  [\"/home/user/others/chronicle/v2/design/bgm_changes.md\"]\n\n76/77 passed  (1 FAILED)"
   },
   {
    "name": "test_core_contract",
    "code": 0,
-   "ms": 1042,
+   "ms": 599,
    "summary": "test_core_contract: 51/51 passed"
   },
   {
    "name": "test_render",
-   "code": 0,
-   "ms": 1344,
-   "summary": "test_render: 145/145 passed"
+   "code": 1,
+   "ms": 626,
+   "summary": "test_render: 144/145 passed",
+   "tail": "\n== draw\npass  draw rounds and puts (ox, oy) on the point\npass  flip mirrors around the point\npass  alpha restored after draw\npass  draw a Sheet picks frame i\npass  draw(null) is a no-op\npass  frameAt walks the pose by time\n\ntest_render: 144/145 passed\nfailed:\n  Sky 0 and 1 both deep night (within 5%)"
   },
   {
    "name": "test_uik",
    "code": 0,
-   "ms": 1510,
+   "ms": 523,
    "summary": "test_uik: 37/37 passed"
   },
   {
    "name": "test_cast",
-   "code": 1,
-   "ms": 1022,
-   "summary": "test_cast: 648/757 passed",
-   "tail": "  npc_star_old_f は look の id\n  npc_star_old_m は look の id\n  npc_star_woman は look の id\n  npc_student は look の id\n  npc_tobias は look の id\n  npc_traveler は look の id\n  npc_woodcutter は look の id\n  npc_yura_man は look の id\n  npc_yura_woman は look の id\n  npc_zaid は look の id\n  npc_zakuro は look の id\n  assets/sprites のフォルダは look の id だけ（ani_camel ani_cat ani_dog ani_fawn ani_hen ani_sheep bartolo basil belladonna berna boden brigitta dokka elm ferno fine hagen hero_m_warrior ilse lazaro marta morga noa noela npc_abul npc_ash_acolyte npc_ash_bookie npc_ash_child npc_ash_fighter npc_ash_man npc_ash_old_f npc_ash_old_m npc_ash_woman npc_bard npc_ben npc_beppo npc_biblia_child npc_biblia_man npc_biblia_old npc_biblia_woman npc_borg npc_caravan npc_clerk npc_desert_child npc_desert_man npc_desert_old_f npc_desert_old_m npc_desert_woman npc_dorga npc_drake npc_emma npc_fara npc_forest_child npc_forest_man npc_forest_old_f npc_forest_old_m npc_forest_woman npc_fortune npc_glen npc_gord npc_hald npc_hanna npc_hans npc_hawk npc_hazal npc_helga npc_hermit npc_isles_child npc_isles_man npc_isles_old_f npc_isles_old_m npc_isles_sailor npc_isles_woman npc_jorn npc_kaya npc_klaus npc_lampwarden npc_loch_mayor npc_lotta npc_luka npc_marina npc_marsh_child npc_marsh_man npc_marsh_old_f npc_marsh_old_m npc_marsh_woman npc_melda npc_merchant_captain npc_mine_child npc_mine_old_f npc_mine_old_m npc_mine_woman npc_miner npc_nadia npc_naturalist npc_night_guard npc_octavia npc_oil_carrier npc_pen_child npc_pen_guard npc_pen_keeper npc_pen_man npc_pen_old_f npc_pen_old_m npc_pen_sailor npc_pen_woman npc_pim npc_pim_mother npc_pip npc_rashid npc_rita npc_roy npc_scribe npc_shepherd npc_silent npc_smith npc_snow_child npc_snow_man npc_snow_old_f npc_snow_old_m npc_snow_watch npc_snow_woman npc_sonja npc_star_child npc_star_man npc_star_old_f npc_star_old_m npc_star_woman npc_student npc_tadeo npc_tobias npc_traveler npc_woodcutter npc_yena npc_yura_elder npc_yura_man npc_yura_woman npc_zaid npc_zakuro otto rouga rowell selma shigure sylvain teo titta viola zafira）"
+   "code": 0,
+   "ms": 460,
+   "summary": "test_cast: 865/865 passed"
   },
   {
    "name": "test_beast",
    "code": 0,
-   "ms": 747,
+   "ms": 397,
    "summary": "test_beast: 93/93 passed"
   },
   {
    "name": "test_terrain",
    "code": 0,
-   "ms": 8420,
+   "ms": 7361,
    "summary": "test_terrain: 76/76 passed"
   },
   {
    "name": "test_field",
    "code": 0,
-   "ms": 983,
+   "ms": 1243,
    "summary": "test_field: 102/102 passed"
   },
   {
    "name": "test_events",
    "code": 0,
-   "ms": 850,
+   "ms": 686,
    "summary": "test_events: 164/164 passed"
   },
   {
    "name": "test_rules",
    "code": 0,
-   "ms": 765,
+   "ms": 493,
    "summary": "test_rules: 187/187 passed"
   },
   {
    "name": "test_battle",
    "code": 0,
-   "ms": 6701,
+   "ms": 5617,
    "summary": "test_battle: 125/125 passed"
   },
   {
    "name": "test_bscene",
    "code": 0,
-   "ms": 573,
+   "ms": 508,
    "summary": "test_bscene: 47/47 passed"
   },
   {
    "name": "test_screens",
    "code": 0,
-   "ms": 674,
+   "ms": 459,
    "summary": "test_screens: 396/396 passed"
   },
   {
    "name": "test_content_p",
    "code": 0,
-   "ms": 2543,
+   "ms": 2233,
    "summary": "test_content_p: 418/418 passed"
   },
   {
    "name": "test_content_f",
    "code": 0,
-   "ms": 2609,
+   "ms": 2037,
    "summary": "CONTENT-F: 645/645 passed"
   },
   {
    "name": "validate",
    "code": 0,
-   "ms": 753,
+   "ms": 520,
    "summary": "validate: 57/57 passed"
   },
   {
    "name": "progress",
    "code": 0,
-   "ms": 32505,
+   "ms": 30983,
    "summary": "progress: 20/20 passed"
   },
   {
    "name": "check_text",
-   "code": 0,
-   "ms": 1533,
-   "summary": "check_text: 0 error(s), 1 warning(s) in 6001 Japanese strings of 241 files — none"
+   "code": 1,
+   "ms": 981,
+   "summary": "check_text: 1 error(s), 1 warning(s) in 6120 Japanese strings of 242 files — T3 1",
+   "tail": "ERROR T3 src/art/cast/looks_sprite.js:59 '樵' is not 常用漢字 nor in STYLE_JA §2: 樵\n\ncheck_text: 1 error(s), 1 warning(s) in 6120 Japanese strings of 242 files — T3 1"
   },
   {
    "name": "check_voice",
    "code": 0,
-   "ms": 140,
+   "ms": 73,
    "summary": "check_voice: 71/71 passed"
   },
   {
    "name": "check_leads",
    "code": 0,
-   "ms": 601,
+   "ms": 373,
    "summary": "check_leads: 24/24 passed"
   },
   {
    "name": "check_springs",
-   "code": 1,
-   "ms": 34820,
-   "summary": "check_springs: 13/17 passed",
-   "tail": "\n== 6. 見つけた泉の印（地図・小さな地図）\npass  泉を使うと R.Game.springs[map] に id が残る\npass  小さな地図が泉の印を描く（springs を読む）\n    地図の画面: ワールドの一枚絵だけ（階の地図は無いので、泉の印は小さな地図だけ）\n\ncheck_springs: 13/17 passed\nfailed:\n  lighthouse: 道のり 147 歩の 40〜60% に泉（lh1_s1 17%、lh2_s1 80%、lh3_s1 97%）\n  verda: 道のり 129 歩の 40〜60% に泉（verda_2_s1 93%）\n  elder: 道のり 183 歩の 40〜60% に泉（elder_1_s1 64%、elder_2_s1 96%）\n  well: 道のり 81 歩の 40〜60% に泉（wl_s1 32%）"
+   "code": 0,
+   "ms": 32008,
+   "summary": "check_springs: 17/17 passed"
   },
   {
    "name": "check_density",
    "code": 0,
-   "ms": 573,
+   "ms": 575,
    "summary": "check_density: 12/12 passed"
   },
   {
    "name": "check_world",
    "code": 0,
-   "ms": 12398,
+   "ms": 5006,
    "summary": "check_world: 7/7 passed"
   },
   {
    "name": "check_chests",
-   "code": 0,
-   "ms": 13035,
-   "summary": "check_chests: 4/4 passed"
+   "code": 1,
+   "ms": 5208,
+   "summary": "check_chests: 3/5 passed",
+   "tail": "pass  world: ワールドに宝箱 0（A27）\npass  縦切りの宝箱 43 個: 床の上・重なる物の下でない・id が一つ・中身あり\n\n== 焼いた床との明るさの差（ブラウザ）\nFAIL  fern_rita.fern_rita_c1: 明るさの差 0.009（箱 0.369・床 0.36）・色の差 0.145  {\"map\":\"fern_rita\",\"id\":\"fern_rita_c1\",\"pose\":\"closed\",\"chest\":0.369,\"floor\":0.36,\"diff\":0.009,\"color\":0.145}\nFAIL  43 個の宝箱すべてで 床との明るさの差 ≧ 0.08 か色の差 ≧ 0.15（明るさの差がいちばん小さい verda_1.verda_1_c4 -0.057／色 0.312）\npass  ページのエラー 0\n\ncheck_chests: 3/5 passed\nfailed:\n  fern_rita.fern_rita_c1: 明るさの差 0.009（箱 0.369・床 0.36）・色の差 0.145\n  43 個の宝箱すべてで 床との明るさの差 ≧ 0.08 か色の差 ≧ 0.15（明るさの差がいちばん小さい verda_1.verda_1_c4 -0.057／色 0.312）"
   },
   {
    "name": "check_secrets",
    "code": 0,
-   "ms": 14089,
+   "ms": 6355,
    "summary": "check_secrets: 32/32 passed"
   },
   {
    "name": "check_stubs",
    "code": 0,
-   "ms": 17366,
-   "summary": "check_stubs: 12/12 passed"
+   "ms": 11045,
+   "summary": "check_stubs: 13/13 passed"
   },
   {
    "name": "sim_zones",
-   "code": 1,
-   "ms": 24912,
-   "summary": "all zones: HP loss 8.6%, rounds 3.09 pass",
-   "tail": "sim_zones: n=120 seed=20260926（標準の一行、雑魚戦 1 回ごとに HP・MP 満タン）\nzone             win%   rounds  HP%   p95   down%  wipe%  MP/戦  判定\nzw_prologue      100.0   3.25   18.0  50.0    0.0   0.00    3.4  pass  (solo, worst of 30: wanderer/wind)\nzw_peninsula     100.0   2.92    7.2  15.6    0.0   0.00    7.2  pass\nz_lighthouse     100.0   3.09    8.4  20.1    0.0   0.00    7.2  FAIL p95 20.1 > 20\nz_well           100.0   2.99    8.7  16.6    0.0   0.00    8.1  pass\nzw_forest_road   100.0   3.28    9.4  18.6    0.0   0.00    8.0  pass\nzw_forest        100.0   3.33    9.5  18.6    0.0   0.00    7.7  pass\nz_verda          100.0   3.04    8.7  19.7    0.0   0.00    7.4  pass\nz_elder          100.0   2.99    8.2  18.3    0.0   0.00    7.5  pass\nall zones: HP loss 8.6%, rounds 3.09 pass\nparty: hero(gl 8, HP 125, sword) bartolo(gl 8, HP 117, greatsword) marta(gl 8, HP 97, staff) sylvain(gl 8, HP 87, bow)"
+   "code": 0,
+   "ms": 23223,
+   "summary": "all zones: HP loss 8.7%, rounds 3.12 pass"
   },
   {
    "name": "sim_zones --segments",
    "code": 0,
-   "ms": 40265,
-   "summary": "segments: 11/11 pass"
+   "ms": 24490,
+   "summary": "segments: 12/12 pass"
   },
   {
    "name": "sim_bosses",
-   "code": 1,
-   "ms": 25292,
-   "summary": "tr_b_rooteater            0      17       99    81    9.7   0.08  pass",
-   "tail": "sim_bosses: n=150 seed=20260926（fight = たたかうだけ、repeat = リピートだけ、script = 正しく対処する台本）\ntroop                  fight%  repeat%  script%  差    rounds  倒れる  判定\ntr_tutorial               —       —      100     —    2.2   0.00  pass\ntr_b_pageeater            1      42       97    55   10.5   0.30  pass\ntr_a21_forest_wolves      0       4      100    96    5.3   0.00  pass\ntr_b_moth                 0      14       95    81    7.0   0.23  FAIL rounds 7.0 ∉ 5–7\ntr_b_rooteater            0      17       99    81    9.7   0.08  pass"
+   "code": 0,
+   "ms": 31946,
+   "summary": "tr_b_rooteater            0      17       99    83    9.8   0.06  pass"
   },
   {
    "name": "sim_growth",
    "code": 0,
-   "ms": 7490,
+   "ms": 3015,
    "summary": "sim_growth: 8/8 passed (runs 20, seed 1)"
   },
   {
    "name": "sim_glimmer",
    "code": 0,
-   "ms": 90522,
+   "ms": 82791,
    "summary": "NOTE (above/below the estimate) slice scope near the V2_PLAN §3.9 estimate (glimmered techs lv1–3 ≈ 20: 28 + starters 8, max lv 3; spells step 1–2 ≈ 12: 18)"
   },
   {
    "name": "sim_loot",
    "code": 0,
-   "ms": 17684,
+   "ms": 9153,
    "summary": "H5 倒しても落ちない: 30000 体、盗み専用のドロップ 0  pass"
+  },
+  {
+   "name": "test_core_flow",
+   "code": 0,
+   "ms": 104556,
+   "summary": "55/55 passed"
+  },
+  {
+   "name": "test_core_wipe",
+   "code": 0,
+   "ms": 8036,
+   "summary": "test_core_wipe: 11/11 passed"
+  },
+  {
+   "name": "test_render_browser",
+   "code": 0,
+   "ms": 13946,
+   "summary": "test_render_browser: 36/36 passed"
+  },
+  {
+   "name": "test_uik_browser",
+   "code": 0,
+   "ms": 32198,
+   "summary": "test_uik_browser: 56/56 passed"
+  },
+  {
+   "name": "test_cast_browser",
+   "code": 1,
+   "ms": 17147,
+   "summary": "test_cast_browser: 35/36 passed",
+   "tail": " \"budget\": {\n  \"desk\": 25,\n  \"phone\": 100\n }\n}\npass  原画の人（アルン）は予算の中（12 コマあたり ≤ desk）\npass  仮の絵は予算の 4 倍まで（原画に替われば消える。open に書く）\npass  ページのエラー 0\n\ntest_cast_browser: 35/36 passed\nfailed:\n  仮の顔の 5 つの表情がすべて違う画素"
+  },
+  {
+   "name": "test_beast_browser",
+   "code": 0,
+   "ms": 11876,
+   "summary": "test_beast_browser: 427/427 passed"
+  },
+  {
+   "name": "test_terrain_browser",
+   "code": 1,
+   "ms": 13465,
+   "summary": "test_terrain_browser: 45/47 passed",
+   "tail": "  CPU ×1: chunk median 3.00 ms  p90 5.50  max 15.80  | step median 2.30  p99 4.50  max 14.00\npass  CPU ×1: チャンク 1 つの焼き時間の中央値 3.00 ms ≦ 予算の 2 倍 8 ms（G1 の関門）\nFAIL  Job.step(3) の 99% が 3 ms 以内（4.50 ms。performance.now の刻み 0.1 ms を含めて ≦ 3.3）  {\"slow\":[[\"tt_hill\",1,1,0,9,3.5],[\"tt_hill\",2,1,0,8,3.2],[\"tt_hill\",3,1,0,9,3.2],[\"tt_hill\",0,2,0,9,3.4]],\"chunkMed\":3,\"chunkP90\":5.5,\"chunkMax\":15.800000011920929,\"stepMed\":2.2999999970197678,\"stepP99\":4.5,\"stepMax\":14,\"prewarm\":{\"tt_harbor\":0.29999999701976776,\"tt_treetop\":0.5,\"tt_moss\":0.6000000089406967,\"tt_forest\":0.5,\"tt_tree\":3.199999988079071,\"tt_lighthouse\":2.5999999940395355,\"tt_cave\":0,\nFAIL  Job.step(3) の最長 14.00 ms ≦ 5 ms（共有の機械の揺れを含む）  {\"slow\":[[\"tt_hill\",1,1,0,9,3.5],[\"tt_hill\",2,1,0,8,3.2],[\"tt_hill\",3,1,0,9,3.2],[\"tt_hill\",0,2,0,9,3.4]],\"chunkMed\":3,\"chunkP90\":5.5,\"chunkMax\":15.800000011920929,\"stepMed\":2.2999999970197678,\"stepP99\":4.5,\"stepMax\":14,\"prewarm\":{\"tt_harbor\":0.29999999701976776,\"tt_treetop\":0.5,\"tt_moss\":0.6000000089406967,\"tt_forest\":0.5,\"tt_tree\":3.199999988079071,\"tt_lighthouse\":2.5999999940395355,\"tt_cave\":0,\npass  コンソールのエラー・外への通信なし\n\nPERF {\"lum\":{\"harbor\":0.205,\"treetop\":0.152,\"moss_village\":0.156,\"forest_dungeon\":0.141,\"tree_inside\":0.138,\"lighthouse\":0.163,\"cave\":0.168,\"world\":0.186,\"hill_village\":0.17},\"perf\":{\"cpu1\":{\"slow\":[[\"tt_hill\",1,1,0,9,3.5],[\"tt_hill\",2,1,0,8,3.2],[\"tt_hill\",3,1,0,9,3.2],[\"tt_hill\",0,2,0,9,3.4]],\"chunkMed\":3,\"chunkP90\":5.5,\"chunkMax\":15.800000011920929,\"stepMed\":2.2999999970197678,\"stepP99\":4.5,\"stepMax\":14,\"prewarm\":{\"tt_harbor\":0.29999999701976776,\"tt_treetop\":0.5,\"tt_moss\":0.6000000089406967,\"tt_forest\":0.5,\"tt_tree\":3.199999988079071,\"tt_lighthouse\":2.5999999940395355,\"tt_cave\":0,\"tt_world\":0.5,\"tt_hill\":0.29999999701976776},\"attempt\":0}}}\n\ntest_terrain_browser: 45/47 passed\nfailed:\n  Job.step(3) の 99% が 3 ms 以内（4.50 ms。performance.now の刻み 0.1 ms を含めて ≦ 3.3）\n  Job.step(3) の最長 14.00 ms ≦ 5 ms（共有の機械の揺れを含む）"
+  },
+  {
+   "name": "test_field_browser",
+   "code": 0,
+   "ms": 91976,
+   "summary": "test_field_browser: 17/17 passed"
+  },
+  {
+   "name": "test_field_slice",
+   "code": 0,
+   "ms": 344329,
+   "summary": "test_field_slice: 148/148 passed"
+  },
+  {
+   "name": "test_events_browser",
+   "code": 0,
+   "ms": 145780,
+   "summary": "test_events_browser: 28/28 passed"
+  },
+  {
+   "name": "test_bscene_flow",
+   "code": 0,
+   "ms": 74160,
+   "summary": "test_bscene_flow: 47/47 passed"
+  },
+  {
+   "name": "test_screens_browser",
+   "code": 0,
+   "ms": 204041,
+   "summary": "test_screens_browser: 151/151 passed"
+  },
+  {
+   "name": "check_ui",
+   "code": 0,
+   "ms": 402868,
+   "summary": "check_ui: 426/426 passed"
+  },
+  {
+   "name": "measure_night",
+   "code": 1,
+   "ms": 54062,
+   "summary": "measure_night: 51/56 passed",
+   "tail": "    world            0.134  (42 チャンク、.12 未満 12)\n    yura             0.159  (14 チャンク、.12 未満 0)\n    yura_inn         0.201  (3 チャンク、.12 未満 0)\npass  チャンクの平均輝度 .12 未満のマップ 0（なし）\n\nmeasure_night: 51/56 passed\nfailed:\n  町（フェルン）: 明るい 95% 分位 0.306 ∈ .35〜.60\n  町（フェルン）: 輝度 > .75 の画素 1.0% ∈ 1〜7%\n  洞窟（古井戸）: 平均輝度 0.127 ∈ .14〜.22\n  洞窟（古井戸）: 明るい 95% 分位 0.303 ∈ .35〜.60\n  洞窟（古井戸）: 輝度 > .75 の画素 0.5% ∈ 1〜7%"
   }
  ]
 }

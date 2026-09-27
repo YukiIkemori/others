@@ -7,6 +7,7 @@
 //   vignette  四隅の暗さ（四隅は中央の 1 − vignette 倍）   bloom = ブルームの強さ、thr = しきい
 //   key/rim/rimC/rimK/mul   RZ.render の light（人物・魔物を焼くときの主光とリム。R.Hd.RZ.render(B, {light: mood.rz})）
 //   moon      月の当たる面（屋根・高い所の上面）に足す色      lamp / lantern = 灯り・ランタンの色と強さ
+//   spillK    spill の強さの倍率（屋内は床が明るいので控えめ。宝箱が床に溶けない）
 //   spillR    光だまりの中心へ足す加算（spill）の半径の倍率
 //   poolK     光だまりの強さの倍率（R.Light.compose の灯りの k に掛ける。暗い地面の場面で灯りの芯を明るく）
 //   actorLift 人物を背景より少し持ち上げる割合（夜に縁が消えないように、STYLE_REFERENCE §5.6）
@@ -35,7 +36,7 @@
     // 夜の町（灯りの島。見本 town.png の rgb(92,90,160)）
     town_night: m({ ambient: 'rgb(106,88,170)', grade: { sh: [6, -4, 10], hi: [16, 6, -10], lift: 0, sat: 1.05, con: 1.08 }, vignette: 0.75, bloom: 0.65, thr: 0.6 }),
     // 家・宿・酒場の中（暖炉とランプの暖色、窓の外は青）
-    interior: m({ ambient: 'rgb(150,116,122)', lightDir: [0.2, -1], shadow: 'rgba(34,14,24,0.4)', grade: { sh: [12, 0, 14], hi: [18, 8, -8], lift: 4, sat: 1.0, con: 1.05 }, vignette: 0.5, bloom: 0.45, thr: 0.64, rz: RZ_WARM, target: Object.assign({}, NIGHT_TARGET, { lum: [0.16, 0.28], darkHue: [260, 340] }) }),
+    interior: m({ spillK: 0.45, ambient: 'rgb(150,116,122)', lightDir: [0.2, -1], shadow: 'rgba(34,14,24,0.4)', grade: { sh: [12, 0, 14], hi: [18, 8, -8], lift: 4, sat: 1.0, con: 1.05 }, vignette: 0.5, bloom: 0.45, thr: 0.64, rz: RZ_WARM, target: Object.assign({}, NIGHT_TARGET, { lum: [0.16, 0.28], darkHue: [260, 340] }) }),
     // 夜の森（蛍とこけの緑、月は木々で細る）
     forest_night: m({ ambient: 'rgb(88,104,158)', shadow: 'rgba(8,16,30,0.45)', grade: { sh: [22, -4, 34], hi: [10, 14, -6], lift: 4, sat: 1.04, con: 1.06 }, vignette: 0.78, poolK: 1.3, spillR: 1.15, bloom: 0.62, lamp: { color: '#ffd07a', k: 0.8 }, target: DUNGEON_TARGET }),
     // 暗がりの階（ランタンの輪の中だけ見える。E6）

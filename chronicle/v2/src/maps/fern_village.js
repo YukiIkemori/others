@@ -179,7 +179,7 @@
         { id: 'arrival', on: 'enter', event: 'fern_arrival' },
       ],
       zones: [],
-      light: { ambient: '#5662a2', k: 0.46, poolK: 2.1, mood: 'forest_night' },
+      light: { ambient: '#5662a2', k: 0.46, poolK: 1.6, spillR: 1.6, mood: 'forest_night' },
       dark: false,
       bgm: 'village',
       meta: { sub: '樹上の村', underDeck: 'moss_earth', chestsInfo: false },

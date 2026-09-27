@@ -60,7 +60,7 @@
     // ---------------------------------------------------------------- 物
     const O = [];
     O.push(K.spring('verda_1_s1', 26, 27));                         // 蛍だまりの泉（1 階の中ほど）
-    O.push(K.spring('verda_1_s2', 27, 9));                          // 北の草地の泉（道のりの中ほど、check_springs の 40〜60%）
+    O.push(K.spring('verda_1_s2', 29, 10));                         // 北の草地の泉（道のりの中ほど、check_springs の 40〜60%）
     O.push({ type: 'brazier', id: 'verda_1_camp', x: 31, y: 30, on: true });   // 野営地のたき火
     O.push(K.prop('tent', 34, 27), K.prop('log', 29, 31), K.prop('log', 33, 31), K.prop('sack', 35, 28), K.prop('crate', 35, 30));
     O.push(K.prop('lantern', 28, 26), K.prop('lantern', 34, 32));
