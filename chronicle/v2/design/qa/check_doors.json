@@ -1,22 +1,7 @@
 {
- "date": "2026-09-27T18:46:37.769Z",
+ "date": "2026-09-27T18:52:25.860Z",
  "fixture": "content_p_pharos",
  "walked": [
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "at": "well",
-   "to": "well",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    77,
-    83
-   ],
-   "ms": 5978
-  },
   {
    "map": "world",
    "kind": "door",
@@ -30,7 +15,22 @@
     106,
     128
    ],
-   "ms": 7297
+   "ms": 5984
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "well",
+   "to": "well",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    77,
+    83
+   ],
+   "ms": 6674
   },
   {
    "map": "world",
@@ -45,7 +45,7 @@
     68,
     65
    ],
-   "ms": 9488
+   "ms": 8999
   },
   {
    "map": "world",
@@ -60,22 +60,7 @@
     64,
     41
    ],
-   "ms": 6887
-  },
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "at": "peak_1",
-   "to": "peak_1",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    60,
-    15
-   ],
-   "ms": 6613
+   "ms": 8131
   },
   {
    "map": "world",
@@ -90,7 +75,22 @@
     36,
     130
    ],
-   "ms": 10303
+   "ms": 9137
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "peak_1",
+   "to": "peak_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    60,
+    15
+   ],
+   "ms": 7611
   },
   {
    "map": "world",
@@ -105,7 +105,7 @@
     22,
     10
    ],
-   "ms": 4887
+   "ms": 5597
   },
   {
    "map": "world",
@@ -114,13 +114,13 @@
    "at": "icicle_1",
    "to": "icicle_1",
    "ok": true,
-   "steps": 7,
+   "steps": 4,
    "why": null,
    "start": [
     22,
     31
    ],
-   "ms": 7272
+   "ms": 5989
   },
   {
    "map": "world",
@@ -135,7 +135,7 @@
     41,
     10
    ],
-   "ms": 7482
+   "ms": 7601
   },
   {
    "map": "world",
@@ -150,7 +150,7 @@
     82,
     87
    ],
-   "ms": 4349
+   "ms": 4844
   },
   {
    "map": "world",
@@ -165,37 +165,7 @@
     100,
     104
    ],
-   "ms": 5207
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "44,81",
-   "at": "fern",
-   "to": "fern",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    44,
-    85
-   ],
-   "ms": 8382
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "46,138",
-   "at": "kasim",
-   "to": "kasim",
-   "ok": true,
-   "steps": 4,
-   "why": null,
-   "start": [
-    45,
-    135
-   ],
-   "ms": 6831
+   "ms": 4800
   },
   {
    "map": "world",
@@ -210,37 +180,37 @@
     26,
     63
    ],
-   "ms": 7852
+   "ms": 8265
   },
   {
    "map": "world",
    "kind": "exit",
-   "id": "27,158",
-   "at": "desert_camp2",
-   "to": "desert_camp2",
+   "id": "38,72",
+   "at": "fern",
+   "to": "fern",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    26,
-    161
+    42,
+    68
    ],
-   "ms": 5121
+   "ms": 9939
   },
   {
    "map": "world",
    "kind": "exit",
-   "id": "58,138",
+   "id": "46,138",
    "at": "kasim",
    "to": "kasim",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    55,
-    137
+    45,
+    135
    ],
-   "ms": 6538
+   "ms": 11828
   },
   {
    "map": "world",
@@ -255,22 +225,37 @@
     37,
     156
    ],
-   "ms": 5609
+   "ms": 7863
   },
   {
    "map": "world",
    "kind": "exit",
-   "id": "13,151",
-   "at": "desert_wellroom",
-   "to": "desert_wellroom",
+   "id": "58,138",
+   "at": "kasim",
+   "to": "kasim",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    14,
-    148
+    55,
+    137
    ],
-   "ms": 4053
+   "ms": 11294
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "27,158",
+   "at": "desert_camp2",
+   "to": "desert_camp2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    161
+   ],
+   "ms": 7702
   },
   {
    "map": "world",
@@ -279,13 +264,13 @@
    "at": "desert_camp3",
    "to": "desert_camp3",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
    "why": null,
    "start": [
     16,
     145
    ],
-   "ms": 5930
+   "ms": 7946
   },
   {
    "map": "world",
@@ -300,7 +285,7 @@
     27,
     154
    ],
-   "ms": 6632
+   "ms": 6052
   },
   {
    "map": "world",
@@ -315,7 +300,7 @@
     27,
     144
    ],
-   "ms": 4553
+   "ms": 5140
   },
   {
    "map": "world",
@@ -324,13 +309,28 @@
    "at": "desert_rocks",
    "to": "desert_rocks",
    "ok": true,
-   "steps": 3,
+   "steps": 4,
    "why": null,
    "start": [
     57,
     129
    ],
-   "ms": 3942
+   "ms": 8120
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "13,151",
+   "at": "desert_wellroom",
+   "to": "desert_wellroom",
+   "ok": true,
+   "steps": 5,
+   "why": null,
+   "start": [
+    14,
+    148
+   ],
+   "ms": 14780
   },
   {
    "map": "world",
@@ -345,22 +345,7 @@
     44,
     31
    ],
-   "ms": 9505
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "54,27",
-   "at": "yule",
-   "to": "yule",
-   "ok": true,
-   "steps": 3,
-   "why": null,
-   "start": [
-    55,
-    30
-   ],
-   "ms": 8445
+   "ms": 12213
   },
   {
    "map": "world",
@@ -375,7 +360,22 @@
     49,
     17
    ],
-   "ms": 8826
+   "ms": 11014
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "54,27",
+   "at": "yule",
+   "to": "yule",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    55,
+    30
+   ],
+   "ms": 12444
   },
   {
    "map": "world",
@@ -384,13 +384,13 @@
    "at": "pass_inn",
    "to": "pass_inn",
    "ok": true,
-   "steps": 2,
+   "steps": 4,
    "why": null,
    "start": [
     84,
     36
    ],
-   "ms": 3721
+   "ms": 5851
   }
  ],
  "looks": [
