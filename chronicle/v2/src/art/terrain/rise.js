@@ -78,6 +78,9 @@
   function faceSheet(style, tile, h) {
     const key = style + '|' + tile + '|' + h;
     if (sheets[key]) return sheets[key];
+    // 描いた面の画像（env.js）があればそれ（横の周期は画像の幅）
+    const e = T.Env && T.Env.face ? T.Env.face(style, tile, h) : null;
+    if (e) return (sheets[key] = e);
     const U = T._u, S = tile * 4, H = tile * h, px = new Uint32Array(S * H), k = 32 / tile;
     for (let y = 0; y < H; y++) for (let x = 0; x < S; x++) {
       const c = faceColor(style, (x + 0.5) * k, y, H, tile);
@@ -87,6 +90,7 @@
     return (sheets[key] = { S, H, px });
   }
   T._faceSheet = faceSheet;
+  T._faceReset = function () { for (const k of Object.keys(sheets)) delete sheets[k]; };
 
   /**
    * 面と AO を dst に描く。C = チャンクのマスの読み（chunks.js の cellInfo）、X0, Y0 = チャンクの左上の px、cells = [x0, y0, x1, y1]

@@ -1,0 +1,890 @@
+{
+ "char": "arun",
+ "companion": null,
+ "npc": null,
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_nolantern",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_nolantern/arun_sheet_01b.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 384.0,
+   "native_height_at_period": 48.0,
+   "scale_note": "描かれた格子のまま（48.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      29,
+      48
+     ],
+     "box": [
+      184,
+      80,
+      448,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.03,
+     "lantern": null
+    },
+    "walk_down_1": {
+     "size": [
+      32,
+      48
+     ],
+     "box": [
+      816,
+      80,
+      1104,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.24,
+     "scale": 0.946,
+     "lantern": null
+    },
+    "walk_down_2": {
+     "size": [
+      32,
+      48
+     ],
+     "box": [
+      1456,
+      80,
+      1744,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.12,
+     "scale": 0.946,
+     "lantern": null
+    },
+    "walk_up_0": {
+     "size": [
+      34,
+      48
+     ],
+     "box": [
+      168,
+      592,
+      472,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.18,
+     "scale": 0.928,
+     "lantern": null
+    },
+    "walk_up_1": {
+     "size": [
+      31,
+      48
+     ],
+     "box": [
+      816,
+      592,
+      1096,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.48,
+     "scale": 0.867,
+     "lantern": null
+    },
+    "walk_up_2": {
+     "size": [
+      31,
+      48
+     ],
+     "box": [
+      1456,
+      592,
+      1736,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.99,
+     "scale": 0.898,
+     "lantern": null
+    },
+    "walk_left_0": {
+     "size": [
+      30,
+      48
+     ],
+     "box": [
+      184,
+      1104,
+      456,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 5.37,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0,
+      "scarf": 1.87
+     },
+     "lantern": null
+    },
+    "walk_left_1": {
+     "size": [
+      33,
+      48
+     ],
+     "box": [
+      808,
+      1104,
+      1104,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 5.4,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0,
+      "scarf": 1.9
+     },
+     "scale": 0.946,
+     "lantern": null
+    },
+    "walk_left_2": {
+     "size": [
+      34,
+      48
+     ],
+     "box": [
+      1448,
+      1104,
+      1752,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 5.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0,
+      "scarf": 2.0
+     },
+     "scale": 0.946,
+     "lantern": null
+    },
+    "walk_right_0": {
+     "size": [
+      32,
+      48
+     ],
+     "box": [
+      176,
+      1616,
+      464,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 5.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0,
+      "scarf": 2.0
+     },
+     "lantern": null
+    },
+    "walk_right_1": {
+     "size": [
+      35,
+      48
+     ],
+     "box": [
+      800,
+      1616,
+      1112,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 5.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0,
+      "scarf": 2.0
+     },
+     "scale": 0.916,
+     "lantern": null
+    },
+    "walk_right_2": {
+     "size": [
+      34,
+      48
+     ],
+     "box": [
+      1448,
+      1616,
+      1752,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 5.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0,
+      "scarf": 2.0
+     },
+     "scale": 0.916,
+     "lantern": null
+    }
+   }
+  },
+  "2": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_nolantern/arun_sheet_02b.png",
+   "size": [
+    2560,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x4",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 384.0,
+   "native_height_at_period": 48.0,
+   "scale_note": "描かれた格子のまま（48.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "run_down_0": {
+     "size": [
+      37,
+      48
+     ],
+     "box": [
+      152,
+      80,
+      480,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.83,
+     "lantern": null
+    },
+    "run_down_1": {
+     "size": [
+      40,
+      48
+     ],
+     "box": [
+      784,
+      80,
+      1136,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.61,
+     "scale": 1.06,
+     "lantern": null
+    },
+    "run_down_2": {
+     "size": [
+      39,
+      48
+     ],
+     "box": [
+      1424,
+      80,
+      1768,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.86,
+     "scale": 1.024,
+     "lantern": null
+    },
+    "run_down_3": {
+     "size": [
+      38,
+      48
+     ],
+     "box": [
+      2072,
+      80,
+      2408,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.6,
+     "scale": 1.024,
+     "lantern": null
+    },
+    "run_up_0": {
+     "size": [
+      37,
+      48
+     ],
+     "box": [
+      152,
+      592,
+      480,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.77,
+     "scale": 1.0,
+     "lantern": null
+    },
+    "run_up_1": {
+     "size": [
+      39,
+      48
+     ],
+     "box": [
+      784,
+      592,
+      1128,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.29,
+     "scale": 1.0,
+     "lantern": null
+    },
+    "run_up_2": {
+     "size": [
+      40,
+      48
+     ],
+     "box": [
+      1424,
+      592,
+      1776,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.82,
+     "scale": 1.0,
+     "lantern": null
+    },
+    "run_up_3": {
+     "size": [
+      39,
+      48
+     ],
+     "box": [
+      2064,
+      592,
+      2408,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.29,
+     "scale": 1.0,
+     "lantern": null
+    },
+    "run_left_0": {
+     "size": [
+      44,
+      48
+     ],
+     "box": [
+      128,
+      1104,
+      512,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 5.28,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0,
+      "scarf": 1.78
+     },
+     "scale": 1.024,
+     "lantern": null
+    },
+    "run_left_1": {
+     "size": [
+      44,
+      48
+     ],
+     "box": [
+      768,
+      1104,
+      1152,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 4.32,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0,
+      "scarf": 0.82
+     },
+     "scale": 1.048,
+     "lantern": null
+    },
+    "run_left_2": {
+     "size": [
+      45,
+      48
+     ],
+     "box": [
+      1400,
+      1104,
+      1792,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 5.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0,
+      "scarf": 2.0
+     },
+     "scale": 1.06,
+     "lantern": null
+    },
+    "run_left_3": {
+     "size": [
+      44,
+      48
+     ],
+     "box": [
+      2048,
+      1104,
+      2432,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 5.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0,
+      "scarf": 2.0
+     },
+     "scale": 1.03,
+     "lantern": null
+    },
+    "run_right_0": {
+     "size": [
+      40,
+      48
+     ],
+     "box": [
+      144,
+      1616,
+      496,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 5.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0,
+      "scarf": 2.0
+     },
+     "scale": 1.0,
+     "lantern": null
+    },
+    "run_right_1": {
+     "size": [
+      43,
+      48
+     ],
+     "box": [
+      768,
+      1616,
+      1144,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 4.4,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0,
+      "scarf": 0.9
+     },
+     "scale": 1.048,
+     "lantern": null
+    },
+    "run_right_2": {
+     "size": [
+      43,
+      48
+     ],
+     "box": [
+      1408,
+      1616,
+      1784,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 5.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0,
+      "scarf": 2.0
+     },
+     "scale": 1.0,
+     "lantern": null
+    },
+    "run_right_3": {
+     "size": [
+      41,
+      48
+     ],
+     "box": [
+      2056,
+      1616,
+      2416,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 5.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0,
+      "scarf": 2.0
+     },
+     "scale": 1.048,
+     "lantern": null
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 1 番（下向き・立ち） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_down_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 2 番（下向き・右足前） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_down_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 3 番（下向き・左足前） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_down_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 4 番（上向き・立ち） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_up_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 5 番（上向き・右足前） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_up_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 6 番（上向き・左足前） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_up_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 7 番（左向き・立ち） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_left_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 8 番（左向き・前の足） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_left_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 9 番（左向き・後ろの足） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_left_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 10 番（右向き・立ち） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_right_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 11 番（右向き・前の足） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_right_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 12 番（右向き・後ろの足） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_right_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート2 の 1 番（下向き・右足で着地） にランタンが見えない（左手に持つはず）",
+   "slot": "run_down_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート2 の 2 番（下向き・浮く1） にランタンが見えない（左手に持つはず）",
+   "slot": "run_down_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート2 の 3 番（下向き・左足で着地） にランタンが見えない（左手に持つはず）",
+   "slot": "run_down_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート2 の 4 番（下向き・浮く2） にランタンが見えない（左手に持つはず）",
+   "slot": "run_down_3",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート2 の 5 番（上向き・右足で着地） にランタンが見えない（左手に持つはず）",
+   "slot": "run_up_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート2 の 6 番（上向き・浮く1） にランタンが見えない（左手に持つはず）",
+   "slot": "run_up_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート2 の 7 番（上向き・左足で着地） にランタンが見えない（左手に持つはず）",
+   "slot": "run_up_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート2 の 8 番（上向き・浮く2） にランタンが見えない（左手に持つはず）",
+   "slot": "run_up_3",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート2 の 9 番（左向き・右足で着地） にランタンが見えない（左手に持つはず）",
+   "slot": "run_left_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート2 の 10 番（左向き・浮く1） にランタンが見えない（左手に持つはず）",
+   "slot": "run_left_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート2 の 11 番（左向き・左足で着地） にランタンが見えない（左手に持つはず）",
+   "slot": "run_left_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート2 の 12 番（左向き・浮く2） にランタンが見えない（左手に持つはず）",
+   "slot": "run_left_3",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート2 の 13 番（右向き・右足で着地） にランタンが見えない（左手に持つはず）",
+   "slot": "run_right_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート2 の 14 番（右向き・浮く1） にランタンが見えない（左手に持つはず）",
+   "slot": "run_right_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート2 の 15 番（右向き・左足で着地） にランタンが見えない（左手に持つはず）",
+   "slot": "run_right_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート2 の 16 番（右向き・浮く2） にランタンが見えない（左手に持つはず）",
+   "slot": "run_right_3",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 5 番（上向き・右足前） の縮尺が少し違う（頭の大きさで約 87%）。並べて見て気になるなら描き直し",
+   "slot": "walk_up_1",
+   "ask": null,
+   "data": {
+    "scale": 0.8674698795180724,
+    "per_ref": [
+     0.9000000000000004,
+     0.9000000000000004,
+     0.9625000000000001,
+     0.8500000000000003
+    ],
+    "group_median": 1.0375000000000003
+   }
+  }
+ ]
+}

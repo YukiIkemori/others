@@ -66,7 +66,7 @@ def convert_set(src_json, kind, look, dst, source):
     out = {'character': d.get('character'), 'set': d.get('set'), 'look': look, 'source': source, 'cell': d['cell'], 'anchor': d['anchor'],
            'frames': frames, 'poses': poses, 'fps': fps, 'anims': d.get('anims') or {}, 'facing': d.get('facing'),
            'target_height': d.get('target_height')}
-    for k in ('attach', 'weapons', 'directions', 'walk_note', 'palette', 'weapon_drawn', 'lantern_drawn', 'copied_from'):
+    for k in ('attach', 'weapons', 'directions', 'walk_note', 'palette', 'weapon_drawn', 'lantern_drawn', 'copied_from', 'npc'):
         if k in d:
             out[k] = d[k]
     if kind == 'face':
@@ -149,6 +149,8 @@ def main():
     o = ap.parse_args()
     src = os.path.abspath(o.src)
     cj = os.path.join(src, 'companion.json')
+    if not os.path.exists(cj):
+        cj = os.path.join(src, 'npc.json')      # NPC runs (tools/npc_spec.py): look = the NPC id / the tier C look id
     if not o.look and os.path.exists(cj):
         o.look = json.load(open(cj)).get('look')
     if not o.look:

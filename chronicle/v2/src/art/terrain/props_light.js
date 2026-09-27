@@ -46,12 +46,15 @@
           if (!sh) break;
           const bx = o.x * env.tile, by = (o.y + (o.h || 3)) * env.tile;
           out.moon.push([bx + sh.meta.roof[0], by + sh.meta.roof[1], sh.meta.roof[2] - sh.meta.roof[0], sh.meta.roof[3] - sh.meta.roof[1]]);
+          // 描いた建物（env）: 灯った窓の画素だけの絵を光の後に描き直す（窓ごとの光と光のにじみは下の 'win' と同じ）
+          const layer = sh.meta.emitLayer;
+          if (layer) out.emissive.push({ kind: 'img', c: layer, x: bx - sh.meta.envAnchor[0], y: by - sh.meta.envAnchor[1], w: layer.width, h: layer.height });
           for (const e of sh.meta.emit) {
             const ex = bx + e.x, ey = by + e.y;
             if (e.kind === 'win') {
               L(ex + e.w / 2, by + 12 * s, 40, S.windowColor, 0.8, 'window', 'window', o.id);
               L(ex + e.w / 2, ey + e.h / 2, 18, S.windowColor, 0.5, 'point', 'window', o.id);
-              out.emissive.push({ kind: 'win', x: ex, y: ey, w: e.w, h: e.h });
+              if (!layer) out.emissive.push({ kind: 'win', x: ex, y: ey, w: e.w, h: e.h });
               G(ex + e.w / 2, ey + e.h / 2, { r: 22 * s, core: 2 * s, halo: 22 * s, color: S.windowColor, k: 0.32, type: 'window' });
             } else if (e.kind === 'door') {
               L(ex + e.w / 2, by + 18 * s, 66, S.windowColor, 1.3, 'wide', 'door', o.id);
@@ -115,6 +118,7 @@
     ctx.save();
     for (const e of list) {
       const x = e.x - X0, y = e.y - Y0;
+      if (e.kind === 'img') { ctx.drawImage(e.c, Math.round(x), Math.round(y)); continue; }
       if (e.kind === 'win') {
         const g = ctx.createLinearGradient(0, y, 0, y + e.h);
         g.addColorStop(0, 'rgba(255,244,210,1)'); g.addColorStop(1, 'rgba(255,190,104,1)');

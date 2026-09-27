@@ -1,1 +1,14 @@
 00:25:36 sheet 1b attempt 1: edit arun_sheet_01.png (1920x2048, quality high)
+00:27:23   pitch in raw image: 8.04 px per art pixel (upright median 386 px / 48)
+00:27:25 sheet 1b -> art_ref/gen/arun/arun_nolantern/arun_sheet_01b.png
+00:27:25 sheet 2b attempt 1: edit arun_sheet_02.png (2560x2048, quality high)
+00:29:02   pitch in raw image: 7.96 px per art pixel (upright median 382 px / 48)
+00:29:05 sheet 2b -> art_ref/gen/arun/arun_nolantern/arun_sheet_02b.png
+00:29:05 pipeline: sheets.py ../art_ref/gen/arun/arun_nolantern --char arun --only 1,2 --out out/arun_v2_nolantern
+00:29:45   |   シート7 武器なし版と武器: なし（必須）
+00:29:45   |   シート9 顔の表情: なし（必須）
+00:29:45   |   シート4 演技ポーズ（上・左向き）: なし（任意）
+00:29:45   |   シート8 戦闘の追加ポーズ: なし（任意）
+00:29:45   | 
+00:29:45   | packed field 236x416 | palette 51 + face 0
+00:29:45 pipeline output: out/arun_v2_nolantern (field set = walk_* / run_* without the lantern)

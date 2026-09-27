@@ -205,6 +205,38 @@ function scanSprites(root) {
   }
   return out;
 }
+/** 地形・戦闘背景の画像（TERRAIN/BEAST、v2/design/ENV_ASSETS.md）。v2/assets/env/<theme>/<sub>/<name>@<tile>.png ＋ <id>.json（meta）
+ *  → env['<theme>/<sub>/<file>'] = {url, meta}（meta は同じ id の .json。bbg は <bbg>/<layer>.png） */
+const ENV_DIR = path.join(V2, 'assets', 'env');
+function scanEnv(root) {
+  const out = [];
+  if (!fs.existsSync(root)) return out;
+  const walkEnv = (d, rel) => {
+    for (const f of fs.readdirSync(d).sort()) {
+      const full = path.join(d, f), r = rel ? rel + '/' + f : f;
+      if (fs.statSync(full).isDirectory()) { walkEnv(full, r); continue; }
+      if (!/\.png$/.test(f)) continue;
+      out.push({ id: r.replace(/\.png$/, ''), ext: 'png', file: full, meta: null, outName: 'env.' + r.replace(/\//g, '.') });
+    }
+  };
+  walkEnv(root, '');
+  // meta: 同じディレクトリの <id>.json（名前の @ より前、_emit を除く。bbg は <bbg>.json）
+  const metas = {};
+  const readMeta = (dir, id) => {
+    const k = dir + '/' + id;
+    if (k in metas) return metas[k];
+    const js = path.join(dir, id + '.json');
+    let m = null;
+    if (fs.existsSync(js)) { try { m = JSON.parse(fs.readFileSync(js, 'utf8')); delete m.src; delete m.def_; } catch (e) { console.warn(`[build] ${js}: bad JSON`); } }
+    return (metas[k] = m);
+  };
+  for (const e of out) {
+    const dir = path.dirname(e.file), base = path.basename(e.file, '.png');
+    const id = /\/bbg\//.test(e.file) ? path.basename(dir) : base.replace(/@\d+$/, '').replace(/_emit$/, '');
+    e.meta = readMeta(dir, id);
+  }
+  return out;
+}
 function copyIfChanged(src, dst) {
   try {
     const a = fs.statSync(src), b = fs.existsSync(dst) && fs.statSync(dst);
@@ -214,12 +246,13 @@ function copyIfChanged(src, dst) {
 }
 /** → {script, embeds, bytes}。mode 'external' は outDir/<kind>/ に写して相対 URL、'embed' は埋め込み、'none' は空 */
 function mediaTable(media, mode, outDir) {
-  const table = { bgm: {}, voice: {}, portraits: {}, sprites: {} };
+  const table = { bgm: {}, voice: {}, portraits: {}, sprites: {}, env: {} };
   const embeds = [];
   let bytes = 0;
   media.sprites = media.sprites || [];
+  media.env = media.env || [];
   const base = (e) => e.outName || path.basename(e.file);
-  for (const kind of ['bgm', 'voice', 'portraits', 'sprites']) {
+  for (const kind of ['bgm', 'voice', 'portraits', 'sprites', 'env']) {
     const extDir = path.join(outDir, kind);
     if (mode === 'external') {
       fs.mkdirSync(extDir, { recursive: true });
@@ -239,10 +272,10 @@ function mediaTable(media, mode, outDir) {
         bytes += fs.statSync(e.file).size;
         url = kind + '/' + base(e);
       } else continue;
-      table[kind][e.id] = kind === 'bgm' ? Object.assign({ url }, e.meta) : kind === 'sprites' ? { url, meta: e.meta } : url;
+      table[kind][e.id] = kind === 'bgm' ? Object.assign({ url }, e.meta) : kind === 'sprites' || kind === 'env' ? { url, meta: e.meta } : url;
     }
   }
-  return { script: `<script>window.RPG_MEDIA=${JSON.stringify(table)};</script>`, embeds: embeds.join('\n'), bytes, counts: { bgm: media.bgm.length, voice: media.voice.length, portraits: media.portraits.length, sprites: media.sprites.length } };
+  return { script: `<script>window.RPG_MEDIA=${JSON.stringify(table)};</script>`, embeds: embeds.join('\n'), bytes, counts: { bgm: media.bgm.length, voice: media.voice.length, portraits: media.portraits.length, sprites: media.sprites.length, env: media.env.length } };
 }
 
 // ------------------------------------------------------------------ HTML
@@ -313,6 +346,7 @@ function main(argv) {
   if (fs.existsSync(pm)) { try { portraitManifest = JSON.parse(fs.readFileSync(pm, 'utf8')); } catch (e) { console.warn('[build] design/portraits/manifest.json: bad JSON — no painted portraits'); } }
   const media = scanMedia(mediaRoot, { slice: !has('--all-bgm'), portraits: portraitsMode, portraitManifest });
   media.sprites = scanSprites(SPRITES_DIR);
+  media.env = scanEnv(ENV_DIR);
 
   // 書体（dev のフィクスチャの字も入れる）
   const withDir = argVal(argv, '--with', null);
@@ -351,10 +385,10 @@ function main(argv) {
   console.log(`[build] ${playFiles.length} files → ${path.relative(process.cwd(), OUT) || '.'}/index.html (${kb('index.html')} KB)` +
     (has('--no-dev') ? '' : `, dev.html (${kb('dev.html')} KB, +${ok.length - playFiles.length} dev files)`) +
     `\n[build] fonts: ${font.chars} chars, ${(font.bytes / 1024).toFixed(0)} KB embedded${font.ok ? '' : ' (SUBSET FAILED)'}` +
-    `\n[build] media (${single ? 'embedded' : 'external'}): ${M.counts.bgm} BGM${has('--all-bgm') ? '' : ' (slice)'}, ${M.counts.voice} voice, ${M.counts.portraits} portraits, ${M.counts.sprites} sprite sheets, ${mb(M.bytes)} MB` +
+    `\n[build] media (${single ? 'embedded' : 'external'}): ${M.counts.bgm} BGM${has('--all-bgm') ? '' : ' (slice)'}, ${M.counts.voice} voice, ${M.counts.portraits} portraits, ${M.counts.sprites} sprite sheets, ${M.counts.env} env images, ${mb(M.bytes)} MB` +
     (bad.length ? `\n[build] ${bad.length} file(s) EXCLUDED (syntax)` : '') + `  [${Date.now() - t0} ms]`);
   if (bad.length) process.exitCode = 1;
 }
 
-module.exports = { order, fixtures, syntax, scanMedia, scanSprites, SPRITES_DIR, SLICE_BGM, DIRS, CORE_FIRST, V2 };
+module.exports = { order, fixtures, syntax, scanMedia, scanSprites, SPRITES_DIR, scanEnv, ENV_DIR, SLICE_BGM, DIRS, CORE_FIRST, V2 };
 if (require.main === module) main(process.argv.slice(2));

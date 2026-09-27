@@ -714,7 +714,7 @@ def check_facing(runs, fc, rep):
     for n, sp in runs.items():
         spec, g = SHEETS[n], group_of(n)
         for sid, v in sp.items():
-            d = spec['face'][v['row']]
+            d = spec.get('col_face', {}).get(v['col'], spec['face'][v['row']])
             if d is None or sid in spec['no_facing']:
                 continue
             key = 'face_' + d if spec['kind'] == 'face' else d
@@ -802,7 +802,7 @@ def check_lantern(runs, rep, fix=True):
             continue
         spec = SHEETS[n]
         for r, d in enumerate(spec['face']):
-            ids = [i for i in spec['ids'][r] if i in sp]
+            ids = [i for i in spec['ids'][r] if i in sp and i in spec.get('lantern_ids', spec['ids'][r])]
             bad, missing = [], []
             for sid in ids:
                 _, lan = side_cues(sp[sid]['img'])
@@ -956,6 +956,8 @@ def main():
     ap.add_argument('--char', default=None, help='character id used in file names (default arun; a companion: its id)')
     ap.add_argument('--companion', default=None, metavar='ID',
                     help='companion sheets comp_<id>_s1..s5 (COMPANIONS_REQUEST.md, tools/companion_spec.py)')
+    ap.add_argument('--npc', default=None, metavar='ID',
+                    help='NPC sheets npc_<id>_s1..s3 / a tier C look of npc_grp_<group> (NPC_REQUEST.md, tools/npc_spec.py)')
     ap.add_argument('--arun', default=os.path.join(HERE, 'out', 'arun_v1'),
                     help='companions: Arun\'s finished run (shared weapons, generic sword grips)')
     ap.add_argument('--out', default=None)
@@ -975,13 +977,18 @@ def main():
         import companion_spec as CS
         comp = CS.setup(args.companion.lower(), args.folder)
         args.char = args.char or comp['id']
+    npc = None
+    if args.npc:
+        import npc_spec as NS
+        npc = NS.setup(args.npc, args.folder)
+        args.char = args.char or npc['look']
     args.char = args.char or 'arun'
-    od = os.path.abspath(args.out or os.path.join(HERE, 'out', ('comp_' + args.char) if comp else args.char))
+    od = os.path.abspath(args.out or os.path.join(HERE, 'out', ('comp_' + args.char) if comp else ('npc_' + args.char) if npc else args.char))
     if args.repack:
-        return repack(args, od, comp)
+        return repack(args, od, comp, npc)
     os.makedirs(os.path.join(od, 'native'), exist_ok=True)
     rep = Report()
-    found = CS.find(comp, rep) if comp else find_sheets(args.folder, rep)
+    found = CS.find(comp, rep) if comp else NS.find(npc, rep, args, od) if npc else find_sheets(args.folder, rep)
     if args.only:
         keep = {int(x) for x in args.only.split(',')}
         found = {k: v for k, v in found.items() if k in keep}
@@ -1022,6 +1029,9 @@ def main():
     check_palette(runs, ref_pal, rep)
     check_breath(runs, rep)
     check_faces(runs, rep)
+    if npc:
+        npc['found'] = found
+        NS.check_proportions(npc, runs, rep)
     # natives again: the checks may have fixed some (lantern mirror, rescale) — native/ is what --repack reads
     for n, sp in runs.items():
         for sid, v in sp.items():
@@ -1039,7 +1049,7 @@ def main():
     with open(os.path.join(od, 'report.txt'), 'w') as f:
         f.write(txt)
     with open(os.path.join(od, 'report.json'), 'w') as f:
-        json.dump(dict(char=args.char, companion=comp['id'] if comp else None, folder=os.path.abspath(args.folder), sheets={str(k): v for k, v in states.items()},
+        json.dump(dict(char=args.char, companion=comp['id'] if comp else None, npc=npc['look'] if npc else None, folder=os.path.abspath(args.folder), sheets={str(k): v for k, v in states.items()},
                        items=rep.items), f, indent=1, ensure_ascii=False, default=lambda o: o.tolist() if hasattr(o, 'tolist') else str(o))
     print(txt)
     if not args.check:
@@ -1047,12 +1057,14 @@ def main():
         pack.pack(args.char, od, runs, rep, colors=args.colors)
         if comp:
             CS.after_pack(comp, od, rep, args.arun)
+        if npc:
+            NS.after_pack(npc, od, rep)
         with open(os.path.join(od, 'report.txt'), 'w') as f:
             f.write(rep.text(states))
     return 1 if any(i['level'] == 'redo' for i in rep.items) else 0
 
 
-def repack(args, od, comp=None):
+def repack(args, od, comp=None, npc=None):
     import pack
     js = json.load(open(os.path.join(od, 'report.json')))
     rep = Report()
@@ -1074,6 +1086,10 @@ def repack(args, od, comp=None):
         import companion_spec as CS
         comp['found'] = {int(k): v['file'] for k, v in js['sheets'].items() if 'file' in v}
         CS.after_pack(comp, od, rep, args.arun)
+    if npc:
+        import npc_spec as NS
+        npc['found'] = {int(k): v['file'] for k, v in js['sheets'].items() if 'file' in v}
+        NS.after_pack(npc, od, rep)
     with open(os.path.join(od, 'report.txt'), 'w') as f:
         f.write(rep.text({int(k): v for k, v in js['sheets'].items()}))
     return 0

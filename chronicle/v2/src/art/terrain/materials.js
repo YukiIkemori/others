@@ -293,6 +293,9 @@
     const byT = (sheets[tile] = sheets[tile] || {});
     let s = byT[id];
     if (!s) {
+      // 描いた素材の画像（env.js、v2/design/ENV_ASSETS.md）があればそれ。周期は画像の幅（256 = 8 マス）。無ければコードで描く
+      const e = T.Env && T.Env.mat ? T.Env.mat(id, tile) : null;
+      if (e) return (byT[id] = { id, S: e.S, tile, px: e.px, row: e.S, done: true, fn: null, env: true });
       const m = info(id);
       const S = tile * 4;
       s = byT[id] = { id, S, tile, px: new Uint32Array(S * S), row: 0, done: false, fn: null, gen: m.gen ? m : info(underOf(id, null)) };
@@ -315,6 +318,8 @@
   }
   T._sheet = function (id, tile, deadline) { const s = sheetOf(id, tile); bakeSheet(s, deadline); return s; };
   T._sheetReady = function (id, tile) { const b = sheets[tile]; return !!(b && b[id] && b[id].done); };
+  /** 画像を読み終えたとき（env.js）: コードで焼いた素材と代表の色を捨てる */
+  T._envReset = function () { for (const k of Object.keys(sheets)) delete sheets[k]; for (const k of Object.keys(colorCache)) delete colorCache[k]; };
 
   /** 立つ物（木・藪・根）の下の地面の素材 */
   function underOf(id, theme) {
@@ -352,6 +357,8 @@
     if (colorCache[k]) return colorCache[k];
     const m = info(id);
     let c;
+    const em = !m.tall && T.Env && T.Env.meanColor ? T.Env.meanColor(m.gen ? id : underOf(id)) : null;
+    if (em) return (colorCache[k] = em);
     if (m.tall === 'tree' || m.tall === 'bush') c = PAL.canopy[4];
     else if (m.tall === 'roots') c = PAL.root[3];
     else {

@@ -248,12 +248,35 @@
     }
   }
 
+  /** 描いた建物の画像（env.js、v2/design/ENV_ASSETS.md）→ Sheet（描く点 = 敷地の左下の角、コードの絵と同じ）。無ければ null。
+   *  地図の建物 id ごとの絵（窓・扉は地図の def に合わせて描いてある）か、def.art の汎用の建物（扉は敷地のまん中の列）。
+   *  meta.emitLayer = 灯った窓の画素だけの絵（光の地図の後に描き直す。props_light.js）、meta.emit = 窓の光（窓ごとの矩形） */
+  function envBuilding(d, tile) {
+    const eb = T.Env && T.Env.bld ? T.Env.bld(d) : null;
+    if (!eb) return null;
+    const p = eb.img(tile);
+    if (!p) return null;
+    const j = eb.j || {}, k = tile / TS, W = Math.round(p.im.width * p.k), H = Math.round(p.im.height * p.k);
+    const c = R.Hd.RZ.canvas(W, H), g = c.getContext('2d');
+    g.imageSmoothingEnabled = false; g.drawImage(p.im, 0, 0, W, H);
+    let emitLayer = null;
+    const pe = eb.emit(tile);
+    if (pe) { emitLayer = R.Hd.RZ.canvas(W, H); const eg = emitLayer.getContext('2d'); eg.imageSmoothingEnabled = false; eg.drawImage(pe.im, 0, 0, W, H); }
+    const ax = Math.round(((j.anchor32 && j.anchor32[0]) || 8) * k), ay = H;
+    const sc = (e) => ({ kind: e.kind, x: e.x * k, y: e.y * k, w: e.w != null ? e.w * k : undefined, h: e.h != null ? e.h * k : undefined });
+    const door = j.door32 ? { x: j.door32.x * k, y: 0 } : null;
+    const meta = { tile, footprint: j.footprint || [d.w || 3, d.h || 3], door, emit: (j.emit32 || []).map(sc), roof: (j.roof32 || [0, -H, W, -H / 2]).map((v) => v * k),
+      wallTop: (j.wallTop32 || 0) * k, emitLayer, envAnchor: [ax, ay], env: eb.id };
+    return { frames: [{ c, ox: ax, oy: ay }], poses: { default: [0] }, anchors: { feet: [0, 0], door: door ? [door.x, 0] : null }, w: W, h: H, meta };
+  }
+  T._envBuilding = envBuilding;
+
   const keys = {};
   /** def → キー（中身が同じなら同じキー。登録は 1 回） */
   T.building = function (def) {
     def = def || {};
     const shape = {};
-    for (const k of ['w', 'h', 'wall', 'roof', 'mat', 'windows', 'sign', 'lamp', 'chimney', 'hip', 'awning', 'beam', 'shutters', 'flowers', 'dormers', 'win2', 'small']) if (def[k] !== undefined) shape[k] = def[k];
+    for (const k of ['w', 'h', 'wall', 'roof', 'mat', 'windows', 'sign', 'lamp', 'chimney', 'hip', 'awning', 'beam', 'shutters', 'flowers', 'dormers', 'win2', 'small', 'art']) if (def[k] !== undefined) shape[k] = def[k];
     if (def.door) shape.door = { x: def.door.x != null ? def.door.x - (def.x || 0) : null, open: def.door.open };
     shape.id = def.id || '';
     const json = JSON.stringify(shape), key = 'hd:bld:' + R.U.hash(json).toString(36);
@@ -261,7 +284,7 @@
       const d = Object.assign({}, shape, { x: 0, door: shape.door ? { x: shape.door.x != null ? shape.door.x : null, open: shape.door.open } : null });
       if (d.door && d.door.x == null) d.door.x = Math.floor((d.w || 3) / 2);
       keys[key] = d;
-      if (!(R.Hd && R.Hd.has && R.Hd.has(key))) T._hdDef(key, (o) => draw(norm(d), ((o && o.tile) || TS) / TS), { kind: 'building', footprint: [d.w || 3, d.h || 3] });
+      if (!(R.Hd && R.Hd.has && R.Hd.has(key))) T._hdDef(key, (o) => envBuilding(d, (o && o.tile) || TS) || draw(norm(d), ((o && o.tile) || TS) / TS), { kind: 'building', footprint: [d.w || 3, d.h || 3] });
     }
     return key;
   };

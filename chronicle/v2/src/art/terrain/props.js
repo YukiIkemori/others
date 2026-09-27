@@ -231,6 +231,13 @@
   };
   // 動く物（コマが時間で回る）: 泉・かがり火（on の間）・大灯火
   const ANIM = { spring: { poses: { f0: [0, 1, 2, 3] }, fps: { f0: 4 } }, brazier: { on: 3, fps: 8 }, torch: { on: 3, fps: 8 }, beacon: { poses: { f0: [0, 1, 2] }, fps: { f0: 6 } } };
+  // 画像（v2/assets/env）にしかない物。コードの絵は無い（画像が無ければ描かない）。CONTENT が objects の prop に置ける
+  const ENV_ONLY = {
+    cupboard: { solid: true }, dresser: { solid: true }, stool: { soft: true }, house_plant: { soft: true }, shelf_jars: { solid: true }, wash_tub: { soft: true },
+    rug_roll: { soft: true }, weapon_rack: { solid: true }, ladder_prop: { solid: true }, lever: { solid: true, frames: ['off', 'on'] }, fern: { soft: true }, reeds: { soft: true },
+    log_moss: { solid: true }, tree_moss: { solid: true, shadow: 'long' }, tree_dead: { solid: true, shadow: 'long' }, tree_glow: { solid: true, shadow: 'long', glow: true },
+  };
+  for (const id of Object.keys(ENV_ONLY)) if (!DRAW[id]) { META[id] = ENV_ONLY[id]; DRAW[id] = function () { return null; }; }
   T._PROP_META = META;
   T._PROP_DRAW = DRAW;
 
@@ -266,7 +273,51 @@
     if (id === 'beacon') return ['f0', 'f1', 'f2'];
     return meta.frames || ['default'];
   }
+  /** 描いた物の画像（env.js、v2/design/ENV_ASSETS.md）からの Sheet。コマは横に並んだ帯（j.frames の順）、描く点 = j.feet */
+  function envProp(id, ev, o) {
+    const j = ev.j || {}, names = j.frames || ['default'], tk = String(ev.tile), k = ev.k || 1;
+    const cell = (j.cell && (j.cell[tk] || j.cell['32'])) || [ev.im.width / names.length, ev.im.height];
+    const feet = (j.feet && (j.feet[tk] || j.feet['32'])) || [cell[0] / 2, cell[1] - 1];
+    const w = Math.max(1, Math.round(cell[0] * k)), h = Math.max(1, Math.round(ev.im.height * k));
+    const mul = o.amb ? ambMul(o.amb) : null;
+    const frames = [], poses = {};
+    names.forEach((f, i) => {
+      const c = R.Hd.RZ.canvas(w, h), g = c.getContext('2d');
+      g.imageSmoothingEnabled = false;
+      g.drawImage(ev.im, i * cell[0], 0, cell[0], ev.im.height, 0, 0, w, h);
+      if (mul || (id === 'tree' && o.leaf === 'dk')) {
+        const m = mul || [0.8, 0.86, 0.9], d = g.getImageData(0, 0, w, h);
+        for (let q = 0; q < d.data.length; q += 4) { d.data[q] *= m[0]; d.data[q + 1] *= m[1]; d.data[q + 2] *= m[2]; }
+        g.putImageData(d, 0, 0);
+      }
+      frames.push({ c, ox: Math.round(feet[0] * k), oy: Math.round(feet[1] * k) });
+      poses[f] = [i];
+    });
+    const s = (o.s || 1);
+    const lt = j.light32 ? [j.light32[0] * s, j.light32[1] * s] : null;
+    if (poses.on) { poses.on0 = poses.on1 = poses.on2 = poses.on; }
+    if (!poses.default) poses.default = [0];
+    if (!poses.f0) poses.f0 = poses.default;
+    const meta = Object.assign({ id, env: ev.id }, R.DB.props[id] || {});
+    if (lt) meta.emit = { light: lt, cyan: /crystal|mushroom|spring|songstone|switch/.test(id), small: w < 16, fire: /brazier|torch|stove|beacon/.test(id) };
+    return { frames, poses, fps: {}, anchors: { feet: [0, 0], light: lt }, w, h, meta };
+  }
+  T._envProp = envProp;
+  /** 画像にしかない物（家具・木の変化など）も hd:prop:<id> として登録し、R.DB.props に足す（env.js が起動のときに呼ぶ） */
+  T._envRegisterProps = function () {
+    if (!T.Env || !T.Env.propIds) return;
+    const SOFT = /^(dec_|fern|reeds|rug_roll|house_plant|stool|wash_tub)/;
+    for (const id of T.Env.propIds()) {
+      if (DRAW[id]) continue;
+      if (!R.DB.props[id]) R.def('props', id, SOFT.test(id) ? { soft: true } : { solid: true, shadow: 'blob' });
+      if (!META[id]) META[id] = SOFT.test(id) ? { soft: true } : { solid: true, shadow: 'blob' };
+      DRAW[id] = function () { return null; };
+      T._hdDef('hd:prop:' + id, (o) => bakeProp(id, o || {}), R.DB.props[id] || {});
+    }
+  };
   function bakeProp(id, o) {
+    const ev = T.Env && T.Env.prop ? T.Env.prop(id, o.v, o) : null;
+    if (ev) return envProp(id, ev, o);
     if (!(R.Hd && R.Hd.RZ && R.Hd.RZ.Builder)) return null;   // ラスタライザがまだ無い → 後でまた
     const RZ = R.Hd.RZ, S = R.Hd.STYLE || {}, s = o.s || 1, names = frameNames(id);
     const light = FL();
