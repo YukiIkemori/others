@@ -185,18 +185,16 @@
         mem.forEach((c) => {
           const slot = R.Rules.defaultSlot(c, id);
           const can = R.Rules.canEquip(c, id, slot);
+          // 1 人 1 行: [顔（決まった幅）][名前・いまの装備（決まった幅）][増減の札（右寄せ、入るだけ）]。札は幅を測って並べるので重ならない
+          const NW = Math.min(u(150), pw * 0.36), dx = px + u(50) + NW + u(12), dw = px + pw - dx;
           S.faceCircle(g, c.look, px + u(20), y + rh / 2, Math.min(u(20), rh / 2 - u(2)), { dim: !can });
-          R.UIK.text(g, c.name, px + u(50), y + rh / 2 - (tall ? u(9) : u(17)), { size: u(14.5), weight: 700, color: can ? C.text : C.disabled });
+          R.UIK.text(g, c.name, px + u(50), y + rh / 2 - (tall ? u(9) : u(17)), { size: u(14.5), weight: 700, color: can ? C.text : C.disabled, maxW: NW });
           if (!can) { R.UIK.text(g, '付けられない', tall ? px + pw : px + u(50), tall ? y + rh / 2 - u(8) : y + rh / 2 + u(3), { size: u(12), color: C.disabled, align: tall ? 'right' : 'left' }); y += rh; return; }
           const cur = S.item(c.equip[slot]);
-          if (!tall) R.UIK.text(g, 'いま：' + (cur ? cur.name : 'なし'), px + u(50), y + rh / 2 + u(3), { size: u(12), color: C.text2, maxW: pw * 0.4 });
-          const rows = S.statDiff(c, slot, id).filter((r) => r.d).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d)).slice(0, tall ? 1 : 2);
+          if (!tall) R.UIK.text(g, 'いま：' + (cur ? cur.name : 'なし'), px + u(50), y + rh / 2 + u(3), { size: u(12), color: C.text2, maxW: NW });
+          const rows = S.statDiff(c, slot, id).filter((r) => r.d).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d));
           if (!rows.length) R.UIK.text(g, '変わらない', px + pw, y + rh / 2 - u(8), { size: u(13), color: C.same, align: 'right' });
-          rows.forEach((r, i) => {
-            const xx = px + pw - i * u(128);
-            S.delta(g, r.d, xx, y + rh / 2 - u(10), { size: u(17) });
-            R.UIK.text(g, r.name, xx - u(66), y + rh / 2 - u(8), { size: u(13), color: C.text2, align: 'right' });
-          });
+          else S.deltaCells(g, rows, dx, y + rh / 2 - u(9), dw, { size: u(15), nameSize: u(13), nameColor: C.text2, align: 'right', gap: u(20) });
           y += rh;
         });
       } else if (it.slot === 'use') {

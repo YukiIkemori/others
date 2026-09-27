@@ -1,0 +1,42 @@
+{
+ "id": "fireplace",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   44,
+   34
+  ],
+  "32": [
+   58,
+   45
+  ],
+  "40": [
+   72,
+   56
+  ]
+ },
+ "feet": {
+  "24": [
+   22,
+   33
+  ],
+  "32": [
+   29,
+   44
+  ],
+  "40": [
+   36,
+   55
+  ]
+ },
+ "files": {
+  "24": "fireplace@24.png",
+  "32": "fireplace@32.png",
+  "40": "fireplace@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_b.png"
+}

@@ -1,0 +1,42 @@
+{
+ "id": "wall_chart",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   24,
+   17
+  ],
+  "32": [
+   32,
+   23
+  ],
+  "40": [
+   40,
+   29
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   22
+  ],
+  "32": [
+   16,
+   30
+  ],
+  "40": [
+   20,
+   38
+  ]
+ },
+ "files": {
+  "24": "wall_chart@24.png",
+  "32": "wall_chart@32.png",
+  "40": "wall_chart@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_c.png"
+}

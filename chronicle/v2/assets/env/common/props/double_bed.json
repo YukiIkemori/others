@@ -1,0 +1,42 @@
+{
+ "id": "double_bed",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   34,
+   58
+  ],
+  "32": [
+   46,
+   77
+  ],
+  "40": [
+   58,
+   96
+  ]
+ },
+ "feet": {
+  "24": [
+   17,
+   57
+  ],
+  "32": [
+   23,
+   76
+  ],
+  "40": [
+   29,
+   95
+  ]
+ },
+ "files": {
+  "24": "double_bed@24.png",
+  "32": "double_bed@32.png",
+  "40": "double_bed@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_b.png"
+}

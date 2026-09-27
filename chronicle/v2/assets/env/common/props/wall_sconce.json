@@ -1,0 +1,42 @@
+{
+ "id": "wall_sconce",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   11,
+   16
+  ],
+  "32": [
+   15,
+   22
+  ],
+  "40": [
+   19,
+   28
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   22
+  ],
+  "32": [
+   8,
+   29
+  ],
+  "40": [
+   9,
+   36
+  ]
+ },
+ "files": {
+  "24": "wall_sconce@24.png",
+  "32": "wall_sconce@32.png",
+  "40": "wall_sconce@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_c.png"
+}

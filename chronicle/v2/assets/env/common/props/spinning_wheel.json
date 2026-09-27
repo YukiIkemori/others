@@ -1,0 +1,42 @@
+{
+ "id": "spinning_wheel",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   26,
+   30
+  ],
+  "32": [
+   34,
+   40
+  ],
+  "40": [
+   42,
+   50
+  ]
+ },
+ "feet": {
+  "24": [
+   13,
+   29
+  ],
+  "32": [
+   17,
+   39
+  ],
+  "40": [
+   21,
+   49
+  ]
+ },
+ "files": {
+  "24": "spinning_wheel@24.png",
+  "32": "spinning_wheel@32.png",
+  "40": "spinning_wheel@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_b.png"
+}

@@ -1,0 +1,42 @@
+{
+ "id": "candelabra",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   16,
+   28
+  ],
+  "32": [
+   22,
+   38
+  ],
+  "40": [
+   28,
+   48
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   28
+  ],
+  "32": [
+   11,
+   37
+  ],
+  "40": [
+   14,
+   46
+  ]
+ },
+ "files": {
+  "24": "candelabra@24.png",
+  "32": "candelabra@32.png",
+  "40": "candelabra@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_b.png"
+}

@@ -1,0 +1,42 @@
+{
+ "id": "keg_rack",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   33,
+   34
+  ],
+  "32": [
+   44,
+   45
+  ],
+  "40": [
+   55,
+   56
+  ]
+ },
+ "feet": {
+  "24": [
+   16,
+   33
+  ],
+  "32": [
+   22,
+   44
+  ],
+  "40": [
+   28,
+   55
+  ]
+ },
+ "files": {
+  "24": "keg_rack@24.png",
+  "32": "keg_rack@32.png",
+  "40": "keg_rack@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_b.png"
+}

@@ -1,0 +1,42 @@
+{
+ "id": "bar_counter",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   44,
+   24
+  ],
+  "32": [
+   58,
+   32
+  ],
+  "40": [
+   72,
+   40
+  ]
+ },
+ "feet": {
+  "24": [
+   22,
+   23
+  ],
+  "32": [
+   29,
+   31
+  ],
+  "40": [
+   36,
+   39
+  ]
+ },
+ "files": {
+  "24": "bar_counter@24.png",
+  "32": "bar_counter@32.png",
+  "40": "bar_counter@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_b.png"
+}

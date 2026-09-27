@@ -1,0 +1,42 @@
+{
+ "id": "wall_pots",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   24,
+   15
+  ],
+  "32": [
+   32,
+   20
+  ],
+  "40": [
+   40,
+   25
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   20
+  ],
+  "32": [
+   16,
+   27
+  ],
+  "40": [
+   20,
+   34
+  ]
+ },
+ "files": {
+  "24": "wall_pots@24.png",
+  "32": "wall_pots@32.png",
+  "40": "wall_pots@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_c.png"
+}

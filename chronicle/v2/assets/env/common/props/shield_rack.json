@@ -1,0 +1,42 @@
+{
+ "id": "shield_rack",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   40,
+   21
+  ],
+  "32": [
+   54,
+   28
+  ],
+  "40": [
+   68,
+   35
+  ]
+ },
+ "feet": {
+  "24": [
+   20,
+   20
+  ],
+  "32": [
+   27,
+   27
+  ],
+  "40": [
+   34,
+   34
+  ]
+ },
+ "files": {
+  "24": "shield_rack@24.png",
+  "32": "shield_rack@32.png",
+  "40": "shield_rack@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_b.png"
+}

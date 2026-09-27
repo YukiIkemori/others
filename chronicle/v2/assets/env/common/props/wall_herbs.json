@@ -1,0 +1,42 @@
+{
+ "id": "wall_herbs",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   22,
+   15
+  ],
+  "32": [
+   30,
+   20
+  ],
+  "40": [
+   38,
+   25
+  ]
+ },
+ "feet": {
+  "24": [
+   11,
+   20
+  ],
+  "32": [
+   15,
+   27
+  ],
+  "40": [
+   19,
+   34
+  ]
+ },
+ "files": {
+  "24": "wall_herbs@24.png",
+  "32": "wall_herbs@32.png",
+  "40": "wall_herbs@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_c.png"
+}

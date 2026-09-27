@@ -1,0 +1,42 @@
+{
+ "id": "wall_trophy",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   21,
+   20
+  ],
+  "32": [
+   28,
+   27
+  ],
+  "40": [
+   35,
+   34
+  ]
+ },
+ "feet": {
+  "24": [
+   10,
+   26
+  ],
+  "32": [
+   14,
+   34
+  ],
+  "40": [
+   18,
+   42
+  ]
+ },
+ "files": {
+  "24": "wall_trophy@24.png",
+  "32": "wall_trophy@32.png",
+  "40": "wall_trophy@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_c.png"
+}

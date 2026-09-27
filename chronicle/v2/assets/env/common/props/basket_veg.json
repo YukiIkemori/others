@@ -1,0 +1,42 @@
+{
+ "id": "basket_veg",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   16,
+   19
+  ],
+  "32": [
+   22,
+   25
+  ],
+  "40": [
+   28,
+   31
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   18
+  ],
+  "32": [
+   11,
+   24
+  ],
+  "40": [
+   14,
+   30
+  ]
+ },
+ "files": {
+  "24": "basket_veg@24.png",
+  "32": "basket_veg@32.png",
+  "40": "basket_veg@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_b.png"
+}

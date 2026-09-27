@@ -1,0 +1,42 @@
+{
+ "id": "wall_tapestry",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   20,
+   16
+  ],
+  "32": [
+   26,
+   21
+  ],
+  "40": [
+   32,
+   26
+  ]
+ },
+ "feet": {
+  "24": [
+   10,
+   21
+  ],
+  "32": [
+   13,
+   28
+  ],
+  "40": [
+   16,
+   35
+  ]
+ },
+ "files": {
+  "24": "wall_tapestry@24.png",
+  "32": "wall_tapestry@32.png",
+  "40": "wall_tapestry@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_c.png"
+}

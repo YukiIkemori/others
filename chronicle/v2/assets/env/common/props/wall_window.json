@@ -1,0 +1,42 @@
+{
+ "id": "wall_window",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   22,
+   17
+  ],
+  "32": [
+   30,
+   23
+  ],
+  "40": [
+   38,
+   29
+  ]
+ },
+ "feet": {
+  "24": [
+   11,
+   22
+  ],
+  "32": [
+   15,
+   30
+  ],
+  "40": [
+   19,
+   38
+  ]
+ },
+ "files": {
+  "24": "wall_window@24.png",
+  "32": "wall_window@32.png",
+  "40": "wall_window@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_c.png"
+}

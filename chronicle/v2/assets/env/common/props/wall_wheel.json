@@ -1,0 +1,42 @@
+{
+ "id": "wall_wheel",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   20,
+   20
+  ],
+  "32": [
+   26,
+   27
+  ],
+  "40": [
+   32,
+   34
+  ]
+ },
+ "feet": {
+  "24": [
+   10,
+   26
+  ],
+  "32": [
+   13,
+   34
+  ],
+  "40": [
+   16,
+   42
+  ]
+ },
+ "files": {
+  "24": "wall_wheel@24.png",
+  "32": "wall_wheel@32.png",
+  "40": "wall_wheel@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_c.png"
+}

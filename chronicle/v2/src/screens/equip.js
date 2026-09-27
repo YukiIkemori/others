@@ -75,30 +75,32 @@
   };
   /**
    * 増減の札を横に並べる（ほかの仲間・店の行）: 「値の名前 ▲+n」を左から、w に入る分だけ。重ならない。
-   * rows = [{name, d}]（大事な順）。o = {size, align:'left'|'right', gap}。→ 描いた数
+   * rows = [{name, d}]（大事な順）。o = {size, nameSize, nameColor, align:'left'|'right', gap}。→ 描いた数
    */
   S.deltaCells = function (g, rows, x, y, w, o) {
     o = o || {};
-    const C = T().color, sz = o.size || u(13.5), gap = o.gap || u(16), inner = u(8);
+    const C = T().color, sz = o.size || u(13.5), ns = o.nameSize || sz, gap = o.gap || u(16), inner = u(8);
+    const ncol = (r) => o.nameColor || (r.d > 0 ? C.up : r.d < 0 ? C.down : C.same);
+    const ny = y + (sz - ns) / 2;   // 名前と数字の字の大きさが違うときは縦の中心をそろえる
     const cells = [];
     let total = 0;
     for (const r of rows) {
-      const nw = R.UIK.measure(r.name, { size: sz }), dw = S.deltaW(r.d, sz);
+      const nw = R.UIK.measure(r.name, { size: ns }), dw = S.deltaW(r.d, sz);
       const cw = nw + inner + dw;
       if (total + (cells.length ? gap : 0) + cw > w) break;
       total += (cells.length ? gap : 0) + cw;
-      cells.push({ r, nw, cw });
+      cells.push({ r, cw });
     }
-    // 1 つも入らないときは、名前を縮めて最初の 1 つだけ
+    // 1 つも入らないときは、名前を縮めて（…）最初の 1 つだけ
     if (!cells.length && rows.length) {
       const r = rows[0], dw = S.deltaW(r.d, sz);
-      R.UIK.text(g, r.name, x, y, { size: sz, color: r.d > 0 ? C.up : r.d < 0 ? C.down : C.same, maxW: Math.max(u(14), w - dw - inner) });
+      R.UIK.text(g, r.name, x, ny, { size: ns, color: ncol(r), maxW: Math.max(u(14), w - dw - inner) });
       S.delta(g, r.d, x + w, y, { size: sz });
       return 1;
     }
     let cx = o.align === 'right' ? x + w - total : x;
     for (const c of cells) {
-      R.UIK.text(g, c.r.name, cx, y, { size: sz, color: c.r.d > 0 ? C.up : c.r.d < 0 ? C.down : C.same });
+      R.UIK.text(g, c.r.name, cx, ny, { size: ns, color: ncol(c.r) });
       S.delta(g, c.r.d, cx + c.cw, y, { size: sz });
       cx += c.cw + gap;
     }

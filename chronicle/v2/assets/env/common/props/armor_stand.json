@@ -1,0 +1,42 @@
+{
+ "id": "armor_stand",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   13,
+   30
+  ],
+  "32": [
+   17,
+   40
+  ],
+  "40": [
+   21,
+   50
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   29
+  ],
+  "32": [
+   8,
+   39
+  ],
+  "40": [
+   11,
+   49
+  ]
+ },
+ "files": {
+  "24": "armor_stand@24.png",
+  "32": "armor_stand@32.png",
+  "40": "armor_stand@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_b.png"
+}

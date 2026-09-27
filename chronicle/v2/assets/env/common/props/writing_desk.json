@@ -1,0 +1,42 @@
+{
+ "id": "writing_desk",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   24,
+   26
+  ],
+  "32": [
+   32,
+   35
+  ],
+  "40": [
+   40,
+   44
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   26
+  ],
+  "32": [
+   16,
+   34
+  ],
+  "40": [
+   20,
+   42
+  ]
+ },
+ "files": {
+  "24": "writing_desk@24.png",
+  "32": "writing_desk@32.png",
+  "40": "writing_desk@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_b.png"
+}
