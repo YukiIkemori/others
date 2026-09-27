@@ -1,0 +1,49 @@
+{
+ "sprite": "plant_5",
+ "id": "plant_5",
+ "name": "千年花",
+ "sheet": 4,
+ "cell": 4,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 73,
+ "h": 86,
+ "anchor": [
+  26,
+  85
+ ],
+ "points": {
+  "head": [
+   45,
+   25
+  ],
+  "center": [
+   38,
+   45
+  ],
+  "fx": [
+   45,
+   30
+  ],
+  "top": [
+   52,
+   0
+  ],
+  "body": [
+   34,
+   40,
+   25,
+   35
+  ]
+ },
+ "facing": "right",
+ "long": 86,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 7.774
+}

@@ -1,0 +1,112 @@
+{
+ "sprite": "rat_1",
+ "id": "rat_1",
+ "name": "野ネズミ",
+ "sheet": 1,
+ "cell": 2,
+ "size": "S",
+ "kind": "mob",
+ "fly": false,
+ "w": 56,
+ "h": 30,
+ "anchor": [
+  30,
+  29
+ ],
+ "points": {
+  "head": [
+   45,
+   17
+  ],
+  "center": [
+   28,
+   18
+  ],
+  "fx": [
+   38,
+   17
+  ],
+  "top": [
+   37,
+   5
+  ],
+  "body": [
+   28,
+   17,
+   17,
+   9
+  ],
+  "eyes": [
+   [
+    45,
+    16,
+    1.2
+   ]
+  ],
+  "eye": [
+   45,
+   16
+  ],
+  "mouth": [
+   52,
+   21
+  ],
+  "back": [
+   22,
+   8
+  ],
+  "spine": [
+   [
+    36,
+    7
+   ],
+   [
+    28,
+    6
+   ],
+   [
+    20,
+    9
+   ]
+  ]
+ },
+ "facing": "right",
+ "long": 56,
+ "core_long": 52.0,
+ "target": {
+  "w": 52,
+  "h": 36,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 12.365,
+ "alsoMakes": [
+  "rat_2",
+  "rat_3"
+ ],
+ "variants": {
+  "rat_2": {
+   "recolor": {
+    "hue": 80,
+    "sat": 0.8
+   },
+   "addons": [
+    "eyes_glow"
+   ],
+   "filter": null,
+   "name": "毒牙ネズミ"
+  },
+  "rat_3": {
+   "recolor": {
+    "sat": 0.3,
+    "bri": 0.9
+   },
+   "addons": [
+    "teeth_iron",
+    "armor_plates"
+   ],
+   "filter": null,
+   "name": "鉄歯ネズミ"
+  }
+ }
+}

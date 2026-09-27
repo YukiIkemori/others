@@ -5,11 +5,33 @@
 //   url は相対パス（外に置いた版: bgm/<id>.ogg）か '#media:<kind>:<id>'（--single の埋め込み）。
 //   埋め込みは <script type="application/octet-stream" id="media:<kind>:<id>" data-type="audio/ogg">base64</script>
 //   で置かれ、起動時には解かない。初めて使うときに bytes() / url() が解く（Blob にして URL を作る）。
+//   まとめた版（tools/pack_web.py、ファイルの数を減らす公開用の写し）:
+//     画像 {url: 'env/atlas_03.webp', rect: [x, y, w, h], meta} = 地図帳（atlas）の一部。image() が切り出して canvas にする
+//     音   {url: 'voice/pack_2.ogg', off, len} = つないだ Ogg（chained）の一部。bytes() がその範囲だけを返す
 // 実行時に外へ通信しない（相対 URL は同じ所に置いたファイル）。
 (function (R) {
   'use strict';
   const blobUrls = {};
   const images = {};
+  const atlases = {};   // url → {img, ready, failed, promise, left}（切り出しが済んだら画像を手放す）
+  const packs = {};     // url → Promise<ArrayBuffer>
+  function atlas(kind, url) {
+    let a = atlases[url];
+    if (a) return a;
+    a = atlases[url] = { img: new Image(), ready: false, failed: false, promise: null, left: 0 };
+    const t = table()[kind] || {};
+    for (const k of Object.keys(t)) if (t[k] && t[k].url === url && t[k].rect) a.left++;
+    a.promise = new Promise((res) => {
+      a.img.onload = () => { a.ready = true; res(a); };
+      a.img.onerror = () => { a.failed = true; res(a); };
+    });
+    a.img.src = url;
+    return a;
+  }
+  function fetchPack(url) {
+    if (!packs[url]) packs[url] = fetch(url).then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer(); }).catch((e) => { delete packs[url]; throw e; });
+    return packs[url];
+  }
 
   function table() {
     const M = (typeof window !== 'undefined' && window.RPG_MEDIA) || R.MEDIA || {};
@@ -61,6 +83,7 @@
         if (!d) return Promise.reject(new Error(`embedded media missing ${e.url}`));
         return Promise.resolve(b64ToBytes(d.b64).buffer);
       }
+      if (typeof e.len === 'number') return fetchPack(e.url).then((ab) => ab.slice(e.off || 0, (e.off || 0) + e.len));
       return fetch(e.url).then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer(); });
     },
     /** 画像。→ {img, ready, failed, meta, promise} | null。初めて呼んだときに読み込みを始める（decode の間は ready false）。
@@ -73,6 +96,22 @@
       const url = Media.url(kind, key);
       if (!url) return null;
       const e = Media.entry(kind, key) || {};
+      if (Array.isArray(e.rect) && typeof document !== 'undefined') {
+        // 地図帳の一部: 同じ大きさの canvas を先に渡し、地図帳が読めたら切り出す
+        const [x, y, w, h] = e.rect;
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        const rec = { img: c, ready: false, failed: false, meta: e.meta || null, promise: null };
+        const a = atlas(kind, url);
+        rec.promise = a.promise.then(() => {
+          if (a.failed) { rec.failed = true; return rec; }
+          try { c.getContext('2d').drawImage(a.img, x, y, w, h, 0, 0, w, h); rec.ready = true; } catch (err) { rec.failed = true; }
+          if (--a.left <= 0) { a.img = null; }
+          return rec;
+        });
+        images[ik] = rec;
+        return rec;
+      }
       const rec = { img: new Image(), ready: false, failed: false, meta: e.meta || null, promise: null };
       rec.promise = new Promise((res) => {
         rec.img.onload = () => { rec.ready = true; res(rec); };

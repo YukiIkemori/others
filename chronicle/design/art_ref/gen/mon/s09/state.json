@@ -1,0 +1,85 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s09_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 44
+  }
+ ],
+ "use": "mon_s09_a1.png",
+ "norm": {
+  "boss_rooteater": {
+   "pitch": 6.69,
+   "how": "core 1405x782 px -> 210 art px",
+   "core_long": 210.0,
+   "raw_box": [
+    60,
+    124,
+    1471,
+    906
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 212
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s09_tele_a1.png",
+   "prompt": "the wind-up pose: the whole grub presses itself down low, head lowered toward the ground, the two roots plunged down further (their lower ends still cut flat at the bottom). Same eye."
+  },
+  {
+   "pose": "attack",
+   "file": "mon_s09_attack_a1.png",
+   "prompt": "the attack pose: the front of the grub rears up and lunges forward to the right, the root-like mandibles spread wide open, the yellow-green eye glaring."
+  },
+  {
+   "pose": "p2",
+   "file": "mon_s09_p2_a1.png",
+   "prompt": "its second form: the white paper-like body looks wet and slimy with bright glossy highlights on every segment, more yellow-green sap veins running over it, the two torn holes wider, the eye bigger. Same size, same pose, same position."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s09_tele_a1.png",
+  "attack": "mon_s09_attack_a1.png",
+  "p2": "mon_s09_p2_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    15,
+    21
+   ],
+   "overlap": 10800,
+   "size": [
+    175,
+    87
+   ]
+  },
+  "attack": {
+   "offset": [
+    2,
+    -11
+   ],
+   "overlap": 15097,
+   "size": [
+    213,
+    129
+   ]
+  },
+  "p2": {
+   "offset": [
+    1,
+    0
+   ],
+   "overlap": 17494,
+   "size": [
+    211,
+    117
+   ]
+  }
+ }
+}

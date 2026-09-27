@@ -1,0 +1,67 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s05_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 41
+  }
+ ],
+ "use": "mon_s05_a1.png",
+ "norm": {
+  "treant_1": {
+   "pitch": 8.282,
+   "how": "core 671x911 px -> 110 art px",
+   "core_long": 110.0,
+   "raw_box": [
+    56,
+    36,
+    764,
+    947
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 111
+  },
+  "b_root": {
+   "pitch": 7.209,
+   "how": "core 595x793 px -> 110 art px",
+   "core_long": 110.0,
+   "raw_box": [
+    865,
+    129,
+    1484,
+    932
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 112
+  }
+ },
+ "notes": [
+  "b_root: dropped 2 stray part(s) (1494,1896 px)"
+ ],
+ "variants": [
+  {
+   "pose": "attack",
+   "file": "mon_s05_attack_a1.png",
+   "prompt": "the attack pose: the root lashes forward to the right like a striking snake, its upper part bent forward, the papery mouth wide open at the front."
+  }
+ ],
+ "posesUse": {
+  "attack": "mon_s05_attack_a1.png"
+ },
+ "poseNorm": {
+  "attack": {
+   "offset": [
+    -6,
+    -3
+   ],
+   "overlap": 3910,
+   "size": [
+    100,
+    113
+   ]
+  }
+ }
+}

@@ -3,7 +3,7 @@
 //
 //   node v2/tools/qa/check_voice.js
 //
-// 縦切りのボイス 22 本（§3.10）について:
+// 縦切りのボイス 22 本（§3.10）と、物語・あいさつのボイス 45 本（design/voice_story_map.json の story・bark）について:
 //  - v2/src/events の ev.say(…, {voice:'v_…'}) にちょうど 1 回ずつ出る（縦切りの外の v_ を使っていない）
 //  - 文面（改行を除く）が chronicle/design/voice/script.csv と 1 字も違わない
 //  - 音のファイル（chronicle/assets/voice/<id>.ogg）がある、ビルドの媒体の一覧（v2/dist/voice）にも写されている
@@ -64,7 +64,26 @@ for (const id of SLICE) {
   const file = ['ogg', 'mp3', 'm4a'].map((e) => path.join(CHRON, 'assets', 'voice', id + '.' + e)).find((p) => fs.existsSync(p));
   ok(`${id}: 音のファイルがある`, !!file);
 }
-const extra = Object.keys(used).filter((id) => !SLICE.includes(id));
+// 2026-09-27: 町の人と物語のボイス（design/voice_story_map.json。文面は node chronicle/tools/story_voice.js --check が見る）
+section('物語のボイスとあいさつ（voice_story_map.json）');
+const SMAP = JSON.parse(fs.readFileSync(path.join(V2, 'design', 'voice_story_map.json'), 'utf8')).lines;
+const STORY = Object.keys(SMAP).filter((id) => SMAP[id].kind === 'story');
+const OPTIONAL = Object.keys(SMAP).filter((id) => SMAP[id].kind === 'optional');
+const BARK = Object.keys(SMAP).filter((id) => SMAP[id].kind === 'bark');
+const srcOf = (f) => fs.readFileSync(path.join(CHRON, f), 'utf8');
+for (const id of STORY) {
+  const L = SMAP[id], src = srcOf(L.file);
+  ok(`${id}: ${path.basename(L.file)} で鳴らす`, src.includes(`'${id}'`));
+  ok(`${id}: 文面が ${path.basename(L.file)} にそのまま残っている`, src.includes(JSON.stringify(L.text).slice(1, -1).replace(/\\"/g, '"')));
+  ok(`${id}: 音のファイルがある`, fs.existsSync(path.join(CHRON, 'assets', 'voice', id + '.ogg')));
+}
+const mapsSrc = fs.readdirSync(path.join(V2, 'src', 'maps')).map((f) => fs.readFileSync(path.join(V2, 'src', 'maps', f), 'utf8')).join('\n');
+for (const id of BARK) {
+  ok(`${id}: マップの NPC の bark`, (mapsSrc.match(new RegExp(`bark: '${id}'`, 'g')) || []).length === 1);
+  ok(`${id}: 音のファイルがある`, fs.existsSync(path.join(CHRON, 'assets', 'voice', id + '.ogg')));
+}
+ok('まだ決まっていない optional のボイス（冒頭のキャプション）は鳴らさない', OPTIONAL.every((id) => !used[id]), OPTIONAL.filter((id) => used[id]));
+const extra = Object.keys(used).filter((id) => !SLICE.includes(id) && !STORY.includes(id));
 ok('縦切りの外のボイスを使っていない', extra.length === 0, extra);
 const dist = path.join(V2, 'dist', 'voice');
 if (fs.existsSync(dist)) {

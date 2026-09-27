@@ -1,0 +1,50 @@
+{
+ "sprite": "boss_pageeater",
+ "id": "b_pageeater",
+ "name": "ページ食らい",
+ "sheet": 6,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 157,
+ "h": 125,
+ "anchor": [
+  91,
+  124
+ ],
+ "points": {
+  "head": [
+   135,
+   25
+  ],
+  "center": [
+   77,
+   60
+  ],
+  "fx": [
+   94,
+   49
+  ],
+  "top": [
+   124,
+   18
+  ],
+  "body": [
+   75,
+   57,
+   59,
+   44
+  ]
+ },
+ "facing": "right",
+ "long": 157,
+ "target": {
+  "w": 150,
+  "h": 100,
+  "long": 150
+ },
+ "colors": 48,
+ "pitch": 7.48,
+ "pose": "p2"
+}

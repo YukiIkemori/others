@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_acorn",
+ "id": "rm_acorn_prince",
+ "name": "どんぐり王子",
+ "sheet": 2,
+ "cell": 3,
+ "size": "S",
+ "kind": "rare",
+ "fly": false,
+ "w": 54,
+ "h": 41,
+ "anchor": [
+  26,
+  40
+ ],
+ "points": {
+  "head": [
+   29,
+   20
+  ],
+  "center": [
+   27,
+   26
+  ],
+  "fx": [
+   30,
+   24
+  ],
+  "top": [
+   24,
+   0
+  ],
+  "body": [
+   25,
+   23,
+   16,
+   14
+  ]
+ },
+ "facing": "right",
+ "long": 54,
+ "core_long": 52.0,
+ "target": {
+  "w": 39,
+  "h": 52,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 11.885
+}

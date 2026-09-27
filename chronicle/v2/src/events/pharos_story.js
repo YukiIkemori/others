@@ -38,11 +38,12 @@
         ev.setFlag('prologue_rowell');
         return;
       }
-      await E.say(ev, 'rowell', E.pick([
-        { cond: 'prologue_done', text: '灯台に火が戻っただと？\n……写し取ったはずの歌が、\nどうして。' },
-        { cond: 'prologue_key', text: '灯台守から鍵を借りたそうだな。\n……火をともせるものなら、\nともしてみるがいい。' },
-        { text: 'まだいたのか。\n写し取った伝承は、本院で\n大切に保管される。' },
-      ]), { face: 'rowell:neutral' });
+      const pk = E.pickEntry([
+        { cond: 'prologue_done', text: '灯台に火が戻っただと？\n……写し取ったはずの歌が、\nどうして。', voice: 'v_rowell_pharos_01' },
+        { cond: 'prologue_key', text: '灯台守から鍵を借りたそうだな。\n……火をともせるものなら、\nともしてみるがいい。', voice: 'v_rowell_pharos_02' },
+        { text: 'まだいたのか。\n写し取った伝承は、本院で\n大切に保管される。', voice: 'v_rowell_pharos_03' },
+      ]);
+      await E.say(ev, 'rowell', pk.text, { voice: pk.voice, face: 'rowell:neutral' });
     },
   };
   D.pharos_record_notice = {
@@ -103,17 +104,17 @@
       const E = X();
       if (ev.flag('prologue_boss')) { await ev.call('pharos_otto_reward'); return; }
       if (!ev.flag('prologue_party')) {
-        await ev.say('otto', 'わしは灯台守のオットー。\n灯台の火が消えてしまって、\nゆうべは眠れんかった。', { face: 'otto:sad' });
-        await ev.say('otto', '……なに、灯台へ行くと？\nひとりで？ とんでもない。\n酒場「潮風亭」で仲間を見つけておいで。', { face: 'otto:surprise' });
+        await ev.say('otto', 'わしは灯台守のオットー。\n灯台の火が消えてしまって、\nゆうべは眠れんかった。', { voice: 'v_otto_pharos_01', face: 'otto:sad' });
+        await ev.say('otto', '……なに、灯台へ行くと？\nひとりで？ とんでもない。\n酒場「潮風亭」で仲間を見つけておいで。', { voice: 'v_otto_pharos_02', face: 'otto:surprise' });
         return;
       }
       if (!ev.flag('prologue_key')) {
-        await ev.say('otto', 'おお、仲間を連れてきたか。\nそれなら話は別じゃ。', { face: 'otto:smile' });
-        await ev.say('otto', '灯台の守り歌が、\nどうしても思い出せんのじゃ。\nあの歌がなけりゃ、火はつかん。', { face: 'otto:sad' });
-        await ev.say('otto', '……頼む。\nこれが灯台の鍵じゃ。', { face: 'otto:neutral' });
+        await ev.say('otto', 'おお、仲間を連れてきたか。\nそれなら話は別じゃ。', { voice: 'v_otto_pharos_03', face: 'otto:smile' });
+        await ev.say('otto', '灯台の守り歌が、\nどうしても思い出せんのじゃ。\nあの歌がなけりゃ、火はつかん。', { voice: 'v_otto_pharos_04', face: 'otto:sad' });
+        await ev.say('otto', '……頼む。\nこれが灯台の鍵じゃ。', { voice: 'v_otto_pharos_05', face: 'otto:neutral' });
         await E.give(ev, 'k_lighthouse_key', 1, { say: true });
         ev.setFlag('prologue_key');
-        await ev.say('otto', '灯台は、町を出て南の\n岬の先じゃ。行く前に、\n戦いの心得を教えておこう。', { face: 'otto:neutral' });
+        await ev.say('otto', '灯台は、町を出て南の\n岬の先じゃ。行く前に、\n戦いの心得を教えておこう。', { voice: 'v_otto_pharos_06', face: 'otto:neutral' });
         await tips(ev);
         return;
       }
@@ -129,12 +130,12 @@
       const E = X();
       if (!ev.flag('prologue_otto_reward')) {
         await E.say(ev, 'otto', 'おお、{hero}！\n灯台に火が戻ったぞ！\n守り歌も、思い出せた。', { face: 'otto:smile' });
-        await ev.say('otto', '♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ……。', { face: 'otto:smile' });
-        await ev.say('otto', 'これは、わしが若いころから\n使ってきたランタンじゃ。\n持っていっておくれ。', { face: 'otto:neutral' });
+        await ev.say('otto', '♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ……。', { voice: 'v_otto_reward_01', face: 'otto:smile' });
+        await ev.say('otto', 'これは、わしが若いころから\n使ってきたランタンじゃ。\n持っていっておくれ。', { voice: 'v_otto_reward_02', face: 'otto:neutral' });
         await E.give(ev, 'ac_keeper_lantern', 1, { say: true });
         ev.setFlag('prologue_otto_reward');
-        await ev.say('otto', '若いころ、灯台には\n『朝番』というのがあってな。\n火が戻ったら、また立てるつもりじゃ。', { face: 'otto:smile' });
-        await ev.say('otto', '……はて。何を見張る番\nじゃったかのう。\nどうしても思い出せん。', { face: 'otto:sad' });
+        await ev.say('otto', '若いころ、灯台には\n『朝番』というのがあってな。\n火が戻ったら、また立てるつもりじゃ。', { voice: 'v_otto_reward_03', face: 'otto:smile' });
+        await ev.say('otto', '……はて。何を見張る番\nじゃったかのう。\nどうしても思い出せん。', { voice: 'v_otto_reward_04', face: 'otto:sad' });
         return;
       }
       await E.say(ev, 'otto', E.pick([
@@ -154,6 +155,7 @@
     run: async (ev) => {
       const E = X();
       if (ev.flag('prologue_done') || !ev.flag('prologue_boss')) return;
+      ev.bgm('dawn');   // 朝の鐘（最後の R.Audio.bgm('town') で町の曲へ）
       try { R.Audio.sfx('bell'); } catch (e) { /* */ }
       await ev.caption('――朝の鐘が、港に鳴りわたった。', { ms: 2800 });
       await E.say(ev, 'cheer_a', '灯台に火が戻ったぞ！\nゆうべ、岬が真っ白に\n光ったんだ！');
@@ -171,13 +173,13 @@
       await Promise.all([ev.caption('年代記に序章\n『灯台守の歌』が記された。', { ms: 3000 }), ev.jingle('chapter')]);
       await ev.say('berna', 'この大陸には八つの大きな伝承がある。\nその全部が、いま白紙になりかけている。', { voice: 'v_berna_lute_03', face: 'berna:sad' });
       await ev.say('berna', '全部を語り直して、\n年代記を書き上げなさい。それが、\nあなたの修業の仕上げだよ。', { voice: 'v_berna_lute_04', face: 'berna:neutral' });
-      await ev.say('berna', 'うわさは酒場に集まるものさ。\nまずは港の酒場で\n聞いてごらん。', { face: 'berna:smile' });
+      await ev.say('berna', 'うわさは酒場に集まるものさ。\nまずは港の酒場で\n聞いてごらん。', { voice: 'v_berna_depart_01', face: 'berna:smile' });
       ev.lead('l_main_rumors');
       await E.narr(ev, '{hero}は、手がかり帳を\n受け取った。');
       try { if (R.DB.tips && R.DB.tips.leads) await R.Screens.tip('leads'); } catch (e) { /* 札が無くても止めない */ }
       await ev.say('berna', 'どこから回ってもいい。\nあなたの足で、あなたの順番で\n語り直していけばいいのさ。', { voice: 'v_berna_lute_05', face: 'berna:smile' });
       // 最初の物忘れの影（STORY_BIBLE §9.1 P10）
-      await ev.say('berna', 'わたしは里へ帰るよ。\n……いってらっしゃい、', { face: 'berna:smile' });
+      await ev.say('berna', 'わたしは里へ帰るよ。\n……いってらっしゃい、', { voice: 'v_berna_depart_02', face: 'berna:smile' });
       await E.narr(ev, 'ベルナは、何か言いかけて、\n笑ってごまかした。');
       await E.say(ev, 'berna', '……{hero}。\n気をつけてお行き。', { face: 'berna:smile' });
       await E.narr(ev, '港のほうから、オットーが\n駆けてきた。');

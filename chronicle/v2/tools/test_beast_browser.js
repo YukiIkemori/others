@@ -53,7 +53,7 @@ function pageCheck() {
         anchors: Object.keys(sh.anchors), right, black: sc.reduce((s, v) => s + v.black, 0) + gs.reduce((s, v) => s + v.black, 0),
         h: sh.h, w: sh.w, visH: sh.meta.visH, tier: sh.meta.tier, fly: !!sh.meta.fly, band: BZ.tierPx(sh.meta.tier), bakeMs: sh.meta.bakeMs, bakeMsGold: gd && gd.meta.bakeMs,
         frames: sh.frames.length, hue: sc[0].hue, goldHue: gs[0] && gs[0].hue, goldDiff: gd ? hash(gd.frames[0].c) !== hash(sh.frames[0].c) : false,
-        stage: sh.meta.stage, base: sh.meta.base, mask: Array.from(mask(sh.frames[0], 24)),
+        stage: sh.meta.stage, base: sh.meta.base, mask: Array.from(mask(sh.frames[0], 24)), img: !!sh.meta.img, long: sh.meta.long, imgBand: sh.meta.band,
       };
     } catch (e) { out.errors.push(key + ': ' + e.message); }
   }
@@ -85,6 +85,7 @@ function pageCheck() {
   let P;
   try {
     P = await Bw.open(S, 'dev.html');
+    await P.page.evaluate(() => (window.RPG.Beast.imgReady ? window.RPG.Beast.imgReady() : 0));   // 原画（v2/assets/monsters）を読み終えてから
     const r = await P.page.evaluate(pageCheck);
     const mine = P.errors.filter((e) => /art\/(mons|boss|bbg)|hd:(mon|boss|bbg)|Beast/.test(e));
     const others = P.errors.filter((e) => !mine.includes(e));
@@ -103,7 +104,9 @@ function pageCheck() {
       ok(`${key}: 右向き（head.x > center.x）`, m.right);
       ok(`${key}: 純黒の画素 0（普通と金色）`, m.black === 0, m.black);
       const v = m.fly ? m.visH : m.h;
-      ok(`${key}: 大きさの段 ${m.tier} ${m.band[0]}〜${m.band[1]} px に ${v} px${m.fly ? '（飛ぶ: 見た目の高さ）' : ''}`, v >= m.band[0] - 2 && v <= m.band[1] + 2);
+      // 原画の魔物は MONSTER_REQUEST §2.4 の段（体の長い辺のドット数）で測る
+      if (m.img) ok(`${key}: 原画の段 ${m.tier} 長い辺 ${m.imgBand[0]}〜${m.imgBand[1]} px に ${m.long} px`, m.long >= m.imgBand[0] - 2 && m.long <= m.imgBand[1] + 2);
+      else ok(`${key}: 大きさの段 ${m.tier} ${m.band[0]}〜${m.band[1]} px に ${v} px${m.fly ? '（飛ぶ: 見た目の高さ）' : ''}`, v >= m.band[0] - 2 && v <= m.band[1] + 2);
       ok(`${key}: 金色（opts.golden）は別の画素で金の色相（${m.goldHue && m.goldHue.toFixed(0)}°）`, m.goldDiff && m.goldHue != null && m.goldHue > 22 && m.goldHue < 62);
     }
     section('段 2 は段 1 と色だけの違いでない（大きさ・形）');

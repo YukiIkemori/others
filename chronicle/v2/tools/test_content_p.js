@@ -248,7 +248,9 @@ for (const id of MINE) {
   if (used[id]) ok(`${id} の文面が同じ`, used[id][0] === script[id], [used[id][0], script[id]]);
   ok(`${id} のファイルがある`, fs.existsSync(path.join(V2, '..', 'assets', 'voice', id + '.ogg')));
 }
-ok('自分のイベントで使うボイスは 15 本だけ', Object.keys(used).every((k) => MINE.includes(k)), Object.keys(used));
+// 2026-09-27: 物語のボイス（design/voice_story_map.json の story）も使う。文面は chronicle/tools/story_voice.js --check が見る
+const STORY_V = Object.entries(JSON.parse(fs.readFileSync(path.join(V2, 'design', 'voice_story_map.json'), 'utf8')).lines).filter(([, l]) => l.kind === 'story').map(([k]) => k);
+ok('自分のイベントで使うボイスは 15 本と物語のボイスだけ', Object.keys(used).every((k) => MINE.includes(k) || STORY_V.includes(k)), Object.keys(used));
 
 // ------------------------------------------------------------------ 8. 通し（真似の ev）
 section('8. 通し: 序章 P1〜P10 と T1（真似の ev で順に流す）');

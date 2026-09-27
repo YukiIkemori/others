@@ -6,8 +6,8 @@
 //   gold(ev, n)             ev.gold → 通知
 //   lore(ev, id)            読み物（STORY_BIBLE §10.2 の lo_*）を書庫に書き写す: フラグ id を立て、R.DB.lore[id] を通知
 //   toast(text, icon)       フィールドの通知（無ければ何もしない）
-//   pick(list)              [{cond, text}…] の上から最初に合う物の text（cond なしは必ず合う）
-//   stay(ev, o)             ただで泊まる（ベルナの家）。暗転 → ev.rest → lastInn
+//   pick(list)              [{cond, text}…] の上から最初に合う物の text（cond なしは必ず合う）。pickEntry(list) は項目ごと（voice 付き）
+//   stay(ev, o)             ただで泊まる（ベルナの家）。暗転 → ev.rest → lastInn。o.morningVoice で朝の一言にボイス
 //   chapter(id)             年代記の章を足す（R.Game.chronicle.chapters に {id, summaryKey}。同じ id は 1 回）
 //   ageLine(age)            世代で分けた台詞の型（STORY_BIBLE §3.5）
 // TODO(EVENTS): ev.say が '{hero}' を置き換え、ev.item が入手の通知を出すようになったら、t() と give() の通知を外す（requests.jsonl）。
@@ -47,6 +47,11 @@
     E.toast('書庫に書き写した' + (d ? '：' + d.title : ''), 'book');
     return true;
   };
+  /** pick の項目ごと（{text, voice?}）。合う物が無ければ {text: null} */
+  E.pickEntry = function (list) {
+    for (const e of list) if (e && (e.cond == null || R.State.check(e.cond))) return e;
+    return { text: null };
+  };
   E.pick = function (list) {
     for (const e of list) if (e && (e.cond == null || R.State.check(e.cond))) return e.text;
     return null;
@@ -64,7 +69,7 @@
     await ev.fade('in', 500);
     try { R.Save.autosave('inn'); } catch (e) { /* */ }
     R.emit('inn', { map: p.map });
-    if (o.morning) await E.say(ev, o.who || null, o.morning);
+    if (o.morning) await E.say(ev, o.who || null, o.morning, o.morningVoice ? { voice: o.morningVoice } : undefined);
     return true;
   };
   E.chapter = function (id) {

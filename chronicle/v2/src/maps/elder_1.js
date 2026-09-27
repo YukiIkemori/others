@@ -87,7 +87,7 @@
       zones: [{ rect: null, zone: 'z_elder' }],
       light: { ambient: '#60709a', k: 0.57, mood: 'tree' },
       dark: false,
-      bgm: 'shrine', bbg: 'tree',
+      bgm: 'eldertree', bbg: 'tree',
       meta: { chestsInfo: true, floor: '1 階', sub: '幹の中のらせん' },
     });
   });

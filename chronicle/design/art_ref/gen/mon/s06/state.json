@@ -1,0 +1,85 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s06_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 41
+  }
+ ],
+ "use": "mon_s06_a1.png",
+ "norm": {
+  "boss_pageeater": {
+   "pitch": 7.48,
+   "how": "core 1122x899 px -> 150 art px",
+   "core_long": 150.0,
+   "raw_box": [
+    187,
+    63,
+    1334,
+    966
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 155
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s06_tele_a1.png",
+   "prompt": "the wind-up pose before it spits a storm of paper: the book-body swells up bigger and leans BACK a little, the two covers (jaws) are opened very wide as if inhaling hard, the page-teeth bristle outward, the paper legs are braced wide apart. Same red eye."
+  },
+  {
+   "pose": "attack",
+   "file": "mon_s06_attack_a1.png",
+   "prompt": "the attack pose: it LUNGES forward to the right, the whole book-body tilted forward and down toward the right, the jaws snapping half-shut at the front, the paper legs stretched back behind it."
+  },
+  {
+   "pose": "p2",
+   "file": "mon_s06_p2_a1.png",
+   "prompt": "its second, enraged form: the leather covers are torn and peeled back at the edges, many loose pages curl up and flare out around the body like a ragged mane (still attached to the body, not floating), more and longer ragged page-teeth, the single red eye bigger and bloodshot. Same size, same pose, same position."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s06_tele_a1.png",
+  "attack": "mon_s06_attack_a1.png",
+  "p2": "mon_s06_p2_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    -2,
+    -7
+   ],
+   "overlap": 11111,
+   "size": [
+    157,
+    129
+   ]
+  },
+  "attack": {
+   "offset": [
+    -18,
+    12
+   ],
+   "overlap": 7579,
+   "size": [
+    185,
+    86
+   ]
+  },
+  "p2": {
+   "offset": [
+    -3,
+    -4
+   ],
+   "overlap": 11857,
+   "size": [
+    157,
+    125
+   ]
+  }
+ }
+}

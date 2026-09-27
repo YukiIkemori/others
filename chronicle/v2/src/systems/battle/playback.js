@@ -470,7 +470,11 @@
   };
   H.grow = async (st, e) => { st.collected.grow.push(e); };
   H.prof = async (st, e) => { st.collected.prof.push(e); };
-  H.msg = async (st, e) => { st.head = { name: e.text, t0: R.Engine.time }; await st.pwait(900); };
+  H.msg = async (st, e) => {
+    // ボスの段階の切り替え（BEAST の原画に第 2 の姿 idle_p2… があれば actors.js がそれを使う）
+    if (e.phase && e.uid != null && st.vis[e.uid]) { const v = st.vis[e.uid]; v.phase = (v.phase || 1) + 1; v.flash = 1; }
+    st.head = { name: e.text, t0: R.Engine.time }; await st.pwait(900);
+  };
   H.end = async () => {};
   P.handlers = H;
 

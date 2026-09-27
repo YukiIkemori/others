@@ -431,13 +431,15 @@ async function route(name, o) {
   for (const row of csv) { const c = row.split(','); if (/^v_/.test(c[0])) VOICE[c[0]] = c[7]; }
   const want = ['v_fine_forest_01', 'v_elm_forest_01', 'v_elm_forest_02', 'v_elm_forest_03', 'v_elm_forest_04', 'v_elm_forest_05', 'v_elm_forest_06'];
   const used = {};
-  for (const s of SAID) if (s.o && s.o.voice) used[s.o.voice] = [].concat(s.text).join('');
+  for (const s of SAID) if (s.o && s.o.voice) [].concat(s.o.voice).forEach((v, i) => { used[v] = Array.isArray(s.o.voice) ? [].concat(s.text)[i] : [].concat(s.text).join(''); });
   for (const v of want) {
     ok(`${v} を使う`, used[v] != null);
     if (used[v] != null) ok(`${v} の文面が script.csv と同じ（改行を除く）`, used[v].replace(/\n/g, '') === VOICE[v], [used[v].replace(/\n/g, ''), VOICE[v]]);
     ok(`${v} の音声ファイルがある`, fs.existsSync(path.join(CHRON, 'assets', 'voice', v + '.ogg')) || fs.existsSync(path.join(CHRON, 'assets', 'voice', v + '.mp3')));
   }
-  ok('森のボイスは 7 本だけ（縦切り 22 本のうち）', Object.keys(used).every((v) => want.includes(v)), Object.keys(used));
+  // 2026-09-27: 物語のボイス（design/voice_story_map.json の story）も使う
+  const STORY_V = Object.entries(JSON.parse(fs.readFileSync(path.join(CHRON, 'v2', 'design', 'voice_story_map.json'), 'utf8')).lines).filter(([, l]) => l.kind === 'story').map(([k]) => k);
+  ok('森のボイスは 7 本と物語のボイスだけ（縦切り 22 本のうち）', Object.keys(used).every((v) => want.includes(v) || STORY_V.includes(v)), Object.keys(used));
 
   // ================================================================ 8. meta の needs/gives の形
   section('meta');

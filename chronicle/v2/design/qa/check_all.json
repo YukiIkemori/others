@@ -1,205 +1,206 @@
 {
- "date": "2026-09-27T06:30:47.975Z",
+ "date": "2026-09-27T06:48:56.732Z",
  "browser": false,
  "full": false,
  "results": [
   {
    "name": "build",
    "code": 0,
-   "ms": 547,
-   "summary": "[build] media (external): 17 BGM (slice), 416 voice, 0 portraits, 239 sprite sheets, 1233 env images, 83.6 MB  [469 ms]"
+   "ms": 578,
+   "summary": "[build] media (external): 22 BGM (slice), 416 voice, 0 portraits, 239 sprite sheets, 1233 env images, 11 title images, 113.1 MB  [498 ms]"
   },
   {
    "name": "test_core",
-   "code": 1,
-   "ms": 530,
-   "summary": "76/77 passed  (1 FAILED)",
-   "tail": "pass  battle object names\npass  units shape\npass  battle runs to an end with valid events\npass  rewards shape\npass  ev names (§2.5.10)\npass  fixtures: 1 state + 2 scenes, valid\npass  core first 6 in order\npass  main.js last, dev before it\npass  index order has no dev files\nFAIL  no API keys / model identifiers in v2 sources  [\"/home/user/others/chronicle/v2/design/bgm_changes.md\"]\n\n76/77 passed  (1 FAILED)"
+   "code": 0,
+   "ms": 505,
+   "summary": "77/77 passed"
   },
   {
    "name": "test_core_contract",
    "code": 0,
-   "ms": 588,
+   "ms": 579,
    "summary": "test_core_contract: 51/51 passed"
   },
   {
    "name": "test_render",
    "code": 0,
-   "ms": 629,
+   "ms": 613,
    "summary": "test_render: 145/145 passed"
   },
   {
    "name": "test_uik",
    "code": 0,
-   "ms": 543,
+   "ms": 563,
    "summary": "test_uik: 37/37 passed"
   },
   {
    "name": "test_cast",
    "code": 0,
-   "ms": 464,
+   "ms": 454,
    "summary": "test_cast: 865/865 passed"
   },
   {
    "name": "test_beast",
    "code": 0,
-   "ms": 406,
+   "ms": 431,
    "summary": "test_beast: 93/93 passed"
   },
   {
    "name": "test_terrain",
    "code": 0,
-   "ms": 7403,
+   "ms": 7179,
    "summary": "test_terrain: 76/76 passed"
   },
   {
    "name": "test_field",
    "code": 0,
-   "ms": 1236,
+   "ms": 1282,
    "summary": "test_field: 102/102 passed"
   },
   {
    "name": "test_events",
    "code": 0,
-   "ms": 617,
+   "ms": 693,
    "summary": "test_events: 164/164 passed"
   },
   {
    "name": "test_rules",
    "code": 0,
-   "ms": 460,
+   "ms": 516,
    "summary": "test_rules: 187/187 passed"
   },
   {
    "name": "test_battle",
    "code": 0,
-   "ms": 5490,
+   "ms": 5693,
    "summary": "test_battle: 125/125 passed"
   },
   {
    "name": "test_bscene",
    "code": 0,
-   "ms": 416,
+   "ms": 427,
    "summary": "test_bscene: 47/47 passed"
   },
   {
    "name": "test_screens",
    "code": 0,
-   "ms": 462,
+   "ms": 549,
    "summary": "test_screens: 396/396 passed"
   },
   {
    "name": "test_content_p",
-   "code": 0,
-   "ms": 2238,
-   "summary": "test_content_p: 419/419 passed"
+   "code": 1,
+   "ms": 2674,
+   "summary": "test_content_p: 418/419 passed",
+   "tail": "pass  潮風亭の噂: 1 回ごとに次の噂（森 → 休み小屋）\npass  依頼 q_pharos_lamp: 2 つの灯籠をともして礼\npass  依頼 q_pharos_well: 巣を見つけて解決\npass  依頼 q_pharos_delivery: 包みを受け取る\npass  風鳴りの丘: 風の鈴\npass  {hero} が名前に置き換わる\npass  T1: 手紙 → 少女（v_fine_t1_01・02）→ 余白の一行\npass  T1 は 1 回だけ\n\ntest_content_p: 418/419 passed\nfailed:\n  自分のイベントで使うボイスは 15 本だけ"
   },
   {
    "name": "test_content_f",
-   "code": 0,
-   "ms": 2045,
-   "summary": "CONTENT-F: 645/645 passed"
+   "code": 1,
+   "ms": 2559,
+   "summary": "CONTENT-F: 611/645 passed",
+   "tail": "  R2: ハンナの ac_tale_forest\n  R2: 森の地方の手がかりが解決（pim・woodcutters・song）\n  R2: 年代記の文が選択どおり\n  R2: 手紙配り q_fern_letters が済む\n  R2: 名を忘れた人々の 1 人目（エダ）\n  event elder_boss が止まらない\n  v_elm_forest_01 を使う\n  v_elm_forest_02 を使う\n  v_elm_forest_03 を使う\n  v_elm_forest_04 を使う\n  v_elm_forest_05 を使う\n  森のボイスは 7 本だけ（縦切り 22 本のうち）"
   },
   {
    "name": "validate",
    "code": 0,
-   "ms": 638,
+   "ms": 489,
    "summary": "validate: 57/57 passed"
   },
   {
    "name": "progress",
    "code": 0,
-   "ms": 29851,
+   "ms": 30791,
    "summary": "progress: 20/20 passed"
   },
   {
    "name": "check_text",
    "code": 0,
-   "ms": 979,
+   "ms": 893,
    "summary": "check_text: 0 error(s), 1 warning(s) in 6120 Japanese strings of 242 files — none"
   },
   {
    "name": "check_voice",
    "code": 0,
-   "ms": 80,
-   "summary": "check_voice: 71/71 passed"
+   "ms": 81,
+   "summary": "check_voice: 199/199 passed"
   },
   {
    "name": "check_leads",
    "code": 0,
-   "ms": 429,
+   "ms": 414,
    "summary": "check_leads: 24/24 passed"
   },
   {
    "name": "check_springs",
    "code": 0,
-   "ms": 30841,
+   "ms": 30980,
    "summary": "check_springs: 17/17 passed"
   },
   {
    "name": "check_density",
    "code": 0,
-   "ms": 442,
+   "ms": 576,
    "summary": "check_density: 12/12 passed"
   },
   {
    "name": "check_world",
    "code": 0,
-   "ms": 4894,
+   "ms": 5005,
    "summary": "check_world: 7/7 passed"
   },
   {
    "name": "check_chests",
    "code": 0,
-   "ms": 5305,
+   "ms": 5067,
    "summary": "check_chests: 4/4 passed"
   },
   {
    "name": "check_secrets",
    "code": 0,
-   "ms": 6514,
+   "ms": 6241,
    "summary": "check_secrets: 32/32 passed"
   },
   {
    "name": "check_stubs",
    "code": 0,
-   "ms": 10854,
+   "ms": 11732,
    "summary": "check_stubs: 13/13 passed"
   },
   {
    "name": "sim_zones",
    "code": 0,
-   "ms": 23611,
+   "ms": 23587,
    "summary": "all zones: HP loss 8.7%, rounds 3.12 pass"
   },
   {
    "name": "sim_zones --segments",
    "code": 0,
-   "ms": 24488,
+   "ms": 25223,
    "summary": "segments: 13/13 pass"
   },
   {
    "name": "sim_bosses",
    "code": 0,
-   "ms": 31664,
+   "ms": 31498,
    "summary": "tr_b_rooteater            0      17       99    83    9.8   0.06  pass"
   },
   {
    "name": "sim_growth",
    "code": 0,
-   "ms": 3194,
+   "ms": 3147,
    "summary": "sim_growth: 8/8 passed (runs 20, seed 1)"
   },
   {
    "name": "sim_glimmer",
    "code": 0,
-   "ms": 78433,
+   "ms": 78969,
    "summary": "NOTE (above/below the estimate) slice scope near the V2_PLAN §3.9 estimate (glimmered techs lv1–3 ≈ 20: 28 + starters 8, max lv 3; spells step 1–2 ≈ 12: 18)"
   },
   {
    "name": "sim_loot",
    "code": 0,
-   "ms": 8198,
+   "ms": 7843,
    "summary": "H5 倒しても落ちない: 30000 体、盗み専用のドロップ 0  pass"
   }
  ]

@@ -9,6 +9,7 @@
 //   R.Events.isNew(map, npc) → bool       E19 の「新しい話」: 今の台詞のハッシュが R.Game.heard[key] と違う
 //   R.Events.makeEv(ctx) → ev             OBJ_API.ev の全部（下）
 //   足した物: runId() / current() → {id, ctx} | null / after(fn)（走っているイベントが終わったら。無ければすぐ）/ lineHash(line)
+//   bark(map, npc)：npc.bark（あいさつのボイス）を、マップに来てから最初に話しかけたときだけ鳴らす（talk が呼ぶ）
 //
 // ev の決まり（§2.11）
 //   say(who, text, {voice, face, name, title})   who = 今のマップの NPC の id か、一行の人の id（'hero' など）か look か null（地の文）。
@@ -243,7 +244,9 @@
         return r;
       },
       g(male, female) { return R.State.heroSex() === 'f' ? female : male; },
-      bgm(id) { try { R.Audio.bgm(id); } catch (e) { /* */ } },
+      bgm(id, o) { try { R.Audio.bgm(id, o); } catch (e) { /* */ } },
+      /** 今のマップの BGM に戻す（予告の曲 omen・灯の曲 dawn の後） */
+      mapBgm(o) { try { const m = R.DB.maps[(R.Field && R.Field.pos && R.Field.pos.map) || ctx.map]; if (m && m.bgm) R.Audio.bgm(m.bgm, o); } catch (e) { /* */ } },
       sfx(id) { try { R.Audio.sfx(id); } catch (e) { /* */ } },
       jingle(id) { try { return R.Audio.jingle(id); } catch (e) { return Promise.resolve(); } },
     };
@@ -352,10 +355,24 @@
     return !!line && R.Game.heard[npc.key] !== lineHash(line);
   };
 
+  // 話しかけたときのあいさつ（npc.bark、design/voice_story_map.json の bark）: マップに来てから最初の 1 回だけ。
+  // 最初の台詞にボイスがあるとき（R.Audio.voiceId）は、そちらが bark を止める（message の say がボイスを鳴らし直す）
+  let barked = {};   // マップに来るたびに空にする（'map:enter'）
+  if (R.on) R.on('map:enter', () => { barked = {}; });
+  function bark(mapId, npc) {
+    if (!npc || !npc.bark || busy) return;
+    const k = mapId + ':' + npc.id;
+    if (barked[k]) return;
+    barked[k] = true;
+    try { if (R.Audio && R.Audio.playVoice && !R.Audio.voiceId) R.Audio.playVoice(npc.bark); } catch (e) { /* 声が無くても止めない */ }
+  }
+  Events.bark = bark;
+
   Events.talk = async function (map, npc) {
     if (!npc) return undefined;
     const mapId = map && map.id ? map.id : map;
     R.emit('talk', { npc: npc.id });
+    bark(mapId, npc);
     if (typeof npc.talk === 'string') {
       if (npc.key) R.Game.heard[npc.key] = lineHash(currentLine(npc));
       return Events.run(npc.talk, { map: mapId, npc: npc.id, x: npc.x, y: npc.y });

@@ -1,0 +1,93 @@
+{
+ "sprite": "fairy_1",
+ "id": "fairy_1",
+ "name": "いたずら妖精",
+ "sheet": 2,
+ "cell": 2,
+ "size": "S",
+ "kind": "mob",
+ "fly": true,
+ "w": 53,
+ "h": 62,
+ "anchor": [
+  23,
+  78
+ ],
+ "points": {
+  "head": [
+   33,
+   20
+  ],
+  "center": [
+   30,
+   32
+  ],
+  "fx": [
+   33,
+   26
+  ],
+  "top": [
+   34,
+   5
+  ],
+  "body": [
+   30,
+   36,
+   7,
+   10
+  ],
+  "eyes": [
+   [
+    36,
+    22,
+    1
+   ]
+  ],
+  "eye": [
+   36,
+   22
+  ],
+  "hand": [
+   41,
+   40
+  ]
+ },
+ "facing": "right",
+ "long": 62,
+ "core_long": 52.0,
+ "target": {
+  "w": 39,
+  "h": 52,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 8.577,
+ "alsoMakes": [
+  "fairy_2",
+  "fairy_3"
+ ],
+ "variants": {
+  "fairy_2": {
+   "recolor": {
+    "hue": 300
+   },
+   "addons": [
+    "flower"
+   ],
+   "filter": null,
+   "name": "花の妖精"
+  },
+  "fairy_3": {
+   "recolor": {
+    "hue": 180,
+    "sat": 0.6,
+    "bri": 1.1
+   },
+   "addons": [
+    "mist"
+   ],
+   "filter": null,
+   "name": "霧の妖精"
+  }
+ }
+}

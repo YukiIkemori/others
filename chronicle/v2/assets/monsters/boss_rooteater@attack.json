@@ -1,0 +1,50 @@
+{
+ "sprite": "boss_rooteater",
+ "id": "b_rooteater",
+ "name": "根食らい",
+ "sheet": 9,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 213,
+ "h": 129,
+ "anchor": [
+  98,
+  127
+ ],
+ "points": {
+  "head": [
+   167,
+   19
+  ],
+  "center": [
+   100,
+   70
+  ],
+  "fx": [
+   120,
+   55
+  ],
+  "top": [
+   164,
+   11
+  ],
+  "body": [
+   98,
+   68,
+   77,
+   46
+  ]
+ },
+ "facing": "right",
+ "long": 213,
+ "target": {
+  "w": 210,
+  "h": 140,
+  "long": 210
+ },
+ "colors": 48,
+ "pitch": 6.69,
+ "pose": "attack"
+}

@@ -294,6 +294,7 @@
   if (R.onData) {
     R.onData(function () {
       if (!R.Hd || !R.Hd.def) return;
+      if (BZ.imgPending) BZ.imgPending();   // mons/img.js: 原画のある魔物は画像から（無い魔物のキーも足す）
       for (const [key, factory, meta] of BZ._pending || []) R.Hd.def(key, factory, meta);
     });
   }

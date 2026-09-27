@@ -1,0 +1,111 @@
+{
+ "sprite": "bee_1",
+ "id": "bee_1",
+ "name": "花バチ",
+ "sheet": 1,
+ "cell": 4,
+ "size": "S",
+ "kind": "mob",
+ "fly": true,
+ "w": 68,
+ "h": 50,
+ "anchor": [
+  30,
+  63
+ ],
+ "points": {
+  "head": [
+   54,
+   30
+  ],
+  "center": [
+   33,
+   32
+  ],
+  "fx": [
+   45,
+   30
+  ],
+  "top": [
+   36,
+   18
+  ],
+  "body": [
+   33,
+   32,
+   16,
+   11
+  ],
+  "eyes": [
+   [
+    53,
+    29,
+    2
+   ]
+  ],
+  "eye": [
+   53,
+   29
+  ],
+  "stinger": [
+   [
+    8,
+    44
+   ],
+   [
+    -0.85,
+    0.5
+   ]
+  ]
+ },
+ "facing": "right",
+ "long": 68,
+ "core_long": 52.0,
+ "target": {
+  "w": 52,
+  "h": 36,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 8.827,
+ "alsoMakes": [
+  "bee_2",
+  "bee_3",
+  "bee_4"
+ ],
+ "variants": {
+  "bee_2": {
+   "recolor": {
+    "hue": 250,
+    "sat": 0.9
+   },
+   "addons": [
+    "stinger"
+   ],
+   "filter": null,
+   "name": "毒針バチ"
+  },
+  "bee_3": {
+   "recolor": {
+    "hue": 190
+   },
+   "addons": [
+    "sparks"
+   ],
+   "filter": null,
+   "name": "しびれバチ"
+  },
+  "bee_4": {
+   "recolor": {
+    "hue": -30,
+    "sat": 1.1,
+    "bri": 0.8
+   },
+   "addons": [
+    "spikes"
+   ],
+   "filter": null,
+   "name": "千本バチ"
+  }
+ }
+}

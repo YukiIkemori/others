@@ -1,0 +1,49 @@
+{
+ "sprite": "boss_wolflord",
+ "id": "b_wolflord",
+ "name": "狼の群れ頭",
+ "sheet": 7,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 162,
+ "h": 110,
+ "anchor": [
+  97,
+  109
+ ],
+ "points": {
+  "head": [
+   136,
+   10
+  ],
+  "center": [
+   92,
+   58
+  ],
+  "fx": [
+   105,
+   44
+  ],
+  "top": [
+   126,
+   0
+  ],
+  "body": [
+   92,
+   58,
+   59,
+   37
+  ]
+ },
+ "facing": "right",
+ "long": 162,
+ "target": {
+  "w": 160,
+  "h": 110,
+  "long": 160
+ },
+ "colors": 48,
+ "pitch": 7.975
+}

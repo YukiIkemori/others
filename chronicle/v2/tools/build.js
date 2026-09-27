@@ -258,6 +258,22 @@ function scanTitle(root) {
   }
   return { list: out, meta };
 }
+/** BEAST の魔物の原画（design/sprite_pipe/tools/mon_pack.py）。v2/assets/monsters/<sprite>.png（ボスの構え・別の姿は <sprite>@<pose>.png）
+ *  ＋同じ名前の .json（meta）→ RPG_MEDIA.monsters['<sprite>'] = {url, meta}（src/art/mons/img.js が読む） */
+const MONSTERS_DIR = path.join(V2, 'assets', 'monsters');
+function scanMonsters(root) {
+  const out = [];
+  if (!fs.existsSync(root)) return out;
+  for (const f of fs.readdirSync(root).sort()) {
+    const m = /^([a-z0-9_]+(?:@[a-z0-9_]+)?)\.png$/.exec(f);
+    if (!m) continue;
+    let meta = null;
+    const js = path.join(root, m[1] + '.json');
+    if (fs.existsSync(js)) { try { meta = JSON.parse(fs.readFileSync(js, 'utf8')); } catch (e) { console.warn(`[build] ${js}: bad JSON (${e.message})`); } }
+    out.push({ id: m[1], ext: 'png', file: path.join(root, f), meta, outName: m[1].replace('@', '.') + '.png' });
+  }
+  return out;
+}
 function copyIfChanged(src, dst) {
   try {
     const a = fs.statSync(src), b = fs.existsSync(dst) && fs.statSync(dst);
@@ -267,14 +283,15 @@ function copyIfChanged(src, dst) {
 }
 /** → {script, embeds, bytes}。mode 'external' は outDir/<kind>/ に写して相対 URL、'embed' は埋め込み、'none' は空 */
 function mediaTable(media, mode, outDir) {
-  const table = { bgm: {}, voice: {}, portraits: {}, sprites: {}, env: {}, title: {} };
+  const table = { bgm: {}, voice: {}, portraits: {}, sprites: {}, env: {}, title: {}, monsters: {} };
   const embeds = [];
   let bytes = 0;
   media.sprites = media.sprites || [];
   media.env = media.env || [];
   media.title = media.title || [];
+  media.monsters = media.monsters || [];
   const base = (e) => e.outName || path.basename(e.file);
-  for (const kind of ['bgm', 'voice', 'portraits', 'sprites', 'env', 'title']) {
+  for (const kind of ['bgm', 'voice', 'portraits', 'sprites', 'env', 'title', 'monsters']) {
     const extDir = path.join(outDir, kind);
     if (mode === 'external') {
       fs.mkdirSync(extDir, { recursive: true });
@@ -297,7 +314,7 @@ function mediaTable(media, mode, outDir) {
         // タイトルの絵は webp が読めないときの png も写す（--single には入れない。TITLE_ART §2）
         if (kind === 'title' && e.png) { copyIfChanged(e.png, path.join(extDir, e.id + '.png')); bytes += fs.statSync(e.png).size; }
       } else continue;
-      table[kind][e.id] = kind === 'bgm' ? Object.assign({ url }, e.meta) : kind === 'sprites' || kind === 'env' ? { url, meta: e.meta }
+      table[kind][e.id] = kind === 'bgm' ? Object.assign({ url }, e.meta) : kind === 'sprites' || kind === 'env' || kind === 'monsters' ? { url, meta: e.meta }
         : kind === 'title' ? (mode === 'external' && e.png ? { url, png: kind + '/' + e.id + '.png' } : { url }) : url;
     }
   }
@@ -375,6 +392,7 @@ function main(argv) {
   media.sprites = scanSprites(SPRITES_DIR);
   media.env = scanEnv(ENV_DIR);
   { const t = scanTitle(TITLE_DIR); media.title = t.list; media.titleMeta = t.meta; }
+  media.monsters = scanMonsters(MONSTERS_DIR);
 
   // 書体（dev のフィクスチャの字も入れる）
   const withDir = argVal(argv, '--with', null);

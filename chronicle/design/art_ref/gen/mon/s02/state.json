@@ -1,0 +1,73 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s02_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 51
+  }
+ ],
+ "use": "mon_s02_a1.png",
+ "norm": {
+  "mushroom_1": {
+   "pitch": 9.269,
+   "how": "core 482x471 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    168,
+    131,
+    651,
+    602
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 53
+  },
+  "fairy_1": {
+   "pitch": 8.577,
+   "how": "core 446x442 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    903,
+    118,
+    1352,
+    637
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 62
+  },
+  "rare_acorn": {
+   "pitch": 11.885,
+   "how": "core 618x446 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    93,
+    839,
+    725,
+    1318
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 54
+  },
+  "bee_5": {
+   "pitch": 9.339,
+   "how": "core 523x506 px -> 56 art px",
+   "core_long": 56.0,
+   "raw_box": [
+    807,
+    783,
+    1479,
+    1358
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 73
+  }
+ },
+ "notes": [
+  "fairy_1: long side 62 outside the tier [48, 56]",
+  "bee_5: long side 73 outside the tier [48, 56]"
+ ]
+}

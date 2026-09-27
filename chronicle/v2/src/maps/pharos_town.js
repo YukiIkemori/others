@@ -98,10 +98,10 @@
     // ---------------------------------------------------------------- 人
     const npcs = [
       { id: 'otto', look: 'otto', name: 'オットー', title: '灯台守', x: 24, y: 34, dir: 's', move: 'still', pushable: false, talk: 'pharos_otto', reward: 'item', key: 'pharos_otto' },
-      { id: 'gateguard', look: 'npc_guard_1', name: '門番', x: 2, y: 20, dir: 'e', move: 'still', pushable: false, talk: 'pharos_gateguard', reward: 'news', key: 'pharos_gateguard' },
+      { id: 'gateguard', look: 'npc_guard_1', name: '門番', x: 2, y: 20, dir: 'e', move: 'still', pushable: false, talk: 'pharos_gateguard', reward: 'news', key: 'pharos_gateguard', bark: 'v_gateguard_greet_01' },
       { id: 'well_child', look: 'npc_child_2', x: 27, y: 20, dir: 's', move: { route: [[27, 20], [25, 20], [25, 21], [27, 21]], wait: 1400 }, talk: 'pharos_well_child', reward: 'side', key: 'pharos_well_child' },
-      { id: 'tadeo', look: 'npc_tadeo', name: 'タデオ', title: '灯守組合の油売り', x: 23, y: 23, dir: 'n', move: 'still', talk: 'pharos_tadeo', reward: 'side', key: 'pharos_tadeo' },
-      { id: 'fishwife', look: 'npc_woman_3', x: 14, y: 33, dir: 's', move: 'still', talk: 'pharos_fishwife', reward: 'item', key: 'pharos_fishwife' },
+      { id: 'tadeo', look: 'npc_tadeo', name: 'タデオ', title: '灯守組合の油売り', x: 23, y: 23, dir: 'n', move: 'still', talk: 'pharos_tadeo', reward: 'side', key: 'pharos_tadeo', bark: 'v_tadeo_greet_01' },
+      { id: 'fishwife', look: 'npc_woman_3', x: 14, y: 33, dir: 's', move: 'still', talk: 'pharos_fishwife', reward: 'item', key: 'pharos_fishwife', bark: 'v_fishwife_greet_01' },
       { id: 'old_sailor', look: 'npc_sailor_2', x: 47, y: 13, dir: 'w', move: 'still', talk: 'pharos_old_sailor', reward: 'hint', key: 'pharos_old_sailor' },
       { id: 'ship_sailor', look: 'npc_sailor_1', x: 57, y: 22, dir: 'e', move: 'wander', talk: 'pharos_ship_sailor', reward: 'news', key: 'pharos_ship_sailor' },
       { id: 'plaza_woman', look: 'npc_woman_1', x: 29, y: 16, dir: 's', move: 'wander', talk: 'pharos_plaza_woman', reward: 'news', key: 'pharos_plaza_woman' },

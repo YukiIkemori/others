@@ -1,5 +1,5 @@
 // UIK: 会話（R.UIK.Message、MODERN_UI §6.3・§5.4、V2_PLAN §2.5.6・§2.11）
-//   say({name, title, face, text, voice, choices, cancel}) → Promise<選んだ番号 | undefined>   場面 id 'message'（K.say）
+//   say({name, title, face, text, voice（id か、元のページごとの id の配列）, choices, cancel}) → Promise<選んだ番号 | undefined>   場面 id 'message'（K.say）
 //     - 羊皮紙の札（下の中央、幅 760・高さ 150）。左に顔の枠 118（顔の無い人は枠ごと出さず文を左に寄せる）、上に話者名（琥珀）と肩書き
 //     - text は文字列か配列（1 つが 1 ページ）。幅で折り返し、3 行ごとに次のページへ。{漢字|かんじ} はふりがな（設定 ruby のときだけ出す）
 //     - 送り: A・B・下キー・タップ（A3）。送ったら R.Audio.stopVoice()（A9）。途中なら全部を出す
@@ -102,6 +102,8 @@
   // ---------------------------------------------------------------- 会話の場面
   function msgScene(o) {
     const T = UIK.T;
+    /** 元のページ src のボイスの id（o.voice は 1 つか、ページごとの配列） */
+    function voiceFor(src) { return Array.isArray(o.voice) ? o.voice[src] || null : src === 0 ? o.voice || null : null; }
     let src = Array.isArray(o.text) ? o.text.map(String) : [String(o.text == null ? '' : o.text)];
     const choices = Array.isArray(o.choices) ? o.choices.map(String) : [];
     const hasChoices = choices.length > 0;
@@ -116,7 +118,7 @@
     const parsed = src.map(parseRuby);
     const st = {
       page: 0, shown: 0, choice: 0, full: false, fullAt: 0, pages: null, key: '', log: null,
-      voiceDone: !o.voice, press: null, t0: 0, ffHold: false, logged: {}, hover: -1,
+      voiceDone: !voiceFor(0), voiceSrc: -1, voiceTok: 0, press: null, t0: 0, ffHold: false, logged: {}, hover: -1,
     };
     if (context) { st.shown = 1e9; st.logged[0] = true; }
     const choiceParts = choices.map((c) => { const i = c.indexOf('\t'); return i < 0 ? [c, ''] : [c.slice(0, i), c.slice(i + 1)]; });
@@ -158,11 +160,23 @@
     const isLast = () => st.page >= st.pages.length - 1;
     const readKey = (pg) => name + '|' + pg.text;
 
+    /** 元のページ src に入ったら、そのボイスを鳴らす（同じ元のページの続きの窓では鳴らし直さない） */
+    function playVoiceFor(src) {
+      if (src === st.voiceSrc) return;
+      st.voiceSrc = src;
+      const id = voiceFor(src);
+      const tok = ++st.voiceTok;
+      if (!id || !R.Audio || !R.Audio.voice) { st.voiceDone = true; return; }
+      st.voiceDone = false;
+      const done = () => { if (st.voiceTok === tok) st.voiceDone = true; };
+      try { Promise.resolve(R.Audio.voice(id)).then(done, done); } catch (e) { st.voiceDone = true; }
+    }
     function flip() {
-      stopVoice();
       const pg = page();
+      const next = !isLast() ? st.pages[st.page + 1] : null;
+      if (!next || !pg || next.src !== pg.src) stopVoice();
       if (pg) readSet.add(readKey(pg));
-      if (!isLast()) { st.page++; st.shown = 0; st.full = false; return; }
+      if (!isLast()) { st.page++; st.shown = 0; st.full = false; playVoiceFor(page().src); return; }
       finish(undefined);
     }
     function complete() { st.shown = page().n; }
@@ -174,9 +188,7 @@
         st.t0 = R.Engine.time;
         // 最初のページは開いたときにログへ（すぐ次の say に替わっても残る）
         if (!context && parsed[0] && parsed[0].plain) { st.logged[0] = true; pushLog(name, parsed[0].plain); }
-        if (o.voice && R.Audio && R.Audio.voice) {
-          try { Promise.resolve(R.Audio.voice(o.voice)).then(() => { st.voiceDone = true; }, () => { st.voiceDone = true; }); } catch (e) { st.voiceDone = true; }
-        }
+        if (voiceFor(0)) playVoiceFor(0);
       },
       exit() {},
       update(dt) {

@@ -54,7 +54,7 @@
           P('lantern', 10, 2), P('lantern', 18, 9), P('crate', 1, 11), P('sack', 18, 11), P('flower_pot', 1, 7),
         ],
         npcs: [
-          { id: 'master', look: 'npc_merchant_2', name: '潮風亭のマスター', x: 4, y: 4, dir: 's', move: 'still', pushable: false, talk: 'pharos_tavern_master', key: 'pharos_master' },
+          { id: 'master', look: 'npc_merchant_2', name: '潮風亭のマスター', x: 4, y: 4, dir: 's', move: 'still', pushable: false, talk: 'pharos_tavern_master', key: 'pharos_master', bark: 'v_master_greet_01' },
           { id: 'gossip', look: 'npc_woman_3', name: 'うわさ好きのおかみ', x: 11, y: 5, dir: 'e', move: 'still', talk: 'pharos_rumor_gossip', reward: 'lead', key: 'pharos_gossip' },
           { id: 'bard', look: 'npc_bard_1', name: '吟遊詩人', x: 17, y: 4, dir: 's', move: 'still', talk: 'pharos_rumor_bard', reward: 'lead', key: 'pharos_bard' },
           { id: 'trader', look: 'npc_merchant_3', name: '旅の商人', x: 14, y: 11, dir: 'e', move: 'still', talk: 'pharos_rumor_trader', reward: 'lead', key: 'pharos_trader' },

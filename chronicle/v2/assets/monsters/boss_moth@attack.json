@@ -1,0 +1,50 @@
+{
+ "sprite": "boss_moth",
+ "id": "b_moth",
+ "name": "ダストウィング",
+ "sheet": 8,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": true,
+ "w": 183,
+ "h": 116,
+ "anchor": [
+  87,
+  155
+ ],
+ "points": {
+  "head": [
+   140,
+   16
+  ],
+  "center": [
+   87,
+   57
+  ],
+  "fx": [
+   103,
+   45
+  ],
+  "top": [
+   140,
+   6
+  ],
+  "body": [
+   85,
+   55,
+   63,
+   38
+  ]
+ },
+ "facing": "right",
+ "long": 183,
+ "target": {
+  "w": 170,
+  "h": 115,
+  "long": 170
+ },
+ "colors": 48,
+ "pitch": 7.065,
+ "pose": "attack"
+}

@@ -1,0 +1,53 @@
+{
+ "sprite": "rare_glassmoth",
+ "id": "rm_glass_moth",
+ "name": "ガラスアゲハ",
+ "sheet": 4,
+ "cell": 3,
+ "size": "M",
+ "kind": "rare",
+ "fly": true,
+ "w": 80,
+ "h": 84,
+ "anchor": [
+  33,
+  107
+ ],
+ "points": {
+  "head": [
+   64,
+   55
+  ],
+  "center": [
+   42,
+   45
+  ],
+  "fx": [
+   55,
+   50
+  ],
+  "top": [
+   17,
+   0
+  ],
+  "body": [
+   33,
+   41,
+   28,
+   29
+  ],
+  "eye": [
+   65,
+   54
+  ]
+ },
+ "facing": "right",
+ "long": 84,
+ "target": {
+  "w": 80,
+  "h": 56,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 7.15
+}

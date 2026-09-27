@@ -1,0 +1,94 @@
+{
+ "sprite": "crab_1",
+ "id": "crab_1",
+ "name": "浜ガニ",
+ "sheet": 3,
+ "cell": 1,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 84,
+ "h": 66,
+ "anchor": [
+  30,
+  65
+ ],
+ "points": {
+  "head": [
+   48,
+   30
+  ],
+  "center": [
+   42,
+   43
+  ],
+  "fx": [
+   60,
+   38
+  ],
+  "top": [
+   45,
+   22
+  ],
+  "body": [
+   40,
+   42,
+   22,
+   10
+  ],
+  "eyes": [
+   [
+    38,
+    23,
+    1
+   ],
+   [
+    47,
+    23,
+    1
+   ]
+  ],
+  "shell": [
+   40,
+   40,
+   20,
+   9
+  ]
+ },
+ "facing": "right",
+ "long": 84,
+ "target": {
+  "w": 80,
+  "h": 56,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 8.675,
+ "alsoMakes": [
+  "crab_2",
+  "crab_3"
+ ],
+ "variants": {
+  "crab_2": {
+   "recolor": {
+    "hue": 200,
+    "sat": 0.35
+   },
+   "addons": [
+    "armor_plates"
+   ],
+   "filter": null,
+   "name": "鉄甲ガニ"
+  },
+  "crab_3": {
+   "recolor": {
+    "hue": 190
+   },
+   "addons": [
+    "bubbles"
+   ],
+   "filter": null,
+   "name": "泡吹きガニ"
+  }
+ }
+}

@@ -40,7 +40,7 @@
   K.bakeJob = { step: 'fn', done: 'bool', 'result?': 'any', 'kind?': 'string', 'onDone?': 'fn' };
   K.light = { x: 'number', y: 'number', r: 'number', color: 'string', 'k?': 'number', 'kind?': 'string' };
   // --- UI（§2.5.6）
-  K.say = { 'name?': 'string', 'title?': 'string', 'face?': 'string|bool', text: 'string|array', 'voice?': 'string', 'choices?': 'string[]', 'cancel?': 'int' };
+  K.say = { 'name?': 'string', 'title?': 'string', 'face?': 'string|bool', text: 'string|array', 'voice?': 'string|array', 'choices?': 'string[]', 'cancel?': 'int' };
   // UIK.T の最低限のキー（ほかの担当が読む名前。UIK は値を変えてよいが、名前は消さない）
   K.uikTokens = {
     color: { text: 'string', text2: 'string', text3: 'string', disabled: 'string', panel: 'string', panelDense: 'string', edge: 'string', gold: 'string', goldHi: 'string', goldLo: 'string', teal: 'string',
@@ -100,6 +100,7 @@
     id: 'string', look: 'string', x: 'int', y: 'int', 'dir?': '"s"|"n"|"e"|"w"', 'move?': 'string|object', 'pushable?': 'bool', 'talk?': 'string|object',
     'name?': 'string', 'title?': 'string',   // 話者名は npc.name → looks[look].name の順（版 2）
     'cond?': 'any', 'reward?': '"lead"|"side"|"discount"|"hint"|"item"|"boss"|"news"|null', 'key?': 'string', 'lv?': '0|1',
+    'bark?': 'string',   // 話しかけたときの短いあいさつのボイスの id（R.Events.talk が鳴らす。design/voice_story_map.json の bark）
   };
   K.map = {
     id: 'string', name: 'string', kind: '"town"|"interior"|"dungeon"|"world"', 'optional?': 'bool', region: 'string', 'location?': 'string',

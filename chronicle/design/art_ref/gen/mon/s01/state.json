@@ -1,0 +1,76 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s01_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 51
+  }
+ ],
+ "use": "mon_s01_a1.png",
+ "norm": {
+  "jelly_1": {
+   "pitch": 8.154,
+   "how": "core 352x424 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    195,
+    172,
+    547,
+    596
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 53
+  },
+  "rat_1": {
+   "pitch": 12.365,
+   "how": "core 643x360 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    773,
+    205,
+    1464,
+    565
+   ],
+   "strays_removed": 1,
+   "colors": 32,
+   "long": 56
+  },
+  "bat_1": {
+   "pitch": 11.558,
+   "how": "core 601x455 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    46,
+    829,
+    731,
+    1320
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 60
+  },
+  "bee_1": {
+   "pitch": 8.827,
+   "how": "core 459x388 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    849,
+    872,
+    1437,
+    1306
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 68
+  }
+ },
+ "notes": [
+  "jelly_1: dropped 1 stray part(s) (4415 px)",
+  "rat_1: dropped 1 stray part(s) (86 px)",
+  "rat_1: removed 1 stray pixel group(s)",
+  "bat_1: long side 60 outside the tier [48, 56]",
+  "bee_1: long side 68 outside the tier [48, 56]"
+ ]
+}

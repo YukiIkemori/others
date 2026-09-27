@@ -1,0 +1,53 @@
+{
+ "sprite": "rare_fawn",
+ "id": "rm_bloom_fawn",
+ "name": "花角の小鹿",
+ "sheet": 4,
+ "cell": 2,
+ "size": "M",
+ "kind": "rare",
+ "fly": false,
+ "w": 69,
+ "h": 88,
+ "anchor": [
+  28,
+  87
+ ],
+ "points": {
+  "head": [
+   56,
+   30
+  ],
+  "center": [
+   40,
+   50
+  ],
+  "fx": [
+   50,
+   38
+  ],
+  "top": [
+   49,
+   2
+  ],
+  "body": [
+   37,
+   43,
+   24,
+   32
+  ],
+  "eye": [
+   57,
+   31
+  ]
+ },
+ "facing": "right",
+ "long": 88,
+ "target": {
+  "w": 80,
+  "h": 56,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 6.95
+}

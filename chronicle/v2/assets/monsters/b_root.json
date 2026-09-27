@@ -1,0 +1,60 @@
+{
+ "sprite": "b_root",
+ "id": "b_root",
+ "name": "根の触手",
+ "sheet": 5,
+ "cell": 2,
+ "size": "L",
+ "kind": "add",
+ "fly": false,
+ "w": 86,
+ "h": 112,
+ "anchor": [
+  38,
+  111
+ ],
+ "points": {
+  "head": [
+   68,
+   20
+  ],
+  "center": [
+   45,
+   60
+  ],
+  "fx": [
+   62,
+   35
+  ],
+  "top": [
+   68,
+   4
+  ],
+  "body": [
+   41,
+   56,
+   27,
+   49
+  ],
+  "eyes": [
+   [
+    57,
+    22,
+    2
+   ]
+  ],
+  "mouth": [
+   80,
+   35
+  ]
+ },
+ "facing": "right",
+ "long": 112,
+ "target": {
+  "w": 83,
+  "h": 110,
+  "long": 110
+ },
+ "colors": 48,
+ "pitch": 7.209
+}

@@ -218,7 +218,7 @@
     g.globalAlpha *= alpha;
     if (sh && sh.frames && sh.frames.length) {
       const P = sh.poses || {};
-      let list = P[pose] || (pose === 'weak' ? P.idle : null) || (pose === 'tele' ? P.attack : null) || (a.side === 'party' ? (P[ATTACK_POSE[a.wtype]] && /slash|smash|thrust|shoot/.test(pose) ? P[ATTACK_POSE[a.wtype]] : null) : null) || P.idle || [0];
+      let list = (v.phase > 1 && a.side !== 'party' && P[pose + '_p' + v.phase]) || P[pose] || (pose === 'weak' ? P.idle : null) || (pose === 'tele' ? P.attack : null) || (a.side === 'party' ? (P[ATTACK_POSE[a.wtype]] && /slash|smash|thrust|shoot/.test(pose) ? P[ATTACK_POSE[a.wtype]] : null) : null) || P.idle || [0];
       const fps = (sh.fps && (sh.fps[pose] || sh.fps.idle)) || 6;
       let fi = Math.floor(Math.max(0, t - (v.poseT || 0)) / 1000 * fps);
       fi = LOOP[pose] ? fi % list.length : Math.min(list.length - 1, fi);

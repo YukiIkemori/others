@@ -73,6 +73,7 @@
       valzard: 'boss2', hollowking: 'boss2', tavern: 'town', home: 'village', rival: 'boss', tension: 'dungeon',
       sorrow: 'shrine', boss2: 'boss', rarebattle: 'battle', superboss: 'lastboss', postgame: 'lastdungeon',
       forest: 'cave', ghost: 'dungeon', legend: 'shrine',
+      lostwood: 'forest', eldertree: 'shrine', dawn: 'title', fine_theme: 'shrine',   // 2026-09-27 の新しい録音の曲（design/bgm_changes.md）。omen は無ければ鳴らさない
     },
     jingles: { superrare: 'rare', chapter: 'keyitem', recruit: 'item' },
     sfx: {
@@ -1117,6 +1118,8 @@
   function mediaEntry(kind, id) {
     return (id && R.Media && R.Media.entry(kind, id)) || null;
   }
+  let oneShotPrev = null;   // 1 回だけ鳴る曲の前に鳴っていた曲
+  function oneShot(id) { const e = mediaEntry('bgm', id); return !!(e && e.loop === false); }
   function decodeBuf(ab) {
     return new Promise((res, rej) => {
       try { const p = ctx.decodeAudioData(ab, res, rej); if (p && p.then) p.then(res, rej); } catch (e) { rej(e); }
@@ -1282,6 +1285,8 @@
       if (cur && cur.id === id) { if (mx && !pb && !jin) startCur(); return; }
       const f = opts && opts.fade ? opts.fade / 60 : 0;
       stopPb(f || 0.06);
+      // 1 回だけ鳴る曲（omen など loop:false）: 前の曲を覚えておき、戦闘の popBgm で無音に戻らないようにする
+      if (oneShot(id)) oneShotPrev = cur && !oneShot(cur.id) ? cur.id : oneShotPrev;
       cur = { id, pos: 0 };
       if (mx && !jin) startCur(f ? { delay: f * 0.5, fadeIn: f * 0.5 } : {});
     },
@@ -1302,7 +1307,8 @@
     /** stop the pushed track and resume the previous one from where it paused */
     popBGM() {
       stopPb(0.1);
-      const e = stack.pop();
+      let e = stack.pop();
+      if (e && oneShot(e.id)) e = oneShotPrev ? { id: oneShotPrev, pos: 0 } : null;   // 鳴り終わった予告の曲には戻らない
       cur = e ? { id: e.id, pos: e.pos } : null;
       if (cur && mx && !jin) startCur({ delay: 0.05, fadeIn: 0.35 });
     },

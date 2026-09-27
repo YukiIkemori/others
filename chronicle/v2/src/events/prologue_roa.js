@@ -57,6 +57,8 @@
     'ただし、ひとりで行っちゃ\nだめだよ。ファロスの酒場\n「潮風亭」で、仲間を探しなさい。',
     'それから、これを持って\nお行き。',
   ];
+  // P2 のボイス（design/voice_story_map.json。{hero} の入る P2[7] は声なし）
+  const P2_VOICE = ['v_berna_p2_01', 'v_berna_p2_02', 'v_berna_p2_03', 'v_berna_p2_04', 'v_berna_p2_05', 'v_berna_p2_06', 'v_berna_p2_07', null, 'v_berna_p2_08', 'v_berna_p2_09'];
   D.roa_berna = {
     meta: { needs: ['flag:prologue_start'], gives: ['flag:prologue_berna', 'item:i_salve', 'gold'] },
     run: async (ev, ctx) => {
@@ -64,7 +66,10 @@
       const who = (ctx && ctx.npc) || 'berna';
       if (!ev.flag('prologue_start')) { await E.say(ev, 'berna', 'おはよう。……もう少し、\nゆっくりしておいで。', { face: 'berna:smile' }); return; }
       if (!ev.flag('prologue_berna')) {
-        for (const t of P2) await E.say(ev, who, t, { face: /大事|白紙|消えた/.test(t) ? 'berna:sad' : 'berna:neutral' });
+        for (let i = 0; i < P2.length; i++) {
+          const t = P2[i];
+          await E.say(ev, who, t, { voice: P2_VOICE[i] || undefined, face: /大事|白紙|消えた/.test(t) ? 'berna:sad' : 'berna:neutral' });
+        }
         await E.give(ev, 'i_salve', 3);
         E.gold(ev, 50);
         await E.narr(ev, '傷薬を 3 つと、\n50 ゴールドを受け取った。');
@@ -74,12 +79,12 @@
       }
       // 序章の後: 近況と、ただの宿（STORY_BIBLE §6.3。T3 以降の物忘れは TODO: T3・T6 のロアの寄り道で）
       if (ev.flag('prologue_done')) {
-        const line = E.pick([
-          { cond: 'cleared_r_forest', text: '森の灯が戻ったそうだね。\n語り石の文字が、ほんの少し\n読めるようになった気がするよ。' },
-          { text: 'おかえり。年代記は、\nちゃんと書いているかい？' },
+        const pk = E.pickEntry([
+          { cond: 'cleared_r_forest', text: '森の灯が戻ったそうだね。\n語り石の文字が、ほんの少し\n読めるようになった気がするよ。', voice: 'v_berna_home_02' },
+          { text: 'おかえり。年代記は、\nちゃんと書いているかい？', voice: 'v_berna_home_01' },
         ]);
-        await E.say(ev, who, line, { face: 'berna:smile' });
-        await E.stay(ev, { who, ask: '泊まっていくかい？', bye: 'そうかい。気をつけてお行き。', morning: 'よく眠れたかい？\n……さあ、いってらっしゃい。' });
+        await E.say(ev, who, pk.text, { voice: pk.voice, face: 'berna:smile' });
+        await E.stay(ev, { who, ask: '泊まっていくかい？', bye: 'そうかい。気をつけてお行き。', morning: 'よく眠れたかい？\n……さあ、いってらっしゃい。', morningVoice: 'v_berna_home_03' });
         return;
       }
       // 序章の途中
@@ -117,7 +122,7 @@
       const E = X();
       await E.narr(ev, '食卓の東向きの席が、\nひとつ空けてある。\n布が、きちんとかけてある。');
       const berna = (R.DB.maps.roa_house.npcs || []).find((n) => n.id === 'berna_desk');
-      if (berna && R.State.check(berna.cond)) await E.say(ev, 'berna_desk', '昔からの習わしさ。\n誰の席かは……忘れちまったよ。', { face: 'berna:neutral' });
+      if (berna && R.State.check(berna.cond)) await E.say(ev, 'berna_desk', '昔からの習わしさ。\n誰の席かは……忘れちまったよ。', { voice: 'v_berna_seat_01', face: 'berna:neutral' });
       E.lore(ev, 'lo_roa_seat');
     },
   };

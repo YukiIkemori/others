@@ -1,0 +1,68 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s07_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 36
+  }
+ ],
+ "use": "mon_s07_a1.png",
+ "norm": {
+  "boss_wolflord": {
+   "pitch": 7.975,
+   "how": "core 1276x852 px -> 160 art px",
+   "core_long": 160.0,
+   "raw_box": [
+    68,
+    68,
+    1357,
+    937
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 162
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s07_tele_a1.png",
+   "prompt": "it raises its head to the sky before a howl: head and muzzle lifted up high pointing up-right, mouth closed, chest puffed out, front legs planted. Same scar and red eye."
+  },
+  {
+   "pose": "attack",
+   "file": "mon_s07_attack_a1.png",
+   "prompt": "the attack pose: a low lunging bite toward the right, body stretched forward and low, head thrust forward with the jaws wide open showing the fangs, hind legs pushing off."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s07_tele_a1.png",
+  "attack": "mon_s07_attack_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    0,
+    -6
+   ],
+   "overlap": 7977,
+   "size": [
+    161,
+    116
+   ]
+  },
+  "attack": {
+   "offset": [
+    -4,
+    24
+   ],
+   "overlap": 5894,
+   "size": [
+    180,
+    80
+   ]
+  }
+ }
+}

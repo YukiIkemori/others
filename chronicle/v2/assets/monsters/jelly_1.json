@@ -1,0 +1,120 @@
+{
+ "sprite": "jelly_1",
+ "id": "jelly_1",
+ "name": "ぷちゼリー",
+ "sheet": 1,
+ "cell": 1,
+ "size": "S",
+ "kind": "mob",
+ "fly": false,
+ "w": 44,
+ "h": 53,
+ "anchor": [
+  22,
+  52
+ ],
+ "points": {
+  "head": [
+   27,
+   30
+  ],
+  "center": [
+   22,
+   36
+  ],
+  "fx": [
+   25,
+   33
+  ],
+  "top": [
+   20,
+   2
+  ],
+  "body": [
+   22,
+   34,
+   26,
+   20
+  ],
+  "eyes": [
+   [
+    20,
+    32,
+    1.5
+   ],
+   [
+    34,
+    32,
+    1.5
+   ]
+  ],
+  "mouth": [
+   28,
+   41
+  ]
+ },
+ "facing": "right",
+ "long": 53,
+ "core_long": 52.0,
+ "target": {
+  "w": 39,
+  "h": 52,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 8.154,
+ "alsoMakes": [
+  "jelly_2",
+  "jelly_3",
+  "jelly_5",
+  "quicksilver_1",
+  "quicksilver_2"
+ ],
+ "variants": {
+  "jelly_2": {
+   "recolor": {
+    "hue": 170
+   },
+   "addons": [
+    "bubbles"
+   ],
+   "filter": null,
+   "name": "あわゼリー"
+  },
+  "jelly_3": {
+   "recolor": {
+    "hue": 110,
+    "sat": 1.1,
+    "bri": 0.85
+   },
+   "addons": [
+    "drips",
+    "skull_mark"
+   ],
+   "filter": null,
+   "name": "毒ゼリー"
+  },
+  "jelly_5": {
+   "recolor": {},
+   "addons": [
+    "tiara"
+   ],
+   "filter": "prism",
+   "name": "虹ゼリー"
+  },
+  "quicksilver_1": {
+   "recolor": {},
+   "addons": [],
+   "filter": "chrome",
+   "name": "白銀ゼリー"
+  },
+  "quicksilver_2": {
+   "recolor": {},
+   "addons": [
+    "tiara"
+   ],
+   "filter": "chrome",
+   "name": "白銀の大ゼリー"
+  }
+ }
+}

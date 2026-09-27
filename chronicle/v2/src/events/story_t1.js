@@ -25,12 +25,15 @@
       await E.narr(ev, '{hero}に、師匠ベルナから\n手紙が届いていた。');
       try { R.Audio.sfx('page'); } catch (e) { /* */ }
       await ev.letter('berna_t1');
-      await E.narr(ev, '手紙をたたむと、灯りの下に\n灰色のマントの少女が\n立っていた。');
-      const o = { name: '灰色のマントの少女' };
-      await ev.say('fine', '一つ目……。\nあと、七つね。', Object.assign({ voice: 'v_fine_t1_01', face: 'fine:smile' }, o));
-      await ev.say('fine', 'わたし？　ただの、\n通りすがりよ。', Object.assign({ voice: 'v_fine_t1_02', face: 'fine:neutral' }, o));
-      try { R.Audio.sfx('magic'); R.Field.flash('#e8ecff', 300); } catch (e) { /* */ }
-      await E.narr(ev, '少女の姿は、灯りの中に\n溶けるように消えた。');
+      R.Audio.pushBgm('fine_theme');
+      try {
+        await E.narr(ev, '手紙をたたむと、灯りの下に\n灰色のマントの少女が\n立っていた。');
+        const o = { name: '灰色のマントの少女' };
+        await ev.say('fine', '一つ目……。\nあと、七つね。', Object.assign({ voice: 'v_fine_t1_01', face: 'fine:smile' }, o));
+        await ev.say('fine', 'わたし？　ただの、\n通りすがりよ。', Object.assign({ voice: 'v_fine_t1_02', face: 'fine:neutral' }, o));
+        try { R.Audio.sfx('magic'); R.Field.flash('#e8ecff', 300); } catch (e) { /* */ }
+        await E.narr(ev, '少女の姿は、灯りの中に\n溶けるように消えた。');
+      } finally { R.Audio.popBgm(); }
       ev.setFlag('story_t1');
       // 手がかり帳の余白（STORY_BIBLE §4.1-3・§4.3 の灯の数 1）。羽ペンの音とともに書き足される
       try { R.Audio.sfx('quill'); } catch (e) { /* */ }

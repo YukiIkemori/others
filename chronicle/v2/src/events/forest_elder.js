@@ -5,6 +5,8 @@
 //   ボイスの付いた文は 1 字も変えない（改行の位置だけ窓に合わせる。今の木の region1_forest.js と同じ）。
 (function (R) {
   'use strict';
+  /** 今のマップの BGM（予告の曲 omen・霧の曲の後に戻す） */
+  const mapBgm = (ev, o) => { const p = R.Field && R.Field.pos, m = p && R.DB.maps[p.map]; if (m && m.bgm) ev.bgm(m.bgm, o); };
   const E = (id, run, o) => R.def('events', id, Object.assign({ run, meta: { needs: [], gives: [] } }, o || {}));
   const F = () => R.ContentF.forest;
   const ELM = { name: '森の主エルム', face: false };
@@ -12,15 +14,18 @@
   // ---------------------------------------------------------------- F10 入口のフィーネ（一言だけで去る）
   E('elder_fine', async (ev) => {
     if (ev.flag('forest_fine') || ev.flag('cleared_r_forest')) return;
-    try { await ev.npc('fine').face('s'); } catch (e) { /* */ }
-    await ev.say('fine', 'この根の奥に、伝承の核があるわ。\n……根を食べているものがいる。', { voice: 'v_fine_forest_01', name: 'フィーネ' });
-    await ev.say('fine', '……気をつけて。', { name: 'フィーネ' });
-    ev.sfx('magic');
-    await ev.fade('out', 240);
-    ev.setFlag('forest_fine');
-    try { await ev.npc('fine').hide(); } catch (e) { /* */ }
-    await ev.fade('in', 240);
-    await ev.caption('灰色のマントの少女は、\n根の奥の闇に溶けるように\n消えた。', { ms: 2200 });
+    R.Audio.pushBgm('fine_theme');
+    try {
+      try { await ev.npc('fine').face('s'); } catch (e) { /* */ }
+      await ev.say('fine', 'この根の奥に、伝承の核があるわ。\n……根を食べているものがいる。', { voice: 'v_fine_forest_01', name: 'フィーネ' });
+      await ev.say('fine', '……気をつけて。', { voice: 'v_fine_forest_02', name: 'フィーネ' });
+      ev.sfx('magic');
+      await ev.fade('out', 240);
+      ev.setFlag('forest_fine');
+      try { await ev.npc('fine').hide(); } catch (e) { /* */ }
+      await ev.fade('in', 240);
+      await ev.caption('灰色のマントの少女は、\n根の奥の闇に溶けるように\n消えた。', { ms: 2200 });
+    } finally { R.Audio.popBgm(); }
   }, { meta: { needs: [], gives: ['flag:forest_fine'] } });
 
   E('elder_carving', async (ev) => {
@@ -47,10 +52,12 @@
     if (ev.flag('cleared_r_forest')) return;
     if (ev.flag('forest_pim_guest')) await ev.call('elder_pim_home');
     if (!ev.flag('forest_boss')) {
+      ev.bgm('omen');
       await ev.say(null, 'ガリッ……ガリッ……。\n何かが、根をかじる音がする。');
       await ev.say(null, '白くぶよぶよした巨大な虫が、\n千年樹の根に食らいついている！');
       ev.sfx('roar');
       const r = await ev.battle('tr_b_rooteater', { boss: true });
+      mapBgm(ev);   // 予告の曲は鳴り終わっている: マップの曲へ
       if (r !== 'win') return;
       ev.setFlag('forest_boss');
       await ev.say(null, '根食らいは、白い紙くずの\nように崩れて、消えていった。');
@@ -87,6 +94,7 @@
     // 2. 大灯火（こずえに歌の灯）: ページ・ティア・光の柱・章の札（EVENTS の共通の筋）
     await ev.clearRegion('r_forest');
     ev.sfx('light');
+    ev.bgm('dawn');
     await ev.caption('千年樹のこずえに、歌の灯がともった。\n森じゅうのこけと蛍が、\nいっせいに光りだす。', { ms: 3000 });
     // 3. エルムの声が森じゅうに響く（v_elm_forest_06 は野営地で）
     await ev.say(null, '森の道は、もう閉ざさぬ。\n木こりたちも、じきに\n村へ帰れるだろう。', Object.assign({ voice: 'v_elm_forest_06' }, ELM));
@@ -148,7 +156,7 @@
       await ev.say('elm', '世界のあちこちで、白い闇が\n広がっているのを感じる。\n……語り部よ、急ぐがよい。', ELM);
       return;
     }
-    await ev.say('elm', ['森の道は、もう閉ざさぬ。\n夏至の歌も、村の者たちが\nまた歌ってくれるだろう。', 'ただ、迷いの森の魔物は、\nわたしにも鎮められぬ。\n腕を磨くには、よいだろう。'], ELM);
+    await ev.say('elm', ['森の道は、もう閉ざさぬ。\n夏至の歌も、村の者たちが\nまた歌ってくれるだろう。', 'ただ、迷いの森の魔物は、\nわたしにも鎮められぬ。\n腕を磨くには、よいだろう。'], Object.assign({ voice: ['v_elm_forest_07', 'v_elm_forest_08'] }, ELM));
   });
   E('elder_altar', async (ev) => {
     if (ev.flag('forest_boss')) await ev.say(null, '根に囲まれた、古い祭壇だ。\n光るきのこが、ぼんやりと\nあたりを照らしている。');

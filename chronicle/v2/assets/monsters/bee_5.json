@@ -1,0 +1,54 @@
+{
+ "sprite": "bee_5",
+ "id": "bee_5",
+ "name": "女王バチ",
+ "sheet": 2,
+ "cell": 4,
+ "size": "S",
+ "kind": "mob",
+ "fly": true,
+ "w": 73,
+ "h": 62,
+ "anchor": [
+  32,
+  78
+ ],
+ "points": {
+  "head": [
+   52,
+   33
+  ],
+  "center": [
+   30,
+   38
+  ],
+  "fx": [
+   42,
+   34
+  ],
+  "top": [
+   38,
+   4
+  ],
+  "body": [
+   32,
+   31,
+   23,
+   21
+  ],
+  "eye": [
+   49,
+   31
+  ]
+ },
+ "facing": "right",
+ "long": 73,
+ "core_long": 56.0,
+ "target": {
+  "w": 56,
+  "h": 39,
+  "long": 56
+ },
+ "colors": 32,
+ "pitch": 9.339
+}

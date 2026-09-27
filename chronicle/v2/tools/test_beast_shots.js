@@ -160,6 +160,7 @@ async function main() {
   const shots = [];
   try {
     const P = await Bw.open(S, 'dev.html');
+    await P.page.evaluate(() => (RPG.Beast.imgReady ? RPG.Beast.imgReady() : 0));   // 原画を読み終えてから
     await P.page.evaluate(() => { RPG.Engine.stop && RPG.Engine.stop(); });
     const BZ = await P.page.evaluate(() => ({ slice: RPG.Beast.SLICE_MONS, rare: RPG.Beast.RARE_IDS || [], bosses: RPG.Beast.BOSS_KEYS || [], bbg: RPG.Beast.BBG_IDS || [] }));
     const mons = ids || BZ.slice;
@@ -209,6 +210,7 @@ async function main() {
     await P.close();
     if (only.includes('phone') && BZ.bbg.length) {
       const PP = await Bw.open(S, 'dev.html', { phone: true });
+      await PP.page.evaluate(() => (RPG.Beast.imgReady ? RPG.Beast.imgReady() : 0));
       await PP.page.evaluate(() => { RPG.Engine.stop && RPG.Engine.stop(); });
       const f = path.join(OUT, 'bbg_forest_phone.png');
       console.log(f, JSON.stringify(await stageShot(PP, 'forest', ['wolf_1', 'plant_2', 'fairy_1'], f))); shots.push(f);

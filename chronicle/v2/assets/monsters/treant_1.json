@@ -1,0 +1,139 @@
+{
+ "sprite": "treant_1",
+ "id": "treant_1",
+ "name": "さまよい木",
+ "sheet": 5,
+ "cell": 1,
+ "size": "L",
+ "kind": "mob",
+ "fly": false,
+ "w": 87,
+ "h": 111,
+ "anchor": [
+  44,
+  110
+ ],
+ "points": {
+  "head": [
+   49,
+   54
+  ],
+  "center": [
+   48,
+   60
+  ],
+  "fx": [
+   52,
+   56
+  ],
+  "top": [
+   52,
+   2
+  ],
+  "body": [
+   48,
+   60,
+   20,
+   30
+  ],
+  "eyes": [
+   [
+    45,
+    53,
+    1.5
+   ],
+   [
+    52,
+    53,
+    1.5
+   ]
+  ],
+  "mouth": [
+   49,
+   64
+  ],
+  "thornLines": [
+   [
+    [
+     60,
+     65
+    ],
+    [
+     75,
+     62
+    ],
+    [
+     88,
+     57
+    ]
+   ],
+   [
+    [
+     38,
+     65
+    ],
+    [
+     25,
+     70
+    ],
+    [
+     10,
+     82
+    ]
+   ],
+   [
+    [
+     45,
+     100
+    ],
+    [
+     48,
+     80
+    ],
+    [
+     50,
+     60
+    ]
+   ]
+  ]
+ },
+ "facing": "right",
+ "long": 111,
+ "target": {
+  "w": 83,
+  "h": 110,
+  "long": 110
+ },
+ "colors": 48,
+ "pitch": 8.282,
+ "alsoMakes": [
+  "treant_2",
+  "treant_3"
+ ],
+ "variants": {
+  "treant_2": {
+   "recolor": {
+    "hue": -30,
+    "sat": 0.9,
+    "bri": 0.9
+   },
+   "addons": [
+    "thorns"
+   ],
+   "filter": null,
+   "name": "いばら木"
+  },
+  "treant_3": {
+   "recolor": {
+    "hue": 30,
+    "sat": 0.8
+   },
+   "addons": [
+    "moss",
+    "flower"
+   ],
+   "filter": null,
+   "name": "こけむし大木"
+  }
+ }
+}

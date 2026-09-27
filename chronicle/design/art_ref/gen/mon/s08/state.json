@@ -1,0 +1,85 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s08_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 39
+  }
+ ],
+ "use": "mon_s08_a1.png",
+ "norm": {
+  "boss_moth": {
+   "pitch": 7.065,
+   "how": "core 1201x826 px -> 170 art px",
+   "core_long": 170.0,
+   "raw_box": [
+    153,
+    66,
+    1405,
+    930
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 178
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s08_tele_a1.png",
+   "prompt": "the wind-up pose: both pairs of wings raised high and spread fully open so the two yellow eye-spots face the viewer, antennae raised, body hanging below. No glow, no dust."
+  },
+  {
+   "pose": "attack",
+   "file": "mon_s08_attack_a1.png",
+   "prompt": "the attack pose: it dives forward to the right, wings swept back behind the body, the head and legs reaching forward and down."
+  },
+  {
+   "pose": "p2",
+   "file": "mon_s08_p2_a1.png",
+   "prompt": "its second form: the wings held wider and a little raised, the wing edges frayed and torn, the yellow eye-spots larger with a red centre ring, the white chest fur bristling. No dust, no glow, no particles."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s08_tele_a1.png",
+  "attack": "mon_s08_attack_a1.png",
+  "p2": "mon_s08_p2_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    -1,
+    -10
+   ],
+   "overlap": 9971,
+   "size": [
+    168,
+    133
+   ]
+  },
+  "attack": {
+   "offset": [
+    -8,
+    3
+   ],
+   "overlap": 8588,
+   "size": [
+    183,
+    116
+   ]
+  },
+  "p2": {
+   "offset": [
+    -12,
+    0
+   ],
+   "overlap": 11143,
+   "size": [
+    190,
+    124
+   ]
+  }
+ }
+}

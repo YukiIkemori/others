@@ -1,0 +1,96 @@
+{
+ "sprite": "mushroom_1",
+ "id": "mushroom_1",
+ "name": "ころりダケ",
+ "sheet": 2,
+ "cell": 1,
+ "size": "S",
+ "kind": "mob",
+ "fly": false,
+ "w": 53,
+ "h": 52,
+ "anchor": [
+  28,
+  51
+ ],
+ "points": {
+  "head": [
+   34,
+   34
+  ],
+  "center": [
+   30,
+   34
+  ],
+  "fx": [
+   34,
+   32
+  ],
+  "top": [
+   29,
+   1
+  ],
+  "body": [
+   32,
+   40,
+   11,
+   10
+  ],
+  "eyes": [
+   [
+    34,
+    34,
+    1.2
+   ],
+   [
+    43,
+    34,
+    1.2
+   ]
+  ],
+  "cap": [
+   30,
+   16,
+   30,
+   16
+  ]
+ },
+ "facing": "right",
+ "long": 53,
+ "core_long": 52.0,
+ "target": {
+  "w": 39,
+  "h": 52,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 9.269,
+ "alsoMakes": [
+  "mushroom_2",
+  "mushroom_3"
+ ],
+ "variants": {
+  "mushroom_2": {
+   "recolor": {
+    "hue": 260
+   },
+   "addons": [
+    "spots"
+   ],
+   "filter": null,
+   "name": "まだらダケ"
+  },
+  "mushroom_3": {
+   "recolor": {
+    "hue": 120,
+    "sat": 1.2
+   },
+   "addons": [
+    "spots",
+    "aura"
+   ],
+   "filter": null,
+   "name": "まどいダケ"
+  }
+ }
+}

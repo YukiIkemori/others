@@ -5,6 +5,8 @@
 //   歌の石 a・b・c（forest_verses）: 3 つで出口の入れ替えが止まり、つるの壁がほどける。c はダストウィングが守る。
 (function (R) {
   'use strict';
+  /** 今のマップの BGM（予告の曲 omen・霧の曲の後に戻す） */
+  const mapBgm = (ev, o) => { const p = R.Field && R.Field.pos, m = p && R.DB.maps[p.map]; if (m && m.bgm) ev.bgm(m.bgm, o); };
   const E = (id, run, o) => R.def('events', id, Object.assign({ run, meta: { needs: [], gives: [] } }, o || {}));
   const F = () => R.ContentF.forest;
   const cleared = (ev) => ev.flag('cleared_r_forest');
@@ -19,6 +21,7 @@
   });
   E('verda_mist', async (ev) => {
     if (ev.var('forest_verses') >= 3) return;
+    ev.bgm('lostwood', { fade: 800 });   // 霧の曲（design/bgm_changes.md）。歌の石が 3 つそろったらマップの曲へ戻す
     ev.sfx('wind');
     await ev.caption('足元から、白い霧が\nわき上がった……。\n森が、道を変えようとしている。', { ms: 2200 });
   });
@@ -46,6 +49,7 @@
       ev.sfx('unlock');
       await ev.caption('三つの石の歌がつながった。\n森の奥で、つるがほどけていく\n音がする……。', { ms: 2800 });
       await ev.caption('森はもう、道を変えない。', { ms: 1800 });
+      mapBgm(ev, { fade: 800 });
       ev.leadDone('l_forest_song');
     } else {
       await ev.say(null, n === 1 ? '歌の石は、あとふたつ……。' : '歌の石は、あとひとつ……。');
@@ -69,6 +73,7 @@
   // ---------------------------------------------------------------- F9 ダストウィング（歌の石 c を守る）
   E('verda_moth', async (ev) => {
     if (ev.flag('forest_moth')) return;
+    ev.bgm('omen');   // ボスの予告（1 回だけ鳴る）。戦闘の後は R.Audio が予告の前の曲に戻す
     await ev.say(null, 'バサッ……バサッ……。\n重い羽音が、森の空気を\nふるわせている。');
     ev.sfx('roar');
     await ev.say(null, '白い粉をまき散らしながら、\n巨大な羽虫が舞い降りた！');
@@ -121,6 +126,7 @@
   // ---------------------------------------------------------------- F5 ベン（狼の群れ）
   E('verda_ben', async (ev) => {
     if (ev.flag('forest_found_ben')) return;
+    ev.bgm('omen');
     await ev.say(null, '低いうなり声。\n狼の群れが、誰かを\n取り囲んでいる！');
     await ev.say('ben', '助けてくれ！\n群れの頭が、仲間を\n呼んでやがる！');
     const r = await ev.battle('tr_a21_forest_wolves');
