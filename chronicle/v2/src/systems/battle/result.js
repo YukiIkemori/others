@@ -39,36 +39,87 @@
     return { gold: rw.gold || 0, drops: merged, grow, prof, glim };
   }
 
+  /** ボタンを待つ（2026-09-27 の持ち主の決まり: 戦闘の終わりはボタンを押したときだけ。自動で進まない）。
+   *  最初の minMs（既定 0.5 秒）は押しても効かない（押しっぱなしのキーで飛ばさない）。→ 押した実時間 */
+  Rs.NEXT_MS = 500;
+  Rs.confirm = async function (st, minMs) {
+    const t0 = R.Engine.time, min = Math.max(Rs.NEXT_MS, minMs || 0);
+    st.next = { t0, min };
+    if (R.Input.consume) R.Input.consume();
+    await R.until(() => {
+      if (st.dead) return true;
+      if (R.Engine.time - t0 < min) return false;
+      const I = R.Input;
+      return I.pressed('a') || !!(I.pointer && I.pointer.pressed);
+    });
+    st.next = null;
+    if (!st.dead) { try { R.Audio.sfx('confirm_soft'); } catch (e) { /* ignore */ } }
+    return R.Engine.time - t0;
+  };
+  /** 点滅する ▼（押せるようになってから）。x, y = ▼ の中心 */
+  Rs.drawNext = function (g, st, x, y) {
+    const n = st.next;
+    if (!n) return;
+    const t = R.Engine.time - n.t0;
+    if (t < n.min) return;
+    const k = R.uiScale || 1;
+    const a = (0.55 + 0.45 * Math.cos((t - n.min) / 260)) * Math.min(1, (t - n.min) / 200);
+    const bob = R.Settings.get('reduceMotion') ? 0 : Math.sin((t - n.min) / 200) * 2 * k;
+    g.save();
+    g.globalAlpha = a;
+    g.fillStyle = '#f2d08a'; g.shadowColor = 'rgba(0,0,0,0.8)'; g.shadowBlur = 6;
+    g.beginPath(); g.moveTo(x - 7 * k, y - 4 * k + bob); g.lineTo(x + 7 * k, y - 4 * k + bob); g.lineTo(x, y + 5 * k + bob); g.closePath(); g.fill();
+    g.restore();
+  };
+  const NEXT_PROMPTS = [{ btn: 'a', label: '決定で進む' }];
+
+  /** 最後の敵の倒れる絵が終わるまで（上限 1.6 秒） */
+  function enemiesGone(st) {
+    const t0 = R.Engine.time;
+    return R.until(() => st.dead || R.Engine.time - t0 > 1600 || st.actors.every((a) => a.side !== 'enemy' || !st.vis[a.uid] || st.vis[a.uid].alive || st.vis[a.uid].gone >= 1));
+  }
+
+  /**
+   * 勝利（2026-09-27）: 倒れる絵が終わる → 0.4 秒の間 → 生きている全員の勝利のポーズと勝利の声 → 報酬の札
+   * → 決定を待つ（自動では閉じない。声は押した後も最後まで鳴る＝scene.js の finish が止めない）
+   */
   Rs.victory = async function (st, rewards) {
     st.phase = 'result';
-    st.ui = null; st.head = null; st.tele = null;
+    st.ui = null; st.tele = null;
+    await enemiesGone(st);
+    st.head = null;
+    await R.wait(400);
+    if (st.dead) return;
     try { R.Audio.stopBgm(200); R.Audio.jingle('victory'); } catch (e) { /* ignore */ }
     const alive = st.partyUnits().filter((u) => st.vis[u.uid] && st.vis[u.uid].alive);
     for (const u of alive) { const v = st.vis[u.uid]; v.pose = 'victory'; v.poseT = R.Engine.time; v.dx = 0; }
+    const end = (Bt.lastEnd = { result: 'win', poseAt: R.Engine.time, voice: null });
     if (alive.length) {
       const rng = R.rng('victory:' + ((R.Game && R.Game.seed) || 0) + ':' + (R.Game && R.Game.steps || 0));
-      _.voice.play(rng.pick(alive), 'victory', { speed: 1, force: true });
+      const id = _.voice.play(rng.pick(alive), 'victory', { speed: 1, force: true });
+      if (id) {
+        const vs = (end.voice = { id, startAt: R.Engine.time, endAt: null, durMs: null });
+        _.voice.settle(8000).then(() => { vs.endAt = R.Engine.time; const c = _.voice.current(); vs.durMs = c && c.id === id ? c.durMs : vs.durMs; });
+        R.until(() => { const c = _.voice.current(); if (c && c.id === id && c.durMs) vs.durMs = c.durMs; return !!vs.durMs || vs.endAt != null; });
+      }
     }
+    // ポーズを見せてから札（声はそのまま）
+    await R.wait(st.speed() > 1 ? 500 : 850);
     const data = collect(st, rewards);
     const anyRare = data.drops.some((d) => d.grade === 'rare' || d.grade === 'super');
     const t0 = R.Engine.time;
     st.result = { data, t0 };
-    const minMs = anyRare ? Bt.MIN.rareCardSkip : 250;
+    end.panelAt = t0;
     if (anyRare) { try { R.Audio.jingle(data.drops.some((d) => d.grade === 'super') ? 'superrare' : 'rare'); } catch (e) { /* ignore */ } }
     st.ui = {
-      prompts: [{ btn: 'a', label: '次へ' }, { btn: 'x', label: 'まとめて見る' }],
+      prompts: NEXT_PROMPTS,
       update() {},
       draw(g) { Rs.drawVictory(g, st); },
     };
-    await R.until(() => {
-      const el = R.Engine.time - t0, I = R.Input;
-      if (st.dead) return true;
-      if (el < minMs) return false;
-      if (st.speed() > 1 && el >= Bt.MIN.victoryAuto) return true;
-      return I.pressed('a') || I.pressed('b') || I.pressed('x') || (I.pointer && I.pointer.pressed);
-    });
+    await Rs.confirm(st, anyRare ? Bt.MIN.rareCardSkip : 0);
+    end.pressAt = R.Engine.time;
     st.log.push({ t: 'victory', ms: R.Engine.time - t0 });
-    st.ui = null;
+    st.closing = true;
   };
 
   Rs.drawVictory = function (g, st) {
@@ -182,20 +233,50 @@
     if (d.glim.length) lines.push(['閃いた技：' + d.glim.join('・'), Kt.COL.gold]);
     if (d.prof.length) lines.push(['熟練が上がった：' + d.prof.join('・'), Kt.COL.text3]);
     lines.forEach(([s, c], j) => row(() => Kt.text(g, Kt.fit(s, colW + 180 * k, { size: 11.5 * k }), x0, (L.tall ? y : R.H - (R.safe.b || 0) - 40 * k - (lines.length - 1 - j) * 18 * k) + (L.tall ? j * 18 * k : 0), { size: 11.5 * k, color: c, raw: true, shadow: true })));
+    // 決定で進む（点滅する ▼。札の右下）
+    if (L.tall) Rs.drawNext(g, st, R.W - 28 * k, R.H - (R.safe.b || 0) - 70 * k);
+    else Rs.drawNext(g, st, x0 + colW + 4 * k, R.H - (R.safe.b || 0) - 62 * k);
   };
 
+  /** 見出しの後ろに ▼ を出して決定を待つ（逃げた・負けた） */
+  async function headConfirm(st) {
+    st.ui = {
+      prompts: NEXT_PROMPTS,
+      update() {},
+      draw(g) {
+        const k = R.uiScale || 1, h = st.head;
+        if (!h) return;
+        const w = _.K.measure(h.name, { size: 17 * k, weight: 700 });
+        Rs.drawNext(g, st, (R.safe.l || 0) + 16 * k + 38 * k + w + 16 * k, (R.safe.t || 0) + 14 * k + 12 * k);
+      },
+    };
+    await Rs.confirm(st, 0);
+    st.ui = null;
+  }
+  /** 逃げた（2026-09-27）: 一行が振り返って右へ走り去る → 決定を待つ → scene.js が暗くして外す */
   Rs.escape = async function (st) {
     st.phase = 'result';
-    st.ui = null;
+    st.ui = null; st.tele = null;
     st.head = { name: 'うまく逃げきれた！', t0: R.Engine.time };
+    Bt.lastEnd = { result: 'escape', at: R.Engine.time };
     try { R.Audio.sfx('escape'); } catch (e) { /* ignore */ }
-    for (const u of st.partyUnits()) { const v = st.vis[u.uid]; if (v && v.alive) { v.pose = 'step'; v.poseT = R.Engine.time; _.play.tween(st, v, 'dx', 160, 520); _.play.tween(st, v, 'appear', 0, 520); } }
-    await st.pwait(700);
+    const reduce = _.trans.reduce();
+    const party = st.partyUnits().filter((u) => st.vis[u.uid] && st.vis[u.uid].alive);
+    party.forEach((u, i) => {
+      const v = st.vis[u.uid];
+      v.pose = 'step'; v.poseT = R.Engine.time;
+      if (reduce) { _.play.tween(st, v, 'appear', 0, 400); return; }
+      st.pwait(i * 60).then(() => { _.play.tween(st, v, 'dx', 300, 620); st.pwait(260).then(() => _.play.tween(st, v, 'appear', 0, 360)); });
+    });
+    await st.pwait(reduce ? 420 : 760 + party.length * 60);
+    await headConfirm(st);
   };
   Rs.lose = async function (st) {
     st.phase = 'result';
-    st.ui = null;
+    st.ui = null; st.tele = null;
     st.head = { name: '一行は力尽きた……。', t0: R.Engine.time };
-    await st.pwait(1000);
+    Bt.lastEnd = { result: 'lose', at: R.Engine.time };
+    await st.pwait(700);
+    await headConfirm(st);
   };
 })(window.RPG);

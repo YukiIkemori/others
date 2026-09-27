@@ -19,7 +19,9 @@
   let current = null;
 
   /** 最短の表示時間（実時間の ms。倍速・早送りでも守る）A12・MODERN_UI §3.6・§6.17 */
-  Bt.MIN = { rareCard: 1500, rareCardSkip: 600, glimmerName: 900, victoryAuto: 1500 };
+  Bt.MIN = { rareCard: 1500, rareCardSkip: 600, glimmerName: 900, victoryAuto: 1500 };   // victoryAuto は使わない（2026-09-27: 勝利の札は決定を押すまで閉じない）
+  /** 出る暗転・フィールドが明ける時間（実時間の ms） */
+  Bt.FADE = { out: 500, in: 450, reduce: 250 };
 
   Bt.debug = () => current;
   Bt.active = () => !!current;
@@ -38,7 +40,7 @@
       setup, info, B: null, retry: 0,
       L: _.layout.compute(),
       vis: {}, actors: [], ui: null, head: null, pops: [], fxs: [], hot: null, ghost: {}, activeUid: null, glowUid: null,
-      clock: 0, phase: 'intro', banner: null, tele: null, card: null, dim: 0, shake: null, result: null, over: null,
+      clock: 0, phase: 'intro', cover: 1, hudIn: 0, bossCard: null, banner: null, tele: null, card: null, dim: 0, shake: null, result: null, over: null,
       partyOpts: ['fight'], chipRects: {}, chipTap: null, collected: { gains: [], grow: [], prof: [], glimmers: [] },
       log: [],   // テスト用: 演出した出来事の種類と時間
     };
@@ -106,21 +108,89 @@
   function bgOpts() { return { w: R.W, h: R.H }; }
 
   // ---------------------------------------------------------------- 流れ
+  /**
+   * 始まりの演出（2026-09-27）: 真っ暗（st.cover = 1、入る移りの続き）から戦場が明け、一行が右から歩いて位置につき、敵が浮かび上がる
+   * → 「〜があらわれた！」→ ボスは名前の札と唸り → 命令。reduceMotion はただ明けるだけ。時間は戦闘の時計（倍速で短くなる）
+   */
   async function intro(st) {
     st.phase = 'intro';
+    const reduce = _.trans.reduce();
+    const boss = !!st.info.boss;
     const foes = st.actors.filter((a) => a.side === 'enemy');
-    for (const a of foes) { st.vis[a.uid].appear = 0; }
+    const party = st.actors.filter((a) => a.side === 'party');
+    for (const a of foes) { const v = st.vis[a.uid]; v.appear = 0; if (!reduce) v.dy = a.boss ? 26 : 14; }
+    for (const a of party) { const v = st.vis[a.uid]; if (!reduce && v.alive) { v.dx = 240 + (a.x > 650 ? 40 : 0); v.pose = 'step'; v.poseT = R.Engine.time; } }
+    st.hudIn = 0;
+    if (st.cover == null) st.cover = 0;
+    const tw = _.play.tween;
+    const lit = reduce ? 300 : boss ? 780 : 460;
+    tw(st, st, 'cover', 0, lit);
+    if (!reduce) {
+      // 一行: 前列から順に（少しずつずらして）
+      party.slice().sort((a, b) => a.x - b.x).forEach((a, i) => {
+        const v = st.vis[a.uid];
+        if (!v.alive) return;
+        st.pwait(80 + i * 70).then(() => tw(st, v, 'dx', 0, 520)).then(() => { if (v.pose === 'step') { v.pose = 'idle'; v.poseT = R.Engine.time; } });
+      });
+      // 敵: 浮かび上がる（ボスは遅く、重く）
+      foes.forEach((a, i) => {
+        const v = st.vis[a.uid];
+        const d = a.boss ? 260 : 140 + i * 70, ms = a.boss ? 900 : 380;
+        st.pwait(d).then(() => { tw(st, v, 'appear', 1, ms); tw(st, v, 'dy', 0, ms); });
+      });
+      await st.pwait(boss ? 1000 : 620);
+    } else {
+      for (const a of foes) tw(st, st.vis[a.uid], 'appear', 1, 300);
+      await st.pwait(320);
+    }
+    for (const a of foes) { const v = st.vis[a.uid]; v.appear = 1; v.dy = 0; }
+    for (const a of party) { const v = st.vis[a.uid]; v.dx = 0; if (v.pose === 'step') { v.pose = 'idle'; v.poseT = R.Engine.time; } }
+    st.cover = 0;
+    if (boss) {
+      const bu = foes.find((a) => a.boss) || foes[0];
+      if (R.Audio.sfx) R.Audio.sfx('roar');
+      if (!reduce && R.Settings.get('shake') !== 'off') st.shake = { t0: R.Engine.time, ms: 520, amp: 5 };
+      st.bossCard = { name: bu ? bu.name : '', sub: (st.info.troop && st.info.troop.title) || '強敵', t0: R.Engine.time, ms: 1700 };
+      await R.until(() => st.dead || R.Engine.time - st.bossCard.t0 >= st.bossCard.ms * (st.speed() > 1 ? 0.6 : 1));
+      st.bossCard = null;
+    }
     const names = [...new Set(foes.map((a) => a.name))];
     st.head = { name: names.length ? `${names.slice(0, 3).join('・')}${names.length > 3 ? 'たち' : ''}があらわれた！` : '戦闘', t0: R.Engine.time };
-    if (st.info.boss && R.Audio.sfx) R.Audio.sfx('roar');
     if (foes.some((a) => a.golden)) { try { R.Audio.jingle('rare'); } catch (e) { /* ignore */ } st.head.sub = 'めったに出会えない魔物だ！'; }
-    const t0 = st.clock;
-    await R.until(() => {
-      const k = Math.min(1, (st.clock - t0) / 420);
-      for (const a of foes) st.vis[a.uid].appear = k;
-      return k >= 1 || st.dead;
-    });
-    await st.pwait(500);
+    tw(st, st, 'hudIn', 1, 260);
+    await st.pwait(boss ? 380 : 520);
+    st.hudIn = 1;
+  }
+
+  /** ボスの名前の札（戦場の上の方、真ん中） */
+  function drawBossCard(g, st) {
+    const c = st.bossCard;
+    if (!c) return;
+    const t = R.Engine.time - c.t0, k = R.uiScale || 1;
+    const a = Math.min(1, t / 260) * Math.min(1, Math.max(0, (c.ms - t) / 380));
+    if (a <= 0) return;
+    const cx = R.W / 2, cy = (st.L.tall ? st.L.stageH * 0.3 : R.H * 0.3);
+    const grow = 1 - Math.pow(1 - Math.min(1, t / 520), 3);
+    g.save();
+    g.globalAlpha = a;
+    const bw = Math.min(R.W, 760 * k);
+    const gr = g.createLinearGradient(cx - bw / 2, 0, cx + bw / 2, 0);
+    gr.addColorStop(0, 'rgba(8,6,14,0)'); gr.addColorStop(0.5, 'rgba(8,6,14,0.72)'); gr.addColorStop(1, 'rgba(8,6,14,0)');
+    g.fillStyle = gr; g.fillRect(cx - bw / 2, cy - 44 * k, bw, 92 * k);
+    const lw = (bw * 0.42) * grow;
+    _.K.hline(g, cx - lw, cx + lw, cy - 30 * k, 0.6, '255,190,150');
+    _.K.hline(g, cx - lw, cx + lw, cy + 36 * k, 0.6, '255,190,150');
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.font = R.Gfx.font(12.5 * k, 700);
+    if ('letterSpacing' in g) g.letterSpacing = 8 * k + 'px';
+    g.fillStyle = 'rgba(255,196,170,0.9)'; g.shadowColor = 'rgba(0,0,0,0.9)'; g.shadowBlur = 6;
+    g.fillText(c.sub, cx, cy - 16 * k);
+    g.font = R.Gfx.font(30 * k, 700);
+    if ('letterSpacing' in g) g.letterSpacing = 6 * k + 'px';
+    const tg = g.createLinearGradient(0, cy - 4 * k, 0, cy + 30 * k); tg.addColorStop(0, '#fff6ec'); tg.addColorStop(1, '#f0b98e');
+    g.fillStyle = tg; g.shadowBlur = 10;
+    g.fillText(c.name, cx, cy + 12 * k + (1 - grow) * 6 * k);
+    g.restore();
   }
 
   async function inputPhase(st) {
@@ -157,9 +227,12 @@
     if (st.setup.canLose) { await _.result.lose(st); return { result: 'lose', rewards: null }; }
     const ch = await _.gameover.run(st);
     if (ch === 'retry') {
+      await R.Engine.fadeTo(1, _.trans.reduce() ? Bt.FADE.reduce : 420);
       R.Save.restore('battle');
       st.retry++;
       initCore(st);
+      st.cover = 1; st.go = null;
+      R.Engine.fade.a = 0;
       try { R.Audio.bgm(st.info.bgm, { fade: 300 }); } catch (e) { /* ignore */ }
       await intro(st);
       return null;
@@ -430,17 +503,26 @@
     _.hud.enemyTags(g, st);
     _.play.drawPops(g, st);
     if (!st.result && st.phase !== 'gameover') {
-      _.hud.party(g, st);
+      const hk = st.hudIn == null ? 1 : st.hudIn;
+      if (hk > 0.01) {
+        g.save();
+        if (hk < 1) { g.globalAlpha = hk; g.translate(0, Math.round((1 - hk) * 48 * (R.uiScale || 1))); }
+        _.hud.party(g, st);
+        g.restore();
+      }
       _.hud.head(g, st);
-      _.hud.chips(g, st);
+      if (hk > 0.5) _.hud.chips(g, st);
       _.play.drawTele(g, st);
     }
+    drawBossCard(g, st);
     _.glimmer.drawBanner(g, st);
     if (st.go) _.gameover.draw(g, st);
     if (st.ui && st.ui.draw) st.ui.draw(g);
     _.play.drawCard(g, st);
     const pr = st.ui && st.ui.prompts ? st.ui.prompts : st.phase === 'play' ? (st.B && st.B.repeatOn ? [{ btn: 'a', label: '早送り' }, { btn: 'b', label: 'リピートを止める' }, { btn: 'r', label: '速さ' }] : [{ btn: 'a', label: '早送り' }, { btn: 'r', label: '速さ' }]) : null;
     if (pr && !(L.tall && st.ui && st.ui.tallPrompts === false)) _.K.prompts(g, pr);
+    // 入る移りの続きの暗さ（intro で明ける）
+    if (st.cover > 0.001) { g.save(); g.globalAlpha = Math.min(1, st.cover); g.fillStyle = R.Gfx.BG || '#070812'; g.fillRect(0, 0, R.W, R.H); g.restore(); }
   }
 
   // ---------------------------------------------------------------- R.Battle.start
@@ -459,9 +541,20 @@
       let fin = false;
       st.finish = async (res) => {
         if (fin) return; fin = true;
+        const reduce = _.trans.reduce();
+        // 声を場面の切り替えで切らない: 勝利の声は手放して最後まで鳴らす（押して進んだ後も）。ほかの声は鳴り終わりを待つ（上限あり）
+        if (res.result === 'win') _.voice.release();
+        else await _.voice.settle(1600);
+        // 暗くなる → 場面を外す → フィールドが明ける（すぐ切らない）
+        st.phase = st.phase === 'gameover' ? st.phase : 'closing';
+        const end = Bt.lastEnd && !Bt.lastEnd.closed ? Bt.lastEnd : (Bt.lastEnd = { result: res.result });
+        end.closed = true;
+        end.fadeOutAt = R.Engine.time;
+        try { if (st.scene && R.Engine.stack.includes(st.scene)) await R.Engine.fadeTo(1, reduce ? Bt.FADE.reduce : Bt.FADE.out); } catch (e) { /* ignore */ }
         st.dead = true;
         _.voice.stop();
         R.Engine.remove(st.scene, res);
+        _.trans.drop();
         R.Audio.popBgm();
         R.Input.touchLayout(prevLayout);
         for (const k of st.pinned || []) { try { R.Hd.unpin(k); } catch (e) { /* ignore */ } }
@@ -472,16 +565,26 @@
           if (res.to === 'inn') R.State.wipeRecover();
           await R.Flow.wipe(res.to);
         }
+        if (R.Engine.fade.a > 0.001) await R.Engine.fadeTo(0, reduce ? Bt.FADE.reduce : Bt.FADE.in);
+        end.fieldAt = R.Engine.time;
         resolve(res);
       };
       st.scene = makeScene(st);
       current = st;
-      R.Engine.push(st.scene);
-      run(st).catch((e) => {
-        console.error('[battle]', e);
-        if (R.Engine.reportError) R.Engine.reportError(e);
-        st.finish({ result: st.B && st.B.over === 'win' ? 'win' : 'escape', rewards: null });
-      });
+      // 入る移り（2026-09-27）: 今の画面が砕ける（ボスは闇に閉じる）→ 真っ暗で場面を積む → intro で明ける
+      const go = () => {
+        if (fin) return;
+        R.Engine.push(st.scene);
+        _.trans.drop();
+        run(st).catch((e) => {
+          console.error('[battle]', e);
+          if (R.Engine.reportError) R.Engine.reportError(e);
+          st.finish({ result: st.B && st.B.over === 'win' ? 'win' : 'escape', rewards: null });
+        });
+      };
+      let covered = null;
+      try { covered = _.trans.cover({ boss }); } catch (e) { console.error('[battle trans]', e); covered = null; }
+      if (covered) covered.then(go, go); else go();
     });
   };
 })(window.RPG);
