@@ -1,0 +1,42 @@
+{
+ "id": "shelf_jars",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   31,
+   24
+  ],
+  "32": [
+   41,
+   32
+  ],
+  "40": [
+   51,
+   40
+  ]
+ },
+ "feet": {
+  "24": [
+   15,
+   23
+  ],
+  "32": [
+   20,
+   31
+  ],
+  "40": [
+   26,
+   39
+  ]
+ },
+ "files": {
+  "24": "shelf_jars@24.png",
+  "32": "shelf_jars@32.png",
+  "40": "shelf_jars@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_a.png"
+}

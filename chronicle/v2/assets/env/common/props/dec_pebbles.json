@@ -1,0 +1,42 @@
+{
+ "id": "dec_pebbles",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   10,
+   5
+  ],
+  "32": [
+   13,
+   7
+  ],
+  "40": [
+   16,
+   9
+  ]
+ },
+ "feet": {
+  "24": [
+   5,
+   4
+  ],
+  "32": [
+   6,
+   6
+  ],
+  "40": [
+   8,
+   8
+  ]
+ },
+ "files": {
+  "24": "dec_pebbles@24.png",
+  "32": "dec_pebbles@32.png",
+  "40": "dec_pebbles@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/nature_a.png"
+}

@@ -1,0 +1,42 @@
+{
+ "id": "roots_v0",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   34,
+   16
+  ],
+  "32": [
+   46,
+   22
+  ],
+  "40": [
+   58,
+   28
+  ]
+ },
+ "feet": {
+  "24": [
+   17,
+   16
+  ],
+  "32": [
+   23,
+   21
+  ],
+  "40": [
+   29,
+   26
+  ]
+ },
+ "files": {
+  "24": "roots_v0@24.png",
+  "32": "roots_v0@32.png",
+  "40": "roots_v0@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/nature_a.png"
+}

@@ -1,0 +1,42 @@
+{
+ "id": "counter",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   33,
+   15
+  ],
+  "32": [
+   44,
+   20
+  ],
+  "40": [
+   55,
+   25
+  ]
+ },
+ "feet": {
+  "24": [
+   16,
+   14
+  ],
+  "32": [
+   22,
+   19
+  ],
+  "40": [
+   28,
+   24
+  ]
+ },
+ "files": {
+  "24": "counter@24.png",
+  "32": "counter@32.png",
+  "40": "counter@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_a.png"
+}

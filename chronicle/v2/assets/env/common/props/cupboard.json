@@ -1,0 +1,42 @@
+{
+ "id": "cupboard",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   23,
+   30
+  ],
+  "32": [
+   31,
+   40
+  ],
+  "40": [
+   39,
+   50
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   29
+  ],
+  "32": [
+   16,
+   39
+  ],
+  "40": [
+   19,
+   49
+  ]
+ },
+ "files": {
+  "24": "cupboard@24.png",
+  "32": "cupboard@32.png",
+  "40": "cupboard@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_a.png"
+}

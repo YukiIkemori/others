@@ -1,0 +1,42 @@
+{
+ "id": "dec_mush",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   9,
+   5
+  ],
+  "32": [
+   12,
+   7
+  ],
+  "40": [
+   15,
+   9
+  ]
+ },
+ "feet": {
+  "24": [
+   4,
+   4
+  ],
+  "32": [
+   6,
+   6
+  ],
+  "40": [
+   8,
+   8
+  ]
+ },
+ "files": {
+  "24": "dec_mush@24.png",
+  "32": "dec_mush@32.png",
+  "40": "dec_mush@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/nature_a.png"
+}

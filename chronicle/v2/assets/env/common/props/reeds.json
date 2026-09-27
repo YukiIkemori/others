@@ -1,0 +1,42 @@
+{
+ "id": "reeds",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   12,
+   14
+  ],
+  "32": [
+   16,
+   19
+  ],
+  "40": [
+   20,
+   24
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   14
+  ],
+  "32": [
+   8,
+   18
+  ],
+  "40": [
+   10,
+   22
+  ]
+ },
+ "files": {
+  "24": "reeds@24.png",
+  "32": "reeds@32.png",
+  "40": "reeds@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/nature_a.png"
+}

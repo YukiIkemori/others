@@ -1,0 +1,42 @@
+{
+ "id": "pine_v4",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   46,
+   52
+  ],
+  "32": [
+   61,
+   70
+  ],
+  "40": [
+   76,
+   88
+  ]
+ },
+ "feet": {
+  "24": [
+   23,
+   52
+  ],
+  "32": [
+   30,
+   69
+  ],
+  "40": [
+   38,
+   86
+  ]
+ },
+ "files": {
+  "24": "pine_v4@24.png",
+  "32": "pine_v4@32.png",
+  "40": "pine_v4@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/trees_conifer.png"
+}

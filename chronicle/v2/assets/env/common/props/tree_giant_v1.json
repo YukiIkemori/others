@@ -1,0 +1,42 @@
+{
+ "id": "tree_giant_v1",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   106,
+   87
+  ],
+  "32": [
+   141,
+   116
+  ],
+  "40": [
+   176,
+   145
+  ]
+ },
+ "feet": {
+  "24": [
+   53,
+   86
+  ],
+  "32": [
+   70,
+   115
+  ],
+  "40": [
+   88,
+   144
+  ]
+ },
+ "files": {
+  "24": "tree_giant_v1@24.png",
+  "32": "tree_giant_v1@32.png",
+  "40": "tree_giant_v1@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/trees_forest.png"
+}

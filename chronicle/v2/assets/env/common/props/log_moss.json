@@ -1,0 +1,42 @@
+{
+ "id": "log_moss",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   30,
+   13
+  ],
+  "32": [
+   40,
+   17
+  ],
+  "40": [
+   50,
+   21
+  ]
+ },
+ "feet": {
+  "24": [
+   15,
+   12
+  ],
+  "32": [
+   20,
+   16
+  ],
+  "40": [
+   25,
+   20
+  ]
+ },
+ "files": {
+  "24": "log_moss@24.png",
+  "32": "log_moss@32.png",
+  "40": "log_moss@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/nature_a.png"
+}

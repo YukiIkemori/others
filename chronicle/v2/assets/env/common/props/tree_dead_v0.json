@@ -1,0 +1,42 @@
+{
+ "id": "tree_dead_v0",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   59,
+   48
+  ],
+  "32": [
+   79,
+   64
+  ],
+  "40": [
+   99,
+   80
+  ]
+ },
+ "feet": {
+  "24": [
+   30,
+   47
+  ],
+  "32": [
+   40,
+   63
+  ],
+  "40": [
+   49,
+   79
+  ]
+ },
+ "files": {
+  "24": "tree_dead_v0@24.png",
+  "32": "tree_dead_v0@32.png",
+  "40": "tree_dead_v0@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/trees_forest.png"
+}

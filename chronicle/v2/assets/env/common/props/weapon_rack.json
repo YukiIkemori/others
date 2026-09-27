@@ -1,0 +1,42 @@
+{
+ "id": "weapon_rack",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   31,
+   26
+  ],
+  "32": [
+   41,
+   34
+  ],
+  "40": [
+   51,
+   42
+  ]
+ },
+ "feet": {
+  "24": [
+   15,
+   25
+  ],
+  "32": [
+   20,
+   33
+  ],
+  "40": [
+   26,
+   41
+  ]
+ },
+ "files": {
+  "24": "weapon_rack@24.png",
+  "32": "weapon_rack@32.png",
+  "40": "weapon_rack@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_a.png"
+}

@@ -1,0 +1,42 @@
+{
+ "id": "rock",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   21,
+   18
+  ],
+  "32": [
+   28,
+   24
+  ],
+  "40": [
+   35,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   10,
+   17
+  ],
+  "32": [
+   14,
+   23
+  ],
+  "40": [
+   18,
+   29
+  ]
+ },
+ "files": {
+  "24": "rock@24.png",
+  "32": "rock@32.png",
+  "40": "rock@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/nature_a.png"
+}

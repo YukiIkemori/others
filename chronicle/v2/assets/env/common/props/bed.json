@@ -1,0 +1,42 @@
+{
+ "id": "bed",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   20,
+   27
+  ],
+  "32": [
+   27,
+   36
+  ],
+  "40": [
+   34,
+   45
+  ]
+ },
+ "feet": {
+  "24": [
+   10,
+   26
+  ],
+  "32": [
+   14,
+   35
+  ],
+  "40": [
+   17,
+   44
+  ]
+ },
+ "files": {
+  "24": "bed@24.png",
+  "32": "bed@32.png",
+  "40": "bed@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_a.png"
+}

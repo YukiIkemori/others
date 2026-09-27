@@ -1,0 +1,42 @@
+{
+ "id": "dresser",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   24,
+   22
+  ],
+  "32": [
+   32,
+   30
+  ],
+  "40": [
+   40,
+   38
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   22
+  ],
+  "32": [
+   16,
+   29
+  ],
+  "40": [
+   20,
+   36
+  ]
+ },
+ "files": {
+  "24": "dresser@24.png",
+  "32": "dresser@32.png",
+  "40": "dresser@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_a.png"
+}

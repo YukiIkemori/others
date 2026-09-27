@@ -1,0 +1,42 @@
+{
+ "id": "house_plant",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   16,
+   18
+  ],
+  "32": [
+   22,
+   24
+  ],
+  "40": [
+   28,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   17
+  ],
+  "32": [
+   11,
+   23
+  ],
+  "40": [
+   14,
+   29
+  ]
+ },
+ "files": {
+  "24": "house_plant@24.png",
+  "32": "house_plant@32.png",
+  "40": "house_plant@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_a.png"
+}

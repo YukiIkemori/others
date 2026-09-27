@@ -1,0 +1,42 @@
+{
+ "id": "dec_leaves",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   10,
+   7
+  ],
+  "32": [
+   14,
+   9
+  ],
+  "40": [
+   18,
+   11
+  ]
+ },
+ "feet": {
+  "24": [
+   5,
+   6
+  ],
+  "32": [
+   7,
+   8
+  ],
+  "40": [
+   9,
+   10
+  ]
+ },
+ "files": {
+  "24": "dec_leaves@24.png",
+  "32": "dec_leaves@32.png",
+  "40": "dec_leaves@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/nature_a.png"
+}

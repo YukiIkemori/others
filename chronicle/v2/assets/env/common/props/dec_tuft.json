@@ -1,0 +1,42 @@
+{
+ "id": "dec_tuft",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   9,
+   8
+  ],
+  "32": [
+   12,
+   11
+  ],
+  "40": [
+   15,
+   14
+  ]
+ },
+ "feet": {
+  "24": [
+   4,
+   8
+  ],
+  "32": [
+   6,
+   10
+  ],
+  "40": [
+   8,
+   12
+  ]
+ },
+ "files": {
+  "24": "dec_tuft@24.png",
+  "32": "dec_tuft@32.png",
+  "40": "dec_tuft@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/nature_a.png"
+}

@@ -1,0 +1,42 @@
+{
+ "id": "bookshelf",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   24,
+   32
+  ],
+  "32": [
+   32,
+   42
+  ],
+  "40": [
+   40,
+   52
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   31
+  ],
+  "32": [
+   16,
+   41
+  ],
+  "40": [
+   20,
+   51
+  ]
+ },
+ "files": {
+  "24": "bookshelf@24.png",
+  "32": "bookshelf@32.png",
+  "40": "bookshelf@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_a.png"
+}

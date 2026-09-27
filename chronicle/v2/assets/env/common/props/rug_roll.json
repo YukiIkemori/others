@@ -1,0 +1,42 @@
+{
+ "id": "rug_roll",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   21,
+   10
+  ],
+  "32": [
+   28,
+   13
+  ],
+  "40": [
+   35,
+   16
+  ]
+ },
+ "feet": {
+  "24": [
+   10,
+   9
+  ],
+  "32": [
+   14,
+   12
+  ],
+  "40": [
+   18,
+   15
+  ]
+ },
+ "files": {
+  "24": "rug_roll@24.png",
+  "32": "rug_roll@32.png",
+  "40": "rug_roll@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_a.png"
+}

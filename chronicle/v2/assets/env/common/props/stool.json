@@ -1,0 +1,42 @@
+{
+ "id": "stool",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   8,
+   10
+  ],
+  "32": [
+   11,
+   14
+  ],
+  "40": [
+   14,
+   18
+  ]
+ },
+ "feet": {
+  "24": [
+   4,
+   10
+  ],
+  "32": [
+   6,
+   13
+  ],
+  "40": [
+   7,
+   16
+  ]
+ },
+ "files": {
+  "24": "stool@24.png",
+  "32": "stool@32.png",
+  "40": "stool@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_a.png"
+}

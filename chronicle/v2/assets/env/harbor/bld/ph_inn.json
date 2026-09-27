@@ -12,6 +12,11 @@
   "32": "ph_inn@32.png",
   "40": "ph_inn@40.png"
  },
+ "emitFiles": {
+  "24": "ph_inn_emit@24.png",
+  "32": "ph_inn_emit@32.png",
+  "40": "ph_inn_emit@40.png"
+ },
  "size": {
   "24": [
    204,
@@ -108,8 +113,9 @@
   -90
  ],
  "wallTop32": -96,
- "src": "design/art_ref/gen/env/test/bld_ph_inn.png",
+ "src": "design/art_ref/gen/env/bld/harbor/ph_inn.png",
  "def_": {
+  "type": "building",
   "id": "ph_inn",
   "x": 3,
   "y": 3,
@@ -120,9 +126,15 @@
   "mat": "plaster",
   "windows": 3,
   "sign": "inn",
+  "lamp": true,
+  "flowers": true,
   "door": {
    "x": 6,
-   "y": 8
+   "y": 8,
+   "to": {
+    "map": "pharos_inn",
+    "spawn": "door"
+   }
   }
  }
 }

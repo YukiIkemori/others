@@ -1,0 +1,42 @@
+{
+ "id": "tree_v0",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   50,
+   51
+  ],
+  "32": [
+   67,
+   68
+  ],
+  "40": [
+   84,
+   85
+  ]
+ },
+ "feet": {
+  "24": [
+   25,
+   50
+  ],
+  "32": [
+   34,
+   67
+  ],
+  "40": [
+   42,
+   84
+  ]
+ },
+ "files": {
+  "24": "tree_v0@24.png",
+  "32": "tree_v0@32.png",
+  "40": "tree_v0@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/trees_broad.png"
+}

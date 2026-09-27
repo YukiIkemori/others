@@ -1,0 +1,42 @@
+{
+ "id": "tree_moss_v1",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   67,
+   50
+  ],
+  "32": [
+   89,
+   66
+  ],
+  "40": [
+   111,
+   82
+  ]
+ },
+ "feet": {
+  "24": [
+   33,
+   49
+  ],
+  "32": [
+   44,
+   65
+  ],
+  "40": [
+   56,
+   81
+  ]
+ },
+ "files": {
+  "24": "tree_moss_v1@24.png",
+  "32": "tree_moss_v1@32.png",
+  "40": "tree_moss_v1@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/trees_forest.png"
+}

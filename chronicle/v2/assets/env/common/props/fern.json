@@ -1,0 +1,42 @@
+{
+ "id": "fern",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   16,
+   14
+  ],
+  "32": [
+   22,
+   19
+  ],
+  "40": [
+   28,
+   24
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   14
+  ],
+  "32": [
+   11,
+   18
+  ],
+  "40": [
+   14,
+   22
+  ]
+ },
+ "files": {
+  "24": "fern@24.png",
+  "32": "fern@32.png",
+  "40": "fern@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/nature_a.png"
+}

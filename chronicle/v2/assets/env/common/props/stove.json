@@ -1,0 +1,46 @@
+{
+ "id": "stove",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   33,
+   28
+  ],
+  "32": [
+   44,
+   38
+  ],
+  "40": [
+   55,
+   48
+  ]
+ },
+ "feet": {
+  "24": [
+   16,
+   28
+  ],
+  "32": [
+   22,
+   37
+  ],
+  "40": [
+   28,
+   46
+  ]
+ },
+ "files": {
+  "24": "stove@24.png",
+  "32": "stove@32.png",
+  "40": "stove@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/interior_a.png",
+ "light32": [
+  0,
+  -8
+ ]
+}

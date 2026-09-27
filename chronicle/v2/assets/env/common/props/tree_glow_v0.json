@@ -1,0 +1,42 @@
+{
+ "id": "tree_glow_v0",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   71,
+   50
+  ],
+  "32": [
+   95,
+   66
+  ],
+  "40": [
+   119,
+   82
+  ]
+ },
+ "feet": {
+  "24": [
+   36,
+   49
+  ],
+  "32": [
+   48,
+   65
+  ],
+  "40": [
+   59,
+   81
+  ]
+ },
+ "files": {
+  "24": "tree_glow_v0@24.png",
+  "32": "tree_glow_v0@32.png",
+  "40": "tree_glow_v0@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/trees_forest.png"
+}

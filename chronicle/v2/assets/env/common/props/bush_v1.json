@@ -1,0 +1,42 @@
+{
+ "id": "bush_v1",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   22,
+   20
+  ],
+  "32": [
+   30,
+   27
+  ],
+  "40": [
+   38,
+   34
+  ]
+ },
+ "feet": {
+  "24": [
+   11,
+   20
+  ],
+  "32": [
+   15,
+   26
+  ],
+  "40": [
+   19,
+   32
+  ]
+ },
+ "files": {
+  "24": "bush_v1@24.png",
+  "32": "bush_v1@32.png",
+  "40": "bush_v1@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/nature_a.png"
+}
