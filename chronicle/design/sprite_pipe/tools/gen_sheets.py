@@ -1128,6 +1128,67 @@ def cmd_arun_fix(a):
     job.log('done (%s). pipeline output: %s' % ('clean' if ok else 'redo lines remain', os.path.relpath(out, PIPE)))
 
 
+NOLANTERN_EN = {
+    1: 'walking (4 rows: toward the viewer, away from the viewer, facing left, facing right; 3 frames each: stand, one foot forward, the other foot forward)',
+    2: 'running (4 rows: toward the viewer, away, left, right; 4 frames each: right foot lands, both feet off the ground, left foot lands, both feet off the ground)',
+}
+
+
+def cmd_arun_alt(a):
+    """Arun's field sheets without the lantern (the engine draws the lantern itself when he leads the party):
+    edits of the delivered (redo-fixed) sheets 1 / 2 -> gen/arun/arun_nolantern/arun_sheet_0<N>b.png + a pipeline pass"""
+    specs = arun_specs()
+    job = Job('arun', 'arun_nolantern', {n: dict(specs[n], file='arun_sheet_%02db.png' % n) for n in (1, 2)})
+    src_dir = os.path.join(GEN, 'arun', 'arun')
+    for n in a.sheets:
+        spec = job.specs[n]
+        out = os.path.join(job.dir, spec['file'])
+        if os.path.exists(out) and not a.force:
+            job.log('sheet %db exists (resume: skipped)' % n)
+            continue
+        src = os.path.join(src_dir, specs[n]['file'])
+        if not os.path.exists(src):
+            src = os.path.join(ARUN_SHEETS, specs[n]['file'])
+        sheet = load_rgb(src)
+        W, H = sheet.size
+        st = job.st(n)
+        k = len(st['attempts']) + 1
+        base = os.path.join(job.raw, 's%db_a%d' % (n, k))
+        prompt = '\n'.join([
+            style_block(), '',
+            'TASK: EDIT the attached sprite sheet (image 1) of the young swordsman (the hero): %s. Every art pixel is exactly 8x8 image px. '
+            'Output the same %dx%d canvas with the same grid, the same pixel size, the same character, outfit, colours, poses, feet lines and '
+            'frame positions.' % (NOLANTERN_EN[n], W, H),
+            'CHANGE ONLY THIS: REMOVE THE BRASS LANTERN from every frame. His LEFT hand is now EMPTY (a loosely closed fist), and that arm swings '
+            'naturally with the walk/run exactly like the other arm does, mirrored in rhythm. Nothing is held in either hand; the sword stays sheathed '
+            'at the hip. Fill the space where the lantern was with the body/clothes that were behind it, or the flat background.',
+            'Keep everything else pixel-identical where possible: hair, red scarf, coat, boots, leg positions, body height (48 art px).',
+            'Solid #FF00FF background, no lantern, no light, no glow, no text.',
+        ])
+        open(base + '_prompt.txt', 'w', encoding='utf-8').write(prompt)
+        if not os.path.exists(base + '.png'):
+            job.log('sheet %db attempt %d: edit %s (%dx%d, quality %s)' % (n, k, os.path.basename(src), W, H, a.quality))
+            png, info = gen_api.generate(prompt, [sheet], size='%dx%d' % (W, H), quality=a.quality, background='opaque',
+                                         tag='arun_nolantern_s%d_a%d' % (n, k))
+            open(base + '.png', 'wb').write(png)
+        st['attempts'].append(dict(raw=os.path.relpath(base + '.png', job.dir), quality=a.quality, t=time.strftime('%Y-%m-%dT%H:%M:%S')))
+        job.save()
+        raw = load_rgb(base + '.png')
+        if raw.size != (W, H):
+            raw = raw.resize((W, H), Image.LANCZOS)
+        img, frames, notes, s = normalize_full(raw, spec, job.log)
+        img.save(out, optimize=True)
+        st.update(frames=frames, notes=notes, pitch=round(s, 3), from_raw=os.path.relpath(base + '.png', job.dir))
+        job.save()
+        job.write_manifest()
+        for m in notes:
+            job.log('  note: ' + m)
+        job.log('sheet %db -> %s' % (n, os.path.relpath(out, DESIGN)))
+    outp = os.path.join(PIPE, 'out', a.out)
+    run_pipeline([job.dir, '--char', 'arun', '--only', ','.join(str(n) for n in sorted(job.specs)), '--out', outp], job.log)
+    job.log('pipeline output: %s (field set = walk_* / run_* without the lantern)' % os.path.relpath(outp, PIPE))
+
+
 def cmd_companion(a):
     js, c, specs = comp_specs(a.id)
     job = Job('companion', a.id, specs, char=c)
@@ -1206,6 +1267,11 @@ def main():
     s.add_argument('--tag', default='', help='suffix for the raw file name (quality comparisons)')
     s.add_argument('--pitch', type=int, default=None, help='image px per art pixel of the request (the model draws finer '
                    'than asked on small figures: a smaller canvas brings its pixels onto the grid)')
+    s = sub.add_parser('arun-alt', help="Arun's field sheets 1 / 2 without the lantern (arun_sheet_01b / 02b)")
+    s.add_argument('--sheets', type=lambda t: [int(x) for x in t.split(',')], default=[1, 2])
+    s.add_argument('--quality', default='medium', choices=['low', 'medium', 'high'])
+    s.add_argument('--force', action='store_true')
+    s.add_argument('--out', default='arun_v2_nolantern')
     s = sub.add_parser('prompt')
     s.add_argument('kind', choices=['companion'])
     s.add_argument('id')
@@ -1218,7 +1284,7 @@ def main():
     s.add_argument('sheet', type=int)
     a = ap.parse_args()
     try:
-        {'arun-fix': cmd_arun_fix, 'companion': cmd_companion, 'prompt': cmd_prompt, 'normalize': cmd_normalize}[a.cmd](a)
+        {'arun-fix': cmd_arun_fix, 'arun-alt': cmd_arun_alt, 'companion': cmd_companion, 'prompt': cmd_prompt, 'normalize': cmd_normalize}[a.cmd](a)
     except gen_api.GenError as e:
         print('STOP: %s' % e)
         sys.exit(2)
