@@ -107,8 +107,10 @@
     for (let c of cands) {
       c = c.replace(/^=/, '');
       if (!hasRaw(c, 'field')) continue;
-      const v = c + '_' + n;
-      return R.DB.looks && R.DB.looks[v] ? v : c;
+      // 色違いの look（spriteOf がこの原画）だけ。npc_bard_1・npc_woodcutter_1 など手で書いた仮の型の look と名前が同じでも、そちらは使わない
+      // （オーナーの報告 2026-09-27: 潮風亭の吟遊詩人が古い仮の絵のまま）
+      const v = c + '_' + n, L = R.DB.looks && R.DB.looks[v];
+      return L && L.spriteOf === c ? v : c;
     }
     return look;
   };

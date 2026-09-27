@@ -314,7 +314,7 @@
       }
       if (it) {
         for (const l of R.UIK.wrap(String(it.desc || '').replace(/\n/g, ''), dp.w - u(44), { size: u(14.5) }).slice(0, 2)) { if (y + u(20) > dp.y + dp.h - u(6)) break; R.UIK.text(g, l, dp.x + u(22), y, { size: u(14.5), color: C.text }); y += u(24); }   // 詳しい所からはみ出さない
-        if (it.element) { y += u(4); R.UIK.chip(g, dp.x + u(22), y, S.ename(it.element) + 'の力を帯びる', { kind: 'teal', size: 11 }); }
+        if (it.element && y + u(28) <= dp.y + dp.h - u(6)) { y += u(4); R.UIK.chip(g, dp.x + u(22), y, S.ename(it.element) + 'の力を帯びる', { kind: 'teal', size: 11 }); }
       }
       // ほかの仲間
       const op = tall ? { x: b.x, y: dp.y + dp.h + u(12), w: b.w, h: b.y + b.h - (dp.y + dp.h + u(12)) } : { x: cp.x, y: cp.y + cp.h + u(14), w: rightX0 - cp.x, h: b.y + b.h - (cp.y + cp.h + u(14)) };
