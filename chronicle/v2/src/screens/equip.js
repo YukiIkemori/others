@@ -235,7 +235,7 @@
       // 縦持ちの候補は、下の「ほかの仲間」に 1 人 u(36) の行が残る分だけ（2〜6 行）。小さな画面は比べる行を 3 つにして詳しい所を低く
       const nOthers = Math.max(1, S.party().length - 1);
       const candRows = (dpH) => Math.floor((b.y + b.h - sp.y - u(56) - u(12) - dpH - u(12) - (u(46) + nOthers * u(36))) / this.clist.rowPx());
-      const dpCandH = candRows(u(300)) >= 2 ? u(300) : u(270);
+      const dpCandH = [u(300), u(270), u(240)].find((h) => candRows(h) >= 2) || u(240);   // 比べる行 4・3・2
       const cRows = Math.max(2, Math.min(6, candRows(dpCandH)));
       const cp = tall ? { x: b.x, y: sp.y, w: b.w, h: this.mode === 'cand' ? u(56) + Math.min(cRows, this.clist.rows.length) * this.clist.rowPx() : sp.h } :{ x: midX, y: b.y, w: mw, h: b.h * 0.64 };
       if (showSlots) drawSlots();
@@ -294,13 +294,13 @@
         // 行の数は詳しい所の高さに入るだけ（説明 1 行の分を残す）
         const all = S.statDiff(c, s, focusId || null), same = !all.some((r) => r.d);
         const fit = Math.floor((dp.y + dp.h - u(12) - u(28) - (same ? u(30) : 0) - y) / u(30));
-        const rows = all.slice(0, Math.max(1, Math.min(tall ? (dpCandH < u(300) ? 3 : 4) : 5, fit)));
+        const rows = all.slice(0, Math.max(1, Math.min(tall ? Math.round((dpCandH - u(180)) / u(30)) : 5, fit)));
         if (same) { R.UIK.text(g, '変わらない', dp.x + u(22), y, { size: u(15), color: C.same }); y += u(30); }
         // 列は右から測って置く: 増減（いちばん広い物の幅）→ 後の値 → → → 前の値。狭い画面でも数字が重ならない
         const rx = dp.x + dp.w - u(22);
         const dcw = rows.reduce((m, r) => Math.max(m, S.deltaW(r.d, u(15))), 0);
         const ax = rx - (dcw ? dcw + u(14) : 0), arx = ax - Math.max(u(44), rows.reduce((m, r) => Math.max(m, R.UIK.measure(String(r.after), { size: u(16.5), weight: 700 })), 0) + u(14));
-        const bx = Math.min(dp.x + dp.w * 0.5, arx - u(18));
+        const bx = Math.min(dp.x + dp.w * 0.5, arx - u(32));
         for (const r of rows) {
           R.UIK.text(g, r.name, dp.x + u(22), y, { size: u(15), color: C.text, maxW: Math.max(u(30), bx - u(30) - (dp.x + u(22))) });
           R.UIK.text(g, String(r.before), bx, y, { size: u(15), color: C.text2, align: 'right' });
@@ -318,7 +318,7 @@
       }
       // ほかの仲間
       const op = tall ? { x: b.x, y: dp.y + dp.h + u(12), w: b.w, h: b.y + b.h - (dp.y + dp.h + u(12)) } : { x: cp.x, y: cp.y + cp.h + u(14), w: rightX0 - cp.x, h: b.y + b.h - (cp.y + cp.h + u(14)) };
-      if (op.h > u(60)) {
+      if (op.h >= u(40) + Math.max(1, S.party().length - 1) * u(28)) {   // 1 人 u(28) の行が入らない高さなら出さない（重ねない）
         R.UIK.panel(g, op, { frost: true });
         S.label(g, 'ほかの仲間が付けると', op.x + u(20), op.y + u(14));
         // 1 人 1 行: [顔（決まった幅）][名前（決まった幅）][増減の札を入るだけ]。札は S.deltaCells が幅を測って並べるので重ならない

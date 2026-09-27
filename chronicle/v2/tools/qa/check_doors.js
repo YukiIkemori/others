@@ -46,6 +46,7 @@ function layoutCheck(all, only) {
     const under = m.art && m.art.image ? underMeta(m.art.image) : null;
     for (const b of m.objects || []) {
       if (b.type !== 'building' || !b.door || !b.door.to) continue;
+      if (!R.DB.maps[b.door.to.map] || R.DB.maps[b.door.to.map].kind !== 'interior') continue;   // 家・店の戸口（ワールドの町・塔の印は別）
       doors++;
       const d = b.door, lv = b.lv || 0, name = `${id} ${b.id} (${d.x},${d.y}) → ${d.to.map}`;
       // 1 外の戸口の幅 = 1

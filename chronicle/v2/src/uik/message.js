@@ -7,7 +7,8 @@
 //     - 選択肢の前では自動送り・早送りでも止まる。選択肢は同じ紙の札で右上に重ねる（'\t' の後ろは右寄せ＝値段）。B は o.cancel があればその番号
 //     - 前の say がまだ開いているときに新しい say が来たら、前を先に undefined で解決する（A6 の固まりの原因）
 //     - 文が空で選択肢だけのときは、直前の会話（0.6 秒以内に閉じた物）を読み返せるよう、その最後のページを添える
-//   caption(text, {ms}) → Promise   地の文を画面の中ほどに（顔も名前もなし）。場面 id 'caption'。ms があればその時間で閉じる
+//   caption(text, {ms, voice}) → Promise   地の文を画面の中ほどに（顔も名前もなし）。場面 id 'caption'。ms があればその時間で閉じる
+//     - voice（id）: 開いたときに R.Audio.voice で鳴らす（ボイスの音量 0 なら鳴らない）。ms があっても声の終わりまで待つ（最長 ms＋20 秒）。送れば声も止める
 //   busy() → bool（会話かキャプションが開いている）/ close()（どちらも閉じる）/ log() → [{name, text}] / auto() → bool
 //   縦持ち: 窓を画面の幅いっぱい、顔は窓の上にはみ出して置く、ボタンは窓の上の札、下に「タップで次へ・長押しで早送り」
 (function (R) {
@@ -432,18 +433,27 @@
   // ---------------------------------------------------------------- キャプション
   function capScene(text, o) {
     const T = UIK.T;
-    const st = { t0: 0, closing: -1, ms: o && o.ms };
+    const st = { t0: 0, closing: -1, ms: o && o.ms, voiceDone: true, voiceTok: 0 };
     const plain = M.plain(text);
+    const voiceId = o && o.voice;
     const scene = {
       id: 'caption',
       opaque: false,
-      enter() { st.t0 = R.Engine.time; },
+      enter() {
+        st.t0 = R.Engine.time;
+        // 守り歌などの声つきの地の文（2026-09-27）: 文と同時に鳴らし、ms の後も声の終わりを待つ
+        if (voiceId && R.Audio && R.Audio.voice) {
+          st.voiceDone = false;
+          const tok = ++st.voiceTok, done = () => { if (st.voiceTok === tok) st.voiceDone = true; };
+          try { Promise.resolve(R.Audio.voice(voiceId)).then(done, done); } catch (e) { st.voiceDone = true; }
+        }
+      },
       exit() {},
       update() {
         const I = R.Input, now = R.Engine.time;
         if (st.closing >= 0) { if (now - st.closing >= 300 || UIK.reduceMotion()) finish(); return; }
         const age = now - st.t0;
-        if (st.ms && age >= st.ms) { st.closing = now; return; }
+        if (st.ms && age >= st.ms && (st.voiceDone || age >= st.ms + 20000)) { st.closing = now; return; }
         if (age > 250 && (I.pressed('a') || I.pressed('b') || I.pointer.released)) { stopVoice(); st.closing = now; }
       },
       draw(g) {
