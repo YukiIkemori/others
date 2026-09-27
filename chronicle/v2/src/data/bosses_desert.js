@@ -13,7 +13,7 @@
   const SCHED = 200;
   // 数値（sim_bosses の 3 本立てで合わせる）
   const DS = {
-    b_sandking: { hp: 0.65, atk: 0.45, mag: 0.45 },
+    b_sandking: { hp: 0.45, atk: 0.45, mag: 0.45 },
     b_sandworm: { hp: 1.1 },
   };
   const A = (list) => list.map(([id, w, cond]) => (cond ? { id, w, cond } : { id, w }));
@@ -127,7 +127,7 @@
     eb_king_raise: { name: '杖を掲げる', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は砂の杖を高く掲げた……。',
       telegraph: { text: '王が杖を掲げた。砂が空へ昇っていく……。', pose: 'tele', tint: '#f0d890', next: 'eb_king_judgment', guard: 'defend', lethal: true,
         cancel: { element: 'fire', msg: '炎が杖の砂を焼き固めた！\n砂の滝は、降ってこない。' } } },
-    eb_king_judgment: { name: '砂の審判', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.65, guardPct: 0.15, kind: 'earth', element: 'earth' }, { type: 'status', status: 'blind', chance: 0.35 }], fx: 'earth2',
+    eb_king_judgment: { name: '砂の審判', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.8, guardPct: 0.15, kind: 'earth', element: 'earth' }, { type: 'status', status: 'blind', chance: 0.35 }], fx: 'earth2',
       msg: '空から、砂の滝が降りそそいだ！' },
     eb_orb_flare: { name: '日輪の炎', kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'magic', power: 1.0, element: 'fire' }], fx: 'fire2', msg: '{user}が燃え上がった！' },
     eb_orb_moonlight: { name: '月の癒やし', kind: 'enemy', target: 'ally_other', effects: [{ type: 'heal', pct: 0.1 }], fx: 'heal', msg: '{user}の冷たい光が、王の傷をふさいだ。' },

@@ -26,11 +26,11 @@ const BOSSES = {
   const DITEMS = Object.assign({}, ITEMS, { i_stone_earth: 4 });
   for (const T of [0, 1, 3]) {
     const k = T === 0 ? '' : '@' + T;
-    BOSSES['tr_b_hawkchief' + k] = { troop: 'tr_b_hawkchief', tier: T, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 8], note: '弓兵に守られた頭 → 弓兵を先に。砂を巻き上げる → 守る' };
-    BOSSES['tr_b_sandworm' + k] = { troop: 'tr_b_sandworm', tier: T, kind: 'mid', members: STD, items: DITEMS, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 8], note: '身を沈める → 土で打つ（もぐれない）、もぐったら守る' };
-    BOSSES['tr_b_sandking' + k] = { troop: 'tr_b_sandking', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 12], note: '日と月の玉を先に割る、杖を掲げたら守る' };
+    BOSSES['tr_b_hawkchief' + k] = { troop: 'tr_b_hawkchief', tier: T, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 9], note: '弓兵に守られた頭 → 弓兵を先に。砂を巻き上げる → 守る（守らないと最大 HP の 9 割）' };
+    BOSSES['tr_b_sandworm' + k] = { troop: 'tr_b_sandworm', tier: T, kind: 'mid', members: STD, items: DITEMS, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 10], note: '身を沈める → もぐったら守る（守らないと倒れる）、もぐっている間は土と突きだけ効く' };
+    BOSSES['tr_b_sandking' + k] = { troop: 'tr_b_sandking', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 13], note: '日と月の玉を先に割る、杖を掲げたら守る（火で砂を焼き固めてもよい）' };
   }
-  BOSSES['tr_b_hawkhold@3'] = { troop: 'tr_b_hawkhold', tier: 3, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 9], note: 'アジトの奥（弓兵 3 人）' };
+  BOSSES['tr_b_hawkhold@3'] = { troop: 'tr_b_hawkhold', tier: 3, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [6, 10], note: 'アジトの奥（弓兵 3 人）' };
 }
 // 雪原（ノルデン雪原、src/data/bosses_snow.js）。好きな順に遊ぶので、ティア 0・1・3 で測る。
 // 氷の巨人の答えの火は、ユールの道具屋の火の壺（i_firepot、ITEMS にある）

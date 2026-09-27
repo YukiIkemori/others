@@ -17,7 +17,7 @@
     // 吹雪の大狼
     eb_bw_howl: { name: '吹雪の遠吠え', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は天を仰ぎ、長く遠吠えした……！',
       telegraph: { text: '大狼のまわりに、吹雪が渦を巻きはじめた……。', pose: 'tele', tint: '#d8e4ff', next: 'eb_bw_storm', guard: 'defend' } },
-    eb_bw_storm: { name: '吹雪の牙', kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'phys', power: 5.2, element: 'water', sure: true }, { type: 'status', status: 'freeze', chance: 0.1 }], fx: 'breath_ice', msg: '吹雪をまとった牙が、一行を次々に襲った！' },
+    eb_bw_storm: { name: '吹雪の牙', kind: 'enemy', target: 'enemies', effects: [{ type: 'damage', formula: 'phys', power: 5.8, element: 'water', sure: true }, { type: 'status', status: 'freeze', chance: 0.1 }], fx: 'breath_ice', msg: '吹雪をまとった牙が、一行を次々に襲った！' },
     eb_bw_bite: { name: '大狼の牙', kind: 'enemy', target: 'enemy', effects: [{ type: 'damage', formula: 'phys', power: 1.35 }], fx: 'bite2', msg: '{user}は低くうなって飛びかかった！' },
     eb_bw_call_1: { name: '群れを呼ぶ', kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_siegewolf', n: 1, max: 4 }], fx: 'song', msg: '守りの手薄な門から、\n狼が駆けつけた！' },
     eb_bw_call_2: { name: '群れを呼ぶ', kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_siegewolf', n: 2, max: 5 }], fx: 'song', msg: '守りの手薄な門から、\n狼の群れが駆けつけた！' },
@@ -46,7 +46,7 @@
     name: '吹雪の大狼', sprite: 'boss_wolflord', bossType: 'mid', lv: 9, actsPerTurn: 1, size: 'l',
     race: 'beast', affinity: 'water', flags: ['boss'], eva: 10,
     elem: { fire: 1.5, water: 0.25, earth: 1.25 }, phys: {}, statusRes: { sleep: 0.25, freeze: 1 },
-    s: { hp: 1.15, atk: 1, mag: 1 },
+    s: { hp: 1.0, atk: 0.9, mag: 0.9 },
     leader: { msg: '大狼が倒れると、狼の群れは\n吹雪の中へ散り散りに逃げていった！' },
     drops: MID('i_ether'),
     desc: '吹雪にまぎれて村を囲む狼の群れの頭。\n遠吠えひとつで吹雪を呼ぶ。',
@@ -67,13 +67,13 @@
   if (G) {
     G.actions = A([['attack', 3], ['eb_ice_hammer', 2], ['eb_avalanche_drop', 2], ['eb_frost_glow', 200, { every: [3, 1] }], ['eb_frost_exhale', 1]]);
     G.melt = { element: 'fire', to: -2, msg: '炎が氷の鎧を砕いた！\n巨人の体がむき出しになった！' };
-    G.s = { hp: 1.7, atk: 1.6, mag: 1.6 };
+    G.s = { hp: 1.2, atk: 1.6, mag: 1.6 };
     G.desc = '白竜の峰の中腹を守る氷の巨人。\n氷の鎧を張るが、火に弱い。';
   }
   // 白竜ネーヴェ（予告の大吹雪・昔話の一節）
   const D = L.b_whitedragon;
   if (D) {
-    D.s = { hp: 1.2, atk: 0.6, mag: 0.6 };
+    D.s = { hp: 1.05, atk: 0.6, mag: 0.6 };
     D.actions = A([['attack', 2], ['eb_ice_claw', 2], ['eb_dragon_tail', 2], ['eb_dragon_inhale', 200, { every: [4, 1] }],
       ['eb_frozen_roar', 1, { every: [4, 3] }], ['eb_glacier_fall', 2, { hpBelow: 0.5 }], ['eb_dragon_remember', 400, { hpBelow: 0.5, once: true }]]);
   }
