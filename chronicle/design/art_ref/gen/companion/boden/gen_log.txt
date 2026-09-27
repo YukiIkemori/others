@@ -2,3 +2,6 @@
 01:14:37   pitch in raw image: 8.02 px per art pixel (upright median 505 px / 63)
 01:14:40 sheet 1 -> art_ref/gen/companion/boden/comp_boden_s1.png (7 poses)
 02:33:37 sheet 2 attempt 1: generating 1920x2048 (pitch 8, quality medium, 2 refs)
+02:36:49   pitch in raw image: 7.21 px per art pixel (upright median 346 px / 48)
+02:36:51 sheet 2 -> art_ref/gen/companion/boden/comp_boden_s2.png (12 poses)
+02:36:53 sheet 3 attempt 1: generating 3648x1344 (pitch 7, quality medium, 2 refs)

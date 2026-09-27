@@ -19,3 +19,4 @@
 02:19:59   | ■ シートの状態
 02:19:59   |   シート1 歩き: 確認あり  npc_ash_fighter_s1.png  ドット 8.00px → 描かれた格子のまま（46.5 ドット）
 02:19:59 sheet 1: 0 redo lines
+02:36:30 pipeline: sheets.py ../art_ref/gen/npc/grp_ash_3 --npc npc_ash_child --out out/npc/npc_ash_child

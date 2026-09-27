@@ -41,3 +41,9 @@
 02:29:59   |   シート5 顔の表情: OK  comp_sylvain_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
 02:29:59 round 1: 0 redo lines left 
 02:29:59 pipeline: sheets.py ../art_ref/gen/companion/sylvain --companion sylvain --out out/comp_sylvain
+02:36:34   |   シート2 フィールドの歩き: 確認あり  comp_sylvain_s2.png  ドット 8.00px → 描かれた格子のまま（55.0 ドット）
+02:36:34   |   シート3 戦闘の基本ポーズ: 確認あり  comp_sylvain_s3.png  ドット 8.00px → 描かれた格子のまま（74.0 ドット）
+02:36:34   |   シート4 戦闘の行動ポーズ＋武器なし版: OK  comp_sylvain_s4.png  ドット 8.00px → 描かれた格子のまま（74.0 ドット）
+02:36:34   |   シート5 顔の表情: OK  comp_sylvain_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+02:36:34   | 
+02:36:34   | packed field 165x236, battle 555x392, battle_bare 475x81, face 316x84 | palette 52 + face 48

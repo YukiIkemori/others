@@ -96,6 +96,35 @@
    "notes": [],
    "pitch": 8.397,
    "from_raw": "raw/s1_a1.png"
+  },
+  "2": {
+   "attempts": [
+    {
+     "raw": "raw/s2_a1.png",
+     "quality": "medium",
+     "t": "2026-09-27T02:36:55"
+    }
+   ],
+   "usage": [
+    {
+     "image_gen": {
+      "input_tokens": 3628,
+      "input_tokens_details": {
+       "image_tokens": 2955,
+       "text_tokens": 673
+      },
+      "output_tokens": 3204,
+      "output_tokens_details": {
+       "image_tokens": 3204,
+       "text_tokens": 0
+      },
+      "total_tokens": 6832
+     },
+     "web_search": {
+      "num_requests": 0
+     }
+    }
+   ]
   }
  }
 }
