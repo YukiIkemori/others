@@ -13,7 +13,7 @@
 
   function table() {
     const M = (typeof window !== 'undefined' && window.RPG_MEDIA) || R.MEDIA || {};
-    M.bgm = M.bgm || {}; M.voice = M.voice || {}; M.portraits = M.portraits || {}; M.sprites = M.sprites || {};
+    M.bgm = M.bgm || {}; M.voice = M.voice || {}; M.portraits = M.portraits || {}; M.sprites = M.sprites || {}; M.title = M.title || {};
     return M;
   }
   function raw(kind, id) {

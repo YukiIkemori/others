@@ -25,7 +25,7 @@ const list = (a, n) => (a.length > (n || 8) ? a.slice(0, n || 8).concat([`… ${
 const SLICE_MAPS = ['roa', 'roa_house', 'world', 'pharos', 'pharos_inn', 'pharos_tavern', 'pharos_shop', 'pharos_smith', 'pharos_record', 'pharos_shipyard',
   'lighthouse_1', 'lighthouse_2', 'lighthouse_3', 'fern', 'fern_inn', 'fern_shop', 'fern_rita', 'fern_search', 'fern_gord', 'fern_pim_home',
   'verda_1', 'verda_2', 'elder_1', 'elder_2', 'yura', 'yura_inn', 'hut', 'well'];
-const SLICE_BGM = ['title', 'home', 'town', 'tavern', 'overworld', 'tower', 'battle', 'boss', 'boss2', 'rarebattle', 'village', 'forest', 'shrine', 'cave', 'sorrow', 'legend', 'tension'];
+const SLICE_BGM = ['title', 'home', 'town', 'tavern', 'overworld', 'tower', 'battle', 'boss', 'boss2', 'rarebattle', 'village', 'forest', 'shrine', 'cave', 'sorrow', 'legend', 'tension', 'lostwood', 'eldertree', 'dawn', 'omen', 'fine_theme'];
 const BBG = ['coast', 'tower', 'forest', 'tree', 'cave'];
 const maps = M.sliceMaps();
 const EV_SRC = fs.readdirSync(path.join(V2, 'src', 'events')).map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n');

@@ -6,7 +6,7 @@
 //   node v2/tools/build.js --check         構文だけ調べる（壊れたファイルがあれば終了コード 1）
 //   オプション:
 //     --media <dir>        bgm/・voice/・portraits/ を読む元（既定 chronicle/assets）
-//     --all-bgm            縦切りで使わない BGM も入れる（既定は §3.10 の 17 曲だけ = --slice）
+//     --all-bgm            縦切りで使わない BGM も入れる（既定は §3.10 の 17 曲＋新しい 5 曲 = --slice）
 //     --portraits <m>      approved（既定。chronicle/design/portraits/manifest.json で approved の物だけ）| all | none
 //     --out <dir>          出力先（既定 v2/dist。テスト用）
 //     --with <dir>         フィクスチャを足した dev_<dir の名前>.html も作る（<dir>/states/*.json・scenes/*.json・*.js）
@@ -33,9 +33,9 @@ const SRC = path.join(V2, 'src');
 const TITLE = 'ルミナス・クロニクル 〜八つの灯火〜';
 const DIRS = ['core', 'render', 'uik', 'data', 'art', 'audio', 'maps', 'events', 'systems', 'screens'];
 const CORE_FIRST = ['ns.js', 'util.js', 'bus.js', 'engine.js', 'fit.js', 'gfx.js'];
-// 縦切りの BGM（§3.10 の 17 曲）
+// 縦切りの BGM（§3.10 の 17 曲＋ design/bgm_changes.md の新しい 5 曲）
 const SLICE_BGM = ['title', 'home', 'town', 'tavern', 'overworld', 'tower', 'battle', 'boss', 'boss2', 'rarebattle', 'village', 'forest',
-  'shrine', 'cave', 'sorrow', 'legend', 'tension'];
+  'shrine', 'cave', 'sorrow', 'legend', 'tension', 'lostwood', 'eldertree', 'dawn', 'omen', 'fine_theme'];
 const EXPRS = ['neutral', 'smile', 'sad', 'angry', 'surprise'];
 const MEDIA_EXT = { bgm: ['ogg', 'm4a', 'mp3', 'wav'], voice: ['ogg', 'm4a', 'mp3', 'wav'], portraits: ['webp', 'png', 'jpg'] };
 const MIME = { ogg: 'audio/ogg', m4a: 'audio/mp4', mp3: 'audio/mpeg', wav: 'audio/wav', webp: 'image/webp', png: 'image/png', jpg: 'image/jpeg' };
@@ -239,6 +239,25 @@ function scanEnv(root) {
   }
   return out;
 }
+/** タイトルの一枚絵（design/TITLE_ART.md）。v2/assets/title/<id>.webp（＋同じ名前の .png = 読めないときの代わり）と
+ *  サイドカー（title_wide.json・title_phone.json・logo.json）→ RPG_MEDIA.title[id] = {url: webp, png} と RPG_MEDIA.titleMeta */
+const TITLE_DIR = path.join(V2, 'assets', 'title');
+function scanTitle(root) {
+  const out = [], meta = {};
+  if (!fs.existsSync(root)) return { list: out, meta };
+  for (const f of fs.readdirSync(root).sort()) {
+    const m = /^([a-z0-9_]+)\.webp$/.exec(f);
+    if (!m) continue;
+    const png = path.join(root, m[1] + '.png');
+    out.push({ id: m[1], ext: 'webp', file: path.join(root, f), png: fs.existsSync(png) ? png : null, meta: null, outName: m[1] + '.webp' });
+  }
+  for (const [k, f] of [['wide', 'title_wide.json'], ['phone', 'title_phone.json'], ['logo', 'logo.json']]) {
+    const js = path.join(root, f);
+    if (!fs.existsSync(js)) continue;
+    try { const j = JSON.parse(fs.readFileSync(js, 'utf8')); delete j.style; delete j.note; delete j.checked; meta[k] = j; } catch (e) { console.warn(`[build] ${js}: bad JSON (${e.message})`); }
+  }
+  return { list: out, meta };
+}
 function copyIfChanged(src, dst) {
   try {
     const a = fs.statSync(src), b = fs.existsSync(dst) && fs.statSync(dst);
@@ -248,17 +267,19 @@ function copyIfChanged(src, dst) {
 }
 /** → {script, embeds, bytes}。mode 'external' は outDir/<kind>/ に写して相対 URL、'embed' は埋め込み、'none' は空 */
 function mediaTable(media, mode, outDir) {
-  const table = { bgm: {}, voice: {}, portraits: {}, sprites: {}, env: {} };
+  const table = { bgm: {}, voice: {}, portraits: {}, sprites: {}, env: {}, title: {} };
   const embeds = [];
   let bytes = 0;
   media.sprites = media.sprites || [];
   media.env = media.env || [];
+  media.title = media.title || [];
   const base = (e) => e.outName || path.basename(e.file);
-  for (const kind of ['bgm', 'voice', 'portraits', 'sprites', 'env']) {
+  for (const kind of ['bgm', 'voice', 'portraits', 'sprites', 'env', 'title']) {
     const extDir = path.join(outDir, kind);
     if (mode === 'external') {
       fs.mkdirSync(extDir, { recursive: true });
       const want = new Set(media[kind].map(base));
+      if (kind === 'title') for (const e of media.title) if (e.png) want.add(e.id + '.png');
       for (const f of fs.readdirSync(extDir)) if (!want.has(f)) fs.unlinkSync(path.join(extDir, f));
     }
     for (const e of media[kind]) {
@@ -273,11 +294,15 @@ function mediaTable(media, mode, outDir) {
         copyIfChanged(e.file, path.join(extDir, base(e)));
         bytes += fs.statSync(e.file).size;
         url = kind + '/' + base(e);
+        // タイトルの絵は webp が読めないときの png も写す（--single には入れない。TITLE_ART §2）
+        if (kind === 'title' && e.png) { copyIfChanged(e.png, path.join(extDir, e.id + '.png')); bytes += fs.statSync(e.png).size; }
       } else continue;
-      table[kind][e.id] = kind === 'bgm' ? Object.assign({ url }, e.meta) : kind === 'sprites' || kind === 'env' ? { url, meta: e.meta } : url;
+      table[kind][e.id] = kind === 'bgm' ? Object.assign({ url }, e.meta) : kind === 'sprites' || kind === 'env' ? { url, meta: e.meta }
+        : kind === 'title' ? (mode === 'external' && e.png ? { url, png: kind + '/' + e.id + '.png' } : { url }) : url;
     }
   }
-  return { script: `<script>window.RPG_MEDIA=${JSON.stringify(table)};</script>`, embeds: embeds.join('\n'), bytes, counts: { bgm: media.bgm.length, voice: media.voice.length, portraits: media.portraits.length, sprites: media.sprites.length, env: media.env.length } };
+  if (mode !== 'none' && media.titleMeta) table.titleMeta = media.titleMeta;
+  return { script: `<script>window.RPG_MEDIA=${JSON.stringify(table)};</script>`, embeds: embeds.join('\n'), bytes, counts: { bgm: media.bgm.length, voice: media.voice.length, portraits: media.portraits.length, sprites: media.sprites.length, env: media.env.length, title: media.title.length } };
 }
 
 // ------------------------------------------------------------------ HTML
@@ -349,6 +374,7 @@ function main(argv) {
   const media = scanMedia(mediaRoot, { slice: !has('--all-bgm'), portraits: portraitsMode, portraitManifest });
   media.sprites = scanSprites(SPRITES_DIR);
   media.env = scanEnv(ENV_DIR);
+  { const t = scanTitle(TITLE_DIR); media.title = t.list; media.titleMeta = t.meta; }
 
   // 書体（dev のフィクスチャの字も入れる）
   const withDir = argVal(argv, '--with', null);
@@ -387,10 +413,10 @@ function main(argv) {
   console.log(`[build] ${playFiles.length} files → ${path.relative(process.cwd(), OUT) || '.'}/index.html (${kb('index.html')} KB)` +
     (has('--no-dev') ? '' : `, dev.html (${kb('dev.html')} KB, +${ok.length - playFiles.length} dev files)`) +
     `\n[build] fonts: ${font.chars} chars, ${(font.bytes / 1024).toFixed(0)} KB embedded${font.ok ? '' : ' (SUBSET FAILED)'}` +
-    `\n[build] media (${single ? 'embedded' : 'external'}): ${M.counts.bgm} BGM${has('--all-bgm') ? '' : ' (slice)'}, ${M.counts.voice} voice, ${M.counts.portraits} portraits, ${M.counts.sprites} sprite sheets, ${M.counts.env} env images, ${mb(M.bytes)} MB` +
+    `\n[build] media (${single ? 'embedded' : 'external'}): ${M.counts.bgm} BGM${has('--all-bgm') ? '' : ' (slice)'}, ${M.counts.voice} voice, ${M.counts.portraits} portraits, ${M.counts.sprites} sprite sheets, ${M.counts.env} env images, ${M.counts.title} title images, ${mb(M.bytes)} MB` +
     (bad.length ? `\n[build] ${bad.length} file(s) EXCLUDED (syntax)` : '') + `  [${Date.now() - t0} ms]`);
   if (bad.length) process.exitCode = 1;
 }
 
-module.exports = { order, fixtures, syntax, scanMedia, scanSprites, SPRITES_DIR, scanEnv, ENV_DIR, SLICE_BGM, DIRS, CORE_FIRST, V2 };
+module.exports = { order, fixtures, syntax, scanMedia, scanSprites, SPRITES_DIR, scanEnv, ENV_DIR, scanTitle, TITLE_DIR, SLICE_BGM, DIRS, CORE_FIRST, V2 };
 if (require.main === module) main(process.argv.slice(2));
