@@ -19,21 +19,19 @@ async function main() {
   const p = P.page;
   ok('fixture opens the field', await B.waitFor(p, `${B.TOP}==='field'`, 4000));
 
-  section('全種類の出来事（倍速 ×3 ＋ A の早送り）');
+  section('全種類の出来事（戦闘の速さ ＋2）');
   await B.ev(p, "RPG.Settings.set('battleSpeed', 3)");
   await B.ev(p, start({ demo: 'all', autoInput: true, mons: [['x', 1]] }));
   ok('battle scene on top, opaque', await B.waitFor(p, `${B.TOP}==='battle' && RPG.Engine.top().opaque`, 3000));
-  await p.keyboard.down('KeyZ');   // 早送りを押し続ける
-  ok('all rounds played to the victory', await B.waitFor(p, `${D} && ${D}.result`, 30000));
-  await p.keyboard.up('KeyZ');
+  ok('all rounds played to the victory', await B.waitFor(p, `${D} && ${D}.result`, 60000));
   const log = await B.ev(p, `${D}.log`);
   const kinds = await B.ev(p, 'Object.keys(RPG.Contract.BATTLE_EVENTS)');
   const seen = new Set(log.map((l) => l.t));
   ok('every event kind was played', kinds.every((k) => seen.has(k)), kinds.filter((k) => !seen.has(k)));
   const gl = log.find((l) => l.t === 'glimmer-name');
-  ok('glimmer name shown ≥ 0.9 s even at ×3 + fast-forward', gl && gl.ms >= 880, gl);
+  ok('glimmer name shown ≥ 0.9 s even at ＋2', gl && gl.ms >= 880, gl);
   const card = log.find((l) => l.t === 'card');
-  ok('rare card shown ≥ 0.6 s with A held (A12)', card && card.ms >= 590, card);
+  ok('rare card shown ≥ 0.6 s (A12)', card && card.ms >= 590, card);
   ok('victory panel opens', await B.waitFor(p, `${D} && ${D}.result && ${D}.next`, 6000));
   await p.waitForTimeout(2500);
   ok('victory never closes by itself, even at ×3 (owner 2026-09-27)', !(await B.ev(p, 'window.__r')) && (await B.ev(p, `${D}.phase === 'result'`)));
@@ -47,6 +45,20 @@ async function main() {
   ok('invariants after the win (field on top, no lock, no message)', await B.waitFor(p, INV, 3000));
   ok('autosave after the win', await B.ev(p, "!!RPG.Save.cards().find((c) => c.slot === 'auto' && c.card)"));
   await B.ev(p, "RPG.Settings.set('battleSpeed', 1)");
+
+  section('戦闘の速さ（R: 通常 → ＋1 → ＋2 → 通常、設定に残る）');
+  await B.ev(p, "RPG.Settings.set('battleSpeed', 1)");
+  await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] }));
+  ok('battle waits for input', await B.waitFor(p, `${D} && ${D}.phase==='input' && ${D}.ui`, 8000));
+  ok('speed label 「▶ 通常」', (await B.ev(p, 'RPG.Battle.speedText(RPG.Settings.get("battleSpeed"))')) === '▶ 通常');
+  const seen2 = [];
+  for (let i = 0; i < 3; i++) { await B.press(p, 'r'); seen2.push(await B.ev(p, 'RPG.Settings.get("battleSpeed")')); }
+  ok('R cycles 通常 → ＋1 → ＋2 → 通常', seen2.join() === '2,3,1', seen2);
+  await B.press(p, 'r');
+  ok('A is not a fast-forward any more (clock runs at the set speed only)', await B.ev(p, `${D}.mul() === 2`));
+  ok('the chosen speed is saved in settings (localStorage)', await B.ev(p, "(() => { try { return JSON.stringify(localStorage).includes('battleSpeed'); } catch (e) { return true; } })()"));
+  await B.ev(p, "RPG.Settings.set('battleSpeed', 1)");
+  ok('finish that battle', await B.pressUntil(p, 'a', 'window.__r', 120));
 
   section('コマンド・カーソル記憶・NEW・リピート');
   await B.ev(p, start({ demo: 'tele', mons: [['x', 1]], bg: 'tower' }));

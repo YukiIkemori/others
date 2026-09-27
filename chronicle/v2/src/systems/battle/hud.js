@@ -304,6 +304,33 @@
   };
 
   /** 左下の倍速の札・リピートの札（16:9）。縦持ちは札の列（タップで切り替え） */
+  /**
+   * 戦闘の速さの札（2026-09-27 の持ち主の決まり）: 「▶ 通常」「▶▶ ＋1」「▶▶▶ ＋2」。▶ は字でなく形で描く（字形の無いフォントでも同じに見える）。
+   * R（縦持ちは札のタップ）で 通常 → ＋1 → ＋2 → 通常。変えた直後は少し光る。→ 幅
+   */
+  function speedChip(g, x, y, sp, size) {
+    const n = sp === 3 ? 3 : sp === 2 ? 2 : 1, label = Bt.speedLabel(sp);
+    const h = size + K.u(9), padX = K.u(8), tw = size * 0.62, gap = size * 0.08;
+    const iw = n * tw + (n - 1) * gap + K.u(5);
+    const w = K.measure(label, { size, weight: 700 }) + padX * 2 + iw;
+    const col = sp > 1 ? COL.gold : COL.text2;
+    const st = Bt.debug && Bt.debug();
+    const flash = st && st.speedFx ? Math.max(0, 1 - (R.Engine.time - st.speedFx) / 600) : 0;
+    g.save();
+    g.beginPath(); if (g.roundRect) g.roundRect(x, y, w, h, h / 2); else g.rect(x, y, w, h);
+    g.fillStyle = 'rgba(14,16,28,0.62)'; g.fill();
+    g.strokeStyle = flash > 0 ? `rgba(242,208,138,${0.3 + 0.6 * flash})` : sp > 1 ? 'rgba(236,201,124,0.5)' : 'rgba(240,228,200,0.28)'; g.lineWidth = 1 + flash; g.stroke();
+    g.fillStyle = col;
+    const cy = y + h / 2;
+    for (let i = 0; i < n; i++) {
+      const tx = x + padX + i * (tw + gap);
+      g.beginPath(); g.moveTo(tx, cy - size * 0.36); g.lineTo(tx + tw, cy); g.lineTo(tx, cy + size * 0.36); g.closePath(); g.fill();
+    }
+    g.restore();
+    K.text(g, label, x + padX + iw, y + (h - size) / 2 - K.u(0.5), { size, weight: 700, color: col, raw: true });
+    return w;
+  }
+
   H.chips = function (g, st) {
     const k = R.uiScale || 1, L = st.L;
     const sp = st.speed();
@@ -311,7 +338,7 @@
     if (L.tall) {
       let x = 16 * k;
       const y = L.chipsY;
-      const w1 = K.chip(g, x, y, '×' + sp, { icon: 'ff', size: 12 * k, color: sp > 1 ? COL.gold : COL.text2 });
+      const w1 = speedChip(g, x, y, sp, 12 * k);
       st.chipRects.speed = { x, y, w: w1, h: 22 * k }; x += w1 + 10 * k;
       const po = st.partyOpts || [];
       const w2 = K.chip(g, x, y, 'リピート', { icon: 'repeat', size: 12 * k, color: st.B && st.B.repeatOn ? COL.gold : po.includes('repeat') ? COL.text2 : COL.disabled });
@@ -324,7 +351,7 @@
     }
     const x = (R.safe.l || 0) + 16 * k, y = R.H - (R.safe.b || 0) - 40 * k;
     let cx = x;
-    const w = K.chip(g, cx, y, '×' + sp, { icon: 'ff', size: 10.5 * k, color: sp > 1 ? COL.gold : COL.text2 });
+    const w = speedChip(g, cx, y, sp, 10.5 * k);
     st.chipRects.speed = { x: cx, y, w, h: 20 * k };
     cx += w + 8 * k;
     if (st.B && st.B.repeatOn) K.chip(g, cx, y, 'リピート', { icon: 'repeat', size: 10.5 * k, color: COL.gold, line: 'rgba(236,201,124,0.6)' });

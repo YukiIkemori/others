@@ -29,6 +29,21 @@
   Bt.active = () => !!current;
 
   function speed() { const s = +R.Settings.get('battleSpeed'); return s === 2 || s === 3 ? s : 1; }
+  /**
+   * 戦闘の速さ（2026-09-27 の持ち主の決まり）: 1 つのボタン（R・縦持ちは札のタップ）で 通常 → ＋1 → ＋2 → 通常。
+   * 設定 battleSpeed（1 | 2 | 3）に書くので、次の戦闘も読み込み直した後も同じ速さ。A の押しっぱなしの早送りは無くした（A は決定）。
+   */
+  Bt.SPEED_LABEL = { 1: '通常', 2: '＋1', 3: '＋2' };
+  Bt.speedLabel = (s) => Bt.SPEED_LABEL[s === 2 || s === 3 ? s : 1];
+  Bt.speedText = (s) => '▶'.repeat(s === 2 || s === 3 ? s : 1) + ' ' + Bt.speedLabel(s);
+  Bt.cycleSpeed = function () {
+    const s = speed(), n = s === 1 ? 2 : s === 2 ? 3 : 1;
+    R.Settings.set('battleSpeed', n);
+    try { if (R.Audio.sfx) R.Audio.sfx('cursor'); } catch (e) { /* ignore */ }
+    if (current) current.speedFx = R.Engine.time;
+    try { if (R.UIK && R.UIK.toast) R.UIK.toast('戦闘の速さ：' + Bt.speedLabel(n), { anchor: 'bl' }); } catch (e) { /* ignore */ }
+    return n;
+  };
 
   function makeCore(setup) {
     if (setup.demo && _.demo) return _.demo.create(setup);
@@ -53,11 +68,11 @@
     st.partyUnits = () => (st.B ? st.B.units.filter((u) => u.side === 'party') : []);
     st.enemyUnits = () => st.actors.filter((a) => a.side === 'enemy').map((a) => st.unit(a.uid)).filter(Boolean);
     st.aliveEnemies = () => st.actors.filter((a) => a.side === 'enemy' && st.vis[a.uid] && st.vis[a.uid].alive && !(st.vis[a.uid].gone >= 1));
-    /** 戦闘の時計で待つ（倍速・A の早送りに従う） */
+    /** 戦闘の時計で待つ（戦闘の速さに従う） */
     st.pwait = (ms) => { const at = st.clock + (ms > 0 ? ms : 0); return R.until(() => st.clock >= at || st.dead); };
     /** 実時間で待つ（最短の表示時間） */
     st.rwait = (ms) => R.wait(ms);
-    st.mul = () => speed() * (st.phase === 'play' && R.Input.down('a') ? 2.5 : 1);
+    st.mul = () => speed();
     return st;
   }
 
@@ -278,19 +293,15 @@
       update(dt) {
         st.clock += dt * st.mul();
         const I = R.Input;
-        // 倍速（R）: どの場面でも
-        if (I.pressed('r') && st.phase !== 'result' && st.phase !== 'gameover') {
-          const s = speed(), n = s === 1 ? 2 : s === 2 ? 3 : 1;
-          R.Settings.set('battleSpeed', n);
-          if (R.Audio.sfx) R.Audio.sfx('cursor');
-        }
+        // 戦闘の速さ（R）: 通常 → ＋1 → ＋2 → 通常（どの場面でも。勝利の札・全滅の画面では変えない）
+        if (I.pressed('r') && st.phase !== 'result' && st.phase !== 'gameover' && st.phase !== 'closing') Bt.cycleSpeed();
         // 縦持ちの札（タップ）
         const p = I.pointer;
         if (p && p.pressed && st.chipRects) {
           for (const k of Object.keys(st.chipRects)) {
             const r = st.chipRects[k];
             if (r && p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y - 6 && p.y <= r.y + r.h + 6) {
-              if (k === 'speed') { const s = speed(); R.Settings.set('battleSpeed', s === 1 ? 2 : s === 2 ? 3 : 1); }
+              if (k === 'speed') Bt.cycleSpeed();
               else if (st.phase === 'play' && k === 'repeat' && st.B.repeatOn) { st.B.setRepeat(false); }
               else if (st.phase === 'input') st.chipTap = k;
               if (I.consume) I.consume();
@@ -521,7 +532,7 @@
     if (st.go) _.gameover.draw(g, st);
     if (st.ui && st.ui.draw) st.ui.draw(g);
     _.play.drawCard(g, st);
-    const pr = st.ui && st.ui.prompts ? st.ui.prompts : st.phase === 'play' ? (st.B && st.B.repeatOn ? [{ btn: 'a', label: '早送り' }, { btn: 'b', label: 'リピートを止める' }, { btn: 'r', label: '速さ' }] : [{ btn: 'a', label: '早送り' }, { btn: 'r', label: '速さ' }]) : null;
+    const pr = st.ui && st.ui.prompts ? st.ui.prompts : st.phase === 'play' ? (st.B && st.B.repeatOn ? [{ btn: 'b', label: 'リピートを止める' }, { btn: 'r', label: '速さ' }] : [{ btn: 'r', label: '速さ' }]) : null;
     if (pr && !(L.tall && st.ui && st.ui.tallPrompts === false)) _.K.prompts(g, pr);
     // 入る移りの続きの暗さ（intro で明ける）
     if (st.cover > 0.001) { g.save(); g.globalAlpha = Math.min(1, st.cover); g.fillStyle = R.Gfx.BG || '#070812'; g.fillRect(0, 0, R.W, R.H); g.restore(); }
