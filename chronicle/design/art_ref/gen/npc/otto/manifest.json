@@ -121,5 +121,197 @@
     ]
    }
   ]
+ },
+ {
+  "sheet": 2,
+  "file": "npc_otto_s2.png",
+  "layout": "3x4",
+  "logical_cell": [
+   96,
+   64
+  ],
+  "image_px": [
+   3072,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "act_nod",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     29,
+     47
+    ]
+   },
+   {
+    "id": "act_surprise",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     32,
+     47
+    ]
+   },
+   {
+    "id": "act_think",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     28,
+     47
+    ]
+   },
+   {
+    "id": "act_bow",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     30,
+     43
+    ]
+   },
+   {
+    "id": "act_kneel",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     32,
+     42
+    ]
+   },
+   {
+    "id": "act_sit",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     39,
+     37
+    ]
+   },
+   {
+    "id": "act_call",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     30,
+     47
+    ]
+   },
+   {
+    "id": "act_look",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     27,
+     46
+    ]
+   },
+   {
+    "id": "act_lie",
+    "row": 3,
+    "column": 1,
+    "logical_bbox": [
+     63,
+     26
+    ]
+   },
+   {
+    "id": "act_sig",
+    "row": 3,
+    "column": 2,
+    "logical_bbox": [
+     38,
+     49
+    ]
+   },
+   {
+    "id": "act_resolve",
+    "row": 3,
+    "column": 3,
+    "logical_bbox": [
+     28,
+     45
+    ]
+   },
+   {
+    "id": "act_sad",
+    "row": 3,
+    "column": 4,
+    "logical_bbox": [
+     28,
+     44
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 3,
+  "file": "npc_otto_s3.png",
+  "layout": "2x3",
+  "logical_cell": [
+   96,
+   96
+  ],
+  "image_px": [
+   2304,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "face_neutral",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     72,
+     80
+    ]
+   },
+   {
+    "id": "face_smile",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     72,
+     80
+    ]
+   },
+   {
+    "id": "face_sad",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     71,
+     79
+    ]
+   },
+   {
+    "id": "face_angry",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     72,
+     80
+    ]
+   },
+   {
+    "id": "face_surprise",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     72,
+     81
+    ]
+   },
+   {
+    "id": "face_closed",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     71,
+     80
+    ]
+   }
+  ]
  }
 ]

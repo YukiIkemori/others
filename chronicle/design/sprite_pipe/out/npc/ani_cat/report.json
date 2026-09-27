@@ -1,0 +1,248 @@
+{
+ "char": "ani_cat",
+ "companion": null,
+ "npc": "ani_cat",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/grp_animal_1",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/sprite_pipe/out/npc/ani_cat/src/ani_cat_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 104.0,
+   "native_height_at_period": 13.0,
+   "scale_note": "描かれた格子のまま（13.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      7,
+      14
+     ],
+     "box": [
+      272,
+      288,
+      360,
+      432
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_down_1": {
+     "size": [
+      7,
+      15
+     ],
+     "box": [
+      912,
+      280,
+      1000,
+      432
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_down_2": {
+     "size": [
+      7,
+      15
+     ],
+     "box": [
+      1552,
+      280,
+      1640,
+      432
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_up_0": {
+     "size": [
+      6,
+      14
+     ],
+     "box": [
+      280,
+      800,
+      360,
+      944
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_up_1": {
+     "size": [
+      6,
+      14
+     ],
+     "box": [
+      920,
+      800,
+      1000,
+      944
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_up_2": {
+     "size": [
+      6,
+      14
+     ],
+     "box": [
+      1560,
+      800,
+      1640,
+      944
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_left_0": {
+     "size": [
+      14,
+      12
+     ],
+     "box": [
+      248,
+      1328,
+      392,
+      1456
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_left_1": {
+     "size": [
+      15,
+      12
+     ],
+     "box": [
+      880,
+      1328,
+      1032,
+      1456
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_left_2": {
+     "size": [
+      14,
+      12
+     ],
+     "box": [
+      1528,
+      1328,
+      1672,
+      1456
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_right_0": {
+     "size": [
+      15,
+      12
+     ],
+     "box": [
+      240,
+      1840,
+      392,
+      1968
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_right_1": {
+     "size": [
+      15,
+      11
+     ],
+     "box": [
+      880,
+      1848,
+      1032,
+      1968
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_right_2": {
+     "size": [
+      15,
+      11
+     ],
+     "box": [
+      1520,
+      1848,
+      1672,
+      1968
+     ],
+     "air": 0,
+     "blur": 0.0
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "pair_half",
+   "msg": "npc_grp_animal_1.png の左半分（人物A）を使う",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/ani_cat）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 8 番（左向き・前の足） の足元の影を消した",
+   "slot": "walk_left_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 11 番（右向き・前の足） の足元の影を消した",
+   "slot": "walk_right_1",
+   "ask": null,
+   "data": {}
+  }
+ ]
+}

@@ -49,7 +49,7 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.77,
+     "facing_score": 0.95,
      "lantern": 0.12698412698412692
     },
     "walk_down_1": {
@@ -65,8 +65,8 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.0,
-     "scale": 1.078,
+     "facing_score": 1.16,
+     "scale": 1.037,
      "lantern": 0.005555555555555536
     },
     "walk_down_2": {
@@ -82,8 +82,8 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.6,
-     "scale": 1.078,
+     "facing_score": 0.96,
+     "scale": 1.037,
      "lantern": -0.07894736842105263
     },
     "walk_up_0": {
@@ -99,8 +99,8 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.87,
-     "scale": 1.0,
+     "facing_score": 0.9,
+     "scale": 0.962,
      "lantern": null
     },
     "walk_up_1": {
@@ -116,8 +116,8 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.88,
-     "scale": 1.0,
+     "facing_score": 0.89,
+     "scale": 0.962,
      "lantern": null
     },
     "walk_up_2": {
@@ -133,8 +133,8 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.07,
-     "scale": 1.0,
+     "facing_score": 0.99,
+     "scale": 0.962,
      "lantern": 0.631578947368421,
      "fixed": [
       "mirrored_lantern"
@@ -178,7 +178,7 @@
       "head": 1.5,
       "upper": 2.0
      },
-     "scale": 1.0,
+     "scale": 0.962,
      "lantern": -0.3684210526315789
     },
     "walk_left_2": {
@@ -199,7 +199,7 @@
       "head": 1.5,
       "upper": 2.0
      },
-     "scale": 1.0,
+     "scale": 0.962,
      "lantern": -0.44135802469135804
     },
     "walk_right_0": {
@@ -240,7 +240,7 @@
       "head": 1.5,
       "upper": 2.0
      },
-     "scale": 1.039,
+     "scale": 1.0,
      "lantern": 0.40740740740740733
     },
     "walk_right_2": {
@@ -261,37 +261,395 @@
       "head": 1.5,
       "upper": 2.0
      },
-     "scale": 1.039,
+     "scale": 1.0,
      "lantern": 0.339712918660287
+    }
+   }
+  },
+  "2": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/otto/npc_otto_s2.png",
+   "size": [
+    3072,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "3x4",
+    "logical_cell": [
+     96,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 376.0,
+   "native_height_at_period": 47.0,
+   "scale_note": "描かれた格子のまま（47.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "act_nod": {
+     "size": [
+      29,
+      47
+     ],
+     "box": [
+      248,
+      88,
+      512,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.13,
+     "scale": 1.037
+    },
+    "act_surprise": {
+     "size": [
+      32,
+      46
+     ],
+     "box": [
+      1008,
+      88,
+      1296,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.36,
+     "scale": 0.962
+    },
+    "act_think": {
+     "size": [
+      28,
+      47
+     ],
+     "box": [
+      1792,
+      88,
+      2048,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.01,
+     "scale": 1.037
+    },
+    "act_bow": {
+     "size": [
+      30,
+      43
+     ],
+     "box": [
+      2552,
+      120,
+      2824,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 0.962
+    },
+    "act_kneel": {
+     "size": [
+      32,
+      42
+     ],
+     "box": [
+      240,
+      640,
+      528,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 1.037
+    },
+    "act_sit": {
+     "size": [
+      39,
+      37
+     ],
+     "box": [
+      976,
+      680,
+      1320,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 1.037
+    },
+    "act_call": {
+     "size": [
+      30,
+      47
+     ],
+     "box": [
+      1784,
+      600,
+      2056,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.68,
+     "scale": 1.037
+    },
+    "act_look": {
+     "size": [
+      27,
+      46
+     ],
+     "box": [
+      2560,
+      608,
+      2808,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 0.962
+    },
+    "act_lie": {
+     "size": [
+      63,
+      26
+     ],
+     "box": [
+      112,
+      1280,
+      648,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "act_sig": {
+     "size": [
+      38,
+      49
+     ],
+     "box": [
+      984,
+      1096,
+      1320,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.75,
+     "scale": 1.037
+    },
+    "act_resolve": {
+     "size": [
+      28,
+      45
+     ],
+     "box": [
+      1792,
+      1128,
+      2048,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.85,
+     "scale": 1.037
+    },
+    "act_sad": {
+     "size": [
+      28,
+      44
+     ],
+     "box": [
+      2560,
+      1136,
+      2816,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 0.962
+    }
+   }
+  },
+  "3": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/otto/npc_otto_s3.png",
+   "size": [
+    2304,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x3",
+    "logical_cell": [
+     96,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 640.0,
+   "native_height_at_period": 80.0,
+   "scale_note": "描かれた格子のまま（80.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      72,
+      80
+     ],
+     "box": [
+      80,
+      48,
+      688,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.39,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.89
+     }
+    },
+    "face_smile": {
+     "size": [
+      72,
+      80
+     ],
+     "box": [
+      848,
+      48,
+      1456,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_sad": {
+     "size": [
+      71,
+      79
+     ],
+     "box": [
+      1616,
+      48,
+      2216,
+      712
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.49,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.99
+     }
+    },
+    "face_angry": {
+     "size": [
+      72,
+      80
+     ],
+     "box": [
+      80,
+      816,
+      688,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_surprise": {
+     "size": [
+      72,
+      81
+     ],
+     "box": [
+      848,
+      808,
+      1456,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.41,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.91
+     }
+    },
+    "face_closed": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      1616,
+      816,
+      2216,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
     }
    }
   }
  },
  "items": [
   {
-   "sheet": 2,
-   "level": "redo",
-   "code": "missing_sheet",
-   "msg": "シート2（演技12（下向き）, npc_otto_s2.png）がない",
-   "slot": null,
-   "ask": "オットー（otto）のシート2（演技12（下向き））を作って",
-   "data": {}
-  },
-  {
-   "sheet": 3,
-   "level": "redo",
-   "code": "missing_sheet",
-   "msg": "シート3（顔6, npc_otto_s3.png）がない",
-   "slot": null,
-   "ask": "オットー（otto）のシート3（顔6）を作って",
-   "data": {}
-  },
-  {
    "sheet": null,
    "level": "info",
    "code": "no_refs",
    "msg": "向きの見本（configs/refs/otto）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
    "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "auto",
+   "code": "marks",
+   "msg": "シート2 の 2 番（驚く） の感情マーク（驚きの線・汗など 3 個）を消した",
+   "slot": "act_surprise",
    "ask": null,
    "data": {}
   },

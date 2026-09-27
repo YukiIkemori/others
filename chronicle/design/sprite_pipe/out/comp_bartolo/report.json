@@ -1,0 +1,1210 @@
+{
+ "char": "bartolo",
+ "companion": "bartolo",
+ "npc": null,
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/companion/bartolo",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/bartolo/comp_bartolo_s1.png",
+   "size": [
+    3584,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x4",
+    "logical_cell": [
+     112,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 560.0,
+   "native_height_at_period": 70.0,
+   "scale_note": "描かれた格子のまま（70.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "ref_front": {
+     "size": [
+      45,
+      70
+     ],
+     "box": [
+      248,
+      144,
+      640,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_34": {
+     "size": [
+      49,
+      69
+     ],
+     "box": [
+      1128,
+      152,
+      1552,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_side_left": {
+     "size": [
+      39,
+      70
+     ],
+     "box": [
+      2064,
+      144,
+      2408,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_back": {
+     "size": [
+      47,
+      70
+     ],
+     "box": [
+      2928,
+      144,
+      3336,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_idle_left": {
+     "size": [
+      52,
+      71
+     ],
+     "box": [
+      224,
+      904,
+      672,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_face": {
+     "size": [
+      75,
+      80
+     ],
+     "box": [
+      1024,
+      816,
+      1656,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_palette": {
+     "size": [
+      90,
+      42
+     ],
+     "box": [
+      1864,
+      968,
+      2616,
+      1336
+     ],
+     "air": 0,
+     "blur": 0.0
+    }
+   }
+  },
+  "2": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/bartolo/comp_bartolo_s2.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 420.0,
+   "native_height_at_period": 52.5,
+   "scale_note": "描かれた格子のまま（52.5 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      33,
+      54
+     ],
+     "box": [
+      168,
+      32,
+      464,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.91
+    },
+    "walk_down_1": {
+     "size": [
+      33,
+      54
+     ],
+     "box": [
+      808,
+      32,
+      1104,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.59,
+     "scale": 1.0
+    },
+    "walk_down_2": {
+     "size": [
+      32,
+      55
+     ],
+     "box": [
+      1456,
+      24,
+      1744,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.64,
+     "scale": 1.0
+    },
+    "walk_up_0": {
+     "size": [
+      33,
+      52
+     ],
+     "box": [
+      168,
+      560,
+      464,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.8,
+     "scale": 1.0
+    },
+    "walk_up_1": {
+     "size": [
+      33,
+      54
+     ],
+     "box": [
+      808,
+      544,
+      1104,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.07,
+     "scale": 0.947
+    },
+    "walk_up_2": {
+     "size": [
+      33,
+      54
+     ],
+     "box": [
+      1448,
+      544,
+      1744,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.13,
+     "scale": 1.0
+    },
+    "walk_left_0": {
+     "size": [
+      29,
+      52
+     ],
+     "box": [
+      184,
+      1072,
+      448,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      31,
+      52
+     ],
+     "box": [
+      816,
+      1072,
+      1096,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.093
+    },
+    "walk_left_2": {
+     "size": [
+      30,
+      52
+     ],
+     "box": [
+      1464,
+      1072,
+      1736,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.067
+    },
+    "walk_right_0": {
+     "size": [
+      27,
+      52
+     ],
+     "box": [
+      192,
+      1584,
+      440,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      30,
+      52
+     ],
+     "box": [
+      824,
+      1584,
+      1096,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.04
+    },
+    "walk_right_2": {
+     "size": [
+      29,
+      53
+     ],
+     "box": [
+      1464,
+      1576,
+      1728,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.04
+    }
+   }
+  },
+  "3": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/bartolo/comp_bartolo_s3.png",
+   "size": [
+    4160,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x5",
+    "logical_cell": [
+     104,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 556.0,
+   "native_height_at_period": 69.5,
+   "scale_note": "描かれた格子のまま（69.5 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "idle_a": {
+     "size": [
+      43,
+      70
+     ],
+     "box": [
+      224,
+      144,
+      600,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.09,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.19
+     }
+    },
+    "idle_b": {
+     "size": [
+      43,
+      70
+     ],
+     "box": [
+      1056,
+      144,
+      1432,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.17,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.27
+     },
+     "scale": 0.907
+    },
+    "step": {
+     "size": [
+      74,
+      66
+     ],
+     "box": [
+      1768,
+      176,
+      2392,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.34,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.44
+     }
+    },
+    "guard": {
+     "size": [
+      84,
+      66
+     ],
+     "box": [
+      2560,
+      176,
+      3264,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.76,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.14
+     },
+     "scale": 1.022
+    },
+    "hit": {
+     "size": [
+      70,
+      66
+     ],
+     "box": [
+      3448,
+      176,
+      4040,
+      736
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.72,
+     "facing_cues": {
+      "head": -0.9,
+      "upper": 0.18
+     },
+     "scale": 0.958
+    },
+    "weak": {
+     "size": [
+      65,
+      57
+     ],
+     "box": [
+      136,
+      1008,
+      688,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.07,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.17
+     },
+     "scale": 1.048
+    },
+    "ko": {
+     "size": [
+      94,
+      39
+     ],
+     "box": [
+      856,
+      1160,
+      1640,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "victory_a": {
+     "size": [
+      50,
+      84
+     ],
+     "box": [
+      1864,
+      800,
+      2296,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.95,
+     "facing_cues": {
+      "head": 0.75,
+      "upper": 0.2
+     },
+     "scale": 0.907
+    },
+    "victory_b": {
+     "size": [
+      65,
+      70
+     ],
+     "box": [
+      2632,
+      912,
+      3184,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 0.958
+    },
+    "glimmer": {
+     "size": [
+      64,
+      69
+     ],
+     "box": [
+      3472,
+      920,
+      4016,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.27,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.37
+     },
+     "scale": 0.933
+    }
+   }
+  },
+  "4": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/bartolo/comp_bartolo_s4.png",
+   "size": [
+    4480,
+    2112
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "3x5",
+    "logical_cell": [
+     112,
+     88
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 560.0,
+   "native_height_at_period": 70.0,
+   "scale_note": "描かれた格子のまま（70.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "windup": {
+     "size": [
+      84,
+      76
+     ],
+     "box": [
+      96,
+      48,
+      800,
+      688
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.19,
+     "facing_cues": {
+      "head": 0.53,
+      "upper": -0.34
+     },
+     "scale": 1.003
+    },
+    "slash": {
+     "size": [
+      87,
+      71
+     ],
+     "box": [
+      976,
+      88,
+      1704,
+      688
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.42,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.52
+     },
+     "scale": 1.067
+    },
+    "thrust_ready": {
+     "size": [
+      106,
+      69
+     ],
+     "box": [
+      1800,
+      104,
+      2680,
+      688
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.54,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.36
+     }
+    },
+    "thrust": {
+     "size": [
+      108,
+      69
+     ],
+     "box": [
+      2688,
+      104,
+      3584,
+      688
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.46,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.44
+     },
+     "scale": 1.048
+    },
+    "charge": {
+     "size": [
+      75,
+      50
+     ],
+     "box": [
+      3712,
+      256,
+      4344,
+      688
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.98,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.08
+     },
+     "scale": 0.997
+    },
+    "smash": {
+     "size": [
+      52,
+      78
+     ],
+     "box": [
+      216,
+      752,
+      680,
+      1424
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.76,
+     "facing_cues": {
+      "head": 0.57,
+      "upper": 0.19
+     },
+     "scale": 0.958
+    },
+    "cast_a": {
+     "size": [
+      64,
+      70
+     ],
+     "box": [
+      1072,
+      800,
+      1616,
+      1392
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.96,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.06
+     },
+     "scale": 1.035
+    },
+    "cast_b": {
+     "size": [
+      56,
+      69
+     ],
+     "box": [
+      2000,
+      808,
+      2480,
+      1392
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.33,
+     "facing_cues": {
+      "head": 0.1,
+      "upper": 0.23
+     },
+     "scale": 0.958
+    },
+    "item": {
+     "size": [
+      53,
+      67
+     ],
+     "box": [
+      2904,
+      824,
+      3360,
+      1392
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.25,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.35
+     },
+     "scale": 0.978
+    },
+    "evade": {
+     "size": [
+      64,
+      69
+     ],
+     "box": [
+      3760,
+      808,
+      4304,
+      1392
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.43,
+     "facing_cues": {
+      "head": -0.28,
+      "upper": -0.15
+     },
+     "scale": 0.914
+    },
+    "bare_idle": {
+     "size": [
+      52,
+      71
+     ],
+     "box": [
+      224,
+      1496,
+      672,
+      2096
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.3,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.4
+     }
+    },
+    "bare_windup": {
+     "size": [
+      59,
+      69
+     ],
+     "box": [
+      1088,
+      1512,
+      1592,
+      2096
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.21,
+     "facing_cues": {
+      "head": 0.15,
+      "upper": 0.07
+     },
+     "scale": 1.022
+    },
+    "bare_slash": {
+     "size": [
+      69,
+      69
+     ],
+     "box": [
+      1944,
+      1512,
+      2528,
+      2096
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.12,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.22
+     },
+     "scale": 1.022
+    },
+    "bare_thrust": {
+     "size": [
+      73,
+      69
+     ],
+     "box": [
+      2824,
+      1512,
+      3440,
+      2096
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.11,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.21
+     },
+     "scale": 1.035
+    },
+    "bare_cast": {
+     "size": [
+      71,
+      70
+     ],
+     "box": [
+      3728,
+      1504,
+      4328,
+      2096
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.14,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.24
+     },
+     "scale": 1.035
+    }
+   }
+  },
+  "5": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/bartolo/comp_bartolo_s5.png",
+   "size": [
+    3072,
+    768
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "1x4",
+    "logical_cell": [
+     96,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 640.0,
+   "native_height_at_period": 80.0,
+   "scale_note": "描かれた格子のまま（80.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      79,
+      80
+     ],
+     "box": [
+      48,
+      80,
+      712,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_smile": {
+     "size": [
+      79,
+      80
+     ],
+     "box": [
+      816,
+      80,
+      1480,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_surprise": {
+     "size": [
+      79,
+      81
+     ],
+     "box": [
+      1584,
+      72,
+      2248,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_pain": {
+     "size": [
+      78,
+      79
+     ],
+     "box": [
+      2360,
+      88,
+      3016,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "ground",
+   "msg": "2 行目の足元の高さが最大 21 ドットずれている。足元で揃えた",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 5 番（戦闘の待機） の足元の影を消した",
+   "slot": "ref_idle_left",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 6 番（顔） の足元の影を消した",
+   "slot": "ref_face",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 7 番（配色見本） の足元の影を消した",
+   "slot": "ref_palette",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "design_refs",
+   "msg": "設定画から向きの見本 6 枚と配色（52 色）を取った。<out>/refs に保存（承認後は tools/refs.py bartolo <out> で configs/refs に）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート2 の 1 番（下向き・立ち） の足元の影を消した",
+   "slot": "walk_down_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート2 の 8 番（左向き・前の足） の足元の影を消した",
+   "slot": "walk_left_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート2 の 11 番（右向き・前の足） の足元の影を消した",
+   "slot": "walk_right_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート2 の 12 番（右向き・後ろの足） の足元の影を消した",
+   "slot": "walk_right_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート3 の 1 番（待機A） の足元の影を消した",
+   "slot": "idle_a",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート3 の 5 番（ダメージ） の足元の影を消した",
+   "slot": "hit",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート3 の 6 番（瀕死） の足元の影を消した",
+   "slot": "weak",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 4,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート4 の 1 番（振りかぶり） の足元の影を消した",
+   "slot": "windup",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 4,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート4 の 2 番（振り抜き） の足元の影を消した",
+   "slot": "slash",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 4,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート4 の 6 番（大技の一撃） の足元の影を消した",
+   "slot": "smash",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 4,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート4 の 14 番（武器なし・突き） の足元の影を消した",
+   "slot": "bare_thrust",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "check",
+   "code": "facing_unsure",
+   "msg": "シート3 の 5 番（ダメージ） の向きがはっきりしない（点数 -0.7）",
+   "slot": "hit",
+   "ask": null,
+   "data": {
+    "cues": {
+     "head": -0.9,
+     "upper": 0.18
+    }
+   }
+  }
+ ]
+}

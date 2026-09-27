@@ -1,0 +1,338 @@
+{
+ "char": "npc_pen_sailor",
+ "companion": null,
+ "npc": "npc_pen_sailor",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/grp_pen_3",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/sprite_pipe/out/npc/npc_pen_sailor/src/npc_pen_sailor_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 388.0,
+   "native_height_at_period": 48.5,
+   "scale_note": "描かれた格子のまま（48.5 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      33,
+      49
+     ],
+     "box": [
+      168,
+      72,
+      464,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.93
+    },
+    "walk_down_1": {
+     "size": [
+      34,
+      50
+     ],
+     "box": [
+      808,
+      64,
+      1112,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.96,
+     "scale": 0.883
+    },
+    "walk_down_2": {
+     "size": [
+      33,
+      49
+     ],
+     "box": [
+      1448,
+      72,
+      1744,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.0,
+     "scale": 1.0
+    },
+    "walk_up_0": {
+     "size": [
+      33,
+      49
+     ],
+     "box": [
+      168,
+      584,
+      464,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.97,
+     "scale": 1.0
+    },
+    "walk_up_1": {
+     "size": [
+      33,
+      49
+     ],
+     "box": [
+      808,
+      584,
+      1104,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.98,
+     "scale": 0.961
+    },
+    "walk_up_2": {
+     "size": [
+      33,
+      49
+     ],
+     "box": [
+      1448,
+      584,
+      1744,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.97,
+     "scale": 0.636,
+     "fixed": [
+      "rescaled 1.57"
+     ]
+    },
+    "walk_left_0": {
+     "size": [
+      27,
+      48
+     ],
+     "box": [
+      192,
+      1104,
+      440,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      29,
+      48
+     ],
+     "box": [
+      824,
+      1104,
+      1088,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    },
+    "walk_left_2": {
+     "size": [
+      26,
+      48
+     ],
+     "box": [
+      1480,
+      1104,
+      1720,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    },
+    "walk_right_0": {
+     "size": [
+      26,
+      48
+     ],
+     "box": [
+      200,
+      1616,
+      440,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      29,
+      48
+     ],
+     "box": [
+      824,
+      1616,
+      1088,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.065
+    },
+    "walk_right_2": {
+     "size": [
+      26,
+      48
+     ],
+     "box": [
+      1480,
+      1616,
+      1720,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "pair_half",
+   "msg": "npc_grp_pen_3.png の右半分（人物B）を使う",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_pen_sailor）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 2 番（下向き・右足前） の縮尺が少し違う（頭の大きさで約 88%）。並べて見て気になるなら描き直し",
+   "slot": "walk_down_1",
+   "ask": null,
+   "data": {
+    "scale": 0.8831168831168833,
+    "per_ref": [
+     1.0000000000000004,
+     0.6500000000000001,
+     0.8500000000000003
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 6 番（上向き・左足前） がほかのポーズより小さく描かれている（頭の大きさで約 64%）。仮に 157% に拡大縮小して使う",
+   "slot": "walk_up_2",
+   "ask": "船乗り（npc_pen_sailor）のシート1の6番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 64%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.6363636363636361,
+    "per_ref": [
+     0.6124999999999998,
+     0.925,
+     0.55
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 49 ドットあたり）: 首 0.34（アルン 0.29）・頭の幅 0.47（0.43）・肩 0.41（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.336734693877551,
+    "head_w": 0.46938775510204084,
+    "shoulder": 0.413265306122449,
+    "neck_clear": 0.6739130434782609
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 115%・頭の幅 110%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 1.099268747311571,
+    "neck": 1.1532010064299694
+   }
+  }
+ ]
+}

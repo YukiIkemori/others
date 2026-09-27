@@ -1,0 +1,21 @@
+01:08:51 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+01:09:47   half A (npc_traveler, target 48):
+01:09:48   pitch in raw image: 4.98 px per art pixel (upright median 239 px / 48)
+01:09:48   half B (npc_bard, target 47):
+01:09:48   pitch in raw image: 5.04 px per art pixel (upright median 237 px / 47)
+01:09:49 sheet 1 -> art_ref/gen/npc/grp_common_1/npc_grp_common_1.png (24 poses)
+01:09:49 pipeline: sheets.py ../art_ref/gen/npc/grp_common_1 --npc npc_traveler --out out/npc/npc_traveler --check
+01:10:38   |   - シート1: npc_grp_common_1.png の左半分（人物A）を使う
+01:10:38   |   - シート1: 頭身の比（歩き12コマの中央値、体 48 ドットあたり）: 首 0.27（アルン 0.29）・頭の幅 0.46（0.43）・肩 0.40（0.40）
+01:10:38   |   - 向きの見本（configs/refs/npc_traveler）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:10:38   | 
+01:10:38   | ■ シートの状態
+01:10:38   |   シート1 歩き: OK  npc_traveler_s1.png  ドット 8.00px → 描かれた格子のまま（47.5 ドット）
+01:10:38 pipeline: sheets.py ../art_ref/gen/npc/grp_common_1 --npc npc_bard --out out/npc/npc_bard --check
+01:11:20   |   「吟遊詩人（npc_bard）のシート1の4番（上向き・立ち）だけ大きく描かれている（頭の大きさがほかのポーズの約 137%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:11:20   |   「吟遊詩人（npc_bard）のシート1の5番（上向き・右足前）だけ大きく描かれている（頭の大きさがほかのポーズの約 136%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:11:20   |   「吟遊詩人（npc_bard）のシート1の6番（上向き・左足前）だけ大きく描かれている（頭の大きさがほかのポーズの約 136%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:11:20   | 
+01:11:20   | ■ シートの状態
+01:11:20   |   シート1 歩き: 要作り直し  npc_bard_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+01:11:20 sheet 1: 0 redo lines

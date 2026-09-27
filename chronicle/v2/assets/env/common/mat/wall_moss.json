@@ -1,0 +1,18 @@
+{
+ "id": "wall_moss",
+ "kind": "material",
+ "theme": "common",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "wall_moss@32.png",
+  "24": "wall_moss@24.png",
+  "40": "wall_moss@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/common/wall_moss.png",
+ "native_px": 7.0,
+ "colours": 40
+}

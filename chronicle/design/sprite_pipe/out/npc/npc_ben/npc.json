@@ -1,0 +1,48 @@
+{
+ "id": "ben",
+ "look": "npc_ben",
+ "name": "ベン",
+ "tier": "B",
+ "kind": "person",
+ "region": "forest",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 48
+ },
+ "measureH": {
+  "field": 50
+ },
+ "headgearExtraDots": 2,
+ "mainHex": "#8A5C30",
+ "mainHue": 28,
+ "mainName": "焦げた橙茶",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_ben_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.30208333333333337,
+   "head_w": 0.4583333333333333,
+   "shoulder": 0.390625,
+   "neck_clear": 0.6363636363636364
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

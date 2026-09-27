@@ -1,0 +1,18 @@
+{
+ "id": "wall_cave",
+ "kind": "material",
+ "theme": "common",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "wall_cave@32.png",
+  "24": "wall_cave@24.png",
+  "40": "wall_cave@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/common/wall_cave.png",
+ "native_px": 9.06,
+ "colours": 40
+}

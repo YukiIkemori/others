@@ -1,1 +1,102 @@
 00:50:30 sheet 1 attempt 1: generating 3584x1536 (pitch 8, quality medium, 1 refs)
+00:51:12   pitch in raw image: 8.22 px per art pixel (upright median 559 px / 68)
+00:51:13 sheet 1 -> art_ref/gen/companion/hagen/comp_hagen_s1.png (7 poses)
+00:51:20 sheet 2 attempt 1: generating 1920x2048 (pitch 8, quality medium, 2 refs)
+00:52:39   pitch in raw image: 8.25 px per art pixel (upright median 421 px / 51)
+00:52:39 sheet 2 -> art_ref/gen/companion/hagen/comp_hagen_s2.png (12 poses)
+00:52:39 sheet 3 attempt 1: generating 3648x1344 (pitch 7, quality medium, 2 refs)
+00:53:43   pitch in raw image: 7.00 px per art pixel (upright median 476 px / 68)
+00:53:44 sheet 3 -> art_ref/gen/companion/hagen/comp_hagen_s3.png (10 poses)
+00:53:44 sheet 4 attempt 1: generating 3360x1440 (pitch 6, quality medium, 2 refs)
+00:54:48   pitch in raw image: 5.51 px per art pixel (upright median 375 px / 68)
+00:54:48   note: thrust is 113x65 art px, larger than its cell 112x80 (clipped)
+00:54:48   note: smash is 50x86 art px, larger than its cell 112x80 (clipped)
+00:54:48 sheet 4 -> art_ref/gen/companion/hagen/comp_hagen_s4.png (15 poses)
+00:54:49 sheet 5 attempt 1: generating 1536x1536 (pitch 8, quality medium, 2 refs)
+00:56:10   pitch in raw image: 7.45 px per art pixel (upright median 596 px / 80)
+00:56:10 sheet 5 -> art_ref/gen/companion/hagen/comp_hagen_s5.png (4 poses)
+00:56:10 pipeline: sheets.py ../art_ref/gen/companion/hagen --companion hagen --out out/comp_hagen --check
+00:58:18   | ■ シートの状態
+00:58:18   |   シート1 設定画: OK  comp_hagen_s1.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+00:58:18   |   シート2 フィールドの歩き: OK  comp_hagen_s2.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+00:58:18   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_hagen_s3.png  ドット 8.00px → 描かれた格子のまま（64.5 ドット）
+00:58:18   |   シート4 戦闘の行動ポーズ＋武器なし版: 要作り直し  comp_hagen_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+00:58:18   |   シート5 顔の表情: OK  comp_hagen_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+00:58:19 sheet 3 fix1: edit hit,victory_b,glimmer (window rows 1-2 cols 1-5, 3648x1344, pitch 7, quality medium)
+00:58:51   calibrated pitch 6.88 px (requested 7; 7 reference poses)
+00:58:52   pasted: hit 98x87, victory_b 67x68, glimmer 80x76
+00:58:52 sheet 4 fix1: edit windup,evade (window rows 1-3 cols 1-5, 3360x1440, pitch 6, quality medium)
+00:59:29   calibrated pitch 5.90 px (requested 6; 12 reference poses)
+00:59:29   cells grown by 8 art px on top (now 112x88) so the pose fits
+00:59:29   pasted: windup 82x82, evade 73x67
+00:59:29 pipeline: sheets.py ../art_ref/gen/companion/hagen --companion hagen --out out/comp_hagen --check
+01:01:16   | ■ シートの状態
+01:01:16   |   シート1 設定画: OK  comp_hagen_s1.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:01:16   |   シート2 フィールドの歩き: OK  comp_hagen_s2.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:01:16   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_hagen_s3.png  ドット 8.00px → 描かれた格子のまま（69.0 ドット）
+01:01:16   |   シート4 戦闘の行動ポーズ＋武器なし版: 要作り直し  comp_hagen_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:01:16   |   シート5 顔の表情: OK  comp_hagen_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:01:16 round 1: 3 redo lines left 3:glimmer,hit 4:windup
+01:01:16 sheet 3 fix2: edit hit,glimmer (window rows 1-2 cols 1-5, 3648x1344, pitch 7, quality medium)
+01:01:55   calibrated pitch 6.88 px (requested 7; 8 reference poses)
+01:01:56   pasted: hit 86x65, glimmer 72x71
+01:01:56 sheet 4 fix2: edit windup (window rows 1-3 cols 1-5, 3360x1584, pitch 6, quality medium)
+01:02:36   calibrated pitch 5.97 px (requested 6; 12 reference poses)
+01:02:37   pasted: windup 65x65
+01:02:37 pipeline: sheets.py ../art_ref/gen/companion/hagen --companion hagen --out out/comp_hagen --check
+01:05:13   | ■ シートの状態
+01:05:13   |   シート1 設定画: OK  comp_hagen_s1.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:05:13   |   シート2 フィールドの歩き: OK  comp_hagen_s2.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:05:13   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_hagen_s3.png  ドット 8.00px → 描かれた格子のまま（69.0 ドット）
+01:05:13   |   シート4 戦闘の行動ポーズ＋武器なし版: 確認あり  comp_hagen_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:05:13   |   シート5 顔の表情: OK  comp_hagen_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:05:13 round 2: 2 redo lines left 3:glimmer,hit
+01:05:13 sheet 3 fix3: edit hit,glimmer (window rows 1-2 cols 1-5, 3648x1344, pitch 7, quality medium)
+01:05:53   calibrated pitch 6.90 px (requested 7; 8 reference poses)
+01:05:54   cells grown by 16 art px on top (now 104x112) so the pose fits
+01:05:55   pasted: hit 102x87, glimmer 103x97
+01:05:55 pipeline: sheets.py ../art_ref/gen/companion/hagen --companion hagen --out out/comp_hagen --check
+01:10:48   | ■ シートの状態
+01:10:48   |   シート1 設定画: OK  comp_hagen_s1.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:10:48   |   シート2 フィールドの歩き: OK  comp_hagen_s2.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:10:48   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_hagen_s3.png  ドット 8.00px → 描かれた格子のまま（69.0 ドット）
+01:10:48   |   シート4 戦闘の行動ポーズ＋武器なし版: 確認あり  comp_hagen_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:10:48   |   シート5 顔の表情: OK  comp_hagen_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:10:48 round 3: 3 redo lines left 3:glimmer,hit
+01:10:48 pipeline: sheets.py ../art_ref/gen/companion/hagen --companion hagen --out out/comp_hagen
+01:17:26   |   シート2 フィールドの歩き: OK  comp_hagen_s2.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:17:26   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_hagen_s3.png  ドット 8.00px → 描かれた格子のまま（69.0 ドット）
+01:17:26   |   シート4 戦闘の行動ポーズ＋武器なし版: 確認あり  comp_hagen_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:17:26   |   シート5 顔の表情: OK  comp_hagen_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:17:26   | 
+01:17:26   | packed field 120x224, battle 820x604, battle_bare 420x74, face 332x84 | palette 52 + face 48
+01:19:00 sheet 2: comp_hagen_s2.png exists (resume: skipped; --force to redraw)
+01:19:00 sheet 3: comp_hagen_s3.png exists (resume: skipped; --force to redraw)
+01:19:00 sheet 4: comp_hagen_s4.png exists (resume: skipped; --force to redraw)
+01:19:00 sheet 5: comp_hagen_s5.png exists (resume: skipped; --force to redraw)
+01:19:00 pipeline: sheets.py ../art_ref/gen/companion/hagen --companion hagen --out out/comp_hagen --check
+01:23:33   | ■ シートの状態
+01:23:33   |   シート1 設定画: OK  comp_hagen_s1.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:23:33   |   シート2 フィールドの歩き: OK  comp_hagen_s2.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:23:33   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_hagen_s3.png  ドット 8.00px → 描かれた格子のまま（64.5 ドット）
+01:23:33   |   シート4 戦闘の行動ポーズ＋武器なし版: 確認あり  comp_hagen_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:23:33   |   シート5 顔の表情: OK  comp_hagen_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:23:34   size check hit: 0.90 of the hero's same pose (relative to idle_a)
+01:23:34   sheet 3 hit: size redo line ignored (same size as the hero's pose)
+01:23:34   size check victory_b: 0.82 of the hero's same pose (relative to idle_a)
+01:23:35   size check glimmer: 0.84 of the hero's same pose (relative to idle_a)
+01:23:35 sheet 3: 3 edit rounds used; leave it for a person
+01:23:35 pipeline: sheets.py ../art_ref/gen/companion/hagen --companion hagen --out out/comp_hagen --check
+01:28:03   | ■ シートの状態
+01:28:03   |   シート1 設定画: OK  comp_hagen_s1.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:28:03   |   シート2 フィールドの歩き: OK  comp_hagen_s2.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:28:03   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_hagen_s3.png  ドット 8.00px → 描かれた格子のまま（64.5 ドット）
+01:28:03   |   シート4 戦闘の行動ポーズ＋武器なし版: 確認あり  comp_hagen_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:28:03   |   シート5 顔の表情: OK  comp_hagen_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:28:03 round 1: 3 redo lines left 3:glimmer,hit,victory_b
+01:28:05   size check hit: 0.90 of the hero's same pose (relative to idle_a)
+01:28:05   sheet 3 hit: size redo line ignored (same size as the hero's pose)
+01:28:07   size check victory_b: 0.82 of the hero's same pose (relative to idle_a)
+01:28:07   size check glimmer: 0.84 of the hero's same pose (relative to idle_a)
+01:28:07 redo lines left but no edit rounds left for them: 3
+01:28:07 pipeline: sheets.py ../art_ref/gen/companion/hagen --companion hagen --out out/comp_hagen

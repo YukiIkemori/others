@@ -1,0 +1,48 @@
+{
+ "id": "yura_elder",
+ "look": "npc_yura_elder",
+ "name": "ユラの長老",
+ "tier": "B",
+ "kind": "person",
+ "region": "forest",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 43
+ },
+ "measureH": {
+  "field": 46
+ },
+ "headgearExtraDots": 3,
+ "mainHex": "#5A6C4C",
+ "mainHue": 110,
+ "mainName": "灰緑",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_yura_elder_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.2906976744186046,
+   "head_w": 0.5813953488372093,
+   "shoulder": 0.6511627906976745,
+   "neck_clear": 0.94
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

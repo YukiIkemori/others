@@ -1,0 +1,802 @@
+{
+ "sheets": {
+  "1": {
+   "attempts": [
+    {
+     "raw": "raw/s1_a1.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "",
+     "t": "2026-09-27T01:02:40"
+    },
+    {
+     "raw": "raw/s1_a2.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "- PROPORTIONS WRONG: the head is too small / the figure too slender. Use exactly the hero's proportions from the template: about 2.7 heads tall, big head (a third of the body height), short sturdy body, low centre of gravity. (ラシード（npc_rashid）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さ 75%・頭の幅 89%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して)",
+     "t": "2026-09-27T01:05:16"
+    },
+    {
+     "kind": "edit",
+     "slots": [
+      "act_surprise"
+     ],
+     "images": 4,
+     "t": "2026-09-27T01:15:34"
+    }
+   ],
+   "frames": {
+    "act_nod": {
+     "row": 1,
+     "column": 4,
+     "logical_bbox": [
+      34,
+      56
+     ],
+     "air": 0
+    },
+    "walk_down_0": {
+     "row": 1,
+     "column": 1,
+     "logical_bbox": [
+      35,
+      54
+     ],
+     "air": 0
+    },
+    "walk_down_2": {
+     "row": 1,
+     "column": 3,
+     "logical_bbox": [
+      37,
+      55
+     ],
+     "air": 0
+    },
+    "walk_down_1": {
+     "row": 1,
+     "column": 2,
+     "logical_bbox": [
+      37,
+      54
+     ],
+     "air": 0
+    },
+    "act_surprise": {
+     "row": 2,
+     "column": 4,
+     "logical_bbox": [
+      45,
+      55
+     ],
+     "air": 0
+    },
+    "walk_up_1": {
+     "row": 2,
+     "column": 2,
+     "logical_bbox": [
+      37,
+      55
+     ],
+     "air": 0
+    },
+    "walk_up_0": {
+     "row": 2,
+     "column": 1,
+     "logical_bbox": [
+      36,
+      54
+     ],
+     "air": 0
+    },
+    "walk_up_2": {
+     "row": 2,
+     "column": 3,
+     "logical_bbox": [
+      37,
+      54
+     ],
+     "air": 0
+    },
+    "walk_left_0": {
+     "row": 3,
+     "column": 1,
+     "logical_bbox": [
+      27,
+      54
+     ],
+     "air": 0
+    },
+    "walk_left_1": {
+     "row": 3,
+     "column": 2,
+     "logical_bbox": [
+      35,
+      54
+     ],
+     "air": 0
+    },
+    "walk_left_2": {
+     "row": 3,
+     "column": 3,
+     "logical_bbox": [
+      33,
+      53
+     ],
+     "air": 0
+    },
+    "act_call": {
+     "row": 3,
+     "column": 4,
+     "logical_bbox": [
+      40,
+      53
+     ],
+     "air": 0
+    },
+    "act_sig": {
+     "row": 4,
+     "column": 4,
+     "logical_bbox": [
+      43,
+      56
+     ],
+     "air": 0
+    },
+    "walk_right_0": {
+     "row": 4,
+     "column": 1,
+     "logical_bbox": [
+      29,
+      54
+     ],
+     "air": 0
+    },
+    "walk_right_2": {
+     "row": 4,
+     "column": 3,
+     "logical_bbox": [
+      33,
+      54
+     ],
+     "air": 0
+    },
+    "walk_right_1": {
+     "row": 4,
+     "column": 2,
+     "logical_bbox": [
+      34,
+      53
+     ],
+     "air": 0
+    }
+   },
+   "notes": [],
+   "pitch": 5.944,
+   "from_raw": "raw/s1_a2.png",
+   "redo_left": [],
+   "takes": [
+    {
+     "file": "raw/s1_take1.png",
+     "score": 3,
+     "frames": {
+      "walk_down_1": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        34,
+        57
+       ],
+       "air": 0
+      },
+      "walk_down_2": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        34,
+        57
+       ],
+       "air": 0
+      },
+      "act_nod": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        30,
+        55
+       ],
+       "air": 0
+      },
+      "walk_down_0": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        32,
+        55
+       ],
+       "air": 0
+      },
+      "act_surprise": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        41,
+        57
+       ],
+       "air": 0
+      },
+      "walk_up_1": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        33,
+        57
+       ],
+       "air": 0
+      },
+      "walk_up_2": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        33,
+        57
+       ],
+       "air": 0
+      },
+      "walk_up_0": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        30,
+        55
+       ],
+       "air": 0
+      },
+      "walk_left_0": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        26,
+        54
+       ],
+       "air": 0
+      },
+      "walk_left_1": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        33,
+        54
+       ],
+       "air": 0
+      },
+      "walk_left_2": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        32,
+        54
+       ],
+       "air": 0
+      },
+      "act_call": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        34,
+        54
+       ],
+       "air": 0
+      },
+      "walk_right_0": {
+       "row": 4,
+       "column": 1,
+       "logical_bbox": [
+        25,
+        55
+       ],
+       "air": 0
+      },
+      "walk_right_1": {
+       "row": 4,
+       "column": 2,
+       "logical_bbox": [
+        34,
+        55
+       ],
+       "air": 0
+      },
+      "walk_right_2": {
+       "row": 4,
+       "column": 3,
+       "logical_bbox": [
+        33,
+        55
+       ],
+       "air": 0
+      },
+      "act_sig": {
+       "row": 4,
+       "column": 4,
+       "logical_bbox": [
+        29,
+        56
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s1_a1.png",
+     "cell": [
+      80,
+      64
+     ]
+    },
+    {
+     "file": "raw/s1_take2.png",
+     "score": 1,
+     "frames": {
+      "act_nod": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        34,
+        56
+       ],
+       "air": 0
+      },
+      "walk_down_0": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        35,
+        54
+       ],
+       "air": 0
+      },
+      "walk_down_2": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        37,
+        55
+       ],
+       "air": 0
+      },
+      "walk_down_1": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        37,
+        54
+       ],
+       "air": 0
+      },
+      "act_surprise": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        45,
+        55
+       ],
+       "air": 0
+      },
+      "walk_up_1": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        37,
+        55
+       ],
+       "air": 0
+      },
+      "walk_up_0": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        36,
+        54
+       ],
+       "air": 0
+      },
+      "walk_up_2": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        37,
+        54
+       ],
+       "air": 0
+      },
+      "walk_left_0": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        27,
+        54
+       ],
+       "air": 0
+      },
+      "walk_left_1": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        35,
+        54
+       ],
+       "air": 0
+      },
+      "walk_left_2": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        33,
+        53
+       ],
+       "air": 0
+      },
+      "act_call": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        40,
+        53
+       ],
+       "air": 0
+      },
+      "act_sig": {
+       "row": 4,
+       "column": 4,
+       "logical_bbox": [
+        43,
+        56
+       ],
+       "air": 0
+      },
+      "walk_right_0": {
+       "row": 4,
+       "column": 1,
+       "logical_bbox": [
+        29,
+        54
+       ],
+       "air": 0
+      },
+      "walk_right_2": {
+       "row": 4,
+       "column": 3,
+       "logical_bbox": [
+        33,
+        54
+       ],
+       "air": 0
+      },
+      "walk_right_1": {
+       "row": 4,
+       "column": 2,
+       "logical_bbox": [
+        34,
+        53
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s1_a2.png",
+     "cell": [
+      80,
+      64
+     ]
+    },
+    {
+     "file": "raw/s1_take3.png",
+     "score": 1,
+     "frames": {
+      "act_nod": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        34,
+        56
+       ],
+       "air": 0
+      },
+      "walk_down_0": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        35,
+        54
+       ],
+       "air": 0
+      },
+      "walk_down_2": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        37,
+        55
+       ],
+       "air": 0
+      },
+      "walk_down_1": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        37,
+        54
+       ],
+       "air": 0
+      },
+      "act_surprise": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        45,
+        55
+       ],
+       "air": 0
+      },
+      "walk_up_1": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        37,
+        55
+       ],
+       "air": 0
+      },
+      "walk_up_0": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        36,
+        54
+       ],
+       "air": 0
+      },
+      "walk_up_2": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        37,
+        54
+       ],
+       "air": 0
+      },
+      "walk_left_0": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        27,
+        54
+       ],
+       "air": 0
+      },
+      "walk_left_1": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        35,
+        54
+       ],
+       "air": 0
+      },
+      "walk_left_2": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        33,
+        53
+       ],
+       "air": 0
+      },
+      "act_call": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        40,
+        53
+       ],
+       "air": 0
+      },
+      "act_sig": {
+       "row": 4,
+       "column": 4,
+       "logical_bbox": [
+        43,
+        56
+       ],
+       "air": 0
+      },
+      "walk_right_0": {
+       "row": 4,
+       "column": 1,
+       "logical_bbox": [
+        29,
+        54
+       ],
+       "air": 0
+      },
+      "walk_right_2": {
+       "row": 4,
+       "column": 3,
+       "logical_bbox": [
+        33,
+        54
+       ],
+       "air": 0
+      },
+      "walk_right_1": {
+       "row": 4,
+       "column": 2,
+       "logical_bbox": [
+        34,
+        53
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s1_a2.png",
+     "cell": [
+      80,
+      64
+     ]
+    },
+    {
+     "file": "raw/s1_take4.png",
+     "score": 0,
+     "frames": {
+      "act_nod": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        34,
+        56
+       ],
+       "air": 0
+      },
+      "walk_down_0": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        35,
+        54
+       ],
+       "air": 0
+      },
+      "walk_down_2": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        37,
+        55
+       ],
+       "air": 0
+      },
+      "walk_down_1": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        37,
+        54
+       ],
+       "air": 0
+      },
+      "act_surprise": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        45,
+        55
+       ],
+       "air": 0
+      },
+      "walk_up_1": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        37,
+        55
+       ],
+       "air": 0
+      },
+      "walk_up_0": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        36,
+        54
+       ],
+       "air": 0
+      },
+      "walk_up_2": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        37,
+        54
+       ],
+       "air": 0
+      },
+      "walk_left_0": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        27,
+        54
+       ],
+       "air": 0
+      },
+      "walk_left_1": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        35,
+        54
+       ],
+       "air": 0
+      },
+      "walk_left_2": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        33,
+        53
+       ],
+       "air": 0
+      },
+      "act_call": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        40,
+        53
+       ],
+       "air": 0
+      },
+      "act_sig": {
+       "row": 4,
+       "column": 4,
+       "logical_bbox": [
+        43,
+        56
+       ],
+       "air": 0
+      },
+      "walk_right_0": {
+       "row": 4,
+       "column": 1,
+       "logical_bbox": [
+        29,
+        54
+       ],
+       "air": 0
+      },
+      "walk_right_2": {
+       "row": 4,
+       "column": 3,
+       "logical_bbox": [
+        33,
+        54
+       ],
+       "air": 0
+      },
+      "walk_right_1": {
+       "row": 4,
+       "column": 2,
+       "logical_bbox": [
+        34,
+        53
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s1_a2.png",
+     "cell": [
+      80,
+      64
+     ]
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,509 @@
+[
+ {
+  "sheet": 1,
+  "file": "comp_dokka_s1.png",
+  "layout": "2x4",
+  "logical_cell": [
+   112,
+   96
+  ],
+  "image_px": [
+   3584,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "ref_front",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     56,
+     52
+    ]
+   },
+   {
+    "id": "ref_34",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     55,
+     52
+    ]
+   },
+   {
+    "id": "ref_side_left",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     34,
+     52
+    ]
+   },
+   {
+    "id": "ref_back",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     57,
+     52
+    ]
+   },
+   {
+    "id": "ref_idle_left",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     49,
+     65
+    ]
+   },
+   {
+    "id": "ref_face",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     60,
+     61
+    ]
+   },
+   {
+    "id": "ref_palette",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     65,
+     32
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 2,
+  "file": "comp_dokka_s2.png",
+  "layout": "4x3",
+  "logical_cell": [
+   80,
+   64
+  ],
+  "image_px": [
+   1920,
+   2048
+  ],
+  "frames": [
+   {
+    "id": "walk_down_0",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     33,
+     39
+    ]
+   },
+   {
+    "id": "walk_down_1",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     34,
+     39
+    ]
+   },
+   {
+    "id": "walk_down_2",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     34,
+     40
+    ]
+   },
+   {
+    "id": "walk_up_0",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     33,
+     39
+    ]
+   },
+   {
+    "id": "walk_up_1",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     33,
+     39
+    ]
+   },
+   {
+    "id": "walk_up_2",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     33,
+     39
+    ]
+   },
+   {
+    "id": "walk_left_0",
+    "row": 3,
+    "column": 1,
+    "logical_bbox": [
+     23,
+     37
+    ]
+   },
+   {
+    "id": "walk_left_1",
+    "row": 3,
+    "column": 2,
+    "logical_bbox": [
+     28,
+     38
+    ]
+   },
+   {
+    "id": "walk_left_2",
+    "row": 3,
+    "column": 3,
+    "logical_bbox": [
+     28,
+     37
+    ]
+   },
+   {
+    "id": "walk_right_0",
+    "row": 4,
+    "column": 1,
+    "logical_bbox": [
+     23,
+     38
+    ]
+   },
+   {
+    "id": "walk_right_1",
+    "row": 4,
+    "column": 2,
+    "logical_bbox": [
+     30,
+     38
+    ]
+   },
+   {
+    "id": "walk_right_2",
+    "row": 4,
+    "column": 3,
+    "logical_bbox": [
+     28,
+     38
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 3,
+  "file": "comp_dokka_s3.png",
+  "layout": "2x5",
+  "logical_cell": [
+   104,
+   96
+  ],
+  "image_px": [
+   4160,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "idle_a",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     44,
+     56
+    ]
+   },
+   {
+    "id": "idle_b",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     44,
+     53
+    ]
+   },
+   {
+    "id": "step",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     70,
+     44
+    ]
+   },
+   {
+    "id": "guard",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     60,
+     49
+    ]
+   },
+   {
+    "id": "hit",
+    "row": 1,
+    "column": 5,
+    "logical_bbox": [
+     59,
+     53
+    ]
+   },
+   {
+    "id": "weak",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     49,
+     44
+    ]
+   },
+   {
+    "id": "ko",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     80,
+     27
+    ]
+   },
+   {
+    "id": "victory_a",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     39,
+     69
+    ]
+   },
+   {
+    "id": "victory_b",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     40,
+     51
+    ]
+   },
+   {
+    "id": "glimmer",
+    "row": 2,
+    "column": 5,
+    "logical_bbox": [
+     42,
+     49
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 4,
+  "file": "comp_dokka_s4.png",
+  "layout": "3x5",
+  "logical_cell": [
+   112,
+   80
+  ],
+  "image_px": [
+   4480,
+   1920
+  ],
+  "frames": [
+   {
+    "id": "windup",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     47,
+     66
+    ]
+   },
+   {
+    "id": "slash",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     70,
+     57
+    ]
+   },
+   {
+    "id": "thrust_ready",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     69,
+     50
+    ]
+   },
+   {
+    "id": "thrust",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     77,
+     50
+    ]
+   },
+   {
+    "id": "charge",
+    "row": 1,
+    "column": 5,
+    "logical_bbox": [
+     61,
+     40
+    ]
+   },
+   {
+    "id": "smash",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     43,
+     61
+    ]
+   },
+   {
+    "id": "cast_a",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     56,
+     52
+    ]
+   },
+   {
+    "id": "cast_b",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     49,
+     56
+    ]
+   },
+   {
+    "id": "item",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     51,
+     52
+    ]
+   },
+   {
+    "id": "evade",
+    "row": 2,
+    "column": 5,
+    "logical_bbox": [
+     39,
+     52
+    ]
+   },
+   {
+    "id": "bare_idle",
+    "row": 3,
+    "column": 1,
+    "logical_bbox": [
+     43,
+     51
+    ]
+   },
+   {
+    "id": "bare_windup",
+    "row": 3,
+    "column": 2,
+    "logical_bbox": [
+     48,
+     51
+    ]
+   },
+   {
+    "id": "bare_slash",
+    "row": 3,
+    "column": 3,
+    "logical_bbox": [
+     54,
+     51
+    ]
+   },
+   {
+    "id": "bare_thrust",
+    "row": 3,
+    "column": 4,
+    "logical_bbox": [
+     56,
+     51
+    ]
+   },
+   {
+    "id": "bare_cast",
+    "row": 3,
+    "column": 5,
+    "logical_bbox": [
+     54,
+     51
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 5,
+  "file": "comp_dokka_s5.png",
+  "layout": "1x4",
+  "logical_cell": [
+   96,
+   96
+  ],
+  "image_px": [
+   3072,
+   768
+  ],
+  "frames": [
+   {
+    "id": "face_neutral",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     90,
+     79
+    ]
+   },
+   {
+    "id": "face_smile",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     90,
+     80
+    ]
+   },
+   {
+    "id": "face_surprise",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     90,
+     80
+    ]
+   },
+   {
+    "id": "face_pain",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     90,
+     80
+    ]
+   }
+  ]
+ }
+]

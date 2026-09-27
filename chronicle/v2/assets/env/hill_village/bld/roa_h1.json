@@ -1,0 +1,148 @@
+{
+ "id": "roa_h1",
+ "kind": "building",
+ "theme": "hill_village",
+ "footprint": [
+  6,
+  6
+ ],
+ "wall": 2,
+ "files": {
+  "24": "roa_h1@24.png",
+  "32": "roa_h1@32.png",
+  "40": "roa_h1@40.png"
+ },
+ "emitFiles": {
+  "24": "roa_h1_emit@24.png",
+  "32": "roa_h1_emit@32.png",
+  "40": "roa_h1_emit@40.png"
+ },
+ "size": {
+  "24": [
+   156,
+   168
+  ],
+  "32": [
+   208,
+   224
+  ],
+  "40": [
+   260,
+   280
+  ]
+ },
+ "anchor32": [
+  8,
+  224
+ ],
+ "door32": null,
+ "emit32": [
+  {
+   "kind": "win",
+   "x": -4,
+   "y": -201,
+   "w": 194,
+   "h": 61
+  },
+  {
+   "kind": "win",
+   "x": 165,
+   "y": -200,
+   "w": 28,
+   "h": 13
+  },
+  {
+   "kind": "win",
+   "x": 174,
+   "y": -182,
+   "w": 16,
+   "h": 8
+  },
+  {
+   "kind": "win",
+   "x": 103,
+   "y": -155,
+   "w": 91,
+   "h": 15
+  },
+  {
+   "kind": "win",
+   "x": 90,
+   "y": -150,
+   "w": 9,
+   "h": 7
+  },
+  {
+   "kind": "win",
+   "x": 85,
+   "y": -136,
+   "w": 11,
+   "h": 1
+  },
+  {
+   "kind": "win",
+   "x": 142,
+   "y": -136,
+   "w": 8,
+   "h": 1
+  },
+  {
+   "kind": "win",
+   "x": -4,
+   "y": -131,
+   "w": 201,
+   "h": 66
+  },
+  {
+   "kind": "win",
+   "x": 176,
+   "y": -128,
+   "w": 21,
+   "h": 12
+  },
+  {
+   "kind": "win",
+   "x": 113,
+   "y": -66,
+   "w": 2,
+   "h": 5
+  },
+  {
+   "kind": "win",
+   "x": 51,
+   "y": -38,
+   "w": 9,
+   "h": 10
+  },
+  {
+   "kind": "win",
+   "x": 132,
+   "y": -38,
+   "w": 9,
+   "h": 10
+  }
+ ],
+ "roof32": [
+  -6,
+  -196,
+  198,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/hill_village/roa_h1.png",
+ "def_": {
+  "type": "building",
+  "id": "roa_h1",
+  "x": 5,
+  "y": 4,
+  "w": 6,
+  "h": 6,
+  "wall": 2,
+  "roof": "thatch",
+  "mat": "plaster",
+  "windows": 2,
+  "lamp": true,
+  "flowers": true,
+  "chimney": true
+ }
+}

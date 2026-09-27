@@ -31,3 +31,35 @@
 00:48:42   |   シート2 演技12（下向き）: なし（必須）
 00:48:42   |   シート3 顔6: なし（必須）
 00:48:42 sheet 1: 1 redo lines: 頭の高さがアルンより大きい（117%）
+00:59:38   pitch in raw image: 6.00 px per art pixel (upright median 282 px / 47)
+00:59:39 sheet 1 -> art_ref/gen/npc/noa/npc_noa_s1.png (12 poses)
+00:59:39 pipeline: sheets.py ../art_ref/gen/npc/noa --npc noa --out out/npc/noa --check
+00:59:52   |   「ノア（noa）のシート3（顔6）を作って」
+00:59:52   | 
+00:59:52   | ■ シートの状態
+00:59:52   |   シート1 歩き: 確認あり  npc_noa_s1.png  ドット 8.00px → 描かれた格子のまま（46.5 ドット）
+00:59:52   |   シート2 演技12（下向き）: なし（必須）
+00:59:52   |   シート3 顔6: なし（必須）
+01:00:20 sheet 1 approved by eye
+01:09:04 sheet 2 attempt 1: edit of the Arun template 2304x1152 (pitch 6, quality medium, 3 refs)
+01:10:21   pitch in raw image: 5.96 px per art pixel (upright median 280 px / 47)
+01:10:22 sheet 2 -> art_ref/gen/npc/noa/npc_noa_s2.png (12 poses)
+01:10:22 pipeline: sheets.py ../art_ref/gen/npc/noa --npc noa --out out/npc/noa --check
+01:11:50   |   「ノア（noa）のシート3（顔6）を作って」
+01:11:50   | 
+01:11:50   | ■ シートの状態
+01:11:50   |   シート1 歩き: 確認あり  npc_noa_s1.png  ドット 8.00px → 描かれた格子のまま（46.5 ドット）
+01:11:50   |   シート2 演技12（下向き）: OK  npc_noa_s2.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+01:11:50   |   シート3 顔6: なし（必須）
+01:11:50 sheet 2: 0 redo lines
+01:11:50 sheet 3 attempt 1: edit of the Arun template 1728x1152 (pitch 6, quality medium, 3 refs)
+01:13:17   pitch in raw image: 5.94 px per art pixel (upright median 475 px / 80)
+01:13:19 sheet 3 -> art_ref/gen/npc/noa/npc_noa_s3.png (6 poses)
+01:13:19 pipeline: sheets.py ../art_ref/gen/npc/noa --npc noa --out out/npc/noa --check
+01:15:39   |   - 向きの見本（configs/refs/noa）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:15:39   | 
+01:15:39   | ■ シートの状態
+01:15:39   |   シート1 歩き: 確認あり  npc_noa_s1.png  ドット 8.00px → 描かれた格子のまま（46.5 ドット）
+01:15:39   |   シート2 演技12（下向き）: OK  npc_noa_s2.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+01:15:39   |   シート3 顔6: OK  npc_noa_s3.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:15:39 sheet 3: 0 redo lines

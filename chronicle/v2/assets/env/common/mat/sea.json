@@ -1,0 +1,18 @@
+{
+ "id": "sea",
+ "kind": "material",
+ "theme": "common",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "sea@32.png",
+  "24": "sea@24.png",
+  "40": "sea@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/common/sea.png",
+ "native_px": 10.52,
+ "colours": 40
+}

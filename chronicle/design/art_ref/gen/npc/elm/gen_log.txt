@@ -1,0 +1,52 @@
+00:52:57 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+00:53:49   pitch in raw image: 5.31 px per art pixel (upright median 308 px / 58)
+00:53:50 sheet 1 -> art_ref/gen/npc/elm/npc_elm_s1.png (16 poses)
+00:53:50 pipeline: sheets.py ../art_ref/gen/npc/elm --npc elm --out out/npc/elm --check
+00:54:24   |   「エルム（elm）のシート1の6番（上向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 77%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+00:54:24   |   「エルム（elm）のシート1の7番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+00:54:24   |   「エルム（elm）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さが約 63%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して」
+00:54:24   | 
+00:54:24   | ■ シートの状態
+00:54:24   |   シート1 歩き＋演技4: 要作り直し  npc_elm_s1.png  ドット 8.00px → 描かれた格子のまま（61.0 ドット）
+00:54:24 sheet 1: 1 redo lines: 頭の高さがアルンより小さい（63%）。頭が小さく、頭身が高すぎる
+00:54:25 sheet 1 attempt 2: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs) + notes
+00:55:16   pitch in raw image: 5.21 px per art pixel (upright median 302 px / 58)
+00:55:17   note: act_nod is 41x65 art px, larger than its cell 80x64 (clipped)
+00:55:17   note: walk_down_0 is 39x63 art px, larger than its cell 80x64 (clipped)
+00:55:17   note: walk_down_1 is 39x63 art px, larger than its cell 80x64 (clipped)
+00:55:17   note: walk_down_2 is 40x63 art px, larger than its cell 80x64 (clipped)
+00:55:17 sheet 1 -> art_ref/gen/npc/elm/npc_elm_s1.png (16 poses)
+00:55:17 pipeline: sheets.py ../art_ref/gen/npc/elm --npc elm --out out/npc/elm --check
+00:55:41   |   「エルム（elm）のシート1の6番（上向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 76%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+00:55:41   |   「エルム（elm）のシート1の7番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 76%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+00:55:41   |   「エルム（elm）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さが約 76%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して」
+00:55:41   | 
+00:55:41   | ■ シートの状態
+00:55:41   |   シート1 歩き＋演技4: 要作り直し  npc_elm_s1.png  ドット 8.00px → 描かれた格子のまま（61.0 ドット）
+00:55:41 sheet 1: 2 redo lines: シート1 の 4 番（うなずく） が画像の端で切れている / 頭の高さがアルンより小さい（76%）。頭が小さく、頭身が高すぎる
+00:55:41 sheet 1 attempt 3: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs) + notes
+00:56:37   pitch in raw image: 5.29 px per art pixel (upright median 307 px / 58)
+00:56:37 sheet 1 -> art_ref/gen/npc/elm/npc_elm_s1.png (16 poses)
+00:56:37 pipeline: sheets.py ../art_ref/gen/npc/elm --npc elm --out out/npc/elm --check
+00:57:32   | ■ 画像 AI にそのまま送れる文
+00:57:32   |   「エルム（elm）のシート1の2番（下向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 72%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+00:57:32   |   「エルム（elm）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さが約 82%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して」
+00:57:32   | 
+00:57:32   | ■ シートの状態
+00:57:32   |   シート1 歩き＋演技4: 要作り直し  npc_elm_s1.png  ドット 8.00px → 描かれた格子のまま（60.0 ドット）
+00:57:32 sheet 1: 1 redo lines: 頭の高さがアルンより小さい（82%）。頭が小さく、頭身が高すぎる
+01:01:55 pipeline: sheets.py ../art_ref/gen/npc/elm --npc elm --out out/npc/elm --check
+01:02:20   | 
+01:02:20   | ■ 画像 AI にそのまま送れる文
+01:02:20   |   「エルム（elm）のシート1の2番（下向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 72%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:02:20   | 
+01:02:20   | ■ シートの状態
+01:02:20   |   シート1 歩き＋演技4: 要作り直し  npc_elm_s1.png  ドット 8.00px → 描かれた格子のまま（60.0 ドット）
+01:18:04 pipeline: sheets.py ../art_ref/gen/npc/elm --npc elm --out out/npc/elm
+01:19:38   |   「エルム（elm）のシート1の2番（下向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 72%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:19:38   | 
+01:19:38   | ■ シートの状態
+01:19:38   |   シート1 歩き＋演技4: 要作り直し  npc_elm_s1.png  ドット 8.00px → 描かれた格子のまま（60.0 ドット）
+01:19:38   | 
+01:19:38   | packed field 244x352 | palette 52 + face 0
+01:19:40 to_v2 elm: elm → /home/user/others/chronicle/v2/assets/sprites/elm |   field: 16 frames

@@ -9,3 +9,11 @@
 00:46:33   | ■ シートの状態
 00:46:33   |   シート1 歩き＋演技4: 要作り直し  npc_gord_s1.png  ドット 8.00px → 描かれた格子のまま（50.0 ドット）
 00:46:33 sheet 1: 0 redo lines
+01:04:43 pipeline: sheets.py ../art_ref/gen/npc/gord --npc gord --out out/npc/npc_gord
+01:05:16   |   「ゴード（npc_gord）のシート1の8番（驚く）だけ小さく描かれている（頭の大きさがほかのポーズの約 69%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:05:16   | 
+01:05:16   | ■ シートの状態
+01:05:16   |   シート1 歩き＋演技4: 要作り直し  npc_gord_s1.png  ドット 8.00px → 描かれた格子のまま（50.0 ドット）
+01:05:16   | 
+01:05:16   | packed field 220x308 | palette 52 + face 0
+01:05:17 to_v2 npc_gord: npc_gord → /home/user/others/chronicle/v2/assets/sprites/npc_gord |   field: 16 frames

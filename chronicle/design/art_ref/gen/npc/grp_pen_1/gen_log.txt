@@ -1,0 +1,21 @@
+01:01:41 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+01:02:31   half A (npc_pen_man, target 48):
+01:02:31   pitch in raw image: 5.02 px per art pixel (upright median 241 px / 48)
+01:02:31   half B (npc_pen_woman, target 46):
+01:02:31   pitch in raw image: 4.89 px per art pixel (upright median 225 px / 46)
+01:02:32 sheet 1 -> art_ref/gen/npc/grp_pen_1/npc_grp_pen_1.png (24 poses)
+01:02:32 pipeline: sheets.py ../art_ref/gen/npc/grp_pen_1 --npc npc_pen_man --out out/npc/npc_pen_man --check
+01:02:49   | 
+01:02:49   | ■ 画像 AI にそのまま送れる文
+01:02:49   |   「港の男（npc_pen_man）のシート1の4番（上向き・立ち）だけ大きく描かれている（頭の大きさがほかのポーズの約 132%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:02:49   | 
+01:02:49   | ■ シートの状態
+01:02:49   |   シート1 歩き: 要作り直し  npc_pen_man_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+01:02:49 pipeline: sheets.py ../art_ref/gen/npc/grp_pen_1 --npc npc_pen_woman --out out/npc/npc_pen_woman --check
+01:03:11   |   - シート1: npc_grp_pen_1.png の右半分（人物B）を使う
+01:03:11   |   - シート1: 頭身の比（歩き12コマの中央値、体 46 ドットあたり）: 首 0.30（アルン 0.29）・頭の幅 0.43（0.43）・肩 0.39（0.40）
+01:03:11   |   - 向きの見本（configs/refs/npc_pen_woman）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:03:11   | 
+01:03:11   | ■ シートの状態
+01:03:11   |   シート1 歩き: OK  npc_pen_woman_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+01:03:11 sheet 1: 0 redo lines

@@ -323,7 +323,8 @@ def generate(prompt, imgs, W, H, quality, tag):
     if used + 1 > npc_cap():
         raise gen_api.GenError('NPC image cap reached (%d / %d); stop and report' % (used, npc_cap()))
     # the shared GEN_IMAGE_CAP counts every tool's images; the NPC task has its own cap (above)
-    os.environ['GEN_IMAGE_CAP'] = str(gen_api.images_used() + 10)
+    # (several NPC processes and other tools run at once: leave room for their images in flight)
+    os.environ['GEN_IMAGE_CAP'] = str(gen_api.images_used() + (npc_cap() - used) + 50)
     # (no input_fidelity: the image tool behind the model rejects that parameter)
     return gen_api.generate(prompt, imgs, size='%dx%d' % (W, H), quality=quality, background='opaque', tag=tag)
 
@@ -762,7 +763,7 @@ def cmd_batch(a):
                 print('exported', export(uid), flush=True)
         except gen_api.GenError as e:
             print('STOP: %s' % e, flush=True)
-            if 'credit_balance' in str(e) or 'insufficient_quota' in str(e) or 'cap reached' in str(e):
+            if 'credit_balance' in str(e) or 'insufficient_quota' in str(e) or 'NPC image cap' in str(e):
                 raise
         except Exception as e:           # one bad unit does not stop the batch
             print('ERROR %s: %s: %s' % (uid, type(e).__name__, e), flush=True)

@@ -1,0 +1,11 @@
+01:16:54 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:17:51   pitch in raw image: 5.63 px per art pixel (upright median 293 px / 52)
+01:17:52 sheet 1 -> art_ref/gen/npc/jorn/npc_jorn_s1.png (16 poses)
+01:17:52 pipeline: sheets.py ../art_ref/gen/npc/jorn --npc jorn --out out/npc/npc_jorn --check
+01:18:56   | 
+01:18:56   | ■ 画像 AI にそのまま送れる文
+01:18:56   |   「ヨルン（npc_jorn）のシート1の16番（その人のしぐさ）だけ大きく描かれている（頭の大きさがほかのポーズの約 137%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:18:56   | 
+01:18:56   | ■ シートの状態
+01:18:56   |   シート1 歩き＋演技4: 要作り直し  npc_jorn_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+01:18:56 sheet 1: 0 redo lines

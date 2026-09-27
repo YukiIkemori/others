@@ -1,0 +1,11 @@
+01:04:25 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:05:25   pitch in raw image: 6.00 px per art pixel (upright median 276 px / 46)
+01:05:27 sheet 1 -> art_ref/gen/npc/emma/npc_emma_s1.png (16 poses)
+01:05:27 pipeline: sheets.py ../art_ref/gen/npc/emma --npc emma --out out/npc/npc_emma --check
+01:06:55   |   「エマ（npc_emma）のシート1の2番（下向き・右足前）だけ大きく描かれている（頭の大きさがほかのポーズの約 150%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:06:55   |   「エマ（npc_emma）のシート1の3番（下向き・左足前）だけ大きく描かれている（頭の大きさがほかのポーズの約 148%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:06:55   |   「エマ（npc_emma）のシート1の12番（手を挙げて呼びかける）だけ大きく描かれている（頭の大きさがほかのポーズの約 141%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:06:55   | 
+01:06:55   | ■ シートの状態
+01:06:55   |   シート1 歩き＋演技4: 要作り直し  npc_emma_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+01:06:55 sheet 1: 0 redo lines

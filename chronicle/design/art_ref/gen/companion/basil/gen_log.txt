@@ -1,0 +1,42 @@
+01:02:29 sheet 1 attempt 1: generating 3584x1536 (pitch 8, quality medium, 1 refs)
+01:03:11   pitch in raw image: 7.59 px per art pixel (upright median 516 px / 68)
+01:03:12 sheet 1 -> art_ref/gen/companion/basil/comp_basil_s1.png (7 poses)
+01:03:21 sheet 2 attempt 1: generating 1920x2048 (pitch 8, quality medium, 2 refs)
+01:04:52   pitch in raw image: 8.33 px per art pixel (upright median 425 px / 51)
+01:04:53 sheet 2 -> art_ref/gen/companion/basil/comp_basil_s2.png (12 poses)
+01:04:53 sheet 3 attempt 1: generating 3648x1344 (pitch 7, quality medium, 2 refs)
+01:06:01   pitch in raw image: 6.34 px per art pixel (upright median 431 px / 68)
+01:06:02 sheet 3 -> art_ref/gen/companion/basil/comp_basil_s3.png (10 poses)
+01:06:05 sheet 4 attempt 1: generating 3360x1440 (pitch 6, quality medium, 2 refs)
+01:07:54   pitch in raw image: 5.19 px per art pixel (upright median 353 px / 68)
+01:07:56   note: windup is 60x83 art px, larger than its cell 112x80 (clipped)
+01:07:56   note: smash is 50x88 art px, larger than its cell 112x80 (clipped)
+01:07:56 sheet 4 -> art_ref/gen/companion/basil/comp_basil_s4.png (15 poses)
+01:07:57 sheet 5 attempt 1: generating 1536x1536 (pitch 8, quality medium, 2 refs)
+01:09:46   pitch in raw image: 7.64 px per art pixel (upright median 611 px / 80)
+01:09:47 sheet 5 -> art_ref/gen/companion/basil/comp_basil_s5.png (4 poses)
+01:09:47 pipeline: sheets.py ../art_ref/gen/companion/basil --companion basil --out out/comp_basil --check
+01:14:37   | ■ シートの状態
+01:14:37   |   シート1 設定画: OK  comp_basil_s1.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:14:37   |   シート2 フィールドの歩き: 確認あり  comp_basil_s2.png  ドット 8.00px → 描かれた格子のまま（50.0 ドット）
+01:14:37   |   シート3 戦闘の基本ポーズ: 確認あり  comp_basil_s3.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:14:37   |   シート4 戦闘の行動ポーズ＋武器なし版: 要作り直し  comp_basil_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:14:37   |   シート5 顔の表情: OK  comp_basil_s5.png  ドット 8.00px → 描かれた格子のまま（79.5 ドット）
+01:14:38 sheet 4 fix1: edit windup (window rows 1-3 cols 1-5, 3360x1440, pitch 6, quality medium)
+01:15:22   calibrated pitch 6.05 px (requested 6; 12 reference poses)
+01:15:25   pasted: windup 51x76
+01:15:25 pipeline: sheets.py ../art_ref/gen/companion/basil --companion basil --out out/comp_basil --check
+01:19:17   | ■ シートの状態
+01:19:17   |   シート1 設定画: OK  comp_basil_s1.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:19:17   |   シート2 フィールドの歩き: 確認あり  comp_basil_s2.png  ドット 8.00px → 描かれた格子のまま（50.0 ドット）
+01:19:17   |   シート3 戦闘の基本ポーズ: 確認あり  comp_basil_s3.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:19:17   |   シート4 戦闘の行動ポーズ＋武器なし版: 確認あり  comp_basil_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:19:17   |   シート5 顔の表情: OK  comp_basil_s5.png  ドット 8.00px → 描かれた格子のまま（79.5 ドット）
+01:19:17 round 1: 0 redo lines left 
+01:19:17 pipeline: sheets.py ../art_ref/gen/companion/basil --companion basil --out out/comp_basil
+01:25:35   |   シート2 フィールドの歩き: 確認あり  comp_basil_s2.png  ドット 8.00px → 描かれた格子のまま（50.0 ドット）
+01:25:35   |   シート3 戦闘の基本ポーズ: 確認あり  comp_basil_s3.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:25:35   |   シート4 戦闘の行動ポーズ＋武器なし版: 確認あり  comp_basil_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:25:35   |   シート5 顔の表情: OK  comp_basil_s5.png  ドット 8.00px → 描かれた格子のまま（79.5 ドット）
+01:25:35   | 
+01:25:35   | packed field 132x228, battle 765x384, battle_bare 415x72, face 348x84 | palette 51 + face 48

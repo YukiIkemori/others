@@ -1,0 +1,4 @@
+01:05:35 sheet 1 attempt 1: generating 3584x1536 (pitch 8, quality medium, 1 refs)
+01:06:22   pitch in raw image: 7.54 px per art pixel (upright median 543 px / 72)
+01:06:24 sheet 1 -> art_ref/gen/companion/shigure/comp_shigure_s1.png (7 poses)
+01:29:18 sheet 2 attempt 1: generating 1920x2048 (pitch 8, quality medium, 2 refs)

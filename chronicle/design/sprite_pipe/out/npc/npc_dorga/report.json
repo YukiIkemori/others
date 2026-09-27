@@ -1,0 +1,373 @@
+{
+ "char": "npc_dorga",
+ "companion": null,
+ "npc": "npc_dorga",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/dorga",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/dorga/npc_dorga_s1.png",
+   "size": [
+    2560,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x4",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 424.0,
+   "native_height_at_period": 53.0,
+   "scale_note": "描かれた格子のまま（53.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      35,
+      52
+     ],
+     "box": [
+      160,
+      48,
+      472,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.96
+    },
+    "walk_down_1": {
+     "size": [
+      37,
+      53
+     ],
+     "box": [
+      792,
+      40,
+      1120,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.4,
+     "scale": 1.0
+    },
+    "walk_down_2": {
+     "size": [
+      36,
+      53
+     ],
+     "box": [
+      1440,
+      40,
+      1760,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.28,
+     "scale": 1.048
+    },
+    "act_nod": {
+     "size": [
+      37,
+      53
+     ],
+     "box": [
+      2072,
+      40,
+      2400,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.45,
+     "scale": 1.133
+    },
+    "walk_up_0": {
+     "size": [
+      37,
+      52
+     ],
+     "box": [
+      152,
+      560,
+      480,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.07,
+     "scale": 1.0
+    },
+    "walk_up_1": {
+     "size": [
+      39,
+      52
+     ],
+     "box": [
+      784,
+      560,
+      1128,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.86,
+     "scale": 1.0
+    },
+    "walk_up_2": {
+     "size": [
+      37,
+      52
+     ],
+     "box": [
+      1432,
+      560,
+      1760,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.87,
+     "scale": 1.036
+    },
+    "act_surprise": {
+     "size": [
+      42,
+      54
+     ],
+     "box": [
+      2056,
+      544,
+      2424,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.86,
+     "scale": 1.0
+    },
+    "walk_left_0": {
+     "size": [
+      27,
+      52
+     ],
+     "box": [
+      192,
+      1072,
+      440,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      32,
+      52
+     ],
+     "box": [
+      816,
+      1072,
+      1104,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.964
+    },
+    "walk_left_2": {
+     "size": [
+      34,
+      52
+     ],
+     "box": [
+      1448,
+      1072,
+      1752,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.94
+    },
+    "act_call": {
+     "size": [
+      38,
+      53
+     ],
+     "box": [
+      2072,
+      1064,
+      2408,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.13,
+     "scale": 1.0
+    },
+    "walk_right_0": {
+     "size": [
+      27,
+      53
+     ],
+     "box": [
+      192,
+      1576,
+      440,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      31,
+      53
+     ],
+     "box": [
+      816,
+      1576,
+      1096,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.94
+    },
+    "walk_right_2": {
+     "size": [
+      33,
+      53
+     ],
+     "box": [
+      1448,
+      1576,
+      1744,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.94
+    },
+    "act_sig": {
+     "size": [
+      34,
+      55
+     ],
+     "box": [
+      2088,
+      1560,
+      2392,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.99,
+     "scale": 1.0
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_dorga）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 4 番（うなずく） の縮尺が少し違う（頭の大きさで約 113%）。並べて見て気になるなら描き直し",
+   "slot": "act_nod",
+   "ask": null,
+   "data": {
+    "scale": 1.1325301204819276,
+    "per_ref": [
+     1.2000000000000006,
+     1.0875000000000004,
+     1.1750000000000003
+    ],
+    "group_median": 1.0375000000000003
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 53 ドットあたり）: 首 0.19（アルン 0.29）・頭の幅 0.35（0.43）・肩 0.42（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.18867924528301888,
+    "head_w": 0.3490566037735849,
+    "shoulder": 0.42452830188679247,
+    "neck_clear": 0.9511904761904761
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ （首が見えない）・頭の幅 82%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 0.8174627723034775,
+    "neck": null
+   }
+  }
+ ]
+}

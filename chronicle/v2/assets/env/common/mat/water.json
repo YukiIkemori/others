@@ -1,0 +1,18 @@
+{
+ "id": "water",
+ "kind": "material",
+ "theme": "common",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "water@32.png",
+  "24": "water@24.png",
+  "40": "water@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/common/water.png",
+ "native_px": 11.3,
+ "colours": 40
+}

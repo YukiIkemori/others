@@ -1,0 +1,356 @@
+{
+ "char": "npc_zaid",
+ "companion": null,
+ "npc": "npc_zaid",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/zaid",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/zaid/npc_zaid_s1.png",
+   "size": [
+    2560,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x4",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 424.0,
+   "native_height_at_period": 53.0,
+   "scale_note": "描かれた格子のまま（53.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      28,
+      54
+     ],
+     "box": [
+      192,
+      32,
+      448,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.75
+    },
+    "walk_down_1": {
+     "size": [
+      30,
+      54
+     ],
+     "box": [
+      824,
+      32,
+      1096,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.7,
+     "scale": 1.0
+    },
+    "walk_down_2": {
+     "size": [
+      33,
+      54
+     ],
+     "box": [
+      1448,
+      32,
+      1744,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.73,
+     "scale": 1.0
+    },
+    "act_nod": {
+     "size": [
+      32,
+      53
+     ],
+     "box": [
+      2096,
+      40,
+      2384,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.37,
+     "scale": 1.037
+    },
+    "walk_up_0": {
+     "size": [
+      29,
+      53
+     ],
+     "box": [
+      184,
+      552,
+      448,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.95,
+     "scale": 1.037
+    },
+    "walk_up_1": {
+     "size": [
+      33,
+      53
+     ],
+     "box": [
+      808,
+      552,
+      1104,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.84,
+     "scale": 1.037
+    },
+    "walk_up_2": {
+     "size": [
+      33,
+      53
+     ],
+     "box": [
+      1448,
+      552,
+      1744,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.93,
+     "scale": 1.037
+    },
+    "act_surprise": {
+     "size": [
+      48,
+      54
+     ],
+     "box": [
+      2032,
+      544,
+      2448,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.81,
+     "scale": 0.912
+    },
+    "walk_left_0": {
+     "size": [
+      26,
+      51
+     ],
+     "box": [
+      200,
+      1080,
+      440,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      32,
+      50
+     ],
+     "box": [
+      816,
+      1088,
+      1104,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.962
+    },
+    "walk_left_2": {
+     "size": [
+      34,
+      51
+     ],
+     "box": [
+      1448,
+      1080,
+      1752,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.962
+    },
+    "act_call": {
+     "size": [
+      33,
+      53
+     ],
+     "box": [
+      2088,
+      1064,
+      2384,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.11,
+     "scale": 0.912
+    },
+    "walk_right_0": {
+     "size": [
+      25,
+      52
+     ],
+     "box": [
+      200,
+      1584,
+      432,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.36,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.86
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      35,
+      52
+     ],
+     "box": [
+      800,
+      1584,
+      1112,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_2": {
+     "size": [
+      36,
+      51
+     ],
+     "box": [
+      1440,
+      1592,
+      1760,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "act_sig": {
+     "size": [
+      34,
+      52
+     ],
+     "box": [
+      2088,
+      1584,
+      2392,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.32,
+     "scale": 0.912
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_zaid）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 49 ドットあたり）: 首 0.22（アルン 0.29）・頭の幅 0.41（0.43）・肩 0.37（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.22448979591836735,
+    "head_w": 0.40816326530612246,
+    "shoulder": 0.3673469387755102,
+    "neck_clear": 0.825
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 77%・頭の幅 96%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 0.9558858672274531,
+    "neck": 0.7688006709533128
+   }
+  }
+ ]
+}

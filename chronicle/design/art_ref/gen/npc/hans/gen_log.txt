@@ -9,3 +9,11 @@
 00:50:10   | ■ シートの状態
 00:50:10   |   シート1 歩き＋演技4: 確認あり  npc_hans_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
 00:50:10 sheet 1: 0 redo lines
+01:07:04 pipeline: sheets.py ../art_ref/gen/npc/hans --npc hans --out out/npc/npc_hans
+01:08:32   |   - 向きの見本（configs/refs/npc_hans）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:08:32   | 
+01:08:32   | ■ シートの状態
+01:08:32   |   シート1 歩き＋演技4: 確認あり  npc_hans_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+01:08:32   | 
+01:08:32   | packed field 184x224 | palette 52 + face 0
+01:08:35 to_v2 npc_hans: npc_hans → /home/user/others/chronicle/v2/assets/sprites/npc_hans |   field: 16 frames

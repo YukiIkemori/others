@@ -9,3 +9,11 @@
 00:48:49   | ■ シートの状態
 00:48:49   |   シート1 歩き＋演技4: 要作り直し  npc_katri_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
 00:48:49 sheet 1: 0 redo lines
+01:05:17 pipeline: sheets.py ../art_ref/gen/npc/katri --npc katri --out out/npc/npc_pim_mother
+01:05:54   |   「カトリ（npc_pim_mother）のシート1の12番（手を挙げて呼びかける）だけ小さく描かれている（頭の大きさがほかのポーズの約 72%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:05:54   | 
+01:05:54   | ■ シートの状態
+01:05:54   |   シート1 歩き＋演技4: 要作り直し  npc_katri_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+01:05:54   | 
+01:05:54   | packed field 172x280 | palette 52 + face 0
+01:05:56 to_v2 npc_pim_mother: npc_pim_mother → /home/user/others/chronicle/v2/assets/sprites/npc_pim_mother |   field: 16 frames

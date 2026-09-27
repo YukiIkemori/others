@@ -1,0 +1,43 @@
+01:01:41 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:02:40   pitch in raw image: 5.83 px per art pixel (upright median 315 px / 54)
+01:02:41 sheet 1 -> art_ref/gen/npc/rashid/npc_rashid_s1.png (16 poses)
+01:02:41 pipeline: sheets.py ../art_ref/gen/npc/rashid --npc rashid --out out/npc/npc_rashid --check
+01:03:59   |   「ラシード（npc_rashid）のシート1の14番（右向き・前の足）だけ大きく描かれている（頭の大きさがほかのポーズの約 123%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:03:59   |   「ラシード（npc_rashid）のシート1の15番（右向き・後ろの足）だけ大きく描かれている（頭の大きさがほかのポーズの約 123%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:03:59   |   「ラシード（npc_rashid）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さ 75%・頭の幅 89%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して」
+01:03:59   | 
+01:03:59   | ■ シートの状態
+01:03:59   |   シート1 歩き＋演技4: 要作り直し  npc_rashid_s1.png  ドット 8.00px → 描かれた格子のまま（55.0 ドット）
+01:03:59 sheet 1: 1 redo lines: 頭がアルンより小さい（頭の高さ 75%・頭の幅 89%）。頭身が高すぎる
+01:04:00 sheet 1 attempt 2: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs) + notes
+01:05:16   pitch in raw image: 5.94 px per art pixel (upright median 321 px / 54)
+01:05:17 sheet 1 -> art_ref/gen/npc/rashid/npc_rashid_s1.png (16 poses)
+01:05:17 pipeline: sheets.py ../art_ref/gen/npc/rashid --npc rashid --out out/npc/npc_rashid --check
+01:06:46   |   「ラシード（npc_rashid）のシート1の5番（上向き・立ち）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:06:46   |   「ラシード（npc_rashid）のシート1の6番（上向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:06:46   |   「ラシード（npc_rashid）のシート1の7番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:06:46   | 
+01:06:46   | ■ シートの状態
+01:06:46   |   シート1 歩き＋演技4: 要作り直し  npc_rashid_s1.png  ドット 8.00px → 描かれた格子のまま（54.0 ドット）
+01:06:46 sheet 1: 1 redo lines: シート1 の 8 番（驚く） が上（奥）を向いて見える（下（手前）のはず。点数 -0.7）
+01:06:46 sheet 1 fix3: edit act_surprise (window rows 2-3 cols 1-4, 2560x1024, pitch 8, quality medium)
+01:13:25 sheet 1: npc_rashid_s1.png exists (resume)
+01:13:25 pipeline: sheets.py ../art_ref/gen/npc/rashid --npc rashid --out out/npc/npc_rashid --check
+01:14:58   |   「ラシード（npc_rashid）のシート1の5番（上向き・立ち）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:14:58   |   「ラシード（npc_rashid）のシート1の6番（上向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:14:58   |   「ラシード（npc_rashid）のシート1の7番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:14:58   | 
+01:14:58   | ■ シートの状態
+01:14:58   |   シート1 歩き＋演技4: 要作り直し  npc_rashid_s1.png  ドット 8.00px → 描かれた格子のまま（54.0 ドット）
+01:14:58 sheet 1: 1 redo lines: シート1 の 8 番（驚く） が上（奥）を向いて見える（下（手前）のはず。点数 -0.7）
+01:14:58 sheet 1 fix3: edit act_surprise (window rows 2-3 cols 1-4, 2560x1024, pitch 8, quality medium)
+01:15:31   calibrated pitch 7.95 px (requested 8; 7 reference poses)
+01:15:34   pasted: act_surprise 47x55
+01:15:34 pipeline: sheets.py ../art_ref/gen/npc/rashid --npc rashid --out out/npc/npc_rashid --check
+01:16:53   |   「ラシード（npc_rashid）のシート1の5番（上向き・立ち）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:16:53   |   「ラシード（npc_rashid）のシート1の6番（上向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:16:53   |   「ラシード（npc_rashid）のシート1の7番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:16:53   | 
+01:16:53   | ■ シートの状態
+01:16:53   |   シート1 歩き＋演技4: 要作り直し  npc_rashid_s1.png  ドット 8.00px → 描かれた格子のまま（54.0 ドット）
+01:16:53 sheet 1: 0 redo lines

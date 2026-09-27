@@ -1,0 +1,21 @@
+01:18:47 sheet 1 attempt 1: generation 2400x1280 (pitch 5, quality medium, 2 refs)
+01:19:46   half A (ani_cat, target 14):
+01:19:47   pitch in raw image: 14.43 px per art pixel (upright median 202 px / 14)
+01:19:47   half B (ani_dog, target 22):
+01:19:48   pitch in raw image: 7.27 px per art pixel (upright median 160 px / 22)
+01:19:49 sheet 1 -> art_ref/gen/npc/grp_animal_1/npc_grp_animal_1.png (24 poses)
+01:19:49 pipeline: sheets.py ../art_ref/gen/npc/grp_animal_1 --npc ani_cat --out out/npc/ani_cat --check
+01:20:16   | ■ メモ（2 件）
+01:20:16   |   - シート1: npc_grp_animal_1.png の左半分（人物A）を使う
+01:20:16   |   - 向きの見本（configs/refs/ani_cat）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:20:16   | 
+01:20:16   | ■ シートの状態
+01:20:16   |   シート1 歩き: OK  ani_cat_s1.png  ドット 8.00px → 描かれた格子のまま（13.0 ドット）
+01:20:16 pipeline: sheets.py ../art_ref/gen/npc/grp_animal_1 --npc ani_dog --out out/npc/ani_dog --check
+01:21:09   | ■ メモ（2 件）
+01:21:09   |   - シート1: npc_grp_animal_1.png の右半分（人物B）を使う
+01:21:09   |   - 向きの見本（configs/refs/ani_dog）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:21:09   | 
+01:21:09   | ■ シートの状態
+01:21:09   |   シート1 歩き: 確認あり  ani_dog_s1.png  ドット 8.00px → 描かれた格子のまま（22.0 ドット）
+01:21:09 sheet 1: 0 redo lines

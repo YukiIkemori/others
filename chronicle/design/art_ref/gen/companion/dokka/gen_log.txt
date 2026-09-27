@@ -1,0 +1,56 @@
+01:01:28 sheet 1 attempt 1: generating 3584x1536 (pitch 8, quality medium, 1 refs)
+01:02:14   pitch in raw image: 9.35 px per art pixel (upright median 486 px / 52)
+01:02:15 sheet 1 -> art_ref/gen/companion/dokka/comp_dokka_s1.png (7 poses)
+01:02:29 sheet 2 attempt 1: generating 1920x2048 (pitch 8, quality medium, 2 refs)
+01:03:54   pitch in raw image: 9.13 px per art pixel (upright median 356 px / 39)
+01:03:55 sheet 2 -> art_ref/gen/companion/dokka/comp_dokka_s2.png (12 poses)
+01:03:56 sheet 3 attempt 1: generating 3648x1344 (pitch 7, quality medium, 2 refs)
+01:05:19   pitch in raw image: 8.65 px per art pixel (upright median 450 px / 52)
+01:05:19 sheet 3 -> art_ref/gen/companion/dokka/comp_dokka_s3.png (10 poses)
+01:05:20 sheet 4 attempt 1: generating 3360x1440 (pitch 6, quality medium, 2 refs)
+01:06:38   pitch in raw image: 6.63 px per art pixel (upright median 345 px / 52)
+01:06:39 sheet 4 -> art_ref/gen/companion/dokka/comp_dokka_s4.png (15 poses)
+01:06:40 sheet 5 attempt 1: generating 1536x1536 (pitch 8, quality medium, 2 refs)
+01:08:25   pitch in raw image: 7.01 px per art pixel (upright median 561 px / 80)
+01:08:26 sheet 5 -> art_ref/gen/companion/dokka/comp_dokka_s5.png (4 poses)
+01:08:26 pipeline: sheets.py ../art_ref/gen/companion/dokka --companion dokka --out out/comp_dokka --check
+01:12:21   | ■ シートの状態
+01:12:21   |   シート1 設定画: OK  comp_dokka_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+01:12:21   |   シート2 フィールドの歩き: OK  comp_dokka_s2.png  ドット 8.00px → 描かれた格子のまま（38.5 ドット）
+01:12:21   |   シート3 戦闘の基本ポーズ: 確認あり  comp_dokka_s3.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:12:21   |   シート4 戦闘の行動ポーズ＋武器なし版: 要作り直し  comp_dokka_s4.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+01:12:21   |   シート5 顔の表情: OK  comp_dokka_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:12:22 sheet 4 fix1: edit windup (window rows 1-3 cols 1-5, 3360x1440, pitch 6, quality medium)
+01:13:01   calibrated pitch 6.00 px (requested 6; 12 reference poses)
+01:13:03   pasted: windup 48x68
+01:13:03 pipeline: sheets.py ../art_ref/gen/companion/dokka --companion dokka --out out/comp_dokka --check
+01:17:09   | ■ シートの状態
+01:17:09   |   シート1 設定画: OK  comp_dokka_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+01:17:09   |   シート2 フィールドの歩き: OK  comp_dokka_s2.png  ドット 8.00px → 描かれた格子のまま（38.5 ドット）
+01:17:09   |   シート3 戦闘の基本ポーズ: 確認あり  comp_dokka_s3.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:17:09   |   シート4 戦闘の行動ポーズ＋武器なし版: 要作り直し  comp_dokka_s4.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+01:17:09   |   シート5 顔の表情: OK  comp_dokka_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:17:09 round 1: 1 redo lines left 4:windup
+01:17:09 sheet 4 fix2: edit windup (window rows 1-3 cols 1-5, 3360x1440, pitch 6, quality medium)
+01:17:46   calibrated pitch 6.00 px (requested 6; 12 reference poses)
+01:17:48   pasted: windup 53x68
+01:17:48 pipeline: sheets.py ../art_ref/gen/companion/dokka --companion dokka --out out/comp_dokka --check
+01:21:45   | ■ シートの状態
+01:21:45   |   シート1 設定画: OK  comp_dokka_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+01:21:45   |   シート2 フィールドの歩き: OK  comp_dokka_s2.png  ドット 8.00px → 描かれた格子のまま（38.5 ドット）
+01:21:45   |   シート3 戦闘の基本ポーズ: 確認あり  comp_dokka_s3.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:21:45   |   シート4 戦闘の行動ポーズ＋武器なし版: 要作り直し  comp_dokka_s4.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+01:21:45   |   シート5 顔の表情: OK  comp_dokka_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:21:45 round 2: 1 redo lines left 4:windup
+01:21:46 sheet 4 fix3: edit windup (window rows 1-3 cols 1-5, 3360x1440, pitch 6, quality medium)
+01:22:21   calibrated pitch 6.02 px (requested 6; 12 reference poses)
+01:22:23   pasted: windup 54x68
+01:22:23 pipeline: sheets.py ../art_ref/gen/companion/dokka --companion dokka --out out/comp_dokka --check
+01:26:25   | ■ シートの状態
+01:26:25   |   シート1 設定画: OK  comp_dokka_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+01:26:25   |   シート2 フィールドの歩き: OK  comp_dokka_s2.png  ドット 8.00px → 描かれた格子のまま（38.5 ドット）
+01:26:25   |   シート3 戦闘の基本ポーズ: 確認あり  comp_dokka_s3.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:26:25   |   シート4 戦闘の行動ポーズ＋武器なし版: 要作り直し  comp_dokka_s4.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+01:26:25   |   シート5 顔の表情: OK  comp_dokka_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:26:25 round 3: 1 redo lines left 4:windup
+01:26:25 pipeline: sheets.py ../art_ref/gen/companion/dokka --companion dokka --out out/comp_dokka

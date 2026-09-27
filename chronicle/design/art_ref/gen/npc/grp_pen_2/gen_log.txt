@@ -1,0 +1,21 @@
+01:03:11 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+01:03:59   half A (npc_pen_old_m, target 45):
+01:04:00   pitch in raw image: 4.91 px per art pixel (upright median 221 px / 45)
+01:04:00   half B (npc_pen_old_f, target 43):
+01:04:00   pitch in raw image: 4.88 px per art pixel (upright median 210 px / 43)
+01:04:01 sheet 1 -> art_ref/gen/npc/grp_pen_2/npc_grp_pen_2.png (24 poses)
+01:04:01 pipeline: sheets.py ../art_ref/gen/npc/grp_pen_2 --npc npc_pen_old_m --out out/npc/npc_pen_old_m --check
+01:04:29   |   - シート1: npc_grp_pen_2.png の左半分（人物A）を使う
+01:04:29   |   - シート1: 頭身の比（歩き12コマの中央値、体 45 ドットあたり）: 首 0.33（アルン 0.29）・頭の幅 0.40（0.43）・肩 0.43（0.40）
+01:04:29   |   - 向きの見本（configs/refs/npc_pen_old_m）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:04:29   | 
+01:04:29   | ■ シートの状態
+01:04:29   |   シート1 歩き: 確認あり  npc_pen_old_m_s1.png  ドット 8.00px → 描かれた格子のまま（44.5 ドット）
+01:04:29 pipeline: sheets.py ../art_ref/gen/npc/grp_pen_2 --npc npc_pen_old_f --out out/npc/npc_pen_old_f --check
+01:04:48   |   - シート1: npc_grp_pen_2.png の右半分（人物B）を使う
+01:04:48   |   - シート1: 頭身の比（歩き12コマの中央値、体 43 ドットあたり）: 首 0.27（アルン 0.29）・頭の幅 0.51（0.43）・肩 0.49（0.40）
+01:04:48   |   - 向きの見本（configs/refs/npc_pen_old_f）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:04:48   | 
+01:04:48   | ■ シートの状態
+01:04:48   |   シート1 歩き: 確認あり  npc_pen_old_f_s1.png  ドット 8.00px → 描かれた格子のまま（42.5 ドット）
+01:04:48 sheet 1: 0 redo lines

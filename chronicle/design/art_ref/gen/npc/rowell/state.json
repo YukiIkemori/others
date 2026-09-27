@@ -8,6 +8,20 @@
      "kind": "full",
      "extra": "",
      "t": "2026-09-27T00:49:44"
+    },
+    {
+     "raw": "raw/s1_a2.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "- A pose has the wrong size: every pose keeps the same body scale (same head size) as the others. (ロウェル（rowell）のシート1の4番（上向き・立ち）だけ小さく描かれている（頭の大きさがほかのポーズの約 71%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して)\n- A pose has the wrong size: every pose keeps the same body scale (same head size) as the others. (ロウェル（rowell）のシート1の5番（上向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 83%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して)\n- A pose has the wrong size",
+     "t": "2026-09-27T00:50:54"
+    },
+    {
+     "raw": "raw/s1_a3.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "- PROPORTIONS WRONG: the head is too small / the figure too slender. Use exactly the hero's proportions from the template: about 2.7 heads tall, big head (a third of the body height), short sturdy body, low centre of gravity. (ロウェル（rowell）のシート1の人物の頭がアルンより大きすぎる（頭の高さが約 116%）。アルンの歩きと同じ頭の大きさにして、同じ条件で描き直して)",
+     "t": "2026-09-27T00:52:10"
     }
    ],
    "frames": {
@@ -15,7 +29,7 @@
      "row": 1,
      "column": 1,
      "logical_bbox": [
-      28,
+      27,
       52
      ],
      "air": 0
@@ -25,7 +39,7 @@
      "column": 2,
      "logical_bbox": [
       29,
-      52
+      51
      ],
      "air": 0
     },
@@ -42,8 +56,8 @@
      "row": 2,
      "column": 1,
      "logical_bbox": [
-      30,
-      50
+      28,
+      51
      ],
      "air": 0
     },
@@ -51,8 +65,8 @@
      "row": 2,
      "column": 2,
      "logical_bbox": [
-      29,
-      50
+      28,
+      52
      ],
      "air": 0
     },
@@ -60,8 +74,8 @@
      "row": 2,
      "column": 3,
      "logical_bbox": [
-      29,
-      50
+      28,
+      51
      ],
      "air": 0
     },
@@ -69,8 +83,8 @@
      "row": 3,
      "column": 1,
      "logical_bbox": [
-      25,
-      50
+      22,
+      49
      ],
      "air": 0
     },
@@ -78,8 +92,8 @@
      "row": 3,
      "column": 2,
      "logical_bbox": [
-      31,
-      50
+      29,
+      49
      ],
      "air": 0
     },
@@ -87,7 +101,7 @@
      "row": 3,
      "column": 3,
      "logical_bbox": [
-      29,
+      30,
       49
      ],
      "air": 0
@@ -97,7 +111,7 @@
      "column": 1,
      "logical_bbox": [
       25,
-      50
+      49
      ],
      "air": 0
     },
@@ -105,8 +119,8 @@
      "row": 4,
      "column": 2,
      "logical_bbox": [
-      31,
-      50
+      29,
+      49
      ],
      "air": 0
     },
@@ -114,35 +128,400 @@
      "row": 4,
      "column": 3,
      "logical_bbox": [
-      31,
-      50
+      28,
+      49
      ],
      "air": 0
     }
    },
    "notes": [],
-   "pitch": 6.0,
-   "from_raw": "raw/s1_a1.png",
-   "redo_left": [
+   "pitch": 6.14,
+   "from_raw": "raw/s1_a2.png",
+   "redo_left": [],
+   "chosen_by_eye": "a2",
+   "approved": "2026-09-27T01:00:20"
+  },
+  "2": {
+   "attempts": [
     {
-     "code": "scale",
-     "slot": "walk_up_0",
-     "msg": "シート1 の 4 番（上向き・立ち） がほかのポーズより小さく描かれている（頭の大きさで約 71%）。仮に 140% に拡大縮小して使う"
+     "raw": "raw/s2_a1.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "",
+     "t": "2026-09-27T01:05:15"
+    }
+   ],
+   "frames": {
+    "act_nod": {
+     "row": 1,
+     "column": 1,
+     "logical_bbox": [
+      26,
+      51
+     ],
+     "air": 0
     },
-    {
-     "code": "scale",
-     "slot": "walk_up_1",
-     "msg": "シート1 の 5 番（上向き・右足前） がほかのポーズより小さく描かれている（頭の大きさで約 83%）。仮に 120% に拡大縮小して使う"
+    "act_surprise": {
+     "row": 1,
+     "column": 2,
+     "logical_bbox": [
+      38,
+      50
+     ],
+     "air": 0
     },
-    {
-     "code": "scale",
-     "slot": "walk_up_2",
-     "msg": "シート1 の 6 番（上向き・左足前） がほかのポーズより小さく描かれている（頭の大きさで約 78%）。仮に 128% に拡大縮小して使う"
+    "act_think": {
+     "row": 1,
+     "column": 3,
+     "logical_bbox": [
+      25,
+      50
+     ],
+     "air": 0
     },
+    "act_bow": {
+     "row": 1,
+     "column": 4,
+     "logical_bbox": [
+      29,
+      47
+     ],
+     "air": 0
+    },
+    "act_look": {
+     "row": 2,
+     "column": 4,
+     "logical_bbox": [
+      26,
+      50
+     ],
+     "air": 0
+    },
+    "act_call": {
+     "row": 2,
+     "column": 3,
+     "logical_bbox": [
+      29,
+      50
+     ],
+     "air": 0
+    },
+    "act_kneel": {
+     "row": 2,
+     "column": 1,
+     "logical_bbox": [
+      38,
+      41
+     ],
+     "air": 0
+    },
+    "act_sit": {
+     "row": 2,
+     "column": 2,
+     "logical_bbox": [
+      42,
+      39
+     ],
+     "air": 0
+    },
+    "act_resolve": {
+     "row": 3,
+     "column": 3,
+     "logical_bbox": [
+      25,
+      50
+     ],
+     "air": 0
+    },
+    "act_sig": {
+     "row": 3,
+     "column": 2,
+     "logical_bbox": [
+      51,
+      48
+     ],
+     "air": 0
+    },
+    "act_sad": {
+     "row": 3,
+     "column": 4,
+     "logical_bbox": [
+      29,
+      47
+     ],
+     "air": 0
+    },
+    "act_lie": {
+     "row": 3,
+     "column": 1,
+     "logical_bbox": [
+      73,
+      30
+     ],
+     "air": 0
+    }
+   },
+   "notes": [],
+   "pitch": 6.2,
+   "from_raw": "raw/s2_a1.png",
+   "redo_left": [],
+   "takes": [
     {
-     "code": "proportion",
-     "slot": "walk_down_0",
-     "msg": "頭の高さがアルンより大きい（130%）"
+     "file": "raw/s2_take1.png",
+     "score": 0,
+     "frames": {
+      "act_nod": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        26,
+        51
+       ],
+       "air": 0
+      },
+      "act_surprise": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        38,
+        50
+       ],
+       "air": 0
+      },
+      "act_think": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        25,
+        50
+       ],
+       "air": 0
+      },
+      "act_bow": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        29,
+        47
+       ],
+       "air": 0
+      },
+      "act_look": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        26,
+        50
+       ],
+       "air": 0
+      },
+      "act_call": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        29,
+        50
+       ],
+       "air": 0
+      },
+      "act_kneel": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        38,
+        41
+       ],
+       "air": 0
+      },
+      "act_sit": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        42,
+        39
+       ],
+       "air": 0
+      },
+      "act_resolve": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        25,
+        50
+       ],
+       "air": 0
+      },
+      "act_sig": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        51,
+        48
+       ],
+       "air": 0
+      },
+      "act_sad": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        29,
+        47
+       ],
+       "air": 0
+      },
+      "act_lie": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        73,
+        30
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s2_a1.png",
+     "cell": [
+      96,
+      64
+     ]
+    }
+   ]
+  },
+  "3": {
+   "attempts": [
+    {
+     "raw": "raw/s3_a1.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "",
+     "t": "2026-09-27T01:07:13"
+    }
+   ],
+   "frames": {
+    "face_neutral": {
+     "row": 1,
+     "column": 1,
+     "logical_bbox": [
+      65,
+      80
+     ],
+     "air": 0
+    },
+    "face_smile": {
+     "row": 1,
+     "column": 2,
+     "logical_bbox": [
+      65,
+      80
+     ],
+     "air": 0
+    },
+    "face_sad": {
+     "row": 1,
+     "column": 3,
+     "logical_bbox": [
+      65,
+      80
+     ],
+     "air": 0
+    },
+    "face_angry": {
+     "row": 2,
+     "column": 1,
+     "logical_bbox": [
+      65,
+      80
+     ],
+     "air": 0
+    },
+    "face_surprise": {
+     "row": 2,
+     "column": 2,
+     "logical_bbox": [
+      65,
+      80
+     ],
+     "air": 0
+    },
+    "face_closed": {
+     "row": 2,
+     "column": 3,
+     "logical_bbox": [
+      65,
+      80
+     ],
+     "air": 0
+    }
+   },
+   "notes": [],
+   "pitch": 6.312,
+   "from_raw": "raw/s3_a1.png",
+   "redo_left": [],
+   "takes": [
+    {
+     "file": "raw/s3_take1.png",
+     "score": 0,
+     "frames": {
+      "face_neutral": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        65,
+        80
+       ],
+       "air": 0
+      },
+      "face_smile": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        65,
+        80
+       ],
+       "air": 0
+      },
+      "face_sad": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        65,
+        80
+       ],
+       "air": 0
+      },
+      "face_angry": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        65,
+        80
+       ],
+       "air": 0
+      },
+      "face_surprise": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        65,
+        80
+       ],
+       "air": 0
+      },
+      "face_closed": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        65,
+        80
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s3_a1.png",
+     "cell": [
+      96,
+      96
+     ]
     }
    ]
   }

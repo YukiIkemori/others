@@ -1,0 +1,11 @@
+01:18:56 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:19:57   pitch in raw image: 6.02 px per art pixel (upright median 283 px / 47)
+01:19:59 sheet 1 -> art_ref/gen/npc/hald/npc_hald_s1.png (16 poses)
+01:19:59 pipeline: sheets.py ../art_ref/gen/npc/hald --npc hald --out out/npc/npc_hald --check
+01:21:03   |   「ハルド（npc_hald）のシート1の4番（うなずく）だけ小さく描かれている（頭の大きさがほかのポーズの約 76%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:21:03   |   「ハルド（npc_hald）のシート1の8番（驚く）だけ小さく描かれている（頭の大きさがほかのポーズの約 80%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:21:03   |   「ハルド（npc_hald）のシート1の12番（手を挙げて呼びかける）だけ小さく描かれている（頭の大きさがほかのポーズの約 72%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:21:03   | 
+01:21:03   | ■ シートの状態
+01:21:03   |   シート1 歩き＋演技4: 要作り直し  npc_hald_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+01:21:03 sheet 1: 0 redo lines

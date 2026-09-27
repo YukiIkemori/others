@@ -31,3 +31,52 @@
 00:48:42   |   シート2 演技12（下向き）: なし（必須）
 00:48:42   |   シート3 顔6: なし（必須）
 00:48:42 sheet 1: 1 redo lines: シート1の 6番（上向き・左足前）はランタンを右手に持っている（左手のはず）。歩くたびに持ち手が入れ替わって見える。仮に左右反転して使う
+00:59:12   pitch in raw image: 5.89 px per art pixel (upright median 277 px / 47)
+00:59:12 sheet 1 -> art_ref/gen/npc/otto/npc_otto_s1.png (12 poses)
+00:59:12 pipeline: sheets.py ../art_ref/gen/npc/otto --npc otto --out out/npc/otto --check
+00:59:24   |   「オットー（otto）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さ 68%・頭の幅 78%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して」
+00:59:24   | 
+00:59:24   | ■ シートの状態
+00:59:24   |   シート1 歩き: 要作り直し  npc_otto_s1.png  ドット 8.00px → 描かれた格子のまま（45.0 ドット）
+00:59:24   |   シート2 演技12（下向き）: なし（必須）
+00:59:24   |   シート3 顔6: なし（必須）
+01:00:02   pitch in raw image: 5.70 px per art pixel (upright median 268 px / 47)
+01:00:02 sheet 1 -> art_ref/gen/npc/otto/npc_otto_s1.png (12 poses)
+01:00:03 pipeline: sheets.py ../art_ref/gen/npc/otto --npc otto --out out/npc/otto --check
+01:00:19   |   「オットー（otto）のシート1の6番（上向き・左足前）でランタンが右手になっている。12コマすべて左手にランタンを持たせて（下向きでは画面の右側、上向きでは画面の左側）、同じ条件で描き直して」
+01:00:19   | 
+01:00:19   | ■ シートの状態
+01:00:19   |   シート1 歩き: 要作り直し  npc_otto_s1.png  ドット 8.00px → 描かれた格子のまま（46.5 ドット）
+01:00:19   |   シート2 演技12（下向き）: なし（必須）
+01:00:19   |   シート3 顔6: なし（必須）
+01:00:19 sheet 1 approved by eye
+01:00:28 sheet 2 attempt 1: edit of the Arun template 2304x1152 (pitch 6, quality medium, 3 refs)
+01:01:25   pitch in raw image: 6.15 px per art pixel (upright median 289 px / 47)
+01:01:25 sheet 2 -> art_ref/gen/npc/otto/npc_otto_s2.png (12 poses)
+01:01:25 pipeline: sheets.py ../art_ref/gen/npc/otto --npc otto --out out/npc/otto --check
+01:01:53   |   「オットー（otto）のシート1の6番（上向き・左足前）でランタンが右手になっている。12コマすべて左手にランタンを持たせて（下向きでは画面の右側、上向きでは画面の左側）、同じ条件で描き直して」
+01:01:53   | 
+01:01:53   | ■ シートの状態
+01:01:53   |   シート1 歩き: 要作り直し  npc_otto_s1.png  ドット 8.00px → 描かれた格子のまま（46.5 ドット）
+01:01:53   |   シート2 演技12（下向き）: OK  npc_otto_s2.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+01:01:53   |   シート3 顔6: なし（必須）
+01:01:53 sheet 2: 0 redo lines
+01:01:53 sheet 3 attempt 1: edit of the Arun template 1728x1152 (pitch 6, quality medium, 3 refs)
+01:02:52   pitch in raw image: 6.01 px per art pixel (upright median 481 px / 80)
+01:02:54 sheet 3 -> art_ref/gen/npc/otto/npc_otto_s3.png (6 poses)
+01:02:54 pipeline: sheets.py ../art_ref/gen/npc/otto --npc otto --out out/npc/otto --check
+01:04:07   |   「オットー（otto）のシート1の6番（上向き・左足前）でランタンが右手になっている。12コマすべて左手にランタンを持たせて（下向きでは画面の右側、上向きでは画面の左側）、同じ条件で描き直して」
+01:04:07   | 
+01:04:07   | ■ シートの状態
+01:04:07   |   シート1 歩き: 要作り直し  npc_otto_s1.png  ドット 8.00px → 描かれた格子のまま（46.5 ドット）
+01:04:07   |   シート2 演技12（下向き）: OK  npc_otto_s2.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+01:04:07   |   シート3 顔6: OK  npc_otto_s3.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:04:07 sheet 3: 0 redo lines
+01:25:32 pipeline: sheets.py ../art_ref/gen/npc/otto --npc otto --out out/npc/otto
+01:27:50   | ■ シートの状態
+01:27:50   |   シート1 歩き: 要作り直し  npc_otto_s1.png  ドット 8.00px → 描かれた格子のまま（46.5 ドット）
+01:27:50   |   シート2 演技12（下向き）: OK  npc_otto_s2.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+01:27:50   |   シート3 顔6: OK  npc_otto_s3.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:27:50   | 
+01:27:50   | packed field 268x371, face 228x170 | palette 52 + face 48
+01:27:51 to_v2 otto: otto → /home/user/others/chronicle/v2/assets/sprites/otto |   field: 24 frames |   face: 6 frames

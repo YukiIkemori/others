@@ -1,0 +1,101 @@
+{
+ "sheets": {
+  "1": {
+   "attempts": [
+    {
+     "raw": "raw/s1_a1.png",
+     "quality": "medium",
+     "t": "2026-09-27T01:14:34"
+    }
+   ],
+   "usage": [
+    {
+     "image_gen": {
+      "input_tokens": 2195,
+      "input_tokens_details": {
+       "image_tokens": 1475,
+       "text_tokens": 720
+      },
+      "output_tokens": 1892,
+      "output_tokens_details": {
+       "image_tokens": 1892,
+       "text_tokens": 0
+      },
+      "total_tokens": 4087
+     },
+     "web_search": {
+      "num_requests": 0
+     }
+    }
+   ],
+   "frames": {
+    "ref_front": {
+     "row": 1,
+     "column": 1,
+     "logical_bbox": [
+      54,
+      63
+     ],
+     "air": 0
+    },
+    "ref_34": {
+     "row": 1,
+     "column": 2,
+     "logical_bbox": [
+      57,
+      63
+     ],
+     "air": 0
+    },
+    "ref_side_left": {
+     "row": 1,
+     "column": 3,
+     "logical_bbox": [
+      45,
+      63
+     ],
+     "air": 0
+    },
+    "ref_back": {
+     "row": 1,
+     "column": 4,
+     "logical_bbox": [
+      54,
+      63
+     ],
+     "air": 0
+    },
+    "ref_face": {
+     "row": 2,
+     "column": 2,
+     "logical_bbox": [
+      77,
+      81
+     ],
+     "air": 0
+    },
+    "ref_idle_left": {
+     "row": 2,
+     "column": 1,
+     "logical_bbox": [
+      58,
+      77
+     ],
+     "air": 0
+    },
+    "ref_palette": {
+     "row": 2,
+     "column": 3,
+     "logical_bbox": [
+      78,
+      37
+     ],
+     "air": 0
+    }
+   },
+   "notes": [],
+   "pitch": 8.016,
+   "from_raw": "raw/s1_a1.png"
+  }
+ }
+}

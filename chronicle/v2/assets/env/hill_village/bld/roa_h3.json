@@ -1,0 +1,78 @@
+{
+ "id": "roa_h3",
+ "kind": "building",
+ "theme": "hill_village",
+ "footprint": [
+  5,
+  6
+ ],
+ "wall": 2,
+ "files": {
+  "24": "roa_h3@24.png",
+  "32": "roa_h3@32.png",
+  "40": "roa_h3@40.png"
+ },
+ "emitFiles": {
+  "24": "roa_h3_emit@24.png",
+  "32": "roa_h3_emit@32.png",
+  "40": "roa_h3_emit@40.png"
+ },
+ "size": {
+  "24": [
+   132,
+   168
+  ],
+  "32": [
+   176,
+   224
+  ],
+  "40": [
+   220,
+   280
+  ]
+ },
+ "anchor32": [
+  8,
+  224
+ ],
+ "door32": null,
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 42,
+   "y": -34,
+   "w": 10,
+   "h": 9
+  },
+  {
+   "kind": "win",
+   "x": 106,
+   "y": -34,
+   "w": 9,
+   "h": 9
+  }
+ ],
+ "roof32": [
+  -6,
+  -196,
+  166,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/hill_village/roa_h3.png",
+ "def_": {
+  "type": "building",
+  "id": "roa_h3",
+  "x": 28,
+  "y": 4,
+  "w": 5,
+  "h": 6,
+  "wall": 2,
+  "roof": "shingle",
+  "mat": "log",
+  "windows": 2,
+  "lamp": true,
+  "flowers": true,
+  "chimney": true
+ }
+}

@@ -194,7 +194,7 @@ def bbg(raw, bid, horizon, front_raw=None, ncol=72, lit_gain=2.2, glow_thr=0.72)
         gt = int(round(horizon * H))
         sfx = '' if name == 'wide' else '_tall'
         save(a, os.path.join(d, 'back%s.png' % sfx))
-        al = np.clip((np.arange(H) - (gt - 10)) / 12.0, 0, 1)[:, None] * np.ones((1, W))
+        al = np.clip((np.arange(H) - (gt - 24)) / 30.0, 0, 1)[:, None] * np.ones((1, W))
         g = np.concatenate([a, al[..., None] * 255], 2)
         save(g, os.path.join(d, 'ground%s.png' % sfx))
         # lamp-lit version of the ground: what the ground looks like inside a warm light pool

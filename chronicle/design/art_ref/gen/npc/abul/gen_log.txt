@@ -1,0 +1,22 @@
+00:58:56 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+00:59:47   pitch in raw image: 5.89 px per art pixel (upright median 265 px / 45)
+00:59:48 sheet 1 -> art_ref/gen/npc/abul/npc_abul_s1.png (16 poses)
+00:59:48 pipeline: sheets.py ../art_ref/gen/npc/abul --npc abul --out out/npc/npc_abul --check
+01:00:17   |   「アブル（npc_abul）のシート1の16番（その人のしぐさ）だけ大きさが違う。ほかのポーズと同じ身長にして、同じ条件で描き直して」
+01:00:17   |   「アブル（npc_abul）のシート1の4番（うなずく）の向きが違う。下（手前）向きにして、同じ条件で描き直して」
+01:00:17   |   「アブル（npc_abul）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さ 64%・頭の幅 87%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して」
+01:00:17   | 
+01:00:17   | ■ シートの状態
+01:00:17   |   シート1 歩き＋演技4: 要作り直し  npc_abul_s1.png  ドット 8.00px → 描かれた格子のまま（45.0 ドット）
+01:00:17 sheet 1: 3 redo lines: シート1 の 16 番（その人のしぐさ） の身長が 37 ドット（ほかは 45） / シート1 の 4 番（うなずく） が上（奥）を向いて見える（下（手前）のはず。点数 -0.8） / 頭がアルンより小さい（頭の高さ 64%・頭の幅 87%）。頭身が高すぎる
+01:00:18 sheet 1 attempt 2: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs) + notes
+01:01:18   pitch in raw image: 5.93 px per art pixel (upright median 267 px / 45)
+01:01:18 sheet 1 -> art_ref/gen/npc/abul/npc_abul_s1.png (16 poses)
+01:01:18 pipeline: sheets.py ../art_ref/gen/npc/abul --npc abul --out out/npc/npc_abul --check
+01:01:41   | 
+01:01:41   | ■ 画像 AI にそのまま送れる文
+01:01:41   |   「アブル（npc_abul）のシート1の7番（上向き・左足前）だけ大きく描かれている（頭の大きさがほかのポーズの約 124%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:01:41   | 
+01:01:41   | ■ シートの状態
+01:01:41   |   シート1 歩き＋演技4: 要作り直し  npc_abul_s1.png  ドット 8.00px → 描かれた格子のまま（45.0 ドット）
+01:01:41 sheet 1: 0 redo lines

@@ -1,0 +1,126 @@
+{
+ "id": "roa_berna",
+ "kind": "building",
+ "theme": "hill_village",
+ "footprint": [
+  9,
+  7
+ ],
+ "wall": 3,
+ "files": {
+  "24": "roa_berna@24.png",
+  "32": "roa_berna@32.png",
+  "40": "roa_berna@40.png"
+ },
+ "emitFiles": {
+  "24": "roa_berna_emit@24.png",
+  "32": "roa_berna_emit@32.png",
+  "40": "roa_berna_emit@40.png"
+ },
+ "size": {
+  "24": [
+   228,
+   192
+  ],
+  "32": [
+   304,
+   256
+  ],
+  "40": [
+   380,
+   320
+  ]
+ },
+ "anchor32": [
+  8,
+  256
+ ],
+ "door32": {
+  "x": 144.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 42,
+   "y": -76,
+   "w": 15,
+   "h": 14
+  },
+  {
+   "kind": "win",
+   "x": 107,
+   "y": -76,
+   "w": 10,
+   "h": 12
+  },
+  {
+   "kind": "win",
+   "x": 169,
+   "y": -76,
+   "w": 12,
+   "h": 15
+  },
+  {
+   "kind": "win",
+   "x": 235,
+   "y": -76,
+   "w": 10,
+   "h": 14
+  },
+  {
+   "kind": "win",
+   "x": 45,
+   "y": -37,
+   "w": 9,
+   "h": 13
+  },
+  {
+   "kind": "win",
+   "x": 109,
+   "y": -37,
+   "w": 10,
+   "h": 12
+  },
+  {
+   "kind": "win",
+   "x": 231,
+   "y": -37,
+   "w": 10,
+   "h": 12
+  }
+ ],
+ "roof32": [
+  -6,
+  -228,
+  294,
+  -90
+ ],
+ "wallTop32": -96,
+ "src": "design/art_ref/gen/env/bld/hill_village/roa_berna.png",
+ "def_": {
+  "type": "building",
+  "id": "roa_berna",
+  "x": 16,
+  "y": 24,
+  "w": 9,
+  "h": 7,
+  "wall": 3,
+  "roof": "moss",
+  "mat": "log",
+  "windows": 3,
+  "chimney": true,
+  "lamp": true,
+  "flowers": true,
+  "door": {
+   "x": 20,
+   "y": 30,
+   "to": {
+    "map": "roa_house",
+    "spawn": "door"
+   }
+  }
+ }
+}

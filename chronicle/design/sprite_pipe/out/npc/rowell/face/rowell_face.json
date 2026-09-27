@@ -1,0 +1,223 @@
+{
+ "character": "rowell",
+ "set": "face",
+ "image": "rowell_face.png",
+ "cell": [
+  69,
+  84
+ ],
+ "anchor": [
+  34,
+  81
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "face_neutral": {
+   "x": 0,
+   "y": 0,
+   "w": 69,
+   "h": 84,
+   "anchor": [
+    34,
+    81
+   ],
+   "points": {
+    "head": [
+     32,
+     2
+    ],
+    "center": [
+     33,
+     47
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  "face_smile": {
+   "x": 69,
+   "y": 0,
+   "w": 69,
+   "h": 84,
+   "anchor": [
+    34,
+    81
+   ],
+   "points": {
+    "head": [
+     32,
+     2
+    ],
+    "center": [
+     33,
+     47
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  "face_sad": {
+   "x": 138,
+   "y": 0,
+   "w": 69,
+   "h": 84,
+   "anchor": [
+    34,
+    81
+   ],
+   "points": {
+    "head": [
+     32,
+     2
+    ],
+    "center": [
+     33,
+     47
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  "face_angry": {
+   "x": 0,
+   "y": 84,
+   "w": 69,
+   "h": 84,
+   "anchor": [
+    34,
+    81
+   ],
+   "points": {
+    "head": [
+     32,
+     2
+    ],
+    "center": [
+     33,
+     47
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  "face_surprise": {
+   "x": 69,
+   "y": 84,
+   "w": 69,
+   "h": 84,
+   "anchor": [
+    34,
+    81
+   ],
+   "points": {
+    "head": [
+     32,
+     2
+    ],
+    "center": [
+     33,
+     47
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  "face_closed": {
+   "x": 138,
+   "y": 84,
+   "w": 69,
+   "h": 84,
+   "anchor": [
+    34,
+    81
+   ],
+   "points": {
+    "head": [
+     32,
+     2
+    ],
+    "center": [
+     33,
+     47
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#0f080d",
+  "#24150e",
+  "#1c191b",
+  "#282526",
+  "#32303c",
+  "#353232",
+  "#444141",
+  "#4d4d5b",
+  "#53504f",
+  "#63605f",
+  "#676979",
+  "#73706f",
+  "#878485",
+  "#ada8a7",
+  "#afb0c0",
+  "#c7c7d2",
+  "#dddde4",
+  "#f2f1f2",
+  "#351e11",
+  "#4f2917",
+  "#433329",
+  "#65361a",
+  "#654831",
+  "#844928",
+  "#7d5016",
+  "#92683a",
+  "#876b59",
+  "#a95f15",
+  "#a86338",
+  "#b27c37",
+  "#c28031",
+  "#b88454",
+  "#c87f4c",
+  "#ad8a66",
+  "#cf8020",
+  "#b69e8c",
+  "#ce9d71",
+  "#e19833",
+  "#d29f4e",
+  "#e19d65",
+  "#efa330",
+  "#f3b44f",
+  "#efbb86",
+  "#f5c470",
+  "#ebd4bf",
+  "#f9d29f",
+  "#808194",
+  "#9799ab"
+ ],
+ "facing": "slightly right",
+ "target_height": 80,
+ "npc": {
+  "tier": "A",
+  "lantern": false,
+  "spirit": false,
+  "recolor": false,
+  "mainHex": "#E6EAF0",
+  "recolorSets": null,
+  "variants": null,
+  "kind": "person"
+ }
+}

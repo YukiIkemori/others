@@ -1,0 +1,436 @@
+{
+ "char": "npc_jorn",
+ "companion": null,
+ "npc": "npc_jorn",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/jorn",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/jorn/npc_jorn_s1.png",
+   "size": [
+    2560,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x4",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 416.0,
+   "native_height_at_period": 52.0,
+   "scale_note": "描かれた格子のまま（52.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      37,
+      52
+     ],
+     "box": [
+      152,
+      48,
+      480,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.1
+    },
+    "walk_down_1": {
+     "size": [
+      35,
+      53
+     ],
+     "box": [
+      800,
+      40,
+      1112,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.97,
+     "scale": 1.072
+    },
+    "walk_down_2": {
+     "size": [
+      36,
+      53
+     ],
+     "box": [
+      1440,
+      40,
+      1760,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.0,
+     "scale": 1.145
+    },
+    "act_nod": {
+     "size": [
+      38,
+      50
+     ],
+     "box": [
+      2072,
+      64,
+      2408,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.47,
+     "scale": 1.145
+    },
+    "walk_up_0": {
+     "size": [
+      35,
+      52
+     ],
+     "box": [
+      160,
+      560,
+      472,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.86,
+     "scale": 1.0
+    },
+    "walk_up_1": {
+     "size": [
+      35,
+      54
+     ],
+     "box": [
+      800,
+      544,
+      1112,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.05,
+     "scale": 1.0
+    },
+    "walk_up_2": {
+     "size": [
+      35,
+      53
+     ],
+     "box": [
+      1440,
+      552,
+      1752,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.51,
+     "scale": 1.0
+    },
+    "act_surprise": {
+     "size": [
+      50,
+      52
+     ],
+     "box": [
+      2024,
+      560,
+      2456,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.84,
+     "scale": 1.157
+    },
+    "walk_left_0": {
+     "size": [
+      26,
+      52
+     ],
+     "box": [
+      200,
+      1072,
+      440,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.49,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 0.99
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      32,
+      52
+     ],
+     "box": [
+      816,
+      1072,
+      1104,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.56,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.06
+     },
+     "scale": 0.988
+    },
+    "walk_left_2": {
+     "size": [
+      31,
+      52
+     ],
+     "box": [
+      1456,
+      1072,
+      1736,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.62,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.12
+     },
+     "scale": 0.94
+    },
+    "act_call": {
+     "size": [
+      35,
+      52
+     ],
+     "box": [
+      2080,
+      1072,
+      2392,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.59,
+     "scale": 1.0
+    },
+    "walk_right_0": {
+     "size": [
+      26,
+      52
+     ],
+     "box": [
+      200,
+      1584,
+      440,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      33,
+      52
+     ],
+     "box": [
+      808,
+      1584,
+      1104,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.07,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 0.57
+     },
+     "scale": 0.94
+    },
+    "walk_right_2": {
+     "size": [
+      32,
+      52
+     ],
+     "box": [
+      1456,
+      1584,
+      1744,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.57,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.07
+     },
+     "scale": 0.904
+    },
+    "act_sig": {
+     "size": [
+      52,
+      51
+     ],
+     "box": [
+      2016,
+      1592,
+      2464,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.15,
+     "scale": 1.373,
+     "fixed": [
+      "rescaled 0.73"
+     ]
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_jorn）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "marks",
+   "msg": "シート1 の 8 番（驚く） の感情マーク（驚きの線・汗など 3 個）を消した",
+   "slot": "act_surprise",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 3 番（下向き・左足前） の縮尺が少し違う（頭の大きさで約 114%）。並べて見て気になるなら描き直し",
+   "slot": "walk_down_2",
+   "ask": null,
+   "data": {
+    "scale": 1.1445783132530118,
+    "per_ref": [
+     1.0000000000000004,
+     1.1875000000000002,
+     1.1875000000000002
+    ],
+    "group_median": 1.0375000000000003
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 4 番（うなずく） の縮尺が少し違う（頭の大きさで約 114%）。並べて見て気になるなら描き直し",
+   "slot": "act_nod",
+   "ask": null,
+   "data": {
+    "scale": 1.144578313253012,
+    "per_ref": [
+     1.0625000000000002,
+     1.2750000000000006,
+     1.1875000000000004
+    ],
+    "group_median": 1.0375000000000003
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 8 番（驚く） の縮尺が少し違う（頭の大きさで約 116%）。並べて見て気になるなら描き直し",
+   "slot": "act_surprise",
+   "ask": null,
+   "data": {
+    "scale": 1.1566265060240966,
+    "per_ref": [
+     1.0375000000000003,
+     1.2750000000000006,
+     1.2000000000000006
+    ],
+    "group_median": 1.0375000000000003
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 16 番（その人のしぐさ） がほかのポーズより大きく描かれている（頭の大きさで約 137%）。仮に 73% に拡大縮小して使う",
+   "slot": "act_sig",
+   "ask": "ヨルン（npc_jorn）のシート1の16番（その人のしぐさ）だけ大きく描かれている（頭の大きさがほかのポーズの約 137%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 1.3734939759036144,
+    "per_ref": [
+     0.9625000000000001,
+     1.4250000000000005,
+     1.4250000000000005
+    ],
+    "group_median": 1.0375000000000003
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 48 ドットあたり）: 首 0.21（アルン 0.29）・頭の幅 0.51（0.43）・肩 0.49（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.20833333333333334,
+    "head_w": 0.5104166666666667,
+    "shoulder": 0.49479166666666663,
+    "neck_clear": 0.9245014245014245
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 71%・頭の幅 120%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 1.1953551912568308,
+    "neck": 0.7134703196347033
+   }
+  }
+ ]
+}

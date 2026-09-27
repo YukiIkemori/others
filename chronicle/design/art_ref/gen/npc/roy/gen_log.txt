@@ -1,1 +1,19 @@
 00:50:10 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+00:50:58   pitch in raw image: 5.77 px per art pixel (upright median 271 px / 47)
+00:50:59 sheet 1 -> art_ref/gen/npc/roy/npc_roy_s1.png (16 poses)
+00:50:59 pipeline: sheets.py ../art_ref/gen/npc/roy --npc roy --out out/npc/npc_roy --check
+00:51:39   | ■ メモ（2 件）
+00:51:39   |   - シート1: 頭身の比（歩き12コマの中央値、体 46 ドットあたり）: 首 0.30（アルン 0.29）・頭の幅 0.39（0.43）・肩 0.30（0.40）
+00:51:39   |   - 向きの見本（configs/refs/npc_roy）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+00:51:39   | 
+00:51:39   | ■ シートの状態
+00:51:39   |   シート1 歩き＋演技4: 確認あり  npc_roy_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+00:51:39 sheet 1: 0 redo lines
+01:10:13 pipeline: sheets.py ../art_ref/gen/npc/roy --npc roy --out out/npc/npc_roy
+01:11:37   |   - 向きの見本（configs/refs/npc_roy）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:11:37   | 
+01:11:37   | ■ シートの状態
+01:11:37   |   シート1 歩き＋演技4: 確認あり  npc_roy_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+01:11:37   | 
+01:11:37   | packed field 148x204 | palette 52 + face 0
+01:11:39 to_v2 npc_roy: npc_roy → /home/user/others/chronicle/v2/assets/sprites/npc_roy |   field: 16 frames

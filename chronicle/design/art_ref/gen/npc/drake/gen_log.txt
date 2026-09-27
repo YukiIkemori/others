@@ -1,0 +1,11 @@
+01:13:47 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:14:56   pitch in raw image: 5.81 px per art pixel (upright median 302 px / 52)
+01:14:58 sheet 1 -> art_ref/gen/npc/drake/npc_drake_s1.png (16 poses)
+01:14:58 pipeline: sheets.py ../art_ref/gen/npc/drake --npc drake --out out/npc/npc_drake --check
+01:16:27   |   「ドレイク（npc_drake）のシート1の6番（上向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 57%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:16:27   |   「ドレイク（npc_drake）のシート1の7番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 57%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:16:27   |   「ドレイク（npc_drake）のシート1の16番（その人のしぐさ）だけ小さく描かれている（頭の大きさがほかのポーズの約 57%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:16:27   | 
+01:16:27   | ■ シートの状態
+01:16:27   |   シート1 歩き＋演技4: 要作り直し  npc_drake_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+01:16:27 sheet 1: 0 redo lines

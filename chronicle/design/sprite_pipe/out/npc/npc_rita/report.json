@@ -1,0 +1,365 @@
+{
+ "char": "npc_rita",
+ "companion": null,
+ "npc": "npc_rita",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/rita",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/rita/npc_rita_s1.png",
+   "size": [
+    2560,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x4",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 376.0,
+   "native_height_at_period": 47.0,
+   "scale_note": "描かれた格子のまま（47.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      28,
+      46
+     ],
+     "box": [
+      192,
+      96,
+      448,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.15
+    },
+    "walk_down_1": {
+     "size": [
+      31,
+      46
+     ],
+     "box": [
+      816,
+      96,
+      1096,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.22,
+     "scale": 1.0
+    },
+    "walk_down_2": {
+     "size": [
+      32,
+      46
+     ],
+     "box": [
+      1456,
+      96,
+      1744,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.12,
+     "scale": 1.0
+    },
+    "act_nod": {
+     "size": [
+      31,
+      46
+     ],
+     "box": [
+      2096,
+      96,
+      2376,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.71,
+     "scale": 1.0
+    },
+    "walk_up_0": {
+     "size": [
+      31,
+      48
+     ],
+     "box": [
+      176,
+      592,
+      456,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.74,
+     "scale": 0.928
+    },
+    "walk_up_1": {
+     "size": [
+      31,
+      48
+     ],
+     "box": [
+      816,
+      592,
+      1096,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.02,
+     "scale": 1.0
+    },
+    "walk_up_2": {
+     "size": [
+      31,
+      48
+     ],
+     "box": [
+      1456,
+      592,
+      1736,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.03,
+     "scale": 1.0
+    },
+    "act_surprise": {
+     "size": [
+      37,
+      47
+     ],
+     "box": [
+      2072,
+      600,
+      2400,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.79,
+     "scale": 1.036
+    },
+    "walk_left_0": {
+     "size": [
+      28,
+      47
+     ],
+     "box": [
+      192,
+      1112,
+      448,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      31,
+      47
+     ],
+     "box": [
+      816,
+      1112,
+      1096,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.964
+    },
+    "walk_left_2": {
+     "size": [
+      33,
+      47
+     ],
+     "box": [
+      1448,
+      1112,
+      1744,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.964
+    },
+    "act_call": {
+     "size": [
+      30,
+      45
+     ],
+     "box": [
+      2104,
+      1128,
+      2376,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.24,
+     "scale": 0.928
+    },
+    "walk_right_0": {
+     "size": [
+      29,
+      48
+     ],
+     "box": [
+      184,
+      1616,
+      448,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      33,
+      47
+     ],
+     "box": [
+      808,
+      1624,
+      1104,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.928
+    },
+    "walk_right_2": {
+     "size": [
+      33,
+      47
+     ],
+     "box": [
+      1448,
+      1624,
+      1744,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.928
+    },
+    "act_sig": {
+     "size": [
+      28,
+      47
+     ],
+     "box": [
+      2112,
+      1624,
+      2368,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.78,
+     "scale": 1.0
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_rita）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "marks",
+   "msg": "シート1 の 8 番（驚く） の感情マーク（驚きの線・汗など 3 個）を消した",
+   "slot": "act_surprise",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 46 ドットあたり）: 首 0.33（アルン 0.29）・頭の幅 0.41（0.43）・肩 0.42（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.32608695652173914,
+    "head_w": 0.41304347826086957,
+    "shoulder": 0.42391304347826086,
+    "neck_clear": 0.7697368421052632
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 112%・頭の幅 97%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 0.9673149373790857,
+    "neck": 1.1167361524717094
+   }
+  }
+ ]
+}

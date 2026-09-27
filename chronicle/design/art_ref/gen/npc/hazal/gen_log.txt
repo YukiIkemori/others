@@ -1,0 +1,11 @@
+01:00:47 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:01:43   pitch in raw image: 5.52 px per art pixel (upright median 320 px / 58)
+01:01:45 sheet 1 -> art_ref/gen/npc/hazal/npc_hazal_s1.png (16 poses)
+01:01:45 pipeline: sheets.py ../art_ref/gen/npc/hazal --npc hazal --out out/npc/npc_hazal --check
+01:02:12   | ■ メモ（2 件）
+01:02:12   |   - シート1: 頭身の比（歩き12コマの中央値、体 52 ドットあたり）: 首 0.21（アルン 0.29）・頭の幅 0.39（0.43）・肩 0.44（0.40）
+01:02:12   |   - 向きの見本（configs/refs/npc_hazal）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:02:12   | 
+01:02:12   | ■ シートの状態
+01:02:12   |   シート1 歩き＋演技4: 確認あり  npc_hazal_s1.png  ドット 8.00px → 描かれた格子のまま（61.0 ドット）
+01:02:12 sheet 1: 0 redo lines

@@ -1,0 +1,518 @@
+{
+ "char": "npc_fara",
+ "companion": null,
+ "npc": "npc_fara",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/fara",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/fara/npc_fara_s1.png",
+   "size": [
+    2560,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x4",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 320.0,
+   "native_height_at_period": 40.0,
+   "scale_note": "描かれた格子のまま（40.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      22,
+      40
+     ],
+     "box": [
+      216,
+      128,
+      424,
+      480
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.03
+    },
+    "walk_down_1": {
+     "size": [
+      22,
+      40
+     ],
+     "box": [
+      856,
+      128,
+      1064,
+      480
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.03,
+     "scale": 0.738,
+     "fixed": [
+      "rescaled 1.35"
+     ]
+    },
+    "walk_down_2": {
+     "size": [
+      23,
+      40
+     ],
+     "box": [
+      1488,
+      128,
+      1704,
+      480
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.01,
+     "scale": 1.0
+    },
+    "act_nod": {
+     "size": [
+      23,
+      39
+     ],
+     "box": [
+      2128,
+      136,
+      2344,
+      480
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.71,
+     "scale": 1.0
+    },
+    "walk_up_0": {
+     "size": [
+      22,
+      40
+     ],
+     "box": [
+      216,
+      640,
+      424,
+      992
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.96,
+     "scale": 1.185
+    },
+    "walk_up_1": {
+     "size": [
+      22,
+      41
+     ],
+     "box": [
+      856,
+      632,
+      1064,
+      992
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.99,
+     "scale": 1.0
+    },
+    "walk_up_2": {
+     "size": [
+      22,
+      40
+     ],
+     "box": [
+      1496,
+      640,
+      1704,
+      992
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.96,
+     "scale": 1.185
+    },
+    "act_surprise": {
+     "size": [
+      26,
+      39
+     ],
+     "box": [
+      2120,
+      648,
+      2360,
+      992
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.05,
+     "scale": 0.738,
+     "fixed": [
+      "rescaled 1.35"
+     ]
+    },
+    "walk_left_0": {
+     "size": [
+      18,
+      40
+     ],
+     "box": [
+      232,
+      1152,
+      408,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      23,
+      40
+     ],
+     "box": [
+      848,
+      1152,
+      1064,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.185
+    },
+    "walk_left_2": {
+     "size": [
+      23,
+      40
+     ],
+     "box": [
+      1488,
+      1152,
+      1704,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.23,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.73
+     },
+     "scale": 1.231,
+     "fixed": [
+      "rescaled 0.81"
+     ]
+    },
+    "act_call": {
+     "size": [
+      25,
+      39
+     ],
+     "box": [
+      2120,
+      1160,
+      2352,
+      1504
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.66,
+     "scale": 0.738,
+     "fixed": [
+      "rescaled 1.35"
+     ]
+    },
+    "walk_right_0": {
+     "size": [
+      18,
+      40
+     ],
+     "box": [
+      232,
+      1664,
+      408,
+      2016
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      23,
+      39
+     ],
+     "box": [
+      848,
+      1672,
+      1064,
+      2016
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.185
+    },
+    "walk_right_2": {
+     "size": [
+      23,
+      39
+     ],
+     "box": [
+      1488,
+      1672,
+      1704,
+      2016
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.185
+    },
+    "act_sig": {
+     "size": [
+      20,
+      38
+     ],
+     "box": [
+      2144,
+      1680,
+      2336,
+      2016
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.79,
+     "scale": 1.0
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_fara）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "marks",
+   "msg": "シート1 の 8 番（驚く） の感情マーク（驚きの線・汗など 2 個）を消した",
+   "slot": "act_surprise",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 2 番（下向き・右足前） がほかのポーズより小さく描かれている（頭の大きさで約 74%）。仮に 135% に拡大縮小して使う",
+   "slot": "walk_down_1",
+   "ask": "ファラ（npc_fara）のシート1の2番（下向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 74%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.7384615384615386,
+    "per_ref": [
+     1.0000000000000004,
+     0.6000000000000001,
+     0.6000000000000001
+    ],
+    "group_median": 0.8125
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 5 番（上向き・立ち） の縮尺が少し違う（頭の大きさで約 118%）。並べて見て気になるなら描き直し",
+   "slot": "walk_up_0",
+   "ask": null,
+   "data": {
+    "scale": 1.1846153846153848,
+    "per_ref": [
+     0.9625000000000001,
+     0.9625000000000001,
+     0.9625000000000001
+    ],
+    "group_median": 0.8125
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 7 番（上向き・左足前） の縮尺が少し違う（頭の大きさで約 118%）。並べて見て気になるなら描き直し",
+   "slot": "walk_up_2",
+   "ask": null,
+   "data": {
+    "scale": 1.1846153846153848,
+    "per_ref": [
+     0.9625000000000001,
+     0.9000000000000004,
+     0.9625000000000001
+    ],
+    "group_median": 0.8125
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 8 番（驚く） がほかのポーズより小さく描かれている（頭の大きさで約 74%）。仮に 135% に拡大縮小して使う",
+   "slot": "act_surprise",
+   "ask": "ファラ（npc_fara）のシート1の8番（驚く）だけ小さく描かれている（頭の大きさがほかのポーズの約 74%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.7384615384615386,
+    "per_ref": [
+     1.0000000000000004,
+     0.6000000000000001,
+     0.6000000000000001
+    ],
+    "group_median": 0.8125
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 10 番（左向き・前の足） の縮尺が少し違う（頭の大きさで約 118%）。並べて見て気になるなら描き直し",
+   "slot": "walk_left_1",
+   "ask": null,
+   "data": {
+    "scale": 1.1846153846153848,
+    "per_ref": [
+     0.75,
+     1.0000000000000004,
+     0.9625000000000001
+    ],
+    "group_median": 0.8125
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 11 番（左向き・後ろの足） がほかのポーズより大きく描かれている（頭の大きさで約 123%）。仮に 81% に拡大縮小して使う",
+   "slot": "walk_left_2",
+   "ask": "ファラ（npc_fara）のシート1の11番（左向き・後ろの足）だけ大きく描かれている（頭の大きさがほかのポーズの約 123%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 1.2307692307692313,
+    "per_ref": [
+     0.75,
+     1.0000000000000004,
+     1.0000000000000004
+    ],
+    "group_median": 0.8125
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 12 番（手を挙げて呼びかける） がほかのポーズより小さく描かれている（頭の大きさで約 74%）。仮に 135% に拡大縮小して使う",
+   "slot": "act_call",
+   "ask": "ファラ（npc_fara）のシート1の12番（手を挙げて呼びかける）だけ小さく描かれている（頭の大きさがほかのポーズの約 74%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.7384615384615386,
+    "per_ref": [
+     0.8875,
+     0.6000000000000001,
+     0.6000000000000001
+    ],
+    "group_median": 0.8125
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 14 番（右向き・前の足） の縮尺が少し違う（頭の大きさで約 118%）。並べて見て気になるなら描き直し",
+   "slot": "walk_right_1",
+   "ask": null,
+   "data": {
+    "scale": 1.1846153846153848,
+    "per_ref": [
+     0.7499999999999998,
+     1.0000000000000004,
+     0.9625000000000001
+    ],
+    "group_median": 0.8125
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 15 番（右向き・後ろの足） の縮尺が少し違う（頭の大きさで約 118%）。並べて見て気になるなら描き直し",
+   "slot": "walk_right_2",
+   "ask": null,
+   "data": {
+    "scale": 1.1846153846153848,
+    "per_ref": [
+     0.7749999999999999,
+     1.0000000000000004,
+     0.9625000000000001
+    ],
+    "group_median": 0.8125
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 40 ドットあたり）: 首 0.28（アルン 0.29）・頭の幅 0.40（0.43）・肩 0.47（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.275,
+    "head_w": 0.4,
+    "shoulder": 0.475,
+    "neck_clear": 0.7794871794871795
+   }
+  }
+ ]
+}

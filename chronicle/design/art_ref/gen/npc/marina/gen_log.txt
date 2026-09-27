@@ -1,0 +1,11 @@
+01:11:27 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:12:29   pitch in raw image: 6.17 px per art pixel (upright median 259 px / 42)
+01:12:31 sheet 1 -> art_ref/gen/npc/marina/npc_marina_s1.png (16 poses)
+01:12:31 pipeline: sheets.py ../art_ref/gen/npc/marina --npc marina --out out/npc/npc_marina --check
+01:13:47   | 
+01:13:47   | ■ 画像 AI にそのまま送れる文
+01:13:47   |   「マリナ（npc_marina）のシート1の12番（手を挙げて呼びかける）だけ小さく描かれている（頭の大きさがほかのポーズの約 80%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:13:47   | 
+01:13:47   | ■ シートの状態
+01:13:47   |   シート1 歩き＋演技4: 要作り直し  npc_marina_s1.png  ドット 8.00px → 描かれた格子のまま（43.0 ドット）
+01:13:47 sheet 1: 0 redo lines

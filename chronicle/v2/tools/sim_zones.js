@@ -7,7 +7,7 @@
 // 一行（STATS_REWORK §8.4 の標準: 主人公 戦士・剣 ＋ バルトロ・マルタ・シルヴァン）は tools/lib/party_model.js（RULES）があればそれ、
 // 無ければ下の buildParty（gl = R.Growth.glAt、熟練 = R.Rules.profAt、装備 = その時のティアの店の品で R.Rules.optimize、
 // 技と術 = 熟練の段階で閃けるもののうち glim.lv ≤ ティア+2）。味方の AI は R.BattleAI.partyCommands（thrift、道具は 'auto'）。
-// 「泉から泉の区間を MP 3 割以上残して」（--segments）は QA の tools/lib/maps.js が来てから（区間ごとの戦闘数が要る）。
+// 「泉から泉の区間を MP 3 割以上残して」は --segments（QA の tools/lib/maps.js・routes.js の道のりと出現の率から、区間ごとの戦闘数を見込む）。
 'use strict';
 const path = require('path');
 const fs = require('fs');
@@ -131,8 +131,72 @@ function judge(r) {
   return f;
 }
 
+/**
+ * 泉から泉（または入口）の区間（--segments、V2_PLAN §3.16 の 6、WORLD_REDESIGN §6.2）: tools/lib/routes.js の道のり（FIELD の当たり）と
+ * 区間のマスの出現の率から戦闘の数の見込み E を出し、泉で満タンの一行が E 回（ポアソンで振る）続けて戦ったときの MP の残りを測る。
+ * 戦闘の間の回復はゲームと同じ（BattleCore の recover: 勝つと生きている人の HP は満タン、MP は K.AFTER.mpPct だけ戻る。倒れた人はそのまま）。
+ * 合格: 平均の MP の残り ≥ 30%、全滅 ≤ 1%。
+ */
+function segments(R, n, seed) {
+  const { dungeonRoutes } = require('./lib/routes');
+  const routes = dungeonRoutes(R);
+  const out = [];
+  console.log(`sim_zones --segments: n=${n}（区間ごと）`);
+  console.log('dungeon     区間                                 歩数  戦闘(見込み)  出現表          MP の残り 平均 / 25%  全滅%   判定');
+  for (const r of routes) {
+    if (r.error) { console.log(`${r.id}: ${r.error}`); out.push({ id: r.id, fail: [r.error] }); continue; }
+    for (const g of r.segments) {
+      const zone = Object.entries(g.byZone).sort((a, b) => b[1] - a[1]).map((x) => x[0])[0];
+      if (!zone || g.battles < 0.05) { out.push({ id: r.id, seg: `${g.from}→${g.to}`, steps: g.steps, battles: 0, fail: [] }); console.log(`${r.id.padEnd(11)} ${(g.from + '→' + g.to).padEnd(36)} ${String(g.steps).padStart(4)}  ${g.battles.toFixed(2).padStart(6)}        -              出現なし`); continue; }
+      const z = ZONES[zone] || { tier: 0, kind: 'party', members: STD };
+      const mp = [], wipe = [];
+      const rng = R.Mon.mkRng(`${seed}:seg:${r.id}:${g.from}`);
+      for (let t = 0; t < n; t++) {
+        let party = buildParty(R, Object.assign({ seed: 7 + t }, z));
+        for (const c of party) { const st = R.Rules.stats(c); c.hp = st.maxHp; c.mp = st.maxMp; c.status = []; }
+        let inv = { i_potion: 5, i_antidote: 2 };
+        // ポアソン（見込み E）で戦闘の数を振る
+        let k = 0, L = Math.exp(-g.battles), p = 1;
+        do { k++; p *= rng.next(); } while (p > L);
+        k--;
+        let lost = false;
+        for (let i = 0; i < k && !lost; i++) {
+          const res = R.BattleCore.simulate({ party, zone, tier: z.tier, seed: `${seed}:${r.id}:${g.from}:${t}:${i}`, inv, maxRounds: 30, after: true });
+          if (res.result === 'none') continue;
+          party = res.party; inv = res.inv;
+          if (res.result === 'lose') lost = true;
+        }
+        const mx = party.reduce((s, c) => s + R.Rules.stats(c).maxMp, 0), now = party.reduce((s, c) => s + Math.max(0, c.mp), 0);
+        mp.push(mx ? (100 * now) / mx : 100);
+        wipe.push(lost ? 1 : 0);
+      }
+      const mMp = mean(mp), q25 = pctile(mp, 0.25), wp = 100 * mean(wipe);
+      const fail = [];
+      if (mMp < 30) fail.push(`MP ${mMp.toFixed(0)}% < 30%`);
+      if (wp > 1) fail.push(`wipe ${wp.toFixed(1)}% > 1%`);
+      out.push({ id: r.id, seg: `${g.from}→${g.to}`, steps: g.steps, battles: +g.battles.toFixed(2), zone, mpMean: +mMp.toFixed(1), mp25: +q25.toFixed(1), wipePct: +wp.toFixed(2), fail });
+      console.log(`${r.id.padEnd(11)} ${(g.from + '→' + g.to).padEnd(36)} ${String(g.steps).padStart(4)}  ${g.battles.toFixed(2).padStart(6)}        ${zone.padEnd(14)} ${mMp.toFixed(0).padStart(5)}% / ${q25.toFixed(0).padStart(3)}%   ${wp.toFixed(1).padStart(5)}   ${fail.length ? 'FAIL ' + fail.join('; ') : 'pass'}`);
+    }
+  }
+  return out;
+}
+
 function main() {
   const argv = process.argv.slice(2);
+  if (argv.includes('--segments')) {
+    const R0 = loadR();
+    const n0 = +(argv.includes('--n') ? argv[argv.indexOf('--n') + 1] : 200);
+    const res = segments(R0, n0, argv.includes('--seed') ? argv[argv.indexOf('--seed') + 1] : '20260927');
+    if (argv.includes('--json')) {
+      const file = path.join(__dirname, '..', 'design', 'qa', 'sim_segments.json');
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+      fs.writeFileSync(file, JSON.stringify(res, null, 1));
+    }
+    const bad = res.filter((x) => x.fail && x.fail.length);
+    console.log(`segments: ${res.length - bad.length}/${res.length} pass`);
+    if (bad.length && !argv.includes('--no-exit')) process.exitCode = 1;
+    return { out: res, failed: bad.length > 0 };
+  }
   const arg = (k, d) => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : d; };
   const n = +arg('--n', argv.includes('--quick') ? 120 : 400);
   const seed = arg('--seed', '20260926');
@@ -186,5 +250,5 @@ function main() {
   return { out, failed };
 }
 
-module.exports = { buildParty, runZone, judge, ZONES, STD, TARGET };
+module.exports = { buildParty, runZone, judge, segments, ZONES, STD, TARGET };
 if (require.main === module) main();

@@ -1,0 +1,376 @@
+{
+ "char": "npc_pip",
+ "companion": null,
+ "npc": "npc_pip",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/pip",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/pip/npc_pip_s1.png",
+   "size": [
+    2560,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x4",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 384.0,
+   "native_height_at_period": 48.0,
+   "scale_note": "描かれた格子のまま（48.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      33,
+      48
+     ],
+     "box": [
+      168,
+      80,
+      464,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.87
+    },
+    "walk_down_1": {
+     "size": [
+      31,
+      49
+     ],
+     "box": [
+      816,
+      72,
+      1096,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.22,
+     "scale": 1.0
+    },
+    "walk_down_2": {
+     "size": [
+      32,
+      49
+     ],
+     "box": [
+      1456,
+      72,
+      1744,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.83,
+     "scale": 1.024
+    },
+    "act_nod": {
+     "size": [
+      30,
+      47
+     ],
+     "box": [
+      2104,
+      88,
+      2376,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.32,
+     "scale": 1.108
+    },
+    "walk_up_0": {
+     "size": [
+      32,
+      47
+     ],
+     "box": [
+      176,
+      600,
+      464,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.84,
+     "scale": 1.06
+    },
+    "walk_up_1": {
+     "size": [
+      31,
+      49
+     ],
+     "box": [
+      816,
+      584,
+      1096,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.89,
+     "scale": 1.024
+    },
+    "walk_up_2": {
+     "size": [
+      31,
+      49
+     ],
+     "box": [
+      1456,
+      584,
+      1736,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.0,
+     "scale": 1.0
+    },
+    "act_surprise": {
+     "size": [
+      40,
+      46
+     ],
+     "box": [
+      2064,
+      608,
+      2416,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.13,
+     "scale": 0.928
+    },
+    "walk_left_0": {
+     "size": [
+      29,
+      48
+     ],
+     "box": [
+      184,
+      1104,
+      448,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      32,
+      48
+     ],
+     "box": [
+      816,
+      1104,
+      1104,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.964
+    },
+    "walk_left_2": {
+     "size": [
+      30,
+      47
+     ],
+     "box": [
+      1464,
+      1112,
+      1736,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.94
+    },
+    "act_call": {
+     "size": [
+      31,
+      47
+     ],
+     "box": [
+      2096,
+      1112,
+      2376,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.81,
+     "scale": 0.807,
+     "fixed": [
+      "rescaled 1.24"
+     ]
+    },
+    "walk_right_0": {
+     "size": [
+      28,
+      48
+     ],
+     "box": [
+      192,
+      1616,
+      448,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      31,
+      48
+     ],
+     "box": [
+      816,
+      1616,
+      1096,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.94
+    },
+    "walk_right_2": {
+     "size": [
+      30,
+      48
+     ],
+     "box": [
+      1464,
+      1616,
+      1736,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.964
+    },
+    "act_sig": {
+     "size": [
+      28,
+      46
+     ],
+     "box": [
+      2112,
+      1632,
+      2368,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.58,
+     "scale": 1.072
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_pip）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 12 番（手を挙げて呼びかける） がほかのポーズより小さく描かれている（頭の大きさで約 81%）。仮に 124% に拡大縮小して使う",
+   "slot": "act_call",
+   "ask": "ピップ（npc_pip）のシート1の12番（手を挙げて呼びかける）だけ小さく描かれている（頭の大きさがほかのポーズの約 81%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.8072289156626505,
+    "per_ref": [
+     0.8125,
+     0.8375000000000001,
+     0.8500000000000003
+    ],
+    "group_median": 1.0375000000000003
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 45 ドットあたり）: 首 0.34（アルン 0.29）・頭の幅 0.63（0.43）・肩 0.46（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.34444444444444444,
+    "head_w": 0.6333333333333333,
+    "shoulder": 0.46111111111111114,
+    "neck_clear": 0.4495192307692308
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 118%・頭の幅 148%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 1.4832162373145978,
+    "neck": 1.1796042617960427
+   }
+  }
+ ]
+}

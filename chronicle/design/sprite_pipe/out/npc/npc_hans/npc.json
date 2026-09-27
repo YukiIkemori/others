@@ -1,0 +1,48 @@
+{
+ "id": "hans",
+ "look": "npc_hans",
+ "name": "ハンス",
+ "tier": "B",
+ "kind": "person",
+ "region": "forest",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 50
+ },
+ "measureH": {
+  "field": 52
+ },
+ "headgearExtraDots": 2,
+ "mainHex": "#5E6A3A",
+ "mainHue": 75,
+ "mainName": "オリーブ",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_hans_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.2,
+   "head_w": 0.42,
+   "shoulder": 0.425,
+   "neck_clear": 0.9320175438596491
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

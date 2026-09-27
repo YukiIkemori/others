@@ -34,3 +34,11 @@
 00:46:44   | ■ シートの状態
 00:46:44   |   シート1 歩き＋演技4: 要作り直し  npc_yena_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
 00:46:44 sheet 1: 0 redo lines
+01:03:37 pipeline: sheets.py ../art_ref/gen/npc/yena --npc yena --out out/npc/npc_yena
+01:04:41   |   「イェナ（npc_yena）のシート1の8番（驚く）だけ小さく描かれている（頭の大きさがほかのポーズの約 81%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:04:41   | 
+01:04:41   | ■ シートの状態
+01:04:41   |   シート1 歩き＋演技4: 要作り直し  npc_yena_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+01:04:41   | 
+01:04:41   | packed field 184x300 | palette 52 + face 0
+01:04:43 to_v2 npc_yena: npc_yena → /home/user/others/chronicle/v2/assets/sprites/npc_yena |   field: 16 frames

@@ -19,7 +19,8 @@ proportion checks (their 'head' is not a human head).
 Proportions (the owner's rule: chunky like Arun, about 2.7 heads): measured on Arun's delivered walk sheet
 (arun_sheet_01, 12 frames, body 48): neck row / body = 0.29 (head incl. chin ~ 1/3), head width / body = 0.43, shoulder
 width / body = 0.40. A person's walk frames are measured the same way against the person's own body height (children
-and short / tall people scale the whole figure, not the head ratio). More than PROP_TOL off -> redo line.
+and short / tall people scale the whole figure, not the head ratio). Head height AND width more than PROP_TOL under
+Arun's (or the width more than WIDTH_TOL under) -> redo line; other deviations over PROP_TOL -> a check.
 """
 import copy
 import json
@@ -216,8 +217,8 @@ def measure(img, body_h, extra=0):
 
 
 def check_proportions(npc, runs, rep, tol=PROP_TOL):
-    """Walk frames vs Arun's ratios. Too small a head (the realistic-proportion failure) -> redo; too big only when the
-    look has no headgear / volume (a hat or hood can widen the head row) -> otherwise a check."""
+    """Walk frames vs Arun's ratios (median of the 12 walk frames). A head too small by both measures -> redo; any other
+    ratio more than tol off -> check (see the comment below)."""
     if npc.get('kind') == 'animal':
         return
     extra = npc.get('headgearExtraDots') or 0
@@ -235,25 +236,21 @@ def check_proportions(npc, runs, rep, tol=PROP_TOL):
         SHEETS[n]['prop'] = med
         rep.add(n, 'info', 'proportion', '頭身の比（歩き12コマの中央値、体 %d ドットあたり）: 首 %.2f（アルン %.2f）・頭の幅 %.2f（%.2f）・肩 %.2f（%.2f）' % (
             bh, med['neck'], ARUN_PROP['neck'], med['head_w'], ARUN_PROP['head_w'], med['shoulder'], ARUN_PROP['shoulder']), **med)
-        # head height (neck row) = the heads-tall ratio: +-tol. Head width depends on hair volume (Arun's hair is bushy; a
-        # cap or slicked hair is narrower at the same head size): only a large shortfall (WIDTH_TOL) is a redo.
-        checks = [('head_w', '頭の幅', WIDTH_TOL)]
-        if med['neck_clear'] < 0.9:          # a visible neck / chin line (hoods and long hair hide it)
-            checks.append(('neck', '頭の高さ', tol))
-        for k, ja, tl in checks:
-            q = med[k] / ARUN_PROP[k]
-            if k == 'head_w' and 1 - WIDTH_TOL <= q < 1 - tol:
-                rep.add(n, 'check', 'proportion_width', '頭の幅がアルンの %.0f%%（髪の量・帽子の形でも変わる）。並べて見る' % (100 * q), ratio=q, metric=k)
-                continue
-            if q < 1 - tl:
-                rep.add(n, 'redo', 'proportion', '%sがアルンより小さい（%.0f%%）。頭が小さく、頭身が高すぎる' % (ja, 100 * q), slot='walk_down_0',
-                        ratio=q, metric=k,
-                        ask='シート%dの人物の頭がアルンより小さく、頭身が高すぎる（%sが約 %.0f%%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して' % (n, ja, 100 * q))
-            elif q > 1 + tl:
-                lvl = 'check' if extra > 0 else 'redo'
-                rep.add(n, lvl, 'proportion', '%sがアルンより大きい（%.0f%%）' % (ja, 100 * q), slot='walk_down_0' if lvl == 'redo' else None,
-                        ratio=q, metric=k,
-                        ask=('シート%dの人物の頭がアルンより大きすぎる（%sが約 %.0f%%）。アルンの歩きと同じ頭の大きさにして、同じ条件で描き直して' % (n, ja, 100 * q)) if lvl == 'redo' else None)
+        # Two measures of the head: its height (the neck / chin row) and its width. Each alone is fooled by the costume: a
+        # beard or a high collar hides the neck (hans: neck 68 % with a normal head), a braid / bun or a child's big head
+        # moves it down, bushy hair or a hat widens the head row (Arun's own hair is bushy). A head that is really too
+        # small (the realistic-proportion failure) is small by BOTH, so: redo when both are more than tol under Arun's, or
+        # the width alone more than WIDTH_TOL under it. Anything else outside +-tol is a 'check' (look at the lineup).
+        qn = med['neck'] / ARUN_PROP['neck'] if med['neck_clear'] < 0.95 else None
+        qw = med['head_w'] / ARUN_PROP['head_w']
+        small = (qw < 1 - WIDTH_TOL) or (qn is not None and qn < 1 - tol and qw < 1 - tol)
+        pct = '頭の高さ %s・頭の幅 %.0f%%' % ('%.0f%%' % (100 * qn) if qn is not None else '（首が見えない）', 100 * qw)
+        if small:
+            rep.add(n, 'redo', 'proportion', '頭がアルンより小さい（%s）。頭身が高すぎる' % pct, slot='walk_down_0', ratio=qw, neck=qn,
+                    ask='シート%dの人物の頭がアルンより小さく、頭身が高すぎる（%s）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して' % (n, pct))
+        elif (qn is not None and abs(qn - 1) > tol) or abs(qw - 1) > tol:
+            rep.add(n, 'check', 'proportion_off', '頭の比がアルンと %d%% 以上違う（%s）。ひげ・髪・帽子のせいでないか、並べて見る' % (int(100 * tol), pct),
+                    ratio=qw, neck=qn)
 
 
 # ------------------------------------------------------------------ after pack: meta for the engine

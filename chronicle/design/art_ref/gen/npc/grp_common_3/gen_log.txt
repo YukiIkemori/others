@@ -1,0 +1,42 @@
+01:13:49 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+01:14:59   half A (npc_silent, target 46):
+01:14:59   pitch in raw image: 4.87 px per art pixel (upright median 224 px / 46)
+01:15:00   half B (npc_oil_carrier, target 49):
+01:15:00   pitch in raw image: 4.84 px per art pixel (upright median 237 px / 49)
+01:15:02 sheet 1 -> art_ref/gen/npc/grp_common_3/npc_grp_common_3.png (24 poses)
+01:15:02 pipeline: sheets.py ../art_ref/gen/npc/grp_common_3 --npc npc_silent --out out/npc/npc_silent --check
+01:15:51   |   - シート1: npc_grp_common_3.png の左半分（人物A）を使う
+01:15:51   |   - シート1: 頭身の比（歩き12コマの中央値、体 46 ドットあたり）: 首 0.33（アルン 0.29）・頭の幅 0.41（0.43）・肩 0.33（0.40）
+01:15:51   |   - 向きの見本（configs/refs/npc_silent）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:15:51   | 
+01:15:51   | ■ シートの状態
+01:15:51   |   シート1 歩き: 確認あり  npc_silent_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+01:15:51 pipeline: sheets.py ../art_ref/gen/npc/grp_common_3 --npc npc_oil_carrier --out out/npc/npc_oil_carrier --check
+01:16:34   | 
+01:16:34   | ■ 画像 AI にそのまま送れる文
+01:16:34   |   「灯守組合の油運び（npc_oil_carrier）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さ 84%・頭の幅 91%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して」
+01:16:34   | 
+01:16:34   | ■ シートの状態
+01:16:34   |   シート1 歩き: 要作り直し  npc_oil_carrier_s1.png  ドット 8.00px → 描かれた格子のまま（49.0 ドット）
+01:16:34 sheet 1: 1 redo lines: 頭がアルンより小さい（頭の高さ 84%・頭の幅 91%）。頭身が高すぎる
+01:16:34 sheet 1 attempt 2: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs) + notes
+01:17:32   half A (npc_silent, target 46):
+01:17:32   pitch in raw image: 4.78 px per art pixel (upright median 220 px / 46)
+01:17:32   half B (npc_oil_carrier, target 49):
+01:17:33   pitch in raw image: 4.78 px per art pixel (upright median 234 px / 49)
+01:17:34 sheet 1 -> art_ref/gen/npc/grp_common_3/npc_grp_common_3.png (24 poses)
+01:17:34 pipeline: sheets.py ../art_ref/gen/npc/grp_common_3 --npc npc_silent --out out/npc/npc_silent --check
+01:18:10   | 
+01:18:10   | ■ 画像 AI にそのまま送れる文
+01:18:10   |   「静夜会の信者（npc_silent）のシート1の3番（下向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 81%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:18:10   | 
+01:18:10   | ■ シートの状態
+01:18:10   |   シート1 歩き: 要作り直し  npc_silent_s1.png  ドット 8.00px → 描かれた格子のまま（45.5 ドット）
+01:18:10 pipeline: sheets.py ../art_ref/gen/npc/grp_common_3 --npc npc_oil_carrier --out out/npc/npc_oil_carrier --check
+01:18:47   |   - シート1: npc_grp_common_3.png の右半分（人物B）を使う
+01:18:47   |   - シート1: 頭身の比（歩き12コマの中央値、体 49 ドットあたり）: 首 0.24（アルン 0.29）・頭の幅 0.40（0.43）・肩 0.43（0.40）
+01:18:47   |   - 向きの見本（configs/refs/npc_oil_carrier）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:18:47   | 
+01:18:47   | ■ シートの状態
+01:18:47   |   シート1 歩き: 確認あり  npc_oil_carrier_s1.png  ドット 8.00px → 描かれた格子のまま（49.0 ドット）
+01:18:47 sheet 1: 0 redo lines

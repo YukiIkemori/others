@@ -1,0 +1,48 @@
+{
+ "id": "roy",
+ "look": "npc_roy",
+ "name": "ロイ",
+ "tier": "B",
+ "kind": "person",
+ "region": "forest",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 46
+ },
+ "measureH": {
+  "field": 47
+ },
+ "headgearExtraDots": 1,
+ "mainHex": "#4A6A5A",
+ "mainHue": 160,
+ "mainName": "深い青緑",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_roy_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.30434782608695654,
+   "head_w": 0.391304347826087,
+   "shoulder": 0.30434782608695654,
+   "neck_clear": 0.513157894736842
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

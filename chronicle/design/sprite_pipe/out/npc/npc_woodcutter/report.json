@@ -1,0 +1,301 @@
+{
+ "char": "npc_woodcutter",
+ "companion": null,
+ "npc": "npc_woodcutter",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/grp_forest_3",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/sprite_pipe/out/npc/npc_woodcutter/src/npc_woodcutter_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 400.0,
+   "native_height_at_period": 50.0,
+   "scale_note": "描かれた格子のまま（50.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      37,
+      52
+     ],
+     "box": [
+      152,
+      48,
+      480,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.62
+    },
+    "walk_down_1": {
+     "size": [
+      38,
+      53
+     ],
+     "box": [
+      792,
+      40,
+      1128,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.86,
+     "scale": 1.037
+    },
+    "walk_down_2": {
+     "size": [
+      40,
+      53
+     ],
+     "box": [
+      1424,
+      40,
+      1776,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.82,
+     "scale": 1.037
+    },
+    "walk_up_0": {
+     "size": [
+      36,
+      50
+     ],
+     "box": [
+      160,
+      576,
+      480,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.82,
+     "scale": 0.937
+    },
+    "walk_up_1": {
+     "size": [
+      36,
+      50
+     ],
+     "box": [
+      800,
+      576,
+      1120,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.83,
+     "scale": 0.962
+    },
+    "walk_up_2": {
+     "size": [
+      37,
+      50
+     ],
+     "box": [
+      1432,
+      576,
+      1760,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.05,
+     "scale": 0.962
+    },
+    "walk_left_0": {
+     "size": [
+      28,
+      50
+     ],
+     "box": [
+      192,
+      1088,
+      448,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      31,
+      50
+     ],
+     "box": [
+      816,
+      1088,
+      1096,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_left_2": {
+     "size": [
+      33,
+      50
+     ],
+     "box": [
+      1448,
+      1088,
+      1744,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.025
+    },
+    "walk_right_0": {
+     "size": [
+      29,
+      49
+     ],
+     "box": [
+      184,
+      1608,
+      448,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      31,
+      50
+     ],
+     "box": [
+      816,
+      1600,
+      1096,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_2": {
+     "size": [
+      33,
+      50
+     ],
+     "box": [
+      1448,
+      1600,
+      1744,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "pair_half",
+   "msg": "npc_grp_forest_3.png の右半分（人物B）を使う",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_woodcutter）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 50 ドットあたり）: 首 0.23（アルン 0.29）・頭の幅 0.47（0.43）・肩 0.47（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.23,
+    "head_w": 0.47,
+    "shoulder": 0.475,
+    "neck_clear": 0.96
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ （首が見えない）・頭の幅 110%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 1.100702576112412,
+    "neck": null
+   }
+  }
+ ]
+}

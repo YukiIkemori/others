@@ -1,0 +1,462 @@
+{
+ "char": "npc_drake",
+ "companion": null,
+ "npc": "npc_drake",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/drake",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/drake/npc_drake_s1.png",
+   "size": [
+    2560,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x4",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 416.0,
+   "native_height_at_period": 52.0,
+   "scale_note": "描かれた格子のまま（52.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      37,
+      53
+     ],
+     "box": [
+      152,
+      40,
+      480,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.11
+    },
+    "walk_down_1": {
+     "size": [
+      36,
+      52
+     ],
+     "box": [
+      800,
+      48,
+      1120,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.11,
+     "scale": 1.025
+    },
+    "walk_down_2": {
+     "size": [
+      36,
+      53
+     ],
+     "box": [
+      1440,
+      40,
+      1760,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.14,
+     "scale": 1.075
+    },
+    "act_nod": {
+     "size": [
+      32,
+      52
+     ],
+     "box": [
+      2096,
+      48,
+      2384,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.72,
+     "scale": 0.85
+    },
+    "walk_up_0": {
+     "size": [
+      35,
+      52
+     ],
+     "box": [
+      160,
+      560,
+      472,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.8,
+     "scale": 0.575,
+     "fixed": [
+      "rescaled 1.74"
+     ]
+    },
+    "walk_up_1": {
+     "size": [
+      35,
+      52
+     ],
+     "box": [
+      800,
+      560,
+      1112,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.01,
+     "scale": 0.575,
+     "fixed": [
+      "rescaled 1.74"
+     ]
+    },
+    "walk_up_2": {
+     "size": [
+      36,
+      53
+     ],
+     "box": [
+      1440,
+      552,
+      1760,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.86,
+     "scale": 0.575,
+     "fixed": [
+      "rescaled 1.74"
+     ]
+    },
+    "act_surprise": {
+     "size": [
+      36,
+      51
+     ],
+     "box": [
+      2080,
+      560,
+      2400,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.22,
+     "scale": 1.037
+    },
+    "walk_left_0": {
+     "size": [
+      21,
+      51
+     ],
+     "box": [
+      216,
+      1080,
+      416,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      32,
+      51
+     ],
+     "box": [
+      816,
+      1080,
+      1104,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_left_2": {
+     "size": [
+      32,
+      51
+     ],
+     "box": [
+      1456,
+      1080,
+      1744,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "act_call": {
+     "size": [
+      32,
+      52
+     ],
+     "box": [
+      2096,
+      1072,
+      2384,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.66,
+     "scale": 0.912
+    },
+    "walk_right_0": {
+     "size": [
+      21,
+      51
+     ],
+     "box": [
+      216,
+      1592,
+      416,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      34,
+      51
+     ],
+     "box": [
+      808,
+      1592,
+      1112,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_2": {
+     "size": [
+      32,
+      51
+     ],
+     "box": [
+      1456,
+      1592,
+      1744,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.025
+    },
+    "act_sig": {
+     "size": [
+      28,
+      50
+     ],
+     "box": [
+      2112,
+      1600,
+      2368,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.15,
+     "scale": 0.575,
+     "fixed": [
+      "rescaled 1.74"
+     ]
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_drake）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "marks",
+   "msg": "シート1 の 8 番（驚く） の感情マーク（驚きの線・汗など 3 個）を消した",
+   "slot": "act_surprise",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 4 番（うなずく） の縮尺が少し違う（頭の大きさで約 85%）。並べて見て気になるなら描き直し",
+   "slot": "act_nod",
+   "ask": null,
+   "data": {
+    "scale": 0.85,
+    "per_ref": [
+     1.0375000000000003,
+     0.8500000000000003,
+     0.8125000000000002
+    ],
+    "group_median": 1.0000000000000004
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 5 番（上向き・立ち） がほかのポーズより小さく描かれている（頭の大きさで約 57%）。仮に 174% に拡大縮小して使う",
+   "slot": "walk_up_0",
+   "ask": "ドレイク（npc_drake）のシート1の5番（上向き・立ち）だけ小さく描かれている（頭の大きさがほかのポーズの約 57%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.5749999999999995,
+    "per_ref": [
+     1.1375000000000004,
+     0.5749999999999997,
+     0.5749999999999997
+    ],
+    "group_median": 1.0000000000000004
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 6 番（上向き・右足前） がほかのポーズより小さく描かれている（頭の大きさで約 57%）。仮に 174% に拡大縮小して使う",
+   "slot": "walk_up_1",
+   "ask": "ドレイク（npc_drake）のシート1の6番（上向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 57%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.5749999999999995,
+    "per_ref": [
+     1.0875000000000004,
+     0.5749999999999997,
+     0.5749999999999997
+    ],
+    "group_median": 1.0000000000000004
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 7 番（上向き・左足前） がほかのポーズより小さく描かれている（頭の大きさで約 57%）。仮に 174% に拡大縮小して使う",
+   "slot": "walk_up_2",
+   "ask": "ドレイク（npc_drake）のシート1の7番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 57%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.5749999999999995,
+    "per_ref": [
+     0.5625,
+     0.5749999999999997,
+     0.5749999999999997
+    ],
+    "group_median": 1.0000000000000004
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 16 番（その人のしぐさ） がほかのポーズより小さく描かれている（頭の大きさで約 57%）。仮に 174% に拡大縮小して使う",
+   "slot": "act_sig",
+   "ask": "ドレイク（npc_drake）のシート1の16番（その人のしぐさ）だけ小さく描かれている（頭の大きさがほかのポーズの約 57%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.5749999999999995,
+    "per_ref": [
+     1.0375000000000003,
+     0.5749999999999997,
+     0.5249999999999999
+    ],
+    "group_median": 1.0000000000000004
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 51 ドットあたり）: 首 0.25（アルン 0.29）・頭の幅 0.42（0.43）・肩 0.44（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.24509803921568626,
+    "head_w": 0.4215686274509804,
+    "shoulder": 0.4362745098039216,
+    "neck_clear": 0.7619047619047619
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 84%・頭の幅 99%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 0.9872801579648253,
+    "neck": 0.8393768466290626
+   }
+  }
+ ]
+}

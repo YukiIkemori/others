@@ -1,0 +1,91 @@
+{
+ "id": "yura_b_inn",
+ "kind": "building",
+ "theme": "moss_village",
+ "footprint": [
+  6,
+  4
+ ],
+ "wall": 2,
+ "files": {
+  "24": "yura_b_inn@24.png",
+  "32": "yura_b_inn@32.png",
+  "40": "yura_b_inn@40.png"
+ },
+ "emitFiles": {
+  "24": "yura_b_inn_emit@24.png",
+  "32": "yura_b_inn_emit@32.png",
+  "40": "yura_b_inn_emit@40.png"
+ },
+ "size": {
+  "24": [
+   156,
+   120
+  ],
+  "32": [
+   208,
+   160
+  ],
+  "40": [
+   260,
+   200
+  ]
+ },
+ "anchor32": [
+  8,
+  160
+ ],
+ "door32": {
+  "x": 80.0,
+  "y": 0,
+  "w": 18,
+  "h": 26
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 36,
+   "y": -32,
+   "w": 10,
+   "h": 11
+  },
+  {
+   "kind": "win",
+   "x": 143,
+   "y": -32,
+   "w": 10,
+   "h": 11
+  }
+ ],
+ "roof32": [
+  -6,
+  -132,
+  198,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/moss_village/yura_b_inn.png",
+ "def_": {
+  "type": "building",
+  "id": "yura_b_inn",
+  "x": 12,
+  "y": 2,
+  "w": 6,
+  "h": 4,
+  "wall": 2,
+  "roof": "moss",
+  "mat": "bark",
+  "windows": 2,
+  "small": true,
+  "door": {
+   "x": 14,
+   "y": 5,
+   "to": {
+    "map": "yura_inn",
+    "spawn": "door"
+   }
+  },
+  "sign": "inn",
+  "lamp": true
+ }
+}

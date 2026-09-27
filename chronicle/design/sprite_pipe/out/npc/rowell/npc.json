@@ -1,0 +1,50 @@
+{
+ "id": "rowell",
+ "look": "rowell",
+ "name": "ロウェル",
+ "tier": "A",
+ "kind": "person",
+ "region": "prologue",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 50,
+  "face": 80
+ },
+ "measureH": {
+  "field": 50
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#E6EAF0",
+ "mainHue": 210,
+ "mainName": "青みの白",
+ "lantern": false,
+ "recolor": false,
+ "face": true,
+ "sheets": {
+  "1": "npc_rowell_s1.png",
+  "2": "npc_rowell_s2.png",
+  "3": "npc_rowell_s3.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.33999999999999997,
+   "head_w": 0.4,
+   "shoulder": 0.345,
+   "neck_clear": 0.65
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

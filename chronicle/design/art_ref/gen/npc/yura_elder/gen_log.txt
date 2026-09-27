@@ -1,0 +1,30 @@
+00:51:41 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+00:52:28   pitch in raw image: 5.41 px per art pixel (upright median 249 px / 46)
+00:52:29 sheet 1 -> art_ref/gen/npc/yura_elder/npc_yura_elder_s1.png (16 poses)
+00:52:29 pipeline: sheets.py ../art_ref/gen/npc/yura_elder --npc yura_elder --out out/npc/npc_yura_elder --check
+00:52:57   | 
+00:52:57   | ■ 画像 AI にそのまま送れる文
+00:52:57   |   「ユラの長老（npc_yura_elder）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さが約 72%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して」
+00:52:57   | 
+00:52:57   | ■ シートの状態
+00:52:57   |   シート1 歩き＋演技4: 要作り直し  npc_yura_elder_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+00:52:57 sheet 1: 1 redo lines: 頭の高さがアルンより小さい（72%）。頭が小さく、頭身が高すぎる
+00:52:57 sheet 1 attempt 2: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs) + notes
+00:53:48   pitch in raw image: 5.30 px per art pixel (upright median 244 px / 46)
+00:53:49 sheet 1 -> art_ref/gen/npc/yura_elder/npc_yura_elder_s1.png (16 poses)
+00:53:49 pipeline: sheets.py ../art_ref/gen/npc/yura_elder --npc yura_elder --out out/npc/npc_yura_elder --check
+00:54:18   | ■ メモ（2 件）
+00:54:18   |   - シート1: 頭身の比（歩き12コマの中央値、体 43 ドットあたり）: 首 0.29（アルン 0.29）・頭の幅 0.58（0.43）・肩 0.65（0.40）
+00:54:18   |   - 向きの見本（configs/refs/npc_yura_elder）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+00:54:18   | 
+00:54:18   | ■ シートの状態
+00:54:18   |   シート1 歩き＋演技4: 確認あり  npc_yura_elder_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+00:54:18 sheet 1: 0 redo lines
+01:17:01 pipeline: sheets.py ../art_ref/gen/npc/yura_elder --npc yura_elder --out out/npc/npc_yura_elder
+01:18:03   |   - 向きの見本（configs/refs/npc_yura_elder）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:18:03   | 
+01:18:03   | ■ シートの状態
+01:18:03   |   シート1 歩き＋演技4: 確認あり  npc_yura_elder_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+01:18:03   | 
+01:18:03   | packed field 180x208 | palette 52 + face 0
+01:18:04 to_v2 npc_yura_elder: npc_yura_elder → /home/user/others/chronicle/v2/assets/sprites/npc_yura_elder |   field: 16 frames

@@ -18,7 +18,7 @@ def tgt(mid, own=None, k=1.6, lo=12, hi=40):
 MATS = [
  ('common/grass', 'common', 'grass', None, 0.8), ('common/tall_grass', 'common', 'tall_grass', None, 0.8), ('common/flowers', 'common', 'flowers', None, 0.85),
  ('common/dirt', 'common', 'dirt', None, 0.9), ('common/road', 'common', 'road', None, 0.85), ('common/moss_earth', 'common', 'moss_earth', None, 0.85),
- ('common/sand', 'common', 'sand', None, 0.8), ('harbor/cobble', 'common', 'cobble', (88, 30), 0.85), ('common/stone_floor', 'common', 'stone_floor', (92, 26), 0.85),
+ ('common/sand', 'common', 'sand', None, 0.8), ('harbor/cobble2', 'common', 'cobble', (84, 28), 0.85), ('common/stone_floor2', 'common', 'stone_floor', (84, 22), 0.85),
  ('common/plank', 'common', 'plank', (74, 26), 0.85), ('common/wood_floor', 'common', 'wood_floor', (80, 26), 0.9), ('common/carpet', 'common', 'carpet', (70, 20), 0.9),
  ('common/cave_floor', 'common', 'cave_floor', (64, 18), 0.9), ('common/bark_floor', 'common', 'bark_floor', (74, 18), 0.9), ('common/root_floor', 'common', 'root_floor', (62, 20), 0.9),
  ('common/water', 'common', 'water', (40, 12), 0.95), ('common/sea', 'common', 'sea', (38, 12), 0.95), ('common/shallow', 'common', 'shallow', (68, 16), 0.9),
@@ -215,3 +215,14 @@ def brighten(theme, pid, k):
 
 if what in ('props', 'all') and (not flt or flt in 'dungeon_a'):
     brighten('common', 'chest', 1.22)
+
+BBG_H = {'coast': 0.40, 'tower': 0.42, 'forest': 0.58, 'tree': 0.46, 'cave': 0.55, 'desert': 0.5, 'snow': 0.5, 'marsh': 0.5, 'isles': 0.5, 'mine': 0.5, 'ash': 0.5, 'star': 0.5}
+def do_bbg():
+    import warnings; warnings.filterwarnings('ignore')
+    for b, h in BBG_H.items():
+        if flt and flt != b: continue
+        p = G + 'bbg/%s.png' % b
+        if not os.path.exists(p): continue
+        bbg(p, b, h, front_raw=G + 'bbg/%s_front.png' % b)
+        print('bbg', b)
+if what in ('bbg', 'all'): do_bbg()

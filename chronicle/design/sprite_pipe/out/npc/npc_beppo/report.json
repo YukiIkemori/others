@@ -1,0 +1,479 @@
+{
+ "char": "npc_beppo",
+ "companion": null,
+ "npc": "npc_beppo",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/beppo",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/beppo/npc_beppo_s1.png",
+   "size": [
+    2560,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x4",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 368.0,
+   "native_height_at_period": 46.0,
+   "scale_note": "描かれた格子のまま（46.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      39,
+      46
+     ],
+     "box": [
+      144,
+      96,
+      488,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.87
+    },
+    "walk_down_1": {
+     "size": [
+      38,
+      46
+     ],
+     "box": [
+      792,
+      96,
+      1128,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.79,
+     "scale": 0.857
+    },
+    "walk_down_2": {
+     "size": [
+      39,
+      46
+     ],
+     "box": [
+      1424,
+      96,
+      1768,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.77,
+     "scale": 0.857
+    },
+    "act_nod": {
+     "size": [
+      39,
+      46
+     ],
+     "box": [
+      2064,
+      96,
+      2408,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.95,
+     "scale": 0.714,
+     "fixed": [
+      "rescaled 1.40"
+     ]
+    },
+    "walk_up_0": {
+     "size": [
+      36,
+      45
+     ],
+     "box": [
+      160,
+      616,
+      480,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.91,
+     "scale": 1.0
+    },
+    "walk_up_1": {
+     "size": [
+      37,
+      46
+     ],
+     "box": [
+      792,
+      608,
+      1120,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.96,
+     "scale": 1.0
+    },
+    "walk_up_2": {
+     "size": [
+      35,
+      46
+     ],
+     "box": [
+      1440,
+      608,
+      1752,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.99,
+     "scale": 1.0
+    },
+    "act_surprise": {
+     "size": [
+      41,
+      46
+     ],
+     "box": [
+      2056,
+      608,
+      2416,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.99,
+     "scale": 0.662,
+     "fixed": [
+      "rescaled 1.51"
+     ]
+    },
+    "walk_left_0": {
+     "size": [
+      28,
+      44
+     ],
+     "box": [
+      192,
+      1136,
+      448,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.45,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.95
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      36,
+      45
+     ],
+     "box": [
+      800,
+      1128,
+      1120,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.2,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.7
+     },
+     "scale": 1.013
+    },
+    "walk_left_2": {
+     "size": [
+      34,
+      44
+     ],
+     "box": [
+      1448,
+      1136,
+      1752,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.77,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 0.27
+     },
+     "scale": 1.013
+    },
+    "act_call": {
+     "size": [
+      38,
+      47
+     ],
+     "box": [
+      2072,
+      1112,
+      2408,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.95,
+     "scale": 0.714,
+     "fixed": [
+      "rescaled 1.40"
+     ]
+    },
+    "walk_right_0": {
+     "size": [
+      30,
+      45
+     ],
+     "box": [
+      184,
+      1640,
+      456,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.49,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.99
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      38,
+      45
+     ],
+     "box": [
+      792,
+      1640,
+      1128,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.63,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.13
+     },
+     "scale": 1.078
+    },
+    "walk_right_2": {
+     "size": [
+      41,
+      45
+     ],
+     "box": [
+      1416,
+      1640,
+      1776,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.57,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.07
+     },
+     "scale": 1.013
+    },
+    "act_sig": {
+     "size": [
+      39,
+      48
+     ],
+     "box": [
+      2064,
+      1616,
+      2408,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.66,
+     "scale": 0.714,
+     "fixed": [
+      "rescaled 1.40"
+     ]
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_beppo）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "marks",
+   "msg": "シート1 の 8 番（驚く） の感情マーク（驚きの線・汗など 3 個）を消した",
+   "slot": "act_surprise",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 2 番（下向き・右足前） の縮尺が少し違う（頭の大きさで約 86%）。並べて見て気になるなら描き直し",
+   "slot": "walk_down_1",
+   "ask": null,
+   "data": {
+    "scale": 0.857142857142857,
+    "per_ref": [
+     1.0000000000000004,
+     0.825,
+     0.7749999999999999
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 3 番（下向き・左足前） の縮尺が少し違う（頭の大きさで約 86%）。並べて見て気になるなら描き直し",
+   "slot": "walk_down_2",
+   "ask": null,
+   "data": {
+    "scale": 0.857142857142857,
+    "per_ref": [
+     1.0000000000000004,
+     0.825,
+     0.7749999999999999
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 4 番（うなずく） がほかのポーズより小さく描かれている（頭の大きさで約 71%）。仮に 140% に拡大縮小して使う",
+   "slot": "act_nod",
+   "ask": "ベッポ（npc_beppo）のシート1の4番（うなずく）だけ小さく描かれている（頭の大きさがほかのポーズの約 71%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.7142857142857142,
+    "per_ref": [
+     1.0375000000000003,
+     0.6874999999999998,
+     0.6875
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 8 番（驚く） がほかのポーズより小さく描かれている（頭の大きさで約 66%）。仮に 151% に拡大縮小して使う",
+   "slot": "act_surprise",
+   "ask": "ベッポ（npc_beppo）のシート1の8番（驚く）だけ小さく描かれている（頭の大きさがほかのポーズの約 66%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.662337662337662,
+    "per_ref": [
+     0.9625000000000001,
+     0.6249999999999998,
+     0.6374999999999997
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 12 番（手を挙げて呼びかける） がほかのポーズより小さく描かれている（頭の大きさで約 71%）。仮に 140% に拡大縮小して使う",
+   "slot": "act_call",
+   "ask": "ベッポ（npc_beppo）のシート1の12番（手を挙げて呼びかける）だけ小さく描かれている（頭の大きさがほかのポーズの約 71%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.714285714285714,
+    "per_ref": [
+     0.8374999999999999,
+     0.6874999999999998,
+     0.6500000000000001
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 16 番（その人のしぐさ） がほかのポーズより小さく描かれている（頭の大きさで約 71%）。仮に 140% に拡大縮小して使う",
+   "slot": "act_sig",
+   "ask": "ベッポ（npc_beppo）のシート1の16番（その人のしぐさ）だけ小さく描かれている（頭の大きさがほかのポーズの約 71%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.714285714285714,
+    "per_ref": [
+     0.9000000000000004,
+     0.6874999999999998,
+     0.6500000000000001
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 43 ドットあたり）: 首 0.30（アルン 0.29）・頭の幅 0.53（0.43）・肩 0.60（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.3023255813953488,
+    "head_w": 0.5348837209302325,
+    "shoulder": 0.5988372093023255,
+    "neck_clear": 0.8477011494252873
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 104%・頭の幅 125%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 1.2526550841457436,
+    "neck": 1.0353615801210576
+   }
+  }
+ ]
+}

@@ -1,0 +1,126 @@
+{
+ "id": "fern_b_shop",
+ "kind": "building",
+ "theme": "treetop",
+ "footprint": [
+  7,
+  5
+ ],
+ "wall": 2,
+ "files": {
+  "24": "fern_b_shop@24.png",
+  "32": "fern_b_shop@32.png",
+  "40": "fern_b_shop@40.png"
+ },
+ "emitFiles": {
+  "24": "fern_b_shop_emit@24.png",
+  "32": "fern_b_shop_emit@32.png",
+  "40": "fern_b_shop_emit@40.png"
+ },
+ "size": {
+  "24": [
+   180,
+   144
+  ],
+  "32": [
+   240,
+   192
+  ],
+  "40": [
+   300,
+   240
+  ]
+ },
+ "anchor32": [
+  8,
+  192
+ ],
+ "door32": {
+  "x": 112.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": -6,
+   "y": -169,
+   "w": 236,
+   "h": 110
+  },
+  {
+   "kind": "win",
+   "x": 59,
+   "y": -160,
+   "w": 5,
+   "h": 6
+  },
+  {
+   "kind": "win",
+   "x": 49,
+   "y": -67,
+   "w": 8,
+   "h": 6
+  },
+  {
+   "kind": "win",
+   "x": 226,
+   "y": -67,
+   "w": 3,
+   "h": 7
+  },
+  {
+   "kind": "win",
+   "x": 43,
+   "y": -46,
+   "w": 5,
+   "h": 5
+  },
+  {
+   "kind": "win",
+   "x": 42,
+   "y": -35,
+   "w": 10,
+   "h": 11
+  },
+  {
+   "kind": "win",
+   "x": 167,
+   "y": -35,
+   "w": 10,
+   "h": 11
+  }
+ ],
+ "roof32": [
+  -6,
+  -164,
+  230,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/treetop/fern_b_shop.png",
+ "def_": {
+  "type": "building",
+  "id": "fern_b_shop",
+  "x": 41,
+  "y": 24,
+  "w": 7,
+  "h": 5,
+  "wall": 2,
+  "roof": "thatch",
+  "mat": "log",
+  "windows": 2,
+  "door": {
+   "x": 44,
+   "y": 28,
+   "to": {
+    "map": "fern_shop",
+    "spawn": "door"
+   }
+  },
+  "sign": "item",
+  "lamp": true,
+  "awning": true
+ }
+}

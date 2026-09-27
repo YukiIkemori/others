@@ -1,0 +1,11 @@
+01:25:34 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:26:37   pitch in raw image: 5.27 px per art pixel (upright median 269 px / 51)
+01:26:39 sheet 1 -> art_ref/gen/npc/loch_mayor/npc_loch_mayor_s1.png (16 poses)
+01:26:39 pipeline: sheets.py ../art_ref/gen/npc/loch_mayor --npc loch_mayor --out out/npc/npc_loch_mayor --check
+01:27:39   | ■ メモ（2 件）
+01:27:39   |   - シート1: 頭身の比（歩き12コマの中央値、体 47 ドットあたり）: 首 0.23（アルン 0.29）・頭の幅 0.48（0.43）・肩 0.47（0.40）
+01:27:39   |   - 向きの見本（configs/refs/npc_loch_mayor）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:27:39   | 
+01:27:39   | ■ シートの状態
+01:27:39   |   シート1 歩き＋演技4: 確認あり  npc_loch_mayor_s1.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:27:39 sheet 1: 0 redo lines

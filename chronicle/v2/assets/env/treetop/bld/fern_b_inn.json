@@ -1,0 +1,99 @@
+{
+ "id": "fern_b_inn",
+ "kind": "building",
+ "theme": "treetop",
+ "footprint": [
+  9,
+  5
+ ],
+ "wall": 2,
+ "files": {
+  "24": "fern_b_inn@24.png",
+  "32": "fern_b_inn@32.png",
+  "40": "fern_b_inn@40.png"
+ },
+ "emitFiles": {
+  "24": "fern_b_inn_emit@24.png",
+  "32": "fern_b_inn_emit@32.png",
+  "40": "fern_b_inn_emit@40.png"
+ },
+ "size": {
+  "24": [
+   228,
+   144
+  ],
+  "32": [
+   304,
+   192
+  ],
+  "40": [
+   380,
+   240
+  ]
+ },
+ "anchor32": [
+  8,
+  192
+ ],
+ "door32": {
+  "x": 144.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 44,
+   "y": -37,
+   "w": 10,
+   "h": 12
+  },
+  {
+   "kind": "win",
+   "x": 107,
+   "y": -37,
+   "w": 10,
+   "h": 13
+  },
+  {
+   "kind": "win",
+   "x": 233,
+   "y": -37,
+   "w": 10,
+   "h": 11
+  }
+ ],
+ "roof32": [
+  -6,
+  -164,
+  294,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/treetop/fern_b_inn.png",
+ "def_": {
+  "type": "building",
+  "id": "fern_b_inn",
+  "x": 5,
+  "y": 24,
+  "w": 9,
+  "h": 5,
+  "wall": 2,
+  "roof": "moss",
+  "mat": "log",
+  "windows": 3,
+  "door": {
+   "x": 9,
+   "y": 28,
+   "to": {
+    "map": "fern_inn",
+    "spawn": "door"
+   }
+  },
+  "sign": "inn",
+  "lamp": true,
+  "flowers": true,
+  "chimney": true
+ }
+}

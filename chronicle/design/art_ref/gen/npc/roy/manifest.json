@@ -1,0 +1,161 @@
+[
+ {
+  "sheet": 1,
+  "file": "npc_roy_s1.png",
+  "layout": "4x4",
+  "logical_cell": [
+   80,
+   64
+  ],
+  "image_px": [
+   2560,
+   2048
+  ],
+  "frames": [
+   {
+    "id": "walk_down_0",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     23,
+     47
+    ]
+   },
+   {
+    "id": "walk_down_1",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     25,
+     47
+    ]
+   },
+   {
+    "id": "walk_down_2",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     26,
+     47
+    ]
+   },
+   {
+    "id": "act_nod",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     24,
+     47
+    ]
+   },
+   {
+    "id": "walk_up_0",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     23,
+     46
+    ]
+   },
+   {
+    "id": "walk_up_1",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     25,
+     46
+    ]
+   },
+   {
+    "id": "walk_up_2",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     25,
+     46
+    ]
+   },
+   {
+    "id": "act_surprise",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     30,
+     46
+    ]
+   },
+   {
+    "id": "walk_left_0",
+    "row": 3,
+    "column": 1,
+    "logical_bbox": [
+     19,
+     47
+    ]
+   },
+   {
+    "id": "walk_left_1",
+    "row": 3,
+    "column": 2,
+    "logical_bbox": [
+     27,
+     47
+    ]
+   },
+   {
+    "id": "walk_left_2",
+    "row": 3,
+    "column": 3,
+    "logical_bbox": [
+     25,
+     47
+    ]
+   },
+   {
+    "id": "act_call",
+    "row": 3,
+    "column": 4,
+    "logical_bbox": [
+     26,
+     46
+    ]
+   },
+   {
+    "id": "walk_right_0",
+    "row": 4,
+    "column": 1,
+    "logical_bbox": [
+     18,
+     47
+    ]
+   },
+   {
+    "id": "walk_right_1",
+    "row": 4,
+    "column": 2,
+    "logical_bbox": [
+     27,
+     47
+    ]
+   },
+   {
+    "id": "walk_right_2",
+    "row": 4,
+    "column": 3,
+    "logical_bbox": [
+     26,
+     46
+    ]
+   },
+   {
+    "id": "act_sig",
+    "row": 4,
+    "column": 4,
+    "logical_bbox": [
+     24,
+     46
+    ]
+   }
+  ]
+ }
+]

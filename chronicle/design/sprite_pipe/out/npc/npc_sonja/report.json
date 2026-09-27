@@ -1,0 +1,445 @@
+{
+ "char": "npc_sonja",
+ "companion": null,
+ "npc": "npc_sonja",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/sonja",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/sonja/npc_sonja_s1.png",
+   "size": [
+    2560,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x4",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 368.0,
+   "native_height_at_period": 46.0,
+   "scale_note": "描かれた格子のまま（46.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      26,
+      48
+     ],
+     "box": [
+      200,
+      80,
+      440,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.22
+    },
+    "walk_down_1": {
+     "size": [
+      28,
+      49
+     ],
+     "box": [
+      832,
+      72,
+      1088,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.44,
+     "scale": 1.0
+    },
+    "walk_down_2": {
+     "size": [
+      27,
+      49
+     ],
+     "box": [
+      1472,
+      72,
+      1720,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.31,
+     "scale": 1.057
+    },
+    "act_nod": {
+     "size": [
+      24,
+      48
+     ],
+     "box": [
+      2128,
+      80,
+      2352,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.23,
+     "scale": 1.057
+    },
+    "walk_up_0": {
+     "size": [
+      27,
+      50
+     ],
+     "box": [
+      192,
+      576,
+      440,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.18,
+     "scale": 1.057
+    },
+    "walk_up_1": {
+     "size": [
+      30,
+      49
+     ],
+     "box": [
+      824,
+      584,
+      1096,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.56,
+     "scale": 1.0
+    },
+    "walk_up_2": {
+     "size": [
+      29,
+      49
+     ],
+     "box": [
+      1464,
+      584,
+      1728,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.99,
+     "scale": 1.0
+    },
+    "act_surprise": {
+     "size": [
+      33,
+      48
+     ],
+     "box": [
+      2088,
+      592,
+      2384,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.92,
+     "scale": 1.068
+    },
+    "walk_left_0": {
+     "size": [
+      21,
+      45
+     ],
+     "box": [
+      216,
+      1128,
+      416,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      30,
+      45
+     ],
+     "box": [
+      824,
+      1128,
+      1096,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.875
+    },
+    "walk_left_2": {
+     "size": [
+      29,
+      45
+     ],
+     "box": [
+      1464,
+      1128,
+      1728,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.909
+    },
+    "act_call": {
+     "size": [
+      27,
+      46
+     ],
+     "box": [
+      2112,
+      1120,
+      2360,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.91,
+     "scale": 1.068
+    },
+    "walk_right_0": {
+     "size": [
+      21,
+      45
+     ],
+     "box": [
+      216,
+      1640,
+      416,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      29,
+      45
+     ],
+     "box": [
+      824,
+      1640,
+      1088,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.909
+    },
+    "walk_right_2": {
+     "size": [
+      29,
+      45
+     ],
+     "box": [
+      1464,
+      1640,
+      1728,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.909
+    },
+    "act_sig": {
+     "size": [
+      32,
+      40
+     ],
+     "box": [
+      2096,
+      1680,
+      2384,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.33,
+     "scale": 1.0
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_sonja）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "marks",
+   "msg": "シート1 の 8 番（驚く） の感情マーク（驚きの線・汗など 3 個）を消した",
+   "slot": "act_surprise",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 11 番（左向き・後ろの足） の足元の影を消した",
+   "slot": "walk_left_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 2 番（下向き・右足前） の身長が 49 ドット（ほかは 46）",
+   "slot": "walk_down_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 3 番（下向き・左足前） の身長が 49 ドット（ほかは 46）",
+   "slot": "walk_down_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 5 番（上向き・立ち） の身長が 50 ドット（ほかは 46）",
+   "slot": "walk_up_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 6 番（上向き・右足前） の身長が 49 ドット（ほかは 46）",
+   "slot": "walk_up_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 7 番（上向き・左足前） の身長が 49 ドット（ほかは 46）",
+   "slot": "walk_up_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 16 番（その人のしぐさ） の身長が 40 ドット（ほかは 46）",
+   "slot": "act_sig",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 10 番（左向き・前の足） の縮尺が少し違う（頭の大きさで約 87%）。並べて見て気になるなら描き直し",
+   "slot": "walk_left_1",
+   "ask": null,
+   "data": {
+    "scale": 0.8749999999999997,
+    "per_ref": [
+     0.8500000000000003,
+     0.9625000000000001,
+     1.0000000000000004
+    ],
+    "group_median": 1.1000000000000005
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 42 ドットあたり）: 首 0.32（アルン 0.29）・頭の幅 0.51（0.43）・肩 0.45（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.3214285714285714,
+    "head_w": 0.5119047619047619,
+    "shoulder": 0.4464285714285714,
+    "neck_clear": 0.8090909090909091
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 110%・頭の幅 120%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 1.1988401918144307,
+    "neck": 1.1007827788649707
+   }
+  }
+ ]
+}

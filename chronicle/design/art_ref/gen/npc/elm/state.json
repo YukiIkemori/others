@@ -1,0 +1,646 @@
+{
+ "sheets": {
+  "1": {
+   "attempts": [
+    {
+     "raw": "raw/s1_a1.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "",
+     "t": "2026-09-27T00:53:49"
+    },
+    {
+     "raw": "raw/s1_a2.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "- PROPORTIONS WRONG: the head is too small / the figure too slender. Use exactly the hero's proportions from the template: about 2.7 heads tall, big head (a third of the body height), short sturdy body, low centre of gravity. (エルム（elm）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さが約 63%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して)",
+     "t": "2026-09-27T00:55:15"
+    },
+    {
+     "raw": "raw/s1_a3.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "- A pose is missing or cut off: draw every pose of the grid, each fully inside its own cell. (エルム（elm）のシート1の4番（うなずく）が画像の端で切れている。全部が画像に入るよう並べ直して、同じ条件で描き直して)\n- PROPORTIONS WRONG: the head is too small / the figure too slender. Use exactly the hero's proportions from the template: about 2.7 heads tall, big head (a third of the body height), short sturdy body, low centre of gravity. (エルム（elm）のシート1の人物の",
+     "t": "2026-09-27T00:56:36"
+    }
+   ],
+   "frames": {
+    "walk_down_0": {
+     "row": 1,
+     "column": 1,
+     "logical_bbox": [
+      39,
+      61
+     ],
+     "air": 0
+    },
+    "walk_down_1": {
+     "row": 1,
+     "column": 2,
+     "logical_bbox": [
+      38,
+      61
+     ],
+     "air": 0
+    },
+    "walk_down_2": {
+     "row": 1,
+     "column": 3,
+     "logical_bbox": [
+      38,
+      61
+     ],
+     "air": 0
+    },
+    "act_nod": {
+     "row": 1,
+     "column": 4,
+     "logical_bbox": [
+      37,
+      59
+     ],
+     "air": 0
+    },
+    "act_surprise": {
+     "row": 2,
+     "column": 4,
+     "logical_bbox": [
+      44,
+      62
+     ],
+     "air": 0
+    },
+    "walk_up_0": {
+     "row": 2,
+     "column": 1,
+     "logical_bbox": [
+      40,
+      61
+     ],
+     "air": 0
+    },
+    "walk_up_1": {
+     "row": 2,
+     "column": 2,
+     "logical_bbox": [
+      39,
+      61
+     ],
+     "air": 0
+    },
+    "walk_up_2": {
+     "row": 2,
+     "column": 3,
+     "logical_bbox": [
+      39,
+      61
+     ],
+     "air": 0
+    },
+    "walk_left_0": {
+     "row": 3,
+     "column": 1,
+     "logical_bbox": [
+      33,
+      60
+     ],
+     "air": 0
+    },
+    "walk_left_1": {
+     "row": 3,
+     "column": 2,
+     "logical_bbox": [
+      38,
+      59
+     ],
+     "air": 0
+    },
+    "walk_left_2": {
+     "row": 3,
+     "column": 3,
+     "logical_bbox": [
+      40,
+      59
+     ],
+     "air": 0
+    },
+    "act_call": {
+     "row": 3,
+     "column": 4,
+     "logical_bbox": [
+      37,
+      59
+     ],
+     "air": 0
+    },
+    "act_sig": {
+     "row": 4,
+     "column": 4,
+     "logical_bbox": [
+      56,
+      62
+     ],
+     "air": 0
+    },
+    "walk_right_0": {
+     "row": 4,
+     "column": 1,
+     "logical_bbox": [
+      32,
+      59
+     ],
+     "air": 0
+    },
+    "walk_right_1": {
+     "row": 4,
+     "column": 2,
+     "logical_bbox": [
+      39,
+      58
+     ],
+     "air": 0
+    },
+    "walk_right_2": {
+     "row": 4,
+     "column": 3,
+     "logical_bbox": [
+      37,
+      58
+     ],
+     "air": 0
+    }
+   },
+   "notes": [],
+   "pitch": 5.293,
+   "from_raw": "raw/s1_a3.png",
+   "redo_left": [],
+   "takes": [
+    {
+     "file": "raw/s1_take1.png",
+     "score": 3,
+     "frames": {
+      "walk_down_0": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        33,
+        62
+       ],
+       "air": 0
+      },
+      "walk_down_1": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        34,
+        62
+       ],
+       "air": 0
+      },
+      "walk_down_2": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        34,
+        62
+       ],
+       "air": 0
+      },
+      "act_nod": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        29,
+        62
+       ],
+       "air": 0
+      },
+      "walk_up_0": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        35,
+        61
+       ],
+       "air": 0
+      },
+      "walk_up_1": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        36,
+        60
+       ],
+       "air": 0
+      },
+      "walk_up_2": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        38,
+        60
+       ],
+       "air": 0
+      },
+      "act_surprise": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        39,
+        61
+       ],
+       "air": 0
+      },
+      "walk_left_0": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        28,
+        61
+       ],
+       "air": 0
+      },
+      "walk_left_1": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        36,
+        61
+       ],
+       "air": 0
+      },
+      "walk_left_2": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        37,
+        61
+       ],
+       "air": 0
+      },
+      "act_call": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        40,
+        62
+       ],
+       "air": 0
+      },
+      "walk_right_0": {
+       "row": 4,
+       "column": 1,
+       "logical_bbox": [
+        28,
+        61
+       ],
+       "air": 0
+      },
+      "walk_right_1": {
+       "row": 4,
+       "column": 2,
+       "logical_bbox": [
+        38,
+        61
+       ],
+       "air": 0
+      },
+      "walk_right_2": {
+       "row": 4,
+       "column": 3,
+       "logical_bbox": [
+        37,
+        61
+       ],
+       "air": 0
+      },
+      "act_sig": {
+       "row": 4,
+       "column": 4,
+       "logical_bbox": [
+        51,
+        62
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s1_a1.png",
+     "cell": [
+      80,
+      64
+     ]
+    },
+    {
+     "file": "raw/s1_take2.png",
+     "score": 4,
+     "frames": {
+      "act_nod": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        41,
+        65
+       ],
+       "air": 0
+      },
+      "walk_down_0": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        39,
+        63
+       ],
+       "air": 0
+      },
+      "walk_down_1": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        39,
+        63
+       ],
+       "air": 0
+      },
+      "walk_down_2": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        40,
+        63
+       ],
+       "air": 0
+      },
+      "walk_up_0": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        38,
+        61
+       ],
+       "air": 0
+      },
+      "walk_up_1": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        39,
+        61
+       ],
+       "air": 0
+      },
+      "walk_up_2": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        39,
+        61
+       ],
+       "air": 0
+      },
+      "act_surprise": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        44,
+        61
+       ],
+       "air": 0
+      },
+      "walk_left_0": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        33,
+        60
+       ],
+       "air": 0
+      },
+      "walk_left_1": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        39,
+        60
+       ],
+       "air": 0
+      },
+      "walk_left_2": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        39,
+        60
+       ],
+       "air": 0
+      },
+      "act_call": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        40,
+        60
+       ],
+       "air": 0
+      },
+      "act_sig": {
+       "row": 4,
+       "column": 4,
+       "logical_bbox": [
+        55,
+        61
+       ],
+       "air": 0
+      },
+      "walk_right_0": {
+       "row": 4,
+       "column": 1,
+       "logical_bbox": [
+        32,
+        60
+       ],
+       "air": 0
+      },
+      "walk_right_1": {
+       "row": 4,
+       "column": 2,
+       "logical_bbox": [
+        37,
+        60
+       ],
+       "air": 0
+      },
+      "walk_right_2": {
+       "row": 4,
+       "column": 3,
+       "logical_bbox": [
+        38,
+        60
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s1_a2.png",
+     "cell": [
+      80,
+      64
+     ]
+    },
+    {
+     "file": "raw/s1_take3.png",
+     "score": 3,
+     "frames": {
+      "walk_down_0": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        39,
+        61
+       ],
+       "air": 0
+      },
+      "walk_down_1": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        38,
+        61
+       ],
+       "air": 0
+      },
+      "walk_down_2": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        38,
+        61
+       ],
+       "air": 0
+      },
+      "act_nod": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        37,
+        59
+       ],
+       "air": 0
+      },
+      "act_surprise": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        44,
+        62
+       ],
+       "air": 0
+      },
+      "walk_up_0": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        40,
+        61
+       ],
+       "air": 0
+      },
+      "walk_up_1": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        39,
+        61
+       ],
+       "air": 0
+      },
+      "walk_up_2": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        39,
+        61
+       ],
+       "air": 0
+      },
+      "walk_left_0": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        33,
+        60
+       ],
+       "air": 0
+      },
+      "walk_left_1": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        38,
+        59
+       ],
+       "air": 0
+      },
+      "walk_left_2": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        40,
+        59
+       ],
+       "air": 0
+      },
+      "act_call": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        37,
+        59
+       ],
+       "air": 0
+      },
+      "act_sig": {
+       "row": 4,
+       "column": 4,
+       "logical_bbox": [
+        56,
+        62
+       ],
+       "air": 0
+      },
+      "walk_right_0": {
+       "row": 4,
+       "column": 1,
+       "logical_bbox": [
+        32,
+        59
+       ],
+       "air": 0
+      },
+      "walk_right_1": {
+       "row": 4,
+       "column": 2,
+       "logical_bbox": [
+        39,
+        58
+       ],
+       "air": 0
+      },
+      "walk_right_2": {
+       "row": 4,
+       "column": 3,
+       "logical_bbox": [
+        37,
+        58
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s1_a3.png",
+     "cell": [
+      80,
+      64
+     ]
+    }
+   ]
+  }
+ }
+}

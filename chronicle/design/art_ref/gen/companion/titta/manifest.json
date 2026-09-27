@@ -1,0 +1,80 @@
+[
+ {
+  "sheet": 1,
+  "file": "comp_titta_s1.png",
+  "layout": "2x4",
+  "logical_cell": [
+   112,
+   96
+  ],
+  "image_px": [
+   3584,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "ref_front",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     38,
+     62
+    ]
+   },
+   {
+    "id": "ref_34",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     37,
+     61
+    ]
+   },
+   {
+    "id": "ref_side_left",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     36,
+     60
+    ]
+   },
+   {
+    "id": "ref_back",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     34,
+     60
+    ]
+   },
+   {
+    "id": "ref_idle_left",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     55,
+     57
+    ]
+   },
+   {
+    "id": "ref_face",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     63,
+     72
+    ]
+   },
+   {
+    "id": "ref_palette",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     74,
+     36
+    ]
+   }
+  ]
+ }
+]

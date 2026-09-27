@@ -1,0 +1,91 @@
+{
+ "id": "roa_h2",
+ "kind": "building",
+ "theme": "hill_village",
+ "footprint": [
+  5,
+  6
+ ],
+ "wall": 2,
+ "files": {
+  "24": "roa_h2@24.png",
+  "32": "roa_h2@32.png",
+  "40": "roa_h2@40.png"
+ },
+ "emitFiles": {
+  "24": "roa_h2_emit@24.png",
+  "32": "roa_h2_emit@32.png",
+  "40": "roa_h2_emit@40.png"
+ },
+ "size": {
+  "24": [
+   132,
+   168
+  ],
+  "32": [
+   176,
+   224
+  ],
+  "40": [
+   220,
+   280
+  ]
+ },
+ "anchor32": [
+  8,
+  224
+ ],
+ "door32": null,
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 17,
+   "y": -220,
+   "w": 20,
+   "h": 14
+  },
+  {
+   "kind": "win",
+   "x": 42,
+   "y": -46,
+   "w": 9,
+   "h": 11
+  },
+  {
+   "kind": "win",
+   "x": 108,
+   "y": -46,
+   "w": 9,
+   "h": 12
+  },
+  {
+   "kind": "win",
+   "x": 37,
+   "y": -16,
+   "w": 8,
+   "h": 2
+  }
+ ],
+ "roof32": [
+  -6,
+  -196,
+  166,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/hill_village/roa_h2.png",
+ "def_": {
+  "type": "building",
+  "id": "roa_h2",
+  "x": 12,
+  "y": 4,
+  "w": 5,
+  "h": 6,
+  "wall": 2,
+  "roof": "shingle",
+  "mat": "log",
+  "windows": 2,
+  "lamp": true,
+  "flowers": true
+ }
+}

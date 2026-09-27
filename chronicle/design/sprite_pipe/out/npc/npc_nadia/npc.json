@@ -1,0 +1,48 @@
+{
+ "id": "nadia",
+ "look": "npc_nadia",
+ "name": "ナディア",
+ "tier": "B",
+ "kind": "person",
+ "region": "desert",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 47
+ },
+ "measureH": {
+  "field": 51
+ },
+ "headgearExtraDots": 4,
+ "mainHex": "#C0602A",
+ "mainHue": 22,
+ "mainName": "夕焼けの橙",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_nadia_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.2765957446808511,
+   "head_w": 0.3829787234042553,
+   "shoulder": 0.32978723404255317,
+   "neck_clear": 0.6235294117647059
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

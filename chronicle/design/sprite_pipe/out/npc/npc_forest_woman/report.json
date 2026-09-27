@@ -1,0 +1,318 @@
+{
+ "char": "npc_forest_woman",
+ "companion": null,
+ "npc": "npc_forest_woman",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/grp_forest_1",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/sprite_pipe/out/npc/npc_forest_woman/src/npc_forest_woman_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 368.0,
+   "native_height_at_period": 46.0,
+   "scale_note": "描かれた格子のまま（46.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      29,
+      46
+     ],
+     "box": [
+      184,
+      96,
+      448,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.84
+    },
+    "walk_down_1": {
+     "size": [
+      31,
+      46
+     ],
+     "box": [
+      816,
+      96,
+      1096,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.93,
+     "scale": 0.917
+    },
+    "walk_down_2": {
+     "size": [
+      30,
+      46
+     ],
+     "box": [
+      1464,
+      96,
+      1736,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.84,
+     "scale": 0.917
+    },
+    "walk_up_0": {
+     "size": [
+      29,
+      46
+     ],
+     "box": [
+      184,
+      608,
+      448,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.94,
+     "scale": 0.972
+    },
+    "walk_up_1": {
+     "size": [
+      29,
+      46
+     ],
+     "box": [
+      824,
+      608,
+      1088,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.92,
+     "scale": 1.0
+    },
+    "walk_up_2": {
+     "size": [
+      29,
+      46
+     ],
+     "box": [
+      1464,
+      608,
+      1728,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.8,
+     "scale": 0.958
+    },
+    "walk_left_0": {
+     "size": [
+      27,
+      46
+     ],
+     "box": [
+      192,
+      1120,
+      440,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      27,
+      46
+     ],
+     "box": [
+      832,
+      1120,
+      1080,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.111
+    },
+    "walk_left_2": {
+     "size": [
+      28,
+      47
+     ],
+     "box": [
+      1472,
+      1112,
+      1728,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.153
+    },
+    "walk_right_0": {
+     "size": [
+      27,
+      45
+     ],
+     "box": [
+      192,
+      1640,
+      440,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      28,
+      45
+     ],
+     "box": [
+      832,
+      1640,
+      1088,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.083
+    },
+    "walk_right_2": {
+     "size": [
+      28,
+      45
+     ],
+     "box": [
+      1472,
+      1640,
+      1728,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.111
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "pair_half",
+   "msg": "npc_grp_forest_1.png の右半分（人物B）を使う",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_forest_woman）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 9 番（左向き・後ろの足） の縮尺が少し違う（頭の大きさで約 115%）。並べて見て気になるなら描き直し",
+   "slot": "walk_left_2",
+   "ask": null,
+   "data": {
+    "scale": 1.1527777777777777,
+    "per_ref": [
+     0.875,
+     1.0375000000000003,
+     1.0375000000000003
+    ],
+    "group_median": 0.9000000000000004
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 46 ドットあたり）: 首 0.26（アルン 0.29）・頭の幅 0.46（0.43）・肩 0.46（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.2608695652173913,
+    "head_w": 0.45652173913043476,
+    "shoulder": 0.46195652173913043,
+    "neck_clear": 0.8603896103896104
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 89%・頭の幅 107%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 1.0691375623663577,
+    "neck": 0.8933889219773675
+   }
+  }
+ ]
+}

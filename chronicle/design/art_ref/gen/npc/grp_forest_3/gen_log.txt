@@ -1,0 +1,21 @@
+01:26:11 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+01:27:07   half A (npc_forest_child, target 36):
+01:27:07   pitch in raw image: 5.81 px per art pixel (upright median 209 px / 36)
+01:27:07   half B (npc_woodcutter, target 50):
+01:27:08   pitch in raw image: 5.14 px per art pixel (upright median 257 px / 50)
+01:27:12 sheet 1 -> art_ref/gen/npc/grp_forest_3/npc_grp_forest_3.png (24 poses)
+01:27:12 pipeline: sheets.py ../art_ref/gen/npc/grp_forest_3 --npc npc_forest_child --out out/npc/npc_forest_child --check
+01:27:42   |   - シート1: npc_grp_forest_3.png の左半分（人物A）を使う
+01:27:42   |   - シート1: 頭身の比（歩き12コマの中央値、体 36 ドットあたり）: 首 0.44（アルン 0.29）・頭の幅 0.53（0.43）・肩 0.44（0.40）
+01:27:42   |   - 向きの見本（configs/refs/npc_forest_child）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:27:42   | 
+01:27:42   | ■ シートの状態
+01:27:42   |   シート1 歩き: 確認あり  npc_forest_child_s1.png  ドット 8.00px → 描かれた格子のまま（36.0 ドット）
+01:27:42 pipeline: sheets.py ../art_ref/gen/npc/grp_forest_3 --npc npc_woodcutter --out out/npc/npc_woodcutter --check
+01:28:14   |   - シート1: npc_grp_forest_3.png の右半分（人物B）を使う
+01:28:14   |   - シート1: 頭身の比（歩き12コマの中央値、体 50 ドットあたり）: 首 0.23（アルン 0.29）・頭の幅 0.47（0.43）・肩 0.47（0.40）
+01:28:14   |   - 向きの見本（configs/refs/npc_woodcutter）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:28:14   | 
+01:28:14   | ■ シートの状態
+01:28:14   |   シート1 歩き: 確認あり  npc_woodcutter_s1.png  ドット 8.00px → 描かれた格子のまま（50.0 ドット）
+01:28:14 sheet 1: 0 redo lines

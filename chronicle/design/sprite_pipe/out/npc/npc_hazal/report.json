@@ -1,0 +1,365 @@
+{
+ "char": "npc_hazal",
+ "companion": null,
+ "npc": "npc_hazal",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/hazal",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/hazal/npc_hazal_s1.png",
+   "size": [
+    2560,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x4",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 488.0,
+   "native_height_at_period": 61.0,
+   "scale_note": "描かれた格子のまま（61.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      39,
+      60
+     ],
+     "box": [
+      144,
+      0,
+      488,
+      504
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.0
+    },
+    "walk_down_1": {
+     "size": [
+      43,
+      61
+     ],
+     "box": [
+      768,
+      0,
+      1144,
+      512
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.68,
+     "scale": 1.0
+    },
+    "walk_down_2": {
+     "size": [
+      41,
+      60
+     ],
+     "box": [
+      1416,
+      0,
+      1776,
+      504
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.72,
+     "scale": 1.0
+    },
+    "act_nod": {
+     "size": [
+      36,
+      61
+     ],
+     "box": [
+      2080,
+      0,
+      2400,
+      512
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.35,
+     "scale": 1.064
+    },
+    "walk_up_0": {
+     "size": [
+      42,
+      59
+     ],
+     "box": [
+      136,
+      504,
+      504,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.69,
+     "scale": 0.949
+    },
+    "walk_up_1": {
+     "size": [
+      42,
+      59
+     ],
+     "box": [
+      776,
+      504,
+      1144,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.81,
+     "scale": 0.987
+    },
+    "walk_up_2": {
+     "size": [
+      41,
+      59
+     ],
+     "box": [
+      1416,
+      504,
+      1776,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.07,
+     "scale": 0.987
+    },
+    "act_surprise": {
+     "size": [
+      46,
+      60
+     ],
+     "box": [
+      2040,
+      504,
+      2440,
+      1016
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.1,
+     "scale": 1.0
+    },
+    "walk_left_0": {
+     "size": [
+      35,
+      62
+     ],
+     "box": [
+      160,
+      1016,
+      472,
+      1544
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      42,
+      61
+     ],
+     "box": [
+      776,
+      1016,
+      1144,
+      1536
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.064
+    },
+    "walk_left_2": {
+     "size": [
+      41,
+      61
+     ],
+     "box": [
+      1416,
+      1016,
+      1776,
+      1536
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.064
+    },
+    "act_call": {
+     "size": [
+      42,
+      62
+     ],
+     "box": [
+      2056,
+      1016,
+      2424,
+      1544
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.54,
+     "scale": 1.0
+    },
+    "walk_right_0": {
+     "size": [
+      36,
+      61
+     ],
+     "box": [
+      160,
+      1528,
+      480,
+      2048
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      40,
+      61
+     ],
+     "box": [
+      784,
+      1528,
+      1136,
+      2048
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_2": {
+     "size": [
+      40,
+      61
+     ],
+     "box": [
+      1424,
+      1528,
+      1776,
+      2048
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.026
+    },
+    "act_sig": {
+     "size": [
+      32,
+      61
+     ],
+     "box": [
+      2096,
+      1528,
+      2384,
+      2048
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.7,
+     "scale": 1.0
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_hazal）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "marks",
+   "msg": "シート1 の 8 番（驚く） の感情マーク（驚きの線・汗など 3 個）を消した",
+   "slot": "act_surprise",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 52 ドットあたり）: 首 0.21（アルン 0.29）・頭の幅 0.39（0.43）・肩 0.44（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.21153846153846154,
+    "head_w": 0.3942307692307693,
+    "shoulder": 0.4423076923076923,
+    "neck_clear": 0.8571428571428571
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 72%・頭の幅 92%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 0.9232570707980545,
+    "neck": 0.7244467860906217
+   }
+  }
+ ]
+}

@@ -17,8 +17,9 @@ const { ok, section, done } = require('../lib/testkit');
 
 const argv = process.argv.slice(2);
 const VERBOSE = argv.includes('--verbose');
-const R = require('../lib/load')({ quiet: true });
-const M = require('../lib/maps').create(R);
+let R = null, M = null;
+/** R を渡すと、その R で閉包を回す（check_springs・sim_zones --segments が同じ R で使う） */
+function init(r) { R = r || require('../lib/load')({ quiet: true }); M = require('../lib/maps').create(R); return { R, M }; }
 const K = (x, y, lv) => x + ',' + y + ',' + (lv || 0);
 
 /** 今の状態で、start から届く全マスをマップごとに → Map(mapId → Set('x,y,lv')) */
@@ -169,6 +170,7 @@ function sliceClosure() {
 }
 
 function main() {
+  init();
   const report = {};
   section('1. 筋の閉包（4 通りの選択）');
   const variants = [];
@@ -221,5 +223,5 @@ function main() {
   }
   done('progress');
 }
-module.exports = { closure, reachAll };
+module.exports = { init, closure: (o) => { if (!R) init(); return closure(o); }, reachAll };
 if (require.main === module) main();

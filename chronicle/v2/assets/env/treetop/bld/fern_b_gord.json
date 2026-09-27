@@ -1,0 +1,104 @@
+{
+ "id": "fern_b_gord",
+ "kind": "building",
+ "theme": "treetop",
+ "footprint": [
+  6,
+  4
+ ],
+ "wall": 2,
+ "files": {
+  "24": "fern_b_gord@24.png",
+  "32": "fern_b_gord@32.png",
+  "40": "fern_b_gord@40.png"
+ },
+ "emitFiles": {
+  "24": "fern_b_gord_emit@24.png",
+  "32": "fern_b_gord_emit@32.png",
+  "40": "fern_b_gord_emit@40.png"
+ },
+ "size": {
+  "24": [
+   156,
+   120
+  ],
+  "32": [
+   208,
+   160
+  ],
+  "40": [
+   260,
+   200
+  ]
+ },
+ "anchor32": [
+  8,
+  160
+ ],
+ "door32": {
+  "x": 112.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": -5,
+   "y": -133,
+   "w": 202,
+   "h": 33
+  },
+  {
+   "kind": "win",
+   "x": -6,
+   "y": -96,
+   "w": 204,
+   "h": 39
+  },
+  {
+   "kind": "win",
+   "x": 38,
+   "y": -30,
+   "w": 9,
+   "h": 10
+  },
+  {
+   "kind": "win",
+   "x": 146,
+   "y": -30,
+   "w": 8,
+   "h": 10
+  }
+ ],
+ "roof32": [
+  -6,
+  -132,
+  198,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/treetop/fern_b_gord.png",
+ "def_": {
+  "type": "building",
+  "id": "fern_b_gord",
+  "x": 21,
+  "y": 3,
+  "w": 6,
+  "h": 4,
+  "wall": 2,
+  "roof": "thatch",
+  "mat": "log",
+  "windows": 2,
+  "door": {
+   "x": 24,
+   "y": 6,
+   "to": {
+    "map": "fern_gord",
+    "spawn": "door"
+   }
+  },
+  "lamp": true,
+  "chimney": true
+ }
+}

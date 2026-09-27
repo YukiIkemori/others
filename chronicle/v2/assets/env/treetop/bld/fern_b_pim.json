@@ -1,0 +1,131 @@
+{
+ "id": "fern_b_pim",
+ "kind": "building",
+ "theme": "treetop",
+ "footprint": [
+  6,
+  4
+ ],
+ "wall": 2,
+ "files": {
+  "24": "fern_b_pim@24.png",
+  "32": "fern_b_pim@32.png",
+  "40": "fern_b_pim@40.png"
+ },
+ "emitFiles": {
+  "24": "fern_b_pim_emit@24.png",
+  "32": "fern_b_pim_emit@32.png",
+  "40": "fern_b_pim_emit@40.png"
+ },
+ "size": {
+  "24": [
+   156,
+   120
+  ],
+  "32": [
+   208,
+   160
+  ],
+  "40": [
+   260,
+   200
+  ]
+ },
+ "anchor32": [
+  8,
+  160
+ ],
+ "door32": {
+  "x": 112.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 97,
+   "y": -131,
+   "w": 12,
+   "h": 1
+  },
+  {
+   "kind": "win",
+   "x": -5,
+   "y": -126,
+   "w": 203,
+   "h": 26
+  },
+  {
+   "kind": "win",
+   "x": -6,
+   "y": -95,
+   "w": 204,
+   "h": 36
+  },
+  {
+   "kind": "win",
+   "x": 106,
+   "y": -70,
+   "w": 4,
+   "h": 7
+  },
+  {
+   "kind": "win",
+   "x": 87,
+   "y": -67,
+   "w": 4,
+   "h": 5
+  },
+  {
+   "kind": "win",
+   "x": 21,
+   "y": -39,
+   "w": 2,
+   "h": 3
+  },
+  {
+   "kind": "win",
+   "x": 36,
+   "y": -37,
+   "w": 10,
+   "h": 15
+  },
+  {
+   "kind": "win",
+   "x": 145,
+   "y": -37,
+   "w": 11,
+   "h": 15
+  }
+ ],
+ "roof32": [
+  -6,
+  -132,
+  198,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/treetop/fern_b_pim.png",
+ "def_": {
+  "type": "building",
+  "id": "fern_b_pim",
+  "x": 15,
+  "y": 41,
+  "w": 6,
+  "h": 4,
+  "wall": 2,
+  "roof": "thatch",
+  "mat": "log",
+  "windows": 2,
+  "door": {
+   "x": 18,
+   "y": 44,
+   "to": {
+    "map": "fern_pim_home",
+    "spawn": "door"
+   }
+  },
+  "flowers": true
+ }
+}

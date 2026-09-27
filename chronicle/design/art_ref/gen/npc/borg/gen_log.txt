@@ -1,0 +1,22 @@
+01:16:27 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:17:32   pitch in raw image: 6.04 px per art pixel (upright median 302 px / 50)
+01:17:33 sheet 1 -> art_ref/gen/npc/borg/npc_borg_s1.png (16 poses)
+01:17:33 pipeline: sheets.py ../art_ref/gen/npc/borg --npc borg --out out/npc/npc_borg --check
+01:18:41   |   「ボルグ（npc_borg）のシート1の7番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 61%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:18:41   |   「ボルグ（npc_borg）のシート1の12番（手を挙げて呼びかける）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:18:41   |   「ボルグ（npc_borg）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さ 89%・頭の幅 84%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して」
+01:18:41   | 
+01:18:41   | ■ シートの状態
+01:18:41   |   シート1 歩き＋演技4: 要作り直し  npc_borg_s1.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:18:41 sheet 1: 1 redo lines: 頭がアルンより小さい（頭の高さ 89%・頭の幅 84%）。頭身が高すぎる
+01:18:41 sheet 1 attempt 2: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs) + notes
+01:19:45   pitch in raw image: 5.78 px per art pixel (upright median 289 px / 50)
+01:19:46 sheet 1 -> art_ref/gen/npc/borg/npc_borg_s1.png (16 poses)
+01:19:46 pipeline: sheets.py ../art_ref/gen/npc/borg --npc borg --out out/npc/npc_borg --check
+01:20:59   |   「ボルグ（npc_borg）のシート1の14番（右向き・前の足）だけ大きく描かれている（頭の大きさがほかのポーズの約 120%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:20:59   |   「ボルグ（npc_borg）のシート1の15番（右向き・後ろの足）だけ大きく描かれている（頭の大きさがほかのポーズの約 125%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:20:59   |   「ボルグ（npc_borg）のシート1の16番（その人のしぐさ）だけ大きく描かれている（頭の大きさがほかのポーズの約 120%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:20:59   | 
+01:20:59   | ■ シートの状態
+01:20:59   |   シート1 歩き＋演技4: 要作り直し  npc_borg_s1.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:20:59 sheet 1: 0 redo lines

@@ -42,6 +42,8 @@ function prologue(o) {
     { id: 'spring_lh', spring: ['lighthouse_3'], optional: true, noHeal: true },
     Object.assign({ id: 'boss_pageeater', ev: 'lighthouse_3_boss', done: 'prologue_boss' }, o.loseBoss ? { lose: true, wipeTo: 'retry' } : {}),
     { id: 'departure', ev: 'pharos_departure', done: 'prologue_done' },
+    { id: 'shop_pharos_arms', ev: 'pharos_smithy', shop: true, optional: true },
+    { id: 'shop_pharos_items', ev: 'pharos_shopkeeper', shop: true, optional: true },
   );
   return g;
 }
@@ -59,6 +61,8 @@ function forest(o) {
     { id: 'gord', ev: 'fern_gord', done: 'forest_gord_talked' },
     { id: 'katri', ev: 'fern_pim_mother', doneJs: "!!(G().items.k_pim_hat) || R.State.check('forest_found_pim')" },
     { id: 'rita', ev: 'fern_rita', done: 'forest_rita_talked' },
+    { id: 'shop_fern_peddler', ev: 'fern_peddler', shop: true, optional: true },
+    { id: 'shop_fern_items', ev: 'fern_shop_keeper', shop: true, optional: true },
   ];
   if (o.r5) g.push({ id: 'suspend_resume', task: { kind: 'suspend', title: 'continue' } });
   if (o.wipeZako) g.push({ id: 'arm_wipe_zako', setLose: { zako: true, map: 'verda' }, wipeTo: 'inn' });
@@ -69,6 +73,8 @@ function forest(o) {
     { id: 'spring_v2', spring: ['verda_2'], optional: true, noHeal: true },
     { id: 'moth', ev: 'verda_moth', done: 'forest_moth' },
     { id: 'stone_c', ev: 'verda_stone_c', done: 'forest_stone_c' },
+    { id: 'shop_fern_peddler2', ev: 'fern_peddler', shop: true, optional: true },
+    { id: 'shop_fern_items2', ev: 'fern_shop_keeper', shop: true, optional: true },
     { id: 'elder_fine', ev: 'elder_fine', done: 'forest_fine', optional: true },
     { id: 'spring_elder', spring: ['elder_2'], optional: true, noHeal: true },
     Object.assign({ id: 'boss_rooteater', ev: 'elder_boss', done: 'cleared_r_forest' }, o.loseBoss ? { lose: true, wipeTo: 'retry' } : {}),
@@ -117,9 +123,9 @@ async function runRoute(S, id, o) {
     let st = null, lastGoal = null, lastLog = 0;
     for (;;) {
       st = await page.evaluate(() => window.__bot.run(600));
-      if (st.goal !== lastGoal || Date.now() - lastLog > 60000) {
+      if (st.goal !== lastGoal || Date.now() - lastLog > 30000) {
         lastGoal = st.goal; lastLog = Date.now();
-        console.log(`[${id}] ${((Date.now() - t0) / 1000).toFixed(0)}s goal=${st.goal} top=${st.top} ${st.pos || ''} steps=${st.steps} battles=${st.battles} gold=${st.gold}`);
+        console.log(`[${id}] ${((Date.now() - t0) / 1000).toFixed(0)}s goal=${st.goal} top=${st.top} ${st.pos || ''} steps=${st.steps} battles=${st.battles} gold=${st.gold} hp=${st.hp}${st.round != null ? ' round=' + st.round : ''} f=${st.frames}`);
       }
       if (st.engineError && !res.engineError) { res.engineError = st.engineError; console.log(`[${id}] ENGINE ERROR ${st.engineError}`); }
       if (st.done || st.fail) break;

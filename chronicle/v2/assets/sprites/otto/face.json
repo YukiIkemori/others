@@ -1,0 +1,257 @@
+{
+ "character": "otto",
+ "set": "face",
+ "look": "otto",
+ "source": "out/npc/otto/face",
+ "cell": [
+  76,
+  85
+ ],
+ "anchor": [
+  38,
+  82
+ ],
+ "frames": [
+  {
+   "id": "face_neutral",
+   "x": 0,
+   "y": 0,
+   "w": 76,
+   "h": 85,
+   "anchor": [
+    38,
+    82
+   ],
+   "points": {
+    "head": [
+     39,
+     3
+    ],
+    "center": [
+     36,
+     49
+    ],
+    "front": [
+     2,
+     66
+    ]
+   }
+  },
+  {
+   "id": "face_smile",
+   "x": 76,
+   "y": 0,
+   "w": 76,
+   "h": 85,
+   "anchor": [
+    38,
+    82
+   ],
+   "points": {
+    "head": [
+     38,
+     3
+    ],
+    "center": [
+     36,
+     49
+    ],
+    "front": [
+     2,
+     65
+    ]
+   }
+  },
+  {
+   "id": "face_sad",
+   "x": 152,
+   "y": 0,
+   "w": 76,
+   "h": 85,
+   "anchor": [
+    38,
+    82
+   ],
+   "points": {
+    "head": [
+     39,
+     3
+    ],
+    "center": [
+     36,
+     49
+    ],
+    "front": [
+     2,
+     65
+    ]
+   }
+  },
+  {
+   "id": "face_angry",
+   "x": 0,
+   "y": 85,
+   "w": 76,
+   "h": 85,
+   "anchor": [
+    38,
+    82
+   ],
+   "points": {
+    "head": [
+     39,
+     3
+    ],
+    "center": [
+     36,
+     49
+    ],
+    "front": [
+     2,
+     65
+    ]
+   }
+  },
+  {
+   "id": "face_surprise",
+   "x": 76,
+   "y": 85,
+   "w": 76,
+   "h": 85,
+   "anchor": [
+    38,
+    82
+   ],
+   "points": {
+    "head": [
+     39,
+     2
+    ],
+    "center": [
+     36,
+     49
+    ],
+    "front": [
+     2,
+     65
+    ]
+   }
+  },
+  {
+   "id": "face_closed",
+   "x": 152,
+   "y": 85,
+   "w": 76,
+   "h": 85,
+   "anchor": [
+    38,
+    82
+   ],
+   "points": {
+    "head": [
+     39,
+     3
+    ],
+    "center": [
+     36,
+     49
+    ],
+    "front": [
+     2,
+     65
+    ]
+   }
+  }
+ ],
+ "poses": {
+  "face_neutral": [
+   0
+  ],
+  "face_smile": [
+   1
+  ],
+  "face_sad": [
+   2
+  ],
+  "face_angry": [
+   3
+  ],
+  "face_surprise": [
+   4
+  ],
+  "face_closed": [
+   5
+  ]
+ },
+ "fps": {},
+ "anims": {},
+ "facing": "slightly right",
+ "target_height": 80,
+ "palette": [
+  "#0c050e",
+  "#0b0a0b",
+  "#0f141a",
+  "#241812",
+  "#151e28",
+  "#292421",
+  "#42362c",
+  "#333b42",
+  "#7d756a",
+  "#a45035",
+  "#372215",
+  "#4b2e1b",
+  "#5f371f",
+  "#723c1f",
+  "#5b493b",
+  "#744828",
+  "#6e4c31",
+  "#824c27",
+  "#97582e",
+  "#7d634d",
+  "#8b613a",
+  "#a96331",
+  "#a76e3f",
+  "#9c7556",
+  "#bf7039",
+  "#9e846b",
+  "#bd7a42",
+  "#ba8453",
+  "#d18443",
+  "#c29772",
+  "#b59b80",
+  "#dd9754",
+  "#e6974d",
+  "#d79e63",
+  "#c9b095",
+  "#f3ad60",
+  "#efbb80",
+  "#dcc6ac",
+  "#fbbf74",
+  "#edcca3",
+  "#eddbc3",
+  "#f8eddb",
+  "#1c2835",
+  "#233243",
+  "#2c3c50",
+  "#34455b",
+  "#3f5067",
+  "#160618"
+ ],
+ "npc": {
+  "tier": "A",
+  "lantern": true,
+  "spirit": false,
+  "recolor": false,
+  "mainHex": "#2C4A66",
+  "recolorSets": null,
+  "variants": null,
+  "kind": "person"
+ },
+ "expr": {
+  "neutral": 0,
+  "smile": 1,
+  "sad": 2,
+  "angry": 3,
+  "surprise": 4
+ }
+}

@@ -38,126 +38,126 @@
    "sprites": {
     "walk_down_0": {
      "size": [
-      25,
+      24,
       47
      ],
      "box": [
-      200,
+      208,
       88,
       432,
       496
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.05
+     "facing_score": 0.78
     },
     "walk_down_1": {
      "size": [
-      25,
-      47
+      26,
+      49
      ],
      "box": [
       840,
-      88,
-      1072,
+      72,
+      1080,
       496
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.84,
-     "scale": 1.037
-    },
-    "walk_down_2": {
-     "size": [
-      25,
-      47
-     ],
-     "box": [
-      1480,
-      88,
-      1712,
-      496
-     ],
-     "air": 0,
-     "blur": 0.0,
-     "facing_score": 0.96,
+     "facing_score": 0.81,
      "scale": 1.0
     },
-    "walk_up_0": {
-     "size": [
-      25,
-      47
-     ],
-     "box": [
-      200,
-      600,
-      432,
-      1008
-     ],
-     "air": 0,
-     "blur": 0.0,
-     "facing_score": 0.74,
-     "scale": 0.962
-    },
-    "walk_up_1": {
-     "size": [
-      28,
-      48
-     ],
-     "box": [
-      832,
-      592,
-      1088,
-      1008
-     ],
-     "air": 0,
-     "blur": 0.0,
-     "facing_score": 0.95,
-     "scale": 0.962
-    },
-    "walk_up_2": {
+    "walk_down_2": {
      "size": [
       26,
       48
      ],
      "box": [
       1480,
-      592,
+      80,
       1720,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.56,
+     "scale": 1.0
+    },
+    "walk_up_0": {
+     "size": [
+      24,
+      47
+     ],
+     "box": [
+      208,
+      600,
+      432,
       1008
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.13,
-     "scale": 0.962
+     "facing_score": 0.63,
+     "scale": 0.928
+    },
+    "walk_up_1": {
+     "size": [
+      26,
+      47
+     ],
+     "box": [
+      840,
+      600,
+      1080,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.86,
+     "scale": 0.928
+    },
+    "walk_up_2": {
+     "size": [
+      25,
+      47
+     ],
+     "box": [
+      1480,
+      600,
+      1712,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.83,
+     "scale": 0.928
     },
     "walk_left_0": {
      "size": [
       20,
-      45
+      46
      ],
      "box": [
       224,
-      1128,
+      1120,
       416,
       1520
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 3.24,
+     "facing_score": 2.97,
      "facing_cues": {
       "head": 1.5,
-      "upper": 1.74
+      "upper": 1.47
      }
     },
     "walk_left_1": {
      "size": [
-      27,
-      46
+      26,
+      45
      ],
      "box": [
-      832,
-      1120,
+      840,
+      1128,
       1080,
       1520
      ],
@@ -168,16 +168,16 @@
       "head": 1.5,
       "upper": 2.0
      },
-     "scale": 1.0
+     "scale": 0.964
     },
     "walk_left_2": {
      "size": [
       27,
-      46
+      45
      ],
      "box": [
       1472,
-      1120,
+      1128,
       1720,
       1520
      ],
@@ -188,36 +188,36 @@
       "head": 1.5,
       "upper": 2.0
      },
-     "scale": 1.0
+     "scale": 0.964
     },
     "walk_right_0": {
      "size": [
-      22,
+      20,
       46
      ],
      "box": [
-      216,
+      224,
       1632,
-      424,
+      416,
       2032
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 3.5,
+     "facing_score": 3.04,
      "facing_cues": {
       "head": 1.5,
-      "upper": 2.0
+      "upper": 1.54
      }
     },
     "walk_right_1": {
      "size": [
-      27,
+      30,
       46
      ],
      "box": [
-      832,
+      824,
       1632,
-      1080,
+      1096,
       2032
      ],
      "air": 0,
@@ -247,30 +247,379 @@
       "head": 1.5,
       "upper": 2.0
      },
+     "scale": 0.964
+    }
+   }
+  },
+  "2": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/noa/npc_noa_s2.png",
+   "size": [
+    3072,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "3x4",
+    "logical_cell": [
+     96,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 376.0,
+   "native_height_at_period": 47.0,
+   "scale_note": "描かれた格子のまま（47.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "act_nod": {
+     "size": [
+      24,
+      45
+     ],
+     "box": [
+      272,
+      104,
+      496,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.9,
+     "scale": 1.06
+    },
+    "act_surprise": {
+     "size": [
+      32,
+      46
+     ],
+     "box": [
+      1008,
+      96,
+      1296,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.55,
      "scale": 1.0
+    },
+    "act_think": {
+     "size": [
+      24,
+      47
+     ],
+     "box": [
+      1808,
+      88,
+      2032,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.14,
+     "scale": 1.048
+    },
+    "act_bow": {
+     "size": [
+      28,
+      45
+     ],
+     "box": [
+      2560,
+      104,
+      2816,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 1.096
+    },
+    "act_kneel": {
+     "size": [
+      32,
+      38
+     ],
+     "box": [
+      240,
+      672,
+      528,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 1.0
+    },
+    "act_sit": {
+     "size": [
+      39,
+      39
+     ],
+     "box": [
+      976,
+      664,
+      1320,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 1.0
+    },
+    "act_call": {
+     "size": [
+      30,
+      47
+     ],
+     "box": [
+      1784,
+      600,
+      2056,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.43,
+     "scale": 0.928
+    },
+    "act_look": {
+     "size": [
+      27,
+      46
+     ],
+     "box": [
+      2560,
+      608,
+      2808,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 0.928
+    },
+    "act_lie": {
+     "size": [
+      70,
+      26
+     ],
+     "box": [
+      88,
+      1280,
+      680,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "act_sig": {
+     "size": [
+      22,
+      48
+     ],
+     "box": [
+      1048,
+      1104,
+      1256,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.8,
+     "scale": 1.0
+    },
+    "act_resolve": {
+     "size": [
+      23,
+      47
+     ],
+     "box": [
+      1808,
+      1112,
+      2024,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.26,
+     "scale": 0.964
+    },
+    "act_sad": {
+     "size": [
+      28,
+      44
+     ],
+     "box": [
+      2560,
+      1136,
+      2816,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 1.048
+    }
+   }
+  },
+  "3": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/noa/npc_noa_s3.png",
+   "size": [
+    2304,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x3",
+    "logical_cell": [
+     96,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 640.0,
+   "native_height_at_period": 80.0,
+   "scale_note": "描かれた格子のまま（80.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      66,
+      80
+     ],
+     "box": [
+      104,
+      48,
+      664,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_smile": {
+     "size": [
+      66,
+      80
+     ],
+     "box": [
+      872,
+      48,
+      1432,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_sad": {
+     "size": [
+      66,
+      80
+     ],
+     "box": [
+      1640,
+      48,
+      2200,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_angry": {
+     "size": [
+      66,
+      80
+     ],
+     "box": [
+      104,
+      816,
+      664,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_surprise": {
+     "size": [
+      66,
+      80
+     ],
+     "box": [
+      872,
+      816,
+      1432,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_closed": {
+     "size": [
+      63,
+      80
+     ],
+     "box": [
+      1648,
+      816,
+      2184,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.2,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.7
+     }
     }
    }
   }
  },
  "items": [
-  {
-   "sheet": 2,
-   "level": "redo",
-   "code": "missing_sheet",
-   "msg": "シート2（演技12（下向き）, npc_noa_s2.png）がない",
-   "slot": null,
-   "ask": "ノア（noa）のシート2（演技12（下向き））を作って",
-   "data": {}
-  },
-  {
-   "sheet": 3,
-   "level": "redo",
-   "code": "missing_sheet",
-   "msg": "シート3（顔6, npc_noa_s3.png）がない",
-   "slot": null,
-   "ask": "ノア（noa）のシート3（顔6）を作って",
-   "data": {}
-  },
   {
    "sheet": null,
    "level": "info",
@@ -281,41 +630,38 @@
    "data": {}
   },
   {
+   "sheet": 2,
+   "level": "auto",
+   "code": "marks",
+   "msg": "シート2 の 2 番（驚く） の感情マーク（驚きの線・汗など 2 個）を消した",
+   "slot": "act_surprise",
+   "ask": null,
+   "data": {}
+  },
+  {
    "sheet": 1,
    "level": "info",
    "code": "proportion",
-   "msg": "頭身の比（歩き12コマの中央値、体 47 ドットあたり）: 首 0.34（アルン 0.29）・頭の幅 0.38（0.43）・肩 0.35（0.40）",
+   "msg": "頭身の比（歩き12コマの中央値、体 47 ドットあたり）: 首 0.36（アルン 0.29）・頭の幅 0.39（0.43）・肩 0.38（0.40）",
    "slot": null,
    "ask": null,
    "data": {
-    "neck": 0.3404255319148936,
-    "head_w": 0.3829787234042553,
-    "shoulder": 0.3457446808510638,
-    "neck_clear": 0.6666666666666666
+    "neck": 0.3617021276595745,
+    "head_w": 0.3936170212765957,
+    "shoulder": 0.3829787234042553,
+    "neck_clear": 0.7836257309941521
    }
   },
   {
    "sheet": 1,
    "level": "check",
-   "code": "proportion_width",
-   "msg": "頭の幅がアルンの 90%（髪の量・帽子の形でも変わる）。並べて見る",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 124%・頭の幅 92%）。ひげ・髪・帽子のせいでないか、並べて見る",
    "slot": null,
    "ask": null,
    "data": {
-    "ratio": 0.8969056754198017,
-    "metric": "head_w"
-   }
-  },
-  {
-   "sheet": 1,
-   "level": "redo",
-   "code": "proportion",
-   "msg": "頭の高さがアルンより大きい（117%）",
-   "slot": "walk_down_0",
-   "ask": "ノア（noa）のシート1の人物の頭がアルンより大きすぎる（頭の高さが約 117%）。アルンの歩きと同じ頭の大きさにして、同じ条件で描き直して",
-   "data": {
-    "ratio": 1.1658408627222385,
-    "metric": "neck"
+    "ratio": 0.9218197219592406,
+    "neck": 1.2387059166423784
    }
   }
  ]

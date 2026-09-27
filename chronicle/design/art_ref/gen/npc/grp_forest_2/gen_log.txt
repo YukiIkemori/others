@@ -1,0 +1,21 @@
+01:23:53 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+01:24:51   half A (npc_forest_old_m, target 45):
+01:24:51   pitch in raw image: 5.36 px per art pixel (upright median 241 px / 45)
+01:24:51   half B (npc_forest_old_f, target 43):
+01:24:52   pitch in raw image: 5.51 px per art pixel (upright median 237 px / 43)
+01:24:54 sheet 1 -> art_ref/gen/npc/grp_forest_2/npc_grp_forest_2.png (24 poses)
+01:24:54 pipeline: sheets.py ../art_ref/gen/npc/grp_forest_2 --npc npc_forest_old_m --out out/npc/npc_forest_old_m --check
+01:25:36   | ■ 画像 AI にそのまま送れる文
+01:25:36   |   「森の老人（npc_forest_old_m）のシート1の4番（上向き・立ち）だけ大きく描かれている（頭の大きさがほかのポーズの約 133%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:25:36   |   「森の老人（npc_forest_old_m）のシート1の5番（上向き・右足前）だけ大きく描かれている（頭の大きさがほかのポーズの約 128%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:25:36   | 
+01:25:36   | ■ シートの状態
+01:25:36   |   シート1 歩き: 要作り直し  npc_forest_old_m_s1.png  ドット 8.00px → 描かれた格子のまま（44.0 ドット）
+01:25:36 pipeline: sheets.py ../art_ref/gen/npc/grp_forest_2 --npc npc_forest_old_f --out out/npc/npc_forest_old_f --check
+01:26:11   |   - シート1: npc_grp_forest_2.png の右半分（人物B）を使う
+01:26:11   |   - シート1: 頭身の比（歩き12コマの中央値、体 43 ドットあたり）: 首 0.40（アルン 0.29）・頭の幅 0.53（0.43）・肩 0.47（0.40）
+01:26:11   |   - 向きの見本（configs/refs/npc_forest_old_f）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:26:11   | 
+01:26:11   | ■ シートの状態
+01:26:11   |   シート1 歩き: 確認あり  npc_forest_old_f_s1.png  ドット 8.00px → 描かれた格子のまま（41.5 ドット）
+01:26:11 sheet 1: 0 redo lines

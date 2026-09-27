@@ -1,0 +1,90 @@
+{
+ "id": "fern_b_rita",
+ "kind": "building",
+ "theme": "treetop",
+ "footprint": [
+  6,
+  5
+ ],
+ "wall": 2,
+ "files": {
+  "24": "fern_b_rita@24.png",
+  "32": "fern_b_rita@32.png",
+  "40": "fern_b_rita@40.png"
+ },
+ "emitFiles": {
+  "24": "fern_b_rita_emit@24.png",
+  "32": "fern_b_rita_emit@32.png",
+  "40": "fern_b_rita_emit@40.png"
+ },
+ "size": {
+  "24": [
+   156,
+   144
+  ],
+  "32": [
+   208,
+   192
+  ],
+  "40": [
+   260,
+   240
+  ]
+ },
+ "anchor32": [
+  8,
+  192
+ ],
+ "door32": {
+  "x": 112.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 36,
+   "y": -43,
+   "w": 12,
+   "h": 13
+  },
+  {
+   "kind": "win",
+   "x": 140,
+   "y": -43,
+   "w": 12,
+   "h": 12
+  }
+ ],
+ "roof32": [
+  -6,
+  -164,
+  198,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/treetop/fern_b_rita.png",
+ "def_": {
+  "type": "building",
+  "id": "fern_b_rita",
+  "x": 49,
+  "y": 5,
+  "w": 6,
+  "h": 5,
+  "wall": 2,
+  "roof": "moss",
+  "mat": "bark",
+  "windows": 2,
+  "door": {
+   "x": 52,
+   "y": 9,
+   "to": {
+    "map": "fern_rita",
+    "spawn": "door"
+   }
+  },
+  "flowers": true,
+  "lamp": true
+ }
+}

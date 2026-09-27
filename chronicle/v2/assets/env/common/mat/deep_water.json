@@ -1,0 +1,20 @@
+{
+ "id": "deep_water",
+ "kind": "material",
+ "theme": "common",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "24": "deep_water@24.png",
+  "32": "deep_water@32.png",
+  "40": "deep_water@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/common/sea.png",
+ "native_px": 10.52,
+ "colours": 40,
+ "derived_from": "sea",
+ "transform": "dark"
+}

@@ -1,0 +1,50 @@
+{
+ "id": "lazaro",
+ "look": "lazaro",
+ "name": "ラザロ",
+ "tier": "A",
+ "kind": "person",
+ "region": "finale",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 52,
+  "face": 80
+ },
+ "measureH": {
+  "field": 52
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#ECE6D8",
+ "mainHue": 45,
+ "mainName": "象牙がかった白",
+ "lantern": false,
+ "recolor": false,
+ "face": true,
+ "sheets": {
+  "1": "npc_lazaro_s1.png",
+  "2": "npc_lazaro_s2.png",
+  "3": "npc_lazaro_s3.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.28846153846153844,
+   "head_w": 0.36538461538461536,
+   "shoulder": 0.375,
+   "neck_clear": 0.7947368421052632
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

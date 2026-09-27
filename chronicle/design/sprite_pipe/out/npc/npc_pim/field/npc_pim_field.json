@@ -1,0 +1,598 @@
+{
+ "character": "npc_pim",
+ "set": "field",
+ "image": "npc_pim_field.png",
+ "cell": [
+  38,
+  45
+ ],
+ "anchor": [
+  19,
+  42
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "walk_down_0": {
+   "x": 0,
+   "y": 0,
+   "w": 38,
+   "h": 45,
+   "anchor": [
+    19,
+    42
+   ],
+   "points": {
+    "head": [
+     20,
+     3
+    ],
+    "center": [
+     19,
+     22
+    ],
+    "front": [
+     9,
+     10
+    ]
+   }
+  },
+  "walk_down_1": {
+   "x": 38,
+   "y": 0,
+   "w": 38,
+   "h": 45,
+   "anchor": [
+    19,
+    42
+   ],
+   "points": {
+    "head": [
+     20,
+     2
+    ],
+    "center": [
+     20,
+     21
+    ],
+    "front": [
+     10,
+     9
+    ]
+   }
+  },
+  "walk_down_2": {
+   "x": 76,
+   "y": 0,
+   "w": 38,
+   "h": 45,
+   "anchor": [
+    19,
+    42
+   ],
+   "points": {
+    "head": [
+     20,
+     2
+    ],
+    "center": [
+     20,
+     21
+    ],
+    "front": [
+     10,
+     9
+    ]
+   }
+  },
+  "act_nod": {
+   "x": 114,
+   "y": 0,
+   "w": 38,
+   "h": 45,
+   "anchor": [
+    19,
+    42
+   ],
+   "points": {
+    "head": [
+     19,
+     4
+    ],
+    "center": [
+     19,
+     23
+    ],
+    "front": [
+     9,
+     15
+    ]
+   }
+  },
+  "walk_up_0": {
+   "x": 0,
+   "y": 45,
+   "w": 38,
+   "h": 45,
+   "anchor": [
+    19,
+    42
+   ],
+   "points": {
+    "head": [
+     18,
+     3
+    ],
+    "center": [
+     18,
+     22
+    ],
+    "front": [
+     9,
+     11
+    ]
+   }
+  },
+  "walk_up_1": {
+   "x": 38,
+   "y": 45,
+   "w": 38,
+   "h": 45,
+   "anchor": [
+    19,
+    42
+   ],
+   "points": {
+    "head": [
+     17,
+     2
+    ],
+    "center": [
+     18,
+     21
+    ],
+    "front": [
+     8,
+     27
+    ]
+   }
+  },
+  "walk_up_2": {
+   "x": 76,
+   "y": 45,
+   "w": 38,
+   "h": 45,
+   "anchor": [
+    19,
+    42
+   ],
+   "points": {
+    "head": [
+     18,
+     3
+    ],
+    "center": [
+     18,
+     22
+    ],
+    "front": [
+     8,
+     28
+    ]
+   }
+  },
+  "act_surprise": {
+   "x": 114,
+   "y": 45,
+   "w": 38,
+   "h": 45,
+   "anchor": [
+    19,
+    42
+   ],
+   "points": {
+    "head": [
+     15,
+     2
+    ],
+    "center": [
+     17,
+     21
+    ],
+    "front": [
+     6,
+     11
+    ]
+   }
+  },
+  "walk_left_0": {
+   "x": 0,
+   "y": 90,
+   "w": 38,
+   "h": 45,
+   "anchor": [
+    19,
+    42
+   ],
+   "points": {
+    "head": [
+     21,
+     2
+    ],
+    "center": [
+     20,
+     20
+    ],
+    "front": [
+     11,
+     9
+    ]
+   }
+  },
+  "walk_left_1": {
+   "x": 38,
+   "y": 90,
+   "w": 38,
+   "h": 45,
+   "anchor": [
+    19,
+    42
+   ],
+   "points": {
+    "head": [
+     20,
+     3
+    ],
+    "center": [
+     21,
+     23
+    ],
+    "front": [
+     10,
+     24
+    ]
+   }
+  },
+  "walk_left_2": {
+   "x": 76,
+   "y": 90,
+   "w": 38,
+   "h": 45,
+   "anchor": [
+    19,
+    42
+   ],
+   "points": {
+    "head": [
+     20,
+     3
+    ],
+    "center": [
+     21,
+     23
+    ],
+    "front": [
+     10,
+     38
+    ]
+   }
+  },
+  "act_call": {
+   "x": 114,
+   "y": 90,
+   "w": 38,
+   "h": 45,
+   "anchor": [
+    19,
+    42
+   ],
+   "points": {
+    "head": [
+     15,
+     3
+    ],
+    "center": [
+     18,
+     21
+    ],
+    "front": [
+     7,
+     5
+    ]
+   }
+  },
+  "walk_right_0": {
+   "x": 0,
+   "y": 135,
+   "w": 38,
+   "h": 45,
+   "anchor": [
+    19,
+    42
+   ],
+   "points": {
+    "head": [
+     18,
+     2
+    ],
+    "center": [
+     18,
+     20
+    ],
+    "front": [
+     9,
+     12
+    ]
+   }
+  },
+  "walk_right_1": {
+   "x": 38,
+   "y": 135,
+   "w": 38,
+   "h": 45,
+   "anchor": [
+    19,
+    42
+   ],
+   "points": {
+    "head": [
+     18,
+     2
+    ],
+    "center": [
+     18,
+     23
+    ],
+    "front": [
+     7,
+     26
+    ]
+   }
+  },
+  "walk_right_2": {
+   "x": 76,
+   "y": 135,
+   "w": 38,
+   "h": 45,
+   "anchor": [
+    19,
+    42
+   ],
+   "points": {
+    "head": [
+     17,
+     3
+    ],
+    "center": [
+     17,
+     23
+    ],
+    "front": [
+     7,
+     27
+    ]
+   }
+  },
+  "act_sig": {
+   "x": 114,
+   "y": 135,
+   "w": 38,
+   "h": 45,
+   "anchor": [
+    19,
+    42
+   ],
+   "points": {
+    "head": [
+     19,
+     7
+    ],
+    "center": [
+     19,
+     27
+    ],
+    "front": [
+     2,
+     31
+    ]
+   }
+  }
+ },
+ "anims": {
+  "walk_down": {
+   "frames": [
+    "walk_down_0",
+    "walk_down_1",
+    "walk_down_0",
+    "walk_down_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_down": {
+   "frames": [
+    "walk_down_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_up": {
+   "frames": [
+    "walk_up_0",
+    "walk_up_1",
+    "walk_up_0",
+    "walk_up_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_up": {
+   "frames": [
+    "walk_up_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_left": {
+   "frames": [
+    "walk_left_0",
+    "walk_left_1",
+    "walk_left_0",
+    "walk_left_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_left": {
+   "frames": [
+    "walk_left_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_right": {
+   "frames": [
+    "walk_right_0",
+    "walk_right_1",
+    "walk_right_0",
+    "walk_right_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_right": {
+   "frames": [
+    "walk_right_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "act_nod": {
+   "frames": [
+    "act_nod"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "act_surprise": {
+   "frames": [
+    "act_surprise"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "act_call": {
+   "frames": [
+    "act_call"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "act_sig": {
+   "frames": [
+    "act_sig"
+   ],
+   "ms": [
+    0
+   ]
+  }
+ },
+ "palette": [
+  "#170c0c",
+  "#251012",
+  "#381a17",
+  "#52281d",
+  "#d75435",
+  "#28170f",
+  "#251d0b",
+  "#341f11",
+  "#412714",
+  "#503019",
+  "#5c351a",
+  "#58411b",
+  "#6b3c18",
+  "#78361d",
+  "#684122",
+  "#774925",
+  "#80491c",
+  "#785326",
+  "#88562c",
+  "#945822",
+  "#a05723",
+  "#7d683d",
+  "#966230",
+  "#957127",
+  "#82775f",
+  "#b26a28",
+  "#9d753e",
+  "#aa7137",
+  "#ba803f",
+  "#a18b58",
+  "#d08137",
+  "#bc9553",
+  "#cd9046",
+  "#e19b48",
+  "#d9a558",
+  "#bbae9a",
+  "#efb25c",
+  "#dcbc7b",
+  "#f5c472",
+  "#f9d684",
+  "#352e14",
+  "#403c13",
+  "#4f4c16",
+  "#5e5f1a",
+  "#6b5e1e",
+  "#71731d",
+  "#84871d",
+  "#989c21",
+  "#b8a87c",
+  "#adaf23",
+  "#f4db9b",
+  "#290d1a"
+ ],
+ "directions": [
+  "down",
+  "up",
+  "left",
+  "right"
+ ],
+ "target_height": 36,
+ "lantern_drawn": false,
+ "npc": {
+  "tier": "B",
+  "lantern": false,
+  "spirit": false,
+  "recolor": false,
+  "mainHex": "#8AAA3C",
+  "recolorSets": null,
+  "variants": null,
+  "kind": "person"
+ }
+}

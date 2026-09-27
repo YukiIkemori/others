@@ -1,0 +1,80 @@
+[
+ {
+  "sheet": 1,
+  "file": "comp_viola_s1.png",
+  "layout": "2x4",
+  "logical_cell": [
+   112,
+   96
+  ],
+  "image_px": [
+   3584,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "ref_front",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     54,
+     69
+    ]
+   },
+   {
+    "id": "ref_34",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     53,
+     69
+    ]
+   },
+   {
+    "id": "ref_side_left",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     51,
+     71
+    ]
+   },
+   {
+    "id": "ref_back",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     51,
+     69
+    ]
+   },
+   {
+    "id": "ref_idle_left",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     66,
+     66
+    ]
+   },
+   {
+    "id": "ref_face",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     65,
+     83
+    ]
+   },
+   {
+    "id": "ref_palette",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     86,
+     42
+    ]
+   }
+  ]
+ }
+]

@@ -143,6 +143,392 @@
      "slot": "walk_up_2",
      "msg": "シート1の 6番（上向き・左足前）はランタンを右手に持っている（左手のはず）。歩くたびに持ち手が入れ替わって見える。仮に左右反転して使う"
     }
+   ],
+   "chosen_by_eye": "a3",
+   "approved": "2026-09-27T01:00:19"
+  },
+  "2": {
+   "attempts": [
+    {
+     "raw": "raw/s2_a1.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "",
+     "t": "2026-09-27T01:01:24"
+    }
+   ],
+   "frames": {
+    "act_nod": {
+     "row": 1,
+     "column": 1,
+     "logical_bbox": [
+      29,
+      47
+     ],
+     "air": 0
+    },
+    "act_think": {
+     "row": 1,
+     "column": 3,
+     "logical_bbox": [
+      28,
+      47
+     ],
+     "air": 0
+    },
+    "act_surprise": {
+     "row": 1,
+     "column": 2,
+     "logical_bbox": [
+      32,
+      47
+     ],
+     "air": 0
+    },
+    "act_bow": {
+     "row": 1,
+     "column": 4,
+     "logical_bbox": [
+      30,
+      43
+     ],
+     "air": 0
+    },
+    "act_call": {
+     "row": 2,
+     "column": 3,
+     "logical_bbox": [
+      30,
+      47
+     ],
+     "air": 0
+    },
+    "act_look": {
+     "row": 2,
+     "column": 4,
+     "logical_bbox": [
+      27,
+      46
+     ],
+     "air": 0
+    },
+    "act_kneel": {
+     "row": 2,
+     "column": 1,
+     "logical_bbox": [
+      32,
+      42
+     ],
+     "air": 0
+    },
+    "act_sit": {
+     "row": 2,
+     "column": 2,
+     "logical_bbox": [
+      39,
+      37
+     ],
+     "air": 0
+    },
+    "act_sig": {
+     "row": 3,
+     "column": 2,
+     "logical_bbox": [
+      38,
+      49
+     ],
+     "air": 0
+    },
+    "act_resolve": {
+     "row": 3,
+     "column": 3,
+     "logical_bbox": [
+      28,
+      45
+     ],
+     "air": 0
+    },
+    "act_sad": {
+     "row": 3,
+     "column": 4,
+     "logical_bbox": [
+      28,
+      44
+     ],
+     "air": 0
+    },
+    "act_lie": {
+     "row": 3,
+     "column": 1,
+     "logical_bbox": [
+      63,
+      26
+     ],
+     "air": 0
+    }
+   },
+   "notes": [],
+   "pitch": 6.149,
+   "from_raw": "raw/s2_a1.png",
+   "redo_left": [],
+   "takes": [
+    {
+     "file": "raw/s2_take1.png",
+     "score": 0,
+     "frames": {
+      "act_nod": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        29,
+        47
+       ],
+       "air": 0
+      },
+      "act_think": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        28,
+        47
+       ],
+       "air": 0
+      },
+      "act_surprise": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        32,
+        47
+       ],
+       "air": 0
+      },
+      "act_bow": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        30,
+        43
+       ],
+       "air": 0
+      },
+      "act_call": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        30,
+        47
+       ],
+       "air": 0
+      },
+      "act_look": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        27,
+        46
+       ],
+       "air": 0
+      },
+      "act_kneel": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        32,
+        42
+       ],
+       "air": 0
+      },
+      "act_sit": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        39,
+        37
+       ],
+       "air": 0
+      },
+      "act_sig": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        38,
+        49
+       ],
+       "air": 0
+      },
+      "act_resolve": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        28,
+        45
+       ],
+       "air": 0
+      },
+      "act_sad": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        28,
+        44
+       ],
+       "air": 0
+      },
+      "act_lie": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        63,
+        26
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s2_a1.png",
+     "cell": [
+      96,
+      64
+     ]
+    }
+   ]
+  },
+  "3": {
+   "attempts": [
+    {
+     "raw": "raw/s3_a1.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "",
+     "t": "2026-09-27T01:02:51"
+    }
+   ],
+   "frames": {
+    "face_neutral": {
+     "row": 1,
+     "column": 1,
+     "logical_bbox": [
+      72,
+      80
+     ],
+     "air": 0
+    },
+    "face_smile": {
+     "row": 1,
+     "column": 2,
+     "logical_bbox": [
+      72,
+      80
+     ],
+     "air": 0
+    },
+    "face_sad": {
+     "row": 1,
+     "column": 3,
+     "logical_bbox": [
+      71,
+      79
+     ],
+     "air": 0
+    },
+    "face_angry": {
+     "row": 2,
+     "column": 1,
+     "logical_bbox": [
+      72,
+      80
+     ],
+     "air": 0
+    },
+    "face_surprise": {
+     "row": 2,
+     "column": 2,
+     "logical_bbox": [
+      72,
+      81
+     ],
+     "air": 0
+    },
+    "face_closed": {
+     "row": 2,
+     "column": 3,
+     "logical_bbox": [
+      71,
+      80
+     ],
+     "air": 0
+    }
+   },
+   "notes": [],
+   "pitch": 6.013,
+   "from_raw": "raw/s3_a1.png",
+   "redo_left": [],
+   "takes": [
+    {
+     "file": "raw/s3_take1.png",
+     "score": 0,
+     "frames": {
+      "face_neutral": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        72,
+        80
+       ],
+       "air": 0
+      },
+      "face_smile": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        72,
+        80
+       ],
+       "air": 0
+      },
+      "face_sad": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        71,
+        79
+       ],
+       "air": 0
+      },
+      "face_angry": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        72,
+        80
+       ],
+       "air": 0
+      },
+      "face_surprise": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        72,
+        81
+       ],
+       "air": 0
+      },
+      "face_closed": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        71,
+        80
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s3_a1.png",
+     "cell": [
+      96,
+      96
+     ]
+    }
    ]
   }
  }

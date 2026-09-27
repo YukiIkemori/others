@@ -1,0 +1,48 @@
+{
+ "id": "fara",
+ "look": "npc_fara",
+ "name": "ファラ",
+ "tier": "B",
+ "kind": "person",
+ "region": "desert",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 40
+ },
+ "measureH": {
+  "field": 40
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#3A6EA0",
+ "mainHue": 210,
+ "mainName": "泉の青",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_fara_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.275,
+   "head_w": 0.4,
+   "shoulder": 0.475,
+   "neck_clear": 0.7794871794871795
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

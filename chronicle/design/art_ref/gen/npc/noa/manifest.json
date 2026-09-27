@@ -17,7 +17,7 @@
     "row": 1,
     "column": 1,
     "logical_bbox": [
-     25,
+     24,
      47
     ]
    },
@@ -26,8 +26,8 @@
     "row": 1,
     "column": 2,
     "logical_bbox": [
-     25,
-     47
+     26,
+     49
     ]
    },
    {
@@ -35,8 +35,8 @@
     "row": 1,
     "column": 3,
     "logical_bbox": [
-     25,
-     47
+     26,
+     48
     ]
    },
    {
@@ -44,7 +44,7 @@
     "row": 2,
     "column": 1,
     "logical_bbox": [
-     25,
+     24,
      47
     ]
    },
@@ -53,8 +53,8 @@
     "row": 2,
     "column": 2,
     "logical_bbox": [
-     28,
-     48
+     26,
+     47
     ]
    },
    {
@@ -62,8 +62,8 @@
     "row": 2,
     "column": 3,
     "logical_bbox": [
-     26,
-     48
+     25,
+     47
     ]
    },
    {
@@ -72,7 +72,7 @@
     "column": 1,
     "logical_bbox": [
      20,
-     45
+     46
     ]
    },
    {
@@ -80,8 +80,8 @@
     "row": 3,
     "column": 2,
     "logical_bbox": [
-     27,
-     46
+     26,
+     45
     ]
    },
    {
@@ -90,7 +90,7 @@
     "column": 3,
     "logical_bbox": [
      27,
-     46
+     45
     ]
    },
    {
@@ -98,7 +98,7 @@
     "row": 4,
     "column": 1,
     "logical_bbox": [
-     22,
+     20,
      46
     ]
    },
@@ -107,7 +107,7 @@
     "row": 4,
     "column": 2,
     "logical_bbox": [
-     27,
+     30,
      46
     ]
    },
@@ -118,6 +118,198 @@
     "logical_bbox": [
      28,
      46
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 2,
+  "file": "npc_noa_s2.png",
+  "layout": "3x4",
+  "logical_cell": [
+   96,
+   64
+  ],
+  "image_px": [
+   3072,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "act_nod",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     24,
+     45
+    ]
+   },
+   {
+    "id": "act_surprise",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     32,
+     46
+    ]
+   },
+   {
+    "id": "act_think",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     24,
+     47
+    ]
+   },
+   {
+    "id": "act_bow",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     28,
+     45
+    ]
+   },
+   {
+    "id": "act_kneel",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     32,
+     38
+    ]
+   },
+   {
+    "id": "act_sit",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     39,
+     39
+    ]
+   },
+   {
+    "id": "act_call",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     30,
+     47
+    ]
+   },
+   {
+    "id": "act_look",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     27,
+     46
+    ]
+   },
+   {
+    "id": "act_lie",
+    "row": 3,
+    "column": 1,
+    "logical_bbox": [
+     70,
+     26
+    ]
+   },
+   {
+    "id": "act_sig",
+    "row": 3,
+    "column": 2,
+    "logical_bbox": [
+     22,
+     48
+    ]
+   },
+   {
+    "id": "act_resolve",
+    "row": 3,
+    "column": 3,
+    "logical_bbox": [
+     23,
+     47
+    ]
+   },
+   {
+    "id": "act_sad",
+    "row": 3,
+    "column": 4,
+    "logical_bbox": [
+     28,
+     44
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 3,
+  "file": "npc_noa_s3.png",
+  "layout": "2x3",
+  "logical_cell": [
+   96,
+   96
+  ],
+  "image_px": [
+   2304,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "face_neutral",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     66,
+     80
+    ]
+   },
+   {
+    "id": "face_smile",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     66,
+     80
+    ]
+   },
+   {
+    "id": "face_sad",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     66,
+     80
+    ]
+   },
+   {
+    "id": "face_angry",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     66,
+     80
+    ]
+   },
+   {
+    "id": "face_surprise",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     66,
+     80
+    ]
+   },
+   {
+    "id": "face_closed",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     63,
+     80
     ]
    }
   ]

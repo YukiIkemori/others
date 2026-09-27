@@ -1,0 +1,797 @@
+{
+ "character": "hagen",
+ "set": "battle",
+ "image": "hagen_battle.png",
+ "cell": [
+  164,
+  151
+ ],
+ "anchor": [
+  84,
+  148
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "idle_a": {
+   "x": 0,
+   "y": 0,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     114,
+     79
+    ],
+    "center": [
+     87,
+     114
+    ],
+    "front": [
+     54,
+     106
+    ]
+   }
+  },
+  "idle_b": {
+   "x": 164,
+   "y": 0,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     112,
+     81
+    ],
+    "center": [
+     87,
+     115
+    ],
+    "front": [
+     56,
+     107
+    ]
+   }
+  },
+  "step": {
+   "x": 328,
+   "y": 0,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     112,
+     88
+    ],
+    "center": [
+     107,
+     124
+    ],
+    "front": [
+     62,
+     140
+    ]
+   }
+  },
+  "guard": {
+   "x": 492,
+   "y": 0,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     76,
+     90
+    ],
+    "center": [
+     77,
+     119
+    ],
+    "front": [
+     36,
+     96
+    ]
+   }
+  },
+  "hit": {
+   "x": 656,
+   "y": 0,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     103,
+     41
+    ],
+    "center": [
+     84,
+     102
+    ],
+    "front": [
+     9,
+     123
+    ]
+   }
+  },
+  "weak": {
+   "x": 0,
+   "y": 151,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     71,
+     99
+    ],
+    "center": [
+     79,
+     127
+    ],
+    "front": [
+     56,
+     119
+    ]
+   }
+  },
+  "ko": {
+   "x": 164,
+   "y": 151,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     84,
+     121
+    ],
+    "center": [
+     83,
+     136
+    ],
+    "front": [
+     34,
+     139
+    ]
+   }
+  },
+  "victory_a": {
+   "x": 328,
+   "y": 151,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     59,
+     65
+    ],
+    "center": [
+     80,
+     114
+    ],
+    "front": [
+     52,
+     71
+    ]
+   }
+  },
+  "victory_b": {
+   "x": 492,
+   "y": 151,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     87,
+     81
+    ],
+    "center": [
+     84,
+     117
+    ],
+    "front": [
+     45,
+     92
+    ]
+   }
+  },
+  "glimmer": {
+   "x": 656,
+   "y": 151,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     116,
+     2
+    ],
+    "center": [
+     104,
+     90
+    ],
+    "front": [
+     6,
+     139
+    ]
+   }
+  },
+  "windup": {
+   "x": 0,
+   "y": 302,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     109,
+     84
+    ],
+    "center": [
+     85,
+     119
+    ],
+    "front": [
+     54,
+     104
+    ]
+   }
+  },
+  "slash": {
+   "x": 164,
+   "y": 302,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     103,
+     77
+    ],
+    "center": [
+     110,
+     116
+    ],
+    "front": [
+     61,
+     140
+    ]
+   }
+  },
+  "thrust_ready": {
+   "x": 328,
+   "y": 302,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     70,
+     84
+    ],
+    "center": [
+     73,
+     118
+    ],
+    "front": [
+     20,
+     111
+    ]
+   }
+  },
+  "thrust": {
+   "x": 492,
+   "y": 302,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     70,
+     84
+    ],
+    "center": [
+     68,
+     116
+    ],
+    "front": [
+     2,
+     109
+    ]
+   }
+  },
+  "charge": {
+   "x": 656,
+   "y": 302,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     66,
+     98
+    ],
+    "center": [
+     87,
+     128
+    ],
+    "front": [
+     56,
+     109
+    ]
+   }
+  },
+  "smash": {
+   "x": 0,
+   "y": 453,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     87,
+     69
+    ],
+    "center": [
+     77,
+     109
+    ],
+    "front": [
+     52,
+     88
+    ]
+   }
+  },
+  "cast_a": {
+   "x": 164,
+   "y": 453,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     81,
+     81
+    ],
+    "center": [
+     84,
+     116
+    ],
+    "front": [
+     46,
+     102
+    ]
+   }
+  },
+  "cast_b": {
+   "x": 328,
+   "y": 453,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     58,
+     76
+    ],
+    "center": [
+     83,
+     114
+    ],
+    "front": [
+     52,
+     84
+    ]
+   }
+  },
+  "item": {
+   "x": 492,
+   "y": 453,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     74,
+     80
+    ],
+    "center": [
+     83,
+     114
+    ],
+    "front": [
+     48,
+     89
+    ]
+   }
+  },
+  "evade": {
+   "x": 656,
+   "y": 453,
+   "w": 164,
+   "h": 151,
+   "anchor": [
+    84,
+    148
+   ],
+   "points": {
+    "head": [
+     94,
+     81
+    ],
+    "center": [
+     99,
+     115
+    ],
+    "front": [
+     58,
+     132
+    ]
+   }
+  }
+ },
+ "anims": {
+  "idle": {
+   "frames": [
+    "idle_a",
+    "idle_b"
+   ],
+   "ms": [
+    520,
+    520
+   ],
+   "loop": true
+  },
+  "attack_sword": {
+   "keys": [
+    {
+     "frame": "step",
+     "ms": 140,
+     "dx": -24,
+     "ease": "out"
+    },
+    {
+     "frame": "windup",
+     "ms": 110,
+     "dx": -24,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "slash",
+     "ms": 220,
+     "dx": -24,
+     "hit": true,
+     "fx_at": "front"
+    },
+    {
+     "frame": "idle_a",
+     "ms": 200,
+     "dx": 0,
+     "ease": "in_out"
+    }
+   ]
+  },
+  "attack_thrust": {
+   "keys": [
+    {
+     "frame": "step",
+     "ms": 140,
+     "dx": -24,
+     "ease": "out"
+    },
+    {
+     "frame": "thrust_ready",
+     "ms": 110,
+     "dx": -24,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "thrust",
+     "ms": 220,
+     "dx": -24,
+     "hit": true,
+     "fx_at": "front"
+    },
+    {
+     "frame": "idle_a",
+     "ms": 200,
+     "dx": 0,
+     "ease": "in_out"
+    }
+   ]
+  },
+  "attack_smash": {
+   "keys": [
+    {
+     "frame": "step",
+     "ms": 140,
+     "dx": -24,
+     "ease": "out"
+    },
+    {
+     "frame": "charge",
+     "ms": 110,
+     "dx": -24,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "smash",
+     "ms": 220,
+     "dx": -24,
+     "hit": true,
+     "fx_at": "front"
+    },
+    {
+     "frame": "idle_a",
+     "ms": 200,
+     "dx": 0,
+     "ease": "in_out"
+    }
+   ]
+  },
+  "cast": {
+   "keys": [
+    {
+     "frame": "cast_a",
+     "ms": 110,
+     "dx": 0,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "cast_b",
+     "ms": 220,
+     "dx": 0,
+     "hit": false,
+     "fx_at": "front"
+    }
+   ]
+  },
+  "victory": {
+   "keys": [
+    {
+     "frame": "victory_a",
+     "ms": 110,
+     "dx": 0,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "victory_b",
+     "ms": 220,
+     "dx": 0,
+     "hit": false,
+     "fx_at": "front"
+    }
+   ]
+  },
+  "hurt": {
+   "keys": [
+    {
+     "frame": "hit",
+     "ms": 80,
+     "dx": 6,
+     "ease": "out"
+    },
+    {
+     "frame": "hit",
+     "ms": 240,
+     "dx": 6
+    },
+    {
+     "frame": "idle_a",
+     "ms": 200,
+     "dx": 0,
+     "ease": "in_out"
+    }
+   ]
+  },
+  "ko_fall": {
+   "keys": [
+    {
+     "frame": "hit",
+     "ms": 160,
+     "dx": 6
+    },
+    {
+     "frame": "weak",
+     "ms": 320,
+     "dx": 6
+    },
+    {
+     "frame": "ko",
+     "ms": 900,
+     "dx": 6
+    }
+   ]
+  },
+  "guard": {
+   "frames": [
+    "guard"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "hit": {
+   "frames": [
+    "hit"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "weak": {
+   "frames": [
+    "weak"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "ko": {
+   "frames": [
+    "ko"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "glimmer": {
+   "frames": [
+    "glimmer"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "item": {
+   "frames": [
+    "item"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "evade": {
+   "frames": [
+    "evade"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "step": {
+   "frames": [
+    "step"
+   ],
+   "ms": [
+    0
+   ]
+  }
+ },
+ "palette": [
+  "#0d0808",
+  "#170712",
+  "#1d120f",
+  "#1c1815",
+  "#271e17",
+  "#2b2623",
+  "#392c24",
+  "#393430",
+  "#47423d",
+  "#58524c",
+  "#6c655d",
+  "#827a6f",
+  "#988f82",
+  "#452a30",
+  "#2d1911",
+  "#3d2315",
+  "#542d1a",
+  "#4c3322",
+  "#4b3931",
+  "#6c2d12",
+  "#61432d",
+  "#6a4124",
+  "#59483c",
+  "#7e4826",
+  "#8d401e",
+  "#6c584a",
+  "#77573b",
+  "#865a37",
+  "#93572c",
+  "#816b59",
+  "#af5829",
+  "#957148",
+  "#ad6a38",
+  "#a47042",
+  "#957e6a",
+  "#c77a3e",
+  "#b18857",
+  "#be844c",
+  "#a89079",
+  "#b4a28d",
+  "#d09d62",
+  "#db9a5a",
+  "#e9b26f",
+  "#ccc0af",
+  "#f2c779",
+  "#302b17",
+  "#443e21",
+  "#57512a",
+  "#665e2e",
+  "#706930",
+  "#7e7533",
+  "#858034"
+ ],
+ "facing": "left",
+ "target_height": 68,
+ "weapon": "greatsword",
+ "weapon_drawn": "notched broad two-handed sword"
+}

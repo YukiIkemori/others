@@ -1,0 +1,21 @@
+01:04:48 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+01:05:40   half A (npc_pen_child, target 36):
+01:05:40   pitch in raw image: 4.89 px per art pixel (upright median 176 px / 36)
+01:05:40   half B (npc_pen_sailor, target 49):
+01:05:41   pitch in raw image: 4.94 px per art pixel (upright median 242 px / 49)
+01:05:41 sheet 1 -> art_ref/gen/npc/grp_pen_3/npc_grp_pen_3.png (24 poses)
+01:05:41 pipeline: sheets.py ../art_ref/gen/npc/grp_pen_3 --npc npc_pen_child --out out/npc/npc_pen_child --check
+01:06:00   |   - シート1: npc_grp_pen_3.png の左半分（人物A）を使う
+01:06:00   |   - シート1: 頭身の比（歩き12コマの中央値、体 36 ドットあたり）: 首 0.40（アルン 0.29）・頭の幅 0.47（0.43）・肩 0.43（0.40）
+01:06:00   |   - 向きの見本（configs/refs/npc_pen_child）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:06:00   | 
+01:06:00   | ■ シートの状態
+01:06:00   |   シート1 歩き: 確認あり  npc_pen_child_s1.png  ドット 8.00px → 描かれた格子のまま（35.0 ドット）
+01:06:00 pipeline: sheets.py ../art_ref/gen/npc/grp_pen_3 --npc npc_pen_sailor --out out/npc/npc_pen_sailor --check
+01:06:33   | 
+01:06:33   | ■ 画像 AI にそのまま送れる文
+01:06:33   |   「船乗り（npc_pen_sailor）のシート1の6番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 64%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:06:33   | 
+01:06:33   | ■ シートの状態
+01:06:33   |   シート1 歩き: 要作り直し  npc_pen_sailor_s1.png  ドット 8.00px → 描かれた格子のまま（48.5 ドット）
+01:06:33 sheet 1: 0 redo lines

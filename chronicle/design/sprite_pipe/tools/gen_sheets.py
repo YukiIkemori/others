@@ -1191,8 +1191,73 @@ def enrich(items, spec_face):
     return items
 
 
+def _trim_h(sp, min_run=5):
+    """height of a sprite without thin things sticking up (blade, staff), in art px"""
+    if sp is None:
+        return 0
+    a = sp.split()[3].point(lambda v: 255 if v else 0)
+    W, H = a.size
+    px = a.tobytes()
+    for y in range(H):
+        run = best = 0
+        for v in px[y * W:(y + 1) * W]:
+            run = run + 1 if v else 0
+            best = max(best, run)
+        if best >= min_run:
+            return H - y
+    return H
+
+
+def false_size_alarm(job, n, sid, tol=0.12):
+    """a companion sheet made by editing the hero's sheet: when the pose has the same size (relative to the idle /
+    standing pose of the sheet) as the hero's same pose in the template, a 'drawn smaller / wrong height' redo line
+    is a false alarm of the head matcher (tilted / turned heads) -> True"""
+    if job.kind != 'companion':
+        return False
+    spec = job.specs[n]
+    tpl = template_for(spec)
+    path = os.path.join(job.dir, spec['file'])
+    if tpl is None or not os.path.exists(path):
+        return False
+    dots = sheet_dots(load_rgb(path))
+    fmap = {v: k for k, v in gen_to_final_map(spec).items()}
+    pos = {s: (r, c) for r, row in enumerate(spec['ids']) for c, s in enumerate(row) if s}
+    if sid not in pos:
+        return False
+    ref_sid = next((s for s in spec['stand'] if s in pos and s != sid), None)
+    if ref_sid is None:
+        return False
+
+    def h(img, cell, rc):
+        return _trim_h(cell_sprite(img, cell, *rc))
+    gr, gc = spec['gen_grid']
+    tcell = (tpl.size[0] // gc, tpl.size[1] // gr)
+    ch, cr = h(dots, spec['cell'], pos[sid]), h(dots, spec['cell'], pos[ref_sid])
+    th, tr = h(tpl, tcell, fmap.get(pos[sid], pos[sid])), h(tpl, tcell, fmap.get(pos[ref_sid], pos[ref_sid]))
+    if not (ch and cr and th and tr):
+        return False
+    r = (ch / float(cr)) / (th / float(tr))
+    job.log('  size check %s: %.2f of the hero\'s same pose (relative to %s)' % (sid, r, ref_sid))
+    return abs(r - 1) < tol
+
+
+def drop_false_alarms(job, n_items):
+    out = {}
+    for n, items in n_items.items():
+        keep = []
+        for it in items:
+            if (it.get('code') in ('scale', 'height')) and false_size_alarm(job, n, it['slot']):
+                job.log('  sheet %s %s: size redo line ignored (same size as the hero\'s pose)' % (n, it['slot']))
+                continue
+            keep.append(it)
+        if keep:
+            out[n] = keep
+    return out
+
+
 def fix_loop(job, n_items, quality, pipe_args, report, max_rounds=MAX_ATTEMPTS, only=None):
     """n_items: {sheet: [items]} -> edits until the pipeline has no redo line for those sheets or attempts run out"""
+    n_items = drop_false_alarms(job, n_items)
     left = n_items
     for rnd in range(1, max_rounds + 1):
         if not n_items:
@@ -1217,6 +1282,7 @@ def fix_loop(job, n_items, quality, pipe_args, report, max_rounds=MAX_ATTEMPTS, 
                 left.setdefault(it['sheet'], []).append(it)
         job.log('round %d: %d redo lines left %s' % (rnd, sum(len(v) for v in left.values()),
                                                     ' '.join('%s:%s' % (k, ','.join(sorted({i["slot"] for i in v}))) for k, v in left.items())))
+        left = drop_false_alarms(job, left)
         n_items = {k: v for k, v in left.items() if job.st(k).get('edit_rounds', 0) < MAX_ATTEMPTS}
         if not left:
             return True

@@ -1,0 +1,378 @@
+{
+ "char": "npc_pen_keeper",
+ "companion": null,
+ "npc": "npc_pen_keeper",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/grp_pen_4",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/sprite_pipe/out/npc/npc_pen_keeper/src/npc_pen_keeper_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 384.0,
+   "native_height_at_period": 48.0,
+   "scale_note": "描かれた格子のまま（48.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      32,
+      49
+     ],
+     "box": [
+      176,
+      72,
+      464,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.88
+    },
+    "walk_down_1": {
+     "size": [
+      32,
+      48
+     ],
+     "box": [
+      816,
+      80,
+      1104,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.04,
+     "scale": 1.143
+    },
+    "walk_down_2": {
+     "size": [
+      31,
+      48
+     ],
+     "box": [
+      1456,
+      80,
+      1736,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.9,
+     "scale": 1.078
+    },
+    "walk_up_0": {
+     "size": [
+      32,
+      48
+     ],
+     "box": [
+      176,
+      592,
+      464,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.86,
+     "scale": 0.818,
+     "fixed": [
+      "rescaled 1.22"
+     ]
+    },
+    "walk_up_1": {
+     "size": [
+      31,
+      48
+     ],
+     "box": [
+      816,
+      592,
+      1096,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.97,
+     "scale": 0.675,
+     "fixed": [
+      "rescaled 1.48"
+     ]
+    },
+    "walk_up_2": {
+     "size": [
+      30,
+      48
+     ],
+     "box": [
+      1464,
+      592,
+      1736,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.02,
+     "scale": 0.753,
+     "fixed": [
+      "rescaled 1.33"
+     ]
+    },
+    "walk_left_0": {
+     "size": [
+      23,
+      48
+     ],
+     "box": [
+      208,
+      1104,
+      424,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      29,
+      48
+     ],
+     "box": [
+      824,
+      1104,
+      1088,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.42,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.92
+     },
+     "scale": 1.039
+    },
+    "walk_left_2": {
+     "size": [
+      27,
+      48
+     ],
+     "box": [
+      1472,
+      1104,
+      1720,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    },
+    "walk_right_0": {
+     "size": [
+      21,
+      47
+     ],
+     "box": [
+      216,
+      1624,
+      416,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      28,
+      47
+     ],
+     "box": [
+      832,
+      1624,
+      1088,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.948
+    },
+    "walk_right_2": {
+     "size": [
+      27,
+      47
+     ],
+     "box": [
+      1472,
+      1624,
+      1720,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "pair_half",
+   "msg": "npc_grp_pen_4.png の右半分（人物B）を使う",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_pen_keeper）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 2 番（下向き・右足前） の縮尺が少し違う（頭の大きさで約 114%）。並べて見て気になるなら描き直し",
+   "slot": "walk_down_1",
+   "ask": null,
+   "data": {
+    "scale": 1.1428571428571432,
+    "per_ref": [
+     1.0000000000000004,
+     1.1000000000000005,
+     1.1500000000000006
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 4 番（上向き・立ち） がほかのポーズより小さく描かれている（頭の大きさで約 82%）。仮に 122% に拡大縮小して使う",
+   "slot": "walk_up_0",
+   "ask": "店と宿の主人（npc_pen_keeper）のシート1の4番（上向き・立ち）だけ小さく描かれている（頭の大きさがほかのポーズの約 82%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.8181818181818181,
+    "per_ref": [
+     0.9625000000000001,
+     0.7875000000000001,
+     0.6500000000000001
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 5 番（上向き・右足前） がほかのポーズより小さく描かれている（頭の大きさで約 68%）。仮に 148% に拡大縮小して使う",
+   "slot": "walk_up_1",
+   "ask": "店と宿の主人（npc_pen_keeper）のシート1の5番（上向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 68%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.6753246753246753,
+    "per_ref": [
+     0.6124999999999998,
+     0.7249999999999999,
+     0.6500000000000001
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 6 番（上向き・左足前） がほかのポーズより小さく描かれている（頭の大きさで約 75%）。仮に 133% に拡大縮小して使う",
+   "slot": "walk_up_2",
+   "ask": "店と宿の主人（npc_pen_keeper）のシート1の6番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 75%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.753246753246753,
+    "per_ref": [
+     0.9625000000000001,
+     0.7249999999999999,
+     0.6500000000000001
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 47 ドットあたり）: 首 0.36（アルン 0.29）・頭の幅 0.43（0.43）・肩 0.41（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.3617021276595745,
+    "head_w": 0.42553191489361697,
+    "shoulder": 0.4148936170212766,
+    "neck_clear": 0.7182539682539683
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 124%・頭の幅 100%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 0.9965618615775573,
+    "neck": 1.2387059166423784
+   }
+  }
+ ]
+}

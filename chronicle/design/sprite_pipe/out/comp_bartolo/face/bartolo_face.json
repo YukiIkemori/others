@@ -1,0 +1,165 @@
+{
+ "character": "bartolo",
+ "set": "face",
+ "image": "bartolo_face.png",
+ "cell": [
+  83,
+  85
+ ],
+ "anchor": [
+  41,
+  82
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "face_neutral": {
+   "x": 0,
+   "y": 0,
+   "w": 83,
+   "h": 85,
+   "anchor": [
+    41,
+    82
+   ],
+   "points": {
+    "head": [
+     38,
+     3
+    ],
+    "center": [
+     41,
+     50
+    ],
+    "front": [
+     2,
+     63
+    ]
+   }
+  },
+  "face_smile": {
+   "x": 83,
+   "y": 0,
+   "w": 83,
+   "h": 85,
+   "anchor": [
+    41,
+    82
+   ],
+   "points": {
+    "head": [
+     38,
+     3
+    ],
+    "center": [
+     41,
+     50
+    ],
+    "front": [
+     2,
+     62
+    ]
+   }
+  },
+  "face_surprise": {
+   "x": 166,
+   "y": 0,
+   "w": 83,
+   "h": 85,
+   "anchor": [
+    41,
+    82
+   ],
+   "points": {
+    "head": [
+     38,
+     2
+    ],
+    "center": [
+     41,
+     49
+    ],
+    "front": [
+     2,
+     62
+    ]
+   }
+  },
+  "face_pain": {
+   "x": 249,
+   "y": 0,
+   "w": 83,
+   "h": 85,
+   "anchor": [
+    41,
+    82
+   ],
+   "points": {
+    "head": [
+     37,
+     4
+    ],
+    "center": [
+     40,
+     50
+    ],
+    "front": [
+     2,
+     63
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#110710",
+  "#110e0f",
+  "#141822",
+  "#251814",
+  "#232020",
+  "#332f2e",
+  "#433f3d",
+  "#524f4e",
+  "#615e5d",
+  "#716d6c",
+  "#817d7b",
+  "#918d8b",
+  "#a29d9b",
+  "#b4aeaa",
+  "#c4beba",
+  "#d4c5b8",
+  "#d6d0cb",
+  "#e5dfd8",
+  "#f3eee8",
+  "#843729",
+  "#39231a",
+  "#523123",
+  "#563b25",
+  "#6a402b",
+  "#5f4f44",
+  "#80482f",
+  "#7d5435",
+  "#77675a",
+  "#8e6953",
+  "#a65f3b",
+  "#996a40",
+  "#928172",
+  "#c67e51",
+  "#b9864f",
+  "#b48a64",
+  "#ab9887",
+  "#d99969",
+  "#d29f62",
+  "#c0ae9e",
+  "#e5b180",
+  "#f0c899",
+  "#f6d9b2",
+  "#1a2334",
+  "#213049",
+  "#293d5e",
+  "#304a72",
+  "#395787",
+  "#466692"
+ ],
+ "facing": "slightly right",
+ "target_height": 80
+}

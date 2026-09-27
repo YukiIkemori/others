@@ -1,0 +1,48 @@
+{
+ "id": "pim",
+ "look": "npc_pim",
+ "name": "ピム",
+ "tier": "B",
+ "kind": "person",
+ "region": "forest",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 36
+ },
+ "measureH": {
+  "field": 39
+ },
+ "headgearExtraDots": 3,
+ "mainHex": "#8AAA3C",
+ "mainHue": 85,
+ "mainName": "若葉色",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_pim_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.4166666666666667,
+   "head_w": 0.5,
+   "shoulder": 0.4444444444444444,
+   "neck_clear": 0.55
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

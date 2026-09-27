@@ -29,7 +29,7 @@
      "row": 1,
      "column": 1,
      "logical_bbox": [
-      25,
+      24,
       47
      ],
      "air": 0
@@ -38,8 +38,8 @@
      "row": 1,
      "column": 2,
      "logical_bbox": [
-      25,
-      47
+      26,
+      49
      ],
      "air": 0
     },
@@ -47,8 +47,8 @@
      "row": 1,
      "column": 3,
      "logical_bbox": [
-      25,
-      47
+      26,
+      48
      ],
      "air": 0
     },
@@ -56,7 +56,7 @@
      "row": 2,
      "column": 1,
      "logical_bbox": [
-      25,
+      24,
       47
      ],
      "air": 0
@@ -65,8 +65,8 @@
      "row": 2,
      "column": 2,
      "logical_bbox": [
-      28,
-      48
+      26,
+      47
      ],
      "air": 0
     },
@@ -74,8 +74,8 @@
      "row": 2,
      "column": 3,
      "logical_bbox": [
-      26,
-      48
+      25,
+      47
      ],
      "air": 0
     },
@@ -84,7 +84,7 @@
      "column": 1,
      "logical_bbox": [
       20,
-      45
+      46
      ],
      "air": 0
     },
@@ -92,8 +92,8 @@
      "row": 3,
      "column": 2,
      "logical_bbox": [
-      27,
-      46
+      26,
+      45
      ],
      "air": 0
     },
@@ -102,7 +102,7 @@
      "column": 3,
      "logical_bbox": [
       27,
-      46
+      45
      ],
      "air": 0
     },
@@ -110,7 +110,7 @@
      "row": 4,
      "column": 1,
      "logical_bbox": [
-      22,
+      20,
       46
      ],
      "air": 0
@@ -119,7 +119,7 @@
      "row": 4,
      "column": 2,
      "logical_bbox": [
-      27,
+      30,
       46
      ],
      "air": 0
@@ -135,13 +135,393 @@
     }
    },
    "notes": [],
-   "pitch": 5.851,
-   "from_raw": "raw/s1_a3.png",
-   "redo_left": [
+   "pitch": 6.0,
+   "from_raw": "raw/s1_a1.png",
+   "redo_left": [],
+   "chosen_by_eye": "a1",
+   "approved": "2026-09-27T01:00:20"
+  },
+  "2": {
+   "attempts": [
     {
-     "code": "proportion",
-     "slot": "walk_down_0",
-     "msg": "頭の高さがアルンより大きい（117%）"
+     "raw": "raw/s2_a1.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "",
+     "t": "2026-09-27T01:10:20"
+    }
+   ],
+   "frames": {
+    "act_think": {
+     "row": 1,
+     "column": 3,
+     "logical_bbox": [
+      24,
+      47
+     ],
+     "air": 0
+    },
+    "act_surprise": {
+     "row": 1,
+     "column": 2,
+     "logical_bbox": [
+      32,
+      46
+     ],
+     "air": 0
+    },
+    "act_nod": {
+     "row": 1,
+     "column": 1,
+     "logical_bbox": [
+      24,
+      45
+     ],
+     "air": 0
+    },
+    "act_bow": {
+     "row": 1,
+     "column": 4,
+     "logical_bbox": [
+      28,
+      45
+     ],
+     "air": 0
+    },
+    "act_call": {
+     "row": 2,
+     "column": 3,
+     "logical_bbox": [
+      30,
+      47
+     ],
+     "air": 0
+    },
+    "act_look": {
+     "row": 2,
+     "column": 4,
+     "logical_bbox": [
+      27,
+      46
+     ],
+     "air": 0
+    },
+    "act_kneel": {
+     "row": 2,
+     "column": 1,
+     "logical_bbox": [
+      32,
+      38
+     ],
+     "air": 0
+    },
+    "act_sit": {
+     "row": 2,
+     "column": 2,
+     "logical_bbox": [
+      39,
+      39
+     ],
+     "air": 0
+    },
+    "act_sig": {
+     "row": 3,
+     "column": 2,
+     "logical_bbox": [
+      22,
+      48
+     ],
+     "air": 0
+    },
+    "act_resolve": {
+     "row": 3,
+     "column": 3,
+     "logical_bbox": [
+      23,
+      47
+     ],
+     "air": 0
+    },
+    "act_sad": {
+     "row": 3,
+     "column": 4,
+     "logical_bbox": [
+      28,
+      44
+     ],
+     "air": 0
+    },
+    "act_lie": {
+     "row": 3,
+     "column": 1,
+     "logical_bbox": [
+      70,
+      26
+     ],
+     "air": 0
+    }
+   },
+   "notes": [],
+   "pitch": 5.957,
+   "from_raw": "raw/s2_a1.png",
+   "redo_left": [],
+   "takes": [
+    {
+     "file": "raw/s2_take1.png",
+     "score": 0,
+     "frames": {
+      "act_think": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        24,
+        47
+       ],
+       "air": 0
+      },
+      "act_surprise": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        32,
+        46
+       ],
+       "air": 0
+      },
+      "act_nod": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        24,
+        45
+       ],
+       "air": 0
+      },
+      "act_bow": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        28,
+        45
+       ],
+       "air": 0
+      },
+      "act_call": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        30,
+        47
+       ],
+       "air": 0
+      },
+      "act_look": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        27,
+        46
+       ],
+       "air": 0
+      },
+      "act_kneel": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        32,
+        38
+       ],
+       "air": 0
+      },
+      "act_sit": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        39,
+        39
+       ],
+       "air": 0
+      },
+      "act_sig": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        22,
+        48
+       ],
+       "air": 0
+      },
+      "act_resolve": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        23,
+        47
+       ],
+       "air": 0
+      },
+      "act_sad": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        28,
+        44
+       ],
+       "air": 0
+      },
+      "act_lie": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        70,
+        26
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s2_a1.png",
+     "cell": [
+      96,
+      64
+     ]
+    }
+   ]
+  },
+  "3": {
+   "attempts": [
+    {
+     "raw": "raw/s3_a1.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "",
+     "t": "2026-09-27T01:13:16"
+    }
+   ],
+   "frames": {
+    "face_neutral": {
+     "row": 1,
+     "column": 1,
+     "logical_bbox": [
+      66,
+      80
+     ],
+     "air": 0
+    },
+    "face_smile": {
+     "row": 1,
+     "column": 2,
+     "logical_bbox": [
+      66,
+      80
+     ],
+     "air": 0
+    },
+    "face_sad": {
+     "row": 1,
+     "column": 3,
+     "logical_bbox": [
+      66,
+      80
+     ],
+     "air": 0
+    },
+    "face_angry": {
+     "row": 2,
+     "column": 1,
+     "logical_bbox": [
+      66,
+      80
+     ],
+     "air": 0
+    },
+    "face_surprise": {
+     "row": 2,
+     "column": 2,
+     "logical_bbox": [
+      66,
+      80
+     ],
+     "air": 0
+    },
+    "face_closed": {
+     "row": 2,
+     "column": 3,
+     "logical_bbox": [
+      63,
+      80
+     ],
+     "air": 0
+    }
+   },
+   "notes": [],
+   "pitch": 5.938,
+   "from_raw": "raw/s3_a1.png",
+   "redo_left": [],
+   "takes": [
+    {
+     "file": "raw/s3_take1.png",
+     "score": 0,
+     "frames": {
+      "face_neutral": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        66,
+        80
+       ],
+       "air": 0
+      },
+      "face_smile": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        66,
+        80
+       ],
+       "air": 0
+      },
+      "face_sad": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        66,
+        80
+       ],
+       "air": 0
+      },
+      "face_angry": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        66,
+        80
+       ],
+       "air": 0
+      },
+      "face_surprise": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        66,
+        80
+       ],
+       "air": 0
+      },
+      "face_closed": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        63,
+        80
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s3_a1.png",
+     "cell": [
+      96,
+      96
+     ]
     }
    ]
   }

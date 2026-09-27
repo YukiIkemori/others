@@ -1,0 +1,21 @@
+01:11:21 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+01:12:20   half A (npc_scribe, target 47):
+01:12:20   pitch in raw image: 4.91 px per art pixel (upright median 231 px / 47)
+01:12:20   half B (npc_clerk, target 48):
+01:12:21   pitch in raw image: 4.85 px per art pixel (upright median 233 px / 48)
+01:12:23 sheet 1 -> art_ref/gen/npc/grp_common_2/npc_grp_common_2.png (24 poses)
+01:12:23 pipeline: sheets.py ../art_ref/gen/npc/grp_common_2 --npc npc_scribe --out out/npc/npc_scribe --check
+01:13:00   |   - シート1: npc_grp_common_2.png の左半分（人物A）を使う
+01:13:00   |   - シート1: 頭身の比（歩き12コマの中央値、体 47 ドットあたり）: 首 0.34（アルン 0.29）・頭の幅 0.40（0.43）・肩 0.38（0.40）
+01:13:00   |   - 向きの見本（configs/refs/npc_scribe）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:13:00   | 
+01:13:00   | ■ シートの状態
+01:13:00   |   シート1 歩き: 確認あり  npc_scribe_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+01:13:00 pipeline: sheets.py ../art_ref/gen/npc/grp_common_2 --npc npc_clerk --out out/npc/npc_clerk --check
+01:13:49   |   「記録院の役人（npc_clerk）のシート1の4番（上向き・立ち）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:13:49   |   「記録院の役人（npc_clerk）のシート1の5番（上向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:13:49   |   「記録院の役人（npc_clerk）のシート1の6番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 72%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:13:49   | 
+01:13:49   | ■ シートの状態
+01:13:49   |   シート1 歩き: 要作り直し  npc_clerk_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+01:13:49 sheet 1: 0 redo lines

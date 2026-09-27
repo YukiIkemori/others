@@ -381,6 +381,9 @@
         let r = p[i] * inv[0], gg = p[i + 1] * inv[1], b = p[i + 2] * inv[2];
         const m = Math.max(r, gg, b);
         if (m > 255) { const l = 0.3 * r + 0.59 * gg + 0.11 * b, t = Math.min(1, (m - 255) / m); r += (l - r) * t; gg += (l - gg) * t; b += (l - b) * t; const k2 = 255 / Math.max(r, gg, b, 255); r *= k2; gg *= k2; b *= k2; }
+        // 明るい所は柔らかく抑える（光だまりの中心が白く飛ばないように）
+        const mx = Math.max(r, gg, b);
+        if (mx > 170) { const k3 = (170 + (mx - 170) * 0.4) / mx; r *= k3; gg *= k3; b *= k3; }
         p[i] = r; p[i + 1] = gg; p[i + 2] = b;
       }
       x.putImageData(d, 0, 0);

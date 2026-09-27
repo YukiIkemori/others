@@ -1,0 +1,82 @@
+{
+ "id": "fern_b_house2",
+ "kind": "building",
+ "theme": "treetop",
+ "footprint": [
+  6,
+  4
+ ],
+ "wall": 2,
+ "files": {
+  "24": "fern_b_house2@24.png",
+  "32": "fern_b_house2@32.png",
+  "40": "fern_b_house2@40.png"
+ },
+ "emitFiles": {
+  "24": "fern_b_house2_emit@24.png",
+  "32": "fern_b_house2_emit@32.png",
+  "40": "fern_b_house2_emit@40.png"
+ },
+ "size": {
+  "24": [
+   156,
+   120
+  ],
+  "32": [
+   208,
+   160
+  ],
+  "40": [
+   260,
+   200
+  ]
+ },
+ "anchor32": [
+  8,
+  160
+ ],
+ "door32": null,
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 47,
+   "y": -122,
+   "w": 4,
+   "h": 4
+  },
+  {
+   "kind": "win",
+   "x": 144,
+   "y": -72,
+   "w": 8,
+   "h": 6
+  },
+  {
+   "kind": "win",
+   "x": 90,
+   "y": -53,
+   "w": 12,
+   "h": 10
+  }
+ ],
+ "roof32": [
+  -6,
+  -132,
+  198,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/treetop/fern_b_house2.png",
+ "def_": {
+  "type": "building",
+  "id": "fern_b_house2",
+  "x": 4,
+  "y": 4,
+  "w": 6,
+  "h": 4,
+  "wall": 2,
+  "roof": "moss",
+  "mat": "bark",
+  "windows": 1
+ }
+}

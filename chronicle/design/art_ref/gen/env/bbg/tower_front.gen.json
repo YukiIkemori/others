@@ -1,0 +1,11 @@
+{
+ "out": "/home/user/others/chronicle/design/art_ref/gen/env/bbg/tower_front.png",
+ "tag": "env_bbgfront_tower",
+ "size": "1920x1088",
+ "quality": "high",
+ "background": "transparent",
+ "prompt": "A FOREGROUND OVERLAY layer for a side-on JRPG battle background (16:9), 2D pixel art: only close-up foreground elements hugging the bottom edge and the two bottom corners, silhouetted dark against the night (deep violet-blue, slight rim of moonlight on top edges): the edge of a wooden crate, a coil of rope, a stack of old books and a cracked stone step. They cover at most the bottom 18% in the centre and rise to about 35% of the height in the left and right corners. Everything else is fully transparent (the middle and top of the image are empty). No characters, no text. Crisp square pixels (4x4 image px each).",
+ "refs": [],
+ "revised_prompt": "Generate a standalone 16:9 PNG-style image asset: a FOREGROUND OVERLAY for a side-on JRPG battle background, 2D crisp pixel art. Alpha transparency is essential: the entire upper and middle area is truly fully transparent, NOT a colored night sky, NOT black, NOT a checkerboard baked into the image. Only close-up foreground objects along the bottom edge and rising at the bottom-left and bottom-right corners. Silhouetted near-black deep violet-blue nighttime palette, sparse subtle cool moonlight rim light on top edges. Include the edge of a weathered wooden crate, a coil of rope, a stack of old books, and a cracked stone step, arranged naturally among the two lower corners and bottom edge. Object coverage at the horizontal center at most bottom 18% of total height; at the far left and far right corners reaches approximately 35% of height. Leave plentiful clear transparent space between raised corner silhouettes; irregular pixel-stepped upper silhouette. No characters, no text, no backdrop, no gradients, no antialiasing. Sharp square pixel blocks with 4x4 output image pixels per art pixel, pixel-grid-aligned outlines and detail.",
+ "model": "gpt-6-sol"
+}

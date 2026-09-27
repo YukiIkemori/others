@@ -1,0 +1,21 @@
+01:06:33 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+01:07:27   half A (npc_pen_guard, target 49):
+01:07:27   pitch in raw image: 4.90 px per art pixel (upright median 240 px / 49)
+01:07:27   half B (npc_pen_keeper, target 47):
+01:07:28   pitch in raw image: 5.00 px per art pixel (upright median 235 px / 47)
+01:07:29 sheet 1 -> art_ref/gen/npc/grp_pen_4/npc_grp_pen_4.png (24 poses)
+01:07:29 pipeline: sheets.py ../art_ref/gen/npc/grp_pen_4 --npc npc_pen_guard --out out/npc/npc_pen_guard --check
+01:08:04   |   - シート1: npc_grp_pen_4.png の左半分（人物A）を使う
+01:08:04   |   - シート1: 頭身の比（歩き12コマの中央値、体 49 ドットあたり）: 首 0.38（アルン 0.29）・頭の幅 0.37（0.43）・肩 0.40（0.40）
+01:08:04   |   - 向きの見本（configs/refs/npc_pen_guard）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:08:04   | 
+01:08:04   | ■ シートの状態
+01:08:04   |   シート1 歩き: 確認あり  npc_pen_guard_s1.png  ドット 8.00px → 描かれた格子のまま（49.0 ドット）
+01:08:04 pipeline: sheets.py ../art_ref/gen/npc/grp_pen_4 --npc npc_pen_keeper --out out/npc/npc_pen_keeper --check
+01:08:50   |   「店と宿の主人（npc_pen_keeper）のシート1の4番（上向き・立ち）だけ小さく描かれている（頭の大きさがほかのポーズの約 82%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:08:50   |   「店と宿の主人（npc_pen_keeper）のシート1の5番（上向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 68%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:08:50   |   「店と宿の主人（npc_pen_keeper）のシート1の6番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 75%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:08:50   | 
+01:08:50   | ■ シートの状態
+01:08:50   |   シート1 歩き: 要作り直し  npc_pen_keeper_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+01:08:50 sheet 1: 0 redo lines

@@ -1,0 +1,50 @@
+{
+ "id": "otto",
+ "look": "otto",
+ "name": "オットー",
+ "tier": "A",
+ "kind": "person",
+ "region": "prologue",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 45,
+  "face": 80
+ },
+ "measureH": {
+  "field": 47
+ },
+ "headgearExtraDots": 2,
+ "mainHex": "#2C4A66",
+ "mainHue": 210,
+ "mainName": "紺",
+ "lantern": true,
+ "recolor": false,
+ "face": true,
+ "sheets": {
+  "1": "npc_otto_s1.png",
+  "2": "npc_otto_s2.png",
+  "3": "npc_otto_s3.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.3,
+   "head_w": 0.4444444444444444,
+   "shoulder": 0.4277777777777778,
+   "neck_clear": 0.75
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

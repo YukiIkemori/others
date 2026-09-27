@@ -1,0 +1,19 @@
+00:59:16 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:00:06   pitch in raw image: 6.25 px per art pixel (upright median 250 px / 40)
+01:00:07 sheet 1 -> art_ref/gen/npc/fara/npc_fara_s1.png (16 poses)
+01:00:07 pipeline: sheets.py ../art_ref/gen/npc/fara --npc fara --out out/npc/npc_fara --check
+01:00:46   |   「ファラ（npc_fara）のシート1の8番（驚く）だけ小さく描かれている（頭の大きさがほかのポーズの約 74%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:00:46   |   「ファラ（npc_fara）のシート1の11番（左向き・後ろの足）だけ大きく描かれている（頭の大きさがほかのポーズの約 123%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:00:46   |   「ファラ（npc_fara）のシート1の12番（手を挙げて呼びかける）だけ小さく描かれている（頭の大きさがほかのポーズの約 74%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:00:46   | 
+01:00:46   | ■ シートの状態
+01:00:46   |   シート1 歩き＋演技4: 要作り直し  npc_fara_s1.png  ドット 8.00px → 描かれた格子のまま（40.0 ドット）
+01:00:46 sheet 1: 0 redo lines
+01:22:36 pipeline: sheets.py ../art_ref/gen/npc/fara --npc fara --out out/npc/npc_fara
+01:23:57   |   「ファラ（npc_fara）のシート1の12番（手を挙げて呼びかける）だけ小さく描かれている（頭の大きさがほかのポーズの約 74%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:23:57   | 
+01:23:57   | ■ シートの状態
+01:23:57   |   シート1 歩き＋演技4: 要作り直し  npc_fara_s1.png  ドット 8.00px → 描かれた格子のまま（40.0 ドット）
+01:23:57   | 
+01:23:57   | packed field 164x232 | palette 52 + face 0
+01:23:59 to_v2 npc_fara: npc_fara → /home/user/others/chronicle/v2/assets/sprites/npc_fara |   field: 16 frames

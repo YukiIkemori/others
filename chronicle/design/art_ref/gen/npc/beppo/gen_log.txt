@@ -1,0 +1,11 @@
+01:06:56 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:08:00   pitch in raw image: 6.09 px per art pixel (upright median 274 px / 45)
+01:08:02 sheet 1 -> art_ref/gen/npc/beppo/npc_beppo_s1.png (16 poses)
+01:08:02 pipeline: sheets.py ../art_ref/gen/npc/beppo --npc beppo --out out/npc/npc_beppo --check
+01:09:15   |   「ベッポ（npc_beppo）のシート1の8番（驚く）だけ小さく描かれている（頭の大きさがほかのポーズの約 66%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:09:15   |   「ベッポ（npc_beppo）のシート1の12番（手を挙げて呼びかける）だけ小さく描かれている（頭の大きさがほかのポーズの約 71%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:09:15   |   「ベッポ（npc_beppo）のシート1の16番（その人のしぐさ）だけ小さく描かれている（頭の大きさがほかのポーズの約 71%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:09:15   | 
+01:09:15   | ■ シートの状態
+01:09:15   |   シート1 歩き＋演技4: 要作り直し  npc_beppo_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+01:09:15 sheet 1: 0 redo lines

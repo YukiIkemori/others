@@ -1,0 +1,21 @@
+01:28:14 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+01:29:05   half A (npc_yura_man, target 47):
+01:29:05   pitch in raw image: 4.98 px per art pixel (upright median 234 px / 47)
+01:29:05   half B (npc_yura_woman, target 45):
+01:29:06   pitch in raw image: 5.04 px per art pixel (upright median 227 px / 45)
+01:29:07 sheet 1 -> art_ref/gen/npc/grp_yura_1/npc_grp_yura_1.png (24 poses)
+01:29:07 pipeline: sheets.py ../art_ref/gen/npc/grp_yura_1 --npc npc_yura_man --out out/npc/npc_yura_man --check
+01:29:43   |   - シート1: npc_grp_yura_1.png の左半分（人物A）を使う
+01:29:43   |   - シート1: 頭身の比（歩き12コマの中央値、体 47 ドットあたり）: 首 0.38（アルン 0.29）・頭の幅 0.40（0.43）・肩 0.35（0.40）
+01:29:43   |   - 向きの見本（configs/refs/npc_yura_man）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:29:43   | 
+01:29:43   | ■ シートの状態
+01:29:43   |   シート1 歩き: 確認あり  npc_yura_man_s1.png  ドット 8.00px → 描かれた格子のまま（46.5 ドット）
+01:29:43 pipeline: sheets.py ../art_ref/gen/npc/grp_yura_1 --npc npc_yura_woman --out out/npc/npc_yura_woman --check
+01:30:19   |   - シート1: npc_grp_yura_1.png の右半分（人物B）を使う
+01:30:19   |   - シート1: 頭身の比（歩き12コマの中央値、体 45 ドットあたり）: 首 0.39（アルン 0.29）・頭の幅 0.44（0.43）・肩 0.35（0.40）
+01:30:19   |   - 向きの見本（configs/refs/npc_yura_woman）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:30:19   | 
+01:30:19   | ■ シートの状態
+01:30:19   |   シート1 歩き: 確認あり  npc_yura_woman_s1.png  ドット 8.00px → 描かれた格子のまま（45.0 ドット）
+01:30:19 sheet 1: 0 redo lines

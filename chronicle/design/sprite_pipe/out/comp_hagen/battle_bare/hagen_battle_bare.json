@@ -1,0 +1,312 @@
+{
+ "character": "hagen",
+ "set": "battle_bare",
+ "image": "hagen_battle_bare.png",
+ "cell": [
+  84,
+  74
+ ],
+ "anchor": [
+  49,
+  69
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "bare_idle": {
+   "x": 0,
+   "y": 0,
+   "w": 84,
+   "h": 74,
+   "anchor": [
+    49,
+    69
+   ],
+   "points": {
+    "head": [
+     44,
+     4
+    ],
+    "center": [
+     48,
+     40
+    ],
+    "front": [
+     23,
+     43
+    ],
+    "grip": [
+     48,
+     11
+    ],
+    "tip": [
+     87,
+     3
+    ]
+   }
+  },
+  "bare_windup": {
+   "x": 84,
+   "y": 0,
+   "w": 84,
+   "h": 74,
+   "anchor": [
+    49,
+    69
+   ],
+   "points": {
+    "head": [
+     36,
+     2
+    ],
+    "center": [
+     47,
+     37
+    ],
+    "front": [
+     21,
+     66
+    ],
+    "grip": [
+     67,
+     16
+    ],
+    "tip": [
+     90,
+     -16
+    ]
+   }
+  },
+  "bare_slash": {
+   "x": 168,
+   "y": 0,
+   "w": 84,
+   "h": 74,
+   "anchor": [
+    49,
+    69
+   ],
+   "points": {
+    "head": [
+     33,
+     3
+    ],
+    "center": [
+     45,
+     38
+    ],
+    "front": [
+     15,
+     42
+    ],
+    "grip": [
+     21,
+     42
+    ],
+    "tip": [
+     -12,
+     65
+    ]
+   }
+  },
+  "bare_thrust": {
+   "x": 252,
+   "y": 0,
+   "w": 84,
+   "h": 74,
+   "anchor": [
+    49,
+    69
+   ],
+   "points": {
+    "head": [
+     35,
+     3
+    ],
+    "center": [
+     43,
+     37
+    ],
+    "front": [
+     2,
+     26
+    ],
+    "grip": [
+     13,
+     29
+    ],
+    "tip": [
+     -25,
+     28
+    ]
+   }
+  },
+  "bare_cast": {
+   "x": 336,
+   "y": 0,
+   "w": 84,
+   "h": 74,
+   "anchor": [
+    49,
+    69
+   ],
+   "points": {
+    "head": [
+     46,
+     2
+    ],
+    "center": [
+     50,
+     37
+    ],
+    "front": [
+     14,
+     26
+    ],
+    "grip": [
+     30,
+     31
+    ],
+    "tip": [
+     33,
+     19
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#0d0808",
+  "#170712",
+  "#1d120f",
+  "#1c1815",
+  "#271e17",
+  "#2b2623",
+  "#392c24",
+  "#393430",
+  "#47423d",
+  "#58524c",
+  "#6c655d",
+  "#827a6f",
+  "#988f82",
+  "#452a30",
+  "#2d1911",
+  "#3d2315",
+  "#542d1a",
+  "#4c3322",
+  "#4b3931",
+  "#6c2d12",
+  "#61432d",
+  "#6a4124",
+  "#59483c",
+  "#7e4826",
+  "#8d401e",
+  "#6c584a",
+  "#77573b",
+  "#865a37",
+  "#93572c",
+  "#816b59",
+  "#af5829",
+  "#957148",
+  "#ad6a38",
+  "#a47042",
+  "#957e6a",
+  "#c77a3e",
+  "#b18857",
+  "#be844c",
+  "#a89079",
+  "#b4a28d",
+  "#d09d62",
+  "#db9a5a",
+  "#e9b26f",
+  "#ccc0af",
+  "#f2c779",
+  "#302b17",
+  "#443e21",
+  "#57512a",
+  "#665e2e",
+  "#706930",
+  "#7e7533",
+  "#858034"
+ ],
+ "facing": "left",
+ "attach": {
+  "bare_idle": {
+   "grip": [
+    25,
+    7
+   ],
+   "tip": [
+    64,
+    -1
+   ],
+   "angle": -12.0,
+   "length": 41,
+   "blade": 33.1,
+   "fit": 0.706,
+   "method": "blade"
+  },
+  "bare_cast": {
+   "grip": [
+    16,
+    29
+   ],
+   "tip": [
+    19,
+    17
+   ],
+   "angle": -78.1,
+   "length": 15,
+   "weapon_px": 92,
+   "fit": 0.91,
+   "method": "diff"
+  },
+  "bare_windup": {
+   "grip": [
+    46,
+    14
+   ],
+   "tip": [
+    69,
+    -18
+   ],
+   "angle": -55,
+   "length": 39,
+   "generic": true,
+   "method": "arun_scaled",
+   "why": "no_twin"
+  },
+  "bare_slash": {
+   "grip": [
+    6,
+    39
+   ],
+   "tip": [
+    -27,
+    62
+   ],
+   "angle": 145,
+   "length": 40,
+   "generic": true,
+   "method": "arun_scaled",
+   "why": "no_twin"
+  },
+  "bare_thrust": {
+   "grip": [
+    11,
+    26
+   ],
+   "tip": [
+    -27,
+    25
+   ],
+   "angle": -178.4,
+   "length": 38,
+   "generic": true,
+   "method": "arun_scaled",
+   "why": "no_twin"
+  }
+ },
+ "attach_note": "draw a weapon on a bare pose: rotate the weapon image (as drawn on sheet 7, tip to the left) about its grip by (attach.angle - 180) degrees and put its grip on points.grip. Angles in image coords (0 = +x, 90 = +y, 180 = pointing left); positive = clockwise on screen.",
+ "weapon": "greatsword",
+ "target_height": 68
+}

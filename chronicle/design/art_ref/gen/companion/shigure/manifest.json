@@ -1,0 +1,80 @@
+[
+ {
+  "sheet": 1,
+  "file": "comp_shigure_s1.png",
+  "layout": "2x4",
+  "logical_cell": [
+   112,
+   96
+  ],
+  "image_px": [
+   3584,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "ref_front",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     49,
+     73
+    ]
+   },
+   {
+    "id": "ref_34",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     48,
+     72
+    ]
+   },
+   {
+    "id": "ref_side_left",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     44,
+     73
+    ]
+   },
+   {
+    "id": "ref_back",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     43,
+     72
+    ]
+   },
+   {
+    "id": "ref_idle_left",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     60,
+     70
+    ]
+   },
+   {
+    "id": "ref_face",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     81,
+     83
+    ]
+   },
+   {
+    "id": "ref_palette",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     88,
+     41
+    ]
+   }
+  ]
+ }
+]

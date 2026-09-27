@@ -1,0 +1,90 @@
+{
+ "id": "fern_b_search",
+ "kind": "building",
+ "theme": "treetop",
+ "footprint": [
+  7,
+  5
+ ],
+ "wall": 2,
+ "files": {
+  "24": "fern_b_search@24.png",
+  "32": "fern_b_search@32.png",
+  "40": "fern_b_search@40.png"
+ },
+ "emitFiles": {
+  "24": "fern_b_search_emit@24.png",
+  "32": "fern_b_search_emit@32.png",
+  "40": "fern_b_search_emit@40.png"
+ },
+ "size": {
+  "24": [
+   180,
+   144
+  ],
+  "32": [
+   240,
+   192
+  ],
+  "40": [
+   300,
+   240
+  ]
+ },
+ "anchor32": [
+  8,
+  192
+ ],
+ "door32": {
+  "x": 112.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 41,
+   "y": -39,
+   "w": 13,
+   "h": 13
+  },
+  {
+   "kind": "win",
+   "x": 170,
+   "y": -39,
+   "w": 12,
+   "h": 13
+  }
+ ],
+ "roof32": [
+  -6,
+  -164,
+  230,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/treetop/fern_b_search.png",
+ "def_": {
+  "type": "building",
+  "id": "fern_b_search",
+  "x": 33,
+  "y": 3,
+  "w": 7,
+  "h": 5,
+  "wall": 2,
+  "roof": "moss",
+  "mat": "plank",
+  "windows": 2,
+  "door": {
+   "x": 36,
+   "y": 7,
+   "to": {
+    "map": "fern_search",
+    "spawn": "door"
+   }
+  },
+  "lamp": true,
+  "sign": "guild"
+ }
+}

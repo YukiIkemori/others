@@ -1,0 +1,11 @@
+01:09:16 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:10:14   pitch in raw image: 6.08 px per art pixel (upright median 310 px / 51)
+01:10:15 sheet 1 -> art_ref/gen/npc/melda/npc_melda_s1.png (16 poses)
+01:10:15 pipeline: sheets.py ../art_ref/gen/npc/melda --npc melda --out out/npc/npc_melda --check
+01:11:27   |   「メルダ（npc_melda）のシート1の5番（上向き・立ち）だけ小さく描かれている（頭の大きさがほかのポーズの約 63%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:11:27   |   「メルダ（npc_melda）のシート1の6番（上向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 70%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:11:27   |   「メルダ（npc_melda）のシート1の7番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 70%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:11:27   | 
+01:11:27   | ■ シートの状態
+01:11:27   |   シート1 歩き＋演技4: 要作り直し  npc_melda_s1.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:11:27 sheet 1: 0 redo lines

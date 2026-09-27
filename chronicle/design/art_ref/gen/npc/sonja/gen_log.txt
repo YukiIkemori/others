@@ -1,0 +1,11 @@
+01:02:12 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:03:01   pitch in raw image: 6.02 px per art pixel (upright median 271 px / 45)
+01:03:03 sheet 1 -> art_ref/gen/npc/sonja/npc_sonja_s1.png (16 poses)
+01:03:03 pipeline: sheets.py ../art_ref/gen/npc/sonja --npc sonja --out out/npc/npc_sonja --check
+01:04:24   | ■ メモ（2 件）
+01:04:24   |   - シート1: 頭身の比（歩き12コマの中央値、体 42 ドットあたり）: 首 0.32（アルン 0.29）・頭の幅 0.51（0.43）・肩 0.45（0.40）
+01:04:24   |   - 向きの見本（configs/refs/npc_sonja）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:04:24   | 
+01:04:24   | ■ シートの状態
+01:04:24   |   シート1 歩き＋演技4: 確認あり  npc_sonja_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+01:04:24 sheet 1: 0 redo lines

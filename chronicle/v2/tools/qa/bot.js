@@ -176,11 +176,41 @@
         tap('a');
         return;
       }
+      case 'shop': return onShop(v, list);
       case 'letter': case 'tip': case 'detail': tap('a'); return;
       default:
         // 店・装備など（台本では使わない）: 閉じる
         if ((B.scrTaps = (B.scrTaps || 0) + 1) % 3 === 0) tap('a'); else tap('b');
     }
+  }
+
+  // ---------------------------------------------------------------- 店: 一行が強くなる装備（付けられる人の中でいちばん上がる人）と消耗品を買う
+  const STOCK = { i_salve: 8, i_potion: 6, i_waker: 4, i_antidote: 3, i_firepot: 3, i_revive: 2, i_ether: 3 };
+  function onShop(v, list) {
+    if (v.busy || v.tab !== 0) { if (v.tab !== 0) tap('l'); return; }
+    const g = B.goals.find((h) => h.id === B.goalId);
+    if (!g || !g.shop) { tap('b'); return; }
+    const Sx = R.Screens, G0 = G();
+    const gold = G0.gold, reserve = 40;
+    let best = -1, bestV = 0;
+    list.rows.forEach((row, i) => {
+      const id = row.value, it = R.DB.items[id];
+      if (!it || !(it.price > 0) || it.price > gold - reserve) return;
+      if (['weapon', 'shield', 'head', 'body', 'hands', 'feet'].includes(it.slot)) {
+        if ((G0.items[id] || 0) > 0) return;   // 買って付けなかった物がある
+        let gain = 0;
+        for (const c of R.Party.members()) {
+          const slot = R.Rules.defaultSlot(c, id);
+          if (!slot || !R.Rules.canEquip(c, id, slot)) continue;
+          const d = Sx.equipScore(c, slot, id) - Sx.equipScore(c, slot, c.equip[slot] || null);
+          if (d > gain) gain = d;
+        }
+        if (gain > 0 && gain / it.price > bestV) { bestV = gain / it.price; best = i; }
+      } else if (STOCK[id] && (G0.items[id] || 0) < STOCK[id] && bestV === 0 && best < 0) best = i;
+    });
+    if (best < 0 || (B.shopBuys = (B.shopBuys || 0) + 1) > 40) { B.shopBuys = 0; tap('b'); return; }
+    if (list.index === best) note('buy ' + list.rows[best].value + ' (' + gold + ' G)');
+    selectRow(list, (r, i) => i === best);
   }
 
   // ---------------------------------------------------------------- 戦闘
@@ -190,6 +220,13 @@
     if (!st) { tap('a'); return; }
     const eng = st.B && st.B.engine;
     if (B.cur && eng) B.cur.rounds = Math.max(B.cur.rounds || 0, eng.round || 0);
+    // 負ける台本: 全員が守るだけ。6 ラウンドで倒れなければ（守ると倒れない相手）、一行の HP を 1 にする（台本の都合。stats.forced に残す）
+    if (B.cur && B.cur.lose && eng && eng.round >= 6 && !B.cur.forced) {
+      B.cur.forced = true;
+      for (const u of eng.party) if (u.alive) u.hp = 1;
+      B.stats.forced.push({ battle: B.cur.troop || B.cur.zone, round: eng.round, f: B.frames });
+      note('lose mode: party HP set to 1 at round ' + eng.round);
+    }
     const w = st.ui;
     if (!w) { if (st.phase === 'play') hold('a'); else tap('a'); return; }
     const rows = w.o && w.o.rows;
@@ -203,7 +240,20 @@
     }
     const keys = rows.map((r) => r.key);
     if (keys.includes('retry') && keys.includes('inn')) {
-      const want = (B.wipeTo || 'retry');
+      let want = (B.wipeTo || 'retry');
+      // 本気で負けた（負ける台本でない）: 1 回目は直前の戦闘から。2 回目は宿へ戻り、道中で 12 戦ほど腕を磨いてから行き直す
+      if (B.cur && !B.cur.lose && !B.cur.wiped && !B.loseNext) {
+        B.realLoss = (B.realLoss || {});
+        const k = B.cur.troop || B.cur.zone;
+        B.realLoss[k] = (B.realLoss[k] || 0) + 1;
+        if (B.realLoss[k] >= 2 && B.realLoss[k] % 2 === 0) { want = 'inn'; B.grind = { n: 12, from: B.stats.battles.length + 1 }; note('lost twice to ' + k + ' → inn and grind 12 battles'); }
+      }
+      if (B.cur && B.goLast !== B.cur.f + ':' + (eng ? eng.round : 0)) {
+        B.goLast = B.cur.f + ':' + (eng ? eng.round : 0);
+        B.cur.lost = (B.cur.lost || 0) + 1;
+        if (B.cur.lost > 1) note('lost again (' + B.cur.lost + ') ' + (B.cur.troop || B.cur.zone));
+        if (B.cur.lost > 6) { fail('lost ' + B.cur.lost + ' times in a row to ' + (B.cur.troop || B.cur.zone)); return; }
+      }
       if (B.cur && !B.cur.wiped) { B.cur.wiped = true; B.cur.lose = false; B.loseNext = null; B.stats.wipes.push({ battle: B.cur.troop || B.cur.zone, map: B.cur.map, to: want, gold: B.cur.gold, round: B.cur.rounds, f: B.frames }); note('gameover → ' + want); }
       menuPick(w, rows.findIndex((r) => r.key === want));
       return;
@@ -283,8 +333,17 @@
     const s = S();
     const t0 = performance.now();
     const blocked = B.blocked || {};
+    // 順番の決まった目標（救出の順）: まだ番の来ていない目標の「踏むと始まる範囲」は踏まない
+    const avoid = {};
+    if (g.ordered || g._h) {
+      const cur = B.goals.indexOf(B.goals.find((h) => h.id === B.goalId));
+      for (const h of B.goals.slice(cur + 1)) {
+        if (!h.ordered || h._skip || goalDone(h) || !h.ev) continue;
+        for (const p of M.eventPlaces(h.ev)) if (p.kind === 'trigger') for (const c of M.standCells(p.map, p)) avoid[p.map + ':' + c.x + ',' + c.y] = 1;
+      }
+    }
     const pl = M.plan({ map: s.map.id, x: s.x, y: s.y, lv: s.lv || 0 }, goalCells(g), {
-      blocked: (m, x, y, lv) => !!blocked[m + ':' + x + ',' + y + ',' + lv],
+      blocked: (m, x, y, lv) => !!blocked[m + ':' + x + ',' + y + ',' + lv] || !!avoid[m + ':' + x + ',' + y],
     });
     B.stats.plans++; B.stats.planMs += performance.now() - t0;
     if (!pl) return null;
@@ -319,6 +378,32 @@
       if (B.task.kind === 'save' && B.task.stage === 'saved') { B.task.stage = 'done'; return; }
       tap('y');
       return;
+    }
+    // 腕を磨く（ボスに 2 回負けた後）: 今のマップに出現表があれば、近くの出現するマスを行き来する
+    if (B.grind && B.stats.battles.length - B.grind.from >= B.grind.n) { note('grind done'); B.grind = null; B.plan = null; }
+    if (B.grind && !g.task && (s.map.zones || []).length && s.map.kind !== 'town' && s.map.kind !== 'interior') {
+      if (!B.grindAt || (s.x === B.grindAt.x && s.y === B.grindAt.y) || (B.grindT = (B.grindT || 0) + 1) > 400) {
+        B.grindT = 0;
+        const res = M.bfs(s.map, [{ x: s.x, y: s.y, lv: s.lv || 0 }], { maxDist: 10 });
+        const cand = [...res.dist.entries()].filter(([k, d]) => d >= 5).map(([k]) => k.split(',').map(Number)).filter(([x, y]) => M.zoneAt(s.map, x, y));
+        B.grindAt = cand.length ? { x: cand[(B.frames * 7) % cand.length][0], y: cand[(B.frames * 7) % cand.length][1], lv: cand[(B.frames * 7) % cand.length][2] } : null;
+        B.plan = null;
+      }
+      if (B.grindAt) {
+        if (!B.plan || B.plan.g !== B.grindG || B.plan.map !== s.map.id) {
+          B.grindG = { id: 'grind', go: { map: s.map.id, x: B.grindAt.x, y: B.grindAt.y, lv: B.grindAt.lv } };
+          B.plan = planFor(B.grindG);
+          B.pi = 0;
+          if (!B.plan) { B.grindAt = null; return; }
+        }
+        const P0 = B.plan;
+        let i0 = -1;
+        for (let k = 0; k < P0.path.length; k++) { const c = P0.path[k]; if (c.x === s.x && c.y === s.y) { i0 = k; break; } }
+        if (i0 < 0 || i0 >= P0.path.length - 1) { B.grindAt = null; return; }
+        const n0 = P0.path[i0 + 1];
+        dirTo(n0.x - s.x, n0.y - s.y);
+        return;
+      }
     }
     // HP が少ない: 近くの泉（ダンジョン）
     if (!g.noHeal && s.map.kind === 'dungeon' && partyHp() < 0.35 && !B.healing && (B.frames - (B.springAt || -1e9)) > 600) {
@@ -446,6 +531,11 @@
       if (!t) return;
       if (e.id === 'screen:title' && t.kind === 'suspend') t.stage = 'title-open';
     });
+    R.on('scene:pop', (e) => {
+      if (e.id !== 'screen:shop') return;
+      const g = B.goals.find((h) => h.id === B.goalId);
+      if (g && g.shop) { g._done = true; note('shop done ' + g.id + ' gold ' + G().gold); }
+    });
     R.on('save', (e) => {
       const t = B.task;
       if (t && t.kind === 'save' && e && e.slot === t.slot) { t.stage = 'saved'; note('saved ' + e.slot); }
@@ -458,7 +548,7 @@
     return {
       frames: B.frames, time: Math.round(now()), goal: B.goalId, done: B.done, fail: B.fail, top: B.topId,
       pos: s.map ? s.map.id + ' ' + s.x + ',' + s.y : null, steps: g ? g.steps : 0, gold: g ? g.gold : 0,
-      battles: B.stats.battles.length, wipes: B.stats.wipes.length, engineError: R.Engine.error ? R.Engine.error.msg.slice(0, 300) : null,
+      battles: B.stats.battles.length, wipes: B.stats.wipes.length, round: B.cur ? B.cur.rounds : null, hp: R.Party && G() ? +partyHp().toFixed(2) : null, engineError: R.Engine.error ? R.Engine.error.msg.slice(0, 300) : null,
     };
   };
   B.run = async function (n) {

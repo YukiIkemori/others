@@ -1,0 +1,451 @@
+{
+ "char": "npc_rashid",
+ "companion": null,
+ "npc": "npc_rashid",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/rashid",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/rashid/npc_rashid_s1.png",
+   "size": [
+    2560,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x4",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 432.0,
+   "native_height_at_period": 54.0,
+   "scale_note": "描かれた格子のまま（54.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      35,
+      54
+     ],
+     "box": [
+      160,
+      32,
+      472,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.68
+    },
+    "walk_down_1": {
+     "size": [
+      37,
+      54
+     ],
+     "box": [
+      792,
+      32,
+      1120,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.14,
+     "scale": 1.078
+    },
+    "walk_down_2": {
+     "size": [
+      37,
+      55
+     ],
+     "box": [
+      1432,
+      24,
+      1760,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.69,
+     "scale": 1.117
+    },
+    "act_nod": {
+     "size": [
+      34,
+      56
+     ],
+     "box": [
+      2088,
+      16,
+      2392,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.55,
+     "scale": 1.078
+    },
+    "walk_up_0": {
+     "size": [
+      36,
+      54
+     ],
+     "box": [
+      160,
+      544,
+      480,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.13,
+     "scale": 0.792,
+     "fixed": [
+      "rescaled 1.26"
+     ]
+    },
+    "walk_up_1": {
+     "size": [
+      37,
+      55
+     ],
+     "box": [
+      792,
+      536,
+      1120,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.15,
+     "scale": 0.792,
+     "fixed": [
+      "rescaled 1.26"
+     ]
+    },
+    "walk_up_2": {
+     "size": [
+      37,
+      54
+     ],
+     "box": [
+      1432,
+      544,
+      1760,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.86,
+     "scale": 0.792,
+     "fixed": [
+      "rescaled 1.26"
+     ]
+    },
+    "act_surprise": {
+     "size": [
+      47,
+      55
+     ],
+     "box": [
+      2032,
+      536,
+      2440,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.28,
+     "scale": 1.117
+    },
+    "walk_left_0": {
+     "size": [
+      27,
+      54
+     ],
+     "box": [
+      192,
+      1056,
+      440,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      35,
+      54
+     ],
+     "box": [
+      800,
+      1056,
+      1112,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.948
+    },
+    "walk_left_2": {
+     "size": [
+      33,
+      53
+     ],
+     "box": [
+      1448,
+      1064,
+      1744,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.948
+    },
+    "act_call": {
+     "size": [
+      40,
+      53
+     ],
+     "box": [
+      2064,
+      1064,
+      2416,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.14,
+     "scale": 1.0
+    },
+    "walk_right_0": {
+     "size": [
+      29,
+      54
+     ],
+     "box": [
+      184,
+      1568,
+      448,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      34,
+      53
+     ],
+     "box": [
+      808,
+      1576,
+      1112,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    },
+    "walk_right_2": {
+     "size": [
+      33,
+      54
+     ],
+     "box": [
+      1448,
+      1568,
+      1744,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "act_sig": {
+     "size": [
+      43,
+      56
+     ],
+     "box": [
+      2048,
+      1552,
+      2424,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.65,
+     "scale": 1.13
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_rashid）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "marks",
+   "msg": "シート1 の 8 番（驚く） の感情マーク（驚きの線・汗など 2 個）を消した",
+   "slot": "act_surprise",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "facing_unsure",
+   "msg": "シート1 の 4 番（うなずく） の向きが下（手前）に見えにくい（点数 -0.6）。顔の向きを見る",
+   "slot": "act_nod",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 5 番（上向き・立ち） がほかのポーズより小さく描かれている（頭の大きさで約 79%）。仮に 126% に拡大縮小して使う",
+   "slot": "walk_up_0",
+   "ask": "ラシード（npc_rashid）のシート1の5番（上向き・立ち）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.792207792207792,
+    "per_ref": [
+     0.9625000000000001,
+     0.7625,
+     0.7625
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 6 番（上向き・右足前） がほかのポーズより小さく描かれている（頭の大きさで約 79%）。仮に 126% に拡大縮小して使う",
+   "slot": "walk_up_1",
+   "ask": "ラシード（npc_rashid）のシート1の6番（上向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.792207792207792,
+    "per_ref": [
+     0.9750000000000001,
+     0.7625,
+     0.7625
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 7 番（上向き・左足前） がほかのポーズより小さく描かれている（頭の大きさで約 79%）。仮に 126% に拡大縮小して使う",
+   "slot": "walk_up_2",
+   "ask": "ラシード（npc_rashid）のシート1の7番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.792207792207792,
+    "per_ref": [
+     0.9625000000000001,
+     0.7625,
+     0.7625
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 16 番（その人のしぐさ） の縮尺が少し違う（頭の大きさで約 113%）。並べて見て気になるなら描き直し",
+   "slot": "act_sig",
+   "ask": null,
+   "data": {
+    "scale": 1.1298701298701301,
+    "per_ref": [
+     1.0000000000000004,
+     1.1250000000000004,
+     1.0875000000000004
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 50 ドットあたり）: 首 0.22（アルン 0.29）・頭の幅 0.44（0.43）・肩 0.45（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.22,
+    "head_w": 0.44,
+    "shoulder": 0.44999999999999996,
+    "neck_clear": 0.8181818181818182
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 75%・頭の幅 103%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 1.0304449648711944,
+    "neck": 0.7534246575342466
+   }
+  }
+ ]
+}
