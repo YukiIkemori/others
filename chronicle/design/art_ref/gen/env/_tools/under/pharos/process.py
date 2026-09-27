@@ -89,7 +89,8 @@ def save_set(name, arr, rgba=False):
     im = Image.fromarray(arr.astype(np.uint8), 'RGBA' if rgba else 'RGB')
     im.save(os.path.join(outdir, name + '@32.png'), optimize=True)
     im.resize((W * 24, H * 24), Image.LANCZOS if not rgba else Image.NEAREST).save(os.path.join(outdir, name + '@24.png'), optimize=True)
-    im.resize((W * 40, H * 40), Image.NEAREST).save(os.path.join(outdir, name + '@40.png'), optimize=True)
+    if W * 40 <= 2048 and H * 40 <= 2048:   # pack_web packs images up to 2048 px; larger maps use @32 scaled for tile 40 (T.Env.under)
+        im.resize((W * 40, H * 40), Image.NEAREST).save(os.path.join(outdir, name + '@40.png'), optimize=True)
 
 
 save_set('pharos', base)
@@ -98,5 +99,5 @@ o = np.zeros(A.shape[:2] + (4,), np.uint8); o[..., :3] = base * ov[..., None]; o
 save_set('pharos_over', o, True)
 doors = [dict(x=b['door'][0] * T + 16, y=b['door'][1] * T + 30, id=b['id']) for b in blds]   # checked with doorsheet.py after the surgery
 json.dump(dict(id='pharos', kind='under', map='pharos', tile=32, size32=[W * T, H * T], windows32=wins, doors32=doors,
-               painted=[], files={t: 'pharos@%d.png' % t for t in (24, 32, 40)}), open(os.path.join(outdir, 'pharos.json'), 'w'), indent=1)
+               painted=[], files={t: 'pharos@%d.png' % t for t in ((24, 32, 40) if W * 40 <= 2048 and H * 40 <= 2048 else (24, 32))}), open(os.path.join(outdir, 'pharos.json'), 'w'), indent=1)
 Image.fromarray(base).save('proc_last.png')

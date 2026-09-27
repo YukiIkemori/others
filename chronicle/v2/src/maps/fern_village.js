@@ -221,6 +221,10 @@
       dark: false,
       bgm: 'village',
       meta: { sub: '樹上の村', underDeck: 'moss_earth', chestsInfo: false },
+      // 村ぜんたいを 1 枚に描いた下絵（v2/assets/env/treetop/under/fern*、design/ENV_ASSETS.md §7）。地面・大木・家・足場・つり橋・はしご・根のアーチはこの絵、
+      // つり橋と根のアーチと木の葉の張り出しは overlay（地面の人より上）、窓と光るきのこ・こけは emit。当たり・戸口・人・灯り・ほかの物は上のデータのまま。
+      // 絵が無ければマスから焼く。roots（橋の下の当たり）は絵に描いてあるので物としては描かない。@40 は無い（2048 の atlas に入らない。@32 を拡大）
+      art: { image: 'treetop/under/fern', overlay: 'treetop/under/fern_over', emit: 'treetop/under/fern_emit', painted: ['roots'] },
     });
   });
 })(window.RPG);

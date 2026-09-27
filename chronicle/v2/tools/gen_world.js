@@ -644,7 +644,7 @@ function check() {
   for (const n2 of npcs) marks.push([n2.x, n2.y]);
   let empty = 0; const emptyAt = [];
   for (let y = 40; y <= DESERT.y1; y++) for (let x = 6; x <= 118; x++) {
-    if (!seen[y * W + x] || !'.d'.includes(gg[y][x])) continue;
+    if (!seenSlice[y * W + x] || !'.d'.includes(gg[y][x])) continue;   // 体験版で歩ける範囲だけ見る
     if (!marks.some(([mx, my]) => Math.abs(mx - x) <= 15 && Math.abs(my - y) <= 8)) { empty++; if (emptyAt.length < 8) emptyAt.push(x + ',' + y); }
   }
   info.emptyRoad = empty; if (empty) info.emptyAt = emptyAt;

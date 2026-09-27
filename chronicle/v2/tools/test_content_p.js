@@ -117,7 +117,11 @@ const START = { roa: 'gate', roa_house: 'bed', pharos: 'gate_w', lighthouse_1: '
 for (const id of MY_MAPS) {
   const m = R.DB.maps[id];
   const sp = m.spawns[START[id] || 'door'];
+  // ワールドは製品版のつながりで見る（体験版では雪原・砂漠の峠を閉じるので、その先の入口は縦切りの間だけ届かない。閉じ方は §9 で見る）
+  const C0 = R.DB.config && R.DB.config.slice;
+  if (id === 'world' && R.DB.config) { R.DB.config.slice = false; if (R.MapUtil.invalidate) R.MapUtil.invalidate(id); }
   const dist = reach(m, sp.x, sp.y, false), distS = reach(m, sp.x, sp.y, true);
+  if (id === 'world' && R.DB.config) { R.DB.config.slice = C0; if (R.MapUtil.invalidate) R.MapUtil.invalidate(id); }
   const miss = [];
   for (const e of m.exits || []) if (near(dist, e.x, e.y, e.w, e.h) === Infinity) miss.push('exit→' + e.to.map);
   for (const o of m.objects || []) {
@@ -344,7 +348,8 @@ ok('world.js は生成器の今の出力と同じ（手で直していない）'
   return out === before;
 })());
 const W = R.DB.maps.world;
-ok('峠の崖崩れと番人は DB.config.slice の間だけ', W.tilePatches.filter((p) => p.cond && p.cond.slice === true).length === 3 && W.npcs.filter((n) => n.cond && n.cond.slice === true).length === 3);
+// 体験版では東の峠・灰の峠・雪原東に加え、北（雪原）と南（砂漠）の峠も閉じる（持ち主の決まり 2026-09-27）→ 5 か所
+ok('峠の崖崩れと番人は DB.config.slice の間だけ', W.tilePatches.filter((p) => p.cond && p.cond.slice === true).length === 5 && W.npcs.filter((n) => n.cond && n.cond.slice === true).length === 5);
 ok('跳ね橋は序章の間だけ上がっている', W.tilePatches.some((p) => p.cond === '!prologue_done'));
 ok('森の街道の消えた灯籠 3 つ（q_forest_fireflies）', W.objects.filter((o) => o.type === 'waylamp' && /^q_forest_fireflies_/.test(o.lit)).length === 3);
 ok('半島の消えた灯籠 2 つ（P3・q_pharos_lamp）', W.objects.filter((o) => o.type === 'waylamp' && /^prologue_lamp_/.test(o.lit)).length === 2);
