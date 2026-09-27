@@ -68,6 +68,42 @@
     if (!nz.length) return null;
     return nz.sort((a, b) => Math.abs(b.d) - Math.abs(a.d))[0];
   };
+  /** S.delta で描く「▲+n」の幅（論理 px） */
+  S.deltaW = function (d, sz) {
+    if (!d) return 0;
+    return R.UIK.measure((d > 0 ? '+' : '−') + Math.abs(d), { size: sz, weight: 700 }) + u(6) + sz * 0.6;
+  };
+  /**
+   * 増減の札を横に並べる（ほかの仲間・店の行）: 「値の名前 ▲+n」を左から、w に入る分だけ。重ならない。
+   * rows = [{name, d}]（大事な順）。o = {size, align:'left'|'right', gap}。→ 描いた数
+   */
+  S.deltaCells = function (g, rows, x, y, w, o) {
+    o = o || {};
+    const C = T().color, sz = o.size || u(13.5), gap = o.gap || u(16), inner = u(8);
+    const cells = [];
+    let total = 0;
+    for (const r of rows) {
+      const nw = R.UIK.measure(r.name, { size: sz }), dw = S.deltaW(r.d, sz);
+      const cw = nw + inner + dw;
+      if (total + (cells.length ? gap : 0) + cw > w) break;
+      total += (cells.length ? gap : 0) + cw;
+      cells.push({ r, nw, cw });
+    }
+    // 1 つも入らないときは、名前を縮めて最初の 1 つだけ
+    if (!cells.length && rows.length) {
+      const r = rows[0], dw = S.deltaW(r.d, sz);
+      R.UIK.text(g, r.name, x, y, { size: sz, color: r.d > 0 ? C.up : r.d < 0 ? C.down : C.same, maxW: Math.max(u(14), w - dw - inner) });
+      S.delta(g, r.d, x + w, y, { size: sz });
+      return 1;
+    }
+    let cx = o.align === 'right' ? x + w - total : x;
+    for (const c of cells) {
+      R.UIK.text(g, c.r.name, cx, y, { size: sz, color: c.r.d > 0 ? C.up : c.r.d < 0 ? C.down : C.same });
+      S.delta(g, c.r.d, cx + c.cw, y, { size: sz });
+      cx += c.cw + gap;
+    }
+    return cells.length;
+  };
   function magicUser(c) { const st = S.stats(c); return (st.int || 0) > (st.str || 0); }
   const score = (c, slot, id) => S.equipScore(c, slot, id);
 
@@ -182,7 +218,10 @@
       const midX = tall ? b.x : sp.x + sp.w + u(16);
       const rightX0 = b.x + b.w;
       const mw = tall ? b.w : Math.min(u(290), (rightX0 - midX) * 0.44);
-      const cp = tall ? { x: b.x, y: sp.y, w: b.w, h: this.mode === 'cand' ? u(56) + Math.min(6, this.clist.rows.length) * this.clist.rowPx() : sp.h } : { x: midX, y: b.y, w: mw, h: b.h * 0.64 };
+      // 縦持ちの候補は、下の「ほかの仲間」に 1 人 u(38) の行が残る分だけ（3〜6 行）
+      const nOthers = Math.max(1, S.party().length - 1);
+      const cRows = Math.max(3, Math.min(6, Math.floor((b.y + b.h - sp.y - u(56) - u(12) - u(300) - u(12) - (u(48) + nOthers * u(38))) / this.clist.rowPx())));
+      const cp = tall ? { x: b.x, y: sp.y, w: b.w, h: this.mode === 'cand' ? u(56) + Math.min(cRows, this.clist.rows.length) * this.clist.rowPx() : sp.h } :{ x: midX, y: b.y, w: mw, h: b.h * 0.64 };
       if (showSlots) drawSlots();
       if (!tall || this.mode === 'cand') {
         R.UIK.panel(g, cp, { frost: true });
@@ -259,26 +298,23 @@
       if (op.h > u(60)) {
         R.UIK.panel(g, op, { frost: true });
         S.label(g, 'ほかの仲間が付けると', op.x + u(20), op.y + u(14));
+        // 1 人 1 行: [顔（決まった幅）][名前（決まった幅）][増減の札を入るだけ]。札は S.deltaCells が幅を測って並べるので重ならない
         const others = S.party().filter((x) => x !== c);
-        const cols = tall ? 1 : Math.max(1, others.length);
-        const ow = (op.w - u(40)) / cols, oh = tall ? Math.min(u(46), (op.h - u(50)) / Math.max(1, others.length)) : op.h - u(50);
+        const top = op.y + u(40), oh = Math.min(u(46), (op.y + op.h - u(8) - top) / Math.max(1, others.length));
+        const ICON = u(44), x = op.x + u(20), rx = op.x + op.w - u(20);
+        const NW = Math.min(u(112), (rx - x - ICON) * 0.32);
+        const tx = x + ICON + NW + u(12), tw = rx - tx;
         others.forEach((o, i) => {
-          const x = op.x + u(20) + (tall ? 0 : i * ow), yy = op.y + u(42) + (tall ? i * oh : 0);
+          const cy = top + i * oh + oh / 2;
           const can = focusId && R.Rules.canEquip(o, focusId, R.Rules.defaultSlot(o, focusId));
-          const fr = tall ? Math.min(u(19), oh / 2 - u(2)) : u(19);
-          S.faceCircle(g, o.look, x + u(20), yy + (tall ? oh / 2 - u(2) : u(20)), fr, { dim: !can });
-          R.UIK.text(g, o.name, x + u(48), yy + (tall ? u(3) : u(2)), { size: u(14.5), weight: 700, color: can ? C.text : C.disabled, maxW: ow - u(56) });
+          S.faceCircle(g, o.look, x + u(19), cy, Math.min(u(19), oh / 2 - u(2)), { dim: !can });
+          R.UIK.text(g, o.name, x + ICON, cy - u(14.5) / 2 - u(1), { size: u(14.5), weight: 700, color: can ? C.text : C.disabled, maxW: NW });
           if (!focusId) return;
-          if (!can) { R.UIK.text(g, '付けられない', x + u(48) + (tall ? u(120) : 0), yy + (tall ? u(4) : u(24)), { size: u(13), color: C.disabled }); return; }
-          const ds = S.statDiff(o, R.Rules.defaultSlot(o, focusId), focusId).filter((r) => r.d).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d) || (b2.d > 0) - (a.d > 0)).slice(0, tall ? 1 : 2);
-          const tx = x + u(48) + (tall ? u(120) : 0), ty = yy + (tall ? u(3) : u(24));
+          const ty = cy - u(13.5) / 2 - u(1);
+          if (!can) { R.UIK.text(g, '付けられない', tx, ty, { size: u(13), color: C.disabled }); return; }
+          const ds = S.statDiff(o, R.Rules.defaultSlot(o, focusId), focusId).filter((r) => r.d).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d) || (b2.d > 0) - (a.d > 0));
           if (!ds.length) R.UIK.text(g, '変わらない', tx, ty, { size: u(13), color: C.same });
-          // 増減は 1 行に 1 つ（広い画面は名前の下に 2 行まで）
-          ds.forEach((d, i) => {
-            const ly = ty + i * u(22);
-            R.UIK.text(g, d.name, tx, ly, { size: u(13.5), color: d.d > 0 ? C.up : C.down });
-            S.delta(g, d.d, tx + u(110), ly, { size: u(13.5) });
-          });
+          else S.deltaCells(g, ds, tx, ty, tw, { size: u(13.5) });
         });
       }
       S.prompts(g, this.mode === 'cand' ? [{ btn: 'a', label: '付ける' }, { btn: 'b', label: '戻る' }, { btn: 'y', label: '詳しく' }] : (S.tall() ? [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '戻る' }, { btn: 'r', label: '次の仲間' }] : [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '戻る' }, { btn: 'x', label: 'いちばん強く' }, { btn: 'r', label: '次の仲間' }]));
