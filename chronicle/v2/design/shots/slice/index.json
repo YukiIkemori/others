@@ -1,5 +1,5 @@
 {
- "date": "2026-09-27T04:12:32.888Z",
+ "date": "2026-09-27T04:15:07.391Z",
  "shots": [
   {
    "name": "notify",
@@ -94,7 +94,7 @@
    "label": "手がかり帳（タブ）",
    "size": "wide",
    "file": "chronicle_leads_wide.png",
-   "page": "dev.html?fixture=content_f_fern_plaza",
+   "page": "dev.html?scene=menus_chronicle",
    "ok": true,
    "errors": [],
    "stubs": [],
@@ -105,6 +105,28 @@
    "label": "手がかり帳（タブ）",
    "size": "phone",
    "file": "chronicle_leads_phone.png",
+   "page": "dev.html?scene=menus_chronicle",
+   "ok": true,
+   "errors": [],
+   "stubs": [],
+   "top": "screen:chronicle"
+  },
+  {
+   "name": "chronicle_book",
+   "label": "年代記（章の文）",
+   "size": "wide",
+   "file": "chronicle_book_wide.png",
+   "page": "dev.html?fixture=content_f_fern_plaza",
+   "ok": true,
+   "errors": [],
+   "stubs": [],
+   "top": "screen:chronicle"
+  },
+  {
+   "name": "chronicle_book",
+   "label": "年代記（章の文）",
+   "size": "phone",
+   "file": "chronicle_book_phone.png",
    "page": "dev.html?fixture=content_f_fern_plaza",
    "ok": true,
    "errors": [],

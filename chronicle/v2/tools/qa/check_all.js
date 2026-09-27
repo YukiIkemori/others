@@ -4,7 +4,7 @@
 //   node v2/tools/qa/check_all.js [--browser] [--full] [--only name,…] [--jobs 3]
 //
 // 既定（速い版）: ビルド → 各担当の node のテスト → validate → progress → 文・ボイス・手がかり・宝箱・隠し通路・泉・密度・世界・仮の実装
-//                 → sim の速い版（sim_zones --quick・--segments・sim_bosses・sim_growth・sim_glimmer --slice・sim_loot）
+//                 → sim（sim_zones・--segments・sim_bosses・sim_growth・sim_glimmer --slice・sim_loot）
 // --browser: 各担当のブラウザのテスト（test_*_browser・test_core_flow・test_core_wipe・test_field_slice・test_bscene_flow）と check_ui・measure_night
 // --full:    --browser に加えて playthrough（5 本）・shots_slice・perf.js
 // 最後に失敗の一覧（名前・終了コード・最後の数行）。結果は v2/design/qa/check_all.json にも書く。
@@ -39,9 +39,9 @@ const STEPS = [
   ['check_secrets', [T('qa/check_secrets.js'), '--no-build']],
   ['check_stubs', [T('qa/check_stubs.js')]],
   // sim の速い版
-  ['sim_zones', [T('sim_zones.js'), '--quick']],
+  ['sim_zones', [T('sim_zones.js')]],   // --quick（n 120）は p95 などが標本のゆれで境を越えるので既定の n 400
   ['sim_zones --segments', [T('sim_zones.js'), '--segments', '--n', '60']],
-  ['sim_bosses', [T('sim_bosses.js'), '--n', '150']],
+  ['sim_bosses', [T('sim_bosses.js')]],
   ['sim_growth', [T('sim_growth.js')]],
   ['sim_glimmer', [T('sim_glimmer.js'), '--slice']],
   ['sim_loot', [T('sim_loot.js'), '--n', '30000']],

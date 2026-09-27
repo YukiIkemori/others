@@ -43,10 +43,15 @@
     chapterRows() {
       const G = R.Game || {};
       const ch = (G.chronicle && G.chronicle.chapters) || [];
-      return ch.map((c, i) => {
-        const txt = (R.DB.chronicle && (R.DB.chronicle[c.summaryKey] || R.DB.chronicle[c.id])) || null;
-        const title = (txt && txt.title) || (c.id === 'prologue' ? '序章' : S.regionName(c.id));
-        return { value: c.id, label: title, no: i, text: txt ? (Array.isArray(txt.text) ? txt.text.join('\n') : txt.text || '') : '' };
+      let n = 0;
+      return ch.map((c) => {
+        // 章の文: R.DB.chronicle（地方の選択で変わる文）→ 無ければ地方の chapter（R.DB.regions）か DB.config.chronicle（序章）
+        const reg = (R.DB.regions || {})[c.id] || {}, cfg = ((R.DB.config || {}).chronicle || {})[c.id] || {};
+        const txt = (R.DB.chronicle && (R.DB.chronicle[c.summaryKey] || R.DB.chronicle[c.id])) ||
+          (reg.chapter && reg.chapter.summary ? { title: reg.chapter.title, text: reg.chapter.summary } : cfg.summary ? { title: cfg.title, text: cfg.summary } : null);
+        const pro = c.id === 'prologue';
+        const title = (txt && txt.title) || (pro ? '序章' : S.regionName(c.id));
+        return { value: c.id, label: title, no: pro ? -1 : n++, text: txt ? (Array.isArray(txt.text) ? txt.text.join('\n') : txt.text || '') : '' };
       });
     },
     refresh(keep) { this.list.setRows(this.tab === 0 ? this.chapterRows() : this.leadRows(), keep); },
@@ -97,7 +102,7 @@
       const row = this.list.current(), px = dp.x + u(26), pw = dp.w - u(52);
       let y = dp.y + u(24);
       if (row && this.tab === 0) {
-        R.UIK.text(g, `第 ${row.no + 1} 章`, px, y, { size: u(13), weight: 700, color: C.gold, track: u(2) }); y += u(26);
+        R.UIK.text(g, row.no < 0 ? '序章' : `第 ${row.no + 1} 章`, px, y, { size: u(13), weight: 700, color: C.gold, track: u(2) }); y += u(26);
         R.UIK.text(g, row.label, px, y, { size: u(22), weight: 700, color: C.goldHi, maxW: pw }); y += u(40);
         for (const l of R.UIK.wrap(row.text || '', pw, { size: u(15.5) })) { R.UIK.text(g, l, px, y, { size: u(15.5), color: C.text }); y += u(28); if (y > dp.y + dp.h - u(30)) break; }
       } else if (row) {

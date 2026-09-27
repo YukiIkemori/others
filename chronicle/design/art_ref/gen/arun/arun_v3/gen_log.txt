@@ -1,0 +1,9 @@
+04:14:20 sheet 5 turn1: edit idle_a,idle_b,step,hit,victory_a,victory_b,glimmer (window rows 1-2 cols 1-5, 3648x1344, pitch 7, quality medium)
+04:15:03   calibrated pitch 6.83 px (requested 7; 3 reference poses)
+04:15:04   pasted: idle_a 64x64, idle_b 60x62, step 71x62, hit 60x62, victory_a 55x83, victory_b 59x65, glimmer 60x66
+04:15:21 sheet 7 turn1: edit bare_idle (window rows 1-2 cols 1-4, 3584x1280, pitch 8, quality medium)
+04:15:59   calibrated pitch 7.82 px (requested 8; 7 reference poses)
+04:16:00   pasted: bare_idle 54x66
+04:19:41 sheet 5 turn2: edit idle_b (window rows 1-2 cols 1-5, 3648x1344, pitch 7, quality medium)
+04:20:22   calibrated pitch 6.91 px (requested 7; 9 reference poses)
+04:20:22   pasted: idle_b 61x63

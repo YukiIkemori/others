@@ -2,7 +2,7 @@
  "character": "arun",
  "set": "face",
  "look": "hero_m_warrior",
- "source": "out/arun_v1/face",
+ "source": "out/arun_v3/face",
  "cell": [
   72,
   84

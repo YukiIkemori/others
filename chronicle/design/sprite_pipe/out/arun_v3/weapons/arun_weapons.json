@@ -1,0 +1,238 @@
+{
+ "character": "arun",
+ "set": "weapons",
+ "image": "arun_weapons.png",
+ "cell": [
+  90,
+  29
+ ],
+ "anchor": [
+  60,
+  15
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "wpn_sword": {
+   "x": 0,
+   "y": 0,
+   "w": 90,
+   "h": 29,
+   "anchor": [
+    60,
+    15
+   ],
+   "points": {
+    "grip": [
+     60,
+     15
+    ],
+    "tip": [
+     23,
+     16
+    ]
+   }
+  },
+  "wpn_greatsword": {
+   "x": 90,
+   "y": 0,
+   "w": 90,
+   "h": 29,
+   "anchor": [
+    60,
+    15
+   ],
+   "points": {
+    "grip": [
+     60,
+     15
+    ],
+    "tip": [
+     2,
+     16
+    ]
+   }
+  },
+  "wpn_dagger": {
+   "x": 180,
+   "y": 0,
+   "w": 90,
+   "h": 29,
+   "anchor": [
+    60,
+    15
+   ],
+   "points": {
+    "grip": [
+     60,
+     15
+    ],
+    "tip": [
+     35,
+     16
+    ]
+   }
+  },
+  "wpn_bow": {
+   "x": 270,
+   "y": 0,
+   "w": 90,
+   "h": 29,
+   "anchor": [
+    60,
+    15
+   ],
+   "points": {
+    "grip": [
+     60,
+     15
+    ],
+    "tip": [
+     41,
+     13
+    ]
+   }
+  },
+  "wpn_staff": {
+   "x": 360,
+   "y": 0,
+   "w": 90,
+   "h": 29,
+   "anchor": [
+    60,
+    15
+   ],
+   "points": {
+    "grip": [
+     60,
+     15
+    ],
+    "tip": [
+     15,
+     15
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#0b0506",
+  "#18110e",
+  "#271b14",
+  "#2f2b27",
+  "#61574c",
+  "#857b6e",
+  "#cdc5bb",
+  "#2f1313",
+  "#4e191a",
+  "#5c271e",
+  "#7a2326",
+  "#a1292b",
+  "#a13e32",
+  "#cc3833",
+  "#c7543f",
+  "#d94833",
+  "#362419",
+  "#462a1a",
+  "#473119",
+  "#463325",
+  "#5a3923",
+  "#544233",
+  "#684827",
+  "#654934",
+  "#764829",
+  "#855831",
+  "#7b5c43",
+  "#9c6334",
+  "#9b6c3f",
+  "#987053",
+  "#927659",
+  "#b78149",
+  "#a98a35",
+  "#ac8968",
+  "#cd7c45",
+  "#b48c61",
+  "#ba9b79",
+  "#ac9f8e",
+  "#d49d64",
+  "#dba155",
+  "#ea9d34",
+  "#d2af8e",
+  "#cfb692",
+  "#e3b785",
+  "#f3cb7d",
+  "#e8cfac",
+  "#f1d1a6",
+  "#fde5b6",
+  "#f4e8d5",
+  "#f7da65",
+  "#fde350",
+  "#205ca3"
+ ],
+ "weapons": {
+  "wpn_sword": {
+   "grip": [
+    37,
+    8
+   ],
+   "tip": [
+    0,
+    9
+   ],
+   "angle": 178.4,
+   "length": 46,
+   "scaled": 0.767
+  },
+  "wpn_greatsword": {
+   "grip": [
+    58,
+    8
+   ],
+   "tip": [
+    0,
+    9
+   ],
+   "angle": 179.6,
+   "length": 73,
+   "scaled": 0.767
+  },
+  "wpn_dagger": {
+   "grip": [
+    25,
+    5
+   ],
+   "tip": [
+    0,
+    6
+   ],
+   "angle": 179.2,
+   "length": 34,
+   "scaled": 0.767
+  },
+  "wpn_bow": {
+   "grip": [
+    19,
+    13
+   ],
+   "tip": [
+    0,
+    11
+   ],
+   "angle": -174.4,
+   "length": 44,
+   "scaled": 0.767
+  },
+  "wpn_staff": {
+   "grip": [
+    45,
+    7
+   ],
+   "tip": [
+    0,
+    7
+   ],
+   "angle": -179.5,
+   "length": 73,
+   "scaled": 0.767
+  }
+ }
+}
