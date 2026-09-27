@@ -31,6 +31,7 @@
       { key: 'vol.bgm', name: 'BGM', vol: true, desc: '音楽の大きさ。0 で消える。' },
       { key: 'vol.sfx', name: '効果音', vol: true, desc: '効果音の大きさ。0 で消える。' },
       { key: 'vol.voice', name: 'ボイス', vol: true, desc: '声の大きさ。0 で消える。' },
+      { key: 'battleVoice', name: '戦闘ボイス', names: { on: 'あり', big: '大技だけ', off: 'なし' }, desc: '戦闘で仲間と主人公が話す声。' },
     ] },
     { label: '操作', items: [
       { key: 'confirmButton', name: '決定ボタンの位置', names: { right: '右', down: '下' }, desc: 'パッドで決定に使うボタンの位置。' },

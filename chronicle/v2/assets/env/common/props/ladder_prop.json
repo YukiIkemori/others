@@ -1,0 +1,42 @@
+{
+ "id": "ladder_prop",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   16,
+   30
+  ],
+  "32": [
+   21,
+   40
+  ],
+  "40": [
+   26,
+   50
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   29
+  ],
+  "32": [
+   10,
+   39
+  ],
+  "40": [
+   13,
+   49
+  ]
+ },
+ "files": {
+  "24": "ladder_prop@24.png",
+  "32": "ladder_prop@32.png",
+  "40": "ladder_prop@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/dungeon_b.png"
+}

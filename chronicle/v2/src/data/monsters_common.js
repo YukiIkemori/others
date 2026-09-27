@@ -306,4 +306,9 @@
       desc: '冠をいただく白金の大きな灯。\n忘却の底の宝といわれる。',
     },
   });
+  // @@V2-BEGIN 縦切りの調整（BATTLE、2026-09-26 P2。sim_zones の主人公 1 人の表を 5 型 × 得意で回した結果）
+  // ぷちゼリーの打撃の耐性 0.5 → 0.75: 杖（打撃）しか攻め手の無い魔道士（光・水・土…の得意）が主人公 1 人の夜道で 1〜2% 全滅していた。
+  // 段 2 以上（jelly_2〜）は 0.5 のまま（系統の性格は残す）。出現表 zw_prologue の lv [1,3] → [1,2] と組み合わせて 0 に（encounters.js）
+  if (R.DB.monsters.jelly_1 && R.DB.monsters.jelly_1.phys) R.DB.monsters.jelly_1.phys.blunt = 0.75;
+  // @@V2-END
 })(window.RPG);

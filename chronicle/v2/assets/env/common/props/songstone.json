@@ -1,0 +1,46 @@
+{
+ "id": "songstone",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   28,
+   34
+  ],
+  "32": [
+   37,
+   46
+  ],
+  "40": [
+   46,
+   58
+  ]
+ },
+ "feet": {
+  "24": [
+   14,
+   34
+  ],
+  "32": [
+   18,
+   45
+  ],
+  "40": [
+   23,
+   56
+  ]
+ },
+ "files": {
+  "24": "songstone@24.png",
+  "32": "songstone@32.png",
+  "40": "songstone@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/dungeon_b.png",
+ "light32": [
+  0,
+  -18
+ ]
+}

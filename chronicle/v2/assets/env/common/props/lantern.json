@@ -1,0 +1,46 @@
+{
+ "id": "lantern",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   8,
+   15
+  ],
+  "32": [
+   10,
+   20
+  ],
+  "40": [
+   12,
+   25
+  ]
+ },
+ "feet": {
+  "24": [
+   4,
+   14
+  ],
+  "32": [
+   5,
+   19
+  ],
+  "40": [
+   6,
+   24
+  ]
+ },
+ "files": {
+  "24": "lantern@24.png",
+  "32": "lantern@32.png",
+  "40": "lantern@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/town_a.png",
+ "light32": [
+  0,
+  -9
+ ]
+}

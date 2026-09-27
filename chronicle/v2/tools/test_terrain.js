@@ -132,9 +132,10 @@ section('焼き直し（dirty）');
   let ev = null; R.on('terrain:dirty', (e) => { ev = e; });
   const ch = m.objects.find((o) => o.type === 'chest' && o.id === 'v_c1');
   const d = T.dirty(m, ch.x, ch.y);
-  ok('宝箱を開けた → そのチャンク 1 つだけ', d.length === 1 && d[0][0] === Math.floor(ch.x / 8) && d[0][1] === Math.floor(ch.y / 8), d);
-  ok("R.emit('terrain:dirty', {map, chunks})", ev && ev.map === m.id && ev.chunks.length === 1);
-  ok('takeDirty で受け取って空になる', T.takeDirty(m.id).length === 1 && T.takeDirty(m.id).length === 0);
+  // 閉じた宝箱の淡い光だまりが隣のチャンクへ届くときは、そのチャンクも（P2: 光だまりの半径 × STYLE.light.poolR）
+  ok('宝箱を開けた → そのチャンクと、光の届くチャンクだけ（多くて 4）', d.length >= 1 && d.length <= 4 && d.some((q) => q[0] === Math.floor(ch.x / 8) && q[1] === Math.floor(ch.y / 8)), d);
+  ok("R.emit('terrain:dirty', {map, chunks})", ev && ev.map === m.id && ev.chunks.length === d.length);
+  ok('takeDirty で受け取って空になる', T.takeDirty(m.id).length === d.length && T.takeDirty(m.id).length === 0);
   const b = m.objects.find((o) => o.type === 'brazier');
   const db = T.dirty(m, b.x, b.y);
   ok('燭台（光が隣へ届く）はそのチャンクと届く範囲のチャンク', db.length >= 1 && db.some((q) => q[0] === Math.floor(b.x / 8) && q[1] === Math.floor(b.y / 8)), db);

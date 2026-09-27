@@ -1,7 +1,11 @@
 // RENDER: 光の地図（R.Light）。V2_PLAN §2.5.5、MODERN_UI §4.1・§7.2（F5・F6）、STYLE_REFERENCE §5.3・§6.4
-//   R.Light.compose(ctx, rect, {ambient, k, lights:[{x, y, r, color, k, kind}], moon:[rects], mood, res})
-//       掛け算の環境光＋足し算の光だまり。rect = [x, y, w, h]（ctx の今の座標。灯りの x, y も同じ座標）に掛ける。
-//       ambient = 環境光の色（既定は mood の ambient）、k = 環境光の効き（1 = そのまま掛ける、0 = 掛けない）
+//   R.Light.compose(ctx, rect, {ambient, bright | k, lights:[{x, y, r, color, k, kind}], moon:[rects], mood, res})
+//       掛け算の環境光＋足し算の光だまり。rect = [x, y, w, h]（ctx の今の座標。灯りの x, y も同じ座標）に掛ける（rect の外は描かない）。
+//       ambient = 環境光の色（既定は mood の ambient）
+//       ── 明るさの決まり（P2 で一本化）──
+//       bright = 場面の明るさ = map.light.k（ART_REWORK §1.4 の意味: 夜の町 0.45・ダンジョン 0.55〜0.7・屋内 0.85・昼 1）。こちらを渡す。
+//       k      = 環境光の効き（1 = そのまま掛ける、0 = 掛けない）。bright から R.Light.effect(bright) で決まる。bright が無いときだけ直に読む（前の呼び方）
+//       R.Terrain.ambient(map, tier) → {ambient, bright, k, mood} の bright は map.light.k そのまま、k は effect(bright)（同じ関数）
 //       lights: kind 'pool'（既定。地面に縦 0.62 の楕円）| 'point'（丸）| 'window'（縦 0.5 の低い楕円）| 'wide'（横に長い、戸口・大灯火の足元）
 //               k = 中心の強さ（0〜1.5、既定 0.85）。r は半径（mood.poolMul を掛ける。洞窟は 1.35 倍）
 //       moon: 月の当たる面（屋根・高い所の上面）の矩形 [x, y, w, h] の一覧。淡い青を足してから掛ける
@@ -55,6 +59,51 @@
   }
   L._sprite = sprite;
 
+  /**
+   * 明るさ（map.light.k、ART_REWORK §1.4）→ 環境光の効き（compose の k）。STYLE.light.nightBright（0.45 = 夜の町）で 1（そのまま掛ける）、
+   * 1（昼）で 0（掛けない）。その間はまっすぐ。null は夜（1）
+   */
+  L.effect = function (bright) {
+    if (bright == null || isNaN(bright)) return 1;
+    const nb = st().nightBright != null ? st().nightBright : 0.45;
+    return Math.max(0, Math.min(1, (1 - bright) / (1 - nb)));
+  };
+  /** compose・map の o から効きを決める（bright が先） */
+  function effectOf(o) { return o.bright != null ? L.effect(o.bright) : o.k != null ? o.k : 1; }
+  L._effectOf = effectOf;
+
+  /**
+   * 夜の環境光の色を STYLE_REFERENCE §5.2 の暗部の色相（250〜295° 青紫）へ寄せる（青 200〜250° のときだけ、STYLE.light.ambientHue の割合）。
+   * 地図の ambient（CONTENT の色）はそのまま書き、色相だけをここで揃える（明るさ V は変えない）
+   */
+  const ambCache = new Map();
+  function nightAmbient(rgb, gainOver) {
+    const S = st(), shift = S.ambientHueShift != null ? S.ambientHueShift : 0;
+    const gain = gainOver != null ? gainOver : S.ambientGain || 1;
+    if (!shift && gain === 1) return rgb;
+    const key = rgb.join(',') + '|' + gain;
+    let v = ambCache.get(key);
+    if (v) return v;
+    if (gain !== 1) rgb = rgb.map((x) => Math.min(255, x * gain));
+    const [r, g, b] = rgb.map((x) => x / 255), mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn;
+    let h = 0;
+    if (d > 0) h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+    h = (h * 60 + 360) % 360;
+    const [h0, h1] = S.ambientHue || [250, 295];
+    v = rgb.map((x) => Math.round(x));
+    if (shift && d > 0 && h >= 195 && h < h0) {
+      const nh = h + (h0 - h) * shift, sat = Math.min(1, (d / mx) * (S.ambientSat || 1));
+      const V = mx, C = V * sat, X = C * (1 - Math.abs(((nh / 60) % 2) - 1)), m0 = V - C;
+      const seg = Math.floor(nh / 60) % 6;
+      const t = [[C, X, 0], [X, C, 0], [0, C, X], [0, X, C], [X, 0, C], [C, 0, X]][seg];
+      v = t.map((c) => Math.round((c + m0) * 255));
+    }
+    ambCache.set(key, v);
+    if (ambCache.size > 64) ambCache.delete(ambCache.keys().next().value);
+    return v;
+  }
+  L._nightAmbient = nightAmbient;
+
   function asRect(rect) {
     if (!rect) return [0, 0, R.W, R.H];
     if (Array.isArray(rect)) return rect;
@@ -66,9 +115,11 @@
     const x = lm.getContext('2d');
     const [rx, ry, rw, rh] = rect;
     const mood = Hd.mood(o.mood || 'night');
-    const amb = rgbOf(o.ambient || mood.ambient);
-    L.current = { ambient: amb, mood: o.mood || 'night', k: o.k != null ? o.k : 1 };
-    const k = o.k != null ? o.k : 1;
+    // 戦闘の光の地図（R.Light.map、層ごとに掛ける）は明るい砂・地面に大きな光だまりを 1 つ置くので、環境光の倍率と中心の足し算は控えめ（mapGain・mapPoolCore）
+    const isMap = !!o._map;
+    const amb = nightAmbient(rgbOf(o.ambient || mood.ambient), isMap ? (st().mapGain != null ? st().mapGain : 1) : null);
+    const k = effectOf(o);
+    L.current = { ambient: amb, mood: o.mood || 'night', k, bright: o.bright };
     const a = amb.map((v) => Math.round(255 - (255 - v) * k));
     x.setTransform(1, 0, 0, 1, 0, 0);
     x.globalCompositeOperation = 'source-over';
@@ -82,7 +133,7 @@
       x.fillStyle = mood.moon || 'rgb(56,64,84)';
       for (const m of o.moon) { const mr = asRect(m); x.fillRect(mr[0], mr[1], mr[2], mr[3]); }
     }
-    const poolMul = mood.poolMul || 1;
+    const poolMul = (mood.poolMul || 1) * (st().poolR || 1);
     const sq = st().poolSquash || 0.62;
     const white = st().poolWhite != null ? st().poolWhite : 0.35;
     const list = [];
@@ -103,8 +154,9 @@
     }
     // ② 重なった所と中心を少し足す（中心 +40〜60%、STYLE_REFERENCE §5.3）
     x.globalCompositeOperation = 'lighter';
+    const core = isMap ? (st().mapPoolCore != null ? st().mapPoolCore : 0.6) : st().poolCore != null ? st().poolCore : 0.6;
     for (const p of list) {
-      x.globalAlpha = Math.min(1, p.k * 0.6);
+      x.globalAlpha = Math.min(1, p.k * core);
       x.drawImage(sprite('pool', p.col), p.li.x - p.r * p.sx * 0.6, p.li.y - p.r * p.sy * 0.6, p.r * 1.2 * p.sx, p.r * 1.2 * p.sy);
     }
     x.globalAlpha = 1;
@@ -118,7 +170,7 @@
     rect = asRect(rect);
     const res = o.res || 0.5;
     const lm = Hd.RZ.canvas(Math.ceil(rect[2] * res), Math.ceil(rect[3] * res));
-    return paint(lm, rect, o, res);
+    return paint(lm, rect, Object.assign({ _map: true }, o), res);
   };
 
   L.compose = function (ctx, rect, o) {
@@ -133,11 +185,13 @@
     ctx.imageSmoothingEnabled = true;
     ctx.drawImage(lm, 0, 0, w, h, rect[0], rect[1], rect[2], rect[3]);
     // ③ 光だまりの中心は下地より明るく（掛け算だけでは下地の色を超えない。加算で少し。STYLE_REFERENCE §5.3 の +40〜60%）
-    const spill = o.spill != null ? o.spill : 0.16;
+    const spill = o.spill != null ? o.spill : st().spill != null ? st().spill : 0.16;
     if (spill > 0 && o.lights && o.lights.length) {
-      const mood = Hd.mood(o.mood || 'night'), poolMul = mood.poolMul || 1, sq = st().poolSquash || 0.62;
+      const mood = Hd.mood(o.mood || 'night'), poolMul = (mood.poolMul || 1) * (st().poolR || 1), sq = st().poolSquash || 0.62;
       ctx.globalCompositeOperation = 'lighter';
       const [rx, ry, rw, rh] = rect;
+      // rect の外へ描かない（帯に分けて掛けても 2 度足さない）
+      ctx.beginPath(); ctx.rect(rx, ry, rw, rh); ctx.clip();
       for (const li of o.lights) {
         if (li.kind === 'window') continue;
         const r = (li.r || 60) * poolMul * 0.55;

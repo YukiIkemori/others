@@ -76,3 +76,29 @@
 {"from": "CAST", "to": "FIELD", "file": "v2/src/systems/field/layers.js", "what": "先頭のランタンの光の輪（R.Light.ring）が人の絵の上に足し算で重なり、先頭の人（アルン）が白く飛ぶ（design/shots/cast/game_pharos.png）。輪は人の層の下（地面）に描くか、中心を Sheet の anchors.lantern（描く点からの相対。向きごとは sheet.meta.lantern[dir]）に置いて人に掛かる明るさを下げてください。アルンの原画はシート1・2 でランタンを左手に描いてあり（meta.lanternDrawn）、芯の位置を anchors.lantern に入れてある", "why": "MODERN_UI の見本では先頭の人は暖かく照らされるが白く飛ばない"}
 {"from": "CAST", "to": "BSCENE", "file": "v2/src/systems/battle/actors.js", "what": "hd:btl:<look>:<wtype> を全員分登録した（原画のアルン＝hero_m_warrior はシートの形で 24 コマ＋5 系統の武器の付け替え、ほかは仮の絵の骨組み 23 コマ）。ポーズは idle step slash thrust smash shoot cast item guard hit weak ko victory＋windup evade、fps は sheet.fps。攻撃のポーズは数コマの並び（構え→振り→残り）なので、LOOP でないポーズは最後のコマで止めてください（今のまま）。R.Art.cast.battleKeys()・repin() で出撃中の 4 人を pin する（'battle:start' で呼んでいる）", "why": "§2.5.7 の登録を待っていた件の返事"}
 {"from": "CAST", "to": "all", "what": "見た目 R.DB.looks を 96 件登録した（§2.6.2 の一覧すべて: 主人公 10・仲間 20・物語の人 5・名前のある町の人 9・町の人の型 12×4・動物 4）。町の人の型と動物は顔なし（R.Portrait.has が null）。キャラの原画は v2/assets/sprites/<look>/（design/sprite_pipe/tools/to_v2.py で取り込む）", "why": "CONTENT・FIELD・MENUS がこの id で書ける"}
+{"from": "lead", "to": "all", "what": "contract", "ver": 3, "why": "P2: 足しただけ（名前の変更・削除なし）。ICONS に 'water'、K.setup に seed?/retry?/demo?/autoInput?、K.lore（R.DB.lore、CONTENT が書く）、K.chronicleEntry（R.DB.chronicle[summaryKey]、CONTENT が書く、MENUS は text を読む）、map.zones[].cond?（R.MapUtil.zoneAt が真のときだけ選ぶ）"}
+{"resolved": 8, "by": "CORE+UIK+MENUS (P2)", "what": "ICONS 'water'（contract v3）＋UIK の水のアイコン（しずく）"}
+{"resolved": 24, "by": "CORE+UIK+MENUS (P2)", "what": "V2_PLAN §4.4 の BEAST の段を R.Hd.STYLE.size（S 44〜60・M 60〜90・L 90〜140・ボス 180〜240 論理 px）に確定"}
+{"resolved": 25, "by": "CORE+UIK+MENUS (P2)", "what": "R.Settings battleVoice 'on'|'big'|'off'（既定 on、CHOICES も）"}
+{"resolved": 26, "by": "CORE+UIK+MENUS (P2)", "what": "R.Audio.battleVoiceId(id)（BGM を下げない・会話を止めない・前の戦闘ボイスだけ止める）。battleVoice(kind) もこれを通る"}
+{"resolved": 27, "by": "CORE+UIK+MENUS (P2)", "what": "test_core_flow を本物の戦闘に（battleSpeed 3・A を最大 240 回・勝ちと gold の増え）"}
+{"resolved": 29, "by": "CORE+UIK+MENUS (P2)", "what": "K.setup に retry?・seed?・demo?・autoInput?（contract v3）"}
+{"resolved": 31, "by": "CORE+UIK+MENUS (P2)", "what": "設定の画面の 音 に『戦闘ボイス: あり／大技だけ／なし』"}
+{"resolved": 33, "by": "CORE+UIK+MENUS (P2)", "what": "test_core_contract・test_core の戦闘の節: 本物の BattleCore（tr_tutorial）で終わるまで attack → finish 1 回・負けは null"}
+{"resolved": 36, "by": "CORE+UIK+MENUS (P2)", "what": "MENUS は seenSkill・book.mon の形のまま使っている（変更なし、確認済み）"}
+{"resolved": 45, "by": "CORE+UIK+MENUS (P2)", "what": "test_core_flow: タイトルの行を value で、作成 → 名前 → 旅立つ を A で、スマホは rowRect(4) をタップ"}
+{"resolved": 46, "by": "CORE+UIK+MENUS (P2)", "what": "R.Flow.title: cmd 'passphrase'（と 'load'）は読み込み済みとして Flow.resume()"}
+{"resolved": 49, "by": "CORE+UIK+MENUS (P2)", "what": "K.chronicleEntry を契約に（R.DB.chronicle は CONTENT が書く、contract v3）"}
+{"resolved": 52, "by": "CORE+UIK+MENUS (P2)", "what": "UIK icons に 'water'。MENUS の S.elemIcon の ice の代わりを外した"}
+{"resolved": 59, "by": "CORE+UIK+MENUS (P2)", "what": "(1) K.lore（contract v3）(2) zones[].cond? を足し MapUtil.zoneAt が読む (3) 風鳴りの丘は今のまま入れておく（外す判断は P2 の終わりにリード）"}
+{"resolved": 61, "by": "CORE+UIK+MENUS (P2)", "what": "test_core_flow を序章（roa_house・roa_house_intro）から始まる形に書き直し"}
+{"resolved": 62, "by": "CORE+UIK+MENUS (P2)", "what": "MENUS: R.Leads.seen などはそのまま使える（確認）"}
+{"resolved": 66, "by": "CORE+UIK+MENUS (P2)", "what": "K.lore・K.chronicleEntry を契約に（contract v3。parts/text の getter の形のまま通る）"}
+{"resolved": 72, "by": "CORE+UIK+MENUS (P2)", "what": "test_core_flow を序章に合わせた（幕 → ベルナ → 作成 → 書見台のベルナと話す）"}
+{"resolved": 11, "by": "CORE+UIK+MENUS (P2)", "what": "MENUS の装備・店を R.Rules.preview（人ごとの ▲▼）・shopItems・sellPrice・canEquip・optimize・loadoutScore で作った"}
+{"resolved": "hub.js 'S.def is not a function'", "by": "CORE+UIK+MENUS (P2)", "what": "各画面のファイルが if (!S.def) の仮の登録を持つので読み込み順に依らない。test_core_flow（index・スマホ・dev の 3 つのフィクスチャ）と scene=menus_* でページのエラー 0 を確かめた"}
+{"resolved": "R.Post.frame ordering", "by": "CORE+UIK+MENUS (P2)", "what": "FIELD（layers.js: 世界 → 暗がり → Post.frame → HUD）と BSCENE（scene.js: 世界 → Post.frame → HUD）はどちらも §2.11 の『draw の最後・HUD の前』。画面（MENUS）は Post を呼ばず、開いたときの UIK.snapshot（Post 込みの写し）を背にする。README の BSCENE の行の『draw の最後』は『世界の最後・HUD の前』と読む"}
+{"from": "CORE", "to": "RULES", "file": "v2/src/data/items_*.js・elements.js", "what": "R.Contract.ICONS に 'water' が入った（contract v3）。水の属性の品・術の icon を 'ice' から 'water' に戻してよい", "why": "requests 8 の返事"}
+{"from": "CORE", "to": "BSCENE", "file": "v2/src/systems/battle/*", "what": "R.Audio.battleVoiceId(id) と設定 battleVoice ができた。仲間の戦闘ボイスを playVoice から battleVoiceId に替えてほしい（BGM を下げない）", "why": "requests 25・26 の返事"}
+{"from": "CORE", "to": "CONTENT-P", "file": "v2/src/maps/world.js", "what": "map.zones[].cond? が使える（R.MapUtil.zoneAt が真のときだけ選ぶ。上から最初に合う物）。半島の出現表を『仲間を選ぶ前／後』で切り替えるならこちらで", "why": "requests 59 の (2)"}
+{"from": "MENUS", "to": "CAST", "file": "v2/src/art/cast/portrait.js", "what": "R.Portrait.draw の仮の顔は 0.5 刻みの倍率で下の中央に置くため、半径 16〜20 論理 px の丸い枠（店・装備・ハブの小さな顔）では顔が小さい。MENUS は丸の 2.4 倍の枠を渡して頭を丸に入れているが、o.fit:'head'（anchors.head を枠の中央に、切り抜き前提で拡大）のような口があれば替える", "why": "MODERN_UI shop.png・equip.png の丸い顔は頭が丸いっぱい"}

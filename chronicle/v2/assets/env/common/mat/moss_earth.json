@@ -1,0 +1,18 @@
+{
+ "id": "moss_earth",
+ "kind": "material",
+ "theme": "common",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "moss_earth@32.png",
+  "24": "moss_earth@24.png",
+  "40": "moss_earth@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/common/moss_earth.png",
+ "native_px": 7.0,
+ "colours": 40
+}

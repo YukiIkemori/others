@@ -1,0 +1,42 @@
+{
+ "id": "fence",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   28,
+   18
+  ],
+  "32": [
+   38,
+   24
+  ],
+  "40": [
+   48,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   14,
+   17
+  ],
+  "32": [
+   19,
+   23
+  ],
+  "40": [
+   24,
+   29
+  ]
+ },
+ "files": {
+  "24": "fence@24.png",
+  "32": "fence@32.png",
+  "40": "fence@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/town_a.png"
+}

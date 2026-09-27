@@ -1,0 +1,42 @@
+{
+ "id": "rope_bridge",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   27,
+   31
+  ],
+  "32": [
+   36,
+   41
+  ],
+  "40": [
+   45,
+   51
+  ]
+ },
+ "feet": {
+  "24": [
+   14,
+   30
+  ],
+  "32": [
+   18,
+   40
+  ],
+  "40": [
+   22,
+   50
+  ]
+ },
+ "files": {
+  "24": "rope_bridge@24.png",
+  "32": "rope_bridge@32.png",
+  "40": "rope_bridge@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/dungeon_b.png"
+}

@@ -1,0 +1,46 @@
+{
+ "id": "mushroom_glow",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   14,
+   14
+  ],
+  "32": [
+   18,
+   18
+  ],
+  "40": [
+   22,
+   22
+  ]
+ },
+ "feet": {
+  "24": [
+   7,
+   13
+  ],
+  "32": [
+   9,
+   17
+  ],
+  "40": [
+   11,
+   21
+  ]
+ },
+ "files": {
+  "24": "mushroom_glow@24.png",
+  "32": "mushroom_glow@32.png",
+  "40": "mushroom_glow@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/dungeon_b.png",
+ "light32": [
+  0,
+  -5
+ ]
+}

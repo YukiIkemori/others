@@ -1,0 +1,42 @@
+{
+ "id": "chair",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   10,
+   16
+  ],
+  "32": [
+   13,
+   22
+  ],
+  "40": [
+   16,
+   28
+  ]
+ },
+ "feet": {
+  "24": [
+   5,
+   16
+  ],
+  "32": [
+   6,
+   21
+  ],
+  "40": [
+   8,
+   26
+  ]
+ },
+ "files": {
+  "24": "chair@24.png",
+  "32": "chair@32.png",
+  "40": "chair@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/town_a.png"
+}

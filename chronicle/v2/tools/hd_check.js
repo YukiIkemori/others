@@ -36,7 +36,9 @@ function inspect(o) {
   const lum = (r, g, b) => (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
   const hashFrames = (sh) => { let h = 2166136261; for (const f of sh.frames) { if (!f || !f.c) continue; const d = f.c.getContext('2d').getImageData(0, 0, f.c.width, f.c.height).data; for (let i = 0; i < d.length; i += 3) { h ^= d[i]; h = Math.imul(h, 16777619) >>> 0; } h ^= f.c.width * 31 + f.c.height; } return h; };
   const monSize = {};
-  for (const m of Object.values(R.DB.monsters || {})) if (m && m.sprite) monSize[m.sprite] = m.size;
+  // id が sprite と同じ魔物を先に（群れの狼 b_packwolf は wolf_1 の土台を借りる、BATTLE）
+  for (const [mid, m] of Object.entries(R.DB.monsters || {})) if (m && m.sprite && mid === m.sprite) monSize[m.sprite] = m.size;
+  for (const m of Object.values(R.DB.monsters || {})) if (m && m.sprite && !monSize[m.sprite]) monSize[m.sprite] = m.size;
   const out = [];
   for (const key of keys) {
     const kind = Hd.kindOf(key), id = key.split(':').slice(2).join(':');
@@ -79,7 +81,9 @@ function inspect(o) {
     if (!sh2 || hashFrames(sh2) !== h1) r.fail.push('same key → different pixels (seed the rng from the key)');
     // 色数（人だけ判定）
     const cb = kind === 'btl' ? ST.colors.btl : kind === 'field' ? ST.colors.field : null;
-    if (cb && (maxColors > cb[1] || minColors < cb[0])) r.fail.push(`colors per frame ${minColors}..${maxColors} (want ${cb[0]}..${cb[1]})`);
+    // オーナーの原画（meta.source 'sprite'、A34・A35）は共通パレットのまま（色を足すと原画から離れる）→ 見るだけ（CAST の依頼）
+    const fromSprite = sh.meta && sh.meta.source === 'sprite';
+    if (cb && (maxColors > cb[1] || minColors < cb[0])) (fromSprite ? r.warn : r.fail).push(`colors per frame ${minColors}..${maxColors} (want ${cb[0]}..${cb[1]})${fromSprite ? ' — owner sprite, palette kept' : ''}`);
     if (kind !== 'fx' && r.info.sat > 0.15) r.warn.push(`saturation > .8 on ${(r.info.sat * 100).toFixed(1)}% of pixels (small spots only)`);
     if (['btl', 'field', 'mon', 'boss'].includes(kind) && r.info.outline < 0.9) r.warn.push(`dark outline ${(r.info.outline * 100).toFixed(0)}% (want ≥ 90%)`);
     if (kind === 'mon' || kind === 'boss') {
@@ -87,9 +91,12 @@ function inspect(o) {
       const hx = head ? (Array.isArray(head) ? head[0] : head.x) : null;
       if (m.facing === 'left' || (m.facing == null && hx != null && hx < 0)) r.fail.push('faces left (monsters face right)');
       if (m.facing == null && hx == null) r.warn.push('no meta.facing / anchors.head to check facing');
-      const lh = r.info.height;   // art px = 論理 px
-      if (kind === 'boss' && (lh < ST.size.boss[0] || lh > ST.size.boss[1] * 1.3)) r.warn.push(`boss height ${lh} (want ${ST.size.boss[0]}..${ST.size.boss[1]})`);
-      const sz = monSize[id];
+      // 高さは不透明な画素の外形（見た目の高さ）。飛ぶ物は足元から浮いているので meta.visH があればそちら（BEAST の依頼）
+      const lh = m.fly && m.visH ? m.visH : r.info.height;   // art px = 論理 px
+      const ADD = [80, 140];   // 段の無い子分（根の触手 b_root、meta.tier 'add'）
+      if (m.tier === 'add') { if (lh < ADD[0] * 0.9 || lh > ADD[1] * 1.1) r.warn.push(`add height ${lh} (want ${ADD[0]}..${ADD[1]})`); }
+      else if (kind === 'boss' && (lh < ST.size.boss[0] || lh > ST.size.boss[1] * 1.3)) r.warn.push(`boss height ${lh} (want ${ST.size.boss[0]}..${ST.size.boss[1]})`);
+      const sz = m.tier === 'add' ? null : monSize[id];
       if (kind === 'mon' && sz && ST.size[sz]) { const b = ST.size[sz]; if (lh < b[0] * 0.9 || lh > b[1] * 1.1) r.warn.push(`size '${sz}' height ${lh} (want ${b[0]}..${b[1]})`); }
     }
     out.push(r);

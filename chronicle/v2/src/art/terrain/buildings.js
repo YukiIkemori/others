@@ -28,8 +28,9 @@
       slate: r(['#1a2232', '#2c3850', '#42526c', '#5a6c88', '#7a8ca6', '#9eaec6'], 8),
       terra: r(['#34160e', '#562618', '#7a3a24', '#9c5434', '#bc724c', '#d6946a'], 8),
       thatch: r(['#2a1e0c', '#4a3616', '#6e5424', '#927234', '#b4924a', '#ceae64'], 8),
-      shingle: r(['#20140c', '#3a2616', '#563a22', '#725030', '#8e6840'], 7),
-      barkR: r(['#16100a', '#2a1e12', '#40301e', '#58442c', '#70583a'], 7),
+      // 夜の掛け算で平らな暗い青の箱に見えないよう、明るい段まで持つ（CONTENT-F の依頼、P2）
+      shingle: r(['#24160e', '#442c1a', '#664428', '#8a5e36', '#ae804c', '#c89c66'], 7),
+      barkR: r(['#1e160e', '#3a2a1a', '#5a4428', '#7c6038', '#9c7e50', '#b89a6a'], 7),
       mossR: r(['#101a10', '#1c2e1a', '#2a4424', '#3c5c2e', '#54783a', '#6e9448'], 8),
       timber: r(['#180e08', '#2e1c0e', '#4a3018', '#664626', '#7e5c36'], 6),
       door: r(['#1e1008', '#38200e', '#54341a', '#704a28', '#8a603a'], 6),
@@ -174,7 +175,7 @@
     }
     // --- 屋根
     const hip = b.hip ? Math.min(roofH * 0.9, 34) : 0, ridgeY = ry0 + Math.round(roofH * 0.38);
-    const thatch = b.roof === 'thatch' || b.roof === 'moss';
+    const thatch = b.roof === 'thatch' || b.roof === 'moss' || b.roof === 'bark';   // 樹皮の屋根も筋のある葺き方（板の格子にしない）
     buf.fill(x0 - over, ry0, x1 + over, ry1 + 4, (x, y) => {
       const lx = x - x0;
       if (y >= ry1 + 3 && (x < x0 - over + 2 || x > x1 + over - 3)) return null;

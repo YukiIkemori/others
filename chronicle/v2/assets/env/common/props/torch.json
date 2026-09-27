@@ -1,0 +1,47 @@
+{
+ "id": "torch",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "off",
+  "on"
+ ],
+ "cell": {
+  "24": [
+   10,
+   20
+  ],
+  "32": [
+   13,
+   27
+  ],
+  "40": [
+   16,
+   34
+  ]
+ },
+ "feet": {
+  "24": [
+   5,
+   20
+  ],
+  "32": [
+   6,
+   26
+  ],
+  "40": [
+   8,
+   32
+  ]
+ },
+ "files": {
+  "24": "torch@24.png",
+  "32": "torch@32.png",
+  "40": "torch@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/dungeon_a.png",
+ "light32": [
+  0,
+  -20
+ ]
+}

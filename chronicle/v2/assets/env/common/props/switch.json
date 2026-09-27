@@ -1,0 +1,47 @@
+{
+ "id": "switch",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "off",
+  "on"
+ ],
+ "cell": {
+  "24": [
+   20,
+   16
+  ],
+  "32": [
+   26,
+   22
+  ],
+  "40": [
+   32,
+   28
+  ]
+ },
+ "feet": {
+  "24": [
+   10,
+   16
+  ],
+  "32": [
+   13,
+   21
+  ],
+  "40": [
+   16,
+   26
+  ]
+ },
+ "files": {
+  "24": "switch@24.png",
+  "32": "switch@32.png",
+  "40": "switch@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/dungeon_a.png",
+ "light32": [
+  0,
+  -4
+ ]
+}

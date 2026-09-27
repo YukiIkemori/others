@@ -214,6 +214,25 @@
     if (!P) return null;
     return { map: P.m.id, n: P.list.length, ready: P.list.filter((e) => e.ready && !e.fb).length, prewarm: !P.pj || P.pj.done };
   };
+  /** 入ったあと: つながっているマップ（出口・扉・階段・建物の入口の行き先）の素材・物・木の絵を、列の余りでいちばん後ろに積む。
+   *  TERRAIN の焼いた素材と物の絵はマップをまたいで使い回されるので、次の暗転の中の焼きが短くなる */
+  CK.neighbors = function () {
+    const m = S.map;
+    if (!m || !canBake()) return;
+    const tile = F._tile(), seen = (S.nbrSeen = S.nbrSeen || new Set());
+    const add = (to) => {
+      if (!to || !to.map || to.map === m.id) return;
+      const t = R.DB.maps[to.map], k = to.map + ':' + tile;
+      if (!t || seen.has(k)) return;
+      seen.add(k);
+      try { const j = R.Terrain.prewarm(t, { tile, tier: R.Tier.get() }); if (j) R.Hd.schedule(j, 12); } catch (e) { console.error('[field] neighbor prewarm', e); }
+    };
+    for (const e of m.exits || []) add(e.to);
+    for (const o of m.objects || []) {
+      if ((o.type === 'stairs' || o.type === 'door') && o.to) add(o.to);
+      else if (o.type === 'building' && o.door) add(o.door.to);
+    }
+  };
   /** 歩いている間: 近くの出口・扉・階段・建物の入口（8 マス以内の最も近い物）の先を先に焼く。離れたら捨てる */
   CK.lookAhead = function () {
     const m = S.map;

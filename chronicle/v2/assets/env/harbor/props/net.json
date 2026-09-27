@@ -1,0 +1,42 @@
+{
+ "id": "net",
+ "kind": "props",
+ "theme": "harbor",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   22,
+   19
+  ],
+  "32": [
+   30,
+   25
+  ],
+  "40": [
+   38,
+   31
+  ]
+ },
+ "feet": {
+  "24": [
+   11,
+   18
+  ],
+  "32": [
+   15,
+   24
+  ],
+  "40": [
+   19,
+   30
+  ]
+ },
+ "files": {
+  "24": "net@24.png",
+  "32": "net@32.png",
+  "40": "net@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/harbor_a.png"
+}

@@ -1,0 +1,42 @@
+{
+ "id": "grave",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   13,
+   18
+  ],
+  "32": [
+   17,
+   24
+  ],
+  "40": [
+   21,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   17
+  ],
+  "32": [
+   8,
+   23
+  ],
+  "40": [
+   11,
+   29
+  ]
+ },
+ "files": {
+  "24": "grave@24.png",
+  "32": "grave@32.png",
+  "40": "grave@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/town_a.png"
+}

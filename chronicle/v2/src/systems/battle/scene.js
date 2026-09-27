@@ -268,36 +268,102 @@
     return map;
   }
   /**
-   * 地面・影・人と敵・手前を 1 枚の層に描き、その層の不透明な所にだけ光の地図を multiply（meta.light === 'layer'）。
-   * 夜空（back）を二重に暗くせず、地平より上に出る大きいボス・人も上下で明るさが割れない。層は実キャンバスの解像度で、g と同じ変換。
+   * 戦闘背景の光（BEAST の依頼 22、meta.light === 'layer'）: 地面・人と敵・手前にだけ光の地図を multiply し、夜空（back）には掛けない。
+   * 重さを抑える形（§2.10 の戦闘 3 ms）: 動かない ground と front は戦闘ごとに 1 回だけ「光を掛けた絵」に焼き（実キャンバスの解像度）、
+   * 毎フレームは人と敵を 1 人ずつ、その矩形の中だけで光を掛けて重ねる（y の順。重なりも元の順のまま）。
+   * 描く順: back → 光を掛けた ground → ランタンのゆらぎ → 影 → 人と敵（1 人ずつ光）→ 光を掛けた front → post → R.Post.frame
    */
-  function litStage(g, st, sh, mid) {
-    if (!g.canvas || !g.getTransform || !(R.Hd.RZ && R.Hd.RZ.canvas)) return false;
+  function litStatic(st, sh, g, name) {
     const map = stageLightMap(st, sh);
-    if (!map) return false;
     const cw = g.canvas.width, ch = g.canvas.height;
-    const A = canvasOf('a', cw, ch), M = canvasOf('m', cw, ch);
-    const ax = A.getContext('2d'), mx = M.getContext('2d');
     const tf = g.getTransform();
-    ax.setTransform(1, 0, 0, 1, 0, 0); ax.globalCompositeOperation = 'source-over'; ax.globalAlpha = 1; ax.clearRect(0, 0, cw, ch);
-    ax.setTransform(tf); ax.imageSmoothingEnabled = false;
-    mid(ax);
-    // 光の地図を層の形で切り抜く
-    mx.setTransform(1, 0, 0, 1, 0, 0); mx.globalCompositeOperation = 'source-over'; mx.clearRect(0, 0, cw, ch);
+    const key = [name, cw, ch, tf.a, tf.e, tf.f, st.lmapKey].join('|');
+    st.litCache = st.litCache || {};
+    if (st.litCache[name] && st.litCache[name].key === key) return st.litCache[name].c;
+    const idx = (sh.poses && sh.poses[name]) || [];
+    if (!idx.length || !map) { st.litCache[name] = { key, c: null }; return null; }
+    _.litBakes = (_.litBakes || 0) + 1;
+    const c = R.Hd.RZ.canvas(cw, ch), x = c.getContext('2d');
+    x.setTransform(tf); x.imageSmoothingEnabled = false;
+    layer(x, sh, name);
+    const m = R.Hd.RZ.canvas(cw, ch), mx = m.getContext('2d');
     mx.setTransform(tf); mx.imageSmoothingEnabled = true;
     mx.drawImage(map, 0, 0, sh.w || R.W, sh.h || R.H);
     mx.setTransform(1, 0, 0, 1, 0, 0);
-    mx.globalCompositeOperation = 'destination-in'; mx.drawImage(A, 0, 0);
-    ax.setTransform(1, 0, 0, 1, 0, 0);
-    ax.globalCompositeOperation = 'multiply'; ax.drawImage(M, 0, 0);
+    mx.globalCompositeOperation = 'destination-in'; mx.drawImage(c, 0, 0);
+    x.setTransform(1, 0, 0, 1, 0, 0);
+    x.globalCompositeOperation = 'multiply'; x.drawImage(m, 0, 0);
+    x.globalCompositeOperation = 'source-over';
+    st.litCache[name] = { key, c };
+    try { if (R.Hd.track) R.Hd.track('bbg', 'bscene:lit:' + name, cw * ch * 4); } catch (e) { /* 量の届けは無くてもよい */ }
+    return c;
+  }
+  function blit(g, c) { g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.drawImage(c, 0, 0); g.restore(); }
+  /** 人と敵 1 人に光を掛けて g に重ねる（矩形の中だけ） */
+  function litActor(g, st, a, map, sh, tf) {
+    const b = _.actors.bounds(st, a, 12);
+    // 論理 → 実キャンバスの px（揺れの translate も tf に入っている）
+    const sx = tf.a, sy = tf.d;
+    let px = Math.floor(b.x * sx + tf.e), py = Math.floor(b.y * sy + tf.f);
+    let pw = Math.ceil(b.w * sx) + 2, ph = Math.ceil(b.h * sy) + 2;
+    const cw = g.canvas.width, ch = g.canvas.height;
+    if (px < 0) { pw += px; px = 0; }
+    if (py < 0) { ph += py; py = 0; }
+    pw = Math.min(pw, cw - px); ph = Math.min(ph, ch - py);
+    if (pw <= 0 || ph <= 0) return;
+    const A = canvasOf('a', cw, ch), M = canvasOf('m', cw, ch);
+    const ax = A.getContext('2d'), mx = M.getContext('2d');
+    ax.setTransform(1, 0, 0, 1, 0, 0); ax.globalCompositeOperation = 'source-over'; ax.globalAlpha = 1; ax.clearRect(px, py, pw, ph);
+    ax.save(); ax.beginPath(); ax.rect(px, py, pw, ph); ax.clip();
+    ax.setTransform(tf); ax.imageSmoothingEnabled = false;
+    _.actors.draw(ax, st, a);
+    ax.restore();
+    // 光の地図の同じ所を切り出し、絵の形で切り抜いて multiply
+    const W = sh.w || R.W, H = sh.h || R.H;
+    const mw = map.width / W, mh = map.height / H;   // 光の地図の解像度（論理 px あたり）
+    mx.setTransform(1, 0, 0, 1, 0, 0); mx.globalCompositeOperation = 'source-over'; mx.clearRect(px, py, pw, ph);
+    mx.imageSmoothingEnabled = true;
+    const lx0 = (px - tf.e) / sx, ly0 = (py - tf.f) / sy;   // 矩形の左上（論理）
+    mx.drawImage(map, lx0 * mw, ly0 * mh, (pw / sx) * mw, (ph / sy) * mh, px, py, pw, ph);
+    // destination-in はキャンバス全体に効く（絵の外を消す）ので、矩形で切って 1 人分だけにする
+    mx.save(); mx.beginPath(); mx.rect(px, py, pw, ph); mx.clip();
+    mx.globalCompositeOperation = 'destination-in'; mx.drawImage(A, px, py, pw, ph, px, py, pw, ph);
+    mx.restore();
+    ax.globalCompositeOperation = 'multiply'; ax.drawImage(M, px, py, pw, ph, px, py, pw, ph);
     ax.globalCompositeOperation = 'source-over';
-    g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.drawImage(A, 0, 0); g.restore();
+    g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
+    g.drawImage(A, px, py, pw, ph, px, py, pw, ph);
+    g.restore();
+  }
+  function litStage(g, st, sh, parts) {
+    if (_.flatStage || !g.canvas || !g.getTransform || !(R.Hd.RZ && R.Hd.RZ.canvas)) return false;
+    const map = stageLightMap(st, sh);
+    if (!map) return false;
+    const tf = g.getTransform();
+    // 焼いた絵は揺れの前の変換（st.baseTf、draw の初め）で焼き、揺れの間は同じだけずらして置く
+    const bt = st.baseTf || tf;
+    const gTf = new DOMMatrix([bt.a, 0, 0, bt.d, bt.e, bt.f]);
+    const ground = litStatic(st, sh, { canvas: g.canvas, getTransform: () => gTf }, 'ground');
+    const front = litStatic(st, sh, { canvas: g.canvas, getTransform: () => gTf }, 'front');
+    const off = [tf.e - bt.e, tf.f - bt.f];
+    const put = (c) => { if (!c) return; g.save(); g.setTransform(1, 0, 0, 1, off[0], off[1]); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.drawImage(c, 0, 0); g.restore(); };
+    const P = _.prof, now = () => (P ? performance.now() : 0);
+    let t0 = now();
+    put(ground);
+    if (P) { P.ground = (P.ground || 0) + now() - t0; t0 = now(); }
+    parts.under(g);                                   // ランタンのゆらぎ・影（地面の上、光の後）
+    if (P) { P.under = (P.under || 0) + now() - t0; t0 = now(); }
+    for (const a of parts.order) litActor(g, st, a, map, sh, tf);
+    if (P) { P.actors = (P.actors || 0) + now() - t0; t0 = now(); }
+    put(front);
+    if (P) { P.front = (P.front || 0) + now() - t0; P.n = (P.n || 0) + 1; }
     return true;
   }
 
   function draw(g, st) {
     const L = st.L, t = R.Engine.time;
     g.save();
+    if (g.getTransform) st.baseTf = g.getTransform();
     // 画面の揺れ（設定 shake）
     if (st.shake) {
       const e = (t - st.shake.t0) / st.shake.ms;
@@ -311,16 +377,19 @@
     const baked = !!(sh && sh.frames && sh.poses);
     if (baked && sh.meta && sh.meta.lantern) lantern = [sh.meta.lantern.x, sh.meta.lantern.y];
     const order = st.actors.slice().sort((a, b) => a.y - b.y);
-    const mid = (c) => {
-      if (baked) layer(c, sh, 'ground');
+    const under = (c) => {
       _.actors.lanternPool(c, { lantern, tall: L.tall, baked }, t);
       for (const a of order) _.actors.shadow(c, st, a);
+    };
+    const mid = (c) => {
+      if (baked) layer(c, sh, 'ground');
+      under(c);
       for (const a of order) _.actors.draw(c, st, a);
       if (baked) layer(c, sh, 'front');
     };
     if (baked) {
       layer(g, sh, 'back');
-      const lit = litStage(g, st, sh, mid);
+      const lit = litStage(g, st, sh, { under, order });
       if (!lit) mid(g);
       layer(g, sh, 'post', (sh.meta && sh.meta.postMode) || 'lighter');
     } else {

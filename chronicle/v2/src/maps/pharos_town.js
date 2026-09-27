@@ -46,7 +46,7 @@
       b('ph_shop', 25, 3, 6, 6, { wall: 3, roof: 'slate', mat: 'plaster', windows: 2, sign: 'item', lamp: true, awning: true, door: door(27, 8, 'pharos_shop') }),
       b('ph_house1', 32, 3, 5, 6, { wall: 3, roof: 'terra', mat: 'plaster', windows: 2, shutters: 'b' }),
       b('ph_house2', 38, 3, 5, 6, { wall: 3, roof: 'slate', mat: 'brick', windows: 2, chimney: true }),
-      b('ph_record', 3, 12, 7, 6, { wall: 3, roof: 'slate', mat: 'stone', windows: 2, sign: 'records', lamp: true, door: door(6, 17, 'pharos_record') }),
+      b('ph_record', 3, 12, 7, 6, { wall: 3, roof: 'slate', mat: 'stone', windows: 2, sign: 'record', lamp: true, door: door(6, 17, 'pharos_record') }),
       b('ph_smith', 11, 12, 7, 6, { wall: 3, roof: 'shingle', mat: 'brick', windows: 2, sign: 'weapon', lamp: true, chimney: true, door: door(14, 17, 'pharos_smith') }),
       b('ph_house3', 36, 13, 6, 5, { wall: 2, roof: 'terra', mat: 'plaster', windows: 2, flowers: true }),
       b('ph_house4', 3, 20, 6, 5, { wall: 2, roof: 'slate', mat: 'plaster', windows: 2, shutters: 'g' }),

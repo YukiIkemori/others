@@ -6,7 +6,7 @@
 //   R.MapUtil.spawn(map, spawn) → {x, y, dir}       spawn は名前か {x, y, dir}。無い名前は最初の spawn（警告）
 //   R.MapUtil.inRect(x, y, r) → bool                r = [x, y, w, h] か {x, y, w?, h?}（w・h の既定 1）
 //   R.MapUtil.objectsAt(map, x, y, lv?) → [obj]      その マスに掛かる物（泉 2×2・建物 w×h、ほかは 1×1）。cond が偽の物は除く
-//   R.MapUtil.zoneAt(map, x, y) → zoneId | null     zones の上から最初に合う物（rect null は全体）
+//   R.MapUtil.zoneAt(map, x, y) → zoneId | null     zones の上から最初に合う物（rect null は全体。cond があれば真のときだけ、版 3）
 //   R.MapUtil.darkAt(map, x, y) → bool              map.dark（true／範囲の配列 [{rect, cond}]）
 //   R.MapUtil.secretFound(mapId, x, y) → bool       R.Game.secrets[mapId] に 'x,y' があるか（見つけた隠し通路の書き方は 'x,y'）
 //   R.MapUtil.invalidate(mapId?)                    フラグ・変数が変わったときなど（FIELD が 'flag' 'var' 'item:gain' で呼ぶ）
@@ -83,7 +83,7 @@
       return out;
     },
     zoneAt(map, x, y) {
-      for (const z of (map && map.zones) || []) if (!z.rect || inRect(x, y, z.rect)) return z.zone;
+      for (const z of (map && map.zones) || []) if ((!z.rect || inRect(x, y, z.rect)) && (z.cond == null || check(z.cond))) return z.zone;
       return null;
     },
     darkAt(map, x, y) {

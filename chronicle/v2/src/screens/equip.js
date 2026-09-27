@@ -28,6 +28,40 @@
       return { k, name: N[k] || k, before, after, d: after - before };
     });
   };
+  /** 人の能力の値（R.Rules.stats の結果）の 1 つ。攻撃・命中・会心は今の武器の値、hp/mp は最大 */
+  S.statVal = function (st, k) {
+    if (!st) return 0;
+    const w = st.w && (st.w.weapon1 || st.w.fist);
+    if ((k === 'atk' || k === 'hit' || k === 'crit') && w && w[k] != null) return w[k];
+    if (k === 'hp') return st.maxHp || 0;
+    if (k === 'mp') return st.maxMp || 0;
+    return st[k] || 0;
+  };
+  /**
+   * 付け替えたときの人の値の増減（R.Rules.preview。両手の武器が押し出す盾・熟練も込み）: slot に id（null は外す）。
+   * → [{k, name, before, after, d}]（枠の主な値＋増減のある値。DIFF_KEYS の順）。o.all で 0 の行も
+   */
+  S.statDiff = function (c, slot, id, o) {
+    o = o || {};
+    if (!c) return [];
+    const N = R.Rules.DIFF_NAMES || {}, KEYS = R.Rules.DIFF_KEYS || RAW.concat(ABIL);
+    slot = R.Rules.charSlot ? R.Rules.charSlot(slot, c, id) : slot;
+    let d;
+    try { d = R.Rules.preview(c, slot, id || null); } catch (e) { return []; }
+    const st = S.stats(c);
+    const it = S.item(id) || S.item(c.equip && c.equip[slot]) || {};
+    const main = it.slot === 'weapon' ? ['atk', 'hit', 'crit'] : it.slot === 'acc' ? [] : ['def', 'mdef'];
+    const keys = main.slice();
+    for (const k of KEYS) if (!keys.includes(k) && (o.all || d[k])) keys.push(k);
+    return keys.map((k) => { const before = S.statVal(st, k); return { k, name: N[k] || k, before, after: before + (d[k] || 0), d: d[k] || 0 }; });
+  };
+  /** 候補の強さ（最強装備の点 R.Rules.loadoutScore ＋ 能力値・最大 HP/MP・回避など）。高いほど上に並べる */
+  S.equipScore = function (c, slot, id) {
+    const rows = S.statDiff(c, slot, id, { all: true }), g = (k) => { const r = rows.find((x) => x.k === k); return r ? r.after : 0; };
+    const after = { atk: g('atk'), mag: g('mag'), def: g('def'), mdef: g('mdef') };
+    const base = R.Rules.loadoutScore ? R.Rules.loadoutScore(after, magicUser(c) ? 'magic' : 'phys') : after.atk + after.def;
+    return base + ABIL.reduce((s, k) => s + g(k) * 1.5, 0) + g('eva') * 0.3 + g('hit') * 0.1 + g('crit') * 0.2 + (g('hp') + g('mp')) * 0.05;
+  };
   /** いちばん大きな増減 1 つ（ほかの仲間・店の行） */
   S.bestDelta = function (rows) {
     const nz = rows.filter((r) => r.d);
@@ -35,12 +69,7 @@
     return nz.sort((a, b) => Math.abs(b.d) - Math.abs(a.d))[0];
   };
   function magicUser(c) { const st = S.stats(c); return (st.int || 0) > (st.str || 0); }
-  function score(c, slot, id) {
-    const rows = S.itemDiff(c, slot, id), g = (k) => { const r = rows.find((x) => x.k === k); return r ? r.after : 0; };
-    const m = magicUser(c);
-    return (m ? g('mag') * 1 + g('atk') * 0.3 : g('atk') + g('mag') * 0.3) + g('def') * 0.8 + g('mdef') * 0.6 + g('hit') * 0.2 + g('eva') * 0.3 + g('crit') * 0.3
-      + ABIL.reduce((s, k) => s + g(k) * 2, 0);
-  }
+  const score = (c, slot, id) => S.equipScore(c, slot, id);
 
   S.def('equip', {
     init(p) {
@@ -153,7 +182,7 @@
       const midX = tall ? b.x : sp.x + sp.w + u(16);
       const rightX0 = b.x + b.w;
       const mw = tall ? b.w : Math.min(u(290), (rightX0 - midX) * 0.44);
-      const cp = tall ? { x: b.x, y: sp.y, w: b.w, h: sp.h } : { x: midX, y: b.y, w: mw, h: b.h * 0.64 };
+      const cp = tall ? { x: b.x, y: sp.y, w: b.w, h: this.mode === 'cand' ? u(56) + Math.min(6, this.clist.rows.length) * this.clist.rowPx() : sp.h } : { x: midX, y: b.y, w: mw, h: b.h * 0.64 };
       if (showSlots) drawSlots();
       if (!tall || this.mode === 'cand') {
         R.UIK.panel(g, cp, { frost: true });
@@ -181,7 +210,7 @@
       }
       // 詳しい所と比べ
       const focusId = this.mode === 'cand' ? (this.clist.current() || {}).value : c.equip[s];
-      const dp = tall ? { x: b.x, y: sp.y + sp.h + u(12), w: b.w, h: this.mode === 'cand' ? u(250) : u(170) } : { x: cp.x + cp.w + u(16), y: b.y, w: rightX0 - (cp.x + cp.w + u(16)), h: cp.h };
+      const dp = tall ? { x: b.x, y: (this.mode === 'cand' ? cp.y + cp.h : sp.y + sp.h) + u(12), w: b.w, h: this.mode === 'cand' ? u(300) : u(170) } : { x: cp.x + cp.w + u(16), y: b.y, w: rightX0 - (cp.x + cp.w + u(16)), h: cp.h };
       R.UIK.panel(g, dp, { frost: true });
       const it = S.item(focusId);
       let y = dp.y + u(18);
@@ -207,7 +236,8 @@
       }
       if (this.mode === 'cand') {
         S.label(g, 'いまの装備と比べる', dp.x + u(22), y); y += u(28);
-        const rows = S.itemDiff(c, s, focusId || null).slice(0, tall ? 4 : 5);
+        const rows = S.statDiff(c, s, focusId || null).slice(0, tall ? 4 : 5);
+        if (!rows.some((r) => r.d)) { R.UIK.text(g, '変わらない', dp.x + u(22), y, { size: u(15), color: C.same }); y += u(30); }
         for (const r of rows) {
           R.UIK.text(g, r.name, dp.x + u(22), y, { size: u(15), color: C.text });
           const bx = dp.x + dp.w * 0.5;
@@ -231,18 +261,24 @@
         S.label(g, 'ほかの仲間が付けると', op.x + u(20), op.y + u(14));
         const others = S.party().filter((x) => x !== c);
         const cols = tall ? 1 : Math.max(1, others.length);
-        const ow = (op.w - u(40)) / cols, oh = tall ? Math.max(u(44), (op.h - u(50)) / Math.max(1, others.length)) : op.h - u(50);
+        const ow = (op.w - u(40)) / cols, oh = tall ? Math.min(u(46), (op.h - u(50)) / Math.max(1, others.length)) : op.h - u(50);
         others.forEach((o, i) => {
           const x = op.x + u(20) + (tall ? 0 : i * ow), yy = op.y + u(42) + (tall ? i * oh : 0);
           const can = focusId && R.Rules.canEquip(o, focusId, R.Rules.defaultSlot(o, focusId));
-          S.faceCircle(g, o.look, x + u(20), yy + u(20), u(19), { dim: !can });
+          const fr = tall ? Math.min(u(19), oh / 2 - u(2)) : u(19);
+          S.faceCircle(g, o.look, x + u(20), yy + (tall ? oh / 2 - u(2) : u(20)), fr, { dim: !can });
           R.UIK.text(g, o.name, x + u(48), yy + (tall ? u(3) : u(2)), { size: u(14.5), weight: 700, color: can ? C.text : C.disabled, maxW: ow - u(56) });
           if (!focusId) return;
           if (!can) { R.UIK.text(g, '付けられない', x + u(48) + (tall ? u(120) : 0), yy + (tall ? u(4) : u(24)), { size: u(13), color: C.disabled }); return; }
-          const d = S.bestDelta(S.itemDiff(o, R.Rules.defaultSlot(o, focusId), focusId));
+          const ds = S.statDiff(o, R.Rules.defaultSlot(o, focusId), focusId).filter((r) => r.d).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d) || (b2.d > 0) - (a.d > 0)).slice(0, tall ? 1 : 2);
           const tx = x + u(48) + (tall ? u(120) : 0), ty = yy + (tall ? u(3) : u(24));
-          if (!d) R.UIK.text(g, '変わらない', tx, ty, { size: u(13), color: C.same });
-          else { const w = R.UIK.text(g, d.name, tx, ty, { size: u(13.5), color: d.d > 0 ? C.up : C.down }); S.delta(g, d.d, tx + w + u(60), ty, { size: u(13.5) }); }
+          if (!ds.length) R.UIK.text(g, '変わらない', tx, ty, { size: u(13), color: C.same });
+          // 増減は 1 行に 1 つ（広い画面は名前の下に 2 行まで）
+          ds.forEach((d, i) => {
+            const ly = ty + i * u(22);
+            R.UIK.text(g, d.name, tx, ly, { size: u(13.5), color: d.d > 0 ? C.up : C.down });
+            S.delta(g, d.d, tx + u(110), ly, { size: u(13.5) });
+          });
         });
       }
       S.prompts(g, this.mode === 'cand' ? [{ btn: 'a', label: '付ける' }, { btn: 'b', label: '戻る' }, { btn: 'y', label: '詳しく' }] : [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '戻る' }, { btn: 'x', label: 'いちばん強く' }, { btn: 'r', label: '次の仲間' }]);

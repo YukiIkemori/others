@@ -5,7 +5,7 @@
   R.onData(function () {
     const K = R.ContentF.kit;
     const L = K.L;
-    const LIGHT = { ambient: '#8a7a9a', k: 0.35, mood: 'interior' };
+    const LIGHT = { ambient: '#8a7a9a', k: 0.8, mood: 'interior' };
 
     function interior(id, name, w, h, o) {
       const { g, door } = K.room(w, h, { doorX: o.doorX });

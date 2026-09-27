@@ -196,12 +196,15 @@
     this.profMax = {}; // 1 回の呼び出しの最長
   }
   // 一度に済ませる仕事の平均の時間（ms。走らせながら覚える）。step の残りに収まらなければ先に戻る
-  const AVG = {}, ATOMIC = { prep: 1, rise: 1, deck: 1, light: 1, emissive: 1, finish: 1 };
+  const AVG = {}, ATOMIC = { prep: 1, rise: 1, deck: 1, emissive: 1, finish: 1 };
+  // 光の地図は帯に分けて掛ける（1 帯 = チャンクの 1/LIGHT_BANDS。Job.step ≤ 3 ms、P2 の依頼）
+  const LIGHT_BANDS = 4;
   T._phaseAvg = AVG;
   const PHASES = ['prep', 'mats', 'sprites', 'ground', 'rise', 'put', 'deck', 'shadow', 'draw', 'light', 'emissive', 'finish'];
   Job.prototype.step = function (ms) {
     if (this.done) return true;
     const t0 = U().now(), deadline = t0 + (ms == null ? 3 : ms);
+    this.t0 = t0;
     try {
       while (!this.done) {
         const ph = PHASES[this.phase], p0 = U().now();
@@ -492,8 +495,35 @@
     return true;
   };
 
-  Job.prototype._light = function () {
+  Job.prototype._light = function (deadline) {
     if (this.o.noLight) { this.chunkLights = []; this.glows = []; this.emissive = []; return true; }
+    if (this.i === 0) { this._lightPrep(); this.i = 1; if (!this._lo) return true; }
+    // 帯ごと: 残りの時間に 1 帯が入らなければ次の step へ（この step でまだ何もしていなければやる）
+    while (this.i <= LIGHT_BANDS) {
+      const now = U().now();
+      if (now - this.t0 > 0.05 && AVG.lightBand && now + AVG.lightBand > deadline) return false;
+      this._lightBand(this.i - 1);
+      AVG.lightBand = AVG.lightBand ? AVG.lightBand * 0.8 + (U().now() - now) * 0.2 : U().now() - now;
+      this.i++;
+      if (U().now() > deadline && this.i <= LIGHT_BANDS) return false;
+    }
+    if (this.over && this._keep) { const og = this.og; og.save(); og.globalCompositeOperation = 'destination-in'; og.drawImage(this._keep, 0, 0); og.restore(); }
+    this._lo = null; this._keep = null;
+    return true;
+  };
+  /** 1 帯: RENDER の光の地図（使い回しの 1 枚）を base のその帯に掛け、同じ絵を over の同じ帯にも掛ける */
+  Job.prototype._lightBand = function (b) {
+    const S = this.size, X0 = this.X0, Y0 = this.Y0, h = S / LIGHT_BANDS, y = b * h;
+    const rect = [X0, Y0 + y, S, h], bg = this.bg;
+    bg.save(); bg.setTransform(1, 0, 0, 1, -X0, -Y0); const lm = R.Light.compose(bg, rect, this._lo); bg.restore();
+    if (this.over && lm) {
+      const og = this.og;
+      og.save(); og.globalCompositeOperation = 'multiply'; og.imageSmoothingEnabled = true;
+      const lw = Math.ceil(S * (this._lo.res || 0.5)), lh = Math.ceil(h * (this._lo.res || 0.5));
+      og.drawImage(lm, 0, 0, lw, lh, 0, y, S, h); og.restore();
+    }
+  };
+  Job.prototype._lightPrep = function () {
     const map = this.map, t = this.tile, s = this.s, X0 = this.X0, Y0 = this.Y0, S = this.size;
     const env = { tile: t, st: this.st, bld: (o) => { try { return R.Hd.now(T.building(o), { tile: t }); } catch (e) { return null; } } };
     const all = lightsCached(map, env, this.plan);
@@ -516,24 +546,21 @@
     }
     this.glows = glows;
     this.emissive = all.emissive.filter((e) => e.x + (e.w || 4) > X0 && e.x < X0 + S && e.y + (e.h || 4) > Y0 && e.y < Y0 + S);
-    // 光の地図（RENDER）を base と over に掛ける
-    const o = { ambient: this.amb.ambient, k: this.amb.k, mood: this.amb.mood, lights, moon: all.moon };
+    // 光の地図（RENDER）を base と over に掛ける。明るさは map.light.k（ART_REWORK §1.4 の「明るさ」）のまま渡す（R.Light が効きに直す）
+    const o = { ambient: this.amb.ambient, bright: this.amb.bright, mood: this.amb.mood, lights, moon: all.moon, res: 0.5 };
     const rect = [X0, Y0, S, S], bg = this.bg;
-    let lm = null;
-    if (R.Light && R.Light.compose) {
-      // RENDER の光の地図（使い回しの 1 枚）を base に掛け、同じ絵を over にも掛ける
-      bg.save(); bg.setTransform(1, 0, 0, 1, -X0, -Y0); lm = R.Light.compose(bg, rect, o); bg.restore();
-    } else {
-      lm = fallbackMap(rect, o);
-      bg.save(); bg.globalCompositeOperation = 'multiply'; bg.imageSmoothingEnabled = true; bg.drawImage(lm, 0, 0, lm.width, lm.height, 0, 0, S, S); bg.restore();
-    }
-    if (this.over && lm) {
-      const og = this.og, keep = scratch('keep', S), kg = keep.getContext('2d');
-      kg.drawImage(this.over, 0, 0);
+    // over の形の写し（帯に分けると仕事どうしが交互に進むので、使い回しの scratch ではなくこの仕事の物）
+    if (this.over) { const keep = U().canvas(S, S); keep.getContext('2d').drawImage(this.over, 0, 0); this._keep = keep; }
+    if (R.Light && R.Light.compose) { this._lo = o; return; }
+    // R.Light が無いとき（node の検査など）: 予備の地図を一度に
+    const lm = fallbackMap(rect, Object.assign({ k: this.amb.k }, o));
+    bg.save(); bg.globalCompositeOperation = 'multiply'; bg.imageSmoothingEnabled = true; bg.drawImage(lm, 0, 0, lm.width, lm.height, 0, 0, S, S); bg.restore();
+    if (this.over && this._keep) {
+      const og = this.og;
       og.save(); og.globalCompositeOperation = 'multiply'; og.imageSmoothingEnabled = true; og.drawImage(lm, 0, 0, lm.width, lm.height, 0, 0, S, S);
-      og.globalCompositeOperation = 'destination-in'; og.drawImage(keep, 0, 0); og.restore();
+      og.globalCompositeOperation = 'destination-in'; og.drawImage(this._keep, 0, 0); og.restore();
     }
-    return true;
+    this._lo = null; this._keep = null;
   };
   // 光の地図の予備（R.Light がまだ読めないとき。RENDER の light.js と同じ考え方の簡単な物）
   function fallbackMap(rect, o) {
@@ -605,6 +632,13 @@
     const reach = objs.some((o) => o.type === 'brazier' || o.type === 'waylamp' || o.type === 'spring') ? 5 : 0;
     const cell = m && R.MapUtil.cell(m, x, y);
     for (let dy = -reach; dy <= reach; dy++) for (let dx = -reach; dx <= reach; dx++) add(Math.floor((x + dx) / CHUNK), Math.floor((y + dy) / CHUNK));
+    // 閉じた宝箱の淡い光だまり（開けると消える）が届くチャンク: 光の半径（R.Light と同じ倍率、いちばん小さいマス 24 px で数える）の楕円の外枠
+    if (objs.some((o) => o.type === 'chest')) {
+      const L = (R.Hd && R.Hd.STYLE && R.Hd.STYLE.light) || {}, md = R.Hd && R.Hd.mood ? R.Hd.mood(T.ambient(m, 0).mood) : {};
+      const rT = (36 * (L.poolR || 1) * ((md && md.poolMul) || 1)) / 24, sq = L.poolSquash || 0.62;
+      const cxT = x + 0.5, cyT = y + 0.86 - 0.25;
+      for (const [ax, ay] of [[cxT - rT, cyT - rT * sq], [cxT + rT, cyT - rT * sq], [cxT - rT, cyT + rT * sq], [cxT + rT, cyT + rT * sq]]) add(Math.floor(ax / CHUNK), Math.floor(ay / CHUNK));
+    }
     if (cell && cell.secret) add(Math.floor(x / CHUNK), Math.floor((y - 1) / CHUNK));
     const set = (dirtyMaps[id] = dirtyMaps[id] || []);
     for (const q of out) if (!set.some((p) => p[0] === q[0] && p[1] === q[1])) set.push(q);
@@ -642,6 +676,7 @@
     const job = { kind: 'prewarm', done: false, result: null, i: 0, n: todo.length, ms: 0,
       step(ms) {
         const t0 = U().now(), deadline = t0 + (ms == null ? 3 : ms);
+    this.t0 = t0;
         while (job.i < todo.length) {
           const w = todo[job.i];
           if (w.mat) { if (!T._sheet(w.mat, tile, deadline).done) break; }

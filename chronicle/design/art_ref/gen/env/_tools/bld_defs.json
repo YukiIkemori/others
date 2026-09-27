@@ -1,0 +1,966 @@
+{
+ "ph_inn": {
+  "d": {
+   "type": "building",
+   "id": "ph_inn",
+   "x": 3,
+   "y": 3,
+   "w": 8,
+   "h": 6,
+   "wall": 3,
+   "roof": "slate",
+   "mat": "plaster",
+   "windows": 3,
+   "sign": "inn",
+   "lamp": true,
+   "flowers": true,
+   "door": {
+    "x": 6,
+    "y": 8,
+    "to": {
+     "map": "pharos_inn",
+     "spawn": "door"
+    }
+   }
+  },
+  "theme": "harbor",
+  "W": 272,
+  "H": 224,
+  "img": [
+   1904,
+   1568
+  ]
+ },
+ "ph_tavern": {
+  "d": {
+   "type": "building",
+   "id": "ph_tavern",
+   "x": 12,
+   "y": 3,
+   "w": 11,
+   "h": 6,
+   "wall": 3,
+   "roof": "terra",
+   "mat": "stone",
+   "windows": 4,
+   "sign": "tavern",
+   "lamp": true,
+   "hip": true,
+   "chimney": true,
+   "door": {
+    "x": 17,
+    "y": 8,
+    "to": {
+     "map": "pharos_tavern",
+     "spawn": "door"
+    }
+   }
+  },
+  "theme": "harbor",
+  "W": 368,
+  "H": 224,
+  "img": [
+   2576,
+   1568
+  ]
+ },
+ "ph_shop": {
+  "d": {
+   "type": "building",
+   "id": "ph_shop",
+   "x": 25,
+   "y": 3,
+   "w": 6,
+   "h": 6,
+   "wall": 3,
+   "roof": "slate",
+   "mat": "plaster",
+   "windows": 2,
+   "sign": "item",
+   "lamp": true,
+   "awning": true,
+   "door": {
+    "x": 27,
+    "y": 8,
+    "to": {
+     "map": "pharos_shop",
+     "spawn": "door"
+    }
+   }
+  },
+  "theme": "harbor",
+  "W": 208,
+  "H": 224,
+  "img": [
+   1456,
+   1568
+  ]
+ },
+ "ph_house1": {
+  "d": {
+   "type": "building",
+   "id": "ph_house1",
+   "x": 32,
+   "y": 3,
+   "w": 5,
+   "h": 6,
+   "wall": 3,
+   "roof": "terra",
+   "mat": "plaster",
+   "windows": 2,
+   "shutters": "b"
+  },
+  "theme": "harbor",
+  "W": 176,
+  "H": 224,
+  "img": [
+   1232,
+   1568
+  ]
+ },
+ "ph_house2": {
+  "d": {
+   "type": "building",
+   "id": "ph_house2",
+   "x": 38,
+   "y": 3,
+   "w": 5,
+   "h": 6,
+   "wall": 3,
+   "roof": "slate",
+   "mat": "brick",
+   "windows": 2,
+   "chimney": true
+  },
+  "theme": "harbor",
+  "W": 176,
+  "H": 224,
+  "img": [
+   1232,
+   1568
+  ]
+ },
+ "ph_record": {
+  "d": {
+   "type": "building",
+   "id": "ph_record",
+   "x": 3,
+   "y": 12,
+   "w": 7,
+   "h": 6,
+   "wall": 3,
+   "roof": "slate",
+   "mat": "stone",
+   "windows": 2,
+   "sign": "record",
+   "lamp": true,
+   "door": {
+    "x": 6,
+    "y": 17,
+    "to": {
+     "map": "pharos_record",
+     "spawn": "door"
+    }
+   }
+  },
+  "theme": "harbor",
+  "W": 240,
+  "H": 224,
+  "img": [
+   1680,
+   1568
+  ]
+ },
+ "ph_smith": {
+  "d": {
+   "type": "building",
+   "id": "ph_smith",
+   "x": 11,
+   "y": 12,
+   "w": 7,
+   "h": 6,
+   "wall": 3,
+   "roof": "shingle",
+   "mat": "brick",
+   "windows": 2,
+   "sign": "weapon",
+   "lamp": true,
+   "chimney": true,
+   "door": {
+    "x": 14,
+    "y": 17,
+    "to": {
+     "map": "pharos_smith",
+     "spawn": "door"
+    }
+   }
+  },
+  "theme": "harbor",
+  "W": 240,
+  "H": 224,
+  "img": [
+   1680,
+   1568
+  ]
+ },
+ "ph_house3": {
+  "d": {
+   "type": "building",
+   "id": "ph_house3",
+   "x": 36,
+   "y": 13,
+   "w": 6,
+   "h": 5,
+   "wall": 2,
+   "roof": "terra",
+   "mat": "plaster",
+   "windows": 2,
+   "flowers": true
+  },
+  "theme": "harbor",
+  "W": 208,
+  "H": 192,
+  "img": [
+   1456,
+   1344
+  ]
+ },
+ "ph_house4": {
+  "d": {
+   "type": "building",
+   "id": "ph_house4",
+   "x": 3,
+   "y": 20,
+   "w": 6,
+   "h": 5,
+   "wall": 2,
+   "roof": "slate",
+   "mat": "plaster",
+   "windows": 2,
+   "shutters": "g"
+  },
+  "theme": "harbor",
+  "W": 208,
+  "H": 192,
+  "img": [
+   1456,
+   1344
+  ]
+ },
+ "ph_house5": {
+  "d": {
+   "type": "building",
+   "id": "ph_house5",
+   "x": 10,
+   "y": 20,
+   "w": 7,
+   "h": 5,
+   "wall": 2,
+   "roof": "terra",
+   "mat": "plaster",
+   "windows": 2,
+   "flowers": true,
+   "chimney": true
+  },
+  "theme": "harbor",
+  "W": 240,
+  "H": 192,
+  "img": [
+   1680,
+   1344
+  ]
+ },
+ "ph_house6": {
+  "d": {
+   "type": "building",
+   "id": "ph_house6",
+   "x": 36,
+   "y": 20,
+   "w": 6,
+   "h": 5,
+   "wall": 2,
+   "roof": "slate",
+   "mat": "brick",
+   "windows": 2
+  },
+  "theme": "harbor",
+  "W": 208,
+  "H": 192,
+  "img": [
+   1456,
+   1344
+  ]
+ },
+ "ph_shipyard": {
+  "d": {
+   "type": "building",
+   "id": "ph_shipyard",
+   "x": 45,
+   "y": 16,
+   "w": 6,
+   "h": 6,
+   "wall": 3,
+   "roof": "shingle",
+   "mat": "plank",
+   "windows": 1,
+   "sign": "guild",
+   "lamp": true,
+   "door": {
+    "x": 47,
+    "y": 21,
+    "to": {
+     "map": "pharos_shipyard",
+     "spawn": "door"
+    }
+   }
+  },
+  "theme": "harbor",
+  "W": 208,
+  "H": 224,
+  "img": [
+   1456,
+   1568
+  ]
+ },
+ "roa_h1": {
+  "d": {
+   "type": "building",
+   "id": "roa_h1",
+   "x": 5,
+   "y": 4,
+   "w": 6,
+   "h": 6,
+   "wall": 2,
+   "roof": "thatch",
+   "mat": "plaster",
+   "windows": 2,
+   "lamp": true,
+   "flowers": true,
+   "chimney": true
+  },
+  "theme": "hill_village",
+  "W": 208,
+  "H": 224,
+  "img": [
+   1456,
+   1568
+  ]
+ },
+ "roa_h2": {
+  "d": {
+   "type": "building",
+   "id": "roa_h2",
+   "x": 12,
+   "y": 4,
+   "w": 5,
+   "h": 6,
+   "wall": 2,
+   "roof": "shingle",
+   "mat": "log",
+   "windows": 2,
+   "lamp": true,
+   "flowers": true
+  },
+  "theme": "hill_village",
+  "W": 176,
+  "H": 224,
+  "img": [
+   1232,
+   1568
+  ]
+ },
+ "roa_hall": {
+  "d": {
+   "type": "building",
+   "id": "roa_hall",
+   "x": 18,
+   "y": 3,
+   "w": 8,
+   "h": 7,
+   "wall": 3,
+   "roof": "moss",
+   "mat": "stone",
+   "windows": [
+    1,
+    6
+   ],
+   "hip": true,
+   "lamp": true
+  },
+  "theme": "hill_village",
+  "W": 272,
+  "H": 256,
+  "img": [
+   1904,
+   1792
+  ]
+ },
+ "roa_h3": {
+  "d": {
+   "type": "building",
+   "id": "roa_h3",
+   "x": 28,
+   "y": 4,
+   "w": 5,
+   "h": 6,
+   "wall": 2,
+   "roof": "shingle",
+   "mat": "log",
+   "windows": 2,
+   "lamp": true,
+   "flowers": true,
+   "chimney": true
+  },
+  "theme": "hill_village",
+  "W": 176,
+  "H": 224,
+  "img": [
+   1232,
+   1568
+  ]
+ },
+ "roa_h4": {
+  "d": {
+   "type": "building",
+   "id": "roa_h4",
+   "x": 34,
+   "y": 4,
+   "w": 6,
+   "h": 6,
+   "wall": 2,
+   "roof": "thatch",
+   "mat": "plaster",
+   "windows": 3,
+   "lamp": true,
+   "flowers": true
+  },
+  "theme": "hill_village",
+  "W": 208,
+  "H": 224,
+  "img": [
+   1456,
+   1568
+  ]
+ },
+ "roa_h5": {
+  "d": {
+   "type": "building",
+   "id": "roa_h5",
+   "x": 4,
+   "y": 19,
+   "w": 5,
+   "h": 3,
+   "wall": 1,
+   "roof": "shingle",
+   "mat": "log",
+   "windows": 1,
+   "lamp": true,
+   "flowers": true,
+   "small": true
+  },
+  "theme": "hill_village",
+  "W": 176,
+  "H": 128,
+  "img": [
+   1232,
+   896
+  ]
+ },
+ "roa_h6": {
+  "d": {
+   "type": "building",
+   "id": "roa_h6",
+   "x": 30,
+   "y": 16,
+   "w": 5,
+   "h": 4,
+   "wall": 2,
+   "roof": "thatch",
+   "mat": "plaster",
+   "windows": 2,
+   "lamp": true,
+   "flowers": true
+  },
+  "theme": "hill_village",
+  "W": 176,
+  "H": 160,
+  "img": [
+   1232,
+   1120
+  ]
+ },
+ "roa_berna": {
+  "d": {
+   "type": "building",
+   "id": "roa_berna",
+   "x": 16,
+   "y": 24,
+   "w": 9,
+   "h": 7,
+   "wall": 3,
+   "roof": "moss",
+   "mat": "log",
+   "windows": 3,
+   "chimney": true,
+   "lamp": true,
+   "flowers": true,
+   "door": {
+    "x": 20,
+    "y": 30,
+    "to": {
+     "map": "roa_house",
+     "spawn": "door"
+    }
+   }
+  },
+  "theme": "hill_village",
+  "W": 304,
+  "H": 256,
+  "img": [
+   2128,
+   1792
+  ]
+ },
+ "fern_b_inn": {
+  "d": {
+   "type": "building",
+   "id": "fern_b_inn",
+   "x": 5,
+   "y": 24,
+   "w": 9,
+   "h": 5,
+   "wall": 2,
+   "roof": "moss",
+   "mat": "log",
+   "windows": 3,
+   "door": {
+    "x": 9,
+    "y": 28,
+    "to": {
+     "map": "fern_inn",
+     "spawn": "door"
+    }
+   },
+   "sign": "inn",
+   "lamp": true,
+   "flowers": true,
+   "chimney": true
+  },
+  "theme": "treetop",
+  "W": 304,
+  "H": 192,
+  "img": [
+   2128,
+   1344
+  ]
+ },
+ "fern_b_shop": {
+  "d": {
+   "type": "building",
+   "id": "fern_b_shop",
+   "x": 41,
+   "y": 24,
+   "w": 7,
+   "h": 5,
+   "wall": 2,
+   "roof": "thatch",
+   "mat": "log",
+   "windows": 2,
+   "door": {
+    "x": 44,
+    "y": 28,
+    "to": {
+     "map": "fern_shop",
+     "spawn": "door"
+    }
+   },
+   "sign": "item",
+   "lamp": true,
+   "awning": true
+  },
+  "theme": "treetop",
+  "W": 240,
+  "H": 192,
+  "img": [
+   1680,
+   1344
+  ]
+ },
+ "fern_b_gord": {
+  "d": {
+   "type": "building",
+   "id": "fern_b_gord",
+   "x": 21,
+   "y": 3,
+   "w": 6,
+   "h": 4,
+   "wall": 2,
+   "roof": "thatch",
+   "mat": "log",
+   "windows": 2,
+   "door": {
+    "x": 24,
+    "y": 6,
+    "to": {
+     "map": "fern_gord",
+     "spawn": "door"
+    }
+   },
+   "lamp": true,
+   "chimney": true
+  },
+  "theme": "treetop",
+  "W": 208,
+  "H": 160,
+  "img": [
+   1456,
+   1120
+  ]
+ },
+ "fern_b_search": {
+  "d": {
+   "type": "building",
+   "id": "fern_b_search",
+   "x": 33,
+   "y": 3,
+   "w": 7,
+   "h": 5,
+   "wall": 2,
+   "roof": "moss",
+   "mat": "plank",
+   "windows": 2,
+   "door": {
+    "x": 36,
+    "y": 7,
+    "to": {
+     "map": "fern_search",
+     "spawn": "door"
+    }
+   },
+   "lamp": true,
+   "sign": "guild"
+  },
+  "theme": "treetop",
+  "W": 240,
+  "H": 192,
+  "img": [
+   1680,
+   1344
+  ]
+ },
+ "fern_b_rita": {
+  "d": {
+   "type": "building",
+   "id": "fern_b_rita",
+   "x": 49,
+   "y": 5,
+   "w": 6,
+   "h": 5,
+   "wall": 2,
+   "roof": "moss",
+   "mat": "bark",
+   "windows": 2,
+   "door": {
+    "x": 52,
+    "y": 9,
+    "to": {
+     "map": "fern_rita",
+     "spawn": "door"
+    }
+   },
+   "flowers": true,
+   "lamp": true
+  },
+  "theme": "treetop",
+  "W": 208,
+  "H": 192,
+  "img": [
+   1456,
+   1344
+  ]
+ },
+ "fern_b_pim": {
+  "d": {
+   "type": "building",
+   "id": "fern_b_pim",
+   "x": 15,
+   "y": 41,
+   "w": 6,
+   "h": 4,
+   "wall": 2,
+   "roof": "thatch",
+   "mat": "log",
+   "windows": 2,
+   "door": {
+    "x": 18,
+    "y": 44,
+    "to": {
+     "map": "fern_pim_home",
+     "spawn": "door"
+    }
+   },
+   "flowers": true
+  },
+  "theme": "treetop",
+  "W": 208,
+  "H": 160,
+  "img": [
+   1456,
+   1120
+  ]
+ },
+ "fern_b_house1": {
+  "d": {
+   "type": "building",
+   "id": "fern_b_house1",
+   "x": 37,
+   "y": 40,
+   "w": 6,
+   "h": 4,
+   "wall": 2,
+   "roof": "thatch",
+   "mat": "log",
+   "windows": 2,
+   "door": {
+    "x": 40,
+    "y": 43
+   },
+   "flowers": true
+  },
+  "theme": "treetop",
+  "W": 208,
+  "H": 160,
+  "img": [
+   1456,
+   1120
+  ]
+ },
+ "fern_b_house2": {
+  "d": {
+   "type": "building",
+   "id": "fern_b_house2",
+   "x": 4,
+   "y": 4,
+   "w": 6,
+   "h": 4,
+   "wall": 2,
+   "roof": "moss",
+   "mat": "bark",
+   "windows": 1
+  },
+  "theme": "treetop",
+  "W": 208,
+  "H": 160,
+  "img": [
+   1456,
+   1120
+  ]
+ },
+ "fern_b_house3": {
+  "d": {
+   "type": "building",
+   "id": "fern_b_house3",
+   "x": 47,
+   "y": 34,
+   "w": 6,
+   "h": 4,
+   "wall": 2,
+   "roof": "thatch",
+   "mat": "log",
+   "windows": 2
+  },
+  "theme": "treetop",
+  "W": 208,
+  "H": 160,
+  "img": [
+   1456,
+   1120
+  ]
+ },
+ "fern_b_shed": {
+  "d": {
+   "type": "building",
+   "id": "fern_b_shed",
+   "x": 22,
+   "y": 44,
+   "w": 4,
+   "h": 3,
+   "wall": 2,
+   "roof": "thatch",
+   "mat": "plank",
+   "windows": 0,
+   "small": true,
+   "chimney": false
+  },
+  "theme": "treetop",
+  "W": 144,
+  "H": 128,
+  "img": [
+   1008,
+   896
+  ]
+ },
+ "yura_b_inn": {
+  "d": {
+   "type": "building",
+   "id": "yura_b_inn",
+   "x": 12,
+   "y": 2,
+   "w": 6,
+   "h": 4,
+   "wall": 2,
+   "roof": "moss",
+   "mat": "bark",
+   "windows": 2,
+   "small": true,
+   "door": {
+    "x": 14,
+    "y": 5,
+    "to": {
+     "map": "yura_inn",
+     "spawn": "door"
+    }
+   },
+   "sign": "inn",
+   "lamp": true
+  },
+  "theme": "moss_village",
+  "W": 208,
+  "H": 160,
+  "img": [
+   1456,
+   1120
+  ]
+ },
+ "yura_b_elder": {
+  "d": {
+   "type": "building",
+   "id": "yura_b_elder",
+   "x": 3,
+   "y": 9,
+   "w": 5,
+   "h": 4,
+   "wall": 2,
+   "roof": "moss",
+   "mat": "stone",
+   "windows": 1,
+   "small": true,
+   "door": {
+    "x": 5,
+    "y": 12
+   },
+   "lamp": true
+  },
+  "theme": "moss_village",
+  "W": 176,
+  "H": 160,
+  "img": [
+   1232,
+   1120
+  ]
+ },
+ "yura_b_h1": {
+  "d": {
+   "type": "building",
+   "id": "yura_b_h1",
+   "x": 21,
+   "y": 3,
+   "w": 5,
+   "h": 4,
+   "wall": 2,
+   "roof": "moss",
+   "mat": "bark",
+   "windows": 1,
+   "small": true,
+   "door": {
+    "x": 23,
+    "y": 6
+   }
+  },
+  "theme": "moss_village",
+  "W": 176,
+  "H": 160,
+  "img": [
+   1232,
+   1120
+  ]
+ },
+ "yura_b_h2": {
+  "d": {
+   "type": "building",
+   "id": "yura_b_h2",
+   "x": 23,
+   "y": 11,
+   "w": 5,
+   "h": 4,
+   "wall": 2,
+   "roof": "moss",
+   "mat": "bark",
+   "windows": 1,
+   "small": true,
+   "door": {
+    "x": 25,
+    "y": 14
+   }
+  },
+  "theme": "moss_village",
+  "W": 176,
+  "H": 160,
+  "img": [
+   1232,
+   1120
+  ]
+ },
+ "yura_b_h3": {
+  "d": {
+   "type": "building",
+   "id": "yura_b_h3",
+   "x": 20,
+   "y": 19,
+   "w": 5,
+   "h": 4,
+   "wall": 2,
+   "roof": "moss",
+   "mat": "bark",
+   "windows": 1,
+   "small": true,
+   "door": {
+    "x": 22,
+    "y": 22
+   }
+  },
+  "theme": "moss_village",
+  "W": 176,
+  "H": 160,
+  "img": [
+   1232,
+   1120
+  ]
+ },
+ "yura_b_h4": {
+  "d": {
+   "type": "building",
+   "id": "yura_b_h4",
+   "x": 5,
+   "y": 18,
+   "w": 5,
+   "h": 4,
+   "wall": 2,
+   "roof": "moss",
+   "mat": "log",
+   "windows": 1,
+   "small": true,
+   "door": {
+    "x": 7,
+    "y": 21
+   }
+  },
+  "theme": "moss_village",
+  "W": 176,
+  "H": 160,
+  "img": [
+   1232,
+   1120
+  ]
+ }
+}

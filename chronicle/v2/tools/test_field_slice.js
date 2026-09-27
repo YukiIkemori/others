@@ -121,7 +121,7 @@ function nodePart() {
 async function browserPart() {
   const B = require('./lib/browser');
   const R = require('./lib/load')({ quiet: true });
-  const ids = sliceMaps(R);
+  const ids = tourOrder(R, sliceMaps(R));
   const spawnOf = (id) => {
     const m = R.DB.maps[id], sp = m.spawns || {};
     // 撮る場所: 町は広場・門、屋内は扉、ダンジョンは入口（名前の順で最初に合う物）
@@ -152,8 +152,10 @@ async function browserPart() {
         enterMs[id].push(r.st.enterMs);
         ok(`${id}${phone ? '（縦）' : ''}: 入った（${sp}）— 暗転の中の焼き ${r.st.enterMs.toFixed(0)} ms・全体 ${r.wall.toFixed(0)} ms`, r.pos.map === id, r);
         // 歩く: FIELD の当たりで 6 歩先のマスを探し、キーで歩く
-        const path = await B.ev(p, `(() => {
+        const findPath = (margin) => B.ev(p, `((margin) => {
           const F = RPG.Field, S = F._s, m = S.map, D = {s:[0,1],n:[0,-1],e:[1,0],w:[-1,0]};
+          const objsNear = (x, y) => RPG.MapUtil.objectsAt(m, x, y).some((o) => o.type === 'stairs' || o.type === 'door' || (o.type === 'building' && o.door && o.door.x === x && o.door.y === y))
+            || (m.exits || []).some((e) => RPG.MapUtil.inRect(x, y, e)) || (m.triggers || []).some((t) => t.on === 'step' && RPG.MapUtil.inRect(x, y, t));
           const q = [[S.x, S.y, S.lv, []]], seen = new Set([S.x + ',' + S.y]);
           let best = null;
           while (q.length) {
@@ -164,16 +166,22 @@ async function browserPart() {
               const nx = x + D[d][0], ny = y + D[d][1];
               if (seen.has(nx + ',' + ny)) continue;
               if (!F._canEnter(m, x, y, nx, ny, lv, d) || F._npcAt(nx, ny, F._lvAfter(m, x, y, nx, ny, lv))) continue;
-              // 出口・扉・階段・建物の入口・トリガーは踏まない
-              const objs = RPG.MapUtil.objectsAt(m, nx, ny);
-              if (objs.some((o) => o.type === 'stairs' || o.type === 'door' || (o.type === 'building' && o.door && o.door.x === nx && o.door.y === ny))) continue;
-              if ((m.exits || []).some((e) => RPG.MapUtil.inRect(nx, ny, e)) || (m.triggers || []).some((t) => t.on === 'step' && RPG.MapUtil.inRect(nx, ny, t))) continue;
+              // 出口・扉・階段・建物の入口・トリガーは踏まない（キーを離すのが遅れて 1 歩余分に進んでも踏まないよう、隣も避ける）
+              let near = false;
+              for (let yy = ny - 1; yy <= ny + 1 && !near; yy++) for (let xx = nx - 1; xx <= nx + 1 && !near; xx++) {
+                const objs = RPG.MapUtil.objectsAt(m, xx, yy);
+                if (objs.some((o) => o.type === 'stairs' || o.type === 'door' || (o.type === 'building' && o.door && o.door.x === xx && o.door.y === yy))) near = true;
+                if ((m.exits || []).some((e) => RPG.MapUtil.inRect(xx, yy, e)) || (m.triggers || []).some((t) => t.on === 'step' && RPG.MapUtil.inRect(xx, yy, t))) near = true;
+              }
+              if (near && (margin || objsNear(nx, ny))) continue;
               seen.add(nx + ',' + ny);
               q.push([nx, ny, F._lvAfter(m, x, y, nx, ny, lv), pth.concat(d)]);
             }
           }
           return best || [];
-        })()`);
+        })(${margin})`);
+        let path = await findPath(true);
+        if (path.length < 3) path = await findPath(false);   // 入口が階段のすぐ横（灯台 3 階）: 隣を避けずに、踏むのだけ避ける
         const K = { s: 'down', n: 'up', e: 'right', w: 'left' };
         const before = await B.ev(p, 'RPG.Field.pos');
         for (const d of path) {
@@ -184,7 +192,11 @@ async function browserPart() {
         }
         await p.waitForTimeout(120);
         const after = await B.ev(p, 'RPG.Field.pos');
+        const missNow = await B.ev(p, 'RPG.Field.chunks.stats().miss');
+        if (missNow !== (P.miss0 || 0)) console.log(`      ${id}: 焼けていないチャンクが画面に ${missNow - (P.miss0 || 0)} 回（その場で焼いた）`);
+        P.miss0 = missNow;
         const moved = Math.abs(after.x - before.x) + Math.abs(after.y - before.y);
+        await p.waitForTimeout(1200);   // 歩き回る時間（つながったマップの下焼きが列の余りで進む）
         ok(`${id}${phone ? '（縦）' : ''}: キーで ${path.length} 歩歩けた`, path.length >= 3 && after.map === id && moved >= Math.min(2, path.length), { path, before, after });
         if (SHOTS) {
           await p.waitForTimeout(700);
@@ -209,7 +221,7 @@ async function browserPart() {
       if (door) {
         await B.ev(p, `RPG.Field.enter('pharos', {x: ${door.x}, y: ${door.y + 3}, dir: 'n'}, {fade: 0, noAutosave: true})`);
         await B.press(p, 'up', 200);
-        await p.waitForTimeout(900);
+        await B.waitFor(p, `(() => { const s = RPG.Field.chunks.preStats(); return s && s.ready === s.n && s.prewarm; })()`, 20000);   // 入った直後は人の絵（prio 90）が先
         const pre = await B.ev(p, 'RPG.Field.chunks.preStats()');
         ok('扉に近づくと宿のチャンクを先に焼く', pre && pre.map === 'pharos_inn' && pre.ready >= 1, pre);
         const r = await B.ev(p, `(async () => { await RPG.Field.enter('pharos_inn', ${JSON.stringify(door.to.spawn)}); return RPG.Field.chunks.stats(); })()`);
@@ -222,6 +234,23 @@ async function browserPart() {
   const all = Object.values(enterMs).map((a) => a[0]).sort((a, b) => a - b);
   if (all.length) console.log(`      暗転の中の焼き（1920×1080）: 中央値 ${all[all.length >> 1].toFixed(0)} ms・最大 ${all[all.length - 1].toFixed(0)} ms`);
   ok('どのマップも暗転の中の焼きが予算 150 ms 以内（§3.16 性能、デスクトップ）', all.every((v) => v <= 150), enterMs);
+}
+/** つながりの順（roa_house から出口・扉・階段をたどる幅優先）。実際に歩く順に近い形で入る（隣のマップの下焼きが効くか） */
+function tourOrder(R, ids) {
+  const want = new Set(ids), out = [], seen = new Set();
+  const q = [R.DB.maps.roa_house ? 'roa_house' : ids[0]];
+  while (q.length) {
+    const id = q.shift();
+    if (seen.has(id) || !R.DB.maps[id]) continue;
+    seen.add(id);
+    if (want.has(id)) out.push(id);
+    const m = R.DB.maps[id], to = [];
+    for (const e of m.exits || []) to.push(e.to);
+    for (const o of m.objects || []) { if (o.to) to.push(o.to); if (o.door && o.door.to) to.push(o.door.to); }
+    for (const t of to) if (t && t.map && !seen.has(t.map)) q.push(t.map);
+  }
+  for (const id of ids) if (!seen.has(id)) out.push(id);
+  return out;
 }
 function path_(id, phone) { return path.join(OUT, `${id}${phone ? '_phone' : ''}.png`); }
 

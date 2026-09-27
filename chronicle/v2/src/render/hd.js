@@ -45,11 +45,18 @@
   /** 登録のキーの一覧（接頭辞で絞る。'hd:mon:' など） */
   Hd.keys = function (prefix) { return Object.keys(S.defs).filter((k) => !prefix || k.startsWith(prefix)).sort(); };
 
+  /**
+   * get は「このフレームに描く物」（画面に出ている人・物）なので、列では高めの prio（GET_PRIO）で待つ。
+   * 先に焼いておく物（want）は呼ぶ側の prio のまま（CAST −1・BEAST −2/−3・隣のマップの prewarm 12 など）。P2 で直した:
+   * prio 0 のままだと、隣のマップの大きな prewarm の仕事の後ろで画面の人が焼けず、dev では仮の人形が出ていた
+   */
+  const GET_PRIO = 90;
+  Hd.GET_PRIO = GET_PRIO;
   Hd.get = function (key, opts) {
     const ck = Hd._ck(key, opts);
     const sh = Hd._take(ck);
     if (sh) return sh;
-    if (S.defs[key]) Hd.want(key, opts, 0);
+    if (S.defs[key]) Hd.want(key, opts, GET_PRIO);
     return null;
   };
   Hd.now = function (key, opts) {

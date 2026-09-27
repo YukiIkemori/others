@@ -13,7 +13,7 @@
       R.Audio.bgm('title', { fade: 600 });
       const r = await R.Screens.open('title');
       if (r && r.cmd === 'continue' && R.Save.load(r.slot)) return Flow.resume();
-      if (r && r.cmd === 'load') return Flow.resume();
+      if (r && (r.cmd === 'load' || r.cmd === 'passphrase') && R.Game) return Flow.resume();   // 記録を選ぶ・冒険の合言葉は画面の中で読み込み済み
       return Flow.newGame(r || {});
     },
     /** 新しいゲーム。R.DB.config.start = {map, spawn, event?} */

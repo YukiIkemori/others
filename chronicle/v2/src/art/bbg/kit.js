@@ -315,11 +315,11 @@
   /** 同期で焼く（見本・テスト）。R.Hd の factory は bakeJob（切れ端で）。画素は同じ */
   K.bake = function (id, def, opts) { const j = K.bakeJob(id, def, opts); while (!j.done) j.step(1e9); return j.result; };
   K.bakeJob = function (id, def, opts) {
-    let spent = 0, SS = null;
-    const j = BZ.job((S) => { SS = S; return bakeGen(id, def, opts, S, () => spent); }, 'bbg');
+    let spent = 0, SS = null, a = 0;
+    const j = BZ.job((S) => { SS = S; return bakeGen(id, def, opts, S, () => spent + (performance.now() - a)); }, 'bbg');
     const step = j.step;
     j.step = function (ms) {
-      const prev = K._S; const a = performance.now();
+      const prev = K._S; a = performance.now();
       K._S = SS;
       try { step(ms); } finally { K._S = prev; spent += performance.now() - a; }
     };

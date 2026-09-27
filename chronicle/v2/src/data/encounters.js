@@ -962,5 +962,7 @@
   });
   // ワールドの出現表の戦闘背景（CONTENT-P の依頼 56: ワールドの map.bbg は 1 つしか書けない）。zw_prologue は移した表のまま、bg だけ
   if (R.DB.encounters.zw_prologue) R.DB.encounters.zw_prologue.bg = 'coast';
+  // 主人公 1 人の夜道: 戦闘レベル [1,3] → [1,2]（5 型 × 得意のどれでも全滅 0。sim_zones の solo の行。monsters_common.js のぷちゼリーと組み)
+  if (R.DB.encounters.zw_prologue) R.DB.encounters.zw_prologue.lv = [1, 2];
   // @@V2-END
 })(window.RPG);

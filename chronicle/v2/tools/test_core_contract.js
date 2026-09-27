@@ -10,7 +10,12 @@ const R = load({ quiet: true });
 const C = R.Contract;
 
 // ---------------------------------------------------------------- 契約そのもの
-ok('contract version 2', C.VERSION === 2);
+ok('contract version 3', C.VERSION === 3);
+ok('v3: ICONS has water', C.ICONS.includes('water'));
+ok('v3: K.setup takes retry/seed', C.check('setup', { troop: 'tr_x', retry: 1, seed: 5 }).ok);
+ok('v3: K.lore / K.chronicleEntry', C.check('lore', { title: 't', text: 'x', region: 'prologue', must: true }).ok && C.check('chronicleEntry', { title: 't', text: 'x', parts: [{ cond: 'a', text: 'x' }] }).ok && !C.check('lore', { text: 'x' }).ok);
+ok('v3: real R.DB.lore / R.DB.chronicle fit', Object.values(R.DB.lore || {}).every((d) => C.check('lore', d).ok) && Object.values(R.DB.chronicle || {}).every((d) => C.check('chronicleEntry', d).ok),
+  Object.entries(R.DB.lore || {}).concat(Object.entries(R.DB.chronicle || {})).filter(([, d]) => !C.check('lore', d).ok && !C.check('chronicleEntry', d).ok).map(([k]) => k).slice(0, 5));
 ok('checkAll with v2 names', C.checkAll().ok, C.checkAll().errors);
 ok('UIK.T has the token names others read (K.uikTokens)', C.check('uikTokens', R.UIK.T).ok, C.check('uikTokens', R.UIK.T).errors);
 ok('SCREEN_RESULTS covers every screen id', C.SCREEN_IDS.every((id) => C.SCREEN_RESULTS[id]), C.SCREEN_IDS.filter((id) => !C.SCREEN_RESULTS[id]));
@@ -44,6 +49,12 @@ ok('spawn by name / object / fallback', R.MapUtil.spawn(m, 'a').dir === 'e' && R
 ok('spring covers 2x2', R.MapUtil.objectsAt(m, 3, 2).some((o) => o.id === 's1') && !R.MapUtil.objectsAt(m, 4, 1).some((o) => o.id === 's1'));
 ok('objects with a false cond are skipped', R.MapUtil.objectsAt(m, 1, 2).length === 0);
 ok('zoneAt first match / whole map', R.MapUtil.zoneAt(m, 2, 1) === 'z_a' && R.MapUtil.zoneAt(m, 4, 2) === 'z_all');
+{
+  const mz = Object.assign({}, m, { zones: [{ rect: null, zone: 'z_after', cond: 'party_chosen' }, { rect: null, zone: 'z_before' }] });
+  const before = R.MapUtil.zoneAt(mz, 2, 1);
+  R.Game.flags.party_chosen = true;
+  ok('v3: zones cond? switches the table', before === 'z_before' && R.MapUtil.zoneAt(mz, 2, 1) === 'z_after' && C.check('map', mz).ok);
+}
 ok('darkAt range', R.MapUtil.darkAt(m, 3, 2) && !R.MapUtil.darkAt(m, 1, 1));
 ok('secret passable in the field stub, found only after entering', R.Field.passable(m, 3, 1) && !R.MapUtil.secretFound('t_map', 3, 1));
 R.Game.secrets.t_map = ['3,1'];

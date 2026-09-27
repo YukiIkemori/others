@@ -87,9 +87,9 @@
     async offerEquip(id) {
       const mem = S.party().filter((c) => R.Rules.canEquip(c, id, R.Rules.defaultSlot(c, id)));
       if (!mem.length) return;
-      const gainOf = (c) => { const d = S.itemDiff(c, R.Rules.defaultSlot(c, id), id); return d.reduce((s, r) => s + r.d, 0); };
+      const gainOf = (c) => S.equipScore(c, R.Rules.defaultSlot(c, id), id) - S.equipScore(c, R.Rules.defaultSlot(c, id), c.equip[R.Rules.defaultSlot(c, id)] || null);
       mem.sort((a, b) => gainOf(b) - gainOf(a));
-      const choices = mem.map((c) => { const d = S.bestDelta(S.itemDiff(c, R.Rules.defaultSlot(c, id), id)); return { label: c.name, right: d ? `${d.name} ${d.d > 0 ? '+' : '−'}${Math.abs(d.d)}` : '' }; });
+      const choices = mem.map((c) => { const d = S.bestDelta(S.statDiff(c, R.Rules.defaultSlot(c, id), id)); return { label: c.name, right: d ? `${d.name} ${d.d > 0 ? '+' : '−'}${Math.abs(d.d)}` : '' }; });
       const k = await S.ask(this, { title: '装備する？', text: S.item(id).name, choices: choices.concat([{ label: '装備しない' }]), cancel: mem.length });
       if (k < 0 || k >= mem.length) return;
       const c = mem[k];
@@ -185,7 +185,7 @@
           if (!can) { R.UIK.text(g, '付けられない', tall ? px + pw : px + u(50), tall ? y + rh / 2 - u(8) : y + rh / 2 + u(3), { size: u(12), color: C.disabled, align: tall ? 'right' : 'left' }); y += rh; return; }
           const cur = S.item(c.equip[slot]);
           if (!tall) R.UIK.text(g, 'いま：' + (cur ? cur.name : 'なし'), px + u(50), y + rh / 2 + u(3), { size: u(12), color: C.text2, maxW: pw * 0.4 });
-          const rows = S.itemDiff(c, slot, id).filter((r) => r.d).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d)).slice(0, tall ? 1 : 2);
+          const rows = S.statDiff(c, slot, id).filter((r) => r.d).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d)).slice(0, tall ? 1 : 2);
           if (!rows.length) R.UIK.text(g, '変わらない', px + pw, y + rh / 2 - u(8), { size: u(13), color: C.same, align: 'right' });
           rows.forEach((r, i) => {
             const xx = px + pw - i * u(128);

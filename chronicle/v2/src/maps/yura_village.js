@@ -85,7 +85,7 @@
       spawns: { door: { x: room.door.x, y: 8, dir: 'n' } },
       exits: [{ x: room.door.x, y: 9, w: 2, h: 1, to: { map: 'yura', spawn: 'inn' } }],
       triggers: [],
-      light: { ambient: '#8a7a9a', k: 0.35, mood: 'interior' },
+      light: { ambient: '#8a7a9a', k: 0.8, mood: 'interior' },
       bgm: 'sorrow',
       meta: { minimap: false },
     });

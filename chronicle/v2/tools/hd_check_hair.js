@@ -5,10 +5,10 @@
 //
 // hd:btl:* と hd:field:* の全コマで、頭の後ろ半分（顔の前の縁より後ろ・頭頂から顎まで）の画素のうち肌の色が 8% 以下であること。
 // 読む物（CAST の Sheet に書いてもらう。無いキーは「skip」と出す）:
-//   sheet.meta.skin   肌の色の一覧 ['#rrggbb'…]（無ければ R.DB.looks[look].skin / .colors.skin）
+//   sheet.meta.skin   肌の色の一覧 ['#rrggbb'…]（無ければ skip。原画のシートは髪と肌がパレットを共有するので出さない）
 //   anchors.head      頭の中心（描く点からの相対 [x, y] か {x, y}。コマごとの frame.anchors が先）
 //   sheet.meta.headR  頭の半径（art px。無ければコマの高さ × 0.2）
-//   向き: 戦闘は右向き（meta.facing があればそれ）、フィールドはポーズの名前（left / right / up は全部が後頭部、down は調べない）
+//   向き: 戦闘は右向き（meta.facing があればそれ）、フィールドは stand_/walk_/run_ のポーズの向き（_w・_e は後ろ半分、_n は全部が後頭部、_s と演技は調べない）
 'use strict';
 const B = require('./lib/browser');
 
@@ -30,8 +30,9 @@ function inspect(o) {
     let sh = null;
     try { sh = Hd.now(key); } catch (e) { r.skip = 'bake threw'; out.push(r); continue; }
     if (!sh) { r.skip = 'no sheet'; out.push(r); continue; }
-    const L = (R.DB.looks || {})[look] || {};
-    let skin = (sh.meta && sh.meta.skin) || L.skin || (L.colors && L.colors.skin);
+
+    // meta.skin だけを見る（原画は髪と肌が同じ共通パレットの色を使うので meta.skin を出さない → skip。CAST の依頼）
+    let skin = sh.meta && sh.meta.skin;
     if (typeof skin === 'string') skin = [skin];
     skin = (skin || []).map(hex).filter(Boolean);
     if (!skin.length) { r.skip = 'no meta.skin'; out.push(r); continue; }
@@ -44,7 +45,13 @@ function inspect(o) {
       if (!head) { r.skip = r.skip || 'no anchors.head'; return; }
       const pose = poseOf[i] || '';
       let face = (sh.meta && sh.meta.facing === 'left') ? -1 : 1, all = false;
-      if (kindField) { if (/up|back|n$/.test(pose)) all = true; else if (/left|w$/.test(pose)) face = -1; else if (/right|e$/.test(pose)) face = 1; else return; }
+      // 向きはフィールドの立ち・歩き・走りのポーズだけ（演技 shake・bow・raise_lantern… は南向きなので数えない。CAST の依頼）
+      if (kindField) {
+        const m = /^(stand|walk|run)_(?:.*_)?(n|s|e|w|up|down|left|right)$/.exec(pose);
+        if (!m) return;
+        const d = m[2];
+        if (d === 'n' || d === 'up') all = true; else if (d === 'w' || d === 'left') face = -1; else if (d === 'e' || d === 'right') face = 1; else return;
+      }
       const hr = (sh.meta && sh.meta.headR) || f.c.height * 0.2;
       const cx = f.ox + head.x, cy = f.oy + head.y;
       const d = f.c.getContext('2d').getImageData(0, 0, f.c.width, f.c.height).data;

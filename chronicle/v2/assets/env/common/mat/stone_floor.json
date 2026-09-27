@@ -1,0 +1,18 @@
+{
+ "id": "stone_floor",
+ "kind": "material",
+ "theme": "common",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "stone_floor@32.png",
+  "24": "stone_floor@24.png",
+  "40": "stone_floor@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/common/stone_floor.png",
+ "native_px": 9.38,
+ "colours": 40
+}

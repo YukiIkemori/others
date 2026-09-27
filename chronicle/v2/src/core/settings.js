@@ -25,6 +25,7 @@
     reduceMotion: false,
     ruby: false,
     shake: 'on',
+    battleVoice: 'on',   // 戦闘ボイス: あり／大技だけ／なし（BRIEF A37、BSCENE が読む）
   };
   const VOL = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const CHOICES = {
@@ -44,6 +45,7 @@
     touchPad: ['auto', 'on', 'off'],
     colorAssist: [false, true], lessFlash: [false, true], reduceMotion: [false, true], ruby: [false, true],
     shake: ['on', 'weak', 'off'],
+    battleVoice: ['on', 'big', 'off'],
   };
   const KEY = 'settings';
   let cur = Object.assign({}, DEFAULTS);

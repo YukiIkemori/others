@@ -152,6 +152,11 @@ def main():
     if not o.look and os.path.exists(cj):
         o.look = json.load(open(cj)).get('look')
     if not o.look:
+        # キャラの名前 → v2 の look（アルンは主人公 hero_m_warrior。名前のフォルダ v2/assets/sprites/arun を作らない＝使われない媒体をビルドに入れない）
+        CHAR_LOOK = {'arun': 'hero_m_warrior'}
+        base = os.path.basename(src.rstrip('/'))
+        o.look = CHAR_LOOK.get(base.split('_')[0])
+    if not o.look:
         ap.error('--look が要る（仲間の出力なら companion.json から読む）')
     dst = os.path.abspath(o.dst or os.path.join(V2_SPRITES, o.look))
     os.makedirs(dst, exist_ok=True)

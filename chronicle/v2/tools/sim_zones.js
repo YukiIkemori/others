@@ -88,9 +88,9 @@ function pctile(arr, p) { if (!arr.length) return 0; const a = arr.slice().sort(
 function mean(a) { return a.length ? a.reduce((s, x) => s + x, 0) / a.length : 0; }
 
 /** 1 つの表を n 回。一行は戦闘ごとに作り直す（HP・MP 満タン: 雑魚戦の 1 回の手応えを測る） */
-function runZone(R, zone, n, seed) {
+function runZone(R, zone, n, seed, hero) {
   const z = ZONES[zone] || { tier: 0, kind: 'party', members: STD };
-  const party = buildParty(R, Object.assign({ seed: 7 }, z));
+  const party = buildParty(R, Object.assign({ seed: 7 }, z, hero ? { hero } : {}));
   const items = { i_potion: 5, i_antidote: 2 };
   const res = { zone, n, win: 0, rounds: [], hp: [], down: 0, wipe: 0, timeout: 0, mp: [], groups: {} };
   // 雑魚戦は MP 6 割で始める（旧の §9.13.1 と同じ。道中で MP は減っていく）
@@ -143,6 +143,26 @@ function main() {
   console.log(`sim_zones: n=${n} seed=${seed}（標準の一行、雑魚戦 1 回ごとに HP・MP 満タン）`);
   console.log('zone             win%   rounds  HP%   p95   down%  wipe%  MP/戦  判定');
   for (const z of zones) {
+    // 主人公 1 人の表: 5 つの型 × 得意の選び方のすべてで勝てること（通しの R1〜R5 は型が違う）。表の行は一番弱い組
+    if ((ZONES[z] || {}).solo && !argv.includes('--warrior-only')) {
+      const rows = [];
+      for (const [type, ht] of Object.entries(R.DB.heroTypes)) {
+        const fo = ht.favorOptions || {};
+        for (const fav of [].concat(...Object.values(fo)).length ? [].concat(...Object.values(fo)) : [null]) {
+          const hero = { type, sex: 'm', name: 'アルン', fav: fav || undefined };
+          const rr = runZone(R, z, Math.max(100, Math.round(n / 2)), seed + ':' + type + ':' + fav, hero);
+          rr.fail = judge(Object.assign({}, rr, { zone: z }));
+          rr.who = type + '/' + fav;
+          rows.push(rr);
+          if (argv.includes('--groups') || rr.fail.length) console.log(`  ${z} ${rr.who.padEnd(22)} win ${rr.winPct.toFixed(1)} rounds ${rr.rounds.toFixed(2)} HP ${rr.hpLoss.toFixed(1)} p95 ${rr.p95.toFixed(1)} wipe ${rr.wipePct.toFixed(2)}${rr.fail.length ? ' FAIL ' + rr.fail.join('; ') : ''}`);
+        }
+      }
+      const worst = rows.slice().sort((a, b) => a.winPct - b.winPct || b.hpLoss - a.hpLoss)[0];
+      const r = Object.assign({}, worst, { zone: z, fail: [...new Set(rows.flatMap((x) => x.fail.map((f) => x.who + ': ' + f)))] });
+      out.push(r);
+      console.log(`${z.padEnd(16)} ${r.winPct.toFixed(1).padStart(5)}  ${r.rounds.toFixed(2).padStart(5)}  ${r.hpLoss.toFixed(1).padStart(5)} ${r.p95.toFixed(1).padStart(5)}  ${r.downPct.toFixed(1).padStart(5)}  ${r.wipePct.toFixed(2).padStart(5)}  ${r.mpUsed.toFixed(1).padStart(5)}  ${r.fail.length ? 'FAIL ' + r.fail.join('; ') : 'pass'}  (solo, worst of ${rows.length}: ${worst.who})`);
+      continue;
+    }
     const r = runZone(R, z, n, seed);
     r.fail = judge(r);
     out.push(r);

@@ -46,6 +46,8 @@ for (const t of ['s', 'm', 'l', 'boss']) {
   ok(`tierPx(${t}) = ${a}〜${b}（STYLE.size ${JSON.stringify(S.size && S.size[t])}）`, a > 0 && b > a && (!S.size || (a === S.size[t][0] && b === S.size[t][1])));
 }
 const sizeMap = {};
+// 同じ sprite を借りる別の魔物（群れの狼 b_packwolf は wolf_1 の土台、BATTLE）より、id が sprite と同じ魔物を先に
+for (const [id, m] of Object.entries(R.DB.monsters || {})) if (m && m.sprite && id === m.sprite) sizeMap[m.sprite] = m.size;
 for (const m of Object.values(R.DB.monsters || {})) if (m && m.sprite && !sizeMap[m.sprite]) sizeMap[m.sprite] = m.size;
 for (const id of BZ.SLICE_MONS) {
   const s = BZ.monSpec(id), ds = sizeMap[id];

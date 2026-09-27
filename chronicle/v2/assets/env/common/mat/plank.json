@@ -1,0 +1,18 @@
+{
+ "id": "plank",
+ "kind": "material",
+ "theme": "common",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "plank@32.png",
+  "24": "plank@24.png",
+  "40": "plank@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/common/plank.png",
+ "native_px": 6.92,
+ "colours": 40
+}

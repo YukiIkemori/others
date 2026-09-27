@@ -126,6 +126,17 @@
     if (!S.queue.length) { S.pumpMs.last = 0; return 0; }
     if (S.dirty) { S.queue.sort((a, b) => b.prio - a.prio || a.seq - b.seq); S.dirty = false; }
     let did = 0;
+    // 飢え: RETRY フレーム以上待った want を 1 つだけ、フレームの最初に（列の後ろ、大きな仕事の後ろにいても）
+    for (let i = 0; i < S.queue.length; i++) {
+      const it = S.queue[i];
+      if (it.t !== 'want' || it.waited < RETRY) continue;
+      S.queue.splice(i, 1);
+      if (Hd._has(it.ck) || !Hd.has(it.key)) { S.queued.delete(it.ck); break; }
+      if (estimate(it.key) > budget) S.over++;
+      bakeWant(it, budget);
+      did++;
+      break;
+    }
     for (let i = 0; i < S.queue.length;) {
       const left = budget - (now() - t0);
       if (left <= 0.05) break;
@@ -140,15 +151,13 @@
       // want
       if (Hd._has(it.ck) || !Hd.has(it.key)) { S.queue.splice(i, 1); S.queued.delete(it.ck); continue; }
       const est = estimate(it.key);
-      if (est > left) {
-        const starved = it.waited >= RETRY && did === 0 && now() - t0 < 0.2;
-        if (!starved) { it.waited++; i++; continue; }
-        S.over++;
-      }
+      if (est > left) { i++; continue; }   // 入らない物は待つ（待ったフレームは下で数え、RETRY を超えたら上の飢えの決まりで焼く）
       S.queue.splice(i, 1);
       bakeWant(it, left);
       did++;
     }
+    // 残った want はこのフレームも待った（仕事の後ろで見てもらえなかった物も数える）
+    for (const it of S.queue) if (it.t === 'want') it.waited++;
     const used = now() - t0;
     S.pumpMs.last = used;
     if (used > S.pumpMs.max) S.pumpMs.max = used;
@@ -160,6 +169,14 @@
     const d = Hd._def(key);
     if (!d) return null;
     const t0 = now();
+    // 列で途中まで焼いた仕事があれば、その続きを最後まで（最初から焼き直さない）
+    const pend = S.queued.get(ck);
+    if (pend && pend.t === 'job' && pend.job && !pend.job.done) {
+      let n = 0; while (!pend.job.done && n++ < 100000) pend.job.step(1e9);
+      finishJob(pend);
+      const got = Hd._take(ck);
+      if (got) return got;
+    }
     let r = callFactory(d, key, opts);
     if (isJob(r)) { let n = 0; while (!r.done && n++ < 100000) r.step(1e9); r = r.result || null; }
     if (!r) { S.failed.set(ck, S.tick); return null; }

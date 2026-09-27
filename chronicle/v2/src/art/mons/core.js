@@ -297,4 +297,32 @@
       for (const [key, factory, meta] of BZ._pending || []) R.Hd.def(key, factory, meta);
     });
   }
+
+  // ------------------------------------------------------------------ 歩いている間に先に焼く（§2.10「戦闘」の行、P2）
+  /**
+   * そのマップの出現表の魔物（hd:mon）と戦闘背景（hd:bbg、map.bbg と出現表の bg。多くて 2 つ）を列の後ろに積む。
+   * 仕事は切れ端（BZ.job）なので 1 フレーム 3 ms の予算に入る。CAST の 4 人（prio −1）の後: 魔物 −2、背景 −3。→ 積んだキー
+   */
+  BZ.prefetch = function (mapId) {
+    const map = R.DB.maps && R.DB.maps[mapId];
+    if (!map || !R.Hd || !R.Hd.want) return [];
+    const mons = new Set(), bgs = [];
+    const addBg = (id) => { if (id && bgs.indexOf(id) < 0 && bgs.length < 2) bgs.push(id); };
+    addBg(map.bbg);
+    for (const z of map.zones || []) {
+      const E = R.DB.encounters && R.DB.encounters[z.zone];
+      if (!E) continue;
+      addBg(E.bg);
+      for (const g of E.groups || []) for (const m of g.mons || []) {
+        const md = R.DB.monsters && R.DB.monsters[m[0]];
+        const sp = (md && md.sprite) || m[0];
+        if (R.Hd.has('hd:mon:' + sp)) mons.add('hd:mon:' + sp);
+      }
+    }
+    const out = [];
+    for (const k of mons) { R.Hd.want(k, undefined, -2); out.push(k); }
+    for (const id of bgs) { const k = 'hd:bbg:' + id; if (R.Hd.has(k)) { R.Hd.want(k, { w: R.W, h: R.H }, -3); out.push(k); } }
+    return out;
+  };
+  if (R.onBoot) R.onBoot(function () { if (R.on) R.on('map:enter', (e) => { try { BZ.prefetch(e && e.map); } catch (err) { console.error('[beast prefetch]', err); } }); });
 })(window.RPG);

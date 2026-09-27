@@ -4,20 +4,23 @@
 //   ?hero_btl=<frame id>   battle frame for the command view (default idle_a)
 //   ?hero_fld=<frame id>   field frame in the town (default walk_left_1)
 //   ?hero_light=0          skip the sprite night relight (warm key / blue rim)
+// window.__COMP = { <look id>: {battle, field} } (tools/preview.js --with <look>=<out dir>) swaps companions the same way.
 'use strict';
 (function (G) {
   const H = G.__HERO;
   if (!H) { console.warn('hero_patch: no __HERO'); return; }
   const Q = new URLSearchParams(location.search);
   const LIGHT = Q.get('hero_light') !== '0';
-  const ready = Promise.all(['battle', 'field'].map((k) => new Promise((res) => {
-    const im = new Image(); im.onload = () => { H[k].img = im; res(); }; im.src = H[k].png;
-  })));
+  const C = G.__COMP || {};
+  const srcs = [H].concat(Object.values(C));
+  const ready = Promise.all([].concat(...srcs.map((S) => ['battle', 'field'].filter((k) => S[k]).map((k) => new Promise((res) => {
+    const im = new Image(); im.onload = () => { S[k].img = im; res(); }; im.src = S[k].png;
+  })))));
 
   // cut one frame out of a sheet → canvas + anchor in the {canvas, ox, oy} shape RZ.render returns
-  function frame(set, id, o) {
+  function frame(set, id, o, who) {
     o = o || {};
-    const S = H[set], f = S.json.frames[id];
+    const S = (who || H)[set], f = S.json.frames[id];
     if (!f) throw new Error('hero_patch: no frame ' + set + '/' + id);
     const c = document.createElement('canvas'); c.width = f.w; c.height = f.h;
     const x = c.getContext('2d'); x.drawImage(S.img, f.x, f.y, f.w, f.h, 0, 0, f.w, f.h);
@@ -54,10 +57,13 @@
   const draw0 = RIG.draw;
   RIG.draw = function (B, L, P) {
     if (G.BATTLE_ART && L === BATTLE_ART.LOOKS.arun) { B.__hero = (P && POSE_TO_FRAME[P.__name]) || 'idle_a'; return; }
+    const ck = G.BATTLE_ART && Object.keys(C).find((k) => C[k].battle && L === BATTLE_ART.LOOKS[k]);
+    if (ck) { B.__hero = (P && POSE_TO_FRAME[P.__name]) || 'idle_a'; B.__comp = ck; return; }
     return draw0.apply(this, arguments);
   };
   const render0 = RZ.render;
   RZ.render = function (B, o) {
+    if (B && B.__comp) return frame('battle', B.__hero, { key: -1, rim: true }, C[B.__comp]);
     if (B && B.__hero) {
       const id = Q.get('hero_btl') && B.__hero === 'idle_a' ? Q.get('hero_btl') : B.__hero;
       return frame('battle', id, { key: -1, rim: true }); // lantern is to the party's left (front)

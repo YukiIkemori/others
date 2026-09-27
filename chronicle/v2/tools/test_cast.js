@@ -110,4 +110,16 @@ if (man) {
   ok('顔のある人が全部並ぶ', faceLooks.every((id) => man.some((m) => m.look === id)), faceLooks.filter((id) => !man.some((m) => m.look === id)));
   ok('形 {look, name, exprs, priority, status, note}', man.every((m) => m.look && m.name && Array.isArray(m.exprs) && [1, 2, 3].includes(m.priority) && ['todo', 'generated', 'approved', 'rejected'].includes(m.status)));
 }
+// 原画の置き場: v2/assets/sprites/<look>/ のフォルダはすべて R.DB.looks の id（名前のフォルダ arun/ などの使われない媒体をビルドに入れない）
+{
+  const fs = require('fs'), pth = require('path');
+  const dir = pth.join(__dirname, '..', 'assets', 'sprites');
+  const dirs = fs.existsSync(dir) ? fs.readdirSync(dir).filter((d) => fs.statSync(pth.join(dir, d)).isDirectory()) : [];
+  const stray = dirs.filter((d) => !L[d]);
+  ok(`assets/sprites のフォルダは look の id だけ（${dirs.join(' ')}）`, stray.length === 0, stray);
+  for (const d of dirs.filter((x) => L[x])) {
+    const kinds = fs.readdirSync(pth.join(dir, d)).filter((f) => f.endsWith('.png')).map((f) => f.slice(0, -4));
+    ok(`${d}: どの png にも同じ名前の json`, kinds.every((k) => fs.existsSync(pth.join(dir, d, k + '.json'))), kinds);
+  }
+}
 done('test_cast');

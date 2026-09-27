@@ -10,16 +10,25 @@ let playwright;
 try { playwright = require('playwright'); } catch (e) { playwright = require('/opt/node22/lib/node_modules/playwright'); }
 const HERE = path.resolve(__dirname, '..');
 const args = process.argv.slice(2);
+// --with <look>=<out dir name> (repeatable): also swap that companion's battle sprite (e.g. --with selma=comp_selma)
+const WITH = {};
+for (let i = 0; i < args.length;) {
+  if (args[i] === '--with') { const [k, d] = args[i + 1].split('='); WITH[k] = d; args.splice(i, 2); } else i++;
+}
 const char = args[0] && !args[0].includes(':') && !['battle', 'town', 'glimmer', 'victory'].some((v) => args[0].startsWith(v)) ? args.shift() : 'arun';
 const views = args.length ? args : ['battle', 'battle_noui', 'glimmer', 'victory', 'town', 'town_noui'];
 const od = path.join(HERE, 'out', char);
 // the sheet files are <character>_<set>.* — the out dir may be named differently (out/arun_v1 holds arun_*.png)
-const set = (k) => {
-  const j = fs.readdirSync(path.join(od, k)).find((f) => f.endsWith(`_${k}.json`));
-  const json = JSON.parse(fs.readFileSync(path.join(od, k, j), 'utf8'));
-  return { png: 'data:image/png;base64,' + fs.readFileSync(path.join(od, k, json.image)).toString('base64'), json };
+const set = (k, dir) => {
+  const odd = dir || od;
+  const j = fs.readdirSync(path.join(odd, k)).find((f) => f.endsWith(`_${k}.json`));
+  const json = JSON.parse(fs.readFileSync(path.join(odd, k, j), 'utf8'));
+  return { png: 'data:image/png;base64,' + fs.readFileSync(path.join(odd, k, json.image)).toString('base64'), json };
 };
 const HERO = { battle: set('battle'), field: set('field') };
+const COMP = {};
+for (const [k, d] of Object.entries(WITH)) COMP[k] = { battle: set('battle', path.join(HERE, 'out', d)) };
+const tag = Object.keys(WITH).length ? '_with_' + Object.keys(WITH).join('_') : '';
 (async () => {
   fs.mkdirSync(path.join(od, 'preview'), { recursive: true });
   const b = await playwright.chromium.launch();
@@ -27,14 +36,14 @@ const HERO = { battle: set('battle'), field: set('field') };
     const [v0, extra] = item.split(':');
     const noui = v0.endsWith('_noui'), view = noui ? v0.slice(0, -5) : v0;
     const ctx = await b.newContext({ viewport: { width: 1920, height: 1080 } });
-    await ctx.addInitScript({ content: 'window.__HERO = ' + JSON.stringify(HERO) + ';' });
+    await ctx.addInitScript({ content: 'window.__HERO = ' + JSON.stringify(HERO) + '; window.__COMP = ' + JSON.stringify(COMP) + ';' });
     const page = await ctx.newPage();
     page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') console.log('[' + m.type() + ']', m.text()); });
     page.on('pageerror', (e) => console.log('[pageerror]', e.stack || e));
     const url = 'file://' + path.join(HERE, 'preview/index.html') + '?view=' + view + '&layout=wide' + (noui ? '&noui=1' : '') + (extra ? '&' + extra : '');
     await page.goto(url);
     await page.waitForFunction(() => document.title === 'done' || document.title === 'err', null, { timeout: 300000 });
-    const name = v0 + (extra ? '_' + extra.replace(/[^a-z0-9]+/gi, '_') : '');
+    const name = v0 + (extra ? '_' + extra.replace(/[^a-z0-9]+/gi, '_') : '') + tag;
     const out = path.join(od, 'preview', name + '.png');
     await page.locator('#screen').screenshot({ path: out });
     console.log((await page.title()) === 'done' ? '→' : 'ERR', out);

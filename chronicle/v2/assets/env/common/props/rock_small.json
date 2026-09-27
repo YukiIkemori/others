@@ -1,0 +1,42 @@
+{
+ "id": "rock_small",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   16,
+   12
+  ],
+  "32": [
+   21,
+   16
+  ],
+  "40": [
+   26,
+   20
+  ]
+ },
+ "feet": {
+  "24": [
+   8,
+   11
+  ],
+  "32": [
+   10,
+   15
+  ],
+  "40": [
+   13,
+   19
+  ]
+ },
+ "files": {
+  "24": "rock_small@24.png",
+  "32": "rock_small@32.png",
+  "40": "rock_small@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/town_a.png"
+}

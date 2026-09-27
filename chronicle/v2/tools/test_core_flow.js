@@ -130,12 +130,15 @@ async function main() {
   ok('Berna gives 3 salves and 50 G', (await ev(p, 'RPG.Game.gold')) === goldT + 50 && (await ev(p, 'RPG.Game.items.i_salve')) >= 3, { gold: await ev(p, 'RPG.Game.gold'), goldT });
   ok('invariants after talk', invOk(await ev(p, INVARIANTS)), await ev(p, INVARIANTS));
   // 戦闘: 本物の R.Battle.start（BSCENE）に本物のデータの編成を渡す（序章の最初の戦闘と同じ tr_tutorial）
-  await ev(p, "window.__bres = null; RPG.Battle.start({troop:'tr_tutorial'}).then((r) => { window.__bres = r; })");
+  await ev(p, "RPG.Settings.set('battleSpeed', 3); 0");   // 設定「戦闘の速さ ×3」（ヘッドレスは遅いので）
+  await ev(p, "window.__bres = null; void RPG.Battle.start({troop:'tr_tutorial'}).then((r) => { window.__bres = r; }); 0");
   ok('battle scene opens', await waitFor(p, `${top}==='battle'`, 5000));
   await p.waitForTimeout(600);
   await p.screenshot({ path: path.join(OUT, 'p0_battle_1920.png') });
   const gold0 = await ev(p, 'RPG.Game.gold');
-  ok('battle ends (A: 一行の命令 → 1 人ずつ → 勝利の画面)', await pressUntil(p, 'a', "!RPG.Engine.has('battle') && window.__bres", 80), await ev(p, 'window.__bres'));
+  ok('battle ends (A: 一行の命令 → 1 人ずつ → 勝利の画面)', await pressUntil(p, 'a', "!RPG.Engine.has('battle') && window.__bres", 240),
+    await ev(p, "(() => { const d = RPG.Battle.debug && RPG.Battle.debug(); return {r: window.__bres, phase: d && d.phase, units: d && d.B && d.B.units.map((u) => u.side[0] + u.hp)}; })()"));
+  await ev(p, "RPG.Settings.set('battleSpeed', 1); 0");
   ok('battle result is a win', await ev(p, "window.__bres==='win' || (window.__bres && window.__bres.result==='win')"), await ev(p, 'window.__bres'));
   await waitFor(p, FREE, 3000);
   await p.waitForTimeout(300);

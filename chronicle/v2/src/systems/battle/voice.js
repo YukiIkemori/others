@@ -60,7 +60,7 @@
     const why = (w) => { note({ who: unit && unit.id, kind, id: null, why: w }); return null; };
     if (mode === 'off') return why('off');
     if (mode === 'big' && !BIG[kind]) return why('big-only');
-    if ((o.speed || 1) > 1 && !SHORT[kind] && !BIG[kind]) return why('speed');
+    if ((o.speed || 1) > 1 && !SHORT[kind]) return why('speed');   // A37: 倍速では短い掛け声（attack・hurt）だけ
     const rnd = o.rng ? o.rng.next() : Math.random();
     if ((kind === 'attack' || kind === 'hurt') && !o.force && rnd > 1 / 3) return why('chance');
     let kinds = [kind];
@@ -77,7 +77,9 @@
     let h = null;
     try {
       const A = R.Audio;
-      if (A && typeof A.playVoice === 'function') h = A.playVoice(id);   // 前の声（会話も）を止めて 1 本だけ
+      // CORE の戦闘ボイスの口（BGM を下げない・会話のボイスを止めない・前の戦闘ボイスだけ止める。BSCENE の依頼 26）
+      if (A && typeof A.battleVoiceId === 'function') { h = A.battleVoiceId(id); if (h) h._bv = true; }
+      else if (A && typeof A.playVoice === 'function') h = A.playVoice(id);   // 古い口: 前の声（会話も）を止めて 1 本だけ
       else if (A && typeof A.voice === 'function') A.voice(id);
     } catch (e) { h = null; }
     cur = { id, h, n: ++seq };
@@ -86,7 +88,14 @@
   };
   V.stop = function () {
     if (!cur) return;
-    try { if (R.Audio && R.Audio.stopVoice) R.Audio.stopVoice(cur.h || undefined); } catch (e) { /* ignore */ }
+    try {
+      const h = cur.h;
+      if (h && h._bv) {
+        // 戦闘ボイスの手札: CORE に止める口があればそれ、無ければ手札の音源を止める（会話のボイスには触らない）
+        if (R.Audio && typeof R.Audio.stopBattleVoice === 'function') R.Audio.stopBattleVoice(h);
+        else if (!h.stopped) { h.stopped = true; if (h.src) h.src.stop(); }
+      } else if (R.Audio && R.Audio.stopVoice) R.Audio.stopVoice(h || undefined);
+    } catch (e) { /* ignore */ }
     cur = null;
   };
 

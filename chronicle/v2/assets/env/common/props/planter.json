@@ -1,0 +1,42 @@
+{
+ "id": "planter",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   22,
+   16
+  ],
+  "32": [
+   30,
+   21
+  ],
+  "40": [
+   38,
+   26
+  ]
+ },
+ "feet": {
+  "24": [
+   11,
+   15
+  ],
+  "32": [
+   15,
+   20
+  ],
+  "40": [
+   19,
+   25
+  ]
+ },
+ "files": {
+  "24": "planter@24.png",
+  "32": "planter@32.png",
+  "40": "planter@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/town_a.png"
+}

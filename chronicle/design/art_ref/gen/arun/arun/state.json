@@ -1,0 +1,40 @@
+{
+ "sheets": {
+  "1": {
+   "attempts": [],
+   "edit_rounds": 1,
+   "fixed_slots": [
+    "walk_down_1",
+    "walk_down_2",
+    "walk_up_1",
+    "walk_up_2"
+   ]
+  },
+  "3": {
+   "attempts": [],
+   "edit_rounds": 1,
+   "fixed_slots": [
+    "act_kneel",
+    "act_sit"
+   ]
+  },
+  "5": {
+   "attempts": [],
+   "edit_rounds": 1,
+   "fixed_slots": [
+    "weak"
+   ]
+  },
+  "6": {
+   "attempts": [],
+   "edit_rounds": 3,
+   "fixed_slots": [
+    "charge",
+    "smash",
+    "smash",
+    "smash"
+   ]
+  }
+ },
+ "started": true
+}

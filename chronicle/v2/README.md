@@ -10,6 +10,9 @@ v2 はほぼゼロからの作り直し（BRIEF A24）。正本は `chronicle/de
 - **P0 のレビュー（契約の版 2）**: 済み。14 担当の質問を先に決めて契約に足した（名前は 1 つも変えていない）。決めたことの一覧は `V2_PLAN.md` §2.11、形は `src/core/contracts.js`、
   確かめは `tools/test_core_contract.js`（node）と `tools/test_core_wipe.js`（ブラウザ）。**下の「担当ごとの ここから始める」から読む**。
 
+- **P2（組み込み）**: 進行中。全部の名前空間が本物（`R.Stubs.claim` 済み。仮で残るのは id が `stub_` のデータだけ）。契約は**版 3**（ICONS `water`・`K.setup` の `retry/seed`・`K.lore`・`K.chronicleEntry`・`zones[].cond`）。
+  `test_core_flow.js` は本物の序章（幕 → ベルナ → 主人公の作成 → 書見台のベルナ → 本物の戦闘 → セーブ → つづきから）を通し、仮の関数が 1 回も呼ばれないことも確かめる。
+
 ## 動かし方（`chronicle/` から）
 ```sh
 node v2/tools/build.js                 # v2/dist/index.html（遊ぶ用）と dev.html（dev とフィクスチャ入り）。媒体は dist/bgm・voice・portraits に写す

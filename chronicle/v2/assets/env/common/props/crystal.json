@@ -1,0 +1,46 @@
+{
+ "id": "crystal",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   20,
+   22
+  ],
+  "32": [
+   27,
+   30
+  ],
+  "40": [
+   34,
+   38
+  ]
+ },
+ "feet": {
+  "24": [
+   10,
+   22
+  ],
+  "32": [
+   14,
+   29
+  ],
+  "40": [
+   17,
+   36
+  ]
+ },
+ "files": {
+  "24": "crystal@24.png",
+  "32": "crystal@32.png",
+  "40": "crystal@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/dungeon_b.png",
+ "light32": [
+  0,
+  -12
+ ]
+}

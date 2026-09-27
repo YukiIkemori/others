@@ -1,17 +1,54 @@
 {
-  "desc": "MENUS: ティア 1 の 4 人（アルン・セルマ・シルヴァン・ヴィオラ）と控え 2 人、袋に薬と装備、12,345 G",
-  "hero": { "type": "warrior", "sex": "m", "name": "アルン" },
-  "party": ["hero", "selma", "sylvain", "viola"],
-  "reserve": ["teo", "marta"],
-  "tier": 1,
-  "gl": "auto",
-  "prof": "auto",
-  "flags": { "prologue_done": true },
-  "items": {
-    "i_salve": 6, "i_potion": 3, "i_ether": 2, "i_revive": 1, "i_antidote": 2, "i_repel": 1, "i_firepot": 2,
-    "w_sword_2": 1, "w_sword_coral": 1, "w_greatsword_st_stoneaxe": 1, "w_bow_1": 1, "w_staff_1": 1,
-    "bd_mail_1": 1, "bd_robe_1": 1, "hd_helm_1": 1, "sh_buckler_1": 1, "ac_ward_poison": 1, "ac_watch": 1, "ft_boots_1": 1
-  },
-  "gold": 12345,
-  "map": { "id": "stub_road", "spawn": "start" }
+ "desc": "MENUS: ティア 1 の 4 人（アルン・セルマ・シルヴァン・ヴィオラ）と控え 2 人、袋に薬と装備、12,345 G。ファロスの武具屋の前（到着の語りは済み）",
+ "hero": {
+  "type": "warrior",
+  "sex": "m",
+  "name": "アルン"
+ },
+ "party": [
+  "hero",
+  "selma",
+  "sylvain",
+  "viola"
+ ],
+ "reserve": [
+  "teo",
+  "marta"
+ ],
+ "tier": 1,
+ "gl": "auto",
+ "prof": "auto",
+ "flags": {
+  "prologue_done": true,
+  "prologue_pharos": true,
+  "prologue_start": true,
+  "prologue_berna": true,
+  "prologue_boss": true
+ },
+ "items": {
+  "i_salve": 6,
+  "i_potion": 3,
+  "i_ether": 2,
+  "i_revive": 1,
+  "i_antidote": 2,
+  "i_repel": 1,
+  "i_firepot": 2,
+  "w_sword_2": 1,
+  "w_sword_coral": 1,
+  "w_greatsword_st_stoneaxe": 1,
+  "w_bow_1": 1,
+  "w_staff_1": 1,
+  "bd_mail_1": 1,
+  "bd_robe_1": 1,
+  "hd_helm_1": 1,
+  "sh_buckler_1": 1,
+  "ac_ward_poison": 1,
+  "ac_watch": 1,
+  "ft_boots_1": 1
+ },
+ "gold": 12345,
+ "map": {
+  "id": "pharos",
+  "spawn": "shop_door"
+ }
 }

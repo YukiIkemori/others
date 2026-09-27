@@ -1,0 +1,42 @@
+{
+ "id": "bollard",
+ "kind": "props",
+ "theme": "harbor",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   10,
+   14
+  ],
+  "32": [
+   14,
+   19
+  ],
+  "40": [
+   18,
+   24
+  ]
+ },
+ "feet": {
+  "24": [
+   5,
+   14
+  ],
+  "32": [
+   7,
+   18
+  ],
+  "40": [
+   9,
+   22
+  ]
+ },
+ "files": {
+  "24": "bollard@24.png",
+  "32": "bollard@32.png",
+  "40": "bollard@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/harbor_a.png"
+}

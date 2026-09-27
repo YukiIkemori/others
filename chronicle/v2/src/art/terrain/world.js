@@ -1,9 +1,10 @@
 // TERRAIN: テーマ（R.Contract.THEMES）と光の既定、ワールドの一枚絵（V2_PLAN §2.5.8 worldThumb・ambient、MODERN_UI §7.3・§7.6）
 //
 //   R.Terrain.theme(map) → テーマの表（id, ground, tree, leaf, mood, decor, air…）   map.theme か、無ければ kind と素材から決める
-//   R.Terrain.ambient(map, tier) → {ambient, k, mood}
+//   R.Terrain.ambient(map, tier) → {ambient, bright, k, mood}
 //       ambient = 掛ける環境光の色（map.light.ambient か mood の色 × R.Sky.at(tier).ambientMul）、mood = R.Contract.MOODS の 1 つ、
-//       k = R.Light.compose の k（環境光の効き。1 = そのまま掛ける）。map.light.k は ART_REWORK §1.4 の「明るさ」（夜の町 0.45・ダンジョン 0.55〜0.7・
+//       bright = map.light.k（ART_REWORK §1.4 の「明るさ」）そのまま → R.Light.compose に {bright} で渡す。k = R.Light.effect(bright)（環境光の効き、前の呼び方）。
+//       map.light.k は「明るさ」（夜の町 0.45・ダンジョン 0.55〜0.7・
 //       屋内 0.85・昼 1.0）なので、ここで効きに直す（0.45 以下 → 1、1.0 → 0）。
 //   R.Terrain.worldThumb(tier) → canvas   ワールド（kind 'world' のマップ）の 1 マス 3 論理 px の一枚絵（MENUS の地図・FIELD の小地図）
 (function (R) {
@@ -46,8 +47,9 @@
     return t;
   };
 
-  /** map.light.k（明るさ）→ R.Light.compose の k（効き） */
+  /** map.light.k（明るさ）→ R.Light.compose の k（効き）。式は RENDER の R.Light.effect 1 か所（無いときだけ同じ式の控え） */
   function effect(k) {
+    if (R.Light && R.Light.effect) return R.Light.effect(k);
     if (k == null) return 1;
     return Math.max(0, Math.min(1, (1 - k) / 0.55));
   }
@@ -63,7 +65,9 @@
       const c = T._u.hex(toHex(base));
       ambient = '#' + c.map((v) => Math.min(255, Math.round(v * mul)).toString(16).padStart(2, '0')).join('');
     } else ambient = toHex(base);
-    return { ambient, k: effect(l.k), mood };
+    // bright = map.light.k（明るさ、ART_REWORK §1.4。無ければ夜の町と同じ 0.45）。k = その効き（compose の k、前の呼び方のため残す）
+    const bright = l.k != null ? l.k : 0.45;
+    return { ambient, bright, k: effect(bright), mood };
   };
   function toHex(c) {
     if (/^#[0-9a-f]{6}$/i.test(c)) return c;

@@ -17,7 +17,8 @@ import urllib.error
 import urllib.request
 
 URL = 'https://api.openai.com/v1/responses'
-BANNED_MODEL_PARTS = ('astra',)         # the owner's rule: the heavy model family is never used
+BANNED_MODEL_PARTS = ('astra',)
+OWN_TAGS = ('probe', 'arun', 'companion', 'npc')   # tags written by gen_sheets.py (the cap counts these)         # the owner's rule: the heavy model family is never used
 
 
 class GenError(RuntimeError):
@@ -52,7 +53,10 @@ def images_used():
     n = 0
     for line in open(p):
         try:
-            n += int(json.loads(line).get('images', 0))
+            e = json.loads(line)
+            if not str(e.get('tag', '')).startswith(OWN_TAGS):   # the log is shared with other tools: count ours
+                continue
+            n += int(e.get('images', 0))
         except Exception:
             pass
     return n

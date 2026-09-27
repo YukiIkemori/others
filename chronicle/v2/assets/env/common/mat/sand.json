@@ -1,0 +1,18 @@
+{
+ "id": "sand",
+ "kind": "material",
+ "theme": "common",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "sand@32.png",
+  "24": "sand@24.png",
+  "40": "sand@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/common/sand.png",
+ "native_px": 8.16,
+ "colours": 40
+}

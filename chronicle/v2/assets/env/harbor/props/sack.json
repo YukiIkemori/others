@@ -1,0 +1,42 @@
+{
+ "id": "sack",
+ "kind": "props",
+ "theme": "harbor",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   12,
+   14
+  ],
+  "32": [
+   16,
+   19
+  ],
+  "40": [
+   20,
+   24
+  ]
+ },
+ "feet": {
+  "24": [
+   6,
+   14
+  ],
+  "32": [
+   8,
+   18
+  ],
+  "40": [
+   10,
+   22
+  ]
+ },
+ "files": {
+  "24": "sack@24.png",
+  "32": "sack@32.png",
+  "40": "sack@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/harbor_a.png"
+}

@@ -23,7 +23,7 @@
       spawns: { door: { x: door.x, y: 10, dir: 'n' } },
       exits: [{ x: door.x, y: 11, w: 2, h: 1, to: { map: 'world', spawn: 'hut' } }],
       triggers: [{ id: 'arrive', on: 'enter', event: 'hut_arrive', once: true }],
-      light: { ambient: '#7a6c90', k: 0.4, mood: 'interior' },
+      light: { ambient: '#7a6c90', k: 0.7, mood: 'interior' },
       bgm: 'village',
       meta: { minimap: false, sub: '森の街道の脇' },
     });

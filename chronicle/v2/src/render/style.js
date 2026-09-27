@@ -41,7 +41,20 @@
       lampR: 110,         // 街灯の光だまりの半径
       fireMul: 1.3,       // 篝火は街灯の 1.3 倍
       flicker: { lamp: [0.08, 3], ring: [0.05, 2] },   // [振れ幅, Hz]
+      // 明るさ（map.light.k、ART_REWORK §1.4）→ 環境光の効き: nightBright で 1、1.0 で 0（R.Light.effect）
+      nightBright: 0.45,
+      // 夜の階調（P2、STYLE_REFERENCE §5.2 と MODERN_UI の見本 town/field/dungeon の測定に合わせた）
+      ambientHue: [250, 295],   // 暗部の色相の目標。環境光の色相が 195〜250° のときこちらへ寄せる
+      ambientHueShift: 0.7,     // 寄せる割合（0 = 地図の色のまま）
+      ambientSat: 1.1,          // 寄せるときの彩度の倍率
+      poolCore: 1.0,            // 光だまりの中心の足し算（②、k に掛ける）
+      poolR: 1.2,               // 光だまりの半径の倍率（灯りの r × mood.poolMul × これ。人の背の 1.5〜2 倍、§5.3）
+      ambientGain: 1.18,        // 夜の環境光の明るさの倍率（暗部の持ち上げを減らした分、中間を上げる）。フィールドのチャンク（compose）
+      mapGain: 1.05, mapPoolCore: 0.6,   // 戦闘の光の地図（R.Light.map）: 明るい地面に大きな光だまり 1 つなので控えめ（見本 battle の p95 .63 に合わせる）
+      spill: 0.3,               // 掛けた後に中心へ足す加算の強さ（③）
     },
+    // 仕上げ（R.Post.frame）の膜: 暗部の持ち上げ = max(0, grade.sh) × shLift ＋ grade.lift × liftMul
+    post: { shLift: 0.15, liftMul: 0.3 },
     // 焼いた絵の 1 画素のバイト（stats の数え方: 幅 × 高さ × 4）
     bpp: 4,
   };

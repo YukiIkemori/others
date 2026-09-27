@@ -42,6 +42,11 @@
     outfit: { type: 'tunic', main: '#8a5c30', sub: '#3c4a30', trim: '#c8a860' }, extras: ['beard'], silhouette: 'spiky_beard' };
   T.npc_roy = { name: 'ロイ', body: m('slim', 'youth'), skin: 'fair', eyes: '#3a4a5a', hair: { style: 'short', color: '#3a2c20', ears: 'hidden' },
     outfit: { type: 'tunic', main: '#4a6a5a', sub: '#4a3a2c', trim: '#c0a060' }, headwear: { type: 'headband', color: '#a8402e' }, silhouette: 'headband' };
+  // ファロス（CONTENT-P の依頼）: 灯守組合の油売り・静夜会の説き手（顔は neutral だけ使う）
+  T.npc_tadeo = { name: 'タデオ', body: m('sturdy'), skin: 'tan', eyes: '#4a3a2c', hair: { style: 'short', color: '#5a3c24', ears: 'show' },
+    outfit: { type: 'coat', main: '#a0582c', sub: '#e0cfa8', trim: '#d8a040' }, headwear: { type: 'cap', color: '#6a4228' }, extras: ['beard'], beard: '#5a3c24', silhouette: 'cap_oilseller' };
+  T.npc_yena = { name: 'イェナ', body: f('slim'), skin: 'fair', eyes: '#5a6a7a', hair: { style: 'long', color: '#4a4454', ears: 'hidden' },
+    outfit: { type: 'robe', main: '#5a6a84', sub: '#3c4658', trim: '#b8c0cc' }, mantle: { color: '#4c5a70', long: true }, headwear: { type: 'hood', color: '#4c5a70' }, silhouette: 'blue_hood' };
   T.npc_yura_elder = { name: 'ユラの長老', body: f('slim', 'old'), skin: 'forest', eyes: '#6a7a5a', hair: { style: 'long', color: '#e0dcd0', ears: 'hidden' },
     outfit: { type: 'robe', main: '#5a6c4c', sub: '#3a4a34', trim: '#d8c890' }, headwear: { type: 'veil', color: '#8a9a78' }, silhouette: 'elder_veil' };
 

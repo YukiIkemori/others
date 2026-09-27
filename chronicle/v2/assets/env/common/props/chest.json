@@ -1,0 +1,45 @@
+{
+ "id": "chest",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "closed",
+  "open",
+  "rare_closed",
+  "rare_open"
+ ],
+ "cell": {
+  "24": [
+   22,
+   24
+  ],
+  "32": [
+   29,
+   32
+  ],
+  "40": [
+   36,
+   40
+  ]
+ },
+ "feet": {
+  "24": [
+   11,
+   23
+  ],
+  "32": [
+   14,
+   31
+  ],
+  "40": [
+   18,
+   39
+  ]
+ },
+ "files": {
+  "24": "chest@24.png",
+  "32": "chest@32.png",
+  "40": "chest@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/dungeon_a.png"
+}

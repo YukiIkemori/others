@@ -34,6 +34,25 @@
     const cap = (a.boss ? CAP.boss : CAP[a.size] || CAP.m) * (R.layout === 'tall' ? 0.85 : 1);
     return vis > cap ? cap / vis : 1;
   };
+  /** 描いた絵の入る矩形（論理 px、余白つき）。戦闘背景の光を人と敵ごとに掛けるときの範囲（scene.js の litStage） */
+  A.bounds = function (st, a, pad) {
+    pad = pad == null ? 10 : pad;
+    const v = (st && st.vis && st.vis[a.uid]) || {};
+    const x = a.x + (v.dx || 0), y = a.y + (v.dy || 0);
+    const sh = a.sheetRef || A.sheet(a, false);
+    let l = 0, r = 0, u = 0, d = 0;
+    if (sh && sh.frames && sh.frames.length) {
+      const sc = A.scaleOf(a, sh);
+      for (const fr of sh.frames) {
+        if (!fr || !fr.c) continue;
+        const ox = fr.ox || 0, oy = fr.oy || 0, w = fr.c.width, h = fr.c.height;
+        const side = Math.max(ox, w - ox) * sc;   // 反転しても入るように左右は広い方
+        l = Math.max(l, side); r = Math.max(r, side); u = Math.max(u, oy * sc); d = Math.max(d, (h - oy) * sc);
+      }
+    }
+    if (!(u > 0)) { const hh = A.height(a); u = hh * 1.25; l = r = hh * 0.9; d = 8; }
+    return { x: Math.floor(x - l - pad), y: Math.floor(y - u - pad), w: Math.ceil(l + r + pad * 2), h: Math.ceil(u + d + pad * 2) };
+  };
   /** 絵の高さ（ねらいの印・数字の位置） */
   A.height = function (a) {
     const sh = a.sheetRef;

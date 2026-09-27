@@ -117,8 +117,10 @@ const OUT = path.join(B.V2, 'design', 'shots', 'terrain');
       T.takeDirty(map.id);
       return { list, changed, cx, cy, f0: p0 && p0.frame, f1: p1 && p1.frame };
     });
-    ok('dirty が返すのは宝箱のチャンク 1 つ', r.list.length === 1 && r.list[0][0] === r.cx && r.list[0][1] === r.cy, r.list);
-    ok('状態を変えて全部焼き直すと、画素が変わるのはそのチャンクだけ', r.changed.length <= 1 && (r.changed.length === 0 || r.changed[0] === r.cx + ',' + r.cy), r.changed);
+    // 閉じた宝箱の淡い光だまりは隣のチャンクへ届くことがある（P2: 光だまりの半径 × STYLE.light.poolR）。dirty はその届くチャンクも返す
+    const listed = r.list.map((q) => q[0] + ',' + q[1]);
+    ok('dirty が返すのは宝箱のチャンクと、その光の届くチャンクだけ（多くて 4）', listed.includes(r.cx + ',' + r.cy) && r.list.length <= 4, r.list);
+    ok('状態を変えて全部焼き直すと、画素が変わるのは dirty が返したチャンクだけ', r.changed.every((k) => listed.includes(k)), { changed: r.changed, listed });
     ok('宝箱の絵のコマ closed → open', r.f0 === 'closed' && r.f1 === 'open', [r.f0, r.f1]);
   }
 

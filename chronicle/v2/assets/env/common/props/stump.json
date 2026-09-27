@@ -1,0 +1,42 @@
+{
+ "id": "stump",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   21,
+   18
+  ],
+  "32": [
+   28,
+   24
+  ],
+  "40": [
+   35,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   10,
+   17
+  ],
+  "32": [
+   14,
+   23
+  ],
+  "40": [
+   18,
+   29
+  ]
+ },
+ "files": {
+  "24": "stump@24.png",
+  "32": "stump@32.png",
+  "40": "stump@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/town_a.png"
+}

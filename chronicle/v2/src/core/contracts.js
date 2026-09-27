@@ -14,7 +14,7 @@
 (function (R) {
   'use strict';
   // 版 1: P0。版 2: P0 のレビュー（14 担当の質問への答え。V2_PLAN §2.11）。足しただけで、名前は変えていない
-  const VERSION = 2;
+  const VERSION = 3;   // 版 3（P2、2026-09-26）: 足しただけ（ICONS 'water'・K.setup の retry/seed・K.lore・K.chronicleEntry・zones の cond?）
 
   // ================================================================ データの形
   const K = {};
@@ -67,6 +67,7 @@
     'troop?': 'string', 'mons?': 'array', 'zone?': 'string', 'tier?': 'int', 'lvOff?': 'number', 'bg?': 'string', 'bgm?': 'string',
     'noEscape?': 'bool', 'canLose?': 'bool', 'noRare?': 'bool', 'noGolden?': 'bool', 'glimmerForce?': 'any', 'members?': 'string[]',
     'dark?': 'bool', 'boss?': 'bool',
+    'seed?': 'number', 'retry?': 'int', 'demo?': 'string', 'autoInput?': 'bool',   // 版 3: 全滅の「直前の戦闘から」の回数（乱数は seed + retry）。demo・autoInput は BSCENE の見本とテスト用
   };
   K.unit = {
     uid: 'string|int', side: '"party"|"enemy"', id: 'string', name: 'string', hp: 'number', mp: 'number', maxHp: 'number', maxMp: 'number',
@@ -105,7 +106,7 @@
     w: 'int', h: 'int', legend: 'object', rows: 'string[]', 'outside?': 'string', 'objects?': [K.mapObject], 'npcs?': [K.npc], spawns: 'object',
     'exits?': [{ x: 'int', y: 'int', w: 'int', h: 'int', to: { map: 'string', spawn: 'string' }, 'cond?': 'any' }],
     'triggers?': [{ id: 'string', 'x?': 'int', 'y?': 'int', 'w?': 'int', 'h?': 'int', on: '"step"|"enter"', event: 'string', 'cond?': 'any', 'once?': 'bool' }],   // 'enter' は範囲なし（マップに入るたび。once で 1 回）
-    'tilePatches?': 'array', 'zones?': [{ rect: 'array|null', zone: 'string' }], 'light?': { ambient: 'string', k: 'number', mood: 'string' },
+    'tilePatches?': 'array', 'zones?': [{ rect: 'array|null', zone: 'string', 'cond?': 'any' }], 'light?': { ambient: 'string', k: 'number', mood: 'string' },
     'dark?': 'bool|array', 'bgm?': 'string', 'bbg?': 'string', 'oneway?': 'array', 'meta?': 'object',
     'theme?': 'string', 'name_ruby?': 'string',   // 版 2: theme = TERRAIN のテーマ（THEMES）。無ければ kind と素材から TERRAIN が決める
   };
@@ -168,6 +169,11 @@
   K.fullHealResult = { used: [{ who: 'string', what: 'string', n: 'int' }], healed: 'string[]', short: 'bool' };   // 満タン（A2）の結果（MENUS が 1 枚にまとめる）
   K.letter = { 'from?': 'string', 'title?': 'string', text: 'string|array', 'face?': 'string' };            // R.DB.letters[id]（書くのは CONTENT）
   K.tip = { title: 'string', text: 'string|array' };                                                        // R.DB.tips[id]（MENUS）
+  // 版 3: 読み物（STORY_BIBLE §10.2 の lo_*）。R.DB.lore[id]。書くのは CONTENT（序章・世界は C-P、森は C-F）。読んだ記録は今はフラグ lo_<id>（EVENTS の ev.lore が来たらそちら）
+  K.lore = { title: 'string', text: 'string|array', region: 'string', 'kind?': 'string', 'must?': 'bool', 'order?': 'number', 'letter?': 'string' };
+  // 版 3: 年代記の章の文。R.DB.chronicle[summaryKey]（R.Game.chronicle.chapters[].summaryKey）。書くのは CONTENT（地方ごと）。
+  //   text は選択で変わった後の文（parts の cond の合う物をつないだ getter でよい）。MENUS は text を読む
+  K.chronicleEntry = { title: 'string', text: 'string|array', 'parts?': [{ 'cond?': 'any', text: 'string' }] };
   K.materialDef = { edge: '"soft"|"hard"', walk: 'bool', 'name?': 'string', 'theme?': 'string' };           // R.DB.materials[id]（TERRAIN。node で id を確かめる用）
   K.propDef = { 'solid?': 'bool', 'soft?': 'bool', 'light?': 'any', 'glow?': 'any', 'shadow?': 'any', 'footprint?': 'array', 'frames?': 'any', 'overChars?': 'bool' };   // R.DB.props[id]（TERRAIN）= hd:prop:<id> の meta
   K.bbgSheet = { frames: 'array', poses: { back: 'array', ground: 'array', 'front?': 'array', 'post?': 'array' }, anchors: 'object', w: 'number', h: 'number', meta: { mood: 'string', 'lantern?': 'object' } };
@@ -260,7 +266,8 @@
   const ICONS = ['bag', 'arts', 'equip', 'sword', 'greatsword', 'dagger', 'bow', 'staff', 'shield', 'helm', 'armor', 'glove', 'boots', 'ring',
     'order', 'beast', 'book', 'journal', 'map', 'save', 'gear', 'warp', 'exit', 'potion', 'gem', 'coin', 'clock', 'pin', 'quest', 'bulb',
     'inn', 'shop', 'ff', 'log', 'skip', 'star', 'check', 'lock', 'door', 'chat', 'person', 'search', 'heal', 'sun', 'up', 'down',
-    'key', 'lamp', 'spring', 'chest', 'secret', 'fire', 'ice', 'thunder', 'wind', 'earth', 'light', 'dark', 'repeat', 'steal'];
+    'key', 'lamp', 'spring', 'chest', 'secret', 'fire', 'ice', 'thunder', 'wind', 'earth', 'light', 'dark', 'repeat', 'steal',
+    'water'];   // 版 3: 属性の水（属性は fire water wind earth light dark）
   // 絵のキー（§2.5.7）の形
   const HD_KEYS = {
     field: 'hd:field:<look>  opts {scale?, lantern?}',

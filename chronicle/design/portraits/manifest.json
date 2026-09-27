@@ -614,5 +614,25 @@
   "priority": 3,
   "status": "todo",
   "note": "仮の顔（骨組み）。原画のシート9 待ち"
+ },
+ {
+  "look": "npc_tadeo",
+  "name": "タデオ",
+  "exprs": [
+   "neutral"
+  ],
+  "priority": 3,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。ファロスの人（CONTENT-P の依頼）"
+ },
+ {
+  "look": "npc_yena",
+  "name": "イェナ",
+  "exprs": [
+   "neutral"
+  ],
+  "priority": 3,
+  "status": "todo",
+  "note": "仮の顔（骨組み）。ファロスの人（CONTENT-P の依頼）"
  }
 ]

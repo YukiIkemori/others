@@ -1,0 +1,42 @@
+{
+ "id": "bench",
+ "kind": "props",
+ "theme": "harbor",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   24,
+   16
+  ],
+  "32": [
+   32,
+   21
+  ],
+  "40": [
+   40,
+   26
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   15
+  ],
+  "32": [
+   16,
+   20
+  ],
+  "40": [
+   20,
+   25
+  ]
+ },
+ "files": {
+  "24": "bench@24.png",
+  "32": "bench@32.png",
+  "40": "bench@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/harbor_a.png"
+}

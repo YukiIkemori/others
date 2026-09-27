@@ -114,7 +114,8 @@
       const vig = Math.max(0, Math.min(0.95, o.vignette != null ? o.vignette : mood.vignette || 0));
       const sh = gr && Array.isArray(gr.sh) ? gr.sh : [0, 0, 0];
       const lf = gr ? gr.lift || 0 : 0;
-      const lift = gr ? sh.map((v) => Math.max(0, Math.round(Math.max(0, v) * 0.35 + lf))) : [0, 0, 0];
+      const PS = (Hd.STYLE && Hd.STYLE.post) || {}, shL = PS.shLift != null ? PS.shLift : 0.35, lfM = PS.liftMul != null ? PS.liftMul : 1;
+      const lift = gr ? sh.map((v) => Math.max(0, Math.round(Math.max(0, v) * shL + lf * lfM))) : [0, 0, 0];
       g.globalCompositeOperation = 'source-over';
       g.imageSmoothingEnabled = false;
       g.drawImage(film(W, H, vig, lift, bd), 0, 0, W, H);

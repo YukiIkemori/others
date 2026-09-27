@@ -1,0 +1,42 @@
+{
+ "id": "door",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   23,
+   27
+  ],
+  "32": [
+   31,
+   36
+  ],
+  "40": [
+   39,
+   45
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   26
+  ],
+  "32": [
+   16,
+   35
+  ],
+  "40": [
+   19,
+   44
+  ]
+ },
+ "files": {
+  "24": "door@24.png",
+  "32": "door@32.png",
+  "40": "door@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/dungeon_b.png"
+}

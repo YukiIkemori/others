@@ -1,0 +1,165 @@
+STYLE: premium modern 2D pixel-art RPG character sprites (hi-bit, "HD pixel art" JRPG look), hand-placed pixels.
+- Proportions: about 2.7 heads tall (big head, slim neck, flaring coat/skirt hem). The head is as wide as the widest part of the clothes. Clear readable silhouette built from 6-8 big shapes (hair, face, torso garment, belt, legs, boots, held item).
+- Real pixel art: every art pixel is a crisp square of the same size across the whole image. No anti-aliasing, no blur, no gradients, no soft brushes, no noise or texture, no semi-transparency, no dithering / checkerboard mixing.
+- Outline: a 1-pixel dark outline around the whole figure, NOT pure black: a warm near-black (#1c1410-ish) mixed with the darkest shade of each material. Interior lines only between big shapes.
+- Lighting: soft key light from the upper left front. Lit planes top/left, shade bottom/right. The face area is the brightest part of the sprite. No rim light, no glow, no backlight, no light effects.
+- Colour ramps: skin 3-4 shades, hair 4-5, main garment 5-6, others 3-4; about 45-55 colours per character. Hue-shifted shading: shadows shift 10-20 degrees toward red/purple and get MORE saturated, highlights shift toward yellow and get less saturated. Never grey or black shadows. Rich but earthy, worn, practical colours.
+- Hair: chunky locks 3-5 px wide, each lock with light/mid/dark bands plus a 1-2 px glossy highlight band; jagged tips breaking the outline.
+- Cloth: big folds in 2-3 shade planes, cloth ends flutter backward and end in 1-px points.
+- Eyes: 2x3 px — a dark lash row, iris colour, one white highlight pixel. Usually no mouth.
+- Metal: cool grey 3-4 shades with 1-2 bright white highlight pixels; blades are a bright line with a dark edge.
+- Poses: dynamic and weighty — low centre of gravity, legs apart, torso leaning into the action, weapon and cloth making strong diagonals; attacks twist the whole body.
+- Background: one flat solid magenta #FF00FF everywhere. No floor shadow, no ground, no text, no labels, no numbers, no frames, no grid lines, no effects (no slash trails, sparkles, magic light).
+
+You are the pixel artist of a 2D RPG. Draw ONE sprite sheet: companion セルマ (selma), シート4 戦闘の行動ポーズ＋武器なし版.
+
+ATTACHED IMAGES:
+Image 1 = LAYOUT TEMPLATE drawn with ANOTHER character (the hero). Copy only its grid, cell positions, pixel size, figure size, facing and the kind of each pose. Do NOT copy the hero himself (no red scarf, no ash-brown messy hair, no black coat + cream cloth + brown leather combination). Draw the companion described below instead, with the companion's own stance and personality.
+Image 2 = QUALITY BAR (the hero's design sheet). Match its pixel density, shading, hue-shifted colour ramps, outline treatment and overall finish. Do not copy the character, the text or the paper layout.
+Image 3 = セルマ's APPROVED DESIGN SHEET: this is exactly how セルマ looks. Same person, same outfit, same colours, same proportions and the same pixel size in every pose.
+
+CANVAS: 3360x1440 px, flat #FF00FF. Grid of 3 rows x 5 columns, each cell 672x480 px (112x80 art px); one art pixel = 6 x 6 image px everywhere (this overrides the 8 px of the Japanese rules). One pose centred in each cell, never crossing into a neighbour cell or the image edge. Feet of all poses in a row on one line near the bottom of the cells.
+SIZE: the character is 64 art px tall head to feet (384 image px) in every upright pose (hair/headgear may add a little). Kneeling, crouching, jumping or lying poses keep the SAME body scale (same head size) — only the pose changes.
+Every battle pose faces LEFT (three-quarter view turned slightly toward the viewer), like the template.
+KEY LOOK: main colour #944D3B (hue 12 deg, mid value) on about half of the clothing — match this hex closely, do not drift to a brighter or more saturated colour. Head shape: single thick braid + iron brow band. Signature item: faded gate crest on rust tabard. Proportions exactly like the hero's sheets: about 2.7 heads tall, big head, NOT realistic tall proportions.
+POSES in reading order:
+row 1 col 1: wind-up before a slash
+row 1 col 2: follow-through after the slash (blade swung all the way down)
+row 1 col 3: thrust ready stance
+row 1 col 4: thrust (arm fully extended forward)
+row 1 col 5: charging a special move (weapon pulled back, body low)
+row 2 col 1: special strike (leaping, swinging down, mid-air)
+row 2 col 2: casting A (one hand held out forward)
+row 2 col 3: casting B (one hand raised high)
+row 2 col 4: using an item (raising a small bottle)
+row 2 col 5: evading (jumping backward)
+row 3 col 1: NO WEAPON: idle A with the weapon removed (hand still closed as if gripping a one-handed sword hilt)
+row 3 col 2: NO WEAPON: one-handed sword wind-up shape, empty closed hand
+row 3 col 3: NO WEAPON: one-handed sword follow-through shape, empty closed hand
+row 3 col 4: NO WEAPON: one-handed sword thrust shape, empty closed hand
+row 3 col 5: NO WEAPON: casting A with the weapon removed
+
+CHARACTER BRIEF (Japanese, authoritative):
+### 4.1 セルマ（selma）— 元衛兵・女・20歳・人間
+- **得意武器**：剣（まっすぐな片手の直剣＋左腕に小さな丸い鉄の盾）／前列
+- **身長**：戦闘64・フィールド48。すらりとして背すじが伸びた、鍛えた体つき。
+- **頭の形**：**太い一本の三つ編み**（右肩から胸の前へ垂らす）。額に**細い鉄の額当て**。髪は**明るい灰金（プラチナに近い麦色）**。
+- **主色**：**錆びた赤茶 12°**（#944D3B 前後）の袖なしの長い上衣（衛兵の上っ張り、ひざ丈、前後に垂れる）。
+- **副色**：磨いた鋼の灰（胸当て・肩当て・すね当て）、暗い灰の下衣、黒に近い革のベルト。上っ張りの胸に**色あせた門の紋章**（2色、鋼色の単純な形）。
+- **持ち歩き**：剣は左腰の鞘、盾は背中。
+- **姿勢と性格**：凛々しく、まっすぐ。待機は**剣を体の正面に立てて構える**衛兵の型。足をそろえ気味。勝利Bは剣を鞘に収めて小さくうなずく。
+- **表情**：きりっとした眉。笑顔は口角を少し上げる程度。
+- **してはいけない**：マフラー・スカーフ（アルンの赤と混ざる）。赤茶は鮮やかな赤ではなく、くすんだ錆の色。
+
+SHEET BRIEF (Japanese, authoritative; follow its pose table for this character's weapon type):
+### 戦闘用（シート3・4）の共通の決まり
+- 身長：4章の「戦闘」の値（アルンは64ドット）
+- 向き：**すべて左向き**。体は少しこちらに向けた4分の3の斜め横。（戦闘画面では味方が右側に立ち、左側の敵を向くため）
+- 武器：**その人の得意武器**（4章）を、4章の形で持つ。ポーズの中身は、下の「武器の系統ごとのポーズ」の表の、その人の系統の列に従う。
+- 立ち方・待機の癖・勝利のしぐさは4章の「姿勢と性格」のとおり。20人とも待機の姿勢が違って見えること。
+
+#### 武器の系統ごとのポーズ
+その人の系統の列を見る。剣の列はアルンのシート5・6と同じ。
+
+| 番号・名前 | 剣（片手） | 大剣（両手の重い武器。斧・槌・棍もここ） | 短剣 | 弓 | 杖 |
+|---|---|---|---|---|---|
+| 3-4 防御 | 剣を横に構えて身を固める | 刃（斧頭・槌頭・棍）を体の前に立てて盾にする | 腕を交差させ、身を縮めて低く | 弓を体の前に斜めに構えて身を固める | 杖を両手で横に掲げて受ける |
+| 3-6 瀕死 | 片ひざ、剣を地面に立てて支え | 片ひざ、武器を地面について支え | 片ひざと片手を地面につく | 片ひざ、弓を杖代わりに地面につく | 片ひざ、杖にすがる |
+| 3-8 勝利A | 剣を高く掲げる | 武器を肩に担ぐか、片手で高く掲げる | 短剣をくるりと回して逆手で決める | 弓を頭上に掲げる | 杖を高く掲げる |
+| 4-1 振りかぶり | 斬る前の振りかぶり | 両手で頭の後ろまで担ぎ上げる | 逆手に持ち、腕を引いて身を低く | 矢筒から矢を抜き、弦につがえる | 杖を頭上に振りかぶる |
+| 4-2 振り抜き | 剣を振り下ろしきった形 | 両手で振り下ろしきる（先が足元近く、体が前に沈む） | 横に素早く切り払い、腕が体の前を通りきる | 弓の本体で、近い敵を横に打ち払う | 杖を振り下ろしきる |
+| 4-3 突きの構え | 突きの構え | 両手で腰の横に水平に構える | 体を沈め、短剣を腰に引く | **弓を引き絞って狙う**（矢先は左） | 杖を両手で腰だめ、杖先を前へ |
+| 4-4 突き | 腕を前に伸ばしきる | 両手で前へ突き出す | 低く大きく踏み込んで刺す | **矢を放った直後**（弦が戻り、右手が後ろに開く。矢は描かない） | 杖先を前に突き出す |
+| 4-5 大技のため | 剣を後ろに引き、身を低く沈める | 武器を後ろへ低く引き、大きく沈む | 短剣を顔の前で構えて深くかがむ | 片ひざをつき、斜め上へ大きく引き絞る | 杖を体の前に立て、両手で握って身を沈める |
+| 4-6 大技の一撃 | 跳び上がって振り下ろす途中 | 跳び上がって両手で振り下ろす途中 | 跳び込んで上から突き刺す途中 | 跳び上がり、下の敵へ引き絞る | 杖を掲げて跳び、振り下ろす途中 |
+| 4-10 身をかわす | 後ろへ跳ぶ | 後ろへ跳ぶ（重そうに） | 後ろへ宙返りするように軽く跳ぶ | 後ろへ跳ぶ | 後ろへ跳ぶ |
+
+表にない番号（待機・一歩・ダメージ・戦闘不能・勝利B・閃き・詠唱・道具）は全系統共通。
+
+### シート4 戦闘の行動ポーズ＋武器なし版
+シート3と同じ大きさ・向き・装備。
+
+- 並べ方：3行×5列
+  - 行1・行2：次の10ポーズ（中身は系統の表）
+    1. 振りかぶり
+    2. 振り抜き
+    3. 突きの構え
+    4. 突き
+    5. 大技のため
+    6. 大技の一撃
+    7. 術の詠唱A（片手を前にかざす）
+    8. 術の詠唱B（片手を高く掲げる）
+    9. 道具を使う（小瓶を掲げる）
+    10. 身をかわす
+  - 行3：**武器を持たない版**の5ポーズ。仲間が別の系統の武器に持ち替えたとき、ゲームが武器の絵を手に重ねるために使う。**`arun_sheet_07.png` の行1と同じ5つの形**を、この人の体で描く。
+    11. 武器なし・待機（シート3の待機Aから武器だけ消した形）
+    12. 武器なし・振りかぶり（片手で剣を振りかぶる形）
+    13. 武器なし・振り抜き（片手で剣を振り抜いた形）
+    14. 武器なし・突き（片手で剣を突き出した形）
+    15. 武器なし・詠唱A（行2の7番から武器だけ消した形）
+    - 手は**片手剣の柄を握る形のまま**、指を閉じる。武器・矢筒の矢・盾は描かない（背中の荷物や楽器など服の一部はそのまま）。
+    - 得意武器が剣の人は、12〜14番を行1の1・2番と4番から武器だけ消した形にする。
+- 斬撃・矢・魔法の光・残像は描かない。
+
+**確認項目**
+- [ ] 1→2と並べると攻撃したように、3→4と並べると突いた（弓なら射た）ように見える
+- [ ] 行3の5ポーズで、手に片手剣を重ねたとき自然に握って見える
+- [ ] 全15ポーズ左向き・同じ大きさ
+
+COMMON RULES (Japanese):
+## 2. 全シート共通の決まり（必ず守る）
+
+### 2.1 絵柄（アルンのシートとまったく同じ）
+- 添付の `arun_sheet_05.png` と**同じ絵柄・同じ細かさ・同じ陰影のつけ方**。20人とアルンを並べたとき、同じゲームの同じ画家の絵に見えること。
+- 等身は**約2.7頭身**（子ども・背の低い人は4章の指定どおり少し変える）。頭が大きく、首が細い、はっきりしたシルエット。
+- 配色の考え方はアルンと同じ。
+  - 影は赤紫寄り、明るい所は黄寄りに色相をずらす。影ほど彩度を上げる。
+  - 顔の周りをいちばん明るくする。
+- 世界は「太陽が消えた夜の世界」。人々は灯りをともして暮らしている。服は**旅や仕事に使い込んだ、実用的な物**（すり切れ・継ぎ当て・革ひも・金具）。ただし絵の光は普通の光で描く（2.4）。
+
+### 2.2 ドット
+- **本物のドット絵**として描く。
+- **1ドット＝画像上で正確に8×8ピクセルの正方形**。シート全体・全ポーズでドットの大きさを同じにする。
+- 次のものは使わない。
+  - ぼかし
+  - アンチエイリアス（なめらかな縁）
+  - グラデーション
+  - ノイズ・紙の質感
+  - 半透明
+- 輪郭は1ドットの暗い線。純粋な黒ではなく、黒に近い色と、その部分の一番暗い色を混ぜる。内側の線は部品の境目だけに引く。
+- 1キャラの色数は**50色前後まで**。肌は3〜4段、服の主な色は6段くらいの陰影にする。
+- 目は2×2〜3ドット。まつげの暗い列・瞳の色・1ドットの白いハイライトで描く。口は基本的に描かない（顔のシートは除く）。
+
+### 2.3 背景・配置
+- 背景は**すべて単色のマゼンタ #FF00FF**。
+- 床の影・地面・枠・飾り・文字・見出し・番号・説明文は**描かない**（設定画も文字なし）。
+- ポーズは**格子状に等間隔**で並べる。ポーズどうしの間は、最低でも10ドット（80px）以上あける。
+- 同じシートのポーズは**身長を同じ**にする。**足の裏の線（接地線）は行ごとに同じ高さ**にする。
+- 武器の先・帽子の羽根・布のはしが、隣のポーズや画像の端にかからない。
+
+### 2.4 光とエフェクト
+- 光は**正面の上からの普通の光**だけ。
+- 次のものは描かない。ゲーム側で後から付ける。
+  - 夜の灯り・ランタンの光
+  - 逆光
+  - 光の筋
+  - キラキラ
+  - 炎のゆらぎ
+  - 斬撃の軌跡・矢の軌跡
+  - 魔法の光・杖先の光
+  - 残像
+- 杖の宝石・鉱夫の兜のランプなどの「物」は描いてよい。ただし**光らせない**（普通の物として塗る）。
+
+### 2.5 色の決まり（20人の見分けのため）
+- その人の**主色**（4章と5章の表）を、服の面積の**半分近く**に使う。主色以外は、4章の「副色」と、革・金属・布の地味な色だけ。
+- **使ってはいけない色**：
+  - マゼンタ・赤紫・ピンク紫（色相およそ285〜330°の鮮やかな色）。背景といっしょに消えてしまう。紫系はヴィオラの藤色（青寄りの淡い紫）だけ。
+  - アルンの目印：**赤いマフラー／首まわりの鮮やかな赤い布**、**灰茶色のくせ毛**、**黒い上着＋生成りの布＋茶色の革の胸当ての組み合わせ**。20人の誰にも使わない。
+- 光る物（宝石・ランプ・色の強い小物）は1人1つまで。
+
+### 2.6 出力
+- **PNG**で出力する。JPG にしない。
+- 画像の比率は横長（16:9 や 3:2）か正方形。ポーズが全部はっきり入る大きさにする。
+- 画像を大きくできないときも、**1ドットはシート全体で同じ大きさの正方形**のまま（8pxより小さくなってもよいが、混ぜない）。
+
+---

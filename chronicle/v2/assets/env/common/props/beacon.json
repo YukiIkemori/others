@@ -1,0 +1,46 @@
+{
+ "id": "beacon",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   25,
+   33
+  ],
+  "32": [
+   33,
+   44
+  ],
+  "40": [
+   41,
+   55
+  ]
+ },
+ "feet": {
+  "24": [
+   12,
+   32
+  ],
+  "32": [
+   16,
+   43
+  ],
+  "40": [
+   21,
+   54
+  ]
+ },
+ "files": {
+  "24": "beacon@24.png",
+  "32": "beacon@32.png",
+  "40": "beacon@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/dungeon_b.png",
+ "light32": [
+  0,
+  -30
+ ]
+}

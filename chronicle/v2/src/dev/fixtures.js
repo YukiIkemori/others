@@ -58,7 +58,13 @@
     const mapId = sc.map || fx.map.id;
     await R.Field.enter(mapId, sc.spawn || fx.map.spawn, { fade: 0, noAutosave: true });
     if (sc.scene === 'battle') { R.Battle.start(sc.setup || { troop: 'tr_stub' }); return true; }
-    if (sc.scene === 'screen') { R.Screens.open(sc.id, sc.params); return true; }
+    if (sc.scene === 'screen') {
+      // すりガラス（UIK.snapshot）が描けたマップを写すよう、フィールドが何フレームか描いて焼く列が空くのを待つ（最大 24 フレーム）
+      const f0 = R.Engine.frame;
+      if (R.Engine.running) await R.until(() => R.Engine.frame >= f0 + 3 && (R.Engine.frame > f0 + 24 || !R.Hd.stats || !R.Hd.stats().queue));
+      R.Screens.open(sc.id, sc.params);
+      return true;
+    }
     if (sc.scene === 'event') { R.Events.run(sc.event, { map: mapId }); return true; }
     return true;
   };

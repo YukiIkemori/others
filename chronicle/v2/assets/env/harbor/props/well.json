@@ -1,0 +1,42 @@
+{
+ "id": "well",
+ "kind": "props",
+ "theme": "harbor",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   30,
+   39
+  ],
+  "32": [
+   40,
+   52
+  ],
+  "40": [
+   50,
+   65
+  ]
+ },
+ "feet": {
+  "24": [
+   15,
+   38
+  ],
+  "32": [
+   20,
+   51
+  ],
+  "40": [
+   25,
+   64
+  ]
+ },
+ "files": {
+  "24": "well@24.png",
+  "32": "well@32.png",
+  "40": "well@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/harbor_a.png"
+}

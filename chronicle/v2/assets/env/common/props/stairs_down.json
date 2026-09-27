@@ -1,0 +1,42 @@
+{
+ "id": "stairs_down",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   26,
+   20
+  ],
+  "32": [
+   34,
+   27
+  ],
+  "40": [
+   42,
+   34
+  ]
+ },
+ "feet": {
+  "24": [
+   13,
+   20
+  ],
+  "32": [
+   17,
+   26
+  ],
+  "40": [
+   21,
+   32
+  ]
+ },
+ "files": {
+  "24": "stairs_down@24.png",
+  "32": "stairs_down@32.png",
+  "40": "stairs_down@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/dungeon_b.png"
+}

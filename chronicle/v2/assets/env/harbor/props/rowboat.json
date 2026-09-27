@@ -1,0 +1,42 @@
+{
+ "id": "rowboat",
+ "kind": "props",
+ "theme": "harbor",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   46,
+   28
+  ],
+  "32": [
+   62,
+   37
+  ],
+  "40": [
+   78,
+   46
+  ]
+ },
+ "feet": {
+  "24": [
+   23,
+   27
+  ],
+  "32": [
+   31,
+   36
+  ],
+  "40": [
+   39,
+   45
+  ]
+ },
+ "files": {
+  "24": "rowboat@24.png",
+  "32": "rowboat@32.png",
+  "40": "rowboat@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/harbor_a.png"
+}

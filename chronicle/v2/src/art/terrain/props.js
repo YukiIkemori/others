@@ -156,6 +156,8 @@
       else { B.poly([[-9, 0], [9, 0], [9, -5], [-9, -5]], m.stone, 0, { bevel: 1.2 }); B.poly([[-7, on ? -2 : -4], [7, on ? -2 : -4], [7, on ? -4 : -7], [-7, on ? -4 : -7]], col, 0.1, { bevel: 1, ny: -0.8 }); }
       return on ? { light: [0, -5], cyan: true, small: true } : null;
     },
+    // ロアの語り石（CONTENT-P の依頼、STORY_BIBLE §2.3）: 人の背ほどの平たい炉石。前の半分に白く抜けた刻み文字。光らない
+    talestone(B) { const m = mats(), RZ = R.Hd.RZ, pale = RZ.mat({ keys: ['#8c8a86', '#c8c4ba', '#eae6dc'], n: 3, flat: true }); B.ell(0, -1, 13, 4, m.stone, 0, { bulge: 0.4 }); B.poly([[-11, -1], [11, -1], [10, -30], [6, -36], [-6, -36], [-10, -30]], m.stone, 0.1, { bevel: 3, nx: -0.08 }); [[-7, -29], [-2, -29], [3, -29], [-7, -23], [-1, -23], [4, -23], [-6, -17], [0, -17]].forEach(([x, y], i) => B.rect(x, y, i % 3 === 1 ? 2 : 3, 2.2, pale, 0.2)); B.rect(-9, -12, 18, 1.4, m.stoneDk, 0.2); B.ell(6, -4, 4, 1.8, m.moss, 0.15, { bulge: 0.6 }); return {}; },
     songstone(B) { const m = mats(); B.ell(0, -1, 9, 3.5, m.stone, 0, { bulge: 0.4 }); B.poly([[-6, -1], [6, -1], [5, -26], [1, -32], [-4, -28], [-6, -18]], m.stoneDk, 0.1, { bevel: 2.5, nx: -0.1 }); [[-2, -22], [1, -17], [-1, -11]].forEach(([x, y]) => B.rect(x, y, 2.4, 3, m.rune, 0.2)); B.ell(-3, -6, 4, 2, m.moss, 0.15, { bulge: 0.6 }); return { light: [0, -18], cyan: true, small: true }; },
     footprint(B) { const m = mats(); B.ell(0, -3, 2.4, 3, m.foot, 0); [[-2.6, -7], [0, -7.8], [2.6, -7]].forEach(([x, y]) => B.ell(x, y, 1, 1.1, m.foot, 0.1)); return { light: [0, -4], cyan: true, small: true }; },
     beacon(B, o, f) {
@@ -219,7 +221,7 @@
     chest: { solid: true, frames: ['closed', 'open', 'rare_closed', 'rare_open'], glow: 'sparkle', light: L('chest', 34) },
     spring: { solid: true, light: L('spring', 150), glow: true, footprint: [2, 2], frames: ['f0', 'f1', 'f2', 'f3'] },
     brazier: { solid: true, frames: ['off', 'on'], light: L('fire', 'fire') }, waylamp: { solid: true, frames: ['off', 'on'], light: L('lamp', 'lampR') },
-    switch: { soft: true, frames: ['off', 'on'] }, songstone: { solid: true, glow: true, light: L('crystal', 48) }, footprint: { soft: true, glow: true },
+    switch: { soft: true, frames: ['off', 'on'] }, songstone: { solid: true, glow: true, light: L('crystal', 48) }, talestone: { solid: true, shadow: 'blob' }, footprint: { soft: true, glow: true },
     beacon: { light: L('fire', 220), glow: true }, stairs_up: {}, stairs_down: {}, door: {},
     // 足した物
     board: { solid: true }, bollard: { solid: true }, stall: { solid: true }, net: { soft: true }, rowboat: { solid: true }, ship: { solid: true, light: L('lamp', 80) },

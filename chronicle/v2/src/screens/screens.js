@@ -107,7 +107,7 @@
     const snap = R.UIK.lastSnapshot && R.UIK.lastSnapshot();
     if (snap && !(v && v.plainBg)) {
       g.save(); g.imageSmoothingEnabled = true; g.drawImage(snap, 0, 0, R.W, R.H); g.restore();
-      g.save(); g.fillStyle = 'rgba(8,9,18,0.46)'; g.fillRect(0, 0, R.W, R.H); g.restore();
+      g.save(); g.fillStyle = 'rgba(8,9,18,0.34)'; g.fillRect(0, 0, R.W, R.H); g.restore();
     } else {
       const gr = g.createLinearGradient(0, 0, 0, R.H);
       gr.addColorStop(0, '#12142c'); gr.addColorStop(0.55, '#171830'); gr.addColorStop(1, '#221c34');
@@ -195,7 +195,7 @@
     return out;
   };
   /** 属性・系統のアイコン（無い名前は近い物で） */
-  S.elemIcon = (e) => (R.UIK.hasIcon(e) ? e : ({ water: 'ice' })[e] || 'arts');
+  S.elemIcon = (e) => (R.UIK.hasIcon(e) ? e : 'arts');
   S.wname = (w) => (R.DB.weaponTypes && R.DB.weaponTypes[w] && R.DB.weaponTypes[w].name) || (R.Rules.WTYPE_NAMES || {})[w] || w;
   S.ename = (e) => (R.DB.elements && R.DB.elements[e] && (R.Rules.ELEMENT_NAMES || {})[e]) || (R.Rules.ELEMENT_NAMES || {})[e] || e;
 
@@ -204,7 +204,8 @@
     o = o || {};
     g.save();
     g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.clip();
-    R.UIK.portraitFrame(g, { x: cx - r, y: cy - r * 0.92, w: r * 2, h: r * 2 }, look, { ring: false, r: 0, dim: o.dim });
+    // 顔の絵は胸から上（下の中央に合わせて描かれる）ので、円より大きい枠で頭が円いっぱいになるように
+    R.UIK.portraitFrame(g, { x: cx - r * 1.2, y: cy - r * 1.25, w: r * 2.4, h: r * 2.4 }, look, { ring: false, r: 0, dim: o.dim });
     g.restore();
     g.save(); g.beginPath(); g.arc(cx, cy, r - 0.25, 0, Math.PI * 2);
     g.strokeStyle = o.ring || (o.dim ? 'rgba(240,228,200,0.12)' : 'rgba(240,228,200,0.3)'); g.lineWidth = 0.75; g.stroke(); g.restore();

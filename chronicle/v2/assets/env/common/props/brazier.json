@@ -1,0 +1,47 @@
+{
+ "id": "brazier",
+ "kind": "props",
+ "theme": "common",
+ "frames": [
+  "off",
+  "on"
+ ],
+ "cell": {
+  "24": [
+   27,
+   32
+  ],
+  "32": [
+   36,
+   42
+  ],
+  "40": [
+   45,
+   52
+  ]
+ },
+ "feet": {
+  "24": [
+   14,
+   31
+  ],
+  "32": [
+   18,
+   41
+  ],
+  "40": [
+   22,
+   51
+  ]
+ },
+ "files": {
+  "24": "brazier@24.png",
+  "32": "brazier@32.png",
+  "40": "brazier@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/dungeon_a.png",
+ "light32": [
+  0,
+  -24
+ ]
+}

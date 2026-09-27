@@ -1,0 +1,42 @@
+{
+ "id": "barrel",
+ "kind": "props",
+ "theme": "harbor",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   14,
+   20
+  ],
+  "32": [
+   19,
+   26
+  ],
+  "40": [
+   24,
+   32
+  ]
+ },
+ "feet": {
+  "24": [
+   7,
+   19
+  ],
+  "32": [
+   10,
+   25
+  ],
+  "40": [
+   12,
+   31
+  ]
+ },
+ "files": {
+  "24": "barrel@24.png",
+  "32": "barrel@32.png",
+  "40": "barrel@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/harbor_a.png"
+}

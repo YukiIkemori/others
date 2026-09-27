@@ -45,6 +45,7 @@
 //   first use, looped between loopStart/loopEnd s; decode failure → synth). Jingles stay synthesised.
 //   R.Audio.playVoice(id) → handle|null, stopVoice(handle?) — own bus (Settings.voiceVolume), BGM −9 dB
 //   while a line plays. setVolumes(bgm, sfx, voice).
+//   R.Audio.battleVoiceId(id) — any battle clip by id (no duck, replaces only the previous battle voice).
 //   R.Audio.battleVoice(kind[, gender]) — the hero's battle shout v_hero_<m|f>_<kind>_<n> (random clip, no duck;
 //   kinds attack glimmer spell hurt ko victory; gender from R.State.hero().gender). Missing → silent.
 (function (R) {
@@ -1383,6 +1384,15 @@
         const pool = ids.length > 1 ? ids.filter((k) => k !== bvLast[kind + g]) : ids;
         const id = pool[Math.floor(Math.random() * pool.length)];
         bvLast[kind + g] = id;
+        return A.battleVoiceId(id);
+      } catch (e) { return null; }
+    },
+    /** a battle voice clip by id (companions' and the hero's shouts, BSCENE): own voice volume, no BGM duck,
+     *  does not stop a story line (R.Audio.voice), replaces only the previous battle voice. → handle | null. Never throws. */
+    battleVoiceId(id) {
+      try {
+        if (!mx || !id || !(vols.voice > 0) || !running()) return null;
+        if (!mediaEntry('voice', id)) return null;
         if (bv) endBattleVoice(bv);
         const h = (bv = { id, stopped: false, src: null, out: null });
         const c = loadBuffer('voice', id);

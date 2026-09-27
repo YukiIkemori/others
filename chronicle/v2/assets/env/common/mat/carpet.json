@@ -1,0 +1,18 @@
+{
+ "id": "carpet",
+ "kind": "material",
+ "theme": "common",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "carpet@32.png",
+  "24": "carpet@24.png",
+  "40": "carpet@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/common/carpet.png",
+ "native_px": 10.7,
+ "colours": 40
+}

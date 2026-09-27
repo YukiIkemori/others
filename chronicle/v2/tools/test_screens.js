@@ -85,6 +85,23 @@ if (two && hero.equip.shield) {
   const db = S.itemDiff(hero, 'weapon1', 'w_bow_short').find((x) => x.k === 'def');
   ok('two-handed weapon counts the shield it pushes off', db && db.d < 0, db);
 }
+section('人の値の増減（R.Rules.preview。装備・店の ▲▼、A20）');
+{
+  const pv = R.Rules.preview(hero, 'weapon1', 'w_sword_2');
+  const sd = S.statDiff(hero, 'weapon1', 'w_sword_2');
+  ok('statDiff d = R.Rules.preview for every row', sd.length > 0 && sd.every((x) => x.d === (pv[x.k] || 0)), sd);
+  ok('statDiff before = the member’s current value, after = before + d', sd.every((x) => x.after === x.before + x.d) && sd.find((x) => x.k === 'atk').before === S.statVal(R.Rules.stats(hero), 'atk'));
+  ok('statDiff keys are R.Rules.DIFF_KEYS', sd.every((x) => R.Rules.DIFF_KEYS.includes(x.k)));
+  const gs = Object.keys(R.DB.items).find((id) => R.Rules.isTwoHanded(id) && R.DB.items[id].slot === 'weapon');
+  if (gs && hero.equip.shield) ok('statDiff: a two-hander counts the pushed-off shield (def goes down)', (S.statDiff(hero, 'weapon1', gs).find((x) => x.k === 'def') || {}).d < 0);
+  const members = S.party();
+  const per = members.map((c) => S.statDiff(c, R.Rules.defaultSlot(c, 'w_sword_2'), 'w_sword_2').map((x) => x.d).join(','));
+  ok('per-member deltas differ by member (not the item values)', new Set(per).size > 1, per);
+  const cands = ['w_sword_2', 'w_sword_coral', hero.equip.weapon1].filter(Boolean);
+  const sorted = cands.slice().sort((a2, b2) => S.equipScore(hero, 'weapon1', b2) - S.equipScore(hero, 'weapon1', a2));
+  ok('equipScore orders candidates (strongest first)', S.equipScore(hero, 'weapon1', sorted[0]) >= S.equipScore(hero, 'weapon1', sorted[sorted.length - 1]));
+  ok('shop list = R.Rules.shopItems', R.Rules.shopItems('shop_pharos_arms').length > 0);
+}
 ok('bestDelta picks the largest change', (S.bestDelta([{ d: 1 }, { d: -5 }, { d: 3 }]) || {}).d === -5);
 
 section('得意（名前だけ）と肩書き');

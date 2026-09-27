@@ -1,0 +1,18 @@
+{
+ "id": "road",
+ "kind": "material",
+ "theme": "common",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "road@32.png",
+  "24": "road@24.png",
+  "40": "road@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/common/road.png",
+ "native_px": 8.3,
+ "colours": 40
+}

@@ -1,0 +1,73 @@
+23:42:50 arun-fix: 4 redo lines from out/arun_v1/report.json
+23:42:50 sheet 1 fix1: reusing saved raw
+23:42:50   calibrated pitch 7.98 px (requested 8; 2 reference poses)
+23:42:51   pasted: walk_down_1 32x48, walk_down_2 32x48, walk_up_1 31x48, walk_up_2 32x48
+23:42:51 pipeline: sheets.py ../art_ref/gen/arun/arun --char arun --out out/arun_v2 --check
+23:45:20   |   シート5 戦闘の基本ポーズ: 要作り直し  arun_sheet_05.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+23:45:20   |   シート6 戦闘の行動ポーズ: 要作り直し  arun_sheet_06.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+23:45:20   |   シート7 武器なし版と武器: OK  arun_sheet_07.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+23:45:20   |   シート9 顔の表情: OK  arun_sheet_09.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+23:45:20   |   シート4 演技ポーズ（上・左向き）: OK  arun_sheet_04.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+23:45:20   |   シート8 戦闘の追加ポーズ: OK  arun_sheet_08.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+23:45:20 round 1: 0 redo lines left 
+23:45:20 pipeline: sheets.py ../art_ref/gen/arun/arun --char arun --out out/arun_v2
+23:48:23   |   シート7 武器なし版と武器: OK  arun_sheet_07.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+23:48:23   |   シート9 顔の表情: OK  arun_sheet_09.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+23:48:23   |   シート4 演技ポーズ（上・左向き）: OK  arun_sheet_04.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+23:48:23   |   シート8 戦闘の追加ポーズ: OK  arun_sheet_08.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+23:48:23   | 
+23:48:23   | packed field 368x676, battle 650x435, battle_bare 405x75, weapons 465x30, face 288x168 | palette 51 + face 41
+23:48:23 done (clean). pipeline output: out/arun_v2
+23:48:44 arun-fix: 2 redo lines from out/arun_v2/report.json
+23:48:45 sheet 3 fix1: edit act_kneel,act_sit (window rows 2-3 cols 1-4, 3072x1024, pitch 8, quality medium)
+23:49:03 arun-fix: 5 redo lines from out/arun_v2/report.json
+23:49:04 sheet 3 fix1: edit act_kneel,act_sit (window rows 2-3 cols 1-4, 3072x1024, pitch 8, quality medium)
+23:49:40   calibrated pitch 7.83 px (requested 8; 6 reference poses)
+23:49:41   pasted: act_kneel 38x40, act_sit 48x40
+23:49:41 sheet 5 fix1: edit weak (window rows 1-2 cols 1-5, 3648x1344, pitch 7, quality medium)
+23:50:30   calibrated pitch 6.84 px (requested 7; 9 reference poses)
+23:50:31   pasted: weak 62x53
+23:50:31 sheet 6 fix1: edit charge,smash (window rows 1-2 cols 2-5, 3328x1280, pitch 8, quality medium)
+23:51:14   calibrated pitch 7.78 px (requested 8; 6 reference poses)
+23:51:15   smash: nothing drawn in the cell
+23:51:15   pasted: charge 66x44
+23:51:15 pipeline: sheets.py ../art_ref/gen/arun/arun --char arun --out out/arun_v2 --check
+23:53:12 pipeline: sheets.py ../art_ref/gen/arun/arun --char arun --out out/arun_v2 --check
+23:55:46   |   シート5 戦闘の基本ポーズ: OK  arun_sheet_05.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+23:55:46   |   シート6 戦闘の行動ポーズ: 要作り直し  arun_sheet_06.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+23:55:46   |   シート7 武器なし版と武器: OK  arun_sheet_07.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+23:55:46   |   シート9 顔の表情: OK  arun_sheet_09.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+23:55:46   |   シート4 演技ポーズ（上・左向き）: OK  arun_sheet_04.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+23:55:46   |   シート8 戦闘の追加ポーズ: OK  arun_sheet_08.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+23:55:46 arun-fix: 1 redo lines from out/arun_v2/report.json
+23:55:46 sheet 6 fix2: edit smash (window rows 1-2 cols 1-4, 3328x1280, pitch 8, quality medium)
+23:56:25   calibrated pitch 7.92 px (requested 8; 7 reference poses)
+23:56:27   pasted: smash 61x82
+23:56:27 pipeline: sheets.py ../art_ref/gen/arun/arun --char arun --out out/arun_v2 --check
+23:58:52   |   シート5 戦闘の基本ポーズ: OK  arun_sheet_05.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+23:58:52   |   シート6 戦闘の行動ポーズ: 要作り直し  arun_sheet_06.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+23:58:52   |   シート7 武器なし版と武器: OK  arun_sheet_07.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+23:58:52   |   シート9 顔の表情: OK  arun_sheet_09.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+23:58:52   |   シート4 演技ポーズ（上・左向き）: OK  arun_sheet_04.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+23:58:52   |   シート8 戦闘の追加ポーズ: OK  arun_sheet_08.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+23:58:52 round 1: 1 redo lines left 6:smash
+23:58:53 sheet 6 fix3: edit smash (window rows 1-2 cols 1-4, 3328x1280, pitch 8, quality medium)
+23:59:33   calibrated pitch 7.92 px (requested 8; 7 reference poses)
+23:59:35   pasted: smash 54x75
+23:59:35 pipeline: sheets.py ../art_ref/gen/arun/arun --char arun --out out/arun_v2 --check
+00:01:58   |   シート5 戦闘の基本ポーズ: OK  arun_sheet_05.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+00:01:58   |   シート6 戦闘の行動ポーズ: 要作り直し  arun_sheet_06.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+00:01:58   |   シート7 武器なし版と武器: OK  arun_sheet_07.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+00:01:58   |   シート9 顔の表情: OK  arun_sheet_09.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+00:01:58   |   シート4 演技ポーズ（上・左向き）: OK  arun_sheet_04.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+00:01:58   |   シート8 戦闘の追加ポーズ: OK  arun_sheet_08.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+00:01:58 round 2: 1 redo lines left 6:smash
+00:01:58 no redo lines left
+00:01:58 pipeline: sheets.py ../art_ref/gen/arun/arun --char arun --out out/arun_v2
+00:05:23   |   シート7 武器なし版と武器: OK  arun_sheet_07.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+00:05:23   |   シート9 顔の表情: OK  arun_sheet_09.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+00:05:23   |   シート4 演技ポーズ（上・左向き）: OK  arun_sheet_04.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+00:05:23   |   シート8 戦闘の追加ポーズ: OK  arun_sheet_08.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+00:05:23   | 
+00:05:23   | packed field 368x676, battle 650x430, battle_bare 405x75, weapons 465x30, face 288x168 | palette 52 + face 41
+00:05:23 done (clean). pipeline output: out/arun_v2

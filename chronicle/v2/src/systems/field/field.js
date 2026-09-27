@@ -57,8 +57,8 @@
     exit() {},
     onLayout() { F.hud.refresh(); },
     tick(dt) {
-      // 暗転の間（入る前）: 次のマップの焼きを進める（画面は暗くなっていくだけなので 1 フレーム 8 ms まで）
-      if (S.entering && S.pre) F.chunks.preStep(8);
+      // 暗転の間（入る前）: 次のマップの焼きを進める（画面は暗くなっていくだけなので 1 フレーム 12 ms まで）
+      if (S.entering && S.pre) F.chunks.preStep(12);
       if (S.map) { F._tickMove(); F._tickNpcs(dt); F.camera._tick(); }
     },
     update() {
@@ -143,6 +143,7 @@
       if (fade) await R.Engine.fadeTo(0, fade / 2);
     } finally { S.entering--; }
     F.chunks.lookAhead();   // 入口のすぐ横の出口（屋内の扉など）の先も列で先に焼いておく
+    F.chunks.neighbors();   // つながっているマップの素材・物の絵を列の余りで
     if (!o.noAutosave) { try { R.Save.autosave('map'); } catch (e) { console.error(e); } }
     // on:'enter' のトリガー（onEnter。入るたび、once なら 1 回）
     const G = R.Game;

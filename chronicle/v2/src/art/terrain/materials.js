@@ -68,6 +68,9 @@
     dirt: ramp(['#2a1e14', '#42301e', '#5c442a', '#76583a', '#8e6e4a'], 7),
     road: ramp(['#2e2418', '#463626', '#5e4a34', '#786046', '#927a58'], 7),
     sand: ramp(['#3a3226', '#5a4e3a', '#7a6c50', '#9a8a68', '#b8a682'], 7),
+    // 縦切りの外の雪原・灰の荒野（CONTENT-P の依頼、P2）
+    snow: ramp(['#5a6072', '#7c8498', '#a0a8ba', '#c4cad8', '#e2e6ee', '#f4f6fa'], 8),
+    ash: ramp(['#1c1a1c', '#2e2a2a', '#44403c', '#5c5650', '#766e66'], 7),
     cobble: ramp(['#262422', '#3e3a36', '#5a534c', '#776d62', '#93877a', '#ad9f8e'], 8),
     flag: ramp(['#34302c', '#524c44', '#70685c', '#8e8474', '#aa9f8c'], 8),
     plank: ramp(['#241610', '#40281a', '#5c3e28', '#7a5838', '#96744c', '#b08e62'], 8),
@@ -227,6 +230,8 @@
     dirt: { name: '土', gen: () => earthGen({ ramp: PAL.dirt, seed: 34 }), pri: 20, edge: 'soft', amp: 0.26, walk: true, halo: -0.06, macro: 0.12 },
     road: { name: '土の道', gen: () => earthGen({ ramp: PAL.road, ruts: true, seed: 35, lift: 0.04 }), pri: 22, edge: 'soft', amp: 0.24, walk: true, rim: -0.06, halo: -0.1, macro: 0.08 },
     cobble: { name: '石畳', gen: () => stones({ nc: 14, nr: 18, ramp: PAL.cobble, mortar: MORTAR, flat: true, seed: 2 }), pri: 40, edge: 'soft', amp: 0.12, walk: true, rim: -0.2, halo: -0.14, macro: 0.06 },
+    snow: { name: '雪原', gen: () => earthGen({ ramp: PAL.snow, seed: 38, lift: 0.04 }), pri: 12, edge: 'soft', amp: 0.34, walk: true, halo: -0.05, macro: 0.12 },
+    ash: { name: '灰の荒野', gen: () => earthGen({ ramp: PAL.ash, seed: 39, ruts: true }), pri: 11, edge: 'soft', amp: 0.3, walk: true, halo: -0.06, macro: 0.12 },
     sand: { name: '砂', gen: () => earthGen({ ramp: PAL.sand, seed: 36 }), pri: 10, edge: 'soft', amp: 0.3, walk: true, halo: -0.04, macro: 0.1 },
     plank: { name: '板', gen: () => planks({ ramp: PAL.plank }), pri: 50, edge: 'hard', walk: true, rim: -0.3, halo: -0.25 },
     deck: { name: '足場', gen: () => planks({ ramp: PAL.plank, lift: 0.05, seed: 5 }), pri: 50, edge: 'hard', walk: true, rim: -0.3, halo: -0.25 },
