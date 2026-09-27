@@ -4,6 +4,7 @@
 import sys, os, json
 sys.path.insert(0, os.path.dirname(__file__))
 from envlib import *
+from envlib import _wrap_x
 from scipy.cluster.vq import vq
 
 ROOT = '/home/user/others/chronicle/v2/assets/env'

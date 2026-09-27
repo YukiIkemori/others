@@ -232,8 +232,10 @@ function scanEnv(root) {
   };
   for (const e of out) {
     const dir = path.dirname(e.file), base = path.basename(e.file, '.png');
-    const id = /\/bbg\//.test(e.file) ? path.basename(dir) : base.replace(/@\d+$/, '').replace(/_emit$/, '');
-    e.meta = readMeta(dir, id);
+    const bbg = /[\\/]bbg[\\/]/.test(e.file);
+    const id = bbg ? path.basename(dir) : base.replace(/@\d+$/, '').replace(/_emit$/, '');
+    // meta は 1 つの id に 1 回だけ（@32 の絵、戦闘背景は back）。RPG_MEDIA を小さく保つ
+    if (bbg ? base === 'back' : /@32$/.test(base) && !/_emit@/.test(base)) e.meta = readMeta(dir, id);
   }
   return out;
 }

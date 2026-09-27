@@ -1,6 +1,7 @@
 {
  "char": "selma",
  "companion": "selma",
+ "npc": null,
  "folder": "/home/user/others/chronicle/design/art_ref/gen/companion/selma",
  "sheets": {
   "1": {
@@ -37,13 +38,13 @@
    "sprites": {
     "ref_front": {
      "size": [
-      31,
+      35,
       64
      ],
      "box": [
-      304,
+      288,
       176,
-      584,
+      600,
       720
      ],
      "air": 0,
@@ -51,13 +52,13 @@
     },
     "ref_34": {
      "size": [
-      30,
-      63
+      34,
+      64
      ],
      "box": [
-      1208,
-      184,
-      1480,
+      1192,
+      176,
+      1496,
       720
      ],
      "air": 0,
@@ -65,13 +66,13 @@
     },
     "ref_side_left": {
      "size": [
-      22,
-      63
+      25,
+      64
      ],
      "box": [
-      2136,
-      184,
-      2344,
+      2120,
+      176,
+      2352,
       720
      ],
      "air": 0,
@@ -79,13 +80,13 @@
     },
     "ref_back": {
      "size": [
-      30,
+      36,
       64
      ],
      "box": [
-      3000,
+      2976,
       176,
-      3272,
+      3296,
       720
      ],
      "air": 0,
@@ -93,13 +94,13 @@
     },
     "ref_idle_left": {
      "size": [
-      36,
-      66
+      45,
+      68
      ],
      "box": [
-      288,
-      928,
-      608,
+      248,
+      912,
+      640,
       1488
      ],
      "air": 0,
@@ -107,27 +108,27 @@
     },
     "ref_face": {
      "size": [
-      67,
-      68
+      66,
+      73
      ],
      "box": [
-      1056,
-      864,
+      1064,
+      840,
       1624,
-      1440
+      1456
      ],
      "air": 0,
      "blur": 0.0
     },
     "ref_palette": {
      "size": [
-      66,
-      31
+      59,
+      30
      ],
      "box": [
-      1960,
-      1008,
-      2520,
+      1984,
+      1016,
+      2488,
       1288
      ],
      "air": 0,
@@ -162,115 +163,115 @@
    "extras": [],
    "period": 8.0,
    "clarity": 99.0,
-   "src_height": 376.0,
-   "native_height_at_period": 47.0,
-   "scale_note": "描かれた格子のまま（47.0 ドット）",
+   "src_height": 380.0,
+   "native_height_at_period": 47.5,
+   "scale_note": "描かれた格子のまま（47.5 ドット）",
    "cell": 8.0,
    "sprites": {
     "walk_down_0": {
      "size": [
-      25,
-      48
-     ],
-     "box": [
-      200,
-      80,
-      432,
-      496
-     ],
-     "air": 0,
-     "blur": 0.0,
-     "facing_score": 1.03
-    },
-    "walk_down_1": {
-     "size": [
-      27,
+      26,
       49
      ],
      "box": [
-      832,
+      200,
       72,
-      1080,
+      440,
       496
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.7,
+     "facing_score": 1.09
+    },
+    "walk_down_1": {
+     "size": [
+      28,
+      48
+     ],
+     "box": [
+      832,
+      80,
+      1088,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.9,
      "scale": 1.0
     },
     "walk_down_2": {
      "size": [
-      27,
-      49
+      28,
+      48
      ],
      "box": [
       1472,
-      72,
-      1720,
+      80,
+      1728,
       496
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.92,
+     "facing_score": 0.96,
      "scale": 1.0
     },
     "walk_up_0": {
      "size": [
-      25,
+      26,
       48
      ],
      "box": [
       200,
       592,
-      432,
+      440,
       1008
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.74,
-     "scale": 0.935
+     "facing_score": 1.15,
+     "scale": 1.0
     },
     "walk_up_1": {
      "size": [
-      27,
-      48
+      28,
+      49
      ],
      "box": [
       832,
-      592,
-      1080,
+      584,
+      1088,
       1008
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.11,
-     "scale": 0.883
+     "facing_score": 1.22,
+     "scale": 1.0
     },
     "walk_up_2": {
      "size": [
-      27,
-      48
+      28,
+      49
      ],
      "box": [
       1472,
-      592,
-      1720,
+      584,
+      1728,
       1008
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.37,
-     "scale": 0.948
+     "facing_score": 1.22,
+     "scale": 1.0
     },
     "walk_left_0": {
      "size": [
-      19,
-      45
+      22,
+      47
      ],
      "box": [
-      224,
-      1128,
-      408,
+      216,
+      1112,
+      424,
       1520
      ],
      "air": 0,
@@ -283,53 +284,53 @@
     },
     "walk_left_1": {
      "size": [
-      25,
-      45
+      27,
+      46
      ],
      "box": [
-      840,
-      1128,
-      1072,
+      832,
+      1120,
+      1080,
       1520
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 3.5,
+     "facing_score": 3.2,
      "facing_cues": {
       "head": 1.5,
-      "upper": 2.0
+      "upper": 1.7
      },
      "scale": 1.039
     },
     "walk_left_2": {
      "size": [
-      25,
-      45
+      26,
+      46
      ],
      "box": [
       1480,
-      1128,
-      1712,
+      1120,
+      1720,
       1520
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 3.5,
+     "facing_score": 3.44,
      "facing_cues": {
       "head": 1.5,
-      "upper": 2.0
+      "upper": 1.94
      },
      "scale": 1.039
     },
     "walk_right_0": {
      "size": [
-      20,
-      46
+      23,
+      47
      ],
      "box": [
-      224,
-      1632,
-      416,
+      208,
+      1624,
+      424,
       2032
      ],
      "air": 0,
@@ -342,13 +343,33 @@
     },
     "walk_right_1": {
      "size": [
-      25,
-      45
+      28,
+      47
      ],
      "box": [
-      840,
-      1640,
-      1072,
+      832,
+      1624,
+      1088,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.31,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.81
+     },
+     "scale": 1.039
+    },
+    "walk_right_2": {
+     "size": [
+      26,
+      47
+     ],
+     "box": [
+      1480,
+      1624,
+      1720,
       2032
      ],
      "air": 0,
@@ -359,26 +380,6 @@
       "upper": 2.0
      },
      "scale": 1.039
-    },
-    "walk_right_2": {
-     "size": [
-      25,
-      45
-     ],
-     "box": [
-      1480,
-      1640,
-      1712,
-      2032
-     ],
-     "air": 0,
-     "blur": 0.0,
-     "facing_score": 3.5,
-     "facing_cues": {
-      "head": 1.5,
-      "upper": 2.0
-     },
-     "scale": 1.0
     }
    }
   },
@@ -409,138 +410,138 @@
    "extras": [],
    "period": 8.0,
    "clarity": 99.0,
-   "src_height": 500.0,
-   "native_height_at_period": 62.5,
-   "scale_note": "描かれた格子のまま（62.5 ドット）",
+   "src_height": 512.0,
+   "native_height_at_period": 64.0,
+   "scale_note": "描かれた格子のまま（64.0 ドット）",
    "cell": 8.0,
    "sprites": {
     "idle_a": {
      "size": [
-      35,
-      65
+      55,
+      64
      ],
      "box": [
-      256,
-      168,
-      568,
+      176,
+      176,
+      648,
       720
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.73,
+     "facing_score": 1.46,
      "facing_cues": {
-      "head": 0.9,
-      "upper": 0.83
+      "head": 0.73,
+      "upper": 0.73
      }
     },
     "idle_b": {
      "size": [
-      35,
-      61
+      54,
+      62
      ],
      "box": [
-      1088,
-      200,
-      1400,
+      1016,
+      192,
+      1480,
       720
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.11,
+     "facing_score": 1.68,
      "facing_cues": {
-      "head": 0.19,
-      "upper": 0.92
+      "head": 0.9,
+      "upper": 0.78
      },
-     "scale": 1.0
+     "scale": 1.026
     },
     "step": {
      "size": [
-      71,
-      60
+      66,
+      64
      ],
      "box": [
-      1776,
-      208,
-      2376,
+      1800,
+      176,
+      2360,
       720
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 2.06,
+     "facing_score": 1.52,
      "facing_cues": {
       "head": 0.9,
-      "upper": 1.16
+      "upper": 0.62
      }
     },
     "guard": {
      "size": [
-      65,
-      58
+      73,
+      64
      ],
      "box": [
-      2632,
-      224,
-      3184,
+      2600,
+      176,
+      3216,
       720
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.87,
+     "facing_score": 1.28,
      "facing_cues": {
       "head": 0.9,
-      "upper": -0.03
+      "upper": 0.38
      },
-     "scale": 1.0
+     "scale": 1.026
     },
     "hit": {
      "size": [
       63,
-      59
+      63
      ],
      "box": [
       3472,
-      216,
+      184,
       4008,
       720
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": -0.61,
+     "facing_score": 1.42,
      "facing_cues": {
-      "head": -0.8,
-      "upper": 0.19
+      "head": 0.9,
+      "upper": 0.52
      },
-     "scale": 0.949
+     "scale": 0.981
     },
     "weak": {
      "size": [
-      51,
-      52
+      57,
+      50
      ],
      "box": [
-      192,
-      1040,
-      632,
+      168,
+      1056,
+      656,
       1488
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.22,
+     "facing_score": 0.24,
      "facing_cues": {
-      "head": 0.9,
-      "upper": 0.32
+      "head": 0.16,
+      "upper": 0.08
      },
-     "scale": 1.0
+     "scale": 1.051
     },
     "ko": {
      "size": [
-      79,
-      28
+      94,
+      31
      ],
      "box": [
-      912,
-      1232,
-      1576,
+      856,
+      1208,
+      1640,
       1488
      ],
      "air": 0,
@@ -548,33 +549,33 @@
     },
     "victory_a": {
      "size": [
-      46,
-      83
+      43,
+      79
      ],
      "box": [
-      1880,
-      792,
-      2280,
+      1888,
+      824,
+      2264,
       1488
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.72,
+     "facing_score": 0.92,
      "facing_cues": {
-      "head": 0.85,
-      "upper": 0.87
+      "head": 0.45,
+      "upper": 0.47
      },
-     "scale": 1.0
+     "scale": 1.013
     },
     "victory_b": {
      "size": [
-      32,
-      63
+      37,
+      65
      ],
      "box": [
-      2768,
-      952,
-      3056,
+      2744,
+      936,
+      3072,
       1488
      ],
      "air": 0,
@@ -583,21 +584,21 @@
     },
     "glimmer": {
      "size": [
-      56,
-      64
+      53,
+      65
      ],
      "box": [
-      3504,
-      944,
-      3984,
+      3512,
+      936,
+      3968,
       1488
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 2.06,
+     "facing_score": 1.44,
      "facing_cues": {
       "head": 0.9,
-      "upper": 1.16
+      "upper": 0.54
      },
      "scale": 1.0
     }
@@ -637,301 +638,301 @@
    "sprites": {
     "windup": {
      "size": [
-      46,
-      65
+      50,
+      66
      ],
      "box": [
-      248,
-      72,
-      648,
+      232,
+      64,
+      664,
       624
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": -0.77,
+     "facing_score": -0.53,
      "facing_cues": {
-      "head": -0.9,
-      "upper": 0.13
+      "head": -0.5,
+      "upper": -0.03
      },
      "scale": 1.0
     },
     "slash": {
      "size": [
-      70,
-      59
+      74,
+      62
      ],
      "box": [
-      1048,
-      120,
-      1640,
+      1032,
+      96,
+      1656,
       624
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 2.12,
+     "facing_score": 1.71,
      "facing_cues": {
       "head": 0.9,
-      "upper": 1.22
+      "upper": 0.81
      },
-     "scale": 1.0
+     "scale": 1.026
     },
     "thrust_ready": {
      "size": [
-      70,
-      60
+      72,
+      62
      ],
      "box": [
-      1944,
-      112,
-      2536,
+      1936,
+      96,
+      2544,
       624
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.58,
+     "facing_score": 0.94,
      "facing_cues": {
       "head": 0.9,
-      "upper": -0.32
+      "upper": 0.04
      }
     },
     "thrust": {
      "size": [
-      83,
-      59
+      90,
+      62
      ],
      "box": [
-      2784,
-      120,
-      3480,
+      2760,
+      96,
+      3512,
       624
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.75,
+     "facing_score": 0.86,
      "facing_cues": {
       "head": 0.9,
-      "upper": -0.15
+      "upper": -0.04
      },
      "scale": 1.0
     },
     "charge": {
      "size": [
-      71,
-      42
+      64,
+      46
      ],
      "box": [
-      3728,
-      256,
-      4328,
+      3760,
+      224,
+      4304,
       624
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 2.11,
+     "facing_score": 1.27,
      "facing_cues": {
       "head": 0.9,
-      "upper": 1.21
+      "upper": 0.37
      },
-     "scale": 1.0
+     "scale": 0.974
     },
     "smash": {
      "size": [
-      45,
-      71
+      47,
+      75
      ],
      "box": [
-      248,
+      240,
       632,
-      640,
-      1232
-     ],
-     "air": 4,
-     "blur": 0.0,
-     "facing_score": 0.29,
-     "facing_cues": {
-      "head": -0.35,
-      "upper": 0.64
-     },
-     "scale": 1.013
-    },
-    "cast_a": {
-     "size": [
-      59,
-      64
-     ],
-     "box": [
-      1088,
-      720,
-      1592,
+      648,
       1264
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.74,
+     "facing_score": 1.14,
      "facing_cues": {
       "head": 0.9,
-      "upper": -0.16
+      "upper": 0.24
+     },
+     "scale": 1.0
+    },
+    "cast_a": {
+     "size": [
+      54,
+      64
+     ],
+     "box": [
+      1112,
+      720,
+      1576,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.78,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.12
      },
      "scale": 1.013
     },
     "cast_b": {
      "size": [
       48,
-      69
+      62
      ],
      "box": [
       2032,
-      680,
+      736,
       2448,
       1264
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.11,
+     "facing_score": 0.24,
      "facing_cues": {
-      "head": -0.53,
-      "upper": 0.64
+      "head": -0.05,
+      "upper": 0.3
      },
-     "scale": 1.051
+     "scale": 1.0
     },
     "item": {
      "size": [
-      49,
-      66
+      50,
+      63
      ],
      "box": [
       2920,
-      704,
-      3344,
+      728,
+      3352,
       1264
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.57,
+     "facing_score": 1.28,
      "facing_cues": {
-      "head": -0.26,
-      "upper": 0.83
+      "head": 0.9,
+      "upper": 0.38
      },
-     "scale": 1.051
+     "scale": 1.0
     },
     "evade": {
      "size": [
-      43,
-      60
+      57,
+      62
      ],
      "box": [
-      3840,
-      720,
-      4216,
-      1232
+      3784,
+      728,
+      4272,
+      1256
      ],
-     "air": 4,
+     "air": 1,
      "blur": 0.0,
-     "facing_score": 1.74,
+     "facing_score": 1.25,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.84
+      "upper": 0.35
      },
-     "scale": 1.013
+     "scale": 1.0
     },
     "bare_idle": {
      "size": [
-      45,
-      61
+      43,
+      64
      ],
      "box": [
-      248,
-      1384,
-      640,
+      256,
+      1360,
+      632,
       1904
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 2.14,
+     "facing_score": 1.39,
      "facing_cues": {
       "head": 0.9,
-      "upper": 1.24
+      "upper": 0.49
      }
     },
     "bare_windup": {
      "size": [
       51,
-      60
+      63
      ],
      "box": [
       1120,
-      1392,
+      1368,
       1560,
       1904
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.47,
+     "facing_score": 1.71,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.57
-     },
-     "scale": 1.0
-    },
-    "bare_slash": {
-     "size": [
-      56,
-      60
-     ],
-     "box": [
-      2000,
-      1392,
-      2480,
-      1904
-     ],
-     "air": 0,
-     "blur": 0.0,
-     "facing_score": 1.72,
-     "facing_cues": {
-      "head": 0.9,
-      "upper": 0.82
+      "upper": 0.81
      },
      "scale": 1.026
     },
-    "bare_thrust": {
+    "bare_slash": {
      "size": [
-      60,
-      60
+      55,
+      64
      ],
      "box": [
-      2880,
-      1392,
-      3392,
+      2000,
+      1360,
+      2472,
       1904
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 1.06,
+     "facing_score": 1.54,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.16
+      "upper": 0.64
+     },
+     "scale": 1.0
+    },
+    "bare_thrust": {
+     "size": [
+      63,
+      63
+     ],
+     "box": [
+      2864,
+      1368,
+      3400,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.25,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.35
      },
      "scale": 1.026
     },
     "bare_cast": {
      "size": [
-      57,
-      61
+      52,
+      64
      ],
      "box": [
-      3784,
-      1384,
-      4272,
+      3808,
+      1360,
+      4256,
       1904
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.96,
+     "facing_score": 1.09,
      "facing_cues": {
       "head": 0.9,
-      "upper": 0.06
+      "upper": 0.19
      },
-     "scale": 1.026
+     "scale": 1.0
     }
    }
   },
@@ -969,78 +970,78 @@
    "sprites": {
     "face_neutral": {
      "size": [
-      79,
+      73,
       80
      ],
      "box": [
-      48,
+      72,
       80,
-      712,
+      688,
       752
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 3.5,
+     "facing_score": 3.37,
      "facing_cues": {
       "head": 1.5,
-      "upper": 2.0
+      "upper": 1.87
      }
     },
     "face_smile": {
      "size": [
-      79,
+      72,
       80
      ],
      "box": [
-      816,
+      848,
       80,
-      1480,
+      1456,
       752
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 3.5,
+     "facing_score": 3.38,
      "facing_cues": {
       "head": 1.5,
-      "upper": 2.0
+      "upper": 1.88
      }
     },
     "face_surprise": {
      "size": [
-      79,
+      73,
       80
      ],
      "box": [
-      1584,
+      1608,
       80,
-      2248,
+      2224,
       752
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 3.5,
+     "facing_score": 3.18,
      "facing_cues": {
       "head": 1.5,
-      "upper": 2.0
+      "upper": 1.68
      }
     },
     "face_pain": {
      "size": [
-      79,
+      72,
       80
      ],
      "box": [
-      2352,
+      2384,
       80,
-      3016,
+      2992,
       752
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 3.5,
+     "facing_score": 3.17,
      "facing_cues": {
       "head": 1.5,
-      "upper": 2.0
+      "upper": 1.67
      }
     }
    }
@@ -1075,57 +1076,35 @@
    "data": {}
   },
   {
-   "sheet": 4,
-   "level": "check",
-   "code": "height",
-   "msg": "シート4 の 8 番（術の詠唱B） の身長が 69 ドット（ほかは 64）",
-   "slot": "cast_b",
+   "sheet": 3,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート3 の 5 番（ダメージ） の足元の影を消した",
+   "slot": "hit",
    "ask": null,
    "data": {}
   },
   {
    "sheet": 3,
-   "level": "check",
-   "code": "facing_unsure",
-   "msg": "シート3 の 5 番（ダメージ） の向きがはっきりしない（点数 -0.6）",
-   "slot": "hit",
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート3 の 6 番（瀕死） の足元の影を消した",
+   "slot": "weak",
    "ask": null,
-   "data": {
-    "cues": {
-     "head": -0.8,
-     "upper": 0.19
-    }
-   }
+   "data": {}
   },
   {
    "sheet": 4,
    "level": "check",
    "code": "facing_unsure",
-   "msg": "シート4 の 1 番（振りかぶり） の向きがはっきりしない（点数 -0.8）",
+   "msg": "シート4 の 1 番（振りかぶり） の向きがはっきりしない（点数 -0.5）",
    "slot": "windup",
    "ask": null,
    "data": {
     "cues": {
-     "head": -0.9,
-     "upper": 0.13
+     "head": -0.5,
+     "upper": -0.03
     }
-   }
-  },
-  {
-   "sheet": 2,
-   "level": "check",
-   "code": "scale_small",
-   "msg": "シート2 の 5 番（上向き・右足前） の縮尺が少し違う（頭の大きさで約 88%）。並べて見て気になるなら描き直し",
-   "slot": "walk_up_1",
-   "ask": null,
-   "data": {
-    "scale": 0.8831168831168833,
-    "per_ref": [
-     0.9625000000000001,
-     0.8500000000000003,
-     0.8500000000000003
-    ],
-    "group_median": 0.9625000000000001
    }
   }
  ]

@@ -1,0 +1,181 @@
+{
+ "route": "R1",
+ "phone": false,
+ "ok": false,
+ "checks": {
+  "reachedT1": false,
+  "invariants": false,
+  "forestPinsCleared": true,
+  "choices": false,
+  "chronicleText": false,
+  "uniqueFromLast": false,
+  "hero": true,
+  "party": false,
+  "stubs0": true,
+  "loadErrors0": true,
+  "consoleErrors0": true,
+  "noEngineError": true,
+  "noDev": true,
+  "rescueOrder": true,
+  "wipeRetryPageeater": false
+ },
+ "errors": [],
+ "started": "2026-09-27T00:34:50.868Z",
+ "status": {
+  "frames": 858,
+  "time": 28804,
+  "goal": "party",
+  "done": false,
+  "fail": "bot error: TypeError: Cannot read properties of null (reading 'e_0')\n    at onBattle (<anonymous>:200:48)\n    at decide (<anonymous>:416:33)\n    at B.run (<anonymous>:468:13)\n    at async <anonymous>:316:30",
+  "top": "battle",
+  "pos": "world 87,96",
+  "steps": 100,
+  "gold": 53,
+  "battles": 0,
+  "wipes": 0,
+  "engineError": null
+ },
+ "final": {
+  "inv": {
+   "top": "battle",
+   "locks": [
+    "battle"
+   ],
+   "busy": false,
+   "fade": 0,
+   "input": true,
+   "msg": false,
+   "ok": false
+  },
+  "pinned": [],
+  "chronicle": "森が歌を忘れ、道を変えた年のこと。\n語り部の見習いは、迷いの森で\n四人を探した。",
+  "uniq": [],
+  "lastWho": "hans",
+  "order": [
+   "hans",
+   "ben",
+   "roy",
+   "pim"
+  ],
+  "choices": {},
+  "cleared": false,
+  "t1": false,
+  "tier": 0,
+  "hero": {
+   "type": "warrior",
+   "sex": "m",
+   "name": "アルン"
+  },
+  "party": [
+   "hero"
+  ],
+  "stubs": [],
+  "loadErrors": [],
+  "playMs": 28399.999999999683,
+  "steps": 100,
+  "gold": 53,
+  "stats": {
+   "tops": {
+    "screen:title": 6,
+    "caption": 54,
+    "cp_curtain": 45,
+    "field": 590,
+    "message": 36,
+    "screen:charcreate": 15,
+    "battle": 113
+   },
+   "taps": 80,
+   "screenOps": 10,
+   "choices": 0,
+   "chars": 563,
+   "captions": 3,
+   "battles": [],
+   "wipes": [],
+   "talks": 19,
+   "plans": 10,
+   "planMs": 1158.9999999925494,
+   "forced": []
+  },
+  "phaseAt": {
+   "start": {
+    "f": 0,
+    "t": 204.00000000596037,
+    "steps": 0,
+    "chars": 0,
+    "ops": 0,
+    "battles": 0,
+    "playMs": 0
+   }
+  },
+  "log": [
+   {
+    "f": 232,
+    "t": 7937,
+    "msg": "goal berna"
+   },
+   {
+    "f": 263,
+    "t": 8971,
+    "msg": "act berna at roa_house 11,5"
+   },
+   {
+    "f": 265,
+    "t": 9037,
+    "msg": "act berna at roa_house 11,5"
+   },
+   {
+    "f": 267,
+    "t": 9104,
+    "msg": "act berna at roa_house 11,5"
+   },
+   {
+    "f": 269,
+    "t": 9171,
+    "msg": "act berna at roa_house 11,5"
+   },
+   {
+    "f": 294,
+    "t": 10004,
+    "msg": "goal farmer"
+   },
+   {
+    "f": 550,
+    "t": 18537,
+    "msg": "act farmer at roa 8,14"
+   },
+   {
+    "f": 553,
+    "t": 18637,
+    "msg": "goal party"
+   },
+   {
+    "f": 858,
+    "t": 28804,
+    "msg": "FAIL bot error: TypeError: Cannot read properties of null (reading 'e_0')\n    at onBattle (<anonymous>:200:48)\n    at decide (<anonymous>:416:33)\n    at B.run (<anonymous>:468:13)\n    at async <anonymous>:316:30"
+   }
+  ],
+  "dev": false
+ },
+ "estimate": {
+  "K": {
+   "step": 0.25,
+   "battle": 40,
+   "bossRound": 12,
+   "char": 0.08,
+   "op": 1
+  },
+  "prologue": null,
+  "forest": null,
+  "target": {
+   "prologue": [
+    1.5,
+    2
+   ],
+   "forest": [
+    2.5,
+    3.5
+   ]
+  }
+ },
+ "wallSec": 22
+}

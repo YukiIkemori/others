@@ -1,0 +1,34 @@
+00:32:21 sheet 1 attempt 1: edit of the Arun template 1440x1536 (pitch 6, quality medium, 2 refs)
+00:33:18   pitch in raw image: 5.65 px per art pixel (upright median 271 px / 48)
+00:33:18 sheet 1 -> art_ref/gen/npc/berna/npc_berna_s1.png (12 poses)
+00:33:18 pipeline: sheets.py ../art_ref/gen/npc/berna --npc berna --out out/npc/berna --check
+00:33:31   |   「ベルナ（berna）のシート3（顔6）を作って」
+00:33:31   | 
+00:33:31   | ■ シートの状態
+00:33:31   |   シート1 歩き: 確認あり  npc_berna_s1.png  ドット 8.00px → 描かれた格子のまま（47.5 ドット）
+00:33:31   |   シート2 演技12（下向き）: なし（必須）
+00:33:31   |   シート3 顔6: なし（必須）
+00:33:31 sheet 1: 0 redo lines
+00:37:36 sheet 1 approved by eye
+00:37:42 sheet 2 attempt 1: edit of the Arun template 2304x1152 (pitch 6, quality medium, 3 refs)
+00:38:58   pitch in raw image: 5.83 px per art pixel (upright median 280 px / 48)
+00:38:59 sheet 2 -> art_ref/gen/npc/berna/npc_berna_s2.png (12 poses)
+00:38:59 pipeline: sheets.py ../art_ref/gen/npc/berna --npc berna --out out/npc/berna --check
+00:39:35   |   「ベルナ（berna）のシート3（顔6）を作って」
+00:39:35   | 
+00:39:35   | ■ シートの状態
+00:39:35   |   シート1 歩き: OK  npc_berna_s1.png  ドット 8.00px → 描かれた格子のまま（47.5 ドット）
+00:39:35   |   シート2 演技12（下向き）: OK  npc_berna_s2.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+00:39:35   |   シート3 顔6: なし（必須）
+00:39:35 sheet 2: 0 redo lines
+00:39:35 sheet 3 attempt 1: edit of the Arun template 1728x1152 (pitch 6, quality medium, 3 refs)
+00:41:03   pitch in raw image: 5.88 px per art pixel (upright median 470 px / 80)
+00:41:04 sheet 3 -> art_ref/gen/npc/berna/npc_berna_s3.png (6 poses)
+00:41:04 pipeline: sheets.py ../art_ref/gen/npc/berna --npc berna --out out/npc/berna --check
+00:42:03   |   - 向きの見本（configs/refs/berna）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+00:42:03   | 
+00:42:03   | ■ シートの状態
+00:42:03   |   シート1 歩き: OK  npc_berna_s1.png  ドット 8.00px → 描かれた格子のまま（47.5 ドット）
+00:42:03   |   シート2 演技12（下向き）: OK  npc_berna_s2.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+00:42:03   |   シート3 顔6: OK  npc_berna_s3.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+00:42:03 sheet 3: 0 redo lines

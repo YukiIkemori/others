@@ -1,0 +1,145 @@
+{
+ "sheets": {
+  "1": {
+   "attempts": [
+    {
+     "raw": "raw/s1_a1.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "",
+     "t": "2026-09-27T00:41:00"
+    }
+   ],
+   "frames": {
+    "walk_down_0": {
+     "row": 1,
+     "column": 1,
+     "logical_bbox": [
+      31,
+      47
+     ],
+     "air": 0
+    },
+    "walk_down_1": {
+     "row": 1,
+     "column": 2,
+     "logical_bbox": [
+      32,
+      47
+     ],
+     "air": 0
+    },
+    "walk_down_2": {
+     "row": 1,
+     "column": 3,
+     "logical_bbox": [
+      32,
+      47
+     ],
+     "air": 0
+    },
+    "walk_up_0": {
+     "row": 2,
+     "column": 1,
+     "logical_bbox": [
+      31,
+      47
+     ],
+     "air": 0
+    },
+    "walk_up_1": {
+     "row": 2,
+     "column": 2,
+     "logical_bbox": [
+      31,
+      47
+     ],
+     "air": 0
+    },
+    "walk_up_2": {
+     "row": 2,
+     "column": 3,
+     "logical_bbox": [
+      31,
+      47
+     ],
+     "air": 0
+    },
+    "walk_left_0": {
+     "row": 3,
+     "column": 1,
+     "logical_bbox": [
+      21,
+      43
+     ],
+     "air": 0
+    },
+    "walk_left_1": {
+     "row": 3,
+     "column": 2,
+     "logical_bbox": [
+      27,
+      43
+     ],
+     "air": 0
+    },
+    "walk_left_2": {
+     "row": 3,
+     "column": 3,
+     "logical_bbox": [
+      28,
+      43
+     ],
+     "air": 0
+    },
+    "walk_right_0": {
+     "row": 4,
+     "column": 1,
+     "logical_bbox": [
+      21,
+      43
+     ],
+     "air": 0
+    },
+    "walk_right_1": {
+     "row": 4,
+     "column": 2,
+     "logical_bbox": [
+      27,
+      43
+     ],
+     "air": 0
+    },
+    "walk_right_2": {
+     "row": 4,
+     "column": 3,
+     "logical_bbox": [
+      27,
+      43
+     ],
+     "air": 0
+    }
+   },
+   "notes": [],
+   "pitch": 5.894,
+   "from_raw": "raw/s1_a1.png",
+   "redo_left": [
+    {
+     "code": "lantern",
+     "slot": "walk_down_1",
+     "msg": "シート1の 2番・3番（下向き・右足前、下向き・左足前）はランタンを右手に持っている（左手のはず）。歩くたびに持ち手が入れ替わって見える。仮に左右反転して使う"
+    },
+    {
+     "code": "lantern_frame",
+     "slot": "walk_down_2",
+     "msg": "シート1 の 3 番（下向き・左足前）: ランタンが右手"
+    },
+    {
+     "code": "proportion",
+     "slot": "walk_down_0",
+     "msg": "頭の幅がアルンより小さい（83%）。頭が小さく、頭身が高すぎる"
+    }
+   ]
+  }
+ }
+}

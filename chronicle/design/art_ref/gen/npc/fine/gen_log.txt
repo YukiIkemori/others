@@ -1,0 +1,27 @@
+00:37:37 sheet 1 attempt 1: edit of the Arun template 1440x1536 (pitch 6, quality medium, 2 refs)
+00:38:54   pitch in raw image: 6.14 px per art pixel (upright median 270 px / 44)
+00:38:54 sheet 1 -> art_ref/gen/npc/fine/npc_fine_s1.png (12 poses)
+00:38:54 pipeline: sheets.py ../art_ref/gen/npc/fine --npc fine --out out/npc/fine --check
+00:39:31   |   「フィーネ（fine）のシート3（顔6）を作って」
+00:39:31   | 
+00:39:31   | ■ シートの状態
+00:39:31   |   シート1 歩き: OK  npc_fine_s1.png  ドット 8.00px → 描かれた格子のまま（42.5 ドット）
+00:39:31   |   シート2 演技12（下向き）: なし（必須）
+00:39:31   |   シート3 顔6: なし（必須）
+00:39:31 sheet 1: 0 redo lines
+00:39:57 sheet 1 approved by eye
+00:39:59 sheet 2 attempt 1: edit of the Arun template 2304x1152 (pitch 6, quality medium, 3 refs)
+00:41:01   pitch in raw image: 5.66 px per art pixel (upright median 249 px / 44)
+00:41:02 sheet 2 -> art_ref/gen/npc/fine/npc_fine_s2.png (12 poses)
+00:41:02 pipeline: sheets.py ../art_ref/gen/npc/fine --npc fine --out out/npc/fine --check
+00:41:50   |   「フィーネ（fine）のシート3（顔6）を作って」
+00:41:50   | 
+00:41:50   | ■ シートの状態
+00:41:50   |   シート1 歩き: 確認あり  npc_fine_s1.png  ドット 8.00px → 描かれた格子のまま（42.5 ドット）
+00:41:50   |   シート2 演技12（下向き）: 確認あり  npc_fine_s2.png  ドット 8.00px → 描かれた格子のまま（44.0 ドット）
+00:41:50   |   シート3 顔6: なし（必須）
+00:41:50 sheet 2: 0 redo lines
+00:41:51 sheet 3 attempt 1: edit of the Arun template 1728x1152 (pitch 6, quality medium, 3 refs)
+00:42:55   pitch in raw image: 5.96 px per art pixel (upright median 477 px / 80)
+00:42:56 sheet 3 -> art_ref/gen/npc/fine/npc_fine_s3.png (6 poses)
+00:42:56 pipeline: sheets.py ../art_ref/gen/npc/fine --npc fine --out out/npc/fine --check

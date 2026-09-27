@@ -1,0 +1,23 @@
+{
+ "id": "face_bark",
+ "style": "bark",
+ "kind": "face",
+ "theme": "common",
+ "files": {
+  "32": "face_bark@32.png",
+  "24": "face_bark@24.png",
+  "40": "face_bark@40.png"
+ },
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "height": {
+  "24": 96,
+  "32": 128,
+  "40": 160
+ },
+ "foot32": 10,
+ "src": "design/art_ref/gen/env/mat/common/face_bark.png"
+}

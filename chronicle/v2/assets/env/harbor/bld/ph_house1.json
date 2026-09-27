@@ -1,0 +1,90 @@
+{
+ "id": "ph_house1",
+ "kind": "building",
+ "theme": "harbor",
+ "footprint": [
+  5,
+  6
+ ],
+ "wall": 3,
+ "files": {
+  "24": "ph_house1@24.png",
+  "32": "ph_house1@32.png",
+  "40": "ph_house1@40.png"
+ },
+ "emitFiles": {
+  "24": "ph_house1_emit@24.png",
+  "32": "ph_house1_emit@32.png",
+  "40": "ph_house1_emit@40.png"
+ },
+ "size": {
+  "24": [
+   132,
+   168
+  ],
+  "32": [
+   176,
+   224
+  ],
+  "40": [
+   220,
+   280
+  ]
+ },
+ "anchor32": [
+  8,
+  224
+ ],
+ "door32": null,
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 44,
+   "y": -75,
+   "w": 11,
+   "h": 11
+  },
+  {
+   "kind": "win",
+   "x": 105,
+   "y": -75,
+   "w": 10,
+   "h": 11
+  },
+  {
+   "kind": "win",
+   "x": 44,
+   "y": -36,
+   "w": 11,
+   "h": 11
+  },
+  {
+   "kind": "win",
+   "x": 105,
+   "y": -36,
+   "w": 10,
+   "h": 11
+  }
+ ],
+ "roof32": [
+  -6,
+  -196,
+  166,
+  -90
+ ],
+ "wallTop32": -96,
+ "src": "design/art_ref/gen/env/bld/harbor/ph_house1.png",
+ "def_": {
+  "type": "building",
+  "id": "ph_house1",
+  "x": 32,
+  "y": 3,
+  "w": 5,
+  "h": 6,
+  "wall": 3,
+  "roof": "terra",
+  "mat": "plaster",
+  "windows": 2,
+  "shutters": "b"
+ }
+}

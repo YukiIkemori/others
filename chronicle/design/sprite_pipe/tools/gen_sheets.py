@@ -11,6 +11,7 @@ Commands (run in design/sprite_pipe/):
   python3 tools/gen_sheets.py arun-fix                              # Arun: the redo lines of out/arun_v1/report.json
   python3 tools/gen_sheets.py prompt companion selma 3              # print the prompt only (no call)
   python3 tools/gen_sheets.py normalize <raw.png> companion selma 3  # re-normalise a saved raw image (no call)
+  python3 tools/gen_sheets.py npc berna --sheets 1                  # NPC sheets: see tools/npc_gen.py (npc, npc-batch, …)
 
 Outputs: design/art_ref/gen/<kind>/<id>/
   <sheet files>          exact canvas of the layout, 1 art px = 8x8 image px, background #FF00FF (what sheets.py reads)
@@ -593,6 +594,9 @@ def compose(cells, rows, cols, cell, ground):
 
 def arun_dots(n):
     e = arun_specs()[n]
+    nol = os.path.join(GEN, 'arun', 'arun_nolantern', 'arun_sheet_%02db.png' % n)
+    if n in (1, 2) and os.path.exists(nol):                   # companions walk with empty hands
+        return sheet_dots(load_rgb(nol)), e
     fixed = os.path.join(GEN, 'arun', 'arun', e['file'])      # the hero's sheets after the redo edits, when there
     return sheet_dots(load_rgb(fixed if os.path.exists(fixed) else os.path.join(ARUN_SHEETS, e['file']))), e
 
@@ -612,6 +616,22 @@ def template_for(spec):
         cells = [(r, c, cell_sprite(d6, e6['cell'], r, c)) for r in range(2) for c in range(5)]
         cells += [(2, c, cell_sprite(d7, e7['cell'], 0, c)) for c in range(5)]
         return compose(cells, 3, 5, spec['cell'], ground_of(spec))
+    if lay == 'design':
+        d1, e1 = arun_dots(1)
+        d5, e5 = arun_dots(5)
+        d9, e9 = arun_dots(9)
+
+        def up(sp, k):
+            return sp.resize((int(round(sp.size[0] * k)), int(round(sp.size[1] * k))), Image.NEAREST) if sp else sp
+        k = 64.0 / 48
+        turn = [(0, 0), (0, 1), (2, 0), (1, 0)]       # front, front step (turned 3/4 by the model), side left, back
+        cells = [(0, i, up(cell_sprite(d1, e1['cell'], r, c), k)) for i, (r, c) in enumerate(turn)]
+        cells += [(1, 0, cell_sprite(d5, e5['cell'], 0, 0))]
+        cv = compose(cells, 2, 4, spec['cell'], ground_of(spec))
+        face = cell_sprite(d9, e9['cell'], 0, 0)
+        cw, ch = spec['cell']
+        cv.alpha_composite(face, (cw + (cw - face.size[0]) // 2, ch + (ch - face.size[1]) // 2))
+        return cv
     if lay == 'face4':
         d9, e9 = arun_dots(9)
         pick = [(0, 0), (0, 2), (1, 0), (1, 1)]     # neutral, smile, surprise, sad (closest to pain)
@@ -764,11 +784,85 @@ def comp_refs(job, spec, p, quality):
     return imgs, '\n'.join(desc)
 
 
+WEAPON_EN = {'sword': 'a one-handed sword', 'greatsword': 'a heavy two-handed weapon', 'dagger': 'a dagger',
+             'bow': 'a bow', 'staff': 'a staff'}
+
+
+def comp_edit_refs(job, spec, p):
+    tpl = template_for(spec)
+    imgs = [render_pitch(tpl, p)]
+    desc = ['Image 1 = THE SHEET TO EDIT: the hero drawn in every pose of this sheet, at the exact size, pixel size and body proportions '
+            'the companion must have.']
+    s1 = os.path.join(job.dir, job.specs[1]['file'])
+    if spec['n'] != 1 and os.path.exists(s1):
+        raw1 = job.st(1).get('from_raw')
+        imgs.append(load_rgb(os.path.join(job.dir, raw1) if raw1 and os.path.exists(os.path.join(job.dir, raw1)) else s1))
+        desc.append('Image 2 = %s\'s APPROVED DESIGN SHEET: take the hair, face, headgear, outfit, colours, accessories and weapon from it. '
+                    'Its body proportions already match the hero; keep image 1\'s pose, size and proportions in any case.' % job.char['name'])
+    return imgs, '\n'.join(desc)
+
+
+def comp_edit_prompt(c, spec, p, W, H, refs_desc, extra=''):
+    req = os.path.join(ART, 'COMPANIONS_REQUEST.md')
+    char = md_section(req, r'4\.\d+ %s（%s）' % (re.escape(c['name']), re.escape(c['id'])))
+    sheet = md_section(req, re.escape(GEN_SHEET_JA[spec['n']]))
+    gr, gc = spec['gen_grid']
+    fmap = gen_to_final_map(spec)
+    order = []
+    for (r, c_), (fr, fc) in sorted(fmap.items()):
+        sid = spec['ids'][fr][fc]
+        if sid:
+            order.append('row %d col %d: %s' % (r + 1, c_ + 1, POSE_EN.get(sid, sid)))
+    lay = spec['layout']
+    body = c['heightDots']['field' if lay == 'walk' else 'battle']
+    hero = 48 if lay == 'walk' else 64
+    wt = c.get('weaponType') or c.get('weapon') or 'sword'
+    lines = [style_block(), '',
+             'TASK: EDIT image 1. It is a pixel-art sprite sheet of the hero (a young swordsman) — %s, %d rows x %d columns, one art pixel = %d x %d '
+             'image px. REPAINT EVERY FIGURE INTO THE COMPANION %s (%s) described below. Output the same %dx%d canvas, flat #FF00FF background.'
+             % (GEN_SHEET_JA[spec['n']], gr, gc, p, p, c['name'], c['id'], W, H),
+             '', 'ATTACHED IMAGES:', refs_desc, '',
+             'KEEP EXACTLY, figure by figure: the cell position, the pose, the facing, the feet line, the pixel size, and the BODY PROPORTIONS — '
+             'the same head size and head width (big head, about 1/2.7 of the height, as wide as the shoulders), the same shoulder width, the same '
+             'thick short limbs, big hands and big boots, the same leg length and the same bulk. The companion must look exactly as big and as chunky '
+             'as the hero. Do NOT make the figure slimmer, longer-legged or smaller-headed. Where the brief says slender / tall / thin / elderly, '
+             'show it with posture, costume and face only — never with thinner limbs or a smaller head. A weapon may stick up above the head '
+             'where the brief asks for it, but the body keeps the hero\'s size.',
+             'CHANGE: hair, face, headgear, clothing, colours, accessories and the weapon, as the brief says. Main colour %s on about half of the '
+             'clothing (match this hex closely). Head: %s. Signature item: %s. None of the hero\'s look may remain (no red scarf, no ash-brown messy '
+             'hair, no black coat + cream cloth + brown leather combination).' % (c.get('mainHex'), c.get('headShape'), c.get('signature')),
+             ]
+    if lay != 'face4' and abs(body - hero) >= 3:
+        lines.append('HEIGHT: this companion\'s body is %d art px tall (the hero\'s is %d): scale each whole figure uniformly to that height, '
+                     'keeping the same proportions (head still about 1/2.7 of the height). Headgear may add height on top.' % (body, hero))
+    if lay in ('battle_base', 'battle_action_bare', 'design') and wt != 'sword':
+        lines.append('WEAPON: this companion fights with %s, not the sword: replace the sword by it and change only the arms and the weapon as '
+                     'needed to hold it the way the pose table says; the body, legs and head keep the hero\'s pose.' % WEAPON_EN.get(wt, wt))
+    if lay == 'battle_action_bare':
+        lines.append('Row 3 holds NO weapon (hands empty but in the same grip shape), exactly like image 1.')
+    if lay == 'walk':
+        lines.append('Both hands empty, weapon stowed as the brief says.')
+    if lay == 'design':
+        lines.append('Row 1: front, three-quarter front (turn the second figure a little), side facing LEFT, back. Row 2: battle idle facing LEFT, '
+                     'chest-up face bust turned slightly RIGHT, then in column 3 draw 8 colour swatch squares (6x6 art px each, 4 across x 2 down: '
+                     'main light, main, main shadow, secondary, hair, skin, leather, metal). Row 2 column 4 stays EMPTY. No text.')
+    if lay == 'face4':
+        lines.append('Keep each bust\'s size, angle and position; only the face, hair, headgear and clothes change to the companion. The four '
+                     'expressions: neutral, smile, surprise, pain (gritted teeth, one eye shut, sweat) — the last one replaces the hero\'s.')
+    lines += ['POSES in reading order:\n' + '\n'.join(order), '',
+              'CHARACTER BRIEF (Japanese, authoritative for the look):\n' + char, '',
+              'SHEET BRIEF (Japanese; follow its pose table for this character\'s weapon type):\n' + sheet]
+    if extra:
+        lines += ['', 'EXTRA INSTRUCTIONS FOR THIS ATTEMPT:\n' + extra]
+    return '\n'.join(lines)
+
+
 def HERE_REF():
     return HERO_REF
 
 
 PITCH_OVERRIDE = {}
+MODE = {}
 
 
 def gen_size(spec):
@@ -790,8 +884,12 @@ def run_comp_sheet(job, n, quality, force=False, extra='', tag_suffix=''):
         job.log('sheet %d: %d attempts used; stop' % (n, MAX_ATTEMPTS))
         return None
     p, W, H = gen_size(spec)
-    imgs, desc = comp_refs(job, spec, p, quality)
-    prompt = comp_prompt(job.char, spec, p, W, H, desc, extra)
+    if MODE.get('edit'):
+        imgs, desc = comp_edit_refs(job, spec, p)
+        prompt = comp_edit_prompt(job.char, spec, p, W, H, desc, extra)
+    else:
+        imgs, desc = comp_refs(job, spec, p, quality)
+        prompt = comp_prompt(job.char, spec, p, W, H, desc, extra)
     k = len(st['attempts']) + 1
     base = os.path.join(job.raw, 's%d_a%d%s' % (n, k, tag_suffix))
     open(base + '_prompt.txt', 'w', encoding='utf-8').write(prompt)
@@ -1223,6 +1321,7 @@ def cmd_companion(a):
     out = os.path.join(PIPE, 'out', 'comp_%s' % a.id)
     pipe_args = [job.dir, '--companion', a.id, '--out', out]
     sheets = a.sheets or sorted(specs)
+    MODE['edit'] = a.mode == 'edit'
     if a.pitch:
         for n in sheets:
             PITCH_OVERRIDE[n] = a.pitch
@@ -1262,8 +1361,12 @@ def cmd_prompt(a):
     job = Job('companion', a.id, specs, char=c)
     spec = specs[a.sheet]
     p, W, H = gen_size(spec)
-    imgs, desc = comp_refs(job, spec, p, 'medium')
-    print(comp_prompt(c, spec, p, W, H, desc))
+    if a.mode == 'edit':
+        imgs, desc = comp_edit_refs(job, spec, p)
+        print(comp_edit_prompt(c, spec, p, W, H, desc))
+    else:
+        imgs, desc = comp_refs(job, spec, p, 'medium')
+        print(comp_prompt(c, spec, p, W, H, desc))
     print('\n[size %dx%d, pitch %d, %d reference images]' % (W, H, p, len(imgs)))
     if a.save_refs:
         for i, im in enumerate(imgs):
@@ -1293,6 +1396,8 @@ def main():
     s.add_argument('--pack', action='store_true', help='run the full pipeline at the end')
     s.add_argument('--extra', default='', help='extra instruction appended to the prompt')
     s.add_argument('--tag', default='', help='suffix for the raw file name (quality comparisons)')
+    s.add_argument('--mode', default='edit', choices=['edit', 'new'], help='edit = repaint the hero\'s own sheet into the companion '
+                   '(locks size, poses and proportions to the hero); new = draw from the template')
     s.add_argument('--pitch', type=int, default=None, help='image px per art pixel of the request (the model draws finer '
                    'than asked on small figures: a smaller canvas brings its pixels onto the grid)')
     s = sub.add_parser('arun-alt', help="Arun's field sheets 1 / 2 without the lantern (arun_sheet_01b / 02b)")
@@ -1305,14 +1410,18 @@ def main():
     s.add_argument('id')
     s.add_argument('sheet', type=int)
     s.add_argument('--save-refs', default=None)
+    s.add_argument('--mode', default='edit', choices=['edit', 'new'])
     s = sub.add_parser('normalize')
     s.add_argument('raw')
     s.add_argument('kind', choices=['companion'])
     s.add_argument('id')
     s.add_argument('sheet', type=int)
+    import npc_gen                      # NPC sheets: npc / npc-batch / npc-export / npc-lineup / npc-contact / npc-prompt
+    npc_cmds = npc_gen.add_parsers(sub)
     a = ap.parse_args()
     try:
-        {'arun-fix': cmd_arun_fix, 'arun-alt': cmd_arun_alt, 'companion': cmd_companion, 'prompt': cmd_prompt, 'normalize': cmd_normalize}[a.cmd](a)
+        dict({'arun-fix': cmd_arun_fix, 'arun-alt': cmd_arun_alt, 'companion': cmd_companion, 'prompt': cmd_prompt, 'normalize': cmd_normalize},
+             **npc_cmds)[a.cmd](a)
     except gen_api.GenError as e:
         print('STOP: %s' % e)
         sys.exit(2)

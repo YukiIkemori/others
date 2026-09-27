@@ -279,7 +279,8 @@
     const cell = (j.cell && (j.cell[tk] || j.cell['32'])) || [ev.im.width / names.length, ev.im.height];
     const feet = (j.feet && (j.feet[tk] || j.feet['32'])) || [cell[0] / 2, cell[1] - 1];
     const w = Math.max(1, Math.round(cell[0] * k)), h = Math.max(1, Math.round(ev.im.height * k));
-    const mul = o.amb ? ambMul(o.amb) : null;
+    // 宝箱は床より明るく（WORLD_REDESIGN §6.3: どの床の上でも見分けられる）。夜の環境光は軽くだけ掛ける
+    const mul = o.amb ? (id === 'chest' ? ambMul(o.amb).map((v) => Math.min(1.25, 0.55 + v * 0.75)) : ambMul(o.amb)) : null;
     const frames = [], poses = {};
     names.forEach((f, i) => {
       const c = R.Hd.RZ.canvas(w, h), g = c.getContext('2d');
@@ -287,7 +288,7 @@
       g.drawImage(ev.im, i * cell[0], 0, cell[0], ev.im.height, 0, 0, w, h);
       if (mul || (id === 'tree' && o.leaf === 'dk')) {
         const m = mul || [0.8, 0.86, 0.9], d = g.getImageData(0, 0, w, h);
-        for (let q = 0; q < d.data.length; q += 4) { d.data[q] *= m[0]; d.data[q + 1] *= m[1]; d.data[q + 2] *= m[2]; }
+        for (let q = 0; q < d.data.length; q += 4) { d.data[q] = Math.min(255, d.data[q] * m[0]); d.data[q + 1] = Math.min(255, d.data[q + 1] * m[1]); d.data[q + 2] = Math.min(255, d.data[q + 2] * m[2]); }
         g.putImageData(d, 0, 0);
       }
       frames.push({ c, ox: Math.round(feet[0] * k), oy: Math.round(feet[1] * k) });
@@ -298,6 +299,8 @@
     if (poses.on) { poses.on0 = poses.on1 = poses.on2 = poses.on; }
     if (!poses.default) poses.default = [0];
     if (!poses.f0) poses.f0 = poses.default;
+    // コードの絵のコマの名前（META.frames・アニメのコマ）が無ければ近い名前のコマで代える
+    for (const f of ((META[id] && META[id].frames) || []).concat(frameNames(id))) if (!poses[f]) poses[f] = poses[f.replace(/\d+$/, '')] || poses.default;
     const meta = Object.assign({ id, env: ev.id }, R.DB.props[id] || {});
     if (lt) meta.emit = { light: lt, cyan: /crystal|mushroom|spring|songstone|switch/.test(id), small: w < 16, fire: /brazier|torch|stove|beacon/.test(id) };
     return { frames, poses, fps: {}, anchors: { feet: [0, 0], light: lt }, w, h, meta };

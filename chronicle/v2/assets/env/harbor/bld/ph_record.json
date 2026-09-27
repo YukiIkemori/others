@@ -1,0 +1,111 @@
+{
+ "id": "ph_record",
+ "kind": "building",
+ "theme": "harbor",
+ "footprint": [
+  7,
+  6
+ ],
+ "wall": 3,
+ "files": {
+  "24": "ph_record@24.png",
+  "32": "ph_record@32.png",
+  "40": "ph_record@40.png"
+ },
+ "emitFiles": {
+  "24": "ph_record_emit@24.png",
+  "32": "ph_record_emit@32.png",
+  "40": "ph_record_emit@40.png"
+ },
+ "size": {
+  "24": [
+   180,
+   168
+  ],
+  "32": [
+   240,
+   224
+  ],
+  "40": [
+   300,
+   280
+  ]
+ },
+ "anchor32": [
+  8,
+  224
+ ],
+ "door32": {
+  "x": 112.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 41,
+   "y": -74,
+   "w": 10,
+   "h": 12
+  },
+  {
+   "kind": "win",
+   "x": 107,
+   "y": -74,
+   "w": 10,
+   "h": 12
+  },
+  {
+   "kind": "win",
+   "x": 168,
+   "y": -74,
+   "w": 10,
+   "h": 12
+  },
+  {
+   "kind": "win",
+   "x": 42,
+   "y": -35,
+   "w": 10,
+   "h": 13
+  },
+  {
+   "kind": "win",
+   "x": 166,
+   "y": -34,
+   "w": 10,
+   "h": 13
+  }
+ ],
+ "roof32": [
+  -6,
+  -196,
+  230,
+  -90
+ ],
+ "wallTop32": -96,
+ "src": "design/art_ref/gen/env/bld/harbor/ph_record.png",
+ "def_": {
+  "type": "building",
+  "id": "ph_record",
+  "x": 3,
+  "y": 12,
+  "w": 7,
+  "h": 6,
+  "wall": 3,
+  "roof": "slate",
+  "mat": "stone",
+  "windows": 2,
+  "sign": "record",
+  "lamp": true,
+  "door": {
+   "x": 6,
+   "y": 17,
+   "to": {
+    "map": "pharos_record",
+    "spawn": "door"
+   }
+  }
+ }
+}

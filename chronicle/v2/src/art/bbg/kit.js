@@ -329,7 +329,8 @@
     const W = Math.round(opts.w || R.W || 960), H = Math.round(opts.h || R.H || 540);
     const g = K.geo(W, H, def.geo);
     const L = K.layoutFor(g);
-    const out = def.bake(g, L, { W, H, RZ: BZ.rz() });
+    const envL = K.envLayers ? K.envLayers(id, def, g, W, H, L) : null;   // 描いた戦闘背景（v2/assets/env/bbg、ENV_ASSETS.md）
+    const out = envL || def.bake(g, L, { W, H, RZ: BZ.rz() });
     const layers = out && typeof out.next === 'function' ? yield* out : out;
     const frames = [], poses = {};
     for (const name of ['back', 'ground', 'front', 'post']) {
@@ -346,6 +347,60 @@
         ambient: def.ambient, foes: L.foes, party: L.party, bakeMs: Math.round(spentMs() * 10) / 10, id },
     };
   }
+
+  // ------------------------------------------------------------------ 描いた戦闘背景（env）
+  // 画像は夜の色で描いてある。BSCENE は ground と front に光の地図（環境光 × ランタン）を multiply するので、
+  // ground・front は「環境光で割った色」（＝灯りの下の色）にして渡す: 光の地図の暗い所では描いた夜の色に戻り、ランタンの光だまりでは暖かく明るくなる。
+  // back（空・遠景）と post（光るもの。'lighter'）はそのまま。縦持ち（W/H < 1.2）は *_tall の絵を戦場（上 55%）に置き、下は一番下の行を伸ばす。
+  K.envLayers = function (id, def, g, W, H, L) {
+    const T = R.Terrain, eb = T && T.Env && T.Env.bbg ? T.Env.bbg(id) : null;
+    if (!eb) return null;
+    const tall = g.tall, sfx = tall ? '_tall' : '';
+    const get = (n) => eb.layer(n + sfx) || eb.layer(n);
+    const fieldH = tall ? Math.round(g.field) : H;
+    const place = (im) => {
+      if (!im) return null;
+      const c = mk(W, H), x = c.getContext('2d');
+      x.imageSmoothingEnabled = false;
+      const k = Math.max(W / im.width, fieldH / im.height), dw = Math.round(im.width * k), dh = Math.round(im.height * k);
+      const ox = Math.round((W - dw) / 2), oy = tall ? 0 : Math.round((H - dh) / 2);
+      x.drawImage(im, ox, oy, dw, dh);
+      if (tall && H > dh) x.drawImage(c, 0, dh - 1, W, 1, 0, dh, W, H - dh);
+      return c;
+    };
+    let amb = null;
+    try { const md = R.Hd.mood && R.Hd.mood(def.mood); amb = md && md.ambient; } catch (e) { amb = null; }
+    const parse = (v) => (/rgb/.test(v) ? v.match(/\d+/g).slice(0, 3).map(Number) : BZ.color.hex(v));
+    const a = parse(amb || def.ambient || 'rgb(92,84,150)');
+    const inv = a.map((v) => 255 / Math.max(24, v));
+    const unlight = (c) => {
+      if (!c) return null;
+      const x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), p = d.data;
+      for (let i = 0; i < p.length; i += 4) {
+        if (!p[i + 3]) continue;
+        let r = p[i] * inv[0], gg = p[i + 1] * inv[1], b = p[i + 2] * inv[2];
+        const m = Math.max(r, gg, b);
+        if (m > 255) { const l = 0.3 * r + 0.59 * gg + 0.11 * b, t = Math.min(1, (m - 255) / m); r += (l - r) * t; gg += (l - gg) * t; b += (l - b) * t; const k2 = 255 / Math.max(r, gg, b, 255); r *= k2; gg *= k2; b *= k2; }
+        p[i] = r; p[i + 1] = gg; p[i + 2] = b;
+      }
+      x.putImageData(d, 0, 0);
+      return c;
+    };
+    const back = place(get('back'));
+    if (!back) return null;
+    const ground = unlight(place(get('ground'))) || mk(W, H);
+    let post = place(get('post'));
+    if (L && L.lantern) {
+      // ランタン（コードの絵と同じ置き方）と、その芯とにじみ
+      const s = g.s, lr = K.lantern(1.3 * K.scaleAt(g, L.lantern.y) * s / 1.205);
+      K.blit(ground.getContext('2d'), lr, L.lantern.x, L.lantern.y);
+      if (!post) post = mk(W, H);
+      const px = post.getContext('2d');
+      K.glow(px, L.lantern.x, L.lantern.y - 9 * s, 100 * s, [255, 190, 110], 0.5);
+      K.glow(px, L.lantern.x, L.lantern.y - 9 * s, 20 * s, [255, 240, 200], 0.85);
+    }
+    return { back, ground, front: unlight(place(get('front'))) || mk(W, H), post, env: true };
+  };
 
   // ------------------------------------------------------------------ 見本の組み立て（BSCENE の描く順の見本。スクショと図鑑の試しに使う）
   const PARTY_COLORS = [['#2e4ea0', '#c46a2c'], ['#843a2c', '#cc4c26'], ['#3c7a4a', '#c4bc78'], ['#9486aa', '#76489a']];

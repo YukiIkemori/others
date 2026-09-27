@@ -150,3 +150,36 @@ if what in ('mat', 'all'): do_mats()
 if what in ('face', 'all'): do_faces()
 if what in ('props', 'all'): do_props()
 if what in ('bld', 'all'): do_bld()
+
+def combine(theme, new, parts, names):
+    """join single-frame props into one multi-frame strip (bottom-centre aligned)"""
+    d = ROOT + '/%s/props/' % theme
+    js = [json.load(open(d + p + '.json')) for p in parts]
+    files = {}; cells = {}; feet = {}
+    for t in TILES:
+        ims = [load(d + j['files'][str(t)]) for j in js]
+        W = max(i.shape[1] for i in ims); H = max(i.shape[0] for i in ims)
+        fr = []
+        for im in ims:
+            c = np.zeros((H, W, 4), np.float32); ox = (W - im.shape[1]) // 2; c[H - im.shape[0]:, ox:ox + im.shape[1]] = im; fr.append(c)
+        fn = '%s@%d.png' % (new, t); save(np.concatenate(fr, 1), d + fn); files[t] = fn; cells[t] = [W, H]; feet[t] = [W / 2, H - 1]
+    for p in parts:
+        for t in TILES:
+            try: os.remove(d + '%s@%d.png' % (p, t))
+            except OSError: pass
+        os.remove(d + p + '.json')
+    json.dump(dict(js[0], id=new, frames=names, files=files, cell=cells, feet=feet), open(d + new + '.json', 'w'), indent=1)
+    print('combined', new)
+
+if what in ('props', 'all') and os.path.exists(ROOT + '/common/props/lever_off.json'):
+    combine('common', 'lever', ['lever_off', 'lever_on'], ['off', 'on'])
+
+def brighten(theme, pid, k):
+    d = ROOT + '/%s/props/' % theme
+    j = json.load(open(d + pid + '.json'))
+    for t, fn in j['files'].items():
+        a = load(d + fn); a[..., :3] = np.clip(a[..., :3] * k + 6, 0, 255); save(a, d + fn)
+    print('brightened', pid, k)
+
+if what in ('props', 'all') and (not flt or flt in 'dungeon_a'):
+    brighten('common', 'chest', 1.22)

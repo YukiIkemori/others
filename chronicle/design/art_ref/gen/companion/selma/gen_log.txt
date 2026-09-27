@@ -65,3 +65,39 @@
 00:23:47 sheet 1 attempt 3: generating 3584x1536 (pitch 8, quality medium, 2 refs)
 00:24:40   pitch in raw image: 9.83 px per art pixel (upright median 629 px / 64)
 00:24:40 sheet 1 -> art_ref/gen/companion/selma/comp_selma_s1.png (7 poses)
+00:31:43 sheet 1 attempt 4: generating 3584x1536 (pitch 8, quality medium, 1 refs)
+00:32:23   pitch in raw image: 8.19 px per art pixel (upright median 524 px / 64)
+00:32:24 sheet 1 -> art_ref/gen/companion/selma/comp_selma_s1.png (7 poses)
+00:32:41 sheet 3 attempt 4: generating 3648x1344 (pitch 7, quality medium, 2 refs)
+00:33:46   pitch in raw image: 7.00 px per art pixel (upright median 448 px / 64)
+00:33:47 sheet 3 -> art_ref/gen/companion/selma/comp_selma_s3.png (10 poses)
+00:33:56 sheet 4 attempt 2: generating 3360x1440 (pitch 6, quality medium, 2 refs)
+00:34:59   pitch in raw image: 6.09 px per art pixel (upright median 390 px / 64)
+00:35:00 sheet 4 -> art_ref/gen/companion/selma/comp_selma_s4.png (15 poses)
+00:35:01 sheet 2 attempt 3: generating 1920x2048 (pitch 8, quality medium, 2 refs)
+00:36:18   pitch in raw image: 7.96 px per art pixel (upright median 382 px / 48)
+00:36:19 sheet 2 -> art_ref/gen/companion/selma/comp_selma_s2.png (12 poses)
+00:36:19 sheet 5 attempt 2: generating 1536x1536 (pitch 8, quality medium, 2 refs)
+00:37:37   pitch in raw image: 8.11 px per art pixel (upright median 649 px / 80)
+00:37:37 sheet 5 -> art_ref/gen/companion/selma/comp_selma_s5.png (4 poses)
+00:37:45 sheet 1: comp_selma_s1.png exists (resume: skipped; --force to redraw)
+00:37:45 sheet 2: comp_selma_s2.png exists (resume: skipped; --force to redraw)
+00:37:45 sheet 3: comp_selma_s3.png exists (resume: skipped; --force to redraw)
+00:37:45 sheet 4: comp_selma_s4.png exists (resume: skipped; --force to redraw)
+00:37:45 sheet 5: comp_selma_s5.png exists (resume: skipped; --force to redraw)
+00:37:45 pipeline: sheets.py ../art_ref/gen/companion/selma --companion selma --out out/comp_selma --check
+00:39:27   | ■ シートの状態
+00:39:27   |   シート1 設定画: OK  comp_selma_s1.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+00:39:27   |   シート2 フィールドの歩き: OK  comp_selma_s2.png  ドット 8.00px → 描かれた格子のまま（47.5 ドット）
+00:39:27   |   シート3 戦闘の基本ポーズ: OK  comp_selma_s3.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+00:39:27   |   シート4 戦闘の行動ポーズ＋武器なし版: 確認あり  comp_selma_s4.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+00:39:27   |   シート5 顔の表情: OK  comp_selma_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+00:39:27 no redo lines left
+00:39:27 pipeline: sheets.py ../art_ref/gen/companion/selma --companion selma --out out/comp_selma
+00:42:12   |   シート2 フィールドの歩き: OK  comp_selma_s2.png  ドット 8.00px → 描かれた格子のまま（47.5 ドット）
+00:42:12   |   シート3 戦闘の基本ポーズ: OK  comp_selma_s3.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+00:42:12   |   シート4 戦闘の行動ポーズ＋武器なし版: 確認あり  comp_selma_s4.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+00:42:12   |   シート5 顔の表情: OK  comp_selma_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+00:42:12   | 
+00:42:12   | packed field 102x212, battle 625x332, battle_bare 370x72, face 308x84 | palette 52 + face 48
+00:42:42 sheet 3 attempt 5: generating 3648x1344 (pitch 7, quality medium, 2 refs)

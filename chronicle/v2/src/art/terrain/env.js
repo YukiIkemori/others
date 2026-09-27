@@ -142,6 +142,8 @@
     const keys = Object.keys(table());
     if (!keys.length) return;
     try { await R.Media.preload('env', keys); } catch (e) { /* 読めた物だけ使う */ }
+    // 画像の展開を先に済ませる（初めて描く時の展開がチャンクを焼く 3 ms の仕事に入らないように）
+    try { await Promise.all(keys.map((k) => { const r = R.Media.image(k, 'env'); return r && r.ready && r.img.decode ? r.img.decode().catch(() => null) : null; })); } catch (e) { /* 無くてもよい */ }
     idx = null;
     E.ready = true;
     E.count = keys.length;

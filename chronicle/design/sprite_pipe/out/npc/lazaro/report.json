@@ -1,0 +1,310 @@
+{
+ "char": "lazaro",
+ "companion": null,
+ "npc": "lazaro",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/lazaro",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/lazaro/npc_lazaro_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 412.0,
+   "native_height_at_period": 51.5,
+   "scale_note": "描かれた格子のまま（51.5 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      33,
+      52
+     ],
+     "box": [
+      168,
+      48,
+      464,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.42
+    },
+    "walk_down_1": {
+     "size": [
+      37,
+      52
+     ],
+     "box": [
+      792,
+      48,
+      1120,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.06,
+     "scale": 1.037
+    },
+    "walk_down_2": {
+     "size": [
+      37,
+      52
+     ],
+     "box": [
+      1432,
+      48,
+      1760,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.11,
+     "scale": 1.0
+    },
+    "walk_up_0": {
+     "size": [
+      33,
+      52
+     ],
+     "box": [
+      168,
+      560,
+      464,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.44,
+     "scale": 0.962
+    },
+    "walk_up_1": {
+     "size": [
+      37,
+      52
+     ],
+     "box": [
+      792,
+      560,
+      1120,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.17,
+     "scale": 0.962
+    },
+    "walk_up_2": {
+     "size": [
+      36,
+      52
+     ],
+     "box": [
+      1440,
+      560,
+      1760,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.06,
+     "scale": 0.962
+    },
+    "walk_left_0": {
+     "size": [
+      28,
+      50
+     ],
+     "box": [
+      192,
+      1088,
+      448,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      36,
+      51
+     ],
+     "box": [
+      800,
+      1080,
+      1120,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.962
+    },
+    "walk_left_2": {
+     "size": [
+      36,
+      51
+     ],
+     "box": [
+      1440,
+      1080,
+      1760,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_0": {
+     "size": [
+      27,
+      51
+     ],
+     "box": [
+      192,
+      1592,
+      440,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      38,
+      50
+     ],
+     "box": [
+      792,
+      1600,
+      1128,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_2": {
+     "size": [
+      35,
+      50
+     ],
+     "box": [
+      1440,
+      1600,
+      1752,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 2,
+   "level": "redo",
+   "code": "missing_sheet",
+   "msg": "シート2（演技12（下向き）, npc_lazaro_s2.png）がない",
+   "slot": null,
+   "ask": "ラザロ（lazaro）のシート2（演技12（下向き））を作って",
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "redo",
+   "code": "missing_sheet",
+   "msg": "シート3（顔6, npc_lazaro_s3.png）がない",
+   "slot": null,
+   "ask": "ラザロ（lazaro）のシート3（顔6）を作って",
+   "data": {}
+  },
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/lazaro）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩きの立ち4コマの中央値、体 52 ドットあたり）: 首 0.29（アルン 0.29）・頭の幅 0.37（0.43）・肩 0.36（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.28846153846153844,
+    "head_w": 0.36538461538461536,
+    "shoulder": 0.3557692307692308,
+    "neck_clear": 0.7947368421052632
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "proportion",
+   "msg": "頭の幅がアルンより小さい（86%）。頭が小さく、頭身が高すぎる",
+   "slot": "walk_down_0",
+   "ask": "ラザロ（lazaro）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の幅が約 86%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して",
+   "data": {
+    "ratio": 0.8557016753738065,
+    "metric": "head_w"
+   }
+  }
+ ]
+}

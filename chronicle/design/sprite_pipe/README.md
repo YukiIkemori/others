@@ -209,3 +209,32 @@ python3 tools/refs.py selma out/comp_selma                              # 目で
 - 顔は「少し右向き」の見本で向きを比べる。8 枚の重なり（表情以外がずれない）は大きさだけ検査している。
 - 仮の絵の戦闘ポーズは元の絵が小さい（43 ドット相当）ので、64 に取り直した分だけ細部が甘い。スキルの剣は元の絵で斬撃の光に隠れていて、刃が短い。
 - `work/` には試作中の中間画像が残っている（消してよい）。
+
+## 9. NPC のシート（`design/art_ref/NPC_REQUEST.md`・`npc_sheets.json`）
+
+同じ `sheets.py` に `--npc <id>` を付けて通す（中身は `tools/npc_spec.py`）。画像 AI で作るのは `tools/gen_sheets.py npc …`（中身は `tools/npc_gen.py`）。
+
+```sh
+python3 tools/sheets.py ../art_ref/gen/npc/berna --npc berna --out out/npc/berna --check     # 段A・段B は NPC の id
+python3 tools/sheets.py ../art_ref/gen/npc/grp_pen_1 --npc npc_pen_man --out out/npc/npc_pen_man   # 段C は人の look（二人のシートの半分）
+python3 tools/to_v2.py out/npc/berna                                                        # look は npc.json から → v2/assets/sprites/<look>
+python3 tools/gen_sheets.py npc berna --sheets 1        # 作る（アルンの絵を NPC の身長に縮めた型を塗り替える edit）→ 検査 → 直し（1 枚 3 回まで）
+python3 tools/gen_sheets.py npc berna --approve 1       # 目で見て良ければ、s1 を見本として承認（段A の s2・s3 は承認の後）
+python3 tools/gen_sheets.py npc-batch --tier B --export # 段ごとに npc_sheets.json の順で
+python3 tools/gen_sheets.py npc-lineup berna fine grp_pen_1 --out /tmp/lineup.png   # アルンと並べた町の並び（1 ドット = 4 px）
+```
+
+| ファイル | 並べ方 | 行き先 |
+|---|---|---|
+| `npc_<id>_s1`（段A） | walk 4×3（マス 80×64、アルンのシート1と同じ id） | `field` |
+| `npc_<id>_s1`（段B） | walk_act 4×4：列1〜3 = 歩き、列4 = `act_nod act_surprise act_call act_sig`（どの行も手前向き。向きの検査は列ごと `col_face`） | `field` |
+| `npc_<id>_s2`（段A） | act12 3×4（アルンのシート3、`act_draw` → `act_sig`） | `field` |
+| `npc_<id>_s3`（段A） | face6 2×3（マス 96×96）`face_neutral smile sad / angry surprise closed` | `face` |
+| `npc_grp_<group>`（段C） | walk_pair 4×6：列1〜3 = 人物A、列4〜6 = 人物B。look ごとに半分を `<out>/src/` に切り出して walk として通す | `field`（look ごと） |
+
+- 作り直しは `_v2`・`_v3`（番号の大きい方、同じなら新しい方）。
+- **身長**: look ごとに `measureH.field`（帽子・荷物を含む）で大きさを検査し、JSON の `target_height` は `heightDots.field`。48 に直さない。
+- **頭身の検査**（`npc_spec.check_proportions`）: 歩きの立ち 4 コマで、首の行・頭の幅・肩の幅を体の高さで割り、アルン（シート1 の 12 コマの中央値：首 0.29・頭の幅 0.43・肩 0.40）と比べる。
+  頭が 8% 以上小さい＝作り直し。大きすぎるのは帽子・頭巾の無い人だけ作り直し（帽子のある人は目で確かめる）。フードや長い髪で首が見えないときは頭の幅だけ。子どもも同じ比（全体の高さだけ変える）。動物は検査しない。
+- **ランタン**は `lantern: true` の人だけ検査（段B の列4 は除く）。`field` の JSON に `lantern_drawn` と `npc`（段・霊・色替えの主色と variants）を書く。`npc.json` に look・身長・使ったファイル・頭身の比。
+- 演技12 の 5 番（片ひざ）・6 番（座る）は、アルンのシート3 でも頭の縮尺の検査が 127〜130% と出る（しゃがんだ頭の読み違い）。`npc_gen` はこの 2 つの 142% 未満の「縮尺」は直さない。

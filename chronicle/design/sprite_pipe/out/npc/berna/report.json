@@ -1,0 +1,656 @@
+{
+ "char": "berna",
+ "companion": null,
+ "npc": "berna",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/berna",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/berna/npc_berna_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 380.0,
+   "native_height_at_period": 47.5,
+   "scale_note": "描かれた格子のまま（47.5 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      28,
+      49
+     ],
+     "box": [
+      192,
+      72,
+      448,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.94
+    },
+    "walk_down_1": {
+     "size": [
+      31,
+      49
+     ],
+     "box": [
+      816,
+      72,
+      1096,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.86,
+     "scale": 1.1
+    },
+    "walk_down_2": {
+     "size": [
+      30,
+      49
+     ],
+     "box": [
+      1464,
+      72,
+      1736,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.95,
+     "scale": 1.0
+    },
+    "walk_up_0": {
+     "size": [
+      28,
+      48
+     ],
+     "box": [
+      192,
+      592,
+      448,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.78,
+     "scale": 0.9
+    },
+    "walk_up_1": {
+     "size": [
+      30,
+      48
+     ],
+     "box": [
+      824,
+      592,
+      1096,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.94,
+     "scale": 0.9
+    },
+    "walk_up_2": {
+     "size": [
+      31,
+      48
+     ],
+     "box": [
+      1456,
+      592,
+      1736,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.96,
+     "scale": 0.9
+    },
+    "walk_left_0": {
+     "size": [
+      23,
+      47
+     ],
+     "box": [
+      208,
+      1112,
+      424,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      28,
+      47
+     ],
+     "box": [
+      832,
+      1112,
+      1088,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_left_2": {
+     "size": [
+      28,
+      46
+     ],
+     "box": [
+      1472,
+      1120,
+      1728,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_0": {
+     "size": [
+      22,
+      47
+     ],
+     "box": [
+      216,
+      1624,
+      424,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      28,
+      46
+     ],
+     "box": [
+      832,
+      1632,
+      1088,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.962
+    },
+    "walk_right_2": {
+     "size": [
+      28,
+      45
+     ],
+     "box": [
+      1472,
+      1640,
+      1728,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.962
+    }
+   }
+  },
+  "2": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/berna/npc_berna_s2.png",
+   "size": [
+    3072,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "3x4",
+    "logical_cell": [
+     96,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 384.0,
+   "native_height_at_period": 48.0,
+   "scale_note": "描かれた格子のまま（48.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "act_nod": {
+     "size": [
+      25,
+      46
+     ],
+     "box": [
+      264,
+      96,
+      496,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.02,
+     "scale": 1.1
+    },
+    "act_surprise": {
+     "size": [
+      35,
+      46
+     ],
+     "box": [
+      992,
+      88,
+      1304,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.18,
+     "scale": 0.962
+    },
+    "act_think": {
+     "size": [
+      24,
+      48
+     ],
+     "box": [
+      1808,
+      80,
+      2032,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.95,
+     "scale": 1.1
+    },
+    "act_bow": {
+     "size": [
+      29,
+      45
+     ],
+     "box": [
+      2552,
+      104,
+      2816,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 1.037
+    },
+    "act_kneel": {
+     "size": [
+      30,
+      39
+     ],
+     "box": [
+      248,
+      664,
+      520,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 0.9
+    },
+    "act_sit": {
+     "size": [
+      39,
+      38
+     ],
+     "box": [
+      976,
+      672,
+      1320,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 1.1
+    },
+    "act_call": {
+     "size": [
+      31,
+      48
+     ],
+     "box": [
+      1776,
+      592,
+      2056,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.7,
+     "scale": 0.962
+    },
+    "act_look": {
+     "size": [
+      28,
+      47
+     ],
+     "box": [
+      2560,
+      600,
+      2816,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 0.962
+    },
+    "act_lie": {
+     "size": [
+      63,
+      26
+     ],
+     "box": [
+      112,
+      1280,
+      648,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "act_sig": {
+     "size": [
+      27,
+      48
+     ],
+     "box": [
+      1024,
+      1104,
+      1272,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.89,
+     "scale": 1.1
+    },
+    "act_resolve": {
+     "size": [
+      26,
+      48
+     ],
+     "box": [
+      1800,
+      1104,
+      2040,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.0,
+     "scale": 1.1
+    },
+    "act_sad": {
+     "size": [
+      27,
+      47
+     ],
+     "box": [
+      2560,
+      1112,
+      2808,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 1.037
+    }
+   }
+  },
+  "3": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/berna/npc_berna_s3.png",
+   "size": [
+    2304,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x3",
+    "logical_cell": [
+     96,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 640.0,
+   "native_height_at_period": 80.0,
+   "scale_note": "描かれた格子のまま（80.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      73,
+      80
+     ],
+     "box": [
+      72,
+      48,
+      688,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_smile": {
+     "size": [
+      72,
+      80
+     ],
+     "box": [
+      848,
+      48,
+      1456,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_sad": {
+     "size": [
+      72,
+      80
+     ],
+     "box": [
+      1616,
+      48,
+      2224,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_angry": {
+     "size": [
+      73,
+      80
+     ],
+     "box": [
+      72,
+      816,
+      688,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_surprise": {
+     "size": [
+      72,
+      80
+     ],
+     "box": [
+      848,
+      816,
+      1456,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_closed": {
+     "size": [
+      72,
+      80
+     ],
+     "box": [
+      1616,
+      816,
+      2224,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/berna）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "auto",
+   "code": "marks",
+   "msg": "シート2 の 2 番（驚く） の感情マーク（驚きの線・汗など 3 個）を消した",
+   "slot": "act_surprise",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩きの立ち4コマの中央値、体 44 ドットあたり）: 首 0.28（アルン 0.29）・頭の幅 0.44（0.43）・肩 0.45（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.28409090909090906,
+    "head_w": 0.4431818181818182,
+    "shoulder": 0.44886363636363635,
+    "neck_clear": 0.8972222222222221
+   }
+  }
+ ]
+}
