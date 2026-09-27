@@ -246,6 +246,15 @@ class Job:
         s, hx, hy, _ = head_of(self.idle, self.href)
         self.idle_head = (hx, hy)
 
+    def idle_rel(self, fid):
+        """the idle-head reading of a key frame itself (1.0 for idle): its bias from pose / occlusion"""
+        if not hasattr(self, '_ir'):
+            self._ir = {}
+        if fid not in self._ir:
+            fr, _ = frame_px(self.a, self.m, fid)
+            self._ir[fid] = bodyscale.match(trim(fr)[0], self.href, rots=(0, -12, 12))[0]
+        return self._ir[fid]
+
     def st(self):
         return self.state.setdefault(self.action, {'attempts': []})
 
@@ -487,6 +496,15 @@ def normalise(job, raw_path, p, lay):
     s = (sx + sy) / 2
     job.log('calibrated pitch %.2f / %.2f px (requested %d), offset %.1f, %.1f' % (sx, sy, p, ox, oy))
     pal = np.array([[int(h[1:3], 16), int(h[3:5], 16), int(h[5:7], 16)] for h in job.m['palette']], np.uint8)
+    kp = []
+    for i, (kind, v) in enumerate(job.plan['slots']):
+        if kind == 'keep':
+            x0, y0 = rects[i]
+            kb = (int(ox + sx * (x0 + 1)), int(max(0, oy + sy * y0)), int(ox + sx * (x0 + lay['W'] - 1)),
+                  int(min(raw.size[1], oy + sy * (y0 + lay['H']))))
+            kp.append(np.mean(drawn_pitch_f(raw.crop(kb))))
+    key_pitch = float(np.median(kp))
+    job.log('drawn pitch of the key cells %.2f' % key_pitch)
     frames = []
     PX, PT = 16, 24          # output cells: padding around the gen cell (upscaled poses may grow past it)
     olay = dict(HX=lay['HX'] + PX, G=lay['G'] + PT, W=lay['W'] + 2 * PX, H=lay['H'] + PT)
@@ -535,8 +553,18 @@ def normalise(job, raw_path, p, lay):
             # size vs its guide (the key frame it was redrawn from): the model tends to draw new poses smaller.
             # Too small / big -> sample the raw again on a finer / coarser lattice (the raw is 8x the art pixel)
             gref = bodyscale.head_crop(lay['keeps'][pf]['img'])
-            m = bodyscale.match(trim(a)[0], gref, rots=(0, -12, 12))[0]
+            mg = bodyscale.match(trim(a)[0], gref, rots=(0, -12, 12))[0]
+            mr = bodyscale.match(trim(a)[0], job.href, rots=(0, -12, 12))[0]
+            mi = mr / job.idle_rel(pf)
+            # head estimates (vs the guide's head; vs idle's head, raw and corrected by the guide's own reading) are
+            # fooled by an arm over the head; the drawn pixel pitch of the cell (the model shrinks a pose by drawing
+            # smaller pixels) is coarse but unbiased: take the head estimate nearest to it
+            mp = float(np.mean(drawn_pitch_f(raw.crop(cbox)))) / key_pitch
+            m = min((mg, mr, mi), key=lambda v: abs(v - mp))
+            if abs(mp - 1) < 0.04:        # drawn at the key cells' pitch: the model kept the size
+                m = 1.0
             gscale = m
+            job.log('  frame %d size: guide %.3f idle %.3f idle/corr %.3f pitch %.3f -> %.3f' % (i + 1, mg, mr, mi, mp, m))
             if abs(m - 1) > 0.03 and 0.6 < m < 1.4:
                 qx, qy = sx * m, sy * m
                 crop = raw.crop(box)
@@ -580,6 +608,28 @@ def normalise(job, raw_path, p, lay):
     st['from_raw'] = os.path.relpath(raw_path, job.dir)
     job.save()
     report(job, frames)
+
+
+def drawn_pitch_f(crop, lo=3.0, hi=11.0):
+    """fractional drawn pixel pitch: autocorrelation of the edge profiles (colour differences inside the figure)"""
+    a = np.asarray(crop.convert('RGB')).astype(float)
+    m = np.asarray(key_mask(crop)) > 0
+    res=[]
+    for ax in (1,0):
+        d = np.abs(np.diff(a, axis=ax)).sum(-1)
+        mm = (m[:, 1:] & m[:, :-1]) if ax == 1 else (m[1:] & m[:-1])
+        d = d*mm
+        prof = d.sum(0) if ax==1 else d.sum(1)
+        prof = prof - np.convolve(prof, np.ones(15)/15, 'same')
+        n=len(prof); best=None
+        for L in np.arange(lo, hi, 0.05):
+            i0 = np.arange(0, n-int(np.ceil(L))-1)
+            f = i0 + L; fl = np.floor(f).astype(int); w = f-fl
+            sh = prof[fl]*(1-w)+prof[fl+1]*w
+            c = (prof[i0]*sh).mean()
+            if best is None or c>best[0]: best=(c,L)
+        res.append(best[1])
+    return res
 
 
 def lattice_sample(raw, mask, box, nx, ny):

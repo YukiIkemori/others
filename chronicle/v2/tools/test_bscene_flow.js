@@ -92,7 +92,7 @@ async function main() {
   const memParty = await B.ev(p, 'RPG.Game.battle.cursor._party');
   ok('party command cursor remembered (repeat = 1)', memParty === 1, memParty);
   ok('finish the battle', await B.pressUntil(p, 'a', 'window.__r', 80));
-  ok('repeat does not carry to the next battle', await (async () => { await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] })); const r = await B.waitFor(p, `${D} && ${D}.phase==='input'`, 20000); const on = await B.ev(p, `${D}.B.repeatOn`); return r && !on; })());
+  ok('repeat stopped with B stays off in the next battle (memory off)', await (async () => { await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] })); const r = await B.waitFor(p, `${D} && ${D}.phase==='input'`, 20000); const on = await B.ev(p, `${D}.B.repeatOn`); return r && !on; })());
 
   section('逃げる');
   // 一行の命令: 戦う・リピート（1 ラウンド目は使えない）・逃げる
@@ -130,6 +130,37 @@ async function main() {
   ok("canLose: '力尽きた' waits for confirm (no wipe screen)", await B.waitFor(p, `${D} && ${D}.next && !${D}.go`, 30000));
   ok("resolves 'lose' after confirm", await B.pressUntil(p, 'a', "window.__r && window.__r.result === 'lose'", 20));
   ok('invariants after canLose', await B.waitFor(p, INV, 3000));
+
+  section('リピートは次の戦闘へ続く（ボス・レアは一時止め、B で止めたら止まる）');
+  const finishWin = async () => { for (let i = 0; i < 300 && !(await B.ev(p, '!!window.__r')); i++) { if (await B.ev(p, `!!(${D} && ${D}.next)`)) await B.press(p, 'a'); else await p.waitForTimeout(150); } return !!(await B.ev(p, '!!window.__r')); };
+  await B.ev(p, "RPG.Settings.set('battleSpeed', 3); RPG.Battle.repeatMemory().on = false; 0");
+  await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] }));
+  ok('round 2 offers repeat', await B.pressUntil(p, 'a', `${D} && ${D}.phase==='input' && ${D}.partyOpts.includes('repeat') && ${D}.ui && ${D}.ui.o && ${D}.ui.o.rows.some((r) => r.key === 'fight')`, 80));
+  await B.press(p, 'l');
+  ok('L turns repeat on and it is remembered', await B.waitFor(p, `${D}.B.repeatOn && RPG.Battle.repeatMemory().on`, 3000));
+  ok('battle ends (confirm)', await finishWin());
+  ok('last commands remembered for the next battle', await B.ev(p, '!!RPG.Battle.repeatMemory().cmds'));
+  await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] }));
+  ok('next normal battle: repeat is on from the first turn (no input)', await B.waitFor(p, `${D} && ${D}.B && ${D}.B.repeatOn && ${D}.repeatCarried`, 20000) && await B.waitFor(p, `${D}.phase==='play'`, 20000));
+  ok('prompts show 「リピート中：[B]でやめる」 from the first turn', await B.ev(p, `RPG.Battle.prompts(${D}).repeatOn`));
+  ok('battle ends', await finishWin());
+  await B.ev(p, start({ demo: 'boss_pageeater', boss: true, autoInput: true, mons: [['x', 1]] }));
+  ok('boss battle: repeat suspended (starts with normal input, memory stays on)', await B.waitFor(p, `${D} && ${D}.B`, 20000) && await B.ev(p, `${D}.repeatSuspended && !${D}.B.repeatOn && !${D}.repeatCarried && RPG.Battle.repeatMemory().on`));
+  ok('boss battle ends', await finishWin());
+  await B.ev(p, start({ demo: 'normal', rare: true, autoInput: true, mons: [['x', 1]] }));
+  ok('rare battle (setup.rare): repeat suspended too', await B.waitFor(p, `${D} && ${D}.B`, 20000) && await B.ev(p, `${D}.repeatSuspended && !${D}.repeatCarried && !${D}.B.repeatOn`));
+  ok('rare battle ends', await finishWin());
+  await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] }));
+  ok('the following normal battle resumes repeat', await B.waitFor(p, `${D} && ${D}.B && ${D}.B.repeatOn && ${D}.repeatCarried`, 20000));
+  await B.waitFor(p, `${D}.phase==='play'`, 20000);
+  await B.press(p, 'b');
+  ok('B stops repeat and the memory turns off', await B.waitFor(p, `!${D}.B.repeatOn && !RPG.Battle.repeatMemory().on`, 3000));
+  ok('battle ends', await finishWin() || await B.pressUntil(p, 'a', 'window.__r', 120));
+  await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] }));
+  ok('after B, the next battle starts with normal input', await B.waitFor(p, `${D} && ${D}.phase==='input' && ${D}.ui`, 30000) && !(await B.ev(p, `${D}.B.repeatOn`)));
+  await B.ev(p, `${D}.finish({ result: 'escape', rewards: null }); 0`);
+  await B.waitFor(p, 'window.__r', 10000);
+  await B.ev(p, "RPG.Settings.set('battleSpeed', 1); 0");
 
   section('戦闘ボイス（ファイルのある主人公の声）');
   ok('hero glimmer clip is picked from the media list (v_hero_m_glimmer_n)', await B.ev(p, "(() => { const id = RPG.Battle._.voice.play({id:'hero', uid:'p0', look:'hero_m_warrior'}, 'glimmer', {force:true}); return /^v_hero_m_glimmer_\\d+$/.test(id); })()"));

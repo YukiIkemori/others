@@ -2107,6 +2107,26 @@
       get over() { return eng.result === 'win' || eng.result === 'lose' || eng.result === 'escape' ? eng.result : null; },
       get repeatOn() { return repeatOn; },
       setRepeat(v) { repeatOn = !!v; },
+      /**
+       * 戦闘をまたぐリピート（BSCENE、2026-09-27 の持ち主の決まり）: 前の戦闘の最後の命令 {人の id: {type, id}} を「前のラウンド」として置く。
+       * 相手は持ち越さない（repeatCommands が生きている最初の相手を選ぶ）。使えない技・術・無い道具・履歴の無い人は攻撃（repeatOne の決まり）。
+       */
+      seedRepeat(prev) {
+        if (!prev || typeof prev !== 'object') return false;
+        lastCmds = [];
+        for (const p of eng.party) {
+          const c = prev[p.c.id];
+          lastCmds[p.idx] = c && c.type ? { type: c.type, id: c.id || undefined, target: null } : { type: 'attack', target: null };
+        }
+        return true;
+      },
+      /** 今の最後の命令（持ち越し用）→ {人の id: {type, id}} | null */
+      lastCommands() {
+        if (!lastCmds) return null;
+        const out = {};
+        for (const p of eng.party) { const c = lastCmds[p.idx]; if (c && c.type) out[p.c.id] = { type: c.type, id: c.id || null }; }
+        return out;
+      },
       unit(uid) { const u = byUid(uid); return u ? view(u) : null; },
       /** 最初の出来事（出てきた・先手・闇の強まり）。1 回だけ */
       intro() {

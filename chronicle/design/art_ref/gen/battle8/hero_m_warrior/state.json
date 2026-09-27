@@ -138,21 +138,21 @@
     "kind": "new",
     "src": null,
     "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 0.975,
+     "ok": false,
+     "why": "head scale 1.063",
+     "head_scale": 1.063,
      "head": [
       72.0,
-      53.6
+      49.5
      ],
-     "height": 57,
-     "rescaled": 1.25,
-     "copy": 0.08,
+     "height": 62,
+     "rescaled": 1.356,
+     "copy": 0.1,
      "shift": [
-      2,
+      1,
       9
      ],
-     "err": 26.2
+     "err": 28.0
     }
    },
    {
@@ -251,5 +251,389 @@
    "H": 102
   },
   "from_raw": "raw/attack_a3.png"
+ },
+ "victory": {
+  "attempts": [
+   {
+    "raw": "raw/victory_a1.png",
+    "pitch": 8,
+    "lay": {
+     "HX": 68,
+     "G": 94,
+     "W": 136,
+     "H": 97
+    },
+    "quality": "high",
+    "extra": "",
+    "t": "2026-09-27T19:26:18",
+    "secs": 69.7
+   }
+  ],
+  "frames": [
+   {
+    "slot": 1,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      84.0,
+      66.5
+     ],
+     "height": 64,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   },
+   {
+    "slot": 2,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.025,
+     "head": [
+      86.3,
+      66.8
+     ],
+     "height": 75,
+     "rescaled": null,
+     "copy": 0.16,
+     "shift": [
+      -4,
+      0
+     ],
+     "err": 27.7
+    }
+   },
+   {
+    "slot": 3,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      85.7,
+      64.2
+     ],
+     "height": 85,
+     "rescaled": null,
+     "copy": 0.09,
+     "shift": [
+      -17,
+      0
+     ],
+     "err": 31.9
+    }
+   },
+   {
+    "slot": 4,
+    "kind": "keep",
+    "src": "victory_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 0.975,
+     "head": [
+      83.7,
+      64.2
+     ],
+     "height": 83,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 31.1
+    }
+   },
+   {
+    "slot": 5,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      85.7,
+      64.2
+     ],
+     "height": 83,
+     "rescaled": null,
+     "copy": 0.1,
+     "shift": [
+      -4,
+      0
+     ],
+     "err": 31.9
+    }
+   },
+   {
+    "slot": 6,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 0.975,
+     "head": [
+      86.3,
+      64.8
+     ],
+     "height": 83,
+     "rescaled": null,
+     "copy": 0.07,
+     "shift": [
+      -16,
+      0
+     ],
+     "err": 31.9
+    }
+   }
+  ],
+  "lay": {
+   "HX": 84,
+   "G": 118,
+   "W": 168,
+   "H": 121
+  },
+  "from_raw": "raw/victory_a1.png"
+ },
+ "cast": {
+  "attempts": [
+   {
+    "raw": "raw/cast_a1.png",
+    "pitch": 8,
+    "lay": {
+     "HX": 68,
+     "G": 75,
+     "W": 136,
+     "H": 78
+    },
+    "quality": "high",
+    "extra": "",
+    "t": "2026-09-27T19:26:32",
+    "secs": 83.4
+   }
+  ],
+  "frames": [
+   {
+    "slot": 1,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      84.0,
+      47.5
+     ],
+     "height": 64,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   },
+   {
+    "slot": 2,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 0.975,
+     "head": [
+      85.7,
+      50.2
+     ],
+     "height": 61,
+     "rescaled": null,
+     "copy": 0.11,
+     "shift": [
+      -6,
+      2
+     ],
+     "err": 22.6
+    }
+   },
+   {
+    "slot": 3,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      85.7,
+      48.2
+     ],
+     "height": 64,
+     "rescaled": null,
+     "copy": 0.14,
+     "shift": [
+      -16,
+      2
+     ],
+     "err": 24.6
+    }
+   },
+   {
+    "slot": 4,
+    "kind": "keep",
+    "src": "cast_b",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.837",
+     "head_scale": 0.837,
+     "head": [
+      83.9,
+      51.6
+     ],
+     "height": 64,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 30.9
+    }
+   },
+   {
+    "slot": 5,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 0.975,
+     "head": [
+      85.7,
+      52.2
+     ],
+     "height": 65,
+     "rescaled": null,
+     "copy": 0.09,
+     "shift": [
+      -11,
+      4
+     ],
+     "err": 37.5
+    }
+   },
+   {
+    "slot": 6,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      85.7,
+      54.2
+     ],
+     "height": 57,
+     "rescaled": null,
+     "copy": 0.06,
+     "shift": [
+      -4,
+      4
+     ],
+     "err": 28.6
+    }
+   },
+   {
+    "slot": 7,
+    "kind": "keep",
+    "src": "cast_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 0.975,
+     "head": [
+      83.7,
+      47.2
+     ],
+     "height": 64,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 23.9
+    }
+   },
+   {
+    "slot": 8,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.925",
+     "head_scale": 0.925,
+     "head": [
+      81.7,
+      49.2
+     ],
+     "height": 62,
+     "rescaled": 1.127,
+     "copy": 0.07,
+     "shift": [
+      0,
+      6
+     ],
+     "err": 33.5
+    }
+   },
+   {
+    "slot": 9,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      86.0,
+      48.5
+     ],
+     "height": 63,
+     "rescaled": null,
+     "copy": 0.13,
+     "shift": [
+      -15,
+      4
+     ],
+     "err": 15.8
+    }
+   }
+  ],
+  "lay": {
+   "HX": 84,
+   "G": 99,
+   "W": 168,
+   "H": 102
+  },
+  "from_raw": "raw/cast_a1.png"
  }
 }

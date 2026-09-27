@@ -53,7 +53,7 @@
     if (boss) units.push({ uid: 'e_boss', side: 'enemy', id: boss, name: BOSSES[boss][0], hp: 3000, mp: 0, maxHp: 3000, maxMp: 0, row: 'front', status: [], sprite: boss, size: 'l', alive: true, wtype: null, boss: true, golden: false });
     foes.forEach((f, i) => units.push({ uid: 'e' + i, side: 'enemy', id: f[0], name: f[1], hp: 200, mp: 0, maxHp: 200, maxMp: 0, row: 'front', status: [], sprite: f[0], size: f[2], alive: true, wtype: null, golden: name === 'golden' && i === 0, boss: false }));
 
-    let over = null, repeatOn = false, finished = null, round = 0;
+    let over = null, repeatOn = false, finished = null, round = 0, seeded = false;
     const subs = {};
     const P = (i) => units[i];
     const E = () => units.filter((u) => u.side === 'enemy' && u.alive);
@@ -74,7 +74,9 @@
         o.push({ cmd: 'defend', target: 'self' }, { cmd: 'item', list: items, target: 'ally' });
         return o;
       },
-      partyOptions() { const o = ['fight']; if (round > 0) o.push('repeat'); if (!setup.noEscape && !boss) o.push('escape'); return o; },
+      seedRepeat(prev) { seeded = !!prev; return seeded; },
+      lastCommands() { return round > 0 || seeded ? Object.fromEntries(units.filter((u) => u.side === 'party').map((u) => [u.id, { type: 'attack', id: null }])) : null; },
+      partyOptions() { const o = ['fight']; if (round > 0 || seeded) o.push('repeat'); if (!setup.noEscape && !boss) o.push('escape'); return o; },
       submit(uid, c) { subs[uid] = c; },
       repeat() {},
       escape() { subs._escape = true; },

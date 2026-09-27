@@ -309,7 +309,7 @@
     }
     // 多いコマの並び（2026-09-27 BSCENE・CAST の取り決め）: battle.json の anims に <ポーズ>8（slash8・thrust8・smash8・shoot8・
     // cast8・victory8・idle8・hit8・step8…、または attack8 / attack8_<系統>）があれば、ポーズ '<ポーズ>8' として足す。昔の並びはそのまま。
-    const plan = Object.assign({}, BTL_PLAN), fpsP = Object.assign({}, BTL_FPS);
+    const plan = Object.assign({}, BTL_PLAN), fpsP = Object.assign({}, BTL_FPS), loopFrom = {};
     try {
       const AN = (B.meta && B.meta.anims) || {};
       const allF = (B.meta && B.meta.frames) || [];
@@ -323,12 +323,15 @@
           .map((q) => (typeof q === 'number' ? allF[q] && allF[q].id : q)).filter((q) => q && body[q]);
         if (ids.length < 2) continue;
         plan[pose + '8'] = ids.map((id) => [id]);
+        // loop_from（art の取り決め）: 最初の移りのコマは 1 回、frames[loop_from:] を繰り返す
+        if (typeof an.loop_from === 'number' && an.loop_from >= 0 && an.loop_from < ids.length) loopFrom[pose + '8'] = an.loop_from | 0;
         const ms = Array.isArray(an.ms) ? an.ms : Array.isArray(an.keys) ? an.keys.map((k) => k && k.ms) : [];
         const okMs = ms.filter((v) => v > 0);
         fpsP[pose + '8'] = typeof an.fps === 'number' && an.fps > 0 ? an.fps : okMs.length ? Math.round(100000 / (okMs.reduce((x, y) => x + y, 0) / okMs.length)) / 100 : Math.max(fpsP[pose] || 8, 12);
       }
     } catch (e) { /* 読めない並びは使わない */ }
     const sheet = build(body, plan, fpsP, B.meta);
+    sheet.loopFrom = loopFrom;
     sheet.meta = Object.assign(sheet.meta, { look, wtype, facing: 'left', source: 'sprite', weaponDrawn: swap ? wtype : drawn, weaponMismatch: !swap && wtype !== drawn });
     return sheet;
   };

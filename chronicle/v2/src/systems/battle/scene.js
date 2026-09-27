@@ -28,6 +28,46 @@
   Bt.debug = () => current;
   Bt.active = () => !!current;
 
+  // ---------------------------------------------------------------- 戦闘をまたぐリピート（2026-09-27 の持ち主の決まり）
+  // 入れたら次の戦闘でも最初のラウンドから続く（最後の命令をそのまま、相手は生きている最初の敵。使えない命令は攻撃）。
+  // ボス・レア・金色の戦闘は一時止める（ふつうの入力で始まる。次のふつうの戦闘でまた続く）。B で止めたら次の戦闘からも止まる。
+  // 覚える所: R.Game.battle.repeat = {on, cmds}（セーブにも入る）。R.Game が無いときはこの場の記憶。
+  const repMem = { on: false, cmds: null };
+  Bt.repeatMemory = function () {
+    const G = R.Game;
+    if (!G) return repMem;
+    G.battle = G.battle || { cursor: {}, lastRound: [] };
+    if (!G.battle.repeat || typeof G.battle.repeat !== 'object') G.battle.repeat = { on: false, cmds: null };
+    return G.battle.repeat;
+  };
+  /** リピートを一時止める戦闘（ボス・レア・金色・メタル） */
+  Bt.repeatSuspends = function (st) {
+    if (st.info && (st.info.boss || st.info.heavy)) return true;
+    if (st.setup && (st.setup.rare || st.setup.boss)) return true;
+    const us = (st.B && st.B.units) || [];
+    return us.some((u) => u.side === 'enemy' && (u.boss || u.golden || u.rare || u.metal));
+  };
+  function repeatCarry(st) {
+    const m = Bt.repeatMemory();
+    st.repeatSuspended = false;
+    if (m.on && st.B && typeof st.B.seedRepeat === 'function') {
+      if (Bt.repeatSuspends(st)) st.repeatSuspended = true;
+      else if (st.B.seedRepeat(m.cmds || {})) { st.B.setRepeat(true); st.repeatCarried = true; }
+    }
+    st._repOn = !!(st.B && st.B.repeatOn);
+  }
+  /** 毎フレーム: 入れた・止めたを覚える（一時止めの戦闘で何もしなければ on のまま） */
+  function repeatWatch(st) {
+    if (!st.B) return;
+    const on = !!st.B.repeatOn;
+    if (on !== st._repOn) { st._repOn = on; Bt.repeatMemory().on = on; }
+  }
+  function repeatRemember(st) {
+    if (!st.B || typeof st.B.lastCommands !== 'function') return;
+    const c = st.B.lastCommands();
+    if (c) Bt.repeatMemory().cmds = c;
+  }
+
   function speed() { const s = +R.Settings.get('battleSpeed'); return s === 2 || s === 3 ? s : 1; }
   /**
    * 戦闘の速さ（2026-09-27 の持ち主の決まり）: 1 つのボタン（R・縦持ちは札のタップ）で 通常 → ＋1 → ＋2 → 通常。
@@ -111,6 +151,7 @@
   function initCore(st) {
     const setup = st.retry ? Object.assign({}, st.setup, { retry: st.retry }) : st.setup;
     st.B = makeCore(setup);
+    try { repeatCarry(st); } catch (e) { console.error('[battle repeat carry]', e); }
     try {
       const ids = setup.members && setup.members.length ? setup.members : (R.Party && R.Party.members ? R.Party.members().map((c) => c.id) : []);
       st.partyOrder = (ids || []).map(String);
@@ -317,6 +358,7 @@
         try { evs = st.B.round() || []; } catch (e) { console.error('[battle round]', e); R.Engine.reportError && R.Engine.reportError(e); }
         empty = evs.length ? 0 : empty + 1;
         await _.play.run(st, evs);
+        repeatRemember(st);
         if (!evs.length) await st.pwait(80);
         if (empty > 50 && !st.B.over) { console.error('[battle] the core returned no events 50 times; ending as escape'); st.forceOver = 'escape'; }
       }
@@ -363,6 +405,7 @@
           st.B.setRepeat(false);
           if (R.UIK && R.UIK.toast) R.UIK.toast('リピートを止めた', { anchor: 'bl' });
         }
+        repeatWatch(st);
         _.play.tick(st, dt);
         _.glimmer.tick(st);
         if (st.ui && st.ui.update) st.ui.update(dt);

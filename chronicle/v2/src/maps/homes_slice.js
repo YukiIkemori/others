@@ -146,9 +146,9 @@
       floor: [
         'B.bb..G-',
         'R.......',
-        '..cT..x.',
+        'cT....x.',
         'mr....kl'],
-      rugs: [[3, 3, 3, 2]],
+      rugs: [[1, 3, 3, 2]],
       npcs: [npc('landsailor', 'npc_sailor_3', 6, 3, ['陸の上は、どうも\n落ち着かねえな。\n早く海に出てえ。'], { name: '船乗り' })] }));
     // 母と子の家（10×8）: 寝台 2 つ・かまど・絵・かご
     home('pharos_home4', Object.assign({}, PH, { name: '港の家', back: 'house4_door', w: 10, h: 8,
@@ -179,9 +179,9 @@
       floor: [
         '.J.H.K.B',
         'V.......',
-        'Y.cT....',
+        'Y...cT..',
         'p.....Pl'],
-      rugs: [[3, 3, 4, 2]], stone: [[3, 2, 3, 1]],
+      rugs: [[5, 3, 4, 2]], stone: [[3, 2, 3, 1]],
       npcs: [npc('fruitgran', 'npc_old_f_3', 6, 3, ['夜市の果物は、\n朝に買うより\n安いんだよ。'], { name: '港のおばあさん' })] }));
 
     // ---------------------------------------------------------------- フェルン（木の上の村）
@@ -191,9 +191,9 @@
       floor: [
         'D-.J.H.K',
         '......V.',
-        'P.cL-c..',
+        'P...cL-c',
         'pQ.....l'],
-      rugs: [[3, 3, 4, 2]],
+      rugs: [[5, 3, 4, 2]],
       npcs: [npc('worrier', 'npc_woman_2', 7, 4, ['森で帰らない人が\nいるの。無事だと\nいいのだけど。'], { name: '村の女' })] }));
     home('fern_home2', Object.assign({}, FE, { name: '村の家', back: 'house2_door', w: 9, h: 8, wallMat: 'wall_bark',
       wall: '.a..c..',

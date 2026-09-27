@@ -225,12 +225,19 @@
     if (!list) list = (pose === 'weak' ? P.idle : null) || (pose === 'tele' ? P.attack : null) || (a.side === 'party' ? (P[ATTACK_POSE[a.wtype]] && /slash|smash|thrust|shoot/.test(pose) ? P[ATTACK_POSE[a.wtype]] : null) : null) || P.idle || [0];
     const F = sh.fps || {};
     const fps = (key && F[key]) || F[pose] || F.idle || 6;
-    return { list, fps, key };
+    const lf = key && sh.loopFrom && sh.loopFrom[key] != null ? sh.loopFrom[key] : null;
+    return { list, fps, key, loopFrom: lf };
+  };
+  /** 何コマ目か: loop_from があれば 移りを 1 回 → frames[loop_from:] を繰り返す。無ければ LOOP のポーズだけ繰り返す */
+  A.frameIndex = function (L, pose, ms) {
+    const n = L.list.length;
+    let fi = Math.floor(Math.max(0, ms) / 1000 * L.fps);
+    if (L.loopFrom != null && L.loopFrom < n) return fi < n ? fi : L.loopFrom + ((fi - L.loopFrom) % (n - L.loopFrom));
+    return LOOP[pose] ? fi % n : Math.min(n - 1, fi);
   };
   function frameAt(sh, a, v, pose, poseT, t) {
     const L = A.poseList(sh, a, v, pose);
-    let fi = Math.floor(Math.max(0, t - (poseT || 0)) / 1000 * L.fps);
-    fi = LOOP[pose] ? fi % L.list.length : Math.min(L.list.length - 1, fi);
+    const fi = A.frameIndex(L, pose, t - (poseT || 0));
     return sh.frames[L.list[fi]] || sh.frames[0];
   }
 

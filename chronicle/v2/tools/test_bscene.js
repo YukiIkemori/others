@@ -114,6 +114,20 @@ section('動きを柔らかく（2026-09-27）');
   ok('hitstop 40–60 ms, shorter at ＋1/＋2', sp(1) >= 40 && sp(1) <= 60 && sp(2) < sp(1) && sp(3) < sp(2), [sp(1), sp(2), sp(3)]);
 }
 
+section('リピートの持ち越し（BattleCore.seedRepeat）');
+{
+  R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'アルン' }, seed: 5 });
+  const Bc = R.BattleCore.create({ troop: 'tr_stub' });
+  const heroUid = Bc.units.find((u) => u.side === 'party' && u.id === 'hero').uid;
+  ok('seedRepeat takes {charId: {type, id}} and offers repeat from round 1', Bc.seedRepeat({ hero: { type: 'tech', id: '__no_such_tech' } }) && Bc.partyOptions().includes('repeat'));
+  Bc.setRepeat(true);
+  const evs = Bc.round();
+  const act = evs.find((e) => e.t === 'act' && e.uid === heroUid);
+  ok('an invalid carried command falls back to a plain attack (target auto-picked)', act && act.cmd === 'attack', act);
+  const lc = Bc.lastCommands();
+  ok('lastCommands() gives {charId: {type, id}} for the next battle', lc && lc.hero && lc.hero.type === 'attack', lc);
+}
+
 section('人の札は隊列の順（前列・後列で分けない。2026-09-27 の持ち主の報告）');
 (async () => {
   R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'アルン' }, seed: 3 });
