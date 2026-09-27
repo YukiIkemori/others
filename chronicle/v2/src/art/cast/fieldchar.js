@@ -97,10 +97,11 @@
       if (R.Hd.has(key)) continue;
       R.Hd.def(key, function (o) {
         const lk = R.DB.looks[look];
-        if (lk && lk.animal) return cast.animalField(look, o);
+        // 原画があれば人も動物もそれ（動物の原画 ani_* も。P2 の後に届いた）
         const sp = cast.sprites.field(look, o);
         if (sp === null) return null;
         if (sp) return sp;
+        if (lk && lk.animal) return cast.animalField(look, o);
         return rigField(look, o);
       }, { kind: 'field', look });
     }

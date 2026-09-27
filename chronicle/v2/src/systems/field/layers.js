@@ -32,6 +32,41 @@
     return OPTS[k] || (OPTS[k] = { scale: s, lantern: !!lantern });
   }
 
+  /** 暗転の中で先頭と仲間の原画の画像が読めるのを少しだけ待つ（起動の直後・つづきからの直後。読めていれば待たない）→ Promise */
+  F._awaitPeopleArt = function (maxMs) {
+    const G = R.Game, SP = R.Art && R.Art.cast && R.Art.cast.sprites;
+    if (!G || !G.party || !SP || !R.Media || !R.Media.image) return Promise.resolve();
+    const ps = [];
+    for (const id of G.party) {
+      const c = G.chars && G.chars[id];
+      if (!c || SP.state(c.look, 'field') !== 'loading') continue;
+      const rec = R.Media.image(c.look + ':field', 'sprites');
+      if (rec && rec.promise) ps.push(rec.promise);
+    }
+    if (!ps.length) return Promise.resolve();
+    return Promise.race([Promise.all(ps), R.wait(maxMs || 1200)]);
+  };
+  /** 暗転の中で人の絵を先に焼く（先頭・後ろの仲間・ゲスト・近くの NPC）。原画の読み込み待ちの物は列に任せる。→ 焼いた数 */
+  F._warmPeople = function (limitMs) {
+    if (!R.Hd || !R.Hd.now) return 0;
+    const G = R.Game, t0 = Date.now(), lim = limitMs || 300;
+    const list = [];
+    if (G && G.party) G.party.forEach((id, i) => { const c = G.chars && G.chars[id]; if (c) list.push([c.look, i === 0]); });
+    if (S.guest && S.guest.look) list.push([S.guest.look, false]);
+    const near = (S.npcs || []).filter((n) => n.vis !== false && !n.hidden && Math.abs(n.x - S.x) <= 16 && Math.abs(n.y - S.y) <= 10)
+      .sort((a, b) => Math.abs(a.x - S.x) + Math.abs(a.y - S.y) - (Math.abs(b.x - S.x) + Math.abs(b.y - S.y)));
+    for (const n of near) list.push([n.look, false]);
+    let n = 0;
+    for (const [look, lantern] of list) {
+      if (Date.now() - t0 > lim) break;
+      const key = 'hd:field:' + look, o = charOpts(lantern);
+      if (!look || !R.Hd.has(key) || (R.Hd.ready && R.Hd.ready(key, o))) continue;
+      if (R.Hd._s && R.Hd._s.failed) R.Hd._s.failed.delete(R.Hd._ck(key, o));   // 読み込み待ちで null だった印を消す
+      try { if (R.Hd.now(key, o)) n++; } catch (e) { console.error('[field] warm people', e); }
+    }
+    return n;
+  };
+
   // ---------------------------------------------------------------- 光の出どころ（止まった灯り）
   /** マップの物から: 光だまり {x, y, r, color, k} と芯 {gx, gy, gr, gcolor}（マップの論理 px）。状態が変わるまで使い回す */
   F._lights = function (tile) {

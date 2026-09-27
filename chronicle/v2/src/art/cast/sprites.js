@@ -18,7 +18,29 @@
     SP.loaded = await R.Media.preload('sprites');
     // 読む前に焼こうとして null（後でまた）になった物を忘れる
     for (const look of SP.looks()) for (const p of ['hd:btl:' + look + ':', 'hd:field:' + look, 'hd:face:' + look]) for (const k of R.Hd.keys(p)) if (R.Hd.forget) R.Hd.forget(k);
+    // 読み込み待ちで null を返した印（30 フレームは積み直さない）も消す: 読み終えたらすぐ焼けるように
+    const F = R.Hd._s && R.Hd._s.failed;
+    if (F) for (const ck of Array.from(F.keys())) if (/^hd:(btl|field|face):/.test(ck)) F.delete(ck);
   });
+  // データだけの道: 原画のフォルダ（RPG_MEDIA.sprites の '<look>:<kind>'）に look が無ければ、原画の meta から最小の K.look を足す
+  // （looks_sprite.js に載っていない、後から届いたフォルダの分。絵は原画だけ。名前はフォルダの id）。読み込み時は表を読むだけ
+  (function () {
+    const M = typeof window !== 'undefined' && window.RPG_MEDIA && window.RPG_MEDIA.sprites;
+    if (!M) return;
+    const seen = {};
+    for (const k of Object.keys(M)) {
+      const look = k.split(':')[0];
+      if (seen[look] || (R.DB.looks && R.DB.looks[look])) continue;
+      seen[look] = true;
+      const npc = (M[k] && M[k].meta && M[k].meta.npc) || {};
+      const animal = npc.kind === 'animal' || /^ani_/.test(look);
+      const f = /woman|old_f/.test(look);
+      R.def('looks', look, { name: look, sprite: true, body: { sex: f ? 'f' : 'm', build: f ? 'slim' : 'normal', age: /child/.test(look) ? 'short' : /old/.test(look) ? 'old' : 'adult' },
+        skin: 'fair', eyes: '#3a4a5a', hair: { style: animal ? 'bald' : f ? 'bob' : 'short', color: '#4a3424', ears: animal ? 'show' : 'hidden' },
+        outfit: { type: 'tunic', main: String(npc.mainHex || '#6a5a4a').toLowerCase(), sub: '#4a4034', trim: '#a88c5c' }, extras: [], hue: 0,
+        silhouette: 'sprite_' + look, face: !!M[look + ':face'], animal: animal ? look.replace(/^ani_/, '') : undefined });
+    }
+  })();
   SP.has = function (look, kind) { return !!(R.Media && R.Media.has && R.Media.has('sprites', look + ':' + kind)); };
   /** 原画の画像の状態 */
   SP.state = function (look, kind) {
@@ -269,9 +291,11 @@
     let w = 0, h = 0;
     for (const f of frames_) { w = Math.max(w, f.c.width); h = Math.max(h, f.c.height); }
     // 頭の中心はコマごと（向きで少し違う）
+    const haMemo = new Map();
     for (const [pose, list] of Object.entries(poses)) for (const i of list) {
       const src = by[`walk_${DIRS[pose.slice(-1)] || 'down'}_0`];
-      const ha = src && headAnchor(src, headR);
+      if (src && !haMemo.has(src)) haMemo.set(src, headAnchor(src, headR));
+      const ha = src && haMemo.get(src);
       if (ha && !frames_[i].anchors) frames_[i].anchors = { head: ha };
     }
     return { frames: frames_, poses, fps, anchors, w, h, meta: { look, source: 'sprite', skinCheck: 'skip: shared palette', headR, lantern: anchorsL, lanternDrawn: !!drawn, scale: o.scale || 1.15 } };
