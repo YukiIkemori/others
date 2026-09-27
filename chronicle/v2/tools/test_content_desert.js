@@ -50,8 +50,9 @@ ok('ほかの地方は錠のまま（雪原は別の担当）', Object.entries(D
 section('2. 置き場所（A27・泉・宝箱）');
 {
   const dungeons = MY_MAPS.filter((id) => D.maps[id].kind === 'dungeon');
-  const noSpring = dungeons.filter((id) => !(D.maps[id].objects || []).some((o) => o.type === 'spring'));
-  ok(`ダンジョン ${dungeons.length} 階すべてに回復の泉`, noSpring.length === 0, noSpring);
+  // 泉は 1 ダンジョンに 1 つまで（WORLD §6.2、check_springs）: 砂漠のダンジョンでは王墓 3 階の王の前だけ
+  const withSpring = dungeons.filter((id) => (D.maps[id].objects || []).some((o) => o.type === 'spring'));
+  ok(`ダンジョン ${dungeons.length} 階のうち泉は王墓 3 階だけ`, withSpring.join() === 'desert_tomb_3', withSpring);
   const secretOut = MY_MAPS.filter((id) => D.maps[id].kind !== 'dungeon' && Object.values(D.maps[id].legend).some((l) => l.secret));
   ok('隠し通路はダンジョンの中だけ（町・野営地・屋内に無い）', secretOut.length === 0, secretOut);
   const w = D.maps.world;

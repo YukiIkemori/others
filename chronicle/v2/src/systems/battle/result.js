@@ -100,6 +100,9 @@
     }
   }
 
+  /** 実時間（ms。音の長さと比べる記録用） */
+  const rt = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
+  Rs.rt = rt;
   /** 最後の敵の倒れる絵が終わるまで（上限 1.6 秒） */
   function enemiesGone(st) {
     const t0 = R.Engine.time;
@@ -125,9 +128,15 @@
       const rng = R.rng('victory:' + ((R.Game && R.Game.seed) || 0) + ':' + (R.Game && R.Game.steps || 0));
       const id = _.voice.play(rng.pick(alive), 'victory', { speed: 1, force: true });
       if (id) {
-        const vs = (end.voice = { id, startAt: R.Engine.time, endAt: null, durMs: null });
-        _.voice.settle(8000).then(() => { vs.endAt = R.Engine.time; const c = _.voice.current(); vs.durMs = c && c.id === id ? c.durMs : vs.durMs; });
-        R.until(() => { const c = _.voice.current(); if (c && c.id === id && c.durMs) vs.durMs = c.durMs; return !!vs.durMs || vs.endAt != null; });
+        // 記録（QA）: 声の長さと、鳴り終わった時（場面を閉じた後も数える。手札を直に見る）
+        const c = _.voice.current(), h = c && c.h;
+        const vs = (end.voice = { id, startAt: R.Engine.time, endAt: null, durMs: null, played: !!h, startRt: rt(), endRt: null });
+        R.until(() => {
+          const b = h && h.src && h.src.buffer;
+          if (b && !vs.durMs) vs.durMs = Math.round(b.duration * 1000);
+          if (!h || h.stopped || rt() - vs.startRt > 8000) { vs.endAt = R.Engine.time; vs.endRt = rt(); vs.heardMs = Math.round(vs.endRt - vs.startRt); vs.cut = !!(h && h.src && vs.durMs && vs.heardMs < vs.durMs - 120); return true; }
+          return false;
+        });
       }
     }
     // ポーズを見せてから札（声はそのまま）
@@ -144,7 +153,7 @@
       draw(g) { Rs.drawVictory(g, st); },
     };
     await Rs.confirm(st, anyRare ? Bt.MIN.rareCardSkip : 0);
-    end.pressAt = R.Engine.time;
+    end.pressAt = R.Engine.time; end.pressRt = rt();
     st.log.push({ t: 'victory', ms: R.Engine.time - t0 });
     // 足された札（熟練など）: それぞれ決定を待つ
     if (Rs.pages.length) { await runPages(st, data, rewards); end.pressAt = R.Engine.time; }

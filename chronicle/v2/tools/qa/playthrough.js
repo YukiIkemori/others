@@ -38,6 +38,7 @@ function prologue(o) {
     { id: 'rowell', ev: 'pharos_rowell', done: 'prologue_rowell', optional: true },
     { id: 'otto', ev: 'pharos_otto', done: 'prologue_key' },
     { id: 'shop_pharos_arms0', ev: 'pharos_smithy', shop: true, optional: true },
+    { id: 'lh_door', ev: 'lighthouse_1_door', done: 'prologue_lh_door' },   // 塔の扉を灯台の鍵で開ける（調べる）
     { id: 'tutorial', ev: 'lighthouse_1_tutorial', done: 'prologue_tutorial' },
     // 人は寄り道しながら歩くので、序章の戦闘は 35 前後（V2_PLAN §3.9 の sim_glimmer の模型）。台本は最短の道なので、灯台で足りない分を戦う
     { id: 'grind_prologue', grind: 24, optional: true },
@@ -78,7 +79,6 @@ function forest(o) {
   g.push(
     { id: 'stone_a', ev: 'verda_stone_a', done: 'forest_stone_a' },
     { id: 'stone_b', ev: 'verda_stone_b', done: 'forest_stone_b' },
-    { id: 'spring_v2', spring: ['verda_2'], optional: true, noHeal: true },
     { id: 'moth', ev: 'verda_moth', done: 'forest_moth' },
     { id: 'stone_c', ev: 'verda_stone_c', done: 'forest_stone_c' },
     { id: 'shop_fern_peddler2', ev: 'fern_peddler', shop: true, optional: true },
@@ -121,7 +121,6 @@ function desert(o) {
     // 森と同じ見積もりの仕方: 人は寄り道しながら歩くので、砂漠の戦闘は 90 前後（sim_glimmer の模型）。台本は最短の道なので王墓で足りない分を戦う
     { id: 'grind_tomb', grind: o.grind || 55, optional: true },
     glyph('za', 'desert_tomb_2'),
-    { id: 'spring_t2', spring: ['desert_tomb_2'], optional: true, noHeal: true },
     { id: 'worm', ev: 'desert_tomb_worm', done: 'desert_worm' },
     glyph('ru', 'desert_tomb_3'),
     { id: 'grind_deep', grind: 90, optional: true },
@@ -164,7 +163,6 @@ function snow(o) {
     { id: 'shop_yule_items2', ev: 'yule_item_keeper', shop: true, optional: true },
     { id: 'wall1', ev: 'peak_icewall', at: [28, 34], done: 'snow_ice_1' },
     { id: 'wall2', ev: 'peak_icewall', at: [44, 17], done: 'snow_ice_2' },
-    { id: 'spring_peak', spring: ['peak_1'], optional: true, noHeal: true },
     { id: 'giant', ev: 'peak_giant', done: 'snow_giant' },
     { id: 'neve', ev: 'peak_neve', done: 'cleared_r_snow' },
     { id: 'reward', ev: 'yule_jorn', done: 'snow_jorn_reward' },

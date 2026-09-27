@@ -137,7 +137,7 @@
     const k = R.uiScale || 1, L = st.L || {};
     if (L.tall) {
       const top = (L.stageH || R.H * 0.5) * 0.5;
-      return { k, tall: true, band: { x: 0, y: top, w: R.W, h: R.H - top }, x0: 20 * k, y0: Math.max(top + 24 * k, (L.stageH || R.H * 0.5) - 50 * k), colW: R.W - 40 * k, nameW: 96 * k, bottom: R.H - (R.safe.b || 0) - 86 * k };
+      return { k, tall: true, band: { x: 0, y: top, w: R.W, h: R.H - top }, x0: 20 * k, y0: Math.max(top + 24 * k, (L.stageH || R.H * 0.5) - 50 * k), colW: R.W - 40 * k, nameW: 70 * k, bottom: R.H - (R.safe.b || 0) - 86 * k };
     }
     const bw = Math.min(R.W * 0.74, 820 * k);
     return { k, tall: false, band: { x: 0, y: 0, w: bw, h: R.H }, x0: (R.safe.l || 0) + 48 * k, y0: 36 * k, colW: Math.min(600 * k, bw - 96 * k), nameW: 132 * k, bottom: R.H - (R.safe.b || 0) - 76 * k };
@@ -239,9 +239,9 @@
     Kt.text(g, '▲' + p.d, xx, y + (h - p.s3) / 2 - 0.5 * k, { size: p.s3, weight: 700, color: Kt.COL.up, raw: true });
   }
   /** 覚えた行: 金の縁の札＋左から右へ流れる光＋✦ の瞬き（reduceMotion なら止めた光） */
-  function drawLearn(g, m, l, x, y, w, t, k) {
+  function drawLearn(g, m, l, x, y, w, t, k, ind) {
     const Kt = _.K, h = 32 * k, reduce = R.Settings.get('reduceMotion');
-    const r = { x: x + 44 * k, y, w: w - 44 * k, h };
+    const r = { x: x + ind, y, w: w - ind, h };
     g.save();
     g.beginPath(); g.roundRect ? g.roundRect(r.x, r.y, r.w, r.h, 8 * k) : g.rect(r.x, r.y, r.w, r.h);
     const bg = g.createLinearGradient(r.x, 0, r.x + r.w, 0);
@@ -281,7 +281,9 @@
     }
     g.restore();
     const s = PU.learnText(m, l);
-    Kt.text(g, Kt.fit(s, r.w - 24 * k, { size: 14.5 * k, weight: 700 }), r.x + 10 * k, r.y + (h - 14.5 * k) / 2 - 1 * k, { size: 14.5 * k, weight: 700, color: Kt.COL.goldHi, raw: true, shadow: true });
+    let fs = 14.5 * k;   // 長い名前は字を小さくして入れる（切るのは最後の手段）
+    while (fs > 11 * k && Kt.measure(s, { size: fs, weight: 700 }) > r.w - 24 * k) fs -= 0.5 * k;
+    Kt.text(g, Kt.fit(s, r.w - 24 * k, { size: fs, weight: 700 }), r.x + 10 * k, r.y + (h - fs) / 2 - 1 * k, { size: fs, weight: 700, color: Kt.COL.goldHi, raw: true, shadow: true });
   }
 
   PU.draw = function (g, st) {
@@ -291,7 +293,7 @@
     const page = pages[Math.min(view.page, pages.length - 1)] || [];
     const t = R.Engine.time - view.t0;
     const ap = (i) => Math.max(0, Math.min(1, (t - 40 - i * 80) / 220));
-    Kt.band(g, G.band, G.tall ? 'b' : 'l', G.tall ? 0.92 : 0.8);
+    Kt.band(g, G.band, G.tall ? 'b' : 'l', G.tall ? 0.94 : 0.9);
     const x0 = G.x0;
     let y = G.y0;
     // 見出し
@@ -317,7 +319,7 @@
         Kt.text(g, Kt.fit(m.name || '―', G.nameW - 8 * k, { size: 15 * k, weight: 700 }), x0 + 44 * k, by + 8 * k, { size: 15 * k, weight: 700, color: Kt.COL.text, raw: true, shadow: true });
         for (const c of lay.chips) drawChip(g, c, by + 4 * k, k);
       } else {
-        drawLearn(g, b.m, b.l, x0, by + 1 * k, G.colW, t - i * 80, k);
+        drawLearn(g, b.m, b.l, x0, by + 1 * k, G.colW, t - i * 80, k, (G.tall ? 20 : 44) * k);
       }
       g.restore();
       y += b.h;

@@ -48,7 +48,7 @@ async function open(S, page, o) {
     return route.abort();
   });
   await p.goto(S.base + page);
-  await p.waitForFunction('window.RPG && RPG.Engine && RPG.Engine.running && RPG.Engine.top()', null, { timeout: o.timeout || 15000 });
+  await p.waitForFunction('window.RPG && RPG.Engine && RPG.Engine.running && RPG.Engine.top()', null, { timeout: o.timeout || +process.env.V2_OPEN_TIMEOUT || 15000 });
   await p.waitForTimeout(300);
   return { ctx, page: p, errors, close: () => ctx.close() };
 }

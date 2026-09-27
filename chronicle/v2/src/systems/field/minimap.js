@@ -1,5 +1,6 @@
 // FIELD — 小地図（MODERN_UI §5.9・§6.2、dungeon.png。E11・E12）
-//   ダンジョンの右上（手がかりの札の下）。歩いた所の周り（4 マス）が埋まる。見つけた泉（青緑）・開けていない宝箱（金）・階段（白）の印、
+//   ダンジョンの右上（手がかりの札の下）。X で 小地図 → 大きな地図（drawBig、画面の中ほど）→ 出さない（設定 fieldMap、hud.js）。
+//   歩いた所の周り（4 マス）が埋まる。見つけた泉（青緑）・開けていない宝箱（金）・階段（白）の印、
 //   一行の向きの矢印。下に「泉 宝箱 階段」の凡例。埋まった所はマップごとに覚える（このセッションの間。R.Game には持たない）。
 //   地図の画像は 1 マス 1 px の小さなキャンバスに、見えた所だけ足していく（毎フレームは drawImage と印だけ）。
 (function (R) {
@@ -60,12 +61,42 @@
     R.UIK.panel(g, { x, y, w, h }, { r: U(10) });
     const pad = U(8), s = Math.min((w - pad * 2) / m.w, (h - pad * 2) / m.h);
     const ox = x + (w - s * m.w) / 2, oy = y + (h - s * m.h) / 2;
+    body(g, m, r, ox, oy, s, 1);
+    legend(g, x, y + h + U(6), 1);
+  };
+
+  /**
+   * 大きな地図（X で 小地図 → 大きな地図 → 出さない、の 2 番目。hud.js）: 今の階の歩いた所を画面の中ほどに大きく、
+   * 下が透けるすりガラス（歩ける。字と印は読める濃さ）。上に階の名前、下に凡例。(cx, cy) = 中心、maxW × maxH に収める
+   */
+  M.drawBig = function (g, cx, cy, maxW, maxH) {
+    const m = S.map, r = rec();
+    if (!r.cv) return;
+    const U = R.UIK.u, T = R.UIK.T;
+    const pad = U(18), head = U(40), foot = U(28);
+    const s = Math.max(1, Math.min((maxW - pad * 2) / m.w, (maxH - pad * 2 - head - foot) / m.h));
+    const w = Math.round(m.w * s + pad * 2), h = Math.round(m.h * s + pad * 2 + head + foot);
+    const x = Math.round(cx - w / 2), y = Math.round(cy - h / 2);
+    R.UIK.panel(g, { x, y, w, h }, { r: U(12), a: 0.46, shadow: false });
+    const meta = m.meta || {};
+    R.UIK.text(g, m.name || m.id, x + pad, y + U(12), { size: U(17), weight: 700, shadow: true });
+    const nw = R.UIK.measure(m.name || m.id, { size: U(17), weight: 700 });
+    const sub = [meta.floor, meta.sub].filter(Boolean).join('　');
+    if (sub) R.UIK.text(g, sub, x + pad + nw + U(14), y + U(17), { size: U(12), color: T.color.text2, shadow: true });
+    body(g, m, r, x + pad, y + head + pad, s, 2);
+    legend(g, x + pad, y + h - foot, 1.25);
+  };
+
+  const ARROW_ANG = Object.assign({ ne: Math.PI / 4, se: Math.PI * 0.75, sw: -Math.PI * 0.75, nw: -Math.PI / 4 }, ANG);
+  /** 地図の中身（歩いた所・泉・宝箱・階段・出口・一行の矢印）。big = 印の大きさの倍率（小地図 1・大きな地図 2） */
+  function body(g, m, r, ox, oy, s, big) {
+    const T = R.UIK.T;
     g.save();
     g.imageSmoothingEnabled = false;
     g.drawImage(r.cv, ox, oy, m.w * s, m.h * s);
     const G = R.Game || {};
     const springs = (G.springs && G.springs[m.id]) || [], opened = (G.chests && G.chests[m.id]) || [];
-    const d = Math.max(2.2, s * 1.1);
+    const d = Math.max(2.2 * big, Math.min(s * 1.1, 2.2 * big + s * 0.4));
     for (const o of m.objects || []) {
       if (o.cond != null && !R.State.check(o.cond)) continue;
       let col = null, cx = o.x + 0.5, cy = o.y + 0.5;
@@ -80,18 +111,20 @@
       g.fillStyle = 'rgba(240,226,192,0.8)'; g.fillRect(ox + e.x * s, oy + e.y * s, Math.max(1, e.w * s), Math.max(1, e.h * s));
     }
     // 一行（向きの矢印）
-    const ang = ANG[S.dir] || 0;
+    const ang = ARROW_ANG[S.dir] || 0;
     g.translate(ox + (S.x + 0.5) * s, oy + (S.y + 0.5) * s); g.rotate(ang);
-    const k = Math.max(1, s / 2.5);
+    const k = Math.max(big, Math.min(s / 2.5, big * 1.6));
     g.beginPath(); g.moveTo(0, -5 * k); g.lineTo(3.5 * k, 3.5 * k); g.lineTo(0, 1.5 * k); g.lineTo(-3.5 * k, 3.5 * k); g.closePath();
     g.fillStyle = T.color.goldHi; g.fill();
     g.restore();
-    // 凡例
-    const lyy = y + h + U(6);
-    R.UIK.text(g, '泉', x + U(2), lyy, { size: U(10), color: '#8fe8f0', shadow: true });
-    R.UIK.text(g, '宝箱', x + U(28), lyy, { size: U(10), color: T.color.gold, shadow: true });
-    R.UIK.text(g, '階段', x + U(64), lyy, { size: U(10), color: T.color.text2, shadow: true });
-  };
+  }
+  /** 凡例（泉・宝箱・階段） */
+  function legend(g, x, y, z) {
+    const U = R.UIK.u, T = R.UIK.T;
+    R.UIK.text(g, '泉', x + U(2 * z), y, { size: U(10 * z), color: '#8fe8f0', shadow: true });
+    R.UIK.text(g, '宝箱', x + U(28 * z), y, { size: U(10 * z), color: T.color.gold, shadow: true });
+    R.UIK.text(g, '階段', x + U(64 * z), y, { size: U(10 * z), color: T.color.text2, shadow: true });
+  }
   function dia(g, x, y, r, col) {
     g.beginPath(); g.moveTo(x, y - r); g.lineTo(x + r, y); g.lineTo(x, y + r); g.lineTo(x - r, y); g.closePath();
     g.fillStyle = col; g.fill(); g.strokeStyle = 'rgba(10,10,20,0.6)'; g.lineWidth = 0.5; g.stroke();

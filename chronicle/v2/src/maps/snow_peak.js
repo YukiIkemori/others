@@ -49,8 +49,8 @@
       K.rect(g, 1, 37, 3, 4, '.');
 
       const O = [];
-      O.push(K.spring('peak_1_s1', 30, 21));                       // 温泉の湧く岩の間（道のりの中ほど）
-      O.push(K.spring('peak_1_s2', 34, 11));                       // 巨人の手前
+      O.push(K.prop('rock_small', 30, 21), K.prop('rock_small', 31, 22));   // 岩の間の小石（泉は置かない。峰は 2 階。WORLD §6.2）
+      O.push(K.prop('rock_small', 34, 11), K.prop('rock_small', 35, 12));   // 巨人の手前の小石
       O.push(K.stairs(41, 1, { map: 'peak_top', spawn: 'south' }, { id: 'peak_1_up', look: 'up', cond: 'snow_giant' }));
       // 氷の壁（とけると消える）と、火種をかざす所
       const WALLS = [[1, 27, 32, 3, 28, 34], [2, 43, 15, 3, 44, 17], [3, 12, 15, 3, 13, 17]];
@@ -117,7 +117,7 @@
       K.blob(g, 20, 6, 6, 3, 'i', 'pt_altar', '.');   // 氷の祭壇
       K.soften(g, 'H', '.,', ['#', 'H'], 0.3, 'pt');
       const O = [];
-      O.push(K.spring('peak_top_s1', 21, 24));
+      O.push(K.prop('rock_small', 21, 24), K.prop('rock_small', 22, 25));   // 小石（泉は置かない。WORLD §6.2）
       O.push(K.stairs(19, 28, { map: 'peak_1', spawn: 'top' }, { id: 'peak_top_down', look: 'down' }));
       O.push({ type: 'brazier', id: 'peak_top_b1', x: 17, y: 24, on: true }, { type: 'brazier', id: 'peak_top_b2', x: 23, y: 26, on: true });
       O.push(K.prop('snow_rock', 12, 12), K.exam(12, 13, 'peak_epitaph'));          // 竜の碑文

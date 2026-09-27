@@ -9,6 +9,7 @@
     alwaysDash: false,
     cursorMemory: true,
     fieldZoom: 'normal',
+    fieldMap: 'mini',   // ダンジョンの地図: 小地図／大きな地図／出さない（フィールドの X で順に。FIELD hud.js）
     wipe: 'retry',
     uiSize: 1,
     panel: 'normal',
@@ -34,6 +35,7 @@
     alwaysDash: [false, true],
     cursorMemory: [true, false],
     fieldZoom: ['near', 'normal', 'far'],
+    fieldMap: ['mini', 'big', 'off'],
     wipe: ['retry', 'inn'],
     uiSize: [1, 1.15, 1.3],
     panel: ['normal', 'dense'],

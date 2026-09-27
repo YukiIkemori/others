@@ -60,7 +60,7 @@
       for (const [x, y, rx, ry, sd] of [[16, 12, 2, 2, 'a'], [9, 18, 2, 2, 'b'], [25, 9, 2, 2, 'c'], [20, 21, 1, 1, 'd'], [13, 6, 1, 1, 'e']]) K.blob(g, x, y, rx, ry, 'm', 'rkm' + sd, 's');
       K.rect(g, 16, 24, 3, 4, 'd');
       const O = [];
-      O.push(K.spring('desert_rocks_s1', 19, 14));
+      O.push(K.prop('rock_small', 19, 14), K.prop('rock_small', 20, 15));   // 小石（泉は置かない。WORLD §6.2）
       O.push(K.chest('desert_rocks_c1', 22, 6, { pool: 'p_T' }), K.chest('desert_rocks_c2', 5, 19, { item: 'i_stone_earth', n: 3 }), K.chest('desert_rocks_c3', 29, 19, { pool: 'p_rare' }));
       O.push(K.sign(19, 24, '金剛トカゲの岩場\n――岩が動いても、驚かぬこと。'));
       O.push(K.exam(12, 21, 'desert_rocks_scales'));
@@ -87,7 +87,7 @@
       K.blob(g, 14, 12, 4, 3, 'k', 'oc5', 's');
       K.rect(g, 26, 10, 2, 2, 'd');
       const O = [];
-      O.push(K.spring('desert_oldcamp_s1', 9, 9));
+      O.push(K.prop('sack', 9, 9), K.prop('rock_small', 10, 10));   // 野営の荷（泉は置かない。WORLD §6.2）
       O.push(K.chest('desert_oldcamp_c1', 6, 13, { pool: 'p_T' }), K.chest('desert_oldcamp_c2', 19, 6, { gold: 220 }), K.chest('desert_oldcamp_c3', 20, 17, { pool: 'p_rare' }));
       O.push(K.prop('tent', 12, 7), K.prop('tent', 16, 16, { variant: 1 }), K.prop('log', 14, 12), K.prop('log', 15, 13), K.prop('firewood', 13, 12));
       O.push(K.prop('broken_pillar', 17, 9), K.exam(11, 11, 'desert_oldcamp_notes'), K.prop('cart_barrels', 8, 16), K.prop('bones', 21, 11), K.prop('sand_mound', 11, 17), K.prop('clay_jars', 18, 12));

@@ -1,5 +1,5 @@
 // CONTENT-P: ファロス灯台（lighthouse_1〜3、ダンジョン。今の大きさ）。V2_PLAN §3.2・§3.3 P8・P9、WORLD_REDESIGN §6.2・§6.5、STORY_BIBLE §9.1
-//   lighthouse_1（36×32）岬と倉庫。塔の扉は灯台の鍵（prologue_key）までは閉じている（tilePatch）。入ってすぐでチュートリアル（P8）。
+//   lighthouse_1（36×32）岬と倉庫。塔の扉は灯台の鍵（prologue_key）で開ける（lighthouse_1_door、扉の物）。入ってすぐでチュートリアル（P8）。
 //                        泉は 1 階の中ほど（新）。宝箱 3。階段は北東。
 //   lighthouse_2（34×30）らせん。三重の輪を、仕切りのせいで遠回りして上る。泉は中の輪。北東の壁のひび（隠し通路）の先の小部屋にレアの箱。
 //   lighthouse_3（26×22）灯室。手前の間に泉と灰色のマントの少女（P9）、奥の丸い灯室でページ食らい → 灯がともる。
@@ -45,11 +45,14 @@
       put(g, 26, 12, '.'); put(g, 27, 12, '.');       // 北東 → 南東（脇の部屋）
       rect(g, 16, 6, 1, 1, '.');
       rect(g, 13, 4, 3, 2, 'c'); rect(g, 19, 16, 2, 3, 'c');
-      // 扉（鍵までは壁。tilePatch で開く）
-      const tilePatches = [{ cond: 'prologue_key', rect: [17, 21, 2, 2], rows: ['..', '..'] }];
+      // 塔の扉（外の壁 y 21〜22 の x 17〜18）。壁はそのまま、扉の絵（2 マス幅の大きな 1 枚）を y 22 に。
+      //   鍵を開けるまで: 閉じた扉（押すと「鍵がかかっている」。灯台の鍵があれば鍵を開ける場面 lighthouse_1_door）。
+      //   開けた後（prologue_lh_door。前のセーブはチュートリアルの後なら開いている）: 押すと入口の間へ入る扉。内（y 21）から押すと岬へ出る。
+      const LH_OPEN = { any: ['prologue_lh_door', 'prologue_tutorial'] };
+      const tilePatches = [];
       const objects = [
-        // 1 階の中ほどの泉（北西の部屋。WORLD §6.5「1 階の中ほどを足す」）
-        K.spring('lh1_s1', 10, 6),
+        // 北西の部屋の荷（泉は置かない。灯台の泉は 3 階のボスの前の 1 つだけ。WORLD §6.2）
+        P('sack', 10, 6), P('rock_small', 11, 7),
         K.stairs(28, 4, { map: 'lighthouse_2', spawn: 'from_prev' }), P('stairs_up', 28, 4),
         K.chest('lh1_c1', 7, 19, { item: 'i_salve', n: 3 }),
         K.chest('lh1_c2', 7, 4, { gold: 60 }),
@@ -64,17 +67,26 @@
         ...PS('lamp_post', [[15, 23], [20, 23]]), P('bollard', 11, 29), P('bollard', 24, 29),
         ...PS('rock_small', [[8, 23], [28, 23], [12, 27], [23, 26]]), ...PS('rock', capeRocks.filter(([x, y]) => g[y][x] === ',')), P('stump', 6, 24), P('log', 29, 25),
         K.sign(21, 25, 'ファロス灯台\n灯台守のほか、立ち入りを禁ず。'),
-        K.exam(17, 22, 'lighthouse_1_door', { cond: '!prologue_key' }),
-        K.exam(18, 22, 'lighthouse_1_door', { cond: '!prologue_key' }),
+        { type: 'door', id: 'lh1_door', x: 17, y: 22, w: 2, scale: 1.55, locked: '扉には、鍵がかかっている', unlock: { cond: 'prologue_key', event: 'lighthouse_1_door' } },
+        { type: 'door', id: 'lh1_door_w', x: 17, y: 22, look: 'none', cond: LH_OPEN, to: { map: 'lighthouse_1', spawn: 'hall_w' } },
+        { type: 'door', id: 'lh1_door_e', x: 18, y: 22, look: 'none', cond: LH_OPEN, to: { map: 'lighthouse_1', spawn: 'hall_e' } },
+        { type: 'door', id: 'lh1_door_out_w', x: 17, y: 21, look: 'none', to: { map: 'lighthouse_1', spawn: 'door_w' } },
+        { type: 'door', id: 'lh1_door_out_e', x: 18, y: 21, look: 'none', to: { map: 'lighthouse_1', spawn: 'door_e' } },
+        K.exam(17, 22, 'lighthouse_1_door', { cond: { not: LH_OPEN } }),
+        K.exam(18, 22, 'lighthouse_1_door', { cond: { not: LH_OPEN } }),
       ];
       const npcs = [
         { id: 'otto', look: 'otto', name: 'オットー', title: '灯台守', x: 15, y: 18, dir: 'e', move: 'still', pushable: false, cond: ['prologue_key', '!prologue_tutorial'], talk: 'lighthouse_1_tutorial' },
       ];
       K.def('lighthouse_1', Object.assign({}, BASE, {
         name: 'ファロス灯台', legend: LEG, rows: g, outside: 'sea', objects, npcs, tilePatches,
-        spawns: { entrance: { x: 17, y: 29, dir: 'n' }, from_next: { x: 27, y: 4, dir: 'w' } },
+        spawns: {
+          entrance: { x: 17, y: 29, dir: 'n' }, from_next: { x: 27, y: 4, dir: 'w' },
+          hall_w: { x: 17, y: 20, dir: 'n' }, hall_e: { x: 18, y: 20, dir: 'n' }, door_w: { x: 17, y: 23, dir: 's' }, door_e: { x: 18, y: 23, dir: 's' },
+        },
         exits: [{ x: 15, y: 31, w: 6, h: 1, to: { map: 'world', spawn: 'lighthouse' } }],
-        triggers: [{ id: 'tutorial', x: 16, y: 19, w: 4, h: 2, on: 'step', event: 'lighthouse_1_tutorial', cond: ['prologue_key', '!prologue_tutorial'] }],
+        // 扉から入ると y 20 に立つ。そこから 1 歩で（y 18〜19）
+        triggers: [{ id: 'tutorial', x: 16, y: 18, w: 4, h: 2, on: 'step', event: 'lighthouse_1_tutorial', cond: ['prologue_key', '!prologue_tutorial'] }],
         zones: [{ rect: [6, 3, 24, 18], zone: 'z_lighthouse' }],
         meta: { chestsInfo: true, floor: '1階', sub: '岬の倉庫' },
       }));
@@ -100,7 +112,7 @@
       const objects = [
         K.stairs(29, 26, { map: 'lighthouse_1', spawn: 'from_next' }), P('stairs_down', 29, 26),
         K.stairs(16, 16, { map: 'lighthouse_3', spawn: 'from_prev' }), P('stairs_up', 16, 16),
-        K.spring('lh2_s1', 14, 6),   // 2 階の北の回廊（道のりの中ほど、check_springs の 40〜60%。前は内側の部屋 15,11 = 80%）
+        P('sack', 14, 6), P('rock_small', 15, 7),   // 2 階の北の回廊の荷（泉は 3 階のボスの前だけ）
         K.chest('lh2_c1', 3, 26, { pool: 'p_T' }),
         K.chest('lh2_c2', 25, 17, { item: 'i_ether', n: 1 }),
         K.chest('lh2_c3', 25, 2, { pool: 'p_rare' }),     // 隠し通路の先のレアの箱（V2_PLAN §3.7）
@@ -129,7 +141,7 @@
       rect(g, 10, 5, 5, 4, 'c');                            // 大きな灯の台（敷物）
       const objects = [
         K.stairs(12, 19, { map: 'lighthouse_2', spawn: 'from_next' }), P('stairs_down', 12, 19),
-        K.spring('lh3_s1', 7, 14),                          // ボスの前の泉
+        K.spring('lh3_s1', 7, 14),                          // ボスの前の泉（灯台でただ 1 つ。WORLD §6.2）
         K.chest('lh3_c1', 17, 14, { item: 'i_salve', n: 2 }),
         K.chest('lh3_c2', 17, 18, { pool: 'p_T' }),
         P('beacon', 12, 5, { cond: 'prologue_boss' }),     // 灯室の大きな灯（ともった後）

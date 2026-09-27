@@ -1,5 +1,5 @@
 {
- "date": "2026-09-27T12:19:14.923Z",
+ "date": "2026-09-27T14:32:17.171Z",
  "shots": [
   {
    "name": "title",
@@ -117,10 +117,12 @@
    "size": "wide",
    "file": "roa_wide.png",
    "page": "dev.html?fixture=content_p_roa",
-   "ok": true,
-   "errors": [],
+   "ok": false,
+   "errors": [
+    "TimeoutError: page.waitForFunction: Timeout 15000ms exceeded."
+   ],
    "stubs": [],
-   "top": "field"
+   "top": null
   },
   {
    "name": "roa",
@@ -128,10 +130,12 @@
    "size": "phone",
    "file": "roa_phone.png",
    "page": "dev.html?fixture=content_p_roa",
-   "ok": true,
-   "errors": [],
+   "ok": false,
+   "errors": [
+    "TimeoutError: page.waitForFunction: Timeout 15000ms exceeded."
+   ],
    "stubs": [],
-   "top": "field"
+   "top": null
   },
   {
    "name": "roa",
@@ -150,10 +154,12 @@
    "size": "wide",
    "file": "pharos_wide.png",
    "page": "dev.html?fixture=content_p_pharos",
-   "ok": true,
-   "errors": [],
+   "ok": false,
+   "errors": [
+    "TimeoutError: page.waitForFunction: Timeout 15000ms exceeded."
+   ],
    "stubs": [],
-   "top": "field"
+   "top": null
   },
   {
    "name": "pharos",
@@ -161,10 +167,12 @@
    "size": "phone",
    "file": "pharos_phone.png",
    "page": "dev.html?fixture=content_p_pharos",
-   "ok": true,
-   "errors": [],
+   "ok": false,
+   "errors": [
+    "TimeoutError: page.waitForFunction: Timeout 15000ms exceeded."
+   ],
    "stubs": [],
-   "top": "field"
+   "top": null
   },
   {
    "name": "pharos",
@@ -315,10 +323,12 @@
    "size": "wide",
    "file": "fern_wide.png",
    "page": "dev.html?fixture=content_f_fern_plaza",
-   "ok": true,
-   "errors": [],
+   "ok": false,
+   "errors": [
+    "TimeoutError: page.waitForFunction: Timeout 15000ms exceeded."
+   ],
    "stubs": [],
-   "top": "field"
+   "top": null
   },
   {
    "name": "fern",
@@ -326,10 +336,12 @@
    "size": "phone",
    "file": "fern_phone.png",
    "page": "dev.html?fixture=content_f_fern_plaza",
-   "ok": true,
-   "errors": [],
+   "ok": false,
+   "errors": [
+    "TimeoutError: page.waitForFunction: Timeout 15000ms exceeded."
+   ],
    "stubs": [],
-   "top": "field"
+   "top": null
   },
   {
    "name": "fern",

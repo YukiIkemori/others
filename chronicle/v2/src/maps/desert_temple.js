@@ -33,7 +33,18 @@
       O.push({ type: 'switch', id: 'desert_temple_1_d2', x: 44, y: 22, flag: DISCS[1], look: 'plate', color: 'gold' });
       O.push({ type: 'switch', id: 'desert_temple_1_d3', x: 10, y: 5, flag: DISCS[2], look: 'plate', color: 'gold' });
       O.push(K.prop('switch', 20, 29, { cond: { not: { all: DISCS } } }), K.exam(24, 29, 'desert_temple_door', { cond: { not: { all: DISCS } } }));
-      O.push(K.spring('desert_temple_1_s1', 30, 27));
+      // 奥の扉（壁 y 30〜31・x 21〜26 はそのまま）: 扉の絵は中ほどに大きな 1 枚（いつも）。開くまでは押すと一言。
+      // 三つの盤がそろった後は扉のマスで向こう側へ（北 y 30 → 南 y 32、南 y 31 → 北 y 29）
+      const SEAL = {}, OPEN = { all: DISCS };
+      O.push({ type: 'door', id: 'desert_temple_1_seal', x: 21, y: 31, w: 6, scale: 1.8, locked: '日輪の紋の扉は、かたく閉ざされている' });
+      O.push({ type: 'door', id: 'desert_temple_1_seal_top', x: 21, y: 30, w: 6, look: 'none', locked: '日輪の紋の扉は、かたく閉ざされている' });   // 北から押したとき
+      for (let i = 0; i < 6; i++) {
+        const x = 21 + i;
+        O.push({ type: 'door', id: 'desert_temple_1_seal_n' + i, x, y: 30, look: 'none', cond: OPEN, to: { map: 'desert_temple_1', spawn: 'seal_s' + i } });
+        O.push({ type: 'door', id: 'desert_temple_1_seal_s' + i, x, y: 31, look: 'none', cond: OPEN, to: { map: 'desert_temple_1', spawn: 'seal_n' + i } });
+        SEAL['seal_s' + i] = { x, y: 32, dir: 's' }; SEAL['seal_n' + i] = { x, y: 29, dir: 'n' };
+      }
+      O.push(K.prop('rock_small', 30, 27), K.prop('rock_small', 31, 28));   // 崩れた石（泉は置かない。WORLD §6.2）
       O.push(K.chest('desert_temple_1_c1', 3, 24, { pool: 'p_T' }), K.chest('desert_temple_1_c2', 45, 19, { pool: 'p_T' }), K.chest('desert_temple_1_c3', 14, 9, { gold: 400 }),
         K.chest('desert_temple_1_c4', 39, 28, { pool: 'p_rare' }), K.chest('desert_temple_1_c5', 17, 36, { item: 'i_stone_light', n: 2 }));
       O.push(K.sign(27, 9, '――日輪の民の宮\n三つの盤に、日を置け'));
@@ -44,13 +55,13 @@
         name: '砂に沈んだ神殿', kind: 'dungeon', optional: true, region: 'r_desert', location: 'temple', theme: 'tomb',
         legend: DK.TOMB_LEGEND({ G: { mat: 'wall_sandstone', solid: true, rise: 2, name: 'seal_door' } }),
         rows: g, outside: 'wall_sandstone', objects: O, npcs: [],
-        spawns: { entrance: { x: 24, y: 5, dir: 's' }, down: { x: 24, y: 33, dir: 'n' } },
+        spawns: Object.assign({ entrance: { x: 24, y: 5, dir: 's' }, down: { x: 24, y: 33, dir: 'n' } }, SEAL),
         exits: [],
         triggers: [{ id: 'arrive', on: 'enter', event: 'desert_temple_arrive', once: true },
           { id: 'plate_1', x: 3, y: 21, w: 1, h: 1, on: 'step', event: 'desert_temple_plate_1', cond: '!desert_tp_disc_1' },
           { id: 'plate_2', x: 44, y: 22, w: 1, h: 1, on: 'step', event: 'desert_temple_plate_2', cond: '!desert_tp_disc_2' },
           { id: 'plate_3', x: 10, y: 5, w: 1, h: 1, on: 'step', event: 'desert_temple_plate_3', cond: '!desert_tp_disc_3' }],
-        tilePatches: [{ cond: { all: DISCS }, rect: [21, 30, 6, 2], rows: ['......', '......'] }],
+        tilePatches: [],   // 奥の扉は壁に穴を開けずに扉の物で通す（上の SEAL）
         zones: [{ rect: null, zone: 'z_desert_temple' }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'cave',
         meta: { chestsInfo: true, floor: '1 階', sub: '柱の間' },
@@ -71,7 +82,7 @@
       for (const [x, y] of [[11, 7], [28, 7], [11, 12], [28, 12]]) K.put(g, x, y, '#');
       const O = [];
       O.push(K.stairs(20, 30, { map: 'desert_temple_1', spawn: 'down' }, { id: 'desert_temple_2_up', look: 'up' }));
-      O.push(K.spring('desert_temple_2_s1', 9, 26));
+      O.push(K.prop('rock_small', 9, 26), K.prop('rock_small', 10, 27));   // 崩れた石（泉は置かない。WORLD §6.2）
       O.push(K.chest('desert_temple_2_staff', 20, 5, { item: 'u_sun_staff' }));
       O.push(K.chest('desert_temple_2_c1', 32, 23, { pool: 'p_rare' }), K.chest('desert_temple_2_c2', 30, 26, { pool: 'p_T' }), K.chest('desert_temple_2_c3', 7, 28, { item: 'i_elixir', n: 1 }));
       O.push(K.prop('obelisk', 14, 4), K.exam(14, 5, 'desert_temple_claim'), K.prop('obelisk', 25, 4), K.exam(25, 5, 'desert_temple_disk'));

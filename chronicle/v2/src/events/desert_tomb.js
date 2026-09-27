@@ -87,6 +87,7 @@
     await ev.say(null, ['砂が、渦を巻いて流れている。\n踏みこめば、のみこまれそうだ。', '砂の下の深い所で、\n何かが動くたびに、渦が強くなる……。']);
   });
   E('desert_tomb_robber', async (ev) => {
+    if (ev.flag('desert_worm')) { await ev.call('desert_tomb_robber_leave'); return; }   // 前のセーブ（倒した後もまだ倒れていた）
     await ev.say('worm_track', ['う……水を……。', '流砂は、砂もぐりのしわざだ……。\nあいつが砂の下を掘り続けるかぎり、\n流砂は止まらん。', 'やつが砂にもぐったら……\n打っても斬っても、きかねえ。\n土の力をぶつけて、引きずり出せ……。']);
     if (!ev.flag('desert_robber_help')) {
       ev.setFlag('desert_robber_help');
@@ -94,7 +95,27 @@
       await ev.say('worm_track', 'すまねえ……。\nこれ、持っていけ。土の石だ。');
       ev.item('i_stone_earth', 2);
     }
-  }, { meta: { needs: [], gives: ['item:i_stone_earth'] } });
+  }, { meta: { needs: [], gives: ['item:i_stone_earth'], calls: ['desert_tomb_robber_leave'] } });
+  // 砂もぐりを倒した後: 倒れていた墓荒らしが起き上がり、礼を言って、足を引きずって上の階へ帰っていく（→ desert_robber_gone で消えたまま）
+  E('desert_tomb_robber_leave', async (ev) => {
+    if (ev.flag('desert_robber_gone')) return;
+    const n = ev.npc('worm_track');
+    await ev.camera(26, 34, 500);
+    await ev.wait(300);
+    await n.face('s');
+    await ev.say('worm_track', ev.flag('desert_robber_help')
+      ? ['……砂の音が、やんだ。\nあんたら、あの砂もぐりを\nやっちまったのか……！', 'もらった水のおかげで、\n這ってでも帰れそうだ。\n……この恩は、忘れねえ。']
+      : ['……砂の音が、やんだ。\nあんたら、あの砂もぐりを\nやっちまったのか……！', '……おれは、もう墓は\nこりごりだ。生きて帰れるうちに、\n帰らせてもらうぜ。']);
+    await ev.say(null, '墓荒らしは、よろよろと\n立ち上がった。');
+    await n.move([[26, 33], [26, 31], [27, 31], [27, 29]], { speed: 0.6 });
+    await ev.wait(200);
+    await ev.fade('out', 350);
+    await n.hide();
+    ev.setFlag('desert_robber_gone');
+    await ev.fade('in', 350);
+    await ev.caption('墓荒らしは、足を引きずりながら\n上の階へ帰っていった。', { ms: 2000 });
+    await ev.camera(null, null, 500);
+  }, { meta: { needs: ['flag:desert_worm'], gives: ['flag:desert_robber_gone'] } });
   E('desert_tomb_worm', async (ev) => {
     if (ev.flag('desert_worm')) return;
     ev.sfx('shake');
@@ -105,7 +126,8 @@
     ev.setFlag('desert_worm');
     ev.sfx('unlock');
     await ev.caption('砂もぐりが崩れ落ちると、\n流砂の渦が、しずかに止まった。', { ms: 2400 });
-  }, { meta: { needs: [], gives: ['flag:desert_worm'] } });
+    await ev.call('desert_tomb_robber_leave');
+  }, { meta: { needs: [], gives: ['flag:desert_worm', 'flag:desert_robber_gone'], calls: ['desert_tomb_robber_leave'] } });
 
   // ---------------------------------------------------------------- 3 階: 拓本の跡・玉座
   E('desert_tomb_rubbing', async (ev) => {

@@ -119,7 +119,9 @@ for (const id of MY_MAPS) {
   if (DUNGEON_FLOORS[id]) {
     const [a, b] = DUNGEON_FLOORS[id];
     ok(`${id}: 宝箱 ${a}〜${b}（${chests.length}）`, chests.length >= a && chests.length <= b);
-    ok(`${id}: 泉が 1 つ以上`, (m.objects || []).some((o) => o.type === 'spring'));
+    // 泉は 1 ダンジョンに 1 つまで（WORLD §6.2、check_springs）: 迷いの森（短い）は 0、千年樹は 2 階の根食らいの手前だけ
+    const ns = (m.objects || []).filter((o) => o.type === 'spring').length;
+    ok(`${id}: 泉 ${id === 'elder_2' ? 1 : 0}（${ns}）`, ns === (id === 'elder_2' ? 1 : 0));
     ok(`${id}: 隠し通路は 1 か所まで（${secrets.length ? 1 : 0}）`, secrets.length <= 3);
     ok(`${id}: 出現表がある`, (m.zones || []).length > 0);
   }

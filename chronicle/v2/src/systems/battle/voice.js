@@ -97,7 +97,7 @@
   V.current = function () {
     if (!cur) return null;
     const h = cur.h, b = h && h.src && h.src.buffer;
-    return { id: cur.id, kind: cur.kind, t0: cur.t0, durMs: b ? Math.round(b.duration * 1000) : null, playing: V.busy() };
+    return { id: cur.id, kind: cur.kind, t0: cur.t0, durMs: b ? Math.round(b.duration * 1000) : null, playing: V.busy(), h: h || null };
   };
   /** 今の声が鳴り終わるまで待つ（capMs まで。音が無い・鳴っていないならすぐ） */
   V.settle = function (capMs) {

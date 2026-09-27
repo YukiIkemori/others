@@ -5,7 +5,7 @@
 //   pharos_shop      道具屋（11×9）      shop_pharos_items
 //   pharos_smith     武具屋（11×9）      shop_pharos_arms
 //   pharos_record    記録院の出張所（12×9）  P5 の若い記録官、写し取り済みの掲示（lo_ev_prologue）、白紙の束
-//   pharos_shipyard  造船所の小屋（14×10）   職人と見習い（q_pharos_delivery）。小舟は縦切りでは出ない
+//   pharos_shipyard  造船所の小屋（12×9）   職人と見習い（q_pharos_delivery）。小舟は縦切りでは出ない
 //   spawn: どれも door（戸口の内側）。出口は pharos の <名>_door へ。
 (function (R) {
   'use strict';
@@ -55,9 +55,9 @@
             '..............',
             'N-N-N-........',
             '.......cTc....',
-            '..............',
+            'b............b',
             'cTc.......cL-c',
-            '..............',
+            'C.............',
             'bx........e.bk'], '....y..w.c..c.'),
         ],
         npcs: [
@@ -127,24 +127,23 @@
       },
     });
 
-    // ---------------------------------------------------------------- 造船所の小屋（14×10、板の間）: 台の上の小舟・材木・道具
-    room('pharos_shipyard', '造船所の小屋', 14, 10, 'shipyard_door', {
+    // ---------------------------------------------------------------- 造船所の小屋（12×9、板の間）: 台の上の小舟・材木・道具
+    room('pharos_shipyard', '造船所の小屋', 12, 9, 'shipyard_door', {
       floor: 'plank',
       map: {
         objects: [
-          P('rowboat', 3, 5), P('rowboat', 10, 5),   // 台の上の小舟（修理中）
+          P('rowboat', 2, 4), P('rowboat', 8, 4),   // 台の上の小舟（修理中）
           ...K.furnish([
-            'gg.xxl....bb',
-            '............',
-            '............',
-            '............',
-            '............',
-            'E.........m.',
-            'kh........xl'], 'o....v..m...'),
+            'gg.xl..bbx',
+            'x........x',
+            '..........',
+            '..........',
+            'E.......m.',
+            'kh......xl'], 'o...v..m..'),
         ],
         npcs: [
-          { id: 'shipwright', look: 'npc_old_m_3', name: '造船所の職人', x: 7, y: 6, dir: 's', move: 'still', pushable: false, talk: 'pharos_shipwright', reward: 'news', key: 'pharos_shipwright' },
-          { id: 'apprentice', look: 'npc_man_1', name: '見習い', x: 3, y: 7, dir: 'e', move: 'still', talk: 'pharos_apprentice', reward: 'side', key: 'pharos_apprentice' },
+          { id: 'shipwright', look: 'npc_old_m_3', name: '造船所の職人', x: 5, y: 5, dir: 's', move: 'still', pushable: false, talk: 'pharos_shipwright', reward: 'news', key: 'pharos_shipwright' },
+          { id: 'apprentice', look: 'npc_man_1', name: '見習い', x: 2, y: 6, dir: 'e', move: 'still', talk: 'pharos_apprentice', reward: 'side', key: 'pharos_apprentice' },
         ],
       },
     });

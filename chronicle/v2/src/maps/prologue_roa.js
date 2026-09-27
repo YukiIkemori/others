@@ -1,4 +1,4 @@
-// CONTENT-P: ロアの里（roa、町 44×36）とベルナの家（roa_house、屋内 16×12）。V2_PLAN §3.2・§3.3 P1・P2、WORLD_REDESIGN §5.2、STORY_BIBLE §2.3・§3.4・§9.1
+// CONTENT-P: ロアの里（roa、町 44×36）とベルナの家（roa_house、屋内 14×10）。V2_PLAN §3.2・§3.3 P1・P2、WORLD_REDESIGN §5.2、STORY_BIBLE §2.3・§3.4・§9.1
 //   roa        丘の上の里。まん中に語り石の広場（石の円陣と語り石）、北に語り石の間、南の低い段にベルナの家。門は東（ワールドへ）。
 //              宝箱 1。出現なし。灯りの形 = 窓明かりと、広場の灯籠の輪（町は灯りの島、WORLD §5.1）。
 //   roa_house  ベルナの家。寝台・書見台（名簿と手がかり帳の短い本）・朝の席（東向きの空いた席）。
@@ -121,22 +121,23 @@
       });
     })();
 
-    // ================================================================ roa_house（16×12）
+    // ================================================================ roa_house（14×10）
+    // 外の建物に合わせて詰めた。ベルナが歩く 5 の行（3→12）・書見台（12,4）・その下（12,6）・朝の席（9,6）・棚（10,2）の位置は前のまま
     (function () {
-      const { g, door } = K.room(16, 12);
-      rect(g, 5, 5, 6, 4, 'c');   // 敷物
+      const { g, door } = K.room(14, 10);
+      rect(g, 5, 5, 6, 3, 'c');   // 敷物
       const P = K.prop, PS = K.props;
       const objects = [
         P('bed', 2, 3), P('bed', 2, 4),
         ...PS('bookshelf', [[9, 2], [10, 2], [11, 2]]),
-        P('stove', 6, 2), P('sack', 5, 2), P('barrel', 14, 2),
+        P('stove', 6, 2), P('sack', 5, 2), P('candelabra', 12, 2),
         P('table', 12, 4),                                  // 書見台（名簿と手がかり帳の短い本）
         P('table', 7, 6), P('table', 8, 6),                 // 食卓
         P('chair', 6, 6), P('chair', 7, 7), P('chair', 8, 7), P('chair', 9, 6),   // 9,6 = 東向きの空いた席（朝の席）
-        P('lantern', 13, 7), P('flower_pot', 1 + 1, 9), P('crate', 13, 9), P('planter', 3, 7),
-        // 飾りと灯り（屋内の見直し。ベルナの歩く 5 の行と書見台・席・棚のマスは空けたまま）
-        P('cupboard', 4, 2), P('basket_veg', 7, 2), P('shelf_jars', 8, 2), P('candelabra', 13, 2), P('house_plant', 14, 5), P('spinning_wheel', 1, 7),
-        P('wall_window', 3, 1), P('wall_herbs', 7, 1), P('wall_painting', 12, 1), P('wall_sconce', 1, 1), P('wall_window', 14, 1),
+        P('lantern', 11, 8), P('flower_pot', 2, 8), P('crate', 12, 8), P('planter', 3, 7), P('barrel', 1, 8),
+        // 飾りと灯り（ベルナの歩く 5 の行と書見台・席・棚のマスは空けたまま）
+        P('cupboard', 4, 2), P('basket_veg', 7, 2), P('shelf_jars', 8, 2), P('house_plant', 1, 5), P('spinning_wheel', 1, 7), P('basket_bread', 11, 7),
+        P('wall_window', 3, 1), P('wall_painting', 5, 1), P('wall_herbs', 7, 1), P('wall_sconce', 1, 1), P('wall_window', 12, 1),
         K.exam(12, 4, 'roa_lectern'),
         K.exam(9, 6, 'roa_seat'),
         K.exam(10, 2, 'roa_shelf'),

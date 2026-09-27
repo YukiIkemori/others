@@ -79,7 +79,7 @@
       objects: R.ContentP.kit.furnish([
         'JK..C.B.B',
         '.........',
-        'N-n......',
+        'N-.......',
         '....cTc..',
         'P.......b',
         'pk......x'], '..yc...w.'),

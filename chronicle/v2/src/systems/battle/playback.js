@@ -75,8 +75,8 @@
     miss: { fill: ['#c8c4bc', '#9a958c'], stroke: 'rgba(20,20,26,0.9)', size: 18 },
     label: { fill: ['#ecc97c', '#ecc97c'], stroke: 'rgba(40,22,6,0.9)', size: 12 },
     status: { fill: ['#e6d0ff', '#c6a0f0'], stroke: 'rgba(30,14,40,0.9)', size: 14 },
-    prof: { fill: ['#fff4d0', '#ecc97c'], stroke: 'rgba(40,22,6,0.95)', size: 15 },     // 熟練度（系統）「剣+1」
-    profE: { fill: ['#e8fbff', '#8fd6d8'], stroke: 'rgba(6,26,34,0.95)', size: 15 },    // 熟練度（属性）「火+1」
+    prof: { fill: ['#fff4d0', '#ecc97c'], stroke: 'rgba(40,22,6,0.95)', size: 17 },     // 熟練度（系統）「剣+1」
+    profE: { fill: ['#e8fbff', '#8fd6d8'], stroke: 'rgba(6,26,34,0.95)', size: 17 },    // 熟練度（属性）「火+1」
   };
   P.drawPops = function (g, st) {
     const k = R.uiScale || 1, reduce = R.Settings.get('reduceMotion');

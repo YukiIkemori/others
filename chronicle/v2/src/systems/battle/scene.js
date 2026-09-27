@@ -2,9 +2,11 @@
 //
 // 順番（仮の実装 stub_battle.js と同じ。§2.11）:
 //   setup.boss なら R.Save.autosave('boss') → R.Save.checkpoint('battle', {setup, seed}) → 'battle:start' → pushBgm → touchLayout('battle')
+//   → 入る移り（trans.js: 今の画面が砕ける／ボスは闇に閉じる）→ 真っ暗で場面を積む → intro（明ける・一行が右から入る・敵が浮かぶ・ボスは名前の札）
 //   → ラウンド（一行の命令 → 1 人ずつの行動 → B.round() の出来事を順に演出）→ over で B.finish()（1 回）
 //   → 勝ち: 勝利と報酬 / 逃げた / 負け: canLose なら 'lose'、ほかは全滅の画面（直前の戦闘から／宿から／タイトルへ）
-//   → 場面を外す → popBgm → touchLayout(前) → 'battle:end' → 勝ちは autosave('battle')
+//   → [決定を待つ（勝利・逃げた・負け。自動では閉じない、2026-09-27）] → 声を切らない（勝利の声は手放す・ほかは鳴り終わりを待つ）
+//   → 暗くなる（Bt.FADE.out）→ 場面を外す → popBgm → touchLayout(前) → 'battle:end' → 勝ちは autosave('battle') → フィールドが明ける（Bt.FADE.in）
 //   → 全滅の宿は R.State.wipeRecover() ＋ await R.Flow.wipe('inn')、タイトルは await R.Flow.wipe('title') → 解決。
 //   「直前の戦闘から」は R.Save.restore('battle') と同じ setup（setup.retry = n。戦闘の種は BATTLE が seed + retry）で続ける（Promise はまだ解決しない）。
 //
@@ -568,7 +570,7 @@
           await R.Flow.wipe(res.to);
         }
         if (R.Engine.fade.a > 0.001) await R.Engine.fadeTo(0, reduce ? Bt.FADE.reduce : Bt.FADE.in);
-        end.fieldAt = R.Engine.time;
+        end.fieldAt = R.Engine.time; end.fieldRt = _.result.rt();
         resolve(res);
       };
       st.scene = makeScene(st);

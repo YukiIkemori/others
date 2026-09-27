@@ -36,7 +36,7 @@
 
     // ---------------------------------------------------------------- 物
     const O = [];
-    O.push(K.spring('elder_1_s1', 6, 14));                                   // 泉（1 階の西の広間＝道のりの中ほど。前は 29,21 = 64%）
+    O.push(K.prop('mushroom_glow', 6, 14), K.prop('rock_small', 7, 15));      // 西の広間の光るきのこ（泉は 2 階の根食らいの手前だけ。WORLD §6.2）
     O.push(K.stairs(23, 24, { map: 'elder_2', spawn: 'top' }, { id: 'elder_1_down', look: 'down' }));
     O.push({ type: 'switch', id: 'elder_1_sw1', x: 22, y: 38, flag: 'forest_sw1', look: 'hole', color: 'teal', by: 'guest' });
     

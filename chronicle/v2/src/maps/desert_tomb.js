@@ -43,7 +43,17 @@
       O.push({ type: 'switch', id: 'desert_tomb_1_sw_e', x: 46, y: 9, flag: 'desert_t1_sw_e', look: 'plate', color: 'gold' });
       const DOOR = { all: ['desert_t1_sw_w', 'desert_t1_sw_e'] };
       O.push(K.prop('switch', 26, 20, { cond: { not: DOOR } }), K.exam(28, 21, 'desert_tomb_door', { cond: { not: DOOR } }));
-      O.push(K.spring('desert_tomb_1_s1', 31, 36));
+      // 封じの扉（壁 y 19〜20・x 27〜29 はそのまま）: 扉の絵は中ほどに大きな 1 枚（いつも）。開くまでは押すと一言。
+      // 開いた後（踏み板 2 つ）は扉のマスで向こう側へ（南 y 20 → 北 y 18、北 y 19 → 南 y 21）
+      const SEAL = {};
+      O.push({ type: 'door', id: 'desert_tomb_1_seal', x: 27, y: 20, w: 3, scale: 1.7, locked: '金の印の扉は、びくともしない' });
+      for (let i = 0; i < 3; i++) {
+        const x = 27 + i;
+        O.push({ type: 'door', id: 'desert_tomb_1_seal_s' + i, x, y: 20, look: 'none', cond: DOOR, to: { map: 'desert_tomb_1', spawn: 'seal_n' + i } });
+        O.push({ type: 'door', id: 'desert_tomb_1_seal_n' + i, x, y: 19, look: 'none', cond: DOOR, to: { map: 'desert_tomb_1', spawn: 'seal_s' + i } });
+        SEAL['seal_n' + i] = { x, y: 18, dir: 'n' }; SEAL['seal_s' + i] = { x, y: 21, dir: 's' };
+      }
+      O.push(K.prop('rock_small', 31, 36), K.prop('rock_small', 32, 37));   // 崩れた石（泉は 3 階の王の前だけ。WORLD §6.2）
       O.push(K.prop('obelisk', 5, 40), K.exam(5, 41, 'desert_tomb_glyph', { glyph: 'ha' }));                    // 墓守の像「ハ」
       O.push(K.exam(21, 29, 'desert_tomb_lizard'));                                                               // 隠し部屋の金剛トカゲ
       O.push(K.chest('desert_tomb_1_c1', 4, 25, { pool: 'p_T' }), K.chest('desert_tomb_1_c2', 13, 8, { item: 'i_stone_earth', n: 2 }),
@@ -59,12 +69,12 @@
         legend: DK.TOMB_LEGEND({ G: { mat: 'wall_sandstone', solid: true, rise: 2, name: 'seal_door' } }),
         rows: g, outside: 'wall_sandstone', objects: O,
         npcs: [K.npc('tomb_ghost', 'npc_desert_old_m', 32, 40, { name: '墓の番の影', dir: 'w', talk: 'desert_tomb_ghost', reward: 'hint', cond: '!cleared_r_desert' })],
-        spawns: { entrance: { x: 28, y: 44, dir: 'n' }, down: { x: 28, y: 9, dir: 's' } },
+        spawns: Object.assign({ entrance: { x: 28, y: 44, dir: 'n' }, down: { x: 28, y: 9, dir: 's' } }, SEAL),
         exits: [],
         triggers: [{ id: 'arrive', on: 'enter', event: 'desert_tomb_arrive', once: true },
           { id: 'plate_w', x: 9, y: 9, w: 1, h: 1, on: 'step', event: 'desert_tomb_plate_w', cond: '!desert_t1_sw_w' },
           { id: 'plate_e', x: 46, y: 9, w: 1, h: 1, on: 'step', event: 'desert_tomb_plate_e', cond: '!desert_t1_sw_e' }],
-        tilePatches: [{ cond: { all: ['desert_t1_sw_w', 'desert_t1_sw_e'] }, rect: [27, 19, 3, 2], rows: ['...', '...'] }],
+        tilePatches: [],   // 封じの扉は壁に穴を開けずに扉の物で通す（上の SEAL）
         zones: [{ rect: null, zone: 'z_desert_tomb' }],
         light: DK.LIGHT_TOMB, dark: false, bgm: 'pyramid', bbg: 'cave',
         meta: { chestsInfo: true, floor: '1 階', sub: '墓守の回廊' },
@@ -97,8 +107,8 @@
       const O = [];
       O.push(K.stairs(28, 3, { map: 'desert_tomb_1', spawn: 'down' }, { id: 'desert_tomb_2_up', look: 'up' }));
       O.push(K.stairs(49, 41, { map: 'desert_tomb_3', spawn: 'up' }, { id: 'desert_tomb_2_down' }));
-      O.push(K.spring('desert_tomb_2_s1', 27, 22));        // 灯りの間の泉（道のりの中ほど）
-      O.push(K.spring('desert_tomb_2_s2', 31, 32));        // 控えの間の泉（砂もぐりの前）
+      O.push(K.prop('rock_small', 27, 22), K.prop('rock_small', 28, 23));   // 灯りの間の崩れた石（泉は 3 階の王の前だけ）
+      O.push(K.prop('rock_small', 31, 32), K.prop('rock_small', 31, 33));   // 控えの間の崩れた石（砂もぐりの前）
       // 燭台（火をともすと周りが明るいまま、E6）
       const BZ = [[28, 5], [16, 6], [9, 5], [9, 16], [9, 30], [7, 38], [22, 19], [34, 19], [22, 27], [34, 27], [24, 33], [32, 33], [45, 6], [45, 17], [40, 24], [50, 28], [50, 40], [20, 38], [37, 38]];
       BZ.forEach(([x, y], i) => O.push({ type: 'brazier', id: 'desert_tomb_2_b' + (i + 1), x, y }));
@@ -110,7 +120,7 @@
       deco(O, [['tomb_urn', 21, 3], ['tomb_urn', 35, 3], ['bones', 5, 22], ['bones', 12, 32], ['sand_mound', 20, 44], ['sand_mound', 36, 44], ['bones', 30, 44],
         ['broken_pillar', 38, 5], ['tomb_urn', 51, 12], ['clay_jars', 45, 43], ['obelisk', 47, 27], ['tomb_urn', 53, 43], ['bones', 24, 45], ['sand_mound', 22, 37]]);
       const N = [
-        K.npc('worm_track', 'npc_desert_old_m', 25, 33, { name: '倒れた墓荒らし', dir: 'e', talk: 'desert_tomb_robber', reward: 'boss', cond: '!desert_worm' }),
+        K.npc('worm_track', 'npc_desert_old_m', 25, 33, { name: '倒れた墓荒らし', dir: 'e', talk: 'desert_tomb_robber', reward: 'boss', cond: '!desert_robber_gone' }),   // 砂もぐりの後、起きて帰る場面で消える（desert_tomb_robber_leave）
       ];
       K.def('desert_tomb_2', {
         name: '砂の王墓', kind: 'dungeon', region: 'r_desert', location: 'tomb', theme: 'tomb',
@@ -152,7 +162,7 @@
       for (const [x, y] of [[18, 5], [34, 5], [18, 9], [34, 9], [22, 15], [30, 15], [22, 19], [30, 19]]) K.put(g, x, y, '#');
       const O = [];
       O.push(K.stairs(26, 40, { map: 'desert_tomb_2', spawn: 'up' }, { id: 'desert_tomb_3_up', look: 'up' }));
-      O.push(K.spring('desert_tomb_3_s1', 25, 15));        // 控えの間の泉（王の前）
+      O.push(K.spring('desert_tomb_3_s1', 25, 15));        // 控えの間の泉（王の前。王墓でただ 1 つ。WORLD §6.2）
       O.push(K.prop('obelisk', 44, 19), K.exam(44, 20, 'desert_tomb_glyph', { glyph: 'ru' }));
       O.push(K.prop('broken_pillar', 20, 3), K.exam(20, 4, 'desert_tomb_rubbing'));        // 拓本の跡（lo_ev_desert）
       O.push(K.prop('tomb_urn', 23, 3), K.prop('tomb_urn', 29, 3), K.prop('obelisk', 16, 3), K.prop('obelisk', 36, 3));

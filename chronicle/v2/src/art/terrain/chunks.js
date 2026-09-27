@@ -190,9 +190,13 @@
         case 'stairs':
           items.push({ key: 'hd:prop:' + (o.look === 'up' || o.dir === 'up' ? 'stairs_up' : 'stairs_down'), opts: optsS({}, s), x: fx, y: (o.y + 1) * tile - 2 * s, ft: o.y * tile, layer: lay || 'base', shadow: null, sortY: fy });
           break;
-        case 'door':
-          if (o.look !== 'none') items.push({ key: 'hd:prop:door', opts: optsS({}, s), x: fx, y: (o.y + 1) * tile, ft: o.y * tile, layer: lay || 'base', shadow: null, sortY: fy, doorCell: true, cx: o.x, cy: o.y });
+        case 'door': {
+          // o.w（マス。幅のある入口の扉は中ほどに 1 枚）・o.scale（大きな扉。灯台・封じの扉）
+          if (o.look === 'none') break;
+          const dw = o.w || 1, dk = o.scale || 1;
+          items.push({ key: 'hd:prop:door', opts: optsS({}, s * dk), x: dw > 1 ? (o.x + dw / 2) * tile : fx, y: (o.y + 1) * tile, ft: o.y * tile, layer: lay || 'base', shadow: null, sortY: fy, doorCell: true, cx: o.x, cy: o.y });
           break;
+        }
         case 'chest':
           dyn.push({ key: 'hd:prop:chest', x: fx, y: fy, sortY: fy, frame: (stt.rare ? 'rare_' : '') + (stt.open ? 'open' : 'closed'), lv, opts: optsS({ amb: ambHex }, s), id: o.id, type: 'chest' });
           occ.add(o.x + ',' + o.y);

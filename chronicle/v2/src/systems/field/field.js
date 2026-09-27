@@ -66,7 +66,7 @@
       if (S.mv || S.arriving || S.entering || F._locked() || R.Engine.fade.a > 0.01 || R.Events.busy()) return;
       const I = R.Input;
       if (I.pressed('y') || I.pressed('start')) { F._openHub('menu'); return; }
-      if (I.pressed('x')) { F._openHub('map'); return; }
+      if (I.pressed('x')) { if (!F.hud.cycleMap()) F._openHub('map'); return; }   // ダンジョン: 小地図 → 大きな地図 → 出さない（hud.js）。町・世界: 世界の地図（X・B で閉じる。Y のメニューの「地図」からも）
       if (I.pressed('a')) { F._act(); return; }
       const d = I.dir8();
       if (d.dx || d.dy) {

@@ -116,6 +116,9 @@
       let want = 0;
       if (task && task.modal) { const i = labels.findIndex((l) => new RegExp(task.modal).test(l)); if (i >= 0) want = i; }
       else want = pickChoice(String(m.text || m.title || ''), labels);
+      // 店の「今すぐ装備する？」: 画面が先に選んでいる人（いちばん上がる人）。選べない行（装備不可）は選ばない
+      if (name === 'shop' && !(task && task.modal) && m.o && typeof m.o.index === 'number' && rows[m.o.index] && !rows[m.o.index].disabled) want = m.o.index;
+      if (rows[want] && rows[want].disabled) want = Math.max(0, rows.findIndex((r) => !r.disabled));
       if (m.list && rows.length) selectRow(m.list, (r, i) => i === want);
       else tap('a');
       return;
@@ -187,14 +190,23 @@
   // ---------------------------------------------------------------- 店: 一行が強くなる装備（付けられる人の中でいちばん上がる人）と消耗品を買う
   const STOCK = { i_salve: 8, i_potion: 6, i_waker: 4, i_antidote: 3, i_firepot: 3, i_revive: 2, i_ether: 3 };
   function onShop(v, list) {
-    if (v.busy || v.tab !== 0) { if (v.tab !== 0) tap('l'); return; }
+    if (v.busy) return;
     const g = B.goals.find((h) => h.id === B.goalId);
     if (!g || !g.shop) { tap('b'); return; }
     const Sx = R.Screens, G0 = G();
     const gold = G0.gold, reserve = 40;
-    let best = -1, bestV = 0;
-    list.rows.forEach((row, i) => {
-      const id = row.value, it = R.DB.items[id];
+    // 数を選ぶ札（道具）: 目安の数まで、所持金の残り reserve を割らない数を選んで買う
+    if (v.qtyPick) {
+      const q = v.qtyPick, it = R.DB.items[q.id];
+      const want = q.mode === 'buy' ? Math.max(1, Math.min(q.max, (STOCK[q.id] || 1) - (G0.items[q.id] || 0), Math.floor((gold - reserve) / Math.max(1, it.price)))) : 1;
+      if (q.n < want) tap('right'); else if (q.n > want) tap('left'); else tap('a');
+      return;
+    }
+    // 店の品すべて（タブは武器・防具・道具に分かれる）から選び、その品のタブへ L/R で移ってから選ぶ
+    const stock = v.stock || list.rows.map((r) => r.value);
+    let best = null, bestV = 0;
+    stock.forEach((id) => {
+      const it = R.DB.items[id];
       if (!it || !(it.price > 0) || it.price > gold - reserve) return;
       if (['weapon', 'shield', 'head', 'body', 'hands', 'feet', 'acc'].includes(it.slot) && !/^ac_ward_/.test(id)) {   // 状態よけより能力値のアクセサリ
         if ((G0.items[id] || 0) > 0) return;   // 買って付けなかった物がある
@@ -205,12 +217,16 @@
           const d = Sx.equipScore(c, slot, id) - Sx.equipScore(c, slot, c.equip[slot] || null);
           if (d > gain) gain = d;
         }
-        if (gain > 0 && gain / it.price > bestV) { bestV = gain / it.price; best = i; }
-      } else if (STOCK[id] && (G0.items[id] || 0) < STOCK[id] && bestV === 0 && best < 0) best = i;
+        if (gain > 0 && gain / it.price > bestV) { bestV = gain / it.price; best = id; }
+      } else if (STOCK[id] && (G0.items[id] || 0) < STOCK[id] && bestV === 0 && !best) best = id;
     });
-    if (best < 0 || (B.shopBuys = (B.shopBuys || 0) + 1) > 40) { B.shopBuys = 0; tap('b'); return; }
-    if (list.index === best) note('buy ' + list.rows[best].value + ' (' + gold + ' G)');
-    selectRow(list, (r, i) => i === best);
+    if (!best || (B.shopBuys = (B.shopBuys || 0) + 1) > 40) { B.shopBuys = 0; tap('b'); return; }
+    const it = R.DB.items[best];
+    const cat = it.slot === 'weapon' ? 'weapon' : ['shield', 'head', 'body', 'hands', 'feet', 'acc'].includes(it.slot) ? 'armor' : 'item';
+    if (v.tabKey && v.tabKey() !== cat) { tap('r'); return; }
+    if (!list.rows.some((r) => r.value === best)) { if (v.filter) tap('start'); else tap('b'); return; }
+    if (list.rows[list.index] && list.rows[list.index].value === best) note('buy ' + best + ' (' + gold + ' G)');
+    selectRow(list, (r) => r.value === best);
   }
 
   // ---------------------------------------------------------------- 戦闘
@@ -228,6 +244,8 @@
       note('lose mode: party HP set to 1 at round ' + eng.round);
     }
     const w = st.ui;
+    // 勝利・逃げた・負けたの札（2026-09-27: 自動では閉じない）: 決定で進む
+    if (st.next) { tap('a'); return; }
     if (!w) { if (st.phase === 'play') hold('a'); else tap('a'); return; }
     const rows = w.o && w.o.rows;
     if (!rows) {

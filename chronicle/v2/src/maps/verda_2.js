@@ -66,8 +66,8 @@
     O.push({ type: 'brazier', id: 'verda_2_b1', x: 25, y: 13 }, { type: 'brazier', id: 'verda_2_b2', x: 36, y: 18 }, { type: 'brazier', id: 'verda_2_b3', x: 30, y: 19 });
     O.push({ type: 'building', id: 'verda_2_hut', x: 32, y: 10, w: 5, h: 3, wall: 2, roof: 'moss', mat: 'log', windows: 0, small: true });
     O.push(K.exam(34, 13, 'verda_empty_hut'));
-    // 泉（ダストウィングの手前）とダストウィングの広場・歌の石 c
-    O.push(K.spring('verda_2_s1', 13, 17));
+    // ダストウィングの広場・歌の石 c（泉は置かない。WORLD §6.2。前の泉の所は蛍と草むら）
+    O.push(K.prop('firefly', 13, 17), K.prop('fern', 14, 18));
     O.push(K.prop('songstone', 12, 4), K.exam(12, 5, 'verda_stone_c'));
     // 薬草
     O.push(K.prop('mushroom_glow', 33, 30), K.exam(33, 30, 'verda_herb', { herb: 4 }));

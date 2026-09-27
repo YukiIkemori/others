@@ -613,13 +613,14 @@
     }
    },
    "notes": [
-    "2026-09-27: too thin next to the hero -> redrawn in edit mode from Arun v4 no-lantern field sheet (raw/s2_a4_v4edit.png), then widened x1.12 by duplicating 3 low-detail interior columns per direction row (same head-centre offsets for all frames of a row; pixel-exact, no resampling) -> raw/s2_a4_v4edit_widen112.png = comp_selma_s2.png. s2_a5_v4wide (quality high) rejected: side views shrank to 43 px."
+    "2026-09-27: too thin next to the hero -> redrawn in edit mode from Arun v4 no-lantern field sheet (raw/s2_a4_v4edit.png), then widened x1.08 by duplicating 2 low-detail interior columns per direction row (same head-centre offsets for all frames of a row; pixel-exact, no resampling) -> raw/s2_a4_v4edit_widen108.png = comp_selma_s2.png. s2_a5_v4wide (quality high) rejected: side views shrank to 43 px."
    ],
    "pitch": 8.417,
    "from_raw": "raw/s2_a4_v4edit.png",
    "widened": {
-    "factor": 1.12,
-    "base": "raw/s2_a4_v4edit.png"
+    "factor": 1.08,
+    "base": "raw/s2_a4_v4edit.png",
+    "result": "raw/s2_a4_v4edit_widen108.png"
    }
   },
   "4": {

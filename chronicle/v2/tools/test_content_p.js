@@ -150,7 +150,8 @@ section('4. 泉・宝箱・隠し通路');
 for (const id of MY_MAPS) {
   const m = R.DB.maps[id];
   const springs = (m.objects || []).filter((o) => o.type === 'spring'), chests = (m.objects || []).filter((o) => o.type === 'chest');
-  if (m.kind === 'dungeon' && id !== 'lighthouse_2') ok(`${id}: 泉 1 つ以上`, springs.length >= 1);
+  // 泉は 1 ダンジョンに 1 つまで（WORLD §6.2、check_springs）: 灯台は 3 階のボスの前だけ、古井戸（1 階の寄り道）は 0
+  if (m.kind === 'dungeon') ok(`${id}: 泉 ${id === 'lighthouse_3' ? '1' : '0'}（${springs.length}）`, springs.length === (id === 'lighthouse_3' ? 1 : 0));
   if (m.kind === 'world') ok('world: 宝箱・隠し通路なし（A27）', chests.length === 0 && !Object.values(m.legend).some((l) => l.secret));
   for (const s of springs) {
     let okCells = true;

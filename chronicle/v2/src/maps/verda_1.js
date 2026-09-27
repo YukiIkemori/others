@@ -59,8 +59,9 @@
 
     // ---------------------------------------------------------------- 物
     const O = [];
-    O.push(K.spring('verda_1_s1', 26, 27));                         // 蛍だまりの泉（1 階の中ほど）
-    O.push(K.spring('verda_1_s2', 29, 10));                         // 北の草地の泉（道のりの中ほど、check_springs の 40〜60%）
+    // 泉は置かない（迷いの森は 2 階の短いダンジョン。フェルンの宿がすぐ。WORLD §6.2）。前の泉の所は蛍だまりと草むら
+    O.push(K.prop('firefly', 26, 27), K.prop('fern', 27, 28));      // 蛍だまり
+    O.push(K.prop('fern', 29, 10), K.prop('rock_small', 30, 11));   // 北の草地
     O.push({ type: 'brazier', id: 'verda_1_camp', x: 31, y: 30, on: true });   // 野営地のたき火
     O.push(K.prop('tent', 34, 27), K.prop('log', 29, 31), K.prop('log', 33, 31), K.prop('sack', 35, 28), K.prop('crate', 35, 30));
     O.push(K.prop('lantern', 28, 26), K.prop('lantern', 34, 32));

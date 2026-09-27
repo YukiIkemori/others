@@ -2,6 +2,7 @@
 //   左上: 場所の名前（入ったときに 2.4 秒。ダンジョンは常に）＋ひとこと＋町の施設のアイコン、ダンジョンは「宝箱 開けた数/総数」、暗がりは「暗い」。
 //         町では「新しい話 ◯人」（E19）。
 //   右上: 目印の手がかりの札（題名・場所・方角の針）。目印が無ければ出さない。ダンジョンは下に小地図（minimap.js）。縦持ちは左上の場所の下。
+//         X で 小地図 → 大きな地図（画面の中ほど、歩ける）→ 出さない（設定 fieldMap。H.cycleMap）。小地図の無いマップの X は世界の地図の画面。
 //   人・物の上: 近づいたときだけ「[A] 話す」「[A] 調べる」「[A] 泉で休む」の吹き出し（R.UIK.bubble）。
 //   右下: ボタン表示（設定 prompts: always／最初の 2 時間／出さない）。タッチの操作パッドが出ているときは出さない。
 //   通知: R.Field.hud.toast(text, {icon, anchor}) → R.UIK.toast（入手は右上 'tr'、システムは左下 'bl'）。
@@ -15,11 +16,28 @@
   const FAC = { inn: 'inn', shop: 'shop', tavern: 'chat', item: 'bag', weapon: 'sword', armor: 'shield', church: 'light', guild: 'journal', records: 'book', record: 'book' };
   const PROMPTS_TOWN = [{ btn: 'y', label: 'メニュー' }, { btn: 'x', label: '地図' }, { btn: 'b', label: '走る' }];
   const PROMPTS_DUN = [{ btn: 'y', label: 'メニュー' }, { btn: 'x', label: '地図' }, { btn: 'b', label: '走る' }];
+  // ダンジョンの地図（設定 fieldMap）: X で 小地図 → 大きな地図 → 出さない → 小地図。ボタン表示は「次に押すと何になるか」
+  const MAP_NEXT = { mini: 'big', big: 'off', off: 'mini' };
+  const MAP_LABEL = { mini: '大きな地図', big: '地図を消す', off: '小地図' };
+  const MAP_TOAST = { mini: '地図：小さく', big: '地図：大きく', off: '地図：出さない' };
   const DIR_ANGLE = { n: 0, ne: Math.PI / 4, e: Math.PI / 2, se: Math.PI * 0.75, s: Math.PI, sw: -Math.PI * 0.75, w: -Math.PI / 2, nw: -Math.PI / 4 };
   const DIR_JA = { n: '北', ne: '北東', e: '東', se: '南東', s: '南', sw: '南西', w: '西', nw: '北西' };
   const B = [{ btn: 'a', label: '' }];
 
   H.toast = function (text, o) { R.UIK.toast(text, Object.assign({ anchor: 'tr' }, o || {})); };
+
+  /** ダンジョンの地図の出し方（'mini'|'big'|'off'）。小地図の無いマップでは null */
+  H.mapMode = function () { return S.hud && S.hud.showMini ? (MAP_NEXT[R.Settings.get('fieldMap')] ? R.Settings.get('fieldMap') : 'mini') : null; };
+  /** X（field.js）: 小地図のあるマップなら出し方を次へ（設定に残す＝階を移っても・次に起動しても同じ）→ true。無ければ false（世界の地図を開く） */
+  H.cycleMap = function () {
+    const cur = H.mapMode();
+    if (!cur) return false;
+    const nx = MAP_NEXT[cur];
+    R.Settings.set('fieldMap', nx);
+    R.UIK.sfx('cursor');
+    R.UIK.toast(MAP_TOAST[nx], { anchor: 'bl', icon: 'map' });
+    return true;
+  };
 
   /** 文字と数を作り直す（入る・宝箱・手がかり・会話・フラグのあと） */
   H.refresh = function () {
@@ -141,7 +159,13 @@
       leadCard(g, cx0, ry, cw, c.lead);
       ry += U(62);
     }
-    if (c.showMini) F.minimap.draw(g, tall ? cx0 : right - U(138), ry + U(2), U(138), U(150));
+    const mode = H.mapMode();
+    if (mode === 'mini') F.minimap.draw(g, tall ? cx0 : right - U(138), ry + U(2), U(138), U(150));
+    else if (mode === 'big') {
+      // 大きな地図: 画面の中ほど（上の場所の札・下のボタン表示と重ならない高さ）。歩きながら見られる
+      const ah = R.H - s.t - s.b - U(tall ? 260 : 150), aw = R.W - s.l - s.r - U(tall ? 24 : 120);
+      F.minimap.drawBig(g, s.l + (R.W - s.l - s.r) / 2, s.t + U(tall ? 150 : 84) + ah / 2, Math.min(aw, U(760)), Math.min(ah, U(560)));
+    }
     // ---- 吹き出し（近づいたときだけ）
     if (top && !F._locked() && !S.mv && !R.Events.busy()) {
       const f = F._front();
@@ -154,7 +178,10 @@
       }
     }
     // ---- 右下: ボタン表示
-    if (top && showPrompts()) R.UIK.prompts(g, S.map.kind === 'dungeon' ? PROMPTS_DUN : PROMPTS_TOWN, 'br');
+    if (top && showPrompts()) {
+      PROMPTS_DUN[1].label = mode ? MAP_LABEL[mode] : '地図';
+      R.UIK.prompts(g, S.map.kind === 'dungeon' ? PROMPTS_DUN : PROMPTS_TOWN, 'br');
+    }
   };
 
   function leadCard(g, x, y, w, L) {

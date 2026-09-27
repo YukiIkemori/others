@@ -172,25 +172,50 @@ const result = (p) => B.ev(p, 'window.__r');
     const picks = await result(p);
     ok('partySelect → 3 companion ids', Array.isArray(picks) && picks.length === 3 && picks.every((x) => typeof x === 'string'), picks);
 
-    // 店: 買う・売る
+    // 店: タブ（武器・防具・道具は並ぶ種類だけ＋売る）・数を選ぶ札・売る（2026-09 の作り直し: 道具は ←→ の数ではなく A で数を選ぶ札を開く）
+    const V = 'RPG.Engine.top().view';
     const g0 = await B.ev(p, 'RPG.Game.gold');
     await openScreen(p, 'shop', { id: 'shop_pharos_items' });
+    ok('shop: item shop tabs = stocked kinds + 売る, opens on 道具', JSON.stringify(await B.ev(p, `${V}.tabs.map((t) => t.key)`)) === JSON.stringify(['armor', 'item', 'sell']) && (await B.ev(p, `${V}.tabKey()`)) === 'item');
     const first = await B.ev(p, 'RPG.Engine.top().list.rows[0].value');
     const n0 = await B.ev(p, `RPG.Game.items[${JSON.stringify(first)}]||0`);
-    await B.press(p, 'right'); await B.press(p, 'a'); await p.waitForTimeout(250);
-    ok('shop: buy ×2 (←→ quantity)', (await B.ev(p, `RPG.Game.items[${JSON.stringify(first)}]||0`)) === n0 + 2 && (await B.ev(p, 'RPG.Game.gold')) < g0, { n0, g0 });
+    await B.press(p, 'a');
+    ok('shop: A on a consumable → quantity picker', await B.waitFor(p, `!!${V}.qtyPick && ${V}.qtyPick.n === 1`, 1500));
+    const qmax = await B.ev(p, `${V}.qtyPick.max`);
+    await B.press(p, 'right');
+    const q1 = await B.ev(p, `${V}.qtyPick.n`);
+    await B.press(p, 'up');
+    const q2 = await B.ev(p, `${V}.qtyPick.n`);
+    await B.press(p, 'down');
+    const q3 = await B.ev(p, `${V}.qtyPick.n`);
+    ok('shop: picker → +1, ↑ +10, ↓ −10 (kept in 1..max)', q1 === Math.min(2, qmax) && q2 === Math.min(q1 + 10, qmax) && q3 === Math.max(1, q2 - 10), { qmax, q1, q2, q3 });
+    await B.press(p, 'a'); await p.waitForTimeout(250);
+    ok('shop: buy ×n from the picker', (await B.ev(p, `RPG.Game.items[${JSON.stringify(first)}]||0`)) === n0 + q3 && (await B.ev(p, 'RPG.Game.gold')) < g0 && !(await B.ev(p, `${V}.qtyPick`)), { n0, g0, q3 });
+    await B.press(p, 'x');
+    ok('shop: X → sort 値段順', (await B.ev(p, `${V}.sortMode`)) === 1 && (await B.ev(p, `(() => { const v = ${V}; const pr = v.list.rows.map((r) => v.price(r.value)); return pr.every((x, i) => !i || pr[i - 1] <= x); })()`)));
+    await B.press(p, 'x'); await B.press(p, 'x');
+    ok('shop: X cycles back to 種類順', (await B.ev(p, `${V}.sortMode`)) === 0);
     await B.press(p, 'r');
-    ok('shop: R → 売る tab', (await B.ev(p, 'RPG.Engine.top().view.tab')) === 1);
+    ok('shop: R (E key) → 売る tab', (await B.ev(p, `${V}.tabKey()`)) === 'sell');
     const g1 = await B.ev(p, 'RPG.Game.gold');
     await B.press(p, 'a'); await p.waitForTimeout(250);
-    if (await B.ev(p, '!!RPG.Engine.top().view.modal')) { await B.press(p, 'a'); await p.waitForTimeout(250); }
+    if (await B.ev(p, `!!${V}.qtyPick`)) { await B.press(p, 'a'); await p.waitForTimeout(250); }
+    if (await B.ev(p, `!!${V}.modal`)) { await B.press(p, 'a'); await p.waitForTimeout(250); }
     ok('shop: sell → gold up', (await B.ev(p, 'RPG.Game.gold')) > g1);
+    await B.press(p, 'l'); await B.press(p, 'l');
+    ok('shop: L (Q key) → 防具 tab', (await B.ev(p, `${V}.tabKey()`)) === 'armor');
     await B.pressUntil(p, 'b', `${TOP}==='field'`, 3);
     ok('shop → undefined', (await result(p)) === '__undef');
-    // 武具屋で装備を買う → 装備する？
+    // 武具屋: 武器・防具・売る。しぼり込み（START）。装備を買う → 今すぐ装備する？
     await openScreen(p, 'shop', { id: 'shop_pharos_arms' });
+    ok('shop: arms shop tabs = 武器・防具・売る', JSON.stringify(await B.ev(p, `${V}.tabs.map((t) => t.key)`)) === JSON.stringify(['weapon', 'armor', 'sell']));
+    const nAll = await B.ev(p, 'RPG.Engine.top().list.rows.length');
+    await B.press(p, 'start');
+    ok('shop: START → only gear someone in the party can equip', (await B.ev(p, `${V}.filter`)) && (await B.ev(p, `RPG.Engine.top().list.rows.every((r) => RPG.Party.members().some((c) => RPG.Rules.canEquip(c, r.value, RPG.Rules.defaultSlot(c, r.value))))`)) && (await B.ev(p, 'RPG.Engine.top().list.rows.length')) <= nAll);
+    await B.press(p, 'start');
     await B.press(p, 'a');
-    ok('shop: buying gear asks 装備する？', await B.waitFor(p, `!!RPG.Engine.top().view.modal`, 1500));
+    ok('shop: buying gear asks 今すぐ装備する？', await B.waitFor(p, `!!${V}.modal && ${V}.modal.o.title === '今すぐ装備する？'`, 1500));
+    ok('shop: the prompt lists every member (+ 装備しない), can\'t-equip rows disabled', await B.ev(p, `(() => { const m = ${V}.modal; const rows = m.list.rows; return rows.length === RPG.Party.members().length + 1 && RPG.Party.members().every((c, i) => !!rows[i].disabled === !RPG.Rules.canEquip(c, ${V}.list.current().value, RPG.Rules.defaultSlot(c, ${V}.list.current().value))); })()`));
     await B.press(p, 'a'); await p.waitForTimeout(250);
     await B.pressUntil(p, 'b', `${TOP}==='field'`, 3);
 

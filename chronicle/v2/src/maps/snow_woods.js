@@ -34,7 +34,7 @@
     for (const [x, y] of [[22, 21], [29, 25], [7, 22], [12, 27], [21, 7], [29, 9], [40, 20], [44, 24], [11, 8]]) if (K.at(g, x, y) === '.') K.put(g, x, y, 'T');
 
     const O = [];
-    O.push(K.spring('snow_woods_s1', 24, 21));
+    O.push(K.prop('rock_small', 24, 21), K.prop('rock_small', 25, 22));   // 小石（泉は置かない。WORLD §6.2）
     O.push({ type: 'brazier', id: 'snow_woods_camp', x: 27, y: 24, on: true });
     O.push(K.prop('tent', 29, 21), K.prop('firewood', 21, 25), K.prop('sled', 28, 26), K.prop('log', 22, 24));
     // 倒木

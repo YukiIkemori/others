@@ -31,7 +31,7 @@
     const O = [];
     O.push(K.stairs(22, 5, { map: 'elder_1', spawn: 'up' }, { id: 'elder_2_up', look: 'up' }));
     O.push({ type: 'switch', id: 'elder_2_sw2', x: 29, y: 8, flag: 'forest_sw2', look: 'hole', color: 'teal', by: 'guest' });
-    O.push(K.spring('elder_2_s1', 30, 30));                     // 泉（根食らいの手前）
+    O.push(K.spring('elder_2_s1', 30, 30));                     // 泉（根食らいの手前。千年樹でただ 1 つ。WORLD §6.2）
     O.push(K.prop('roots', 23, 22), K.exam(24, 22, 'elder_rings'));   // 切り口（伸びない年輪）
     O.push(K.prop('crystal', 26, 44), K.exam(26, 43, 'elder_altar'));  // 根の祭壇
     O.push(K.chest('elder_2_c1', 6, 18, { pool: 'p_T' }));

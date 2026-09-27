@@ -44,7 +44,7 @@
       K.rect(g, 38, 9, 2, 2, 'w');                      // 水がめの池（盗んだ水）
       const O = [];
       O.push(K.stairs(21, 3, { map: 'desert_hawks_2', spawn: 'top' }, { id: 'desert_hawks_1_down' }));
-      O.push(K.spring('desert_hawks_1_s1', 15, 29), K.spring('desert_hawks_1_s2', 22, 9));
+      O.push(K.prop('rock_small', 15, 29), K.prop('sack', 16, 30), K.prop('rock_small', 22, 9), K.prop('sack', 23, 10));   // 岩と荷（泉は置かない。WORLD §6.2）
       O.push(K.chest('desert_hawks_1_c1', 38, 25, { pool: 'p_T' }), K.chest('desert_hawks_1_c2', 5, 26, { item: 'i_smoke', n: 2 }),
         K.chest('desert_hawks_1_c3', 36, 16, { pool: 'p_T' }), K.chest('desert_hawks_1_c4', 5, 10, { gold: 180 }), K.chest('desert_hawks_1_c5', 24, 9, { pool: 'p_rare' }));
       O.push(K.exam(33, 9, 'desert_hawks_water'), K.exam(4, 16, 'desert_hawks_bunks'));
@@ -86,7 +86,7 @@
       K.blob(g, 30, 19, 3, 3, '.', 'hk2c'); K.rect(g, 26, 16, 3, 2, '.'); K.rect(g, 27, 12, 2, 5, '.'); K.rect(g, 24, 12, 4, 2, '.');   // 東の小部屋（宝箱）
       const O = [];
       O.push(K.stairs(17, 25, { map: 'desert_hawks_1', spawn: 'down' }, { id: 'desert_hawks_2_up', look: 'up' }));
-      O.push(K.spring('desert_hawks_2_s1', 6, 20));
+      O.push(K.prop('sack', 6, 20), K.prop('rock_small', 7, 21));   // 荷（泉は置かない。WORLD §6.2）
       O.push(K.chest('desert_hawks_2_c1', 31, 21, { pool: 'p_T' }), K.chest('desert_hawks_2_c2', 9, 23, { item: 'i_ether', n: 2 }), K.chest('desert_hawks_2_c3', 26, 6, { pool: 'p_rare' }));
       O.push(K.prop('obelisk', 11, 5, { cond: [FRIEND[0], FRIEND[1], { choice: 'ch_desert_write', is: 'pain' }] }), K.exam(11, 6, 'desert_hawks_memorial', { cond: [FRIEND[0], FRIEND[1], { choice: 'ch_desert_write', is: 'pain' }] }));
       O.push(K.exam(24, 4, 'desert_hawks_map_table'));

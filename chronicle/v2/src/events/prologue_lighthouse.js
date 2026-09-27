@@ -1,5 +1,5 @@
 // CONTENT-P: ファロス灯台（V2_PLAN §3.3 P8・P9、STORY_BIBLE §9.1 P8・P9・§10.2 の 5）
-//   lighthouse_1_door      鍵の前の塔の扉（調べる）
+//   lighthouse_1_door      塔の扉（調べる・押す）: 鍵が無ければ閉じたまま、鍵があれば初めの 1 回だけ開ける場面
 //   lighthouse_1_tutorial  P8 入ってすぐ: オットーが見守り、野ネズミ 2 匹と主人公ひとり。必ず閃く。負けてもやり直して続く（canLose）
 //   lighthouse_3_fine      P9 灯室の手前で灰色のマントの少女（v_fine_lighthouse_01・02。名はまだ無い）
 //   lighthouse_3_boss      P9 ページ食らい → 紙切れから守り歌が戻る（lo_lighthouse_song）→ 灯台に灯がともる（夜の世界で最初の灯り）
@@ -12,12 +12,23 @@
   const D = R.DB.events;
   const X = () => R.ContentP.ev;
 
+  // 塔の扉: 鍵が無ければ閉じたまま。灯台の鍵があれば、初めての 1 回だけ鍵を開ける場面（→ prologue_lh_door。扉の物が入口の間への扉に替わる）。
+  //   扉を調べたとき（K.exam）と、鍵を持って扉を押したとき（扉の物の unlock。FIELD の move.js）に走る
   D.lighthouse_1_door = {
-    meta: { needs: [], gives: [] },
+    meta: { needs: [], gives: ['flag:prologue_lh_door'] },
     run: async (ev) => {
       const E = X();
-      await E.narr(ev, '灯台の扉には、がっしりと\n鍵がかかっている。');
-      await E.narr(ev, '灯台守なら、鍵を\n持っているかもしれない。');
+      if (ev.flag('prologue_lh_door') || ev.flag('prologue_tutorial')) return;
+      if (!ev.flag('prologue_key')) {
+        await E.narr(ev, '灯台の扉には、がっしりと\n鍵がかかっている。');
+        await E.narr(ev, '灯台守なら、鍵を\n持っているかもしれない。');
+        return;
+      }
+      await E.narr(ev, '{hero}は、オットーから預かった\n灯台の鍵を、鍵穴に差しこんだ。');
+      ev.sfx('unlock');
+      await ev.wait(450);
+      ev.setFlag('prologue_lh_door');
+      await E.narr(ev, 'ガチャリ……。\n灯台の鍵で 扉を開けた！');
     },
   };
 

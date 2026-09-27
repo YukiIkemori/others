@@ -38,8 +38,9 @@
     };
     const objects = [
       K.stairs(18, 3, { map: 'world', spawn: 'well' }), P('stairs_up', 18, 3),
-      K.spring('wl_s1', 17, 13),                                      // 入口寄りの泉
-      K.spring('wl_s2', 31, 9),                                       // 中ほどの泉（東の小部屋、道のりの 40〜60%。check_springs）
+      // 泉は置かない（1 階だけの短い寄り道。WORLD §6.2）。前の泉の所は石と光るきのこ
+      P('rock_small', 17, 13), P('mushroom_glow', 18, 14),
+      P('mushroom_glow', 31, 9), P('rock_small', 32, 10),
       K.chest('wl_c1', 31, 3, { pool: 'p_T' }),
       K.chest('wl_c2', 3, 28, { pool: 'p_rare' }),                    // 隠し通路の先
       K.chest('wl_c3', 31, 24, { item: 'i_jewel_carrot', n: 1 }),     // 巣の奥

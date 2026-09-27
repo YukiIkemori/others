@@ -42,13 +42,26 @@
     return null;
   }
   /** 行き先の無い戸口（鍵の掛かった戸）を押した: 一言（1.5 秒に 1 回） */
+  //   扉の物（type:'door'）で行き先の無い物も同じ（鍵・仕掛けで開く扉の閉じた方）。o.unlock = {cond, event} があり、cond が真なら
+  //   一言の代わりにそのイベント（鍵を開ける場面。開いた後は行き先のある扉の物に替わる）
   function lockedBump(dx, dy) {
-    const b = F._doorAt && F._doorAt(S.map, S.x + dx, S.y + dy, S.lv || 0);
-    if (!b || b.door.to) return;
+    const x = S.x + dx, y = S.y + dy, lv = S.lv || 0;
+    const b = F._doorAt && F._doorAt(S.map, x, y, lv);
+    let msg = null;
+    if (b) { if (b.door.to) return; msg = b.door.locked; }
+    else {
+      const d = R.MapUtil.objectsAt(S.map, x, y, lv).find((o) => o.type === 'door');
+      if (!d || d.to) return;
+      if (d.unlock && d.unlock.event && (d.unlock.cond == null || R.State.check(d.unlock.cond))) {
+        if (!(R.Events.busy && R.Events.busy())) R.Events.run(d.unlock.event, { map: S.map.id, x, y });
+        return;
+      }
+      msg = d.locked;
+    }
     const now = R.Engine.time;
     if (S.lockedAt && now - S.lockedAt < 1500) return;
     S.lockedAt = now;
-    F.hud.toast(b.door.locked || '戸には鍵がかかっている', { icon: 'search', anchor: 'bl' });
+    F.hud.toast(msg || '戸には鍵がかかっている', { icon: 'search', anchor: 'bl' });
   }
 
   /** 1 歩を始める。→ true（動いた） */
@@ -121,6 +134,42 @@
 
   function inRect(x, y, r) { return x >= r.x && y >= r.y && x < r.x + (r.w || 1) && y < r.y + (r.h || 1); }
 
+  /**
+   * 階段で着くマス（オーナーの報告「階段を上り下りすると 1 マス左に出る」）。
+   *   名前つきの spawn は地図ごとに手で置いた所で、階段の横（灯台は左）・斜め・2 マス先とばらばらだった。
+   *   行き先の spawn の近く（3 マス以内）の階段（戻る階段を優先）を見つけ、その「前」のマスに着く:
+   *   上下左右の隣のうち、階段から歩いて入れて（当たり・一方通行）、ほかの出入り口でなく、動かない人がいないマス。
+   *   その向きにまっすぐ開けている（3 マスまで）所ほど良い＝部屋の側。同じなら南 → 北 → 東 → 西。
+   *   向きは階段から離れる向き。当てはまる所が無ければ spawn のまま。→ {x, y, dir, lv} | spawn（名前）
+   */
+  const LAND = [['s', 0, 1], ['n', 0, -1], ['e', 1, 0], ['w', -1, 0]];
+  function condOk(c) { if (c == null) return true; try { return !!R.State.check(c); } catch (e) { return false; } }
+  F.stairsLanding = function (mapId, spawn, fromId) {
+    const map = R.DB.maps[mapId];
+    if (!map || typeof spawn !== 'string' || !(map.spawns || {})[spawn]) return spawn;
+    const def = map.spawns[spawn], lv = def.lv || 0;
+    let st = null, best = 1e9;
+    for (const o of map.objects || []) {
+      if (o.type !== 'stairs' || !o.to || (o.lv || 0) !== lv) continue;   // cond は見ない（位置の目印。戻る階段の cond が偽でも、その前に着く）
+      const d = Math.max(Math.abs(o.x - def.x), Math.abs(o.y - def.y));
+      if (d > 3) continue;
+      const k = d + (o.to.map === fromId ? 0 : 10);
+      if (k < best) { best = k; st = o; }
+    }
+    if (!st) return spawn;
+    const npcAt = (x, y) => (map.npcs || []).some((n) => n.x === x && n.y === y && (n.lv || 0) === lv && condOk(n.cond));
+    const free = (fx, fy, x, y, dir) => F._canEnter(map, fx, fy, x, y, lv, dir) && F._lvAfter(map, fx, fy, x, y, lv) === lv && !F._warpAt(map, x, y, lv) && !npcAt(x, y);
+    let out = null, open = -1;
+    for (const [dir, dx, dy] of LAND) {
+      const x = st.x + dx, y = st.y + dy;
+      if (!free(st.x, st.y, x, y, dir)) continue;
+      let k = 1;
+      while (k < 3 && free(x + dx * (k - 1), y + dy * (k - 1), x + dx * k, y + dy * k, dir)) k++;
+      if (k > open) { open = k; out = { x, y, dir, lv }; }
+    }
+    return out || spawn;
+  };
+
   /** 入った瞬間の判定（1 マスに 1 回）。非同期の仕事（マップの移動・イベント・戦闘）があれば Promise を返す */
   F._arrive = function () {
     const m = S.map, G = R.Game;
@@ -151,7 +200,7 @@
       if (o.type === 'switch' && o.look === 'plate') F._switch(o, 'step');
       if ((o.type === 'stairs' || o.type === 'door') && o.to && (!o.cond || R.State.check(o.cond))) {
         try { R.Audio.sfx(o.type === 'stairs' ? 'stairs' : 'door'); } catch (e) { /* */ }
-        return F.enter(o.to.map, o.to.spawn);
+        return F.enter(o.to.map, o.type === 'stairs' ? F.stairsLanding(o.to.map, o.to.spawn, m.id) : o.to.spawn);
       }
       if (o.type === 'building' && o.door && o.door.x === S.x && o.door.y === S.y && o.door.to) {
         try { R.Audio.sfx('door'); } catch (e) { /* */ }

@@ -32,7 +32,7 @@
       // 氷に閉じこめられた宝箱（北の回廊の奥）
       K.rect(g, 16, 5, 3, 3, 'H'); K.put(g, 17, 6, '.'); K.put(g, 17, 7, 'I');
       const O = [];
-      O.push(K.spring('icicle_1_s1', 21, 18));
+      O.push(K.prop('rock_small', 21, 18), K.prop('rock_small', 22, 19));   // 小石（泉は置かない。WORLD §6.2）
       O.push(K.stairs(6, 17, { map: 'icicle_2', spawn: 'up' }, { id: 'icicle_1_down', look: 'down' }));
       O.push(K.chest('icicle_1_c1', 17, 6, { pool: 'p_rare' }), K.exam(17, 8, 'icicle_frozen', { box: 1 }));
       O.push(K.prop('ice_crystal', 17, 7, { cond: '!snow_icicle_box_1' }));
@@ -70,7 +70,7 @@
       K.soften(g, 'H', '.,', ['#', 'H'], 0.3, 'ic2');
       K.rect(g, 18, 3, 5, 3, '.'); K.rect(g, 19, 6, 3, 1, 'I');   // 一品物の小部屋（氷でふさがる）
       const O = [];
-      O.push(K.spring('icicle_2_s1', 18, 23));
+      O.push(K.prop('rock_small', 18, 23), K.prop('rock_small', 19, 24));   // 小石（泉は置かない。WORLD §6.2）
       O.push(K.stairs(6, 25, { map: 'icicle_1', spawn: 'up' }, { id: 'icicle_2_up', look: 'up' }));
       O.push({ type: 'brazier', id: 'icicle_2_b1', x: 23, y: 20 }, { type: 'brazier', id: 'icicle_2_b2', x: 34, y: 12 }, { type: 'brazier', id: 'icicle_2_b3', x: 16, y: 9 });
       O.push(K.chest('icicle_2_c1', 20, 4, { item: 'u_icicle_spear', n: 1 }), K.exam(20, 7, 'icicle_frozen', { box: 2 }));
@@ -172,7 +172,7 @@
       K.soften(g, 'H', 'n,i', ['#', 'H'], 0.3, 'au');
       K.rect(g, 12, 3, 17, 1, 'H');                             // 崖の縁
       const O = [];
-      O.push(K.spring('aurora_s1', 6, 15));
+      O.push(K.prop('rock_small', 6, 15), K.prop('rock_small', 7, 16));   // 小石（泉は置かない。WORLD §6.2）
       O.push(K.exam(20, 5, 'aurora_view'), K.prop('ice_crystal', 16, 4), K.prop('ice_crystal', 24, 4), K.prop('snow_sign', 21, 6));
       O.push(K.prop('talestone', 28, 9), K.exam(28, 10, 'aurora_legend'));
       O.push(K.chest('aurora_c1', 30, 20, { pool: 'p_T' }), K.chest('aurora_c2', 5, 13, { pool: 'p_rare' }), K.chest('aurora_c3', 11, 8, { item: 'i_ether', n: 2 }));
@@ -202,7 +202,7 @@
       K.rect(g, 19, 16, 2, 4, 'p');                              // 渡り板
       K.rect(g, 6, 6, 4, 3, 'W'); K.rect(g, 30, 6, 5, 3, 'W');   // 船室の壁
       const O = [];
-      O.push(K.spring('frost_ship_1_s1', 10, 12));
+      O.push(K.prop('sack', 10, 12), K.prop('sack', 11, 13));   // 荷（泉は置かない。WORLD §6.2）
       O.push(K.stairs(33, 12, { map: 'frost_ship_2', spawn: 'up' }, { id: 'frost_ship_1_down', look: 'down' }));
       for (const [x, y] of [[14, 10], [22, 10], [28, 14]]) O.push(K.prop('ice_crystal', x, y));
       O.push(K.prop('barrel', 12, 14), K.prop('crate', 25, 14), K.prop('snow_barrel', 16, 14), K.prop('net', 29, 10), K.prop('rowboat', 5, 18));
@@ -225,7 +225,7 @@
       K.rect(g2, 14, 3, 2, 16, 'W'); K.rect(g2, 14, 10, 2, 3, 'p');   // 船倉の仕切り
       K.rect(g2, 22, 12, 11, 7, 'c');                                   // 船長室（敷物）
       const O2 = [];
-      O2.push(K.spring('frost_ship_2_s1', 6, 12));
+      O2.push(K.prop('sack', 6, 12), K.prop('sack', 7, 13));   // 荷（泉は置かない。WORLD §6.2）
       O2.push(K.stairs(4, 4, { map: 'frost_ship_1', spawn: 'up' }, { id: 'frost_ship_2_up', look: 'up' }));
       O2.push(K.prop('barrel', 8, 5), K.prop('barrel', 9, 5), K.prop('crate', 11, 16), K.prop('crate', 12, 16), K.prop('table', 27, 14), K.prop('chair', 26, 14), K.prop('bookshelf', 31, 4),
         K.prop('ice_crystal', 20, 6), K.prop('ice_crystal', 30, 17), K.prop('lantern', 24, 6));
