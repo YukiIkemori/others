@@ -78,6 +78,7 @@ function buildStat(R, c, build) {
   const w = R.Rules.weaponType(c);
   return WSTAT[w] || 'str';
 }
+function roleOf(R, c) { const d = c && R.DB.companions && R.DB.companions[c.id]; return (d && d.role) || null; }
 /** 枠 slot に、ティア T・等級 grade の品で、stat の印（units）を持つ物を 1 つ（無ければ同じ等級・ティアの何か、無ければ null） */
 function pick(R, c, slot, T, grade, stat, wtype) {
   const SK = { str: 's', vit: 'v', dex: 'd', agi: 'a', int: 'i', mnd: 'm' };
@@ -90,7 +91,11 @@ function pick(R, c, slot, T, grade, stat, wtype) {
     return R.Rules.canEquip(c, id, slot);
   });
   if (!list.length) return null;
-  const sc = ([, it]) => (String(it.units || '').includes(SK[stat]) ? 10 : 0) + (it.tier || 0) + (slot === 'acc1' || slot === 'acc2' ? (it.line === 'ac_' + stat ? 20 : 0) : 0);
+  // 回復役（role 'healer'）の武器は回復の杖（healPct）を選ぶ。持ち主「見習いの杖と祈りの杖、効果同じじゃねえかｗ」で杖の 2 系列を
+  // 攻撃の術（w_staff、magicPct）と回復の術（w_staff_prayer、healPct）に分けたので、町医者が攻撃の杖を持つ模型にしない
+  const healer = slot === 'weapon1' && roleOf(R, c) === 'healer';
+  const sc = ([, it]) => (String(it.units || '').includes(SK[stat]) ? 10 : 0) + (it.tier || 0) + (slot === 'acc1' || slot === 'acc2' ? (it.line === 'ac_' + stat ? 20 : 0) : 0) +
+    (healer && it.mods && it.mods.healPct > 0 ? 20 : 0);
   list.sort((a, b) => sc(b) - sc(a) || (b[1].sort || 0) - (a[1].sort || 0));
   return list[0][0];
 }
