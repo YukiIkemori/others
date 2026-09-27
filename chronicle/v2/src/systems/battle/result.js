@@ -42,7 +42,9 @@
     const glim = [];
     const techName = (id) => { const t = (R.DB.techs && R.DB.techs[id]) || (R.DB.spells && R.DB.spells[id]); return (t && t.name) || id; };
     for (const gl of (rw.glimmers || [])) { const nm = typeof gl === 'string' ? techName(gl) : gl && (gl.name || techName(gl.id || gl.tech || gl.skill)); if (nm && !glim.includes(nm)) glim.push(nm); }
-    return { gold: rw.gold || 0, drops: merged, grow, prof, glim };
+    let profUI = null;
+    try { if (_.profUI && _.profUI.gather) profUI = _.profUI.gather(st, rw); } catch (e) { console.error('[battle result prof]', e); }
+    return { gold: rw.gold || 0, drops: merged, grow, prof, glim, profUI };
   }
 
   /** ボタンを待つ（2026-09-27 の持ち主の決まり: 戦闘の終わりはボタンを押したときだけ。自動で進まない）。
@@ -155,7 +157,13 @@
       update() {},
       draw(g) { Rs.drawVictory(g, st); },
     };
+    if (data.profUI && data.profUI.members.some((m) => m.learned.length)) { try { R.Audio.sfx('glimmer'); } catch (e) { /* ignore */ } }
     await Rs.confirm(st, anyRare ? Bt.MIN.rareCardSkip : 0);
+    // 縦持ちで入りきらないときだけ、仲間の続きを次の頁に（頁ごとに決定）
+    while (!st.dead && (st.result.pageCount || 1) > (st.result.page || 0) + 1) {
+      st.result.page = (st.result.page || 0) + 1; st.result.pageT0 = R.Engine.time;
+      await Rs.confirm(st, 0);
+    }
     end.pressAt = R.Engine.time; end.pressRt = rt();
     st.log.push({ t: 'victory', ms: R.Engine.time - t0 });
     // 足された札（熟練など）: それぞれ決定を待つ
@@ -163,122 +171,183 @@
     st.closing = true;
   };
 
+  // ---------------------------------------------------------------- 勝利の札（1 枚。2026-09-27 の持ち主の決まり）
+  // ゴールド・手に入れた物（落とした物・盗んだ物「盗んだ」・レア ★）・仲間ごとに 最大 HP/MP の伸び・熟練の札（剣 12→13）・覚えた技「✦ …を覚えた！」。
+  // 16:9 は 2 列（左: ゴールドと品、右: 仲間）。縦持ちは 1 列。入らないときは品を「ほか N 品」にまとめ、それでも入らない縦持ちだけ仲間を頁に分ける。
+  const PU = () => _.profUI || null;
+  function geomV(st) {
+    const k = R.uiScale || 1, L = st.L;
+    if (L.tall) {
+      const top = L.stageH * 0.5;
+      return { k, tall: true, band: { x: 0, y: top, w: R.W, h: R.H - top }, x0: 20 * k, y0: Math.max(top + 16 * k, L.stageH - 60 * k), lw: R.W - 40 * k, rx: 20 * k, rw: R.W - 40 * k, bottom: R.H - (R.safe.b || 0) - 84 * k };
+    }
+    const x0 = (R.safe.l || 0) + 40 * k, lw = 250 * k, rx = x0 + lw + 30 * k, rw = Math.min(330 * k, R.W * 0.62 - (rx - 0));
+    return { k, tall: false, band: { x: 0, y: 0, w: rx + rw + 40 * k, h: R.H }, x0, y0: 30 * k, lw, rx, rw: Math.max(240 * k, rw), bottom: R.H - (R.safe.b || 0) - 50 * k };
+  }
+  /** 仲間 1 人の塊: 顔と名前と伸び（1 行目）→ 熟練の札（折り返す）→ 覚えた技の行 */
+  function memberLayout(u, m, grow, G) {
+    const k = G.k, ck = k * 0.82, P = PU();
+    const cx0 = G.rx + 44 * k, cx1 = G.rx + G.rw;
+    const chips = [];
+    let x = cx0, line = 0;
+    for (const up of (m && m.ups) || []) {
+      const w = P ? P.chipW(up, ck) : 80 * k;
+      if (x > cx0 && x + w > cx1) { x = cx0; line++; }
+      chips.push({ up, x, line });
+      x += w + 6 * k;
+    }
+    const chipLines = chips.length ? line + 1 : 0;
+    const learned = (m && m.learned) || [];
+    const h = 36 * k + chipLines * 25 * k + learned.length * 34 * k + 6 * k;
+    return { u, m, grow, chips, chipLines, learned, h };
+  }
+  /** 札の組み立て（描く前に大きさを決める）→ {G, items:{shown, more}, pages:[[block]]} */
+  Rs.layoutVictory = function (st) {
+    const res = st.result, d = res.data, G = geomV(st), k = G.k;
+    const units = st.partyUnits();
+    const profBy = {};
+    for (const m of (d.profUI && d.profUI.members) || []) profBy[m.id] = m;
+    const blocks = units.map((u) => {
+      const c = charOf(u.id);
+      return memberLayout(u, profBy[String(u.id)] || null, d.grow[u.id] || (c && d.grow[c.id]) || null, G);
+    });
+    // 仲間の分からない閃き（まれ）: 最後の塊の後に行だけ
+    const orphan = (d.profUI && d.profUI.members || []).filter((m) => !units.some((u) => String(u.id) === m.id));
+    for (const m of orphan) if (m.learned.length) blocks.push({ u: null, m, grow: null, chips: [], chipLines: 0, learned: m.learned, h: m.learned.length * 34 * k + 4 * k });
+    const GR = { super: 0, rare: 1 };
+    const drops = d.drops.slice().sort((a, b) => (GR[a.grade] != null ? GR[a.grade] : 2) - (GR[b.grade] != null ? GR[b.grade] : 2));
+    const headH = 58 * k, goldH = 32 * k, itemH = 30 * k, itemHead = drops.length ? 20 * k : 0, memHead = 20 * k;
+    const memTotal = blocks.reduce((s, b) => s + b.h, 0);
+    let maxItems, pages;
+    if (!G.tall) {
+      const room = G.bottom - (G.y0 + headH + goldH + itemHead);
+      maxItems = Math.max(1, Math.floor(room / itemH));
+      pages = [blocks];
+      G.memTop = G.y0 + headH;
+      G.memScale = Math.min(1, (G.bottom - G.memTop - memHead) / Math.max(1, memTotal));   // 入らないときは右の列を少し縮める
+    } else {
+      // 縦持ち: 見出し → ゴールド → 品（4 行まで）→ 仲間。入らなければ品をまとめ、それでも入らなければ仲間を頁に分ける
+      maxItems = Math.min(4, drops.length);
+      const itemsH = (n) => (drops.length ? itemHead + Math.min(drops.length, n + (drops.length > n ? 1 : 0)) * itemH : 0);
+      const top0 = () => G.y0 + headH + goldH + itemsH(maxItems) + 8 * k + memHead;
+      while (maxItems > 1 && top0() + memTotal > G.bottom) maxItems--;
+      pages = [];
+      let cur = [], used = top0();
+      for (const b of blocks) {
+        if (cur.length && used + b.h > G.bottom) { pages.push(cur); cur = []; used = G.y0 + headH + memHead; }
+        cur.push(b); used += b.h;
+      }
+      pages.push(cur);
+      G.memScale = 1;
+    }
+    const more = drops.length > maxItems ? drops.length - (maxItems - 1) : 0;
+    const shown = more ? drops.slice(0, Math.max(1, maxItems - 1)) : drops;
+    return { G, shown, more, pages };
+  };
+
+  function drawItem(g, dr, x0, ry, colW, k) {
+    const Kt = _.K;
+    const rr = dr.grade === 'rare' || dr.grade === 'super';
+    const col = dr.grade === 'super' ? Kt.COL.superRare : dr.grade === 'rare' ? Kt.COL.rare : Kt.COL.text;
+    if (rr) {
+      const rgb = dr.grade === 'super' ? '255,182,94' : '134,200,255';
+      Kt.box(g, { x: x0 - 8 * k, y: ry - 3 * k, w: colW + 16 * k, h: 27 * k }, { a: 0.45, r: 8 * k, edge: `rgba(${rgb},0.5)` });
+      g.save(); g.globalCompositeOperation = 'lighter';
+      const gl = g.createRadialGradient(x0 + 8 * k, ry + 11 * k, 1, x0 + 8 * k, ry + 11 * k, 36 * k);
+      gl.addColorStop(0, `rgba(${rgb},0.35)`); gl.addColorStop(1, `rgba(${rgb},0)`);
+      g.fillStyle = gl; g.fillRect(x0 - 30 * k, ry - 26 * k, 76 * k, 76 * k); g.restore();
+    }
+    Kt.icon(g, _.play.itemIcon(dr.item), x0, ry + 1 * k, 17 * k, rr ? col : Kt.COL.text2);
+    const nm = _.play.itemName(dr.item);
+    const tag = (dr.stolen ? 44 : 0) * k + (rr ? (dr.grade === 'super' ? 28 : 16) * k : 0);
+    const nmS = Kt.fit(nm, colW - 70 * k - tag, { size: 13.5 * k, weight: rr ? 700 : 500 });
+    Kt.text(g, nmS, x0 + 26 * k, ry + 2 * k, { size: 13.5 * k, weight: rr ? 700 : 500, color: col, raw: true, shadow: true });
+    let tx = x0 + 31 * k + Kt.measure(nmS, { size: 13.5 * k, weight: rr ? 700 : 500 });
+    if (rr) { Kt.text(g, dr.grade === 'super' ? '★★' : '★', tx, ry + 3 * k, { size: 12 * k, weight: 700, color: col, raw: true }); tx += (dr.grade === 'super' ? 26 : 14) * k; }
+    if (dr.stolen) Kt.text(g, '盗んだ', tx + 2 * k, ry + 4 * k, { size: 10.5 * k, weight: 700, color: Kt.COL.gold, raw: true, shadow: true });
+    Kt.text(g, '×' + dr.n, x0 + colW, ry + 3 * k, { size: 12.5 * k, color: Kt.COL.text2, align: 'right', raw: true, shadow: true });
+  }
+  function drawMember(g, st, b, x, y, w, k, t) {
+    const Kt = _.K, P = PU();
+    if (b.u) {
+      const u = b.u, alive = st.vis[u.uid] && st.vis[u.uid].alive;
+      const r = { x, y, w: 32 * k, h: 32 * k };
+      if (P && P.drawFace) P.drawFace(g, { uid: u.uid, look: u.look || u.id }, r, st);
+      Kt.text(g, Kt.fit(u.name, 120 * k, { size: 13.5 * k, weight: 700 }), x + 42 * k, y + 8 * k, { size: 13.5 * k, weight: 700, color: alive ? Kt.COL.text : Kt.COL.disabled, raw: true, shadow: true });
+      const gr = b.grow;
+      if (gr && (gr.hp || gr.mp)) {
+        const s = [gr.hp ? '最大HP +' + gr.hp : '', gr.mp ? '最大MP +' + gr.mp : ''].filter(Boolean).join('  ');
+        Kt.text(g, s, x + w, y + 9 * k, { size: 12 * k, color: Kt.COL.up, align: 'right', raw: true, shadow: true });
+      }
+    }
+    const ck = k * 0.82;
+    for (const c of b.chips) if (P && P.drawChipAt) P.drawChipAt(g, c.up, c.x - (b.u ? 0 : 0), y + 36 * k + c.line * 25 * k, ck);
+    let ly = y + 36 * k + b.chipLines * 25 * k;
+    for (const l of b.learned) { if (P && P.drawLearn) P.drawLearn(g, b.m, l, x, ly, w, t, k, 44 * k); ly += 34 * k; }
+  }
+
   Rs.drawVictory = function (g, st) {
     const res = st.result;
     if (!res) return;
-    const d = res.data, k = R.uiScale || 1, Kt = _.K, t = R.Engine.time - res.t0, L = st.L;
-    const ap = (i) => Math.max(0, Math.min(1, (t - 80 - i * 70) / 200));
-    let x0, y, colW;
-    if (L.tall) {
-      Kt.band(g, { x: 0, y: L.stageH * 0.5, w: R.W, h: R.H - L.stageH * 0.5 }, 'b', 0.9);
-      x0 = 20 * k; y = L.stageH - 50 * k; colW = R.W - 40 * k;
-    } else {
-      Kt.band(g, { x: 0, y: 0, w: Math.min(R.W * 0.66, 640 * k), h: R.H }, 'l', 0.7);
-      x0 = (R.safe.l || 0) + 48 * k; y = 36 * k; colW = Math.min(300 * k, R.W * 0.32);
-    }
+    const d = res.data, k = R.uiScale || 1, Kt = _.K, t = R.Engine.time - res.t0;
+    const lay = Rs.layoutVictory(st), G = lay.G;
+    res.pageCount = lay.pages.length;
+    const page = Math.min(res.page || 0, lay.pages.length - 1);
+    const ap = (i) => Math.max(0, Math.min(1, ((R.Engine.time - (res.pageT0 || res.t0)) - 80 - i * 60) / 200));
+    Kt.band(g, G.band, G.tall ? 'b' : 'l', G.tall ? 0.92 : 0.78);
     let i = 0;
     const row = (fn) => { g.save(); g.globalAlpha = ap(i); g.translate(-(1 - ap(i)) * 12, 0); fn(); g.restore(); i++; };
-    // 見出し
+    const x0 = G.x0, fullW = G.tall ? G.lw : G.rx + G.rw - x0;
+    let y = G.y0;
+    // 見出しとゴールド
     row(() => {
       g.save();
-      g.font = R.Gfx.font(32 * k, 700); g.textBaseline = 'top';
+      g.font = R.Gfx.font(30 * k, 700); g.textBaseline = 'top';
       if ('letterSpacing' in g) g.letterSpacing = 6 * k + 'px';
       g.shadowColor = 'rgba(0,0,0,0.8)'; g.shadowBlur = 8;
-      const gr = g.createLinearGradient(0, y, 0, y + 32 * k); gr.addColorStop(0, '#fffdf2'); gr.addColorStop(1, '#f2d08a');
+      const gr = g.createLinearGradient(0, y, 0, y + 30 * k); gr.addColorStop(0, '#fffdf2'); gr.addColorStop(1, '#f2d08a');
       g.fillStyle = gr; g.fillText('勝利', x0, y);
       g.restore();
-      Kt.hline(g, x0 - 8 * k, x0 + colW + 200 * k, y + 46 * k, 0.5, '255,226,160');
+      if (lay.pages.length > 1) Kt.text(g, `${page + 1} / ${lay.pages.length}`, x0 + fullW, y + 8 * k, { size: 13 * k, weight: 700, color: Kt.COL.text2, align: 'right', raw: true, shadow: true });
+      Kt.hline(g, x0 - 8 * k, x0 + fullW + 20 * k, y + 44 * k, 0.5, '255,226,160');
     });
-    y += 62 * k;
-    row(() => {
-      Kt.icon(g, 'coin', x0, y, 18 * k, Kt.COL.text2);
-      Kt.text(g, 'ゴールド', x0 + 28 * k, y + 1 * k, { size: 13 * k, color: Kt.COL.text2, raw: true, shadow: true });
-      Kt.text(g, '+' + d.gold.toLocaleString('en-US') + ' G', x0 + colW, y - 2 * k, { size: 18 * k, weight: 700, color: Kt.COL.gold, align: 'right', raw: true, shadow: true });
-    });
-    y += 34 * k;
-    // 縦の余白の見積もり（16:9・横持ち）: 下の文（閃き・熟練）の上までに 手に入れた物 → 仲間 が収まるように、
-    // 品の行を減らし（レア・超レアを先に、残りは「ほか N 品」）、それでも足りなければ仲間の行を詰める
-    const units = st.partyUnits();
-    const own = Rs.pages.some((p) => p.id === 'prof');   // 熟練・閃きは次の札（result_prof.js。誰の何がいくつ）
-    const nLines = 0;
-    let rh = (L.tall ? 42 : 40) * k;
-    let maxRows = L.tall ? 4 : 6;
-    if (!L.tall) {
-      const footTop = R.H - (R.safe.b || 0) - 40 * k - Math.max(0, nLines - 1) * 18 * k - 10 * k;
-      const memberNeed = (n) => 6 * k + 18 * k + units.length * n + 4 * k;
-      const dropsHead = d.drops.length ? 20 * k : 0;
-      const room = footTop - y - dropsHead - memberNeed(rh);
-      maxRows = Math.max(d.drops.length > 1 ? 2 : 1, Math.min(maxRows, Math.floor(room / (34 * k))));   // 一番よい品は必ず見せる
-      const left = footTop - y - dropsHead - Math.min(d.drops.length, maxRows) * 34 * k - memberNeed(0);
-      if (units.length && left < units.length * rh) rh = Math.max(30 * k, left / units.length);
-    }
-    if (d.drops.length) {
-      row(() => Kt.text(g, '手に入れた物', x0, y, { size: 11.5 * k, weight: 700, color: Kt.COL.text3, raw: true, track: 2 }));
-      y += 20 * k;
-      const GR = { super: 0, rare: 1 };
-      const drops = d.drops.slice().sort((a, b) => (GR[a.grade] != null ? GR[a.grade] : 2) - (GR[b.grade] != null ? GR[b.grade] : 2));
-      const more = drops.length > maxRows ? drops.length - (maxRows - 1) : 0;
-      const shown = more ? drops.slice(0, maxRows - 1) : drops;
-      for (const dr of shown) {
-        const ry = y;
-        row(() => {
-          const rr = dr.grade === 'rare' || dr.grade === 'super';
-          const col = dr.grade === 'super' ? Kt.COL.superRare : dr.grade === 'rare' ? Kt.COL.rare : Kt.COL.text;
-          if (rr) {
-            const rgb = dr.grade === 'super' ? '255,182,94' : '134,200,255';
-            Kt.box(g, { x: x0 - 8 * k, y: ry - 3 * k, w: colW + 16 * k, h: 30 * k }, { a: 0.45, r: 8 * k, edge: `rgba(${rgb},0.5)` });
-            g.save(); g.globalCompositeOperation = 'lighter';
-            const gl = g.createRadialGradient(x0 + 8 * k, ry + 12 * k, 1, x0 + 8 * k, ry + 12 * k, 40 * k);
-            gl.addColorStop(0, `rgba(${rgb},0.35)`); gl.addColorStop(1, `rgba(${rgb},0)`);
-            g.fillStyle = gl; g.fillRect(x0 - 32 * k, ry - 28 * k, 80 * k, 80 * k); g.restore();
-          }
-          Kt.icon(g, _.play.itemIcon(dr.item), x0, ry + 2 * k, 18 * k, rr ? col : Kt.COL.text2);
-          const nm = _.play.itemName(dr.item);
-          Kt.text(g, Kt.fit(nm, colW - 80 * k, { size: 14 * k, weight: rr ? 700 : 500 }), x0 + 28 * k, ry + 3 * k, { size: 14 * k, weight: rr ? 700 : 500, color: col, raw: true, shadow: true });
-          let tx = x0 + 34 * k + Kt.measure(nm, { size: 14 * k, weight: rr ? 700 : 500 });
-          if (rr) { Kt.text(g, dr.grade === 'super' ? '★★' : '★', tx, ry + 4 * k, { size: 12 * k, weight: 700, color: col, raw: true }); tx += (dr.grade === 'super' ? 26 : 14) * k; }
-          if (dr.stolen) Kt.text(g, '盗んだ', tx + 2 * k, ry + 5 * k, { size: 10.5 * k, weight: 700, color: Kt.COL.gold, raw: true, shadow: true });
-          Kt.text(g, '×' + dr.n, x0 + colW, ry + 4 * k, { size: 13 * k, color: Kt.COL.text2, align: 'right', raw: true, shadow: true });
-        });
-        y += 34 * k;
-      }
-      if (more) {
-        const ry = y;
-        row(() => Kt.text(g, `ほか ${more} 品`, x0 + 28 * k, ry + 3 * k, { size: 13 * k, color: Kt.COL.text2, raw: true, shadow: true }));
-        y += 34 * k;
-      }
-    }
-    // 仲間
-    y += 6 * k;
-    row(() => Kt.text(g, '仲間', x0, y, { size: 11.5 * k, weight: 700, color: Kt.COL.text3, raw: true, track: 2 }));
-    y += 18 * k;
-    units.forEach((u, j) => {
-      const ry = y + j * rh;
+    y += 58 * k;
+    const memTop = G.tall ? null : y;
+    if (page === 0) {
       row(() => {
-        const r = { x: x0, y: ry, w: 32 * k, h: 32 * k };
-        g.save();
-        g.beginPath(); g.arc(r.x + r.w / 2, r.y + r.h / 2, r.w / 2, 0, 7); g.fillStyle = 'rgba(30,32,52,0.9)'; g.fill();
-        g.clip();
-        try { if (R.Portrait && R.Portrait.draw) R.Portrait.draw(g, u.look || u.id, r, { expr: st.vis[u.uid] && st.vis[u.uid].alive ? 'smile' : 'sad' }); } catch (e) { /* 顔が無い */ }
-        g.restore();
-        g.save(); g.beginPath(); g.arc(r.x + r.w / 2, r.y + r.h / 2, r.w / 2, 0, 7); g.strokeStyle = 'rgba(240,228,200,0.3)'; g.lineWidth = 1; g.stroke(); g.restore();
-        const alive = st.vis[u.uid] && st.vis[u.uid].alive;
-        Kt.text(g, u.name, x0 + 42 * k, ry + 7 * k, { size: 13.5 * k, weight: 700, color: alive ? Kt.COL.text : Kt.COL.disabled, raw: true, shadow: true });
-        const c = charOf(u.id);
-        const gr = d.grow[u.id] || (c && d.grow[c.id]);
-        if (gr && (gr.hp || gr.mp)) {
-          if (gr.hp) Kt.text(g, '最大HP +' + gr.hp, x0 + colW, ry + (gr.mp ? 0 : 8) * k, { size: 12 * k, color: Kt.COL.up, align: 'right', raw: true, shadow: true });
-          if (gr.mp) Kt.text(g, '最大MP +' + gr.mp, x0 + colW, ry + (gr.hp ? 16 : 8) * k, { size: 12 * k, color: Kt.COL.up, align: 'right', raw: true, shadow: true });
-        }
+        Kt.icon(g, 'coin', x0, y, 18 * k, Kt.COL.text2);
+        Kt.text(g, 'ゴールド', x0 + 28 * k, y + 1 * k, { size: 13 * k, color: Kt.COL.text2, raw: true, shadow: true });
+        Kt.text(g, '+' + d.gold.toLocaleString('en-US') + ' G', x0 + G.lw, y - 2 * k, { size: 18 * k, weight: 700, color: Kt.COL.gold, align: 'right', raw: true, shadow: true });
       });
-    });
-    y += units.length * rh + 8 * k;
-    const lines = [];
-    // 閃き・熟練は勝利の札には書かない（持ち主の決まり 2026-09-27。熟練度の札 result_prof.js で誰の何がいくつかを出す）
-    lines.forEach(([s, c], j) => row(() => Kt.text(g, Kt.fit(s, colW + 180 * k, { size: 11.5 * k }), x0, (L.tall ? y : R.H - (R.safe.b || 0) - 40 * k - (lines.length - 1 - j) * 18 * k) + (L.tall ? j * 18 * k : 0), { size: 11.5 * k, color: c, raw: true, shadow: true })));
-    // 決定で進む（点滅する ▼。札の右下）
-    if (L.tall) Rs.drawNext(g, st, R.W - 28 * k, R.H - (R.safe.b || 0) - 70 * k);
-    else Rs.drawNext(g, st, x0 + colW + 4 * k, R.H - (R.safe.b || 0) - 62 * k);
+      y += 32 * k;
+      if (d.drops.length) {
+        row(() => Kt.text(g, '手に入れた物', x0, y, { size: 11.5 * k, weight: 700, color: Kt.COL.text3, raw: true, track: 2 }));
+        y += 20 * k;
+        for (const dr of lay.shown) { const ry = y; row(() => drawItem(g, dr, x0, ry, G.lw, k)); y += 30 * k; }
+        if (lay.more) { const ry = y; row(() => Kt.text(g, `ほか ${lay.more} 品`, x0 + 26 * k, ry + 2 * k, { size: 13 * k, color: Kt.COL.text2, raw: true, shadow: true })); y += 30 * k; }
+      } else {
+        row(() => Kt.text(g, '手に入れた物はない', x0, y, { size: 12 * k, color: Kt.COL.text3, raw: true, shadow: true }));
+        y += 24 * k;
+      }
+      y += 8 * k;
+    }
+    // 仲間（16:9 は右の列）
+    let my = G.tall ? y : memTop;
+    const mx = G.tall ? x0 : G.rx;
+    row(() => Kt.text(g, '仲間', mx, my, { size: 11.5 * k, weight: 700, color: Kt.COL.text3, raw: true, track: 2 }));
+    my += 20 * k;
+    const sc = G.memScale || 1;
+    g.save();
+    if (sc < 1) { g.translate(mx, my); g.scale(sc, sc); g.translate(-mx, -my); }
+    for (const b of lay.pages[page] || []) {
+      const by = my;
+      row(() => drawMember(g, st, b, mx, by, G.rw, k, t));
+      my += b.h;
+    }
+    g.restore();
+    // 決定で進む（点滅する ▼）
+    if (G.tall) Rs.drawNext(g, st, R.W - 28 * k, R.H - (R.safe.b || 0) - 70 * k);
+    else Rs.drawNext(g, st, G.rx + G.rw - 4 * k, R.H - (R.safe.b || 0) - 40 * k);
   };
 
   /** 見出しの後ろに ▼ を出して決定を待つ（逃げた・負けた） */

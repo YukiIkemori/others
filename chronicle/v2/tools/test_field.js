@@ -240,6 +240,9 @@ async function main() {
   R.Input._set('a', true); adv(17); await flush(); R.Input._set('a', false); await settle(100);
   ok('opening twice gives nothing more', R.Game.gold === gold0 + 50 && opened === 1);
   R.off('chest:open', onChest);
+  // 宝箱の中身は文の窓で出る（2026-09-27 から。右上の通知ではない）: 窓を閉じてから次へ
+  for (let i = 0; i < 4 && R.Field._locked(); i++) { R.Input._set('a', true); adv(17); await flush(); R.Input._set('a', false); await settle(100); }
+  ok('chest message closes with A and unlocks the field', !R.Field._locked());
   await enter('field_lab', 4, 2, 'w');
   R.Party.members().forEach((c) => { c.hp = 1; });
   R.Input._set('a', true); adv(17); await flush(); R.Input._set('a', false); await settle(100);

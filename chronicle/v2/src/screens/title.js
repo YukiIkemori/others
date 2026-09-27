@@ -1,5 +1,5 @@
 // MENUS: タイトル（MODERN_UI §6.1、V2_PLAN §2.5.15・§3.11、design/TITLE_ART.md）
-//   背景: 描いた一枚絵（assets/title/ の 4 層、cover・視差・ランタンの光・八つの灯火・火の粉・蛍・流れ星）。読み終わるまで・読めないときは
+//   背景: 描いた一枚絵（assets/title/ の 4 層、cover・視差・ランタンの光・八つの灯火・火の粉・蛍・流れ星）。読み終わるまでは暗いまま待ち（最長 ART_WAIT）、読めないときは
 //   コードで描いた夜の海と灯台（下の bakeTitle）。題字は logo の画像（読めなければ文字の題字）。
 //   起動して最初は出てくる順（§4: 空と谷 → 灯火が順に → 岩場とアルン → 題字 → 命令）。どのキーでもとばせる。戻ったときは 0.6 秒のフェード。
 //   命令: 横は左下（x .075・y .655）、縦は下のガラスの札。「つづきから」を選んでいる間だけ最後の記録の札。
@@ -280,6 +280,7 @@
   }
 
   // 出てくる順（TITLE_ART §4、ミリ秒）
+  const ART_WAIT = 6000;   // 一枚絵を待つ上限（ms）。過ぎたらコードの背景で出す
   const INTRO = { sky: [0, 1600], beacon0: 600, beaconGap: 120, crag: [1400, 2400], logo: [2200, 3200], flames: 2500, menu: [3000, 3500], rowGap: 60, ff: 3000, input: 3000, end: 3500 };
   /** 時刻 t（ms、開いてから。とばしたら大きい値）の各部の強さ */
   function introAt(t) {
@@ -511,6 +512,8 @@
       this.intro = !!(p && p.intro);
       this.skipped = false;
       this.t0 = R.Engine.time;
+      this.openedAt = R.Engine.time;
+      this.artWait = false;
       this.flare = null;
       this.fx = null;
       this.codeShown = false;
@@ -550,6 +553,7 @@
     },
     update() {
       if (this.busy) return;
+      if (this.artWait) return;   // 絵を読んでいる間は暗いまま（下の draw）
       const I = R.Input;
       if (this.intro && !this.skipped && R.Engine.time - this.t0 < INTRO.input) {
         // どのキーでも残りをとばしてすぐ操作できるように
@@ -565,7 +569,16 @@
       const A = introAt(t);
       const flare = this.flare ? 1 + 0.6 * easeOut((R.Engine.time - this.flare.t0) / 300) : 1;
       const art = drawArt(g, this, { t, alpha: 1, flare });
-      // 読み終わるまではコードの背景。読めたら 0.6 秒で絵へ
+      // 読み終わるまでは暗いまま待つ（オーナー 2026-09-27: 古いコードの背景が一瞬出てから絵に替わるのをやめる）。
+      // 出てくる順（§4）は絵が読めてから始める。ART_WAIT ms たっても読めない・読めないと分かったときだけコードの背景
+      this.artWait = false;
+      const logoRec = loadImg('logo'), logoWait = !logoRec.ready && !logoRec.failed;
+      if ((logoWait || (!art && artSet(tall ? 'phone' : 'wide').mode === 'wait')) && R.Engine.time - this.openedAt < ART_WAIT) {
+        this.artWait = true;
+        if (this.intro && !this.skipped) this.t0 = R.Engine.time;
+        g.fillStyle = '#04050c'; g.fillRect(0, 0, R.W, R.H);
+        return;
+      }
       if (!art) {
         drawBg(g);
         this.codeShown = true;

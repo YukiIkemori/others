@@ -95,13 +95,21 @@
         // 門番のおかみ: 師匠にあいさつするまでは門の前に立つ（押してもどかない）
         { id: 'gatewoman', look: 'npc_woman_2', name: '門番のおかみ', x: 40, y: 15, dir: 'w', move: 'still', pushable: false, cond: '!prologue_berna', talk: 'roa_gate', key: 'roa_gatewoman' },
         { id: 'gatewoman2', look: 'npc_woman_2', name: '門番のおかみ', x: 38, y: 16, dir: 's', move: 'still', cond: 'prologue_berna', talk: 'roa_gatewoman', reward: 'news', key: 'roa_gatewoman2' },
-        { id: 'child_a', look: 'npc_child_1', x: 20, y: 18, dir: 'n', move: 'still', talk: 'roa_children', reward: 'news', key: 'roa_children' },
-        { id: 'child_b', look: 'npc_child_3', x: 22, y: 18, dir: 'n', move: 'still', talk: 'roa_children' },
+        // 動き（npc.js の wander・route。自分で歩く人は戸口・出口・門の trigger に入らない）。門番・年寄り（子どもの話に加わる）・
+        // 門番のおかみ（あと）は立ったまま。道順は戸口の前（y 10・y 20・y 31）・門の道・ベルナの家への石段と小道（x 27〜28）を通らない
+        // 子ども 2 人: 語り石のまわりを走って追いかけっこ（広場の石畳、ワープの着く所 (21,19) と長椅子の行 y 19 には入らない）
+        { id: 'child_a', look: 'npc_child_1', x: 19, y: 14, dir: 'e', move: { route: [[23, 14], [23, 17], [19, 17], [19, 14]], wait: 250, speed: 1.9 }, talk: 'roa_children', reward: 'news', key: 'roa_children' },
+        { id: 'child_b', look: 'npc_child_3', x: 23, y: 17, dir: 'w', move: { route: [[19, 17], [19, 14], [23, 14], [23, 17]], wait: 450, speed: 1.7 }, talk: 'roa_children' },
         { id: 'elder', look: 'npc_old_m_1', name: '里の年寄り', x: 24, y: 16, dir: 'w', move: 'still', talk: 'roa_elder', reward: 'news', key: 'roa_elder' },
-        { id: 'farmer', look: 'npc_man_2', x: 8, y: 13, dir: 's', move: { route: [[6, 13], [10, 13]], wait: 1600 }, talk: 'roa_farmer', reward: 'item', key: 'roa_farmer' },
-        { id: 'weaver', look: 'npc_old_f_1', x: 31, y: 11, dir: 's', move: 'still', talk: 'roa_weaver', reward: 'news', key: 'roa_weaver' },
-        { id: 'youth', look: 'npc_man_1', x: 14, y: 11, dir: 's', move: 'wander', talk: 'roa_youth', reward: 'hint', key: 'roa_youth' },
-        { id: 'cat', look: 'ani_cat', name: 'ねこ', x: 29, y: 27, dir: 's', move: 'wander', talk: { lines: [{ text: 'ねこが、のびをしている。' }] } },
+        // 畑の人: 畝に沿って行ったり来たり（柵の内。宝箱 (5,17) の横 (5,16) は通らない）
+        { id: 'farmer', look: 'npc_man_2', x: 6, y: 13, dir: 'e', move: { route: [[10, 13], [10, 15], [6, 15], [6, 17], [10, 17], [10, 13], [6, 13]], wait: 1500 }, talk: 'roa_farmer', reward: 'item', key: 'roa_farmer' },
+        // 機織りのばあさん: 井戸 (30,13) の北で、行ったり来たり（水くみの順番待ち）
+        { id: 'weaver', look: 'npc_old_f_1', x: 29, y: 12, dir: 's', move: { route: [[32, 12], [29, 12]], wait: 2200 }, talk: 'roa_weaver', reward: 'news', key: 'roa_weaver' },
+        // 家々のあいだを歩く人: 北の小道の南の行（y 11）だけ。戸口の前の行（y 10）は空ける
+        { id: 'youth', look: 'npc_man_1', x: 14, y: 11, dir: 'e', move: { route: [[19, 11], [8, 11], [14, 11]], wait: 2600 }, talk: 'roa_youth', reward: 'hint', key: 'roa_youth' },
+        { id: 'stroller', look: 'npc_woman_1', name: '里の娘', x: 34, y: 11, dir: 'w', move: { route: [[24, 11], [36, 11]], wait: 3000 },
+          talk: { lines: [{ text: '夕方になると、みんな\n語り石のまわりに集まるの。\n里の、いちばんの楽しみよ。' }] } },
+        { id: 'cat', look: 'ani_cat', name: 'ねこ', x: 32, y: 27, dir: 's', move: 'wander', radius: 2, talk: { lines: [{ text: 'ねこが、のびをしている。' }] } },   // 前庭の東（ベルナの家への小道 x 27〜28 には届かない）
       ];
       K.def('roa', {
         name: 'ロアの里', name_ruby: 'ろあのさと', kind: 'town', region: 'prologue', location: 'roa', theme: 'hill_village',

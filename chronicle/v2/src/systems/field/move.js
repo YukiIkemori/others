@@ -338,17 +338,22 @@
     list.push(o.id);
     const loot = R.Rules.chestLoot(o, R.Tier.get(), R.rng(G.seed + ':' + m.id + ':' + o.id)) || {};
     try { R.Audio.sfx('chest'); } catch (e) { /* */ }
+    // 手に入れた物は画面下の文の窓で出す（持ち主の決まり 2026-09-27: 右上の通知だと気づきにくい）
+    let text = '宝箱は、からっぽだった。';
     if (loot.gold) {
       G.gold += loot.gold;
-      F.hud.toast(`${loot.gold} Gを手に入れた`, { icon: 'coin' });
+      text = `宝箱を開けた！\n${loot.gold} ゴールドを手に入れた！`;
     } else if (loot.item) {
       const r = R.State.gain(loot.item, loot.n || 1) || {};
-      const nm = r.name || (R.DB.items[loot.item] && R.DB.items[loot.item].name) || loot.item;
-      F.hud.toast(`${nm}${(loot.n || 1) > 1 ? ' ×' + loot.n : ''}を手に入れた`, { icon: 'chest' });
+      const it = R.DB.items[loot.item] || {};
+      const nm = r.name || it.name || loot.item;
+      const star = it.grade === 'super' ? '★★' : it.grade === 'rare' ? '★' : '';
+      text = `宝箱を開けた！\n${star}${nm}${(loot.n || 1) > 1 ? ' ×' + loot.n : ''}を手に入れた！`;
     }
     F.chunks.dirtyAt(o.x, o.y);
     F.hud.refresh();
     R.emit('chest:open', { map: m.id, id: o.id });
+    F._run(() => R.UIK.Message.say({ text, face: false }));
   };
   F._spring = function (o) {
     const G = R.Game, m = S.map;

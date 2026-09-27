@@ -125,13 +125,8 @@
   };
 
   // ---------------------------------------------------------------- 頁（勝利の札の後。Rs.addPage）
-  if (_.result && _.result.addPage) {
-    _.result.addPage({
-      id: 'prof', order: 10,
-      when(st, data, rewards) { st.profData = PU.gather(st, rewards); return PU.has(st.profData); },
-      run(st) { return PU.show(st, st.profData); },
-    });
-  }
+  // 2026-09-27 の持ち主の決まり（勝利の画面は 1 枚）: 熟練度は別の頁にせず、勝利の札（result.js の drawVictory）の仲間の行に入れる。
+  // ここは集める物（PU.gather）と描く部品（PU.drawChipAt・PU.drawLearn・PU.drawFace）を渡すだけ。PU.show は古い頁の形（使わない）。
 
   function geom(st) {
     const k = R.uiScale || 1, L = st.L || {};
@@ -285,6 +280,13 @@
     while (fs > 11 * k && Kt.measure(s, { size: fs, weight: 700 }) > r.w - 24 * k) fs -= 0.5 * k;
     Kt.text(g, Kt.fit(s, r.w - 24 * k, { size: fs, weight: 700 }), r.x + 10 * k, r.y + (h - fs) / 2 - 1 * k, { size: fs, weight: 700, color: Kt.COL.goldHi, raw: true, shadow: true });
   }
+
+  // ---------------------------------------------------------------- 勝利の札（result.js）に渡す部品
+  PU.CH = CH;
+  PU.chipW = (u, k) => chipParts(u, k).w;
+  PU.drawChipAt = (g, u, x, y, k) => drawChip(g, { u, x, y: 0, p: chipParts(u, k) }, y, k);
+  PU.drawLearn = drawLearn;
+  PU.drawFace = drawFace;
 
   PU.draw = function (g, st) {
     const view = st.prof;
