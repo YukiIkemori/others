@@ -1,5 +1,5 @@
 {
- "date": "2026-09-27T17:25:30.858Z",
+ "date": "2026-09-27T17:26:59.194Z",
  "fixture": "content_p_pharos",
  "walked": [
   {
@@ -15,7 +15,7 @@
     28,
     47
    ],
-   "ms": 59424
+   "ms": 61784
   },
   {
    "map": "verda_1",
@@ -30,7 +30,7 @@
     29,
     4
    ],
-   "ms": 22147
+   "ms": 23130
   },
   {
    "map": "verda_1",
@@ -42,13 +42,13 @@
    ],
    "to": "verda_1",
    "ok": false,
-   "steps": 2,
+   "steps": 3,
    "why": "timeout 90 s",
    "start": [
     43,
     27
    ],
-   "ms": 300964
+   "ms": 323338
   },
   {
    "map": "verda_1",
@@ -66,74 +66,7 @@
     11,
     24
    ],
-   "ms": 497036
-  },
-  {
-   "map": "verda_2",
-   "kind": "exit",
-   "id": "28,51",
-   "at": [
-    28,
-    51
-   ],
-   "to": "verda_1",
-   "ok": false,
-   "steps": 1,
-   "why": "timeout 90 s",
-   "start": [
-    28,
-    47
-   ],
-   "ms": 518606
-  },
-  {
-   "map": "verda_2",
-   "kind": "exit",
-   "id": "28,0",
-   "at": [
-    28,
-    0
-   ],
-   "to": "elder_1",
-   "ok": false,
-   "steps": 1,
-   "why": "timeout 90 s",
-   "start": [
-    29,
-    3
-   ],
-   "ms": 556426
-  },
-  {
-   "map": "verda_2",
-   "kind": "exit",
-   "id": "20,32",
-   "at": [
-    20,
-    32
-   ],
-   "to": "verda_2",
-   "ok": false,
-   "steps": 1,
-   "why": "timeout 90 s",
-   "start": [
-    24,
-    32
-   ],
-   "ms": 421635
-  },
-  {
-   "map": "well",
-   "kind": "stairs",
-   "id": "",
-   "at": [
-    18,
-    3
-   ],
-   "to": "world",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 6799
+   "ms": 500548
   },
   {
    "map": "world",
@@ -145,8 +78,13 @@
    ],
    "to": "lighthouse_1",
    "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 2
+   "steps": 1,
+   "why": "timeout 90 s",
+   "start": [
+    106,
+    128
+   ],
+   "ms": 528155
   },
   {
    "map": "world",
@@ -158,8 +96,13 @@
    ],
    "to": "well",
    "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "steps": 1,
+   "why": "timeout 90 s",
+   "start": [
+    77,
+    83
+   ],
+   "ms": 551209
   },
   {
    "map": "world",
@@ -171,8 +114,13 @@
    ],
    "to": "hut",
    "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
+   "steps": 1,
+   "why": "timeout 90 s",
+   "start": [
+    68,
+    65
+   ],
+   "ms": 433601
   },
   {
    "map": "world",
@@ -185,7 +133,7 @@
    "to": "sandedge",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 10
+   "ms": 102832
   },
   {
    "map": "world",
@@ -198,7 +146,7 @@
    "to": "snow_woods",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
+   "ms": 27
   },
   {
    "map": "world",
@@ -211,7 +159,7 @@
    "to": "peak_1",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ms": 0
   },
   {
    "map": "world",
@@ -237,7 +185,7 @@
    "to": "aurora",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
+   "ms": 93
   },
   {
    "map": "world",
@@ -250,7 +198,7 @@
    "to": "frost_ship_1",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ms": 100
   },
   {
    "map": "world",
@@ -276,7 +224,7 @@
    "to": "pharos",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
+   "ms": 1
   },
   {
    "map": "world",
@@ -289,7 +237,7 @@
    "to": "fern",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 9
+   "ms": 20
   },
   {
    "map": "world",
@@ -302,7 +250,7 @@
    "to": "yura",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ms": 3
   },
   {
    "map": "world",
@@ -315,7 +263,7 @@
    "to": "kasim",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
+   "ms": 1
   },
   {
    "map": "world",
@@ -354,7 +302,7 @@
    "to": "desert_camp2",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
+   "ms": 1
   },
   {
    "map": "world",
@@ -393,7 +341,7 @@
    "to": "desert_wellroom",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ms": 0
   },
   {
    "map": "world",
@@ -406,7 +354,7 @@
    "to": "desert_hawks_1",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
+   "ms": 9
   },
   {
    "map": "world",
@@ -419,7 +367,7 @@
    "to": "desert_rocks",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
+   "ms": 1
   },
   {
    "map": "world",
@@ -445,7 +393,7 @@
    "to": "yule",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 16
+   "ms": 0
   },
   {
    "map": "world",
@@ -471,111 +419,7 @@
    "to": "pass_inn",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
-  },
-  {
-   "map": "yura",
-   "kind": "door",
-   "id": "yura_b_inn",
-   "at": [
-    14,
-    5
-   ],
-   "to": "yura_inn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 8
-  },
-  {
-   "map": "yura",
-   "kind": "door",
-   "id": "yura_b_elder",
-   "at": [
-    5,
-    12
-   ],
-   "to": "yura_home_elder",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
    "ms": 0
-  },
-  {
-   "map": "yura",
-   "kind": "door",
-   "id": "yura_b_h1",
-   "at": [
-    23,
-    6
-   ],
-   "to": "yura_home1",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
-  },
-  {
-   "map": "yura",
-   "kind": "door",
-   "id": "yura_b_h2",
-   "at": [
-    25,
-    14
-   ],
-   "to": "yura_home2",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "yura",
-   "kind": "door",
-   "id": "yura_b_h3",
-   "at": [
-    22,
-    22
-   ],
-   "to": "yura_home3",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 9
-  },
-  {
-   "map": "yura",
-   "kind": "door",
-   "id": "yura_b_h4",
-   "at": [
-    7,
-    21
-   ],
-   "to": "yura_home4",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "yura",
-   "kind": "exit",
-   "id": "14,27",
-   "at": [
-    14,
-    27
-   ],
-   "to": "world",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "yura_home1",
-   "kind": "exit",
-   "id": "3,6",
-   "at": [
-    3,
-    6
-   ],
-   "to": "yura",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
   },
   {
    "map": "yura_home2",
@@ -588,59 +432,7 @@
    "to": "yura",
    "ok": false,
    "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "yura_home3",
-   "kind": "exit",
-   "id": "3,6",
-   "at": [
-    3,
-    6
-   ],
-   "to": "yura",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 19
-  },
-  {
-   "map": "yura_home4",
-   "kind": "exit",
-   "id": "4,7",
-   "at": [
-    4,
-    7
-   ],
-   "to": "yura",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "yura_home_elder",
-   "kind": "exit",
-   "id": "4,7",
-   "at": [
-    4,
-    7
-   ],
-   "to": "yura",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "yura_inn",
-   "kind": "exit",
-   "id": "4,8",
-   "at": [
-    4,
-    8
-   ],
-   "to": "yura",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
+   "ms": 1
   }
  ],
  "looks": [
@@ -684,34 +476,6 @@
    "npc": "fawn_after",
    "look": "ani_fawn",
    "art": "ani_fawn",
-   "ok": true
-  },
-  {
-   "map": "verda_2",
-   "npc": "pim",
-   "look": "npc_pim",
-   "art": "npc_pim",
-   "ok": true
-  },
-  {
-   "map": "verda_2",
-   "npc": "fawn",
-   "look": "ani_fawn",
-   "art": "ani_fawn",
-   "ok": true
-  },
-  {
-   "map": "verda_2",
-   "npc": "hans",
-   "look": "npc_hans",
-   "art": "npc_hans",
-   "ok": true
-  },
-  {
-   "map": "verda_2",
-   "npc": "roy",
-   "look": "npc_roy",
-   "art": "npc_roy",
    "ok": true
   },
   {
@@ -813,115 +577,10 @@
    "ok": true
   },
   {
-   "map": "yura",
-   "npc": "yura_elder",
-   "look": "npc_yura_elder",
-   "art": "npc_yura_elder",
-   "ok": true
-  },
-  {
-   "map": "yura",
-   "npc": "yura_miller",
-   "look": "npc_yura_folk_2",
-   "art": "npc_yura_man_2",
-   "ok": true
-  },
-  {
-   "map": "yura",
-   "npc": "yura_nanny",
-   "look": "npc_yura_folk_1",
-   "art": "npc_yura_woman_1",
-   "ok": true
-  },
-  {
-   "map": "yura",
-   "npc": "yura_grave",
-   "look": "npc_yura_folk_3",
-   "art": "npc_yura_woman_3",
-   "ok": true
-  },
-  {
-   "map": "yura",
-   "npc": "yura_lamp",
-   "look": "npc_yura_folk_4",
-   "art": "npc_yura_man_4",
-   "ok": true
-  },
-  {
-   "map": "yura",
-   "npc": "yura_seller",
-   "look": "npc_yura_folk_1",
-   "art": "npc_yura_woman_1",
-   "ok": true
-  },
-  {
-   "map": "yura",
-   "npc": "yura_child",
-   "look": "npc_child_4",
-   "art": "npc_forest_child_4",
-   "ok": true
-  },
-  {
-   "map": "yura",
-   "npc": "yura_cat",
-   "look": "ani_cat",
-   "art": "ani_cat",
-   "ok": true
-  },
-  {
-   "map": "yura",
-   "npc": "laila_mother",
-   "look": "npc_old_f_2",
-   "art": "npc_yura_woman_2",
-   "ok": true
-  },
-  {
-   "map": "yura_home1",
-   "npc": "long",
-   "look": "npc_yura_folk_1",
-   "art": "npc_yura_woman_1",
-   "ok": true
-  },
-  {
    "map": "yura_home2",
    "npc": "uncalled",
    "look": "npc_yura_folk_3",
    "art": "npc_yura_woman_3",
-   "ok": true
-  },
-  {
-   "map": "yura_home3",
-   "npc": "dreamer",
-   "look": "npc_yura_folk_4",
-   "art": "npc_yura_man_4",
-   "ok": true
-  },
-  {
-   "map": "yura_home4",
-   "npc": "namekid",
-   "look": "npc_child_3",
-   "art": "npc_forest_child_3",
-   "ok": true
-  },
-  {
-   "map": "yura_home_elder",
-   "npc": "aide",
-   "look": "npc_yura_folk_2",
-   "art": "npc_yura_man_2",
-   "ok": true
-  },
-  {
-   "map": "yura_inn",
-   "npc": "yura_innkeeper",
-   "look": "npc_yura_folk_3",
-   "art": "npc_yura_woman_3",
-   "ok": true
-  },
-  {
-   "map": "yura_inn",
-   "npc": "yura_guest",
-   "look": "npc_yura_folk_4",
-   "art": "npc_yura_man_4",
    "ok": true
   }
  ],
