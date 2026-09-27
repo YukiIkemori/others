@@ -55,7 +55,16 @@
       await ev.say('otto', spell ? '閃いた術は、もう忘れん。\nメニューの『技・術』で\n見られるぞ。' : '閃いた技は、もう忘れん。\nメニューの『技・術』で\n見られるぞ。', { face: 'otto:smile' });
       await ev.say('otto', 'わしは港へ戻っておる。\n上の灯室を、頼んだぞ。', { voice: 'v_otto_tower_05', face: 'otto:neutral' });
       ev.setFlag('prologue_tutorial');
-      try { await ev.npc('otto').move([[15, 20], [17, 20]]); await ev.npc('otto').hide(); } catch (e) { /* */ }
+      // 去り方（持ち主の決まり 2026-09-27: その場でパッと消さない）。入口の扉まで歩き、扉の音を鳴らして外へ出る
+      try {
+        await ev.npc('otto').move([[15, 20], [17, 20], [17, 21]]);
+        await ev.npc('otto').face('s');
+        await ev.wait(200);
+        ev.sfx('door');
+        await ev.npc('otto').hide();
+        await ev.wait(250);
+        await E.narr(ev, 'オットーは、港へ帰っていった。');
+      } catch (e) { /* */ }
     },
   };
 

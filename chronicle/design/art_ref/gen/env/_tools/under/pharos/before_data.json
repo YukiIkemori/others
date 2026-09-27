@@ -1,0 +1,2230 @@
+{
+ "id": "pharos",
+ "w": 64,
+ "h": 48,
+ "rows": [
+  "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT~~~~~~~~~~~~",
+  "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR~~~~~~~~~~~~",
+  "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR~~~~~~~~~~~~",
+  "QQcccccccccccccccccccccccccccccccccccccccccQpppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccccccccccccccccccccccccccQpppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccccccccccccccccccccccccccQpppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccccccccccccccccccccccccccQpppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccccccccccccccccccccccccccQpppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccccccccccccccccccccccccccQpppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccccccccccccccccccccccccccQpppppppppppppppp~~~~",
+  "QQcccccccccccccccccccccccccccccccccccccccccQpppppppppppppppp~~~~",
+  "QQcccccccccccccccccccccccccccccccccccccccccQpppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccccccccccccccccccccccccccepppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccssssssssssssssssccccccccepppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccssssssssssssssssccccccccQpppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccssssssssssssssssccccccccQpppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccssssssssssssssssccccccccQpppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccssssssssssssssssccccccccQpppppppp~~~~~~~~~~~~",
+  "..cccccccccccccccccssssssssssssssssccccccccQpppppppp~~~~~~~~~~~~",
+  "..cccccccccccccccccssssssssssssssssccccccccQpppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccssssssssssssssssccccccccQpppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccssssssssssssssssccccccccQppppppppppppppppppp~",
+  "QQcccccccccccccccccssssssssssssssssccccccccQppppppppppppppppppp~",
+  "QQcccccccccccccccccssssssssssssssssccccccccQppppppppppppppppppp~",
+  "QQcccccccccccccccccssssssssssssssssccccccccQpppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccccccccccccccccccccccccccQpppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccccccccccccccccccccccccccQpppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccccccccccccccccccccccccccQpppppppp~~~~~~~~~~~~",
+  "QQccooccccccccccccccooccccccccccccccccoocccQpppppppp~~~~~~~~~~~~",
+  "QQcccccccccccccccccccccccccccccccccccccccccQpppppppp~~~~~~~~~~~~",
+  "QQQQQQQQQQQQeeQQQQQQQQQQQQQQQQeeQQQQQQQQQQQQpppppppp~~~~~~~~~~~~",
+  "pppppppppppppppppppppppppppppppppppppppppppppppppppp~~~~~~~~~~~~",
+  "pppppppppppppppppppppppppppppppppppppppppppppppppppp~~~~~~~~~~~~",
+  "pppppppppppppppppppppppppppppppppppppppppppppppppppp~~~~~~~~~~~~",
+  "pppppppppppppppppppppppppppppppppppppppppppppppppppp~~~~~~~~~~~~",
+  "pppppppppppppppppppppppppppppppppppppppppppppppppppp~~~~~~~~~~~~",
+  "~~~~~~~pp~~~~~~~~~~~~~ppp~~~~~~~~~~~pp~~~~~~~~~~~~~~~~~~~~~~~~~~",
+  "~~~~~~~pp~~~~~~~~~~~~~ppp~~~~~~~~~~~pp~~~~~~~~~~~~~~~~~~~~~~~~~~",
+  "~~~~~~~pp~~~~~~~~~~~~~ppp~~~~~~~~~~~pp~~~~~~~~~~~~~~~~~~~~~~~~~~",
+  "~~~~~~~pp~~~~~~~~~~~~~ppp~~~~~~~~~~~pp~~~~~~~~~~~~~~~~~~~~~~~~~~",
+  "~~~~~~~pp~~~~~~~~~~~~~ppp~~~~~~~~~~~pp~~~~~~~~~~~~~~~~~~~~~~~~~~",
+  "~~~~~~~pp~~~~~~~~~~~~~ppp~~~~~~~~~~~pp~~~~~~~~~~~~~~~~~~~~~~~~~~",
+  "~~~~~~~pp~~~~~~~~~~~~~ppp~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+  "~~~~~~~~~~~~~~~~~~~~~~ppp~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+  "~~~~~~~~~~~~~~~~~~~~ppppppp~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+  "~~~~~~~~~~~~~~~~~~~~ppppppp~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+  "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+  "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+ ],
+ "legend": {
+  "c": {
+   "mat": "cobble"
+  },
+  "s": {
+   "mat": "stone_floor"
+  },
+  ".": {
+   "mat": "road"
+  },
+  "o": {
+   "mat": "flowers"
+  },
+  "T": {
+   "mat": "tree",
+   "solid": true
+  },
+  "R": {
+   "mat": "cliff",
+   "solid": true,
+   "rise": 1
+  },
+  "Q": {
+   "mat": "wall_stone",
+   "solid": true,
+   "rise": 1
+  },
+  "e": {
+   "mat": "stone_floor",
+   "name": "stairs"
+  },
+  "p": {
+   "mat": "pier"
+  },
+  "~": {
+   "mat": "sea",
+   "walk": false
+  }
+ },
+ "objects": [
+  {
+   "type": "building",
+   "id": "ph_inn",
+   "x": 3,
+   "y": 3,
+   "w": 8,
+   "h": 6,
+   "wall": 3,
+   "roof": "slate",
+   "mat": "plaster",
+   "windows": 3,
+   "sign": "inn",
+   "lamp": true,
+   "flowers": true,
+   "door": {
+    "x": 6,
+    "y": 8,
+    "to": {
+     "map": "pharos_inn",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "ph_tavern",
+   "x": 12,
+   "y": 3,
+   "w": 11,
+   "h": 6,
+   "wall": 3,
+   "roof": "terra",
+   "mat": "stone",
+   "windows": 4,
+   "sign": "tavern",
+   "lamp": true,
+   "hip": true,
+   "chimney": true,
+   "door": {
+    "x": 17,
+    "y": 8,
+    "to": {
+     "map": "pharos_tavern",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "ph_shop",
+   "x": 25,
+   "y": 3,
+   "w": 6,
+   "h": 6,
+   "wall": 3,
+   "roof": "slate",
+   "mat": "plaster",
+   "windows": 2,
+   "sign": "item",
+   "lamp": true,
+   "awning": true,
+   "door": {
+    "x": 27,
+    "y": 8,
+    "to": {
+     "map": "pharos_shop",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "ph_house1",
+   "x": 32,
+   "y": 3,
+   "w": 5,
+   "h": 6,
+   "wall": 3,
+   "roof": "terra",
+   "mat": "plaster",
+   "windows": 2,
+   "shutters": "b",
+   "door": {
+    "x": 34,
+    "y": 8,
+    "to": {
+     "map": "pharos_home1",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "ph_house2",
+   "x": 38,
+   "y": 3,
+   "w": 5,
+   "h": 6,
+   "wall": 3,
+   "roof": "slate",
+   "mat": "brick",
+   "windows": 2,
+   "chimney": true,
+   "door": {
+    "x": 40,
+    "y": 8,
+    "to": {
+     "map": "pharos_home2",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "ph_record",
+   "x": 3,
+   "y": 12,
+   "w": 7,
+   "h": 6,
+   "wall": 3,
+   "roof": "slate",
+   "mat": "stone",
+   "windows": 2,
+   "sign": "record",
+   "lamp": true,
+   "door": {
+    "x": 6,
+    "y": 17,
+    "to": {
+     "map": "pharos_record",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "ph_smith",
+   "x": 11,
+   "y": 12,
+   "w": 7,
+   "h": 6,
+   "wall": 3,
+   "roof": "shingle",
+   "mat": "brick",
+   "windows": 2,
+   "sign": "weapon",
+   "lamp": true,
+   "chimney": true,
+   "door": {
+    "x": 14,
+    "y": 17,
+    "to": {
+     "map": "pharos_smith",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "ph_house3",
+   "x": 36,
+   "y": 13,
+   "w": 6,
+   "h": 5,
+   "wall": 2,
+   "roof": "terra",
+   "mat": "plaster",
+   "windows": 2,
+   "flowers": true,
+   "door": {
+    "x": 38,
+    "y": 17,
+    "to": {
+     "map": "pharos_home3",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "ph_house4",
+   "x": 3,
+   "y": 20,
+   "w": 6,
+   "h": 5,
+   "wall": 2,
+   "roof": "slate",
+   "mat": "plaster",
+   "windows": 2,
+   "shutters": "g",
+   "door": {
+    "x": 5,
+    "y": 24,
+    "to": {
+     "map": "pharos_home4",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "ph_house5",
+   "x": 10,
+   "y": 20,
+   "w": 7,
+   "h": 5,
+   "wall": 2,
+   "roof": "terra",
+   "mat": "plaster",
+   "windows": 2,
+   "flowers": true,
+   "chimney": true,
+   "door": {
+    "x": 13,
+    "y": 24,
+    "to": {
+     "map": "pharos_home5",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "ph_house6",
+   "x": 36,
+   "y": 20,
+   "w": 6,
+   "h": 5,
+   "wall": 2,
+   "roof": "slate",
+   "mat": "brick",
+   "windows": 2,
+   "door": {
+    "x": 38,
+    "y": 24,
+    "to": {
+     "map": "pharos_home6",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "ph_shipyard",
+   "x": 45,
+   "y": 16,
+   "w": 6,
+   "h": 6,
+   "wall": 3,
+   "roof": "shingle",
+   "mat": "plank",
+   "windows": 1,
+   "sign": "guild",
+   "lamp": true,
+   "door": {
+    "x": 47,
+    "y": 21,
+    "to": {
+     "map": "pharos_shipyard",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "prop",
+   "id": "well",
+   "x": 26,
+   "y": 18
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 20,
+   "y": 14
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 32,
+   "y": 13
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 19,
+   "y": 23
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 33,
+   "y": 23
+  },
+  {
+   "type": "prop",
+   "id": "stall",
+   "x": 22,
+   "y": 22
+  },
+  {
+   "type": "prop",
+   "id": "stall",
+   "x": 30,
+   "y": 22
+  },
+  {
+   "type": "prop",
+   "id": "board",
+   "x": 21,
+   "y": 14
+  },
+  {
+   "type": "prop",
+   "id": "board",
+   "x": 23,
+   "y": 22
+  },
+  {
+   "type": "prop",
+   "id": "bench",
+   "x": 24,
+   "y": 20
+  },
+  {
+   "type": "prop",
+   "id": "bench",
+   "x": 28,
+   "y": 20
+  },
+  {
+   "type": "prop",
+   "id": "flower_pot",
+   "x": 19,
+   "y": 13
+  },
+  {
+   "type": "prop",
+   "id": "flower_pot",
+   "x": 34,
+   "y": 13
+  },
+  {
+   "type": "prop",
+   "id": "flower_pot",
+   "x": 19,
+   "y": 24
+  },
+  {
+   "type": "prop",
+   "id": "flower_pot",
+   "x": 34,
+   "y": 24
+  },
+  {
+   "type": "prop",
+   "id": "crate",
+   "x": 31,
+   "y": 21
+  },
+  {
+   "type": "prop",
+   "id": "barrel",
+   "x": 21,
+   "y": 21
+  },
+  {
+   "type": "prop",
+   "id": "sack",
+   "x": 29,
+   "y": 22
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 4,
+   "y": 11
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 11,
+   "y": 9
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 16,
+   "y": 11
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 22,
+   "y": 9
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 32,
+   "y": 9
+  },
+  {
+   "type": "prop",
+   "id": "barrel",
+   "x": 11,
+   "y": 8
+  },
+  {
+   "type": "prop",
+   "id": "barrel",
+   "x": 23,
+   "y": 8
+  },
+  {
+   "type": "prop",
+   "id": "barrel",
+   "x": 23,
+   "y": 7
+  },
+  {
+   "type": "prop",
+   "id": "crate",
+   "x": 31,
+   "y": 8
+  },
+  {
+   "type": "prop",
+   "id": "crate",
+   "x": 24,
+   "y": 8
+  },
+  {
+   "type": "prop",
+   "id": "sack",
+   "x": 37,
+   "y": 9
+  },
+  {
+   "type": "prop",
+   "id": "flower_pot",
+   "x": 2,
+   "y": 9
+  },
+  {
+   "type": "prop",
+   "id": "flower_pot",
+   "x": 10,
+   "y": 9
+  },
+  {
+   "type": "prop",
+   "id": "flower_pot",
+   "x": 37,
+   "y": 8
+  },
+  {
+   "type": "prop",
+   "id": "bench",
+   "x": 33,
+   "y": 11
+  },
+  {
+   "type": "prop",
+   "id": "table",
+   "x": 20,
+   "y": 10
+  },
+  {
+   "type": "prop",
+   "id": "chair",
+   "x": 19,
+   "y": 10
+  },
+  {
+   "type": "prop",
+   "id": "chair",
+   "x": 21,
+   "y": 10
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 4,
+   "y": 25
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 40,
+   "y": 29
+  },
+  {
+   "type": "prop",
+   "id": "barrel",
+   "x": 10,
+   "y": 17
+  },
+  {
+   "type": "prop",
+   "id": "barrel",
+   "x": 18,
+   "y": 12
+  },
+  {
+   "type": "prop",
+   "id": "crate",
+   "x": 18,
+   "y": 13
+  },
+  {
+   "type": "prop",
+   "id": "planter",
+   "x": 9,
+   "y": 19
+  },
+  {
+   "type": "prop",
+   "id": "bench",
+   "x": 6,
+   "y": 27
+  },
+  {
+   "type": "prop",
+   "id": "bench",
+   "x": 25,
+   "y": 27
+  },
+  {
+   "type": "prop",
+   "id": "table",
+   "x": 14,
+   "y": 27
+  },
+  {
+   "type": "prop",
+   "id": "chair",
+   "x": 13,
+   "y": 27
+  },
+  {
+   "type": "prop",
+   "id": "chair",
+   "x": 15,
+   "y": 27
+  },
+  {
+   "type": "prop",
+   "id": "barrel",
+   "x": 34,
+   "y": 28
+  },
+  {
+   "type": "prop",
+   "id": "barrel",
+   "x": 35,
+   "y": 28
+  },
+  {
+   "type": "prop",
+   "id": "crate",
+   "x": 33,
+   "y": 28
+  },
+  {
+   "type": "prop",
+   "id": "sack",
+   "x": 41,
+   "y": 27
+  },
+  {
+   "type": "prop",
+   "id": "hay",
+   "x": 42,
+   "y": 26
+  },
+  {
+   "type": "prop",
+   "id": "flower_pot",
+   "x": 9,
+   "y": 28
+  },
+  {
+   "type": "prop",
+   "id": "flower_pot",
+   "x": 27,
+   "y": 28
+  },
+  {
+   "type": "prop",
+   "id": "stump",
+   "x": 42,
+   "y": 19
+  },
+  {
+   "type": "prop",
+   "id": "rock_small",
+   "x": 2,
+   "y": 24
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 4,
+   "y": 31
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 10,
+   "y": 31
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 33,
+   "y": 31
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 44,
+   "y": 6
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 44,
+   "y": 11
+  },
+  {
+   "type": "prop",
+   "id": "lamp_post",
+   "x": 44,
+   "y": 27
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 5,
+   "y": 35
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 11,
+   "y": 35
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 19,
+   "y": 35
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 27,
+   "y": 35
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 33,
+   "y": 35
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 41,
+   "y": 35
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 51,
+   "y": 7
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 51,
+   "y": 14
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 51,
+   "y": 26
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 51,
+   "y": 30
+  },
+  {
+   "type": "prop",
+   "id": "net",
+   "x": 13,
+   "y": 34
+  },
+  {
+   "type": "prop",
+   "id": "net",
+   "x": 44,
+   "y": 33
+  },
+  {
+   "type": "prop",
+   "id": "crate",
+   "x": 30,
+   "y": 34
+  },
+  {
+   "type": "prop",
+   "id": "crate",
+   "x": 31,
+   "y": 34
+  },
+  {
+   "type": "prop",
+   "id": "barrel",
+   "x": 32,
+   "y": 34
+  },
+  {
+   "type": "prop",
+   "id": "barrel",
+   "x": 1,
+   "y": 33
+  },
+  {
+   "type": "prop",
+   "id": "sack",
+   "x": 2,
+   "y": 33
+  },
+  {
+   "type": "prop",
+   "id": "barrel",
+   "x": 45,
+   "y": 8
+  },
+  {
+   "type": "prop",
+   "id": "barrel",
+   "x": 45,
+   "y": 9
+  },
+  {
+   "type": "prop",
+   "id": "crate",
+   "x": 50,
+   "y": 5
+  },
+  {
+   "type": "prop",
+   "id": "crate",
+   "x": 50,
+   "y": 18
+  },
+  {
+   "type": "prop",
+   "id": "sack",
+   "x": 45,
+   "y": 26
+  },
+  {
+   "type": "prop",
+   "id": "net",
+   "x": 50,
+   "y": 28
+  },
+  {
+   "type": "prop",
+   "id": "hay",
+   "x": 45,
+   "y": 4
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 7,
+   "y": 42
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 8,
+   "y": 42
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 22,
+   "y": 45
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 26,
+   "y": 45
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 36,
+   "y": 41
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 59,
+   "y": 9
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 62,
+   "y": 21
+  },
+  {
+   "type": "prop",
+   "id": "bollard",
+   "x": 62,
+   "y": 23
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 9,
+   "y": 40
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 25,
+   "y": 40
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 38,
+   "y": 40
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 59,
+   "y": 10
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 61,
+   "y": 22
+  },
+  {
+   "type": "prop",
+   "id": "ship",
+   "x": 18,
+   "y": 41
+  },
+  {
+   "type": "prop",
+   "id": "ship",
+   "x": 57,
+   "y": 18
+  },
+  {
+   "type": "prop",
+   "id": "ship",
+   "x": 57,
+   "y": 26
+  },
+  {
+   "type": "prop",
+   "id": "rowboat",
+   "x": 10,
+   "y": 38
+  },
+  {
+   "type": "prop",
+   "id": "rowboat",
+   "x": 34,
+   "y": 38
+  },
+  {
+   "type": "prop",
+   "id": "rowboat",
+   "x": 55,
+   "y": 12
+  },
+  {
+   "type": "prop",
+   "id": "rowboat",
+   "x": 40,
+   "y": 44
+  },
+  {
+   "type": "sign",
+   "x": 2,
+   "y": 16,
+   "text": "港町ファロス\n西へ出れば、半島の街道。"
+  },
+  {
+   "type": "sign",
+   "x": 49,
+   "y": 22,
+   "text": "造船所\n小舟の修理、承ります。"
+  },
+  {
+   "type": "sign",
+   "x": 25,
+   "y": 44,
+   "text": "定期船の桟橋\n「しばらく欠航いたします。」"
+  },
+  {
+   "type": "examine",
+   "x": 23,
+   "y": 22,
+   "event": "pharos_oilboard"
+  },
+  {
+   "type": "examine",
+   "x": 21,
+   "y": 14,
+   "event": "pharos_board"
+  },
+  {
+   "type": "examine",
+   "x": 61,
+   "y": 21,
+   "event": "pharos_tract"
+  },
+  {
+   "type": "prop",
+   "id": "crate",
+   "x": 61,
+   "y": 21
+  },
+  {
+   "type": "chest",
+   "id": "ph_c1",
+   "x": 50,
+   "y": 3,
+   "item": "i_ether",
+   "n": 1
+  },
+  {
+   "type": "chest",
+   "id": "ph_c2",
+   "x": 37,
+   "y": 40,
+   "pool": "p_T"
+  }
+ ],
+ "npcs": [
+  {
+   "id": "otto",
+   "look": "otto",
+   "name": "オットー",
+   "title": "灯台守",
+   "x": 24,
+   "y": 34,
+   "dir": "s",
+   "move": "still",
+   "pushable": false,
+   "talk": "pharos_otto",
+   "reward": "item",
+   "key": "pharos_otto"
+  },
+  {
+   "id": "gateguard",
+   "look": "npc_guard_1",
+   "name": "門番",
+   "x": 2,
+   "y": 20,
+   "dir": "e",
+   "move": "still",
+   "pushable": false,
+   "talk": "pharos_gateguard",
+   "reward": "news",
+   "key": "pharos_gateguard",
+   "bark": "v_gateguard_greet_01"
+  },
+  {
+   "id": "well_child",
+   "look": "npc_child_2",
+   "x": 27,
+   "y": 20,
+   "dir": "s",
+   "move": {
+    "route": [
+     [
+      27,
+      20
+     ],
+     [
+      25,
+      20
+     ],
+     [
+      25,
+      21
+     ],
+     [
+      27,
+      21
+     ]
+    ],
+    "wait": 1400
+   },
+   "talk": "pharos_well_child",
+   "reward": "side",
+   "key": "pharos_well_child"
+  },
+  {
+   "id": "tadeo",
+   "look": "npc_tadeo",
+   "name": "タデオ",
+   "title": "灯守組合の油売り",
+   "x": 23,
+   "y": 23,
+   "dir": "n",
+   "move": "still",
+   "talk": "pharos_tadeo",
+   "reward": "side",
+   "key": "pharos_tadeo",
+   "bark": "v_tadeo_greet_01"
+  },
+  {
+   "id": "fishwife",
+   "look": "npc_woman_3",
+   "x": 14,
+   "y": 33,
+   "dir": "s",
+   "move": "still",
+   "talk": "pharos_fishwife",
+   "reward": "item",
+   "key": "pharos_fishwife",
+   "bark": "v_fishwife_greet_01"
+  },
+  {
+   "id": "old_sailor",
+   "look": "npc_sailor_2",
+   "x": 47,
+   "y": 13,
+   "dir": "w",
+   "move": "still",
+   "talk": "pharos_old_sailor",
+   "reward": "hint",
+   "key": "pharos_old_sailor"
+  },
+  {
+   "id": "ship_sailor",
+   "look": "npc_sailor_1",
+   "x": 57,
+   "y": 22,
+   "dir": "e",
+   "move": "wander",
+   "talk": "pharos_ship_sailor",
+   "reward": "news",
+   "key": "pharos_ship_sailor"
+  },
+  {
+   "id": "plaza_woman",
+   "look": "npc_woman_1",
+   "x": 29,
+   "y": 16,
+   "dir": "s",
+   "move": "wander",
+   "talk": "pharos_plaza_woman",
+   "reward": "news",
+   "key": "pharos_plaza_woman"
+  },
+  {
+   "id": "bench_old",
+   "look": "npc_old_m_2",
+   "x": 6,
+   "y": 26,
+   "dir": "s",
+   "move": "still",
+   "talk": "pharos_bench_old",
+   "reward": "news",
+   "key": "pharos_bench_old"
+  },
+  {
+   "id": "merchant",
+   "look": "npc_merchant_1",
+   "x": 30,
+   "y": 11,
+   "dir": "s",
+   "move": {
+    "route": [
+     [
+      28,
+      11
+     ],
+     [
+      34,
+      11
+     ]
+    ],
+    "wait": 1800
+   },
+   "talk": "pharos_merchant",
+   "reward": "discount",
+   "key": "pharos_merchant"
+  },
+  {
+   "id": "yena",
+   "look": "npc_yena",
+   "name": "イェナ",
+   "title": "静夜会",
+   "x": 59,
+   "y": 22,
+   "dir": "e",
+   "move": "still",
+   "talk": "pharos_yena",
+   "reward": null,
+   "key": "pharos_yena"
+  },
+  {
+   "id": "kid_pier",
+   "look": "npc_child_4",
+   "x": 8,
+   "y": 38,
+   "dir": "s",
+   "move": "still",
+   "talk": "pharos_kid_pier",
+   "reward": "news",
+   "key": "pharos_kid_pier"
+  },
+  {
+   "id": "dog",
+   "look": "ani_dog",
+   "name": "いぬ",
+   "x": 16,
+   "y": 29,
+   "dir": "e",
+   "move": "wander",
+   "talk": {
+    "lines": [
+     {
+      "text": "いぬが、しっぽをふっている。"
+     }
+    ]
+   }
+  },
+  {
+   "id": "berna",
+   "look": "berna",
+   "name": "ベルナ",
+   "x": 7,
+   "y": 11,
+   "dir": "n",
+   "move": "still",
+   "pushable": false,
+   "cond": [
+    "prologue_boss",
+    "!prologue_done"
+   ],
+   "talk": "pharos_departure"
+  },
+  {
+   "id": "cheer_a",
+   "look": "npc_man_1",
+   "x": 4,
+   "y": 10,
+   "dir": "e",
+   "move": "still",
+   "cond": [
+    "prologue_boss",
+    "!prologue_done"
+   ],
+   "talk": "pharos_departure"
+  },
+  {
+   "id": "cheer_b",
+   "look": "npc_woman_1",
+   "x": 9,
+   "y": 10,
+   "dir": "w",
+   "move": "still",
+   "cond": [
+    "prologue_boss",
+    "!prologue_done"
+   ],
+   "talk": "pharos_departure"
+  }
+ ],
+ "spawns": {
+  "gate_w": {
+   "x": 2,
+   "y": 18,
+   "dir": "e"
+  },
+  "harbor": {
+   "x": 24,
+   "y": 32,
+   "dir": "s"
+  },
+  "warp": {
+   "x": 26,
+   "y": 21,
+   "dir": "s"
+  },
+  "inn_front": {
+   "x": 6,
+   "y": 10,
+   "dir": "s"
+  },
+  "inn_door": {
+   "x": 6,
+   "y": 9,
+   "dir": "s"
+  },
+  "tavern_door": {
+   "x": 17,
+   "y": 9,
+   "dir": "s"
+  },
+  "shop_door": {
+   "x": 27,
+   "y": 9,
+   "dir": "s"
+  },
+  "record_door": {
+   "x": 6,
+   "y": 18,
+   "dir": "s"
+  },
+  "smith_door": {
+   "x": 14,
+   "y": 18,
+   "dir": "s"
+  },
+  "shipyard_door": {
+   "x": 47,
+   "y": 22,
+   "dir": "s"
+  },
+  "house1_door": {
+   "x": 34,
+   "y": 9,
+   "dir": "s"
+  },
+  "house2_door": {
+   "x": 40,
+   "y": 9,
+   "dir": "s"
+  },
+  "house3_door": {
+   "x": 38,
+   "y": 18,
+   "dir": "s"
+  },
+  "house4_door": {
+   "x": 5,
+   "y": 25,
+   "dir": "s"
+  },
+  "house5_door": {
+   "x": 13,
+   "y": 25,
+   "dir": "s"
+  },
+  "house6_door": {
+   "x": 38,
+   "y": 25,
+   "dir": "s"
+  }
+ },
+ "exits": [
+  {
+   "x": 0,
+   "y": 18,
+   "w": 1,
+   "h": 2,
+   "to": {
+    "map": "world",
+    "spawn": "pharos"
+   }
+  }
+ ],
+ "walk": [
+  "################################################################",
+  "################################################################",
+  "################################################################",
+  "##.########.###########..######.#####.######......#.############",
+  "##.########.###########..######.#####.######.#......############",
+  "##.########.###########..######.#####.######......#.############",
+  "##.########.###########..######.#####.#######.......############",
+  "##.########.############.######.#####.######.......#############",
+  "##.###.##########.#########.######.##.##.###.#......############",
+  "##.........#..........#.........#..........#.#.............#####",
+  "##..................#......................#................####",
+  "##..#...........#..........................##.......############",
+  "##.#######.########.................................############",
+  "##.#######.########.............#...######..........############",
+  "##.#######.#######..##..............######.#.......#############",
+  "##.#######.#######..................######.#........############",
+  "##########.#######..................######.#.######.############",
+  "##.###.#######.###..................##.###.#.######.############",
+  "..........................#................#.######.############",
+  ".........#................................##.######.############",
+  "##.######.#######...................######.#.######.############",
+  "##.######.#######....#.........#....######.#.##.###..........###",
+  "##.######.#######.....##......#.....######.#.....#.............#",
+  "##.######.#######..#.............#..######.#..................##",
+  "##.##.###.###.###...................##.###.#........############",
+  "##..#......................................#........############",
+  "##........................................##.......#############",
+  "##............#............................##.......############",
+  "##...............................###.......#........############",
+  "##......................................#..#........############",
+  "############..################..############.......#############",
+  "....#.....#......................#..................############",
+  "....................................................############",
+  ".#..................................................############",
+  "..............................###...................############",
+  ".....#.....#.......#.......#.....#.......#..........############",
+  "#######..#############...###########..##########################",
+  "#######..#############...###########..##########################",
+  "#######..#############...###########..##########################",
+  "#######..#############...###########..##########################",
+  "#######..#############...###########.###########################",
+  "#######..#############...############.##########################",
+  "######################...#######################################",
+  "######################...#######################################",
+  "####################.....#.#####################################",
+  "####################..#...######################################",
+  "################################################################",
+  "################################################################"
+ ],
+ "props": {
+  "barrel": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "crate": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "sack": {
+   "soft": true
+  },
+  "bench": {
+   "soft": true
+  },
+  "chair": {
+   "soft": true
+  },
+  "table": {
+   "solid": true,
+   "light": {
+    "r": 40,
+    "kind": "candle"
+   }
+  },
+  "bed": {
+   "solid": true
+  },
+  "bookshelf": {
+   "solid": true
+  },
+  "counter": {
+   "solid": true
+  },
+  "stove": {
+   "solid": true,
+   "light": {
+    "r": 70,
+    "kind": "fire"
+   }
+  },
+  "lamp_post": {
+   "solid": true,
+   "glow": true,
+   "shadow": "long",
+   "light": {
+    "r": 110,
+    "kind": "lamp"
+   }
+  },
+  "lantern": {
+   "soft": true,
+   "glow": true,
+   "light": {
+    "r": 60,
+    "kind": "lamp"
+   }
+  },
+  "fence": {
+   "solid": true
+  },
+  "flower_pot": {
+   "soft": true
+  },
+  "planter": {
+   "solid": true
+  },
+  "well": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "signboard": {
+   "solid": true
+  },
+  "board": {
+   "solid": true
+  },
+  "rock_small": {
+   "soft": true
+  },
+  "rock": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "stump": {
+   "solid": true
+  },
+  "log": {
+   "solid": true
+  },
+  "mushroom_glow": {
+   "soft": true,
+   "glow": true,
+   "light": {
+    "r": 34,
+    "kind": "crystal"
+   }
+  },
+  "firefly": {
+   "soft": true,
+   "glow": true
+  },
+  "rope_bridge": {
+   "overChars": true
+  },
+  "leaves_over": {
+   "overChars": true
+  },
+  "chest": {
+   "solid": true,
+   "glow": "sparkle",
+   "frames": [
+    "closed",
+    "open",
+    "rare_closed",
+    "rare_open"
+   ],
+   "light": {
+    "r": 34,
+    "kind": "chest"
+   }
+  },
+  "spring": {
+   "solid": true,
+   "glow": true,
+   "footprint": [
+    2,
+    2
+   ],
+   "frames": [
+    "f0",
+    "f1",
+    "f2",
+    "f3"
+   ],
+   "light": {
+    "r": 150,
+    "kind": "spring"
+   }
+  },
+  "brazier": {
+   "solid": true,
+   "frames": [
+    "off",
+    "on"
+   ],
+   "light": {
+    "r": 143,
+    "kind": "fire"
+   }
+  },
+  "torch": {
+   "solid": true,
+   "frames": [
+    "off",
+    "on"
+   ],
+   "light": {
+    "r": 90,
+    "kind": "fire"
+   }
+  },
+  "waylamp": {
+   "solid": true,
+   "frames": [
+    "off",
+    "on"
+   ],
+   "light": {
+    "r": 110,
+    "kind": "lamp"
+   }
+  },
+  "switch": {
+   "soft": true,
+   "frames": [
+    "off",
+    "on"
+   ]
+  },
+  "talestone": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "songstone": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 48,
+    "kind": "crystal"
+   }
+  },
+  "footprint": {
+   "soft": true,
+   "glow": true
+  },
+  "beacon": {
+   "glow": true,
+   "light": {
+    "r": 220,
+    "kind": "fire"
+   }
+  },
+  "stairs_up": {},
+  "stairs_down": {},
+  "door": {},
+  "bollard": {
+   "solid": true
+  },
+  "stall": {
+   "solid": true
+  },
+  "net": {
+   "soft": true
+  },
+  "rowboat": {
+   "solid": true
+  },
+  "ship": {
+   "solid": true,
+   "light": {
+    "r": 80,
+    "kind": "lamp"
+   }
+  },
+  "crystal": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 90,
+    "kind": "crystal"
+   }
+  },
+  "tent": {
+   "solid": true
+  },
+  "grave": {
+   "solid": true
+  },
+  "hay": {
+   "solid": true
+  },
+  "tree": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "pine": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "tree_giant": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "bush": {
+   "solid": true
+  },
+  "roots": {
+   "solid": true
+  },
+  "cupboard": {
+   "solid": true
+  },
+  "dresser": {
+   "solid": true
+  },
+  "stool": {
+   "soft": true
+  },
+  "house_plant": {
+   "soft": true
+  },
+  "shelf_jars": {
+   "solid": true
+  },
+  "wash_tub": {
+   "soft": true
+  },
+  "rug_roll": {
+   "soft": true
+  },
+  "weapon_rack": {
+   "solid": true
+  },
+  "ladder_prop": {
+   "solid": true
+  },
+  "lever": {
+   "solid": true,
+   "frames": [
+    "off",
+    "on"
+   ]
+  },
+  "fern": {
+   "soft": true
+  },
+  "reeds": {
+   "soft": true
+  },
+  "log_moss": {
+   "solid": true
+  },
+  "tree_moss": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "tree_dead": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "tree_glow": {
+   "solid": true,
+   "glow": true,
+   "shadow": "long"
+  },
+  "cactus": {
+   "solid": true
+  },
+  "desert_palm": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "desert_stall": {
+   "solid": true
+  },
+  "carpet_rack": {
+   "solid": true
+  },
+  "cart_barrels": {
+   "solid": true
+  },
+  "clay_jars": {
+   "solid": true
+  },
+  "copper_brazier": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 90,
+    "kind": "fire"
+   }
+  },
+  "dry_well": {
+   "solid": true
+  },
+  "obelisk": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "sand_mound": {
+   "soft": true
+  },
+  "thorn_bush": {
+   "soft": true
+  },
+  "tomb_urn": {
+   "solid": true
+  },
+  "bones": {
+   "soft": true
+  },
+  "broken_pillar": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "armor_stand": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "shield_rack": {
+   "solid": true
+  },
+  "candelabra": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 64,
+    "kind": "candle"
+   }
+  },
+  "fireplace": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 96,
+    "kind": "fire"
+   }
+  },
+  "dining_table": {
+   "solid": true
+  },
+  "bar_counter": {
+   "solid": true
+  },
+  "potion_shelf": {
+   "solid": true
+  },
+  "keg_rack": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "double_bed": {
+   "solid": true
+  },
+  "spinning_wheel": {
+   "solid": true
+  },
+  "basket_veg": {
+   "soft": true
+  },
+  "basket_bread": {
+   "soft": true
+  },
+  "writing_desk": {
+   "solid": true
+  },
+  "wall_window": {},
+  "wall_painting": {},
+  "wall_shelf": {},
+  "wall_herbs": {},
+  "wall_sconce": {
+   "glow": true,
+   "light": {
+    "r": 56,
+    "kind": "candle"
+   }
+  },
+  "wall_trophy": {},
+  "wall_chart": {},
+  "wall_tapestry": {},
+  "wall_pots": {},
+  "wall_antlers": {},
+  "wall_wheel": {},
+  "wall_tools": {},
+  "firewood": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "frozen_well": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "hay_sled": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ice_crystal": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 48,
+    "kind": "crystal"
+   }
+  },
+  "ice_hole": {
+   "soft": true
+  },
+  "sled": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_bank": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_barrel": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_fence": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_fir": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "snow_lamp": {
+   "solid": true,
+   "glow": true,
+   "shadow": "long",
+   "light": {
+    "r": 110,
+    "kind": "lamp"
+   }
+  },
+  "snow_rock": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_sign": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "stove_pipe": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "arena_banner": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ash_bush": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ash_weapon_rack": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "charred_stump": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "charred_tree": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "hot_spring": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "iron_brazier": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lava_rock": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "obsidian_shards": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "phoenix_statue": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "rope_post": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "steam_vent": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "sulphur": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "volcanic_rocks": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "water_urn": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "anchor": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "blue_bench": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "buoys": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "coco_palm": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "coral": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "driftwood": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "fish_barrel": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lamp_pillar": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "map_sign": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "net_frame": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "palm_small": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "palm_umbrella": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "rope_bollard": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "shells": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "white_pot": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "bell_frame": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "board_steps": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "crooked_sign": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "fish_trap": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "grave_moss": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lily_pads": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "mangrove_roots": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "mud_boat": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "pale_mushrooms": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "reeds_tall": {
+   "soft": true
+  },
+  "rotten_stump": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "stilt_posts": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "swamp_tree": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "willow": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "wisp_lamp": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "anvil": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "bellows": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "coal_barrel": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "forge": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "hook_lamp": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lift_cage": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "mine_cart": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "mine_cart_ore": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "oath_stone": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ore_blue": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ore_copper": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "rail": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "timber_frame": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "tool_crate": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "tool_rack": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "blue_flowers": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "book_cart": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "book_stack": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "fountain": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "globe": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "iron_gate": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lectern": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "marble_bench": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "orrery": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "scholar_statue": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "star_banner": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "star_dial": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "star_lamp": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "telescope": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "topiary": {
+   "solid": true,
+   "shadow": "blob"
+  }
+ }
+}

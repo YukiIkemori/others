@@ -200,7 +200,7 @@
   };
   D.PROF_GLIM = function (P, name) {
     const out = [{ c: P(0).id, kind: 'tech', id: 'demo_sword_1', name: '雷光突き' }];
-    if (name === 'prof_many') out.push({ c: P(3).id, kind: 'spell', id: 'demo_sp_x', name: 'ファイアウィンド' }, { c: P(1).id, kind: 'tech', id: 'demo_dagger_x', name: '影縫い' });
+    if (name === 'prof_many') out.push({ c: P(3).id, kind: 'spell', id: 'demo_sp_x', name: 'ファイアウィンド' }, { c: P(1).id, kind: 'tech', id: 'demo_dagger_x', name: '影踏み' });
     return out;
   };
   D.NAMES = Object.keys(D.scripts);

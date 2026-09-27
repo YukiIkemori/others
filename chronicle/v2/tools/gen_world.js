@@ -380,6 +380,9 @@ function closure(id, x, y, w, h, guard, text) {
 // 北の峠（雪原へ）は雪原の地方ができたので開いた（gen_world_snow.js）。山地への峠は雪原の東（峠の宿の先）で閉じる
 closure('guard_east', 112, 62, 3, 3, { x: 110, y: 64, dir: 'e' }, ['東の峠は、ゆうべの\n崖崩れで通れないんだ。', '山地の鉱山町へ行くなら、\nしばらく待ってくれ。']);
 // 南の峠（砂漠へ）は砂漠の地方ができたので開いた（gen_world_desert.js）。灰の荒野への峠は砂漠の側で閉じる
+// 体験版（縦切り）では雪原・砂漠の地方を閉じる（持ち主の決まり 2026-09-27: 体験版に全部を振る）。cond {slice:true} なので製品版では開く
+closure('guard_north', 37, 44, 3, 4, { x: 41, y: 48, dir: 's' }, ['北の峠は、雪崩で\nふさがってしまったんだ。', '雪原へ行くのは、\n雪が落ちつくまで待ってくれ。']);
+closure('guard_south', 30, 118, 3, 3, { x: 33, y: 117, dir: 'n' }, ['南の峠は、砂嵐で\n道が埋まってしまったんだ。', '砂漠へ行くのは、\n嵐がやむまで待ってくれ。']);
 
 // --- 道しるべの灯籠（街道に 28〜34 歩ごと。縦切りの消えた灯籠: 半島 1・森 3）
 const LIT = true;
@@ -611,9 +614,13 @@ function check() {
   const errs = [], info = {};
   const sliceOn = (c) => c && c.slice === true ? true : c === '!prologue_done' ? false : c === 'cleared_r_forest' ? false : false;
   const gg = applyPatches((c) => sliceOn(c));
-  const seen = bfs(gg, spawns.roa.x, spawns.roa.y, sliceOn);
+  const seenSlice = bfs(gg, spawns.roa.x, spawns.roa.y, sliceOn);
+  // 到達の検査は製品版（縦切りの閉じ方なし）で見る。縦切りで閉じた先（雪原・砂漠）は下で「閉じていること」を見る
+  const sliceOff = (c) => c && c.slice === true ? false : sliceOn(c);
+  const seen = bfs(applyPatches(sliceOff), spawns.roa.x, spawns.roa.y, sliceOff);
+  for (const k of ['yule', 'pass_inn', 'kasim']) if (spawns[k] && seenSlice[spawns[k].y * W + spawns[k].x]) errs.push('slice leak: ' + k + ' is reachable in the demo');
   let n = 0, pen = 0, fst = 0, pl = 0;
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (seen[y * W + x]) { n++; if (y >= 78 && x >= 66) pen++; else if (x <= 64) fst++; else pl++; }
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (seenSlice[y * W + x]) { n++; if (y >= 78 && x >= 66) pen++; else if (x <= 64) fst++; else pl++; }
   info.walk = n; info.peninsula = pen; info.forest = fst; info.plains = pl;
   // 入口に着く（出口のマスの隣か上）
   for (const e of exits) {
@@ -625,7 +632,7 @@ function check() {
   for (const o of objects) if (o.type === 'stairs' && !seen[o.y * W + o.x] && !(SNOW.late && SNOW.late(o.x, o.y))) errs.push('stairs not reachable ' + o.x + ',' + o.y);
   for (const k of Object.keys(spawns)) { const s = spawns[k]; if (!walkCh(gg[s.y][s.x]) && k !== 'bridge_n') errs.push('spawn on a wall: ' + k); if (!seen[s.y * W + s.x] && k !== 'bridge_n' && !(SNOW.late && SNOW.late(s.x, s.y))) errs.push('spawn not reachable: ' + k); }
   // 閉じ方: 縦切りの範囲の外（雪原・山地・砂漠）に出られない
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (seen[y * W + x] && (y < 40 || x > 118 || y > 134) && !inDesert(x, y) && !inSnow(x, y)) { errs.push('slice leaks at ' + x + ',' + y); y = H; break; }
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (seenSlice[y * W + x] && (y < 40 || x > 118 || y > 134)) { errs.push('slice leaks at ' + x + ',' + y); y = H; break; }
   // 跳ね橋が上がっている間、半島から出られない
   const pro = (c) => c && c.slice === true ? true : c === '!prologue_done' ? true : false;
   const gp = applyPatches(pro);

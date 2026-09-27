@@ -24,9 +24,12 @@
     const drops = (rw.drops || []).map((d) => ({ item: d.item, grade: _.play.gradeOf(d.item, d.grade), n: d.n || 1 }));
     // 出来事の gain（盗んだ以外）で rewards に無い物も足す
     for (const e of st.collected.gains) if (!e.stolen && !drops.some((d) => d.item === e.item)) drops.push({ item: e.item, grade: _.play.gradeOf(e.item, e.grade), n: 1 });
-    // 同じ品はまとめる
+    // 盗んだ物も一覧に入れる（持ち主の決まり 2026-09-27: 手に入れた物は落とした物・盗んだ物・レアを全部見せる）
+    const stolen = (rw.stolen || []).map((s) => ({ item: s.item, grade: _.play.gradeOf(s.item, s.stealOnly ? 'super' : s.grade), n: 1, stolen: true }));
+    if (!stolen.length) for (const e of st.collected.gains) if (e.stolen) stolen.push({ item: e.item, grade: _.play.gradeOf(e.item, e.stealOnly ? 'super' : e.grade), n: 1, stolen: true });
+    // 同じ品はまとめる（落とした物と盗んだ物は別の行）
     const merged = [];
-    for (const d of drops) { const m = merged.find((x) => x.item === d.item); if (m) m.n += d.n; else merged.push(Object.assign({}, d)); }
+    for (const d of drops.concat(stolen)) { const m = merged.find((x) => x.item === d.item && !!x.stolen === !!d.stolen); if (m) m.n += d.n; else merged.push(Object.assign({}, d)); }
     const grow = {};
     for (const gr of (rw.grow || []).concat(st.collected.grow)) {
       const c = charOf(gr.c);
@@ -197,7 +200,7 @@
     // 品の行を減らし（レア・超レアを先に、残りは「ほか N 品」）、それでも足りなければ仲間の行を詰める
     const units = st.partyUnits();
     const own = Rs.pages.some((p) => p.id === 'prof');   // 熟練・閃きは次の札（result_prof.js。誰の何がいくつ）
-    const nLines = own ? 0 : (d.glim.length ? 1 : 0) + (d.prof.length ? 1 : 0);
+    const nLines = 0;
     let rh = (L.tall ? 42 : 40) * k;
     let maxRows = L.tall ? 4 : 6;
     if (!L.tall) {
@@ -232,7 +235,9 @@
           Kt.icon(g, _.play.itemIcon(dr.item), x0, ry + 2 * k, 18 * k, rr ? col : Kt.COL.text2);
           const nm = _.play.itemName(dr.item);
           Kt.text(g, Kt.fit(nm, colW - 80 * k, { size: 14 * k, weight: rr ? 700 : 500 }), x0 + 28 * k, ry + 3 * k, { size: 14 * k, weight: rr ? 700 : 500, color: col, raw: true, shadow: true });
-          if (rr) Kt.text(g, dr.grade === 'super' ? '★★' : '★', x0 + 34 * k + Kt.measure(nm, { size: 14 * k, weight: 700 }), ry + 4 * k, { size: 12 * k, weight: 700, color: col, raw: true });
+          let tx = x0 + 34 * k + Kt.measure(nm, { size: 14 * k, weight: rr ? 700 : 500 });
+          if (rr) { Kt.text(g, dr.grade === 'super' ? '★★' : '★', tx, ry + 4 * k, { size: 12 * k, weight: 700, color: col, raw: true }); tx += (dr.grade === 'super' ? 26 : 14) * k; }
+          if (dr.stolen) Kt.text(g, '盗んだ', tx + 2 * k, ry + 5 * k, { size: 10.5 * k, weight: 700, color: Kt.COL.gold, raw: true, shadow: true });
           Kt.text(g, '×' + dr.n, x0 + colW, ry + 4 * k, { size: 13 * k, color: Kt.COL.text2, align: 'right', raw: true, shadow: true });
         });
         y += 34 * k;
@@ -269,8 +274,7 @@
     });
     y += units.length * rh + 8 * k;
     const lines = [];
-    if (d.glim.length && !own) lines.push(['閃いた技：' + d.glim.join('・'), Kt.COL.gold]);
-    if (d.prof.length && !own) lines.push(['熟練が上がった：' + d.prof.join('・'), Kt.COL.text3]);
+    // 閃き・熟練は勝利の札には書かない（持ち主の決まり 2026-09-27。熟練度の札 result_prof.js で誰の何がいくつかを出す）
     lines.forEach(([s, c], j) => row(() => Kt.text(g, Kt.fit(s, colW + 180 * k, { size: 11.5 * k }), x0, (L.tall ? y : R.H - (R.safe.b || 0) - 40 * k - (lines.length - 1 - j) * 18 * k) + (L.tall ? j * 18 * k : 0), { size: 11.5 * k, color: c, raw: true, shadow: true })));
     // 決定で進む（点滅する ▼。札の右下）
     if (L.tall) Rs.drawNext(g, st, R.W - 28 * k, R.H - (R.safe.b || 0) - 70 * k);
