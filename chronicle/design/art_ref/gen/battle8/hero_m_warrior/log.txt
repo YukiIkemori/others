@@ -20,3 +20,4 @@
 19:16:24   attack frame 7 new   {"ok": true, "why": "", "head_scale": 0.975, "head": [61.7, 33.2], "height": 55, "copy": 0.08, "shift": [0, 5], "err": 30.9}
 19:16:24   attack frame 8 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [58.0, 23.5], "height": 64, "copy": 0.65, "shift": [0, 0], "err": 7.6}
 19:16:24   attack frame 9 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [58.0, 23.5], "height": 64, "copy": null, "shift": [0, 0], "err": 0.0}
+19:18:22 hero_m_warrior attack attempt 3: generating 2832x1872 (pitch 8, quality high)

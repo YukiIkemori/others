@@ -365,8 +365,11 @@ def prompt_for(job, p, W, H, extra=''):
                 lines.append('- Frame %d (row %d, column %d): EMPTY -> draw: %s' % (i + 1, r + 1, cc + 1, v))
     lines += ['',
               'CONSISTENCY RULES for every new frame:',
-              '- exactly the same character, same size: the same head size, head shape, body proportions, limb thickness and height '
-              'as the key frames (compare with the head of frame 1). No shrinking, no stretching.',
+              '- SAME SIZE, NEVER SMALLER: the head (hair + face) is the SAME drawing as in the key frames, exactly as many pixels wide '
+              'and tall as the head of frame 1, only moved (tilted at most a little). Build the new body pose under that head at the '
+              'same scale: same boot size, same hand size, same arm and leg thickness, same weapon length. Crouching or lunging is '
+              'shown by bending the knees and spreading the legs, NOT by shrinking the figure. A redrawn figure must never look '
+              'smaller or farther away than the key frames next to it.',
               '- exactly the same colours as the key frames (reuse their palette; no new hues).',
               '- the weapon is ALWAYS the same %s as in the key frames (%s): same shape, same length, same colours, held in the same '
               'hand(s). It never turns into another object, never disappears, never duplicates.' % (WEAPON_EN.get(wt, wt), c['weaponDrawn']),
