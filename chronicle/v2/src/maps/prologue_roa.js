@@ -115,6 +115,9 @@
         ],
         light: { ambient: '#5c5aa0', k: 0.45, mood: 'town_night', vignette: 0.66 }, bgm: 'home',
         meta: { sub: '語り部の里', chestsInfo: true },
+        // 里ぜんたいを 1 枚に描いた下絵（v2/assets/env/hill_village/under/roa*、design/ENV_ASSETS.md §7）。地面・建物・木・柵はこの絵、
+        // 当たり・戸口・人・灯り・ほかの物は上のデータのまま。絵が無ければマスから焼く
+        art: { image: 'hill_village/under/roa', overlay: 'hill_village/under/roa_over', emit: 'hill_village/under/roa_emit', painted: ['fence'] },
       });
     })();
 

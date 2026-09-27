@@ -15,6 +15,9 @@
 //   R.Terrain.prewarm(map, {tile, tier}) → Job   マップの素材のタイル・建物・物・木の絵を先に焼く（暗転の中で）
 //   R.Terrain.chunkOf(x, y) → [cx, cy]          マス → チャンク
 //
+// 描いた下絵（map.art = {image, overlay?, emit?, painted?: [prop id]}、design/ENV_ASSETS.md §7）: 絵があれば地面・立ち上がり・水の縁・
+//   建物・木・地面の飾り・painted の物は焼かず、下絵の同じ所を base に置く（overlay は over＝人より上、emit は窓の灯り）。
+//   当たり・戸口・人・灯り・宝箱などの物はマップのデータのまま。絵が無ければ今までどおりマスから焼く（控え）。
 // 1 チャンクの仕事の順: 準備（マスの読み・要る絵の一覧）→ 素材のタイル → 絵（建物・物・木）→ 地面（dual grid）→ 立ち上がり・水の縁 →
 //   大きなゆらぎ → base に置く → 足場 → 影 → 建物・木・物（足もとより上は over）→ 光の地図（R.Light.map）→ 窓・戸口の描き直し・照り返し → 結果
 (function (R) {
@@ -29,6 +32,52 @@
     try { return TILE[R.Settings.get('fieldZoom')] || 32; } catch (e) { return 32; }
   }
   const U = () => T._u;
+
+  // ------------------------------------------------------------------ 描いた下絵（map.art）
+  const underCache = {};
+  /** map.art の絵（このマスの大きさ）→ {img, k, over, emit, j, painted:Set, overChunks:Set|null} | null（絵が無い・読めていない = 控え） */
+  function underOf(map, tile) {
+    const a = map && map.art;
+    if (!a || !a.image || !T.Env || !T.Env.under) return null;
+    const ck = map.id + '|' + tile;
+    if (underCache[ck] !== undefined) return underCache[ck];
+    const b = T.Env.under(a.image, tile);
+    if (!b) return null;   // まだ読めていないかもしれない: 覚えない
+    const ov = a.overlay ? T.Env.under(a.overlay, tile) : null, em = a.emit ? T.Env.under(a.emit, tile) : null;
+    const r = { img: b.img, k: b.k, j: b.j || {}, over: ov, emit: em, painted: new Set(a.painted || (b.j && b.j.painted) || []), overChunks: null, emitC: null };
+    // overlay に画素のあるチャンク（無いチャンクに over の canvas を作らない）
+    if (ov) {
+      try {
+        const w = ov.img.width, h = ov.img.height, c = U().canvas(w, h), g = c.getContext('2d');
+        g.drawImage(ov.img, 0, 0);
+        const d = g.getImageData(0, 0, w, h).data, cs = (CHUNK * tile) / ov.k, set = new Set();
+        for (let y = 0; y < h; y += 2) for (let x = 0; x < w; x += 2) if (d[(y * w + x) * 4 + 3] > 8) set.add(Math.floor(x / cs) + ',' + Math.floor(y / cs));
+        r.overChunks = set;
+      } catch (e) { r.overChunks = null; }
+    }
+    return (underCache[ck] = r);
+  }
+  T._underOf = underOf;
+  /** 下絵の窓の灯り（emit の絵をこのマスの大きさの canvas に）と窓ごとの光（meta.windows32） */
+  function underLights(map, und, tile, v) {
+    const s = tile / 32, SL = (R.Hd && R.Hd.STYLE && R.Hd.STYLE.light) || {}, wc = SL.windowColor || '#ffcf86';
+    const out = { lights: v.lights.slice(), glows: v.glows.slice(), emissive: v.emissive.slice(), moon: v.moon };
+    if (und.emit) {
+      if (!und.emitC) {
+        const im = und.emit.img, k = und.emit.k, c = U().canvas(Math.round(im.width * k), Math.round(im.height * k)), g = c.getContext('2d');
+        g.imageSmoothingEnabled = false; g.drawImage(im, 0, 0, c.width, c.height);
+        und.emitC = c;
+      }
+      out.emissive.push({ kind: 'img', c: und.emitC, x: 0, y: 0, w: und.emitC.width, h: und.emitC.height });
+    }
+    for (const w of und.j.windows32 || []) {
+      const ex = w.x * s, ey = w.y * s, ew = w.w * s, eh = w.h * s;
+      out.lights.push({ x: ex + ew / 2, y: ey + eh + 14 * s, r: 40 * s, color: wc, k: 0.8, kind: 'window', type: 'window' });
+      out.lights.push({ x: ex + ew / 2, y: ey + eh / 2, r: 18 * s, color: wc, k: 0.5, kind: 'point', type: 'window' });
+      out.glows.push({ x: ex + ew / 2, y: ey + eh / 2, r: 22 * s, core: 2 * s, halo: 22 * s, color: wc, k: 0.32, type: 'window' });
+    }
+    return out;
+  }
 
   // ------------------------------------------------------------------ 状態（§2.11: state = {grid, chests, lit, lamps, secrets}）
   function listOf(v, mapId) { if (Array.isArray(v)) return v; if (v && typeof v === 'object') return v[mapId] || []; return []; }
@@ -245,6 +294,7 @@
     this.C = cellReader(map, this.st, this.theme, c0x - 5, c0y - 3, c0x + CHUNK + 5, c0y + CHUNK + 6);
     const plan = planOf(map, this.st, this.theme, t, this.amb);
     this.plan = plan;
+    const und = (this.und = this.o.noUnder ? null : underOf(map, t));
     // 要る素材
     const mats = new Set();
     for (let y = c0y - 1; y <= c0y + CHUNK; y++) for (let x = c0x - 1; x <= c0x + CHUNK; x++) mats.add(this.C(x, y).mat);
@@ -255,11 +305,13 @@
     const hit = (x0, y0, x1, y1) => x1 > X0 - M && x0 < X0 + S + M && y1 > Y0 - M && y0 < Y0 + S + M;
     const draw = [];
     for (const it of plan.items) {
+      if (und && (it.bld || und.painted.has(it.key.slice(8)))) continue;   // 下絵に描いてある（建物・柵…）
       if (it.bld) { if (hit(it.x - 8 * s, it.y - it.h - 24 * s, it.x + it.w + 40 * s, it.y + 24 * s)) draw.push(it); }
       else if (hit(it.x - 96 * s, it.y - 120 * s, it.x + 96 * s, it.y + 32 * s)) draw.push(it);
     }
     // 木・藪・根・深い森の縁の木、地面の小さな飾り（マスから決まる）
     const th = this.theme, C = this.C;
+    if (und) { this.mats = []; draw.sort((a, b) => a.sortY - b.sortY || a.x - b.x); this.draw = draw; return true; }   // 木・地面の飾りも下絵
     for (let y = c0y - 1; y < c0y + CHUNK + 4; y++) for (let x = c0x - 3; x < c0x + CHUNK + 3; x++) {
       const c = C(x, y);
       if (c.found || !c.tall) continue;
@@ -326,6 +378,7 @@
   };
 
   Job.prototype._ground = function (deadline) {
+    if (this.und) return true;
     const t = this.tile, S = this.size;
     if (!this.px) this.px = takePx(S * S);
     const c0x = this.cells[0] - 1, c0y = this.cells[1] - 1, n = CHUNK + 1;
@@ -342,6 +395,7 @@
   };
 
   Job.prototype._rise = function () {
+    if (this.und) return true;
     const [x0, y0, x1, y1] = this.cells;
     T._rise(this.px, this.size, this.X0, this.Y0, this.C, this.tile, x0, y0, x1, y1);
     T._waterEdges(this.px, this.size, this.X0, this.Y0, this.C, this.tile, x0, y0, x1, y1);
@@ -377,6 +431,13 @@
   Job.prototype._put = function (deadline) {
     const S = this.size;
     if (!this.base) { const c = U().canvas(S, S); if (!c) throw new Error('no canvas'); this.base = c; this.bg = c.getContext('2d'); }
+    if (this.und) {
+      // 下絵の同じ所（マップの外は透明のまま = FIELD の外の色）
+      const u = this.und, k = u.k, bg = this.bg;
+      bg.imageSmoothingEnabled = false;
+      bg.drawImage(u.img, this.X0 / k, this.Y0 / k, S / k, S / k, 0, 0, S, S);
+      return true;
+    }
     const img = imgOf(this.bg, S), h = S / BANDS;
     while (this.i < BANDS) {
       new Uint32Array(img.data.buffer).set(this.px);
@@ -491,6 +552,12 @@
       }
       if (U().now() > deadline) return this.i >= this.draw.length;
     }
+    // 下絵の overlay（屋根の張り出し・木の枝葉: 人より上）。物の over より後（手前の木が物も隠す）
+    const u = this.und;
+    if (u && u.over && (!u.overChunks || u.overChunks.has(this.cx + ',' + this.cy))) {
+      const k = u.over.k, og = overCtx(this);
+      og.drawImage(u.over.img, this.X0 / k, this.Y0 / k, S / k, S / k, 0, 0, S, S);
+    }
     // 見つけた隠し通路の印（床の上）
     const [x0, y0, x1, y1] = this.cells, t = this.tile;
     for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { const c = this.C(x, y); if (c.found) T._secretMark(this.bg, x * t - X0, y * t - Y0, t, c.raw); }
@@ -527,8 +594,9 @@
   };
   Job.prototype._lightPrep = function () {
     const map = this.map, t = this.tile, s = this.s, X0 = this.X0, Y0 = this.Y0, S = this.size;
-    const env = { tile: t, st: this.st, bld: (o) => { try { return R.Hd.now(T.building(o), { tile: t }); } catch (e) { return null; } } };
-    const all = lightsCached(map, env, this.plan);
+    const und = this.und;
+    const env = { tile: t, st: this.st, bld: (o) => { if (und) return null; try { return R.Hd.now(T.building(o), { tile: t }); } catch (e) { return null; } } };   // 下絵の建物の窓は下絵の meta から
+    const all = lightsCached(map, env, this.plan, und);
     this.allLights = all.lights;
     const lights = all.lights.slice(), glows = [];
     // 洞窟の水は淡く光る（MODERN_UI §4.1-3 の光る苔・結晶と同じ青緑）
@@ -579,11 +647,12 @@
   }
   // 地図の光の一覧は状態が変わるまで使い回す
   const lightCache = new WeakMap();
-  function lightsCached(map, env, plan) {
+  function lightsCached(map, env, plan, und) {
     const c = lightCache.get(map);
-    if (c && c.plan === plan && c.tile === env.tile) return c.v;
-    const v = T._lightsOf(map, env);
-    lightCache.set(map, { plan, tile: env.tile, v });
+    if (c && c.plan === plan && c.tile === env.tile && c.und === (und || null)) return c.v;
+    let v = T._lightsOf(map, env);
+    if (und) v = underLights(map, und, env.tile, v);
+    lightCache.set(map, { plan, tile: env.tile, und: und || null, v });
     return v;
   }
 
