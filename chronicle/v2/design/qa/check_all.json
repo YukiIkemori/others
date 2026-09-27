@@ -1,79 +1,223 @@
 {
- "date": "2026-09-27T13:28:38.104Z",
+ "date": "2026-09-27T16:28:51.507Z",
  "browser": false,
  "full": false,
  "results": [
   {
    "name": "build",
    "code": 0,
-   "ms": 931,
-   "summary": "[build] media (external): 31 BGM (slice), 416 voice, 0 portraits, 239 sprite sheets, 1233 env images, 11 title images, 123.2 MB  [782 ms]"
+   "ms": 21166,
+   "summary": "[build] media (external): 31 BGM (slice), 416 voice, 0 portraits, 239 sprite sheets, 1308 env images, 11 title images, 123.4 MB  [20560 ms]"
+  },
+  {
+   "name": "test_core",
+   "code": 1,
+   "ms": 5690,
+   "summary": "76/77 passed  (1 FAILED)",
+   "tail": "pass  battle object names\npass  units shape\npass  battle runs to an end with valid events\npass  rewards shape\npass  ev names (§2.5.10)\npass  fixtures: 1 state + 2 scenes, valid\npass  core first 6 in order\npass  main.js last, dev before it\npass  index order has no dev files\nFAIL  no API keys / model identifiers in v2 sources  [\"/home/user/others/chronicle/v2/design/bgm_changes.md\"]\n\n76/77 passed  (1 FAILED)"
+  },
+  {
+   "name": "test_core_contract",
+   "code": 0,
+   "ms": 7055,
+   "summary": "test_core_contract: 51/51 passed"
+  },
+  {
+   "name": "test_render",
+   "code": 1,
+   "ms": 5615,
+   "summary": "test_render: 144/145 passed",
+   "tail": "\n== draw\npass  draw rounds and puts (ox, oy) on the point\npass  flip mirrors around the point\npass  alpha restored after draw\npass  draw a Sheet picks frame i\npass  draw(null) is a no-op\npass  frameAt walks the pose by time\n\ntest_render: 144/145 passed\nfailed:\n  real clock: median pump 4.08 ms ≤ 3"
+  },
+  {
+   "name": "test_uik",
+   "code": 0,
+   "ms": 4824,
+   "summary": "test_uik: 37/37 passed"
+  },
+  {
+   "name": "test_cast",
+   "code": 0,
+   "ms": 4707,
+   "summary": "test_cast: 865/865 passed"
+  },
+  {
+   "name": "test_beast",
+   "code": 0,
+   "ms": 3940,
+   "summary": "test_beast: 94/94 passed"
+  },
+  {
+   "name": "test_terrain",
+   "code": 0,
+   "ms": 26455,
+   "summary": "test_terrain: 76/76 passed"
+  },
+  {
+   "name": "test_field",
+   "code": 0,
+   "ms": 12062,
+   "summary": "test_field: 102/102 passed"
+  },
+  {
+   "name": "test_events",
+   "code": 0,
+   "ms": 6006,
+   "summary": "test_events: 164/164 passed"
   },
   {
    "name": "test_rules",
    "code": 0,
-   "ms": 1640,
+   "ms": 5632,
    "summary": "test_rules: 187/187 passed"
+  },
+  {
+   "name": "test_battle",
+   "code": 0,
+   "ms": 19335,
+   "summary": "test_battle: 125/125 passed"
+  },
+  {
+   "name": "test_bscene",
+   "code": 0,
+   "ms": 3461,
+   "summary": "test_bscene: 47/47 passed"
+  },
+  {
+   "name": "test_screens",
+   "code": 0,
+   "ms": 2709,
+   "summary": "test_screens: 396/396 passed"
   },
   {
    "name": "test_content_p",
    "code": 0,
-   "ms": 23458,
+   "ms": 54525,
    "summary": "test_content_p: 544/544 passed"
+  },
+  {
+   "name": "test_content_f",
+   "code": 0,
+   "ms": 30577,
+   "summary": "CONTENT-F: 655/655 passed"
   },
   {
    "name": "test_content_desert",
    "code": 0,
-   "ms": 151253,
+   "ms": 972221,
    "summary": "test_content_desert: 34/34 passed"
   },
   {
    "name": "validate",
    "code": 0,
-   "ms": 1556,
+   "ms": 5005,
    "summary": "validate: 57/57 passed"
   },
   {
    "name": "progress",
    "code": 0,
-   "ms": 504982,
+   "ms": 2323196,
    "summary": "progress: 31/31 passed"
   },
   {
    "name": "check_text",
+   "code": 1,
+   "ms": 14983,
+   "summary": "check_text: 7 error(s), 1 warning(s) in 8085 Japanese strings of 286 files — T3 1, T4 3, T2 2, T1 1",
+   "tail": "ERROR T3 src/events/desert_tomb.js:108 '這' is not 常用漢字 nor in STYLE_JA §2: もらった水のおかげで、⏎這ってでも帰れそうだ。⏎……この恩は、忘れねえ。\nERROR T4 src/events/prologue_lighthouse.js:31 DQ-style word spacing (half-width space between Japanese words): ガチャリ……。⏎灯台の鍵で 扉を開けた！\nERROR T4 src/screens/settings.js:16 DQ-style word spacing (half-width space between Japanese words): 戦闘の演出の速さ。戦闘中も R で 通常 → ＋1 → ＋2 と切り替え…\nERROR T2 src/screens/shop.js:309 '並び替え' (§7.3): 並び替え\nERROR T2 src/screens/shop.js:312 '並び替え' (§7.3): 並び替え\nERROR T4 src/screens/shop.js:474 DQ-style word spacing (half-width space between Japanese words): ←→ 1 つ ・ ↑↓ 10 ずつ\nERROR T1 src/systems/battle/demo.js:203 '影縫い' in a string (STYLE_JA §7.1): 影縫い\n\ncheck_text: 7 error(s), 1 warning(s) in 8085 Japanese strings of 286 files — T3 1, T4 3, T2 2, T1 1"
+  },
+  {
+   "name": "check_voice",
    "code": 0,
-   "ms": 2194,
-   "summary": "check_text: 0 error(s), 1 warning(s) in 8149 Japanese strings of 283 files — none"
+   "ms": 1786,
+   "summary": "check_voice: 199/199 passed"
   },
   {
    "name": "check_leads",
    "code": 0,
-   "ms": 1093,
+   "ms": 10928,
    "summary": "check_leads: 34/34 passed"
   },
   {
    "name": "check_springs",
    "code": 0,
-   "ms": 554631,
-   "summary": "check_springs: 31/31 passed"
+   "ms": 566241,
+   "summary": "check_springs: 35/35 passed"
   },
   {
    "name": "check_density",
    "code": 0,
-   "ms": 1777,
+   "ms": 22054,
    "summary": "check_density: 39/39 passed"
   },
   {
-   "name": "check_chests",
+   "name": "check_world",
    "code": 0,
-   "ms": 21036,
-   "summary": "check_chests: 4/4 passed"
+   "ms": 301972,
+   "summary": "check_world: 7/7 passed"
+  },
+  {
+   "name": "check_chests",
+   "code": 2,
+   "ms": 44479,
+   "summary": "pass  縦切りの宝箱 125 個: 床の上・重なる物の下でない・id が一つ・中身あり",
+   "tail": "== データ\npass  world: ワールドに宝箱 0（A27）\npass  縦切りの宝箱 125 個: 床の上・重なる物の下でない・id が一つ・中身あり\n\n== 焼いた床との明るさの差（ブラウザ）\npage.waitForFunction: Timeout 15000ms exceeded.\n    at Object.open (/home/user/others/chronicle/v2/tools/lib/browser.js:51:11)\n    at async /home/user/others/chronicle/v2/tools/qa/check_chests.js:41:13 {\n  name: 'TimeoutError'\n}"
+  },
+  {
+   "name": "check_secrets",
+   "code": 2,
+   "ms": 45364,
+   "summary": "pass  §3.2 の置き場所（灯台 2 階・迷いの森 1・2 階・千年樹 1 階・古井戸）に隠し通路",
+   "tail": "pass  roa: 隠し通路 0\npass  pharos: 隠し通路 0\npass  fern: 隠し通路 0\npass  yura: 隠し通路 0\npass  §3.2 の置き場所（灯台 2 階・迷いの森 1・2 階・千年樹 1 階・古井戸）に隠し通路\n\n== 見つける前は周りの壁と同じ画素（ブラウザ）\npage.waitForFunction: Timeout 15000ms exceeded.\n    at Object.open (/home/user/others/chronicle/v2/tools/lib/browser.js:51:11)\n    at async /home/user/others/chronicle/v2/tools/qa/check_secrets.js:40:13 {\n  name: 'TimeoutError'\n}"
   },
   {
    "name": "check_stubs",
+   "code": 2,
+   "ms": 45854,
+   "summary": "pass  始まりの場所は本物（roa_house の roa_house_intro）",
+   "tail": "== 1. node: 埋まった仮の関数\npass  仮の実装で埋まった名前空間の関数 0\n    仮のデータ（id が stub_、使わない物）: DB.materials: stub_grass,stub_road,stub_tree,stub_water ／ DB.maps: stub_road ／ DB.events: stub_guard_talk ／ DB.troops: tr_stub ／ DB.monsters: stub_slime ／ DB.encounters: z_stub ／ DB.locations: stub_road\npass  縦切りのデータ・イベントが stub_ の id を参照しない\npass  始まりの場所は本物（roa_house の roa_house_intro）\n\n== 2. ブラウザ: 起動 → はじめから → ロアの里\npage.waitForFunction: Timeout 15000ms exceeded.\n    at Object.open (/home/user/others/chronicle/v2/tools/lib/browser.js:51:11)\n    at async /home/user/others/chronicle/v2/tools/qa/check_stubs.js:38:15 {\n  name: 'TimeoutError'\n}"
+  },
+  {
+   "name": "check_reach",
    "code": 0,
-   "ms": 28385,
-   "summary": "check_stubs: 16/16 passed"
+   "ms": 68134,
+   "summary": "check_reach: 1/1 passed"
+  },
+  {
+   "name": "sim_zones",
+   "code": 0,
+   "ms": 984409,
+   "summary": "all zones: HP loss 9.0%, rounds 2.98 pass"
+  },
+  {
+   "name": "sim_zones --segments",
+   "code": 0,
+   "ms": 1877946,
+   "summary": "segments: 12/12 pass"
+  },
+  {
+   "name": "sim_bosses",
+   "code": 0,
+   "ms": 3137709,
+   "summary": "tr_b_frost_admiral@6      0       0      100   100   12.2   0.03  pass"
+  },
+  {
+   "name": "sim_growth",
+   "code": 0,
+   "ms": 111642,
+   "summary": "sim_growth: 8/8 passed (runs 20, seed 1)"
+  },
+  {
+   "name": "sim_glimmer",
+   "code": 0,
+   "ms": 1692193,
+   "summary": "NOTE (above/below the estimate) slice scope near the V2_PLAN §3.9 estimate (glimmered techs lv1–3 ≈ 20: 28 + starters 8, max lv 3; spells step 1–2 ≈ 12: 18)"
+  },
+  {
+   "name": "sim_loot",
+   "code": 0,
+   "ms": 95773,
+   "summary": "H5 倒しても落ちない: 30000 体、盗み専用のドロップ 0  pass"
   }
  ]
 }
