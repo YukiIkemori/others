@@ -84,7 +84,12 @@
         round++;
         const ev = [];
         if (subs._escape) { delete subs._escape; over = 'escape'; ev.push({ t: 'msg', text: '一行は逃げ出した！' }, { t: 'end', result: 'escape' }); return ev; }
-        const act = (u, cmd, id, nm, targets) => { ev.push({ t: 'turn', uid: u.uid }, { t: 'act', uid: u.uid, cmd, id, name: nm, targets: targets.map((t) => t.uid) }); };
+        const act = (u, cmd, id, nm, targets) => {
+          // 見本: 技・術は MP を払う（本物と同じく act に mp。札はこの時に減る）
+          const mp = u.side === 'party' && (cmd === 'skill' || cmd === 'spell') ? Math.min(u.mp, cmd === 'spell' ? 6 : 4) : 0;
+          if (mp) u.mp -= mp;
+          ev.push({ t: 'turn', uid: u.uid }, Object.assign({ t: 'act', uid: u.uid, cmd, id, name: nm, targets: targets.map((t) => t.uid) }, mp ? { mp } : {}));
+        };
         const dmg = (t, n, o) => { t.hp = Math.max(0, t.hp - n); ev.push(Object.assign({ t: 'dmg', uid: t.uid, n, crit: false, weak: false, kind: 'phys' }, o)); if (t.hp <= 0 && t.alive) { t.alive = false; ev.push({ t: 'ko', uid: t.uid }); } };
         const heal = (t, n, mp) => { if (mp) t.mp = Math.min(t.maxMp, t.mp + n); else t.hp = Math.min(t.maxHp, t.hp + n); ev.push({ t: 'heal', uid: t.uid, n, mp: !!mp }); };
         const e0 = () => E()[0], e1 = () => E()[1] || E()[0];

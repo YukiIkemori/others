@@ -315,6 +315,10 @@ async function main() {
   R.Party.members().forEach((c) => { c.hp = 1; });
   R.Input._set('a', true); adv(17); await flush(); R.Input._set('a', false); await settle(100);
   ok('spring restores (restoreAll) and is remembered', R.Party.members().every((c) => c.hp > 1) && (R.Game.springs.field_lab || []).includes('lab_s'));
+  // ダンジョンの回復の場所は女神の像（2026-09）: 祈りの文が画面下の窓で出る。窓を閉じてから次へ
+  ok('in a dungeon the spring is a goddess statue', R.MapUtil.springLook(R.DB.maps.field_lab, { type: 'spring' }) === (R.DB.maps.field_lab.kind === 'dungeon' ? 'goddess' : 'water'));
+  for (let i = 0; i < 4 && R.Field._locked(); i++) { R.Input._set('a', true); adv(17); await flush(); R.Input._set('a', false); await settle(100); }
+  ok('prayer message closes with A and unlocks the field', !R.Field._locked());
   await enter('field_lab', 11, 8, 'n');
   let sw = null;
   const onSw = (e) => { sw = e; };

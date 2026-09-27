@@ -241,6 +241,8 @@
     for (const u of st.B.units) {
       let v = st.vis[u.uid];
       if (!v) continue;
+      if (st.tweens) st.tweens = st.tweens.filter((t) => !(t.obj === v && t.key === 'mp' && (t.res(), true)));
+      v.mpPaid = 0;
       v.hp = u.hp; v.mp = u.mp; v.maxHp = u.maxHp; v.maxMp = u.maxMp; v.status = (u.status || []).slice();
       if (u.alive !== v.alive) {
         v.alive = u.alive;
@@ -317,6 +319,7 @@
   }
 
   const H = {};
+  P._H = H;   // テスト用
   H.turn = async (st, e, ctx) => { if (ctx.actor && ctx.actor !== e.uid) await returnActor(st, ctx); };
   H.act = async (st, e, ctx) => {
     if (ctx.actor) await returnActor(st, ctx);
@@ -328,6 +331,8 @@
     if (st.tele && st.tele.uid === e.uid) { st.tele = null; }
     const v = st.vis[e.uid];
     const sp = st.speed();
+    // 払った MP はこの行動の始まりで札から減らす（短く減っていく。ラウンドの終わりの P.sync は同じ値に合わせるだけ）
+    if (v && e.mp > 0) { v.mpPaid = (v.mpPaid || 0) + e.mp; P.tween(st, v, 'mp', Math.max(0, (v.mp || 0) - e.mp), 280, 'out'); }
     if (u.side === 'party') {
       // ボイス（A37）
       const big = _.voice.isBig(e.cmd, e.id);

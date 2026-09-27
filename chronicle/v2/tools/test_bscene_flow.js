@@ -173,8 +173,9 @@ async function main() {
   ok('companion clips b_<id>_<kind>_<n> are used when present', await B.ev(p, "(() => { const ids = Object.keys(RPG.Media.table().voice).filter((k) => /^b_[a-z]+_bigtech_\\d+$/.test(k)); if (!ids.length) return true; const who = ids[0].split('_')[1]; const id = RPG.Battle._.voice.play({id: who, uid:'p1'}, 'bigtech'); return id && id.startsWith('b_' + who + '_bigtech_'); })()"));
 
   section('本物（か仮）の BattleCore で');
+  await B.ev(p, "RPG.Settings.set('battleSpeed', 3); 0");   // A の連打で 1 人ずつ命令する（リピートは使わない）ので速さ ＋2
   await B.ev(p, start({ troop: 'tr_stub' }));
-  ok('battle with the core ends (press A)', await B.pressUntil(p, 'a', 'window.__r', 80), await B.ev(p, `${D} && [${D}.phase, ${D}.log.slice(-3)]`));
+  ok('battle with the core ends (press A)', await B.pressUntil(p, 'a', 'window.__r', 160), await B.ev(p, `${D} && [${D}.phase, ${D}.log.slice(-3)]`));
   ok('invariants after the real-core battle', await B.waitFor(p, INV, 3000));
 
   section('全滅: タイトルへ');

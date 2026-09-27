@@ -1975,7 +1975,13 @@
       case 'actor': if (ev.u) out.push({ t: 'turn', uid: ev.u.uid }); break;
       case 'fx':
         if (ev.again) break;
-        out.push({ t: 'act', uid: uidOf(ev.user), cmd: ev.cmd || CMD_OF_KIND[ev.kind] || 'enemy', id: ev.id || (ev.ab && ev.ab.id) || 'attack', name: ev.name || (ev.ab && ev.ab.name) || '', targets: (ev.targets || []).map(uidOf), fx: ev.fx || null, counter: ev.kind === 'counter' || undefined, telegraphing: ev.telegraphing || undefined });
+        {
+          const cmd = ev.cmd || CMD_OF_KIND[ev.kind] || 'enemy', id = ev.id || (ev.ab && ev.ab.id) || 'attack';
+          // 払った MP（BSCENE: 行動の始まりで人の札の MP を減らす。2026-09-27 の持ち主の報告「MP がターンの終わりまで減らない」）
+          let mp;
+          if (eng && ev.user && ev.user.isParty && (cmd === 'skill' || cmd === 'spell') && !ev.again) { try { mp = eng.mpCost(ev.user, id) || undefined; } catch (e) { mp = undefined; } }
+          out.push({ t: 'act', uid: uidOf(ev.user), cmd, id, name: ev.name || (ev.ab && ev.ab.name) || '', targets: (ev.targets || []).map(uidOf), fx: ev.fx || null, counter: ev.kind === 'counter' || undefined, telegraphing: ev.telegraphing || undefined, mp });
+        }
         break;
       case 'dmg': {
         const e = { t: 'dmg', uid: uidOf(ev.u), n: ev.n, crit: !!ev.crit, weak: !!ev.weak, kind: ev.mp ? 'mp' : ev.el && ev.kind !== 'cost' ? ev.el : ev.kind || 'phys' };   // 属性があれば kind は属性（BSCENE の依頼 28）

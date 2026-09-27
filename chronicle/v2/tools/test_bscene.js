@@ -125,6 +125,27 @@ section('リピートの持ち越し（BattleCore.seedRepeat）');
   const act = evs.find((e) => e.t === 'act' && e.uid === heroUid);
   ok('an invalid carried command falls back to a plain attack (target auto-picked)', act && act.cmd === 'attack', act);
   const lc = Bc.lastCommands();
+  // MP はその行動の始まりで（act の mp）
+  {
+    const c = R.Game.chars.hero;
+    const tech = Object.keys(R.DB.techs).find((id) => { const t = R.DB.techs[id]; return t.kind === 'tech' && t.wtype === (c.equip && c.equip.weapon1 && R.DB.items[c.equip.weapon1] ? R.DB.items[c.equip.weapon1].wtype : 'sword') && (t.mp || 0) > 0; });
+    if (tech && !(c.techs || []).includes(tech)) c.techs = (c.techs || []).concat([tech]);
+    c.mp = c.maxMp || c.mp || 30;
+    const B2 = R.BattleCore.create({ troop: 'tr_stub' });
+    const hu = B2.units.find((u) => u.side === 'party' && u.id === 'hero');
+    const opt = (B2.options(hu.uid).find((o) => o.cmd === 'skill') || { list: [] }).list.find((x) => x.usable);
+    if (opt) {
+      for (const u of B2.units) if (u.side === 'party') B2.submit(u.uid, u === hu ? { cmd: 'skill', id: opt.id, target: B2.units.find((x) => x.side === 'enemy').uid } : { cmd: 'defend' });
+      const ev2 = B2.round();
+      const a2 = ev2.find((e) => e.t === 'act' && e.uid === hu.uid);
+      ok('act events carry the MP paid (so the card drops at the start of the action)', a2 && a2.cmd === 'skill' && a2.mp === opt.mp && opt.mp > 0, { a2, cost: opt.mp });
+      // 描き方: act の演出で札の MP が減り始める（ラウンドの終わりを待たない）
+      const st = { clock: 0, vis: { [hu.uid]: { mp: 50 } }, tweens: [], speed: () => 1, unit: () => ({ side: 'party', name: 'x', wtype: 'sword', id: 'hero' }), actor: () => ({ x: 0, y: 0 }), head: null, pwait: () => Promise.resolve(), vrng: null, L: {} };
+      const H = _.play._H;
+      if (H) { H.act(st, { t: 'act', uid: hu.uid, cmd: 'skill', id: opt.id, mp: 7, targets: [] }, {}).catch(() => {}); for (let i = 0; i < 30; i++) { st.clock += 16; _.play.tick(st, 16); } }
+      ok('the card MP ticks down to (MP − cost) during the action start', H && Math.round(st.vis[hu.uid].mp) === 43, H ? st.vis[hu.uid].mp : 'no _H');
+    } else ok('a usable tech for the MP test', false, { tech });
+  }
   ok('lastCommands() gives {charId: {type, id}} for the next battle', lc && lc.hero && lc.hero.type === 'attack', lc);
 }
 
