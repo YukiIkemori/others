@@ -50,9 +50,9 @@
     O.push(B('yura_hut_h4', 3, 20, 4, 4, { door: { x: 5, y: 23, to: { map: 'yura_home4', spawn: 'door' } } }));
     O.push(B('yura_mill', 17, 2, 7, 6, { windows: 2, small: false }));   // 粉ひき小屋と大水車（東の x 22-24）。戸は描かない（入らない）
     // 粉ひきの庭・屋台・広場
-    O.push(K.prop('sack', 17, 8), K.prop('sack', 18, 8), K.prop('crate', 16, 6), K.prop('barrel', 16, 5));
-    O.push(K.prop('stall', 11, 20), K.prop('crate', 10, 20), K.prop('sack', 12, 20));
-    O.push(K.prop('bench', 17, 21), K.prop('bench', 12, 16), K.prop('flower_pot', 11, 6), K.prop('planter', 19, 24));
+    O.push(K.prop('sack', 18, 8), K.prop('barrel', 16, 5));   // 小物は壁ぎわに少しだけ（持ち主 2026-09-27: 移動の邪魔になる小物は置かない）
+    O.push(K.prop('stall', 11, 20), K.prop('crate', 10, 20));
+    O.push(K.prop('bench', 17, 21), K.prop('bench', 12, 16), K.prop('flower_pot', 11, 6));
     O.push(K.prop('stump', 2, 13), K.prop('rock', 27, 21));
     // 灯り: 置き灯籠（当たりなし）を水辺・小道の脇に。街灯は立てない
     for (const [x, y] of [[10, 10], [17, 10], [8, 13], [17, 13], [13, 17], [16, 17], [13, 22], [16, 22], [19, 20], [7, 19], [23, 25], [18, 7], [7, 7]]) O.push(K.prop('lantern', x, y));
