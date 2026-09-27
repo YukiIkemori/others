@@ -179,6 +179,38 @@
     st.hudIn = 1;
   }
 
+  /**
+   * 右下の操作の案内（2026-09-27 の持ち主の決まり: 速さとリピートはここに 1 つだけ）。
+   *   速さ: 「[R] 速さ：通常／＋1／＋2」（押すたびに変わる）。リピート: 動いている間は「リピート中：[B]でやめる」、
+   *   選べるときは「[L] リピート」。勝利・全滅・閉じる間は出さない。縦持ちは下の札（速さ・リピート・逃げる、タップ）が同じ役。
+   * → {list, repeatOn}
+   */
+  Bt.prompts = function (st) {
+    const base = st.ui && st.ui.prompts ? st.ui.prompts : [];
+    let list = base.filter((p) => p.btn !== 'r');
+    const live = st.phase === 'input' || st.phase === 'play' || st.phase === 'intro';
+    const repeatOn = !!(live && st.B && st.B.repeatOn);
+    if (live && !st.L.tall) {
+      if (repeatOn) list = [{ btn: 'b', label: 'でやめる', repeat: true }].concat(list.filter((p) => p.btn !== 'b'));
+      else if (st.phase === 'input' && (st.partyOpts || []).includes('repeat')) list = list.concat([{ btn: 'l', label: 'リピート' }]);
+      list = list.concat([{ btn: 'r', label: '速さ：' + Bt.speedLabel(speed()) }]);
+    }
+    return { list, repeatOn: repeatOn && !st.L.tall };
+  };
+  /** 「リピート中：」の金の札（案内の [B]でやめる の左） */
+  function drawRepeatTag(g, rect) {
+    const k = R.uiScale || 1, Kt = _.K, s = 12 * k;
+    const label = 'リピート中：';
+    const w = Kt.measure(label, { size: s, weight: 700 }) + 22 * k;
+    const x = rect.x - w - 2 * k, y = rect.y + rect.h / 2;
+    const pulse = R.Settings.get('reduceMotion') ? 1 : 0.6 + 0.4 * Math.sin(R.Engine.time / 240);
+    g.save();
+    g.fillStyle = `rgba(242,208,138,${pulse})`;
+    g.beginPath(); g.arc(x + 8 * k, y, 3.5 * k, 0, 7); g.fill();
+    g.restore();
+    Kt.text(g, label, x + 16 * k, y - s / 2 - 1 * k, { size: s, weight: 700, color: Kt.COL.gold, raw: true, shadow: true });
+  }
+
   /** ボスの名前の札（戦場の上の方、真ん中） */
   function drawBossCard(g, st) {
     const c = st.bossCard;
@@ -295,6 +327,8 @@
         const I = R.Input;
         // 戦闘の速さ（R）: 通常 → ＋1 → ＋2 → 通常（どの場面でも。勝利の札・全滅の画面では変えない）
         if (I.pressed('r') && st.phase !== 'result' && st.phase !== 'gameover' && st.phase !== 'closing') Bt.cycleSpeed();
+        // リピートを始める（L、選べるときだけ。一行の命令・1 人ずつの命令のどちらの窓でも）
+        if (I.pressed('l') && st.phase === 'input' && st.B && !st.B.repeatOn && (st.partyOpts || []).includes('repeat')) st.chipTap = 'repeat';
         // 縦持ちの札（タップ）
         const p = I.pointer;
         if (p && p.pressed && st.chipRects) {
@@ -532,8 +566,11 @@
     if (st.go) _.gameover.draw(g, st);
     if (st.ui && st.ui.draw) st.ui.draw(g);
     _.play.drawCard(g, st);
-    const pr = st.ui && st.ui.prompts ? st.ui.prompts : st.phase === 'play' ? (st.B && st.B.repeatOn ? [{ btn: 'b', label: 'リピートを止める' }, { btn: 'r', label: '速さ' }] : [{ btn: 'r', label: '速さ' }]) : null;
-    if (pr && !(L.tall && st.ui && st.ui.tallPrompts === false)) _.K.prompts(g, pr);
+    const pp = Bt.prompts(st);
+    if (pp.list.length && !(L.tall && st.ui && st.ui.tallPrompts === false)) {
+      const rect = _.K.prompts(g, pp.list);
+      if (pp.repeatOn && rect) drawRepeatTag(g, rect);
+    }
     // 入る移りの続きの暗さ（intro で明ける）
     if (st.cover > 0.001) { g.save(); g.globalAlpha = Math.min(1, st.cover); g.fillStyle = R.Gfx.BG || '#070812'; g.fillRect(0, 0, R.W, R.H); g.restore(); }
   }

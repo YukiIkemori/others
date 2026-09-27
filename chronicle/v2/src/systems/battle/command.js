@@ -232,11 +232,12 @@
     const memOn = R.Settings.get('cursorMemory') !== false;
     const start = memOn && G && G.battle && G.battle.cursor && G.battle.cursor._party != null ? G.battle.cursor._party : (m._party || 0);
     st.activeUid = null;
-    st.head = { name: '一行の命令', sub: po.includes('repeat') ? 'リピートは前のラウンドと同じ行動（B で止める）。' : 'どうする？' };
+    st.head = { name: '一行の命令', sub: po.includes('repeat') ? 'リピートは前のラウンドと同じ行動（動いている間は B でやめる）。' : 'どうする？' };
     const k = R.uiScale || 1;
     const i = await menu(st, {
       rows, sel: rows[start] && !rows[start].disabled ? start : 0, t0: R.Engine.time, cancel: false,
       prompts: [{ btn: 'a', label: '決定' }, { btn: 'r', label: '速さ' }],
+      onChip: (c) => { const j = rows.findIndex((r) => r.key === c && !r.disabled); return j >= 0 ? j : undefined; },   // L・札のリピート
       draw(g, w) {
         const n = st.partyUnits().length;
         const x = R.W - (R.safe.r || 0) - 14 * k - 150 * k, y = (14 + n * 44) * k;

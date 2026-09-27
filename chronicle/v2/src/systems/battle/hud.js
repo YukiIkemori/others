@@ -186,8 +186,9 @@
       K.text(g, back ? '後' : '前', x + s / 2, y + s * 0.12, { size: s * 0.72, weight: 700, color: c, align: 'center', raw: true });
     },
     prompts(g, list) {
-      if (fn('prompts')) { R.UIK.prompts(g, list); return; }
+      if (fn('prompts')) return R.UIK.prompts(g, list);
       const k = R.uiScale || 1, s = 11.5 * k;
+      const x1 = R.W - (R.safe.r || 0) - 16 * k;
       let x = R.W - (R.safe.r || 0) - 16 * k;
       const y = R.H - (R.safe.b || 0) - 16 * k - s;
       for (const p of list.slice().reverse()) {
@@ -200,6 +201,7 @@
         K.text(g, pr.label, x + kw / 2, y, { size: s, weight: 700, color: '#1a1a28', align: 'center', raw: true });
         x -= 18 * k;
       }
+      return { x, y: y - 4 * k, w: x1 - x, h: s + 8 * k };
     },
   };
   _.K = K;
@@ -308,8 +310,8 @@
    * 戦闘の速さの札（2026-09-27 の持ち主の決まり）: 「▶ 通常」「▶▶ ＋1」「▶▶▶ ＋2」。▶ は字でなく形で描く（字形の無いフォントでも同じに見える）。
    * R（縦持ちは札のタップ）で 通常 → ＋1 → ＋2 → 通常。変えた直後は少し光る。→ 幅
    */
-  function speedChip(g, x, y, sp, size) {
-    const n = sp === 3 ? 3 : sp === 2 ? 2 : 1, label = Bt.speedLabel(sp);
+  function speedChip(g, x, y, sp, size, pre) {
+    const n = sp === 3 ? 3 : sp === 2 ? 2 : 1, label = (pre || '') + Bt.speedLabel(sp);
     const h = size + K.u(9), padX = K.u(8), tw = size * 0.62, gap = size * 0.08;
     const iw = n * tw + (n - 1) * gap + K.u(5);
     const w = K.measure(label, { size, weight: 700 }) + padX * 2 + iw;
@@ -338,10 +340,11 @@
     if (L.tall) {
       let x = 16 * k;
       const y = L.chipsY;
-      const w1 = speedChip(g, x, y, sp, 12 * k);
+      const w1 = speedChip(g, x, y, sp, 12 * k, '速さ：');
       st.chipRects.speed = { x, y, w: w1, h: 22 * k }; x += w1 + 10 * k;
       const po = st.partyOpts || [];
-      const w2 = K.chip(g, x, y, 'リピート', { icon: 'repeat', size: 12 * k, color: st.B && st.B.repeatOn ? COL.gold : po.includes('repeat') ? COL.text2 : COL.disabled });
+      const on = !!(st.B && st.B.repeatOn);
+      const w2 = K.chip(g, x, y, on ? 'リピート中：タップでやめる' : 'リピート', { icon: 'repeat', size: 12 * k, color: on ? COL.gold : po.includes('repeat') && st.phase === 'input' ? COL.text2 : COL.disabled, line: on ? 'rgba(236,201,124,0.7)' : undefined });
       st.chipRects.repeat = { x, y, w: w2, h: 22 * k }; x += w2 + 10 * k;
       if (!st.setup.noEscape && !(st.info && st.info.boss)) {   // ボス戦は逃げられない（BATTLE 34-11）: 札を出さない
         const w3 = K.chip(g, x, y, '逃げる', { icon: 'exit', size: 12 * k, color: po.includes('escape') ? COL.text2 : COL.disabled });
@@ -349,11 +352,6 @@
       }
       return;
     }
-    const x = (R.safe.l || 0) + 16 * k, y = R.H - (R.safe.b || 0) - 40 * k;
-    let cx = x;
-    const w = speedChip(g, cx, y, sp, 10.5 * k);
-    st.chipRects.speed = { x: cx, y, w, h: 20 * k };
-    cx += w + 8 * k;
-    if (st.B && st.B.repeatOn) K.chip(g, cx, y, 'リピート', { icon: 'repeat', size: 10.5 * k, color: COL.gold, line: 'rgba(236,201,124,0.6)' });
+    // 16:9: 速さとリピートは右下の操作の案内に 1 つにまとめた（scene.js の Bt.prompts。2026-09-27 の持ち主の決まり）。左下には出さない
   };
 })(window.RPG);
