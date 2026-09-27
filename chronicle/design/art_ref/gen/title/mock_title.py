@@ -1,3 +1,6 @@
+"""Mock of the full title screen (key art + logo + menu in the UIK style) from v2/assets/title/.
+usage: python3 mock_title.py wide 2.0   |   python3 mock_title.py phone 3.0   (writes mock_<tag>.png in the cwd)
+The glow / vignette / particles here stand in for what the engine draws (v2/design/TITLE_ART.md)."""
 import sys, random, math
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageFilter

@@ -7,7 +7,8 @@ Masks (MASKS dir, made with rembg isnet-general-use + hand clean-up): hero_mask_
                 inpaint_mask_s.png, inpaint_mask_ps.png (alpha 0 = area the model repainted)
 Fonts: Shippori Mincho B1 ExtraBold (Google Fonts, OFL) for the re-set subtitle of the logo.
 
-usage: python3 build_title_assets.py MASKS_DIR FONT_TTF
+usage: python3 build_title_assets.py [MASKS_DIR (default raw/masks)] [FONT_TTF]
+After a rebuild, also refresh the .webp siblings (quality 88; logo 92).
 """
 import json, os, sys
 import numpy as np
@@ -16,7 +17,8 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 HERE = os.path.dirname(os.path.abspath(__file__))
 RAW = os.path.join(HERE, 'raw')
 OUT = os.path.abspath(os.path.join(HERE, '../../../../v2/assets/title'))
-MASKS, FONT = sys.argv[1], sys.argv[2]
+MASKS = sys.argv[1] if len(sys.argv) > 1 else os.path.join(RAW, 'masks')
+FONT = sys.argv[2] if len(sys.argv) > 2 else 'ShipporiMinchoB1-ExtraBold.ttf'
 
 
 def L(p):
@@ -138,5 +140,5 @@ if __name__ == '__main__':
                   skyline=(0.36, 0.47),
                   crag=[(0, 1), (0, 0.789), (0.253, 0.781), (0.49, 0.762), (0.493, 0.637), (0.726, 0.617), (0.794, 0.625),
                         (1, 0.617), (1, 1)], blur=4)
-    lsize, lbb = logo(FONT)
-    json.dump({'wide': wide, 'phone': phone, 'logo': {'size': lsize, 'crop': lbb}}, open(os.path.join(HERE, 'build_out.json'), 'w'), indent=1)
+    logo(FONT)
+    # the sidecars (title_wide.json, title_phone.json, logo.json) are hand-kept; re-check them if the art changes

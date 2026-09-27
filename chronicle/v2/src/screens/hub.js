@@ -218,13 +218,15 @@
   S.tallCard = function (g, c, r, focused) {
     const C = T().color;
     R.UIK.card(g, r, { focused, frost: true });
-    const pad = u(9), fs = u(50);
+    // 低い札（道具の相手選びなど、u(130) 未満）は顔を小さく・肩書きなしで HP/MP が札に収まるように（字の最小 12 CSS px で行が高くなった）
+    const compact = r.h < u(130);
+    const pad = u(9), fs = compact ? u(34) : u(50);
     const dead = !(c.hp > 0);
     R.UIK.portraitFrame(g, { x: r.x + pad, y: r.y + pad, w: fs, h: fs }, c.look, { dim: dead });
     const x = r.x + pad * 2 + fs;
     const tw = R.UIK.tag(g, c.row, x, r.y + pad + u(2), u(11));
     R.UIK.text(g, c.name, x + tw + u(6), r.y + pad, { size: u(15), weight: 700, color: dead ? C.disabled : focused ? C.goldHi : C.text, maxW: r.x + r.w - x - tw - u(12) });
-    R.UIK.text(g, S.title(c), x, r.y + pad + u(26), { size: u(12), color: C.text2, maxW: r.x + r.w - x - pad });
+    if (!compact) R.UIK.text(g, S.title(c), x, r.y + pad + u(26), { size: u(12), color: C.text2, maxW: r.x + r.w - x - pad });
     S.hpmp(g, c, r.x + pad, r.y + pad + fs + u(4), r.w - pad * 2, { size: 13.5, stack: true });
   };
 

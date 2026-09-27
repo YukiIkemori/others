@@ -15,11 +15,45 @@
  "anchor": {
   "subtitle_center": [
    0.5,
-   0.86
+   0.85
   ],
   "lantern_emblem": [
    0.497,
    0.26
+  ],
+  "flames": [
+   [
+    0.271,
+    0.301
+   ],
+   [
+    0.315,
+    0.27
+   ],
+   [
+    0.368,
+    0.23
+   ],
+   [
+    0.419,
+    0.192
+   ],
+   [
+    0.574,
+    0.192
+   ],
+   [
+    0.627,
+    0.23
+   ],
+   [
+    0.678,
+    0.27
+   ],
+   [
+    0.726,
+    0.301
+   ]
   ]
  },
  "motif": "hanging brass lantern with eight warm flames = the eight great flames",
