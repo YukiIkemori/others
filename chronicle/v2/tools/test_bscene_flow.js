@@ -92,7 +92,9 @@ async function main() {
   const memParty = await B.ev(p, 'RPG.Game.battle.cursor._party');
   ok('party command cursor remembered (repeat = 1)', memParty === 1, memParty);
   ok('finish the battle', await B.pressUntil(p, 'a', 'window.__r', 80));
-  ok('repeat stopped with B stays off in the next battle (memory off)', await (async () => { await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] })); const r = await B.waitFor(p, `${D} && ${D}.phase==='input'`, 20000); const on = await B.ev(p, `${D}.B.repeatOn`); return r && !on; })());
+  // 「finish the battle」は A の連打で一行の命令のリピート（カーソル記憶 = 1）をまた選ぶので、覚えを消してから次の戦闘
+  await B.ev(p, 'RPG.Battle.repeatMemory().on = false; 0');
+  ok('with the repeat memory off, the next battle waits for input', await (async () => { await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] })); const r = await B.waitFor(p, `${D} && ${D}.phase==='input'`, 20000); const on = await B.ev(p, `${D}.B.repeatOn`); return r && !on; })());
 
   section('逃げる');
   // 一行の命令: 戦う・リピート（1 ラウンド目は使えない）・逃げる
@@ -155,7 +157,8 @@ async function main() {
   await B.waitFor(p, `${D}.phase==='play'`, 20000);
   await B.press(p, 'b');
   ok('B stops repeat and the memory turns off', await B.waitFor(p, `!${D}.B.repeatOn && !RPG.Battle.repeatMemory().on`, 3000));
-  ok('battle ends', await finishWin() || await B.pressUntil(p, 'a', 'window.__r', 120));
+  await B.ev(p, `${D}.finish({ result: 'escape', rewards: null }); 0`);   // A の連打はリピートをまた選ぶので、ここでは閉じるだけ
+  ok('battle closed', await B.waitFor(p, 'window.__r', 10000));
   await B.ev(p, start({ demo: 'normal', mons: [['x', 1]] }));
   ok('after B, the next battle starts with normal input', await B.waitFor(p, `${D} && ${D}.phase==='input' && ${D}.ui`, 30000) && !(await B.ev(p, `${D}.B.repeatOn`)));
   await B.ev(p, `${D}.finish({ result: 'escape', rewards: null }); 0`);

@@ -174,7 +174,214 @@
     "t": "2026-09-27T19:33:42",
     "secs": 98.8
    }
-  ]
+  ],
+  "frames": [
+   {
+    "slot": 1,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      95.5,
+      54.0
+     ],
+     "height": 74,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   },
+   {
+    "slot": 2,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      97.7,
+      53.5
+     ],
+     "height": 75,
+     "rescaled": null,
+     "copy": 0.13,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 27.8
+    }
+   },
+   {
+    "slot": 3,
+    "kind": "keep",
+    "src": "windup",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.862",
+     "head_scale": 0.862,
+     "head": [
+      95.7,
+      52.2
+     ],
+     "height": 77,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 28.0
+    }
+   },
+   {
+    "slot": 4,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      97.7,
+      52.9
+     ],
+     "height": 79,
+     "rescaled": null,
+     "copy": 0.22,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 27.3
+    }
+   },
+   {
+    "slot": 5,
+    "kind": "keep",
+    "src": "thrust_ready",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.937",
+     "head_scale": 0.937,
+     "head": [
+      96.2,
+      53.2
+     ],
+     "height": 79,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 26.7
+    }
+   },
+   {
+    "slot": 6,
+    "kind": "keep",
+    "src": "thrust",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.862",
+     "head_scale": 0.862,
+     "head": [
+      95.7,
+      53.2
+     ],
+     "height": 79,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 29.4
+    }
+   },
+   {
+    "slot": 7,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      96.7,
+      53.2
+     ],
+     "height": 82,
+     "rescaled": null,
+     "copy": 0.25,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 30.8
+    }
+   },
+   {
+    "slot": 8,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      97.5,
+      54.0
+     ],
+     "height": 74,
+     "rescaled": null,
+     "copy": 0.17,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 10.0
+    }
+   },
+   {
+    "slot": 9,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      95.5,
+      54.0
+     ],
+     "height": 74,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   }
+  ],
+  "lay": {
+   "HX": 96,
+   "G": 114,
+   "W": 180,
+   "H": 117
+  },
+  "from_raw": "raw/attack_a1.png"
  },
  "cast": {
   "attempts": [
@@ -192,6 +399,213 @@
     "t": "2026-09-27T19:33:46",
     "secs": 96.4
    }
-  ]
+  ],
+  "frames": [
+   {
+    "slot": 1,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      91.5,
+      52.0
+     ],
+     "height": 74,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   },
+   {
+    "slot": 2,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      89.7,
+      56.5
+     ],
+     "height": 69,
+     "rescaled": null,
+     "copy": 0.11,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 21.8
+    }
+   },
+   {
+    "slot": 3,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      92.7,
+      48.2
+     ],
+     "height": 76,
+     "rescaled": null,
+     "copy": 0.3,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 33.8
+    }
+   },
+   {
+    "slot": 4,
+    "kind": "keep",
+    "src": "cast_b",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.862",
+     "head_scale": 0.862,
+     "head": [
+      91.7,
+      50.2
+     ],
+     "height": 77,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 31.4
+    }
+   },
+   {
+    "slot": 5,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      91.2,
+      49.9
+     ],
+     "height": 81,
+     "rescaled": null,
+     "copy": 0.33,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 31.5
+    }
+   },
+   {
+    "slot": 6,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      89.7,
+      53.2
+     ],
+     "height": 71,
+     "rescaled": null,
+     "copy": 0.13,
+     "shift": [
+      6,
+      0
+     ],
+     "err": 30.6
+    }
+   },
+   {
+    "slot": 7,
+    "kind": "keep",
+    "src": "cast_a",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.862",
+     "head_scale": 0.862,
+     "head": [
+      91.7,
+      48.2
+     ],
+     "height": 76,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 32.2
+    }
+   },
+   {
+    "slot": 8,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      89.9,
+      53.7
+     ],
+     "height": 70,
+     "rescaled": null,
+     "copy": 0.09,
+     "shift": [
+      12,
+      2
+     ],
+     "err": 33.7
+    }
+   },
+   {
+    "slot": 9,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      92.8,
+      52.2
+     ],
+     "height": 74,
+     "rescaled": null,
+     "copy": 0.22,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 13.9
+    }
+   }
+  ],
+  "lay": {
+   "HX": 92,
+   "G": 112,
+   "W": 176,
+   "H": 115
+  },
+  "from_raw": "raw/cast_a1.png"
  }
 }
