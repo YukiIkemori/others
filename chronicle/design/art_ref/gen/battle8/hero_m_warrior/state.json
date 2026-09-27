@@ -28,6 +28,20 @@
     "extra": "",
     "t": "2026-09-27T19:16:21",
     "secs": 93.6
+   },
+   {
+    "raw": "raw/attack_a3.png",
+    "pitch": 8,
+    "lay": {
+     "HX": 58,
+     "G": 75,
+     "W": 118,
+     "H": 78
+    },
+    "quality": "high",
+    "extra": "",
+    "t": "2026-09-27T19:19:51",
+    "secs": 88.0
    }
   ],
   "frames": [
@@ -58,19 +72,19 @@
     "src": null,
     "checks": {
      "ok": false,
-     "why": "head scale 0.862",
-     "head_scale": 0.862,
+     "why": "head scale 0.837",
+     "head_scale": 0.837,
      "head": [
-      54.2,
-      31.9
+      53.9,
+      33.6
      ],
-     "height": 60,
-     "copy": 0.09,
+     "height": 58,
+     "copy": 0.08,
      "shift": [
-      2,
-      1
+      3,
+      0
      ],
-     "err": 32.8
+     "err": 27.2
     }
    },
    {
@@ -100,19 +114,19 @@
     "src": null,
     "checks": {
      "ok": false,
-     "why": "head scale 0.800",
-     "head_scale": 0.8,
+     "why": "head scale 0.750",
+     "head_scale": 0.75,
      "head": [
-      57.4,
-      36.2
+      54.8,
+      35.6
      ],
-     "height": 59,
-     "copy": 0.05,
+     "height": 57,
+     "copy": 0.07,
      "shift": [
       0,
-      5
+      10
      ],
-     "err": 37.8
+     "err": 38.4
     }
    },
    {
@@ -121,19 +135,19 @@
     "src": null,
     "checks": {
      "ok": false,
-     "why": "head scale 0.837",
-     "head_scale": 0.837,
+     "why": "head scale 0.737",
+     "head_scale": 0.737,
      "head": [
-      54.9,
-      38.6
+      53.6,
+      38.5
      ],
-     "height": 47,
-     "copy": 0.05,
+     "height": 46,
+     "copy": 0.07,
      "shift": [
       0,
-      5
+      9
      ],
-     "err": 31.5
+     "err": 26.9
     }
    },
    {
@@ -162,20 +176,20 @@
     "kind": "new",
     "src": null,
     "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 0.975,
+     "ok": false,
+     "why": "head scale 0.787",
+     "head_scale": 0.787,
      "head": [
-      61.7,
-      33.2
+      52.2,
+      38.1
      ],
-     "height": 55,
-     "copy": 0.08,
+     "height": 47,
+     "copy": 0.07,
      "shift": [
       0,
-      5
+      13
      ],
-     "err": 30.9
+     "err": 25.1
     }
    },
    {
@@ -183,20 +197,20 @@
     "kind": "new",
     "src": null,
     "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 1.0,
+     "ok": false,
+     "why": "head scale 0.800",
+     "head_scale": 0.8,
      "head": [
-      58.0,
-      23.5
+      51.4,
+      31.2
      ],
-     "height": 64,
-     "copy": 0.65,
+     "height": 54,
+     "copy": 0.07,
      "shift": [
       0,
-      0
+      12
      ],
-     "err": 7.6
+     "err": 22.0
     }
    },
    {
@@ -227,6 +241,6 @@
    "W": 118,
    "H": 78
   },
-  "from_raw": "raw/attack_a2.png"
+  "from_raw": "raw/attack_a3.png"
  }
 }
