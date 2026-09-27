@@ -10,8 +10,11 @@
       R.Engine.fade.a = 0;
       R.Game = null;
       R.Input.touchLayout('menu');
-      R.Audio.bgm('title', { fade: 600 });
-      const r = await R.Screens.open('title');
+      // 起動して最初だけ BGM を 1.2 秒のフェードで入れ、タイトルは出てくる順を見せる（design/TITLE_ART.md §4・§5）
+      const first = !Flow._titled;
+      Flow._titled = true;
+      R.Audio.bgm('title', { fade: first ? 1200 : 600 });
+      const r = await R.Screens.open('title', { intro: first });
       if (r && r.cmd === 'continue' && R.Save.load(r.slot)) return Flow.resume();
       if (r && (r.cmd === 'load' || r.cmd === 'passphrase') && R.Game) return Flow.resume();   // 記録を選ぶ・冒険の合言葉は画面の中で読み込み済み
       return Flow.newGame(r || {});
@@ -20,9 +23,13 @@
     async newGame(o) {
       o = o || {};
       const s = (R.DB.config && R.DB.config.start) || {};
+      // タイトルの「はじめから」は暗転して閉じる（o.faded）: 次の場面の幕が出たところで明ける
+      const unfade = () => { if (o.faded) { o.faded = false; R.Engine.fadeTo(0, 300); } };
+      if (!s.event) unfade();
       const hero = o.hero || (s.event ? null : await R.Screens.open('charcreate'));
       R.State.newGame({ hero, seed: o.seed });
       await R.Field.enter(s.map, s.spawn, { fade: 0, noAutosave: true });
+      unfade();
       if (s.event) await R.Events.run(s.event, { map: s.map });
     },
     /** 読み込んだ R.Game の場所から続ける */
