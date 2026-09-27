@@ -1,7 +1,7 @@
 // MENUS: 店（MODERN_UI §6.13 shop.png、A6・A17・A20。2026-09 に作り直し）。params {id, face?, line?, tab?} → undefined（売り買いは画面の中で R.Game を書く）
 //   上: 店の人の顔・店の名前・ひとこと。所持金はいつも見える（横長は右上の札、縦持ちは店の札の右）。
 //   タブ: 武器／防具／道具（その店に並ぶ種類だけ。アクセサリは防具）＋売る。L/R（キーボード Q/E）とタップで替える。1 つの建物に 1 つの店のまま。
-//   一覧の上の札: 並び（種類順 → 値段順 → 強さ順。X かタップ）、しぼり込み「装備できる物だけ」（一行の誰かが付けられる品。START かタップ。武器・防具のタブ）。
+//   一覧の上の札: 並び（種類順 → 値段順 → 強さ順。X かタップ。下の表示は「並べ方」）、しぼり込み「装備できる物だけ」（一行の誰かが付けられる品。START かタップ。武器・防具のタブ）。
 //   一覧の行: アイコン・名前・「装備中」の札・持っている数 ×N・値段（売るタブは売値。お金が足りない値段は灰色、誰も付けられない装備は名前が灰色）。
 //   右（縦持ちは下）: 名前・種類・値段・主な値・説明（2 行まで）。装備なら「仲間が付けると」の帯: 一行の全員の顔と増減
 //     （▲+n 緑 ／ ▼−n 赤 ／ ±0 灰。付けられない人は顔を薄くして「装備不可」、もう付けている人は「装備中」）。
@@ -306,10 +306,10 @@
         this.drawQty(g);
         S.prompts(g, [{ btn: 'a', label: this.qtyPick.mode === 'buy' ? '買う' : '売る' }, { btn: 'b', label: 'やめる' }]);
       } else if (row) {
-        const pr = [{ btn: 'a', label: sell ? '売る' : '買う' }, { btn: 'b', label: '戻る' }, { btn: 'x', label: '並び替え' }, { btn: 'y', label: '詳しく' }];
+        const pr = [{ btn: 'a', label: sell ? '売る' : '買う' }, { btn: 'b', label: '戻る' }, { btn: 'x', label: '並べ方' }, { btn: 'y', label: '詳しく' }];
         if (!tall && this.canFilter()) pr.push({ btn: 'start', label: 'しぼり込み' });
         S.prompts(g, pr);
-      } else S.prompts(g, [{ btn: 'b', label: '戻る' }, { btn: 'x', label: '並び替え' }]);
+      } else S.prompts(g, [{ btn: 'b', label: '戻る' }, { btn: 'x', label: '並べ方' }]);
     },
     /** 一覧の上の札: 並び・しぼり込み（押せる） */
     drawBar(g, lp, barH) {
@@ -471,7 +471,7 @@
       q.rects.p1 = button(g, { x: px + pw - bw * 2 - u(8), y: ry, w: bw, h: bh }, '＋1', { disabled: q.n >= q.max });
       q.rects.p10 = button(g, { x: px + pw - bw, y: ry, w: bw, h: bh }, '＋10', { disabled: q.n >= q.max });
       R.UIK.text(g, '×' + q.n, nx, ry + (bh - u(28)) / 2, { size: u(28), weight: 700, color: C.goldHi, align: 'center' });
-      R.UIK.text(g, '←→ 1 つ ・ ↑↓ 10 ずつ', nx, ry + bh + u(8), { size: u(12.5), color: C.text3, align: 'center', maxW: pw });
+      R.UIK.text(g, '←→で1つ、↑↓で10ずつ', nx, ry + bh + u(8), { size: u(12.5), color: C.text3, align: 'center', maxW: pw });
       // 合計と所持金
       const ty = ry + bh + u(36);
       R.UIK.text(g, (buy ? '合計 ' : '受け取り ') + R.UIK.num(total) + ' G', px, ty, { size: u(17), weight: 700, color: C.gold });

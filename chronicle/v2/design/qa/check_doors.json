@@ -1,7 +1,202 @@
 {
- "date": "2026-09-27T14:47:28.430Z",
+ "date": "2026-09-27T16:12:58.300Z",
  "fixture": "content_p_pharos",
  "walked": [
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_inn",
+   "at": "pharos_inn",
+   "to": "pharos_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    11
+   ],
+   "ms": 32890
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_tavern",
+   "at": "pharos_tavern",
+   "to": "pharos_tavern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    18,
+    11
+   ],
+   "ms": 27463
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_shop",
+   "at": "pharos_shop",
+   "to": "pharos_shop",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    27,
+    12
+   ],
+   "ms": 21619
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house1",
+   "at": "pharos_home1",
+   "to": "pharos_home1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    34,
+    12
+   ],
+   "ms": 18653
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house2",
+   "at": "pharos_home2",
+   "to": "pharos_home2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    40,
+    12
+   ],
+   "ms": 17837
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_record",
+   "at": "pharos_record",
+   "to": "pharos_record",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    19
+   ],
+   "ms": 16782
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_smith",
+   "at": "pharos_smith",
+   "to": "pharos_smith",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    12,
+    19
+   ],
+   "ms": 15328
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house3",
+   "at": "pharos_home3",
+   "to": "pharos_home3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    36,
+    19
+   ],
+   "ms": 17778
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house4",
+   "at": "pharos_home4",
+   "to": "pharos_home4",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    28
+   ],
+   "ms": 18230
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house5",
+   "at": "pharos_home5",
+   "to": "pharos_home5",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    13,
+    28
+   ],
+   "ms": 15998
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house6",
+   "at": "pharos_home6",
+   "to": "pharos_home6",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    38,
+    28
+   ],
+   "ms": 22504
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_shipyard",
+   "at": "pharos_shipyard",
+   "to": "pharos_shipyard",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    47,
+    25
+   ],
+   "ms": 22831
+  },
+  {
+   "map": "pharos",
+   "kind": "exit",
+   "id": "0,18",
+   "at": "world",
+   "to": "world",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    18
+   ],
+   "ms": 21823
+  },
   {
    "map": "roa",
    "kind": "door",
@@ -15,7 +210,7 @@
     5,
     11
    ],
-   "ms": 27554
+   "ms": 22227
   },
   {
    "map": "roa",
@@ -30,7 +225,7 @@
     14,
     13
    ],
-   "ms": 26832
+   "ms": 25296
   },
   {
    "map": "roa",
@@ -45,7 +240,7 @@
     21,
     13
    ],
-   "ms": 23078
+   "ms": 18346
   },
   {
    "map": "roa",
@@ -60,7 +255,7 @@
     29,
     12
    ],
-   "ms": 21780
+   "ms": 16129
   },
   {
    "map": "roa",
@@ -69,13 +264,13 @@
    "at": "roa_home4",
    "to": "roa_home4",
    "ok": true,
-   "steps": 2,
+   "steps": 4,
    "why": null,
    "start": [
     36,
     12
    ],
-   "ms": 10279
+   "ms": 14303
   },
   {
    "map": "roa",
@@ -90,7 +285,7 @@
     5,
     25
    ],
-   "ms": 13535
+   "ms": 13704
   },
   {
    "map": "roa",
@@ -105,7 +300,7 @@
     30,
     21
    ],
-   "ms": 14590
+   "ms": 16354
   },
   {
    "map": "roa",
@@ -120,7 +315,7 @@
     17,
     31
    ],
-   "ms": 11927
+   "ms": 18250
   },
   {
    "map": "roa",
@@ -135,10 +330,122 @@
     39,
     15
    ],
-   "ms": 31023
+   "ms": 21267
   }
  ],
  "looks": [
+  {
+   "map": "pharos",
+   "npc": "otto",
+   "look": "otto",
+   "art": "otto",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "gateguard",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "well_child",
+   "look": "npc_child_2",
+   "art": "npc_pen_child_2",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "tadeo",
+   "look": "npc_tadeo",
+   "art": "npc_tadeo",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "fishwife",
+   "look": "npc_woman_3",
+   "art": "npc_pen_woman_3",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "old_sailor",
+   "look": "npc_sailor_2",
+   "art": "npc_pen_sailor_2",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "ship_sailor",
+   "look": "npc_sailor_1",
+   "art": "npc_pen_sailor_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "plaza_woman",
+   "look": "npc_woman_1",
+   "art": "npc_pen_woman_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "bench_old",
+   "look": "npc_old_m_2",
+   "art": "npc_pen_old_m_2",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "merchant",
+   "look": "npc_merchant_1",
+   "art": "npc_pen_keeper_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "yena",
+   "look": "npc_yena",
+   "art": "npc_yena",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "kid_pier",
+   "look": "npc_child_4",
+   "art": "npc_pen_child_4",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "dog",
+   "look": "ani_dog",
+   "art": "ani_dog",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "berna",
+   "look": "berna",
+   "art": "berna",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "cheer_a",
+   "look": "npc_man_1",
+   "art": "npc_pen_man_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "cheer_b",
+   "look": "npc_woman_1",
+   "art": "npc_pen_woman_1",
+   "ok": true
+  },
   {
    "map": "roa",
    "npc": "gatewoman",

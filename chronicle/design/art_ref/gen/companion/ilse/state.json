@@ -235,9 +235,17 @@
      "air": 0
     }
    },
-   "notes": [],
+   "notes": [
+    "2026-09-27: too thin (owner approved widening) -> the body below the neck widened x1.26 of the torso width by duplicating low-detail interior columns (front/back +5, sides +3; same head-centre offsets and one neck line per direction row; head untouched; pixel-exact, no resampling) -> raw/s2_widen_body126.png = comp_ilse_s2.png (base: raw/s2_a1.png)"
+   ],
    "pitch": 8.184,
-   "from_raw": "raw/s2_a1.png"
+   "from_raw": "raw/s2_a1.png",
+   "widened": {
+    "factor": 1.26,
+    "mode": "body below the neck",
+    "base": "raw/s2_a1.png",
+    "result": "raw/s2_widen_body126.png"
+   }
   },
   "3": {
    "attempts": [
