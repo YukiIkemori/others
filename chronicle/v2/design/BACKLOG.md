@@ -21,3 +21,4 @@ Items the owner asked for "later" — not part of the current demo-polish pass.
 - Break the grid: irregular placement/orientation/spacing, winding paths, organic shapes.
 - One strange large building may hold several shops (each with its own door).
 - Yura (riverside mill village) is accepted for now; later passes can break it up further.
+- Towns: small props must never block movement; keep clutter off paths (owner 2026-09-27)
