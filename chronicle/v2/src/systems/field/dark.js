@@ -4,7 +4,7 @@
 //   宝箱と泉のきらめきは膜の上（layers.js）。範囲に入ったら場所の名前の横に「暗い」（hud.js）。
 //   灯りの外で始まった戦闘は setup.dark（R.Mon.encounter の o.dark）。一行のランタンは数えない（しょく台・泉の灯りだけ）。
 //   松明（i_torch、RULES の use {type:'light', r, steps}）: R.Field.light(r, steps) の間は一行の灯りが r マスになり、灯りの中として数える。
-//   範囲の縁は 1.5 マスかけて少しずつ暗くする（四角い線に見せない、CONTENT-F の依頼）。
+//   範囲の縁は約 2 マスかけて少しずつ暗くし、揺らぎと丸い角で四角い線に見せない（CONTENT-F・QA の依頼。膜はマップごとに 1 枚焼く）。
 (function (R) {
   'use strict';
   const F = (R.Field = R.Field || {});
@@ -63,6 +63,45 @@
     mg.drawImage(hole, x / 4 - s / 2 + 1, y / 4 - s / 2 + 1, s, s);
   }
 
+  // 暗がりの範囲の膜（マップの座標、1 マス Q px）。rects の組が変わったときだけ作り直す
+  let fieldCache = null;
+  const Q = 4, PAD = 3;
+  function vnoise(x, y, seed) {
+    const h = (i, j) => { const v = Math.sin(i * 127.1 + j * 311.7 + seed * 74.7) * 43758.5453; return v - Math.floor(v); };
+    const xi = Math.floor(x), yi = Math.floor(y), fx = x - xi, fy = y - yi;
+    const sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy);
+    const a = h(xi, yi), b = h(xi + 1, yi), c = h(xi, yi + 1), e = h(xi + 1, yi + 1);
+    return a + (b - a) * sx + (c - a) * sy + (a - b - c + e) * sx * sy;
+  }
+  function darkField(m, rects, sig) {
+    if (fieldCache && fieldCache.sig === sig) return fieldCache;
+    const W = (m.w + PAD * 2) * Q, H = (m.h + PAD * 2) * Q;
+    const c = R.Gfx.canvas2d(W, H);
+    if (!c) return null;
+    const g = c.getContext('2d'), img = g.createImageData(W, H), px = img.data;
+    const seed = (R.U && R.U.hash ? R.U.hash(m.id) % 997 : 7);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const tx = x / Q - PAD + 0.5 / Q, ty = y / Q - PAD + 0.5 / Q;
+      // 縁の揺らぎ（±0.8 マス、大きさの違う 2 つの波）
+      const n = (vnoise(tx * 0.3, ty * 0.3, seed) - 0.5) * 1.7 + (vnoise(tx * 1.1, ty * 1.1, seed + 3) - 0.5) * 0.6;
+      let a = 0;
+      for (const r of rects) {
+        // 四角からの符号つきの距離（マス。中は負）。角は丸く
+        const dx = Math.max(r[0] - tx, tx - (r[0] + r[2])), dy = Math.max(r[1] - ty, ty - (r[1] + r[3]));
+        const out = Math.hypot(Math.max(dx, 0), Math.max(dy, 0)), inside = Math.min(Math.max(dx, dy), 0);
+        const sd = out + inside + n;
+        // sd 1.4（外）→ −0.9（中）で 0 → 1
+        let k = (1.4 - sd) / 2.3; k = k < 0 ? 0 : k > 1 ? 1 : k; k = k * k * (3 - 2 * k);
+        if (k > a) a = k;
+      }
+      const q = (y * W + x) * 4;
+      px[q] = 5; px[q + 1] = 6; px[q + 2] = 18; px[q + 3] = Math.round(a * 0.93 * 255);
+    }
+    g.putImageData(img, 0, 0);
+    fieldCache = { sig, c, q: Q, pad: PAD };
+    return fieldCache;
+  }
+
   D.draw = function (g, cam) {
     if (!D.on()) return;
     if (!ensure()) return;
@@ -73,19 +112,23 @@
     const d = m.dark;
     if (d === true) mg.fillRect(0, 0, mask.width, mask.height);
     else {
+      // 範囲の膜はマップごとに 1 枚（1 マス 4 px）に焼いておく: 縁は約 2 マスかけて暗くなり、揺らぎで直線・四角い角に見せない
+      // （前は四角を 6 枚重ねていて、縁と角が四角いまま見えた。QA verda_dark）
+      let sig = m.id + ':' + t;
+      const act = [];
       for (let i = 0; i < d.length; i++) {
         const e = d[i];
         if (e.cond != null && !R.State.check(e.cond)) continue;
-        if (!e.rect) { mg.fillRect(0, 0, mask.width, mask.height); continue; }
-        const r = e.rect;
-        // 縁をぼかす: 外へ 1.5 マス・内へ 0.5 マスの間を 6 枚の薄い膜で重ねる（重なった内側が 0.93 になる）
-        const x0 = (r[0] * t - cx) / 4 + 1, y0 = (r[1] * t - cy) / 4 + 1, w0 = (r[2] * t) / 4, h0 = (r[3] * t) / 4, q = t / 4;
-        mg.fillStyle = 'rgba(5,6,18,0.36)';
-        for (let k = 0; k < 6; k++) {
-          const o = q * (1.5 - (k * 2) / 5);   // 1.5 → -0.5 マス
-          mg.fillRect(x0 - o, y0 - o, w0 + o * 2, h0 + o * 2);
+        if (!e.rect) { act.length = 0; act.push(null); break; }
+        act.push(e.rect); sig += '|' + i;
+      }
+      if (act.length === 1 && act[0] === null) mg.fillRect(0, 0, mask.width, mask.height);
+      else if (act.length) {
+        const fld = darkField(m, act, sig);
+        if (fld) {
+          mg.imageSmoothingEnabled = true;
+          mg.drawImage(fld.c, (-fld.pad * t - cx) / 4 + 1, (-fld.pad * t - cy) / 4 + 1, (fld.c.width / fld.q) * t / 4, (fld.c.height / fld.q) * t / 4);
         }
-        mg.fillStyle = 'rgba(5,6,18,0.93)';
       }
     }
     mg.globalCompositeOperation = 'destination-out';
