@@ -15,6 +15,7 @@
     fx: 'slash2',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
+    derive: [{ to: 't_greatsword_flat', uses: 20, chance: 0.025 }, { to: 't_greatsword_desperate', uses: 30, chance: 0.015 }],
   },
   t_greatsword_mow: {
     kind: 'tech',
@@ -28,6 +29,7 @@
     fx: 'slash2',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
+    derive: [{ to: 't_greatsword_whirl', uses: 25, chance: 0.02 }],
   },
   t_greatsword_crumble: {
     kind: 'tech',
@@ -44,6 +46,7 @@
     fx: 'strike',
     rank: 2,
     glim: { lv: 2, from: ['attack'] },
+    derive: [{ to: 't_greatsword_bell', uses: 30, chance: 0.02 }],
   },
   t_greatsword_throw: {
     kind: 'tech',
@@ -70,6 +73,7 @@
     fx: 'strike2',
     rank: 2,
     glim: { lv: 2, from: ['t_greatsword_overhead'] },
+    derive: [{ to: 't_greatsword_helmsplit', uses: 30, chance: 0.02 }],
   },
   t_greatsword_parry: {
     kind: 'tech',
@@ -111,6 +115,7 @@
     fx: 'slash2',
     rank: 3,
     glim: { lv: 3, from: ['t_greatsword_mow'] },
+    derive: [{ to: 't_greatsword_quake', uses: 40, chance: 0.012 }],
   },
   t_greatsword_bell: {
     kind: 'tech',
@@ -124,6 +129,7 @@
     fx: 'strike2',
     rank: 4,
     glim: { lv: 4, from: ['t_greatsword_crumble'] },
+    derive: [{ to: 't_greatsword_strip', uses: 35, chance: 0.015 }],
   },
   t_greatsword_desperate: {
     kind: 'tech',
@@ -137,6 +143,7 @@
     fx: 'slash3',
     rank: 4,
     glim: { lv: 4, from: ['t_greatsword_overhead'] },
+    derive: [{ to: 't_greatsword_cliff', uses: 40, chance: 0.012 }],
   },
   t_greatsword_helmsplit: {
     kind: 'tech',
@@ -150,6 +157,7 @@
     fx: 'slash3',
     rank: 4,
     glim: { lv: 4, from: ['t_greatsword_flat'] },
+    derive: [{ to: 't_greatsword_adamant', uses: 45, chance: 0.012 }],
   },
   t_greatsword_strip: {
     kind: 'tech',
@@ -163,6 +171,7 @@
     fx: 'strike2',
     rank: 5,
     glim: { lv: 5, from: ['t_greatsword_bell'] },
+    derive: [{ to: 't_greatsword_thunder', uses: 60, chance: 0.008 }],
   },
   t_greatsword_rend: {
     kind: 'tech',
@@ -176,6 +185,7 @@
     fx: 'slash3',
     rank: 5,
     glim: { lv: 5, from: ['t_greatsword_flat'] },
+    derive: [{ to: 't_greatsword_crush', uses: 45, chance: 0.012 }],
   },
   t_greatsword_shatter: {
     kind: 'tech',
@@ -215,6 +225,7 @@
     fx: 'earth2',
     rank: 6,
     glim: { lv: 6, from: ['t_greatsword_whirl', 't_greatsword_desperate'] },
+    derive: [{ to: 't_greatsword_tempest', uses: 50, chance: 0.01 }],
   },
   t_greatsword_crush: {
     kind: 'tech',
@@ -228,6 +239,7 @@
     fx: 'slash3',
     rank: 7,
     glim: { lv: 7, from: ['t_greatsword_rend'] },
+    derive: [{ to: 't_greatsword_skyfall', uses: 60, chance: 0.008 }],
   },
   t_greatsword_adamant: {
     kind: 'tech',

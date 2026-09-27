@@ -9,6 +9,7 @@
 //   R.State.check(cond) → bool             条件（下の文法）。R.State.checkIn(G, cond, env) は同じ物を任意の状態で（tools/lib/cond.js も使う）
 //   R.State.gain(id, n) → K.gain           品を入れる 1 か所（ev.item・宝箱・店・戦闘の報酬）。u_* はその時のティアの個体を R.Game.uniques に
 //   足した物: take(id, n) → bool / owned(id) → 袋＋装備の数 / hero() → CharState / heroName() / gold(n)
+//   migrateChars(G) → 派生技の回数 techUse・derived を埋める（deserialize が呼ぶ）
 //   canonItem(id) → 今の id（R.DB.itemAlias: まとめて消した品 → 残した品）/ migrateItems(G) → 袋と装備を付け替えた数（deserialize が呼ぶ）
 //
 // 条件 Cond（§2.5.10。ここに無い書き方は R.warn して false）
@@ -50,6 +51,7 @@
     const c = {
       id, name: o.name || id, look: o.look || id, type: o.type, gl: 0, hp: 1, mp: 0,
       equip: {}, wprof: {}, eprof: {}, techs: [], spells: [], status: [], row: o.row || 'front',
+      techUse: {}, derived: {},   // 派生技: 技を使った回数・派生で覚えた技の元（R.Glimmer.countUse・learnDerived）
     };
     if (c.type === undefined) delete c.type;
     for (const k of EQUIP) c.equip[k] = null;
@@ -157,6 +159,17 @@
     return n;
   };
 
+  /** 全員（控えも）の techUse・derived を正しい形に（古いセーブには無い → {}。知らない技・負の数は捨てる）→ G */
+  State.migrateChars = function (G) {
+    for (const cid of Object.keys((G && G.chars) || {})) {
+      const c = G.chars[cid];
+      if (!c || typeof c !== 'object') continue;
+      if (R.Glimmer && R.Glimmer.sanitize) R.Glimmer.sanitize(c);
+      else { if (!c.techUse || typeof c.techUse !== 'object') c.techUse = {}; if (!c.derived || typeof c.derived !== 'object') c.derived = {}; }
+    }
+    return G;
+  };
+
   // ---------------------------------------------------------------- 保存と読み込み
   State.serialize = function () {
     const G = R.Game;
@@ -183,6 +196,7 @@
     if (!G.battle.cursor) G.battle.cursor = {};
     if (!Array.isArray(G.battle.lastRound)) G.battle.lastRound = [];
     State.migrateItems(G);   // 消した品の id（R.DB.itemAlias）を残した品へ
+    State.migrateChars(G);   // 派生技の回数（techUse・derived）: 古いセーブには無い → {}
     const chk =R.Contract && R.Contract.check ? R.Contract.check('game', G) : { ok: true };
     if (!chk.ok) { R.warn('R.State.deserialize: ' + chk.errors.slice(0, 3).join('; ')); return false; }
     R.Game = G;

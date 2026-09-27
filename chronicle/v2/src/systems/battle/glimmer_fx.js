@@ -1,13 +1,17 @@
 // BSCENE: 閃きの瞬間（MODERN_UI §6.17・§3.6、glimmer.png）。画面が一瞬暗くなり（150 ms）→ 閃いた人の頭の上に電球（ピコーン）→
 // 右上の一覧のその人の行が金に光り → 左上の帯に「閃き」と技名（h1、金）を 900 ms（倍速・早送りでも 0.9 秒）→ 戻る（200 ms）。
 // その後の act（閃いた技をその場で繰り出す）は playback がふつうに演出する。
+// 派生技（e.from がある。行動の後に出る）: 同じ帯に「〇〇から、」（小）と「△△を編み出した！」（大）。技は繰り出さないので、
+// 帯は戦闘の速さに合わせて短く（DERIVE_MS ÷ battleSpeed。1 / 2 / 3 / 5 → 1.1 / 0.55 / 0.37 / 0.22 秒）出して、消えるまで待つ。
 (function (R) {
   'use strict';
   const Bt = (R.Battle = R.Battle || {});
   const _ = (Bt._ = Bt._ || {});
   const G = (_.glimmer = {});
 
+  G.DERIVE_MS = 1100;
   G.play = async function (st, e) {
+    if (e && e.from) return G.playDerive(st, e);
     const u = st.unit(e.uid);
     const lessFlash = R.Settings.get('lessFlash');
     const t0 = R.Engine.time;
@@ -22,19 +26,36 @@
     st.banner = { name: e.name || '', kind: e.kind, t0: R.Engine.time, dimTo };
     await R.until(() => R.Engine.time - st.banner.t0 >= 420 || st.dead);
   };
+  /** 派生技: 行動の後。暗く → 電球と帯（短い）→ 戻る。速さ ×2 以上は声を出さない */
+  G.playDerive = async function (st, e) {
+    const u = st.unit(e.uid);
+    const sp = Math.max(1, (st.speed && st.speed()) || 1);
+    const lessFlash = R.Settings.get('lessFlash');
+    const dimTo = lessFlash ? 0.2 : 0.35;
+    const t0 = R.Engine.time, dimMs = 150 / sp;
+    await R.until(() => { st.dim = Math.min(dimTo, dimTo * (R.Engine.time - t0) / dimMs); return R.Engine.time - t0 >= dimMs || st.dead; });
+    st.glim = { uid: e.uid, t0: R.Engine.time };
+    if (u && u.side === 'party') st.glowUid = e.uid;
+    try { R.Audio.sfx('glimmer'); } catch (err) { /* ignore */ }
+    if (u && sp < 2) _.voice.play(u, 'glimmer', { speed: 1, force: true });
+    const hold = Math.round(G.DERIVE_MS / sp);
+    st.banner = { name: (e.name || '') + 'を編み出した！', head: (e.fromName || '') + 'から、', kind: e.kind, derive: true, t0: R.Engine.time, dimTo, hold, fade: Math.max(80, Math.round(200 / sp)) };
+    st.banner.release = st.banner.t0;
+    await R.until(() => !st.banner || st.dead);
+  };
   /** 帯と暗さの片付け（場面の update から毎フレーム） */
   G.tick = function (st) {
     const b = st.banner;
     if (!b) return;
     const t = R.Engine.time - b.t0;
     // 閃いた技を繰り出し終わる（release）まで、かつ最短 0.9 秒は出したまま
-    const from = Math.max(Bt.MIN.glimmerName, b.release != null ? b.release - b.t0 : Infinity);
+    const from = b.derive ? b.hold : Math.max(Bt.MIN.glimmerName, b.release != null ? b.release - b.t0 : Infinity);
     if (t < from) return;
-    const k = Math.min(1, (t - from) / 200);
+    const k = Math.min(1, (t - from) / (b.fade || 200));
     b.out = k;
     st.dim = b.dimTo * (1 - k);
     if (k >= 1) {
-      st.log.push({ t: 'glimmer-name', ms: t });
+      st.log.push({ t: b.derive ? 'derive-name' : 'glimmer-name', ms: t });
       st.banner = null; st.glim = null; st.glowUid = null; st.dim = 0;
     }
   };
@@ -94,7 +115,7 @@
     gl.addColorStop(0, 'rgba(255,214,130,0.22)'); gl.addColorStop(1, 'rgba(255,214,130,0)');
     g.fillStyle = gl; g.fillRect(cx - 200 * k, cy - 60 * k, 400 * k, 120 * k);
     g.globalCompositeOperation = 'source-over';
-    Kt.text(g, '閃き', cx, cy - 30 * k, { size: 13 * k, weight: 700, color: Kt.COL.gold, align: 'center', raw: true, shadow: true, track: 6 });
+    Kt.text(g, b.head || '閃き', cx, cy - 30 * k, { size: (b.head ? 15 : 13) * k, weight: 700, color: Kt.COL.gold, align: 'center', raw: true, shadow: true, track: b.head ? 2 : 6 });
     // 技名（金のグラデーション）
     const size = Math.min(34 * k, (x2 - x1 - 20 * k) / Math.max(1, [...b.name].length) / 1.1);
     const sc = R.Settings.get('reduceMotion') ? 1 : 1 + 0.08 * Math.max(0, 1 - t / 180);

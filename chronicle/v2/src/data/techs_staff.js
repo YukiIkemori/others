@@ -16,6 +16,7 @@
     fx: 'magic',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
+    derive: [{ to: 't_staff_weaken', uses: 20, chance: 0.025 }, { to: 't_staff_bolt', uses: 35, chance: 0.015 }],
   },
   t_staff_soothe: {
     kind: 'tech',
@@ -30,6 +31,7 @@
     fx: 'heal',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
+    derive: [{ to: 't_staff_calm', uses: 25, chance: 0.02 }, { to: 't_staff_share', uses: 30, chance: 0.015 }],
   },
   t_staff_seal: {
     kind: 'tech',
@@ -77,6 +79,7 @@
     fx: 'earth',
     rank: 3,
     glim: { lv: 3, from: ['t_greatsword_crumble'] },
+    derive: [{ to: 't_staff_rumble', uses: 45, chance: 0.012 }],
     magic: true,
   },
   t_staff_unward: {
@@ -109,6 +112,7 @@
     fx: 'heal',
     rank: 3,
     glim: { lv: 3, from: ['t_staff_soothe'] },
+    derive: [{ to: 't_staff_clarity', uses: 40, chance: 0.012 }],
   },
   t_staff_share: {
     kind: 'tech',
@@ -138,6 +142,7 @@
     fx: 'magic2',
     rank: 5,
     glim: { lv: 5, from: ['t_staff_mind', 't_staff_unward'] },
+    derive: [{ to: 't_staff_oracle', uses: 60, chance: 0.008 }],
   },
   t_staff_bolt: {
     kind: 'tech',
@@ -152,6 +157,7 @@
     fx: 'magic2',
     rank: 5,
     glim: { lv: 5, from: ['t_staff_weaken', 't_staff_seal'] },
+    derive: [{ to: 't_staff_drain', uses: 50, chance: 0.01 }],
   },
   t_staff_whirl: {
     kind: 'tech',
@@ -184,6 +190,7 @@
     fx: 'buff',
     rank: 6,
     glim: { lv: 6, from: ['t_staff_share'] },
+    derive: [{ to: 't_staff_aegis', uses: 45, chance: 0.012 }],
   },
   t_staff_aegis: {
     kind: 'tech',

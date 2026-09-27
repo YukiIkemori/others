@@ -16,6 +16,7 @@
     fx: 'arrow',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
+    derive: [{ to: 't_bow_hobble', uses: 20, chance: 0.025 }, { to: 't_bow_hawk', uses: 35, chance: 0.015 }],
   },
   t_bow_twin: {
     kind: 'tech',
@@ -29,6 +30,7 @@
     fx: 'arrow',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
+    derive: [{ to: 't_bow_rain', uses: 25, chance: 0.02 }],
   },
   t_bow_hobble: {
     kind: 'tech',
@@ -42,6 +44,7 @@
     fx: 'arrow',
     rank: 2,
     glim: { lv: 2, from: ['t_bow_rapid'] },
+    derive: [{ to: 't_bow_venom', uses: 30, chance: 0.02 }],
   },
   t_bow_blind: {
     kind: 'tech',
@@ -55,6 +58,7 @@
     fx: 'arrow',
     rank: 2,
     glim: { lv: 2, from: ['t_bow_rapid'] },
+    derive: [{ to: 't_bow_hush', uses: 30, chance: 0.02 }],
   },
   t_bow_rain: {
     kind: 'tech',
@@ -68,6 +72,7 @@
     fx: 'arrow2',
     rank: 3,
     glim: { lv: 3, from: ['t_bow_twin'] },
+    derive: [{ to: 't_bow_volley', uses: 45, chance: 0.012 }],
   },
   t_bow_receive: {
     kind: 'tech',
@@ -82,6 +87,7 @@
     fx: 'stance',
     rank: 3,
     glim: { lv: 3, from: ['t_dagger_butt'] },
+    derive: [{ to: 't_bow_ripple', uses: 40, chance: 0.012 }],
   },
   t_bow_hush: {
     kind: 'tech',
@@ -95,6 +101,7 @@
     fx: 'arrow2',
     rank: 4,
     glim: { lv: 4, from: ['t_bow_blind'] },
+    derive: [{ to: 't_bow_pin', uses: 40, chance: 0.012 }],
   },
   t_bow_venom: {
     kind: 'tech',
@@ -121,6 +128,7 @@
     fx: 'arrow2',
     rank: 5,
     glim: { lv: 5, from: ['t_bow_rapid'] },
+    derive: [{ to: 't_bow_soar', uses: 50, chance: 0.01 }],
   },
   t_bow_pin: {
     kind: 'tech',
@@ -134,6 +142,7 @@
     fx: 'arrow2',
     rank: 6,
     glim: { lv: 6, from: ['t_bow_hush'] },
+    derive: [{ to: 't_bow_dusk', uses: 50, chance: 0.01 }],
   },
   t_bow_ripple: {
     kind: 'tech',
@@ -147,6 +156,7 @@
     fx: 'pierce2',
     rank: 6,
     glim: { lv: 6, from: ['t_dagger_sweep', 't_bow_receive'] },
+    derive: [{ to: 't_bow_phalanx', uses: 45, chance: 0.012 }],
   },
   t_bow_volley: {
     kind: 'tech',
@@ -160,6 +170,7 @@
     fx: 'arrow3',
     rank: 7,
     glim: { lv: 7, from: ['t_bow_twin', 't_bow_rain'] },
+    derive: [{ to: 't_bow_starrain', uses: 60, chance: 0.008 }],
   },
   t_bow_firerain: {
     kind: 'tech',

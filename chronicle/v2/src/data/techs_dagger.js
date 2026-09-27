@@ -15,6 +15,7 @@
     fx: 'pierce',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
+    derive: [{ to: 't_dagger_venom', uses: 20, chance: 0.025 }, { to: 't_dagger_gap', uses: 40, chance: 0.012 }],
   },
   t_dagger_filch: {
     kind: 'tech',
@@ -29,6 +30,7 @@
     fx: 'steal',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
+    derive: [{ to: 't_dagger_knives', uses: 25, chance: 0.02 }],
   },
   t_dagger_butt: {
     kind: 'tech',
@@ -42,6 +44,7 @@
     fx: 'strike',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
+    derive: [{ to: 't_dagger_pommel', uses: 25, chance: 0.02 }],
   },
   t_dagger_venom: {
     kind: 'tech',
@@ -55,6 +58,7 @@
     fx: 'poison',
     rank: 2,
     glim: { lv: 2, from: ['t_dagger_vital'] },
+    derive: [{ to: 't_dagger_lull', uses: 30, chance: 0.02 }],
   },
   t_dagger_numb: {
     kind: 'tech',
@@ -68,6 +72,7 @@
     fx: 'pierce',
     rank: 2,
     glim: { lv: 2, from: ['t_dagger_filch'] },
+    derive: [{ to: 't_dagger_serpent', uses: 30, chance: 0.02 }],
   },
   t_dagger_sweep: {
     kind: 'tech',
@@ -94,6 +99,7 @@
     fx: 'pierce',
     rank: 3,
     glim: { lv: 3, from: ['t_dagger_filch'] },
+    derive: [{ to: 't_dagger_bees', uses: 35, chance: 0.015 }],
   },
   t_dagger_pommel: {
     kind: 'tech',
@@ -107,6 +113,7 @@
     fx: 'strike2',
     rank: 3,
     glim: { lv: 3, from: ['t_dagger_vital'] },
+    derive: [{ to: 't_dagger_vault', uses: 35, chance: 0.015 }],
   },
   t_dagger_lull: {
     kind: 'tech',
@@ -120,6 +127,7 @@
     fx: 'sleep',
     rank: 4,
     glim: { lv: 4, from: ['t_dagger_venom'] },
+    derive: [{ to: 't_dagger_nape', uses: 45, chance: 0.012 }],
   },
   t_dagger_serpent: {
     kind: 'tech',
@@ -146,6 +154,7 @@
     fx: 'pierce2',
     rank: 5,
     glim: { lv: 5, from: ['t_dagger_knives'] },
+    derive: [{ to: 't_dagger_dance', uses: 60, chance: 0.008 }],
   },
   t_dagger_hail: {
     kind: 'tech',
@@ -185,6 +194,7 @@
     fx: 'pierce2',
     rank: 6,
     glim: { lv: 6, from: ['t_dagger_vital', 't_dagger_lull'] },
+    derive: [{ to: 't_dagger_shadow', uses: 50, chance: 0.01 }],
   },
   t_dagger_nape: {
     kind: 'tech',

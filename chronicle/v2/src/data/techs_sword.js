@@ -15,6 +15,7 @@
     fx: 'slash',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
+    derive: [{ to: 't_sword_twin', uses: 20, chance: 0.025 }, { to: 't_sword_thrust', uses: 25, chance: 0.02 }],
   },
   t_sword_guard: {
     kind: 'tech',
@@ -29,6 +30,7 @@
     fx: 'stance',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
+    derive: [{ to: 't_sword_bulwark', uses: 35, chance: 0.015 }],
   },
   t_sword_disarm: {
     kind: 'tech',
@@ -56,6 +58,7 @@
     fx: 'slash',
     rank: 2,
     glim: { lv: 2, from: ['attack'] },
+    derive: [{ to: 't_sword_mine', uses: 25, chance: 0.02 }],
   },
   t_sword_twin: {
     kind: 'tech',
@@ -69,6 +72,7 @@
     fx: 'slash',
     rank: 2,
     glim: { lv: 2, from: ['t_sword_stepcut'] },
+    derive: [{ to: 't_sword_wheel', uses: 30, chance: 0.02 }, { to: 't_sword_triple', uses: 50, chance: 0.01 }],
   },
   t_sword_mine: {
     kind: 'tech',
@@ -82,6 +86,7 @@
     fx: 'strike',
     rank: 3,
     glim: { lv: 3, from: ['t_sword_draw'] },
+    derive: [{ to: 't_sword_haze', uses: 30, chance: 0.02 }],
   },
   t_sword_thrust: {
     kind: 'tech',
@@ -95,6 +100,7 @@
     fx: 'pierce',
     rank: 3,
     glim: { lv: 3, from: ['t_sword_stepcut'] },
+    derive: [{ to: 't_sword_pierce', uses: 30, chance: 0.02 }],
   },
   t_sword_pierce: {
     kind: 'tech',
@@ -108,6 +114,7 @@
     fx: 'pierce2',
     rank: 4,
     glim: { lv: 4, from: ['attack', 't_dagger_sweep'] },
+    derive: [{ to: 't_sword_cloud', uses: 35, chance: 0.015 }],
   },
   t_sword_wheel: {
     kind: 'tech',
@@ -121,6 +128,7 @@
     fx: 'slash2',
     rank: 4,
     glim: { lv: 4, from: ['t_sword_twin'] },
+    derive: [{ to: 't_sword_bladewind', uses: 45, chance: 0.012 }],
   },
   t_sword_haze: {
     kind: 'tech',
@@ -134,6 +142,7 @@
     fx: 'fire2',
     rank: 4,
     glim: { lv: 4, from: ['t_sword_mine'] },
+    derive: [{ to: 't_sword_void', uses: 40, chance: 0.012 }],
   },
   t_sword_cloud: {
     kind: 'tech',
@@ -187,6 +196,7 @@
     fx: 'wind2',
     rank: 6,
     glim: { lv: 6, from: ['t_sword_haze', 't_sword_wheel'] },
+    derive: [{ to: 't_sword_lifecut', uses: 45, chance: 0.012 }],
   },
   t_sword_bladewind: {
     kind: 'tech',
@@ -213,6 +223,7 @@
     fx: 'slash3',
     rank: 7,
     glim: { lv: 7, from: ['t_sword_void'] },
+    derive: [{ to: 't_sword_first', uses: 60, chance: 0.008 }],
   },
   t_sword_triple: {
     kind: 'tech',
@@ -226,6 +237,7 @@
     fx: 'slash3',
     rank: 8,
     glim: { lv: 8, from: ['t_sword_twin', 't_sword_purify'] },
+    derive: [{ to: 't_sword_dawn', uses: 60, chance: 0.008 }],
   },
   t_sword_first: {
     kind: 'tech',

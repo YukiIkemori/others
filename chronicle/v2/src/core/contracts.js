@@ -82,7 +82,7 @@
     turn: { uid: 'any' }, act: { uid: 'any', cmd: 'string', id: 'any', name: 'string', targets: 'array' },
     dmg: { uid: 'any', n: 'number', 'crit?': 'bool', 'weak?': 'bool', 'kind?': 'string' }, heal: { uid: 'any', n: 'number', 'mp?': 'bool' },
     miss: { uid: 'any' }, status: { uid: 'any', id: 'string', on: 'bool' }, ko: { uid: 'any' }, revive: { uid: 'any' },
-    glimmer: { uid: 'any', kind: 'string', id: 'string', name: 'string' }, telegraph: { uid: 'any', text: 'string', pose: 'string', tint: 'string', next: 'string' },
+    glimmer: { uid: 'any', kind: 'string', id: 'string', name: 'string', 'from?': 'string', 'fromName?': 'string' }, telegraph: { uid: 'any', text: 'string', pose: 'string', tint: 'string', next: 'string' },
     summon: { uid: 'any', mon: 'any' }, flee: { uid: 'any' }, steal: { uid: 'any', target: 'any', item: 'string|null', 'grade?': 'string', 'stealOnly?': 'bool' },
     gain: { item: 'string', grade: 'string', 'stolen?': 'bool', 'stealOnly?': 'bool' }, grow: { c: 'any', hp: 'number', mp: 'number' },
     prof: { c: 'any', key: 'string' }, msg: { text: 'string' }, end: { result: '"win"|"lose"|"escape"' },
@@ -122,6 +122,7 @@
     id: 'string', name: 'string', look: 'string', 'type?': 'string', gl: 'number', hp: 'number', mp: 'number',
     equip: { weapon1: 'string|null', shield: 'string|null', head: 'string|null', body: 'string|null', hands: 'string|null', feet: 'string|null', acc1: 'string|null', acc2: 'string|null' },
     wprof: 'object', eprof: 'object', techs: 'array', spells: 'array', status: 'array', row: '"front"|"back"',
+    'techUse?': 'object', 'derived?': 'object',   // 派生技: {技id: 使った回数}・{派生した技id: 元の技id}（無い古いセーブは R.State.migrateChars が埋める）
   };
   K.game = {
     ver: '2', seed: 'number', playMs: 'number', chapter: 'number', hero: 'string', chars: 'object', party: 'string[]', reserve: 'string[]', joined: 'string[]',

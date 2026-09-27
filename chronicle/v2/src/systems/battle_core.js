@@ -699,6 +699,7 @@
         const g = yield* this.glimmerStep(u, cmd);
         if (g && g.replace) {
           const r = yield* this.useAction(u, g.id, g.act, g.target, { free: true, glimmed: true });
+          if (g.act.kind === 'tech' && r && r.done) this.countUse(u, g.id);   // 閃いた技も 1 回と数える（派生は振らない: 閃きと重ねない）
           yield* this.trainAfter(u, g.act.kind === 'spell' ? { kind: 'spell', act: g.act, id: g.id } : { kind: 'tech', act: g.act, id: g.id }, r);
           return;
         }
@@ -733,7 +734,9 @@
           const a = ACT(cmd.id);
           if (!a) return yield* this.attack(u, cmd.target, {});
           const r = yield* this.useAction(u, cmd.id, a, cmd.target, {});
+          if (u.isParty && r.done && a.kind === 'tech') this.countUse(u, cmd.id);
           if (u.isParty && r.done) yield* this.trainAfter(u, a.kind === 'spell' ? { kind: 'spell', act: a, id: cmd.id } : { kind: 'tech', act: a, id: cmd.id }, r);
+          if (u.isParty && r.done && a.kind === 'tech') yield* this.deriveStep(u, cmd.id);
           return;
         }
         case 'item': {
@@ -784,6 +787,26 @@
       const target = this.glimTarget(u, cmd, a);
       if (kind === 'spell' && !this.targets(u, a, target).length) return { replace: false };
       return { replace: true, id, act: a, target };
+    }
+    // ------------------------------------------------------- 派生技（design/BACKLOG「派生技の閃き」、R.Glimmer.deriveRoll）
+    // 持ち主「その技を使ってる時しか閃かない」: 技 X を使った行動が終わった後（熟練度の後）に、X の derive だけを振る。
+    // 攻撃・術・道具・ほかの技では振らない。行動の前の閃き（glimmerStep）で行動が差し替わったときは振らない（重ねない）。1 行動に 1 つまで。
+    countUse(u, id) {
+      if (R.Glimmer && R.Glimmer.countUse) { try { return R.Glimmer.countUse(u.c, id); } catch (e) { R.warn('battle: R.Glimmer.countUse failed', e && e.message); } }
+      return 0;
+    }
+    *deriveStep(u, used) {
+      if (!u.alive || !R.Glimmer || !R.Glimmer.deriveRoll) return;
+      let res = null;
+      try { res = R.Glimmer.deriveRoll(u.c, used, { rng: this.rng, force: !!this.o.deriveForce }); } catch (e) { R.warn('battle: R.Glimmer.deriveRoll failed', e && e.message); res = null; }
+      if (!res || !ACT(res.id) || !ACT(used)) return;
+      const a = ACT(res.id), from = ACT(used);
+      let fresh = false;
+      try { fresh = R.Glimmer.learnDerived(u.c, res.id, used, { quiet: true }); } catch (e) { R.warn('battle: R.Glimmer.learnDerived failed', e && e.message); }
+      if (!fresh) return;
+      yield { t: 'glimmer', u, id: res.id, kind: 'tech', name: a.name, from: used, fromName: from.name };
+      yield this.m(`${u.name}は${from.name}から、${a.name}を編み出した！`);
+      this.glimmers.push({ char: u.c.id, id: res.id, kind: 'tech', from: used });
     }
     /** glimmerForce の予備: 今の武器の系統のまだ知らない技で glim.lv が最も低い物 */
     forcedGlimmer(u) {
@@ -1996,7 +2019,12 @@
       case 'revive': out.push({ t: 'revive', uid: uidOf(ev.u) }); break;
       case 'status': out.push({ t: 'status', uid: uidOf(ev.u), id: ev.s, on: !!ev.on }); break;
       case 'buff': out.push({ t: 'status', uid: uidOf(ev.u), id: 'buff_' + ev.stat, on: (ev.stage || 0) !== 0, stage: ev.stage || 0 }); break;
-      case 'glimmer': out.push({ t: 'glimmer', uid: uidOf(ev.u), kind: ev.kind, id: ev.id, name: ev.name || (ACT(ev.id) || {}).name || ev.id }); break;
+      case 'glimmer': {
+        const e = { t: 'glimmer', uid: uidOf(ev.u), kind: ev.kind, id: ev.id, name: ev.name || (ACT(ev.id) || {}).name || ev.id };
+        if (ev.from) { e.from = ev.from; e.fromName = ev.fromName || (ACT(ev.from) || {}).name || ev.from; }   // 派生技（「〇〇から、△△を編み出した！」）
+        out.push(e);
+        break;
+      }
       case 'telegraph': out.push({ t: 'telegraph', uid: uidOf(ev.u), text: ev.text || '', pose: ev.pose || 'tele', tint: ev.tint || '', next: ev.next || '' }); break;
       case 'summon': for (const i of ev.units || []) out.push({ t: 'summon', uid: 'e_' + i, mon: eng && eng.mons[i] ? eng.mons[i].id : null, by: uidOf(ev.by) }); break;
       case 'flee': out.push({ t: 'flee', uid: uidOf(ev.u) }); break;
@@ -2219,7 +2247,7 @@
           drops: rw.drops.map((d) => ({ item: d.item, grade: d.grade, n: d.n, mon: d.mon, kept: d.kept })),
           grow: finished && finished.grow ? finished.grow : [],
           prof: eng.profUps.map((p) => ({ c: p.char, key: p.id, kind: p.kind, rank: p.rank, from: p.from })),
-          glimmers: eng.glimmers.map((g) => ({ c: g.char, kind: g.kind, id: g.id })),
+          glimmers: eng.glimmers.map((g) => (g.from ? { c: g.char, kind: g.kind, id: g.id, from: g.from } : { c: g.char, kind: g.kind, id: g.id })),
           stolen: eng.stolen.map((s) => ({ c: s.char, item: s.item, grade: s.grade, stealOnly: s.stealOnly, mon: s.mon })),
           goldLost: eng.goldLost,
         };
@@ -2243,6 +2271,7 @@
           if (cp.wprof) c.wprof = cp.wprof;
           if (cp.eprof) c.eprof = cp.eprof;
           for (const k of ['techs', 'spells']) if (Array.isArray(cp[k])) c[k] = cp[k].slice();
+          for (const k of ['techUse', 'derived']) if (cp[k] && typeof cp[k] === 'object') c[k] = Object.assign({}, cp[k]);   // 派生技の回数と元
         });
         // 熟練度の「▲」（強さの画面。R.Battle.profUI.note）: 見るまで上がる前の段階を覚える
         try { if (R.Battle && R.Battle.profUI && R.Battle.profUI.note) R.Battle.profUI.note(G, eng.profUps); } catch (e) { R.warn('battle: profUI.note failed', e && e.message); }
