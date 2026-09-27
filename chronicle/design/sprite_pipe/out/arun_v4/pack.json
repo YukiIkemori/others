@@ -4,113 +4,113 @@
    "to": "walk_down_0",
    "dx": 1,
    "dy": 0,
-   "fit": 1.089
+   "fit": 1.085
   },
   "walk_down_2": {
    "to": "walk_down_0",
    "dx": 0,
    "dy": 0,
-   "fit": 1.149
+   "fit": 1.142
   },
   "walk_up_1": {
    "to": "walk_up_0",
    "dx": 0,
    "dy": 0,
-   "fit": 1.069
+   "fit": 1.084
   },
   "walk_up_2": {
    "to": "walk_up_0",
    "dx": 0,
    "dy": 0,
-   "fit": 1.078
+   "fit": 1.079
   },
   "walk_left_1": {
    "to": "walk_left_0",
    "dx": -4,
    "dy": 0,
-   "fit": 0.882
+   "fit": 0.879
   },
   "walk_left_2": {
    "to": "walk_left_0",
    "dx": -4,
    "dy": 0,
-   "fit": 0.96
+   "fit": 0.951
   },
   "walk_right_1": {
    "to": "walk_right_0",
    "dx": 0,
    "dy": 0,
-   "fit": 0.927
+   "fit": 0.918
   },
   "walk_right_2": {
    "to": "walk_right_0",
    "dx": 0,
    "dy": 0,
-   "fit": 0.919
+   "fit": 0.92
   },
   "idle_b": {
    "to": "idle_a",
    "dx": 1,
    "dy": 0,
-   "fit": 1.067
+   "fit": 1.077
   },
   "face_serious": {
    "to": "face_neutral",
    "dx": 0,
    "dy": 0,
-   "fit": 1.364
+   "fit": 1.308
   },
   "face_smile": {
    "to": "face_neutral",
    "dx": 0,
    "dy": 0,
-   "fit": 1.332
+   "fit": 1.32
   },
   "face_laugh": {
    "to": "face_neutral",
-   "dx": 0,
+   "dx": -1,
    "dy": 0,
-   "fit": 1.31
+   "fit": 1.341
   },
   "face_surprise": {
    "to": "face_neutral",
    "dx": 0,
    "dy": 0,
-   "fit": 1.325
+   "fit": 1.386
   },
   "face_sad": {
    "to": "face_neutral",
-   "dx": 0,
+   "dx": -1,
    "dy": 0,
-   "fit": 1.332
+   "fit": 1.289
   },
   "face_angry": {
    "to": "face_neutral",
    "dx": 0,
    "dy": 0,
-   "fit": 1.313
+   "fit": 1.293
   },
   "face_tired": {
    "to": "face_neutral",
-   "dx": 0,
+   "dx": -1,
    "dy": 0,
-   "fit": 1.305
+   "fit": 1.315
   }
  },
  "attach": {
   "bare_idle": {
    "grip": [
     12,
-    37
+    36
    ],
    "tip": [
     -11,
     59
    ],
-   "angle": 135.7,
+   "angle": 135.5,
    "length": 33,
    "blade": 22.2,
-   "fit": 1.022,
+   "fit": 1.031,
    "method": "blade"
   },
   "bare_windup": {
@@ -120,12 +120,12 @@
    ],
    "tip": [
     72,
-    -24
+    -25
    ],
    "angle": -55,
-   "length": 37,
+   "length": 38,
    "blade": 26.3,
-   "fit": 0.687,
+   "fit": 0.684,
    "method": "blade",
    "manual": true
   },
@@ -135,13 +135,13 @@
     37
    ],
    "tip": [
-    -32,
+    -33,
     63
    ],
    "angle": 145,
    "length": 38,
    "blade": 27.1,
-   "fit": 0.22,
+   "fit": 0.219,
    "method": "blade",
    "manual": true
   },
@@ -157,7 +157,7 @@
    "angle": -178.4,
    "length": 36,
    "blade": 25.0,
-   "fit": 0.873,
+   "fit": 0.872,
    "method": "blade"
   },
   "bare_cast": {
@@ -172,27 +172,27 @@
    "angle": 62.0,
    "length": 22,
    "weapon_px": 94,
-   "fit": 0.918,
+   "fit": 0.915,
    "method": "diff"
   }
  },
  "weapons": {
   "wpn_sword": {
    "grip": [
-    36,
+    37,
     8
    ],
    "tip": [
     0,
     9
    ],
-   "angle": 178.3,
-   "length": 45,
-   "scaled": 0.754
+   "angle": 178.4,
+   "length": 46,
+   "scaled": 0.769
   },
   "wpn_greatsword": {
    "grip": [
-    57,
+    58,
     8
    ],
    "tip": [
@@ -200,21 +200,21 @@
     9
    ],
    "angle": 179.6,
-   "length": 72,
-   "scaled": 0.754
+   "length": 73,
+   "scaled": 0.769
   },
   "wpn_dagger": {
    "grip": [
-    25,
+    27,
     5
    ],
    "tip": [
     0,
     6
    ],
-   "angle": 179.2,
-   "length": 34,
-   "scaled": 0.754
+   "angle": 179.3,
+   "length": 35,
+   "scaled": 0.769
   },
   "wpn_bow": {
    "grip": [
@@ -225,13 +225,13 @@
     0,
     11
    ],
-   "angle": -174.5,
-   "length": 44,
-   "scaled": 0.754
+   "angle": -174.9,
+   "length": 45,
+   "scaled": 0.769
   },
   "wpn_staff": {
    "grip": [
-    44,
+    45,
     7
    ],
    "tip": [
@@ -239,8 +239,8 @@
     7
    ],
    "angle": -179.6,
-   "length": 72,
-   "scaled": 0.754
+   "length": 73,
+   "scaled": 0.769
   }
  },
  "sets": [

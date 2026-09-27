@@ -175,7 +175,7 @@ module.exports = function desert(A) {
   // 【灯りを守る】隊商路の烽火台（q_kasim_beacons、調べると desert_beacon）
   LAMP('wl_desert_beacon_1', 42, 147, 'q_kasim_beacon_1', { event: 'desert_beacon' });
   LAMP('wl_desert_beacon_2', 32, 160, 'q_kasim_beacon_2', { event: 'desert_beacon' });
-  LAMP('wl_desert_beacon_3', 12, 146, 'q_kasim_beacon_3', { event: 'desert_beacon' });
+  LAMP('wl_desert_beacon_3', 15, 147, 'q_kasim_beacon_3', { event: 'desert_beacon' });
   // 井戸掘りの 3 か所（q_kasim_dig）。当たりの所には泉が湧く（町の外の回復の泉）
   for (const [x, y, n] of [[51, 147, 1], [55, 146, 2], [49, 150, 3]]) { objects.push({ type: 'examine', x, y, event: 'desert_dig', dig: n }); P('sand_mound', x + 1, y); }
   objects.push({ type: 'spring', id: 'world_desert_spring', x: 55, y: 147, cond: 'desert_dig_found' });

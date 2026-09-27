@@ -217,16 +217,7 @@
     // 玉は「倒れた」ときの効果を持つ（battle_core の die → d.onDeath）
   });
 
-  // ------------------------------------------------------------ 盗み専用（A28）: 金剛トカゲ（レア、率 16）
-  R.defs('items', {
-    sh_st_diamond_lizard: { name: '金剛うろこの盾', slot: 'shield', grade: 'super', tier: 5, src: 'steal', stealOnly: true, weight: 'light', units: 'a2',
-      mods: { elemResist: { earth: 0.5 }, takenPct: -5 }, abil: { vit: 1 }, icon: 'shield' },
-  });
-  R.onData(function () {
-    const L = R.DB.monsters.rm_diamond_lizard;
-    if (L) L.drops = Object.assign({}, L.drops, { steal: { item: 'sh_st_diamond_lizard', rate: 16 } });
-    if (R.DB.stealSources) R.DB.stealSources.sh_st_diamond_lizard = { mon: 'rm_diamond_lizard', rate: 16 };
-  });
+  // 盗み専用（A28）は items_steal.js の ac_st_sandking（砂の王）・hn_st_gold_idol（黄金の守護像）。36 品の決まった数なので足さない
 
   // ------------------------------------------------------------ 編成
   const boss = (mons, o) => Object.assign({ mons, noEscape: true }, o);

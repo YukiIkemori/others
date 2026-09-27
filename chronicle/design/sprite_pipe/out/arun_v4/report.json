@@ -5,7 +5,7 @@
  "folder": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4",
  "sheets": {
   "1": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_01.png",
+   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_01.png",
    "size": [
     1920,
     2048
@@ -66,7 +66,7 @@
      "air": 0,
      "blur": 0.0,
      "facing_score": 0.83,
-     "scale": 0.928,
+     "scale": 0.945,
      "lantern": 0.6411764705882352
     },
     "walk_down_2": {
@@ -83,7 +83,7 @@
      "air": 0,
      "blur": 0.0,
      "facing_score": 1.26,
-     "scale": 0.982,
+     "scale": 1.0,
      "lantern": 0.6875
     },
     "walk_up_0": {
@@ -100,7 +100,7 @@
      "air": 0,
      "blur": 0.0,
      "facing_score": 0.62,
-     "scale": 0.867,
+     "scale": 0.883,
      "lantern": -0.5833333333333334
     },
     "walk_up_1": {
@@ -117,7 +117,7 @@
      "air": 0,
      "blur": 0.0,
      "facing_score": 0.73,
-     "scale": 0.873,
+     "scale": 0.89,
      "lantern": -0.5580808080808082
     },
     "walk_up_2": {
@@ -134,7 +134,7 @@
      "air": 0,
      "blur": 0.0,
      "facing_score": 0.92,
-     "scale": 0.873,
+     "scale": 0.89,
      "lantern": -0.622994652406417
     },
     "walk_left_0": {
@@ -177,7 +177,7 @@
       "upper": -1.43,
       "scarf": 1.17
      },
-     "scale": 0.946,
+     "scale": 0.963,
      "lantern": -0.8529411764705882
     },
     "walk_left_2": {
@@ -199,7 +199,7 @@
       "upper": -0.92,
       "scarf": 1.29
      },
-     "scale": 0.94,
+     "scale": 0.957,
      "lantern": -0.7833333333333333
     },
     "walk_right_0": {
@@ -242,7 +242,7 @@
       "upper": -0.96,
       "scarf": 1.87
      },
-     "scale": 0.922,
+     "scale": 0.939,
      "lantern": 0.8055555555555556
     },
     "walk_right_2": {
@@ -264,13 +264,13 @@
       "upper": -1.43,
       "scarf": 1.71
      },
-     "scale": 0.922,
+     "scale": 0.939,
      "lantern": 0.8382352941176471
     }
    }
   },
   "2": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_02.png",
+   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_02.png",
    "size": [
     2560,
     2048
@@ -331,7 +331,7 @@
      "air": 1,
      "blur": 0.0,
      "facing_score": 0.89,
-     "scale": 1.024,
+     "scale": 1.043,
      "lantern": 0.5864661654135338
     },
     "run_down_2": {
@@ -348,7 +348,7 @@
      "air": 0,
      "blur": 0.0,
      "facing_score": 1.38,
-     "scale": 1.0,
+     "scale": 1.018,
      "lantern": 0.8026315789473685
     },
     "run_down_3": {
@@ -365,7 +365,7 @@
      "air": 2,
      "blur": 0.0,
      "facing_score": 0.68,
-     "scale": 1.06,
+     "scale": 1.08,
      "lantern": 0.4410774410774411
     },
     "run_up_0": {
@@ -381,9 +381,9 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.75,
-     "scale": 1.0,
-     "lantern": null
+     "facing_score": 0.78,
+     "scale": 0.957,
+     "lantern": -0.23148148148148145
     },
     "run_up_1": {
      "size": [
@@ -398,8 +398,8 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.68,
-     "scale": 0.97,
+     "facing_score": 0.69,
+     "scale": 0.988,
      "lantern": null
     },
     "run_up_2": {
@@ -415,9 +415,9 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.65,
-     "scale": 0.94,
-     "lantern": null
+     "facing_score": 0.67,
+     "scale": 0.957,
+     "lantern": -0.19999999999999998
     },
     "run_up_3": {
      "size": [
@@ -432,9 +432,9 @@
      ],
      "air": 3,
      "blur": 0.0,
-     "facing_score": -0.02,
-     "scale": 1.0,
-     "lantern": null
+     "facing_score": 0.04,
+     "scale": 1.018,
+     "lantern": -0.6597222222222222
     },
     "run_left_0": {
      "size": [
@@ -455,7 +455,7 @@
       "upper": 2.0,
       "scarf": 1.86
      },
-     "scale": 1.0,
+     "scale": 1.018,
      "lantern": -0.8859649122807017
     },
     "run_left_1": {
@@ -477,7 +477,7 @@
       "upper": 2.0,
       "scarf": 2.0
      },
-     "scale": 1.03,
+     "scale": 1.049,
      "lantern": -0.8583333333333334
     },
     "run_left_2": {
@@ -499,7 +499,7 @@
       "upper": 2.0,
       "scarf": 1.81
      },
-     "scale": 1.03,
+     "scale": 1.049,
      "lantern": -0.865
     },
     "run_left_3": {
@@ -521,7 +521,7 @@
       "upper": 2.0,
       "scarf": 1.68
      },
-     "scale": 1.0,
+     "scale": 1.018,
      "lantern": -0.7928571428571429
     },
     "run_right_0": {
@@ -543,7 +543,7 @@
       "upper": 2.0,
       "scarf": 2.0
      },
-     "scale": 1.0,
+     "scale": 1.018,
      "lantern": 0.8473684210526317
     },
     "run_right_1": {
@@ -565,7 +565,7 @@
       "upper": 2.0,
       "scarf": 1.94
      },
-     "scale": 0.964,
+     "scale": 0.982,
      "lantern": 0.7149999999999999
     },
     "run_right_2": {
@@ -587,7 +587,7 @@
       "upper": 2.0,
       "scarf": 2.0
      },
-     "scale": 1.03,
+     "scale": 1.049,
      "lantern": 0.8571428571428571
     },
     "run_right_3": {
@@ -609,13 +609,13 @@
       "upper": 2.0,
       "scarf": 2.0
      },
-     "scale": 1.0,
+     "scale": 1.018,
      "lantern": 0.863157894736842
     }
    }
   },
   "3": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_03.png",
+   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_03.png",
    "size": [
     3072,
     1536
@@ -660,7 +660,7 @@
      "air": 0,
      "blur": 0.0,
      "facing_score": 0.78,
-     "scale": 1.0
+     "scale": 1.018
     },
     "act_surprise": {
      "size": [
@@ -676,7 +676,7 @@
      "air": 0,
      "blur": 0.0,
      "facing_score": 0.42,
-     "scale": 1.0
+     "scale": 1.018
     },
     "act_think": {
      "size": [
@@ -692,7 +692,7 @@
      "air": 0,
      "blur": 0.0,
      "facing_score": 0.46,
-     "scale": 1.0
+     "scale": 1.018
     },
     "act_bow": {
      "size": [
@@ -707,7 +707,7 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "scale": 0.964
+     "scale": 0.982
     },
     "act_kneel": {
      "size": [
@@ -722,7 +722,7 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "scale": 1.0
+     "scale": 1.018
     },
     "act_sit": {
      "size": [
@@ -737,7 +737,7 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "scale": 0.982
+     "scale": 1.0
     },
     "act_call": {
      "size": [
@@ -753,7 +753,7 @@
      "air": 0,
      "blur": 0.0,
      "facing_score": 0.28,
-     "scale": 1.0
+     "scale": 1.018
     },
     "act_look": {
      "size": [
@@ -768,7 +768,7 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "scale": 0.964
+     "scale": 0.982
     },
     "act_lie": {
      "size": [
@@ -798,7 +798,7 @@
      "air": 0,
      "blur": 0.0,
      "facing_score": 1.03,
-     "scale": 1.0
+     "scale": 1.018
     },
     "act_resolve": {
      "size": [
@@ -814,7 +814,7 @@
      "air": 0,
      "blur": 0.0,
      "facing_score": 0.61,
-     "scale": 1.0
+     "scale": 1.018
     },
     "act_sad": {
      "size": [
@@ -829,12 +829,12 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "scale": 1.0
+     "scale": 1.018
     }
    }
   },
   "5": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_05.png",
+   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_05.png",
    "size": [
     4160,
     1536
@@ -1063,7 +1063,7 @@
    }
   },
   "6": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_06.png",
+   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_06.png",
    "size": [
     4160,
     1280
@@ -1306,7 +1306,7 @@
    }
   },
   "7": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_07.png",
+   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_07.png",
    "size": [
     4480,
     1280
@@ -1514,7 +1514,7 @@
    }
   },
   "9": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_09.png",
+   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_09.png",
    "size": [
     3072,
     1536
@@ -1547,163 +1547,163 @@
    "sprites": {
     "face_neutral": {
      "size": [
-      68,
+      69,
       80
      ],
      "box": [
-      96,
+      88,
       48,
       672,
       720
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.81,
+     "facing_score": 0.49,
      "facing_cues": {
-      "head": 0.53,
-      "upper": 0.29
+      "head": 0.42,
+      "upper": 0.08
      }
     },
     "face_serious": {
      "size": [
-      68,
+      70,
       80
      ],
      "box": [
-      864,
+      856,
       48,
-      1440,
+      1448,
       720
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.87,
+     "facing_score": 0.58,
      "facing_cues": {
-      "head": 0.61,
-      "upper": 0.26
+      "head": 0.49,
+      "upper": 0.09
      }
     },
     "face_smile": {
      "size": [
-      68,
+      70,
       80
      ],
      "box": [
-      1632,
+      1624,
       48,
-      2208,
+      2216,
       720
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.83,
+     "facing_score": 0.49,
      "facing_cues": {
-      "head": 0.65,
-      "upper": 0.19
+      "head": 0.35,
+      "upper": 0.14
      }
     },
     "face_laugh": {
      "size": [
-      68,
+      70,
       80
      ],
      "box": [
-      2400,
+      2392,
       48,
-      2976,
+      2984,
       720
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.8,
+     "facing_score": 0.38,
      "facing_cues": {
-      "head": 0.59,
-      "upper": 0.21
+      "head": 0.35,
+      "upper": 0.03
      }
     },
     "face_surprise": {
      "size": [
-      68,
+      69,
       80
      ],
      "box": [
-      96,
+      88,
       816,
       672,
       1488
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.8,
+     "facing_score": 0.57,
      "facing_cues": {
-      "head": 0.64,
-      "upper": 0.16
+      "head": 0.46,
+      "upper": 0.11
      }
     },
     "face_sad": {
      "size": [
-      68,
+      70,
       80
      ],
      "box": [
-      864,
+      856,
       816,
-      1440,
+      1448,
       1488
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.81,
+     "facing_score": 0.74,
      "facing_cues": {
       "head": 0.61,
-      "upper": 0.2
+      "upper": 0.13
      }
     },
     "face_angry": {
      "size": [
-      68,
+      70,
       80
      ],
      "box": [
-      1632,
+      1624,
       816,
-      2208,
+      2216,
       1488
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.77,
+     "facing_score": 0.56,
      "facing_cues": {
-      "head": 0.67,
-      "upper": 0.11
+      "head": 0.39,
+      "upper": 0.17
      }
     },
     "face_tired": {
      "size": [
-      68,
+      70,
       80
      ],
      "box": [
-      2400,
+      2392,
       816,
-      2976,
+      2984,
       1488
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.84,
+     "facing_score": 0.52,
      "facing_cues": {
-      "head": 0.65,
-      "upper": 0.2
+      "head": 0.54,
+      "upper": -0.01
      }
     }
    }
   },
   "4": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_04.png",
+   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_04.png",
    "size": [
     2816,
-    1024
+    1152
    ],
    "key": {
     "border_magenta": 1.0,
@@ -1719,16 +1719,16 @@
     "layout": "2x4",
     "logical_cell": [
      88,
-     64
+     72
     ],
     "dot": 8.0
    },
    "extras": [],
    "period": 8.0,
    "clarity": 99.0,
-   "src_height": 396.0,
-   "native_height_at_period": 49.5,
-   "scale_note": "描かれた格子のまま（49.5 ドット）",
+   "src_height": 412.0,
+   "native_height_at_period": 51.5,
+   "scale_note": "描かれた格子のまま（51.5 ドット）",
    "cell": 8.0,
    "sprites": {
     "act_up_nod": {
@@ -1738,14 +1738,14 @@
      ],
      "box": [
       208,
-      112,
+      176,
       488,
-      496
+      560
      ],
      "air": 0,
      "blur": 0.0,
      "facing_score": 0.18,
-     "scale": 0.904
+     "scale": 0.92
     },
     "act_up_surprise": {
      "size": [
@@ -1754,33 +1754,30 @@
      ],
      "box": [
       896,
-      24,
+      88,
       1216,
-      496
+      560
      ],
      "air": 0,
      "blur": 0.0,
      "facing_score": 0.23,
-     "scale": 1.024
+     "scale": 1.043
     },
     "act_up_call": {
      "size": [
-      26,
-      48
+      29,
+      52
      ],
      "box": [
-      1640,
-      80,
-      1880,
-      496
+      1632,
+      112,
+      1896,
+      560
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": -0.05,
-     "scale": 0.765,
-     "fixed": [
-      "rescaled 1.31"
-     ]
+     "facing_score": 0.31,
+     "scale": 0.883
     },
     "act_up_draw": {
      "size": [
@@ -1789,14 +1786,14 @@
      ],
      "box": [
       2232,
-      56,
+      120,
       2696,
-      496
+      560
      ],
      "air": 0,
      "blur": 0.0,
      "facing_score": 0.83,
-     "scale": 1.0
+     "scale": 1.018
     },
     "act_left_nod": {
      "size": [
@@ -1805,9 +1802,9 @@
      ],
      "box": [
       208,
-      600,
+      728,
       488,
-      1008
+      1136
      ],
      "air": 0,
      "blur": 0.0,
@@ -1817,28 +1814,28 @@
       "upper": 2.0,
       "scarf": 2.0
      },
-     "scale": 0.904
+     "scale": 0.92
     },
     "act_left_surprise": {
      "size": [
-      32,
-      47
+      36,
+      52
      ],
      "box": [
-      912,
-      544,
-      1200,
-      1008
+      896,
+      688,
+      1216,
+      1136
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": -2.56,
+     "facing_score": 2.3,
      "facing_cues": {
       "head": -1.5,
-      "upper": -2.0,
-      "scarf": 0.94
+      "upper": 2.0,
+      "scarf": 1.8
      },
-     "scale": 0.843
+     "scale": 0.957
     },
     "act_left_call": {
      "size": [
@@ -1847,9 +1844,9 @@
      ],
      "box": [
       1640,
-      536,
+      664,
       1872,
-      1008
+      1136
      ],
      "air": 0,
      "blur": 0.0,
@@ -1859,7 +1856,7 @@
       "upper": 1.85,
       "scarf": 1.2
      },
-     "scale": 0.904
+     "scale": 0.92
     },
     "act_left_draw": {
      "size": [
@@ -1868,9 +1865,9 @@
      ],
      "box": [
       2224,
-      592,
+      720,
       2704,
-      1008
+      1136
      ],
      "air": 0,
      "blur": 0.0,
@@ -1880,12 +1877,12 @@
       "upper": -2.0,
       "scarf": 2.0
      },
-     "scale": 0.946
+     "scale": 0.963
     }
    }
   },
   "8": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_08.png",
+   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_08.png",
    "size": [
     3584,
     640
@@ -2003,18 +2000,9 @@
   },
   {
    "sheet": 4,
-   "level": "auto",
-   "code": "marks",
-   "msg": "シート4 の 6 番（左向き・驚く） の感情マーク（驚きの線・汗など 1 個）を消した",
-   "slot": "act_left_surprise",
-   "ask": null,
-   "data": {}
-  },
-  {
-   "sheet": 4,
    "level": "check",
    "code": "height",
-   "msg": "シート4 の 1 番（上向き・うなずく） の身長が 44 ドット（ほかは 48）",
+   "msg": "シート4 の 1 番（上向き・うなずく） の身長が 44 ドット（ほかは 50）",
    "slot": "act_up_nod",
    "ask": null,
    "data": {}
@@ -2023,8 +2011,8 @@
    "sheet": 4,
    "level": "check",
    "code": "height",
-   "msg": "シート4 の 4 番（上向き・剣を構える） の身長が 51 ドット（ほかは 48）",
-   "slot": "act_up_draw",
+   "msg": "シート4 の 5 番（左向き・うなずく） の身長が 47 ドット（ほかは 50）",
+   "slot": "act_left_nod",
    "ask": null,
    "data": {}
   },
@@ -2032,33 +2020,8 @@
    "sheet": 4,
    "level": "check",
    "code": "height",
-   "msg": "シート4 の 7 番（左向き・手を挙げる） の身長が 55 ドット（ほかは 48）",
+   "msg": "シート4 の 7 番（左向き・手を挙げる） の身長が 55 ドット（ほかは 50）",
    "slot": "act_left_call",
-   "ask": null,
-   "data": {}
-  },
-  {
-   "sheet": 4,
-   "level": "redo",
-   "code": "facing",
-   "msg": "シート4 の 6 番（左向き・驚く） が右を向いている（左向きのはず。点数 -2.6）",
-   "slot": "act_left_surprise",
-   "ask": "シート4の6番（左向き・驚く）が右を向いている。左向きにして、同じ条件で描き直して",
-   "data": {
-    "score": -2.555072463768116,
-    "cues": {
-     "head": -1.5,
-     "upper": -2.0,
-     "scarf": 0.94
-    }
-   }
-  },
-  {
-   "sheet": 2,
-   "level": "check",
-   "code": "lantern_missing",
-   "msg": "シート2 の 5 番（上向き・右足で着地） にランタンが見えない（左手に持つはず）",
-   "slot": "run_up_0",
    "ask": null,
    "data": {}
   },
@@ -2068,24 +2031,6 @@
    "code": "lantern_missing",
    "msg": "シート2 の 6 番（上向き・浮く1） にランタンが見えない（左手に持つはず）",
    "slot": "run_up_1",
-   "ask": null,
-   "data": {}
-  },
-  {
-   "sheet": 2,
-   "level": "check",
-   "code": "lantern_missing",
-   "msg": "シート2 の 7 番（上向き・左足で着地） にランタンが見えない（左手に持つはず）",
-   "slot": "run_up_2",
-   "ask": null,
-   "data": {}
-  },
-  {
-   "sheet": 2,
-   "level": "check",
-   "code": "lantern_missing",
-   "msg": "シート2 の 8 番（上向き・浮く2） にランタンが見えない（左手に持つはず）",
-   "slot": "run_up_3",
    "ask": null,
    "data": {}
   },
@@ -2129,90 +2074,72 @@
    "sheet": 1,
    "level": "check",
    "code": "scale_small",
-   "msg": "シート1 の 4 番（上向き・立ち） の縮尺が少し違う（頭の大きさで約 87%）。並べて見て気になるなら描き直し",
+   "msg": "シート1 の 4 番（上向き・立ち） の縮尺が少し違う（頭の大きさで約 88%）。並べて見て気になるなら描き直し",
    "slot": "walk_up_0",
    "ask": null,
    "data": {
-    "scale": 0.8674698795180724,
+    "scale": 0.883435582822086,
     "per_ref": [
      0.9625000000000001,
      0.9000000000000004,
      0.9000000000000004,
      0.6375
     ],
-    "group_median": 1.0375000000000003
+    "group_median": 1.0187500000000003
    }
   },
   {
    "sheet": 1,
    "level": "check",
    "code": "scale_small",
-   "msg": "シート1 の 5 番（上向き・右足前） の縮尺が少し違う（頭の大きさで約 87%）。並べて見て気になるなら描き直し",
+   "msg": "シート1 の 5 番（上向き・右足前） の縮尺が少し違う（頭の大きさで約 89%）。並べて見て気になるなら描き直し",
    "slot": "walk_up_1",
    "ask": null,
    "data": {
-    "scale": 0.8734939759036146,
+    "scale": 0.8895705521472393,
     "per_ref": [
      0.9125000000000003,
      0.9000000000000004,
      0.9625000000000001,
      0.6375
     ],
-    "group_median": 1.0375000000000003
+    "group_median": 1.0187500000000003
    }
   },
   {
    "sheet": 1,
    "level": "check",
    "code": "scale_small",
-   "msg": "シート1 の 6 番（上向き・左足前） の縮尺が少し違う（頭の大きさで約 87%）。並べて見て気になるなら描き直し",
+   "msg": "シート1 の 6 番（上向き・左足前） の縮尺が少し違う（頭の大きさで約 89%）。並べて見て気になるなら描き直し",
    "slot": "walk_up_2",
    "ask": null,
    "data": {
-    "scale": 0.8734939759036146,
+    "scale": 0.8895705521472393,
     "per_ref": [
      0.9125000000000003,
      0.9000000000000004,
      0.9625000000000001,
      0.6374999999999997
     ],
-    "group_median": 1.0375000000000003
-   }
-  },
-  {
-   "sheet": 4,
-   "level": "redo",
-   "code": "scale",
-   "msg": "シート4 の 3 番（上向き・手を挙げる） がほかのポーズより小さく描かれている（頭の大きさで約 77%）。仮に 131% に拡大縮小して使う",
-   "slot": "act_up_call",
-   "ask": "シート4の3番（上向き・手を挙げる）だけ小さく描かれている（頭の大きさがほかのポーズの約 77%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
-   "data": {
-    "scale": 0.7650602409638553,
-    "per_ref": [
-     0.8000000000000003,
-     0.8500000000000003,
-     0.7874999999999999,
-     0.6375
-    ],
-    "group_median": 1.0375000000000003
+    "group_median": 1.0187500000000003
    }
   },
   {
    "sheet": 4,
    "level": "check",
    "code": "scale_small",
-   "msg": "シート4 の 6 番（左向き・驚く） の縮尺が少し違う（頭の大きさで約 84%）。並べて見て気になるなら描き直し",
-   "slot": "act_left_surprise",
+   "msg": "シート4 の 3 番（上向き・手を挙げる） の縮尺が少し違う（頭の大きさで約 88%）。並べて見て気になるなら描き直し",
+   "slot": "act_up_call",
    "ask": null,
    "data": {
-    "scale": 0.8433734939759037,
+    "scale": 0.883435582822086,
     "per_ref": [
-     0.8500000000000003,
-     0.9625000000000001,
      0.9000000000000004,
-     0.8000000000000003
+     0.9000000000000004,
+     0.9000000000000004,
+     0.6874999999999998
     ],
-    "group_median": 1.0375000000000003
+    "group_median": 1.0187500000000003
    }
   }
  ]

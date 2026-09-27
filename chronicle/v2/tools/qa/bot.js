@@ -324,7 +324,8 @@
     }
     if (g.go) return [{ map: g.go.map, kind: 'cell', ref: g.go }];
     if (!g.ev) return [];
-    return M.eventPlaces(g.ev).filter((p) => !g.map || p.map === g.map);   // g.map: 同じイベントが幾つもの階にあるとき（砂漠の墓守の像）
+    return M.eventPlaces(g.ev).filter((p) => !g.map || p.map === g.map)   // g.map: 同じイベントが幾つもの階にあるとき（砂漠の墓守の像）
+      .filter((p) => !g.at || (p.ref && p.ref.x === g.at[0] && p.ref.y === g.at[1]));   // g.at: 同じイベントの調べる物が幾つもあるとき（雪の林の薪・峰の氷の壁）
   }
   function goalCells(g) {
     const places = placesFor(g);

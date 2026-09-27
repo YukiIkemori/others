@@ -127,7 +127,7 @@ function battle() {
   for (const id of ['eb_hawk_dust', 'eb_worm_rear', 'eb_worm_sink', 'eb_king_raise']) ok(`${id} は予告（telegraph → next）`, !!(A[id] && A[id].telegraph && A[A[id].telegraph.next]));
   ok('砂の王は第 2 の姿（hpBelow 0.4）', !!(D.monsters.b_sandking.phases || []).length);
   ok('名を呼ぶ道具は戦闘の中で special desert_call_name', D.items.i_desert_kingname.use.effects[0].id === 'desert_call_name');
-  ok('盗み専用 sh_st_diamond_lizard は金剛トカゲの盗みだけ', D.items.sh_st_diamond_lizard.stealOnly && (D.monsters.rm_diamond_lizard.drops.steal || {}).item === 'sh_st_diamond_lizard' && !/sh_st_diamond_lizard/.test(SRC));
+  ok('盗み専用: 砂の王 ac_st_sandking・黄金の守護像 hn_st_gold_idol は盗みだけ（イベントで渡さない）', ['ac_st_sandking', 'hn_st_gold_idol'].every((id) => D.items[id] && D.items[id].stealOnly && !SRC.includes(id)) && D.stealSources.ac_st_sandking.mon === 'b_sandking');
   // 名を呼ぶ: 第 2 の姿の前は道具が戻る、後は王が倒れる（R.BattleCore の本物の特別な効果）
   const BC = R.BattleCore;
   const fake = (rate, phase) => {

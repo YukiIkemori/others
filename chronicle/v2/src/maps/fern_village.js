@@ -56,10 +56,11 @@
     O.push(B('fern_b_search', 33, 3, 7, 5, { door: { x: 36, y: 7, to: { map: 'fern_search', spawn: 'door' } }, roof: 'moss', mat: 'plank', lamp: true, sign: 'guild' }));
     O.push(B('fern_b_rita', 49, 5, 6, 5, { door: { x: 52, y: 9, to: { map: 'fern_rita', spawn: 'door' } }, roof: 'moss', mat: 'bark', windows: 2, flowers: true, lamp: true }));
     O.push(B('fern_b_pim', 15, 41, 6, 4, { door: { x: 18, y: 44, to: { map: 'fern_pim_home', spawn: 'door' } }, roof: 'thatch', mat: 'log', flowers: true }));
-    O.push(B('fern_b_house1', 37, 40, 6, 4, { door: { x: 40, y: 43 }, roof: 'thatch', mat: 'log', windows: 2, flowers: true }));
-    O.push(B('fern_b_house2', 4, 4, 6, 4, { roof: 'moss', mat: 'bark', windows: 1 }));
-    O.push(B('fern_b_house3', 47, 34, 6, 4, { roof: 'thatch', mat: 'log', windows: 2 }));
-    O.push(B('fern_b_shed', 22, 44, 4, 3, { roof: 'thatch', mat: 'plank', windows: 0, small: true, chimney: false }));
+    // 家の中（fern_home1〜3・fern_shed）は homes_slice.js
+    O.push(B('fern_b_house1', 37, 40, 6, 4, { door: { x: 40, y: 43, to: { map: 'fern_home1', spawn: 'door' } }, roof: 'thatch', mat: 'log', windows: 2, flowers: true }));
+    O.push(B('fern_b_house2', 4, 4, 6, 4, { door: { x: 6, y: 7, to: { map: 'fern_home2', spawn: 'door' } }, roof: 'moss', mat: 'bark', windows: 1 }));
+    O.push(B('fern_b_house3', 47, 34, 6, 4, { door: { x: 49, y: 37, to: { map: 'fern_home3', spawn: 'door' } }, roof: 'thatch', mat: 'log', windows: 2 }));
+    O.push(B('fern_b_shed', 22, 44, 4, 3, { door: { x: 23, y: 46, to: { map: 'fern_shed', spawn: 'door' } }, roof: 'thatch', mat: 'plank', windows: 0, small: true, chimney: false }));
 
     // 大木（幹）と足場の灯り
     // 大木（足場を支える幹。地面の層に立つ）
@@ -93,7 +94,7 @@
     O.push(K.prop('barrel', 14, 26), K.prop('barrel', 14, 27), K.prop('crate', 4, 29), K.prop('log', 20, 7), K.prop('log', 20, 8), K.prop('stump', 27, 7));
     O.push(K.prop('hay', 48, 29), K.prop('crate', 48, 25), K.prop('flower_pot', 40, 28), K.prop('sack', 32, 7), K.prop('barrel', 40, 5), K.prop('crate', 40, 6));
     O.push(K.prop('flower_pot', 48, 9), K.prop('flower_pot', 55, 9), K.prop('planter', 21, 45), K.prop('barrel', 36, 43), K.prop('crate', 43, 42));
-    O.push(K.prop('log', 23, 47), K.prop('stump', 26, 45), K.prop('rock', 45, 52), K.prop('rock_small', 12, 54), K.prop('tent', 45, 3));
+    O.push(K.prop('log', 25, 47), K.prop('stump', 26, 45), K.prop('rock', 45, 52), K.prop('rock_small', 12, 54), K.prop('tent', 45, 3));
     const keep = new Set();
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if ('rkcY:'.includes(K.at(g, x, y))) keep.add(x + ',' + y);
     for (const o of O) if (o.type === 'building' && o.door) for (let dy = 0; dy <= 2; dy++) keep.add(o.door.x + ',' + (o.door.y + dy));
@@ -168,6 +169,7 @@
         rita: { x: 52, y: 10, dir: 's' },
         pim_home: { x: 18, y: 45, dir: 's' },
         house1: { x: 40, y: 44, dir: 's' },
+        house2_door: { x: 6, y: 8, dir: 's' }, house3_door: { x: 49, y: 38, dir: 's' }, shed_door: { x: 23, y: 47, dir: 's' },
         deck: { x: 16, y: 13, dir: 'e', lv: 1 },
         east: { x: 46, y: 46, dir: 'e' },
       },

@@ -11,10 +11,17 @@
   const ORTHO = [[0, 1], [0, -1], [1, 0], [-1, 0]];
   const OPP = { s: 'n', n: 's', e: 'w', w: 'e' };
 
+  // 絵の look: 原画のフォルダがあればそれ。町の人の仮の型（npc_man_1 …）は地方の原画の型の色違いへ（CAST の R.Art.cast.fieldLook）。
+  // 話者の名前は地図の look（d.look）のまま
+  function artLook(look, m) {
+    const c = R.Art && R.Art.cast;
+    try { return c && c.fieldLook ? c.fieldLook(look, m) : look; } catch (e) { return look; }
+  }
+  F._artLook = artLook;
   F._initNpcs = function () {
     const m = S.map;
     S.npcs = (m.npcs || []).map((d) => ({
-      def: d, id: d.id, look: d.look, x: d.x, y: d.y, lv: d.lv || 0, dir: d.dir || 's', home: { x: d.x, y: d.y, dir: d.dir || 's' },
+      def: d, id: d.id, look: artLook(d.look, m), x: d.x, y: d.y, lv: d.lv || 0, dir: d.dir || 's', home: { x: d.x, y: d.y, dir: d.dir || 's' },
       mv: null, vis: true, hidden: false, script: 0, talking: false, nextAt: R.Engine.time + 600 + (R.U.hash(d.id) % 1800), returnAt: 0,
       route: 0, pose: null, rng: R.rng(m.id + ':' + d.id), isNew: false, waiters: [],
     }));

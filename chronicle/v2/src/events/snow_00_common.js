@@ -151,4 +151,30 @@
       { cond: 'cleared_r_snow', text: '頂に冬至の火がともり、\n空いっぱいにオーロラが揺れた。' },
     ],
   });
+
+  // ---------------------------------------------------------------- 雪原の BGM（ワールドの雪原の範囲 = tools/gen_world_snow.js の箱）
+  //   入ると ice、出ると overworld（砂漠と同じく 'step' と 'map:enter' で切り替える。砂漠の範囲とは重ならない）
+  const inSnow = (x, y) => x >= 8 && x <= 93 && y >= 1 && y <= 48;
+  let cur = null;
+  function snowBgm(e) {
+    try {
+      const pos = R.Field && R.Field.pos;
+      if (!pos || pos.map !== 'world' || !R.Audio || !R.Audio.bgm) { cur = null; return; }
+      const want = inSnow(pos.x, pos.y) ? 'ice' : cur === 'ice' ? 'overworld' : null;
+      if (!want || want === cur) return;
+      if (R.Engine && R.Engine.top && R.Engine.top() && R.Engine.top().id === 'battle') return;
+      cur = want === 'overworld' ? null : want;
+      R.Audio.bgm(want, { fade: e === 'enter' ? 0 : 900 });
+    } catch (err) { /* 音が無くても止めない */ }
+  }
+  // 録音の曲が無いとき（node・--slice でない版）の代わりの曲
+  R.onData(function () {
+    const F = R.Audio && R.Audio.FALLBACK && R.Audio.FALLBACK.bgm;
+    if (F) for (const [k, v] of [['yule', 'village'], ['bonfire', 'legend'], ['siege', 'tension'], ['ice', 'overworld'], ['ghost', 'cave']]) if (!F[k]) F[k] = v;
+  });
+  if (R.on) {
+    R.on('step', () => snowBgm('step'));
+    R.on('map:enter', () => { cur = null; snowBgm('enter'); });
+    R.on('battle:end', () => { cur = null; });
+  }
 })(window.RPG);

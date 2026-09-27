@@ -110,7 +110,7 @@ function desert(o) {
     { id: 'fara', ev: 'kasim_fara', done: 'desert_fara_met', optional: true },
     { id: 'nadia', ev: 'kasim_nadia', done: 'desert_nadia_met', optional: true },
     { id: 'abul', ev: 'kasim_abul', done: 'desert_abul_met', optional: true },
-    { id: 'zaid', ev: 'kasim_zaid', done: 'desert_caravan_on' },
+    { id: 'zaid', ev: 'kasim_zaid', doneJs: "!!(G().flags.desert_caravan_on || G().flags.desert_camp3_done)" },
     { id: 'camp1', ev: 'desert_camp1_scene', done: 'desert_camp1_done' },
     { id: 'camp2', ev: 'desert_camp2_scene', done: 'desert_camp2_done' },
     { id: 'camp3', ev: 'desert_camp3_scene', done: 'desert_camp3_done' },
@@ -118,11 +118,13 @@ function desert(o) {
     { id: 'plate_w', ev: 'desert_tomb_plate_w', done: 'desert_t1_sw_w' },
     { id: 'plate_e', ev: 'desert_tomb_plate_e', done: 'desert_t1_sw_e' },
     glyph('ha', 'desert_tomb_1'),
-    { id: 'grind_tomb', grind: o.grind || 30, optional: true },
+    // 森と同じ見積もりの仕方: 人は寄り道しながら歩くので、砂漠の戦闘は 90 前後（sim_glimmer の模型）。台本は最短の道なので王墓で足りない分を戦う
+    { id: 'grind_tomb', grind: o.grind || 55, optional: true },
     glyph('za', 'desert_tomb_2'),
     { id: 'spring_t2', spring: ['desert_tomb_2'], optional: true, noHeal: true },
     { id: 'worm', ev: 'desert_tomb_worm', done: 'desert_worm' },
     glyph('ru', 'desert_tomb_3'),
+    { id: 'grind_deep', grind: 90, optional: true },
     { id: 'spring_t3', spring: ['desert_tomb_3'], optional: true, noHeal: true },
     { id: 'king', ev: 'desert_tomb_king', done: 'cleared_r_desert' },
     { id: 'reward', ev: 'desert_after', done: 'desert_reward_given' },
@@ -134,6 +136,50 @@ const CHD = (hawk, route, write) => [
   { re: 'どちらの道', pick: route === 'short' ? '近道' : '遠回り' },
   { re: '年代記に ?何を', pick: write === 'pain' ? '日継ぎ' : '砂の盗賊' },
   { re: '引き受ける', pick: 'やめておく' },
+];
+// 雪原（snow_*.js）: 状態のフィクスチャ（ティア 1・3、森の解決の後、ワールドのユールの西の門の前）から、ユール → 支度（薪・氷・昔話）→
+// 大火祭 → 籠城 3 波（門を選ぶ）→ 夜明け → 白竜の峰（氷の壁・巨人）→ 頂でネーヴェ（語る／戦う）→ clearRegion('r_snow')
+function snow(o) {
+  o = o || {};
+  const tale = { dragon: 'yule_ingrid', hunter: 'yule_olaf', fire_child: 'yule_brenda' };
+  const g = [
+    { id: 'yule', ev: 'yule_arrival', done: 'snow_start' },
+    { id: 'shop_yule_arms', ev: 'yule_smith', shop: true, optional: true },
+    { id: 'shop_yule_items', ev: 'yule_item_keeper', shop: true, optional: true },
+    { id: 'jorn', ev: 'yule_jorn', done: 'snow_jorn_talked' },
+    { id: 'tale_dragon', ev: tale.dragon, done: 'snow_tale_dragon' },
+    { id: 'tale_hunter', ev: tale.hunter, done: 'snow_tale_hunter' },
+    { id: 'tale_fire_child', ev: tale.fire_child, done: 'snow_tale_fire_child' },
+  ];
+  if (o.ice) g.push({ id: 'saw', ev: 'yule_fisher', done: 'snow_saw' }, { id: 'pond_ice', ev: 'yule_pond_ice', done: 'snow_ice_done', maxTries: 20 });
+  g.push(
+    { id: 'log1', ev: 'snow_woods_log', at: [8, 24], done: 'snow_log_1' },
+    { id: 'grind_snow', grind: o.grind || 20, optional: true },
+    { id: 'log2', ev: 'snow_woods_log', at: [27, 8], done: 'snow_log_2' },
+    { id: 'log3', ev: 'snow_woods_log', at: [43, 22], done: 'snow_log_3' },
+    { id: 'festival', ev: 'yule_jorn', done: 'snow_festival_lit' },
+    { id: 'wave1', ev: 'yule_siege_jorn', map: 'yule_night', doneJs: '(G().vars.snow_wave || 0) >= 1', maxTries: 10 },
+    { id: 'wave2', ev: 'yule_siege_jorn', map: 'yule_night', doneJs: '(G().vars.snow_wave || 0) >= 2', maxTries: 10 },
+    { id: 'wave3', ev: 'yule_siege_jorn', map: 'yule_night', done: 'snow_dawn', maxTries: 10 },
+    { id: 'shop_yule_items2', ev: 'yule_item_keeper', shop: true, optional: true },
+    { id: 'wall1', ev: 'peak_icewall', at: [28, 34], done: 'snow_ice_1' },
+    { id: 'wall2', ev: 'peak_icewall', at: [44, 17], done: 'snow_ice_2' },
+    { id: 'spring_peak', spring: ['peak_1'], optional: true, noHeal: true },
+    { id: 'giant', ev: 'peak_giant', done: 'snow_giant' },
+    { id: 'neve', ev: 'peak_neve', done: 'cleared_r_snow' },
+    { id: 'reward', ev: 'yule_jorn', done: 'snow_jorn_reward' },
+  );
+  return g;
+}
+const TALE_NAME = { dragon: '竜と娘', hunter: '狼と猟師', fire_child: '火を盗んだ' };
+const GATE_PICK = { n: '北の門', e: '東の門', w: '西の門' };
+const CHS = (tale, gates, talk, write) => [
+  { re: '祭を始めるか', pick: '祭を始める' },
+  { re: 'どの話を語る', pick: TALE_NAME[tale] },
+  { re: '第1の波', pick: GATE_PICK[gates[0]] }, { re: '第2の波', pick: GATE_PICK[gates[1]] }, { re: '第3の波', pick: GATE_PICK[gates[2]] },
+  { re: 'ネーヴェが、翼を広げた', pick: talk ? '物語を語る' : '戦う' },
+  { re: '年代記に何を書く', pick: write === 'pain' ? 'のことも書く' : '勝ったことだけ' },
+  { re: 'どんな像にする', pick: '竜' }, { re: '北の流氷原へ渡る', pick: 'やめておく' },
 ];
 const ROUTES = {
   R1: { hero: { type: 'warrior', sex: 'm' }, party: ['bartolo', 'marta', 'sylvain'], pim: 'send', fawn: 'heal', write: 'pain',
@@ -149,9 +195,14 @@ const ROUTES = {
   // 砂漠: 状態のフィクスチャから（主人公 戦士 ＋ バルトロ・マルタ・シルヴァン）。D1 = ティア 1・水を分ける・遠回り・盗賊と書く、D3 = ティア 3・戦う・近道・痛み
   D1: { fixture: 'content_d_route_t1', tier: 1, hero: { type: 'warrior', sex: 'm' }, party: ['bartolo', 'marta', 'sylvain'], hawk: 'water', route: 'long', write: 'legend', goals: () => desert() },
   D3: { fixture: 'content_d_route_t3', tier: 3, hero: { type: 'warrior', sex: 'm' }, party: ['bartolo', 'marta', 'sylvain'], hawk: 'fight', route: 'short', write: 'pain', goals: () => desert() },
+  // 雪原: S1 = ティア 1・氷の灯籠まで支度・竜の昔話・門は北→東→西（3 波目の読み当て）・ネーヴェに語る・痛みを書く
+  //       S3 = ティア 3・氷なし・狼と猟師の昔話・門は西→西→北（本命を外す）・ネーヴェと戦う・勝ったことだけ書く
+  S1: { fixture: 'content_s_route_t1', tier: 1, region: 'r_snow', hero: { type: 'warrior', sex: 'm' }, party: ['bartolo', 'marta', 'sylvain'], tale: 'dragon', gates: ['n', 'e', 'w'], talk: true, write: 'pain', goals: () => snow({ ice: true }) },
+  S3: { fixture: 'content_s_route_t3', tier: 3, region: 'r_snow', hero: { type: 'warrior', sex: 'm' }, party: ['bartolo', 'marta', 'sylvain'], tale: 'hunter', gates: ['w', 'w', 'n'], talk: false, write: 'glory', goals: () => snow({ ice: false, grind: 10 }) },
 };
 function routeDef(id) {
   const r = ROUTES[id];
+  if (r.region === 'r_snow') return { id, fixture: r.fixture, hero: r.hero, party: r.party, settings: SETTINGS, choices: CHS(r.tale, r.gates, r.talk, r.write), goals: r.goals(), expect: { region: 'r_snow', tale: r.tale, gates: r.gates, talk: r.talk, write: r.write, tier: r.tier } };
   if (r.fixture) return { id, fixture: r.fixture, hero: r.hero, party: r.party, settings: SETTINGS, choices: CHD(r.hawk, r.route, r.write), goals: r.goals(), expect: { hawk: r.hawk, route: r.route, write: r.write, tier: r.tier } };
   return { id, hero: r.hero, party: r.party, settings: SETTINGS, choices: CH(r.pim, r.fawn, r.write), goals: r.goals(), expect: { pim: r.pim, fawn: r.fawn, write: r.write } };
 }
@@ -169,8 +220,41 @@ async function runRoute(S, id, o) {
     await page.addScriptTag({ content: fs.readFileSync(path.join(V2, 'tools', 'lib', 'maps.js'), 'utf8') });
     await page.addScriptTag({ content: fs.readFileSync(path.join(__dirname, 'bot.js'), 'utf8') });
     if (route.fixture) await page.waitForFunction("RPG.Engine.top() && RPG.Engine.top().id === 'field' && RPG.Engine.fade.a < 0.02", null, { timeout: 180000 });
+    // フィクスチャの一行を、そのティアに来た人の標準（sim_zones の buildParty と同じ: gl = glAt(T,'mid')・熟練・閃いた見込みの技と術・そのティアの店の装備）に
+    if (route.fixture) await page.evaluate((T) => {
+      const R = window.RPG, K = R.Rules.K;
+      const pts = R.Rules.profAt(T, 'main'), rank = R.Rules.profRank(pts);
+      const lvCap = Math.min(T + 2, (K.TECH_PROF || [0, 1, 3, 8]).reduce((m, need, lv) => (lv > 0 && need <= rank ? lv : m), 1));
+      const inv = {};
+      for (const sid of Object.keys(R.DB.shops)) for (const id of R.Rules.shopItems(sid, T)) { const it = R.DB.items[id]; if (it && it.slot !== 'use' && it.slot !== 'key' && (it.tier == null || it.tier <= T) && (it.grade || 'normal') === 'normal') inv[id] = (inv[id] || 0) + 4; }
+      for (const c of R.Party.members()) {
+        c.gl = R.Growth.glAt(T, 'mid');
+        const wt = R.Rules.weaponType(c);
+        c.wprof = c.wprof || {}; c.eprof = c.eprof || {};
+        if (wt && wt !== 'fist') c.wprof[wt] = Math.max(c.wprof[wt] || 0, pts);
+        const els = new Set();
+        for (const id of c.spells || []) for (const e of (R.DB.spells[id] && R.DB.spells[id].elements) || []) els.add(e);
+        for (const e of els) c.eprof[e] = Math.max(c.eprof[e] || 0, pts);
+        const techs = new Set(c.techs || []);
+        for (const id in R.DB.techs) { const a = R.DB.techs[id]; if (a.wtype === wt && a.glim && a.glim.lv <= lvCap) techs.add(id); }
+        c.techs = [...techs];
+        const spells = new Set(c.spells || []);
+        for (const id in R.DB.spells) { const a = R.DB.spells[id]; if ((a.elements || []).length === 1 && els.has(a.elements[0]) && a.glim && a.glim.lv <= lvCap) spells.add(id); }
+        c.spells = [...spells];
+        const plan = R.Rules.optimize(c, c.spells.length > 1 && wt === 'staff' ? 'magic' : 'phys', { inv });
+        R.Rules.applyLoadout(c, plan, { inv });
+        const st = R.Rules.stats(c); c.hp = st.maxHp; c.mp = st.maxMp;
+      }
+    }, route.expect.tier);
     else await page.waitForFunction("RPG.Engine.top() && RPG.Engine.top().id === 'screen:title'", null, { timeout: 180000 });
     await page.evaluate((r) => window.__bot.setup(r), route);
+    // 戸口の記録: マップが変わるたびに、出る前に立っていたマス（歩いて戸口に入ったか）と、仲間を選んだ所（フラグ prologue_party が立ったときのマップ）
+    await page.evaluate(() => {
+      const R = window.RPG, T = (window.__trips = { moves: [], party: null });
+      R.on('map:leave', () => { const s = R.Field._s; T.leaving = { map: s.map && s.map.id, x: s.x, y: s.y }; });
+      R.on('map:enter', (e) => { T.moves.push({ to: e && e.map, from: T.leaving || null, frames: window.__bot.frames }); T.leaving = null; });
+      R.on('flag', (e) => { if (e && e.id === 'prologue_party' && e.v && !T.party) T.party = { map: R.Field._s.map && R.Field._s.map.id }; });
+    });
     const maxMs = (+o.maxMin || 90) * 60000;
     let st = null, lastGoal = null, lastLog = 0;
     for (;;) {
@@ -211,6 +295,41 @@ async function runRoute(S, id, o) {
     }, route.expect);
     res.final = fin;
     const C = res.checks;
+    // 序章の本: 潮風亭（pharos_tavern）へはファロスの戸口のマスを歩いて入り、仲間は潮風亭の中で選んだ（ワープ・フィクスチャなし）
+    if (!route.fixture) {
+      const trips = await page.evaluate(() => window.__trips || null);
+      const tav = (await page.evaluate(() => { const b = (RPG.DB.maps.pharos.objects || []).find((o) => o.id === 'ph_tavern'); return b && b.door; }));
+      const inTav = trips && trips.moves.find((m) => m.to === 'pharos_tavern');
+      C.tavernWalked = !!(inTav && inTav.from && inTav.from.map === 'pharos' && tav && inTav.from.x === tav.x && inTav.from.y === tav.y);
+      C.recruitedInTavern = !!(trips && trips.party && trips.party.map === 'pharos_tavern');
+      res.trips = trips && { tavern: inTav || null, party: trips.party, moves: trips.moves.length };
+    }
+    if (route.expect && route.expect.region === 'r_snow') {
+      const d = await page.evaluate(() => {
+        const R = window.RPG, G = R.Game;
+        const pins = Object.entries(G.leads || {}).filter(([k, v]) => (R.DB.leads[k] || {}).region === 'r_snow' && v && v.pin).map(([k]) => k);
+        const has = (k) => (G.items[k] || 0) > 0 || R.Party.members().some((c) => Object.values(c.equip || {}).includes(k));
+        return { cleared: !!(G.cleared && G.cleared.r_snow), tier: G.tier, choices: Object.assign({}, G.choices), chronicle: R.DB.chronicle.r_snow ? R.DB.chronicle.r_snow.text : '', pins,
+          reward: has('ac_tale_snow'), dragonItem: has('u_dragon_fang') || has('u_dragon_scale'), broken: ['n', 'e', 'w'].filter((g) => G.flags['snow_gate_' + g + '_broken']), sky: R.Tier && R.Tier.get ? R.Tier.get() : null };
+      });
+      const e = route.expect;
+      C.clearedSnow = d.cleared;
+      C.tierUp = d.tier === e.tier + 1;
+      C.invariants = fin.inv.ok;
+      C.snowPinsCleared = d.pins.length === 0;
+      C.choices = d.choices.ch_snow_tale === e.tale && d.choices.ch_snow_neve === (e.talk ? 'talk' : 'fight') && d.choices.ch_snow_write === e.write
+        && e.gates.every((g, i) => d.choices['ch_snow_gate_' + (i + 1)] === g);
+      C.chronicleText = !!d.chronicle && d.chronicle.length > 20;
+      C.rewards = d.reward && d.dragonItem;
+      C.stubs0 = fin.stubs.length === 0;
+      C.loadErrors0 = fin.loadErrors.length === 0;
+      C.consoleErrors0 = P.errors.length === 0;
+      C.noEngineError = !res.engineError;
+      res.snow = d;
+      res.estimate = estimateDesert(fin);
+      res.ok = !st.fail && Object.values(C).every(Boolean);
+      return res;
+    }
     if (route.fixture) {
       const d = await page.evaluate(() => {
         const R = window.RPG, G = R.Game;

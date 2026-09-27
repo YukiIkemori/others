@@ -69,7 +69,7 @@
       ],
       oneway: [{ x: 15, y: 8, dir: 'w' }, { x: 15, y: 9, dir: 'w' }],
       zones: [{ rect: null, zone: 'z_snow_woods' }],
-      light: { ambient: '#5a64a4', k: 0.55, mood: 'night' },
+      light: { ambient: '#5a64a4', k: 0.55, poolK: 0.7, spillR: 0.9, mood: 'night' },
       dark: false,
       bgm: 'ice', bbg: 'snow', weather: 'snow', weatherCond: '!cleared_r_snow',
       meta: { chestsInfo: true, sub: '倒木の林' },

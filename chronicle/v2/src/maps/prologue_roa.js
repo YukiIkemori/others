@@ -34,6 +34,7 @@
       // 南の段（低い段。崖の面が南を向く）: y 22 の崖、x 27〜28 の石段
       hline(g, 3, 41, 22, 'R');
       rect(g, 27, 22, 2, 1, 'e');
+      put(g, 5, 22, 'e');   // 畑の番小屋（roa_h5）の戸の前の小さな石段（戸が崖に向いているので、下の段から上がる）
       path(g, [[27, 19], [27, 21]], '.', 2);
       // ベルナの家の前庭と、家への小道
       rect(g, 12, 23, 22, 9, ',');
@@ -47,17 +48,18 @@
         T: { mat: 'tree', solid: true }, w: { mat: 'water', walk: false }, R: { mat: 'cliff', solid: true, rise: 1 }, e: { mat: 'stone_floor', name: 'stairs' },
       };
       const b = K.b, P = K.prop, PS = K.props;
+      const D = (x, y, map) => ({ x, y, to: { map, spawn: 'door' } });   // 戸口（中は homes_slice.js）。戸の位置は描いた建物の戸（env の door32）に合わせる
       const house = (id, x, y, w, h, o) => b(id, x, y, w, h, Object.assign({ roof: 'thatch', mat: 'plaster', wall: 2, windows: 2, lamp: true, flowers: true }, o));
       const objects = [
         // 北の家並み（戸口は小道へ。中へは入らない家は戸が閉じている）
-        house('roa_h1', 5, 4, 6, 6, { windows: 2, chimney: true }),
-        house('roa_h2', 12, 4, 5, 6, { roof: 'shingle', mat: 'log' }),
-        b('roa_hall', 18, 3, 8, 7, { roof: 'moss', mat: 'stone', wall: 3, windows: [1, 6], hip: true, lamp: true }),   // 語り石の間
-        house('roa_h3', 28, 4, 5, 6, { roof: 'shingle', mat: 'log', chimney: true }),
-        house('roa_h4', 34, 4, 6, 6, { windows: 3 }),
+        house('roa_h1', 5, 4, 6, 6, { windows: 2, chimney: true, door: D(7, 9, 'roa_home1') }),
+        house('roa_h2', 12, 4, 5, 6, { roof: 'shingle', mat: 'log', door: D(14, 9, 'roa_home2') }),
+        b('roa_hall', 18, 3, 8, 7, { roof: 'moss', mat: 'stone', wall: 3, windows: [1, 6], hip: true, lamp: true, door: D(21, 9, 'roa_hall_in') }),   // 語り石の間
+        house('roa_h3', 28, 4, 5, 6, { roof: 'shingle', mat: 'log', chimney: true, door: D(30, 9, 'roa_home3') }),
+        house('roa_h4', 34, 4, 6, 6, { windows: 3, door: D(37, 9, 'roa_home4') }),
         // 西の家（畑の番）と東の家
-        house('roa_h5', 4, 19, 5, 3, { wall: 1, windows: 1, roof: 'shingle', mat: 'log', small: true }),
-        house('roa_h6', 30, 16, 5, 4, { roof: 'thatch', windows: 2, wall: 2 }),
+        house('roa_h5', 4, 19, 5, 3, { wall: 1, windows: 1, roof: 'shingle', mat: 'log', small: true, door: D(5, 21, 'roa_home5') }),
+        house('roa_h6', 30, 16, 5, 4, { roof: 'thatch', windows: 2, wall: 2, door: D(32, 19, 'roa_home6') }),
         // ベルナの家（南の段）
         b('roa_berna', 16, 24, 9, 7, { roof: 'moss', mat: 'log', wall: 3, windows: 3, chimney: true, lamp: true, flowers: true, door: { x: 20, y: 30, to: { map: 'roa_house', spawn: 'door' } } }),
         // 語り石の広場: 語り石（まん中）と石の円陣、広場の灯籠の輪
@@ -68,7 +70,7 @@
         // 北の小道の飾り
         ...PS('lantern', [[11, 10], [17, 10], [27, 10], [33, 10]]),
         ...PS('barrel', [[4, 10], [39, 10]]), P('crate', 39, 11), P('sack', 4, 11),
-        ...PS('flower_pot', [[7, 10], [14, 10], [30, 10], [36, 10]]),
+        ...PS('flower_pot', [[9, 10], [15, 10], [29, 10], [36, 10]]),   // 戸の前は空ける
         P('well', 30, 13),
         // 畑のまわり
         ...PS('fence', [[4, 12], [5, 12], [6, 12], [7, 12], [8, 12], [9, 12], [10, 12], [11, 12], [12, 13], [12, 14], [12, 16], [12, 17], [12, 18]]),
@@ -82,8 +84,6 @@
         ...PS('flower_pot', [[15, 29], [26, 29]]), P('barrel', 26, 25), P('stump', 32, 24), P('log', 12, 24),
         ...PS('firefly', [[13, 27], [31, 31], [22, 23 + 9]]),
         P('mushroom_glow', 11, 29), P('rock_small', 34, 26),
-        // 語り石の間の戸口（閉じている。調べると中の話）
-        K.exam(21, 9, 'roa_hall'),
         K.exam(21, 15, 'roa_stone'),
         K.sign(37, 13, 'ロアの里\n語り部の里。東へ出れば、半島の街道。'),
         K.chest('roa_c1', 5, 17, { item: 'i_salve', n: 2 }),
@@ -103,7 +103,11 @@
       K.def('roa', {
         name: 'ロアの里', name_ruby: 'ろあのさと', kind: 'town', region: 'prologue', location: 'roa', theme: 'hill_village',
         legend, rows: g, outside: 'tree', objects, npcs,
-        spawns: { gate: { x: 42, y: 15, dir: 'w' }, house: { x: 20, y: 31, dir: 's' }, warp: { x: 21, y: 19, dir: 's' } },
+        spawns: {
+          gate: { x: 42, y: 15, dir: 'w' }, house: { x: 20, y: 31, dir: 's' }, warp: { x: 21, y: 19, dir: 's' },
+          h1_door: { x: 7, y: 10, dir: 's' }, h2_door: { x: 14, y: 10, dir: 's' }, h3_door: { x: 30, y: 10, dir: 's' }, h4_door: { x: 37, y: 10, dir: 's' },
+          h5_door: { x: 5, y: 22, dir: 's' }, h6_door: { x: 32, y: 20, dir: 's' }, hall_door: { x: 21, y: 10, dir: 's' },
+        },
         exits: [{ x: 43, y: 15, w: 1, h: 1, to: { map: 'world', spawn: 'roa' } }],
         triggers: [
           { id: 'gate', x: 39, y: 15, w: 1, h: 1, on: 'step', event: 'roa_gate', cond: '!prologue_berna' },

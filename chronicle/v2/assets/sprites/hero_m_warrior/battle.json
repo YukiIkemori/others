@@ -2,7 +2,7 @@
  "character": "arun",
  "set": "battle",
  "look": "hero_m_warrior",
- "source": "out/arun_v3/battle",
+ "source": "out/arun_v4/battle",
  "cell": [
   130,
   87

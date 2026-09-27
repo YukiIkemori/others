@@ -41,3 +41,27 @@
   それまでは `node v2/tools/build.js --all-bgm` で入る。作り直した 6 曲は同じ id なので、今のビルドのままで入る。
 - 大きさ: 新しい 5 曲 ≈ 3.5 MB、作り直しの 6 曲で +2.6 MB（3.4 → 6.0 MB）、ボイス 48 本 ≈ 1.9 MB（`--single` は base64 で約 1.33 倍）。
 - `V2_PLAN.md` §3.10 の BGM の一覧（17 曲）にも 5 曲を足すこと（リード）。
+
+## 4. 砂漠（desert_*.js、2026-09-27）
+新しい 3 曲（tools/lyria_bgm.js、design/bgm/prompts.json の kasim・desert・caravan）と、前からある `pyramid`。build.js・validate.js の SLICE_BGM に足した。
+| id | 鳴る所 | 曲 |
+|---|---|---|
+| `kasim` | オアシスの町カシム・屋内・宿場「砂の縁」 | D の短調（フリギア属）104、ウード・ネイ・ダルブッカ。ループ 28.8→75.0 s |
+| `desert` | ワールドの砂漠の範囲（desert_00_common.js が 'step' で overworld と切り替える）・金剛トカゲの岩場・蜃気楼の市 | 73.7 s、ループ 7.4→ |
+| `caravan` | 野営地 3 つ・隊商と出発したとき・古い野営跡・井戸の小屋 | 80.8 s、ループ 10.2→ |
+| `pyramid` | 砂の王墓・砂に沈んだ神殿 | 前からある曲 |
+録音の曲が無いときの代わり（R.Audio.FALLBACK）: kasim → town、desert → overworld、caravan → sorrow、pyramid → dungeon。
+
+## 5. 雪原（snow_*.js、2026-09-27）
+新しい 3 曲（tools/lyria_bgm.js、design/bgm/prompts_snow.json の yule・bonfire・siege。各 2 本録って聞き比べ、ループの良い方）と、前からある `ice`・`ghost`。
+build.js・validate.js の SLICE_BGM に足した（`ice`・`ghost`・`yule`・`bonfire`・`siege`）。
+| id | 鳴る所 | 曲 |
+|---|---|---|
+| `yule` | 雪の村ユール・屋内（酒場の宿は `tavern`） | 75.6 s、ループ 15.6→75.6 s。祭の支度の、温かい北の村（フィドル・ハーディ・ガーディ・鈴） |
+| `bonfire` | 大火祭の火入れ（snow_festival）・二日目の祭（snow_day2） | 79.7 s、ループ 27.3→79.7 s。焚き火を囲む踊り（聞き取りの判定: 継ぎ目の違和感なし） |
+| `siege` | 籠城の夜のユール（yule_night）・門の戦い（troops_snow.js の bgm） | 70.1 s、ループ 15.3→70.1 s。低い太鼓とホルンの緊張 |
+| `ice` | ワールドの雪原の範囲（snow_00_common.js が 'step' で overworld と切り替える）・雪の林・白竜の峰・つららの回廊・流氷原 | 前からある曲 |
+| `ghost` | 氷に閉じた帆船 | 前からある曲 |
+ボス: 吹雪の大狼・氷壁の巨人は `boss`、白竜ネーヴェ・氷の船団長は `boss2`。予告のスティングは `omen`、夜明け・解決は `dawn`、昔話の語りは `legend`。
+録音の曲が無いときの代わり（R.Audio.FALLBACK）: yule → village、bonfire → legend、siege → tension、ice → overworld、ghost → cave。
+`yule` の聞き取りは「拍の飛び」の指摘が 1 つ残った（3 本目の候補のループ）。気になるなら `--only yule --takes 3` で録り直す。

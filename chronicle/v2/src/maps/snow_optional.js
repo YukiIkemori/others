@@ -48,7 +48,7 @@
         triggers: [{ id: 'arrive', on: 'enter', event: 'icicle_arrive', once: true }],
         tilePatches: [{ cond: 'snow_icicle_box_1', rect: [17, 7, 1, 1], rows: ['.'] }],
         zones: [{ rect: null, zone: 'z_snow_icicle' }],
-        light: { ambient: '#4c5c98', k: 0.6, mood: 'cave' },
+        light: { ambient: '#4c5c98', k: 0.6, poolK: 0.6, spillR: 0.8, mood: 'cave' },
         dark: false, bgm: 'cave', bbg: 'snow',
         meta: { chestsInfo: true, floor: '1 階', sub: '氷の洞' },
       });
@@ -90,7 +90,7 @@
         ],
         tilePatches: [{ cond: 'snow_icicle_box_2', rect: [19, 6, 3, 1], rows: ['...'] }],
         zones: [{ rect: null, zone: 'z_snow_icicle' }],
-        light: { ambient: '#3e4a82', k: 0.66, mood: 'cave' },
+        light: { ambient: '#3e4a82', k: 0.66, poolK: 0.6, spillR: 0.8, mood: 'cave' },
         dark: [{ rect: [0, 0, 40, 32] }], bgm: 'cave', bbg: 'snow',
         meta: { chestsInfo: true, floor: '2 階', sub: '暗い氷の洞' },
       });
@@ -185,7 +185,7 @@
         exits: [{ x: 18, y: 29, w: 4, h: 1, to: { map: 'world', spawn: 'aurora' } }],
         triggers: [{ id: 'arrive', on: 'enter', event: 'aurora_arrive', once: true }],
         zones: [{ rect: null, zone: 'z_snow_floe' }],
-        light: { ambient: '#6a64b0', k: 0.58, mood: 'night' },
+        light: { ambient: '#6a64b0', k: 0.58, poolK: 0.7, spillR: 0.9, mood: 'night' },
         dark: false, bgm: 'ice', bbg: 'snow', weather: 'snow',
         meta: { chestsInfo: true, sub: '空が七色に揺れる崖' },
       });
@@ -216,7 +216,7 @@
         exits: [{ x: 18, y: 23, w: 4, h: 1, to: { map: 'world', spawn: 'frost_ship' } }],
         triggers: [{ id: 'arrive', on: 'enter', event: 'frost_ship_arrive', once: true }],
         zones: [{ rect: null, zone: 'z_snow_floe' }],
-        light: { ambient: '#56629c', k: 0.58, mood: 'night' },
+        light: { ambient: '#56629c', k: 0.58, poolK: 0.7, spillR: 0.9, mood: 'night' },
         dark: false, bgm: 'ghost', bbg: 'snow', weather: 'snow',
         meta: { chestsInfo: true, floor: '甲板', sub: '氷の中の帆柱' },
       });
@@ -239,7 +239,7 @@
         exits: [],
         triggers: [{ id: 'boss', x: 20, y: 8, w: 3, h: 10, on: 'step', event: 'frost_ship_boss', cond: '!snow_admiral' }],
         zones: [{ rect: [0, 0, 14, 22], zone: 'z_snow_floe' }],
-        light: { ambient: '#4e5890', k: 0.62, mood: 'cave' },
+        light: { ambient: '#4e5890', k: 0.62, poolK: 0.6, spillR: 0.8, mood: 'cave' },
         dark: false, bgm: 'ghost', bbg: 'snow',
         meta: { chestsInfo: true, floor: '船倉', sub: '凍りついた船長室' },
       });

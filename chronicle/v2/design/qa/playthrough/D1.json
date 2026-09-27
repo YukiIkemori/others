@@ -1,0 +1,1002 @@
+{
+ "route": "D1",
+ "phone": false,
+ "ok": true,
+ "checks": {
+  "clearedDesert": true,
+  "tierUp": true,
+  "invariants": true,
+  "desertPinsCleared": true,
+  "choices": true,
+  "chronicleText": true,
+  "sealFromAbul": true,
+  "stubs0": true,
+  "loadErrors0": true,
+  "consoleErrors0": true,
+  "noEngineError": true
+ },
+ "errors": [],
+ "started": "2026-09-27T12:34:24.841Z",
+ "status": {
+  "frames": 13083,
+  "time": 654969,
+  "goal": "king",
+  "done": true,
+  "fail": null,
+  "top": "field",
+  "pos": "kasim 31,34",
+  "steps": 1132,
+  "gold": 2624,
+  "battles": 39,
+  "wipes": 0,
+  "round": null,
+  "hp": 1,
+  "engineError": null
+ },
+ "final": {
+  "inv": {
+   "top": "field",
+   "locks": [],
+   "busy": false,
+   "fade": 0,
+   "input": true,
+   "msg": false,
+   "ok": true
+  },
+  "pinned": [],
+  "chronicle": "森が歌を忘れ、道を変えた年のこと。\n語り部の見習いは、迷いの森で\n四人を探した。\n千年樹のこずえに、歌の灯がともった。",
+  "uniq": [],
+  "lastWho": "hans",
+  "order": [
+   "hans",
+   "ben",
+   "roy",
+   "pim"
+  ],
+  "choices": {
+   "ch_desert_hawk": "water",
+   "ch_desert_route": "long",
+   "ch_desert_write": "legend"
+  },
+  "cleared": false,
+  "t1": true,
+  "tier": 2,
+  "hero": {
+   "type": "warrior",
+   "sex": "m",
+   "name": "アルン"
+  },
+  "party": [
+   "hero",
+   "bartolo",
+   "marta",
+   "sylvain"
+  ],
+  "stubs": [],
+  "loadErrors": [],
+  "playMs": 656018.800000003,
+  "steps": 1132,
+  "gold": 2624,
+  "stats": {
+   "tops": {
+    "field": 4125,
+    "caption": 333,
+    "message": 187,
+    "screen:shop": 64,
+    "screen:tip": 4,
+    "battle": 8290,
+    "celebrate": 80
+   },
+   "taps": 1773,
+   "screenOps": 33,
+   "choices": 4,
+   "chars": 3368,
+   "captions": 27,
+   "battles": [
+    {
+     "troop": null,
+     "zone": "zw_desert_caravan",
+     "boss": false,
+     "map": "world",
+     "gold": 40,
+     "rounds": 1,
+     "lose": false,
+     "f": 934,
+     "t0": 47568.800000002986,
+     "result": "win",
+     "ms": 6900
+    },
+    {
+     "troop": null,
+     "zone": "zw_desert_caravan",
+     "boss": false,
+     "map": "world",
+     "gold": 76,
+     "rounds": 1,
+     "lose": false,
+     "f": 1224,
+     "t0": 62068.800000002986,
+     "result": "win",
+     "ms": 8600
+    },
+    {
+     "troop": null,
+     "zone": "zw_desert_caravan",
+     "boss": false,
+     "map": "world",
+     "gold": 127,
+     "rounds": 2,
+     "lose": false,
+     "f": 1424,
+     "t0": 72068.80000000299,
+     "result": "win",
+     "ms": 14250
+    },
+    {
+     "troop": null,
+     "zone": "zw_desert_caravan",
+     "boss": false,
+     "map": "world",
+     "gold": 181,
+     "rounds": 1,
+     "lose": false,
+     "f": 1844,
+     "t0": 93068.80000000299,
+     "result": "win",
+     "ms": 10300
+    },
+    {
+     "troop": null,
+     "zone": "zw_desert_caravan",
+     "boss": false,
+     "map": "world",
+     "gold": 235,
+     "rounds": 1,
+     "lose": false,
+     "f": 2073,
+     "t0": 104518.80000000299,
+     "result": "win",
+     "ms": 8400
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 289,
+     "rounds": 1,
+     "lose": false,
+     "f": 2520,
+     "t0": 126868.80000000299,
+     "result": "win",
+     "ms": 11400
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 349,
+     "rounds": 1,
+     "lose": false,
+     "f": 2905,
+     "t0": 146118.800000003,
+     "result": "win",
+     "ms": 8400
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 409,
+     "rounds": 1,
+     "lose": false,
+     "f": 3152,
+     "t0": 158468.800000003,
+     "result": "win",
+     "ms": 7600
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 469,
+     "rounds": 2,
+     "lose": false,
+     "f": 3351,
+     "t0": 168418.800000003,
+     "result": "win",
+     "ms": 14650
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 529,
+     "rounds": 2,
+     "lose": false,
+     "f": 3774,
+     "t0": 189568.800000003,
+     "result": "win",
+     "ms": 14800
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 583,
+     "rounds": 1,
+     "lose": false,
+     "f": 4094,
+     "t0": 205568.800000003,
+     "result": "win",
+     "ms": 9200
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 623,
+     "rounds": 1,
+     "lose": false,
+     "f": 4350,
+     "t0": 218368.800000003,
+     "result": "win",
+     "ms": 5800
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 657,
+     "rounds": 1,
+     "lose": false,
+     "f": 4497,
+     "t0": 225718.800000003,
+     "result": "win",
+     "ms": 9400
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 697,
+     "rounds": 1,
+     "lose": false,
+     "f": 4773,
+     "t0": 239518.800000003,
+     "result": "win",
+     "ms": 8100
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 739,
+     "rounds": 1,
+     "lose": false,
+     "f": 5144,
+     "t0": 258068.800000003,
+     "result": "win",
+     "ms": 9749.99999999997
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 787,
+     "rounds": 1,
+     "lose": false,
+     "f": 5425,
+     "t0": 272118.80000000296,
+     "result": "win",
+     "ms": 6700
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 835,
+     "rounds": 1,
+     "lose": false,
+     "f": 5599,
+     "t0": 280818.80000000296,
+     "result": "win",
+     "ms": 7900
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 875,
+     "rounds": 1,
+     "lose": false,
+     "f": 5822,
+     "t0": 291968.80000000296,
+     "result": "win",
+     "ms": 8100
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 935,
+     "rounds": 1,
+     "lose": false,
+     "f": 6135,
+     "t0": 307618.80000000296,
+     "result": "win",
+     "ms": 5100
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 978,
+     "rounds": 1,
+     "lose": false,
+     "f": 6402,
+     "t0": 320968.80000000296,
+     "result": "win",
+     "ms": 4700
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 1021,
+     "rounds": 1,
+     "lose": false,
+     "f": 6556,
+     "t0": 328668.80000000296,
+     "result": "win",
+     "ms": 10500
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 1077,
+     "rounds": 1,
+     "lose": false,
+     "f": 6870,
+     "t0": 344368.80000000296,
+     "result": "win",
+     "ms": 6400
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 1117,
+     "rounds": 1,
+     "lose": false,
+     "f": 7117,
+     "t0": 356718.80000000296,
+     "result": "win",
+     "ms": 7200
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 1157,
+     "rounds": 1,
+     "lose": false,
+     "f": 7324,
+     "t0": 367068.80000000296,
+     "result": "win",
+     "ms": 8400
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 1217,
+     "rounds": 1,
+     "lose": false,
+     "f": 7552,
+     "t0": 378468.80000000296,
+     "result": "win",
+     "ms": 8800
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 1277,
+     "rounds": 1,
+     "lose": false,
+     "f": 7803,
+     "t0": 391018.80000000296,
+     "result": "win",
+     "ms": 8700
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 1319,
+     "rounds": 1,
+     "lose": false,
+     "f": 8050,
+     "t0": 403368.80000000296,
+     "result": "win",
+     "ms": 7300
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 1379,
+     "rounds": 1,
+     "lose": false,
+     "f": 8287,
+     "t0": 415218.80000000296,
+     "result": "win",
+     "ms": 12000
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 1435,
+     "rounds": 1,
+     "lose": false,
+     "f": 8551,
+     "t0": 428418.80000000296,
+     "result": "win",
+     "ms": 7350
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 1492,
+     "rounds": 1,
+     "lose": false,
+     "f": 8843,
+     "t0": 443018.80000000296,
+     "result": "win",
+     "ms": 10700
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 1546,
+     "rounds": 1,
+     "lose": false,
+     "f": 9105,
+     "t0": 456118.80000000296,
+     "result": "win",
+     "ms": 11100
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_1",
+     "gold": 1602,
+     "rounds": 1,
+     "lose": false,
+     "f": 9431,
+     "t0": 472418.80000000296,
+     "result": "win",
+     "ms": 8300
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_2",
+     "gold": 1644,
+     "rounds": 1,
+     "lose": false,
+     "f": 9673,
+     "t0": 484518.80000000296,
+     "result": "win",
+     "ms": 8050
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_2",
+     "gold": 1692,
+     "rounds": 1,
+     "lose": false,
+     "f": 9920,
+     "t0": 496868.80000000296,
+     "result": "win",
+     "ms": 8500
+    },
+    {
+     "troop": "tr_b_sandworm",
+     "zone": null,
+     "boss": true,
+     "map": "desert_tomb_2",
+     "gold": 1732,
+     "rounds": 4,
+     "lose": false,
+     "f": 10247,
+     "t0": 513168.80000000296,
+     "result": "win",
+     "ms": 28550
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb",
+     "boss": false,
+     "map": "desert_tomb_2",
+     "gold": 2073,
+     "rounds": 2,
+     "lose": false,
+     "f": 10892,
+     "t0": 545468.800000003,
+     "result": "win",
+     "ms": 13550
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb_deep",
+     "boss": false,
+     "map": "desert_tomb_3",
+     "gold": 2133,
+     "rounds": 2,
+     "lose": false,
+     "f": 11343,
+     "t0": 568018.800000003,
+     "result": "win",
+     "ms": 13700
+    },
+    {
+     "troop": null,
+     "zone": "z_desert_tomb_deep",
+     "boss": false,
+     "map": "desert_tomb_3",
+     "gold": 2190,
+     "rounds": 2,
+     "lose": false,
+     "f": 11638,
+     "t0": 582768.800000003,
+     "result": "win",
+     "ms": 16750
+    },
+    {
+     "troop": "tr_b_sandking",
+     "zone": null,
+     "boss": true,
+     "map": "desert_tomb_3",
+     "gold": 2258,
+     "rounds": 4,
+     "lose": false,
+     "f": 12048,
+     "t0": 603218.800000003,
+     "result": "win",
+     "ms": 38600
+    }
+   ],
+   "wipes": [],
+   "talks": 56,
+   "plans": 96,
+   "planMs": 156105.5000000596,
+   "forced": []
+  },
+  "phaseAt": {
+   "start": {
+    "f": 0,
+    "t": 818.8000000029824,
+    "steps": 0,
+    "chars": 0,
+    "ops": 0,
+    "battles": 0,
+    "playMs": 0
+   },
+   "prologue_done": {
+    "f": 30,
+    "t": 2318.8000000029824,
+    "steps": 7,
+    "chars": 0,
+    "ops": 0,
+    "battles": 0,
+    "playMs": 2318.8000000029824
+   },
+   "forest_start": {
+    "f": 30,
+    "t": 2318.8000000029824,
+    "steps": 7,
+    "chars": 0,
+    "ops": 0,
+    "battles": 0,
+    "playMs": 2318.8000000029824
+   },
+   "cleared": {
+    "f": 30,
+    "t": 2318.8000000029824,
+    "steps": 7,
+    "chars": 0,
+    "ops": 0,
+    "battles": 0,
+    "playMs": 2318.8000000029824
+   },
+   "t1": {
+    "f": 30,
+    "t": 2318.8000000029824,
+    "steps": 7,
+    "chars": 0,
+    "ops": 0,
+    "battles": 0,
+    "playMs": 2318.8000000029824
+   }
+  },
+  "log": [
+   {
+    "f": 0,
+    "t": 819,
+    "msg": "goal kasim"
+   },
+   {
+    "f": 75,
+    "t": 4569,
+    "msg": "goal shop_kasim_arms"
+   },
+   {
+    "f": 134,
+    "t": 7519,
+    "msg": "act shop_kasim_arms at kasim 20,17"
+   },
+   {
+    "f": 164,
+    "t": 9019,
+    "msg": "act shop_kasim_arms at kasim 20,17"
+   },
+   {
+    "f": 185,
+    "t": 10069,
+    "msg": "buy w_greatsword_2 (1500 G)"
+   },
+   {
+    "f": 186,
+    "t": 10119,
+    "msg": "buy w_greatsword_2 (1500 G)"
+   },
+   {
+    "f": 197,
+    "t": 10669,
+    "msg": "buy w_bow_2 (1040 G)"
+   },
+   {
+    "f": 198,
+    "t": 10719,
+    "msg": "buy w_bow_2 (1040 G)"
+   },
+   {
+    "f": 209,
+    "t": 11269,
+    "msg": "buy w_greatsword_2 (580 G)"
+   },
+   {
+    "f": 210,
+    "t": 11319,
+    "msg": "buy w_greatsword_2 (580 G)"
+   },
+   {
+    "f": 220,
+    "t": 11819,
+    "msg": "shop done shop_kasim_arms gold 120"
+   },
+   {
+    "f": 220,
+    "t": 11819,
+    "msg": "goal shop_kasim_items"
+   },
+   {
+    "f": 323,
+    "t": 16969,
+    "msg": "act shop_kasim_items at kasim_shop 5,4"
+   },
+   {
+    "f": 326,
+    "t": 17119,
+    "msg": "buy i_salve (120 G)"
+   },
+   {
+    "f": 327,
+    "t": 17169,
+    "msg": "buy i_salve (120 G)"
+   },
+   {
+    "f": 328,
+    "t": 17219,
+    "msg": "buy i_salve (100 G)"
+   },
+   {
+    "f": 329,
+    "t": 17269,
+    "msg": "buy i_salve (100 G)"
+   },
+   {
+    "f": 330,
+    "t": 17319,
+    "msg": "buy i_salve (80 G)"
+   },
+   {
+    "f": 331,
+    "t": 17369,
+    "msg": "buy i_salve (80 G)"
+   },
+   {
+    "f": 332,
+    "t": 17419,
+    "msg": "buy i_salve (60 G)"
+   },
+   {
+    "f": 333,
+    "t": 17469,
+    "msg": "buy i_salve (60 G)"
+   },
+   {
+    "f": 339,
+    "t": 17769,
+    "msg": "shop done shop_kasim_items gold 40"
+   },
+   {
+    "f": 339,
+    "t": 17769,
+    "msg": "goal fara"
+   },
+   {
+    "f": 425,
+    "t": 22069,
+    "msg": "act fara at kasim 31,24"
+   },
+   {
+    "f": 455,
+    "t": 23569,
+    "msg": "act fara at kasim 31,24"
+   },
+   {
+    "f": 462,
+    "t": 23919,
+    "msg": "goal nadia"
+   },
+   {
+    "f": 494,
+    "t": 25519,
+    "msg": "act nadia at kasim 28,33"
+   },
+   {
+    "f": 524,
+    "t": 27019,
+    "msg": "act nadia at kasim 28,33"
+   },
+   {
+    "f": 547,
+    "t": 28169,
+    "msg": "goal abul"
+   },
+   {
+    "f": 711,
+    "t": 36369,
+    "msg": "act abul at kasim_abul 5,5"
+   },
+   {
+    "f": 722,
+    "t": 36919,
+    "msg": "goal zaid"
+   },
+   {
+    "f": 823,
+    "t": 41969,
+    "msg": "act zaid at kasim 36,33"
+   },
+   {
+    "f": 853,
+    "t": 43469,
+    "msg": "act zaid at kasim 36,33"
+   },
+   {
+    "f": 861,
+    "t": 43869,
+    "msg": "choose \"出発する\" for \"隊商と出発する？\""
+   },
+   {
+    "f": 903,
+    "t": 45969,
+    "msg": "goal camp1"
+   },
+   {
+    "f": 1165,
+    "t": 59069,
+    "msg": "choose \"水を分ける\" for \"砂の鷹団にどうする？\""
+   },
+   {
+    "f": 1191,
+    "t": 60369,
+    "msg": "goal camp2"
+   },
+   {
+    "f": 1789,
+    "t": 90269,
+    "msg": "choose \"遠回り（西の浜を回る）\" for \"どちらの道を行く？\""
+   },
+   {
+    "f": 1807,
+    "t": 91169,
+    "msg": "goal camp3"
+   },
+   {
+    "f": 2384,
+    "t": 120019,
+    "msg": "goal abul_oasis"
+   },
+   {
+    "f": 2394,
+    "t": 120519,
+    "msg": "act abul_oasis at desert_camp3 13,16"
+   },
+   {
+    "f": 2424,
+    "t": 122019,
+    "msg": "act abul_oasis at desert_camp3 13,16"
+   },
+   {
+    "f": 2433,
+    "t": 122469,
+    "msg": "goal plate_w"
+   },
+   {
+    "f": 2874,
+    "t": 144519,
+    "msg": "goal plate_e"
+   },
+   {
+    "f": 3766,
+    "t": 189119,
+    "msg": "goal glyph_ha"
+   },
+   {
+    "f": 4944,
+    "t": 248019,
+    "msg": "act glyph_ha at desert_tomb_1 5,41"
+   },
+   {
+    "f": 4951,
+    "t": 248369,
+    "msg": "goal grind_tomb"
+   },
+   {
+    "f": 4951,
+    "t": 248369,
+    "msg": "grind to 30 battles on desert_tomb_1"
+   },
+   {
+    "f": 9058,
+    "t": 453719,
+    "msg": "grind goal grind_tomb done (30 battles)"
+   },
+   {
+    "f": 9059,
+    "t": 453769,
+    "msg": "goal glyph_za"
+   },
+   {
+    "f": 10104,
+    "t": 506019,
+    "msg": "act glyph_za at desert_tomb_2 5,37"
+   },
+   {
+    "f": 10111,
+    "t": 506369,
+    "msg": "goal spring_t2"
+   },
+   {
+    "f": 10196,
+    "t": 510619,
+    "msg": "act spring_t2 at desert_tomb_2 26,22"
+   },
+   {
+    "f": 10197,
+    "t": 510669,
+    "msg": "goal worm"
+   },
+   {
+    "f": 10830,
+    "t": 542319,
+    "msg": "goal glyph_ru"
+   },
+   {
+    "f": 11276,
+    "t": 564619,
+    "msg": "act glyph_ru at desert_tomb_3 44,21"
+   },
+   {
+    "f": 11306,
+    "t": 566119,
+    "msg": "act glyph_ru at desert_tomb_3 44,21"
+   },
+   {
+    "f": 11327,
+    "t": 567169,
+    "msg": "goal spring_t3"
+   },
+   {
+    "f": 12002,
+    "t": 600919,
+    "msg": "act spring_t3 at desert_tomb_3 25,17"
+   },
+   {
+    "f": 12003,
+    "t": 600969,
+    "msg": "goal king"
+   },
+   {
+    "f": 13047,
+    "t": 653169,
+    "msg": "choose \"砂の鷹を「砂の盗賊」と書く\" for \"年代記に何を書く？\""
+   }
+  ],
+  "dev": true
+ },
+ "desert": {
+  "cleared": true,
+  "tier": 2,
+  "choices": {
+   "ch_desert_hawk": "water",
+   "ch_desert_route": "long",
+   "ch_desert_write": "legend"
+  },
+  "chronicle": "オアシスの泉が枯れかけた年のこと。\n語り部の見習いは、隊商を守って\n三つの夜を砂漠で越えた。\n岩の井戸では、砂の鷹と水を分け合った。\n嵐を避け、西の浜を遠回りした。\n砂の鷹と呼ばれる盗賊が隊を襲い、\n王はその名を取り戻した。\n古い泉の底に、日輪の火がともった。",
+  "pins": [],
+  "reward": true,
+  "named": false
+ },
+ "estimate": {
+  "K": {
+   "step": 0.25,
+   "battle": 40,
+   "bossRound": 12,
+   "char": 0.08,
+   "op": 1
+  },
+  "steps": 1132,
+  "zako": 37,
+  "bosses": [
+   "tr_b_sandworm:4r",
+   "tr_b_sandking:4r"
+  ],
+  "chars": 3368,
+  "ops": 37,
+  "hours": 0.6,
+  "target": [
+   2.5,
+   3.5
+  ]
+ },
+ "wallSec": 559
+}

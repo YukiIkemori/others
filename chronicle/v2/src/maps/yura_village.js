@@ -24,11 +24,11 @@
     const O = [];
     const B = (id, x, y, w, h, o) => Object.assign({ type: 'building', id, x, y, w, h, wall: 2, roof: 'moss', mat: 'bark', windows: 1, small: true }, o || {});
     O.push(B('yura_b_inn', 12, 2, 6, 4, { door: { x: 14, y: 5, to: { map: 'yura_inn', spawn: 'door' } }, sign: 'inn', windows: 2, lamp: true }));
-    O.push(B('yura_b_elder', 3, 9, 5, 4, { door: { x: 5, y: 12 }, mat: 'stone', lamp: true }));
-    O.push(B('yura_b_h1', 21, 3, 5, 4, { door: { x: 23, y: 6 } }));
-    O.push(B('yura_b_h2', 23, 11, 5, 4, { door: { x: 25, y: 14 } }));
-    O.push(B('yura_b_h3', 20, 19, 5, 4, { door: { x: 22, y: 22 } }));
-    O.push(B('yura_b_h4', 5, 18, 5, 4, { door: { x: 7, y: 21 }, mat: 'log' }));
+    O.push(B('yura_b_elder', 3, 9, 5, 4, { door: { x: 5, y: 12, to: { map: 'yura_home_elder', spawn: 'door' } }, mat: 'stone', lamp: true }));   // 家の中は homes_slice.js
+    O.push(B('yura_b_h1', 21, 3, 5, 4, { door: { x: 23, y: 6, to: { map: 'yura_home1', spawn: 'door' } } }));
+    O.push(B('yura_b_h2', 23, 11, 5, 4, { door: { x: 25, y: 14, to: { map: 'yura_home2', spawn: 'door' } } }));
+    O.push(B('yura_b_h3', 20, 19, 5, 4, { door: { x: 22, y: 22, to: { map: 'yura_home3', spawn: 'door' } } }));
+    O.push(B('yura_b_h4', 5, 18, 5, 4, { door: { x: 7, y: 21, to: { map: 'yura_home4', spawn: 'door' } }, mat: 'log' }));
     O.push(K.prop('stall', 17, 20), K.prop('crate', 18, 21), K.prop('sack', 19, 21));
     O.push(K.prop('well', 9, 7), K.prop('bench', 18, 9), K.prop('bench', 11, 17));
     for (const [x, y] of [[12, 11], [18, 11], [12, 15], [18, 15], [13, 24], [16, 24], [9, 13], [21, 13]]) O.push(K.prop('lantern', x, y));
@@ -40,7 +40,7 @@
     K.scatter(g, O, 'firefly', 6, [2, 2, 26, 24], ',.', 'yff', { gap: 4 });
 
     const N = [
-      K.npc('yura_elder', 'npc_yura_elder', 5, 13, { name: '長老', title: '――名を忘れた長', dir: 's', talk: 'yura_elder', reward: 'side' }),
+      K.npc('yura_elder', 'npc_yura_elder', 6, 13, { name: '長老', title: '――名を忘れた長', dir: 's', talk: 'yura_elder', reward: 'side' }),
       K.npc('yura_miller', 'npc_yura_folk_2', 9, 9, { name: '粉ひき', dir: 'e', talk: 'yura_miller', reward: 'side', cond: '!yura_miller_home' }),
       K.npc('yura_nanny', 'npc_yura_folk_1', 20, 14, { name: '子守', dir: 'w', talk: 'yura_nanny', reward: 'hint' }),
       K.npc('yura_grave', 'npc_yura_folk_3', 25, 20, { name: '墓守', dir: 'w', talk: 'yura_gravekeeper', reward: 'news' }),
@@ -58,6 +58,8 @@
       spawns: {
         gate: { x: 14, y: 24, dir: 'n' },
         inn: { x: 14, y: 6, dir: 's' },
+        elder_door: { x: 5, y: 13, dir: 's' }, h1_door: { x: 23, y: 7, dir: 's' }, h2_door: { x: 25, y: 15, dir: 's' },
+        h3_door: { x: 22, y: 23, dir: 's' }, h4_door: { x: 7, y: 22, dir: 's' },
       },
       exits: [{ x: 14, y: 27, w: 2, h: 1, to: { map: 'world', spawn: 'yura' } }],
       triggers: [{ id: 'arrival', on: 'enter', event: 'yura_arrival', once: true }],

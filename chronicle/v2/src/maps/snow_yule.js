@@ -213,7 +213,7 @@
     K.def('yule_night', Object.assign(common(true), {
       name: '雪の村ユール', rows: D2.g, objects: D2.O, npcs: NIGHT,
       triggers: [],
-      light: { ambient: '#3e4684', k: 0.42, poolK: 1.1, spillR: 1.1, mood: 'town_night' },
+      light: { ambient: '#3e4684', k: 0.42, poolK: 0.85, spillR: 0.9, mood: 'town_night' },
       bgm: 'siege', weather: 'blizzard',
       meta: { sub: '籠城の夜', chestsInfo: false, noWarp: true },
     }));

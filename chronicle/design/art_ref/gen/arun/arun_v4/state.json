@@ -11,6 +11,11 @@
      "raw": "raw/s9_a2.png",
      "quality": "medium",
      "t": "2026-09-27T12:07:59"
+    },
+    {
+     "raw": "raw/s9_a3.png",
+     "quality": "medium",
+     "t": "2026-09-27T12:47:23"
     }
    ],
    "usage": [
@@ -49,6 +54,24 @@
      "web_search": {
       "num_requests": 0
      }
+    },
+    {
+     "image_gen": {
+      "input_tokens": 3909,
+      "input_tokens_details": {
+       "image_tokens": 3419,
+       "text_tokens": 490
+      },
+      "output_tokens": 1935,
+      "output_tokens_details": {
+       "image_tokens": 1935,
+       "text_tokens": 0
+      },
+      "total_tokens": 5844
+     },
+     "web_search": {
+      "num_requests": 0
+     }
     }
    ],
    "frames": {
@@ -56,7 +79,7 @@
      "row": 1,
      "column": 1,
      "logical_bbox": [
-      68,
+      69,
       80
      ],
      "air": 0
@@ -65,7 +88,7 @@
      "row": 1,
      "column": 2,
      "logical_bbox": [
-      68,
+      70,
       80
      ],
      "air": 0
@@ -74,7 +97,7 @@
      "row": 1,
      "column": 3,
      "logical_bbox": [
-      68,
+      70,
       80
      ],
      "air": 0
@@ -83,7 +106,7 @@
      "row": 1,
      "column": 4,
      "logical_bbox": [
-      68,
+      70,
       80
      ],
      "air": 0
@@ -92,7 +115,7 @@
      "row": 2,
      "column": 1,
      "logical_bbox": [
-      68,
+      69,
       80
      ],
      "air": 0
@@ -101,7 +124,7 @@
      "row": 2,
      "column": 2,
      "logical_bbox": [
-      68,
+      70,
       80
      ],
      "air": 0
@@ -110,7 +133,7 @@
      "row": 2,
      "column": 3,
      "logical_bbox": [
-      68,
+      70,
       80
      ],
      "air": 0
@@ -119,15 +142,15 @@
      "row": 2,
      "column": 4,
      "logical_bbox": [
-      68,
+      70,
       80
      ],
      "air": 0
     }
    },
    "notes": [],
-   "pitch": 8.8,
-   "from_raw": "raw/s9_a2.png",
+   "pitch": 8.488,
+   "from_raw": "raw/s9_a3.png",
    "restyled": true
   },
   "1": {
@@ -770,10 +793,17 @@
    "pitch": 7.375,
    "from_raw": "raw/s4_a1.png",
    "restyled": true,
-   "edit_rounds": 1,
+   "edit_rounds": 3,
    "fixed_slots": [
     "act_left_surprise",
+    "act_up_call",
+    "act_left_surprise",
+    "act_up_call",
     "act_up_call"
+   ],
+   "cell": [
+    88,
+    72
    ]
   }
  }

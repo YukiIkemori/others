@@ -38,3 +38,31 @@
 12:20:20   |   シート8 戦闘の追加ポーズ: OK  arun_sheet_08.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
 12:20:20 round 1: 2 redo lines left 4:act_left_surprise,act_up_call
 12:20:20 sheet 4 fix2: edit act_up_call,act_left_surprise (window rows 1-2 cols 1-4, 2816x1024, pitch 8, quality medium)
+12:20:55   calibrated pitch 7.92 px (requested 8; 6 reference poses)
+12:20:55   cells grown by 8 art px on top (now 88x72) so the pose fits
+12:20:55   pasted: act_left_surprise 36x52, act_up_call 34x62
+12:20:55 pipeline: sheets.py ../art_ref/gen/arun/arun_v4 --char arun --out out/arun_v4 --check
+12:23:09   |   シート5 戦闘の基本ポーズ: OK  arun_sheet_05.png  ドット 8.00px → 描かれた格子のまま（63.5 ドット）
+12:23:09   |   シート6 戦闘の行動ポーズ: 確認あり  arun_sheet_06.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+12:23:09   |   シート7 武器なし版と武器: OK  arun_sheet_07.png  ドット 8.00px → 描かれた格子のまま（65.0 ドット）
+12:23:09   |   シート9 顔の表情: OK  arun_sheet_09.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+12:23:09   |   シート4 演技ポーズ（上・左向き）: 要作り直し  arun_sheet_04.png  ドット 8.00px → 描かれた格子のまま（51.5 ドット）
+12:23:09   |   シート8 戦闘の追加ポーズ: OK  arun_sheet_08.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+12:23:09 round 2: 1 redo lines left 4:act_up_call
+12:23:09 sheet 4 fix3: edit act_up_call (window rows 1-2 cols 1-4, 2816x1152, pitch 8, quality medium)
+12:23:47   calibrated pitch 7.91 px (requested 8; 7 reference poses)
+12:23:47   pasted: act_up_call 29x52
+12:23:47 pipeline: sheets.py ../art_ref/gen/arun/arun_v4 --char arun --out out/arun_v4 --check
+12:26:19   |   シート5 戦闘の基本ポーズ: OK  arun_sheet_05.png  ドット 8.00px → 描かれた格子のまま（63.5 ドット）
+12:26:19   |   シート6 戦闘の行動ポーズ: 確認あり  arun_sheet_06.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+12:26:19   |   シート7 武器なし版と武器: OK  arun_sheet_07.png  ドット 8.00px → 描かれた格子のまま（65.0 ドット）
+12:26:19   |   シート9 顔の表情: OK  arun_sheet_09.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+12:26:19   |   シート4 演技ポーズ（上・左向き）: 確認あり  arun_sheet_04.png  ドット 8.00px → 描かれた格子のまま（51.5 ドット）
+12:26:19   |   シート8 戦闘の追加ポーズ: OK  arun_sheet_08.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+12:26:19 round 3: 0 redo lines left 
+12:31:11 sheet 2 lant1: edit run_up_0,run_up_1,run_up_2,run_up_3 (window rows 2-3 cols 1-4, 2560x1024, pitch 8, quality medium)
+12:31:55   calibrated pitch 7.96 px (requested 8; 2 reference poses)
+12:31:58   pasted: run_up_0 36x51, run_up_1 36x51, run_up_2 34x51, run_up_3 34x49
+12:46:39 sheet 9 attempt 3: restyle edit arun_sheet_09.png (3072x1536, quality medium, 3 refs)
+12:47:24   pitch in raw image: 8.49 px per art pixel (upright median 679 px / 80)
+12:47:26 sheet 9 -> art_ref/gen/arun/arun_v4/arun_sheet_09.png

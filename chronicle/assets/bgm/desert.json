@@ -2,8 +2,6 @@
   "loopStart": 7.407,
   "loopEnd": 73.735,
   "source": {
-    "provider": "gemini",
-    "model": "lyria-3.5",
     "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. Crossing a vast moonlit desert with a caravan: cold sand, the wind over the dunes, a line of camels and lamps under a sky full of stars. A travelling song with a steady walking pulse; lonely and grand, but warm underneath. Tempo 96 BPM, 4/4 time, key of E minor. Instrumentation: solo ney or duduk-like reed melody, oud ostinato, low strings drone, soft frame drum and bendir heartbeat, harp shimmer like stars. Form: drone and oud ostinato intro, reed melody A, strings join for B, harp star shimmer interlude, melody returns. Duration: 100 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
     "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[C4]]",
     "generated": "2026-09-27T11:04:59.959Z",

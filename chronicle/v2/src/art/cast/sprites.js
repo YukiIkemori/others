@@ -41,14 +41,127 @@
         silhouette: 'sprite_' + look, face: !!M[look + ':face'], animal: animal ? look.replace(/^ani_/, '') : undefined });
     }
   })();
-  SP.has = function (look, kind) { return !!(R.Media && R.Media.has && R.Media.has('sprites', look + ':' + kind)); };
+  // 町の人の色違い（原画の meta.npc.variants = npc_<型>_1〜4、recolor）: 色違いの look を足す（原画は元の型のフォルダ、主色 mainHex の画素だけ色相を回す）。
+  // _1 は原画のまま、_2〜_4 は VAR_HUE の分だけ回す
+  (function () {
+    const M = typeof window !== 'undefined' && window.RPG_MEDIA && window.RPG_MEDIA.sprites;
+    if (!M) return;
+    for (const k of Object.keys(M)) {
+      if (!/:field$/.test(k)) continue;
+      const base = k.split(':')[0], npc = (M[k] && M[k].meta && M[k].meta.npc) || {};
+      if (!npc.recolor || !Array.isArray(npc.variants)) continue;
+      const bd = (R.DB.looks && R.DB.looks[base]) || {};
+      npc.variants.forEach((vid, i) => {
+        if (R.DB.looks && R.DB.looks[vid]) return;
+        R.def('looks', vid, Object.assign({}, bd, { sprite: true, spriteOf: base, variant: i + 1, face: false }));
+      });
+    }
+  })();
+  const hasRaw = (look, kind) => !!(R.Media && R.Media.has && R.Media.has('sprites', look + ':' + kind));
+  /** 原画のフォルダ: 自分のフォルダ、無ければ色違いの元（spriteOf）→ {look, v}（v = 色違いの番号。0・1 は原画のまま）| null */
+  function src(look, kind) {
+    if (!look) return null;
+    if (hasRaw(look, kind)) return { look, v: 0 };
+    const L = R.DB.looks && R.DB.looks[look];
+    if (L && L.spriteOf && hasRaw(L.spriteOf, kind)) return { look: L.spriteOf, v: L.variant || 0 };
+    return null;
+  }
+  SP.src = src;
+  SP.has = function (look, kind) { return !!src(look, kind); };
   /** 原画の画像の状態 */
   SP.state = function (look, kind) {
-    if (!SP.has(look, kind)) return 'none';
-    const rec = R.Media.image(look + ':' + kind, 'sprites');
+    const s0 = src(look, kind);
+    if (!s0) return 'none';
+    const rec = R.Media.image(s0.look + ':' + kind, 'sprites');
     if (!rec) return 'failed';
     return rec.ready ? 'ready' : rec.failed ? 'failed' : 'loading';
   };
+
+  // ------------------------------------------------------------------ 町の人の型 → 地方の原画（FIELD が人を置くときに呼ぶ）
+  // 地図の look が手で描く仮の型（npc_man_1・npc_woman_2 …、looks_npc.js）で原画のフォルダが無いとき、マップの地方の原画の型
+  // （序章・半島 = npc_pen_*、森 = npc_forest_*、ユラ = npc_yura_*、ほかの地方 = npc_<地方>_*）の同じ番号の色違いへ。
+  // 原画のフォルダがある look（名前のある人・物語の人）はそのまま（原画が必ず先）。
+  const TYPE_ALIAS = {
+    man: ['man'], woman: ['woman'], old_m: ['old_m', 'man'], old_f: ['old_f', 'woman'], child: ['child'],
+    sailor: ['sailor', 'man'], guard: ['guard', 'watch', 'man'], merchant: ['keeper', '=npc_traveler', 'man'], keeper: ['keeper', 'woman'],
+    woodcutter: ['=npc_woodcutter', 'man'], bard: ['=npc_bard', 'man'], yura_folk: [],
+  };
+  function regionKeys(map) {
+    const m = map || {}, reg = String(m.region || ''), out = [];
+    if (m.location === 'yura') out.push('yura');
+    if (reg === 'prologue' || reg === 'r_prologue' || reg === 'r_pen') out.push('pen');
+    else if (reg === 'r_forest') out.push('forest');
+    else if (reg) out.push(reg.replace(/^r_/, ''));
+    for (const k of ['forest', 'pen']) if (!out.includes(k)) out.push(k);
+    return out;
+  }
+  cast.fieldLook = function (look, map) {
+    if (!look || SP.has(look, 'field')) return look;
+    const mm = /^npc_([a-z_]+?)_(\d)$/.exec(look);
+    if (!mm || !(mm[1] in TYPE_ALIAS)) return look;
+    const type = mm[1], n = +mm[2];
+    let cands = [];
+    if (type === 'yura_folk') cands = n % 2 ? ['=npc_yura_woman', '=npc_forest_woman'] : ['=npc_yura_man', '=npc_forest_man'];
+    else for (const k of regionKeys(map)) for (const t of TYPE_ALIAS[type]) cands.push(t[0] === '=' ? t : 'npc_' + k + '_' + t);
+    for (let c of cands) {
+      c = c.replace(/^=/, '');
+      if (!hasRaw(c, 'field')) continue;
+      const v = c + '_' + n;
+      return R.DB.looks && R.DB.looks[v] ? v : c;
+    }
+    return look;
+  };
+
+  // ------------------------------------------------------------------ 色違い（主色の画素の色相を回す）
+  const VAR_HUE = [0, 0, 125, 205, 290];
+  function hsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+    if (!d) return [0, 0, l];
+    const s = d / (1 - Math.abs(2 * l - 1));
+    let h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+    h *= 60; if (h < 0) h += 360;
+    return [h, s, l];
+  }
+  function rgb(h, s, l) {
+    const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(((h / 60) % 2) - 1)), m = l - c / 2;
+    const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+    return [Math.round((r + m) * 255), Math.round((g + m) * 255), Math.round((b + m) * 255)];
+  }
+  const tintCache = {};
+  /** 元の画像を色違いにした canvas（主色 mainHex に近い画素だけ: 色相 ±14°（淡い主色は ±20°）・彩度と明るさが近い）。肌と髪は残す */
+  function tinted(img, key, mainHex, v) {
+    const ck = key + '#' + v;
+    if (tintCache[ck]) return tintCache[ck];
+    const c = mk(img.width, img.height), x = c.getContext('2d');
+    x.imageSmoothingEnabled = false;
+    x.drawImage(img, 0, 0);
+    const hex = String(mainHex || '').replace('#', '');
+    const shift = VAR_HUE[v] || 0;
+    if (hex.length === 6 && shift) {
+      const [h0, s0, l0] = hsl(parseInt(hex.slice(0, 2), 16), parseInt(hex.slice(2, 4), 16), parseInt(hex.slice(4, 6), 16));
+      const dh = s0 < 0.25 ? 20 : 14, ds = Math.max(0.1, s0 * 0.6);
+      // 暖色の主色（茶・黄土、色相 12〜60°）は肌と髪と同じ色の帯なので回さない（色違いは原画のまま）
+      if (h0 >= 12 && h0 <= 60) return (tintCache[ck] = c);
+      const id = x.getImageData(0, 0, c.width, c.height), d = id.data;
+      const memo = new Map();
+      for (let i = 0; i < d.length; i += 4) {
+        if (!d[i + 3]) continue;
+        const k = (d[i] << 16) | (d[i + 1] << 8) | d[i + 2];
+        let out = memo.get(k);
+        if (out === undefined) {
+          const [h, s, l] = hsl(d[i], d[i + 1], d[i + 2]);
+          const hd = Math.min(Math.abs(h - h0), 360 - Math.abs(h - h0));
+          out = s >= 0.06 && hd <= dh && Math.abs(s - s0) <= ds && Math.abs(l - l0) <= 0.32 ? rgb((h + shift) % 360, Math.min(1, s * 1.05), l) : null;
+          memo.set(k, out);
+        }
+        if (out) { d[i] = out[0]; d[i + 1] = out[1]; d[i + 2] = out[2]; }
+      }
+      x.putImageData(id, 0, 0);
+    }
+    if (R.Hd && R.Hd.track) R.Hd.track('sprite', 'cast:tint:' + ck, c.width * c.height * 4);
+    return (tintCache[ck] = c);
+  }
   /** 原画のある look（どれか 1 つの kind でも） */
   SP.looks = function () {
     const t = (R.Media && R.Media.table && R.Media.table().sprites) || {};
@@ -56,8 +169,8 @@
     for (const k of Object.keys(t)) out[k.split(':')[0]] = true;
     return Object.keys(out).sort();
   };
-  function rec(look, kind) { const r = R.Media.image(look + ':' + kind, 'sprites'); return r && r.ready ? r : null; }
-  function meta(look, kind) { const e = R.Media.entry('sprites', look + ':' + kind); return (e && e.meta) || null; }
+  function rec(look, kind) { const s0 = src(look, kind); const r = s0 && R.Media.image(s0.look + ':' + kind, 'sprites'); return r && r.ready ? r : null; }
+  function meta(look, kind) { const s0 = src(look, kind); const e = s0 && R.Media.entry('sprites', s0.look + ':' + kind); return (e && e.meta) || null; }
 
   /** 1 コマを切り出す → {c, ox, oy, id, points}（ox, oy = そのコマの anchor） */
   function cut(img, f, flip) {
@@ -71,9 +184,11 @@
   function frames(look, kind) {
     const r = rec(look, kind), m = meta(look, kind);
     if (!r || !m) return null;
+    const s0 = src(look, kind);
+    const img = s0 && s0.v >= 2 ? tinted(r.img, s0.look + ':' + kind, m.npc && m.npc.mainHex, s0.v) : r.img;
     const out = {};
-    for (const f of m.frames || []) out[f.id] = cut(r.img, f);
-    return { by: out, meta: m, img: r.img };
+    for (const f of m.frames || []) out[f.id] = cut(img, f);
+    return { by: out, meta: m, img };
   }
   /** 拡大・縮小（最近傍。フィールドの「ちかい」「ひろい」） */
   function scaleFrame(fr, k) {

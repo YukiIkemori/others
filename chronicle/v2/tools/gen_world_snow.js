@@ -124,7 +124,7 @@ module.exports = function snow(A) {
   camp(30, 40); camp(73, 28); camp(58, 36);
   // 西の湖岸と北東の雪原のまん中（画面 1 枚に目印 1 つ）
   camp(22, 21); P('snow_lamp', 83, 16); P('tent', 84, 17); P('snow_lamp', 79, 12);
-  P('ice_crystal', 26, 29); P('ice_crystal', 36, 24); P('snow_rock', 45, 35); P('snow_rock', 53, 35);
+  P('ice_crystal', 26, 29); P('snow_rock', 45, 35); P('snow_rock', 53, 35);
   npcs.push({ id: 'snow_trapper', look: 'npc_snow_man', name: 'わな猟師', x: 31, y: 41, dir: 's', move: 'still', talk: 'world_snow_trapper', reward: 'hint', key: 'world_snow_trapper' });
   npcs.push({ id: 'snow_pilgrim', look: 'npc_snow_old_m', name: '峠越えの年寄り', x: 74, y: 29, dir: 'w', move: 'still', talk: 'world_snow_pilgrim', reward: 'news', key: 'world_snow_pilgrim' });
   npcs.push({ id: 'snow_scout', look: 'npc_snow_watch', name: '見回りの若者', x: 51, y: 16, dir: 's', move: 'still', talk: 'world_snow_scout', reward: 'boss', key: 'world_snow_scout' });

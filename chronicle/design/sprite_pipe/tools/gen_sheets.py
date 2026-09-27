@@ -1475,6 +1475,9 @@ def cmd_arun_restyle(a):
             if base_img.size != (W, H):
                 raise SystemExit('--base must be %dx%d' % (W, H))
         refs = restyle_refs(n)
+        if a.identity:
+            refs[-1] = (load_rgb(a.identity), 'The owner\'s CONCEPT of the hero\'s FACE (design authority: ash-brown messy hair, large dark-brown '
+                                               'eyes, gentle but determined face, red scarf). Do not copy its text or paper background.')
         if base_img is not None:
             refs = refs[1:] if a.no_old else [(src, 'LAYOUT AND POSE REFERENCE: the hero\'s current sheet of this layout (older, cruder rendering — do NOT copy its '
                           'rendering). Take from it the hero\'s look, where the lantern is held%s and how each pose reads.'
@@ -1649,6 +1652,7 @@ def main():
     s.add_argument('--job', default='arun_v4', help='gen/arun/<job>: where the sheets go')
     s.add_argument('--out', default='', help='out/<out>: run the pipeline at the end')
     s.add_argument('--extra', default='')
+    s.add_argument('--identity', default='', help='replace the concept sheet by this image (e.g. a crop of its face panel)')
     s.add_argument('--no-old', action='store_true', help='with --base: do not attach his old sheet (the model copies its rendering)')
     s.add_argument('--base', default='', help='a companion sheet of the same canvas to repaint into the hero (instead of his own sheet)')
     s = sub.add_parser('prompt')
