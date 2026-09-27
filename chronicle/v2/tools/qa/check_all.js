@@ -39,6 +39,7 @@ const STEPS = [
   ['check_chests', [T('qa/check_chests.js'), '--no-build']],
   ['check_secrets', [T('qa/check_secrets.js'), '--no-build']],
   ['check_stubs', [T('qa/check_stubs.js')]],
+  ['check_reach', [T('qa/check_reach.js')]],   // 戸口・出入り口・人・調べる物に出発から届く（FIELD の当たり、柵・物も）
   // sim の速い版
   ['sim_zones', [T('sim_zones.js')]],   // --quick（n 120）は p95 などが標本のゆれで境を越えるので既定の n 400
   ['sim_zones --segments', [T('sim_zones.js'), '--segments', '--n', '60']],
@@ -52,6 +53,7 @@ if (BROWSER) {
     ...['test_core_flow', 'test_core_wipe', 'test_render_browser', 'test_uik_browser', 'test_cast_browser', 'test_beast_browser', 'test_terrain_browser',
       'test_field_browser', 'test_field_slice', 'test_events_browser', 'test_bscene_flow', 'test_screens_browser'].map((t) => [t, [T(t + '.js')], { browser: true }]),
     ['test_desert_doors_browser', [T('test_desert_doors_browser.js')], { browser: true }],   // 砂漠の戸口・出口・階段を本物の入力で
+    ['check_doors', [T('qa/check_doors.js'), '--jobs', '2'], { browser: true }],   // 戸口・扉・階段・出口を本物のキー入力で歩いて入る＋人の絵が原画
     ['check_ui', [T('qa/check_ui.js')], { browser: true }],
     ['measure_night', [T('qa/measure_night.js'), '--json'], { browser: true }],
   );

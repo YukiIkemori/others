@@ -123,7 +123,9 @@ async function walkInto(p, portal) {
   const enters0 = await p.evaluate(() => window.__enters || 0);
   const entered = async () => (await p.evaluate(() => window.__enters || 0)) > enters0;   // 同じマップへの出口（迷いの森の輪）も数える
   let steps = 0;
+  const t0 = Date.now();
   for (let guard = 0; guard < 80; guard++) {
+    if (Date.now() - t0 > 90000) return { ok: false, steps, why: 'timeout 90 s' };
     await settle(p);
     const st = await pos(p);
     if (st.m === from.m && portal.to === from.m && (await entered())) return { ok: true, steps, at: st.m };
@@ -204,6 +206,25 @@ async function worker(S, jobs, results, shots) {
   await P0.page.evaluate(PAGE_LIB);
   const all = await P0.page.evaluate(([a, o]) => window.__doors.list(a, o), [ALL, ONLY ? ONLY.split(',') : null]);
   await P0.close();
+  // 人の絵: 縦切りのマップの人が、どれも原画（v2/assets/sprites）で描かれる（手で描く仮の型のままの人がいない）
+  const looks = await P0.page.evaluate(([a, o]) => {
+    const R = window.RPG, SP = R.Art.cast.sprites, out = [];
+    const isOther = (id, m) => /^(desert_|snow_)/.test(id) || /desert|snow/.test(m.region || '') || /desert|snow/.test(m.theme || '');
+    for (const id of Object.keys(R.DB.maps).sort()) {
+      const m = R.DB.maps[id];
+      if (/^(stub_|field_|t_)/.test(id) || (!a && isOther(id, m)) || (o && !o.includes(id))) continue;
+      for (const n of m.npcs || []) {
+        const art = R.Field._artLook(n.look, m);
+        const L = R.DB.looks[art] || {};
+        const ok = SP.has(art, 'field') || !!L.animal;
+        out.push({ map: id, npc: n.id, look: n.look, art, ok });
+      }
+    }
+    return out;
+  }, [ALL, ONLY ? ONLY.split(',') : null]);
+  const badLooks = looks.filter((l) => !l.ok);
+  for (const l of badLooks) console.log(`FAIL  人の絵 ${l.map}.${l.npc}: ${l.look} → ${l.art} に原画が無い（手で描く仮の絵のまま）`);
+  console.log(`人の絵: ${looks.length - badLooks.length}/${looks.length} が原画（町の人の仮の型は地方の原画の型へ: ${looks.filter((l) => l.look !== l.art).length} 人）`);
   const on = all.filter((d) => d.on), off = all.filter((d) => !d.on);
   console.log(`出入り口 ${all.length}（今の状態で開いている ${on.length}、cond が偽 ${off.length} は数えるだけ）、fixture ${FIXTURE}、${JOBS} 本で歩く`);
   const jobs = on.slice(), results = [];
@@ -212,9 +233,9 @@ async function worker(S, jobs, results, shots) {
   const bad = results.filter((r) => !r.ok);
   const f = path.join(V2, 'design', 'qa', 'check_doors.json');
   fs.mkdirSync(path.dirname(f), { recursive: true });
-  fs.writeFileSync(f, JSON.stringify({ date: new Date().toISOString(), fixture: FIXTURE, walked: results, skipped: off.map((d) => ({ map: d.map, kind: d.kind, id: d.id, to: d.to, cond: d.cond })), errors: errs }, null, 1));
+  fs.writeFileSync(f, JSON.stringify({ date: new Date().toISOString(), fixture: FIXTURE, walked: results, looks, skipped: off.map((d) => ({ map: d.map, kind: d.kind, id: d.id, to: d.to, cond: d.cond })), errors: errs }, null, 1));
   if (errs.length) console.log('page errors:', errs.slice(0, 5));
   console.log(`\ncheck_doors: ${results.length - bad.length}/${results.length} passed（本物の入力で歩いて入った）${off.length ? `、cond が偽で数えるだけ ${off.length}` : ''}`);
   if (bad.length) { console.log('failed:\n  ' + bad.map((r) => `${r.map} ${r.kind} ${r.id} → ${r.to}: ${r.why}`).join('\n  ')); process.exitCode = 1; }
-  if (errs.length) process.exitCode = 1;
+  if (errs.length || badLooks.length) process.exitCode = 1;
 })().catch((e) => { console.error(e); process.exit(1); });
