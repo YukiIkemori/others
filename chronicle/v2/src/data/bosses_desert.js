@@ -14,7 +14,7 @@
   // 数値（sim_bosses の 3 本立てで合わせる）
   const DS = {
     b_sandking: { hp: 0.65, atk: 0.45, mag: 0.45 },
-    b_sandworm: { hp: 2.0 },
+    b_sandworm: { hp: 1.1 },
   };
   const A = (list) => list.map(([id, w, cond]) => (cond ? { id, w, cond } : { id, w }));
   const MID = (seed) => ({ normal: { pool: 'p_boss_mid', rate: 1 }, bonus: { item: seed, rate: 1 } });
@@ -85,7 +85,7 @@
     const W = R.DB.monsters.b_sandworm, K = R.DB.monsters.b_sandking;
     if (W) {
       W.actions = A([['attack', 3], ['eb_quicksand', 2, { noFlag: 'worm_sunk' }], ['eb_swallow_whole', 1, { noFlag: 'worm_sunk' }],
-        ['eb_worm_rear', SCHED, { every: [3, 1], noFlag: 'worm_sunk' }], ['eb_worm_surface', SCHED, { flag: 'worm_sunk' }]]);
+        ['eb_worm_rear', SCHED, { every: [3, 0], noFlag: 'worm_sunk' }], ['eb_worm_surface', SCHED, { flag: 'worm_sunk' }]]);
       W.sunk = { phys: { slash: 0.15, blunt: 0.15, pierce: 1 }, elem: { fire: 0.15, water: 0.15, wind: 0.15, light: 0.15, dark: 0.15, earth: 1.5 } };
       W.drops = Object.assign({}, W.drops);
       W.desc = '王墓の流砂にひそむ大ミミズ。\n砂にもぐると、刃も術も届かない。';
@@ -114,12 +114,10 @@
     eb_hawk_volley: { name: '一斉射ち', kind: 'enemy', target: 'random', effects: [{ type: 'damage', formula: 'phys', power: 0.6, hits: 2, kind: 'pierce' }], fx: 'arrow', msg: '{user}は続けざまに矢を放った！' },
     // 砂もぐり
     eb_worm_rear: { name: '身を沈める', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は、ずぶずぶと砂に身を沈めはじめた……。',
-      telegraph: { text: '砂もぐりが砂に身を沈めはじめた……。', pose: 'tele', tint: '#d8b878', next: 'eb_worm_sink', guard: 'element:earth',
-        cancel: { element: 'earth', msg: '土の力が足もとの砂を固めた！\n砂もぐりは、もぐれない！' } } },
+      telegraph: { text: '砂もぐりが砂に身を沈めはじめた……。', pose: 'tele', tint: '#d8b878', next: 'eb_worm_sink', guard: 'element:earth' } },
     eb_worm_sink: { name: '砂にもぐる', kind: 'enemy', target: 'self', effects: [{ type: 'special', id: 'desert_worm_sink' }], fx: 'earth', msg: '{user}は砂の中へ消えた！',
-      telegraph: { text: '砂の下で、何かがはいまわっている……。', pose: 'idle', tint: '#b89868', next: 'eb_worm_burst', guard: 'defend', lethal: true,
-        cancel: { element: 'earth', msg: '土の力が、砂の中の砂もぐりを\n引きずり出した！' } } },
-    eb_worm_burst: { name: '砂中の一撃', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 0.6, guardPct: 0.12, kind: 'blunt' }, { type: 'special', id: 'desert_worm_surface' }], fx: 'strike3', msg: '足もとの砂が裂け、{user}が飛び出した！' },
+      telegraph: { text: '砂の下で、何かがはいまわっている……。', pose: 'idle', tint: '#b89868', next: 'eb_worm_burst', guard: 'defend', lethal: true } },
+    eb_worm_burst: { name: '砂中の一撃', kind: 'enemy', target: 'enemies', effects: [{ type: 'special', id: 'desert_sweep', pct: 1.0, guardPct: 0.12, kind: 'blunt' }, { type: 'special', id: 'desert_worm_surface' }], fx: 'strike3', msg: '足もとの砂が裂け、{user}が飛び出した！' },
     eb_worm_surface: { name: '顔を出す', kind: 'enemy', target: 'self', effects: [{ type: 'special', id: 'desert_worm_surface' }], fx: 'earth', msg: '{user}が、砂の上に顔を出した。' },
     // 名なき砂の王
     eb_king_sun: { name: '日の玉', kind: 'enemy', target: 'self', effects: [{ type: 'summon', mon: 'b_sun_orb', n: 1, max: 5 }, { type: 'special', id: 'desert_orb_absorb', orb: 'sun' }], fx: 'fire2',

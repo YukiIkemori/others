@@ -33,7 +33,7 @@
       O.push({ type: 'switch', id: 'desert_temple_1_d2', x: 44, y: 22, flag: DISCS[1], look: 'plate', color: 'gold' });
       O.push({ type: 'switch', id: 'desert_temple_1_d3', x: 10, y: 5, flag: DISCS[2], look: 'plate', color: 'gold' });
       O.push(K.prop('switch', 20, 29, { cond: { not: { all: DISCS } } }), K.exam(24, 29, 'desert_temple_door', { cond: { not: { all: DISCS } } }));
-      O.push(K.spring('desert_temple_1_s1', 36, 6));
+      O.push(K.spring('desert_temple_1_s1', 30, 27));
       O.push(K.chest('desert_temple_1_c1', 3, 24, { pool: 'p_T' }), K.chest('desert_temple_1_c2', 45, 19, { pool: 'p_T' }), K.chest('desert_temple_1_c3', 14, 9, { gold: 400 }),
         K.chest('desert_temple_1_c4', 39, 28, { pool: 'p_rare' }), K.chest('desert_temple_1_c5', 17, 36, { item: 'i_stone_light', n: 2 }));
       O.push(K.sign(27, 9, '――日輪の民の宮\n三つの盤に、日を置け'));
