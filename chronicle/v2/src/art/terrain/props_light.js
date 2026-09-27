@@ -110,7 +110,7 @@
     return out;
   };
   // 物の灯りの芯の位置（DRAW の light の値。焼かずに知るため、よく使う物は表で持つ）
-  const ANCHOR = { lamp_post: [5, -46], lantern: [0, -7], table: [4, -12], stove: [0, -6], mushroom_glow: [0, -5], crystal: [0, -12], torch: [0, -13], beacon: [0, -50], songstone: [0, -18], ship: [14, -86], firefly: [0, -12] };
+  const ANCHOR = { lamp_post: [5, -46], lantern: [0, -7], table: [4, -12], stove: [0, -6], mushroom_glow: [0, -5], crystal: [0, -12], torch: [0, -13], beacon: [0, -50], songstone: [0, -18], ship: [14, -86], firefly: [0, -12], snow_lamp: [7, -32], ice_crystal: [0, -8] };
   function anchorOf(id, s) { const a = ANCHOR[id] || [0, -10]; return [a[0] * s, a[1] * s]; }
 
   /** 光の地図の後: 窓のガラス・開いた戸口・壁の灯りを明るく描き直す（ctx はチャンク、X0, Y0 だけずらして描く） */

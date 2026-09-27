@@ -16,8 +16,13 @@
       chapter: { title: '千年樹の歌', summary: '歌を忘れた森は\n人を迷わせた。\n語り部が歌をつなぐと、\n森の主は目を覚まし、\nこずえに歌の灯がともった。' },
       page: 'k_page_forest', town: 'fern', dungeons: ['verda', 'elder'], bossTroop: 'tr_b_rooteater', zone: 'zw_forest', beacon: '千年樹の歌の灯', beaconAt: { map: 'world', x: 24, y: 82 },
     },
-    r_desert: { name: 'ザハラ砂漠', short: 'desert', n: 2, chapter: { title: '名を売った王', summary: '' }, page: 'k_page_desert', town: 'kasim', beacon: '日輪の火', slice: 'locked' },
-    r_snow: { name: 'ノルデン雪原', short: 'snow', n: 3, chapter: { title: '白竜と冬至の火', summary: '' }, page: 'k_page_snow', town: 'yule', beacon: '冬至の火', slice: 'locked' },
+    r_desert: {
+      name: 'ザハラ砂漠', short: 'desert', n: 2,
+      chapter: { title: '名を売った王', summary: '泉が枯れ、隊商は\n出られなくなった。\n語り部が王の名を取り戻すと、\n古い泉の底に\n日輪の火がともった。' },
+      page: 'k_page_desert', town: 'kasim', dungeons: ['tomb'], bossTroop: 'tr_b_sandking', zone: 'zw_desert', beacon: '日輪の火', beaconAt: { map: 'desert_camp3', x: 13, y: 8 },
+    },
+    r_snow: { name: 'ノルデン雪原', short: 'snow', n: 3, chapter: { title: '白竜と冬至の火', summary: '吹雪のやまない冬至に、\nユールの人々は大火祭を開き、\n氷の狼から村を守った。\n冬至の火が峰に届き、\n白竜の心がとけた。' },
+      page: 'k_page_snow', town: 'yule', dungeons: ['snow_woods', 'peak'], bossTroop: 'tr_b_whitedragon', zone: 'zw_snow', beacon: '冬至の火', beaconAt: { map: 'world', x: 62, y: 5 } },   // 雪原は開いた（snow_*.js）
     r_marsh: { name: 'グレイモア湿原', short: 'marsh', n: 4, chapter: { title: '霧の魔女と七つの鐘', summary: '' }, page: 'k_page_marsh', town: 'loch', beacon: '七つの鐘楼の灯', slice: 'locked' },
     r_isles: { name: 'マレア諸島', short: 'isles', n: 5, chapter: { title: '帰らずの船長', summary: '' }, page: 'k_page_isles', town: 'coral', beacon: '帰らずの灯', slice: 'locked' },
     r_mine: { name: 'ガルド山地', short: 'mine', n: 6, chapter: { title: '鍛冶神の誓い', summary: '' }, page: 'k_page_mine', town: 'dovan', beacon: '鍛冶神の炉', slice: 'locked' },

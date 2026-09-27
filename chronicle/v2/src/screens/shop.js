@@ -35,7 +35,12 @@
       this.refresh(false);
       this.busy = false;
     },
-    price(id) { const it = S.item(id); return (it && it.price) || 0; },
+    price(id) {
+      const it = S.item(id), base = (it && it.price) || 0;
+      // 店ごとの値の倍率（shop.priceMul: 数か関数。値切り・割引・闇市の高値）
+      const pm = this.shop.priceMul, m = typeof pm === 'function' ? pm() : (pm || 1);
+      return base > 0 && m !== 1 ? Math.max(1, Math.round(base * m)) : base;
+    },
     refresh(keep) {
       if (this.tab === 0) {
         const ids = R.Rules.shopItems ? R.Rules.shopItems(this.p.id) : this.shop.items || [];

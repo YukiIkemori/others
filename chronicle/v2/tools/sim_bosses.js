@@ -20,17 +20,31 @@ const BOSSES = {
   tr_b_moth: { tier: 0, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 7], note: '羽が光る → 眠りのりん粉（風で吹き飛ぶ・目覚まし）' },
   tr_b_rooteater: { tier: 0, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 11], note: '根がもぐる → 前列へ突き上げ（守る）、火で根を焼く' },
 };
+// 砂漠（ザハラ砂漠、src/data/bosses_desert.js）。地方は好きな順に遊ぶので、ティア 0・1・3 で測る。
+// 砂もぐりの答えの土は、カシムの道具屋の土の魔石（台本の道具に足す）
+{
+  const DITEMS = Object.assign({}, ITEMS, { i_stone_earth: 4 });
+  for (const T of [0, 1, 3]) {
+    const k = T === 0 ? '' : '@' + T;
+    BOSSES['tr_b_hawkchief' + k] = { troop: 'tr_b_hawkchief', tier: T, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 8], note: '弓兵に守られた頭 → 弓兵を先に。砂を巻き上げる → 守る' };
+    BOSSES['tr_b_sandworm' + k] = { troop: 'tr_b_sandworm', tier: T, kind: 'mid', members: STD, items: DITEMS, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 8], note: '身を沈める → 土で打つ（もぐれない）、もぐったら守る' };
+    BOSSES['tr_b_sandking' + k] = { troop: 'tr_b_sandking', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 12], note: '日と月の玉を先に割る、杖を掲げたら守る' };
+  }
+  BOSSES['tr_b_hawkhold@3'] = { troop: 'tr_b_hawkhold', tier: 3, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 9], note: 'アジトの奥（弓兵 3 人）' };
+}
 
 function loadR() { return require('./lib/load')({ quiet: true }); }
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : 0);
 
 function runStyle(R, troop, style, n, seed, cfg) {
+  const ITEMS = cfg.items || module.exports.ITEMS;
+  troop = cfg.troop || troop;
   const party = buildParty(R, Object.assign({ seed: 5, items: ITEMS }, cfg));
   const out = { win: 0, rounds: [], down: [], tele: 0, answered: 0 };
   let sample = null;
   for (let i = 0; i < n; i++) {
     const ai = R.BattleAI.styleAI(style);
-    const s = R.BattleCore.simulate({ party, troop, seed: `${seed}:${troop}:${style}:${i}`, inv: ITEMS, maxRounds: 40, glimmerForce: cfg.glimmerForce, ai, events: style === 'script' && i === 0, log: style === 'script' && i === 0 });
+    const s = R.BattleCore.simulate({ party, troop, tier: cfg.tier, seed: `${seed}:${troop}:${style}:${i}`, inv: ITEMS, maxRounds: 40, glimmerForce: cfg.glimmerForce, ai, events: style === 'script' && i === 0, log: style === 'script' && i === 0 });
     if (s.result === 'win') out.win++;
     out.rounds.push(s.rounds);
     out.down.push(s.eng.party.filter((p) => !p.alive).length + 0 * s.deaths);

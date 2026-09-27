@@ -43,6 +43,7 @@ for (const [x, y] of cells) {
   const mat = (R.MapUtil.cell(m, x, y) || {}).mat;
   byKind[mat] = (byKind[mat] || 0) + 1;
 }
+if (VERBOSE) console.log("empty", empty.join(" "));
 ok(`歩ける ${cells.length} マスのうち、画面 1 枚に目印の無いマス 0（${empty.length}${empty.length ? ' ' + JSON.stringify(byKind) : ''}）`, empty.length === 0, empty.slice(0, 10));
 
 section('2. ループのつなぎ目・端');
@@ -64,7 +65,11 @@ ok('縦切りの範囲はマップの端に触れない', edge.length === 0, edg
 }
 
 section('3. 縦切りの閉じ方');
-const leak = cells.filter(([x, y]) => y < 40 || x > 118 || y > 134);
+// 縦切りの後に作った地方の範囲（錠の外れた地方）は外に数えない: 雪原 x 8〜93・y 1〜48（tools/gen_world_snow.js）
+const BUILT = [];
+if (R.DB.regions.r_snow && !R.DB.regions.r_snow.slice) BUILT.push([8, 93, 1, 48]);
+const inBuilt = (x, y) => BUILT.some(([x0, x1, y0, y1]) => x >= x0 && x <= x1 && y >= y0 && y <= y1);
+const leak = cells.filter(([x, y]) => (y < 40 || x > 118 || y > 134) && !inBuilt(x, y));
 ok('縦切りの範囲の外（雪原・山地・砂漠）へ出られない', leak.length === 0, leak.slice(0, 5));
 const guards = (m.npcs || []).filter((n) => n.cond && n.cond.slice === true);
 ok(`峠の番人 ${guards.length} 人（北・東・南）`, guards.length >= 3);

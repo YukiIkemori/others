@@ -1,0 +1,49 @@
+{
+ "sprite": "desert_sun_orb",
+ "id": "desert_sun_orb",
+ "name": "日の玉",
+ "size": "S",
+ "kind": "mob",
+ "fly": true,
+ "w": 35,
+ "h": 56,
+ "anchor": [
+  17,
+  55
+ ],
+ "points": {
+  "head": [
+   19,
+   3
+  ],
+  "center": [
+   17,
+   28
+  ],
+  "fx": [
+   19,
+   24
+  ],
+  "top": [
+   17,
+   0
+  ],
+  "body": [
+   17,
+   30,
+   11,
+   18
+  ]
+ },
+ "facing": "right",
+ "long": 56,
+ "core_long": null,
+ "target": {
+  "w": 35,
+  "h": 56,
+  "long": 56
+ },
+ "colors": 48,
+ "pitch": 8,
+ "note": "derived from the field sprite (v2/assets/sprites) by the desert content agent"
+}

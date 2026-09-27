@@ -1250,6 +1250,15 @@
           yield { t: 'telegraph', u: tgt, text: '', pose: 'idle', tint: '', next: '', cancel: true };
           if (c.msg) yield this.m(c.msg.replace(/\{user\}/g, tgt.name));
         }
+        // v2（氷壁の巨人・雪原）: 守りの氷（守りの段が上がっている間）をその属性で割る → 守りの段が to（既定 −2）に落ちる
+        const mt = !tgt.isParty && tgt.alive && tgt.d.melt;
+        if (mt && info.element === mt.element && tgt.buffs.def > 0) {
+          const to = mt.to != null ? mt.to : -2, d0 = to - tgt.buffs.def;
+          tgt.buffs.def = to;
+          if (mt.flag) this.flags[mt.flag] = true;
+          yield { t: 'buff', u: tgt, stat: 'def', d: d0, stage: to };
+          if (mt.msg) yield this.m(mt.msg.replace(/\{user\}/g, tgt.name));
+        }
       }
       if (info.drain && att.alive && dealt > 0) yield* this.restore(att, Math.round(dealt * info.drain), 'hp', 'drain');
       return true;
@@ -1283,6 +1292,8 @@
         this.flags[ob.flag] = true;
         if (ob.msg) yield this.m(ob.msg.replace(/\{user\}/g, u.name));
       }
+      // v2（砂漠）: 倒れたときの特別な効果（d.onDeath = BC.specials の名前。鷹団の弓兵・砂の王の玉）
+      if (u.d.onDeath && BC.specials && BC.specials[u.d.onDeath]) yield* BC.specials[u.d.onDeath](this, u, killer, { type: 'special', id: u.d.onDeath }, { death: true, element });
       // v2（狼の群れ頭）: 頭が倒れると群れが逃げる
       if (u.d.leader) {
         const rest = this.mons.filter((m) => m.alive && m !== u && (!m.boss || m.d.bossType === 'add'));

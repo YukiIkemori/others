@@ -145,7 +145,7 @@
     // 起動で待つのは縦切りの分（共通・序章と森のテーマ・縦切りの戦闘背景）の今のマスの大きさの絵だけ。ほかの地方と別の大きさは後ろで読む
     let tile = 32;
     try { tile = ({ near: 40, normal: 32, far: 24 })[R.Settings.get('fieldZoom')] || 32; } catch (e) { tile = 32; }
-    const SLICE = /^(common|harbor|hill_village|treetop|moss_village|tree_inside|lighthouse|cave|forest_dungeon)\//, SLICE_BBG = /^bbg\/(coast|tower|forest|tree|cave)\//;
+    const SLICE = /^(common|harbor|hill_village|treetop|moss_village|tree_inside|lighthouse|cave|forest_dungeon|snow|desert)\//, SLICE_BBG = /^bbg\/(coast|tower|forest|tree|cave|snow|desert)\//;
     const now = all.filter((k) => (SLICE.test(k) && new RegExp('@' + tile + '$').test(k)) || SLICE_BBG.test(k));
     const later = all.filter((k) => now.indexOf(k) < 0);
     const decode = (keys) => Promise.all(keys.map((k) => { const r = R.Media.image(k, 'env'); return r && r.ready && r.img.decode ? r.img.decode().catch(() => null) : null; }));

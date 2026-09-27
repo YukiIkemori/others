@@ -1,0 +1,50 @@
+{
+ "sprite": "b_hawk_chief",
+ "id": "b_hawk_chief",
+ "name": "鷹団の頭ラシード",
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 40,
+ "h": 53,
+ "anchor": [
+  20,
+  52
+ ],
+ "points": {
+  "head": [
+   22,
+   3
+  ],
+  "center": [
+   20,
+   26
+  ],
+  "fx": [
+   22,
+   22
+  ],
+  "top": [
+   20,
+   0
+  ],
+  "body": [
+   20,
+   28,
+   13,
+   17
+  ]
+ },
+ "facing": "right",
+ "long": 53,
+ "core_long": null,
+ "target": {
+  "w": 40,
+  "h": 53,
+  "long": 53
+ },
+ "colors": 48,
+ "pitch": 8,
+ "note": "derived from the field sprite (v2/assets/sprites) by the desert content agent",
+ "pose": "tele"
+}

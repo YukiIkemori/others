@@ -26,6 +26,11 @@ const TOWNS = {
   fern: { maps: ['fern', 'fern_inn', 'fern_shop', 'fern_rita', 'fern_search', 'fern_gord', 'fern_pim_home'], n: 8 },
   yura: { maps: ['yura', 'yura_inn'], n: 6 },
 };
+// 縦切りの後に作った地方の町（雪原: ユール 8 人以上・峠の宿 4 人以上）
+if (D.maps.yule) {
+  TOWNS.yule = { maps: ['yule', 'yule_hall', 'yule_inn', 'yule_items', 'yule_arms', 'yule_jorn', 'yule_sonja', 'yule_brenda', 'yule_hunter', 'yule_fishhut', 'yule_base', 'yule_branch'], n: 8 };
+  TOWNS.pass_inn = { maps: ['pass_inn', 'pass_inn_in'], n: 4 };
+}
 const STAFF = /keeper|seller|peddler|master|smith|clerk|shop|inn_/;
 for (const [town, t] of Object.entries(TOWNS)) {
   const ppl = [];
@@ -50,7 +55,10 @@ for (const e of Object.values(D.events)) for (const g of (e.meta && e.meta.gives
 for (const m of EV_SRC.matchAll(/\.lead\('([\w]+)'\)/g)) given.add(m[1]);
 for (const m of MAP_SRC.matchAll(/lead:\s*'([\w]+)'/g)) given.add(m[1]);
 const all = Object.keys(D.leads);
-ok(`手がかり ${all.length} 件（目安 約 28）`, all.length >= 26 && all.length <= 40);
+// 縦切りの後に作った地方（錠の外れた地方）の手がかりは目安の数に入れない
+const builtR = (r) => r && D.regions[r] && !D.regions[r].slice && !['r_forest', 'prologue', 'world'].includes(r);
+const nSlice = all.filter((id) => !builtR(D.leads[id].region)).length;
+ok(`手がかり ${nSlice} 件（目安 約 28。ほかに作った地方の ${all.length - nSlice} 件）`, nSlice >= 26 && nSlice <= 40);
 const never = all.filter((id) => !given.has(id) && D.leads[id].slice !== 'locked');
 // 酒場の噂（森以外は locked）は、噂の 3 人がまとめて渡す（R.Leads の一覧か、手がかりの配列）
 const rumorGive = /l_rumor_/.test(EV_SRC);

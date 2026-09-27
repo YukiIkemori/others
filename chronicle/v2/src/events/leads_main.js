@@ -28,7 +28,7 @@
       done: 'cleared_r_forest',
     },
     l_rumor_snow: {
-      title: '冬至の火が細い', kind: 'rumor', region: 'r_snow', from: '潮風亭の吟遊詩人', dir: '北', slice: 'locked',
+      title: '冬至の火が細い', kind: 'rumor', region: 'r_snow', from: '潮風亭の吟遊詩人', place: 'yule', dir: '北',
       text: '北の雪の村ユールは、大火祭の支度で\n大忙し。ただ、今年は冬至の火が\n細いという。', done: 'cleared_r_snow',
     },
     l_rumor_desert: {

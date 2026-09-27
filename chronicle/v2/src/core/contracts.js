@@ -263,6 +263,8 @@
   const MOODS = ['night', 'town_night', 'interior', 'forest_night', 'dark', 'tree', 'tower', 'cave', 'coast'];
   // 地形のテーマ（map.theme。TERRAIN、§4.1 の 7 つ＋ワールドとロア）
   const THEMES = ['harbor', 'treetop', 'moss_village', 'forest_dungeon', 'tree_inside', 'lighthouse', 'cave', 'world', 'hill_village'];
+  THEMES.push('snow', 'snow_town', 'ice_cave');   // 雪原（snow_*.js）
+  THEMES.push('desert', 'desert_town', 'tomb');   // 砂漠（desert_*.js）
   // アイコンの名前（R.UIK.icon。MODERN_UI の kit.js の一覧から、斧・槍を除き、版 2 で使う物を足した）
   const ICONS = ['bag', 'arts', 'equip', 'sword', 'greatsword', 'dagger', 'bow', 'staff', 'shield', 'helm', 'armor', 'glove', 'boots', 'ring',
     'order', 'beast', 'book', 'journal', 'map', 'save', 'gear', 'warp', 'exit', 'potion', 'gem', 'coin', 'clock', 'pin', 'quest', 'bulb',

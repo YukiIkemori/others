@@ -1,0 +1,127 @@
+// CONTENT（砂漠）: 隊商路の野営地 3 つ（WORLD_REDESIGN §4.2 の流れ 2・3、STORY_BIBLE §7.2）。どれも 30×22 の小さな場所（戦闘なし）。
+//   desert_camp1 野営地「岩の井戸」: 岩に囲まれた井戸と、名の削れた戦没者の碑（lo_war_desert）。焚き火の場面で砂の鷹団が来る
+//   desert_camp2 野営地「星の石」: 星を刻んだ立ち石と、記録官が置き去りにした鞍袋（くべられなかった手紙）。砂嵐の選択（近道・遠回り）
+//   desert_camp3 王墓のオアシス: 古い泉（回復の泉）と王墓の入口。隊はここで待つ（ここから先は一行だけ）
+//   入ると隊と一緒なら焚き火の場面（desert_campN_scene、once は旗で）。隊と一緒でなければ静かな野営の跡。
+(function (R) {
+  'use strict';
+  R.onData(function () {
+    const K = R.ContentF.kit, DK = R.Desert.kit;
+    const L = K.L;
+    const W = 30, H = 22;
+
+    function base(seed) {
+      const g = K.grid(W, H, 'u');
+      K.blob(g, 15, 11, 12, 8, 's', seed + 'a');
+      K.blob(g, 15, 12, 5, 3, 'k', seed + 'b', 's');
+      K.rect(g, 14, 18, 2, 4, 'd');                     // 南の口（ワールドへ）
+      K.path(g, [[15, 18], [15, 13]], 'd', 1, 'suk');
+      return g;
+    }
+    const camp = (O, cx, cy) => {
+      O.push({ type: 'brazier', id: 'fire_' + cx + '_' + cy, x: cx, y: cy, on: true });
+      O.push(K.prop('log', cx - 1, cy + 1), K.prop('log', cx + 1, cy + 1), K.prop('log', cx, cy - 1));
+    };
+    const caravan = (id, cond, o) => [
+      K.npc(id + '_zaid', 'npc_zaid', o.zx, o.zy, { name: 'ザイード', title: '隊商の長', dir: o.zd || 's', talk: 'desert_camp_zaid', reward: 'news', cond, pushable: false }),
+      K.npc(id + '_man1', 'npc_caravan', o.ax, o.ay, { name: '隊商のファド', dir: 'e', talk: 'desert_camp_man', reward: 'news', cond }),
+      K.npc(id + '_man2', 'npc_desert_man', o.bx, o.by, { name: '隊商のサミル', dir: 'w', talk: 'desert_camp_man', reward: 'news', cond }),
+      K.npc(id + '_camel1', 'ani_camel', o.c1x, o.c1y, { name: 'ラクダ', dir: 'w', talk: [L('ラクダは、荷を下ろしてもらって\n満足そうに目を細めている。')], reward: null, cond }),
+      K.npc(id + '_camel2', 'ani_camel', o.c2x, o.c2y, { name: 'ラクダ', dir: 'e', talk: [L('ラクダが、鼻を鳴らした。')], reward: null, cond }),
+    ];
+
+    // ---------------------------------------------------------------- 1. 岩の井戸
+    {
+      const g = base('c1');
+      K.blob(g, 5, 6, 4, 4, 'm', 'c1r1'); K.blob(g, 24, 5, 5, 4, 'm', 'c1r2'); K.blob(g, 25, 16, 3, 3, 'm', 'c1r3');
+      K.blob(g, 5, 16, 3, 2, 'm', 'c1r4');
+      const O = [];
+      camp(O, 15, 11);
+      O.push(K.prop('dry_well', 11, 7), K.exam(11, 8, 'desert_camp1_well'));
+      O.push(K.prop('broken_pillar', 20, 7), K.exam(20, 8, 'desert_camp1_memorial'));
+      O.push(K.prop('tent', 9, 11), K.prop('tent', 21, 12), K.prop('cart_barrels', 19, 15), K.prop('clay_jars', 10, 14), K.prop('sack', 11, 14), K.prop('crate', 20, 15));
+      O.push(K.prop('bones', 7, 11), K.prop('thorn_bush', 23, 10), K.prop('cactus', 8, 14), K.prop('sand_mound', 18, 4), K.prop('rock_small', 13, 5), K.prop('desert_palm', 16, 6));
+      O.push(K.prop('lantern', 12, 10), K.prop('lantern', 18, 13), K.prop('copper_brazier', 14, 17), K.prop('copper_brazier', 16, 17));
+      O.push(K.sign(17, 18, '野営地「岩の井戸」\n――隊商路の最初の夜'));
+      const N = caravan('c1', ['desert_caravan_on', 'desert_camp1_done', '!desert_camp2_done'], { zx: 14, zy: 10, ax: 13, ay: 12, bx: 17, by: 12, c1x: 22, c1y: 14, c2x: 8, c2y: 12 })
+        .concat([
+          K.npc('rashid_fire', 'npc_rashid', 16, 10, { name: 'ラシード', title: '砂の鷹団の頭', dir: 'w', talk: 'desert_rashid_fire', reward: 'hint', cond: ['desert_hawk_met', '!desert_camp2_done', { not: { choice: 'ch_desert_hawk', is: 'fight' } }] }),
+          K.npc('camp1_old', 'npc_desert_old_m', 22, 9, { name: '井戸守りの老人', dir: 'w', talk: 'desert_camp1_old', reward: 'news', cond: '!desert_caravan_on' }),
+        ]);
+      K.def('desert_camp1', {
+        name: '野営地「岩の井戸」', kind: 'town', region: 'r_desert', location: 'camp1', theme: 'desert',
+        legend: DK.LEGEND(), rows: g, outside: 'dune_sand', objects: O, npcs: N,
+        spawns: { road: { x: 15, y: 19, dir: 'n' }, fire: { x: 15, y: 13, dir: 'n' } },
+        exits: [{ x: 14, y: 21, w: 2, h: 1, to: { map: 'world', spawn: 'camp1' } }],
+        triggers: [{ id: 'scene', on: 'enter', event: 'desert_camp1_scene' }],
+        zones: [], light: DK.LIGHT_OUT, dark: false, bgm: 'caravan', bbg: 'desert',
+        meta: { sub: '隊商路の最初の夜', chestsInfo: false },
+      });
+    }
+
+    // ---------------------------------------------------------------- 2. 星の石
+    {
+      const g = base('c2');
+      K.blob(g, 4, 5, 3, 3, 'X', 'c2r1', 'su'); K.blob(g, 26, 7, 3, 4, 'X', 'c2r2', 'su'); K.blob(g, 23, 17, 3, 2, 'm', 'c2r3');
+      const O = [];
+      camp(O, 13, 12);
+      O.push(K.prop('obelisk', 18, 7), K.exam(18, 8, 'desert_camp2_stone'));
+      O.push(K.prop('sack', 23, 12), K.exam(23, 13, 'desert_camp2_saddlebag'));           // 記録官の鞍袋（くべられなかった手紙）
+      O.push(K.prop('tent', 8, 10), K.prop('tent', 19, 13), K.prop('cart_barrels', 9, 15), K.prop('clay_jars', 17, 15), K.prop('crate', 10, 15));
+      O.push(K.prop('bones', 6, 13), K.prop('sand_mound', 21, 4), K.prop('thorn_bush', 7, 7), K.prop('cactus', 24, 10), K.prop('rock_small', 12, 4), K.prop('desert_palm', 11, 6, { variant: 1 }));
+      O.push(K.prop('lantern', 15, 10), K.prop('lantern', 11, 14), K.prop('copper_brazier', 14, 17), K.prop('copper_brazier', 16, 17));
+      O.push(K.sign(17, 18, '野営地「星の石」\n――北は砂嵐の窪地'));
+      const N = caravan('c2', ['desert_caravan_on', 'desert_camp2_done', '!desert_camp3_done'], { zx: 12, zy: 11, ax: 11, ay: 13, bx: 15, by: 13, c1x: 21, c1y: 15, c2x: 7, c2y: 12 })
+        .concat([K.npc('camp2_star', 'npc_desert_child', 20, 9, { name: '星読みの子', dir: 'w', talk: 'desert_camp2_child', reward: 'hint', cond: '!desert_caravan_on' })]);
+      K.def('desert_camp2', {
+        name: '野営地「星の石」', kind: 'town', region: 'r_desert', location: 'camp2', theme: 'desert',
+        legend: DK.LEGEND(), rows: g, outside: 'dune_sand', objects: O, npcs: N,
+        spawns: { road: { x: 15, y: 19, dir: 'n' }, fire: { x: 13, y: 14, dir: 'n' } },
+        exits: [{ x: 14, y: 21, w: 2, h: 1, to: { map: 'world', spawn: 'camp2' } }],
+        triggers: [{ id: 'scene', on: 'enter', event: 'desert_camp2_scene' }],
+        zones: [], light: DK.LIGHT_OUT, dark: false, bgm: 'caravan', bbg: 'desert',
+        meta: { sub: '星を刻んだ立ち石', chestsInfo: false },
+      });
+    }
+
+    // ---------------------------------------------------------------- 3. 王墓のオアシス（古い泉・王墓の入口）
+    {
+      const g = K.grid(W, H + 4, 'u');
+      K.blob(g, 15, 13, 13, 10, 's', 'c3a');
+      K.blob(g, 11, 12, 5, 3, 'g', 'c3g', 's');
+      K.blob(g, 11, 12, 3, 2, 'w', 'c3w', 'g');                // 古い泉（枯れかけ。解決で満ちる＝tilePatches）
+      K.rect(g, 16, 1, 12, 7, 'X');                            // 王墓の正面（砂岩の崖）
+      K.rect(g, 20, 5, 4, 3, 'Q'); K.rect(g, 21, 3, 2, 2, 'Q');  // 墓の入口の前庭
+      K.rect(g, 14, 22, 2, 4, 'd');
+      K.path(g, [[15, 22], [15, 17], [21, 17], [21, 8]], 'd', 1, 'sukg');
+      const O = [];
+      camp(O, 17, 14);
+      O.push(K.stairs(21, 3, { map: 'desert_tomb_1', spawn: 'entrance' }, { id: 'desert_camp3_tomb' }));
+      O.push(K.prop('obelisk', 19, 6), K.prop('obelisk', 24, 6), K.prop('tomb_urn', 20, 8), K.prop('tomb_urn', 23, 8));
+      O.push(K.spring('desert_camp3_s1', 7, 15));             // 古い泉のほとりの湧き水（回復の泉）
+      O.push(K.exam(13, 11, 'desert_camp3_oldspring'));
+      O.push(K.prop('beacon', 13, 8, { cond: 'cleared_r_desert' }));   // 日輪の火（大灯火の光の柱）
+      for (const [x, y, v] of [[6, 9, 0], [16, 9, 1], [5, 13, 1], [17, 11, 0], [8, 18, 0], [13, 19, 1], [25, 12, 0]]) O.push(K.prop('desert_palm', x, y, { variant: v }));
+      O.push(K.prop('tent', 22, 13), K.prop('tent', 22, 18), K.prop('cart_barrels', 26, 16), K.prop('clay_jars', 24, 20), K.prop('crate', 20, 20));
+      O.push(K.prop('lantern', 19, 12), K.prop('lantern', 15, 17), K.prop('copper_brazier', 19, 9), K.prop('copper_brazier', 24, 9), K.prop('copper_brazier', 14, 22), K.prop('copper_brazier', 16, 22));
+      O.push(K.sign(18, 22, '王墓のオアシス\n――名なき王の墓所'), K.sign(25, 9, '王墓\n入る者は名を忘るべからず'));
+      O.push(K.prop('bones', 3, 17), K.prop('sand_mound', 26, 21), K.prop('thorn_bush', 4, 7));
+      const wait = ['desert_camp3_done', '!desert_finale_done'];
+      const N = caravan('c3', wait, { zx: 18, zy: 13, zd: 'w', ax: 16, ay: 15, bx: 20, by: 15, c1x: 25, c1y: 14, c2x: 9, c2y: 18 })
+        .concat([
+          K.npc('abul_oasis', 'npc_abul', 12, 16, { name: 'アブル', title: '王墓の番', dir: 'n', talk: 'desert_abul_oasis', reward: 'boss', cond: ['desert_abul_came', '!cleared_r_desert'] }),
+          K.npc('hazal_spirit', 'npc_hazal', 11, 10, { name: 'ハザル王', dir: 's', talk: 'desert_hazal_after', reward: 'news', cond: 'cleared_r_desert' }),
+        ]);
+      K.def('desert_camp3', {
+        name: '王墓のオアシス', kind: 'town', region: 'r_desert', location: 'oasis', theme: 'desert',
+        legend: DK.LEGEND(), rows: g, outside: 'dune_sand', objects: O, npcs: N,
+        spawns: { road: { x: 15, y: 23, dir: 'n' }, tomb: { x: 21, y: 5, dir: 's' }, fire: { x: 17, y: 16, dir: 'n' }, spring: { x: 13, y: 15, dir: 'n' } },
+        exits: [{ x: 14, y: 25, w: 2, h: 1, to: { map: 'world', spawn: 'camp3' } }],
+        triggers: [{ id: 'scene', on: 'enter', event: 'desert_camp3_scene' }],
+        tilePatches: [{ cond: 'cleared_r_desert', rect: [8, 11, 7, 3], rows: [' wwwww ', 'wwwwwww', ' wwwww '] }],
+        zones: [], light: DK.LIGHT_OUT, dark: false, bgm: 'caravan', bbg: 'desert',
+        meta: { sub: '古い泉と王墓の入口', chestsInfo: false },
+      });
+    }
+  });
+})(window.RPG);

@@ -377,9 +377,9 @@ function closure(id, x, y, w, h, guard, text) {
   tilePatches.push({ cond: { slice: true }, rect: [x, y, w, h], rows });
   npcs.push(Object.assign({ id, look: 'npc_guard_1', name: '番人', move: 'still', pushable: false, cond: { slice: true }, talk: { lines: [{ text }] }, reward: 'news', key: 'world_' + id }, guard));
 }
-closure('guard_north', 37, 42, 3, 3, { x: 39, y: 46, dir: 'n' }, ['この先の峠は、崖崩れで\nふさがっておる。', '北の雪原へ行くのは、\n道が片づくまで待ってくれ。']);
+// 北の峠（雪原へ）は雪原の地方ができたので開いた（gen_world_snow.js）。山地への峠は雪原の東（峠の宿の先）で閉じる
 closure('guard_east', 112, 62, 3, 3, { x: 110, y: 64, dir: 'e' }, ['東の峠は、ゆうべの\n崖崩れで通れないんだ。', '山地の鉱山町へ行くなら、\nしばらく待ってくれ。']);
-closure('guard_south', 30, 119, 3, 3, { x: 33, y: 117, dir: 's' }, ['南の砂漠へ抜ける峠は、\n崖崩れでふさがってるよ。', '片づくまでは、\n森を回ってくれ。']);
+// 南の峠（砂漠へ）は砂漠の地方ができたので開いた（gen_world_desert.js）。灰の荒野への峠は砂漠の側で閉じる
 
 // --- 道しるべの灯籠（街道に 28〜34 歩ごと。縦切りの消えた灯籠: 半島 1・森 3）
 const LIT = true;
@@ -492,6 +492,12 @@ const LEGEND = {
   n: { mat: 'snow' }, a: { mat: 'ash' },
 };
 const walkCh = (ch) => { const l = LEGEND[ch]; return !!l && !l.solid && l.walk !== false; };
+// 砂漠の地方（ザハラ砂漠、tools/gen_world_desert.js）: 地面・道・物・出口・出現表・地名を上から描く
+const DESERT = require('./gen_world_desert')({ g, get, set, h2, fbm, road, clearing, P, B, S, LAMP, objects, npcs, exits, triggers, tilePatches, spawns, zones, areas, LEGEND, lampsAlong }).box;
+const inDesert = (x, y) => x >= DESERT.x0 && x <= DESERT.x1 && y >= DESERT.y0 && y <= DESERT.y1;
+// 雪原の地方（ノルデン雪原・北の流氷原、tools/gen_world_snow.js）: 地形・町と入口・灯籠・出現表・地名を上から描く
+const SNOW = require('./gen_world_snow')({ get, set, rect, road, h2, fbm, P, S, LAMP, objects, npcs, exits, triggers, tilePatches, spawns, zones, areas, LEGEND, ROADS }).box;
+const inSnow = (x, y) => x >= SNOW.x0 && x <= SNOW.x1 && y >= SNOW.y0 && y <= SNOW.y1;
 function applyPatches(on) {
   const gg = g.map((r) => r.slice());
   for (const p of tilePatches) {
@@ -541,10 +547,10 @@ function check() {
     if (!ok) errs.push('exit not reachable: ' + JSON.stringify(e.to));
   }
   for (const o of objects) if (o.type === 'building' && o.door) { if (!seen[(o.door.y + 1) * W + o.door.x]) errs.push('door not reachable: ' + o.id); }
-  for (const o of objects) if (o.type === 'stairs' && !seen[o.y * W + o.x]) errs.push('stairs not reachable ' + o.x + ',' + o.y);
-  for (const k of Object.keys(spawns)) { const s = spawns[k]; if (!walkCh(gg[s.y][s.x]) && k !== 'bridge_n') errs.push('spawn on a wall: ' + k); if (!seen[s.y * W + s.x] && k !== 'bridge_n') errs.push('spawn not reachable: ' + k); }
+  for (const o of objects) if (o.type === 'stairs' && !seen[o.y * W + o.x] && !(SNOW.late && SNOW.late(o.x, o.y))) errs.push('stairs not reachable ' + o.x + ',' + o.y);
+  for (const k of Object.keys(spawns)) { const s = spawns[k]; if (!walkCh(gg[s.y][s.x]) && k !== 'bridge_n') errs.push('spawn on a wall: ' + k); if (!seen[s.y * W + s.x] && k !== 'bridge_n' && !(SNOW.late && SNOW.late(s.x, s.y))) errs.push('spawn not reachable: ' + k); }
   // 閉じ方: 縦切りの範囲の外（雪原・山地・砂漠）に出られない
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (seen[y * W + x] && (y < 40 || x > 118 || y > 134)) { errs.push('slice leaks at ' + x + ',' + y); y = H; break; }
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (seen[y * W + x] && (y < 40 || x > 118 || y > 134) && !inDesert(x, y) && !inSnow(x, y)) { errs.push('slice leaks at ' + x + ',' + y); y = H; break; }
   // 跳ね橋が上がっている間、半島から出られない
   const pro = (c) => c && c.slice === true ? true : c === '!prologue_done' ? true : false;
   const gp = applyPatches(pro);
@@ -555,7 +561,7 @@ function check() {
     (o.type === 'prop' && /lamp|lantern|tent|mushroom_glow|firefly|beacon|tree_giant|ship/.test(o.id))).map((o) => [o.x, o.y]);
   for (const n2 of npcs) marks.push([n2.x, n2.y]);
   let empty = 0; const emptyAt = [];
-  for (let y = 40; y <= 134; y++) for (let x = 6; x <= 118; x++) {
+  for (let y = 40; y <= DESERT.y1; y++) for (let x = 6; x <= 118; x++) {
     if (!seen[y * W + x] || !'.d'.includes(gg[y][x])) continue;
     if (!marks.some(([mx, my]) => Math.abs(mx - x) <= 15 && Math.abs(my - y) <= 8)) { empty++; if (emptyAt.length < 8) emptyAt.push(x + ',' + y); }
   }

@@ -228,6 +228,8 @@
     crystal: { solid: true, glow: true, light: L('crystal', 90) }, torch: { solid: true, frames: ['off', 'on'], light: L('fire', 90) }, planter: { solid: true },
     tent: { solid: true }, grave: { solid: true }, hay: { solid: true }, rock: { solid: true, shadow: 'blob' },
     tree: { solid: true, shadow: 'long' }, pine: { solid: true, shadow: 'long' }, tree_giant: { solid: true, shadow: 'long' }, bush: { solid: true }, roots: { solid: true },
+    // 雪原の描いた物で灯りを持つ物（snow_*.js）
+    snow_lamp: { solid: true, light: L('lamp', 'lampR'), glow: true, shadow: 'long' }, ice_crystal: { solid: true, glow: true, light: L('crystal', 48) },
   };
   // 動く物（コマが時間で回る）: 泉・かがり火（on の間）・大灯火
   const ANIM = { spring: { poses: { f0: [0, 1, 2, 3] }, fps: { f0: 4 } }, brazier: { on: 3, fps: 8 }, torch: { on: 3, fps: 8 }, beacon: { poses: { f0: [0, 1, 2] }, fps: { f0: 6 } } };
@@ -236,6 +238,10 @@
     cupboard: { solid: true }, dresser: { solid: true }, stool: { soft: true }, house_plant: { soft: true }, shelf_jars: { solid: true }, wash_tub: { soft: true },
     rug_roll: { soft: true }, weapon_rack: { solid: true }, ladder_prop: { solid: true }, lever: { solid: true, frames: ['off', 'on'] }, fern: { soft: true }, reeds: { soft: true },
     log_moss: { solid: true }, tree_moss: { solid: true, shadow: 'long' }, tree_dead: { solid: true, shadow: 'long' }, tree_glow: { solid: true, shadow: 'long', glow: true },
+    // 砂漠（desert_*.js）の描いた物
+    cactus: { solid: true }, desert_palm: { solid: true, shadow: 'long' }, desert_stall: { solid: true }, carpet_rack: { solid: true }, cart_barrels: { solid: true },
+    clay_jars: { solid: true }, copper_brazier: { solid: true, light: L('fire', 90), glow: true }, dry_well: { solid: true }, obelisk: { solid: true, shadow: 'long' },
+    sand_mound: { soft: true }, thorn_bush: { soft: true }, tomb_urn: { solid: true }, bones: { soft: true }, broken_pillar: { solid: true, shadow: 'long' },
   };
   for (const id of Object.keys(ENV_ONLY)) if (!DRAW[id]) { META[id] = ENV_ONLY[id]; DRAW[id] = function () { return null; }; DRAW[id].envOnly = true; }
   T._PROP_META = META;

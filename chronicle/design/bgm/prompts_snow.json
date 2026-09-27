@@ -1,0 +1,54 @@
+{
+ "_readme": [
+  "Prompts for the snow region (ユール・大火祭・籠城), 2026-09-27. Same format as prompts_v2.json; run with",
+  "  node tools/lyria_bgm.js --prompts design/bgm/prompts_snow.json --only <ids> --takes 2 --listen",
+  "Where they play: v2/design/bgm_changes.md (snow). Never name existing games, composers or songs here."
+ ],
+ "style_prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody.",
+ "negative": "vocals, singing, lyrics, speech, choir words, crowd noise, vinyl crackle, lo-fi noise, fade-out, modern EDM drops, dubstep, distorted metal guitars, copyrighted melodies",
+ "suffix": "Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+ "tracks": [
+  {
+   "id": "yule",
+   "status": "new",
+   "scene": "雪の村ユール（町・屋内）",
+   "tempo": 84,
+   "meter": "3/4",
+   "key": "G",
+   "key_text": "G major",
+   "instrumentation": "folk fiddle lead, nyckelharpa-like bowed drones, wooden flute answer, soft hand-played frame drum, warm cello and upright bass, gentle celesta sparkles like falling snow",
+   "length_sec": 95,
+   "loop": "seamless loop",
+   "desc": "The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. A northern snow village whose buried houses are linked by snow tunnels, glowing ice lanterns at every tunnel mouth, villagers preparing a winter-solstice bonfire festival while a blizzard howls outside. Cozy, hearth-warm and communal, with a hint of worry beneath the warmth. A singable fiddle waltz melody over a drone, like people humming by a fire.",
+   "form": "4-bar drone and celesta intro; section A fiddle waltz melody; section B wooden flute answers in E minor, a little wistful; section A returns with cello countermelody; the last bar leads back to section A"
+  },
+  {
+   "id": "bonfire",
+   "status": "new",
+   "scene": "大火祭の夜・二日目の祭",
+   "tempo": 112,
+   "meter": "6/8",
+   "key": "D",
+   "key_text": "D major",
+   "instrumentation": "two folk fiddles in harmony, wooden flute, hurdy-gurdy style drone, frame drums and hand claps, plucked lute, low strings, small bells",
+   "length_sec": 90,
+   "loop": "seamless loop",
+   "desc": "The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. The winter-solstice bonfire festival: a huge fire roars up into the dark snowy sky, the whole village dances in a ring around it, sparks fly toward the dragon's mountain. Joyful, rustic and uplifting jig, full of life, with a proud, hopeful melody.",
+   "form": "drum and drone pickup; section A lively fiddle jig; section B flute and fiddles trade a soaring phrase; percussion break with claps; section A returns fuller; the last bar leads back to section A"
+  },
+  {
+   "id": "siege",
+   "status": "new",
+   "scene": "籠城（門を守る戦い）",
+   "tempo": 144,
+   "meter": "4/4",
+   "key": "Cm",
+   "key_text": "C minor",
+   "instrumentation": "driving low strings ostinato, war taiko and frame drums, horn calls, a heroic brass melody, fiddle tremolo like a blizzard, occasional wolf-howl-like string glissandi",
+   "length_sec": 85,
+   "loop": "seamless loop",
+   "desc": "The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. A battle theme for defending a snowed-in village gate at night against a pack of ice wolves in a blizzard, the festival fire burning behind the defenders. Urgent, brave and determined rather than grim; a clear heroic brass melody over pounding drums.",
+   "form": "horn call and drum intro; section A brass melody over string ostinato; section B tense minor-key fiddle tremolo with horn answers; section A returns bigger; the last bar leads back to section A"
+  }
+ ]
+}

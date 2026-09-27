@@ -13,6 +13,8 @@
 
   // ground = 木・藪の下の地面、tree = 木の素材のマスに立てる木、leaf = 葉の色、decor = 地面の小さな飾り（1 マスあたりの割合）、
   // fireflies = 1 チャンクの蛍の数、pools = 水が光る（洞窟）、edgeTrees = 深い森の縁に木を並べる
+  const palm = () => (T.Env && T.Env.has && T.Env.has('prop', 'desert_palm_v0') ? ['desert_palm'] : ['tree']);
+  const snowFir = () => (T.Env && T.Env.has && T.Env.has('prop', 'snow_fir_v0') ? ['snow_fir'] : ['pine']);
   const THEMES = {
     harbor: { ground: 'cobble', tree: ['tree'], leaf: 'leaf', mood: 'town_night', decor: { dec_pebbles: 0.03 }, fireflies: 3, outside: 'sea' },
     treetop: { ground: 'moss_earth', tree: ['tree_giant', 'tree'], leaf: 'moss', mood: 'forest_night', decor: { dec_tuft: 0.12, dec_mush: 0.05, dec_flowers: 0.03 }, fireflies: 10, outside: 'forest_dark', edgeTrees: true },
@@ -23,6 +25,14 @@
     cave: { ground: 'cave_floor', tree: ['tree'], leaf: 'dk', mood: 'cave', decor: { dec_pebbles: 0.05, dec_mush: 0.03 }, fireflies: 5, outside: 'wall_cave', pools: true },
     world: { ground: 'grass', tree: ['pine', 'tree'], leaf: 'leaf', mood: 'night', decor: { dec_tuft: 0.06, dec_flowers: 0.02, dec_pebbles: 0.02 }, fireflies: 5, outside: 'sea', edgeTrees: true, twoTrees: true },
     hill_village: { ground: 'grass', tree: ['tree'], leaf: 'leaf', mood: 'town_night', decor: { dec_tuft: 0.07, dec_flowers: 0.05 }, fireflies: 4, outside: 'grass' },
+    // 雪原（snow_*.js）: 木は雪のもみ（描いた絵が無いときはコードの松）
+    snow: { ground: 'snow', get tree() { return snowFir(); }, leaf: 'leaf', mood: 'night', decor: { dec_pebbles: 0.02 }, fireflies: 0, outside: 'snow' },
+    snow_town: { ground: 'snow', get tree() { return snowFir(); }, leaf: 'leaf', mood: 'town_night', decor: { dec_pebbles: 0.02 }, fireflies: 0, outside: 'snow' },
+    ice_cave: { ground: 'ice', get tree() { return snowFir(); }, leaf: 'dk', mood: 'cave', decor: { dec_pebbles: 0.03 }, fireflies: 3, outside: 'wall_snow', pools: true },
+    // 砂漠（desert_*.js）: 木はなつめやし（描いた絵が無いときはコードの木）
+    desert: { ground: 'dune_sand', get tree() { return palm(); }, leaf: 'leaf', mood: 'night', decor: {}, fireflies: 0, outside: 'dune_sand' },
+    desert_town: { ground: 'sand', get tree() { return palm(); }, leaf: 'leaf', mood: 'town_night', decor: {}, fireflies: 2, outside: 'dune_sand' },
+    tomb: { ground: 'sandstone_floor', tree: ['tree'], leaf: 'dk', mood: 'cave', decor: { dec_pebbles: 0.03 }, fireflies: 0, outside: 'wall_sandstone' },
     interior: { ground: 'wood_floor', tree: ['tree'], leaf: 'leaf', mood: 'interior', decor: {}, fireflies: 0, outside: 'wall_wood' },
   };
   for (const id of Object.keys(THEMES)) THEMES[id].id = id;

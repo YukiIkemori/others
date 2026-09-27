@@ -27,6 +27,8 @@ const SLICE_MAPS = ['roa', 'roa_house', 'world', 'pharos', 'pharos_inn', 'pharos
   'verda_1', 'verda_2', 'elder_1', 'elder_2', 'yura', 'yura_inn', 'hut', 'well'];
 const SLICE_BGM = ['title', 'home', 'town', 'tavern', 'overworld', 'tower', 'battle', 'boss', 'boss2', 'rarebattle', 'village', 'forest', 'shrine', 'cave', 'sorrow', 'legend', 'tension', 'lostwood', 'eldertree', 'dawn', 'omen', 'fine_theme'];
 const BBG = ['coast', 'tower', 'forest', 'tree', 'cave'];
+// 縦切りの後に作った地方（slice の錠が外れた地方）の BGM・背景
+SLICE_BGM.push('ice', 'ghost', 'yule', 'bonfire', 'siege'); BBG.push('snow');
 const maps = M.sliceMaps();
 const EV_SRC = fs.readdirSync(path.join(V2, 'src', 'events')).map((f) => fs.readFileSync(path.join(V2, 'src', 'events', f), 'utf8')).join('\n');
 
@@ -210,12 +212,15 @@ section('4. 数');
   const miss = SLICE_MAPS.filter((id) => !D.maps[id]);
   ok(`§3.2 の必須のマップ 28 枚がそろう`, miss.length === 0, miss);
   const sliceLeads = Object.entries(D.leads).filter(([, l]) => l.region === 'r_forest' || l.region === 'prologue' || l.region === 'world' || l.kind === 'rumor');
-  ok(`手がかり 約 28 件（${Object.keys(D.leads).length}）`, Object.keys(D.leads).length >= 24 && Object.keys(D.leads).length <= 40, Object.keys(D.leads).length);
+  // 縦切りの後に作った地方（regions の slice が外れ、森・序章・世界でない地方）の手がかりは数えない
+  const builtR = (r) => r && D.regions[r] && !D.regions[r].slice && !['r_forest', 'prologue', 'world'].includes(r);
+  const nLeads = Object.values(D.leads).filter((l) => !builtR(l.region) && !builtR(l.opens)).length;
+  ok(`手がかり 約 28 件（${nLeads}）`, nLeads >= 24 && nLeads <= 40, nLeads);
   const want = ['l_main_rumors', 'l_main_recorder_forest', 'l_rumor_forest', 'l_rumor_snow', 'l_rumor_desert', 'l_rumor_marsh', 'l_rumor_isles', 'l_rumor_mine', 'l_rumor_ash', 'l_rumor_star',
     'l_forest_board', 'l_forest_pim', 'l_forest_woodcutters', 'l_forest_song', 'l_forest_hut', 'q_fern_letters', 'q_fern_herbs', 'q_fern_song', 'q_forest_fireflies', 'q_forest_acorn',
     'q_pharos_well', 'q_pharos_lamp', 'q_pharos_delivery', 'q_yura_names', 'q_pim_poet', 'l_opt_hut', 'l_opt_well', 'l_opt_yura'];
   ok('§3.5 の手がかりの id がそろう', want.every((id) => D.leads[id]), want.filter((id) => !D.leads[id]));
-  const locked = ['l_rumor_snow', 'l_rumor_desert', 'l_rumor_marsh', 'l_rumor_isles', 'l_rumor_mine', 'l_rumor_ash', 'l_rumor_star'].filter((id) => D.leads[id] && D.leads[id].slice !== 'locked');
+  const locked = ['l_rumor_snow', 'l_rumor_desert', 'l_rumor_marsh', 'l_rumor_isles', 'l_rumor_mine', 'l_rumor_ash', 'l_rumor_star'].filter((id) => D.leads[id] && D.leads[id].slice !== 'locked' && !builtR(D.leads[id].opens || ('r_' + id.slice(8))));
   ok('森以外の噂は slice:locked', locked.length === 0, locked);
   void sliceLeads;
   const nT = Object.keys(D.techs).length, nS = Object.keys(D.spells).length;

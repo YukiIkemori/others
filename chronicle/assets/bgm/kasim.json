@@ -1,0 +1,27 @@
+{
+  "loopStart": 28.793,
+  "loopEnd": 74.954,
+  "source": {
+    "provider": "gemini",
+    "model": "lyria-3.5",
+    "prompt": "Instrumental background music for a classic 1990s-style Japanese fantasy role-playing game. The writing and orchestration evoke the golden age of 16-bit console RPG soundtracks (memorable singable lead melody, clear bass line, warm chords, tasteful hall reverb), but the production is high quality, warm and full, recorded with real-sounding instruments. Completely original melody. The game's world lives in an endless night lit by lanterns, lamps and great beacon fires; the score is gentle and melancholic, with warmth and a quiet, stubborn hope. An oasis market town in the desert at night: copper oil lamps around a dying old spring, carpets and spice stalls, a dancer's anklets, the smell of dates and lamp oil, stars over the dunes. Warm, lively and a little wistful, with a singable ney melody over a swaying darbuka groove. Tempo 104 BPM, 4/4 time, key of D minor (phrygian dominant colour). Instrumentation: oud and qanun, ney flute melody, violin answer, darbuka and riq, soft frame drum, upright bass, finger cymbals. Form: darbuka and oud pickup, ney A melody, violin B melody a little wistful, qanun interlude like lamplight, A melody again with fuller band. Duration: 95 seconds. Instrumental only: no vocals, no singing, no spoken words, no lyrics. Keep one steady tempo and key from start to finish, no fade-in and no fade-out, no long silences; the last bar leads naturally back into the first bar so the piece loops seamlessly as game background music.",
+    "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[B4]]",
+    "generated": "2026-09-27T11:04:02.176Z",
+    "rawSeconds": 96,
+    "takes": 2
+  },
+  "analysis": {
+    "loudnessLUFS": -18,
+    "truePeakDb": -6.3,
+    "gainDb": -6.4,
+    "peakLimited": false,
+    "loopScore": 0.585,
+    "seamCorr": 0.171,
+    "xfade": 0.6,
+    "medianDb": -22.2,
+    "longestSilence": 0,
+    "seamLevelDiffDb": 1.1,
+    "seamJump": 0.0221,
+    "maxStep": 0.0489
+  }
+}

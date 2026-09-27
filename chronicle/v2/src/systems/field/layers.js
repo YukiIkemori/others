@@ -149,6 +149,8 @@
     void list;
     // F6: 発光の描き直し（芯＋にじみ）
     glows(g, t, cx, cy, real);
+    // 天気（map.weather: 'snow' | 'blizzard'。weather.js）
+    if (m.weather && F._weather) F._weather(g, m, cx, cy, t);
     // 暗がり（E6）
     F.dark.draw(g, cam);
     // 膜の上: 宝箱・泉のきらめき、新しい話の印

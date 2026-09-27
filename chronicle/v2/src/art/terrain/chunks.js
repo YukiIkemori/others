@@ -71,7 +71,7 @@
         }
       }
       if (m.face && (e.solid || e.rise || e === outE) && e.rise !== 0) { c.raised = true; c.rise = Math.max(1, e.rise || 1); c.face = m.face; }
-      if (m.tall && m.tall !== 'canopy') c.mat = T._underOf(e.mat, theme);
+      if (m.tall && m.tall !== 'canopy') c.mat = e.under || T._underOf(e.mat, theme);   // e.under = その凡例だけの地面（雪原のワールドの木）
       if (e.deck) c.mat = theme.ground === 'cobble' ? 'dirt' : theme.ground;
       return c;
     };
@@ -97,7 +97,8 @@
     if (s !== 1) o.s = s;
     return { key: 'hd:prop:' + id, opts: o };
   }
-  function optsS(o, s) { if (s !== 1) o.s = s; return o; }
+  function legendTree(e) { return !!(e && e.tree && T.Env && T.Env.has && T.Env.has('prop', e.tree[0] + '_v0')); }
+    function optsS(o, s) { if (s !== 1) o.s = s; return o; }
   /** Sheet のコマ（pose の最初のコマ。無ければ default・0） */
   function frameOf(sh, name) { const p = (name && sh.poses && sh.poses[name]) || (sh.poses && sh.poses.default) || [0]; return sh.frames[p[0]] || sh.frames[0]; }
   T._frameOf = frameOf;
@@ -265,8 +266,9 @@
       const fy = (y + 0.86) * t;
       if (c.tall === 'tree') {
         const n = th.twoTrees ? 2 : 1;
+        const tth = legendTree(c.e) ? { tree: c.e.tree, leaf: 'leaf' } : th;   // e.tree = その凡例だけの木（描いた絵があるときだけ）
         for (let k = 0; k < n; k++) {
-          const sp = treeSprite(th, x, y, k, s), jx = n === 2 ? (k ? 0.72 : 0.28) : 0.5 + (variantOf(x, y, 81) - 0.5) * 0.3;
+          const sp = treeSprite(tth, x, y, k, s), jx = n === 2 ? (k ? 0.72 : 0.28) : 0.5 + (variantOf(x, y, 81) - 0.5) * 0.3;
           draw.push({ key: sp.key, opts: sp.opts, x: (x + jx) * t, y: fy - (n === 2 && k ? 4 * s : 0), ft: y * t, layer: 'split', shadow: 'tall', sortY: fy + k });
         }
       } else if (c.tall === 'bush') {
@@ -287,7 +289,7 @@
     for (let y = c0y - 1; y < c0y + CHUNK + 1; y++) for (let x = c0x - 1; x < c0x + CHUNK + 1; x++) {
       const c = C(x, y);
       if (!c.walk || c.water || c.hard || c.raised || c.tall || plan.occ.has(x + ',' + y) || x < 0 || y < 0 || x >= map.w || y >= map.h) continue;
-      if (c.mat === 'road' || c.mat === 'sand') continue;
+      if (c.mat === 'road' || c.mat === 'sand' || c.mat === 'dune_sand' || c.mat === 'cracked_clay') continue;
       let k = 0;
       for (const id of Object.keys(dec)) {
         k++;
@@ -670,6 +672,7 @@
       todo.push({ key: 'hd:prop:' + id, opts });
     }
     // 地面の飾り・藪・根（チャンクで使う形の変化を全部）
+    for (const k of Object.keys(map.legend || {})) { const e = map.legend[k]; if (legendTree(e)) for (let v = 0; v < 6; v++) for (const id of e.tree) todo.push({ key: 'hd:prop:' + id, opts: s !== 1 ? { v, h: 44, s } : { v, h: 44 } }); }
     const leafMoss = theme.leaf === 'moss';
     for (const id of Object.keys(theme.decor || {})) for (let v = 0; v < 4; v++) { const o2 = { v }; if (leafMoss) o2.leaf = 'moss'; if (s !== 1) o2.s = s; todo.push({ key: 'hd:prop:' + id, opts: o2 }); }
     const talls = new Set(Object.keys(map.legend || {}).map((k) => T._matInfo(map.legend[k].mat).tall));

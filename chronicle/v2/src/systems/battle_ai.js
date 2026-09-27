@@ -633,6 +633,13 @@
       if (done) continue;
       if (tele.length && guardFor(u)) { cmds[u.idx] = { type: 'defend' }; continue; }
       // 3. 考えどころの相手（群れの頭・火に弱い根）
+      // 雪原: 守りの氷を張った魔物（d.melt）は、その属性で割る
+      const iced = eng.living('mon').find((m) => m.d.melt && m.buffs.def > 0);
+      if (iced) {
+        const el = iced.d.melt.element;
+        const o = all.find((x) => dmgOf(x.ab) && FOE_TARGETS[x.ab.target] && ((x.ab.elements || []).includes(el) || dmgOf(x.ab).element === el) && !(x.item && plan.items[x.id] >= eng.count(x.id)));
+        if (o && !elemDone.has(iced)) { reserve(plan, o); cmds[u.idx] = cmdOf(o, iced); elemDone.add(iced); continue; }
+      }
       const leader = eng.living('mon').find((m) => m.d.leader);
       const burnable = eng.living('mon').find((m) => m.d.onBurn || m.d.onKilledBy);
       if (burnable && !(eng.flags[(burnable.d.onBurn || burnable.d.onKilledBy).flag])) {
