@@ -1,0 +1,42 @@
+{
+ "id": "ice_crystal",
+ "kind": "props",
+ "theme": "snow",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   19,
+   18
+  ],
+  "32": [
+   25,
+   24
+  ],
+  "40": [
+   31,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   9,
+   17
+  ],
+  "32": [
+   12,
+   23
+  ],
+  "40": [
+   16,
+   29
+  ]
+ },
+ "files": {
+  "24": "ice_crystal@24.png",
+  "32": "ice_crystal@32.png",
+  "40": "ice_crystal@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/snow_a.png"
+}

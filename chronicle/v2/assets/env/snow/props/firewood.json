@@ -1,0 +1,42 @@
+{
+ "id": "firewood",
+ "kind": "props",
+ "theme": "snow",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   68,
+   50
+  ],
+  "32": [
+   90,
+   66
+  ],
+  "40": [
+   112,
+   82
+  ]
+ },
+ "feet": {
+  "24": [
+   34,
+   49
+  ],
+  "32": [
+   45,
+   65
+  ],
+  "40": [
+   56,
+   81
+  ]
+ },
+ "files": {
+  "24": "firewood@24.png",
+  "32": "firewood@32.png",
+  "40": "firewood@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/snow_a.png"
+}

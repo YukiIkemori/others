@@ -27,3 +27,11 @@
 02:35:51   | 
 02:35:51   | packed field 102x204 | palette 51 + face 0
 02:35:51 pipeline: sheets.py ../art_ref/gen/npc/grp_yura_1 --npc npc_yura_woman --out out/npc/npc_yura_woman
+02:36:26   |   - 向きの見本（configs/refs/npc_yura_woman）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:36:26   | 
+02:36:26   | ■ シートの状態
+02:36:26   |   シート1 歩き: 確認あり  npc_yura_woman_s1.png  ドット 8.00px → 描かれた格子のまま（45.0 ドット）
+02:36:26   | 
+02:36:26   | packed field 102x200 | palette 52 + face 0
+02:36:27 to_v2 npc_yura_man: npc_yura_man → /home/user/others/chronicle/v2/assets/sprites/npc_yura_man |   field: 12 frames
+02:36:29 to_v2 npc_yura_woman: npc_yura_woman → /home/user/others/chronicle/v2/assets/sprites/npc_yura_woman |   field: 12 frames

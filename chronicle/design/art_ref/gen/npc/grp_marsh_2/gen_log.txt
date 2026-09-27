@@ -40,3 +40,4 @@
 02:09:35   | ■ シートの状態
 02:09:35   |   シート1 歩き: 確認あり  npc_marsh_old_f_s1.png  ドット 8.00px → 描かれた格子のまま（43.0 ドット）
 02:09:35 sheet 1: 0 redo lines
+02:36:27 pipeline: sheets.py ../art_ref/gen/npc/grp_marsh_2 --npc npc_marsh_old_m --out out/npc/npc_marsh_old_m

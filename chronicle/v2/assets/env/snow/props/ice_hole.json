@@ -1,0 +1,42 @@
+{
+ "id": "ice_hole",
+ "kind": "props",
+ "theme": "snow",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   26,
+   18
+  ],
+  "32": [
+   34,
+   24
+  ],
+  "40": [
+   42,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   13,
+   17
+  ],
+  "32": [
+   17,
+   23
+  ],
+  "40": [
+   21,
+   29
+  ]
+ },
+ "files": {
+  "24": "ice_hole@24.png",
+  "32": "ice_hole@32.png",
+  "40": "ice_hole@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/snow_a.png"
+}

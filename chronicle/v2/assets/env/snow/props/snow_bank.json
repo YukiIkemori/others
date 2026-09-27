@@ -1,0 +1,42 @@
+{
+ "id": "snow_bank",
+ "kind": "props",
+ "theme": "snow",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   31,
+   18
+  ],
+  "32": [
+   41,
+   24
+  ],
+  "40": [
+   51,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   15,
+   17
+  ],
+  "32": [
+   20,
+   23
+  ],
+  "40": [
+   26,
+   29
+  ]
+ },
+ "files": {
+  "24": "snow_bank@24.png",
+  "32": "snow_bank@32.png",
+  "40": "snow_bank@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/snow_a.png"
+}

@@ -1,0 +1,42 @@
+{
+ "id": "snow_fence",
+ "kind": "props",
+ "theme": "snow",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   28,
+   18
+  ],
+  "32": [
+   38,
+   24
+  ],
+  "40": [
+   48,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   14,
+   17
+  ],
+  "32": [
+   19,
+   23
+  ],
+  "40": [
+   24,
+   29
+  ]
+ },
+ "files": {
+  "24": "snow_fence@24.png",
+  "32": "snow_fence@32.png",
+  "40": "snow_fence@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/snow_a.png"
+}

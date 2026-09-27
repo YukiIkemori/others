@@ -1,0 +1,55 @@
+{
+ "id": "npc_yura_woman",
+ "look": "npc_yura_woman",
+ "name": "ユラの女",
+ "tier": "C",
+ "kind": "person",
+ "region": "forest",
+ "group": "yura_1",
+ "slot": "B",
+ "heightDots": {
+  "field": 45
+ },
+ "measureH": {
+  "field": 45
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#5A6C4C",
+ "mainHue": 110,
+ "mainName": "灰緑",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_yura_woman_1",
+  "npc_yura_woman_2",
+  "npc_yura_woman_3",
+  "npc_yura_woman_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_yura_woman_s1.png"
+ },
+ "pair_file": "npc_grp_yura_1.png",
+ "proportion": {
+  "1": {
+   "neck": 0.3888888888888889,
+   "head_w": 0.4444444444444444,
+   "shoulder": 0.35,
+   "neck_clear": 0.7473684210526316
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

@@ -1,0 +1,475 @@
+{
+ "character": "npc_yura_woman",
+ "set": "field",
+ "image": "npc_yura_woman_field.png",
+ "cell": [
+  34,
+  50
+ ],
+ "anchor": [
+  17,
+  47
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "walk_down_0": {
+   "x": 0,
+   "y": 0,
+   "w": 34,
+   "h": 50,
+   "anchor": [
+    17,
+    47
+   ],
+   "points": {
+    "head": [
+     17,
+     3
+    ],
+    "center": [
+     17,
+     26
+    ],
+    "front": [
+     6,
+     30
+    ]
+   }
+  },
+  "walk_down_1": {
+   "x": 34,
+   "y": 0,
+   "w": 34,
+   "h": 50,
+   "anchor": [
+    17,
+    47
+   ],
+   "points": {
+    "head": [
+     17,
+     2
+    ],
+    "center": [
+     18,
+     25
+    ],
+    "front": [
+     6,
+     30
+    ]
+   }
+  },
+  "walk_down_2": {
+   "x": 68,
+   "y": 0,
+   "w": 34,
+   "h": 50,
+   "anchor": [
+    17,
+    47
+   ],
+   "points": {
+    "head": [
+     17,
+     2
+    ],
+    "center": [
+     18,
+     25
+    ],
+    "front": [
+     6,
+     30
+    ]
+   }
+  },
+  "walk_up_0": {
+   "x": 0,
+   "y": 50,
+   "w": 34,
+   "h": 50,
+   "anchor": [
+    17,
+    47
+   ],
+   "points": {
+    "head": [
+     17,
+     3
+    ],
+    "center": [
+     17,
+     26
+    ],
+    "front": [
+     6,
+     30
+    ]
+   }
+  },
+  "walk_up_1": {
+   "x": 34,
+   "y": 50,
+   "w": 34,
+   "h": 50,
+   "anchor": [
+    17,
+    47
+   ],
+   "points": {
+    "head": [
+     17,
+     3
+    ],
+    "center": [
+     17,
+     25
+    ],
+    "front": [
+     2,
+     28
+    ]
+   }
+  },
+  "walk_up_2": {
+   "x": 68,
+   "y": 50,
+   "w": 34,
+   "h": 50,
+   "anchor": [
+    17,
+    47
+   ],
+   "points": {
+    "head": [
+     18,
+     3
+    ],
+    "center": [
+     17,
+     26
+    ],
+    "front": [
+     6,
+     30
+    ]
+   }
+  },
+  "walk_left_0": {
+   "x": 0,
+   "y": 100,
+   "w": 34,
+   "h": 50,
+   "anchor": [
+    17,
+    47
+   ],
+   "points": {
+    "head": [
+     15,
+     3
+    ],
+    "center": [
+     16,
+     25
+    ],
+    "front": [
+     5,
+     10
+    ]
+   }
+  },
+  "walk_left_1": {
+   "x": 34,
+   "y": 100,
+   "w": 34,
+   "h": 50,
+   "anchor": [
+    17,
+    47
+   ],
+   "points": {
+    "head": [
+     15,
+     3
+    ],
+    "center": [
+     16,
+     25
+    ],
+    "front": [
+     5,
+     9
+    ]
+   }
+  },
+  "walk_left_2": {
+   "x": 68,
+   "y": 100,
+   "w": 34,
+   "h": 50,
+   "anchor": [
+    17,
+    47
+   ],
+   "points": {
+    "head": [
+     15,
+     3
+    ],
+    "center": [
+     16,
+     26
+    ],
+    "front": [
+     5,
+     10
+    ]
+   }
+  },
+  "walk_right_0": {
+   "x": 0,
+   "y": 150,
+   "w": 34,
+   "h": 50,
+   "anchor": [
+    17,
+    47
+   ],
+   "points": {
+    "head": [
+     19,
+     4
+    ],
+    "center": [
+     18,
+     26
+    ],
+    "front": [
+     7,
+     42
+    ]
+   }
+  },
+  "walk_right_1": {
+   "x": 34,
+   "y": 150,
+   "w": 34,
+   "h": 50,
+   "anchor": [
+    17,
+    47
+   ],
+   "points": {
+    "head": [
+     19,
+     4
+    ],
+    "center": [
+     18,
+     26
+    ],
+    "front": [
+     5,
+     41
+    ]
+   }
+  },
+  "walk_right_2": {
+   "x": 68,
+   "y": 150,
+   "w": 34,
+   "h": 50,
+   "anchor": [
+    17,
+    47
+   ],
+   "points": {
+    "head": [
+     20,
+     4
+    ],
+    "center": [
+     18,
+     26
+    ],
+    "front": [
+     6,
+     43
+    ]
+   }
+  }
+ },
+ "anims": {
+  "walk_down": {
+   "frames": [
+    "walk_down_0",
+    "walk_down_1",
+    "walk_down_0",
+    "walk_down_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_down": {
+   "frames": [
+    "walk_down_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_up": {
+   "frames": [
+    "walk_up_0",
+    "walk_up_1",
+    "walk_up_0",
+    "walk_up_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_up": {
+   "frames": [
+    "walk_up_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_left": {
+   "frames": [
+    "walk_left_0",
+    "walk_left_1",
+    "walk_left_0",
+    "walk_left_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_left": {
+   "frames": [
+    "walk_left_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_right": {
+   "frames": [
+    "walk_right_0",
+    "walk_right_1",
+    "walk_right_0",
+    "walk_right_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_right": {
+   "frames": [
+    "walk_right_0"
+   ],
+   "ms": [
+    0
+   ]
+  }
+ },
+ "palette": [
+  "#0b0506",
+  "#12040e",
+  "#18120d",
+  "#241517",
+  "#261d14",
+  "#30211d",
+  "#2e271a",
+  "#3e3028",
+  "#3a1721",
+  "#3d2818",
+  "#59341e",
+  "#543a26",
+  "#554239",
+  "#554631",
+  "#714526",
+  "#694b2f",
+  "#6c5a49",
+  "#815734",
+  "#7e5f3d",
+  "#7c664d",
+  "#936239",
+  "#8d7557",
+  "#8b7760",
+  "#9a744b",
+  "#aa733f",
+  "#9a8263",
+  "#ae7f50",
+  "#a8906e",
+  "#cc8342",
+  "#c68f4f",
+  "#be9765",
+  "#b79f7e",
+  "#c2aa88",
+  "#dea361",
+  "#d0b996",
+  "#e6ba85",
+  "#ecb977",
+  "#dcc8a5",
+  "#f5cc93",
+  "#e5d3b2",
+  "#f8daa9",
+  "#fae2b8",
+  "#3d3624",
+  "#4a422b",
+  "#554c30",
+  "#615738",
+  "#6c613e",
+  "#756a43",
+  "#7f7348",
+  "#897c4e",
+  "#948655",
+  "#1e0617"
+ ],
+ "directions": [
+  "down",
+  "up",
+  "left",
+  "right"
+ ],
+ "target_height": 45,
+ "lantern_drawn": false,
+ "npc": {
+  "tier": "C",
+  "lantern": false,
+  "spirit": false,
+  "recolor": true,
+  "mainHex": "#5A6C4C",
+  "recolorSets": 4,
+  "variants": [
+   "npc_yura_woman_1",
+   "npc_yura_woman_2",
+   "npc_yura_woman_3",
+   "npc_yura_woman_4"
+  ],
+  "kind": "person"
+ }
+}

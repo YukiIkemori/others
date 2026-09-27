@@ -1,0 +1,42 @@
+{
+ "id": "sled",
+ "kind": "props",
+ "theme": "snow",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   34,
+   18
+  ],
+  "32": [
+   45,
+   24
+  ],
+  "40": [
+   56,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   17,
+   17
+  ],
+  "32": [
+   22,
+   23
+  ],
+  "40": [
+   28,
+   29
+  ]
+ },
+ "files": {
+  "24": "sled@24.png",
+  "32": "sled@32.png",
+  "40": "sled@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/snow_a.png"
+}

@@ -1,0 +1,42 @@
+{
+ "id": "snow_barrel",
+ "kind": "props",
+ "theme": "snow",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   14,
+   18
+  ],
+  "32": [
+   18,
+   24
+  ],
+  "40": [
+   22,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   7,
+   17
+  ],
+  "32": [
+   9,
+   23
+  ],
+  "40": [
+   11,
+   29
+  ]
+ },
+ "files": {
+  "24": "snow_barrel@24.png",
+  "32": "snow_barrel@32.png",
+  "40": "snow_barrel@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/snow_a.png"
+}

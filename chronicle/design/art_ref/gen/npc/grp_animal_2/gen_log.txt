@@ -19,3 +19,4 @@
 01:32:32   | ■ シートの状態
 01:32:32   |   シート1 歩き: OK  ani_fawn_s1.png  ドット 8.00px → 描かれた格子のまま（32.0 ドット）
 01:32:32 sheet 1: 0 redo lines
+02:36:29 pipeline: sheets.py ../art_ref/gen/npc/grp_animal_2 --npc ani_hen --out out/npc/ani_hen

@@ -1,0 +1,42 @@
+{
+ "id": "snow_rock",
+ "kind": "props",
+ "theme": "snow",
+ "frames": [
+  "default"
+ ],
+ "cell": {
+  "24": [
+   22,
+   18
+  ],
+  "32": [
+   29,
+   24
+  ],
+  "40": [
+   36,
+   30
+  ]
+ },
+ "feet": {
+  "24": [
+   11,
+   17
+  ],
+  "32": [
+   14,
+   23
+  ],
+  "40": [
+   18,
+   29
+  ]
+ },
+ "files": {
+  "24": "snow_rock@24.png",
+  "32": "snow_rock@32.png",
+  "40": "snow_rock@40.png"
+ },
+ "src": "design/art_ref/gen/env/props/snow_a.png"
+}
