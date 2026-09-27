@@ -525,6 +525,13 @@
     if (id === 'battle') return onBattle();
     if (id.indexOf('screen:') === 0) return onScreen(id.slice(7), top);
     if (id === 'field') return onField();
+    // 間合いの小さな遊び（雪原の氷の切り出し・砂漠の値切り）: 印が当たりの帯の真ん中あたりに来たら A
+    if (id === 'mini:timing' && R.Mini && R.Mini.state) {
+      const st = R.Mini.state();
+      if (st && st.phase === 'input' && st.pos != null && (st.zones || []).some((z) => Math.abs(st.pos - (z[0] + z[1]) / 2) < (z[1] - z[0]) * 0.3)) return tap('a');
+      if (st && st.phase === 'result') return tap('a');
+      return;
+    }
     // 自前の幕・小さな遊びなど: 待つ。長く続けば A
     if ((B.otherN = (B.otherN || 0) + 1) % 20 === 0) tap('a');
   }

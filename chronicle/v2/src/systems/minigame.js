@@ -41,7 +41,8 @@
   Mini.state = function () {
     if (!live) return null;
     const s = live;
-    return { kind: s.kind, phase: s.phase, round: s.round, rounds: s.rounds, seq: s.seq ? s.seq.slice() : null, input: s.input ? s.input.length : 0, hits: s.hits, total: s.total, lit: s.lit, rank: s.rank || null };
+    return { kind: s.kind, phase: s.phase, round: s.round, rounds: s.rounds, seq: s.seq ? s.seq.slice() : null, input: s.input ? s.input.length : 0, hits: s.hits, total: s.total, lit: s.lit, rank: s.rank || null,
+      pos: s.kind === 'timing' && R.Engine ? markerAt(s, R.Engine.time) : null, zones: s.zones || null };   // pos・zones: 間合いの印の位置（テストの手が読む）
   };
 
   function rankOf(score) { return score >= 100 ? 'S' : score >= 80 ? 'A' : score >= 50 ? 'B' : 'C'; }

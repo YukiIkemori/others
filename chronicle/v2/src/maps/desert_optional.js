@@ -25,13 +25,12 @@
       for (const [x, y] of [[9, 10], [14, 10], [21, 10], [26, 10], [9, 14], [14, 14], [21, 14], [26, 14], [18, 4], [18, 21]]) O.push(K.prop('lantern', x, y));
       O.push(K.prop('copper_brazier', 16, 10), K.prop('copper_brazier', 20, 10), K.prop('copper_brazier', 16, 14), K.prop('copper_brazier', 20, 14));
       deco(O, [['carpet_rack', 5, 12], ['carpet_rack', 31, 12], ['clay_jars', 10, 7], ['clay_jars', 25, 7], ['cart_barrels', 5, 17], ['cart_barrels', 30, 17],
-        ['sack', 11, 17], ['crate', 25, 17], ['tent', 4, 7], ['tent', 31, 7], ['desert_palm', 3, 13], ['desert_palm', 33, 11, 1], ['sand_mound', 8, 20], ['sand_mound', 28, 20],
-        ['bones', 2, 20], ['cactus', 33, 20], ['obelisk', 18, 2]]);
+        ['tent', 4, 7], ['tent', 31, 7], ['desert_palm', 3, 13], ['desert_palm', 33, 11, 1], 
+        ['obelisk', 18, 2]]);
       O.push(K.exam(18, 3, 'desert_mirage_obelisk'));
       // 南の列（入口の両側にも屋台と天幕。灯りの列が入口まで続く）
       for (const [x, y] of [[7, 19], [12, 19], [23, 19], [28, 19]]) O.push(K.prop('desert_stall', x, y));
-      for (const [x, y] of [[10, 21], [25, 21], [16, 23], [20, 23]]) O.push(K.prop('lantern', x, y));
-      deco(O, [['carpet_rack', 9, 18], ['carpet_rack', 26, 18], ['clay_jars', 14, 20], ['clay_jars', 21, 20], ['tent', 3, 18], ['tent', 31, 18], ['sack', 5, 21], ['crate', 30, 21], ['cart_barrels', 13, 22]]);
+      for (const [x, y] of [[16, 23], [20, 23]]) O.push(K.prop('lantern', x, y));
       const N = [
         K.npc('m_seller_a', 'npc_desert_old_f', 8, 10, { name: '陽炎の売り手', title: '一品物', dir: 's', talk: 'desert_mirage_seller', pushable: false, reward: 'item' }),
         K.npc('m_seller_b', 'npc_desert_man', 24, 10, { name: '砂うたの売り手', title: '一品物', dir: 's', talk: 'desert_mirage_seller', pushable: false, reward: 'item' }),

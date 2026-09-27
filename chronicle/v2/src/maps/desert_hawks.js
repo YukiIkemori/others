@@ -44,7 +44,7 @@
       K.rect(g, 38, 9, 2, 2, 'w');                      // 水がめの池（盗んだ水）
       const O = [];
       O.push(K.stairs(21, 3, { map: 'desert_hawks_2', spawn: 'top' }, { id: 'desert_hawks_1_down' }));
-      O.push(K.spring('desert_hawks_1_s1', 15, 29), K.spring('desert_hawks_1_s2', 17, 14));
+      O.push(K.spring('desert_hawks_1_s1', 15, 29), K.spring('desert_hawks_1_s2', 22, 9));
       O.push(K.chest('desert_hawks_1_c1', 38, 25, { pool: 'p_T' }), K.chest('desert_hawks_1_c2', 5, 26, { item: 'i_smoke', n: 2 }),
         K.chest('desert_hawks_1_c3', 36, 16, { pool: 'p_T' }), K.chest('desert_hawks_1_c4', 5, 10, { gold: 180 }), K.chest('desert_hawks_1_c5', 24, 9, { pool: 'p_rare' }));
       O.push(K.exam(33, 9, 'desert_hawks_water'), K.exam(4, 16, 'desert_hawks_bunks'));

@@ -29,6 +29,8 @@ const PAGE_LIB = function () {
   const D = { n: [0, -1], s: [0, 1], w: [-1, 0], e: [1, 0] };
   const isOther = (id, m) => /^(desert_|snow_)/.test(id) || /desert|snow/.test(m.region || '') || /desert|snow/.test(m.theme || '');
   const check = (c) => { if (c == null) return true; try { return !!R.State.check(c); } catch (e) { return false; } };
+  window.__enters = 0;
+  R.on('map:enter', () => { window.__enters++; });
   window.__doors = {
     list(all, only) {
       const out = [];
@@ -118,10 +120,13 @@ const pos = (p) => p.evaluate(() => { const s = RPG.Field._s; return { m: s.map 
 /** キーボードで 1 歩ずつ歩いて出入り口に入る → {ok, steps, why?, at} */
 async function walkInto(p, portal) {
   const from = await pos(p);
+  const enters0 = await p.evaluate(() => window.__enters || 0);
+  const entered = async () => (await p.evaluate(() => window.__enters || 0)) > enters0;   // 同じマップへの出口（迷いの森の輪）も数える
   let steps = 0;
   for (let guard = 0; guard < 80; guard++) {
     await settle(p);
     const st = await pos(p);
+    if (st.m === from.m && portal.to === from.m && (await entered())) return { ok: true, steps, at: st.m };
     if (st.m !== from.m) return { ok: st.m === portal.to, steps, at: st.m, why: st.m === portal.to ? null : 'went to ' + st.m };
     const route = await p.evaluate(([cells]) => window.__doors.path(cells, true), [portal.cells]);
     if (!route || !route.length) return { ok: false, steps, why: 'no path from ' + st.x + ',' + st.y };
@@ -148,7 +153,7 @@ async function walkInto(p, portal) {
     // 出入り口に入ったら、移るのを待つ（暗転）
     const s3 = await pos(p);
     if (portal.cells.some(([x, y]) => x === s3.x && y === s3.y) && s3.m === from.m) {
-      for (let i = 0; i < 60; i++) { await p.waitForTimeout(100); const s4 = await pos(p); if (s4.m !== from.m) break; }
+      for (let i = 0; i < 60; i++) { await p.waitForTimeout(100); const s4 = await pos(p); if (s4.m !== from.m || (await entered())) break; }
     }
   }
   return { ok: false, steps, why: 'too many steps' };
