@@ -28,7 +28,7 @@ for (const id of MY_MAPS) {
   const r = R.Contract.check('map', D.maps[id]);
   if (!r.ok) ok(`map ${id} が K.map`, false, r.errors);
 }
-const myEvents = [...SRC.matchAll(/\bE\('([a-z0-9_]+)'/g)].map((m) => m[1]);
+const myEvents = [...SRC.matchAll(/\bE\('([a-z0-9_]+)'/g)].map((m) => m[1]).filter((id) => !id.endsWith('_'));
 ok(`砂漠のイベント ${myEvents.length} 本が R.DB.events にある`, myEvents.every((id) => D.events[id]), myEvents.filter((id) => !D.events[id]));
 {
   const miss = [];

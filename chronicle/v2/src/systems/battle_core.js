@@ -1259,6 +1259,7 @@
           yield { t: 'buff', u: tgt, stat: 'def', d: d0, stage: to };
           if (mt.msg) yield this.m(mt.msg.replace(/\{user\}/g, tgt.name));
           if (mt.clear) yield* this.clearStatus(tgt, mt.clear, true);
+          for (const k of mt.reset || []) if (tgt.buffs[k] > 0) { const dk = -tgt.buffs[k]; tgt.buffs[k] = 0; yield { t: 'buff', u: tgt, stat: k, d: dk, stage: 0 }; }
         }
       }
       if (info.drain && att.alive && dealt > 0) yield* this.restore(att, Math.round(dealt * info.drain), 'hp', 'drain');
