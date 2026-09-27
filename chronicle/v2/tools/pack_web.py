@@ -210,7 +210,9 @@ def main():
     manifest = {
         'note': 'Play-ready copy of the v2 slice. Publish the batches in order to the same artifact (batch 1 holds index.html). '
                 'Sizes are bytes; limits used: <= 64,000,000 bytes and <= 255 files per publish, <= 15 MB per binary / 16 MB per text file, '
-                '<= 511 files and 256 MB per version.',
+                '<= 511 files and 256 MB per version. Atlas and voice pack names carry a content hash (and copied media a ?v=<hash> '
+                'in the table) so browsers never reuse an old cached image after a republish; when republishing to the same artifact, '
+                'remove the previous version\'s atlas_*/pack_* paths that are not in this list (files: {path: null}).',
         'entry': 'index.html',
         'total_files': len(files),
         'total_bytes': total,

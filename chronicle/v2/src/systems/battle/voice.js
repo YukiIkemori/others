@@ -82,10 +82,30 @@
       else if (A && typeof A.playVoice === 'function') h = A.playVoice(id);   // 古い口: 前の声（会話も）を止めて 1 本だけ
       else if (A && typeof A.voice === 'function') A.voice(id);
     } catch (e) { h = null; }
-    cur = { id, h, n: ++seq };
+    cur = { id, h, n: ++seq, kind, t0: R.Engine.time };
     note({ who: unit.id, kind, id, why: 'play' });
     return id;
   };
+
+  // ---------------------------------------------------------------- 場面の切り替えで声を切らない（2026-09-27 の遊びの声）
+  /** 今の声がまだ鳴っている（読み込み中も含む）か */
+  V.busy = function () {
+    const h = cur && cur.h;
+    return !!(h && !h.stopped && (h.src || h.src === null) && (R.Engine.time - cur.t0) < 8000);
+  };
+  /** 今の声 {id, kind, t0, durMs|null, playing}（テスト・QA の記録用） */
+  V.current = function () {
+    if (!cur) return null;
+    const h = cur.h, b = h && h.src && h.src.buffer;
+    return { id: cur.id, kind: cur.kind, t0: cur.t0, durMs: b ? Math.round(b.duration * 1000) : null, playing: V.busy() };
+  };
+  /** 今の声が鳴り終わるまで待つ（capMs まで。音が無い・鳴っていないならすぐ） */
+  V.settle = function (capMs) {
+    const t0 = R.Engine.time, cap = capMs == null ? 3500 : capMs;
+    return R.until(() => !V.busy() || R.Engine.time - t0 >= cap);
+  };
+  /** 止めずに手放す（勝利の声は場面を閉じた後も最後まで鳴らす） */
+  V.release = function () { cur = null; };
   V.stop = function () {
     if (!cur) return;
     try {

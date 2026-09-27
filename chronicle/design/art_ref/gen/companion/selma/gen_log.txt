@@ -103,3 +103,6 @@
 00:42:42 sheet 3 attempt 5: generating 3648x1344 (pitch 7, quality medium, 2 refs)
 00:43:45   pitch in raw image: 7.12 px per art pixel (upright median 456 px / 64)
 00:43:45 sheet 3 -> art_ref/gen/companion/selma/comp_selma_s3.png (10 poses)
+14:00:58 sheet 2 attempt 4: generating 1920x2048 (pitch 8, quality medium, 2 refs)
+14:02:12   pitch in raw image: 8.42 px per art pixel (upright median 404 px / 48)
+14:02:13 sheet 2 -> art_ref/gen/companion/selma/comp_selma_s2.png (12 poses)

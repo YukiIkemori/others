@@ -398,6 +398,11 @@
      "raw": "raw/s2_a3_edit.png",
      "quality": "medium",
      "t": "2026-09-27T00:36:18"
+    },
+    {
+     "raw": "raw/s2_a4_v4edit.png",
+     "quality": "medium",
+     "t": "2026-09-27T14:02:12"
     }
    ],
    "usage": [
@@ -454,21 +459,30 @@
      "web_search": {
       "num_requests": 0
      }
+    },
+    {
+     "image_gen": {
+      "input_tokens": 3402,
+      "input_tokens_details": {
+       "image_tokens": 2955,
+       "text_tokens": 447
+      },
+      "output_tokens": 3204,
+      "output_tokens_details": {
+       "image_tokens": 3204,
+       "text_tokens": 0
+      },
+      "total_tokens": 6606
+     },
+     "web_search": {
+      "num_requests": 0
+     }
     }
    ],
    "frames": {
     "walk_down_0": {
      "row": 1,
      "column": 1,
-     "logical_bbox": [
-      26,
-      49
-     ],
-     "air": 0
-    },
-    "walk_down_2": {
-     "row": 1,
-     "column": 3,
      "logical_bbox": [
       28,
       48
@@ -484,12 +498,21 @@
      ],
      "air": 0
     },
+    "walk_down_2": {
+     "row": 1,
+     "column": 3,
+     "logical_bbox": [
+      28,
+      48
+     ],
+     "air": 0
+    },
     "walk_up_0": {
      "row": 2,
      "column": 1,
      "logical_bbox": [
-      26,
-      48
+      27,
+      49
      ],
      "air": 0
     },
@@ -497,7 +520,7 @@
      "row": 2,
      "column": 2,
      "logical_bbox": [
-      28,
+      27,
       49
      ],
      "air": 0
@@ -506,7 +529,7 @@
      "row": 2,
      "column": 3,
      "logical_bbox": [
-      28,
+      27,
       49
      ],
      "air": 0
@@ -515,8 +538,8 @@
      "row": 3,
      "column": 1,
      "logical_bbox": [
-      22,
-      47
+      21,
+      45
      ],
      "air": 0
     },
@@ -524,8 +547,8 @@
      "row": 3,
      "column": 2,
      "logical_bbox": [
-      27,
-      46
+      26,
+      44
      ],
      "air": 0
     },
@@ -534,7 +557,7 @@
      "column": 3,
      "logical_bbox": [
       26,
-      46
+      44
      ],
      "air": 0
     },
@@ -542,8 +565,8 @@
      "row": 4,
      "column": 1,
      "logical_bbox": [
-      23,
-      47
+      22,
+      45
      ],
      "air": 0
     },
@@ -551,8 +574,8 @@
      "row": 4,
      "column": 2,
      "logical_bbox": [
-      28,
-      47
+      27,
+      44
      ],
      "air": 0
     },
@@ -560,15 +583,15 @@
      "row": 4,
      "column": 3,
      "logical_bbox": [
-      26,
-      47
+      27,
+      44
      ],
      "air": 0
     }
    },
    "notes": [],
-   "pitch": 7.958,
-   "from_raw": "raw/s2_a3_edit.png"
+   "pitch": 8.417,
+   "from_raw": "raw/s2_a4_v4edit.png"
   },
   "4": {
    "attempts": [

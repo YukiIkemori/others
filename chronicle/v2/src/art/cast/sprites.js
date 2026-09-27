@@ -17,7 +17,8 @@
     if (!R.Media || !R.Media.preload || typeof Image === 'undefined') return;
     SP.loaded = await R.Media.preload('sprites');
     // 読む前に焼こうとして null（後でまた）になった物を忘れる
-    for (const look of SP.looks()) for (const p of ['hd:btl:' + look + ':', 'hd:field:' + look, 'hd:face:' + look]) for (const k of R.Hd.keys(p)) if (R.Hd.forget) R.Hd.forget(k);
+    const lks = SP.looks().concat(Object.keys(R.DB.looks || {}).filter((l) => R.DB.looks[l] && R.DB.looks[l].spriteOf));
+    for (const look of lks) for (const p of ['hd:btl:' + look + ':', 'hd:field:' + look, 'hd:face:' + look]) for (const k of R.Hd.keys(p)) if (R.Hd.forget) R.Hd.forget(k);
     // 読み込み待ちで null を返した印（30 フレームは積み直さない）も消す: 読み終えたらすぐ焼けるように
     const F = R.Hd._s && R.Hd._s.failed;
     if (F) for (const ck of Array.from(F.keys())) if (/^hd:(btl|field|face):/.test(ck)) F.delete(ck);
