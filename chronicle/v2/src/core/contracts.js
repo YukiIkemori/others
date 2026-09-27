@@ -228,7 +228,7 @@
     battle: ['@units', 'options', 'partyOptions', 'submit', 'repeat', '?repeatOn', 'setRepeat', 'round', '?over', 'rewards', 'escape', 'finish'],   // 版 2: escape・finish
     ev: ['say', 'choose', 'caption', 'fade', 'wait', 'flag', 'setFlag', 'var', 'addVar', 'item', 'take', 'gold', 'has', 'battle', 'warp', 'heal', 'rest',
       'inn', 'shop', 'tavern', 'chooseCompanions', 'createHero', 'lead', 'leadDone', 'choice', 'choiceOf', 'clearRegion', 'npc', 'guest', 'camera',
-      '@mini', 'letter', 'call', 'g', 'bgm', 'sfx', 'jingle'],
+      '@mini', 'letter', 'call', 'g', 'bgm', 'sfx', 'jingle', '?partyShow', '?partyHide'],   // 版 2: 主人公だけのフィールドで仲間を出す
     fieldNpc: ['move', 'face', 'act', 'hide', 'show', 'setPos'],
     list: ['update', 'draw'],
     layer: ['open', 'close', '#k'],   // 版 2: new R.UIK.Layer(o)

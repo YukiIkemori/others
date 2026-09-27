@@ -102,6 +102,18 @@ ok('proficiency names only (剣・火)', _.result.profName('sword') === '剣' &&
 const src = ['scene', 'hud', 'command', 'result', 'gameover', 'playback'].map((f) => require('fs').readFileSync(path.join(__dirname, '..', 'src', 'systems', 'battle', f + '.js'), 'utf8')).join('\n').replace(/^\s*\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
 ok('no forbidden words shown (Lv・経験値・オート戦闘・WP)', !/['"`][^'"`]*(Lv|経験値|次のレベル|オート戦闘|WP)[^'"`]*['"`]/.test(src));
 
+section('動きを柔らかく（2026-09-27）');
+{
+  const E = _.play.EASE;
+  ok('easing curves start at 0 and end at 1 (out, inOut, back, in)', ['out', 'out3', 'in', 'inOut', 'back'].every((k) => Math.abs(E[k](0)) < 1e-9 && Math.abs(E[k](1) - 1) < 1e-9));
+  ok('ease back overshoots a little (recoil settles back)', Math.max(...[0.6, 0.7, 0.8, 0.9].map(E.back)) > 1);
+  const sh = { poses: { idle: [0], slash: [1], slash8: [2, 3, 4, 5, 6, 7, 8, 9] }, fps: { slash: 11, slash8: 20 }, frames: [] };
+  const pl = _.actors.poseList(sh, { side: 'party', wtype: 'sword' }, {}, 'slash');
+  ok('a sheet with <pose>8 frames uses them (art agent naming), else the old pose', pl.key === 'slash8' && pl.list.length === 8 && pl.fps === 20 && _.actors.poseList(sh, { side: 'party' }, {}, 'idle').key === 'idle', pl);
+  const fst = { speed: () => 1 }; const sp = (n) => { fst.speed = () => n; fst.hitstopUntil = 0; const t0 = R.Engine.time; _.play.hitstop(fst); return fst.hitstopUntil - t0; };
+  ok('hitstop 40–60 ms, shorter at ＋1/＋2', sp(1) >= 40 && sp(1) <= 60 && sp(2) < sp(1) && sp(3) < sp(2), [sp(1), sp(2), sp(3)]);
+}
+
 section('人の札は隊列の順（前列・後列で分けない。2026-09-27 の持ち主の報告）');
 (async () => {
   R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'アルン' }, seed: 3 });

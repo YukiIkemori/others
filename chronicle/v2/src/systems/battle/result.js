@@ -128,6 +128,17 @@
     try { R.Audio.stopBgm(200); R.Audio.jingle('victory'); } catch (e) { /* ignore */ }
     const alive = st.partyUnits().filter((u) => st.vis[u.uid] && st.vis[u.uid].alive);
     for (const u of alive) { const v = st.vis[u.uid]; v.pose = 'victory'; v.poseT = R.Engine.time; v.dx = 0; }
+    // 勝利の小さな跳ね（1 人ずつ少しずらす）: 縮む → 跳ぶ（緩急）→ 着地でつぶれて戻る。reduceMotion は跳ねない
+    if (!R.Settings.get('reduceMotion')) {
+      const P = _.play;
+      alive.forEach((u, i) => {
+        const v = st.vis[u.uid];
+        st.pwait(i * 90).then(() => P.squash(st, v, 1.06, 0.93, 80, 'out'))
+          .then(() => { P.squash(st, v, 0.96, 1.05, 120, 'out'); return P.tween(st, v, 'dy', -12, 170, 'out3'); })
+          .then(() => P.tween(st, v, 'dy', 0, 150, 'in'))
+          .then(() => P.squash(st, v, 1.07, 0.93, 60, 'out')).then(() => P.unsquash(st, v, 180));
+      });
+    }
     const end = (Bt.lastEnd = { result: 'win', poseAt: R.Engine.time, voice: null });
     if (alive.length) {
       const rng = R.rng('victory:' + ((R.Game && R.Game.seed) || 0) + ':' + (R.Game && R.Game.steps || 0));

@@ -161,13 +161,13 @@
       party.slice().sort((a, b) => a.x - b.x).forEach((a, i) => {
         const v = st.vis[a.uid];
         if (!v.alive) return;
-        st.pwait(80 + i * 70).then(() => tw(st, v, 'dx', 0, 520)).then(() => { if (v.pose === 'step') { v.pose = 'idle'; v.poseT = R.Engine.time; } });
+        st.pwait(80 + i * 70).then(() => tw(st, v, 'dx', 0, 560, 'out3')).then(() => { if (v.pose === 'step') { v.pose = 'idle'; v.poseT = R.Engine.time; } });
       });
       // 敵: 浮かび上がる（ボスは遅く、重く）
       foes.forEach((a, i) => {
         const v = st.vis[a.uid];
         const d = a.boss ? 260 : 140 + i * 70, ms = a.boss ? 900 : 380;
-        st.pwait(d).then(() => { tw(st, v, 'appear', 1, ms); tw(st, v, 'dy', 0, ms); });
+        st.pwait(d).then(() => { tw(st, v, 'appear', 1, ms, 'out'); tw(st, v, 'dy', 0, ms, 'out3'); });
       });
       await st.pwait(boss ? 1000 : 620);
     } else {
@@ -337,7 +337,8 @@
       exit() {},
       onLayout() { place(st); },
       update(dt) {
-        st.clock += dt * st.mul();
+        // ヒットストップ（当たった瞬間、実時間で 35〜55 ms だけ戦闘の時計を止める。playback.js の P.hitstop）
+        if (!(st.hitstopUntil && R.Engine.time < st.hitstopUntil)) st.clock += dt * st.mul();
         const I = R.Input;
         // 戦闘の速さ（R）: 通常 → ＋1 → ＋2 → 通常（どの場面でも。勝利の札・全滅の画面では変えない）
         if (I.pressed('r') && st.phase !== 'result' && st.phase !== 'gameover' && st.phase !== 'closing') Bt.cycleSpeed();
@@ -555,6 +556,7 @@
     }
     if (!baked) mid(g);
     _.play.drawFx(g, st);
+    if (_.play.drawStreaks) _.play.drawStreaks(g, st);
     g.restore();
     // 仕上げ（世界の最後・HUD の前。RENDER の依頼: mood は背景の meta.mood）
     if (R.Post && R.Post.frame) { try { R.Post.frame(g, { mood: (sh && sh.meta && sh.meta.mood) || 'night' }); } catch (e) { /* 仕上げは無くてもよい */ } }

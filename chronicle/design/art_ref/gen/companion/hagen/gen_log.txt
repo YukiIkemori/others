@@ -110,3 +110,5 @@
 01:35:15   size check glimmer: 0.84 of the hero's same pose (relative to idle_a)
 01:41:46   size check victory_b: 0.82 of the hero's same pose (relative to idle_a)
 19:03:23 sheet 3 flowerfix1: edit victory_b (window rows 1-2 cols 1-5, 3648x1456, pitch 7, quality high)
+19:04:28   calibrated pitch 6.92 px (requested 7; 9 reference poses)
+19:04:29   pasted: victory_b 63x66

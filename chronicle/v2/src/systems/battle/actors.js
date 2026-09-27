@@ -206,41 +206,108 @@
     g.restore();
   };
 
+  // ---------------------------------------------------------------- 動きを柔らかく（2026-09-27 の持ち主の決まり「動きがカクカク」）
+  // 1) 立ちの息（1〜2 px の上下とわずかな伸び、人ごとに位相をずらす）2) 伸び縮み v.sx・v.sy（足もとを軸、playback の P.squash）
+  // 3) 残像 v.smearTo（少し前の位置に薄い写しを 2〜3 枚）4) ポーズの切り替えを 75 ms の重ねで柔らかく（当たりの瞬間は重ねない）
+  // 5) 絵に多いコマの並び <ポーズ>8（例 slash8・victory8・cast8。CAST の battle.json の anims）があればそれを使う。
+  // reduceMotion: 息・残像・重ねをやめ、伸び縮みは半分（playback 側）。
+  const IMPACT = { hit: 1, slash: 1, smash: 1, thrust: 1, shoot: 1, attack: 1, ko: 1 };
+  const BREATH = { idle: 1, weak: 1, tele: 1, guard: 1, cast: 0.5, victory: 0.4 };
+  const BLEND_MS = 75;
+  A.BLEND_MS = BLEND_MS;
+  /** そのポーズの並び（<pose>8 を先に）と fps */
+  A.poseList = function (sh, a, v, pose) {
+    const P = sh.poses || {};
+    const ph = v.phase > 1 && a.side !== 'party' ? '_p' + v.phase : '';
+    const cands = [pose + '8' + ph, pose + ph, pose + '8', pose];
+    let key = cands.find((k) => P[k] && P[k].length) || null;
+    let list = key ? P[key] : null;
+    if (!list) list = (pose === 'weak' ? P.idle : null) || (pose === 'tele' ? P.attack : null) || (a.side === 'party' ? (P[ATTACK_POSE[a.wtype]] && /slash|smash|thrust|shoot/.test(pose) ? P[ATTACK_POSE[a.wtype]] : null) : null) || P.idle || [0];
+    const F = sh.fps || {};
+    const fps = (key && F[key]) || F[pose] || F.idle || 6;
+    return { list, fps, key };
+  };
+  function frameAt(sh, a, v, pose, poseT, t) {
+    const L = A.poseList(sh, a, v, pose);
+    let fi = Math.floor(Math.max(0, t - (poseT || 0)) / 1000 * L.fps);
+    fi = LOOP[pose] ? fi % L.list.length : Math.min(L.list.length - 1, fi);
+    return sh.frames[L.list[fi]] || sh.frames[0];
+  }
+
   A.draw = function (g, st, a) {
     const v = st.vis[a.uid] || {};
     if (v.gone >= 1 || v.hidden) return;
     const t = R.Engine.time;
+    const rm = !!R.Settings.get('reduceMotion');
     let pose = v.pose || 'idle';
     if (a.side === 'party' && pose === 'idle' && v.alive && v.maxHp > 0 && v.hp / v.maxHp < 0.25) pose = 'weak';
     if (a.side === 'party' && !v.alive && pose !== 'ko' && pose !== 'hit') pose = 'ko';
     const sh = A.sheet(a, false);
     a.sheetRef = sh || a.sheetRef;
     const alpha = (1 - (v.gone || 0)) * (v.appear != null ? v.appear : 1);
+    // 息
+    const bk = rm || v.alive === false || pose === 'ko' ? 0 : (BREATH[pose] || 0);
+    const phase = (hash(a.uid) % 628) / 100;
+    const br = bk ? Math.sin(t * Math.PI * 2 / (a.side === 'party' ? 1500 : 1700) + phase) : 0;
+    const bob = br * bk * (a.side === 'party' ? 1.2 : 1.6);
+    const sx = (v.sx || 1) * (1 - 0.006 * br * bk), sy = (v.sy || 1) * (1 + 0.013 * br * bk);
+    const x = a.x + (v.dx || 0), y = a.y + (v.dy || 0);
+    // 残像のための少し前の位置（戦闘の時計で）
+    const hist = (v._hist = v._hist || []);
+    if (!hist.length || hist[hist.length - 1].c !== st.clock) { hist.push({ x, y, c: st.clock }); if (hist.length > 10) hist.shift(); }
+    const put = (fn, px, py, am) => {
+      g.save();
+      g.globalAlpha *= am;
+      g.translate(px, py); if (sx !== 1 || sy !== 1) g.scale(sx, sy); g.translate(-px, -py);
+      fn(px, py);
+      g.restore();
+    };
     g.save();
     g.globalAlpha *= alpha;
     if (sh && sh.frames && sh.frames.length) {
-      const P = sh.poses || {};
-      let list = (v.phase > 1 && a.side !== 'party' && P[pose + '_p' + v.phase]) || P[pose] || (pose === 'weak' ? P.idle : null) || (pose === 'tele' ? P.attack : null) || (a.side === 'party' ? (P[ATTACK_POSE[a.wtype]] && /slash|smash|thrust|shoot/.test(pose) ? P[ATTACK_POSE[a.wtype]] : null) : null) || P.idle || [0];
-      const fps = (sh.fps && (sh.fps[pose] || sh.fps.idle)) || 6;
-      let fi = Math.floor(Math.max(0, t - (v.poseT || 0)) / 1000 * fps);
-      fi = LOOP[pose] ? fi % list.length : Math.min(list.length - 1, fi);
-      const fr0 = sh.frames[list[fi]] || sh.frames[0];
-      const x = a.x + (v.dx || 0), y = a.y + (v.dy || 0);
-      // 戦闘背景の光（scene.js が st.lightAt を置いたときだけ）: 体の中ほどの光の色を掛ける
-      const fr = st.lightAt ? A.litFrame(fr0, st.lightAt(x, y - A.height(a) * 0.5)) : fr0;
+      const fr0 = frameAt(sh, a, v, pose, v.poseT, t);
+      // ポーズが変わった: 前のコマを覚えて短く重ねる（当たりの瞬間・reduceMotion は重ねない）
+      const pk = pose + '@' + (v.poseT || 0);
+      if (v._pk !== pk) {
+        if (v._pk && v._lastFr && !IMPACT[pose] && !rm) { v._bFr = v._lastFr; v._bT0 = t; } else v._bFr = null;
+        v._pk = pk;
+      }
+      v._lastFr = fr0;
+      const lit = (f, px, py) => (st.lightAt ? A.litFrame(f, st.lightAt(px, py - A.height(a) * 0.5)) : f);
       const sc = A.scaleOf(a, sh);
-      R.Hd.draw(g, fr, x, y, sc < 1 ? { scale: sc } : {});
-      if (v.flash > 0) { g.globalCompositeOperation = 'lighter'; R.Hd.draw(g, fr, x, y, sc < 1 ? { alpha: v.flash * 0.8, scale: sc } : { alpha: v.flash * 0.8 }); }
+      const draw1 = (f, px, py, extra) => R.Hd.draw(g, lit(f, px, py), px, py + bob, Object.assign(sc < 1 ? { scale: sc } : {}, extra || {}));
+      // 残像（素早い踏み込み・振り）
+      if (!rm && v.smearTo && st.clock < v.smearTo && hist.length > 3) {
+        const left = Math.min(1, (v.smearTo - st.clock) / 120);
+        [[hist.length - 7, 0.16], [hist.length - 4, 0.26]].forEach(([i, al]) => {
+          const h = hist[Math.max(0, i)];
+          if (!h || Math.hypot(h.x - x, h.y - y) < 3) return;
+          put(() => draw1(fr0, h.x, h.y), h.x, h.y, al * left);
+        });
+      }
+      put(() => {
+        draw1(fr0, x, y);
+        if (v.flash > 0) { g.globalCompositeOperation = 'lighter'; draw1(fr0, x, y, { alpha: Math.min(1, v.flash) * 0.8 }); g.globalCompositeOperation = 'source-over'; }
+      }, x, y, 1);
+      // 前のポーズのコマを上に薄く（重ね）
+      if (v._bFr) {
+        const k = (t - v._bT0) / BLEND_MS;
+        if (k >= 1 || v._bFr === fr0) v._bFr = null;
+        else put(() => draw1(v._bFr, x, y), x, y, (1 - k) * 0.85);
+      }
     } else {
-      if (a.side === 'party') partyPlaceholder(g, a, Object.assign({}, v, { pose }), t);
-      else enemyPlaceholder(g, a, Object.assign({}, v, { pose }), t);
+      put(() => {
+        const vv = Object.assign({}, v, { pose, dy: (v.dy || 0) + bob });
+        if (a.side === 'party') partyPlaceholder(g, a, vv, t);
+        else enemyPlaceholder(g, a, vv, t);
+      }, x, y, 1);
       if (v.flash > 0) {
         g.globalCompositeOperation = 'lighter';
-        g.globalAlpha = v.flash * 0.5 * alpha;
+        g.globalAlpha = Math.min(1, v.flash) * 0.5 * alpha;
         const hh = A.height(a);
-        const gr = g.createRadialGradient(a.x, a.y - hh / 2, 1, a.x, a.y - hh / 2, hh * 0.6);
+        const gr = g.createRadialGradient(x, a.y - hh / 2, 1, x, a.y - hh / 2, hh * 0.6);
         gr.addColorStop(0, 'rgba(255,255,255,0.9)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
-        g.fillStyle = gr; g.fillRect(a.x - hh, a.y - hh * 1.2, hh * 2, hh * 1.4);
+        g.fillStyle = gr; g.fillRect(x - hh, a.y - hh * 1.2, hh * 2, hh * 1.4);
       }
     }
     g.restore();

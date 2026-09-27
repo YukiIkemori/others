@@ -18,22 +18,79 @@
   const rare = (g) => g === 'rare' || g === 'super';
 
   // ---------------------------------------------------------------- 動き（tween）
-  P.tween = function (st, obj, key, to, ms) {
+  // 曲線（2026-09-27 の持ち主の決まり「動きがカクカク」: 位置の動きはすべて緩急をつける）
+  const EASE = {
+    linear: (k) => k,
+    out: (k) => 1 - (1 - k) * (1 - k),                                   // 既定（昔と同じ）
+    out3: (k) => 1 - Math.pow(1 - k, 3),
+    in: (k) => k * k,
+    inOut: (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2),
+    back: (k) => { const c = 1.70158 * 1.2, c3 = c + 1; return 1 + c3 * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); },   // 少し行き過ぎて戻る
+  };
+  P.EASE = EASE;
+  /** obj[key] を ms（戦闘の時計）で to へ。ease = 'out'（既定）| 'out3' | 'in' | 'inOut' | 'back' | 'linear' */
+  P.tween = function (st, obj, key, to, ms, ease) {
     return new Promise((res) => {
       st.tweens = (st.tweens || []).filter((t) => !(t.obj === obj && t.key === key && (t.res(), true)));
-      st.tweens.push({ obj, key, from: obj[key] || 0, to, t0: st.clock, ms: Math.max(1, ms), res });
+      st.tweens.push({ obj, key, from: obj[key] || 0, to, t0: st.clock, ms: Math.max(1, ms), res, ease: EASE[ease] || EASE.out });
     });
+  };
+  // ---------------------------------------------------------------- 動きを柔らかく（2026-09-27）
+  const reduce = () => !!R.Settings.get('reduceMotion');
+  /** 伸び縮み（足もとを軸。sx 横・sy 縦、1 が元）。reduceMotion は半分 */
+  P.squash = function (st, v, sx, sy, ms, ease) {
+    if (!v) return Promise.resolve();
+    const r = reduce() ? 0.5 : 1;
+    return Promise.all([P.tween(st, v, 'sx', 1 + (sx - 1) * r, ms, ease), P.tween(st, v, 'sy', 1 + (sy - 1) * r, ms, ease)]);
+  };
+  P.unsquash = function (st, v, ms) { return P.squash(st, v, 1, 1, ms || 160, 'back'); };
+  /** 残像（素早い踏み込み・振り）: ms の間、描くときに少し前の位置のコマを 2〜3 枚薄く重ねる。reduceMotion では出さない */
+  P.smear = function (st, v, ms) { if (v && !reduce()) v.smearTo = st.clock + (ms || 220); };
+  /** ヒットストップ（当たった瞬間に動きを少し止める）: 速さ 通常 55 ms・＋1 45 ms・＋2 35 ms、reduceMotion は 30 ms */
+  P.hitstop = function (st) {
+    const sp = st.speed();
+    const ms = reduce() ? 30 : sp >= 3 ? 35 : sp === 2 ? 45 : 55;
+    st.hitstopUntil = Math.max(st.hitstopUntil || 0, R.Engine.time + ms);
+  };
+  /** 武器の弧の筋（当たった所に武器の色で 1 本）。reduceMotion は細く短く */
+  const WCOL = { sword: '220,236,255', greatsword: '255,208,138', dagger: '184,255,216', bow: '255,242,176', staff: '200,176,255', claw: '255,154,138', bite: '255,154,138', hit: '255,236,210' };
+  P.streak = function (st, x, y, kind, flip) {
+    (st.streaks = st.streaks || []).push({ x, y, col: WCOL[kind] || WCOL.hit, t0: st.clock, flip: !!flip, big: kind === 'greatsword' || kind === 'smash', r: reduce() });
+  };
+  P.drawStreaks = function (g, st) {
+    const list = st.streaks || [];
+    if (!list.length) return;
+    const keep = [];
+    for (const s of list) {
+      const t = st.clock - s.t0, D = s.r ? 110 : 170;
+      if (t > D) continue;
+      keep.push(s);
+      const k = t / D, a = 1 - k;
+      const R0 = (s.big ? 38 : 30) * (0.85 + 0.25 * EASE.out(k));
+      const dir = s.flip ? -1 : 1;
+      const a0 = -Math.PI * 0.85, a1 = a0 + Math.PI * 0.95 * EASE.out3(Math.min(1, k * 2.2));
+      g.save();
+      g.translate(s.x, s.y); g.scale(dir, 1);
+      g.globalCompositeOperation = 'lighter';
+      g.lineCap = 'round';
+      for (const [w, al] of [[(s.big ? 9 : 6) * (s.r ? 0.5 : 1), 0.28], [(s.big ? 3.5 : 2.5), 0.9]]) {
+        g.strokeStyle = `rgba(${s.col},${al * a})`; g.lineWidth = w;
+        g.beginPath(); g.arc(0, 0, R0, a0, a1); g.stroke();
+      }
+      g.restore();
+    }
+    st.streaks = keep;
   };
   P.tick = function (st, dt) {
     const tw = st.tweens || [];
     for (let i = tw.length - 1; i >= 0; i--) {
-      const t = tw[i], k = Math.min(1, (st.clock - t.t0) / t.ms), e = 1 - (1 - k) * (1 - k);
+      const t = tw[i], k = Math.min(1, (st.clock - t.t0) / t.ms), e = (t.ease || EASE.out)(k);
       t.obj[t.key] = t.from + (t.to - t.from) * e;
       if (k >= 1) { tw.splice(i, 1); t.res(); }
     }
     for (const uid of Object.keys(st.vis)) {
       const v = st.vis[uid];
-      if (v.flash > 0) v.flash = Math.max(0, v.flash - dt / 220);
+      if (v.flash > 0 && !(v.flashHold && R.Engine.time < v.flashHold)) v.flash = Math.max(0, v.flash - dt / 220);
     }
     if (st.ghost) for (const uid of Object.keys(st.ghost)) { const gh = st.ghost[uid]; gh.k -= dt / 400 * Math.max(0.05, gh.k - gh.to); if (gh.k <= gh.to + 0.002) delete st.ghost[uid]; }
   };
@@ -255,7 +312,7 @@
     if (!uid) return;
     const v = st.vis[uid];
     if (!v) return;
-    if (Math.abs(v.dx || 0) > 0.5) await P.tween(st, v, 'dx', 0, 150);
+    if (Math.abs(v.dx || 0) > 0.5) { P.squash(st, v, 0.97, 1.03, 80, 'out'); await P.tween(st, v, 'dx', 0, 190, 'inOut'); P.squash(st, v, 1.05, 0.95, 50, 'out').then(() => P.unsquash(st, v, 140)); }
     if (v.alive && v.pose !== 'ko') setPose(st, uid, 'idle');
   }
 
@@ -287,15 +344,28 @@
         setPose(st, e.uid, 'guard'); await st.pwait(260);
       } else {
         const ranged = u.wtype === 'bow';
-        if (!ranged) { setPose(st, e.uid, 'step'); await P.tween(st, v, 'dx', -64, 170); }
+        if (!ranged) {
+          // 溜め（少し縮む）→ 踏み込み（横に伸びる・残像）→ 振り
+          await P.squash(st, v, 1.05, 0.94, 70, 'out');
+          setPose(st, e.uid, 'step');
+          P.smear(st, v, 200);
+          P.squash(st, v, 0.95, 1.06, 90, 'out');
+          await P.tween(st, v, 'dx', -64, 190, 'inOut');
+          P.squash(st, v, 1.06, 0.95, 60, 'out').then(() => P.unsquash(st, v, 150));
+        } else await P.squash(st, v, 1.04, 0.96, 80, 'out').then(() => P.unsquash(st, v, 120));
         setPose(st, e.uid, _.actors.ATTACK_POSE[u.wtype] || 'slash');
+        P.smear(st, v, 160);
         sfx('attack');
         await st.pwait(ranged ? 260 : 200);
       }
     } else {
       if (e.cmd === 'defend') { await st.pwait(200); return; }
       if (e.cmd === 'spell') { setPose(st, e.uid, 'attack'); P.fx(st, 'cast', st.actor(e.uid).x, st.actor(e.uid).y - 30, {}); sfx('magic'); await st.pwait(420); return; }
-      await P.tween(st, v, 'dx', 26, 120);
+      await P.squash(st, v, 1.05, 0.95, 70, 'out');
+      P.smear(st, v, 180);
+      P.squash(st, v, 0.96, 1.05, 80, 'out');
+      await P.tween(st, v, 'dx', 26, 130, 'inOut');
+      P.unsquash(st, v, 150);
       setPose(st, e.uid, 'attack'); sfx('enemy_attack');
       await st.pwait(160);
     }
@@ -328,8 +398,20 @@
     const before = mpDmg ? v.mp : v.hp;
     if (mpDmg) v.mp = Math.max(0, v.mp - e.n); else v.hp = Math.max(0, v.hp - e.n);
     if (u.side === 'party' && !mpDmg && v.maxHp > 0) { st.ghost[e.uid] = { k: before / v.maxHp, to: v.hp / v.maxHp }; }
-    v.flash = 1;
+    v.flash = 1; v.flashHold = R.Engine.time + 50;   // 白い光を 2〜3 コマ保つ
     setPose(st, e.uid, 'hit');
+    // 当たり: ヒットストップ → 後ろへ仰け反り（戻りは少し行き過ぎて戻る）・つぶれ・武器の弧
+    P.hitstop(st);
+    {
+      const back = u.side === 'party' ? 10 : -10, base = v.dx || 0;
+      P.tween(st, v, 'dx', base + back * (e.crit ? 1.6 : 1), 70, 'out3').then(() => P.tween(st, v, 'dx', base, 220, 'back'));
+      P.squash(st, v, 1.06, 0.94, 50, 'out').then(() => P.unsquash(st, v, 180));
+      const at = ctx.actor && st.unit(ctx.actor);
+      if (ctx.act && (ctx.act.cmd === 'attack' || ctx.act.cmd === 'skill') && at) {
+        const c = centerOf(st, e.uid);
+        P.streak(st, c.x, c.y, at.side === 'party' ? (at.wtype || 'sword') : (ctx.fx === 'bite' || ctx.fx === 'claw' ? ctx.fx : 'hit'), at.side === 'party');
+      }
+    }
     P.pop(st, e.uid, (e.n | 0).toLocaleString('en-US'), e.crit ? 'crit' : mpDmg ? 'mp' : 'dmg', e.crit ? { tag: '会心' } : e.weak ? { tag: '弱点', tagColor: '#f4a07c' } : {});
     sfx(u.side === 'party' ? 'hurt' : e.crit ? 'crit' : 'hit');
     if (u.side === 'party' && e.n > 0) _.voice.play(u, 'hurt', { speed: st.speed(), rng: st.vrng, force: false, chance: true });
@@ -351,7 +433,7 @@
     const v = st.vis[e.uid], u = st.unit(e.uid);
     P.pop(st, e.uid, 'ミス', 'miss');
     sfx('miss');
-    if (v && u) { const d = u.side === 'party' ? 14 : -14; await P.tween(st, v, 'dx', (v.dx || 0) + d, 90); await P.tween(st, v, 'dx', 0, 120); }
+    if (v && u) { const d = u.side === 'party' ? 16 : -16; P.smear(st, v, 120); await P.tween(st, v, 'dx', (v.dx || 0) + d, 110, 'out3'); await P.tween(st, v, 'dx', 0, 170, 'inOut'); }
     else await st.pwait(200);
   };
   H.status = async (st, e) => {
@@ -446,7 +528,7 @@
     sfx('escape');
     const a = st.actor(e.uid);
     if (a) P.fx(st, 'smoke', a.x, a.y - 20, {});
-    P.tween(st, v, 'dx', u.side === 'party' ? 120 : -120, 380);
+    P.tween(st, v, 'dx', u.side === 'party' ? 120 : -120, 380, 'in');
     if (u.side === 'enemy') { v.alive = false; await P.tween(st, v, 'gone', 1, 380); }
     else await st.pwait(380);
   };
