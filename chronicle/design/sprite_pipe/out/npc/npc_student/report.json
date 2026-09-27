@@ -1,0 +1,319 @@
+{
+ "char": "npc_student",
+ "companion": null,
+ "npc": "npc_student",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/grp_star_3",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/sprite_pipe/out/npc/npc_student/src/npc_student_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 376.0,
+   "native_height_at_period": 47.0,
+   "scale_note": "描かれた格子のまま（47.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      25,
+      48
+     ],
+     "box": [
+      200,
+      80,
+      432,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.69
+    },
+    "walk_down_1": {
+     "size": [
+      27,
+      48
+     ],
+     "box": [
+      832,
+      80,
+      1080,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.09,
+     "scale": 1.0
+    },
+    "walk_down_2": {
+     "size": [
+      27,
+      48
+     ],
+     "box": [
+      1472,
+      80,
+      1720,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.09,
+     "scale": 1.0
+    },
+    "walk_up_0": {
+     "size": [
+      26,
+      48
+     ],
+     "box": [
+      200,
+      592,
+      440,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.66,
+     "scale": 1.0
+    },
+    "walk_up_1": {
+     "size": [
+      27,
+      49
+     ],
+     "box": [
+      832,
+      584,
+      1080,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.14,
+     "scale": 1.0
+    },
+    "walk_up_2": {
+     "size": [
+      27,
+      48
+     ],
+     "box": [
+      1472,
+      592,
+      1720,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.98,
+     "scale": 1.0
+    },
+    "walk_left_0": {
+     "size": [
+      22,
+      46
+     ],
+     "box": [
+      216,
+      1120,
+      424,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.3,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.8
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      26,
+      44
+     ],
+     "box": [
+      840,
+      1136,
+      1080,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.065
+    },
+    "walk_left_2": {
+     "size": [
+      25,
+      44
+     ],
+     "box": [
+      1480,
+      1136,
+      1712,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    },
+    "walk_right_0": {
+     "size": [
+      22,
+      45
+     ],
+     "box": [
+      216,
+      1640,
+      424,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      24,
+      45
+     ],
+     "box": [
+      848,
+      1640,
+      1072,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    },
+    "walk_right_2": {
+     "size": [
+      24,
+      45
+     ],
+     "box": [
+      1488,
+      1640,
+      1712,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.45,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.95
+     },
+     "scale": 1.013
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "pair_half",
+   "msg": "npc_grp_star_3.png の右半分（人物B）を使う",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_student）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 8 番（左向き・前の足） の身長が 44 ドット（ほかは 47）",
+   "slot": "walk_left_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 9 番（左向き・後ろの足） の身長が 44 ドット（ほかは 47）",
+   "slot": "walk_left_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 47 ドットあたり）: 首 0.40（アルン 0.29）・頭の幅 0.48（0.43）・肩 0.38（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.40425531914893614,
+    "head_w": 0.4787234042553191,
+    "shoulder": 0.3829787234042553,
+    "neck_clear": 0.4782608695652174
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 138%・頭の幅 112%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 1.121132094274752,
+    "neck": 1.3844360244826581
+   }
+  }
+ ]
+}

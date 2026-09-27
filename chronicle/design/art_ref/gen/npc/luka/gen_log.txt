@@ -1,1 +1,30 @@
 01:34:22 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:35:15   pitch in raw image: 5.94 px per art pixel (upright median 279 px / 47)
+01:35:16 sheet 1 -> art_ref/gen/npc/luka/npc_luka_s1.png (16 poses)
+01:35:16 pipeline: sheets.py ../art_ref/gen/npc/luka --npc luka --out out/npc/npc_luka --check
+01:35:46   | ■ メモ（2 件）
+01:35:46   |   - シート1: 頭身の比（歩き12コマの中央値、体 46 ドットあたり）: 首 0.37（アルン 0.29）・頭の幅 0.46（0.43）・肩 0.35（0.40）
+01:35:46   |   - 向きの見本（configs/refs/npc_luka）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:35:46   | 
+01:35:46   | ■ シートの状態
+01:35:46   |   シート1 歩き＋演技4: 確認あり  npc_luka_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+01:35:46 sheet 1: 0 redo lines
+01:57:01 sheet 1 attempt 2: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs) + notes
+01:58:27   pitch in raw image: 5.70 px per art pixel (upright median 268 px / 47)
+01:58:35 sheet 1 -> art_ref/gen/npc/luka/npc_luka_s1.png (16 poses)
+01:58:35 pipeline: sheets.py ../art_ref/gen/npc/luka --npc luka --out out/npc/npc_luka --check
+02:01:48   | ■ メモ（2 件）
+02:01:48   |   - シート1: 頭身の比（歩き12コマの中央値、体 46 ドットあたり）: 首 0.33（アルン 0.29）・頭の幅 0.39（0.43）・肩 0.35（0.40）
+02:01:48   |   - 向きの見本（configs/refs/npc_luka）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:01:48   | 
+02:01:48   | ■ シートの状態
+02:01:48   |   シート1 歩き＋演技4: 確認あり  npc_luka_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+02:01:48 sheet 1: 0 redo lines
+02:16:10 pipeline: sheets.py ../art_ref/gen/npc/luka --npc luka --out out/npc/npc_luka
+02:17:17   |   - 向きの見本（configs/refs/npc_luka）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:17:17   | 
+02:17:17   | ■ シートの状態
+02:17:17   |   シート1 歩き＋演技4: 確認あり  npc_luka_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+02:17:17   | 
+02:17:17   | packed field 148x212 | palette 52 + face 0
+02:17:19 to_v2 npc_luka: npc_luka → /home/user/others/chronicle/v2/assets/sprites/npc_luka |   field: 16 frames

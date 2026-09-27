@@ -34,11 +34,11 @@
     town_night: m({ ambient: 'rgb(106,88,170)', grade: { sh: [14, -4, 16], hi: [16, 6, -10], lift: 0, sat: 1.05, con: 1.08 }, vignette: 0.66, bloom: 0.6, thr: 0.62 }),
     // 家・宿・酒場の中（暖炉とランプの暖色、窓の外は青）
     interior: m({ ambient: 'rgb(150,116,122)', lightDir: [0.2, -1], shadow: 'rgba(34,14,24,0.4)', grade: { sh: [12, 0, 14], hi: [18, 8, -8], lift: 4, sat: 1.0, con: 1.05 }, vignette: 0.5, bloom: 0.45, thr: 0.64, rz: RZ_WARM, target: Object.assign({}, NIGHT_TARGET, { lum: [0.16, 0.28], darkHue: [260, 340] }) }),
-    // 夜の森（蛍と苔の緑、月は木々で細る）
+    // 夜の森（蛍とこけの緑、月は木々で細る）
     forest_night: m({ ambient: 'rgb(88,104,158)', shadow: 'rgba(8,16,30,0.45)', grade: { sh: [4, 2, 20], hi: [10, 14, -6], lift: 4, sat: 1.04, con: 1.06 }, vignette: 0.62, bloom: 0.55, lamp: { color: '#ffd07a', k: 0.8 }, target: DUNGEON_TARGET }),
     // 暗がりの階（ランタンの輪の中だけ見える。E6）
     dark: m({ ambient: 'rgb(54,48,104)', shadow: 'rgba(6,4,20,0.5)', grade: { sh: [8, -2, 22], hi: [18, 8, -8], lift: 3, sat: 1.02, con: 1.08 }, vignette: 0.72, bloom: 0.6, thr: 0.58, actorLift: 0.15, target: Object.assign({}, DUNGEON_TARGET, { lum: [0.08, 0.18] }) }),
-    // 千年樹の中（光る苔の青緑）
+    // 千年樹の中（光るこけの青緑）
     tree: m({ ambient: 'rgb(96,120,146)', lightDir: [0, -1], shadow: 'rgba(8,20,28,0.42)', grade: { sh: [2, 8, 18], hi: [12, 16, -4], lift: 4, sat: 1.04, con: 1.05 }, vignette: 0.62, bloom: 0.62, thr: 0.58, lamp: { color: '#c8ffb0', k: 0.75 }, target: DUNGEON_TARGET }),
     // 灯台の中（石と松明）
     tower: m({ ambient: 'rgb(108,98,172)', lightDir: [0.3, -1], grade: { sh: [10, -2, 20], hi: [18, 8, -8], lift: 4, sat: 1.02, con: 1.06 }, vignette: 0.64, bloom: 0.55, target: DUNGEON_TARGET }),

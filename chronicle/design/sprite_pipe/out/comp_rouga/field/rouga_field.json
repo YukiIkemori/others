@@ -1,0 +1,461 @@
+{
+ "character": "rouga",
+ "set": "field",
+ "image": "rouga_field.png",
+ "cell": [
+  45,
+  60
+ ],
+ "anchor": [
+  22,
+  57
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "walk_down_0": {
+   "x": 0,
+   "y": 0,
+   "w": 45,
+   "h": 60,
+   "anchor": [
+    22,
+    57
+   ],
+   "points": {
+    "head": [
+     23,
+     2
+    ],
+    "center": [
+     24,
+     30
+    ],
+    "front": [
+     7,
+     33
+    ]
+   }
+  },
+  "walk_down_1": {
+   "x": 45,
+   "y": 0,
+   "w": 45,
+   "h": 60,
+   "anchor": [
+    22,
+    57
+   ],
+   "points": {
+    "head": [
+     23,
+     3
+    ],
+    "center": [
+     24,
+     29
+    ],
+    "front": [
+     8,
+     34
+    ]
+   }
+  },
+  "walk_down_2": {
+   "x": 90,
+   "y": 0,
+   "w": 45,
+   "h": 60,
+   "anchor": [
+    22,
+    57
+   ],
+   "points": {
+    "head": [
+     24,
+     3
+    ],
+    "center": [
+     25,
+     29
+    ],
+    "front": [
+     9,
+     33
+    ]
+   }
+  },
+  "walk_up_0": {
+   "x": 0,
+   "y": 60,
+   "w": 45,
+   "h": 60,
+   "anchor": [
+    22,
+    57
+   ],
+   "points": {
+    "head": [
+     21,
+     5
+    ],
+    "center": [
+     21,
+     32
+    ],
+    "front": [
+     4,
+     15
+    ]
+   }
+  },
+  "walk_up_1": {
+   "x": 45,
+   "y": 60,
+   "w": 45,
+   "h": 60,
+   "anchor": [
+    22,
+    57
+   ],
+   "points": {
+    "head": [
+     21,
+     5
+    ],
+    "center": [
+     20,
+     31
+    ],
+    "front": [
+     4,
+     15
+    ]
+   }
+  },
+  "walk_up_2": {
+   "x": 90,
+   "y": 60,
+   "w": 45,
+   "h": 60,
+   "anchor": [
+    22,
+    57
+   ],
+   "points": {
+    "head": [
+     22,
+     6
+    ],
+    "center": [
+     21,
+     32
+    ],
+    "front": [
+     4,
+     15
+    ]
+   }
+  },
+  "walk_left_0": {
+   "x": 0,
+   "y": 120,
+   "w": 45,
+   "h": 60,
+   "anchor": [
+    22,
+    57
+   ],
+   "points": {
+    "head": [
+     21,
+     6
+    ],
+    "center": [
+     24,
+     31
+    ],
+    "front": [
+     14,
+     10
+    ]
+   }
+  },
+  "walk_left_1": {
+   "x": 45,
+   "y": 120,
+   "w": 45,
+   "h": 60,
+   "anchor": [
+    22,
+    57
+   ],
+   "points": {
+    "head": [
+     21,
+     8
+    ],
+    "center": [
+     25,
+     34
+    ],
+    "front": [
+     10,
+     35
+    ]
+   }
+  },
+  "walk_left_2": {
+   "x": 90,
+   "y": 120,
+   "w": 45,
+   "h": 60,
+   "anchor": [
+    22,
+    57
+   ],
+   "points": {
+    "head": [
+     21,
+     8
+    ],
+    "center": [
+     25,
+     34
+    ],
+    "front": [
+     10,
+     34
+    ]
+   }
+  },
+  "walk_right_0": {
+   "x": 0,
+   "y": 180,
+   "w": 45,
+   "h": 60,
+   "anchor": [
+    22,
+    57
+   ],
+   "points": {
+    "head": [
+     22,
+     6
+    ],
+    "center": [
+     19,
+     31
+    ],
+    "front": [
+     6,
+     24
+    ]
+   }
+  },
+  "walk_right_1": {
+   "x": 45,
+   "y": 180,
+   "w": 45,
+   "h": 60,
+   "anchor": [
+    22,
+    57
+   ],
+   "points": {
+    "head": [
+     22,
+     7
+    ],
+    "center": [
+     18,
+     34
+    ],
+    "front": [
+     2,
+     21
+    ]
+   }
+  },
+  "walk_right_2": {
+   "x": 90,
+   "y": 180,
+   "w": 45,
+   "h": 60,
+   "anchor": [
+    22,
+    57
+   ],
+   "points": {
+    "head": [
+     22,
+     7
+    ],
+    "center": [
+     18,
+     34
+    ],
+    "front": [
+     2,
+     21
+    ]
+   }
+  }
+ },
+ "anims": {
+  "walk_down": {
+   "frames": [
+    "walk_down_0",
+    "walk_down_1",
+    "walk_down_0",
+    "walk_down_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_down": {
+   "frames": [
+    "walk_down_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_up": {
+   "frames": [
+    "walk_up_0",
+    "walk_up_1",
+    "walk_up_0",
+    "walk_up_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_up": {
+   "frames": [
+    "walk_up_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_left": {
+   "frames": [
+    "walk_left_0",
+    "walk_left_1",
+    "walk_left_0",
+    "walk_left_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_left": {
+   "frames": [
+    "walk_left_0"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "walk_right": {
+   "frames": [
+    "walk_right_0",
+    "walk_right_1",
+    "walk_right_0",
+    "walk_right_2"
+   ],
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "loop": true
+  },
+  "stand_right": {
+   "frames": [
+    "walk_right_0"
+   ],
+   "ms": [
+    0
+   ]
+  }
+ },
+ "palette": [
+  "#0f0909",
+  "#170711",
+  "#200e07",
+  "#1d1915",
+  "#2c2821",
+  "#30262b",
+  "#3c3732",
+  "#575251",
+  "#767271",
+  "#979390",
+  "#b6b2ae",
+  "#d6d4d0",
+  "#f7f6f3",
+  "#2f110a",
+  "#301a0b",
+  "#3d1907",
+  "#4c2209",
+  "#482e18",
+  "#5a2508",
+  "#653411",
+  "#6e2e0b",
+  "#644122",
+  "#783b0e",
+  "#82360b",
+  "#933904",
+  "#934614",
+  "#805329",
+  "#905124",
+  "#ab4602",
+  "#a25301",
+  "#a9511d",
+  "#a9612a",
+  "#c15301",
+  "#9b6a36",
+  "#bc6126",
+  "#93765e",
+  "#c16402",
+  "#d46400",
+  "#b57c3e",
+  "#cd712f",
+  "#c47937",
+  "#e27501",
+  "#d98338",
+  "#ea8101",
+  "#d39449",
+  "#e19143",
+  "#cb9d61",
+  "#eda04a",
+  "#f3ac5a",
+  "#f4ad4e",
+  "#f5b85c",
+  "#e2bf98"
+ ],
+ "directions": [
+  "down",
+  "up",
+  "left",
+  "right"
+ ],
+ "target_height": 48,
+ "lantern_drawn": false,
+ "lantern_note": "no lantern drawn: the engine adds it when this companion leads"
+}

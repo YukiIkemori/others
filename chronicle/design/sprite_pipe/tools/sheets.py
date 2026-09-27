@@ -651,7 +651,7 @@ SCALE_SKIP = {'ko', 'act_lie', 'sleep_lie'}      # lying: the head is turned 90 
 scale2x, rescale_pixel = P.scale2x, P.rescale_pixel
 
 
-def check_scale(runs, rep, tol_redo=0.2, tol_check=0.12, fix=True):
+def check_scale(runs, rep, tol_redo=0.2, tol_check=0.12, fix=True, ok=()):
     """Drawn scale of each pose (head size vs the reference poses, tools/bodyscale.py). The bounding box misses a pose
     drawn smaller with a raised sword (the sword keeps the box at the target height). Each pose's scale is taken
     relative to the median of its group (battle / field) — the head match reads tilted heads a little small, so the
@@ -671,6 +671,9 @@ def check_scale(runs, rep, tol_redo=0.2, tol_check=0.12, fix=True):
             spec = SHEETS[n]
             for sid, v in sp.items():
                 if sid.startswith('wpn_') or sid in SCALE_SKIP or sid in SCALE_REFS[g]:   # the references define 100 %
+                    continue
+                if sid in ok:          # configs/overrides/<char>.json "scale_ok": looked at, the size is right
+                    rep.add(n, 'info', 'scale_ok', '%s の縮尺は目で確かめて OK（overrides の scale_ok）' % sid, slot=sid)
                     continue
                 sc, per = scale_of(v['img'], [h for r, h in refs if r != sid])
                 meas.append((n, sid, v, sc, per))
@@ -1025,7 +1028,9 @@ def main():
         CS.add_run_refs(fc, runs)
     check_facing(runs, fc, rep)
     check_lantern(runs, rep, fix=not args.no_autofix)
-    check_scale(runs, rep, fix=not args.no_autofix)
+    ov_p = os.path.join(HERE, 'configs', 'overrides', args.char + '.json')
+    scale_ok = set(json.load(open(ov_p)).get('scale_ok', [])) if os.path.exists(ov_p) else set()
+    check_scale(runs, rep, fix=not args.no_autofix, ok=scale_ok)
     check_palette(runs, ref_pal, rep)
     check_breath(runs, rep)
     check_faces(runs, rep)

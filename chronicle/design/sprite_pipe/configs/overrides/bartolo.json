@@ -1,0 +1,6 @@
+{
+ "scale_ok": [
+  "windup"
+ ],
+ "_note": "scale_ok: poses whose head-size scale alarm was a false alarm (same size as the hero's pose)"
+}

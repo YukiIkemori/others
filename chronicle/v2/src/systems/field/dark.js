@@ -1,8 +1,8 @@
 // FIELD — 暗がり（E6、V2_PLAN §2.5.9、WORLD_REDESIGN §6.4）
-//   map.dark（true = 全体、[{rect, cond}] = その範囲）の中は、一行の周り 4 マス・ともした燭台の周り 3 マス・泉の周り 3 マスの外を
+//   map.dark（true = 全体、[{rect, cond}] = その範囲）の中は、一行の周り 4 マス・ともしたしょく台の周り 3 マス・泉の周り 3 マスの外を
 //   暗い膜で覆う。膜は 1/4 の解像度の 1 枚に、焼いておいた穴の絵を destination-out で抜く（毎フレーム新しい物を作らない）。
 //   宝箱と泉のきらめきは膜の上（layers.js）。範囲に入ったら場所の名前の横に「暗い」（hud.js）。
-//   灯りの外で始まった戦闘は setup.dark（R.Mon.encounter の o.dark）。一行のランタンは数えない（燭台・泉の灯りだけ）。
+//   灯りの外で始まった戦闘は setup.dark（R.Mon.encounter の o.dark）。一行のランタンは数えない（しょく台・泉の灯りだけ）。
 //   松明（i_torch、RULES の use {type:'light', r, steps}）: R.Field.light(r, steps) の間は一行の灯りが r マスになり、灯りの中として数える。
 //   範囲の縁は 1.5 マスかけて少しずつ暗くする（四角い線に見せない、CONTENT-F の依頼）。
 (function (R) {
@@ -17,7 +17,7 @@
   D.on = function () { return !!(S.map && S.map.dark); };
   /** 一行の灯りの半径（マス）: 松明の間は広い */
   D.partyR = function () { return S.torch && S.torch.steps > 0 ? Math.max(D.PARTY_R, S.torch.r) : D.PARTY_R; };
-  /** (x, y) が燭台（ともした）・泉の光の中か */
+  /** (x, y) がしょく台（ともした）・泉の光の中か */
   D.litAt = function (x, y) {
     const m = S.map, G = R.Game || {};
     if (!m) return false;
@@ -102,7 +102,7 @@
     g.imageSmoothingEnabled = true;
     g.drawImage(mask, -4, -4, mask.width * 4, mask.height * 4);
     g.restore();
-    // 消えた燭台は遠くからでも輪郭が見える（WORLD §6.4）
+    // 消えたしょく台は遠くからでも輪郭が見える（WORLD §6.4）
     g.save();
     g.strokeStyle = 'rgba(190,180,230,0.35)'; g.lineWidth = 1;
     for (const o of m.objects || []) {

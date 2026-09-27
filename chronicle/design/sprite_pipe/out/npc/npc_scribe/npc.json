@@ -1,0 +1,55 @@
+{
+ "id": "npc_scribe",
+ "look": "npc_scribe",
+ "name": "記録院の書記",
+ "tier": "C",
+ "kind": "person",
+ "region": "prologue",
+ "group": "common_2",
+ "slot": "A",
+ "heightDots": {
+  "field": 47
+ },
+ "measureH": {
+  "field": 47
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#E4E8EE",
+ "mainHue": 210,
+ "mainName": "記録院の白",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_scribe_1",
+  "npc_scribe_2",
+  "npc_scribe_3",
+  "npc_scribe_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_scribe_s1.png"
+ },
+ "pair_file": "npc_grp_common_2.png",
+ "proportion": {
+  "1": {
+   "neck": 0.3404255319148936,
+   "head_w": 0.40425531914893614,
+   "shoulder": 0.37765957446808507,
+   "neck_clear": 0.7969924812030075
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

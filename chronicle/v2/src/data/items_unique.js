@@ -8,7 +8,7 @@
   'use strict';
   const U = (slot, name, o) => Object.assign({ name, slot, grade: 'rare', tier: 0, src: 'unique', grow: 'tier', price: 0 }, o);
   R.defs('items', {
-    u_hans_axe: U('weapon', '樵の大斧', { wtype: 'greatsword', art: 'axe', units: 's1v1', mult: 1.4, crit: 2, vs: { plant: 1.5 }, icon: 'greatsword',
+    u_hans_axe: U('weapon', 'きこりの大斧', { wtype: 'greatsword', art: 'axe', units: 's1v1', mult: 1.4, crit: 2, vs: { plant: 1.5 }, icon: 'greatsword',
       desc: '植物に大きなダメージ。\n持ち主とともに強くなる大斧。' }),
     u_ben_whistle: U('acc', 'ベンの呼び笛', { mods: { preemptPct: 10, escapePct: 25, spd: 4 }, icon: 'ring',
       desc: '先制しやすくなる。逃げやすくなる。\nすばやく動ける。' }),

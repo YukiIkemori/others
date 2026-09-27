@@ -97,9 +97,14 @@ def lit_mask(s):
     m = (s[..., 3] > 0) & (r > 180) & (g > 0.72 * r) & (b < 0.72 * r) & (r - b > 60)
     lab, n = ndimage.label(ndimage.binary_dilation(m, iterations=1))
     if n:
-        sizes = ndimage.sum(m, lab, range(1, n + 1))
-        keep = np.isin(lab, 1 + np.nonzero(sizes >= 6)[0])
-        m = m & keep
+        keep = np.zeros(n + 1, bool)
+        for i, sl in enumerate(ndimage.find_objects(lab)):
+            sub = m[sl] & (lab[sl] == i + 1)
+            h, w = sub.shape
+            # a window pane cluster: enough pixels, not a thin streak (thatch / tile highlights), filled box
+            if sub.sum() >= 10 and h >= 4 and w >= 3 and sub.sum() / float(h * w) >= 0.3:
+                keep[i + 1] = True
+        m = m & keep[lab]
     return m
 
 def find_windows(rgb32, alpha32):
@@ -128,11 +133,14 @@ def building(raw, theme, d, g, ncol=48, mean=None, std=None, sat=None, tone=None
         if tone:
             m = s[..., 3] > 0
             s[..., :3] = np.where(m[..., None], calibrate(s[..., :3], None, None, tone.get('sat')) * tone.get('mul', 1.0), s[..., :3])
+        # lit windows only on the wall face (thatch / tile highlights on the roof are not windows)
+        wall_y = int(round((g['wallr'][1] - 2) * k))
+        s_w = s.copy(); s_w[:wall_y, :, 3] = 0
         if t == 32:
-            emit32 = find_windows(s[..., :3], s[..., 3])
+            emit32 = find_windows(s_w[..., :3], s_w[..., 3])
         fn = '%s@%d.png' % (d['id'], t)
         save(s, os.path.join(dd, fn)); files[t] = fn
-        lit = lit_mask(s)
+        lit = lit_mask(s_w)
         e = s.copy(); e[..., 3] = np.where(lit, 255, 0)
         efn = '%s_emit@%d.png' % (d['id'], t)
         save(e, os.path.join(dd, efn)); efiles[t] = efn

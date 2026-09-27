@@ -133,7 +133,7 @@
         K.chest('lh3_c1', 17, 14, { item: 'i_salve', n: 2 }),
         K.chest('lh3_c2', 17, 18, { pool: 'p_T' }),
         P('beacon', 12, 5, { cond: 'prologue_boss' }),     // 灯室の大きな灯（ともった後）
-        P('brazier', 12, 5, { cond: '!prologue_boss' }),   // 消えた灯（仮の見た目は燭台）
+        P('brazier', 12, 5, { cond: '!prologue_boss' }),   // 消えた灯（仮の見た目はしょく台）
         ...PS('lantern', [[6, 13], [18, 13], [6, 19], [18, 19], [5, 7], [20, 7]]),
         ...PS('crate', [[15, 19], [16, 19]]), P('barrel', 9, 19), P('sack', 18, 16), P('bookshelf', 8, 13),
         ...PS('rock_small', [[7, 4], [17, 10]]),

@@ -1,0 +1,36 @@
+{
+ "id": "titta",
+ "name": "ティッタ",
+ "look": "titta",
+ "weaponType": "dagger",
+ "weaponDrawn": "short dagger (reverse grip)",
+ "heightDots": {
+  "battle": 56,
+  "field": 42,
+  "face": 80
+ },
+ "measureH": {
+  "battle": 60,
+  "field": 45
+ },
+ "row": "front",
+ "split4": false,
+ "sheets": {
+  "1": "comp_titta_s1.png",
+  "2": "comp_titta_s2.png",
+  "3": "comp_titta_s3.png",
+  "4": "comp_titta_s4.png",
+  "5": "comp_titta_s5.png"
+ },
+ "used": {
+  "weapons": "out/arun_v1/weapons/arun_weapons.json",
+  "grip_from": "out/arun_v1/battle_bare/arun_battle_bare.json"
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "surprise": "face_surprise",
+  "sad": "face_pain",
+  "angry": "face_neutral"
+ }
+}

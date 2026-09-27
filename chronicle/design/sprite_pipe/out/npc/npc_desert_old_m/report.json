@@ -1,0 +1,301 @@
+{
+ "char": "npc_desert_old_m",
+ "companion": null,
+ "npc": "npc_desert_old_m",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/grp_desert_2",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/sprite_pipe/out/npc/npc_desert_old_m/src/npc_desert_old_m_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 360.0,
+   "native_height_at_period": 45.0,
+   "scale_note": "描かれた格子のまま（45.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      31,
+      45
+     ],
+     "box": [
+      176,
+      104,
+      456,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.81
+    },
+    "walk_down_1": {
+     "size": [
+      31,
+      45
+     ],
+     "box": [
+      816,
+      104,
+      1096,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.98,
+     "scale": 0.962
+    },
+    "walk_down_2": {
+     "size": [
+      30,
+      45
+     ],
+     "box": [
+      1464,
+      104,
+      1736,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.86,
+     "scale": 0.962
+    },
+    "walk_up_0": {
+     "size": [
+      31,
+      44
+     ],
+     "box": [
+      176,
+      624,
+      456,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.86,
+     "scale": 1.037
+    },
+    "walk_up_1": {
+     "size": [
+      31,
+      44
+     ],
+     "box": [
+      816,
+      624,
+      1096,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.97,
+     "scale": 1.037
+    },
+    "walk_up_2": {
+     "size": [
+      31,
+      44
+     ],
+     "box": [
+      1456,
+      624,
+      1736,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.97,
+     "scale": 1.037
+    },
+    "walk_left_0": {
+     "size": [
+      33,
+      46
+     ],
+     "box": [
+      168,
+      1120,
+      464,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.58,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.08
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      33,
+      45
+     ],
+     "box": [
+      808,
+      1128,
+      1104,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.0,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.5
+     },
+     "scale": 1.0
+    },
+    "walk_left_2": {
+     "size": [
+      31,
+      45
+     ],
+     "box": [
+      1456,
+      1128,
+      1736,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.97,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.47
+     },
+     "scale": 1.0
+    },
+    "walk_right_0": {
+     "size": [
+      32,
+      45
+     ],
+     "box": [
+      176,
+      1640,
+      464,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.91,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.41
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      32,
+      45
+     ],
+     "box": [
+      816,
+      1640,
+      1104,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.14,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.64
+     },
+     "scale": 1.0
+    },
+    "walk_right_2": {
+     "size": [
+      32,
+      45
+     ],
+     "box": [
+      1456,
+      1640,
+      1744,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.02,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.52
+     },
+     "scale": 1.0
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "pair_half",
+   "msg": "npc_grp_desert_2.png の左半分（人物A）を使う",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_desert_old_m）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 45 ドットあたり）: 首 0.23（アルン 0.29）・頭の幅 0.44（0.43）・肩 0.44（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.23333333333333334,
+    "head_w": 0.4444444444444444,
+    "shoulder": 0.4444444444444444,
+    "neck_clear": 0.9
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 80%・頭の幅 104%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 1.0408534998698933,
+    "neck": 0.7990867579908676
+   }
+  }
+ ]
+}

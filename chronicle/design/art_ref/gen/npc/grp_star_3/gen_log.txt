@@ -1,0 +1,21 @@
+02:23:02 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+02:24:09   half A (npc_star_child, target 36):
+02:24:10   pitch in raw image: 5.22 px per art pixel (upright median 188 px / 36)
+02:24:10   half B (npc_student, target 47):
+02:24:11   pitch in raw image: 5.23 px per art pixel (upright median 246 px / 47)
+02:24:14 sheet 1 -> art_ref/gen/npc/grp_star_3/npc_grp_star_3.png (24 poses)
+02:24:14 pipeline: sheets.py ../art_ref/gen/npc/grp_star_3 --npc npc_star_child --out out/npc/npc_star_child --check
+02:25:56   |   - シート1: npc_grp_star_3.png の左半分（人物A）を使う
+02:25:56   |   - シート1: 頭身の比（歩き12コマの中央値、体 36 ドットあたり）: 首 0.42（アルン 0.29）・頭の幅 0.50（0.43）・肩 0.42（0.40）
+02:25:56   |   - 向きの見本（configs/refs/npc_star_child）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:25:56   | 
+02:25:56   | ■ シートの状態
+02:25:56   |   シート1 歩き: 確認あり  npc_star_child_s1.png  ドット 8.00px → 描かれた格子のまま（36.0 ドット）
+02:25:56 pipeline: sheets.py ../art_ref/gen/npc/grp_star_3 --npc npc_student --out out/npc/npc_student --check
+02:27:54   |   - シート1: npc_grp_star_3.png の右半分（人物B）を使う
+02:27:54   |   - シート1: 頭身の比（歩き12コマの中央値、体 47 ドットあたり）: 首 0.40（アルン 0.29）・頭の幅 0.48（0.43）・肩 0.38（0.40）
+02:27:54   |   - 向きの見本（configs/refs/npc_student）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:27:54   | 
+02:27:54   | ■ シートの状態
+02:27:54   |   シート1 歩き: 確認あり  npc_student_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+02:27:54 sheet 1: 0 redo lines

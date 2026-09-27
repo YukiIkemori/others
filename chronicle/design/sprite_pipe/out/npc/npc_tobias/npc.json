@@ -1,0 +1,48 @@
+{
+ "id": "tobias",
+ "look": "npc_tobias",
+ "name": "トビアス",
+ "tier": "B",
+ "kind": "person",
+ "region": "marsh",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 48
+ },
+ "measureH": {
+  "field": 50
+ },
+ "headgearExtraDots": 2,
+ "mainHex": "#4A8A78",
+ "mainHue": 165,
+ "mainName": "緑青",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_tobias_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.20833333333333331,
+   "head_w": 0.375,
+   "shoulder": 0.453125,
+   "neck_clear": 1.0292397660818713
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

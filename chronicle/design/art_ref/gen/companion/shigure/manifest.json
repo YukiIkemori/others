@@ -304,5 +304,206 @@
     ]
    }
   ]
+ },
+ {
+  "sheet": 4,
+  "file": "comp_shigure_s4.png",
+  "layout": "3x5",
+  "logical_cell": [
+   112,
+   80
+  ],
+  "image_px": [
+   4480,
+   1920
+  ],
+  "frames": [
+   {
+    "id": "windup",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     63,
+     73
+    ]
+   },
+   {
+    "id": "slash",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     80,
+     74
+    ]
+   },
+   {
+    "id": "thrust_ready",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     87,
+     72
+    ]
+   },
+   {
+    "id": "thrust",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     109,
+     72
+    ]
+   },
+   {
+    "id": "charge",
+    "row": 1,
+    "column": 5,
+    "logical_bbox": [
+     82,
+     53
+    ]
+   },
+   {
+    "id": "smash",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     54,
+     86
+    ]
+   },
+   {
+    "id": "cast_a",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     73,
+     75
+    ]
+   },
+   {
+    "id": "cast_b",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     61,
+     75
+    ]
+   },
+   {
+    "id": "item",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     65,
+     74
+    ]
+   },
+   {
+    "id": "evade",
+    "row": 2,
+    "column": 5,
+    "logical_bbox": [
+     66,
+     73
+    ]
+   },
+   {
+    "id": "bare_idle",
+    "row": 3,
+    "column": 1,
+    "logical_bbox": [
+     56,
+     70
+    ]
+   },
+   {
+    "id": "bare_windup",
+    "row": 3,
+    "column": 2,
+    "logical_bbox": [
+     62,
+     71
+    ]
+   },
+   {
+    "id": "bare_slash",
+    "row": 3,
+    "column": 3,
+    "logical_bbox": [
+     68,
+     72
+    ]
+   },
+   {
+    "id": "bare_thrust",
+    "row": 3,
+    "column": 4,
+    "logical_bbox": [
+     77,
+     70
+    ]
+   },
+   {
+    "id": "bare_cast",
+    "row": 3,
+    "column": 5,
+    "logical_bbox": [
+     70,
+     71
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 5,
+  "file": "comp_shigure_s5.png",
+  "layout": "1x4",
+  "logical_cell": [
+   96,
+   96
+  ],
+  "image_px": [
+   3072,
+   768
+  ],
+  "frames": [
+   {
+    "id": "face_neutral",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     78,
+     80
+    ]
+   },
+   {
+    "id": "face_smile",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     79,
+     80
+    ]
+   },
+   {
+    "id": "face_surprise",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     78,
+     80
+    ]
+   },
+   {
+    "id": "face_pain",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     78,
+     80
+    ]
+   }
+  ]
  }
 ]

@@ -8,7 +8,7 @@
 // 作り方:
 //   1. 見取り図（WORLD_REDESIGN §2.3、1 字 = 8×8 マス、28×24）を 224×192 に広げる（座標をノイズでゆがめて海岸線を自然に）。
 //   2. 縦切りの範囲（ファロス半島・北の野・ヴェルダの森）を上から描き直す: 陸の形・尾根（他の地方との境）・街道と小道・町の入口・寄り道。
-//   3. 物（道しるべの灯籠・看板・野営の跡・光る苔と蛍・岩）と、町の入口の建物・出口・spawn・出現表・閉じ方（DB.config.slice の崖崩れと番人）。
+//   3. 物（道しるべの灯籠・看板・野営の跡・光るこけと蛍・岩）と、町の入口の建物・出口・spawn・出現表・閉じ方（DB.config.slice の崖崩れと番人）。
 //   4. 検査: 縦切りの範囲の歩けるマスの数、全部の入口に着く、閉じ方で外へ出られない、30 歩の円に何も無い道のマス 0。
 //
 // 縦切りだけの閉じ方（V2_PLAN §3.2 の最後）: 北（雪原へ）・東（山地へ）・南（砂漠へ）の街道の峠に、cond {slice:true} の tilePatch（崩れた岩）と
@@ -237,7 +237,7 @@ const PL = {
   pharosGate: [100, 108],                         // ファロスの門（出口）
   lighthouse: [106, 124],                         // 灯台の扉
   junction: [87, 63],                             // 北の野の分かれ道
-  hutDoor: [68, 61],                              // 樵の休み小屋の戸口
+  hutDoor: [68, 61],                              // きこりの休み小屋の戸口
   fernS: [44, 81],                                // フェルンの南の門（北の門は迷いの森へ。CONTENT-F）
   yura: [26, 59],                                 // ユラの入口
   windhill: [40, 54],                             // 風鳴りの丘
@@ -279,7 +279,7 @@ rect(86, 71, 3, 8, '=');
 for (const [x, y] of [[98, 79], [102, 79], [99, 78], [101, 78], [100, 78], [97, 80], [103, 80]]) if (!'~O'.includes(get(x, y))) set(x, y, 'm');
 // 峠の道の岩をどける（尾根を道が抜ける所）
 for (const [x, y, w, h] of [[37, 40, 3, 8], [110, 62, 6, 3], [30, 116, 3, 7]]) for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) if ('mc'.includes(get(i, j))) set(i, j, '.');
-// 千年樹のまわりは深い森（入口は迷いの森の中。ワールドからは梢だけが見える）
+// 千年樹のまわりは深い森（入口は迷いの森の中。ワールドからはこずえだけが見える）
 for (let y = 78; y <= 90; y++) for (let x = 18; x <= 30; x++) if (Math.hypot(x - 24, y - 84) < 6.5) set(x, y, 'F');
 for (let y = 82; y <= 86; y++) for (let x = 22; x <= 26; x++) set(x, y, 'h');
 // フェルン・ロア・ファロス・ユラの町の塊（ワールドの上の建物の下は歩けない土地）
@@ -334,8 +334,8 @@ tilePatches.push({ cond: '!prologue_done', rect: [86, 72, 3, 6], rows: ['~~~', '
 npcs.push({ id: 'bridge_guard', look: 'npc_guard_2', name: '橋番', x: 89, y: 79, dir: 'w', move: 'still', pushable: false, talk: 'world_bridge_guard', reward: 'news', key: 'world_bridge_guard' });
 P('lamp_post', 85, 79); P('lamp_post', 89, 70); P('bollard', 85, 70);
 // 北の野の分かれ道
-S(89, 61, '北の野の分かれ道\n西 … ヴェルダの森・フェルン\n東 … ガルド山地\n南 … 跳ね橋・ファロス半島');
-// 樵の休み小屋（#1）
+S(89, 61, '北の野の分かれ道\n西 → ヴェルダの森・フェルン\n東 → ガルド山地\n南 → 跳ね橋・ファロス半島');
+// きこりの休み小屋（#1）
 B('w_hut', 66, 58, 4, 4, { roof: 'shingle', mat: 'log', lamp: true, chimney: true, small: false, door: { x: PL.hutDoor[0], y: PL.hutDoor[1], to: { map: 'hut', spawn: 'door' } } });
 P('log', 65, 62); P('stump', 71, 60); P('crate', 70, 62);
 spawns.hut = { x: 68, y: 62, dir: 's' };
@@ -356,7 +356,7 @@ exits.push({ x: PL.yura[0], y: PL.yura[1], w: 1, h: 1, to: { map: 'yura', spawn:
 set(PL.yura[0], PL.yura[1], 'd');
 spawns.yura = { x: 28, y: 59, dir: 'e' };
 for (const [x, y] of [[30, 58], [32, 60], [35, 59]]) P('lantern', x, y);
-// 千年樹（ワールドからは梢。森の解決で光の柱）
+// 千年樹（ワールドからはこずえ。森の解決で光の柱）
 P('tree_giant', 24, 84); P('tree_giant', 23, 83); P('tree_giant', 25, 83);
 P('beacon', 24, 82, { cond: 'cleared_r_forest' });
 // 風鳴りの丘（#2）
@@ -431,10 +431,10 @@ for (let i = objects.length - 1; i >= 0; i--) {
 function camp(x, y) { P('tent', x, y); P('lantern', x + 1, y + 1); P('log', x - 1, y + 1); }
 camp(96, 57); camp(58, 90); camp(25, 70); camp(96, 124 - 9);
 npcs.push({ id: 'traveler_plains', look: 'npc_merchant_2', name: '旅の行商人', x: 97, y: 59, dir: 's', move: 'still', talk: 'world_traveler_plains', reward: 'news', key: 'world_traveler_plains' });
-npcs.push({ id: 'woodcutter_road', look: 'npc_woodcutter_1', name: '樵', x: 59, y: 91, dir: 'w', move: 'still', talk: 'world_woodcutter', reward: 'hint', key: 'world_woodcutter' });
+npcs.push({ id: 'woodcutter_road', look: 'npc_woodcutter_1', name: 'きこり', x: 59, y: 91, dir: 'w', move: 'still', talk: 'world_woodcutter', reward: 'hint', key: 'world_woodcutter' });
 npcs.push({ id: 'shepherd', look: 'npc_old_m_2', name: '羊飼いの年寄り', x: 93, y: 93, dir: 'w', move: 'still', cond: 'prologue_done', talk: 'world_shepherd', reward: 'news', key: 'world_shepherd' });
 
-// --- 景色の飾り（森の光る苔・蛍、野の岩・切り株）。道と出口には置かない
+// --- 景色の飾り（森の光るこけ・蛍、野の岩・切り株）。道と出口には置かない
 function freeFor(x, y) {
   const c = get(x, y);
   if (!',;"hs'.includes(c)) return false;

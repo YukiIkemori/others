@@ -72,7 +72,7 @@
   t_dagger_sweep: {
     kind: 'tech',
     wtype: 'dagger',
-    name: '薙ぎ払い',
+    name: '裾払い',
     desc: 'ひと群れの敵を、まとめて突き払う。',
     mp: 5,
     target: 'group',

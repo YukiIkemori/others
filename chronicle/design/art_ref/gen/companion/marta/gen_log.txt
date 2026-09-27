@@ -1,0 +1,3 @@
+01:51:51 sheet 1 attempt 1: generating 3584x1536 (pitch 8, quality medium, 1 refs)
+01:52:34   pitch in raw image: 8.46 px per art pixel (upright median 550 px / 65)
+01:52:39 sheet 1 -> art_ref/gen/companion/marta/comp_marta_s1.png (7 poses)

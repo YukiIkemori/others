@@ -9,3 +9,11 @@
 01:11:27   | ■ シートの状態
 01:11:27   |   シート1 歩き＋演技4: 要作り直し  npc_melda_s1.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
 01:11:27 sheet 1: 0 redo lines
+01:36:07 pipeline: sheets.py ../art_ref/gen/npc/melda --npc melda --out out/npc/npc_melda
+01:36:34   |   「メルダ（npc_melda）のシート1の7番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 70%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:36:34   | 
+01:36:34   | ■ シートの状態
+01:36:34   |   シート1 歩き＋演技4: 要作り直し  npc_melda_s1.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:36:34   | 
+01:36:34   | packed field 156x340 | palette 52 + face 0
+01:36:35 to_v2 npc_melda: npc_melda → /home/user/others/chronicle/v2/assets/sprites/npc_melda |   field: 16 frames

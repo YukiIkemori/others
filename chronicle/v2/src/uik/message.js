@@ -348,7 +348,7 @@
       drawButtons(g, L);
       if (last && hasChoices && full) drawChoices(g, L);
       if (L.tall) {
-        const hint = 'タップで次へ ・ 長押しで早送り';
+        const hint = 'タップで次へ　・　長押しで早送り';
         UIK.text(g, hint, R.W / 2, L.y + L.h + 8 * k, { size: T.size.caption * k, color: T.color.text2, align: 'center', shadow: true });
       }
     }
@@ -384,9 +384,9 @@
           x -= 10 * k;
         }
       } else {
-        UIK.prompts(g, [{ btn: 'x', label: 'ログ' }, { btn: 'y', label: autoOn ? '自動送り 入' : '自動送り' }, { btn: 'r', label: '早送り' }], { x: L.x + L.w - 8 * k, y: L.btnY, align: 'right' });
+        UIK.prompts(g, [{ btn: 'x', label: 'ログ' }, { btn: 'y', label: autoOn ? '自動送り　入' : '自動送り' }, { btn: 'r', label: '早送り' }], { x: L.x + L.w - 8 * k, y: L.btnY, align: 'right' });
         // 文字の速さ（左上）
-        const lbl = autoOn ? '自動送り 中' : '文字の速さ  ' + (SPEED_LABEL[spd] || SPEED_LABEL.normal);
+        const lbl = autoOn ? '自動送り　中' : '文字の速さ  ' + (SPEED_LABEL[spd] || SPEED_LABEL.normal);
         UIK.chip(g, L.x + 2 * k, L.btnY - UIK.chipH(11) / 2, lbl, { size: 11, kind: autoOn ? 'gold' : 'plain', bg: autoOn ? undefined : 'rgba(14,16,26,0.6)', color: autoOn ? undefined : T.color.text2 });
       }
     }

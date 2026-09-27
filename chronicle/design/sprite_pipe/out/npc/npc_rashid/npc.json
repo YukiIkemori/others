@@ -1,0 +1,48 @@
+{
+ "id": "rashid",
+ "look": "npc_rashid",
+ "name": "ラシード",
+ "tier": "B",
+ "kind": "person",
+ "region": "desert",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 50
+ },
+ "measureH": {
+  "field": 54
+ },
+ "headgearExtraDots": 4,
+ "mainHex": "#3A3028",
+ "mainHue": 25,
+ "mainName": "焦げた黒茶",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_rashid_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.22,
+   "head_w": 0.44,
+   "shoulder": 0.44999999999999996,
+   "neck_clear": 0.8181818181818182
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

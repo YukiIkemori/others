@@ -13,7 +13,7 @@
     },
     r_forest: {
       name: 'ヴェルダの森', short: 'forest', n: 1,
-      chapter: { title: '千年樹の歌', summary: '歌を忘れた森は\n人を迷わせた。\n語り部が歌をつなぐと、\n森の主は目を覚まし、\n梢に歌の灯がともった。' },
+      chapter: { title: '千年樹の歌', summary: '歌を忘れた森は\n人を迷わせた。\n語り部が歌をつなぐと、\n森の主は目を覚まし、\nこずえに歌の灯がともった。' },
       page: 'k_page_forest', town: 'fern', dungeons: ['verda', 'elder'], bossTroop: 'tr_b_rooteater', zone: 'zw_forest', beacon: '千年樹の歌の灯', beaconAt: { map: 'world', x: 24, y: 82 },
     },
     r_desert: { name: 'ザハラ砂漠', short: 'desert', n: 2, chapter: { title: '名を売った王', summary: '' }, page: 'k_page_desert', town: 'kasim', beacon: '日輪の火', slice: 'locked' },

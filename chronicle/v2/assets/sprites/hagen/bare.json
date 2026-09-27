@@ -1,0 +1,333 @@
+{
+ "character": "hagen",
+ "set": "battle_bare",
+ "look": "hagen",
+ "source": "out/comp_hagen/battle_bare",
+ "cell": [
+  84,
+  75
+ ],
+ "anchor": [
+  49,
+  69
+ ],
+ "frames": [
+  {
+   "id": "bare_idle",
+   "x": 0,
+   "y": 0,
+   "w": 84,
+   "h": 75,
+   "anchor": [
+    49,
+    69
+   ],
+   "points": {
+    "head": [
+     44,
+     5
+    ],
+    "center": [
+     48,
+     41
+    ],
+    "front": [
+     23,
+     44
+    ],
+    "grip": [
+     48,
+     11
+    ],
+    "tip": [
+     87,
+     3
+    ]
+   }
+  },
+  {
+   "id": "bare_windup",
+   "x": 84,
+   "y": 0,
+   "w": 84,
+   "h": 75,
+   "anchor": [
+    49,
+    69
+   ],
+   "points": {
+    "head": [
+     36,
+     2
+    ],
+    "center": [
+     47,
+     37
+    ],
+    "front": [
+     21,
+     66
+    ],
+    "grip": [
+     67,
+     16
+    ],
+    "tip": [
+     90,
+     -16
+    ]
+   }
+  },
+  {
+   "id": "bare_slash",
+   "x": 168,
+   "y": 0,
+   "w": 84,
+   "h": 75,
+   "anchor": [
+    49,
+    69
+   ],
+   "points": {
+    "head": [
+     33,
+     3
+    ],
+    "center": [
+     45,
+     38
+    ],
+    "front": [
+     15,
+     42
+    ],
+    "grip": [
+     21,
+     42
+    ],
+    "tip": [
+     -12,
+     65
+    ]
+   }
+  },
+  {
+   "id": "bare_thrust",
+   "x": 252,
+   "y": 0,
+   "w": 84,
+   "h": 75,
+   "anchor": [
+    49,
+    69
+   ],
+   "points": {
+    "head": [
+     35,
+     3
+    ],
+    "center": [
+     43,
+     37
+    ],
+    "front": [
+     2,
+     26
+    ],
+    "grip": [
+     13,
+     29
+    ],
+    "tip": [
+     -25,
+     28
+    ]
+   }
+  },
+  {
+   "id": "bare_cast",
+   "x": 336,
+   "y": 0,
+   "w": 84,
+   "h": 75,
+   "anchor": [
+    49,
+    69
+   ],
+   "points": {
+    "head": [
+     46,
+     2
+    ],
+    "center": [
+     50,
+     37
+    ],
+    "front": [
+     14,
+     26
+    ],
+    "grip": [
+     57,
+     54
+    ],
+    "tip": [
+     68,
+     69
+    ]
+   }
+  }
+ ],
+ "poses": {
+  "bare_idle": [
+   0
+  ],
+  "bare_windup": [
+   1
+  ],
+  "bare_slash": [
+   2
+  ],
+  "bare_thrust": [
+   3
+  ],
+  "bare_cast": [
+   4
+  ]
+ },
+ "fps": {},
+ "anims": {},
+ "facing": "left",
+ "target_height": 68,
+ "attach": {
+  "bare_idle": {
+   "grip": [
+    25,
+    6
+   ],
+   "tip": [
+    64,
+    -2
+   ],
+   "angle": -12.9,
+   "length": 41,
+   "blade": 33.1,
+   "fit": 0.731,
+   "method": "blade"
+  },
+  "bare_cast": {
+   "grip": [
+    43,
+    52
+   ],
+   "tip": [
+    54,
+    67
+   ],
+   "angle": 52.4,
+   "length": 23,
+   "weapon_px": 91,
+   "fit": 0.948,
+   "method": "diff"
+  },
+  "bare_windup": {
+   "grip": [
+    46,
+    14
+   ],
+   "tip": [
+    69,
+    -18
+   ],
+   "angle": -55,
+   "length": 39,
+   "generic": true,
+   "method": "arun_scaled",
+   "why": "no_twin"
+  },
+  "bare_slash": {
+   "grip": [
+    6,
+    39
+   ],
+   "tip": [
+    -27,
+    62
+   ],
+   "angle": 145,
+   "length": 40,
+   "generic": true,
+   "method": "arun_scaled",
+   "why": "no_twin"
+  },
+  "bare_thrust": {
+   "grip": [
+    11,
+    26
+   ],
+   "tip": [
+    -27,
+    25
+   ],
+   "angle": -178.4,
+   "length": 38,
+   "generic": true,
+   "method": "arun_scaled",
+   "why": "no_twin"
+  }
+ },
+ "palette": [
+  "#0c0808",
+  "#13060f",
+  "#181310",
+  "#251710",
+  "#221d1a",
+  "#2e241c",
+  "#2e2926",
+  "#3f312b",
+  "#393430",
+  "#453f3a",
+  "#534d47",
+  "#635c54",
+  "#756d64",
+  "#8a8175",
+  "#a19789",
+  "#c2b5a5",
+  "#bac3cb",
+  "#cc6444",
+  "#362215",
+  "#462817",
+  "#4d3624",
+  "#5a351e",
+  "#4f3d34",
+  "#624630",
+  "#5c4b3f",
+  "#744223",
+  "#6d472a",
+  "#705c4d",
+  "#845735",
+  "#8d542b",
+  "#7e6241",
+  "#836d5b",
+  "#9c6a3f",
+  "#a96736",
+  "#967f6b",
+  "#a78053",
+  "#b57e49",
+  "#a9917b",
+  "#cc864c",
+  "#ca965c",
+  "#dea160",
+  "#c9ad86",
+  "#e8b270",
+  "#ecbe67",
+  "#332d19",
+  "#474021",
+  "#5a532c",
+  "#665f2f",
+  "#726d33",
+  "#857a36",
+  "#325d8e",
+  "#24111a"
+ ]
+}

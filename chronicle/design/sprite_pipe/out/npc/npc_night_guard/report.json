@@ -1,0 +1,421 @@
+{
+ "char": "npc_night_guard",
+ "companion": null,
+ "npc": "npc_night_guard",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/grp_star_4",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/sprite_pipe/out/npc/npc_night_guard/src/npc_night_guard_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 392.0,
+   "native_height_at_period": 49.0,
+   "scale_note": "描かれた格子のまま（49.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      30,
+      51
+     ],
+     "box": [
+      184,
+      56,
+      456,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.96,
+     "lantern": null
+    },
+    "walk_down_1": {
+     "size": [
+      31,
+      51
+     ],
+     "box": [
+      816,
+      56,
+      1096,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.01,
+     "scale": 1.0,
+     "lantern": null
+    },
+    "walk_down_2": {
+     "size": [
+      31,
+      51
+     ],
+     "box": [
+      1456,
+      56,
+      1736,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.97,
+     "scale": 1.0,
+     "lantern": null
+    },
+    "walk_up_0": {
+     "size": [
+      30,
+      49
+     ],
+     "box": [
+      184,
+      584,
+      456,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.87,
+     "scale": 0.9,
+     "lantern": null
+    },
+    "walk_up_1": {
+     "size": [
+      31,
+      49
+     ],
+     "box": [
+      816,
+      584,
+      1096,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.84,
+     "scale": 0.9,
+     "lantern": null
+    },
+    "walk_up_2": {
+     "size": [
+      31,
+      49
+     ],
+     "box": [
+      1456,
+      584,
+      1736,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.98,
+     "scale": 0.9,
+     "lantern": null
+    },
+    "walk_left_0": {
+     "size": [
+      26,
+      48
+     ],
+     "box": [
+      200,
+      1104,
+      440,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.21,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.71
+     },
+     "lantern": null
+    },
+    "walk_left_1": {
+     "size": [
+      30,
+      48
+     ],
+     "box": [
+      824,
+      1104,
+      1096,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0,
+     "lantern": null
+    },
+    "walk_left_2": {
+     "size": [
+      29,
+      48
+     ],
+     "box": [
+      1464,
+      1104,
+      1728,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0,
+     "lantern": null
+    },
+    "walk_right_0": {
+     "size": [
+      27,
+      49
+     ],
+     "box": [
+      192,
+      1608,
+      440,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.91,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 0.41
+     },
+     "lantern": null
+    },
+    "walk_right_1": {
+     "size": [
+      30,
+      49
+     ],
+     "box": [
+      824,
+      1608,
+      1096,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0,
+     "lantern": null
+    },
+    "walk_right_2": {
+     "size": [
+      31,
+      49
+     ],
+     "box": [
+      1456,
+      1608,
+      1736,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0,
+     "lantern": null
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "pair_half",
+   "msg": "npc_grp_star_4.png の左半分（人物A）を使う",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_night_guard）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 1 番（下向き・立ち） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_down_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 2 番（下向き・右足前） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_down_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 3 番（下向き・左足前） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_down_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 4 番（上向き・立ち） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_up_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 5 番（上向き・右足前） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_up_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 6 番（上向き・左足前） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_up_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 7 番（左向き・立ち） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_left_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 8 番（左向き・前の足） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_left_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 9 番（左向き・後ろの足） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_left_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 10 番（右向き・立ち） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_right_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 11 番（右向き・前の足） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_right_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "lantern_missing",
+   "msg": "シート1 の 12 番（右向き・後ろの足） にランタンが見えない（左手に持つはず）",
+   "slot": "walk_right_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 49 ドットあたり）: 首 0.35（アルン 0.29）・頭の幅 0.41（0.43）・肩 0.35（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.3469387755102041,
+    "head_w": 0.40816326530612246,
+    "shoulder": 0.3520408163265306,
+    "neck_clear": 0.6015037593984962
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 119%・頭の幅 96%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 0.9558858672274531,
+    "neck": 1.1881464914733018
+   }
+  }
+ ]
+}

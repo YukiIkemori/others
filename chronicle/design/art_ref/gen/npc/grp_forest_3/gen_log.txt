@@ -19,3 +19,4 @@
 01:28:14   | ■ シートの状態
 01:28:14   |   シート1 歩き: 確認あり  npc_woodcutter_s1.png  ドット 8.00px → 描かれた格子のまま（50.0 ドット）
 01:28:14 sheet 1: 0 redo lines
+02:33:18 pipeline: sheets.py ../art_ref/gen/npc/grp_forest_3 --npc npc_forest_child --out out/npc/npc_forest_child

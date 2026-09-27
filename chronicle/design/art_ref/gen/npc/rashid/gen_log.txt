@@ -41,3 +41,11 @@
 01:16:53   | ■ シートの状態
 01:16:53   |   シート1 歩き＋演技4: 要作り直し  npc_rashid_s1.png  ドット 8.00px → 描かれた格子のまま（54.0 ドット）
 01:16:53 sheet 1: 0 redo lines
+02:17:12 pipeline: sheets.py ../art_ref/gen/npc/rashid --npc rashid --out out/npc/npc_rashid
+02:18:20   |   「ラシード（npc_rashid）のシート1の7番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+02:18:20   | 
+02:18:20   | ■ シートの状態
+02:18:20   |   シート1 歩き＋演技4: 要作り直し  npc_rashid_s1.png  ドット 8.00px → 描かれた格子のまま（54.0 ドット）
+02:18:20   | 
+02:18:20   | packed field 240x292 | palette 52 + face 0
+02:18:21 to_v2 npc_rashid: npc_rashid → /home/user/others/chronicle/v2/assets/sprites/npc_rashid |   field: 16 frames

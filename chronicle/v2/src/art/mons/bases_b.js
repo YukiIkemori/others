@@ -293,7 +293,7 @@
       eye(face[0] + 4.8, face[1] - 2.6, 1.9, 1.9);
       B.ell(face[0] + 2.2, face[1] + 5 + atk, 3.4, 2.2 + atk * 1.6, P.hole, 2.6);
       B.fold(face[0] - 4, face[1] - 6, face[0] + 7, face[1] - 5.5, 0.9, gt, -2);
-      // 苔
+      // こけ
       B.ell(...T(-6, -16), 5, 2.4, P.moss, 1.2, { rot: 0.4, bulge: 0.6 });
       B.ell(...T(3, -38), 6, 2.2, P.moss, 1.21, { bulge: 0.6 });
       // 根の脚（手前）

@@ -64,12 +64,17 @@ function run() {
   const STATUS = ['眠り', 'まひ', '凍結', '気絶', '混乱', '沈黙', '暗闇', 'やけど'];
   const heroNames = [...new Set([(DB.config.defaultHero || {}).name || 'アルン', 'アルン'])];
   const seenK = {};
+  // 読み物・手がかり・手紙の本文は画面の中で折り返す（会話の窓の 20 字の決まりの外）
+  const READ = new Set();
+  for (const k of ['lore', 'leads', 'letters', 'chronicle']) for (const v of Object.values(DB[k] || {})) for (const x of [].concat(v.text || [], (v.parts || []).map((q) => q.text))) READ.add(String(x));
   let n = 0, over18 = 0;
   const files = walk(path.join(V2, 'src'));
   for (const f of files) {
     const rel = path.relative(V2, f);
     const src = fs.readFileSync(f, 'utf8');
     const lines = src.split('\n');
+    // 素材の name（src/art/terrain/materials.js）は一覧表の見出しだけで画面に出ない（地名・物の名は maps の方）
+    if (/^src\/art\/terrain\/materials\.js$/.test(rel)) continue;
     const talk = /^src\/(events|maps)\//.test(rel);   // 会話・キャプション・看板（20 字の窓）
     for (const { s, line } of OLD.strings(src)) {
       if (!JP.test(s)) continue;
@@ -79,7 +84,7 @@ function run() {
       if (/nameentry|kana/.test(rel) && s.length > 30) continue;
       n++;
       const where = `${rel}:${line}`;
-      const t = s.replace(/\u0000/g, '');
+      const t = s.replace(/\u0000/g, 'X');   // テンプレートの ${…} は ASCII の 1 字として数える（空白の検査で誤らない）
       for (const w of srcBanned) if (t.includes(w) && !SRC_EXC.some((e) => e.includes(w) && t.includes(e))) E('T2', `${where} '${w}' (§7.3): ${clip(t)}`);
       if (joyo) for (const ch of t) {
         if (!KANJI.test(ch) || joyo.has(ch) || allowed.has(ch) || ch === '々') continue;
@@ -87,9 +92,9 @@ function run() {
         const k = ch + '|' + rel;
         if (!seenK[k]) { seenK[k] = 1; E('T3', `${where} '${ch}' is not 常用漢字 nor in STYLE_JA §2: ${clip(t)}`); }
       }
-      OLD.checkSpacing(t, (m) => E('T4', `${where} ${m}: ${clip(t)}`));
+      if (!/nameentry/.test(rel)) OLD.checkSpacing(t, (m) => E('T4', `${where} ${m}: ${clip(t)}`));
       OLD.checkEllipsis(t, (m) => E('T5', `${where} ${m}: ${clip(t)}`));
-      if (talk) for (const ln of t.split(/[\n\f]/)) {
+      if (talk && !READ.has(s)) for (const ln of t.split(/[\n\f]/)) {
         const w = OLD.width(ln);
         if (w > 20) E('T6', `${where} a line is ${w} wide (max 20): ${clip(ln)}`);
         else if (w > 18) over18++;

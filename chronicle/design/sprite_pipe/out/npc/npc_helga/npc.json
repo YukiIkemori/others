@@ -1,0 +1,48 @@
+{
+ "id": "helga",
+ "look": "npc_helga",
+ "name": "ヘルガ",
+ "tier": "B",
+ "kind": "person",
+ "region": "mine",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 48
+ },
+ "measureH": {
+  "field": 50
+ },
+ "headgearExtraDots": 2,
+ "mainHex": "#A0582E",
+ "mainHue": 22,
+ "mainName": "赤銅",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_helga_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.36458333333333337,
+   "head_w": 0.5208333333333333,
+   "shoulder": 0.4895833333333333,
+   "neck_clear": 0.7112794612794613
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

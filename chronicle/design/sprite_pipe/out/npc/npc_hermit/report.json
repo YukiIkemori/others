@@ -1,0 +1,399 @@
+{
+ "char": "npc_hermit",
+ "companion": null,
+ "npc": "npc_hermit",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/hermit",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/hermit/npc_hermit_s1.png",
+   "size": [
+    2560,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x4",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 352.0,
+   "native_height_at_period": 44.0,
+   "scale_note": "描かれた格子のまま（44.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      27,
+      45
+     ],
+     "box": [
+      192,
+      96,
+      440,
+      488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.89
+    },
+    "walk_down_1": {
+     "size": [
+      31,
+      45
+     ],
+     "box": [
+      816,
+      96,
+      1096,
+      488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.73,
+     "scale": 1.078
+    },
+    "walk_down_2": {
+     "size": [
+      32,
+      45
+     ],
+     "box": [
+      1456,
+      96,
+      1744,
+      488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.75,
+     "scale": 1.0
+    },
+    "act_nod": {
+     "size": [
+      28,
+      39
+     ],
+     "box": [
+      2112,
+      144,
+      2368,
+      488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.47,
+     "scale": 0.857
+    },
+    "walk_up_0": {
+     "size": [
+      27,
+      44
+     ],
+     "box": [
+      192,
+      616,
+      440,
+      1000
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.72,
+     "scale": 0.896
+    },
+    "walk_up_1": {
+     "size": [
+      30,
+      45
+     ],
+     "box": [
+      824,
+      608,
+      1096,
+      1000
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.0,
+     "scale": 0.844
+    },
+    "walk_up_2": {
+     "size": [
+      30,
+      45
+     ],
+     "box": [
+      1464,
+      608,
+      1736,
+      1000
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.99,
+     "scale": 0.935
+    },
+    "act_surprise": {
+     "size": [
+      37,
+      43
+     ],
+     "box": [
+      2072,
+      624,
+      2400,
+      1000
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.71,
+     "scale": 1.0
+    },
+    "walk_left_0": {
+     "size": [
+      23,
+      44
+     ],
+     "box": [
+      208,
+      1128,
+      424,
+      1512
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.12,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.62
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      29,
+      42
+     ],
+     "box": [
+      824,
+      1144,
+      1088,
+      1512
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.47,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.97
+     },
+     "scale": 1.0
+    },
+    "walk_left_2": {
+     "size": [
+      28,
+      42
+     ],
+     "box": [
+      1472,
+      1144,
+      1728,
+      1512
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.32,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.82
+     },
+     "scale": 1.0
+    },
+    "act_call": {
+     "size": [
+      30,
+      46
+     ],
+     "box": [
+      2104,
+      1112,
+      2376,
+      1512
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.67,
+     "scale": 0.922
+    },
+    "walk_right_0": {
+     "size": [
+      23,
+      44
+     ],
+     "box": [
+      208,
+      1640,
+      424,
+      2024
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.27,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.77
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      28,
+      42
+     ],
+     "box": [
+      832,
+      1656,
+      1088,
+      2024
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.49,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.99
+     },
+     "scale": 1.0
+    },
+    "walk_right_2": {
+     "size": [
+      28,
+      43
+     ],
+     "box": [
+      1472,
+      1648,
+      1728,
+      2024
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.19,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.69
+     },
+     "scale": 1.039
+    },
+    "act_sig": {
+     "size": [
+      29,
+      46
+     ],
+     "box": [
+      2104,
+      1624,
+      2368,
+      2024
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.76,
+     "scale": 0.922
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_hermit）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 4 番（うなずく） の身長が 39 ドット（ほかは 44）",
+   "slot": "act_nod",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 4 番（うなずく） の縮尺が少し違う（頭の大きさで約 86%）。並べて見て気になるなら描き直し",
+   "slot": "act_nod",
+   "ask": null,
+   "data": {
+    "scale": 0.8571428571428572,
+    "per_ref": [
+     1.1000000000000005,
+     0.8250000000000002,
+     0.825
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 6 番（上向き・右足前） の縮尺が少し違う（頭の大きさで約 84%）。並べて見て気になるなら描き直し",
+   "slot": "walk_up_1",
+   "ask": null,
+   "data": {
+    "scale": 0.844155844155844,
+    "per_ref": [
+     0.9625000000000001,
+     0.8125,
+     0.8125
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 42 ドットあたり）: 首 0.26（アルン 0.29）・頭の幅 0.45（0.43）・肩 0.45（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.2619047619047619,
+    "head_w": 0.4523809523809524,
+    "shoulder": 0.4464285714285714,
+    "neck_clear": 0.8973684210526316
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 90%・頭の幅 106%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 1.0594401695104272,
+    "neck": 0.8969341161121984
+   }
+  }
+ ]
+}

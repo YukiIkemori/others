@@ -199,7 +199,7 @@
     const d = U(tall ? 104 : 88), r = U(tall ? 38 : 32);
     const pos = [[0, -1], [1, 0], [0, 1], [-1, 0], [0, 0]];
     st.rects.length = 0;
-    // 石の輪（苔の輪と、節の流れの細い線）
+    // 石の輪（こけの輪と、節の流れの細い線）
     g.save();
     if (st.phase === 'result') g.globalAlpha = 0;
     const ring = g.createRadialGradient(cx, cy, d * 0.3, cx, cy, d * 1.5);
@@ -223,7 +223,7 @@
         g.fillStyle = gr; g.beginPath(); g.arc(px, py, r * 2.4, 0, Math.PI * 2); g.fill();
         g.restore();
       }
-      // 石（丸い苔の石＋刻まれた音の印）
+      // 石（丸いこけの石＋刻まれた音の印）
       g.save();
       const body = g.createLinearGradient(px, py - r, px, py + r);
       body.addColorStop(0, lit ? rgba(col, 0.95) : 'rgba(70,78,92,0.95)');
@@ -259,10 +259,10 @@
     }
     // 言葉
     let msg = '', mc = C.text;
-    if (st.phase === 'intro') msg = st.round === 0 ? '歌の石が 歌いはじめる。よく 聞いて……' : 'つぎの節。音が ひとつ 増える……';
-    else if (st.phase === 'play') msg = '聞いて……';
-    else if (st.phase === 'input') msg = `同じ順に くり返して（${st.input.length} / ${L}）`;
-    else if (st.phase === 'judge') { msg = st.flash === 'ok' ? 'きれいに 重なった！' : 'あっ、ちがう音……'; mc = st.flash === 'ok' ? C.up : C.down; }
+    if (st.phase === 'intro') msg = st.round === 0 ? '歌の石が歌いはじめる。よく聞いて……。' : 'つぎの節。音がひとつ増える……。';
+    else if (st.phase === 'play') msg = '聞いて……。';
+    else if (st.phase === 'input') msg = `同じ順にくり返して（${st.input.length} / ${L}）`;
+    else if (st.phase === 'judge') { msg = st.flash === 'ok' ? 'きれいに重なった！' : 'あっ、ちがう音……。'; mc = st.flash === 'ok' ? C.up : C.down; }
     if (st.phase !== 'result') R.UIK.text(g, msg, cx, dotsY + U(24), { size: U(15), weight: 700, color: mc, align: 'center', maxW: w - U(40) });
     // 結果
     if (st.phase === 'result') {
@@ -272,11 +272,11 @@
       const halo = g.createRadialGradient(cx, y + U(178), 0, cx, y + U(178), U(120));
       halo.addColorStop(0, rgba(st.th.tint, 0.18)); halo.addColorStop(1, rgba(st.th.tint, 0));
       g.fillStyle = halo; g.fillRect(x + U(40), y + U(96), w - U(80), U(200));
-      R.UIK.text(g, '歌あわせの ひょうか', cx, y + U(116), { size: U(13), weight: 700, color: C.text2, align: 'center', track: U(2) });
+      R.UIK.text(g, '歌あわせのひょうか', cx, y + U(116), { size: U(13), weight: 700, color: C.text2, align: 'center', track: U(2) });
       const rc = st.rank === 'S' ? C.superRare : st.rank === 'A' ? C.goldHi : st.rank === 'B' ? C.rare : C.text2;
       R.UIK.text(g, st.rank, cx, y + U(142), { size: U(64), weight: 700, family: 'en', color: rc, align: 'center', shadow: 'rgba(236,180,90,0.35)', blur: 12 });
       R.UIK.text(g, `重なった音　${st.hits} / ${st.total}`, cx, y + U(226), { size: U(15), color: C.text, align: 'center' });
-      const words = { S: '森じゅうが 耳を すませていた。', A: 'きれいな 歌だった。', B: 'もう少しで 覚えられそう。', C: 'まだ 歌が ばらばらだ。' };
+      const words = { S: '森じゅうが耳をすませていた。', A: 'きれいな歌だった。', B: 'もう少しで覚えられそう。', C: 'まだ歌がばらばらだ。' };
       R.UIK.text(g, words[st.rank] || '', cx, y + U(254), { size: U(13), color: C.text3, align: 'center' });
       g.restore();
     }

@@ -1,0 +1,55 @@
+{
+ "id": "npc_pen_child",
+ "look": "npc_pen_child",
+ "name": "港の子ども",
+ "tier": "C",
+ "kind": "person",
+ "region": "prologue",
+ "group": "pen_3",
+ "slot": "A",
+ "heightDots": {
+  "field": 36
+ },
+ "measureH": {
+  "field": 36
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#B89A3A",
+ "mainHue": 48,
+ "mainName": "からし色",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_pen_child_1",
+  "npc_pen_child_2",
+  "npc_pen_child_3",
+  "npc_pen_child_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_pen_child_s1.png"
+ },
+ "pair_file": "npc_grp_pen_3.png",
+ "proportion": {
+  "1": {
+   "neck": 0.4027777777777778,
+   "head_w": 0.4722222222222222,
+   "shoulder": 0.4305555555555556,
+   "neck_clear": 0.6470588235294118
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

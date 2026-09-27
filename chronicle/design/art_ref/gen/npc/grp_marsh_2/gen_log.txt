@@ -1,0 +1,42 @@
+01:55:24 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+01:57:00   half A (npc_marsh_old_m, target 45):
+01:57:01   pitch in raw image: 4.89 px per art pixel (upright median 220 px / 45)
+01:57:01   half B (npc_marsh_old_f, target 43):
+01:57:02   pitch in raw image: 5.12 px per art pixel (upright median 220 px / 43)
+01:57:06 sheet 1 -> art_ref/gen/npc/grp_marsh_2/npc_grp_marsh_2.png (24 poses)
+01:57:06 pipeline: sheets.py ../art_ref/gen/npc/grp_marsh_2 --npc npc_marsh_old_m --out out/npc/npc_marsh_old_m --check
+01:59:23   |   - シート1: npc_grp_marsh_2.png の左半分（人物A）を使う
+01:59:23   |   - シート1: 頭身の比（歩き12コマの中央値、体 45 ドットあたり）: 首 0.29（アルン 0.29）・頭の幅 0.58（0.43）・肩 0.44（0.40）
+01:59:23   |   - 向きの見本（configs/refs/npc_marsh_old_m）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:59:23   | 
+01:59:23   | ■ シートの状態
+01:59:23   |   シート1 歩き: 確認あり  npc_marsh_old_m_s1.png  ドット 8.00px → 描かれた格子のまま（44.5 ドット）
+01:59:23 pipeline: sheets.py ../art_ref/gen/npc/grp_marsh_2 --npc npc_marsh_old_f --out out/npc/npc_marsh_old_f --check
+02:01:54   |   - シート1: npc_grp_marsh_2.png の右半分（人物B）を使う
+02:01:54   |   - シート1: 頭身の比（歩き12コマの中央値、体 43 ドットあたり）: 首 0.40（アルン 0.29）・頭の幅 0.47（0.43）・肩 0.42（0.40）
+02:01:54   |   - 向きの見本（configs/refs/npc_marsh_old_f）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:01:54   | 
+02:01:54   | ■ シートの状態
+02:01:54   |   シート1 歩き: 確認あり  npc_marsh_old_f_s1.png  ドット 8.00px → 描かれた格子のまま（43.0 ドット）
+02:01:54 sheet 1: 0 redo lines
+02:07:35 sheet 1 attempt 2: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs) + notes
+02:08:32   half A (npc_marsh_old_m, target 45):
+02:08:33   pitch in raw image: 5.20 px per art pixel (upright median 234 px / 45)
+02:08:33   half B (npc_marsh_old_f, target 43):
+02:08:34   pitch in raw image: 5.33 px per art pixel (upright median 229 px / 43)
+02:08:35 sheet 1 -> art_ref/gen/npc/grp_marsh_2/npc_grp_marsh_2.png (24 poses)
+02:08:35 pipeline: sheets.py ../art_ref/gen/npc/grp_marsh_2 --npc npc_marsh_old_m --out out/npc/npc_marsh_old_m --check
+02:09:06   |   - シート1: npc_grp_marsh_2.png の左半分（人物A）を使う
+02:09:06   |   - シート1: 頭身の比（歩き12コマの中央値、体 45 ドットあたり）: 首 0.36（アルン 0.29）・頭の幅 0.51（0.43）・肩 0.38（0.40）
+02:09:06   |   - 向きの見本（configs/refs/npc_marsh_old_m）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:09:06   | 
+02:09:06   | ■ シートの状態
+02:09:06   |   シート1 歩き: 確認あり  npc_marsh_old_m_s1.png  ドット 8.00px → 描かれた格子のまま（45.0 ドット）
+02:09:06 pipeline: sheets.py ../art_ref/gen/npc/grp_marsh_2 --npc npc_marsh_old_f --out out/npc/npc_marsh_old_f --check
+02:09:35   |   - シート1: npc_grp_marsh_2.png の右半分（人物B）を使う
+02:09:35   |   - シート1: 頭身の比（歩き12コマの中央値、体 43 ドットあたり）: 首 0.37（アルン 0.29）・頭の幅 0.43（0.43）・肩 0.41（0.40）
+02:09:35   |   - 向きの見本（configs/refs/npc_marsh_old_f）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:09:35   | 
+02:09:35   | ■ シートの状態
+02:09:35   |   シート1 歩き: 確認あり  npc_marsh_old_f_s1.png  ドット 8.00px → 描かれた格子のまま（43.0 ドット）
+02:09:35 sheet 1: 0 redo lines

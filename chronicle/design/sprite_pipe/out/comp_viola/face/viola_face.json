@@ -1,0 +1,165 @@
+{
+ "character": "viola",
+ "set": "face",
+ "image": "viola_face.png",
+ "cell": [
+  64,
+  84
+ ],
+ "anchor": [
+  32,
+  81
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "face_neutral": {
+   "x": 0,
+   "y": 0,
+   "w": 64,
+   "h": 84,
+   "anchor": [
+    32,
+    81
+   ],
+   "points": {
+    "head": [
+     47,
+     2
+    ],
+    "center": [
+     31,
+     47
+    ],
+    "front": [
+     2,
+     80
+    ]
+   }
+  },
+  "face_smile": {
+   "x": 64,
+   "y": 0,
+   "w": 64,
+   "h": 84,
+   "anchor": [
+    32,
+    81
+   ],
+   "points": {
+    "head": [
+     47,
+     2
+    ],
+    "center": [
+     31,
+     47
+    ],
+    "front": [
+     2,
+     80
+    ]
+   }
+  },
+  "face_surprise": {
+   "x": 128,
+   "y": 0,
+   "w": 64,
+   "h": 84,
+   "anchor": [
+    32,
+    81
+   ],
+   "points": {
+    "head": [
+     49,
+     2
+    ],
+    "center": [
+     31,
+     47
+    ],
+    "front": [
+     2,
+     80
+    ]
+   }
+  },
+  "face_pain": {
+   "x": 192,
+   "y": 0,
+   "w": 64,
+   "h": 84,
+   "anchor": [
+    32,
+    81
+   ],
+   "points": {
+    "head": [
+     50,
+     2
+    ],
+    "center": [
+     31,
+     48
+    ],
+    "front": [
+     2,
+     80
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#0c070b",
+  "#18141c",
+  "#272220",
+  "#26222e",
+  "#3f3734",
+  "#5f564f",
+  "#857b6f",
+  "#bbada2",
+  "#e1d4c5",
+  "#ede3d2",
+  "#f9f3e2",
+  "#4b2f1d",
+  "#6e4229",
+  "#77573c",
+  "#8e5837",
+  "#b7673f",
+  "#9b7550",
+  "#aa7049",
+  "#a59586",
+  "#d48d57",
+  "#c99f70",
+  "#e5a96e",
+  "#d1c2b1",
+  "#f2c085",
+  "#edcfa6",
+  "#fbd49b",
+  "#21152a",
+  "#33213e",
+  "#302d3e",
+  "#3e294f",
+  "#3d394e",
+  "#4b3261",
+  "#56386e",
+  "#4b465e",
+  "#62417d",
+  "#6c4a87",
+  "#734d90",
+  "#615a74",
+  "#7d5698",
+  "#885ea2",
+  "#685072",
+  "#7d5b91",
+  "#846f81",
+  "#9368ac",
+  "#96739f",
+  "#a071b6",
+  "#a478b9",
+  "#a38e9c"
+ ],
+ "facing": "slightly right",
+ "target_height": 80
+}

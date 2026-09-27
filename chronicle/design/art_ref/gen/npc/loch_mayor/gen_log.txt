@@ -9,3 +9,11 @@
 01:27:39   | ■ シートの状態
 01:27:39   |   シート1 歩き＋演技4: 確認あり  npc_loch_mayor_s1.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
 01:27:39 sheet 1: 0 redo lines
+02:08:54 pipeline: sheets.py ../art_ref/gen/npc/loch_mayor --npc loch_mayor --out out/npc/npc_loch_mayor
+02:10:10   |   - 向きの見本（configs/refs/npc_loch_mayor）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:10:10   | 
+02:10:10   | ■ シートの状態
+02:10:10   |   シート1 歩き＋演技4: 確認あり  npc_loch_mayor_s1.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+02:10:10   | 
+02:10:10   | packed field 192x232 | palette 50 + face 0
+02:10:11 to_v2 npc_loch_mayor: npc_loch_mayor → /home/user/others/chronicle/v2/assets/sprites/npc_loch_mayor |   field: 16 frames

@@ -1,0 +1,48 @@
+{
+ "id": "klaus",
+ "look": "npc_klaus",
+ "name": "クラウス",
+ "tier": "B",
+ "kind": "person",
+ "region": "marsh",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 47
+ },
+ "measureH": {
+  "field": 47
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#E0E4EA",
+ "mainHue": 210,
+ "mainName": "記録院の白",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_klaus_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.3404255319148936,
+   "head_w": 0.40425531914893614,
+   "shoulder": 0.37765957446808507,
+   "neck_clear": 0.7
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

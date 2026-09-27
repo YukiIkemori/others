@@ -9,3 +9,11 @@
 01:16:27   | ■ シートの状態
 01:16:27   |   シート1 歩き＋演技4: 要作り直し  npc_drake_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
 01:16:27 sheet 1: 0 redo lines
+01:37:22 pipeline: sheets.py ../art_ref/gen/npc/drake --npc drake --out out/npc/npc_drake
+01:37:57   |   「ドレイク（npc_drake）のシート1の16番（その人のしぐさ）だけ小さく描かれている（頭の大きさがほかのポーズの約 57%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:37:57   | 
+01:37:57   | ■ シートの状態
+01:37:57   |   シート1 歩き＋演技4: 要作り直し  npc_drake_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+01:37:57   | 
+01:37:57   | packed field 268x384 | palette 52 + face 0
+01:37:58 to_v2 npc_drake: npc_drake → /home/user/others/chronicle/v2/assets/sprites/npc_drake |   field: 16 frames

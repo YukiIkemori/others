@@ -84,10 +84,10 @@
     // 1. 画面は野営地へ
     await ev.fade('out', 600);
     await ev.warp('verda_1', 'camp');
-    // 2. 大灯火（梢に歌の灯）: ページ・ティア・光の柱・章の札（EVENTS の共通の筋）
+    // 2. 大灯火（こずえに歌の灯）: ページ・ティア・光の柱・章の札（EVENTS の共通の筋）
     await ev.clearRegion('r_forest');
     ev.sfx('light');
-    await ev.caption('千年樹の梢に、歌の灯がともった。\n森じゅうの苔と蛍が、\nいっせいに光りだす。', { ms: 3000 });
+    await ev.caption('千年樹のこずえに、歌の灯がともった。\n森じゅうのこけと蛍が、\nいっせいに光りだす。', { ms: 3000 });
     // 3. エルムの声が森じゅうに響く（v_elm_forest_06 は野営地で）
     await ev.say(null, '森の道は、もう閉ざさぬ。\n木こりたちも、じきに\n村へ帰れるだろう。', Object.assign({ voice: 'v_elm_forest_06' }, ELM));
     // 4. 野営地の人が立ち上がり、光る道を村へ帰っていく
@@ -109,10 +109,10 @@
     await ev.caption(f.SONG, { ms: 5200 });
     await ev.say(null, ['ピムが一番を歌いまちがえて、\n広場に笑い声が起きた。', 'ピムは真っ赤になって、\nもう一度、大きな声で歌った。']);
     if (ev.choiceOf('ch_forest_pim') === 'take') await ev.say('npc_pim', 'ぼくも行ったんだ！\n千年樹の抜け穴、\nぼくが開けたんだから！', { name: 'ピム' });
-    await ev.say('hanna', 'やっぱり、朝は千年樹の梢から\n生まれるんだねえ。\n……昔の樵歌のとおりさ。', { name: 'ハンナ' });
+    await ev.say('hanna', 'やっぱり、朝は千年樹のこずえから\n生まれるんだねえ。\n……昔のきこり歌のとおりさ。', { name: 'ハンナ' });
     // 6. 年代記に書く選択（ch_forest_write。痛みの側は R.Game の数を足す）
     await ev.say(null, '{hero}は、年代記を開いた。\nこの森のことを、どう書こう。');
-    const i = await ev.choose(['語り部の火が森を焼いたことも書く', 'エルムの誓いだけを書く'], { text: '年代記に 何を書く？' });
+    const i = await ev.choose(['語り部の火が森を焼いたことも書く', 'エルムの誓いだけを書く'], { text: '年代記に何を書く？' });
     if (i === 0) {
       ev.choice('ch_forest_write', 'pain');
       ev.addVar('pain_count', 1);
@@ -151,7 +151,7 @@
     await ev.say('elm', ['森の道は、もう閉ざさぬ。\n夏至の歌も、村の者たちが\nまた歌ってくれるだろう。', 'ただ、迷いの森の魔物は、\nわたしにも鎮められぬ。\n腕を磨くには、よいだろう。'], ELM);
   });
   E('elder_altar', async (ev) => {
-    if (ev.flag('forest_boss')) await ev.say(null, '根に囲まれた、古い祭壇だ。\n光る茸が、ぼんやりと\nあたりを照らしている。');
+    if (ev.flag('forest_boss')) await ev.say(null, '根に囲まれた、古い祭壇だ。\n光るきのこが、ぼんやりと\nあたりを照らしている。');
     else await ev.say(null, '根に囲まれた、古い祭壇だ。\nかじられた根から、\n白い粉がこぼれている。');
   });
 })(window.RPG);

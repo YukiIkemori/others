@@ -1,0 +1,55 @@
+{
+ "id": "npc_oil_carrier",
+ "look": "npc_oil_carrier",
+ "name": "灯守組合の油運び",
+ "tier": "C",
+ "kind": "person",
+ "region": "prologue",
+ "group": "common_3",
+ "slot": "B",
+ "heightDots": {
+  "field": 49
+ },
+ "measureH": {
+  "field": 49
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#4A4E5C",
+ "mainHue": 225,
+ "mainName": "煤けた紺鼠",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_oil_carrier_1",
+  "npc_oil_carrier_2",
+  "npc_oil_carrier_3",
+  "npc_oil_carrier_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_oil_carrier_s1.png"
+ },
+ "pair_file": "npc_grp_common_3.png",
+ "proportion": {
+  "1": {
+   "neck": 0.24489795918367346,
+   "head_w": 0.3979591836734694,
+   "shoulder": 0.4336734693877551,
+   "neck_clear": 0.8694444444444445
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

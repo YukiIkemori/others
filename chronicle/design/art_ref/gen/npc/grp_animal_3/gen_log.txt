@@ -1,0 +1,57 @@
+01:42:56 sheet 1 attempt 1: generation 2400x1280 (pitch 5, quality medium, 2 refs)
+01:43:53   half A (ani_camel, target 52):
+01:43:54   pitch in raw image: 5.21 px per art pixel (upright median 271 px / 52)
+01:43:55   half B (ani_sheep, target 22):
+01:43:55   pitch in raw image: 6.64 px per art pixel (upright median 146 px / 22)
+01:43:56 sheet 1 -> art_ref/gen/npc/grp_animal_3/npc_grp_animal_3.png (24 poses)
+01:43:56 pipeline: sheets.py ../art_ref/gen/npc/grp_animal_3 --npc ani_camel --out out/npc/ani_camel --check
+01:44:23   | 
+01:44:23   | ■ 画像 AI にそのまま送れる文
+01:44:23   |   「ラクダ（ani_camel）のシート1の12番（右向き・後ろの足）だけ大きさが違う。ほかのポーズと同じ身長にして、同じ条件で描き直して」
+01:44:23   | 
+01:44:23   | ■ シートの状態
+01:44:23   |   シート1 歩き: 要作り直し  ani_camel_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+01:44:23 pipeline: sheets.py ../art_ref/gen/npc/grp_animal_3 --npc ani_sheep --out out/npc/ani_sheep --check
+01:44:45   |   「ひつじ（ani_sheep）のシート1の4番（上向き・立ち）だけ大きさが違う。ほかのポーズと同じ身長にして、同じ条件で描き直して」
+01:44:45   |   「ひつじ（ani_sheep）のシート1の7番（左向き・立ち）だけ大きさが違う。ほかのポーズと同じ身長にして、同じ条件で描き直して」
+01:44:45   |   「ひつじ（ani_sheep）のシート1の10番（右向き・立ち）だけ大きさが違う。ほかのポーズと同じ身長にして、同じ条件で描き直して」
+01:44:45   | 
+01:44:45   | ■ シートの状態
+01:44:45   |   シート1 歩き: 要作り直し  ani_sheep_s1.png  ドット 8.00px → 描かれた格子のまま（21.0 ドット）
+01:44:45 sheet 1: 5 redo lines: シート1 の 12 番（右向き・後ろの足） の身長が 39 ドット（ほかは 48） / シート1 の 1 番（下向き・立ち） の身長が 32 ドット（ほかは 21） / シート1 の 4 番（上向き・立ち） の身長が 30 ドット（ほかは 21） / シート1 の 7 番（左向き・立ち） の身長が 31 ドット（ほかは 21） / シート1 の 10 番（右向き・立ち） の身長が 34 ドット（ほかは 21）
+01:44:46 sheet 1 fix2: edit B:walk_down_0,B:walk_up_0,B:walk_left_0,A:walk_right_2,B:walk_right_0 (window rows 1-4 cols 1-6, 3840x2048, pitch 8, quality medium)
+01:45:34   calibrated pitch 7.86 px (requested 8; 19 reference poses)
+01:45:36   pasted: A:walk_right_2 64x44, B:walk_down_0 17x21, B:walk_up_0 15x24, B:walk_left_0 24x21, B:walk_right_0 74x33
+01:45:36 pipeline: sheets.py ../art_ref/gen/npc/grp_animal_3 --npc ani_camel --out out/npc/ani_camel --check
+01:46:10   | ■ メモ（2 件）
+01:46:10   |   - シート1: npc_grp_animal_3.png の左半分（人物A）を使う
+01:46:10   |   - 向きの見本（configs/refs/ani_camel）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:46:10   | 
+01:46:10   | ■ シートの状態
+01:46:10   |   シート1 歩き: 確認あり  ani_camel_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+01:46:10 pipeline: sheets.py ../art_ref/gen/npc/grp_animal_3 --npc ani_sheep --out out/npc/ani_sheep --check
+01:46:37   | ■ 画像 AI にそのまま送れる文
+01:46:37   |   「ひつじ（ani_sheep）のシート1の4番（上向き・立ち）だけ大きさが違う。ほかのポーズと同じ身長にして、同じ条件で描き直して」
+01:46:37   |   「ひつじ（ani_sheep）のシート1の10番（右向き・立ち）だけ大きさが違う。ほかのポーズと同じ身長にして、同じ条件で描き直して」
+01:46:37   | 
+01:46:37   | ■ シートの状態
+01:46:37   |   シート1 歩き: 要作り直し  ani_sheep_s1.png  ドット 8.00px → 描かれた格子のまま（20.5 ドット）
+01:46:37 sheet 1: 2 redo lines: シート1 の 4 番（上向き・立ち） の身長が 24 ドット（ほかは 20） / シート1 の 10 番（右向き・立ち） の身長が 33 ドット（ほかは 20）
+01:46:40 sheet 1 fix3: edit B:walk_up_0,B:walk_right_0 (window rows 2-4 cols 1-6, 3840x1536, pitch 8, quality medium)
+01:47:15   calibrated pitch 7.86 px (requested 8; 16 reference poses)
+01:47:19   pasted: B:walk_up_0 15x24, B:walk_right_0 23x19
+01:47:19 pipeline: sheets.py ../art_ref/gen/npc/grp_animal_3 --npc ani_camel --out out/npc/ani_camel --check
+01:47:51   | ■ メモ（2 件）
+01:47:51   |   - シート1: npc_grp_animal_3.png の左半分（人物A）を使う
+01:47:51   |   - 向きの見本（configs/refs/ani_camel）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:47:51   | 
+01:47:51   | ■ シートの状態
+01:47:51   |   シート1 歩き: 確認あり  ani_camel_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+01:47:51 pipeline: sheets.py ../art_ref/gen/npc/grp_animal_3 --npc ani_sheep --out out/npc/ani_sheep --check
+01:48:13   | 
+01:48:13   | ■ 画像 AI にそのまま送れる文
+01:48:13   |   「ひつじ（ani_sheep）のシート1の4番（上向き・立ち）だけ大きさが違う。ほかのポーズと同じ身長にして、同じ条件で描き直して」
+01:48:13   | 
+01:48:13   | ■ シートの状態
+01:48:13   |   シート1 歩き: 要作り直し  ani_sheep_s1.png  ドット 8.00px → 描かれた格子のまま（20.0 ドット）
+01:48:13 sheet 1: 1 redo lines: シート1 の 4 番（上向き・立ち） の身長が 24 ドット（ほかは 20）

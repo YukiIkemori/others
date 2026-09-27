@@ -31,3 +31,11 @@
 01:34:22   | ■ シートの状態
 01:34:22   |   シート1 歩き＋演技4: 要作り直し  npc_zakuro_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
 01:34:22 sheet 1: 0 redo lines
+02:19:36 pipeline: sheets.py ../art_ref/gen/npc/zakuro --npc zakuro --out out/npc/npc_zakuro
+02:20:49   |   「ザクロ（npc_zakuro）のシート1の7番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 81%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+02:20:49   | 
+02:20:49   | ■ シートの状態
+02:20:49   |   シート1 歩き＋演技4: 要作り直し  npc_zakuro_s1.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+02:20:49   | 
+02:20:49   | packed field 188x268 | palette 52 + face 0
+02:20:50 to_v2 npc_zakuro: npc_zakuro → /home/user/others/chronicle/v2/assets/sprites/npc_zakuro |   field: 16 frames

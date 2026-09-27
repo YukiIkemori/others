@@ -1,0 +1,12 @@
+{
+ "attach": {
+  "bare_idle": {
+   "grip": [
+    4,
+    30
+   ],
+   "angle": 138
+  }
+ },
+ "_note_attach": "bare_idle: the armed idle holds the planted axe high, so the diff grip landed on the face; grip = front fist of the bare idle (sprite px)"
+}

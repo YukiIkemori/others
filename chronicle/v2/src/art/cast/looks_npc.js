@@ -75,7 +75,7 @@
     });
   }
   // 町の人の型の呼び名（話者の名前が npc.name に無いとき）
-  const NAME = { man: '町の人', woman: '町の人', old_m: 'おじいさん', old_f: 'おばあさん', child: '子ども', sailor: '船乗り', merchant: '商人', woodcutter: '樵',
+  const NAME = { man: '町の人', woman: '町の人', old_m: 'おじいさん', old_f: 'おばあさん', child: '子ども', sailor: '船乗り', merchant: '商人', woodcutter: 'きこり',
     guard: '兵士', keeper: '店の人', bard: '吟遊詩人', yura_folk: 'ユラの人' };
   for (const id of Object.keys(T)) {
     const mm = /^npc_([a-z_]+)_\d$/.exec(id);

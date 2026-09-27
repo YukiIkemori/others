@@ -4,7 +4,7 @@
 //     - legend の walk:false・solid（secret は「通れる壁」なので通れる）
 //     - 2 つの高さ（フェルン）: lv 1 は deck と ladder のマスだけ。lv 0 は deck の下をくぐれる（deck のマスも地面として歩ける）
 //     - 一方通行（E5）: map.oneway [{x, y, dir}] のマスは dir の向きに進むときだけ入れる（fromDir = 進む向き 's'|'n'|'e'|'w'。斜めは入れない）
-//     - 物: 宝箱・泉（2×2）・燭台・灯籠・看板・建物（扉のマスを除く）・R.DB.props の solid（soft は通り抜け）・レバー／穴のスイッチ
+//     - 物: 宝箱・泉（2×2）・しょく台・灯籠・看板・建物（扉のマスを除く）・R.DB.props の solid（soft は通り抜け）・レバー／穴のスイッチ
 //   R.Field._blocked(x, y, lv) → 人（NPC）を含めた当たり（今のマップ）
 (function (R) {
   'use strict';

@@ -1,0 +1,19 @@
+01:42:25 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:43:24   pitch in raw image: 6.35 px per art pixel (upright median 292 px / 46)
+01:43:25 sheet 1 -> art_ref/gen/npc/naturalist/npc_naturalist_s1.png (16 poses)
+01:43:25 pipeline: sheets.py ../art_ref/gen/npc/naturalist --npc naturalist --out out/npc/npc_naturalist --check
+01:44:15   | ■ メモ（2 件）
+01:44:15   |   - シート1: 頭身の比（歩き12コマの中央値、体 45 ドットあたり）: 首 0.33（アルン 0.29）・頭の幅 0.46（0.43）・肩 0.39（0.40）
+01:44:15   |   - 向きの見本（configs/refs/npc_naturalist）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:44:15   | 
+01:44:15   | ■ シートの状態
+01:44:15   |   シート1 歩き＋演技4: 確認あり  npc_naturalist_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+01:44:15 sheet 1: 0 redo lines
+02:16:08 pipeline: sheets.py ../art_ref/gen/npc/naturalist --npc naturalist --out out/npc/npc_naturalist
+02:17:11   |   - 向きの見本（configs/refs/npc_naturalist）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:17:11   | 
+02:17:11   | ■ シートの状態
+02:17:11   |   シート1 歩き＋演技4: 確認あり  npc_naturalist_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+02:17:11   | 
+02:17:11   | packed field 160x204 | palette 52 + face 0
+02:17:12 to_v2 npc_naturalist: npc_naturalist → /home/user/others/chronicle/v2/assets/sprites/npc_naturalist |   field: 16 frames

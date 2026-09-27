@@ -1,0 +1,55 @@
+{
+ "id": "npc_forest_man",
+ "look": "npc_forest_man",
+ "name": "森の村の男",
+ "tier": "C",
+ "kind": "person",
+ "region": "forest",
+ "group": "forest_1",
+ "slot": "A",
+ "heightDots": {
+  "field": 48
+ },
+ "measureH": {
+  "field": 48
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#4E6A36",
+ "mainHue": 95,
+ "mainName": "苔色",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_forest_man_1",
+  "npc_forest_man_2",
+  "npc_forest_man_3",
+  "npc_forest_man_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_forest_man_s1.png"
+ },
+ "pair_file": "npc_grp_forest_1.png",
+ "proportion": {
+  "1": {
+   "neck": 0.375,
+   "head_w": 0.45833333333333337,
+   "shoulder": 0.40625,
+   "neck_clear": 0.5458333333333334
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

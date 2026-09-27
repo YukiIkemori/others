@@ -1,4 +1,4 @@
-// CONTENT-F: フェルンの屋内 6 つ（V2_PLAN §3.2）: 宿「木漏れ日亭」・道具屋・リタの歌の家・捜索隊の詰所・樵頭ゴードの家・ピムの家
+// CONTENT-F: フェルンの屋内 6 つ（V2_PLAN §3.2）: 宿「木漏れ日亭」・道具屋・リタの歌の家・捜索隊の詰所・きこり頭ゴードの家・ピムの家
 //   どれも K.room（上 2 行が壁の立ち上がり、下の中ほどに 2 マスの戸口）。戸口のマスが出口（フェルンの戸の前へ）。
 (function (R) {
   'use strict';
@@ -83,7 +83,7 @@
       ],
     });
 
-    // ---------------------------------------------------------------- 樵頭ゴードの家 12×10
+    // ---------------------------------------------------------------- きこり頭ゴードの家 12×10
     interior('fern_gord', 'ゴードの家', 12, 10, {
       back: 'gord', floor: 'wood_floor', wall: 'wall_wood',
       objects: [
@@ -91,7 +91,7 @@
         K.prop('barrel', 1, 7), K.prop('crate', 4, 2), K.prop('lantern', 6, 3),
       ],
       npcs: [
-        K.npc('gord', 'npc_gord', 5, 4, { name: 'ゴード', title: '樵頭', dir: 's', talk: 'fern_gord', reward: 'lead', pushable: false }),
+        K.npc('gord', 'npc_gord', 5, 4, { name: 'ゴード', title: 'きこり頭', dir: 's', talk: 'fern_gord', reward: 'lead', pushable: false }),
       ],
     });
 

@@ -89,7 +89,7 @@
   F._arrive = function () {
     const m = S.map, G = R.Game;
     S.stat.arrive++;
-    if (S.torch && S.torch.steps > 0 && --S.torch.steps <= 0) { S.torch = null; F.hud.toast('松明の 火が 消えた', { icon: 'lamp', anchor: 'bl' }); }
+    if (S.torch && S.torch.steps > 0 && --S.torch.steps <= 0) { S.torch = null; F.hud.toast('松明の火が消えた', { icon: 'lamp', anchor: 'bl' }); }
     if (G) {
       G.steps = (G.steps || 0) + 1;
       const p = G.pos || (G.pos = {});
@@ -255,11 +255,11 @@
     try { R.Audio.sfx('chest'); } catch (e) { /* */ }
     if (loot.gold) {
       G.gold += loot.gold;
-      F.hud.toast(`${loot.gold} G を 手に入れた`, { icon: 'coin' });
+      F.hud.toast(`${loot.gold} Gを手に入れた`, { icon: 'coin' });
     } else if (loot.item) {
       const r = R.State.gain(loot.item, loot.n || 1) || {};
       const nm = r.name || (R.DB.items[loot.item] && R.DB.items[loot.item].name) || loot.item;
-      F.hud.toast(`${nm}${(loot.n || 1) > 1 ? ' ×' + loot.n : ''} を 手に入れた`, { icon: 'chest' });
+      F.hud.toast(`${nm}${(loot.n || 1) > 1 ? ' ×' + loot.n : ''}を手に入れた`, { icon: 'chest' });
     }
     F.chunks.dirtyAt(o.x, o.y);
     F.hud.refresh();
@@ -272,7 +272,7 @@
     if (!L.includes(o.id)) L.push(o.id);
     try { R.Audio.sfx('spring'); } catch (e) { /* */ }
     F.flash('#8fe8f0', 420);
-    F.hud.toast('泉の水で 元気になった', { icon: 'spring' });
+    F.hud.toast('泉の水で元気になった', { icon: 'spring' });
     F.hud.refresh();
     R.emit('spring:use', { map: m.id, id: o.id });
   };
@@ -291,7 +291,7 @@
     const G = R.Game, m = S.map;
     if (!G || !o.flag) return;
     if (o.by === 'guest' && !S.guest) {
-      if (how === 'act') F.hud.toast('小さな 穴だ。ここを 通れる人が いれば……', { icon: 'search', anchor: 'bl' });
+      if (how === 'act') F.hud.toast('小さな穴だ。ここを通れる人がいれば……。', { icon: 'search', anchor: 'bl' });
       return;
     }
     const on = o.look === 'plate' ? true : !G.flags[o.flag];

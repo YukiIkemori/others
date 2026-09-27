@@ -35,12 +35,12 @@
      50
     ],
     "grip": [
-     24,
-     4
+     14,
+     32
     ],
     "tip": [
-     15,
-     26
+     -8,
+     51
     ]
    }
   },
@@ -232,18 +232,19 @@
  "attach": {
   "bare_idle": {
    "grip": [
-    14,
-    2
+    4,
+    30
    ],
    "tip": [
-    5,
-    24
+    -18,
+    49
    ],
-   "angle": 112.6,
+   "angle": 138,
    "length": 29,
    "weapon_px": 270,
    "fit": 0.817,
-   "method": "diff"
+   "method": "diff",
+   "manual": true
   },
   "bare_cast": {
    "grip": [

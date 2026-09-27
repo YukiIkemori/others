@@ -6,8 +6,8 @@
 (function () {
   'use strict';
   const R = window.RPG;
-  const DT = 1000 / 30;          // 1 フレームで進める時間（場面はどれも時間で動くので 2 倍の刻みでよい）
-  const RENDER_EVERY = 2;        // 描く間隔（会話の頁割りは draw で決まるので時々は描く）
+  const DT = 50;                  // 1 フレームで進める時間（場面はどれも時間で動くので、20 fps の刻みでよい）
+  const RENDER_EVERY = 5;        // 描く間隔（会話の頁割りは draw で決まるので時々は描く）
   const BTNS = ['a', 'b', 'x', 'y', 'l', 'r', 'start', 'up', 'down', 'left', 'right', 'dash'];
   const B = (window.__bot = {
     route: null, goals: [], log: [], frames: 0, done: false, fail: null, warn: [],
@@ -196,7 +196,7 @@
     list.rows.forEach((row, i) => {
       const id = row.value, it = R.DB.items[id];
       if (!it || !(it.price > 0) || it.price > gold - reserve) return;
-      if (['weapon', 'shield', 'head', 'body', 'hands', 'feet'].includes(it.slot)) {
+      if (['weapon', 'shield', 'head', 'body', 'hands', 'feet', 'acc'].includes(it.slot) && !/^ac_ward_/.test(id)) {   // 状態よけより能力値のアクセサリ
         if ((G0.items[id] || 0) > 0) return;   // 買って付けなかった物がある
         let gain = 0;
         for (const c of R.Party.members()) {
@@ -240,20 +240,22 @@
     }
     const keys = rows.map((r) => r.key);
     if (keys.includes('retry') && keys.includes('inn')) {
-      let want = (B.wipeTo || 'retry');
-      // 本気で負けた（負ける台本でない）: 1 回目は直前の戦闘から。2 回目は宿へ戻り、道中で 12 戦ほど腕を磨いてから行き直す
-      if (B.cur && !B.cur.lose && !B.cur.wiped && !B.loseNext) {
-        B.realLoss = (B.realLoss || {});
-        const k = B.cur.troop || B.cur.zone;
-        B.realLoss[k] = (B.realLoss[k] || 0) + 1;
-        if (B.realLoss[k] >= 2 && B.realLoss[k] % 2 === 0) { want = 'inn'; B.grind = { n: 12, from: B.stats.battles.length + 1 }; note('lost twice to ' + k + ' → inn and grind 12 battles'); }
-      }
       if (B.cur && B.goLast !== B.cur.f + ':' + (eng ? eng.round : 0)) {
         B.goLast = B.cur.f + ':' + (eng ? eng.round : 0);
         B.cur.lost = (B.cur.lost || 0) + 1;
         if (B.cur.lost > 1) note('lost again (' + B.cur.lost + ') ' + (B.cur.troop || B.cur.zone));
         if (B.cur.lost > 6) { fail('lost ' + B.cur.lost + ' times in a row to ' + (B.cur.troop || B.cur.zone)); return; }
       }
+      let want = (B.wipeTo || 'retry');
+      // 本気で負けた（負ける台本でない）: 1 回目は直前の戦闘から。2 回目は宿へ戻り、道中で 12 戦ほど腕を磨いてから行き直す
+      if (B.cur && !B.cur.lose && B.goKey !== B.goLast) {
+        B.goKey = B.goLast;
+        B.realLoss = (B.realLoss || {});
+        const k = B.cur.troop || B.cur.zone;
+        B.realLoss[k] = (B.realLoss[k] || 0) + 1;
+        if (B.realLoss[k] >= 2 && B.realLoss[k] % 2 === 0) { want = 'inn'; B.grind = { n: 12, from: B.stats.battles.length + 1 }; note('lost twice to ' + k + ' → inn and grind 12 battles'); }
+        B.goWant = want;
+      } else if (B.goWant && B.goKey === B.goLast) want = B.goWant;
       if (B.cur && !B.cur.wiped) { B.cur.wiped = true; B.cur.lose = false; B.loseNext = null; B.stats.wipes.push({ battle: B.cur.troop || B.cur.zone, map: B.cur.map, to: want, gold: B.cur.gold, round: B.cur.rounds, f: B.frames }); note('gameover → ' + want); }
       menuPick(w, rows.findIndex((r) => r.key === want));
       return;
@@ -369,6 +371,11 @@
     }
     if (B.frames - g.t0 > (g.maxFrames || 60000)) { fail('goal ' + g.id + ' timed out'); return; }
     if (B.afterWipe && B.afterWipe.goldAfter == null) { B.afterWipe.goldAfter = G().gold; B.afterWipe.mapAfter = s.map.id; B.stats.wipes[B.stats.wipes.length - 1].after = { gold: G().gold, map: s.map.id }; note('after wipe: gold ' + B.afterWipe.goldBefore + ' → ' + G().gold + ' at ' + s.map.id); }
+    if (g.grind != null) {
+      if (B.stats.battles.length >= g.grind) { g._done = true; B.grind = null; note('grind goal ' + g.id + ' done (' + B.stats.battles.length + ' battles)'); return; }
+      if ((s.map.zones || []).length && s.map.kind !== 'town' && s.map.kind !== 'interior') { if (!B.grind) { B.grind = { n: g.grind - B.stats.battles.length, from: B.stats.battles.length }; note('grind to ' + g.grind + ' battles on ' + s.map.id); } }
+      else if (!g.ev) { g._skip = true; note('grind ' + g.id + ': no encounter zone here, skipped'); return; }
+    }
     if (g.setLose) { B.loseNext = g.setLose; if (g.wipeTo) B.wipeTo = g.wipeTo; g._done = true; note('armed lose ' + JSON.stringify(g.setLose)); return; }
     // 台本のメニュー操作（R5: セーブ・中断・読み込み）
     if (g.task) {

@@ -19,3 +19,19 @@
 01:11:20   | ■ シートの状態
 01:11:20   |   シート1 歩き: 要作り直し  npc_bard_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
 01:11:20 sheet 1: 0 redo lines
+02:22:48 pipeline: sheets.py ../art_ref/gen/npc/grp_common_1 --npc npc_traveler --out out/npc/npc_traveler
+02:23:32   |   - 向きの見本（configs/refs/npc_traveler）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:23:32   | 
+02:23:32   | ■ シートの状態
+02:23:32   |   シート1 歩き: OK  npc_traveler_s1.png  ドット 8.00px → 描かれた格子のまま（47.5 ドット）
+02:23:32   | 
+02:23:32   | packed field 114x208 | palette 52 + face 0
+02:23:32 pipeline: sheets.py ../art_ref/gen/npc/grp_common_1 --npc npc_bard --out out/npc/npc_bard
+02:24:16   |   「吟遊詩人（npc_bard）のシート1の6番（上向き・左足前）だけ大きく描かれている（頭の大きさがほかのポーズの約 136%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+02:24:16   | 
+02:24:16   | ■ シートの状態
+02:24:16   |   シート1 歩き: 要作り直し  npc_bard_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+02:24:16   | 
+02:24:16   | packed field 126x208 | palette 52 + face 0
+02:24:17 to_v2 npc_traveler: npc_traveler → /home/user/others/chronicle/v2/assets/sprites/npc_traveler |   field: 12 frames
+02:24:20 to_v2 npc_bard: npc_bard → /home/user/others/chronicle/v2/assets/sprites/npc_bard |   field: 12 frames

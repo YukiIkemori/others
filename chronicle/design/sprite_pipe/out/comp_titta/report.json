@@ -1,0 +1,1111 @@
+{
+ "char": "titta",
+ "companion": "titta",
+ "npc": null,
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/companion/titta",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/titta/comp_titta_s1.png",
+   "size": [
+    3584,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x4",
+    "logical_cell": [
+     112,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 480.0,
+   "native_height_at_period": 60.0,
+   "scale_note": "描かれた格子のまま（60.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "ref_front": {
+     "size": [
+      38,
+      62
+     ],
+     "box": [
+      280,
+      184,
+      616,
+      712
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_34": {
+     "size": [
+      37,
+      61
+     ],
+     "box": [
+      1176,
+      192,
+      1504,
+      712
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_side_left": {
+     "size": [
+      36,
+      60
+     ],
+     "box": [
+      2080,
+      200,
+      2400,
+      712
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_back": {
+     "size": [
+      34,
+      60
+     ],
+     "box": [
+      2984,
+      200,
+      3288,
+      712
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_idle_left": {
+     "size": [
+      55,
+      57
+     ],
+     "box": [
+      208,
+      992,
+      680,
+      1480
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_face": {
+     "size": [
+      63,
+      72
+     ],
+     "box": [
+      1072,
+      848,
+      1608,
+      1456
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_palette": {
+     "size": [
+      74,
+      36
+     ],
+     "box": [
+      1928,
+      992,
+      2552,
+      1312
+     ],
+     "air": 0,
+     "blur": 0.0
+    }
+   }
+  },
+  "2": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/titta/comp_titta_s2.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 356.0,
+   "native_height_at_period": 44.5,
+   "scale_note": "描かれた格子のまま（44.5 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      25,
+      46
+     ],
+     "box": [
+      200,
+      96,
+      432,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.02
+    },
+    "walk_down_1": {
+     "size": [
+      26,
+      46
+     ],
+     "box": [
+      840,
+      96,
+      1080,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.58,
+     "scale": 1.0
+    },
+    "walk_down_2": {
+     "size": [
+      26,
+      46
+     ],
+     "box": [
+      1480,
+      96,
+      1720,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.95,
+     "scale": 1.0
+    },
+    "walk_up_0": {
+     "size": [
+      26,
+      45
+     ],
+     "box": [
+      200,
+      616,
+      440,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.05,
+     "scale": 1.078
+    },
+    "walk_up_1": {
+     "size": [
+      25,
+      45
+     ],
+     "box": [
+      840,
+      616,
+      1072,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.75,
+     "scale": 1.078
+    },
+    "walk_up_2": {
+     "size": [
+      24,
+      45
+     ],
+     "box": [
+      1488,
+      616,
+      1712,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.78,
+     "scale": 1.0
+    },
+    "walk_left_0": {
+     "size": [
+      25,
+      44
+     ],
+     "box": [
+      200,
+      1136,
+      432,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      27,
+      44
+     ],
+     "box": [
+      832,
+      1136,
+      1080,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_left_2": {
+     "size": [
+      27,
+      44
+     ],
+     "box": [
+      1472,
+      1136,
+      1720,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_0": {
+     "size": [
+      25,
+      44
+     ],
+     "box": [
+      200,
+      1648,
+      432,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      27,
+      44
+     ],
+     "box": [
+      832,
+      1648,
+      1080,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.013
+    },
+    "walk_right_2": {
+     "size": [
+      27,
+      44
+     ],
+     "box": [
+      1472,
+      1648,
+      1720,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    }
+   }
+  },
+  "3": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/titta/comp_titta_s3.png",
+   "size": [
+    4160,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x5",
+    "logical_cell": [
+     104,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 480.0,
+   "native_height_at_period": 60.0,
+   "scale_note": "描かれた格子のまま（60.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "idle_a": {
+     "size": [
+      53,
+      61
+     ],
+     "box": [
+      184,
+      192,
+      640,
+      712
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.97,
+     "facing_cues": {
+      "head": 0.68,
+      "upper": 0.28
+     }
+    },
+    "idle_b": {
+     "size": [
+      49,
+      60
+     ],
+     "box": [
+      1032,
+      200,
+      1456,
+      712
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.01,
+     "facing_cues": {
+      "head": 0.64,
+      "upper": 0.37
+     },
+     "scale": 1.039
+    },
+    "step": {
+     "size": [
+      59,
+      58
+     ],
+     "box": [
+      1824,
+      216,
+      2328,
+      712
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.71,
+     "facing_cues": {
+      "head": 0.44,
+      "upper": 0.27
+     }
+    },
+    "guard": {
+     "size": [
+      69,
+      59
+     ],
+     "box": [
+      2616,
+      208,
+      3200,
+      712
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.5,
+     "facing_cues": {
+      "head": 0.72,
+      "upper": 0.78
+     },
+     "scale": 1.052
+    },
+    "hit": {
+     "size": [
+      54,
+      59
+     ],
+     "box": [
+      3512,
+      208,
+      3976,
+      712
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.72,
+     "facing_cues": {
+      "head": -0.28,
+      "upper": -0.44
+     },
+     "scale": 0.877
+    },
+    "weak": {
+     "size": [
+      53,
+      51
+     ],
+     "box": [
+      184,
+      1040,
+      640,
+      1480
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.16,
+     "facing_cues": {
+      "head": 0.18,
+      "upper": -0.03
+     },
+     "scale": 1.032
+    },
+    "ko": {
+     "size": [
+      73,
+      31
+     ],
+     "box": [
+      936,
+      1200,
+      1552,
+      1480
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "victory_a": {
+     "size": [
+      40,
+      73
+     ],
+     "box": [
+      1904,
+      864,
+      2256,
+      1480
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.18,
+     "facing_cues": {
+      "head": -0.31,
+      "upper": 0.13
+     },
+     "scale": 0.955
+    },
+    "victory_b": {
+     "size": [
+      57,
+      62
+     ],
+     "box": [
+      2664,
+      952,
+      3152,
+      1480
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 0.961
+    },
+    "glimmer": {
+     "size": [
+      50,
+      60
+     ],
+     "box": [
+      3528,
+      968,
+      3960,
+      1480
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.4,
+     "facing_cues": {
+      "head": 0.36,
+      "upper": 0.04
+     },
+     "scale": 1.0
+    }
+   }
+  },
+  "4": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/titta/comp_titta_s4.png",
+   "size": [
+    4480,
+    1920
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "3x5",
+    "logical_cell": [
+     112,
+     80
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 480.0,
+   "native_height_at_period": 60.0,
+   "scale_note": "描かれた格子のまま（60.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "windup": {
+     "size": [
+      45,
+      58
+     ],
+     "box": [
+      248,
+      120,
+      640,
+      616
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.14,
+     "facing_cues": {
+      "head": -0.1,
+      "upper": 0.24
+     },
+     "scale": 1.006
+    },
+    "slash": {
+     "size": [
+      58,
+      55
+     ],
+     "box": [
+      1096,
+      144,
+      1592,
+      616
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.03,
+     "facing_cues": {
+      "head": 0.61,
+      "upper": 0.42
+     },
+     "scale": 1.019
+    },
+    "thrust_ready": {
+     "size": [
+      62,
+      56
+     ],
+     "box": [
+      1976,
+      136,
+      2504,
+      616
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.53,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.63
+     }
+    },
+    "thrust": {
+     "size": [
+      73,
+      56
+     ],
+     "box": [
+      2824,
+      136,
+      3440,
+      616
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.43,
+     "facing_cues": {
+      "head": 0.83,
+      "upper": 0.61
+     },
+     "scale": 1.026
+    },
+    "charge": {
+     "size": [
+      61,
+      43
+     ],
+     "box": [
+      3768,
+      240,
+      4288,
+      616
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.33,
+     "facing_cues": {
+      "head": 0.02,
+      "upper": -0.35
+     },
+     "scale": 1.026
+    },
+    "smash": {
+     "size": [
+      40,
+      70
+     ],
+     "box": [
+      272,
+      664,
+      624,
+      1256
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.5,
+     "facing_cues": {
+      "head": 0.72,
+      "upper": -0.22
+     },
+     "scale": 0.935
+    },
+    "cast_a": {
+     "size": [
+      53,
+      60
+     ],
+     "box": [
+      1112,
+      744,
+      1568,
+      1256
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.67,
+     "facing_cues": {
+      "head": 0.87,
+      "upper": 0.8
+     },
+     "scale": 1.0
+    },
+    "cast_b": {
+     "size": [
+      42,
+      62
+     ],
+     "box": [
+      2056,
+      728,
+      2424,
+      1256
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.46,
+     "facing_cues": {
+      "head": 0.36,
+      "upper": 0.11
+     },
+     "scale": 1.0
+    },
+    "item": {
+     "size": [
+      46,
+      60
+     ],
+     "box": [
+      2936,
+      744,
+      3336,
+      1256
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.4,
+     "facing_cues": {
+      "head": 0.85,
+      "upper": 0.55
+     },
+     "scale": 1.0
+    },
+    "evade": {
+     "size": [
+      46,
+      59
+     ],
+     "box": [
+      3832,
+      752,
+      4232,
+      1256
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.16,
+     "facing_cues": {
+      "head": 0.43,
+      "upper": -0.26
+     },
+     "scale": 1.0
+    },
+    "bare_idle": {
+     "size": [
+      44,
+      59
+     ],
+     "box": [
+      256,
+      1392,
+      640,
+      1896
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.9,
+     "facing_cues": {
+      "head": 0.71,
+      "upper": 0.19
+     }
+    },
+    "bare_windup": {
+     "size": [
+      48,
+      58
+     ],
+     "box": [
+      1136,
+      1400,
+      1552,
+      1896
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.32,
+     "facing_cues": {
+      "head": 0.32,
+      "upper": -0.64
+     },
+     "scale": 0.974
+    },
+    "bare_slash": {
+     "size": [
+      53,
+      59
+     ],
+     "box": [
+      2008,
+      1392,
+      2464,
+      1896
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.16,
+     "facing_cues": {
+      "head": 0.69,
+      "upper": 0.46
+     },
+     "scale": 0.994
+    },
+    "bare_thrust": {
+     "size": [
+      61,
+      59
+     ],
+     "box": [
+      2872,
+      1392,
+      3392,
+      1896
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.11,
+     "facing_cues": {
+      "head": 0.62,
+      "upper": 0.48
+     },
+     "scale": 1.019
+    },
+    "bare_cast": {
+     "size": [
+      55,
+      59
+     ],
+     "box": [
+      3792,
+      1392,
+      4264,
+      1896
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.5,
+     "facing_cues": {
+      "head": 0.82,
+      "upper": 0.68
+     },
+     "scale": 1.0
+    }
+   }
+  },
+  "5": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/titta/comp_titta_s5.png",
+   "size": [
+    3072,
+    768
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "1x4",
+    "logical_cell": [
+     96,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 640.0,
+   "native_height_at_period": 80.0,
+   "scale_note": "描かれた格子のまま（80.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      80,
+      80,
+      680,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_smile": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      848,
+      80,
+      1448,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_surprise": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      1616,
+      80,
+      2216,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_pain": {
+     "size": [
+      71,
+      80
+     ],
+     "box": [
+      2384,
+      80,
+      2984,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "ground",
+   "msg": "2 行目の足元の高さが最大 21 ドットずれている。足元で揃えた",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 7 番（配色見本） の足元の影を消した",
+   "slot": "ref_palette",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "design_refs",
+   "msg": "設定画から向きの見本 6 枚と配色（52 色）を取った。<out>/refs に保存（承認後は tools/refs.py titta <out> で configs/refs に）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "check",
+   "code": "facing_unsure",
+   "msg": "シート3 の 5 番（ダメージ） の向きがはっきりしない（点数 -0.7）",
+   "slot": "hit",
+   "ask": null,
+   "data": {
+    "cues": {
+     "head": -0.28,
+     "upper": -0.44
+    }
+   }
+  },
+  {
+   "sheet": 3,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート3 の 5 番（ダメージ） の縮尺が少し違う（頭の大きさで約 88%）。並べて見て気になるなら描き直し",
+   "slot": "hit",
+   "ask": null,
+   "data": {
+    "scale": 0.8766233766233764,
+    "per_ref": [
+     0.825,
+     0.825,
+     0.9125000000000001,
+     0.8625
+    ],
+    "group_median": 0.9625000000000002
+   }
+  }
+ ]
+}

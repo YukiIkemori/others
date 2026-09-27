@@ -3,7 +3,7 @@
 //   量を R.Hd.track('chunk', id, bytes) で届け、持つ範囲（見えている範囲＋周り 1 チャンク＋進む向きに 2 チャンク先）を決め、外れた物を捨てる。
 //   state = {grid: R.MapUtil.grid(map), chests, lit, lamps, secrets}（R.Game の今の値）。
 //   マップに入る暗転の中で prewarm と見える範囲を焼く。見える範囲に焼けていないチャンクが来たら、その場で焼き切る（stat.miss に数える）。
-//   TERRAIN の結果に base が無い間（仮の実装）は、ここで素材の色から仮の地面を焼く（fb）。宝箱・燭台・隠し通路・tilePatches が変わったら、
+//   TERRAIN の結果に base が無い間（仮の実装）は、ここで素材の色から仮の地面を焼く（fb）。宝箱・しょく台・隠し通路・tilePatches が変わったら、
 //   そのチャンクだけ焼き直す（焼き終わるまで古い絵を出す）。焼き直すチャンクは R.Terrain.dirty の返す一覧と R.Terrain.takeDirty（'terrain:dirty'）。
 //   次のマップ: 出口・扉・階段に近づいたら（と F.enter の暗転の前から）その先の見える範囲を列で先に焼き（CK.preload）、入ったら使い回す。
 (function (R) {
@@ -291,7 +291,7 @@
     CK.sync();
   };
 
-  /** (x, y) のマスが変わった（宝箱・燭台・隠し通路・灯籠）: TERRAIN に知らせ、光の届く範囲のチャンクを焼き直す */
+  /** (x, y) のマスが変わった（宝箱・しょく台・隠し通路・灯籠）: TERRAIN に知らせ、光の届く範囲のチャンクを焼き直す */
   CK.dirtyAt = function (x, y, r) {
     if (!S.map) return;
     let list = null;

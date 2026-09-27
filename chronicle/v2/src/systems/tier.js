@@ -200,12 +200,12 @@
     R.UIK.text(g, st.title, cx, y + U(96), { size: U(tall ? 26 : 30), weight: 700, align: 'center', grad: [C.goldHi, C.gold, C.goldLo], shadow: 'rgba(236,180,90,0.35)', blur: 10, maxW: w - U(48) });
     R.UIK.rule(g, x + U(56), x + w - U(56), y + U(146), 0.16);
     if (st.page) {
-      const line = st.page + ' を 年代記に 綴じた';
+      const line = st.page + 'を年代記にとじた';
       const tw = R.UIK.measure(line, { size: U(13.5) }) + U(24);
       R.UIK.icon(g, 'book', cx - tw / 2, y + U(160), U(17), C.gold);
       R.UIK.text(g, line, cx - tw / 2 + U(24), y + U(160), { size: U(13.5), color: C.text });
     }
-    R.UIK.text(g, st.region + ' に 灯りが もどった', cx, y + U(186), { size: U(12), color: C.text3, align: 'center' });
+    R.UIK.text(g, st.region + 'に灯りがもどった', cx, y + U(186), { size: U(12), color: C.text3, align: 'center' });
     if (ct > 900) R.UIK.prompts(g, [{ btn: 'a', label: 'つづける' }], { x: x + w - U(20), y: y + h - U(22), align: 'right' });
     g.restore();
   }

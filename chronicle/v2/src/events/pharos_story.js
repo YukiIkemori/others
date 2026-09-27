@@ -50,7 +50,7 @@
     run: async (ev) => {
       const E = X();
       await E.narr(ev, '掲示が貼ってある。');
-      await E.narr(ev, '「ファロス灯台の守り歌、\n保管のため写し取り済み。\n――記録院 ファロス出張所」');
+      await E.narr(ev, '「ファロス灯台の守り歌、\n保管のため写し取り済み。\n――記録院ファロス出張所」');
       E.lore(ev, 'lo_ev_prologue');
     },
   };
@@ -83,7 +83,7 @@
       if (i === 0) { await ev.tavern({ swap: true }); return; }
       if (i === 1) {
         await E.say(ev, who, E.pick([
-          { cond: 'prologue_done', text: '噂なら、うちの客に\n聞いてごらん。\n酒場には噂が集まるものさ。' },
+          { cond: 'prologue_done', text: 'うわさなら、うちの客に\n聞いてごらん。\n酒場にはうわさが集まるものさ。' },
           { text: '灯台の火が消えてから、\n船乗りたちは陸で\n飲んでばかりさ。' },
         ]));
       }
@@ -171,7 +171,7 @@
       await Promise.all([ev.caption('年代記に序章\n『灯台守の歌』が記された。', { ms: 3000 }), ev.jingle('chapter')]);
       await ev.say('berna', 'この大陸には八つの大きな伝承がある。\nその全部が、いま白紙になりかけている。', { voice: 'v_berna_lute_03', face: 'berna:sad' });
       await ev.say('berna', '全部を語り直して、\n年代記を書き上げなさい。それが、\nあなたの修業の仕上げだよ。', { voice: 'v_berna_lute_04', face: 'berna:neutral' });
-      await ev.say('berna', '噂は酒場に集まるものさ。\nまずは港の酒場で\n聞いてごらん。', { face: 'berna:smile' });
+      await ev.say('berna', 'うわさは酒場に集まるものさ。\nまずは港の酒場で\n聞いてごらん。', { face: 'berna:smile' });
       ev.lead('l_main_rumors');
       await E.narr(ev, '{hero}は、手がかり帳を\n受け取った。');
       try { if (R.DB.tips && R.DB.tips.leads) await R.Screens.tip('leads'); } catch (e) { /* 札が無くても止めない */ }

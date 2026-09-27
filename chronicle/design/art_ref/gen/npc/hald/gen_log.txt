@@ -9,3 +9,11 @@
 01:21:03   | ■ シートの状態
 01:21:03   |   シート1 歩き＋演技4: 要作り直し  npc_hald_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
 01:21:03 sheet 1: 0 redo lines
+02:05:29 pipeline: sheets.py ../art_ref/gen/npc/hald --npc hald --out out/npc/npc_hald
+02:06:50   |   「ハルド（npc_hald）のシート1の12番（手を挙げて呼びかける）だけ小さく描かれている（頭の大きさがほかのポーズの約 72%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+02:06:50   | 
+02:06:50   | ■ シートの状態
+02:06:50   |   シート1 歩き＋演技4: 要作り直し  npc_hald_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+02:06:50   | 
+02:06:50   | packed field 216x276 | palette 52 + face 0
+02:06:53 to_v2 npc_hald: npc_hald → /home/user/others/chronicle/v2/assets/sprites/npc_hald |   field: 16 frames

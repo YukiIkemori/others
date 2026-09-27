@@ -1,0 +1,21 @@
+02:24:34 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+02:26:05   half A (npc_biblia_man, target 48):
+02:26:06   pitch in raw image: 4.83 px per art pixel (upright median 232 px / 48)
+02:26:07   half B (npc_biblia_woman, target 46):
+02:26:10   pitch in raw image: 4.85 px per art pixel (upright median 223 px / 46)
+02:26:19 sheet 1 -> art_ref/gen/npc/grp_biblia_1/npc_grp_biblia_1.png (24 poses)
+02:26:19 pipeline: sheets.py ../art_ref/gen/npc/grp_biblia_1 --npc npc_biblia_man --out out/npc/npc_biblia_man --check
+02:28:12   |   - シート1: npc_grp_biblia_1.png の左半分（人物A）を使う
+02:28:12   |   - シート1: 頭身の比（歩き12コマの中央値、体 48 ドットあたり）: 首 0.33（アルン 0.29）・頭の幅 0.42（0.43）・肩 0.34（0.40）
+02:28:12   |   - 向きの見本（configs/refs/npc_biblia_man）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:28:12   | 
+02:28:12   | ■ シートの状態
+02:28:12   |   シート1 歩き: 確認あり  npc_biblia_man_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+02:28:12 pipeline: sheets.py ../art_ref/gen/npc/grp_biblia_1 --npc npc_biblia_woman --out out/npc/npc_biblia_woman --check
+02:28:49   |   - シート1: npc_grp_biblia_1.png の右半分（人物B）を使う
+02:28:49   |   - シート1: 頭身の比（歩き12コマの中央値、体 46 ドットあたり）: 首 0.39（アルン 0.29）・頭の幅 0.41（0.43）・肩 0.38（0.40）
+02:28:49   |   - 向きの見本（configs/refs/npc_biblia_woman）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:28:49   | 
+02:28:49   | ■ シートの状態
+02:28:49   |   シート1 歩き: 確認あり  npc_biblia_woman_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+02:28:49 sheet 1: 0 redo lines

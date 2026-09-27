@@ -1,0 +1,45 @@
+{
+ "id": "ani_dog",
+ "look": "ani_dog",
+ "name": "いぬ",
+ "tier": "C",
+ "kind": "animal",
+ "region": "prologue",
+ "group": "animal_1",
+ "slot": "B",
+ "heightDots": {
+  "field": 22
+ },
+ "measureH": {
+  "field": 22
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#8A6040",
+ "mainHue": 30,
+ "mainName": "茶",
+ "lantern": false,
+ "recolor": false,
+ "recolorSets": 1,
+ "variants": [
+  "ani_dog"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "ani_dog_s1.png"
+ },
+ "pair_file": "npc_grp_animal_1.png",
+ "proportion": {},
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

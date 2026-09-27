@@ -17,7 +17,7 @@
     icon: 'ring',
   },
   ac_st_whitedragon: {
-    name: '白竜の逆鱗',
+    name: '白竜の逆うろこ',
     slot: 'acc',
     grade: 'super',
     tier: 5,
@@ -94,7 +94,7 @@
     icon: 'ring',
   },
   ac_st_lazaro: {
-    name: '大書記の栞',
+    name: '大書記のしおり',
     slot: 'acc',
     grade: 'super',
     tier: 8,
@@ -116,7 +116,7 @@
     icon: 'ring',
   },
   bd_st_ouroboros: {
-    name: '円環竜の逆鱗鎧',
+    name: '円環竜の逆うろこ鎧',
     slot: 'body',
     grade: 'super',
     tier: 9,

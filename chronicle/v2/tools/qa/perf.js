@@ -24,12 +24,41 @@ const KEY = { up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'Arrow
 // ---------------------------------------------------------------- 台本（QA が P1 で足す: 町を歩く・ワールドを走る・暗がり・術の戦闘・メニュー・出入り 10 回）
 const SCRIPTS = [
   {
-    id: 'stub_walk', desc: '仮の夜道を左右に歩く（P0 の骨組みの確かめ）', query: 'fixture=core_stub_road', frames: 600,
-    async run(page, h) { for (let i = 0; i < 4; i++) { await h.hold('right', 2200); await h.hold('left', 2200); } },
+    id: 'town_walk', desc: '町（ファロス、灯り 10 以上）を 600 フレームほど歩く', query: 'fixture=content_p_pharos', frames: 600,
+    async run(page, h) { for (let i = 0; i < 3; i++) { await h.hold('right', 1500); await h.hold('down', 800); await h.hold('left', 1500); await h.hold('up', 800); } },
   },
   {
-    id: 'stub_menu', desc: 'メニューの開け閉め 10 回', query: 'fixture=core_stub_road', frames: 300,
-    async run(page, h) { for (let i = 0; i < 10; i++) { await h.press('y'); await h.wait(250); await h.press('b'); await h.wait(250); } },
+    id: 'world_run', desc: 'ワールドを走る（ダッシュ、焼けていないチャンクが出ないか）', query: 'fixture=content_p_world_pharos', frames: 600,
+    async run(page, h) { await page.keyboard.down('ShiftLeft'); for (let i = 0; i < 3; i++) { await h.hold('up', 1800); await h.hold('left', 1800); await h.hold('down', 1800); await h.hold('right', 1800); } await page.keyboard.up('ShiftLeft'); },
+  },
+  {
+    id: 'dark_forest', desc: '迷いの森 2 階の暗がりを歩く', query: 'fixture=content_f_verda_2_dark', frames: 600,
+    async run(page, h) { for (let i = 0; i < 3; i++) { await h.hold('down', 1200); await h.hold('up', 1200); await h.hold('left', 900); await h.hold('right', 900); } },
+  },
+  {
+    id: 'battle_spell', desc: '効果の多い術の戦闘（BSCENE の見本、術の詠唱と当たり）', query: 'scene=bscene_spell', frames: 600,
+    async run(page, h) { await h.wait(9000); },
+  },
+  {
+    id: 'battle_boss', desc: 'ボスの戦闘（根食らい、入力待ちと A の連打）', query: 'scene=battle_b_rooteater', frames: 600,
+    async run(page, h) { for (let i = 0; i < 40; i++) { await h.press('a'); await h.wait(150); } },
+  },
+  {
+    id: 'menu', desc: 'メニューの開け閉め 10 回（ファロス）', query: 'fixture=content_p_pharos', frames: 300,
+    async run(page, h) { await h.wait(800); for (let i = 0; i < 10; i++) { await h.press('y'); await h.wait(300); await h.press('b'); await h.wait(300); } },
+  },
+  {
+    id: 'map_enter', desc: 'マップの出入り 10 回（ファロス ⇄ 潮風亭）', query: 'fixture=content_p_pharos', frames: 600,
+    async run(page, h) {
+      await h.wait(800);
+      for (let i = 0; i < 10; i++) {
+        const t0 = Date.now();
+        await h.eval(`RPG.Field.enter(${i % 2 ? "'pharos', 'warp'" : "'pharos_tavern', 'door'"})`);
+        await page.waitForFunction("RPG.Engine.fade.a < 0.01 && !RPG.Field._s.entering", null, { timeout: 10000 });
+        (h.enterMs = h.enterMs || []).push(await h.eval('RPG.Field._s.stat.enterMs || 0'));
+        void t0;
+      }
+    },
   },
 ];
 
@@ -56,12 +85,13 @@ async function measure(browser, base, sc, cpu) {
   };
   const t0 = Date.now();
   await sc.run(page, h);
+  const enterMs = h.enterMs ? h.enterMs.slice().sort((a, b) => a - b)[Math.floor(h.enterMs.length / 2)] : null;
   const r = await page.evaluate(() => {
     const R = window.RPG;
     return { frame: R.Engine.frameStats(), hd: R.Hd && R.Hd.stats ? R.Hd.stats() : null, stubs: R.Stubs.report().length };
   });
   await ctx.close();
-  return { ms: Date.now() - t0, avg: r.frame.avg, p95: r.frame.p95, max: r.frame.max, long: r.frame.long, frames: r.frame.n, hdBytes: r.hd ? r.hd.bytes : 0, errors };
+  return { enterMs, ms: Date.now() - t0, avg: r.frame.avg, p95: r.frame.p95, max: r.frame.max, long: r.frame.long, frames: r.frame.n, hdBytes: r.hd ? r.hd.bytes : 0, errors };
 }
 
 async function main() {
@@ -81,9 +111,9 @@ async function main() {
       for (let i = 0; i < runs; i++) rs.push(await measure(browser, base, sc, cpu));
       errs += rs.reduce((s, r) => s + r.errors.length, 0);
       const key = `${sc.id}@cpu${cpu}`;
-      out.results[key] = { desc: sc.desc, avg: median(rs.map((r) => r.avg)), p95: median(rs.map((r) => r.p95)), max: median(rs.map((r) => r.max)), long: median(rs.map((r) => r.long)), hdBytes: median(rs.map((r) => r.hdBytes)) };
+      out.results[key] = { desc: sc.desc, avg: median(rs.map((r) => r.avg)), p95: median(rs.map((r) => r.p95)), max: median(rs.map((r) => r.max)), long: median(rs.map((r) => r.long)), hdBytes: median(rs.map((r) => r.hdBytes)), enterMs: median(rs.map((r) => r.enterMs || 0)) };
       const x = out.results[key];
-      console.log(`${key.padEnd(22)} avg ${x.avg.toFixed(2)} ms  p95 ${x.p95.toFixed(2)}  max ${x.max.toFixed(1)}  long(>33ms) ${x.long}  hd ${(x.hdBytes / 1048576).toFixed(1)} MB`);
+      console.log(`${key.padEnd(22)} avg ${x.avg.toFixed(2)} ms  p95 ${x.p95.toFixed(2)}  max ${x.max.toFixed(1)}  long(>33ms) ${x.long}  hd ${(x.hdBytes / 1048576).toFixed(1)} MB${x.enterMs ? '  enter ' + x.enterMs.toFixed(0) + ' ms' : ''}`);
     }
   }
   await browser.close();

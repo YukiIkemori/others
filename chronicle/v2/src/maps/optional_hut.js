@@ -1,5 +1,5 @@
-// CONTENT-F: 樵の休み小屋（#1、寄り道の屋内 16×12、hut）。V2_PLAN §3.2・§3.3 F13・STORY_BIBLE §7.1・§10.2
-//   森の街道の脇。無料の寝床（全快）・途切れた樵の日誌（l_forest_hut）・記録官の帳面（l_main_recorder_forest・lo_ev_forest）・宝箱 1。
+// CONTENT-F: きこりの休み小屋（#1、寄り道の屋内 16×12、hut）。V2_PLAN §3.2・§3.3 F13・STORY_BIBLE §7.1・§10.2
+//   森の街道の脇。無料の寝床（全快）・途切れたきこりの日誌（l_forest_hut）・記録官の帳面（l_main_recorder_forest・lo_ev_forest）・宝箱 1。
 (function (R) {
   'use strict';
   R.onData(function () {
@@ -7,7 +7,7 @@
     const { g, door } = K.room(16, 12, { doorX: 7 });
     K.rect(g, 5, 6, 6, 3, 'c');
     K.def('hut', {
-      name: '樵の休み小屋', kind: 'interior', optional: true, region: 'r_forest', location: 'hut',
+      name: 'きこりの休み小屋', kind: 'interior', optional: true, region: 'r_forest', location: 'hut',
       legend: K.ROOM_LEGEND('wall_wood', 'wood_floor'),
       rows: g, outside: 'forest_dark',
       objects: [

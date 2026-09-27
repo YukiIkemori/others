@@ -1,3 +1,33 @@
 01:08:24 sheet 1 attempt 1: generating 3584x1536 (pitch 8, quality medium, 1 refs)
 01:09:06   pitch in raw image: 7.96 px per art pixel (upright median 533 px / 67)
 01:09:16 sheet 1 -> art_ref/gen/companion/brigitta/comp_brigitta_s1.png (7 poses)
+01:57:44 sheet 2 attempt 1: generating 1920x2048 (pitch 8, quality medium, 2 refs)
+02:01:14   pitch in raw image: 7.58 px per art pixel (upright median 379 px / 50)
+02:01:16 sheet 2 -> art_ref/gen/companion/brigitta/comp_brigitta_s2.png (12 poses)
+02:01:18 sheet 3 attempt 1: generating 3648x1344 (pitch 7, quality medium, 2 refs)
+02:04:30   pitch in raw image: 6.85 px per art pixel (upright median 459 px / 67)
+02:04:32 sheet 3 -> art_ref/gen/companion/brigitta/comp_brigitta_s3.png (10 poses)
+02:04:33 sheet 4 attempt 1: generating 3360x1440 (pitch 6, quality medium, 2 refs)
+02:07:45   pitch in raw image: 5.57 px per art pixel (upright median 373 px / 67)
+02:07:47   note: smash is 56x81 art px, larger than its cell 112x80 (clipped)
+02:07:47 sheet 4 -> art_ref/gen/companion/brigitta/comp_brigitta_s4.png (15 poses)
+02:07:47 sheet 5 attempt 1: generating 1536x1536 (pitch 8, quality medium, 2 refs)
+02:10:31   pitch in raw image: 7.59 px per art pixel (upright median 607 px / 80)
+02:10:32 sheet 5 -> art_ref/gen/companion/brigitta/comp_brigitta_s5.png (4 poses)
+02:10:32 pipeline: sheets.py ../art_ref/gen/companion/brigitta --companion brigitta --out out/comp_brigitta --check
+02:18:12   | ■ シートの状態
+02:18:12   |   シート1 設定画: OK  comp_brigitta_s1.png  ドット 8.00px → 描かれた格子のまま（67.0 ドット）
+02:18:12   |   シート2 フィールドの歩き: OK  comp_brigitta_s2.png  ドット 8.00px → 描かれた格子のまま（49.5 ドット）
+02:18:12   |   シート3 戦闘の基本ポーズ: OK  comp_brigitta_s3.png  ドット 8.00px → 描かれた格子のまま（67.0 ドット）
+02:18:12   |   シート4 戦闘の行動ポーズ＋武器なし版: 要作り直し  comp_brigitta_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+02:18:12   |   シート5 顔の表情: OK  comp_brigitta_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+02:18:13   size check charge: 1.01 of the hero's same pose (relative to cast_a)
+02:18:13   sheet 4 charge: size redo line ignored (same size as the hero's pose) -> overrides scale_ok
+02:18:13 no redo lines left
+02:18:13 pipeline: sheets.py ../art_ref/gen/companion/brigitta --companion brigitta --out out/comp_brigitta
+02:28:50   |   シート2 フィールドの歩き: OK  comp_brigitta_s2.png  ドット 8.00px → 描かれた格子のまま（49.5 ドット）
+02:28:50   |   シート3 戦闘の基本ポーズ: OK  comp_brigitta_s3.png  ドット 8.00px → 描かれた格子のまま（67.0 ドット）
+02:28:50   |   シート4 戦闘の行動ポーズ＋武器なし版: OK  comp_brigitta_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+02:28:50   |   シート5 顔の表情: OK  comp_brigitta_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+02:28:50   | 
+02:28:50   | packed field 111x224, battle 560x356, battle_bare 355x71, face 292x84 | palette 52 + face 48

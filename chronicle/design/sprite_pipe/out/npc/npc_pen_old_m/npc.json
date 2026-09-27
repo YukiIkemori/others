@@ -1,0 +1,55 @@
+{
+ "id": "npc_pen_old_m",
+ "look": "npc_pen_old_m",
+ "name": "港の老人",
+ "tier": "C",
+ "kind": "person",
+ "region": "prologue",
+ "group": "pen_2",
+ "slot": "A",
+ "heightDots": {
+  "field": 45
+ },
+ "measureH": {
+  "field": 45
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#8A7A4A",
+ "mainHue": 48,
+ "mainName": "油色の黄土",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_pen_old_m_1",
+  "npc_pen_old_m_2",
+  "npc_pen_old_m_3",
+  "npc_pen_old_m_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_pen_old_m_s1.png"
+ },
+ "pair_file": "npc_grp_pen_2.png",
+ "proportion": {
+  "1": {
+   "neck": 0.3333333333333333,
+   "head_w": 0.4,
+   "shoulder": 0.43333333333333335,
+   "neck_clear": 0.8055555555555556
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

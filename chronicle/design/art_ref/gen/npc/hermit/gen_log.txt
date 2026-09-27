@@ -1,0 +1,30 @@
+01:35:43 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:36:36   pitch in raw image: 5.66 px per art pixel (upright median 249 px / 44)
+01:36:37 sheet 1 -> art_ref/gen/npc/hermit/npc_hermit_s1.png (16 poses)
+01:36:37 pipeline: sheets.py ../art_ref/gen/npc/hermit --npc hermit --out out/npc/npc_hermit --check
+01:37:12   | 
+01:37:12   | ■ 画像 AI にそのまま送れる文
+01:37:12   |   「山の隠者（npc_hermit）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さ 90%・頭の幅 89%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して」
+01:37:12   | 
+01:37:12   | ■ シートの状態
+01:37:12   |   シート1 歩き＋演技4: 要作り直し  npc_hermit_s1.png  ドット 8.00px → 描かれた格子のまま（44.0 ドット）
+01:37:12 sheet 1: 1 redo lines: 頭がアルンより小さい（頭の高さ 90%・頭の幅 89%）。頭身が高すぎる
+01:37:12 sheet 1 attempt 2: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs) + notes
+01:38:05   pitch in raw image: 5.80 px per art pixel (upright median 255 px / 44)
+01:38:06 sheet 1 -> art_ref/gen/npc/hermit/npc_hermit_s1.png (16 poses)
+01:38:06 pipeline: sheets.py ../art_ref/gen/npc/hermit --npc hermit --out out/npc/npc_hermit --check
+01:38:44   | ■ メモ（2 件）
+01:38:44   |   - シート1: 頭身の比（歩き12コマの中央値、体 42 ドットあたり）: 首 0.26（アルン 0.29）・頭の幅 0.45（0.43）・肩 0.45（0.40）
+01:38:44   |   - 向きの見本（configs/refs/npc_hermit）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:38:44   | 
+01:38:44   | ■ シートの状態
+01:38:44   |   シート1 歩き＋演技4: 確認あり  npc_hermit_s1.png  ドット 8.00px → 描かれた格子のまま（44.0 ドット）
+01:38:44 sheet 1: 0 redo lines
+02:13:23 pipeline: sheets.py ../art_ref/gen/npc/hermit --npc hermit --out out/npc/npc_hermit
+02:14:18   |   - 向きの見本（configs/refs/npc_hermit）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:14:18   | 
+02:14:18   | ■ シートの状態
+02:14:18   |   シート1 歩き＋演技4: 確認あり  npc_hermit_s1.png  ドット 8.00px → 描かれた格子のまま（44.0 ドット）
+02:14:18   | 
+02:14:18   | packed field 164x200 | palette 52 + face 0
+02:14:20 to_v2 npc_hermit: npc_hermit → /home/user/others/chronicle/v2/assets/sprites/npc_hermit |   field: 16 frames

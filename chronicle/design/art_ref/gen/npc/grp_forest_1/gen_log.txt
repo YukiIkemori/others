@@ -19,3 +19,19 @@
 01:23:52   | ■ シートの状態
 01:23:52   |   シート1 歩き: 確認あり  npc_forest_woman_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
 01:23:52 sheet 1: 0 redo lines
+02:29:19 pipeline: sheets.py ../art_ref/gen/npc/grp_forest_1 --npc npc_forest_man --out out/npc/npc_forest_man
+02:30:16   |   - 向きの見本（configs/refs/npc_forest_man）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:30:16   | 
+02:30:16   | ■ シートの状態
+02:30:16   |   シート1 歩き: 確認あり  npc_forest_man_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+02:30:16   | 
+02:30:16   | packed field 102x212 | palette 52 + face 0
+02:30:16 pipeline: sheets.py ../art_ref/gen/npc/grp_forest_1 --npc npc_forest_woman --out out/npc/npc_forest_woman
+02:31:10   |   - 向きの見本（configs/refs/npc_forest_woman）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:31:10   | 
+02:31:10   | ■ シートの状態
+02:31:10   |   シート1 歩き: 確認あり  npc_forest_woman_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+02:31:10   | 
+02:31:10   | packed field 117x204 | palette 51 + face 0
+02:31:16 to_v2 npc_forest_man: npc_forest_man → /home/user/others/chronicle/v2/assets/sprites/npc_forest_man |   field: 12 frames
+02:31:18 to_v2 npc_forest_woman: npc_forest_woman → /home/user/others/chronicle/v2/assets/sprites/npc_forest_woman |   field: 12 frames

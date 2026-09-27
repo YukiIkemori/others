@@ -1,0 +1,1219 @@
+{
+ "char": "sylvain",
+ "companion": "sylvain",
+ "npc": null,
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/companion/sylvain",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/sylvain/comp_sylvain_s1.png",
+   "size": [
+    3584,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x4",
+    "logical_cell": [
+     112,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 600.0,
+   "native_height_at_period": 75.0,
+   "scale_note": "描かれた格子のまま（75.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "ref_front": {
+     "size": [
+      58,
+      75
+     ],
+     "box": [
+      200,
+      112,
+      696,
+      744
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_34": {
+     "size": [
+      52,
+      75
+     ],
+     "box": [
+      1120,
+      112,
+      1568,
+      744
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_side_left": {
+     "size": [
+      56,
+      75
+     ],
+     "box": [
+      2000,
+      112,
+      2480,
+      744
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_back": {
+     "size": [
+      52,
+      75
+     ],
+     "box": [
+      2912,
+      112,
+      3360,
+      744
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_idle_left": {
+     "size": [
+      60,
+      64
+     ],
+     "box": [
+      192,
+      968,
+      704,
+      1512
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_face": {
+     "size": [
+      75,
+      78
+     ],
+     "box": [
+      1024,
+      824,
+      1656,
+      1480
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_palette": {
+     "size": [
+      63,
+      29
+     ],
+     "box": [
+      1968,
+      1016,
+      2504,
+      1280
+     ],
+     "air": 0,
+     "blur": 0.0
+    }
+   }
+  },
+  "2": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/sylvain/comp_sylvain_s2.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 440.0,
+   "native_height_at_period": 55.0,
+   "scale_note": "描かれた格子のまま（55.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      32,
+      54
+     ],
+     "box": [
+      176,
+      32,
+      464,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.13
+    },
+    "walk_down_1": {
+     "size": [
+      35,
+      55
+     ],
+     "box": [
+      800,
+      24,
+      1112,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.01,
+     "scale": 1.031
+    },
+    "walk_down_2": {
+     "size": [
+      38,
+      55
+     ],
+     "box": [
+      1432,
+      24,
+      1768,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.13,
+     "scale": 1.056
+    },
+    "walk_up_0": {
+     "size": [
+      33,
+      53
+     ],
+     "box": [
+      168,
+      552,
+      464,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.79
+    },
+    "walk_up_1": {
+     "size": [
+      37,
+      55
+     ],
+     "box": [
+      792,
+      536,
+      1120,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.8,
+     "scale": 0.845
+    },
+    "walk_up_2": {
+     "size": [
+      37,
+      55
+     ],
+     "box": [
+      1432,
+      536,
+      1760,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.74,
+     "scale": 0.845
+    },
+    "walk_left_0": {
+     "size": [
+      28,
+      54
+     ],
+     "box": [
+      192,
+      1056,
+      448,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      37,
+      55
+     ],
+     "box": [
+      792,
+      1048,
+      1120,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.031
+    },
+    "walk_left_2": {
+     "size": [
+      39,
+      53
+     ],
+     "box": [
+      1424,
+      1064,
+      1768,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.031
+    },
+    "walk_right_0": {
+     "size": [
+      31,
+      55
+     ],
+     "box": [
+      176,
+      1560,
+      456,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      37,
+      55
+     ],
+     "box": [
+      792,
+      1560,
+      1120,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.969
+    },
+    "walk_right_2": {
+     "size": [
+      38,
+      54
+     ],
+     "box": [
+      1432,
+      1568,
+      1768,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 0.969
+    }
+   }
+  },
+  "3": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/sylvain/comp_sylvain_s3.png",
+   "size": [
+    4160,
+    1664
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x5",
+    "logical_cell": [
+     104,
+     104
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 592.0,
+   "native_height_at_period": 74.0,
+   "scale_note": "描かれた格子のまま（74.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "idle_a": {
+     "size": [
+      73,
+      74
+     ],
+     "box": [
+      104,
+      184,
+      720,
+      808
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.35,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.45
+     }
+    },
+    "idle_b": {
+     "size": [
+      74,
+      74
+     ],
+     "box": [
+      936,
+      184,
+      1560,
+      808
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.41,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.51
+     },
+     "scale": 1.17
+    },
+    "step": {
+     "size": [
+      77,
+      73
+     ],
+     "box": [
+      1752,
+      192,
+      2400,
+      808
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.95,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.05
+     }
+    },
+    "guard": {
+     "size": [
+      82,
+      74
+     ],
+     "box": [
+      2568,
+      184,
+      3256,
+      808
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.78,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.12
+     },
+     "scale": 1.184
+    },
+    "hit": {
+     "size": [
+      74,
+      74
+     ],
+     "box": [
+      3432,
+      184,
+      4056,
+      808
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.23,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.33
+     },
+     "scale": 1.085
+    },
+    "weak": {
+     "size": [
+      69,
+      63
+     ],
+     "box": [
+      120,
+      1104,
+      704,
+      1640
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.87,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.03
+     }
+    },
+    "ko": {
+     "size": [
+      102,
+      39
+     ],
+     "box": [
+      824,
+      1296,
+      1672,
+      1640
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "victory_a": {
+     "size": [
+      60,
+      94
+     ],
+     "box": [
+      1824,
+      880,
+      2336,
+      1664
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.79,
+     "facing_cues": {
+      "head": 0.43,
+      "upper": 0.36
+     },
+     "scale": 1.149
+    },
+    "victory_b": {
+     "size": [
+      73,
+      75
+     ],
+     "box": [
+      2600,
+      1008,
+      3216,
+      1640
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 1.121
+    },
+    "glimmer": {
+     "size": [
+      73,
+      74
+     ],
+     "box": [
+      3432,
+      1016,
+      4048,
+      1640
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.31,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.41
+     },
+     "scale": 1.085
+    }
+   }
+  },
+  "4": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/sylvain/comp_sylvain_s4.png",
+   "size": [
+    4480,
+    1920
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "3x5",
+    "logical_cell": [
+     112,
+     80
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 592.0,
+   "native_height_at_period": 74.0,
+   "scale_note": "描かれた格子のまま（74.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "windup": {
+     "size": [
+      64,
+      77
+     ],
+     "box": [
+      176,
+      0,
+      720,
+      640
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.04,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.14
+     },
+     "scale": 1.0
+    },
+    "slash": {
+     "size": [
+      83,
+      73
+     ],
+     "box": [
+      992,
+      8,
+      1688,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.45,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.55
+     },
+     "scale": 1.0
+    },
+    "thrust_ready": {
+     "size": [
+      70,
+      79
+     ],
+     "box": [
+      1944,
+      0,
+      2536,
+      656
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.19,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.29
+     }
+    },
+    "thrust": {
+     "size": [
+      84,
+      79
+     ],
+     "box": [
+      2784,
+      0,
+      3488,
+      656
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.12,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.22
+     },
+     "scale": 1.043
+    },
+    "charge": {
+     "size": [
+      86,
+      51
+     ],
+     "box": [
+      3672,
+      184,
+      4392,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.73,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.17
+     },
+     "scale": 0.979
+    },
+    "smash": {
+     "size": [
+      63,
+      80
+     ],
+     "box": [
+      176,
+      624,
+      712,
+      1296
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.11,
+     "facing_cues": {
+      "head": 0.14,
+      "upper": -0.03
+     },
+     "scale": 0.972
+    },
+    "cast_a": {
+     "size": [
+      75,
+      76
+     ],
+     "box": [
+      1024,
+      632,
+      1656,
+      1272
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.02,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.12
+     },
+     "scale": 1.0
+    },
+    "cast_b": {
+     "size": [
+      60,
+      77
+     ],
+     "box": [
+      1984,
+      632,
+      2496,
+      1280
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.04,
+     "facing_cues": {
+      "head": -0.48,
+      "upper": 0.43
+     },
+     "scale": 0.936
+    },
+    "item": {
+     "size": [
+      62,
+      74
+     ],
+     "box": [
+      2872,
+      640,
+      3400,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.34,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.44
+     },
+     "scale": 1.0
+    },
+    "evade": {
+     "size": [
+      60,
+      73
+     ],
+     "box": [
+      3776,
+      648,
+      4288,
+      1264
+     ],
+     "air": 1,
+     "blur": 0.0,
+     "facing_score": 1.44,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.54
+     },
+     "scale": 0.957
+    },
+    "bare_idle": {
+     "size": [
+      61,
+      74
+     ],
+     "box": [
+      184,
+      1280,
+      704,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.27,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.37
+     }
+    },
+    "bare_windup": {
+     "size": [
+      60,
+      72
+     ],
+     "box": [
+      1088,
+      1296,
+      1600,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.41,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.51
+     },
+     "scale": 0.979
+    },
+    "bare_slash": {
+     "size": [
+      68,
+      71
+     ],
+     "box": [
+      1952,
+      1304,
+      2528,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.37,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.47
+     },
+     "scale": 0.957
+    },
+    "bare_thrust": {
+     "size": [
+      80,
+      71
+     ],
+     "box": [
+      2800,
+      1304,
+      3472,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.16,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.26
+     },
+     "scale": 1.0
+    },
+    "bare_cast": {
+     "size": [
+      77,
+      72
+     ],
+     "box": [
+      3704,
+      1296,
+      4352,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.98,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.08
+     },
+     "scale": 1.0
+    }
+   }
+  },
+  "5": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/sylvain/comp_sylvain_s5.png",
+   "size": [
+    3072,
+    768
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "1x4",
+    "logical_cell": [
+     96,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 640.0,
+   "native_height_at_period": 80.0,
+   "scale_note": "描かれた格子のまま（80.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      75,
+      80
+     ],
+     "box": [
+      64,
+      80,
+      696,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_smile": {
+     "size": [
+      75,
+      80
+     ],
+     "box": [
+      832,
+      80,
+      1464,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_surprise": {
+     "size": [
+      75,
+      80
+     ],
+     "box": [
+      1600,
+      80,
+      2232,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_pain": {
+     "size": [
+      75,
+      80
+     ],
+     "box": [
+      2368,
+      80,
+      3000,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "ground",
+   "msg": "2 行目の足元の高さが最大 29 ドットずれている。足元で揃えた",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 7 番（配色見本） の足元の影を消した",
+   "slot": "ref_palette",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "design_refs",
+   "msg": "設定画から向きの見本 6 枚と配色（52 色）を取った。<out>/refs に保存（承認後は tools/refs.py sylvain <out> で configs/refs に）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "auto",
+   "code": "ground",
+   "msg": "2 行目の足元の高さが最大 3 ドットずれている。足元で揃えた",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 4,
+   "level": "auto",
+   "code": "ground",
+   "msg": "1 行目の足元の高さが最大 4 ドットずれている。足元で揃えた",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "weak の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "weak",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート3 の 2 番（待機B） の縮尺が少し違う（頭の大きさで約 117%）。並べて見て気になるなら描き直し",
+   "slot": "idle_b",
+   "ask": null,
+   "data": {
+    "scale": 1.170212765957447,
+    "per_ref": [
+     1.0125000000000002,
+     0.9625000000000001,
+     1.1000000000000005,
+     1.0500000000000005
+    ],
+    "group_median": 0.8812500000000002
+   }
+  },
+  {
+   "sheet": 3,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート3 の 4 番（防御） の縮尺が少し違う（頭の大きさで約 118%）。並べて見て気になるなら描き直し",
+   "slot": "guard",
+   "ask": null,
+   "data": {
+    "scale": 1.1843971631205676,
+    "per_ref": [
+     1.0375000000000003,
+     0.9875000000000003,
+     1.1000000000000005,
+     1.0500000000000005
+    ],
+    "group_median": 0.8812500000000002
+   }
+  },
+  {
+   "sheet": 3,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート3 の 8 番（勝利A） の縮尺が少し違う（頭の大きさで約 115%）。並べて見て気になるなら描き直し",
+   "slot": "victory_a",
+   "ask": null,
+   "data": {
+    "scale": 1.1489361702127658,
+    "per_ref": [
+     0.9625000000000001,
+     0.7874999999999999,
+     1.0750000000000004,
+     1.0625000000000002
+    ],
+    "group_median": 0.8812500000000002
+   }
+  },
+  {
+   "sheet": 3,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート3 の 9 番（勝利B） の縮尺が少し違う（頭の大きさで約 112%）。並べて見て気になるなら描き直し",
+   "slot": "victory_b",
+   "ask": null,
+   "data": {
+    "scale": 1.1205673758865249,
+    "per_ref": [
+     1.0125000000000004,
+     0.9625000000000001,
+     1.1000000000000005,
+     0.9000000000000004
+    ],
+    "group_median": 0.8812500000000002
+   }
+  },
+  {
+   "sheet": 2,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "walk_up_0 の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "walk_up_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート2 の 5 番（上向き・右足前） の縮尺が少し違う（頭の大きさで約 84%）。並べて見て気になるなら描き直し",
+   "slot": "walk_up_1",
+   "ask": null,
+   "data": {
+    "scale": 0.84472049689441,
+    "per_ref": [
+     0.9625000000000001,
+     0.8500000000000003,
+     0.8500000000000003
+    ],
+    "group_median": 1.0062500000000003
+   }
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート2 の 6 番（上向き・左足前） の縮尺が少し違う（頭の大きさで約 84%）。並べて見て気になるなら描き直し",
+   "slot": "walk_up_2",
+   "ask": null,
+   "data": {
+    "scale": 0.84472049689441,
+    "per_ref": [
+     0.9625000000000001,
+     0.8500000000000003,
+     0.8500000000000003
+    ],
+    "group_median": 1.0062500000000003
+   }
+  }
+ ]
+}

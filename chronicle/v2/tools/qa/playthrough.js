@@ -37,7 +37,10 @@ function prologue(o) {
   g.push(
     { id: 'rowell', ev: 'pharos_rowell', done: 'prologue_rowell', optional: true },
     { id: 'otto', ev: 'pharos_otto', done: 'prologue_key' },
+    { id: 'shop_pharos_arms0', ev: 'pharos_smithy', shop: true, optional: true },
     { id: 'tutorial', ev: 'lighthouse_1_tutorial', done: 'prologue_tutorial' },
+    // 人は寄り道しながら歩くので、序章の戦闘は 35 前後（V2_PLAN §3.9 の sim_glimmer の模型）。台本は最短の道なので、灯台で足りない分を戦う
+    { id: 'grind_prologue', grind: 24, optional: true },
     { id: 'fine_lh', ev: 'lighthouse_3_fine', done: 'prologue_fine', optional: true },
     { id: 'spring_lh', spring: ['lighthouse_3'], optional: true, noHeal: true },
     Object.assign({ id: 'boss_pageeater', ev: 'lighthouse_3_boss', done: 'prologue_boss' }, o.loseBoss ? { lose: true, wipeTo: 'retry' } : {}),
@@ -66,7 +69,12 @@ function forest(o) {
   ];
   if (o.r5) g.push({ id: 'suspend_resume', task: { kind: 'suspend', title: 'continue' } });
   if (o.wipeZako) g.push({ id: 'arm_wipe_zako', setLose: { zako: true, map: 'verda' }, wipeTo: 'inn' });
-  for (const who of o.order || ['hans', 'ben', 'roy', 'pim']) for (const s of RESCUE[who]) g.push(Object.assign({}, s, { ordered: !!o.strict }));
+  let first = true;
+  for (const who of o.order || ['hans', 'ben', 'roy', 'pim']) for (const s of RESCUE[who]) {
+    g.push(Object.assign({}, s, { ordered: !!o.strict }));
+    // 森の本筋の戦闘は 95 前後（sim_glimmer の模型）。最初の持ち物を拾った迷いの森で、足りない分を戦う
+    if (first) { g.push({ id: 'grind_forest', grind: 60, optional: true }); first = false; }
+  }
   g.push(
     { id: 'stone_a', ev: 'verda_stone_a', done: 'forest_stone_a' },
     { id: 'stone_b', ev: 'verda_stone_b', done: 'forest_stone_b' },
@@ -76,6 +84,7 @@ function forest(o) {
     { id: 'shop_fern_peddler2', ev: 'fern_peddler', shop: true, optional: true },
     { id: 'shop_fern_items2', ev: 'fern_shop_keeper', shop: true, optional: true },
     { id: 'elder_fine', ev: 'elder_fine', done: 'forest_fine', optional: true },
+    { id: 'grind_elder', grind: 85, optional: true },
     { id: 'spring_elder', spring: ['elder_2'], optional: true, noHeal: true },
     Object.assign({ id: 'boss_rooteater', ev: 'elder_boss', done: 'cleared_r_forest' }, o.loseBoss ? { lose: true, wipeTo: 'retry' } : {}),
     { id: 'unique', ev: 'fern_after', done: 'forest_unique_given' },
@@ -110,7 +119,7 @@ function routeDef(id) {
 // ================================================================ 1 本
 async function runRoute(S, id, o) {
   const route = routeDef(id);
-  const P = await Bw.open(S, 'index.html', { phone: o.phone, size: o.phone ? null : [1280, 720], timeout: 30000 });
+  const P = await Bw.open(S, 'index.html', { phone: o.phone, size: o.phone ? null : [960, 540], timeout: 30000 });
   const page = P.page;
   const t0 = Date.now();
   const res = { route: id, phone: !!o.phone, ok: false, checks: {}, errors: P.errors, started: new Date().toISOString() };

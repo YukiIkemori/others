@@ -1,3 +1,43 @@
 01:09:32 sheet 1 attempt 1: generating 3584x1536 (pitch 8, quality medium, 1 refs)
 01:10:18   pitch in raw image: 8.16 px per art pixel (upright median 604 px / 74)
 01:10:24 sheet 1 -> art_ref/gen/companion/sylvain/comp_sylvain_s1.png (7 poses)
+01:57:46 sheet 2 attempt 1: generating 1920x2048 (pitch 8, quality medium, 2 refs)
+02:01:09   pitch in raw image: 7.27 px per art pixel (upright median 400 px / 55)
+02:01:10 sheet 2 -> art_ref/gen/companion/sylvain/comp_sylvain_s2.png (12 poses)
+02:01:12 sheet 3 attempt 1: generating 3648x1344 (pitch 7, quality medium, 2 refs)
+02:04:48   pitch in raw image: 6.27 px per art pixel (upright median 464 px / 74)
+02:04:51   note: victory_a is 62x96 art px, larger than its cell 104x96 (clipped)
+02:04:51 sheet 3 -> art_ref/gen/companion/sylvain/comp_sylvain_s3.png (10 poses)
+02:04:56 sheet 4 attempt 1: generating 3360x1440 (pitch 6, quality medium, 2 refs)
+02:07:56   pitch in raw image: 5.07 px per art pixel (upright median 375 px / 74)
+02:08:00   note: thrust_ready is 70x79 art px, larger than its cell 112x80 (clipped)
+02:08:00   note: thrust is 84x79 art px, larger than its cell 112x80 (clipped)
+02:08:00   note: smash is 63x91 art px, larger than its cell 112x80 (clipped)
+02:08:00 sheet 4 -> art_ref/gen/companion/sylvain/comp_sylvain_s4.png (15 poses)
+02:08:01 sheet 5 attempt 1: generating 1536x1536 (pitch 8, quality medium, 2 refs)
+02:10:37   pitch in raw image: 7.40 px per art pixel (upright median 592 px / 80)
+02:10:38 sheet 5 -> art_ref/gen/companion/sylvain/comp_sylvain_s5.png (4 poses)
+02:10:38 pipeline: sheets.py ../art_ref/gen/companion/sylvain --companion sylvain --out out/comp_sylvain --check
+02:19:08   | ■ シートの状態
+02:19:08   |   シート1 設定画: OK  comp_sylvain_s1.png  ドット 8.00px → 描かれた格子のまま（75.0 ドット）
+02:19:08   |   シート2 フィールドの歩き: 要作り直し  comp_sylvain_s2.png  ドット 8.00px → 描かれた格子のまま（55.0 ドット）
+02:19:08   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_sylvain_s3.png  ドット 8.00px → 描かれた格子のまま（74.0 ドット）
+02:19:08   |   シート4 戦闘の行動ポーズ＋武器なし版: OK  comp_sylvain_s4.png  ドット 8.00px → 描かれた格子のまま（74.0 ドット）
+02:19:08   |   シート5 顔の表情: OK  comp_sylvain_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+02:19:09   size check weak: 1.05 of the hero's same pose (relative to idle_a)
+02:19:09   sheet 3 weak: size redo line ignored (same size as the hero's pose) -> overrides scale_ok
+02:19:10   size check walk_up_0: 0.96 of the hero's same pose (relative to walk_down_0)
+02:19:10   sheet 2 walk_up_0: size redo line ignored (same size as the hero's pose) -> overrides scale_ok
+02:19:11 sheet 3 fix1: edit victory_a (window rows 1-2 cols 1-5, 3648x1344, pitch 7, quality medium)
+02:20:01   calibrated pitch 6.92 px (requested 7; 9 reference poses)
+02:20:01   cells grown by 8 art px on top (now 104x104) so the pose fits
+02:20:04   pasted: victory_a 60x94
+02:20:04 pipeline: sheets.py ../art_ref/gen/companion/sylvain --companion sylvain --out out/comp_sylvain --check
+02:29:59   | ■ シートの状態
+02:29:59   |   シート1 設定画: OK  comp_sylvain_s1.png  ドット 8.00px → 描かれた格子のまま（75.0 ドット）
+02:29:59   |   シート2 フィールドの歩き: 確認あり  comp_sylvain_s2.png  ドット 8.00px → 描かれた格子のまま（55.0 ドット）
+02:29:59   |   シート3 戦闘の基本ポーズ: 確認あり  comp_sylvain_s3.png  ドット 8.00px → 描かれた格子のまま（74.0 ドット）
+02:29:59   |   シート4 戦闘の行動ポーズ＋武器なし版: OK  comp_sylvain_s4.png  ドット 8.00px → 描かれた格子のまま（74.0 ドット）
+02:29:59   |   シート5 顔の表情: OK  comp_sylvain_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+02:29:59 round 1: 0 redo lines left 
+02:29:59 pipeline: sheets.py ../art_ref/gen/companion/sylvain --companion sylvain --out out/comp_sylvain

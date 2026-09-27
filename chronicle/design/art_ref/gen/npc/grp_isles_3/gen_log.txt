@@ -1,0 +1,21 @@
+02:05:12 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+02:07:01   half A (npc_isles_child, target 36):
+02:07:04   pitch in raw image: 4.97 px per art pixel (upright median 179 px / 36)
+02:07:04   half B (npc_isles_sailor, target 49):
+02:07:05   pitch in raw image: 5.12 px per art pixel (upright median 251 px / 49)
+02:07:10 sheet 1 -> art_ref/gen/npc/grp_isles_3/npc_grp_isles_3.png (24 poses)
+02:07:10 pipeline: sheets.py ../art_ref/gen/npc/grp_isles_3 --npc npc_isles_child --out out/npc/npc_isles_child --check
+02:08:47   |   - シート1: npc_grp_isles_3.png の左半分（人物A）を使う
+02:08:47   |   - シート1: 頭身の比（歩き12コマの中央値、体 36 ドットあたり）: 首 0.39（アルン 0.29）・頭の幅 0.47（0.43）・肩 0.37（0.40）
+02:08:47   |   - 向きの見本（configs/refs/npc_isles_child）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:08:47   | 
+02:08:47   | ■ シートの状態
+02:08:47   |   シート1 歩き: 確認あり  npc_isles_child_s1.png  ドット 8.00px → 描かれた格子のまま（36.0 ドット）
+02:08:47 pipeline: sheets.py ../art_ref/gen/npc/grp_isles_3 --npc npc_isles_sailor --out out/npc/npc_isles_sailor --check
+02:10:08   |   - シート1: npc_grp_isles_3.png の右半分（人物B）を使う
+02:10:08   |   - シート1: 頭身の比（歩き12コマの中央値、体 49 ドットあたり）: 首 0.38（アルン 0.29）・頭の幅 0.47（0.43）・肩 0.37（0.40）
+02:10:08   |   - 向きの見本（configs/refs/npc_isles_sailor）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:10:08   | 
+02:10:08   | ■ シートの状態
+02:10:08   |   シート1 歩き: 確認あり  npc_isles_sailor_s1.png  ドット 8.00px → 描かれた格子のまま（48.5 ドット）
+02:10:08 sheet 1: 0 redo lines

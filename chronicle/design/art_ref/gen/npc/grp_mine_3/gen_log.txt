@@ -1,0 +1,21 @@
+02:10:12 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+02:11:32   half A (npc_mine_child, target 36):
+02:11:33   pitch in raw image: 4.94 px per art pixel (upright median 178 px / 36)
+02:11:34   half B (npc_smith, target 50):
+02:11:35   pitch in raw image: 5.34 px per art pixel (upright median 267 px / 50)
+02:11:45 sheet 1 -> art_ref/gen/npc/grp_mine_3/npc_grp_mine_3.png (24 poses)
+02:11:48 pipeline: sheets.py ../art_ref/gen/npc/grp_mine_3 --npc npc_mine_child --out out/npc/npc_mine_child --check
+02:13:00   |   - シート1: npc_grp_mine_3.png の左半分（人物A）を使う
+02:13:00   |   - シート1: 頭身の比（歩き12コマの中央値、体 36 ドットあたり）: 首 0.44（アルン 0.29）・頭の幅 0.60（0.43）・肩 0.44（0.40）
+02:13:00   |   - 向きの見本（configs/refs/npc_mine_child）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:13:00   | 
+02:13:00   | ■ シートの状態
+02:13:00   |   シート1 歩き: 確認あり  npc_mine_child_s1.png  ドット 8.00px → 描かれた格子のまま（35.5 ドット）
+02:13:00 pipeline: sheets.py ../art_ref/gen/npc/grp_mine_3 --npc npc_smith --out out/npc/npc_smith --check
+02:14:20   | 
+02:14:20   | ■ 画像 AI にそのまま送れる文
+02:14:20   |   「鍛冶衆（npc_smith）のシート1の3番（下向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 81%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+02:14:20   | 
+02:14:20   | ■ シートの状態
+02:14:20   |   シート1 歩き: 要作り直し  npc_smith_s1.png  ドット 8.00px → 描かれた格子のまま（50.0 ドット）
+02:14:20 sheet 1: 0 redo lines

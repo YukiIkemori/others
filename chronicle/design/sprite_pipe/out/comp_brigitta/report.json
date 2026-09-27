@@ -1,0 +1,1087 @@
+{
+ "char": "brigitta",
+ "companion": "brigitta",
+ "npc": null,
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/companion/brigitta",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/brigitta/comp_brigitta_s1.png",
+   "size": [
+    3584,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x4",
+    "logical_cell": [
+     112,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 536.0,
+   "native_height_at_period": 67.0,
+   "scale_note": "描かれた格子のまま（67.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "ref_front": {
+     "size": [
+      37,
+      67
+     ],
+     "box": [
+      280,
+      160,
+      608,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_34": {
+     "size": [
+      36,
+      66
+     ],
+     "box": [
+      1184,
+      168,
+      1504,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_side_left": {
+     "size": [
+      32,
+      67
+     ],
+     "box": [
+      2096,
+      160,
+      2384,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_back": {
+     "size": [
+      35,
+      67
+     ],
+     "box": [
+      2976,
+      160,
+      3288,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_idle_left": {
+     "size": [
+      51,
+      71
+     ],
+     "box": [
+      224,
+      896,
+      664,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_face": {
+     "size": [
+      71,
+      76
+     ],
+     "box": [
+      1040,
+      832,
+      1640,
+      1472
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_palette": {
+     "size": [
+      74,
+      36
+     ],
+     "box": [
+      1928,
+      992,
+      2552,
+      1312
+     ],
+     "air": 0,
+     "blur": 0.0
+    }
+   }
+  },
+  "2": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/brigitta/comp_brigitta_s2.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 396.0,
+   "native_height_at_period": 49.5,
+   "scale_note": "描かれた格子のまま（49.5 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      28,
+      51
+     ],
+     "box": [
+      192,
+      56,
+      448,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.08
+    },
+    "walk_down_1": {
+     "size": [
+      29,
+      52
+     ],
+     "box": [
+      824,
+      48,
+      1088,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.55,
+     "scale": 1.0
+    },
+    "walk_down_2": {
+     "size": [
+      29,
+      52
+     ],
+     "box": [
+      1464,
+      48,
+      1728,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.57,
+     "scale": 1.0
+    },
+    "walk_up_0": {
+     "size": [
+      28,
+      50
+     ],
+     "box": [
+      192,
+      576,
+      448,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.96,
+     "scale": 1.0
+    },
+    "walk_up_1": {
+     "size": [
+      28,
+      51
+     ],
+     "box": [
+      832,
+      568,
+      1088,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.0,
+     "scale": 1.0
+    },
+    "walk_up_2": {
+     "size": [
+      28,
+      51
+     ],
+     "box": [
+      1472,
+      568,
+      1728,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.05,
+     "scale": 1.0
+    },
+    "walk_left_0": {
+     "size": [
+      25,
+      49
+     ],
+     "box": [
+      200,
+      1096,
+      432,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      30,
+      48
+     ],
+     "box": [
+      824,
+      1104,
+      1096,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    },
+    "walk_left_2": {
+     "size": [
+      29,
+      49
+     ],
+     "box": [
+      1464,
+      1096,
+      1728,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    },
+    "walk_right_0": {
+     "size": [
+      25,
+      49
+     ],
+     "box": [
+      200,
+      1608,
+      432,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      29,
+      47
+     ],
+     "box": [
+      824,
+      1624,
+      1088,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.013
+    },
+    "walk_right_2": {
+     "size": [
+      29,
+      47
+     ],
+     "box": [
+      1464,
+      1624,
+      1728,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.013
+    }
+   }
+  },
+  "3": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/brigitta/comp_brigitta_s3.png",
+   "size": [
+    4160,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x5",
+    "logical_cell": [
+     104,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 536.0,
+   "native_height_at_period": 67.0,
+   "scale_note": "描かれた格子のまま（67.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "idle_a": {
+     "size": [
+      42,
+      67
+     ],
+     "box": [
+      232,
+      160,
+      600,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.31,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.41
+     }
+    },
+    "idle_b": {
+     "size": [
+      43,
+      67
+     ],
+     "box": [
+      1056,
+      160,
+      1432,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.16,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.26
+     },
+     "scale": 1.0
+    },
+    "step": {
+     "size": [
+      52,
+      65
+     ],
+     "box": [
+      1856,
+      176,
+      2304,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.44,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.54
+     }
+    },
+    "guard": {
+     "size": [
+      70,
+      69
+     ],
+     "box": [
+      2616,
+      144,
+      3208,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.19,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.29
+     },
+     "scale": 1.038
+    },
+    "hit": {
+     "size": [
+      54,
+      67
+     ],
+     "box": [
+      3512,
+      160,
+      3976,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.54,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.64
+     },
+     "scale": 0.936
+    },
+    "weak": {
+     "size": [
+      54,
+      61
+     ],
+     "box": [
+      184,
+      976,
+      648,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.4,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.5
+     },
+     "scale": 1.026
+    },
+    "ko": {
+     "size": [
+      88,
+      31
+     ],
+     "box": [
+      880,
+      1216,
+      1616,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "victory_a": {
+     "size": [
+      45,
+      85
+     ],
+     "box": [
+      1880,
+      784,
+      2272,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.35,
+     "facing_cues": {
+      "head": 0.05,
+      "upper": 0.3
+     },
+     "scale": 1.013
+    },
+    "victory_b": {
+     "size": [
+      56,
+      66
+     ],
+     "box": [
+      2672,
+      936,
+      3152,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 0.987
+    },
+    "glimmer": {
+     "size": [
+      55,
+      67
+     ],
+     "box": [
+      3504,
+      912,
+      3976,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.47,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.57
+     },
+     "scale": 1.0
+    }
+   }
+  },
+  "4": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/brigitta/comp_brigitta_s4.png",
+   "size": [
+    4480,
+    1920
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "3x5",
+    "logical_cell": [
+     112,
+     80
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 544.0,
+   "native_height_at_period": 68.0,
+   "scale_note": "描かれた格子のまま（68.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "windup": {
+     "size": [
+      59,
+      72
+     ],
+     "box": [
+      192,
+      16,
+      696,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.74,
+     "facing_cues": {
+      "head": 0.39,
+      "upper": 0.35
+     },
+     "scale": 1.0
+    },
+    "slash": {
+     "size": [
+      74,
+      65
+     ],
+     "box": [
+      1032,
+      72,
+      1656,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.73,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.83
+     },
+     "scale": 1.0
+    },
+    "thrust_ready": {
+     "size": [
+      63,
+      67
+     ],
+     "box": [
+      1968,
+      56,
+      2504,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.2,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.3
+     }
+    },
+    "thrust": {
+     "size": [
+      91,
+      65
+     ],
+     "box": [
+      2752,
+      72,
+      3512,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.16,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.26
+     },
+     "scale": 0.987
+    },
+    "charge": {
+     "size": [
+      59,
+      47
+     ],
+     "box": [
+      3776,
+      216,
+      4280,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.66,
+     "facing_cues": {
+      "head": 0.52,
+      "upper": 0.13
+     }
+    },
+    "smash": {
+     "size": [
+      56,
+      80
+     ],
+     "box": [
+      208,
+      624,
+      688,
+      1296
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.56,
+     "facing_cues": {
+      "head": 0.11,
+      "upper": 0.45
+     },
+     "scale": 1.0
+    },
+    "cast_a": {
+     "size": [
+      61,
+      68
+     ],
+     "box": [
+      1080,
+      688,
+      1600,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.69,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.21
+     },
+     "scale": 1.013
+    },
+    "cast_b": {
+     "size": [
+      49,
+      69
+     ],
+     "box": [
+      2024,
+      680,
+      2448,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.21,
+     "facing_cues": {
+      "head": -0.15,
+      "upper": 0.36
+     },
+     "scale": 0.955
+    },
+    "item": {
+     "size": [
+      50,
+      69
+     ],
+     "box": [
+      2920,
+      680,
+      3352,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.12,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.22
+     },
+     "scale": 1.051
+    },
+    "evade": {
+     "size": [
+      53,
+      67
+     ],
+     "box": [
+      3800,
+      696,
+      4256,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.42,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.52
+     },
+     "scale": 1.026
+    },
+    "bare_idle": {
+     "size": [
+      46,
+      66
+     ],
+     "box": [
+      248,
+      1344,
+      648,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.59,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.69
+     }
+    },
+    "bare_windup": {
+     "size": [
+      51,
+      67
+     ],
+     "box": [
+      1120,
+      1336,
+      1560,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.41,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.51
+     },
+     "scale": 0.929
+    },
+    "bare_slash": {
+     "size": [
+      58,
+      66
+     ],
+     "box": [
+      1992,
+      1344,
+      2488,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.37,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.47
+     },
+     "scale": 1.026
+    },
+    "bare_thrust": {
+     "size": [
+      65,
+      67
+     ],
+     "box": [
+      2856,
+      1336,
+      3408,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.09,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.19
+     },
+     "scale": 1.051
+    },
+    "bare_cast": {
+     "size": [
+      58,
+      67
+     ],
+     "box": [
+      3784,
+      1336,
+      4280,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.21,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.31
+     },
+     "scale": 1.051
+    }
+   }
+  },
+  "5": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/brigitta/comp_brigitta_s5.png",
+   "size": [
+    3072,
+    768
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "1x4",
+    "logical_cell": [
+     96,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 640.0,
+   "native_height_at_period": 80.0,
+   "scale_note": "描かれた格子のまま（80.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      69,
+      80
+     ],
+     "box": [
+      88,
+      80,
+      672,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.42,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.92
+     }
+    },
+    "face_smile": {
+     "size": [
+      69,
+      80
+     ],
+     "box": [
+      856,
+      80,
+      1440,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.43,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.93
+     }
+    },
+    "face_surprise": {
+     "size": [
+      69,
+      80
+     ],
+     "box": [
+      1624,
+      80,
+      2208,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.41,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.91
+     }
+    },
+    "face_pain": {
+     "size": [
+      69,
+      80
+     ],
+     "box": [
+      2392,
+      80,
+      2976,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.38,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.88
+     }
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "ground",
+   "msg": "2 行目の足元の高さが最大 23 ドットずれている。足元で揃えた",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 7 番（配色見本） の足元の影を消した",
+   "slot": "ref_palette",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "design_refs",
+   "msg": "設定画から向きの見本 6 枚と配色（52 色）を取った。<out>/refs に保存（承認後は tools/refs.py brigitta <out> で configs/refs に）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 4,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "charge の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "charge",
+   "ask": null,
+   "data": {}
+  }
+ ]
+}

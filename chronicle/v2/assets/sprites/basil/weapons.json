@@ -1,0 +1,264 @@
+{
+ "character": "basil",
+ "set": "weapons",
+ "look": "basil",
+ "source": "out/comp_basil/weapons",
+ "cell": [
+  93,
+  30
+ ],
+ "anchor": [
+  62,
+  16
+ ],
+ "frames": [
+  {
+   "id": "wpn_sword",
+   "x": 0,
+   "y": 0,
+   "w": 93,
+   "h": 30,
+   "anchor": [
+    62,
+    16
+   ],
+   "points": {
+    "grip": [
+     62,
+     16
+    ],
+    "tip": [
+     24,
+     17
+    ]
+   }
+  },
+  {
+   "id": "wpn_greatsword",
+   "x": 93,
+   "y": 0,
+   "w": 93,
+   "h": 30,
+   "anchor": [
+    62,
+    16
+   ],
+   "points": {
+    "grip": [
+     62,
+     16
+    ],
+    "tip": [
+     2,
+     16
+    ]
+   }
+  },
+  {
+   "id": "wpn_dagger",
+   "x": 186,
+   "y": 0,
+   "w": 93,
+   "h": 30,
+   "anchor": [
+    62,
+    16
+   ],
+   "points": {
+    "grip": [
+     62,
+     16
+    ],
+    "tip": [
+     35,
+     16
+    ]
+   }
+  },
+  {
+   "id": "wpn_bow",
+   "x": 279,
+   "y": 0,
+   "w": 93,
+   "h": 30,
+   "anchor": [
+    62,
+    16
+   ],
+   "points": {
+    "grip": [
+     62,
+     16
+    ],
+    "tip": [
+     42,
+     14
+    ]
+   }
+  },
+  {
+   "id": "wpn_staff",
+   "x": 372,
+   "y": 0,
+   "w": 93,
+   "h": 30,
+   "anchor": [
+    62,
+    16
+   ],
+   "points": {
+    "grip": [
+     62,
+     16
+    ],
+    "tip": [
+     16,
+     16
+    ]
+   }
+  }
+ ],
+ "poses": {
+  "wpn_sword": [
+   0
+  ],
+  "wpn_greatsword": [
+   1
+  ],
+  "wpn_dagger": [
+   2
+  ],
+  "wpn_bow": [
+   3
+  ],
+  "wpn_staff": [
+   4
+  ]
+ },
+ "fps": {},
+ "anims": {},
+ "facing": null,
+ "target_height": null,
+ "weapons": {
+  "wpn_sword": {
+   "grip": [
+    38,
+    8
+   ],
+   "tip": [
+    0,
+    9
+   ],
+   "angle": 178.1,
+   "length": 47,
+   "scaled": 0.786
+  },
+  "wpn_greatsword": {
+   "grip": [
+    60,
+    9
+   ],
+   "tip": [
+    0,
+    9
+   ],
+   "angle": 179.6,
+   "length": 75,
+   "scaled": 0.786
+  },
+  "wpn_dagger": {
+   "grip": [
+    27,
+    6
+   ],
+   "tip": [
+    0,
+    6
+   ],
+   "angle": 179.5,
+   "length": 35,
+   "scaled": 0.786
+  },
+  "wpn_bow": {
+   "grip": [
+    20,
+    14
+   ],
+   "tip": [
+    0,
+    12
+   ],
+   "angle": -174.6,
+   "length": 46,
+   "scaled": 0.786
+  },
+  "wpn_staff": {
+   "grip": [
+    46,
+    7
+   ],
+   "tip": [
+    0,
+    7
+   ],
+   "angle": -179.6,
+   "length": 75,
+   "scaled": 0.786
+  }
+ },
+ "palette": [
+  "#0a0605",
+  "#1a1512",
+  "#25170e",
+  "#2c201c",
+  "#302f2d",
+  "#64594f",
+  "#7f807f",
+  "#ada293",
+  "#fcfcfa",
+  "#280c0d",
+  "#351713",
+  "#491719",
+  "#5a161b",
+  "#58281e",
+  "#5f2821",
+  "#852428",
+  "#9d262c",
+  "#a92e2d",
+  "#c43934",
+  "#d03632",
+  "#d24837",
+  "#dc5133",
+  "#36251a",
+  "#432b1a",
+  "#553823",
+  "#684428",
+  "#644835",
+  "#674b25",
+  "#764827",
+  "#7b5942",
+  "#84572c",
+  "#956331",
+  "#9a6134",
+  "#967056",
+  "#9a7052",
+  "#d06a45",
+  "#ae873d",
+  "#af8769",
+  "#c7813f",
+  "#b58f6d",
+  "#df9930",
+  "#d49d66",
+  "#d09f6a",
+  "#da9c62",
+  "#d4b090",
+  "#ecc167",
+  "#edcda8",
+  "#f3d4a7",
+  "#f2e5d3",
+  "#a78d30",
+  "#fde153",
+  "#205ca3"
+ ],
+ "copied_from": "out/arun_v1/weapons/arun_weapons.json"
+}

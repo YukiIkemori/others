@@ -1,0 +1,30 @@
+01:52:31 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+01:53:27   half A (npc_snow_child, target 36):
+01:53:28   pitch in raw image: 5.92 px per art pixel (upright median 213 px / 36)
+01:53:28   half B (npc_snow_watch, target 49):
+01:53:29   pitch in raw image: 5.43 px per art pixel (upright median 266 px / 49)
+01:53:32 sheet 1 -> art_ref/gen/npc/grp_snow_3/npc_grp_snow_3.png (24 poses)
+01:53:32 pipeline: sheets.py ../art_ref/gen/npc/grp_snow_3 --npc npc_snow_child --out out/npc/npc_snow_child --check
+01:54:23   |   - シート1: npc_grp_snow_3.png の左半分（人物A）を使う
+01:54:23   |   - シート1: 頭身の比（歩き12コマの中央値、体 36 ドットあたり）: 首 0.44（アルン 0.29）・頭の幅 0.53（0.43）・肩 0.46（0.40）
+01:54:23   |   - 向きの見本（configs/refs/npc_snow_child）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:54:23   | 
+01:54:23   | ■ シートの状態
+01:54:23   |   シート1 歩き: 確認あり  npc_snow_child_s1.png  ドット 8.00px → 描かれた格子のまま（36.0 ドット）
+01:54:23 pipeline: sheets.py ../art_ref/gen/npc/grp_snow_3 --npc npc_snow_watch --out out/npc/npc_snow_watch --check
+01:55:15 sheet 1: npc_grp_snow_3.png exists (resume)
+01:55:15 pipeline: sheets.py ../art_ref/gen/npc/grp_snow_3 --npc npc_snow_child --out out/npc/npc_snow_child --check
+01:56:50   |   - シート1: npc_grp_snow_3.png の左半分（人物A）を使う
+01:56:50   |   - シート1: 頭身の比（歩き12コマの中央値、体 36 ドットあたり）: 首 0.44（アルン 0.29）・頭の幅 0.53（0.43）・肩 0.46（0.40）
+01:56:50   |   - 向きの見本（configs/refs/npc_snow_child）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:56:50   | 
+01:56:50   | ■ シートの状態
+01:56:50   |   シート1 歩き: 確認あり  npc_snow_child_s1.png  ドット 8.00px → 描かれた格子のまま（36.0 ドット）
+01:56:50 pipeline: sheets.py ../art_ref/gen/npc/grp_snow_3 --npc npc_snow_watch --out out/npc/npc_snow_watch --check
+01:58:32   |   - シート1: npc_grp_snow_3.png の右半分（人物B）を使う
+01:58:32   |   - シート1: 頭身の比（歩き12コマの中央値、体 49 ドットあたり）: 首 0.39（アルン 0.29）・頭の幅 0.57（0.43）・肩 0.42（0.40）
+01:58:32   |   - 向きの見本（configs/refs/npc_snow_watch）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:58:32   | 
+01:58:32   | ■ シートの状態
+01:58:32   |   シート1 歩き: 確認あり  npc_snow_watch_s1.png  ドット 8.00px → 描かれた格子のまま（48.5 ドット）
+01:58:32 sheet 1: 0 redo lines

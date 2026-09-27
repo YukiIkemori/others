@@ -1,0 +1,81 @@
+{
+ "id": "snow_shop_m",
+ "kind": "building",
+ "theme": "snow",
+ "footprint": [
+  6,
+  5
+ ],
+ "wall": 2,
+ "files": {
+  "24": "snow_shop_m@24.png",
+  "32": "snow_shop_m@32.png",
+  "40": "snow_shop_m@40.png"
+ },
+ "emitFiles": {
+  "24": "snow_shop_m_emit@24.png",
+  "32": "snow_shop_m_emit@32.png",
+  "40": "snow_shop_m_emit@40.png"
+ },
+ "size": {
+  "24": [
+   156,
+   144
+  ],
+  "32": [
+   208,
+   192
+  ],
+  "40": [
+   260,
+   240
+  ]
+ },
+ "anchor32": [
+  8,
+  192
+ ],
+ "door32": {
+  "x": 112.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 36,
+   "y": -33,
+   "w": 6,
+   "h": 8
+  },
+  {
+   "kind": "win",
+   "x": 143,
+   "y": -33,
+   "w": 5,
+   "h": 8
+  }
+ ],
+ "roof32": [
+  -6,
+  -164,
+  198,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/snow/snow_shop_m.png",
+ "def_": {
+  "id": "snow_shop_m",
+  "x": 0,
+  "y": 0,
+  "w": 6,
+  "h": 5,
+  "wall": 2,
+  "door": {
+   "x": 3,
+   "y": 4
+  },
+  "windows": 2
+ }
+}

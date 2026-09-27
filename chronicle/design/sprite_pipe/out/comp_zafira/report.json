@@ -1,0 +1,1118 @@
+{
+ "char": "zafira",
+ "companion": "zafira",
+ "npc": null,
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/companion/zafira",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/zafira/comp_zafira_s1.png",
+   "size": [
+    3584,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x4",
+    "logical_cell": [
+     112,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 512.0,
+   "native_height_at_period": 64.0,
+   "scale_note": "描かれた格子のまま（64.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "ref_front": {
+     "size": [
+      44,
+      64
+     ],
+     "box": [
+      256,
+      176,
+      640,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_34": {
+     "size": [
+      46,
+      63
+     ],
+     "box": [
+      1144,
+      184,
+      1544,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_side_left": {
+     "size": [
+      40,
+      63
+     ],
+     "box": [
+      2064,
+      184,
+      2416,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_back": {
+     "size": [
+      41,
+      64
+     ],
+     "box": [
+      2952,
+      176,
+      3312,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_idle_left": {
+     "size": [
+      57,
+      68
+     ],
+     "box": [
+      200,
+      912,
+      688,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_face": {
+     "size": [
+      76,
+      77
+     ],
+     "box": [
+      1024,
+      824,
+      1664,
+      1472
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_palette": {
+     "size": [
+      84,
+      40
+     ],
+     "box": [
+      1888,
+      976,
+      2592,
+      1328
+     ],
+     "air": 0,
+     "blur": 0.0
+    }
+   }
+  },
+  "2": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/zafira/comp_zafira_s2.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 384.0,
+   "native_height_at_period": 48.0,
+   "scale_note": "描かれた格子のまま（48.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      36,
+      51
+     ],
+     "box": [
+      160,
+      56,
+      480,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.08
+    },
+    "walk_down_1": {
+     "size": [
+      33,
+      50
+     ],
+     "box": [
+      808,
+      64,
+      1104,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.72,
+     "scale": 0.975
+    },
+    "walk_down_2": {
+     "size": [
+      35,
+      50
+     ],
+     "box": [
+      1440,
+      64,
+      1752,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.66,
+     "scale": 1.1
+    },
+    "walk_up_0": {
+     "size": [
+      34,
+      48
+     ],
+     "box": [
+      168,
+      592,
+      472,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.81,
+     "scale": 1.037
+    },
+    "walk_up_1": {
+     "size": [
+      33,
+      48
+     ],
+     "box": [
+      808,
+      592,
+      1104,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.91,
+     "scale": 1.037
+    },
+    "walk_up_2": {
+     "size": [
+      33,
+      48
+     ],
+     "box": [
+      1448,
+      592,
+      1744,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.96,
+     "scale": 1.037
+    },
+    "walk_left_0": {
+     "size": [
+      27,
+      48
+     ],
+     "box": [
+      192,
+      1104,
+      440,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      31,
+      47
+     ],
+     "box": [
+      816,
+      1112,
+      1096,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_left_2": {
+     "size": [
+      30,
+      47
+     ],
+     "box": [
+      1464,
+      1112,
+      1736,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_0": {
+     "size": [
+      28,
+      47
+     ],
+     "box": [
+      192,
+      1624,
+      448,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      32,
+      47
+     ],
+     "box": [
+      816,
+      1624,
+      1104,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_2": {
+     "size": [
+      31,
+      47
+     ],
+     "box": [
+      1456,
+      1624,
+      1736,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    }
+   }
+  },
+  "3": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/zafira/comp_zafira_s3.png",
+   "size": [
+    4160,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x5",
+    "logical_cell": [
+     104,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 512.0,
+   "native_height_at_period": 64.0,
+   "scale_note": "描かれた格子のまま（64.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "idle_a": {
+     "size": [
+      67,
+      64
+     ],
+     "box": [
+      128,
+      176,
+      696,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.36,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.46
+     }
+    },
+    "idle_b": {
+     "size": [
+      66,
+      64
+     ],
+     "box": [
+      968,
+      176,
+      1528,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.12,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.22
+     },
+     "scale": 1.039
+    },
+    "step": {
+     "size": [
+      71,
+      64
+     ],
+     "box": [
+      1776,
+      176,
+      2376,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.42,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.52
+     }
+    },
+    "guard": {
+     "size": [
+      72,
+      64
+     ],
+     "box": [
+      2608,
+      176,
+      3216,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.96,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.06
+     },
+     "scale": 1.078
+    },
+    "hit": {
+     "size": [
+      67,
+      60
+     ],
+     "box": [
+      3456,
+      208,
+      4024,
+      720
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.02,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.12
+     },
+     "scale": 0.623,
+     "fixed": [
+      "rescaled 1.60"
+     ]
+    },
+    "weak": {
+     "size": [
+      63,
+      52
+     ],
+     "box": [
+      144,
+      1040,
+      680,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.54,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.64
+     },
+     "scale": 1.078
+    },
+    "ko": {
+     "size": [
+      87,
+      34
+     ],
+     "box": [
+      880,
+      1184,
+      1608,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "victory_a": {
+     "size": [
+      56,
+      80
+     ],
+     "box": [
+      1840,
+      816,
+      2320,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.99,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.09
+     },
+     "scale": 0.987
+    },
+    "victory_b": {
+     "size": [
+      64,
+      63
+     ],
+     "box": [
+      2640,
+      952,
+      3184,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 1.0
+    },
+    "glimmer": {
+     "size": [
+      67,
+      63
+     ],
+     "box": [
+      3456,
+      952,
+      4024,
+      1488
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.31,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.41
+     },
+     "scale": 1.0
+    }
+   }
+  },
+  "4": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/zafira/comp_zafira_s4.png",
+   "size": [
+    4480,
+    1920
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "3x5",
+    "logical_cell": [
+     112,
+     80
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 512.0,
+   "native_height_at_period": 64.0,
+   "scale_note": "描かれた格子のまま（64.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "windup": {
+     "size": [
+      51,
+      65
+     ],
+     "box": [
+      224,
+      72,
+      664,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.1,
+     "facing_cues": {
+      "head": -0.38,
+      "upper": 0.49
+     },
+     "scale": 0.968
+    },
+    "slash": {
+     "size": [
+      75,
+      63
+     ],
+     "box": [
+      1024,
+      88,
+      1656,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.6,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.7
+     },
+     "scale": 1.013
+    },
+    "thrust_ready": {
+     "size": [
+      73,
+      64
+     ],
+     "box": [
+      1928,
+      80,
+      2544,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.82,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.08
+     }
+    },
+    "thrust": {
+     "size": [
+      90,
+      63
+     ],
+     "box": [
+      2760,
+      88,
+      3512,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.12,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.22
+     },
+     "scale": 1.026
+    },
+    "charge": {
+     "size": [
+      65,
+      46
+     ],
+     "box": [
+      3752,
+      224,
+      4304,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.28,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.38
+     },
+     "scale": 1.0
+    },
+    "smash": {
+     "size": [
+      58,
+      73
+     ],
+     "box": [
+      200,
+      648,
+      696,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.92,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.02
+     },
+     "scale": 0.974
+    },
+    "cast_a": {
+     "size": [
+      63,
+      64
+     ],
+     "box": [
+      1072,
+      720,
+      1608,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.84,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.06
+     },
+     "scale": 1.0
+    },
+    "cast_b": {
+     "size": [
+      56,
+      64
+     ],
+     "box": [
+      2000,
+      720,
+      2480,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.43,
+     "facing_cues": {
+      "head": 0.65,
+      "upper": 0.78
+     },
+     "scale": 0.968
+    },
+    "item": {
+     "size": [
+      57,
+      66
+     ],
+     "box": [
+      2888,
+      704,
+      3376,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.56,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.66
+     },
+     "scale": 0.974
+    },
+    "evade": {
+     "size": [
+      48,
+      62
+     ],
+     "box": [
+      3824,
+      728,
+      4240,
+      1256
+     ],
+     "air": 1,
+     "blur": 0.0,
+     "facing_score": 2.18,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.28
+     },
+     "scale": 1.013
+    },
+    "bare_idle": {
+     "size": [
+      50,
+      64
+     ],
+     "box": [
+      232,
+      1360,
+      664,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.22,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.32
+     }
+    },
+    "bare_windup": {
+     "size": [
+      54,
+      63
+     ],
+     "box": [
+      1112,
+      1368,
+      1576,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.13,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.23
+     },
+     "scale": 1.039
+    },
+    "bare_slash": {
+     "size": [
+      60,
+      64
+     ],
+     "box": [
+      1984,
+      1360,
+      2496,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.62,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.72
+     },
+     "scale": 1.065
+    },
+    "bare_thrust": {
+     "size": [
+      70,
+      64
+     ],
+     "box": [
+      2840,
+      1360,
+      3432,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.39,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.49
+     },
+     "scale": 1.052
+    },
+    "bare_cast": {
+     "size": [
+      63,
+      64
+     ],
+     "box": [
+      3760,
+      1360,
+      4296,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.33,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.43
+     },
+     "scale": 1.0
+    }
+   }
+  },
+  "5": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/zafira/comp_zafira_s5.png",
+   "size": [
+    3072,
+    768
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "1x4",
+    "logical_cell": [
+     96,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 640.0,
+   "native_height_at_period": 80.0,
+   "scale_note": "描かれた格子のまま（80.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      73,
+      80
+     ],
+     "box": [
+      72,
+      80,
+      688,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_smile": {
+     "size": [
+      73,
+      80
+     ],
+     "box": [
+      840,
+      80,
+      1456,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_surprise": {
+     "size": [
+      73,
+      80
+     ],
+     "box": [
+      1608,
+      80,
+      2224,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_pain": {
+     "size": [
+      73,
+      80
+     ],
+     "box": [
+      2376,
+      80,
+      2992,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "ground",
+   "msg": "2 行目の足元の高さが最大 20 ドットずれている。足元で揃えた",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 7 番（配色見本） の足元の影を消した",
+   "slot": "ref_palette",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "design_refs",
+   "msg": "設定画から向きの見本 6 枚と配色（52 色）を取った。<out>/refs に保存（承認後は tools/refs.py zafira <out> で configs/refs に）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "height",
+   "msg": "シート2 の 1 番（下向き・立ち） の身長が 51 ドット（ほかは 48）",
+   "slot": "walk_down_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート3 の 5 番（ダメージ） の足元の影を消した",
+   "slot": "hit",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート3 の 5 番（ダメージ） がほかのポーズより小さく描かれている（頭の大きさで約 62%）。仮に 160% に拡大縮小して使う",
+   "slot": "hit",
+   "ask": "仲間ザフィラ（zafira）のシート3の5番（ダメージ）だけ小さく描かれている（頭の大きさがほかのポーズの約 62%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.623376623376623,
+    "per_ref": [
+     0.575,
+     0.5624999999999998,
+     0.6249999999999998,
+     0.6249999999999998
+    ],
+    "group_median": 0.9625000000000004
+   }
+  }
+ ]
+}

@@ -5,7 +5,7 @@
  "folder": "/home/user/others/chronicle/design/art_ref/gen/companion/hagen",
  "sheets": {
   "1": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/hagen/comp_hagen_s1.png",
+   "file": "../art_ref/gen/companion/hagen/comp_hagen_s1.png",
    "size": [
     3584,
     1536
@@ -137,7 +137,7 @@
    }
   },
   "2": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/hagen/comp_hagen_s2.png",
+   "file": "../art_ref/gen/companion/hagen/comp_hagen_s2.png",
    "size": [
     1920,
     2048
@@ -384,7 +384,7 @@
    }
   },
   "3": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/hagen/comp_hagen_s3.png",
+   "file": "../art_ref/gen/companion/hagen/comp_hagen_s3.png",
    "size": [
     4160,
     1536
@@ -452,7 +452,7 @@
       "head": 0.07,
       "upper": -0.18
      },
-     "scale": 0.891
+     "scale": 0.869
     },
     "step": {
      "size": [
@@ -491,7 +491,7 @@
       "head": 0.9,
       "upper": 0.19
      },
-     "scale": 0.878
+     "scale": 0.856
     },
     "hit": {
      "size": [
@@ -510,11 +510,7 @@
      "facing_cues": {
       "head": -0.9,
       "upper": -0.14
-     },
-     "scale": 0.647,
-     "fixed": [
-      "rescaled 1.54"
-     ]
+     }
     },
     "weak": {
      "size": [
@@ -534,7 +530,7 @@
       "head": 0.9,
       "upper": 0.16
      },
-     "scale": 0.923
+     "scale": 0.9
     },
     "ko": {
      "size": [
@@ -567,8 +563,7 @@
      "facing_cues": {
       "head": 0.53,
       "upper": 0.19
-     },
-     "scale": 0.84
+     }
     },
     "victory_b": {
      "size": [
@@ -582,11 +577,7 @@
       1496
      ],
      "air": 0,
-     "blur": 0.0,
-     "scale": 0.795,
-     "fixed": [
-      "rescaled 1.26"
-     ]
+     "blur": 0.0
     },
     "glimmer": {
      "size": [
@@ -605,16 +596,12 @@
      "facing_cues": {
       "head": 0.9,
       "upper": -0.13
-     },
-     "scale": 0.686,
-     "fixed": [
-      "rescaled 1.46"
-     ]
+     }
     }
    }
   },
   "4": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/hagen/comp_hagen_s4.png",
+   "file": "../art_ref/gen/companion/hagen/comp_hagen_s4.png",
    "size": [
     4480,
     2112
@@ -663,7 +650,7 @@
       "head": -0.9,
       "upper": -0.11
      },
-     "scale": 1.026
+     "scale": 1.0
     },
     "slash": {
      "size": [
@@ -683,7 +670,7 @@
       "head": 0.9,
       "upper": 0.34
      },
-     "scale": 1.0
+     "scale": 0.975
     },
     "thrust_ready": {
      "size": [
@@ -722,7 +709,7 @@
       "head": 0.9,
       "upper": -0.18
      },
-     "scale": 1.096
+     "scale": 1.069
     },
     "charge": {
      "size": [
@@ -742,7 +729,7 @@
       "head": 0.9,
       "upper": 0.34
      },
-     "scale": 1.013
+     "scale": 0.988
     },
     "smash": {
      "size": [
@@ -762,7 +749,7 @@
       "head": -0.61,
       "upper": -0.12
      },
-     "scale": 0.949
+     "scale": 0.925
     },
     "cast_a": {
      "size": [
@@ -782,7 +769,7 @@
       "head": 0.9,
       "upper": 0.16
      },
-     "scale": 1.103
+     "scale": 1.075
     },
     "cast_b": {
      "size": [
@@ -802,7 +789,7 @@
       "head": 0.34,
       "upper": 0.01
      },
-     "scale": 1.0
+     "scale": 0.975
     },
     "item": {
      "size": [
@@ -822,7 +809,7 @@
       "head": 0.9,
       "upper": 0.24
      },
-     "scale": 1.141
+     "scale": 1.113
     },
     "evade": {
      "size": [
@@ -841,8 +828,7 @@
      "facing_cues": {
       "head": 0.9,
       "upper": 0.33
-     },
-     "scale": 0.846
+     }
     },
     "bare_idle": {
      "size": [
@@ -881,7 +867,7 @@
       "head": 0.9,
       "upper": 0.33
      },
-     "scale": 1.038
+     "scale": 1.013
     },
     "bare_slash": {
      "size": [
@@ -901,7 +887,7 @@
       "head": 0.9,
       "upper": 0.29
      },
-     "scale": 1.038
+     "scale": 1.012
     },
     "bare_thrust": {
      "size": [
@@ -921,7 +907,7 @@
       "head": 0.9,
       "upper": -0.0
      },
-     "scale": 1.051
+     "scale": 1.025
     },
     "bare_cast": {
      "size": [
@@ -941,12 +927,12 @@
       "head": 0.9,
       "upper": 0.01
      },
-     "scale": 1.038
+     "scale": 1.013
     }
    }
   },
   "5": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/hagen/comp_hagen_s5.png",
+   "file": "../art_ref/gen/companion/hagen/comp_hagen_s5.png",
    "size": [
     3072,
     768
@@ -1173,146 +1159,83 @@
   },
   {
    "sheet": 3,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "hit の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "hit",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "victory_a の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "victory_a",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "victory_b の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "victory_b",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "glimmer の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "glimmer",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 4,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "evade の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "evade",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
    "level": "check",
    "code": "scale_small",
-   "msg": "シート3 の 2 番（待機B） の縮尺が少し違う（頭の大きさで約 89%）。並べて見て気になるなら描き直し",
+   "msg": "シート3 の 2 番（待機B） の縮尺が少し違う（頭の大きさで約 87%）。並べて見て気になるなら描き直し",
    "slot": "idle_b",
    "ask": null,
    "data": {
-    "scale": 0.891025641025641,
+    "scale": 0.8687499999999999,
     "per_ref": [
      0.9375,
      0.9375000000000002,
      0.8000000000000003,
      0.7250000000000001
     ],
-    "group_median": 0.9750000000000002
+    "group_median": 1.0000000000000002
    }
   },
   {
    "sheet": 3,
    "level": "check",
    "code": "scale_small",
-   "msg": "シート3 の 4 番（防御） の縮尺が少し違う（頭の大きさで約 88%）。並べて見て気になるなら描き直し",
+   "msg": "シート3 の 4 番（防御） の縮尺が少し違う（頭の大きさで約 86%）。並べて見て気になるなら描き直し",
    "slot": "guard",
    "ask": null,
    "data": {
-    "scale": 0.878205128205128,
+    "scale": 0.8562499999999997,
     "per_ref": [
      0.6749999999999998,
      1.0250000000000004,
      0.825,
      0.8875
     ],
-    "group_median": 0.9750000000000002
-   }
-  },
-  {
-   "sheet": 3,
-   "level": "redo",
-   "code": "scale",
-   "msg": "シート3 の 5 番（ダメージ） がほかのポーズより小さく描かれている（頭の大きさで約 65%）。仮に 154% に拡大縮小して使う",
-   "slot": "hit",
-   "ask": "仲間ハーゲン（hagen）のシート3の5番（ダメージ）だけ小さく描かれている（頭の大きさがほかのポーズの約 65%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
-   "data": {
-    "scale": 0.6474358974358974,
-    "per_ref": [
-     0.6500000000000001,
-     0.5624999999999998,
-     0.6125,
-     1.2000000000000006
-    ],
-    "group_median": 0.9750000000000002
-   }
-  },
-  {
-   "sheet": 3,
-   "level": "check",
-   "code": "scale_small",
-   "msg": "シート3 の 8 番（勝利A） の縮尺が少し違う（頭の大きさで約 84%）。並べて見て気になるなら描き直し",
-   "slot": "victory_a",
-   "ask": null,
-   "data": {
-    "scale": 0.8397435897435898,
-    "per_ref": [
-     0.8375000000000001,
-     0.9125000000000001,
-     0.8000000000000003,
-     0.5374999999999999
-    ],
-    "group_median": 0.9750000000000002
-   }
-  },
-  {
-   "sheet": 3,
-   "level": "redo",
-   "code": "scale",
-   "msg": "シート3 の 9 番（勝利B） がほかのポーズより小さく描かれている（頭の大きさで約 79%）。仮に 126% に拡大縮小して使う",
-   "slot": "victory_b",
-   "ask": "仲間ハーゲン（hagen）のシート3の9番（勝利B）だけ小さく描かれている（頭の大きさがほかのポーズの約 79%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
-   "data": {
-    "scale": 0.7948717948717947,
-    "per_ref": [
-     0.6000000000000001,
-     0.9125000000000001,
-     0.7625,
-     0.7875000000000001
-    ],
-    "group_median": 0.9750000000000002
-   }
-  },
-  {
-   "sheet": 3,
-   "level": "redo",
-   "code": "scale",
-   "msg": "シート3 の 10 番（閃き） がほかのポーズより小さく描かれている（頭の大きさで約 69%）。仮に 146% に拡大縮小して使う",
-   "slot": "glimmer",
-   "ask": "仲間ハーゲン（hagen）のシート3の10番（閃き）だけ小さく描かれている（頭の大きさがほかのポーズの約 69%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
-   "data": {
-    "scale": 0.6858974358974358,
-    "per_ref": [
-     0.5,
-     0.5,
-     1.0875000000000004,
-     0.8375000000000001
-    ],
-    "group_median": 0.9750000000000002
-   }
-  },
-  {
-   "sheet": 4,
-   "level": "check",
-   "code": "scale_small",
-   "msg": "シート4 の 9 番（道具を使う） の縮尺が少し違う（頭の大きさで約 114%）。並べて見て気になるなら描き直し",
-   "slot": "item",
-   "ask": null,
-   "data": {
-    "scale": 1.1410256410256412,
-    "per_ref": [
-     1.2625000000000004,
-     1.2000000000000006,
-     1.0000000000000004,
-     1.0250000000000004
-    ],
-    "group_median": 0.9750000000000002
-   }
-  },
-  {
-   "sheet": 4,
-   "level": "check",
-   "code": "scale_small",
-   "msg": "シート4 の 10 番（身をかわす） の縮尺が少し違う（頭の大きさで約 85%）。並べて見て気になるなら描き直し",
-   "slot": "evade",
-   "ask": null,
-   "data": {
-    "scale": 0.8461538461538463,
-    "per_ref": [
-     0.6000000000000001,
-     0.5874999999999999,
-     1.0500000000000005,
-     1.1000000000000005
-    ],
-    "group_median": 0.9750000000000002
+    "group_median": 1.0000000000000002
    }
   }
  ]

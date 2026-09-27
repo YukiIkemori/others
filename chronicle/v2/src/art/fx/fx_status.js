@@ -60,7 +60,7 @@
 
   // ---------------------------------------------------------------- 状態の印
   const MARK = {
-    poison: ['#8fd06a', '毒'], sleep: ['#8fb0f0', '眠'], paralysis: ['#f0d060', '痺'], paralyze: ['#f0d060', '痺'], confuse: ['#f09ad0', '混'],
+    poison: ['#8fd06a', '毒'], sleep: ['#8fb0f0', '眠'], paralysis: ['#f0d060', '麻'], paralyze: ['#f0d060', '麻'], confuse: ['#f09ad0', '混'],
     blind: ['#a0a0b0', '暗'], silence: ['#b0c8e0', '封'], stone: ['#b8b0a0', '石'], charm: ['#ff9ab0', '魅'], stun: ['#ffe080', '気'],
     slow: ['#90a8d0', '遅'], haste: ['#8ee08a', '速'], regen: ['#8ee08a', '再'], protect: ['#ecc97c', '守'], shell: ['#8fd6d8', '護'],
     berserk: ['#f47e6c', '狂'], doom: ['#c090f0', '死'], guard: ['#ecc97c', '防'],
@@ -79,7 +79,7 @@
   BFX.statusName = function (id) {
     const d = R.DB.statuses && R.DB.statuses[id];
     if (d && d.name) return d.name;
-    const N = { poison: '毒', sleep: '眠り', paralysis: 'まひ', paralyze: 'まひ', confuse: '混乱', blind: '暗闇', silence: '沈黙', stone: '石化', charm: '魅了', stun: '気絶', slow: 'スロウ', haste: 'ヘイスト', regen: 'リジェネ', protect: '守り', shell: '魔よけ', berserk: '狂戦士', doom: '死の宣告', guard: '防御' };
+    const N = { poison: '毒', sleep: '眠り', paralysis: 'まひ', paralyze: 'まひ', confuse: '混乱', blind: '暗闇', silence: '沈黙', stone: '石化', charm: '魅了', stun: '気絶', slow: 'スロウ', haste: '身軽', regen: '再生', protect: '守り', shell: '魔よけ', berserk: '狂戦士', doom: '死の宣告', guard: '防御' };
     return N[id] || id;
   };
 })(window.RPG);

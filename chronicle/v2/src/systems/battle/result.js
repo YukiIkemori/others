@@ -195,7 +195,7 @@
   Rs.lose = async function (st) {
     st.phase = 'result';
     st.ui = null;
-    st.head = { name: '一行は力尽きた……', t0: R.Engine.time };
+    st.head = { name: '一行は力尽きた……。', t0: R.Engine.time };
     await st.pwait(1000);
   };
 })(window.RPG);

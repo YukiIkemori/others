@@ -1,0 +1,333 @@
+{
+ "character": "viola",
+ "set": "battle_bare",
+ "look": "viola",
+ "source": "out/comp_viola/battle_bare",
+ "cell": [
+  77,
+  74
+ ],
+ "anchor": [
+  43,
+  69
+ ],
+ "frames": [
+  {
+   "id": "bare_idle",
+   "x": 0,
+   "y": 0,
+   "w": 77,
+   "h": 74,
+   "anchor": [
+    43,
+    69
+   ],
+   "points": {
+    "head": [
+     49,
+     2
+    ],
+    "center": [
+     45,
+     39
+    ],
+    "front": [
+     23,
+     46
+    ],
+    "grip": [
+     46,
+     33
+    ],
+    "tip": [
+     30,
+     60
+    ]
+   }
+  },
+  {
+   "id": "bare_windup",
+   "x": 77,
+   "y": 0,
+   "w": 77,
+   "h": 74,
+   "anchor": [
+    43,
+    69
+   ],
+   "points": {
+    "head": [
+     41,
+     2
+    ],
+    "center": [
+     43,
+     37
+    ],
+    "front": [
+     20,
+     66
+    ],
+    "grip": [
+     35,
+     41
+    ],
+    "tip": [
+     57,
+     63
+    ]
+   }
+  },
+  {
+   "id": "bare_slash",
+   "x": 154,
+   "y": 0,
+   "w": 77,
+   "h": 74,
+   "anchor": [
+    43,
+    69
+   ],
+   "points": {
+    "head": [
+     41,
+     2
+    ],
+    "center": [
+     44,
+     38
+    ],
+    "front": [
+     18,
+     44
+    ],
+    "grip": [
+     40,
+     39
+    ],
+    "tip": [
+     69,
+     61
+    ]
+   }
+  },
+  {
+   "id": "bare_thrust",
+   "x": 231,
+   "y": 0,
+   "w": 77,
+   "h": 74,
+   "anchor": [
+    43,
+    69
+   ],
+   "points": {
+    "head": [
+     34,
+     2
+    ],
+    "center": [
+     34,
+     37
+    ],
+    "front": [
+     2,
+     28
+    ],
+    "grip": [
+     28,
+     35
+    ],
+    "tip": [
+     56,
+     61
+    ]
+   }
+  },
+  {
+   "id": "bare_cast",
+   "x": 308,
+   "y": 0,
+   "w": 77,
+   "h": 74,
+   "anchor": [
+    43,
+    69
+   ],
+   "points": {
+    "head": [
+     48,
+     2
+    ],
+    "center": [
+     42,
+     38
+    ],
+    "front": [
+     13,
+     27
+    ],
+    "grip": [
+     41,
+     16
+    ],
+    "tip": [
+     54,
+     2
+    ]
+   }
+  }
+ ],
+ "poses": {
+  "bare_idle": [
+   0
+  ],
+  "bare_windup": [
+   1
+  ],
+  "bare_slash": [
+   2
+  ],
+  "bare_thrust": [
+   3
+  ],
+  "bare_cast": [
+   4
+  ]
+ },
+ "fps": {},
+ "anims": {},
+ "facing": "left",
+ "target_height": 64,
+ "attach": {
+  "bare_idle": {
+   "grip": [
+    23,
+    31
+   ],
+   "tip": [
+    7,
+    58
+   ],
+   "angle": 120.6,
+   "length": 32,
+   "blade": 24.2,
+   "fit": 0.902,
+   "method": "blade"
+  },
+  "bare_windup": {
+   "grip": [
+    15,
+    39
+   ],
+   "tip": [
+    37,
+    61
+   ],
+   "angle": 46.7,
+   "length": 32,
+   "blade": 24.3,
+   "fit": 0.682,
+   "method": "blade"
+  },
+  "bare_slash": {
+   "grip": [
+    22,
+    37
+   ],
+   "tip": [
+    51,
+    59
+   ],
+   "angle": 37.6,
+   "length": 37,
+   "blade": 28.8,
+   "fit": 0.734,
+   "method": "blade"
+  },
+  "bare_thrust": {
+   "grip": [
+    26,
+    33
+   ],
+   "tip": [
+    54,
+    59
+   ],
+   "angle": 42.9,
+   "length": 39,
+   "blade": 31.4,
+   "fit": 0.922,
+   "method": "blade"
+  },
+  "bare_cast": {
+   "grip": [
+    28,
+    14
+   ],
+   "tip": [
+    41,
+    0
+   ],
+   "angle": -45.6,
+   "length": 20,
+   "blade": 11.6,
+   "fit": 0.889,
+   "method": "blade"
+  }
+ },
+ "palette": [
+  "#0e090b",
+  "#170b15",
+  "#201c1a",
+  "#28232b",
+  "#332f2b",
+  "#38333e",
+  "#46403b",
+  "#5a544d",
+  "#736c65",
+  "#8f8778",
+  "#958c8a",
+  "#ae9ea9",
+  "#c0b9b6",
+  "#dbd3c3",
+  "#e0d7db",
+  "#f4f0ea",
+  "#3a231c",
+  "#733f45",
+  "#af5d43",
+  "#b77670",
+  "#ef9b98",
+  "#fbc7c2",
+  "#583a29",
+  "#7c4631",
+  "#775b45",
+  "#9a6a4a",
+  "#9b7e62",
+  "#cd8862",
+  "#c29f7a",
+  "#b3a897",
+  "#eaaf7e",
+  "#eec396",
+  "#f7dca4",
+  "#fae5bd",
+  "#463253",
+  "#464151",
+  "#533966",
+  "#64477c",
+  "#5a5465",
+  "#3e5c86",
+  "#7a5793",
+  "#7e6090",
+  "#8e67a6",
+  "#9472a8",
+  "#231426",
+  "#33213b",
+  "#624b6f",
+  "#907993",
+  "#a37bb9",
+  "#a984bb",
+  "#b89ac0",
+  "#ccb9cf"
+ ]
+}

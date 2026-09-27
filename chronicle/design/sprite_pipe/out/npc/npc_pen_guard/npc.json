@@ -1,0 +1,55 @@
+{
+ "id": "npc_pen_guard",
+ "look": "npc_pen_guard",
+ "name": "番兵",
+ "tier": "C",
+ "kind": "person",
+ "region": "prologue",
+ "group": "pen_4",
+ "slot": "A",
+ "heightDots": {
+  "field": 49
+ },
+ "measureH": {
+  "field": 49
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#2C3E62",
+ "mainHue": 215,
+ "mainName": "紺",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_pen_guard_1",
+  "npc_pen_guard_2",
+  "npc_pen_guard_3",
+  "npc_pen_guard_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_pen_guard_s1.png"
+ },
+ "pair_file": "npc_grp_pen_4.png",
+ "proportion": {
+  "1": {
+   "neck": 0.37755102040816324,
+   "head_w": 0.3673469387755102,
+   "shoulder": 0.4030612244897959,
+   "neck_clear": 0.7712418300653594
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

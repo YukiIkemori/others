@@ -1,6 +1,6 @@
 // CONTENT-P: ファロスの屋内 6 つ（V2_PLAN §3.2）。どれも「上の 2 行が壁、下の中ほどに戸口」の箱（R.ContentP.kit.room）。
 //   pharos_inn       宿（16×12）         宿の主人 → ev.inn
-//   pharos_tavern    潮風亭（20×14）     マスター（P6 の仲間選び・入れ替え）、噂の 3 人、吟遊詩人、旅の剣士
+//   pharos_tavern    潮風亭（20×14）     マスター（P6 の仲間選び・入れ替え）、うわさの 3 人、吟遊詩人、旅の剣士
 //   pharos_shop      道具屋（14×10）     shop_pharos_items
 //   pharos_smith     武具屋（14×10）     shop_pharos_arms
 //   pharos_record    記録院の出張所（14×10）  P5 の若い記録官、写し取り済みの掲示（lo_ev_prologue）、白紙の束
@@ -55,7 +55,7 @@
         ],
         npcs: [
           { id: 'master', look: 'npc_merchant_2', name: '潮風亭のマスター', x: 4, y: 4, dir: 's', move: 'still', pushable: false, talk: 'pharos_tavern_master', key: 'pharos_master' },
-          { id: 'gossip', look: 'npc_woman_3', name: '噂好きのおかみ', x: 11, y: 5, dir: 'e', move: 'still', talk: 'pharos_rumor_gossip', reward: 'lead', key: 'pharos_gossip' },
+          { id: 'gossip', look: 'npc_woman_3', name: 'うわさ好きのおかみ', x: 11, y: 5, dir: 'e', move: 'still', talk: 'pharos_rumor_gossip', reward: 'lead', key: 'pharos_gossip' },
           { id: 'bard', look: 'npc_bard_1', name: '吟遊詩人', x: 17, y: 4, dir: 's', move: 'still', talk: 'pharos_rumor_bard', reward: 'lead', key: 'pharos_bard' },
           { id: 'trader', look: 'npc_merchant_3', name: '旅の商人', x: 14, y: 11, dir: 'e', move: 'still', talk: 'pharos_rumor_trader', reward: 'lead', key: 'pharos_trader' },
           { id: 'swordsman', look: 'npc_man_3', name: '旅の剣士', x: 2, y: 10, dir: 'e', move: 'still', talk: 'pharos_swordsman', reward: 'boss', key: 'pharos_swordsman' },
@@ -90,7 +90,7 @@
     });
 
     // ---------------------------------------------------------------- 記録院の出張所（14×10）
-    room('pharos_record', '記録院 ファロス出張所', 14, 10, 'record_door', {
+    room('pharos_record', '記録院ファロス出張所', 14, 10, 'record_door', {
       wall: 'wall_stone', floor: 'stone_floor', carpet: [4, 5, 6, 3],
       map: {
         objects: [

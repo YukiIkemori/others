@@ -1,5 +1,5 @@
 // CONTENT-P: 旅人の古井戸（寄り道 #3、V2_PLAN §3.2・§3.4 q_pharos_well、WORLD_REDESIGN §2.7-3）
-//   well_nest   宝石ウサギの巣に入った（1 回）: 依頼 q_pharos_well と寄り道の噂 l_opt_well が解決
+//   well_nest   宝石ウサギの巣に入った（1 回）: 依頼 q_pharos_well と寄り道のうわさ l_opt_well が解決
 //   well_grave  旅人の墓標（井戸の底の花の話）
 (function (R) {
   'use strict';
@@ -11,7 +11,7 @@
     meta: { needs: [], gives: ['flag:prologue_well_nest'] },
     run: async (ev) => {
       const E = X();
-      await E.narr(ev, '花の咲く窪みに、\n光る毛並みの小さなけものの\n巣がある。');
+      await E.narr(ev, '花の咲くくぼみに、\n光る毛並みの小さなけものの\n巣がある。');
       await E.narr(ev, '宝石ウサギの巣だ……！\nきらきらした音の正体は、\nこれだったのか。');
       ev.setFlag('prologue_well_nest');
       if (R.Game.leads && R.Game.leads.q_pharos_well) ev.leadDone('q_pharos_well');

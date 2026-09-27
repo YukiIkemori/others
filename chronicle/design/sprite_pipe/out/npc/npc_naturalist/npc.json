@@ -1,0 +1,48 @@
+{
+ "id": "naturalist",
+ "look": "npc_naturalist",
+ "name": "博物学者",
+ "tier": "B",
+ "kind": "person",
+ "region": "star",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 45
+ },
+ "measureH": {
+  "field": 46
+ },
+ "headgearExtraDots": 1,
+ "mainHex": "#5A6A3C",
+ "mainHue": 90,
+ "mainName": "苔色",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_naturalist_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.3333333333333333,
+   "head_w": 0.45555555555555555,
+   "shoulder": 0.3888888888888889,
+   "neck_clear": 0.6602870813397129
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

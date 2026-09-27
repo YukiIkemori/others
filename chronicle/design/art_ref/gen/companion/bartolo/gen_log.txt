@@ -40,3 +40,4 @@
 01:27:27   |   シート5 顔の表情: OK  comp_bartolo_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
 01:27:27   | 
 01:27:27   | packed field 126x236, battle 735x352, battle_bare 405x75, face 332x85 | palette 52 + face 48
+01:35:14   size check windup: 1.04 of the hero's same pose (relative to cast_a)

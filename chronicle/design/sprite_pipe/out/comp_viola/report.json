@@ -1,0 +1,1256 @@
+{
+ "char": "viola",
+ "companion": "viola",
+ "npc": null,
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/companion/viola",
+ "sheets": {
+  "1": {
+   "file": "../art_ref/gen/companion/viola/comp_viola_s1.png",
+   "size": [
+    3584,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x4",
+    "logical_cell": [
+     112,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 552.0,
+   "native_height_at_period": 69.0,
+   "scale_note": "描かれた格子のまま（69.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "ref_front": {
+     "size": [
+      51,
+      69
+     ],
+     "box": [
+      216,
+      144,
+      680,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_34": {
+     "size": [
+      50,
+      69
+     ],
+     "box": [
+      1112,
+      144,
+      1568,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_side_left": {
+     "size": [
+      51,
+      71
+     ],
+     "box": [
+      2016,
+      128,
+      2456,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_back": {
+     "size": [
+      51,
+      69
+     ],
+     "box": [
+      2912,
+      144,
+      3352,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_idle_left": {
+     "size": [
+      66,
+      66
+     ],
+     "box": [
+      168,
+      936,
+      728,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_face": {
+     "size": [
+      65,
+      83
+     ],
+     "box": [
+      1064,
+      800,
+      1616,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_palette": {
+     "size": [
+      86,
+      42
+     ],
+     "box": [
+      1880,
+      968,
+      2600,
+      1336
+     ],
+     "air": 0,
+     "blur": 0.0
+    }
+   }
+  },
+  "2": {
+   "file": "../art_ref/gen/companion/viola/comp_viola_s2.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 420.0,
+   "native_height_at_period": 52.5,
+   "scale_note": "描かれた格子のまま（52.5 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      25,
+      53
+     ],
+     "box": [
+      200,
+      40,
+      432,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.02
+    },
+    "walk_down_1": {
+     "size": [
+      27,
+      54
+     ],
+     "box": [
+      832,
+      32,
+      1080,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.87,
+     "scale": 1.078
+    },
+    "walk_down_2": {
+     "size": [
+      26,
+      54
+     ],
+     "box": [
+      1480,
+      32,
+      1720,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.95,
+     "scale": 1.0
+    },
+    "walk_up_0": {
+     "size": [
+      24,
+      52
+     ],
+     "box": [
+      208,
+      560,
+      432,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.69,
+     "scale": 1.0
+    },
+    "walk_up_1": {
+     "size": [
+      26,
+      53
+     ],
+     "box": [
+      840,
+      552,
+      1080,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.9,
+     "scale": 1.0
+    },
+    "walk_up_2": {
+     "size": [
+      26,
+      53
+     ],
+     "box": [
+      1480,
+      552,
+      1720,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.04,
+     "scale": 1.0
+    },
+    "walk_left_0": {
+     "size": [
+      23,
+      53
+     ],
+     "box": [
+      208,
+      1064,
+      424,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.19,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 0.69
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      28,
+      52
+     ],
+     "box": [
+      832,
+      1072,
+      1088,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_left_2": {
+     "size": [
+      28,
+      52
+     ],
+     "box": [
+      1472,
+      1072,
+      1728,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_0": {
+     "size": [
+      21,
+      51
+     ],
+     "box": [
+      216,
+      1592,
+      416,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.61,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.11
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      31,
+      50
+     ],
+     "box": [
+      816,
+      1600,
+      1096,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.2,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.7
+     },
+     "scale": 0.844
+    },
+    "walk_right_2": {
+     "size": [
+      31,
+      50
+     ],
+     "box": [
+      1456,
+      1600,
+      1736,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.29,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.79
+     },
+     "scale": 0.844
+    }
+   }
+  },
+  "3": {
+   "file": "../art_ref/gen/companion/viola/comp_viola_s3.png",
+   "size": [
+    4160,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x5",
+    "logical_cell": [
+     104,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 548.0,
+   "native_height_at_period": 68.5,
+   "scale_note": "描かれた格子のまま（68.5 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "idle_a": {
+     "size": [
+      58,
+      69
+     ],
+     "box": [
+      168,
+      144,
+      664,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.22,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.32
+     }
+    },
+    "idle_b": {
+     "size": [
+      57,
+      69
+     ],
+     "box": [
+      1000,
+      144,
+      1488,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.16,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.26
+     },
+     "scale": 0.944
+    },
+    "step": {
+     "size": [
+      67,
+      68
+     ],
+     "box": [
+      1792,
+      152,
+      2360,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.42,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.52
+     }
+    },
+    "guard": {
+     "size": [
+      79,
+      69
+     ],
+     "box": [
+      2576,
+      144,
+      3240,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.41,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.49
+     },
+     "scale": 0.963
+    },
+    "hit": {
+     "size": [
+      62,
+      68
+     ],
+     "box": [
+      3472,
+      152,
+      4016,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.67,
+     "facing_cues": {
+      "head": -0.22,
+      "upper": 0.88
+     },
+     "scale": 0.864
+    },
+    "weak": {
+     "size": [
+      62,
+      57
+     ],
+     "box": [
+      152,
+      1008,
+      680,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.48,
+     "facing_cues": {
+      "head": 0.03,
+      "upper": 0.45
+     }
+    },
+    "ko": {
+     "size": [
+      95,
+      37
+     ],
+     "box": [
+      848,
+      1168,
+      1640,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "victory_a": {
+     "size": [
+      47,
+      86
+     ],
+     "box": [
+      1872,
+      776,
+      2280,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.08,
+     "facing_cues": {
+      "head": -0.19,
+      "upper": 0.27
+     },
+     "scale": 0.944
+    },
+    "victory_b": {
+     "size": [
+      57,
+      68
+     ],
+     "box": [
+      2664,
+      920,
+      3152,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 0.944
+    },
+    "glimmer": {
+     "size": [
+      59,
+      66
+     ],
+     "box": [
+      3488,
+      936,
+      3992,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.99,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.09
+     },
+     "scale": 0.988
+    }
+   }
+  },
+  "4": {
+   "file": "../art_ref/gen/companion/viola/comp_viola_s4.png",
+   "size": [
+    4480,
+    1920
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "3x5",
+    "logical_cell": [
+     112,
+     80
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 544.0,
+   "native_height_at_period": 68.0,
+   "scale_note": "描かれた格子のまま（68.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "windup": {
+     "size": [
+      48,
+      70
+     ],
+     "box": [
+      240,
+      32,
+      656,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.07,
+     "facing_cues": {
+      "head": 0.83,
+      "upper": 0.24
+     },
+     "scale": 1.049
+    },
+    "slash": {
+     "size": [
+      76,
+      68
+     ],
+     "box": [
+      1024,
+      48,
+      1664,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.2,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.3
+     },
+     "scale": 1.049
+    },
+    "thrust_ready": {
+     "size": [
+      73,
+      69
+     ],
+     "box": [
+      1928,
+      40,
+      2544,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.65,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.25
+     }
+    },
+    "thrust": {
+     "size": [
+      92,
+      69
+     ],
+     "box": [
+      2752,
+      40,
+      3520,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.9,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.0
+     },
+     "scale": 1.037
+    },
+    "charge": {
+     "size": [
+      64,
+      53
+     ],
+     "box": [
+      3760,
+      168,
+      4304,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.09,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.19
+     },
+     "scale": 1.019
+    },
+    "smash": {
+     "size": [
+      48,
+      78
+     ],
+     "box": [
+      240,
+      632,
+      656,
+      1288
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.14,
+     "facing_cues": {
+      "head": -0.33,
+      "upper": 0.19
+     },
+     "scale": 0.963
+    },
+    "cast_a": {
+     "size": [
+      64,
+      68
+     ],
+     "box": [
+      1072,
+      688,
+      1616,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.49,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.59
+     },
+     "scale": 0.988
+    },
+    "cast_b": {
+     "size": [
+      52,
+      67
+     ],
+     "box": [
+      2016,
+      696,
+      2464,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.3,
+     "facing_cues": {
+      "head": -0.25,
+      "upper": 0.55
+     },
+     "scale": 1.0
+    },
+    "item": {
+     "size": [
+      54,
+      68
+     ],
+     "box": [
+      2904,
+      688,
+      3368,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.95,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.05
+     },
+     "scale": 1.0
+    },
+    "evade": {
+     "size": [
+      57,
+      68
+     ],
+     "box": [
+      3784,
+      688,
+      4272,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.01,
+     "facing_cues": {
+      "head": -0.1,
+      "upper": 1.12
+     },
+     "scale": 1.0
+    },
+    "bare_idle": {
+     "size": [
+      44,
+      70
+     ],
+     "box": [
+      256,
+      1312,
+      640,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.19,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.29
+     }
+    },
+    "bare_windup": {
+     "size": [
+      51,
+      68
+     ],
+     "box": [
+      1120,
+      1328,
+      1560,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.37,
+     "facing_cues": {
+      "head": -0.44,
+      "upper": 0.81
+     },
+     "scale": 1.0
+    },
+    "bare_slash": {
+     "size": [
+      57,
+      69
+     ],
+     "box": [
+      1992,
+      1320,
+      2480,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.07,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 1.17
+     },
+     "scale": 1.049
+    },
+    "bare_thrust": {
+     "size": [
+      64,
+      68
+     ],
+     "box": [
+      2864,
+      1328,
+      3408,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.18,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.28
+     },
+     "scale": 1.037
+    },
+    "bare_cast": {
+     "size": [
+      54,
+      69
+     ],
+     "box": [
+      3800,
+      1320,
+      4264,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.51,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.39
+     },
+     "scale": 1.0
+    }
+   }
+  },
+  "5": {
+   "file": "../art_ref/gen/companion/viola/comp_viola_s5.png",
+   "size": [
+    3072,
+    768
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "1x4",
+    "logical_cell": [
+     96,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 640.0,
+   "native_height_at_period": 80.0,
+   "scale_note": "描かれた格子のまま（80.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      60,
+      80
+     ],
+     "box": [
+      128,
+      80,
+      640,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_smile": {
+     "size": [
+      60,
+      80
+     ],
+     "box": [
+      896,
+      80,
+      1408,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_surprise": {
+     "size": [
+      60,
+      80
+     ],
+     "box": [
+      1664,
+      80,
+      2176,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_pain": {
+     "size": [
+      60,
+      80
+     ],
+     "box": [
+      2432,
+      80,
+      2944,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "ground",
+   "msg": "2 行目の足元の高さが最大 20 ドットずれている。足元で揃えた",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 1 番（正面） の足元の影を消した",
+   "slot": "ref_front",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 2 番（斜め前） の足元の影を消した",
+   "slot": "ref_34",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 4 番（背面） の足元の影を消した",
+   "slot": "ref_back",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 5 番（戦闘の待機） の足元の影を消した",
+   "slot": "ref_idle_left",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 6 番（顔） の足元の影を消した",
+   "slot": "ref_face",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 7 番（配色見本） の足元の影を消した",
+   "slot": "ref_palette",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "design_refs",
+   "msg": "設定画から向きの見本 6 枚と配色（52 色）を取った。<out>/refs に保存（承認後は tools/refs.py viola <out> で configs/refs に）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート3 の 1 番（待機A） の足元の影を消した",
+   "slot": "idle_a",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート3 の 5 番（ダメージ） の足元の影を消した",
+   "slot": "hit",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート3 の 9 番（勝利B） の足元の影を消した",
+   "slot": "victory_b",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "auto",
+   "code": "effect",
+   "msg": "シート3 の 10 番（閃き） の光・軌跡らしい物を消した。消えすぎていないか見る",
+   "slot": "glimmer",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 4,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート4 の 2 番（振り抜き） の足元の影を消した",
+   "slot": "slash",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "weak の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "weak",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート3 の 5 番（ダメージ） の縮尺が少し違う（頭の大きさで約 86%）。並べて見て気になるなら描き直し",
+   "slot": "hit",
+   "ask": null,
+   "data": {
+    "scale": 0.8641975308641973,
+    "per_ref": [
+     0.9375000000000002,
+     0.9750000000000001,
+     0.8125,
+     0.8000000000000003
+    ],
+    "group_median": 1.0125000000000004
+   }
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート2 の 11 番（右向き・前の足） の縮尺が少し違う（頭の大きさで約 84%）。並べて見て気になるなら描き直し",
+   "slot": "walk_right_1",
+   "ask": null,
+   "data": {
+    "scale": 0.844155844155844,
+    "per_ref": [
+     0.8125,
+     0.7625,
+     1.0000000000000004
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート2 の 12 番（右向き・後ろの足） の縮尺が少し違う（頭の大きさで約 84%）。並べて見て気になるなら描き直し",
+   "slot": "walk_right_2",
+   "ask": null,
+   "data": {
+    "scale": 0.844155844155844,
+    "per_ref": [
+     0.8125,
+     0.7625,
+     1.0000000000000004
+    ],
+    "group_median": 0.9625000000000001
+   }
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "leak",
+   "msg": "背景のマゼンタが絵の中に 13 ドット残っている",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "check",
+   "code": "leak",
+   "msg": "背景のマゼンタが絵の中に 27 ドット残っている",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 5,
+   "level": "check",
+   "code": "leak",
+   "msg": "背景のマゼンタが絵の中に 97 ドット残っている",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  }
+ ]
+}

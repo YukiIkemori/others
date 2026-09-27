@@ -9,3 +9,29 @@
 01:34:51   note: ko is 109x38 art px, larger than its cell 104x96 (clipped)
 01:34:51 sheet 3 -> art_ref/gen/companion/shigure/comp_shigure_s3.png (10 poses)
 01:34:52 sheet 4 attempt 1: generating 3360x1440 (pitch 6, quality medium, 2 refs)
+01:36:00   pitch in raw image: 5.26 px per art pixel (upright median 379 px / 72)
+01:36:03   note: smash is 54x86 art px, larger than its cell 112x80 (clipped)
+01:36:03 sheet 4 -> art_ref/gen/companion/shigure/comp_shigure_s4.png (15 poses)
+01:36:04 sheet 5 attempt 1: generating 1536x1536 (pitch 8, quality medium, 2 refs)
+01:37:41   pitch in raw image: 7.84 px per art pixel (upright median 627 px / 80)
+01:37:41 sheet 5 -> art_ref/gen/companion/shigure/comp_shigure_s5.png (4 poses)
+01:37:41 pipeline: sheets.py ../art_ref/gen/companion/shigure --companion shigure --out out/comp_shigure --check
+01:44:40   | ■ シートの状態
+01:44:40   |   シート1 設定画: OK  comp_shigure_s1.png  ドット 8.00px → 描かれた格子のまま（72.0 ドット）
+01:44:40   |   シート2 フィールドの歩き: OK  comp_shigure_s2.png  ドット 8.00px → 描かれた格子のまま（54.0 ドット）
+01:44:40   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_shigure_s3.png  ドット 8.00px → 描かれた格子のまま（72.0 ドット）
+01:44:40   |   シート4 戦闘の行動ポーズ＋武器なし版: OK  comp_shigure_s4.png  ドット 8.00px → 描かれた格子のまま（74.0 ドット）
+01:44:40   |   シート5 顔の表情: OK  comp_shigure_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:44:41   size check glimmer: 0.99 of the hero's same pose (relative to idle_a)
+01:44:41   sheet 3 glimmer: size redo line ignored (same size as the hero's pose)
+01:44:41 no redo lines left
+01:44:41 pipeline: sheets.py ../art_ref/gen/companion/shigure --companion shigure --out out/comp_shigure
+01:55:27   |   シート2 フィールドの歩き: OK  comp_shigure_s2.png  ドット 8.00px → 描かれた格子のまま（54.0 ドット）
+01:55:27   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_shigure_s3.png  ドット 8.00px → 描かれた格子のまま（72.0 ドット）
+01:55:27   |   シート4 戦闘の行動ポーズ＋武器なし版: OK  comp_shigure_s4.png  ドット 8.00px → 描かれた格子のまま（74.0 ドット）
+01:55:27   |   シート5 顔の表情: OK  comp_shigure_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:55:27   | 
+01:55:27   | packed field 129x244, battle 670x392, battle_bare 440x84, face 332x84 | palette 52 + face 47
+01:56:19 sheet 3 fix1: edit idle_b (window rows 1-2 cols 1-5, 3648x1344, pitch 7, quality medium)
+01:56:59   calibrated pitch 6.92 px (requested 7; 9 reference poses)
+01:57:03   pasted: idle_b 53x72

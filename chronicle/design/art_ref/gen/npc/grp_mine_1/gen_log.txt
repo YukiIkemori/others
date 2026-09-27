@@ -1,0 +1,21 @@
+02:08:15 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+02:09:42   half A (npc_miner, target 48):
+02:09:43   pitch in raw image: 4.92 px per art pixel (upright median 236 px / 48)
+02:09:43   half B (npc_mine_woman, target 46):
+02:09:44   pitch in raw image: 4.87 px per art pixel (upright median 224 px / 46)
+02:10:00 sheet 1 -> art_ref/gen/npc/grp_mine_1/npc_grp_mine_1.png (24 poses)
+02:10:01 pipeline: sheets.py ../art_ref/gen/npc/grp_mine_1 --npc npc_miner --out out/npc/npc_miner --check
+02:11:16   |   - シート1: npc_grp_mine_1.png の左半分（人物A）を使う
+02:11:16   |   - シート1: 頭身の比（歩き12コマの中央値、体 48 ドットあたり）: 首 0.23（アルン 0.29）・頭の幅 0.56（0.43）・肩 0.47（0.40）
+02:11:16   |   - 向きの見本（configs/refs/npc_miner）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:11:16   | 
+02:11:16   | ■ シートの状態
+02:11:16   |   シート1 歩き: 確認あり  npc_miner_s1.png  ドット 8.00px → 描かれた格子のまま（47.5 ドット）
+02:11:16 pipeline: sheets.py ../art_ref/gen/npc/grp_mine_1 --npc npc_mine_woman --out out/npc/npc_mine_woman --check
+02:12:46   |   - シート1: npc_grp_mine_1.png の右半分（人物B）を使う
+02:12:46   |   - シート1: 頭身の比（歩き12コマの中央値、体 46 ドットあたり）: 首 0.41（アルン 0.29）・頭の幅 0.48（0.43）・肩 0.39（0.40）
+02:12:46   |   - 向きの見本（configs/refs/npc_mine_woman）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:12:46   | 
+02:12:46   | ■ シートの状態
+02:12:46   |   シート1 歩き: 確認あり  npc_mine_woman_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+02:12:46 sheet 1: 0 redo lines

@@ -452,7 +452,7 @@
       "head": 0.9,
       "upper": 0.27
      },
-     "scale": 0.919
+     "scale": 0.91
     },
     "step": {
      "size": [
@@ -491,7 +491,7 @@
       "head": 0.9,
       "upper": -0.18
      },
-     "scale": 1.036
+     "scale": 1.026
     },
     "hit": {
      "size": [
@@ -511,7 +511,7 @@
       "head": -0.9,
       "upper": 0.22
      },
-     "scale": 0.971
+     "scale": 0.962
     },
     "weak": {
      "size": [
@@ -531,7 +531,7 @@
       "head": 0.9,
       "upper": 0.21
      },
-     "scale": 1.061
+     "scale": 1.051
     },
     "ko": {
      "size": [
@@ -565,7 +565,7 @@
       "head": 0.75,
       "upper": 0.18
      },
-     "scale": 0.919
+     "scale": 0.91
     },
     "victory_b": {
      "size": [
@@ -580,7 +580,7 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "scale": 0.971
+     "scale": 0.962
     },
     "glimmer": {
      "size": [
@@ -600,7 +600,7 @@
       "head": 0.9,
       "upper": 0.38
      },
-     "scale": 0.945
+     "scale": 0.936
     }
    }
   },
@@ -653,11 +653,7 @@
      "facing_cues": {
       "head": 0.54,
       "upper": -0.14
-     },
-     "scale": 0.634,
-     "fixed": [
-      "rescaled 1.58"
-     ]
+     }
     },
     "slash": {
      "size": [
@@ -677,7 +673,7 @@
       "head": 0.9,
       "upper": 0.55
      },
-     "scale": 1.081
+     "scale": 1.071
     },
     "thrust_ready": {
      "size": [
@@ -716,7 +712,7 @@
       "head": 0.9,
       "upper": -0.48
      },
-     "scale": 1.061
+     "scale": 1.051
     },
     "charge": {
      "size": [
@@ -736,7 +732,7 @@
       "head": 0.9,
       "upper": 0.13
      },
-     "scale": 1.01
+     "scale": 1.0
     },
     "smash": {
      "size": [
@@ -756,7 +752,7 @@
       "head": 0.59,
       "upper": 0.2
      },
-     "scale": 0.971
+     "scale": 0.962
     },
     "cast_a": {
      "size": [
@@ -776,7 +772,7 @@
       "head": 0.9,
       "upper": 0.02
      },
-     "scale": 1.049
+     "scale": 1.038
     },
     "cast_b": {
      "size": [
@@ -796,7 +792,7 @@
       "head": 0.12,
       "upper": 0.24
      },
-     "scale": 0.971
+     "scale": 0.962
     },
     "item": {
      "size": [
@@ -816,7 +812,7 @@
       "head": 0.9,
       "upper": 0.35
      },
-     "scale": 0.99
+     "scale": 0.981
     },
     "evade": {
      "size": [
@@ -836,7 +832,7 @@
       "head": -0.29,
       "upper": -0.14
      },
-     "scale": 0.926
+     "scale": 0.917
     },
     "bare_idle": {
      "size": [
@@ -875,7 +871,7 @@
       "head": 0.15,
       "upper": 0.09
      },
-     "scale": 1.036
+     "scale": 1.026
     },
     "bare_slash": {
      "size": [
@@ -895,7 +891,7 @@
       "head": 0.9,
       "upper": 0.26
      },
-     "scale": 1.036
+     "scale": 1.026
     },
     "bare_thrust": {
      "size": [
@@ -915,7 +911,7 @@
       "head": 0.9,
       "upper": 0.2
      },
-     "scale": 1.049
+     "scale": 1.038
     },
     "bare_cast": {
      "size": [
@@ -935,7 +931,7 @@
       "head": 0.9,
       "upper": 0.23
      },
-     "scale": 1.049
+     "scale": 1.038
     }
    }
   },
@@ -1202,21 +1198,12 @@
   },
   {
    "sheet": 4,
-   "level": "redo",
-   "code": "scale",
-   "msg": "シート4 の 1 番（振りかぶり） がほかのポーズより小さく描かれている（頭の大きさで約 63%）。仮に 158% に拡大縮小して使う",
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "windup の縮尺は目で確かめて OK（overrides の scale_ok）",
    "slot": "windup",
-   "ask": "仲間バルトロ（bartolo）のシート4の1番（振りかぶり）だけ小さく描かれている（頭の大きさがほかのポーズの約 63%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
-   "data": {
-    "scale": 0.6343042071197408,
-    "per_ref": [
-     1.0250000000000004,
-     0.6624999999999999,
-     0.5624999999999998,
-     0.55
-    ],
-    "group_median": 0.9656250000000002
-   }
+   "ask": null,
+   "data": {}
   }
  ]
 }

@@ -1,0 +1,21 @@
+01:40:57 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+01:41:46   half A (npc_hawk, target 49):
+01:41:46   pitch in raw image: 5.47 px per art pixel (upright median 268 px / 49)
+01:41:46   half B (npc_fortune, target 44):
+01:41:47   pitch in raw image: 5.11 px per art pixel (upright median 225 px / 44)
+01:41:48 sheet 1 -> art_ref/gen/npc/grp_desert_4/npc_grp_desert_4.png (24 poses)
+01:41:48 pipeline: sheets.py ../art_ref/gen/npc/grp_desert_4 --npc npc_hawk --out out/npc/npc_hawk --check
+01:42:27   |   - シート1: npc_grp_desert_4.png の左半分（人物A）を使う
+01:42:27   |   - シート1: 頭身の比（歩き12コマの中央値、体 49 ドットあたり）: 首 0.36（アルン 0.29）・頭の幅 0.43（0.43）・肩 0.38（0.40）
+01:42:27   |   - 向きの見本（configs/refs/npc_hawk）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:42:27   | 
+01:42:27   | ■ シートの状態
+01:42:27   |   シート1 歩き: 確認あり  npc_hawk_s1.png  ドット 8.00px → 描かれた格子のまま（50.5 ドット）
+01:42:27 pipeline: sheets.py ../art_ref/gen/npc/grp_desert_4 --npc npc_fortune --out out/npc/npc_fortune --check
+01:42:56   |   - シート1: npc_grp_desert_4.png の右半分（人物B）を使う
+01:42:56   |   - シート1: 頭身の比（歩き12コマの中央値、体 44 ドットあたり）: 首 0.20（アルン 0.29）・頭の幅 0.45（0.43）・肩 0.46（0.40）
+01:42:56   |   - 向きの見本（configs/refs/npc_fortune）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:42:56   | 
+01:42:56   | ■ シートの状態
+01:42:56   |   シート1 歩き: OK  npc_fortune_s1.png  ドット 8.00px → 描かれた格子のまま（43.5 ドット）
+01:42:56 sheet 1: 0 redo lines

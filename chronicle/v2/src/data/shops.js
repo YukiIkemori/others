@@ -25,15 +25,18 @@
     'ac_ward_poison', 'ac_ward_blind', 'ac_ward_sleep'];
   const ITEMS_T1 = ['i_potion', 'i_ether', 'i_numb', 'i_throat', 'i_lure', 'i_lens', 'ac_ward_paralyze', 'ac_ward_silence', 'ac_ward_confuse', 'ac_ward_stun'];
   const STONES = ['fire', 'water', 'wind', 'earth', 'light', 'dark'].map((e) => `i_stone_${e}`);
+  // 能力値の T0 のアクセサリ（銅の腕輪など 6 品）。sim の標準の一行（tools/lib/party_model.js）は「そのティアの店の品」で 2 つずつ付けるので、
+  // 縦切りの店でも買えるようにする（QA: 店で買えない品を前提にボスの釣り合いを取っていた）
+  const ACC_T0 = ['str', 'vit', 'dex', 'agi', 'int', 'mnd'].map((s) => `ac_${s}_0`);
 
   R.defs('shops', {
     // ファロスの道具屋（薬・毒消し・目覚まし・目薬・魔除けの香・松明…）
-    shop_pharos_items: { name: 'ファロスの道具屋', kind: 'item', keepOld: true, sell: true, items: ITEMS_T0.slice(), tier: { 1: ITEMS_T1.concat(STONES) } },
+    shop_pharos_items: { name: 'ファロスの道具屋', kind: 'item', keepOld: true, sell: true, items: ITEMS_T0.concat(ACC_T0), tier: { 1: ITEMS_T1.concat(STONES) } },
     // ファロスの武具屋（5 系統の T0 の武器・盾・頭・体・手・足）
     shop_pharos_arms: { name: 'ファロスの武具屋', kind: 'weapon', keepOld: false, sell: true,
-      items: gear(WEAPON_LINES, 0).concat(gear(ARMOR_LINES, 0)), tier: { 1: gear(WEAPON_LINES, 1).concat(gear(ARMOR_LINES, 1)) } },
+      items: gear(WEAPON_LINES, 0).concat(['w_sword_uchi'], gear(ARMOR_LINES, 0)), tier: { 1: gear(WEAPON_LINES, 1).concat(gear(ARMOR_LINES, 1)) } },
     // フェルンの道具屋
-    shop_fern_items: { name: 'フェルンの道具屋', kind: 'item', keepOld: true, sell: true, items: ITEMS_T0.concat(STONES), tier: { 1: ITEMS_T1 } },
+    shop_fern_items: { name: 'フェルンの道具屋', kind: 'item', keepOld: true, sell: true, items: ITEMS_T0.concat(ACC_T0, STONES), tier: { 1: ITEMS_T1 } },
     // フェルンの広場の行商（T0〜T1 の武器）
     shop_fern_peddler: { name: '広場の行商', kind: 'weapon', keepOld: false, sell: true,
       items: gear(WEAPON_LINES, 0).concat(gear(WEAPON_LINES, 1)), tier: { 1: gear(WEAPON_LINES, 1).concat(gear(WEAPON_LINES, 2)) } },

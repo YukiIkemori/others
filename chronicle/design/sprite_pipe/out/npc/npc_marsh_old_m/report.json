@@ -1,0 +1,310 @@
+{
+ "char": "npc_marsh_old_m",
+ "companion": null,
+ "npc": "npc_marsh_old_m",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/grp_marsh_2",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/sprite_pipe/out/npc/npc_marsh_old_m/src/npc_marsh_old_m_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 360.0,
+   "native_height_at_period": 45.0,
+   "scale_note": "描かれた格子のまま（45.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      31,
+      45
+     ],
+     "box": [
+      176,
+      104,
+      456,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.68
+    },
+    "walk_down_1": {
+     "size": [
+      30,
+      45
+     ],
+     "box": [
+      824,
+      104,
+      1096,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.63,
+     "scale": 1.065
+    },
+    "walk_down_2": {
+     "size": [
+      29,
+      45
+     ],
+     "box": [
+      1464,
+      104,
+      1728,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.39,
+     "scale": 1.0
+    },
+    "walk_up_0": {
+     "size": [
+      29,
+      45
+     ],
+     "box": [
+      184,
+      616,
+      448,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.6,
+     "scale": 1.0
+    },
+    "walk_up_1": {
+     "size": [
+      33,
+      46
+     ],
+     "box": [
+      808,
+      608,
+      1104,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.45,
+     "scale": 0.961
+    },
+    "walk_up_2": {
+     "size": [
+      31,
+      46
+     ],
+     "box": [
+      1456,
+      608,
+      1736,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.38,
+     "scale": 0.961
+    },
+    "walk_left_0": {
+     "size": [
+      26,
+      45
+     ],
+     "box": [
+      200,
+      1128,
+      440,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.12,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.62
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      28,
+      45
+     ],
+     "box": [
+      832,
+      1128,
+      1088,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.81,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.31
+     },
+     "scale": 1.039
+    },
+    "walk_left_2": {
+     "size": [
+      27,
+      45
+     ],
+     "box": [
+      1472,
+      1128,
+      1720,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.08,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.58
+     },
+     "scale": 1.039
+    },
+    "walk_right_0": {
+     "size": [
+      26,
+      44
+     ],
+     "box": [
+      200,
+      1648,
+      440,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.12,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.62
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      29,
+      44
+     ],
+     "box": [
+      824,
+      1648,
+      1088,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.92,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.42
+     },
+     "scale": 1.0
+    },
+    "walk_right_2": {
+     "size": [
+      28,
+      44
+     ],
+     "box": [
+      1472,
+      1648,
+      1728,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 2.96,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.46
+     },
+     "scale": 1.0
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "pair_half",
+   "msg": "npc_grp_marsh_2.png の左半分（人物A）を使う",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_marsh_old_m）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "facing_unsure",
+   "msg": "シート1 の 3 番（下向き・左足前） の向きが下（手前）に見えにくい（点数 -0.4）。顔の向きを見る",
+   "slot": "walk_down_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 45 ドットあたり）: 首 0.36（アルン 0.29）・頭の幅 0.51（0.43）・肩 0.38（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.35555555555555557,
+    "head_w": 0.5111111111111111,
+    "shoulder": 0.37777777777777777,
+    "neck_clear": 0.6521739130434783
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 122%・頭の幅 120%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 1.1969815248503772,
+    "neck": 1.2176560121765603
+   }
+  }
+ ]
+}

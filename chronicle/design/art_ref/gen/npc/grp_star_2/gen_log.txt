@@ -1,0 +1,21 @@
+02:20:01 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+02:21:35   half A (npc_star_old_m, target 45):
+02:21:36   pitch in raw image: 5.49 px per art pixel (upright median 247 px / 45)
+02:21:36   half B (npc_star_old_f, target 43):
+02:21:38   pitch in raw image: 5.65 px per art pixel (upright median 243 px / 43)
+02:21:42 sheet 1 -> art_ref/gen/npc/grp_star_2/npc_grp_star_2.png (24 poses)
+02:21:42 pipeline: sheets.py ../art_ref/gen/npc/grp_star_2 --npc npc_star_old_m --out out/npc/npc_star_old_m --check
+02:23:18   | 
+02:23:18   | ■ 画像 AI にそのまま送れる文
+02:23:18   |   「老学者（npc_star_old_m）のシート1の5番（上向き・右足前）だけ大きく描かれている（頭の大きさがほかのポーズの約 120%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+02:23:18   | 
+02:23:18   | ■ シートの状態
+02:23:18   |   シート1 歩き: 要作り直し  npc_star_old_m_s1.png  ドット 8.00px → 描かれた格子のまま（45.0 ドット）
+02:23:18 pipeline: sheets.py ../art_ref/gen/npc/grp_star_2 --npc npc_star_old_f --out out/npc/npc_star_old_f --check
+02:24:33   |   - シート1: npc_grp_star_2.png の右半分（人物B）を使う
+02:24:33   |   - シート1: 頭身の比（歩き12コマの中央値、体 43 ドットあたり）: 首 0.42（アルン 0.29）・頭の幅 0.42（0.43）・肩 0.36（0.40）
+02:24:33   |   - 向きの見本（configs/refs/npc_star_old_f）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:24:33   | 
+02:24:33   | ■ シートの状態
+02:24:33   |   シート1 歩き: 確認あり  npc_star_old_f_s1.png  ドット 8.00px → 描かれた格子のまま（42.5 ドット）
+02:24:33 sheet 1: 0 redo lines

@@ -7,7 +7,7 @@
   const cleared = (ev) => ev.flag('cleared_r_forest');
 
   E('yura_arrival', async (ev) => {
-    await ev.caption('苔むした家々が、\n池を囲んで円を描いている。', { ms: 2200 });
+    await ev.caption('こけむした家々が、\n池を囲んで円を描いている。', { ms: 2200 });
     await ev.caption('……誰も、名を呼び合っていない。', { ms: 1800 });
   });
 
@@ -41,7 +41,7 @@
       await ev.caption('粉ひきのエダは、\n森の村フェルンへ帰っていった。', { ms: 2200 });
       return;
     }
-    await ev.say('yura_miller', ['粉を挽く音を聞くと、\nどこか懐かしいの。', '木の上に家があって……\nつり橋が揺れて……。\n……だめ、思い出せない。']);
+    await ev.say('yura_miller', ['粉をひく音を聞くと、\nどこか懐かしいの。', '木の上に家があって……\nつり橋が揺れて……。\n……だめ、思い出せない。']);
   }, { meta: { needs: ['region:r_forest'], gives: ['flag:yura_miller_home'] } });
 
   E('yura_nanny', async (ev) => {
@@ -52,7 +52,7 @@
   E('yura_gravekeeper', async (ev) => {
     // ⑦ 近況
     await ev.say('yura_gravekeeper', cleared(ev)
-      ? ['森の歌が戻ったそうだね。\n墓の苔まで、光って見えるよ。']
+      ? ['森の歌が戻ったそうだね。\n墓のこけまで、光って見えるよ。']
       : ['墓守をしている。\n墓石には、名前が無いんだ。', '名を置いてきた者は、\n名の無いまま眠る。\n……さびしいことさ。']);
   });
 
@@ -83,6 +83,6 @@
   });
 
   E('yura_stone', async (ev) => {
-    await ev.say(null, ['池のほとりの、苔むした石。\n表面が、名前を削り取った\nように平らになっている。', 'そばに、小さな字で\n「名は、呼ばれるためにある」\nと刻まれている。']);
+    await ev.say(null, ['池のほとりの、こけむした石。\n表面が、名前を削り取った\nように平らになっている。', 'そばに、小さな字で\n「名は、呼ばれるためにある」\nと刻まれている。']);
   });
 })(window.RPG);

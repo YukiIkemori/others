@@ -4,10 +4,12 @@
  "src": "design/art_ref/gen/env/bbg/cave.png",
  "prelit": true,
  "layers": {
+  "front": "front.png",
   "back": "back.png",
   "ground": "ground.png",
   "ground_lit": "ground_lit.png",
   "post": "post.png",
+  "front_tall": "front_tall.png",
   "back_tall": "back_tall.png",
   "ground_tall": "ground_tall.png",
   "ground_lit_tall": "ground_lit_tall.png",

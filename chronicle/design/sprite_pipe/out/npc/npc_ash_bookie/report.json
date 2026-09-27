@@ -1,0 +1,306 @@
+{
+ "char": "npc_ash_bookie",
+ "companion": null,
+ "npc": "npc_ash_bookie",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/grp_ash_4",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/sprite_pipe/out/npc/npc_ash_bookie/src/npc_ash_bookie_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 376.0,
+   "native_height_at_period": 47.0,
+   "scale_note": "描かれた格子のまま（47.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      40,
+      49
+     ],
+     "box": [
+      144,
+      72,
+      496,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.8
+    },
+    "walk_down_1": {
+     "size": [
+      41,
+      49
+     ],
+     "box": [
+      776,
+      72,
+      1136,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.98,
+     "scale": 1.037
+    },
+    "walk_down_2": {
+     "size": [
+      42,
+      48
+     ],
+     "box": [
+      1416,
+      80,
+      1784,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.73,
+     "scale": 1.0
+    },
+    "walk_up_0": {
+     "size": [
+      38,
+      47
+     ],
+     "box": [
+      152,
+      600,
+      488,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.04,
+     "scale": 0.862
+    },
+    "walk_up_1": {
+     "size": [
+      38,
+      47
+     ],
+     "box": [
+      792,
+      600,
+      1128,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.26,
+     "scale": 0.9
+    },
+    "walk_up_2": {
+     "size": [
+      39,
+      47
+     ],
+     "box": [
+      1424,
+      600,
+      1768,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.07,
+     "scale": 0.9
+    },
+    "walk_left_0": {
+     "size": [
+      32,
+      47
+     ],
+     "box": [
+      176,
+      1112,
+      464,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      33,
+      47
+     ],
+     "box": [
+      808,
+      1112,
+      1104,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_left_2": {
+     "size": [
+      33,
+      47
+     ],
+     "box": [
+      1448,
+      1112,
+      1744,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_0": {
+     "size": [
+      30,
+      46
+     ],
+     "box": [
+      184,
+      1632,
+      456,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      31,
+      46
+     ],
+     "box": [
+      816,
+      1632,
+      1096,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_2": {
+     "size": [
+      31,
+      46
+     ],
+     "box": [
+      1456,
+      1632,
+      1736,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "pair_half",
+   "msg": "npc_grp_ash_4.png の右半分（人物B）を使う",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_ash_bookie）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 4 番（上向き・立ち） の縮尺が少し違う（頭の大きさで約 86%）。並べて見て気になるなら描き直し",
+   "slot": "walk_up_0",
+   "ask": null,
+   "data": {
+    "scale": 0.8624999999999997,
+    "per_ref": [
+     0.8500000000000003,
+     0.8625,
+     0.8625
+    ],
+    "group_median": 1.0000000000000004
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 47 ドットあたり）: 首 0.21（アルン 0.29）・頭の幅 0.41（0.43）・肩 0.47（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.2127659574468085,
+    "head_w": 0.4148936170212766,
+    "shoulder": 0.46808510638297873,
+    "neck_clear": 0.975
+   }
+  }
+ ]
+}

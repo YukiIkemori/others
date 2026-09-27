@@ -9,3 +9,11 @@
 01:02:12   | ■ シートの状態
 01:02:12   |   シート1 歩き＋演技4: 確認あり  npc_hazal_s1.png  ドット 8.00px → 描かれた格子のまま（61.0 ドット）
 01:02:12 sheet 1: 0 redo lines
+01:34:59 pipeline: sheets.py ../art_ref/gen/npc/hazal --npc hazal --out out/npc/npc_hazal
+01:35:34   |   - 向きの見本（configs/refs/npc_hazal）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:35:34   | 
+01:35:34   | ■ シートの状態
+01:35:34   |   シート1 歩き＋演技4: 確認あり  npc_hazal_s1.png  ドット 8.00px → 描かれた格子のまま（61.0 ドット）
+01:35:34   | 
+01:35:34   | packed field 224x264 | palette 52 + face 0
+01:35:35 to_v2 npc_hazal: npc_hazal → /home/user/others/chronicle/v2/assets/sprites/npc_hazal |   field: 16 frames

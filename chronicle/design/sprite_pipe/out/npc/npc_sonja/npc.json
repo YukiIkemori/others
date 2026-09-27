@@ -1,0 +1,48 @@
+{
+ "id": "sonja",
+ "look": "npc_sonja",
+ "name": "ソーニャ",
+ "tier": "B",
+ "kind": "person",
+ "region": "snow",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 42
+ },
+ "measureH": {
+  "field": 45
+ },
+ "headgearExtraDots": 3,
+ "mainHex": "#C8703A",
+ "mainHue": 25,
+ "mainName": "茜の橙",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_sonja_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.3214285714285714,
+   "head_w": 0.5119047619047619,
+   "shoulder": 0.4464285714285714,
+   "neck_clear": 0.8090909090909091
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

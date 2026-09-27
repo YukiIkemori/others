@@ -111,7 +111,7 @@
     const foes = st.actors.filter((a) => a.side === 'enemy');
     for (const a of foes) { st.vis[a.uid].appear = 0; }
     const names = [...new Set(foes.map((a) => a.name))];
-    st.head = { name: names.length ? `${names.slice(0, 3).join('・')}${names.length > 3 ? 'たち' : ''}が あらわれた！` : '戦闘', t0: R.Engine.time };
+    st.head = { name: names.length ? `${names.slice(0, 3).join('・')}${names.length > 3 ? 'たち' : ''}があらわれた！` : '戦闘', t0: R.Engine.time };
     if (st.info.boss && R.Audio.sfx) R.Audio.sfx('roar');
     if (foes.some((a) => a.golden)) { try { R.Audio.jingle('rare'); } catch (e) { /* ignore */ } st.head.sub = 'めったに出会えない魔物だ！'; }
     const t0 = st.clock;

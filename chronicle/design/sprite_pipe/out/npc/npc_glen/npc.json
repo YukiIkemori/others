@@ -1,0 +1,48 @@
+{
+ "id": "glen",
+ "look": "npc_glen",
+ "name": "グレン",
+ "tier": "B",
+ "kind": "person",
+ "region": "isles",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 50
+ },
+ "measureH": {
+  "field": 55
+ },
+ "headgearExtraDots": 5,
+ "mainHex": "#7A96AA",
+ "mainHue": 205,
+ "mainName": "青白い灰青",
+ "lantern": true,
+ "spirit": true,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_glen_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.24,
+   "head_w": 0.43,
+   "shoulder": 0.33499999999999996,
+   "neck_clear": 0.6282894736842105
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

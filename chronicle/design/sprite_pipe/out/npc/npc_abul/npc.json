@@ -1,0 +1,48 @@
+{
+ "id": "abul",
+ "look": "npc_abul",
+ "name": "アブル",
+ "tier": "B",
+ "kind": "person",
+ "region": "desert",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 43
+ },
+ "measureH": {
+  "field": 45
+ },
+ "headgearExtraDots": 2,
+ "mainHex": "#B8A078",
+ "mainHue": 40,
+ "mainName": "砂色",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_abul_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.19767441860465118,
+   "head_w": 0.46511627906976744,
+   "shoulder": 0.4883720930232558,
+   "neck_clear": 0.91
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

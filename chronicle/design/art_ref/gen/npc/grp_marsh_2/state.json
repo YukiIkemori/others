@@ -1,0 +1,700 @@
+{
+ "sheets": {
+  "1": {
+   "attempts": [
+    {
+     "raw": "raw/s1_a1.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "",
+     "t": "2026-09-27T01:56:59"
+    },
+    {
+     "raw": "raw/s1_a2.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "Person A (the marsh old man, left three columns) wore a CONICAL straw hat, which is a party member's signature (a shallow wide woven conical hat). Give him the marsh region's hat instead: a big ROUND-BRIMMED oiled rain hat with a rounded crown (like a sou'wester / round bowl crown), dark grey-green or mud brown, NOT conical and NOT woven straw. Person B stays as described.",
+     "t": "2026-09-27T02:08:31"
+    }
+   ],
+   "frames": {
+    "A:walk_down_0": {
+     "row": 1,
+     "column": 1,
+     "logical_bbox": [
+      31,
+      45
+     ],
+     "air": 0
+    },
+    "A:walk_down_1": {
+     "row": 1,
+     "column": 2,
+     "logical_bbox": [
+      30,
+      45
+     ],
+     "air": 0
+    },
+    "A:walk_down_2": {
+     "row": 1,
+     "column": 3,
+     "logical_bbox": [
+      29,
+      45
+     ],
+     "air": 0
+    },
+    "A:walk_up_1": {
+     "row": 2,
+     "column": 2,
+     "logical_bbox": [
+      33,
+      46
+     ],
+     "air": 0
+    },
+    "A:walk_up_0": {
+     "row": 2,
+     "column": 1,
+     "logical_bbox": [
+      29,
+      45
+     ],
+     "air": 0
+    },
+    "A:walk_up_2": {
+     "row": 2,
+     "column": 3,
+     "logical_bbox": [
+      31,
+      46
+     ],
+     "air": 0
+    },
+    "A:walk_left_0": {
+     "row": 3,
+     "column": 1,
+     "logical_bbox": [
+      26,
+      45
+     ],
+     "air": 0
+    },
+    "A:walk_left_1": {
+     "row": 3,
+     "column": 2,
+     "logical_bbox": [
+      28,
+      45
+     ],
+     "air": 0
+    },
+    "A:walk_left_2": {
+     "row": 3,
+     "column": 3,
+     "logical_bbox": [
+      27,
+      45
+     ],
+     "air": 0
+    },
+    "A:walk_right_0": {
+     "row": 4,
+     "column": 1,
+     "logical_bbox": [
+      26,
+      44
+     ],
+     "air": 0
+    },
+    "A:walk_right_1": {
+     "row": 4,
+     "column": 2,
+     "logical_bbox": [
+      29,
+      44
+     ],
+     "air": 0
+    },
+    "A:walk_right_2": {
+     "row": 4,
+     "column": 3,
+     "logical_bbox": [
+      28,
+      44
+     ],
+     "air": 0
+    },
+    "B:walk_down_0": {
+     "row": 1,
+     "column": 4,
+     "logical_bbox": [
+      25,
+      42
+     ],
+     "air": 0
+    },
+    "B:walk_down_1": {
+     "row": 1,
+     "column": 5,
+     "logical_bbox": [
+      29,
+      43
+     ],
+     "air": 0
+    },
+    "B:walk_down_2": {
+     "row": 1,
+     "column": 6,
+     "logical_bbox": [
+      28,
+      41
+     ],
+     "air": 0
+    },
+    "B:walk_up_0": {
+     "row": 2,
+     "column": 4,
+     "logical_bbox": [
+      25,
+      43
+     ],
+     "air": 0
+    },
+    "B:walk_up_1": {
+     "row": 2,
+     "column": 5,
+     "logical_bbox": [
+      26,
+      43
+     ],
+     "air": 0
+    },
+    "B:walk_up_2": {
+     "row": 2,
+     "column": 6,
+     "logical_bbox": [
+      26,
+      43
+     ],
+     "air": 0
+    },
+    "B:walk_left_0": {
+     "row": 3,
+     "column": 4,
+     "logical_bbox": [
+      22,
+      43
+     ],
+     "air": 0
+    },
+    "B:walk_left_1": {
+     "row": 3,
+     "column": 5,
+     "logical_bbox": [
+      25,
+      43
+     ],
+     "air": 0
+    },
+    "B:walk_left_2": {
+     "row": 3,
+     "column": 6,
+     "logical_bbox": [
+      24,
+      43
+     ],
+     "air": 0
+    },
+    "B:walk_right_0": {
+     "row": 4,
+     "column": 4,
+     "logical_bbox": [
+      22,
+      43
+     ],
+     "air": 0
+    },
+    "B:walk_right_1": {
+     "row": 4,
+     "column": 5,
+     "logical_bbox": [
+      24,
+      43
+     ],
+     "air": 0
+    },
+    "B:walk_right_2": {
+     "row": 4,
+     "column": 6,
+     "logical_bbox": [
+      24,
+      43
+     ],
+     "air": 0
+    }
+   },
+   "notes": [],
+   "pitch": 5.263,
+   "from_raw": "raw/s1_a2.png",
+   "redo_left": [],
+   "takes": [
+    {
+     "file": "raw/s1_take1.png",
+     "score": 0,
+     "frames": {
+      "A:walk_down_0": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        32,
+        45
+       ],
+       "air": 0
+      },
+      "A:walk_down_1": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        31,
+        45
+       ],
+       "air": 0
+      },
+      "A:walk_down_2": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        32,
+        45
+       ],
+       "air": 0
+      },
+      "A:walk_up_0": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        31,
+        44
+       ],
+       "air": 0
+      },
+      "A:walk_up_1": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        31,
+        46
+       ],
+       "air": 0
+      },
+      "A:walk_up_2": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        31,
+        46
+       ],
+       "air": 0
+      },
+      "A:walk_left_0": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        33,
+        45
+       ],
+       "air": 0
+      },
+      "A:walk_left_1": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        33,
+        44
+       ],
+       "air": 0
+      },
+      "A:walk_left_2": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        33,
+        44
+       ],
+       "air": 0
+      },
+      "A:walk_right_0": {
+       "row": 4,
+       "column": 1,
+       "logical_bbox": [
+        32,
+        44
+       ],
+       "air": 0
+      },
+      "A:walk_right_1": {
+       "row": 4,
+       "column": 2,
+       "logical_bbox": [
+        33,
+        44
+       ],
+       "air": 0
+      },
+      "A:walk_right_2": {
+       "row": 4,
+       "column": 3,
+       "logical_bbox": [
+        33,
+        44
+       ],
+       "air": 0
+      },
+      "B:walk_down_0": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        29,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_down_1": {
+       "row": 1,
+       "column": 5,
+       "logical_bbox": [
+        29,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_down_2": {
+       "row": 1,
+       "column": 6,
+       "logical_bbox": [
+        30,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_up_0": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        30,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_up_1": {
+       "row": 2,
+       "column": 5,
+       "logical_bbox": [
+        30,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_up_2": {
+       "row": 2,
+       "column": 6,
+       "logical_bbox": [
+        30,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_left_0": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        23,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_left_1": {
+       "row": 3,
+       "column": 5,
+       "logical_bbox": [
+        24,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_left_2": {
+       "row": 3,
+       "column": 6,
+       "logical_bbox": [
+        24,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_right_0": {
+       "row": 4,
+       "column": 4,
+       "logical_bbox": [
+        23,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_right_1": {
+       "row": 4,
+       "column": 5,
+       "logical_bbox": [
+        23,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_right_2": {
+       "row": 4,
+       "column": 6,
+       "logical_bbox": [
+        23,
+        43
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s1_a1.png",
+     "cell": [
+      80,
+      64
+     ]
+    },
+    {
+     "file": "raw/s1_take2.png",
+     "score": 0,
+     "frames": {
+      "A:walk_down_0": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        31,
+        45
+       ],
+       "air": 0
+      },
+      "A:walk_down_1": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        30,
+        45
+       ],
+       "air": 0
+      },
+      "A:walk_down_2": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        29,
+        45
+       ],
+       "air": 0
+      },
+      "A:walk_up_1": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        33,
+        46
+       ],
+       "air": 0
+      },
+      "A:walk_up_0": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        29,
+        45
+       ],
+       "air": 0
+      },
+      "A:walk_up_2": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        31,
+        46
+       ],
+       "air": 0
+      },
+      "A:walk_left_0": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        26,
+        45
+       ],
+       "air": 0
+      },
+      "A:walk_left_1": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        28,
+        45
+       ],
+       "air": 0
+      },
+      "A:walk_left_2": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        27,
+        45
+       ],
+       "air": 0
+      },
+      "A:walk_right_0": {
+       "row": 4,
+       "column": 1,
+       "logical_bbox": [
+        26,
+        44
+       ],
+       "air": 0
+      },
+      "A:walk_right_1": {
+       "row": 4,
+       "column": 2,
+       "logical_bbox": [
+        29,
+        44
+       ],
+       "air": 0
+      },
+      "A:walk_right_2": {
+       "row": 4,
+       "column": 3,
+       "logical_bbox": [
+        28,
+        44
+       ],
+       "air": 0
+      },
+      "B:walk_down_0": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        25,
+        42
+       ],
+       "air": 0
+      },
+      "B:walk_down_1": {
+       "row": 1,
+       "column": 5,
+       "logical_bbox": [
+        29,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_down_2": {
+       "row": 1,
+       "column": 6,
+       "logical_bbox": [
+        28,
+        41
+       ],
+       "air": 0
+      },
+      "B:walk_up_0": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        25,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_up_1": {
+       "row": 2,
+       "column": 5,
+       "logical_bbox": [
+        26,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_up_2": {
+       "row": 2,
+       "column": 6,
+       "logical_bbox": [
+        26,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_left_0": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        22,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_left_1": {
+       "row": 3,
+       "column": 5,
+       "logical_bbox": [
+        25,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_left_2": {
+       "row": 3,
+       "column": 6,
+       "logical_bbox": [
+        24,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_right_0": {
+       "row": 4,
+       "column": 4,
+       "logical_bbox": [
+        22,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_right_1": {
+       "row": 4,
+       "column": 5,
+       "logical_bbox": [
+        24,
+        43
+       ],
+       "air": 0
+      },
+      "B:walk_right_2": {
+       "row": 4,
+       "column": 6,
+       "logical_bbox": [
+        24,
+        43
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s1_a2.png",
+     "cell": [
+      80,
+      64
+     ]
+    }
+   ]
+  }
+ }
+}

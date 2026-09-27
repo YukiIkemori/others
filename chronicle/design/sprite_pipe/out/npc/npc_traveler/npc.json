@@ -1,0 +1,55 @@
+{
+ "id": "npc_traveler",
+ "look": "npc_traveler",
+ "name": "旅の商人",
+ "tier": "C",
+ "kind": "person",
+ "region": "prologue",
+ "group": "common_1",
+ "slot": "A",
+ "heightDots": {
+  "field": 48
+ },
+ "measureH": {
+  "field": 48
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#7A6A54",
+ "mainHue": 35,
+ "mainName": "灰茶",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_traveler_1",
+  "npc_traveler_2",
+  "npc_traveler_3",
+  "npc_traveler_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_traveler_s1.png"
+ },
+ "pair_file": "npc_grp_common_1.png",
+ "proportion": {
+  "1": {
+   "neck": 0.2708333333333333,
+   "head_w": 0.45833333333333337,
+   "shoulder": 0.3958333333333333,
+   "neck_clear": 0.6138716356107661
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

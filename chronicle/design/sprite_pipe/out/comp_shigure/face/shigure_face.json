@@ -1,0 +1,164 @@
+{
+ "character": "shigure",
+ "set": "face",
+ "image": "shigure_face.png",
+ "cell": [
+  83,
+  84
+ ],
+ "anchor": [
+  42,
+  81
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "face_neutral": {
+   "x": 0,
+   "y": 0,
+   "w": 83,
+   "h": 84,
+   "anchor": [
+    42,
+    81
+   ],
+   "points": {
+    "head": [
+     43,
+     2
+    ],
+    "center": [
+     41,
+     46
+    ],
+    "front": [
+     3,
+     78
+    ]
+   }
+  },
+  "face_smile": {
+   "x": 83,
+   "y": 0,
+   "w": 83,
+   "h": 84,
+   "anchor": [
+    42,
+    81
+   ],
+   "points": {
+    "head": [
+     43,
+     2
+    ],
+    "center": [
+     41,
+     47
+    ],
+    "front": [
+     2,
+     80
+    ]
+   }
+  },
+  "face_surprise": {
+   "x": 166,
+   "y": 0,
+   "w": 83,
+   "h": 84,
+   "anchor": [
+    42,
+    81
+   ],
+   "points": {
+    "head": [
+     43,
+     2
+    ],
+    "center": [
+     42,
+     47
+    ],
+    "front": [
+     3,
+     79
+    ]
+   }
+  },
+  "face_pain": {
+   "x": 249,
+   "y": 0,
+   "w": 83,
+   "h": 84,
+   "anchor": [
+    42,
+    81
+   ],
+   "points": {
+    "head": [
+     43,
+     2
+    ],
+    "center": [
+     41,
+     47
+    ],
+    "front": [
+     3,
+     78
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#111011",
+  "#170e17",
+  "#13151c",
+  "#151b28",
+  "#261b17",
+  "#1f1e1c",
+  "#312f2b",
+  "#47433c",
+  "#685d50",
+  "#35241a",
+  "#493223",
+  "#583e29",
+  "#6c3f26",
+  "#66482d",
+  "#735132",
+  "#854b2c",
+  "#815a37",
+  "#9c5934",
+  "#8c623a",
+  "#866943",
+  "#986a3f",
+  "#b4693c",
+  "#a37344",
+  "#ad7b48",
+  "#918472",
+  "#c37a49",
+  "#b9854e",
+  "#c38f54",
+  "#d99156",
+  "#ce9859",
+  "#b0a188",
+  "#cd9b61",
+  "#c9a06e",
+  "#d6a261",
+  "#ddab6c",
+  "#e8ab6e",
+  "#e5b577",
+  "#d3c4a9",
+  "#f1be7d",
+  "#f2c586",
+  "#eadcc0",
+  "#182033",
+  "#1c263f",
+  "#1f2a48",
+  "#222f52",
+  "#25345c",
+  "#293966"
+ ],
+ "facing": "slightly right",
+ "target_height": 80
+}

@@ -1,0 +1,45 @@
+{
+ "id": "ani_cat",
+ "look": "ani_cat",
+ "name": "ねこ",
+ "tier": "C",
+ "kind": "animal",
+ "region": "prologue",
+ "group": "animal_1",
+ "slot": "A",
+ "heightDots": {
+  "field": 14
+ },
+ "measureH": {
+  "field": 14
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#8A8A8A",
+ "mainHue": 0,
+ "mainName": "灰と白",
+ "lantern": false,
+ "recolor": false,
+ "recolorSets": 1,
+ "variants": [
+  "ani_cat"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "ani_cat_s1.png"
+ },
+ "pair_file": "npc_grp_animal_1.png",
+ "proportion": {},
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

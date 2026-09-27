@@ -1,0 +1,338 @@
+{
+ "char": "ani_camel",
+ "companion": null,
+ "npc": "ani_camel",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/grp_animal_3",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/sprite_pipe/out/npc/ani_camel/src/ani_camel_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 384.0,
+   "native_height_at_period": 48.0,
+   "scale_note": "描かれた格子のまま（48.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      37,
+      53
+     ],
+     "box": [
+      152,
+      40,
+      480,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_down_1": {
+     "size": [
+      37,
+      53
+     ],
+     "box": [
+      792,
+      40,
+      1120,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_down_2": {
+     "size": [
+      26,
+      53
+     ],
+     "box": [
+      1480,
+      40,
+      1720,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_up_0": {
+     "size": [
+      36,
+      52
+     ],
+     "box": [
+      160,
+      560,
+      480,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_up_1": {
+     "size": [
+      36,
+      52
+     ],
+     "box": [
+      800,
+      560,
+      1120,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_up_2": {
+     "size": [
+      25,
+      52
+     ],
+     "box": [
+      1480,
+      560,
+      1712,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_left_0": {
+     "size": [
+      64,
+      42
+     ],
+     "box": [
+      48,
+      1152,
+      592,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_left_1": {
+     "size": [
+      64,
+      42
+     ],
+     "box": [
+      688,
+      1152,
+      1232,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_left_2": {
+     "size": [
+      42,
+      41
+     ],
+     "box": [
+      1416,
+      1160,
+      1784,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_right_0": {
+     "size": [
+      67,
+      44
+     ],
+     "box": [
+      32,
+      1648,
+      600,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_right_1": {
+     "size": [
+      66,
+      44
+     ],
+     "box": [
+      680,
+      1648,
+      1240,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_right_2": {
+     "size": [
+      64,
+      44
+     ],
+     "box": [
+      1328,
+      1648,
+      1872,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "pair_half",
+   "msg": "npc_grp_animal_3.png の左半分（人物A）を使う",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/ani_camel）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 1 番（下向き・立ち） の身長が 53 ドット（ほかは 48）",
+   "slot": "walk_down_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 2 番（下向き・右足前） の身長が 53 ドット（ほかは 48）",
+   "slot": "walk_down_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 3 番（下向き・左足前） の身長が 53 ドット（ほかは 48）",
+   "slot": "walk_down_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 4 番（上向き・立ち） の身長が 52 ドット（ほかは 48）",
+   "slot": "walk_up_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 5 番（上向き・右足前） の身長が 52 ドット（ほかは 48）",
+   "slot": "walk_up_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 6 番（上向き・左足前） の身長が 52 ドット（ほかは 48）",
+   "slot": "walk_up_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 7 番（左向き・立ち） の身長が 42 ドット（ほかは 48）",
+   "slot": "walk_left_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 8 番（左向き・前の足） の身長が 42 ドット（ほかは 48）",
+   "slot": "walk_left_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 9 番（左向き・後ろの足） の身長が 41 ドット（ほかは 48）",
+   "slot": "walk_left_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 10 番（右向き・立ち） の身長が 44 ドット（ほかは 48）",
+   "slot": "walk_right_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 11 番（右向き・前の足） の身長が 44 ドット（ほかは 48）",
+   "slot": "walk_right_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 12 番（右向き・後ろの足） の身長が 44 ドット（ほかは 48）",
+   "slot": "walk_right_2",
+   "ask": null,
+   "data": {}
+  }
+ ]
+}

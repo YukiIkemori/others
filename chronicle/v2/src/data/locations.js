@@ -15,6 +15,6 @@
     yura: { name: '隠れ里ユラ', region: 'r_forest', kind: 'town', map: 'yura', spawn: 'gate', warp: W },
     verda: { name: '迷いの森', region: 'r_forest', kind: 'dungeon', map: 'verda_1', spawn: 'south', warp: W },
     elder: { name: '千年樹', region: 'r_forest', kind: 'dungeon', map: 'elder_1', spawn: 'south', warp: W },
-    hut: { name: '樵の休み小屋', region: 'r_forest', kind: 'place', map: 'hut', spawn: 'door', warp: W },
+    hut: { name: 'きこりの休み小屋', region: 'r_forest', kind: 'place', map: 'hut', spawn: 'door', warp: W },
   });
 })(window.RPG);

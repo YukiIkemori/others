@@ -208,20 +208,20 @@
   Object.assign(R.DB.bossActions, {
     // ページ食らい（序章）: 紙をため込む → 次の手番に全体の紙吹雪 → 防御で半分（教える戦いなので罰は軽く）
     eb_page_gather: {name: '紙を吸いこむ', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は体を大きくふくらませた！',
-      telegraph: {text: 'ページ食らいが 紙を吸いこんでいる……', pose: 'tele', tint: '#e8dcb8', next: 'eb_confetti', guard: 'defend'}},
+      telegraph: {text: 'ページ食らいが紙を吸いこんでいる……。', pose: 'tele', tint: '#e8dcb8', next: 'eb_confetti', guard: 'defend'}},
     eb_confetti: {name: '紙吹雪', kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'phys', power: 3.6, kind: 'slash', sure: true}], fx: 'slash2', msg: '{user}の体から、ため込んだ紙片が一気に吹き出した！'},
     // ダストウィング（森の中ボス）: 羽が光る → 次の手番に全員へ眠りのりん粉。風の術・技で打つと吹き飛ぶ（予約が消える）
     eb_wing_glow: {name: '羽の光', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は羽を大きく広げた！',
-      telegraph: {text: 'ダストウィングの羽が 青白く光りはじめた……', pose: 'tele', tint: '#b8e0ff', next: 'eb_sleep_dust', guard: 'element:wind',
+      telegraph: {text: 'ダストウィングの羽が青白く光りはじめた……。', pose: 'tele', tint: '#b8e0ff', next: 'eb_sleep_dust', guard: 'element:wind',
         cancel: {element: 'wind', msg: '風が、羽のりん粉を吹き飛ばした！'}}},
     eb_sleep_dust: {name: '眠りのりん粉', kind: 'enemy', target: 'enemies', effects: [{type: 'damage', formula: 'magic', power: 0.5}, {type: 'status', status: 'sleep', chance: 0.9}], fx: 'sleep', msg: '{user}は光るりん粉を一面に振りまいた！'},
     // 根食らい（森の地方ボス）: 根が地面にもぐる → 次の手番に前列へ根の突き上げ。後列の人には届かない・防御で半分
-    eb_root_sink: {name: '根もぐり', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}の根が、ずぶずぶと地面に沈んでいく……',
-      telegraph: {text: '根が地面にもぐった……', pose: 'tele', tint: '#8fd6d8', next: 'eb_root_quake', guard: 'back'}},
+    eb_root_sink: {name: '根もぐり', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}の根が、ずぶずぶと地面に沈んでいく……。',
+      telegraph: {text: '根が地面にもぐった……。', pose: 'tele', tint: '#8fd6d8', next: 'eb_root_quake', guard: 'back'}},
     eb_root_quake: {name: '根の突き上げ', kind: 'enemy', target: 'front', effects: [{type: 'damage', formula: 'phys', power: 2.4, sure: true}], fx: 'earth2', msg: '前列の足もとから、根が一斉に突き上げた！'},
     // 狼の群れ頭（救出の戦い）: 大きく息を吸う → 次の手番に遠吠えで狼が 1 匹増える。頭を倒すと群れが逃げる
     eb_lord_breath: {name: '息を吸う', kind: 'enemy', target: 'self', effects: [], fx: 'tele', msg: '{user}は天を仰いだ。',
-      telegraph: {text: '群れ頭が 大きく息を吸いこんだ……', pose: 'tele', tint: '#c8d0e8', next: 'eb_pack_howl', guard: 'focus'}},
+      telegraph: {text: '群れ頭が大きく息を吸いこんだ……。', pose: 'tele', tint: '#c8d0e8', next: 'eb_pack_howl', guard: 'focus'}},
     eb_pack_howl: {name: '群れの遠吠え', kind: 'enemy', target: 'self', effects: [{type: 'summon', mon: 'b_packwolf', n: 2, max: 6}], fx: 'song', msg: '{user}の遠吠えが、森にこだました！'},
     eb_lord_bite: {name: '頭の牙', kind: 'enemy', target: 'enemy', effects: [{type: 'damage', formula: 'phys', power: 1.35}], fx: 'bite2', msg: '{user}は低くうなって飛びかかった！'},
   });

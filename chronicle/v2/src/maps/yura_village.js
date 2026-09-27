@@ -1,5 +1,5 @@
 // CONTENT-F: 隠れ里ユラ（#4、寄り道）と宿（yura・yura_inn）。V2_PLAN §3.2・WORLD_REDESIGN §5.14・STORY_BIBLE §8.10
-//   森の中の窪地。苔むした家が円を描き、真ん中に苔の池と灯籠。村人は自分の名前が言えず、役目で呼び合う。
+//   森の中のくぼ地。こけむした家が円を描き、真ん中にこけの池と灯籠。村人は自分の名前が言えず、役目で呼び合う。
 //   町 30×28（「ひろい」の表示より小さい所は外を深い森で埋める）。門は南（ワールド）。宿と、珍しいアクセサリの店（屋台）。
 (function (R) {
   'use strict';
@@ -11,7 +11,7 @@
     K.border(g, 'F', 2);
     for (const [x, y, rx, ry] of [[3, 3, 2, 2], [26, 3, 2, 2], [3, 24, 2, 2], [26, 24, 2, 2]]) K.blob(g, x, y, rx, ry, 'F', 'yb' + x + y);
     K.blob(g, 15, 13, 10, 8, ',', 'yg', '.');
-    // 円い道と苔の池
+    // 円い道とこけの池
     for (let a = 0; a < 64; a++) {
       const t = (a / 64) * Math.PI * 2;
       const x = Math.round(15 + Math.cos(t) * 6.5), y = Math.round(13 + Math.sin(t) * 5);
@@ -36,7 +36,7 @@
     O.push(K.prop('grave', 26, 21), K.prop('grave', 27, 22), K.prop('flower_pot', 11, 6), K.prop('planter', 20, 7), K.prop('rock', 4, 5), K.prop('stump', 27, 13));
     O.push(K.prop('songstone', 15, 10, { variant: 3 }), K.exam(15, 11, 'yura_stone'));
     O.push(K.chest('yura_c1', 3, 20, { pool: 'p_T' }));
-    O.push(K.sign(16, 25, '――ここは ユラ。\n名を置いてきた者の里。'));
+    O.push(K.sign(16, 25, '――ここはユラ。\n名を置いてきた者の里。'));
     K.scatter(g, O, 'firefly', 6, [2, 2, 26, 24], ',.', 'yff', { gap: 4 });
 
     const N = [

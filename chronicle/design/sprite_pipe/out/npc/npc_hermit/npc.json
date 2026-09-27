@@ -1,0 +1,48 @@
+{
+ "id": "hermit",
+ "look": "npc_hermit",
+ "name": "山の隠者",
+ "tier": "B",
+ "kind": "person",
+ "region": "mine",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 42
+ },
+ "measureH": {
+  "field": 44
+ },
+ "headgearExtraDots": 2,
+ "mainHex": "#6A7050",
+ "mainHue": 90,
+ "mainName": "苔の灰緑",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_hermit_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.2619047619047619,
+   "head_w": 0.4523809523809524,
+   "shoulder": 0.4464285714285714,
+   "neck_clear": 0.8973684210526316
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

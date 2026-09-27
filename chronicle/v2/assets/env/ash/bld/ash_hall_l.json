@@ -1,0 +1,130 @@
+{
+ "id": "ash_hall_l",
+ "kind": "building",
+ "theme": "ash",
+ "footprint": [
+  8,
+  6
+ ],
+ "wall": 3,
+ "files": {
+  "24": "ash_hall_l@24.png",
+  "32": "ash_hall_l@32.png",
+  "40": "ash_hall_l@40.png"
+ },
+ "emitFiles": {
+  "24": "ash_hall_l_emit@24.png",
+  "32": "ash_hall_l_emit@32.png",
+  "40": "ash_hall_l_emit@40.png"
+ },
+ "size": {
+  "24": [
+   204,
+   168
+  ],
+  "32": [
+   272,
+   224
+  ],
+  "40": [
+   340,
+   280
+  ]
+ },
+ "anchor32": [
+  8,
+  224
+ ],
+ "door32": {
+  "x": 144.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 38,
+   "y": -80,
+   "w": 9,
+   "h": 13
+  },
+  {
+   "kind": "win",
+   "x": 93,
+   "y": -80,
+   "w": 9,
+   "h": 12
+  },
+  {
+   "kind": "win",
+   "x": 149,
+   "y": -80,
+   "w": 8,
+   "h": 13
+  },
+  {
+   "kind": "win",
+   "x": 206,
+   "y": -80,
+   "w": 9,
+   "h": 12
+  },
+  {
+   "kind": "win",
+   "x": 76,
+   "y": -75,
+   "w": 2,
+   "h": 3
+  },
+  {
+   "kind": "win",
+   "x": 37,
+   "y": -39,
+   "w": 9,
+   "h": 13
+  },
+  {
+   "kind": "win",
+   "x": 92,
+   "y": -39,
+   "w": 9,
+   "h": 13
+  },
+  {
+   "kind": "win",
+   "x": 206,
+   "y": -39,
+   "w": 9,
+   "h": 13
+  },
+  {
+   "kind": "win",
+   "x": 171,
+   "y": -35,
+   "w": 2,
+   "h": 4
+  }
+ ],
+ "roof32": [
+  -6,
+  -196,
+  262,
+  -90
+ ],
+ "wallTop32": -96,
+ "src": "design/art_ref/gen/env/bld/ash/ash_hall_l.png",
+ "def_": {
+  "id": "ash_hall_l",
+  "x": 0,
+  "y": 0,
+  "w": 8,
+  "h": 6,
+  "wall": 3,
+  "door": {
+   "x": 4,
+   "y": 5
+  },
+  "windows": 3
+ }
+}

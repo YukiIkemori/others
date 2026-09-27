@@ -1,0 +1,21 @@
+02:18:07 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+02:19:25   half A (npc_ash_acolyte, target 44):
+02:19:27   pitch in raw image: 5.41 px per art pixel (upright median 238 px / 44)
+02:19:28   half B (npc_ash_bookie, target 47):
+02:19:31   pitch in raw image: 5.23 px per art pixel (upright median 246 px / 47)
+02:19:36 sheet 1 -> art_ref/gen/npc/grp_ash_4/npc_grp_ash_4.png (24 poses)
+02:19:36 pipeline: sheets.py ../art_ref/gen/npc/grp_ash_4 --npc npc_ash_acolyte --out out/npc/npc_ash_acolyte --check
+02:21:21   |   - シート1: npc_grp_ash_4.png の左半分（人物A）を使う
+02:21:21   |   - シート1: 頭身の比（歩き12コマの中央値、体 44 ドットあたり）: 首 0.40（アルン 0.29）・頭の幅 0.44（0.43）・肩 0.34（0.40）
+02:21:21   |   - 向きの見本（configs/refs/npc_ash_acolyte）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:21:21   | 
+02:21:21   | ■ シートの状態
+02:21:21   |   シート1 歩き: 確認あり  npc_ash_acolyte_s1.png  ドット 8.00px → 描かれた格子のまま（45.5 ドット）
+02:21:21 pipeline: sheets.py ../art_ref/gen/npc/grp_ash_4 --npc npc_ash_bookie --out out/npc/npc_ash_bookie --check
+02:23:02   |   - シート1: npc_grp_ash_4.png の右半分（人物B）を使う
+02:23:02   |   - シート1: 頭身の比（歩き12コマの中央値、体 47 ドットあたり）: 首 0.21（アルン 0.29）・頭の幅 0.41（0.43）・肩 0.47（0.40）
+02:23:02   |   - 向きの見本（configs/refs/npc_ash_bookie）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:23:02   | 
+02:23:02   | ■ シートの状態
+02:23:02   |   シート1 歩き: 確認あり  npc_ash_bookie_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+02:23:02 sheet 1: 0 redo lines

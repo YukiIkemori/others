@@ -1,0 +1,257 @@
+{
+ "character": "noa",
+ "set": "face",
+ "look": "noa",
+ "source": "out/npc/noa/face",
+ "cell": [
+  70,
+  84
+ ],
+ "anchor": [
+  35,
+  81
+ ],
+ "frames": [
+  {
+   "id": "face_neutral",
+   "x": 0,
+   "y": 0,
+   "w": 70,
+   "h": 84,
+   "anchor": [
+    35,
+    81
+   ],
+   "points": {
+    "head": [
+     34,
+     2
+    ],
+    "center": [
+     34,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  {
+   "id": "face_smile",
+   "x": 70,
+   "y": 0,
+   "w": 70,
+   "h": 84,
+   "anchor": [
+    35,
+    81
+   ],
+   "points": {
+    "head": [
+     34,
+     2
+    ],
+    "center": [
+     34,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  {
+   "id": "face_sad",
+   "x": 140,
+   "y": 0,
+   "w": 70,
+   "h": 84,
+   "anchor": [
+    35,
+    81
+   ],
+   "points": {
+    "head": [
+     34,
+     2
+    ],
+    "center": [
+     34,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  {
+   "id": "face_angry",
+   "x": 0,
+   "y": 84,
+   "w": 70,
+   "h": 84,
+   "anchor": [
+    35,
+    81
+   ],
+   "points": {
+    "head": [
+     34,
+     2
+    ],
+    "center": [
+     34,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  {
+   "id": "face_surprise",
+   "x": 70,
+   "y": 84,
+   "w": 70,
+   "h": 84,
+   "anchor": [
+    35,
+    81
+   ],
+   "points": {
+    "head": [
+     34,
+     2
+    ],
+    "center": [
+     34,
+     46
+    ],
+    "front": [
+     2,
+     74
+    ]
+   }
+  },
+  {
+   "id": "face_closed",
+   "x": 140,
+   "y": 84,
+   "w": 70,
+   "h": 84,
+   "anchor": [
+    35,
+    81
+   ],
+   "points": {
+    "head": [
+     34,
+     2
+    ],
+    "center": [
+     35,
+     45
+    ],
+    "front": [
+     5,
+     76
+    ]
+   }
+  }
+ ],
+ "poses": {
+  "face_neutral": [
+   0
+  ],
+  "face_smile": [
+   1
+  ],
+  "face_sad": [
+   2
+  ],
+  "face_angry": [
+   3
+  ],
+  "face_surprise": [
+   4
+  ],
+  "face_closed": [
+   5
+  ]
+ },
+ "fps": {},
+ "anims": {},
+ "facing": "slightly right",
+ "target_height": 80,
+ "palette": [
+  "#23120f",
+  "#2f1217",
+  "#2f1912",
+  "#3c2015",
+  "#472616",
+  "#522b16",
+  "#622f11",
+  "#5f341b",
+  "#72390f",
+  "#6f3e20",
+  "#7b371b",
+  "#6b492e",
+  "#7d4723",
+  "#864410",
+  "#984721",
+  "#8c5128",
+  "#725e4c",
+  "#984f11",
+  "#875e3a",
+  "#995a2c",
+  "#aa5912",
+  "#a5622f",
+  "#b65a2c",
+  "#af6a32",
+  "#bc6414",
+  "#a37143",
+  "#ba6e1c",
+  "#cd6f15",
+  "#c0783b",
+  "#cf7035",
+  "#ab8c70",
+  "#d0811e",
+  "#bd8a55",
+  "#d18842",
+  "#d58950",
+  "#e18944",
+  "#cd9d63",
+  "#e29f63",
+  "#eb9d58",
+  "#e7a52a",
+  "#deb477",
+  "#d1b995",
+  "#f3b06c",
+  "#f6be7c",
+  "#eeca8c",
+  "#fcca8b",
+  "#fadda0",
+  "#f4e3bf"
+ ],
+ "npc": {
+  "tier": "A",
+  "lantern": false,
+  "spirit": false,
+  "recolor": false,
+  "mainHex": "#B0782E",
+  "recolorSets": null,
+  "variants": null,
+  "kind": "person"
+ },
+ "expr": {
+  "neutral": 0,
+  "smile": 1,
+  "sad": 2,
+  "angry": 3,
+  "surprise": 4
+ }
+}

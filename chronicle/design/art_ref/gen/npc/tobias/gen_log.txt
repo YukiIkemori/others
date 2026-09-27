@@ -9,3 +9,11 @@
 01:23:21   | ■ シートの状態
 01:23:21   |   シート1 歩き＋演技4: 確認あり  npc_tobias_s1.png  ドット 8.00px → 描かれた格子のまま（50.0 ドット）
 01:23:21 sheet 1: 0 redo lines
+02:06:53 pipeline: sheets.py ../art_ref/gen/npc/tobias --npc tobias --out out/npc/npc_tobias
+02:07:54   |   - 向きの見本（configs/refs/npc_tobias）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:07:54   | 
+02:07:54   | ■ シートの状態
+02:07:54   |   シート1 歩き＋演技4: 確認あり  npc_tobias_s1.png  ドット 8.00px → 描かれた格子のまま（50.0 ドット）
+02:07:54   | 
+02:07:54   | packed field 168x228 | palette 52 + face 0
+02:07:55 to_v2 npc_tobias: npc_tobias → /home/user/others/chronicle/v2/assets/sprites/npc_tobias |   field: 16 frames

@@ -76,5 +76,434 @@
     ]
    }
   ]
+ },
+ {
+  "sheet": 2,
+  "file": "comp_titta_s2.png",
+  "layout": "4x3",
+  "logical_cell": [
+   80,
+   64
+  ],
+  "image_px": [
+   1920,
+   2048
+  ],
+  "frames": [
+   {
+    "id": "walk_down_0",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     25,
+     46
+    ]
+   },
+   {
+    "id": "walk_down_1",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     26,
+     46
+    ]
+   },
+   {
+    "id": "walk_down_2",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     26,
+     46
+    ]
+   },
+   {
+    "id": "walk_up_0",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     26,
+     45
+    ]
+   },
+   {
+    "id": "walk_up_1",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     25,
+     45
+    ]
+   },
+   {
+    "id": "walk_up_2",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     24,
+     45
+    ]
+   },
+   {
+    "id": "walk_left_0",
+    "row": 3,
+    "column": 1,
+    "logical_bbox": [
+     25,
+     44
+    ]
+   },
+   {
+    "id": "walk_left_1",
+    "row": 3,
+    "column": 2,
+    "logical_bbox": [
+     27,
+     44
+    ]
+   },
+   {
+    "id": "walk_left_2",
+    "row": 3,
+    "column": 3,
+    "logical_bbox": [
+     27,
+     44
+    ]
+   },
+   {
+    "id": "walk_right_0",
+    "row": 4,
+    "column": 1,
+    "logical_bbox": [
+     25,
+     44
+    ]
+   },
+   {
+    "id": "walk_right_1",
+    "row": 4,
+    "column": 2,
+    "logical_bbox": [
+     27,
+     44
+    ]
+   },
+   {
+    "id": "walk_right_2",
+    "row": 4,
+    "column": 3,
+    "logical_bbox": [
+     27,
+     44
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 3,
+  "file": "comp_titta_s3.png",
+  "layout": "2x5",
+  "logical_cell": [
+   104,
+   96
+  ],
+  "image_px": [
+   4160,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "idle_a",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     53,
+     61
+    ]
+   },
+   {
+    "id": "idle_b",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     49,
+     60
+    ]
+   },
+   {
+    "id": "step",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     59,
+     58
+    ]
+   },
+   {
+    "id": "guard",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     69,
+     59
+    ]
+   },
+   {
+    "id": "hit",
+    "row": 1,
+    "column": 5,
+    "logical_bbox": [
+     54,
+     59
+    ]
+   },
+   {
+    "id": "weak",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     53,
+     51
+    ]
+   },
+   {
+    "id": "ko",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     73,
+     31
+    ]
+   },
+   {
+    "id": "victory_a",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     40,
+     73
+    ]
+   },
+   {
+    "id": "victory_b",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     57,
+     62
+    ]
+   },
+   {
+    "id": "glimmer",
+    "row": 2,
+    "column": 5,
+    "logical_bbox": [
+     50,
+     60
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 4,
+  "file": "comp_titta_s4.png",
+  "layout": "3x5",
+  "logical_cell": [
+   112,
+   80
+  ],
+  "image_px": [
+   4480,
+   1920
+  ],
+  "frames": [
+   {
+    "id": "windup",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     45,
+     58
+    ]
+   },
+   {
+    "id": "slash",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     58,
+     55
+    ]
+   },
+   {
+    "id": "thrust_ready",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     62,
+     56
+    ]
+   },
+   {
+    "id": "thrust",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     73,
+     56
+    ]
+   },
+   {
+    "id": "charge",
+    "row": 1,
+    "column": 5,
+    "logical_bbox": [
+     61,
+     43
+    ]
+   },
+   {
+    "id": "smash",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     40,
+     70
+    ]
+   },
+   {
+    "id": "cast_a",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     53,
+     60
+    ]
+   },
+   {
+    "id": "cast_b",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     42,
+     62
+    ]
+   },
+   {
+    "id": "item",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     46,
+     60
+    ]
+   },
+   {
+    "id": "evade",
+    "row": 2,
+    "column": 5,
+    "logical_bbox": [
+     46,
+     59
+    ]
+   },
+   {
+    "id": "bare_idle",
+    "row": 3,
+    "column": 1,
+    "logical_bbox": [
+     44,
+     59
+    ]
+   },
+   {
+    "id": "bare_windup",
+    "row": 3,
+    "column": 2,
+    "logical_bbox": [
+     48,
+     58
+    ]
+   },
+   {
+    "id": "bare_slash",
+    "row": 3,
+    "column": 3,
+    "logical_bbox": [
+     53,
+     59
+    ]
+   },
+   {
+    "id": "bare_thrust",
+    "row": 3,
+    "column": 4,
+    "logical_bbox": [
+     61,
+     59
+    ]
+   },
+   {
+    "id": "bare_cast",
+    "row": 3,
+    "column": 5,
+    "logical_bbox": [
+     55,
+     59
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 5,
+  "file": "comp_titta_s5.png",
+  "layout": "1x4",
+  "logical_cell": [
+   96,
+   96
+  ],
+  "image_px": [
+   3072,
+   768
+  ],
+  "frames": [
+   {
+    "id": "face_neutral",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     71,
+     80
+    ]
+   },
+   {
+    "id": "face_smile",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     71,
+     80
+    ]
+   },
+   {
+    "id": "face_surprise",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     71,
+     80
+    ]
+   },
+   {
+    "id": "face_pain",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     71,
+     80
+    ]
+   }
+  ]
  }
 ]

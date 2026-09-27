@@ -76,5 +76,383 @@
     ]
    }
   ]
+ },
+ {
+  "sheet": 2,
+  "file": "comp_ferno_s2.png",
+  "layout": "4x3",
+  "logical_cell": [
+   80,
+   64
+  ],
+  "image_px": [
+   1920,
+   2048
+  ],
+  "frames": [
+   {
+    "id": "walk_down_0",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     37,
+     59
+    ]
+   },
+   {
+    "id": "walk_down_1",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     37,
+     60
+    ]
+   },
+   {
+    "id": "walk_down_2",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     37,
+     61
+    ]
+   },
+   {
+    "id": "walk_up_0",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     36,
+     58
+    ]
+   },
+   {
+    "id": "walk_up_1",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     36,
+     59
+    ]
+   },
+   {
+    "id": "walk_up_2",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     36,
+     59
+    ]
+   },
+   {
+    "id": "walk_left_0",
+    "row": 3,
+    "column": 1,
+    "logical_bbox": [
+     35,
+     52
+    ]
+   },
+   {
+    "id": "walk_left_1",
+    "row": 3,
+    "column": 2,
+    "logical_bbox": [
+     33,
+     53
+    ]
+   },
+   {
+    "id": "walk_left_2",
+    "row": 3,
+    "column": 3,
+    "logical_bbox": [
+     33,
+     52
+    ]
+   },
+   {
+    "id": "walk_right_0",
+    "row": 4,
+    "column": 1,
+    "logical_bbox": [
+     33,
+     54
+    ]
+   },
+   {
+    "id": "walk_right_1",
+    "row": 4,
+    "column": 2,
+    "logical_bbox": [
+     33,
+     54
+    ]
+   },
+   {
+    "id": "walk_right_2",
+    "row": 4,
+    "column": 3,
+    "logical_bbox": [
+     33,
+     53
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 3,
+  "file": "comp_ferno_s3.png",
+  "layout": "2x5",
+  "logical_cell": [
+   104,
+   96
+  ],
+  "image_px": [
+   4160,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "idle_a",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     88,
+     81
+    ]
+   },
+   {
+    "id": "idle_b",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     72,
+     78
+    ]
+   },
+   {
+    "id": "step",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     78,
+     75
+    ]
+   },
+   {
+    "id": "guard",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     85,
+     77
+    ]
+   },
+   {
+    "id": "hit",
+    "row": 1,
+    "column": 5,
+    "logical_bbox": [
+     85,
+     73
+    ]
+   },
+   {
+    "id": "weak",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     76,
+     63
+    ]
+   },
+   {
+    "id": "ko",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     117,
+     38
+    ]
+   },
+   {
+    "id": "victory_a",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     70,
+     98
+    ]
+   },
+   {
+    "id": "victory_b",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     101,
+     73
+    ]
+   },
+   {
+    "id": "glimmer",
+    "row": 2,
+    "column": 5,
+    "logical_bbox": [
+     73,
+     74
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 4,
+  "file": "comp_ferno_s4.png",
+  "layout": "3x5",
+  "logical_cell": [
+   112,
+   80
+  ],
+  "image_px": [
+   4480,
+   1920
+  ],
+  "frames": [
+   {
+    "id": "windup",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     62,
+     77
+    ]
+   },
+   {
+    "id": "slash",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     81,
+     77
+    ]
+   },
+   {
+    "id": "thrust_ready",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     75,
+     76
+    ]
+   },
+   {
+    "id": "thrust",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     85,
+     77
+    ]
+   },
+   {
+    "id": "charge",
+    "row": 1,
+    "column": 5,
+    "logical_bbox": [
+     72,
+     61
+    ]
+   },
+   {
+    "id": "smash",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     59,
+     88
+    ]
+   },
+   {
+    "id": "cast_a",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     69,
+     78
+    ]
+   },
+   {
+    "id": "cast_b",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     61,
+     75
+    ]
+   },
+   {
+    "id": "item",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     63,
+     78
+    ]
+   },
+   {
+    "id": "evade",
+    "row": 2,
+    "column": 5,
+    "logical_bbox": [
+     69,
+     77
+    ]
+   },
+   {
+    "id": "bare_idle",
+    "row": 3,
+    "column": 1,
+    "logical_bbox": [
+     56,
+     80
+    ]
+   },
+   {
+    "id": "bare_windup",
+    "row": 3,
+    "column": 2,
+    "logical_bbox": [
+     66,
+     76
+    ]
+   },
+   {
+    "id": "bare_slash",
+    "row": 3,
+    "column": 3,
+    "logical_bbox": [
+     69,
+     79
+    ]
+   },
+   {
+    "id": "bare_thrust",
+    "row": 3,
+    "column": 4,
+    "logical_bbox": [
+     81,
+     78
+    ]
+   },
+   {
+    "id": "bare_cast",
+    "row": 3,
+    "column": 5,
+    "logical_bbox": [
+     69,
+     79
+    ]
+   }
+  ]
  }
 ]

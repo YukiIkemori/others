@@ -1,4 +1,4 @@
-// CONTENT-F: マップを組み立てる小道具（フェルン・迷いの森・千年樹・ユラ・樵の休み小屋。V2_PLAN §2.6.1）
+// CONTENT-F: マップを組み立てる小道具（フェルン・迷いの森・千年樹・ユラ・きこりの休み小屋。V2_PLAN §2.6.1）
 //   R.ContentF.kit: grid / put / rect / hline / vline / path / blob / border / stamp / at / rows / def
 //                   scatter（空いたマスに物を散らす。同じ種なら同じ置き方）/ room（屋内の箱）
 //                   prop / chest / spring / sign / exam / stairs / npc / lines（物と人の短い書き方）

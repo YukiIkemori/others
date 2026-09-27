@@ -1,0 +1,1151 @@
+{
+ "char": "rouga",
+ "companion": "rouga",
+ "npc": null,
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/companion/rouga",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/rouga/comp_rouga_s1.png",
+   "size": [
+    3584,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x4",
+    "logical_cell": [
+     112,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 552.0,
+   "native_height_at_period": 69.0,
+   "scale_note": "描かれた格子のまま（69.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "ref_front": {
+     "size": [
+      45,
+      70
+     ],
+     "box": [
+      248,
+      136,
+      640,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_34": {
+     "size": [
+      49,
+      69
+     ],
+     "box": [
+      1128,
+      144,
+      1552,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_side_left": {
+     "size": [
+      41,
+      68
+     ],
+     "box": [
+      2056,
+      152,
+      2416,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_back": {
+     "size": [
+      48,
+      69
+     ],
+     "box": [
+      2928,
+      144,
+      3344,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_idle_left": {
+     "size": [
+      70,
+      64
+     ],
+     "box": [
+      152,
+      952,
+      744,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_face": {
+     "size": [
+      76,
+      74
+     ],
+     "box": [
+      1024,
+      840,
+      1664,
+      1464
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "ref_palette": {
+     "size": [
+      83,
+      42
+     ],
+     "box": [
+      1888,
+      968,
+      2584,
+      1336
+     ],
+     "air": 0,
+     "blur": 0.0
+    }
+   }
+  },
+  "2": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/rouga/comp_rouga_s2.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 416.0,
+   "native_height_at_period": 52.0,
+   "scale_note": "描かれた格子のまま（52.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      36,
+      56
+     ],
+     "box": [
+      160,
+      16,
+      480,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.01
+    },
+    "walk_down_1": {
+     "size": [
+      35,
+      55
+     ],
+     "box": [
+      800,
+      24,
+      1112,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.83,
+     "scale": 1.039
+    },
+    "walk_down_2": {
+     "size": [
+      34,
+      55
+     ],
+     "box": [
+      1448,
+      24,
+      1752,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.81,
+     "scale": 1.039
+    },
+    "walk_up_0": {
+     "size": [
+      34,
+      53
+     ],
+     "box": [
+      168,
+      552,
+      472,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.84,
+     "scale": 1.0
+    },
+    "walk_up_1": {
+     "size": [
+      33,
+      53
+     ],
+     "box": [
+      808,
+      552,
+      1104,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.82,
+     "scale": 1.0
+    },
+    "walk_up_2": {
+     "size": [
+      34,
+      52
+     ],
+     "box": [
+      1448,
+      560,
+      1752,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.82,
+     "scale": 1.078
+    },
+    "walk_left_0": {
+     "size": [
+      26,
+      52
+     ],
+     "box": [
+      200,
+      1072,
+      440,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      32,
+      50
+     ],
+     "box": [
+      816,
+      1088,
+      1104,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_left_2": {
+     "size": [
+      32,
+      50
+     ],
+     "box": [
+      1456,
+      1088,
+      1744,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_0": {
+     "size": [
+      25,
+      52
+     ],
+     "box": [
+      200,
+      1584,
+      432,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      34,
+      51
+     ],
+     "box": [
+      808,
+      1592,
+      1112,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    },
+    "walk_right_2": {
+     "size": [
+      32,
+      51
+     ],
+     "box": [
+      1456,
+      1592,
+      1744,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    }
+   }
+  },
+  "3": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/rouga/comp_rouga_s3.png",
+   "size": [
+    4160,
+    1536
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "2x5",
+    "logical_cell": [
+     104,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 556.0,
+   "native_height_at_period": 69.5,
+   "scale_note": "描かれた格子のまま（69.5 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "idle_a": {
+     "size": [
+      72,
+      70
+     ],
+     "box": [
+      112,
+      136,
+      720,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.31,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.41
+     }
+    },
+    "idle_b": {
+     "size": [
+      66,
+      69
+     ],
+     "box": [
+      968,
+      144,
+      1528,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.39,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.49
+     },
+     "scale": 1.007
+    },
+    "step": {
+     "size": [
+      79,
+      65
+     ],
+     "box": [
+      1744,
+      176,
+      2408,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.58,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.68
+     }
+    },
+    "guard": {
+     "size": [
+      84,
+      67
+     ],
+     "box": [
+      2560,
+      160,
+      3264,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.66,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.24
+     },
+     "scale": 1.033
+    },
+    "hit": {
+     "size": [
+      74,
+      69
+     ],
+     "box": [
+      3432,
+      144,
+      4056,
+      728
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.38,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.48
+     },
+     "scale": 1.033
+    },
+    "weak": {
+     "size": [
+      55,
+      57
+     ],
+     "box": [
+      176,
+      1008,
+      648,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.36,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.46
+     },
+     "scale": 0.941
+    },
+    "ko": {
+     "size": [
+      102,
+      33
+     ],
+     "box": [
+      824,
+      1200,
+      1672,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "victory_a": {
+     "size": [
+      56,
+      87
+     ],
+     "box": [
+      1840,
+      768,
+      2320,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.47,
+     "facing_cues": {
+      "head": 0.15,
+      "upper": 0.33
+     },
+     "scale": 0.993
+    },
+    "victory_b": {
+     "size": [
+      53,
+      76
+     ],
+     "box": [
+      2680,
+      856,
+      3136,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "scale": 1.0
+    },
+    "glimmer": {
+     "size": [
+      66,
+      72
+     ],
+     "box": [
+      3464,
+      888,
+      4024,
+      1496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.16,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.26
+     },
+     "scale": 0.993
+    }
+   }
+  },
+  "4": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/rouga/comp_rouga_s4.png",
+   "size": [
+    4480,
+    1920
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "3x5",
+    "logical_cell": [
+     112,
+     80
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 552.0,
+   "native_height_at_period": 69.0,
+   "scale_note": "描かれた格子のまま（69.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "windup": {
+     "size": [
+      60,
+      75
+     ],
+     "box": [
+      192,
+      0,
+      704,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -1.18,
+     "facing_cues": {
+      "head": -0.9,
+      "upper": -0.28
+     },
+     "scale": 0.935
+    },
+    "slash": {
+     "size": [
+      83,
+      74
+     ],
+     "box": [
+      992,
+      0,
+      1688,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.45,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.55
+     },
+     "scale": 0.993
+    },
+    "thrust_ready": {
+     "size": [
+      85,
+      68
+     ],
+     "box": [
+      1880,
+      48,
+      2592,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.48,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": -0.42
+     }
+    },
+    "thrust": {
+     "size": [
+      97,
+      68
+     ],
+     "box": [
+      2728,
+      48,
+      3536,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.12,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.22
+     },
+     "scale": 1.0
+    },
+    "charge": {
+     "size": [
+      71,
+      51
+     ],
+     "box": [
+      3728,
+      184,
+      4328,
+      624
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.38,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.48
+     },
+     "scale": 0.98
+    },
+    "smash": {
+     "size": [
+      58,
+      80
+     ],
+     "box": [
+      200,
+      624,
+      696,
+      1296
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.9,
+     "facing_cues": {
+      "head": -0.88,
+      "upper": -0.02
+     },
+     "scale": 1.0
+    },
+    "cast_a": {
+     "size": [
+      69,
+      69
+     ],
+     "box": [
+      1048,
+      680,
+      1632,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.14,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.24
+     },
+     "scale": 0.974
+    },
+    "cast_b": {
+     "size": [
+      57,
+      69
+     ],
+     "box": [
+      1992,
+      680,
+      2480,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.07,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.17
+     },
+     "scale": 0.98
+    },
+    "item": {
+     "size": [
+      55,
+      71
+     ],
+     "box": [
+      2896,
+      664,
+      3368,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.97,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.07
+     },
+     "scale": 0.987
+    },
+    "evade": {
+     "size": [
+      53,
+      68
+     ],
+     "box": [
+      3800,
+      688,
+      4256,
+      1264
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.28,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.38
+     }
+    },
+    "bare_idle": {
+     "size": [
+      50,
+      67
+     ],
+     "box": [
+      232,
+      1336,
+      664,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.22,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.32
+     }
+    },
+    "bare_windup": {
+     "size": [
+      57,
+      67
+     ],
+     "box": [
+      1096,
+      1336,
+      1584,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.41,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.51
+     },
+     "scale": 1.02
+    },
+    "bare_slash": {
+     "size": [
+      65,
+      67
+     ],
+     "box": [
+      1960,
+      1336,
+      2512,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.26,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.36
+     },
+     "scale": 1.02
+    },
+    "bare_thrust": {
+     "size": [
+      72,
+      67
+     ],
+     "box": [
+      2832,
+      1336,
+      3440,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.17,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.27
+     },
+     "scale": 1.02
+    },
+    "bare_cast": {
+     "size": [
+      66,
+      67
+     ],
+     "box": [
+      3752,
+      1336,
+      4312,
+      1904
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.32,
+     "facing_cues": {
+      "head": 0.9,
+      "upper": 0.42
+     },
+     "scale": 1.013
+    }
+   }
+  },
+  "5": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/rouga/comp_rouga_s5.png",
+   "size": [
+    3072,
+    768
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "1x4",
+    "logical_cell": [
+     96,
+     96
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 636.0,
+   "native_height_at_period": 79.5,
+   "scale_note": "描かれた格子のまま（79.5 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "face_neutral": {
+     "size": [
+      83,
+      80
+     ],
+     "box": [
+      32,
+      80,
+      728,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_smile": {
+     "size": [
+      81,
+      80
+     ],
+     "box": [
+      808,
+      80,
+      1488,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_surprise": {
+     "size": [
+      82,
+      79
+     ],
+     "box": [
+      1576,
+      88,
+      2264,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "face_pain": {
+     "size": [
+      81,
+      79
+     ],
+     "box": [
+      2344,
+      88,
+      3024,
+      752
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "ground",
+   "msg": "2 行目の足元の高さが最大 20 ドットずれている。足元で揃えた",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート1 の 7 番（配色見本） の足元の影を消した",
+   "slot": "ref_palette",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "design_refs",
+   "msg": "設定画から向きの見本 6 枚と配色（52 色）を取った。<out>/refs に保存（承認後は tools/refs.py rouga <out> で configs/refs に）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 2,
+   "level": "check",
+   "code": "height",
+   "msg": "シート2 の 1 番（下向き・立ち） の身長が 56 ドット（ほかは 52）",
+   "slot": "walk_down_0",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "auto",
+   "code": "shadow",
+   "msg": "シート3 の 9 番（勝利B） の足元の影を消した",
+   "slot": "victory_b",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "check",
+   "code": "height",
+   "msg": "シート3 の 3 番（一歩前に踏み出す） の身長が 65 ドット（ほかは 70）",
+   "slot": "step",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 4,
+   "level": "check",
+   "code": "facing_unsure",
+   "msg": "シート4 の 1 番（振りかぶり） の向きがはっきりしない（点数 -1.2）",
+   "slot": "windup",
+   "ask": null,
+   "data": {
+    "cues": {
+     "head": -0.9,
+     "upper": -0.28
+    }
+   }
+  },
+  {
+   "sheet": 4,
+   "level": "check",
+   "code": "facing_unsure",
+   "msg": "シート4 の 6 番（大技の一撃） の向きがはっきりしない（点数 -0.9）",
+   "slot": "smash",
+   "ask": null,
+   "data": {
+    "cues": {
+     "head": -0.88,
+     "upper": -0.02
+    }
+   }
+  },
+  {
+   "sheet": 4,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "evade の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "evade",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 3,
+   "level": "check",
+   "code": "breath_big",
+   "msg": "待機AとBの差が大きい（輪郭の 20%、身長差 1 ドット）。交互に出すと跳ねて見えないか見る",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  }
+ ]
+}

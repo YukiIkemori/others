@@ -1,0 +1,115 @@
+[
+ {
+  "id": "lighthouse",
+  "seg": "entrance→lh1_s1",
+  "steps": 25,
+  "battles": 0.59,
+  "zone": "z_lighthouse",
+  "mpMean": 99.1,
+  "mp25": 98.6,
+  "wipePct": 0,
+  "fail": []
+ },
+ {
+  "id": "lighthouse",
+  "seg": "lh1_s1→lh2_s1",
+  "steps": 92,
+  "battles": 3.5,
+  "zone": "z_lighthouse",
+  "mpMean": 95.4,
+  "mp25": 93.1,
+  "wipePct": 0,
+  "fail": []
+ },
+ {
+  "id": "lighthouse",
+  "seg": "lh2_s1→lh3_s1",
+  "steps": 30,
+  "battles": 0.77,
+  "zone": "z_lighthouse",
+  "mpMean": 98.9,
+  "mp25": 98.6,
+  "wipePct": 0,
+  "fail": []
+ },
+ {
+  "id": "lighthouse",
+  "seg": "lh3_s1→lighthouse_3_boss",
+  "steps": 4,
+  "battles": 0,
+  "fail": []
+ },
+ {
+  "id": "verda",
+  "seg": "entrance→verda_2_s1",
+  "steps": 120,
+  "battles": 5.23,
+  "zone": "z_verda",
+  "mpMean": 97.6,
+  "mp25": 96.6,
+  "wipePct": 0,
+  "fail": []
+ },
+ {
+  "id": "verda",
+  "seg": "verda_2_s1→verda_moth",
+  "steps": 9,
+  "battles": 0.23,
+  "zone": "z_verda",
+  "mpMean": 99.8,
+  "mp25": 100,
+  "wipePct": 0,
+  "fail": []
+ },
+ {
+  "id": "elder",
+  "seg": "entrance→elder_1_s1",
+  "steps": 128,
+  "battles": 5.36,
+  "zone": "z_elder",
+  "mpMean": 98.2,
+  "mp25": 96.9,
+  "wipePct": 0,
+  "fail": []
+ },
+ {
+  "id": "elder",
+  "seg": "elder_1_s1→elder_2_s1",
+  "steps": 61,
+  "battles": 2.41,
+  "zone": "z_elder",
+  "mpMean": 98.6,
+  "mp25": 96.9,
+  "wipePct": 0,
+  "fail": []
+ },
+ {
+  "id": "elder",
+  "seg": "elder_2_s1→elder_boss",
+  "steps": 8,
+  "battles": 0,
+  "fail": []
+ },
+ {
+  "id": "well",
+  "seg": "entrance→wl_s1",
+  "steps": 26,
+  "battles": 1,
+  "zone": "z_well",
+  "mpMean": 98.2,
+  "mp25": 97.2,
+  "wipePct": 0,
+  "fail": []
+ },
+ {
+  "id": "well",
+  "seg": "wl_s1→end",
+  "steps": 55,
+  "battles": 2.32,
+  "zone": "z_well",
+  "mpMean": 96.6,
+  "mp25": 94.4,
+  "wipePct": 0,
+  "fail": []
+ }
+]

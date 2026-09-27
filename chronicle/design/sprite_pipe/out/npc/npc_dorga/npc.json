@@ -1,0 +1,48 @@
+{
+ "id": "dorga",
+ "look": "npc_dorga",
+ "name": "ドルガ",
+ "tier": "B",
+ "kind": "person",
+ "region": "ash",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 53
+ },
+ "measureH": {
+  "field": 53
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#6A625A",
+ "mainHue": 30,
+ "mainName": "耐火の灰",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_dorga_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.18867924528301888,
+   "head_w": 0.3490566037735849,
+   "shoulder": 0.42452830188679247,
+   "neck_clear": 0.9511904761904761
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

@@ -1,3 +1,26 @@
 01:10:34 sheet 1 attempt 1: generating 3584x1536 (pitch 8, quality medium, 1 refs)
 01:11:18   pitch in raw image: 8.48 px per art pixel (upright median 543 px / 64)
 01:11:20 sheet 1 -> art_ref/gen/companion/zafira/comp_zafira_s1.png (7 poses)
+02:19:26 sheet 2 attempt 1: generating 1920x2048 (pitch 8, quality medium, 2 refs)
+02:21:15   pitch in raw image: 8.06 px per art pixel (upright median 387 px / 48)
+02:21:16 sheet 2 -> art_ref/gen/companion/zafira/comp_zafira_s2.png (12 poses)
+02:21:16 sheet 3 attempt 1: generating 3648x1344 (pitch 7, quality medium, 2 refs)
+02:22:49   pitch in raw image: 7.17 px per art pixel (upright median 459 px / 64)
+02:22:50 sheet 3 -> art_ref/gen/companion/zafira/comp_zafira_s3.png (10 poses)
+02:22:50 sheet 4 attempt 1: generating 3360x1440 (pitch 6, quality medium, 2 refs)
+02:24:25   pitch in raw image: 6.02 px per art pixel (upright median 385 px / 64)
+02:24:26 sheet 4 -> art_ref/gen/companion/zafira/comp_zafira_s4.png (15 poses)
+02:24:27 sheet 5 attempt 1: generating 1536x1536 (pitch 8, quality medium, 2 refs)
+02:26:11   pitch in raw image: 7.69 px per art pixel (upright median 615 px / 80)
+02:26:13 sheet 5 -> art_ref/gen/companion/zafira/comp_zafira_s5.png (4 poses)
+02:26:13 pipeline: sheets.py ../art_ref/gen/companion/zafira --companion zafira --out out/comp_zafira --check
+02:30:53   | ■ シートの状態
+02:30:53   |   シート1 設定画: OK  comp_zafira_s1.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+02:30:53   |   シート2 フィールドの歩き: 確認あり  comp_zafira_s2.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+02:30:53   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_zafira_s3.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+02:30:53   |   シート4 戦闘の行動ポーズ＋武器なし版: OK  comp_zafira_s4.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+02:30:53   |   シート5 顔の表情: OK  comp_zafira_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+02:30:54   size check hit: 0.95 of the hero's same pose (relative to idle_a)
+02:30:54   sheet 3 hit: size redo line ignored (same size as the hero's pose) -> overrides scale_ok
+02:30:54 no redo lines left
+02:30:54 pipeline: sheets.py ../art_ref/gen/companion/zafira --companion zafira --out out/comp_zafira

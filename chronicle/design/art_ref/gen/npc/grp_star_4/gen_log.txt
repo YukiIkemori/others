@@ -1,0 +1,21 @@
+02:21:55 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+02:23:32   half A (npc_night_guard, target 49):
+02:23:33   pitch in raw image: 4.90 px per art pixel (upright median 240 px / 49)
+02:23:33   half B (npc_shepherd, target 46):
+02:23:34   pitch in raw image: 5.02 px per art pixel (upright median 231 px / 46)
+02:23:38 sheet 1 -> art_ref/gen/npc/grp_star_4/npc_grp_star_4.png (24 poses)
+02:23:38 pipeline: sheets.py ../art_ref/gen/npc/grp_star_4 --npc npc_night_guard --out out/npc/npc_night_guard --check
+02:25:28   |   - シート1: npc_grp_star_4.png の左半分（人物A）を使う
+02:25:28   |   - シート1: 頭身の比（歩き12コマの中央値、体 49 ドットあたり）: 首 0.35（アルン 0.29）・頭の幅 0.41（0.43）・肩 0.35（0.40）
+02:25:28   |   - 向きの見本（configs/refs/npc_night_guard）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:25:28   | 
+02:25:28   | ■ シートの状態
+02:25:28   |   シート1 歩き: 確認あり  npc_night_guard_s1.png  ドット 8.00px → 描かれた格子のまま（49.0 ドット）
+02:25:28 pipeline: sheets.py ../art_ref/gen/npc/grp_star_4 --npc npc_shepherd --out out/npc/npc_shepherd --check
+02:27:26   |   - シート1: npc_grp_star_4.png の右半分（人物B）を使う
+02:27:26   |   - シート1: 頭身の比（歩き12コマの中央値、体 46 ドットあたり）: 首 0.37（アルン 0.29）・頭の幅 0.43（0.43）・肩 0.40（0.40）
+02:27:26   |   - 向きの見本（configs/refs/npc_shepherd）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:27:26   | 
+02:27:26   | ■ シートの状態
+02:27:26   |   シート1 歩き: 確認あり  npc_shepherd_s1.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+02:27:26 sheet 1: 0 redo lines

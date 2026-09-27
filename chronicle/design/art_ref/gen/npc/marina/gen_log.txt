@@ -9,3 +9,11 @@
 01:13:47   | ■ シートの状態
 01:13:47   |   シート1 歩き＋演技4: 要作り直し  npc_marina_s1.png  ドット 8.00px → 描かれた格子のまま（43.0 ドット）
 01:13:47 sheet 1: 0 redo lines
+01:36:35 pipeline: sheets.py ../art_ref/gen/npc/marina --npc marina --out out/npc/npc_marina
+01:37:21   |   「マリナ（npc_marina）のシート1の12番（手を挙げて呼びかける）だけ小さく描かれている（頭の大きさがほかのポーズの約 80%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+01:37:21   | 
+01:37:21   | ■ シートの状態
+01:37:21   |   シート1 歩き＋演技4: 要作り直し  npc_marina_s1.png  ドット 8.00px → 描かれた格子のまま（43.0 ドット）
+01:37:21   | 
+01:37:21   | packed field 160x232 | palette 52 + face 0
+01:37:22 to_v2 npc_marina: npc_marina → /home/user/others/chronicle/v2/assets/sprites/npc_marina |   field: 16 frames

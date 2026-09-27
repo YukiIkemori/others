@@ -1,0 +1,301 @@
+{
+ "char": "npc_shepherd",
+ "companion": null,
+ "npc": "npc_shepherd",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/grp_star_4",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/sprite_pipe/out/npc/npc_shepherd/src/npc_shepherd_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 368.0,
+   "native_height_at_period": 46.0,
+   "scale_note": "描かれた格子のまま（46.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      32,
+      46
+     ],
+     "box": [
+      176,
+      96,
+      464,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.79
+    },
+    "walk_down_1": {
+     "size": [
+      32,
+      46
+     ],
+     "box": [
+      816,
+      96,
+      1104,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.78,
+     "scale": 1.0
+    },
+    "walk_down_2": {
+     "size": [
+      32,
+      46
+     ],
+     "box": [
+      1456,
+      96,
+      1744,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.75,
+     "scale": 1.037
+    },
+    "walk_up_0": {
+     "size": [
+      31,
+      46
+     ],
+     "box": [
+      176,
+      608,
+      456,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.16,
+     "scale": 0.9
+    },
+    "walk_up_1": {
+     "size": [
+      31,
+      46
+     ],
+     "box": [
+      816,
+      608,
+      1096,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.62,
+     "scale": 0.962
+    },
+    "walk_up_2": {
+     "size": [
+      31,
+      46
+     ],
+     "box": [
+      1456,
+      608,
+      1736,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.88,
+     "scale": 0.962
+    },
+    "walk_left_0": {
+     "size": [
+      25,
+      47
+     ],
+     "box": [
+      200,
+      1112,
+      432,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      26,
+      47
+     ],
+     "box": [
+      840,
+      1112,
+      1080,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_left_2": {
+     "size": [
+      25,
+      47
+     ],
+     "box": [
+      1480,
+      1112,
+      1712,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_0": {
+     "size": [
+      25,
+      45
+     ],
+     "box": [
+      200,
+      1640,
+      432,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      27,
+      45
+     ],
+     "box": [
+      832,
+      1640,
+      1080,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.2,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.7
+     },
+     "scale": 1.0
+    },
+    "walk_right_2": {
+     "size": [
+      27,
+      45
+     ],
+     "box": [
+      1472,
+      1640,
+      1720,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.19,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 1.69
+     },
+     "scale": 1.0
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "pair_half",
+   "msg": "npc_grp_star_4.png の右半分（人物B）を使う",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_shepherd）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 46 ドットあたり）: 首 0.37（アルン 0.29）・頭の幅 0.43（0.43）・肩 0.40（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.3695652173913043,
+    "head_w": 0.4347826086956522,
+    "shoulder": 0.3967391304347826,
+    "neck_clear": 0.7306763285024154
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 127%・頭の幅 102%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 1.018226249872722,
+    "neck": 1.265634306134604
+   }
+  }
+ ]
+}

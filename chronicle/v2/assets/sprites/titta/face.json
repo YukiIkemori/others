@@ -1,0 +1,191 @@
+{
+ "character": "titta",
+ "set": "face",
+ "look": "titta",
+ "source": "out/comp_titta/face",
+ "cell": [
+  75,
+  84
+ ],
+ "anchor": [
+  37,
+  81
+ ],
+ "frames": [
+  {
+   "id": "face_neutral",
+   "x": 0,
+   "y": 0,
+   "w": 75,
+   "h": 84,
+   "anchor": [
+    37,
+    81
+   ],
+   "points": {
+    "head": [
+     39,
+     2
+    ],
+    "center": [
+     37,
+     45
+    ],
+    "front": [
+     2,
+     76
+    ]
+   }
+  },
+  {
+   "id": "face_smile",
+   "x": 75,
+   "y": 0,
+   "w": 75,
+   "h": 84,
+   "anchor": [
+    37,
+    81
+   ],
+   "points": {
+    "head": [
+     39,
+     2
+    ],
+    "center": [
+     37,
+     45
+    ],
+    "front": [
+     2,
+     76
+    ]
+   }
+  },
+  {
+   "id": "face_surprise",
+   "x": 150,
+   "y": 0,
+   "w": 75,
+   "h": 84,
+   "anchor": [
+    37,
+    81
+   ],
+   "points": {
+    "head": [
+     38,
+     2
+    ],
+    "center": [
+     37,
+     45
+    ],
+    "front": [
+     2,
+     76
+    ]
+   }
+  },
+  {
+   "id": "face_pain",
+   "x": 225,
+   "y": 0,
+   "w": 75,
+   "h": 84,
+   "anchor": [
+    37,
+    81
+   ],
+   "points": {
+    "head": [
+     38,
+     2
+    ],
+    "center": [
+     37,
+     45
+    ],
+    "front": [
+     2,
+     76
+    ]
+   }
+  }
+ ],
+ "poses": {
+  "face_neutral": [
+   0
+  ],
+  "face_smile": [
+   1
+  ],
+  "face_surprise": [
+   2
+  ],
+  "face_pain": [
+   3
+  ]
+ },
+ "fps": {},
+ "anims": {},
+ "facing": "slightly right",
+ "target_height": 80,
+ "palette": [
+  "#10050c",
+  "#090d0a",
+  "#201711",
+  "#0d211d",
+  "#302925",
+  "#413b32",
+  "#564e42",
+  "#887b6d",
+  "#95877a",
+  "#a49588",
+  "#ad9e93",
+  "#c8bbae",
+  "#f3ede5",
+  "#312010",
+  "#4a3319",
+  "#5e3419",
+  "#674925",
+  "#7f4b28",
+  "#7a5722",
+  "#685c4e",
+  "#97572b",
+  "#7a6d5f",
+  "#93672b",
+  "#97724f",
+  "#a67830",
+  "#be6c3a",
+  "#b37443",
+  "#a58c44",
+  "#ba893a",
+  "#c8905e",
+  "#d78c52",
+  "#c89941",
+  "#e1a066",
+  "#dbaa77",
+  "#d1ad8b",
+  "#deb251",
+  "#efb87f",
+  "#efc969",
+  "#f7c891",
+  "#ebd2b7",
+  "#797740",
+  "#0e332b",
+  "#0e473d",
+  "#125a4d",
+  "#166c5d",
+  "#4d6e4b",
+  "#1d7d6b",
+  "#228e7a"
+ ],
+ "expr": {
+  "neutral": 0,
+  "smile": 1,
+  "surprise": 2,
+  "sad": 3,
+  "angry": 0
+ }
+}

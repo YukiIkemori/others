@@ -1,0 +1,158 @@
+{
+ "id": "isles_shop_m",
+ "kind": "building",
+ "theme": "isles",
+ "footprint": [
+  6,
+  5
+ ],
+ "wall": 2,
+ "files": {
+  "24": "isles_shop_m@24.png",
+  "32": "isles_shop_m@32.png",
+  "40": "isles_shop_m@40.png"
+ },
+ "emitFiles": {
+  "24": "isles_shop_m_emit@24.png",
+  "32": "isles_shop_m_emit@32.png",
+  "40": "isles_shop_m_emit@40.png"
+ },
+ "size": {
+  "24": [
+   156,
+   144
+  ],
+  "32": [
+   208,
+   192
+  ],
+  "40": [
+   260,
+   240
+  ]
+ },
+ "anchor32": [
+  8,
+  192
+ ],
+ "door32": {
+  "x": 112.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 180,
+   "y": -64,
+   "w": 10,
+   "h": 34
+  },
+  {
+   "kind": "win",
+   "x": 1,
+   "y": -61,
+   "w": 7,
+   "h": 11
+  },
+  {
+   "kind": "win",
+   "x": 71,
+   "y": -47,
+   "w": 20,
+   "h": 8
+  },
+  {
+   "kind": "win",
+   "x": 37,
+   "y": -43,
+   "w": 10,
+   "h": 15
+  },
+  {
+   "kind": "win",
+   "x": 142,
+   "y": -43,
+   "w": 11,
+   "h": 17
+  },
+  {
+   "kind": "win",
+   "x": 2,
+   "y": -41,
+   "w": 8,
+   "h": 26
+  },
+  {
+   "kind": "win",
+   "x": 179,
+   "y": -25,
+   "w": 11,
+   "h": 16
+  },
+  {
+   "kind": "win",
+   "x": 58,
+   "y": -17,
+   "w": 15,
+   "h": 8
+  },
+  {
+   "kind": "win",
+   "x": 44,
+   "y": -16,
+   "w": 6,
+   "h": 8
+  },
+  {
+   "kind": "win",
+   "x": 81,
+   "y": -15,
+   "w": 11,
+   "h": 6
+  },
+  {
+   "kind": "win",
+   "x": 162,
+   "y": -15,
+   "w": 11,
+   "h": 6
+  },
+  {
+   "kind": "win",
+   "x": 32,
+   "y": -14,
+   "w": 8,
+   "h": 7
+  },
+  {
+   "kind": "win",
+   "x": 127,
+   "y": -14,
+   "w": 13,
+   "h": 5
+  }
+ ],
+ "roof32": [
+  -6,
+  -164,
+  198,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/isles/isles_shop_m.png",
+ "def_": {
+  "id": "isles_shop_m",
+  "x": 0,
+  "y": 0,
+  "w": 6,
+  "h": 5,
+  "wall": 2,
+  "door": {
+   "x": 3,
+   "y": 4
+  },
+  "windows": 2
+ }
+}

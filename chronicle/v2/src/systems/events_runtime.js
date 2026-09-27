@@ -96,7 +96,7 @@
     if (!r || !r.n) return;
     const it = R.DB.items[r.item];
     const icon = it ? (it.slot === 'key' ? 'key' : it.icon && R.UIK.hasIcon && R.UIK.hasIcon(it.icon) ? it.icon : 'bag') : 'bag';
-    const txt = `${r.name || r.item}${r.n > 1 ? ' ×' + r.n : ''} を 手に入れた`;
+    const txt = `${r.name || r.item}${r.n > 1 ? ' ×' + r.n : ''}を手に入れた`;
     try { if (R.Field && R.Field.hud && R.Field.hud.toast && R.Engine.has('field')) R.Field.hud.toast(txt, { icon }); else R.UIK.toast(txt, { icon, anchor: 'tr' }); } catch (e) { /* */ }
     try { (it && it.slot === 'key' ? R.Audio.jingle('keyitem') : R.Audio.sfx('item')); } catch (e) { /* */ }
   }
@@ -148,7 +148,7 @@
         guard();
         const v = R.State.gold(n || 0);
         if (n > 0 && !(o && o.silent)) {
-          try { if (R.Engine.has('field')) R.Field.hud.toast(`${n} G を 手に入れた`, { icon: 'coin' }); else R.UIK.toast(`${n} G を 手に入れた`, { icon: 'coin', anchor: 'tr' }); } catch (e) { /* */ }
+          try { if (R.Engine.has('field')) R.Field.hud.toast(`${n} Gを手に入れた`, { icon: 'coin' }); else R.UIK.toast(`${n} Gを手に入れた`, { icon: 'coin', anchor: 'tr' }); } catch (e) { /* */ }
           try { R.Audio.sfx('gold'); } catch (e) { /* */ }
         }
         return v;

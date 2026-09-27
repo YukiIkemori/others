@@ -71,7 +71,7 @@
       g.stroke();
     }
     if (go.text > 0) {
-      Kt.text(g, '灯が消えた……', x, y + 40 * k, { size: 22 * k, weight: 700, color: `rgba(236,226,206,${go.text})`, align: 'center', raw: true, shadow: true, track: 4 });
+      Kt.text(g, '灯が消えた……。', x, y + 40 * k, { size: 22 * k, weight: 700, color: `rgba(236,226,206,${go.text})`, align: 'center', raw: true, shadow: true, track: 4 });
     }
     g.restore();
   };

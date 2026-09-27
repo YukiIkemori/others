@@ -8,3 +8,25 @@
 01:34:48   pitch in raw image: 6.87 px per art pixel (upright median 467 px / 68)
 01:34:48 sheet 3 -> art_ref/gen/companion/viola/comp_viola_s3.png (10 poses)
 01:34:49 sheet 4 attempt 1: generating 3360x1440 (pitch 6, quality medium, 2 refs)
+01:35:53   pitch in raw image: 5.76 px per art pixel (upright median 392 px / 68)
+01:35:54 sheet 4 -> art_ref/gen/companion/viola/comp_viola_s4.png (15 poses)
+01:35:54 sheet 5 attempt 1: generating 1536x1536 (pitch 8, quality medium, 2 refs)
+01:37:25   pitch in raw image: 8.07 px per art pixel (upright median 646 px / 80)
+01:37:25 sheet 5 -> art_ref/gen/companion/viola/comp_viola_s5.png (4 poses)
+01:37:25 pipeline: sheets.py ../art_ref/gen/companion/viola --companion viola --out out/comp_viola --check
+01:42:58   | ■ シートの状態
+01:42:58   |   シート1 設定画: OK  comp_viola_s1.png  ドット 8.00px → 描かれた格子のまま（69.0 ドット）
+01:42:58   |   シート2 フィールドの歩き: 確認あり  comp_viola_s2.png  ドット 8.00px → 描かれた格子のまま（52.5 ドット）
+01:42:58   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_viola_s3.png  ドット 8.00px → 描かれた格子のまま（68.5 ドット）
+01:42:58   |   シート4 戦闘の行動ポーズ＋武器なし版: OK  comp_viola_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:42:58   |   シート5 顔の表情: 確認あり  comp_viola_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:42:59   size check weak: 0.99 of the hero's same pose (relative to idle_a)
+01:42:59   sheet 3 weak: size redo line ignored (same size as the hero's pose)
+01:42:59 no redo lines left
+01:42:59 pipeline: sheets.py ../art_ref/gen/companion/viola --companion viola --out out/comp_viola
+01:53:32   |   シート2 フィールドの歩き: 確認あり  comp_viola_s2.png  ドット 8.00px → 描かれた格子のまま（52.5 ドット）
+01:53:32   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_viola_s3.png  ドット 8.00px → 描かれた格子のまま（68.5 ドット）
+01:53:32   |   シート4 戦闘の行動ポーズ＋武器なし版: OK  comp_viola_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+01:53:32   |   シート5 顔の表情: 確認あり  comp_viola_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:53:32   | 
+01:53:32   | packed field 120x232, battle 590x360, battle_bare 385x74, face 256x84 | palette 52 + face 48

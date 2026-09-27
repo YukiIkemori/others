@@ -1,0 +1,21 @@
+01:50:21 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+01:51:14   half A (npc_snow_old_m, target 45):
+01:51:15   pitch in raw image: 5.16 px per art pixel (upright median 232 px / 45)
+01:51:15   half B (npc_snow_old_f, target 43):
+01:51:15   pitch in raw image: 5.07 px per art pixel (upright median 218 px / 43)
+01:51:16 sheet 1 -> art_ref/gen/npc/grp_snow_2/npc_grp_snow_2.png (24 poses)
+01:51:16 pipeline: sheets.py ../art_ref/gen/npc/grp_snow_2 --npc npc_snow_old_m --out out/npc/npc_snow_old_m --check
+01:51:54   |   - シート1: npc_grp_snow_2.png の左半分（人物A）を使う
+01:51:54   |   - シート1: 頭身の比（歩き12コマの中央値、体 45 ドットあたり）: 首 0.20（アルン 0.29）・頭の幅 0.39（0.43）・肩 0.43（0.40）
+01:51:54   |   - 向きの見本（configs/refs/npc_snow_old_m）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:51:54   | 
+01:51:54   | ■ シートの状態
+01:51:54   |   シート1 歩き: 確認あり  npc_snow_old_m_s1.png  ドット 8.00px → 描かれた格子のまま（44.5 ドット）
+01:51:54 pipeline: sheets.py ../art_ref/gen/npc/grp_snow_2 --npc npc_snow_old_f --out out/npc/npc_snow_old_f --check
+01:52:31   |   - シート1: npc_grp_snow_2.png の右半分（人物B）を使う
+01:52:31   |   - シート1: 頭身の比（歩き12コマの中央値、体 43 ドットあたり）: 首 0.21（アルン 0.29）・頭の幅 0.44（0.43）・肩 0.44（0.40）
+01:52:31   |   - 向きの見本（configs/refs/npc_snow_old_f）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+01:52:31   | 
+01:52:31   | ■ シートの状態
+01:52:31   |   シート1 歩き: 確認あり  npc_snow_old_f_s1.png  ドット 8.00px → 描かれた格子のまま（42.5 ドット）
+01:52:31 sheet 1: 0 redo lines

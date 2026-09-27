@@ -1,6 +1,6 @@
-// CONTENT-P: ファロスの町の人・店・宿・依頼・酒場の噂（V2_PLAN §3.3「話す見返りのある人」・§3.4・§3.5、WORLD_REDESIGN §3.3、STORY_BIBLE §3.5・§8.10・§10.2）
+// CONTENT-P: ファロスの町の人・店・宿・依頼・酒場のうわさ（V2_PLAN §3.3「話す見返りのある人」・§3.4・§3.5、WORLD_REDESIGN §3.3、STORY_BIBLE §3.5・§8.10・§10.2）
 //   話す見返り（町・屋内で 10 人以上、種類は ①手がかり ②依頼 ⑤一度だけの品 ④隠し場所のほのめかし ⑥ボスの癖 ⑦近況）:
-//     潮風亭の噂の 3 人（手がかり）・井戸の子（依頼 q_pharos_well）・タデオ（依頼 q_pharos_lamp）・造船所の見習い（依頼 q_pharos_delivery）・
+//     潮風亭のうわさの 3 人（手がかり）・井戸の子（依頼 q_pharos_well）・タデオ（依頼 q_pharos_lamp）・造船所の見習い（依頼 q_pharos_delivery）・
 //     漁師のおかみ（一度だけの品）・老水夫（灯台 2 階の隠し通路）・旅の剣士（ページ食らいの癖）・門番／船乗り／広場の人（近況）
 //   世代で分けた台詞（STORY_BIBLE §3.5）: 桟橋の子（二十歳より下）・行商人（二十〜四十）・ベンチの年寄り（年寄り）
 //   読み物: pharos_oilboard（lo_pharos_oilboard）・pharos_tract（lo_silent_tract）
@@ -64,7 +64,7 @@
       const k = [1.0, 1.0, 0.9, 0.9, 0.8, 0.8, 0.7, 0.7, 0.6][Math.min(8, (R.Game && R.Game.tier) || 0)];
       const p = (n) => Math.round(n * k);
       await E.narr(ev, '油の相場の札が立っている。');
-      await E.narr(ev, `「半島の魚油 ${p(12)} G／森の樹脂 ${p(15)} G\n砂漠の黒い油 ${p(30)} G／鉱山の燐石 ${p(40)} G」`);
+      await E.narr(ev, `「半島の魚油 ${p(12)} G／森の樹脂 ${p(15)} G\n砂漠の黒い油 ${p(30)} G／鉱山のりん石 ${p(40)} G」`);
       await E.narr(ev, '札の端に、小さく\n「大灯火が細るほど、値は上がる」\nと書き足してある。');
       E.lore(ev, 'lo_pharos_oilboard');
     },
@@ -104,7 +104,7 @@
   ]);
   D.pharos_swordsman = say('swordsman', [
     { cond: 'prologue_boss', text: '灯台の化け物を倒したって？\n紙吹雪をよく防いだな。\n大したもんだ。' },
-    { text: ['灯台に、紙を食う化け物が\n住みついたって噂だ。', '紙を吸いこみはじめたら、\n次は紙吹雪が来る。\nみなで身を守れば半分で済むさ。'] },
+    { text: ['灯台に、紙を食う化け物が\n住みついたってうわさだ。', '紙を吸いこみはじめたら、\n次は紙吹雪が来る。\nみなで身を守れば半分で済むさ。'] },
   ]);
 
   // ------------------------------------------------------------ 依頼
@@ -147,7 +147,7 @@
       await E.say(ev, 'tadeo', both ? '灯籠のまわりは、\n魔物も寄りつかん。\n灯りってのは、ありがたいもんだ。' : '見晴らし台は、半島の北の\n分かれ道から東だ。\nもうひとつは、ロアへの夜道さ。');
     },
   };
-  // q_pharos_delivery（造船所の見習い → 包みをフェルンの樵頭ゴードへ。受け取りは CONTENT-F の fern_gord）
+  // q_pharos_delivery（造船所の見習い → 包みをフェルンのきこり頭ゴードへ。受け取りは CONTENT-F の fern_gord）
   D.pharos_apprentice = {
     meta: { needs: ['flag:prologue_done'], gives: ['lead:q_pharos_delivery', 'item:k_ship_parcel'] },
     run: async (ev) => {
@@ -155,13 +155,13 @@
       if (!ev.flag('prologue_done')) { await E.say(ev, 'apprentice', '親方の手伝いで、\n小舟の板を削ってるんだ。\n灯台が戻れば、また海に出られる。'); return; }
       if (ev.flag('q_pharos_delivery_done')) { await E.say(ev, 'apprentice', '包み、届けてくれたんだね！\nゴードさんから、礼の手紙が\n来たよ。ありがとう！'); return; }
       if (!ev.flag('prologue_parcel')) {
-        await E.say(ev, 'apprentice', ['ちょうどよかった！\n西の森の村フェルンの、\n樵頭ゴードさんに届け物があるんだ。', '頼んでいた斧の柄の木を\n削り直したんだけど、\n跳ね橋が上がってて出せなくてさ。', 'この包み、届けてくれない？']);
+        await E.say(ev, 'apprentice', ['ちょうどよかった！\n西の森の村フェルンの、\nきこり頭ゴードさんに届け物があるんだ。', '頼んでいた斧の柄の木を\n削り直したんだけど、\n跳ね橋が上がってて出せなくてさ。', 'この包み、届けてくれない？']);
         await E.give(ev, 'k_ship_parcel', 1, { say: true });
         ev.setFlag('prologue_parcel');
         ev.lead('q_pharos_delivery');
         return;
       }
-      await E.say(ev, 'apprentice', 'フェルンは、北の野から\n西の森へ入った先だよ。\n樵頭のゴードさんに渡してね。');
+      await E.say(ev, 'apprentice', 'フェルンは、北の野から\n西の森へ入った先だよ。\nきこり頭のゴードさんに渡してね。');
     },
   };
 
@@ -193,15 +193,15 @@
     },
   };
 
-  // ------------------------------------------------------------ 潮風亭の噂の 3 人（WORLD_REDESIGN §3.3。1 回話すごとに次の噂。序章の後）
+  // ------------------------------------------------------------ 潮風亭のうわさの 3 人（WORLD_REDESIGN §3.3。1 回話すごとに次のうわさ。序章の後）
   const RUMORS = {
     gossip: ['l_rumor_forest', 'l_opt_hut', 'l_rumor_marsh', 'l_rumor_isles'],
     bard: ['l_rumor_snow', 'l_rumor_star', 'l_rumor_ash', 'l_opt_windhill'],
     trader: ['l_rumor_desert', 'l_opt_yura', 'l_rumor_mine'],
   };
   const TALK = {
-    l_rumor_forest: '西の森の村で、樵が三人\n帰ってこないんだって。\nそれを探しに、子どもまで森に入ったとか。',
-    l_opt_hut: '森の東の縁の休み小屋に、\n樵の日誌が置いてあるそうよ。\nある日で、ぷっつり途切れてるって。',
+    l_rumor_forest: '西の森の村で、きこりが三人\n帰ってこないんだって。\nそれを探しに、子どもまで森に入ったとか。',
+    l_opt_hut: '森の東の縁の休み小屋に、\nきこりの日誌が置いてあるそうよ。\nある日で、ぷっつり途切れてるって。',
     l_rumor_marsh: '東の湿原の町ロッホじゃ、\n霧の中で子どもが消えるそうよ。\n……おお、こわい。',
     l_rumor_isles: '南東の島々に、青い鬼火の\n幽霊船が出るんだって。\n船乗りはみんな陸にいるわ。',
     l_rumor_snow: '北の雪の村は、大火祭の\n支度で大忙しさ。ただ、今年は\n冬至の火が細いって、首をかしげてる。',
@@ -225,7 +225,7 @@
         const who = (ctx && ctx.npc) || key;
         if (!ev.flag('prologue_done')) { await E.say(ev, who, BEFORE[key]); return; }
         const next = RUMORS[key].find((l) => !(R.Game.leads && R.Game.leads[l]));
-        if (!next) { await E.say(ev, who, '噂なら、もうみんな話したよ。\n新しい話が入ったら、\nまた教えてあげる。'); return; }
+        if (!next) { await E.say(ev, who, 'うわさなら、もうみんな話したよ。\n新しい話が入ったら、\nまた教えてあげる。'); return; }
         await E.say(ev, who, TALK[next]);
         ev.lead(next);
       },

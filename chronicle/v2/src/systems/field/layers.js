@@ -4,7 +4,7 @@
 //   宝箱と泉のきらめき（膜の上、WORLD §6.3）→ 新しい話の印 → 光の明滅 → R.Post.frame → HUD。
 //   人の絵は hd:field:<look>（opts {scale, lantern}）。登録が無い間は dev だけ仮の人形（index.html では影だけ）。
 //   物の絵は TERRAIN のチャンクの props（R.Hd.get(p.key, p.opts) の poses[p.frame]、fps があれば時間で回す、p.cond が真の間だけ）。
-//   仮の地面（fb）の間は、ここで宝箱・泉・燭台・灯籠・建物などを簡単な形で描く。
+//   仮の地面（fb）の間は、ここで宝箱・泉・しょく台・灯籠・建物などを簡単な形で描く。
 //   光の輪は R.Light.ring(g, x, y, r, t, {mood})（環境光を渡すと輪の色が合う）。
 (function (R) {
   'use strict';
@@ -157,7 +157,7 @@
     for (let i = 0; i < objs.length; i++) {
       const o = objs[i];
       if (o.x == null) continue;
-      if (real && o.type !== 'trail') { const ce = F.chunks.at(o.x, o.y); if (!ce || !ce.fb) continue; }   // TERRAIN が焼いた物（宝箱・泉・燭台…の今の状態もチャンクの props）
+      if (real && o.type !== 'trail') { const ce = F.chunks.at(o.x, o.y); if (!ce || !ce.fb) continue; }   // TERRAIN が焼いた物（宝箱・泉・しょく台…の今の状態もチャンクの props）
       if (o.type === 'exit' || o.type === 'examine' || o.type === 'door' && !o.look) continue;
       if (o.cond != null && o.type !== 'trail' && !R.State.check(o.cond)) continue;
       const h = o.type === 'building' ? (o.h || 1) : o.type === 'spring' ? 2 : 1;

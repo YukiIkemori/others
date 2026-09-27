@@ -1,3 +1,33 @@
 01:06:34 sheet 1 attempt 1: generating 3584x1536 (pitch 8, quality medium, 1 refs)
 01:07:15   pitch in raw image: 8.79 px per art pixel (upright median 598 px / 68)
 01:07:16 sheet 1 -> art_ref/gen/companion/rouga/comp_rouga_s1.png (7 poses)
+01:51:40 sheet 2 attempt 1: generating 1920x2048 (pitch 8, quality medium, 2 refs)
+01:54:34   pitch in raw image: 7.22 px per art pixel (upright median 368 px / 51)
+01:54:37 sheet 2 -> art_ref/gen/companion/rouga/comp_rouga_s2.png (12 poses)
+01:54:38 sheet 3 attempt 1: generating 3648x1344 (pitch 7, quality medium, 2 refs)
+01:57:57   pitch in raw image: 6.51 px per art pixel (upright median 443 px / 68)
+01:58:01 sheet 3 -> art_ref/gen/companion/rouga/comp_rouga_s3.png (10 poses)
+01:58:03 sheet 4 attempt 1: generating 3360x1440 (pitch 6, quality medium, 2 refs)
+02:01:47   pitch in raw image: 5.59 px per art pixel (upright median 380 px / 68)
+02:01:51   note: smash is 58x83 art px, larger than its cell 112x80 (clipped)
+02:01:51 sheet 4 -> art_ref/gen/companion/rouga/comp_rouga_s4.png (15 poses)
+02:01:53 sheet 5 attempt 1: generating 1536x1536 (pitch 8, quality medium, 2 refs)
+02:04:44   pitch in raw image: 7.56 px per art pixel (upright median 605 px / 80)
+02:04:45 sheet 5 -> art_ref/gen/companion/rouga/comp_rouga_s5.png (4 poses)
+02:04:45 pipeline: sheets.py ../art_ref/gen/companion/rouga --companion rouga --out out/comp_rouga --check
+02:12:53   | ■ シートの状態
+02:12:53   |   シート1 設定画: OK  comp_rouga_s1.png  ドット 8.00px → 描かれた格子のまま（69.0 ドット）
+02:12:53   |   シート2 フィールドの歩き: 確認あり  comp_rouga_s2.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+02:12:53   |   シート3 戦闘の基本ポーズ: 確認あり  comp_rouga_s3.png  ドット 8.00px → 描かれた格子のまま（69.5 ドット）
+02:12:53   |   シート4 戦闘の行動ポーズ＋武器なし版: 要作り直し  comp_rouga_s4.png  ドット 8.00px → 描かれた格子のまま（69.0 ドット）
+02:12:53   |   シート5 顔の表情: OK  comp_rouga_s5.png  ドット 8.00px → 描かれた格子のまま（79.5 ドット）
+02:12:54   size check evade: 1.02 of the hero's same pose (relative to cast_a)
+02:12:54   sheet 4 evade: size redo line ignored (same size as the hero's pose) -> overrides scale_ok
+02:12:54 no redo lines left
+02:12:54 pipeline: sheets.py ../art_ref/gen/companion/rouga --companion rouga --out out/comp_rouga
+02:22:06   |   シート2 フィールドの歩き: 確認あり  comp_rouga_s2.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+02:22:06   |   シート3 戦闘の基本ポーズ: 確認あり  comp_rouga_s3.png  ドット 8.00px → 描かれた格子のまま（69.5 ドット）
+02:22:06   |   シート4 戦闘の行動ポーズ＋武器なし版: 確認あり  comp_rouga_s4.png  ドット 8.00px → 描かれた格子のまま（69.0 ドット）
+02:22:06   |   シート5 顔の表情: OK  comp_rouga_s5.png  ドット 8.00px → 描かれた格子のまま（79.5 ドット）
+02:22:06   | 
+02:22:06   | packed field 135x240, battle 675x364, battle_bare 385x72, face 348x84 | palette 52 + face 47

@@ -314,7 +314,7 @@ section('予告の予約（E18）・考えどころ（§3.6）');
   const boss = eng.mons[0];
   let evs = drainAll(eng.useAction(boss, 'eb_page_gather', BC.ACT('eb_page_gather'), null, {}));
   const tele = evs.find((e) => e.t === 'telegraph');
-  ok('telegraph event with text / pose / next', tele && tele.text === 'ページ食らいが 紙を吸いこんでいる……' && tele.next === 'eb_confetti' && tele.pose === 'tele');
+  ok('telegraph event with text / pose / next', tele && tele.text === 'ページ食らいが紙を吸いこんでいる……。' && tele.next === 'eb_confetti' && tele.pose === 'tele');
   ok('no "しかし効き目がなかった" on a pose-only action', !evs.some((e) => e.t === 'msg' && /効き目/.test(e.text)));
   ok('reserved for the next round', boss.reserved && boss.reserved.id === 'eb_confetti');
   const partyDef = eng.party.map((p) => ({ type: 'defend' }));

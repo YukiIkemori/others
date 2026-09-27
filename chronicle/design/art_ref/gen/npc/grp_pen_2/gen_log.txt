@@ -19,3 +19,19 @@
 01:04:48   | ■ シートの状態
 01:04:48   |   シート1 歩き: 確認あり  npc_pen_old_f_s1.png  ドット 8.00px → 描かれた格子のまま（42.5 ドット）
 01:04:48 sheet 1: 0 redo lines
+02:18:34 pipeline: sheets.py ../art_ref/gen/npc/grp_pen_2 --npc npc_pen_old_m --out out/npc/npc_pen_old_m
+02:19:07   |   - 向きの見本（configs/refs/npc_pen_old_m）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:19:07   | 
+02:19:07   | ■ シートの状態
+02:19:07   |   シート1 歩き: 確認あり  npc_pen_old_m_s1.png  ドット 8.00px → 描かれた格子のまま（44.5 ドット）
+02:19:07   | 
+02:19:07   | packed field 117x200 | palette 52 + face 0
+02:19:07 pipeline: sheets.py ../art_ref/gen/npc/grp_pen_2 --npc npc_pen_old_f --out out/npc/npc_pen_old_f
+02:19:46   |   - 向きの見本（configs/refs/npc_pen_old_f）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:19:46   | 
+02:19:46   | ■ シートの状態
+02:19:46   |   シート1 歩き: 確認あり  npc_pen_old_f_s1.png  ドット 8.00px → 描かれた格子のまま（42.5 ドット）
+02:19:46   | 
+02:19:46   | packed field 114x192 | palette 52 + face 0
+02:19:47 to_v2 npc_pen_old_m: npc_pen_old_m → /home/user/others/chronicle/v2/assets/sprites/npc_pen_old_m |   field: 12 frames
+02:19:49 to_v2 npc_pen_old_f: npc_pen_old_f → /home/user/others/chronicle/v2/assets/sprites/npc_pen_old_f |   field: 12 frames

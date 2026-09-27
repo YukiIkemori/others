@@ -1,0 +1,48 @@
+{
+ "id": "jorn",
+ "look": "npc_jorn",
+ "name": "ヨルン",
+ "tier": "B",
+ "kind": "person",
+ "region": "snow",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 48
+ },
+ "measureH": {
+  "field": 52
+ },
+ "headgearExtraDots": 4,
+ "mainHex": "#2F5A48",
+ "mainHue": 160,
+ "mainName": "松葉色",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_jorn_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.20833333333333334,
+   "head_w": 0.5104166666666667,
+   "shoulder": 0.49479166666666663,
+   "neck_clear": 0.9245014245014245
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

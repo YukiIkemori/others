@@ -1,0 +1,48 @@
+{
+ "id": "merchant_captain",
+ "look": "npc_merchant_captain",
+ "name": "商船の船長",
+ "tier": "B",
+ "kind": "person",
+ "region": "isles",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 48
+ },
+ "measureH": {
+  "field": 52
+ },
+ "headgearExtraDots": 4,
+ "mainHex": "#2E5040",
+ "mainHue": 160,
+ "mainName": "深緑",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_merchant_captain_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.2916666666666667,
+   "head_w": 0.5104166666666666,
+   "shoulder": 0.33854166666666663,
+   "neck_clear": 0.5443349753694582
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

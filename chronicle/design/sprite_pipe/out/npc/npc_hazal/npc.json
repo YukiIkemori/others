@@ -1,0 +1,48 @@
+{
+ "id": "hazal",
+ "look": "npc_hazal",
+ "name": "ハザル王",
+ "tier": "B",
+ "kind": "person",
+ "region": "desert",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 52
+ },
+ "measureH": {
+  "field": 58
+ },
+ "headgearExtraDots": 6,
+ "mainHex": "#2E3E80",
+ "mainHue": 230,
+ "mainName": "群青",
+ "lantern": false,
+ "spirit": true,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_hazal_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.21153846153846154,
+   "head_w": 0.3942307692307693,
+   "shoulder": 0.4423076923076923,
+   "neck_clear": 0.8571428571428571
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

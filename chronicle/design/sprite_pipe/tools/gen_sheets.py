@@ -1241,13 +1241,24 @@ def false_size_alarm(job, n, sid, tol=0.12):
     return abs(r - 1) < tol
 
 
+def mark_scale_ok(cid, sid):
+    p = os.path.join(PIPE, 'configs', 'overrides', cid + '.json')
+    ov = json.load(open(p)) if os.path.exists(p) else {}
+    ok = ov.setdefault('scale_ok', [])
+    if sid not in ok:
+        ok.append(sid)
+        ov.setdefault('_note', 'scale_ok: poses whose head-size scale alarm was a false alarm (same size as the hero\'s pose)')
+        json.dump(ov, open(p, 'w'), ensure_ascii=False, indent=1)
+
+
 def drop_false_alarms(job, n_items):
     out = {}
     for n, items in n_items.items():
         keep = []
         for it in items:
             if (it.get('code') in ('scale', 'height')) and false_size_alarm(job, n, it['slot']):
-                job.log('  sheet %s %s: size redo line ignored (same size as the hero\'s pose)' % (n, it['slot']))
+                job.log('  sheet %s %s: size redo line ignored (same size as the hero\'s pose) -> overrides scale_ok' % (n, it['slot']))
+                mark_scale_ok(job.id, it['slot'])
                 continue
             keep.append(it)
         if keep:

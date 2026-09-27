@@ -1,0 +1,59 @@
+{
+ "registration": {
+  "walk_down_1": {
+   "to": "walk_down_0",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.103
+  },
+  "walk_down_2": {
+   "to": "walk_down_0",
+   "dx": -3,
+   "dy": 0,
+   "fit": 0.808
+  },
+  "walk_up_1": {
+   "to": "walk_up_0",
+   "dx": -1,
+   "dy": 0,
+   "fit": 1.276
+  },
+  "walk_up_2": {
+   "to": "walk_up_0",
+   "dx": -1,
+   "dy": 0,
+   "fit": 1.381
+  },
+  "walk_left_1": {
+   "to": "walk_left_0",
+   "dx": -1,
+   "dy": 0,
+   "fit": 1.126
+  },
+  "walk_left_2": {
+   "to": "walk_left_0",
+   "dx": -1,
+   "dy": 0,
+   "fit": 1.122
+  },
+  "walk_right_1": {
+   "to": "walk_right_0",
+   "dx": -3,
+   "dy": 0,
+   "fit": 1.292
+  },
+  "walk_right_2": {
+   "to": "walk_right_0",
+   "dx": -3,
+   "dy": 0,
+   "fit": 1.267
+  }
+ },
+ "attach": {},
+ "weapons": {},
+ "sets": [
+  "field"
+ ],
+ "colors": 51,
+ "face_colors": 0
+}

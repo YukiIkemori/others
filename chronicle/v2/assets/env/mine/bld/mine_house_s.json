@@ -1,0 +1,137 @@
+{
+ "id": "mine_house_s",
+ "kind": "building",
+ "theme": "mine",
+ "footprint": [
+  5,
+  4
+ ],
+ "wall": 2,
+ "files": {
+  "24": "mine_house_s@24.png",
+  "32": "mine_house_s@32.png",
+  "40": "mine_house_s@40.png"
+ },
+ "emitFiles": {
+  "24": "mine_house_s_emit@24.png",
+  "32": "mine_house_s_emit@32.png",
+  "40": "mine_house_s_emit@40.png"
+ },
+ "size": {
+  "24": [
+   132,
+   120
+  ],
+  "32": [
+   176,
+   160
+  ],
+  "40": [
+   220,
+   200
+  ]
+ },
+ "anchor32": [
+  8,
+  160
+ ],
+ "door32": {
+  "x": 80.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 27,
+   "y": -52,
+   "w": 16,
+   "h": 1
+  },
+  {
+   "kind": "win",
+   "x": 156,
+   "y": -51,
+   "w": 4,
+   "h": 4
+  },
+  {
+   "kind": "win",
+   "x": 94,
+   "y": -46,
+   "w": 14,
+   "h": 2
+  },
+  {
+   "kind": "win",
+   "x": 4,
+   "y": -43,
+   "w": 5,
+   "h": 3
+  },
+  {
+   "kind": "win",
+   "x": 29,
+   "y": -32,
+   "w": 8,
+   "h": 7
+  },
+  {
+   "kind": "win",
+   "x": 119,
+   "y": -32,
+   "w": 8,
+   "h": 7
+  },
+  {
+   "kind": "win",
+   "x": 116,
+   "y": -20,
+   "w": 7,
+   "h": 2
+  },
+  {
+   "kind": "win",
+   "x": 4,
+   "y": -17,
+   "w": 8,
+   "h": 8
+  },
+  {
+   "kind": "win",
+   "x": 102,
+   "y": -11,
+   "w": 6,
+   "h": 2
+  },
+  {
+   "kind": "win",
+   "x": 155,
+   "y": -11,
+   "w": 7,
+   "h": 4
+  }
+ ],
+ "roof32": [
+  -6,
+  -132,
+  166,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/mine/mine_house_s.png",
+ "def_": {
+  "id": "mine_house_s",
+  "x": 0,
+  "y": 0,
+  "w": 5,
+  "h": 4,
+  "wall": 2,
+  "door": {
+   "x": 2,
+   "y": 3
+  },
+  "windows": 2
+ }
+}

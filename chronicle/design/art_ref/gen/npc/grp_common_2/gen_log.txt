@@ -19,3 +19,19 @@
 01:13:49   | ■ シートの状態
 01:13:49   |   シート1 歩き: 要作り直し  npc_clerk_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
 01:13:49 sheet 1: 0 redo lines
+02:24:20 pipeline: sheets.py ../art_ref/gen/npc/grp_common_2 --npc npc_scribe --out out/npc/npc_scribe
+02:25:18   |   - 向きの見本（configs/refs/npc_scribe）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:25:18   | 
+02:25:18   | ■ シートの状態
+02:25:18   |   シート1 歩き: 確認あり  npc_scribe_s1.png  ドット 8.00px → 描かれた格子のまま（47.0 ドット）
+02:25:18   | 
+02:25:18   | packed field 102x204 | palette 51 + face 0
+02:25:18 pipeline: sheets.py ../art_ref/gen/npc/grp_common_2 --npc npc_clerk --out out/npc/npc_clerk
+02:26:01   |   「記録院の役人（npc_clerk）のシート1の6番（上向き・左足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 72%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して」
+02:26:01   | 
+02:26:01   | ■ シートの状態
+02:26:01   |   シート1 歩き: 要作り直し  npc_clerk_s1.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+02:26:01   | 
+02:26:01   | packed field 129x280 | palette 52 + face 0
+02:26:02 to_v2 npc_scribe: npc_scribe → /home/user/others/chronicle/v2/assets/sprites/npc_scribe |   field: 12 frames
+02:26:12 to_v2 npc_clerk: npc_clerk → /home/user/others/chronicle/v2/assets/sprites/npc_clerk |   field: 12 frames

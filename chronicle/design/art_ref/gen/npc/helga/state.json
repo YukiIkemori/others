@@ -8,6 +8,13 @@
      "kind": "full",
      "extra": "",
      "t": "2026-09-27T01:32:56"
+    },
+    {
+     "raw": "raw/s1_a2.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "- PROPORTIONS WRONG: the head is too small / the figure too slender. Use exactly the hero's proportions from the template: about 2.7 heads tall, big head (a third of the body height), short sturdy body, low centre of gravity. (ヘルガ（npc_helga）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さ 82%・頭の幅 88%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して)",
+     "t": "2026-09-27T01:35:11"
     }
    ],
    "frames": {
@@ -16,7 +23,7 @@
      "column": 1,
      "logical_bbox": [
       34,
-      52
+      50
      ],
      "air": 0
     },
@@ -24,8 +31,8 @@
      "row": 1,
      "column": 2,
      "logical_bbox": [
-      33,
-      52
+      34,
+      50
      ],
      "air": 0
     },
@@ -33,8 +40,8 @@
      "row": 1,
      "column": 3,
      "logical_bbox": [
-      34,
-      52
+      35,
+      50
      ],
      "air": 0
     },
@@ -42,35 +49,8 @@
      "row": 1,
      "column": 4,
      "logical_bbox": [
-      37,
-      51
-     ],
-     "air": 0
-    },
-    "walk_up_2": {
-     "row": 2,
-     "column": 3,
-     "logical_bbox": [
       33,
-      52
-     ],
-     "air": 0
-    },
-    "walk_up_0": {
-     "row": 2,
-     "column": 1,
-     "logical_bbox": [
-      34,
-      52
-     ],
-     "air": 0
-    },
-    "walk_up_1": {
-     "row": 2,
-     "column": 2,
-     "logical_bbox": [
-      33,
-      52
+      50
      ],
      "air": 0
     },
@@ -78,16 +58,34 @@
      "row": 2,
      "column": 4,
      "logical_bbox": [
-      36,
+      37,
       51
      ],
      "air": 0
     },
-    "act_call": {
-     "row": 3,
-     "column": 4,
+    "walk_up_0": {
+     "row": 2,
+     "column": 1,
      "logical_bbox": [
-      32,
+      33,
+      50
+     ],
+     "air": 0
+    },
+    "walk_up_1": {
+     "row": 2,
+     "column": 2,
+     "logical_bbox": [
+      36,
+      50
+     ],
+     "air": 0
+    },
+    "walk_up_2": {
+     "row": 2,
+     "column": 3,
+     "logical_bbox": [
+      35,
       51
      ],
      "air": 0
@@ -96,7 +94,7 @@
      "row": 3,
      "column": 1,
      "logical_bbox": [
-      27,
+      26,
       50
      ],
      "air": 0
@@ -105,7 +103,7 @@
      "row": 3,
      "column": 2,
      "logical_bbox": [
-      30,
+      27,
       50
      ],
      "air": 0
@@ -119,20 +117,20 @@
      ],
      "air": 0
     },
+    "act_call": {
+     "row": 3,
+     "column": 4,
+     "logical_bbox": [
+      33,
+      49
+     ],
+     "air": 0
+    },
     "act_sig": {
      "row": 4,
      "column": 4,
      "logical_bbox": [
-      33,
-      52
-     ],
-     "air": 0
-    },
-    "walk_right_0": {
-     "row": 4,
-     "column": 1,
-     "logical_bbox": [
-      28,
+      42,
       50
      ],
      "air": 0
@@ -141,7 +139,7 @@
      "row": 4,
      "column": 2,
      "logical_bbox": [
-      31,
+      27,
       50
      ],
      "air": 0
@@ -150,22 +148,25 @@
      "row": 4,
      "column": 3,
      "logical_bbox": [
-      27,
+      29,
       50
+     ],
+     "air": 0
+    },
+    "walk_right_0": {
+     "row": 4,
+     "column": 1,
+     "logical_bbox": [
+      27,
+      49
      ],
      "air": 0
     }
    },
    "notes": [],
-   "pitch": 5.98,
-   "from_raw": "raw/s1_a1.png",
-   "redo_left": [
-    {
-     "code": "proportion",
-     "slot": "walk_down_0",
-     "msg": "頭がアルンより小さい（頭の高さ 82%・頭の幅 88%）。頭身が高すぎる"
-    }
-   ],
+   "pitch": 6.06,
+   "from_raw": "raw/s1_a2.png",
+   "redo_left": [],
    "takes": [
     {
      "file": "raw/s1_take1.png",
@@ -317,6 +318,161 @@
       }
      },
      "from_raw": "raw/s1_a1.png",
+     "cell": [
+      80,
+      64
+     ]
+    },
+    {
+     "file": "raw/s1_take2.png",
+     "score": 0,
+     "frames": {
+      "walk_down_0": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        34,
+        50
+       ],
+       "air": 0
+      },
+      "walk_down_1": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        34,
+        50
+       ],
+       "air": 0
+      },
+      "walk_down_2": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        35,
+        50
+       ],
+       "air": 0
+      },
+      "act_nod": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        33,
+        50
+       ],
+       "air": 0
+      },
+      "act_surprise": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        37,
+        51
+       ],
+       "air": 0
+      },
+      "walk_up_0": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        33,
+        50
+       ],
+       "air": 0
+      },
+      "walk_up_1": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        36,
+        50
+       ],
+       "air": 0
+      },
+      "walk_up_2": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        35,
+        51
+       ],
+       "air": 0
+      },
+      "walk_left_0": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        26,
+        50
+       ],
+       "air": 0
+      },
+      "walk_left_1": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        27,
+        50
+       ],
+       "air": 0
+      },
+      "walk_left_2": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        28,
+        50
+       ],
+       "air": 0
+      },
+      "act_call": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        33,
+        49
+       ],
+       "air": 0
+      },
+      "act_sig": {
+       "row": 4,
+       "column": 4,
+       "logical_bbox": [
+        42,
+        50
+       ],
+       "air": 0
+      },
+      "walk_right_1": {
+       "row": 4,
+       "column": 2,
+       "logical_bbox": [
+        27,
+        50
+       ],
+       "air": 0
+      },
+      "walk_right_2": {
+       "row": 4,
+       "column": 3,
+       "logical_bbox": [
+        29,
+        50
+       ],
+       "air": 0
+      },
+      "walk_right_0": {
+       "row": 4,
+       "column": 1,
+       "logical_bbox": [
+        27,
+        49
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s1_a2.png",
      "cell": [
       80,
       64

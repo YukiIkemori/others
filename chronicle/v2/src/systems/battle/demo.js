@@ -17,11 +17,11 @@
   const ROWS = ['front', 'front', 'back', 'back'];
   const HPS = [[417, 452, 47, 60], [512, 540, 22, 34], [301, 330, 38, 52], [58, 268, 86, 120]];
   const FOES = {
-    normal: [['goblin_axe', '小鬼の斧兵', 'm'], ['ice_wolf', '氷狼', 'l'], ['jelly_1', 'スライム', 's']],
-    many: [['jelly_1', 'スライム', 's'], ['jelly_2', 'スライムＢ', 's'], ['bat_1', 'こうもり', 's'], ['rat_1', '野ねずみ', 's'], ['wolf_1', '森の狼', 'm'], ['bee_1', '夜蜂', 's']],
+    normal: [['goblin_axe', '小鬼の斧兵', 'm'], ['ice_wolf', '氷狼', 'l'], ['jelly_1', 'ゼリー', 's']],
+    many: [['jelly_1', 'ゼリー', 's'], ['jelly_2', 'ゼリーＢ', 's'], ['bat_1', 'こうもり', 's'], ['rat_1', '野ねずみ', 's'], ['wolf_1', '森の狼', 'm'], ['bee_1', '夜蜂', 's']],
   };
   const BOSSES = {
-    boss_pageeater: ['ページ食らい', []], boss_moth: ['夜灯の大蛾', []], boss_rooteater: ['根食らい', [['b_root', '根の子', 's'], ['b_root', '根の子', 's']]], boss_wolflord: ['狼の王', [['wolf_1', '森の狼', 'm']]],
+    boss_pageeater: ['ページ食らい', []], boss_moth: ['ダストウィング', []], boss_rooteater: ['根食らい', [['b_root', '根の子', 's'], ['b_root', '根の子', 's']]], boss_wolflord: ['狼の王', [['wolf_1', '森の狼', 'm']]],
   };
   const SKILLS = {
     sword: [['二段斬り', 4, '二度続けて斬りつける。'], ['稲妻突き', 6, '雷をまとった鋭い突き。', 0, 'thunder'], ['疾風剣', 0, '風のように速い一太刀。', 1], ['流し斬り', 12, '受け流して斬り返す。', 0, null, 'mp']],
@@ -129,7 +129,7 @@
     tele(s) {
       const b = s.units.find((u) => u.boss);
       s.act(s.P(0), 'attack', 'attack', '攻撃', [b]); s.dmg(b, 120);
-      s.ev.push({ t: 'turn', uid: b.uid }, { t: 'telegraph', uid: b.uid, text: '根が地面にもぐった……', pose: 'tele', tint: '#8fd6d8', next: 'root_burst' });
+      s.ev.push({ t: 'turn', uid: b.uid }, { t: 'telegraph', uid: b.uid, text: '根が地面にもぐった……。', pose: 'tele', tint: '#8fd6d8', next: 'root_burst' });
       if (s.round >= 2) { s.ev.push({ t: 'act', uid: b.uid, cmd: 'skill', id: 'root_burst', name: '根の突き上げ', targets: ['p0', 'p1', 'p2', 'p3'] }); for (let i = 0; i < 4; i++) if (s.P(i).alive) s.dmg(s.P(i), 40 + i * 7); }
       if (s.round >= 3) for (const e of s.E()) s.dmg(e, 9999);
     },
@@ -163,8 +163,8 @@
         s.act(s.P(1), 'attack', 'attack', '攻撃', [b]); s.ev.push({ t: 'miss', uid: b.uid });
         s.act(s.P(1), 'skill', 'demo_dagger_1', '盗む', [w]); s.ev.push({ t: 'steal', uid: 'p1', target: w.uid, item: 'dg_frost_fang', grade: 'rare' }, { t: 'gain', item: 'dg_frost_fang', grade: 'rare', stolen: true });
         s.ev.push({ t: 'turn', uid: b.uid }, { t: 'act', uid: b.uid, cmd: 'skill', id: 'venom', name: '毒の牙', targets: ['p2'] }); s.dmg(s.P(2), 30); s.ev.push({ t: 'status', uid: 'p2', id: 'poison', on: true });
-        s.ev.push({ t: 'telegraph', uid: w.uid, text: '氷狼が息を大きく吸いこんだ……', pose: 'tele', tint: '#8fd6d8', next: 'breath' });
-        s.ev.push({ t: 'summon', uid: b.uid, mon: { uid: 'e_sum', side: 'enemy', id: 'jelly_2', name: 'スライム', hp: 30, mp: 0, maxHp: 30, maxMp: 0, row: 'front', status: [], sprite: 'jelly_2', size: 's', alive: true } });
+        s.ev.push({ t: 'telegraph', uid: w.uid, text: '氷狼が息を大きく吸いこんだ……。', pose: 'tele', tint: '#8fd6d8', next: 'breath' });
+        s.ev.push({ t: 'summon', uid: b.uid, mon: { uid: 'e_sum', side: 'enemy', id: 'jelly_2', name: 'ゼリー', hp: 30, mp: 0, maxHp: 30, maxMp: 0, row: 'front', status: [], sprite: 'jelly_2', size: 's', alive: true } });
         s.ev.push({ t: 'turn', uid: w.uid }, { t: 'act', uid: w.uid, cmd: 'skill', id: 'breath', name: '凍える息', targets: ['p0', 'p1', 'p2', 'p3'] });
         for (let i = 0; i < 4; i++) s.dmg(s.P(i), i === 3 ? 999 : 25 + i * 3);
         s.act(s.P(0), 'item', 'i_revive', '気付け薬', [s.P(3)]); s.ev.push({ t: 'revive', uid: 'p3' }); s.P(3).alive = true; s.P(3).hp = 60; s.heal(s.P(3), 60);

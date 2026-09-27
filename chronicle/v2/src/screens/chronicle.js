@@ -8,7 +8,7 @@
   if (!S.def) S.def = function (id, v) { (S._defs = S._defs || {})[id] = v; };
   const u = (v) => R.UIK.u(v);
   const T = () => R.UIK.T;
-  const KIND = { main: '本筋', region: '地方', side: '依頼', rumor: '噂', map: '地図' };
+  const KIND = { main: '本筋', region: '地方', side: '依頼', rumor: 'うわさ', map: '地図' };
   const REGION_ORDER = ['prologue', 'r_forest', 'r_snow', 'r_desert', 'r_marsh', 'r_isles', 'r_mine', 'r_ash', 'r_star'];
 
   S.regionName = function (rid) {

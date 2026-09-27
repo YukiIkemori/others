@@ -1,0 +1,55 @@
+{
+ "id": "npc_forest_woman",
+ "look": "npc_forest_woman",
+ "name": "森の村の女",
+ "tier": "C",
+ "kind": "person",
+ "region": "forest",
+ "group": "forest_1",
+ "slot": "B",
+ "heightDots": {
+  "field": 46
+ },
+ "measureH": {
+  "field": 46
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#7A9A48",
+ "mainHue": 85,
+ "mainName": "若草",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_forest_woman_1",
+  "npc_forest_woman_2",
+  "npc_forest_woman_3",
+  "npc_forest_woman_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_forest_woman_s1.png"
+ },
+ "pair_file": "npc_grp_forest_1.png",
+ "proportion": {
+  "1": {
+   "neck": 0.2608695652173913,
+   "head_w": 0.45652173913043476,
+   "shoulder": 0.46195652173913043,
+   "neck_clear": 0.8603896103896104
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

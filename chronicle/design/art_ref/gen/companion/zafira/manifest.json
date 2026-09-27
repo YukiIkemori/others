@@ -76,5 +76,434 @@
     ]
    }
   ]
+ },
+ {
+  "sheet": 2,
+  "file": "comp_zafira_s2.png",
+  "layout": "4x3",
+  "logical_cell": [
+   80,
+   64
+  ],
+  "image_px": [
+   1920,
+   2048
+  ],
+  "frames": [
+   {
+    "id": "walk_down_0",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     36,
+     51
+    ]
+   },
+   {
+    "id": "walk_down_1",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     33,
+     50
+    ]
+   },
+   {
+    "id": "walk_down_2",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     35,
+     50
+    ]
+   },
+   {
+    "id": "walk_up_0",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     34,
+     48
+    ]
+   },
+   {
+    "id": "walk_up_1",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     33,
+     48
+    ]
+   },
+   {
+    "id": "walk_up_2",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     33,
+     48
+    ]
+   },
+   {
+    "id": "walk_left_0",
+    "row": 3,
+    "column": 1,
+    "logical_bbox": [
+     27,
+     48
+    ]
+   },
+   {
+    "id": "walk_left_1",
+    "row": 3,
+    "column": 2,
+    "logical_bbox": [
+     31,
+     47
+    ]
+   },
+   {
+    "id": "walk_left_2",
+    "row": 3,
+    "column": 3,
+    "logical_bbox": [
+     30,
+     47
+    ]
+   },
+   {
+    "id": "walk_right_0",
+    "row": 4,
+    "column": 1,
+    "logical_bbox": [
+     28,
+     47
+    ]
+   },
+   {
+    "id": "walk_right_1",
+    "row": 4,
+    "column": 2,
+    "logical_bbox": [
+     32,
+     47
+    ]
+   },
+   {
+    "id": "walk_right_2",
+    "row": 4,
+    "column": 3,
+    "logical_bbox": [
+     31,
+     47
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 3,
+  "file": "comp_zafira_s3.png",
+  "layout": "2x5",
+  "logical_cell": [
+   104,
+   96
+  ],
+  "image_px": [
+   4160,
+   1536
+  ],
+  "frames": [
+   {
+    "id": "idle_a",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     67,
+     64
+    ]
+   },
+   {
+    "id": "idle_b",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     66,
+     64
+    ]
+   },
+   {
+    "id": "step",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     71,
+     64
+    ]
+   },
+   {
+    "id": "guard",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     72,
+     64
+    ]
+   },
+   {
+    "id": "hit",
+    "row": 1,
+    "column": 5,
+    "logical_bbox": [
+     67,
+     60
+    ]
+   },
+   {
+    "id": "weak",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     63,
+     52
+    ]
+   },
+   {
+    "id": "ko",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     87,
+     34
+    ]
+   },
+   {
+    "id": "victory_a",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     56,
+     80
+    ]
+   },
+   {
+    "id": "victory_b",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     64,
+     63
+    ]
+   },
+   {
+    "id": "glimmer",
+    "row": 2,
+    "column": 5,
+    "logical_bbox": [
+     67,
+     63
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 4,
+  "file": "comp_zafira_s4.png",
+  "layout": "3x5",
+  "logical_cell": [
+   112,
+   80
+  ],
+  "image_px": [
+   4480,
+   1920
+  ],
+  "frames": [
+   {
+    "id": "windup",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     51,
+     65
+    ]
+   },
+   {
+    "id": "slash",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     75,
+     63
+    ]
+   },
+   {
+    "id": "thrust_ready",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     73,
+     64
+    ]
+   },
+   {
+    "id": "thrust",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     90,
+     63
+    ]
+   },
+   {
+    "id": "charge",
+    "row": 1,
+    "column": 5,
+    "logical_bbox": [
+     65,
+     46
+    ]
+   },
+   {
+    "id": "smash",
+    "row": 2,
+    "column": 1,
+    "logical_bbox": [
+     58,
+     73
+    ]
+   },
+   {
+    "id": "cast_a",
+    "row": 2,
+    "column": 2,
+    "logical_bbox": [
+     63,
+     64
+    ]
+   },
+   {
+    "id": "cast_b",
+    "row": 2,
+    "column": 3,
+    "logical_bbox": [
+     56,
+     64
+    ]
+   },
+   {
+    "id": "item",
+    "row": 2,
+    "column": 4,
+    "logical_bbox": [
+     57,
+     66
+    ]
+   },
+   {
+    "id": "evade",
+    "row": 2,
+    "column": 5,
+    "logical_bbox": [
+     48,
+     62
+    ]
+   },
+   {
+    "id": "bare_idle",
+    "row": 3,
+    "column": 1,
+    "logical_bbox": [
+     50,
+     64
+    ]
+   },
+   {
+    "id": "bare_windup",
+    "row": 3,
+    "column": 2,
+    "logical_bbox": [
+     54,
+     63
+    ]
+   },
+   {
+    "id": "bare_slash",
+    "row": 3,
+    "column": 3,
+    "logical_bbox": [
+     60,
+     64
+    ]
+   },
+   {
+    "id": "bare_thrust",
+    "row": 3,
+    "column": 4,
+    "logical_bbox": [
+     70,
+     64
+    ]
+   },
+   {
+    "id": "bare_cast",
+    "row": 3,
+    "column": 5,
+    "logical_bbox": [
+     63,
+     64
+    ]
+   }
+  ]
+ },
+ {
+  "sheet": 5,
+  "file": "comp_zafira_s5.png",
+  "layout": "1x4",
+  "logical_cell": [
+   96,
+   96
+  ],
+  "image_px": [
+   3072,
+   768
+  ],
+  "frames": [
+   {
+    "id": "face_neutral",
+    "row": 1,
+    "column": 1,
+    "logical_bbox": [
+     73,
+     80
+    ]
+   },
+   {
+    "id": "face_smile",
+    "row": 1,
+    "column": 2,
+    "logical_bbox": [
+     73,
+     80
+    ]
+   },
+   {
+    "id": "face_surprise",
+    "row": 1,
+    "column": 3,
+    "logical_bbox": [
+     73,
+     80
+    ]
+   },
+   {
+    "id": "face_pain",
+    "row": 1,
+    "column": 4,
+    "logical_bbox": [
+     73,
+     80
+    ]
+   }
+  ]
  }
 ]

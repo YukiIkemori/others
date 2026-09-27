@@ -1,0 +1,55 @@
+{
+ "id": "npc_forest_old_f",
+ "look": "npc_forest_old_f",
+ "name": "森の老婆",
+ "tier": "C",
+ "kind": "person",
+ "region": "forest",
+ "group": "forest_2",
+ "slot": "B",
+ "heightDots": {
+  "field": 43
+ },
+ "measureH": {
+  "field": 43
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#6A7A5A",
+ "mainHue": 100,
+ "mainName": "灰緑",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_forest_old_f_1",
+  "npc_forest_old_f_2",
+  "npc_forest_old_f_3",
+  "npc_forest_old_f_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_forest_old_f_s1.png"
+ },
+ "pair_file": "npc_grp_forest_2.png",
+ "proportion": {
+  "1": {
+   "neck": 0.3953488372093023,
+   "head_w": 0.5348837209302325,
+   "shoulder": 0.46511627906976744,
+   "neck_clear": 0.6988636363636364
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

@@ -1,0 +1,21 @@
+02:14:20 sheet 1 attempt 1: edit of the Arun template 2400x1280 (pitch 5, quality medium, 2 refs)
+02:15:34   half A (npc_ash_child, target 36):
+02:15:35   pitch in raw image: 5.39 px per art pixel (upright median 194 px / 36)
+02:15:35   half B (npc_ash_fighter, target 50):
+02:15:39   pitch in raw image: 5.54 px per art pixel (upright median 277 px / 50)
+02:15:42 sheet 1 -> art_ref/gen/npc/grp_ash_3/npc_grp_ash_3.png (24 poses)
+02:15:42 pipeline: sheets.py ../art_ref/gen/npc/grp_ash_3 --npc npc_ash_child --out out/npc/npc_ash_child --check
+02:18:12   |   - シート1: npc_grp_ash_3.png の左半分（人物A）を使う
+02:18:12   |   - シート1: 頭身の比（歩き12コマの中央値、体 36 ドットあたり）: 首 0.39（アルン 0.29）・頭の幅 0.39（0.43）・肩 0.41（0.40）
+02:18:12   |   - 向きの見本（configs/refs/npc_ash_child）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:18:12   | 
+02:18:12   | ■ シートの状態
+02:18:12   |   シート1 歩き: 確認あり  npc_ash_child_s1.png  ドット 8.00px → 描かれた格子のまま（36.0 ドット）
+02:18:12 pipeline: sheets.py ../art_ref/gen/npc/grp_ash_3 --npc npc_ash_fighter --out out/npc/npc_ash_fighter --check
+02:19:59   |   - シート1: npc_grp_ash_3.png の右半分（人物B）を使う
+02:19:59   |   - シート1: 頭身の比（歩き12コマの中央値、体 50 ドットあたり）: 首 0.34（アルン 0.29）・頭の幅 0.36（0.43）・肩 0.38（0.40）
+02:19:59   |   - 向きの見本（configs/refs/npc_ash_fighter）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）
+02:19:59   | 
+02:19:59   | ■ シートの状態
+02:19:59   |   シート1 歩き: 確認あり  npc_ash_fighter_s1.png  ドット 8.00px → 描かれた格子のまま（46.5 ドット）
+02:19:59 sheet 1: 0 redo lines

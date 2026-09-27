@@ -1,9 +1,9 @@
 // CONTENT-F: 森の村フェルン（fern）樹上の村。V2_PLAN §3.2・WORLD_REDESIGN §5.4・STORY_BIBLE §7.1・§8.2
 //   町 60×56。地面の層（lv 0）と樹上の層（lv 1）: 大木のまわりの足場とつり橋（'='、deck）を、はしご（':'）で行き来する。
 //   門は南（森の道 → ワールド）と北（小川沿いの細道 → 迷いの森）。小川が村を東西に横切り、道の橋で渡る。
-//   北: 樵頭ゴードの家・捜索隊の詰所・リタの歌の家（いちばん高い木のそば）・北西と北東の大木の足場とつり橋（手紙配りの 3 軒）
+//   北: きこり頭ゴードの家・捜索隊の詰所・リタの歌の家（いちばん高い木のそば）・北西と北東の大木の足場とつり橋（手紙配りの 3 軒）
 //   南: 宿「木漏れ日亭」・道具屋・広場（掲示板・行商・ハンナ）・ピムの家・薬草園・西の大木の足場（手紙配りの 2 軒）・伐り跡の原（東の外れ）
-//   灯りの形は「蛍の籠と光る苔」（WORLD §5.1）。
+//   灯りの形は「蛍の籠と光るこけ」（WORLD §5.1）。
 (function (R) {
   'use strict';
   R.onData(function () {
@@ -34,7 +34,7 @@
     K.path(g, [[29, 38], [13, 38], [13, 45], [18, 45]], 'r', 1);   // → ピムの家
     K.path(g, [[31, 44], [40, 44]], 'r', 1);               // → 東の民家
     K.path(g, [[31, 16], [36, 16], [36, 8]], 'r', 1);      // → 捜索隊の詰所
-    K.path(g, [[28, 9], [24, 9], [24, 7]], 'r', 1);        // → 樵頭の家
+    K.path(g, [[28, 9], [24, 9], [24, 7]], 'r', 1);        // → きこり頭の家
     K.path(g, [[37, 16], [52, 16], [52, 10]], 'r', 1);     // → リタの歌の家
     // 薬草園（南西）と伐り跡の原（南東）
     K.rect(g, 4, 46, 9, 5, '*');
@@ -125,7 +125,7 @@
       K.npc('kid', 'npc_child_2', 33, 38, { name: '村の子', dir: 'n', talk: 'fern_kid', reward: 'hint' }),
       K.npc('traveler', 'npc_merchant_1', 12, 31, { name: '旅の商人', dir: 'e', talk: 'fern_traveler', reward: 'lead' }),
       K.npc('acorn_boy', 'npc_child_1', 38, 36, { name: '木の実拾いの子', dir: 'w', talk: 'fern_acorn_boy', reward: 'side' }),
-      K.npc('elder_m', 'npc_old_m_1', 47, 47, { name: '年寄りの樵', dir: 'e', talk: 'fern_old_woodcutter', reward: 'news' }),
+      K.npc('elder_m', 'npc_old_m_1', 47, 47, { name: '年寄りのきこり', dir: 'e', talk: 'fern_old_woodcutter', reward: 'news' }),
       K.npc('yura_miller', 'npc_yura_folk_2', 23, 29, { name: 'エダ', title: '粉ひき', dir: 'e', talk: 'fern_yura_miller', reward: 'item', cond: 'yura_miller_home' }),
       K.npc('pim_after', 'npc_pim', 28, 33, { name: 'ピム', dir: 's', talk: 'fern_pim_after', reward: 'side', cond: 'cleared_r_forest' }),
       // 樹上（lv 1）: 手紙配りの 5 軒の住人

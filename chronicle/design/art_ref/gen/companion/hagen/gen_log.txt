@@ -106,3 +106,6 @@
 01:33:55   |   シート5 顔の表情: OK  comp_hagen_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
 01:33:55   | 
 01:33:55   | packed field 120x224, battle 770x392, battle_bare 420x75, face 332x84 | palette 52 + face 48
+01:35:14   size check hit: 0.90 of the hero's same pose (relative to idle_a)
+01:35:15   size check glimmer: 0.84 of the hero's same pose (relative to idle_a)
+01:41:46   size check victory_b: 0.82 of the hero's same pose (relative to idle_a)

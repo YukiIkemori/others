@@ -1,0 +1,239 @@
+{
+ "char": "ani_sheep",
+ "companion": null,
+ "npc": "ani_sheep",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/grp_animal_3",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/sprite_pipe/out/npc/ani_sheep/src/ani_sheep_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 160.0,
+   "native_height_at_period": 20.0,
+   "scale_note": "描かれた格子のまま（20.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      17,
+      21
+     ],
+     "box": [
+      232,
+      248,
+      400,
+      448
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_down_1": {
+     "size": [
+      16,
+      20
+     ],
+     "box": [
+      880,
+      256,
+      1040,
+      448
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_down_2": {
+     "size": [
+      16,
+      20
+     ],
+     "box": [
+      1520,
+      256,
+      1680,
+      448
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_up_0": {
+     "size": [
+      15,
+      24
+     ],
+     "box": [
+      240,
+      736,
+      392,
+      960
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_up_1": {
+     "size": [
+      15,
+      22
+     ],
+     "box": [
+      880,
+      752,
+      1032,
+      960
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_up_2": {
+     "size": [
+      15,
+      22
+     ],
+     "box": [
+      1520,
+      752,
+      1672,
+      960
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_left_0": {
+     "size": [
+      24,
+      21
+     ],
+     "box": [
+      208,
+      1272,
+      432,
+      1472
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_left_1": {
+     "size": [
+      24,
+      19
+     ],
+     "box": [
+      848,
+      1288,
+      1072,
+      1472
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_left_2": {
+     "size": [
+      24,
+      19
+     ],
+     "box": [
+      1488,
+      1288,
+      1712,
+      1472
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_right_0": {
+     "size": [
+      23,
+      19
+     ],
+     "box": [
+      208,
+      1800,
+      424,
+      1984
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_right_1": {
+     "size": [
+      24,
+      20
+     ],
+     "box": [
+      848,
+      1792,
+      1072,
+      1984
+     ],
+     "air": 0,
+     "blur": 0.0
+    },
+    "walk_right_2": {
+     "size": [
+      24,
+      20
+     ],
+     "box": [
+      1488,
+      1792,
+      1712,
+      1984
+     ],
+     "air": 0,
+     "blur": 0.0
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "pair_half",
+   "msg": "npc_grp_animal_3.png の右半分（人物B）を使う",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/ani_sheep）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "height",
+   "msg": "シート1 の 4 番（上向き・立ち） の身長が 24 ドット（ほかは 20）",
+   "slot": "walk_up_0",
+   "ask": "ひつじ（ani_sheep）のシート1の4番（上向き・立ち）だけ大きさが違う。ほかのポーズと同じ身長にして、同じ条件で描き直して",
+   "data": {}
+  }
+ ]
+}
