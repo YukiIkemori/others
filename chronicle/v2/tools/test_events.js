@@ -417,6 +417,15 @@ R.DB.events.story_t1 = { async run(ev, ctx) { ran.push('t1:' + ctx.reason); } };
   const res = await drive(pSeq, 5000);
   ok('sequence → {score, rank}: 3 + 3 of 7 notes', res && res.hits === 6 && res.total === 7 && res.score === 86 && res.rank === 'A', res);
   ok('sequence scene removed', !R.Engine.has('mini:sequence'));
+  // 森の歌あわせは symbols を名前の配列で渡す（持ち主の報告 2026-09-27: hexRgb の例外で止まった）
+  const pArr = R.Mini.sequence({ title: '歌あわせ', symbols: ['葉', '風', '月', '水'], rounds: 1, seed: 'arr' });
+  await frames(3);
+  ok('sequence accepts a symbol-name array (4 notes, valid indices)', (R.Mini.state().seq || []).every((v) => v >= 0 && v < 4), R.Mini.state().seq);
+  { let ga = 0; while (R.Mini.state() && R.Mini.state().phase !== 'input' && ga++ < 600) await frames(1); }
+  for (const v of R.Mini.state().seq) await press(DIRS[v]);
+  { let ga = 0; while (R.Mini.state() && R.Mini.state().phase !== 'result' && ga++ < 600) await frames(1); }
+  await frames(60); await press('a');
+  await drive(pArr, 5000);
   const pQ = R.Mini.sequence({ rounds: 3, seed: 'q' });
   await frames(5); await press('b');
   let gq = 0; while (R.Mini.state() && R.Mini.state().phase !== 'result' && gq++ < 200) await frames(1);

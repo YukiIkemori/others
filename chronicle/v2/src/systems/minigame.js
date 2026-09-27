@@ -50,7 +50,8 @@
   // ================================================================ 歌あわせ
   Mini.sequence = function (o) {
     o = o || {};
-    const n = Math.max(3, Math.min(5, o.symbols || 4));
+    // symbols は数でも名前の配列でもよい（配列なら長さ。森の歌あわせは ['葉','風','月','水'] で呼ぶ）
+    const n = Math.max(3, Math.min(5, (Array.isArray(o.symbols) ? o.symbols.length : +o.symbols) || 4));
     const rounds = Math.max(1, o.rounds || 3);
     const start = Math.max(2, o.start || 3);
     const tempo = Math.max(260, o.tempo || 560);
@@ -157,7 +158,7 @@
 
   // ---------------------------------------------------------------- 絵
   const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
-  function hexRgb(h) { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  function hexRgb(h) { const n = parseInt(String(h || '#ffffff').slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
 
   function frame(g, st, title, sub) {
     const U = R.UIK.u, T = R.UIK.T, C = T.color;

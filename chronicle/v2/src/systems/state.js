@@ -120,6 +120,40 @@
         if (to !== eq[k] && R.DB.items[to]) { eq[k] = to; n++; }
       }
     }
+    n += State.retireItems(G);
+    return n;
+  };
+  /**
+   * 体験版で持てない品を古いセーブから外す（持ち主 2026-09-27「削除しちゃうか、代替品に変えるかしていいよ」）:
+   *   もう無い id は捨てる。体験版（DB.config.slice）では レア率・ドロップ率・先制・レア遭遇 の品（中盤以降の品）を
+   *   外して、1 つにつき代わりの品（RETIRE_TO）を袋へ。→ 外した数
+   */
+  const RETIRE_TO = 'i_elixir';
+  const EARLY = ['rarePct', 'dropPct', 'preemptPct', 'rareEncPct'];
+  State.retireItems = function (G) {
+    if (!G) return 0;
+    const DB = R.DB, slice = !!(DB.config && DB.config.slice);
+    const tooEarly = (id) => { const it = DB.items[id]; return !!(slice && it && it.mods && EARLY.some((k) => it.mods[k])); };
+    let n = 0, give = 0;
+    const items = G.items || {};
+    const RENAMED = { ac_st_lucky_spore: 'ac_st_spore_sachet' };   // 付け替えた体験版の盗み品（2026-09-27）
+    for (const id of Object.keys(items)) {
+      if (RENAMED[id] && DB.items[RENAMED[id]]) { items[RENAMED[id]] = Math.min(99, (items[RENAMED[id]] || 0) + items[id]); delete items[id]; n++; continue; }
+      if (!DB.items[id]) { delete items[id]; n++; continue; }
+      if (tooEarly(id)) { give += items[id] || 0; delete items[id]; n++; }
+    }
+    for (const cid of Object.keys(G.chars || {})) {
+      const eq = G.chars[cid] && G.chars[cid].equip;
+      if (!eq) continue;
+      for (const k of Object.keys(eq)) {
+        if (!eq[k]) continue;
+        if (RENAMED[eq[k]] && DB.items[RENAMED[eq[k]]]) { eq[k] = RENAMED[eq[k]]; n++; continue; }
+        if (!DB.items[eq[k]]) { eq[k] = null; n++; continue; }
+        if (tooEarly(eq[k])) { eq[k] = null; give++; n++; }
+      }
+    }
+    if (give && DB.items[RETIRE_TO]) items[RETIRE_TO] = Math.min(99, (items[RETIRE_TO] || 0) + give);
+    G.items = items;
     return n;
   };
 
