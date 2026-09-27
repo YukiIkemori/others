@@ -33,11 +33,12 @@ const BOSSES = {
   BOSSES['tr_b_hawkhold@3'] = { troop: 'tr_b_hawkhold', tier: 3, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [6, 10], note: 'アジトの奥（弓兵 3 人）' };
 }
 // 雪原（ノルデン雪原、src/data/bosses_snow.js）。好きな順に遊ぶので、ティア 0・1・3 で測る。
-// 氷の巨人の答えの火は、ユールの道具屋の火の壺（i_firepot、ITEMS にある）
+// 氷の巨人の答えの火は、ユールの道具屋の火炎つぼ（i_firepot。峰の前に買い足す前提で 6 個）
+const SITEMS = Object.assign({}, ITEMS, { i_firepot: 6 });
 for (const T of [0, 1, 3]) {
   const k = T === 0 ? '' : '@' + T;
   BOSSES['tr_b_blizzardwolf_0' + k] = { troop: 'tr_b_blizzardwolf_0', tier: T, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 8], note: '籠城の最後の波。遠吠え → 吹雪（守る）、手下を呼ぶ → 頭を先に' };
-  BOSSES['tr_b_icegiant' + k] = { troop: 'tr_b_icegiant', tier: T, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 8], note: '白く光る → 氷の鎧（火で消す・張っても火でとける）' };
+  BOSSES['tr_b_icegiant' + k] = { troop: 'tr_b_icegiant', tier: T, kind: 'mid', members: STD, items: SITEMS, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 8], note: '白く光る → 氷の鎧（火で消す・張っても火でとける）' };
   BOSSES['tr_b_whitedragon' + k] = { troop: 'tr_b_whitedragon', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 12], note: '息を吸う → 白い息（守る）。半分で思い出す間' };
 }
 BOSSES['tr_b_frost_admiral@6'] = { troop: 'tr_b_frost_admiral', tier: 6, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 85, diff: 40, rounds: [8, 13], note: '氷に閉じた帆船（隠しボス。ティア 6 から）' };

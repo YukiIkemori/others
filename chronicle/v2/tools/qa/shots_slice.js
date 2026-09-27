@@ -94,6 +94,42 @@ const SHOTS = [
   ['victory', '勝利と報酬', 'dev.html?scene=bscene_victory', [{ until: `${D} && ${D}.result && RPG.Engine.time - ${D}.result.t0 > 1100`, ms: 15000 }]],
   ['wipe', '全滅（3 つの選択）', 'dev.html?scene=bscene_wipe', [{ until: `${D} && ${D}.go && ${D}.ui`, ms: 15000 }, { wait: 500 }]],
 ];
+// 砂漠（desert_*.js。tools/fixtures/states/content_d_*・scenes/battle_d_*）
+{
+  const F = (name, label, fx, sizes) => [name, label, 'dev.html?fixture=' + fx, [{ until: FIELD, ms: 20000 }, { wait: 1600 }], sizes];
+  const BT = (name, label, sc) => [name, label, 'dev.html?scene=' + sc, [{ until: IN, ms: 20000 }, { wait: 600 }], ['wide', 'phone']];
+  SHOTS.push(
+    F('d_world', '砂漠のワールド（カシムの外）', 'content_d_world', ['wide', 'phone']),
+    F('d_world_night', '砂漠のワールド（消灯の刻）', 'content_d_world_night', ['wide', 'phone']),
+    F('d_kasim', 'カシム（泉の広場）', 'content_d_kasim', ['wide', 'phone']),
+    F('d_kasim_market', 'カシムの市場', 'content_d_kasim_market', ['wide', 'phone']),
+    F('d_kasim_guild_front', 'カシムの東', 'content_d_kasim_guild_front', ['wide', 'phone']),
+    F('d_kasim_after', 'カシム（解決の後）', 'content_d_kasim_after', ['wide', 'phone']),
+    F('d_kasim_inn', '宿「泉の星亭」', 'content_d_kasim_inn', ['wide', 'phone']),
+    F('d_kasim_tavern', '酒場「砂時計」', 'content_d_kasim_tavern', ['wide', 'phone']),
+    F('d_kasim_guild', '隊商ギルド', 'content_d_kasim_guild', ['wide', 'phone']),
+    F('d_sandedge', '宿場「砂の縁」', 'content_d_sandedge', ['wide', 'phone']),
+    F('d_camp1', '野営地「岩の井戸」', 'content_d_camp1', ['wide', 'phone']),
+    F('d_camp2', '野営地「星の石」', 'content_d_camp2', ['wide', 'phone']),
+    F('d_camp3', '王墓のオアシス', 'content_d_camp3', ['wide', 'phone']),
+    F('d_tomb_1', '砂の王墓 1 階', 'content_d_tomb_1', ['wide', 'phone']),
+    F('d_tomb_2', '砂の王墓 2 階', 'content_d_tomb_2', ['wide', 'phone']),
+    F('d_tomb_3', '砂の王墓 3 階', 'content_d_tomb_3', ['wide', 'phone']),
+    F('d_hawks_1', '砂の鷹団のアジト 1 階', 'content_d_hawks_1', ['wide', 'phone']),
+    F('d_hawks_2', '砂の鷹団のアジト 2 階', 'content_d_hawks_2', ['wide', 'phone']),
+    F('d_mirage', '蜃気楼の市', 'content_d_mirage', ['wide', 'phone']),
+    F('d_rocks', '金剛トカゲの岩場', 'content_d_rocks', ['wide', 'phone']),
+    F('d_oldcamp', '古い野営跡', 'content_d_oldcamp', ['wide', 'phone']),
+    F('d_wellroom', '井戸の小屋', 'content_d_wellroom', ['wide', 'phone']),
+    F('d_temple_1', '砂に沈んだ神殿 1 階', 'content_d_temple_1', ['wide', 'phone']),
+    F('d_temple_2', '砂に沈んだ神殿 2 階', 'content_d_temple_2', ['wide', 'phone']),
+    BT('d_battle', '砂漠の雑魚', 'battle_d_zone'),
+    BT('d_boss_hawk', '中ボス 鷹団の頭', 'battle_d_hawkchief'),
+    BT('d_boss_worm', '中ボス 砂もぐり', 'battle_d_sandworm'),
+    BT('d_boss_king', 'ボス 名なき砂の王', 'battle_d_sandking'),
+    BT('d_boss_hold', 'アジトの頭（敵）', 'battle_d_hawkhold'),
+  );
+}
 const SIZES = { wide: { size: [1920, 1080] }, phone: { phone: true }, land: { land: true } };
 
 async function openPage(S, page, o) {

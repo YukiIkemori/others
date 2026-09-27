@@ -46,7 +46,7 @@
     name: '吹雪の大狼', sprite: 'boss_wolflord', bossType: 'mid', lv: 9, actsPerTurn: 1, size: 'l',
     race: 'beast', affinity: 'water', flags: ['boss'], eva: 10,
     elem: { fire: 1.5, water: 0.25, earth: 1.25 }, phys: {}, statusRes: { sleep: 0.25, freeze: 1 },
-    s: { hp: 1.0, atk: 0.9, mag: 0.9 },
+    s: { hp: 1.25, atk: 0.9, mag: 0.9 },
     leader: { msg: '大狼が倒れると、狼の群れは\n吹雪の中へ散り散りに逃げていった！' },
     drops: MID('i_ether'),
     desc: '吹雪にまぎれて村を囲む狼の群れの頭。\n遠吠えひとつで吹雪を呼ぶ。',
@@ -65,7 +65,7 @@
   // 氷壁の巨人（今の数値と行動に予告と融ける氷を足す）
   const G = L.b_icegiant;
   if (G) {
-    G.actions = A([['attack', 3], ['eb_ice_hammer', 2], ['eb_avalanche_drop', 2], ['eb_frost_glow', 200, { every: [3, 1] }], ['eb_frost_exhale', 1]]);
+    G.actions = A([['attack', 3], ['eb_ice_hammer', 2], ['eb_avalanche_drop', 2], ['eb_frost_glow', 200, { every: [2, 1] }], ['eb_frost_exhale', 1]]);
     G.melt = { element: 'fire', to: -2, msg: '炎が氷の鎧を砕いた！\n巨人の体がむき出しになった！' };
     G.s = { hp: 1.2, atk: 1.6, mag: 1.6 };
     G.desc = '白竜の峰の中腹を守る氷の巨人。\n氷の鎧を張るが、火に弱い。';
