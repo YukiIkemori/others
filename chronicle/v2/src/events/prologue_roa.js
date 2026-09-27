@@ -15,6 +15,7 @@
   // 冒頭のボイス（幕の上のフィーネ 4 本 → ベルナ 5 本）。幕の前に先読みする
   const INTRO_VOICES = ['v_fine_opening_01', 'v_fine_song_01', 'v_fine_opening_02', 'v_fine_opening_03',
     'v_berna_prologue_01', 'v_berna_prologue_02', 'v_berna_prologue_03', 'v_berna_intro_01', 'v_berna_prologue_04'];
+  const BREATH = 1000;   // 冒頭の場面の切れ目の間（ms）
   D.roa_house_intro = {
     meta: { needs: [], gives: ['flag:prologue_start', 'hero'] },
     run: async (ev) => {
@@ -27,15 +28,18 @@
         // 冒頭のボイスを先読み（まとめた版は初めの声で束を読む。読み終わりか 2.5 秒の早い方まで、幕のまま待つ）
         try { if (R.Audio && R.Audio.preloadVoice) await Promise.race([R.Audio.preloadVoice(INTRO_VOICES), R.wait(2500)]); } catch (e) { /* 声が無くても進む */ }
         await ev.caption('……ねえ、聞こえる？', { ms: 2600, voice: 'v_fine_opening_01' });
+        await ev.wait(BREATH);   // 場面が変わるたびにひと呼吸（持ち主 2026-09-27）
         // 灯台の守り歌（オーナー 2026-09-27「メインだから声を」）: 幕の上でフィーネが子守歌のように。声の終わりまで待つ
         await ev.caption('♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ', { ms: 4200, voice: 'v_fine_song_01' });
+        await ev.wait(BREATH);   // 場面が変わるたびにひと呼吸（持ち主 2026-09-27）
         await ev.caption('これは、忘れられかけた物語。', { ms: 2600, voice: 'v_fine_opening_02' });
+        await ev.wait(BREATH);   // 場面が変わるたびにひと呼吸（持ち主 2026-09-27）
         await ev.caption('そして、それを語り直した、\nひとりの語り部の物語。', { ms: 3400, voice: 'v_fine_opening_03' });
-        await ev.wait(300);
+        await ev.wait(BREATH);
         const t0 = R.Engine.time;
         if (R.Engine.running) await R.until(() => { curtain.a = Math.max(0, 1 - (R.Engine.time - t0) / 1200); return curtain.a <= 0; });
       } finally { R.Engine.remove(curtain); }
-      await ev.wait(400);
+      await ev.wait(BREATH);
       await E.narr(ev, '窓の外は、まだ消灯の刻の\n闇のなかだった。');
       await ev.say('berna', 'おはよう。今日は大事な日だよ。', { voice: 'v_berna_prologue_01', face: 'berna:smile' });
       await ev.say('berna', '語り部の名簿に、\nあなたのことを書いておかないとね。', { voice: 'v_berna_prologue_02', face: 'berna:neutral' });
