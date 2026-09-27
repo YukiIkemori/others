@@ -54,3 +54,9 @@
 01:26:25   |   シート5 顔の表情: OK  comp_dokka_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
 01:26:25 round 3: 1 redo lines left 4:windup
 01:26:25 pipeline: sheets.py ../art_ref/gen/companion/dokka --companion dokka --out out/comp_dokka
+01:30:49   |   シート2 フィールドの歩き: OK  comp_dokka_s2.png  ドット 8.00px → 描かれた格子のまま（38.5 ドット）
+01:30:49   |   シート3 戦闘の基本ポーズ: 確認あり  comp_dokka_s3.png  ドット 8.00px → 描かれた格子のまま（51.0 ドット）
+01:30:49   |   シート4 戦闘の行動ポーズ＋武器なし版: 要作り直し  comp_dokka_s4.png  ドット 8.00px → 描かれた格子のまま（52.0 ドット）
+01:30:49   |   シート5 顔の表情: OK  comp_dokka_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+01:30:49   | 
+01:30:49   | packed field 117x176, battle 540x292, battle_bare 300x56, face 376x84 | palette 52 + face 48

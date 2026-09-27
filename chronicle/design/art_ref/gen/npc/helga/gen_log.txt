@@ -1,0 +1,4 @@
+01:31:56 sheet 1 attempt 1: edit of the Arun template 1920x1536 (pitch 6, quality medium, 2 refs)
+01:32:57   pitch in raw image: 5.98 px per art pixel (upright median 299 px / 50)
+01:32:59 sheet 1 -> art_ref/gen/npc/helga/npc_helga_s1.png (16 poses)
+01:32:59 pipeline: sheets.py ../art_ref/gen/npc/helga --npc helga --out out/npc/npc_helga --check

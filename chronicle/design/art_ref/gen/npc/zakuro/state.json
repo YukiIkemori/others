@@ -8,6 +8,13 @@
      "kind": "full",
      "extra": "",
      "t": "2026-09-27T01:28:54"
+    },
+    {
+     "raw": "raw/s1_a2.png",
+     "quality": "medium",
+     "kind": "full",
+     "extra": "- PROPORTIONS WRONG: the head is too small / the figure too slender. Use exactly the hero's proportions from the template: about 2.7 heads tall, big head (a third of the body height), short sturdy body, low centre of gravity. (ザクロ（npc_zakuro）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さ 79%・頭の幅 77%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して)",
+     "t": "2026-09-27T01:31:12"
     }
    ],
    "frames": {
@@ -16,7 +23,7 @@
      "column": 1,
      "logical_bbox": [
       33,
-      51
+      52
      ],
      "air": 0
     },
@@ -24,8 +31,8 @@
      "row": 1,
      "column": 2,
      "logical_bbox": [
-      33,
-      51
+      36,
+      52
      ],
      "air": 0
     },
@@ -33,7 +40,7 @@
      "row": 1,
      "column": 3,
      "logical_bbox": [
-      33,
+      34,
       51
      ],
      "air": 0
@@ -42,17 +49,8 @@
      "row": 1,
      "column": 4,
      "logical_bbox": [
-      33,
-      50
-     ],
-     "air": 0
-    },
-    "act_surprise": {
-     "row": 2,
-     "column": 4,
-     "logical_bbox": [
-      44,
-      52
+      34,
+      51
      ],
      "air": 0
     },
@@ -60,16 +58,7 @@
      "row": 2,
      "column": 1,
      "logical_bbox": [
-      33,
-      52
-     ],
-     "air": 0
-    },
-    "walk_up_1": {
-     "row": 2,
-     "column": 2,
-     "logical_bbox": [
-      33,
+      31,
       52
      ],
      "air": 0
@@ -78,8 +67,26 @@
      "row": 2,
      "column": 3,
      "logical_bbox": [
-      32,
+      33,
+      53
+     ],
+     "air": 0
+    },
+    "act_surprise": {
+     "row": 2,
+     "column": 4,
+     "logical_bbox": [
+      37,
       52
+     ],
+     "air": 0
+    },
+    "walk_up_1": {
+     "row": 2,
+     "column": 2,
+     "logical_bbox": [
+      34,
+      51
      ],
      "air": 0
     },
@@ -87,7 +94,7 @@
      "row": 3,
      "column": 4,
      "logical_bbox": [
-      33,
+      36,
       54
      ],
      "air": 0
@@ -96,7 +103,7 @@
      "row": 3,
      "column": 1,
      "logical_bbox": [
-      22,
+      20,
       52
      ],
      "air": 0
@@ -105,8 +112,8 @@
      "row": 3,
      "column": 2,
      "logical_bbox": [
-      33,
-      52
+      29,
+      53
      ],
      "air": 0
     },
@@ -114,7 +121,7 @@
      "row": 3,
      "column": 3,
      "logical_bbox": [
-      33,
+      30,
       52
      ],
      "air": 0
@@ -123,8 +130,8 @@
      "row": 4,
      "column": 1,
      "logical_bbox": [
-      22,
-      53
+      19,
+      52
      ],
      "air": 0
     },
@@ -132,8 +139,8 @@
      "row": 4,
      "column": 2,
      "logical_bbox": [
-      34,
-      52
+      33,
+      51
      ],
      "air": 0
     },
@@ -141,7 +148,7 @@
      "row": 4,
      "column": 3,
      "logical_bbox": [
-      32,
+      29,
       51
      ],
      "air": 0
@@ -150,20 +157,20 @@
      "row": 4,
      "column": 4,
      "logical_bbox": [
-      29,
-      51
+      31,
+      50
      ],
      "air": 0
     }
    },
    "notes": [],
-   "pitch": 6.038,
-   "from_raw": "raw/s1_a1.png",
+   "pitch": 5.904,
+   "from_raw": "raw/s1_a2.png",
    "redo_left": [
     {
      "code": "proportion",
      "slot": "walk_down_0",
-     "msg": "頭がアルンより小さい（頭の高さ 79%・頭の幅 77%）。頭身が高すぎる"
+     "msg": "頭がアルンより小さい（頭の高さ 79%・頭の幅 74%）。頭身が高すぎる"
     }
    ],
    "takes": [
@@ -317,6 +324,161 @@
       }
      },
      "from_raw": "raw/s1_a1.png",
+     "cell": [
+      80,
+      64
+     ]
+    },
+    {
+     "file": "raw/s1_take2.png",
+     "score": 3,
+     "frames": {
+      "walk_down_0": {
+       "row": 1,
+       "column": 1,
+       "logical_bbox": [
+        33,
+        52
+       ],
+       "air": 0
+      },
+      "walk_down_1": {
+       "row": 1,
+       "column": 2,
+       "logical_bbox": [
+        36,
+        52
+       ],
+       "air": 0
+      },
+      "walk_down_2": {
+       "row": 1,
+       "column": 3,
+       "logical_bbox": [
+        34,
+        51
+       ],
+       "air": 0
+      },
+      "act_nod": {
+       "row": 1,
+       "column": 4,
+       "logical_bbox": [
+        34,
+        51
+       ],
+       "air": 0
+      },
+      "walk_up_0": {
+       "row": 2,
+       "column": 1,
+       "logical_bbox": [
+        31,
+        52
+       ],
+       "air": 0
+      },
+      "walk_up_2": {
+       "row": 2,
+       "column": 3,
+       "logical_bbox": [
+        33,
+        53
+       ],
+       "air": 0
+      },
+      "act_surprise": {
+       "row": 2,
+       "column": 4,
+       "logical_bbox": [
+        37,
+        52
+       ],
+       "air": 0
+      },
+      "walk_up_1": {
+       "row": 2,
+       "column": 2,
+       "logical_bbox": [
+        34,
+        51
+       ],
+       "air": 0
+      },
+      "act_call": {
+       "row": 3,
+       "column": 4,
+       "logical_bbox": [
+        36,
+        54
+       ],
+       "air": 0
+      },
+      "walk_left_0": {
+       "row": 3,
+       "column": 1,
+       "logical_bbox": [
+        20,
+        52
+       ],
+       "air": 0
+      },
+      "walk_left_1": {
+       "row": 3,
+       "column": 2,
+       "logical_bbox": [
+        29,
+        53
+       ],
+       "air": 0
+      },
+      "walk_left_2": {
+       "row": 3,
+       "column": 3,
+       "logical_bbox": [
+        30,
+        52
+       ],
+       "air": 0
+      },
+      "walk_right_0": {
+       "row": 4,
+       "column": 1,
+       "logical_bbox": [
+        19,
+        52
+       ],
+       "air": 0
+      },
+      "walk_right_1": {
+       "row": 4,
+       "column": 2,
+       "logical_bbox": [
+        33,
+        51
+       ],
+       "air": 0
+      },
+      "walk_right_2": {
+       "row": 4,
+       "column": 3,
+       "logical_bbox": [
+        29,
+        51
+       ],
+       "air": 0
+      },
+      "act_sig": {
+       "row": 4,
+       "column": 4,
+       "logical_bbox": [
+        31,
+        50
+       ],
+       "air": 0
+      }
+     },
+     "from_raw": "raw/s1_a2.png",
      "cell": [
       80,
       64

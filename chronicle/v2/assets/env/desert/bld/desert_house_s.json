@@ -1,0 +1,95 @@
+{
+ "id": "desert_house_s",
+ "kind": "building",
+ "theme": "desert",
+ "footprint": [
+  5,
+  4
+ ],
+ "wall": 2,
+ "files": {
+  "24": "desert_house_s@24.png",
+  "32": "desert_house_s@32.png",
+  "40": "desert_house_s@40.png"
+ },
+ "emitFiles": {
+  "24": "desert_house_s_emit@24.png",
+  "32": "desert_house_s_emit@32.png",
+  "40": "desert_house_s_emit@40.png"
+ },
+ "size": {
+  "24": [
+   132,
+   120
+  ],
+  "32": [
+   176,
+   160
+  ],
+  "40": [
+   220,
+   200
+  ]
+ },
+ "anchor32": [
+  8,
+  160
+ ],
+ "door32": {
+  "x": 80.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": -5,
+   "y": -132,
+   "w": 170,
+   "h": 53
+  },
+  {
+   "kind": "win",
+   "x": 1,
+   "y": -73,
+   "w": 157,
+   "h": 69
+  },
+  {
+   "kind": "win",
+   "x": 29,
+   "y": -42,
+   "w": 9,
+   "h": 10
+  },
+  {
+   "kind": "win",
+   "x": 122,
+   "y": -42,
+   "w": 8,
+   "h": 10
+  }
+ ],
+ "roof32": [
+  -6,
+  -132,
+  166,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/desert/desert_house_s.png",
+ "def_": {
+  "id": "desert_house_s",
+  "x": 0,
+  "y": 0,
+  "w": 5,
+  "h": 4,
+  "wall": 2,
+  "door": {
+   "x": 2,
+   "y": 3
+  },
+  "windows": 2
+ }
+}

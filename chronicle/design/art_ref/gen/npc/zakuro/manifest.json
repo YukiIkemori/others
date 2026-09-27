@@ -18,7 +18,7 @@
     "column": 1,
     "logical_bbox": [
      33,
-     51
+     52
     ]
    },
    {
@@ -26,8 +26,8 @@
     "row": 1,
     "column": 2,
     "logical_bbox": [
-     33,
-     51
+     36,
+     52
     ]
    },
    {
@@ -35,7 +35,7 @@
     "row": 1,
     "column": 3,
     "logical_bbox": [
-     33,
+     34,
      51
     ]
    },
@@ -44,8 +44,8 @@
     "row": 1,
     "column": 4,
     "logical_bbox": [
-     33,
-     50
+     34,
+     51
     ]
    },
    {
@@ -53,7 +53,7 @@
     "row": 2,
     "column": 1,
     "logical_bbox": [
-     33,
+     31,
      52
     ]
    },
@@ -62,8 +62,8 @@
     "row": 2,
     "column": 2,
     "logical_bbox": [
-     33,
-     52
+     34,
+     51
     ]
    },
    {
@@ -71,8 +71,8 @@
     "row": 2,
     "column": 3,
     "logical_bbox": [
-     32,
-     52
+     33,
+     53
     ]
    },
    {
@@ -80,7 +80,7 @@
     "row": 2,
     "column": 4,
     "logical_bbox": [
-     44,
+     37,
      52
     ]
    },
@@ -89,7 +89,7 @@
     "row": 3,
     "column": 1,
     "logical_bbox": [
-     22,
+     20,
      52
     ]
    },
@@ -98,8 +98,8 @@
     "row": 3,
     "column": 2,
     "logical_bbox": [
-     33,
-     52
+     29,
+     53
     ]
    },
    {
@@ -107,7 +107,7 @@
     "row": 3,
     "column": 3,
     "logical_bbox": [
-     33,
+     30,
      52
     ]
    },
@@ -116,7 +116,7 @@
     "row": 3,
     "column": 4,
     "logical_bbox": [
-     33,
+     36,
      54
     ]
    },
@@ -125,8 +125,8 @@
     "row": 4,
     "column": 1,
     "logical_bbox": [
-     22,
-     53
+     19,
+     52
     ]
    },
    {
@@ -134,8 +134,8 @@
     "row": 4,
     "column": 2,
     "logical_bbox": [
-     34,
-     52
+     33,
+     51
     ]
    },
    {
@@ -143,7 +143,7 @@
     "row": 4,
     "column": 3,
     "logical_bbox": [
-     32,
+     29,
      51
     ]
    },
@@ -152,8 +152,8 @@
     "row": 4,
     "column": 4,
     "logical_bbox": [
-     29,
-     51
+     31,
+     50
     ]
    }
   ]

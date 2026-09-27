@@ -1,0 +1,396 @@
+{
+ "char": "npc_merchant_captain",
+ "companion": null,
+ "npc": "npc_merchant_captain",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/merchant_captain",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/merchant_captain/npc_merchant_captain_s1.png",
+   "size": [
+    2560,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x4",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 416.0,
+   "native_height_at_period": 52.0,
+   "scale_note": "描かれた格子のまま（52.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      29,
+      53
+     ],
+     "box": [
+      184,
+      40,
+      448,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.58
+    },
+    "walk_down_1": {
+     "size": [
+      31,
+      52
+     ],
+     "box": [
+      816,
+      48,
+      1096,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.64,
+     "scale": 0.821,
+     "fixed": [
+      "rescaled 1.22"
+     ]
+    },
+    "walk_down_2": {
+     "size": [
+      29,
+      52
+     ],
+     "box": [
+      1464,
+      48,
+      1728,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.68,
+     "scale": 0.987
+    },
+    "act_nod": {
+     "size": [
+      31,
+      53
+     ],
+     "box": [
+      2096,
+      40,
+      2376,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.59,
+     "scale": 0.987
+    },
+    "walk_up_0": {
+     "size": [
+      31,
+      52
+     ],
+     "box": [
+      176,
+      560,
+      456,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.55,
+     "scale": 0.936
+    },
+    "walk_up_1": {
+     "size": [
+      31,
+      52
+     ],
+     "box": [
+      816,
+      560,
+      1096,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.0,
+     "scale": 0.987
+    },
+    "walk_up_2": {
+     "size": [
+      31,
+      52
+     ],
+     "box": [
+      1456,
+      560,
+      1736,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.94,
+     "scale": 1.064
+    },
+    "act_surprise": {
+     "size": [
+      44,
+      54
+     ],
+     "box": [
+      2048,
+      544,
+      2432,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.87,
+     "scale": 1.064
+    },
+    "walk_left_0": {
+     "size": [
+      26,
+      51
+     ],
+     "box": [
+      200,
+      1080,
+      440,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      29,
+      51
+     ],
+     "box": [
+      824,
+      1080,
+      1088,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_left_2": {
+     "size": [
+      31,
+      51
+     ],
+     "box": [
+      1456,
+      1080,
+      1736,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.051
+    },
+    "act_call": {
+     "size": [
+      31,
+      53
+     ],
+     "box": [
+      2096,
+      1064,
+      2376,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.02,
+     "scale": 1.0
+    },
+    "walk_right_0": {
+     "size": [
+      26,
+      52
+     ],
+     "box": [
+      200,
+      1584,
+      440,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      32,
+      51
+     ],
+     "box": [
+      816,
+      1592,
+      1104,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.026
+    },
+    "walk_right_2": {
+     "size": [
+      32,
+      51
+     ],
+     "box": [
+      1456,
+      1592,
+      1744,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.026
+    },
+    "act_sig": {
+     "size": [
+      29,
+      52
+     ],
+     "box": [
+      2104,
+      1584,
+      2368,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.12,
+     "scale": 1.205,
+     "fixed": [
+      "rescaled 0.83"
+     ]
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_merchant_captain）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 2 番（下向き・右足前） がほかのポーズより小さく描かれている（頭の大きさで約 82%）。仮に 122% に拡大縮小して使う",
+   "slot": "walk_down_1",
+   "ask": "商船の船長（npc_merchant_captain）のシート1の2番（下向き・右足前）だけ小さく描かれている（頭の大きさがほかのポーズの約 82%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.8205128205128205,
+    "per_ref": [
+     1.0250000000000001,
+     0.6874999999999998,
+     0.8000000000000003
+    ],
+    "group_median": 0.9750000000000003
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート1 の 16 番（その人のしぐさ） がほかのポーズより大きく描かれている（頭の大きさで約 121%）。仮に 83% に拡大縮小して使う",
+   "slot": "act_sig",
+   "ask": "商船の船長（npc_merchant_captain）のシート1の16番（その人のしぐさ）だけ大きく描かれている（頭の大きさがほかのポーズの約 121%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 1.2051282051282053,
+    "per_ref": [
+     0.9750000000000001,
+     1.2250000000000003,
+     1.1750000000000005
+    ],
+    "group_median": 0.9750000000000003
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 48 ドットあたり）: 首 0.29（アルン 0.29）・頭の幅 0.51（0.43）・肩 0.34（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.2916666666666667,
+    "head_w": 0.5104166666666666,
+    "shoulder": 0.33854166666666663,
+    "neck_clear": 0.5443349753694582
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 100%・頭の幅 120%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 1.1953551912568305,
+    "neck": 0.9988584474885847
+   }
+  }
+ ]
+}

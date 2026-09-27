@@ -1,0 +1,81 @@
+{
+ "id": "star_house_s",
+ "kind": "building",
+ "theme": "star",
+ "footprint": [
+  5,
+  4
+ ],
+ "wall": 2,
+ "files": {
+  "24": "star_house_s@24.png",
+  "32": "star_house_s@32.png",
+  "40": "star_house_s@40.png"
+ },
+ "emitFiles": {
+  "24": "star_house_s_emit@24.png",
+  "32": "star_house_s_emit@32.png",
+  "40": "star_house_s_emit@40.png"
+ },
+ "size": {
+  "24": [
+   132,
+   120
+  ],
+  "32": [
+   176,
+   160
+  ],
+  "40": [
+   220,
+   200
+  ]
+ },
+ "anchor32": [
+  8,
+  160
+ ],
+ "door32": {
+  "x": 80.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": 28,
+   "y": -35,
+   "w": 9,
+   "h": 14
+  },
+  {
+   "kind": "win",
+   "x": 120,
+   "y": -35,
+   "w": 9,
+   "h": 14
+  }
+ ],
+ "roof32": [
+  -6,
+  -132,
+  166,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/star/star_house_s.png",
+ "def_": {
+  "id": "star_house_s",
+  "x": 0,
+  "y": 0,
+  "w": 5,
+  "h": 4,
+  "wall": 2,
+  "door": {
+   "x": 2,
+   "y": 3
+  },
+  "windows": 2
+ }
+}

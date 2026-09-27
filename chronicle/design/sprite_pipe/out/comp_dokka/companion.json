@@ -1,0 +1,36 @@
+{
+ "id": "dokka",
+ "name": "ドッカ",
+ "look": "dokka",
+ "weaponType": "greatsword",
+ "weaponDrawn": "two-handed double-bit axe (greatsword class)",
+ "heightDots": {
+  "battle": 52,
+  "field": 39,
+  "face": 80
+ },
+ "measureH": {
+  "battle": 52,
+  "field": 39
+ },
+ "row": "front",
+ "split4": false,
+ "sheets": {
+  "1": "comp_dokka_s1.png",
+  "2": "comp_dokka_s2.png",
+  "3": "comp_dokka_s3.png",
+  "4": "comp_dokka_s4.png",
+  "5": "comp_dokka_s5.png"
+ },
+ "used": {
+  "weapons": "out/arun_v1/weapons/arun_weapons.json",
+  "grip_from": "out/arun_v1/battle_bare/arun_battle_bare.json"
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "surprise": "face_surprise",
+  "sad": "face_pain",
+  "angry": "face_neutral"
+ }
+}

@@ -2,3 +2,6 @@
 01:05:17   pitch in raw image: 8.06 px per art pixel (upright median 548 px / 68)
 01:05:18 sheet 1 -> art_ref/gen/companion/viola/comp_viola_s1.png (7 poses)
 01:29:19 sheet 2 attempt 1: generating 1920x2048 (pitch 8, quality medium, 2 refs)
+01:32:19   pitch in raw image: 7.69 px per art pixel (upright median 392 px / 51)
+01:32:21 sheet 2 -> art_ref/gen/companion/viola/comp_viola_s2.png (12 poses)
+01:32:22 sheet 3 attempt 1: generating 3648x1344 (pitch 7, quality medium, 2 refs)

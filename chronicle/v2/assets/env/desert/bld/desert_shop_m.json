@@ -1,0 +1,102 @@
+{
+ "id": "desert_shop_m",
+ "kind": "building",
+ "theme": "desert",
+ "footprint": [
+  6,
+  5
+ ],
+ "wall": 2,
+ "files": {
+  "24": "desert_shop_m@24.png",
+  "32": "desert_shop_m@32.png",
+  "40": "desert_shop_m@40.png"
+ },
+ "emitFiles": {
+  "24": "desert_shop_m_emit@24.png",
+  "32": "desert_shop_m_emit@32.png",
+  "40": "desert_shop_m_emit@40.png"
+ },
+ "size": {
+  "24": [
+   156,
+   144
+  ],
+  "32": [
+   208,
+   192
+  ],
+  "40": [
+   260,
+   240
+  ]
+ },
+ "anchor32": [
+  8,
+  192
+ ],
+ "door32": {
+  "x": 112.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": -7,
+   "y": -164,
+   "w": 205,
+   "h": 69
+  },
+  {
+   "kind": "win",
+   "x": 35,
+   "y": -161,
+   "w": 122,
+   "h": 3
+  },
+  {
+   "kind": "win",
+   "x": 0,
+   "y": -82,
+   "w": 191,
+   "h": 81
+  },
+  {
+   "kind": "win",
+   "x": 36,
+   "y": -33,
+   "w": 8,
+   "h": 8
+  },
+  {
+   "kind": "win",
+   "x": 146,
+   "y": -33,
+   "w": 8,
+   "h": 10
+  }
+ ],
+ "roof32": [
+  -6,
+  -164,
+  198,
+  -58
+ ],
+ "wallTop32": -64,
+ "src": "design/art_ref/gen/env/bld/desert/desert_shop_m.png",
+ "def_": {
+  "id": "desert_shop_m",
+  "x": 0,
+  "y": 0,
+  "w": 6,
+  "h": 5,
+  "wall": 2,
+  "door": {
+   "x": 3,
+   "y": 4
+  },
+  "windows": 2
+ }
+}

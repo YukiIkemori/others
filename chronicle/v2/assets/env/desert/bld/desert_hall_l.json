@@ -1,0 +1,102 @@
+{
+ "id": "desert_hall_l",
+ "kind": "building",
+ "theme": "desert",
+ "footprint": [
+  8,
+  6
+ ],
+ "wall": 3,
+ "files": {
+  "24": "desert_hall_l@24.png",
+  "32": "desert_hall_l@32.png",
+  "40": "desert_hall_l@40.png"
+ },
+ "emitFiles": {
+  "24": "desert_hall_l_emit@24.png",
+  "32": "desert_hall_l_emit@32.png",
+  "40": "desert_hall_l_emit@40.png"
+ },
+ "size": {
+  "24": [
+   204,
+   168
+  ],
+  "32": [
+   272,
+   224
+  ],
+  "40": [
+   340,
+   280
+  ]
+ },
+ "anchor32": [
+  8,
+  224
+ ],
+ "door32": {
+  "x": 144.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "win",
+   "x": -5,
+   "y": -202,
+   "w": 265,
+   "h": 85
+  },
+  {
+   "kind": "win",
+   "x": 13,
+   "y": -198,
+   "w": 33,
+   "h": 3
+  },
+  {
+   "kind": "win",
+   "x": 156,
+   "y": -198,
+   "w": 45,
+   "h": 3
+  },
+  {
+   "kind": "win",
+   "x": 9,
+   "y": -184,
+   "w": 2,
+   "h": 5
+  },
+  {
+   "kind": "win",
+   "x": -1,
+   "y": -109,
+   "w": 258,
+   "h": 101
+  }
+ ],
+ "roof32": [
+  -6,
+  -196,
+  262,
+  -90
+ ],
+ "wallTop32": -96,
+ "src": "design/art_ref/gen/env/bld/desert/desert_hall_l.png",
+ "def_": {
+  "id": "desert_hall_l",
+  "x": 0,
+  "y": 0,
+  "w": 8,
+  "h": 6,
+  "wall": 3,
+  "door": {
+   "x": 4,
+   "y": 5
+  },
+  "windows": 3
+ }
+}
