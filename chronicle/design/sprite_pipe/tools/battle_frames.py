@@ -585,7 +585,7 @@ def lattice_sample(raw, mask, box, nx, ny):
         for i in range(nx):
             x0, x1 = int(round(i * W / nx)), int(round((i + 1) * W / nx))
             m = mk[y0:y1, x0:x1]
-            if m.size == 0 or m.mean() < 0.4:
+            if m.size == 0 or m.mean() < 0.3:
                 continue
             iy0, iy1 = y0 + (y1 - y0) // 4, y1 - (y1 - y0) // 4
             ix0, ix1 = x0 + (x1 - x0) // 4, x1 - (x1 - x0) // 4

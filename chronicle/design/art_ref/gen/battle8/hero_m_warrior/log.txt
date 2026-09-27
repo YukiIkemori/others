@@ -61,3 +61,13 @@
 19:23:20   attack frame 7 new   {"ok": false, "why": "head scale 0.963", "head_scale": 0.963, "head": [55.8, 28.2], "height": 60, "rescaled": 1.29, "copy": 0.09, "shift": [5, 14], "err": 25.9}
 19:23:20   attack frame 8 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [55.9, 22.6], "height": 63, "rescaled": 1.25, "copy": 0.09, "shift": [6, 13], "err": 43.4}
 19:23:20   attack frame 9 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [58.0, 23.5], "height": 64, "rescaled": null, "copy": null, "shift": [0, 0], "err": 0.0}
+19:23:47 calibrated pitch 7.98 / 8.00 px (requested 8), offset 0.4, 1.2
+19:23:55   attack frame 1 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [58.0, 23.5], "height": 64, "rescaled": null, "copy": null, "shift": [0, 0], "err": 0.0}
+19:23:55   attack frame 2 new   {"ok": true, "why": "", "head_scale": 0.975, "head": [55.7, 25.2], "height": 70, "rescaled": 1.194, "copy": 0.06, "shift": [6, 0], "err": 26.3}
+19:23:55   attack frame 3 keep  {"ok": false, "why": "head scale 0.862", "head_scale": 0.862, "head": [58.2, 31.9], "height": 64, "rescaled": null, "copy": null, "shift": [0, 0], "err": 35.6}
+19:23:55   attack frame 4 new   {"ok": true, "why": "", "head_scale": 1.013, "head": [56.0, 23.4], "height": 67, "rescaled": 1.311, "copy": 0.03, "shift": [3, 9], "err": 35.8}
+19:23:55   attack frame 5 new   {"ok": true, "why": "", "head_scale": 0.975, "head": [56.0, 29.6], "height": 57, "rescaled": 1.25, "copy": 0.08, "shift": [2, 9], "err": 26.2}
+19:23:55   attack frame 6 keep  {"ok": false, "why": "head scale 1.075", "head_scale": 1.075, "head": [58.0, 24.4], "height": 64, "rescaled": null, "copy": null, "shift": [0, 0], "err": 28.1}
+19:23:55   attack frame 7 new   {"ok": false, "why": "head scale 0.963", "head_scale": 0.963, "head": [55.8, 28.2], "height": 60, "rescaled": 1.29, "copy": 0.09, "shift": [5, 14], "err": 25.8}
+19:23:55   attack frame 8 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [55.7, 24.2], "height": 63, "rescaled": 1.194, "copy": 0.16, "shift": [4, 13], "err": 25.1}
+19:23:55   attack frame 9 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [58.0, 23.5], "height": 64, "rescaled": null, "copy": null, "shift": [0, 0], "err": 0.0}
