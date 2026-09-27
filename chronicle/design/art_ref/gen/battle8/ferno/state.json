@@ -1,469 +1,19 @@
 {
- "attack": {
-  "attempts": [
-   {
-    "raw": "raw/attack_a1.png",
-    "pitch": 8,
-    "lay": {
-     "HX": 79,
-     "G": 75,
-     "W": 147,
-     "H": 78
-    },
-    "quality": "high",
-    "extra": "",
-    "t": "2026-09-27T20:01:34",
-    "secs": 86.6
-   }
-  ],
-  "frames": [
-   {
-    "slot": 1,
-    "kind": "keep",
-    "src": "idle_a",
-    "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 1.0,
-     "head": [
-      94.5,
-      47.5
-     ],
-     "height": 64,
-     "rescaled": null,
-     "copy": null,
-     "shift": [
-      0,
-      0
-     ],
-     "err": 0.0
-    }
-   },
-   {
-    "slot": 2,
-    "kind": "new",
-    "src": null,
-    "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 1.0,
-     "head": [
-      93.3,
-      49.1
-     ],
-     "height": 63,
-     "rescaled": null,
-     "copy": 0.13,
-     "shift": [
-      9,
-      -1
-     ],
-     "err": 33.1
-    }
-   },
-   {
-    "slot": 3,
-    "kind": "keep",
-    "src": "thrust_ready",
-    "checks": {
-     "ok": false,
-     "why": "head scale 1.050",
-     "head_scale": 1.05,
-     "head": [
-      95.3,
-      48.1
-     ],
-     "height": 64,
-     "rescaled": null,
-     "copy": null,
-     "shift": [
-      0,
-      0
-     ],
-     "err": 33.2
-    }
-   },
-   {
-    "slot": 4,
-    "kind": "new",
-    "src": null,
-    "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 1.0,
-     "head": [
-      94.3,
-      49.1
-     ],
-     "height": 63,
-     "rescaled": null,
-     "copy": 0.28,
-     "shift": [
-      0,
-      1
-     ],
-     "err": 32.4
-    }
-   },
-   {
-    "slot": 5,
-    "kind": "new",
-    "src": null,
-    "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 1.0,
-     "head": [
-      93.3,
-      50.6
-     ],
-     "height": 60,
-     "rescaled": null,
-     "copy": 0.24,
-     "shift": [
-      9,
-      1
-     ],
-     "err": 35.3
-    }
-   },
-   {
-    "slot": 6,
-    "kind": "keep",
-    "src": "thrust",
-    "checks": {
-     "ok": false,
-     "why": "head scale 1.050",
-     "head_scale": 1.05,
-     "head": [
-      95.3,
-      49.1
-     ],
-     "height": 63,
-     "rescaled": null,
-     "copy": null,
-     "shift": [
-      0,
-      0
-     ],
-     "err": 35.3
-    }
-   },
-   {
-    "slot": 7,
-    "kind": "new",
-    "src": null,
-    "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 1.0,
-     "head": [
-      93.3,
-      47.1
-     ],
-     "height": 65,
-     "rescaled": null,
-     "copy": 0.26,
-     "shift": [
-      0,
-      2
-     ],
-     "err": 33.5
-    }
-   },
-   {
-    "slot": 8,
-    "kind": "new",
-    "src": null,
-    "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 1.0,
-     "head": [
-      93.5,
-      46.5
-     ],
-     "height": 65,
-     "rescaled": null,
-     "copy": 0.29,
-     "shift": [
-      2,
-      1
-     ],
-     "err": 10.9
-    }
-   },
-   {
-    "slot": 9,
-    "kind": "keep",
-    "src": "idle_a",
-    "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 1.0,
-     "head": [
-      94.5,
-      47.5
-     ],
-     "height": 64,
-     "rescaled": null,
-     "copy": null,
-     "shift": [
-      0,
-      0
-     ],
-     "err": 0.0
-    }
-   }
-  ],
-  "lay": {
-   "HX": 95,
-   "G": 99,
-   "W": 179,
-   "H": 102
-  },
-  "from_raw": "raw/attack_a1.png"
- },
- "cast": {
-  "attempts": [
-   {
-    "raw": "raw/cast_a1.png",
-    "pitch": 8,
-    "lay": {
-     "HX": 68,
-     "G": 75,
-     "W": 136,
-     "H": 78
-    },
-    "quality": "high",
-    "extra": "",
-    "t": "2026-09-27T20:01:43",
-    "secs": 89.7
-   }
-  ],
-  "frames": [
-   {
-    "slot": 1,
-    "kind": "keep",
-    "src": "idle_a",
-    "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 1.0,
-     "head": [
-      84.5,
-      47.5
-     ],
-     "height": 64,
-     "rescaled": null,
-     "copy": null,
-     "shift": [
-      0,
-      0
-     ],
-     "err": 0.0
-    }
-   },
-   {
-    "slot": 2,
-    "kind": "new",
-    "src": null,
-    "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 1.0,
-     "head": [
-      81.7,
-      50.9
-     ],
-     "height": 60,
-     "rescaled": null,
-     "copy": 0.09,
-     "shift": [
-      13,
-      -2
-     ],
-     "err": 38.6
-    }
-   },
-   {
-    "slot": 3,
-    "kind": "new",
-    "src": null,
-    "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 1.0,
-     "head": [
-      81.9,
-      49.8
-     ],
-     "height": 62,
-     "rescaled": null,
-     "copy": 0.11,
-     "shift": [
-      8,
-      -2
-     ],
-     "err": 37.7
-    }
-   },
-   {
-    "slot": 4,
-    "kind": "keep",
-    "src": "cast_b",
-    "checks": {
-     "ok": false,
-     "why": "head scale 0.950",
-     "head_scale": 0.95,
-     "head": [
-      83.7,
-      48.9
-     ],
-     "height": 64,
-     "rescaled": null,
-     "copy": null,
-     "shift": [
-      0,
-      0
-     ],
-     "err": 25.7
-    }
-   },
-   {
-    "slot": 5,
-    "kind": "new",
-    "src": null,
-    "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 1.0,
-     "head": [
-      85.3,
-      49.6
-     ],
-     "height": 71,
-     "rescaled": null,
-     "copy": 0.12,
-     "shift": [
-      0,
-      0
-     ],
-     "err": 37.3
-    }
-   },
-   {
-    "slot": 6,
-    "kind": "new",
-    "src": null,
-    "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 1.0,
-     "head": [
-      82.3,
-      50.6
-     ],
-     "height": 60,
-     "rescaled": null,
-     "copy": 0.13,
-     "shift": [
-      11,
-      0
-     ],
-     "err": 40.2
-    }
-   },
-   {
-    "slot": 7,
-    "kind": "keep",
-    "src": "cast_a",
-    "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 0.975,
-     "head": [
-      84.1,
-      47.2
-     ],
-     "height": 64,
-     "rescaled": null,
-     "copy": null,
-     "shift": [
-      0,
-      0
-     ],
-     "err": 25.9
-    }
-   },
-   {
-    "slot": 8,
-    "kind": "new",
-    "src": null,
-    "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 1.0,
-     "head": [
-      82.1,
-      50.5
-     ],
-     "height": 60,
-     "rescaled": null,
-     "copy": 0.07,
-     "shift": [
-      9,
-      2
-     ],
-     "err": 44.3
-    }
-   },
-   {
-    "slot": 9,
-    "kind": "new",
-    "src": null,
-    "checks": {
-     "ok": true,
-     "why": "",
-     "head_scale": 1.0,
-     "head": [
-      81.9,
-      47.8
-     ],
-     "height": 64,
-     "rescaled": null,
-     "copy": 0.17,
-     "shift": [
-      0,
-      -1
-     ],
-     "err": 21.4
-    }
-   }
-  ],
-  "lay": {
-   "HX": 84,
-   "G": 99,
-   "W": 168,
-   "H": 102
-  },
-  "from_raw": "raw/cast_a1.png"
- },
  "victory": {
   "attempts": [
    {
     "raw": "raw/victory_a1.png",
     "pitch": 8,
     "lay": {
-     "HX": 68,
-     "G": 91,
-     "W": 136,
-     "H": 94
+     "HX": 81,
+     "G": 103,
+     "W": 149,
+     "H": 106
     },
     "quality": "high",
     "extra": "",
-    "t": "2026-09-27T20:01:50",
-    "secs": 75.9
+    "t": "2026-09-27T20:01:52",
+    "secs": 72.1
    }
   ],
   "frames": [
@@ -476,10 +26,10 @@
      "why": "",
      "head_scale": 1.0,
      "head": [
-      84.5,
-      63.5
+      96.5,
+      61.5
      ],
-     "height": 64,
+     "height": 81,
      "rescaled": null,
      "copy": null,
      "shift": [
@@ -498,17 +48,17 @@
      "why": "",
      "head_scale": 1.0,
      "head": [
-      86.1,
-      63.2
+      95.1,
+      108.8
      ],
-     "height": 67,
+     "height": 85,
      "rescaled": null,
-     "copy": 0.2,
+     "copy": 0.06,
      "shift": [
-      0,
+      3,
       0
      ],
-     "err": 19.9
+     "err": 63.7
     }
    },
    {
@@ -520,17 +70,17 @@
      "why": "",
      "head_scale": 1.0,
      "head": [
-      85.1,
-      63.2
+      96.7,
+      82.6
      ],
-     "height": 81,
+     "height": 92,
      "rescaled": null,
-     "copy": 0.22,
+     "copy": 0.28,
      "shift": [
       0,
       0
      ],
-     "err": 25.4
+     "err": 62.6
     }
    },
    {
@@ -539,20 +89,20 @@
     "src": "victory_a",
     "checks": {
      "ok": false,
-     "why": "head scale 0.950",
-     "head_scale": 0.95,
+     "why": "head scale 0.875",
+     "head_scale": 0.875,
      "head": [
-      83.7,
-      63.9
+      96.9,
+      81.7
      ],
-     "height": 80,
+     "height": 92,
      "rescaled": null,
      "copy": null,
      "shift": [
       0,
       0
      ],
-     "err": 22.2
+     "err": 61.0
     }
    },
    {
@@ -564,17 +114,17 @@
      "why": "",
      "head_scale": 1.0,
      "head": [
-      83.1,
-      63.2
+      98.8,
+      82.1
      ],
-     "height": 82,
+     "height": 92,
      "rescaled": null,
-     "copy": 0.21,
+     "copy": 0.46,
      "shift": [
-      0,
-      2
+      -5,
+      0
      ],
-     "err": 27.5
+     "err": 58.8
     }
    },
    {
@@ -586,26 +136,476 @@
      "why": "",
      "head_scale": 1.0,
      "head": [
-      82.1,
-      65.5
+      98.8,
+      82.1
      ],
-     "height": 81,
+     "height": 92,
      "rescaled": null,
-     "copy": 0.25,
+     "copy": 0.49,
      "shift": [
-      0,
-      2
+      -1,
+      0
      ],
-     "err": 28.2
+     "err": 59.1
     }
    }
   ],
   "lay": {
-   "HX": 84,
-   "G": 115,
-   "W": 168,
-   "H": 118
+   "HX": 97,
+   "G": 127,
+   "W": 181,
+   "H": 130
   },
   "from_raw": "raw/victory_a1.png"
+ },
+ "cast": {
+  "attempts": [
+   {
+    "raw": "raw/cast_a1.png",
+    "pitch": 8,
+    "lay": {
+     "HX": 81,
+     "G": 92,
+     "W": 149,
+     "H": 95
+    },
+    "quality": "high",
+    "extra": "",
+    "t": "2026-09-27T20:02:14",
+    "secs": 97.4
+   }
+  ],
+  "frames": [
+   {
+    "slot": 1,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      96.5,
+      50.5
+     ],
+     "height": 81,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   },
+   {
+    "slot": 2,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      95.2,
+      53.3
+     ],
+     "height": 76,
+     "rescaled": null,
+     "copy": 0.1,
+     "shift": [
+      1,
+      0
+     ],
+     "err": 37.7
+    }
+   },
+   {
+    "slot": 3,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      95.2,
+      50.8
+     ],
+     "height": 79,
+     "rescaled": null,
+     "copy": 0.09,
+     "shift": [
+      1,
+      0
+     ],
+     "err": 36.5
+    }
+   },
+   {
+    "slot": 4,
+    "kind": "keep",
+    "src": "cast_b",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.812",
+     "head_scale": 0.812,
+     "head": [
+      97.2,
+      54.8
+     ],
+     "height": 75,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 40.5
+    }
+   },
+   {
+    "slot": 5,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      99.0,
+      52.2
+     ],
+     "height": 81,
+     "rescaled": null,
+     "copy": 0.09,
+     "shift": [
+      -1,
+      0
+     ],
+     "err": 56.2
+    }
+   },
+   {
+    "slot": 6,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      94.8,
+      55.6
+     ],
+     "height": 74,
+     "rescaled": null,
+     "copy": 0.09,
+     "shift": [
+      3,
+      0
+     ],
+     "err": 46.1
+    }
+   },
+   {
+    "slot": 7,
+    "kind": "keep",
+    "src": "cast_a",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.850",
+     "head_scale": 0.85,
+     "head": [
+      97.2,
+      52.3
+     ],
+     "height": 78,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 37.1
+    }
+   },
+   {
+    "slot": 8,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      95.2,
+      51.8
+     ],
+     "height": 78,
+     "rescaled": null,
+     "copy": 0.11,
+     "shift": [
+      6,
+      0
+     ],
+     "err": 39.8
+    }
+   },
+   {
+    "slot": 9,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      98.9,
+      50.7
+     ],
+     "height": 81,
+     "rescaled": null,
+     "copy": 0.17,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 19.0
+    }
+   }
+  ],
+  "lay": {
+   "HX": 97,
+   "G": 116,
+   "W": 181,
+   "H": 119
+  },
+  "from_raw": "raw/cast_a1.png"
+ },
+ "attack": {
+  "attempts": [
+   {
+    "raw": "raw/attack_a1.png",
+    "pitch": 8,
+    "lay": {
+     "HX": 81,
+     "G": 92,
+     "W": 149,
+     "H": 95
+    },
+    "quality": "high",
+    "extra": "",
+    "t": "2026-09-27T20:02:14",
+    "secs": 98.3
+   }
+  ],
+  "frames": [
+   {
+    "slot": 1,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      96.5,
+      50.5
+     ],
+     "height": 81,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   },
+   {
+    "slot": 2,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      97.1,
+      50.3
+     ],
+     "height": 81,
+     "rescaled": null,
+     "copy": 0.37,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 17.3
+    }
+   },
+   {
+    "slot": 3,
+    "kind": "keep",
+    "src": "windup",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.937",
+     "head_scale": 0.937,
+     "head": [
+      96.7,
+      53.6
+     ],
+     "height": 77,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 36.1
+    }
+   },
+   {
+    "slot": 4,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      97.9,
+      54.7
+     ],
+     "height": 76,
+     "rescaled": null,
+     "copy": 0.23,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 39.9
+    }
+   },
+   {
+    "slot": 5,
+    "kind": "keep",
+    "src": "thrust_ready",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.875",
+     "head_scale": 0.875,
+     "head": [
+      96.9,
+      55.7
+     ],
+     "height": 76,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 38.8
+    }
+   },
+   {
+    "slot": 6,
+    "kind": "keep",
+    "src": "thrust",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.837",
+     "head_scale": 0.837,
+     "head": [
+      96.9,
+      54.1
+     ],
+     "height": 77,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 38.7
+    }
+   },
+   {
+    "slot": 7,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      98.2,
+      53.3
+     ],
+     "height": 77,
+     "rescaled": null,
+     "copy": 0.17,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 39.8
+    }
+   },
+   {
+    "slot": 8,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      97.1,
+      50.3
+     ],
+     "height": 81,
+     "rescaled": null,
+     "copy": 0.39,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 16.0
+    }
+   },
+   {
+    "slot": 9,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      96.5,
+      50.5
+     ],
+     "height": 81,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   }
+  ],
+  "lay": {
+   "HX": 97,
+   "G": 116,
+   "W": 181,
+   "H": 119
+  },
+  "from_raw": "raw/attack_a1.png"
  }
 }

@@ -194,7 +194,7 @@
   const DEMO_RARE = { bee_1: 'ac_r1_item', bee_2: 'w_dagger_r1', mushroom_1: 'hd_mushroom_cap', mushroom_2: 'bd_r1_int', plant_1: 'w_bow_leaf', plant_2: 'bd_marsh_coat',
     fairy_1: 'hd_star_hood', fairy_2: 'w_staff_r1', treant_1: 'sh_r1_vit', treant_2: 'w_greatsword_r1' };
   const DEMO_STEAL = { bee_1: 'ac_st_royal_jelly', mushroom_1: 'ac_st_lucky_spore', fairy_2: 'w_staff_st_petal' };
-  for (const [id, item] of Object.entries(DEMO_RARE)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { rare: { item, rate: 32 } });
+  for (const [id, item] of Object.entries(DEMO_RARE)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { rare: { item, rate: /_2$/.test(id) ? 16 : 32 } });
   for (const [id, item] of Object.entries(DEMO_STEAL)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { steal: { item, rate: 32 } });
   // @@V2-END
 })(window.RPG);

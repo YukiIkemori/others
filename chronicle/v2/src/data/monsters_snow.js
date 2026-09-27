@@ -177,7 +177,7 @@
   // 灰色オオカミ・霜牙オオカミ（森の z_verda に出る）
   const DEMO_RARE = { wolf_1: 'ft_r1_agi', wolf_2: 'hn_mole_claw' };
   const DEMO_STEAL = { wolf_2: 'w_dagger_st_frostfang' };
-  for (const [id, item] of Object.entries(DEMO_RARE)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { rare: { item, rate: 32 } });
+  for (const [id, item] of Object.entries(DEMO_RARE)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { rare: { item, rate: /_2$/.test(id) ? 16 : 32 } });
   for (const [id, item] of Object.entries(DEMO_STEAL)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { steal: { item, rate: 32 } });
   // @@V2-END
 })(window.RPG);

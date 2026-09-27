@@ -312,14 +312,16 @@
   if (R.DB.monsters.jelly_1 && R.DB.monsters.jelly_1.phys) R.DB.monsters.jelly_1.phys.blunt = 0.75;
   // 縦切りのレア枠を戻す（オーナー 2026-09-27「レアがめっきり減ったねえ……。楽しみがちょっとないかも」）。
   // STATS_REWORK §10.1 の「レア枠は系統の最後の段だけ」で縦切りの 11 系統の段 1〜2 がレア 0 になっていた → 段 1〜2 の全部に
-  // T1 の帯のレア（店の T0〜T1 より強いか、店に無い効果）を 1 体 1 品、率は K.DROP の既定 32。盗み専用は約 3 分の 1（率 32、items_steal.js）。
-  // 見込み（sim_loot の H7）: 縦切り 1 周でレアのドロップ 約 4〜6 回。森の系統は monsters_forest.js、オオカミは monsters_snow.js
+  // T1 の帯のレア（店の T0〜T1 より強いか、店に無い効果）を 1 体 1 品。率は段 1 が K.DROP の既定 32、たまに混ざる段 2 は 16（枠ごと。既定は変えない）。
+  // 盗み専用は約 3 分の 1 の 7 体（率 32、items_steal.js の T2 の 7 品）。
+  // 見込み（sim_loot の H7）: 縦切り 1 周でレアのドロップ 最短の道 約 3 回〜自動の通し（R1、迷い・やり直し込み）約 12 回、ふつうの 1 周で 5〜7 回。
+  // 森の系統は monsters_forest.js、オオカミは monsters_snow.js
   const DEMO_RARE = {
     jelly_1: 'ac_r1_int', jelly_2: 'w_bow_r1', rat_1: 'ft_rat_sandal', rat_2: 'hn_r1_dex', seabird_1: 'hd_r1_dex', seabird_2: 'w_sword_r1',
     crab_1: 'sh_crab_shell', crab_2: 'w_sword_coral', bat_1: 'ac_bat_fang', bat_2: 'w_greatsword_r1m',
   };
   const DEMO_STEAL = { rat_1: 'ac_st_rat_pouch', crab_1: 'hd_st_beach_crab', seabird_2: 'ft_st_storm_gull' };
-  for (const [id, item] of Object.entries(DEMO_RARE)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { rare: { item, rate: 32 } });
+  for (const [id, item] of Object.entries(DEMO_RARE)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { rare: { item, rate: /_2$/.test(id) ? 16 : 32 } });
   for (const [id, item] of Object.entries(DEMO_STEAL)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { steal: { item, rate: 32 } });
   // @@V2-END
 })(window.RPG);
