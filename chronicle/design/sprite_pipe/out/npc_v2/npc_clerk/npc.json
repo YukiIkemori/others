@@ -1,0 +1,55 @@
+{
+ "id": "npc_clerk",
+ "look": "npc_clerk",
+ "name": "記録院の役人",
+ "tier": "C",
+ "kind": "person",
+ "region": "prologue",
+ "group": "common_2",
+ "slot": "B",
+ "heightDots": {
+  "field": 48
+ },
+ "measureH": {
+  "field": 48
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#D8DCE2",
+ "mainHue": 210,
+ "mainName": "記録院の白と灰",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_clerk_1",
+  "npc_clerk_2",
+  "npc_clerk_3",
+  "npc_clerk_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_clerk_s1.png"
+ },
+ "pair_file": "npc_grp_common_2.png",
+ "proportion": {
+  "1": {
+   "neck": 0.3333333333333333,
+   "head_w": 0.375,
+   "shoulder": 0.3541666666666667,
+   "neck_clear": 0.6393188854489165
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

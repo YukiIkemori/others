@@ -1,0 +1,48 @@
+{
+ "id": "tadeo",
+ "look": "npc_tadeo",
+ "name": "タデオ",
+ "tier": "B",
+ "kind": "person",
+ "region": "prologue",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 48
+ },
+ "measureH": {
+  "field": 50
+ },
+ "headgearExtraDots": 2,
+ "mainHex": "#4A4E5C",
+ "mainHue": 225,
+ "mainName": "煤けた紺鼠",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_tadeo_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.26041666666666663,
+   "head_w": 0.3958333333333333,
+   "shoulder": 0.47395833333333337,
+   "neck_clear": 0.849624060150376
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

@@ -1,0 +1,48 @@
+{
+ "id": "elm",
+ "look": "elm",
+ "name": "エルム",
+ "tier": "B",
+ "kind": "person",
+ "region": "forest",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 54
+ },
+ "measureH": {
+  "field": 58
+ },
+ "headgearExtraDots": 4,
+ "mainHex": "#6A9AB0",
+ "mainHue": 195,
+ "mainName": "淡い青緑",
+ "lantern": false,
+ "spirit": true,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_elm_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.24074074074074073,
+   "head_w": 0.537037037037037,
+   "shoulder": 0.48148148148148145,
+   "neck_clear": 0.8317972350230414
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

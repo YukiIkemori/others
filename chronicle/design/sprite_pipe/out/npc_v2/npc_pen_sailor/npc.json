@@ -1,0 +1,55 @@
+{
+ "id": "npc_pen_sailor",
+ "look": "npc_pen_sailor",
+ "name": "船乗り",
+ "tier": "C",
+ "kind": "person",
+ "region": "prologue",
+ "group": "pen_3",
+ "slot": "B",
+ "heightDots": {
+  "field": 49
+ },
+ "measureH": {
+  "field": 49
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#2C3A5A",
+ "mainHue": 220,
+ "mainName": "紺と白の縞",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_pen_sailor_1",
+  "npc_pen_sailor_2",
+  "npc_pen_sailor_3",
+  "npc_pen_sailor_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_pen_sailor_s1.png"
+ },
+ "pair_file": "npc_grp_pen_3.png",
+ "proportion": {
+  "1": {
+   "neck": 0.336734693877551,
+   "head_w": 0.46938775510204084,
+   "shoulder": 0.413265306122449,
+   "neck_clear": 0.6739130434782609
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

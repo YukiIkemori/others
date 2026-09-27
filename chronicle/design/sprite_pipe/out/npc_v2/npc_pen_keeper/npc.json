@@ -1,0 +1,55 @@
+{
+ "id": "npc_pen_keeper",
+ "look": "npc_pen_keeper",
+ "name": "店と宿の主人",
+ "tier": "C",
+ "kind": "person",
+ "region": "prologue",
+ "group": "pen_4",
+ "slot": "B",
+ "heightDots": {
+  "field": 47
+ },
+ "measureH": {
+  "field": 47
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#6A7A5A",
+ "mainHue": 100,
+ "mainName": "灰緑",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_pen_keeper_1",
+  "npc_pen_keeper_2",
+  "npc_pen_keeper_3",
+  "npc_pen_keeper_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_pen_keeper_s1.png"
+ },
+ "pair_file": "npc_grp_pen_4.png",
+ "proportion": {
+  "1": {
+   "neck": 0.3404255319148936,
+   "head_w": 0.42553191489361697,
+   "shoulder": 0.4148936170212766,
+   "neck_clear": 0.7182539682539683
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

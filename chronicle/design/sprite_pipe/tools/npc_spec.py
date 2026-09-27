@@ -41,6 +41,18 @@ ARUN_PROP = dict(neck=0.292, head_w=0.427, shoulder=0.396)
 PROP_TOL = 0.08          # owner: within 8 % of Arun's ratios (the heads-tall ratio)
 WIDTH_TOL = 0.20         # head width: hair volume / headgear change it at the same head size
 
+# Head-scale check (tools/bodyscale.py via sheets.check_scale) on NPC sheets. Shared by tools/npc_gen.py (what is never
+# redrawn for 'scale') and tools/sheets.py --npc (what is never auto-rescaled on the head match alone).
+# acting poses whose head reads ~125-130 % in the head-scale check on Arun's own sheet 3 as well (crouched head):
+# not a drawing problem, never redrawn / rescaled for 'scale' below this bound
+SCALE_FALSE = {'act_kneel': 1.42, 'act_sit': 1.42}
+# upright poses: the head-template match reads caps, hoods, beards, back views (walk_up) and raised arms / tilted heads
+# as a smaller or bigger head (tadeo: every pose 50-51 art px tall, three flagged at 75 %; katri act_call 72 % with the
+# same body height). Their size is covered by the bbox height check; sheets.py rescales them only when the body height
+# (head top to feet, raised arms left out: bodyscale.body_height) is off as well
+UPRIGHT_SCALE_SKIP = {'walk_%s_%d' % (d, i) for d in ('down', 'up', 'left', 'right') for i in range(3)} | {
+    'act_nod', 'act_surprise', 'act_think', 'act_call', 'act_resolve', 'act_sig'}
+
 WALK_JA = ARUN[1]['ja']
 ACT4_JA = ['うなずく', '驚く', '手を挙げて呼びかける', 'その人のしぐさ']
 FACE6_JA = [['通常', '笑顔', '悲しみ'], ['怒り', '驚き', '目を閉じる']]

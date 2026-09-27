@@ -91,3 +91,21 @@ def scale_of(im, refs):
     """median scale over several reference heads -> (scale, [per-ref scales])"""
     ss = [match(im, r)[0] for r in refs]
     return float(np.median(ss)), ss
+
+
+def body_height(im, min_run):
+    """Body height of a pose in px: from the head top to the lowest opaque row. The head top is the first row with a
+    contiguous opaque run of at least min_run px (about 40 % of a head width), so a raised arm / hand, a wand or a
+    feather above the head (thin) is left out, where the bounding box would count it."""
+    a = im[..., 3] > 0
+    ys = np.where(a.any(1))[0]
+    if len(ys) == 0:
+        return 0
+    bottom = ys.max()
+    for y in ys:
+        row = a[y].astype(np.int8)
+        d = np.diff(np.concatenate([[0], row, [0]]))
+        runs = np.where(d == -1)[0] - np.where(d == 1)[0]
+        if runs.max() >= min_run:
+            return int(bottom - y + 1)
+    return int(bottom - ys.min() + 1)

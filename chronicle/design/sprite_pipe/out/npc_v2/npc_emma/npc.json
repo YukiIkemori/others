@@ -1,0 +1,48 @@
+{
+ "id": "emma",
+ "look": "npc_emma",
+ "name": "エマ",
+ "tier": "B",
+ "kind": "person",
+ "region": "marsh",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 46
+ },
+ "measureH": {
+  "field": 46
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#6A7A68",
+ "mainHue": 120,
+ "mainName": "灰緑",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_emma_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.32608695652173914,
+   "head_w": 0.40217391304347827,
+   "shoulder": 0.3315217391304348,
+   "neck_clear": 0.65
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

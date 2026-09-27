@@ -1,0 +1,367 @@
+{
+ "char": "npc_ash_woman",
+ "companion": null,
+ "npc": "npc_ash_woman",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/grp_ash_1",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/sprite_pipe/out/npc_v2/npc_ash_woman/src/npc_ash_woman_s1.png",
+   "size": [
+    1920,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x3",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 360.0,
+   "native_height_at_period": 45.0,
+   "scale_note": "描かれた格子のまま（45.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      23,
+      47
+     ],
+     "box": [
+      208,
+      88,
+      424,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.76
+    },
+    "walk_down_1": {
+     "size": [
+      24,
+      48
+     ],
+     "box": [
+      848,
+      80,
+      1072,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.83
+    },
+    "walk_down_2": {
+     "size": [
+      23,
+      48
+     ],
+     "box": [
+      1488,
+      80,
+      1704,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.09
+    },
+    "walk_up_0": {
+     "size": [
+      23,
+      46
+     ],
+     "box": [
+      208,
+      608,
+      424,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.85,
+     "scale": 1.0
+    },
+    "walk_up_1": {
+     "size": [
+      23,
+      46
+     ],
+     "box": [
+      848,
+      608,
+      1064,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.89,
+     "scale": 1.053
+    },
+    "walk_up_2": {
+     "size": [
+      23,
+      46
+     ],
+     "box": [
+      1488,
+      608,
+      1704,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.92,
+     "scale": 1.0
+    },
+    "walk_left_0": {
+     "size": [
+      23,
+      44
+     ],
+     "box": [
+      208,
+      1136,
+      424,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      23,
+      44
+     ],
+     "box": [
+      848,
+      1136,
+      1064,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_2": {
+     "size": [
+      23,
+      44
+     ],
+     "box": [
+      1488,
+      1136,
+      1704,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_0": {
+     "size": [
+      23,
+      43
+     ],
+     "box": [
+      208,
+      1656,
+      424,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      24,
+      43
+     ],
+     "box": [
+      848,
+      1656,
+      1072,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_2": {
+     "size": [
+      23,
+      43
+     ],
+     "box": [
+      1488,
+      1656,
+      1704,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "pair_half",
+   "msg": "npc_grp_ash_1.png の右半分（人物B）を使う",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_ash_woman）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 2 番（下向き・右足前） の身長が 48 ドット（ほかは 45）",
+   "slot": "walk_down_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 3 番（下向き・左足前） の身長が 48 ドット（ほかは 45）",
+   "slot": "walk_down_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "walk_down_1 の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "walk_down_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "walk_down_2 の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "walk_down_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "walk_left_1 の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "walk_left_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "walk_left_2 の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "walk_left_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "walk_right_1 の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "walk_right_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "walk_right_2 の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "walk_right_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 46 ドットあたり）: 首 0.41（アルン 0.29）・頭の幅 0.45（0.43）・肩 0.31（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.41304347826086957,
+    "head_w": 0.44565217391304346,
+    "shoulder": 0.3097826086956522,
+    "neck_clear": 0.5626598465473146
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 141%・頭の幅 104%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 1.0436819061195397,
+    "neck": 1.4145324597974986
+   }
+  }
+ ]
+}

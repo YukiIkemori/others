@@ -1,0 +1,48 @@
+{
+ "id": "marina",
+ "look": "npc_marina",
+ "name": "マリナ",
+ "tier": "B",
+ "kind": "person",
+ "region": "isles",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 42
+ },
+ "measureH": {
+  "field": 42
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#8AB8C8",
+ "mainHue": 195,
+ "mainName": "淡い海の水色",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_marina_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.23809523809523808,
+   "head_w": 0.44047619047619047,
+   "shoulder": 0.45833333333333337,
+   "neck_clear": 0.849624060150376
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

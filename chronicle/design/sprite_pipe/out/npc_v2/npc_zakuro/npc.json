@@ -1,0 +1,48 @@
+{
+ "id": "zakuro",
+ "look": "npc_zakuro",
+ "name": "ザクロ",
+ "tier": "B",
+ "kind": "person",
+ "region": "ash",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 52
+ },
+ "measureH": {
+  "field": 52
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#5A626C",
+ "mainHue": 215,
+ "mainName": "鉄の灰",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_zakuro_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.27884615384615385,
+   "head_w": 0.38461538461538464,
+   "shoulder": 0.42788461538461536,
+   "neck_clear": 0.8047619047619048
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

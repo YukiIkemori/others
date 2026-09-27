@@ -1,0 +1,416 @@
+{
+ "char": "npc_abul",
+ "companion": null,
+ "npc": "npc_abul",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/abul",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/abul/npc_abul_s1.png",
+   "size": [
+    2560,
+    2048
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x4",
+    "logical_cell": [
+     80,
+     64
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 360.0,
+   "native_height_at_period": 45.0,
+   "scale_note": "描かれた格子のまま（45.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      30,
+      46
+     ],
+     "box": [
+      184,
+      96,
+      456,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.09
+    },
+    "walk_down_1": {
+     "size": [
+      32,
+      46
+     ],
+     "box": [
+      816,
+      96,
+      1104,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.16,
+     "scale": 1.137
+    },
+    "walk_down_2": {
+     "size": [
+      31,
+      46
+     ],
+     "box": [
+      1456,
+      96,
+      1736,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.24,
+     "scale": 1.0
+    },
+    "act_nod": {
+     "size": [
+      29,
+      44
+     ],
+     "box": [
+      2104,
+      112,
+      2368,
+      496
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.83,
+     "scale": 1.137
+    },
+    "walk_up_0": {
+     "size": [
+      29,
+      46
+     ],
+     "box": [
+      184,
+      608,
+      448,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.76,
+     "scale": 1.087
+    },
+    "walk_up_1": {
+     "size": [
+      29,
+      45
+     ],
+     "box": [
+      824,
+      616,
+      1088,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.82,
+     "scale": 1.087
+    },
+    "walk_up_2": {
+     "size": [
+      30,
+      45
+     ],
+     "box": [
+      1464,
+      616,
+      1736,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.8
+    },
+    "act_surprise": {
+     "size": [
+      33,
+      45
+     ],
+     "box": [
+      2088,
+      616,
+      2384,
+      1008
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.7,
+     "scale": 1.0
+    },
+    "walk_left_0": {
+     "size": [
+      24,
+      44
+     ],
+     "box": [
+      208,
+      1136,
+      432,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      27,
+      45
+     ],
+     "box": [
+      832,
+      1128,
+      1080,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_left_2": {
+     "size": [
+      27,
+      45
+     ],
+     "box": [
+      1472,
+      1128,
+      1720,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "act_call": {
+     "size": [
+      30,
+      45
+     ],
+     "box": [
+      2104,
+      1128,
+      2376,
+      1520
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.07,
+     "scale": 0.937
+    },
+    "walk_right_0": {
+     "size": [
+      24,
+      44
+     ],
+     "box": [
+      208,
+      1648,
+      432,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      26,
+      45
+     ],
+     "box": [
+      840,
+      1640,
+      1080,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_2": {
+     "size": [
+      27,
+      45
+     ],
+     "box": [
+      1472,
+      1640,
+      1720,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "act_sig": {
+     "size": [
+      39,
+      39
+     ],
+     "box": [
+      2064,
+      1688,
+      2408,
+      2032
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.02,
+     "scale": 0.9
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_abul）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "marks",
+   "msg": "シート1 の 8 番（驚く） の感情マーク（驚きの線・汗など 3 個）を消した",
+   "slot": "act_surprise",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 16 番（その人のしぐさ） の身長が 39 ドット（ほかは 45）",
+   "slot": "act_sig",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "walk_up_2 の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "walk_up_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 2 番（下向き・右足前） の縮尺が少し違う（頭の大きさで約 114%）。並べて見て気になるなら描き直し",
+   "slot": "walk_down_1",
+   "ask": null,
+   "data": {
+    "scale": 1.1375,
+    "per_ref": [
+     0.9750000000000003,
+     1.1375000000000004,
+     1.1375000000000004
+    ],
+    "group_median": 1.0000000000000004
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "scale_small",
+   "msg": "シート1 の 4 番（うなずく） の縮尺が少し違う（頭の大きさで約 114%）。並べて見て気になるなら描き直し",
+   "slot": "act_nod",
+   "ask": null,
+   "data": {
+    "scale": 1.1375,
+    "per_ref": [
+     1.0375000000000003,
+     1.1375000000000004,
+     1.1375000000000004
+    ],
+    "group_median": 1.0000000000000004
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 43 ドットあたり）: 首 0.21（アルン 0.29）・頭の幅 0.49（0.43）・肩 0.49（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.20930232558139536,
+    "head_w": 0.4883720930232558,
+    "shoulder": 0.4883720930232558,
+    "neck_clear": 0.91
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "proportion_off",
+   "msg": "頭の比がアルンと 8% 以上違う（頭の高さ 72%・頭の幅 114%）。ひげ・髪・帽子のせいでないか、並べて見る",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "ratio": 1.1437285550895921,
+    "neck": 0.7167887862376554
+   }
+  }
+ ]
+}

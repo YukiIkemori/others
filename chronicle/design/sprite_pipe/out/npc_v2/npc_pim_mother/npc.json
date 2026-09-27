@@ -1,0 +1,48 @@
+{
+ "id": "katri",
+ "look": "npc_pim_mother",
+ "name": "カトリ",
+ "tier": "B",
+ "kind": "person",
+ "region": "forest",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 46
+ },
+ "measureH": {
+  "field": 48
+ },
+ "headgearExtraDots": 2,
+ "mainHex": "#7A8A48",
+ "mainHue": 80,
+ "mainName": "若草色",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_katri_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.30434782608695654,
+   "head_w": 0.45652173913043476,
+   "shoulder": 0.41304347826086957,
+   "neck_clear": 0.6038961038961039
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "id": "npc_bard",
+ "look": "npc_bard",
+ "name": "吟遊詩人",
+ "tier": "C",
+ "kind": "person",
+ "region": "prologue",
+ "group": "common_1",
+ "slot": "B",
+ "heightDots": {
+  "field": 47
+ },
+ "measureH": {
+  "field": 47
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#3A4E8A",
+ "mainHue": 225,
+ "mainName": "深い青",
+ "lantern": false,
+ "recolor": true,
+ "recolorSets": 4,
+ "variants": [
+  "npc_bard_1",
+  "npc_bard_2",
+  "npc_bard_3",
+  "npc_bard_4"
+ ],
+ "face": false,
+ "sheets": {
+  "1": "npc_bard_s1.png"
+ },
+ "pair_file": "npc_grp_common_1.png",
+ "proportion": {
+  "1": {
+   "neck": 0.2978723404255319,
+   "head_w": 0.3829787234042553,
+   "shoulder": 0.3191489361702128,
+   "neck_clear": 0.6491228070175439
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

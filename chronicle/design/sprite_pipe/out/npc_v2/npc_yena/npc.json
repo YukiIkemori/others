@@ -1,0 +1,48 @@
+{
+ "id": "yena",
+ "look": "npc_yena",
+ "name": "イェナ",
+ "tier": "B",
+ "kind": "person",
+ "region": "prologue",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 47
+ },
+ "measureH": {
+  "field": 47
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#C8C4BA",
+ "mainHue": 40,
+ "mainName": "暖かい灰白",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_yena_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.2553191489361702,
+   "head_w": 0.3829787234042553,
+   "shoulder": 0.39361702127659576,
+   "neck_clear": 0.8333333333333334
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

@@ -1,0 +1,48 @@
+{
+ "id": "gord",
+ "look": "npc_gord",
+ "name": "ゴード",
+ "tier": "B",
+ "kind": "person",
+ "region": "forest",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 50
+ },
+ "measureH": {
+  "field": 50
+ },
+ "headgearExtraDots": 0,
+ "mainHex": "#4A5A32",
+ "mainHue": 95,
+ "mainName": "深い苔色",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_gord_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.2,
+   "head_w": 0.4,
+   "shoulder": 0.49,
+   "neck_clear": 0.975
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

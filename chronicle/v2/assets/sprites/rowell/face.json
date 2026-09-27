@@ -2,7 +2,7 @@
  "character": "rowell",
  "set": "face",
  "look": "rowell",
- "source": "out/npc/rowell/face",
+ "source": "out/npc_v2/rowell/face",
  "cell": [
   69,
   84

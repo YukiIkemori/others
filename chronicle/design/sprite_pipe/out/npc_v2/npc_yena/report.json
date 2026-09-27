@@ -1,0 +1,406 @@
+{
+ "char": "npc_yena",
+ "companion": null,
+ "npc": "npc_yena",
+ "folder": "/home/user/others/chronicle/design/art_ref/gen/npc/yena",
+ "sheets": {
+  "1": {
+   "file": "/home/user/others/chronicle/design/art_ref/gen/npc/yena/npc_yena_s1.png",
+   "size": [
+    2560,
+    2304
+   ],
+   "key": {
+    "border_magenta": 1.0,
+    "bg": [
+     255,
+     0,
+     255
+    ],
+    "bg_std": 0.0,
+    "dark_magenta_px": 0
+   },
+   "manifest": {
+    "layout": "4x4",
+    "logical_cell": [
+     80,
+     72
+    ],
+    "dot": 8.0
+   },
+   "extras": [],
+   "period": 8.0,
+   "clarity": 99.0,
+   "src_height": 376.0,
+   "native_height_at_period": 47.0,
+   "scale_note": "描かれた格子のまま（47.0 ドット）",
+   "cell": 8.0,
+   "sprites": {
+    "walk_down_0": {
+     "size": [
+      25,
+      48
+     ],
+     "box": [
+      200,
+      144,
+      432,
+      560
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.17
+    },
+    "walk_down_1": {
+     "size": [
+      28,
+      49
+     ],
+     "box": [
+      832,
+      136,
+      1088,
+      560
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.6
+    },
+    "walk_down_2": {
+     "size": [
+      27,
+      48
+     ],
+     "box": [
+      1472,
+      144,
+      1720,
+      560
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 1.68
+    },
+    "act_nod": {
+     "size": [
+      22,
+      47
+     ],
+     "box": [
+      2136,
+      152,
+      2344,
+      560
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.86
+    },
+    "walk_up_0": {
+     "size": [
+      25,
+      47
+     ],
+     "box": [
+      200,
+      728,
+      432,
+      1136
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.93,
+     "scale": 0.948
+    },
+    "walk_up_1": {
+     "size": [
+      27,
+      46
+     ],
+     "box": [
+      832,
+      736,
+      1080,
+      1136
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.9,
+     "scale": 1.0
+    },
+    "walk_up_2": {
+     "size": [
+      28,
+      47
+     ],
+     "box": [
+      1472,
+      728,
+      1728,
+      1136
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.96,
+     "scale": 1.0
+    },
+    "act_surprise": {
+     "size": [
+      34,
+      47
+     ],
+     "box": [
+      2088,
+      728,
+      2392,
+      1136
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.99
+    },
+    "walk_left_0": {
+     "size": [
+      22,
+      46
+     ],
+     "box": [
+      216,
+      1312,
+      424,
+      1712
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_left_1": {
+     "size": [
+      27,
+      46
+     ],
+     "box": [
+      832,
+      1312,
+      1080,
+      1712
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    },
+    "walk_left_2": {
+     "size": [
+      28,
+      46
+     ],
+     "box": [
+      1472,
+      1312,
+      1728,
+      1712
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "act_call": {
+     "size": [
+      25,
+      50
+     ],
+     "box": [
+      2120,
+      1280,
+      2352,
+      1712
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 0.19,
+     "scale": 1.0
+    },
+    "walk_right_0": {
+     "size": [
+      22,
+      47
+     ],
+     "box": [
+      216,
+      1880,
+      424,
+      2288
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     }
+    },
+    "walk_right_1": {
+     "size": [
+      27,
+      46
+     ],
+     "box": [
+      832,
+      1888,
+      1080,
+      2288
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.0
+    },
+    "walk_right_2": {
+     "size": [
+      28,
+      46
+     ],
+     "box": [
+      1472,
+      1888,
+      1728,
+      2288
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": 3.5,
+     "facing_cues": {
+      "head": 1.5,
+      "upper": 2.0
+     },
+     "scale": 1.039
+    },
+    "act_sig": {
+     "size": [
+      30,
+      47
+     ],
+     "box": [
+      2096,
+      1880,
+      2368,
+      2288
+     ],
+     "air": 0,
+     "blur": 0.0,
+     "facing_score": -0.17,
+     "scale": 1.039
+    }
+   }
+  }
+ },
+ "items": [
+  {
+   "sheet": null,
+   "level": "info",
+   "code": "no_refs",
+   "msg": "向きの見本（configs/refs/npc_yena）が無い。向きの検査はシートどうしの多数決だけ（行ごと全部が逆だと気づけない）",
+   "slot": null,
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "auto",
+   "code": "marks",
+   "msg": "シート1 の 8 番（驚く） の感情マーク（驚きの線・汗など 3 個）を消した",
+   "slot": "act_surprise",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "check",
+   "code": "height",
+   "msg": "シート1 の 12 番（手を挙げて呼びかける） の身長が 50 ドット（ほかは 47）",
+   "slot": "act_call",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "walk_down_1 の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "walk_down_1",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "walk_down_2 の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "walk_down_2",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "act_nod の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "act_nod",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "scale_ok",
+   "msg": "act_surprise の縮尺は目で確かめて OK（overrides の scale_ok）",
+   "slot": "act_surprise",
+   "ask": null,
+   "data": {}
+  },
+  {
+   "sheet": 1,
+   "level": "info",
+   "code": "proportion",
+   "msg": "頭身の比（歩き12コマの中央値、体 47 ドットあたり）: 首 0.26（アルン 0.29）・頭の幅 0.38（0.43）・肩 0.39（0.40）",
+   "slot": null,
+   "ask": null,
+   "data": {
+    "neck": 0.2553191489361702,
+    "head_w": 0.3829787234042553,
+    "shoulder": 0.39361702127659576,
+    "neck_clear": 0.8333333333333334
+   }
+  },
+  {
+   "sheet": 1,
+   "level": "redo",
+   "code": "proportion",
+   "msg": "頭がアルンより小さい（頭の高さ 87%・頭の幅 90%）。頭身が高すぎる",
+   "slot": "walk_down_0",
+   "ask": "イェナ（npc_yena）のシート1の人物の頭がアルンより小さく、頭身が高すぎる（頭の高さ 87%・頭の幅 90%）。アルンの歩きと同じ約2.7頭身・大きな頭・低い重心にして、同じ条件で描き直して",
+   "data": {
+    "ratio": 0.8969056754198017,
+    "neck": 0.8743806470416788
+   }
+  }
+ ]
+}

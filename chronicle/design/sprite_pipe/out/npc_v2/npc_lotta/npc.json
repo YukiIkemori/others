@@ -1,0 +1,48 @@
+{
+ "id": "lotta",
+ "look": "npc_lotta",
+ "name": "ロッタ",
+ "tier": "B",
+ "kind": "person",
+ "region": "desert",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 45
+ },
+ "measureH": {
+  "field": 57
+ },
+ "headgearExtraDots": 12,
+ "mainHex": "#A8582E",
+ "mainHue": 20,
+ "mainName": "柿色",
+ "lantern": false,
+ "spirit": false,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_lotta_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.3888888888888889,
+   "head_w": 0.7222222222222222,
+   "shoulder": 0.6333333333333333,
+   "neck_clear": 0.8002846299810247
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

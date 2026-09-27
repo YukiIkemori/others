@@ -1,0 +1,9 @@
+{
+ "scale_ok": [
+  "act_call",
+  "act_nod",
+  "act_sig",
+  "act_surprise"
+ ],
+ "_note": "scale_ok: poses whose head-size scale alarm was a false alarm, checked by eye 2026-09-27 against the stand frames (same body height; hats / hoods / back views / raised arms misread by the head match). Wrongly auto-rescaled before: act_call, act_nod, act_sig, act_surprise."
+}

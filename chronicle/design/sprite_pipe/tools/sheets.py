@@ -651,19 +651,29 @@ SCALE_SKIP = {'ko', 'act_lie', 'sleep_lie'}      # lying: the head is turned 90 
 scale2x, rescale_pixel = P.scale2x, P.rescale_pixel
 
 
-def check_scale(runs, rep, tol_redo=0.2, tol_check=0.12, fix=True, ok=()):
+def check_scale(runs, rep, tol_redo=0.2, tol_check=0.12, fix=True, ok=(), upright=(), crouch=None):
     """Drawn scale of each pose (head size vs the reference poses, tools/bodyscale.py). The bounding box misses a pose
     drawn smaller with a raised sword (the sword keeps the box at the target height). Each pose's scale is taken
     relative to the median of its group (battle / field) — the head match reads tilted heads a little small, so the
     group median is the '100 %'. Off by more than 20 %: a redraw is asked for and the pose is rescaled as a
-    fallback (Scale2x + majority sampling); 12-20 %: look at it."""
-    from bodyscale import head_crop, scale_of
+    fallback (Scale2x + majority sampling); 12-20 %: look at it.
+
+    NPC runs (npc_spec.UPRIGHT_SCALE_SKIP / SCALE_FALSE, the same sets tools/npc_gen.py never redraws for 'scale'):
+      upright: standing / walking poses. The head match misreads hats, hoods, beards, back views and raised arms or
+      tilted heads, so the head alone never rescales them: only when the body height (head top to feet, raised arms
+      left out — bodyscale.body_height) is off by more than tol_redo against the reference poses as well; otherwise
+      a 'check' line. crouch: {pose: bound} — kneeling / sitting read big by the head match; below the bound: a check."""
+    from bodyscale import body_height, head_crop, scale_of
+    crouch = crouch or {}
     from facing import group_of
     allsp = {sid: (n, v) for n, sp in runs.items() for sid, v in sp.items()}
     for g in ('btl', 'fld'):
         refs = [(r, head_crop(allsp[r][1]['img'])) for r in SCALE_REFS[g] if r in allsp]
         if len(refs) < 2:
             continue
+        if upright:
+            min_run = max(3, int(round(0.4 * np.median([h.shape[1] for _, h in refs]))))
+            ref_body = float(np.median([body_height(allsp[r][1]['img'], min_run) for r, _ in refs]))
         meas = []
         for n, sp in runs.items():
             if group_of(n) != g:
@@ -684,20 +694,34 @@ def check_scale(runs, rep, tol_redo=0.2, tol_check=0.12, fix=True, ok=()):
             spec = SHEETS[n]
             sc = sc_raw / base
             v['scale'] = round(sc, 3)
+            what = '頭の大きさ'
             name = slot_name(n, v['row'], v['col'])
             num = v['row'] * spec['cols'] + v['col'] + 1
             pct = int(round(100 * sc))
+            if abs(np.log(sc)) > np.log(1 + tol_redo) and (sid in upright or (sid in crouch and sc < crouch[sid])):
+                if sid in upright:
+                    bq = body_height(v['img'], min_run) / ref_body
+                    v['body_scale'] = round(bq, 3)
+                if sid in crouch or abs(np.log(bq)) <= np.log(1 + tol_redo):
+                    why = ('しゃがんだ頭の読み違い（アルンのシート3でも出る）' if sid in crouch else
+                           '体の高さは立ちポーズの約 %d%%。帽子・ひげ・後ろ姿・挙げた腕・傾いた頭の読み違い' % int(round(100 * bq)))
+                    rep.add(n, 'check', 'scale_head', '%s の頭の大きさが約 %d%% と出たが、%s とみて拡大縮小しない。並べて見て気になるなら描き直し'
+                            % (name, pct, why), slot=sid, scale=sc, per_ref=per, group_median=base, body_scale=v.get('body_scale'))
+                    continue
+                sc = bq          # the body height is off as well: rescale by the body height
+                pct = int(round(100 * sc))
+                what = '体の高さ'
             if abs(np.log(sc)) > np.log(1 + tol_redo):
                 big = sc > 1
                 k = 1.0 / sc
                 if fix:
                     v['img'] = rescale_pixel(v['img'], k)
                     v['fixed'] = v.get('fixed', []) + ['rescaled %.2f' % k]
-                rep.add(n, 'redo', 'scale', '%s がほかのポーズより%s描かれている（頭の大きさで約 %d%%）。%s' % (
-                    name, '大きく' if big else '小さく', pct, '仮に %d%% に拡大縮小して使う' % int(round(100 * k)) if fix else ''),
+                rep.add(n, 'redo', 'scale', '%s がほかのポーズより%s描かれている（%sで約 %d%%）。%s' % (
+                    name, '大きく' if big else '小さく', what, pct, '仮に %d%% に拡大縮小して使う' % int(round(100 * k)) if fix else ''),
                     slot=sid, scale=sc, per_ref=per, group_median=base,
-                    ask='シート%dの%d番（%s）だけ%s描かれている（頭の大きさがほかのポーズの約 %d%%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して' % (
-                        n, num, spec['ja'][v['row']][v['col']], '大きく' if big else '小さく', pct))
+                    ask='シート%dの%d番（%s）だけ%s描かれている（%sがほかのポーズの約 %d%%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して' % (
+                        n, num, spec['ja'][v['row']][v['col']], '大きく' if big else '小さく', what, pct))
             elif abs(np.log(sc)) > np.log(1 + tol_check):
                 rep.add(n, 'check', 'scale_small', '%s の縮尺が少し違う（頭の大きさで約 %d%%）。並べて見て気になるなら描き直し' % (name, pct),
                         slot=sid, scale=sc, per_ref=per, group_median=base)
@@ -1030,7 +1054,9 @@ def main():
     check_lantern(runs, rep, fix=not args.no_autofix)
     ov_p = os.path.join(HERE, 'configs', 'overrides', args.char + '.json')
     scale_ok = set(json.load(open(ov_p)).get('scale_ok', [])) if os.path.exists(ov_p) else set()
-    check_scale(runs, rep, fix=not args.no_autofix, ok=scale_ok)
+    # NPC runs: the same upright / crouch sets tools/npc_gen.py never redraws for 'scale' (npc_spec)
+    check_scale(runs, rep, fix=not args.no_autofix, ok=scale_ok,
+                upright=NS.UPRIGHT_SCALE_SKIP if npc else (), crouch=NS.SCALE_FALSE if npc else None)
     check_palette(runs, ref_pal, rep)
     check_breath(runs, rep)
     check_faces(runs, rep)

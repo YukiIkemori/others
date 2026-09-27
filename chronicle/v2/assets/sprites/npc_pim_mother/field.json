@@ -2,7 +2,7 @@
  "character": "npc_pim_mother",
  "set": "field",
  "look": "npc_pim_mother",
- "source": "../../../../../../tmp/claude-0/-home-user-others/00503990-4adc-574c-b37a-87d13f1cb58c/scratchpad/katri_out/field",
+ "source": "out/npc_v2/npc_pim_mother/field",
  "cell": [
   39,
   55

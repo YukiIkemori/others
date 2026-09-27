@@ -1,0 +1,48 @@
+{
+ "id": "melda",
+ "look": "npc_melda",
+ "name": "メルダ",
+ "tier": "B",
+ "kind": "person",
+ "region": "marsh",
+ "group": null,
+ "slot": null,
+ "heightDots": {
+  "field": 46
+ },
+ "measureH": {
+  "field": 51
+ },
+ "headgearExtraDots": 5,
+ "mainHex": "#7A8A9A",
+ "mainHue": 210,
+ "mainName": "霧の灰青",
+ "lantern": false,
+ "spirit": true,
+ "recolor": false,
+ "face": false,
+ "sheets": {
+  "1": "npc_melda_s1.png"
+ },
+ "proportion": {
+  "1": {
+   "neck": 0.31521739130434784,
+   "head_w": 0.40217391304347827,
+   "shoulder": 0.24456521739130432,
+   "neck_clear": 0.4444444444444444
+  }
+ },
+ "arun_proportion": {
+  "neck": 0.292,
+  "head_w": 0.427,
+  "shoulder": 0.396
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "sad": "face_sad",
+  "angry": "face_angry",
+  "surprise": "face_surprise",
+  "closed": "face_closed"
+ }
+}

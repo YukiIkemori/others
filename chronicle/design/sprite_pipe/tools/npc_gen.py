@@ -35,20 +35,15 @@ from PIL import Image, ImageDraw, ImageFont
 
 import gen_api
 import gen_sheets as G
-from npc_spec import ARUN_PROP, SPEC_JSON
+# SCALE_FALSE / UPRIGHT_SCALE_SKIP: the head-scale false alarms (crouch / upright poses), shared with sheets.py --npc
+# (which leaves those poses un-rescaled), so the pipeline and the redo lines agree
+from npc_spec import ARUN_PROP, SCALE_FALSE, SPEC_JSON, UPRIGHT_SCALE_SKIP
 
 NPC_MD = os.path.join(G.ART, 'NPC_REQUEST.md')
 OUT = os.path.join(G.PIPE, 'out', 'npc')
 MAX_IMAGES_PER_SHEET = 3
 PITCH = {'walk': 6, 'walk_act': 6, 'act12': 6, 'face6': 6, 'walk_pair': 5}
 FONT = os.path.join(G.DESIGN, 'art_proto', 'fonts', 'ZenMaruGothic-Medium.ttf')
-# acting poses whose head reads ~125-130 % in the head-scale check on Arun's own sheet 3 as well (crouched head):
-# not a drawing problem, never redrawn for 'scale' below this bound
-SCALE_FALSE = {'act_kneel': 1.42, 'act_sit': 1.42}
-# upright poses: the pipeline's head-template scale check reads caps, hoods and beards as a smaller head (tadeo: every
-# pose 50-51 art px tall, three flagged at 75 %). Their size is covered by the bbox height check, so 'scale' is not redrawn
-UPRIGHT_SCALE_SKIP = {'walk_%s_%d' % (d, i) for d in ('down', 'up', 'left', 'right') for i in range(3)} | {
-    'act_nod', 'act_surprise', 'act_think', 'act_call', 'act_resolve', 'act_sig'}
 
 G.POSE_EN.update({
     'act_sig': "the person's SIGNATURE GESTURE (see the brief)",
