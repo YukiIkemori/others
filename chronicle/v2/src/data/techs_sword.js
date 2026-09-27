@@ -30,7 +30,7 @@
     fx: 'stance',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
-    derive: [{ to: 't_sword_bulwark', uses: 35, chance: 0.015 }],
+    derive: [{ to: 't_sword_disarm', uses: 25, chance: 0.02 }, { to: 't_sword_bulwark', uses: 35, chance: 0.015 }],
   },
   t_sword_disarm: {
     kind: 'tech',

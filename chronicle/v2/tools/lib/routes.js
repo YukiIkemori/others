@@ -15,20 +15,24 @@ const DUNGEONS = [
     unset: ['forest_boss', 'cleared_r_forest', 'forest_finale_done', 'forest_fine'], bosses: [['elder_2', 'elder_boss']] },
   { id: 'well', start: { map: 'well', spawn: 'entrance' }, goal: { map: 'well', far: true }, unset: [], bosses: [] },
   // 砂漠（desert_*.js）: 王墓（流砂は砂もぐりの後の形・封じの扉は開いた形で道を引く）・沈んだ神殿・鷹団のアジト・岩場・古い野営跡
-  { id: 'tomb', start: { map: 'desert_tomb_1', spawn: 'entrance' }, goal: { map: 'desert_tomb_3', ev: 'desert_tomb_king' },
+  // 砂漠は縦切り（DB.config.slice）の外: open で閉包を slice なしで回し、砂漠の選び方（variant）を足す
+  { id: 'tomb', open: true, variant: { ch_desert_hawk: 'water', ch_desert_route: 'long', ch_desert_write: 'pain' }, start: { map: 'desert_tomb_1', spawn: 'entrance' }, goal: { map: 'desert_tomb_3', ev: 'desert_tomb_king' },
     unset: ['desert_king', 'cleared_r_desert', 'desert_finale_done'], bosses: [['desert_tomb_3', 'desert_tomb_king'], ['desert_tomb_2', 'desert_tomb_worm']] },
-  { id: 'temple', start: { map: 'desert_temple_1', spawn: 'entrance' }, goal: { map: 'desert_temple_2', ev: 'desert_temple_guard' },
+  { id: 'temple', open: true, variant: { ch_desert_hawk: 'water', ch_desert_route: 'long' }, start: { map: 'desert_temple_1', spawn: 'entrance' }, goal: { map: 'desert_temple_2', ev: 'desert_temple_guard' },
     unset: ['desert_temple_guard'], bosses: [['desert_temple_2', 'desert_temple_guard']] },
-  { id: 'hawks', start: { map: 'desert_hawks_1', spawn: 'mouth' }, goal: { map: 'desert_hawks_2', ev: 'desert_hawks_boss' },
+  { id: 'hawks', open: true, variant: { ch_desert_hawk: 'fight', ch_desert_route: 'long' }, start: { map: 'desert_hawks_1', spawn: 'mouth' }, goal: { map: 'desert_hawks_2', ev: 'desert_hawks_boss' },
     unset: ['desert_hawkhold_done'], bosses: [['desert_hawks_2', 'desert_hawks_boss']] },
   { id: 'rocks', start: { map: 'desert_rocks', spawn: 'mouth' }, goal: { map: 'desert_rocks', far: true }, unset: [], bosses: [] },
   { id: 'oldcamp', start: { map: 'desert_oldcamp', spawn: 'road' }, goal: { map: 'desert_oldcamp', far: true }, unset: [], bosses: [] },
 ];
 
+let SLICE0 = null;
 function prepare(R, d) {
   const P = require('../qa/progress');
   P.init(R);
-  P.closure({ variant: { ch_forest_pim: 'send', ch_forest_fawn: 'heal', ch_forest_write: 'pain' } });
+  if (SLICE0 === null) SLICE0 = !!(R.DB.config && R.DB.config.slice);
+  if (R.DB.config) R.DB.config.slice = d.open ? false : SLICE0;   // 縦切りの外の地方は、錠を外した形で道を引く（本物の config は変えない: 同じ R の中だけ）
+  P.closure({ variant: Object.assign({ ch_forest_pim: 'send', ch_forest_fawn: 'heal', ch_forest_write: 'pain' }, d.variant || {}) });
   const G = R.Game;
   for (const f of d.unset || []) delete G.flags[f];
   if ((d.unset || []).includes('cleared_r_forest')) { delete G.cleared.r_forest; G.tier = 0; }
@@ -37,6 +41,9 @@ function prepare(R, d) {
   R.MapUtil.invalidate();
   return G;
 }
+
+/** prepare で外した縦切りの錠を元へ */
+function restore(R) { if (SLICE0 !== null && R.DB.config) R.DB.config.slice = SLICE0; R.MapUtil.invalidate(); }
 
 function dungeonRoutes(R, o) {
   o = o || {};
@@ -90,7 +97,8 @@ function dungeonRoutes(R, o) {
     }
     out.push({ id: d.id, def: d, total, cells, springs, onRoute, rests, segments });
   }
+  restore(R);
   return out;
 }
 
-module.exports = { DUNGEONS, dungeonRoutes, prepare };
+module.exports = { DUNGEONS, dungeonRoutes, prepare, restore };

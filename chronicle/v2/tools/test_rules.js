@@ -556,4 +556,101 @@ section('auto-equip weighs weapon mods (おまかせ装備で回復役は祈り�
   ok('optimize is deterministic', JSON.stringify(Ru.optimize(mk('noela'), 'magic', { inv: bag() })) === JSON.stringify(Ru.optimize(mk('noela'), 'magic', { inv: bag() })));
 }
 
+// ================================================================ 派生技（design/BACKLOG「派生技の閃き」）
+// 持ち主: 「特定の技を何度も使ってると、派生技を編み出す」「その技を使ってる時しか閃かない」
+section('technique derivation: data, counters, only while using that tech, reachability, save');
+{
+  const Gl = R.Glimmer, T = DB.techs;
+  const edges = [];
+  for (const id of Object.keys(T)) for (const d of Gl.deriveOf(id)) edges.push([id, d]);
+  ok(`derive lists exist on every weapon line (${edges.length} edges)`, K.WTYPES.every((w) => edges.some(([f]) => T[f].wtype === w)), K.WTYPES.map((w) => edges.filter(([f]) => T[f].wtype === w).length));
+  const badShape = edges.filter(([, d]) => !(typeof d.to === 'string' && Number.isInteger(d.uses) && d.uses >= 1 && typeof d.chance === 'number' && d.chance > 0 && d.chance <= 1));
+  ok('every entry is {to, uses ≥ 1, 0 < chance ≤ 1}', !badShape.length, badShape.slice(0, 3));
+  ok('every derive target is an existing tech', edges.every(([, d]) => !!T[d.to]), edges.filter(([, d]) => !T[d.to]).map(([f, d]) => f + '→' + d.to));
+  ok('a derivation stays on its weapon line and goes up (target lv > source lv)', edges.every(([f, d]) => T[d.to] && T[d.to].wtype === T[f].wtype && T[d.to].glim.lv > T[f].glim.lv),
+    edges.filter(([f, d]) => T[d.to] && !(T[d.to].wtype === T[f].wtype && T[d.to].glim.lv > T[f].glim.lv)).map(([f, d]) => f + '→' + d.to));
+  ok('no derivation into a secret (lv 10, 極意) tech: those stay glimmer-only', edges.every(([, d]) => T[d.to].glim.lv < K.GLIM.secretLv));
+  ok('at most one entry per target per source, no self-derivation', edges.every(([f, d]) => f !== d.to) && edges.length === new Set(edges.map(([f, d]) => f + '>' + d.to)).size);
+  // 通常の閃きの道を奪わない: 派生の先も glim を持ち、閃きの候補（今の武器の系統の索引）に残る
+  const h0 = R.Party.makeChar(fake({ str: 16, vit: 16, dex: 16, agi: 16, int: 16, mnd: 16 }), { tier: 0, gl: 10 });
+  const targets = [...new Set(edges.map(([, d]) => d.to))];
+  ok(`every derive target (${targets.length}) keeps its normal glimmer path (glim.lv and glim.from)`, targets.every((id) => T[id].glim && T[id].glim.lv >= 1 && Array.isArray(T[id].glim.from) && T[id].glim.from.length),
+    targets.filter((id) => !(T[id].glim && T[id].glim.from && T[id].glim.from.length)));
+  ok('a derive target is still a glimmer candidate (max rank, max prof, weapon of its line)', targets.every((id) => {
+    const c = JSON.parse(JSON.stringify(h0));
+    c.techs = []; c.wprof = { [T[id].wtype]: Ru.profPtsOf(100) };
+    return Gl.candidates(c, { kind: 'tech', wtype: T[id].wtype, rankB: 12, ef: 1, tier: 9, row: 'front', used: 'attack' }).some((x) => x.id === id);
+  }));
+  // 届くこと: 攻撃から閃ける技（glim.from に 'attack'）か仲間の入門技から、派生の辺だけをたどってすべての先に届く
+  const roots = new Set(Object.keys(T).filter((id) => T[id].glim.from.includes('attack')));
+  for (const cid of Object.keys(DB.companions)) for (const id of DB.companions[cid].startTechs || []) roots.add(id);
+  const seen = new Set(roots), queue = [...roots];
+  while (queue.length) { const id = queue.shift(); for (const d of Gl.deriveOf(id)) if (!seen.has(d.to)) { seen.add(d.to); queue.push(d.to); } }
+  ok('every derive target is reachable through derivations from a tech the attack glimmer or a starter gives', targets.every((id) => seen.has(id)), targets.filter((id) => !seen.has(id)));
+  ok('every derive source is itself learnable (has glim or is a starter)', edges.every(([f]) => T[f].glim || roots.has(f)));
+  ok('each lv1 tech that leads anywhere has an early branch (lv ≤ 3): the demo can see one', Object.keys(T).filter((id) => T[id].glim.lv === 1 && Gl.deriveOf(id).length).every((id) => Gl.deriveOf(id).some((d) => T[d.to].glim.lv <= 3)));
+
+  // 回数
+  const c = JSON.parse(JSON.stringify(h0));
+  c.equip.weapon1 = 'w_sword_0' in DB.items ? 'w_sword_0' : c.equip.weapon1;
+  c.techs = ['t_sword_stepcut']; c.wprof = { sword: Ru.profPtsOf(10) }; delete c.techUse;
+  ok('useCount starts at 0 (no techUse field yet)', Gl.useCount(c, 't_sword_stepcut') === 0);
+  ok('countUse adds 1 per use, per technique', Gl.countUse(c, 't_sword_stepcut') === 1 && Gl.countUse(c, 't_sword_stepcut') === 2 && Gl.useCount(c, 't_sword_twin') === 0 && c.techUse.t_sword_stepcut === 2);
+  ok('countUse ignores attack / spells / unknown ids', Gl.countUse(c, 'attack') === 0 && Gl.countUse(c, 's_fire_1') === 0 && Object.keys(c.techUse).join() === 't_sword_stepcut');
+  c.techUse.t_sword_stepcut = K.DERIVE.maxCount; Gl.countUse(c, 't_sword_stepcut');
+  ok('the counter stops at K.DERIVE.maxCount', c.techUse.t_sword_stepcut === K.DERIVE.maxCount);
+
+  // 確率: 回数の関門・回数と熟練度で上がる・上限・熟練度の関門・覚えている物は 0
+  const d0 = Gl.deriveOf('t_sword_stepcut')[0];
+  ok('below uses → chance 0', Gl.deriveChance(c, 't_sword_stepcut', d0, d0.uses - 1) === 0);
+  ok('at uses → the data chance × prof factor', Gl.deriveChance(c, 't_sword_stepcut', d0, d0.uses) >= d0.chance);
+  ok('more uses → higher chance (up to useMax)', Gl.deriveChance(c, 't_sword_stepcut', d0, d0.uses * 2) > Gl.deriveChance(c, 't_sword_stepcut', d0, d0.uses) &&
+    near(Gl.deriveChance(c, 't_sword_stepcut', d0, d0.uses * 50), Gl.deriveChance(c, 't_sword_stepcut', d0, d0.uses * 60)));
+  const lo = JSON.parse(JSON.stringify(c)), hi = JSON.parse(JSON.stringify(c));
+  lo.wprof.sword = Ru.profPtsOf(3); hi.wprof.sword = Ru.profPtsOf(30);
+  ok('higher weapon proficiency → higher chance', Gl.deriveChance(hi, 't_sword_stepcut', d0, d0.uses) > Gl.deriveChance(lo, 't_sword_stepcut', d0, d0.uses));
+  const nov = JSON.parse(JSON.stringify(c)); nov.wprof.sword = 0;
+  const dT = Gl.deriveOf('t_sword_stepcut').find((d) => d.to === 't_sword_thrust');
+  ok('weapon rank below K.TECH_PROF[target lv] → chance 0 (刺し貫き lv3 needs rank 8)', Gl.deriveChance(nov, 't_sword_stepcut', dT, 999) === 0 && Gl.deriveChance(c, 't_sword_stepcut', dT, 999) > 0);
+  ok('capped at K.DERIVE.cap', Gl.deriveChance(Object.assign({}, hi, { wprof: { sword: Ru.profPtsOf(100) } }), 't_sword_stepcut', Object.assign({}, d0, { chance: 1 }), 999) === K.DERIVE.cap);
+  const knows = JSON.parse(JSON.stringify(c)); knows.techs.push(d0.to);
+  ok('already known target → chance 0', Gl.deriveChance(knows, 't_sword_stepcut', d0, 999) === 0);
+
+  // その技を使ってる時だけ（「その技を使ってる時しか閃かない」）
+  c.techUse = { t_sword_stepcut: 999, t_sword_twin: 999 };
+  const always = () => 0;   // rng 0 → どんな p > 0 でも当たる
+  ok('deriveRoll(X) with enough uses → a derive of X', (() => { const r = Gl.deriveRoll(c, 't_sword_stepcut', { rng: always }); return r && r.from === 't_sword_stepcut' && Gl.deriveOf('t_sword_stepcut').some((d) => d.to === r.id); })());
+  ok('deriveRoll never fires from attack, spells, items or unknown ids', ['attack', 's_fire_1', 'i_potion', 'defend', null, undefined].every((a) => Gl.deriveRoll(c, a, { rng: always }) === null));
+  ok('deriveRoll(Y) only offers Y\'s derivations (never X\'s)', (() => { c.techs.push('t_sword_twin'); const r = Gl.deriveRoll(c, 't_sword_twin', { rng: always }); const ok1 = !r || Gl.deriveOf('t_sword_twin').some((d) => d.to === r.id); c.techs.pop(); return ok1 && (!r || r.from === 't_sword_twin'); })());
+  ok('a tech with no derive list never derives', Gl.deriveRoll(Object.assign({}, c, { techUse: { t_sword_crest: 999 } }), 't_sword_crest', { rng: always }) === null);
+  ok('one derivation per action: deriveRoll returns one result (the first hit in data order)', (() => { const r = Gl.deriveRoll(c, 't_sword_stepcut', { rng: always }); return r && r.id === d0.to; })());
+  ok('high uses of X do not help Y (counter is per technique)', (() => { const y = JSON.parse(JSON.stringify(c)); y.techUse = { t_sword_stepcut: 999 }; y.techs.push('t_sword_draw'); return Gl.deriveRoll(y, 't_sword_draw', { rng: always }) === null; })());
+  ok('rng above p → no derivation', Gl.deriveRoll(c, 't_sword_stepcut', { rng: () => 0.9999 }) === null);
+  // 覚える・元
+  const L = JSON.parse(JSON.stringify(c));
+  ok('learnDerived adds the tech once and records where it came from', Gl.learnDerived(L, 't_sword_twin', 't_sword_stepcut', { quiet: true }) && !Gl.learnDerived(L, 't_sword_twin', 't_sword_stepcut', { quiet: true }) &&
+    L.techs.includes('t_sword_twin') && Gl.derivedFrom(L, 't_sword_twin') === 't_sword_stepcut' && Gl.derivedFrom(L, 't_sword_stepcut') === null);
+  ok('deriveSources lists the source techs', Gl.deriveSources('t_sword_twin').includes('t_sword_stepcut'));
+
+  // 保存と古いセーブ
+  R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'アルン', fav: 'sword' }, seed: 5 });
+  const hero = R.State.hero();
+  ok('a new char has techUse {} and derived {} (K.char)', hero.techUse && hero.derived && !Object.keys(hero.techUse).length && chk('char', hero).ok);
+  Gl.countUse(hero, 't_sword_stepcut'); Gl.countUse(hero, 't_sword_stepcut');
+  Gl.learnDerived(hero, 't_sword_twin', 't_sword_stepcut', { quiet: true });
+  const sv = JSON.parse(JSON.stringify(R.State.serialize()));
+  ok('techUse and derived are saved', sv.chars.hero.techUse.t_sword_stepcut === 2 && sv.chars.hero.derived.t_sword_twin === 't_sword_stepcut');
+  ok('and read back', R.State.deserialize(JSON.parse(JSON.stringify(sv))) && R.State.hero().techUse.t_sword_stepcut === 2 && R.Glimmer.derivedFrom(R.State.hero(), 't_sword_twin') === 't_sword_stepcut');
+  const old = JSON.parse(JSON.stringify(sv));
+  delete old.chars.hero.techUse; delete old.chars.hero.derived;
+  ok('an old save without techUse / derived loads with {}', R.State.deserialize(old) && JSON.stringify(R.State.hero().techUse) === '{}' && JSON.stringify(R.State.hero().derived) === '{}');
+  const junk = JSON.parse(JSON.stringify(sv));
+  junk.chars.hero.techUse = { t_sword_stepcut: '7', t_gone: 5, t_sword_twin: -3, t_sword_draw: 'x' };
+  junk.chars.hero.derived = { t_sword_twin: 't_gone', t_gone: 't_sword_stepcut', t_sword_thrust: 't_sword_stepcut' };
+  ok('bad values are dropped on load (unknown ids, negative, not numbers)', R.State.deserialize(junk) &&
+    JSON.stringify(R.State.hero().techUse) === '{"t_sword_stepcut":7}' && JSON.stringify(R.State.hero().derived) === '{"t_sword_thrust":"t_sword_stepcut"}', [R.State.hero().techUse, R.State.hero().derived]);
+  const arr = JSON.parse(JSON.stringify(sv)); arr.chars.hero.techUse = [1, 2]; arr.chars.hero.derived = null;
+  ok('a wrong shape (array / null) becomes {}', R.State.deserialize(arr) && JSON.stringify(R.State.hero().techUse) === '{}' && JSON.stringify(R.State.hero().derived) === '{}');
+}
+
 done('test_rules');

@@ -98,7 +98,7 @@
   /** 詳しい表示: 'w_sword_iron' | {kind, id} */
   S.detail = function (x) {
     if (!x) return Promise.resolve();
-    const p = typeof x === 'string' ? { id: x } : { kind: x.kind, id: x.id || x.item || x.skill };
+    const p = typeof x === 'string' ? { id: x } : { kind: x.kind, id: x.id || x.item || x.skill, c: x.c || null };
     return S.open('detail', p);
   };
 

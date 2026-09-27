@@ -22,7 +22,7 @@ const V2 = path.resolve(__dirname, '..', '..');
 const VERBOSE = process.argv.includes('--verbose');
 const R = require('../lib/load')({ quiet: true });
 const M = require('../lib/maps').create(R);
-const { DUNGEONS, prepare } = require('../lib/routes');
+const { DUNGEONS, prepare, restore } = require('../lib/routes');
 
 /** 長いダンジョンのしきい値: 外から数えて 3 階目以上の階があるダンジョン */
 const LONG_DEPTH = 3;
@@ -87,6 +87,7 @@ for (const d of DUNGEONS) {
   }
   ok(`${d.id}: ${bev} の前に泉（${best ? best.id + ' ' + best.d + ' 歩' : 'なし'}）`, !!best && best.d <= BOSS_STEPS);
 }
+restore(R);
 
 section('5. 泉の周り 3 マスは出現なし（FIELD の safeAt）');
 {

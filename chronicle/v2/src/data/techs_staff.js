@@ -16,7 +16,7 @@
     fx: 'magic',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
-    derive: [{ to: 't_staff_weaken', uses: 20, chance: 0.025 }, { to: 't_staff_bolt', uses: 35, chance: 0.015 }],
+    derive: [{ to: 't_staff_weaken', uses: 20, chance: 0.025 }, { to: 't_staff_bolt', uses: 35, chance: 0.015 }, { to: 't_staff_wave', uses: 40, chance: 0.012 }],
   },
   t_staff_soothe: {
     kind: 'tech',
@@ -79,7 +79,6 @@
     fx: 'earth',
     rank: 3,
     glim: { lv: 3, from: ['t_greatsword_crumble'] },
-    derive: [{ to: 't_staff_rumble', uses: 45, chance: 0.012 }],
     magic: true,
   },
   t_staff_unward: {
@@ -142,7 +141,7 @@
     fx: 'magic2',
     rank: 5,
     glim: { lv: 5, from: ['t_staff_mind', 't_staff_unward'] },
-    derive: [{ to: 't_staff_oracle', uses: 60, chance: 0.008 }],
+    derive: [{ to: 't_staff_rumble', uses: 45, chance: 0.012 }],
   },
   t_staff_bolt: {
     kind: 'tech',
@@ -250,6 +249,7 @@
     fx: 'drain',
     rank: 8,
     glim: { lv: 8, from: ['t_staff_seal', 't_staff_wave'] },
+    derive: [{ to: 't_staff_oracle', uses: 60, chance: 0.008 }],
   },
   t_staff_oracle: {
     kind: 'tech',

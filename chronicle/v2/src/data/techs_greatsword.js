@@ -73,7 +73,7 @@
     fx: 'strike2',
     rank: 2,
     glim: { lv: 2, from: ['t_greatsword_overhead'] },
-    derive: [{ to: 't_greatsword_helmsplit', uses: 30, chance: 0.02 }],
+    derive: [{ to: 't_greatsword_helmsplit', uses: 30, chance: 0.02 }, { to: 't_greatsword_rend', uses: 35, chance: 0.015 }],
   },
   t_greatsword_parry: {
     kind: 'tech',

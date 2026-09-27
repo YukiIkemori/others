@@ -498,6 +498,81 @@ section('乱数: 同じ種なら同じ戦闘（直前の戦闘からのやり直
   ok('retry + 1 → a different battle', run(0) !== run(1));
 }
 
+// ================================================================ 派生技（design/BACKLOG「派生技の閃き」）
+// 持ち主: 「特定の技を何度も使ってると、派生技を編み出す」「その技を使ってる時しか閃かない」
+section('派生技: 技 X を使った行動の後だけ、X の derive を振る（1 行動に 1 つ、閃きと重ねない）');
+{
+  newGame();
+  const setHero = (c, uses) => { c.techs = ['t_sword_stepcut', 't_sword_draw']; c.wprof = Object.assign({}, c.wprof, { sword: R.Rules.profPtsOf(20) }); c.techUse = Object.assign({}, uses); c.derived = {}; c.mp = 99; };
+  const sword = (eng) => eng.party.find((p) => p.c.id === 'hero');
+  const mk = (uses) => {
+    const eng = engine({ mons: ['treant_1'], lv: 7, rng: seqRng([], 0) });   // rng 0: どんな p > 0 でも当たる
+    const u = sword(eng); setHero(u.c, uses); u.mp = 99;
+    eng.rankB = 0;   // 行動の前の閃きの候補を無くす（派生だけを見る）
+    return { eng, u };
+  };
+  const derives = (evs) => evs.filter((e) => e.t === 'glimmer' && e.from);
+  {
+    const { eng, u } = mk({ t_sword_stepcut: 999 });
+    ok('hero holds a sword', u.wtype === 'sword');
+    const evs = drainAll(eng.execute(u, { type: 'tech', id: 't_sword_stepcut', target: eng.mons[0] }));
+    const d = derives(evs);
+    ok('using X (踏み込み斬り, 999 uses) → one derivation of X', d.length === 1 && d[0].from === 't_sword_stepcut' && d[0].id === 't_sword_twin', d);
+    ok('message 「〇〇から、△△を編み出した！」', evs.some((e) => e.t === 'msg' && /踏み込み斬りから、連ね斬りを編み出した！$/.test(e.text)), evs.filter((e) => e.t === 'msg').map((e) => e.text));
+    ok('the derivation comes after the action resolves (after the damage)', evs.findIndex((e) => e.t === 'glimmer') > evs.findIndex((e) => e.t === 'dmg' || e.t === 'miss'));
+    ok('learned, with its source, and counted in eng.glimmers', u.c.techs.includes('t_sword_twin') && u.c.derived.t_sword_twin === 't_sword_stepcut' && eng.glimmers.some((g) => g.id === 't_sword_twin' && g.from === 't_sword_stepcut'));
+    ok('the use counter went up (999 → 1000)', u.c.techUse.t_sword_stepcut === 1000);
+    const out = []; for (const e of evs) BC.toEvents(e, 'アルン', out, eng);
+    ok('contract event: glimmer with from / fromName', out.some((e) => e.t === 'glimmer' && e.from === 't_sword_stepcut' && e.fromName === '踏み込み斬り') && !badEvents(out).length, badEvents(out));
+    const again = drainAll(eng.execute(u, { type: 'tech', id: 't_sword_stepcut', target: eng.mons[0] }));
+    ok('the next use can find the other branch (刺し貫き), still one per action', derives(again).length <= 1 && derives(again).every((e) => e.id === 't_sword_thrust'), derives(again));
+  }
+  {
+    // 「その技を使ってる時しか閃かない」: 踏み込み斬りを 999 回使っていても、攻撃・防御・ほかの技では出ない
+    const { eng, u } = mk({ t_sword_stepcut: 999 });
+    let evs = [];
+    for (let i = 0; i < 20; i++) evs = evs.concat(drainAll(eng.execute(u, { type: 'attack', target: eng.mons[0] })));
+    for (let i = 0; i < 5; i++) evs = evs.concat(drainAll(eng.execute(u, { type: 'defend' })));
+    ok('attack ×20 and defend ×5 never derive from 踏み込み斬り', !derives(evs).length && !u.c.techs.includes('t_sword_twin'));
+    ok('attack does not count as a use', u.c.techUse.t_sword_stepcut === 999 && !u.c.techUse.attack);
+    evs = drainAll(eng.execute(u, { type: 'tech', id: 't_sword_draw', target: eng.mons[0] }));
+    ok('using another tech (抜き打ち, 1 use) neither derives from 踏み込み斬り nor from itself yet', !derives(evs).length && u.c.techUse.t_sword_draw === 1 && !u.c.techs.includes('t_sword_twin'));
+    u.c.techUse.t_sword_draw = 999;
+    evs = drainAll(eng.execute(u, { type: 'tech', id: 't_sword_draw', target: eng.mons[0] }));
+    ok('抜き打ち with enough uses derives only its own branch (峰打ち)', derives(evs).length === 1 && derives(evs)[0].id === 't_sword_mine' && derives(evs)[0].from === 't_sword_draw');
+    u.c.techUse.t_sword_draw = 999; u.mp = 0; u.c.mp = 0;
+    evs = drainAll(eng.execute(u, { type: 'tech', id: 't_sword_draw', target: eng.mons[0] }));
+    ok('a tech that was not performed (no MP) neither counts nor derives', !derives(evs).length && u.c.techUse.t_sword_draw === 999);
+  }
+  {
+    // 閃きと重ねない: 行動の前の閃きで行動が差し替わったら、派生は振らない
+    const { eng, u } = mk({ t_sword_stepcut: 999 });
+    eng.rankB = 10; eng.forceGlim = 'hero'; eng.forceUsed = false;
+    const evs = drainAll(eng.execute(u, { type: 'tech', id: 't_sword_stepcut', target: eng.mons[0] }));
+    const gl = evs.filter((e) => e.t === 'glimmer');
+    ok('a glimmer that replaces the action → no derivation on the same action', gl.length === 1 && !gl[0].from, gl.map((e) => [e.id, e.from]));
+    ok('踏み込み斬り was not used, so its counter did not move', u.c.techUse.t_sword_stepcut === 999);
+  }
+  {
+    // 実際の戦闘（B）: 保存する人に techUse・derived が戻る
+    newGame();
+    const h = R.State.hero();
+    setHero(h, { t_sword_stepcut: 40 });
+    const B = BC.create({ mons: [['treant_1', 1]], lv: 7, seed: 'derive' });
+    B.engine.o.deriveForce = true; B.engine.rankB = 0;
+    B.intro();
+    let evs = [];
+    for (let n = 0; n < 3 && !B.over; n++) {
+      B.submit('p_hero', { cmd: 'skill', id: 't_sword_stepcut', target: B.units.find((x) => x.side === 'enemy' && x.alive).uid });
+      evs = evs.concat(B.round());
+    }
+    B.finish();
+    ok('B: a forced derivation reaches the events with from', evs.some((e) => e.t === 'glimmer' && e.from === 't_sword_stepcut'));
+    ok('B.finish writes techUse and derived back to R.Game', h.techUse.t_sword_stepcut > 40 && h.derived.t_sword_twin === 't_sword_stepcut' && h.techs.includes('t_sword_twin'), [h.techUse, h.derived]);
+    ok('the derived tech is NEW in the menu (seenSkill false)', R.Game.seenSkill && R.Game.seenSkill[Object.keys(R.Game.seenSkill).find((k) => /t_sword_twin/.test(k))] === false);
+  }
+}
+
 // ================================================================ 縦切りのレア（オーナー 2026-09-27「レアがめっきり減ったねえ……。楽しみがちょっとないかも」）
 section('slice rare drops: grade rare reaches the result (★ and the rare jingle)');
 {

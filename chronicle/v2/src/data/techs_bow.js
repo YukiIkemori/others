@@ -16,7 +16,7 @@
     fx: 'arrow',
     rank: 1,
     glim: { lv: 1, from: ['attack'] },
-    derive: [{ to: 't_bow_hobble', uses: 20, chance: 0.025 }, { to: 't_bow_hawk', uses: 35, chance: 0.015 }],
+    derive: [{ to: 't_bow_hobble', uses: 20, chance: 0.025 }, { to: 't_bow_blind', uses: 25, chance: 0.02 }, { to: 't_bow_hawk', uses: 35, chance: 0.015 }],
   },
   t_bow_twin: {
     kind: 'tech',
@@ -44,7 +44,7 @@
     fx: 'arrow',
     rank: 2,
     glim: { lv: 2, from: ['t_bow_rapid'] },
-    derive: [{ to: 't_bow_venom', uses: 30, chance: 0.02 }],
+    derive: [{ to: 't_bow_venom', uses: 30, chance: 0.02 }, { to: 't_bow_receive', uses: 30, chance: 0.02 }],
   },
   t_bow_blind: {
     kind: 'tech',
