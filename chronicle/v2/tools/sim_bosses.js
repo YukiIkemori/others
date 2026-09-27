@@ -37,7 +37,8 @@ const BOSSES = {
 const SITEMS = Object.assign({}, ITEMS, { i_firepot: 6 });
 for (const T of [0, 1, 3]) {
   const k = T === 0 ? '' : '@' + T;
-  BOSSES['tr_b_blizzardwolf_0' + k] = { troop: 'tr_b_blizzardwolf_0', tier: T, kind: 'mid', members: STD, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 8], note: '籠城の最後の波。遠吠え → 吹雪（守る）、手下を呼ぶ → 頭を先に' };
+  // ティア 0（森の前に寄り道した一行）は籠城の山場として重め: 台本 85%・12 ラウンドまで
+  BOSSES['tr_b_blizzardwolf_0' + k] = { troop: 'tr_b_blizzardwolf_0', tier: T, kind: 'mid', members: STD, fight: 35, repeat: 30, script: T ? 90 : 85, diff: 50, rounds: T ? [5, 8] : [5, 12], note: '籠城の最後の波。遠吠え → 吹雪（守る）、手下を呼ぶ → 頭を先に' };
   BOSSES['tr_b_icegiant' + k] = { troop: 'tr_b_icegiant', tier: T, kind: 'mid', members: STD, items: SITEMS, fight: 35, repeat: 30, script: 90, diff: 50, rounds: [5, 8], note: '白く光る → 氷の鎧（火で消す・張っても火でとける）' };
   BOSSES['tr_b_whitedragon' + k] = { troop: 'tr_b_whitedragon', tier: T, kind: 'boss', members: STD, fight: 20, repeat: 30, script: 90, diff: 50, rounds: [8, 12], note: '息を吸う → 白い息（守る）。半分で思い出す間' };
 }

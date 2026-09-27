@@ -94,7 +94,7 @@
       K.actions = A([['attack', 2], ['eb_steal_name', 2], ['eb_king_sand', 2],
         ['eb_king_sun', SCHED, { every: [12, 1], countBelow: 5, noFlag: 'orb_out' }], ['eb_king_moon', SCHED, { every: [12, 7], countBelow: 5, noFlag: 'orb_out' }],
         ['eb_raise_guard', 1, { every: [5, 2], countBelow: 3 }], ['eb_withering', 2],
-        ['eb_king_raise', SCHED, { hpBelow: 0.5, every: [4, 0] }]]);
+        ['eb_king_raise', SCHED, { hpBelow: 0.5, every: [6, 5] }]]);
       K.phases = [{ hpBelow: 0.4, msg: '王の顔の包帯がほどけ、\nうつろな目がのぞいた……。', set: { buffs: { atk: 1, mag: 1 } } }];
       K.orbHost = true;
       K.desc = '名を砂の精霊に差し出した王。\n日と月の玉を呼び、忘れた名を探す。';
