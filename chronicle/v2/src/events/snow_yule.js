@@ -14,7 +14,8 @@
     if (ev.flag('snow_finale_done') && !ev.flag('snow_day2')) { await ev.call('snow_day2'); return; }
     if (ev.flag('snow_start')) return;
     ev.setFlag('snow_start');
-    await ev.caption('雪に埋もれた家々を、\n雪のトンネルがつないでいる。', { ms: 2400 });
+    await ev.caption('深い雪の吹きだまりのあいだを、\n踏み固めた雪の道が\nうねってつないでいる。', { ms: 2400 });
+    await ev.caption('広場を抱くように、\n竜の背のような長い家が\n横たわっていた。', { ms: 2400 });
     await ev.caption('トンネルの入口ごとに、\n氷の灯籠が並べられていた。\n――大火祭の支度の最中らしい。', { ms: 2800 });
     await ev.caption('広場の大かまどの火は、\nひどく細かった。', { ms: 2000 });
   }, { meta: { needs: [], gives: ['flag:snow_start'], calls: ['snow_day2', 'yule_siege_resume'] } });
@@ -210,10 +211,14 @@
   });
   E('yule_pond', async (ev) => {
     if (ev.flag('snow_saw') && !ev.flag('snow_ice_done')) { await ev.call('yule_pond_ice'); return; }
-    await ev.say(null, ['凍った池。氷に、\n釣りの穴がいくつも開いている。', '釣り小屋は、池の南の岸だ。']);
+    await ev.say(null, ['凍った池。氷に、\n釣りの穴がいくつも開いている。', '釣り小屋は、そりの台に乗って\n氷の上に出ている。']);
   });
   E('yule_north_gate', async (ev) => {
     await ev.say(null, cleared(ev) ? '北の門の先に、白竜の峰が\nくっきりと見える。' : ['北の門。この先の道は、\n白竜の峰へ続いている。', '吹雪の向こうに、峰の影が\nかすかに見える。']);
+  });
+  // 籠城の夜: 家の戸は閉ざされている（戸口を調べる）
+  E('yule_night_door', async (ev) => {
+    await ev.say(null, ['戸は、内から固く閉ざされている。', '……中で、子どもをあやす声がする。\n今夜は、門を守らなければ。']);
   });
   E('yule_snowman', async (ev) => {
     const c = ev.choiceOf('ch_snow_statue');

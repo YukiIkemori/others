@@ -10,6 +10,7 @@
 //   z_desert_hawks      鷹団のアジト（敵のとき）
 //   z_desert_rocks      金剛トカゲの岩場（#9、レアの巣）
 //   z_desert_temple     砂に沈んだ神殿（#6、lvOff 2・黄金の守護像の巣）
+//   ダンジョン（z_*）の組は 2〜3 体（持ち主の決まり: 序盤のダンジョンは 2〜3 体。牙の宝箱だけ 1 体）
 (function (R) {
   'use strict';
   const G = (w, mons, o) => Object.assign({ w, mons }, o || {});
@@ -44,16 +45,16 @@
     ] },
     z_desert_tomb: { region: 'r_desert', tier: 'dyn', lvOff: 1, bg: 'cave', groups: [
       G(9, [['@mummy', 2, 3]]),
-      G(7, [['@bat', 3, 4]]),
+      G(7, [['@bat', 2, 3]]),
       G(7, [['@scorpion', 2, 3]]),
-      G(6, [['@mummy', 1, 2], ['@bat', 1, 2]]),
+      G(6, [['@mummy', 1, 2], ['@bat', 1, 1]]),
       G(5, [['@snake', 1, 2], ['@scorpion', 1, 1]]),
       G(3, [['@sandworm', 1, 1], ['@mummy', 1, 1]]),
       G(1.5, [['@mimic', 1, 1]], { solo: true }),
     ] },
     z_desert_tomb_deep: { region: 'r_desert', tier: 'dyn', lvOff: 1, bg: 'cave', groups: [
       G(9, [['@mummy', 2, 3]]),
-      G(6, [['@mummy', 1, 2], ['@bat', 1, 2]]),
+      G(6, [['@mummy', 1, 2], ['@bat', 1, 1]]),
       G(6, [['@scorpion', 2, 2], ['@mummy', 1, 1]]),
       G(4, [['@sandworm', 1, 1], ['@mummy', 1, 1]]),
       G(1.5, [['@mimic', 1, 1]], { solo: true }),
@@ -72,7 +73,7 @@
     z_desert_temple: { region: 'r_desert', tier: 'dyn', lvOff: 2, bg: 'cave', groups: [
       G(9, [['@mummy', 2, 2]]),
       G(7, [['@scorpion', 2, 2]]),
-      G(6, [['@mummy', 1, 2], ['@snake', 1, 2]]),
+      G(6, [['@mummy', 1, 2], ['@snake', 1, 1]]),
       G(4, [['@sandworm', 1, 1], ['@mummy', 1, 2]]),
       G(1.5, [['@mimic', 1, 1]], { solo: true }),
     ] },

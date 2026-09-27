@@ -97,64 +97,105 @@
     }
 
     // ================================================================ #14 峠の宿（外）34×26
+    //   ありふれた宿場ではない: 峠をまたぐ古い関所の門の跡に住みついた宿。西の塔が宿（戸口）、東の塔が売店（戸口）、
+    //   二つの塔をつなぐ門の壁のアーチは、峠の先の崖崩れの岩でふさがっている（山地へは抜けられない）。
+    //   鞍部の東には、雪をとかす湯の段々（湯気の立つ石の湯だまり 3 つ。いちばん上の湯だまりのわきが回復の泉、湯殿のくみ口は板の囲い）。
+    //   西は旅人の野営地。道は南の出口から鞍部をうねって門の石畳の庭へ上る。
+    //   絵は 1 枚の下絵（v2/assets/env/snow/under/pass_inn*、design/ENV_ASSETS.md §7）。当たり・戸口・人・灯り・物は下のデータ。
     {
       const W = 34, H = 26;
-      const g = K.grid(W, H, '.');
-      K.border(g, 'H', 2);
-      for (const [x, y, rx, ry] of [[3, 3, 3, 2], [30, 3, 3, 2], [3, 22, 2, 2], [30, 22, 2, 2]]) K.blob(g, x, y, rx, ry, 'H', 'pib' + x + y);
-      K.rect(g, 15, 22, 4, 4, ',');
-      K.path(g, [[16, 22], [16, 10]], ',', 2);
-      K.path(g, [[16, 14], [7, 14]], ',', 2);
-      K.path(g, [[17, 16], [26, 16]], ',', 2);
-      K.rect(g, 22, 6, 8, 6, 'c');                             // 湯殿の石の庭
-      K.blob(g, 26, 8, 2, 1, '~', 'pipool', 'c');
-      K.put(g, 32, 12, 'H');
-      const O = [];
-      const inn = S.shop('pass_b_inn', 11, 4, { to: { map: 'pass_inn_in', spawn: 'door' }, sign: 'inn' });
-      const bath = S.house('pass_b_bath', 4, 16, { to: undefined });
-      O.push(inn, bath);
-      O.push(K.spring('pass_inn_s1', 22, 8));                   // 湯だまり（回復の泉）
-      O.push(K.prop('stove_pipe', 24, 11), K.exam(28, 9, 'pass_inn_bath_pool'));
-      // 氷の灯籠: 南北の道の両わき（道の外の雪）と湯殿の庭の角。道・1 マス幅の所には立てない（v2/tools/qa/check_lamps.js）
-      for (const [x, y] of [[14, 12], [19, 12], [14, 19], [19, 19], [21, 7], [31, 8]]) O.push(K.prop('snow_lamp', x, y));
-      O.push(K.prop('firewood', 9, 8), K.prop('firewood', 20, 4), K.prop('sled', 26, 19), K.prop('hay_sled', 28, 21), K.prop('snow_barrel', 10, 20), K.prop('snow_fence', 20, 14), K.prop('snow_fence', 21, 14));
-      O.push(K.prop('board', 18, 17), K.exam(18, 18, 'pass_inn_board'));
-      O.push(K.sign(18, 23, '宿場「峠の宿」\n雪原と山地のあいだ。'));
-      O.push(K.chest('pass_inn_c1', 29, 18, { pool: 'p_T' }));
-      K.scatter(g, O, ['snow_fir', 'snow_rock'], 10, [2, 2, 30, 22], '.', 'pideco', { gap: 4, variant: true, keep: new Set(['16,21', '17,21', '16,20', '17,20']) });
+      // # 岩と雪の崖（歩けない）・. 雪・, 踏み固めた道・c 石畳（関所の庭・湯の段の縁）・~ 湯（歩けない）
+      const g = [
+        '##################################',
+        '####......############......######',
+        '####........................######',
+        '####........................######',
+        '####........................######',
+        '####........................######',
+        '####........................######',
+        '####......cccccccccccc......######',
+        '###cccccccccccccccccccccccccc#####',
+        '###cccccccccccc,,cccccccccccc#####',
+        '###cccccccccccc,,cccccccccccc...##',
+        '###............,,........cccc...##',
+        '##.............,,....ccccc~~~ccc##',
+        '##............,,,....ccc~~~~~~~.##',
+        '##............,,,....ccccc~~~cc..#',
+        '#.............,,,...,,,..cccc....#',
+        '##............,,,,,,,,,ccccc.....#',
+        '##........,,,,,,,.....cc~~~~c....#',
+        '##........,,,,,,,......c~~~c.....#',
+        '###...........,,,..........cccc.##',
+        '####..........,,,,........cc~~~c##',
+        '#####.........,,,,.........cccc###',
+        '######........,,,,.........#######',
+        '########.......,,,.......#########',
+        '############...,,,...#############',
+        '###############,,,################',
+      ].map((r) => [...r]);
+      const B = (id, x, y, w, h, o) => Object.assign({ type: 'building', id, x, y, w, h, wall: 3, roof: 'slate', mat: 'stone', windows: 2, lamp: true, chimney: true }, o || {});
+      const O = [
+        B('pass_gate_inn', 4, 1, 6, 7, { sign: 'inn', door: { x: 7, y: 7, to: { map: 'pass_inn_in', spawn: 'door' } } }),
+        B('pass_gate_wall', 10, 2, 12, 5, { lamp: false, chimney: false, windows: 0 }),   // 門の壁（アーチは崖崩れの岩でふさがる。戸なし）
+        B('pass_gate_shop', 22, 1, 6, 7, { sign: 'item', door: { x: 25, y: 7, to: { map: 'pass_inn_shop', spawn: 'door' } } }),
+        B('pass_bath_screen', 29, 10, 3, 2, { wall: 1, roof: 'shingle', mat: 'plank', lamp: false, chimney: false, windows: 0 }),   // 湯殿のくみ口の板の囲い
+      ];
+      O.push(K.spring('pass_inn_s1', 22, 12));                   // 湯だまり（回復の泉）
+      O.push(K.exam(30, 11, 'pass_inn_bath_pool'));
+      // 氷の灯籠（街灯）: 庭と鞍部の広い所の縁だけ。道・戸口の前・1 マス幅の所には立てない（v2/tools/qa/check_lamps.js）
+      for (const [x, y] of [[3,  11],  [19,  11],  [11,  21],  [20,  20]]) O.push(K.prop('snow_lamp', x, y));
+      for (const [x, y] of [[9,  9],  [23,  9],  [21,  15],  [14,  24]]) O.push(K.prop('lantern', x, y));
+      // 小物は壁の際に少しだけ（町の小物は当たらない。道・戸口の前には置かない）
+      O.push(K.prop('tent', 5, 14), K.prop('firewood', 3, 17), K.prop('sled', 7, 20));
+      O.push(K.prop('board', 12, 11), K.exam(12, 11, 'pass_inn_board'));
+      O.push(K.sign(18, 23, '宿場「峠の宿」\n関所の跡の宿。湯あり。'));
+      O.push(K.chest('pass_inn_c1', 4, 20, { pool: 'p_T' }));
       K.def('pass_inn', {
         name: '峠の宿', kind: 'town', optional: true, region: 'r_snow', location: 'pass_inn', theme: 'snow_town',
-        legend: S.LEGEND(), rows: g, outside: 'snow', objects: O,
+        legend: S.LEGEND({ c: { mat: 'cobble' }, '~': { mat: 'water', walk: false, name: 'hot_spring' } }), rows: g, outside: 'wall_snow', objects: O,
         npcs: [
-          K.npc('bath_keeper', 'npc_snow_old_m', 6, 21, { name: '湯の番', dir: 'n', talk: 'pass_inn_bath_keeper', reward: 'side' }),
-          K.npc('pass_inn_scout', 'npc_snow_watch', 17, 15, { name: '峠の見張り', dir: 'e', talk: 'pass_inn_scout', reward: 'news' }),
-          K.npc('pass_inn_fox_man', 'npc_snow_man', 25, 17, { name: '毛皮取り', dir: 'w', talk: 'pass_inn_fox_man', reward: 'hint' }),
-          K.npc('pass_dog', 'ani_dog', 12, 17, { name: '犬', dir: 'e', move: 'wander', talk: [L('ワフ。')], reward: null }),
+          K.npc('bath_keeper', 'npc_snow_old_m', 23, 15, { name: '湯の番', dir: 'e', talk: 'pass_inn_bath_keeper', reward: 'side' }),
+          K.npc('pass_inn_scout', 'npc_snow_watch', 16, 8, { name: '峠の見張り', dir: 'n', talk: 'pass_inn_scout', reward: 'news' }),
+          K.npc('pass_inn_fox_man', 'npc_snow_man', 9, 15, { name: '毛皮取り', dir: 'e', talk: 'pass_inn_fox_man', reward: 'hint' }),
+          K.npc('pass_dog', 'ani_dog', 6, 18, { name: '犬', dir: 'e', move: 'wander', talk: [L('ワフ。')], reward: null }),
         ],
-        spawns: { gate: { x: 16, y: 23, dir: 'n' }, inn: { x: 14, y: 9, dir: 's' }, bath: { x: 6, y: 20, dir: 's' } },
-        exits: [{ x: 15, y: 25, w: 4, h: 1, to: { map: 'world', spawn: 'pass_inn' } }],
+        spawns: { gate: { x: 16, y: 23, dir: 'n' }, inn: { x: 7, y: 8, dir: 's' }, shop: { x: 25, y: 8, dir: 's' }, bath: { x: 23, y: 16, dir: 'n' } },
+        exits: [{ x: 15, y: 25, w: 3, h: 1, to: { map: 'world', spawn: 'pass_inn' } }],
         triggers: [{ id: 'arrive', on: 'enter', event: 'pass_inn_arrive', once: true }],
         zones: [], light: { ambient: '#5c66a6', k: 0.5, poolK: 0.8, spillR: 0.9, mood: 'town_night' },
         bgm: 'yule', weather: 'snow', weatherCond: '!cleared_r_snow',
-        meta: { sub: '湯気の立つ峠の宿', chestsInfo: false },
+        meta: { sub: '関所の跡の湯の宿', chestsInfo: false },
+        art: { image: 'snow/under/pass_inn', emit: 'snow/under/pass_inn_emit', painted: [] },
       });
+      // 宿（西の塔の中）: おかみと、うわさ好きの泊まり客 3 人
       const r = K.room(18, 12, {});
       K.rect(r.g, 6, 6, 6, 3, 'c');
       K.def('pass_inn_in', {
         name: '峠の宿', kind: 'interior', optional: true, region: 'r_snow', location: 'pass_inn',
         legend: S.ROOM(), rows: r.g, outside: 'wall_wood',
-        objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('counter', 12, 3), K.prop('counter', 13, 3), K.prop('shelf_jars', 14, 2),
+        objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('shelf_jars', 14, 2),
           K.prop('bed', 16, 5), K.prop('bed', 16, 8), K.prop('table', 7, 7), K.prop('chair', 6, 7), K.prop('chair', 8, 7), K.prop('table', 11, 8), K.prop('chair', 10, 8), K.prop('chair', 12, 8),
           K.prop('stove', 1, 6), K.prop('lantern', 9, 3), K.prop('firewood', 1, 9), K.prop('snow_barrel', 15, 10)],
         npcs: [
           K.npc('pass_inn_innkeeper', 'npc_snow_woman', 4, 2, { name: '峠の宿のおかみ', dir: 's', talk: 'pass_inn_innkeeper', pushable: false }),
-          K.npc('pass_shop', 'npc_snow_man', 13, 2, { name: '売店の主人', dir: 's', talk: 'pass_inn_shopkeeper', pushable: false }),
           K.npc('rumor_gossip', 'npc_snow_woman', 6, 8, { name: 'うわさ好きの湯治客', dir: 'e', talk: 'pass_inn_rumor_gossip', reward: 'lead' }),
           K.npc('rumor_bard', 'npc_bard_3', 11, 7, { name: '吟遊詩人', dir: 's', talk: 'pass_inn_rumor_bard', reward: 'lead' }),
           K.npc('rumor_merchant', 'npc_traveler', 13, 9, { name: '旅の商人', dir: 'w', talk: 'pass_inn_rumor_merchant', reward: 'lead' }),
         ],
         spawns: { door: { x: r.door.x, y: 10, dir: 'n' } },
         exits: [{ x: r.door.x, y: 11, w: 1, h: 1, to: { map: 'pass_inn', spawn: 'inn' } }],
+        triggers: [], light: S.ROOM_LIGHT, bgm: 'tavern', meta: { minimap: false },
+      });
+      // 売店（東の塔の中）
+      const r2 = K.room(10, 8, {});
+      K.def('pass_inn_shop', {
+        name: '峠の宿の売店', kind: 'interior', optional: true, region: 'r_snow', location: 'pass_inn',
+        legend: S.ROOM(), rows: r2.g, outside: 'wall_wood',
+        objects: [K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('counter', 6, 3), K.prop('shelf_jars', 1, 2), K.prop('shelf_jars', 8, 2),
+          K.prop('snow_barrel', 8, 5), K.prop('sack', 1, 5), K.prop('lantern', 7, 4)],
+        npcs: [K.npc('pass_shop', 'npc_snow_man', 5, 2, { name: '売店の主人', dir: 's', talk: 'pass_inn_shopkeeper', pushable: false })],
+        spawns: { door: { x: r2.door.x, y: 6, dir: 'n' } },
+        exits: [{ x: r2.door.x, y: 7, w: 1, h: 1, to: { map: 'pass_inn', spawn: 'shop' } }],
         triggers: [], light: S.ROOM_LIGHT, bgm: 'tavern', meta: { minimap: false },
       });
     }

@@ -1,5 +1,6 @@
-// CONTENT（砂漠）: カシムの屋内 8 つ（WORLD_REDESIGN §5.5）: 宿「泉の星亭」・酒場「砂時計」・道具屋・地図屋・占いの天幕・隊商ギルド・
-//   王墓の番アブルの家・井戸掘りの親方の家。どれも K.room（上 2 行が壁の立ち上がり、下の中ほどに 1 マスの戸口）。壁は日干しれんが、床は砂岩と敷物。
+// CONTENT（砂漠）: カシムの屋内 8 つ（WORLD_REDESIGN §5.5）: 宿「泉の星亭」・酒場「砂時計」・道具屋・地図屋・占いの間（この 3 つは巨像の台座の中）・
+//   隊商ギルド・王墓の番アブルの家・井戸掘りの親方の家。どれも K.room（上 2 行が壁の立ち上がり、下の中ほどに 1 マスの戸口）。壁は日干しれんが、床は砂岩と敷物。
+//   机・腰掛けは戸口の列（戸口からまっすぐ奥へ）に置かない（持ち主の決まり）。店の台は奥の壁ぎわ（話しかける先）なのでよい。
 (function (R) {
   'use strict';
   R.onData(function () {
@@ -28,7 +29,7 @@
       objects: [
         K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('shelf_jars', 1, 2), K.prop('clay_jars', 7, 2),
         K.prop('bed', 12, 2), K.prop('bed', 14, 2), K.prop('bed', 12, 5), K.prop('bed', 14, 5), K.prop('bed', 16, 5),
-        K.prop('table', 7, 7), K.prop('stool', 6, 7), K.prop('stool', 8, 7), K.prop('house_plant', 1, 6), K.prop('rug_roll', 16, 9),
+        K.prop('table', 6, 7), K.prop('stool', 5, 7), K.prop('stool', 7, 7), K.prop('house_plant', 1, 6), K.prop('rug_roll', 16, 9),
         K.prop('lantern', 9, 3), K.prop('lantern', 15, 8), K.prop('tomb_urn', 1, 9), K.exam(16, 2, 'kasim_inn_window'),
       ],
       npcs: [
@@ -41,7 +42,7 @@
       back: 'tavern', carpet: [6, 5, 6, 3],
       objects: [
         K.prop('counter', 2, 3), K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('counter', 5, 3), K.prop('shelf_jars', 1, 2), K.prop('barrel', 6, 2),
-        K.prop('table', 8, 6), K.prop('stool', 7, 6), K.prop('stool', 9, 6), K.prop('table', 12, 4), K.prop('stool', 13, 4), K.prop('table', 12, 8), K.prop('stool', 11, 8),
+        K.prop('table', 8, 6), K.prop('stool', 9, 6), K.prop('table', 12, 4), K.prop('stool', 13, 4), K.prop('table', 12, 8), K.prop('stool', 11, 8),
         K.prop('lantern', 10, 2), K.prop('lantern', 14, 6), K.prop('clay_jars', 14, 2), K.prop('barrel', 1, 8),
         K.exam(9, 2, 'kasim_tavern_poster'),
       ],
@@ -65,16 +66,16 @@
     interior('kasim_mapshop', '地図屋', 12, 10, {
       back: 'mapshop', carpet: [3, 5, 6, 2],
       objects: [
-        K.prop('table', 5, 4), K.prop('stool', 4, 4), K.prop('bookshelf', 1, 2), K.prop('bookshelf', 2, 2), K.prop('bookshelf', 9, 2), K.prop('rug_roll', 10, 5),
+        K.prop('table', 6, 4), K.prop('stool', 7, 4), K.prop('bookshelf', 1, 2), K.prop('bookshelf', 2, 2), K.prop('bookshelf', 9, 2), K.prop('rug_roll', 10, 5),
         K.prop('lantern', 7, 2), K.exam(1, 5, 'kasim_mapshop_wall'),
       ],
       npcs: [K.npc('mapmaker', 'npc_desert_old_m', 6, 3, { name: '地図屋のヤズ', title: '地図屋', dir: 's', talk: 'kasim_mapmaker', pushable: false, reward: 'side' })],
     });
-    // 占いの天幕 12×10（まだ聞いていない噂を 1 つ、手がかり帳に足す。有料）
-    interior('kasim_fortune', '占いの天幕', 12, 10, {
+    // 占いの間 12×10（巨像の台座のまん中の部屋。まだ聞いていない噂を 1 つ、手がかり帳に足す。有料）
+    interior('kasim_fortune', '占いの間', 12, 10, {
       back: 'fortune', carpet: [2, 3, 8, 5],
-      objects: [K.prop('table', 5, 4), K.prop('crystal', 5, 3), K.prop('rug_roll', 1, 7), K.prop('lantern', 2, 2), K.prop('lantern', 9, 2), K.prop('clay_jars', 10, 7)],
-      npcs: [K.npc('fortune', 'npc_fortune', 6, 5, { name: '占い師', dir: 'n', talk: 'kasim_fortune', pushable: false, reward: 'lead' })],
+      objects: [K.prop('table', 6, 4), K.prop('crystal', 7, 3), K.prop('rug_roll', 1, 7), K.prop('lantern', 2, 2), K.prop('lantern', 9, 2), K.prop('clay_jars', 10, 7)],
+      npcs: [K.npc('fortune', 'npc_fortune', 6, 3, { name: '占い師', dir: 's', talk: 'kasim_fortune', pushable: false, reward: 'lead' })],
       light: { ambient: '#6e6090' },
     });
     // 隊商ギルド 18×12（ザイード・事務方・隊商の人）
@@ -82,7 +83,7 @@
       back: 'guild', carpet: [[6, 5, 6, 4]],
       objects: [
         K.prop('counter', 2, 3), K.prop('counter', 3, 3), K.prop('counter', 4, 3), K.prop('board', 8, 2), K.exam(8, 3, 'kasim_board'),
-        K.prop('table', 8, 6), K.prop('stool', 7, 6), K.prop('stool', 9, 6), K.prop('crate', 14, 2), K.prop('crate', 15, 2), K.prop('sack', 16, 3), K.prop('cart_barrels', 15, 8),
+        K.prop('table', 11, 7), K.prop('stool', 12, 7), K.prop('crate', 14, 2), K.prop('crate', 15, 2), K.prop('sack', 16, 3), K.prop('cart_barrels', 15, 8),
         K.prop('lantern', 11, 2), K.prop('lantern', 1, 8), K.prop('carpet_rack', 13, 9), K.exam(1, 3, 'kasim_guild_ledger'),
       ],
       npcs: [
@@ -100,7 +101,7 @@
     // 井戸掘りの親方の家 12×10
     interior('kasim_digger', '井戸掘りの家', 12, 10, {
       back: 'digger',
-      objects: [K.prop('bed', 10, 2), K.prop('table', 5, 5), K.prop('stool', 4, 5), K.prop('weapon_rack', 1, 2), K.prop('wash_tub', 1, 6), K.prop('sack', 9, 6), K.prop('lantern', 6, 2)],
+      objects: [K.prop('bed', 10, 2), K.prop('table', 6, 5), K.prop('stool', 7, 5), K.prop('weapon_rack', 1, 2), K.prop('wash_tub', 1, 6), K.prop('sack', 9, 6), K.prop('lantern', 6, 2)],
       npcs: [K.npc('digger', 'npc_desert_old_m', 6, 4, { name: '井戸掘りのオマル', title: '井戸掘りの親方', dir: 's', talk: 'kasim_digger', pushable: false, reward: 'side' })],
     });
   });

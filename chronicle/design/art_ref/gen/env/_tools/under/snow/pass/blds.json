@@ -1,0 +1,48 @@
+[
+ {
+  "id": "pass_gate_inn",
+  "kind": "tower",
+  "x": 4,
+  "y": 1,
+  "w": 6,
+  "h": 7,
+  "wall": 3,
+  "door": [
+   7,
+   7
+  ]
+ },
+ {
+  "id": "pass_gate_wall",
+  "kind": "gate",
+  "x": 10,
+  "y": 2,
+  "w": 12,
+  "h": 5,
+  "wall": 3,
+  "door": null
+ },
+ {
+  "id": "pass_gate_shop",
+  "kind": "tower",
+  "x": 22,
+  "y": 1,
+  "w": 6,
+  "h": 7,
+  "wall": 3,
+  "door": [
+   25,
+   7
+  ]
+ },
+ {
+  "id": "pass_bath_screen",
+  "kind": "screen",
+  "x": 29,
+  "y": 10,
+  "w": 3,
+  "h": 2,
+  "wall": 1,
+  "door": null
+ }
+]

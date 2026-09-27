@@ -95,7 +95,7 @@
       for (const [x, y] of [[12, 7], [24, 11], [17, 18], [9, 20], [30, 17]]) O.push(K.prop('torch', x, y));
       const N = [
         K.npc('rashid', 'npc_rashid', 18, 4, { name: 'ラシード', title: '砂の鷹団の頭', dir: 's', talk: 'desert_hawks_rashid', pushable: false, reward: 'item',
-          cond: { any: [FRIEND, 'desert_hawkhold_done'] } }),
+          cond: 'desert_hawk_met' }),   // 戦う道でも広間の奥に立っている（戦いの前後で出し消ししない）
         K.npc('hawk_guard_l', 'npc_hawk', 14, 7, { name: '鷹団の弓手', dir: 'e', talk: 'desert_hawks_member', reward: 'news', cond: FRIEND }),
         K.npc('hawk_guard_r', 'npc_hawk', 22, 7, { name: '鷹団の弓手', dir: 'w', talk: 'desert_hawks_member', reward: 'news', cond: FRIEND }),
       ];

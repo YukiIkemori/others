@@ -114,7 +114,7 @@
       const BZ = [[28, 5], [16, 6], [9, 5], [9, 16], [9, 30], [7, 38], [22, 19], [34, 19], [22, 27], [34, 27], [24, 33], [32, 33], [45, 6], [45, 17], [40, 24], [50, 28], [50, 40], [20, 38], [37, 38]];
       BZ.forEach(([x, y], i) => O.push({ type: 'brazier', id: 'desert_tomb_2_b' + (i + 1), x, y }));
       O.push(K.prop('obelisk', 5, 36), K.exam(5, 37, 'desert_tomb_glyph', { glyph: 'za' }));
-      O.push(K.exam(28, 36, 'desert_tomb_quicksand'), K.exam(42, 40, 'desert_tomb_quicksand'), K.exam(41, 27, 'desert_tomb_quicksand'));
+      O.push(K.exam(28, 36, 'desert_tomb_quicksand'), K.exam(39, 40, 'desert_tomb_quicksand'), K.exam(41, 27, 'desert_tomb_quicksand'));
       O.push(K.sign(26, 30, '――流砂の主、ここに眠る。\n砂にもぐるものは、土を嫌う。\n槍は砂を突き通す。\n（誰かの書き付け）'));
       O.push(K.chest('desert_tomb_2_c1', 5, 4, { pool: 'p_T' }), K.chest('desert_tomb_2_c2', 50, 6, { pool: 'p_T' }), K.chest('desert_tomb_2_c3', 38, 11, { item: 'i_torch', n: 2 }),
         K.chest('desert_tomb_2_c4', 11, 41, { gold: 220 }), K.chest('desert_tomb_2_c5', 52, 30, { pool: 'p_rare' }), K.chest('desert_tomb_2_c6', 12, 12, { item: 'i_potion', n: 2 }));

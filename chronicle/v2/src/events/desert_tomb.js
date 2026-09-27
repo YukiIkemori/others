@@ -107,13 +107,9 @@
     await ev.say('worm_track', ev.flag('desert_robber_help')
       ? ['……砂の音が、やんだ。\nあんたら、あの砂もぐりを\nやっちまったのか……！', 'もらった水のおかげで、\nはってでも帰れそうだ。\n……この恩は、忘れねえ。']
       : ['……砂の音が、やんだ。\nあんたら、あの砂もぐりを\nやっちまったのか……！', '……おれは、もう墓は\nこりごりだ。生きて帰れるうちに、\n帰らせてもらうぜ。'], { name: '墓荒らし' });
-    await n.face('n');
-    await n.move(stay ? [[25, 31], [26, 31], [26, 29]] : [[28, 31], [28, 29]], { speed: 0.8 });
-    await ev.wait(250);
-    await ev.fade('out', 350);
-    await n.hide();
+    // 背を向けて、足を引きずって歩きながら薄れて消える（画面ごと暗くしない。持ち主の決まり: 立ち去る人は ev.leave）
+    await ev.leave('worm_track', { path: stay ? [[25, 31], [26, 31], [26, 29], [26, 28]] : [[28, 32], [28, 31], [28, 30], [28, 29]], ms: 1400 });
     ev.setFlag('desert_robber_gone');
-    await ev.fade('in', 350);
     await ev.caption('墓荒らしは、足を引きずりながら\n上の階へ帰っていった。', { ms: 2000 });
     if (!stay) await ev.camera(null, null, 500);
   }, { meta: { needs: ['flag:desert_worm'], gives: ['flag:desert_robber_gone'] } });

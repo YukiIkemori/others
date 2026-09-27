@@ -103,11 +103,15 @@
         await ev.say('npc_rashid', ['……金か。砂漠じゃ水は買えんが、\n町でなら買える。', '通っていい。おれはラシード。\n台地の洞に来ることがあれば、\n話くらいは聞いてやる。'], RASHID);
       }
     }
-    ev.setFlag('desert_hawk_met');
     ev.lead('l_opt_hawknest');
+    // 短い眠り: 暗転のあいだに旗を立てる（鷹団がたき火に残る・去るのを、パッと出し消ししない）
+    await ev.fade('out', 500);
+    ev.setFlag('desert_hawk_met');
     ev.setFlag('desert_camp1_done');
     ev.mapBgm({ fade: 600 });
     ev.rest();
+    await ev.wait(300);
+    await ev.fade('in', 600);
     await ev.caption('たき火のそばで、短い眠り。\n（一行の体力と魔力が戻った）', { ms: 2000 });
     await ev.say('npc_zaid', ['次は野営地「星の石」だ。\nここから南へ、道なりに。', '……今夜のことは、ギルドの帳面に\nちゃんと書いておくよ。'], ZAID);
   }, {
@@ -161,8 +165,11 @@
       ev.choice('ch_desert_route', 'long');
       await ev.say('npc_zaid', ['慎重だな。……嫌いじゃない。', '星の石から西へ、浜に出たら北へ。\n井戸の小屋で、水を足していこう。'], ZAID);
     }
+    await ev.fade('out', 500);
     ev.setFlag('desert_camp2_done');
     ev.rest();
+    await ev.wait(300);
+    await ev.fade('in', 600);
     await ev.caption('嵐の音を聞きながら、短い眠り。\n（一行の体力と魔力が戻った）', { ms: 2000 });
   }, {
     meta: {
@@ -207,6 +214,8 @@
     await ev.say('npc_zaid', ['地の果ての、白む星……。\n祖母は、あれを「夜明けの星」と\n呼んでいた。', '……夜明け。\nふしぎな言葉だな。\n夜が、明ける？　何が明けるんだ？'], ZAID);
     await ev.say(null, 'ザイードは首をかしげて、\nたき火に薪を足した。');
     await ev.say('npc_zaid', ['供え物は、泉のほとりに置いた。\n隊はここで待つ。', '墓の入口の砂は、隊の者でどけた。\n……ここから先は、あんたたちだけだ。', '王墓の番のアブルじいさんも、\n古い道を通って来ているはずだ。\n話を聞いていくといい。'], ZAID);
+    // 暗転のあいだに、ついてきたザイードが隊の輪に戻り、古い道を来たアブルが着く（出し消しを見せない）
+    await ev.fade('out', 500);
     ev.guest(null);
     ev.setFlag('desert_caravan_on', false);
     ev.setFlag('desert_camp3_done');
@@ -214,6 +223,8 @@
     ev.leadDone('l_desert_caravan');
     ev.lead('l_desert_tomb');
     ev.rest();
+    await ev.wait(300);
+    await ev.fade('in', 600);
     await ev.caption('泉のほとりで、短い眠り。\n（一行の体力と魔力が戻った）', { ms: 2000 });
   }, {
     meta: {

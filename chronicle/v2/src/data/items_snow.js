@@ -14,11 +14,12 @@
     // つららの回廊（#11）・氷に閉じた帆船（#13）
     u_icicle_spear: U('weapon', 'つららの細剣', { wtype: 'sword', units: 's2', mult: 1.15, hit: 6, element: 'water', icon: 'sword',
       desc: '水の力をもつ。よく当たる。\n溶けないつららを研いだ細身の剣。' }),
-    u_frost_compass: U('acc', '凍えの羅針盤', { mods: { preemptPct: 15, statusResist: { freeze: 1 }, elemResist: { water: 0.5 } }, icon: 'ring',
-      desc: '先制しやすい。凍結が効かない。\n水の攻撃を半分に。氷の船団の羅針盤。' }),
+    // 雪原は序盤〜中盤の手前。先制・レアの率・落とす率の品は置かない（持ち主の決まり）
+    u_frost_compass: U('acc', '凍えの羅針盤', { mods: { hpPct: 5, statusResist: { freeze: 1 }, elemResist: { water: 0.5 } }, icon: 'ring',
+      desc: '凍結が効かない。水の攻撃を\n半分に。最大HPが少し上がる。\n氷の船団の羅針盤。' }),
     // 釣り大会の一等（段位ごとの品のいちばん上）
-    u_ice_rod_charm: U('acc', '氷上の釣り名人の証', { mods: { rareEncPct: 25, goldPct: 10 }, icon: 'ring',
-      desc: '珍しい魔物に出会いやすい。\nお金が少し増える。' }),
+    u_ice_rod_charm: U('acc', '氷上の釣り名人の証', { mods: { elemResist: { water: 0.75 }, goldPct: 10 }, icon: 'ring',
+      desc: '水の攻撃を少し弱める。\nお金が少し増える。\n氷の主を釣った名人の証。' }),
     // 大事な物
     k_yule_logs: K('大火祭の薪', '雪の林で集めた、よく乾いた倒木の薪。\n大かまどにくべる。', { icon: 'fire' }),
     k_ice_saw: K('氷切りのこぎり', '釣り小屋のじいさまに借りた、\n氷を切り出すのこぎり。', { icon: 'key' }),

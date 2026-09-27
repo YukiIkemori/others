@@ -17,12 +17,22 @@
   for (const z of [W, P]) if (z) for (const g of z.groups) for (const m of g.mons) if (m[0] === '@frostling') m[2] = Math.min(m[2], g.mons.length > 1 ? 1 : 3);
   if (W) W.bg = 'snow';
   if (P) P.bg = 'snow';
+  // 雪原は序盤（T1）のダンジョン: 1 組は 2〜3 匹まで（持ち主の決まり「序盤のダンジョンの敵は少なく」）。
+  //   多い組は、いちばん多い魔物から 1 匹ずつ減らす（最小の数は 1 まで。組の最小の合計も 3 まで）
+  const small = (z, cap) => {
+    for (const g of z.groups) {
+      const tot = (i) => g.mons.reduce((a, m) => a + m[i], 0);
+      while (tot(2) > cap) { const m = g.mons.reduce((a, b) => (b[2] > a[2] ? b : a)); m[2] -= 1; if (m[1] > m[2]) m[1] = m[2]; }
+      while (tot(1) > Math.min(cap, 2)) { const m = g.mons.reduce((a, b) => (b[1] > a[1] ? b : a)); if (m[1] <= 1) break; m[1] -= 1; }
+    }
+    return z;
+  };
   Object.assign(E, {
     zw_snow_road: clone(W, { rate: 0.3, bg: 'snow' }),
-    z_snow_woods: clone(W, { lvOff: 0, bg: 'snow' }),
-    z_snow_peak: lessYeti(clone(P, { lvOff: 0, bg: 'snow' })),
-    z_snow_icicle: lessYeti(clone(P, { lvOff: 0, bg: 'snow' })),
-    z_snow_floe: clone(W, { lvOff: 0, bg: 'snow' }),
+    z_snow_woods: small(clone(W, { lvOff: 0, bg: 'snow' }), 3),
+    z_snow_peak: small(lessYeti(clone(P, { lvOff: 0, bg: 'snow' })), 3),
+    z_snow_icicle: small(lessYeti(clone(P, { lvOff: 0, bg: 'snow' })), 3),
+    z_snow_floe: small(clone(W, { lvOff: 0, bg: 'snow' }), 3),
   });
   // 籠城の門の戦い（troops_snow.js）と同じ地方の印
   Object.assign(R.DB.rareEncounters, {

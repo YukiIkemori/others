@@ -144,9 +144,10 @@
       await ev.say('base_kid', 'せいかーい！\n入っていいよ！');
       ev.setFlag('snow_base_open');
       ev.leadDone('q_snow_base');
-      await ev.fade('out', 250);
-      try { await ev.npc('base_kid').hide(); } catch (e) { /* */ }
-      await ev.fade('in', 250);
+      // ペッカは基地の穴（戸）へ歩いて入り、薄れて消える（パッと消さない。戸の音）
+      try { await ev.npc('base_kid').face('n'); } catch (e) { /* */ }
+      ev.sfx('door');
+      try { await ev.leave('base_kid', { path: [[36, 40]], ms: 520 }); } catch (e) { /* */ }
       return;
     }
     await ev.say('base_kid', i === 3 ? '村の子に聞いてみなよ！' : 'ぶぶー！　ちがうよー。\n火は、おまけなんだって。');

@@ -1,0 +1,35 @@
+[
+ {
+  "id": "sandedge_b_inn",
+  "kind": "plinth",
+  "x": 16,
+  "y": 6,
+  "w": 8,
+  "h": 5,
+  "wall": 3,
+  "door": [
+   20,
+   10
+  ]
+ },
+ {
+  "id": "sandedge_s_store",
+  "kind": "cistern",
+  "x": 29,
+  "y": 6,
+  "w": 4,
+  "h": 4,
+  "wall": 1,
+  "door": null
+ },
+ {
+  "id": "sandedge_s_yurt",
+  "kind": "yurt",
+  "x": 6,
+  "y": 6,
+  "w": 4,
+  "h": 4,
+  "wall": 1,
+  "door": null
+ }
+]

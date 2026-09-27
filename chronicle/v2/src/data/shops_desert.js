@@ -44,7 +44,8 @@
         items: f(STONES.concat(WARDS.slice(0, 4), ACC(0))), tier: tiers((t) => f(STONES.concat(WARDS, ACC(Math.min(t, 8)))), 1, 8) },
       shop_sandedge: { name: '砂の縁の売り台', kind: 'item', keepOld: true, sell: true, items: f(S0.concat(['i_potion', 'i_ether'])), tier: { 2: f(['i_incense', 'i_thaw']), 4: f(['i_elixir']) } },
       shop_lotta: { name: 'ロッタの背負い籠', kind: 'special', keepOld: false, sell: true,
-        items: f(['ac_watch', 'ac_quiet', 'i_lure']), tier: { 1: f(['ac_watch', 'ac_quiet', 'ac_loupe', 'i_lure', 'i_lens']), 2: f(['ac_watch', 'ac_quiet', 'ac_loupe', 'ac_clover', 'i_lure', 'i_lens']) } },
+        // 砂漠は序盤〜中盤: 先制・ドロップ率・レア率の品（見張りの角笛・目利きの片眼鏡・四つ葉）は置かない（持ち主の決まり）
+        items: f(['ac_quiet', 'i_lure', 'i_lens']), tier: { 1: f(['ac_quiet', 'ac_ward_poison', 'ac_purse', 'i_lure', 'i_lens']), 2: f(['ac_quiet', 'ac_ward_poison', 'ac_ward_blind', 'ac_purse', 'i_lure', 'i_lens']) } },
       shop_hawks: { name: '鷹団の闇市', kind: 'weapon', priceMul: hawks, keepOld: false, sell: true,
         items: f(gear(['w_dagger', 'w_bow'], 1).concat(['i_smoke', 'i_lure', 'ac_quickhand'])),
         tier: tiers((t) => f(gear(['w_dagger', 'w_bow'], t + 1).concat(['i_smoke', 'i_lure', 'ac_quickhand', 'ac_purse'])), 1, 8) },

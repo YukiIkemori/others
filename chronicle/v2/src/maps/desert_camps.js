@@ -22,8 +22,10 @@
       O.push({ type: 'brazier', id: 'fire_' + cx + '_' + cy, x: cx, y: cy, on: true });
       O.push(K.prop('log', cx - 1, cy + 1), K.prop('log', cx + 1, cy + 1), K.prop('log', cx, cy - 1));
     };
+    // 隊の人（たき火の場面のあいだもそこにいる）。ザイードは隊と一緒のあいだは一行の後ろにつく人（ev.guest）なので、
+    // 野営地の人としては置かない（同じ人が 2 人にならない）。o.zaid = ザイードが野営地に残る条件（王墓のオアシスだけ）
     const caravan = (id, cond, o) => [
-      K.npc(id + '_zaid', 'npc_zaid', o.zx, o.zy, { name: 'ザイード', title: '隊商の長', dir: o.zd || 's', talk: 'desert_camp_zaid', reward: 'news', cond, pushable: false }),
+      ...(o.zaid ? [K.npc(id + '_zaid', 'npc_zaid', o.zx, o.zy, { name: 'ザイード', title: '隊商の長', dir: o.zd || 's', talk: 'desert_camp_zaid', reward: 'news', cond: o.zaid, pushable: false })] : []),
       K.npc(id + '_man1', 'npc_caravan', o.ax, o.ay, { name: '隊商のファド', dir: 'e', talk: 'desert_camp_man', reward: 'news', cond }),
       K.npc(id + '_man2', 'npc_desert_man', o.bx, o.by, { name: '隊商のサミル', dir: 'w', talk: 'desert_camp_man', reward: 'news', cond }),
       K.npc(id + '_camel1', 'ani_camel', o.c1x, o.c1y, { name: 'ラクダ', dir: 'w', talk: [L('ラクダは、荷を下ろしてもらって\n満足そうに目を細めている。')], reward: null, cond }),
@@ -44,7 +46,7 @@
       O.push(K.prop('lantern', 12, 10), K.prop('lantern', 18, 13), K.prop('copper_brazier', 14, 17), K.prop('copper_brazier', 16, 17));
       O.push(K.sign(17, 18, '野営地「岩の井戸」\n――隊商路の最初の夜'));
       O.push(K.prop('sand_mound', 4, 13), K.prop('rock_small', 26, 12), K.prop('thorn_bush', 12, 17), K.prop('clay_jars', 21, 16), K.prop('sack', 8, 15), K.prop('cactus', 27, 19), K.prop('bones', 3, 19), K.prop('rock_small', 10, 4));
-      const N = caravan('c1', ['desert_caravan_on', 'desert_camp1_done', '!desert_camp2_done'], { zx: 14, zy: 10, ax: 13, ay: 12, bx: 17, by: 12, c1x: 22, c1y: 14, c2x: 8, c2y: 12 })
+      const N = caravan('c1', ['desert_caravan_on', '!desert_camp2_done'], { zx: 14, zy: 10, ax: 13, ay: 12, bx: 17, by: 12, c1x: 22, c1y: 14, c2x: 8, c2y: 12 })
         .concat([
           K.npc('rashid_fire', 'npc_rashid', 16, 10, { name: 'ラシード', title: '砂の鷹団の頭', dir: 'w', talk: 'desert_rashid_fire', reward: 'hint', cond: ['desert_hawk_met', '!desert_camp2_done', { not: { choice: 'ch_desert_hawk', is: 'fight' } }] }),
           K.npc('camp1_old', 'npc_desert_old_m', 22, 9, { name: '井戸守りの老人', dir: 'w', talk: 'desert_camp1_old', reward: 'news', cond: '!desert_caravan_on' }),
@@ -73,7 +75,7 @@
       O.push(K.prop('lantern', 15, 10), K.prop('lantern', 11, 14), K.prop('copper_brazier', 14, 17), K.prop('copper_brazier', 16, 17));
       O.push(K.sign(17, 18, '野営地「星の石」\n――北は砂嵐のくぼ地'));
       O.push(K.prop('sand_mound', 4, 16), K.prop('rock_small', 27, 14), K.prop('thorn_bush', 11, 18), K.prop('sack', 16, 16), K.prop('cactus', 3, 10), K.prop('bones', 26, 19), K.prop('rock_small', 8, 4), K.prop('clay_jars', 20, 11));
-      const N = caravan('c2', ['desert_caravan_on', 'desert_camp2_done', '!desert_camp3_done'], { zx: 12, zy: 11, ax: 11, ay: 13, bx: 15, by: 13, c1x: 21, c1y: 15, c2x: 7, c2y: 12 })
+      const N = caravan('c2', ['desert_caravan_on', 'desert_camp1_done', '!desert_camp3_done'], { zx: 12, zy: 11, ax: 11, ay: 13, bx: 15, by: 13, c1x: 21, c1y: 15, c2x: 7, c2y: 12 })
         .concat([K.npc('camp2_star', 'npc_desert_child', 20, 9, { name: '星読みの子', dir: 'w', talk: 'desert_camp2_child', reward: 'hint', cond: '!desert_caravan_on' })]);
       K.def('desert_camp2', {
         name: '野営地「星の石」', kind: 'town', region: 'r_desert', location: 'camp2', theme: 'desert',
@@ -108,8 +110,8 @@
       O.push(K.prop('lantern', 19, 12), K.prop('lantern', 15, 17), K.prop('copper_brazier', 19, 9), K.prop('copper_brazier', 24, 9), K.prop('copper_brazier', 14, 22), K.prop('copper_brazier', 16, 22));
       O.push(K.sign(18, 22, '王墓のオアシス\n――名なき王の墓所'), K.sign(25, 9, '王墓\n入る者は名を忘るべからず'));
       O.push(K.prop('bones', 3, 17), K.prop('sand_mound', 26, 21), K.prop('thorn_bush', 4, 7));
-      const wait = ['desert_camp3_done', '!desert_finale_done'];
-      const N = caravan('c3', wait, { zx: 18, zy: 13, zd: 'w', ax: 16, ay: 15, bx: 20, by: 15, c1x: 25, c1y: 14, c2x: 9, c2y: 18 })
+      const wait = [{ any: [['desert_caravan_on', 'desert_camp2_done'], 'desert_camp3_done'] }, '!desert_finale_done'];
+      const N = caravan('c3', wait, { zaid: ['desert_camp3_done', '!desert_finale_done'], zx: 18, zy: 13, zd: 'w', ax: 16, ay: 15, bx: 20, by: 15, c1x: 25, c1y: 14, c2x: 9, c2y: 18 })
         .concat([
           K.npc('abul_oasis', 'npc_abul', 12, 16, { name: 'アブル', title: '王墓の番', dir: 'n', talk: 'desert_abul_oasis', reward: 'boss', cond: ['desert_abul_came', '!cleared_r_desert'] }),
           K.npc('hazal_spirit', 'npc_hazal', 11, 10, { name: 'ハザル王', dir: 's', talk: 'desert_hazal_after', reward: 'news', cond: 'cleared_r_desert' }),

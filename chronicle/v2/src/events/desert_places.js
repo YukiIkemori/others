@@ -33,7 +33,7 @@
   E('sandedge_arrive', async (ev) => {
     if (ev.flag('desert_sandedge_seen')) return;
     ev.setFlag('desert_sandedge_seen');
-    await ev.caption('宿場「砂の縁」。\n長い街道のまん中の、\n日干しれんがの隊商宿。', { ms: 2200 });
+    await ev.caption('宿場「砂の縁」。\n森の終わりに立つ、石になった\n大樹の根もとの隊商宿。', { ms: 2400 });
   });
   E('sandedge_notice', async (ev) => {
     await ev.say(null, ['宿場の掲示だ。', '「東の峠、灰の崩れにより不通。\n灰の荒野へ向かう者は\n片づくまで待たれよ」', T() >= 2 ? '「北の雪原へ向かう者、\n防寒の備えを忘れるな」' : '「カシムの泉、細る。\n水は宿場で足していかれよ」']);
@@ -165,6 +165,7 @@
   });
   E('desert_hawks_rashid', async (ev) => {
     const c = X().hawk(ev);
+    if (c === 'fight' && !ev.flag('desert_hawkhold_done')) { await ev.call('desert_hawks_boss'); return; }
     if (c === 'fight') {
       await ev.say('rashid', ['……負けは負けだ。\nおれたちは、もう隊を襲わん。', '……年代記、とか言ったか。\nおれたちのことを書くなら、\n盗賊とでも書いておけ。']);
       return;
@@ -192,12 +193,13 @@
   E('desert_hawks_boss', async (ev) => {
     if (ev.flag('desert_hawkhold_done')) return;
     ev.bgm('tension');
-    await ev.say('npc_rashid', ['……来たか。隊商の犬め。\nここは、おれたちの最後の巣だ。', '今度は、手加減せんぞ！'], { name: 'ラシード' });
+    try { await ev.npc('rashid').face('s'); } catch (e) { /* */ }
+    await ev.say('rashid', ['……来たか。隊商の犬め。\nここは、おれたちの最後の巣だ。', '今度は、手加減せんぞ！']);
     const r = await ev.battle('tr_b_hawkhold', { boss: true });
     ev.mapBgm();
     if (r !== 'win') return;
     ev.setFlag('desert_hawkhold_done');
-    await ev.say('npc_rashid', ['……まいった。\nおれたちの負けだ。', 'この手袋を持っていけ。\n……もう、盗みはやめる。\n洞の者を食わせる道を探すさ。'], { name: 'ラシード' });
+    await ev.say('rashid', ['……まいった。\nおれたちの負けだ。', 'この手袋を持っていけ。\n……もう、盗みはやめる。\n洞の者を食わせる道を探すさ。']);
     ev.item('u_hawk_gloves', 1);
   }, { meta: { needs: ['flag:desert_hawk_met'], gives: ['flag:desert_hawkhold_done', 'item:u_hawk_gloves'] } });
 

@@ -249,10 +249,9 @@
       await ev.say(null, '見張り台に、灰色のマントの少女が\n立っていた。峰を見上げている。');
       await ev.say('fine', '凍っているのは、竜の体じゃない。\n心のほうよ。', { name: '灰色のマントの少女' });
       ev.sfx('magic');
-      await ev.fade('out', 240);
-      try { await ev.npc('fine').hide(); } catch (e) { /* */ }
+      // 見張りの台の東の端へ歩き、吹雪の中へ薄れて消える（パッと消さない）
+      try { await ev.leave('fine', { path: [[32, 1], [33, 1]], ms: 900 }); } catch (e) { /* */ }
       ev.setFlag('snow_fine_seen');
-      await ev.fade('in', 240);
       await ev.caption('少女の姿は、吹雪の中に\n溶けるように消えた。', { ms: 2000 });
     } finally { R.Audio.popBgm(); }
     // ソーニャと冬至の火の火種

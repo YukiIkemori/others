@@ -58,7 +58,7 @@
   lead('l_desert_glyphs', { kind: 'region', title: '墓守の像の文字', text: '王墓の墓守の像の台座に、\n王の名が一文字ずつ刻まれている、\nとアブルは言う。', from: '王墓の番アブル', place: 'tomb', done: { all: [{ item: 'k_desert_glyph_ha' }, { item: 'k_desert_glyph_za' }, { item: 'k_desert_glyph_ru' }] }, hideWhen: 'cleared_r_desert' });
   lead('l_desert_tomb', { kind: 'region', title: '王墓の奥', text: '王墓のオアシスの古い泉のそばに、\n名なき王の墓がある。\n泉の火は、その奥で消えかけている。', from: '王墓のオアシス', place: 'tomb', done: 'cleared_r_desert' });
   lead('l_desert_hawks', { kind: 'region', title: '砂の鷹', text: '隊商路に、水を奪う盗賊\n「砂の鷹」が出るという。\n夜、鷹の笛が聞こえたら用心。', from: 'カシムの西の門番', place: 'kasim', dir: '西', done: 'desert_hawk_met' });
-  lead('l_desert_sundial', { kind: 'region', title: '砂に埋もれた日時計', text: '市場の真ん中の古い日時計。\n影の刻みの溝に、長い年月の砂が\nたまっているという。', from: '日時計のじいさま', place: 'kasim', done: 'lo_time_desert' });
+  lead('l_desert_sundial', { kind: 'region', title: '砂に埋もれた日時計', text: '広場のすみの古い日時計。\n影の刻みの溝に、長い年月の砂が\nたまっているという。', from: '日時計のじいさま', place: 'kasim', done: 'lo_time_desert' });
   // 依頼（side）
   lead('q_kasim_anklet', { kind: 'side', title: '踊り子の足鈴', text: 'ナディアが銀の足鈴を失くした。\n市場の子どもが拾ったらしいが、\nただでは返してくれないようだ。', from: '踊り子ナディア', place: 'kasim', done: 'desert_anklet_done' });
   lead('q_kasim_dig', { kind: 'side', title: '井戸掘りの手伝い', text: '井戸掘りの親方オマルが、町の外の\n砂地を三か所掘ってほしいという。\n水脈の当たりを探す。', from: '井戸掘りの親方', place: 'kasim', done: 'desert_dig_done' });

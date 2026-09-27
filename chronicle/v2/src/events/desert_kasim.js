@@ -13,7 +13,8 @@
   E('kasim_arrival', async (ev) => {
     if (!ev.flag('desert_arrived')) {
       ev.setFlag('desert_arrived');
-      await ev.caption('オアシスの町カシム。\n泉を囲む市場の屋台は、\n半分が布をおろしていた。', { ms: 2600 });
+      await ev.caption('オアシスの町カシム。\n砂丘に半ば埋もれた、\n顔のない王の巨像の足もとの町。', { ms: 2600 });
+      await ev.caption('巨像の前の市場の屋台は、\n半分が布をおろしていた。', { ms: 2200 });
       await ev.caption('隊商が出られず、品が届かない。\n泉の水も、日に日に細っている。', { ms: 2200 });
       ev.lead('l_rumor_desert');
       return;
@@ -33,25 +34,31 @@
     }
     if (!ev.flag('desert_fara_met')) {
       ev.setFlag('desert_fara_met');
-      await ev.say(id, ['わたしはファラ。父さんが\nこの泉の番人なの。', '泉が、毎年少しずつ\n浅くなってるの。今年は、\nとうとう底が見えてしまった。', '底の石に、古い字が彫ってあるわ。\n誰にも読めないけど……\n見てみて。水盤の下の段から。']);
+      await ev.say(id, ['わたしはファラ。父さんが\nこの泉の番人なの。', '泉が、毎年少しずつ\n浅くなってるの。今年は、\nとうとう底が見えてしまった。', '底の石に、古い字が彫ってあるわ。\n誰にも読めないけど……\n石の手の、指のあいだから見てみて。']);
       ev.lead('l_desert_spring');
       return;
     }
-    await ev.say(id, ev.flag('lo_desert_spring_letters') ? ['「名を呼ぶかぎり、火は消えず」……？', '王墓のそばの古い泉が、\nこの泉の水の源なんですって。\nそこにも、何かあるのかしら。'] : '泉の底の字、見てくれた？\n水盤の段を降りればすぐよ。');
+    await ev.say(id, ev.flag('lo_desert_spring_letters') ? ['「名を呼ぶかぎり、火は消えず」……？', '王墓のそばの古い泉が、\nこの泉の水の源なんですって。\nそこにも、何かあるのかしら。'] : '泉の底の字、見てくれた？\n石の手の指のあいだから、\nのぞけるわ。');
   }, { meta: { needs: [], gives: ['lead:l_desert_spring'] } });
 
   E('kasim_spring_letters', async (ev) => {
     if (cleared(ev)) { await ev.say(null, ['泉の底の古い字が、\n水の下で金色に光っている。', '「ハザルの火を、泉に預く。\n名を呼ぶかぎり、火は消えず」']); return; }
-    await ev.say(null, ['乾いた泉の底の石に、\n古い字が彫ってある。', '「……の火を、泉に預く。\n名を呼ぶかぎり、火は消えず」', '最初の所だけ、字が\nすっかり消えている。']);
+    await ev.say(null, ['石の手の指のあいだから、\n乾いた泉の底をのぞきこむ。\n底の石に、古い字が彫ってある。', '「……の火を、泉に預く。\n名を呼ぶかぎり、火は消えず」', '最初の所だけ、字が\nすっかり消えている。']);
     await X().lore(ev, 'lo_desert_spring_letters');
   }, { meta: { needs: [], gives: ['flag:lo_desert_spring_letters'] } });
 
   E('kasim_sundial', async (ev) => {
-    await ev.say(null, ['市場の真ん中の、古い日時計だ。\n影を落とす針が、天を指している。', '影の刻みの溝に、\n砂がびっしりたまっている。\n何年分……いや、何十年分か。']);
+    await ev.say(null, ['広場のすみの、古い日時計だ。\n影を落とす針が、天を指している。', '影の刻みの溝に、\n砂がびっしりたまっている。\n何年分……いや、何十年分か。']);
     ev.setFlag('desert_sundial_seen');
     if (ev.flag('desert_ledger_seen')) await X().lore(ev, 'lo_time_desert');
     else await ev.say(null, '……影が落ちない日時計。\nいつから、使われていないのだろう。');
   }, { meta: { needs: [], gives: ['flag:desert_sundial_seen', 'flag:lo_time_desert'] } });
+  // 巨像の台座（名の削れた王。王墓の名なき王と同じ）
+  E('kasim_colossus', async (ev) => {
+    await ev.say(null, ['巨像の台座だ。ラクダを連れた\n隊商の列が、浮き彫りにされている。', 'まん中の、名を刻む枠だけが\nのみで削り取られていた。\n見上げた顔も、風ですり減っている。']);
+    if (cleared(ev)) await ev.say(null, '削られた枠の下に、\n誰かが小さく彫り足していた。\n「ハザル」と。');
+    else if (ev.flag('desert_abul_met')) await ev.say(null, '……アブルの話では、王墓の\n王の名も、石から消えていたという。');
+  });
   E('kasim_guild_ledger', async (ev) => {
     await ev.say(null, ['隊商ギルドの古い帳面だ。\n「日の出の祈り」という欄がある。', '毎朝、隊が出る前に\n祈った印らしい。……印は、\n光暦二九二年の冬で終わっている。']);
     ev.setFlag('desert_ledger_seen');

@@ -29,14 +29,14 @@
       desc: '三つの刻み石をつないだ王の名。\n戦いの中で、王の名を呼ぶ。',
       use: { target: 'enemy', effects: [{ type: 'special', id: 'desert_call_name' }], fx: 'holy', battle: true, field: false } },
     // 砂の鷹団（どの選択でも同じ品にたどり着く: 敵なら頭との戦いの宝箱、味方なら頭の礼、払ったならアジトの店で買う）
-    u_hawk_gloves: U('hands', '鷹の手袋', { weight: 'light', units: 'd1', mult: 1.2, mods: { stealPct: 20, preemptPct: 5 }, icon: 'glove',
-      desc: '盗みが成功しやすい。\n先制しやすくなる。' }),
+    u_hawk_gloves: U('hands', '鷹の手袋', { weight: 'light', units: 'd1', mult: 1.2, mods: { stealPct: 20, spd: 2 }, icon: 'glove',
+      desc: '盗みが成功しやすい。\nすばやく動ける。' }),
     // 砂に沈んだ神殿（#6）
     u_sun_staff: U('weapon', '日輪の杖', { wtype: 'staff', units: 's1v1', mult: 1.35, mods: { elemBoost: { fire: 15, light: 15 } }, icon: 'staff',
       desc: '火と光の術が強くなる。\n日の名残を宿した杖。' }),
     // 依頼の礼
     u_nadia_bell: U('acc', '踊り子の足鈴', { mods: { spd: 4, escapePct: 15 }, icon: 'ring', desc: 'すばやく動ける。逃げやすい。\nしゃらりと鳴る銀の鈴。' }),
-    u_signal_mirror: U('acc', 'のろしの鏡', { mods: { encounterPct: -10, preemptPct: 5 }, icon: 'ring', desc: '魔物に出会いにくい。\n先制しやすくなる。' }),
+    u_signal_mirror: U('acc', 'のろしの鏡', { mods: { encounterPct: -10, escapePct: 15 }, icon: 'ring', desc: '魔物に出会いにくい。\n逃げやすくなる。' }),
     u_caravan_scarf: U('head', '隊商の頭布', { weight: 'light', mods: { statusResist: { blind: 0.5 }, hpPct: 4 }, icon: 'helm', desc: '暗闇にかかりにくい。\n砂よけの藍の頭布。' }),
     u_well_charm: U('acc', '井戸掘りのお守り', { mods: { hpPct: 5, statusResist: { poison: 0.5 } }, icon: 'ring', desc: '最大HPが上がる。\n毒にかかりにくい。' }),
     // しんきろうの市（#8、ティアで入れ替わる 3 品 × 2 段。代金は市の人がティアで決める）

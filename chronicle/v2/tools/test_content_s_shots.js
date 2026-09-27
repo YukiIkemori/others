@@ -22,7 +22,7 @@ const only = args.includes('--only') ? args[args.indexOf('--only') + 1] : null;
 const FIX = fs.readdirSync(path.join(__dirname, 'fixtures', 'states')).filter((f) => /^content_s_/.test(f) && !/route|battle/.test(f)).map((f) => f.replace(/\.json$/, ''));
 const READY = "(RPG.Engine.top()||{}).id==='field' && RPG.Engine.fade.a < 0.01";
 const DOOR_MAPS = ['world', 'yule', 'yule_hall', 'yule_inn', 'yule_items', 'yule_arms', 'yule_jorn', 'yule_sonja', 'yule_brenda', 'yule_hunter', 'yule_fishhut', 'yule_base', 'yule_branch',
-  'pass_inn', 'pass_inn_in', 'snow_woods', 'peak_1', 'peak_top', 'icicle_1', 'icicle_2', 'aurora', 'frost_ship_1', 'frost_ship_2'];
+  'pass_inn', 'pass_inn_in', 'pass_inn_shop', 'snow_woods', 'peak_1', 'peak_top', 'icicle_1', 'icicle_2', 'aurora', 'frost_ship_1', 'frost_ship_2'];
 
 /** 走っている会話・キャプションを A で送り切る */
 async function settle(p, ms) {

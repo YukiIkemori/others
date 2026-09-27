@@ -1,0 +1,146 @@
+[
+ {
+  "id": "kasim_b_shop",
+  "kind": "plinth",
+  "x": 23,
+  "y": 14,
+  "w": 5,
+  "h": 3,
+  "wall": 3,
+  "door": [
+   25,
+   16
+  ]
+ },
+ {
+  "id": "kasim_b_fortune",
+  "kind": "plinth",
+  "x": 29,
+  "y": 14,
+  "w": 5,
+  "h": 3,
+  "wall": 3,
+  "door": [
+   31,
+   16
+  ]
+ },
+ {
+  "id": "kasim_b_mapshop",
+  "kind": "plinth",
+  "x": 35,
+  "y": 14,
+  "w": 5,
+  "h": 3,
+  "wall": 3,
+  "door": [
+   37,
+   16
+  ]
+ },
+ {
+  "id": "kasim_b_inn",
+  "kind": "inn",
+  "x": 6,
+  "y": 9,
+  "w": 10,
+  "h": 7,
+  "wall": 3,
+  "door": [
+   10,
+   15
+  ]
+ },
+ {
+  "id": "kasim_b_tavern",
+  "kind": "jar",
+  "x": 46,
+  "y": 9,
+  "w": 10,
+  "h": 6,
+  "wall": 2,
+  "door": [
+   50,
+   14
+  ]
+ },
+ {
+  "id": "kasim_b_digger",
+  "kind": "dome",
+  "x": 52,
+  "y": 17,
+  "w": 6,
+  "h": 5,
+  "wall": 2,
+  "door": [
+   54,
+   21
+  ]
+ },
+ {
+  "id": "kasim_b_guild",
+  "kind": "ribs",
+  "x": 42,
+  "y": 38,
+  "w": 11,
+  "h": 7,
+  "wall": 3,
+  "door": [
+   47,
+   44
+  ]
+ },
+ {
+  "id": "kasim_b_abul",
+  "kind": "rock",
+  "x": 4,
+  "y": 33,
+  "w": 6,
+  "h": 5,
+  "wall": 2,
+  "door": [
+   6,
+   37
+  ]
+ },
+ {
+  "id": "kasim_s_cistern",
+  "kind": "cistern",
+  "x": 15,
+  "y": 41,
+  "w": 5,
+  "h": 5,
+  "wall": 2,
+  "door": null
+ },
+ {
+  "id": "kasim_s_dove",
+  "kind": "dove",
+  "x": 24,
+  "y": 46,
+  "w": 3,
+  "h": 5,
+  "wall": 2,
+  "door": null
+ },
+ {
+  "id": "kasim_s_granary",
+  "kind": "granary",
+  "x": 33,
+  "y": 46,
+  "w": 7,
+  "h": 5,
+  "wall": 2,
+  "door": null
+ },
+ {
+  "id": "kasim_s_wind",
+  "kind": "wind",
+  "x": 56,
+  "y": 32,
+  "w": 3,
+  "h": 4,
+  "wall": 2,
+  "door": null
+ }
+]

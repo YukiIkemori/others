@@ -1,70 +1,97 @@
-// CONTENT（砂漠）: 宿場「砂の縁」（WORLD_REDESIGN §2.7 #10・§5.14）。森〜砂漠〜灰の街道のまん中の、日干しれんがの隊商宿。
-//   sandedge      40×30 の中庭の宿場。まん中に甘い水の井戸（回復の泉）、北に宿の広間（中は sandedge_inn）、東に売り台、
-//                 西にラクダのうまや。行商人ロッタ（塩の配達・籠の店）、森と灰から来た旅人（地方をまたぐ話）。
+// CONTENT（砂漠）: 宿場「砂の縁」（WORLD_REDESIGN §2.7 #10・§5.14）。森〜砂漠〜灰の街道のまん中の隊商宿（2026-09-27 に作り直し）。
+//   sandedge      40×30。四角い宿屋ではない: 森の終わり・砂漠の始まりに立つ「石になった大樹」の町。
+//                 北のまん中 = 石化した大樹の幹。幹のうろを掘った宿（中は sandedge_inn）。石の根が中庭へ広がる。
+//                 まん中 = 根もとから湧く甘い水の井戸（回復の泉）。西 = 岩のアーチの下のうまや。東 = 帆布を張った売り台とロッタの籠。
+//                 北の縁は森の名残の草と低木、ほかは砂丘。戸の無い物: 石の根のあいだの丸屋根の蔵・遊牧の天幕小屋。
 //   sandedge_inn  宿と酒場（うわさ）。
-//   町なので宝箱は見える物 1 つだけ。隠し通路は置かない（A27）。
+//   町なので宝箱は見える物 1 つだけ。隠し通路は置かない（A27）。小物は壁・岩の際に少しだけ。町の絵は 1 枚の下絵（desert/under/sandedge*）。
 (function (R) {
   'use strict';
   R.onData(function () {
     const K = R.ContentF.kit, DK = R.Desert.kit;
     const L = K.L;
     const W = 40, H = 30;
-    const g = K.grid(W, H, 'u');
-    K.blob(g, 20, 15, 19, 14, 's', 'se0');
-    // 外壁（日干しれんが）と南の門
-    K.rect(g, 3, 2, 34, 1, 'X'); K.rect(g, 3, 25, 34, 1, 'X'); K.rect(g, 3, 2, 1, 24, 'X'); K.rect(g, 36, 2, 1, 24, 'X');
-    K.rect(g, 4, 3, 32, 22, 's');
-    K.rect(g, 18, 25, 4, 1, 'Q'); K.rect(g, 18, 26, 4, 4, 'd');
-    // 中庭の敷石と、井戸のまわり
-    K.rect(g, 10, 11, 20, 11, 'Q');
-    K.rect(g, 18, 14, 4, 4, 'c');
-    K.path(g, [[20, 25], [20, 21]], 'Q', 2);
-    // うまや（西）の砂と、売り台の列（東）の粘土
-    K.rect(g, 4, 12, 5, 12, 'k'); K.rect(g, 31, 12, 5, 10, 'k');
+    const g = K.grid(W, H, 'D');
+    // 中庭のくぼ地（ふちはゆらぐ）と、北の森の名残（草・低木）
+    K.blob(g, 20, 16, 17, 12, 's', 'se2_floor', ['D']);
+    for (let y = 0; y < 5; y++) for (let x = 0; x < W; x++) g[y][x] = 'P';
+    K.blob(g, 20, 3, 18, 3, 'P', 'se2_wood');
+    K.rect(g, 5, 10, 6, 1, 's'); K.rect(g, 28, 10, 6, 1, 's'); K.rect(g, 10, 5, 1, 6, 's'); K.rect(g, 33, 6, 1, 5, 's');
+    K.blob(g, 6, 7, 5, 3, 'g', 'se2_g1', ['s']); K.blob(g, 33, 7, 5, 3, 'g', 'se2_g2', ['s']);
+    // 石化した大樹（幹 = 宿、石の根が左右へ）
+    for (let y = 0; y < 12; y++) for (let x = 11; x < 29; x++) {
+      const trunk = ((x - 19.5) / 6.2) ** 2 + ((y - 5) / 7) ** 2 < 1;
+      const rootL = y >= 7 && y <= 10 && x >= 11 && x <= 15 && (x - 11) + (10 - y) >= 1;
+      const rootR = y >= 7 && y <= 10 && x >= 24 && x <= 28 && (28 - x) + (10 - y) >= 1;
+      if (trunk || rootL || rootR) g[y][x] = 'T';
+    }
+    // うまや: 西の岩のアーチ（東へ開く）
+    K.rect(g, 2, 11, 7, 1, 'm'); K.rect(g, 2, 21, 7, 1, 'm'); K.rect(g, 2, 11, 2, 11, 'm');
+    K.rect(g, 4, 12, 5, 9, 'k');
+    // 中庭の敷石（井戸のまわり）と、東の売り台の粘土
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (((x - 20) / 6.5) ** 2 + ((y - 16.5) / 4.6) ** 2 < 1 && g[y][x] === 's') g[y][x] = 'Q';
+    K.rect(g, 30, 12, 6, 9, 'k', ['s', 'D']);
+    // 南の門（砂丘の切れ目）と道
+    K.path(g, [[19, 29], [19, 25], [20, 21]], 'k', 2, ['s', 'D', 'Q']);
+    K.path(g, [[20, 11], [20, 13]], 'Q', 1);
+    K.rect(g, 18, 26, 4, 4, 'k');
 
+    // 下絵に合わせる: 石の根の足もと（戸口の左右の 10 行目）と、門の柱 2 本
+    K.rect(g, 9, 10, 10, 1, 'T'); K.rect(g, 22, 10, 7, 1, 'T');
+    K.rect(g, 18, 25, 1, 2, 'x'); K.rect(g, 26, 25, 1, 2, 'x');
     const O = [];
-    const B = (id, kind, x, y, to, o) => { const b = DK.bld(id, kind, x, y, Object.assign({ to }, o || {})); O.push(b.obj); return b.door; };
-    const dInn = B('sandedge_b_inn', 'l', 16, 3, { map: 'sandedge_inn', spawn: 'door' }, { sign: 'inn' });
-    B('sandedge_b_store', 's', 6, 4, null);
-    B('sandedge_b_house', 's', 29, 4, null);
-    // 井戸（甘い水。回復の泉）
+    const bld = (id, x, y, w, h, o) => {
+      const b = Object.assign({ type: 'building', id, x, y, w, h, wall: 2, roof: 'flat', mat: 'plaster', windows: 1, lamp: false }, o);
+      O.push(b);
+      if (b.door) g[b.door.y][b.door.x] = 'Q';
+      return b;
+    };
+    // 幹のうろの宿（正面の帯 = 石の樹皮に掘った壁と戸）
+    const bInn = bld('sandedge_b_inn', 16, 6, 8, 5, { wall: 3, windows: 2, sign: 'inn', lamp: true, door: { x: 20, y: 10, to: { map: 'sandedge_inn', spawn: 'door' } } });
+    // 戸の無い物: 根のあいだの丸屋根の蔵（東）・遊牧の天幕小屋（北西）
+    bld('sandedge_s_store', 29, 6, 4, 4, { wall: 1, windows: 0 });
+    bld('sandedge_s_yurt', 6, 6, 4, 4, { wall: 1, windows: 0 });
+    for (const b of O) for (let j = 0; j < b.h; j++) for (let i = 0; i < b.w; i++) if (g[b.y + j][b.x + i] === 'P' || g[b.y + j][b.x + i] === 'D') g[b.y + j][b.x + i] = 's';
+
+    // 井戸（甘い水。回復の泉 2×2）
     O.push(K.spring('sandedge_spring', 19, 15));
-    O.push(K.prop('desert_palm', 17, 13), K.prop('desert_palm', 22, 13, { variant: 1 }), K.prop('desert_palm', 17, 18, { variant: 1 }), K.prop('desert_palm', 22, 18));
-    // 売り台（東）とロッタの籠
-    O.push(K.prop('desert_stall', 32, 12), K.prop('desert_stall', 32, 16), K.prop('carpet_rack', 34, 20), K.prop('clay_jars', 35, 12), K.prop('sack', 35, 14), K.prop('crate', 35, 17));
-    // うまや（西）
-    O.push(K.prop('fence', 4, 11), K.prop('fence', 5, 11), K.prop('fence', 6, 11), K.prop('fence', 7, 11), K.prop('fence', 8, 11));
-    O.push(K.prop('hay', 5, 13), K.prop('hay', 5, 19), K.prop('wash_tub', 4, 21), K.prop('cart_barrels', 5, 23));
-    // 中庭の飾り（灯り・敷物・荷）
-    O.push(K.prop('copper_brazier', 11, 12), K.prop('copper_brazier', 28, 12), K.prop('copper_brazier', 11, 20), K.prop('copper_brazier', 28, 20));
-    O.push(K.prop('copper_brazier', 17, 24), K.prop('copper_brazier', 22, 24));
-    O.push(K.prop('lantern', 14, 9), K.prop('lantern', 25, 9), K.prop('lantern', 9, 4), K.prop('lantern', 32, 4));
-    O.push(K.prop('table', 13, 15), K.prop('stool', 12, 15), K.prop('stool', 14, 16), K.prop('table', 26, 16), K.prop('stool', 27, 16), K.prop('stool', 25, 17));
-    O.push(K.prop('clay_jars', 12, 4), K.prop('clay_jars', 27, 4), K.prop('sack', 13, 5), K.prop('crate', 26, 5), K.prop('cart_barrels', 12, 22), K.prop('clay_jars', 27, 22));
-    O.push(K.prop('tent', 24, 21), K.prop('bones', 38, 28), K.prop('cactus', 1, 27), K.prop('thorn_bush', 38, 5), K.prop('sand_mound', 1, 8), K.prop('cactus', 37, 18));
-    O.push(K.prop('house_plant', 15, 9), K.prop('house_plant', 24, 9), K.prop('rug_roll', 9, 9), K.prop('carpet_rack', 30, 9));
-    O.push(K.prop('desert_palm', 5, 8, { variant: 1 }), K.prop('desert_palm', 34, 8));
+    // 売り台（東の帆布の下、壁際）とロッタの籠
+    O.push(K.prop('desert_stall', 34, 12), K.prop('carpet_rack', 34, 19), K.prop('clay_jars', 35, 14), K.prop('crate', 35, 17));
+    // うまや（岩のアーチの下）
+    O.push(K.prop('hay', 4, 12), K.prop('hay', 4, 20), K.prop('wash_tub', 4, 16));
+    // 灯り: 井戸のまわりの銅のかがり火（敷石の縁の外）、戸口の脇の置き灯籠
+    O.push(K.prop('copper_brazier', 12, 14), K.prop('copper_brazier', 28, 14), K.prop('copper_brazier', 12, 19), K.prop('copper_brazier', 28, 19));
+    O.push(K.prop('lantern', 19, 11), K.prop('lantern', 21, 11), K.prop('lantern', 17, 24), K.prop('lantern', 22, 24), K.prop('lantern', 9, 12));
+    // 壁・根の際の少しの物
+    O.push(K.prop('table', 25, 13), K.prop('stool', 26, 13), K.prop('clay_jars', 13, 11), K.prop('cart_barrels', 27, 11), K.prop('sack', 33, 21));
     O.push(K.sign(23, 26, '宿場「砂の縁」\n北 → ヴェルダの森　南 → カシム\n東の峠 → 灰の荒野（崩れで通れない）'));
-    O.push(K.exam(9, 5, 'sandedge_notice'));
-    O.push(K.chest('sandedge_c1', 7, 22, { item: 'i_potion', n: 2 }));          // 見える宝箱（うまやの隅）
+    O.push(K.exam(15, 10, 'sandedge_notice'));                                   // 石の根に打ちつけた掲示
+    O.push(K.chest('sandedge_c1', 5, 19, { item: 'i_potion', n: 2 }));          // 見える宝箱（うまやの隅）
     const N = [
       K.npc('lotta', 'npc_lotta', 33, 14, { name: '行商人ロッタ', title: '背負い籠の店', dir: 'w', talk: 'sandedge_lotta', pushable: false, reward: 'side' }),
       K.npc('stall', 'npc_desert_man', 33, 18, { name: '売り台の男', title: '道具', dir: 'w', talk: 'sandedge_shop', pushable: false, reward: null }),
-      K.npc('stable', 'npc_desert_child', 7, 16, { name: 'うまやの子', dir: 'e', talk: 'sandedge_stable', reward: 'news' }),
-      K.npc('camel_a', 'ani_camel', 6, 14, { name: 'ラクダ', dir: 'e', talk: [L('ラクダが、長いまつげの下から\nこちらを見ている。')], reward: null }),
-      K.npc('camel_b', 'ani_camel', 6, 19, { name: 'ラクダ', dir: 'e', talk: [L('ラクダは、干し草を\nもぐもぐかんでいる。')], reward: null }),
-      K.npc('forest_trav', 'npc_traveler', 13, 16, { name: '森から来た木こり', dir: 'e', talk: 'sandedge_forest_traveler', reward: 'news' }),
-      K.npc('ash_trav', 'npc_ash_fighter', 27, 15, { name: '灰まみれの兵', dir: 'w', talk: 'sandedge_ash_traveler', reward: 'lead' }),
-      K.npc('well_girl', 'npc_desert_child', 21, 19, { name: '水くみの娘', dir: 'n', talk: 'sandedge_well_girl', reward: 'hint' }),
+      K.npc('stable', 'npc_desert_child', 8, 16, { name: 'うまやの子', dir: 'e', talk: 'sandedge_stable', reward: 'news' }),
+      K.npc('camel_a', 'ani_camel', 5, 14, { name: 'ラクダ', dir: 'e', talk: [L('ラクダが、長いまつげの下から\nこちらを見ている。')], reward: null }),
+      K.npc('camel_b', 'ani_camel', 5, 18, { name: 'ラクダ', dir: 'e', talk: [L('ラクダは、干し草を\nもぐもぐかんでいる。')], reward: null }),
+      K.npc('forest_trav', 'npc_traveler', 14, 16, { name: '森から来た木こり', dir: 'e', talk: 'sandedge_forest_traveler', reward: 'news' }),
+      K.npc('ash_trav', 'npc_ash_fighter', 26, 16, { name: '灰まみれの兵', dir: 'w', talk: 'sandedge_ash_traveler', reward: 'lead' }),
+      K.npc('well_girl', 'npc_desert_child', 21, 18, { name: '水くみの娘', dir: 'n', talk: 'sandedge_well_girl', reward: 'hint' }),
     ];
     K.def('sandedge', {
       name: '宿場「砂の縁」', kind: 'town', region: 'r_desert', location: 'sandedge', theme: 'desert_town',
-      legend: DK.LEGEND(), rows: g, outside: 'dune_sand', objects: O, npcs: N,
-      spawns: { gate: { x: 20, y: 24, dir: 'n' }, warp: { x: 20, y: 22, dir: 'n' }, inn: { x: dInn.x, y: dInn.y + 1, dir: 's' } },
+      legend: DK.LEGEND({
+        D: { mat: 'dune_sand', solid: true, rise: 1, name: 'dune' },
+        P: { mat: 'grass', solid: true, name: 'scrub' },
+        T: { mat: 'rock', solid: true, rise: 1, name: 'stone_tree' },
+      }),
+      rows: g, outside: 'dune_sand', objects: O, npcs: N,
+      spawns: { gate: { x: 20, y: 26, dir: 'n' }, warp: { x: 20, y: 22, dir: 'n' }, inn: { x: bInn.door.x, y: bInn.door.y + 1, dir: 's' } },
       exits: [{ x: 18, y: 29, w: 4, h: 1, to: { map: 'world', spawn: 'sandedge' } }],
       triggers: [{ id: 'arrive', on: 'enter', event: 'sandedge_arrive' }],
       zones: [], light: DK.LIGHT_TOWN, dark: false, bgm: 'kasim', bbg: 'desert',
-      meta: { sub: '街道のまん中の宿', chestsInfo: true },
+      meta: { sub: '石になった大樹の宿場', chestsInfo: false },
+      // 宿場ぜんたいを 1 枚に描いた下絵（v2/assets/env/desert/under/sandedge*、design/ENV_ASSETS.md §7）。当たり・戸口・人・灯り・物は上のデータ
+      art: { image: 'desert/under/sandedge', emit: 'desert/under/sandedge_emit', painted: [] },
     });
 
     // 宿と酒場（18×12）

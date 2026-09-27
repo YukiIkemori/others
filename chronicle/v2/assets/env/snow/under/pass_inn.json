@@ -1,0 +1,65 @@
+{
+ "id": "pass_inn",
+ "kind": "under",
+ "map": "pass_inn",
+ "tile": 32,
+ "size32": [
+  1088,
+  832
+ ],
+ "windows32": [
+  {
+   "kind": "win",
+   "x": 768,
+   "y": 75,
+   "w": 12,
+   "h": 7
+  },
+  {
+   "kind": "win",
+   "x": 162,
+   "y": 180,
+   "w": 10,
+   "h": 14
+  },
+  {
+   "kind": "win",
+   "x": 850,
+   "y": 182,
+   "w": 10,
+   "h": 12
+  },
+  {
+   "kind": "win",
+   "x": 293,
+   "y": 183,
+   "w": 10,
+   "h": 11
+  },
+  {
+   "kind": "win",
+   "x": 724,
+   "y": 183,
+   "w": 11,
+   "h": 11
+  }
+ ],
+ "doors32": [
+  {
+   "x": 240,
+   "y": 254,
+   "id": "pass_gate_inn"
+  },
+  {
+   "x": 816,
+   "y": 254,
+   "id": "pass_gate_shop"
+  }
+ ],
+ "painted": [],
+ "files": {
+  "24": "pass_inn@24.png",
+  "32": "pass_inn@32.png",
+  "40": "pass_inn@40.png"
+ }
+}

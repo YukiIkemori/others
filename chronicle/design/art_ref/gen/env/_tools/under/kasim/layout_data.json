@@ -1,0 +1,1913 @@
+{
+ "id": "kasim",
+ "w": 62,
+ "h": 56,
+ "rows": [
+  "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDXXXDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDDDDDDDDDDXXXXXXXDDDDDDDDDDDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDDDDDDDDDXXXXXXXXXDDDDDDDDDDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDDDDDDDDXXXXXXXXXXXDDDDDDDDDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDDDDDDDDXXXXXXXXXXXDDDDDDDDDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDDDDDDDDXXXXXXXXXXXDDDDDDDDDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDDDDDDDDXXXXXXXXXXXDDDDDDDDDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDDDDDDsXXXXXXXXXXXXXDDDDDDDDDDDDDDDDDDDDDDDD",
+  "DDDDDDssssssssssDDDDDDDXXXXXXXXXXXXXXXXXDDDDDDssssssssssDDDDDD",
+  "DDDDDDsssssssssssssDDXXXXXXXXXXXXXXXXXXXXXDDDDssssssssssDDDDDD",
+  "DDDDDDsssssssssssssssXXXXXXXXXXXXXXXXXXXXXsssssssssssssssDDDDD",
+  "DDDDDsssssssssssssssXXXXXXXXXXXXXXXXXXXXXXXsssssssssssssssDDDD",
+  "DDDDDssssssssssssssssXXXXXXXXXXXXXXXXXXXXXsssssssssssssssssDDD",
+  "DDDDsssssssssssssssssXXXXXXXXXXXXXXXXXXXXXssssssssQssssssssDDD",
+  "DDDDssssssQssssssssssXXXXXXXXXXXXXXXXXXXXXsssssssskksssssssDDD",
+  "DDDDsssssskksssssssssXXXXQXXXXXQXXXXXQXXXXsssssssskksssssssDDD",
+  "DDDDsssssskksssssssQQQQQQQQQQQQQQQQQQQQQQQQQsssssskksssssssDDD",
+  "DDDDPPPssskksssssssQQQQQQQQQQQQQQQQQQQQQQQQQsssssskkssssssPDDD",
+  "DDDDDPPssskksssssssQQQQQQQQQQQQQQQQQQQQQQQQQssssskkkssssssDDDD",
+  "DDDDDPPssskkkkkssssssssQQQQQQxxQxxQQQQQQssssssssskkkssssssDDDD",
+  "DDDDDDPssskkkkksPsssssQQQQQxQxxQxxQxQQQQQsssssPsskksssQsssDDDD",
+  "DDDDDDDsssssskkssssssQQQQQQxxxxxxxxxQQQQQQssssssskkkkkkkDDDDDD",
+  "DDDDDDDsssssskkssssssQQQQQxxxxxxxxxxxQQQQQssssskkkkkkkkksssDDD",
+  "DDDssssskkkkkkkkkkksQQQQQQxxxkkkkkxxxQQQQQQsssskkkkssssssssDDD",
+  "DDDssssskkkkkkkkkkksQQQQQxxxxkkkkkxxxQQQQQQsssskkssssssssssDDD",
+  "kkkkkkkkkkkkkkkkkkkkQQQQQxxxkkwwwkkxxQQQQQQkksskkssskkkkkkkkkk",
+  "kkkkkkkkkkksssskkkkkQQQQQQxxkkkkkkkxxQQQQQQkksskkssskkkkkkkkkk",
+  "kkkkkkkkkkksssskkkkkQQQQQQxxxxQQxxxxQQQQQQQkkkkkkkkkkkkkkkkkkk",
+  "DDDDDDssssssssskkssssQQQQQQxxxQQxxxQQQQQQQkkkkkkkkkkkkkssDDDDD",
+  "DDDDDDssssssssskkssssQQQQQQQxxQQxxQQQQQQQQkkkkkkkkkkkkksssDDDD",
+  "DDDDDsssssssssskksssssQQQQQQQQQQQQQQQQQQQssssssssssssssssDDDDD",
+  "DDDDDDssssssssskkssssssQQQQQQQQQQQQQQQQQsssssssssssssssssssDDD",
+  "DDDDssssssskkkkkkssssssssQQQQQQQQQQQQQskkksssssssssssssssssDDD",
+  "DDDDssssssskkkkkkssssssssssQQQQQQQQQssskkksssssssssssssssssDDD",
+  "DDDDssssssskksssssssssssssssskkkkssssssskksssssssssssssssssDDD",
+  "DDDDssssssskksssssssssssssssskkssssssssskkssssssssssssssDDDDDD",
+  "DDDDssQsssskkssssssPPPPsssssskkssssssssskkssssssssssssssDDDDDD",
+  "DDDDDDkkkkkkkssssssPPPPsssssskkssssssssskksssssssssssssDDDDDDD",
+  "DDDDDDkkkkkkkssssssPPPPkkkkkkkkksssssssskksssssssssssPDDDDDDDD",
+  "DDDDDDDDDDsssssssssPPPPkkkkkkkkksssssssskksssssssssssPDDDDDDDD",
+  "DDDDDDDDDDssssssssssssskkssssskksssssssskksssssssssssDDDDDDDDD",
+  "DDDDDDDDDDDssssssssssssssssssskksssssssskksssssssssssDDDDDDDDD",
+  "DDDDDDDDDDDDDssssssssssssssssskksssssssskksssssssssssDDDDDDDDD",
+  "DDDDDDDDDDDDDDsssssssssssssssskkkkkkkkkkkksssssQsssssDDDDDDDDD",
+  "DDDDDDDDDDDDDDDssssssssssssssskkkkkkkkkkkkkkkkkkkDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDsssssssssssssskkssssssskkkkkkkkkDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDssssssssssssskkssssssssssssDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDsssssssssssskkssssssssPPPPDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDsssssssssssskkssssssssPPPDDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDDssssssssssskkssssssssPPDDDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDDDDssssssssskksssssssDDDDDDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDDDDDDDsssssssssssssDDDDDDDDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
+ ],
+ "legend": {
+  "s": {
+   "mat": "sand"
+  },
+  "u": {
+   "mat": "dune_sand"
+  },
+  "k": {
+   "mat": "cracked_clay"
+  },
+  "d": {
+   "mat": "dirt"
+  },
+  "Q": {
+   "mat": "sandstone_floor"
+  },
+  "c": {
+   "mat": "cobble"
+  },
+  "X": {
+   "mat": "wall_sandstone",
+   "solid": true,
+   "rise": 2
+  },
+  "x": {
+   "mat": "wall_sandstone",
+   "solid": true,
+   "rise": 1
+  },
+  "m": {
+   "mat": "rock",
+   "solid": true,
+   "rise": 1
+  },
+  "w": {
+   "mat": "water",
+   "walk": false
+  },
+  "_": {
+   "mat": "shallow"
+  },
+  "g": {
+   "mat": "grass"
+  },
+  "D": {
+   "mat": "dune_sand",
+   "solid": true,
+   "rise": 1,
+   "name": "dune"
+  },
+  "P": {
+   "mat": "grass",
+   "solid": true,
+   "name": "palms"
+  }
+ },
+ "objects": [
+  {
+   "type": "building",
+   "id": "kasim_b_shop",
+   "x": 23,
+   "y": 14,
+   "w": 5,
+   "h": 3,
+   "wall": 3,
+   "roof": "flat",
+   "mat": "plaster",
+   "windows": 1,
+   "lamp": true,
+   "sign": "item",
+   "door": {
+    "x": 25,
+    "y": 16,
+    "to": {
+     "map": "kasim_shop",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "kasim_b_fortune",
+   "x": 29,
+   "y": 14,
+   "w": 5,
+   "h": 3,
+   "wall": 3,
+   "roof": "flat",
+   "mat": "plaster",
+   "windows": 0,
+   "lamp": false,
+   "door": {
+    "x": 31,
+    "y": 16,
+    "to": {
+     "map": "kasim_fortune",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "kasim_b_mapshop",
+   "x": 35,
+   "y": 14,
+   "w": 5,
+   "h": 3,
+   "wall": 3,
+   "roof": "flat",
+   "mat": "plaster",
+   "windows": 1,
+   "lamp": true,
+   "sign": "map",
+   "door": {
+    "x": 37,
+    "y": 16,
+    "to": {
+     "map": "kasim_mapshop",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "kasim_b_inn",
+   "x": 6,
+   "y": 9,
+   "w": 10,
+   "h": 7,
+   "wall": 3,
+   "roof": "flat",
+   "mat": "plaster",
+   "windows": 3,
+   "lamp": true,
+   "sign": "inn",
+   "door": {
+    "x": 10,
+    "y": 15,
+    "to": {
+     "map": "kasim_inn",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "kasim_b_tavern",
+   "x": 46,
+   "y": 9,
+   "w": 10,
+   "h": 6,
+   "wall": 2,
+   "roof": "flat",
+   "mat": "plaster",
+   "windows": 2,
+   "lamp": true,
+   "sign": "tavern",
+   "door": {
+    "x": 50,
+    "y": 14,
+    "to": {
+     "map": "kasim_tavern",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "kasim_b_digger",
+   "x": 52,
+   "y": 17,
+   "w": 6,
+   "h": 5,
+   "wall": 2,
+   "roof": "flat",
+   "mat": "plaster",
+   "windows": 1,
+   "lamp": false,
+   "door": {
+    "x": 54,
+    "y": 21,
+    "to": {
+     "map": "kasim_digger",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "kasim_b_guild",
+   "x": 42,
+   "y": 38,
+   "w": 11,
+   "h": 7,
+   "wall": 3,
+   "roof": "flat",
+   "mat": "plaster",
+   "windows": 2,
+   "lamp": true,
+   "sign": "guild",
+   "door": {
+    "x": 47,
+    "y": 44,
+    "to": {
+     "map": "kasim_guild",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "kasim_b_abul",
+   "x": 4,
+   "y": 33,
+   "w": 6,
+   "h": 5,
+   "wall": 2,
+   "roof": "flat",
+   "mat": "plaster",
+   "windows": 1,
+   "lamp": false,
+   "door": {
+    "x": 6,
+    "y": 37,
+    "to": {
+     "map": "kasim_abul",
+     "spawn": "door"
+    }
+   }
+  },
+  {
+   "type": "building",
+   "id": "kasim_s_cistern",
+   "x": 15,
+   "y": 41,
+   "w": 5,
+   "h": 5,
+   "wall": 2,
+   "roof": "flat",
+   "mat": "plaster",
+   "windows": 0,
+   "lamp": false
+  },
+  {
+   "type": "building",
+   "id": "kasim_s_dove",
+   "x": 24,
+   "y": 46,
+   "w": 3,
+   "h": 5,
+   "wall": 2,
+   "roof": "flat",
+   "mat": "plaster",
+   "windows": 0,
+   "lamp": false
+  },
+  {
+   "type": "building",
+   "id": "kasim_s_granary",
+   "x": 33,
+   "y": 46,
+   "w": 7,
+   "h": 5,
+   "wall": 2,
+   "roof": "flat",
+   "mat": "plaster",
+   "windows": 0,
+   "lamp": false
+  },
+  {
+   "type": "building",
+   "id": "kasim_s_wind",
+   "x": 56,
+   "y": 32,
+   "w": 3,
+   "h": 4,
+   "wall": 2,
+   "roof": "flat",
+   "mat": "plaster",
+   "windows": 0,
+   "lamp": false
+  },
+  {
+   "type": "prop",
+   "id": "obelisk",
+   "x": 24,
+   "y": 31
+  },
+  {
+   "type": "examine",
+   "x": 24,
+   "y": 31,
+   "event": "kasim_sundial"
+  },
+  {
+   "type": "examine",
+   "x": 31,
+   "y": 22,
+   "event": "kasim_spring_letters"
+  },
+  {
+   "type": "prop",
+   "id": "board",
+   "x": 38,
+   "y": 33
+  },
+  {
+   "type": "examine",
+   "x": 38,
+   "y": 33,
+   "event": "kasim_board"
+  },
+  {
+   "type": "prop",
+   "id": "broken_pillar",
+   "x": 54,
+   "y": 30
+  },
+  {
+   "type": "examine",
+   "x": 54,
+   "y": 30,
+   "event": "kasim_memorial"
+  },
+  {
+   "type": "prop",
+   "id": "dry_well",
+   "x": 58,
+   "y": 24
+  },
+  {
+   "type": "examine",
+   "x": 58,
+   "y": 24,
+   "event": "kasim_well"
+  },
+  {
+   "type": "examine",
+   "x": 21,
+   "y": 14,
+   "event": "kasim_colossus"
+  },
+  {
+   "type": "examine",
+   "x": 41,
+   "y": 14,
+   "event": "kasim_colossus"
+  },
+  {
+   "type": "prop",
+   "id": "copper_brazier",
+   "x": 26,
+   "y": 23
+  },
+  {
+   "type": "prop",
+   "id": "copper_brazier",
+   "x": 36,
+   "y": 23
+  },
+  {
+   "type": "prop",
+   "id": "copper_brazier",
+   "x": 25,
+   "y": 26
+  },
+  {
+   "type": "prop",
+   "id": "copper_brazier",
+   "x": 36,
+   "y": 27
+  },
+  {
+   "type": "prop",
+   "id": "copper_brazier",
+   "x": 29,
+   "y": 29
+  },
+  {
+   "type": "prop",
+   "id": "copper_brazier",
+   "x": 32,
+   "y": 29
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 22,
+   "y": 16
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 28,
+   "y": 16
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 34,
+   "y": 16
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 40,
+   "y": 16
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 9,
+   "y": 16
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 12,
+   "y": 16
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 49,
+   "y": 15
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 52,
+   "y": 15
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 46,
+   "y": 45
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 49,
+   "y": 45
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 5,
+   "y": 38
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 8,
+   "y": 38
+  },
+  {
+   "type": "prop",
+   "id": "lantern",
+   "x": 53,
+   "y": 22
+  },
+  {
+   "type": "prop",
+   "id": "flower_pot",
+   "x": 25,
+   "y": 23,
+   "cond": "cleared_r_desert"
+  },
+  {
+   "type": "prop",
+   "id": "flower_pot",
+   "x": 37,
+   "y": 24,
+   "cond": "cleared_r_desert"
+  },
+  {
+   "type": "prop",
+   "id": "flower_pot",
+   "x": 27,
+   "y": 30,
+   "cond": "cleared_r_desert"
+  },
+  {
+   "type": "prop",
+   "id": "flower_pot",
+   "x": 35,
+   "y": 30,
+   "cond": "cleared_r_desert"
+  },
+  {
+   "type": "prop",
+   "id": "desert_stall",
+   "x": 19,
+   "y": 14
+  },
+  {
+   "type": "prop",
+   "id": "carpet_rack",
+   "x": 43,
+   "y": 14
+  },
+  {
+   "type": "prop",
+   "id": "clay_jars",
+   "x": 18,
+   "y": 15
+  },
+  {
+   "type": "prop",
+   "id": "clay_jars",
+   "x": 44,
+   "y": 15
+  },
+  {
+   "type": "prop",
+   "id": "tomb_urn",
+   "x": 18,
+   "y": 13
+  },
+  {
+   "type": "prop",
+   "id": "cart_barrels",
+   "x": 14,
+   "y": 11
+  },
+  {
+   "type": "prop",
+   "id": "clay_jars",
+   "x": 45,
+   "y": 11
+  },
+  {
+   "type": "prop",
+   "id": "sack",
+   "x": 56,
+   "y": 13
+  },
+  {
+   "type": "prop",
+   "id": "crate",
+   "x": 41,
+   "y": 40
+  },
+  {
+   "type": "prop",
+   "id": "clay_jars",
+   "x": 10,
+   "y": 34
+  },
+  {
+   "type": "chest",
+   "id": "kasim_c1",
+   "x": 58,
+   "y": 16,
+   "pool": "p_T"
+  },
+  {
+   "type": "chest",
+   "id": "kasim_c2",
+   "x": 14,
+   "y": 44,
+   "item": "i_ether",
+   "n": 2
+  },
+  {
+   "type": "sign",
+   "x": 4,
+   "y": 29,
+   "text": "オアシスの町カシム\n西の門 → 隊商路・王墓"
+  },
+  {
+   "type": "sign",
+   "x": 57,
+   "y": 29,
+   "text": "東の門 → 灰の荒野"
+  }
+ ],
+ "npcs": [
+  {
+   "id": "fara",
+   "look": "npc_fara",
+   "x": 34,
+   "y": 20,
+   "dir": "s",
+   "move": "still",
+   "name": "ファラ",
+   "title": "泉の番人の娘",
+   "talk": "kasim_fara",
+   "reward": "lead",
+   "cond": "!cleared_r_desert",
+   "key": "fara"
+  },
+  {
+   "id": "fara_after",
+   "look": "npc_fara",
+   "x": 33,
+   "y": 31,
+   "dir": "n",
+   "move": "still",
+   "name": "ファラ",
+   "title": "泉の番人の娘",
+   "talk": "kasim_fara",
+   "reward": "lead",
+   "cond": "cleared_r_desert",
+   "key": "fara_after"
+  },
+  {
+   "id": "nadia",
+   "look": "npc_nadia",
+   "x": 27,
+   "y": 32,
+   "dir": "s",
+   "move": "still",
+   "name": "ナディア",
+   "title": "踊り子",
+   "talk": "kasim_nadia",
+   "reward": "lead",
+   "key": "nadia"
+  },
+  {
+   "id": "zaid_plaza",
+   "look": "npc_zaid",
+   "x": 36,
+   "y": 31,
+   "dir": "s",
+   "move": "still",
+   "name": "ザイード",
+   "title": "隊商の長",
+   "talk": "kasim_zaid",
+   "reward": "lead",
+   "cond": [
+    "!desert_caravan_on",
+    "!desert_camp3_done"
+   ],
+   "key": "zaid_plaza"
+  },
+  {
+   "id": "zaid_after",
+   "look": "npc_zaid",
+   "x": 36,
+   "y": 31,
+   "dir": "s",
+   "move": "still",
+   "name": "ザイード",
+   "title": "隊商の長",
+   "talk": "kasim_zaid",
+   "reward": "discount",
+   "cond": "cleared_r_desert",
+   "key": "zaid_after"
+  },
+  {
+   "id": "child_dates",
+   "look": "npc_desert_child",
+   "x": 21,
+   "y": 29,
+   "dir": "e",
+   "move": "still",
+   "name": "市場の子",
+   "talk": "kasim_child",
+   "reward": "side",
+   "key": "child_dates"
+  },
+  {
+   "id": "sundial_old",
+   "look": "npc_desert_old_m",
+   "x": 24,
+   "y": 32,
+   "dir": "e",
+   "move": "still",
+   "name": "日時計のじいさま",
+   "talk": "kasim_old_man",
+   "reward": "news",
+   "key": "sundial_old"
+  },
+  {
+   "id": "arms_vendor",
+   "look": "npc_desert_man",
+   "x": 19,
+   "y": 15,
+   "dir": "s",
+   "move": "still",
+   "name": "武具売りのハミド",
+   "title": "市場の武具の屋台",
+   "talk": "kasim_arms",
+   "pushable": false,
+   "reward": null,
+   "key": "arms_vendor"
+  },
+  {
+   "id": "bazaar",
+   "look": "npc_desert_woman",
+   "x": 43,
+   "y": 15,
+   "dir": "s",
+   "move": "still",
+   "name": "屋台のサルマ",
+   "title": "市場の屋台",
+   "talk": "kasim_bazaar",
+   "pushable": false,
+   "reward": "discount",
+   "key": "bazaar"
+  },
+  {
+   "id": "dates_vendor",
+   "look": "npc_desert_old_f",
+   "x": 17,
+   "y": 30,
+   "dir": "e",
+   "move": "still",
+   "name": "なつめやし売り",
+   "talk": "kasim_dates",
+   "reward": "side",
+   "key": "dates_vendor"
+  },
+  {
+   "id": "salt_vendor",
+   "look": "npc_caravan",
+   "x": 44,
+   "y": 30,
+   "dir": "w",
+   "move": "still",
+   "name": "塩売りのカリム",
+   "talk": "kasim_salt",
+   "reward": "side",
+   "key": "salt_vendor"
+  },
+  {
+   "id": "tadeo",
+   "look": "npc_tadeo",
+   "x": 45,
+   "y": 22,
+   "dir": "s",
+   "move": "still",
+   "name": "タデオ",
+   "title": "灯守組合の油売り",
+   "talk": "kasim_tadeo",
+   "reward": "side",
+   "key": "tadeo"
+  },
+  {
+   "id": "guard_w",
+   "look": "npc_desert_man",
+   "x": 4,
+   "y": 25,
+   "dir": "s",
+   "move": "still",
+   "name": "西の門番",
+   "talk": "kasim_gate_w",
+   "reward": "boss",
+   "key": "guard_w"
+  },
+  {
+   "id": "guard_e",
+   "look": "npc_desert_man",
+   "x": 57,
+   "y": 25,
+   "dir": "s",
+   "move": "still",
+   "name": "東の門番",
+   "talk": "kasim_gate_e",
+   "reward": "news",
+   "key": "guard_e"
+  },
+  {
+   "id": "woman_mid",
+   "look": "npc_desert_woman",
+   "x": 22,
+   "y": 24,
+   "dir": "e",
+   "move": "still",
+   "name": "水売りの女",
+   "talk": "kasim_water_woman",
+   "reward": "item",
+   "key": "woman_mid"
+  },
+  {
+   "id": "hawk_friend",
+   "look": "npc_desert_man",
+   "x": 11,
+   "y": 23,
+   "dir": "e",
+   "move": "still",
+   "name": "日焼けした男",
+   "talk": "kasim_hawk_friend",
+   "reward": "hint",
+   "key": "hawk_friend"
+  },
+  {
+   "id": "rashid_memorial",
+   "look": "npc_rashid",
+   "x": 54,
+   "y": 31,
+   "dir": "n",
+   "move": "still",
+   "name": "ラシード",
+   "title": "砂の鷹団の頭",
+   "talk": "kasim_rashid_memorial",
+   "reward": "news",
+   "cond": [
+    "cleared_r_desert",
+    {
+     "choice": "ch_desert_write",
+     "is": "pain"
+    }
+   ],
+   "key": "rashid_memorial"
+  },
+  {
+   "id": "yura_returnee",
+   "look": "npc_yura_woman",
+   "x": 38,
+   "y": 21,
+   "dir": "s",
+   "move": "still",
+   "name": "ライラ",
+   "title": "藍染め職人",
+   "talk": "kasim_yura_dyer",
+   "reward": "side",
+   "key": "yura_returnee"
+  },
+  {
+   "id": "pilgrim_kid",
+   "look": "npc_desert_child",
+   "x": 38,
+   "y": 28,
+   "dir": "w",
+   "move": "wander",
+   "name": "泉で遊ぶ子",
+   "talk": "kasim_kid",
+   "reward": "hint",
+   "key": "pilgrim_kid"
+  },
+  {
+   "id": "camel_1",
+   "look": "ani_camel",
+   "x": 43,
+   "y": 47,
+   "dir": "w",
+   "move": "still",
+   "name": "ラクダ",
+   "talk": {
+    "lines": [
+     {
+      "text": "ラクダは、つまらなそうに\n砂をかんでいる。"
+     }
+    ]
+   },
+   "reward": null,
+   "key": "camel_1"
+  },
+  {
+   "id": "cat",
+   "look": "ani_cat",
+   "x": 28,
+   "y": 42,
+   "dir": "s",
+   "move": "wander",
+   "name": "猫",
+   "talk": {
+    "lines": [
+     {
+      "text": "ニャア。"
+     }
+    ]
+   },
+   "reward": null,
+   "key": "cat"
+  },
+  {
+   "id": "woman_air",
+   "look": "npc_desert_woman",
+   "x": 8,
+   "y": 27,
+   "dir": "e",
+   "move": "still",
+   "name": "市場の女",
+   "talk": {
+    "lines": [
+     {
+      "text": "泉が枯れてから、\n水は油と同じ値段さ。\n……油の値も上がってるけどね。"
+     },
+     {
+      "cond": "cleared_r_desert",
+      "text": "水の値が、半分になったよ！\n今夜はお茶を三杯飲むんだ。"
+     }
+    ]
+   },
+   "reward": null,
+   "key": "woman_air"
+  }
+ ],
+ "spawns": {
+  "gate_w": {
+   "x": 2,
+   "y": 27,
+   "dir": "e"
+  },
+  "gate_e": {
+   "x": 59,
+   "y": 27,
+   "dir": "w"
+  },
+  "plaza": {
+   "x": 31,
+   "y": 32,
+   "dir": "n"
+  },
+  "inn": {
+   "x": 10,
+   "y": 16,
+   "dir": "s"
+  },
+  "tavern": {
+   "x": 50,
+   "y": 15,
+   "dir": "s"
+  },
+  "abul": {
+   "x": 6,
+   "y": 38,
+   "dir": "s"
+  },
+  "shop": {
+   "x": 25,
+   "y": 17,
+   "dir": "s"
+  },
+  "mapshop": {
+   "x": 37,
+   "y": 17,
+   "dir": "s"
+  },
+  "fortune": {
+   "x": 31,
+   "y": 17,
+   "dir": "s"
+  },
+  "guild": {
+   "x": 47,
+   "y": 45,
+   "dir": "s"
+  },
+  "digger": {
+   "x": 54,
+   "y": 22,
+   "dir": "s"
+  },
+  "spring": {
+   "x": 31,
+   "y": 30,
+   "dir": "n"
+  },
+  "warp": {
+   "x": 31,
+   "y": 35,
+   "dir": "n"
+  }
+ },
+ "exits": [
+  {
+   "x": 0,
+   "y": 26,
+   "w": 1,
+   "h": 3,
+   "to": {
+    "map": "world",
+    "spawn": "kasim"
+   }
+  },
+  {
+   "x": 61,
+   "y": 26,
+   "w": 1,
+   "h": 3,
+   "to": {
+    "map": "world",
+    "spawn": "kasim_e"
+   }
+  }
+ ],
+ "walk": [
+  "##############################################################",
+  "##############################################################",
+  "##############################################################",
+  "##############################################################",
+  "##############################################################",
+  "##############################################################",
+  "##############################################################",
+  "##############################################################",
+  "########################.#####################################",
+  "##############################################################",
+  "################...###########################################",
+  "################.....#####################....##########.#####",
+  "#####.##########....#######################...##########..####",
+  "#####.##########.....#####################....##########...###",
+  "####..##########...#.#####################.#..####.#####...###",
+  "####..####.#####.....#####################.................###",
+  "####.................####.#####.#####.####................####",
+  "####................................................######.###",
+  "#######.............................................##########",
+  "#######.............................................##########",
+  "#######......................##.##..................##########",
+  "#######.........#..........#.##.##.#..........#.....##.#######",
+  "#######....................#########....................######",
+  "#######...................###########......................###",
+  "###.......................###.....###.....................####",
+  "###......................####.....###......................###",
+  ".........................###..###..##.........................",
+  "..........................##.......##.........................",
+  "..........................####..####..........................",
+  "######.....................###..###......................#####",
+  "######......................##..##....................#...####",
+  "#####...................#................................#####",
+  "######..................................................######",
+  "##########............................#.................######",
+  "##########..............................................######",
+  "##########..............................................######",
+  "##########..............................................######",
+  "######.###.........####.................................######",
+  "######.............####...................###########..#######",
+  "######.............####...................####################",
+  "##########.........####...................####################",
+  "##########.....#####......................####################",
+  "###########....#####......................####################",
+  "#############..#####......................####################",
+  "####################......................#####.##############",
+  "####################.............................#############",
+  "#################.......###......#######.........#############",
+  "##################......###......#######.....#################",
+  "###################.....###......#######.#####################",
+  "###################.....###......#######.#####################",
+  "####################....###......#######.#####################",
+  "######################..................######################",
+  "#########################.............########################",
+  "##############################################################",
+  "##############################################################",
+  "##############################################################"
+ ],
+ "props": {
+  "barrel": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "crate": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "sack": {
+   "soft": true
+  },
+  "bench": {
+   "soft": true
+  },
+  "chair": {
+   "soft": true
+  },
+  "table": {
+   "solid": true,
+   "light": {
+    "r": 40,
+    "kind": "candle"
+   }
+  },
+  "bed": {
+   "solid": true
+  },
+  "bookshelf": {
+   "solid": true
+  },
+  "counter": {
+   "solid": true
+  },
+  "stove": {
+   "solid": true,
+   "light": {
+    "r": 70,
+    "kind": "fire"
+   }
+  },
+  "lamp_post": {
+   "solid": true,
+   "glow": true,
+   "shadow": "long",
+   "light": {
+    "r": 110,
+    "kind": "lamp"
+   }
+  },
+  "lantern": {
+   "soft": true,
+   "glow": true,
+   "light": {
+    "r": 60,
+    "kind": "lamp"
+   }
+  },
+  "fence": {
+   "solid": true
+  },
+  "flower_pot": {
+   "soft": true
+  },
+  "planter": {
+   "solid": true
+  },
+  "well": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "signboard": {
+   "solid": true
+  },
+  "board": {
+   "solid": true
+  },
+  "rock_small": {
+   "soft": true
+  },
+  "rock": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "stump": {
+   "solid": true
+  },
+  "log": {
+   "solid": true
+  },
+  "mushroom_glow": {
+   "soft": true,
+   "glow": true,
+   "light": {
+    "r": 34,
+    "kind": "crystal"
+   }
+  },
+  "firefly": {
+   "soft": true,
+   "glow": true
+  },
+  "rope_bridge": {
+   "overChars": true
+  },
+  "leaves_over": {
+   "overChars": true
+  },
+  "chest": {
+   "solid": true,
+   "glow": "sparkle",
+   "frames": [
+    "closed",
+    "open",
+    "rare_closed",
+    "rare_open"
+   ],
+   "light": {
+    "r": 34,
+    "kind": "chest"
+   }
+  },
+  "spring": {
+   "solid": true,
+   "glow": true,
+   "footprint": [
+    2,
+    2
+   ],
+   "frames": [
+    "f0",
+    "f1",
+    "f2",
+    "f3"
+   ],
+   "light": {
+    "r": 150,
+    "kind": "spring"
+   }
+  },
+  "goddess": {
+   "solid": true,
+   "glow": true,
+   "footprint": [
+    2,
+    2
+   ],
+   "light": {
+    "r": 150,
+    "kind": "lamp"
+   }
+  },
+  "brazier": {
+   "solid": true,
+   "frames": [
+    "off",
+    "on"
+   ],
+   "light": {
+    "r": 143,
+    "kind": "fire"
+   }
+  },
+  "torch": {
+   "solid": true,
+   "frames": [
+    "off",
+    "on"
+   ],
+   "light": {
+    "r": 90,
+    "kind": "fire"
+   }
+  },
+  "waylamp": {
+   "solid": true,
+   "frames": [
+    "off",
+    "on"
+   ],
+   "light": {
+    "r": 110,
+    "kind": "lamp"
+   }
+  },
+  "switch": {
+   "soft": true,
+   "frames": [
+    "off",
+    "on"
+   ]
+  },
+  "talestone": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "songstone": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 48,
+    "kind": "crystal"
+   }
+  },
+  "footprint": {
+   "soft": true,
+   "glow": true
+  },
+  "beacon": {
+   "glow": true,
+   "light": {
+    "r": 220,
+    "kind": "fire"
+   }
+  },
+  "stairs_up": {},
+  "stairs_down": {},
+  "door": {},
+  "bollard": {
+   "solid": true
+  },
+  "stall": {
+   "solid": true
+  },
+  "net": {
+   "soft": true
+  },
+  "rowboat": {
+   "solid": true
+  },
+  "ship": {
+   "solid": true,
+   "light": {
+    "r": 80,
+    "kind": "lamp"
+   }
+  },
+  "crystal": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 90,
+    "kind": "crystal"
+   }
+  },
+  "tent": {
+   "solid": true
+  },
+  "grave": {
+   "solid": true
+  },
+  "hay": {
+   "solid": true
+  },
+  "tree": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "pine": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "tree_giant": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "bush": {
+   "solid": true
+  },
+  "roots": {
+   "solid": true
+  },
+  "cupboard": {
+   "solid": true
+  },
+  "dresser": {
+   "solid": true
+  },
+  "stool": {
+   "soft": true
+  },
+  "house_plant": {
+   "soft": true
+  },
+  "shelf_jars": {
+   "solid": true
+  },
+  "wash_tub": {
+   "soft": true
+  },
+  "rug_roll": {
+   "soft": true
+  },
+  "weapon_rack": {
+   "solid": true
+  },
+  "ladder_prop": {
+   "solid": true
+  },
+  "lever": {
+   "solid": true,
+   "frames": [
+    "off",
+    "on"
+   ]
+  },
+  "fern": {
+   "soft": true
+  },
+  "reeds": {
+   "soft": true
+  },
+  "log_moss": {
+   "solid": true
+  },
+  "tree_moss": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "tree_dead": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "tree_glow": {
+   "solid": true,
+   "glow": true,
+   "shadow": "long"
+  },
+  "cactus": {
+   "solid": true
+  },
+  "desert_palm": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "desert_stall": {
+   "solid": true
+  },
+  "carpet_rack": {
+   "solid": true
+  },
+  "cart_barrels": {
+   "solid": true
+  },
+  "clay_jars": {
+   "solid": true
+  },
+  "copper_brazier": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 90,
+    "kind": "fire"
+   }
+  },
+  "dry_well": {
+   "solid": true
+  },
+  "obelisk": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "sand_mound": {
+   "soft": true
+  },
+  "thorn_bush": {
+   "soft": true
+  },
+  "tomb_urn": {
+   "solid": true
+  },
+  "bones": {
+   "soft": true
+  },
+  "broken_pillar": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "armor_stand": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "shield_rack": {
+   "solid": true
+  },
+  "candelabra": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 64,
+    "kind": "candle"
+   }
+  },
+  "fireplace": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 96,
+    "kind": "fire"
+   }
+  },
+  "dining_table": {
+   "solid": true
+  },
+  "bar_counter": {
+   "solid": true
+  },
+  "potion_shelf": {
+   "solid": true
+  },
+  "keg_rack": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "double_bed": {
+   "solid": true
+  },
+  "spinning_wheel": {
+   "solid": true
+  },
+  "basket_veg": {
+   "soft": true
+  },
+  "basket_bread": {
+   "soft": true
+  },
+  "writing_desk": {
+   "solid": true
+  },
+  "wall_window": {},
+  "wall_painting": {},
+  "wall_shelf": {},
+  "wall_herbs": {},
+  "wall_sconce": {
+   "glow": true,
+   "light": {
+    "r": 56,
+    "kind": "candle"
+   }
+  },
+  "wall_trophy": {},
+  "wall_chart": {},
+  "wall_tapestry": {},
+  "wall_pots": {},
+  "wall_antlers": {},
+  "wall_wheel": {},
+  "wall_tools": {},
+  "firewood": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "frozen_well": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "hay_sled": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ice_crystal": {
+   "solid": true,
+   "glow": true,
+   "light": {
+    "r": 48,
+    "kind": "crystal"
+   }
+  },
+  "ice_hole": {
+   "soft": true
+  },
+  "sled": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_bank": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_barrel": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_fence": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_fir": {
+   "solid": true,
+   "shadow": "long"
+  },
+  "snow_lamp": {
+   "solid": true,
+   "glow": true,
+   "shadow": "long",
+   "light": {
+    "r": 110,
+    "kind": "lamp"
+   }
+  },
+  "snow_rock": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "snow_sign": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "stove_pipe": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "arena_banner": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ash_bush": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ash_weapon_rack": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "charred_stump": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "charred_tree": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "hot_spring": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "iron_brazier": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lava_rock": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "obsidian_shards": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "phoenix_statue": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "rope_post": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "steam_vent": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "sulphur": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "volcanic_rocks": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "water_urn": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "anchor": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "blue_bench": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "buoys": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "coco_palm": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "coral": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "driftwood": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "fish_barrel": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lamp_pillar": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "map_sign": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "net_frame": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "palm_small": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "palm_umbrella": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "rope_bollard": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "shells": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "white_pot": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "bell_frame": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "board_steps": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "crooked_sign": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "fish_trap": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "grave_moss": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lily_pads": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "mangrove_roots": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "mud_boat": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "pale_mushrooms": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "reeds_tall": {
+   "soft": true
+  },
+  "rotten_stump": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "stilt_posts": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "swamp_tree": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "willow": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "wisp_lamp": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "anvil": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "bellows": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "coal_barrel": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "forge": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "hook_lamp": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lift_cage": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "mine_cart": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "mine_cart_ore": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "oath_stone": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ore_blue": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "ore_copper": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "rail": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "timber_frame": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "tool_crate": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "tool_rack": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "blue_flowers": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "book_cart": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "book_stack": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "fountain": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "globe": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "iron_gate": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "lectern": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "marble_bench": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "orrery": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "scholar_statue": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "star_banner": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "star_dial": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "star_lamp": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "telescope": {
+   "solid": true,
+   "shadow": "blob"
+  },
+  "topiary": {
+   "solid": true,
+   "shadow": "blob"
+  }
+ }
+}

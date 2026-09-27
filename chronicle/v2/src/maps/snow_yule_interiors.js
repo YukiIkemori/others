@@ -78,7 +78,7 @@
     // ---------------------------------------------------------------- 村長ヨルンの家・火守りの家 12×10
     interior('yule_jorn', '村長の家', 12, 10, {
       back: 'jorn', carpet: [3, 5, 6, 3],
-      objects: [K.prop('bed', 9, 2), K.prop('table', 5, 6), K.prop('chair', 4, 6), K.prop('chair', 6, 6), K.prop('stove', 1, 2), K.prop('bookshelf', 3, 2),
+      objects: [K.prop('bed', 9, 2), K.prop('table', 7, 6), K.prop('chair', 6, 6), K.prop('chair', 8, 6), K.prop('stove', 1, 2), K.prop('bookshelf', 3, 2),   // 戸口の列（x 5）は空ける
         K.exam(3, 3, 'yule_jorn_ledger'), K.prop('firewood', 10, 7), K.prop('lantern', 7, 3)],
       npcs: [K.npc('jorn_wife', 'npc_snow_woman', 6, 4, { name: 'ヨルンのおかみさん', dir: 's', talk: 'yule_jorn_wife', reward: 'item' })],
     });
@@ -92,7 +92,7 @@
     // ---------------------------------------------------------------- 語りの年寄りの家（ブレンダ・オラフ）12×10
     interior('yule_brenda', 'ブレンダの家', 12, 10, {
       back: 'brenda', carpet: [3, 5, 6, 3],
-      objects: [K.prop('stove', 1, 2), K.prop('bed', 9, 2), K.prop('table', 5, 6), K.prop('chair', 4, 6), K.prop('chair', 6, 6), K.prop('rug_roll', 10, 6), K.prop('lantern', 6, 3),
+      objects: [K.prop('stove', 1, 2), K.prop('bed', 9, 2), K.prop('table', 7, 6), K.prop('chair', 6, 6), K.prop('chair', 8, 6), K.prop('rug_roll', 10, 6), K.prop('lantern', 6, 3),   // 戸口の列（x 5）は空ける
         K.prop('shelf_jars', 3, 2), K.prop('house_plant', 10, 7)],
       npcs: [K.npc('brenda', 'npc_snow_old_f', 5, 4, { name: 'ブレンダ', title: '語りの年寄り', dir: 's', talk: 'yule_brenda', reward: 'lead' })],
     });
@@ -106,7 +106,7 @@
     // ---------------------------------------------------------------- 釣り小屋 12×10
     interior('yule_fishhut', '氷上の釣り小屋', 12, 10, {
       back: 'fish',
-      objects: [K.prop('stove', 1, 2), K.prop('snow_barrel', 10, 2), K.prop('snow_barrel', 10, 3), K.prop('table', 5, 5), K.prop('chair', 4, 5), K.prop('ice_hole', 8, 6),
+      objects: [K.prop('stove', 1, 2), K.prop('snow_barrel', 10, 2), K.prop('snow_barrel', 10, 3), K.prop('table', 3, 5), K.prop('chair', 2, 5), K.prop('ice_hole', 8, 6),   // 戸口の列（x 5）は空ける
         K.exam(8, 6, 'yule_fish_hole'), K.prop('sled', 2, 7), K.prop('lantern', 6, 3), K.prop('crate', 10, 7)],
       npcs: [K.npc('fisher', 'npc_snow_old_m', 7, 4, { name: 'トーレ', title: '釣り小屋のじいさま', dir: 's', talk: 'yule_fisher', reward: 'side', pushable: false })],
     });
