@@ -133,7 +133,7 @@
         spawns: { gate: { x: 16, y: 23, dir: 'n' }, inn: { x: 14, y: 9, dir: 's' }, bath: { x: 6, y: 20, dir: 's' } },
         exits: [{ x: 15, y: 25, w: 4, h: 1, to: { map: 'world', spawn: 'pass_inn' } }],
         triggers: [{ id: 'arrive', on: 'enter', event: 'pass_inn_arrive', once: true }],
-        zones: [], light: { ambient: '#5c66a6', k: 0.5, poolK: 1.6, mood: 'town_night' },
+        zones: [], light: { ambient: '#5c66a6', k: 0.5, poolK: 0.8, spillR: 0.9, mood: 'town_night' },
         bgm: 'yule', weather: 'snow', weatherCond: '!cleared_r_snow',
         meta: { sub: '湯気の立つ峠の宿', chestsInfo: false },
       });

@@ -5,7 +5,7 @@
  "folder": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4",
  "sheets": {
   "1": {
-   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_01.png",
+   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_01.png",
    "size": [
     1920,
     2048
@@ -270,7 +270,7 @@
    }
   },
   "2": {
-   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_02.png",
+   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_02.png",
    "size": [
     2560,
     2048
@@ -615,7 +615,7 @@
    }
   },
   "3": {
-   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_03.png",
+   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_03.png",
    "size": [
     3072,
     1536
@@ -834,7 +834,7 @@
    }
   },
   "5": {
-   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_05.png",
+   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_05.png",
    "size": [
     4160,
     1536
@@ -1063,7 +1063,7 @@
    }
   },
   "6": {
-   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_06.png",
+   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_06.png",
    "size": [
     4160,
     1280
@@ -1306,7 +1306,7 @@
    }
   },
   "7": {
-   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_07.png",
+   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_07.png",
    "size": [
     4480,
     1280
@@ -1514,7 +1514,7 @@
    }
   },
   "9": {
-   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_09.png",
+   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_09.png",
    "size": [
     3072,
     1536
@@ -1700,7 +1700,7 @@
    }
   },
   "4": {
-   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_04.png",
+   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_04.png",
    "size": [
     2816,
     1024
@@ -1726,9 +1726,9 @@
    "extras": [],
    "period": 8.0,
    "clarity": 99.0,
-   "src_height": 420.0,
-   "native_height_at_period": 52.5,
-   "scale_note": "描かれた格子のまま（52.5 ドット）",
+   "src_height": 396.0,
+   "native_height_at_period": 49.5,
+   "scale_note": "描かれた格子のまま（49.5 ドット）",
    "cell": 8.0,
    "sprites": {
     "act_up_nod": {
@@ -1765,19 +1765,22 @@
     },
     "act_up_call": {
      "size": [
-      30,
-      57
+      26,
+      48
      ],
      "box": [
-      1624,
-      8,
-      1896,
+      1640,
+      80,
+      1880,
       496
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": 0.06,
-     "scale": 0.904
+     "facing_score": -0.05,
+     "scale": 0.765,
+     "fixed": [
+      "rescaled 1.31"
+     ]
     },
     "act_up_draw": {
      "size": [
@@ -1829,13 +1832,13 @@
      ],
      "air": 0,
      "blur": 0.0,
-     "facing_score": -2.39,
+     "facing_score": -2.56,
      "facing_cues": {
       "head": -1.5,
-      "upper": -1.7,
-      "scarf": 0.81
+      "upper": -2.0,
+      "scarf": 0.94
      },
-     "scale": 0.873
+     "scale": 0.843
     },
     "act_left_call": {
      "size": [
@@ -1882,7 +1885,7 @@
    }
   },
   "8": {
-   "file": "../art_ref/gen/arun/arun_v4/arun_sheet_08.png",
+   "file": "/home/user/others/chronicle/design/art_ref/gen/arun/arun_v4/arun_sheet_08.png",
    "size": [
     3584,
     640
@@ -2002,7 +2005,7 @@
    "sheet": 4,
    "level": "auto",
    "code": "marks",
-   "msg": "シート4 の 6 番（左向き・驚く） の感情マーク（驚きの線・汗など 2 個）を消した",
+   "msg": "シート4 の 6 番（左向き・驚く） の感情マーク（驚きの線・汗など 1 個）を消した",
    "slot": "act_left_surprise",
    "ask": null,
    "data": {}
@@ -2011,25 +2014,25 @@
    "sheet": 4,
    "level": "check",
    "code": "height",
-   "msg": "シート4 の 1 番（上向き・うなずく） の身長が 44 ドット（ほかは 49）",
+   "msg": "シート4 の 1 番（上向き・うなずく） の身長が 44 ドット（ほかは 48）",
    "slot": "act_up_nod",
    "ask": null,
    "data": {}
   },
   {
    "sheet": 4,
-   "level": "redo",
+   "level": "check",
    "code": "height",
-   "msg": "シート4 の 3 番（上向き・手を挙げる） の身長が 57 ドット（ほかは 49）",
-   "slot": "act_up_call",
-   "ask": "シート4の3番（上向き・手を挙げる）だけ大きさが違う。ほかのポーズと同じ身長にして、同じ条件で描き直して",
+   "msg": "シート4 の 4 番（上向き・剣を構える） の身長が 51 ドット（ほかは 48）",
+   "slot": "act_up_draw",
+   "ask": null,
    "data": {}
   },
   {
    "sheet": 4,
    "level": "check",
    "code": "height",
-   "msg": "シート4 の 7 番（左向き・手を挙げる） の身長が 55 ドット（ほかは 49）",
+   "msg": "シート4 の 7 番（左向き・手を挙げる） の身長が 55 ドット（ほかは 48）",
    "slot": "act_left_call",
    "ask": null,
    "data": {}
@@ -2038,15 +2041,15 @@
    "sheet": 4,
    "level": "redo",
    "code": "facing",
-   "msg": "シート4 の 6 番（左向き・驚く） が右を向いている（左向きのはず。点数 -2.4）",
+   "msg": "シート4 の 6 番（左向き・驚く） が右を向いている（左向きのはず。点数 -2.6）",
    "slot": "act_left_surprise",
    "ask": "シート4の6番（左向き・驚く）が右を向いている。左向きにして、同じ条件で描き直して",
    "data": {
-    "score": -2.394421462438599,
+    "score": -2.555072463768116,
     "cues": {
      "head": -1.5,
-     "upper": -1.7,
-     "scarf": 0.81
+     "upper": -2.0,
+     "scarf": 0.94
     }
    }
   },
@@ -2178,17 +2181,35 @@
   },
   {
    "sheet": 4,
+   "level": "redo",
+   "code": "scale",
+   "msg": "シート4 の 3 番（上向き・手を挙げる） がほかのポーズより小さく描かれている（頭の大きさで約 77%）。仮に 131% に拡大縮小して使う",
+   "slot": "act_up_call",
+   "ask": "シート4の3番（上向き・手を挙げる）だけ小さく描かれている（頭の大きさがほかのポーズの約 77%）。ほかのポーズと同じ縮尺にして、同じ条件で描き直して",
+   "data": {
+    "scale": 0.7650602409638553,
+    "per_ref": [
+     0.8000000000000003,
+     0.8500000000000003,
+     0.7874999999999999,
+     0.6375
+    ],
+    "group_median": 1.0375000000000003
+   }
+  },
+  {
+   "sheet": 4,
    "level": "check",
    "code": "scale_small",
-   "msg": "シート4 の 6 番（左向き・驚く） の縮尺が少し違う（頭の大きさで約 87%）。並べて見て気になるなら描き直し",
+   "msg": "シート4 の 6 番（左向き・驚く） の縮尺が少し違う（頭の大きさで約 84%）。並べて見て気になるなら描き直し",
    "slot": "act_left_surprise",
    "ask": null,
    "data": {
-    "scale": 0.8734939759036144,
+    "scale": 0.8433734939759037,
     "per_ref": [
      0.8500000000000003,
      0.9625000000000001,
-     0.9625000000000001,
+     0.9000000000000004,
      0.8000000000000003
     ],
     "group_median": 1.0375000000000003

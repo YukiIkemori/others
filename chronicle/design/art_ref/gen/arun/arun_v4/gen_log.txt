@@ -30,3 +30,11 @@
 12:18:12   calibrated pitch 7.90 px (requested 8; 6 reference poses)
 12:18:12   pasted: act_up_call 26x48, act_left_surprise 32x54
 12:18:12 pipeline: sheets.py ../art_ref/gen/arun/arun_v4 --char arun --out out/arun_v4 --check
+12:20:20   |   シート5 戦闘の基本ポーズ: OK  arun_sheet_05.png  ドット 8.00px → 描かれた格子のまま（63.5 ドット）
+12:20:20   |   シート6 戦闘の行動ポーズ: 確認あり  arun_sheet_06.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+12:20:20   |   シート7 武器なし版と武器: OK  arun_sheet_07.png  ドット 8.00px → 描かれた格子のまま（65.0 ドット）
+12:20:20   |   シート9 顔の表情: OK  arun_sheet_09.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+12:20:20   |   シート4 演技ポーズ（上・左向き）: 要作り直し  arun_sheet_04.png  ドット 8.00px → 描かれた格子のまま（49.5 ドット）
+12:20:20   |   シート8 戦闘の追加ポーズ: OK  arun_sheet_08.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+12:20:20 round 1: 2 redo lines left 4:act_left_surprise,act_up_call
+12:20:20 sheet 4 fix2: edit act_up_call,act_left_surprise (window rows 1-2 cols 1-4, 2816x1024, pitch 8, quality medium)

@@ -28,6 +28,10 @@
         ['sack', 11, 17], ['crate', 25, 17], ['tent', 4, 7], ['tent', 31, 7], ['desert_palm', 3, 13], ['desert_palm', 33, 11, 1], ['sand_mound', 8, 20], ['sand_mound', 28, 20],
         ['bones', 2, 20], ['cactus', 33, 20], ['obelisk', 18, 2]]);
       O.push(K.exam(18, 3, 'desert_mirage_obelisk'));
+      // 南の列（入口の両側にも屋台と天幕。灯りの列が入口まで続く）
+      for (const [x, y] of [[7, 19], [12, 19], [23, 19], [28, 19]]) O.push(K.prop('desert_stall', x, y));
+      for (const [x, y] of [[10, 21], [25, 21], [16, 23], [20, 23]]) O.push(K.prop('lantern', x, y));
+      deco(O, [['carpet_rack', 9, 18], ['carpet_rack', 26, 18], ['clay_jars', 14, 20], ['clay_jars', 21, 20], ['tent', 3, 18], ['tent', 31, 18], ['sack', 5, 21], ['crate', 30, 21], ['cart_barrels', 13, 22]]);
       const N = [
         K.npc('m_seller_a', 'npc_desert_old_f', 8, 10, { name: '陽炎の売り手', title: '一品物', dir: 's', talk: 'desert_mirage_seller', pushable: false, reward: 'item' }),
         K.npc('m_seller_b', 'npc_desert_man', 24, 10, { name: '砂うたの売り手', title: '一品物', dir: 's', talk: 'desert_mirage_seller', pushable: false, reward: 'item' }),
@@ -43,7 +47,7 @@
         spawns: { road: { x: 18, y: 23, dir: 'n' } },
         exits: [{ x: 17, y: 25, w: 3, h: 1, to: { map: 'world', spawn: 'mirage' } }],
         triggers: [{ id: 'arrive', on: 'enter', event: 'desert_mirage_arrive' }],
-        zones: [], light: { ambient: '#4c4a90', k: 0.4, poolK: 1.8, spillR: 1.8, mood: 'town_night' }, dark: false, bgm: 'desert', bbg: 'desert',
+        zones: [], light: { ambient: '#4c4a90', k: 0.45, poolK: 1.15, spillR: 1.3, mood: 'town_night' }, dark: false, bgm: 'desert', bbg: 'desert',
         meta: { sub: '消灯の刻の市', chestsInfo: false },
       });
     }

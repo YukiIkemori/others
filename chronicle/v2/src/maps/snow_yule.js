@@ -205,7 +205,7 @@
         { cond: 'cleared_r_snow', rect: [19, 34, 2, 3], rows: ['..', '..', '..'] },
         { cond: 'cleared_r_snow', rect: [35, 34, 3, 2], rows: ['...', '...'] },
       ],
-      light: { ambient: '#5a66a8', k: 0.5, poolK: 1.7, spillR: 1.7, mood: 'town_night' },
+      light: { ambient: '#5a66a8', k: 0.5, poolK: 0.8, spillR: 0.9, mood: 'town_night' },
       bgm: 'yule', weather: 'snow', weatherCond: '!cleared_r_snow',
       meta: { sub: '雪のトンネルの村', chestsInfo: false },
     }));
@@ -213,7 +213,7 @@
     K.def('yule_night', Object.assign(common(true), {
       name: '雪の村ユール', rows: D2.g, objects: D2.O, npcs: NIGHT,
       triggers: [],
-      light: { ambient: '#3e4684', k: 0.42, poolK: 2.0, spillR: 1.9, mood: 'town_night' },
+      light: { ambient: '#3e4684', k: 0.42, poolK: 1.1, spillR: 1.1, mood: 'town_night' },
       bgm: 'siege', weather: 'blizzard',
       meta: { sub: '籠城の夜', chestsInfo: false, noWarp: true },
     }));
