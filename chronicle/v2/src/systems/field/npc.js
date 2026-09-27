@@ -1,4 +1,4 @@
-// FIELD — NPC（V2_PLAN §2.5.9、A3）: 立ち・歩き回り（wander）・決まった道（route）、押し続けると 1 歩よける・
+// FIELD — NPC（V2_PLAN §2.5.9、A3）: 立ち・歩き回り（wander、radius で広さ）・決まった道（route、{route, wait, speed}）、押し続けると 1 歩よける・
 // 動けなければ入れ替わる・しばらくして戻る。pushable:false は動かない。歩き回る NPC は逃げ場を 2 マス未満にしない
 // （周りの通れるマスが 3 つ以上ある所にしか入らない）。話すときは一行の方を向く。
 //   R.Field.npc(id) → {move(path, {speed}), face(dir), act(pose), hide(), show(), setPos(x, y)}（どれも Promise）
@@ -50,6 +50,19 @@
   function freeFor(n, x, y) {
     return F._walkable(S.map, x, y, null, n.lv) && !occupied(x, y, n.lv, n);
   }
+  // 自分で歩く（wander・route・よける・戻る）ときは、戸口・出口・階段と、踏むと起きる所（step の trigger）に立たない。
+  // 台本の move（ev.npc(id).move）はこの制限を受けない
+  function offLimits(n, x, y) {
+    const m = S.map;
+    if (F._warpAt && F._warpAt(m, x, y, n.lv || 0)) return true;
+    const t = m.triggers || [];
+    for (let i = 0; i < t.length; i++) {
+      const tr = t[i];
+      if (tr.on === 'step' && tr.x != null && x >= tr.x && y >= tr.y && x < tr.x + (tr.w || 1) && y < tr.y + (tr.h || 1)) return true;
+    }
+    return false;
+  }
+  function freeWalk(n, x, y) { return freeFor(n, x, y) && !offLimits(n, x, y); }
   function openness(n, x, y) {
     let k = 0;
     for (let i = 0; i < 4; i++) if (F._walkable(S.map, x + ORTHO[i][0], y + ORTHO[i][1], null, n.lv)) k++;
@@ -79,8 +92,8 @@
       if (n.returnAt && now >= n.returnAt) {
         if (n.x === n.home.x && n.y === n.home.y) { n.returnAt = 0; if (d.move === 'still' || !d.move) n.dir = n.home.dir; continue; }
         const dx = Math.sign(n.home.x - n.x), dy = Math.sign(n.home.y - n.y);
-        if (dx && freeFor(n, n.x + dx, n.y)) stepTo(n, n.x + dx, n.y);
-        else if (dy && freeFor(n, n.x, n.y + dy)) stepTo(n, n.x, n.y + dy);
+        if (dx && freeWalk(n, n.x + dx, n.y)) stepTo(n, n.x + dx, n.y);
+        else if (dy && freeWalk(n, n.x, n.y + dy)) stepTo(n, n.x, n.y + dy);
         else n.returnAt = now + 800;
         continue;
       }
@@ -89,17 +102,19 @@
         n.nextAt = now + 1400 + n.rng.int(0, 2600);
         const dir = ORTHO[n.rng.int(0, 3)];
         const x = n.x + dir[0], y = n.y + dir[1];
-        if (Math.abs(x - n.home.x) > 3 || Math.abs(y - n.home.y) > 3) continue;
+        const rad = d.radius || 3;   // 歩き回る広さ（home から縦横それぞれ radius マスまで。既定 3）
+        if (Math.abs(x - n.home.x) > rad || Math.abs(y - n.home.y) > rad) continue;
         if (Math.max(Math.abs(x - S.x), Math.abs(y - S.y)) <= 1) continue;   // 一行の目の前には入らない
-        if (!freeFor(n, x, y) || openness(n, x, y) < 3) continue;           // 逃げ場を 2 マス未満にしない
+        if (!freeWalk(n, x, y) || openness(n, x, y) < 3) continue;           // 逃げ場を 2 マス未満にしない
         stepTo(n, x, y);
       } else if (d.move && typeof d.move === 'object' && Array.isArray(d.move.route) && d.move.route.length) {
         const r = d.move.route;
         const wp = r[n.route % r.length];
         if (n.x === wp[0] && n.y === wp[1]) { n.route++; n.nextAt = now + (d.move.wait || 1200); continue; }
         const dx = Math.sign(wp[0] - n.x), dy = Math.sign(wp[1] - n.y);
-        if (dx && freeFor(n, n.x + dx, n.y)) stepTo(n, n.x + dx, n.y);
-        else if (dy && freeFor(n, n.x, n.y + dy)) stepTo(n, n.x, n.y + dy);
+        const ms = STEP_MS / (d.move.speed || 1);   // speed: 1 = 歩く、2 前後 = 走る（子ども）
+        if (dx && freeWalk(n, n.x + dx, n.y)) stepTo(n, n.x + dx, n.y, ms);
+        else if (dy && freeWalk(n, n.x, n.y + dy)) stepTo(n, n.x, n.y + dy, ms);
         else n.nextAt = now + 600;
       } else n.nextAt = now + 5000;
     }
@@ -111,7 +126,7 @@
     const sides = [[-dy, dx], [dy, -dx], [dx, dy]];
     for (const s of sides) {
       const x = n.x + s[0], y = n.y + s[1];
-      if (freeFor(n, x, y)) { stepTo(n, x, y, 220); n.returnAt = R.Engine.time + RETURN_MS; return 'dodge'; }
+      if (freeWalk(n, x, y)) { stepTo(n, x, y, 220); n.returnAt = R.Engine.time + RETURN_MS; return 'dodge'; }
     }
     // よけられない: 入れ替わる（NPC は一行のいたマスへ）
     stepTo(n, S.x, S.y, F.WALK_MS);
