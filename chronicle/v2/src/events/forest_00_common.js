@@ -41,9 +41,7 @@
     ev.setFlag('forest_found_' + who);
     try { ev.jingle('rescue'); } catch (e) { /* */ }
     if (o.hide !== false) {
-      await ev.fade('out', 300);
-      try { await ev.npc(o.npc || who).hide(); } catch (e) { /* */ }
-      await ev.fade('in', 300);
+      try { await ev.leave(o.npc || who); } catch (e) { /* */ }   // 背を向けて数歩歩き、薄れて消える（持ち主 2026-09-27）
     }
     if (!o.quiet) await ev.caption(`${F.PEOPLE[who].name}は、\n蛍だまりの野営地へ向かった。`, { ms: 2200 });
     if (n >= 4) await ev.caption('探していた四人が、そろった。\nあとは、森の歌を取り戻すだけだ。', { ms: 2600 });

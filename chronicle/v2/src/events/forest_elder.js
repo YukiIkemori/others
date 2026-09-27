@@ -105,7 +105,7 @@
       try { moves.push(ev.npc(id).move([[29 + (i % 2), 36], [29 + (i % 2), 44], [29 + (i % 2), 50]], { speed: 1 })); } catch (e) { /* */ }
     });
     await Promise.race([Promise.all(moves), ev.wait(4200)]);
-    for (const id of walkers) { try { await ev.npc(id).hide(); } catch (e) { /* */ } }
+    try { await ev.leave(walkers, { path: [], ms: 500, stagger: 0 }); } catch (e) { /* */ }   // 歩いた先で薄れて消える
     await ev.caption('四人は、光る道を\n村へ帰っていった。', { ms: 2200 });
     ev.setFlag('forest_finale_done');
     // 5. フェルンの広場で歌

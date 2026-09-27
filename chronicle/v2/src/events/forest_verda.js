@@ -178,9 +178,7 @@
       ev.guest('npc_pim');
       await ev.caption('ピムが、うしろからついてくる。', { ms: 1600 });
     } else {
-      await ev.fade('out', 300);
-      try { await ev.npc('pim').hide(); } catch (e) { /* */ }
-      await ev.fade('in', 300);
+      try { await ev.leave('pim'); } catch (e) { /* */ }
       await ev.caption('ピムは、蛍だまりの野営地へ向かった。', { ms: 2000 });
     }
   }, { meta: { needs: [], gives: ['flag:forest_found_pim', 'choice:ch_forest_pim', 'choice:ch_forest_fawn'], calls: ['verda_fawn_choice'] } });
@@ -201,7 +199,7 @@
       ev.setFlag('forest_fawn_done');
       await ev.say(null, '小鹿は、しばらくこちらを見て、\n森の奥へ歩いていった。');
     }
-    try { await ev.npc('fawn').hide(); } catch (e) { /* */ }
+    try { await ev.leave('fawn'); } catch (e) { /* */ }
   }, { meta: { needs: ['flag:forest_found_pim'], gives: ['choice:ch_forest_fawn', 'flag:forest_fawn_done'] } });
 
   E('verda_fawn_after', async (ev) => {

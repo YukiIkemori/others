@@ -57,12 +57,10 @@
       ev.setFlag('prologue_tutorial');
       // 去り方（持ち主の決まり 2026-09-27: その場でパッと消さない）。入口の扉まで歩き、扉の音を鳴らして外へ出る
       try {
-        await ev.npc('otto').move([[15, 20], [17, 20], [17, 21]]);
-        await ev.npc('otto').face('s');
-        await ev.wait(200);
+        await ev.npc('otto').move([[15, 20], [17, 20]]);
         ev.sfx('door');
-        await ev.npc('otto').hide();
-        await ev.wait(250);
+        await ev.leave('otto', { path: [[17, 21]], ms: 520 });   // 戸口へ 1 歩、薄れて外へ（パッと消さない）
+        await ev.wait(200);
         await E.narr(ev, 'オットーは、港へ帰っていった。');
       } catch (e) { /* */ }
     },

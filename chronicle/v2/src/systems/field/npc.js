@@ -216,7 +216,56 @@
       async face(dir) { if (DIRS[dir]) { n.dir = dir; n.faced = true; n.glance = null; } },   // イベントが向きを決めた人は見回さない
       async act(pose, o) { const ms = (o && o.ms) || 700; n.pose = { name: pose, until: R.Engine.time + ms }; await R.wait(ms); },
       async hide() { n.hidden = true; F._npcVis(); },
-      async show() { n.hidden = false; F._npcVis(); },
+      async show() { n.hidden = false; n.fade = null; F._npcVis(); },
+      /**
+       * 立ち去る（持ち主 2026-09-27: 話が終わってパッと消さない）: 背を向けて数歩歩き、歩きながら薄れて消える。
+       * o.path があればその道を歩く。無ければ主人公から離れる向きへ歩ける所を o.steps（既定 3）マスまで。o.ms = 薄れる時間
+       */
+      async leave(o) {
+        o = o || {};
+        n.script++;
+        try {
+          await idle();
+          let path = o.path;
+          if (!path) {
+            const ax = Math.sign(n.x - S.x), ay = Math.sign(n.y - S.y);
+            const order = Math.abs(n.x - S.x) >= Math.abs(n.y - S.y)
+              ? [[ax || 1, 0], [0, ay || 1], [0, -(ay || 1)], [-(ax || 1), 0]]
+              : [[0, ay || 1], [ax || 1, 0], [-(ax || 1), 0], [0, -(ay || 1)]];
+            path = [];
+            for (const [dx, dy] of order) {
+              let x = n.x, y = n.y;
+              const p = [];
+              for (let i = 0; i < (o.steps || 3); i++) { if (!freeFor(n, x + dx, y + dy)) break; x += dx; y += dy; p.push([x, y]); }
+              if (p.length > path.length) path = p;
+              if (path.length >= (o.steps || 3)) break;
+            }
+          }
+          if (path.length) {
+            const f = path[0];
+            const d = R.U.dirOf(f[0] - n.x, f[1] - n.y, n.dir);
+            n.dir = d; n.faced = true; n.glance = null;
+          }
+          await R.wait(180);
+          const ms = STEP_MS * 1.25;
+          const fadeMs = o.ms || Math.max(360, ms * Math.max(1, path.length) * 0.8);
+          fadeOf(n, 0, fadeMs);
+          const t0 = R.Engine.time;
+          n.fadeDone = () => { n.hidden = true; F._npcVis(); };   // 薄れ切った所で消す（_tickPartyFade）
+          for (const [x, y] of path) {
+            while (n.x !== x || n.y !== y) {
+              const dx = Math.sign(x - n.x), dy = Math.sign(y - n.y);
+              stepTo(n, n.x + (dx || 0), n.y + (dx ? 0 : dy), ms);
+              await idle();
+            }
+          }
+          const left = fadeMs - (R.Engine.time - t0);
+          if (left > 0) await R.wait(left + 20);
+        } finally { n.script--; }
+        n.fade = null; n.fadeDone = null;
+        n.hidden = true;
+        F._npcVis();
+      },
       async setPos(x, y) { n.mv = null; n.x = x; n.y = y; n.home = { x, y, dir: n.dir }; },
     };
   };

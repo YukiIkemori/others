@@ -252,6 +252,19 @@
       choiceOf(key) { return G().choices[key]; },
       async clearRegion(rid) { guard(); const r = await clearRegion(rid); guard(); return r; },
       npc(id) { return R.Field.npc(id); },
+      /** 立ち去る（背を向けて数歩歩き、薄れて消える）。ids は 1 人か配列。みんな同時に歩く。o = {steps, path, ms, stagger} */
+      async leave(ids, o) {
+        guard();
+        const list = [].concat(ids).filter(Boolean);
+        const st = (o && o.stagger) != null ? o.stagger : 140;
+        const self = this;
+        await Promise.all(list.map(async (id, i) => {
+          if (i && st) await self.wait(i * st);
+          const h = self.npc(id);
+          await (h.leave ? h.leave(o) : h.hide());
+        }));
+        guard();
+      },
       async partyShow(id, o) { guard(); if (!fieldOn()) return []; const r = await R.Field.partyShow(id, o || {}); guard(); return r; },
       async partyHide(id, o) { guard(); if (!fieldOn()) return []; const r = await R.Field.partyHide(id, o || {}); guard(); return r; },
       guest(look) { guard(); R.Field.setGuest(look ? { id: look, look } : null); },

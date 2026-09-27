@@ -160,8 +160,7 @@
       await ev.caption('――朝の鐘が、港に鳴りわたった。', { ms: 2800 });
       await E.say(ev, 'cheer_a', '灯台に火が戻ったぞ！\nゆうべ、岬が真っ白に\n光ったんだ！');
       await ev.npc('berna').move([[7, 11], [6, 11]]);
-      // 旅立ちの朝: 仲間も主人公のそばに並ぶ（ベルナが来た後に。フィールドは主人公だけ。イベントが終われば消える）
-      if (ev.partyShow) await ev.partyShow('all', { near: 'hero' });
+      // 仲間は出さない（持ち主 2026-09-27: 急に皆が出るのは違和感。フィールドは主人公だけ）
       await E.say(ev, 'berna', '夜通し歩いてきたよ。\n……よくやったね、{hero}。', { face: 'berna:smile' });
       await ev.say('berna', 'これは、あなたの年代記だよ。\n語り部はみんな、自分の\n年代記を持って旅に出るんだ。', { voice: 'v_berna_lute_01', face: 'berna:smile' });
       await E.give(ev, 'k_chronicle', 1, { say: true });
@@ -184,9 +183,12 @@
       await ev.say('berna', 'わたしは里へ帰るよ。\n……いってらっしゃい、', { voice: 'v_berna_depart_02', face: 'berna:smile' });
       await E.narr(ev, 'ベルナは、何か言いかけて、\n笑ってごまかした。');
       await E.say(ev, 'berna', '……{hero}。\n気をつけてお行き。', { face: 'berna:smile' });
+      // 立ち去る（持ち主 2026-09-27: 話が終わったら背を向けて数歩歩き、薄れて消える）。ベルナは西の門から里へ
+      await ev.leave('berna', { path: [[5, 11], [4, 11], [3, 11]] });
       await E.narr(ev, '港のほうから、オットーが\n駆けてきた。');
       await ev.call('pharos_otto_reward');
       await E.say(ev, 'cheer_b', '領主さまが、北の跳ね橋を\n下ろしてくださったそうよ！\nこれで北の野へ出られるわ！');
+      await ev.leave(['cheer_b', 'cheer_a']);   // 集まっていた町の人も、それぞれ歩いて去る
       ev.setFlag('prologue_done');
       try { R.Audio.bgm('town'); } catch (e) { /* */ }
     },

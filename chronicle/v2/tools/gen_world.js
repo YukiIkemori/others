@@ -314,10 +314,11 @@ exits.push({ x: PL.pharosGate[0], y: PL.pharosGate[1], w: 1, h: 2, to: { map: 'p
 spawns.pharos = { x: 98, y: 108, dir: 'w' };
 S(98, 110, '港町ファロス');
 // 灯台（岬の先）
-//   描いた塔（assets/env/harbor/bld/w_lighthouse、design/art_ref/gen/env/_tools/jobs_world_lighthouse.py）: 敷地 3×3 マス（扉は下の段のまん中）、
+//   描いた塔（assets/env/harbor/bld/w_lighthouse、design/art_ref/gen/env/_tools/jobs_world_lighthouse.py）: 敷地 3×2 マス（岩の台座。扉は下の段のまん中）、
 //   絵は岩の上の紅白の塔で 6.5 マスの高さ。敷地より上は人より上に描く（塔の裏を歩ける）。
 //   灯室の灯り（props_light.js の kind 'beacon'）: lit の条件（灯台のページ食らいを倒した後）で強く灯って光がめぐる。それまでは弱い残り火。
-B('w_lighthouse', 105, 122, 3, 3, { roof: 'slate', mat: 'stone', wall: 3, windows: 0, small: false, lit: 'prologue_boss', door: { x: 106, y: 124, to: { map: 'lighthouse_1', spawn: 'entrance' } } });
+B('w_lighthouse', 105, 123, 3, 2, {   // 当たりは岩の台座（下の 2 段）だけ。塔の細い上の段（y 122 の左右）は見えない壁にしない
+   roof: 'slate', mat: 'stone', wall: 3, windows: 0, small: false, lit: 'prologue_boss', door: { x: 106, y: 124, to: { map: 'lighthouse_1', spawn: 'entrance' } } });
 for (let y = 118; y <= 124; y++) for (let x = 104; x <= 108; x++) if ('Th'.includes(get(x, y))) set(x, y, ',');   // 塔と塔の上の半分に木が重ならない（敷地の下の木のマスも消す）
 spawns.lighthouse = { x: 106, y: 126, dir: 'n' };
 S(104, 127, 'ファロス灯台');

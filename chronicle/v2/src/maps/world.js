@@ -218,7 +218,7 @@
       {"type":"prop","id":"ship","x":111,"y":111},
       {"type":"prop","id":"lantern","x":110,"y":106},
       {"type":"sign","x":98,"y":110,"text":"港町ファロス"},
-      {"type":"building","id":"w_lighthouse","x":105,"y":122,"w":3,"h":3,"wall":3,"roof":"slate","mat":"stone","windows":0,"small":false,"lit":"prologue_boss","door":{"x":106,"y":124,"to":{"map":"lighthouse_1","spawn":"entrance"}}},
+      {"type":"building","id":"w_lighthouse","x":105,"y":123,"w":3,"h":2,"wall":3,"roof":"slate","mat":"stone","windows":0,"small":false,"lit":"prologue_boss","door":{"x":106,"y":124,"to":{"map":"lighthouse_1","spawn":"entrance"}}},
       {"type":"sign","x":104,"y":127,"text":"ファロス灯台"},
       {"type":"stairs","x":76,"y":86,"to":{"map":"well","spawn":"entrance"}},
       {"type":"prop","id":"well","x":75,"y":86},
