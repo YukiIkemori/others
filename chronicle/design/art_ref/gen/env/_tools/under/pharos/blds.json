@@ -1,0 +1,158 @@
+[
+ {
+  "id": "ph_inn",
+  "kind": "cave",
+  "x": 3,
+  "y": 4,
+  "w": 8,
+  "h": 5,
+  "wall": 3,
+  "door": [
+   6,
+   8
+  ]
+ },
+ {
+  "id": "ph_record",
+  "kind": "cave",
+  "x": 11,
+  "y": 4,
+  "w": 6,
+  "h": 5,
+  "wall": 3,
+  "door": [
+   14,
+   8
+  ]
+ },
+ {
+  "id": "ph_house1",
+  "kind": "cave",
+  "x": 19,
+  "y": 4,
+  "w": 5,
+  "h": 5,
+  "wall": 3,
+  "door": [
+   21,
+   8
+  ]
+ },
+ {
+  "id": "ph_smith",
+  "kind": "cave",
+  "x": 25,
+  "y": 4,
+  "w": 7,
+  "h": 5,
+  "wall": 3,
+  "door": [
+   28,
+   8
+  ]
+ },
+ {
+  "id": "ph_house2",
+  "kind": "cave",
+  "x": 33,
+  "y": 4,
+  "w": 5,
+  "h": 5,
+  "wall": 3,
+  "door": [
+   35,
+   8
+  ]
+ },
+ {
+  "id": "ph_tavern",
+  "kind": "hull",
+  "x": 3,
+  "y": 17,
+  "w": 10,
+  "h": 6,
+  "wall": 3,
+  "door": [
+   8,
+   22
+  ]
+ },
+ {
+  "id": "ph_shop",
+  "kind": "hull",
+  "x": 33,
+  "y": 17,
+  "w": 5,
+  "h": 5,
+  "wall": 2,
+  "door": [
+   35,
+   21
+  ]
+ },
+ {
+  "id": "ph_house4",
+  "kind": "hull",
+  "x": 38,
+  "y": 17,
+  "w": 5,
+  "h": 4,
+  "wall": 2,
+  "door": [
+   40,
+   20
+  ]
+ },
+ {
+  "id": "ph_house5",
+  "kind": "cave",
+  "x": 3,
+  "y": 25,
+  "w": 6,
+  "h": 4,
+  "wall": 2,
+  "door": [
+   6,
+   28
+  ]
+ },
+ {
+  "id": "ph_house6",
+  "kind": "cave",
+  "x": 38,
+  "y": 25,
+  "w": 5,
+  "h": 4,
+  "wall": 2,
+  "door": [
+   40,
+   28
+  ]
+ },
+ {
+  "id": "ph_house3",
+  "kind": "cave",
+  "x": 47,
+  "y": 3,
+  "w": 6,
+  "h": 5,
+  "wall": 3,
+  "door": [
+   49,
+   7
+  ]
+ },
+ {
+  "id": "ph_shipyard",
+  "kind": "yard",
+  "x": 45,
+  "y": 24,
+  "w": 6,
+  "h": 5,
+  "wall": 2,
+  "door": [
+   47,
+   28
+  ]
+ }
+]

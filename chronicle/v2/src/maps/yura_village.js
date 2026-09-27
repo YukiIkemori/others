@@ -55,7 +55,7 @@
     O.push(K.prop('bench', 17, 21), K.prop('bench', 12, 16), K.prop('flower_pot', 11, 6), K.prop('planter', 19, 24));
     O.push(K.prop('stump', 2, 13), K.prop('rock', 27, 21));
     // 灯り: 置き灯籠（当たりなし）を水辺・小道の脇に。街灯は立てない
-    for (const [x, y] of [[10, 10], [17, 10], [8, 13], [17, 13], [13, 17], [16, 17], [13, 22], [16, 22], [19, 20], [7, 19], [23, 25], [18, 7], [8, 7]]) O.push(K.prop('lantern', x, y));
+    for (const [x, y] of [[10, 10], [17, 10], [8, 13], [17, 13], [13, 17], [16, 17], [13, 22], [16, 22], [19, 20], [7, 19], [23, 25], [18, 7], [7, 7]]) O.push(K.prop('lantern', x, y));
     for (const [x, y] of [[11, 4], [16, 3], [2, 10], [9, 22], [25, 24], [18, 25]]) O.push(K.prop('mushroom_glow', x, y, { variant: (x + y) % 4 }));
     for (const [x, y] of [[4, 10], [20, 10], [19, 13]]) O.push(K.prop('reeds', x, y, { variant: (x + y) % 4 }));
     // 小山のてっぺん: 名の無い墓石
@@ -98,6 +98,8 @@
       light: { ambient: '#56609a', k: 0.45, mood: 'forest_night' },
       bgm: 'sorrow',
       meta: { sub: '名を置いてきた者の里' },
+      // 里ぜんたいを 1 枚に描いた下絵（地面・小屋・水車・小山・川・森）。当たり・戸口・人・灯り・墓石ほかの物は上のデータのまま。絵が無ければマスから焼く
+      art: { image: 'moss_village/under/yura', overlay: 'moss_village/under/yura_over', emit: 'moss_village/under/yura_emit', painted: [] },
     });
 
     // ---------------------------------------------------------------- ユラの宿 11×9（家具は文字の絵 R.ContentP.kit.furnish）

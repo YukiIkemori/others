@@ -16,7 +16,7 @@
 //   R.Terrain.chunkOf(x, y) → [cx, cy]          マス → チャンク
 //
 // 描いた下絵（map.art = {image, overlay?, emit?, painted?: [prop id]}、design/ENV_ASSETS.md §7）: 絵があれば地面・立ち上がり・水の縁・
-//   建物・木・地面の飾り・painted の物は焼かず、下絵の同じ所を base に置く（overlay は over＝人より上、emit は窓の灯り）。
+//   建物・木・地面の飾り・足場（deck）・painted の物は焼かず、下絵の同じ所を base に置く（overlay は over＝人より上、emit は窓の灯り）。
 //   当たり・戸口・人・灯り・宝箱などの物はマップのデータのまま。絵が無ければ今までどおりマスから焼く（控え）。
 // 1 チャンクの仕事の順: 準備（マスの読み・要る絵の一覧）→ 素材のタイル → 絵（建物・物・木）→ 地面（dual grid）→ 立ち上がり・水の縁 →
 //   大きなゆらぎ → base に置く → 足場 → 影 → 建物・木・物（足もとより上は over）→ 光の地図（R.Light.map）→ 窓・戸口の描き直し・照り返し → 結果
@@ -466,6 +466,7 @@
 
   // 足場（lv 1。over に描く）と支柱・下の影（base）
   Job.prototype._deck = function () {
+    if (this.und) return true;   // 描いた下絵に足場・つり橋・はしごも描いてある（橋の人より上の部分は overlay）
     const [x0, y0, x1, y1] = this.cells, t = this.tile, s = this.s, C = this.C;
     let any = false;
     for (let y = y0 - 1; y < y1 + 1 && !any; y++) for (let x = x0 - 1; x < x1 + 1; x++) if (C(x, y).deck) { any = true; break; }
