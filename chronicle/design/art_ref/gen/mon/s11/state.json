@@ -11,7 +11,7 @@
  "norm": {
   "paper_2": {
    "pitch": 7.643,
-   "how": "core 642x321 px -> 84 art px",
+   "how": "core 642x323 px -> 84 art px",
    "core_long": 84.0,
    "raw_box": [
     38,
@@ -25,7 +25,7 @@
   },
   "paper_3": {
    "pitch": 7.0,
-   "how": "core 588x518 px -> 84 art px",
+   "how": "core 588x519 px -> 84 art px",
    "core_long": 84.0,
    "raw_box": [
     859,
@@ -52,11 +52,11 @@
    "long": 89
   },
   "wolf_5": {
-   "pitch": 6.845,
-   "how": "core 575x573 px -> 84 art px",
+   "pitch": 6.869,
+   "how": "core 577x574 px -> 84 art px",
    "core_long": 84.0,
    "raw_box": [
-    807,
+    806,
     809,
     1411,
     1406

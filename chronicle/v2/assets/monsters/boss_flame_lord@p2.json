@@ -1,0 +1,51 @@
+{
+ "sprite": "boss_flame_lord",
+ "id": "b_lavabeast",
+ "name": "溶岩の巨獣",
+ "sheet": 48,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 232,
+ "h": 138,
+ "anchor": [
+  120,
+  137
+ ],
+ "points": {
+  "head": [
+   196,
+   32
+  ],
+  "center": [
+   119,
+   66
+  ],
+  "fx": [
+   142,
+   56
+  ],
+  "top": [
+   149,
+   3
+  ],
+  "body": [
+   119,
+   66,
+   73,
+   47
+  ]
+ },
+ "facing": "right",
+ "long": 232,
+ "core_long": null,
+ "target": {
+  "w": 230,
+  "h": 155,
+  "long": 230
+ },
+ "colors": 48,
+ "pitch": 6.143,
+ "pose": "p2"
+}

@@ -1,0 +1,72 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s51_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 52
+  }
+ ],
+ "use": "mon_s51_a1.png",
+ "norm": {
+  "rare_clockbird": {
+   "pitch": 10.288,
+   "how": "core 535x385 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    126,
+    157,
+    692,
+    622
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 56
+  },
+  "book_1": {
+   "pitch": 10.346,
+   "how": "core 439x538 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    898,
+    106,
+    1363,
+    656
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 54
+  },
+  "rare_bookworm": {
+   "pitch": 11.192,
+   "how": "core 505x582 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    117,
+    846,
+    629,
+    1428
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 53
+  },
+  "rare_quill": {
+   "pitch": 10.904,
+   "how": "core 416x567 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    886,
+    787,
+    1351,
+    1442
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 61
+  }
+ },
+ "notes": [
+  "rare_quill: long side 61 outside the tier [48, 56]"
+ ]
+}

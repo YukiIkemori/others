@@ -7,38 +7,38 @@
  "size": "L",
  "kind": "mob",
  "fly": false,
- "w": 111,
- "h": 89,
+ "w": 113,
+ "h": 75,
  "anchor": [
-  60,
-  88
+  54,
+  74
  ],
  "points": {
   "head": [
-   97,
-   40
+   71,
+   21
   ],
   "center": [
-   60,
-   45
+   50,
+   38
   ],
   "fx": [
-   71,
-   44
+   57,
+   33
   ],
   "top": [
-   60,
+   50,
    1
   ],
   "body": [
-   60,
-   45,
-   34,
-   31
+   50,
+   38,
+   29,
+   26
   ]
  },
  "facing": "right",
- "long": 111,
+ "long": 113,
  "core_long": 110.0,
  "target": {
   "w": 110,
@@ -46,7 +46,7 @@
   "long": 110
  },
  "colors": 48,
- "pitch": 6.273,
+ "pitch": 7.491,
  "alsoMakes": [
   "kraken_2",
   "kraken_3"

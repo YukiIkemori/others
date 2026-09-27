@@ -1,0 +1,68 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s41_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 40
+  }
+ ],
+ "use": "mon_s41_a1.png",
+ "norm": {
+  "b_rockeater": {
+   "pitch": 7.959,
+   "how": "core 1353x707 px -> 170 art px",
+   "core_long": 170.0,
+   "raw_box": [
+    72,
+    125,
+    1432,
+    852
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 172
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s41_tele_a1.png",
+   "prompt": "the wind-up pose: the rock-eater rears its front segments up high, the round millstone mouth opening wide, ready to crash down. Same size, rear body in the same place."
+  },
+  {
+   "pose": "attack",
+   "file": "mon_s41_attack_a1.png",
+   "prompt": "the attack pose: the rock-eater lunges forward to the right, its front stretched low and long, the round mouth wide open. Same size."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s41_tele_a1.png",
+  "attack": "mon_s41_attack_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    1,
+    -13
+   ],
+   "overlap": 7746,
+   "size": [
+    168,
+    114
+   ]
+  },
+  "attack": {
+   "offset": [
+    -4,
+    10
+   ],
+   "overlap": 8945,
+   "size": [
+    183,
+    79
+   ]
+  }
+ }
+}

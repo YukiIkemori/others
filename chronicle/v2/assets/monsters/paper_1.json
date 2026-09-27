@@ -1,0 +1,50 @@
+{
+ "sprite": "paper_1",
+ "id": "paper_1",
+ "name": "白紙の小鬼",
+ "sheet": 54,
+ "cell": 1,
+ "size": "S",
+ "kind": "mob",
+ "fly": false,
+ "w": 49,
+ "h": 56,
+ "anchor": [
+  24,
+  55
+ ],
+ "points": {
+  "head": [
+   36,
+   13
+  ],
+  "center": [
+   21,
+   27
+  ],
+  "fx": [
+   25,
+   23
+  ],
+  "top": [
+   36,
+   11
+  ],
+  "body": [
+   21,
+   27,
+   12,
+   14
+  ]
+ },
+ "facing": "right",
+ "long": 56,
+ "core_long": 52.0,
+ "target": {
+  "w": 39,
+  "h": 52,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 11.692
+}

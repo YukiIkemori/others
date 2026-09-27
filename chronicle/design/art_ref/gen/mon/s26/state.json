@@ -38,33 +38,36 @@
    "long": 85
   },
   "lizardman_1": {
-   "pitch": 8.6,
-   "how": "core 688x562 px -> 80 art px",
+   "pitch": 7.025,
+   "how": "core 551x562 px -> 80 art px",
    "core_long": 80.0,
    "raw_box": [
     42,
     833,
-    763,
+    750,
     1428
    ],
    "strays_removed": 0,
    "colors": 48,
-   "long": 85
+   "long": 102
   },
   "lizardman_4": {
-   "pitch": 8.536,
-   "how": "core 717x638 px -> 84 art px",
+   "pitch": 9.321,
+   "how": "core 783x638 px -> 84 art px",
    "core_long": 84.0,
    "raw_box": [
-    773,
-    773,
+    652,
+    768,
     1498,
     1439
    ],
    "strays_removed": 0,
    "colors": 48,
-   "long": 86
+   "long": 91
   }
  },
- "notes": []
+ "notes": [
+  "lizardman_1: long side 102 outside the tier [72, 84]",
+  "lizardman_4: long side 91 outside the tier [72, 84]"
+ ]
 }

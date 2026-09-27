@@ -1,0 +1,68 @@
+{
+ "sprite": "chaos_1",
+ "id": "chaos_1",
+ "name": "混沌の獣",
+ "sheet": 66,
+ "cell": 2,
+ "size": "L",
+ "kind": "mob",
+ "fly": false,
+ "w": 113,
+ "h": 81,
+ "anchor": [
+  62,
+  80
+ ],
+ "points": {
+  "head": [
+   97,
+   24
+  ],
+  "center": [
+   60,
+   42
+  ],
+  "fx": [
+   71,
+   36
+  ],
+  "top": [
+   71,
+   4
+  ],
+  "body": [
+   60,
+   42,
+   36,
+   27
+  ]
+ },
+ "facing": "right",
+ "long": 113,
+ "core_long": 110.0,
+ "target": {
+  "w": 110,
+  "h": 77,
+  "long": 110
+ },
+ "colors": 48,
+ "pitch": 6.991,
+ "alsoMakes": [
+  "chaos_2"
+ ],
+ "variants": {
+  "chaos_2": {
+   "recolor": {
+    "hue": 40,
+    "sat": 1.1
+   },
+   "addons": [
+    "crown",
+    "crystals",
+    "aura"
+   ],
+   "filter": null,
+   "name": "混沌の王獣"
+  }
+ }
+}

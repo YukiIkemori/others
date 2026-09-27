@@ -237,8 +237,13 @@ def cmd_gen(a):
 def fg_mask(img):
     a = np.asarray(img.convert('RGB')).astype(np.int16)
     r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    # background = close to the sheet's own magenta (median of the border), not "any purple": purple monsters
+    # (octopus, tentacle, ghosts) share the hue family of the key colour
+    border = np.concatenate([a[0], a[-1], a[:, 0], a[:, -1]])
+    ref = np.median(border, axis=0)
+    d = np.abs(a - ref).sum(axis=2)
     mn = np.minimum(r, b)
-    bg = ((mn - g) > 60) & (np.abs(r - b) < 90)
+    bg = ((mn - g) > 60) & (np.abs(r - b) < 90) & ((d < 200) | (g * 4 < mn))
     # pink fringe: strongly magenta-tinted light pixels next to the background
     return ~bg
 
@@ -534,6 +539,20 @@ def normalise_sheet(n, raw=None, only=None, export_it=True):
     rects = cell_rects(s, *img.size)
     notes = []
     res = {}
+    cell_masks = {}
+    if len(s['cells']) == 1:
+        cell_masks[s['cells'][0]['cell']] = mask
+    else:
+        lab, nl = pieces(mask, s['pxPerDot'] * img.size[0] / s['canvas'][0])
+        if nl:
+            cents = ndimage.center_of_mass(mask, lab, range(1, nl + 1))
+            owner = np.zeros(nl + 1, dtype=np.int32)
+            for i, (cy, cx) in enumerate(cents, 1):
+                for k, (x0, y0, x1, y1) in enumerate(rects):
+                    if x0 <= cx < x1 and y0 <= cy < y1:
+                        owner[i] = k + 1
+            for c0 in s['cells']:
+                cell_masks[c0['cell']] = mask & (owner[lab] == c0['cell'])
     for c in s['cells']:
         if only and c['cell'] not in only:
             continue
@@ -545,7 +564,10 @@ def normalise_sheet(n, raw=None, only=None, export_it=True):
             cs['canvas'] = list(cimg.size)
             dots, info = normalise_cell(cimg, cmask, (0, 0) + cimg.size, c, cs, notes)
         else:
-            dots, info = normalise_cell(img, mask, rects[c['cell'] - 1], c, s, notes)
+            # each connected part goes to the cell holding its centre, so a monster that crosses the cell line
+            # (a long neck or tail) stays whole and does not leave a fragment in its neighbour
+            cm = cell_masks.get(c['cell'])
+            dots, info = normalise_cell(img, cm, (0, 0) + img.size, c, s, notes)
         if dots is None:
             continue
         maxc = 32 if c['size'] == 'S' else 48
@@ -560,7 +582,7 @@ def normalise_sheet(n, raw=None, only=None, export_it=True):
             notes.append('%s: removed %d stray pixel group(s)' % (c['sprite'], ci['strays_removed']))
         info['long'] = L
         res[c['sprite']] = (im, info)
-        if export_it:
+        if export_it and not overrides().get(c['sprite'], {}).get('fromEdit'):   # fromEdit: redrawn as an edit of another sprite
             export(im, c, s, info)
     st['norm'] = {k: v[1] for k, v in res.items()}
     st['notes'] = notes
@@ -675,7 +697,7 @@ def normalise_variant(sprite, pose, raw=None):
     pitch = info0['pitch']
     mask = fg_mask(img)
     # only the sprite's own cell (an edit of a 2-cell sheet repaints the neighbour too)
-    x0, y0, x1, y1 = cell_rects(s, *img.size)[c['cell'] - 1]
+    x0, y0, x1, y1 = cell_rects(s, *img.size)[c['cell'] - 1] if len(s['cells']) > 1 else (0, 0) + img.size
     keep_rect = np.zeros_like(mask)
     keep_rect[y0:y1, x0:x1] = True
     mask &= keep_rect

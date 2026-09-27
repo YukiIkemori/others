@@ -1,0 +1,42 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s40_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 38
+  }
+ ],
+ "use": "mon_s40_a1.png",
+ "norm": {
+  "golem_1": {
+   "pitch": 7.345,
+   "how": "core 625x808 px -> 110 art px",
+   "core_long": 110.0,
+   "raw_box": [
+    115,
+    109,
+    740,
+    917
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 111
+  },
+  "golem_3": {
+   "pitch": 6.75,
+   "how": "core 630x810 px -> 120 art px",
+   "core_long": 120.0,
+   "raw_box": [
+    791,
+    103,
+    1421,
+    919
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 122
+  }
+ },
+ "notes": []
+}

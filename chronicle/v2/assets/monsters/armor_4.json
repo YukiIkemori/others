@@ -1,0 +1,50 @@
+{
+ "sprite": "armor_4",
+ "id": "armor_4",
+ "name": "黒金の鎧",
+ "sheet": 50,
+ "cell": 1,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 88,
+ "h": 85,
+ "anchor": [
+  44,
+  84
+ ],
+ "points": {
+  "head": [
+   42,
+   18
+  ],
+  "center": [
+   28,
+   41
+  ],
+  "fx": [
+   32,
+   34
+  ],
+  "top": [
+   36,
+   10
+  ],
+  "body": [
+   28,
+   41,
+   17,
+   23
+  ]
+ },
+ "facing": "right",
+ "long": 88,
+ "core_long": 84.0,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 8.167
+}

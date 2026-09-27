@@ -1,0 +1,44 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s65_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 50
+  }
+ ],
+ "use": "mon_s65_a1.png",
+ "norm": {
+  "void_1": {
+   "pitch": 8.175,
+   "how": "core 517x654 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    103,
+    214,
+    666,
+    874
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 81
+  },
+  "void_3": {
+   "pitch": 9.607,
+   "how": "core 807x699 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    659,
+    135,
+    1522,
+    881
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 91
+  }
+ },
+ "notes": [
+  "void_3: long side 91 outside the tier [72, 84]"
+ ]
+}

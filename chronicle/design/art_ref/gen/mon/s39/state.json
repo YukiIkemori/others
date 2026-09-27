@@ -28,7 +28,7 @@
    "how": "core 702x468 px -> 84 art px",
    "core_long": 84.0,
    "raw_box": [
-    773,
+    770,
     146,
     1501,
     650
@@ -52,21 +52,19 @@
    "long": 82
   },
   "salamander_5": {
-   "pitch": 8.655,
-   "how": "core 727x427 px -> 84 art px",
+   "pitch": 9.06,
+   "how": "core 761x427 px -> 84 art px",
    "core_long": 84.0,
    "raw_box": [
-    773,
+    733,
     865,
     1506,
     1306
    ],
    "strays_removed": 0,
    "colors": 48,
-   "long": 85
+   "long": 86
   }
  },
- "notes": [
-  "salamander_1: dropped 1 stray part(s) (1611 px)"
- ]
+ "notes": []
 }

@@ -1,0 +1,50 @@
+{
+ "sprite": "demon_1",
+ "id": "demon_1",
+ "name": "忘れられた魔兵",
+ "sheet": 55,
+ "cell": 1,
+ "size": "L",
+ "kind": "mob",
+ "fly": false,
+ "w": 121,
+ "h": 102,
+ "anchor": [
+  42,
+  101
+ ],
+ "points": {
+  "head": [
+   62,
+   25
+  ],
+  "center": [
+   44,
+   51
+  ],
+  "fx": [
+   49,
+   43
+  ],
+  "top": [
+   58,
+   20
+  ],
+  "body": [
+   44,
+   51,
+   17,
+   26
+  ]
+ },
+ "facing": "right",
+ "long": 121,
+ "core_long": 110.0,
+ "target": {
+  "w": 83,
+  "h": 110,
+  "long": 110
+ },
+ "colors": 48,
+ "pitch": 5.9
+}

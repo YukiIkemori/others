@@ -26,5 +26,45 @@
  },
  "notes": [
   "b_captain: dropped 2 stray part(s) (34,71 px)"
- ]
+ ],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s37_tele_a1.png",
+   "prompt": "the wind-up pose: the ghost captain raises the cutlass high above his head and lifts the ship lantern forward. Same size and position."
+  },
+  {
+   "pose": "p2",
+   "file": "mon_s37_p2_a1.png",
+   "prompt": "his second form: a faint warm light has returned to his eyes (small warm yellow pupils instead of pale blank eyes), his face looks a little less gaunt and more human, sad. Same size, same pose, same position."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s37_tele_a1.png",
+  "p2": "mon_s37_p2_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    1,
+    -24
+   ],
+   "overlap": 10257,
+   "size": [
+    130,
+    237
+   ]
+  },
+  "p2": {
+   "offset": [
+    0,
+    0
+   ],
+   "overlap": 12467,
+   "size": [
+    155,
+    212
+   ]
+  }
+ }
 }

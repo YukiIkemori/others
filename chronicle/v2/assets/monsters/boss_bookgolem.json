@@ -1,0 +1,50 @@
+{
+ "sprite": "boss_bookgolem",
+ "id": "b_bookgolem",
+ "name": "本の巨人",
+ "sheet": 58,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 130,
+ "h": 172,
+ "anchor": [
+  80,
+  171
+ ],
+ "points": {
+  "head": [
+   103,
+   35
+  ],
+  "center": [
+   63,
+   83
+  ],
+  "fx": [
+   75,
+   68
+  ],
+  "top": [
+   73,
+   3
+  ],
+  "body": [
+   63,
+   83,
+   46,
+   61
+  ]
+ },
+ "facing": "right",
+ "long": 172,
+ "core_long": 170.0,
+ "target": {
+  "w": 125,
+  "h": 170,
+  "long": 170
+ },
+ "colors": 48,
+ "pitch": 7.641
+}

@@ -1,0 +1,51 @@
+{
+ "sprite": "boss_rowell",
+ "id": "b_rowell1",
+ "name": "ロウェル",
+ "sheet": 56,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 49,
+ "h": 69,
+ "anchor": [
+  22,
+  68
+ ],
+ "points": {
+  "head": [
+   29,
+   6
+  ],
+  "center": [
+   22,
+   33
+  ],
+  "fx": [
+   24,
+   25
+  ],
+  "top": [
+   27,
+   2
+  ],
+  "body": [
+   22,
+   31,
+   13,
+   22
+  ]
+ },
+ "facing": "right",
+ "long": 69,
+ "core_long": null,
+ "target": {
+  "w": 50,
+  "h": 68,
+  "long": 68
+ },
+ "colors": 48,
+ "pitch": 17.5,
+ "pose": "tele"
+}

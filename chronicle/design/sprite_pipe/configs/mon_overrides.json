@@ -739,5 +739,8 @@
  },
  "boss_wolflord": {
   "lift": 0.8
+ },
+ "b_rowell2": {
+  "fromEdit": "boss_rowell@r2 (the sheet drew a different man)"
  }
 }

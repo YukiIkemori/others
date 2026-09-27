@@ -1,0 +1,28 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s46_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 37
+  }
+ ],
+ "use": "mon_s46_a1.png",
+ "norm": {
+  "chimera_1": {
+   "pitch": 7.018,
+   "how": "core 772x604 px -> 110 art px",
+   "core_long": 110.0,
+   "raw_box": [
+    101,
+    311,
+    883,
+    920
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 113
+  }
+ },
+ "notes": []
+}

@@ -1,0 +1,51 @@
+{
+ "sprite": "boss_lazaro",
+ "id": "b_lazaro",
+ "name": "大書記ラザロ",
+ "sheet": 62,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 56,
+ "h": 85,
+ "anchor": [
+  26,
+  84
+ ],
+ "points": {
+  "head": [
+   40,
+   33
+  ],
+  "center": [
+   24,
+   48
+  ],
+  "fx": [
+   29,
+   44
+  ],
+  "top": [
+   29,
+   10
+  ],
+  "body": [
+   24,
+   46,
+   16,
+   29
+  ]
+ },
+ "facing": "right",
+ "long": 85,
+ "core_long": null,
+ "target": {
+  "w": 56,
+  "h": 76,
+  "long": 76
+ },
+ "colors": 48,
+ "pitch": 14.868,
+ "pose": "tele"
+}

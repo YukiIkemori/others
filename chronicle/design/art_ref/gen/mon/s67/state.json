@@ -1,0 +1,42 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s67_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 39
+  }
+ ],
+ "use": "mon_s67_a1.png",
+ "norm": {
+  "chaos_3": {
+   "pitch": 6.792,
+   "how": "core 815x605 px -> 120 art px",
+   "core_long": 120.0,
+   "raw_box": [
+    36,
+    205,
+    855,
+    833
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 121
+  },
+  "rare_tapir": {
+   "pitch": 5.6,
+   "how": "core 616x385 px -> 110 art px",
+   "core_long": 110.0,
+   "raw_box": [
+    879,
+    432,
+    1504,
+    823
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 112
+  }
+ },
+ "notes": []
+}

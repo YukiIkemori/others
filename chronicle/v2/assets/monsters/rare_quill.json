@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_quill",
+ "id": "rm_golden_quill",
+ "name": "黄金の羽ペン",
+ "sheet": 51,
+ "cell": 4,
+ "size": "S",
+ "kind": "rare",
+ "fly": true,
+ "w": 44,
+ "h": 61,
+ "anchor": [
+  21,
+  77
+ ],
+ "points": {
+  "head": [
+   31,
+   20
+  ],
+  "center": [
+   20,
+   21
+  ],
+  "fx": [
+   23,
+   21
+  ],
+  "top": [
+   12,
+   1
+  ],
+  "body": [
+   20,
+   21,
+   12,
+   16
+  ]
+ },
+ "facing": "right",
+ "long": 61,
+ "core_long": 52.0,
+ "target": {
+  "w": 39,
+  "h": 52,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 10.904
+}

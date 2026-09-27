@@ -1,0 +1,51 @@
+{
+ "sprite": "boss_stareater",
+ "id": "b_stareater",
+ "name": "星食らい",
+ "sheet": 53,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 198,
+ "h": 154,
+ "anchor": [
+  94,
+  152
+ ],
+ "points": {
+  "head": [
+   182,
+   30
+  ],
+  "center": [
+   101,
+   77
+  ],
+  "fx": [
+   125,
+   63
+  ],
+  "top": [
+   172,
+   15
+  ],
+  "body": [
+   93,
+   75,
+   67,
+   48
+  ]
+ },
+ "facing": "right",
+ "long": 198,
+ "core_long": null,
+ "target": {
+  "w": 230,
+  "h": 150,
+  "long": 230
+ },
+ "colors": 48,
+ "pitch": 6.161,
+ "pose": "tele"
+}

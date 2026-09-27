@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_bookworm",
+ "id": "rm_bookworm",
+ "name": "本の虫",
+ "sheet": 51,
+ "cell": 3,
+ "size": "S",
+ "kind": "rare",
+ "fly": false,
+ "w": 46,
+ "h": 53,
+ "anchor": [
+  22,
+  52
+ ],
+ "points": {
+  "head": [
+   42,
+   9
+  ],
+  "center": [
+   24,
+   28
+  ],
+  "fx": [
+   29,
+   22
+  ],
+  "top": [
+   34,
+   1
+  ],
+  "body": [
+   24,
+   28,
+   16,
+   20
+  ]
+ },
+ "facing": "right",
+ "long": 53,
+ "core_long": 52.0,
+ "target": {
+  "w": 39,
+  "h": 52,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 11.192
+}

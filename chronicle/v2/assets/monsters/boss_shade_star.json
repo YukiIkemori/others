@@ -1,0 +1,50 @@
+{
+ "sprite": "boss_shade_star",
+ "id": "b_shade_star",
+ "name": "杖の勇者の影",
+ "sheet": 61,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 45,
+ "h": 89,
+ "anchor": [
+  16,
+  88
+ ],
+ "points": {
+  "head": [
+   39,
+   8
+  ],
+  "center": [
+   17,
+   42
+  ],
+  "fx": [
+   24,
+   32
+  ],
+  "top": [
+   39,
+   4
+  ],
+  "body": [
+   17,
+   42,
+   12,
+   26
+  ]
+ },
+ "facing": "right",
+ "long": 89,
+ "core_long": 84.0,
+ "target": {
+  "w": 60,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 13.595
+}

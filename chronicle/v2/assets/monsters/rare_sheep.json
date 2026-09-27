@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_sheep",
+ "id": "rm_moon_sheep",
+ "name": "月見ヒツジ",
+ "sheet": 44,
+ "cell": 4,
+ "size": "M",
+ "kind": "rare",
+ "fly": true,
+ "w": 83,
+ "h": 71,
+ "anchor": [
+  39,
+  90
+ ],
+ "points": {
+  "head": [
+   71,
+   17
+  ],
+  "center": [
+   40,
+   30
+  ],
+  "fx": [
+   49,
+   26
+  ],
+  "top": [
+   64,
+   4
+  ],
+  "body": [
+   40,
+   30,
+   30,
+   22
+  ]
+ },
+ "facing": "right",
+ "long": 83,
+ "core_long": 80.0,
+ "target": {
+  "w": 80,
+  "h": 56,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 6.838
+}

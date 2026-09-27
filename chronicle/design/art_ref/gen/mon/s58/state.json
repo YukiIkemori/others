@@ -1,0 +1,68 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s58_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 45
+  }
+ ],
+ "use": "mon_s58_a1.png",
+ "norm": {
+  "boss_bookgolem": {
+   "pitch": 7.641,
+   "how": "core 980x1299 px -> 170 art px",
+   "core_long": 170.0,
+   "raw_box": [
+    26,
+    110,
+    1011,
+    1414
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 172
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s58_tele_a1.png",
+   "prompt": "the wind-up pose: the book golem raises both book-pillar arms high over its head. Same size, feet in the same place."
+  },
+  {
+   "pose": "attack",
+   "file": "mon_s58_attack_a1.png",
+   "prompt": "the attack pose: the book golem slams both book-pillar arms down in front of it toward the right, hunched forward. Same size."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s58_tele_a1.png",
+  "attack": "mon_s58_attack_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    1,
+    -10
+   ],
+   "overlap": 8543,
+   "size": [
+    118,
+    185
+   ]
+  },
+  "attack": {
+   "offset": [
+    8,
+    12
+   ],
+   "overlap": 9785,
+   "size": [
+    123,
+    151
+   ]
+  }
+ }
+}

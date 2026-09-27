@@ -1,0 +1,51 @@
+{
+ "sprite": "boss_nemrea1",
+ "id": "b_nemrea1",
+ "name": "虚ろの王",
+ "sheet": 63,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 159,
+ "h": 232,
+ "anchor": [
+  75,
+  232
+ ],
+ "points": {
+  "head": [
+   131,
+   68
+  ],
+  "center": [
+   69,
+   120
+  ],
+  "fx": [
+   88,
+   104
+  ],
+  "top": [
+   104,
+   9
+  ],
+  "body": [
+   74,
+   118,
+   48,
+   86
+  ]
+ },
+ "facing": "right",
+ "long": 232,
+ "core_long": null,
+ "target": {
+  "w": 160,
+  "h": 230,
+  "long": 230
+ },
+ "colors": 48,
+ "pitch": 5.891,
+ "pose": "tele"
+}

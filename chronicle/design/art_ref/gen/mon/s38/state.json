@@ -10,13 +10,13 @@
  "use": "mon_s38_a1.png",
  "norm": {
   "beetle_1": {
-   "pitch": 12.923,
-   "how": "core 672x419 px -> 52 art px",
+   "pitch": 14.538,
+   "how": "core 756x419 px -> 52 art px",
    "core_long": 52.0,
    "raw_box": [
     71,
     239,
-    763,
+    847,
     679
    ],
    "strays_removed": 0,
@@ -38,8 +38,8 @@
    "long": 60
   },
   "rare_hedgehog": {
-   "pitch": 11.038,
-   "how": "core 574x445 px -> 52 art px",
+   "pitch": 11.058,
+   "how": "core 575x445 px -> 52 art px",
    "core_long": 52.0,
    "raw_box": [
     83,
@@ -47,9 +47,9 @@
     711,
     1381
    ],
-   "strays_removed": 0,
+   "strays_removed": 1,
    "colors": 32,
-   "long": 57
+   "long": 58
   },
   "mimic_1": {
    "pitch": 9.212,
@@ -67,9 +67,8 @@
   }
  },
  "notes": [
-  "crystal_1: dropped 2 stray part(s) (13002,3184 px)",
   "crystal_1: long side 60 outside the tier [48, 56]",
-  "rare_hedgehog: dropped 1 stray part(s) (45 px)",
+  "rare_hedgehog: removed 1 stray pixel group(s)",
   "mimic_1: long side 64 outside the tier [48, 56]"
  ]
 }

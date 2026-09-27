@@ -11,12 +11,12 @@
  "norm": {
   "b_doll_violin": {
    "pitch": 7.836,
-   "how": "core 529x862 px -> 110 art px",
+   "how": "core 553x862 px -> 110 art px",
    "core_long": 110.0,
    "raw_box": [
     224,
     106,
-    764,
+    791,
     968
    ],
    "strays_removed": 0,
@@ -38,7 +38,5 @@
    "long": 111
   }
  },
- "notes": [
-  "b_doll_drum: dropped 1 stray part(s) (685 px)"
- ]
+ "notes": []
 }

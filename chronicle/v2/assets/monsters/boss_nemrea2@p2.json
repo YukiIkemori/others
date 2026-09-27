@@ -1,0 +1,51 @@
+{
+ "sprite": "boss_nemrea2",
+ "id": "b_nemrea2",
+ "name": "ネムレア",
+ "sheet": 64,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 237,
+ "h": 173,
+ "anchor": [
+  115,
+  172
+ ],
+ "points": {
+  "head": [
+   192,
+   30
+  ],
+  "center": [
+   105,
+   79
+  ],
+  "fx": [
+   131,
+   64
+  ],
+  "top": [
+   192,
+   16
+  ],
+  "body": [
+   106,
+   81,
+   88,
+   55
+  ]
+ },
+ "facing": "right",
+ "long": 237,
+ "core_long": null,
+ "target": {
+  "w": 230,
+  "h": 155,
+  "long": 230
+ },
+ "colors": 48,
+ "pitch": 5.539,
+ "pose": "p2"
+}

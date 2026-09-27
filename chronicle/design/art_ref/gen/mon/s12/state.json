@@ -10,36 +10,33 @@
  "use": "mon_s12_a1.png",
  "norm": {
   "paper_4": {
-   "pitch": 5.975,
-   "how": "core 717x708 px -> 120 art px",
+   "pitch": 6.55,
+   "how": "core 786x709 px -> 120 art px",
    "core_long": 120.0,
    "raw_box": [
     37,
     100,
-    764,
+    843,
     830
    ],
    "strays_removed": 0,
    "colors": 48,
-   "long": 123
+   "long": 124
   },
   "treant_4": {
    "pitch": 6.267,
-   "how": "core 676x752 px -> 120 art px",
+   "how": "core 563x752 px -> 120 art px",
    "core_long": 120.0,
    "raw_box": [
-    772,
+    836,
     139,
     1511,
     903
    ],
-   "strays_removed": 1,
+   "strays_removed": 0,
    "colors": 48,
    "long": 123
   }
  },
- "notes": [
-  "treant_4: dropped 1 stray part(s) (268 px)",
-  "treant_4: removed 1 stray pixel group(s)"
- ]
+ "notes": []
 }

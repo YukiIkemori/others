@@ -10,8 +10,8 @@
  "use": "mon_s36_a1.png",
  "norm": {
   "b_octopus": {
-   "pitch": 6.953,
-   "how": "core 1182x865 px -> 170 art px",
+   "pitch": 8.318,
+   "how": "core 1414x878 px -> 170 art px",
    "core_long": 170.0,
    "raw_box": [
     65,
@@ -19,14 +19,50 @@
     1480,
     947
    ],
-   "strays_removed": 13,
+   "strays_removed": 0,
    "colors": 48,
-   "long": 204
+   "long": 171
   }
  },
- "notes": [
-  "b_octopus: dropped 15 stray part(s) (144,36,29,73,8,105 px)",
-  "b_octopus: long side 204 outside the tier [153.0, 187.00000000000003]",
-  "b_octopus: removed 13 stray pixel group(s)"
- ]
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s36_tele_a1.png",
+   "prompt": "the wind-up pose: the great octopus raises all its thick front arms high and curled, ready to slam down, the golden eyes narrowed. Same size and position."
+  },
+  {
+   "pose": "attack",
+   "file": "mon_s36_attack_a1.png",
+   "prompt": "the attack pose: the great octopus lashes two thick arms forward to the right along the ground, body leaning forward. Same size."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s36_tele_a1.png",
+  "attack": "mon_s36_attack_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    0,
+    0
+   ],
+   "overlap": 9398,
+   "size": [
+    171,
+    110
+   ]
+  },
+  "attack": {
+   "offset": [
+    0,
+    0
+   ],
+   "overlap": 8637,
+   "size": [
+    177,
+    105
+   ]
+  }
+ }
 }

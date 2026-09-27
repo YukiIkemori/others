@@ -1,0 +1,42 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s45_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 37
+  }
+ ],
+ "use": "mon_s45_a1.png",
+ "norm": {
+  "orc_1": {
+   "pitch": 6.873,
+   "how": "core 564x756 px -> 110 art px",
+   "core_long": 110.0,
+   "raw_box": [
+    115,
+    123,
+    685,
+    887
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 112
+  },
+  "orc_3": {
+   "pitch": 5.967,
+   "how": "core 713x716 px -> 120 art px",
+   "core_long": 120.0,
+   "raw_box": [
+    749,
+    138,
+    1468,
+    887
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 126
+  }
+ },
+ "notes": []
+}

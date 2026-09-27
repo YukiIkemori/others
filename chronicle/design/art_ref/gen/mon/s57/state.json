@@ -1,0 +1,51 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s57_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 37
+  }
+ ],
+ "use": "mon_s57_a1.png",
+ "norm": {
+  "b_rowell2": {
+   "pitch": 12.956,
+   "how": "core 613x881 px -> 68 art px",
+   "core_long": 68.0,
+   "raw_box": [
+    148,
+    363,
+    893,
+    1263
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 70
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "attack",
+   "file": "mon_s57_attack_a1.png",
+   "prompt": "the attack pose: Rowell lunges forward to the right, thrusting the silver pen held in both hands, torn coat flying back. Same size."
+  }
+ ],
+ "posesUse": {
+  "attack": "mon_s57_attack_a1.png"
+ },
+ "poseNorm": {
+  "attack": {
+   "offset": [
+    -7,
+    6
+   ],
+   "overlap": 1219,
+   "size": [
+    74,
+    62
+   ]
+  }
+ }
+}

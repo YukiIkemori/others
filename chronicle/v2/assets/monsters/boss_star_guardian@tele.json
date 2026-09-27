@@ -1,0 +1,51 @@
+{
+ "sprite": "boss_star_guardian",
+ "id": "b_orrery",
+ "name": "天球の番人",
+ "sheet": 52,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 120,
+ "h": 176,
+ "anchor": [
+  72,
+  176
+ ],
+ "points": {
+  "head": [
+   79,
+   38
+  ],
+  "center": [
+   70,
+   91
+  ],
+  "fx": [
+   73,
+   75
+  ],
+  "top": [
+   77,
+   23
+  ],
+  "body": [
+   70,
+   91,
+   18,
+   49
+  ]
+ },
+ "facing": "right",
+ "long": 176,
+ "core_long": null,
+ "target": {
+  "w": 120,
+  "h": 165,
+  "long": 165
+ },
+ "colors": 48,
+ "pitch": 8.4,
+ "pose": "tele"
+}

@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_goldfish",
+ "id": "rm_memory_fish",
+ "name": "記憶の金魚",
+ "sheet": 54,
+ "cell": 2,
+ "size": "S",
+ "kind": "rare",
+ "fly": true,
+ "w": 57,
+ "h": 44,
+ "anchor": [
+  28,
+  55
+ ],
+ "points": {
+  "head": [
+   50,
+   17
+  ],
+  "center": [
+   29,
+   21
+  ],
+  "fx": [
+   35,
+   20
+  ],
+  "top": [
+   36,
+   3
+  ],
+  "body": [
+   29,
+   21,
+   20,
+   12
+  ]
+ },
+ "facing": "right",
+ "long": 57,
+ "core_long": 52.0,
+ "target": {
+  "w": 52,
+  "h": 36,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 11.0
+}

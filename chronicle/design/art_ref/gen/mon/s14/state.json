@@ -16,26 +16,26 @@
    "raw_box": [
     191,
     109,
-    763,
+    724,
     670
    ],
-   "strays_removed": 1,
+   "strays_removed": 0,
    "colors": 48,
    "long": 81
   },
   "mummy_5": {
    "pitch": 7.405,
-   "how": "core 590x622 px -> 84 art px",
+   "how": "core 613x622 px -> 84 art px",
    "core_long": 84.0,
    "raw_box": [
-    773,
+    744,
     52,
     1370,
     674
    ],
    "strays_removed": 0,
    "colors": 48,
-   "long": 85
+   "long": 86
   },
   "cactus_1": {
    "pitch": 7.5,
@@ -44,7 +44,7 @@
    "raw_box": [
     141,
     798,
-    700,
+    701,
     1417
    ],
    "strays_removed": 0,
@@ -52,22 +52,21 @@
    "long": 83
   },
   "cactus_4": {
-   "pitch": 7.81,
-   "how": "core 431x656 px -> 84 art px",
+   "pitch": 8.083,
+   "how": "core 431x679 px -> 84 art px",
    "core_long": 84.0,
    "raw_box": [
     842,
-    773,
+    713,
     1319,
     1429
    ],
    "strays_removed": 0,
    "colors": 48,
-   "long": 85
+   "long": 90
   }
  },
  "notes": [
-  "mummy_1: removed 1 stray pixel group(s)",
-  "mummy_5: dropped 1 stray part(s) (1411 px)"
+  "cactus_4: long side 90 outside the tier [72, 84]"
  ]
 }

@@ -1,0 +1,51 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s60_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 43
+  }
+ ],
+ "use": "mon_s60_a1.png",
+ "norm": {
+  "boss_shade_prayer": {
+   "pitch": 15.298,
+   "how": "core 648x1285 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    178,
+    153,
+    834,
+    1446
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 85
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s60_tele_a1.png",
+   "prompt": "the wind-up pose: the prayer hero shade lifts both clasped hands high above her head in prayer. Same size and position."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s60_tele_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    0,
+    -5
+   ],
+   "overlap": 2204,
+   "size": [
+    43,
+    92
+   ]
+  }
+ }
+}

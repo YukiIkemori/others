@@ -1,0 +1,50 @@
+{
+ "sprite": "imp_5",
+ "id": "imp_5",
+ "name": "悪魔の軍師",
+ "sheet": 43,
+ "cell": 2,
+ "size": "S",
+ "kind": "mob",
+ "fly": true,
+ "w": 58,
+ "h": 59,
+ "anchor": [
+  30,
+  75
+ ],
+ "points": {
+  "head": [
+   50,
+   16
+  ],
+  "center": [
+   32,
+   27
+  ],
+  "fx": [
+   38,
+   23
+  ],
+  "top": [
+   36,
+   2
+  ],
+  "body": [
+   32,
+   27,
+   16,
+   18
+  ]
+ },
+ "facing": "right",
+ "long": 59,
+ "core_long": 56.0,
+ "target": {
+  "w": 56,
+  "h": 39,
+  "long": 56
+ },
+ "colors": 32,
+ "pitch": 9.732
+}

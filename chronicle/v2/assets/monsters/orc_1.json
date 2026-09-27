@@ -1,0 +1,67 @@
+{
+ "sprite": "orc_1",
+ "id": "orc_1",
+ "name": "荒野の大鬼",
+ "sheet": 45,
+ "cell": 1,
+ "size": "L",
+ "kind": "mob",
+ "fly": false,
+ "w": 84,
+ "h": 112,
+ "anchor": [
+  36,
+  111
+ ],
+ "points": {
+  "head": [
+   71,
+   51
+  ],
+  "center": [
+   33,
+   57
+  ],
+  "fx": [
+   44,
+   55
+  ],
+  "top": [
+   20,
+   3
+  ],
+  "body": [
+   33,
+   57,
+   27,
+   39
+  ]
+ },
+ "facing": "right",
+ "long": 112,
+ "core_long": 110.0,
+ "target": {
+  "w": 83,
+  "h": 110,
+  "long": 110
+ },
+ "colors": 48,
+ "pitch": 6.873,
+ "alsoMakes": [
+  "orc_2"
+ ],
+ "variants": {
+  "orc_2": {
+   "recolor": {
+    "hue": -30,
+    "sat": 0.9
+   },
+   "addons": [
+    "club_iron",
+    "helm"
+   ],
+   "filter": null,
+   "name": "鉄棒の大鬼"
+  }
+ }
+}

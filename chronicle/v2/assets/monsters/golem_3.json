@@ -1,0 +1,50 @@
+{
+ "sprite": "golem_3",
+ "id": "golem_3",
+ "name": "宝玉兵",
+ "sheet": 40,
+ "cell": 2,
+ "size": "L",
+ "kind": "mob",
+ "fly": false,
+ "w": 95,
+ "h": 122,
+ "anchor": [
+  44,
+  121
+ ],
+ "points": {
+  "head": [
+   87,
+   49
+  ],
+  "center": [
+   42,
+   62
+  ],
+  "fx": [
+   56,
+   58
+  ],
+  "top": [
+   58,
+   2
+  ],
+  "body": [
+   42,
+   62,
+   32,
+   45
+  ]
+ },
+ "facing": "right",
+ "long": 122,
+ "core_long": 120.0,
+ "target": {
+  "w": 90,
+  "h": 120,
+  "long": 120
+ },
+ "colors": 48,
+ "pitch": 6.75
+}

@@ -1,0 +1,68 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s52_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 47
+  }
+ ],
+ "use": "mon_s52_a1.png",
+ "norm": {
+  "boss_star_guardian": {
+   "pitch": 8.4,
+   "how": "core 930x1386 px -> 165 art px",
+   "core_long": 165.0,
+   "raw_box": [
+    14,
+    33,
+    982,
+    1501
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 176
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s52_tele_a1.png",
+   "prompt": "the wind-up pose: the orrery guardian spreads its four blade wings wide open and the three celestial rings tilt and spread apart around it. Same size and position."
+  },
+  {
+   "pose": "attack",
+   "file": "mon_s52_attack_a1.png",
+   "prompt": "the attack pose: the orrery guardian thrusts its blade wings forward to the right like spears, leaning forward. Same size."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s52_tele_a1.png",
+  "attack": "mon_s52_attack_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    0,
+    -1
+   ],
+   "overlap": 6890,
+   "size": [
+    120,
+    176
+   ]
+  },
+  "attack": {
+   "offset": [
+    8,
+    8
+   ],
+   "overlap": 3546,
+   "size": [
+    116,
+    157
+   ]
+  }
+ }
+}

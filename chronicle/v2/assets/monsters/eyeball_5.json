@@ -1,0 +1,50 @@
+{
+ "sprite": "eyeball_5",
+ "id": "eyeball_5",
+ "name": "天の大目玉",
+ "sheet": 43,
+ "cell": 4,
+ "size": "S",
+ "kind": "mob",
+ "fly": true,
+ "w": 58,
+ "h": 53,
+ "anchor": [
+  28,
+  67
+ ],
+ "points": {
+  "head": [
+   54,
+   15
+  ],
+  "center": [
+   28,
+   22
+  ],
+  "fx": [
+   36,
+   20
+  ],
+  "top": [
+   54,
+   13
+  ],
+  "body": [
+   28,
+   22,
+   21,
+   11
+  ]
+ },
+ "facing": "right",
+ "long": 58,
+ "core_long": 56.0,
+ "target": {
+  "w": 56,
+  "h": 39,
+  "long": 56
+ },
+ "colors": 32,
+ "pitch": 13.036
+}

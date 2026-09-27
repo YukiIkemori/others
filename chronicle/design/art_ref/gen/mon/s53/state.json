@@ -1,0 +1,70 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s53_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 47
+  }
+ ],
+ "use": "mon_s53_a1.png",
+ "norm": {
+  "boss_stareater": {
+   "pitch": 6.161,
+   "how": "core 1417x920 px -> 230 art px",
+   "core_long": 230.0,
+   "raw_box": [
+    64,
+    40,
+    1495,
+    989
+   ],
+   "strays_removed": 4,
+   "colors": 48,
+   "long": 233
+  }
+ },
+ "notes": [
+  "boss_stareater: removed 4 stray pixel group(s)"
+ ],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s53_tele_a1.png",
+   "prompt": "the wind-up pose: the star-eater coils its long body tighter and raises its wolf-serpent head, three white eyes wide, jaws opening. Same size."
+  },
+  {
+   "pose": "p2",
+   "file": "mon_s53_p2_a1.png",
+   "prompt": "its second form: the swallowed stars now shine inside its belly as a large bright cluster of white and pale-yellow star dots (solid colour, part of the body), the three eyes larger. Same size, pose and position."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s53_tele_a1.png",
+  "p2": "mon_s53_p2_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    22,
+    1
+   ],
+   "overlap": 16247,
+   "size": [
+    198,
+    154
+   ]
+  },
+  "p2": {
+   "offset": [
+    0,
+    0
+   ],
+   "overlap": 20823,
+   "size": [
+    233,
+    155
+   ]
+  }
+ }
+}

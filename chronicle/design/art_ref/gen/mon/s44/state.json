@@ -1,0 +1,72 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s44_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 48
+  }
+ ],
+ "use": "mon_s44_a1.png",
+ "norm": {
+  "gargoyle_1": {
+   "pitch": 8.262,
+   "how": "core 661x545 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    81,
+    137,
+    814,
+    709
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 90
+  },
+  "rare_monkey": {
+   "pitch": 7.075,
+   "how": "core 370x566 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    868,
+    123,
+    1335,
+    703
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 83
+  },
+  "rare_turtle": {
+   "pitch": 7.975,
+   "how": "core 638x508 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    80,
+    856,
+    745,
+    1379
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 84
+  },
+  "rare_sheep": {
+   "pitch": 6.838,
+   "how": "core 547x465 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    840,
+    879,
+    1402,
+    1358
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 83
+  }
+ },
+ "notes": [
+  "gargoyle_1: long side 90 outside the tier [72, 84]"
+ ]
+}

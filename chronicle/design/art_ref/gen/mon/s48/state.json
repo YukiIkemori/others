@@ -1,0 +1,68 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s48_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 40
+  }
+ ],
+ "use": "mon_s48_a1.png",
+ "norm": {
+  "boss_flame_lord": {
+   "pitch": 6.143,
+   "how": "core 1413x840 px -> 230 art px",
+   "core_long": 230.0,
+   "raw_box": [
+    40,
+    89,
+    1459,
+    934
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 231
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s48_tele_a1.png",
+   "prompt": "the wind-up pose: the lava beast rears up higher on its hind legs, head thrown back roaring, front claws raised. Same size."
+  },
+  {
+   "pose": "p2",
+   "file": "mon_s48_p2_a1.png",
+   "prompt": "its second form: the lava has cooled and hardened — the whole body is dull black and dark grey basalt rock, the cracks are dark dull red instead of bright orange, the heart in the chest dim dark red. Same size, same pose, same position."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s48_tele_a1.png",
+  "p2": "mon_s48_p2_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    18,
+    -18
+   ],
+   "overlap": 10675,
+   "size": [
+    190,
+    158
+   ]
+  },
+  "p2": {
+   "offset": [
+    0,
+    0
+   ],
+   "overlap": 17652,
+   "size": [
+    232,
+    138
+   ]
+  }
+ }
+}

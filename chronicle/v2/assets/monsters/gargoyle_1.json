@@ -1,0 +1,91 @@
+{
+ "sprite": "gargoyle_1",
+ "id": "gargoyle_1",
+ "name": "石像鬼",
+ "sheet": 44,
+ "cell": 1,
+ "size": "M",
+ "kind": "mob",
+ "fly": true,
+ "w": 90,
+ "h": 71,
+ "anchor": [
+  43,
+  90
+ ],
+ "points": {
+  "head": [
+   76,
+   9
+  ],
+  "center": [
+   42,
+   22
+  ],
+  "fx": [
+   52,
+   18
+  ],
+  "top": [
+   76,
+   6
+  ],
+  "body": [
+   42,
+   22,
+   28,
+   17
+  ]
+ },
+ "facing": "right",
+ "long": 90,
+ "core_long": 80.0,
+ "target": {
+  "w": 80,
+  "h": 56,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 8.262,
+ "alsoMakes": [
+  "gargoyle_2",
+  "gargoyle_3",
+  "gargoyle_4"
+ ],
+ "variants": {
+  "gargoyle_2": {
+   "recolor": {
+    "sat": 0.3,
+    "bri": 0.45
+   },
+   "addons": [
+    "eyes_glow"
+   ],
+   "filter": null,
+   "name": "黒曜の石像鬼"
+  },
+  "gargoyle_3": {
+   "recolor": {
+    "hue": 115,
+    "sat": 1.3
+   },
+   "addons": [
+    "embers"
+   ],
+   "filter": null,
+   "name": "火炎の石像鬼"
+  },
+  "gargoyle_4": {
+   "recolor": {
+    "sat": 0.5,
+    "bri": 0.85
+   },
+   "addons": [
+    "horns",
+    "crown"
+   ],
+   "filter": null,
+   "name": "石像鬼の長"
+  }
+ }
+}

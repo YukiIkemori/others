@@ -1,0 +1,42 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s54_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 45
+  }
+ ],
+ "use": "mon_s54_a1.png",
+ "norm": {
+  "paper_1": {
+   "pitch": 11.692,
+   "how": "core 533x608 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    106,
+    190,
+    673,
+    832
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 56
+  },
+  "rare_goldfish": {
+   "pitch": 11.0,
+   "how": "core 572x440 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    808,
+    288,
+    1422,
+    758
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 57
+  }
+ },
+ "notes": []
+}

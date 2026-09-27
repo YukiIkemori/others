@@ -1,0 +1,68 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s62_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 39
+  }
+ ],
+ "use": "mon_s62_a1.png",
+ "norm": {
+  "boss_lazaro": {
+   "pitch": 14.868,
+   "how": "core 804x1130 px -> 76 art px",
+   "core_long": 76.0,
+   "raw_box": [
+    88,
+    220,
+    953,
+    1351
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 77
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s62_tele_a1.png",
+   "prompt": "the wind-up pose: Lazaro holds the white book high over his head with his left hand, the silver quill raised in the right. Same size, feet in the same place."
+  },
+  {
+   "pose": "p2",
+   "file": "mon_s62_p2_a1.png",
+   "prompt": "his second form: weary and shaking — his shoulders drop, he leans slightly forward, the white book held lower, one hand trembling, his face pained. Same size, feet in the same place."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s62_tele_a1.png",
+  "p2": "mon_s62_p2_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    4,
+    -8
+   ],
+   "overlap": 1900,
+   "size": [
+    56,
+    85
+   ]
+  },
+  "p2": {
+   "offset": [
+    1,
+    2
+   ],
+   "overlap": 2064,
+   "size": [
+    59,
+    75
+   ]
+  }
+ }
+}

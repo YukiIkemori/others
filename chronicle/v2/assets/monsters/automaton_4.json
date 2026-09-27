@@ -1,0 +1,50 @@
+{
+ "sprite": "automaton_4",
+ "id": "automaton_4",
+ "name": "からくり大将",
+ "sheet": 49,
+ "cell": 3,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 89,
+ "h": 78,
+ "anchor": [
+  42,
+  77
+ ],
+ "points": {
+  "head": [
+   49,
+   10
+  ],
+  "center": [
+   35,
+   39
+  ],
+  "fx": [
+   39,
+   30
+  ],
+  "top": [
+   47,
+   3
+  ],
+  "body": [
+   35,
+   39,
+   20,
+   24
+  ]
+ },
+ "facing": "right",
+ "long": 89,
+ "core_long": 84.0,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 7.988
+}

@@ -1,0 +1,85 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s42_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 37
+  }
+ ],
+ "use": "mon_s42_a1.png",
+ "norm": {
+  "b_ironwarden": {
+   "pitch": 5.613,
+   "how": "core 964x1263 px -> 225 art px",
+   "core_long": 225.0,
+   "raw_box": [
+    41,
+    118,
+    1015,
+    1402
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 229
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s42_tele_a1.png",
+   "prompt": "the wind-up pose: the iron warden raises the great hammer high over its horned helm with both hands. Same size, feet in the same place."
+  },
+  {
+   "pose": "p2",
+   "file": "mon_s42_p2_a1.png",
+   "prompt": "its second form, fully awake: the armour stands fully upright and squared, the eye slits in the helm now show two small orange lights, the furnace door in the chest half open showing orange fire as a solid colour block. Same size, feet in the same place. No glow effect."
+  },
+  {
+   "pose": "p3",
+   "file": "mon_s42_p3_a1.png",
+   "prompt": "its third form: the furnace in the chest burns bright red-orange-yellow (solid colour blocks, door blown open), the armour plates cracked with thin red-hot seams, the eye slits bright. No steam, no glow, no sparks drawn. Same size, feet in the same place."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s42_tele_a1.png",
+  "p2": "mon_s42_p2_a1.png",
+  "p3": "mon_s42_p3_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    2,
+    -23
+   ],
+   "overlap": 15293,
+   "size": [
+    147,
+    263
+   ]
+  },
+  "p2": {
+   "offset": [
+    0,
+    -2
+   ],
+   "overlap": 19848,
+   "size": [
+    174,
+    231
+   ]
+  },
+  "p3": {
+   "offset": [
+    1,
+    0
+   ],
+   "overlap": 22273,
+   "size": [
+    174,
+    229
+   ]
+  }
+ }
+}

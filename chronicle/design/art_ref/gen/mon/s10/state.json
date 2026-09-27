@@ -44,7 +44,7 @@
    "raw_box": [
     131,
     820,
-    675,
+    676,
     1371
    ],
    "strays_removed": 0,
@@ -52,22 +52,22 @@
    "long": 57
   },
   "fairy_4": {
-   "pitch": 9.446,
-   "how": "core 449x529 px -> 56 art px",
+   "pitch": 9.5,
+   "how": "core 450x532 px -> 56 art px",
    "core_long": 56.0,
    "raw_box": [
-    865,
-    773,
+    864,
+    760,
     1346,
-    1394
+    1395
    ],
    "strays_removed": 0,
    "colors": 32,
-   "long": 66
+   "long": 68
   }
  },
  "notes": [
-  "rat_4: dropped 5 stray part(s) (92,45,36,20,15 px)",
-  "fairy_4: long side 66 outside the tier [48, 56]"
+  "rat_4: dropped 4 stray part(s) (92,45,36,20 px)",
+  "fairy_4: long side 68 outside the tier [48, 56]"
  ]
 }

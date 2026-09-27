@@ -1,0 +1,51 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s61_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 38
+  }
+ ],
+ "use": "mon_s61_a1.png",
+ "norm": {
+  "boss_shade_star": {
+   "pitch": 13.595,
+   "how": "core 557x1142 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    253,
+    167,
+    858,
+    1358
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 89
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s61_tele_a1.png",
+   "prompt": "the wind-up pose: the staff hero shade holds the star staff forward at arm's length toward the right, the other hand behind. Same size and position."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s61_tele_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    -1,
+    15
+   ],
+   "overlap": 1338,
+   "size": [
+    57,
+    73
+   ]
+  }
+ }
+}

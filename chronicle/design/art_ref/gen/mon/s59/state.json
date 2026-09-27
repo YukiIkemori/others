@@ -1,0 +1,51 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s59_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 35
+  }
+ ],
+ "use": "mon_s59_a1.png",
+ "norm": {
+  "boss_shade_sword": {
+   "pitch": 10.571,
+   "how": "core 888x841 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    59,
+    468,
+    1007,
+    1345
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 91
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s59_tele_a1.png",
+   "prompt": "the wind-up pose: the sword hero shade raises the white sword high overhead with both hands. Same size, same position."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s59_tele_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    0,
+    -37
+   ],
+   "overlap": 2200,
+   "size": [
+    59,
+    121
+   ]
+  }
+ }
+}

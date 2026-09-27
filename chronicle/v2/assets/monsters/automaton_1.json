@@ -1,0 +1,79 @@
+{
+ "sprite": "automaton_1",
+ "id": "automaton_1",
+ "name": "からくり兵",
+ "sheet": 49,
+ "cell": 2,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 90,
+ "h": 81,
+ "anchor": [
+  28,
+  80
+ ],
+ "points": {
+  "head": [
+   35,
+   9
+  ],
+  "center": [
+   27,
+   42
+  ],
+  "fx": [
+   29,
+   32
+  ],
+  "top": [
+   35,
+   5
+  ],
+  "body": [
+   27,
+   42,
+   14,
+   30
+  ]
+ },
+ "facing": "right",
+ "long": 90,
+ "core_long": 80.0,
+ "target": {
+  "w": 60,
+  "h": 80,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 7.375,
+ "alsoMakes": [
+  "automaton_2",
+  "automaton_3"
+ ],
+ "variants": {
+  "automaton_2": {
+   "recolor": {
+    "hue": 20,
+    "sat": 0.8
+   },
+   "addons": [
+    "bow"
+   ],
+   "filter": null,
+   "name": "からくり弓兵"
+  },
+  "automaton_3": {
+   "recolor": {
+    "hue": 160,
+    "sat": 0.8
+   },
+   "addons": [
+    "staff",
+    "runes"
+   ],
+   "filter": null,
+   "name": "からくり術兵"
+  }
+ }
+}

@@ -1,0 +1,67 @@
+{
+ "sprite": "golem_1",
+ "id": "golem_1",
+ "name": "石くれ兵",
+ "sheet": 40,
+ "cell": 1,
+ "size": "L",
+ "kind": "mob",
+ "fly": false,
+ "w": 86,
+ "h": 111,
+ "anchor": [
+  39,
+  110
+ ],
+ "points": {
+  "head": [
+   79,
+   45
+  ],
+  "center": [
+   38,
+   55
+  ],
+  "fx": [
+   50,
+   52
+  ],
+  "top": [
+   54,
+   2
+  ],
+  "body": [
+   38,
+   55,
+   29,
+   41
+  ]
+ },
+ "facing": "right",
+ "long": 111,
+ "core_long": 110.0,
+ "target": {
+  "w": 83,
+  "h": 110,
+  "long": 110
+ },
+ "colors": 48,
+ "pitch": 7.345,
+ "alsoMakes": [
+  "golem_2"
+ ],
+ "variants": {
+  "golem_2": {
+   "recolor": {
+    "hue": 180,
+    "sat": 0.4,
+    "bri": 0.8
+   },
+   "addons": [
+    "armor_plates"
+   ],
+   "filter": null,
+   "name": "鉄鉱兵"
+  }
+ }
+}

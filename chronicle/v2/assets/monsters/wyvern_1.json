@@ -7,38 +7,38 @@
  "size": "L",
  "kind": "mob",
  "fly": true,
- "w": 122,
- "h": 102,
+ "w": 123,
+ "h": 101,
  "anchor": [
-  55,
-  130
+  56,
+  128
  ],
  "points": {
   "head": [
-   108,
+   109,
    23
   ],
   "center": [
-   57,
+   58,
    42
   ],
   "fx": [
-   72,
+   73,
    36
   ],
   "top": [
-   108,
+   109,
    18
   ],
   "body": [
-   57,
+   58,
    42,
    42,
-   27
+   28
   ]
  },
  "facing": "right",
- "long": 122,
+ "long": 123,
  "core_long": 110.0,
  "target": {
   "w": 110,
@@ -46,7 +46,7 @@
   "long": 110
  },
  "colors": 48,
- "pitch": 6.073,
+ "pitch": 6.082,
  "alsoMakes": [
   "wyvern_2",
   "wyvern_3"

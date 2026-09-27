@@ -1,0 +1,102 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s56_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 41
+  }
+ ],
+ "use": "mon_s56_a1.png",
+ "norm": {
+  "boss_rowell": {
+   "pitch": 17.5,
+   "how": "core 693x1190 px -> 68 art px",
+   "core_long": 68.0,
+   "raw_box": [
+    136,
+    173,
+    925,
+    1363
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 69
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s56_tele_a1.png",
+   "prompt": "the wind-up pose: Rowell draws the silver pen back beside his head like a rapier ready to thrust, notebook held forward. Same size, feet in the same place."
+  },
+  {
+   "pose": "attack",
+   "file": "mon_s56_attack_a1.png",
+   "prompt": "the attack pose: Rowell lunges forward to the right thrusting the silver pen like a rapier, front knee bent, coat tails flying back. Same size."
+  },
+  {
+   "pose": "r2",
+   "file": "mon_s56_r2_a1.png",
+   "prompt": "the SAME young man Rowell in his second battle, determined: his white gold-trimmed coat now hangs open and its hem is torn, he no longer holds the notebook, he grips the silver pen with BOTH hands in front of him like a rapier, leaning forward in a low stance, determined face. Same black hair tied back, same colours, same size (68 art px tall), feet in the same place, facing right."
+  },
+  {
+   "pose": "r2attack",
+   "file": "mon_s56_r2attack_a1.png",
+   "prompt": "the SAME young man Rowell, white gold-trimmed coat hanging open with a torn hem, no notebook: he lunges forward to the right thrusting the silver pen held in both hands like a rapier, front knee bent, coat flying back. Same size, facing right."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s56_tele_a1.png",
+  "attack": "mon_s56_attack_a1.png",
+  "r2": "mon_s56_r2_a1.png",
+  "r2attack": "mon_s56_r2attack_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    -2,
+    0
+   ],
+   "overlap": 1349,
+   "size": [
+    49,
+    69
+   ]
+  },
+  "attack": {
+   "offset": [
+    -5,
+    6
+   ],
+   "overlap": 940,
+   "size": [
+    54,
+    56
+   ]
+  },
+  "r2": {
+   "offset": [
+    -3,
+    8
+   ],
+   "overlap": 996,
+   "size": [
+    51,
+    61
+   ]
+  },
+  "r2attack": {
+   "offset": [
+    -8,
+    11
+   ],
+   "overlap": 808,
+   "size": [
+    57,
+    55
+   ]
+  }
+ }
+}

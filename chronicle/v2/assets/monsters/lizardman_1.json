@@ -7,38 +7,38 @@
  "size": "M",
  "kind": "mob",
  "fly": false,
- "w": 85,
- "h": 70,
+ "w": 102,
+ "h": 85,
  "anchor": [
   38,
-  69
+  84
  ],
  "points": {
   "head": [
-   55,
-   8
+   68,
+   10
   ],
   "center": [
-   40,
-   30
+   50,
+   37
   ],
   "fx": [
-   45,
-   23
+   55,
+   29
   ],
   "top": [
-   51,
-   3
+   64,
+   4
   ],
   "body": [
-   40,
-   30,
-   13,
-   22
+   50,
+   37,
+   16,
+   27
   ]
  },
  "facing": "right",
- "long": 85,
+ "long": 102,
  "core_long": 80.0,
  "target": {
   "w": 60,
@@ -46,7 +46,7 @@
   "long": 80
  },
  "colors": 48,
- "pitch": 8.6,
+ "pitch": 7.025,
  "alsoMakes": [
   "lizardman_2",
   "lizardman_3"

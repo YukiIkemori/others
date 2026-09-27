@@ -1,0 +1,53 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s63_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 56
+  }
+ ],
+ "use": "mon_s63_a1.png",
+ "norm": {
+  "boss_nemrea1": {
+   "pitch": 5.891,
+   "how": "core 952x1355 px -> 230 art px",
+   "core_long": 230.0,
+   "raw_box": [
+    24,
+    35,
+    996,
+    1449
+   ],
+   "strays_removed": 1,
+   "colors": 48,
+   "long": 241
+  }
+ },
+ "notes": [
+  "boss_nemrea1: removed 1 stray pixel group(s)"
+ ],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s63_tele_a1.png",
+   "prompt": "the wind-up pose: the hollow king raises both huge folded-paper hands high on either side, the hood lifted, paper edges peeling. Same size and position."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s63_tele_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    1,
+    8
+   ],
+   "overlap": 19075,
+   "size": [
+    159,
+    232
+   ]
+  }
+ }
+}

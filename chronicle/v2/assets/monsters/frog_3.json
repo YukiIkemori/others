@@ -8,15 +8,15 @@
  "kind": "mob",
  "fly": false,
  "w": 87,
- "h": 69,
+ "h": 68,
  "anchor": [
-  39,
-  68
+  40,
+  67
  ],
  "points": {
   "head": [
    78,
-   11
+   12
   ],
   "center": [
    44,
@@ -28,13 +28,13 @@
   ],
   "top": [
    76,
-   5
+   6
   ],
   "body": [
    44,
    36,
-   33,
-   23
+   32,
+   22
   ]
  },
  "facing": "right",
@@ -46,7 +46,7 @@
   "long": 84
  },
  "colors": 48,
- "pitch": 8.024,
+ "pitch": 8.262,
  "alsoMakes": [
   "frog_4"
  ],

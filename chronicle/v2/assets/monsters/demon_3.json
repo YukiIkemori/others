@@ -1,0 +1,50 @@
+{
+ "sprite": "demon_3",
+ "id": "demon_3",
+ "name": "忘れられた魔神",
+ "sheet": 66,
+ "cell": 1,
+ "size": "L",
+ "kind": "mob",
+ "fly": false,
+ "w": 108,
+ "h": 129,
+ "anchor": [
+  54,
+  128
+ ],
+ "points": {
+  "head": [
+   78,
+   26
+  ],
+  "center": [
+   52,
+   66
+  ],
+  "fx": [
+   60,
+   54
+  ],
+  "top": [
+   76,
+   11
+  ],
+  "body": [
+   52,
+   66,
+   29,
+   40
+  ]
+ },
+ "facing": "right",
+ "long": 129,
+ "core_long": 120.0,
+ "target": {
+  "w": 90,
+  "h": 120,
+  "long": 120
+ },
+ "colors": 48,
+ "pitch": 6.358
+}

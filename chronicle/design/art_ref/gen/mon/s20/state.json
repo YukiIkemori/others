@@ -10,8 +10,8 @@
  "use": "mon_s20_a1.png",
  "norm": {
   "yeti_1": {
-   "pitch": 6.064,
-   "how": "core 638x667 px -> 110 art px",
+   "pitch": 6.073,
+   "how": "core 638x668 px -> 110 art px",
    "core_long": 110.0,
    "raw_box": [
     50,
@@ -24,11 +24,11 @@
    "long": 112
   },
   "yeti_3": {
-   "pitch": 6.325,
-   "how": "core 720x759 px -> 120 art px",
+   "pitch": 6.333,
+   "how": "core 727x760 px -> 120 art px",
    "core_long": 120.0,
    "raw_box": [
-    772,
+    764,
     114,
     1494,
     891

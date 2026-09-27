@@ -24,18 +24,18 @@
    "long": 82
   },
   "frostling_5": {
-   "pitch": 8.667,
-   "how": "core 728x554 px -> 84 art px",
+   "pitch": 9.31,
+   "how": "core 782x554 px -> 84 art px",
    "core_long": 84.0,
    "raw_box": [
-    773,
+    713,
     88,
     1512,
     654
    ],
    "strays_removed": 0,
    "colors": 48,
-   "long": 86
+   "long": 87
   },
   "owl_1": {
    "pitch": 8.725,
@@ -67,7 +67,6 @@
   }
  },
  "notes": [
-  "frostling_1: dropped 1 stray part(s) (3966 px)",
   "owl_4: long side 89 outside the tier [72, 84]"
  ]
 }

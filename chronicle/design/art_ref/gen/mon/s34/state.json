@@ -10,36 +10,35 @@
  "use": "mon_s34_a1.png",
  "norm": {
   "kraken_1": {
-   "pitch": 6.273,
-   "how": "core 690x553 px -> 110 art px",
+   "pitch": 7.491,
+   "how": "core 824x553 px -> 110 art px",
    "core_long": 110.0,
    "raw_box": [
     73,
     337,
-    764,
+    916,
     891
    ],
    "strays_removed": 0,
    "colors": 48,
-   "long": 111
+   "long": 113
   },
   "boss_tentacle": {
-   "pitch": 6.391,
-   "how": "core 232x703 px -> 110 art px",
+   "pitch": 6.4,
+   "how": "core 236x704 px -> 110 art px",
    "core_long": 110.0,
    "raw_box": [
     1029,
-    144,
+    139,
     1423,
     896
    ],
-   "strays_removed": 19,
+   "strays_removed": 9,
    "colors": 48,
-   "long": 112
+   "long": 120
   }
  },
  "notes": [
-  "boss_tentacle: dropped 19 stray part(s) (251,134,39,39,138,24 px)",
-  "boss_tentacle: removed 19 stray pixel group(s)"
+  "boss_tentacle: removed 9 stray pixel group(s)"
  ]
 }

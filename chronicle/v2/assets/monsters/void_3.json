@@ -1,0 +1,50 @@
+{
+ "sprite": "void_3",
+ "id": "void_3",
+ "name": "虚無の騎士王",
+ "sheet": 65,
+ "cell": 2,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 91,
+ "h": 79,
+ "anchor": [
+  36,
+  78
+ ],
+ "points": {
+  "head": [
+   53,
+   12
+  ],
+  "center": [
+   39,
+   44
+  ],
+  "fx": [
+   43,
+   34
+  ],
+  "top": [
+   49,
+   6
+  ],
+  "body": [
+   39,
+   44,
+   21,
+   26
+  ]
+ },
+ "facing": "right",
+ "long": 91,
+ "core_long": 84.0,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 9.607
+}

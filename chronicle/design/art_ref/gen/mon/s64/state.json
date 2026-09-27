@@ -1,0 +1,68 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s64_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 44
+  }
+ ],
+ "use": "mon_s64_a1.png",
+ "norm": {
+  "boss_nemrea2": {
+   "pitch": 5.539,
+   "how": "core 1274x945 px -> 230 art px",
+   "core_long": 230.0,
+   "raw_box": [
+    118,
+    24,
+    1432,
+    976
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 238
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s64_tele_a1.png",
+   "prompt": "the wind-up pose: Nemrea spreads all eight page wings wide open and lifts her chin, eyes half open. Same size and position."
+  },
+  {
+   "pose": "p2",
+   "file": "mon_s64_p2_a1.png",
+   "prompt": "her second form: the written text patterns now cover her whole body (thin dark lines), her eyes fully open and cold, the quill crown more broken. Same size, pose and position."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s64_tele_a1.png",
+  "p2": "mon_s64_p2_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    -5,
+    -2
+   ],
+   "overlap": 25721,
+   "size": [
+    249,
+    173
+   ]
+  },
+  "p2": {
+   "offset": [
+    1,
+    0
+   ],
+   "overlap": 27343,
+   "size": [
+    237,
+    173
+   ]
+  }
+ }
+}

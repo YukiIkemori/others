@@ -1,0 +1,80 @@
+{
+ "sprite": "armor_1",
+ "id": "armor_1",
+ "name": "からっぽの鎧",
+ "sheet": 49,
+ "cell": 4,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 86,
+ "h": 72,
+ "anchor": [
+  24,
+  71
+ ],
+ "points": {
+  "head": [
+   35,
+   7
+  ],
+  "center": [
+   24,
+   34
+  ],
+  "fx": [
+   27,
+   26
+  ],
+  "top": [
+   33,
+   2
+  ],
+  "body": [
+   24,
+   34,
+   15,
+   26
+  ]
+ },
+ "facing": "right",
+ "long": 86,
+ "core_long": 80.0,
+ "target": {
+  "w": 60,
+  "h": 80,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 7.612,
+ "alsoMakes": [
+  "armor_2",
+  "armor_3"
+ ],
+ "variants": {
+  "armor_2": {
+   "recolor": {
+    "hue": 20
+   },
+   "addons": [
+    "shield",
+    "spear"
+   ],
+   "filter": null,
+   "name": "番兵の鎧"
+  },
+  "armor_3": {
+   "recolor": {
+    "hue": 200,
+    "sat": 0.8
+   },
+   "addons": [
+    "helm",
+    "cape",
+    "sword"
+   ],
+   "filter": null,
+   "name": "騎士の鎧"
+  }
+ }
+}

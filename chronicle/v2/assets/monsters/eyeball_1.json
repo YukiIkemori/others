@@ -1,0 +1,91 @@
+{
+ "sprite": "eyeball_1",
+ "id": "eyeball_1",
+ "name": "のぞき目玉",
+ "sheet": 43,
+ "cell": 3,
+ "size": "S",
+ "kind": "mob",
+ "fly": true,
+ "w": 43,
+ "h": 68,
+ "anchor": [
+  20,
+  86
+ ],
+ "points": {
+  "head": [
+   39,
+   13
+  ],
+  "center": [
+   21,
+   23
+  ],
+  "fx": [
+   27,
+   20
+  ],
+  "top": [
+   27,
+   0
+  ],
+  "body": [
+   21,
+   23,
+   16,
+   18
+  ]
+ },
+ "facing": "right",
+ "long": 68,
+ "core_long": 52.0,
+ "target": {
+  "w": 39,
+  "h": 52,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 7.462,
+ "alsoMakes": [
+  "eyeball_2",
+  "eyeball_3",
+  "eyeball_4"
+ ],
+ "variants": {
+  "eyeball_2": {
+   "recolor": {
+    "hue": -60,
+    "sat": 1.2
+   },
+   "addons": [
+    "eyes_glow"
+   ],
+   "filter": null,
+   "name": "にらみ目玉"
+  },
+  "eyeball_3": {
+   "recolor": {
+    "hue": 120,
+    "sat": 1.2
+   },
+   "addons": [
+    "eye3"
+   ],
+   "filter": null,
+   "name": "まどわし目玉"
+  },
+  "eyeball_4": {
+   "recolor": {
+    "hue": 200,
+    "sat": 1.1,
+    "bri": 1.1
+   },
+   "addons": [
+    "halo"
+   ],
+   "filter": null,
+   "name": "星見の目玉"
+  }
+ }
+}

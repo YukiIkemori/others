@@ -1,0 +1,88 @@
+{
+ "sprite": "imp_1",
+ "id": "imp_1",
+ "name": "すす悪魔",
+ "sheet": 43,
+ "cell": 1,
+ "size": "S",
+ "kind": "mob",
+ "fly": true,
+ "w": 65,
+ "h": 48,
+ "anchor": [
+  30,
+  60
+ ],
+ "points": {
+  "head": [
+   47,
+   10
+  ],
+  "center": [
+   29,
+   20
+  ],
+  "fx": [
+   34,
+   17
+  ],
+  "top": [
+   43,
+   6
+  ],
+  "body": [
+   29,
+   20,
+   16,
+   13
+  ]
+ },
+ "facing": "right",
+ "long": 65,
+ "core_long": 52.0,
+ "target": {
+  "w": 52,
+  "h": 36,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 10.538,
+ "alsoMakes": [
+  "imp_2",
+  "imp_3",
+  "imp_4"
+ ],
+ "variants": {
+  "imp_2": {
+   "recolor": {},
+   "addons": [
+    "embers"
+   ],
+   "filter": null,
+   "name": "火の粉悪魔"
+  },
+  "imp_3": {
+   "recolor": {
+    "sat": 0.1,
+    "bri": 1.1
+   },
+   "addons": [
+    "smoke"
+   ],
+   "filter": null,
+   "name": "灰の悪魔"
+  },
+  "imp_4": {
+   "recolor": {
+    "hue": 20,
+    "sat": 1.2
+   },
+   "addons": [
+    "horns",
+    "flame"
+   ],
+   "filter": null,
+   "name": "業火の悪魔"
+  }
+ }
+}

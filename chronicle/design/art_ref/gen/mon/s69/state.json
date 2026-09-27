@@ -1,0 +1,28 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s69_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 42
+  }
+ ],
+ "use": "mon_s69_a1.png",
+ "norm": {
+  "boss_ouroboros": {
+   "pitch": 5.895,
+   "how": "core 1297x928 px -> 220 art px",
+   "core_long": 220.0,
+   "raw_box": [
+    121,
+    38,
+    1418,
+    990
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 220
+  }
+ },
+ "notes": []
+}

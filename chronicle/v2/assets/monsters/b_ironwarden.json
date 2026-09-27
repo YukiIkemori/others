@@ -1,0 +1,50 @@
+{
+ "sprite": "b_ironwarden",
+ "id": "b_ironwarden",
+ "name": "鉄の番人",
+ "sheet": 42,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 175,
+ "h": 229,
+ "anchor": [
+  76,
+  228
+ ],
+ "points": {
+  "head": [
+   160,
+   117
+  ],
+  "center": [
+   78,
+   117
+  ],
+  "fx": [
+   103,
+   117
+  ],
+  "top": [
+   104,
+   18
+  ],
+  "body": [
+   78,
+   117,
+   60,
+   75
+  ]
+ },
+ "facing": "right",
+ "long": 229,
+ "core_long": 225.0,
+ "target": {
+  "w": 150,
+  "h": 225,
+  "long": 225
+ },
+ "colors": 48,
+ "pitch": 5.613
+}

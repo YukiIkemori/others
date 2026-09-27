@@ -10,25 +10,25 @@
  "use": "mon_s21_a1.png",
  "norm": {
   "mammoth_1": {
-   "pitch": 6.782,
-   "how": "core 746x489 px -> 110 art px",
+   "pitch": 6.6,
+   "how": "core 726x489 px -> 110 art px",
    "core_long": 110.0,
    "raw_box": [
     18,
     312,
-    764,
+    744,
     810
    ],
-   "strays_removed": 1,
+   "strays_removed": 0,
    "colors": 48,
-   "long": 107
+   "long": 111
   },
   "mammoth_3": {
-   "pitch": 6.308,
-   "how": "core 757x557 px -> 120 art px",
+   "pitch": 6.65,
+   "how": "core 798x557 px -> 120 art px",
    "core_long": 120.0,
    "raw_box": [
-    772,
+    731,
     240,
     1529,
     809
@@ -38,7 +38,5 @@
    "long": 121
   }
  },
- "notes": [
-  "mammoth_1: removed 1 stray pixel group(s)"
- ]
+ "notes": []
 }

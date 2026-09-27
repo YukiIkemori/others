@@ -8,23 +8,23 @@
  "kind": "mob",
  "fly": true,
  "w": 71,
- "h": 82,
+ "h": 91,
  "anchor": [
   33,
-  104
+  115
  ],
  "points": {
   "head": [
-   51,
-   13
+   53,
+   17
   ],
   "center": [
    33,
    35
   ],
   "fx": [
-   38,
-   29
+   39,
+   30
   ],
   "top": [
    44,
@@ -38,7 +38,7 @@
   ]
  },
  "facing": "right",
- "long": 82,
+ "long": 91,
  "core_long": 80.0,
  "target": {
   "w": 60,

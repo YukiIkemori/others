@@ -1,0 +1,51 @@
+{
+ "sprite": "boss_hellhound",
+ "id": "b_hellhound",
+ "name": "炎の番犬",
+ "sheet": 47,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 174,
+ "h": 105,
+ "anchor": [
+  74,
+  96
+ ],
+ "points": {
+  "head": [
+   131,
+   15
+  ],
+  "center": [
+   90,
+   46
+  ],
+  "fx": [
+   102,
+   37
+  ],
+  "top": [
+   124,
+   2
+  ],
+  "body": [
+   91,
+   48,
+   49,
+   28
+  ]
+ },
+ "facing": "right",
+ "long": 174,
+ "core_long": null,
+ "target": {
+  "w": 170,
+  "h": 120,
+  "long": 170
+ },
+ "colors": 48,
+ "pitch": 8.388,
+ "pose": "attack"
+}

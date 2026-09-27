@@ -24,18 +24,18 @@
    "long": 113
   },
   "wyvern_1": {
-   "pitch": 6.073,
-   "how": "core 668x577 px -> 110 art px",
+   "pitch": 6.082,
+   "how": "core 669x577 px -> 110 art px",
    "core_long": 110.0,
    "raw_box": [
-    772,
+    766,
     175,
     1511,
     787
    ],
    "strays_removed": 0,
    "colors": 48,
-   "long": 122
+   "long": 123
   }
  },
  "notes": []

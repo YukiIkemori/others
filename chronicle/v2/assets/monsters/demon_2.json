@@ -1,0 +1,50 @@
+{
+ "sprite": "demon_2",
+ "id": "demon_2",
+ "name": "忘れられた魔将",
+ "sheet": 55,
+ "cell": 2,
+ "size": "L",
+ "kind": "mob",
+ "fly": false,
+ "w": 125,
+ "h": 107,
+ "anchor": [
+  43,
+  106
+ ],
+ "points": {
+  "head": [
+   64,
+   20
+  ],
+  "center": [
+   44,
+   53
+  ],
+  "fx": [
+   50,
+   43
+  ],
+  "top": [
+   63,
+   11
+  ],
+  "body": [
+   44,
+   53,
+   24,
+   30
+  ]
+ },
+ "facing": "right",
+ "long": 125,
+ "core_long": 120.0,
+ "target": {
+  "w": 90,
+  "h": 120,
+  "long": 120
+ },
+ "colors": 48,
+ "pitch": 6.317
+}

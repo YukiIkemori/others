@@ -1,0 +1,51 @@
+{
+ "sprite": "boss_shade_prayer",
+ "id": "b_shade_prayer",
+ "name": "祈りの勇者の影",
+ "sheet": 60,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 43,
+ "h": 92,
+ "anchor": [
+  24,
+  89
+ ],
+ "points": {
+  "head": [
+   34,
+   24
+  ],
+  "center": [
+   22,
+   48
+  ],
+  "fx": [
+   26,
+   41
+  ],
+  "top": [
+   27,
+   5
+  ],
+  "body": [
+   22,
+   47,
+   14,
+   31
+  ]
+ },
+ "facing": "right",
+ "long": 92,
+ "core_long": null,
+ "target": {
+  "w": 60,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 15.298,
+ "pose": "tele"
+}

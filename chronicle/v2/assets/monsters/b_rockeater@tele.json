@@ -1,0 +1,51 @@
+{
+ "sprite": "b_rockeater",
+ "id": "b_rockeater",
+ "name": "岩食らい",
+ "sheet": 41,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 168,
+ "h": 114,
+ "anchor": [
+  87,
+  104
+ ],
+ "points": {
+  "head": [
+   151,
+   38
+  ],
+  "center": [
+   93,
+   61
+  ],
+  "fx": [
+   111,
+   54
+  ],
+  "top": [
+   129,
+   20
+  ],
+  "body": [
+   95,
+   58,
+   60,
+   36
+  ]
+ },
+ "facing": "right",
+ "long": 168,
+ "core_long": null,
+ "target": {
+  "w": 170,
+  "h": 110,
+  "long": 170
+ },
+ "colors": 48,
+ "pitch": 7.959,
+ "pose": "tele"
+}

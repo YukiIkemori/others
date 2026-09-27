@@ -1,0 +1,74 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s43_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 50
+  }
+ ],
+ "use": "mon_s43_a1.png",
+ "norm": {
+  "imp_1": {
+   "pitch": 10.538,
+   "how": "core 548x428 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    73,
+    176,
+    749,
+    671
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 65
+  },
+  "imp_5": {
+   "pitch": 9.732,
+   "how": "core 530x545 px -> 56 art px",
+   "core_long": 56.0,
+   "raw_box": [
+    777,
+    115,
+    1336,
+    671
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 59
+  },
+  "eyeball_1": {
+   "pitch": 7.462,
+   "how": "core 321x388 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    216,
+    892,
+    537,
+    1400
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 68
+  },
+  "eyeball_5": {
+   "pitch": 13.036,
+   "how": "core 730x505 px -> 56 art px",
+   "core_long": 56.0,
+   "raw_box": [
+    723,
+    747,
+    1477,
+    1435
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 58
+  }
+ },
+ "notes": [
+  "imp_1: long side 65 outside the tier [48, 56]",
+  "imp_5: long side 59 outside the tier [48, 56]",
+  "eyeball_1: long side 68 outside the tier [48, 56]"
+ ]
+}

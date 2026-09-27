@@ -10,13 +10,13 @@
  "use": "mon_s15_a1.png",
  "norm": {
   "rare_lizard": {
-   "pitch": 8.212,
-   "how": "core 657x424 px -> 80 art px",
+   "pitch": 9.412,
+   "how": "core 753x424 px -> 80 art px",
    "core_long": 80.0,
    "raw_box": [
     79,
     181,
-    763,
+    866,
     636
    ],
    "strays_removed": 0,
@@ -38,13 +38,13 @@
    "long": 87
   },
   "rare_bird": {
-   "pitch": 8.538,
-   "how": "core 683x609 px -> 80 art px",
+   "pitch": 8.7,
+   "how": "core 696x609 px -> 80 art px",
    "core_long": 80.0,
    "raw_box": [
     66,
-    773,
-    763,
+    757,
+    785,
     1413
    ],
    "strays_removed": 0,
@@ -53,23 +53,18 @@
   },
   "rare_icefox": {
    "pitch": 7.838,
-   "how": "core 627x505 px -> 80 art px",
+   "how": "core 627x506 px -> 80 art px",
    "core_long": 80.0,
    "raw_box": [
-    773,
+    791,
     851,
     1459,
     1381
    ],
-   "strays_removed": 2,
+   "strays_removed": 0,
    "colors": 48,
-   "long": 85
+   "long": 86
   }
  },
- "notes": [
-  "rare_lizard: dropped 1 stray part(s) (82 px)",
-  "rare_idol: dropped 2 stray part(s) (8459,274 px)",
-  "rare_bird: dropped 1 stray part(s) (3 px)",
-  "rare_icefox: removed 2 stray pixel group(s)"
- ]
+ "notes": []
 }

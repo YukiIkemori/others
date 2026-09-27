@@ -1,0 +1,68 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s47_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 41
+  }
+ ],
+ "use": "mon_s47_a1.png",
+ "norm": {
+  "boss_hellhound": {
+   "pitch": 8.388,
+   "how": "core 1426x836 px -> 170 art px",
+   "core_long": 170.0,
+   "raw_box": [
+    64,
+    59,
+    1495,
+    918
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 171
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s47_tele_a1.png",
+   "prompt": "the wind-up pose: the two-headed hound crouches very low on bent legs, both heads lowered and snarling, ready to leap. Same size, feet in the same place."
+  },
+  {
+   "pose": "attack",
+   "file": "mon_s47_attack_a1.png",
+   "prompt": "the attack pose: the two-headed hound leaps forward to the right, front legs reaching out, both jaws wide open. Same size."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s47_tele_a1.png",
+  "attack": "mon_s47_attack_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    1,
+    18
+   ],
+   "overlap": 6737,
+   "size": [
+    169,
+    78
+   ]
+  },
+  "attack": {
+   "offset": [
+    2,
+    6
+   ],
+   "overlap": 6983,
+   "size": [
+    174,
+    105
+   ]
+  }
+ }
+}

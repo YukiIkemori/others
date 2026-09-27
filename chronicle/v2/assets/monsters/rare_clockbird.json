@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_clockbird",
+ "id": "rm_clock_bird",
+ "name": "ぜんまい鳥",
+ "sheet": 51,
+ "cell": 1,
+ "size": "S",
+ "kind": "rare",
+ "fly": true,
+ "w": 56,
+ "h": 46,
+ "anchor": [
+  25,
+  58
+ ],
+ "points": {
+  "head": [
+   48,
+   17
+  ],
+  "center": [
+   25,
+   22
+  ],
+  "fx": [
+   32,
+   21
+  ],
+  "top": [
+   34,
+   2
+  ],
+  "body": [
+   25,
+   22,
+   19,
+   13
+  ]
+ },
+ "facing": "right",
+ "long": 56,
+ "core_long": 52.0,
+ "target": {
+  "w": 52,
+  "h": 36,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 10.288
+}

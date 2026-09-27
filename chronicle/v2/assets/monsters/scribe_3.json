@@ -1,0 +1,50 @@
+{
+ "sprite": "scribe_3",
+ "id": "scribe_3",
+ "name": "白衣の司書長",
+ "sheet": 50,
+ "cell": 3,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 67,
+ "h": 85,
+ "anchor": [
+  24,
+  84
+ ],
+ "points": {
+  "head": [
+   61,
+   10
+  ],
+  "center": [
+   28,
+   45
+  ],
+  "fx": [
+   38,
+   35
+  ],
+  "top": [
+   61,
+   6
+  ],
+  "body": [
+   28,
+   45,
+   20,
+   34
+  ]
+ },
+ "facing": "right",
+ "long": 85,
+ "core_long": 84.0,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 7.94
+}

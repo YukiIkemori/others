@@ -1,0 +1,51 @@
+{
+ "sprite": "b_captain",
+ "id": "b_captain",
+ "name": "亡霊船長グレン",
+ "sheet": 37,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 130,
+ "h": 237,
+ "anchor": [
+  56,
+  235
+ ],
+ "points": {
+  "head": [
+   78,
+   40
+  ],
+  "center": [
+   54,
+   106
+  ],
+  "fx": [
+   61,
+   86
+  ],
+  "top": [
+   78,
+   30
+  ],
+  "body": [
+   53,
+   106,
+   30,
+   62
+  ]
+ },
+ "facing": "right",
+ "long": 237,
+ "core_long": null,
+ "target": {
+  "w": 140,
+  "h": 200,
+  "long": 200
+ },
+ "colors": 48,
+ "pitch": 6.115,
+ "pose": "tele"
+}

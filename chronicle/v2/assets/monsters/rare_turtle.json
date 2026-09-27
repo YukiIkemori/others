@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_turtle",
+ "id": "rm_volcano_turtle",
+ "name": "火山ガメ",
+ "sheet": 44,
+ "cell": 3,
+ "size": "M",
+ "kind": "rare",
+ "fly": false,
+ "w": 84,
+ "h": 66,
+ "anchor": [
+  38,
+  65
+ ],
+ "points": {
+  "head": [
+   77,
+   21
+  ],
+  "center": [
+   40,
+   34
+  ],
+  "fx": [
+   51,
+   30
+  ],
+  "top": [
+   38,
+   2
+  ],
+  "body": [
+   40,
+   34,
+   29,
+   22
+  ]
+ },
+ "facing": "right",
+ "long": 84,
+ "core_long": 80.0,
+ "target": {
+  "w": 80,
+  "h": 56,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 7.975
+}

@@ -1,0 +1,45 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s66_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 64
+  }
+ ],
+ "use": "mon_s66_a1.png",
+ "norm": {
+  "demon_3": {
+   "pitch": 6.358,
+   "how": "core 652x763 px -> 120 art px",
+   "core_long": 120.0,
+   "raw_box": [
+    49,
+    100,
+    726,
+    914
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 129
+  },
+  "chaos_1": {
+   "pitch": 6.991,
+   "how": "core 769x524 px -> 110 art px",
+   "core_long": 110.0,
+   "raw_box": [
+    720,
+    356,
+    1504,
+    918
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 113
+  }
+ },
+ "notes": [
+  "demon_3: dropped 2 stray part(s) (23,11 px)",
+  "demon_3: long side 129 outside the tier [100, 120]"
+ ]
+}

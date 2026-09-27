@@ -1,0 +1,50 @@
+{
+ "sprite": "boss_shade_sword",
+ "id": "b_shade_sword",
+ "name": "剣の勇者の影",
+ "sheet": 59,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 91,
+ "h": 84,
+ "anchor": [
+  36,
+  83
+ ],
+ "points": {
+  "head": [
+   46,
+   5
+  ],
+  "center": [
+   35,
+   34
+  ],
+  "fx": [
+   38,
+   25
+  ],
+  "top": [
+   43,
+   1
+  ],
+  "body": [
+   35,
+   34,
+   17,
+   22
+  ]
+ },
+ "facing": "right",
+ "long": 91,
+ "core_long": 84.0,
+ "target": {
+  "w": 60,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 10.571
+}

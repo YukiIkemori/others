@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_tapir",
+ "id": "rm_dream_tapir",
+ "name": "夢食いバク",
+ "sheet": 67,
+ "cell": 2,
+ "size": "L",
+ "kind": "rare",
+ "fly": false,
+ "w": 112,
+ "h": 70,
+ "anchor": [
+  36,
+  69
+ ],
+ "points": {
+  "head": [
+   84,
+   15
+  ],
+  "center": [
+   44,
+   33
+  ],
+  "fx": [
+   56,
+   28
+  ],
+  "top": [
+   76,
+   5
+  ],
+  "body": [
+   44,
+   33,
+   37,
+   26
+  ]
+ },
+ "facing": "right",
+ "long": 112,
+ "core_long": 110.0,
+ "target": {
+  "w": 110,
+  "h": 77,
+  "long": 110
+ },
+ "colors": 48,
+ "pitch": 5.6
+}

@@ -1,0 +1,52 @@
+{
+ "sprite": "b_rowell2",
+ "id": "b_rowell2",
+ "name": "ロウェル",
+ "sheet": 57,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 57,
+ "h": 55,
+ "anchor": [
+  28,
+  57
+ ],
+ "points": {
+  "head": [
+   35,
+   -5
+  ],
+  "center": [
+   28,
+   22
+  ],
+  "fx": [
+   30,
+   14
+  ],
+  "top": [
+   33,
+   -9
+  ],
+  "body": [
+   24,
+   22,
+   15,
+   15
+  ]
+ },
+ "facing": "right",
+ "long": 57,
+ "core_long": null,
+ "target": {
+  "w": 50,
+  "h": 68,
+  "long": 68
+ },
+ "colors": 48,
+ "pitch": 17.5,
+ "pose": "attack",
+ "note": "drawn as an edit of boss_rowell (same person)"
+}

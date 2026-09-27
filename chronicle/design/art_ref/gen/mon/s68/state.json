@@ -1,0 +1,51 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s68_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 43
+  }
+ ],
+ "use": "mon_s68_a1.png",
+ "norm": {
+  "b_valzard_echo": {
+   "pitch": 5.905,
+   "how": "core 905x1299 px -> 220 art px",
+   "core_long": 220.0,
+   "raw_box": [
+    59,
+    128,
+    987,
+    1448
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 224
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s68_tele_a1.png",
+   "prompt": "the wind-up pose: the demon lord echo raises the winged orb staff high and spreads the bat-wing cape wide. Same size and position."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s68_tele_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    -12,
+    -23
+   ],
+   "overlap": 16133,
+   "size": [
+    170,
+    245
+   ]
+  }
+ }
+}

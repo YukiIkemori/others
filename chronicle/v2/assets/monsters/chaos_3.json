@@ -1,0 +1,50 @@
+{
+ "sprite": "chaos_3",
+ "id": "chaos_3",
+ "name": "混沌の祖獣",
+ "sheet": 67,
+ "cell": 1,
+ "size": "L",
+ "kind": "mob",
+ "fly": false,
+ "w": 121,
+ "h": 93,
+ "anchor": [
+  64,
+  92
+ ],
+ "points": {
+  "head": [
+   104,
+   32
+  ],
+  "center": [
+   62,
+   50
+  ],
+  "fx": [
+   75,
+   45
+  ],
+  "top": [
+   74,
+   12
+  ],
+  "body": [
+   62,
+   50,
+   39,
+   28
+  ]
+ },
+ "facing": "right",
+ "long": 121,
+ "core_long": 120.0,
+ "target": {
+  "w": 120,
+  "h": 84,
+  "long": 120
+ },
+ "colors": 48,
+ "pitch": 6.792
+}
