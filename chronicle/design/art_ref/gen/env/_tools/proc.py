@@ -93,11 +93,16 @@ def crop_alpha(rgba, pad=0):
 # ---------------------------------------------------------------- buildings
 def lit_mask(s):
     r, g, b = s[..., 0], s[..., 1], s[..., 2]
-    return (s[..., 3] > 0) & (r > 170) & (g > 120) & (b < 160) & (r - b > 60)
+    m = (s[..., 3] > 0) & (r > 180) & (g > 0.72 * r) & (b < 0.72 * r) & (r - b > 60)
+    lab, n = ndimage.label(ndimage.binary_dilation(m, iterations=1))
+    if n:
+        sizes = ndimage.sum(m, lab, range(1, n + 1))
+        keep = np.isin(lab, 1 + np.nonzero(sizes >= 6)[0])
+        m = m & keep
+    return m
 
 def find_windows(rgb32, alpha32):
-    r, g, b = rgb32[..., 0], rgb32[..., 1], rgb32[..., 2]
-    lit = (alpha32 > 0) & (r > 190) & (g > 140) & (b < 150) & (r - b > 70)
+    lit = lit_mask(np.concatenate([rgb32, alpha32[..., None]], 2))
     lab, n = ndimage.label(ndimage.binary_dilation(lit, iterations=2))
     lab = lab * lit
     out = []

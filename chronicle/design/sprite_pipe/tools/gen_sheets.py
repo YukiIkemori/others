@@ -496,9 +496,9 @@ def normalize_full(raw, spec, log):
         if tb:
             boxes[sid] = dict(box=tb, gen=(r, c), fin=(fr, fc))
     notes = []
-    hs = [b['box'][3] - b['box'][1] for sid, b in boxes.items() if sid in spec['stand']]
+    hs = [body_height(mask, b['box'], s_guess) for sid, b in boxes.items() if sid in spec['stand']]
     if not hs:
-        hs = [b['box'][3] - b['box'][1] for b in boxes.values()]
+        hs = [body_height(mask, b['box'], s_guess) for b in boxes.values()]
     hs.sort()
     if not hs:
         raise RuntimeError('no poses found in the raw image')
@@ -544,6 +544,26 @@ def normalize_full(raw, spec, log):
     if missing:
         notes.append('missing poses: ' + ' '.join(missing))
     return to_sheet(canvas), frames, notes, s
+
+
+def body_height(mask, box, s_guess, min_run=3.5):
+    """height of a pose without thin things sticking up (a raised blade, a staff, an antenna of hair): the top is the
+    first row holding a run of art at least min_run art px wide (at the requested pitch). A raised sword otherwise
+    makes the bbox the target height and the body comes out small."""
+    crop = mask.crop(box)
+    W, H = crop.size
+    px = crop.tobytes()
+    need = max(3, int(min_run * s_guess))
+    for y in range(H):
+        row = px[y * W:(y + 1) * W]
+        run = best = 0
+        for v in row:
+            run = run + 1 if v else 0
+            if run > best:
+                best = run
+        if best >= need:
+            return H - y
+    return H
 
 
 def _near(a, b, d):
