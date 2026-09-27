@@ -276,7 +276,6 @@
     if (st.litCache[name] && st.litCache[name].key === key) return st.litCache[name].c;
     const idx = (sh.poses && sh.poses[name]) || [];
     if (!idx.length || !map) { st.litCache[name] = { key, c: null }; return null; }
-    _.litBakes = (_.litBakes || 0) + 1;
     const c = R.Hd.RZ.canvas(cw, ch), x = c.getContext('2d');
     x.setTransform(tf); x.imageSmoothingEnabled = false;
     layer(x, sh, name);
@@ -319,17 +318,11 @@
     const front = litStatic(st, sh, { canvas: g.canvas, getTransform: () => gTf }, 'front');
     const off = [tf.e - bt.e, tf.f - bt.f];
     const put = (c) => { if (!c) return; g.save(); g.setTransform(1, 0, 0, 1, off[0], off[1]); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.drawImage(c, 0, 0); g.restore(); };
-    const P = _.prof, now = () => (P ? performance.now() : 0);
-    let t0 = now();
     put(ground);
-    if (P) { P.ground = (P.ground || 0) + now() - t0; t0 = now(); }
     parts.under(g);                                   // ランタンのゆらぎ・影（地面の上、光の後）
-    if (P) { P.under = (P.under || 0) + now() - t0; t0 = now(); }
     st.lightAt = lightSampler(st, sh, map);           // 人と敵は体の中ほどの光の色を掛けたコマで描く（actors.js の litFrame）
     try { for (const a of parts.order) _.actors.draw(g, st, a); } finally { st.lightAt = null; }
-    if (P) { P.actors = (P.actors || 0) + now() - t0; t0 = now(); }
     put(front);
-    if (P) { P.front = (P.front || 0) + now() - t0; P.n = (P.n || 0) + 1; }
     return true;
   }
 

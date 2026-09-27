@@ -133,7 +133,7 @@
       x.fillStyle = mood.moon || 'rgb(56,64,84)';
       for (const m of o.moon) { const mr = asRect(m); x.fillRect(mr[0], mr[1], mr[2], mr[3]); }
     }
-    const poolMul = (mood.poolMul || 1) * (st().poolR || 1);
+    const poolMul = (mood.poolMul || 1) * (isMap ? 1 : st().poolR || 1);
     const sq = st().poolSquash || 0.62;
     const white = st().poolWhite != null ? st().poolWhite : 0.35;
     const list = [];

@@ -72,3 +72,12 @@
 00:05:23   | packed field 368x676, battle 650x430, battle_bare 405x75, weapons 465x30, face 288x168 | palette 52 + face 41
 00:05:23 done (clean). pipeline output: out/arun_v2
 00:06:51 pipeline: sheets.py ../art_ref/gen/arun/arun --char arun --out out/arun_v2 --check
+00:10:58   |   シート5 戦闘の基本ポーズ: OK  arun_sheet_05.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+00:10:58   |   シート6 戦闘の行動ポーズ: 確認あり  arun_sheet_06.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+00:10:58   |   シート7 武器なし版と武器: OK  arun_sheet_07.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+00:10:58   |   シート9 顔の表情: OK  arun_sheet_09.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+00:10:58   |   シート4 演技ポーズ（上・左向き）: OK  arun_sheet_04.png  ドット 8.00px → 描かれた格子のまま（48.0 ドット）
+00:10:58   |   シート8 戦闘の追加ポーズ: OK  arun_sheet_08.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+00:10:58 arun-fix: 0 redo lines from out/arun_v2/report.json
+00:10:58 no redo lines left
+00:10:58 pipeline: sheets.py ../art_ref/gen/arun/arun --char arun --out out/arun_v2

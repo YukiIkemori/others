@@ -74,19 +74,21 @@ const B = require('./lib/browser');
       const m = L.map([0, 0, 200, 100], { mood: 'town_night', lights: [{ x: 150, y: 50, r: 40, color: '#ffc27a', k: 0.9 }] });
       const d = m.getContext('2d').getImageData(0, 0, m.width, m.height).data;
       const at = (x, y) => { const q = (Math.floor(y / 2) * m.width + Math.floor(x / 2)) * 4; return [d[q], d[q + 1], d[q + 2]]; };
-      const amb = R.Hd._rgb(R.Hd.mood('town_night').ambient);
+      // 環境光は夜の色相と明るさの倍率（STYLE.light）を通した色（P2）。地図 L.map は mapGain、compose は ambientGain
+      const amb = L._nightAmbient(R.Hd._rgb(R.Hd.mood('town_night').ambient), R.Hd.STYLE.light.mapGain);
       // compose を白い canvas に
       const c = R.Hd.RZ.canvas(200, 100), x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, 200, 100);
       x.fillStyle = 'rgb(160,160,160)'; x.fillRect(0, 0, 200, 100);
       L.compose(x, [0, 0, 200, 100], { mood: 'cave', lights: [{ x: 60, y: 60, r: 30, color: '#ffc27a', k: 0.9 }], moon: [[0, 0, 200, 10]] });
       const cd = x.getImageData(0, 0, 200, 100).data;
       const cat = (px, py) => { const q = (py * 200 + px) * 4; return [cd[q], cd[q + 1], cd[q + 2]]; };
-      const caveAmb = R.Hd._rgb(R.Hd.mood('cave').ambient).map((v) => Math.round(v * 160 / 255));
+      const caveAmb = L._nightAmbient(R.Hd._rgb(R.Hd.mood('cave').ambient)).map((v) => Math.round(v * 160 / 255));
       return { far: at(10, 90), center: at(150, 50), amb, size: [m.width, m.height], cFar: cat(180, 99), cMoon: cat(180, 3), cLight: cat(72, 60), caveAmb };
     })()`);
     ok('light map is half resolution by default', lm.size[0] === 100 && lm.size[1] === 50, lm.size);
     ok('light map = ambient away from lights', lm.far.every((v, i) => Math.abs(v - lm.amb[i]) <= 2), lm);
-    ok('light map is warm and bright at a light', lm.center[0] > lm.amb[0] + 80 && lm.center[0] > lm.center[2], lm.center);
+    // 中心は白に近い（poolWhite）。暖色 = 赤が青より小さくない（飽和して 255 同士になりうる）
+    ok('light map is warm and bright at a light', lm.center[0] > lm.amb[0] + 80 && lm.center[0] >= lm.center[2] && lm.center[2] > lm.amb[2], lm.center);
     ok('compose multiplies: grey × ambient far from lights', lm.cFar.every((v, i) => Math.abs(v - lm.caveAmb[i]) <= 3), [lm.cFar, lm.caveAmb]);
     ok('compose: moon rects lighter than ambient', lm.cMoon[2] > lm.cFar[2] || lm.cMoon[0] > lm.cFar[0], lm.cMoon);
     ok('compose: lit ground warm (red > blue)', lm.cLight[0] > lm.cLight[2] && lm.cLight[0] > lm.cFar[0], lm.cLight);

@@ -184,7 +184,7 @@
     const P = (S.pre = { key, m, tile, sig: gridSig(m), list: [], t0: now() });
     try {
       const pj = R.Terrain.prewarm(m, { tile, tier: R.Tier.get() });
-      if (pj) { P.pj = pj; R.Hd.schedule(pj, 45); }
+      if (pj) { P.pj = pj; R.Hd.schedule(pj, 32); }
     } catch (e) { console.error('[field] preload prewarm', e); }
     const v = viewAt(m, sp.x, sp.y, tile, preView);
     const cx0 = (v.x0 + v.x1) / 2, cy0 = (v.y0 + v.y1) / 2;
@@ -192,7 +192,7 @@
       const e = entry(m, cx, cy);
       e.tile = tile;
       P.list.push(e);
-      makeJob(e, 40 - Math.round(Math.hypot(cx - cx0, cy - cy0)));
+      makeJob(e, 30 - Math.round(Math.hypot(cx - cx0, cy - cy0)));   // 今のマップの周り（40〜50）より後
     }
     return P;
   };
