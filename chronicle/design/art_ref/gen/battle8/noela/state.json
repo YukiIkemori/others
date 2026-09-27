@@ -428,21 +428,21 @@
     "kind": "new",
     "src": null,
     "checks": {
-     "ok": false,
-     "why": "head scale 0.950",
-     "head_scale": 0.95,
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
      "head": [
-      81.7,
-      40.5
+      82.2,
+      49.4
      ],
-     "height": 70,
-     "rescaled": 1.176,
-     "copy": 0.09,
+     "height": 59,
+     "rescaled": null,
+     "copy": 0.15,
      "shift": [
-      3,
+      4,
       0
      ],
-     "err": 35.7
+     "err": 34.5
     }
    },
    {
@@ -452,14 +452,14 @@
     "checks": {
      "ok": true,
      "why": "",
-     "head_scale": 1.025,
+     "head_scale": 1.0,
      "head": [
-      81.7,
-      39.5
+      83.2,
+      45.4
      ],
-     "height": 70,
-     "rescaled": 1.118,
-     "copy": 0.17,
+     "height": 63,
+     "rescaled": null,
+     "copy": 0.25,
      "shift": [
       0,
       0
@@ -516,21 +516,21 @@
     "kind": "new",
     "src": null,
     "checks": {
-     "ok": false,
-     "why": "head scale 1.088",
-     "head_scale": 1.088,
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
      "head": [
-      81.9,
-      42.3
+      81.6,
+      49.6
      ],
-     "height": 68,
-     "rescaled": 1.143,
-     "copy": 0.11,
+     "height": 59,
+     "rescaled": null,
+     "copy": 0.17,
      "shift": [
-      9,
+      8,
       0
      ],
-     "err": 34.5
+     "err": 34.1
     }
    },
    {
@@ -562,19 +562,19 @@
     "checks": {
      "ok": true,
      "why": "",
-     "head_scale": 0.975,
+     "head_scale": 1.0,
      "head": [
-      81.7,
-      44.5
+      82.2,
+      51.4
      ],
-     "height": 65,
-     "rescaled": 1.143,
-     "copy": 0.15,
+     "height": 57,
+     "rescaled": null,
+     "copy": 0.14,
      "shift": [
       10,
-      2
+      1
      ],
-     "err": 37.7
+     "err": 38.4
     }
    },
    {
@@ -606,6 +606,12 @@
    "W": 168,
    "H": 101
   },
-  "from_raw": "raw/cast_a1.png"
+  "from_raw": "raw/cast_a1.png",
+  "scale": {
+   "2": 1.0,
+   "3": 1.0,
+   "6": 1.0,
+   "8": 1.0
+  }
  }
 }
