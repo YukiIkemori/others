@@ -5,7 +5,7 @@
  "folder": "/home/user/others/chronicle/design/art_ref/gen/companion/sylvain",
  "sheets": {
   "1": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/sylvain/comp_sylvain_s1.png",
+   "file": "../art_ref/gen/companion/sylvain/comp_sylvain_s1.png",
    "size": [
     3584,
     1536
@@ -137,7 +137,7 @@
    }
   },
   "2": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/sylvain/comp_sylvain_s2.png",
+   "file": "../art_ref/gen/companion/sylvain/comp_sylvain_s2.png",
    "size": [
     1920,
     2048
@@ -383,7 +383,7 @@
    }
   },
   "3": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/sylvain/comp_sylvain_s3.png",
+   "file": "../art_ref/gen/companion/sylvain/comp_sylvain_s3.png",
    "size": [
     4160,
     1664
@@ -603,7 +603,7 @@
    }
   },
   "4": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/sylvain/comp_sylvain_s4.png",
+   "file": "../art_ref/gen/companion/sylvain/comp_sylvain_s4.png",
    "size": [
     4480,
     1920
@@ -935,7 +935,7 @@
    }
   },
   "5": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/sylvain/comp_sylvain_s5.png",
+   "file": "../art_ref/gen/companion/sylvain/comp_sylvain_s5.png",
    "size": [
     3072,
     768

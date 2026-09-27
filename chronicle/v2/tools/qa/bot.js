@@ -149,7 +149,7 @@
         else tap('a');
         return;
       }
-      case 'hub': {
+      case 'menu': case 'hub': {
         if (task && task.stage === 'saved') { tap('b'); return; }
         if (task && (task.kind === 'save' || task.kind === 'suspend')) { selectRow(list, (r) => r.value === 'save') || tap('b'); return; }
         tap('b');
