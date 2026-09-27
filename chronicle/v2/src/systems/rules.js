@@ -211,6 +211,8 @@
   /** 品の定義。u_* で R.Game.uniques[id] があればその個体の数値を重ねた物（R.DB.items は書き換えない） */
   function itemOf(id) {
     if (!id) return null;
+    // 消した品の id（R.DB.itemAlias。古いセーブ・古い参照）は残した品として読む
+    if (!DB.items[id] && DB.itemAlias && DB.itemAlias[id]) id = DB.itemAlias[id];
     const it = DB.items[id];
     if (!it) return null;
     const u = it.grow === 'tier' && R.Game && R.Game.uniques && R.Game.uniques[id];
@@ -572,7 +574,7 @@
       const v = K.PROF_TRACK[T];
       return kind === 'second' ? Math.round(v / 2) : v;
     },
-    /** 点を足す（× (1 + profPct/100)、PEXP より下なら × CATCHUP、柔らかい線より上なら × 0.3）→ {rank, up, pts} */
+    /** 点を足す（× (1 + profPct/100)、PEXP より下なら × CATCHUP、柔らかい線より上なら × 0.3）→ {rank, up, pts, from（足す前の段階）} */
     addProf(c, kind, id, pts, opts) {
       const t = kind === 'e' ? (c.eprof = c.eprof || {}) : (c.wprof = c.wprof || {});
       const cur = t[id] || 0;
@@ -587,13 +589,13 @@
       const r0 = Rules.profRank(cur);
       t[id] = clamp(round2(cur + v), 0, K.PROF_CAP);
       const r1 = Rules.profRank(t[id]);
-      return { rank: r1, up: r1 > r0, pts: t[id] };
+      return { rank: r1, up: r1 > r0, pts: t[id], from: r0 };
     },
     /**
      * 熟練度を伸ばす。2 つの呼び方:
      *   train(c, kind, key, n)  kind 'w'|'weapon'|'e'|'element'、key = 系統か属性、n = 点（上の倍率をかける）
      *   train(c, info)          戦闘の 1 行動ごと: info = {kind:'attack'|'tech'|'spell'|'item', wtype?, elements?, actionId?, stone?, tier?}
-     * → [{kind:'w'|'e', id, rank}]（段階が上がったもの）
+     * → [{kind:'w'|'e', id, rank, from}]（段階が上がったもの。from = 上がる前の段階）
      */
     train(c, kind, key, n) {
       if (!c) return [];
@@ -602,13 +604,13 @@
         if (k === 'w' && !WTYPES.includes(key)) return [];
         if (k === 'e' && !ELEMENTS.includes(key)) return [];
         const r = Rules.addProf(c, k, key, n == null ? 1 : n);
-        return r.up ? [{ kind: k, id: key, rank: r.rank }] : [];
+        return r.up ? [{ kind: k, id: key, rank: r.rank, from: r.from }] : [];
       }
       const info = kind;
       if (!info) return [];
       const G = K.PROF_GAIN, ups = [];
       const o = { mods: Rules.mods(c), tier: info.tier };
-      const bump = (k, id, pts) => { const r = Rules.addProf(c, k, id, pts, o); if (r.up) ups.push({ kind: k, id, rank: r.rank }); };
+      const bump = (k, id, pts) => { const r = Rules.addProf(c, k, id, pts, o); if (r.up) ups.push({ kind: k, id, rank: r.rank, from: r.from }); };
       const a = info.actionId && actionOf(info.actionId);
       if (info.stone || (info.kind === 'item' && a == null && info.elements)) {
         for (const e of info.elements || []) if (ELEMENTS.includes(e)) bump('e', e, G.stone);
@@ -699,6 +701,7 @@
       slot = Rules.charSlot(slot, c, itemId);
       if (!SLOTS.includes(slot)) return fail('この枠には付けられない。');
       itemId = itemId || null;
+      if (itemId && !DB.items[itemId] && DB.itemAlias && DB.itemAlias[itemId]) itemId = DB.itemAlias[itemId];   // 消した品の id → 残した品
       const old = c.equip[slot] || null;
       if (old === itemId) return { ok: true, removed: [], shieldRemoved: null };
       if (itemId) {

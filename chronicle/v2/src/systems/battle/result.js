@@ -1,7 +1,9 @@
 // BSCENE: 勝利と報酬（MODERN_UI §6.18、victory.png。Lv・経験値は出さない＝V2_PLAN §0.2）・逃げた・負け（canLose）。
 // 全員の勝利のポーズ、左から暗い帯、見出し「勝利」、ゴールド、手に入れた物（レアは青い札と星、超レアは橙の札と光）、
 // 仲間ごとの最大 HP/MP の増え方（緑）、熟練は「熟練が上がった：剣・弓・火」と名前だけ（数字なし、A17）、閃いた技。
-// [A] 次へ・[X] まとめて見る。倍速のときは自動で 1.5 秒。レア以上の品があれば、読める時間（0.6 秒）までは閉じない（A12）。
+// 流れ（2026-09-27 の遊びの声）: 倒れる絵が終わる → 0.4 秒 → 勝利のポーズと声 → 札 → [A] 決定で進む（点滅する ▼）。
+// 自動では閉じない（倍速でも）。最初の 0.5 秒（レアの品は 0.6 秒、A12）は押しても効かない。足された札（Rs.addPage）→ scene.js が暗くして外す。
+// 逃げた・負けた（canLose）も同じくボタンを待つ。
 (function (R) {
   'use strict';
   const Bt = (R.Battle = R.Battle || {});
@@ -35,7 +37,8 @@
     const prof = [];
     for (const p of (rw.prof || []).concat(st.collected.prof)) { const key = typeof p === 'string' ? p : p && p.key; const nm = key && Rs.profName(key); if (nm && !prof.includes(nm)) prof.push(nm); }
     const glim = [];
-    for (const gl of (rw.glimmers || [])) { const nm = typeof gl === 'string' ? gl : gl && (gl.name || gl.id); if (nm && !glim.includes(nm)) glim.push(nm); }
+    const techName = (id) => { const t = (R.DB.techs && R.DB.techs[id]) || (R.DB.spells && R.DB.spells[id]); return (t && t.name) || id; };
+    for (const gl of (rw.glimmers || [])) { const nm = typeof gl === 'string' ? techName(gl) : gl && (gl.name || techName(gl.id || gl.tech || gl.skill)); if (nm && !glim.includes(nm)) glim.push(nm); }
     return { gold: rw.gold || 0, drops: merged, grow, prof, glim };
   }
 
@@ -72,6 +75,30 @@
     g.restore();
   };
   const NEXT_PROMPTS = [{ btn: 'a', label: '決定で進む' }];
+  Rs.NEXT_PROMPTS = NEXT_PROMPTS;
+
+  /**
+   * 勝利の後の札（ページ）の列。勝利の札（'victory'）の後に order の順で 1 枚ずつ出し、それぞれ決定を待つ。ほかの担当が足してよい:
+   *   Rs.addPage({ id, order, when?(st, data, rewards) → bool, run(st, data, rewards) → Promise })
+   *   run の中で st.ui = { prompts: Rs.NEXT_PROMPTS, update() {}, draw(g) {…; Rs.drawNext(g, st, x, y)} } を置き、await Rs.confirm(st) で待つ。
+   *   st.result は残る（勝利の札の絵を後ろに出したくなければ run の中で st.result = null）。例外は飛ばして次の札へ（戦闘は止めない）。
+   */
+  Rs.pages = Rs.pages || [];
+  Rs.addPage = function (p) {
+    if (!p || !p.id || typeof p.run !== 'function') return;
+    Rs.pages = Rs.pages.filter((x) => x.id !== p.id).concat([p]).sort((a, b) => (a.order || 0) - (b.order || 0));
+  };
+  Rs.removePage = function (id) { Rs.pages = Rs.pages.filter((x) => x.id !== id); };
+  async function runPages(st, data, rewards) {
+    for (const pg of Rs.pages.slice()) {
+      if (st.dead) return;
+      try {
+        if (pg.when && !pg.when(st, data, rewards)) continue;
+        await pg.run(st, data, rewards);
+        st.log.push({ t: 'page:' + pg.id });
+      } catch (e) { console.error('[battle result page ' + pg.id + ']', e); }
+    }
+  }
 
   /** 最後の敵の倒れる絵が終わるまで（上限 1.6 秒） */
   function enemiesGone(st) {
@@ -119,6 +146,8 @@
     await Rs.confirm(st, anyRare ? Bt.MIN.rareCardSkip : 0);
     end.pressAt = R.Engine.time;
     st.log.push({ t: 'victory', ms: R.Engine.time - t0 });
+    // 足された札（熟練など）: それぞれ決定を待つ
+    if (Rs.pages.length) { await runPages(st, data, rewards); end.pressAt = R.Engine.time; }
     st.closing = true;
   };
 

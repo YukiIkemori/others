@@ -253,7 +253,9 @@ section('data: items');
 {
   const ids = Object.keys(DB.items).filter((id) => DB.items[id].slot !== 'key');
   const trimmed = require('./port/trim_10_1.json').deleted.length;
-  ok('about 1060 items (1024 ported + 36 steal + 6 unique) less the §10.1 trim (' + trimmed + ')', ids.length >= 1060 - trimmed && trimmed >= 150 && trimmed <= 200, ids.length);
+  // 防具の通常品の 2 系列ずつを 1 つにまとめて 150 品を消した（名前しか違わなかった。下の「merged armor lines」、R.DB.itemAlias）ので、その分を引く
+  const merged = Object.keys(DB.itemAlias || {}).length;
+  ok('about 1060 items (1024 ported + 36 steal + 6 unique) less the §10.1 trim (' + trimmed + ') and the merged armor (' + merged + ')', ids.length >= 1060 - trimmed - merged && trimmed >= 150 && trimmed <= 200 && merged === 150, ids.length);
   const bad = ids.filter((id) => !chk('item', DB.items[id]).ok);
   ok('every item fits K.item', !bad.length, bad.slice(0, 5).map((id) => [id, chk('item', DB.items[id]).errors]));
   const badIcon = ids.filter((id) => !C.ICONS.includes(DB.items[id].icon));
@@ -436,6 +438,43 @@ section('fieldUse・new items (MENUS 50, CONTENT-F 64)');
   h.hp = mx;
   ok('fieldUse on a full char: no change', !R.Rules.fieldUse(DB.items.i_salve, null, [h]).changed);
   ok('ac_climb_shoes: acc, normal, K.item', DB.items.ac_climb_shoes && DB.items.ac_climb_shoes.slot === 'acc' && chk('item', DB.items.ac_climb_shoes).ok);
+}
+
+section('merged armor lines (items_armor.js: one line per slot × weight) and save aliases');
+{
+  // 持ち主の判断「まとめる」: 同じ枠・同じ重さ・同じティアで units の能力の文字しか違わなかった 2 系列（例 鉄の胸当て と 鉄の大鎧:
+  // 守備 28・魔防 6・100 G）を 1 系列にした。通常品の防具は 30 系列 × 10 ティア = 300 → 15 系列 × 10 = 150（消した 150 品は R.DB.itemAlias）。
+  const normalArmor = Object.entries(DB.items).filter(([, it]) => it.src === 'shop' && it.grade === 'normal' && ['shield', 'head', 'body', 'hands', 'feet'].includes(it.slot));
+  ok('normal shop armor: 150 items (was 300 before the merge)', normalArmor.length === 150, normalArmor.length);
+  const lines = {};
+  for (const [id, it] of normalArmor) (lines[it.line] = lines[it.line] || []).push(it);
+  ok('15 armor lines × tiers 0..9 (was 30 lines)', Object.keys(lines).length === 15 && Object.values(lines).every((l) => l.length === 10 && new Set(l.map((x) => x.tier)).size === 10), Object.keys(lines).length);
+  const key = (it) => [it.slot, it.weight, it.tier].join(':');
+  const seen = {}, dup = [];
+  for (const [id, it] of normalArmor) { const k = key(it); if (seen[k]) dup.push(seen[k] + '=' + id); else seen[k] = id; }
+  ok('no two normal armor items share slot, weight and tier', !dup.length, dup.slice(0, 5));
+  ok('kept lines carry both stat letters (e.g. bd_mail sv2)', DB.items.bd_iron_cuirass.units === 'sv2' && DB.items.bd_vest_3.units === 'da2' && DB.items.hd_wool_hood.units === 'mi1');
+  const A = DB.itemAlias || {};
+  const aIds = Object.keys(A);
+  ok('itemAlias: 150 removed ids → existing kept ids, none still defined', aIds.length === 150 && aIds.every((id) => !DB.items[id] && DB.items[A[id]] && DB.items[A[id]].slot === { bd: 'body', hd: 'head', sh: 'shield', hn: 'hands', ft: 'feet' }[id.slice(0, 2)]), aIds.length);
+  ok('alias keeps the tier (bd_plate_0 → bd_iron_cuirass, hd_iron_band → hd_helm_0, ft_slipper_7 → ft_sandal_7)', A.bd_plate_0 === 'bd_iron_cuirass' && A.hd_iron_band === 'hd_helm_0' && A.ft_slipper_7 === 'ft_sandal_7' && aIds.every((id) => DB.items[A[id]].tier === (+(/_(\d)$/.exec(id) || [0, 0])[1])));
+  const refs = [];
+  for (const [sid, s] of Object.entries(DB.shops)) for (const id of (s.items || []).concat(...Object.values(s.tier || {}))) if (A[id]) refs.push(sid + ':' + id);
+  for (const [pid, p] of Object.entries(DB.pools)) for (const t of p.tiers) for (const e of t) if (e.item && A[e.item]) refs.push(pid + ':' + e.item);
+  for (const src of [DB.companions, DB.heroTypes]) for (const [cid, c] of Object.entries(src)) for (const id of Object.values(c.startEquip || {})) if (A[id]) refs.push(cid + ':' + id);
+  ok('shops, pools and start gear use only kept ids', !refs.length, refs.slice(0, 5));
+  // 古いセーブ: 袋と装備（控えも）の消した id は、読み込み（R.State.deserialize）で残した id に。数は合わせる
+  R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'アルン', fav: 'sword' }, seed: 5 });
+  const save = R.State.serialize();
+  save.items = { bd_plate_0: 2, bd_iron_cuirass: 1, hn_mitten_3: 1, i_salve: 3 };
+  save.chars.hero.equip.head = 'hd_iron_band';
+  save.chars.hero.equip.body = 'bd_plate_0';
+  ok('deserialize an old save with removed ids', R.State.deserialize(JSON.parse(JSON.stringify(save))));
+  const G = R.Game;
+  ok('bag: bd_plate_0 ×2 + bd_iron_cuirass ×1 → bd_iron_cuirass ×3, hn_mitten_3 → hn_longglove_3', G.items.bd_iron_cuirass === 3 && !G.items.bd_plate_0 && G.items.hn_longglove_3 === 1 && !G.items.hn_mitten_3 && G.items.i_salve === 3, G.items);
+  ok('equip: hd_iron_band → hd_helm_0, bd_plate_0 → bd_iron_cuirass', G.chars.hero.equip.head === 'hd_helm_0' && G.chars.hero.equip.body === 'bd_iron_cuirass', G.chars.hero.equip);
+  ok('gain / take / owned read the alias', (() => { const g = R.State.gain('bd_garb_2', 1); return g.item === 'bd_vest_2' && G.items.bd_vest_2 === 1 && R.State.owned('bd_garb_2') === 1 && R.State.take('bd_garb_2', 1) && !G.items.bd_vest_2; })());
+  ok('Rules.itemOf / stats read an old id as the kept item', Ru.itemOf ? Ru.itemOf('sh_tower_1') === DB.items.sh_buckler_1 : true);
 }
 
 done('test_rules');

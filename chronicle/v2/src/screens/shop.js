@@ -149,7 +149,8 @@
         const id = row.value, it = S.item(id), sz = u(15), cy = rect.y + (rect.h - sz) / 2 - u(1);
         const pr = this.tab === 0 ? this.price(id) : R.Rules.sellPrice(id);
         const cant = this.tab === 0 && pr > S.gold();
-        const faceW = this.isEquip(id) ? mem.length * u(18) + u(8) : 0;
+        // 付けられる人の小さな顔は、品の名前に u(96) が残るときだけ（狭い画面で名前が「…」だけにならないように）
+        const faceW = this.isEquip(id) && rect.w - u(150) - (mem.length * u(18) + u(8)) >= u(96) ? mem.length * u(18) + u(8) : 0;
         S.itemLabel(gg, id, rect.x + u(14), cy, { focused: f, size: sz, maxW: rect.w - u(150) - faceW });
         if (faceW) mem.forEach((c, i) => S.faceCircle(gg, c.look, rect.x + rect.w - u(150) - faceW + u(10) + i * u(18), rect.y + rect.h / 2, u(8), { dim: !R.Rules.canEquip(c, id, R.Rules.defaultSlot(c, id)) }));
         const n = this.tab === 0 ? owned(id) : S.count(id);
@@ -187,14 +188,14 @@
           const can = R.Rules.canEquip(c, id, slot);
           // 1 人 1 行: [顔（決まった幅）][名前・いまの装備（決まった幅）][増減の札（右寄せ、入るだけ）]。札は幅を測って並べるので重ならない
           const NW = Math.min(u(150), pw * 0.36), dx = px + u(50) + NW + u(12), dw = px + pw - dx;
-          S.faceCircle(g, c.look, px + u(20), y + rh / 2, Math.min(u(20), rh / 2 - u(2)), { dim: !can });
+          S.faceCircle(g, c.look, px + u(20), y + rh / 2, Math.max(u(4), Math.min(u(20), rh / 2 - u(2))), { dim: !can });
           R.UIK.text(g, c.name, px + u(50), y + rh / 2 - (tall ? u(9) : u(17)), { size: u(14.5), weight: 700, color: can ? C.text : C.disabled, maxW: NW });
           if (!can) { R.UIK.text(g, '付けられない', tall ? px + pw : px + u(50), tall ? y + rh / 2 - u(8) : y + rh / 2 + u(3), { size: u(12), color: C.disabled, align: tall ? 'right' : 'left' }); y += rh; return; }
           const cur = S.item(c.equip[slot]);
           if (!tall) R.UIK.text(g, 'いま：' + (cur ? cur.name : 'なし'), px + u(50), y + rh / 2 + u(3), { size: u(12), color: C.text2, maxW: NW });
           const rows = S.statDiff(c, slot, id).filter((r) => r.d).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d));
           if (!rows.length) R.UIK.text(g, '変わらない', px + pw, y + rh / 2 - u(8), { size: u(13), color: C.same, align: 'right' });
-          else S.deltaCells(g, rows, dx, y + rh / 2 - u(9), dw, { size: u(15), nameSize: u(13), nameColor: C.text2, align: 'right', gap: u(20) });
+          else S.deltaCells(g, rows, dx, 0, dw, { size: u(15), nameSize: u(13), nameColor: C.text2, align: 'right', gap: u(20), cy: y + rh / 2, lines: rh >= u(48) ? 2 : 1, lh: u(21) });
           y += rh;
         });
       } else if (it.slot === 'use') {

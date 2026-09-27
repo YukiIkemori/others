@@ -842,7 +842,7 @@
       try { ups = R.Rules.train(u.c, x); } catch (e) { R.warn('battle: R.Rules.train failed', e && e.message); }
       for (const up of Array.isArray(ups) ? ups : []) {
         this.profUps.push(Object.assign({ char: u.c.id }, up));
-        yield { t: 'prof', u, kind: up.kind, id: up.id, rank: up.rank };
+        yield { t: 'prof', u, kind: up.kind, id: up.id, rank: up.rank, from: up.from };
       }
     }
 
@@ -1996,7 +1996,7 @@
         out.push({ t: 'gain', item: ev.item, grade: ev.grade, stolen: true, stealOnly: !!ev.stealOnly });
         break;
       case 'drop': out.push({ t: 'gain', item: ev.item, grade: ev.grade, mon: ev.mon, n: ev.n || 1, kept: ev.kept !== false }); break;
-      case 'prof': out.push({ t: 'prof', c: ev.u && ev.u.c ? ev.u.c.id : null, key: ev.id }); break;
+      case 'prof': out.push({ t: 'prof', c: ev.u && ev.u.c ? ev.u.c.id : null, key: ev.id, uid: uidOf(ev.u), kind: ev.kind, rank: ev.rank, from: ev.from }); break;   // uid・rank・from: 戦闘中の「剣+1」（prof_ui.js）
       default: break;   // crit（dmg に入れた）・golden・cover・react・escape・victory
     }
     return out;
@@ -2187,7 +2187,7 @@
           gold: rw.gold,
           drops: rw.drops.map((d) => ({ item: d.item, grade: d.grade, n: d.n, mon: d.mon, kept: d.kept })),
           grow: finished && finished.grow ? finished.grow : [],
-          prof: eng.profUps.map((p) => ({ c: p.char, key: p.id, kind: p.kind })),
+          prof: eng.profUps.map((p) => ({ c: p.char, key: p.id, kind: p.kind, rank: p.rank, from: p.from })),
           glimmers: eng.glimmers.map((g) => ({ c: g.char, kind: g.kind, id: g.id })),
           stolen: eng.stolen.map((s) => ({ c: s.char, item: s.item, grade: s.grade, stealOnly: s.stealOnly, mon: s.mon })),
           goldLost: eng.goldLost,
@@ -2213,6 +2213,8 @@
           if (cp.eprof) c.eprof = cp.eprof;
           for (const k of ['techs', 'spells']) if (Array.isArray(cp[k])) c[k] = cp[k].slice();
         });
+        // 熟練度の「▲」（強さの画面。R.Battle.profUI.note）: 見るまで上がる前の段階を覚える
+        try { if (R.Battle && R.Battle.profUI && R.Battle.profUI.note) R.Battle.profUI.note(G, eng.profUps); } catch (e) { R.warn('battle: profUI.note failed', e && e.message); }
         G.seenSkill = G.seenSkill || {};
         for (const g of eng.glimmers) {
           G.seenSkill[seenKey(g.char, g.id)] = false;

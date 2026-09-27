@@ -18,7 +18,7 @@
     favorOptions: { weapon: ['sword', 'greatsword'] },
     pairElement: false,
     defaultWeapon: 'w_sword_iron',
-    startEquip: { body: 'bd_iron_cuirass', head: 'hd_iron_band', shield: 'sh_iron_buckler' },
+    startEquip: { body: 'bd_iron_cuirass', head: 'hd_helm_0', shield: 'sh_iron_buckler' },
     onFavor: { weapon: { techs: [], spells: [] }, element: { techs: [], spells: [] } },
     row: 'front',
   },

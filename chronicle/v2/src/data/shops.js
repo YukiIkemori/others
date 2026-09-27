@@ -7,16 +7,14 @@
 (function (R) {
   'use strict';
   const WEAPON_LINES = ['w_sword', 'w_greatsword', 'w_greatsword_maul', 'w_dagger', 'w_bow', 'w_staff', 'w_staff_prayer'];
+  // 防具は 1 枠・1 重さに 1 系列（名前しか違わなかった 2 系列は items_armor.js でまとめた。消した id は R.DB.itemAlias）
   const ARMOR_LINES = [
-    'sh_buckler', 'sh_tower', 'sh_shield', 'sh_round', 'sh_book', 'sh_charm',
-    'hd_helm', 'hd_band', 'hd_cap', 'hd_scarf', 'hd_hat', 'hd_hood',
-    'bd_mail', 'bd_plate', 'bd_vest', 'bd_garb', 'bd_robe', 'bd_habit',
-    'hn_gauntlet', 'hn_bracer', 'hn_glove', 'hn_armlet', 'hn_longglove', 'hn_mitten',
-    'ft_greave', 'ft_shin', 'ft_boots', 'ft_shoes', 'ft_slipper', 'ft_sandal',
+    'sh_buckler', 'sh_shield', 'sh_book', 'hd_helm', 'hd_cap', 'hd_hood',
+    'bd_mail', 'bd_vest', 'bd_robe', 'hn_gauntlet', 'hn_glove', 'hn_longglove', 'ft_greave', 'ft_boots', 'ft_sandal',
   ];
   // T0 だけ最初の装備の決まった id を使う系列（今の木の §8.1.2 のまま）
   const T0ID = { w_sword: 'w_sword_iron', w_greatsword: 'w_greatsword_iron', w_greatsword_maul: 'w_greatsword_club', w_dagger: 'w_dagger_iron',
-    w_bow: 'w_bow_short', w_staff: 'w_staff_novice', bd_mail: 'bd_iron_cuirass', hd_band: 'hd_iron_band', sh_buckler: 'sh_iron_buckler',
+    w_bow: 'w_bow_short', w_staff: 'w_staff_novice', bd_mail: 'bd_iron_cuirass', sh_buckler: 'sh_iron_buckler',
     bd_vest: 'bd_leather_vest', hd_cap: 'hd_leather_cap', sh_shield: 'sh_leather', bd_robe: 'bd_hemp_robe', hd_hood: 'hd_wool_hood', sh_book: 'sh_primer' };
   const at = (line, t) => (t === 0 && T0ID[line]) || `${line}_${t}`;
   const gear = (lines, t) => lines.map((l) => at(l, t));

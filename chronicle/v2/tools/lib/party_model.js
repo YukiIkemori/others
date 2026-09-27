@@ -23,7 +23,7 @@ const WSTAT = { sword: 'str', greatsword: 'str', dagger: 'dex', bow: 'dex', staf
 // §8.13.1 の T8 の一式（STATS_REWORK §3.1・§8.2: 武器 1 本の 8 枠。A29 で大斧 → 大剣）
 const BUILD_SETS = {
   int: {
-    N: ['w_staff_8', 'sh_book_8', 'hd_hat_8', 'bd_robe_8', 'hn_longglove_8', 'ft_slipper_8', 'ac_int_8', 'ac_int_8'],
+    N: ['w_staff_8', 'sh_book_8', 'hd_hood_8', 'bd_robe_8', 'hn_longglove_8', 'ft_sandal_8', 'ac_int_8', 'ac_int_8'],
     R7: ['w_staff_r7', 'sh_r7_int', 'hd_r7_int', 'bd_r7_int', 'hn_r7_int', 'ft_r7_int', 'ac_r7_int', 'ac_r7_int'],
     R9: ['w_staff_r9', 'sh_r9_int', 'hd_r9_int', 'bd_r9_int', 'hn_r9_int', 'ft_r9_int', 'ac_r9_int', 'ac_r9_int'],
     S: ['w_staff_sr_cosmos', 'sh_sr_blank', 'hd_sr_dusk', 'bd_sr_starry', 'hn_sr_words', 'ft_sr_cloud', 'ac_sr_owl', 'ac_sr_ink'],

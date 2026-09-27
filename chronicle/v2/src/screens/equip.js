@@ -74,37 +74,49 @@
     return R.UIK.measure((d > 0 ? '+' : '−') + Math.abs(d), { size: sz, weight: 700 }) + u(6) + sz * 0.6;
   };
   /**
-   * 増減の札を横に並べる（ほかの仲間・店の行）: 「値の名前 ▲+n」を左から、w に入る分だけ。重ならない。
-   * rows = [{name, d}]（大事な順）。o = {size, nameSize, nameColor, align:'left'|'right', gap}。→ 描いた数
+   * 増減の札を横に並べる（ほかの仲間・店の行）: 「値の名前 ▲+n」を左から、w に入る分だけ。札の幅を測って置くので重ならない。
+   * rows = [{name, d}]（大事な順）。o = {size, nameSize, nameColor, align:'left'|'right', gap, lines（行の数、既定 1）, lh（行の間）, cy（縦の中心。無ければ y が 1 行目の上）}。
+   * → 描いた数
    */
   S.deltaCells = function (g, rows, x, y, w, o) {
     o = o || {};
     const C = T().color, sz = o.size || u(13.5), ns = o.nameSize || sz, gap = o.gap || u(16), inner = u(8);
+    const maxLines = o.lines || 1, lh = o.lh || sz + u(8);
     const ncol = (r) => o.nameColor || (r.d > 0 ? C.up : r.d < 0 ? C.down : C.same);
-    const ny = y + (sz - ns) / 2;   // 名前と数字の字の大きさが違うときは縦の中心をそろえる
-    const cells = [];
-    let total = 0;
+    // 並べ方を先に決める（行ごとに入るだけ）
+    const lines = [[]], lw = [0];
     for (const r of rows) {
-      const nw = R.UIK.measure(r.name, { size: ns }), dw = S.deltaW(r.d, sz);
-      const cw = nw + inner + dw;
-      if (total + (cells.length ? gap : 0) + cw > w) break;
-      total += (cells.length ? gap : 0) + cw;
-      cells.push({ r, cw });
+      const cw = R.UIK.measure(r.name, { size: ns }) + inner + S.deltaW(r.d, sz);
+      let L = lines.length - 1;
+      const add = (lines[L].length ? gap : 0) + cw;
+      if (lw[L] + add > w) {
+        if (!lines[L].length || lines.length >= maxLines) break;
+        lines.push([]); lw.push(0); L++;
+        if (cw > w) break;
+        lines[L].push({ r, cw }); lw[L] = cw;
+      } else { lines[L].push({ r, cw }); lw[L] += add; }
     }
+    if (!lines[lines.length - 1].length) { lines.pop(); lw.pop(); }
+    const n = lines.length;
+    const y0 = o.cy != null ? o.cy - ((Math.max(1, n) - 1) * lh + sz) / 2 : y;
     // 1 つも入らないときは、名前を縮めて（…）最初の 1 つだけ
-    if (!cells.length && rows.length) {
+    if (!n && rows.length) {
       const r = rows[0], dw = S.deltaW(r.d, sz);
-      R.UIK.text(g, r.name, x, ny, { size: ns, color: ncol(r), maxW: Math.max(u(14), w - dw - inner) });
-      S.delta(g, r.d, x + w, y, { size: sz });
+      R.UIK.text(g, r.name, x, y0 + (sz - ns) / 2, { size: ns, color: ncol(r), maxW: Math.max(u(14), w - dw - inner) });
+      S.delta(g, r.d, x + w, y0, { size: sz });
       return 1;
     }
-    let cx = o.align === 'right' ? x + w - total : x;
-    for (const c of cells) {
-      R.UIK.text(g, c.r.name, cx, ny, { size: ns, color: ncol(c.r) });
-      S.delta(g, c.r.d, cx + c.cw, y, { size: sz });
-      cx += c.cw + gap;
-    }
-    return cells.length;
+    let count = 0;
+    lines.forEach((cells, L) => {
+      const ly = y0 + L * lh;
+      let cx = o.align === 'right' ? x + w - lw[L] : x;
+      for (const c of cells) {
+        R.UIK.text(g, c.r.name, cx, ly + (sz - ns) / 2, { size: ns, color: ncol(c.r) });   // 名前と数字の縦の中心をそろえる
+        S.delta(g, c.r.d, cx + c.cw, ly, { size: sz });
+        cx += c.cw + gap; count++;
+      }
+    });
+    return count;
   };
   function magicUser(c) { const st = S.stats(c); return (st.int || 0) > (st.str || 0); }
   const score = (c, slot, id) => S.equipScore(c, slot, id);
@@ -316,7 +328,7 @@
           if (!can) { R.UIK.text(g, '付けられない', tx, ty, { size: u(13), color: C.disabled }); return; }
           const ds = S.statDiff(o, R.Rules.defaultSlot(o, focusId), focusId).filter((r) => r.d).sort((a, b2) => Math.abs(b2.d) - Math.abs(a.d) || (b2.d > 0) - (a.d > 0));
           if (!ds.length) R.UIK.text(g, '変わらない', tx, ty, { size: u(13), color: C.same });
-          else S.deltaCells(g, ds, tx, ty, tw, { size: u(13.5) });
+          else S.deltaCells(g, ds, tx, 0, tw, { size: u(13.5), cy, lines: oh >= u(44) ? 2 : 1, lh: u(19) });
         });
       }
       S.prompts(g, this.mode === 'cand' ? [{ btn: 'a', label: '付ける' }, { btn: 'b', label: '戻る' }, { btn: 'y', label: '詳しく' }] : (S.tall() ? [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '戻る' }, { btn: 'r', label: '次の仲間' }] : [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '戻る' }, { btn: 'x', label: 'いちばん強く' }, { btn: 'r', label: '次の仲間' }]));

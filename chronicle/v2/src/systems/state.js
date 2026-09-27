@@ -9,6 +9,7 @@
 //   R.State.check(cond) → bool             条件（下の文法）。R.State.checkIn(G, cond, env) は同じ物を任意の状態で（tools/lib/cond.js も使う）
 //   R.State.gain(id, n) → K.gain           品を入れる 1 か所（ev.item・宝箱・店・戦闘の報酬）。u_* はその時のティアの個体を R.Game.uniques に
 //   足した物: take(id, n) → bool / owned(id) → 袋＋装備の数 / hero() → CharState / heroName() / gold(n)
+//   canonItem(id) → 今の id（R.DB.itemAlias: まとめて消した品 → 残した品）/ migrateItems(G) → 袋と装備を付け替えた数（deserialize が呼ぶ）
 //
 // 条件 Cond（§2.5.10。ここに無い書き方は R.warn して false）
 //   null・undefined・true → 真 / false → 偽 / 'flag' / '!flag' / 'cleared_<rid>'（R.Game.cleared）/ 配列（すべて）
@@ -90,6 +91,38 @@
     return /_f_/.test(h.look || '') ? 'f' : 'm';
   };
 
+  // ---------------------------------------------------------------- 品の id の付け替え（まとめて消した品 → 残した品）
+  /** R.DB.itemAlias（items_armor.js: 名前しか違わなかった防具の系列をまとめたときの 消した id → 残した id）で今の id にする */
+  State.canonItem = function (id) {
+    const A = R.DB.itemAlias;
+    let n = 0;
+    while (id && A && Object.prototype.hasOwnProperty.call(A, id) && n++ < 8) id = A[id];
+    return id;
+  };
+  /** 古いセーブの袋と全員（控えも）の装備の id を付け替える。→ 付け替えた数 */
+  State.migrateItems = function (G) {
+    if (!G) return 0;
+    let n = 0;
+    const items = G.items || {};
+    for (const id of Object.keys(items)) {
+      const to = State.canonItem(id);
+      if (to === id) continue;
+      if (!R.DB.items[to]) continue;
+      items[to] = Math.min(99, (items[to] || 0) + (items[id] || 0));
+      delete items[id];
+      n++;
+    }
+    for (const cid of Object.keys(G.chars || {})) {
+      const eq = G.chars[cid] && G.chars[cid].equip;
+      if (!eq) continue;
+      for (const k of Object.keys(eq)) {
+        const to = State.canonItem(eq[k]);
+        if (to !== eq[k] && R.DB.items[to]) { eq[k] = to; n++; }
+      }
+    }
+    return n;
+  };
+
   // ---------------------------------------------------------------- 保存と読み込み
   State.serialize = function () {
     const G = R.Game;
@@ -115,7 +148,8 @@
     if (!Array.isArray(G.chronicle.chapters)) G.chronicle.chapters = [];
     if (!G.battle.cursor) G.battle.cursor = {};
     if (!Array.isArray(G.battle.lastRound)) G.battle.lastRound = [];
-    const chk = R.Contract && R.Contract.check ? R.Contract.check('game', G) : { ok: true };
+    State.migrateItems(G);   // 消した品の id（R.DB.itemAlias）を残した品へ
+    const chk =R.Contract && R.Contract.check ? R.Contract.check('game', G) : { ok: true };
     if (!chk.ok) { R.warn('R.State.deserialize: ' + chk.errors.slice(0, 3).join('; ')); return false; }
     R.Game = G;
     return true;
@@ -133,6 +167,7 @@
   /** 袋＋装備している数 */
   function owned(G, id) {
     if (!G) return 0;
+    id = State.canonItem(id);
     let n = (G.items && G.items[id]) || 0;
     for (const cid of Object.keys(G.chars || {})) {
       const eq = G.chars[cid] && G.chars[cid].equip;
@@ -154,6 +189,7 @@
   State.gain = function (id, n) {
     const G = R.Game;
     n = n == null ? 1 : Math.floor(n);
+    id = State.canonItem(id);
     const it = R.DB.items[id];
     if (!it) R.warn('R.State.gain: unknown item ' + id);
     // 大事な物は 1 つだけ（2 つ目は入れない）
@@ -178,6 +214,7 @@
   State.take = function (id, n) {
     const G = R.Game;
     n = n == null ? 1 : Math.floor(n);
+    id = State.canonItem(id);
     const have = (G.items[id] || 0);
     if (have < n) return false;
     if (have - n > 0) G.items[id] = have - n; else delete G.items[id];
