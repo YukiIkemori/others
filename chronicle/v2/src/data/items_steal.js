@@ -404,9 +404,9 @@
   // T2（縦切りのレアの帯 T1 の 1 つ上）。効果はどれも今ある mods の組み合わせ
   ac_st_rat_pouch: { name: '野ネズミの隠し袋', slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { goldPct: 15, dropPct: 10 }, abil: { agi: 1 }, icon: 'ring' },
   hd_st_beach_crab: { name: '浜ガニの甲の兜', slot: 'head', grade: 'super', tier: 2, src: 'steal', stealOnly: true, weight: 'heavy', mods: { def: 4, elemResist: { water: 0.5 } }, icon: 'helm' },
-  ft_st_storm_gull: { name: '嵐カモメの羽靴', slot: 'feet', grade: 'super', tier: 2, src: 'steal', stealOnly: true, weight: 'light', mods: { spd: 10, preemptPct: 10 }, icon: 'boots' },
+  ft_st_storm_gull: { name: '嵐カモメの羽靴', slot: 'feet', grade: 'super', tier: 2, src: 'steal', stealOnly: true, weight: 'light', mods: { spd: 10, eva: 5 }, icon: 'boots' },   // 先制アップは体験版では出さない（持ち主 2026-09-27）
   ac_st_royal_jelly: { name: '女王の蜜のしずく', slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { regen: 1 }, abil: { mnd: 1 }, icon: 'ring' },
-  ac_st_lucky_spore: { name: '幸運の胞子', slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { rarePct: 20 }, icon: 'ring' },
+  ac_st_spore_sachet: { name: '眠り茸の胞子袋', slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { statusResist: { sleep: 0.5, poison: 0.5 } }, abil: { vit: 1 }, icon: 'ring' },   // レア率アップは中盤以降（持ち主 2026-09-27）
   w_staff_st_petal: { name: '花びらの杖', slot: 'weapon', grade: 'super', tier: 2, src: 'steal', stealOnly: true, wtype: 'staff', mods: { healPct: 20, mpRegen: 1 }, abil: { mnd: 1 }, icon: 'staff' },
   w_dagger_st_frostfang: { name: '霜牙の短剣', slot: 'weapon', grade: 'super', tier: 2, src: 'steal', stealOnly: true, wtype: 'dagger', element: 'water', crit: 10, abil: { dex: 1 }, icon: 'dagger' },
 });
@@ -452,7 +452,7 @@
   hd_st_beach_crab: { mon: 'crab_1', rate: 32 },
   ft_st_storm_gull: { mon: 'seabird_2', rate: 32 },
   ac_st_royal_jelly: { mon: 'bee_1', rate: 32 },
-  ac_st_lucky_spore: { mon: 'mushroom_1', rate: 32 },
+  ac_st_spore_sachet: { mon: 'mushroom_1', rate: 32 },
   w_staff_st_petal: { mon: 'fairy_2', rate: 32 },
   w_dagger_st_frostfang: { mon: 'wolf_2', rate: 32 },
 };
