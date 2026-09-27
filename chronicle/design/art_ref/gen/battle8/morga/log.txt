@@ -46,3 +46,8 @@
 20:06:51   cast frame 7 keep  {"ok": false, "why": "head scale 0.787", "head_scale": 0.787, "head": [84.4, 45.7], "height": 63, "rescaled": null, "copy": null, "shift": [0, 0], "err": 44.0}
 20:06:51   cast frame 8 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [85.9, 85.7], "height": 51, "rescaled": null, "copy": 0.03, "shift": [-18, 9], "err": 42.4}
 20:06:51   cast frame 9 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [83.0, 48.0], "height": 63, "rescaled": null, "copy": 0.34, "shift": [0, 7], "err": 17.7}
+20:16:09 calibrated pitch 8.03 / 8.06 px (requested 8), offset 3.2, 3.5
+20:16:09 calibrated pitch 8.01 / 7.71 px (requested 8), offset -0.6, 20.2
+20:16:09 drawn pitch of the key cells 8.00
+20:16:10 drawn pitch of the key cells 8.00
+20:16:12   frame 2 size: guide 0.787 idle 0.787 idle/corr 0.787 pitch 0.938 -> 1.000
