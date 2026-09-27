@@ -14,7 +14,7 @@
     bow: { name: '弓', order: 3, twoHanded: true, reach: true, kind: 'pierce', icon: 'bow', fx: 'arrow', pose: 'shoot',
       desc: '両手持ち。後列から確実に射る。' },
     staff: { name: '杖', order: 4, twoHanded: false, reach: true, kind: 'blunt', icon: 'staff', fx: 'strike', pose: 'smash',
-      desc: '術の威力を高め、後列からも届く。' },
+      desc: '術力が高く、後列からも届く。' },
   });
 
   // 技・術をひとつの表 R.DB.actions にもまとめる（今の木の戦闘・閃きのコードが DB.actions を読むため。

@@ -1,4 +1,4 @@
-// items_steal.js — 盗み専用の超レア 36（RULES。STATS_REWORK §7.2、率は V2_PLAN §2.6.6。クセなし）
+// items_steal.js — 盗み専用の超レア 43（RULES。STATS_REWORK §7.2、率は V2_PLAN §2.6.6。クセなし）
 // 生成: node v2/tools/port/*.js（今の木から移した結果。以後はこのファイルが正）
 // 盗める魔物と率（drops.steal = {item, rate}）は BATTLE が魔物のデータに書く。R.DB.stealSources はその照合用（validate・test_rules）。
 (function (R) {
@@ -400,6 +400,15 @@
     abil: { str: 1, int: 1 },
     icon: 'ring',
   },
+  // 縦切りの盗み専用 7（BATTLE、2026-09-27。オーナー「レアがめっきり減ったねえ……」）: 縦切りの 11 系統の段 1〜2 の約 3 分の 1 に drops.steal（率 32）。
+  // T2（縦切りのレアの帯 T1 の 1 つ上）。効果はどれも今ある mods の組み合わせ
+  ac_st_rat_pouch: { name: '野ネズミの隠し袋', slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { goldPct: 15, dropPct: 10 }, abil: { agi: 1 }, icon: 'ring' },
+  hd_st_beach_crab: { name: '浜ガニの甲の兜', slot: 'head', grade: 'super', tier: 2, src: 'steal', stealOnly: true, weight: 'heavy', mods: { def: 4, elemResist: { water: 0.5 } }, icon: 'helm' },
+  ft_st_storm_gull: { name: '嵐カモメの羽靴', slot: 'feet', grade: 'super', tier: 2, src: 'steal', stealOnly: true, weight: 'light', mods: { spd: 10, preemptPct: 10 }, icon: 'boots' },
+  ac_st_royal_jelly: { name: '女王の蜜のしずく', slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { regen: 1 }, abil: { mnd: 1 }, icon: 'ring' },
+  ac_st_lucky_spore: { name: '幸運の胞子', slot: 'acc', grade: 'super', tier: 2, src: 'steal', stealOnly: true, mods: { rarePct: 20 }, icon: 'ring' },
+  w_staff_st_petal: { name: '花びらの杖', slot: 'weapon', grade: 'super', tier: 2, src: 'steal', stealOnly: true, wtype: 'staff', mods: { healPct: 20, mpRegen: 1 }, abil: { mnd: 1 }, icon: 'staff' },
+  w_dagger_st_frostfang: { name: '霜牙の短剣', slot: 'weapon', grade: 'super', tier: 2, src: 'steal', stealOnly: true, wtype: 'dagger', element: 'water', crit: 10, abil: { dex: 1 }, icon: 'dagger' },
 });
   R.DB.stealSources = {
   ac_st_rooteater: { mon: 'b_rooteater', rate: 16 },
@@ -438,5 +447,13 @@
   ac_st_heaven_eye: { mon: 'eyeball_5', rate: 32 },
   ac_st_librarian: { mon: 'scribe_3', rate: 32 },
   ac_st_demon_heart: { mon: 'demon_3', rate: 32 },
+  // 縦切り（2026-09-27、オーナーの依頼）
+  ac_st_rat_pouch: { mon: 'rat_1', rate: 32 },
+  hd_st_beach_crab: { mon: 'crab_1', rate: 32 },
+  ft_st_storm_gull: { mon: 'seabird_2', rate: 32 },
+  ac_st_royal_jelly: { mon: 'bee_1', rate: 32 },
+  ac_st_lucky_spore: { mon: 'mushroom_1', rate: 32 },
+  w_staff_st_petal: { mon: 'fairy_2', rate: 32 },
+  w_dagger_st_frostfang: { mon: 'wolf_2', rate: 32 },
 };
 })(window.RPG);

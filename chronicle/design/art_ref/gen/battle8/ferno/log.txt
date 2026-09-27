@@ -1,0 +1,3 @@
+20:00:34 ferno attack attempt 1: generating 3584x2288 (pitch 8, quality high)
+20:00:35 ferno cast attempt 1: generating 3584x2288 (pitch 8, quality high)
+20:00:39 ferno victory attempt 1: generating 3584x1696 (pitch 8, quality high)

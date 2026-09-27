@@ -238,6 +238,16 @@ section('4. 数');
   ok('効果 grow（実）を持つ品が無い（STATS_REWORK §10.2）', noGrow.length === 0, noGrow);
   const slotBad = Object.entries(D.items).filter(([, it]) => !['weapon', 'shield', 'head', 'body', 'hands', 'feet', 'acc', 'use', 'key'].includes(it.slot)).map((x) => x[0]);
   ok('品の slot（9 種）', slotBad.length === 0, list(slotBad));
+  // 持ち主「見習いの杖と祈りの杖、効果同じじゃねえかｗ」: 同じ系統・同じティアの通常品の武器で、攻撃力・術力・能力値・効果・値段・説明が
+  // すべて同じ品を作らない（杖の 2 系列は 攻撃の術 magicPct と 回復の術 healPct で分けた。items_weapons.js）
+  const wSig = (it) => JSON.stringify([it.wtype, it.tier, it.atk, it.mag, it.stats, it.mods || null, it.price, it.desc, it.crit || 0, it.hit || 0, it.kind || null, it.element || null, it.onHit || null, it.vs || null]);
+  const wSeen = {}, wDup = [];
+  for (const [id, it] of Object.entries(D.items)) {
+    if (it.slot !== 'weapon' || it.grade !== 'normal') continue;
+    const k = wSig(it);
+    if (wSeen[k]) wDup.push(wSeen[k] + '=' + id); else wSeen[k] = id;
+  }
+  ok('通常品の武器: 同じ系統・ティアで中身が全く同じ品が無い', wDup.length === 0, list(wDup));
 }
 
 // ================================================================ 5. 文の長さ
@@ -297,10 +307,17 @@ section('7. ドロップの枠（STATS_REWORK §10.1）');
   const normal = Object.entries(D.monsters).filter(([id, m]) => !((m.flags || []).includes('boss')) && !/^(rm_|b_|stub_)/.test(id));
   const noNormal = normal.filter(([, m]) => !(m.drops && m.drops.normal)).map((x) => x[0]);
   ok(`通常の魔物 ${normal.length} 体すべてが normal の枠を持つ`, noNormal.length === 0, list(noNormal));
-  const rareNotLast = normal.filter(([id, m]) => m.drops && m.drops.rare && !last.has(id)).map((x) => x[0]);
-  const rareN = normal.filter(([, m]) => m.drops && m.drops.rare).length;
+  // 縦切りの 11 系統の段 1〜2（22 体）は例外でレア枠を持つ（オーナー 2026-09-27「レアがめっきり減ったねえ……。楽しみがちょっとないかも」）。
+  // 割合（目安 25%）はそれを除いて数え、縦切りの 22 体は全部がレア枠を持つことを確かめる
+  const DEMO = new Set(['jelly', 'rat', 'seabird', 'crab', 'bat', 'bee', 'mushroom', 'plant', 'fairy', 'wolf', 'treant'].flatMap((l) => [l + '_1', l + '_2']));
+  const rareNotLast = normal.filter(([id, m]) => m.drops && m.drops.rare && !last.has(id) && !DEMO.has(id)).map((x) => x[0]);
+  const rest = normal.filter(([id]) => !DEMO.has(id));
+  const rareN = rest.filter(([, m]) => m.drops && m.drops.rare).length;
   const superN = normal.filter(([, m]) => m.drops && m.drops.super).length;
-  ok(`rare の枠は系統の最後の段だけ（${rareN} 体、${(100 * rareN / normal.length).toFixed(0)}%、目安 25%）`, rareNotLast.length === 0 && rareN / normal.length <= 0.32, list(rareNotLast));
+  ok(`rare の枠は系統の最後の段だけ（縦切りの 22 体を除き ${rareN} 体、${(100 * rareN / rest.length).toFixed(0)}%、目安 25%）`, rareNotLast.length === 0 && rareN / rest.length <= 0.32, list(rareNotLast));
+  const demoNo = [...DEMO].filter((id) => D.monsters[id] && !(D.monsters[id].drops && D.monsters[id].drops.rare));
+  const demoItems = [...DEMO].map((id) => D.monsters[id] && D.monsters[id].drops && D.monsters[id].drops.rare && D.monsters[id].drops.rare.item).filter(Boolean);
+  ok(`縦切りの 22 体すべてがレア枠（品はみな違う: ${new Set(demoItems).size}）`, demoNo.length === 0 && new Set(demoItems).size === demoItems.length, list(demoNo));
   const superBad = normal.filter(([id, m]) => m.drops && m.drops.super && !last5.has(id) && !/^(book_3|paper_4)$/.test(id)).map((x) => x[0]);
   ok(`super の枠は 5 段の系統の最後など（${superN} 体、${(100 * superN / normal.length).toFixed(0)}%、目安 9%）`, superBad.length === 0 && superN / normal.length <= 0.15, list(superBad));
 }
@@ -309,7 +326,8 @@ section('7. ドロップの枠（STATS_REWORK §10.1）');
 section('8. 盗み専用（STATS_REWORK §7.6、V2_PLAN §2.6.6）');
 {
   const st = Object.entries(D.items).filter(([, it]) => it.stealOnly);
-  ok(`盗み専用 30〜40 品（${st.length}）`, st.length >= 30 && st.length <= 40);
+  // 36 ＋縦切りの 7（オーナー 2026-09-27「レアがめっきり減ったねえ……」）
+  ok(`盗み専用 30〜45 品（${st.length}）`, st.length >= 30 && st.length <= 45);
   const form = st.filter(([, it]) => it.grade !== 'super' || it.src !== 'steal' || it.quirk).map((x) => x[0]);
   ok('grade super・src steal・quirk なし', form.length === 0, form);
   const owners = {};

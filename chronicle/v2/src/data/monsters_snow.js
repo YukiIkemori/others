@@ -173,4 +173,11 @@
       desc: '白い毛の大王。一歩ごとに\n雪原の雪が震えて落ちる。',
     },
   });
+  // @@V2-BEGIN 縦切りのレア枠（BATTLE、2026-09-27。オーナー「レアがめっきり減ったねえ……」。決まりと見込みは monsters_common.js の同じ区画）
+  // 灰色オオカミ・霜牙オオカミ（森の z_verda に出る）
+  const DEMO_RARE = { wolf_1: 'ft_r1_agi', wolf_2: 'hn_mole_claw' };
+  const DEMO_STEAL = { wolf_2: 'w_dagger_st_frostfang' };
+  for (const [id, item] of Object.entries(DEMO_RARE)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { rare: { item, rate: 32 } });
+  for (const [id, item] of Object.entries(DEMO_STEAL)) if (R.DB.monsters[id]) R.DB.monsters[id].drops = Object.assign({}, R.DB.monsters[id].drops, { steal: { item, rate: 32 } });
+  // @@V2-END
 })(window.RPG);

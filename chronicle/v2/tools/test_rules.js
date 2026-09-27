@@ -272,7 +272,8 @@ section('data: items');
 section('data: steal-only (§7.2, V2_PLAN §2.6.6)');
 {
   const st = Object.keys(DB.items).filter((id) => DB.items[id].src === 'steal');
-  ok('36 steal-only items, super, stealOnly, no quirk', st.length === 36 && st.every((id) => DB.items[id].grade === 'super' && DB.items[id].stealOnly && !DB.items[id].quirk));
+  // 36 + 7 for the slice's stage 1–2 monsters (owner 2026-09-27: 「レアがめっきり減ったねえ……。楽しみがちょっとないかも」)
+  ok('43 steal-only items, super, stealOnly, no quirk', st.length === 43 && st.every((id) => DB.items[id].grade === 'super' && DB.items[id].stealOnly && !DB.items[id].quirk));
   ok('ids <slot>_st_<name>', st.every((id) => /^(w_\w+|ac|hn|ft|sh|bd|hd)_st_/.test(id) || /^w_\w+_st_/.test(id)));
   ok('rates: bosses 16, rare 16, mobs 32', Object.values(DB.stealSources).every((s) => [16, 32].includes(s.rate)) && DB.stealSources.ac_st_rooteater.rate === 16 && DB.stealSources.ft_st_jewel_hare.rate === 16);
   const pooled = new Set();
@@ -412,13 +413,19 @@ section('glimmer');
 
 section('§10.1 drop slots and chest pools (A30)');
 {
-  const mobs = Object.entries(DB.monsters).filter(([id, m]) => !/^(b_|rm_)/.test(id) && !(m.flags || []).includes('boss') && !(m.flags || []).includes('rare'));
+  // the slice's 22 stage 1–2 monsters all carry a rare slot again (owner 2026-09-27: 「レアがめっきり減ったねえ……。楽しみがちょっとないかも」);
+  // the ~25 % rule of §10.1 is counted over the rest
+  const DEMO = new Set(['jelly', 'rat', 'seabird', 'crab', 'bat', 'bee', 'mushroom', 'plant', 'fairy', 'wolf', 'treant'].flatMap((l) => [l + '_1', l + '_2']));
+  const mobs = Object.entries(DB.monsters).filter(([id, m]) => !/^(b_|rm_)/.test(id) && !(m.flags || []).includes('boss') && !(m.flags || []).includes('rare') && !DEMO.has(id));
+  ok('slice stage 1–2 monsters (22) all have a rare slot, each a different item', [...DEMO].every((id) => DB.monsters[id].drops.rare) && new Set([...DEMO].map((id) => DB.monsters[id].drops.rare.item)).size === 22);
   const rs = mobs.filter(([, m]) => m.drops && m.drops.rare).length / mobs.length, ss = mobs.filter(([, m]) => m.drops && m.drops.super).length / mobs.length;
   ok('rare slots on about 25% of normal monsters, super about 9%', rs >= 0.2 && rs <= 0.3 && ss >= 0.06 && ss <= 0.12, { rs, ss });
   const T = require('./port/trim_10_1.json');
   ok('trimmed items are gone', T.deleted.every((id) => !DB.items[id]));
   const pooled = new Set(); for (const p of Object.values(DB.pools)) for (const t of p.tiers) for (const e of t) if (e.item) pooled.add(e.item);
-  ok('kept monster items (≈30 rare, ≈30 super) are in chest pools', T.rareToChest.every((id) => pooled.has(id)) && T.superToChest.every((id) => pooled.has(id)) && T.rareToChest.length >= 25 && T.superToChest.length >= 25);
+  // kept items that a slice monster drops again (owner 2026-09-27, rare slots restored) leave p_rare (pools.js: no item a monster drops)
+  const droppedNow = new Set(); for (const m of Object.values(DB.monsters)) if (m.drops && m.drops.rare) droppedNow.add(m.drops.rare.item);
+  ok('kept monster items (≈30 rare, ≈30 super) are in chest pools', T.rareToChest.every((id) => pooled.has(id) || droppedNow.has(id)) && T.superToChest.every((id) => pooled.has(id)) && T.rareToChest.length >= 25 && T.superToChest.length >= 25);
   const dropped = new Set(); for (const m of Object.values(DB.monsters)) for (const k of ['normal', 'rare', 'super']) if (m.drops && m.drops[k] && m.drops[k].item) dropped.add(m.drops[k].item);
   ok('p_super has no item a monster drops (H2)', DB.pools.p_super.tiers.every((t) => t.every((e) => !dropped.has(e.item))));
   ok('p_super has items at every tier', DB.pools.p_super.tiers.every((t) => t.length > 0));
@@ -475,6 +482,34 @@ section('merged armor lines (items_armor.js: one line per slot × weight) and sa
   ok('equip: hd_iron_band → hd_helm_0, bd_plate_0 → bd_iron_cuirass', G.chars.hero.equip.head === 'hd_helm_0' && G.chars.hero.equip.body === 'bd_iron_cuirass', G.chars.hero.equip);
   ok('gain / take / owned read the alias', (() => { const g = R.State.gain('bd_garb_2', 1); return g.item === 'bd_vest_2' && G.items.bd_vest_2 === 1 && R.State.owned('bd_garb_2') === 1 && R.State.take('bd_garb_2', 1) && !G.items.bd_vest_2; })());
   ok('Rules.itemOf / stats read an old id as the kept item', Ru.itemOf ? Ru.itemOf('sh_tower_1') === DB.items.sh_buckler_1 : true);
+}
+
+section('normal shop weapons: no two lines alike (staff lines split by role)');
+{
+  // 持ち主「見習いの杖と祈りの杖、効果同じじゃねえかｗ」: 通常品は units の能力が 0 なので、同じ系統・同じティアの系列が
+  // 攻撃力・術力・値段・説明まで同じになっていた（杖の 2 系列、全ティア）。防具はまとめたが、武器は役目で分ける判断:
+  //   w_staff = 攻撃の術（magicPct +10）、w_staff_prayer = 回復の術（healPct +20、術力は × 0.9）
+  const normalW = Object.entries(DB.items).filter(([, it]) => it.slot === 'weapon' && it.grade === 'normal');
+  const sig = (it) => JSON.stringify([it.atk, it.mag, it.stats, it.mods || null, it.price, it.desc, it.crit || 0, it.hit || 0, it.kind || null, it.element || null, it.onHit || null, it.vs || null]);
+  const seen = {}, dup = [];
+  for (const [id, it] of normalW) { const k = it.wtype + ':' + it.tier + ':' + sig(it); if (seen[k]) dup.push(seen[k] + '=' + id); else seen[k] = id; }
+  ok('no two normal weapons of the same type and tier have the same numbers and text', !dup.length, dup.slice(0, 5));
+  const T = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const st = (T) => DB.items[T === 0 ? 'w_staff_novice' : `w_staff_${T}`], pr = (T) => DB.items[`w_staff_prayer_${T}`];
+  ok('w_staff: magicPct +10 at every tier, mag = WA[T]', T.every((t) => st(t).mods.magicPct === 10 && !st(t).mods.healPct && st(t).mag === K.WA[t]));
+  ok('w_staff_prayer: healPct +20 at every tier, mag = round(WA[T] × 0.9) (a bit lower)', T.every((t) => pr(t).mods.healPct === 20 && !pr(t).mods.magicPct && pr(t).mag === Math.round(K.WA[t] * 0.9) && pr(t).mag < st(t).mag));
+  ok('same atk and price for the two staff lines', T.every((t) => pr(t).atk === st(t).atk && pr(t).price === st(t).price));
+  ok('T0: 見習いの杖 mag 11 / 祈りの杖 mag 10, 110 G each', st(0).mag === 11 && pr(0).mag === 10 && st(0).price === 110 && pr(0).price === 110, [st(0).mag, pr(0).mag]);
+  ok('shop text shows the role first (攻撃の術の威力が上がる。 / 回復の術がよく効く。)', T.every((t) => st(t).desc.split('\n')[0] === '攻撃の術の威力が上がる。' && pr(t).desc.split('\n')[0] === '回復の術がよく効く。'), [st(0).desc, pr(0).desc]);
+  ok('the second line keeps the staff type text (後列からも届く)', /後列からも届く/.test(st(0).desc.split('\n')[1]) && /後列からも届く/.test(pr(0).desc.split('\n')[1]));
+  ok('fillItem: an item magMult overrides the type magMult', Ru.fillItem({ slot: 'weapon', wtype: 'staff', grade: 'normal', tier: 9, magMult: 0.5 }).mag === Math.round(K.WA[9] * 0.5));
+  ok('maul text no longer claims stats that normal gear does not give', DB.items.w_greatsword_club.desc.indexOf('腕力') < 0 && !Object.keys(DB.items.w_greatsword_club.stats).length);
+  // 効き目: magicPct は術のダメージだけ、healPct は回復だけ（回復は術力を使わない）
+  const id = fake({ str: 10, vit: 13, dex: 15, agi: 16, int: 21, mnd: 18 });
+  const a = R.Party.makeChar(id, { tier: 5, gl: 10 }), b = R.Party.makeChar(id, { tier: 5, gl: 10 });
+  a.equip.weapon1 = 'w_staff_5'; b.equip.weapon1 = 'w_staff_prayer_5';
+  ok('mods reach the wearer (magicPct 10 / healPct 20)', Ru.mods(a).magicPct === 10 && !Ru.mods(a).healPct && Ru.mods(b).healPct === 20 && !Ru.mods(b).magicPct);
+  ok('prayer staff: lower mag, same HEALF (heal uses 精神, then × (1 + healPct))', Ru.stats(b).mag < Ru.stats(a).mag && near(Ru.stats(a).healF, Ru.stats(b).healF));
 }
 
 done('test_rules');

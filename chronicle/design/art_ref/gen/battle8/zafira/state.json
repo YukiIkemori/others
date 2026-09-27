@@ -1,0 +1,20 @@
+{
+ "attack": {
+  "attempts": [
+   {
+    "raw": "raw/attack_a1.png",
+    "pitch": 8,
+    "lay": {
+     "HX": 79,
+     "G": 75,
+     "W": 147,
+     "H": 78
+    },
+    "quality": "high",
+    "extra": "",
+    "t": "2026-09-27T20:01:34",
+    "secs": 86.6
+   }
+  ]
+ }
+}

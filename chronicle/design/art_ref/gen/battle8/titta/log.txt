@@ -1,0 +1,48 @@
+19:58:46 titta victory attempt 1: generating 3264x1392 (pitch 8, quality high)
+19:58:48 titta cast attempt 1: generating 3264x1824 (pitch 8, quality high)
+19:58:48 titta attack attempt 1: generating 3296x1808 (pitch 8, quality high)
+19:59:57 calibrated pitch 7.91 / 7.95 px (requested 8), offset 3.9, 5.0
+19:59:58 drawn pitch of the key cells 8.00
+19:59:59   frame 2 size: guide 1.000 idle 1.000 idle/corr 1.000 pitch 1.000 -> 1.000
+20:00:01   frame 3 size: guide 0.512 idle 1.000 idle/corr 1.081 pitch 1.000 -> 1.000
+20:00:02   frame 5 size: guide 1.000 idle 0.913 idle/corr 0.986 pitch 1.000 -> 1.000
+20:00:03   frame 6 size: guide 1.000 idle 0.913 idle/corr 0.986 pitch 1.000 -> 1.000
+20:00:04   victory frame 1 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [84.0, 58.5], "height": 61, "rescaled": null, "copy": null, "shift": [0, 0], "err": 0.0}
+20:00:04   victory frame 2 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [85.0, 56.5], "height": 63, "rescaled": null, "copy": 0.15, "shift": [0, 0], "err": 12.1}
+20:00:04   victory frame 3 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [82.0, 56.5], "height": 69, "rescaled": null, "copy": 0.16, "shift": [0, 0], "err": 13.1}
+20:00:04   victory frame 4 keep  {"ok": false, "why": "head scale 0.925", "head_scale": 0.925, "head": [83.9, 59.7], "height": 73, "rescaled": null, "copy": null, "shift": [0, 0], "err": 32.3}
+20:00:04   victory frame 5 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [84.7, 59.6], "height": 73, "rescaled": null, "copy": 0.25, "shift": [0, 0], "err": 33.4}
+20:00:04   victory frame 6 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [84.7, 58.6], "height": 73, "rescaled": null, "copy": 0.27, "shift": [0, 0], "err": 33.0}
+20:00:14 calibrated pitch 8.00 / 8.01 px (requested 8), offset 3.1, 2.3
+20:00:15 drawn pitch of the key cells 8.00
+20:00:16 calibrated pitch 7.98 / 8.00 px (requested 8), offset 1.7, 1.2
+20:00:16 drawn pitch of the key cells 8.00
+20:00:16   frame 2 size: guide 0.975 idle 0.975 idle/corr 0.975 pitch 1.000 -> 1.000
+20:00:18   frame 2 size: guide 0.950 idle 0.950 idle/corr 0.950 pitch 1.000 -> 1.000
+20:00:18   frame 4 size: guide 0.938 idle 0.913 idle/corr 0.986 pitch 1.000 -> 1.000
+20:00:20   frame 3 size: guide 0.975 idle 0.913 idle/corr 0.986 pitch 1.000 -> 1.000
+20:00:21   frame 5 size: guide 1.000 idle 0.975 idle/corr 1.000 pitch 1.000 -> 1.000
+20:00:22   frame 5 size: guide 1.100 idle 0.675 idle/corr 0.730 pitch 1.000 -> 1.000
+20:00:24   frame 7 size: guide 0.963 idle 0.913 idle/corr 0.936 pitch 1.000 -> 1.000
+20:00:25   frame 6 size: guide 1.000 idle 0.913 idle/corr 0.986 pitch 1.000 -> 1.000
+20:00:26   frame 8 size: guide 1.000 idle 1.000 idle/corr 1.000 pitch 1.000 -> 1.000
+20:00:28   frame 8 size: guide 0.938 idle 0.875 idle/corr 0.946 pitch 1.000 -> 1.000
+20:00:28   attack frame 1 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [85.0, 46.5], "height": 61, "rescaled": null, "copy": null, "shift": [0, 0], "err": 0.0}
+20:00:28   attack frame 2 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [82.6, 51.2], "height": 56, "rescaled": null, "copy": 0.08, "shift": [7, 0], "err": 24.4}
+20:00:28   attack frame 3 keep  {"ok": false, "why": "head scale 0.925", "head_scale": 0.925, "head": [84.9, 50.7], "height": 56, "rescaled": null, "copy": null, "shift": [0, 0], "err": 19.2}
+20:00:28   attack frame 4 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [82.7, 52.6], "height": 54, "rescaled": null, "copy": 0.11, "shift": [6, 8], "err": 23.7}
+20:00:28   attack frame 5 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [82.6, 57.2], "height": 50, "rescaled": null, "copy": 0.06, "shift": [13, 6], "err": 27.9}
+20:00:28   attack frame 6 keep  {"ok": true, "why": "", "head_scale": 0.975, "head": [84.6, 51.2], "height": 56, "rescaled": null, "copy": null, "shift": [0, 0], "err": 25.5}
+20:00:28   attack frame 7 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [82.7, 53.6], "height": 53, "rescaled": null, "copy": 0.19, "shift": [4, 7], "err": 26.0}
+20:00:28   attack frame 8 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [84.0, 46.5], "height": 61, "rescaled": null, "copy": 0.28, "shift": [0, 1], "err": 13.2}
+20:00:28   attack frame 9 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [85.0, 46.5], "height": 61, "rescaled": null, "copy": null, "shift": [0, 0], "err": 0.0}
+20:00:29   frame 9 size: guide 1.000 idle 1.000 idle/corr 1.000 pitch 1.000 -> 1.000
+20:00:30   cast frame 1 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [84.0, 47.5], "height": 61, "rescaled": null, "copy": null, "shift": [0, 0], "err": 0.0}
+20:00:30   cast frame 2 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [82.2, 51.0], "height": 58, "rescaled": null, "copy": 0.14, "shift": [0, 0], "err": 27.3}
+20:00:30   cast frame 3 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [81.7, 47.6], "height": 60, "rescaled": null, "copy": 0.16, "shift": [3, 0], "err": 25.1}
+20:00:30   cast frame 4 keep  {"ok": false, "why": "head scale 0.925", "head_scale": 0.925, "head": [83.9, 49.7], "height": 62, "rescaled": null, "copy": null, "shift": [0, 0], "err": 21.9}
+20:00:30   cast frame 5 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [86.1, 45.1], "height": 65, "rescaled": null, "copy": 0.08, "shift": [-10, 0], "err": 34.6}
+20:00:30   cast frame 6 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [81.7, 48.6], "height": 59, "rescaled": null, "copy": 0.18, "shift": [3, 0], "err": 24.0}
+20:00:30   cast frame 7 keep  {"ok": false, "why": "head scale 0.925", "head_scale": 0.925, "head": [83.9, 47.7], "height": 60, "rescaled": null, "copy": null, "shift": [0, 0], "err": 22.4}
+20:00:30   cast frame 8 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [82.1, 49.2], "height": 58, "rescaled": null, "copy": 0.09, "shift": [5, 1], "err": 26.1}
+20:00:30   cast frame 9 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [85.0, 47.5], "height": 61, "rescaled": null, "copy": 0.34, "shift": [0, 0], "err": 14.3}

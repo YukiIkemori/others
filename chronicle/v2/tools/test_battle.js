@@ -78,7 +78,8 @@ section('データ（K.monster・K.boss・K.troop、出現表、盗み専用）'
   ok('forest road rate 0.3 (WORLD_REDESIGN §2.2)', DB.encounters.zw_forest_road.rate === 0.3);
   // 盗み専用（STATS_REWORK §7.2、率は V2_PLAN §2.6.6: 通常 32・レア 16・ボス 16）
   const st = mons.filter((id) => DB.monsters[id].drops && DB.monsters[id].drops.steal);
-  ok('steal-only slots: 30–40 monsters', st.length >= 30 && st.length <= 40, st.length);
+  // 36 + 7 slice monsters (owner 2026-09-27: 「レアがめっきり減ったねえ……。楽しみがちょっとないかも」)
+  ok('steal-only slots: 30–45 monsters', st.length >= 30 && st.length <= 45, st.length);
   const rateOk = st.every((id) => { const d = DB.monsters[id]; const want = (d.flags || []).includes('boss') ? 16 : (d.flags || []).includes('rare') ? 16 : 32; return d.drops.steal.rate === want; });
   ok('steal-only rates 32 / 16 / 16', rateOk);
   ok('each steal-only item belongs to one monster', new Set(st.map((id) => DB.monsters[id].drops.steal.item)).size === st.length);
@@ -92,7 +93,10 @@ section('データ（K.monster・K.boss・K.troop、出現表、盗み専用）'
     ok('steal-only items are grade super, src steal (RULES)', st.every((id) => { const it = DB.items[DB.monsters[id].drops.steal.item]; return it && it.grade === 'super' && (it.src === 'steal' || it.stealOnly); }));
   } else ok('drop items (RULES data not loaded yet — skipped)', true);
   // ドロップの枠（STATS_REWORK §10.1）
-  const mobs = mons.filter((id) => { const d = DB.monsters[id]; return !(d.flags || []).includes('boss') && !(d.flags || []).includes('rare') && d.lineage; });
+  // the slice's 22 stage 1–2 monsters have rare slots again (owner 2026-09-27: 「レアがめっきり減ったねえ……」); the ~25 % is counted over the rest
+  const DEMO = new Set(['jelly', 'rat', 'seabird', 'crab', 'bat', 'bee', 'mushroom', 'plant', 'fairy', 'wolf', 'treant'].flatMap((l) => [l + '_1', l + '_2']));
+  ok('slice stage 1–2: every monster has a rare slot at rate 32', [...DEMO].every((id) => DB.monsters[id].drops.rare && DB.monsters[id].drops.rare.rate === 32));
+  const mobs = mons.filter((id) => { const d = DB.monsters[id]; return !(d.flags || []).includes('boss') && !(d.flags || []).includes('rare') && d.lineage && !DEMO.has(id); });
   const rareN = mobs.filter((id) => DB.monsters[id].drops && DB.monsters[id].drops.rare).length;
   const superN = mobs.filter((id) => DB.monsters[id].drops && DB.monsters[id].drops.super).length;
   ok(`rare slot ~25 % of mobs (${rareN}/${mobs.length})`, rareN / mobs.length > 0.18 && rareN / mobs.length < 0.32);
@@ -492,6 +496,21 @@ section('乱数: 同じ種なら同じ戦闘（直前の戦闘からのやり直
   };
   ok('same setup + seed → same events', run(0) === run(0));
   ok('retry + 1 → a different battle', run(0) !== run(1));
+}
+
+// ================================================================ 縦切りのレア（オーナー 2026-09-27「レアがめっきり減ったねえ……。楽しみがちょっとないかも」）
+section('slice rare drops: grade rare reaches the result (★ and the rare jingle)');
+{
+  newGame(['bartolo']);
+  const g = R.Mon.mkRng('rare'); g.chance = () => true;   // every slot hits
+  const eng = engine({ mons: ['jelly_1'], lv: 3, rng: g });
+  eng.killed.push(eng.mons[0]);
+  const rw = eng.computeRewards();
+  R.Mon.setRng(R.Mon.mkRng('after-rare'));
+  const rare = rw.drops.find((d) => d.slot === 'rare');
+  ok('jelly_1 rare slot drops ac_r1_int with grade rare', !!rare && rare.item === 'ac_r1_int' && rare.grade === 'rare', rw.drops);
+  // src/systems/battle/result.js: any drop of grade rare/super → R.Audio.jingle('rare' | 'superrare')
+  ok('the rare / superrare jingles exist (R.DB.music)', !!(DB.music && DB.music.rare && DB.music.rare.jingle && DB.music.superrare));
 }
 
 done('test_battle');

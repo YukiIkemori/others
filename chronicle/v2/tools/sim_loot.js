@@ -7,6 +7,7 @@
 // H5: n 体を倒して R.Mon.rollDrops に盗み専用の品が 1 度も出ない（倒しても落ちない）。
 // H6（参考）: stealPct +50 の盗み手が毎戦 1 回盗むとき、通常の魔物の盗み専用を取るまでの戦闘数の中央値（目安 30〜60）と、
 //             ボス（根食らい）で 1 戦（10 回の盗み）のうちに取れる率（目安 35〜55%、V2_PLAN の率 16 で読み替え）。
+// H7: 縦切り 1 周で見るレアのドロップの回数の見込み（目安 3〜6。オーナー 2026-09-27「レアがめっきり減ったねえ……」）。
 'use strict';
 
 function loadR() { return require('./lib/load')({ quiet: true }); }
@@ -89,6 +90,42 @@ function h6(R, trials, seed) {
   return { median: battles[Math.floor(battles.length / 2)], bossPct: (100 * got) / trials };
 }
 
+/** H7: 縦切り 1 周で見るレアのドロップの見込み（オーナー 2026-09-27「レアがめっきり減ったねえ……。楽しみがちょっとないかも」）。
+ *  出現表の組の重み（ティア 0 の組）× 数 → 1 戦で倒す魔物の見込み、R.Mon.dropChances の rare を足す。戦闘数は 2 通り:
+ *  route = design/qa/sim_segments.json の縦切りのダンジョンの区間（最短の道）＋ R1 のワールドの戦闘、
+ *  R1 = design/qa/playthrough/R1.json（通しの自動の 1 周。迷い・やり直しを含む）。目安 3〜6（route で 3 以上） */
+function h7(R) {
+  const fs = require('fs');
+  const path = require('path');
+  const QA = path.join(__dirname, '..', 'design', 'qa');
+  const read = (f) => { try { return JSON.parse(fs.readFileSync(path.join(QA, f), 'utf8')); } catch (e) { return null; } };
+  const perBattle = (zid) => {
+    const z = R.DB.encounters[zid];
+    if (!z) return { kills: 0, rare: 0 };
+    const gs = z.groups.filter((g) => !(g.tierMin > 0));
+    let W = 0, K = 0, P = 0;
+    for (const g of gs) {
+      let k = 0, p = 0;
+      for (const [m0, a, b] of g.mons) {
+        const m = m0[0] === '@' ? R.Mon.resolve(m0, 0) : m0;
+        const d = m && R.DB.monsters[m];
+        const n = (a + (b == null ? a : b)) / 2;
+        k += n; p += n * (d ? R.Mon.dropChances(d, {}).rare : 0);
+      }
+      W += g.w; K += g.w * k; P += g.w * p;
+    }
+    return { kills: W ? K / W : 0, rare: W ? P / W : 0 };
+  };
+  const sum = (counts) => { let kills = 0, rare = 0, battles = 0; for (const [z, n] of Object.entries(counts)) { const q = perBattle(z); battles += n; kills += n * q.kills; rare += n * q.rare; } return { battles, kills, rare }; };
+  const r1 = {};
+  const R1 = read('playthrough/R1.json');
+  for (const b of (R1 && R1.final && R1.final.stats && R1.final.stats.battles) || []) if (b.zone) r1[b.zone] = (r1[b.zone] || 0) + 1;
+  const route = {};
+  for (const g of read('sim_segments.json') || []) if (g.zone && /^z_(lighthouse|verda|elder|well)$/.test(g.zone)) route[g.zone] = (route[g.zone] || 0) + (g.battles || 0);
+  for (const [z, n] of Object.entries(r1)) if (/^zw_/.test(z)) route[z] = n;
+  return { route: sum(route), r1: sum(r1) };
+}
+
 function main() {
   const argv = process.argv.slice(2);
   const arg = (k, d) => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : d; };
@@ -107,8 +144,13 @@ function main() {
   failed = failed || !r5.ok;
   const r6 = h6(R, argv.includes('--quick') ? 100 : 400, seed);
   console.log(`H6（参考）stealPct +50: 通常の魔物（ぬすみカモメ）を取るまで 中央値 ${r6.median} 戦（目安 30〜60）、根食らい 1 戦 10 回で ${r6.bossPct.toFixed(1)}%（率 16 の読み替えで目安 35〜55）`);
+  const r7 = h7(R);
+  const line = (k, x) => `${k} ${x.battles.toFixed(0)} 戦・${x.kills.toFixed(0)} 体 → レア ${x.rare.toFixed(1)} 回（1 度も出ない ${(100 * Math.exp(-x.rare)).toFixed(0)}%）`;
+  const ok7 = r7.route.rare >= 3;
+  console.log(`H7 縦切り 1 周のレアのドロップ（目安 3〜6）: ${line('最短の道', r7.route)}、${line('R1 の通し', r7.r1)}  ${ok7 ? 'pass' : 'FAIL'}`);
+  failed = failed || !ok7;
   if (failed) process.exitCode = 1;
 }
 
-module.exports = { h4, h5, h6 };
+module.exports = { h4, h5, h6, h7 };
 if (require.main === module) main();
