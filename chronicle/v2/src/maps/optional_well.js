@@ -38,7 +38,7 @@
     };
     const objects = [
       K.stairs(18, 3, { map: 'world', spawn: 'well' }), P('stairs_up', 18, 3),
-      K.spring('wl_s1', 17, 13),                                      // 中ほどの泉
+      K.spring('wl_s1', 31, 9),                                       // 中ほどの泉（東の小部屋。前は 17,13 = 32%）
       K.chest('wl_c1', 31, 3, { pool: 'p_T' }),
       K.chest('wl_c2', 3, 28, { pool: 'p_rare' }),                    // 隠し通路の先
       K.chest('wl_c3', 31, 24, { item: 'i_jewel_carrot', n: 1 }),     // 巣の奥

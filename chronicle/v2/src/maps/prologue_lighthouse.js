@@ -100,7 +100,7 @@
       const objects = [
         K.stairs(29, 26, { map: 'lighthouse_1', spawn: 'from_next' }), P('stairs_down', 29, 26),
         K.stairs(16, 16, { map: 'lighthouse_3', spawn: 'from_prev' }), P('stairs_up', 16, 16),
-        K.spring('lh2_s1', 15, 11),
+        K.spring('lh2_s1', 14, 6),   // 2 階の北の回廊（道のりの中ほど、check_springs の 40〜60%。前は内側の部屋 15,11 = 80%）
         K.chest('lh2_c1', 3, 26, { pool: 'p_T' }),
         K.chest('lh2_c2', 25, 17, { item: 'i_ether', n: 1 }),
         K.chest('lh2_c3', 25, 2, { pool: 'p_rare' }),     // 隠し通路の先のレアの箱（V2_PLAN §3.7）
