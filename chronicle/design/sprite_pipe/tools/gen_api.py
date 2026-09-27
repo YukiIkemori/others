@@ -118,7 +118,7 @@ def generate(prompt, images=(), size='1536x1024', quality='medium', background='
             msg = e.read().decode('utf-8', 'replace')[:800]
             last = 'HTTP %d: %s' % (e.code, msg)
             _log(dict(t=time.strftime('%Y-%m-%dT%H:%M:%S'), tag=tag, images=0, error=last, settings=tool))
-            if e.code in (400, 401, 403, 404):
+            if e.code in (400, 401, 403, 404) or 'insufficient_quota' in msg or 'credit_balance' in msg:
                 raise GenError(last)
             time.sleep(5 * (attempt + 1))
             continue

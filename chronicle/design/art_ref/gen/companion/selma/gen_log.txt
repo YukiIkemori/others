@@ -61,3 +61,4 @@
 00:12:00   |   シート5 顔の表情: OK  comp_selma_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
 00:12:00   | 
 00:12:00   | packed field 96x212, battle 585x348, battle_bare 350x69, face 332x84 | palette 52 + face 48
+00:16:35 sheet 3 attempt 4: generating 3648x1344 (pitch 7, quality medium, 3 refs)

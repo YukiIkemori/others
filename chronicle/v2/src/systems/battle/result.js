@@ -104,11 +104,29 @@
       Kt.text(g, '+' + d.gold.toLocaleString('en-US') + ' G', x0 + colW, y - 2 * k, { size: 18 * k, weight: 700, color: Kt.COL.gold, align: 'right', raw: true, shadow: true });
     });
     y += 34 * k;
+    // 縦の余白の見積もり（16:9・横持ち）: 下の文（閃き・熟練）の上までに 手に入れた物 → 仲間 が収まるように、
+    // 品の行を減らし（レア・超レアを先に、残りは「ほか N 品」）、それでも足りなければ仲間の行を詰める
+    const units = st.partyUnits();
+    const nLines = (d.glim.length ? 1 : 0) + (d.prof.length ? 1 : 0);
+    let rh = (L.tall ? 42 : 40) * k;
+    let maxRows = L.tall ? 4 : 6;
+    if (!L.tall) {
+      const footTop = R.H - (R.safe.b || 0) - 40 * k - Math.max(0, nLines - 1) * 18 * k - 10 * k;
+      const memberNeed = (n) => 6 * k + 18 * k + units.length * n + 4 * k;
+      const dropsHead = d.drops.length ? 20 * k : 0;
+      const room = footTop - y - dropsHead - memberNeed(rh);
+      maxRows = Math.max(d.drops.length > 1 ? 2 : 1, Math.min(maxRows, Math.floor(room / (34 * k))));   // 一番よい品は必ず見せる
+      const left = footTop - y - dropsHead - Math.min(d.drops.length, maxRows) * 34 * k - memberNeed(0);
+      if (units.length && left < units.length * rh) rh = Math.max(30 * k, left / units.length);
+    }
     if (d.drops.length) {
       row(() => Kt.text(g, '手に入れた物', x0, y, { size: 11.5 * k, weight: 700, color: Kt.COL.text3, raw: true, track: 2 }));
       y += 20 * k;
-      const maxRows = L.tall ? 4 : 6;
-      for (const dr of d.drops.slice(0, maxRows)) {
+      const GR = { super: 0, rare: 1 };
+      const drops = d.drops.slice().sort((a, b) => (GR[a.grade] != null ? GR[a.grade] : 2) - (GR[b.grade] != null ? GR[b.grade] : 2));
+      const more = drops.length > maxRows ? drops.length - (maxRows - 1) : 0;
+      const shown = more ? drops.slice(0, maxRows - 1) : drops;
+      for (const dr of shown) {
         const ry = y;
         row(() => {
           const rr = dr.grade === 'rare' || dr.grade === 'super';
@@ -129,13 +147,16 @@
         });
         y += 34 * k;
       }
+      if (more) {
+        const ry = y;
+        row(() => Kt.text(g, `ほか ${more} 品`, x0 + 28 * k, ry + 3 * k, { size: 13 * k, color: Kt.COL.text2, raw: true, shadow: true }));
+        y += 34 * k;
+      }
     }
     // 仲間
     y += 6 * k;
     row(() => Kt.text(g, '仲間', x0, y, { size: 11.5 * k, weight: 700, color: Kt.COL.text3, raw: true, track: 2 }));
     y += 18 * k;
-    const units = st.partyUnits();
-    const rh = (L.tall ? 42 : 40) * k;
     units.forEach((u, j) => {
       const ry = y + j * rh;
       row(() => {
