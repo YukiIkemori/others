@@ -176,3 +176,21 @@
 19:28:55   victory frame 4 keep  {"ok": true, "why": "", "head_scale": 0.975, "head": [83.7, 64.2], "height": 83, "rescaled": null, "copy": null, "shift": [0, 0], "err": 31.1}
 19:28:55   victory frame 5 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [85.7, 64.2], "height": 83, "rescaled": null, "copy": 0.1, "shift": [-4, 0], "err": 31.9}
 19:28:55   victory frame 6 new   {"ok": true, "why": "", "head_scale": 0.975, "head": [86.3, 64.8], "height": 83, "rescaled": null, "copy": 0.07, "shift": [-16, 0], "err": 31.9}
+19:29:07 calibrated pitch 7.98 / 8.00 px (requested 8), offset 0.4, 1.2
+19:29:07 drawn pitch of the key cells 8.00
+19:29:09   frame 2 size: guide 0.838 idle 0.838 idle/corr 0.837 pitch 0.941 -> 0.838
+19:29:11   frame 4 size: guide 0.763 idle 0.838 idle/corr 0.971 pitch 0.750 -> 0.763
+19:29:13   frame 5 size: guide 0.800 idle 0.738 idle/corr 0.686 pitch 0.750 -> 0.738
+19:29:15   frame 7 size: guide 0.775 idle 0.837 idle/corr 0.779 pitch 0.750 -> 0.775
+19:29:17   frame 8 size: guide 0.837 idle 0.837 idle/corr 0.837 pitch 0.813 -> 0.837
+19:29:19   attack frame 1 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [74.0, 47.5], "height": 64, "rescaled": null, "copy": null, "shift": [0, 0], "err": 0.0}
+19:29:19   attack frame 2 new   {"ok": true, "why": "", "head_scale": 0.975, "head": [71.7, 49.2], "height": 70, "rescaled": 1.194, "copy": 0.06, "shift": [6, 0], "err": 26.3}
+19:29:19   attack frame 3 keep  {"ok": false, "why": "head scale 0.862", "head_scale": 0.862, "head": [74.2, 55.9], "height": 64, "rescaled": null, "copy": null, "shift": [0, 0], "err": 35.6}
+19:29:19   attack frame 4 new   {"ok": true, "why": "", "head_scale": 1.013, "head": [72.0, 47.4], "height": 75, "rescaled": 1.311, "copy": 0.03, "shift": [3, 9], "err": 35.8}
+19:29:19   attack frame 5 new   {"ok": false, "why": "head scale 1.063", "head_scale": 1.063, "head": [72.0, 49.5], "height": 62, "rescaled": 1.356, "copy": 0.1, "shift": [1, 9], "err": 28.0}
+19:29:19   attack frame 6 keep  {"ok": false, "why": "head scale 1.075", "head_scale": 1.075, "head": [74.0, 48.4], "height": 64, "rescaled": null, "copy": null, "shift": [0, 0], "err": 28.1}
+19:29:19   attack frame 7 new   {"ok": false, "why": "head scale 0.963", "head_scale": 0.963, "head": [71.8, 52.2], "height": 60, "rescaled": 1.29, "copy": 0.09, "shift": [5, 14], "err": 25.8}
+19:29:19   attack frame 8 new   {"ok": true, "why": "", "head_scale": 1.0, "head": [72.0, 47.5], "height": 64, "rescaled": 1.194, "copy": 0.13, "shift": [5, 13], "err": 23.2}
+19:29:19   attack frame 9 keep  {"ok": true, "why": "", "head_scale": 1.0, "head": [74.0, 47.5], "height": 64, "rescaled": null, "copy": null, "shift": [0, 0], "err": 0.0}
+19:29:22 calibrated pitch 7.36 / 7.54 px (requested 8), offset 24.5, 1.8
+19:29:22 drawn pitch of the key cells 7.50
