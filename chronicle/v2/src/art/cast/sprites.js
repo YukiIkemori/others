@@ -375,6 +375,7 @@
 
   // ------------------------------------------------------------------ フィールド
   const DIRS = { s: 'down', n: 'up', w: 'left', e: 'right' };
+  const DIAG = ['se', 'sw', 'ne', 'nw'];   // 斜め（json の名前も se sw ne nw: walk8_se …）
   // シートの形の演技の名前 → §2.5.7 の演技
   const ACT_OF = { nod: 'act_nod', surprise: 'act_surprise', think: 'act_think', bow: 'act_bow', kneel: 'act_kneel', sit: 'act_sit', point: 'act_call', sad: 'act_sad' };
   /** 描かれたランタンの芯（明るい暖色の画素の中心）→ [x, y]（コマの中）| null */
@@ -436,6 +437,25 @@
       }
       if (Id.ids.length) { poses['idle_' + d] = Id.ids.map(idxOf(Id.mirror)); fps['idle_' + d] = Id.fps || 4; }
     }
+    // 斜め（主人公の 8 方向、2026-09-27）: json に walk8_<se|sw|ne|nw>（無ければ反対側の鏡）がある向きだけ。無い向きは作らない
+    //   → FIELD は縦横の向きで描く（NPC・仲間・昔のシートは今までどおり）
+    for (const d of DIAG) {
+      const W = gait(F, by, 'walk', d);
+      if (!W.ids.length) continue;
+      const Rn = gait(F, by, 'run', d), Id = gait(F, by, 'idle', d);
+      const memo = {};
+      const idxOf = (mir) => (id) => { const k2 = (mir ? 'M:' : '') + id; return memo[k2] != null ? memo[k2] : (memo[k2] = put(frameOf(id, mir))); };
+      poses['walk_' + d] = W.ids.map(idxOf(W.mirror));
+      if (W.fps) fps['walk_' + d] = W.fps;
+      if (W.stride) stride['walk_' + d] = W.stride;
+      if (Rn.ids.length) {
+        poses['run_' + d] = Rn.ids.map(idxOf(Rn.mirror));
+        if (Rn.fps) fps['run_' + d] = Rn.fps;
+        if (Rn.stride) stride['run_' + d] = Rn.stride;
+      }
+      if (Id.ids.length) { poses['idle_' + d] = Id.ids.map(idxOf(Id.mirror)); fps['idle_' + d] = Id.fps || 4; }
+      poses['stand_' + d] = [(Id.ids.length ? poses['idle_' + d] : poses['walk_' + d])[0]];
+    }
     // 演技（南向き）: シートにあればそれ、無ければ立ちのコマのつなぎ
     const s0 = first.s;
     if (s0) {
@@ -470,7 +490,7 @@
   const LEGACY_N = { walk: 3, run: 4, stand: 1 };
   // 並びの名前の候補（先が新しい書き出し）
   const GAIT_KEYS = { walk: ['walk8', 'walk'], run: ['run8', 'run'], stand: ['stand'], idle: ['idle'] };
-  const OPP_SIDE = { right: 'left', left: 'right' };
+  const OPP_SIDE = { right: 'left', left: 'right', se: 'sw', sw: 'se', ne: 'nw', nw: 'ne' };
   /** 歩き・走り・立ち・待ちの 1 向きの並び → {ids, fps, stride, mirror}（ids は by にあるコマの名前。mirror = 反転して使う） */
   function gait(F, by, kind, name) {
     const m = F.meta || {};

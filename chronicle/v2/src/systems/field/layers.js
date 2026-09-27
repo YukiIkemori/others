@@ -3,7 +3,7 @@
 //   チャンクの over（屋根の張り出し・足場・木の葉）→ lv 1 の人（足場の上）→ 発光の描き直し（芯＋にじみ、30 個まで）→ 暗がりの膜（E6）→
 //   宝箱と泉のきらめき（膜の上、WORLD §6.3）→ 新しい話の印 → 光の明滅 → R.Post.frame → HUD。
 //   人の絵は hd:field:<look>（opts {scale, lantern}）。登録が無い間は dev だけ仮の人形（index.html では影だけ）。
-//   歩きの絵: ダッシュは run_*（無ければ walk_*）、止まれば idle_*（2 コマ以上あれば）か stand_*。コマの数と fps はシートから（cast/sprites.js が json を読む）。
+//   歩きの絵: ダッシュは run_*（無ければ walk_*）、止まれば idle_*（2 コマ以上あれば）か stand_*。先頭は斜めの絵（*_se sw ne nw）があれば斜め移動でそれ。コマの数と fps はシートから（cast/sprites.js が json を読む）。
 //   歩き・走りのコマは歩いた道のりで進める（1 マスあたり fps × 1 マスの時間 ÷ 1000 コマ、json の stride があれば 1 巡りのマス数）: 速さが変わっても足が滑らない。
 //   走り出しとダッシュ中の向き変えで足もとに小さな土ぼこり（F._dust、環境光とランタンの色）。
 //   物の絵は TERRAIN のチャンクの props（R.Hd.get(p.key, p.opts) の poses[p.frame]、fps があれば時間で回す、p.cond が真の間だけ）。
@@ -15,10 +15,10 @@
   const S = (F._s = F._s || {});
   const cam = { cx: 0, cy: 0, t: 32 };
   const vis = { px: 0, py: 0 };
-  const WALK = { s: 'walk_s', n: 'walk_n', e: 'walk_e', w: 'walk_w' };
-  const STAND = { s: 'stand_s', n: 'stand_n', e: 'stand_e', w: 'stand_w' };
-  const RUN = { s: 'run_s', n: 'run_n', e: 'run_e', w: 'run_w' };
-  const IDLE = { s: 'idle_s', n: 'idle_n', e: 'idle_e', w: 'idle_w' };
+  const WALK = { s: 'walk_s', n: 'walk_n', e: 'walk_e', w: 'walk_w', se: 'walk_se', sw: 'walk_sw', ne: 'walk_ne', nw: 'walk_nw' };
+  const STAND = { s: 'stand_s', n: 'stand_n', e: 'stand_e', w: 'stand_w', se: 'stand_se', sw: 'stand_sw', ne: 'stand_ne', nw: 'stand_nw' };
+  const RUN = { s: 'run_s', n: 'run_n', e: 'run_e', w: 'run_w', se: 'run_se', sw: 'run_sw', ne: 'run_ne', nw: 'run_nw' };
+  const IDLE = { s: 'idle_s', n: 'idle_n', e: 'idle_e', w: 'idle_w', se: 'idle_se', sw: 'idle_sw', ne: 'idle_ne', nw: 'idle_nw' };
   // 昔の速さ（json に fps の無い 3 コマの歩き・4 コマの走り・仮の絵）: 1 コマ 130 ms、ダッシュ 85 ms
   const LEG_WALK_FPS = 1000 / 130, LEG_RUN_FPS = 1000 / 85;
   const NPC_STEP_MS = 320;   // npc.js の STEP_MS（NPC の歩の足の運びの基準）
@@ -260,7 +260,9 @@
       F._vis(vis);
       const G = R.Game, c = G && G.chars[F.leadId()];
       const dash = !!(S.mv && S.mv.dash);
-      drawChar(g, c ? c.look : 'hero', Math.round((vis.px + 0.5) * t - cx), Math.round((vis.py + 1) * t - cy - t * 0.1), S.dir, !!S.mv, dash, true, null, F._gaitDist(), dash ? F.DASH_MS : F.WALK_MS, 1);
+      // 斜めの絵（8 方向。move.js の S.dir8、向きが縦横のまま変わっていない間だけ）。シートに無ければ drawChar が S.dir に戻す
+      const d8 = S.dir8 && S.dir8At === S.dir ? S.dir8 : S.dir;
+      drawChar(g, c ? c.look : 'hero', Math.round((vis.px + 0.5) * t - cx), Math.round((vis.py + 1) * t - cy - t * 0.1), d8, !!S.mv, dash, true, null, F._gaitDist(), dash ? F.DASH_MS : F.WALK_MS, 1, undefined, S.dir);
       return;
     }
     if (e.kind === 'fol') {
@@ -307,8 +309,9 @@
    * 人を 1 人描く。dist = 歩いた道のり（マス。歩き・走りのコマを道のりで進める。null なら時間で）、
    * gaitMs = その人の 1 マスの基準の時間（fps から 1 マスあたりのコマ数を出す）、alpha = 濃さ（イベントで出る仲間のフェード）
    */
-  function drawChar(g, look, x, y, dir, moving, dash, lantern, pose, dist, gaitMs, alpha, tOff) {
+  function drawChar(g, look, x, y, dir, moving, dash, lantern, pose, dist, gaitMs, alpha, tOff, dirFb) {
     const t = cam.t, u = t / 32;
+    const dirC = dir && dir.length === 2 ? dirFb || dir[0] : dir;   // 斜め（se sw ne nw）の代わりの縦横の向き
     const fade = alpha != null && alpha < 1;
     if (fade) { g.save(); g.globalAlpha = Math.max(0, alpha); }
     // 足もとの柔らかい影
@@ -318,13 +321,14 @@
     if (R.Hd.has(key)) {
       const sh = R.Hd.get(key, charOpts(lantern));
       if (sh) {
+        if (dir !== dirC && !sh.poses['stand_' + dir]) dir = dirC;
         const fr = sh.frames[pickFrame(sh, dir, moving, dash, pose, dist, gaitMs, tOff)] || sh.frames[0];
         R.Hd.draw(g, fr, x, y, { flip: dir === 'w' && !sh.poses.stand_w });
         if (fade) g.restore();
         return;
       }
     }
-    if (R.Dev) doll(g, look, x, y, dir, moving, lantern, u);   // 絵の登録が無い間: dev だけ仮の人形（§2.5.5）
+    if (R.Dev) doll(g, look, x, y, dirC, moving, lantern, u);   // 絵の登録が無い間: dev だけ仮の人形（§2.5.5）
     if (fade) g.restore();
   }
   /** シートのどのコマか。歩き・走りは道のり、待ち・演技は時間 */

@@ -68,6 +68,8 @@
   F._step = function (dx, dy, dash) {
     const prevDir = S.dir;
     S.dir = R.U.dirOf(dx, dy, S.dir);
+    // 見た目の 8 方向（先頭の斜めの絵だけが使う。当たり・話しかけ・保存は縦横の S.dir のまま）
+    const d8 = (ax, ay) => (ax && ay ? (ay > 0 ? 's' : 'n') + (ax > 0 ? 'e' : 'w') : S.dir);
     if (S.dir !== prevDir && R.Game && R.Game.pos) R.Game.pos.dir = S.dir;
     let go = null;
     if (dx && dy) {
@@ -101,6 +103,7 @@
         }
       } else S.push = null;
     }
+    S.dir8 = go ? d8(go[0], go[1]) : d8(dx, dy); S.dir8At = S.dir;
     if (!go) return false;
     S.push = null;
     const nx = S.x + go[0], ny = S.y + go[1];
