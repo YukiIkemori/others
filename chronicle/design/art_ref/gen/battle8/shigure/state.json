@@ -222,7 +222,20 @@
    "W": 174,
    "H": 112
   },
-  "from_raw": "raw/attack_a1.png"
+  "from_raw": "raw/attack_a1.png",
+  "smooth": [
+   {
+    "slot": 5,
+    "box": [
+     8,
+     72,
+     45,
+     80
+    ],
+    "axis": "h",
+    "r": 4
+   }
+  ]
  },
  "victory": {
   "attempts": [
