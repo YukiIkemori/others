@@ -44,6 +44,37 @@
   }
   cast._rigFace = rigFace;
 
+  /** 歩きの原画（正面の立ち）の胸から上 → 顔のシート（表情は 1 つを全部に）。読み込み中は null、作れなければ undefined */
+  function fieldFace(look) {
+    const sh = cast.sprites.field(look, {});
+    if (sh === null) return null;
+    if (!sh || !sh.frames) return undefined;
+    const P = sh.poses.stand_s || sh.poses.idle_s || [0];
+    const fr = sh.frames[P[0]];
+    if (!fr || !fr.c) return undefined;
+    const src = fr.c;
+    let b = { x: 0, y: 0, w: src.width, h: src.height };
+    try {
+      const d = src.getContext('2d').getImageData(0, 0, src.width, src.height).data;
+      let x0 = src.width, y0 = src.height, x1 = -1, y1 = -1;
+      for (let y = 0; y < src.height; y++) for (let x = 0; x < src.width; x++) if (d[(y * src.width + x) * 4 + 3] > 24) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+      if (x1 >= x0) b = { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 };
+    } catch (e) { /* 全体 */ }
+    // 2.5〜3 頭身: 上から 52% が頭と肩
+    const ch = Math.max(8, Math.round(b.h * 0.52)), cw = Math.max(ch, b.w);
+    const cx = b.x + b.w / 2;
+    const sc = Math.max(2, Math.round(84 / ch));
+    const c = R.Hd.RZ.canvas(Math.round(cw * sc), Math.round(ch * sc)), x = c.getContext('2d');
+    x.imageSmoothingEnabled = false;
+    x.drawImage(src, Math.round(cx - cw / 2), b.y, cw, ch, 0, 0, c.width, c.height);
+    const frames = [{ c, ox: c.width >> 1, oy: c.height - 1, id: 'face_neutral' }];
+    const poses = {};
+    EXPRS.forEach((e) => { poses[e] = [0]; });
+    if (R.Hd && R.Hd.track) R.Hd.track('sprite', 'cast:fieldface:' + look, c.width * c.height * 4);
+    return { frames, poses, fps: {}, anchors: { feet: [0, 0] }, w: c.width, h: c.height, meta: { look, source: 'sprite', from: 'field', pixel: true } };
+  }
+  cast._fieldFace = fieldFace;
+
   R.onData(function () {
     if (!R.Hd || !R.Hd.def) return;
     for (const look of Object.keys(R.DB.looks || {})) {
@@ -54,6 +85,11 @@
         const sp = cast.sprites.face(look);
         if (sp === null) return null;
         if (sp) return sp;
+        // 顔の原画は無いが歩きの原画はある人（タデオ・イェナ・ハンス…）: 古い仮の顔ではなく、歩きの原画の胸から上を拡大して顔にする
+        if (cast.sprites.has(look, 'field')) {
+          const fs = fieldFace(look);
+          if (fs !== undefined) return fs;
+        }
         return rigFace(look);
       }, { kind: 'face', look });
     }
