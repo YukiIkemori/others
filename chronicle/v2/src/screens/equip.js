@@ -58,8 +58,8 @@
   /** 候補の強さ（最強装備の点 R.Rules.loadoutScore ＋ 能力値・最大 HP/MP・回避など）。高いほど上に並べる */
   S.equipScore = function (c, slot, id) {
     const rows = S.statDiff(c, slot, id, { all: true }), g = (k) => { const r = rows.find((x) => x.k === k); return r ? r.after : 0; };
-    const after = { atk: g('atk'), mag: g('mag'), def: g('def'), mdef: g('mdef') };
-    const base = R.Rules.loadoutScore ? R.Rules.loadoutScore(after, magicUser(c) ? 'magic' : 'phys') : after.atk + after.def;
+    const after = { atk: g('atk'), mag: g('mag'), def: g('def'), mdef: g('mdef'), mods: candMods(c, slot, id) };
+    const base = R.Rules.loadoutScore ? R.Rules.loadoutScore(after, loadoutMode(c), R.Rules.spellLean ? R.Rules.spellLean(c) : null) : after.atk + after.def;
     return base + ABIL.reduce((s, k) => s + g(k) * 1.5, 0) + g('eva') * 0.3 + g('hit') * 0.1 + g('crit') * 0.2 + (g('hp') + g('mp')) * 0.05;
   };
   /** いちばん大きな増減 1 つ（ほかの仲間・店の行） */
@@ -119,6 +119,16 @@
     return count;
   };
   function magicUser(c) { const st = S.stats(c); return (st.int || 0) > (st.str || 0); }
+  /** おまかせ装備の向き（R.Rules.loadoutMode: 回復役・術師は magic。無ければ int と str で） */
+  function loadoutMode(c) { return R.Rules.loadoutMode ? R.Rules.loadoutMode(c) : magicUser(c) ? 'magic' : 'phys'; }
+  /** slot に id を付けたときの mods（候補の並びでも magicPct・healPct を量る。c は変えない） */
+  function candMods(c, slot, id) {
+    if (!R.Rules.mods) return null;
+    try {
+      const sl = R.Rules.charSlot ? R.Rules.charSlot(slot, c, id) : slot;
+      return R.Rules.mods(Object.assign({}, c, { equip: Object.assign({}, c.equip, { [sl]: id || null }) }));
+    } catch (e) { return null; }
+  }
   const score = (c, slot, id) => S.equipScore(c, slot, id);
 
   S.def('equip', {
@@ -172,7 +182,7 @@
     },
     async best() {
       const c = this.char();
-      const plan = R.Rules.optimize(c, magicUser(c) ? 'magic' : 'phys');
+      const plan = R.Rules.optimize(c, loadoutMode(c));
       if (!plan.changes.length) { await S.note(this, { title: 'いちばん強く', lines: ['いまの装備が、いちばん強い。'] }); return; }
       const N = R.Rules.SLOT_NAMES || {};
       const lines = plan.changes.map((ch) => ({ text: `${N[ch.slot] || ch.slot}：${ch.from ? S.item(ch.from).name : 'なし'} → ${ch.to ? S.item(ch.to).name : 'なし'}`, icon: S.iconOf(S.item(ch.to || ch.from)) }));

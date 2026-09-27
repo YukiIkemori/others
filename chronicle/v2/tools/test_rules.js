@@ -518,4 +518,42 @@ section('normal shop weapons: no two lines alike (staff lines split by role)');
   ok('prayer staff: lower mag, same HEALF (heal uses 精神, then × (1 + healPct))', Ru.stats(b).mag < Ru.stats(a).mag && near(Ru.stats(a).healF, Ru.stats(b).healF));
 }
 
+section('auto-equip weighs weapon mods (おまかせ装備で回復役は祈りの杖)');
+{
+  // 持ち主 2026-09-27「おまかせ装備で回復役は祈りの杖」: 杖の 2 系列を分けたあと、最強装備（Rules.optimize）は能力値だけ見ていたので、
+  // magic では術力の高い見習いの杖の系列（magicPct +10）をいつも選んでいた。回復役は祈りの杖（healPct +20、術力 × 0.9）を選ぶ。
+  // spellLean（役目 → 覚えた術の割合）で magicPct・healPct を術力に換えて足す。phys の点は前と同じ。
+  R.State.newGame({ hero: { type: 'warrior', sex: 'm', name: 'アルン', fav: 'sword' }, seed: 21 });
+  const bag = () => ({ w_staff_5: 1, w_staff_prayer_5: 1 });
+  const mk = (id, weapon) => { const c = R.Party.makeChar(id, { tier: 5, gl: 10 }); c.equip.weapon1 = weapon || 'w_staff_novice'; return c; };
+  const pick = (c, mode) => Ru.optimize(c, mode || Ru.loadoutMode(c), { inv: bag() }).equip.weapon1;
+
+  // 役目・術の向き
+  ok('spellLean: healer role → heal only (おまかせ装備で回復役は祈りの杖)', JSON.stringify(Ru.spellLean(mk('marta'))) === '{"heal":1,"attack":0}' && JSON.stringify(Ru.spellLean(mk('noela'))) === '{"heal":1,"attack":0}');
+  ok('spellLean: caster role → attack only', JSON.stringify(Ru.spellLean(mk('teo'))) === '{"heal":0,"attack":1}');
+  ok('loadoutMode: healers and casters use magic (ノエラは腕力 15 > 術 14 でも magic)', ['marta', 'noela', 'teo', 'ilse'].every((id) => Ru.loadoutMode(mk(id)) === 'magic') && Ru.loadoutMode(R.Game.chars.hero) === 'phys');
+
+  // おまかせ装備で回復役は祈りの杖
+  ok('マルタ（回復役）: おまかせ装備で回復役は祈りの杖', pick(mk('marta')) === 'w_staff_prayer_5', pick(mk('marta')));
+  ok('ノエラ（回復役、攻めの術もひとつ）: おまかせ装備で回復役は祈りの杖', pick(mk('noela')) === 'w_staff_prayer_5', pick(mk('noela')));
+  ok('回復役は祈りの杖を持っていたら替えない（おまかせ装備で回復役は祈りの杖）', pick(mk('marta', 'w_staff_prayer_5')) === 'w_staff_prayer_5');
+  // 攻めの術師は見習いの杖の系列
+  ok('テオ（術師）: attack staff, even from a prayer staff', pick(mk('teo', 'w_staff_prayer_0')) === 'w_staff_5' && pick(mk('ilse')) === 'w_staff_5');
+
+  // 主人公（役目なし）: 覚えた術の割合で決まる
+  const hero = (spells) => { const h = R.Game.chars.hero; const c = Object.assign({}, h, { spells, equip: Object.assign({}, h.equip, { weapon1: 'w_staff_novice', shield: null }) }); return c; };
+  const healer = hero(['s_light_1', 's_light_3', 's_water_light_b', 's_fire_1']), mage = hero(['s_fire_1', 's_wind_1', 's_light_1']);
+  ok('hero spellLean from spells: 3 heals + 1 attack → heal 0.75', near(Ru.spellLean(healer).heal, 0.75) && near(Ru.spellLean(healer).attack, 0.25), Ru.spellLean(healer));
+  ok('hero whose spells are mostly heals → magic mode, おまかせ装備で回復役は祈りの杖', Ru.loadoutMode(healer) === 'magic' && pick(healer, 'magic') === 'w_staff_prayer_5', pick(healer, 'magic'));
+  ok('hero whose spells are mostly attacks → attack staff (magic)', pick(mage, 'magic') === 'w_staff_5', pick(mage, 'magic'));
+  ok('cure spells count as heal; no spells → no lean', JSON.stringify(Ru.spellLean(hero(['s_water_2']))) === '{"heal":1,"attack":0}' && JSON.stringify(Ru.spellLean(hero([]))) === '{"heal":0,"attack":0}');
+
+  // 点: phys は mods を数えない。lean が無ければ前と同じ。決まった結果
+  const m = mk('marta'), st = Ru.stats(m);
+  ok('loadoutScore: phys ignores lean, no lean = old score', Ru.loadoutScore(st, 'phys', { heal: 1, attack: 1 }) === Ru.loadoutScore(st, 'phys') &&
+    Ru.loadoutScore(st, 'magic') === st.mag + 0.6 * st.mdef + 0.3 * st.def);
+  ok('loadoutScore: magic adds mag × magicPct for an attack lean (w_staff_novice +10%)', near(Ru.loadoutScore(st, 'magic', { heal: 0, attack: 1 }) - Ru.loadoutScore(st, 'magic'), st.mag * 0.1));
+  ok('optimize is deterministic', JSON.stringify(Ru.optimize(mk('noela'), 'magic', { inv: bag() })) === JSON.stringify(Ru.optimize(mk('noela'), 'magic', { inv: bag() })));
+}
+
 done('test_rules');

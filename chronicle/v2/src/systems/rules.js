@@ -760,12 +760,48 @@
       return Rules.diffStats(before, Rules.stats(v));
     },
     previewStats(c, slot, itemId) { return Rules.preview(c, slot, itemId); },
-    /** 最強装備の点（§4.4.1）: phys | magic | balance */
-    loadoutScore(s, mode) {
+    /**
+     * 術の向き（おまかせ装備が武器・防具の mods を量るため）→ {heal, attack}（0〜1）。
+     * 仲間の役目が先: healer = 回復だけ {1, 0}、caster = 攻めだけ {0, 1}。ほかの人（主人公も）は覚えた術の割合:
+     * 味方に効く回復・蘇生・状態回復の術 = heal、ダメージの術 = attack（補助だけの術は数えない）。術が無ければ {0, 0}
+     */
+    spellLean(c) {
+      const src = c && c.id !== 'hero' ? Rules.source(c) : null;
+      const role = src && src.role;
+      if (role === 'healer') return { heal: 1, attack: 0 };
+      if (role === 'caster') return { heal: 0, attack: 1 };
+      let h = 0, a = 0;
+      for (const id of (c && c.spells) || []) {
+        const d = DB.spells && DB.spells[id];
+        if (!d) continue;
+        const ef = d.effects || [];
+        if (ef.some((e) => e.type === 'damage')) a++;
+        else if (/^(ally|allies|ally_dead|party)$/.test(d.target || '') && ef.some((e) => e.type === 'heal' || e.type === 'revive' || e.type === 'cure')) h++;
+      }
+      const n = h + a;
+      return n ? { heal: h / n, attack: a / n } : { heal: 0, attack: 0 };
+    },
+    /** おまかせ装備の向き: 役目が healer・caster か、回復の術が半分より多い → magic。ほかは 術力の能力（int）が腕力より上なら magic */
+    loadoutMode(c) {
+      const src = c && c.id !== 'hero' ? Rules.source(c) : null;
+      if (src && (src.role === 'healer' || src.role === 'caster')) return 'magic';
+      if (Rules.spellLean(c).heal > 0.5) return 'magic';
+      const fs = Rules.finalStats(c);
+      return fs.int > fs.str ? 'magic' : 'phys';
+    },
+    /**
+     * 最強装備の点（§4.4.1）: phys | magic | balance。
+     * lean（Rules.spellLean）と s.mods があれば術の mods も量る（術力に換えて）: 術力 × (attack × magicPct + heal × healPct) / 100。
+     * magic は ×1、balance は ×0.5、phys は数えない（戦士の点は前と同じ）。
+     * 回復は術力を使わないが、同じ物差しに乗せるため術力を単位にする（祈りの杖: 術力 × 0.9 でも healPct +20 で 回復役には上）
+     */
+    loadoutScore(s, mode, lean) {
       const phys = statKey(s, 'atk') + 0.6 * s.def + 0.3 * s.mdef;
       const magic = s.mag + 0.6 * s.mdef + 0.3 * s.def;
-      if (mode === 'magic') return magic;
-      if (mode === 'balance') return (phys + magic) / 2;
+      const m = s.mods, w = mode === 'magic' ? 1 : mode === 'balance' ? 0.5 : 0;
+      const modV = lean && m && w ? w * (s.mag || 0) * ((lean.attack || 0) * (m.magicPct || 0) + (lean.heal || 0) * (m.healPct || 0)) / 100 : 0;
+      if (mode === 'magic') return magic + modV;
+      if (mode === 'balance') return (phys + magic) / 2 + modV;
       return phys;
     },
     /**
@@ -777,6 +813,7 @@
       mode = mode === 'magic' || mode === 'balance' ? mode : 'phys';
       const inv = Object.assign({}, (opts && opts.inv) || gameInv());
       const before = Rules.stats(c);
+      const lean = Rules.spellLean(c);
       const locked = {};
       for (const s of OPT_SLOTS) { const it = itemOf(c.equip[s]); if (it && it.quirk) locked[s] = true; }
       const v = virtualChar(c);
@@ -802,7 +839,7 @@
             const t = virtualChar(v);
             t.equip[s] = id;
             if (id && s === 'weapon1' && Rules.isTwoHanded(id)) t.equip.shield = null;
-            const sc = Rules.loadoutScore(Rules.stats(t), mode);
+            const sc = Rules.loadoutScore(Rules.stats(t), mode, lean);
             if (sc > bestScore + 1e-9 || (Math.abs(sc - bestScore) <= 1e-9 && better(itemOf(id), itemOf(best), id === cur, best === cur))) { best = id; bestScore = sc; }
           }
           if (best !== cur) {
@@ -817,7 +854,7 @@
       for (const s of OPT_SLOTS) equip[s] = v.equip[s] || null;
       const changes = [];
       for (const s of OPT_ORDER) if ((c.equip[s] || null) !== equip[s]) changes.push({ slot: s, from: c.equip[s] || null, to: equip[s] });
-      return { mode, equip, changes, diff: Rules.diffStats(before, Rules.stats(v)), score: round2(Rules.loadoutScore(Rules.stats(v), mode)) };
+      return { mode, equip, changes, diff: Rules.diffStats(before, Rules.stats(v)), score: round2(Rules.loadoutScore(Rules.stats(v), mode, lean)) };
     },
     /** Plan を当てる（R.Rules.equip を枠の順に）。途中で失敗したら全部戻す → {ok, removed, reason?} */
     applyLoadout(c, plan, opts) {
