@@ -116,10 +116,10 @@
 
     // 広場: 掲示板・行商・ベンチ・蛍の籠
     O.push(K.prop('board', 31, 26), K.exam(32, 26, 'fern_board'));
-    O.push(K.prop('stall', 37, 27), K.prop('crate', 39, 28), K.prop('sack', 39, 29));
+    O.push(K.prop('stall', 37, 27));
     O.push(K.prop('bench', 30, 32), K.prop('bench', 38, 32), K.prop('well', 31, 34));
     O.push(K.prop('songstone', 34, 30, { variant: 0 }), K.exam(35, 30, 'fern_monument'));            // 千年樹の歌の碑
-    O.push(K.prop('lantern', 32, 29), K.prop('lantern', 36, 31), K.prop('flower_pot', 29, 30), K.prop('planter', 37, 34), K.prop('bench', 34, 35), K.prop('crate', 38, 26));
+    O.push(K.prop('lantern', 32, 29), K.prop('lantern', 36, 31), K.prop('bench', 34, 35), K.prop('crate', 38, 26));   // 木箱は屋台の裏だけ
     O.push(K.sign(32, 36, '森の村フェルン\n――歌は森の道しるべ'));
     O.push(K.sign(23, 46, '↑ フェルン　↓ 森の道'));
     O.push(K.sign(31, 6, '↑ 迷いの森\n（捜索隊の許しなく入るべからず）'));
@@ -132,20 +132,17 @@
     // 薬草園（石の縁は下絵）のまわり
     O.push(K.prop('planter', 13, 48), K.prop('flower_pot', 13, 52), K.prop('sack', 3, 47));
     // 伐り跡の原: 切り株（痛みを書いたあと、苗が植わる）
-    for (const [x, y] of [[46, 46], [49, 45], [52, 46], [45, 49], [48, 49], [51, 49], [53, 48], [47, 51]]) O.push(K.prop('stump', x, y, { variant: (x + y) % 4 }));
+    for (const [x, y] of [[52, 46], [45, 49], [51, 49], [47, 51]]) O.push(K.prop('stump', x, y, { variant: (x + y) % 4 }));
     for (const [x, y] of [[47, 47], [50, 48], [46, 50], [52, 50], [49, 51]]) O.push(K.prop('bush', x, y, { cond: { choice: 'ch_forest_write', is: 'pain' }, variant: 1 }));
     O.push(K.exam(50, 47, 'fern_cutover'));
-    // 家まわりの小物（固めて置き、道の真ん中は空ける）
-    O.push(K.prop('barrel', 16, 36), K.prop('barrel', 17, 36), K.prop('crate', 10, 35), K.prop('log', 56, 16), K.prop('log', 56, 15), K.prop('stump', 49, 15));
-    O.push(K.prop('hay', 24, 32), K.prop('crate', 24, 31), K.prop('flower_pot', 4, 34), K.prop('sack', 15, 36), K.prop('barrel', 49, 27), K.prop('crate', 43, 27));
-    O.push(K.prop('flower_pot', 50, 9), K.prop('flower_pot', 56, 9), K.prop('planter', 13, 43), K.prop('barrel', 38, 40), K.prop('crate', 44, 40));
-    O.push(K.prop('log', 24, 40), K.prop('stump', 25, 41), K.prop('rock', 43, 51), K.prop('rock_small', 16, 51), K.prop('tent', 55, 23));
-    O.push(K.prop('barrel', 6, 19), K.prop('crate', 6, 18), K.prop('sack', 24, 6), K.prop('flower_pot', 31, 7), K.prop('crate', 19, 43), K.prop('barrel', 44, 23));
-    O.push(K.prop('hay', 37, 41), K.prop('crate', 49, 31), K.prop('barrel', 50, 31), K.prop('flower_pot', 11, 42), K.prop('sack', 19, 40), K.prop('log', 45, 36));
-    O.push(K.prop('flower_pot', 18, 34), K.prop('planter', 9, 34), K.prop('rock_small', 22, 25), K.prop('rock_small', 47, 31), K.prop('stump', 14, 48), K.prop('rock_small', 22, 48));
+    // 家まわりの小物: 壁・根・生け垣にぴったり寄せた数個だけ。道・広場・橋・戸口の前・門には置かない
+    //   （持ち主 2026-09-27「移動障害になるような小物は極力置かないで…ストレス過ぎる」。町の小物は当たらないが、見た目も道を空ける）
+    O.push(K.prop('log', 56, 15), K.prop('crate', 24, 31), K.prop('barrel', 44, 23), K.prop('crate', 44, 40), K.prop('log', 45, 36));
+    O.push(K.prop('flower_pot', 56, 9), K.prop('flower_pot', 31, 7), K.prop('flower_pot', 11, 42), K.prop('planter', 13, 43), K.prop('sack', 19, 40));
+    O.push(K.prop('rock', 43, 51), K.prop('tent', 55, 23));
     // 蛍と、地面の小さな飾り
     for (const [x, y] of [[14, 19], [40, 19], [27, 31], [21, 37], [48, 33], [48, 42], [8, 47], [37, 49], [22, 50], [53, 23], [17, 13], [46, 7], [3, 21], [54, 27]]) O.push(K.prop('firefly', x, y));
-    for (const [x, y] of [[20, 24], [33, 24], [41, 23], [12, 17], [52, 23], [11, 40], [18, 49], [25, 37], [42, 43], [55, 36], [37, 38], [29, 24], [40, 23]]) O.push(K.prop('rock_small', x, y, { variant: (x + y) % 4 }));
+    for (const [x, y] of [[33, 24], [41, 23], [11, 40], [18, 49], [55, 36], [29, 24]]) O.push(K.prop('rock_small', x, y, { variant: (x + y) % 4 }));
 
     // ---------------------------------------------------------------- 人
     const L = K.L;
