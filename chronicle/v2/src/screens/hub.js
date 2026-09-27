@@ -9,16 +9,16 @@
   const u = (v) => R.UIK.u(v);
   const T = () => R.UIK.T;
 
+  // 並び（持ち主の決まり 2026-09-27）: 道具・装備・技・術・隊列・ワープ（脱出）・図鑑・年代記・手がかり・設定・セーブ。地図はフィールドの X で開く
   const CMDS = [
     { value: 'items', label: '道具', icon: 'bag', desc: '薬や大事な物を見る。使う。' },
-    { value: 'skills', label: '技・術', icon: 'arts', desc: '覚えた技と術を見る。フィールドで使える術を唱える。' },
     { value: 'equip', label: '装備', icon: 'equip', desc: '武器・防具・アクセサリを付け替える。' },
-    { value: 'order', label: '並びと隊列', short: '並びと隊列', icon: 'order', desc: '並びと、前列・後列を決める。' },
+    { value: 'skills', label: '技・術', icon: 'arts', desc: '覚えた技と術を見る。フィールドで使える術を唱える。' },
+    { value: 'order', label: '隊列', short: '隊列', icon: 'order', desc: '並びと、前列・後列を決める。' },
     { value: 'bestiary', label: '図鑑', icon: 'beast', desc: '出会った魔物と、手に入れた品を見る。' },
     { value: 'chronicle', label: '年代記・手がかり', short: '年代記', icon: 'journal', desc: '旅の年代記と、手がかり帳を読む。' },
-    { value: 'map', label: '地図', icon: 'map', desc: '世界の地図を見る。' },
-    { value: 'save', label: 'セーブ', icon: 'save', desc: '旅を記録する。中断もここから。' },
     { value: 'settings', label: '設定', icon: 'gear', desc: '文字・画面・音・操作を変える。' },
+    { value: 'save', label: 'セーブ', icon: 'save', desc: '旅を記録する。中断もここから。' },
   ];
   const WARP = { value: 'warp', label: 'ワープ', icon: 'warp', desc: '行ったことのある町やダンジョンの入口へ飛ぶ。' };
   const ESCAPE = { value: 'escape', label: '脱出', icon: 'exit', desc: 'このダンジョンの入口へ戻る。' };
@@ -29,8 +29,12 @@
     const map = R.Field && R.Field.pos && R.DB.maps[R.Field.pos.map];
     let warps = [];
     try { warps = R.Field.warpList ? R.Field.warpList() : []; } catch (e) { warps = []; }
-    if (warps.length && G.flags && G.flags.prologue_done) rows.push(Object.assign({}, WARP));   // 序章の間はワープを出さない
-    if (map && map.kind === 'dungeon') rows.push(Object.assign({}, ESCAPE));
+    // ワープ・脱出は隊列の次（図鑑の前）に入れる
+    const at = rows.findIndex((r) => r.value === 'bestiary');
+    const extra = [];
+    if (warps.length && G.flags && G.flags.prologue_done) extra.push(Object.assign({}, WARP));   // 序章の間はワープを出さない
+    if (map && map.kind === 'dungeon') extra.push(Object.assign({}, ESCAPE));
+    rows.splice(at < 0 ? rows.length : at, 0, ...extra);
     return rows;
   }
 
