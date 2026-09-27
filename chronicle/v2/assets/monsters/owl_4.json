@@ -1,0 +1,50 @@
+{
+ "sprite": "owl_4",
+ "id": "owl_4",
+ "name": "賢者フクロウ",
+ "sheet": 19,
+ "cell": 4,
+ "size": "M",
+ "kind": "mob",
+ "fly": true,
+ "w": 89,
+ "h": 67,
+ "anchor": [
+  40,
+  85
+ ],
+ "points": {
+  "head": [
+   81,
+   26
+  ],
+  "center": [
+   41,
+   33
+  ],
+  "fx": [
+   53,
+   31
+  ],
+  "top": [
+   48,
+   2
+  ],
+  "body": [
+   41,
+   33,
+   30,
+   23
+  ]
+ },
+ "facing": "right",
+ "long": 89,
+ "core_long": 84.0,
+ "target": {
+  "w": 84,
+  "h": 59,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 7.893
+}

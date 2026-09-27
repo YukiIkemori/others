@@ -1,0 +1,50 @@
+{
+ "sprite": "boss_tentacle",
+ "id": "b_tentacle",
+ "name": "大ダコの足",
+ "sheet": 34,
+ "cell": 2,
+ "size": "L",
+ "kind": "add",
+ "fly": false,
+ "w": 62,
+ "h": 112,
+ "anchor": [
+  24,
+  111
+ ],
+ "points": {
+  "head": [
+   35,
+   32
+  ],
+  "center": [
+   36,
+   67
+  ],
+  "fx": [
+   36,
+   56
+  ],
+  "top": [
+   33,
+   19
+  ],
+  "body": [
+   36,
+   67,
+   10,
+   39
+  ]
+ },
+ "facing": "right",
+ "long": 112,
+ "core_long": 110.0,
+ "target": {
+  "w": 83,
+  "h": 110,
+  "long": 110
+ },
+ "colors": 48,
+ "pitch": 6.391
+}

@@ -1,0 +1,78 @@
+{
+ "sprite": "spider_1",
+ "id": "spider_1",
+ "name": "糸吐きグモ",
+ "sheet": 27,
+ "cell": 1,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 110,
+ "h": 77,
+ "anchor": [
+  60,
+  76
+ ],
+ "points": {
+  "head": [
+   80,
+   33
+  ],
+  "center": [
+   45,
+   30
+  ],
+  "fx": [
+   55,
+   31
+  ],
+  "top": [
+   42,
+   0
+  ],
+  "body": [
+   45,
+   30,
+   29,
+   21
+  ]
+ },
+ "facing": "right",
+ "long": 110,
+ "core_long": 78.5,
+ "target": {
+  "w": 80,
+  "h": 56,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 5.668,
+ "alsoMakes": [
+  "spider_2",
+  "spider_3"
+ ],
+ "variants": {
+  "spider_2": {
+   "recolor": {
+    "hue": 250,
+    "sat": 1.1
+   },
+   "addons": [
+    "spots"
+   ],
+   "filter": null,
+   "name": "毒グモ"
+  },
+  "spider_3": {
+   "recolor": {
+    "sat": 0.3,
+    "bri": 0.4
+   },
+   "addons": [
+    "eyes_glow"
+   ],
+   "filter": null,
+   "name": "影グモ"
+  }
+ }
+}

@@ -1,0 +1,44 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s21_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 35
+  }
+ ],
+ "use": "mon_s21_a1.png",
+ "norm": {
+  "mammoth_1": {
+   "pitch": 6.782,
+   "how": "core 746x489 px -> 110 art px",
+   "core_long": 110.0,
+   "raw_box": [
+    18,
+    312,
+    764,
+    810
+   ],
+   "strays_removed": 1,
+   "colors": 48,
+   "long": 107
+  },
+  "mammoth_3": {
+   "pitch": 6.308,
+   "how": "core 757x557 px -> 120 art px",
+   "core_long": 120.0,
+   "raw_box": [
+    772,
+    240,
+    1529,
+    809
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 121
+  }
+ },
+ "notes": [
+  "mammoth_1: removed 1 stray pixel group(s)"
+ ]
+}

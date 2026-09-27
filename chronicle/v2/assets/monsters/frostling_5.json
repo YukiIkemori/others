@@ -1,0 +1,50 @@
+{
+ "sprite": "frostling_5",
+ "id": "frostling_5",
+ "name": "冬将軍",
+ "sheet": 19,
+ "cell": 2,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 86,
+ "h": 66,
+ "anchor": [
+  26,
+  65
+ ],
+ "points": {
+  "head": [
+   45,
+   10
+  ],
+  "center": [
+   31,
+   40
+  ],
+  "fx": [
+   35,
+   31
+  ],
+  "top": [
+   41,
+   4
+  ],
+  "body": [
+   31,
+   40,
+   22,
+   23
+  ]
+ },
+ "facing": "right",
+ "long": 86,
+ "core_long": 84.0,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 8.667
+}

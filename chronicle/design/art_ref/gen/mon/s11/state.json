@@ -1,0 +1,75 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s11_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 51
+  }
+ ],
+ "use": "mon_s11_a1.png",
+ "norm": {
+  "paper_2": {
+   "pitch": 7.643,
+   "how": "core 642x321 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    38,
+    262,
+    739,
+    629
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 92
+  },
+  "paper_3": {
+   "pitch": 7.0,
+   "how": "core 588x518 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    859,
+    88,
+    1498,
+    632
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 92
+  },
+  "crab_4": {
+   "pitch": 8.048,
+   "how": "core 676x495 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    43,
+    906,
+    754,
+    1406
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 89
+  },
+  "wolf_5": {
+   "pitch": 6.845,
+   "how": "core 575x573 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    807,
+    809,
+    1411,
+    1406
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 89
+  }
+ },
+ "notes": [
+  "paper_2: long side 92 outside the tier [72, 84]",
+  "paper_3: long side 92 outside the tier [72, 84]",
+  "crab_4: long side 89 outside the tier [72, 84]",
+  "wolf_5: long side 89 outside the tier [72, 84]"
+ ]
+}

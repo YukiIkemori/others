@@ -1,0 +1,42 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s20_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 38
+  }
+ ],
+ "use": "mon_s20_a1.png",
+ "norm": {
+  "yeti_1": {
+   "pitch": 6.064,
+   "how": "core 638x667 px -> 110 art px",
+   "core_long": 110.0,
+   "raw_box": [
+    50,
+    204,
+    700,
+    882
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 112
+  },
+  "yeti_3": {
+   "pitch": 6.325,
+   "how": "core 720x759 px -> 120 art px",
+   "core_long": 120.0,
+   "raw_box": [
+    772,
+    114,
+    1494,
+    891
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 124
+  }
+ },
+ "notes": []
+}

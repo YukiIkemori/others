@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_hermit",
+ "id": "rm_treasure_crab",
+ "name": "財宝ヤドカリ",
+ "sheet": 27,
+ "cell": 4,
+ "size": "M",
+ "kind": "rare",
+ "fly": false,
+ "w": 86,
+ "h": 68,
+ "anchor": [
+  33,
+  67
+ ],
+ "points": {
+  "head": [
+   73,
+   39
+  ],
+  "center": [
+   33,
+   33
+  ],
+  "fx": [
+   45,
+   35
+  ],
+  "top": [
+   31,
+   1
+  ],
+  "body": [
+   33,
+   33,
+   26,
+   23
+  ]
+ },
+ "facing": "right",
+ "long": 86,
+ "core_long": 80.0,
+ "target": {
+  "w": 80,
+  "h": 56,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 8.062
+}

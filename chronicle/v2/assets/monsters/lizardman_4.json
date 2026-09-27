@@ -1,0 +1,50 @@
+{
+ "sprite": "lizardman_4",
+ "id": "lizardman_4",
+ "name": "トカゲの族長",
+ "sheet": 26,
+ "cell": 4,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 86,
+ "h": 79,
+ "anchor": [
+  32,
+  78
+ ],
+ "points": {
+  "head": [
+   44,
+   13
+  ],
+  "center": [
+   28,
+   36
+  ],
+  "fx": [
+   33,
+   29
+  ],
+  "top": [
+   34,
+   2
+  ],
+  "body": [
+   28,
+   36,
+   16,
+   27
+  ]
+ },
+ "facing": "right",
+ "long": 86,
+ "core_long": 84.0,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 8.536
+}

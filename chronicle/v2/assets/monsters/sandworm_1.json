@@ -1,0 +1,66 @@
+{
+ "sprite": "sandworm_1",
+ "id": "sandworm_1",
+ "name": "砂ミミズ",
+ "sheet": 16,
+ "cell": 1,
+ "size": "L",
+ "kind": "mob",
+ "fly": false,
+ "w": 77,
+ "h": 111,
+ "anchor": [
+  46,
+  110
+ ],
+ "points": {
+  "head": [
+   71,
+   18
+  ],
+  "center": [
+   38,
+   56
+  ],
+  "fx": [
+   48,
+   44
+  ],
+  "top": [
+   56,
+   2
+  ],
+  "body": [
+   38,
+   56,
+   28,
+   46
+  ]
+ },
+ "facing": "right",
+ "long": 111,
+ "core_long": 110.0,
+ "target": {
+  "w": 83,
+  "h": 110,
+  "long": 110
+ },
+ "colors": 48,
+ "pitch": 6.827,
+ "alsoMakes": [
+  "sandworm_2"
+ ],
+ "variants": {
+  "sandworm_2": {
+   "recolor": {
+    "sat": 0.3,
+    "bri": 0.85
+   },
+   "addons": [
+    "armor_plates"
+   ],
+   "filter": null,
+   "name": "岩ミミズ"
+  }
+ }
+}

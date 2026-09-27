@@ -1,0 +1,50 @@
+{
+ "sprite": "merman_4",
+ "id": "merman_4",
+ "name": "魚人の騎士",
+ "sheet": 32,
+ "cell": 2,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 92,
+ "h": 88,
+ "anchor": [
+  32,
+  87
+ ],
+ "points": {
+  "head": [
+   48,
+   15
+  ],
+  "center": [
+   27,
+   41
+  ],
+  "fx": [
+   34,
+   33
+  ],
+  "top": [
+   40,
+   7
+  ],
+  "body": [
+   27,
+   41,
+   20,
+   25
+  ]
+ },
+ "facing": "right",
+ "long": 92,
+ "core_long": 84.0,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 7.155
+}

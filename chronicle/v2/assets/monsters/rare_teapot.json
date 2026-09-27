@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_teapot",
+ "id": "rm_ghost_teapot",
+ "name": "おばけ茶器",
+ "sheet": 24,
+ "cell": 3,
+ "size": "S",
+ "kind": "rare",
+ "fly": false,
+ "w": 53,
+ "h": 45,
+ "anchor": [
+  28,
+  44
+ ],
+ "points": {
+  "head": [
+   32,
+   12
+  ],
+  "center": [
+   24,
+   27
+  ],
+  "fx": [
+   26,
+   22
+  ],
+  "top": [
+   27,
+   5
+  ],
+  "body": [
+   24,
+   27,
+   14,
+   15
+  ]
+ },
+ "facing": "right",
+ "long": 53,
+ "core_long": 52.0,
+ "target": {
+  "w": 39,
+  "h": 52,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 13.558
+}

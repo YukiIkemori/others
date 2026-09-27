@@ -1,0 +1,42 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s16_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 39
+  }
+ ],
+ "use": "mon_s16_a1.png",
+ "norm": {
+  "sandworm_1": {
+   "pitch": 6.827,
+   "how": "core 512x751 px -> 110 art px",
+   "core_long": 110.0,
+   "raw_box": [
+    103,
+    178,
+    623,
+    930
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 111
+  },
+  "sandworm_3": {
+   "pitch": 6.792,
+   "how": "core 663x815 px -> 120 art px",
+   "core_long": 120.0,
+   "raw_box": [
+    805,
+    95,
+    1473,
+    930
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 123
+  }
+ },
+ "notes": []
+}

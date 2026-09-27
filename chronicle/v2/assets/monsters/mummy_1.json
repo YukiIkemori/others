@@ -1,0 +1,94 @@
+{
+ "sprite": "mummy_1",
+ "id": "mummy_1",
+ "name": "ミイラ兵",
+ "sheet": 14,
+ "cell": 1,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 76,
+ "h": 81,
+ "anchor": [
+  24,
+  80
+ ],
+ "points": {
+  "head": [
+   47,
+   6
+  ],
+  "center": [
+   25,
+   34
+  ],
+  "fx": [
+   31,
+   26
+  ],
+  "top": [
+   45,
+   1
+  ],
+  "body": [
+   25,
+   34,
+   18,
+   31
+  ]
+ },
+ "facing": "right",
+ "long": 81,
+ "core_long": 80.0,
+ "target": {
+  "w": 60,
+  "h": 80,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 7.012,
+ "alsoMakes": [
+  "mummy_2",
+  "mummy_3",
+  "mummy_4"
+ ],
+ "variants": {
+  "mummy_2": {
+   "recolor": {
+    "hue": 250,
+    "sat": 0.4,
+    "bri": 0.9
+   },
+   "addons": [
+    "eyes_glow"
+   ],
+   "filter": null,
+   "name": "呪いミイラ"
+  },
+  "mummy_3": {
+   "recolor": {
+    "hue": 20,
+    "sat": 0.5
+   },
+   "addons": [
+    "hood",
+    "staff"
+   ],
+   "filter": null,
+   "name": "ミイラ神官"
+  },
+  "mummy_4": {
+   "recolor": {
+    "hue": 10,
+    "sat": 0.6
+   },
+   "addons": [
+    "helm",
+    "sword",
+    "shield"
+   ],
+   "filter": null,
+   "name": "ミイラ将軍"
+  }
+ }
+}

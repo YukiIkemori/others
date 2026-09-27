@@ -1,0 +1,74 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s27_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 48
+  }
+ ],
+ "use": "mon_s27_a1.png",
+ "norm": {
+  "spider_1": {
+   "pitch": 5.668,
+   "how": "core 445x328 px -> 80 art px, capped",
+   "core_long": 78.5,
+   "raw_box": [
+    61,
+    200,
+    680,
+    627
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 110
+  },
+  "spider_4": {
+   "pitch": 6.619,
+   "how": "core 556x393 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    816,
+    142,
+    1481,
+    633
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 102
+  },
+  "rare_bellsnail": {
+   "pitch": 7.088,
+   "how": "core 567x458 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    48,
+    906,
+    678,
+    1364
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 90
+  },
+  "rare_hermit": {
+   "pitch": 8.062,
+   "how": "core 645x527 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    816,
+    837,
+    1503,
+    1383
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 86
+  }
+ },
+ "notes": [
+  "spider_1: long side 110 outside the tier [72, 84]",
+  "spider_4: long side 102 outside the tier [72, 84]",
+  "rare_bellsnail: long side 90 outside the tier [72, 84]"
+ ]
+}

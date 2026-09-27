@@ -1,0 +1,42 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s35_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 38
+  }
+ ],
+ "use": "mon_s35_a1.png",
+ "norm": {
+  "rare_whale": {
+   "pitch": 6.427,
+   "how": "core 707x332 px -> 110 art px",
+   "core_long": 110.0,
+   "raw_box": [
+    38,
+    355,
+    760,
+    709
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 113
+  },
+  "wyvern_1": {
+   "pitch": 6.073,
+   "how": "core 668x577 px -> 110 art px",
+   "core_long": 110.0,
+   "raw_box": [
+    772,
+    175,
+    1511,
+    787
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 122
+  }
+ },
+ "notes": []
+}

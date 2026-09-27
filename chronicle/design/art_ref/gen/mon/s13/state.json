@@ -1,0 +1,73 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s13_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 50
+  }
+ ],
+ "use": "mon_s13_a1.png",
+ "norm": {
+  "scorpion_1": {
+   "pitch": 7.562,
+   "how": "core 605x546 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    20,
+    121,
+    727,
+    685
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 94
+  },
+  "scorpion_5": {
+   "pitch": 7.25,
+   "how": "core 609x560 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    787,
+    122,
+    1502,
+    690
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 99
+  },
+  "snake_1": {
+   "pitch": 7.288,
+   "how": "core 504x583 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    74,
+    818,
+    635,
+    1401
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 81
+  },
+  "snake_4": {
+   "pitch": 7.095,
+   "how": "core 586x596 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    807,
+    798,
+    1400,
+    1407
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 87
+  }
+ },
+ "notes": [
+  "scorpion_1: long side 94 outside the tier [72, 84]",
+  "scorpion_5: long side 99 outside the tier [72, 84]"
+ ]
+}

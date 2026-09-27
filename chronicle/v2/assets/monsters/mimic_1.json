@@ -1,0 +1,92 @@
+{
+ "sprite": "mimic_1",
+ "id": "mimic_1",
+ "name": "牙の宝箱",
+ "sheet": 38,
+ "cell": 4,
+ "size": "S",
+ "kind": "mob",
+ "fly": false,
+ "w": 64,
+ "h": 52,
+ "anchor": [
+  24,
+  51
+ ],
+ "points": {
+  "head": [
+   44,
+   7
+  ],
+  "center": [
+   24,
+   26
+  ],
+  "fx": [
+   30,
+   20
+  ],
+  "top": [
+   43,
+   2
+  ],
+  "body": [
+   24,
+   26,
+   20,
+   20
+  ]
+ },
+ "facing": "right",
+ "long": 64,
+ "core_long": 52.0,
+ "target": {
+  "w": 52,
+  "h": 36,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 9.212,
+ "alsoMakes": [
+  "mimic_2",
+  "mimic_3",
+  "mimic_4"
+ ],
+ "variants": {
+  "mimic_2": {
+   "recolor": {
+    "hue": 100,
+    "sat": 0.8
+   },
+   "addons": [
+    "drips"
+   ],
+   "filter": null,
+   "name": "毒牙の宝箱"
+  },
+  "mimic_3": {
+   "recolor": {
+    "hue": 240,
+    "sat": 0.7
+   },
+   "addons": [
+    "chain",
+    "eyes_glow"
+   ],
+   "filter": null,
+   "name": "呪いの宝箱"
+  },
+  "mimic_4": {
+   "recolor": {
+    "sat": 0.5,
+    "bri": 0.45
+   },
+   "addons": [
+    "crown",
+    "aura"
+   ],
+   "filter": null,
+   "name": "奈落の宝箱"
+  }
+ }
+}

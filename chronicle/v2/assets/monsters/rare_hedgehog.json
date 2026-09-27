@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_hedgehog",
+ "id": "rm_gem_hedgehog",
+ "name": "宝石ハリネズミ",
+ "sheet": 38,
+ "cell": 3,
+ "size": "S",
+ "kind": "rare",
+ "fly": false,
+ "w": 57,
+ "h": 42,
+ "anchor": [
+  26,
+  41
+ ],
+ "points": {
+  "head": [
+   41,
+   11
+  ],
+  "center": [
+   26,
+   23
+  ],
+  "fx": [
+   31,
+   19
+  ],
+  "top": [
+   30,
+   3
+  ],
+  "body": [
+   26,
+   23,
+   19,
+   14
+  ]
+ },
+ "facing": "right",
+ "long": 57,
+ "core_long": 52.0,
+ "target": {
+  "w": 52,
+  "h": 36,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 11.038
+}

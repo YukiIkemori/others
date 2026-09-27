@@ -1,0 +1,30 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s37_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 42
+  }
+ ],
+ "use": "mon_s37_a1.png",
+ "norm": {
+  "b_captain": {
+   "pitch": 6.115,
+   "how": "core 920x1223 px -> 200 art px",
+   "core_long": 200.0,
+   "raw_box": [
+    65,
+    134,
+    1005,
+    1426
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 212
+  }
+ },
+ "notes": [
+  "b_captain: dropped 2 stray part(s) (34,71 px)"
+ ]
+}

@@ -1,0 +1,68 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s23_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 38
+  }
+ ],
+ "use": "mon_s23_a1.png",
+ "norm": {
+  "boss_whitedragon": {
+   "pitch": 5.174,
+   "how": "core 1190x920 px -> 230 art px",
+   "core_long": 230.0,
+   "raw_box": [
+    118,
+    32,
+    1367,
+    973
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 242
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s23_tele_a1.png",
+   "prompt": "the wind-up pose: the white dragon rears its head and long neck up and back, mouth opening wide as if drawing a deep breath, wings spread fully open. No breath, no frost effects. Feet in the same place."
+  },
+  {
+   "pose": "p2",
+   "file": "mon_s23_p2_a1.png",
+   "prompt": "its second form: the deep-blue frozen heart in its chest is now cracked with bright white-blue cracks, the chest ice shattered around it, a few scales chipped off, the eyes sharper. Same size, same pose, same position."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s23_tele_a1.png",
+  "p2": "mon_s23_p2_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    -6,
+    -6
+   ],
+   "overlap": 20434,
+   "size": [
+    277,
+    186
+   ]
+  },
+  "p2": {
+   "offset": [
+    0,
+    0
+   ],
+   "overlap": 26325,
+   "size": [
+    242,
+    182
+   ]
+  }
+ }
+}

@@ -1,0 +1,50 @@
+{
+ "sprite": "mushroom_4",
+ "id": "mushroom_4",
+ "name": "長老ダケ",
+ "sheet": 10,
+ "cell": 3,
+ "size": "S",
+ "kind": "mob",
+ "fly": false,
+ "w": 57,
+ "h": 57,
+ "anchor": [
+  24,
+  56
+ ],
+ "points": {
+  "head": [
+   40,
+   11
+  ],
+  "center": [
+   23,
+   27
+  ],
+  "fx": [
+   28,
+   22
+  ],
+  "top": [
+   29,
+   1
+  ],
+  "body": [
+   23,
+   27,
+   14,
+   22
+  ]
+ },
+ "facing": "right",
+ "long": 57,
+ "core_long": 56.0,
+ "target": {
+  "w": 42,
+  "h": 56,
+  "long": 56
+ },
+ "colors": 32,
+ "pitch": 9.839
+}

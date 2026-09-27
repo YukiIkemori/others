@@ -1,0 +1,73 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s14_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 52
+  }
+ ],
+ "use": "mon_s14_a1.png",
+ "norm": {
+  "mummy_1": {
+   "pitch": 7.012,
+   "how": "core 519x561 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    191,
+    109,
+    763,
+    670
+   ],
+   "strays_removed": 1,
+   "colors": 48,
+   "long": 81
+  },
+  "mummy_5": {
+   "pitch": 7.405,
+   "how": "core 590x622 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    773,
+    52,
+    1370,
+    674
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 85
+  },
+  "cactus_1": {
+   "pitch": 7.5,
+   "how": "core 526x600 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    141,
+    798,
+    700,
+    1417
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 83
+  },
+  "cactus_4": {
+   "pitch": 7.81,
+   "how": "core 431x656 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    842,
+    773,
+    1319,
+    1429
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 85
+  }
+ },
+ "notes": [
+  "mummy_1: removed 1 stray pixel group(s)",
+  "mummy_5: dropped 1 stray part(s) (1411 px)"
+ ]
+}

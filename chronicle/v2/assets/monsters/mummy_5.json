@@ -1,0 +1,50 @@
+{
+ "sprite": "mummy_5",
+ "id": "mummy_5",
+ "name": "王家のミイラ",
+ "sheet": 14,
+ "cell": 2,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 82,
+ "h": 85,
+ "anchor": [
+  32,
+  84
+ ],
+ "points": {
+  "head": [
+   60,
+   19
+  ],
+  "center": [
+   38,
+   42
+  ],
+  "fx": [
+   44,
+   35
+  ],
+  "top": [
+   50,
+   1
+  ],
+  "body": [
+   38,
+   42,
+   22,
+   29
+  ]
+ },
+ "facing": "right",
+ "long": 85,
+ "core_long": 84.0,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 7.405
+}

@@ -1,0 +1,50 @@
+{
+ "sprite": "paper_4",
+ "id": "paper_4",
+ "name": "白紙の竜",
+ "sheet": 12,
+ "cell": 1,
+ "size": "L",
+ "kind": "mob",
+ "fly": true,
+ "w": 122,
+ "h": 123,
+ "anchor": [
+  61,
+  156
+ ],
+ "points": {
+  "head": [
+   110,
+   44
+  ],
+  "center": [
+   64,
+   53
+  ],
+  "fx": [
+   78,
+   50
+  ],
+  "top": [
+   47,
+   6
+  ],
+  "body": [
+   64,
+   53,
+   35,
+   36
+  ]
+ },
+ "facing": "right",
+ "long": 123,
+ "core_long": 120.0,
+ "target": {
+  "w": 120,
+  "h": 84,
+  "long": 120
+ },
+ "colors": 48,
+ "pitch": 5.975
+}

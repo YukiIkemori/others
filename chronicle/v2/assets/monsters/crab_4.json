@@ -1,0 +1,50 @@
+{
+ "sprite": "crab_4",
+ "id": "crab_4",
+ "name": "城ガニ",
+ "sheet": 11,
+ "cell": 3,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 89,
+ "h": 63,
+ "anchor": [
+  38,
+  62
+ ],
+ "points": {
+  "head": [
+   78,
+   33
+  ],
+  "center": [
+   38,
+   32
+  ],
+  "fx": [
+   50,
+   32
+  ],
+  "top": [
+   51,
+   2
+  ],
+  "body": [
+   38,
+   32,
+   28,
+   21
+  ]
+ },
+ "facing": "right",
+ "long": 89,
+ "core_long": 84.0,
+ "target": {
+  "w": 84,
+  "h": 59,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 8.048
+}

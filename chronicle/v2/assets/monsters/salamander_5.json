@@ -1,0 +1,50 @@
+{
+ "sprite": "salamander_5",
+ "id": "salamander_5",
+ "name": "炎帝トカゲ",
+ "sheet": 39,
+ "cell": 4,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 85,
+ "h": 51,
+ "anchor": [
+  38,
+  50
+ ],
+ "points": {
+  "head": [
+   71,
+   19
+  ],
+  "center": [
+   42,
+   27
+  ],
+  "fx": [
+   51,
+   25
+  ],
+  "top": [
+   45,
+   2
+  ],
+  "body": [
+   42,
+   27,
+   29,
+   18
+  ]
+ },
+ "facing": "right",
+ "long": 85,
+ "core_long": 84.0,
+ "target": {
+  "w": 84,
+  "h": 59,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 8.655
+}

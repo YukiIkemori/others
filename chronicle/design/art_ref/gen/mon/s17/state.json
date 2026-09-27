@@ -1,0 +1,68 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s17_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 43
+  }
+ ],
+ "use": "mon_s17_a1.png",
+ "norm": {
+  "b_sandworm": {
+   "pitch": 7.988,
+   "how": "core 869x1318 px -> 165 art px",
+   "core_long": 165.0,
+   "raw_box": [
+    99,
+    97,
+    984,
+    1421
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 166
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s17_tele_a1.png",
+   "prompt": "the wind-up pose: the worm coils its S-shaped body lower and pulls its head back to the left, the four petal jaws closed tight into a point, ready to strike. Lower end still cut flat."
+  },
+  {
+   "pose": "attack",
+   "file": "mon_s17_attack_a1.png",
+   "prompt": "the attack pose: the worm strikes forward to the right, its upper body stretched out toward the right, the four petal jaws spread wide open showing the ring of teeth and the red throat. Lower end still cut flat."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s17_tele_a1.png",
+  "attack": "mon_s17_attack_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    0,
+    17
+   ],
+   "overlap": 9794,
+   "size": [
+    106,
+    149
+   ]
+  },
+  "attack": {
+   "offset": [
+    2,
+    -8
+   ],
+   "overlap": 9752,
+   "size": [
+    113,
+    169
+   ]
+  }
+ }
+}

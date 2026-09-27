@@ -1,0 +1,50 @@
+{
+ "sprite": "paper_2",
+ "id": "paper_2",
+ "name": "白紙の獣",
+ "sheet": 11,
+ "cell": 1,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 92,
+ "h": 49,
+ "anchor": [
+  50,
+  48
+ ],
+ "points": {
+  "head": [
+   76,
+   11
+  ],
+  "center": [
+   47,
+   24
+  ],
+  "fx": [
+   55,
+   20
+  ],
+  "top": [
+   76,
+   7
+  ],
+  "body": [
+   47,
+   24,
+   31,
+   12
+  ]
+ },
+ "facing": "right",
+ "long": 92,
+ "core_long": 84.0,
+ "target": {
+  "w": 84,
+  "h": 59,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 7.643
+}

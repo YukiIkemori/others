@@ -1,0 +1,78 @@
+{
+ "sprite": "owl_1",
+ "id": "owl_1",
+ "name": "雪フクロウ",
+ "sheet": 19,
+ "cell": 3,
+ "size": "M",
+ "kind": "mob",
+ "fly": true,
+ "w": 83,
+ "h": 62,
+ "anchor": [
+  38,
+  78
+ ],
+ "points": {
+  "head": [
+   77,
+   19
+  ],
+  "center": [
+   38,
+   32
+  ],
+  "fx": [
+   50,
+   28
+  ],
+  "top": [
+   77,
+   16
+  ],
+  "body": [
+   38,
+   32,
+   30,
+   19
+  ]
+ },
+ "facing": "right",
+ "long": 83,
+ "core_long": 80.0,
+ "target": {
+  "w": 80,
+  "h": 56,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 8.725,
+ "alsoMakes": [
+  "owl_2",
+  "owl_3"
+ ],
+ "variants": {
+  "owl_2": {
+   "recolor": {
+    "hue": 30,
+    "sat": 0.7
+   },
+   "addons": [
+    "hat"
+   ],
+   "filter": null,
+   "name": "ねむりフクロウ"
+  },
+  "owl_3": {
+   "recolor": {
+    "hue": 270,
+    "sat": 1.1
+   },
+   "addons": [
+    "eyes_glow"
+   ],
+   "filter": null,
+   "name": "まどいフクロウ"
+  }
+ }
+}

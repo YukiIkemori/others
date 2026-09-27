@@ -1,0 +1,68 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s22_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 42
+  }
+ ],
+ "use": "mon_s22_a1.png",
+ "norm": {
+  "boss_frost_giant": {
+   "pitch": 7.329,
+   "how": "core 971x1246 px -> 170 art px",
+   "core_long": 170.0,
+   "raw_box": [
+    20,
+    135,
+    1012,
+    1387
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 171
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s22_tele_a1.png",
+   "prompt": "the wind-up pose: the ice giant lifts the ice-covered log club high over its head with both arms, the ice shield arm pulled back, leaning back. Same size and position, feet in the same place."
+  },
+  {
+   "pose": "attack",
+   "file": "mon_s22_attack_a1.png",
+   "prompt": "the attack pose: the ice giant swings the log club down and forward to the right, body leaning forward, the club low in front of it. Feet in the same place."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s22_tele_a1.png",
+  "attack": "mon_s22_attack_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    7,
+    -15
+   ],
+   "overlap": 12642,
+   "size": [
+    129,
+    188
+   ]
+  },
+  "attack": {
+   "offset": [
+    1,
+    6
+   ],
+   "overlap": 13488,
+   "size": [
+    136,
+    164
+   ]
+  }
+ }
+}

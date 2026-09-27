@@ -1,0 +1,50 @@
+{
+ "sprite": "fairy_4",
+ "id": "fairy_4",
+ "name": "妖精姫",
+ "sheet": 10,
+ "cell": 4,
+ "size": "S",
+ "kind": "mob",
+ "fly": true,
+ "w": 52,
+ "h": 66,
+ "anchor": [
+  23,
+  83
+ ],
+ "points": {
+  "head": [
+   47,
+   14
+  ],
+  "center": [
+   24,
+   29
+  ],
+  "fx": [
+   31,
+   24
+  ],
+  "top": [
+   38,
+   8
+  ],
+  "body": [
+   24,
+   29,
+   17,
+   21
+  ]
+ },
+ "facing": "right",
+ "long": 66,
+ "core_long": 56.0,
+ "target": {
+  "w": 42,
+  "h": 56,
+  "long": 56
+ },
+ "colors": 32,
+ "pitch": 9.446
+}

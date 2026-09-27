@@ -1,0 +1,90 @@
+{
+ "sprite": "frostling_1",
+ "id": "frostling_1",
+ "name": "こおり小僧",
+ "sheet": 19,
+ "cell": 1,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 77,
+ "h": 82,
+ "anchor": [
+  32,
+  81
+ ],
+ "points": {
+  "head": [
+   63,
+   27
+  ],
+  "center": [
+   36,
+   44
+  ],
+  "fx": [
+   44,
+   39
+  ],
+  "top": [
+   41,
+   2
+  ],
+  "body": [
+   36,
+   44,
+   24,
+   30
+  ]
+ },
+ "facing": "right",
+ "long": 82,
+ "core_long": 80.0,
+ "target": {
+  "w": 60,
+  "h": 80,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 6.312,
+ "alsoMakes": [
+  "frostling_2",
+  "frostling_3",
+  "frostling_4"
+ ],
+ "variants": {
+  "frostling_2": {
+   "recolor": {
+    "hue": 15
+   },
+   "addons": [
+    "crystals"
+   ],
+   "filter": null,
+   "name": "つらら小僧"
+  },
+  "frostling_3": {
+   "recolor": {
+    "sat": 0.4,
+    "bri": 1.2
+   },
+   "addons": [
+    "mist"
+   ],
+   "filter": null,
+   "name": "ふぶき小僧"
+  },
+  "frostling_4": {
+   "recolor": {
+    "hue": 20,
+    "sat": 1.1
+   },
+   "addons": [
+    "helm",
+    "sword"
+   ],
+   "filter": null,
+   "name": "雪の大将"
+  }
+ }
+}

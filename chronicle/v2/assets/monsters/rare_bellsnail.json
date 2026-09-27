@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_bellsnail",
+ "id": "rm_bell_snail",
+ "name": "鐘カタツムリ",
+ "sheet": 27,
+ "cell": 3,
+ "size": "M",
+ "kind": "rare",
+ "fly": false,
+ "w": 90,
+ "h": 65,
+ "anchor": [
+  38,
+  64
+ ],
+ "points": {
+  "head": [
+   75,
+   35
+  ],
+  "center": [
+   38,
+   38
+  ],
+  "fx": [
+   49,
+   37
+  ],
+  "top": [
+   43,
+   1
+  ],
+  "body": [
+   38,
+   38,
+   28,
+   24
+  ]
+ },
+ "facing": "right",
+ "long": 90,
+ "core_long": 80.0,
+ "target": {
+  "w": 80,
+  "h": 56,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 7.088
+}

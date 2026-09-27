@@ -1,0 +1,73 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s10_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 53
+  }
+ ],
+ "use": "mon_s10_a1.png",
+ "norm": {
+  "jelly_4": {
+   "pitch": 11.589,
+   "how": "core 649x493 px -> 56 art px",
+   "core_long": 56.0,
+   "raw_box": [
+    93,
+    147,
+    762,
+    681
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 58
+  },
+  "rat_4": {
+   "pitch": 11.607,
+   "how": "core 650x512 px -> 56 art px",
+   "core_long": 56.0,
+   "raw_box": [
+    814,
+    152,
+    1471,
+    682
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 57
+  },
+  "mushroom_4": {
+   "pitch": 9.839,
+   "how": "core 538x551 px -> 56 art px",
+   "core_long": 56.0,
+   "raw_box": [
+    131,
+    820,
+    675,
+    1371
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 57
+  },
+  "fairy_4": {
+   "pitch": 9.446,
+   "how": "core 449x529 px -> 56 art px",
+   "core_long": 56.0,
+   "raw_box": [
+    865,
+    773,
+    1346,
+    1394
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 66
+  }
+ },
+ "notes": [
+  "rat_4: dropped 5 stray part(s) (92,45,36,20,15 px)",
+  "fairy_4: long side 66 outside the tier [48, 56]"
+ ]
+}

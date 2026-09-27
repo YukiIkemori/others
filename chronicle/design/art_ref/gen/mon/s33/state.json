@@ -1,0 +1,73 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s33_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 52
+  }
+ ],
+ "use": "mon_s33_a1.png",
+ "norm": {
+  "skeleton_5": {
+   "pitch": 7.321,
+   "how": "core 565x615 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    66,
+    57,
+    751,
+    679
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 94
+  },
+  "mole_1": {
+   "pitch": 7.738,
+   "how": "core 619x568 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    782,
+    106,
+    1458,
+    674
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 88
+  },
+  "mole_4": {
+   "pitch": 7.488,
+   "how": "core 629x621 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    58,
+    811,
+    723,
+    1432
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 90
+  },
+  "rare_prism": {
+   "pitch": 8.6,
+   "how": "core 688x622 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    792,
+    792,
+    1504,
+    1421
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 84
+  }
+ },
+ "notes": [
+  "skeleton_5: long side 94 outside the tier [72, 84]",
+  "mole_4: long side 90 outside the tier [72, 84]"
+ ]
+}

@@ -1,0 +1,32 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s36_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 38
+  }
+ ],
+ "use": "mon_s36_a1.png",
+ "norm": {
+  "b_octopus": {
+   "pitch": 6.953,
+   "how": "core 1182x865 px -> 170 art px",
+   "core_long": 170.0,
+   "raw_box": [
+    65,
+    63,
+    1480,
+    947
+   ],
+   "strays_removed": 13,
+   "colors": 48,
+   "long": 204
+  }
+ },
+ "notes": [
+  "b_octopus: dropped 15 stray part(s) (144,36,29,73,8,105 px)",
+  "b_octopus: long side 204 outside the tier [153.0, 187.00000000000003]",
+  "b_octopus: removed 13 stray pixel group(s)"
+ ]
+}

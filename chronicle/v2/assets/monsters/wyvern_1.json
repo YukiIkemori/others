@@ -1,0 +1,79 @@
+{
+ "sprite": "wyvern_1",
+ "id": "wyvern_1",
+ "name": "若飛竜",
+ "sheet": 35,
+ "cell": 2,
+ "size": "L",
+ "kind": "mob",
+ "fly": true,
+ "w": 122,
+ "h": 102,
+ "anchor": [
+  55,
+  130
+ ],
+ "points": {
+  "head": [
+   108,
+   23
+  ],
+  "center": [
+   57,
+   42
+  ],
+  "fx": [
+   72,
+   36
+  ],
+  "top": [
+   108,
+   18
+  ],
+  "body": [
+   57,
+   42,
+   42,
+   27
+  ]
+ },
+ "facing": "right",
+ "long": 122,
+ "core_long": 110.0,
+ "target": {
+  "w": 110,
+  "h": 77,
+  "long": 110
+ },
+ "colors": 48,
+ "pitch": 6.073,
+ "alsoMakes": [
+  "wyvern_2",
+  "wyvern_3"
+ ],
+ "variants": {
+  "wyvern_2": {
+   "recolor": {
+    "hue": 30,
+    "sat": 1.1
+   },
+   "addons": [
+    "horns"
+   ],
+   "filter": null,
+   "name": "風切り飛竜"
+  },
+  "wyvern_3": {
+   "recolor": {
+    "sat": 0.3,
+    "bri": 0.7
+   },
+   "addons": [
+    "storm",
+    "sparks"
+   ],
+   "filter": null,
+   "name": "嵐飛竜"
+  }
+ }
+}

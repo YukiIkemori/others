@@ -1,0 +1,68 @@
+{
+ "sprite": "mammoth_1",
+ "id": "mammoth_1",
+ "name": "雪原マンモス",
+ "sheet": 21,
+ "cell": 1,
+ "size": "L",
+ "kind": "mob",
+ "fly": false,
+ "w": 107,
+ "h": 74,
+ "anchor": [
+  38,
+  73
+ ],
+ "points": {
+  "head": [
+   70,
+   10
+  ],
+  "center": [
+   47,
+   40
+  ],
+  "fx": [
+   54,
+   31
+  ],
+  "top": [
+   69,
+   4
+  ],
+  "body": [
+   47,
+   40,
+   32,
+   27
+  ]
+ },
+ "facing": "right",
+ "long": 107,
+ "core_long": 110.0,
+ "target": {
+  "w": 110,
+  "h": 77,
+  "long": 110
+ },
+ "colors": 48,
+ "pitch": 6.782,
+ "alsoMakes": [
+  "mammoth_2"
+ ],
+ "variants": {
+  "mammoth_2": {
+   "recolor": {
+    "hue": -10,
+    "sat": 0.8,
+    "bri": 0.85
+   },
+   "addons": [
+    "tusks",
+    "armor_plates"
+   ],
+   "filter": null,
+   "name": "鉄牙マンモス"
+  }
+ }
+}

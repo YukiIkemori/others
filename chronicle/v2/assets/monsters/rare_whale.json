@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_whale",
+ "id": "rm_star_whale",
+ "name": "星くじら",
+ "sheet": 35,
+ "cell": 1,
+ "size": "L",
+ "kind": "rare",
+ "fly": true,
+ "w": 113,
+ "h": 56,
+ "anchor": [
+  61,
+  71
+ ],
+ "points": {
+  "head": [
+   104,
+   18
+  ],
+  "center": [
+   66,
+   28
+  ],
+  "fx": [
+   78,
+   25
+  ],
+  "top": [
+   90,
+   10
+  ],
+  "body": [
+   66,
+   28,
+   34,
+   15
+  ]
+ },
+ "facing": "right",
+ "long": 113,
+ "core_long": 110.0,
+ "target": {
+  "w": 110,
+  "h": 77,
+  "long": 110
+ },
+ "colors": 48,
+ "pitch": 6.427
+}

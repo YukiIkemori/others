@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_lotus",
+ "id": "rm_lotus_sprite",
+ "name": "はすの精",
+ "sheet": 24,
+ "cell": 2,
+ "size": "S",
+ "kind": "rare",
+ "fly": false,
+ "w": 50,
+ "h": 53,
+ "anchor": [
+  22,
+  52
+ ],
+ "points": {
+  "head": [
+   44,
+   9
+  ],
+  "center": [
+   24,
+   27
+  ],
+  "fx": [
+   30,
+   21
+  ],
+  "top": [
+   34,
+   1
+  ],
+  "body": [
+   24,
+   27,
+   16,
+   22
+  ]
+ },
+ "facing": "right",
+ "long": 53,
+ "core_long": 52.0,
+ "target": {
+  "w": 39,
+  "h": 52,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 12.154
+}

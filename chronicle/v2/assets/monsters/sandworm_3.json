@@ -1,0 +1,50 @@
+{
+ "sprite": "sandworm_3",
+ "id": "sandworm_3",
+ "name": "大地ミミズ",
+ "sheet": 16,
+ "cell": 2,
+ "size": "L",
+ "kind": "mob",
+ "fly": false,
+ "w": 99,
+ "h": 123,
+ "anchor": [
+  54,
+  122
+ ],
+ "points": {
+  "head": [
+   91,
+   21
+  ],
+  "center": [
+   50,
+   64
+  ],
+  "fx": [
+   62,
+   51
+  ],
+  "top": [
+   79,
+   5
+  ],
+  "body": [
+   50,
+   64,
+   34,
+   50
+  ]
+ },
+ "facing": "right",
+ "long": 123,
+ "core_long": 120.0,
+ "target": {
+  "w": 90,
+  "h": 120,
+  "long": 120
+ },
+ "colors": 48,
+ "pitch": 6.792
+}

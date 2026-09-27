@@ -1,0 +1,50 @@
+{
+ "sprite": "mole_4",
+ "id": "mole_4",
+ "name": "モグラ大親方",
+ "sheet": 33,
+ "cell": 3,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 90,
+ "h": 84,
+ "anchor": [
+  36,
+  83
+ ],
+ "points": {
+  "head": [
+   59,
+   9
+  ],
+  "center": [
+   38,
+   44
+  ],
+  "fx": [
+   45,
+   33
+  ],
+  "top": [
+   54,
+   2
+  ],
+  "body": [
+   38,
+   44,
+   25,
+   30
+  ]
+ },
+ "facing": "right",
+ "long": 90,
+ "core_long": 84.0,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 7.488
+}

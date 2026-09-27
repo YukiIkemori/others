@@ -1,0 +1,50 @@
+{
+ "sprite": "b_sandworm",
+ "id": "b_sandworm",
+ "name": "砂もぐり",
+ "sheet": 17,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 112,
+ "h": 166,
+ "anchor": [
+  49,
+  165
+ ],
+ "points": {
+  "head": [
+   95,
+   33
+  ],
+  "center": [
+   50,
+   86
+  ],
+  "fx": [
+   63,
+   70
+  ],
+  "top": [
+   81,
+   7
+  ],
+  "body": [
+   50,
+   86,
+   34,
+   69
+  ]
+ },
+ "facing": "right",
+ "long": 166,
+ "core_long": 165.0,
+ "target": {
+  "w": 120,
+  "h": 165,
+  "long": 165
+ },
+ "colors": 48,
+ "pitch": 7.988
+}

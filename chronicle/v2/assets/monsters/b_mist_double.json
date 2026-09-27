@@ -1,0 +1,50 @@
+{
+ "sprite": "b_mist_double",
+ "id": "b_mist_double",
+ "name": "霧の分身",
+ "sheet": 29,
+ "cell": 2,
+ "size": "L",
+ "kind": "add",
+ "fly": true,
+ "w": 93,
+ "h": 119,
+ "anchor": [
+  37,
+  151
+ ],
+ "points": {
+  "head": [
+   72,
+   40
+  ],
+  "center": [
+   36,
+   49
+  ],
+  "fx": [
+   47,
+   47
+  ],
+  "top": [
+   35,
+   5
+  ],
+  "body": [
+   36,
+   49,
+   26,
+   31
+  ]
+ },
+ "facing": "right",
+ "long": 119,
+ "core_long": 110.0,
+ "target": {
+  "w": 83,
+  "h": 110,
+  "long": 110
+ },
+ "colors": 48,
+ "pitch": 6.736
+}

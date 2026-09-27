@@ -1,0 +1,50 @@
+{
+ "sprite": "spider_4",
+ "id": "spider_4",
+ "name": "女郎グモ",
+ "sheet": 27,
+ "cell": 2,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 102,
+ "h": 75,
+ "anchor": [
+  46,
+  74
+ ],
+ "points": {
+  "head": [
+   72,
+   31
+  ],
+  "center": [
+   39,
+   30
+  ],
+  "fx": [
+   49,
+   30
+  ],
+  "top": [
+   39,
+   0
+  ],
+  "body": [
+   39,
+   30,
+   29,
+   21
+  ]
+ },
+ "facing": "right",
+ "long": 102,
+ "core_long": 84.0,
+ "target": {
+  "w": 84,
+  "h": 59,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 6.619
+}

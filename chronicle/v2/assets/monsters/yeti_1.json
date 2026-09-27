@@ -1,0 +1,67 @@
+{
+ "sprite": "yeti_1",
+ "id": "yeti_1",
+ "name": "雪男",
+ "sheet": 20,
+ "cell": 1,
+ "size": "L",
+ "kind": "mob",
+ "fly": false,
+ "w": 108,
+ "h": 112,
+ "anchor": [
+  50,
+  111
+ ],
+ "points": {
+  "head": [
+   86,
+   33
+  ],
+  "center": [
+   50,
+   58
+  ],
+  "fx": [
+   61,
+   51
+  ],
+  "top": [
+   70,
+   4
+  ],
+  "body": [
+   50,
+   58,
+   37,
+   39
+  ]
+ },
+ "facing": "right",
+ "long": 112,
+ "core_long": 110.0,
+ "target": {
+  "w": 83,
+  "h": 110,
+  "long": 110
+ },
+ "colors": 48,
+ "pitch": 6.064,
+ "alsoMakes": [
+  "yeti_2"
+ ],
+ "variants": {
+  "yeti_2": {
+   "recolor": {
+    "hue": 20,
+    "sat": 1.2
+   },
+   "addons": [
+    "crystals",
+    "frost"
+   ],
+   "filter": null,
+   "name": "氷の雪男"
+  }
+ }
+}

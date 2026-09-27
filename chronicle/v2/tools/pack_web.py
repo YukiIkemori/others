@@ -145,7 +145,7 @@ def main():
                 os.makedirs(os.path.join(out, os.path.dirname(u)), exist_ok=True)
                 shutil.copyfile(os.path.join(dist, u), os.path.join(out, u))
     counts = {}
-    for kind in ('env', 'sprites'):
+    for kind in ('env', 'sprites', 'monsters'):
         if media.get(kind):
             new[kind], counts[kind] = pack_images(kind, media[kind], dist, out, a.page)
     if media.get('voice'):
@@ -198,7 +198,7 @@ def main():
         'total_files': len(files),
         'total_bytes': total,
         'folders': folders,
-        'packed': {'env_atlases': counts.get('env', 0), 'sprite_atlases': counts.get('sprites', 0), 'voice_packs': counts.get('voice', 0),
+        'packed': {'env_atlases': counts.get('env', 0), 'sprite_atlases': counts.get('sprites', 0), 'monster_atlases': counts.get('monsters', 0), 'monster_images': len(media.get('monsters') or {}), 'voice_packs': counts.get('voice', 0),
                    'env_images': len(media.get('env') or {}), 'sprite_sheets': len(media.get('sprites') or {}), 'voice_clips': len(media.get('voice') or {})},
         'files': files,
         'batches': batches,

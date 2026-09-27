@@ -1,0 +1,50 @@
+{
+ "sprite": "wolf_5",
+ "id": "wolf_5",
+ "name": "氷牙のオオカミ王",
+ "sheet": 11,
+ "cell": 4,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 89,
+ "h": 88,
+ "anchor": [
+  42,
+  87
+ ],
+ "points": {
+  "head": [
+   75,
+   15
+  ],
+  "center": [
+   48,
+   51
+  ],
+  "fx": [
+   56,
+   40
+  ],
+  "top": [
+   74,
+   7
+  ],
+  "body": [
+   48,
+   51,
+   28,
+   32
+  ]
+ },
+ "facing": "right",
+ "long": 89,
+ "core_long": 84.0,
+ "target": {
+  "w": 84,
+  "h": 59,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 6.845
+}

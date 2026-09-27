@@ -1,0 +1,91 @@
+{
+ "sprite": "scorpion_1",
+ "id": "scorpion_1",
+ "name": "赤サソリ",
+ "sheet": 13,
+ "cell": 1,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 94,
+ "h": 76,
+ "anchor": [
+  46,
+  75
+ ],
+ "points": {
+  "head": [
+   62,
+   46
+  ],
+  "center": [
+   36,
+   44
+  ],
+  "fx": [
+   44,
+   44
+  ],
+  "top": [
+   22,
+   16
+  ],
+  "body": [
+   36,
+   44,
+   22,
+   18
+  ]
+ },
+ "facing": "right",
+ "long": 94,
+ "core_long": 80.0,
+ "target": {
+  "w": 80,
+  "h": 56,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 7.562,
+ "alsoMakes": [
+  "scorpion_2",
+  "scorpion_3",
+  "scorpion_4"
+ ],
+ "variants": {
+  "scorpion_2": {
+   "recolor": {
+    "hue": 100
+   },
+   "addons": [
+    "stinger"
+   ],
+   "filter": null,
+   "name": "毒尾サソリ"
+  },
+  "scorpion_3": {
+   "recolor": {
+    "sat": 0.25,
+    "bri": 0.95
+   },
+   "addons": [
+    "armor_plates"
+   ],
+   "filter": null,
+   "name": "鋼殻サソリ"
+  },
+  "scorpion_4": {
+   "recolor": {
+    "hue": 260,
+    "sat": 0.6,
+    "bri": 0.6
+   },
+   "addons": [
+    "skull_mark",
+    "eyes_glow"
+   ],
+   "filter": null,
+   "name": "死神サソリ"
+  }
+ }
+}

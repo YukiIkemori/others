@@ -1,0 +1,50 @@
+{
+ "sprite": "rat_4",
+ "id": "rat_4",
+ "name": "ネズミの頭領",
+ "sheet": 10,
+ "cell": 2,
+ "size": "S",
+ "kind": "mob",
+ "fly": false,
+ "w": 57,
+ "h": 46,
+ "anchor": [
+  24,
+  45
+ ],
+ "points": {
+  "head": [
+   41,
+   6
+  ],
+  "center": [
+   27,
+   21
+  ],
+  "fx": [
+   31,
+   17
+  ],
+  "top": [
+   35,
+   1
+  ],
+  "body": [
+   27,
+   21,
+   14,
+   16
+  ]
+ },
+ "facing": "right",
+ "long": 57,
+ "core_long": 56.0,
+ "target": {
+  "w": 56,
+  "h": 39,
+  "long": 56
+ },
+ "colors": 32,
+ "pitch": 11.607
+}

@@ -31,7 +31,9 @@
   A.scaleOf = function (a, sh) {
     if (!sh || a.side === 'party') return 1;
     const vis = (sh.meta && sh.meta.visH) || sh.h || 0;
-    const cap = (a.boss ? CAP.boss : CAP[a.size] || CAP.m) * (R.layout === 'tall' ? 0.85 : 1);
+    // BEAST の原画（meta.img）は MONSTER_REQUEST §2.4 の大きさ（ボス 230 まで）で描いてあるので、その段まで縮めない
+    const img = sh.meta && sh.meta.img;
+    const cap = (a.boss ? (img ? 236 : CAP.boss) : img ? 140 : CAP[a.size] || CAP.m) * (R.layout === 'tall' ? 0.85 : 1);
     return vis > cap ? cap / vis : 1;
   };
   /**

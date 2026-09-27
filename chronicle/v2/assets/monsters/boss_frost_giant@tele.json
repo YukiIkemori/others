@@ -1,0 +1,51 @@
+{
+ "sprite": "boss_frost_giant",
+ "id": "b_icegiant",
+ "name": "氷壁の巨人",
+ "sheet": 22,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 129,
+ "h": 188,
+ "anchor": [
+  66,
+  185
+ ],
+ "points": {
+  "head": [
+   117,
+   88
+  ],
+  "center": [
+   60,
+   100
+  ],
+  "fx": [
+   77,
+   96
+  ],
+  "top": [
+   82,
+   25
+  ],
+  "body": [
+   63,
+   106,
+   45,
+   59
+  ]
+ },
+ "facing": "right",
+ "long": 188,
+ "core_long": null,
+ "target": {
+  "w": 120,
+  "h": 170,
+  "long": 170
+ },
+ "colors": 48,
+ "pitch": 7.329,
+ "pose": "tele"
+}

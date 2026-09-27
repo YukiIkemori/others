@@ -1,207 +1,293 @@
 {
- "date": "2026-09-27T06:48:56.732Z",
- "browser": false,
+ "date": "2026-09-27T07:13:49.362Z",
+ "browser": true,
  "full": false,
  "results": [
   {
    "name": "build",
    "code": 0,
-   "ms": 578,
-   "summary": "[build] media (external): 22 BGM (slice), 416 voice, 0 portraits, 239 sprite sheets, 1233 env images, 11 title images, 113.1 MB  [498 ms]"
+   "ms": 575,
+   "summary": "[build] media (external): 22 BGM (slice), 416 voice, 0 portraits, 239 sprite sheets, 1233 env images, 11 title images, 113.1 MB  [494 ms]"
   },
   {
    "name": "test_core",
    "code": 0,
-   "ms": 505,
+   "ms": 556,
    "summary": "77/77 passed"
   },
   {
    "name": "test_core_contract",
    "code": 0,
-   "ms": 579,
+   "ms": 671,
    "summary": "test_core_contract: 51/51 passed"
   },
   {
    "name": "test_render",
    "code": 0,
-   "ms": 613,
+   "ms": 667,
    "summary": "test_render: 145/145 passed"
   },
   {
    "name": "test_uik",
    "code": 0,
-   "ms": 563,
+   "ms": 535,
    "summary": "test_uik: 37/37 passed"
   },
   {
    "name": "test_cast",
    "code": 0,
-   "ms": 454,
+   "ms": 496,
    "summary": "test_cast: 865/865 passed"
   },
   {
    "name": "test_beast",
    "code": 0,
-   "ms": 431,
-   "summary": "test_beast: 93/93 passed"
+   "ms": 436,
+   "summary": "test_beast: 94/94 passed"
   },
   {
    "name": "test_terrain",
    "code": 0,
-   "ms": 7179,
+   "ms": 6899,
    "summary": "test_terrain: 76/76 passed"
   },
   {
    "name": "test_field",
    "code": 0,
-   "ms": 1282,
+   "ms": 1295,
    "summary": "test_field: 102/102 passed"
   },
   {
    "name": "test_events",
    "code": 0,
-   "ms": 693,
+   "ms": 666,
    "summary": "test_events: 164/164 passed"
   },
   {
    "name": "test_rules",
    "code": 0,
-   "ms": 516,
+   "ms": 525,
    "summary": "test_rules: 187/187 passed"
   },
   {
    "name": "test_battle",
    "code": 0,
-   "ms": 5693,
+   "ms": 5802,
    "summary": "test_battle: 125/125 passed"
   },
   {
    "name": "test_bscene",
    "code": 0,
-   "ms": 427,
+   "ms": 429,
    "summary": "test_bscene: 47/47 passed"
   },
   {
    "name": "test_screens",
    "code": 0,
-   "ms": 549,
+   "ms": 473,
    "summary": "test_screens: 396/396 passed"
   },
   {
    "name": "test_content_p",
-   "code": 1,
-   "ms": 2674,
-   "summary": "test_content_p: 418/419 passed",
-   "tail": "pass  潮風亭の噂: 1 回ごとに次の噂（森 → 休み小屋）\npass  依頼 q_pharos_lamp: 2 つの灯籠をともして礼\npass  依頼 q_pharos_well: 巣を見つけて解決\npass  依頼 q_pharos_delivery: 包みを受け取る\npass  風鳴りの丘: 風の鈴\npass  {hero} が名前に置き換わる\npass  T1: 手紙 → 少女（v_fine_t1_01・02）→ 余白の一行\npass  T1 は 1 回だけ\n\ntest_content_p: 418/419 passed\nfailed:\n  自分のイベントで使うボイスは 15 本だけ"
+   "code": 0,
+   "ms": 2341,
+   "summary": "test_content_p: 419/419 passed"
   },
   {
    "name": "test_content_f",
-   "code": 1,
-   "ms": 2559,
-   "summary": "CONTENT-F: 611/645 passed",
-   "tail": "  R2: ハンナの ac_tale_forest\n  R2: 森の地方の手がかりが解決（pim・woodcutters・song）\n  R2: 年代記の文が選択どおり\n  R2: 手紙配り q_fern_letters が済む\n  R2: 名を忘れた人々の 1 人目（エダ）\n  event elder_boss が止まらない\n  v_elm_forest_01 を使う\n  v_elm_forest_02 を使う\n  v_elm_forest_03 を使う\n  v_elm_forest_04 を使う\n  v_elm_forest_05 を使う\n  森のボイスは 7 本だけ（縦切り 22 本のうち）"
+   "code": 0,
+   "ms": 2198,
+   "summary": "CONTENT-F: 645/645 passed"
   },
   {
    "name": "validate",
    "code": 0,
-   "ms": 489,
+   "ms": 510,
    "summary": "validate: 57/57 passed"
   },
   {
    "name": "progress",
    "code": 0,
-   "ms": 30791,
+   "ms": 30476,
    "summary": "progress: 20/20 passed"
   },
   {
    "name": "check_text",
    "code": 0,
-   "ms": 893,
-   "summary": "check_text: 0 error(s), 1 warning(s) in 6120 Japanese strings of 242 files — none"
+   "ms": 875,
+   "summary": "check_text: 0 error(s), 1 warning(s) in 6120 Japanese strings of 243 files — none"
   },
   {
    "name": "check_voice",
    "code": 0,
-   "ms": 81,
+   "ms": 93,
    "summary": "check_voice: 199/199 passed"
   },
   {
    "name": "check_leads",
    "code": 0,
-   "ms": 414,
+   "ms": 518,
    "summary": "check_leads: 24/24 passed"
   },
   {
    "name": "check_springs",
    "code": 0,
-   "ms": 30980,
+   "ms": 32115,
    "summary": "check_springs: 17/17 passed"
   },
   {
    "name": "check_density",
    "code": 0,
-   "ms": 576,
+   "ms": 734,
    "summary": "check_density: 12/12 passed"
   },
   {
    "name": "check_world",
    "code": 0,
-   "ms": 5005,
+   "ms": 5632,
    "summary": "check_world: 7/7 passed"
   },
   {
    "name": "check_chests",
    "code": 0,
-   "ms": 5067,
+   "ms": 5827,
    "summary": "check_chests: 4/4 passed"
   },
   {
    "name": "check_secrets",
    "code": 0,
-   "ms": 6241,
+   "ms": 6755,
    "summary": "check_secrets: 32/32 passed"
   },
   {
    "name": "check_stubs",
    "code": 0,
-   "ms": 11732,
+   "ms": 11944,
    "summary": "check_stubs: 13/13 passed"
   },
   {
    "name": "sim_zones",
    "code": 0,
-   "ms": 23587,
+   "ms": 24104,
    "summary": "all zones: HP loss 8.7%, rounds 3.12 pass"
   },
   {
    "name": "sim_zones --segments",
    "code": 0,
-   "ms": 25223,
+   "ms": 24691,
    "summary": "segments: 13/13 pass"
   },
   {
    "name": "sim_bosses",
    "code": 0,
-   "ms": 31498,
+   "ms": 31199,
    "summary": "tr_b_rooteater            0      17       99    83    9.8   0.06  pass"
   },
   {
    "name": "sim_growth",
    "code": 0,
-   "ms": 3147,
+   "ms": 3370,
    "summary": "sim_growth: 8/8 passed (runs 20, seed 1)"
   },
   {
    "name": "sim_glimmer",
    "code": 0,
-   "ms": 78969,
+   "ms": 80860,
    "summary": "NOTE (above/below the estimate) slice scope near the V2_PLAN §3.9 estimate (glimmered techs lv1–3 ≈ 20: 28 + starters 8, max lv 3; spells step 1–2 ≈ 12: 18)"
   },
   {
    "name": "sim_loot",
    "code": 0,
-   "ms": 7843,
+   "ms": 9641,
    "summary": "H5 倒しても落ちない: 30000 体、盗み専用のドロップ 0  pass"
+  },
+  {
+   "name": "test_core_flow",
+   "code": 2,
+   "ms": 140108,
+   "summary": "pass  tap この主人公で旅立つ",
+   "tail": "pass  0 console errors (16:9 run)  []\npass  title offers つづきから first after reload\npass  つづきから → field at the saved place\npass  resumed at the same tile  {\"pos\":{\"map\":\"roa_house\",\"x\":12,\"y\":6,\"dir\":\"n\"},\"pos2\":{\"map\":\"roa_house\",\"x\":12,\"y\":6,\"dir\":\"n\"}}\npass  0 console errors (after reload)  []\npass  fit 390x844 portrait → 540x1169 tall, uiScale 1.3, SCALE 2  {\"W\":540,\"H\":1169,\"SCALE\":2,\"layout\":\"tall\",\"ui\":1.3}\nFAIL  tap はじめから → (tap through the curtain) → 主人公の作成\npass  tap この主人公で旅立つ\nFAIL  tap through the lines → field  {\"top\":\"screen:title\",\"locks\":[],\"busy\":false,\"fade\":0,\"input\":true,\"msg\":false}\nFAIL  device switched to touch, touch pad shown\nTypeError: Cannot read properties of null (reading 'x')\n    at main (/home/user/others/chronicle/v2/tools/test_core_flow.js:213:38)"
+  },
+  {
+   "name": "test_core_wipe",
+   "code": 0,
+   "ms": 7589,
+   "summary": "test_core_wipe: 11/11 passed"
+  },
+  {
+   "name": "test_render_browser",
+   "code": 0,
+   "ms": 13797,
+   "summary": "test_render_browser: 36/36 passed"
+  },
+  {
+   "name": "test_uik_browser",
+   "code": 0,
+   "ms": 32918,
+   "summary": "test_uik_browser: 56/56 passed"
+  },
+  {
+   "name": "test_cast_browser",
+   "code": 0,
+   "ms": 17410,
+   "summary": "test_cast_browser: 36/36 passed"
+  },
+  {
+   "name": "test_beast_browser",
+   "code": 1,
+   "ms": 8989,
+   "summary": "test_beast_browser: 580/581 passed",
+   "tail": "  hd:bbg:ash@540x1169            55.1 ms\n  hd:bbg:star@960x540            46.9 ms\n  hd:bbg:star@540x1169           46.1 ms\n  hd:bbg:tower@960x540          109.3 ms\n  hd:bbg:tower@540x1169         109.9 ms\n  hd:bbg:tree@960x540           108.3 ms\n  hd:bbg:tree@540x1169          135.1 ms\n  R.Hd.stats().byKind {\"field\":2025904,\"mon\":11630720,\"boss\":6740464,\"bbg\":18394560}\n\ntest_beast_browser: 580/581 passed\nfailed:\n  jelly: 形が違う（外形の重なり 97.9% < 97%）"
+  },
+  {
+   "name": "test_terrain_browser",
+   "code": 1,
+   "ms": 13928,
+   "summary": "test_terrain_browser: 45/47 passed",
+   "tail": "  CPU ×1: chunk median 3.00 ms  p90 6.40  max 32.30  | step median 2.20  p99 14.10  max 27.60\npass  CPU ×1: チャンク 1 つの焼き時間の中央値 3.00 ms ≦ 予算の 2 倍 8 ms（G1 の関門）\nFAIL  Job.step(3) の 99% が 3 ms 以内（14.10 ms。performance.now の刻み 0.1 ms を含めて ≦ 3.3）  {\"slow\":[[\"tt_hill\",2,1,0,6,3.3],[\"tt_hill\",4,1,0,3,27.6],[\"tt_hill\",4,1,3,9,4.5],[\"tt_hill\",1,2,0,7,3.7]],\"chunkMed\":3,\"chunkP90\":6.399999991059303,\"chunkMax\":32.29999999701977,\"stepMed\":2.199999988079071,\"stepP99\":14.099999994039536,\"stepMax\":27.600000008940697,\"prewarm\":{\"tt_harbor\":0.29999999701976776,\"tt_treetop\":0.29999999701976776,\"tt_moss\":0.29999999701976776,\"tt_forest\":0.3000000119209289\nFAIL  Job.step(3) の最長 27.60 ms ≦ 5 ms（共有の機械の揺れを含む）  {\"slow\":[[\"tt_hill\",2,1,0,6,3.3],[\"tt_hill\",4,1,0,3,27.6],[\"tt_hill\",4,1,3,9,4.5],[\"tt_hill\",1,2,0,7,3.7]],\"chunkMed\":3,\"chunkP90\":6.399999991059303,\"chunkMax\":32.29999999701977,\"stepMed\":2.199999988079071,\"stepP99\":14.099999994039536,\"stepMax\":27.600000008940697,\"prewarm\":{\"tt_harbor\":0.29999999701976776,\"tt_treetop\":0.29999999701976776,\"tt_moss\":0.29999999701976776,\"tt_forest\":0.3000000119209289\npass  コンソールのエラー・外への通信なし\n\nPERF {\"lum\":{\"harbor\":0.205,\"treetop\":0.152,\"moss_village\":0.156,\"forest_dungeon\":0.141,\"tree_inside\":0.138,\"lighthouse\":0.163,\"cave\":0.168,\"world\":0.186,\"hill_village\":0.17},\"perf\":{\"cpu1\":{\"slow\":[[\"tt_hill\",2,1,0,6,3.3],[\"tt_hill\",4,1,0,3,27.6],[\"tt_hill\",4,1,3,9,4.5],[\"tt_hill\",1,2,0,7,3.7]],\"chunkMed\":3,\"chunkP90\":6.399999991059303,\"chunkMax\":32.29999999701977,\"stepMed\":2.199999988079071,\"stepP99\":14.099999994039536,\"stepMax\":27.600000008940697,\"prewarm\":{\"tt_harbor\":0.29999999701976776,\"tt_treetop\":0.29999999701976776,\"tt_moss\":0.29999999701976776,\"tt_forest\":0.30000001192092896,\"tt_tree\":0.19999998807907104,\"tt_lighthouse\":0.10000000894069672,\"tt_cave\":0.20000000298023224,\"tt_world\":0.5,\"tt_hill\":0.19999998807907104},\"attempt\":1}}}\n\ntest_terrain_browser: 45/47 passed\nfailed:\n  Job.step(3) の 99% が 3 ms 以内（14.10 ms。performance.now の刻み 0.1 ms を含めて ≦ 3.3）\n  Job.step(3) の最長 27.60 ms ≦ 5 ms（共有の機械の揺れを含む）"
+  },
+  {
+   "name": "test_field_browser",
+   "code": 0,
+   "ms": 109659,
+   "summary": "test_field_browser: 17/17 passed"
+  },
+  {
+   "name": "test_field_slice",
+   "code": 0,
+   "ms": 362983,
+   "summary": "test_field_slice: 148/148 passed"
+  },
+  {
+   "name": "test_events_browser",
+   "code": 0,
+   "ms": 164084,
+   "summary": "test_events_browser: 28/28 passed"
+  },
+  {
+   "name": "test_bscene_flow",
+   "code": 0,
+   "ms": 77947,
+   "summary": "test_bscene_flow: 47/47 passed"
+  },
+  {
+   "name": "test_screens_browser",
+   "code": 1,
+   "ms": 279127,
+   "summary": "test_screens_browser: 150/151 passed",
+   "tail": "== タッチ（スマホ縦）\npass  touch: tap the 装備 tile → equip\npass  touch: menu layout shows the B spot\npass  touch: B spot closes equip → hub\npass  touch: tap a member card → status\npass  touch: tap the ▶ arrow changes a setting\npass  touch: tap a tab\npass  0 console errors (touch run)\n\ntest_screens_browser: 150/151 passed\nfailed:\n  partySelect → 3 companion ids"
+  },
+  {
+   "name": "check_ui",
+   "code": 0,
+   "ms": 526239,
+   "summary": "check_ui: 426/426 passed"
+  },
+  {
+   "name": "measure_night",
+   "code": 0,
+   "ms": 57613,
+   "summary": "measure_night: 56/56 passed"
   }
  ]
 }

@@ -1,0 +1,42 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s29_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 42
+  }
+ ],
+ "use": "mon_s29_a1.png",
+ "norm": {
+  "b_doll_flute": {
+   "pitch": 7.118,
+   "how": "core 406x783 px -> 110 art px",
+   "core_long": 110.0,
+   "raw_box": [
+    140,
+    171,
+    576,
+    954
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 111
+  },
+  "b_mist_double": {
+   "pitch": 6.736,
+   "how": "core 585x741 px -> 110 art px",
+   "core_long": 110.0,
+   "raw_box": [
+    813,
+    87,
+    1436,
+    882
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 119
+  }
+ },
+ "notes": []
+}

@@ -1,0 +1,50 @@
+{
+ "sprite": "yeti_3",
+ "id": "yeti_3",
+ "name": "大雪男",
+ "sheet": 20,
+ "cell": 2,
+ "size": "L",
+ "kind": "mob",
+ "fly": false,
+ "w": 115,
+ "h": 124,
+ "anchor": [
+  52,
+  123
+ ],
+ "points": {
+  "head": [
+   90,
+   24
+  ],
+  "center": [
+   49,
+   62
+  ],
+  "fx": [
+   62,
+   50
+  ],
+  "top": [
+   67,
+   4
+  ],
+  "body": [
+   49,
+   62,
+   38,
+   45
+  ]
+ },
+ "facing": "right",
+ "long": 124,
+ "core_long": 120.0,
+ "target": {
+  "w": 90,
+  "h": 120,
+  "long": 120
+ },
+ "colors": 48,
+ "pitch": 6.325
+}

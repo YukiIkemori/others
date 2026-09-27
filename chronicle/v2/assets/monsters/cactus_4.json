@@ -1,0 +1,50 @@
+{
+ "sprite": "cactus_4",
+ "id": "cactus_4",
+ "name": "サボテン大将",
+ "sheet": 14,
+ "cell": 4,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 62,
+ "h": 85,
+ "anchor": [
+  26,
+  84
+ ],
+ "points": {
+  "head": [
+   48,
+   25
+  ],
+  "center": [
+   28,
+   44
+  ],
+  "fx": [
+   34,
+   38
+  ],
+  "top": [
+   32,
+   0
+  ],
+  "body": [
+   28,
+   44,
+   20,
+   33
+  ]
+ },
+ "facing": "right",
+ "long": 85,
+ "core_long": 84.0,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 7.81
+}

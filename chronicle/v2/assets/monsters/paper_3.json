@@ -1,0 +1,50 @@
+{
+ "sprite": "paper_3",
+ "id": "paper_3",
+ "name": "白紙の騎士",
+ "sheet": 11,
+ "cell": 2,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 92,
+ "h": 79,
+ "anchor": [
+  29,
+  78
+ ],
+ "points": {
+  "head": [
+   37,
+   12
+  ],
+  "center": [
+   23,
+   41
+  ],
+  "fx": [
+   27,
+   32
+  ],
+  "top": [
+   33,
+   7
+  ],
+  "body": [
+   23,
+   41,
+   15,
+   25
+  ]
+ },
+ "facing": "right",
+ "long": 92,
+ "core_long": 84.0,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 7.0
+}

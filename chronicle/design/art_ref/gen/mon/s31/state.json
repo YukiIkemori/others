@@ -1,0 +1,51 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s31_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 43
+  }
+ ],
+ "use": "mon_s31_a1.png",
+ "norm": {
+  "boss_mistbeast": {
+   "pitch": 5.8,
+   "how": "core 938x1218 px -> 210 art px",
+   "core_long": 210.0,
+   "raw_box": [
+    42,
+    159,
+    992,
+    1377
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 211
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s31_tele_a1.png",
+   "prompt": "the wind-up pose: the hooded mist witch rises taller and spreads both misty arms wide, the round mouth below opening wider showing the needle teeth. Same size."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s31_tele_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    0,
+    -18
+   ],
+   "overlap": 18365,
+   "size": [
+    168,
+    235
+   ]
+  }
+ }
+}

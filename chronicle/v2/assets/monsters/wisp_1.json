@@ -1,0 +1,108 @@
+{
+ "sprite": "wisp_1",
+ "id": "wisp_1",
+ "name": "鬼火",
+ "sheet": 24,
+ "cell": 1,
+ "size": "S",
+ "kind": "mob",
+ "fly": true,
+ "w": 35,
+ "h": 56,
+ "anchor": [
+  18,
+  71
+ ],
+ "points": {
+  "head": [
+   28,
+   22
+  ],
+  "center": [
+   18,
+   34
+  ],
+  "fx": [
+   21,
+   30
+  ],
+  "top": [
+   22,
+   6
+  ],
+  "body": [
+   18,
+   34,
+   12,
+   18
+  ]
+ },
+ "facing": "right",
+ "long": 56,
+ "core_long": 52.0,
+ "target": {
+  "w": 39,
+  "h": 52,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 11.75,
+ "alsoMakes": [
+  "wisp_2",
+  "wisp_3",
+  "wisp_4",
+  "platinum_1",
+  "platinum_2"
+ ],
+ "variants": {
+  "wisp_2": {
+   "recolor": {
+    "hue": -100,
+    "sat": 1.2
+   },
+   "addons": [
+    "eyes_glow"
+   ],
+   "filter": null,
+   "name": "化け火"
+  },
+  "wisp_3": {
+   "recolor": {
+    "sat": 0.4,
+    "bri": 1.2
+   },
+   "addons": [
+    "aura"
+   ],
+   "filter": null,
+   "name": "人魂"
+  },
+  "wisp_4": {
+   "recolor": {
+    "hue": 15,
+    "sat": 1.2,
+    "bri": 0.55
+   },
+   "addons": [
+    "aura",
+    "skull_mark"
+   ],
+   "filter": null,
+   "name": "黄泉の火"
+  },
+  "platinum_1": {
+   "recolor": {},
+   "addons": [],
+   "filter": "platinum",
+   "name": "白金の鬼火"
+  },
+  "platinum_2": {
+   "recolor": {},
+   "addons": [
+    "crown"
+   ],
+   "filter": "platinum",
+   "name": "白金の大鬼火"
+  }
+ }
+}

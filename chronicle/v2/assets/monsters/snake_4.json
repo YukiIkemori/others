@@ -1,0 +1,50 @@
+{
+ "sprite": "snake_4",
+ "id": "snake_4",
+ "name": "砂の大蛇",
+ "sheet": 13,
+ "cell": 4,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 85,
+ "h": 87,
+ "anchor": [
+  38,
+  86
+ ],
+ "points": {
+  "head": [
+   75,
+   14
+  ],
+  "center": [
+   41,
+   48
+  ],
+  "fx": [
+   51,
+   38
+  ],
+  "top": [
+   68,
+   4
+  ],
+  "body": [
+   41,
+   48,
+   28,
+   36
+  ]
+ },
+ "facing": "right",
+ "long": 87,
+ "core_long": 84.0,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 7.095
+}

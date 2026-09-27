@@ -1,0 +1,73 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s32_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 50
+  }
+ ],
+ "use": "mon_s32_a1.png",
+ "norm": {
+  "merman_1": {
+   "pitch": 7.312,
+   "how": "core 476x585 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    104,
+    96,
+    753,
+    702
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 90
+  },
+  "merman_4": {
+   "pitch": 7.155,
+   "how": "core 601x595 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    818,
+    81,
+    1471,
+    702
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 92
+  },
+  "skeleton_1": {
+   "pitch": 7.55,
+   "how": "core 604x598 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    90,
+    817,
+    729,
+    1419
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 86
+  },
+  "skeleton_3": {
+   "pitch": 7.786,
+   "how": "core 654x597 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    795,
+    818,
+    1464,
+    1419
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 87
+  }
+ },
+ "notes": [
+  "merman_1: long side 90 outside the tier [72, 84]",
+  "merman_4: long side 92 outside the tier [72, 84]"
+ ]
+}

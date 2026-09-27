@@ -1,0 +1,73 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s24_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 55
+  }
+ ],
+ "use": "mon_s24_a1.png",
+ "norm": {
+  "wisp_1": {
+   "pitch": 11.75,
+   "how": "core 406x611 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    188,
+    69,
+    594,
+    724
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 56
+  },
+  "rare_lotus": {
+   "pitch": 12.154,
+   "how": "core 587x632 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    803,
+    102,
+    1401,
+    734
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 53
+  },
+  "rare_teapot": {
+   "pitch": 13.558,
+   "how": "core 705x593 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    58,
+    794,
+    763,
+    1398
+   ],
+   "strays_removed": 1,
+   "colors": 32,
+   "long": 53
+  },
+  "bat_5": {
+   "pitch": 12.321,
+   "how": "core 690x541 px -> 56 art px",
+   "core_long": 56.0,
+   "raw_box": [
+    773,
+    834,
+    1482,
+    1415
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 59
+  }
+ },
+ "notes": [
+  "rare_teapot: removed 1 stray pixel group(s)",
+  "bat_5: long side 59 outside the tier [48, 56]"
+ ]
+}

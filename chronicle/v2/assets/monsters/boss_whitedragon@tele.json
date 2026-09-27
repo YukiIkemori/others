@@ -1,0 +1,51 @@
+{
+ "sprite": "boss_whitedragon",
+ "id": "b_whitedragon",
+ "name": "白竜ネーヴェ",
+ "sheet": 23,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 277,
+ "h": 186,
+ "anchor": [
+  138,
+  187
+ ],
+ "points": {
+  "head": [
+   210,
+   36
+  ],
+  "center": [
+   131,
+   84
+  ],
+  "fx": [
+   155,
+   69
+  ],
+  "top": [
+   210,
+   24
+  ],
+  "body": [
+   143,
+   78,
+   95,
+   50
+  ]
+ },
+ "facing": "right",
+ "long": 277,
+ "core_long": null,
+ "target": {
+  "w": 230,
+  "h": 155,
+  "long": 230
+ },
+ "colors": 48,
+ "pitch": 5.174,
+ "pose": "tele"
+}

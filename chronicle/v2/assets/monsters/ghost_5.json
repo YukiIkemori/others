@@ -1,0 +1,50 @@
+{
+ "sprite": "ghost_5",
+ "id": "ghost_5",
+ "name": "冥界の霊王",
+ "sheet": 25,
+ "cell": 2,
+ "size": "M",
+ "kind": "mob",
+ "fly": true,
+ "w": 82,
+ "h": 90,
+ "anchor": [
+  37,
+  114
+ ],
+ "points": {
+  "head": [
+   60,
+   25
+  ],
+  "center": [
+   37,
+   47
+  ],
+  "fx": [
+   44,
+   40
+  ],
+  "top": [
+   51,
+   8
+  ],
+  "body": [
+   37,
+   47,
+   25,
+   26
+  ]
+ },
+ "facing": "right",
+ "long": 90,
+ "core_long": 84.0,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 8.06
+}

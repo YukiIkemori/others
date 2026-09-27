@@ -1,0 +1,50 @@
+{
+ "sprite": "b_doll_conductor",
+ "id": "b_doll_conductor",
+ "name": "指揮者人形",
+ "sheet": 30,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 91,
+ "h": 161,
+ "anchor": [
+  37,
+  160
+ ],
+ "points": {
+  "head": [
+   65,
+   55
+  ],
+  "center": [
+   36,
+   80
+  ],
+  "fx": [
+   45,
+   72
+  ],
+  "top": [
+   46,
+   5
+  ],
+  "body": [
+   36,
+   80,
+   23,
+   57
+  ]
+ },
+ "facing": "right",
+ "long": 161,
+ "core_long": 155.0,
+ "target": {
+  "w": 115,
+  "h": 155,
+  "long": 155
+ },
+ "colors": 48,
+ "pitch": 8.019
+}

@@ -1,0 +1,92 @@
+{
+ "sprite": "salamander_1",
+ "id": "salamander_1",
+ "name": "火トカゲ",
+ "sheet": 39,
+ "cell": 3,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 82,
+ "h": 44,
+ "anchor": [
+  46,
+  43
+ ],
+ "points": {
+  "head": [
+   70,
+   15
+  ],
+  "center": [
+   44,
+   24
+  ],
+  "fx": [
+   52,
+   21
+  ],
+  "top": [
+   59,
+   6
+  ],
+  "body": [
+   44,
+   24,
+   28,
+   13
+  ]
+ },
+ "facing": "right",
+ "long": 82,
+ "core_long": 80.0,
+ "target": {
+  "w": 80,
+  "h": 56,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 8.338,
+ "alsoMakes": [
+  "salamander_2",
+  "salamander_3",
+  "salamander_4"
+ ],
+ "variants": {
+  "salamander_2": {
+   "recolor": {
+    "hue": 10,
+    "sat": 1.1
+   },
+   "addons": [
+    "flame"
+   ],
+   "filter": null,
+   "name": "火吹きトカゲ"
+  },
+  "salamander_3": {
+   "recolor": {
+    "hue": -20,
+    "sat": 1.2,
+    "bri": 0.7
+   },
+   "addons": [
+    "embers"
+   ],
+   "filter": null,
+   "name": "溶岩トカゲ"
+  },
+  "salamander_4": {
+   "recolor": {
+    "hue": -10,
+    "sat": 1.2
+   },
+   "addons": [
+    "horns",
+    "embers"
+   ],
+   "filter": null,
+   "name": "炎角トカゲ"
+  }
+ }
+}

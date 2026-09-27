@@ -1,0 +1,106 @@
+{
+ "sprite": "beetle_1",
+ "id": "beetle_1",
+ "name": "石カブト",
+ "sheet": 38,
+ "cell": 1,
+ "size": "S",
+ "kind": "mob",
+ "fly": false,
+ "w": 54,
+ "h": 35,
+ "anchor": [
+  23,
+  34
+ ],
+ "points": {
+  "head": [
+   48,
+   12
+  ],
+  "center": [
+   29,
+   17
+  ],
+  "fx": [
+   35,
+   15
+  ],
+  "top": [
+   32,
+   1
+  ],
+  "body": [
+   29,
+   17,
+   19,
+   12
+  ]
+ },
+ "facing": "right",
+ "long": 54,
+ "core_long": 52.0,
+ "target": {
+  "w": 52,
+  "h": 36,
+  "long": 52
+ },
+ "colors": 32,
+ "pitch": 12.923,
+ "alsoMakes": [
+  "beetle_2",
+  "beetle_3",
+  "beetle_4",
+  "mirror_1",
+  "mirror_2"
+ ],
+ "variants": {
+  "beetle_2": {
+   "recolor": {
+    "sat": 0.2,
+    "bri": 0.7
+   },
+   "addons": [
+    "armor_plates"
+   ],
+   "filter": null,
+   "name": "鉄カブト"
+  },
+  "beetle_3": {
+   "recolor": {
+    "hue": -40,
+    "sat": 1.2
+   },
+   "addons": [
+    "sparks"
+   ],
+   "filter": null,
+   "name": "火花カブト"
+  },
+  "beetle_4": {
+   "recolor": {
+    "sat": 0.3,
+    "bri": 1.3
+   },
+   "addons": [
+    "crystals"
+   ],
+   "filter": null,
+   "name": "金剛カブト"
+  },
+  "mirror_1": {
+   "recolor": {},
+   "addons": [],
+   "filter": "mirror",
+   "name": "鏡カブト"
+  },
+  "mirror_2": {
+   "recolor": {},
+   "addons": [
+    "horns"
+   ],
+   "filter": "mirror",
+   "name": "鏡の大カブト"
+  }
+ }
+}

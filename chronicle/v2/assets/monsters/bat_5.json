@@ -1,0 +1,50 @@
+{
+ "sprite": "bat_5",
+ "id": "bat_5",
+ "name": "コウモリ公",
+ "sheet": 24,
+ "cell": 4,
+ "size": "S",
+ "kind": "mob",
+ "fly": true,
+ "w": 59,
+ "h": 48,
+ "anchor": [
+  24,
+  60
+ ],
+ "points": {
+  "head": [
+   50,
+   13
+  ],
+  "center": [
+   24,
+   22
+  ],
+  "fx": [
+   31,
+   19
+  ],
+  "top": [
+   32,
+   5
+  ],
+  "body": [
+   24,
+   22,
+   21,
+   14
+  ]
+ },
+ "facing": "right",
+ "long": 59,
+ "core_long": 56.0,
+ "target": {
+  "w": 56,
+  "h": 39,
+  "long": 56
+ },
+ "colors": 32,
+ "pitch": 12.321
+}

@@ -1,0 +1,68 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s30_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 35
+  }
+ ],
+ "use": "mon_s30_a1.png",
+ "norm": {
+  "b_doll_conductor": {
+   "pitch": 8.019,
+   "how": "core 725x1243 px -> 155 art px",
+   "core_long": 155.0,
+   "raw_box": [
+    176,
+    126,
+    902,
+    1413
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 161
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s30_tele_a1.png",
+   "prompt": "the wind-up pose: the conductor doll raises the white baton high over its head with both arms spread wide, as at the climax of a piece. Feet in the same place."
+  },
+  {
+   "pose": "attack",
+   "file": "mon_s30_attack_a1.png",
+   "prompt": "the attack pose: the conductor doll slashes the white baton down and forward to the right like a sword, leaning forward. Feet in the same place."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s30_tele_a1.png",
+  "attack": "mon_s30_attack_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    -10,
+    -8
+   ],
+   "overlap": 5465,
+   "size": [
+    110,
+    168
+   ]
+  },
+  "attack": {
+   "offset": [
+    -1,
+    8
+   ],
+   "overlap": 5095,
+   "size": [
+    103,
+    150
+   ]
+  }
+ }
+}

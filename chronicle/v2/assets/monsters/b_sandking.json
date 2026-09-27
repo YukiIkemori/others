@@ -1,0 +1,50 @@
+{
+ "sprite": "b_sandking",
+ "id": "b_sandking",
+ "name": "名なき砂の王",
+ "sheet": 18,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 153,
+ "h": 221,
+ "anchor": [
+  74,
+  220
+ ],
+ "points": {
+  "head": [
+   104,
+   45
+  ],
+  "center": [
+   69,
+   95
+  ],
+  "fx": [
+   79,
+   80
+  ],
+  "top": [
+   99,
+   12
+  ],
+  "body": [
+   69,
+   95,
+   38,
+   64
+  ]
+ },
+ "facing": "right",
+ "long": 221,
+ "core_long": 210.0,
+ "target": {
+  "w": 150,
+  "h": 210,
+  "long": 210
+ },
+ "colors": 48,
+ "pitch": 6.519
+}

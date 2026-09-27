@@ -1,0 +1,50 @@
+{
+ "sprite": "treant_4",
+ "id": "treant_4",
+ "name": "古老の木",
+ "sheet": 12,
+ "cell": 2,
+ "size": "L",
+ "kind": "mob",
+ "fly": false,
+ "w": 108,
+ "h": 123,
+ "anchor": [
+  44,
+  122
+ ],
+ "points": {
+  "head": [
+   65,
+   20
+  ],
+  "center": [
+   44,
+   62
+  ],
+  "fx": [
+   50,
+   49
+  ],
+  "top": [
+   54,
+   3
+  ],
+  "body": [
+   44,
+   62,
+   25,
+   47
+  ]
+ },
+ "facing": "right",
+ "long": 123,
+ "core_long": 120.0,
+ "target": {
+  "w": 90,
+  "h": 120,
+  "long": 120
+ },
+ "colors": 48,
+ "pitch": 6.267
+}

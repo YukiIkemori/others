@@ -291,6 +291,49 @@
     try { if (R.Hd.track) R.Hd.track('bbg', 'bscene:lit:' + name, cw * ch * 4); } catch (e) { /* 量の届けは無くてもよい */ }
     return c;
   }
+  /**
+   * 手前の層（front）が人と敵を隠さないように、体の所だけ前の層を薄くする（2026-09-27、敵の 3 つ目の場所・ボスが草や木箱の後ろに隠れた）。
+   * 体の中ほどを中心にした柔らかい楕円で destination-out（中心 88%）。足もとの位置と高さが変わったときだけ作り直す。
+   * src = 実キャンバスの大きさの前の層（光を掛けた物）か null（そのときは layer で描く）。tf = 論理 → 実画素の変換
+   */
+  function holes(st) {
+    const out = [];
+    for (const a of st.actors) {
+      const v = st.vis[a.uid] || {};
+      if (v.gone >= 1 || v.hidden) continue;
+      const h = _.actors.height(a);
+      out.push([Math.round(a.x), Math.round(a.y), Math.round(h)]);
+    }
+    return out;
+  }
+  function maskedFront(st, sh, g, src, tf) {
+    const cw = g.canvas.width, ch = g.canvas.height;
+    const hs = holes(st);
+    const key = [cw, ch, tf.a, tf.d, tf.e, tf.f, src ? (st.litCache && st.litCache.front && st.litCache.front.key) : 'flat', JSON.stringify(hs)].join('|');
+    st.frontMask = st.frontMask || {};
+    if (st.frontMask.key === key && st.frontMask.c) return st.frontMask.c;
+    const c = (st.frontMask.c && st.frontMask.c.width === cw && st.frontMask.c.height === ch) ? st.frontMask.c : R.Hd.RZ.canvas(cw, ch);
+    const x = c.getContext('2d');
+    x.setTransform(1, 0, 0, 1, 0, 0); x.globalCompositeOperation = 'source-over'; x.globalAlpha = 1;
+    x.clearRect(0, 0, cw, ch);
+    if (src) x.drawImage(src, 0, 0);
+    else { x.setTransform(tf); x.imageSmoothingEnabled = false; layer(x, sh, 'front'); }
+    x.setTransform(tf);
+    x.globalCompositeOperation = 'destination-out';
+    for (const [ax, ay, h] of hs) {
+      const cx = ax, cy = ay - h * 0.45, r = Math.max(26, h * 0.62);
+      const gr = x.createRadialGradient(cx, cy, 0, cx, cy, r);
+      gr.addColorStop(0, 'rgba(0,0,0,0.88)'); gr.addColorStop(0.6, 'rgba(0,0,0,0.75)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+      x.fillStyle = gr;
+      x.save(); x.translate(cx, cy); x.scale(0.85, 1.15); x.translate(-cx, -cy);
+      x.fillRect(cx - r, cy - r, r * 2, r * 2);
+      x.restore();
+    }
+    x.globalCompositeOperation = 'source-over';
+    x.setTransform(1, 0, 0, 1, 0, 0);
+    st.frontMask = { key, c };
+    return c;
+  }
   function blit(g, c) { g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.drawImage(c, 0, 0); g.restore(); }
   /** 光の地図の 1 点の色（論理 px）→ [r, g, b]。地図の画素は戦闘ごとに 1 回だけ読む */
   function lightSampler(st, sh, map) {
@@ -322,7 +365,7 @@
     parts.under(g);                                   // ランタンのゆらぎ・影（地面の上、光の後）
     st.lightAt = lightSampler(st, sh, map);           // 人と敵は体の中ほどの光の色を掛けたコマで描く（actors.js の litFrame）
     try { for (const a of parts.order) _.actors.draw(g, st, a); } finally { st.lightAt = null; }
-    put(front);
+    put(front ? maskedFront(st, sh, g, front, gTf) : null);
     return true;
   }
 
@@ -351,7 +394,14 @@
       if (baked) layer(c, sh, 'ground');
       under(c);
       for (const a of order) _.actors.draw(c, st, a);
-      if (baked) layer(c, sh, 'front');
+      if (baked) {
+        // 手前の層は体の所を薄くして置く（maskedFront）。変換の無い所（テストの 2D の口など）はそのまま
+        if (c.getTransform && c.canvas && R.Hd.RZ && R.Hd.RZ.canvas) {
+          const tf = c.getTransform();
+          const m = maskedFront(st, sh, c, null, tf);
+          c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.globalCompositeOperation = 'source-over'; c.drawImage(m, 0, 0); c.restore();
+        } else layer(c, sh, 'front');
+      }
     };
     if (baked) {
       layer(g, sh, 'back');

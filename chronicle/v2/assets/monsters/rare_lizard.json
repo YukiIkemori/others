@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_lizard",
+ "id": "rm_diamond_lizard",
+ "name": "金剛トカゲ",
+ "sheet": 15,
+ "cell": 1,
+ "size": "M",
+ "kind": "rare",
+ "fly": false,
+ "w": 84,
+ "h": 56,
+ "anchor": [
+  54,
+  55
+ ],
+ "points": {
+  "head": [
+   79,
+   9
+  ],
+  "center": [
+   54,
+   29
+  ],
+  "fx": [
+   61,
+   23
+  ],
+  "top": [
+   74,
+   4
+  ],
+  "body": [
+   54,
+   29,
+   26,
+   17
+  ]
+ },
+ "facing": "right",
+ "long": 84,
+ "core_long": 80.0,
+ "target": {
+  "w": 80,
+  "h": 56,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 8.212
+}

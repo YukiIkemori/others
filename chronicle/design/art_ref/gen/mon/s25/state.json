@@ -1,0 +1,75 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s25_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 51
+  }
+ ],
+ "use": "mon_s25_a1.png",
+ "norm": {
+  "ghost_1": {
+   "pitch": 7.875,
+   "how": "core 515x630 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    117,
+    122,
+    670,
+    763
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 82
+  },
+  "ghost_5": {
+   "pitch": 8.06,
+   "how": "core 623x677 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    773,
+    44,
+    1428,
+    763
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 90
+  },
+  "frog_1": {
+   "pitch": 6.988,
+   "how": "core 559x416 px -> 80 art px",
+   "core_long": 80.0,
+   "raw_box": [
+    88,
+    964,
+    663,
+    1401
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 83
+  },
+  "frog_3": {
+   "pitch": 8.024,
+   "how": "core 674x498 px -> 84 art px",
+   "core_long": 84.0,
+   "raw_box": [
+    773,
+    773,
+    1463,
+    1415
+   ],
+   "strays_removed": 1,
+   "colors": 48,
+   "long": 87
+  }
+ },
+ "notes": [
+  "ghost_1: dropped 1 stray part(s) (222 px)",
+  "ghost_5: long side 90 outside the tier [72, 84]",
+  "frog_1: dropped 2 stray part(s) (1931,684 px)",
+  "frog_3: removed 1 stray pixel group(s)"
+ ]
+}

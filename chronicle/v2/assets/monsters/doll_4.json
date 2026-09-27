@@ -1,0 +1,50 @@
+{
+ "sprite": "doll_4",
+ "id": "doll_4",
+ "name": "貴婦人人形",
+ "sheet": 26,
+ "cell": 2,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 65,
+ "h": 85,
+ "anchor": [
+  38,
+  84
+ ],
+ "points": {
+  "head": [
+   58,
+   15
+  ],
+  "center": [
+   35,
+   42
+  ],
+  "fx": [
+   42,
+   34
+  ],
+  "top": [
+   35,
+   1
+  ],
+  "body": [
+   35,
+   42,
+   22,
+   36
+  ]
+ },
+ "facing": "right",
+ "long": 85,
+ "core_long": 84.0,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 8.345
+}

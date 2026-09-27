@@ -1,0 +1,50 @@
+{
+ "sprite": "goblin_5",
+ "id": "goblin_5",
+ "name": "小鬼の王",
+ "sheet": 39,
+ "cell": 2,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 88,
+ "h": 61,
+ "anchor": [
+  28,
+  60
+ ],
+ "points": {
+  "head": [
+   45,
+   8
+  ],
+  "center": [
+   32,
+   34
+  ],
+  "fx": [
+   36,
+   27
+  ],
+  "top": [
+   45,
+   4
+  ],
+  "body": [
+   32,
+   34,
+   20,
+   21
+  ]
+ },
+ "facing": "right",
+ "long": 88,
+ "core_long": 84.0,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 8.357
+}

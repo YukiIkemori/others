@@ -1,0 +1,50 @@
+{
+ "sprite": "mammoth_3",
+ "id": "mammoth_3",
+ "name": "大王マンモス",
+ "sheet": 21,
+ "cell": 2,
+ "size": "L",
+ "kind": "mob",
+ "fly": false,
+ "w": 121,
+ "h": 91,
+ "anchor": [
+  42,
+  90
+ ],
+ "points": {
+  "head": [
+   73,
+   13
+  ],
+  "center": [
+   48,
+   49
+  ],
+  "fx": [
+   56,
+   38
+  ],
+  "top": [
+   69,
+   5
+  ],
+  "body": [
+   48,
+   49,
+   35,
+   32
+  ]
+ },
+ "facing": "right",
+ "long": 121,
+ "core_long": 120.0,
+ "target": {
+  "w": 120,
+  "h": 84,
+  "long": 120
+ },
+ "colors": 48,
+ "pitch": 6.308
+}

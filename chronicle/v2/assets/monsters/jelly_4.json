@@ -1,0 +1,50 @@
+{
+ "sprite": "jelly_4",
+ "id": "jelly_4",
+ "name": "ゼリー将軍",
+ "sheet": 10,
+ "cell": 1,
+ "size": "S",
+ "kind": "mob",
+ "fly": false,
+ "w": 58,
+ "h": 47,
+ "anchor": [
+  22,
+  46
+ ],
+ "points": {
+  "head": [
+   38,
+   18
+  ],
+  "center": [
+   24,
+   29
+  ],
+  "fx": [
+   28,
+   26
+  ],
+  "top": [
+   28,
+   9
+  ],
+  "body": [
+   24,
+   29,
+   14,
+   15
+  ]
+ },
+ "facing": "right",
+ "long": 58,
+ "core_long": 56.0,
+ "target": {
+  "w": 42,
+  "h": 56,
+  "long": 56
+ },
+ "colors": 32,
+ "pitch": 11.589
+}

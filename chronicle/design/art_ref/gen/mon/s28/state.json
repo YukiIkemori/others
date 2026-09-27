@@ -1,0 +1,44 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s28_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 41
+  }
+ ],
+ "use": "mon_s28_a1.png",
+ "norm": {
+  "b_doll_violin": {
+   "pitch": 7.836,
+   "how": "core 529x862 px -> 110 art px",
+   "core_long": 110.0,
+   "raw_box": [
+    224,
+    106,
+    764,
+    968
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 111
+  },
+  "b_doll_drum": {
+   "pitch": 8.555,
+   "how": "core 365x941 px -> 110 art px",
+   "core_long": 110.0,
+   "raw_box": [
+    905,
+    21,
+    1303,
+    966
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 111
+  }
+ },
+ "notes": [
+  "b_doll_drum: dropped 1 stray part(s) (685 px)"
+ ]
+}

@@ -1,0 +1,50 @@
+{
+ "sprite": "boss_mistbeast",
+ "id": "b_mistbeast",
+ "name": "霧食らい",
+ "sheet": 31,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 165,
+ "h": 211,
+ "anchor": [
+  84,
+  210
+ ],
+ "points": {
+  "head": [
+   116,
+   25
+  ],
+  "center": [
+   85,
+   114
+  ],
+  "fx": [
+   94,
+   87
+  ],
+  "top": [
+   104,
+   6
+  ],
+  "body": [
+   85,
+   114,
+   42,
+   80
+  ]
+ },
+ "facing": "right",
+ "long": 211,
+ "core_long": 210.0,
+ "target": {
+  "w": 150,
+  "h": 210,
+  "long": 210
+ },
+ "colors": 48,
+ "pitch": 5.8
+}

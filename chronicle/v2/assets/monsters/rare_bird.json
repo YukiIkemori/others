@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_bird",
+ "id": "rm_aurora_bird",
+ "name": "オーロラ鳥",
+ "sheet": 15,
+ "cell": 3,
+ "size": "M",
+ "kind": "rare",
+ "fly": true,
+ "w": 83,
+ "h": 76,
+ "anchor": [
+  37,
+  96
+ ],
+ "points": {
+  "head": [
+   73,
+   26
+  ],
+  "center": [
+   45,
+   30
+  ],
+  "fx": [
+   54,
+   29
+  ],
+  "top": [
+   63,
+   16
+  ],
+  "body": [
+   45,
+   30,
+   30,
+   17
+  ]
+ },
+ "facing": "right",
+ "long": 83,
+ "core_long": 80.0,
+ "target": {
+  "w": 80,
+  "h": 56,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 8.538
+}

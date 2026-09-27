@@ -105,7 +105,8 @@ async function main() {
   await p.screenshot({ path: path.join(OUT, 'p0_title_1920.png') });
 
   ok('title: はじめから is the first row with no record', await ev(p, "RPG.Engine.top().list.rows[0].value==='new'"));
-  ok('title → はじめから → 序章の幕 → 主人公の作成', await pressUntil(p, 'a', `${top}==='screen:charcreate'`, 20));
+  // タイトルは起動して最初に出てくる順を見せる（design/TITLE_ART.md §4）: 最初の A はとばすだけ、はじめからは光って暗転
+  ok('title → はじめから → 序章の幕 → 主人公の作成', await pressUntil(p, 'a', `${top}==='screen:charcreate'`, 28));
   await p.waitForTimeout(250);
   await p.screenshot({ path: path.join(OUT, 'p0_charcreate_1920.png') });
   // 性別・タイプ・得意・名前（名前の入力が開き、決定の上）→「この主人公で旅立つ」→ ベルナの台詞 → 書見台へ歩く
@@ -190,8 +191,10 @@ async function main() {
   };
   const rowCenter = (i) => `(() => { const l = RPG.Engine.top().list; const r = l.rowRect(${i}); return r && {x: r.x + r.w/2, y: r.y + r.h/2}; })()`;
   // タイトルの「はじめから」（行 0）を直接タップ
+  // 最初のタップは出てくる順をとばすだけ（TITLE_ART §4）。もう一度タップして選ぶ
   const row0 = await ev(p, rowCenter(0));
   await tapLogical(row0.x, row0.y);
+  if (await ev(p, `${top}==='screen:title' && !RPG.Engine.top().view.busy`)) { await p.waitForTimeout(200); const r0 = await ev(p, rowCenter(0)); await tapLogical(r0.x, r0.y); }
   // 序章の幕とベルナの台詞はタップで送る
   let reached = false;
   for (let i = 0; i < 30 && !reached; i++) { reached = await ev(p, `${top}==='screen:charcreate'`); if (!reached) await tapLogical(RPG_W2(info1), info1.H * 0.5); }

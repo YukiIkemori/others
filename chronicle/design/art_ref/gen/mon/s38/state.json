@@ -1,0 +1,75 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s38_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 49
+  }
+ ],
+ "use": "mon_s38_a1.png",
+ "norm": {
+  "beetle_1": {
+   "pitch": 12.923,
+   "how": "core 672x419 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    71,
+    239,
+    763,
+    679
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 54
+  },
+  "crystal_1": {
+   "pitch": 10.115,
+   "how": "core 291x526 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    1033,
+    108,
+    1340,
+    707
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 60
+  },
+  "rare_hedgehog": {
+   "pitch": 11.038,
+   "how": "core 574x445 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    83,
+    919,
+    711,
+    1381
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 57
+  },
+  "mimic_1": {
+   "pitch": 9.212,
+   "how": "core 479x462 px -> 52 art px",
+   "core_long": 52.0,
+   "raw_box": [
+    880,
+    923,
+    1457,
+    1391
+   ],
+   "strays_removed": 0,
+   "colors": 32,
+   "long": 64
+  }
+ },
+ "notes": [
+  "crystal_1: dropped 2 stray part(s) (13002,3184 px)",
+  "crystal_1: long side 60 outside the tier [48, 56]",
+  "rare_hedgehog: dropped 1 stray part(s) (45 px)",
+  "mimic_1: long side 64 outside the tier [48, 56]"
+ ]
+}

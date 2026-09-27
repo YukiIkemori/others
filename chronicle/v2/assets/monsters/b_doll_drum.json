@@ -1,0 +1,50 @@
+{
+ "sprite": "b_doll_drum",
+ "id": "b_doll_drum",
+ "name": "太鼓人形",
+ "sheet": 28,
+ "cell": 2,
+ "size": "L",
+ "kind": "add",
+ "fly": false,
+ "w": 47,
+ "h": 111,
+ "anchor": [
+  20,
+  110
+ ],
+ "points": {
+  "head": [
+   38,
+   50
+  ],
+  "center": [
+   20,
+   55
+  ],
+  "fx": [
+   25,
+   53
+  ],
+  "top": [
+   27,
+   5
+  ],
+  "body": [
+   20,
+   55,
+   14,
+   39
+  ]
+ },
+ "facing": "right",
+ "long": 111,
+ "core_long": 110.0,
+ "target": {
+  "w": 83,
+  "h": 110,
+  "long": 110
+ },
+ "colors": 48,
+ "pitch": 8.555
+}

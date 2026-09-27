@@ -1,0 +1,78 @@
+{
+ "sprite": "cactus_1",
+ "id": "cactus_1",
+ "name": "サボテン小僧",
+ "sheet": 14,
+ "cell": 3,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 75,
+ "h": 83,
+ "anchor": [
+  38,
+  82
+ ],
+ "points": {
+  "head": [
+   52,
+   21
+  ],
+  "center": [
+   34,
+   45
+  ],
+  "fx": [
+   40,
+   38
+  ],
+  "top": [
+   42,
+   10
+  ],
+  "body": [
+   34,
+   45,
+   20,
+   27
+  ]
+ },
+ "facing": "right",
+ "long": 83,
+ "core_long": 80.0,
+ "target": {
+  "w": 60,
+  "h": 80,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 7.5,
+ "alsoMakes": [
+  "cactus_2",
+  "cactus_3"
+ ],
+ "variants": {
+  "cactus_2": {
+   "recolor": {
+    "hue": -15,
+    "sat": 1.1,
+    "bri": 0.9
+   },
+   "addons": [
+    "spikes"
+   ],
+   "filter": null,
+   "name": "針サボテン"
+  },
+  "cactus_3": {
+   "recolor": {
+    "hue": 10
+   },
+   "addons": [
+    "flower"
+   ],
+   "filter": null,
+   "name": "花咲きサボテン"
+  }
+ }
+}

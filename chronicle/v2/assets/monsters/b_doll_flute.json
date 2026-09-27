@@ -1,0 +1,50 @@
+{
+ "sprite": "b_doll_flute",
+ "id": "b_doll_flute",
+ "name": "笛人形",
+ "sheet": 29,
+ "cell": 1,
+ "size": "L",
+ "kind": "add",
+ "fly": false,
+ "w": 62,
+ "h": 111,
+ "anchor": [
+  32,
+  110
+ ],
+ "points": {
+  "head": [
+   44,
+   16
+  ],
+  "center": [
+   32,
+   52
+  ],
+  "fx": [
+   35,
+   41
+  ],
+  "top": [
+   36,
+   1
+  ],
+  "body": [
+   32,
+   52,
+   18,
+   39
+  ]
+ },
+ "facing": "right",
+ "long": 111,
+ "core_long": 110.0,
+ "target": {
+  "w": 83,
+  "h": 110,
+  "long": 110
+ },
+ "colors": 48,
+ "pitch": 7.118
+}

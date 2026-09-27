@@ -1,0 +1,78 @@
+{
+ "sprite": "merman_1",
+ "id": "merman_1",
+ "name": "魚人の見張り",
+ "sheet": 32,
+ "cell": 1,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 90,
+ "h": 84,
+ "anchor": [
+  30,
+  83
+ ],
+ "points": {
+  "head": [
+   45,
+   14
+  ],
+  "center": [
+   31,
+   33
+  ],
+  "fx": [
+   35,
+   28
+  ],
+  "top": [
+   38,
+   6
+  ],
+  "body": [
+   31,
+   33,
+   12,
+   22
+  ]
+ },
+ "facing": "right",
+ "long": 90,
+ "core_long": 80.0,
+ "target": {
+  "w": 60,
+  "h": 80,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 7.312,
+ "alsoMakes": [
+  "merman_2",
+  "merman_3"
+ ],
+ "variants": {
+  "merman_2": {
+   "recolor": {
+    "hue": -30
+   },
+   "addons": [
+    "helm"
+   ],
+   "filter": null,
+   "name": "魚人のもり兵"
+  },
+  "merman_3": {
+   "recolor": {
+    "hue": 90,
+    "sat": 0.8
+   },
+   "addons": [
+    "hood",
+    "staff"
+   ],
+   "filter": null,
+   "name": "魚人の呪い師"
+  }
+ }
+}

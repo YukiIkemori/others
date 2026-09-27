@@ -1,0 +1,50 @@
+{
+ "sprite": "scorpion_5",
+ "id": "scorpion_5",
+ "name": "皇帝サソリ",
+ "sheet": 13,
+ "cell": 2,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 99,
+ "h": 79,
+ "anchor": [
+  49,
+  78
+ ],
+ "points": {
+  "head": [
+   49,
+   14
+  ],
+  "center": [
+   39,
+   41
+  ],
+  "fx": [
+   42,
+   33
+  ],
+  "top": [
+   42,
+   1
+  ],
+  "body": [
+   39,
+   41,
+   23,
+   25
+  ]
+ },
+ "facing": "right",
+ "long": 99,
+ "core_long": 84.0,
+ "target": {
+  "w": 84,
+  "h": 59,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 7.25
+}

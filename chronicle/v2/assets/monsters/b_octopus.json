@@ -1,0 +1,50 @@
+{
+ "sprite": "b_octopus",
+ "id": "b_octopus",
+ "name": "深みの大ダコ",
+ "sheet": 36,
+ "cell": 1,
+ "size": "B",
+ "kind": "boss",
+ "fly": false,
+ "w": 204,
+ "h": 128,
+ "anchor": [
+  98,
+  127
+ ],
+ "points": {
+  "head": [
+   97,
+   41
+  ],
+  "center": [
+   79,
+   59
+  ],
+  "fx": [
+   84,
+   54
+  ],
+  "top": [
+   75,
+   18
+  ],
+  "body": [
+   79,
+   59,
+   37,
+   36
+  ]
+ },
+ "facing": "right",
+ "long": 204,
+ "core_long": 170.0,
+ "target": {
+  "w": 170,
+  "h": 115,
+  "long": 170
+ },
+ "colors": 48,
+ "pitch": 6.953
+}

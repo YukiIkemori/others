@@ -1,0 +1,50 @@
+{
+ "sprite": "rare_icefox",
+ "id": "rm_icetail_fox",
+ "name": "氷尾ギツネ",
+ "sheet": 15,
+ "cell": 4,
+ "size": "M",
+ "kind": "rare",
+ "fly": false,
+ "w": 85,
+ "h": 68,
+ "anchor": [
+  44,
+  67
+ ],
+ "points": {
+  "head": [
+   76,
+   25
+  ],
+  "center": [
+   40,
+   36
+  ],
+  "fx": [
+   51,
+   33
+  ],
+  "top": [
+   35,
+   7
+  ],
+  "body": [
+   40,
+   36,
+   30,
+   18
+  ]
+ },
+ "facing": "right",
+ "long": 85,
+ "core_long": 80.0,
+ "target": {
+  "w": 80,
+  "h": 56,
+  "long": 80
+ },
+ "colors": 48,
+ "pitch": 7.838
+}

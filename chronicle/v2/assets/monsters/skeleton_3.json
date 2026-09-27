@@ -1,0 +1,50 @@
+{
+ "sprite": "skeleton_3",
+ "id": "skeleton_3",
+ "name": "骸骨の砲手",
+ "sheet": 32,
+ "cell": 4,
+ "size": "M",
+ "kind": "mob",
+ "fly": false,
+ "w": 87,
+ "h": 79,
+ "anchor": [
+  24,
+  78
+ ],
+ "points": {
+  "head": [
+   83,
+   37
+  ],
+  "center": [
+   37,
+   34
+  ],
+  "fx": [
+   51,
+   35
+  ],
+  "top": [
+   37,
+   1
+  ],
+  "body": [
+   37,
+   34,
+   30,
+   22
+  ]
+ },
+ "facing": "right",
+ "long": 87,
+ "core_long": 84.0,
+ "target": {
+  "w": 63,
+  "h": 84,
+  "long": 84
+ },
+ "colors": 48,
+ "pitch": 7.786
+}

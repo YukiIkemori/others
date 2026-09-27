@@ -1,0 +1,73 @@
+{
+ "attempts": [
+  {
+   "file": "mon_s18_a1.png",
+   "notes": "",
+   "quality": "medium",
+   "secs": 43
+  }
+ ],
+ "use": "mon_s18_a1.png",
+ "norm": {
+  "b_sandking": {
+   "pitch": 6.519,
+   "how": "core 977x1369 px -> 210 art px",
+   "core_long": 210.0,
+   "raw_box": [
+    16,
+    61,
+    1006,
+    1495
+   ],
+   "strays_removed": 0,
+   "colors": 48,
+   "long": 221
+  }
+ },
+ "notes": [],
+ "variants": [
+  {
+   "pose": "tele",
+   "file": "mon_s18_tele_a1.png",
+   "prompt": "the wind-up pose: the mummy king raises the sceptre high above its head with its right arm, the other hand spread forward, the sand-vortex lower body twisting. Same size and position."
+  },
+  {
+   "pose": "p2",
+   "file": "mon_s18_p2_a1.png",
+   "prompt": "its second form: the bandages over its face have come loose and hang down, revealing a hollow dark face with two large glaring gold eyes; the crown more broken; more loose bandage strips flutter (attached to the body). Same size, pose and position."
+  },
+  {
+   "pose": "tele",
+   "file": "mon_s18_tele_a2.png",
+   "prompt": "the wind-up pose: the mummy king raises the sceptre high above its head with its right arm. IMPORTANT: keep the figure EXACTLY the same size as in the attached image (same crown height, same body width, same bottom tip position) — do not shrink it."
+  }
+ ],
+ "posesUse": {
+  "tele": "mon_s18_tele_a2.png",
+  "p2": "mon_s18_p2_a1.png"
+ },
+ "poseNorm": {
+  "tele": {
+   "offset": [
+    10,
+    -12
+   ],
+   "overlap": 9430,
+   "size": [
+    134,
+    232
+   ]
+  },
+  "p2": {
+   "offset": [
+    1,
+    0
+   ],
+   "overlap": 14733,
+   "size": [
+    152,
+    221
+   ]
+  }
+ }
+}
