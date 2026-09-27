@@ -134,9 +134,10 @@
       if (from !== map.id || S.chTile !== F._tile()) F.chunks.reset();   // 同じマップの中の移り（森の出口の入れ替え）は焼いた物を使い続ける
       else S.stat.adopted = F.chunks.stats().ready;
       F.chunks.prewarm();
-      try { if (F._awaitPeopleArt) await F._awaitPeopleArt(1200); } catch (e) { /* 絵が無くても止めない */ }
-      try { if (F._warmPeople) F._warmPeople(300); } catch (e) { console.error(e); }
       S.stat.enterMs = (typeof performance !== 'undefined' ? performance.now() : Date.now()) - t0;
+      // 人の絵（先頭・仲間・近くの人）も暗転の中で。起動の直後は原画の画像が読めるのを少しだけ待つ（enterMs の外）
+      try { if (F._awaitPeopleArt) await F._awaitPeopleArt(1200); } catch (e) { /* 絵が無くても止めない */ }
+      try { if (F._warmPeople) S.stat.peopleMs = F._warmPeople(300); } catch (e) { console.error(e); }
       try { if (R.Mon.resetEncounter && G) R.Mon.resetEncounter(G.steps || 0); } catch (e) { /* */ }   // 安全な歩数を数え直す（BATTLE）
       F.minimap.reveal();
       F.hud.refresh();
