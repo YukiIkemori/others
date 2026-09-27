@@ -378,7 +378,9 @@
      "air": 0
     }
    },
-   "notes": [],
+   "notes": [
+    "2026-09-27: victory_b drawn ~5% smaller than idle (body height 0.95 of idle_a) -> rescaled x1.04 in this sheet (pixlib.rescale_pixel, feet and centre kept). v2 battle pack: only this frame replaced, colours snapped to the existing palette."
+   ],
    "pitch": 7.125,
    "from_raw": "raw/s3_a5_bighead.png"
   },

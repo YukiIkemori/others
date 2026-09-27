@@ -343,8 +343,12 @@ spawns.hut = { x: 68, y: 62, dir: 's' };
 B('w_fern1', 39, 73, 4, 3, { roof: 'moss', mat: 'log', lamp: true }); B('w_fern2', 45, 72, 4, 3, { roof: 'bark', mat: 'bark', lamp: true });
 B('w_fern3', 41, 77, 3, 3, { roof: 'moss', mat: 'bark' }); B('w_fern4', 46, 77, 3, 3, { roof: 'moss', mat: 'log', lamp: true });
 P('tree_giant', 44, 75); P('lantern', 43, 80); P('lantern', 46, 80); P('lantern', 43, 72); P('lantern', 46, 71);
-exits.push({ x: PL.fernS[0], y: PL.fernS[1], w: 1, h: 1, to: { map: 'fern', spawn: 'gate_s' } });
-set(PL.fernS[0], PL.fernS[1], 'd');
+// 入口は村の敷地ぜんぶ（x 38〜49、y 72〜81）。以前は南の門の 1 マス（44,81）だけで、看板（46,84）から村の地面へ上がっても
+// 門のマスを踏まないと切り替わらなかった（村の地面は歩けるので、東や北から回り込むと家の間を歩けるだけ）。オーナーの報告
+// 「森の街フェルンが立て看板あるところにいっても街に切り替わらない」。どこから村へ一歩入ってもフェルンの南の門へ
+exits.push({ x: 38, y: 72, w: 12, h: 10, to: { map: 'fern', spawn: 'gate_s' } });
+for (let x = 43; x <= 46; x++) set(x, PL.fernS[1], 'd');   // 看板の道の終わり＝村の口（幅 4 の土の道）
+set(PL.fernS[0], PL.fernS[1] - 1, 'd'); set(PL.fernS[0] + 1, PL.fernS[1] - 1, 'd');
 spawns.fern = { x: 44, y: 83, dir: 's' };
 S(46, 84, '森の村フェルン');
 // 迷いの森の入口はフェルンの北の門の先（CONTENT-F の fern → verda_1）。ワールドには森の奥を指す看板だけ

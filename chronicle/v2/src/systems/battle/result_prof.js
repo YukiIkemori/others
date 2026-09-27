@@ -211,7 +211,7 @@
     g.beginPath(); g.arc(r.x + r.w / 2, r.y + r.h / 2, r.w / 2, 0, 7); g.fillStyle = 'rgba(30,32,52,0.9)'; g.fill();
     g.clip();
     const alive = !m.uid || !st.vis || !st.vis[m.uid] || st.vis[m.uid].alive;
-    try { if (R.Portrait && R.Portrait.draw) R.Portrait.draw(g, m.look, r, { expr: alive ? 'smile' : 'sad' }); } catch (e) { /* 顔が無い */ }
+    try { if (R.Portrait && R.Portrait.draw) R.Portrait.draw(g, m.look, r, { expr: alive ? 'smile' : 'sad', fit: 'circle' }); } catch (e) { /* 顔が無い */ }
     g.restore();
     g.save(); g.beginPath(); g.arc(r.x + r.w / 2, r.y + r.h / 2, r.w / 2, 0, 7); g.strokeStyle = 'rgba(240,228,200,0.35)'; g.lineWidth = 1; g.stroke(); g.restore();
   }

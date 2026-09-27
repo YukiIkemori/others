@@ -359,7 +359,9 @@
      "air": 0
     }
    },
-   "notes": [],
+   "notes": [
+    "2026-09-27: victory_a / victory_b were drawn ~12% smaller than the idle poses (body height feet->head top 0.88 / 0.87 of idle_a; he shrank in the victory pose) -> rescaled x1.12 / x1.13 in this sheet (pixlib.rescale_pixel, feet and centre kept), every cell grown 8 px on top (cell 104x96 -> 104x104) so the raised sword fits. v2 battle pack: only these two frames replaced, colours snapped to the existing palette."
+   ],
    "pitch": 7.0,
    "from_raw": "raw/s3_a1.png",
    "edit_rounds": 3,

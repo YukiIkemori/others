@@ -204,8 +204,8 @@
     o = o || {};
     g.save();
     g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.clip();
-    // 顔の絵は胸から上（下の中央に合わせて描かれる）ので、円より大きい枠で頭が円いっぱいになるように
-    R.UIK.portraitFrame(g, { x: cx - r * 1.2, y: cy - r * 1.25, w: r * 2.4, h: r * 2.4 }, look, { ring: false, r: 0, dim: o.dim });
+    // 顔は R.Portrait の fit 'circle'（髪のてっぺん〜顎を切り出して丸をほぼ埋める。上に空きを作らない）
+    R.UIK.portraitFrame(g, { x: cx - r, y: cy - r, w: r * 2, h: r * 2 }, look, { ring: false, r: 0, dim: o.dim, fit: 'circle' });
     g.restore();
     g.save(); g.beginPath(); g.arc(cx, cy, r - 0.25, 0, Math.PI * 2);
     g.strokeStyle = o.ring || (o.dim ? 'rgba(240,228,200,0.12)' : 'rgba(240,228,200,0.3)'); g.lineWidth = 0.75; g.stroke(); g.restore();

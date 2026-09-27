@@ -2,6 +2,7 @@
 //   R.Portrait.key(look, expr) → 'portrait:<look>:<expr>'
 //   R.Portrait.has(look, expr) → 'painted'|'placeholder'|null      （顔の無い人は null。呼ぶ側は枠ごと出さない）
 //   R.Portrait.draw(g, look, rect, {expr, dim, now})               枠（rect）の下の中央に合わせて描く。描いた顔は枠いっぱい
+//     fit:'bust'（胸から上を枠いっぱい）・fit:'circle'（rect に内接する丸を顔でほぼ埋める。髪のてっぺん〜顎・首。丸で切り抜く。zoom・headroom）
 //   R.Portrait.parse('berna:smile') → {look, expr}                  （無い表情は neutral）
 // 描いた顔の画像は初めて使うときに読み込む（decode の間は仮の顔）。仮の顔・原画の顔はぼかさずに拡大（0.5 刻みの倍率）。
 (function (R) {
@@ -78,6 +79,66 @@
     return true;
   }
 
+  // ------------------------------------------------------------------ 丸い枠の顔（o.fit 'circle'）
+  // 髪（帽子）のてっぺんから顎〜首までの正方形を切り出し、丸（rect に内接する円）が顔でほぼ埋まるように描く。上に空きを作らない。
+  // 頭の横の中心は「頭の上の段（6〜30%）の左端・右端の中央値」の真ん中。羽根・帽子の星・背負った荷で外れすぎたら、コマの足元の中心（ox）に戻す。
+  // 切る高さは絵の形で違う: 原画の顔（胸から上）0.66・歩きの原画から作った顔 0.95（もとが頭と肩だけ）・仮の顔（骨組み）0.85（絵のある高さに対する割合）。
+  const CIRCLE_K = { sprite: 0.66, field: 0.95, rig: 0.85 };
+  const heads = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  function headBox(fr, meta) {
+    const c = fr.c;
+    if (heads && heads.has(c)) return heads.get(c);
+    const b = opaqueBox(c);
+    const kind = meta && meta.source === 'rig' ? 'rig' : meta && meta.from === 'field' ? 'field' : 'sprite';
+    let cx = b.x + b.w / 2;
+    try {
+      const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+      const L = [], Rr = [];
+      const y0 = Math.floor(b.y + b.h * 0.06), y1 = Math.max(y0 + 1, Math.floor(b.y + b.h * 0.3));
+      for (let y = y0; y < y1; y++) {
+        let l = -1, r = -1;
+        for (let x = 0; x < c.width; x++) if (d[(y * c.width + x) * 4 + 3] >= 24) { if (l < 0) l = x; r = x; }
+        if (l >= 0) { L.push(l); Rr.push(r); }
+      }
+      if (L.length) {
+        L.sort((a, z) => a - z); Rr.sort((a, z) => a - z);
+        cx = (L[L.length >> 1] + Rr[Rr.length >> 1] + 1) / 2;
+      }
+    } catch (e) { /* 読めない canvas は箱の中央 */ }
+    const foot = fr.ox != null ? fr.ox + 0.5 : cx;
+    if (kind === 'sprite' && Math.abs(cx - foot) > c.width * 0.1) cx = foot;
+    if (kind === 'rig') cx = c.width * 0.55;   // 骨組みの顔は頭が大きく左で切れ、顔は斜め右を向く（目の間がコマの 55%）   // 羽根・星・荷物に引っぱられた
+    const S = b.h * CIRCLE_K[kind];
+    const hb = { cx, top: b.y, S, kind };
+    if (heads) heads.set(c, hb);
+    return hb;
+  }
+  P.headBox = headBox;
+  function drawCircle(g, fr, meta, rect, alpha, o) {
+    const c = fr.c, hb = headBox(fr, meta);
+    const D = Math.min(rect.w, rect.h);
+    const px = R.SCALE || 2;
+    const zoom = o.zoom || 1;
+    let s = (D / hb.S) * zoom;
+    // 画面の画素の整数倍に寄せる（近い整数が 15% 以内なら。ドットが崩れない）。遠ければそのままの倍率
+    const sp = s * px, k = Math.round(sp);
+    let crisp = sp >= 1.5;
+    if (k >= 1 && Math.abs(k / sp - 1) <= 0.15) { s = k / px; crisp = true; }
+    const dw = c.width * s, dh = c.height * s;
+    const ccx = rect.x + rect.w / 2, ccy = rect.y + rect.h / 2;
+    const top = ccy - D / 2 + D * (o.headroom != null ? o.headroom : 0.03);   // 髪のてっぺんが丸の上の縁のすぐ下
+    let y = top - hb.top * s;
+    const bottomGap = ccy + D / 2 - (y + opaqueBox(c).y * s + opaqueBox(c).h * s);   // 絵が丸の下まで届かないなら下に寄せる
+    if (bottomGap > 0) y += bottomGap;
+    g.save();
+    g.globalAlpha = alpha;
+    g.imageSmoothingEnabled = !crisp;
+    g.beginPath(); g.arc(ccx, ccy, D / 2, 0, Math.PI * 2); g.clip();
+    g.drawImage(c, Math.round((ccx - hb.cx * s) * px) / px, Math.round(y * px) / px, dw, dh);
+    g.restore();
+    return true;
+  }
+
   P.draw = function (g, look, rect, o) {
     o = o || {};
     const expr = EXPRS.includes(o.expr) ? o.expr : 'neutral';
@@ -91,6 +152,13 @@
       g.globalAlpha = a0 * alpha;
       g.imageSmoothingEnabled = true;
       const iw = rec.img.naturalWidth || rec.img.width, ih = rec.img.naturalHeight || rec.img.height;
+      if (o.fit === 'circle') {   // 描いた顔の丸: 少し寄って上に合わせる（胸を切り、顔を丸の中に）
+        const D = Math.min(rect.w, rect.h), s = (Math.max(D / iw, D / ih)) * (o.zoom || 1.3);
+        g.beginPath(); g.arc(rect.x + rect.w / 2, rect.y + rect.h / 2, D / 2, 0, Math.PI * 2); g.clip();
+        g.drawImage(rec.img, rect.x + (rect.w - iw * s) / 2, rect.y + rect.h / 2 - D / 2 - ih * s * 0.04, iw * s, ih * s);
+        g.restore();
+        return true;
+      }
       const s = Math.max(rect.w / iw, rect.h / ih);   // 枠いっぱい（はみ出しは切る）
       g.beginPath(); g.rect(rect.x, rect.y, rect.w, rect.h); g.clip();
       g.drawImage(rec.img, rect.x + (rect.w - iw * s) / 2, rect.y + (rect.h - ih * s) / 2, iw * s, ih * s);
@@ -106,6 +174,7 @@
     if (!fr || !fr.c) return false;
     const w = fr.c.width, h = fr.c.height;
     if (o.fit === 'bust') return drawBust(g, fr.c, rect, a0 * alpha, o);
+    if (o.fit === 'circle') return drawCircle(g, fr, sh.meta, rect, a0 * alpha, o);
     let s = Math.min(rect.w / w, rect.h / h);
     s = s >= 1 ? Math.max(1, Math.floor(s * 2) / 2) : Math.max(0.25, Math.floor(s * 4) / 4);
     const dw = Math.round(w * s), dh = Math.round(h * s);
