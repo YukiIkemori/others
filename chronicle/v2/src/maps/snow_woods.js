@@ -49,7 +49,7 @@
     O.push(K.chest('snow_woods_c3', 44, 6, { pool: 'p_T' }));
     O.push(K.chest('snow_woods_c4', 13, 26, { gold: 110 }));
     O.push(K.sign(27, 35, '雪の林\n倒木は薪になる。――ユールの薪割り'));
-    O.push(K.prop('snow_lamp', 22, 34), K.prop('snow_lamp', 28, 34));
+    O.push(K.prop('snow_lamp', 20, 34), K.prop('snow_lamp', 30, 34));   // 入口の広場の両端（道の口をふさがない）
     const keep = new Set();
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (K.at(g, x, y) === ',') keep.add(x + ',' + y);
     K.scatter(g, O, ['snow_rock', 'snow_bank', 'snow_fir'], 18, [2, 2, 46, 38], '.', 'swdeco', { keep, gap: 4, variant: true });

@@ -187,8 +187,8 @@
     // 隠し通路（入った瞬間に見つける）
     const c = R.MapUtil.cell(m, S.x, S.y);
     if (c && c.secret && G && !R.MapUtil.secretFound(m.id, S.x, S.y)) {
-      (G.secrets[m.id] = G.secrets[m.id] || []).push(S.x + ',' + S.y);
-      F.chunks.dirtyAt(S.x, S.y);
+      if (F._secretFound) F._secretFound(m, S.x, S.y);   // ひと続きの通路と先の部屋を出す（やわらかく浮かび上がる。secrets.js）
+      else { (G.secrets[m.id] = G.secrets[m.id] || []).push(S.x + ',' + S.y); F.chunks.dirtyAt(S.x, S.y); }
       try { R.Audio.sfx('secret'); } catch (e) { /* */ }
       F.hud.toast('隠し通路を見つけた！', { icon: 'secret' });
       R.emit('secret:found', { map: m.id, x: S.x, y: S.y });

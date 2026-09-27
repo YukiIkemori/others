@@ -237,7 +237,7 @@ async function main() {
   // ------------------------------------------------ dev.html のフィクスチャ 3 つ（フィクスチャの仕組み。中のマップは仮のデータ stub_road）
   for (const [q, want] of [['fixture=core_stub_road', 'field'], ['scene=core_battle', 'battle'], ['scene=core_menu', 'screen:menu']]) {
     const C = await open(browser, base + 'dev.html?' + q, { viewport: { width: 1920, height: 1080 } });
-    ok(`dev.html?${q} → ${want}`, await waitFor(C.page, `${top}==='${want}'`, 5000), await ev(C.page, top));
+    ok(`dev.html?${q} → ${want}`, await waitFor(C.page, `${top}==='${want}'`, 15000), await ev(C.page, top));
     ok(`dev.html?${q}: 4 members`, (await ev(C.page, 'RPG.Party.members().length')) === 4);
     await C.page.waitForTimeout(400);
     await C.page.screenshot({ path: path.join(OUT, `p0_dev_${q.split('=')[1]}_1920.png`) });

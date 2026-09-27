@@ -101,7 +101,7 @@
       await E.narr(ev, 'ページ食らいの体から、\n白い紙切れが舞い上がった。');
       try { R.Audio.sfx('page'); R.Field.flash('#ffffff', 200); } catch (e) { /* */ }
       await E.narr(ev, '紙切れに、少しずつ\n文字が浮かんでくる……。');
-      await ev.caption('♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ', { ms: 4200 });
+      await ev.caption('♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ', { ms: 4200, voice: 'v_fine_song_02' });   // 守り歌はフィーネの声（声の終わりまで待つ）
       try { R.Audio.sfx('quill'); } catch (e) { /* */ }
       await ev.caption(E.t('{hero}は、守り歌を\n年代記に書き記した。'), { ms: 2600 });
       E.lore(ev, 'lo_lighthouse_song');

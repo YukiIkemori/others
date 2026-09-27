@@ -93,7 +93,7 @@
     lo_roa_seat: { title: '朝の席', region: 'prologue', must: false, text: '食卓の東向きの席が、ひとつ空けてある。\n「昔からの習わしさ。誰の席かは……忘れちまったよ。」' },
     lo_roa_register: { title: '語り部の名簿', region: 'prologue', must: true, text: 'アルノ、ベルナ、リオナ……。リオナの欄に「戦にて」。\nその横に小さく、あとから「子も、病にて」。' },
     lo_ev_prologue: { title: '写し取り済みの掲示', region: 'prologue', must: true, text: '「ファロス灯台の守り歌、保管のため写し取り済み。\n――記録院ファロス出張所」' },
-    lo_lighthouse_song: { title: '灯台の守り歌', region: 'prologue', must: true, text: '♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ' },
+    lo_lighthouse_song: { title: '灯台の守り歌', region: 'prologue', must: true, text: '♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ', voice: 'v_fine_song_02' },   // voice: 年代記の章で聞き直せる（screens/chronicle.js）
     lo_pharos_oilboard: { title: '油の相場の札', region: 'prologue', must: false, text: '半島の魚油、森の樹脂、砂漠の黒い油、鉱山のりん石。\n「大灯火が細るほど、値は上がる」' },
     lo_silent_tract: { title: '静夜会の刷り物', region: 'prologue', must: false, text: '「夜は安らぎ、名は重荷。\n名を手放し、静かな夜を。――静夜会」' },
   });

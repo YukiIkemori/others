@@ -43,7 +43,7 @@
 - `V2_PLAN.md` §3.10 の BGM の一覧（17 曲）にも 5 曲を足すこと（リード）。
 
 ## 4. 砂漠（desert_*.js、2026-09-27）
-新しい 3 曲（tools/lyria_bgm.js、design/bgm/prompts.json の kasim・desert・caravan）と、前からある `pyramid`。build.js・validate.js の SLICE_BGM に足した。
+新しい 3 曲（BGM 生成の道具、design/bgm/prompts.json の kasim・desert・caravan）と、前からある `pyramid`。build.js・validate.js の SLICE_BGM に足した。
 | id | 鳴る所 | 曲 |
 |---|---|---|
 | `kasim` | オアシスの町カシム・屋内・宿場「砂の縁」 | D の短調（フリギア属）104、ウード・ネイ・ダルブッカ。ループ 28.8→75.0 s |
@@ -53,7 +53,7 @@
 録音の曲が無いときの代わり（R.Audio.FALLBACK）: kasim → town、desert → overworld、caravan → sorrow、pyramid → dungeon。
 
 ## 5. 雪原（snow_*.js、2026-09-27）
-新しい 3 曲（tools/lyria_bgm.js、design/bgm/prompts_snow.json の yule・bonfire・siege。各 2 本録って聞き比べ、ループの良い方）と、前からある `ice`・`ghost`。
+新しい 3 曲（BGM 生成の道具、design/bgm/prompts_snow.json の yule・bonfire・siege。各 2 本録って聞き比べ、ループの良い方）と、前からある `ice`・`ghost`。
 build.js・validate.js の SLICE_BGM に足した（`ice`・`ghost`・`yule`・`bonfire`・`siege`）。
 | id | 鳴る所 | 曲 |
 |---|---|---|

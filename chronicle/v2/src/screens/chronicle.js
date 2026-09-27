@@ -51,12 +51,28 @@
           (reg.chapter && reg.chapter.summary ? { title: reg.chapter.title, text: reg.chapter.summary } : cfg.summary ? { title: cfg.title, text: cfg.summary } : null);
         const pro = c.id === 'prologue';
         const title = (txt && txt.title) || (pro ? '序章' : S.regionName(c.id));
-        return { value: c.id, label: title, no: pro ? -1 : n++, text: txt ? (Array.isArray(txt.text) ? txt.text.join('\n') : txt.text || '') : '' };
+        return { value: c.id, label: title, no: pro ? -1 : n++, text: txt ? (Array.isArray(txt.text) ? txt.text.join('\n') : txt.text || '') : '', songs: this.songsOf(c.id) };
       });
     },
+    /** その章で書き写した、声のある読み物（R.DB.lore の voice。灯台の守り歌 v_fine_song_02 など）→ [{id, title, text, voice}] */
+    songsOf(region) {
+      const flags = (R.Game && R.Game.flags) || {};
+      return Object.entries(R.DB.lore || {}).filter(([id, d]) => d && d.voice && d.region === region && flags[id])
+        .map(([id, d]) => ({ id, title: d.title, text: Array.isArray(d.text) ? d.text.join('\n') : String(d.text || ''), voice: d.voice }));
+    },
+    /** 章の歌を聞き直す（A）。鳴っていれば止める。ボイスの音量 0 なら鳴らない（R.Audio.playVoice が null） */
+    playSong(row) {
+      const sg = row && row.songs && row.songs[0];
+      if (!sg || !R.Audio) return;
+      if (R.Audio.voiceId === sg.voice) { R.Audio.stopVoice(); this.songOn = null; return; }
+      const h = R.Audio.playVoice ? R.Audio.playVoice(sg.voice) : null;
+      this.songOn = h ? sg.voice : null;
+      if (!h) R.UIK.toast('ボイスの音量が 0 です（設定）', { anchor: 'bl' });
+    },
+    exit() { if (this.songOn && R.Audio && R.Audio.voiceId === this.songOn) R.Audio.stopVoice(); },
     refresh(keep) { this.list.setRows(this.tab === 0 ? this.chapterRows() : this.leadRows(), keep); },
     pick(row) {
-      if (this.tab !== 1) return;
+      if (this.tab !== 1) { this.playSong(row); return; }
       if (row.locked) { R.UIK.sfx('buzzer'); return; }
       if (row.st === 'done') { R.UIK.sfx('buzzer'); return; }
       if (row.pinned) { R.Leads.unpin(); R.UIK.toast('目印を外した', { anchor: 'bl', icon: 'pin' }); }
@@ -105,6 +121,14 @@
         R.UIK.text(g, row.no < 0 ? '序章' : `第 ${row.no + 1} 章`, px, y, { size: u(13), weight: 700, color: C.gold, track: u(2) }); y += u(26);
         R.UIK.text(g, row.label, px, y, { size: u(22), weight: 700, color: C.goldHi, maxW: pw }); y += u(40);
         for (const l of R.UIK.wrap(row.text || '', pw, { size: u(15.5) })) { R.UIK.text(g, l, px, y, { size: u(15.5), color: C.text }); y += u(28); if (y > dp.y + dp.h - u(30)) break; }
+        // 書き写した歌（A で聞き直す）
+        for (const sg of row.songs || []) {
+          if (y > dp.y + dp.h - u(110)) break;
+          y += u(8); R.UIK.rule(g, px, px + pw, y, 0.14); y += u(14);
+          const on = R.Audio && R.Audio.voiceId === sg.voice;
+          R.UIK.text(g, sg.title, px, y, { size: u(14), weight: 700, color: on ? C.goldHi : C.gold }); y += u(26);
+          for (const l of R.UIK.wrap(sg.text, pw, { size: u(15.5) })) { R.UIK.text(g, l, px, y, { size: u(15.5), color: on ? C.goldHi : C.text }); y += u(28); if (y > dp.y + dp.h - u(30)) break; }
+        }
       } else if (row) {
         const L = row.L;
         let cx = px;
@@ -121,7 +145,7 @@
         for (const l of R.UIK.wrap(text, pw, { size: u(15.5) })) { R.UIK.text(g, l, px, y, { size: u(15.5), color: row.locked ? C.text3 : C.text }); y += u(28); if (y > dp.y + dp.h - u(30)) break; }
         if (row.st === 'done') R.UIK.chip(g, px, dp.y + dp.h - u(40), '解決した', { kind: 'plain', size: 11, icon: 'check' });
       }
-      S.prompts(g, this.tab === 1 ? [{ btn: 'a', label: '目印' }, { btn: 'l', label: '年代記' }, { btn: 'b', label: '戻る' }] : [{ btn: 'r', label: '手がかり' }, { btn: 'b', label: '戻る' }]);
+      S.prompts(g, this.tab === 1 ? [{ btn: 'a', label: '目印' }, { btn: 'l', label: '年代記' }, { btn: 'b', label: '戻る' }] : [].concat(row && row.songs && row.songs.length ? [{ btn: 'a', label: R.Audio && R.Audio.voiceId === row.songs[0].voice ? '歌を止める' : '歌を聞く' }] : [], [{ btn: 'r', label: '手がかり' }, { btn: 'b', label: '戻る' }]));
     },
   });
 })(window.RPG);

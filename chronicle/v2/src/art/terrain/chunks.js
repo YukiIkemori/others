@@ -108,11 +108,14 @@
         const row = grid[y] || '';
         const ch = row.length === map.w ? row.charAt(x) : [...row][x];
         e = legend[ch] || outE;
+        // 見つける前の隠し通路の先（部屋・宝箱）は、入口の壁と同じ壁で描く（MapUtil.secretHidden）
+        const hid = R.MapUtil.secretHidden && R.MapUtil.secretHidden(map, x, y, st.secrets);
+        if (hid) e = hid;
       }
       const m = T._matInfo(e.mat);
       const c = { e, mat: e.mat, raw: e.mat, raised: false, rise: 1, face: null, water: !!m.water, hard: m.edge === 'hard' || !!QUAY[e.mat], tall: m.tall || null, deck: !!e.deck, secret: !!e.secret, found: false, walk: !e.solid && e.walk !== false && m.walk !== false };
       if (e.secret) {
-        c.found = st.secrets.indexOf(x + ',' + y) >= 0;
+        c.found = R.MapUtil.secretOpen ? R.MapUtil.secretOpen(map, x, y, st.secrets) : st.secrets.indexOf(x + ',' + y) >= 0;   // 同じひと続きのどこかで見つけた
         if (c.found) {
           c.mat = e.floor || theme.ground; c.walk = true; c.hard = !!QUAY[c.mat];
           const fm = T._matInfo(c.mat); c.water = !!fm.water; c.tall = null;
@@ -155,7 +158,7 @@
   /** マップ全体の「焼いて置く物」と「FIELD が描く物」を作る（地図と状態が同じ間は使い回す） */
   const planCache = new WeakMap();
   function planOf(map, st, theme, tile, amb) {
-    const sig = tile + '|' + st.chests.join(',') + '|' + st.lit.join(',') + '|' + JSON.stringify(st.lamps) + '|' + (R.Game && R.Game.flags ? Object.keys(R.Game.flags).length : 0) + '|' + amb.ambient;
+    const sig = tile + '|' + st.chests.join(',') + '|' + st.lit.join(',') + '|' + JSON.stringify(st.lamps) + '|' + (R.Game && R.Game.flags ? Object.keys(R.Game.flags).length : 0) + '|' + amb.ambient + '|' + st.secrets.join(';');
     let c = planCache.get(map);
     if (c && c.sig === sig) return c.plan;
     const s = tile / 32, items = [], dyn = [], occ = new Set();
@@ -163,6 +166,7 @@
     for (const o of map.objects || []) {
       if (o.x == null || o.y == null) continue;
       if (o.cond != null && o.type !== 'trail') { let ok = false; try { ok = !!(R.State && R.Game && R.State.check(o.cond)); } catch (e) { ok = false; } if (!ok) continue; }
+      if (R.MapUtil.secretHidden && R.MapUtil.secretHidden(map, o.x, o.y, st.secrets)) continue;   // 見つける前の隠し通路の先の物は出さない
       const [fx, fy] = T._objFeet(o, tile), stt = T._objState(map, o, st), lv = o.lv || 0;
       const lay = lv ? 'over' : null;
       switch (o.type) {

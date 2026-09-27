@@ -71,13 +71,14 @@
   /** マップの物から: 光だまり {x, y, r, color, k} と芯 {gx, gy, gr, gcolor}（マップの論理 px）。状態が変わるまで使い回す */
   F._lights = function (tile) {
     const G = R.Game || {}, m = S.map;
-    const sig = m.id + tile + ':' + ((G.lit && G.lit[m.id]) || []).length + ':' + Object.keys(G.lamps || {}).length;
+    const sig = m.id + tile + ':' + ((G.lit && G.lit[m.id]) || []).length + ':' + Object.keys(G.lamps || {}).length + ':' + ((G.secrets && G.secrets[m.id]) || []).length;
     if (S.lightSig === sig && S.lightList) return S.lightList;
     const t = tile, u = t / 32, out = [];
     const lit = (G.lit && G.lit[m.id]) || [];
     const add = (x, y, r, color, k, gy, gcolor, gr) => out.push({ x, y, r: r * u, color, k, gx: x, gy: gy != null ? gy : y, gcolor: gcolor || color, gr: (gr || 6) * u });
     for (const o of m.objects || []) {
       if (o.cond != null && !R.State.check(o.cond)) continue;
+      if (hiddenAt(m, o.x, o.y)) continue;   // 見つける前の隠し通路の先
       const cx = (o.x + 0.5) * t, cy = (o.y + 0.8) * t;
       if (o.type === 'prop') {
         const meta = (R.DB.props && R.DB.props[o.id]) || {};
@@ -146,6 +147,8 @@
     // over（足場・屋根の張り出し）→ 足場の上の人
     F.chunks.eachVisible((e) => { if (e.over) g.drawImage(e.over, e.cx * cs - cx, e.cy * cs - cy); });
     for (let i = 0; i < n; i++) { const e = sorted[i]; if (e.lv === 1) drawEnt(g, e, t, cx, cy); }
+    // 見つけた隠し通路の先が浮かび上がる間: 前の壁の絵を薄くしながら重ね、一行はその上に描き直す（secrets.js）
+    if (S.secretFx && F._secretFxDraw && F._secretFxDraw(g, t, cx, cy)) for (let i = 0; i < n; i++) { const e = sorted[i]; if (e.kind === 'lead' || e.kind === 'fol') drawEnt(g, e, t, cx, cy); }
     void list;
     // F6: 発光の描き直し（芯＋にじみ）
     glows(g, t, cx, cy, real);
@@ -170,6 +173,9 @@
     if (F._wayfindLabels) F._wayfindLabels(g, t, cx, cy);   // 出口の行き先・店の名前の札（近いときだけ）
     F.hud.draw(g, cam);
   };
+
+  /** 見つける前の隠し通路の先のマスか（MapUtil.secretHidden） */
+  function hiddenAt(m, x, y) { return x != null && !!(R.MapUtil.secretHidden && R.MapUtil.secretHidden(m, x, y)); }
 
   let sortBuf = [];
   function sortPool(n) {
@@ -200,6 +206,7 @@
       if (real && o.type !== 'trail') { const ce = F.chunks.at(o.x, o.y); if (!ce || !ce.fb) continue; }   // TERRAIN が焼いた物（宝箱・泉・しょく台…の今の状態もチャンクの props）
       if (o.type === 'exit' || o.type === 'examine' || o.type === 'door' && !o.look) continue;
       if (o.cond != null && o.type !== 'trail' && !R.State.check(o.cond)) continue;
+      if (hiddenAt(m, o.x, o.y)) continue;
       const h = o.type === 'building' ? (o.h || 1) : o.type === 'spring' ? 2 : 1;
       ent(o.type === 'building' ? 'bld' : 'obj', o, (o.y + h) * t - (o.type === 'trail' ? t : 1), o.lv, 1);
     }
@@ -488,6 +495,7 @@
     for (const o of m.objects || []) {
       if (o.type !== 'chest' || opened.includes(o.id)) continue;
       if (o.cond != null && !R.State.check(o.cond)) continue;
+      if (hiddenAt(m, o.x, o.y)) continue;
       const x = o.x * t - cx, y = o.y * t - cy;
       if (x < -t || y < -t || x > R.W || y > R.H) continue;
       // 2〜3 秒ごとに 4 コマのきらめき（位置でずらす）。暗がりの膜の上でも見える

@@ -80,6 +80,10 @@
       for (const e of Rl.ELEMENTS || []) items.push({ key: e, name: S.ename(e), icon: S.elemIcon(e), r: Rl.rankOf(c, 'e', e), el: true });
       const nw = this.profSeen(c);
       const cols = tall ? 2 : 3, cw = (pw - u(18) * (cols - 1)) / cols;
+      // 段の数の右端: 列の幅の 6 割か、いちばん長い名前（＋上がった印）と「100」が入る所の遠い方（狭い画面で名前と数字が重ならない）
+      const badgeW = (up) => R.UIK.measure('▲' + up, { size: u(10.5), weight: 700 }) + u(16);
+      const nameEnd = items.reduce((m, it) => { const up = nw && nw[it.key] != null ? (it.r || 1) - nw[it.key] : 0; return Math.max(m, R.UIK.measure(it.name, { size: u(13.5) }) + (up > 0 ? badgeW(up) : 0)); }, 0);
+      const numOff = Math.min(cw - u(24), Math.max(cw * 0.6, u(22) + nameEnd + u(8) + R.UIK.measure('100', { size: u(15), weight: 700 })));
       items.forEach((it, i) => {
         const xx = px + (i % cols) * (cw + u(18)), yy = y + Math.floor(i / cols) * u(28);
         R.UIK.icon(g, it.icon, xx, yy, u(15), it.el ? C.teal : C.text2);
@@ -93,8 +97,8 @@
           g.fillStyle = 'rgba(40,90,40,0.85)'; g.fill(); g.strokeStyle = 'rgba(142,224,138,0.8)'; g.lineWidth = 1; g.stroke(); g.restore();
           R.UIK.text(g, s2, bx + bw / 2, yy + u(2.5), { size: u(10.5), weight: 700, color: '#c8f7c0', align: 'center' });
         }
-        R.UIK.text(g, String(it.r || 1), xx + cw * 0.6, yy - u(1), { size: u(15), weight: 700, color: C.text, align: 'right' });
-        R.UIK.gauge(g, { x: xx + cw * 0.64, y: yy + u(7), w: cw * 0.36, h: u(2) }, it.r || 1, 100, it.el ? ['#3a8a8c', '#8fd6d8'] : ['#8a6a2a', '#f0cf7c']);
+        R.UIK.text(g, String(it.r || 1), xx + numOff, yy - u(1), { size: u(15), weight: 700, color: C.text, align: 'right' });
+        R.UIK.gauge(g, { x: xx + numOff + u(8), y: yy + u(7), w: Math.max(u(8), cw - numOff - u(8)), h: u(2) }, it.r || 1, 100, it.el ? ['#3a8a8c', '#8fd6d8'] : ['#8a6a2a', '#f0cf7c']);
       });
       y += Math.ceil(items.length / cols) * u(28) + u(10);
       if (y + u(60) < rp.y + rp.h) {

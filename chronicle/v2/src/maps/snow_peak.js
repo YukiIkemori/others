@@ -71,7 +71,7 @@
       O.push(K.sign(29, 43, '白竜の峰\nここより上、吹雪やまず。'));
       O.push(K.exam(46, 40, 'peak_overlook'));
       for (const [x, y] of [[22, 40], [34, 40], [24, 26], [34, 27], [37, 9], [45, 5]]) O.push(K.prop('ice_crystal', x, y));
-      for (const [x, y] of [[26, 38], [30, 38], [41, 12]]) O.push(K.prop('snow_lamp', x, y));
+      for (const [x, y] of [[26, 38], [30, 38], [41, 9]]) O.push(K.prop('snow_lamp', x, y));   // 41,9: 上の段の縁（下り口の通路をふさがない）
       O.push(K.prop('firewood', 31, 36), K.prop('sled', 23, 42), K.prop('snow_rock', 12, 24), K.prop('snow_rock', 44, 26));
       const keep = new Set();
       for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (K.at(g, x, y) === ',') keep.add(x + ',' + y);

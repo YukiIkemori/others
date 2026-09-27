@@ -266,6 +266,9 @@
       // 詳しい所と比べ
       const focusId = this.mode === 'cand' ? (this.clist.current() || {}).value : c.equip[s];
       const dp = tall ? { x: b.x, y: (this.mode === 'cand' ? cp.y + cp.h : sp.y + sp.h) + u(12), w: b.w, h: this.mode === 'cand' ? dpCandH : u(170) } : { x: cp.x + cp.w + u(16), y: b.y, w: rightX0 - (cp.x + cp.w + u(16)), h: cp.h };
+      S.prompts(g, this.mode === 'cand' ? [{ btn: 'a', label: '付ける' }, { btn: 'b', label: '戻る' }, { btn: 'y', label: '詳しく' }] : (S.tall() ? [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '戻る' }, { btn: 'r', label: '次の仲間' }] : [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '戻る' }, { btn: 'x', label: 'いちばん強く' }, { btn: 'r', label: '次の仲間' }]));
+      // 縦持ちの小さな画面（8 枠の一覧だけで埋まる）では、詳しい所と仲間を出さない（下の操作の札に重ねない）
+      if (tall && dp.y + dp.h > b.y + b.h + u(4)) return;
       R.UIK.panel(g, dp, { frost: true });
       const it = S.item(focusId);
       let y = dp.y + u(18);
@@ -318,7 +321,7 @@
       }
       // ほかの仲間
       const op = tall ? { x: b.x, y: dp.y + dp.h + u(12), w: b.w, h: b.y + b.h - (dp.y + dp.h + u(12)) } : { x: cp.x, y: cp.y + cp.h + u(14), w: rightX0 - cp.x, h: b.y + b.h - (cp.y + cp.h + u(14)) };
-      if (op.h >= u(40) + Math.max(1, S.party().length - 1) * u(28)) {   // 1 人 u(28) の行が入らない高さなら出さない（重ねない）
+      if (op.h >= u(40) + Math.max(1, S.party().length - 1) * u(24)) {   // 1 人 u(24) の行が入らない高さなら出さない（重ねない）
         R.UIK.panel(g, op, { frost: true });
         S.label(g, 'ほかの仲間が付けると', op.x + u(20), op.y + u(14));
         // 1 人 1 行: [顔（決まった幅）][名前（決まった幅）][増減の札を入るだけ]。札は S.deltaCells が幅を測って並べるので重ならない
@@ -340,7 +343,6 @@
           else S.deltaCells(g, ds, tx, 0, tw, { size: u(13.5), cy, lines: oh >= u(44) ? 2 : 1, lh: u(19) });
         });
       }
-      S.prompts(g, this.mode === 'cand' ? [{ btn: 'a', label: '付ける' }, { btn: 'b', label: '戻る' }, { btn: 'y', label: '詳しく' }] : (S.tall() ? [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '戻る' }, { btn: 'r', label: '次の仲間' }] : [{ btn: 'a', label: '選ぶ' }, { btn: 'b', label: '戻る' }, { btn: 'x', label: 'いちばん強く' }, { btn: 'r', label: '次の仲間' }]));
     },
   });
 })(window.RPG);

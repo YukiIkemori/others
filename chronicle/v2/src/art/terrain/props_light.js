@@ -39,6 +39,7 @@
     for (const o of map.objects || []) {
       if (o.x == null || o.y == null) continue;
       if (o.cond != null && o.type !== 'trail' && !check(o.cond)) continue;
+      if (env.st && R.MapUtil.secretHidden && R.MapUtil.secretHidden(map, o.x, o.y, env.st.secrets)) continue;   // 見つける前の隠し通路の先は灯りも漏らさない
       const [fx, fy] = T._objFeet(o, env.tile), stt = T._objState(map, o, env.st);
       switch (o.type) {
         case 'building': {

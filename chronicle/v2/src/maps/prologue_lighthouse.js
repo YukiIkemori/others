@@ -1,7 +1,8 @@
 // CONTENT-P: ファロス灯台（lighthouse_1〜3、ダンジョン。今の大きさ）。V2_PLAN §3.2・§3.3 P8・P9、WORLD_REDESIGN §6.2・§6.5、STORY_BIBLE §9.1
 //   lighthouse_1（36×32）岬と倉庫。塔の扉は灯台の鍵（prologue_key）で開ける（lighthouse_1_door、扉の物）。入ってすぐでチュートリアル（P8）。
 //                        泉は 1 階の中ほど（新）。宝箱 3。階段は北東。
-//   lighthouse_2（34×30）らせん。三重の輪を、仕切りのせいで遠回りして上る。泉は中の輪。北東の壁のひび（隠し通路）の先の小部屋にレアの箱。
+//   lighthouse_2（34×30）らせん。三重の輪を、仕切りのせいで遠回りして上る。南の回廊のつき当たりの、戸口をふさいだ崩れかけの壁
+//                        （隠し通路）の先が昔の物置で、レアの箱。
 //   lighthouse_3（26×22）灯室。手前の間に泉と灰色のマントの少女（P9）、奥の丸い灯室でページ食らい → 灯がともる。
 //   出現 z_lighthouse（1・2 階）。BGM tower、戦闘背景 tower。脱出 → ワールドの灯台の岬（lighthouse_1 の外への出口）。
 //   spawns: lighthouse_1.entrance（岬、ワールドから）・from_next（2 階から下りた所）
@@ -64,7 +65,7 @@
         ...PS('lantern', [[6, 3], [16, 3], [18, 3], [29, 3], [6, 13], [22, 14], [13, 14], [29, 13]]),
         P('bookshelf', 20, 3), P('bookshelf', 21, 3), P('table', 25, 10), P('chair', 24, 10), P('net', 20, 19),
         // 岬
-        ...PS('lamp_post', [[15, 23], [20, 23]]), P('bollard', 11, 29), P('bollard', 24, 29),
+        ...PS('lamp_post', [[16, 23], [19, 23]]), P('bollard', 11, 29), P('bollard', 24, 29),
         ...PS('rock_small', [[8, 23], [28, 23], [12, 27], [23, 26]]), ...PS('rock', capeRocks.filter(([x, y]) => g[y][x] === ',')), P('stump', 6, 24), P('log', 29, 25),
         K.sign(21, 25, 'ファロス灯台\n灯台守のほか、立ち入りを禁ず。'),
         { type: 'door', id: 'lh1_door', x: 17, y: 22, w: 2, scale: 1.55, locked: '扉には、鍵がかかっている', unlock: { cond: 'prologue_key', event: 'lighthouse_1_door' } },
@@ -106,23 +107,26 @@
       // 中の輪: 入ってすぐ東を仕切る → 北回りで南の口からまん中へ
       rect(g, 11, 19, 1, 3, '#');
       rect(g, 16, 18, 2, 1, '.');
-      // 北東の隠し部屋（外の壁の中）と、ひびの壁（隠し通路）
-      rect(g, 24, 1, 5, 3, '.');
-      put(g, 26, 4, 'S');
+      // 南の回廊の東の端は昔の物置（x 19〜23・y 24〜27。東は入口側の仕切り x 24〜25）。戸口を石でふさいだ壁 x 18 が
+      // 崩れかけていて、真ん中の 1 マスが抜けられる（隠し通路）。回廊のつき当たりに崩れた石と、すきま風の調べる所
+      vline(g, 18, 24, 27, '#');
+      put(g, 18, 25, 'S');
       const objects = [
         K.stairs(29, 26, { map: 'lighthouse_1', spawn: 'from_next' }), P('stairs_down', 29, 26),
         K.stairs(16, 16, { map: 'lighthouse_3', spawn: 'from_prev' }), P('stairs_up', 16, 16),
         P('sack', 14, 6), P('rock_small', 15, 7),   // 2 階の北の回廊の荷（泉は 3 階のボスの前だけ）
         K.chest('lh2_c1', 3, 26, { pool: 'p_T' }),
         K.chest('lh2_c2', 25, 17, { item: 'i_ether', n: 1 }),
-        K.chest('lh2_c3', 25, 2, { pool: 'p_rare' }),     // 隠し通路の先のレアの箱（V2_PLAN §3.7）
-        K.chest('lh2_c4', 27, 2, { gold: 120 }),
+        K.chest('lh2_c3', 22, 24, { pool: 'p_rare' }),    // 隠し通路の先（ふさいだ物置）のレアの箱（V2_PLAN §3.7）
+        K.chest('lh2_c4', 23, 27, { gold: 120 }),
         ...PS('lantern', [[2, 5], [31, 5], [2, 27], [31, 27], [8, 11], [25, 11], [8, 21], [25, 21], [16, 5], [16, 27], [13, 15], [20, 15]]),
         ...PS('crate', [[5, 5], [6, 5], [30, 10], [30, 11], [3, 15], [4, 15], [20, 26], [21, 26], [21, 20], [22, 20]]),
         ...PS('barrel', [[2, 12], [31, 16], [9, 26], [14, 5], [19, 12], [25, 14]]),
         ...PS('sack', [[7, 26], [28, 7], [10, 20], [22, 12]]),
         P('bookshelf', 20, 5), P('bookshelf', 21, 5), P('table', 18, 21), P('rock_small', 5, 20), P('net', 3, 8),
-        P('crate', 25, 1), P('lantern', 24, 1), P('lantern', 28, 1),
+        // 物置の中（見つけるまで描かない）と、つき当たりの崩れた石・すきま風
+        P('crate', 23, 24), P('barrel', 19, 24), P('sack', 19, 27),
+        P('rock_small', 17, 24), K.exam(17, 25, 'secret_hint', { text: '石でふさいだ古い戸口だ。\n目地が崩れて、すきま風が\n抜けてくる……。' }),
       ];
       K.def('lighthouse_2', Object.assign({}, BASE, {
         name: 'ファロス灯台', legend: LEG, rows: g, outside: 'wall_stone', objects,

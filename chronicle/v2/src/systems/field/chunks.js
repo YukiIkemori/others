@@ -359,7 +359,8 @@
     const ch = row.length === m.w ? row.charAt(x) : [...row][x];
     const L = m.legend[ch];
     if (L && L.secret) return R.MapUtil.secretFound(m.id, x, y) ? { mat: L.floor || 'stone_floor', _found: true } : L;
-    return L || null;
+    const hid = L && R.MapUtil.secretHidden && R.MapUtil.secretHidden(m, x, y);   // 見つける前の隠し通路の先は壁
+    return hid || L || null;
   }
   const isWall = (L) => !!(L && L.solid && !L._found);
   const isWater = (L) => !!(L && !L.solid && L.walk === false && WATER.test(L.mat));

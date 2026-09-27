@@ -1,5 +1,5 @@
 // CONTENT-P: 序章 P1・P2 とロアの里の人々（V2_PLAN §3.3、STORY_BIBLE §9.1 P1・P2、§3.4・§3.5・§10.2 の 1〜3）
-//   roa_house_intro  P1（DB.config.start.event）: 暗転のキャプション 3 枚 → 消灯の刻の窓明かりで「おはよう」（v_berna_prologue_01〜04）→ ev.createHero()
+//   roa_house_intro  P1（DB.config.start.event）: 暗転のキャプション 3 枚（1 枚目の後に守り歌、v_fine_song_01）→ 消灯の刻の窓明かりで「おはよう」（v_berna_prologue_01〜04）→ ev.createHero()
 //   roa_berna        P2: 白紙・灯台の火（細りはじめて三晩、きのう消えた）・潮風亭で仲間を → 傷薬 3 と 50 G。序章の後は近況とただの宿
 //   roa_lectern      書見台: 語り部の名簿（lo_roa_register）と「手がかり帳の使い方」の短い本
 //   roa_seat         朝の席（lo_roa_seat）   roa_shelf  本棚   roa_stone  語り石（lo_roa_stone）   roa_hall  語り石の間
@@ -22,6 +22,8 @@
       R.Engine.push(curtain);
       try {
         await ev.caption('……ねえ、聞こえる？', { ms: 2600 });
+        // 灯台の守り歌（オーナー 2026-09-27「メインだから声を」）: 幕の上でフィーネが子守歌のように。声の終わりまで待つ
+        await ev.caption('♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ', { ms: 4200, voice: 'v_fine_song_01' });
         await ev.caption('これは、忘れられかけた物語。', { ms: 2600 });
         await ev.caption('そして、それを語り直した、\nひとりの語り部の物語。', { ms: 3400 });
         await ev.wait(300);

@@ -498,6 +498,81 @@ const inDesert = (x, y) => x >= DESERT.x0 && x <= DESERT.x1 && y >= DESERT.y0 &&
 // 雪原の地方（ノルデン雪原・北の流氷原、tools/gen_world_snow.js）: 地形・町と入口・灯籠・出現表・地名を上から描く
 const SNOW = require('./gen_world_snow')({ get, set, rect, road, h2, fbm, P, S, LAMP, objects, npcs, exits, triggers, tilePatches, spawns, zones, areas, LEGEND, ROADS }).box;
 const inSnow = (x, y) => x >= SNOW.x0 && x <= SNOW.x1 && y >= SNOW.y0 && y <= SNOW.y1;
+
+// --- 街灯の置き場所をならす（v2/tools/qa/check_lamps.js と同じ決まり。オーナーの報告「街灯が通行不能で移動が面倒」）
+// 当たりのある灯り（waylamp・lamp_post・snow_lamp）が道の上・戸口の前・出入り口・着く所にあるか、そばの通り道を 1 マス幅にする・
+// 切るなら、近い良い所（3 マス以内、近い順）へ動かす。動かせない飾りの灯籠（lit: true）は外す。依頼の灯籠は id と条件のまま動かす
+(function settleLamps() {
+  const ROAD_CH = new Set(['.', '=', 'P']);
+  const isLamp = (o) => o.type === 'waylamp' || (o.type === 'prop' && /^(lamp_post|snow_lamp)$/.test(o.id));
+  const SOFT = /^(lantern|beacon|rock_small|bench|mushroom_glow|firefly|bones|thorn_bush|sand_mound|footprint|leaves_over|net)$/;   // 当たりの無い物（R.DB.props の solid でない物）
+  const occ = new Map();
+  const add = (x, y, o) => { const k = x + ',' + y; if (!occ.has(k)) occ.set(k, []); occ.get(k).push(o); };
+  for (const o of objects) {
+    if (o.type === 'building') { for (let j = 0; j < o.h; j++) for (let i = 0; i < o.w; i++) if (!(o.door && o.door.x === o.x + i && o.door.y === o.y + j)) add(o.x + i, o.y + j, o); }
+    else if (o.x != null && !(o.type === 'prop' && SOFT.test(o.id)) && o.type !== 'examine' && o.type !== 'trail') add(o.x, o.y, o);
+  }
+  const keep = new Set();
+  for (const e of exits) for (let j = 0; j < (e.h || 1); j++) for (let i = 0; i < (e.w || 1); i++) keep.add((e.x + i) + ',' + (e.y + j));
+  for (const s of Object.values(spawns)) keep.add(s.x + ',' + s.y);
+  for (const o of objects) {
+    if (o.type === 'building' && o.door) for (let j = 0; j <= 2; j++) keep.add(o.door.x + ',' + (o.door.y + j));
+    if ((o.type === 'stairs' || o.type === 'door') && o.x != null) for (const [dx, dy] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]]) keep.add((o.x + dx) + ',' + (o.y + dy));
+  }
+  const walk = (x, y) => inB(x, y) && walkCh(get(x, y)) && !occ.has(x + ',' + y);
+  const D4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+  function ok(x, y) {
+    if (!walk(x, y) || ROAD_CH.has(get(x, y)) || keep.has(x + ',' + y)) return false;
+    for (const [dx, dy] of D4) {
+      const nx = x + dx, ny = y + dy;
+      if (!walk(nx, ny)) continue;
+      if (!walk(nx + dx, ny + dy)) return false;                       // 街灯と壁の間が 1 マス
+      let n = 1;
+      for (let k = 1; k < 3 && walk(nx + dy * k, ny + dx * k); k++) n++;
+      for (let k = 1; k < 3 && walk(nx - dy * k, ny - dx * k); k++) n++;
+      if (n <= 2) return false;                                         // 幅 2 以下の通路の口
+    }
+    for (const [dx, dy] of [[1, 0], [0, 1]]) {                          // 幅 6 以下の通りのまん中
+      let a = 0, b = 0;
+      while (a < 8 && walk(x - dx * (a + 1), y - dy * (a + 1))) a++;
+      while (b < 8 && walk(x + dx * (b + 1), y + dy * (b + 1))) b++;
+      if (a + b + 1 <= 6 && a > 0 && b > 0) return false;
+    }
+    // まわり 8 マスの歩ける所が 5×5 の中でつながる
+    const inWin = (i, j) => Math.abs(i - x) <= 2 && Math.abs(j - y) <= 2 && !(i === x && j === y) && walk(i, j);
+    const ring = [];
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if ((dx || dy) && walk(x + dx, y + dy)) ring.push([x + dx, y + dy]);
+    if (ring.length > 1) {
+      const seen = new Set([ring[0].join()]), q = [ring[0]];
+      for (let i = 0; i < q.length; i++) {
+        const [cx, cy] = q[i];
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+          if ((!dx && !dy) || !inWin(cx + dx, cy + dy) || seen.has((cx + dx) + ',' + (cy + dy))) continue;
+          if (dx && dy && (!inWin(cx + dx, cy) || !inWin(cx, cy + dy))) continue;
+          seen.add((cx + dx) + ',' + (cy + dy)); q.push([cx + dx, cy + dy]);
+        }
+      }
+      if (ring.some((p) => !seen.has(p.join()))) return false;
+    }
+    return true;
+  }
+  const near = [];
+  for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) if (dx || dy) near.push([dx, dy]);
+  near.sort((a, b) => (a[0] * a[0] + a[1] * a[1]) - (b[0] * b[0] + b[1] * b[1]) || a[1] - b[1] || a[0] - b[0]);
+  for (let i = objects.length - 1; i >= 0; i--) {
+    const o = objects[i];
+    if (!isLamp(o)) continue;
+    const k0 = o.x + ',' + o.y, list = occ.get(k0) || [];
+    list.splice(list.indexOf(o), 1);
+    if (!list.length) occ.delete(k0);
+    if (!ok(o.x, o.y)) {
+      const to = near.map(([dx, dy]) => [o.x + dx, o.y + dy]).find(([x, y]) => ok(x, y));
+      if (to) { o.x = to[0]; o.y = to[1]; }
+      else if (o.lit === true || o.type === 'prop') { objects.splice(i, 1); continue; }
+    }
+    add(o.x, o.y, o);
+  }
+})();
 function applyPatches(on) {
   const gg = g.map((r) => r.slice());
   for (const p of tilePatches) {

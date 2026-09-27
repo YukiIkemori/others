@@ -115,7 +115,8 @@
       O.push(inn, bath);
       O.push(K.spring('pass_inn_s1', 22, 8));                   // 湯だまり（回復の泉）
       O.push(K.prop('stove_pipe', 24, 11), K.exam(28, 9, 'pass_inn_bath_pool'));
-      for (const [x, y] of [[14, 12], [19, 12], [14, 19], [19, 19], [21, 6], [30, 6], [9, 14]]) O.push(K.prop('snow_lamp', x, y));
+      // 氷の灯籠: 南北の道の両わき（道の外の雪）と湯殿の庭の角。道・1 マス幅の所には立てない（v2/tools/qa/check_lamps.js）
+      for (const [x, y] of [[14, 12], [19, 12], [14, 19], [19, 19], [21, 7], [31, 8]]) O.push(K.prop('snow_lamp', x, y));
       O.push(K.prop('firewood', 9, 8), K.prop('firewood', 20, 4), K.prop('sled', 26, 19), K.prop('hay_sled', 28, 21), K.prop('snow_barrel', 10, 20), K.prop('snow_fence', 20, 14), K.prop('snow_fence', 21, 14));
       O.push(K.prop('board', 18, 17), K.exam(18, 18, 'pass_inn_board'));
       O.push(K.sign(18, 23, '宿場「峠の宿」\n雪原と山地のあいだ。'));

@@ -3,7 +3,7 @@
 //
 //   node v2/tools/qa/check_voice.js
 //
-// 縦切りのボイス 22 本（§3.10）と、物語・あいさつのボイス 45 本（design/voice_story_map.json の story・bark）について:
+// 縦切りのボイス 22 本（§3.10）と、物語・あいさつのボイス（design/voice_story_map.json の story・bark。灯台の守り歌 v_fine_song_01・02 を含む）について:
 //  - v2/src/events の ev.say(…, {voice:'v_…'}) にちょうど 1 回ずつ出る（縦切りの外の v_ を使っていない）
 //  - 文面（改行を除く）が chronicle/design/voice/script.csv と 1 字も違わない
 //  - 音のファイル（chronicle/assets/voice/<id>.ogg）がある、ビルドの媒体の一覧（v2/dist/voice）にも写されている
@@ -89,6 +89,28 @@ const dist = path.join(V2, 'dist', 'voice');
 if (fs.existsSync(dist)) {
   const have = new Set(fs.readdirSync(dist).map((f) => f.replace(/\.\w+$/, '')));
   ok('ビルドの dist/voice に 22 本が写されている', SLICE.every((id) => have.has(id)), SLICE.filter((id) => !have.has(id)));
+}
+// 2026-09-27: 灯台の守り歌（オーナー「メインだから、つけてよ」）。フィーネの声で、冒頭の幕の上と、ページ食らいの後の紙切れ。年代記の序章で聞き直せる
+section('灯台の守り歌（v_fine_song_01・02）');
+{
+  const SONG = '♪　海の果てまで、灯よ届け\n帰る舟に、道を照らせ';
+  const lit = JSON.stringify(SONG).slice(1, -1);
+  const where = { v_fine_song_01: ['prologue_roa.js', 'roa_house_intro'], v_fine_song_02: ['prologue_lighthouse.js', 'lighthouse_3_boss'] };
+  for (const [id, [file, event]] of Object.entries(where)) {
+    const L = SMAP[id];
+    ok(`${id}: voice_story_map.json に story として載っている`, !!L && L.kind === 'story' && L.speaker === 'fine' && L.event === event && L.text === SONG, L);
+    const src = fs.readFileSync(path.join(V2, 'src', 'events', file), 'utf8');
+    ok(`${id}: ${file} の守り歌のキャプションに声がつく`, src.includes(`ev.caption('${lit}', { ms: 4200, voice: '${id}' })`));
+    const ogg = path.join(CHRON, 'assets', 'voice', id + '.ogg');
+    ok(`${id}: Ogg のファイルがある`, fs.existsSync(ogg) && fs.readFileSync(ogg).subarray(0, 4).toString() === 'OggS');
+    if (fs.existsSync(dist)) ok(`${id}: ビルドの dist/voice に写されている`, fs.existsSync(path.join(dist, id + '.ogg')));
+  }
+  const lead = fs.readFileSync(path.join(V2, 'src', 'events', 'leads_main.js'), 'utf8');
+  ok('読み物 lo_lighthouse_song に声（年代記で聞き直す）', /lo_lighthouse_song:[^\n]*voice: 'v_fine_song_02'/.test(lead));
+  const msg = fs.readFileSync(path.join(V2, 'src', 'uik', 'message.js'), 'utf8');
+  ok('UIK のキャプションが voice を鳴らし、声の終わりまで待つ', /const voiceId = o && o\.voice;/.test(msg) && /R\.Audio\.voice\(voiceId\)/.test(msg) && /st\.voiceDone \|\|/.test(msg));
+  const chr = fs.readFileSync(path.join(V2, 'src', 'screens', 'chronicle.js'), 'utf8');
+  ok('年代記の章で書き写した歌を聞き直せる（A）', /songsOf\(/.test(chr) && /playSong\(/.test(chr));
 }
 section('戦闘の主人公の声（A20）');
 {

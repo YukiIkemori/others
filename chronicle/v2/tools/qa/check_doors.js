@@ -132,7 +132,9 @@ const PAGE_LIB = function () {
         for (const e of m.exits || []) {
           const cells = [];
           for (let j = 0; j < (e.h || 1); j++) for (let i = 0; i < (e.w || 1); i++) cells.push([e.x + i, e.y + j]);
-          out.push({ map: id, kind: 'exit', id: e.x + ',' + e.y, cells, lv: 0, to: e.to.map, cond: e.cond, on: check(e.cond) });
+          // 屋内から町の建物の戸口へ戻る出口: 着くのは戸口の真下（下向き）
+          const tm = R.DB.maps[e.to.map], bd = m.kind === 'interior' && tm && (tm.objects || []).find((o) => o.type === 'building' && o.door && o.door.to && o.door.to.map === id);
+          out.push({ map: id, kind: 'exit', id: e.x + ',' + e.y, cells, lv: 0, to: e.to.map, cond: e.cond, on: check(e.cond), arrive: bd ? [bd.door.x, bd.door.y + 1] : null });
         }
       }
       return out;
@@ -274,6 +276,12 @@ async function worker(S, jobs, results, shots) {
         else {
           r = await walkInto(p, d);
           r.start = [st.x, st.y];
+          if (r.ok && d.arrive) {
+            // 出て着いたマス: 戸口の真下・下向き。少し待っても同じマップ（すぐまた移らない）
+            await p.waitForTimeout(400); await settle(p);
+            const a = await p.evaluate(() => { const s = RPG.Field._s; return { m: s.map.id, x: s.x, y: s.y, dir: s.dir }; });
+            if (a.m !== d.to || a.x !== d.arrive[0] || a.y !== d.arrive[1] || a.dir !== 's') { r.ok = false; r.why = `arrived at ${a.m} ${a.x},${a.y} ${a.dir} (want ${d.arrive.join(',')} s)`; }
+          }
           if (r.ok && shots && d.kind === 'door') await B.shot(p, path.join(V2, 'design', 'shots', 'qa_doors', `${d.map}_${d.id}.png`));
         }
       }

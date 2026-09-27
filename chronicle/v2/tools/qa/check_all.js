@@ -3,7 +3,7 @@
 //
 //   node v2/tools/qa/check_all.js [--browser] [--full] [--only name,…] [--jobs 3]
 //
-// 既定（速い版）: ビルド → 各担当の node のテスト → validate → progress → 文・ボイス・手がかり・宝箱・隠し通路・泉・密度・世界・仮の実装・到達・階段
+// 既定（速い版）: ビルド → 各担当の node のテスト → validate → progress → 文・ボイス・手がかり・宝箱・隠し通路・泉・密度・世界・仮の実装・到達・階段・戸口の形・街灯
 //                 → sim（sim_zones・--segments・sim_bosses・sim_growth・sim_glimmer --slice・sim_loot）
 // --browser: 各担当のブラウザのテスト（test_*_browser・test_core_flow・test_core_wipe・test_field_slice・test_bscene_flow）と check_ui・measure_night
 // --full:    --browser に加えて playthrough（5 本）・shots_slice・perf.js
@@ -40,7 +40,9 @@ const STEPS = [
   ['check_secrets', [T('qa/check_secrets.js'), '--no-build']],
   ['check_stubs', [T('qa/check_stubs.js')]],
   ['check_reach', [T('qa/check_reach.js')]],   // 戸口・出入り口・人・調べる物に出発から届く（FIELD の当たり、柵・物も）
+  ['check_lamps', [T('qa/check_lamps.js')]],   // 街灯（当たりのある灯り）が道・戸口の前・出入り口・1 マス幅の所に無く、道をふさがない
   ['check_stairs', [T('qa/check_stairs.js')]],   // 階段で着くマス: 行き先の階段の隣・離れる向き・歩ける・すぐ移らない（R.Field.stairsLanding）
+  ['check_doors --layout', [T('qa/check_doors.js'), '--layout']],   // 町の家の戸口: 外で移るのは戸の絵の下の 1 マス・屋内の出口も 1 マス・出て着くのは戸口の真下（下向き・すぐ移らない）
   // sim の速い版
   ['sim_zones', [T('sim_zones.js')]],   // --quick（n 120）は p95 などが標本のゆれで境を越えるので既定の n 400
   ['sim_zones --segments', [T('sim_zones.js'), '--segments', '--n', '60']],

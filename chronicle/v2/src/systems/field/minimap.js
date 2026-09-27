@@ -36,6 +36,7 @@
         if ((x - S.x) * (x - S.x) + (y - S.y) * (y - S.y) > REVEAL * REVEAL + 1) continue;
         const i = y * m.w + x;
         if (r.bits[i]) continue;
+        if (R.MapUtil.secretHidden && R.MapUtil.secretHidden(m, x, y)) continue;   // 見つける前の隠し通路の先は地図に載せない（secrets.js）
         r.bits[i] = 1;
         if (g) paint(g, m, x, y);
       }
