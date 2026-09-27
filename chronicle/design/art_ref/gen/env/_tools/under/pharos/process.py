@@ -94,7 +94,7 @@ def save_set(name, arr, rgba=False):
 
 save_set('pharos', base)
 save_set('pharos_emit', emit, True)
-o = np.zeros(A.shape[:2] + (4,), np.uint8); o[..., :3] = base; o[..., 3] = ov * 255
+o = np.zeros(A.shape[:2] + (4,), np.uint8); o[..., :3] = base * ov[..., None]; o[..., 3] = ov * 255   # clear RGB where transparent (small file)
 save_set('pharos_over', o, True)
 doors = [dict(x=b['door'][0] * T + 16, y=b['door'][1] * T + 30, id=b['id']) for b in blds]   # checked with doorsheet.py after the surgery
 json.dump(dict(id='pharos', kind='under', map='pharos', tile=32, size32=[W * T, H * T], windows32=wins, doors32=doors,

@@ -55,9 +55,9 @@
     // 施設のアイコン（町）: 建物の看板から
     c.icons = [];
     if (m.kind === 'town') for (const o of m.objects || []) if (o.type === 'building' && o.sign && FAC[o.sign] && !c.icons.includes(FAC[o.sign])) c.icons.push(FAC[o.sign]);
-    // 宝箱の残り（ダンジョンは常に。meta.chestsInfo で町・屋内も）
+    // 宝箱の数は出さない（持ち主の決まり 2026-09-27: 開けた数・総数の表示はいらない。meta.chestsInfo も見ない）
     const chests = (m.objects || []).filter((o) => o.type === 'chest');
-    const showChests = chests.length && (m.kind === 'dungeon' ? meta.chestsInfo !== false : !!meta.chestsInfo);
+    const showChests = false && chests.length;
     const opened = G ? chests.filter((o) => ((G.chests[m.id] || []).includes(o.id))).length : 0;
     c.chests = showChests ? `宝箱 ${opened}/${chests.length}` : '';
     c.chestsDone = showChests && opened === chests.length;
