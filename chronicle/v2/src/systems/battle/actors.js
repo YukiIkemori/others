@@ -34,24 +34,32 @@
     const cap = (a.boss ? CAP.boss : CAP[a.size] || CAP.m) * (R.layout === 'tall' ? 0.85 : 1);
     return vis > cap ? cap / vis : 1;
   };
-  /** 描いた絵の入る矩形（論理 px、余白つき）。戦闘背景の光を人と敵ごとに掛けるときの範囲（scene.js の litStage） */
-  A.bounds = function (st, a, pad) {
-    pad = pad == null ? 10 : pad;
-    const v = (st && st.vis && st.vis[a.uid]) || {};
-    const x = a.x + (v.dx || 0), y = a.y + (v.dy || 0);
-    const sh = a.sheetRef || A.sheet(a, false);
-    let l = 0, r = 0, u = 0, d = 0;
-    if (sh && sh.frames && sh.frames.length) {
-      const sc = A.scaleOf(a, sh);
-      for (const fr of sh.frames) {
-        if (!fr || !fr.c) continue;
-        const ox = fr.ox || 0, oy = fr.oy || 0, w = fr.c.width, h = fr.c.height;
-        const side = Math.max(ox, w - ox) * sc;   // 反転しても入るように左右は広い方
-        l = Math.max(l, side); r = Math.max(r, side); u = Math.max(u, oy * sc); d = Math.max(d, (h - oy) * sc);
-      }
+  /**
+   * 戦闘背景の光を掛けたコマ（multiply、1 色）。color = [r, g, b]（0〜255、8 刻みに丸めて覚える）。
+   * 光の地図を人ごとに 1 点で読んで掛ける（scene.js の litStage。人の中の明るさの差は小さいので 1 色で足りる）
+   */
+  const litMemo = new WeakMap();
+  A.litFrame = function (fr, color) {
+    if (!fr || !fr.c || !color || !(R.Hd.RZ && R.Hd.RZ.canvas)) return fr;
+    const q = color.map((v) => Math.min(255, Math.round(v / 8) * 8));
+    if (q[0] >= 248 && q[1] >= 248 && q[2] >= 248) return fr;
+    const key = q.join(',');
+    let m = litMemo.get(fr.c);
+    if (!m) { m = new Map(); litMemo.set(fr.c, m); }
+    let c = m.get(key);
+    if (!c) {
+      c = R.Hd.RZ.canvas(fr.c.width, fr.c.height);
+      const x = c.getContext('2d');
+      x.drawImage(fr.c, 0, 0);
+      x.globalCompositeOperation = 'multiply';
+      x.fillStyle = `rgb(${q[0]},${q[1]},${q[2]})`;
+      x.fillRect(0, 0, c.width, c.height);
+      x.globalCompositeOperation = 'destination-in';
+      x.drawImage(fr.c, 0, 0);
+      m.set(key, c);
+      if (m.size > 12) m.delete(m.keys().next().value);
     }
-    if (!(u > 0)) { const hh = A.height(a); u = hh * 1.25; l = r = hh * 0.9; d = 8; }
-    return { x: Math.floor(x - l - pad), y: Math.floor(y - u - pad), w: Math.ceil(l + r + pad * 2), h: Math.ceil(u + d + pad * 2) };
+    return { c, ox: fr.ox, oy: fr.oy, anchors: fr.anchors };
   };
   /** 絵の高さ（ねらいの印・数字の位置） */
   A.height = function (a) {
@@ -214,8 +222,10 @@
       const fps = (sh.fps && (sh.fps[pose] || sh.fps.idle)) || 6;
       let fi = Math.floor(Math.max(0, t - (v.poseT || 0)) / 1000 * fps);
       fi = LOOP[pose] ? fi % list.length : Math.min(list.length - 1, fi);
-      const fr = sh.frames[list[fi]] || sh.frames[0];
+      const fr0 = sh.frames[list[fi]] || sh.frames[0];
       const x = a.x + (v.dx || 0), y = a.y + (v.dy || 0);
+      // 戦闘背景の光（scene.js が st.lightAt を置いたときだけ）: 体の中ほどの光の色を掛ける
+      const fr = st.lightAt ? A.litFrame(fr0, st.lightAt(x, y - A.height(a) * 0.5)) : fr0;
       const sc = A.scaleOf(a, sh);
       R.Hd.draw(g, fr, x, y, sc < 1 ? { scale: sc } : {});
       if (v.flash > 0) { g.globalCompositeOperation = 'lighter'; R.Hd.draw(g, fr, x, y, sc < 1 ? { alpha: v.flash * 0.8, scale: sc } : { alpha: v.flash * 0.8 }); }

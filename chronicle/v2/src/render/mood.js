@@ -45,7 +45,7 @@
     // 洞窟（結晶と松明、光だまりは 1.35 倍。見本 dungeon.png の rgb(138,120,200) に周辺を強く）
     cave: m({ ambient: 'rgb(122,106,188)', lightDir: [0, -1], shadow: 'rgba(10,6,28,0.45)', grade: { sh: [10, -4, 22], hi: [14, 8, -6], lift: 3, sat: 1.04, con: 1.08 }, vignette: 0.7, bloom: 0.62, thr: 0.58, poolMul: 1.35, target: DUNGEON_TARGET }),
     // 海辺・港の外（夜光の海、青みの強い月）
-    coast: m({ ambient: 'rgb(104,114,190)', lightDir: [-0.7, -0.7], grade: { sh: [6, 0, 22], hi: [16, 8, -8], lift: 4, sat: 1.04, con: 1.06 }, vignette: 0.55, bloom: 0.58 }),
+    coast: m({ ambient: 'rgb(94,102,178)', lightDir: [-0.7, -0.7], grade: { sh: [6, 0, 22], hi: [16, 8, -8], lift: 4, sat: 1.04, con: 1.06 }, vignette: 0.55, bloom: 0.58 }),
   };
   Hd.MOOD_TABLE = TABLE;
 

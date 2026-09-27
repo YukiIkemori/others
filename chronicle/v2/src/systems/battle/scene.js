@@ -244,12 +244,6 @@
       if (mode) c.restore();
     }
   }
-  const LAY = { a: null, m: null };
-  function canvasOf(k, w, h) {
-    let c = LAY[k];
-    if (!c || c.width !== w || c.height !== h) { c = LAY[k] = R.Hd.RZ.canvas(w, h); }
-    return c;
-  }
   /** 光の地図（戦闘ごとに 1 回。灯りは背景のランタンの位置で動かない） */
   function stageLightMap(st, sh) {
     const m = sh.meta || {};
@@ -270,7 +264,7 @@
   /**
    * 戦闘背景の光（BEAST の依頼 22、meta.light === 'layer'）: 地面・人と敵・手前にだけ光の地図を multiply し、夜空（back）には掛けない。
    * 重さを抑える形（§2.10 の戦闘 3 ms）: 動かない ground と front は戦闘ごとに 1 回だけ「光を掛けた絵」に焼き（実キャンバスの解像度）、
-   * 毎フレームは人と敵を 1 人ずつ、その矩形の中だけで光を掛けて重ねる（y の順。重なりも元の順のまま）。
+   * 人と敵は光の地図を体の中ほどの 1 点で読み、その色を掛けたコマ（覚えておく）で描く（毎フレームの画面全体の合成をしない）。
    * 描く順: back → 光を掛けた ground → ランタンのゆらぎ → 影 → 人と敵（1 人ずつ光）→ 光を掛けた front → post → R.Post.frame
    */
   function litStatic(st, sh, g, name) {
@@ -299,41 +293,19 @@
     return c;
   }
   function blit(g, c) { g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.drawImage(c, 0, 0); g.restore(); }
-  /** 人と敵 1 人に光を掛けて g に重ねる（矩形の中だけ） */
-  function litActor(g, st, a, map, sh, tf) {
-    const b = _.actors.bounds(st, a, 12);
-    // 論理 → 実キャンバスの px（揺れの translate も tf に入っている）
-    const sx = tf.a, sy = tf.d;
-    let px = Math.floor(b.x * sx + tf.e), py = Math.floor(b.y * sy + tf.f);
-    let pw = Math.ceil(b.w * sx) + 2, ph = Math.ceil(b.h * sy) + 2;
-    const cw = g.canvas.width, ch = g.canvas.height;
-    if (px < 0) { pw += px; px = 0; }
-    if (py < 0) { ph += py; py = 0; }
-    pw = Math.min(pw, cw - px); ph = Math.min(ph, ch - py);
-    if (pw <= 0 || ph <= 0) return;
-    const A = canvasOf('a', cw, ch), M = canvasOf('m', cw, ch);
-    const ax = A.getContext('2d'), mx = M.getContext('2d');
-    ax.setTransform(1, 0, 0, 1, 0, 0); ax.globalCompositeOperation = 'source-over'; ax.globalAlpha = 1; ax.clearRect(px, py, pw, ph);
-    ax.save(); ax.beginPath(); ax.rect(px, py, pw, ph); ax.clip();
-    ax.setTransform(tf); ax.imageSmoothingEnabled = false;
-    _.actors.draw(ax, st, a);
-    ax.restore();
-    // 光の地図の同じ所を切り出し、絵の形で切り抜いて multiply
-    const W = sh.w || R.W, H = sh.h || R.H;
-    const mw = map.width / W, mh = map.height / H;   // 光の地図の解像度（論理 px あたり）
-    mx.setTransform(1, 0, 0, 1, 0, 0); mx.globalCompositeOperation = 'source-over'; mx.clearRect(px, py, pw, ph);
-    mx.imageSmoothingEnabled = true;
-    const lx0 = (px - tf.e) / sx, ly0 = (py - tf.f) / sy;   // 矩形の左上（論理）
-    mx.drawImage(map, lx0 * mw, ly0 * mh, (pw / sx) * mw, (ph / sy) * mh, px, py, pw, ph);
-    // destination-in はキャンバス全体に効く（絵の外を消す）ので、矩形で切って 1 人分だけにする
-    mx.save(); mx.beginPath(); mx.rect(px, py, pw, ph); mx.clip();
-    mx.globalCompositeOperation = 'destination-in'; mx.drawImage(A, px, py, pw, ph, px, py, pw, ph);
-    mx.restore();
-    ax.globalCompositeOperation = 'multiply'; ax.drawImage(M, px, py, pw, ph, px, py, pw, ph);
-    ax.globalCompositeOperation = 'source-over';
-    g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
-    g.drawImage(A, px, py, pw, ph, px, py, pw, ph);
-    g.restore();
+  /** 光の地図の 1 点の色（論理 px）→ [r, g, b]。地図の画素は戦闘ごとに 1 回だけ読む */
+  function lightSampler(st, sh, map) {
+    if (st.lmapPx && st.lmapPx.map === map) return st.lmapPx.at;
+    let data = null;
+    try { data = map.getContext('2d').getImageData(0, 0, map.width, map.height).data; } catch (e) { data = null; }
+    const W = sh.w || R.W, H = sh.h || R.H, mw = map.width, mh = map.height;
+    const at = data ? (x, y) => {
+      const px = Math.max(0, Math.min(mw - 1, Math.round(x * mw / W))), py = Math.max(0, Math.min(mh - 1, Math.round(y * mh / H)));
+      const i = (py * mw + px) * 4;
+      return [data[i], data[i + 1], data[i + 2]];
+    } : null;
+    st.lmapPx = { map, at };
+    return at;
   }
   function litStage(g, st, sh, parts) {
     if (_.flatStage || !g.canvas || !g.getTransform || !(R.Hd.RZ && R.Hd.RZ.canvas)) return false;
@@ -353,7 +325,8 @@
     if (P) { P.ground = (P.ground || 0) + now() - t0; t0 = now(); }
     parts.under(g);                                   // ランタンのゆらぎ・影（地面の上、光の後）
     if (P) { P.under = (P.under || 0) + now() - t0; t0 = now(); }
-    for (const a of parts.order) litActor(g, st, a, map, sh, tf);
+    st.lightAt = lightSampler(st, sh, map);           // 人と敵は体の中ほどの光の色を掛けたコマで描く（actors.js の litFrame）
+    try { for (const a of parts.order) _.actors.draw(g, st, a); } finally { st.lightAt = null; }
     if (P) { P.actors = (P.actors || 0) + now() - t0; t0 = now(); }
     put(front);
     if (P) { P.front = (P.front || 0) + now() - t0; P.n = (P.n || 0) + 1; }

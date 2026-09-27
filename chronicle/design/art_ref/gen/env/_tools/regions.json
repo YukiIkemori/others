@@ -1,0 +1,184 @@
+{
+ "desert": {
+  "mats": [
+   "dune_sand",
+   "cracked_clay",
+   "sandstone_floor",
+   "wall_sandstone"
+  ],
+  "face": "sandstone",
+  "props": [
+   "tall date palm tree",
+   "short palm tree",
+   "round cactus with flowers",
+   "desert market stall with a striped cloth canopy and spice sacks",
+   "stack of clay water jars",
+   "rolled carpets on a rack",
+   "sandstone obelisk with glyphs",
+   "broken sandstone pillar",
+   "tomb urn with a lid",
+   "animal skull and bones in sand",
+   "dry thorn bush",
+   "stone oasis well (dry)",
+   "copper brazier on a tripod (unlit)",
+   "wooden cart with barrels",
+   "small sand dune mound"
+  ]
+ },
+ "snow": {
+  "mats": [
+   "snow",
+   "snow_path",
+   "ice",
+   "wall_snow"
+  ],
+  "face": "snow_cliff",
+  "props": [
+   "snow-laden fir tree",
+   "small snowy fir",
+   "snow-covered boulder",
+   "stack of firewood under snow",
+   "wooden sled",
+   "frozen stone well with icicles",
+   "snowman-free snow bank mound",
+   "ice crystal formation",
+   "iron stove chimney pipe (unlit)",
+   "wooden ice-fishing hole frame",
+   "snowy wooden fence",
+   "barrel with snow on top",
+   "hanging lantern post with snow (unlit)",
+   "reindeer-free hay sled with sacks",
+   "icicle-covered signpost (blank)"
+  ]
+ },
+ "marsh": {
+  "mats": [
+   "mud",
+   "marsh_water",
+   "peat_grass",
+   "wall_marsh"
+  ],
+  "face": "mud_bank",
+  "props": [
+   "weeping willow tree",
+   "twisted swamp tree with hanging moss",
+   "clump of tall reeds",
+   "lily pads with a white flower",
+   "wooden stilt posts with rope",
+   "old bronze bell on a wooden frame",
+   "leaning gravestone with moss",
+   "will-o-wisp lantern post (lantern unlit, pale glass)",
+   "rotten stump in water",
+   "wooden boardwalk steps",
+   "mangrove root cluster",
+   "fishing trap basket",
+   "small rowboat stuck in mud",
+   "crooked signpost (blank)",
+   "cluster of glowing pale mushrooms"
+  ]
+ },
+ "isles": {
+  "mats": [
+   "white_paving",
+   "coral_sand",
+   "tide_rock",
+   "glow_sea"
+  ],
+  "face": "white_wall",
+  "props": [
+   "coconut palm",
+   "small palm",
+   "pink coral cluster",
+   "ship anchor leaning",
+   "stack of floats and buoys",
+   "fishing net drying on a frame",
+   "white clay flower pot with bougainvillea",
+   "blue-painted wooden bench",
+   "seashell pile",
+   "barrel of fish",
+   "rope bollard",
+   "small stone lighthouse lamp pillar (unlit)",
+   "driftwood log",
+   "beach umbrella of palm leaves",
+   "treasure map signboard (blank)"
+  ]
+ },
+ "mine": {
+  "mats": [
+   "mine_floor",
+   "scaffold",
+   "ore_rock",
+   "iron_grate"
+  ],
+  "face": "mine_wall",
+  "props": [
+   "mine cart full of ore on rails",
+   "empty mine cart",
+   "short straight rail track piece",
+   "pile of glowing blue ore crystals",
+   "pile of copper ore",
+   "timber support frame",
+   "blacksmith anvil on a stump",
+   "stone forge furnace (cold)",
+   "rack of pickaxes and shovels",
+   "hanging lantern on a hook post (unlit)",
+   "wooden crate of tools",
+   "dwarf-sized stone oath monument with carved runes",
+   "bellows",
+   "barrel of coal",
+   "iron lift cage frame"
+  ]
+ },
+ "ash": {
+  "mats": [
+   "ash",
+   "basalt_floor",
+   "lava",
+   "obsidian"
+  ],
+  "face": "basalt",
+  "props": [
+   "dead charred tree",
+   "small charred stump",
+   "steaming ground vent",
+   "sharp obsidian shard cluster",
+   "cooled lava rock",
+   "hot spring pool with stone rim",
+   "iron brazier (unlit)",
+   "arena banner on a pole (red cloth, no letters)",
+   "stone phoenix statue",
+   "pile of volcanic rocks",
+   "sulphur crystal cluster",
+   "rope barrier post",
+   "wooden weapon rack",
+   "clay water urn",
+   "ash-covered bush"
+  ]
+ },
+ "star": {
+  "mats": [
+   "marble_floor",
+   "star_mosaic",
+   "garden_hedge_top",
+   "wall_marble"
+  ],
+  "face": "marble",
+  "props": [
+   "brass telescope on a tripod",
+   "brass orrery / armillary sphere",
+   "lectern with an open book",
+   "stone statue of a robed scholar",
+   "star-shaped lamp post (unlit glass)",
+   "marble bench",
+   "small stone fountain",
+   "clipped topiary bush",
+   "stack of books",
+   "globe on a stand",
+   "bookshelf cart",
+   "sundial-shaped star dial",
+   "hanging banner with a star emblem (no letters)",
+   "potted blue flowers",
+   "iron gate section"
+  ]
+ }
+}

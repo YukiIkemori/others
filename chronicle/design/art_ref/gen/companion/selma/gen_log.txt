@@ -41,3 +41,9 @@
 00:06:41 sheet 1 -> art_ref/gen/companion/selma/comp_selma_s1.png (7 poses)
 00:06:42   pitch in raw image: 7.51 px per art pixel (upright median 601 px / 80)
 00:06:42 sheet 5 -> art_ref/gen/companion/selma/comp_selma_s5.png (4 poses)
+00:06:51 sheet 1: comp_selma_s1.png exists (resume: skipped; --force to redraw)
+00:06:51 sheet 2: comp_selma_s2.png exists (resume: skipped; --force to redraw)
+00:06:51 sheet 3: comp_selma_s3.png exists (resume: skipped; --force to redraw)
+00:06:51 sheet 4: comp_selma_s4.png exists (resume: skipped; --force to redraw)
+00:06:51 sheet 5: comp_selma_s5.png exists (resume: skipped; --force to redraw)
+00:06:51 pipeline: sheets.py ../art_ref/gen/companion/selma --companion selma --out out/comp_selma --check

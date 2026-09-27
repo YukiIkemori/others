@@ -71,3 +71,4 @@
 00:05:23   | 
 00:05:23   | packed field 368x676, battle 650x430, battle_bare 405x75, weapons 465x30, face 288x168 | palette 52 + face 41
 00:05:23 done (clean). pipeline output: out/arun_v2
+00:06:51 pipeline: sheets.py ../art_ref/gen/arun/arun --char arun --out out/arun_v2 --check
