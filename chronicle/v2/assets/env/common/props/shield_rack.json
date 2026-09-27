@@ -21,15 +21,15 @@
  },
  "feet": {
   "24": [
-   20,
+   8,
    20
   ],
   "32": [
-   27,
+   11,
    27
   ],
   "40": [
-   34,
+   14,
    34
   ]
  },
@@ -38,5 +38,6 @@
   "32": "shield_rack@32.png",
   "40": "shield_rack@40.png"
  },
- "src": "design/art_ref/gen/env/props/interior_b.png"
+ "src": "design/art_ref/gen/env/props/interior_b.png",
+ "wide": 2
 }

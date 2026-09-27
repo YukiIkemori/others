@@ -8,29 +8,29 @@
  "cell": {
   "24": [
    34,
-   58
+   36
   ],
   "32": [
    46,
-   77
+   48
   ],
   "40": [
    58,
-   96
+   60
   ]
  },
  "feet": {
   "24": [
-   17,
-   57
+   5,
+   35
   ],
   "32": [
-   23,
-   76
+   7,
+   47
   ],
   "40": [
-   29,
-   95
+   9,
+   59
   ]
  },
  "files": {
@@ -38,5 +38,6 @@
   "32": "double_bed@32.png",
   "40": "double_bed@40.png"
  },
- "src": "design/art_ref/gen/env/props/interior_b.png"
+ "src": "design/art_ref/gen/env/props/interior_b.png",
+ "wide": 2
 }

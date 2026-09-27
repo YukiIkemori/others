@@ -9,6 +9,8 @@
 //   T.Env.bld(defId) → {img:{tile:Image}, emit:{tile:Image}, j}   建物（地図の建物 id ごと。無ければ def.art の汎用の建物）
 //   T.Env.bbg(id) → {img:{layer:Image}, j}                           戦闘背景（back ground front post と _tall）
 //   T.Env.meanColor(id) → css | null 素材の代表の色（小地図・地図）
+//   T.Env.under(key, tile) → {img, k, j} | null   マップ 1 枚の描いた下絵（'<theme>/under/<name>'。map.art.image・overlay・emit が指す。
+//                                    k = tile / 画像のマスの大きさ。j = <name>.json の meta: windows32 など）
 (function (R) {
   'use strict';
   const T = (R.Terrain = R.Terrain || {});
@@ -18,12 +20,14 @@
 
   function table() { return (R.Media && R.Media.table && R.Media.table().env) || {}; }
   function build() {
-    const t = table(), out = { mat: {}, face: {}, prop: {}, bld: {}, bbg: {}, meta: {} };
+    const t = table(), out = { mat: {}, face: {}, prop: {}, bld: {}, bbg: {}, under: {}, meta: {} };
     for (const key of Object.keys(t)) {
       const parts = key.split('/'), meta = t[key].meta || {};
       out.meta[key] = meta;
       if (parts[0] === 'bbg') { const b = (out.bbg[parts[1]] = out.bbg[parts[1]] || {}); b[parts[2]] = key; continue; }
-      const sub = parts[1], name = parts[2] || '', m = /^(.*?)(_emit)?@(\d+)$/.exec(name);
+      const sub = parts[1], name = parts[2] || '';
+      if (sub === 'under') { const mu = /^(.*)@(\d+)$/.exec(name); if (mu) { const uk = parts[0] + '/under/' + mu[1]; (out.under[uk] = out.under[uk] || {})[+mu[2]] = key; } continue; }
+      const m = /^(.*?)(_emit)?@(\d+)$/.exec(name);
       if (!m) continue;
       const id = m[1], tile = +m[3];
       if (sub === 'mat') {
@@ -124,6 +128,16 @@
     if (!b || !b.back) return null;
     const out = { j: E.metaOf(b.back) || {}, layer: (name) => img(b[name]) };
     return out.layer('back') ? out : null;
+  };
+  /** 描いた下絵（マップ 1 枚）: 32 の絵の meta も返す（_emit・_over は meta を持たないので本体の名前で引く） */
+  E.under = function (key, tile) {
+    if (!E.ready || !key) return null;
+    const keys = I().under[key];
+    if (!keys) return null;
+    const p = pickTile(keys, tile);
+    if (!p) return null;
+    const baseKey = key.replace(/_(emit|over)$/, ''), bk = I().under[baseKey];
+    return { img: p.im, k: p.k, j: (bk && E.metaOf(bk[32])) || {} };
   };
   const meanCache = {};
   E.meanColor = function (id) {

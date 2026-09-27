@@ -79,6 +79,41 @@
       f: { mat: floor || 'wood_floor' },
       c: { mat: 'carpet' },
       d: { mat: floor || 'wood_floor', name: 'door' },
+      k: { mat: 'stone_floor' },   // 炉ばた・台所の石の床
+      p: { mat: 'plank' },         // 板の間（作業場・納戸）
     };
+  };
+
+  // ---------------------------------------------------------------- 家具を文字の絵で並べる（屋内。homes_slice・各町の屋内が使う）
+  // floor: 床の行（y = 2 から。1 文字目が x = 1）。wall: 上の壁の行（y = 1）に掛ける物。'.' は何も置かない、'-' は左の 2 マス幅の物の続き。
+  K.FURN = {
+    B: 'bed', D: ['double_bed', 2], T: 'table', L: ['dining_table', 2], c: 'chair', s: 'stool', K: 'cupboard', R: 'dresser', S: 'bookshelf',
+    J: 'shelf_jars', H: 'stove', F: ['fireplace', 2], P: 'house_plant', p: 'flower_pot', b: 'barrel', x: 'crate', k: 'sack', w: 'wash_tub',
+    l: 'lantern', C: 'candelabra', V: 'basket_veg', Y: 'basket_bread', Q: 'spinning_wheel', E: 'writing_desk', A: 'armor_stand',
+    Z: ['shield_rack', 2], N: ['bar_counter', 2], n: 'counter', O: 'potion_shelf', G: ['keg_rack', 2], h: 'hay', g: 'log', r: 'rug_roll',
+    e: 'bench', t: 'talestone', W: 'weapon_rack', o: 'planter', q: 'board', m: 'net', X: 'lamp_post', U: 'wash_tub',
+  };
+  K.WALL_DECO = {
+    w: 'wall_window', p: 'wall_painting', s: 'wall_shelf', h: 'wall_herbs', c: 'wall_sconce', t: 'wall_trophy', m: 'wall_chart',
+    y: 'wall_tapestry', k: 'wall_pots', a: 'wall_antlers', v: 'wall_wheel', o: 'wall_tools',
+  };
+  /** → objects[]（prop）。o.x0・o.y0 で左上をずらせる */
+  K.furnish = function (floor, wall, o) {
+    o = o || {};
+    const x0 = o.x0 != null ? o.x0 : 1, y0 = o.y0 != null ? o.y0 : 2, out = [];
+    (floor || []).forEach((row, j) => [...row].forEach((ch, i) => {
+      if (ch === '.' || ch === '-' || ch === ' ') return;
+      const f = K.FURN[ch];
+      if (!f) throw new Error('K.furnish: unknown furniture ' + ch);
+      if (Array.isArray(f)) out.push(K.prop(f[0], x0 + i, y0 + j, { w: f[1] }));
+      else out.push(K.prop(f, x0 + i, y0 + j));
+    }));
+    [...(wall || '')].forEach((ch, i) => {
+      if (ch === '.' || ch === ' ') return;
+      const id = K.WALL_DECO[ch];
+      if (!id) throw new Error('K.furnish: unknown wall decoration ' + ch);
+      out.push(K.prop(id, x0 + i, y0 - 1));
+    });
+    return out;
   };
 })(window.RPG);

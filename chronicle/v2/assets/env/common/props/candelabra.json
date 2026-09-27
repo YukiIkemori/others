@@ -38,5 +38,9 @@
   "32": "candelabra@32.png",
   "40": "candelabra@40.png"
  },
- "src": "design/art_ref/gen/env/props/interior_b.png"
+ "src": "design/art_ref/gen/env/props/interior_b.png",
+ "light32": [
+  0,
+  -35
+ ]
 }

@@ -1,5 +1,6 @@
 // UIK: 通知（MODERN_UI §3.3・§6.2）。すべての場面の上に重ね描き（R.Engine.overlay 'toast'）
 //   toast(text, o)   o = {icon, anchor:'bl'（システム: オートセーブ・セーブ）|'tr'（入手・手がかり）, ms: 2400}
+//   どちらも右上に出す（'bl' は名前だけ残した。'tr' の下に積む。会話の窓が開いている間は 'bl' を出さない）
 //   2.4 秒で消える。同じ角には 4 つまで積む（古い物から消える）。大きさは中で uiScale を掛ける。
 //   R.UIK.toastOffset = {bl: 0, tr: 0}: FIELD などが角の札（小地図・目印の札）の分だけずらすとき（掛けた後の px）
 (function (R) {
@@ -15,11 +16,19 @@
     const s = R.safe || { l: 0, t: 0, r: 0, b: 0 }, m = UIK.margin();
     const size = UIK.u(T.size.label), h = UIK.u(30), gap = UIK.u(8);
     const still = UIK.reduceMotion();
-    let yb = R.H - s.b - m - (UIK.toastOffset.bl || 0);
     let yt = s.t + m + (UIK.toastOffset.tr || 0);
+    // システムの通知（'bl' = オートセーブ・セーブなど）は、会話の窓（下の中央。縦持ちは幅いっぱい）と重ならないよう右上の
+    // 入手の札（'tr'）の下に積む（オーナーの所見 2026-09-27: オートセーブの札が NPC の台詞を隠す）。
+    // 会話・キャプションが開いている間は出さない（時間は進む。長い会話なら出ないまま消える）
+    const talking = !!(UIK.Message && UIK.Message.busy && UIK.Message.busy());
+    const order = [];
+    for (let i = list.length - 1; i >= 0; i--) if (list[i].anchor === 'tr') order.push(list[i]);
+    let ys = null;
+    for (let i = list.length - 1; i >= 0; i--) if (list[i].anchor !== 'tr') order.push(list[i]);
     // 新しい物ほど角に近い
-    for (let i = list.length - 1; i >= 0; i--) {
-      const t = list[i], age = now - t.t0;
+    for (const t of order) {
+      const age = now - t.t0;
+      if (t.anchor !== 'tr' && talking) continue;
       const kin = Math.min(1, age / T.ms.toastIn), kout = Math.min(1, (t.ms - age) / T.ms.toastOut);
       const k = Math.max(0, Math.min(kin, kout));
       const iw = t.icon ? size + UIK.u(8) : UIK.u(8);
@@ -27,7 +36,7 @@
       const slide = still ? 0 : (1 - UIK.ease(kin)) * UIK.u(14);
       let x, y;
       if (t.anchor === 'tr') { x = R.W - s.r - m - w + slide; y = yt; yt += h + gap; }
-      else { yb -= h; x = s.l + m - slide; y = yb; yb -= gap; }
+      else { if (ys == null) ys = yt + (UIK.toastOffset.bl || 0); x = R.W - s.r - m - w + slide; y = ys; ys += h + gap; }
       g.save();
       g.globalAlpha = k;
       UIK.panel(g, { x, y, w, h }, { r: UIK.u(8), a: 0.82, shadow: false });
@@ -42,6 +51,8 @@
   UIK.toast = function (text, o) {
     o = o || {};
     const anchor = o.anchor === 'tr' ? 'tr' : 'bl';
+    // 同じシステムの通知（オートセーブが続けて 2 回など）は積まずに出し直す
+    if (anchor === 'bl') for (let i = list.length - 1; i >= 0; i--) if (list[i].anchor === 'bl' && list[i].text === String(text)) list.splice(i, 1);
     list.push({ text: String(text), icon: o.icon, t0: R.Engine ? R.Engine.time : 0, ms: o.ms || UIK.T.ms.toast, anchor });
     // 同じ角は 4 つまで
     let n = 0;

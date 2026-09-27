@@ -99,7 +99,7 @@
           const lx = fx + a[0], ly = fy + a[1];
           const color = /crystal|mushroom|songstone/.test(o.id) ? S.crystalColor : spec.color;
           L(lx, fy - 4 * s, spec.r, color, spec.k * 1.2, 'pool', spec.kind, o.id + '@' + o.x + ',' + o.y);
-          if (/lamp|lantern|beacon|torch|crystal|stove/.test(o.id)) L(lx, ly, 24, color, 0.7, 'point', spec.kind, o.id);
+          if (/lamp|lantern|beacon|torch|crystal|stove|fireplace|candelabra|sconce/.test(o.id)) L(lx, ly, 24, color, 0.7, 'point', spec.kind, o.id);
           const soft = /crystal|mushroom|songstone/.test(o.id);
           G(lx, ly, { r: (o.id === 'beacon' ? 60 : soft ? 18 : 22) * s, core: (o.id === 'beacon' ? 9 : soft ? 1.5 : 3) * s, halo: (o.id === 'beacon' ? 60 : soft ? 18 : 22) * s, color, k: soft ? 0.55 : 0.9, type: spec.kind });
           break;
@@ -110,7 +110,8 @@
     return out;
   };
   // 物の灯りの芯の位置（DRAW の light の値。焼かずに知るため、よく使う物は表で持つ）
-  const ANCHOR = { lamp_post: [5, -46], lantern: [0, -7], table: [4, -12], stove: [0, -6], mushroom_glow: [0, -5], crystal: [0, -12], torch: [0, -13], beacon: [0, -50], songstone: [0, -18], ship: [14, -86], firefly: [0, -12], snow_lamp: [7, -32], ice_crystal: [0, -8] };
+  const ANCHOR = { lamp_post: [5, -46], lantern: [0, -7], table: [4, -12], stove: [0, -6], mushroom_glow: [0, -5], crystal: [0, -12], torch: [0, -13], beacon: [0, -50], songstone: [0, -18], ship: [14, -86], firefly: [0, -12], snow_lamp: [7, -32], ice_crystal: [0, -8],
+    candelabra: [0, -35], fireplace: [16, -10], wall_sconce: [-3, -27] };
   function anchorOf(id, s) { const a = ANCHOR[id] || [0, -10]; return [a[0] * s, a[1] * s]; }
 
   /** 光の地図の後: 窓のガラス・開いた戸口・壁の灯りを明るく描き直す（ctx はチャンク、X0, Y0 だけずらして描く） */

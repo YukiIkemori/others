@@ -21,15 +21,15 @@
  },
  "feet": {
   "24": [
-   16,
+   4,
    33
   ],
   "32": [
-   22,
+   6,
    44
   ],
   "40": [
-   28,
+   8,
    55
   ]
  },
@@ -38,5 +38,6 @@
   "32": "keg_rack@32.png",
   "40": "keg_rack@40.png"
  },
- "src": "design/art_ref/gen/env/props/interior_b.png"
+ "src": "design/art_ref/gen/env/props/interior_b.png",
+ "wide": 2
 }

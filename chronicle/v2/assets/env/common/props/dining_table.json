@@ -21,15 +21,15 @@
  },
  "feet": {
   "24": [
-   21,
+   9,
    21
   ],
   "32": [
-   28,
+   12,
    28
   ],
   "40": [
-   35,
+   15,
    35
   ]
  },
@@ -38,5 +38,6 @@
   "32": "dining_table@32.png",
   "40": "dining_table@40.png"
  },
- "src": "design/art_ref/gen/env/props/interior_b.png"
+ "src": "design/art_ref/gen/env/props/interior_b.png",
+ "wide": 2
 }

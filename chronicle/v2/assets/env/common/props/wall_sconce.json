@@ -38,5 +38,9 @@
   "32": "wall_sconce@32.png",
   "40": "wall_sconce@40.png"
  },
- "src": "design/art_ref/gen/env/props/interior_c.png"
+ "src": "design/art_ref/gen/env/props/interior_c.png",
+ "light32": [
+  0,
+  -27
+ ]
 }

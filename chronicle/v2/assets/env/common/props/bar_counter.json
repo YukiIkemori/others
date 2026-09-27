@@ -21,15 +21,15 @@
  },
  "feet": {
   "24": [
-   22,
+   10,
    23
   ],
   "32": [
-   29,
+   13,
    31
   ],
   "40": [
-   36,
+   16,
    39
   ]
  },
@@ -38,5 +38,6 @@
   "32": "bar_counter@32.png",
   "40": "bar_counter@40.png"
  },
- "src": "design/art_ref/gen/env/props/interior_b.png"
+ "src": "design/art_ref/gen/env/props/interior_b.png",
+ "wide": 2
 }

@@ -242,6 +242,14 @@
     cactus: { solid: true }, desert_palm: { solid: true, shadow: 'long' }, desert_stall: { solid: true }, carpet_rack: { solid: true }, cart_barrels: { solid: true },
     clay_jars: { solid: true }, copper_brazier: { solid: true, light: L('fire', 90), glow: true }, dry_well: { solid: true }, obelisk: { solid: true, shadow: 'long' },
     sand_mound: { soft: true }, thorn_bush: { soft: true }, tomb_urn: { solid: true }, bones: { soft: true }, broken_pillar: { solid: true, shadow: 'long' },
+    // 屋内の家具（v2/assets/env/common/props、design/art_ref/gen/env/props/interior_b）。2 マス幅の物は置く側が w: 2（絵の中心が 2 マスの境）
+    armor_stand: { solid: true, shadow: 'blob' }, shield_rack: { solid: true }, candelabra: { solid: true, light: L('candle', 64), glow: true },
+    fireplace: { solid: true, light: L('fire', 96), glow: true }, dining_table: { solid: true }, bar_counter: { solid: true }, potion_shelf: { solid: true },
+    keg_rack: { solid: true, shadow: 'blob' }, double_bed: { solid: true }, spinning_wheel: { solid: true }, basket_veg: { soft: true }, basket_bread: { soft: true },
+    writing_desk: { solid: true },
+    // 壁に掛ける物（interior_c）: 上の壁の行（y = 1）に置く。影なし
+    wall_window: {}, wall_painting: {}, wall_shelf: {}, wall_herbs: {}, wall_sconce: { light: L('candle', 56), glow: true }, wall_trophy: {},
+    wall_chart: {}, wall_tapestry: {}, wall_pots: {}, wall_antlers: {}, wall_wheel: {}, wall_tools: {},
   };
   for (const id of Object.keys(ENV_ONLY)) if (!DRAW[id]) { META[id] = ENV_ONLY[id]; DRAW[id] = function () { return null; }; DRAW[id].envOnly = true; }
   T._PROP_META = META;
