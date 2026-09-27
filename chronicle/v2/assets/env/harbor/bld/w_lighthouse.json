@@ -1,0 +1,71 @@
+{
+ "id": "w_lighthouse",
+ "kind": "building",
+ "theme": "harbor",
+ "footprint": [
+  3,
+  3
+ ],
+ "wall": 3,
+ "files": {
+  "24": "w_lighthouse@24.png",
+  "32": "w_lighthouse@32.png",
+  "40": "w_lighthouse@40.png"
+ },
+ "emitFiles": {
+  "24": "w_lighthouse_emit@24.png",
+  "32": "w_lighthouse_emit@32.png",
+  "40": "w_lighthouse_emit@40.png"
+ },
+ "size": {
+  "24": [
+   84,
+   156
+  ],
+  "32": [
+   112,
+   208
+  ],
+  "40": [
+   140,
+   260
+  ]
+ },
+ "anchor32": [
+  8,
+  208
+ ],
+ "door32": {
+  "x": 48.0,
+  "y": 0,
+  "w": 22,
+  "h": 32
+ },
+ "emit32": [
+  {
+   "kind": "beacon",
+   "x": 48,
+   "y": -168
+  }
+ ],
+ "roof32": [
+  25,
+  -196,
+  71,
+  -144
+ ],
+ "wallTop32": -144,
+ "src": "design/art_ref/gen/env/bld/harbor/w_lighthouse_g1.png",
+ "def_": {
+  "type": "building",
+  "id": "w_lighthouse",
+  "x": 105,
+  "y": 122,
+  "w": 3,
+  "h": 3,
+  "door": {
+   "x": 106,
+   "y": 124
+  }
+ }
+}

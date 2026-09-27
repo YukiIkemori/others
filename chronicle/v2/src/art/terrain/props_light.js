@@ -49,7 +49,9 @@
           out.moon.push([bx + sh.meta.roof[0], by + sh.meta.roof[1], sh.meta.roof[2] - sh.meta.roof[0], sh.meta.roof[3] - sh.meta.roof[1]]);
           // 描いた建物（env）: 灯った窓の画素だけの絵を光の後に描き直す（窓ごとの光と光のにじみは下の 'win' と同じ）
           const layer = sh.meta.emitLayer;
-          if (layer) out.emissive.push({ kind: 'img', c: layer, x: bx - sh.meta.envAnchor[0], y: by - sh.meta.envAnchor[1], w: layer.width, h: layer.height });
+          // o.lit = 灯る条件（灯台: 灯を取り戻すまでは灯室が弱い残り火。emit の 'beacon'）
+          const lit = o.lit == null || check(o.lit);
+          if (layer) out.emissive.push({ kind: 'img', c: layer, x: bx - sh.meta.envAnchor[0], y: by - sh.meta.envAnchor[1], w: layer.width, h: layer.height, a: lit ? 1 : 0.3 });
           for (const e of sh.meta.emit) {
             const ex = bx + e.x, ey = by + e.y;
             if (e.kind === 'win') {
@@ -61,6 +63,16 @@
               L(ex + e.w / 2, by + 18 * s, 66, S.windowColor, 1.3, 'wide', 'door', o.id);
               if (!layer) out.emissive.push({ kind: 'door', x: ex, y: ey, w: e.w, h: e.h });
               G(ex + e.w / 2, ey + e.h / 2, { r: 30 * s, core: 3 * s, halo: 30 * s, color: S.windowColor, k: 0.5, type: 'door' });
+            } else if (e.kind === 'beacon') {
+              // 灯台の灯室: 岬を照らす大きな光だまり・灯室の芯・回る光の帯（R.Light.glow の beam）。灯る前は小さく息づく残り火
+              if (lit) {
+                L(ex, by + 8 * s, 230, S.lampColor, 1.2, 'pool', 'beacon', o.id);
+                L(ex, ey + 30 * s, 60, '#ffe2a8', 0.9, 'point', 'beacon', o.id);
+                G(ex, ey, { r: 64 * s, core: 7 * s, halo: 64 * s, color: '#ffe2a8', k: 0.95, type: 'beacon', beam: { len: 420 * s, period: 9000, width: 0.12, squash: 0.5, k: 0.7 } });
+              } else {
+                L(ex, ey + 20 * s, 34, S.fireColor, 0.4, 'point', 'beacon', o.id);
+                G(ex, ey, { r: 16 * s, core: 2 * s, halo: 16 * s, color: S.fireColor, k: 0.45, type: 'ember', pulse: 3200 });
+              }
             } else if (e.kind === 'lamp') {
               L(ex, by + 10 * s, 70, S.lampColor, 1.1, 'pool', 'lamp', o.id);
               L(ex, ey, 22, S.lampColor, 0.8, 'point', 'lamp', o.id);
@@ -120,7 +132,7 @@
     ctx.save();
     for (const e of list) {
       const x = e.x - X0, y = e.y - Y0;
-      if (e.kind === 'img') { ctx.drawImage(e.c, Math.round(x), Math.round(y)); continue; }
+      if (e.kind === 'img') { ctx.globalAlpha = e.a != null ? e.a : 1; ctx.drawImage(e.c, Math.round(x), Math.round(y)); ctx.globalAlpha = 1; continue; }
       if (e.kind === 'win') {
         const g = ctx.createLinearGradient(0, y, 0, y + e.h);
         g.addColorStop(0, 'rgba(255,244,210,1)'); g.addColorStop(1, 'rgba(255,190,104,1)');

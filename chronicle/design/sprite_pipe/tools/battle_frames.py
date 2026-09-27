@@ -561,7 +561,7 @@ def normalise(job, raw_path, p, lay):
             # smaller pixels) is coarse but unbiased: take the head estimate nearest to it
             mp = float(np.mean(drawn_pitch_f(raw.crop(cbox)))) / key_pitch
             m = min((mg, mr, mi), key=lambda v: abs(v - mp))
-            if abs(mp - 1) < 0.04:        # drawn at the key cells' pitch: the model kept the size
+            if abs(mp - 1) < 0.08:        # drawn at (about) the key cells' pitch: the model kept the size
                 m = 1.0
             gscale = m
             job.log('  frame %d size: guide %.3f idle %.3f idle/corr %.3f pitch %.3f -> %.3f' % (i + 1, mg, mr, mi, mp, m))

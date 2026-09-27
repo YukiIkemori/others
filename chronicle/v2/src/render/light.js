@@ -13,6 +13,7 @@
 //       → 光の地図の canvas（使い回し。次の compose で上書き）
 //   R.Light.map(rect, o) → 光の地図の canvas だけ（チャンクに焼き込むときに。compose と同じ中身、使い回さない新しい canvas）
 //   R.Light.glow(g, x, y, {r, color, core, halo}, t)   発光の描き直し: 白に近い芯（半径 core、既定 6）＋芯の 3 倍のにじみ（加算、半径 halo、r でも可）。
+//       o.pulse（ms）= ゆっくり息づく、o.beam = {len, period, width, squash, k} 灯台の回る光の帯（world の w_lighthouse）。
 //       t（ms）を渡すと小さくゆらぐ（±8%、3 Hz。効果「高」だけ）。効果「切」は芯だけ
 //   R.Light.ring(g, x, y, r, t, o?)   先頭の人のランタンの光の輪（r = 88 art px、暗がりの階は 4 マス）。掛けた後の画面を暖色の灯りの下の色へ戻す
 //       （color-dodge。色は環境光から決める: o.mood / o.ambient、無ければ最後の compose の環境光）
@@ -225,7 +226,11 @@
     const a0 = g.globalAlpha, op = g.globalCompositeOperation, sm = g.imageSmoothingEnabled;
     g.imageSmoothingEnabled = true;
     g.globalCompositeOperation = 'lighter';
-    const k = o.k != null ? o.k : 1;
+    let k = o.k != null ? o.k : 1;
+    // o.pulse = ゆっくり息づく（周期 ms。灯台の残り火）、o.beam = 回る光の帯（灯台の灯室。{len, period, width}）
+    const still = t == null || reduced();
+    if (o.pulse && !still) k *= 0.72 + 0.28 * Math.sin((t / o.pulse) * 6.283);
+    if (o.beam && quality !== 'off') k *= beam(g, x, y, o.beam, still ? 0 : t, color, a0);
     if (quality !== 'off') {
       const hr = halo * f;
       g.globalAlpha = a0 * Math.min(1, k * f);
@@ -236,6 +241,25 @@
     g.drawImage(sprite('core', color), x - cr, y - cr, cr * 2, cr * 2);
     g.globalAlpha = a0; g.globalCompositeOperation = op; g.imageSmoothingEnabled = sm;
   };
+
+  /** 灯台の光の帯: 灯室から左右反対へ 2 本、上から見た地面へ平たく（y を潰す）ゆっくり回る。見る人の方（南）を向くと灯が強まる → 芯の強さの倍率 */
+  function beam(g, x, y, b, t, color, a0) {
+    const per = b.period || 9000, len = b.len || 320, wd = b.width || 0.13, sq = b.squash || 0.5;
+    const a = ((t / per) % 1) * 6.283;
+    for (const d of [0, Math.PI]) {
+      const th = a + d, face = Math.max(0, Math.sin(th));   // sin > 0 = 画面の下（南）向き
+      g.save();
+      g.translate(x, y); g.scale(1, sq); g.rotate(th);
+      const gr = g.createLinearGradient(0, 0, len, 0);
+      gr.addColorStop(0, 'rgba(255,236,190,0.55)'); gr.addColorStop(0.25, 'rgba(255,226,160,0.26)'); gr.addColorStop(1, 'rgba(255,220,150,0)');
+      g.globalAlpha = a0 * (b.k != null ? b.k : 0.8) * (0.55 + 0.45 * face);
+      g.fillStyle = gr;
+      g.beginPath(); g.moveTo(0, -3); g.lineTo(len, -len * wd); g.lineTo(len, len * wd); g.lineTo(0, 3); g.closePath(); g.fill();
+      g.restore();
+    }
+    g.globalAlpha = a0;
+    return 0.8 + 0.5 * Math.pow(Math.abs(Math.sin(a)), 6);   // 光がこちらを掃くたびに灯室がぱっと明るく
+  }
 
   // ランタンの輪の色: 掛けた後の画面（下地 × 環境光）を「下地 × 暖色」に近づける color-dodge の色。
   // dodge は ×1/(1−s) なので、s = 1 − 環境光 / 暖色（チャンネルごと、1〜3 倍）

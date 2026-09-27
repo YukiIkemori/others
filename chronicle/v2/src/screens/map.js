@@ -1,4 +1,4 @@
-// MENUS: 地図（MODERN_UI §6.12、E13、A17）。世界の一枚絵（R.Terrain.worldThumb）を画面いっぱいより少し小さく。拡大はしない。
+// MENUS: 地図（MODERN_UI §6.12、E13、A17）。町で X（params {town}）は先に町の地図（R.Field.townmap）、Y・R で世界の地図へ。世界の一枚絵（R.Terrain.worldThumb）を画面いっぱいより少し小さく。拡大はしない。
 //   印: 行った町（名前）・行ったダンジョン・目印の手がかり（琥珀の羽ペン、ゆっくり光る）・一行の位置（矢印）。右下に凡例。
 //   縦切りの範囲の外は「まだ知らない土地」。ワールドのマップが無いときは、行った場所の一覧だけを出す。
 (function (R) {
@@ -21,10 +21,33 @@
   };
 
   S.def('map', {
-    init() { this.thumb = null; this.tried = false; },
+    // params {town: mapId}（町で X）: 先にその町の地図。Y・R で世界の地図と行き来する。B・X で閉じる
+    init(p) {
+      this.thumb = null; this.tried = false;
+      const tm = p && p.town && R.DB.maps[p.town];
+      this.town = tm && tm.kind === 'town' && R.Field && R.Field.townmap ? tm.id : null;
+      this.view = this.town ? 'town' : 'world';
+    },
     update() {
       const I = R.Input;
+      if (this.town && (I.pressed('y') || I.pressed('r'))) { R.UIK.sfx('cursor'); this.view = this.view === 'town' ? 'world' : 'town'; return; }
       if (I.pressed('b') || I.pressed('a') || I.pressed('x')) { R.UIK.sfx('cancel'); this.close(undefined); }
+    },
+    promptList() {
+      if (!this.town) return [{ btn: 'b', label: '戻る' }];
+      return [{ btn: 'y', label: this.view === 'town' ? '世界の地図' : '町の地図' }, { btn: 'b', label: '閉じる' }];
+    },
+    /** 町の地図（R.Field.townmap が描く）: 町の名前・地図・凡例 */
+    drawTown(g) {
+      const b = S.box(), C = T().color, tall = S.tall(), m = R.DB.maps[this.town];
+      S.heading(g, '町の地図', b.x + u(8), b.y + u(6), 0, { size: 15, track: 4 });
+      R.UIK.text(g, m.name || m.id, b.x + u(8), b.y + u(26), { size: u(19), weight: 700, color: C.text });
+      const lw = tall ? b.w : Math.min(b.w, u(900));
+      const lh = R.Field.townmap.legendHeight(m.id, lw);
+      const area = { x: b.x + u(8), y: b.y + u(60), w: b.w - u(16), h: b.h - u(60) - lh - u(tall ? 70 : 18) };
+      const r = R.Field.townmap.draw(g, area, m.id) || area;
+      R.Field.townmap.legend(g, { x: b.x + (b.w - lw) / 2, y: Math.min(r.y + r.h + u(14), b.y + b.h - lh - u(tall ? 56 : 4)), w: lw, h: lh }, m.id);
+      S.prompts(g, this.promptList());
     },
     places() {
       const G = R.Game || {}, out = [];
@@ -36,6 +59,7 @@
       return out;
     },
     draw(g) {
+      if (this.view === 'town') { this.drawTown(g); return; }
       const b = S.box(), C = T().color, tall = S.tall(), G = R.Game || {};
       S.heading(g, '地図', b.x + u(8), b.y + u(6), 0, { size: 15, track: 4 });
       const w = worldMap();
@@ -55,7 +79,7 @@
         }
         const here = S.placeName();
         if (here) { R.UIK.icon(g, 'pin', area.x + u(30), y + u(8), u(16), C.teal); R.UIK.text(g, '今いる所：' + here, area.x + u(56), y + u(8), { size: u(15), color: C.teal }); }
-        S.prompts(g, [{ btn: 'b', label: '戻る' }]);
+        S.prompts(g, this.promptList());
         return;
       }
       // 一枚絵
@@ -105,7 +129,7 @@
         else R.UIK.icon(g, 'up', x - u(1), y - u(1), u(15), '#fff1c8');
         R.UIK.text(g, lab, x + u(22), y, { size: u(12.5), color: C.text2 });
       });
-      S.prompts(g, [{ btn: 'b', label: '戻る' }]);
+      S.prompts(g, this.promptList());
     },
   });
 })(window.RPG);

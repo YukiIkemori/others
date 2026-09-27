@@ -1,0 +1,611 @@
+{
+ "victory": {
+  "attempts": [
+   {
+    "raw": "raw/victory_a1.png",
+    "pitch": 8,
+    "lay": {
+     "HX": 81,
+     "G": 98,
+     "W": 149,
+     "H": 101
+    },
+    "quality": "high",
+    "extra": "",
+    "t": "2026-09-27T19:40:21",
+    "secs": 68.7
+   }
+  ],
+  "frames": [
+   {
+    "slot": 1,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      97.0,
+      65.5
+     ],
+     "height": 70,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   },
+   {
+    "slot": 2,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      99.5,
+      63.8
+     ],
+     "height": 87,
+     "rescaled": null,
+     "copy": 0.15,
+     "shift": [
+      -1,
+      0
+     ],
+     "err": 30.3
+    }
+   },
+   {
+    "slot": 3,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      98.5,
+      70.2
+     ],
+     "height": 88,
+     "rescaled": null,
+     "copy": 0.11,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 40.9
+    }
+   },
+   {
+    "slot": 4,
+    "kind": "keep",
+    "src": "victory_a",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.950",
+     "head_scale": 0.95,
+     "head": [
+      97.1,
+      63.9
+     ],
+     "height": 87,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 42.8
+    }
+   },
+   {
+    "slot": 5,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      98.5,
+      58.2
+     ],
+     "height": 89,
+     "rescaled": null,
+     "copy": 0.31,
+     "shift": [
+      -2,
+      0
+     ],
+     "err": 43.5
+    }
+   },
+   {
+    "slot": 6,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      98.8,
+      62.8
+     ],
+     "height": 89,
+     "rescaled": null,
+     "copy": 0.36,
+     "shift": [
+      -1,
+      0
+     ],
+     "err": 38.9
+    }
+   }
+  ],
+  "lay": {
+   "HX": 97,
+   "G": 122,
+   "W": 181,
+   "H": 125
+  },
+  "from_raw": "raw/victory_a1.png"
+ },
+ "attack": {
+  "attempts": [
+   {
+    "raw": "raw/attack_a1.png",
+    "pitch": 8,
+    "lay": {
+     "HX": 81,
+     "G": 86,
+     "W": 149,
+     "H": 89
+    },
+    "quality": "high",
+    "extra": "",
+    "t": "2026-09-27T19:40:33",
+    "secs": 90.0
+   }
+  ],
+  "frames": [
+   {
+    "slot": 1,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      97.0,
+      53.5
+     ],
+     "height": 70,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   },
+   {
+    "slot": 2,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      96.6,
+      62.2
+     ],
+     "height": 59,
+     "rescaled": null,
+     "copy": 0.1,
+     "shift": [
+      0,
+      2
+     ],
+     "err": 48.0
+    }
+   },
+   {
+    "slot": 3,
+    "kind": "keep",
+    "src": "windup",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.887",
+     "head_scale": 0.887,
+     "head": [
+      97.0,
+      58.1
+     ],
+     "height": 75,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 41.2
+    }
+   },
+   {
+    "slot": 4,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      95.1,
+      59.0
+     ],
+     "height": 73,
+     "rescaled": null,
+     "copy": 0.2,
+     "shift": [
+      2,
+      2
+     ],
+     "err": 54.5
+    }
+   },
+   {
+    "slot": 5,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      95.3,
+      62.2
+     ],
+     "height": 58,
+     "rescaled": null,
+     "copy": 0.06,
+     "shift": [
+      5,
+      3
+     ],
+     "err": 53.3
+    }
+   },
+   {
+    "slot": 6,
+    "kind": "keep",
+    "src": "slash",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 0.975,
+     "head": [
+      96.5,
+      49.2
+     ],
+     "height": 74,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 35.9
+    }
+   },
+   {
+    "slot": 7,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      94.7,
+      62.6
+     ],
+     "height": 60,
+     "rescaled": null,
+     "copy": 0.06,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 40.2
+    }
+   },
+   {
+    "slot": 8,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      97.0,
+      53.5
+     ],
+     "height": 70,
+     "rescaled": null,
+     "copy": 0.55,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 17.4
+    }
+   },
+   {
+    "slot": 9,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      97.0,
+      53.5
+     ],
+     "height": 70,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   }
+  ],
+  "lay": {
+   "HX": 97,
+   "G": 110,
+   "W": 181,
+   "H": 113
+  },
+  "from_raw": "raw/attack_a1.png"
+ },
+ "cast": {
+  "attempts": [
+   {
+    "raw": "raw/cast_a1.png",
+    "pitch": 8,
+    "lay": {
+     "HX": 81,
+     "G": 81,
+     "W": 149,
+     "H": 84
+    },
+    "quality": "high",
+    "extra": "",
+    "t": "2026-09-27T19:40:39",
+    "secs": 92.0
+   }
+  ],
+  "frames": [
+   {
+    "slot": 1,
+    "kind": "keep",
+    "src": "idle_a",
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      97.0,
+      48.5
+     ],
+     "height": 70,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 0.0
+    }
+   },
+   {
+    "slot": 2,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      98.0,
+      48.5
+     ],
+     "height": 70,
+     "rescaled": null,
+     "copy": 0.33,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 11.4
+    }
+   },
+   {
+    "slot": 3,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      98.1,
+      47.9
+     ],
+     "height": 70,
+     "rescaled": null,
+     "copy": 0.24,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 40.4
+    }
+   },
+   {
+    "slot": 4,
+    "kind": "keep",
+    "src": "cast_b",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.950",
+     "head_scale": 0.95,
+     "head": [
+      97.1,
+      52.9
+     ],
+     "height": 69,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 45.4
+    }
+   },
+   {
+    "slot": 5,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      97.2,
+      49.8
+     ],
+     "height": 74,
+     "rescaled": null,
+     "copy": 0.2,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 43.5
+    }
+   },
+   {
+    "slot": 6,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      94.7,
+      50.6
+     ],
+     "height": 67,
+     "rescaled": null,
+     "copy": 0.16,
+     "shift": [
+      7,
+      0
+     ],
+     "err": 44.2
+    }
+   },
+   {
+    "slot": 7,
+    "kind": "keep",
+    "src": "cast_a",
+    "checks": {
+     "ok": false,
+     "why": "head scale 0.937",
+     "head_scale": 0.937,
+     "head": [
+      96.9,
+      48.7
+     ],
+     "height": 69,
+     "rescaled": null,
+     "copy": null,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 35.0
+    }
+   },
+   {
+    "slot": 8,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      95.4,
+      55.4
+     ],
+     "height": 64,
+     "rescaled": null,
+     "copy": 0.07,
+     "shift": [
+      40,
+      1
+     ],
+     "err": 52.2
+    }
+   },
+   {
+    "slot": 9,
+    "kind": "new",
+    "src": null,
+    "checks": {
+     "ok": true,
+     "why": "",
+     "head_scale": 1.0,
+     "head": [
+      99.0,
+      48.5
+     ],
+     "height": 70,
+     "rescaled": null,
+     "copy": 0.29,
+     "shift": [
+      0,
+      0
+     ],
+     "err": 22.5
+    }
+   }
+  ],
+  "lay": {
+   "HX": 97,
+   "G": 105,
+   "W": 181,
+   "H": 108
+  },
+  "from_raw": "raw/cast_a1.png"
+ }
+}

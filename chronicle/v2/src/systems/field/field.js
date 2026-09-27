@@ -66,7 +66,7 @@
       if (S.mv || S.arriving || S.entering || F._locked() || R.Engine.fade.a > 0.01 || R.Events.busy()) return;
       const I = R.Input;
       if (I.pressed('y') || I.pressed('start')) { F._openHub('menu'); return; }
-      if (I.pressed('x')) { if (!F.hud.cycleMap()) F._openHub('map'); return; }   // ダンジョン: 小地図 → 大きな地図 → 出さない（hud.js）。町・世界: 世界の地図（X・B で閉じる。Y のメニューの「地図」からも）
+      if (I.pressed('x')) { if (!F.hud.cycleMap()) F._openHub('map', S.map.kind === 'town' ? { town: S.map.id } : undefined); return; }   // ダンジョン: 小地図 → 大きな地図 → 出さない（hud.js）。町: 町の地図（Y・R で世界の地図）。世界: 世界の地図（X・B で閉じる。Y のメニューの「地図」からも）
       if (I.pressed('a')) { F._act(); return; }
       const d = I.dir8();
       if (d.dx || d.dy) {
@@ -78,9 +78,9 @@
   };
   F.scene = scene;
 
-  F._openHub = function (id) {
+  F._openHub = function (id, params) {
     F.lock('menu');
-    R.Screens.open(id).then((r) => {
+    R.Screens.open(id, params).then((r) => {
       F.unlock('menu');
       R.Input.touchLayout('field');
       // ハブの結果（§2.11 SCREEN_RESULTS.menu）: 閉じた後にワープ・脱出・タイトル

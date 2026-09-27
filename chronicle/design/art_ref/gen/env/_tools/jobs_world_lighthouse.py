@@ -106,6 +106,10 @@ def build(raw):
         lit = box & m & (r > 150) & (g > 0.6 * r) & (r - b > 30)
         if lit.sum() < 12:
             lit = box & m & ((r + g + b) / 3 > 110)
+        from scipy import ndimage   # drop stray rust-orange specks on the gallery
+        lab, n = ndimage.label(lit)
+        for i, sl in enumerate(ndimage.find_objects(lab)):
+            if (lab[sl] == i + 1).sum() < 4: lit[lab == i + 1] = False
         fn = '%s@%d.png' % (ID, t)
         save(s, os.path.join(dd, fn)); files[t] = fn
         e = s.copy()

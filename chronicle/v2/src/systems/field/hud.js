@@ -14,7 +14,7 @@
   const H = (F.hud = F.hud || {});
   const TWO_H = 2 * 3600 * 1000;
   const FAC = { inn: 'inn', shop: 'shop', tavern: 'chat', item: 'bag', weapon: 'sword', armor: 'shield', church: 'light', guild: 'journal', records: 'book', record: 'book' };
-  const PROMPTS_TOWN = [{ btn: 'y', label: 'メニュー' }, { btn: 'x', label: '地図' }, { btn: 'b', label: '走る' }];
+  const PROMPTS_TOWN = [{ btn: 'y', label: 'メニュー' }, { btn: 'x', label: '地図' }, { btn: 'b', label: '走る' }];   // 町の X は「町の地図」（draw で）
   const PROMPTS_DUN = [{ btn: 'y', label: 'メニュー' }, { btn: 'x', label: '地図' }, { btn: 'b', label: '走る' }];
   // ダンジョンの地図（設定 fieldMap）: X で 小地図 → 大きな地図 → 出さない → 小地図。ボタン表示は「次に押すと何になるか」
   const MAP_NEXT = { mini: 'big', big: 'off', off: 'mini' };
@@ -180,6 +180,7 @@
     // ---- 右下: ボタン表示
     if (top && showPrompts()) {
       PROMPTS_DUN[1].label = mode ? MAP_LABEL[mode] : '地図';
+      PROMPTS_TOWN[1].label = S.map.kind === 'town' ? '町の地図' : '地図';
       R.UIK.prompts(g, S.map.kind === 'dungeon' ? PROMPTS_DUN : PROMPTS_TOWN, 'br');
     }
   };

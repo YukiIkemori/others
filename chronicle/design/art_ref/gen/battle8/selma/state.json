@@ -293,19 +293,19 @@
     "checks": {
      "ok": true,
      "why": "",
-     "head_scale": 1.025,
+     "head_scale": 1.0,
      "head": [
       82.2,
-      46.8
+      49.9
      ],
-     "height": 65,
-     "rescaled": 1.072,
+     "height": 61,
+     "rescaled": null,
      "copy": 0.07,
      "shift": [
       7,
-      1
+      0
      ],
-     "err": 29.0
+     "err": 30.2
     }
    },
    {
@@ -337,19 +337,19 @@
     "checks": {
      "ok": true,
      "why": "",
-     "head_scale": 0.975,
+     "head_scale": 1.0,
      "head": [
-      82.0,
-      46.6
+      81.5,
+      49.2
      ],
-     "height": 65,
-     "rescaled": 1.042,
-     "copy": 0.05,
+     "height": 62,
+     "rescaled": null,
+     "copy": 0.08,
      "shift": [
-      9,
+      8,
       1
      ],
-     "err": 30.4
+     "err": 31.5
     }
    },
    {

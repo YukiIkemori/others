@@ -335,4 +335,7 @@
       tag(g, s.name, x, y - 11 * (t / 32), { alpha: a, size: 11, color: '#fff1d6' });
     }
   };
+  // 町の地図（townmap.js）が看板と同じ絵と種類を使う
+  W.KIND = KIND;
+  W.pict = pict;
 })(window.RPG);

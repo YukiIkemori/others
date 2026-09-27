@@ -669,7 +669,7 @@
     const g = this.bg, X0 = this.X0, Y0 = this.Y0, S = this.size, t = this.tile, C = this.C;
     T._drawEmissive(g, this.emissive, X0, Y0, this.s);
     // 描いた建物の灯った窓の絵（kind 'img'）は over（屋根・壁の上の層）にも、over の形の中だけ描き直す（屋根窓が夜に灯らなかった。ENV の依頼）
-    if (this.og) for (const e of this.emissive) if (e.kind === 'img') { this.og.save(); this.og.globalCompositeOperation = 'source-atop'; this.og.drawImage(e.c, Math.round(e.x - X0), Math.round(e.y - Y0)); this.og.restore(); }
+    if (this.og) for (const e of this.emissive) if (e.kind === 'img') { this.og.save(); this.og.globalCompositeOperation = 'source-atop'; this.og.globalAlpha = e.a != null ? e.a : 1; this.og.drawImage(e.c, Math.round(e.x - X0), Math.round(e.y - Y0)); this.og.restore(); }
     const [x0, y0, x1, y1] = this.cells;
     let water = false;
     for (let y = y0 - 1; y <= y1 && !water; y++) for (let x = x0 - 1; x <= x1; x++) if (C(x, y).water) { water = true; break; }
