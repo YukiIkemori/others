@@ -85,6 +85,8 @@ function run() {
       n++;
       const where = `${rel}:${line}`;
       const t = s.replace(/\u0000/g, 'X');   // テンプレートの ${…} は ASCII の 1 字として数える（空白の検査で誤らない）
+      // 他社の名前は data の名前だけでなく、画面に出す文字列（戦闘の見本の台本など）でも使わない（「かしの」などの一般の語は除く）
+      if (!/^src\/core\/stubs\//.test(rel)) for (const w of partial) if (w.length >= 3 && !/^[ぁ-ゖ]+$/.test(w) && t.includes(w)) E('T1', `${where} '${w}' in a string (STYLE_JA §7.1): ${clip(t)}`);
       for (const w of srcBanned) if (t.includes(w) && !SRC_EXC.some((e) => e.includes(w) && t.includes(e))) E('T2', `${where} '${w}' (§7.3): ${clip(t)}`);
       if (joyo) for (const ch of t) {
         if (!KANJI.test(ch) || joyo.has(ch) || allowed.has(ch) || ch === '々') continue;

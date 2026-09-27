@@ -11,3 +11,22 @@
 02:56:34   pitch in raw image: 5.89 px per art pixel (upright median 365 px / 62)
 02:56:36 sheet 4 -> art_ref/gen/companion/noela/comp_noela_s4.png (15 poses)
 02:56:36 sheet 5 attempt 1: generating 1536x1536 (pitch 8, quality medium, 2 refs)
+02:58:26   pitch in raw image: 7.92 px per art pixel (upright median 634 px / 80)
+02:58:28 sheet 5 -> art_ref/gen/companion/noela/comp_noela_s5.png (4 poses)
+02:58:28 pipeline: sheets.py ../art_ref/gen/companion/noela --companion noela --out out/comp_noela --check
+03:04:00   | ■ シートの状態
+03:04:00   |   シート1 設定画: OK  comp_noela_s1.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+03:04:00   |   シート2 フィールドの歩き: OK  comp_noela_s2.png  ドット 8.00px → 描かれた格子のまま（48.5 ドット）
+03:04:00   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_noela_s3.png  ドット 8.00px → 描かれた格子のまま（61.0 ドット）
+03:04:00   |   シート4 戦闘の行動ポーズ＋武器なし版: OK  comp_noela_s4.png  ドット 8.00px → 描かれた格子のまま（62.0 ドット）
+03:04:00   |   シート5 顔の表情: OK  comp_noela_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+03:04:01   size check hit: 0.98 of the hero's same pose (relative to idle_a)
+03:04:01   sheet 3 hit: size redo line ignored (same size as the hero's pose) -> overrides scale_ok
+03:04:01 no redo lines left
+03:04:01 pipeline: sheets.py ../art_ref/gen/companion/noela --companion noela --out out/comp_noela
+03:14:10   |   シート2 フィールドの歩き: OK  comp_noela_s2.png  ドット 8.00px → 描かれた格子のまま（48.5 ドット）
+03:14:10   |   シート3 戦闘の基本ポーズ: 確認あり  comp_noela_s3.png  ドット 8.00px → 描かれた格子のまま（61.0 ドット）
+03:14:10   |   シート4 戦闘の行動ポーズ＋武器なし版: OK  comp_noela_s4.png  ドット 8.00px → 描かれた格子のまま（62.0 ドット）
+03:14:10   |   シート5 顔の表情: OK  comp_noela_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+03:14:10   | 
+03:14:10   | packed field 108x216, battle 725x324, battle_bare 355x67, face 304x84 | palette 52 + face 48

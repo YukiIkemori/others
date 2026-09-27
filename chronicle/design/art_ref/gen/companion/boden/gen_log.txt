@@ -22,3 +22,9 @@
 02:51:37   |   シート5 顔の表情: OK  comp_boden_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
 02:51:37 no redo lines left
 02:51:37 pipeline: sheets.py ../art_ref/gen/companion/boden --companion boden --out out/comp_boden
+02:58:13   |   シート2 フィールドの歩き: OK  comp_boden_s2.png  ドット 8.00px → 描かれた格子のまま（47.5 ドット）
+02:58:13   |   シート3 戦闘の基本ポーズ: 確認あり  comp_boden_s3.png  ドット 8.00px → 描かれた格子のまま（63.5 ドット）
+02:58:13   |   シート4 戦闘の行動ポーズ＋武器なし版: 確認あり  comp_boden_s4.png  ドット 8.00px → 描かれた格子のまま（64.0 ドット）
+02:58:13   |   シート5 顔の表情: OK  comp_boden_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+02:58:13   | 
+02:58:13   | packed field 135x216, battle 660x356, battle_bare 370x67, face 324x84 | palette 52 + face 48

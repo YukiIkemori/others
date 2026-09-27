@@ -12,3 +12,26 @@
 02:57:18   note: smash is 52x79 art px, larger than its cell 112x80 (clipped)
 02:57:18 sheet 4 -> art_ref/gen/companion/morga/comp_morga_s4.png (15 poses)
 02:57:19 sheet 5 attempt 1: generating 1536x1536 (pitch 8, quality medium, 2 refs)
+02:59:46   pitch in raw image: 7.80 px per art pixel (upright median 624 px / 80)
+02:59:47 sheet 5 -> art_ref/gen/companion/morga/comp_morga_s5.png (4 poses)
+02:59:47 pipeline: sheets.py ../art_ref/gen/companion/morga --companion morga --out out/comp_morga --check
+03:08:28   | ■ シートの状態
+03:08:28   |   シート1 設定画: OK  comp_morga_s1.png  ドット 8.00px → 描かれた格子のまま（62.0 ドット）
+03:08:28   |   シート2 フィールドの歩き: 確認あり  comp_morga_s2.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+03:08:28   |   シート3 戦闘の基本ポーズ: 要作り直し  comp_morga_s3.png  ドット 8.00px → 描かれた格子のまま（60.0 ドット）
+03:08:28   |   シート4 戦闘の行動ポーズ＋武器なし版: 要作り直し  comp_morga_s4.png  ドット 8.00px → 描かれた格子のまま（62.0 ドット）
+03:08:28   |   シート5 顔の表情: OK  comp_morga_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+03:08:29   size check hit: 0.88 of the hero's same pose (relative to idle_a)
+03:08:29   sheet 3 hit: size redo line ignored (same size as the hero's pose) -> overrides scale_ok
+03:08:30   size check glimmer: 0.94 of the hero's same pose (relative to idle_a)
+03:08:30   sheet 3 glimmer: size redo line ignored (same size as the hero's pose) -> overrides scale_ok
+03:08:31   size check windup: 1.08 of the hero's same pose (relative to cast_a)
+03:08:31   sheet 4 windup: size redo line ignored (same size as the hero's pose) -> overrides scale_ok
+03:08:31 no redo lines left
+03:08:31 pipeline: sheets.py ../art_ref/gen/companion/morga --companion morga --out out/comp_morga
+03:15:51   |   シート2 フィールドの歩き: 確認あり  comp_morga_s2.png  ドット 8.00px → 描かれた格子のまま（46.0 ドット）
+03:15:51   |   シート3 戦闘の基本ポーズ: 確認あり  comp_morga_s3.png  ドット 8.00px → 描かれた格子のまま（60.0 ドット）
+03:15:51   |   シート4 戦闘の行動ポーズ＋武器なし版: 確認あり  comp_morga_s4.png  ドット 8.00px → 描かれた格子のまま（62.0 ドット）
+03:15:51   |   シート5 顔の表情: OK  comp_morga_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+03:15:51   | 
+03:15:51   | packed field 126x208, battle 530x332, battle_bare 325x68, face 308x84 | palette 52 + face 47

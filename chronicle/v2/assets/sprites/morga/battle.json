@@ -1,0 +1,918 @@
+{
+ "character": "morga",
+ "set": "battle",
+ "look": "morga",
+ "source": "out/comp_morga/battle",
+ "cell": [
+  106,
+  83
+ ],
+ "anchor": [
+  64,
+  80
+ ],
+ "frames": [
+  {
+   "id": "idle_a",
+   "x": 0,
+   "y": 0,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     76,
+     19
+    ],
+    "center": [
+     65,
+     51
+    ],
+    "front": [
+     48,
+     46
+    ]
+   }
+  },
+  {
+   "id": "idle_b",
+   "x": 106,
+   "y": 0,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     77,
+     19
+    ],
+    "center": [
+     65,
+     51
+    ],
+    "front": [
+     48,
+     46
+    ]
+   }
+  },
+  {
+   "id": "step",
+   "x": 212,
+   "y": 0,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     60,
+     24
+    ],
+    "center": [
+     64,
+     55
+    ],
+    "front": [
+     34,
+     53
+    ]
+   }
+  },
+  {
+   "id": "guard",
+   "x": 318,
+   "y": 0,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     60,
+     25
+    ],
+    "center": [
+     60,
+     56
+    ],
+    "front": [
+     18,
+     43
+    ]
+   }
+  },
+  {
+   "id": "hit",
+   "x": 424,
+   "y": 0,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     72,
+     27
+    ],
+    "center": [
+     70,
+     57
+    ],
+    "front": [
+     40,
+     75
+    ]
+   }
+  },
+  {
+   "id": "weak",
+   "x": 0,
+   "y": 83,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     39,
+     26
+    ],
+    "center": [
+     60,
+     57
+    ],
+    "front": [
+     34,
+     29
+    ]
+   }
+  },
+  {
+   "id": "ko",
+   "x": 106,
+   "y": 83,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     72,
+     47
+    ],
+    "center": [
+     67,
+     63
+    ],
+    "front": [
+     24,
+     67
+    ]
+   }
+  },
+  {
+   "id": "victory_a",
+   "x": 212,
+   "y": 83,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     46,
+     6
+    ],
+    "center": [
+     63,
+     48
+    ],
+    "front": [
+     40,
+     22
+    ]
+   }
+  },
+  {
+   "id": "victory_b",
+   "x": 318,
+   "y": 83,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     57,
+     21
+    ],
+    "center": [
+     59,
+     53
+    ],
+    "front": [
+     38,
+     43
+    ]
+   }
+  },
+  {
+   "id": "glimmer",
+   "x": 424,
+   "y": 83,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     61,
+     23
+    ],
+    "center": [
+     60,
+     54
+    ],
+    "front": [
+     40,
+     40
+    ]
+   }
+  },
+  {
+   "id": "windup",
+   "x": 0,
+   "y": 166,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     82,
+     12
+    ],
+    "center": [
+     62,
+     51
+    ],
+    "front": [
+     38,
+     32
+    ]
+   }
+  },
+  {
+   "id": "slash",
+   "x": 106,
+   "y": 166,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     66,
+     20
+    ],
+    "center": [
+     69,
+     55
+    ],
+    "front": [
+     29,
+     71
+    ]
+   }
+  },
+  {
+   "id": "thrust_ready",
+   "x": 212,
+   "y": 166,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     58,
+     21
+    ],
+    "center": [
+     60,
+     53
+    ],
+    "front": [
+     22,
+     34
+    ]
+   }
+  },
+  {
+   "id": "thrust",
+   "x": 318,
+   "y": 166,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     53,
+     20
+    ],
+    "center": [
+     55,
+     53
+    ],
+    "front": [
+     2,
+     40
+    ]
+   }
+  },
+  {
+   "id": "charge",
+   "x": 424,
+   "y": 166,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     47,
+     35
+    ],
+    "center": [
+     59,
+     62
+    ],
+    "front": [
+     34,
+     78
+    ]
+   }
+  },
+  {
+   "id": "smash",
+   "x": 0,
+   "y": 249,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     63,
+     2
+    ],
+    "center": [
+     58,
+     43
+    ],
+    "front": [
+     32,
+     27
+    ]
+   }
+  },
+  {
+   "id": "cast_a",
+   "x": 106,
+   "y": 249,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     62,
+     18
+    ],
+    "center": [
+     63,
+     51
+    ],
+    "front": [
+     31,
+     40
+    ]
+   }
+  },
+  {
+   "id": "cast_b",
+   "x": 212,
+   "y": 249,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     43,
+     17
+    ],
+    "center": [
+     64,
+     51
+    ],
+    "front": [
+     38,
+     23
+    ]
+   }
+  },
+  {
+   "id": "item",
+   "x": 318,
+   "y": 249,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     59,
+     19
+    ],
+    "center": [
+     62,
+     51
+    ],
+    "front": [
+     35,
+     29
+    ]
+   }
+  },
+  {
+   "id": "evade",
+   "x": 424,
+   "y": 249,
+   "w": 106,
+   "h": 83,
+   "anchor": [
+    64,
+    80
+   ],
+   "points": {
+    "head": [
+     65,
+     19
+    ],
+    "center": [
+     71,
+     48
+    ],
+    "front": [
+     40,
+     56
+    ]
+   }
+  }
+ ],
+ "poses": {
+  "idle_a": [
+   0
+  ],
+  "idle_b": [
+   1
+  ],
+  "step": [
+   2
+  ],
+  "guard": [
+   3
+  ],
+  "hit": [
+   4
+  ],
+  "weak": [
+   5
+  ],
+  "ko": [
+   6
+  ],
+  "victory_a": [
+   7
+  ],
+  "victory_b": [
+   8
+  ],
+  "glimmer": [
+   9
+  ],
+  "windup": [
+   10
+  ],
+  "slash": [
+   11
+  ],
+  "thrust_ready": [
+   12
+  ],
+  "thrust": [
+   13
+  ],
+  "charge": [
+   14
+  ],
+  "smash": [
+   15
+  ],
+  "cast_a": [
+   16
+  ],
+  "cast_b": [
+   17
+  ],
+  "item": [
+   18
+  ],
+  "evade": [
+   19
+  ],
+  "anim_idle": [
+   0,
+   1
+  ],
+  "anim_guard": [
+   3
+  ],
+  "anim_hit": [
+   4
+  ],
+  "anim_weak": [
+   5
+  ],
+  "anim_ko": [
+   6
+  ],
+  "anim_glimmer": [
+   9
+  ],
+  "anim_item": [
+   18
+  ],
+  "anim_evade": [
+   19
+  ],
+  "anim_step": [
+   2
+  ]
+ },
+ "fps": {
+  "anim_idle": 1.92,
+  "anim_guard": 8.0,
+  "anim_hit": 8.0,
+  "anim_weak": 8.0,
+  "anim_ko": 8.0,
+  "anim_glimmer": 8.0,
+  "anim_item": 8.0,
+  "anim_evade": 8.0,
+  "anim_step": 8.0
+ },
+ "anims": {
+  "idle": {
+   "frames": [
+    "idle_a",
+    "idle_b"
+   ],
+   "ms": [
+    520,
+    520
+   ],
+   "loop": true
+  },
+  "attack_sword": {
+   "keys": [
+    {
+     "frame": "step",
+     "ms": 140,
+     "dx": -24,
+     "ease": "out"
+    },
+    {
+     "frame": "windup",
+     "ms": 110,
+     "dx": -24,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "slash",
+     "ms": 220,
+     "dx": -24,
+     "hit": true,
+     "fx_at": "front"
+    },
+    {
+     "frame": "idle_a",
+     "ms": 200,
+     "dx": 0,
+     "ease": "in_out"
+    }
+   ]
+  },
+  "attack_thrust": {
+   "keys": [
+    {
+     "frame": "step",
+     "ms": 140,
+     "dx": -24,
+     "ease": "out"
+    },
+    {
+     "frame": "thrust_ready",
+     "ms": 110,
+     "dx": -24,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "thrust",
+     "ms": 220,
+     "dx": -24,
+     "hit": true,
+     "fx_at": "front"
+    },
+    {
+     "frame": "idle_a",
+     "ms": 200,
+     "dx": 0,
+     "ease": "in_out"
+    }
+   ]
+  },
+  "attack_smash": {
+   "keys": [
+    {
+     "frame": "step",
+     "ms": 140,
+     "dx": -24,
+     "ease": "out"
+    },
+    {
+     "frame": "charge",
+     "ms": 110,
+     "dx": -24,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "smash",
+     "ms": 220,
+     "dx": -24,
+     "hit": true,
+     "fx_at": "front"
+    },
+    {
+     "frame": "idle_a",
+     "ms": 200,
+     "dx": 0,
+     "ease": "in_out"
+    }
+   ]
+  },
+  "cast": {
+   "keys": [
+    {
+     "frame": "cast_a",
+     "ms": 110,
+     "dx": 0,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "cast_b",
+     "ms": 220,
+     "dx": 0,
+     "hit": false,
+     "fx_at": "front"
+    }
+   ]
+  },
+  "victory": {
+   "keys": [
+    {
+     "frame": "victory_a",
+     "ms": 110,
+     "dx": 0,
+     "hit": false,
+     "fx_at": "front"
+    },
+    {
+     "frame": "victory_b",
+     "ms": 220,
+     "dx": 0,
+     "hit": false,
+     "fx_at": "front"
+    }
+   ]
+  },
+  "hurt": {
+   "keys": [
+    {
+     "frame": "hit",
+     "ms": 80,
+     "dx": 6,
+     "ease": "out"
+    },
+    {
+     "frame": "hit",
+     "ms": 240,
+     "dx": 6
+    },
+    {
+     "frame": "idle_a",
+     "ms": 200,
+     "dx": 0,
+     "ease": "in_out"
+    }
+   ]
+  },
+  "ko_fall": {
+   "keys": [
+    {
+     "frame": "hit",
+     "ms": 160,
+     "dx": 6
+    },
+    {
+     "frame": "weak",
+     "ms": 320,
+     "dx": 6
+    },
+    {
+     "frame": "ko",
+     "ms": 900,
+     "dx": 6
+    }
+   ]
+  },
+  "guard": {
+   "frames": [
+    "guard"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "hit": {
+   "frames": [
+    "hit"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "weak": {
+   "frames": [
+    "weak"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "ko": {
+   "frames": [
+    "ko"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "glimmer": {
+   "frames": [
+    "glimmer"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "item": {
+   "frames": [
+    "item"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "evade": {
+   "frames": [
+    "evade"
+   ],
+   "ms": [
+    0
+   ]
+  },
+  "step": {
+   "frames": [
+    "step"
+   ],
+   "ms": [
+    0
+   ]
+  }
+ },
+ "facing": "left",
+ "target_height": 60,
+ "palette": [
+  "#0b0607",
+  "#13060f",
+  "#11100e",
+  "#1a1211",
+  "#181915",
+  "#231a15",
+  "#2b191b",
+  "#20221d",
+  "#30231c",
+  "#282b26",
+  "#212d2b",
+  "#2f3632",
+  "#3d3631",
+  "#38403d",
+  "#444a45",
+  "#544b44",
+  "#6f635c",
+  "#887d79",
+  "#a79b94",
+  "#c3b7ae",
+  "#dfd7ce",
+  "#3a2c22",
+  "#463126",
+  "#49392d",
+  "#553d2f",
+  "#584536",
+  "#634a39",
+  "#72533e",
+  "#6c5645",
+  "#82634b",
+  "#836d57",
+  "#977458",
+  "#928475",
+  "#a3866a",
+  "#b48f6c",
+  "#c7a481",
+  "#d8b791",
+  "#e7caa2",
+  "#f1dbb8",
+  "#2e3120",
+  "#3f432d",
+  "#515936",
+  "#575d49",
+  "#636d42",
+  "#6f775d",
+  "#76844f",
+  "#2a4547",
+  "#356068",
+  "#1f0a19",
+  "#462a33",
+  "#5b444b",
+  "#856d74"
+ ],
+ "weapon_drawn": "twisted black crook staff with bell and bird-bone charm",
+ "weapon": "staff"
+}

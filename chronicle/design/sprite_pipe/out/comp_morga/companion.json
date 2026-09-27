@@ -1,0 +1,36 @@
+{
+ "id": "morga",
+ "name": "モルガ",
+ "look": "morga",
+ "weaponType": "staff",
+ "weaponDrawn": "twisted black crook staff with bell and bird-bone charm",
+ "heightDots": {
+  "battle": 60,
+  "field": 45,
+  "face": 80
+ },
+ "measureH": {
+  "battle": 62,
+  "field": 47
+ },
+ "row": "back",
+ "split4": false,
+ "sheets": {
+  "1": "comp_morga_s1.png",
+  "2": "comp_morga_s2.png",
+  "3": "comp_morga_s3.png",
+  "4": "comp_morga_s4.png",
+  "5": "comp_morga_s5.png"
+ },
+ "used": {
+  "weapons": "out/arun_v1/weapons/arun_weapons.json",
+  "grip_from": "out/arun_v1/battle_bare/arun_battle_bare.json"
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "surprise": "face_surprise",
+  "sad": "face_pain",
+  "angry": "face_neutral"
+ }
+}

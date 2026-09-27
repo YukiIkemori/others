@@ -126,7 +126,7 @@ async function main() {
       try {
         P = await openPage(S, page, SIZES[sz]);
         for (const s of steps) {
-          if (s.eval) await P.page.evaluate(s.eval);
+          if (s.eval) await P.page.evaluate('(() => { ' + s.eval + '; })()');   // Promise を待たない（歌あわせ・イベントは終わらない）
           if (s.until) { const r = await B.waitFor(P.page, s.until, s.ms || 8000); if (!r) { rec.ok = false; rec.errors.push('timeout: ' + s.until.slice(0, 80)); break; } }
           if (s.wait) await P.page.waitForTimeout(s.wait);
           if (s.keys) for (const k of s.keys) { await B.press(P.page, k); await P.page.waitForTimeout(180); }

@@ -93,9 +93,9 @@ function forest(o) {
   return g;
 }
 const CH = (pim, fawn, write) => [
-  { re: 'ピムを', pick: pim === 'take' ? '連れて' : '送り' },
+  { re: 'ピムを ?どうする', pick: pim === 'take' ? '連れて' : '送り' },
   { re: '小鹿|手当て', pick: fawn === 'heal' ? '手当て' : 'そっと' },
-  { re: '年代記に 何を', pick: write === 'oath' ? 'エルム' : '火が森' },
+  { re: '年代記に ?何を', pick: write === 'oath' ? 'エルム' : '火が森' },
   { re: '泊まっていく|泊まる', pick: '泊まる' },
   { re: '斧で払う', pick: '斧' }, { re: '呼び笛', pick: '吹く' },
 ];
@@ -145,6 +145,8 @@ async function runRoute(S, id, o) {
       if (P.errors.length > 30) { st.fail = 'too many page errors'; break; }
     }
     res.status = st;
+    // 終わりの確かめの前に、走っている会話・イベントを最後まで進める（フィールドに戻るまで A）
+    if (st.done) await page.evaluate(() => window.__bot.settle(900));
     // 終わりの確かめ
     const fin = await page.evaluate((exp) => {
       const R = window.RPG, G = R.Game, B = window.__bot;

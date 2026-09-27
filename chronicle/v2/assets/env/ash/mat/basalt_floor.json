@@ -1,0 +1,18 @@
+{
+ "id": "basalt_floor",
+ "kind": "material",
+ "theme": "ash",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "basalt_floor@32.png",
+  "24": "basalt_floor@24.png",
+  "40": "basalt_floor@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/ash/basalt_floor.png",
+ "native_px": 7.0,
+ "colours": 40
+}

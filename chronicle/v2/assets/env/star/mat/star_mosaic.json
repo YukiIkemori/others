@@ -1,0 +1,18 @@
+{
+ "id": "star_mosaic",
+ "kind": "material",
+ "theme": "star",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "star_mosaic@32.png",
+  "24": "star_mosaic@24.png",
+  "40": "star_mosaic@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/star/star_mosaic.png",
+ "native_px": 7.0,
+ "colours": 40
+}

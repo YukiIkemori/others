@@ -3,5 +3,15 @@
   "weak",
   "walk_up_0"
  ],
- "_note": "scale_ok: poses whose head-size scale alarm was a false alarm (same size as the hero's pose)"
+ "_note": "scale_ok: poses whose head-size scale alarm was a false alarm (same size as the hero's pose)",
+ "attach": {
+  "bare_idle": {
+   "grip": [
+    15,
+    42
+   ],
+   "angle": 138.3
+  }
+ },
+ "_note_attach": "bare_idle: grip/angle transferred from the hero's bare idle (edit-mode poses follow his), the weapon diff put it off the hand"
 }

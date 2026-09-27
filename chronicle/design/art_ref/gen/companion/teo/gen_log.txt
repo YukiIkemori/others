@@ -33,3 +33,9 @@
 02:52:19   sheet 4 smash: size redo line ignored (same size as the hero's pose) -> overrides scale_ok
 02:52:19 no redo lines left
 02:52:19 pipeline: sheets.py ../art_ref/gen/companion/teo --companion teo --out out/comp_teo
+02:58:42   |   シート2 フィールドの歩き: 確認あり  comp_teo_s2.png  ドット 8.00px → 描かれた格子のまま（50.0 ドット）
+02:58:42   |   シート3 戦闘の基本ポーズ: 確認あり  comp_teo_s3.png  ドット 8.00px → 描かれた格子のまま（67.5 ドット）
+02:58:42   |   シート4 戦闘の行動ポーズ＋武器なし版: OK  comp_teo_s4.png  ドット 8.00px → 描かれた格子のまま（68.0 ドット）
+02:58:42   |   シート5 顔の表情: OK  comp_teo_s5.png  ドット 8.00px → 描かれた格子のまま（80.0 ドット）
+02:58:42   | 
+02:58:42   | packed field 117x228, battle 635x336, battle_bare 380x73, face 276x84 | palette 52 + face 48

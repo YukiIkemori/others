@@ -1,0 +1,191 @@
+{
+ "character": "teo",
+ "set": "face",
+ "look": "teo",
+ "source": "out/comp_teo/face",
+ "cell": [
+  69,
+  84
+ ],
+ "anchor": [
+  34,
+  81
+ ],
+ "frames": [
+  {
+   "id": "face_neutral",
+   "x": 0,
+   "y": 0,
+   "w": 69,
+   "h": 84,
+   "anchor": [
+    34,
+    81
+   ],
+   "points": {
+    "head": [
+     22,
+     2
+    ],
+    "center": [
+     33,
+     45
+    ],
+    "front": [
+     2,
+     19
+    ]
+   }
+  },
+  {
+   "id": "face_smile",
+   "x": 69,
+   "y": 0,
+   "w": 69,
+   "h": 84,
+   "anchor": [
+    34,
+    81
+   ],
+   "points": {
+    "head": [
+     22,
+     2
+    ],
+    "center": [
+     33,
+     45
+    ],
+    "front": [
+     2,
+     19
+    ]
+   }
+  },
+  {
+   "id": "face_surprise",
+   "x": 138,
+   "y": 0,
+   "w": 69,
+   "h": 84,
+   "anchor": [
+    34,
+    81
+   ],
+   "points": {
+    "head": [
+     22,
+     2
+    ],
+    "center": [
+     33,
+     45
+    ],
+    "front": [
+     2,
+     20
+    ]
+   }
+  },
+  {
+   "id": "face_pain",
+   "x": 207,
+   "y": 0,
+   "w": 69,
+   "h": 84,
+   "anchor": [
+    34,
+    81
+   ],
+   "points": {
+    "head": [
+     23,
+     2
+    ],
+    "center": [
+     33,
+     45
+    ],
+    "front": [
+     2,
+     19
+    ]
+   }
+  }
+ ],
+ "poses": {
+  "face_neutral": [
+   0
+  ],
+  "face_smile": [
+   1
+  ],
+  "face_surprise": [
+   2
+  ],
+  "face_pain": [
+   3
+  ]
+ },
+ "fps": {},
+ "anims": {},
+ "facing": "slightly right",
+ "target_height": 80,
+ "palette": [
+  "#10060d",
+  "#0f0b07",
+  "#1d1916",
+  "#2c2824",
+  "#3a332e",
+  "#49403c",
+  "#584d4b",
+  "#6d5f5e",
+  "#958981",
+  "#beb3ab",
+  "#dcd7d1",
+  "#f6f1eb",
+  "#231408",
+  "#331b07",
+  "#452409",
+  "#3b2a0f",
+  "#503508",
+  "#5d3010",
+  "#6a4006",
+  "#753c13",
+  "#5f4d31",
+  "#845004",
+  "#944c19",
+  "#7c5e13",
+  "#835b32",
+  "#9c6206",
+  "#bd6027",
+  "#b17003",
+  "#99794f",
+  "#9f7f2b",
+  "#bc7b45",
+  "#c4830a",
+  "#b08c1a",
+  "#df843e",
+  "#d7950e",
+  "#d0a01a",
+  "#cca52f",
+  "#cfa26c",
+  "#e0a012",
+  "#e89e58",
+  "#ddb225",
+  "#e9ae16",
+  "#f3bd1d",
+  "#f3bc74",
+  "#fbc720",
+  "#f8cb2c",
+  "#edcd9c",
+  "#fbcf89"
+ ],
+ "expr": {
+  "neutral": 0,
+  "smile": 1,
+  "surprise": 2,
+  "sad": 3,
+  "angry": 0
+ }
+}

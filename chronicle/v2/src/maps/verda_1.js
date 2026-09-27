@@ -129,7 +129,7 @@
         { id: 'arrive', on: 'enter', event: 'verda_arrive', once: true },
         { id: 'mist_e', x: 39, y: 28, w: 1, h: 2, on: 'step', event: 'verda_mist', cond: UNSTABLE, once: true },
         { id: 'mist_n', x: 11, y: 21, w: 2, h: 1, on: 'step', event: 'verda_mist', cond: UNSTABLE, once: true },
-        { id: 'wolves', x: 44, y: 22, w: 9, h: 7, on: 'step', event: 'verda_ben', cond: '!forest_found_ben' },
+        { id: 'wolves', x: 43, y: 21, w: 5, h: 8, on: 'step', event: 'verda_ben', cond: '!forest_found_ben' },
       ],
       oneway: [{ x: 18, y: 12, dir: 'w' }, { x: 18, y: 13, dir: 'w' }],
       zones: [{ rect: null, zone: 'z_verda' }],

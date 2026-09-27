@@ -1,0 +1,18 @@
+{
+ "id": "lava",
+ "kind": "material",
+ "theme": "ash",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "lava@32.png",
+  "24": "lava@24.png",
+  "40": "lava@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/ash/lava.png",
+ "native_px": 7.52,
+ "colours": 40
+}

@@ -85,4 +85,38 @@ JSON sidecars:
 4. Preview in the real engine with `node _tools/env_shot.js out.png <map> <spawn|x,y> --before`. With `--before` the shot uses the wired dist; without it, the assets are injected at runtime by `env_inject.js`.
 
 ## 5. Asset list
-See §6 (updated at the end of the generation run).
+See §6.
+
+## 6. Asset list (generated 2026-09-27)
+
+- **ash/mat** (5): ash, basalt_floor, face_basalt, lava, obsidian
+- **ash/props** (15): arena_banner, ash_bush, ash_weapon_rack, charred_stump, charred_tree, hot_spring, iron_brazier, lava_rock, obsidian_shards, phoenix_statue, rope_post, steam_vent, sulphur, volcanic_rocks, water_urn
+- **ash/bld** (3): ash_hall_l, ash_house_s, ash_shop_m
+- **common/mat** (40): bark_floor, bridge, carpet, cave_floor, cliff, cobble, deck, deep_water, dirt, face_bark, face_brick, face_cave, face_cliff, face_moss, face_rock, face_stone, face_wood, flowers, forest_dark, grass, ladder, moss_earth, pier, plank, road, rock, root_floor, sand, sea, shallow, stone_floor, tall_grass, wall_bark, wall_brick, wall_cave, wall_moss, wall_stone, wall_wood, water, wood_floor
+- **common/props** (73): beacon, bed, bookshelf, brazier, bush_v0, bush_v1, chair, chest, counter, crystal, cupboard, dec_flowers, dec_leaves, dec_mush, dec_pebbles, dec_tuft, dec_tuft_v1, door, dresser, fence, fern, grave, hay, house_plant, ladder_prop, lantern, lever, log, log_moss, mushroom_glow, pine_v0, pine_v1, pine_v2, pine_v3, pine_v4, pine_v5, planter, reeds, rock, rock_small, rock_v1, roots_v0, roots_v1, rope_bridge, rug_roll, shelf_jars, signboard, songstone, spring, stairs_down, stairs_up, stool, stove, stump, switch, table, tent, torch, tree_dead_v0, tree_giant_v0, tree_giant_v1, tree_glow_v0, tree_moss_v0, tree_moss_v1, tree_v0, tree_v1, tree_v2, tree_v3, tree_v4, tree_v5, wash_tub, waylamp, weapon_rack
+- **desert/mat** (5): cracked_clay, dune_sand, face_sandstone, sandstone_floor, wall_sandstone
+- **desert/props** (15): bones, broken_pillar, cactus, carpet_rack, cart_barrels, clay_jars, copper_brazier, desert_palm_v0, desert_palm_v1, desert_stall, dry_well, obelisk, sand_mound, thorn_bush, tomb_urn
+- **desert/bld** (3): desert_hall_l, desert_house_s, desert_shop_m
+- **harbor/props** (12): barrel, bench, board, bollard, crate, flower_pot, lamp_post, net, rowboat, sack, stall, well
+- **harbor/bld** (12): ph_house1, ph_house2, ph_house3, ph_house4, ph_house5, ph_house6, ph_inn, ph_record, ph_shipyard, ph_shop, ph_smith, ph_tavern
+- **hill_village/bld** (8): roa_berna, roa_h1, roa_h2, roa_h3, roa_h4, roa_h5, roa_h6, roa_hall
+- **isles/mat** (5): coral_sand, face_white_wall, glow_sea, tide_rock, white_paving
+- **isles/props** (15): anchor, blue_bench, buoys, coco_palm, coral, driftwood, fish_barrel, lamp_pillar, map_sign, net_frame, palm_small, palm_umbrella, rope_bollard, shells, white_pot
+- **isles/bld** (3): isles_hall_l, isles_house_s, isles_shop_m
+- **marsh/mat** (5): face_mud_bank, marsh_water, mud, peat_grass, wall_marsh
+- **marsh/props** (15): bell_frame, board_steps, crooked_sign, fish_trap, grave_moss, lily_pads, mangrove_roots, mud_boat, pale_mushrooms, reeds_tall, rotten_stump, stilt_posts, swamp_tree, willow, wisp_lamp
+- **marsh/bld** (3): marsh_hall_l, marsh_house_s, marsh_shop_m
+- **mine/mat** (5): face_mine_wall, iron_grate, mine_floor, ore_rock, scaffold
+- **mine/props** (15): anvil, bellows, coal_barrel, forge, hook_lamp, lift_cage, mine_cart, mine_cart_ore, oath_stone, ore_blue, ore_copper, rail, timber_frame, tool_crate, tool_rack
+- **mine/bld** (3): mine_hall_l, mine_house_s, mine_shop_m
+- **moss_village/bld** (6): yura_b_elder, yura_b_h1, yura_b_h2, yura_b_h3, yura_b_h4, yura_b_inn
+- **snow/mat** (5): face_snow_cliff, ice, snow, snow_path, wall_snow
+- **snow/props** (15): firewood, frozen_well, hay_sled, ice_crystal, ice_hole, sled, snow_bank, snow_barrel, snow_fence, snow_fir_v0, snow_fir_v1, snow_lamp, snow_rock, snow_sign, stove_pipe
+- **snow/bld** (3): snow_hall_l, snow_house_s, snow_shop_m
+- **star/mat** (5): face_marble, garden_hedge_top, marble_floor, star_mosaic, wall_marble
+- **star/props** (15): blue_flowers, book_cart, book_stack, fountain, globe, iron_gate, lectern, marble_bench, orrery, scholar_statue, star_banner, star_dial, star_lamp, telescope, topiary
+- **star/bld** (3): star_hall_l, star_house_s, star_shop_m
+- **treetop/bld** (10): fern_b_gord, fern_b_house1, fern_b_house2, fern_b_house3, fern_b_inn, fern_b_pim, fern_b_rita, fern_b_search, fern_b_shed, fern_b_shop
+- **bbg** (12, each back/ground/front/post + _tall): ash, cave, coast, desert, forest, isles, marsh, mine, snow, star, tower, tree
+
+Raw generations: `design/art_ref/gen/env/{mat,props,bld,bbg}/` (197 images, each with a `.gen.json` that records the prompt). Before/after screenshots: `v2/design/shots/env/`.

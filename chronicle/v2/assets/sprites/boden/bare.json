@@ -1,0 +1,333 @@
+{
+ "character": "boden",
+ "set": "battle_bare",
+ "look": "boden",
+ "source": "out/comp_boden/battle_bare",
+ "cell": [
+  74,
+  67
+ ],
+ "anchor": [
+  45,
+  64
+ ],
+ "frames": [
+  {
+   "id": "bare_idle",
+   "x": 0,
+   "y": 0,
+   "w": 74,
+   "h": 67,
+   "anchor": [
+    45,
+    64
+   ],
+   "points": {
+    "head": [
+     44,
+     3
+    ],
+    "center": [
+     46,
+     36
+    ],
+    "front": [
+     21,
+     41
+    ],
+    "grip": [
+     22,
+     47
+    ],
+    "tip": [
+     21,
+     -2
+    ]
+   }
+  },
+  {
+   "id": "bare_windup",
+   "x": 74,
+   "y": 0,
+   "w": 74,
+   "h": 67,
+   "anchor": [
+    45,
+    64
+   ],
+   "points": {
+    "head": [
+     35,
+     3
+    ],
+    "center": [
+     42,
+     35
+    ],
+    "front": [
+     19,
+     61
+    ],
+    "grip": [
+     62,
+     16
+    ],
+    "tip": [
+     83,
+     -13
+    ]
+   }
+  },
+  {
+   "id": "bare_slash",
+   "x": 148,
+   "y": 0,
+   "w": 74,
+   "h": 67,
+   "anchor": [
+    45,
+    64
+   ],
+   "points": {
+    "head": [
+     30,
+     4
+    ],
+    "center": [
+     38,
+     36
+    ],
+    "front": [
+     7,
+     40
+    ],
+    "grip": [
+     13,
+     39
+    ],
+    "tip": [
+     -17,
+     60
+    ]
+   }
+  },
+  {
+   "id": "bare_thrust",
+   "x": 222,
+   "y": 0,
+   "w": 74,
+   "h": 67,
+   "anchor": [
+    45,
+    64
+   ],
+   "points": {
+    "head": [
+     33,
+     3
+    ],
+    "center": [
+     38,
+     35
+    ],
+    "front": [
+     2,
+     24
+    ],
+    "grip": [
+     12,
+     27
+    ],
+    "tip": [
+     -23,
+     26
+    ]
+   }
+  },
+  {
+   "id": "bare_cast",
+   "x": 296,
+   "y": 0,
+   "w": 74,
+   "h": 67,
+   "anchor": [
+    45,
+    64
+   ],
+   "points": {
+    "head": [
+     43,
+     2
+    ],
+    "center": [
+     44,
+     34
+    ],
+    "front": [
+     10,
+     23
+    ],
+    "grip": [
+     58,
+     20
+    ],
+    "tip": [
+     71,
+     0
+    ]
+   }
+  }
+ ],
+ "poses": {
+  "bare_idle": [
+   0
+  ],
+  "bare_windup": [
+   1
+  ],
+  "bare_slash": [
+   2
+  ],
+  "bare_thrust": [
+   3
+  ],
+  "bare_cast": [
+   4
+  ]
+ },
+ "fps": {},
+ "anims": {},
+ "facing": "left",
+ "target_height": 58,
+ "attach": {
+  "bare_idle": {
+   "grip": [
+    1,
+    44
+   ],
+   "tip": [
+    0,
+    -5
+   ],
+   "angle": -91.8,
+   "length": 67,
+   "weapon_px": 482,
+   "fit": 0.84,
+   "method": "diff"
+  },
+  "bare_cast": {
+   "grip": [
+    48,
+    18
+   ],
+   "tip": [
+    61,
+    -2
+   ],
+   "angle": -56.3,
+   "length": 27,
+   "weapon_px": 198,
+   "fit": 0.962,
+   "method": "diff"
+  },
+  "bare_windup": {
+   "grip": [
+    43,
+    13
+   ],
+   "tip": [
+    64,
+    -16
+   ],
+   "angle": -55,
+   "length": 36,
+   "generic": true,
+   "method": "arun_scaled",
+   "why": "no_twin"
+  },
+  "bare_slash": {
+   "grip": [
+    6,
+    35
+   ],
+   "tip": [
+    -24,
+    56
+   ],
+   "angle": 145,
+   "length": 36,
+   "generic": true,
+   "method": "arun_scaled",
+   "why": "no_twin"
+  },
+  "bare_thrust": {
+   "grip": [
+    10,
+    24
+   ],
+   "tip": [
+    -25,
+    23
+   ],
+   "angle": -178.4,
+   "length": 35,
+   "generic": true,
+   "method": "arun_scaled",
+   "why": "no_twin"
+  }
+ },
+ "palette": [
+  "#0d0707",
+  "#13040d",
+  "#1a110c",
+  "#23170e",
+  "#2e261f",
+  "#40362b",
+  "#504538",
+  "#685e54",
+  "#83786b",
+  "#a39c91",
+  "#241115",
+  "#2d1e11",
+  "#331c13",
+  "#392411",
+  "#392719",
+  "#452b13",
+  "#452e1e",
+  "#523317",
+  "#533825",
+  "#5d3a18",
+  "#61412a",
+  "#69441b",
+  "#5f4b36",
+  "#754525",
+  "#6f4c32",
+  "#774c1e",
+  "#645645",
+  "#845521",
+  "#7f593c",
+  "#8f562e",
+  "#905d24",
+  "#776652",
+  "#8d6240",
+  "#9c6628",
+  "#a96738",
+  "#8a7660",
+  "#a86f2c",
+  "#9e7450",
+  "#a97244",
+  "#b87a30",
+  "#9a8670",
+  "#c5804b",
+  "#b48a61",
+  "#ab957f",
+  "#c99f65",
+  "#dd9b5f",
+  "#bca68d",
+  "#d1bda6",
+  "#eeb67b",
+  "#f1cf99",
+  "#e9d9c4",
+  "#2a5693"
+ ]
+}

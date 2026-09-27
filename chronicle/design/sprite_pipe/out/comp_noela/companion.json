@@ -1,0 +1,36 @@
+{
+ "id": "noela",
+ "name": "ノエラ",
+ "look": "noela",
+ "weaponType": "staff",
+ "weaponDrawn": "staff with water-drop ring and small bells",
+ "heightDots": {
+  "battle": 60,
+  "field": 45,
+  "face": 80
+ },
+ "measureH": {
+  "battle": 62,
+  "field": 47
+ },
+ "row": "back",
+ "split4": false,
+ "sheets": {
+  "1": "comp_noela_s1.png",
+  "2": "comp_noela_s2.png",
+  "3": "comp_noela_s3.png",
+  "4": "comp_noela_s4.png",
+  "5": "comp_noela_s5.png"
+ },
+ "used": {
+  "weapons": "out/arun_v1/weapons/arun_weapons.json",
+  "grip_from": "out/arun_v1/battle_bare/arun_battle_bare.json"
+ },
+ "expr": {
+  "neutral": "face_neutral",
+  "smile": "face_smile",
+  "surprise": "face_surprise",
+  "sad": "face_pain",
+  "angry": "face_neutral"
+ }
+}

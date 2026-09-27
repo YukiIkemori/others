@@ -237,7 +237,7 @@
     rug_roll: { soft: true }, weapon_rack: { solid: true }, ladder_prop: { solid: true }, lever: { solid: true, frames: ['off', 'on'] }, fern: { soft: true }, reeds: { soft: true },
     log_moss: { solid: true }, tree_moss: { solid: true, shadow: 'long' }, tree_dead: { solid: true, shadow: 'long' }, tree_glow: { solid: true, shadow: 'long', glow: true },
   };
-  for (const id of Object.keys(ENV_ONLY)) if (!DRAW[id]) { META[id] = ENV_ONLY[id]; DRAW[id] = function () { return null; }; }
+  for (const id of Object.keys(ENV_ONLY)) if (!DRAW[id]) { META[id] = ENV_ONLY[id]; DRAW[id] = function () { return null; }; DRAW[id].envOnly = true; }
   T._PROP_META = META;
   T._PROP_DRAW = DRAW;
 
@@ -315,12 +315,21 @@
       if (!R.DB.props[id]) R.def('props', id, SOFT.test(id) ? { soft: true } : { solid: true, shadow: 'blob' });
       if (!META[id]) META[id] = SOFT.test(id) ? { soft: true } : { solid: true, shadow: 'blob' };
       DRAW[id] = function () { return null; };
+      DRAW[id].envOnly = true;
       T._hdDef('hd:prop:' + id, (o) => bakeProp(id, o || {}), R.DB.props[id] || {});
     }
   };
   function bakeProp(id, o) {
     const ev = T.Env && T.Env.prop ? T.Env.prop(id, o.v, o) : null;
     if (ev) return envProp(id, ev, o);
+    // 画像にしかない物で、画像がまだ（読み込み中・無い）: 透明な 1 コマ（コードの絵は無い）
+    if (DRAW[id] && DRAW[id].envOnly) {
+      if (!(R.Hd && R.Hd.RZ && R.Hd.RZ.canvas)) return null;
+      const c = R.Hd.RZ.canvas(1, 1), names = frameNames(id), poses = {};
+      names.forEach((f) => { poses[f] = [0]; });
+      poses.default = [0];
+      return { frames: [{ c, ox: 0, oy: 0 }], poses, fps: {}, anchors: { feet: [0, 0], light: null }, w: 1, h: 1, meta: Object.assign({ id, placeholder: true }, R.DB.props[id] || {}) };
+    }
     if (!(R.Hd && R.Hd.RZ && R.Hd.RZ.Builder)) return null;   // ラスタライザがまだ無い → 後でまた
     const RZ = R.Hd.RZ, S = R.Hd.STYLE || {}, s = o.s || 1, names = frameNames(id);
     const light = FL();

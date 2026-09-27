@@ -210,11 +210,14 @@ def bbg(raw, bid, horizon, front_raw=None, ncol=72, lit_gain=2.2, glow_thr=0.72)
         lit = a * lit_gain * np.array([1.4, 1.02, 0.62]) + np.array([14, 6, 0])
         lit = np.clip(lit, 0, 255)
         lit = snap(lit, palette_of(lit, ncol))
-        save(np.concatenate([lit, al[..., None] * 255], 2), os.path.join(d, 'ground_lit%s.png' % sfx))
+        # (ground_lit is not shipped: the engine derives the lamp-lit look by dividing ground by the mood ambient, kit.js K.envLayers)
         # post: additive glow from luminous colours (crystals, glowing moss, moon, stars)
         hsv_s = (a.max(2) - a.min(2)) / (a.max(2) + 1)
         Ln = lum(a) / 255.0
-        m = ((Ln > glow_thr) | ((Ln > 0.45) & (hsv_s > 0.45) & (a[..., 2] > a[..., 0]))).astype(np.float32)
+        # luminous = small bright points (stars, moon, lamps) standing out from their surroundings, or saturated coloured light
+        # (aurora, crystals, lava, plankton). Large bright areas such as snow or sand are NOT luminous.
+        loc = ndimage.uniform_filter(Ln, 15)
+        m = (((Ln > glow_thr) & (Ln - loc > 0.14)) | ((Ln > 0.42) & (hsv_s > 0.5) & (Ln - loc > 0.04))).astype(np.float32)
         glow = a * m[..., None]
         post = _soft(glow, 6) * 1.4 + _soft(glow, 2) * 0.6
         pa = np.clip(post.max(2), 0, 255)
@@ -231,7 +234,7 @@ def bbg(raw, bid, horizon, front_raw=None, ncol=72, lit_gain=2.2, glow_thr=0.72)
             fs = np.concatenate([np.clip(rgb, 0, 255), np.where(al2 > 90, 255, 0)[..., None]], 2)
             save(fs, os.path.join(d, 'front%s.png' % sfx))
             meta['layers']['front' + sfx] = 'front%s.png' % sfx
-        for k in ('back', 'ground', 'ground_lit', 'post'):
+        for k in ('back', 'ground', 'post'):
             meta['layers'][k + sfx] = '%s%s.png' % (k, sfx)
         meta['horizon'][name] = gt
     meta['blend'] = dict(back='source-over (no light)', ground='source-over (prelit; do NOT multiply by the ambient)', ground_lit='source-over through a radial mask at the lantern (and other pools)', front='source-over, soften r=3.5 like K.softenG', post="'lighter'")

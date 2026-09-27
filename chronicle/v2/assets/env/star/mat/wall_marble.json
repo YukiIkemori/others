@@ -1,0 +1,18 @@
+{
+ "id": "wall_marble",
+ "kind": "material",
+ "theme": "star",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "wall_marble@32.png",
+  "24": "wall_marble@24.png",
+  "40": "wall_marble@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/star/wall_marble.png",
+ "native_px": 7.0,
+ "colours": 40
+}

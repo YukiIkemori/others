@@ -76,19 +76,19 @@
  "attach": {
   "bare_idle": {
    "grip": [
-    60,
-    11
+    11,
+    38
    ],
    "tip": [
-    38,
-    10
+    -6,
+    53
    ],
-   "angle": -176.3,
+   "angle": 138.3,
    "length": 23,
    "blade": 15.0,
    "fit": 0.256,
    "method": "blade",
-   "unreliable": true
+   "manual": true
   },
   "bare_cast": {
    "grip": [

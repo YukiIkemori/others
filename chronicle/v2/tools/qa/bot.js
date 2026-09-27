@@ -307,7 +307,13 @@
     return !!g._done;
   }
   function curGoal() {
-    for (const g of B.goals) { if (g._skip) continue; if (!goalDone(g)) return g; }
+    const s = S(), zoneHere = !!(s && s.map && (s.map.zones || []).length && s.map.kind !== 'town' && s.map.kind !== 'interior');
+    for (const g of B.goals) {
+      if (g._skip) continue;
+      if (goalDone(g)) continue;
+      if (g.grind != null && !zoneHere) continue;   // 腕を磨くのは出現のあるマップに着いてから
+      return g;
+    }
     return null;
   }
   function placesFor(g) {
@@ -317,6 +323,7 @@
       return out;
     }
     if (g.go) return [{ map: g.go.map, kind: 'cell', ref: g.go }];
+    if (!g.ev) return [];
     return M.eventPlaces(g.ev);
   }
   function goalCells(g) {
@@ -344,9 +351,13 @@
         for (const p of M.eventPlaces(h.ev)) if (p.kind === 'trigger') for (const c of M.standCells(p.map, p)) avoid[p.map + ':' + c.x + ',' + c.y] = 1;
       }
     }
-    const pl = M.plan({ map: s.map.id, x: s.x, y: s.y, lv: s.lv || 0 }, goalCells(g), {
+    let pl = M.plan({ map: s.map.id, x: s.x, y: s.y, lv: s.lv || 0 }, goalCells(g), {
       blocked: (m, x, y, lv) => !!blocked[m + ':' + x + ',' + y + ',' + lv] || !!avoid[m + ':' + x + ',' + y],
     });
+    if (!pl && Object.keys(avoid).length) {
+      pl = M.plan({ map: s.map.id, x: s.x, y: s.y, lv: s.lv || 0 }, goalCells(g), { blocked: (m, x, y, lv) => !!blocked[m + ':' + x + ',' + y + ',' + lv] });
+      if (pl && !g._avoidNote) { g._avoidNote = true; note('goal ' + g.id + ': only reachable through the trigger of a later rescue'); }
+    }
     B.stats.plans++; B.stats.planMs += performance.now() - t0;
     if (!pl) return null;
     const leg = pl.legs[0];
@@ -428,7 +439,7 @@
         B.unreach = (B.unreach || 0) + 1;
         if (g.optional || B.unreach > 3) { note('unreachable ' + g.id + (g.optional ? ' (optional, skipped)' : '')); if (g.optional) { g._skip = true; B.unreach = 0; return; } }
         // ほかの目標で先に届く物があれば、そちらを先に（順番のしばりの無い物だけ）
-        const alt = B.goals.find((h) => h !== g && !h._skip && !goalDone(h) && !h.ordered && !h.task && planFor(h));
+        const alt = B.goals.find((h) => h !== g && !h._skip && !goalDone(h) && !h.ordered && !h.task && h.grind == null && (h.ev || h.spring || h.go) && planFor(h));
         if (alt) { note('goal ' + g.id + ' not reachable yet; doing ' + alt.id + ' first'); B.goals.splice(B.goals.indexOf(alt), 1); B.goals.splice(B.goals.indexOf(g), 0, alt); B.goalId = null; return; }
         fail('goal ' + g.id + ' unreachable from ' + s.map.id + ' ' + s.x + ',' + s.y);
         return;
@@ -481,8 +492,10 @@
     const fr = f._front();
     const want = place.ref;
     const ok = fr && ((fr.kind === 'npc' && want && fr.npc && (fr.npc.id === want.id || fr.npc.def === want)) || (fr.kind === 'obj' && fr.obj === want));
+    if (B.actAt && B.frames - B.actAt < 30) return;   // 押した後はイベントが始まるのを待つ
     if (ok || (fr && B.atEnd > 20)) {
       if (tap('a')) {
+        B.actAt = B.frames;
         B.tries = (B.tries || 0) + 1;
         B.atEnd = 0;
         note('act ' + (tg._h ? 'spring' : g.id) + ' at ' + s.map.id + ' ' + s.x + ',' + s.y + (ok ? '' : ' (front: ' + (fr.npc ? fr.npc.id : fr.obj && fr.obj.type) + ')'));
@@ -550,6 +563,25 @@
       if (t && t.kind === 'save' && e && e.slot === t.slot) { t.stage = 'saved'; note('saved ' + e.slot); }
     });
     return true;
+  };
+  /** 目標が終わった後: フィールドで止まっているまで A を押して進める（不変条件の確かめの前） */
+  B.settle = async function (n) {
+    for (let i = 0; i < n; i++) {
+      const t = R.Engine.top();
+      const idle = t && t.id === 'field' && !R.Events.busy() && !R.UIK.Message.busy() && R.Engine.fade.a < 0.01 && !Object.keys(R.Field.locks()).length;
+      if (idle && i > 20) break;
+      held = {};
+      if (t && t.id !== 'field') { try { decide(); } catch (e) { /* */ } } else if (!idle) tap('a');
+      apply();
+      R.Engine.step(DT);
+      if (cool > 0) cool--;
+      B.frames++;
+      if (B.frames % RENDER_EVERY === 0) R.Engine.render();
+      await macro();
+    }
+    for (const b of BTNS) R.Input._set(b, false);
+    R.Engine.render();
+    return B.status();
   };
   B.status = function () {
     const s = S() || {};

@@ -1,0 +1,18 @@
+{
+ "id": "ash",
+ "kind": "material",
+ "theme": "ash",
+ "period": {
+  "24": 192,
+  "32": 256,
+  "40": 320
+ },
+ "files": {
+  "32": "ash@32.png",
+  "24": "ash@24.png",
+  "40": "ash@40.png"
+ },
+ "src": "design/art_ref/gen/env/mat/ash/ash.png",
+ "native_px": 7.0,
+ "colours": 40
+}

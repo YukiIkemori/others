@@ -5,7 +5,7 @@
  "folder": "/home/user/others/chronicle/design/art_ref/gen/companion/brigitta",
  "sheets": {
   "1": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/brigitta/comp_brigitta_s1.png",
+   "file": "../art_ref/gen/companion/brigitta/comp_brigitta_s1.png",
    "size": [
     3584,
     1536
@@ -137,7 +137,7 @@
    }
   },
   "2": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/brigitta/comp_brigitta_s2.png",
+   "file": "../art_ref/gen/companion/brigitta/comp_brigitta_s2.png",
    "size": [
     1920,
     2048
@@ -384,7 +384,7 @@
    }
   },
   "3": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/brigitta/comp_brigitta_s3.png",
+   "file": "../art_ref/gen/companion/brigitta/comp_brigitta_s3.png",
    "size": [
     4160,
     1536
@@ -605,7 +605,7 @@
    }
   },
   "4": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/brigitta/comp_brigitta_s4.png",
+   "file": "../art_ref/gen/companion/brigitta/comp_brigitta_s4.png",
    "size": [
     4480,
     1920
@@ -936,7 +936,7 @@
    }
   },
   "5": {
-   "file": "/home/user/others/chronicle/design/art_ref/gen/companion/brigitta/comp_brigitta_s5.png",
+   "file": "../art_ref/gen/companion/brigitta/comp_brigitta_s5.png",
    "size": [
     3072,
     768

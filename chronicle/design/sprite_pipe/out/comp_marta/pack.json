@@ -1,0 +1,229 @@
+{
+ "registration": {
+  "walk_down_1": {
+   "to": "walk_down_0",
+   "dx": 1,
+   "dy": 0,
+   "fit": 1.128
+  },
+  "walk_down_2": {
+   "to": "walk_down_0",
+   "dx": 1,
+   "dy": 0,
+   "fit": 1.162
+  },
+  "walk_up_1": {
+   "to": "walk_up_0",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.303
+  },
+  "walk_up_2": {
+   "to": "walk_up_0",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.316
+  },
+  "walk_left_1": {
+   "to": "walk_left_0",
+   "dx": -3,
+   "dy": 0,
+   "fit": 1.073
+  },
+  "walk_left_2": {
+   "to": "walk_left_0",
+   "dx": -2,
+   "dy": 0,
+   "fit": 1.018
+  },
+  "walk_right_1": {
+   "to": "walk_right_0",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.083
+  },
+  "walk_right_2": {
+   "to": "walk_right_0",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.043
+  },
+  "idle_b": {
+   "to": "idle_a",
+   "dx": 2,
+   "dy": 0,
+   "fit": 1.106
+  },
+  "face_smile": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.413
+  },
+  "face_surprise": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.431
+  },
+  "face_pain": {
+   "to": "face_neutral",
+   "dx": 0,
+   "dy": 0,
+   "fit": 1.391
+  }
+ },
+ "attach": {
+  "bare_idle": {
+   "grip": [
+    8,
+    44
+   ],
+   "tip": [
+    -17,
+    60
+   ],
+   "angle": 146.0,
+   "length": 36,
+   "weapon_px": 178,
+   "fit": 0.936,
+   "method": "diff"
+  },
+  "bare_cast": {
+   "grip": [
+    48,
+    45
+   ],
+   "tip": [
+    64,
+    54
+   ],
+   "angle": 31.0,
+   "length": 23,
+   "weapon_px": 109,
+   "fit": 0.92,
+   "method": "diff"
+  },
+  "bare_windup": {
+   "grip": [
+    43,
+    13
+   ],
+   "tip": [
+    65,
+    -18
+   ],
+   "angle": -55,
+   "length": 38,
+   "generic": true,
+   "method": "arun_scaled",
+   "why": "no_twin"
+  },
+  "bare_slash": {
+   "grip": [
+    5,
+    37
+   ],
+   "tip": [
+    -26,
+    59
+   ],
+   "angle": 145,
+   "length": 38,
+   "generic": true,
+   "method": "arun_scaled",
+   "why": "no_twin"
+  },
+  "bare_thrust": {
+   "grip": [
+    10,
+    25
+   ],
+   "tip": [
+    -27,
+    24
+   ],
+   "angle": -178.4,
+   "length": 37,
+   "generic": true,
+   "method": "arun_scaled",
+   "why": "no_twin"
+  }
+ },
+ "weapons": {
+  "wpn_sword": {
+   "grip": [
+    38,
+    8
+   ],
+   "tip": [
+    0,
+    9
+   ],
+   "angle": 178.1,
+   "length": 47,
+   "scaled": 0.786
+  },
+  "wpn_greatsword": {
+   "grip": [
+    60,
+    9
+   ],
+   "tip": [
+    0,
+    9
+   ],
+   "angle": 179.6,
+   "length": 75,
+   "scaled": 0.786
+  },
+  "wpn_dagger": {
+   "grip": [
+    27,
+    6
+   ],
+   "tip": [
+    0,
+    6
+   ],
+   "angle": 179.5,
+   "length": 35,
+   "scaled": 0.786
+  },
+  "wpn_bow": {
+   "grip": [
+    20,
+    14
+   ],
+   "tip": [
+    0,
+    12
+   ],
+   "angle": -174.6,
+   "length": 46,
+   "scaled": 0.786
+  },
+  "wpn_staff": {
+   "grip": [
+    46,
+    7
+   ],
+   "tip": [
+    0,
+    7
+   ],
+   "angle": -179.6,
+   "length": 75,
+   "scaled": 0.786
+  }
+ },
+ "sets": [
+  "battle",
+  "battle_bare",
+  "face",
+  "field",
+  "weapons"
+ ],
+ "colors": 52,
+ "face_colors": 48
+}

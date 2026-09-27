@@ -139,11 +139,30 @@
   // ------------------------------------------------------------------ 起動のときに読む（読めなかった物はコードの絵のまま）
   R.onBoot(async function () {
     if (!R.Media || !R.Media.preload || typeof Image === 'undefined') return;
-    const keys = Object.keys(table());
-    if (!keys.length) return;
-    try { await R.Media.preload('env', keys); } catch (e) { /* 読めた物だけ使う */ }
-    // 画像の展開を先に済ませる（初めて描く時の展開がチャンクを焼く 3 ms の仕事に入らないように）
-    try { await Promise.all(keys.map((k) => { const r = R.Media.image(k, 'env'); return r && r.ready && r.img.decode ? r.img.decode().catch(() => null) : null; })); } catch (e) { /* 無くてもよい */ }
+    const all = Object.keys(table());
+    if (!all.length) return;
+    const t0 = typeof performance !== 'undefined' ? performance.now() : 0;
+    // 起動で待つのは縦切りの分（共通・序章と森のテーマ・縦切りの戦闘背景）の今のマスの大きさの絵だけ。ほかの地方と別の大きさは後ろで読む
+    let tile = 32;
+    try { tile = ({ near: 40, normal: 32, far: 24 })[R.Settings.get('fieldZoom')] || 32; } catch (e) { tile = 32; }
+    const SLICE = /^(common|harbor|hill_village|treetop|moss_village|tree_inside|lighthouse|cave|forest_dungeon)\//, SLICE_BBG = /^bbg\/(coast|tower|forest|tree|cave)\//;
+    const now = all.filter((k) => (SLICE.test(k) && new RegExp('@' + tile + '$').test(k)) || SLICE_BBG.test(k));
+    const later = all.filter((k) => now.indexOf(k) < 0);
+    const decode = (keys) => Promise.all(keys.map((k) => { const r = R.Media.image(k, 'env'); return r && r.ready && r.img.decode ? r.img.decode().catch(() => null) : null; }));
+    try { await R.Media.preload('env', now); await decode(now); } catch (e) { /* 読めた物だけ使う */ }
+    E.bootMs = Math.round((typeof performance !== 'undefined' ? performance.now() : 0) - t0); E.bootN = now.length;
+    // 残りは少しずつ（12 枚ずつ読み、展開してから次へ）。読み終えたら物の絵を焼き直す（地方の物・別の大きさ）
+    E.later = (async () => {
+      for (let i = 0; i < later.length; i += 12) {
+        const b = later.slice(i, i + 12);
+        try { await R.Media.preload('env', b); await decode(b); } catch (e) { /* 読めた物だけ */ }
+      }
+      idx = null; E.all = true;
+      for (const k of Object.keys(matCache)) if (!matCache[k]) delete matCache[k];
+      for (const k of Object.keys(faceCache)) if (!faceCache[k]) delete faceCache[k];
+      if (R.Hd && R.Hd.keys && R.Hd.forget) for (const k of R.Hd.keys('hd:prop:')) if (T._envProp && T.Env.prop(k.slice(8), 0, {})) R.Hd.forget(k);
+    })();
+    const keys = all;
     idx = null;
     E.ready = true;
     E.count = keys.length;

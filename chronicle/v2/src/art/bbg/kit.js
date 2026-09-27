@@ -402,7 +402,9 @@
       K.glow(px, L.lantern.x, L.lantern.y - 9 * s, 100 * s, [255, 190, 110], 0.5);
       K.glow(px, L.lantern.x, L.lantern.y - 9 * s, 20 * s, [255, 240, 200], 0.85);
     }
-    return { back, ground, front: unlight(place(get('front'))) || mk(W, H), post, env: true };
+    const fr = unlight(place(get('front')));
+    // 手前の層は被写界深度ふうにぼかす（コードの絵の front と同じ K.soften）
+    return { back, ground, front: fr ? K.soften(fr, 2.5) : mk(W, H), post, env: true };
   };
 
   // ------------------------------------------------------------------ 見本の組み立て（BSCENE の描く順の見本。スクショと図鑑の試しに使う）

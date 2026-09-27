@@ -24,8 +24,8 @@
     boss_pageeater: ['ページ食らい', []], boss_moth: ['ダストウィング', []], boss_rooteater: ['根食らい', [['b_root', '根の子', 's'], ['b_root', '根の子', 's']]], boss_wolflord: ['狼の王', [['wolf_1', '森の狼', 'm']]],
   };
   const SKILLS = {
-    sword: [['二段斬り', 4, '二度続けて斬りつける。'], ['稲妻突き', 6, '雷をまとった鋭い突き。', 0, 'thunder'], ['疾風剣', 0, '風のように速い一太刀。', 1], ['流し斬り', 12, '受け流して斬り返す。', 0, null, 'mp']],
-    dagger: [['影縫い', 3, '影を縫い止めて動きを鈍らせる。'], ['盗む', 0, '相手の持ち物を盗む。']],
+    sword: [['連ね斬り', 4, '二度続けて斬りつける。'], ['雷光突き', 6, '雷をまとった鋭い突き。', 0, 'thunder'], ['疾風剣', 0, '風のように速い一太刀。', 1], ['返し斬り', 12, '受け流して斬り返す。', 0, null, 'mp']],
+    dagger: [['影刺し', 3, '影を縫い止めて動きを鈍らせる。'], ['盗む', 0, '相手の持ち物を盗む。']],
     bow: [['狙い撃ち', 4, '急所をねらう一矢。'], ['影矢', 5, '影から放つ矢。']],
     staff: [['打ち据え', 2, '杖で強く打つ。']],
   };
@@ -94,7 +94,7 @@
         return ev;
       },
       rewards() {
-        const r = { gold: 380, drops: [{ item: 'mt_wolf_pelt', grade: 'normal', n: 2 }, { item: 'i_potion', grade: 'normal' }, { item: 'dg_frost_fang', grade: 'rare' }], grow: [{ c: P(0).id, hp: 12, mp: 3 }, { c: P(2).id, hp: 9, mp: 4 }], prof: [{ c: P(0).id, key: 'sword' }, { c: P(2).id, key: 'bow' }, { c: P(3).id, key: 'fire' }], glimmers: name === 'glimmer' || name === 'all' ? [{ id: 'demo_sword_1', name: '稲妻突き' }] : [] };
+        const r = { gold: 380, drops: [{ item: 'mt_wolf_pelt', grade: 'normal', n: 2 }, { item: 'i_potion', grade: 'normal' }, { item: 'dg_frost_fang', grade: 'rare' }], grow: [{ c: P(0).id, hp: 12, mp: 3 }, { c: P(2).id, hp: 9, mp: 4 }], prof: [{ c: P(0).id, key: 'sword' }, { c: P(2).id, key: 'bow' }, { c: P(3).id, key: 'fire' }], glimmers: name === 'glimmer' || name === 'all' ? [{ id: 'demo_sword_1', name: '雷光突き' }] : [] };
         return r;
       },
       finish() { if (finished) return finished.r; finished = { r: over === 'win' ? B.rewards() : null }; return finished.r; },
@@ -114,8 +114,8 @@
       if (s.round >= 2) { for (const e of s.E()) s.dmg(e, 999); }
     },
     glimmer(s) {
-      s.ev.push({ t: 'turn', uid: 'p0' }, { t: 'glimmer', uid: 'p0', kind: 'tech', id: 'demo_sword_1', name: '稲妻突き' });
-      s.ev.push({ t: 'act', uid: 'p0', cmd: 'skill', id: 'demo_sword_1', name: '稲妻突き', targets: ['e1'] });
+      s.ev.push({ t: 'turn', uid: 'p0' }, { t: 'glimmer', uid: 'p0', kind: 'tech', id: 'demo_sword_1', name: '雷光突き' });
+      s.ev.push({ t: 'act', uid: 'p0', cmd: 'skill', id: 'demo_sword_1', name: '雷光突き', targets: ['e1'] });
       s.dmg(s.units.find((u) => u.uid === 'e1'), 1284, { crit: true, kind: 'thunder' });
       s.act(s.P(3), 'spell', 'demo_sp_1', 'キュア', [s.P(1)]); s.heal(s.P(1), 86);
       for (const e of s.E()) s.dmg(e, 999);
@@ -158,8 +158,8 @@
       const b = s.e0(), w = s.e1();
       if (s.round === 1) {
         s.ev.push({ t: 'msg', text: '風が止んだ。' });
-        s.ev.push({ t: 'turn', uid: 'p0' }, { t: 'glimmer', uid: 'p0', kind: 'tech', id: 'demo_sword_1', name: '稲妻突き' });
-        s.ev.push({ t: 'act', uid: 'p0', cmd: 'skill', id: 'demo_sword_1', name: '稲妻突き', targets: [w.uid] }); s.dmg(w, 150, { crit: true });
+        s.ev.push({ t: 'turn', uid: 'p0' }, { t: 'glimmer', uid: 'p0', kind: 'tech', id: 'demo_sword_1', name: '雷光突き' });
+        s.ev.push({ t: 'act', uid: 'p0', cmd: 'skill', id: 'demo_sword_1', name: '雷光突き', targets: [w.uid] }); s.dmg(w, 150, { crit: true });
         s.act(s.P(1), 'attack', 'attack', '攻撃', [b]); s.ev.push({ t: 'miss', uid: b.uid });
         s.act(s.P(1), 'skill', 'demo_dagger_1', '盗む', [w]); s.ev.push({ t: 'steal', uid: 'p1', target: w.uid, item: 'dg_frost_fang', grade: 'rare' }, { t: 'gain', item: 'dg_frost_fang', grade: 'rare', stolen: true });
         s.ev.push({ t: 'turn', uid: b.uid }, { t: 'act', uid: b.uid, cmd: 'skill', id: 'venom', name: '毒の牙', targets: ['p2'] }); s.dmg(s.P(2), 30); s.ev.push({ t: 'status', uid: 'p2', id: 'poison', on: true });

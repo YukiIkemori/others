@@ -1,0 +1,165 @@
+{
+ "character": "noela",
+ "set": "face",
+ "image": "noela_face.png",
+ "cell": [
+  76,
+  84
+ ],
+ "anchor": [
+  38,
+  81
+ ],
+ "anchor_note": "anchor = ground contact point (x between the feet, y = the ground row); weapons: the grip",
+ "frames": {
+  "face_neutral": {
+   "x": 0,
+   "y": 0,
+   "w": 76,
+   "h": 84,
+   "anchor": [
+    38,
+    81
+   ],
+   "points": {
+    "head": [
+     39,
+     2
+    ],
+    "center": [
+     37,
+     45
+    ],
+    "front": [
+     2,
+     70
+    ]
+   }
+  },
+  "face_smile": {
+   "x": 76,
+   "y": 0,
+   "w": 76,
+   "h": 84,
+   "anchor": [
+    38,
+    81
+   ],
+   "points": {
+    "head": [
+     38,
+     2
+    ],
+    "center": [
+     37,
+     45
+    ],
+    "front": [
+     2,
+     71
+    ]
+   }
+  },
+  "face_surprise": {
+   "x": 152,
+   "y": 0,
+   "w": 76,
+   "h": 84,
+   "anchor": [
+    38,
+    81
+   ],
+   "points": {
+    "head": [
+     39,
+     2
+    ],
+    "center": [
+     37,
+     45
+    ],
+    "front": [
+     2,
+     71
+    ]
+   }
+  },
+  "face_pain": {
+   "x": 228,
+   "y": 0,
+   "w": 76,
+   "h": 84,
+   "anchor": [
+    38,
+    81
+   ],
+   "points": {
+    "head": [
+     38,
+     2
+    ],
+    "center": [
+     37,
+     45
+    ],
+    "front": [
+     2,
+     71
+    ]
+   }
+  }
+ },
+ "anims": {},
+ "palette": [
+  "#0d090a",
+  "#23140d",
+  "#1b191a",
+  "#2a2929",
+  "#423f40",
+  "#545456",
+  "#6e6c6c",
+  "#8a898a",
+  "#a6a5a5",
+  "#c1bfbe",
+  "#bdc5ce",
+  "#d8d6d5",
+  "#d5e6f0",
+  "#eae9e8",
+  "#fafafa",
+  "#3b1e12",
+  "#463226",
+  "#5f3723",
+  "#763720",
+  "#6f5b4b",
+  "#974a2f",
+  "#89583c",
+  "#bb5f39",
+  "#b16943",
+  "#967f6f",
+  "#ac7b5f",
+  "#d48054",
+  "#cb8d67",
+  "#e19263",
+  "#d3b294",
+  "#ecab81",
+  "#ecb373",
+  "#efbc94",
+  "#f7cea9",
+  "#fbdab7",
+  "#fcdda8",
+  "#1c3143",
+  "#314e69",
+  "#3c6a90",
+  "#5d6f7e",
+  "#4e85b1",
+  "#62869f",
+  "#619ac7",
+  "#8ea8bb",
+  "#77abd0",
+  "#8cb9d7",
+  "#9ec6de",
+  "#add1e5"
+ ],
+ "facing": "slightly right",
+ "target_height": 80
+}
