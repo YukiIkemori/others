@@ -154,6 +154,8 @@
     // 暗がり（E6）
     F.dark.draw(g, cam);
     // 膜の上: 宝箱・泉のきらめき、新しい話の印
+    // 町の道しるべ（出口の灯り・店の吊り看板。wayfind.js）: 町の絵の上、膜の上
+    if (F._wayfind) F._wayfind(g, t, cx, cy);
     sparkles(g, t, cx, cy);
     newTalk(g, t, cx, cy);
     // 光の明滅
@@ -165,6 +167,7 @@
     }
     // F8: 仕上げ（HUD の前）
     R.Post.frame(g, S.postO || {});
+    if (F._wayfindLabels) F._wayfindLabels(g, t, cx, cy);   // 出口の行き先・店の名前の札（近いときだけ）
     F.hud.draw(g, cam);
   };
 

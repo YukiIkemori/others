@@ -34,7 +34,12 @@ async function main() {
   ok('glimmer name shown ≥ 0.9 s even at ×3 + fast-forward', gl && gl.ms >= 880, gl);
   const card = log.find((l) => l.t === 'card');
   ok('rare card shown ≥ 0.6 s with A held (A12)', card && card.ms >= 590, card);
-  ok('victory closes by itself at ×3 (1.5 s)', await B.waitFor(p, 'window.__r', 6000));
+  ok('victory panel opens', await B.waitFor(p, `${D} && ${D}.result && ${D}.next`, 6000));
+  await p.waitForTimeout(2500);
+  ok('victory never closes by itself, even at ×3 (owner 2026-09-27)', !(await B.ev(p, 'window.__r')) && (await B.ev(p, `${D}.phase === 'result'`)));
+  ok('confirm closes the victory (fade out → field)', await B.pressUntil(p, 'a', 'window.__r', 20));
+  const le = await B.ev(p, 'RPG.Battle.lastEnd');
+  ok('end sequence order: pose → panel → press → fade out → field', le && le.poseAt < le.panelAt && le.panelAt <= le.pressAt && le.pressAt <= le.fadeOutAt && le.fadeOutAt < le.fieldAt && le.fieldAt - le.fadeOutAt >= 800, le);
   const r1 = await B.ev(p, 'window.__r');
   ok('result win with rewards (K.battleResult)', r1 && r1.result === 'win' && (await B.ev(p, 'RPG.Contract.check("battleResult", window.__r).ok')), r1);
   const vic = (await B.ev(p, `window.__lastLog = ${D} ? ${D}.log : null`), log);
@@ -78,7 +83,8 @@ async function main() {
   section('逃げる');
   // 一行の命令: 戦う・リピート（1 ラウンド目は使えない）・逃げる
   await B.press(p, 'down'); await B.press(p, 'down'); await B.press(p, 'a');
-  ok('escape resolves with result escape', await B.waitFor(p, "window.__r && window.__r.result === 'escape'", 8000), await B.ev(p, 'window.__r'));
+  ok('escape waits for confirm (run-off, ▼)', await B.waitFor(p, `${D} && ${D}.next && ${D}.head && /逃げ/.test(${D}.head.name)`, 8000) && !(await B.ev(p, 'window.__r')));
+  ok('escape resolves with result escape', await B.pressUntil(p, 'a', "window.__r && window.__r.result === 'escape'", 20), await B.ev(p, 'window.__r'));
   ok('invariants after escape', await B.waitFor(p, INV, 3000));
 
   section('全滅: 直前の戦闘から（既定・失う物なし）');
@@ -107,7 +113,8 @@ async function main() {
 
   section('canLose（全滅の画面なし）');
   await B.ev(p, start({ demo: 'wipe', autoInput: true, canLose: true, mons: [['x', 1]] }));
-  ok("resolves 'lose' without the wipe screen", await B.waitFor(p, "window.__r && window.__r.result === 'lose'", 15000));
+  ok("canLose: '力尽きた' waits for confirm (no wipe screen)", await B.waitFor(p, `${D} && ${D}.next && !${D}.go`, 15000));
+  ok("resolves 'lose' after confirm", await B.pressUntil(p, 'a', "window.__r && window.__r.result === 'lose'", 20));
   ok('invariants after canLose', await B.waitFor(p, INV, 3000));
 
   section('戦闘ボイス（ファイルのある主人公の声）');

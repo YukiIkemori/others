@@ -14,7 +14,8 @@
     init(p) {
       this.canSwap = p.swap !== false;
       this.ids = R.Party.candidates ? R.Party.candidates() : Object.keys(R.DB.companions);
-      this.list = new R.UIK.List({ rows: this.ids.map((id) => ({ label: id, value: id })), rowH: 58, cols: S.tall() ? 2 : 4 });
+      const gd = S.companionGrid();
+      this.list = new R.UIK.List({ rows: this.ids.map((id) => ({ label: id, value: id })), rowH: gd.rowH, cols: gd.cols });
       this.list.onSelect = (row) => this.choose(row.value);
       this.list.onCancel = () => this.close(undefined);
       this.mode = 'pick';
@@ -22,7 +23,7 @@
       this.mrects = [];
       this.busy = false;
     },
-    layout() { this.list.cols = S.tall() ? 2 : 4; },
+    layout() { const gd = S.companionGrid(); this.list.cols = gd.cols; this.list.rowH = gd.rowH; },
     state(id) {
       const G = R.Game;
       if (G.party.includes(id)) return 'party';
@@ -67,11 +68,11 @@
       const top = b.y + u(46), memH = u(88);
       let gr, dp, mp;
       if (tall) {
-        dp = { x: b.x, y: top, w: b.w, h: u(318) };
+        dp = { x: b.x, y: top, w: b.w, h: S.companionDetailH() };
         mp = { x: b.x, y: dp.y + dp.h + u(10), w: b.w, h: memH };
         gr = { x: b.x, y: mp.y + mp.h + u(10), w: b.w, h: b.y + b.h - (mp.y + mp.h + u(10)) };
       } else {
-        const gw = Math.min(b.w * 0.62, u(640));
+        const gw = Math.min(b.w * 0.6, u(600));
         gr = { x: b.x, y: top, w: gw, h: b.h - (top - b.y) - memH - u(12) };
         mp = { x: b.x, y: gr.y + gr.h + u(12), w: gw, h: memH };
         dp = { x: b.x + gw + u(20), y: top, w: b.w - gw - u(20), h: b.h - (top - b.y) };

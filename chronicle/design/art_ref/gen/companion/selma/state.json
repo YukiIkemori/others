@@ -403,6 +403,11 @@
      "raw": "raw/s2_a4_v4edit.png",
      "quality": "medium",
      "t": "2026-09-27T14:02:12"
+    },
+    {
+     "raw": "raw/s2_a5_v4wide.png",
+     "quality": "high",
+     "t": "2026-09-27T14:07:31"
     }
    ],
    "usage": [
@@ -477,6 +482,24 @@
      "web_search": {
       "num_requests": 0
      }
+    },
+    {
+     "image_gen": {
+      "input_tokens": 3420,
+      "input_tokens_details": {
+       "image_tokens": 2955,
+       "text_tokens": 465
+      },
+      "output_tokens": 12814,
+      "output_tokens_details": {
+       "image_tokens": 12814,
+       "text_tokens": 0
+      },
+      "total_tokens": 16234
+     },
+     "web_search": {
+      "num_requests": 0
+     }
     }
    ],
    "frames": {
@@ -485,7 +508,7 @@
      "column": 1,
      "logical_bbox": [
       28,
-      48
+      50
      ],
      "air": 0
     },
@@ -493,8 +516,8 @@
      "row": 1,
      "column": 2,
      "logical_bbox": [
-      28,
-      48
+      27,
+      50
      ],
      "air": 0
     },
@@ -502,8 +525,8 @@
      "row": 1,
      "column": 3,
      "logical_bbox": [
-      28,
-      48
+      27,
+      50
      ],
      "air": 0
     },
@@ -512,7 +535,7 @@
      "column": 1,
      "logical_bbox": [
       27,
-      49
+      48
      ],
      "air": 0
     },
@@ -529,7 +552,7 @@
      "row": 2,
      "column": 3,
      "logical_bbox": [
-      27,
+      26,
       49
      ],
      "air": 0
@@ -538,8 +561,8 @@
      "row": 3,
      "column": 1,
      "logical_bbox": [
-      21,
-      45
+      22,
+      43
      ],
      "air": 0
     },
@@ -547,8 +570,8 @@
      "row": 3,
      "column": 2,
      "logical_bbox": [
-      26,
-      44
+      25,
+      43
      ],
      "air": 0
     },
@@ -557,7 +580,7 @@
      "column": 3,
      "logical_bbox": [
       26,
-      44
+      43
      ],
      "air": 0
     },
@@ -566,7 +589,7 @@
      "column": 1,
      "logical_bbox": [
       22,
-      45
+      44
      ],
      "air": 0
     },
@@ -574,7 +597,7 @@
      "row": 4,
      "column": 2,
      "logical_bbox": [
-      27,
+      25,
       44
      ],
      "air": 0
@@ -583,15 +606,15 @@
      "row": 4,
      "column": 3,
      "logical_bbox": [
-      27,
+      26,
       44
      ],
      "air": 0
     }
    },
    "notes": [],
-   "pitch": 8.417,
-   "from_raw": "raw/s2_a4_v4edit.png"
+   "pitch": 8.083,
+   "from_raw": "raw/s2_a5_v4wide.png"
   },
   "4": {
    "attempts": [
