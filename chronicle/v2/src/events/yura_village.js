@@ -7,7 +7,7 @@
   const cleared = (ev) => ev.flag('cleared_r_forest');
 
   E('yura_arrival', async (ev) => {
-    await ev.caption('こけむした家々が、\n池を囲んで円を描いている。', { ms: 2200 });
+    await ev.caption('まるい石の小屋が、\n大きな水車のまわりに寄りそっている。', { ms: 2200 });
     await ev.caption('……誰も、名を呼び合っていない。', { ms: 1800 });
   });
 
@@ -59,7 +59,7 @@
   E('yura_lampkeeper', async (ev) => {
     // ⑤ 一度だけの品（ティアで量が変わる）
     if (!ev.flag('yura_lamp_gift')) {
-      await ev.say('yura_lampkeeper', ['灯守だよ。池のまわりの灯籠を\n守ってる。', '旅の人が来るのは久しぶりだ。\nこれ、持っておいき。']);
+      await ev.say('yura_lampkeeper', ['灯守だよ。水辺の灯籠を\n守ってる。', '旅の人が来るのは久しぶりだ。\nこれ、持っておいき。']);
       R.ContentF.forest.small(ev, [['i_ether', 1], ['i_ether', 2], ['i_ether2', 1], ['i_ether2', 2]]);
       ev.setFlag('yura_lamp_gift');
       return;

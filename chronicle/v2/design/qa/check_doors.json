@@ -1,21 +1,1129 @@
 {
- "date": "2026-09-27T17:26:59.194Z",
+ "date": "2026-09-27T17:43:36.004Z",
  "fixture": "content_p_pharos",
  "walked": [
   {
-   "map": "verda_1",
+   "map": "elder_1",
+   "kind": "stairs",
+   "id": "elder_1_down",
+   "at": "elder_2",
+   "to": "elder_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    24,
+    27
+   ],
+   "ms": 10244
+  },
+  {
+   "map": "elder_1",
    "kind": "exit",
-   "id": "28,51",
+   "id": "24,47",
+   "at": "verda_2",
+   "to": "verda_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    43
+   ],
+   "ms": 13750
+  },
+  {
+   "map": "elder_2",
+   "kind": "stairs",
+   "id": "elder_2_up",
+   "at": "elder_1",
+   "to": "elder_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    8
+   ],
+   "ms": 6594
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_b_inn",
+   "at": "fern_inn",
+   "to": "fern_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    9,
+    32
+   ],
+   "ms": 17630
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_b_gord",
+   "at": "fern_gord",
+   "to": "fern_gord",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    24,
+    10
+   ],
+   "ms": 3938
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_b_shop",
+   "at": "fern_shop",
+   "to": "fern_shop",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    44,
+    32
+   ],
+   "ms": 18942
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_b_rita",
+   "at": "fern_rita",
+   "to": "fern_rita",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    52,
+    13
+   ],
+   "ms": 4157
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_b_search",
+   "at": "fern_search",
+   "to": "fern_search",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    36,
+    11
+   ],
+   "ms": 5008
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_b_pim",
+   "at": "fern_pim_home",
+   "to": "fern_pim_home",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    18,
+    48
+   ],
+   "ms": 4055
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_b_house1",
+   "at": "fern_home1",
+   "to": "fern_home1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    40,
+    47
+   ],
+   "ms": 4785
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_b_house2",
+   "at": "fern_home2",
+   "to": "fern_home2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    11
+   ],
+   "ms": 4580
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_b_house3",
+   "at": "fern_home3",
+   "to": "fern_home3",
+   "ok": true,
+   "steps": 1,
+   "why": null,
+   "start": [
+    49,
+    41
+   ],
+   "ms": 3989
+  },
+  {
+   "map": "fern",
+   "kind": "door",
+   "id": "fern_b_shed",
+   "at": "fern_shed",
+   "to": "fern_shed",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    50
+   ],
+   "ms": 5703
+  },
+  {
+   "map": "fern",
+   "kind": "exit",
+   "id": "28,55",
+   "at": "world",
+   "to": "world",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    51
+   ],
+   "ms": 5946
+  },
+  {
+   "map": "fern_gord",
+   "kind": "exit",
+   "id": "4,7",
    "at": "fern",
    "to": "fern",
    "ok": true,
    "steps": 4,
    "why": null,
    "start": [
-    28,
-    47
+    4,
+    3
    ],
-   "ms": 61784
+   "ms": 7281
+  },
+  {
+   "map": "fern",
+   "kind": "exit",
+   "id": "28,0",
+   "at": "verda_1",
+   "to": "verda_1",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    28,
+    4
+   ],
+   "ms": 9176
+  },
+  {
+   "map": "fern_home1",
+   "kind": "exit",
+   "id": "4,6",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    3
+   ],
+   "ms": 5501
+  },
+  {
+   "map": "fern_home2",
+   "kind": "exit",
+   "id": "3,7",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    3
+   ],
+   "ms": 5642
+  },
+  {
+   "map": "fern_home3",
+   "kind": "exit",
+   "id": "4,6",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    4,
+    2
+   ],
+   "ms": 4512
+  },
+  {
+   "map": "fern_inn",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 5447
+  },
+  {
+   "map": "fern_pim_home",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    4
+   ],
+   "ms": 5925
+  },
+  {
+   "map": "fern_rita",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 4705
+  },
+  {
+   "map": "fern_search",
+   "kind": "exit",
+   "id": "5,8",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    5
+   ],
+   "ms": 4373
+  },
+  {
+   "map": "fern_shed",
+   "kind": "exit",
+   "id": "3,6",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    2,
+    3
+   ],
+   "ms": 4522
+  },
+  {
+   "map": "fern_shop",
+   "kind": "exit",
+   "id": "4,8",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    4
+   ],
+   "ms": 4705
+  },
+  {
+   "map": "hut",
+   "kind": "exit",
+   "id": "5,8",
+   "at": "world",
+   "to": "world",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    4
+   ],
+   "ms": 9768
+  },
+  {
+   "map": "lighthouse_1",
+   "kind": "stairs",
+   "id": "",
+   "at": "lighthouse_2",
+   "to": "lighthouse_2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    8
+   ],
+   "ms": 8204
+  },
+  {
+   "map": "lighthouse_1",
+   "kind": "door",
+   "id": "lh1_door_out_w",
+   "at": "lighthouse_1",
+   "to": "lighthouse_1",
+   "ok": true,
+   "steps": 4,
+   "start": [
+    17,
+    17
+   ],
+   "ms": 8406
+  },
+  {
+   "map": "lighthouse_1",
+   "kind": "door",
+   "id": "lh1_door_out_e",
+   "at": "lighthouse_1",
+   "to": "lighthouse_1",
+   "ok": true,
+   "steps": 3,
+   "start": [
+    18,
+    17
+   ],
+   "ms": 6627
+  },
+  {
+   "map": "lighthouse_1",
+   "kind": "exit",
+   "id": "15,31",
+   "at": "world",
+   "to": "world",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    15,
+    27
+   ],
+   "ms": 5214
+  },
+  {
+   "map": "lighthouse_2",
+   "kind": "stairs",
+   "id": "",
+   "at": "lighthouse_1",
+   "to": "lighthouse_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    27
+   ],
+   "ms": 5300
+  },
+  {
+   "map": "lighthouse_2",
+   "kind": "stairs",
+   "id": "",
+   "at": "lighthouse_3",
+   "to": "lighthouse_3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    16,
+    20
+   ],
+   "ms": 5524
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_inn",
+   "at": "pharos_inn",
+   "to": "pharos_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    11
+   ],
+   "ms": 6501
+  },
+  {
+   "map": "lighthouse_3",
+   "kind": "stairs",
+   "id": "",
+   "at": "lighthouse_2",
+   "to": "lighthouse_2",
+   "ok": true,
+   "steps": 5,
+   "why": null,
+   "start": [
+    12,
+    15
+   ],
+   "ms": 11859
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_tavern",
+   "at": "pharos_tavern",
+   "to": "pharos_tavern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    18,
+    11
+   ],
+   "ms": 8130
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_shop",
+   "at": "pharos_shop",
+   "to": "pharos_shop",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    27,
+    12
+   ],
+   "ms": 7740
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house2",
+   "at": "pharos_home2",
+   "to": "pharos_home2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    40,
+    12
+   ],
+   "ms": 7054
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house1",
+   "at": "pharos_home1",
+   "to": "pharos_home1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    34,
+    12
+   ],
+   "ms": 7785
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_smith",
+   "at": "pharos_smith",
+   "to": "pharos_smith",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    12,
+    19
+   ],
+   "ms": 6098
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_record",
+   "at": "pharos_record",
+   "to": "pharos_record",
+   "ok": true,
+   "steps": 5,
+   "why": null,
+   "start": [
+    4,
+    19
+   ],
+   "ms": 7157
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house3",
+   "at": "pharos_home3",
+   "to": "pharos_home3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    36,
+    19
+   ],
+   "ms": 4759
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house4",
+   "at": "pharos_home4",
+   "to": "pharos_home4",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    28
+   ],
+   "ms": 4735
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house6",
+   "at": "pharos_home6",
+   "to": "pharos_home6",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    38,
+    28
+   ],
+   "ms": 3416
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_house5",
+   "at": "pharos_home5",
+   "to": "pharos_home5",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    13,
+    28
+   ],
+   "ms": 5926
+  },
+  {
+   "map": "pharos",
+   "kind": "door",
+   "id": "ph_shipyard",
+   "at": "pharos_shipyard",
+   "to": "pharos_shipyard",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    47,
+    25
+   ],
+   "ms": 4929
+  },
+  {
+   "map": "pharos",
+   "kind": "exit",
+   "id": "0,18",
+   "at": "world",
+   "to": "world",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    18
+   ],
+   "ms": 6260
+  },
+  {
+   "map": "pharos_home1",
+   "kind": "exit",
+   "id": "3,7",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    2,
+    4
+   ],
+   "ms": 4688
+  },
+  {
+   "map": "pharos_home2",
+   "kind": "exit",
+   "id": "3,7",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    3
+   ],
+   "ms": 5359
+  },
+  {
+   "map": "pharos_home3",
+   "kind": "exit",
+   "id": "4,6",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    3,
+    3
+   ],
+   "ms": 5069
+  },
+  {
+   "map": "pharos_home4",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    4
+   ],
+   "ms": 4264
+  },
+  {
+   "map": "pharos_home5",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    4
+   ],
+   "ms": 4745
+  },
+  {
+   "map": "pharos_home6",
+   "kind": "exit",
+   "id": "4,6",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    3,
+    3
+   ],
+   "ms": 4664
+  },
+  {
+   "map": "pharos_inn",
+   "kind": "exit",
+   "id": "5,9",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    5
+   ],
+   "ms": 5630
+  },
+  {
+   "map": "pharos_record",
+   "kind": "exit",
+   "id": "5,8",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    5
+   ],
+   "ms": 4809
+  },
+  {
+   "map": "pharos_shop",
+   "kind": "exit",
+   "id": "4,8",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    5
+   ],
+   "ms": 5143
+  },
+  {
+   "map": "pharos_shipyard",
+   "kind": "exit",
+   "id": "5,8",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 6,
+   "why": null,
+   "start": [
+    5,
+    4
+   ],
+   "ms": 7554
+  },
+  {
+   "map": "pharos_tavern",
+   "kind": "exit",
+   "id": "7,10",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    6
+   ],
+   "ms": 4228
+  },
+  {
+   "map": "pharos_smith",
+   "kind": "exit",
+   "id": "4,8",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    5
+   ],
+   "ms": 4964
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h1",
+   "at": "roa_home1",
+   "to": "roa_home1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    11
+   ],
+   "ms": 6211
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h2",
+   "at": "roa_home2",
+   "to": "roa_home2",
+   "ok": true,
+   "steps": 6,
+   "why": null,
+   "start": [
+    14,
+    13
+   ],
+   "ms": 9559
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_hall",
+   "at": "roa_hall_in",
+   "to": "roa_hall_in",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    21,
+    13
+   ],
+   "ms": 6923
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h3",
+   "at": "roa_home3",
+   "to": "roa_home3",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    29,
+    12
+   ],
+   "ms": 5913
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h4",
+   "at": "roa_home4",
+   "to": "roa_home4",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    36,
+    12
+   ],
+   "ms": 5848
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h5",
+   "at": "roa_home5",
+   "to": "roa_home5",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    25
+   ],
+   "ms": 5145
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_h6",
+   "at": "roa_home6",
+   "to": "roa_home6",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    30,
+    21
+   ],
+   "ms": 4338
+  },
+  {
+   "map": "roa",
+   "kind": "door",
+   "id": "roa_berna",
+   "at": "roa_house",
+   "to": "roa_house",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    17,
+    31
+   ],
+   "ms": 4383
+  },
+  {
+   "map": "roa",
+   "kind": "exit",
+   "id": "43,15",
+   "at": "world",
+   "to": "world",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    39,
+    15
+   ],
+   "ms": 4973
+  },
+  {
+   "map": "roa_hall_in",
+   "kind": "exit",
+   "id": "5,8",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    4
+   ],
+   "ms": 5421
+  },
+  {
+   "map": "roa_home1",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    2,
+    5
+   ],
+   "ms": 7058
+  },
+  {
+   "map": "roa_home2",
+   "kind": "exit",
+   "id": "3,7",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    3,
+    3
+   ],
+   "ms": 5143
+  },
+  {
+   "map": "roa_home4",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    3
+   ],
+   "ms": 5686
+  },
+  {
+   "map": "roa_home3",
+   "kind": "exit",
+   "id": "3,7",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    3
+   ],
+   "ms": 6533
+  },
+  {
+   "map": "roa_home5",
+   "kind": "exit",
+   "id": "3,6",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    2
+   ],
+   "ms": 5766
+  },
+  {
+   "map": "roa_home6",
+   "kind": "exit",
+   "id": "3,6",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    2,
+    3
+   ],
+   "ms": 6443
+  },
+  {
+   "map": "roa_house",
+   "kind": "exit",
+   "id": "6,9",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    6,
+    5
+   ],
+   "ms": 5015
   },
   {
    "map": "verda_1",
@@ -30,7 +1138,305 @@
     29,
     4
    ],
-   "ms": 23130
+   "ms": 14315
+  },
+  {
+   "map": "verda_1",
+   "kind": "exit",
+   "id": "28,51",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    47
+   ],
+   "ms": 20383
+  },
+  {
+   "map": "verda_1",
+   "kind": "exit",
+   "id": "11,20",
+   "at": "verda_1",
+   "to": "verda_1",
+   "ok": true,
+   "steps": 4,
+   "start": [
+    11,
+    24
+   ],
+   "ms": 12105
+  },
+  {
+   "map": "verda_2",
+   "kind": "exit",
+   "id": "28,51",
+   "at": "verda_1",
+   "to": "verda_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    28,
+    47
+   ],
+   "ms": 13321
+  },
+  {
+   "map": "verda_2",
+   "kind": "exit",
+   "id": "28,0",
+   "at": "elder_1",
+   "to": "elder_1",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    29,
+    3
+   ],
+   "ms": 4976
+  },
+  {
+   "map": "verda_2",
+   "kind": "exit",
+   "id": "20,32",
+   "at": "verda_2",
+   "to": "verda_2",
+   "ok": true,
+   "steps": 5,
+   "start": [
+    24,
+    32
+   ],
+   "ms": 18248
+  },
+  {
+   "map": "well",
+   "kind": "stairs",
+   "id": "",
+   "at": "world",
+   "to": "world",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    18,
+    7
+   ],
+   "ms": 5216
+  },
+  {
+   "map": "world",
+   "kind": "door",
+   "id": "w_lighthouse",
+   "at": "lighthouse_1",
+   "to": "lighthouse_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    106,
+    128
+   ],
+   "ms": 5697
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "well",
+   "to": "well",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    77,
+    83
+   ],
+   "ms": 7535
+  },
+  {
+   "map": "world",
+   "kind": "door",
+   "id": "w_hut",
+   "at": "hut",
+   "to": "hut",
+   "ok": true,
+   "steps": 3,
+   "why": null,
+   "start": [
+    68,
+    65
+   ],
+   "ms": 8120
+  },
+  {
+   "map": "world",
+   "kind": "door",
+   "id": "w_sandedge",
+   "at": "sandedge",
+   "to": "sandedge",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    36,
+    130
+   ],
+   "ms": 7757
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "snow_woods",
+   "to": "snow_woods",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    64,
+    41
+   ],
+   "ms": 7992
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "peak_1",
+   "to": "peak_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    60,
+    15
+   ],
+   "ms": 8628
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "icicle_1",
+   "to": "icicle_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    31
+   ],
+   "ms": 6438
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "aurora",
+   "to": "aurora",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    22,
+    10
+   ],
+   "ms": 6690
+  },
+  {
+   "map": "world",
+   "kind": "stairs",
+   "id": "",
+   "at": "frost_ship_1",
+   "to": "frost_ship_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    41,
+    10
+   ],
+   "ms": 8038
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "82,91",
+   "at": "roa",
+   "to": "roa",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    82,
+    87
+   ],
+   "ms": 4145
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "100,108",
+   "at": "pharos",
+   "to": "pharos",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    100,
+    104
+   ],
+   "ms": 5697
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "44,81",
+   "at": "fern",
+   "to": "fern",
+   "ok": true,
+   "steps": 2,
+   "why": null,
+   "start": [
+    44,
+    85
+   ],
+   "ms": 6051
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "26,59",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    63
+   ],
+   "ms": 9244
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "46,138",
+   "at": "kasim",
+   "to": "kasim",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    45,
+    135
+   ],
+   "ms": 6886
   },
   {
    "map": "verda_1",
@@ -42,241 +1448,373 @@
    ],
    "to": "verda_1",
    "ok": false,
-   "steps": 3,
+   "steps": 2,
    "why": "timeout 90 s",
    "start": [
     43,
     27
    ],
-   "ms": 323338
-  },
-  {
-   "map": "verda_1",
-   "kind": "exit",
-   "id": "11,20",
-   "at": [
-    11,
-    20
-   ],
-   "to": "verda_1",
-   "ok": false,
-   "steps": 1,
-   "why": "timeout 90 s",
-   "start": [
-    11,
-    24
-   ],
-   "ms": 500548
-  },
-  {
-   "map": "world",
-   "kind": "door",
-   "id": "w_lighthouse",
-   "at": [
-    106,
-    124
-   ],
-   "to": "lighthouse_1",
-   "ok": false,
-   "steps": 1,
-   "why": "timeout 90 s",
-   "start": [
-    106,
-    128
-   ],
-   "ms": 528155
-  },
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "at": [
-    76,
-    86
-   ],
-   "to": "well",
-   "ok": false,
-   "steps": 1,
-   "why": "timeout 90 s",
-   "start": [
-    77,
-    83
-   ],
-   "ms": 551209
-  },
-  {
-   "map": "world",
-   "kind": "door",
-   "id": "w_hut",
-   "at": [
-    68,
-    61
-   ],
-   "to": "hut",
-   "ok": false,
-   "steps": 1,
-   "why": "timeout 90 s",
-   "start": [
-    68,
-    65
-   ],
-   "ms": 433601
-  },
-  {
-   "map": "world",
-   "kind": "door",
-   "id": "w_sandedge",
-   "at": [
-    36,
-    126
-   ],
-   "to": "sandedge",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 102832
-  },
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "at": [
-    66,
-    39
-   ],
-   "to": "snow_woods",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 27
-  },
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "at": [
-    60,
-    11
-   ],
-   "to": "peak_1",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "at": [
-    20,
-    33
-   ],
-   "to": "icicle_1",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "at": [
-    22,
-    6
-   ],
-   "to": "aurora",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 93
-  },
-  {
-   "map": "world",
-   "kind": "stairs",
-   "id": "",
-   "at": [
-    41,
-    6
-   ],
-   "to": "frost_ship_1",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 100
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "82,91",
-   "at": [
-    82,
-    91
-   ],
-   "to": "roa",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "100,108",
-   "at": [
-    100,
-    108
-   ],
-   "to": "pharos",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "44,81",
-   "at": [
-    44,
-    81
-   ],
-   "to": "fern",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 20
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "26,59",
-   "at": [
-    26,
-    59
-   ],
-   "to": "yura",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 3
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "46,138",
-   "at": [
-    46,
-    138
-   ],
-   "to": "kasim",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ms": 158447
   },
   {
    "map": "world",
    "kind": "exit",
    "id": "58,138",
-   "at": [
-    58,
-    138
-   ],
+   "at": "kasim",
    "to": "kasim",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    55,
+    137
+   ],
+   "ms": 4439
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "27,158",
+   "at": "desert_camp2",
+   "to": "desert_camp2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    26,
+    161
+   ],
+   "ms": 6325
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "16,141",
+   "at": "desert_camp3",
+   "to": "desert_camp3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    16,
+    145
+   ],
+   "ms": 6032
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "27,150",
+   "at": "desert_oldcamp",
+   "to": "desert_oldcamp",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    27,
+    154
+   ],
+   "ms": 5201
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "13,151",
+   "at": "desert_wellroom",
+   "to": "desert_wellroom",
+   "ok": true,
+   "steps": 6,
+   "why": null,
+   "start": [
+    14,
+    148
+   ],
+   "ms": 4443
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "28,141",
+   "at": "desert_hawks_1",
+   "to": "desert_hawks_1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    27,
+    144
+   ],
+   "ms": 3615
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "57,125",
+   "at": "desert_rocks",
+   "to": "desert_rocks",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    57,
+    129
+   ],
+   "ms": 5138
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "44,27",
+   "at": "yule",
+   "to": "yule",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    44,
+    31
+   ],
+   "ms": 8775
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "54,27",
+   "at": "yule",
+   "to": "yule",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    55,
+    30
+   ],
+   "ms": 3760
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "49,21",
+   "at": "yule",
+   "to": "yule",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    49,
+    17
+   ],
+   "ms": 4727
+  },
+  {
+   "map": "world",
+   "kind": "exit",
+   "id": "84,32",
+   "at": "pass_inn",
+   "to": "pass_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    84,
+    36
+   ],
+   "ms": 4373
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_b_inn",
+   "at": "yura_inn",
+   "to": "yura_inn",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    14,
+    9
+   ],
+   "ms": 3611
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_b_elder",
+   "at": "yura_home_elder",
+   "to": "yura_home_elder",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    5,
+    16
+   ],
+   "ms": 2578
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_b_h1",
+   "at": "yura_home1",
+   "to": "yura_home1",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    23,
+    10
+   ],
+   "ms": 2822
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_b_h2",
+   "at": "yura_home2",
+   "to": "yura_home2",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    25,
+    18
+   ],
+   "ms": 3225
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_b_h3",
+   "at": "yura_home3",
+   "to": "yura_home3",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    21,
+    25
+   ],
+   "ms": 3467
+  },
+  {
+   "map": "yura",
+   "kind": "door",
+   "id": "yura_b_h4",
+   "at": "yura_home4",
+   "to": "yura_home4",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    7,
+    25
+   ],
+   "ms": 3034
+  },
+  {
+   "map": "yura",
+   "kind": "exit",
+   "id": "14,27",
+   "at": "world",
+   "to": "world",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    14,
+    23
+   ],
+   "ms": 2879
+  },
+  {
+   "map": "yura_home1",
+   "kind": "exit",
+   "id": "3,6",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    2,
+    3
+   ],
+   "ms": 3575
+  },
+  {
+   "map": "yura_home2",
+   "kind": "exit",
+   "id": "3,7",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    2,
+    4
+   ],
+   "ms": 3062
+  },
+  {
+   "map": "yura_home3",
+   "kind": "exit",
+   "id": "3,6",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    3
+   ],
+   "ms": 2894
+  },
+  {
+   "map": "yura_home4",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    3
+   ],
+   "ms": 3272
+  },
+  {
+   "map": "yura_home_elder",
+   "kind": "exit",
+   "id": "4,7",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    3,
+    4
+   ],
+   "ms": 2740
+  },
+  {
+   "map": "yura_inn",
+   "kind": "exit",
+   "id": "4,8",
+   "at": "yura",
+   "to": "yura",
+   "ok": true,
+   "steps": 4,
+   "why": null,
+   "start": [
+    4,
+    4
+   ],
+   "ms": 3091
   },
   {
    "map": "world",
@@ -288,154 +1826,653 @@
    ],
    "to": "desert_camp1",
    "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "27,158",
-   "at": [
-    27,
-    158
+   "steps": 2,
+   "why": "timeout 90 s",
+   "start": [
+    37,
+    156
    ],
-   "to": "desert_camp2",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "16,141",
-   "at": [
-    16,
-    141
-   ],
-   "to": "desert_camp3",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "27,150",
-   "at": [
-    27,
-    150
-   ],
-   "to": "desert_oldcamp",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "13,151",
-   "at": [
-    13,
-    151
-   ],
-   "to": "desert_wellroom",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "28,141",
-   "at": [
-    28,
-    141
-   ],
-   "to": "desert_hawks_1",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 9
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "57,125",
-   "at": [
-    57,
-    125
-   ],
-   "to": "desert_rocks",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "44,27",
-   "at": [
-    44,
-    27
-   ],
-   "to": "yule",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "54,27",
-   "at": [
-    54,
-    27
-   ],
-   "to": "yule",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "49,21",
-   "at": [
-    49,
-    21
-   ],
-   "to": "yule",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "world",
-   "kind": "exit",
-   "id": "84,32",
-   "at": [
-    84,
-    32
-   ],
-   "to": "pass_inn",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 0
-  },
-  {
-   "map": "yura_home2",
-   "kind": "exit",
-   "id": "3,7",
-   "at": [
-    3,
-    7
-   ],
-   "to": "yura",
-   "ok": false,
-   "why": "page.evaluate: Target page, context or browser has been closed",
-   "ms": 1
+   "ms": 289407
   }
  ],
  "looks": [
+  {
+   "map": "elder_1",
+   "npc": "fine",
+   "look": "fine",
+   "art": "fine",
+   "ok": true
+  },
+  {
+   "map": "elder_2",
+   "npc": "elm",
+   "look": "elm",
+   "art": "elm",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "hanna",
+   "look": "npc_hanna",
+   "art": "npc_hanna",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "search_lead",
+   "look": "npc_guard_2",
+   "art": "npc_forest_man_2",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "search_a",
+   "look": "npc_woodcutter_2",
+   "art": "npc_woodcutter",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "peddler",
+   "look": "npc_merchant_2",
+   "art": "npc_traveler_2",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "herbalist",
+   "look": "npc_old_f_1",
+   "art": "npc_forest_old_f_1",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "postmaster",
+   "look": "npc_woman_3",
+   "art": "npc_forest_woman_3",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "lampkeeper",
+   "look": "npc_old_m_2",
+   "art": "npc_forest_old_m_2",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "hunter",
+   "look": "npc_woodcutter_3",
+   "art": "npc_woodcutter",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "kid",
+   "look": "npc_child_2",
+   "art": "npc_forest_child_2",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "traveler",
+   "look": "npc_merchant_1",
+   "art": "npc_traveler_1",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "acorn_boy",
+   "look": "npc_child_1",
+   "art": "npc_forest_child_1",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "elder_m",
+   "look": "npc_old_m_1",
+   "art": "npc_forest_old_m_1",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "yura_miller",
+   "look": "npc_yura_folk_2",
+   "art": "npc_yura_man_2",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "pim_after",
+   "look": "npc_pim",
+   "art": "npc_pim",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "deck_1",
+   "look": "npc_woman_1",
+   "art": "npc_forest_woman_1",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "deck_2",
+   "look": "npc_old_m_3",
+   "art": "npc_forest_old_m_3",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "deck_3",
+   "look": "npc_man_2",
+   "art": "npc_forest_man_2",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "deck_4",
+   "look": "npc_woman_2",
+   "art": "npc_forest_woman_2",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "deck_5",
+   "look": "npc_man_3",
+   "art": "npc_forest_man_3",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "dog",
+   "look": "ani_dog",
+   "art": "ani_dog",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "hen",
+   "look": "ani_hen",
+   "art": "ani_hen",
+   "ok": true
+  },
+  {
+   "map": "fern",
+   "npc": "singer",
+   "look": "npc_bard_1",
+   "art": "npc_bard",
+   "ok": true
+  },
+  {
+   "map": "fern_gord",
+   "npc": "gord",
+   "look": "npc_gord",
+   "art": "npc_gord",
+   "ok": true
+  },
+  {
+   "map": "fern_home1",
+   "npc": "worrier",
+   "look": "npc_woman_2",
+   "art": "npc_forest_woman_2",
+   "ok": true
+  },
+  {
+   "map": "fern_home2",
+   "npc": "rootold",
+   "look": "npc_old_m_2",
+   "art": "npc_forest_old_m_2",
+   "ok": true
+  },
+  {
+   "map": "fern_home3",
+   "npc": "swayman",
+   "look": "npc_man_2",
+   "art": "npc_forest_man_2",
+   "ok": true
+  },
+  {
+   "map": "fern_inn",
+   "npc": "inn_keeper",
+   "look": "npc_woman_4",
+   "art": "npc_forest_woman_4",
+   "ok": true
+  },
+  {
+   "map": "fern_inn",
+   "npc": "inn_guest",
+   "look": "npc_man_4",
+   "art": "npc_forest_man_4",
+   "ok": true
+  },
+  {
+   "map": "fern_pim_home",
+   "npc": "katri",
+   "look": "npc_pim_mother",
+   "art": "npc_pim_mother",
+   "ok": true
+  },
+  {
+   "map": "fern_rita",
+   "npc": "rita",
+   "look": "npc_rita",
+   "art": "npc_rita",
+   "ok": true
+  },
+  {
+   "map": "fern_rita",
+   "npc": "rita_pupil",
+   "look": "npc_child_3",
+   "art": "npc_forest_child_3",
+   "ok": true
+  },
+  {
+   "map": "fern_search",
+   "npc": "search_chief",
+   "look": "npc_guard_1",
+   "art": "npc_forest_man_1",
+   "ok": true
+  },
+  {
+   "map": "fern_search",
+   "npc": "search_b",
+   "look": "npc_woodcutter_4",
+   "art": "npc_woodcutter",
+   "ok": true
+  },
+  {
+   "map": "fern_shed",
+   "npc": "hider",
+   "look": "npc_child_2",
+   "art": "npc_forest_child_2",
+   "ok": true
+  },
+  {
+   "map": "fern_shop",
+   "npc": "shop_keeper",
+   "look": "npc_merchant_3",
+   "art": "npc_traveler_3",
+   "ok": true
+  },
+  {
+   "map": "lighthouse_1",
+   "npc": "otto",
+   "look": "otto",
+   "art": "otto",
+   "ok": true
+  },
+  {
+   "map": "lighthouse_3",
+   "npc": "fine",
+   "look": "fine",
+   "art": "fine",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "otto",
+   "look": "otto",
+   "art": "otto",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "gateguard",
+   "look": "npc_guard_1",
+   "art": "npc_pen_guard_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "well_child",
+   "look": "npc_child_2",
+   "art": "npc_pen_child_2",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "tadeo",
+   "look": "npc_tadeo",
+   "art": "npc_tadeo",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "fishwife",
+   "look": "npc_woman_3",
+   "art": "npc_pen_woman_3",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "old_sailor",
+   "look": "npc_sailor_2",
+   "art": "npc_pen_sailor_2",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "ship_sailor",
+   "look": "npc_sailor_1",
+   "art": "npc_pen_sailor_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "plaza_woman",
+   "look": "npc_woman_1",
+   "art": "npc_pen_woman_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "bench_old",
+   "look": "npc_old_m_2",
+   "art": "npc_pen_old_m_2",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "merchant",
+   "look": "npc_merchant_1",
+   "art": "npc_pen_keeper_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "yena",
+   "look": "npc_yena",
+   "art": "npc_yena",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "kid_pier",
+   "look": "npc_child_4",
+   "art": "npc_pen_child_4",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "dog",
+   "look": "ani_dog",
+   "art": "ani_dog",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "berna",
+   "look": "berna",
+   "art": "berna",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "cheer_a",
+   "look": "npc_man_1",
+   "art": "npc_pen_man_1",
+   "ok": true
+  },
+  {
+   "map": "pharos",
+   "npc": "cheer_b",
+   "look": "npc_woman_1",
+   "art": "npc_pen_woman_1",
+   "ok": true
+  },
+  {
+   "map": "pharos_home1",
+   "npc": "sailorwife",
+   "look": "npc_woman_2",
+   "art": "npc_pen_woman_2",
+   "ok": true
+  },
+  {
+   "map": "pharos_home2",
+   "npc": "oldnet",
+   "look": "npc_old_m_1",
+   "art": "npc_pen_old_m_1",
+   "ok": true
+  },
+  {
+   "map": "pharos_home3",
+   "npc": "landsailor",
+   "look": "npc_sailor_3",
+   "art": "npc_pen_sailor_3",
+   "ok": true
+  },
+  {
+   "map": "pharos_home4",
+   "npc": "mom",
+   "look": "npc_woman_3",
+   "art": "npc_pen_woman_3",
+   "ok": true
+  },
+  {
+   "map": "pharos_home4",
+   "npc": "kid",
+   "look": "npc_child_1",
+   "art": "npc_pen_child_1",
+   "ok": true
+  },
+  {
+   "map": "pharos_home5",
+   "npc": "clerkfriend",
+   "look": "npc_man_1",
+   "art": "npc_pen_man_1",
+   "ok": true
+  },
+  {
+   "map": "pharos_home6",
+   "npc": "fruitgran",
+   "look": "npc_old_f_3",
+   "art": "npc_pen_old_f_3",
+   "ok": true
+  },
+  {
+   "map": "pharos_inn",
+   "npc": "innkeeper",
+   "look": "npc_woman_4",
+   "art": "npc_pen_woman_4",
+   "ok": true
+  },
+  {
+   "map": "pharos_record",
+   "npc": "rowell",
+   "look": "rowell",
+   "art": "rowell",
+   "ok": true
+  },
+  {
+   "map": "pharos_record",
+   "npc": "clerk",
+   "look": "npc_man_2",
+   "art": "npc_pen_man_2",
+   "ok": true
+  },
+  {
+   "map": "pharos_shipyard",
+   "npc": "shipwright",
+   "look": "npc_old_m_3",
+   "art": "npc_pen_old_m_3",
+   "ok": true
+  },
+  {
+   "map": "pharos_shipyard",
+   "npc": "apprentice",
+   "look": "npc_man_1",
+   "art": "npc_pen_man_1",
+   "ok": true
+  },
+  {
+   "map": "pharos_shop",
+   "npc": "shopkeeper",
+   "look": "npc_merchant_1",
+   "art": "npc_pen_keeper_1",
+   "ok": true
+  },
+  {
+   "map": "pharos_smith",
+   "npc": "smith",
+   "look": "npc_man_4",
+   "art": "npc_pen_man_4",
+   "ok": true
+  },
+  {
+   "map": "pharos_tavern",
+   "npc": "master",
+   "look": "npc_merchant_2",
+   "art": "npc_pen_keeper_2",
+   "ok": true
+  },
+  {
+   "map": "pharos_tavern",
+   "npc": "gossip",
+   "look": "npc_woman_3",
+   "art": "npc_pen_woman_3",
+   "ok": true
+  },
+  {
+   "map": "pharos_tavern",
+   "npc": "bard",
+   "look": "npc_bard_1",
+   "art": "npc_bard",
+   "ok": true
+  },
+  {
+   "map": "pharos_tavern",
+   "npc": "trader",
+   "look": "npc_merchant_3",
+   "art": "npc_pen_keeper_3",
+   "ok": true
+  },
+  {
+   "map": "pharos_tavern",
+   "npc": "swordsman",
+   "look": "npc_man_3",
+   "art": "npc_pen_man_3",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "gatewoman",
+   "look": "npc_woman_2",
+   "art": "npc_pen_woman_2",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "gatewoman2",
+   "look": "npc_woman_2",
+   "art": "npc_pen_woman_2",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "child_a",
+   "look": "npc_child_1",
+   "art": "npc_pen_child_1",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "child_b",
+   "look": "npc_child_3",
+   "art": "npc_pen_child_3",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "elder",
+   "look": "npc_old_m_1",
+   "art": "npc_pen_old_m_1",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "farmer",
+   "look": "npc_man_2",
+   "art": "npc_pen_man_2",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "weaver",
+   "look": "npc_old_f_1",
+   "art": "npc_pen_old_f_1",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "youth",
+   "look": "npc_man_1",
+   "art": "npc_pen_man_1",
+   "ok": true
+  },
+  {
+   "map": "roa",
+   "npc": "cat",
+   "look": "ani_cat",
+   "art": "ani_cat",
+   "ok": true
+  },
+  {
+   "map": "roa_home1",
+   "npc": "mother",
+   "look": "npc_woman_1",
+   "art": "npc_pen_woman_1",
+   "ok": true
+  },
+  {
+   "map": "roa_home2",
+   "npc": "woodman",
+   "look": "npc_man_3",
+   "art": "npc_pen_man_3",
+   "ok": true
+  },
+  {
+   "map": "roa_home3",
+   "npc": "granny",
+   "look": "npc_old_f_2",
+   "art": "npc_pen_old_f_2",
+   "ok": true
+  },
+  {
+   "map": "roa_home4",
+   "npc": "father",
+   "look": "npc_man_4",
+   "art": "npc_pen_man_4",
+   "ok": true
+  },
+  {
+   "map": "roa_home5",
+   "npc": "fieldkeeper",
+   "look": "npc_old_m_3",
+   "art": "npc_pen_old_m_3",
+   "ok": true
+  },
+  {
+   "map": "roa_home6",
+   "npc": "pondwife",
+   "look": "npc_woman_4",
+   "art": "npc_pen_woman_4",
+   "ok": true
+  },
+  {
+   "map": "roa_house",
+   "npc": "berna",
+   "look": "berna",
+   "art": "berna",
+   "ok": true
+  },
+  {
+   "map": "roa_house",
+   "npc": "berna_desk",
+   "look": "berna",
+   "art": "berna",
+   "ok": true
+  },
   {
    "map": "verda_1",
    "npc": "ben",
@@ -476,6 +2513,34 @@
    "npc": "fawn_after",
    "look": "ani_fawn",
    "art": "ani_fawn",
+   "ok": true
+  },
+  {
+   "map": "verda_2",
+   "npc": "pim",
+   "look": "npc_pim",
+   "art": "npc_pim",
+   "ok": true
+  },
+  {
+   "map": "verda_2",
+   "npc": "fawn",
+   "look": "ani_fawn",
+   "art": "ani_fawn",
+   "ok": true
+  },
+  {
+   "map": "verda_2",
+   "npc": "hans",
+   "look": "npc_hans",
+   "art": "npc_hans",
+   "ok": true
+  },
+  {
+   "map": "verda_2",
+   "npc": "roy",
+   "look": "npc_roy",
+   "art": "npc_roy",
    "ok": true
   },
   {
@@ -577,14 +2642,143 @@
    "ok": true
   },
   {
+   "map": "yura",
+   "npc": "yura_elder",
+   "look": "npc_yura_elder",
+   "art": "npc_yura_elder",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "yura_miller",
+   "look": "npc_yura_folk_2",
+   "art": "npc_yura_man_2",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "yura_nanny",
+   "look": "npc_yura_folk_1",
+   "art": "npc_yura_woman_1",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "yura_grave",
+   "look": "npc_yura_folk_3",
+   "art": "npc_yura_woman_3",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "yura_lamp",
+   "look": "npc_yura_folk_4",
+   "art": "npc_yura_man_4",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "yura_seller",
+   "look": "npc_yura_folk_1",
+   "art": "npc_yura_woman_1",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "yura_child",
+   "look": "npc_child_4",
+   "art": "npc_forest_child_4",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "yura_cat",
+   "look": "ani_cat",
+   "art": "ani_cat",
+   "ok": true
+  },
+  {
+   "map": "yura",
+   "npc": "laila_mother",
+   "look": "npc_old_f_2",
+   "art": "npc_yura_woman_2",
+   "ok": true
+  },
+  {
+   "map": "yura_home1",
+   "npc": "long",
+   "look": "npc_yura_folk_1",
+   "art": "npc_yura_woman_1",
+   "ok": true
+  },
+  {
    "map": "yura_home2",
    "npc": "uncalled",
    "look": "npc_yura_folk_3",
    "art": "npc_yura_woman_3",
    "ok": true
+  },
+  {
+   "map": "yura_home3",
+   "npc": "dreamer",
+   "look": "npc_yura_folk_4",
+   "art": "npc_yura_man_4",
+   "ok": true
+  },
+  {
+   "map": "yura_home4",
+   "npc": "namekid",
+   "look": "npc_child_3",
+   "art": "npc_forest_child_3",
+   "ok": true
+  },
+  {
+   "map": "yura_home_elder",
+   "npc": "aide",
+   "look": "npc_yura_folk_2",
+   "art": "npc_yura_man_2",
+   "ok": true
+  },
+  {
+   "map": "yura_inn",
+   "npc": "yura_innkeeper",
+   "look": "npc_yura_folk_3",
+   "art": "npc_yura_woman_3",
+   "ok": true
+  },
+  {
+   "map": "yura_inn",
+   "npc": "yura_guest",
+   "look": "npc_yura_folk_4",
+   "art": "npc_yura_man_4",
+   "ok": true
   }
  ],
  "skipped": [
+  {
+   "map": "lighthouse_1",
+   "kind": "door",
+   "id": "lh1_door_w",
+   "to": "lighthouse_1",
+   "cond": {
+    "any": [
+     "prologue_lh_door",
+     "prologue_tutorial"
+    ]
+   }
+  },
+  {
+   "map": "lighthouse_1",
+   "kind": "door",
+   "id": "lh1_door_e",
+   "to": "lighthouse_1",
+   "cond": {
+    "any": [
+     "prologue_lh_door",
+     "prologue_tutorial"
+    ]
+   }
+  },
   {
    "map": "world",
    "kind": "stairs",
