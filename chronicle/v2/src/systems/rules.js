@@ -912,7 +912,8 @@
     },
     /**
      * 品の数値を埋める（書いてある値は残す）: stats（能力値。abil ＋ クセの statsAdd）・atk・mag・twoHanded・def・mdef・eva・price・sort・icon・desc。
-     *   武器 atk = round(WA[T] × (mult ?? 系統の mult) × GRADE_ATK)、mag = round(WA[T] × 系統の magMult × GRADE_ATK)
+     *   武器 atk = round(WA[T] × (mult ?? 系統の mult) × GRADE_ATK)、mag = round(WA[T] × (magMult ?? 系統の magMult) × GRADE_ATK)
+     *   （品の magMult: 祈りの杖の系列 0.9。持ち主「見習いの杖と祈りの杖、効果同じじゃねえかｗ」で杖の 2 系列を役目で分けた）
      *   防具 def = round(割合 × D(T) × 重さの def × GRADE_DEF)、mdef も同じ
      * fillItem(item, {tier}) で item.grow === 'tier'（伸びる一品物）なら、そのティアの値の新しい物を返す（元は変えない）。
      */
@@ -934,7 +935,7 @@
         const w = K.WTYPE[it.wtype] || K.WTYPE.fist;
         const ga = K.GRADE_ATK[g] || 1;
         if (it.atk === undefined) it.atk = Math.round(K.WA[T] * (typeof it.mult === 'number' ? it.mult : w.mult) * ga);
-        if (it.mag === undefined) it.mag = Math.round(K.WA[T] * w.magMult * ga);
+        if (it.mag === undefined) it.mag = Math.round(K.WA[T] * (typeof it.magMult === 'number' ? it.magMult : w.magMult) * ga);
         if (Rules.wtypeInfo(it.wtype).twoHanded) it.twoHanded = true;
       } else if (K.SLOT_SHARE[it.slot] !== undefined) {
         const wt = K.WEIGHT[it.weight] || K.WEIGHT.light, D = K.D(T), sh = K.SLOT_SHARE[it.slot], gd = K.GRADE_DEF[g] || 1;
@@ -983,7 +984,14 @@
         else if (it.slot === 'acc') first = '身につける飾り。';
         return [first, statLine].filter(Boolean).join('\n');
       }
-      return packDesc(fx.good, fx.bad, statLine);
+      const d = packDesc(fx.good, fx.bad, statLine);
+      // 通常品の武器: 効果が 1 行に収まれば、2 行目に系統の説明（後列から届く など）を残す。同じ系統の店の品の違いが 1 行目で見える
+      //（持ち主「見習いの杖と祈りの杖、効果同じじゃねえかｗ」）
+      if (it.slot === 'weapon' && (it.grade || 'normal') === 'normal' && d && !/\n/.test(d)) {
+        const wd = DB.weaponTypes[it.wtype] && DB.weaponTypes[it.wtype].desc;
+        if (wd && Rules.textWidth(wd) <= 20) return d + '\n' + wd;
+      }
+      return d;
     },
     textWidth(s) { let w = 0; for (const ch of String(s)) w += /[\u0000-ÿ｡-ﾟ]/.test(ch) ? 0.5 : 1; return w; },
 
@@ -1153,9 +1161,10 @@
     if (m.defPct > 0) G('守備力が割合で上がる。', '守備力が上がる。');
     if (m.mdefPct > 0) G('術防が割合で上がる。', '術防が上がる。');
     if (m.physPct > 0) G('物理攻撃の威力が上がる。', '物理が強くなる。');
-    if (m.magicPct > 0) G('術の威力が上がる。', '術が強くなる。');
+    // magicPct は術のダメージだけに効く（battle_core の magic。回復は healPct）ので「攻撃の術」と書く
+    if (m.magicPct > 0) G('攻撃の術の威力が上がる。', '攻撃の術が強くなる。');
     if (m.physPct < 0) B('ただし物理攻撃が弱くなる。', 'ただし物理が弱い。');
-    if (m.magicPct < 0) B('ただし術が弱くなる。');
+    if (m.magicPct < 0) B('ただし攻撃の術が弱くなる。', 'ただし術が弱くなる。');
     if (m.healPct > 0) G('回復の術がよく効く。', '回復がよく効く。');
     if (m.itemPct > 0) G('回復の道具がよく効く。');
     if (m.mpCostPct < 0 && m.techCostPct < 0) G('術と技のMPの消費が減る。', 'MPの消費が減る。');

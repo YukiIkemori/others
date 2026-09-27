@@ -1,5 +1,9 @@
 // items_weapons.js — 武器の通常品（5 系統＋大槌の系列） 71（RULES。K.item。数値は R.Rules.fillItem が R.onData で埋める）
 // 生成: node v2/tools/port/*.js（今の木から移した結果。以後はこのファイルが正）
+// 杖の 2 系列は役目で分ける（持ち主「見習いの杖と祈りの杖、効果同じじゃねえかｗ」→ 分ける判断。通常品は units の能力が 0 なので、
+//   前は全ティアで 攻撃力・術力・値段・説明が同じだった）:
+//   w_staff（見習いの杖〜）= 攻撃の術: mods.magicPct +10（術のダメージだけに効く。回復には効かない）
+//   w_staff_prayer（祈りの杖〜）= 回復の術: mods.healPct +20、術力は少し低い（magMult 0.9 = 系統の 1.0 × 0.9）。値段は同じ
 (function (R) {
   'use strict';
   R.defs('items', {
@@ -156,7 +160,7 @@
     art: 'club',
     mult: 1.35,
     hit: 10,
-    desc: '打撃で、硬い敵や骨の敵に強い。\n腕力と体力が上がる。',
+    desc: '打撃で、硬い敵や骨の敵に強い。\n両手持ち。大剣より当たりやすい。',
     slot: 'weapon',
     icon: 'greatsword',
   },
@@ -173,7 +177,7 @@
     art: 'club',
     mult: 1.35,
     hit: 10,
-    desc: '打撃で、硬い敵や骨の敵に強い。\n腕力と体力が上がる。',
+    desc: '打撃で、硬い敵や骨の敵に強い。\n両手持ち。大剣より当たりやすい。',
     slot: 'weapon',
     icon: 'greatsword',
   },
@@ -190,7 +194,7 @@
     art: 'club',
     mult: 1.35,
     hit: 10,
-    desc: '打撃で、硬い敵や骨の敵に強い。\n腕力と体力が上がる。',
+    desc: '打撃で、硬い敵や骨の敵に強い。\n両手持ち。大剣より当たりやすい。',
     slot: 'weapon',
     icon: 'greatsword',
   },
@@ -207,7 +211,7 @@
     art: 'club',
     mult: 1.35,
     hit: 10,
-    desc: '打撃で、硬い敵や骨の敵に強い。\n腕力と体力が上がる。',
+    desc: '打撃で、硬い敵や骨の敵に強い。\n両手持ち。大剣より当たりやすい。',
     slot: 'weapon',
     icon: 'greatsword',
   },
@@ -224,7 +228,7 @@
     art: 'club',
     mult: 1.35,
     hit: 10,
-    desc: '打撃で、硬い敵や骨の敵に強い。\n腕力と体力が上がる。',
+    desc: '打撃で、硬い敵や骨の敵に強い。\n両手持ち。大剣より当たりやすい。',
     slot: 'weapon',
     icon: 'greatsword',
   },
@@ -241,7 +245,7 @@
     art: 'club',
     mult: 1.35,
     hit: 10,
-    desc: '打撃で、硬い敵や骨の敵に強い。\n腕力と体力が上がる。',
+    desc: '打撃で、硬い敵や骨の敵に強い。\n両手持ち。大剣より当たりやすい。',
     slot: 'weapon',
     icon: 'greatsword',
   },
@@ -258,7 +262,7 @@
     art: 'club',
     mult: 1.35,
     hit: 10,
-    desc: '打撃で、硬い敵や骨の敵に強い。\n腕力と体力が上がる。',
+    desc: '打撃で、硬い敵や骨の敵に強い。\n両手持ち。大剣より当たりやすい。',
     slot: 'weapon',
     icon: 'greatsword',
   },
@@ -275,7 +279,7 @@
     art: 'club',
     mult: 1.35,
     hit: 10,
-    desc: '打撃で、硬い敵や骨の敵に強い。\n腕力と体力が上がる。',
+    desc: '打撃で、硬い敵や骨の敵に強い。\n両手持ち。大剣より当たりやすい。',
     slot: 'weapon',
     icon: 'greatsword',
   },
@@ -292,7 +296,7 @@
     art: 'club',
     mult: 1.35,
     hit: 10,
-    desc: '打撃で、硬い敵や骨の敵に強い。\n腕力と体力が上がる。',
+    desc: '打撃で、硬い敵や骨の敵に強い。\n両手持ち。大剣より当たりやすい。',
     slot: 'weapon',
     icon: 'greatsword',
   },
@@ -309,7 +313,7 @@
     art: 'club',
     mult: 1.35,
     hit: 10,
-    desc: '打撃で、硬い敵や骨の敵に強い。\n腕力と体力が上がる。',
+    desc: '打撃で、硬い敵や骨の敵に強い。\n両手持ち。大剣より当たりやすい。',
     slot: 'weapon',
     icon: 'greatsword',
   },

@@ -94,3 +94,7 @@
 19:53:28 drawn pitch of the key cells 8.00
 19:53:28 drawn pitch of the key cells 8.00
 19:53:30 calibrated pitch 8.01 / 8.01 px (requested 8), offset -9.8, 0.8
+19:53:40 drawn pitch of the key cells 8.00
+19:53:50   frame 2 size: guide 0.963 idle 0.963 idle/corr 0.962 pitch 1.000 -> 1.000
+19:53:55   frame 2 size: guide 0.975 idle 0.975 idle/corr 0.975 pitch 1.000 -> 1.000
+19:53:56   frame 2 size: guide 0.963 idle 0.963 idle/corr 0.962 pitch 1.000 -> 1.000
