@@ -98,12 +98,12 @@
     // 切り株の家（きこり頭ゴード）
     O.push(B('fern_u_gord', 50, 12, 6, 5, { door: D(53, 16, 'fern_gord'), lamp: true, roof: 'thatch', mat: 'log' }));
     // いちばん高い木の根もとの花のつぼみの家（リタの歌の家）
-    O.push(B('fern_u_rita', 51, 6, 5, 4, { door: D(53, 9, 'fern_rita'), lamp: true }));
+    O.push(B('fern_u_rita', 51, 7, 5, 4, { door: D(53, 10, 'fern_rita'), lamp: true }));
     // ひょうたんの家（ピム）
     O.push(B('fern_u_pim', 14, 40, 5, 4, { door: D(16, 43, 'fern_pim_home'), roof: 'thatch', mat: 'plaster' }));
     // 家の中（fern_home1〜3・fern_shed）は homes_slice.js
     O.push(B('fern_u_house1', 39, 37, 5, 4, { door: D(40, 40, 'fern_home1'), roof: 'shingle', mat: 'plaster' }));   // きのこの家（紫）
-    O.push(B('fern_u_house2', 2, 16, 4, 3, { wall: 1, door: D(4, 18, 'fern_home2'), windows: 1, small: true }));     // どんぐりの家
+    O.push(B('fern_u_house2', 2, 16, 4, 4, { wall: 1, door: D(4, 19, 'fern_home2'), windows: 1, small: true }));     // どんぐりの家
     O.push(B('fern_u_house3', 44, 24, 5, 4, { door: D(45, 27, 'fern_home3'), roof: 'slate', mat: 'plaster' }));    // きのこの家（青緑）
     O.push(B('fern_u_shed', 20, 38, 4, 3, { wall: 1, windows: 0, small: true, door: D(22, 40, 'fern_shed') }));   // どんぐりの物置
 
@@ -202,10 +202,10 @@
         shop: { x: 22, y: 34, dir: 's' },
         gord: { x: 53, y: 17, dir: 's' },
         search: { x: 8, y: 34, dir: 's' },
-        rita: { x: 53, y: 10, dir: 's' },
+        rita: { x: 53, y: 11, dir: 's' },
         pim_home: { x: 16, y: 44, dir: 's' },
         house1: { x: 40, y: 41, dir: 's' },
-        house2_door: { x: 4, y: 19, dir: 's' }, house3_door: { x: 45, y: 28, dir: 's' }, shed_door: { x: 22, y: 41, dir: 's' },
+        house2_door: { x: 4, y: 20, dir: 's' }, house3_door: { x: 45, y: 28, dir: 's' }, shed_door: { x: 22, y: 41, dir: 's' },
         deck: { x: 12, y: 12, dir: 'e', lv: 1 },
         east: { x: 46, y: 45, dir: 'e' },
       },
